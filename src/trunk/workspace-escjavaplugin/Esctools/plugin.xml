@@ -3,7 +3,7 @@
 <plugin
    id="escjava.esctools"
    name="Esctools Library Plug-in"
-   version="1.0.2"
+   version="1.0.4"
    provider-name="David R. Cok">
 
    <runtime>
