@@ -50,9 +50,11 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
         switch (tag) {
             case TagConstants.AXIOM:
             case TagConstants.INVARIANT:
-	    case TagConstants.REPRESENTS:
+            case TagConstants.REPRESENTS:
 	    case TagConstants.CONSTRAINT: {
-                Expr e = ((ExprDeclPragma)tp).expr;
+                Expr e = tag == TagConstants.REPRESENTS ?
+			    ((NamedExprDeclPragma)tp).expr :
+			    ((ExprDeclPragma)tp).expr;
                 write(o, "/*@ "); 
                 write(o, TagConstants.toString(
 				tp.isRedundant() ? TagConstants.makeRedundant(tag)

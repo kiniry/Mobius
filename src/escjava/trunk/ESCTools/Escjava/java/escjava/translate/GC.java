@@ -314,6 +314,10 @@ public final class GC {
     return Condition.make(TagConstants.CHKFREE, pred, locPragmaDecl);
   }
 
+  public static Condition assumeCondition(Expr pred, int locPragmaDecl) {
+    return Condition.make(TagConstants.CHKASSUME, pred, locPragmaDecl);
+  }
+
   //@ requires locPragmaDecl != Location.NULL;
   public static GuardedCmd assumeAnnotation(int locPragmaDecl,
 					    /*@ non_null */ Expr p) {
@@ -600,6 +604,10 @@ public final class GC {
                           /*@ non_null */ Expr e3) {
     Expr[] args = { e1, e2, e3 };
     return nary(sloc,eloc,tag, ExprVec.make(args));
+  }
+
+  public static Expr nary(int tag, ExprVec ev) {
+	return nary(Location.NULL, Location.NULL, tag, ev);
   }
 
   public static Expr nary(int sloc, int eloc, int tag, ExprVec ev) {

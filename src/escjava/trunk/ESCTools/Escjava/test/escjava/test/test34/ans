@@ -10,12 +10,6 @@ WontEvenParse3.java:3: Error: Cannot convert int[] to boolean
 Caution: Turning off extended static checking due to type error(s)
 1 caution
 1 error
-WontEvenParse4.java:3: Not implemented: Not checking predicates containing new instance expressions
-  //@ ensures \result == (3 < 4 ? new Object() : new int[12]);
-                                  ^
-WontEvenParse4.java:8: Not implemented: Not checking predicates containing new instance expressions
-  //@ requires (new Object()) != null;
-                ^
 WontEvenParse5.java:3: Error: No such method \nonnullelements(java.lang.Object[]) in type WontEvenParse5
     //@ assert WontEvenParse5.\nonnullelements(a);
                               ^

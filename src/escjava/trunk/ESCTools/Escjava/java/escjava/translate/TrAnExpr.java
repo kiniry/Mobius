@@ -41,9 +41,23 @@ public final class TrAnExpr {
         return trSpecExpr(e, null, null);
     }
 
+    public static void initForClause() {
+	trSpecExprAuxConditions = ExprVec.make();
+	trSpecExprAuxAssumptions = ExprVec.make();
+    }
+
+    public static void initForRoutine() {
+	trSpecExprAuxConditions = null;
+	tempn = 100;
+	declStack = new LinkedList();
+	currentAlloc = GC.allocvar;
+    }
+
     public static ExprVec trSpecExprAuxConditions = null;
+    public static ExprVec trSpecExprAuxAssumptions = null;
     public static int tempn = 100;
     public static LinkedList declStack = new LinkedList();
+    public static VariableAccess currentAlloc = GC.allocvar;
 
     /** This is the full form of function <code>TrSpecExpr</code>
      * described in ESCJ 16.  Each of the parameters <code>sp</code>
@@ -270,10 +284,6 @@ public final class TrAnExpr {
       }
 
       case TagConstants.NEWINSTANCEEXPR: {
-	// FIXME - no translation support for new Type() expressions
-	//ErrorSet.fatal(e.getStartLoc(),"No support as yet for constructor invocations in specification expressions");
-	ErrorSet.notImplemented(!Main.options().noNotCheckedWarnings,
-		e.getStartLoc(),"Not checking predicates containing new instance expressions");
 	NewInstanceExpr me = (NewInstanceExpr)e;
 	ExprVec ev = ExprVec.make(me.args.size());
 		// FIXME - 'this' argument???
@@ -283,7 +293,45 @@ public final class TrAnExpr {
 	}
 	Expr ne = GC.nary(me.getStartLoc(), me.getEndLoc(),
 			TagConstants.METHODCALL,ev);
-	((NaryExpr)ne).methodName = Identifier.intern("<constructor>");
+	((NaryExpr)ne).methodName = Identifier.intern(
+		"new#" + me.args.size() + "#" + me.type.name.printName());
+		// FIXME - does the name need to be unique across signatures?
+	Type type = TypeCheck.inst.getType(me);
+	if (trSpecExprAuxConditions != null && !declStack.contains(me.decl)) {
+	    Identifier n = Identifier.intern("tempNewObject"+(++tempn));
+	    VariableAccess v =  VariableAccess.make(n, e.getStartLoc(), 
+			    LocalVarDecl.make(Modifiers.NONE, null,n,
+				    type,
+				    UniqName.temporaryVariable,
+				    null, Location.NULL));
+	    Expr ee = GC.nary(TagConstants.ANYEQ, v, ne);
+	    // FIXME - should add the following mapping of the temp variable
+	    // to the method only if the method is a function call - pure
+	    // method of immutable objects, and either static or has the
+	    // this object inserted as an argument.
+	    trSpecExprAuxConditions.addElement(ee);
+	    ee = GC.nary(TagConstants.REFNE, v, 
+		LiteralExpr.make(TagConstants.NULLLIT, null, Location.NULL));
+	    trSpecExprAuxConditions.addElement(ee);
+	    ee = GC.nary(TagConstants.TYPEEQ,
+		GC.nary(TagConstants.TYPEOF, v),
+		TypeExpr.make(Location.NULL, Location.NULL, type));
+	    trSpecExprAuxConditions.addElement(ee);
+	    VariableAccess newAlloc =
+		apply(sp,GC.makeVar(GC.allocvar.id,e.getStartLoc())); // alloc
+	    trSpecExprAuxAssumptions.addElement(
+		GC.nary(TagConstants.ALLOCLT, currentAlloc, newAlloc));
+	    trSpecExprAuxConditions.addElement(
+		GC.nary(TagConstants.BOOLNOT,
+		    GC.nary(TagConstants.ISALLOCATED, v, currentAlloc)));
+	    trSpecExprAuxConditions.addElement(
+		GC.nary(TagConstants.ISALLOCATED, v, newAlloc));
+	    currentAlloc = newAlloc;
+	    declStack.addFirst(me.decl);
+	    getCalledSpecs(me.decl,null,me.args,v,sp,st); // adds to trSpecExprAuxConditions
+	    declStack.removeFirst();
+	    return v;
+	}
 	return ne;
       }
 
@@ -314,7 +362,7 @@ public final class TrAnExpr {
 	    // this object inserted as an argument.
 	    trSpecExprAuxConditions.addElement(ee);
 	    declStack.addFirst(me.decl);
-	    getCalledSpecs(me,me.args,v,sp,st); // adds to trSpecExprAuxConditions
+	    getCalledSpecs(me.decl,me.od,me.args,v,sp,st); // adds to trSpecExprAuxConditions
 	    declStack.removeFirst();
 	    return v;
 	}
@@ -323,19 +371,47 @@ public final class TrAnExpr {
       }
 
       case TagConstants.NEWARRAYEXPR: {
-	ErrorSet.notImplemented(!Main.options().noNotCheckedWarnings,
-		e.getStartLoc(),"Not checking predicates containing new array expressions");
 	NewArrayExpr nae = (NewArrayExpr)e;
 // FIXME - need to put in the type and the dimension array
 // also need to make SImplify understand the make$Array function
-	ExprVec ev = ExprVec.make(0); // should be 2
-	//ev.addElement( trSpecExpr( nae.args.element(0), sp, st) );
-	//ev.addElement( trSpecExpr( nae.args.element(1), sp, st) );
-	Expr ne = GC.nary(e.getStartLoc(), e.getEndLoc(),
-			TagConstants.METHODCALL, ev);
-	((NaryExpr)ne).methodName = 
-		Identifier.intern("make$Array");
-	return ne;
+	if (trSpecExprAuxConditions != null ) {
+	    Identifier n = Identifier.intern("tempMethodReturn"+(++tempn));
+	    VariableAccess v =  VariableAccess.make(n, e.getStartLoc(), 
+			    LocalVarDecl.make(Modifiers.NONE, null,n,
+				    TypeCheck.inst.getType(nae),
+				    UniqName.temporaryVariable,
+				    null, Location.NULL));
+
+	    ExprVec ev = ExprVec.make(7);
+	    ev.addElement( v ); // variable name
+	    ev.addElement(apply(sp,currentAlloc) ); // alloc
+	    VariableAccess newAlloc = GC.makeVar(GC.allocvar.id,nae.getStartLoc());
+	    ev.addElement(apply(sp,newAlloc) ); // alloc
+	    trSpecExprAuxAssumptions.addElement(
+		GC.nary(TagConstants.ALLOCLT, currentAlloc, newAlloc));
+	    currentAlloc = newAlloc;
+	    ev.addElement(GC.elemsvar ); // elems
+	    Expr edims = GC.nary( TagConstants.ARRAYSHAPEONE, 
+				trSpecExpr( nae.dims.elementAt(0), sp, st));
+	    for (int kk = 1; kk < nae.dims.size(); ++kk) {
+		edims = GC.nary( TagConstants.ARRAYSHAPEMORE,
+				trSpecExpr( nae.dims.elementAt(kk), sp, st));
+	    }
+	    ev.addElement(edims ); // arrayShape
+	    ev.addElement( TypeExpr.make(Location.NULL, Location.NULL, TypeCheck.inst.getType(nae)) );
+	    if (Types.isIntType(nae.type))
+		ev.addElement( LiteralExpr.make(TagConstants.INTLIT, new Integer(0), Location.NULL)); // initial value
+	    else if (Types.isReferenceType(nae.type))
+		ev.addElement( LiteralExpr.make(TagConstants.NULLLIT, null, Location.NULL));
+
+	    trSpecExprAuxConditions.addElement(GC.nary(TagConstants.ARRAYFRESH,ev));
+	    return v;
+		// FIXME for multiple dimensions
+	} else {
+	    ErrorSet.notImplemented(!Main.options().noNotCheckedWarnings,
+		e.getStartLoc(),"Not checking predicates containing new array expressions");
+	    return null;
+	}
       }
 
       case TagConstants.EXPLIES: {
@@ -1065,11 +1141,13 @@ wrap those variables being modified and not everything.
     return TypeExpr.make(type.getStartLoc(), type.getEndLoc(), type);
   }
   
-  public static void getCalledSpecs(MethodInvocation me, ExprVec ev, 
+  public static void getCalledSpecs( 
+			RoutineDecl decl,
+			ObjectDesignator od, ExprVec ev, 
 			VariableAccess resultVar,
 			Hashtable sp, Hashtable st) {
-//System.out.println("MI " + me.od);
-    ModifierPragmaVec md = me.decl.pmodifiers;
+    ModifierPragmaVec md = decl.pmodifiers;
+    if (md == null) return;
     for (int i=0; i<md.size(); ++i) {
 	ModifierPragma m = md.elementAt(i);
 	switch (m.getTag()) {
@@ -1080,16 +1158,16 @@ wrap those variables being modified and not everything.
 //System.out.println("ENSURES " + e);
 		Hashtable h = new Hashtable();
 		h.put(Substitute.resexpr,resultVar);
-		if (me.od instanceof ExprObjectDesignator) {
-		    if (!(((ExprObjectDesignator)me.od).expr instanceof ThisExpr)) {
-			h.put(Substitute.thisexpr, ((ExprObjectDesignator)me.od).expr);
+		if (od instanceof ExprObjectDesignator) {
+		    if (!(((ExprObjectDesignator)od).expr instanceof ThisExpr)) {
+			h.put(Substitute.thisexpr, ((ExprObjectDesignator)od).expr);
 		    }
-		} else if (me.od instanceof SuperObjectDesignator) {
+		} else if (od instanceof SuperObjectDesignator) {
 			// FIXME
-		    System.out.println("NOT SUPPORTED " + me.od.getClass());
-		} // fall-through for TypeObjectDesignator
+		    System.out.println("NOT SUPPORTED " + od.getClass());
+		} // fall-through for TypeObjectDesignator or null
 		    
-		FormalParaDeclVec args = me.decl.args;
+		FormalParaDeclVec args = decl.args;
 		for (int j=0; j<args.size(); ++j) {
 		    h.put(args.elementAt(j), ev.elementAt(j));
 		}
@@ -1102,5 +1180,32 @@ wrap those variables being modified and not everything.
 		break;
 	}
     }
+
+	// FIXME - What about constraint clauses
+
+	TypeDeclElemVec tdev = decl.parent.elems;
+	for (int j=0; j<tdev.size(); ++j) {
+	    TypeDeclElem e = tdev.elementAt(j);
+	    if (!(e instanceof TypeDeclElemPragma)) continue;
+	    TypeDeclElemPragma p = (TypeDeclElemPragma)e;
+	    if (p.getTag() == TagConstants.INVARIANT) {
+		Expr ee = ((ExprDeclPragma)p).expr;
+		Hashtable h = new Hashtable();
+		h.put(Substitute.resexpr,resultVar);
+		if (od instanceof ExprObjectDesignator) {
+		    if (!(((ExprObjectDesignator)od).expr instanceof ThisExpr)) {
+			h.put(Substitute.thisexpr, ((ExprObjectDesignator)od).expr);
+		    }
+		} else if (od instanceof SuperObjectDesignator) {
+			// FIXME
+		    System.out.println("NOT SUPPORTED " + od.getClass());
+		} else if (od == null) { // Constructor case
+		    h.put(Substitute.thisexpr, resultVar);
+		} // fall-through for TypeObjectDesignator 
+		ee = Substitute.doSubst(h,ee);
+		ee = trSpecExpr(ee,sp,st);
+		trSpecExprAuxConditions.addElement(ee);
+	    }
+	}
   }
 }

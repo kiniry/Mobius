@@ -378,9 +378,11 @@ public class Substitute {
 	  }
 	  Expr ee = me.enclosingInstance;
 	  if (ee != null) ee = doSubst(subst, ee, rhsVars);
-	  result = NewInstanceExpr.make(ee,
+	  NewInstanceExpr r = NewInstanceExpr.make(ee,
 			me.locDot, me.type, args, me.anonDecl,
 			me.loc, me.locOpenParen);
+	  r.decl = me.decl;
+	  result = r;
 	} else {
 
 	    Assert.fail("Bad expr in Substitute.doSubst: "+e+ " " 

@@ -1,0 +1,26 @@
+ESC/Java version VERSION
+  Prover started:TIME
+
+NewObject ...
+
+NewObject: NewObject() ...
+    [TIME]  passed immediately
+
+NewObject: m() ...
+    [TIME]  passed
+
+NewObject: mm() ...
+    [TIME]  passed
+
+NewObject: mmm() ...
+    [TIME]  passed
+
+NewObject: m4() ...
+    [TIME]  passed
+  [TIME total]
+
+NewObjectA ...
+
+NewObjectA: NewObjectA() ...
+    [TIME]  passed immediately
+  [TIME total]

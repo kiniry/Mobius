@@ -74,7 +74,6 @@ public final class Translate
         }
         this.issueCautions = issueCautions;
 	this.modifyEverythingLocations = new ArrayList();
-	getPostconditionLocations(rd);
 
         if (Info.on) {
             System.out.print("trBody: ");
@@ -4120,9 +4119,6 @@ public final class Translate
 		    ev.add((Expr)o);
 	    }
 	}
-    }
-    public void getPostconditionLocations(RoutineDecl r) {
-	//System.out.println("GETTING POST " + r);
     }
 } // end of class Translate
 

@@ -826,6 +826,7 @@ public class Main extends javafe.SrcTool
         }
 
         FindContributors scope = new FindContributors(r);
+	TrAnExpr.initForRoutine();
 
         /*
          * Compute an upper bound for synTargs if -O7 given.

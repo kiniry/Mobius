@@ -37,6 +37,7 @@ public class NoWarn
         // We never check Free because we know they always hold, even
         // if we can't prove them:
         setChkStatus( TagConstants.CHKFREE, TagConstants.CHK_AS_SKIP );
+        setChkStatus( TagConstants.CHKASSUME, TagConstants.CHK_AS_ASSUME );
     }
 
     // If this boolean is set to true, all checks will use the the
