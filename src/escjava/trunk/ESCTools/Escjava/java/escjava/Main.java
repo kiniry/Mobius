@@ -304,6 +304,10 @@ public class Main extends javafe.SrcTool
     public void handleTD(TypeDecl td) {
         long startTime = currentTime();
         TypeSig sig = TypeCheck.inst.getSig(td);
+
+        if (!options().quiet)
+            System.out.println("\n" + sig.toString() + " ...");
+
 	/* If something is on the command-line, presume we want to check it
 	   as thoroughly as possible.
         if (sig.getTypeDecl().specOnly &&
@@ -317,9 +321,6 @@ public class Main extends javafe.SrcTool
 
         if (Location.toLineNumber(td.getEndLoc()) < options().startLine)
             return;
-
-        if (!options().quiet)
-            System.out.println("\n" + sig.toString() + " ...");
 
         // Do actual work:
         boolean aborted = processTD(td);
