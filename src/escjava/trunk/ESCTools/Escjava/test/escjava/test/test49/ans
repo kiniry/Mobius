@@ -75,7 +75,7 @@ class NonNull
 
    void foo(Object x /*@ non_null */)
     /*@ pure */
-    /*@ requires (/*boolean*/ (\lblneg NonNull:32.16 (/*boolean*/ (/*java.lang.Object*/ x:32.34) != (/*null*/ null)))); */
+    /*@ requires (/*boolean*/ (\lblneg NonNull:0.32.16 (/*boolean*/ (/*java.lang.Object*/ x:32.34) != (/*null*/ null)))); */
     /*@ modifies (/*UNAVAILABLE*/ \nothing) if (/*boolean*/ \old((/*boolean*/ (/*java.lang.Object*/ x:32.34) != (/*null*/ null)))); */ 
    {
       /*@ assert (/*boolean*/ (/*java.lang.Object*/ foo) != (/*null*/ null)); */
@@ -86,7 +86,7 @@ class NonNull
 
    void foo2(Object x /*@ non_null */)
     /*@ pure */
-    /*@ requires (/*boolean*/ (\lblneg NonNull:39.17 (/*boolean*/ (/*java.lang.Object*/ x:39.35) != (/*null*/ null)))); */
+    /*@ requires (/*boolean*/ (\lblneg NonNull:0.39.17 (/*boolean*/ (/*java.lang.Object*/ x:39.35) != (/*null*/ null)))); */
     /*@ modifies (/*UNAVAILABLE*/ \nothing) if (/*boolean*/ \old((/*boolean*/ (/*java.lang.Object*/ x:39.35) != (/*null*/ null)))); */ 
    {
       /*@ assert (/*boolean*/ (/*java.lang.Object*/ s) != (/*null*/ null)); */
