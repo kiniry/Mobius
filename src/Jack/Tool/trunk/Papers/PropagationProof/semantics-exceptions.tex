@@ -1,0 +1,102 @@
+%%%%%%
+%%%%%%  Natural Semantics
+\begin{figure}
+\begin{displaymath}
+\begin{array}{c}
+\hline
+\ \\
+% binary operation - break
+\begin{array}{c}
+\eval{\state{\genv_0,\rho},e_1}{\genv_1,\excval{\exc}} \; \vee \\
+(\eval{\state{\genv_0,\rho},e_1}{\genv_1,c} \wedge \eval{\state{\genv_1,\rho},e_2}{\genv_2,\excval{\exc}}) \\
+\hline
+\eval{\state{\genv,\rho},{(e_1\;\mathit{op}\;e_2)}}{\genv',\excval{\exc}}
+\end{array} \\
+\ \\
+% Method call -exception arguments
+\begin{array}{c}
+((n \leq |m|) \wedge 1 \leq i \leq n:\;\eval{\state{\genv_{i-1},\rho},e_i}{\genv_i,c_i} \wedge \eval{\state{\genv_{n-1},\rho},e_n}{\genv_n,\excval{\exc}})  \\
+\hline
+\eval{\state{\genv,\rho},m(e_1,\ldots,e_{|m|})}{\genv',\excval{\exc}}
+\end{array} \\
+\ \\
+% Method call - exception at call
+%  Method call - exception
+\begin{array}{c}
+1 \leq i \leq |m|:\;\eval{\state{\genv_{i-1},\rho},e_i}{\genv_i,c_i} \\
+\|m\| = \langle s_0,x_1,\ldots,x_{|m|} \rangle \wedge
+\rho' = \bot[x_i \mapsto c_i] \\
+\eval{\state{\genv_{|m|},\rho'},s_0}{\state{\genv_{|m|+1 },\rho'},\excval{\exc}} \\
+\hline
+\eval{\state{\genv,\rho},m(e_1,\ldots,e_{|m|})}{\genv',\excval{\exc}}
+\end{array} 
+\;\;\;
+%  Method call - native - exception 
+\begin{array}{c}
+m.\mathit{isNative}  \\
+1 \leq i \leq |m|:\;\eval{\state{\genv_{i-1},\rho},e_i}{\genv_i,c_i} \\
+\excval{\exc} = \means{m}(c_1,\ldots,c_{|m|}) \\
+\hline
+\eval{\state{\genv,\rho},m(e_1,\ldots,e_{|m|})}{\genv',\excval{\exc}}
+\end{array} \\
+\ \\
+% throw 
+\eval{\state{\genv,\rho},{(\texttt{throw}\; \exc)}}{\state{\genv,\rho},\excval{\exc}} \\
+\ \\
+% try - catch - Normal
+\begin{array}{c}
+\eval{\state{\genv_0,\rho},s_1}{\state{\genv_1,\rho'}} \;\vee  \\
+\eval{\state{\genv_0,\rho},s_1}{\state{\genv_1,\rho},\excval{\exc'}} \wedge (\exc' \preceq \exc) \wedge \eval{\state{\genv_1,\rho''},{s_2}}{\state{\genv_2,\rho'}}   \\
+\hline
+\eval{\state{\genv,\rho},{(\texttt{try}\;s_1\;\texttt{catch}(\exc)\;s_2)}}{\state{\genv',\rho'}}
+\end{array} \\
+\ \\
+% try - catch - return
+\begin{array}{c}
+\eval{\state{\genv_0,\rho},s_1}{\state{\genv_1,\rho'},\retval{-}}\; \vee \\
+\eval{\state{\genv_0,\rho},s_1}{\state{\genv_1,\rho''},\excval{\exc'}} \wedge (\exc' \preceq \exc) \wedge \eval{\state{\genv_1,\rho''},{s_2}}{\state{\genv_2,\rho'},\retval{-}}   \\
+\hline
+\eval{\state{\genv,\rho},{(\texttt{try}\;s_1\;\texttt{catch}(\exc)\; s_2)}}{\state{\genv',\rho'},\retval{-}}
+\end{array} \\
+\ \\
+% try - catch - exc
+\begin{array}{c}
+(\eval{\state{\genv_0,\rho},s_1}{\state{\genv_1,\rho'},\excval{\exc'}} \wedge \exc'\not\preceq\exc)\; \vee \\
+P \vdash \state{\genv_0,\rho},s_1 \Downarrow \state{\genv_1,\rho''},\excval{\exc''} \wedge (\exc'' \preceq \exc) \wedge \eval{\state{\genv_1,\rho''},{s_2}}{\state{\genv_2,\rho'},\excval{\exc'}}   \\
+\hline
+\eval{\state{\genv,\rho},{(\texttt{try}\;s_1\;\texttt{catch}(\exc)\; s_2)}}{\state{\genv',\rho'},\excval{\exc'}}
+\end{array} \\
+\ \\
+\hline
+\end{array}
+\end{displaymath}
+\caption{Exception Handling Rules}\label{fig:bigstep-exceptions}
+\end{figure}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,34 @@
+\begin{figure}[tbp]
+\begin{displaymath}
+\begin{array}{c}
+\hline
+\ \\
+x,y,z \in \textrm{PVar}\;\;\;\; X,Y,Z \in \textrm{Ghost} \\
+\ \\
+\begin{array}{rcl}
+\multicolumn{3}{l}{P \in  \textrm{Program},\;d  \in  \textrm{MDecl},\;m  \in  \textrm{MethodName}}   \\
+P & ::= & \texttt{global}\;(x = c;)^*  \;\; \texttt{ghost}\;(X = c;)^* \;\;  d^{+}  \\
+d & ::= & \texttt{requires}\;\; p \;\; \texttt{pre-set}\;\; \bar{s}   \\
+  &     & \texttt{ensures}\;\; p \;\; \texttt{post-set}\;\; \bar{s} \\
+& & \texttt{method } m\textrm{(}x_1,\ldots,x_n)\; [= s] \texttt{ end} 
+\end{array} \\
+\ \\
+\begin{array}{rcl}
+\multicolumn{3}{l}{e  \in \textrm{Exp},\; b,p,q  \in  \textrm{BExp},\;s  \in  \textrm{Stmt}  } \\
+e & ::= & c \mid x \mid e_1 \;aOp\; e_2     \\  
+b & ::= & \texttt{true} \mid \texttt{false} \mid e_1 \;\mathit{bOp}\; e_2 \mid
+           \texttt{not}\;b \mid b_1 \;\texttt{and}\; b_2 \mid b_1 \;\texttt{or}\; b_2   \\
+s & ::= & \texttt{skip} \mid x \texttt{:=}\; e \mid
+         \texttt{if }b\;s_1\;s_2 \mid
+        \texttt{while}\;[I]\; b\texttt{ do }s \mid s_1; s_2 \mid \\
+ & & m(e_1,\ldots,e_{|m|})  \mid \texttt{return} \mid 
+ \texttt{assert}\;b \mid \texttt{set}\;\bar{s} \\
+\bar{s} & ::= & (X := \bar{e})^* \\
+& &  \mbox{where } fv(\bar{e}) \subseteq \textrm{Ghost} \\
+\end{array} \\
+\ \\
+\hline
+\end{array}
+\end{displaymath}
+\caption{Syntax of Programs}\label{fig:syntax}
+\end{figure}

@@ -1,0 +1,104 @@
+%%%%%%
+%%%%%%  Natural Semantics
+\begin{figure}[tbp]
+\begin{displaymath}
+\begin{array}{c}
+\hline
+\ \\
+% skip
+\eval{\state{\genv,\rho},\texttt{skip}}{\state{\genv',\rho}}
+\;\;\;\;\;
+% return - normal
+\eval{\state{\genv,\rho},\texttt{return}}{\state{\genv,\rho},\retval{}} \\
+\ \\
+% assignment - local
+\begin{array}{c}
+x \not\in dom(\genv) \\
+\eval{\state{\genv,\rho},e}{c} \\
+\hline
+\eval{\state{\genv,\rho},x \texttt{:=}e}{\state{\genv,\rho[x \mapsto c]}}
+\end{array}
+\;\;\;\;\;\;\;
+% assignment - global
+\begin{array}{c}
+x \in dom(\genv) \\
+\eval{\state{\genv,\rho},e}{c} \\
+\hline
+\eval{\state{\genv,\rho},x \texttt{:=}e}{\state{\genv[x \mapsto c],\rho}}
+\end{array} \\
+\ \\
+% conditional - normal
+\begin{array}{c}
+\eval{\state{\genv,\rho},b}{v_b} \\
+\eval{\state{\genv,\rho},(v_b \;?\; s_1 : s_2)}{\state{\genv',\rho'}} \\
+\hline
+\eval{\state{\genv,\rho},{(\texttt{if }b\;s_1\;s_2)}}{\state{\genv',\rho'}}
+\end{array} 
+\;\;\;\;\;
+% conditional - break
+\begin{array}{c}
+\eval{\state{\genv,\rho},b}{v_b} \\
+\eval{\state{\genv,\rho},(v_0 \;?\; s_1 : s_2)}{\state{\genv',\rho'},\brk} \\
+\hline
+\eval{\state{\genv,\rho},{(\texttt{if }b\;s_1\;s_2)}}{\state{\genv',\rho'},\brk}
+\end{array} \\
+\ \\
+% while loop - false
+\begin{array}{c}
+\eval{\state{\genv,\rho},b}{\texttt{ff}} \\
+\hline
+\eval{\state{\genv,\rho},{(\texttt{while}\;b\;\texttt{do}\;s)}}{\state{\genv,\rho}}
+\end{array}
+\;\;\;
+% while loop - true
+\begin{array}{c}
+\eval{\state{\genv,\rho},b}{\texttt{tt}} \wedge \eval{\state{\genv,\rho},s}{\state{\genv'',\rho''}}  \\
+ \eval{\state{\genv'',\rho''},{(\texttt{while}\;b\;\texttt{do}\;s)}}{\state{\genv',\rho'}} \\
+\hline
+\eval{\state{\genv,\rho},{(\texttt{while}\;b\;\texttt{do}\;s)}}{\state{\genv',\rho'}}
+\end{array} \\ 
+\ \\
+% while loop - exception or return
+\begin{array}{c}
+\eval{\state{\genv,\rho},b}{\texttt{tt}} \\
+ \eval{\state{\genv,\rho},s}{\state{\genv',\rho'},\brk}  \\
+\hline
+\eval{\state{\genv,\rho},{(\texttt{while}\;b\;\texttt{do}\;s)}}{\state{\genv',\rho'},\brk}
+\end{array}
+\;\;\;
+% 
+\begin{array}{c}
+\eval{\state{\genv,\rho},b}{\texttt{tt}} \wedge \eval{\state{\genv,\rho},s}{\state{\genv'',\rho''}}  \\
+\eval{\state{\genv'',\rho''},{(\texttt{while}\;b\;\texttt{do}\;s)}}{\state{\genv',\rho'},\brk} \\
+\hline
+\eval{\state{\genv,\rho},{(\texttt{while}\;b\;\texttt{do}\;s)}}{\state{\genv',\rho'},\brk}
+\end{array} \\ 
+\ \\
+% sequencing - normal 
+\begin{array}{c}
+\eval{\state{\genv,\rho},s_1}{\state{\genv'',\rho''}}    \\
+\eval{\state{\genv'',\rho''},s_2}{\state{\genv',\rho'}} \\
+\hline
+\eval{\state{\genv,\rho},{(s_1;s_2)}}{\state{\genv',\rho'}}
+\end{array} 
+\;\;\;\;\;\;\;
+% sequencing - break
+\begin{array}{c}
+\eval{\state{\genv,\rho},s_1}{\state{\genv',\rho'},\brk}   \\
+\hline
+\eval{\state{\genv,\rho},{(s_1;s_2)}}{\state{\genv',\rho'},\brk}
+\end{array} \\
+\ \\
+\begin{array}{c}
+\eval{\state{\genv,\rho},s_1}{\state{\genv'',\rho''}} \\
+ \eval{\state{\genv'',\rho''},s_2}{\state{\genv',\rho'},\brk)} \\
+\hline
+\eval{\state{\genv,\rho},{(s_1;s_2)}}{\state{\genv',\rho'},\brk}
+\end{array} \\
+\ \\
+\hline
+\end{array}
+\end{displaymath}
+\caption{Statement Evaluation Rules}\label{fig:bigstep-statements}
+\end{figure}
+

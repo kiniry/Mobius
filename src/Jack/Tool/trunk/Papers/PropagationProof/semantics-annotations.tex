@@ -1,0 +1,77 @@
+%%%%%%
+%%%%%%  Natural Semantics
+\begin{figure}[tbp]
+\begin{displaymath}
+\begin{array}{c}
+\hline
+\ \\
+%% call function
+\begin{array}{l}
+\mathit{call}(P,\genv,s_0,\vec{x},\vec{c})  =  \state{\genv',\rho'} \\
+\;\;\;\;\mbox{where } \rho'' = \bot[x_i \mapsto c_i] \wedge 
+      \eval{\state{\genv,\rho''},s_0}{\state{\genv',\rho'},\retval{}} \\
+\mathit{call}(P,\genv,\bot,\vec{x},\vec{c}) =  \state{\means{m}(\genv,\vec{c}),\bot}
+\end{array} \\
+\ \\
+\multicolumn{1}{l}{%
+\mbox{Let: }s = m(e_1,\ldots,e_{|m|}), \|m\| = \langle p,\bar{s}_0,q,\bar{s}_1, s_\bot,\vec{x} \rangle \mbox{ and } \vec{c} = c_1 \cons \ldots \cons c_{|m|}:} \\
+\ \\
+%%%% method call
+%  Method call
+\begin{array}{c}
+1 \leq i \leq |m|:\;\evale{\state{\genv,\rho},e_i}{c_i} \\
+\checktrue{\state{\genv,[\vec{x} \mapsto \vec{c}]}}{p} \wedge
+\eval{\genv,\bar{s}_0}{\genv_0} \\
+\state{\genv',\rho'} = \mathit{call}(P,\genv_0,s_\bot,\vec{x},\vec{c}) \\
+\checktrue{\state{\genv',\rho'}}{q} \wedge 
+\eval{\genv',\bar{s}_1}{\genv_1}   \\
+\hline
+\eval{\state{\genv,\rho},s}{\state{\genv_1,\rho}}
+\end{array} 
+\;\;
+%%%% method call - failure
+\begin{array}{c}
+1 \leq i \leq |m|:\;\eval{\state{\genv,\rho},e_i}{c_i} \\
+\checktrue{\state{\genv,[\vec{x} \mapsto \vec{c}]}}{\neg p} \\
+\hline
+\eval{\state{\genv,\rho},m(e_1,\ldots,e_{|m|})}{\state{\genv',\rho},\assertval{}}
+\end{array} \\
+\ \\
+\begin{array}{c}
+1 \leq i \leq |m|:\;\evale{\state{\genv,\rho},e_i}{c_i} \\
+\checktrue{\state{\genv,[\vec{x} \mapsto \vec{c}]}}{p} \wedge
+\eval{\genv,\bar{s}_0}{\genv_0} \\
+\state{\genv',\rho'} = \mathit{call}(P,\genv_0,s_\bot,\vec{x},\vec{c}) \\
+\checktrue{\state{\genv',\rho'}}{\neg q} \\
+\hline
+\eval{\state{\genv,\rho},s}{\state{\genv',\rho'},\assertval{}} 
+\end{array} \\
+\ \\
+\multicolumn{1}{l}{\mbox{Guard Statements:}} \\
+\ \\
+% assert - true
+\begin{array}{c}
+\checktrue{\state{\genv,\rho}}{b} \\
+\hline
+\eval{\state{\genv,\rho},\texttt{assert}\;b}{\state{\genv,\rho}}
+\end{array}
+\;\;\;\;\;\;
+% assert -false
+\begin{array}{c}
+\checktrue{\state{\genv,\rho}}{\neg b} \\
+\hline
+\eval{\state{\genv,\rho},\texttt{assert}\;b}{\state{\genv,\rho},\assertval{}}
+\end{array} \\
+\ \\
+% set
+\begin{array}{c}
+\eval{\state{\genv,\rho},e_i}{c_i} \\
+\hline
+\eval{\state{\genv,\rho},\texttt{set}\;(X_i:=e_i)^*}{\state{\genv[X_i \mapsto c_i],\rho}}
+\end{array} \\
+\ \\
+\hline
+\end{array}
+\end{displaymath}
+\caption{Execution Rules - Guard Statements and Annotated Methods}\label{fig:bigstep-annotations}
+\end{figure}
