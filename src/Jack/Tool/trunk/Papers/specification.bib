@@ -1,4 +1,4 @@
-@STRING{ENTCS   = "Elect. Notes in Theor. Comp. Sci."}
+@STRING{ENTCS   = "ENTCS"}
 @string{elsevier="Elsevier  Publishing"}
 @string {LNCS           = {LNCS}}
 @string{springer        = {Springer}}%{Springer-Verlag}}            %
@@ -12,26 +12,17 @@
   title = 	 {The Timeless Way of Building},
   publisher = 	 {Oxford University Press},
   year = 	 {1979},
-  OPTkey = 	 {},
-  OPTvolume = 	 {},
-  OPTnumber = 	 {},
-  OPTseries = 	 {},
-  OPTaddress = 	 {},
-  OPTedition = 	 {},
-  OPTmonth = 	 {},
-  OPTnote = 	 {},
-  OPTannote = 	 {}
 }
 
-@inproceedings{bartetzko01assertions,
-    author = {Detlef Bartetzko and Clemens Fischer and Michael M\"oller and Heike Wehrheim},
+@journal{bartetzko01assertions,
+    author = {Detlef Bartetzko and Clemens Fischer and Michael M{"o}ller and 
+              Heike Wehrheim},
     title = {{Jass~{--}~Java with Assertions}},
-    booktitle = {{Runtime Verification}},
-    series = {Elect. Notes in Theor. Comp. Sci.},
-    number = {55},
-    publisher = {Elsevier Publishing},
-    editor = {K. Havelund
- and G. Rosu},
+    journal = ENTCS,
+    volume = {55},
+    issue = {2},
+    publisher = elsevier,
+    editor = {Klaus Havelund and Grigore Rosu},
     year = {2001}
 }
 
@@ -41,8 +32,8 @@
                   Application Identifier Class}},
   EDITOR =       {I. Attali and T. Jensen},
   BOOKTITLE =    {Java on Smart Cards: Programming and Security},
-  SERIES =       {LNCS},
-  NUMBER =       {2041},
+  SERIES =       LNCS,
+  number =       {2041},
   PAGES =        {137--150},
   PUBLISHER =    {Springer},
   YEAR =         2001
@@ -60,7 +51,7 @@
 title = {{Specifying and Verifying an Example: a decimal representation in Java for smartcards }},
 author = "C. Breunesse and B. Jacobs and Berg, J. van den",
 year = 2002,
-booktitle = "Annual Verificard Meeting",
+booktitle = "Annual VerifiCard Meeting",
 note = "To appear"
 }
 
@@ -82,66 +73,29 @@ year = 2002
   title = 	 {{Expressing Checkable Properties of Dynamic Systems: the Bandera Specification Language}},
   institution =  {Kansas State University, Department of Computing and Information Sciences},
   year = 	 {2001},
-  OPTkey = 	 {},
-  OPTtype = 	 {},
   number = 	 {2001-04},
-  OPTaddress = 	 {},
-  OPTmonth = 	 {},
-  OPTnote = 	 {},
-  OPTannote = 	 {}
 }
 
 @InProceedings{CorbettDHLPRZ00,
   author = 	 {J. Corbett and M. Dwyer and J. Hatcliff and S. Laubach and C. P\u as\u areanu and Robby and H. Zheng},
-  title = 	 {{Bandera: Extracting Finite-state Models from Java Source Code}},
-  booktitle = 	 {proceedings of 22nd International Conference on Software Engineering},
-  OPTcrossref =  {},
-  OPTkey = 	 {},
+  booktitle = 	 {22nd International Conference on Software Engineering},
   pages = 	 {439--448},
   year = 	 {2000},
-  OPTeditor = 	 {},
-  OPTvolume = 	 {},
-  OPTnumber = 	 {},
-  OPTseries = 	 {},
-  OPTaddress = 	 {},
   month = 	 {June},
-  OPTorganization = {},
-  OPTpublisher = {},
-  OPTnote = 	 {},
-  OPTannote = 	 {}
 }
 
 @InProceedings{DwyerAC98,
   author = 	 {M. Dwyer and G. Avrunin and J. Corbett},
-  title = 	 {{Property Specification Patterns for Finite-state Verification}},
-  booktitle = 	 {proceedings of 2nd Workshop on Formal Methods in Software Practice},
-  OPTcrossref =  {},
-  OPTkey = 	 {},
+  booktitle = 	 {2nd Workshop on Formal Methods in Software Practice},
   pages = 	 {7--15},
   year = 	 {1998},
-  OPTeditor = 	 {},
-  OPTvolume = 	 {},
-  OPTnumber = 	 {},
-  OPTseries = 	 {},
-  OPTaddress = 	 {},
+  title = 	 {{Property Specification Patterns for Finite-state Verification}},
+  pages = 	 {7--15},
+  year = 	 {1998},
   month = 	 {March},
-  OPTorganization = {},
-  OPTpublisher = {},
-  OPTnote = 	 {},
-  OPTannote = 	 {}
 }
 
 
-@Misc{Dwyer00,
-  key = 	 {spec},
-  OPTauthor = 	 {},
-  title = 	 {{A Specification Pattern System}},
-  OPThowpublished = {},
-  OPTmonth = 	 {},
-  OPTyear = 	 {},
-  note = 	 {\texttt{http://www.cis.ksu.edu/santos/spec-patterns/}},
-  OPTannote = 	 {}
-}
 
 @misc{ESCJavaUrl,
 title        = {{Extended static checking for Java}},
@@ -162,7 +116,7 @@ author = {C. Flanagan and K.R.M. Leino},
 booktitle = {Formal Methods Europe 2001 (FME'01): 
 Formal Methods for Increasing Software Productivity}, 
 editor = {J.N. Oliveira and P. Zave},
-series = lncs,
+series = LNCS,
 number = 2021,
 publisher = springer,
 year = 2001,
@@ -170,24 +124,12 @@ pages = {500--517}
 }
 
 
-@InProceedings{JacobsMP01,
+@article{JacobsMP01,
   author = 	 {B. Jacobs and H. Meijer and E. Poll},
-  title = 	 {Verificard: a {European Project for Smart Card Verification}},
-  booktitle = 	 {Newsletter 5 of the Dutch Association for Theoretical Computer Science},
-  OPTcrossref =  {},
-  OPTkey = 	 {},
-  OPTpages = 	 {},
+  title = 	 {{VerifiCard}: a {European Project for Smart Card Verification}},
+  journal = 	 {Newsletter of the Dutch Association for Theoretical Computer Science ({NVTI})},
+  volume = 5,
   year = 	 {2001},
-  OPTeditor = 	 {},
-  OPTvolume = 	 {},
-  OPTnumber = 	 {},
-  OPTseries = 	 {},
-  OPTaddress = 	 {},
-  OPTmonth = 	 {},
-  OPTorganization = {},
-  OPTpublisher = {},
-  OPTnote = 	 {},
-  OPTannote = 	 {}
 }
 
 @INPROCEEDINGS{JacobsP01a,
@@ -233,12 +175,6 @@ YEAR         = 2001}
   title = 	 {{Reasoning about Java Programs in Higher Order Logic with PVS and Isabelle}},
   school = 	 {University of Nijmegen},
   year = 	 {2000},
-  OPTkey = 	 {},
-  OPTtype = 	 {},
-  OPTaddress = 	 {},
-  OPTmonth = 	 {},
-  OPTnote = 	 {},
-  OPTannote = 	 {}
 }
 
 
@@ -247,20 +183,11 @@ YEAR         = 2001}
   author = 	 {M. Huisman and B. Jacobs},
   title = 	 {{Java Program Verification via a Hoare Logic with Abrupt Termination}},
   booktitle = 	 {Fundamental Approaches to Software Engineering},
-  OPTcrossref =  {},
-  OPTkey = 	 {},
   pages = 	 {284-303},
   year = 	 {2000},
-  OPTeditor = 	 {},
-  OPTvolume = 	 {},
   number = 	 {1783},
-  series = 	 {LNCS},
-  OPTaddress = 	 {},
-  OPTmonth = 	 {},
-  OPTorganization = {},
-  publisher = {Springer},
-  OPTnote = 	 {},
-  OPTannote = 	 {}
+  series = 	 LNCS,
+  publisher = springer,
 }
 
 @TechReport{LeavensBR99,
@@ -340,6 +267,11 @@ pages = "63--77"
 }
 
 
+@misc{PatternsURL,
+  key = {Patterns},
+  title = 	 {A system of specification patterns},
+  note = {\texttt{http://www.cis.ksu.edu/~dwyer/spec-patterns.html}}
+}
 
 @inproceedings{PollBergJacobs99,
         author    = {E. Poll and J. van den Berg and B. Jacobs},
@@ -365,12 +297,6 @@ note    = {\\\texttt{http://www.gemplus.com/smart/r\_d/publications/case-study/}
   title = 	 {{Bandera Specification Language: a Specification Language for Software Model Checking}},
   school = 	 {Kansas State University},
   year = 	 {2000},
-  OPTkey = 	 {},
-  OPTtype = 	 {},
-  OPTaddress = 	 {},
-  OPTmonth = 	 {},
-  OPTnote = 	 {},
-  OPTannote = 	 {}
 }
 
 
