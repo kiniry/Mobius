@@ -238,12 +238,15 @@ public class TagConstants extends javafe.tc.TagConstants
     // \lblpos -- an ESC keyword
     // \lockset -- an ESC keyword
     // \max -- an ESC keyword 
-    public static final int MIN = IS_INITIALIZED + 1;
+    public static final int MAXQUANT = IS_INITIALIZED + 1;
+    public static final int MIN = MAXQUANT + 1;
     // \nonnullelements -- an ESC keyword
     public static final int NOTHING = MIN + 1;
     public static final int NOT_MODIFIED = NOTHING + 1;
     public static final int NOT_SPECIFIED = NOT_MODIFIED + 1;
-    public static final int NUM_OF = NOT_SPECIFIED + 1;
+    public static final int WACK_NOWARN = NOT_SPECIFIED + 1;
+    public static final int NOWARN_OP = WACK_NOWARN + 1;
+    public static final int NUM_OF = NOWARN_OP + 1;
     // \old -- an ESC keyword
     public static final int OTHER = NUM_OF + 1;
     public static final int PRIVATE_DATA = OTHER + 1;
@@ -257,7 +260,9 @@ public class TagConstants extends javafe.tc.TagConstants
     // \type -- an ESC keyword
     // \typeof -- an ESC keyword
     // \TYPE -- an ESC keyword
-    public static final int WACK_WORKING_SPACE = SUM + 1;
+    public static final int WARN = SUM + 1;
+    public static final int WARN_OP = WARN + 1;
+    public static final int WACK_WORKING_SPACE = WARN_OP + 1;
 
     public static final int ABRUPT_BEHAVIOR = WACK_WORKING_SPACE + 1;
     public static final int ACCESSIBLE_REDUNDANTLY = ABRUPT_BEHAVIOR + 1;
@@ -791,10 +796,13 @@ public class TagConstants extends javafe.tc.TagConstants
         Identifier.intern("\\fields_of"),
         Identifier.intern("\\invariant_for"),
         Identifier.intern("\\is_initialized"),
+        Identifier.intern("\\max"),
         Identifier.intern("\\min"),
         Identifier.intern("\\nothing"),
         Identifier.intern("\\not_modified"),
         Identifier.intern("\\not_specified"),
+	Identifier.intern("\\nowarn"),
+	Identifier.intern("\\nowarn_op"),
         Identifier.intern("\\num_of"),
         Identifier.intern("\\other"),
         Identifier.intern("\\private_data"),
@@ -804,6 +812,8 @@ public class TagConstants extends javafe.tc.TagConstants
         Identifier.intern("\\space"),
         Identifier.intern("\\such_that"),
         Identifier.intern("\\sum"),
+	Identifier.intern("\\warn"),
+	Identifier.intern("\\warn_op"),
         Identifier.intern("\\working_space"),
         Identifier.intern("abrupt_behavior"),
         Identifier.intern("accessible_redundantly"),

@@ -88,6 +88,12 @@ GoodJmlPragmas.j:155: /*@ when_redundantly predicate; */
 GoodJmlPragmas.j:157: /*@ working_space_redundantly \not_specified; */
 GoodJmlPragmas.j:158: /*@ working_space_redundantly spec_expression_of_type_int; */
 GoodJmlPragmas.j:159: /*@ working_space_redundantly spec_expression_of_type_int if predicate; */
+GoodJmlPragmas.j:161: /*@ duration \duration(bar()); */
+GoodJmlPragmas.j:162: /*@ duration \duration(Foo.bar()); */
+GoodJmlPragmas.j:163: /*@ duration \duration(this.foo()); */
+GoodJmlPragmas.j:164: /*@ duration \duration(super.foo()); */
+GoodJmlPragmas.j:165: /*@ working_space \space(Foo.bar()); */
+GoodJmlPragmas.j:166: /*@ working_space \working_space(Foo.bar()); */
 GoodJmlPragmas.j:168: /*@ duration \not_specified; */
 GoodJmlPragmas.j:169: /*@ duration spec_expression; */
 GoodJmlPragmas.j:170: /*@ duration spec_expression if predicate; */

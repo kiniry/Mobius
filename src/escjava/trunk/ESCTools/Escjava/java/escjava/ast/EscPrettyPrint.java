@@ -712,6 +712,13 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
     case TagConstants.ELEMSNONNULL:
     case TagConstants.ELEMTYPE:
     case TagConstants.FRESH:
+    case TagConstants.WACK_NOWARN:
+    case TagConstants.NOWARN_OP:
+    case TagConstants.WARN:
+    case TagConstants.WARN_OP:
+    case TagConstants.WACK_DURATION:
+    case TagConstants.WACK_WORKING_SPACE:
+    case TagConstants.SPACE:
     case TagConstants.MAX:
     case TagConstants.PRE:
     case TagConstants.TYPEOF:
@@ -732,6 +739,56 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
       break;
     }
 
+    case TagConstants.NUM_OF:{
+      NumericalQuantifiedExpr qe = (NumericalQuantifiedExpr)e;
+      write(o, "(");
+      write(o, TagConstants.toString(tag));
+      write(o, " ");
+      String prefix = "";
+      for( int i=0; i<qe.vars.size(); i++) {
+	GenericVarDecl decl = qe.vars.elementAt(i);
+	write(o, prefix );
+	if (i == 0) self.print(o, decl.type);
+	write(o, ' ');
+	if (escjava.Main.options().nvu)
+	  write(o, decl.id.toString());
+	else
+	  write(o, escjava.translate.UniqName.variable(decl));
+	prefix = ", ";
+      }
+      write(o, "; ");
+      self.print(o, ind, qe.expr);
+      write(o, ')');
+      break;
+    }
+
+    case TagConstants.SUM:
+    case TagConstants.PRODUCT:
+    case TagConstants.MIN:
+    case TagConstants.MAXQUANT:{
+      GeneralizedQuantifiedExpr qe = (GeneralizedQuantifiedExpr)e;
+      write(o, "(");
+      write(o, TagConstants.toString(tag));
+      write(o, " ");
+      String prefix = "";
+      for( int i=0; i<qe.vars.size(); i++) {
+	GenericVarDecl decl = qe.vars.elementAt(i);
+	write(o, prefix );
+	if (i == 0) self.print(o, decl.type);
+	write(o, ' ');
+	if (escjava.Main.options().nvu)
+	  write(o, decl.id.toString());
+	else
+	  write(o, escjava.translate.UniqName.variable(decl));
+	prefix = ", ";
+      }
+      write(o, "; ");
+      self.print(o, ind, qe.expr);
+      write(o, "; ");
+      self.print(o, ind, qe.rangeExpr);
+      write(o, ')');
+      break;
+    }
     case TagConstants.FORALL:
     case TagConstants.EXISTS: {
       QuantifiedExpr qe = (QuantifiedExpr)e;
@@ -742,7 +799,7 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
       for( int i=0; i<qe.vars.size(); i++) {
 	GenericVarDecl decl = qe.vars.elementAt(i);
 	write(o, prefix );
-	self.print(o, decl.type);
+	if (i == 0) self.print(o, decl.type);
 	write(o, ' ');
 	if (escjava.Main.options().nvu)
 	  write(o, decl.id.toString());

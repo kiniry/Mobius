@@ -637,6 +637,12 @@ public class AnnotationHandler {
 			    Location.toFileLineString(c.decl.loc) + ")");
 		    }
 		    break;
+		case TagConstants.WACK_DURATION:
+		case TagConstants.WACK_WORKING_SPACE:
+		case TagConstants.SPACE:
+		    // The argument of these built-in functions is not
+		    // evaluated, so it need not be pure.
+		    return;
 	    }
 	    {
 		    int n = x.childCount();

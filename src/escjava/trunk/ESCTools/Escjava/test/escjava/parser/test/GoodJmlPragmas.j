@@ -158,12 +158,12 @@
 //@ working_space_redundantly spec_expression_of_type_int;
 //@ working_space_redundantly spec_expression_of_type_int if predicate;
 
-//@ \duration(bar());
-//@ \duration(Foo.bar());
-//@ \duration(this.foo());
-//@ \duration(super.foo());
-//@ \space(Foo.bar());
-//@ \working_space(Foo.bar());
+//@ duration \duration(bar());
+//@ duration \duration(Foo.bar());
+//@ duration \duration(this.foo());
+//@ duration \duration(super.foo());
+//@ working_space \space(Foo.bar());
+//@ working_space \working_space(Foo.bar());
 
 //@ duration \not_specified;
 //@ duration spec_expression;

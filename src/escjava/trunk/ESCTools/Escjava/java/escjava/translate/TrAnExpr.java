@@ -313,10 +313,28 @@ public final class TrAnExpr {
       case TagConstants.TYPEEXPR:
 	return e;
 
+      case TagConstants.NUM_OF:
+      case TagConstants.MIN:
+      case TagConstants.MAXQUANT:
+      case TagConstants.SUM:
+      case TagConstants.PRODUCT:
+	{
+	    // FIXME - ignore these till we can figure out how to reason
+	    return LiteralExpr.make(TagConstants.INTLIT,new Integer(0),Location.NULL);
+        }
+
       case TagConstants.FORALL:
       case TagConstants.EXISTS: {
-	if (Main.options().nestQuantifiers) {
 	  QuantifiedExpr qe = (QuantifiedExpr)e;
+	if (qe.vars.size() != 1) {
+	  int locStart = e.getStartLoc();
+	  int locEnd = e.getEndLoc();
+
+	  Expr goodTypes = GC.truelit;
+	  Expr body = trSpecExpr(qe.expr, sp, st);
+	  return GC.quantifiedExpr(locStart, locEnd, tag,
+				   qe.vars, body, null);
+	} else if (Main.options().nestQuantifiers) {
 	  GenericVarDecl decl = qe.vars.elementAt(0);
 
 	  Assert.notFalse(sp == null || ! sp.contains(decl));
@@ -345,7 +363,6 @@ public final class TrAnExpr {
 	  else
 	    op = TagConstants.BOOLAND;
 
-	  QuantifiedExpr qe = (QuantifiedExpr)e;
 	  GenericVarDeclVec dummyDecls = GenericVarDeclVec.make();
 	  Expr goodTypes = GC.truelit;
 	  while (true) {
@@ -433,6 +450,23 @@ wrap those variables being modified and not everything.
 	BinaryExpr be = (BinaryExpr)e;
 // FIXME
 	return be.left;
+
+      case TagConstants.NOWARN_OP:
+      case TagConstants.WACK_NOWARN:
+      case TagConstants.WARN_OP:
+      case TagConstants.WARN:
+      {
+	// FIXME - set these as a pass through for now
+	NaryExpr ne = (NaryExpr)e;
+	return trSpecExpr(ne.exprs.elementAt(0), sp, st);
+      }
+
+      case TagConstants.SPACE:
+      case TagConstants.WACK_WORKING_SPACE:
+      case TagConstants.WACK_DURATION:
+	// FIXME - translation of these is not implemented.
+	// Set it to (long)0 for now.
+	return LiteralExpr.make(TagConstants.LONGLIT, new Long(0), 0);
 
       default:
 	Assert.fail("UnknownTag<"+e.getTag()+","+

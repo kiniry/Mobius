@@ -159,6 +159,88 @@ public class Substitute {
 	break;
       }
 
+    case TagConstants.NUM_OF:
+      {
+	NumericalQuantifiedExpr qe = (NumericalQuantifiedExpr)e;
+
+	// this routine requires that the bound variables of the quantified
+	// expression not occur as left-hand sides of the substitution,
+	// so here's a run-time check of this condition
+	for(int i=0; i<qe.vars.size(); i++) {
+	  Assert.notFalse( !subst.contains( qe.vars.elementAt(i) ));
+	}
+
+	// the routine also requires that the variables in the right-hand
+	// sides of the substitution are not captured by the quantified
+	// expression, so here's a check for that
+	if (rhsVars.s == null) {
+	  rhsVars.s = new Set();
+	  for (Enumeration enum = subst.elements(); enum.hasMoreElements(); ) {
+	    Expr ee = (Expr)enum.nextElement();
+	    rhsVars.s.union(freeVars(ee));
+	  }
+	}
+	for (int i = 0; i < qe.vars.size(); i++) {
+	  Assert.notFalse(!rhsVars.s.contains(qe.vars.elementAt(i)));
+	}
+
+	ExprVec newNopats;
+	if (qe.nopats == null) {
+	  newNopats = null;
+	} else {
+	  newNopats = ExprVec.make(qe.nopats.size());
+	  for (int i = 0; i < qe.nopats.size(); i++) {
+	    newNopats.addElement(doSubst(subst, qe.nopats.elementAt(i), rhsVars));
+	  }
+	}
+	result = NumericalQuantifiedExpr.make( qe.sloc, qe.eloc, qe.quantifier,
+		  	   	      qe.vars, doSubst(subst,qe.expr,rhsVars),
+				      newNopats);
+	break;
+      }
+    case TagConstants.MAXQUANT:
+    case TagConstants.MIN:
+    case TagConstants.SUM:
+    case TagConstants.PRODUCT:
+      {
+	GeneralizedQuantifiedExpr qe = (GeneralizedQuantifiedExpr)e;
+
+	// this routine requires that the bound variables of the quantified
+	// expression not occur as left-hand sides of the substitution,
+	// so here's a run-time check of this condition
+	for(int i=0; i<qe.vars.size(); i++) {
+	  Assert.notFalse( !subst.contains( qe.vars.elementAt(i) ));
+	}
+
+	// the routine also requires that the variables in the right-hand
+	// sides of the substitution are not captured by the quantified
+	// expression, so here's a check for that
+	if (rhsVars.s == null) {
+	  rhsVars.s = new Set();
+	  for (Enumeration enum = subst.elements(); enum.hasMoreElements(); ) {
+	    Expr ee = (Expr)enum.nextElement();
+	    rhsVars.s.union(freeVars(ee));
+	  }
+	}
+	for (int i = 0; i < qe.vars.size(); i++) {
+	  Assert.notFalse(!rhsVars.s.contains(qe.vars.elementAt(i)));
+	}
+
+	ExprVec newNopats;
+	if (qe.nopats == null) {
+	  newNopats = null;
+	} else {
+	  newNopats = ExprVec.make(qe.nopats.size());
+	  for (int i = 0; i < qe.nopats.size(); i++) {
+	    newNopats.addElement(doSubst(subst, qe.nopats.elementAt(i), rhsVars));
+	  }
+	}
+	result = GeneralizedQuantifiedExpr.make( qe.sloc, qe.eloc, qe.quantifier,
+			  qe.vars, doSubst(subst,qe.expr,rhsVars),
+			    doSubst(subst, qe.rangeExpr,rhsVars),
+			  newNopats);
+	break;
+      }
     case TagConstants.FORALL:
     case TagConstants.EXISTS:
       {

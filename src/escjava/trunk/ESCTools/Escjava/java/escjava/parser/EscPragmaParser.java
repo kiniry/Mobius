@@ -193,7 +193,7 @@ import java.util.Vector;
  JmlSpecExpr ::= '\nothing' | '\everything' | '\not_specified'
 
  Function ::= '\fresh' | '\nonnullelements' | '\elemtype' | '\max' | '\old'
- | '\typeof' | '\not_modified'
+ | '\typeof' | '\not_modified' | '\nowarn' | '\nowarn_op' | '\warn' | '\warn_op'
 
  UnOp ::= '+' | '-' | '!' | '~'
 
@@ -425,7 +425,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
         final String startEnclosedPragma = "<esc>";
         final String endEnclosedPragma = "</esc>";
 
-        int startLoc = scanFor(pendingJavadocComment, startEnclosedPragma);
+	int startLoc = scanFor(pendingJavadocComment, startEnclosedPragma);
         if (startLoc == Location.NULL) {
             pendingJavadocComment = null;
             inProcessTag = NOTHING_ELSE_TO_PROCESS;
@@ -529,7 +529,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
 	    return startLoc;
 	}
     }
-	    
+
     /**
      * Closes this pragma parser including its scanner and pending Javadoc comment.
      */
@@ -831,8 +831,6 @@ public class EscPragmaParser extends Parse implements PragmaParser
                     scanner.lexicalPragmas.addElement( 
 			  ImportPragma.make(parseImportDeclaration(scanner),
                                                                         loc));
-// FIXME - the next line doesn't eat the semicolon ????
-                    semiNotOptional = true;
                     return getNextPragma(dst);
 
                 case TagConstants.MODEL:
@@ -841,7 +839,6 @@ public class EscPragmaParser extends Parse implements PragmaParser
 			scanner.lexicalPragmas.addElement( 
                                                           ImportPragma.make(parseImportDeclaration(scanner),
                                                                             loc));
-			semiNotOptional = true;
 			return getNextPragma(dst);
 		    }
 		    prefixModifiers |= Modifiers.ACC_MODEL;
@@ -853,8 +850,8 @@ public class EscPragmaParser extends Parse implements PragmaParser
 		    int modifiers = parseModifiers(scanner,true);
 		    if ((modifiers & prefixModifiers) != 0) {
 			ErrorSet.warning(loc,
-                                         TagConstants.toString(tag) +
-                                         " annotation has a repeated access modifier");
+			     TagConstants.toString(tag) +
+			     " annotation has a repeated access modifier");
 		    }
 		    modifiers |= prefixModifiers;
 			
@@ -875,8 +872,8 @@ public class EscPragmaParser extends Parse implements PragmaParser
                     int locAssignOp = Location.NULL;
 		    if (scanner.ttype == TagConstants.LPAREN) {
 			if (tag == TagConstants.GHOST) {
-			    ErrorSet.error(loc,
-                                           "A method may not be declared ghost");
+			    ErrorSet.error(loc, 
+				"A method may not be declared ghost");
 			}
 			// Must be a model method
 			// FIXME - note - cannot have a ghost method
@@ -1112,148 +1109,6 @@ public class EscPragmaParser extends Parse implements PragmaParser
                     dst.auxVal = pragma;
                     semiNotOptional = true;
                     break;
-                }
-
-                case TagConstants.FIELDS_OF:
-                    // SC AAST 4 parsed and discarded, unknown semantics (kiniry)
-                    // FieldsOfExpr ::= '\fields_of' '(' SpecExpr [ ',' Idn [ ',' StoreRefExpr ] ] ')' ';'
-                    parseFieldsOfExpr(scanner);
-                    noteUnsupportedCheckableJmlPragma(loc, tag);
-                    return getNextPragma(dst);
-                                                                                     
-                case TagConstants.INVARIANT_FOR: {
-                    // SC AAST 4, parsed and discarded (kiniry)
-                    // InvariantFor ::= '\invariant_for' '(' SpecExpr ')' ';'
-                    dst.ttype = TagConstants.MODIFIERPRAGMA;
-                    expect(scanner, TagConstants.LPAREN);                    
-                    Expr expr = parseExpression(scanner);
-                    expect(scanner, TagConstants.RPAREN);
-                    expect(scanner, TagConstants.SEMICOLON);
-                    dst.auxVal = ExprModifierPragma.make(TagConstants.INVARIANT_FOR, 
-                                                         expr, loc);
-                    noteUnsupportedCheckableJmlPragma(loc, tag);
-                    return getNextPragma(dst);
-                }
-
-                case TagConstants.SPACE: {
-                    // SC HPT 2, parsed and discarded, unclear semantics (kiniry)
-                    // SpaceExpr ::= '\space' '(' SpecExpr ')'
-                    dst.ttype = TagConstants.MODIFIERPRAGMA;
-                    noteUnsupportedCheckableJmlPragma(loc, tag);
-                    expect(scanner, TagConstants.LPAREN);
-                    Expr expr = parseExpression(scanner);
-                    expect(scanner, TagConstants.RPAREN);
-                    expect(scanner, TagConstants.SEMICOLON);
-                    dst.auxVal = ExprModifierPragma.make(TagConstants.SPACE, 
-                                                         expr, loc);
-                    return getNextPragma(dst);
-                }
-
-                case TagConstants.WACK_DURATION: {
-                    // SC HPT 2, parsed and discarded, unclear semantics (kiniry)
-                    // ::= '\duration' '(' MethodInvOrConstructor ')'
-                    dst.ttype = TagConstants.MODIFIERPRAGMA;
-                    noteUnsupportedCheckableJmlPragma(loc, tag);
-                    expect(scanner, TagConstants.LPAREN);
-                    Expr expr = parsePrimaryExpression(scanner);
-                    expect(scanner, TagConstants.RPAREN);
-                    expect(scanner, TagConstants.SEMICOLON);
-                    dst.auxVal = ExprModifierPragma.make(TagConstants.WACK_DURATION,
-                                                         expr, loc);
-                    return getNextPragma(dst);
-                }
-
-                case TagConstants.WACK_WORKING_SPACE: {
-                    // SC HPT 2, parsed and discarded, unclear semantics (kiniry)
-                    // ::= '\working_space' '(' MethodInvOrConstructor ')'
-                    dst.ttype = TagConstants.MODIFIERPRAGMA;
-                    noteUnsupportedCheckableJmlPragma(loc, tag);
-                    expect(scanner, TagConstants.LPAREN);
-                    Expr expr = parsePrimaryExpression(scanner);
-                    expect(scanner, TagConstants.RPAREN);
-                    expect(scanner, TagConstants.SEMICOLON);
-                    dst.auxVal = 
-                        ExprModifierPragma.make(TagConstants.WACK_WORKING_SPACE,
-                                                expr, loc);
-                    return getNextPragma(dst);
-                }
-
-                case TagConstants.IS_INITIALIZED: {
-                    // SC AAST 3, parsed and discarded, unclear semantics (kiniry)
-                    // IsInitializedExpr ::= '\is_initialized' '(' Idn ')' ';'
-                    dst.ttype = TagConstants.MODIFIERPRAGMA;
-                    noteUnsupportedCheckableJmlPragma(loc, tag);
-                    expect(scanner, TagConstants.LPAREN);
-                    Identifier identifier = parseIdentifier(scanner);
-                    expect(scanner, TagConstants.RPAREN);
-                    expect(scanner, TagConstants.SEMICOLON);
-                    dst.auxVal = 
-                        IdentifierModifierPragma.make(TagConstants.IS_INITIALIZED,
-                                                      identifier, loc);
-                    return getNextPragma(dst);
-                }
-
-                case TagConstants.OTHER:
-                    // unclear syntax and semantics, so we are not parsing at all
-                    // for now (kiniry)
-                    eatThroughSemiColon();
-                    noteUnsupportedCheckableJmlPragma(loc, tag);
-                    return getNextPragma(dst);
-
-                case TagConstants.REACH: {
-                    // SC HPT AAST 5, parsed and discarded, unclear semantics (kiniry)
-                    // ReachExpr ::= '\reach' '(' SpecExpr [ ',' Idn [ ',' StoreRefExpr ] ] ')' ';'
-                    dst.ttype = TagConstants.MODIFIERPRAGMA;
-                    noteUnsupportedCheckableJmlPragma(loc, tag);
-                    expect(scanner, TagConstants.LPAREN);
-                    Expr expr = parseExpression(scanner);
-                    Identifier identifier = null;
-                    IdentifierVec store_refs = null;
-                    if (scanner.lookahead(0) == TagConstants.COMMA) {
-                        identifier = parseIdentifier(scanner);
-                        if (scanner.lookahead(0) == TagConstants.COMMA) {
-                            // Duplicated from NoWarn parsing.
-                            seqIdentifier.push();
-                            if (scanner.ttype == TagConstants.IDENT)
-                                while (true) {
-                                    seqIdentifier.addElement(parseIdentifier(scanner));
-                                    if (scanner.ttype != TagConstants.COMMA)
-                                        break;
-                                    expect(scanner, TagConstants.COMMA);
-                                }
-                            store_refs = IdentifierVec.popFromStackVector(seqIdentifier);
-                        }
-                    }
-                    expect(scanner, TagConstants.RPAREN);
-                    expect(scanner, TagConstants.SEMICOLON);
-                    dst.auxVal = ReachModifierPragma.make(expr, identifier, 
-                                                          store_refs, loc);
-                    return getNextPragma(dst);
-                }
-
-                case TagConstants.NUM_OF: {
-                    // SC HPT AAST 3, parsed and discarded (kiniry)
-                    noteUnsupportedCheckableJmlPragma(loc, tag);
-                    int locOpenParen = scanner.startingLoc;
-                    Type type = parseType(scanner);
-                    GCExpr num_quant_expr = parseQuantifierRemainder(scanner, tag, 
-                                                                     type, locOpenParen);
-                    dst.auxVal = num_quant_expr;
-                    return getNextPragma(dst);
-                }
-
-                case TagConstants.MAX:                      // SC HPT AAST 3
-                case TagConstants.MIN:                  // SC HPT AAST 3
-                case TagConstants.PRODUCT:              // SC HPT AAST 3
-                case TagConstants.SUM: {                // SC HPT AAST 3
-                    // parsed and discarded (kiniry)
-                    noteUnsupportedCheckableJmlPragma(loc, tag);
-                    int locOpenParen = scanner.startingLoc;
-                    Type type = parseType(scanner);
-                    GCExpr gen_quant_expr = parseQuantifierRemainder(scanner, tag, 
-                                                                     type, locOpenParen);
-                    dst.auxVal = gen_quant_expr;
-                    return getNextPragma(dst);
                 }
 
                 case TagConstants.REFINE:
@@ -1720,17 +1575,32 @@ public class EscPragmaParser extends Parse implements PragmaParser
                                     break;
                                 }
 
+				case TagConstants.WACK_NOWARN:
+				case TagConstants.NOWARN_OP:
+				case TagConstants.WARN:
+				case TagConstants.WARN_OP:
                                 case TagConstants.FRESH: 
                                 case TagConstants.ELEMSNONNULL:
                                 case TagConstants.ELEMTYPE:
                                 case TagConstants.MAX: 
-                                case TagConstants.PRE:
+                                case TagConstants.PRE: // \\old
                                 case TagConstants.TYPEOF: {
 				    l.getNextToken();
                                     ExprVec args = parseExpressionList(l, TagConstants.RPAREN);
                                     primary = NaryExpr.make(loc, l.startingLoc, tag, null, args);
                                     break;
                                 }
+
+				case TagConstants.WACK_DURATION:
+				case TagConstants.WACK_WORKING_SPACE:
+				case TagConstants.SPACE:
+				{
+				    l.getNextToken();
+                                    ExprVec args = parseExpressionList(l, TagConstants.RPAREN);
+                                    primary = NaryExpr.make(loc, l.startingLoc, tag, null, args);
+                                    break;
+
+				}
                                     
                                 default:
                                     // parseArgumentList requires that the scanner (l) must
@@ -1783,6 +1653,11 @@ public class EscPragmaParser extends Parse implements PragmaParser
                     if (l.ttype == TagConstants.IDENT) {
                         Identifier kw = l.identifierVal;
                         int tag = TagConstants.fromIdentifier(kw);
+			// If \max is followed by a ( then it is a function,
+			// otherwise it is a quantifier and we change the tag.
+			if (tag == TagConstants.MAX &&
+				l.lookahead(1) != TagConstants.LPAREN)
+					tag = TagConstants.MAXQUANT;
                         if ((tag == TagConstants.LBLPOS || tag == TagConstants.LBLNEG) &&
                             l.lookahead(1) == TagConstants.IDENT) {
                             regularParenExpr = false;
@@ -1795,6 +1670,11 @@ public class EscPragmaParser extends Parse implements PragmaParser
                                                      pos, label, e);
                             expect(l, TagConstants.RPAREN);
                         } else if (tag == TagConstants.FORALL || 
+				   tag == TagConstants.MIN ||
+				   tag == TagConstants.MAXQUANT ||
+				   tag == TagConstants.NUM_OF ||
+				   tag == TagConstants.SUM ||
+				   tag == TagConstants.PRODUCT ||
                                    tag == TagConstants.EXISTS) {
                             int lookahead = l.lookahead(1);
                             if (lookahead == TagConstants.IDENT ||
@@ -1885,15 +1765,29 @@ public class EscPragmaParser extends Parse implements PragmaParser
         GenericVarDeclVec vs = GenericVarDeclVec.make();
         vs.addElement(v);
     
+	while (l.ttype == TagConstants.COMMA) {
+	    l.getNextToken(); // skip comma
+	    idLoc = l.startingLoc;
+	    idn = parseIdentifier(l);
+	    v = LocalVarDecl.make(0, null, idn, type, idLoc,
+                                           null, Location.NULL);
+	    vs.addElement(v);
+        }
+
+	int locSemi = Location.NULL;
         int endLoc = 0 /*@ uninitialized @*/;
+	Expr rangeExpr = null;
         Expr rest = null /*@ uninitialized @*/;
+
+/*
         if (l.ttype == TagConstants.COMMA) {
             l.getNextToken();
             GCExpr quant_expr_r = parseQuantifierRemainder(l, tag, type, Location.NULL);
             rest = quant_expr_r;
             endLoc = quant_expr_r.eloc;
-        } else if (l.ttype == TagConstants.SEMICOLON) {
+        } else */  if (l.ttype == TagConstants.SEMICOLON) {
             l.getNextToken();
+	    locSemi = l.startingLoc;
             boolean emptyRange = false;
             if (l.ttype == TagConstants.SEMICOLON) {
                 l.getNextToken();  // eat the semicolon
@@ -1902,26 +1796,31 @@ public class EscPragmaParser extends Parse implements PragmaParser
             rest = parseExpression(l);
             if (!emptyRange && l.ttype == TagConstants.SEMICOLON) {
                 // there is a nonempty range expression
-                int locSemi = l.startingLoc;
+                locSemi = l.startingLoc;
                 l.getNextToken();  // eat the semicolon
-                Expr term = parseExpression(l);
-                if (tag == TagConstants.FORALL) {
-                    rest = BinaryExpr.make(TagConstants.IMPLIES, rest, term, locSemi);
-                } else {
-                    rest = BinaryExpr.make(TagConstants.AND, rest, term, locSemi);
-                }
+		rangeExpr = rest;
+                rest = parseExpression(l);
             }
             endLoc = l.startingLoc;
             expect(l, TagConstants.RPAREN);
         } else
             ErrorSet.fatal(l.startingLoc, "Syntax error in quantified expression.");
         GCExpr returnExpr = null;
-        if (tag == TagConstants.FORALL || tag == TagConstants.EXISTS) {
+        if (tag == TagConstants.FORALL) {
+	    if (rangeExpr != null) rest = BinaryExpr.make(TagConstants.IMPLIES, rangeExpr, rest, locSemi);
             returnExpr = QuantifiedExpr.make(loc, endLoc, tag, vs, rest, null);
-        } else if (tag == TagConstants.MAX || tag == TagConstants.MIN ||
+        } else if (tag == TagConstants.EXISTS) {
+	    if (rangeExpr != null) rest = BinaryExpr.make(TagConstants.AND, rangeExpr, rest, locSemi);
+            returnExpr = QuantifiedExpr.make(loc, endLoc, tag, vs, rest, null);
+        } else if (tag == TagConstants.MAXQUANT || tag == TagConstants.MIN ||
                    tag == TagConstants.PRODUCT || tag == TagConstants.SUM) {
-            returnExpr = GeneralizedQuantifiedExpr.make(loc, endLoc, tag, vs, rest, null);
+	    if (rangeExpr == null) {
+		ErrorSet.error(locSemi, "A range predicate is required");
+		rangeExpr = LiteralExpr.make(TagConstants.BOOLEANLIT,Boolean.TRUE,Location.NULL);
+	    }
+            returnExpr = GeneralizedQuantifiedExpr.make(loc, endLoc, tag, vs, rest, rangeExpr, null);
         } else if (tag == TagConstants.NUM_OF) {
+	    if (rangeExpr != null) rest = BinaryExpr.make(TagConstants.AND, rangeExpr, rest, locSemi);
             returnExpr = NumericalQuantifiedExpr.make(loc, endLoc, tag, vs, rest, null);
         } else {
             Assert.fail("Illegal quantifier seen at location " + loc);

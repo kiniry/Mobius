@@ -145,6 +145,12 @@ public class NaryExpr extends GCExpr
       (op == TagConstants.CLASSLITERALFUNC
        || op == TagConstants.DTTFSA
        || op == TagConstants.ELEMTYPE
+       || op == TagConstants.WACK_NOWARN
+       || op == TagConstants.NOWARN_OP
+       || op == TagConstants.WARN
+       || op == TagConstants.WARN_OP
+       || op == TagConstants.WACK_DURATION
+       || op == TagConstants.WACK_WORKING_SPACE
        || op == TagConstants.FRESH
        || op == TagConstants.MAX
        || op == TagConstants.TYPEOF
@@ -181,6 +187,7 @@ public class GeneralizedQuantifiedExpr extends GCExpr
   //# int quantifier
   //# GenericVarDecl* vars
   //# Expr expr
+  //# Expr rangeExpr
   //# Expr* nopats NullOK
 
   //# ManualTag
@@ -191,7 +198,7 @@ public class GeneralizedQuantifiedExpr extends GCExpr
     boolean goodtag =
       (quantifier == TagConstants.MIN
        || quantifier == TagConstants.PRODUCT
-       || quantifier == TagConstants.MAX
+       || quantifier == TagConstants.MAXQUANT
        || quantifier == TagConstants.SUM);
     Assert.notFalse(goodtag);
   }

@@ -701,6 +701,27 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                     return e;
                 }
 
+	    case TagConstants.WACK_NOWARN:
+	    case TagConstants.NOWARN_OP:
+	    case TagConstants.WARN:
+	    case TagConstants.WARN_OP:
+	        {
+                    NaryExpr ne = (NaryExpr)e;
+		    Expr nu;
+                    if( ne.exprs.size() != 1 ) {
+                        ErrorSet.error( ne.sloc, 
+			    "The function " + TagConstants.toString(tag) + " takes only one argument");
+		    }
+		    if (ne.exprs.size() == 0) {
+			setType( e, Types.intType );
+                    } else {
+                        nu = checkExpr(env, ne.exprs.elementAt(0));
+                        ne.exprs.setElementAt( nu, 0 );			
+			setType( e, getType(nu) );
+                    }
+                    return e;
+                }
+
             case TagConstants.ELEMTYPE:
                 {
                     NaryExpr ne = (NaryExpr)e;
@@ -712,6 +733,23 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                         ne.exprs.setElementAt( nu, 0 );			
                     }
                     setType( e, Types.typecodeType );
+                    return e;
+                }
+
+	    case TagConstants.WACK_DURATION:
+	    case TagConstants.WACK_WORKING_SPACE:
+	    case TagConstants.SPACE:
+		{
+                    NaryExpr ne = (NaryExpr)e;
+                    if( ne.exprs.size() != 1 ) 
+                        ErrorSet.error( ne.sloc, 
+			    "The function " + TagConstants.toString(tag) + " takes only one argument");
+                    else {
+			// Note: the arguments are not evaluated
+                        Expr nu = checkExpr(env, ne.exprs.elementAt(0));
+                        ne.exprs.setElementAt( nu, 0 );			
+                    }
+                    setType( e, Types.longType );
                     return e;
                 }
 
@@ -807,7 +845,57 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                     return e;
                 }
 
-            case TagConstants.FORALL:
+            case TagConstants.NUM_OF:
+	        {
+                    NumericalQuantifiedExpr qe = (NumericalQuantifiedExpr)e;
+	
+                    if (!isCurrentlyPredicateContext) {
+                        ErrorSet.error(qe.getStartLoc(),
+			   "Quantified expressions are not allowed in this context");
+                    } else {
+                        Env subenv = env;
+	
+                        for( int i=0; i<qe.vars.size(); i++) {
+                            GenericVarDecl decl = qe.vars.elementAt(i);
+                            env.resolveType( decl.type );
+	    
+                            subenv = new EnvForLocals(subenv, decl);
+                        }
+                        isPredicateContext = true;
+                        qe.expr = checkExpr(subenv, qe.expr, Types.booleanType);
+                    }
+                    setType(e, Types.intType);
+                    return e;
+                }
+
+            case TagConstants.SUM:
+            case TagConstants.PRODUCT:
+            case TagConstants.MIN:
+            case TagConstants.MAXQUANT:
+                {
+                    GeneralizedQuantifiedExpr qe = (GeneralizedQuantifiedExpr)e;
+	
+                    if (!isCurrentlyPredicateContext) {
+                        ErrorSet.error(qe.getStartLoc(),
+			   "Quantified expressions are not allowed in this context");
+                    } else {
+                        Env subenv = env;
+	
+                        for( int i=0; i<qe.vars.size(); i++) {
+                            GenericVarDecl decl = qe.vars.elementAt(i);
+                            env.resolveType( decl.type );
+	    
+                            subenv = new EnvForLocals(subenv, decl);
+                        }
+                        isPredicateContext = true;
+                        qe.rangeExpr = checkExpr(subenv, qe.rangeExpr, Types.booleanType);
+                        qe.expr = checkExpr(subenv, qe.expr, Types.intType);
+                    }
+                    setType(e, Types.intType);
+                    return e;
+                }
+
+	    case TagConstants.FORALL:
             case TagConstants.EXISTS:
                 {
                     QuantifiedExpr qe = (QuantifiedExpr)e;
@@ -1578,7 +1666,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                         if (rd instanceof MethodDecl && isOverridable((MethodDecl)rd)) {
                             isPrivateFieldAccessAllowed = false;
                         }
-                        emp.expr = checkExpr(env, emp.expr, Types.intType);
+                        emp.expr = checkExpr(env, emp.expr, Types.longType);
                         if (emp.cond != null)
 			 emp.cond = checkExpr(env, emp.cond, Types.booleanType);
                         isRESContext = oldIsRESContext;
