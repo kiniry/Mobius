@@ -36,13 +36,16 @@ public interface List extends Collection {
     //@ pure
     boolean isEmpty();
 
-    // specification inherited
+    //@ also public behavior
+    //@   ensures \result <==> (\exists int i; 0<=i && i<size(); nullequals(o,get(i)));
     //@ pure
     boolean contains(Object o);
 
     /*@ also
       @ public behavior
       @   ensures \result != null;
+      @*/
+    /* FIXME
       @   ensures size() < Integer.MAX_VALUE
       @       ==> (\forall int i; 0 <= i && i < size();
       @                \result.hasNext(i) && \result.nthNextElement(i)
@@ -55,6 +58,7 @@ public interface List extends Collection {
       @   requires size() < Integer.MAX_VALUE;
       @   ensures \result != null;
       @   ensures \result.length == size();
+      @   ensures (\forall int i; 0<=i && i < size(); \result[i] == _theCollection[i]);
       @*/
     //@ pure
     Object[] toArray();
@@ -65,7 +69,7 @@ public interface List extends Collection {
       @   old int colSize = size();
       @   requires a!= null; 
       @   requires elementType <: \elemtype(\typeof(a));
-      @   requires (\forall Object o; contains(o); \typeof(o) <: \elemtype(\typeof(a)));
+      @   requires (\forall Object o; contains(o); \typeof(o) <: \elemtype(\typeof(a))); // FIXME - implied by the precondition above
       @   {|
       @     requires colSize <= arrSize;
       @     assignable a[*];
@@ -81,20 +85,40 @@ public interface List extends Collection {
       @     ensures (\forall int k; 0 <= k && k < colSize;
       @                            get(k) == \result[k]);
       @   |}
+              // FIXME - spec the exceptions
       @*/
     Object[] toArray(Object[] a);
 
+    //@ also public normal_behavior
+    //@   requires \typeof(o) <: elementType;
+    //@   requires !containsNull ==> o != null;
+    //@   assignable _theCollection;
+    //@   ensures size() == \old(size()+1);
+    //@   ensures get(size()-1) == o;
+    //@   ensures (\forall int i; 0<=i && i <size(); _theCollection[i] == \old(_theCollection[i]));
     boolean add(Object o);
 
+
+    // FIXME
+    //@ also public normal_behavior
+    //@   requires contains(o);
+    //@   assignable _theCollection;
+    //@   ensures size() == \old(size()-1);
+            // FIXME - spec what is missing
+    //@ also public normal_behavior
+    //@   requires !contains(o);
+    //@   assignable \nothing;
+    // FIXME - watch out for optional exceptions
     boolean remove(Object o);
 
     // specification inherited
     //@ pure
     boolean containsAll(Collection c);
 
-    // specification inherited
+    // FIXME
     boolean addAll(Collection c);
 
+    // FIXME - spec the contents of the new list
     /*@   public behavior
       @     requires c != null;
       @     requires 0 <= index && index <= size();
@@ -120,10 +144,10 @@ public interface List extends Collection {
       @*/
     boolean addAll(int index, Collection c);
 
-    // specification inherited
+    // FIXME
     boolean removeAll(Collection c);
 
-    // specification inherited
+    // FIXME
     boolean retainAll(Collection c);
 
     // specification inherited
@@ -132,14 +156,8 @@ public interface List extends Collection {
     /*@ also
       @ public normal_behavior
       @   requires o instanceof List && size() == ((List) o).size();
-      @  ensures \result == (\forall int i; 0 <= i && i < size(); 
-      @               (get(i) == null
-      @                && ((List) o).get(i) == null) 
-      @            || (get(i).equals(((List) o).get(i))));
-      @  ensures \result == (\forall int i; 0 <= i && i < size(); 
-      @               (get(i) == null
-      @                && ((List) o).get(i) == null) 
-      @            || (get(i).equals(((List) o).get(i))));
+      @   ensures \result <==> (\forall int i; 0<=i && i <size(); 
+                           _theCollection[i] == \old(_theCollection[i]));
       @ also public normal_behavior
       @   requires !(o instanceof List && size() == ((List) o).size());
       @   ensures !\result;
@@ -151,16 +169,17 @@ public interface List extends Collection {
 
     /*@ public normal_behavior
       @   requires 0 <= index && index < size();
+      @   ensures \result == _theCollection[index];
+      @   ensures (\result == null) || \typeof(\result) <: elementType;
+      @   ensures !containsNull ==> \result != null;
       @ also
       @ public exceptional_behavior
       @   requires !(0 <= index && index < size());
-      @   signals (IndexOutOfBoundsException);
+      @   signals_only IndexOutOfBoundsException;
       @
       @ implies_that
       @   public normal_behavior
       @     requires index >= 0;
-      @     ensures (\result == null) || \typeof(\result) <: elementType;
-      @     ensures !containsNull ==> \result != null;
       @*/
     /*@ pure @*/ Object get(int index);
 
@@ -172,6 +191,9 @@ public interface List extends Collection {
       @   requires 0 <= index && index < size();
       @   assignable objectState;
       @   ensures \result == (\old(get(index)));
+      @   ensures get(index) == element;
+      @   ensures (\forall int i; 0<=i && i<size() && i != index;
+                             get(i) == \old(get(i)));
       @   signals (UnsupportedOperationException)
       @           (* set method not supported by list *);
       @   signals (ClassCastException)
@@ -198,17 +220,11 @@ public interface List extends Collection {
       @   {|
       @     requires  0 <= index && index < size();
       @     assignable objectState;
-      @     ensures (element == null && get(index) == null)
-      @          || (get(index).equals(element))
+      @     ensures (get(index) == (element))
       @          && (\forall int i; 0 <= i && i < index;
-      @                     (get(i) == null
-      @                      && \old(this.get(i)) == null)    
-      @                  || get(i).equals(\old(this.get(i))))
+      @                     get(i) == \old(get(i)))
       @          && (\forall int i; index <= i && i < \old(size());
-      @                     (get((int)(i+1)) == null
-      @                      && \old(this.get(i)) == null)    
-      @                  || get((int)(i+1))
-      @                                    .equals(\old(this.get(i))));
+      @                     \old(get(i)) == get(i+1));
 
       @     signals (UnsupportedOperationException)
       @             (* add method not supported by list *);
@@ -236,13 +252,9 @@ public interface List extends Collection {
       @   assignable objectState;
       @   ensures \result == (\old(get(index))) ;
       @   ensures (\forall int i; 0 <= i && i < index;
-      @                   (get(i) == null
-      @                    && \old(this.get(i)) == null)    
-      @                || get(i) == (\old(this.get(i))))
+      @                get(i) == (\old(this.get(i))))
       @        && (\forall \bigint i; index <= i && i < (\old(size() - 1) );
-      @                   (get((int)i) == null
-      @                    && \old(this.get((int)(i+1))) == null)    
-      @                || get((int)i) == (\old(this.get((int)(i+1)))));
+      @                 get((int)i) == (\old(this.get((int)(i+1)))));
       @   signals (UnsupportedOperationException)
       @            (* remove method not supported by list *);
       @ also
@@ -254,53 +266,38 @@ public interface List extends Collection {
       @   requires !(0 <= index && index < size());
       @   assignable \nothing;
       @   ensures false;
-      @   signals (IndexOutOfBoundsException);
+      @   signals_only IndexOutOfBoundsException;
       @ |}
       @*/
     Object remove(int index);
 
     /*@ public behavior
-      @   requires !containsNull ==> o != null;
-      @   requires (o == null) || \typeof(o) <: elementType;
-      @   ensures \result != -1 && get(\result) == null
-      @           ==> o == null;
-      @   ensures \result != -1 && get(\result) != null
-      @           ==> get(\result).equals(o)
-      @               && indexOf(o) == \result;
+      @   ensures \result >= -1 && \result < size();
+      @   ensures \result != -1 ==> nullequals(o,get(\result));
+      @   ensures (\forall int i; 0<=i && i < \result; !nullequals(o,get(i)));
+      @   ensures \result == -1 <==> !contains(o);
       @   signals (ClassCastException)
       @           (* class of specified element is incompatible with this *);
       @   signals (NullPointerException)
       @            (* element is null and null elements are not
       @               supported by this *);
-      @ implies_that
-      @   ensures \result != -1
-      @       ==> (\forall int i; 0 <= i && i < \result;
-      @                 (get(i) == null && o != null)
-      @              || (get(i) != null && !get(i).equals(o)));
       @*/
     /*@ pure @*/ int indexOf(Object o);
 
     /*@ public behavior
-      @   requires !containsNull ==> o != null;
-      @   requires (o == null) || \typeof(o) <: elementType;
-      @   ensures \result != -1 && get(\result) == null
-      @           ==> o == null;
-      @   ensures \result != -1 && get(\result) != null 
-      @            ==> get(\result).equals(o);
+      @   ensures \result >= -1 && \result < size();
+      @   ensures \result != -1 ==> nullequals(o,get(\result));
+      @   ensures (\forall int i; \result<i && i < size(); !nullequals(o,get(i)));
+      @   ensures \result == -1 <==> !contains(o);
       @   signals (ClassCastException)
       @           (* class of specified element is incompatible with this *);
       @   signals (NullPointerException)
-      @           (* element is null and null elements are not
-      @              supported by this *);
-      @ implies_that
-      @   ensures \result != -1
-      @       ==> (\forall int i; \result < i && i < size();
-      @                 (get(i) == null && o != null)
-      @              || (get(i) != null && !get(i).equals(o)));
+      @            (* element is null and null elements are not
+      @               supported by this *);
       @*/
     /*@ pure @*/ int lastIndexOf(Object o);
 
-    /*@ 
+    /* FIXME @ 
       @ public normal_behavior
       @   ensures \result != null && size() < Integer.MAX_VALUE
       @       ==> (\forall int i; 0 <= i && i < size();
@@ -311,7 +308,7 @@ public interface List extends Collection {
       @*/
     /*@ pure @*/ /*@ non_null @*/ ListIterator listIterator();
 
-    /*@ 
+    /* FIXME @ 
       @ public normal_behavior
       @   requires 0 <= index && index < size();
       @   ensures \result != null && size() < Integer.MAX_VALUE
@@ -329,20 +326,21 @@ public interface List extends Collection {
       @*/
     /*@ pure @*/ /*@ non_null @*/ ListIterator listIterator(int index);
 
+    // FIXME - changes to a sublist affect the list it is a sublist of!!!
     /*@ public normal_behavior
       @   requires 0 <= fromIndex && fromIndex <= size() 
       @         && 0 <= toIndex && toIndex <= size()
       @         && fromIndex <= toIndex;
+      @   ensures \result.size() == toIndex - fromIndex;
+      @   ensures (\forall int i; fromIndex <=i && i < toIndex;
+                         \old(get(i)) == get(i-fromIndex));
       @ also
       @ public exceptional_behavior
       @   requires !(0 <= fromIndex && fromIndex <= size())
       @         || !( 0 <= toIndex && toIndex <= size())
       @         || !(fromIndex <= toIndex);
-      @   signals (IndexOutOfBoundsException);
+      @   signals_only IndexOutOfBoundsException;
       @
-      @ implies_that
-      @   public normal_behavior
-      @     requires 0 <= fromIndex && fromIndex <= toIndex;
       @*/
     /*@ pure @*/ List subList(int fromIndex, int toIndex);
 }

@@ -23,6 +23,7 @@ package java.lang;
 /** JML's specification of java.lang.CharSequence.
  * @version $Revision$
  * @author Gary T. Leavens
+ * @author David Cok
  */
 public interface CharSequence {
     //@ public instance model char[] charArray;
@@ -49,42 +50,37 @@ public interface CharSequence {
     //@ axiom (\forall char[] a,b,c;; (equal(a,b) && equal(b,c))==>equal(a,c)); 
 
     //@ public normal_behavior
-    //@      modifies objectState;
     //@      ensures \result >= 0;
     //@      ensures \result == charArray.length;
+    //@ pure
     int length();
 
     /*@   public normal_behavior
       @      requires 0 <= index && index < charArray.length;
-      @      modifies objectState;
       @      ensures  \result == charArray[index];
       @  also
       @    public exceptional_behavior
       @      requires !(0 <= index && index < charArray.length);
-      @      modifies objectState;
-      @      signals (Exception e) e instanceof IndexOutOfBoundsException;
-      @      signals (IndexOutOfBoundsException);
+      @      signals_only IndexOutOfBoundsException;
       @*/
+    //@ pure
     char charAt(int index) throws IndexOutOfBoundsException;
 
     /*@   public normal_behavior
       @      requires 0 <= start && start <= end && end <= charArray.length;
-      @      modifies objectState;
       @      ensures \result.charArray.length == end-start;
       @      ensures equal(\result.charArray,0,charArray,start,end-start);
       @  also
       @    public exceptional_behavior
       @      requires start < 0 || end < start || end > charArray.length;
-      @      modifies objectState;
-      @      signals (Exception e) e instanceof IndexOutOfBoundsException;
-      @      signals (IndexOutOfBoundsException);
+      @      signals_only IndexOutOfBoundsException;
       @*/
+    //@ pure
     CharSequence subSequence(int start, int end)
         throws IndexOutOfBoundsException;
 
     /*@ also
       @    public normal_behavior
-      @      modifies objectState;
       @      ensures \result != null
       @           && equal(\result.charArray,charArray);
       @*/
@@ -93,12 +89,10 @@ public interface CharSequence {
     /** According to the javadocs, the equals method should not be called. */
     //@ also
     //@      requires false;
-    // @      modifies objectState;
     public boolean equals(Object obj);
 
     /** According to the javadocs, the hashCode method should not be called. */
     //@ also
     //@    requires false;
-    //@      modifies objectState;
     public int hashCode();
 }

@@ -29,13 +29,12 @@ import java.lang.reflect.Array;
  */
 public class Object {
 
-    /** A data group for the state of this object.  This is used to
-     * allow side effects on unknown variables in methods such as
-     * equals, clone, and toString. It also provides a convenient way
-     * to talk about "the state" of an object in assignable
-     * clauses.
+    /** A data group for the complete state of this object.  
      */
     //@ public non_null model JMLDataGroup objectState;
+
+    /** Use this for the private state holding benevolent side effects */
+    //@ public non_null model JMLDataGroup privateState; in objectState;
 
     /** The Object that has a field pointing to this Object.
      * Used to specify (among other things) injectivity (see
@@ -68,23 +67,17 @@ public class Object {
       @*/
     public /*@ pure @*/ final Class getClass();
 
+    //@ public model int theHashCode; in objectState;
+
     /*@  public behavior
-      @     assignable objectState; // for subclasses with benevolent side effects
+      @     assignable privateState;
       @     ensures (* \result is a hash code for this object *);
-      @     //ensures \result == hashValue();
-      @  also
-      @   public normal_behavior
-      @     requires \typeof(this) == \type(Object);
-      @     assignable \nothing;
+      @     ensures \result == theHashCode;
       @*/
     public int hashCode();
 
-    // FIXME - use this (and the postcondition in hashCode), or some other
-    // method of creating a pure value of hashCode?
-
-    // The value produced by hashCode() but without any side-effects.
-    // @ ensures (\forall Object o; equals(o) ==> \result == o.hashValue());
-    //@ public pure model int hashValue();
+    //  FIXME - how do we ensure the following
+    //     (\forall Object o,oo; oo.equals(o) ==> o.theHashCOde == oo.theHashCode);
 
     /*@  public normal_behavior
       @     requires obj != null;
@@ -103,7 +96,7 @@ public class Object {
       @    requires obj != null;
       @    ensures \result == obj.equals(this);
       @*/
-    public /*@ pure @*/ boolean equals(/*+@ \readonly @+*/ Object obj);
+    public /*@ pure @*/ boolean equals(/*@ \readonly @*/ Object obj);
 
     /*@ protected normal_behavior
       @   requires this instanceof Cloneable;
@@ -113,30 +106,19 @@ public class Object {
 		// strict equality when it is called, and subclasses are
 		// expected to fulfill it by calling super.clone();
       @   ensures \typeof(\result) == \typeof(this);
-      @   ensures (* \result is a clone of this *);
+      @  // ensures (* \result is a clone of this *);
       @*/
-    /*+@
+    /* FIXME  - seems not to reason with isArray @
       @ also protected normal_behavior
       @   requires this.getClass().isArray();
       @   assignable \nothing;
       @   ensures \elemtype(\typeof(\result)) == \elemtype(\typeof(this));
-      @   ensures ((\peer \peer Object[])\result).length
-      @            == ((\peer \peer Object[])this).length;
-      @   ensures (\forall int i;
-      @                0<=i && i < ((\peer \peer Object[])this).length;
-      @                ((\peer \peer Object[])\result)[i]
-      @                 == ((\peer \peer Object[])this)[i] );
-      @+*/
-    /*-@
-      @ also protected normal_behavior
-      @   requires this.getClass().isArray();
-      @   assignable \nothing;
-      @   ensures \elemtype(\typeof(\result)) == \elemtype(\typeof(this));
-      @   ensures ((Object[])\result).length == ((Object[])this).length;
-      @   ensures (\forall int i; 0<=i && i < ((Object[])this).length;
-      @                ((Object[])\result)[i] == ((Object[])this)[i] );
-      @*/
-    /*@
+      @   //ensures ((\peer \peer Object[])\result).length
+      @   //         == ((\peer \peer Object[])this).length;
+      @   //ensures (\forall int i;
+      @    //            0<=i && i < ((\peer \peer Object[])this).length;
+      @    //            ((\peer \peer Object[])\result)[i]
+      @    //             == ((\peer \peer Object[])this)[i] );
       @ also
       @   requires this.getClass().isArray();
       @   // FIXME requires \elemtype(\typeof(this)).isPrimitive();
@@ -145,10 +127,12 @@ public class Object {
       @   ensures Array.getLength(\result) == Array.getLength(this);
       @   ensures (\forall int i; 0<=i && i < Array.getLength(this);
       @                Array.get(\result,i).equals(Array.get(this,i))  );
+      @*/
+    /*@
       @ also protected exceptional_behavior
       @   requires !(this instanceof Cloneable);
       @   assignable \nothing;
-      @   signals (CloneNotSupportedException) true;
+      @   signals_only CloneNotSupportedException;
       @*/
 // FIXME - is it always true that \result != this
 // FIXME - ifnot some derived classes will want to ensure this
@@ -179,31 +163,20 @@ public class Object {
     protected Object clone() throws CloneNotSupportedException;
 
     /** Use theString as the (pure) model value of toString() */
-    // This is not in objectState since it will not necessarily change just because
-    // the state of the object changes (e.g. when there are benevolent side effects)
-    //@ public model String theString;
+    //@ public model String theString; in objectState;
 
     /*@   public normal_behavior
-      @     assignable objectState;
+      @     assignable privateState;
       @     ensures \result != null;
       @     ensures \result == theString;
       @     ensures (* \result is a string representation of this object *);
       @ also
       @   public normal_behavior
       @     requires \typeof(this) == \type(Object);
-      @     assignable \nothing;
-      @     ensures \result != null
-      @          && (* \result is the instance's class name, followed by an @,
-      @		       followed by the instance's hashcode in hex *);
-      @ also
-      @   public model_program {
-      @       assume \typeof(this) == \type(Object);
-      @       return getClass().getName()
-      @              + '@' + Integer.toHexString(hashCode());
-      @   }
-      @ implies_that
-      @    assignable objectState;
-      @    ensures \result != null;
+      @     assignable privateState;
+      @     ensures \result != null;
+      @     // FIXME ensures \result.equals(getClass().getName() + "@" + 
+            //                         Integer.toHexString(thehashCode));
       @*/
     public String toString();
 
@@ -211,10 +184,22 @@ public class Object {
 
     public final void notifyAll();
 
-    //@ requires timeout >= 0L;
+    //@ public behavior
+    //@   requires timeout >= 0L;
+          // FIXME also check thread ownership - IllegalMonitorStateException
+    //@ also public exceptional_behavior
+    //@   requires timeout < 0;
+    //@   signals_only IllegalArgumentException;
     public final void wait(long timeout) throws InterruptedException;
 
-    //@ requires timeout >= 0L && 0 <= nanos && nanos < 1000000;
+    //@ public behavior
+    //@   requires timeout >= 0L;
+    //@   requires 0 <= nanos;
+    //@   requires nanos < 1000000;
+          // FIXME also check thread ownership - IllegalMonitorStateException
+    //@ also public exceptional_behavior
+    //@   requires timeout < 0 || nanos < 0 || nanos >= 1000000;
+    //@   signals_only IllegalArgumentException;
     public final void wait(long timeout, int nanos)
         throws InterruptedException;
 
@@ -230,5 +215,5 @@ public class Object {
 
     /** The number of times this object has been finalized.
      */
-    //@ protected ghost int objectTimesFinalized;
+    //@ protected ghost int objectTimesFinalized = 0; // not part of objectState
 }

@@ -29,11 +29,18 @@ package java.util;
  * @author Gary T. Leavens
  * @author Brandon Shilling
  * @author Erik Poll 
+ * @author David Cok
  */
 public interface Collection {
 
     //@ public model instance non_null Object[] _theCollection; //in objectState;
 
+    /** A utility method that compares possibly-null objects with equals */
+    /*@ public normal_behavior
+      @   ensures \result <==> ( o == oo ||
+      @        ( o != null && oo != null && o.equals(oo)));
+      @ static public model pure boolean nullequals(Object o, Object oo);
+      @*/
     // Subclasses may not support some operations.  The following
     // model variables should be given a representation that indicates
     // whether or not the associated operation is supported. 
@@ -70,7 +77,6 @@ public interface Collection {
     /*@ public normal_behavior
       @    ensures \result >= 0;
       @    ensures \result == _theCollection.length;
-      @    ensures \result == 0 <==> isEmpty();
       @*/
     /*@ pure @*/ int size();
 
@@ -85,6 +91,7 @@ public interface Collection {
       @   ensures \result <==> (\exists int i; 0<=i && i<_theCollection.length;
       @                          _theCollection[i] == o);
 		// The exceptions are optional says the Java documentation
+                // FIXME
       @   signals (ClassCastException)
       @           (* \typeof(o) is incompatible
       @              with the elementType of this collection *);
@@ -96,6 +103,8 @@ public interface Collection {
       @   ensures \result != null;
       @   ensures \result.elementType == elementType;
       @   ensures containsNull == \result.returnsNull;
+      @*/
+    /* FIXME
       @   ensures (\forall int i; 0 <= i && i < size();
       @                 contains(\result.nthNextElement(i)));
       @   ensures (\forall Object o; contains(o) ==>
@@ -111,16 +120,18 @@ public interface Collection {
     /*@ non_null @*/ /*@ pure @*/ Iterator iterator();
 
     /*@ public normal_behavior
-      @   requires size() < Integer.MAX_VALUE;
+      @   requires size() < Integer.MAX_VALUE; // FIXME - do we need this test?
       @   ensures \result != null;
       @   ensures containsNull || \nonnullelements(\result);
       @   ensures \result.length == size();
+              // FIXME - the following are not right for arbitrary collections
       @   ensures (\forall int i; 0 <= i && i < size(); contains(\result[i]));
       @   ensures (\forall Object o; contains(o) ==>
       @              (\exists int i; 0 <= i && i < size(); o.equals(\result[i])));
       @*/
     /*@ pure @*/ Object[] toArray();
        
+    // FIXME - what does an arbitrary collection satisfy?
     /*@ public normal_behavior
       @   old int colSize = size();
       @   old int arrSize = a.length;
@@ -162,6 +173,7 @@ public interface Collection {
     /*@ non_null @*/ Object[] toArray(Object[] a);
 
     /*@ public behavior
+      @   requires addOperationSupported;
       @   requires !containsNull ==> o != null;
       @   requires  (o == null) || \typeof(o) <: elementType;
       @   assignable objectState; 
@@ -172,8 +184,6 @@ public interface Collection {
 	// arithmetic fix this?
       @   ensures !\result ==> size() == \old(size());
       @   ensures contains(o);
-      @   signals (UnsupportedOperationException)
-      @             (* this does not support add *);
       @   signals (NullPointerException)
       @             (* not allowed to add null *);
       @   signals (ClassCastException)
@@ -182,11 +192,15 @@ public interface Collection {
       @   signals (IllegalArgumentException)
       @             (* some aspect of this element 
       @                prevents it from being added to this *);
+      @ also public exceptional_behavior
+      @   requires !addOperationSupported;
+      @   signals_only UnsupportedOperationException;
       @   
       @*/
     boolean add(Object o);
 
     /*@ public behavior
+      @   requires removeOperationSupported;
       @   requires !containsNull ==> o != null;
       @   requires  (o == null) || \typeof(o) <: elementType;
       @   assignable objectState; 
@@ -200,32 +214,29 @@ public interface Collection {
       @   signals (ClassCastException)
       @            (* the type of this element is not 
       @               compatible with this *);
+      @ also public exceptional_behavior
+      @   requires !removeOperationSupported;
+      @   signals_only UnsupportedOperationException;
       @*/
     boolean remove(Object o);
 
     /*@ public behavior
       @   requires c != null;
-      @   requires c.elementType <: elementType;
-      @   requires !containsNull ==> !c.containsNull;
-      @   signals (ClassCastException)
-      @           (* class of specified element prevents it 
-      @              from being added to this *);
-      @   signals (NullPointerException)
-      @           (* argument contains null elements and this does not support 
-      @              null elements *);
+      @   ensures \result <==> 
+                    (\forall Object o; c.contains(o) ==> contains(o));
       @ also public exceptional_behavior
       @  requires c == null;
-      @  signals (NullPointerException);
+      @  signals_only NullPointerException;
       @*/
     /*@ pure @*/ boolean containsAll(Collection c);
 
     /*@ public behavior
+      @   requires addOperationSupported;
       @   requires c != null;
       @   requires c.elementType <: elementType;
       @   requires !containsNull ==> !c.containsNull;
       @   assignable objectState; 
-      @   signals (UnsupportedOperationException)
-      @           (* this does not support addAll *);
+            // FIXME - what can we ensure that is right for arbitrary kinds of collections?
       @   signals (ClassCastException)
       @           (* class of specified element prevents it 
       @              from being added to this *);
@@ -236,36 +247,31 @@ public interface Collection {
       @           (* argument contains null elements and this does not support 
       @              null elements *);
       @ also public exceptional_behavior
-      @  requires c == null;
+      @  requires c == null || !addOperationSupported;
       @  assignable \nothing;
-      @  signals (NullPointerException);
+      @  signals_only NullPointerException, UnsupportedOperationException;
+      @  signals (NullPointerException) c==null;
+      @  signals (UnsupportedOperationException) !addOperationSupported;
       @*/
     boolean addAll(Collection c);
 
     /*@ public behavior
-      @   requires c != null;
-      @   requires elementType <: c.elementType;
-      @   requires !c.containsNull ==> !containsNull;
+      @  requires removeOperationSupported;
+      @  requires c != null;
       @  assignable objectState; 
-      @   signals (UnsupportedOperationException)
-      @               (* this does not support removeAll *);
-      @   signals (ClassCastException)
-      @             (* the type of one or more of the elements
-      @                in c is not supported by this *);
-      @   signals (NullPointerException)
-      @           (* argument contains null elements and this does not support 
-      @              null elements *);
+            // FIXME - is this right for Bags?
+      @  ensures (\forall Object o; contains(o) <==> (\old(contains(o)) && !c.contains(o)));
       @ also public exceptional_behavior
-      @  requires c == null;
+      @  requires c == null || !removeOperationSupported;
       @  assignable \nothing;
-      @  signals (NullPointerException);
+      @  signals_only NullPointerException, UnsupportedOperationException;
+      @  signals (NullPointerException) c==null;
+      @  signals (UnsupportedOperationException) !removeOperationSupported;
       @*/
     boolean removeAll(Collection c);
 
     /*@ public behavior
       @   requires c != null;
-      @   requires elementType <: c.elementType;
-      @   requires !c.containsNull ==> !containsNull;
       @  assignable objectState; 
       @   signals (UnsupportedOperationException)
       @            (* this does not support retainAll *);
@@ -278,22 +284,25 @@ public interface Collection {
       @ also public exceptional_behavior
       @  requires c == null;
       @  assignable \nothing;
-      @  signals (NullPointerException);
+      @  signals_only NullPointerException;
       @*/
     boolean retainAll(Collection c);
 
-    /*@ public behavior
+    /*@ public normal_behavior
+      @   requires removeOperationSupported;
       @   assignable objectState; 
       @   ensures isEmpty();
       @   ensures_redundantly size() == 0;
-      @   signals (UnsupportedOperationException)
-      @           (* clear is not supported by this *);
+      @ also public exceptional_behavior
+      @   requires !removeOperationSupported;
+      @   signals_only UnsupportedOperationException;
       @*/
     void clear();
 
+    // FIXME
     boolean equals(Object o);
 
+    // Specification is inherited
     int hashCode();
     
-    //@ public model int hashValue();
 }

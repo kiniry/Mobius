@@ -25,6 +25,7 @@ package java.lang;
  * @version $Revision$
  * @author Brandon Shilling
  * @author Gary T. Leavens
+ * @author David R. Cok
  */
 //-@ immutable
 public final /*@ pure @*/ class Boolean implements java.io.Serializable {
@@ -36,7 +37,7 @@ public final /*@ pure @*/ class Boolean implements java.io.Serializable {
     public static final Class	TYPE;
 
     //@ public model boolean theBoolean;
-    //@ represents theBoolean <- booleanValue();
+    //  represents theBoolean <- booleanValue();
 
     /*@ public normal_behavior
       @   assignable theBoolean;
@@ -87,8 +88,9 @@ public final /*@ pure @*/ class Boolean implements java.io.Serializable {
       @ public normal_behavior
       @   ensures valueOf(\result).booleanValue() == theBoolean;
       @*/
-    public /*@ pure @*/ String toString();
+    public String toString();
 
+    // inherited specification
     public int hashCode();
 
     /*@ also
@@ -103,6 +105,7 @@ public final /*@ pure @*/ class Boolean implements java.io.Serializable {
       @*/
     public /*@ pure @*/ boolean equals(Object obj);
     
+    // FIXME - check if getPRoperty is case-insensitive; getBoolean is supposed to be
     /*@ public normal_behavior
       @   requires name != null && !name.equals("")
       @         && System.getProperty(name) != null;

@@ -24,43 +24,25 @@ package java.util;
 /** JML's specification of java.util.AbstractList.
  * @version $Revision$
  * @author Gary T. Leavens
+ * @author David R. Cok
  */
 public abstract class AbstractList extends AbstractCollection implements List {
 
     /*@ pure @*/ protected AbstractList();
 
-    /*@ also
-      @   protected model_program {
-      @      add(size(), o); 
-      @   }
-      @*/
+    // specification inherited from List
     public boolean add(Object o);
 
-    // specification inherited from Collection
+    // specification inherited from List
     abstract public /*@ pure @*/ Object get(int index);
 
-    /*@ also
-      @   protected exceptional_behavior
-      @     requires \typeof(this) == \type(AbstractList);
-      @     assignable \nothing;
-      @     signals (Exception e) e instanceof UnsupportedOperationException;
-      @*/
+    // specification inherited from List
     public Object set(int index, Object element) throws UnsupportedOperationException;
 
-    /*@ also
-      @   protected exceptional_behavior
-      @     requires \typeof(this) == \type(AbstractList);
-      @     assignable \nothing;
-      @     signals (Exception e) e instanceof UnsupportedOperationException;
-      @*/
+    // specification inherited from List
     public void add(int index, Object element) throws UnsupportedOperationException;
 
-    /*@ also
-      @   protected exceptional_behavior
-      @     requires \typeof(this) == \type(AbstractList);
-      @     assignable \nothing;
-      @     signals (Exception e) e instanceof UnsupportedOperationException;
-      @*/
+    // specification inherited from List
     public Object remove(int index) throws UnsupportedOperationException;
 
     // Search Operations
@@ -73,11 +55,7 @@ public abstract class AbstractList extends AbstractCollection implements List {
 
     // Bulk Operations
 
-    /*@ also
-      @   protected model_program {
-      @      removeRange(0, size()); 
-      @   }
-      @*/
+    // specification inherited from List
     public void clear();
 
     // specification inherited from List
@@ -88,11 +66,6 @@ public abstract class AbstractList extends AbstractCollection implements List {
     // specification inherited from List
     public /*@ pure @*/ Iterator iterator();
 
-    /*@ also
-      @   protected model_program {
-      @      return listIterator(0);
-      @   }
-      @*/
     public /*@ pure @*/ ListIterator listIterator();
 
     // specification inherited from List
@@ -118,15 +91,19 @@ public abstract class AbstractList extends AbstractCollection implements List {
       @   also
       @     requires fromIndex < toIndex && toIndex < size();
       @     assignable objectState;
-      @     //FIXME detailed postcondition missing
+      @     ensures size() == \old(size()) - (toIndex-fromIndex);
+      @     ensures (\forall int i; 0<=i && i < fromIndex;
+                               get(i) == \old(get(i)));
+      @     ensures (\forall int i; toIndex<=i && i < \old(size());
+                               get(i-toIndex+fromIndex) == \old(get(i)));
       @  |}
       @*/
+     // FIXME - exception for bad arguments?
     protected void removeRange(int fromIndex, int toIndex);
 
-    protected transient int modCount;
-    //@                       in objectState;
+    transient protected int modCount; //@ in objectState;
+        //@ initially modCount == 0;
 
-    //@ protected initially modCount == 0;
 }
 
 class SubList extends AbstractList {
