@@ -558,19 +558,6 @@ public class ExprStmtPragma extends StmtPragma
   public int getEndLoc() { return expr.getEndLoc(); }
 }
 
-public class RepresentsPragma extends TypeDeclElemPragma
-{
-  // represents 'target' <- 'value':
-
-  //# Expr target
-  //# int locOp
-  //# Expr value
-  //# int loc
-
-  public int getStartLoc() { return loc; }
-  public int getEndLoc() { return value.getEndLoc(); }
-}
-
 public class SetStmtPragma extends StmtPragma
 {
   // set 'target' = 'value':
