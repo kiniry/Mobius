@@ -374,7 +374,8 @@ public class TagConstants extends GeneratedTags
     // set -- an ESC keyword
     public static final int SIGNALS_REDUNDANTLY = RETURNS + 1;
     public static final int SIGNALS = SIGNALS_REDUNDANTLY + 1;
-    public static final int SPEC_PROTECTED = SIGNALS + 1;
+    public static final int SIGNALS_ONLY = SIGNALS + 1;
+    public static final int SPEC_PROTECTED = SIGNALS_ONLY + 1;
     // spec_public -- an ESC keyword
     public static final int STATIC_INITIALIZER = SPEC_PROTECTED + 1;
     public static final int SUBCLASSING_CONTRACT = STATIC_INITIALIZER + 1;
@@ -605,7 +606,7 @@ public class TagConstants extends GeneratedTags
     public static int unRedundant(int tag) {
         int Result = tag;
         switch (tag) {
-	    case TagConstants.REQUIRES_REDUNDANTLY:
+	          case TagConstants.REQUIRES_REDUNDANTLY:
                 Result = TagConstants.REQUIRES; break;
             case TagConstants.ENSURES_REDUNDANTLY:
                 Result = TagConstants.ENSURES; break;
@@ -924,7 +925,7 @@ public class TagConstants extends GeneratedTags
         Identifier.intern("exceptional_behavior"),
         Identifier.intern("exceptional_example"),
         Identifier.intern("exsures_redundantly"),
-	Identifier.intern("field"),
+	      Identifier.intern("field"),
         Identifier.intern("forall"),
         Identifier.intern("for_example"),
         Identifier.intern("implies_that"),
@@ -939,7 +940,7 @@ public class TagConstants extends GeneratedTags
         Identifier.intern("maintaining"),
         Identifier.intern("measured_by_redundantly"),
         Identifier.intern("measured_by"),
-	Identifier.intern("method"),
+	      Identifier.intern("method"),
         Identifier.intern("model"),
         Identifier.intern("model_program"),
         Identifier.intern("modifiable_redundantly"),
@@ -964,6 +965,7 @@ public class TagConstants extends GeneratedTags
         Identifier.intern("returns"),
         Identifier.intern("signals_redundantly"),
         Identifier.intern("signals"),
+        Identifier.intern("signals_only"),
         Identifier.intern("spec_protected"),
         Identifier.intern("static_initializer"),
         Identifier.intern("subclassing_contract"),

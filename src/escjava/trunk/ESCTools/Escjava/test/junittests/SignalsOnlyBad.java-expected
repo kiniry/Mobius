@@ -1,0 +1,20 @@
+ESC/Java version VERSION
+SignalsOnlyBad.java:6: Error: Expected a type name
+        signals_only;
+                    ^
+SignalsOnlyBad.java:7: Error: Expected a type name
+        signals_only NullPointerException ,, Exception;
+                                           ^
+SignalsOnlyBad.java:8: Error: Expected a type name
+        signals_only , Exception;
+                     ^
+    [TIME]
+
+SignalsOnlyBad ...
+SignalsOnlyBad.java:9: Error: Invalid instanceof operation: A value of type java.lang.Exception can never be an instance of java.lang.String
+        signals_only  String;
+                      ^
+SignalsOnlyBad.java:10: Fatal error: Can't find type named "Q"
+        signals_only Q;
+                     ^
+5 errors
