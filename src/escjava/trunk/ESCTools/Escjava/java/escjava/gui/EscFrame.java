@@ -200,7 +200,7 @@ public class EscFrame extends JFrame {
 	    public void actionPerformed(ActionEvent e) { 
 		synchronized (GUI.processTasks) {
 		    GUI.processTasks.clear();
-		    GUI.stop = true; 
+		    GUI.gui.stop = true; 
 		    escjava.ProverManager.kill();
 		    GUI.processTasks.addTask(GUI.STOP);
 		    //System.out.println("REQUESTED STOP");

@@ -76,8 +76,8 @@ static {
     static public class Stop extends RuntimeException {}
     static public final Stop STOP = new Stop();
 
-    volatile static public boolean stop = false;
-    static private void stopCheck(boolean thr) { 
+    volatile public boolean stop = false;
+    private void stopCheck(boolean thr) { 
 	if (!stop) return;
 	//System.out.println("STOPPED");  
 	if (thr) throw STOP; 
@@ -261,14 +261,13 @@ static {
     // parents as well if needed, but not recursively doing all of
     // the children.
     //@ requires action == TYPECHECK || action == CHECK;
-    public void processTypeDecl(TDTreeValue tdn, int action) {
+    public int processTypeDecl(TDTreeValue tdn, int action) {
 	TypeDecl td = tdn.td;
 	tdn.scope = null;
 	tdn.initState = null;
 	tdn.sig = null;
 	tdn.outputText = null;
 
-	ByteArrayOutputStream ba = junitutils.Utils.setStreams();
 	int status = -1;
 
 	try {
@@ -300,31 +299,26 @@ static {
         }
 
 	} catch (Stop e) {
-		status = Status.NOTPROCESSED;
-		throw e;
+	    status = Status.NOTPROCESSED;
+	    throw e;
 	} catch (FatalError e) {
-		status = Status.TYPECHECKED_ERROR;
+	    status = Status.TYPECHECKED_ERROR;
 	} catch (Throwable t) {
 	    System.out.println("Exception thrown while handling a type declaration: " + t);
 	    t.printStackTrace(System.out);
-	} finally {
-	    junitutils.Utils.restoreStreams(true);
-	    String out = ba.toString();
-	    if (status == Status.NOTPROCESSED) out = "";
-	    tdn.setStatus(status,out);
 	}
+	return status;
     }
 
     // This applies the given action to the given routine, doing the
     // parents as well if needed.
     // requires action == PARSE;
-    public void processRoutineDecl(RDTreeValue rdn, int action) {
+    public int processRoutineDecl(RDTreeValue rdn, int action) {
 	RoutineDecl r = rdn.rd;
 	TDTreeValue tdn = (TDTreeValue)rdn.getParent();
 
 	int status = Status.ILLEGAL;
 	ErrorSet.mark();
-	ByteArrayOutputStream ba = junitutils.Utils.setStreams();
 	try {
 
 	if (r.body == null) {
@@ -376,7 +370,7 @@ static {
 		    GUI.gui.escframe.showGuiLight(1);
 		    status = doProving(vc,r,directTargets,tdn.scope);
 		    //System.out.println("DOPROVING " + status);
-		    stopCheck(true);
+		    GUI.gui.stopCheck(true);
 		}
 	    }
 	}
@@ -392,14 +386,12 @@ static {
 	    System.out.println("An exception was thrown while processing a routine declaration: " + t);
 	    t.printStackTrace(System.out);
 	} finally {
-	    junitutils.Utils.restoreStreams(true);
 	    GUI.gui.escframe.showGuiLight(2);
-	    String out = ba.toString();
 	    if (ErrorSet.errorsSinceMark()) status = Status.STATICCHECKED_ERROR;
 	    else if (ErrorSet.cautionsSinceMark() && status == Status.STATICCHECKED_OK)
 		    status = Status.STATICCHECKED_CAUTION;
-	    rdn.setStatus(status,out);
 	}
+	return status;
     }
 
     static abstract class EscTreeValue {
@@ -487,7 +479,7 @@ static {
 
 	// Processes just this node, not the children, if there is anything to do
 	public void processThis(int action) {
-	    stopCheck(true);
+	    GUI.gui.stopCheck(true);
 	    if (action == CLEAR) { clearCheck(); return; }
 	    int actualAction = actualAction(action);
 	    if (actualAction == -10) return;
@@ -500,8 +492,9 @@ static {
 		if (Status.isError(ien.status)) return;
 	    }
 	    escframe.label.setText(actionString(actualAction) + toString());
+	    ByteArrayOutputStream ba = junitutils.Utils.setStreams();
 	    try {
-		processThisAction(actualAction);
+		status = processThisAction(actualAction);
 	    } catch (Stop t) {
 		status = Status.NOTPROCESSED;
 		throw t;
@@ -510,6 +503,10 @@ static {
 			+ Project.eol + t);
 		t.printStackTrace(System.out);
 	    } finally {
+		junitutils.Utils.restoreStreams(true);
+		String out = ba.toString();
+		if (status == Status.NOTPROCESSED) out = "";
+		setStatus(status,out);
 		escframe.label.setText(" ");
 		showOutput(false);
 		if (ien != null) ien.propagateStatus(status);
@@ -578,7 +575,7 @@ static {
 	    ErrorSet.mark();
 	    int s = Status.RESOLVED_ERROR;
 
-	    ByteArrayOutputStream ba = Utils.setStreams();
+	    //ByteArrayOutputStream ba = Utils.setStreams();
 	    try {
 		a = gui.resolveInputEntry(ie);
 		s = Status.RESOLVED_OK;
@@ -591,8 +588,6 @@ static {
 	    if (ErrorSet.errorsSinceMark()) s = Status.RESOLVED_ERROR;
 	    else if (ErrorSet.cautionsSinceMark()) s = Status.RESOLVED_CAUTION;
 
-	    String out = ba.toString();
-
 	    if (holder.isLeaf() && a != null && a.size() != 0) {
 		// The contents have not been added to the node tree
 		Iterator i = a.iterator();
@@ -604,7 +599,6 @@ static {
 		if (escframe != null && escframe.guioptionPanel.settings.autoExpand) 
 			escframe.tree.expandPath(new TreePath(holder.getPath()));
 	    }
-	    setStatus( s, out);  // Notifies the GUI object
 	    return s;
         }
     }
@@ -652,7 +646,6 @@ static {
         public int processThisAction(int action) {
 		// parse the GenericFile
 	    ErrorSet.mark();
-	    ByteArrayOutputStream ba = Utils.setStreams();
 	    int s = Status.PARSED_ERROR; 
 	    CompilationUnit cu = null;
 	    try {
@@ -668,9 +661,6 @@ static {
 		e.printStackTrace(System.out);
 		s = Status.PARSED_ERROR;
 	    } finally {
-		Utils.restoreStreams(true);
-		String out = ba.toString();
-		if (s == Status.NOTPROCESSED) out = "";
 		if (ErrorSet.errorsSinceMark()) s = Status.PARSED_ERROR;
 		else if (ErrorSet.cautionsSinceMark()) s = Status.PARSED_CAUTION;
 		if (cu != null)  {
@@ -686,99 +676,11 @@ static {
 		} else {
 		    s = Status.PARSED_ERROR;
 		}
-
-		setStatus( s, out);  // Notifies the GUI object
 	    }
 	    return s;
         }
     }
-/*
-    static class GFTreeValue extends EscTreeValue {
-	static public DefaultMutableTreeNode makeNode(GenericFile gf, int s) {
-	    EscTreeValue v = new GFTreeValue(gf);
-	    DefaultMutableTreeNode n = new DefaultMutableTreeNode(v);
-	    v.holder = n;
-	    v.status = s;
-	    return n;
-	}
-	public GFTreeValue(GenericFile gf) {
-	    this.gf = gf;
-	}
-	public GenericFile gf;
-	public String type() { return "File "; }
-	public String toString() {
-	    return gf.getHumanName();
-	}
-	public String getFilename() { return gf.getHumanName(); }
-	public int getLine() { return 1; }
 
-        public int actualAction(int action) {
-	    if (action == RESOLVE) return action;
-	    return PARSE;
-	}
-
-        public int processThisAction(int action) {
-		// parse the GenericFile
-	    ErrorSet.mark();
-	    ByteArrayOutputStream ba = Utils.setStreams();
-	    int s = Status.PARSED_OK; 
-	    CompilationUnit cu = null;
-	    try {
-		cu = OutsideEnv.addSource(gf);
-	    } catch (Exception e) {
-		System.out.println("Parsing failed for " + gf.getHumanName()
-			+ ": " + e);
-	    } finally {
-		Utils.restoreStreams(true);
-	    }
-	    String out = ba.toString();
-	    if (ErrorSet.errorsSinceMark()) s = Status.PARSED_ERROR;
-	    else if (ErrorSet.cautionsSinceMark()) s = Status.PARSED_CAUTION;
-	    if (holder.isLeaf() && cu != null ) { 
-		holder.add( CUTreeValue.makeNode(cu,Status.NOTPROCESSED));
-		if (escframe != null && escframe.guioptionPanel.settings.autoExpand) 
-			escframe.tree.expandPath(new TreePath(holder.getPath()));
-	    }
-	    setStatus( s, out);  // Notifies the GUI object
-	    return s;
-        }
-    }
-
-    static class CUTreeValue extends EscTreeValue {
-	static public DefaultMutableTreeNode makeNode(CompilationUnit cu, int s) {
-	    EscTreeValue v = new CUTreeValue(cu);
-	    DefaultMutableTreeNode n = new DefaultMutableTreeNode(v);
-	    v.holder = n;
-	    v.status = s;
-	    return n;
-	}
-	public CUTreeValue(CompilationUnit cu) {
-	    this.cu = cu;
-	}
-	public CompilationUnit cu;
-	public String type() { return "Compilation Unit "; }
-	public String toString() {
-	    return cu.sourceFile().toString();
-	}
-	public String getFilename() { return cu.sourceFile().getHumanName(); }
-	public int getLine() { return 1; }
-
-	public int actualAction(int action) {
-	    if (action == CHECK) return TYPECHECK;
-	    return action;
-	}
-        public int processThisAction(int action) {
-	    if (holder.isLeaf()) {
-		// The contents have not been added to the node tree
-		gui.buildCUTree(this);
-	    }
-	    if (action == PARSE || action == RESOLVE) status = getParent().status;
-	    else status = Status.TYPECHECKED_WAITING; // This will get altered 
-					// as subnodes are processed
-	    return status;
-        }
-    }
-*/
     static class TDTreeValue extends EscTreeValue {
 	static public DefaultMutableTreeNode makeNode(TypeDecl td) {
 	    EscTreeValue v = new TDTreeValue(td);
@@ -807,8 +709,7 @@ static {
 	    return action;
 	}
         public int processThisAction(int action) {
-	    gui.processTypeDecl(this,action);
-	    return status;
+	    return gui.processTypeDecl(this,action);
         }
 	public String getFilename() { return Location.toFileName(td.getStartLoc()); }
 	public int getLine() { return Location.toLineNumber(td.getStartLoc()); }
@@ -844,8 +745,7 @@ static {
 	    return action;
 	}
         public int processThisAction(int action) {
-	    gui.processRoutineDecl(this,action);
-	    return status;
+	    return gui.processRoutineDecl(this,action);
         }
     }
 
@@ -900,7 +800,7 @@ static {
 		//System.out.println("PROCESSING " + v.action + " " + o.getClass() + " " + o.toString());
 		v.process(v.action);
 	    } else if (o instanceof Stop) {
-		stop = false;
+		GUI.gui.stop = false;
 	    } else {
 		System.out.println("UNKNOWN TASK: " + o);
 	    }
@@ -920,6 +820,17 @@ static {
 	
 
 /* Issues:
+
+- IF a file in an RS has a parse problem (e.g. missing semicolon), no message
+is reported 
+
+- Problem with Java on XP
+
+- Is there a problem with options being reset when a project is loaded?
+
+- Need a button to reset all options to defaults
+
+- Combine the files of a RS into one entry in the GUI
 
 - Want skeletons for a whole missing file, a new file in ref sequence, a new method in a file
 - Integrate other tools - JML, Daikon

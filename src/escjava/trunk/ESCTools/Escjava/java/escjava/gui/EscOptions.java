@@ -71,10 +71,15 @@ public class EscOptions extends JPanel implements ActionListener {
 	};
 
     public EscOptions(escjava.Options doc) {
-	init(doc);
+	build(doc);
     }
 
     public void init(escjava.Options doc) {
+	// FIXME - change this so it does not rebuild the GUI every time
+	build(doc);
+    }
+
+    public void build(escjava.Options doc) {
 	this.doc = doc;
 	removeAll();
 	JButton jb;
