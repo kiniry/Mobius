@@ -90,7 +90,7 @@ on further distribution of the source.
 OBTAINING CURRENT SOURCE FOR ESC/Java2
 
 A CVS repository of the current work is maintained by Joe Kiniry
-<kiniry@cs.kun.nl>.  Build and execution instructions are provided later
+<kiniry@acm.org>.  Build and execution instructions are provided later
 in this README file.
 
 To obtain access to the CVS distribution, you will need:
@@ -277,6 +277,9 @@ JUNIT_LIB - the location of the JUnit library, used in compiling and
         version of the JUnit library included in the CVS distribution,
         but you can substitute your own by defining this variable.
         All testing is performed with the version included in CVS.
+
+ANT_LIB - the location of the Ant jar file, used in compiling the
+        ESC/Java2 Ant task.
 
 ----------------------------------------------------------------------------
 
