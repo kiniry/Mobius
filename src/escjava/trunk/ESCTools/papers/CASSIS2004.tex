@@ -257,14 +257,14 @@ pre-state and the post-state.  That is,
 \texttt{\char'134 not\_modified(x+y) $\equiv$ ( (x+y) == \char'134 old(x+y) )  }.
 \end{center}
 Uses of the expression in postconditions are expanded inline according
-to this definition .
+to this definition.
 
 \paragraph*{Checking of datagroups and frame conditions}
-JML contains syntax to define datagroups
-~\cite{Leino-Poetzsch-Heffter-Zhou02}.  With datagroups, the items in
+JML contains syntax to define 
+datagroups~\cite{Leino-Poetzsch-Heffter-Zhou02}.  With datagroups, the items in
 an \texttt{assignable} clause may represent sets of program locations,
-and those sets may be extended by subtypes.  Each (of possibly
-multiple) specification cases of a routine may be guarded by a
+and those sets may be extended by subtypes.  Each
+specification case of a routine may be guarded by a
 precondition and may specify the set of store locations that may be
 assigned to.
 
@@ -274,7 +274,7 @@ left-hand side of \textit{expr.field}.  For this to be a legal
 assignment with respect to the specifications, either (a) the
 \textit{expr} must evaluate to an object that has been allocated since
 the beginning of the execution of the method, or (b) it must be the
-case that for every spec-case of the method containing the assignment
+case that for every specification case of the method containing the assignment
 for which the precondition is true (in the pre-state) there is at
 least one store location in the list of assignable locations that
 matches \textit{expr.field}.  To match, the field names must be the
@@ -315,7 +315,7 @@ arrays can be translated into first-order logic as functions without
 difficulty.
 
 \paragraph*{model fields and represents clauses}
-The combination of model fields and \texttt{represents} clauses
+The combination of \texttt{represents} clauses and model fields
 provides a substantial benefit in abstraction, especially since the
 representations may be provided by a subtype \cite{Cheon-etal03}.
 Simple representations can be implemented in ESC/Java2 by inlining the
@@ -358,8 +358,8 @@ semantic issues in JML.  Since ESC/Java2 is built on a different
 source code base than other JML tools, differences of interpretation
 in both syntax and semantics arise on occasion.  These are generally
 resolved and documented via mailing list discussions\footnote{See
-  \texttt{jmlspecs-interest@lists.sourceforge.net},
-  \texttt{jmlspecs-developers@lists.sourceforge.net}, and
+  \texttt{jmlspecs-interest@lists.sourceforge.net},\\
+  \texttt{jmlspecs-developers@lists.sourceforge.net}, and \\
   \texttt{jmlspecs-escjava@lists.sourceforge.net} or the corresponding
   archives at \url{http://sourceforge.net/projects/jmlspecs}} by
 interested parties.  There are, however, still unresolved issues, most
@@ -492,7 +492,7 @@ ensure a double-check of the election count with an independent
 system.  It was also thought that such an external implementation
 would provide some third-party review of the original work, as the new
 implementation would depend entirely upon system design documentation
-and data artifacts (\eg candidate and vote files); no source code
+and data artifacts (e.g. candidate and vote files); no source code
 would be shared, or even seen, by the team implementing the redundant
 system.
 
@@ -532,8 +532,8 @@ methods~\cite{ClarkeWing96}.
       \hline
       \quad     & \textbf{File I/O} & \textbf{Graphical I/O} & \textbf{Core} \\
       \hline
-      # classes & 8                 & 13                     & 6             \\
-      # methods & 154               & 200                    & 83            \\
+       classes & 8                 & 13                     & 6             \\
+       methods & 154               & 200                    & 83            \\
       NCSS      & 837               & 1,599                  & 395           \\
       Specs     & 446               & 172                    & 529           \\
       Approx.\\
@@ -547,7 +547,7 @@ Table~\ref{tab:KOA_System_Summary} summarizes the size, complexity,
 and specification coverage of the three subsystems, as measured with
 the JavaNCSS tool version 20.40.  Assertions were approximately
 counted by simply counting the number of uses of appropriate core
-specification keywords (requires, ensures, invariant, non_null, in,
+specification keywords (requires, ensures, invariant, non\_null, in,
 set, and modifies).
 
 Unsurprisingly, the GUI portion of KOA is the largest subsystem with
@@ -705,7 +705,7 @@ in JML raised by the work on ESC/Java2.  These teams provided the twin
 foundations on which the current work is built.  Other research groups
 that use and critique both JML and ESC/Java2 have provided a research
 environment in which the work described here is useful.  Thanks are
-due also to Leavens who commented on a draft of this paper.
+due also to Leavens for his comments on an eaarly draft of this paper.
 
 Joseph Kiniry is supported by the NWO Pionier research project on
 Program Security and Correctness and the VerifiCard research project.
@@ -746,6 +746,7 @@ Program Security and Correctness and the VerifiCard research project.
 and modularity in writing specifications;
 \item enlarging the use and correcting the handling of scope of ghost fields, so that the syntactic behavior 
 of annotation fields matches that of Java and other JML tools;
+\item[]
 \item[] \textit{Language parsing}
 \item parsing of all of current JML, even if the constructs are
   ignored with respect to typechecking or verification;
@@ -758,6 +759,7 @@ of annotation fields matches that of Java and other JML tools;
 \texttt{\char'134 not\_modified}, \texttt{instance}, \texttt{old}, \texttt{forall},
 \texttt{pure} keywords as defined in JML; and
 \item consistency in the format of annotations in order to match the language handled by other JML tools.
+\item equivalence of \texttt{\char'134 TYPE} and \texttt{java.lang.Class};
 \end{itemize}
 In addition, virtually all of the differences between JML and DEC/SRC ESC/Java
 noted in the JML Reference Manual have been resolved.
@@ -786,7 +788,6 @@ ESC/Java2, the features that are currently ignored are the following:
 \item annotations regarding space and time consumption;
 \item full support of recursive \texttt{maps} declarations;
 \item model programs;
-\item equivalence of \texttt{\char'134 TYPE} and \texttt{java.lang.Class};
 \item some aspects of store-ref expressions;
 \item verification of anonymous and block-level classes;
 \item verification of set comprehension and some forms of quantified
