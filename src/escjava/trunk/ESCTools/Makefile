@@ -348,7 +348,7 @@ binary-release: build ##docs ## FIXME javadoc
 	cp README.first README.txt ${RELTEMP}
 	cd release-files; cp `ls | grep -v CVS` ${RELTEMP}
 	cp escspecs.jar ${RELTEMP}
-	cp jmlspecs.jar ${RELTEMP}
+	cp escspecs.jar ${RELTEMP}/jmlspecs.jar
 	-find ${RELTEMP} -name "*~" -exec rm -f {} \; > /dev/null 2>&1
 	cd ${RELTEMP}; tar cjvf ${RELDIR}/${RELTAR} *
 	rm -rf ${RELTEMP}
