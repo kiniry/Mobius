@@ -3,21 +3,22 @@
 @string {LNCS           = {LNCS}}
 @string{springer        = {Springer}}%{Springer-Verlag}}            %
 
-@string{cav96           = {Computer-Aided Verification (CAV '96)}}
+@string{cav96           = {Computer-Aided Verification (CAV~'96)}}
 @string{tacas00 	= "Tools and Algorithms
                            for the Construction and Analysis of
-		  Systems (TACAS 2000)"}
+		  Systems (TACAS~2000)"}
 @string{tacas01 	= "Tools and Algorithms
                            for the Construction and Analysis of
-		  Systems (TACAS 2001)"}
-@string{fase00          = "Fundamental Approaches to Software Engineering (FASE 2000)"}
-@string{fase01          = "Fundamental Approaches to Software Engineering (FASE 2001)"}
+		  Systems (TACAS~2001)"}
+@string{fase00          = "Fundamental Approaches to Software Engineering (FASE~2000)"}
+@string{fase01          = "Fundamental Approaches to Software Engineering (FASE~2001)"}
 
 @STRING{OOPSLA98  = "Object-Oriented Programming, Systems, Languages
-		   and Applications (OOPSLA '98)"}
+		   and Applications (OOPSLA~'98)"}
 @STRING{ACMTPLS         = "ACM Trans. on Progr. Lang. and Systems"}
 @string{amast02         = "Algebraic Methodology And Software
-                  Technology (AMAST '02)"}
+                  Technology (AMAST~'02)"}
+@string{fme02           = "Formal Methods Europe (FME~'02)"}
 
 @book{Alexander79,
   author = {C. Alexander},
@@ -195,7 +196,11 @@ year = 2001
 title = {Formal Specification and Static Checking of Gemplus's Electronic Purse Using {ESC/Java}},
 author = "N. Cata{\~n}o and M. Huisman",
 year = 2002,
-booktitle = "Annual VerifiCard Meeting",
+booktitle = fme02,
+editor = "L.-H. Eriksson and P.A. Lindsay",
+series = lncs,
+publisher = springer,
+note = "To appear"
 }
 
 @misc{CatanoH02b,
@@ -556,7 +561,7 @@ note= {\texttt{http://java.sun.com/products/javacard/}}
 @misc{InsurePP,
 title   = {ParaSoft Insure$++$},
 key     = {INSURE},
-note    = {\texttt{{http://www.parasoft.com/jsp/products/home.jsp?product=Insure}}}
+note    = {\texttt{{http://www.parasoft.com/insure}}}
 }
 
 @book{JoyJiniSpecification99,
@@ -758,7 +763,7 @@ publisher = {Springer-Verlag}
 
 @PhdThesis{Mueller01,
   author = {M{\"u}ller, P.},
-  title =  {Modular Specification and Verification of Object Oriented Programs, PhD Thesis},
+  title =  {Modular Specification and Verification of Object Oriented Programs},
   school = {FernUniversit\"at Hagen},
   year =   2001,
 }
