@@ -148,7 +148,17 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
     // Extensions to type declaration member checkers.
 
     protected void checkTypeDeclElem(TypeDeclElem e) {
+	boolean savedInAnnotation = inAnnotation;
+	if (e instanceof ConstructorDecl &&
+		null != GetSpec.findModifierPragma(((ConstructorDecl)e).pmodifiers,TagConstants.MODEL)) {
+		inAnnotation = true;
+	}
+	if (e instanceof MethodDecl &&
+		null != GetSpec.findModifierPragma(((MethodDecl)e).pmodifiers,TagConstants.MODEL)) {
+		inAnnotation = true;
+	}
         super.checkTypeDeclElem(e);
+	inAnnotation = savedInAnnotation;
     
         if (e.getTag() == TagConstants.INITBLOCK) {
             InitBlock ib = (InitBlock)e;
@@ -263,10 +273,11 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
             if (allowed) {
                 Assert.notFalse(!isTwoStateContext);
                 Assert.notFalse(!inAnnotation);
+		boolean savedInAnnotation = inAnnotation;
                 inAnnotation = true;
                 isTwoStateContext = true;
                 s.expr = checkPredicate(env, s.expr);
-                inAnnotation = false;
+                inAnnotation = savedInAnnotation;
                 isTwoStateContext = false;
             } else {
                 errorExpectingLoop(s.getStartLoc(), TagConstants.LOOP_INVARIANT);
@@ -283,9 +294,10 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
             if (allowed) {
                 Assert.notFalse(!isTwoStateContext);
                 Assert.notFalse(!inAnnotation);
+		boolean savedInAnnotation = inAnnotation;
                 inAnnotation = true;
                 s.expr = checkExpr(env, s.expr, Types.intType);
-                inAnnotation = false;
+                inAnnotation = savedInAnnotation;
             } else {
                 errorExpectingLoop(s.getStartLoc(), TagConstants.DECREASES);
             }
@@ -300,10 +312,11 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
             if (allowed) {
                 Assert.notFalse(!isTwoStateContext);
                 Assert.notFalse(!inAnnotation);
+		boolean savedInAnnotation = inAnnotation;
                 inAnnotation = true;
                 isTwoStateContext = true;
                 s.expr = checkPredicate(env, s.expr);
-                inAnnotation = false;
+                inAnnotation = savedInAnnotation;
                 isTwoStateContext = false;
             } else {
                 errorExpectingLoop(s.getStartLoc(), TagConstants.LOOP_PREDICATE);
@@ -318,11 +331,12 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
             if (allowed) {
                 Assert.notFalse(!isTwoStateContext);
                 Assert.notFalse(!inAnnotation);
+		boolean savedInAnnotation = inAnnotation;
                 inAnnotation = true;
                 isTwoStateContext = true;
                 env.resolveType(s.type);
                 env = new EnvForLocals(env, s);
-                inAnnotation = false;
+                inAnnotation = savedInAnnotation;
                 isTwoStateContext = false;	
             } else {
                 errorExpectingLoop(s.getStartLoc(), TagConstants.SKOLEM_CONSTANT);
@@ -1082,6 +1096,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 
     protected  void checkTypeDeclElemPragma(TypeDeclElemPragma e) {
         int tag = e.getTag();
+	boolean savedInAnnotation = inAnnotation;
         inAnnotation = true;	// Must be reset before we exit!
 
         switch(tag) {
@@ -1156,17 +1171,24 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                 }
 
 	    case TagConstants.MODELCONSTRUCTORDECLPRAGMA: {
-                ConstructorDecl decl = ((ModelConstructorDeclPragma)e).decl;
+		ModelConstructorDeclPragma me = (ModelConstructorDeclPragma)e;
+                ConstructorDecl decl = me.decl;
                 Env rootEnv = Modifiers.isStatic(decl.modifiers)
                     ? rootSEnv
                     : rootIEnv;
                 checkModifierPragmaVec( decl.pmodifiers, decl, rootEnv );
+System.out.println("CONST " + me.parent.id + " " + me.id.id + " " + (me.parent.id == me.id.id));
+		if (me.parent.id != me.id.id ) {
+		    ErrorSet.error(me.id.getStartLoc(),
+			"A constructor must have the same id as the enclosing class (" + me.id.id + " vs. " + me.parent.id + ")");
+		}
 		// FIXME -- need to do some checks???
 		break;
             }
 
 
 	    case TagConstants.MODELMETHODDECLPRAGMA: {
+System.out.println("MODEL METHOD");
                 MethodDecl decl = ((ModelMethodDeclPragma)e).decl;
                 Env rootEnv = Modifiers.isStatic(decl.modifiers)
                     ? rootSEnv
@@ -1277,7 +1299,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                 Assert.fail("Unexpected tag " + tag + 
 				" " + TagConstants.toString(tag));
         }
-        inAnnotation = false;
+        inAnnotation = savedInAnnotation;
     }
 
     protected boolean checkModifierPragma(ModifierPragma p, ASTNode ctxt, Env env) {
@@ -1951,6 +1973,16 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 		// Just ignore these.
 		break;
 
+	    case TagConstants.GHOST:
+	    case TagConstants.MODEL:
+		if (ctxt instanceof ConstructorDecl) {
+
+			// FIXME
+			//System.out.println("CHECK CONSTRCUTOR");
+
+		}
+		break;
+
             default:
                 ErrorSet.error(p.getStartLoc(),
 				"Ignored unexpected " +  
@@ -1994,6 +2026,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
     }
 
     protected void checkStmtPragma(Env e, StmtPragma s) {
+	boolean savedInAnnotation = inAnnotation;
         inAnnotation = true;	// Must be reset before we exit!
         int tag = s.getTag();
         switch(tag) {
@@ -2062,7 +2095,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                 Assert.fail("Unexpected tag " + tag +" "+s +
 				" " + Location.toString(s.getStartLoc()));
         }
-        inAnnotation = false;
+        inAnnotation = savedInAnnotation;
     }
 
 

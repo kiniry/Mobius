@@ -285,7 +285,8 @@ public class TagConstants extends javafe.tc.TagConstants
     public static final int CHOOSE = CHOOSE_IF + 1;
     public static final int CONSTRAINT_REDUNDANTLY = CHOOSE + 1;
     public static final int CONSTRAINT = CONSTRAINT_REDUNDANTLY + 1;
-    public static final int CONTINUES_REDUNDANTLY = CONSTRAINT + 1;
+    public static final int CONSTRUCTOR = CONSTRAINT + 1;
+    public static final int CONTINUES_REDUNDANTLY = CONSTRUCTOR + 1;
     public static final int CONTINUES = CONTINUES_REDUNDANTLY + 1; // @review
     public static final int DECREASES_REDUNDANTLY = CONTINUES + 1;
     // decreases -- an ESC keyword
@@ -304,8 +305,9 @@ public class TagConstants extends javafe.tc.TagConstants
     public static final int EXCEPTIONAL_BEHAVIOR = EXAMPLE + 1;
     public static final int EXCEPTIONAL_EXAMPLE = EXCEPTIONAL_BEHAVIOR + 1;
     public static final int EXSURES_REDUNDANTLY = EXCEPTIONAL_EXAMPLE + 1;
+    public static final int FIELDKW = EXSURES_REDUNDANTLY + 1;
     // exsures -- an ESC keyword
-    public static final int NO_WACK_FORALL = EXSURES_REDUNDANTLY + 1;
+    public static final int NO_WACK_FORALL = FIELDKW + 1;
     public static final int FOR_EXAMPLE = NO_WACK_FORALL + 1;
     // ghost -- an ESC keyword
     public static final int IMPLIES_THAT = FOR_EXAMPLE + 1;
@@ -323,7 +325,8 @@ public class TagConstants extends javafe.tc.TagConstants
     public static final int MAINTAINING = MAINTAINING_REDUNDANTLY + 1;
     public static final int MEASURED_BY_REDUNDANTLY = MAINTAINING + 1;
     public static final int MEASURED_BY = MEASURED_BY_REDUNDANTLY + 1;
-    public static final int MODEL = MEASURED_BY + 1;
+    public static final int METHOD = MEASURED_BY + 1;
+    public static final int MODEL = METHOD + 1;
     public static final int MODEL_PROGRAM = MODEL + 1;
     public static final int MODIFIABLE_REDUNDANTLY = MODEL_PROGRAM + 1;
     public static final int MODIFIABLE = MODIFIABLE_REDUNDANTLY + 1;
@@ -847,6 +850,7 @@ public class TagConstants extends javafe.tc.TagConstants
         Identifier.intern("choose"),
         Identifier.intern("constraint_redundantly"),
         Identifier.intern("constraint"),
+	Identifier.intern("constructor"),
         Identifier.intern("continues_redundantly"),
         Identifier.intern("continues"),
         Identifier.intern("decreases_redundantly"),
@@ -864,6 +868,7 @@ public class TagConstants extends javafe.tc.TagConstants
         Identifier.intern("exceptional_behavior"),
         Identifier.intern("exceptional_example"),
         Identifier.intern("exsures_redundantly"),
+	Identifier.intern("field"),
         Identifier.intern("forall"),
         Identifier.intern("for_example"),
         Identifier.intern("implies_that"),
@@ -878,6 +883,7 @@ public class TagConstants extends javafe.tc.TagConstants
         Identifier.intern("maintaining"),
         Identifier.intern("measured_by_redundantly"),
         Identifier.intern("measured_by"),
+	Identifier.intern("method"),
         Identifier.intern("model"),
         Identifier.intern("model_program"),
         Identifier.intern("modifiable_redundantly"),

@@ -1110,8 +1110,9 @@ public class EscPragmaParser extends Parse implements PragmaParser
 		    } else {
 			savedGhostModelPragma = SimpleModifierPragma.make(tag, loc);
 		    }
-		    return getNextPragma(dst);
-		    // no fall-through
+                    dst.ttype = TagConstants.MODIFIERPRAGMA;
+                    dst.auxVal = SimpleModifierPragma.make(tag, loc);
+                    break;
 
 
                 case TagConstants.MODEL:
@@ -1133,8 +1134,9 @@ public class EscPragmaParser extends Parse implements PragmaParser
 		    } else {
 			savedGhostModelPragma = SimpleModifierPragma.make(tag, loc);
 		    }
-		    return getNextPragma(dst);
-		    // no fall-through
+                    dst.ttype = TagConstants.MODIFIERPRAGMA;
+                    dst.auxVal = SimpleModifierPragma.make(tag, loc);
+                    break;
 
                 case TagConstants.SKOLEM_CONSTANT: {
 		    checkNoModifiers(tag,loc);
@@ -1423,6 +1425,22 @@ public class EscPragmaParser extends Parse implements PragmaParser
                                    tag + " " + TagConstants.toString(tag));
                     break;
 	
+		case TagConstants.CONSTRUCTOR:
+		case TagConstants.METHOD:
+		    if (savedGhostModelPragma == null) {
+			ErrorSet.error(loc,"A " + TagConstants.toString(tag) +
+			" keyword may only be used in a model method declaration");
+		    }
+		case TagConstants.FIELDKW:
+		    if (savedGhostModelPragma == null && tag == TagConstants.FIELDKW) {
+			ErrorSet.error(loc,"A " + TagConstants.toString(tag) +
+			" keyword may only be used in a ghost or model declaration");
+		    }
+		    if (savedGhostModelPragma != null) {
+			semicolonExpected = parseDeclaration(dst, loc, tag);
+		    }
+		    break;
+
                 default:
 		    if (savedGhostModelPragma != null) {
 			// Ghost is special because it can be placed in any
@@ -1433,7 +1451,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
 			// field declaration begins).  So we have gotten all
 			// of the modifiers above, and we see that one of them
 			// is ghost, so we go off to parse the field declaration
-			semicolonExpected = parseDeclaration(dst, loc);
+			semicolonExpected = parseDeclaration(dst, loc, 0);
 		    } else {
                     ErrorSet.error(loc, "Unrecognized pragma: " + tag + " " +
                                    TagConstants.toString(tag));
@@ -2361,7 +2379,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
 	can be a ghost or model field or a model method or constructor.
 	@return true if a terminating semicolon is expected next
     */
-    public boolean parseDeclaration(Token dst, int loc) {
+    public boolean parseDeclaration(Token dst, int loc, int kwtag) {
       try {
 
 	int tag = savedGhostModelPragma.getTag();
@@ -2372,6 +2390,9 @@ public class EscPragmaParser extends Parse implements PragmaParser
 	Type type = parseType(scanner); 
 
 	if (scanner.ttype == TagConstants.LPAREN) {
+	    if (!(kwtag == 0 || kwtag == TagConstants.CONSTRUCTOR)) {
+		ErrorSet.caution("A constructor declaration is encountered after a " +TagConstants.toString(kwtag) + " keyword");
+	    }
 	    if (tag == TagConstants.GHOST) {
 		ErrorSet.error(savedGhostModelPragma.getStartLoc(),
 			"A constructor may not be declared ghost");
@@ -2393,15 +2414,21 @@ public class EscPragmaParser extends Parse implements PragmaParser
 	// A method will have a (
 
 	if (scanner.ttype == TagConstants.LPAREN) {
-		if (tag == TagConstants.GHOST) {
-		    ErrorSet.error(savedGhostModelPragma.getStartLoc(),
-			"A method may not be declared ghost");
-		}
-		return parseMethodDeclTail(dst,loc,type,locType,id,locId);
-		// Note the finally block
+	    if (!(kwtag == 0 || kwtag == TagConstants.METHOD)) {
+		ErrorSet.caution("A method declaration is encountered after a " +TagConstants.toString(kwtag) + " keyword");
+	    }
+	    if (tag == TagConstants.GHOST) {
+		ErrorSet.error(savedGhostModelPragma.getStartLoc(),
+		    "A method may not be declared ghost");
+	    }
+	    return parseMethodDeclTail(dst,loc,type,locType,id,locId);
+	    // Note the finally block
 	} else {
-		return parseFieldDeclTail(dst,loc,locId,type,id);
-		// Note the finally block
+	    if (!(kwtag == 0 || kwtag == TagConstants.FIELDKW)) {
+		ErrorSet.caution("A field declaration is encountered after a " +TagConstants.toString(kwtag) + " keyword");
+	    }
+	    return parseFieldDeclTail(dst,loc,locId,type,id);
+	    // Note the finally block
 	}
       } finally {
 	inProcessTag = NEXT_TOKEN_STARTS_NEW_PRAGMA;
@@ -2473,6 +2500,18 @@ public class EscPragmaParser extends Parse implements PragmaParser
     public boolean parseConstructorDeclTail(Token dst, int loc, Type type,
 						int locType) {
 	// Must be a model constructor
+	SimpleName id = null;
+	if (!(type instanceof TypeName)) {
+	    ErrorSet.error(type.getStartLoc(),"The type name in a constructor declaration may not be a primitive or array type");
+	} else {
+	    Name name = ((TypeName)type).name;
+	    if (!(name instanceof SimpleName)) {
+		ErrorSet.error(name.getStartLoc(),
+		    "The type name in a constructor must be a simple name that matches the name of the enclosing type");
+	    } else {
+		id = (SimpleName)name;
+	    }
+	}
 	FormalParaDeclVec args;
 	argListInAnnotation = true;
 	try {
@@ -2505,13 +2544,16 @@ public class EscPragmaParser extends Parse implements PragmaParser
 		"encountered " + 
 		TagConstants.toString(scanner.ttype));
 	}
-	// FIXME - need to add the method into the decl elements of the type
 	ConstructorDecl md = ConstructorDecl.make(
 				modifiers, modifierPragmas,
 				null, args,
 				raises, body, locOpenBrace,
 				loc, locType, locThrowsKeyword);
-	dst.auxVal = ModelConstructorDeclPragma.make(md,loc);
+	ModelConstructorDeclPragma mcd = ModelConstructorDeclPragma.make(md,loc,id);
+	dst.auxVal = mcd;
+		// Semantic checks in FlowInsensitiveChecks verify that the
+		// id matches the enclosing type, since the enclosing type
+		// is not available here.
 	return false; // No semicolon, or it is already eaten
     }
 
