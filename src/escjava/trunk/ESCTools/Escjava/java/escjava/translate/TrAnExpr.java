@@ -738,7 +738,7 @@ System.out.println("");
 		Assert.notFalse(st == null || ! st.contains(decl));
 		dummyDecls.addElement(decl);
 
-		// FIXME goodTypes = GC.and(goodTypes, quantTypeCorrect(decl, sp));
+		goodTypes = GC.and(goodTypes, quantTypeCorrect(decl, sp));
 	    }
 	    if (qe.expr.getTag() == tag) {
 	      qe = (QuantifiedExpr)qe.expr;
