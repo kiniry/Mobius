@@ -88,9 +88,9 @@ GoodJmlPragmas.j:155: /*@ when_redundantly predicate; */
 GoodJmlPragmas.j:157: /*@ working_space_redundantly \not_specified; */
 GoodJmlPragmas.j:158: /*@ working_space_redundantly spec_expression_of_type_int; */
 GoodJmlPragmas.j:159: /*@ working_space_redundantly spec_expression_of_type_int if predicate; */
-GoodJmlPragmas.j:169: /*@ duration \not_specified; */
-GoodJmlPragmas.j:170: /*@ duration spec_expression; */
-GoodJmlPragmas.j:171: /*@ duration spec_expression if predicate; */
-GoodJmlPragmas.j:173: /*@ working_space \not_specified; */
-GoodJmlPragmas.j:174: /*@ working_space spec_expression_of_type_int; */
-GoodJmlPragmas.j:175: /*@ working_space spec_expression_of_type_int if predicate; */
+GoodJmlPragmas.j:168: /*@ duration \not_specified; */
+GoodJmlPragmas.j:169: /*@ duration spec_expression; */
+GoodJmlPragmas.j:170: /*@ duration spec_expression if predicate; */
+GoodJmlPragmas.j:172: /*@ working_space \not_specified; */
+GoodJmlPragmas.j:173: /*@ working_space spec_expression_of_type_int; */
+GoodJmlPragmas.j:174: /*@ working_space spec_expression_of_type_int if predicate; */

@@ -41,7 +41,7 @@
 //@ behavior
 //@ normal_behavior
 //@ exceptional_behavior
-//@ abrupt_behavior
+// abrupt_behavior
 
 // redundant specifications
 
@@ -161,8 +161,7 @@
 //@ \duration(bar());
 //@ \duration(Foo.bar());
 //@ \duration(this.foo());
-//@ \duration(super());
-//@ \duration(super().foo());
+//@ \duration(super.foo());
 //@ \space(Foo.bar());
 //@ \working_space(Foo.bar());
 
