@@ -51,6 +51,7 @@ alltests:
 
 ########################################### general
 
+## It does not appear that this is used anywhere - is it needed? FIXME
 .PHONY: fix-perms
 fix-perms:
 	find $(ESCTOOLS_ROOT) -type f \
