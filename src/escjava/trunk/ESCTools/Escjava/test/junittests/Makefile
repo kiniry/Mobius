@@ -26,7 +26,6 @@ export JUNITSW = $(JAVA) -Xmx256M -classpath "${_CLASSPATH}" \
 ##############################################################################
 .PHONY: buildtests
 buildtests:
-	echo "${_CLASSPATH}"
 	$(JAVAC) -classpath "${_CLASSPATH}" TestSuite.java
 	cp Binary.javax Binary.java
 	javac Binary.java
@@ -94,6 +93,7 @@ endif
 lists:
 	@rm -f listtests
 	@touch listtests
+ifdef COMSPEC
 	@for f in `ls *.java ${OTHERTESTS} | grep -v -f skip -f notjunittests`; do \
 		echo -n ${ALWAYSFLAGS} " " >> listtests ; \
 		( grep FLAGS $$f || echo ${DEFAULTFLAGS} ) \
@@ -102,6 +102,15 @@ lists:
 		| sed -e "s@.:..@.;..@" \
 		>> listtests ; \
 	done
+else
+	@for f in `ls *.java ${OTHERTESTS} | grep -v -f skip -f notjunittests`; do \
+		echo -n ${ALWAYSFLAGS} " " >> listtests ; \
+		( grep FLAGS $$f || echo ${DEFAULTFLAGS} ) \
+		| sed -e 's?//#FLAGS:??' -e "s/\$$/ $$f/"  \
+		| sed -e "s@ESCTOOLS_ROOT@${ESCTOOLS_ROOT}@" \
+		>> listtests ; \
+	done
+endif
 
 .PHONY: septest
 septest:
@@ -153,7 +162,7 @@ othertests: $(addsuffix -test,${OTHERTESTS})
 
 %-test: 
 	@echo Testing $* 
-	if [ ! -e $* ] ; then \
+	@if [ ! -e $* ] ; then \
 		echo No such file $* ;\
 	else \
 	(${ESCJAVA} ${ALWAYSFLAGS} \
