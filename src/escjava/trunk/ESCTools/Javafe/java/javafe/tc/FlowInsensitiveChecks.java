@@ -1329,6 +1329,7 @@ public class FlowInsensitiveChecks
             case TagConstants.POSTFIXINC: case TagConstants.POSTFIXDEC: {
                 UnaryExpr ue = (UnaryExpr)x;
                 ue.expr = checkDesignator(env, ue.expr);
+
 		if (ue.expr instanceof VariableAccess) {
 		    GenericVarDecl v = ((VariableAccess)ue.expr).decl;
 		    if (Modifiers.isFinal(v.modifiers))
@@ -1812,7 +1813,11 @@ public class FlowInsensitiveChecks
             case TagConstants.ASGBITXOR: {
 		if (left instanceof VariableAccess) {
 		    GenericVarDecl v = ((VariableAccess)left).decl;
-		    if (Modifiers.isFinal(v.modifiers))
+		    if (Modifiers.isFinal(v.modifiers) && 
+			(v instanceof FormalParaDecl ||
+			(v instanceof LocalVarDecl &&
+			    ((LocalVarDecl)v).init != null)
+			))
 			ErrorSet.caution(left.getStartLoc(),
 			    "May not assign to a final variable",
 			    v.getStartLoc());
@@ -1823,7 +1828,9 @@ public class FlowInsensitiveChecks
 		    if (v == Types.lengthFieldDecl) 
 			ErrorSet.error(left.getStartLoc(),
 			    "May not assign to array's length field");
-		    else if (v != null && Modifiers.isFinal(v.modifiers))
+		    else if (v != null && Modifiers.isFinal(v.modifiers) &&
+			v instanceof FieldDecl &&
+			((FieldDecl)v).init != null)
 			ErrorSet.caution(left.getStartLoc(),
 			    "May not assign to a final field",
 			    v.getStartLoc());
