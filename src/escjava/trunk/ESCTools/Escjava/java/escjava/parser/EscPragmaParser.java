@@ -755,7 +755,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
 
                 case TagConstants.SET: {
                     dst.ttype = TagConstants.STMTPRAGMA;
-                    Expr target = parseExpression(scanner);
+                    Expr target = parsePrimaryExpression(scanner);
                     int locOp = scanner.startingLoc;
                     expect(scanner, TagConstants.ASSIGN);
                     Expr value = parseExpression(scanner);
@@ -1449,7 +1449,6 @@ public class EscPragmaParser extends Parse implements PragmaParser
                     // May be followed by ( ArgumentListopt ) :
                     if (l.ttype == TagConstants.LPAREN) {
                         int locOpenParen = l.startingLoc;
-                        l.getNextToken();
                         
                         Identifier kw = n.identifierAt(0);
                         int tag = TagConstants.fromIdentifier(kw);
@@ -1462,6 +1461,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
 			} else {
                             switch (tag) {
                                 case TagConstants.TYPE: {
+				    l.getNextToken();
                                     Type subexpr = parseType(l);
                                     primary = TypeExpr.make(loc, l.startingLoc, subexpr);
                                     expect(l, TagConstants.RPAREN);
@@ -1469,6 +1469,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
                                 }
                                     
                                 case TagConstants.DTTFSA: {
+				    l.getNextToken();
                                     Type t = parseType(l);
                                     TypeExpr te = TypeExpr.make(loc, l.startingLoc, t);
                                     expect(l, TagConstants.COMMA);
@@ -1484,6 +1485,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
                                 case TagConstants.MAX: 
                                 case TagConstants.PRE:
                                 case TagConstants.TYPEOF: {
+				    l.getNextToken();
                                     ExprVec args = parseExpressionList(l, TagConstants.RPAREN);
                                     primary = NaryExpr.make(loc, l.startingLoc, tag, null, args);
                                     break;
