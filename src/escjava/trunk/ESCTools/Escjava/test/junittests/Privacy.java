@@ -1,5 +1,5 @@
+// Tests spec_public, spec_protected
 public class Privacy {
-
 	private boolean b;
 
 	//@ spec_public
@@ -54,7 +54,7 @@ public class Privacy {
 	//@ protected model boolean ppmg;
 	//@ public model boolean pppmg;
 
-//@ FIXME - check for model methods, model constructors, model and non-model types
+// FIXME - check for model methods, model constructors, model and non-model types
 
 	//@ ensures g && pg && ppg && pppg;
 	//@ ensures mg && pmg && ppmg && pppmg;

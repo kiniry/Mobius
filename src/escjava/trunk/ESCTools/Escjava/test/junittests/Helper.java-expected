@@ -12,14 +12,17 @@ Helper: mm() ...
 Helper: p() ...
 ------------------------------------------------------------------------
 Helper.java:25: Warning: Possible violation of object invariant (Invariant)
-        public void p() { i=10; }
-                                ^
+        public void p() { i=10; return; }
+                                        ^
 Associated declaration is "Helper.java", line 29, col 12:
         //@ public invariant i == 0;
                    ^
 Possibly relevant items from the counterexample context:  
   brokenObj == this
 (brokenObj* refers to the object for which the invariant is broken.)
+
+Execution trace information:
+    Executed return in "Helper.java", line 25, col 25.
 
 ------------------------------------------------------------------------
     [TIME]  failed

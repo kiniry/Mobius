@@ -5,10 +5,10 @@ SpecFileRef2 ...
 
 SpecFileRef2: n() ...
 ------------------------------------------------------------------------
-SpecFileRef2.java:5: Warning: Precondition possibly not established (Pre)
+SpecFileRef2.java:6: Warning: Precondition possibly not established (Pre)
                 s.m();
                    ^
-Associated declaration is "./SpecFile.jml", line 4, col 5:
+Associated declaration is "./SpecFileHelper.jml", line 4, col 5:
         //@ requires false;
             ^
 ------------------------------------------------------------------------

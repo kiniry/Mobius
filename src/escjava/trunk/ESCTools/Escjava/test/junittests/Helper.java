@@ -22,7 +22,7 @@ public class Helper {
 
 // Error here, since the invariant is not maintained.
 	//@ modifies i;
-	public void p() { i=10; }
+	public void p() { i=10; return; }
 
 	public int i;
 

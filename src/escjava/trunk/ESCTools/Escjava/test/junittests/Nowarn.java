@@ -1,4 +1,4 @@
-
+// Tests nowarn annotations
 
 public class Nowarn {
 
@@ -12,4 +12,6 @@ public class Nowarn {
 		o = null; //@ nowarn NonNull ;
 		oo = null;
 	}
+
+	//@ nowarn;
 }

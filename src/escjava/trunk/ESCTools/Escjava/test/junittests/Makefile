@@ -32,11 +32,13 @@ swtests: lists
 ALWAYSFLAGS = -nowarn Deadlock -verboseTrace -testMode
 DEFAULTFLAGS = " "
 
+OTHERTESTS = RefineT.t SpecFile.jml RefineNoJava.refines-java
+
 .PHONY: lists
 lists:
 	@rm -f listtests
 	@touch listtests
-	@for f in `ls *.java | grep -v -f skip`; do \
+	@for f in `ls *.java ${OTHERTESTS} | grep -v -f skip`; do \
 		echo -n ${ALWAYSFLAGS} " " >> listtests ; \
 		( grep FLAGS $$f || echo ${DEFAULTFLAGS} ) \
 		| sed -e 's?//#FLAGS:??' -e "s/\$$/ $$f/" >> listtests ; \
@@ -51,7 +53,7 @@ septest: skips othertests
 skips:
 	@echo Skipped: `cat skip | grep -v "^#" `
 
-othertests: SpecFile.jml-test
+othertests: $(addsuffix -test,${OTHERTESTS})
 
 # The sed -e s/x/x/ is just meant to be a noop since I can't seem
 # to get 2>&1 > to work in order to output directly into the -ckd file

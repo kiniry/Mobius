@@ -1,7 +1,8 @@
+// Tests reading some specs from another file
+//#FLAGS: -sourcepath .
 public class SpecFileRef2 {
-
 	public void n() {
-		SpecFile s = new SpecFile();
+		SpecFileHelper s = new SpecFileHelper();
 		s.m();
 	}
 }
