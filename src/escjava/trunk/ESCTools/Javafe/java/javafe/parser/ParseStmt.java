@@ -204,11 +204,10 @@ public abstract class ParseStmt extends ParseExpr
         int keywordloc = l.startingLoc;
         switch (ttype) {
             case TagConstants.ASSERT: { // 'assert' BoolExpr [ ':' NonVoidExpr ] ';'
-                // Only process if we are supposed to be parsing Java
-                // 1.4 or later.
+                // Only process if assert *is* a keyword.
                 if (!Tool.options.assertIsKeyword) {
                     fail(l.startingLoc, "Java keyword \"assert\" is only supported if the" +
-                         "-source 1.4 option is provided.");
+                         " -source 1.4 option is provided.");
                 }
                 
                 l.getNextToken(); // Discard the keyword
