@@ -164,6 +164,10 @@ public class TestLex implements PragmaParser {
     l.close();
   }
 
+  public javafe.ast.FieldDecl isPragmaDecl(javafe.parser.Lex l) {
+	return null;
+  }
+
   //@ invariant fakeLoc!=Location.NULL
   public static int fakeLoc = Location.createFakeLoc("<fake location>");
 }

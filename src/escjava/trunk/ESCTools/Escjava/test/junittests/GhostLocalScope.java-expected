@@ -1,0 +1,41 @@
+ESC/Java version VERSION
+  Prover started:TIME
+
+GhostLocalScope ...
+GhostLocalScope.java:19: Error: Can use set only on ghost variables
+                //@ set kk = 8; // ERROR
+                        ^
+GhostLocalScope.java:10: Associated declaration: 
+                int kk = 0;
+                ^
+GhostLocalScope.java:21: Error: Undefined variable 'i'
+                kk = i; // ERROR
+                     ^
+GhostLocalScope.java:22: Error: Undefined variable 'k'
+                kk = k; // ERROR
+                     ^
+GhostLocalScope.java:29: Error: Variable 'y' is already defined here.
+                //@ ghost Object y; // ERROR - Duplicate
+                                 ^
+GhostLocalScope.java:28: Associated declaration: 
+                Object y;
+                ^
+GhostLocalScope.java:35: Error: An instance field may be accessed only via an object and/or from a non-static context or an inner class enclosed by a type possessing that field.
+                kk = ii; // ERROR
+                     ^
+GhostLocalScope.java:36: Error: Undefined variable 'i'
+                kk = i;  // ERROR
+                     ^
+GhostLocalScope.java:38: Error: Undefined variable 'i'
+                //@ set k = i; // ERROR
+                            ^
+GhostLocalScope.java:39: Error: An instance field may be accessed only via an object and/or from a non-static context or an inner class enclosed by a type possessing that field.
+                //@ set k = ii; // ERROR
+                            ^
+GhostLocalScope.java:41: Error: Undefined variable 'k'
+                kk = k; // ERROR
+                     ^
+Caution: Turning off extended static checking due to type error(s)
+  [TIME total] (aborted)
+1 caution
+9 errors

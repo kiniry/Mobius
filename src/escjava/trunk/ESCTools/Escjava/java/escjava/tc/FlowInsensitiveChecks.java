@@ -31,6 +31,12 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
      * Are we in the middle of processing an annotation? (Used by {@link GhostEnv}.)
      */
     public static boolean inAnnotation = false;
+    public static boolean inModelBody = false;
+	// FIXME - the above two variables are a hack!  Note that below we
+	// have to save and restore their values so that the appropriate
+	// values are read out of these global-static variables by GhostEnv.
+	// It would be much better to create a sub Env that understands what
+	// to do and pass that along for the checks. -- DRCok
 
     public escjava.AnnotationHandler annotationHandler = new escjava.AnnotationHandler();
     /**
@@ -149,16 +155,20 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 
     protected void checkTypeDeclElem(TypeDeclElem e) {
 	boolean savedInAnnotation = inAnnotation;
+	boolean savedInModelBody = inModelBody;
 	if (e instanceof ConstructorDecl &&
 		null != GetSpec.findModifierPragma(((ConstructorDecl)e).pmodifiers,TagConstants.MODEL)) {
 		inAnnotation = true;
+		inModelBody = true;
 	}
 	if (e instanceof MethodDecl &&
 		null != GetSpec.findModifierPragma(((MethodDecl)e).pmodifiers,TagConstants.MODEL)) {
 		inAnnotation = true;
+		inModelBody = true;
 	}
         super.checkTypeDeclElem(e);
 	inAnnotation = savedInAnnotation;
+	inModelBody = savedInModelBody;
     
         if (e.getTag() == TagConstants.INITBLOCK) {
             InitBlock ib = (InitBlock)e;
@@ -257,6 +267,31 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                 checkSkolemConstants(env, false);
                 break;
             }
+	    case TagConstants.VARDECLSTMT: {
+		VarDeclStmt vs = (VarDeclStmt)s;
+		LocalVarDecl x = vs.decl;
+		if (escjava.translate.GetSpec.findModifierPragma(x.pmodifiers,
+				TagConstants.GHOST) != null) {
+		    boolean savedInAnnotation = inAnnotation;
+		    inAnnotation = true;
+		    checkTypeModifiers(env, x.type);
+		    javafe.tc.PrepTypeDeclaration.inst.
+			checkModifiers(x.modifiers, Modifiers.ACC_FINAL,
+			    x.locId, "local ghost variable");
+		    checkModifierPragmaVec(x.pmodifiers, x, env);
+
+		    Env newEnv = new EnvForGhostLocals(env,x);
+		    if (x.init != null)
+			x.init = checkInit(newEnv, x.init, x.type);
+		    env = newEnv;
+		    inAnnotation = savedInAnnotation;
+		    break;
+		}
+
+		env = super.checkStmt(env, s);
+                break;
+
+	    }
             default:
                 env = super.checkStmt(env, s);
                 break;
@@ -1085,10 +1120,10 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
             case TagConstants.ASGURSHIFT: case TagConstants.ASGBITAND:
             case TagConstants.ASGBITOR: case TagConstants.ASGBITXOR:
                 {
-                    if (inAnnotation) {
+                    if (inAnnotation && !inModelBody) {
                         BinaryExpr be = (BinaryExpr)e;
                         ErrorSet.error(be.locOp,
-                                       "assignments cannot be used in specification expressions");
+			   "assignments cannot be used in specification expressions");
                     }
                     return super.checkExpr(env, e);
                 }
@@ -1096,10 +1131,10 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
             case TagConstants.INC: case TagConstants.DEC: 
             case TagConstants.POSTFIXINC: case TagConstants.POSTFIXDEC:
                 {
-                    if (inAnnotation) {
+                    if (inAnnotation && !inModelBody) {
                         UnaryExpr ue = (UnaryExpr)e;
                         ErrorSet.error(ue.locOp,
-                                       "assignments cannot be used in specification expressions");
+			   "assignments cannot be used in specification expressions");
                     }
                     return super.checkExpr(env, e);
                 }
@@ -1189,29 +1224,29 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 
 	    case TagConstants.MODELCONSTRUCTORDECLPRAGMA: {
 		ModelConstructorDeclPragma me = (ModelConstructorDeclPragma)e;
-                ConstructorDecl decl = me.decl;
-                Env rootEnv = Modifiers.isStatic(decl.modifiers)
+                ConstructorDecl cd = me.decl;
+                Env rootEnv = Modifiers.isStatic(cd.modifiers)
                     ? rootSEnv
                     : rootIEnv;
-                checkModifierPragmaVec( decl.pmodifiers, decl, rootEnv );
-System.out.println("CONST " + me.parent.id + " " + me.id.id + " " + (me.parent.id == me.id.id));
-		if (me.parent.id != me.id.id ) {
-		    ErrorSet.error(me.id.getStartLoc(),
-			"A constructor must have the same id as the enclosing class (" + me.id.id + " vs. " + me.parent.id + ")");
-		}
-		// FIXME -- need to do some checks???
+
+		// All gets checked since the associated ConstructorDecl is
+		// part of the type
+
+		// FIXME - the body needs to allow ghost/model vars
 		break;
             }
 
 
 	    case TagConstants.MODELMETHODDECLPRAGMA: {
-System.out.println("MODEL METHOD");
                 MethodDecl decl = ((ModelMethodDeclPragma)e).decl;
                 Env rootEnv = Modifiers.isStatic(decl.modifiers)
                     ? rootSEnv
                     : rootIEnv;
-                checkModifierPragmaVec( decl.pmodifiers, decl, rootEnv );
-		// FIXME -- need to do some checks???
+
+		// All gets checked since the associated ConstructorDecl is
+		// part of the type
+
+		// FIXME - the body needs to allow ghost/model vars
 		break;
             }
 
@@ -1223,6 +1258,14 @@ System.out.println("MODEL METHOD");
 
                 checkModifierPragmaVec( decl.pmodifiers, decl, rootEnv );
 
+		// Check for both static and instance declarations
+
+		if (Modifiers.isStatic(decl.modifiers)) {
+		    ModifierPragma inst = GetSpec.findModifierPragma(decl,
+					TagConstants.INSTANCE);
+		    if (inst != null) ErrorSet.error(inst.getStartLoc(),
+			"May not specify both static and instance on a declaration");
+		}
 
                 /*
                  * Check for other fields with the same name:
@@ -1234,7 +1277,6 @@ System.out.println("MODEL METHOD");
                                    "Another field named '"+decl.id.toString()
                                    +"' already exists in this type");
                 }
-// FIXME - Check for other model fields
 
                 /*
                  * All that remains to be done is to prep the Type:
@@ -1252,23 +1294,14 @@ System.out.println("MODEL METHOD");
 
                 checkModifierPragmaVec( decl.pmodifiers, decl, rootEnv );
 
+		// Check for both static and instance declarations
+
 		if (Modifiers.isStatic(decl.modifiers)) {
 		    ModifierPragma inst = GetSpec.findModifierPragma(decl,
 					TagConstants.INSTANCE);
 		    if (inst != null) ErrorSet.error(inst.getStartLoc(),
 			"May not specify both static and instance on a declaration");
 		}
-/*
-		System.out.println("GHOST" + Location.toString(e.getStartLoc()));
-	        if (GetSpec.findModifierPragma(decl,TagConstants.INSTANCE) != null) {
-			System.out.println("GHOST HAS INSTANCE");
-		}
-		if (Modifiers.isStatic(decl.modifiers))
-			System.out.println("STATIC -A");
-		if (Modifiers.isStatic(e.getModifiers()))
-			System.out.println("STATIC -B");
-*/		
-
 
                 /*
                  * Handle initializer:
@@ -2063,10 +2096,19 @@ System.out.println("MODEL METHOD");
                         ErrorSet.error(fa.locId,
                                        "Can use set only on ghost fields");
 		
-                } else
+		} else if (set.target instanceof VariableAccess) {
+		    VariableAccess va = (VariableAccess)set.target;
+		    GenericVarDecl gd = va.decl;
+		    if ( escjava.translate.GetSpec.findModifierPragma(
+				gd.pmodifiers,TagConstants.GHOST) == null)
+                        ErrorSet.error(va.loc,
+			       "Can use set only on ghost variables",
+				gd.getStartLoc());
+                } else {
                     ErrorSet.error(set.getStartLoc(),
-                                   "Can use set only on fields");
+                                   "Can use set only on ghost variables and fields");
 
+		}
                 break;
             }
 

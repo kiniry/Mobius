@@ -1708,23 +1708,33 @@ public final class Translate
             case TagConstants.SETSTMTPRAGMA: {
                 SetStmtPragma s = (SetStmtPragma)stmt;
 
-                Assert.notFalse(s.target instanceof FieldAccess);
-                FieldAccess fa = (FieldAccess)s.target;
+		if (s.target instanceof FieldAccess) {
+		    FieldAccess fa = (FieldAccess)s.target;
 
-                Expr lhs= trFieldAccess(true, fa);
-                writeCheck(lhs, s.value, TrAnExpr.trSpecExpr(s.value), s.locOp, false);
+		    Expr lhs= trFieldAccess(true, fa);
+		    writeCheck(lhs, s.value, TrAnExpr.trSpecExpr(s.value), s.locOp, false);
 
-                VariableAccess field = VariableAccess.make(fa.id, fa.locId, fa.decl);
-                if (Modifiers.isStatic(fa.decl.modifiers)) {
-                    code.addElement(GC.gets( field,
-                                             TrAnExpr.trSpecExpr(s.value)));
-                } else {
-                    Expr obj = ((ExprObjectDesignator)fa.od).expr;
-                    code.addElement(GC.subgets( field,
-                                                TrAnExpr.trSpecExpr(obj),
-                                                TrAnExpr.trSpecExpr(s.value) ));
-                }
+		    VariableAccess field = VariableAccess.make(fa.id, fa.locId, fa.decl);
+		    if (Modifiers.isStatic(fa.decl.modifiers)) {
+			code.addElement(GC.gets( field,
+						 TrAnExpr.trSpecExpr(s.value)));
+		    } else {
+			Expr obj = ((ExprObjectDesignator)fa.od).expr;
+			code.addElement(GC.subgets( field,
+						    TrAnExpr.trSpecExpr(obj),
+						    TrAnExpr.trSpecExpr(s.value) ));
+		    }
 
+		} else if (s.target instanceof VariableAccess) {
+		    VariableAccess lhs = (VariableAccess)s.target;
+		    Expr rval = TrAnExpr.trSpecExpr(s.value);
+		    writeCheck(lhs, s.value, rval, s.locOp, false);
+		    code.addElement(GC.gets(lhs,rval));
+		} else {
+
+			ErrorSet.fatal(s.getStartLoc(),
+				"Unknown construct to translate");
+		}
                 break;
             }
 

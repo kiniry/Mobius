@@ -49,6 +49,8 @@ public class ErrorPragmaParser implements PragmaParser
     /** No work to close us. */
     public void close() {}
 
+    public javafe.ast.FieldDecl isPragmaDecl(javafe.parser.Lex l) { return null; }
+
 } // end of class ErrorPragmaParser
 
 /*

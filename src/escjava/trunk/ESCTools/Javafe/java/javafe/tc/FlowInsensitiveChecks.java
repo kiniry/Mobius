@@ -340,7 +340,7 @@ public class FlowInsensitiveChecks
                                    x.locId, "local variable");
                 checkModifierPragmaVec(x.pmodifiers, x, e);
 
-                Env newEnv = new EnvForLocals(e, x);
+		Env newEnv = new EnvForLocals(e,x);
                 if (x.init != null)
                     x.init = checkInit(newEnv, x.init, x.type);
                 return newEnv;
@@ -415,6 +415,7 @@ public class FlowInsensitiveChecks
                                                 || val instanceof Integer);
                                 Long valLong = new Long(ConstantExpr.getLongConstant(val));
                                 if(switchValues.containsKey(valLong)) {
+					// Point to dup label - FIXME
                                     ErrorSet.error(x.loc, 
                                                    "Duplicate case label "+val
                                                    +" in switch statement");
@@ -425,6 +426,7 @@ public class FlowInsensitiveChecks
                         } else {
                             // this is default
                             if(defaultEncountered)
+					// Point to dup label - FIXME
                                 ErrorSet.error(x.loc, 
                                                "Duplicate default label in switch statement");
                             else
@@ -614,6 +616,7 @@ public class FlowInsensitiveChecks
                         && ((LabelStmt)enclosing).label == ls.label)
                         ErrorSet.error(ls.locId, 
                                        "Label '"+ls.label+"' already used in this scope");
+				// FIXME - point to dup
                 }
     
                 enclosingLabels.addElement(ls);
@@ -1394,12 +1397,14 @@ public class FlowInsensitiveChecks
                                                + "an object and/or from a non-static"
                                                + " context or an inner class enclosed"
                                                + " by a type possessing that field.");
+					// FIXME - point to declaration
                             else
                                 ErrorSet.error(fa.locId,
                                                "The instance fields of type "
                                                + ((TypeObjectDesignator)fa.od).type
                                                + " may not be accessed from type "
                                                + sig);
+					// FIXME = point to declaration
                         }
                     } catch(LookupException ex) {
 			if (!Types.isErrorType(t))

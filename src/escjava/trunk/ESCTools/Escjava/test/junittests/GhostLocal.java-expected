@@ -1,0 +1,11 @@
+ESC/Java version VERSION
+  Prover started:TIME
+
+GhostLocal ...
+
+GhostLocal: m() ...
+    [TIME]  passed
+
+GhostLocal: GhostLocal() ...
+    [TIME]  passed
+  [TIME total]

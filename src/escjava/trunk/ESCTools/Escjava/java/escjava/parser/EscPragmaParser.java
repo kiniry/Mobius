@@ -2557,7 +2557,8 @@ public class EscPragmaParser extends Parse implements PragmaParser
 	} else if (scanner.ttype == TagConstants.LBRACE) {
 	    locOpenBrace = scanner.startingLoc;
 	    body = parseBlock(scanner, false);
-	    // FIXME - the above parses with specOnly=true which will not provide the body
+	    // To skip the body, use true in the call above.
+	    // body will be non-null but have 0 statements
 	} else {
 	    ErrorSet.fatal(scanner.startingLoc,
 		"Invalid syntax - expected a " +
@@ -2572,9 +2573,14 @@ public class EscPragmaParser extends Parse implements PragmaParser
 				loc, locType, locThrowsKeyword);
 	ModelConstructorDeclPragma mcd = ModelConstructorDeclPragma.make(md,loc,id);
 	dst.auxVal = mcd;
-		// Semantic checks in FlowInsensitiveChecks verify that the
+		// Semantic checks in AnnotationHandler verify that the
 		// id matches the enclosing type, since the enclosing type
 		// is not available here.
+	if (id == null) {
+		savedGhostModelPragma = null;
+		modifiers = Modifiers.NONE;
+		return getNextPragma(dst);
+	}
 	return false; // No semicolon, or it is already eaten
     }
 
@@ -2609,7 +2615,9 @@ public class EscPragmaParser extends Parse implements PragmaParser
 	} else if (scanner.ttype == TagConstants.LBRACE) {
 	    locOpenBrace = scanner.startingLoc;
 	    body = parseBlock(scanner, false);
-	    // FIXME - the above parses with specOnly=true which will not provide the body
+	    // To skip the body, use true in the call above.
+	    // body will be non-null but have 0 statements
+		// FIXME - set in accordance with specOnly; constructor also
 	} else {
 	    ErrorSet.fatal(scanner.startingLoc,
 		"Invalid syntax - expected a " +
@@ -2627,6 +2635,27 @@ public class EscPragmaParser extends Parse implements PragmaParser
 	return false; // No semicolon, or it is already eaten
     }
 
+    public FieldDecl isPragmaDecl(Lex l) {
+	if (l.auxVal == null) return null;
+	TypeDeclElemPragma smp = (TypeDeclElemPragma)l.auxVal;
+	int loc = smp.getStartLoc();
+	int tag = smp.getTag();
+	if (tag == TagConstants.MODELDECLPRAGMA) {
+	    ModelDeclPragma mdp = (ModelDeclPragma)smp;
+	    ModifierPragma mp = escjava.translate.GetSpec.findModifierPragma(mdp.decl.pmodifiers,TagConstants.MODEL);
+	    ErrorSet.error(mp != null ? mp.getStartLoc() : loc,
+		"Model variables are not allowed here");
+	    return null;
+	}
+	if (tag != TagConstants.GHOSTDECLPRAGMA) {
+	    ErrorSet.error(loc,
+		"Expected a local ghost declaration here");
+	    return null;
+	}
+
+	GhostDeclPragma gd = (GhostDeclPragma)l.auxVal;
+	return gd.decl;
+    }
 
 } // end of class EscPragmaParser
 

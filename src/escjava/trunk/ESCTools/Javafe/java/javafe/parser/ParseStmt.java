@@ -6,6 +6,7 @@ import javafe.ast.*;
 import javafe.util.StackVector;
 import javafe.util.Location;
 import javafe.util.Assert;
+import javafe.util.ErrorSet;
 import javafe.Tool;
 
 /**
@@ -216,7 +217,7 @@ public abstract class ParseStmt extends ParseExpr
                 expect(l, TagConstants.SEMICOLON);
                 // Only process if assert *is* a keyword.
                 if (Tool.options != null && !Tool.options.assertIsKeyword) {
-                    javafe.util.ErrorSet.error(loc, "Java keyword \"assert\" is only supported if the" +
+                    ErrorSet.error(loc, "Java keyword \"assert\" is only supported if the" +
                          " -source 1.4 option is provided.");
                 } else
 		    seqStmt.addElement(AssertStmt.make(predicate, label, keywordloc));
@@ -356,7 +357,30 @@ public abstract class ParseStmt extends ParseExpr
             int modifiers = parseModifiers(l);
             ModifierPragmaVec pmodifiers = this.modifierPragmas;
 
-            if (l.ttype == TagConstants.CLASS) {
+	    // This is rather a hack, because some pragmas that are allowed
+	    // are not statement pragmas (because they are indistinguishable
+	    // from other pragmas).
+	    if (l.ttype == TagConstants.TYPEDECLELEMPRAGMA) {
+		TypeDeclElemPragma tdp = (TypeDeclElemPragma)l.auxVal;
+		tdp.decorate(pmodifiers);
+		FieldDecl fd = l.pragmaParser.isPragmaDecl(l);
+		if (modifiers != Modifiers.NONE) {
+		    ErrorSet.caution(tdp.getStartLoc(),
+			"Misplaced Java modifiers prior to this point");
+		}
+		if (fd != null) {
+		    LocalVarDecl d
+			= LocalVarDecl.make(fd.modifiers, fd.pmodifiers, 
+				fd.id, fd.type, fd.locId, fd.init, fd.locAssignOp);
+		    seqStmt.addElement( VarDeclStmt.make(d) );
+		    l.getNextToken();
+		    // FIXME - might be more than one?
+		    return;
+		} else {
+		    l.getNextToken();
+		    return;
+		}
+	    } else if (l.ttype == TagConstants.CLASS) {
                 ClassDecl cd = (ClassDecl)parseTypeDeclTail(l, false, keywordloc,
                                                             modifiers, pmodifiers);
                 seqStmt.addElement(ClassDeclStmt.make(cd));

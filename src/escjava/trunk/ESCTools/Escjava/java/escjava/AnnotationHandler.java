@@ -72,7 +72,13 @@ public class AnnotationHandler {
 	    if (tde instanceof ModelConstructorDeclPragma) {
 		handlePragmas(tde);
 		ModelConstructorDeclPragma mmp = (ModelConstructorDeclPragma)tde;
-		td.elems.setElementAt(((ModelConstructorDeclPragma)tde).decl,j);
+		if (mmp.id == null) {
+		   // An error reported already - improper name cf. EscPragmaParser
+		} else if (mmp.id.id != td.id) {
+		    ErrorSet.error(mmp.id.getStartLoc(),"A constructor-like declaration has an id which is not the same as the id of the enclosing type: " + mmp.id.id + " vs. " + td.id, td.locId);
+		} else {
+		    td.elems.setElementAt(((ModelConstructorDeclPragma)tde).decl,j);
+		}
 	    }
 	    // handle PURE pragmas
 	    if (tde instanceof MethodDecl ||

@@ -23,6 +23,7 @@ ModifiesPure.java
 ## A bug
 EX.java
 FormalNonnullInheritance.java
+GhostFieldOverride.java
 ## dangling also
 Heavyweight.java
 ## Modify everything tests
