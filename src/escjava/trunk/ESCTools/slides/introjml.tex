@@ -212,7 +212,7 @@ using a few keywords
 \begin{alltt}
 \texttt{\textbf{\small
 {\green /*@}{\blue requires} amount >= 0;
-    {\blue ensures}  balance == \old(balance)-amount &&
+    {\blue ensures}  balance == \old(balance-amount) &&
               \result == balance;
 { \green  @*/}
   public int{\green debit}(int amount) \{ 
