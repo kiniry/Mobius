@@ -1,3 +1,202 @@
+2003-02-03  Joseph R. Kiniry  <kiniry@acm.org>
+
+	* build.xml:
+	Added targets "generate_javafe_ast" and "generate_escjava_ast" to
+	generate various ASTGEN-dependent sources.  Added targets
+	"generate_default_backpred", "create_decsrc_jar",
+	"create_mochalib_jar".  Added corresponding clean targets and
+	dependencies.
+
+	* Javafe/java/javafe/parser/TagConstants.java:
+	Corrected error in tag indexing; EOF was missing entirely due to
+	off-by-one error.
+
+	* Javafe/Makefile, Javafe/java/javafe/ast/Makefile:
+	Updating all Makefiles to work correctly in a modern, typical environment.
+
+	* Javafe/sources: "sources" files no longer used.
+
+	* Javafe/setup, Javafe/setup.sh:
+	Switched entirely to supporting only a (ba)sh version of setup.sh.
+
+2003-01-31  Joseph R. Kiniry  <kiniry@acm.org>
+
+	* Escjava/java/escjava/ast/TagConstants.java:
+	Removed unused JML checks.  Fixed FIRSTFUNCTIONTAG definition and
+	bounds on toString default cause.  Fixed bounds on for loop in main
+	method.
+
+	* Escjava/java/escjava/parser/EscPragmaParser.java:
+	Added new JML_* tags to appropriate specifications.
+
+	* Escjava/java/escjava/tc/FlowInsensitiveChecks.java:
+	* Escjava/java/escjava/translate/GetSpec.java:
+	Code formatting cleanup.
+
+2003-01-30  Joseph R. Kiniry  <kiniry@acm.org>
+
+	* Escjava/simplify:
+	Added support for automatic use of ESCTools-built simplify.
+
+	* Escjava/java/escjava/ast/.cvsignore, Escjava/setup.sh:
+	Added support for setting up JAVA_HOME if it is unset.  Added support
+	for automatically addding Java source to path dependent upon version
+	(very rough now).  Refined definition of CLASSES and ESC_CLASSPATH to
+	include build targets (not just jars).
+
+	* Escjava/java/escjava/ast/EscPrettyPrint.java:
+	* Escjava/java/escjava/ast/TagConstants.java:
+	* Escjava/java/escjava/ast/hierarchy.j:
+	* Escjava/java/escjava/parser/EscPragmaParser.java:
+	* Escjava/java/escjava/tc/FlowInsensitiveChecks.java:
+	* Escjava/java/escjava/translate/GetSpec.java:
+	* Escjava/java/escjava/translate/Translate.java:
+	* Javafe/java/javafe/ast/hierarchy.j:
+	Added support for JML keywords with ESC/Java synonyms "pre", "post",
+	"assignable", "modifiable", "signals", "maintaining", and
+	"decreasing".  Support for "also" has also begun, but it is only being
+	parsed at this time.  Some documentation and code cleanup as well.
+
+	* Escjava/java/escjava/Main.java:
+	Changed version number and re-enabled output of prover start time information.
+
+	* Escjava/java/escjava/ast/VisitorArgResult.java:
+	Removed import that was in place to work around a very old JDK 1 javac
+	bug.
+
+	* Escjava/java/escjava/parser/ErrorPragmaParser.java:
+	* Escjava/java/escjava/parser/EscPragmaLex.java:
+	* Escjava/java/escjava/parser/JmlCorrelatedReader.java:
+	Documentation and code format cleanup.
+
+	* Javafe/java/javafe/util/Location.java:
+	* Javafe/java/javafe/tc/TypeCheck.java:
+	Documentation cleanup.
+
+	* TODO.kotl: New outline-mode todo list for ESC/Java work at Nijmegen.
+
+	* Javafe/test/javafe/test/Print.java:
+	Removed import that was in place to work around a very old JDK 1 javac
+	bug.
+
+	* Javafe/test/javafe/parser/test/Makefile:
+	Added JDK 1.4 files to tests.
+
+	* Javafe/java/javafe/reader/Reader.java:
+	* Javafe/java/javafe/reader/SrcReader.java:
+	* Javafe/java/javafe/reader/StandardTypeReader.java:
+	* Javafe/java/javafe/reader/TypeReader.java:
+	* Javafe/java/javafe/tc/OutsideEnv.java:
+	* Javafe/java/javafe/tc/TagConstants.java:
+	* Javafe/java/javafe/parser/Parse.java:
+	* Javafe/java/javafe/parser/ParseExpr.java:
+	* Javafe/java/javafe/parser/ParseStmt.java:
+	* Javafe/java/javafe/parser/ParseType.java:
+	Documentation cleanup.  Commented out import that was in place to work
+	around a very old JDK 1 javac bug.
+
+	* Javafe/java/javafe/genericfile/UnopenableFile.java:
+	* Javafe/java/javafe/filespace/ClassPath.java:
+	* Javafe/java/javafe/filespace/LookAheadEnum.java:
+	* Javafe/java/javafe/filespace/PkgTree.java:
+	Documentation cleanup.
+
+	* Javafe/java/javafe/PrintSpec.java: Capitalization typo fix.
+
+	* Javafe/setup.sh:
+	Added support for specifying JML and JUNIT install locations.
+
+	* Escjava/test/escjava/parser/test/GoodJmlPragmas.ans:
+	* Escjava/test/escjava/parser/test/GoodJmlPragmas.j:
+	* Escjava/test/escjava/parser/test/Makefile:
+	Added initial tests for JML keyword support.
+
+	* Escjava/doc/SRC-2000-002.html:
+	* Escjava/doc/SRC-2000-004.html:
+	Added ESC/Java User Guide and Quick Reference, as both are public but
+	not included in either the source or binary release of ESC/Java and
+	HP's webserver (gatekeeper) is *always* unavailable these days.
+
+	* Escjava/doc/cvs-tags.html:
+	* Javafe/doc/abstract-syntax.html:
+	* Javafe/doc/annot-lang.html:
+	* Javafe/doc/astgen.html:
+	* Javafe/doc/cvs-tags.html:
+	* Javafe/doc/java-type-spec.html:
+	* Javafe/doc/naming.html:
+	* Javafe/doc/parsed-grammar.html:
+	Generate cleanup of all HTML-based documentation for Javafe and
+	Escjava envelopes.
+
+	* Javafe/java/javafe/ast/:
+	Removed auto-generated Javafe AST files.
+
+	* Javafe/java/decsrc/:
+	Source for decsrc package extracted from final ESC/Java binary
+	release's zipfile.
+
+	* Escjava/java/escjava/ast/:
+	Removed generated Escjava AST files.
+
+2003-01-30  Joseph R. Kiniry  <kiniry@kind.cs.kun.nl>
+
+	* simplify: 
+	Added support for automatic use of ESCTools-built simplify.
+
+	* setup.sh:
+	Added support for setting up JAVA_HOME if it is unset.  Added support
+	for automatically addding Java source to path dependent upon version
+	(very rough now).  Refined definition of CLASSES and ESC_CLASSPATH to
+	include build targets (not just jars).
+
+	* java/escjava/ast/EscPrettyPrint.java:
+	* java/escjava/ast/TagConstants.java:
+	* java/escjava/ast/hierarchy.j:
+	* java/escjava/parser/EscPragmaParser.java:
+	* java/escjava/tc/FlowInsensitiveChecks.java:
+	* java/escjava/translate/GetSpec.java:
+	* java/escjava/translate/Translate.java:
+	Added support for JML keywords with ESC/Java synonyms "pre", "post",
+	"assignable", "modifiable", "signals", "maintaining", and
+	"decreasing".  Support for "also" has also begun, but it is only being
+	parsed at this time.  Some documentation and code cleanup as well.
+
+	* java/escjava/Main.java:
+	Changed version number and re-enabled output of prover start time
+	information.
+
+	* java/escjava/ast/VisitorArgResult.java:
+	Removed import that was in place to work around a very old JDK 1 javac
+	bug.
+
+	* java/escjava/parser/ErrorPragmaParser.java:
+	* java/escjava/parser/EscPragmaLex.java:
+	* java/escjava/parser/JmlCorrelatedReader.java:
+	Documentation and code format cleanup.
+
+	* test/escjava/parser/test/GoodJmlPragmas.ans:
+	* test/escjava/parser/test/GoodJmlPragmas.j:
+	* test/escjava/parser/test/Makefile:
+	Added initial tests for JML keyword support.
+
+	* doc/SRC-2000-002.html, doc/SRC-2000-004.html:
+	Added ESC/Java User Guide and Quick Reference, as both are public but
+	not included in either the source or binary release of ESC/Java and
+	HP's webserver (gatekeeper) is *always* unavailable these days.
+
+	* doc/cvs-tags.html:
+	Generate cleanup of all HTML-based documentation for Javafe and Escjava 
+	envelopes. 
+	
+	* java/escjava/ast/:
+	Removed generated Escjava AST files.
+
+2003-01-15  Joseph R. Kiniry  <kiniry@kind.cs.kun.nl>
+
+	* setup.sh:
+	Switched to use of JDK 1.2 as minimal JDK due to class dependencies in
+	ESC/Java source (e.g., java.util.Arrays).
+
 2003-01-15  Joseph R. Kiniry  <kiniry@kind.cs.kun.nl>
 
 	* build.xml:
