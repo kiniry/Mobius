@@ -2,35 +2,28 @@
 
 package escjava.translate;
 
-
-import java.util.Hashtable;
-import java.util.Enumeration;
-import java.util.ArrayList;
-import java.util.Iterator;
-
 import escjava.Main;
-
-import javafe.ast.*;
 import escjava.ast.*;
-import escjava.ast.TagConstants;
 import escjava.ast.Modifiers;
-
+import escjava.ast.TagConstants;
 import escjava.backpred.FindContributors;
-
-import javafe.tc.TypeSig;
-import escjava.tc.Types;
 import escjava.tc.TypeCheck;
+import escjava.tc.Types;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Iterator;
+import javafe.ast.*;
+import javafe.tc.TypeSig;
 
 import javafe.util.*;
 
-
-
-/** Responsible for getting Spec for calls.
- Includes ... from ESCJ16c.
+/**
+ * Responsible for getting Spec for calls.  Includes ... from ESCJ16c.
  */
 
-public final class GetSpec {
-
+public final class GetSpec
+{
     public static Spec getSpecForCall(/*@ non_null */ RoutineDecl rd,
                                       /*@ non_null */ FindContributors scope,
                                       Set predictedSynTargs) {
@@ -55,10 +48,9 @@ public final class GetSpec {
         return extendSpecForBody( spec, scope, synTargs );
     }
 
-    //@ ensures \result != null;
-    private static Spec getCommonSpec(/*@ non_null */ RoutineDecl rd,
-				      /*@ non_null */ FindContributors scope,
-				      Hashtable premap)
+    private static /*@ non_null @*/ Spec getCommonSpec(/*@ non_null */ RoutineDecl rd,
+                                                       /*@ non_null */ FindContributors scope,
+                                                       Hashtable premap)
     {
 	/* Need to typecheck TypeDecl containing callee so that
          requires/ensures/modifies clauses etc are resolved. */
@@ -185,7 +177,7 @@ public final class GetSpec {
 
 		// This may no longer be necessary, but it doesn't hurt
 		SimpleModifierPragma nonnull = NonNullPragma(oldDecl);
-		if (nonnull!=null)
+		if (nonnull != null)
 		    setNonNullPragma(newDecl, nonnull);
 
 		VariableAccess va = VariableAccess.make(newDecl.id,
@@ -962,7 +954,7 @@ while (ee.hasMoreElements()) {
              * GC call ever modifies?
              */
             boolean falsifiable = true;
-            if (predictedSynTargs!=null || spec.modifiesEverything) {
+            if (predictedSynTargs != null || spec.modifiesEverything) {
                 Assert.notFalse(!Main.options().useAllInvPreBody);
                 falsifiable = invFV.containsAny(predictedSynTargs);
             }
@@ -1913,9 +1905,8 @@ while (ee.hasMoreElements()) {
      ** Decorates <code>GenericVarDecl</code>'s to point to
      ** NonNullPragmas (SimpleModifierPragma's).
      **/
-    //@ invariant nonnullDecoration!=null
-    /*@ invariant nonnullDecoration.decorationType ==
-     \type(SimpleModifierPragma)  */
+    //@ invariant nonnullDecoration != null;
+    //@ invariant nonnullDecoration.decorationType == \type(SimpleModifierPragma);
     private static ASTDecoration nonnullDecoration
         = new ASTDecoration("nonnullDecoration");
 
@@ -1951,7 +1942,7 @@ while (ee.hasMoreElements()) {
 /* In JML, non_null pragmas do not inherit!
 	SimpleModifierPragma mark = (SimpleModifierPragma)
             nonnullDecoration.get(v);
-	if (mark!=null)
+	if (mark != null)
 	    return mark;
 */
 

@@ -442,7 +442,7 @@ public final class Translate
                             Assert.fail("Unexpected type tag");
                             break;
                     }
-                    if (defaultValue!=null)
+                    if (defaultValue != null)
                         code.addElement(GC.subgets(fdref, GC.thisvar, defaultValue));
                 }
             }
@@ -2161,7 +2161,7 @@ public final class Translate
                     
             case TagConstants.THISEXPR: {
                 ThisExpr t = (ThisExpr)expr;
-                if (t.classPrefix!=null)
+                if (t.classPrefix != null)
                     return trExpr(protect, Inner.unfoldThis(t));
 
                 // We ignore "protect" here, since "this" is (almost) never
@@ -2204,7 +2204,7 @@ public final class Translate
                     ExprVec rawArgs = ni.args.copy();
                     ExprVec args = ExprVec.make(ni.args.size());
 
-                    if (ni.anonDecl!=null) {
+                    if (ni.anonDecl != null) {
                         if (this.issueCautions && ! Main.options().noNotCheckedWarnings) {
                             ErrorSet.caution(ni.anonDecl.loc,
                                              "Not checking body of anonymous class" +
@@ -2214,7 +2214,7 @@ public final class Translate
                     }
 
                     // translate enclosing instance argument if present:
-                    if (ni.enclosingInstance!=null) {
+                    if (ni.enclosingInstance != null) {
                         rawArgs.insertElementAt(ni.enclosingInstance, 0);
                         Expr arg = trExpr(true, ni.enclosingInstance);
                         args.addElement(arg);
@@ -2238,7 +2238,7 @@ public final class Translate
 	  
                     {   Expr tType = TypeExpr.make(ni.loc, ni.getEndLoc(), ni.type);
                     Expr resType = GC.nary(TagConstants.TYPEOF, GC.resultvar);
-                    if (ni.anonDecl!=null) {
+                    if (ni.anonDecl != null) {
                         //  assume typeof(RES) != T  (for anonymous new)
                         code.addElement(GC.assume(GC.nary(TagConstants.TYPENE,
                                                           resType,
@@ -2262,7 +2262,7 @@ public final class Translate
                     NewArrayExpr x= (NewArrayExpr)expr;
                     int nd= x.dims.size();
 
-                    if (x.init!=null) {
+                    if (x.init != null) {
                         return trExpr(true, x.init);
                     }
 
@@ -3878,7 +3878,8 @@ public final class Translate
 			if (ah == null && aah != null) continue; // FIXME - could compare against the length of ao
 			aao = GC.nary(TagConstants.REFEQ,ao,aao);
 			aal = aal == null ? null :
-				GC.nary(TagConstants.INTEGRALLE,aal,al!=null?al: GC.zerolit);
+				GC.nary(TagConstants.INTEGRALLE,aal,
+                                        al != null ? al: GC.zerolit);
 			aah = aah == null ? null :
 				GC.nary(TagConstants.INTEGRALLE,ah,aah);
 			aal = aal == null ? aah : aah == null ? aal : GC.and(aal,aah);
@@ -3892,7 +3893,8 @@ public final class Translate
 			Expr aao = modTranslate(aarray,true,null);
 			aindex = modTranslate(aindex,true,null); 
 			aao = GC.nary(TagConstants.REFEQ,ao,aao);
-			Expr aal = GC.nary(TagConstants.INTEGRALLE,aindex,al!=null?al: GC.zerolit);
+			Expr aal = GC.nary(TagConstants.INTEGRALLE,aindex,
+                                           al != null ? al: GC.zerolit);
 			Expr aah = GC.nary(TagConstants.INTEGRALLE,ah,aindex);
 			aal = GC.and(aal,aah);
 			aao = GC.and(aao,aal);
