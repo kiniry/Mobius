@@ -218,14 +218,19 @@ The work on ESC/Java2 required embellishments of the original DEC/SRC
 ESC/Java in a number of areas.  Here we present the most significant
 of these.
 \subsection{Java 1.4}
-The original work was performed between 1998 and 2000, and Java has
-evolved since then\footnote{In fact, Java 1.5 went beta recently.  No
-  work has begun on parsing or statically checking Java 1.5 code.
-  Interested parties are welcome to contact the authors with regards
-  to this work.}.  The principal addition required by Java 1.4 is
-support for the Java {\tt assert} statement.  This is complicated
-slightly by the presence of a similar \texttt{assert} statement in
-JML.
+The original work was performed in 1998 and 2000, and Java has evolved
+since then.\footnote{In fact, Java 1.5 went beta recently.  No work has begun on
+  parsing or statically checking Java 1.5 code.  Interested parties
+  are welcome to contact the authors with regard to this work.}  The
+principal addition required by Java 1.4 is support for the Java {\tt
+  assert} statement.  
+
+JML itself contains a similar assert statement.  Hence, the user may make a choice between
+two behaviors.  A Java assert statement may be interpreted as simply another language
+feature whose behavior is to be modeled.  In this case that behavior is to raise an
+exception of type \texttt{AssertionError} under appropriate circumstances.  Alternatively, 
+a Java assert statement may be interpreted as a JML assert statement.  In this case, the
+static checker will report a warning if the assertion predicate cannot be established to be true.
 
 \subsection{Current JML}
 The Java Modeling Language is a research project in itself; hence the
@@ -240,9 +245,17 @@ additions that have been implemented:
   ignored with respect to typechecking or verification,
 \item support for refinement files,
 \item heavyweight annotations,
-\item inheritance of annotations, particularly of \texttt{non\_null}
-  modifiers, and
-\item model fields, routines, and types.
+\item inheritance of annotations and of \texttt{non\_null}
+  modifiers, 
+\item support for datagroups and \texttt{in} and \texttt{maps} clauses,
+\item model import statements and model fields, routines, and types, 
+\item auto import of \texttt{org.jmlspecs.lang},
+\item enlarging the use and correcting the handling of scope of ghost fields,
+\item generalizing the use of \texttt{set} statements and local ghost variables,
+\item wider use of \texttt{\char'134 old},
+\item introduction of \texttt{constraint}, \texttt{represents}, \texttt{field}, \texttt{method},
+\texttt{constructor}, \texttt{\char'134 not\_modified}, \texttt{forall}, \texttt{old}, \texttt{pure}, \texttt{instance} keywords
+\item consistency in the format of annotations.
 \end{itemize}
 In addition, the differences between DEC/SRC ESC/Java and JML noted in the JML
 Reference Manual have been resolved.
@@ -256,9 +269,9 @@ DEC/SRC ESC/Java:
 \setlength{\partopsep}{0in}\setlength{\parskip}{0in}\setlength{\itemsep}{0in}\setlength{\topsep}{0in}
 \begin{itemize}
 \setlength{\partopsep}{0in}\setlength{\parskip}{0in}\setlength{\itemsep}{0in}\setlength{\topsep}{0in}
-\item \texttt{constraint} and \texttt{initially} clauses,
+\item \texttt{constraint} and \texttt{initially} clauses and \texttt{\char'134 not\_modified} expressions,
 \item frame conditions, including the \texttt{in} and \texttt{maps} clauses,
-\item model fields and represents clauses, and
+\item model fields and \texttt{represents} clauses, and
 \item annotations that include (pure) routine calls and dynamic allocations.
 \end{itemize}
 
@@ -289,7 +302,8 @@ introduced.  The principal such incompatibilities are these:
 
 Though the core is well-supported, there are several features of JML
 which are parsed and ignored, some of them experimental or not yet
-endowed with a clear semantics.  The features that are currently ignored are:
+endowed with a clear semantics, and some in the process of being implemented.
+  The features that are currently ignored are:
 \setlength{\partopsep}{0in}\setlength{\parskip}{0in}\setlength{\itemsep}{0in}\setlength{\topsep}{0in}
 \begin{itemize}
 \setlength{\partopsep}{0in}\setlength{\parskip}{0in}\setlength{\itemsep}{0in}\setlength{\topsep}{0in}
@@ -308,6 +322,8 @@ endowed with a clear semantics.  The features that are currently ignored are:
 \item annotations regarding space and time consumption,
 \item full support of recursive \texttt{maps} declarations,
 \item model programs, 
+\item equivalence of \texttt{\char'134 TYPE} and \texttt{java.lang.Class},
+\item some aspects of store-ref expressions,
 \item verification of anonymous and block-level classes,
 \item verification of set comprehension and some forms of quantified
   expressions, and
@@ -331,12 +347,15 @@ are the subject of ongoing research:
 \item interpretation of the combination of purity and benevolent
   side-effects that is suitable for both static and run-time checking;
 \item interpretation of exceptions in pure expressions;
-\item the use of helper annotations on routines;
+\item the use of \texttt{helper} annotations on routines;
 \item the interpretation of annotations for initialization code and
   constructors;
 \item use of \texttt{measured\_by} clauses to assist in checking
   termination;
 \item meaning of \texttt{code\_contract} clauses;
+\item model programs;
+\item the interaction among datagroups (and in and maps clauses), the syntax for designating store locations, and reasoning about recursive data structures;
+\item hence\_by, weakly;
 \item axioms and reasoning procedures to handle safe and unbounded
   arithmetic~\cite{Chalin03}.
 \end{itemize}
@@ -451,7 +470,7 @@ specifications (at least in this usage) are overly broad.
 %% can find something to say here that is, in fact, implicatory, they 
 %% I'd be fore it. -JRK
 
-\section{Conclusion}
+%%\section{Conclusion}
 
 \large\textbf{TODO:}\normalsize Perhaps discuss the fact that a
 verifying compiler might be closer than some notable computer
