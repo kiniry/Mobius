@@ -19,8 +19,8 @@ export TOOLCMD = ${JAVA} -mx40m -classpath ${CLASSDIRECTORY} javafe.test.Print -
 export TOOLARGS = -noprint -typecheck
 export TOOL = ${TOOLCMD} ${TOOLARGS}
 
-#runtest: septests
-runtest: diffs
+runtest: septests
+#runtest: diffs
 
 all: outputs javac diffs compare summary
 

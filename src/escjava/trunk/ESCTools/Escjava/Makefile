@@ -5,7 +5,11 @@
 
 export TOP = ..
 include ${TOP}/Makefile.defs
-# Must define:	ESCJAVA_ROOT, JAVAFE_ROOT, JAVAC, JAVAC_FLAGS
+# Makefile.defs and the parent Makefile provide definitions of the following variables needed here:
+#	JAVA, JAVAC, JAVAC_FLAGS,
+#	ESCJAVA_ROOT, ESCJAVA_CLASSPATH, ESCJAVA_CLASSFILES, 
+#	JAVAFE_ROOT, JAVAFE_SOURCE_DIR
+# (Building Escjava relies on the AST building tools in ${JAVAFE_ROOT}/astgen)
 
 # Various conventional UNIX tools are used in the following, including
 # cc in preprocess only mode.  Also, the "astgen" and "astfilelist"
@@ -15,6 +19,7 @@ include ${TOP}/Makefile.defs
 # Defining relevant directory locations and other variables.
 
 ESCJAVA_SOURCE_DIR = $(ESCJAVA_ROOT)/java
+JAVAFE_SOURCE_DIR ?= $(JAVAFE_ROOT)/java
 JAVASOURCEFILES = $(ESCJAVA_SOURCE_DIR)/escjava/ast/*.java \
 	$(ESCJAVA_SOURCE_DIR)/escjava/backpred/*.java \
 	$(ESCJAVA_SOURCE_DIR)/escjava/parser/*.java \
@@ -27,18 +32,16 @@ JAVASOURCEFILES = $(ESCJAVA_SOURCE_DIR)/escjava/ast/*.java \
 OTHERSOURCEFILES = /dev/null
 TESTHARNESSFILES = /dev/null
 
-
-export CLASSDIRECTORY=${ESCJAVA_ROOT}/classfiles
-export SOURCEDIRECTORY=${ESCJAVA_ROOT}/java
-export TESTSOURCEDIRECTORY=${ESCJAVA_ROOT}/test
-
-## FIXME - check and fix this
-ESCJAVA_CLASSPATH ?= $(JAVAFE_ROOT)/classfiles:$(CLASSDIRECTORY):$(ESCJAVA_ROOT)/jars/mochalib.jar:$(ESCJAVA_ROOT)/jars/javafe.jar:$(ESCJAVA_ROOT)/jars/escjava.jar:$(ESCJAVA_ROOT)/jars/decsrc.jar:..:.:
-
-## FIXME -- add onto theprevious path ???  SOURCEPATH???
-JAVAC_FLAGS = -g -classpath $(ESCJAVA_CLASSPATH) \
+## These are the options to JAVAC used to build Escjava.
+## FIXME - what does SOURCEPATH do ?
+JAVAC_FLAGS += -classpath $(ESCJAVA_BUILD_CLASSPATH) \
 	-sourcepath $(SOURCEPATH) \
-	-d $(CLASSDIRECTORY) 
+	-d $(ESCJAVA_CLASSFILES) 
+
+## These definitions are used in subsidiary makes, hence are exported
+export CLASSDIRECTORY=${ESCJAVA_CLASSFILES}
+export SOURCEDIRECTORY=${ESCJAVA_SOURCE_DIR}
+export TESTSOURCEDIRECTORY=${ESCJAVA_ROOT}/test
 
 ###########################################################################
 .PHONY: all
@@ -64,7 +67,7 @@ test: test_escjava
 #docs: docs_escjava
 docs:
 
-ESCJAVA_CORE_DOC = $(ESCJAVA_ROOT)/java/escjava/escjava.mtex
+ESCJAVA_CORE_DOC = $(ESCJAVA_SOURCE_DIR)/escjava/escjava.mtex
 
 .PHONY: docs_escjava
 docs_escjava:	$(ESCJAVA_CORE_DOC)
@@ -91,7 +94,7 @@ STAMPFILE = classes.stamp
 ## file has not been modified.  If in doubt do a clean before a build
 ## - it doesn't take long.
 .PHONY: compile
-compile: $(CLASSDIRECTORY) generate_files $(STAMPFILE)
+compile: $(CLASSDIRECTORY) generate_files $(MOCHA_LIB) $(STAMPFILE)
 
 .PHONY: compileall
 compileall: $(CLASSDIRECTORY) generate_files allclasses
@@ -101,33 +104,55 @@ allclasses:
 	@$(JAVAC) $(JAVAC_FLAGS) $(JAVASOURCEFILES)
 	touch $(STAMPFILE)
 
-$(STAMPFILE): $(JAVASOURCEFILES)
-	$(JAVAC) $(JAVAC_FLAGS) $?
-	touch $@
-
 $(CLASSDIRECTORY):
 	mkdir -p $@
 
 .PHONY: generate_files
 generate_files: generate_escjava_ast_source generate_escjava_backpred
 
+$(STAMPFILE): $(JAVASOURCEFILES)
+	$(JAVAC) $(JAVAC_FLAGS) $?
+	touch $@
+
+###########################################################################
+## mocha
+
+MOCHA_DIR = ${ESCJAVA_ROOT}/mochalib
+MOCHA_SOURCES = ${MOCHA_DIR}/java/mocha/*/*/*.java
+MOCHA_CLASSES_DIR = ${MOCHA_DIR}/classes
+
+.PHONY: mocha
+mocha ${MOCHA_LIB}: ${MOCHA_CLASSES_DIR}
+	${JAVAC} ${JAVAC_FLAGS} -d ${MOCHA_CLASSES_DIR} ${MOCHA_SOURCES}
+	(cd ${MOCHA_CLASSES_DIR}; jar cf ${MOCHA_LIB} mocha/*/*/*.class )
+
+ 
+${MOCHA_CLASSES_DIR}:
+	mkdir $@
+ 
+.PHONY: clean_mocha
+clean_mocha:
+	rm -rf ${MOCHA_CLASSES_DIR}
+	rm -f ${MOCHA_LIB}
+
+
 ###########################################################################
 # source file generation for escjava.ast
 
 AST_DIR = $(ESCJAVA_SOURCE_DIR)/escjava/ast
-JAVAFE_AST_DIR = $(JAVAFE_ROOT)/java/javafe/ast
 
 # Dependence on Javafe astgen programs:
 
-ASTGEN = $(JAVAFE_ROOT)/astgen/astgen
-ASTFILELIST = $(JAVAFE_ROOT)/astgen/astfilelist
+ASTGEN_DIR = $(JAVAFE_ROOT)/astgen
+ASTGEN = $(ASTGEN_DIR)/astgen
+ASTFILELIST = $(ASTGEN_DIR)/astfilelist
 
 $(ASTFILELIST) $(ASTGEN):
-	${MAKE} -C $(JAVAFE_ROOT)/astgen
+	${MAKE} -C $(ASTGEN_DIR)
 
 # Generating Java files:
 
-VECTEMPLATE = $(JAVAFE_ROOT)/java/javafe/util/_TYPE_Vec.j
+VECTEMPLATE = $(JAVAFE_SOURCE_DIR)/javafe/util/_TYPE_Vec.j
 
 # The component type for these (e.g. FieldDecl.java) is in Javafe.
 JavafeTypeVec = \
@@ -151,11 +176,11 @@ generate_escjava_ast_source: $(AST_DIR)/GeneratedTags.java $(TypeVec) $(JavafeTy
 
 # FIXME - ought to make these depend on the component type.
 $(AST_DIR)/%Vec.java: $(VECTEMPLATE)
-	@if [ -e $(ESCJAVA_ROOT)/java/escjava/ast/$*.java ]; then \
+	@if [ -e $(ESCJAVA_SOURCE_DIR)/escjava/ast/$*.java ]; then \
 		sed s/_TYPE_/$*/g $(VECTEMPLATE) | \
 		sed s/_PKG_/escjava.ast/g              | \
 		sed s/_COMPONENTPKG_/escjava.ast/g > $@ ;\
-	elif [ -e $(JAVAFE_ROOT)/java/javafe/ast/$*.java ]; then \
+	elif [ -e $(JAVAFE_SOURCE_DIR)/javafe/ast/$*.java ]; then \
 		sed s/_TYPE_/$*/g $(VECTEMPLATE) | \
 		sed s/_PKG_/escjava.ast/g              | \
 		sed s/_COMPONENTPKG_/javafe.ast/g > $@ ;\
@@ -212,10 +237,11 @@ clean_escjava_backpred:
 ## FIXME - Check all these
 
 .PHONY: clean clean_escjava clean_tests clean_classfiles \
-	clean_docs clean_javadocs clean_misc clean_jars cleanarchives
+	clean_docs clean_misc clean_jars cleanarchives
 
 clean: clean_classfiles clean_docs clean_escjava clean_tests \
-	clean_misc clean_jars clean_archives
+	clean_misc clean_jars clean_archives \
+	clean_mocha
 
 clean_escjava: clean_escjava_ast clean_escjava_backpred 
 
@@ -224,11 +250,8 @@ clean_tests: clean_escjava_parser_test clean_test_escjava
 clean_classfiles:
 	rm -rf $(CLASSDIRECTORY)
 
-clean_docs: clean_javadocs
+clean_docs: 
 	rm -f doc/escjava.html doc/escjava-public.html doc/man1/*.1
-
-clean_javadocs:
-	rm -rf $(JAVADOCDIR)
 
 clean_misc:
 	rm -f $(STAMPFILE)
@@ -269,13 +292,13 @@ jar_escjava_complete: compile_escjava
 
 TOP_ESCJAVA_TEST_DIR = $(TESTSOURCEDIRECTORY)/escjava/test
 
-.PHONY: self_test test_escjava_parser
-
+.PHONY: self_test
 self_test: compile
 	cd $(ESCJAVA_SOURCE_DIR)/escjava; \
 	escjava -nocheck -v \*.java ast/*.java parser/*.java \
 	  tc/*.java bacpred/*.java prover/*.java
 
+.PHONY: test_escjava_parser
 test_escjava: build build_javafe_test test_escjava_parser clean_test_escjava
 	(cd $(TOP_ESCJAVA_TEST_DIR); \
 	rtestall)
@@ -337,10 +360,10 @@ test_parser_idempotence: compile_escjava_parser_test_programs
 ###########################################################################
 # Miscellaneous targets.
 
-.PHONY: word_count
 
 # Roughly counting size of source.
 
+.PHONY: word_count
 word_count:
 # --- Non-java Source files ---
 	wc $(OTHERSOURCEFILES)

@@ -26,15 +26,36 @@ export ESC_PROJECT ?= ESCTools
 export ESC_VERSION ?= February-2003
 
 ## The following definitions are used in various Makefiles and should
-## be common for all users and environments.  (at least those that
-## have '/' as the path separator.
+## be common for all users and environments.  (at least those environments
+## that have '/' as the path separator.
+## These are defined here rather than in the Makefiles for the individual
+## packages because the tools are used by each other (e.g. all tools use
+## Javafe).
 
 export ESCTOOLS_JARS=${ESCTOOLS_ROOT}/jars
+export JAVADOCDIRECTORY ?= ${ESCTOOLS_ROOT}/javadoc
 
 export JAVAFE_ROOT=${ESCTOOLS_ROOT}/Javafe
+export JAVAFE_SOURCE_DIR = ${JAVAFE_ROOT}/java
 export JAVAFE_CLASSFILES=${JAVAFE_ROOT}/classfiles
+
+## This is the path needed to build Javafe
+export JAVAFE_BUILD_CLASSPATH=${JAVAFE_CLASSFILES}
+
+# This is the path needed to run Javafe (only used for testing)
+export JAVAFE_CLASSPATH=${JAVAFE_CLASSFILES}
  
 export ESCJAVA_ROOT=${ESCTOOLS_ROOT}/Escjava
+export ESCJAVA_CLASSFILES=${ESCJAVA_ROOT}/classfiles
+
+## Paths to Mocha components
+export MOCHA_LIB ?= ${ESCTOOLS_ROOT}/jars/mochalib.jar
+
+## This is the path needed to build Escjava.
+export ESCJAVA_BUILD_CLASSPATH=${JAVAFE_CLASSFILES}:${ESCJAVA_CLASSFILES}:${MOCHA_LIB}
+## This is the path needed to run Escjava. FIXME - do we want to run using
+## jar files instead??
+export ESCJAVA_CLASSPATH=${JAVAFE_CLASSFILES}:${ESCJAVA_CLASSFILES}:${MOCHA_LIB}
 
 ## Definitions of Java tools.
 export JAVA ?= java
@@ -49,14 +70,19 @@ export JDKSPEC_ROOT ?= ${ESCJAVA_ROOT}/release/master/specs
  
 ######################### locations #########################
  
-export JAVADOCDIRECTORY ?= ${ESCTOOLS_ROOT}/javadoc
  
 ##### This stuff with MOCHA needs to be cleaned up
 ### FIXME
  
-export MOCHA_ROOT=${ESCJAVA_ROOT}/mochalib
-export MOCHA_PROOT=${HOME}/apps/mocha/j-mocha.2.0/mocha
-export MOCHA_CLASSES=${MOCHA_PROOT}/..
+
+## Escjava relies on the jMocha library from UC Berkeley.
+## It uses (a) a jar file of java classes (mochalib.jar) that
+## is supplied with the Escjava distribution.
+## It also uses (b) a set of compiled shared object modules.
+
+## FIXME: DO we supply these?  DO we supply the tools to build them?
+## Do we leave it to the user to figure it out?  What are the license
+## restrictions on jMocha?  What version do we have here?
  
 # To get predicate abstraction to work with ESC/Java, you need to
 # download jMocha from UC Berkeley.  When you build jMocha, you'll get
@@ -65,6 +91,7 @@ export MOCHA_CLASSES=${MOCHA_PROOT}/..
 # the name of that directory.  For example, if you put the shared
 # objects in a directory called ${MOCHA_ROOT}/platform/alpha, then you
 # would include the following line here:
+export MOCHA_PROOT=${HOME}/apps/mocha/j-mocha.2.0/mocha
 export LD_LIBRARY_PATH=${MOCHA_PROOT}/platform/linux
  
 ######################### classpaths #########################
@@ -78,14 +105,12 @@ export LD_LIBRARY_PATH=${MOCHA_PROOT}/platform/linux
 #
 export JARS=${ESCTOOLS_JARS}/mochalib.jar:${ESCTOOLS_JARS}/javafe.jar:${ESCTOOLS_JARS}/escjava.jar:
  
-export CLASSFILES=${CLASSDIRECTORY}:${MOCHA_CLASSES}:${JAVAFE_CLASSFILES}
+##export CLASSFILES=${CLASSDIRECTORY}:${MOCHA_LIB}:${JAVAFE_CLASSFILES}
  
-export CLASSES=${CLASSFILES}
+##export CLASSES=${CLASSFILES}
  
-export CLASSPATH=${CLASSES}
+##export CLASSPATH=${CLASSES}
  
-export ESC_CLASSPATH=${CLASSES}:${JDK_BINARIES}
-export ESCJAVA_CLASSPATH=${ESC_CLASSPATH}
  
 export SOURCEPATH=${SOURCEDIRECTORY}:${TESTSOURCEDIRECTORY}:${JAVAFE_ROOT}/java
  
@@ -102,7 +127,7 @@ export BOOTCLASSPATH=${JDKSPEC}:${JDK_BINARIES}
 # The classpath for checking escjava itself (e.g., escjava's
 # classpath), not counting -bootclasspath:
 #
-export ESCSPEC=${SOURCEDIRECTORY}:${JAVAFE_ROOT}/java:${MOCHA_CLASSES}
+export ESCSPEC=${SOURCEDIRECTORY}:${JAVAFE_ROOT}/java:${MOCHA_LIB}
  
  
 ######################### misc cmds #########################
