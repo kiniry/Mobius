@@ -2760,7 +2760,7 @@ class Derived extends Super @{
 @subsubsection Inheritance and non_null
 
 The syntactic rules and semantic meaning of 
-@code{non_null} in the presence of inheritance
+@code{non_null} on formal parameters in the presence of inheritance
 differ between ESC/Java and ESC/Java2.
 A @code{non_null} annotation on a formal parameter is equivalent to 
 (a) a requirement that the parameter not be assigned a null value in the body
@@ -2780,7 +2780,7 @@ is equivalent to
      ... specifications ...
 //@@ |@}
 @end example
-
+@noindent
 Similarly a non_null annotation on the result is equivalent to an additional
 post-condition:
 @example
@@ -2855,7 +2855,7 @@ If the precondition were @code{requires false;}, then the combined spec would be
         requires false;
 @end example
 @noindent
-which is equivalent to @code{requires o != null;}.  Then D and E would fail, and C
+which is equivalent to @code{requires o != null;}.  Then E would fail, and C and D
 would be OK.  In otherwords, it is the same as Case 2 below.
 
 
@@ -2874,8 +2874,9 @@ class Super @{
 class Derived extends S @{
 
     public void m(Object o) @{
-        nonnull(o);           // Line C - OK
-        o = null;   // Line D - FAILS [[[ Currently does not FAIL]]]
+        nonnull(o); // Line C - OK - precondition limits values of o
+        o = null;   // Line D - OK - no restriction on 
+                    //               assignments in this body
     @}
 
     public void mm() @{
@@ -2891,7 +2892,6 @@ method's specification, including the @code{non_null}.
 Lines B and F are still errors, and A is not, because of the specification of Super.m; 
 lines D and E are errors, and C is not.
  
-[[[ Open question about lines D; and ESC/Java2's implementation currently does not produce an error]]].
 
 @item Case 3: Super class has no non_null, but subclass does
 
@@ -2907,8 +2907,8 @@ class Super @{
 class Derived extends S @{
 
     public void m(/*@@ non_null */ Object o) @{
-        nonnull(o);           // Line C - FAILS
-        o = null;             // Line D - OK [[[ Currently FAILS ]]]
+        nonnull(o);      // Line C - FAILS - annotation ignored
+        o = null;        // Line D - OK - annotation ignored
     @}
  
     public void mm() @{
@@ -2919,27 +2919,52 @@ class Derived extends S @{
 @}
 @end example
 @noindent In this case, it is the derived class that has the @code{non_null} specification,
-but not the super class.  ESC/Java does not allow overriding methods to have
-non_null parameters (ESC/Java2 does).  
+but not the super class.  This is a problematic case, since the body of the
+overriding method may be called through the overridden signature, in which case
+the actual argument may not be constrained to be non_null.  Hence the non_null
+annotation on the overriding formal paramater can be misleading.  Therefore in
+ESC/Java2, a non_null annotation is ignored if there is any overridden method that
+has that formal parameter declared without a non_null argument.  A caution message
+is provided to warn the user of this behavior. 
 
-ESC/Java2 will allow lines B and F since the super class does not limit the values
+Thus, ESC/Java2 will allow lines B and F since the super class does not limit the values
 of the parameter; similarly line A provokes an error.  Although the parameter of
-@code{Derived.m} is declared @code{non_null}, the composite specification for
-@code{Derived.m} is
+@code{Derived.m} is declared @code{non_null}, the @code{non_null} annotation 
+is ignored.  Consequently, there is no limitation on the value of the formal
+parameter (since it may have been called through the super class's signature), and
+hence line C fails; similarly, there is no limitation on what may be assigned to
+the formal parameter variable, so line D is ok.  Finally, line E is ok since there
+is no additional precondition created by the ignored @code{non_null}.
+
+Note that 
+ behavior equivalent to the @code{non_null} declaration on a formal parameter
+can be obtained by adding appropriate explicit
+preconditions requiring the formal parameter to be non_null in the appropriate
+circumstances.  Furthermore, if it is actually desired to have the formal
+parameter be non_null within the body, code such as the following can be
+written.  Instead of
 @example
-        requires true;
-        also
-        requires o != null;
+        public void m(/*@@ non_null */ Object o) @{
+                ...
+        @}
 @end example
-@noindent
-which is equivalent to @code{requires true;}.  Consequently, line C fails, but lines
-D and E are acceptable.  This behavior on lines C, D and E is potentially confusing.
-It results from the fact that the combined spec does not require 
-@code{o != null;}.  [[[ Perhaps this case should be prohibited??? ]]]
+@noindent write
+@example
+        public void m(Object oo) @{
+                /*@@ non_null */ Object o = oo;
+                ...
+        @}
+@end example
 
-[[[ The behavior of line D is open to question; ESC/Java2 currently produces an error here. ]]]
+Finally note that
+@itemize @bullet
+@item ESC/Java does not allow overriding methods to have
+non_null parameters, whether or not the overridden method does.
+@item There are no particular issues with respect to @code{non_null} on the result
+type; overriding and overridden methods may have any combination of @code{non_null}
+annotations or lack thereof.
+@end itemize  
 
-@end itemize
 
 [[[ What does jmlrac do with the inheritance of non_null? ]]]
 
@@ -3258,13 +3283,53 @@ static checker is used without modification.
 
 [[[ discussion needed - no change yet ]]]
 
+@section use of modifies clause in checking routine bodies
+
+ESC/Java does not check the correctness of the @code{modifies} clauses.  However, 
+it does use that information during the checking of the body of a routine in the
+following way.  A pre-state value of variables that are mentioned in modifies 
+clauses is defined; then when a variable reference occurs within a @code{\old}
+construct, the pre-state value is used.  However, variables not mentioned in
+a modifies clauses are presumed not to change in the course of the routine body
+and hence are not mapped to a pre-state value.  Instances of those variables in
+an @code{\old} construct are simply mapped to the current value, which may not be
+the pre-state value if indeed the variable is modified.
+
+ESC/Java2 mitigates problems caused by errors in modifies clauses by maintaining
+pre-state values for any variable mentioned in an @code{\old} construct (in 
+addition to those in modifies clauses).  As a result, the static checking of the
+routine body proceeds correctly despite any errors in the modifies clauses.
+
 @section defaults for modifies clauses
 
-[[[ discussion needed ]]]
+ESC/Java had an implicit default for a missing modifies clause, namely that nothing
+was modified (@code{modifies \nothing;} in JML).  JML defines the default instead
+to be @code{modifies \everything;}.  ESC/Java2 has implemented this as the default.
+The implicit use of @code{modifies \nothing;} had the danger of missing or hiding
+many errors in usage, since unexpected changes to variables caused by calling a
+routine are a not unusual source of bugs.  However, some outstanding issues are
+discussed in the following section.
+
 
 @section modifies \everything
 
-[[[ discussion needed - no change yet ]]]
+The use of @code{\nothing}, @code{\everything}, and @code{\not_specified} in
+a modfies clause are now implemented.  @code{not_specified} is equivalent to
+@code{\everything}, and @code{\everything} is the default.
+However there are two issues outstanding.
+@itemize @bullet
+@item With this default, any method that has no annotations is assumed to have the
+behavior @code{modifies \everything;}.  There is very little reasoning that can
+be performed as a result.  Thus any use of the ESC/Java2 tool will require having
+specification files for system classes and for many of the other classes in the
+user's body of code.
+@item The logic to reason about routine bodies that contain calls of methods that
+are specified with @code{modifies \everything;} has not yet been defined or 
+implemented.  A caution is issued in these cases.  But to avoid breaking tests,
+this caution is not yet turned on.
+@end itemize
+
+[[[ This needs updating when 'modifies everything' is implemented. ]]]
 
 @section Checking of modifies
 
