@@ -1,4 +1,3 @@
-@string {lncs           = {LNCS}}
 @string{springer        = {Springer-Verlag}}            %
 @string{cav96           = {Computer-Aided Verification (CAV '96)}}
 @string{cup             = "Cambridge University Press"}
@@ -39,14 +38,14 @@
 author       = "Berg, J. van den and M. Huisman and B. Jacobs
 		and E. Poll",
 title        = "A Type-Theoretic Memory Model for Verification of
-                Sequential {Java} Programs",
-booktitle    = "Recent Trends in Algebraic Development Techniques", 
-series       = LNCS, 
-number       = 1827,
+                Sequential \textsc{Java} Programs",
+booktitle    = "Recent Trends in Algebraic Development Techniques",
 pages        = "1-21",
+year         = "2000",
 editor       = "D. Bert and C. Choppy and P.D. Mosses",
+number       = "1827",
+series       = {Lecture Notes in Computer Science},
 publisher    = springer,
-year         = 2000
 }
 
 %5
@@ -67,17 +66,17 @@ howpublished = "Compaq Research Center, \texttt{http$:$//www.research.compaq.com
 }
 
 %7
-@misc{JAVA,
-    key =   {Jav},
-    title = "The {Java} Language Specification",
-    howpublished = "Sun {Microsystems} Inc, {http$:$//java.sun.com/docs/books/jls/index.html}", 
-    year = "2001", 
+@book{JAVA,
+    author = 	 "J. Gosling and B. Joy and G. Steel",
+    title = "The \textsc{Java} Language Specification",
+    publisher = "Addison-Wesley",
+    year = 	 "2001"
 }
 
 %8
 @book{ HNSS00,
     author = "U. Hansmann and M. S. Nicklous and T. Sch{\"a}ck and F. Seliger",
-    title = "Smart Card Application Development Using {Java}",
+    title = "Smart Card Application Development Using \textsc{Java}",
     publisher = "Springer-Verlag",
     year = "2000"
 }
@@ -85,13 +84,13 @@ howpublished = "Compaq Research Center, \texttt{http$:$//www.research.compaq.com
 %9
 @inproceedings{ HJ00,
 author       = "M. Huisman and B. Jacobs", 
-title        = "{Java} Program Verification via a {Hoare} Logic with 
+title        = "\textsc{Java} Program Verification via a {Hoare} Logic with 
                 Abrupt Termination", 
 booktitle    = "Fundamental Approaches to Software Engineering (FASE 2000)",
 publisher    = springer, 
 editor       = "T. Maibaum",
 pages        = "284--303",
-series       = LNCS, 
+series       = {Lecture Notes in Computer Science},
 number       = "1783",            
 year         = 2000
 }
@@ -101,7 +100,7 @@ year         = 2000
 @article{HJB01,
 author       = "M. Huisman and B. Jacobs and Berg, J. van den", 
 title        = "A case study in class library verification:
-	        {Java}'s {Vector} class", 
+	        \textsc{Java}'s {Vector} class", 
 journal      = "Software Tools for Technology Transfer (STTT)",
 volume       = "3/3",
 pages        = "332 -- 352",
@@ -121,7 +120,7 @@ year         = 2001
 %12
 @book{ JBHBHT98,
     author = "B. Jacobs and J. {van den} Berg and M. Huisman and M. {van} Berkum and U. Hensel and H. Tews",
-    title = "Reasoning about classes in Java (preliminary report)",
+    title = "Reasoning about classes in \textsc{Java} (preliminary report)",
     publisher = "Object Oriented Programming, Systems, Languages and Applications (OOPSLA), pages 329-340. ACM Press ",
     year = "1998"
 }
@@ -131,7 +130,7 @@ year         = 2001
 @misc{ SM99,
     key = "JCard",
     title = "\textsc{JavaCard} 2.1.1 Application Programming Interface",
-    howpublished = "Sun Microsystems Inc. {http$:$//java.sun.com/products/javacard/}",
+    howpublished = "Sun Microsystems Inc. \texttt{http$:$//java.sun.com/products/javacard/}",
     year = "2000"
 }
 
@@ -151,7 +150,7 @@ year         = 2001
 %15
 @techreport{ LBR00,
     author = "Gary T. Leavens and Albert L. Baker and Clyde Ruby",
-    title = "Preliminary Design of \textsc{Jml}$:$ {A} Behavioral Interface Specification Language for Java",
+    title = "Preliminary Design of \textsc{Jml}$:$ {A} Behavioral Interface Specification Language for \textsc{Java}",
     number = "98-06i",
     year = "2000",
     institution = "Department of Computer Science, Iowa State University",
@@ -162,7 +161,7 @@ year         = 2001
 @misc{LoopUrl,
 key       = {LOOP},
 title     = "{The LOOP project}",
-howpublished = "\texttt{http$:$//www.cs.kun.nl/$\sim$~bart/LOOP/index.html}"
+howpublished = "\texttt{http$:$//www.cs.kun.nl/$\sim\!\,$bart/LOOP/index.html}"
 }
 
 
@@ -177,17 +176,15 @@ howpublished = "\texttt{http$:$//www.cs.kun.nl/$\sim$~bart/LOOP/index.html}"
 
 %18
 @inproceedings{ ORRS96, 
-title = {{PVS}: Combining Specification, Proof Checking, and
-         Model Checking},
-author = {S. Owre and S. Rajan and J.M. Rushby and N. Shankar
-          and M.K. Srivas},
+author = {S. Owre and S. Rajan and J.M. Rushby and N. Shankar and M.K. Srivas},
+title = {\textsc{Pvs}: Combining Specification, Proof Checking, and Model Checking},
 booktitle = cav96,
-editor = {R. Alur and T.A. Henzinger},
 pages = {411--414},
-publisher = springer,
-series = LNCS,
-number = 1102,
 year = 1996,
+editor = {R. Alur and T.A. Henzinger},
+number = 1102,
+series       = {Lecture Notes in Computer Science},
+publisher = springer,
 }
 
 
@@ -198,14 +195,14 @@ title = "Isabelle$:$ a generic theorem prover",
 publisher = springer,
 year = 1994,
 note = "With contributions by Tobias Nipkow",
-series = LNCS,
+series       = {Lecture Notes in Computer Science},
 number = 828
 } 
 
 %20
 @inproceedings{ PBJ00,
     author = "Erik Poll and Joachim {van den} Berg and Bart Jacobs",
-    title = "Specification of the \textsc{JavaCard} \textsc{Api} in \textsc{Jml}",
+    title = "Specification of the \textsc{Java Card} \textsc{Api} in \textsc{Jml}",
     booktitle = "Fourth Smart Card Research and Advanced Application Conference ({IFIP} Cardis)",
     publisher = "Kluwer Academic Publishers",
     year = "2000",
@@ -215,7 +212,7 @@ number = 828
 %21
 @book{ Hui01,
     author = "Marieke Huisman",
-    title = "Reasoning about Java programs in higher order logic with PVS and Isabelle, PhD Thesis",
+    title = "Reasoning about \textsc{Java} programs in higher order logic with \textsc{Pvs} and Isabelle, Ph.D. Thesis",
     publisher = "University of Nijmegen",
     year = "2001"
 }
@@ -236,7 +233,7 @@ title        = "A Logic for the {J}ava {M}odeling {L}anguage \textsc{Jml}",
 booktitle    = "Fundamental Approaches to Software Engineering (FASE)",
 editor       = "H. Hussmann",
 pusblisher   = "Springer, Berlin",
-series       = "LNCS",
+series       = {Lecture Notes in Computer Science},
 number       = "2029",
 pages        = "284--299",
 year         = "2001",
@@ -248,7 +245,7 @@ year         = "2001",
     title = "PACAP Purse and Loyalty specification",
     number = "V 0.4",
     year = "2000",
-    institution = "GEMPLUS" ,
+    institution = "\textsc{Gemplus}" ,
 }
 
 %25
@@ -315,7 +312,7 @@ publisher = {Springer-Verlag}
 %32
 @techreport{ bhorkar00runtime,
     author = "Abhay Bhorkar",
-    title = "A Run-time Assertion Checker for {Java} using {JML}",
+    title = "A Run-time Assertion Checker for {Java} using \textsc{Jml}",
     number = "00-08",
     address = "226 Atanasoff Hall, Ames, Iowa 50011",
     institution = "Iowa State University",
@@ -365,8 +362,8 @@ year = 2001
 
 %37
 @misc{EscJmlDiff,
-title = {Differences between {E}SC/{Java} and {JML}},
-note = {Comes with {JML} distribution, in file \texttt{esc-jml-diffs.txt}},
+title = {Differences between {E}SC/{Java} and \textsc{Jml}},
+note = {Comes with \textsc{Jml} distribution, in file \texttt{esc-jml-diffs.txt}},
 year = 2000,
 key = {EJ00}
 }
@@ -377,7 +374,7 @@ title  = {Houdini, an annotation assistant for {ESC/Java}},
 author = {C. Flanagan and K.R.M. Leino},
 booktitle = {Formal Methods Europe 2001 (FME'01): Formal Methods for Increasing Software Productivity},
 editor = {J.N. Oliveira and P. Zave},
-series = lncs,
+series       = {Lecture Notes in Computer Science},
 number = 2021,
 publisher = springer,
 year  = 2001,
@@ -408,7 +405,7 @@ year   = 2000,
 booktitle = tacas00,
 editor    = "S. Graf and M. Schwartzbach",
 publisher = springer,
-series    = lncs,
+series       = {Lecture Notes in Computer Science},
 volume    = 1785,
 pages     = "63--77"
 }
@@ -416,7 +413,7 @@ pages     = "63--77"
 %42
 @misc{PurseUrl,
 title          = {Applet Benchmark Kit},
-author         = "Gemplus",
+author         = "\textsc{Gemplus}",
 key            = {Purse},
 howpublished   = {\texttt{http://www.gemplus.com/smart/r\_d/publications/case-study/}}
 }
@@ -424,7 +421,7 @@ howpublished   = {\texttt{http://www.gemplus.com/smart/r\_d/publications/case-st
 %43
 @InProceedings{CH02,
   author = 	 {N. {Cata\~no} and M. {Huisman}},
-  title = 	 {Formal specification of Gemplus' electronic purse case study},
+  title = 	 {Formal specification of \textsc{Gemplus}' electronic purse case study},
   booktitle = 	 {FME: Formal Methods Europe},
   pages = 	 {272-289},
   year = 	 {2002},
@@ -473,17 +470,13 @@ howpublished   = {\texttt{http://www.gemplus.com/smart/r\_d/publications/case-st
 @InProceedings{Pnue77,
   author =       "Amir Pnueli",
   title =        "The temporal logic of programs",
-  booktitle =    "Proceedings of the 18th IEEE Symposium on the
-                 Foundations of Computer Science (FOCS-77)",
+  booktitle =    "Proceedings of the 18th IEEE Symposium on the Foundations of Computer Science (FOCS-77)",
+  pages =        "46--57",
+  year =         "1977",
   address =      "Providence, Rhode Island",
   publisher =    "IEEE Computer Society Press",
   organization = "IEEE",
   month =        oct # " 31--" # nov # " 2",
-  year =         "1977",
-  pages =        "46--57",
-  annote =       "[to read] Presents the idea of reactive systems and
-                  temporal logic in contrast to transformationel
-                  systems using Hoare Logic."
 }
 
 %48
@@ -493,7 +486,7 @@ howpublished   = {\texttt{http://www.gemplus.com/smart/r\_d/publications/case-st
   booktitle =    "Proc. Logics of Programs",
   address =      "Yorktown Heights, New York",
   publisher =    "Lecture Notes in Computer Science",
-  organization = "LNCS",
+  series       = {Lecture Notes in Computer Science},
   month =        "may ",
   year =         "1981",
   pages =        "52--71",
@@ -543,7 +536,7 @@ note    = {\texttt{http$://$www.parasoft.com$/$products$/$jtract$/$}},
 %53
 @inproceedings{CKRM97,
  author = "P. Cenciarelli and A. Knapp and B. Reus and M. Wirsing",
- title = "From Sequential to Multi-Threaded {Java}: An Event-Based Operational Semantics",
+ title = "From Sequential to Multi-Threaded \textsc{Java}: An Event-Based Operational Semantics",
  booktitle = "Algebraic Methodology and Software Technology",
  pages = "75-90",
  year = "1997",
@@ -574,15 +567,16 @@ note    = {\texttt{http$://$www.parasoft.com$/$products$/$jtract$/$}},
 }
 
 %55
-@proceedings{CF99,
-  title = "A Formal Study of Slicing for Multi-threaded Programs with {JVM} Concurrency Primitives",
-  editor    = "A. Cortesi and G. Fil{\'e}",
+@inproceedings{CF99,
+  author = "J. Hatcliff and J. Corbett and M. Dwyer and S. Sokolowski and H. Zheng",
+  title = "A Formal Study of Slicing for Multi-threaded Programs with \textsc{JVM} Concurrency Primitives",
   booktitle = "{SAS}, Static Analysis",
-  publisher = "Springer",
-  series    = "Lecture Notes in Computer Science",
-  volume    = {1694},
-  pages     = {1-18}, 
+  pages     = {1-18},
   year      = {1999},
+  editor    = "A. Cortesi and G. Fil{\'e}",
+  volume    = {1694},
+  series    = "Lecture Notes in Computer Science",
+  publisher = "Springer",
 }
 
 %56
@@ -634,11 +628,12 @@ note    = {\texttt{http$://$www.parasoft.com$/$products$/$jtract$/$}},
 %60
 @inproceedings{DrossopoulouS99,
   author = 	 {S. Drossopoulou and S. Eisenbach},
-  title = 	 {Describing the Semantics of {Java} and Proving Type Soundness},
-  booktitle = 	 "Formal Syntax and Semantics of Java",
-  editor = "In J. Alves-Foss",
-  publisher    = "Springer, Berlin",
-  volume       = "1523",
+  title = 	 {Describing the Semantics of \textsc{Java} and Proving Type Soundness},
+  booktitle = 	 "Formal Syntax and Semantics of \textsc{Java}",
+  editor =       "In J. Alves-Foss",
+  publisher =    "Springer, Berlin",
+  series       = {Lecture Notes in Computer Science},
+  volume =       "1523",
   pages = 	 {41-82},
   year = 	 {1999},
 }
@@ -648,9 +643,10 @@ note    = {\texttt{http$://$www.parasoft.com$/$products$/$jtract$/$}},
   author = 	 {D. Syme},
   title = 	 "Proving {Java} Type Soundness",
   booktitle = 	 "Formal Syntax and Semantics of {Java}",
-  editor = "In J. Alves-Foss",
-  publisher    = "Springer, Berlin",
-  volume       = "1523",
+  editor =       "In J. Alves-Foss",
+  publisher =    "Springer, Berlin",
+  series       = {Lecture Notes in Computer Science},
+  volume =       "1523",
   pages = 	 {83-118},
   year = 	 {1999},
 }
@@ -662,6 +658,7 @@ note    = {\texttt{http$://$www.parasoft.com$/$products$/$jtract$/$}},
   booktitle = 	 "Formal Syntax and Semantics of {Java}",
   editor = "In J. Alves-Foss",
   publisher    = "Springer, Berlin",
+  series       = {Lecture Notes in Computer Science},
   volume       = "1523",
   pages = 	 {119-156},
   year = 	 {1999},
@@ -670,13 +667,14 @@ note    = {\texttt{http$://$www.parasoft.com$/$products$/$jtract$/$}},
 %63
 @inproceedings{CKRW99,
  author = "P. Cenciarelli and A. Knapp and B. Reus and M. Wirsing",
- title = "An Event-Based Structural Operational Semantics of Multi-Threaded {Java}",
+ title = "An Event-Based Structural Operational Semantics of Multi-Threaded \textsc{Java}",
  booktitle = "Formal Syntax and Semantics of {Java}",
- editor = "In J. Alves-Foss",
- publisher    = "Springer, Berlin",
- volume       = "1523",
  pages = "157-200",
  year = "1999",
+ editor = "In J. Alves-Foss",
+ volume       = "1523",
+ series       = {Lecture Notes in Computer Science},
+ publisher    = "Springer, Berlin",
 }
 
 %64
@@ -686,6 +684,7 @@ note    = {\texttt{http$://$www.parasoft.com$/$products$/$jtract$/$}},
   booktitle = "Formal Syntax and Semantics of {Java}",
   editor = "In J. Alves-Foss",
   publisher    = "Springer, Berlin",
+  series       = {Lecture Notes in Computer Science},
   volume       = "1523",
   pages       = " 353--404",
   year         = "1999",
@@ -694,22 +693,22 @@ note    = {\texttt{http$://$www.parasoft.com$/$products$/$jtract$/$}},
 %65
 @book{KnappThesis,
   author = "Alexander Knapp",
-  title = "A Formal Approach to Object-Oriented Software Engineering",
+  title = "A Formal Approach to Object-Oriented Software Engineering, Ph.D. Thesis",
   publisher = {Ludwig-Maximilians-Universit\"at M\"unchen},
   year = "2000",
 }
 
 %66
 @misc{BanderaURL,
- title        = {{The Bandera project}},
- key       = {Bandera},
+ title   = {The Bandera project},
+ key     = {Bandera},
  note    = {\texttt{http://www.cis.ksu.edu/santos/bandera/}}
 }
 
 %67
 @inproceedings{bartetzko01assertions,
  author = {D. Bartetzko and C. Fischer and M. M{\"o}ller and H. Wehrheim},
- title = {{Jass~{--}~Java with Assertions}},
+ title = {{\textsc{Jass}~{--}~\textsc{Java} with Assertions}},
  booktitle = ENTCS,
  volume = {55(2)},
  publisher = elsevier,
@@ -720,7 +719,7 @@ note    = {\texttt{http$://$www.parasoft.com$/$products$/$jtract$/$}},
 %68
 @InProceedings{CH03,
   author = 	 {N. {Cata\~no} and M. {Huisman}},
-  title = 	 {CHASE: A Static Checker for JML's Assignable Clause},
+  title = 	 {Chase: A Static Checker for \textsc{Jml}'s Assignable Clause},
   booktitle = 	 {VMCAI: Verification, Model Checking and Abstract Interpretation},
   pages = 	 {26-40},
   year = 	 {2003},
@@ -735,7 +734,7 @@ note    = {\texttt{http$://$www.parasoft.com$/$products$/$jtract$/$}},
 %69
 @misc{PvsUrl,
  key       = {PVS},
- title     = "{The PVS Specification and Verification System}",
+ title     = "{The \textsc{Pvs} Specification and Verification System}",
  howpublished = "\texttt{http$:$//pvs.csl.sri.com/}"
 }
 
@@ -760,7 +759,7 @@ note    = {\texttt{http$://$www.parasoft.com$/$products$/$jtract$/$}},
 @inproceedings{SpotoPoll03,
    author = {Fausto Spoto and Erik Poll},
    booktitle = {{F}oundations of {O}bject-{O}riented {L}anguages (FOOL10)},
-   title = {Static Analysis for {JML}'s assignable Clauses},
+   title = {Static Analysis for \textsc{Jml}'s assignable Clauses},
    year = {2003},
   place = "New Orleans"
 }
@@ -774,4 +773,62 @@ note    = {\texttt{http$://$www.parasoft.com$/$products$/$jtract$/$}},
  volume = "3",
  pages = "121--189",
  year = "1995"
+}
+
+
+%73
+@misc{JmlUrl,
+ key       = {JML},
+ title     = "The \textsc{Java} Model Language \textsc{Jml}",
+ howpublished = "\texttt{http://www.cs.iastate.edu/~leavens/JML/}"
+}
+
+
+%74
+@inproceedings{LichtensteinP85,
+  author = {O. Lichtenstein and A. Pnueli},
+  title  = {Checking that finite state concurrent programs satisfy their linear specification},
+  booktitle = {Proceedings of the 12th ACM symposium on Principles of programming languages},
+  pages = {97--107},
+  year  = {1985},
+  series  = {ACM},
+  address = {New Orleans, Louisiana, United States},
+  publisher = {ACM Press}
+}
+
+
+%75
+@misc{JpfUrl,
+ key       = "{JPF}",
+ title     = "\textsc{Java PathFinder}, a Model Checker for \textsc{Java} Programs",
+ howpublished = "\texttt{http://ase.arc.nasa.gov/visser/jpf/}"
+}
+
+%76
+@inproceedings{Pugh99,
+ author = {William Pugh},
+ title = "Fixing the {Java} memory model",
+ booktitle = "Proceedings of the {ACM} {1999} conference on \textsc{Java}Grande",
+ year = {1999},
+ isbn = {1-58113-161-5},
+ pages = {89--98},
+ location = {San Francisco, California, United States},
+ publisher = {ACM Press},
+ }
+
+
+
+%77
+@InProceedings{FirleyG02,
+  author = 	 {N. Firley and U. Goltz},
+  title = 	 {Property Dependent Abstraction of Control Structure for Software Verification},
+  booktitle = 	 {FME: Formal Methods Europe},
+  pages = 	 {511-530},
+  year = 	 {2002},
+  editor = 	 {Lars-Henrik Eriksson and Peter A. Lindsay},
+  volume = 	 {2391},
+  series = 	 {Lecture Notes in Computer Science},
+  address = 	 {Copenhagen, Denmark},
+  month = 	 {July 22-24},
+  publisher = {Springer}
 }
