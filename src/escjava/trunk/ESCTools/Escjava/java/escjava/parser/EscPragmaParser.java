@@ -174,26 +174,43 @@ public class EscPragmaParser extends Parse implements PragmaParser
 
     private int inProcessLoc;
     private CorrelatedReader pendingJavadocComment;
-    
+
+    /**
+     * Indicates that we have parsed an "also" JML keyword and thus
+     * all following REQUIRES, ENSURES, EXSURES, and MODIFIES should
+     * be parsed as ALSO_REQUIRES, ALSO_ENSURES, ALSO_EXSURES, and
+     * ALSO_MODIFIES.  This flag should be cleared when we have
+     * finished parsing the current method specification.
+     */
+    private boolean inAlsoClause = false;
 
     /**
      * Maximum # of levels of nesting of annotation comments allowed.
      * 0 == no nesting of annotation comments allowed.
      * 
      * <p> If you change this, change the error message in
-     * EscPragmaParser(int) below as well.
+     * EscPragmaParser(int) below as well. </p>
      */
     static final int maxAnnotationNestingLevel = 1;
 
-
+    /**
+     * Constructs a new pragma parser with zero nesting level.
+     * @see EscPragmaParser(int)
+     */
     public EscPragmaParser() {
 	this(0);
     }
 
+    /**
+     * Constructs a new prama parser at the indicated nesting level.
+     *
+     * @param level the nesting level of this instance.
+     */
+    //@ requires level >= 0;
     public EscPragmaParser(int level) {
 	PragmaParser pp;
-	if (level<maxAnnotationNestingLevel)
-	    pp = new EscPragmaParser(level+1);
+	if (level < maxAnnotationNestingLevel)
+	    pp = new EscPragmaParser(level + 1);
 	else
 	    pp = new ErrorPragmaParser("Annotation comments may be nested "
 				       + "at most 1 time");
@@ -213,8 +230,15 @@ public class EscPragmaParser extends Parse implements PragmaParser
 	scanner.addKeyword("\\lockset", TagConstants.LS);
 	scanner.addKeyword("\\TYPE", TagConstants.TYPETYPE);
 	inProcessTag = -2;
+        inAlsoClause = false;
     }
 
+    /**
+     * Describe <code>checkTag</code> method here.
+     *
+     * @param tag an <code>int</code> value
+     * @return a <code>boolean</code> value
+     */
     public boolean checkTag(int tag) {
         return tag == '@' || tag == '*';
     }
@@ -224,6 +248,9 @@ public class EscPragmaParser extends Parse implements PragmaParser
      * Restart a pragma parser on a new input stream.  If
      * <code>this</code> is already opened on another {@link
      * CorrelatedReader}, closes the old reader.
+     *
+     * @param in the reader on which to read.
+     * @param eolComment unknown.
      */
     public void restart(CorrelatedReader in, boolean eolComment) {
         try {
@@ -240,9 +267,10 @@ public class EscPragmaParser extends Parse implements PragmaParser
                                                  JmlCorrelatedReader.EOL_COMMENT :
                                                  JmlCorrelatedReader.C_COMMENT);
                     /*
-                     * At this point, in has been trimmed/replaced as needed to
-                     * represent the annotation part of the comment (if any --
-                     * may be empty)
+                     * At this point, <code>in</code> has been
+                     * trimmed/replaced as needed to represent the
+                     * annotation part of the comment (if any -- it
+                     * may be empty).
                      */
                     scanner.restart(in);
                     inProcessTag = -1;
@@ -264,13 +292,19 @@ public class EscPragmaParser extends Parse implements PragmaParser
                     break;
 
                 default:
-                    Assert.fail("Bad starting character on comment:"+c+" "+(char)c);
+                    Assert.fail("Bad starting character on comment:"+ c + " " + (char)c);
             }
         } catch (IOException e) {
             ErrorSet.fatal(in.getLocation(), e.toString());
         }
     }
 
+    /**
+     * Unknown.
+     *
+     * @return unknown.
+     * @exception IOException when?
+     */
     private boolean processJavadocComment() throws IOException {
         if (pendingJavadocComment == null) {
             return false;
@@ -312,11 +346,12 @@ public class EscPragmaParser extends Parse implements PragmaParser
      * Eat any wizard inserted comment at the start of an escjava
      * annotation.
      *
-     * <p> May side-effect the mark of <code>in</code>.
+     * <p> May side-effect the mark of <code>in</code>. </p>
      *
-     * <p> Eats "([^)]*)", if present, from <code>in</code>.
+     * <p> Eats "([^)]*)", if present, from <code>in</code>. </p>
+     *
+     * @param in the stream from which to read.
      */
-
     private void eatWizardComment(/*@ non_null */ CorrelatedReader in) 
             throws IOException {
         in.mark();
@@ -339,18 +374,19 @@ public class EscPragmaParser extends Parse implements PragmaParser
         } while (cc != ')');
     }
 
-
-
     /** 
      * Scans input stream for a string matching match. Only works if
      * the first character is not repeated in the string.
      *
      * <p> If present, the location of the match is returned.  If not
-     * present, Location.NULL is returned.
+     * present, Location.NULL is returned. </p>
      *
-     * <p> Requires that <code>in</code> is not closed.
+     * <p> Requires that <code>in</code> is not closed. </p>
+     *
+     * @param in the stream from which to read.
+     * @param match unknown.
+     * @return unknown.
      */
-
     private int scanFor(/*@ non_null */ CorrelatedReader in,
 			/*@ non_null */ String match)
             throws IOException
@@ -381,7 +417,10 @@ public class EscPragmaParser extends Parse implements PragmaParser
 	}
     }
 	    
-
+    /**
+     * Closes this pragma parser including its scanner and pending
+     * Javadoc comment.
+     */
     public void close() {
 	scanner.close();
 	if (pendingJavadocComment != null) {
@@ -390,6 +429,12 @@ public class EscPragmaParser extends Parse implements PragmaParser
 	}
     }
 
+    /**
+     * Unknown.
+     *
+     * @param dst unknown.
+     * @return unknown.
+     */
     public boolean getNextPragma(Token dst) {
         try {
             if (inProcessTag == -2) {
@@ -430,6 +475,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
             boolean semiNotOptional = false;
 
             switch (tag) {
+                
                 case TagConstants.NOWARN:
                     dst.ttype = TagConstants.LEXICALPRAGMA;
                     seqIdentifier.push();
@@ -454,7 +500,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
                 case TagConstants.JML_ASSIGNABLE:
                     if (tag == TagConstants.JML_MODIFIABLE 
                         || tag == TagConstants.JML_ASSIGNABLE) {
-                        ErrorSet.caution("ESC/Java keyword 'modifies' " +
+                        ErrorSet.caution(loc, "ESC/Java keyword 'modifies' " +
                                          "is preferred to JML keywords " + 
                                          "'modifiable' and 'assignable'.");
                     }
@@ -477,7 +523,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
                 case TagConstants.JML_DECREASING:
                     if (tag == TagConstants.JML_MAINTAINING 
                         || tag == TagConstants.JML_DECREASING) {
-                        ErrorSet.caution("ESC/Java keywords 'loop_invariant' and " +
+                        ErrorSet.caution(loc, "ESC/Java keywords 'loop_invariant' and " +
                                          "'decreases' are preferred to JML keywords " + 
                                          "'maintaining' and 'decreasing'.");
                     }
@@ -611,18 +657,17 @@ public class EscPragmaParser extends Parse implements PragmaParser
                 case TagConstants.ALSO_REQUIRES:
                 case TagConstants.ENSURES:
                 case TagConstants.ALSO_ENSURES:
-
                 case TagConstants.JML_PRE:
                 case TagConstants.JML_POST:
-                    if (tag == TagConstants.ALSO_REQUIRES && !Main.allowAlsoRequires) {
+                    if ((tag == TagConstants.ALSO_REQUIRES ||
+                        (tag == TagConstants.REQUIRES && inAlsoClause))
+                        && !Main.allowAlsoRequires)
                         ErrorSet.fatal(loc, TagConstants.toString(tag) +
                                        " is not allowed pragma");
-                    }
-                    if (tag == TagConstants.JML_POST || tag == TagConstants.JML_PRE) {
-                        ErrorSet.caution("ESC/Java keywords 'require' and 'ensures' " +
+                    if (tag == TagConstants.JML_POST || tag == TagConstants.JML_PRE)
+                        ErrorSet.caution(loc, "ESC/Java keywords 'require' and 'ensures' " +
                                          "are preferred to JML keywords " + 
                                          "'pre' and 'post'.");
-                    }
                     dst.ttype = TagConstants.MODIFIERPRAGMA;
                     dst.auxVal
                         = ExprModifierPragma.make(tag, parseExpression(scanner), loc);
@@ -630,14 +675,18 @@ public class EscPragmaParser extends Parse implements PragmaParser
                     break;
 
                 case TagConstants.JML_ALSO:
-                    ErrorSet.caution("JML keyword 'also' not yet supported.");
+                    if (inAlsoClause)
+                        ErrorSet.warning(loc, "Already in an 'also' specification; " + 
+                                         "duplicate 'also' ignored.");
+                    inAlsoClause = true;
+                    // Assert.fail("JML keyword 'also' unsupported.");
                     break;
 
                 case TagConstants.EXSURES:
                 case TagConstants.ALSO_EXSURES:
                 case TagConstants.JML_SIGNALS: {
                     if (tag == TagConstants.JML_SIGNALS) {
-                        ErrorSet.caution("ESC/Java keywords 'exsures' " +
+                        ErrorSet.caution(loc, "ESC/Java keywords 'exsures' " +
                                          "is preferred to JML keyword " + 
                                          "'signals'.");
                     }
@@ -719,6 +768,12 @@ public class EscPragmaParser extends Parse implements PragmaParser
         }
     }
 
+    /**
+     * Unknown.
+     *
+     * @param l unknown.
+     * @return unknown.
+     */
     protected Expr parsePrimaryExpression(Lex l) {
 
         /* Lookahead for:
@@ -897,6 +952,13 @@ public class EscPragmaParser extends Parse implements PragmaParser
         return parsePrimarySuffix( l, primary );
     }
 
+    /**
+     * Unknown.
+     *
+     * @param l unknown.
+     * @param primary unknown.
+     * @return unknown.
+     */
     protected Expr parsePrimarySuffix(Lex l, Expr primary) {
 
         for(;;) {
@@ -920,6 +982,15 @@ public class EscPragmaParser extends Parse implements PragmaParser
         }
     }
 
+    /**
+     * Unknown.
+     *
+     * @param l unknown.
+     * @param tag unknown.
+     * @param type unknown.
+     * @param loc unknown.
+     * @return unknown.
+     */
     //@ requires l.m_in != null;
     //@ requires type.syntax;
     //@ ensures \result != null;
@@ -970,10 +1041,14 @@ public class EscPragmaParser extends Parse implements PragmaParser
 
 
     /**
-     * Is a tag a PrimitiveType keyword?  Overriden to add type TYPE.
+     * Is a <code>tag</code> a PrimitiveType keyword?  Overriden to add type TYPE.
+     *
+     * @param tag the tag to check.
+     * @return a flag indicating if the supplied parameter is a
+     * primate type.
      */
     public boolean isPrimitiveKeywordTag(int tag) {
-        switch( tag ) {
+        switch(tag) {
             case TagConstants.TYPETYPE:
                 return true;
 
@@ -982,14 +1057,16 @@ public class EscPragmaParser extends Parse implements PragmaParser
         }
     }
 
-    /** 
+    /**
      * Parses a PrimitiveType.  Overriden to add type TYPE.  Returns
      * <code>null</code> on failure.
      * 
      * <p> PrimitiveType is one of: boolean byte short int long char
-     * float double void TYPE.
+     * float double void TYPE. </p>
+     *
+     * @param l a <code>Lex</code> value
+     * @return a <code>PrimitiveType</code> value
      */
-
     public PrimitiveType parsePrimitiveType(Lex l) {
         int tag;
 
@@ -1005,6 +1082,13 @@ public class EscPragmaParser extends Parse implements PragmaParser
         return PrimitiveType.make( tag, loc );
     }
 
+    /**
+     * Describe <code>isStartOfUnaryExpressionNotPlusMinus</code> method
+     * here.
+     *
+     * @param tag an <code>int</code> value
+     * @return a <code>boolean</code> value
+     */
     public boolean isStartOfUnaryExpressionNotPlusMinus(int tag) {
 	// All previous cases apply...
 	if (super.isStartOfUnaryExpressionNotPlusMinus(tag))
@@ -1017,6 +1101,12 @@ public class EscPragmaParser extends Parse implements PragmaParser
 	return false;
     }
 
+    /**
+     * Describe <code>parseExsuresFormalParaDecl</code> method here.
+     *
+     * @param l an <code>EscPragmaLex</code> value
+     * @return a <code>FormalParaDecl</code> value
+     */
     //@ requires l.m_in != null;
     public FormalParaDecl parseExsuresFormalParaDecl(/*@ non_null */ EscPragmaLex l) {
         int modifiers = parseModifiers(l);
@@ -1038,6 +1128,12 @@ public class EscPragmaParser extends Parse implements PragmaParser
                                    idn, paratype, locId);
     }
 
+    /**
+     * Describe <code>parseExsuresType</code> method here.
+     *
+     * @param l an <code>EscPragmaLex</code> value
+     * @return a <code>Type</code> value
+     */
     //@ requires l.m_in != null;
     //@ ensures \result != null;
     //@ ensures \result.syntax;
@@ -1046,6 +1142,13 @@ public class EscPragmaParser extends Parse implements PragmaParser
 	return parseBracketPairs(l, type);
     }
 
+    /**
+     * Describe <code>parseExsuresPrimitiveTypeOrTypeName</code> method
+     * here.
+     *
+     * @param l an <code>EscPragmaLex</code> value
+     * @return a <code>Type</code> value
+     */
     //@ requires l!=null && l.m_in!=null
     //@ ensures \result!=null
     //@ ensures \result.syntax
@@ -1057,6 +1160,12 @@ public class EscPragmaParser extends Parse implements PragmaParser
 	    return parseExsuresTypeName(l);
     }
 
+    /**
+     * Describe <code>parseExsuresPrimitiveType</code> method here.
+     *
+     * @param l an <code>EscPragmaLex</code> value
+     * @return a <code>PrimitiveType</code> value
+     */
     //@ requires l!=null && l.m_in!=null
     //@ ensures \result!=null ==> \result.syntax
     public PrimitiveType parseExsuresPrimitiveType (EscPragmaLex l) {
@@ -1081,13 +1190,17 @@ public class EscPragmaParser extends Parse implements PragmaParser
 	return PrimitiveType.make( tag, loc );
     }
 
+    /**
+     * Describe <code>parseExsuresTypeName</code> method here.
+     *
+     * @param l an <code>EscPragmaLex</code> value
+     * @return a <code>TypeName</code> value
+     */
     //@ requires l!=null && l.m_in!=null
     //@ ensures \result!=null
     //@ ensures \result.syntax
     public TypeName parseExsuresTypeName(EscPragmaLex l) {
 	return parseTypeName(l);	
     }
-
- 
 
 }
