@@ -50,7 +50,8 @@ public class TagConstants extends javafe.tc.TagConstants
     public static final int ENSURES = DTTFSA + 1;
     public static final int ELEMSNONNULL = ENSURES + 1; // Function
     public static final int ELEMTYPE = ELEMSNONNULL + 1; // Function
-    public static final int EXISTS = ELEMTYPE + 1;
+    public static final int EVERYTHING = ELEMTYPE + 1;
+    public static final int EXISTS = EVERYTHING + 1;
     public static final int EXSURES = EXISTS + 1;
     public static final int FRESH = EXSURES + 1; // Non-GCE function
     public static final int FORALL = FRESH + 1;
@@ -63,11 +64,13 @@ public class TagConstants extends javafe.tc.TagConstants
     public static final int LOOP_PREDICATE = LOOP_INVARIANT + 1;
     public static final int LS = LOOP_PREDICATE + 1;
     public static final int MAX = LS + 1; // Function
-    public static final int MODIFIES = MAX + 1;
+    public static final int MODEL = MAX + 1;
+    public static final int MODIFIES = MODEL + 1;
     public static final int MONITORED = MODIFIES + 1;
     public static final int MONITORED_BY = MONITORED + 1;
     public static final int NON_NULL = MONITORED_BY + 1;
-    public static final int NOWARN = NON_NULL + 1;
+    public static final int NOTHING = NON_NULL + 1;
+    public static final int NOWARN = NOTHING + 1;
     public static final int PRE = NOWARN + 1;
     public static final int READABLE_IF = PRE + 1;
     public static final int RES = READABLE_IF + 1;
@@ -337,6 +340,7 @@ public class TagConstants extends javafe.tc.TagConstants
         Identifier.intern("ensures"),
         Identifier.intern("\\nonnullelements"),
         Identifier.intern("\\elemtype"),
+        Identifier.intern("\\everything"),
         Identifier.intern("\\exists"),
         Identifier.intern("exsures"),
         Identifier.intern("\\fresh"),
@@ -350,10 +354,12 @@ public class TagConstants extends javafe.tc.TagConstants
         Identifier.intern("loop_predicate"),
         Identifier.intern("\\lockset"),
         Identifier.intern("\\max"),
+        Identifier.intern("model"),
         Identifier.intern("modifies"),
         Identifier.intern("monitored"),
         Identifier.intern("monitored_by"),
         Identifier.intern("non_null"),
+        Identifier.intern("\\nothing"),
         Identifier.intern("nowarn"),
         Identifier.intern("\\old"),
         Identifier.intern("readable_if"),
