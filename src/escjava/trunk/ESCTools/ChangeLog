@@ -1,3 +1,76 @@
+2003-12-14  David Cok  <cok@frontiernet.net>
+
+	* Escjava/test/junittests/MapsIn.java-expected:
+	* Escjava/test/junittests/ModChecks5.java:
+	* Escjava/test/junittests/ModChecks5.java-expected:
+	* Escjava/test/junittests/skip:
+	* Javafe/java/javafe/parser/Parse.java:
+	* Javafe/test/javafe/test/fe/test18/ans:
+	* Javafe/test/javafe/test/fe/test20/ans:
+	* Javafe/test/javafe/test/fe/test4/ans:
+	* Javafe/test/javafe/test/fe/test5/ans:
+	* Javafe/test/javafe/test/fe/test6/ans:
+	* Escjava/java/escjava/tc/Datagroups.java:
+	* Escjava/java/escjava/tc/FlowInsensitiveChecks.java:
+	* Escjava/java/escjava/translate/Translate.java:
+	* Escjava/java/escjava/parser/EscPragmaParser.java:
+	Implementing some of the in clause
+
+2003-12-11  David Cok  <cok@frontiernet.net>
+
+	* Escjava/java/escjava/ast/Utils.java:
+	* Escjava/java/escjava/parser/EscPragmaParser.java:
+	* Escjava/java/escjava/tc/FlowInsensitiveChecks.java:
+	* Escjava/java/escjava/translate/ErrorMsg.java:
+	* Escjava/java/escjava/translate/GetSpec.java:
+	* Escjava/java/escjava/translate/Substitute.java:
+	* Escjava/java/escjava/translate/TrAnExpr.java:
+	* Escjava/java/escjava/translate/Translate.java:
+	* Escjava/test/junittests/Constraint.java:
+	* Escjava/test/junittests/GhostLocal.java:
+	* Escjava/test/junittests/Initially.java:
+	* Escjava/test/junittests/Instance2.java:
+	* Escjava/test/junittests/InvariantFor.java:
+	* Escjava/test/junittests/IsInitialized.java:
+	* Escjava/test/junittests/Mod.java:
+	* Escjava/test/junittests/Mod2.java:
+	* Escjava/test/junittests/ModChecks.java:
+	* Escjava/test/junittests/ModChecks.java-expected:
+	* Escjava/test/junittests/ModChecks2.java:
+	* Escjava/test/junittests/ModChecks2.java-expected:
+	* Escjava/test/junittests/ModChecks3.java:
+	* Escjava/test/junittests/ModChecks3.java-expected:
+	* Escjava/test/junittests/ModChecks4.java:
+	* Escjava/test/junittests/ModChecks4.java-expected:
+	* Escjava/test/junittests/ModelClass2.java:
+	* Escjava/test/junittests/Monitored.java:
+	* Escjava/test/junittests/Monitored.java-expected:
+	* Escjava/test/junittests/NewObject.java:
+	* Escjava/test/junittests/Nowarn.java:
+	* Escjava/test/junittests/ParseModifies.java:
+	* Escjava/test/junittests/ParseRepresents.java:
+	* Escjava/test/junittests/Represents.java:
+	* Escjava/test/junittests/StoreRefs.java-expected:
+	Phase 1 of supporting checks of Modifies clauses - still need to
+	check the modifies clauses of called methods and to implement
+	datagroups
+
+	* Escjava/java/escjava/reader/RefinementCachedReader.java:
+	* Escjava/test/escjava/test/rtest:
+	* Makefile.defs:
+	* Escjava/test/escjava/test/Makefile:
+	* Escjava/test/junittests/Makefile:
+	* Javafe/test/javafe/parser/test/Makefile:
+	* Javafe/test/javafe/test/fe/Makefile:
+	* Javafe/test/javafe/test/lex/Makefile:
+	Improvements on the platform-independence
+
+2003-12-10  Joseph R. Kiniry  <kiniry@acm.org>
+
+	* README.first:
+	Updated README with details on using Windows for building, testing,
+	and running.
+
 2003-12-09  Joseph R. Kiniry  <kiniry@acm.org>
 
 	* Escjava/test/junittests/Makefile:
