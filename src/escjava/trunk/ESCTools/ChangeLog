@@ -1,3 +1,97 @@
+2003-01-15  Joseph R. Kiniry  <kiniry@kind.cs.kun.nl>
+
+	* build.xml:
+	Removed houdini and docs dependencies temporarily so that we can focus
+	on javafe and escjava.
+
+	* Javafe/java/javafe/tc/FlowInsensitiveChecks.java:
+	Removed bogus section markers ('§') used in comments that was causing
+	Emacs 21 to convert file into a non-UTF-encoded input file, messing up
+	javac tremendously.
+
+	* Javafe/astgen/astgen.h:
+	Removed bogus trailing identifier on final #endif and turned it into a
+	comment.
+
+	* Escjava/setup.sh, Javafe/setup.sh:
+	Switched to use of JDK 1.2 as minimal JDK due to class dependencies in
+	ESC/Java source (e.g., java.util.Arrays).
+
+	* Houdini/classes/**/*.class:
+	Removed extraneous classfiles from repository.
+
+2003-01-14  Joseph R. Kiniry  <kiniry@kind.cs.kun.nl>
+
+	* build.xml:
+	Refined reference to decsrc classfiles so that they are not deleted
+	during a "ant clean" invocation.  Fixed a reference to
+	javafe_root_dir.  Refined escjava compile targets.
+
+	* Escjava/setup.sh: New bash-version of setup file.
+
+	* Escjava/escj:
+	Standardized reference to /bin/tcsh and cleaned up command-line.
+
+	* Escjava/escwiz, Escjava/wizardreset:
+	Standardized reference to /bin/tcsh.
+
+	* Escjava/Makefile:
+	Removed bogus proc target and cleaned up compile target rule.
+
+	* Escjava/java/escjava/ast/GeneratedTags.java:
+	* Escjava/java/escjava/ast/Visitor.java:
+	Removed bogus imports that were for work-arounds in 1.0 compiler.
+
+	* Escjava/java/escjava/Makefile, Escjava/java/escjava/parser/Makefile:
+	Corrected reference to new test hierarchy location.
+
+	* Javafe/test/javafe/parser/test/Makefile:
+	* Javafe/test/javafe/test/PrintTest:
+	* Javafe/test/javafe/test/fe/do:
+	* Javafe/test/javafe/test/fe/doj:
+	* Javafe/test/javafe/test/fe/make_javac:
+	* Javafe/test/javafe/test/fe/make_outputs:
+	* Javafe/test/javafe/test/fe/sources:
+	* Javafe/test/javafe/test/fe/test1007/run:
+	* Javafe/test/javafe/test/fe/test6/ans:
+	* Javafe/test/javafe/test/runPrepJDK:
+	* Javafe/test/javafe/test/typecheckJDK:
+	* Javafe/test/javafe/test/typecheckJavafe:
+	Cleaned up Makefiles and scripts to refer to new, cleaned up
+	environment build variables; made scripts more readable and updated
+	them for JDK >= 1.1.
+
+	* Javafe/java/javafe/util/LocationManagerCorrelatedReader.java:
+	Updated call to Vector.add -> Vector.addElement to conform to JDK >= 1.1.
+
+	* Javafe/java/javafe/tc/FlowInsensitiveChecks.java:
+	Reformatted code according to modern conventions, cleaned up uses of
+	braces in case blocks, and made sure that the class compiles in all
+	Java compilers.
+
+	* Javafe/java/javafe/ast/Makefile:
+	Fixed astgen location to pre-defined root env variables JAVAFE_ROOT.
+
+	* Javafe/setup.sh:
+	Added JAVA_HOME definition and automatic path extension (based upon
+	JAVA_HOME).  Refined definitions of JDK_BINARIES, JDK_SOURCES, and the
+	dependent CLASSPATH.
+
+	* Javafe/Makefile:
+	Removed prot rule that botched permissions indiscriminately.  Tweaked
+	a path for new location of test code hierarchy.
+
+	* build.xml:
+	Changed default compiler to be the "classic" (JDK 1.1 or 1.2) compiler
+	so that we emit bytecodes that the (ancient) decsrc.util classes can
+	parse.  Refined excludes on javafe compilation to make sure to compile
+	javafe.test classes.
+
+	* Rcc/java/rccwizard/test/src/Ambit-noAnnot/Ambit/Agent.class:
+	* Rcc/java/rccwizard/test/src/Ambit-noAnnot/Ambit/Ambient.class:
+	Removing all shipped classfiles as they are not useful and should not
+	be in the repository.
+
 2003-01-14  Joseph R. Kiniry  <kiniry@kind.cs.kun.nl>
 
 	* build.xml:
