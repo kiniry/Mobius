@@ -17,7 +17,7 @@ psfiles =	$(foreach texfile,$(texfiles),\
 pdffiles =	$(foreach texfile,$(texfiles),\
 		$(subst .tex,.pdf,$(texfile)))
 
-all:	$(dvifiles) $(psfiles) $(pdffiles)
+all:	escjava_demo introjml
 
 # %.pdf: %.tex
 # 	pdflatex $< $@
@@ -49,6 +49,18 @@ ${talk}.ps: ${talk}.dvi
 
 ${talk}.dvi: ${talk}.tex
 	latex ${talk};
+
+%.info:	%.texinfo
+	makeinfo $<
+
+%.txt:	%.texinfo
+	makeinfo --no-headers $< -o $@
+
+%.html:	%.texinfo
+	makeinfo --html	$<
+
+%.dvi:	%.texinfo
+	texi2dvi $<
 
 cleanup:
 	rm -f _region_* *.aux *.log *# *~
