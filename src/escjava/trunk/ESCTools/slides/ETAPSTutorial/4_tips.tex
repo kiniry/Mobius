@@ -82,7 +82,7 @@ cok,
 \begin{itemize}
 \item Base class specifications apply to derived classes
 \begin{itemize}
-\item that is, ESC/Java2 enforces {\it behavioral subtyping}
+\item that is, ESC/Java2 enforces \textit{behavioral subtyping}
 \item Specs from implemented interfaces also must hold for implementing classes
 \end{itemize}
 \item Be thoughtful about how strict the base class specs should be
@@ -101,13 +101,21 @@ For example, in the code below
 \begin{itemize}
 \item Parent.m(i) satisfies $i \geq 0 \Rightarrow \result \geq i$
 \item Child.m(i) satisfies \hspace{.5ex} $i \geq 0 \Rightarrow \result \geq i$ 
-\\{\it and} \hspace{14.5ex}  $i \leq 0 \Rightarrow \result \leq i$
+\\\textit{and} \hspace{13.5ex}  $i \leq 0 \Rightarrow \result \leq i$
 \\so Child.m(0) must be 0.
 \item[]
-\end{itemize}
-{\tiny
-\begin{verbatim}
-  class Parent {     //@ requires i >= 0;     //@ ensures  \result >= i;     int m(int i);  }  class Child extends Parent {     //@ also     //@   requires i <= 0     //@   ensures  \result <= i;     int m(int i); }
+\end{itemize} 
+{\tiny \begin{verbatim}class Parent {
+    //@ requires i >= 0;     
+    //@ ensures  \result >= i;     
+   int m(int i);  
+}  
+class Child extends Parent {     
+    //@ also     
+    //@   requires i <= 0     
+    //@   ensures  \result <= i;     
+int m(int i); 
+}
 \end{verbatim}
 }
 \vspace*{-20ex}
@@ -245,7 +253,7 @@ that is, {\blue this} and some different object ({\blue brokenObj}) share the \\
 \knalblue
 \put(38,118){this}
 \put(113,118){brokenObj}
-\put(175,72){{\it an} int[] {\it object}}
+\put(175,72){\textit{an} int[] \textit{object}}
 \green
 \put(75,92){\vector(4,-1){100}}
 \put(150,92){\vector(1,-1){25}}
@@ -295,8 +303,8 @@ public class Alias {
 \knalblue
 \put(38,115){this}
 \put(113,115){brokenObj}
-\put(170,70){{\it an} int[] {\it object}}
-\put(100,35){{\it an} int[] {\it object}}
+\put(170,70){\textit{an} int[] \textit{object}}
+\put(100,35){\textit{an} int[] \textit{object}}
 \green
 \put(70,92){\vector(1,-2){30}}
 \put(145,92){\vector(1,-1){25}}
@@ -426,7 +434,7 @@ Problems can arise when a reference to an internal object is exported from a cla
 \end{figure*}
 \vspace*{-3ex}
 \begin{itemize}
-\item ESC/Java does not check that {\it every} allocated object still satisfies its invariants.
+\item ESC/Java does not check that \textit{every} allocated object still satisfies its invariants.
 \item Similar hidden problems can result if public fields are modified directly.
 \end{itemize}
 
@@ -595,7 +603,7 @@ requires A && B;
 \end{slide}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{slide}{\it Finally}
+\begin{slide}{\textit{Finally}}
 \begin{itemize}
 
 \item Specification is {\green tricky} - getting it right is hard, even with tools

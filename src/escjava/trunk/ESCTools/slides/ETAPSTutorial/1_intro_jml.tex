@@ -134,7 +134,7 @@ What this set of slides aims to do
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \overlays{2}{
 \begin{slide}{JML {\footnotesize {\black by Gary Leavens et al.}}}
-\vspace*{-3ex}
+\vspace*{-4ex}
 {\blue Formal specification language} for Java 
 \medskip
 \begin{itemize}
@@ -167,7 +167,7 @@ as in Eiffel (Design by Contract), but more expressive.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{JML}
-\vspace*{-3ex}
+\vspace*{-4ex}
 
 To make JML easy to use:
 
@@ -204,7 +204,7 @@ using a few keywords
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{requires, ensures}
-\vspace*{-3ex}
+\vspace*{-4ex}
 
 {\blue Pre-} and {\blue post-conditions} for method can be specified.
 
@@ -226,7 +226,7 @@ before execution of the method.
 \end{slide}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{requires, ensures}
-\vspace*{-3ex}
+\vspace*{-4ex}
 
 JML specs can be as strong or as weak as you want.
 
@@ -247,7 +247,7 @@ This default postcondition ``\code{ensures true}'' can be omitted.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{Design-by-Contract}
-\vspace*{-3ex}
+\vspace*{-4ex}
 
 Pre- and postconditions define a {\blue contract} between a class and
 its clients:
@@ -271,7 +271,7 @@ clause makes this {\green explicit}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{signals}
-\vspace*{-3ex}
+\vspace*{-4ex}
 
 {\blue Exceptional postconditions} can also be specified.
 \vspace*{-1ex}
@@ -294,7 +294,7 @@ clause makes this {\green explicit}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{signals}
-\vspace*{-3ex}
+\vspace*{-4ex}
 
 Exceptions mentioned in throws clause are allowed by default,
 i.e.\ the default signals clause is
@@ -320,7 +320,7 @@ or use the keyword {\blue normal\_behavior}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{invariant}
-\vspace*{-3ex}
+\vspace*{-4ex}
 {\blue Invariants} (aka {\em class} invariants) are properties that
 must be maintained by all methods, e.g.,
 \begin{alltt}
@@ -382,7 +382,7 @@ these.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{assert}
-\vspace*{-3ex}
+\vspace*{-4ex}
 
 An {\blue \code{ assert}} clause specifies
 a property that should hold at some point in the code, e.g.,
@@ -402,7 +402,7 @@ a property that should hold at some point in the code, e.g.,
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{assert}
-\vspace*{-3ex}
+\vspace*{-4ex}
 
 JML keyword \code{assert} now also in Java (since Java 1.4).
 
@@ -423,7 +423,7 @@ Still, assert in JML is more expressive, for example in
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{assignable}
-\vspace*{-3ex}
+\vspace*{-4ex}
 
 {\blue Frame properties} limit possible side-effects of methods.
 
@@ -448,7 +448,7 @@ Default assignable clause: \code{assignable \everything}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{pure}
-\vspace*{-3ex}
+\vspace*{-4ex}
 
 A {\blue method without side-effects} is called {\blue pure}.
 
@@ -478,7 +478,7 @@ eg.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{JML recap}
-\vspace*{-3ex}
+\vspace*{-4ex}
 
 The JML keywords discussed so far:
 \begin{itemize}
@@ -522,9 +522,9 @@ The JML keywords discussed so far:
 \end{slide}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\overlays{4}{
+\overlays{5}{
 \begin{slide}{runtime assertion checking}
-\vspace*{-3ex}
+\vspace*{-4ex}
 {\blue jmlrac compiler} by Gary Leavens, Yoonsik Cheon, et al. at Iowa State Univ.
 
 \begin{itemize}
@@ -538,20 +538,24 @@ into {\blue runtime checks}:
 \fromSlide{2}{\item$\!$
   {\blue cheap \& easy} to do as part of existing testing practice}
 \fromSlide{2}{\item$\!$
-  {\blue better testing}, because {\green more properties} are tested,
+  {\blue better testing and better feedback}, because {\green more properties} are tested,
   at {\green more places} in the code}
+\fromSlide{3}{\textit{ \ \\ \scriptsize \it Eg,
+   ``Invariant violated in line 8000'' \ after 1 minute 
+  instead of  \ ``NullPointerException in line 2000'' \  after 4 minutes}}
 \end{itemize}
 
-\fromSlide{3}{Of course, an assertion violation can be an {\em error in
+
+\fromSlide{4}{Of course, an assertion violation can be an {\em error in
     code} {\green or} an {\em error in specification}.}
 
-\fromSlide{4}{
+\fromSlide{5}{
   The {\blue jmlunit} tool combines jmlrac and {\green unit testing}.}
 \end{slide}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{runtime assertion checking}
-\vspace*{-3ex}
+\vspace*{-4ex}
 
 jmlrac can generate complicated test-code for free.  E.g., for
 \begin{alltt}
@@ -575,7 +579,7 @@ quantification is finite.}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \overlays{6}{
 \begin{slide}{extended static checking}
-\vspace*{-3ex}
+\vspace*{-4ex}
 
 {\blue ESC/Java(2)}
 \begin{itemstep}
@@ -601,7 +605,7 @@ relatively simple properties.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{ESC/Java(2) credits }
-\vspace*{-3ex}
+\vspace*{-4ex}
 
 \begin{itemize}
 \item
@@ -615,7 +619,7 @@ by Rustan Leino, Cormac Flanagan, Mark Lillibridge, Greg Nelson, Raymie Stata, a
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{static checking vs runtime checking}
-\vspace*{-3ex}
+\vspace*{-4ex}
 
 One of the assertions below is wrong:
 \begin{alltt}
@@ -640,7 +644,7 @@ ESC/Java2 {\blue {\em will}} detect this at compile-time.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{static checking vs runtime checking}
-\vspace*{-3ex}
+\vspace*{-4ex}
 
 Important differences:
 
@@ -671,7 +675,7 @@ and invariants needed for {\blue modular verification}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{modular reasoning}
-\vspace*{-3ex}
+\vspace*{-4ex}
 
 ESC/Java2 reasons about every method individually.
 So in
@@ -690,7 +694,7 @@ even though you can see that it won't be.
 \end{slide}
 
 \begin{slide}{modular reasoning}
-\vspace*{-3ex}
+\vspace*{-4ex}
 To stop ESC/Java2 complaining: add a postcondition
 \begin{alltt}\code{ class A\{
   byte[] b;
@@ -709,7 +713,7 @@ And: subclasses that override methods have to preserve these.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{modular reasoning}
-\vspace*{-3ex}
+\vspace*{-4ex}
 
 Similarly, ESC/Java will complain about \code{b[0] = 2} in
 
@@ -729,7 +733,7 @@ constructors and {\em all} methods.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{modular reasoning}
-\vspace*{-3ex}
+\vspace*{-4ex}
 
 To stop ESC/Java2 complaining here: add an invariant
 
@@ -754,7 +758,7 @@ And again: subclasses have to preserve these properties.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{assume}
-\vspace*{-3ex}
+\vspace*{-4ex}
 
 Alternative to stop ESC/Java2 complaining: add an assumption:
 \begin{alltt}\code{ 
@@ -778,8 +782,8 @@ too weak.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \overlays{1}{\begin{slide}{more JML tools}
+\vspace*{-4ex}
 
-\vspace*{-2ex}
 \begin{itemize}
 \item$\!$ {\blue javadoc-style documentation}:  {\green jmldoc}
 \item$\!$ {\green Eclipse} plugin
@@ -803,6 +807,7 @@ See \texttt{www.jmlspecs.org}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{Related Work}
+\vspace*{-4ex}
 
 \begin{itemize}
 \item {\blue jContract} tool for Java by {\green Parasoft}
@@ -816,11 +821,11 @@ See \texttt{www.jmlspecs.org}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{Acknowledgements}
 
-\vspace*{-2ex}
+\vspace*{-4ex}
 Many people and groups have contributed to JML and related tools.
 
 \begin{itemize}
-\item {\scriptsize Gary Leavens led the JML effort at Iowa St.
+\item {\scriptsize Gary Leavens leads the JML effort at Iowa St. 
     Contributors include Albert Baker, Clyde Ruby, Curtis
     Clifton, Yoonsik Cheon, Anand Ganapathy, Abhay Bhorkar, Arun
     Raghavan, Kristina Boysen, David Behroozi. Katie Becker, Elisabeth
@@ -829,6 +834,7 @@ Many people and groups have contributed to JML and related tools.
 \item {\scriptsize The ESC project at SRC included Rustan 
     Leino, Cormac Flanagan, Mark Lillibridge, Greg Nelson, Raymie
     Stata, and James Saxe.}
+\item {\scriptsize More people at many different places are contributing to JML}
 \end{itemize}
   
 \end{slide}
@@ -836,7 +842,7 @@ Many people and groups have contributed to JML and related tools.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{More information}
 
-\vspace*{-2ex}
+\vspace*{-4ex}
 These websites and mailing lists can provide more information (and have links to even more):
 
 \begin{itemize}
