@@ -362,7 +362,7 @@ public final class ErrorMsg
 	    break;
 	case TagConstants.CHKMODIFIES:
 	    r = ("Possible violation of modifies clause");
-	    //Assert.notFalse(hasAssocDecl);
+	    //Assert.notFalse(hasAssocDecl); 
 	    break;
 	case TagConstants.CHKNEGATIVEARRAYSIZE:
 	    r = ("Possible attempt to allocate array of negative length");

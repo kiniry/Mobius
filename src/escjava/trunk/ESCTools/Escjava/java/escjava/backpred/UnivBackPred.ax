@@ -57,6 +57,10 @@
 	(IMPLIES (<: t |T_float|) (EQ t |T_float|))))
 (BG_PUSH (FORALL (t) (PATS (<: t |T_double|))
 	(IMPLIES (<: t |T_double|) (EQ t |T_double|))))
+(BG_PUSH (FORALL (t) (PATS (<: t |T_bigint|))
+	(IMPLIES (<: t |T_bigint|) (EQ t |T_bigint|))))
+(BG_PUSH (FORALL (t) (PATS (<: t |T_real|))
+	(IMPLIES (<: t |T_real|) (EQ t |T_real|))))
 
 ; (New as of 12 Dec 2000)
 ; primitive types have no proper supertypes
@@ -77,7 +81,11 @@
 	(IMPLIES (<: |T_float| t) (EQ t |T_float|))))
 (BG_PUSH (FORALL (t) (PATS (<: |T_double| t))
 	(IMPLIES (<: |T_double| t) (EQ t |T_double|))))
-
+(BG_PUSH (FORALL (t) (PATS (<: |T_bigint| t))
+	(IMPLIES (<: |T_bigint| t) (EQ t |T_bigint|))))
+(BG_PUSH (FORALL (t) (PATS (<: |T_real| t))
+	(IMPLIES (<: |T_real| t) (EQ t |T_real|))))
+	
 ; === ESCJ 8: Section 1.2
 
 (BG_PUSH
@@ -155,6 +163,8 @@
 
 ; === Define typeof for primitive types - DRCok
 
+(BG_PUSH (EQ |T_bigint| |T_long|))  ; FIXME - change this eventually
+
 (BG_PUSH (FORALL (x) 
 	   (PATS (typeof x))
 	   (IFF (is x |T_int|) (EQ (typeof x) |T_int|))
@@ -194,7 +204,17 @@
 	   ;(PATS (is x |T_float|))
 	   (IFF (is x |T_float|) (EQ (typeof x) |T_float|))
      ))
-
+(BG_PUSH (FORALL (x) 
+	   (PATS (typeof x))
+	   ;(PATS (is x |T_real|))
+	   (IFF (is x |T_real|) (EQ (typeof x) |T_real|))
+     ))
+(BG_PUSH (FORALL (x) 
+	   (PATS (typeof x))
+	   ;(PATS (is x |T_bigint|))
+	   (IFF (is x |T_bigint|) (EQ (typeof x) |T_bigint|))
+     ))
+     
 ; === ESCJ 8: Section 2.3
       
 (BG_PUSH

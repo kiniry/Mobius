@@ -11,6 +11,7 @@ import escjava.tc.TypeCheck;
 import escjava.tc.Types;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import javafe.ast.*;
@@ -981,8 +982,13 @@ while (ee.hasMoreElements()) {
         ParamAndGlobalVarInfo vars = null;
 
 	boolean isConstructor = spec.dmd.isConstructor();
-        for (InvariantInfo ii = mergeInvariants(collectInvariants(scope, spec.preVarMap));
-             ii != null; ii = ii.next) {
+	InvariantInfo ii = mergeInvariants(collectInvariants(scope, spec.preVarMap));
+        HashSet axs = collectInvariantsAxsToAdd;
+        ExprVec assumptions = addNewAxs(axs,null);
+        spec.preAssumptions.append(assumptions);
+        spec.postAssumptions.append(assumptions);
+        
+	for (; ii != null; ii = ii.next) {
 
 	    int tag = ii.prag.getTag();
 	    boolean includeInPre = true;
@@ -1187,8 +1193,13 @@ while (ee.hasMoreElements()) {
             nonNullInitChecks(td, spec.post);
         }
 
-        for (InvariantInfo ii = mergeInvariants(collectInvariants(scope,spec.preVarMap));
-             ii != null; ii = ii.next) {
+        InvariantInfo ii = mergeInvariants(collectInvariants(scope,spec.preVarMap));
+        HashSet axsToAdd = collectInvariantsAxsToAdd;
+        ExprVec assumptions = addNewAxs(axsToAdd,null);
+        spec.preAssumptions.append(assumptions);
+        spec.postAssumptions.append(assumptions);
+        
+        for (; ii != null; ii = ii.next) {
 	    int tag = ii.prag.getTag();
             addInvariantBody(ii, spec, synTargs);
         }
@@ -1491,7 +1502,10 @@ while (ee.hasMoreElements()) {
 
     /** Collects the invariants in <code>scope</code>. */
   
+    private static HashSet collectInvariantsAxsToAdd;
+    
     private static InvariantInfo collectInvariants(/*@ non_null */ FindContributors scope, Hashtable premap) {
+        collectInvariantsAxsToAdd = null;
         InvariantInfo ii = null;
         InvariantInfo iiPrev = null;
 
@@ -1570,10 +1584,12 @@ while (ee.hasMoreElements()) {
 //System.out.println("COLLECTING INVARIANT-END " + Location.toString(ep.getStartLoc()));
             }
           }
+          collectInvariantsAxsToAdd = new java.util.HashSet();
+          collectInvariantsAxsToAdd.addAll(TrAnExpr.trSpecAuxAxiomsNeeded);
 	  java.util.Set axsToAdd = new java.util.HashSet();
-	  axsToAdd.addAll(TrAnExpr.trSpecAuxAxiomsNeeded);
+	  //axsToAdd.addAll(TrAnExpr.trSpecAuxAxiomsNeeded);
 	  java.util.Set axsDone = new java.util.HashSet();
-	    while (false && ! axsToAdd.isEmpty()) {  // FIXME - keep this off ???
+	  while (false && ! axsToAdd.isEmpty()) {  // FIXME - keep this off ???
 		RepHelper o = (RepHelper)axsToAdd.iterator().next();
 		axsToAdd.remove(o);
 		if (!axsDone.add(o)) continue;
@@ -1674,6 +1690,21 @@ while (ee.hasMoreElements()) {
         return vars;
     }
 
+    private static ExprVec addNewAxs(HashSet axsToAdd, ExprVec assumptions) {
+        if (assumptions == null) assumptions = ExprVec.make();
+        java.util.Set axsDone = new java.util.HashSet();
+        while (! axsToAdd.isEmpty()) {
+            RepHelper o = (RepHelper)axsToAdd.iterator().next();
+            axsToAdd.remove(o);
+            if (!axsDone.add(o)) continue;
+            Expr e = TrAnExpr.getEquivalentAxioms(o,null);
+            assumptions.addElement(e);
+            axsToAdd.addAll( TrAnExpr.trSpecAuxAxiomsNeeded); 
+            TrAnExpr.trSpecAuxAxiomsNeeded.clear();
+        }
+        return assumptions;
+
+    }
     /** Shaves a GC designator. */
   
     private static VariableAccess shave(/*@ non_null */ Expr e)
