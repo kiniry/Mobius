@@ -36,7 +36,6 @@ public class BCRET extends BCInstruction implements EndBlock {
 	 * @see bytecode.ByteCode#wp(formula.Formula, specification.ExceptionalPostcondition)
 	 */
 	public Formula wp(Formula _normal_Postcondition, ExceptionalPostcondition _exc_Postcondition) {
-		// TODO Auto-generated method stub
 		return _normal_Postcondition;
 	}
 	

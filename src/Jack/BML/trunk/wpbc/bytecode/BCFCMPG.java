@@ -1,49 +1,49 @@
-/*
- * Created on Mar 31, 2004
- *
- * To change the template for this generated file go to
- * Window>Preferences>Java>Code Generation>Code and Comments
- */
 package bytecode;
-
 import org.apache.bcel.generic.InstructionHandle;
 import specification.ExceptionalPostcondition;
-import bcexpression.javatype.JavaType;
+
 import formula.Formula;
 
+import bcexpression.javatype.JavaType;
 /**
- * @author mpavlova
+ * @author Mariela
  *
- * To change the template for this generated type comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
+ * To change this generated comment edit the template variable "typecomment":
+ * Window>Preferences>Java>Templates.
+ * To enable and disable the creation of type comments go to
+ * Window>Preferences>Java>Code Generation.
  */
-public class BCTypeASTORE extends BCExceptionThrower implements BCTypedInstruction  {
-	private JavaType type;
+public class BCFCMPG extends BCInstruction implements BCTypedInstruction{
 	
 	/**
 	 * @param _instruction
 	 */
-	public BCTypeASTORE(InstructionHandle _instruction, JavaType _type) {
+	public BCFCMPG(InstructionHandle _instruction) {
 		super(_instruction);
-		setType(_type );
+
 	}
+
 	/* (non-Javadoc)
 	 * @see bytecode.BCTypedInstruction#getType()
 	 */
 	public JavaType getType() {
-		return type;
+		return JavaType.JavaFLOAT;
 	}
+
 	/* (non-Javadoc)
+	 * does nothing as the type of this instruction is by default long
 	 * @see bytecode.BCTypedInstruction#setType(org.apache.bcel.generic.TypedInstruction, org.apache.bcel.generic.ConstantPoolGen)
 	 */
 	public void setType(JavaType _type) {
-		type = _type;	
+		
 	}
+
 	/* (non-Javadoc)
-	 * @see bytecode.ByteCode#wp(formula.Formula, java.util.HashMap)
+	 * @see bytecode.ByteCode#wp(formula.Formula, specification.ExceptionalPostcondition)
 	 */
 	public Formula wp(Formula _normal_Postcondition, ExceptionalPostcondition _exc_Postcondition) {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
 }

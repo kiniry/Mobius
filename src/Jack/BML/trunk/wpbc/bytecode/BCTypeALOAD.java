@@ -89,7 +89,8 @@ public class BCTypeALOAD  extends BCExceptionThrower implements  BCTypedInstruct
 		  Formula _normal_termination = new Formula(_condition, _f , Connector.IMPLIES );
 	  
 		  // (S(t) != null and S(t).length > S(t+1) ==>  n_post[ S(t) <----- S(t)[t+1]] )[t <----- t - 1]
-		  _normal_termination.substitute(_counter, new ArithmeticExpression( _counter, new NumberLiteral(new Integer(1)) , ExpressionConstants.MINUS ));
+		  //commented
+		  //_normal_termination.substitute(_counter, new ArithmeticExpression( _counter, new NumberLiteral(new Integer(1)) , ExpressionConstants.MINUS ));
 
 		  //  execution terminating with java.lang.IndexOutOfBoundsException
 		  Formula _index_out_of_bounds = new Predicate2Ar( _arrlength,   _stackTop,  PredicateSymbol.LESSEQ); 
@@ -102,11 +103,8 @@ public class BCTypeALOAD  extends BCExceptionThrower implements  BCTypedInstruct
 		  Formula _arr_null = new Predicate2Ar(_stackTop_minus_1, Expression.NULL,  PredicateSymbol.EQ );
 		  Formula _wp_null_pointer =  getWpForException(JavaType.getJavaClass("java.lang.NullPointerException"), _e_Postcondition);;
 		  Formula _null_pointer_termination = new Formula(_arr_null, 
-																						 _wp_null_pointer,
-																						 Connector.IMPLIES);
-		  
-		  
-		  
+														  _wp_null_pointer,
+														  Connector.IMPLIES);
 		  Formula[] _formulas = new Formula[3];
 		  _formulas[0] = _normal_termination;
 		  _formulas[1] = _null_pointer_termination;
