@@ -134,7 +134,7 @@ promotes reading, writing and understanding specifications and will
 likely assist in their automated verification as well.  
 
 One such system,
-ESC/Java [[[Ref???]]] was successful at checking annotations, but its
+ESC/Java \cite{ESCJava} was successful at checking annotations, but its
 absence of method calls in annotations limited those annotations to
 low-level representations.  That system translated Java programs into
 an untyped first-order language.  In this paper we discuss the implementation
@@ -156,15 +156,32 @@ and we end with some outstanding issues in section 8.
 
 \section{Background: Related work}
 
+There are by now a number of research tools that translate Java into verification conditions
+appropriate to some logical reasoning engine.  There are numerous tools that insert
+assertion checking code into compiled Java programs, but
+we are aware only of these tools that do static
+checking of assertions:
+\begin{itemize}
+\item Krakatoa [[[ref]]] uses the Coq prover, and 
+translates all statements with reference to a current program state. 
+\item The LOOP tool [[[ref]]] uses PVS, interactively.  
+\item The CHASE tool [[[Ref]]] checks frame conditions.
+\item Jive -- [[[need a reference and describption]]]
+\item JACK - [[[need a reference and description]]]
+\end{itemize}
+
+
 [[[ Need discussion of how the LOOP tool treats method calls, as well as other tools, if there is published literature about them. ]]]
+[[[ What is different about ESC/java2's approach ]]]
+[[[ Should this section be moved to the end? ]]]
 
 \section{The Java Modeling Language}
 
 The Java Modeling Language (JML) has by now been described in several publications
-[[[Ref???]]], and we will not repeat that full description here.  This language is suitable for
+\cite{Leavens-Baker-Ruby99b,Leavens-Baker-Ruby02,jmlpapers} and we will not repeat that full description here.  This language is suitable for
 describing the issues at hand and is used in the implementation of the solution.
- The advance described in this paper
-can be illustrated by simple invariants and lightweight preconditions,
+ The advances described in this paper
+can be illustrated using simple invariants and lightweight preconditions,
 frame conditions and postconditions.  
 A class with examples of these annotations is shown in Fig.~\ref{fig:SS}.
 
@@ -219,7 +236,7 @@ and was also successfully used by other groups for a variety of case
 studies (e.g.,~\cite{Hub03,HOP04}).
 
 Its long-term utility, however, was lessened by a number of factors.  
-The ESC/Java2 project [[[ Ref???]]] aims to extend the work of ESC/Java 
+The ESC/Java2 project \cite{CokKiniry04} aims to extend the work of ESC/Java 
 in a number of directions to improve its utility.
 \begin{itemize}
 \item As companies were bought and sold and research groups
@@ -263,7 +280,7 @@ into verification conditions (VCs).  These conditions are passed to an accompany
 judges them to be valid or invalid and may produce counterexamples to demonstrate
 invalidity.  With an appropriately general definition of the syntax and semantics of the verification
 condition language, various provers could be used and compared.  ESC/Java2 uses the
-Simplify [[[Ref???]]] prover, accepting verification conditions expressed in a
+Simplify \cite{nelson80,simplify} prover, accepting verification conditions expressed in a
 first-order logic (including universal and existential quantification) with equality and untyped total
 functions, extended with a simple theory of arithmetic.
 
@@ -557,7 +574,8 @@ some external means.
 
 Reasoning with immutable objects is potentially simpler and more efficient that with typical
 mutable objects.  For example, JML includes a library of classes representing mathematical 
-concepts useful in specifying classes [[[Ref???]]]; it may be advantageous if it could be 
+concepts useful in specifying classes \cite{Leavens-etal03a}; 
+it may be advantageous if it could be 
 established that values of these classes are immutable.  For this to be possible, we need 
 a set of sufficient conditions for immutability that can be statically checked, a proof of 
 soundness regarding immutability, and a demonstration by a working implementation
@@ -572,7 +590,37 @@ of the utility of immutable classes in program verification .
 
 \subsection{Exceptions}
 
-[[[[ complete ...]]]
+The evaluation of the expression in a model variable's represents clause might result in
+exceptional behavior (that is, in the throwing of a Java exception).  In an environment
+where the truth or falsity of assertions must be determined by the reasoning engine, a
+semantics for specifications with exceptional termination must be established.  For example,
+what should be the behavior of a verification system on encountering the program of 
+Fig.~\ref{fig:exc}?  Consider just the precondition of method \texttt{p}: should the program 
+checker issue a warning that there is a potential dereference of a null reference, or should it
+simply presume an implicit precondition that \texttt{o != null}?
+
+\begin{BFIGURE}
+\verbatiminput{NoRep.java}
+\caption{The specification and code for a class in which methods used in specifications throw exceptions.}
+\label{fig:norep}
+\end{BFIGURE}
+
+Various approaches to handling exceptional expressions are described in previous 
+publications.
+In \ref{Cheon-Leavens02b}, Cheon takes a contextual approach appropriate to run-time 
+assertion checking.   In \ref{Leavens-Baker-Ruby02}, it is proposed that 
+an arbitrary, unknown value be substituted for an expression that terminates abruptly.
+This has the effect (perhaps surprising to the Java programmer) that
+\texttt{(o == null || o.a == 0)} and \texttt{(o.a == 0 || o == null)} have the same boolean value.
+The LOOP project formalized exceptions differently \cite{BergPJ00a}, in the end recommending
+that operators such as \texttt{||} be interpreted precisely as in Java and that specifications be
+fully guarded so that no exceptional termination will occur.
+
+The choice of semantics for exceptional expressions obviously affects the tools that would
+implement any static checking, but also affects the convenience of reading and 
+writing specifications and the success of achieving the goal of defining specifications (in JML, 
+at least) so that they are unsurprising to Java programmers.  ESC/Java2 currently has
+undefined behavior if a specification expression might terminate abruptly.
 
 \section{Conclusion}
 
