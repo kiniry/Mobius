@@ -117,6 +117,7 @@ public abstract class SrcTool extends FrontEndTool implements Listener
      * This method calls preload, loadAllFiles, preprocess, handleAllCU, postprocess.
      */
     public void frontEndToolProcessing(String[] args, int offset) {
+	long startTime = currentTime();
 	/*
 	 * At this point, all options have already been processed and
 	 * the front end has been initialized.
@@ -135,6 +136,9 @@ public abstract class SrcTool extends FrontEndTool implements Listener
 
 	// Do any tool-specific pre-processing:
 	preprocess();
+
+	if (!options.quiet)
+		System.out.println("    [" + timeUsed(startTime) + "]");
 	
         handleAllCUs();
 	

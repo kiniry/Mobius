@@ -19,7 +19,7 @@ public abstract class Tool {
     static public final int okExitCode = 0;
     static public final int badUsageExitCode = 1;
     static public final int errorExitCode = 2;
-    static public final int outofmemoryExitCode = 3;
+    static public final int outOfMemoryExitCode = 3;
 
     /***************************************************
      *                                                 *
@@ -96,4 +96,21 @@ public abstract class Tool {
      */
     //@ requires \nonnullelements(args)
     public abstract int run(String[] args);
+
+    /**
+     * Compute the time used from a start time to now, then return it
+     * in a user readable form.
+     */
+    /*@ ensures \result != null */
+    public static String timeUsed(long startTime) {
+        //if (options.testMode) return "TIME";
+        long delta = java.lang.System.currentTimeMillis() - startTime;
+     
+        return (delta/1000.0) + " s";
+    }
+ 
+    public static long currentTime() {
+        return java.lang.System.currentTimeMillis();
+    }
+ 
 }

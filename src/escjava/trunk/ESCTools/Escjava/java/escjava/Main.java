@@ -137,8 +137,8 @@ public class Main extends javafe.SrcTool
      */
     //@ requires \nonnullelements(args)
     public static void main(String[] args) {
-        int exitcode = compile(args);
-        if (exitcode != 0) System.exit(exitcode);
+	int exitcode = compile(args);
+	if (exitcode != 0) System.exit(exitcode);
     }
 
     public Main() {
@@ -169,8 +169,8 @@ public class Main extends javafe.SrcTool
             long memUsedBytes = rt.totalMemory() - rt.freeMemory();
             System.out.println("java.lang.OutOfMemoryError (" + memUsedBytes +
                                 " bytes used)");
-            oom.printStackTrace(System.out);
-            return outofmemoryExitCode;
+            //oom.printStackTrace(System.out);
+            return outOfMemoryExitCode;
         }
     }
 
@@ -302,6 +302,7 @@ public class Main extends javafe.SrcTool
      * nested within outside types.
      */
     public void handleTD(TypeDecl td) {
+        long startTime = currentTime();
         TypeSig sig = TypeCheck.inst.getSig(td);
 	/* If something is on the command-line, presume we want to check it
 	   as thoroughly as possible.
@@ -317,7 +318,6 @@ public class Main extends javafe.SrcTool
         if (Location.toLineNumber(td.getEndLoc()) < options().startLine)
             return;
 
-        long startTime = java.lang.System.currentTimeMillis();
         if (!options().quiet)
             System.out.println("\n" + sig.toString() + " ...");
 
@@ -352,6 +352,7 @@ public class Main extends javafe.SrcTool
          * Do Java type checking then print Java types if we've been
          * asked to:
          */
+	long startTime = currentTime();
         int errorCount = ErrorSet.errors;
         TypeSig sig = TypeCheck.inst.getSig(td);
         sig.typecheck();
@@ -426,6 +427,10 @@ public class Main extends javafe.SrcTool
             LabelInfoToString.reset();
             InitialState initState = new InitialState(scope);
             LabelInfoToString.mark();
+
+	    if (!options().quiet)
+		System.out.println("    [" + timeUsed(startTime) + "]");
+
     
             // Process the elements of "td"; stage 3 continues into stages 4
             // and 5 inside processTypeDeclElem:
@@ -929,6 +934,10 @@ public class Main extends javafe.SrcTool
         long delta = java.lang.System.currentTimeMillis() - startTime;
     
         return (delta/1000.0) + " s";
+    }
+
+    public static long currentTime() {
+	return java.lang.System.currentTimeMillis();
     }
 
     private static String removeSpaces(/*@ non_null */ String s) {
