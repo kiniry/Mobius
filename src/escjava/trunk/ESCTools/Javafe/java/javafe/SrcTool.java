@@ -3,10 +3,14 @@
 package javafe;
 
 import java.util.Vector;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.ArrayList;
 
 import javafe.ast.*;
 import javafe.tc.*;
 import javafe.util.*;
+import javafe.genericfile.GenericFile;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -113,29 +117,29 @@ public abstract class SrcTool extends FrontEndTool implements Listener
      * This method calls preload, loadAllFiles, preprocess, handleAllCU, postprocess.
      */
     public void frontEndToolProcessing(String[] args, int offset) {
-		/*
-		 * At this point, all options have already been processed and
-		 * the front end has been initialized.
-		 */
-	
-		// Set up to receive CompilationUnit-loading notification events:
-		OutsideEnv.setListener(this);
+	/*
+	 * At this point, all options have already been processed and
+	 * the front end has been initialized.
+	 */
+
+	// Set up to receive CompilationUnit-loading notification events:
+	OutsideEnv.setListener(this);
 	
         preload();
 	
         loadAllFiles(offset,args);
 	
-		OutsideEnv.avoidSpec = options().avoidSpec;
-		if (options().processRecursively)
-		    OutsideEnv.avoidSpec = true;
-	
-		// Do any tool-specific pre-processing:
-		preprocess();
+	OutsideEnv.avoidSpec = options().avoidSpec;
+	if (options().processRecursively)
+	    OutsideEnv.avoidSpec = true;
+
+	// Do any tool-specific pre-processing:
+	preprocess();
 	
         handleAllCUs();
 	
-		// Do any tool-specific post-processing:
-		postprocess();
+	// Do any tool-specific post-processing:
+	postprocess();
     }
 
 
@@ -151,6 +155,8 @@ public abstract class SrcTool extends FrontEndTool implements Listener
 	 */
 	for (; offset<args.length; offset++)
 	    OutsideEnv.addSource(args[offset]);
+
+	loadPackages(options.packagesToProcess);
 
 	/* load in source files from supplied file name */
 	for (int i = 0; i < argumentFileNames.size(); i++) {
@@ -168,6 +174,15 @@ public abstract class SrcTool extends FrontEndTool implements Listener
 	    } catch (IOException e) {
 		ErrorSet.fatal(e.getMessage());
 	    }
+	}
+    }
+
+    public void loadPackages(ArrayList packagesToProcess) {
+	Iterator i = packagesToProcess.iterator();
+	while (i.hasNext()) {
+	    String p = (String)i.next();
+	    String[] pa = javafe.filespace.StringUtil.parseList(p,'.');
+	    OutsideEnv.addSources(pa);
 	}
     }
 

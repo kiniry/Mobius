@@ -1,5 +1,6 @@
 package javafe;
 import javafe.util.UsageError;
+import java.util.ArrayList;
 
 /** This is the super-class of classes that hold the values of command-line
   * options.  The options are separated from the Main class to improve
@@ -43,6 +44,9 @@ public class Options {
     
     // Note - the "-v" option is directly set in javafe.util.Info.on
     
+    /** Option holding a list of packages to be processed along with files */
+    // elements have type java.lang.String
+    public ArrayList packagesToProcess = new ArrayList();
 
     //************************************************************************
     //     Constructors
@@ -132,6 +136,13 @@ public class Options {
 	    }
 	    sysPath = args[offset];
 	    return offset+1;
+	} else if (option.equals("-package")) {
+	    if (offset>=args.length) {
+		throw new UsageError("Option " + option + 
+                                     " requires one argument");
+	    }
+	    packagesToProcess.add(args[offset]);
+	    return offset+1;
 	}
 
 	// Pass on unrecognized options:
@@ -177,13 +188,25 @@ public class Options {
      */
     public String showOptions(boolean all) {
     	StringBuffer sb = new StringBuffer();
-	sb.append("  -v"); sb.append(eol);	
-	sb.append("  -quiet"); sb.append(eol);
-	sb.append("  -bootclasspath <classpath>"); sb.append(eol);	
-	sb.append("  -classpath <classpath>"); sb.append(eol);
-	sb.append("  -noCautions"); sb.append(eol);
+	for (int i = 0; i<optionData.length; ++i) {
+	    sb.append(format(optionData[i]));
+        }
 	return sb.toString();
     }
+
+    public String format(String[] sa) {
+	return ("  " + sa[0] + " : " + sa[1] + eol);
+    }
+
+    final String[][] optionData = {
+    {"-v", ""},
+    {"-quiet", ""},
+    {"-bootclasspath <classpath>", ""},
+    {"-classpath <classpath>", ""},
+    {"-noCautions", ""},
+    {"-package <packagename>", "Loads all the files in the named package"},
+    };
+    
     
     final public String eol = System.getProperty("line.separator");
 }
