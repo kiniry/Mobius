@@ -43,11 +43,12 @@ TEXINFOS =
 #
 TEXIBASE = $(ROOT)
 
-all : html pdf postscript pdf
+all : html postscript pdf
 
 postscript : $(TEXIBASE).ps
 
 $(TEXIBASE).ps  : $(TEXIBASE).dvi
+	dvips -o $(TEXIBASE).ps $(TEXIBASE).dvi
 
 dvi: $(TEXIBASE).dvi
 
@@ -57,8 +58,12 @@ $(TEXIBASE).dvi : $(TEXIBASE).texinfo $(TEXINFOS)
 
 pdf: $(TEXIBASE).pdf
 
-$(TEXIBASE).pdf : $(TEXIBASE).texinfo
-	$(TEXI2PDF) $(TEXIBASE).texinfo
+$(TEXIBASE).pdf : $(TEXIBASE).texinfo $(TEXIBASE).ps
+	if type -type $(TEXI2PDF) > /dev/null; then \
+		$(TEXI2PDF) $(TEXIBASE).texinfo; \
+	else \
+		ps2pdf $(TEXIBASE).ps $(TEXIBASE).pdf; \
+	fi
 
 $(TEXIBASE).dvi.gz : $(TEXIBASE).dvi
 	gzip -f --best $(TEXIBASE).dvi
