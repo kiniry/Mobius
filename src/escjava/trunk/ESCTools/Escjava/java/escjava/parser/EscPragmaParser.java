@@ -576,7 +576,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
 		c = in.read();
 		if (c != '>') continue;
 		endTag = "</ESC>";
-	    } else if (c == 'j') {
+	    } else if (c == 'j' && Main.options().parsePlus) {
 		c = in.read();
 		if (c != 'm') continue;
 		c = in.read();
@@ -584,7 +584,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
 		c = in.read();
 		if (c != '>') continue;
 		endTag = "</jml>";
-	    } else if (c == 'J') {
+	    } else if (c == 'J' && Main.options().parsePlus) {
 		c = in.read();
 		if (c != 'M') continue;
 		c = in.read();
