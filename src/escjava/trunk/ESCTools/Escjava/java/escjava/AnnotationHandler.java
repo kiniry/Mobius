@@ -621,20 +621,20 @@ public class AnnotationHandler {
 		    MethodInvocation m = (MethodInvocation)x;
 		    if (!Modifiers.isPure(m.decl.modifiers) &&
 			!Modifiers.isPure(m.decl.getParent().modifiers)) {
-			ErrorSet.error(m.locId,
+/*FIXME			ErrorSet.error(m.locId,
 			    "Method " + m.id + " is used in an annotation" +
 			    " but is not pure (" + 
-			    Location.toFileLineString(m.decl.loc) + ")");
+			    Location.toFileLineString(m.decl.loc) + ")");*/
 		    }
 		    break;
 		case TagConstants.NEWINSTANCEEXPR:
 		    NewInstanceExpr c = (NewInstanceExpr)x;
 		    if (!Modifiers.isPure(c.decl.modifiers) &&
 			!Modifiers.isPure(c.decl.getParent().modifiers)) {
-			ErrorSet.error(c.loc,
+/*FIXME			ErrorSet.error(c.loc,
 			    "Constructor is used in an annotation" +
 			    " but is not pure (" + 
-			    Location.toFileLineString(c.decl.loc) + ")");
+			    Location.toFileLineString(c.decl.loc) + ")");*/
 		    }
 		    break;
 		case TagConstants.WACK_DURATION:

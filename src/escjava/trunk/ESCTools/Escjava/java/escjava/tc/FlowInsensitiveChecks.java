@@ -171,29 +171,29 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 		    MethodDecl directMD = (MethodDecl)(ee.nextElement());
 		    if (Modifiers.isPure(directMD.modifiers) &&
 			!md.parent.isBinary()) {
-			ErrorSet.error(md.getStartLoc(),
+/* FIXME			ErrorSet.error(md.getStartLoc(),
 			    "Method must be declared pure since it " +
 			    (directMD.parent instanceof ClassDecl ?
 				"overrides" : "implements" ) +
 			    " a pure method (" + 
-			    Location.toString(directMD.getStartLoc()) + ")");
+			    Location.toString(directMD.getStartLoc()) + ")");*/
 		    }
 		    if (Modifiers.isPure(directMD.getParent().modifiers) &&
 			!md.parent.isBinary()) {
 		      if (directMD.parent instanceof ClassDecl) {
-			ErrorSet.error(md.getStartLoc(),
+/* FIXME			ErrorSet.error(md.getStartLoc(),
 			    "Method must be declared pure since it " +
 			    "overrides a method in a class " +
 			    "that is pure (" + 
 			    Location.toString(directMD.parent.getStartLoc()) +
-			    ")");
+			    ")"); */
 		      } else {
-			ErrorSet.error(md.getStartLoc(),
+/* FIXME			ErrorSet.error(md.getStartLoc(),
 			    "Method must be declared pure since it " +
 			    "implements a method in an " +
 			    "interface that is pure (" + 
 			    Location.toString(directMD.parent.getStartLoc()) +
-			    ")");
+			    ")"); */
 		      }
 		    }
 		}
