@@ -1,0 +1,5 @@
+#!/bin/csh -f
+
+## Test binary class file reader.
+
+${TOOL} C.java

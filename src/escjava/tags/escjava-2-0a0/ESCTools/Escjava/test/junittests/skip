@@ -1,0 +1,28 @@
+TestSuite.java
+## Tests to be fixed
+ParseDependsBad.java
+AlsoInherit.java
+Methods.java
+Represents.java
+Test.java
+Test2.java
+# Problem when run separately, but not in junit tests?
+ParsePlus.java 
+## Platform dependent
+PureCheck.java
+Quant.java
+## Pure and embedded checks
+Embedded.java
+EmbeddedA.java
+PureCheck2.java
+ParsePure.java
+ModifiesPure.java
+## A bug
+EX.java
+## dangling also
+Heavyweight.java
+## New tests
+Privacy.java
+Instance.java
+Mod.java
+InstanceError.java

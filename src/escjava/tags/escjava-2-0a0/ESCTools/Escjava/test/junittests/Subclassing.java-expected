@@ -1,0 +1,14 @@
+ESC/Java version VERSION
+  Prover started:TIME
+
+Subclassing ...
+
+Subclassing: m(int) ...
+    [TIME]  passed
+
+Subclassing: n() ...
+    [TIME]  passed
+
+Subclassing: Subclassing() ...
+    [TIME]  passed
+  [TIME total]

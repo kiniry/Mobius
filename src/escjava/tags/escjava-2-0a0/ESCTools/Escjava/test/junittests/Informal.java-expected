@@ -1,0 +1,23 @@
+ESC/Java version VERSION
+  Prover started:TIME
+
+Informal ...
+
+Informal: m() ...
+------------------------------------------------------------------------
+Informal.java:11: Warning: Postcondition possibly not established (Post)
+        public void m() {}
+                         ^
+Associated declaration is "Informal.java", line 8, col 5:
+        //@ ensures ! (* ok *);
+            ^
+Execution trace information:
+    Executed implicit return in "Informal.java", line 11, col 18.
+
+------------------------------------------------------------------------
+    [TIME]  failed
+
+Informal: Informal() ...
+    [TIME]  passed
+  [TIME total]
+1 warning

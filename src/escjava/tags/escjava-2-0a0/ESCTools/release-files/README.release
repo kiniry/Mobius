@@ -1,0 +1,51 @@
+
+--------------------  ESCJAVA2 ---------------------------------
+
+These files constitute a release of Escjava2, an ugrade of the
+original Esc/Java from DEC-SRC/Compaq/HP.  It consists of the
+following files:
+
+	README.release - this file
+	README.txt - the original readme from DEC/SRC
+	README.first - a longer description of the ESCjava2 project
+	esctools2.jar - the Java classes constituting the Escjava2 tool
+	escj - a script to run the escjava2 tool
+        escjava2 - a sample wrapper script for escj
+	simplify_script - a script used by escj to run Simplify
+	Simplify* - various builds of the Simplify theorem prover
+	RELEASE_NOTES.txt - descriptions of changes and previous versions
+	quicktest - a short test that an installation was successful
+
+-----------------------INSTALLATION ----------------------------
+
+The installation package consists of a tar file.
+The installation procedure consists of these steps:
+a) untar the tar file in a directory of your choice
+b) Set the environment variable ESCTOOLS_RELEASE to the absolute path of 
+the directory in which you placed the release files. [If this is not set,
+the executables will attempt to guess an appropriate value.]
+c) Set the SIMPLIFY environment variable to the name of one of the Simplify
+executables contained in $ESCTOOLS_RELEASE, depending on the operating system
+you are using. [If SIMPLIFY is not set, the executables will attempt to guess
+an appropriate value for some platforms.]
+d) Execute the program $ESCTOOLS_RELEASE/escj - this is the new escjava2
+program.
+e) If you wish, run $ESCTOOLS_RELEASE/quicktest to execute a quick smoke test
+of the release.
+
+---------------------- RUNNING THE TOOL ------------------------
+
+The escjava2 tool is run by executing the tcsh script $ESCTOOLS_RELEASE/escj.
+Typically a user will generate a wrapper script that sets ESCTOOLS_RELEASE
+and SIMPLIFY and then invokes escj.
+
+The command-line arguments are an optional set of options (beginning with a
+single hyphen) and then a list of file names.  The options must precede the
+file names.  The file name must be specified using wither absolute paths or
+relative paths that are relative to the current working directory.  Classes
+referenced by the given files are found using the current setting of the
+classpath (either the value of the option -sourcepath or the value of the
+option -classpath or the value of the environment variable CLASSPATH).
+
+There are many options available, most of them experimental and not documented.
+The "official" options are listed using "escj -help".

@@ -1,0 +1,5 @@
+#!/bin/csh -f
+# usage: run FLAGS
+
+${ESCJ} $* ghost.java
+${ESCJ} $* Specials.java

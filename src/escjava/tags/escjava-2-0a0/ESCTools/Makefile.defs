@@ -1,0 +1,280 @@
+## This file is part of the 2003 Revision of EscJava
+## author: David Cok - 1 May 2003
+## author: Joe Kiniry
+##
+## This file contains variable definitions common to the Makefiles in
+## various subdirectories of the ESC tools.  These should not need to
+## be modified by the user (those variables are in Makefile.local).
+## Many of these variables are initialized with ?= so that they can be
+## preset by environment variables, if customization is needed.  The
+## definitions here mostly reflect the directory organization of the
+## ESC tools; changing them will likely break something.
+
+## >>> Tell us if you find that something needs to be changed for your platform
+
+## This include file contains any user-customized definitions.
+export TOP ?= .
+ifneq ($(wildcard ${TOP}/Makefile.*local),)
+include ${TOP}/Makefile.local
+endif
+
+######### Check if ESCTOOLS_ROOT is set
+
+ifndef ESCTOOLS_ROOT
+$(error You must have ESCTOOLS_ROOT defined, either as an environment variable or in the file Makefile.local in the same directory as Makefile.defs )
+endif
+
+######### Check if ESCJ_SIMPLIFY_DIR is set
+
+export ESCJ_SIMPLIFY_DIR ?= ${ESCTOOLS_ROOT}/Escjava/release/master/bin
+
+######### Check if SIMPLIFY is set; guess a value if not
+######### Set ESCJ_SIMPLIFY as appropriate
+## (Caution: don't use tabs here, just spaces)
+
+ifndef SIMPLIFY
+        os = $(shell uname -s)
+        ifeq ("${os}","Linux")
+            export SIMPLIFY =  Simplify-1.5.4.linux
+            $(warning Guessing a value for SIMPLIFY: ${SIMPLIFY})
+        endif
+        ifeq ("${os}","Darwin")
+            export SIMPLIFY =  Simplify-1.5.4.macosx
+            $(warning Guessing a value for SIMPLIFY: ${SIMPLIFY})
+        endif
+endif
+ifndef SIMPLIFY
+	$(error You must have SIMPLIFY defined, either as an environment variable or in the file Makefile.local in the same directory as Makefile.defs.  It should be defined to be the name of, not the path to, an appropriate Simplify executable in $ESCTOOLS_ROOT/Escjava/release/master/bin: os = ${os})
+endif
+export ESCJ_SIMPLIFY = ${ESCJ_SIMPLIFY_DIR}/${SIMPLIFY}
+
+export ESCJ_SIMPLIFY_SCRIPT = ${ESCJAVA_ROOT}/simplify
+
+##########################################################################
+## Definitions of Java tools.
+## Override these by defining them in Makefile.local or as environment
+## variables.
+
+export JAVA ?= java
+export JAVAC ?= javac 
+export JAVAC_FLAGS ?= -g -source 1.4
+export JAVADOC ?= javadoc -J-mx200m -source 1.4 -breakiterator -quiet
+
+##########################################################################
+
+## Variables that define the release.  They will be used to build
+## archives for distribution.  They are used to create the Version.java
+## file, which is used by Main.java to provide a version string.
+
+export ESC_PROJECT ?= ESCTools
+export ESC_VERSION ?= CURRENT-CVS
+
+##########################################################################
+
+## The following definitions are used in various Makefiles and should
+## be common for all users and environments.  (at least those environments
+## that have '/' as the path separator.
+## These are defined here rather than in the Makefiles for the individual
+## packages because the tools are used by each other (e.g. all tools use
+## Javafe).
+
+export JAVADOC_GEN_DIR = ${ESCTOOLS_ROOT}/docs/api
+
+## Pertinent definitions for Javafe
+export JAVAFE_ROOT = ${ESCTOOLS_ROOT}/Javafe
+export JAVAFE_SOURCE_DIR = ${JAVAFE_ROOT}/java
+export JAVAFE_CLASSFILES = ${JAVAFE_ROOT}/classfiles
+
+## This is the path needed to build Javafe
+export JAVAFE_BUILD_CLASSPATH = ${JAVAFE_CLASSFILES}
+
+# This is the path needed to run Javafe (only used for testing)
+export JAVAFE_CLASSPATH = ${JAVAFE_CLASSFILES}
+ 
+## Pertinent things for Escjava
+export ESCJAVA_ROOT = ${ESCTOOLS_ROOT}/Escjava
+export ESCJAVA_SOURCE_DIR = ${ESCJAVA_ROOT}/java
+export ESCJAVA_CLASSFILES = ${ESCJAVA_ROOT}/classfiles
+
+## Paths to Mocha components
+export MOCHA_LIB = ${ESCTOOLS_ROOT}/jars/mochalib.jar
+
+## This is the path needed to *run* Escjava.
+export ESCJAVA_CLASSPATH = ${JAVAFE_CLASSFILES}:${ESCJAVA_CLASSFILES}:${MOCHA_LIB}
+
+## The front-end for Escjava that should be used for testing.
+export ESCJ = ${ESCJAVA_ROOT}/escj
+
+# This is the location of any specification files for the JDK.
+# Here we set a default value as the location of spec
+# files supplied with the ESC release.
+export JDKSPEC_ROOT ?= ${ESCJAVA_ROOT}/release/master/specs
+ 
+############################### Release
+## Pertinent locations for building a release
+
+# Temp directory for constructing a binary rrelease
+export RELTEMP = ${ESCTOOLS_ROOT}/release-temp
+
+# Final directory in which to put binary and patch tar files
+export RELDIR  = ${ESCTOOLS_ROOT}/release
+
+# Binary release - name of jar file, name of release tar file
+export RELJAR  = esctools2.jar
+export RELTAR  = esctools2-${ESC_VERSION}-binary.tbz
+
+# Patch release - temp directory for generating a patch release
+export PATCH_DIR = ${ESCTOOLS_ROOT}/patches
+
+# The prefix of the name of the patch release tar file
+export PATCH_NAME = ${ESC_PROJECT}-${ESC_VERSION}-`date "+%d-%m-%y"`
+
+############################### Original ESCTools material
+
+# Directory containing the (uncompressed) tar files of the original
+# ESCTools and Simplify release
+export ORIGINAL_TAR_DIR ?= ${ESCTOOLS_ROOT}/../ESCTools-original-tars
+
+# Directory containing the original files of the original 
+# ESCTools and Simplify releases, as obtained from the tar files
+export ESCTOOLS_ORIGINAL ?= ${ESCTOOLS_ROOT}/../ESCTools.orig
+
+############################### JUnit
+## The location of the JUnit library as obtained from the JUnit project
+## You can override this default setting in Makefile.local or in your
+## environment
+export JUNIT_LIB ?= ${ESCTOOLS_ROOT}/Utils/junit.jar
+export JUNIT_SOURCEPATH ?= /usr/local/Java/junit/src
+
+## This contains items needed for compiling/running JUnit tests,
+## but not for compiling or running the tools themselves
+export JUNIT_UTILS_PATH = ${ESCTOOLS_ROOT}/Utils:${JUNIT_LIB}
+
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+## The stuff from here on needs cleaning up (FIXME)
+
+######################### locations #########################
+ 
+ 
+##### This stuff with MOCHA needs to be cleaned up
+### FIXME
+ 
+## Escjava relies on the jMocha library from UC Berkeley.
+## It uses (a) a jar file of java classes (mochalib.jar) that
+## is supplied with the Escjava distribution.
+## It also uses (b) a set of compiled shared object modules.
+
+## FIXME: DO we supply these?  DO we supply the tools to build them?
+## Do we leave it to the user to figure it out?  What are the license
+## restrictions on jMocha?  What version do we have here?
+
+## Joe: We do not supply these, nor is jMocha absolutely necessary for
+## using ESC/Java.  The license on jMocha is BSDish so we can
+## redistribute whatever bits of it that we like so long as we give
+## proper attribution.  http://www.ucop.edu/ott/permissn.html
+## See http://www.cs.sunysb.edu/~mocha/ for more information.
+
+# To get predicate abstraction to work with ESC/Java, you need to
+# download jMocha from UC Berkeley.  When you build jMocha, you'll get
+# 3 shared objects: libjbdd.so, libglu.so, libcu.so.  These have to be
+# put in an appropriate directory, and LD_LIBRARY_PATH must be set to
+# the name of that directory.  For example, if you put the shared
+# objects in a directory called ${MOCHA_ROOT}/platform/alpha, then you
+# would include the following line here:
+export MOCHA_ROOT = ${ESCJAVA_ROOT}/mochalib
+export MOCHA_SOURCE_DIR = ${MOCHA_ROOT}/java
+export MOCHA_TWO_ROOT = /usr/local/Java/j-mocha.2.0/mocha
+export LD_LIBRARY_PATH = ${MOCHA_TWO_ROOT}/platform/linux
+export MOCHA_CLASSES = ${MOCHA_SOURCE_DIR}:${ESCJAVA_ROOT}/jars/mochalib.jar
+ 
+######################### classpaths #########################
+ 
+## FIXME -- check which of these are actually needed - they come from
+## the setup file so some are for execution.
+
+# A colon-separated list of directories that contain the source code
+# for the whole of ESC/Java.
+export SOURCEPATH = ${JAVAFE_SOURCE_DIR}:${ESCJAVA_SOURCE_DIR}:${MOCHA_SOURCE_DIR}
+ 
+#
+# Need to sources here because we can't read binary inner classes;
+# need the binaries because don't have source for sun.* classes...
+#
+export JDKSPEC = ${JDKSPEC_ROOT}
+ 
+#################################################################
+# Everything from here down was added by Joe on 16 May 2003 to show
+# how one might perform automatic setup of CLASSPATH, perform OS
+# detection for file separators, etc.  These definitions are not
+# currently used, but will be evaluated by the Concordia folks as they
+# attempt to build on Cygwin.
+
+# # Auto-library discovery of core JDK libs.
+# 
+# jdkdir =	/usr/local/Java/jdk-1.3
+# jdklibs0 =	$(subst $(space),:,$(wildcard $(jdkdir)/jre/lib/*.jar))
+# jdklibs1 =	$(subst $(space),:,$(wildcard $(jdkdir)/jre/lib/ext/*.jar))
+# jdklibs2 =	$(subst $(space),:,$(wildcard /usr/local/Java/libs/*.jar))
+# jdklibs =	$(jdklibs0):$(jdklibs1):$(jdklibs2)
+# 
+# # Auto-library discovery for UNIX and Windows.
+# 
+# empty:=
+# space:=		$(empty) $(empty)
+# unixlibpath =	$(subst $(space),:,$(wildcard $(libdir)/*.jar))
+# doslibpath =	$(subst $(space),;,$(wildcard $(libdir)/*.jar))
+# unixparents =	..:../..:../../..:../../../..:../../../../..
+# dosparents =	..;../..;../../..;../../../..;../../../../..
+# unixclasspath =	$(jdklibs):$(unixparents):$(unixlibpath):$(srcbasedir)
+# dosclasspath =	$(jdklibs);$(dosparents);$(doslibpath);$(srcbasedir)
+# 
+# # Check to see if we are building on Windows.  If so, quote CLASSPATH
+# # but not JIKESPATH.  That's just how it works - it doesn't match the
+# # documentation.
+# 
+# ifdef COMSPEC
+# 	export CLASSPATH = "$(dosclasspath)"
+# else
+# 	export CLASSPATH = $(unixclasspath)
+# endif
+# 
+# ifdef COMSPEC
+# 	export JIKESPATH = "$(CLASSPATH)"
+# else
+# 	export JIKESPATH = $(CLASSPATH)
+# endif
+# 
+# # If the environmental variable QUIETJIKES is set to anything we'll tell
+# # jikes to not be pedantic and complain about "rendundant" interface
+# # information and the like that we actually like.
+# 
+# ifndef QUIETJIKES
+# 	jikesflags =	$(corejikesflags) +P
+# else
+# 	jikesflags =	$(corejikesflags)
+# endif
+# 
+# # If the environmental variable USEEMACS is set to anything we'll tell
+# # jikes to output errors and warning in an emacs-compatible format.
+# 
+# ifdef USEEMACS
+# 	jflags =	$(jikesflags) +E
+# else
+# 	jflags =	$(jikesflags)
+# endif
+# 
+# # If the environmental variable JAVAC is set to anything, we'll try
+# # to build with classic javac.  Otherwise, we'll use jikes.
+# 
+# ifdef JAVAC
+# 	jc =		javac
+# 	jflags =	$(javacflags)
+# else
+# 	jc =		jikes
+# endif
+
+ 
+

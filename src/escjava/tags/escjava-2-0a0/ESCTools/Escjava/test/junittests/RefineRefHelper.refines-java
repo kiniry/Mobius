@@ -1,0 +1,6 @@
+//@ refine "RefineRefHelper.spec";
+
+public class RefineRefHelper {
+
+	/*@ non_null */ Object o;
+}

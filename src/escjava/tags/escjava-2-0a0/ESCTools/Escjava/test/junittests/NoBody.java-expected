@@ -1,0 +1,20 @@
+ESC/Java version VERSION
+  Prover started:TIME
+
+NoBody ...
+
+NoBody: m() ...
+    [TIME]  passed immediately
+
+NoBody: n() ...
+------------------------------------------------------------------------
+NoBody.java:7: Warning: Possible null dereference (Null)
+                String s = m().toString();
+                              ^
+------------------------------------------------------------------------
+    [TIME]  failed
+
+NoBody: NoBody() ...
+    [TIME]  passed
+  [TIME total]
+1 warning

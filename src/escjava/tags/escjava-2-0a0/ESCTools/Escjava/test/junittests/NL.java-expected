@@ -1,0 +1,242 @@
+ESC/Java version VERSION
+  Prover started:TIME
+
+NL ...
+
+NL: m(java.lang.Object) ...
+    [TIME]  passed
+
+NL: m2(java.lang.Object) ...
+    [TIME]  passed
+
+NL: mm1() ...
+------------------------------------------------------------------------
+NL.java:16: Warning: Possible assignment of null to variable declared non_null (NonNull)
+                m(oo);  // FAILS
+                 ^
+Associated declaration is "NL.java", line 93, col 19:
+        public void m(/*@ non_null */ Object o) {
+                          ^
+------------------------------------------------------------------------
+    [TIME]  failed
+
+NL: mm2() ...
+------------------------------------------------------------------------
+NL.java:19: Warning: Possible assignment of null to variable declared non_null (NonNull)
+                (new NLS()).m(oo);  // FAILS
+                             ^
+Associated declaration is "NL.java", line 93, col 19:
+        public void m(/*@ non_null */ Object o) {
+                          ^
+------------------------------------------------------------------------
+    [TIME]  failed
+
+NL: qm2(java.lang.Object) ...
+------------------------------------------------------------------------
+NL.java:26: Warning: Possible assignment of null to variable declared non_null (NonNull)
+                nonnull(o); // FAILS 
+                       ^
+Associated declaration is "NL.java", line 91, col 25:
+        public void nonnull(/*@ non_null */ Object o);
+                                ^
+------------------------------------------------------------------------
+    [TIME]  failed
+
+NL: qm(java.lang.Object) ...
+    [TIME]  passed
+
+NL: qmm1() ...
+    [TIME]  passed
+
+NL: qmm2() ...
+------------------------------------------------------------------------
+NL.java:38: Warning: Possible assignment of null to variable declared non_null (NonNull)
+                (new NLS()).qm(oo);   // FAILS
+                              ^
+Associated declaration is "NL.java", line 98, col 20:
+        public void qm(/*@ non_null */ Object o) {
+                           ^
+------------------------------------------------------------------------
+    [TIME]  failed
+
+NL: qqm2(java.lang.Object) ...
+    [TIME]  passed
+
+NL: qqm(java.lang.Object) ...
+    [TIME]  passed
+
+NL: qqmm1() ...
+------------------------------------------------------------------------
+NL.java:54: Warning: Precondition possibly not established (Pre)
+                qqm(oo); // FAILS 
+                   ^
+Associated declaration is "NL.java", line 49, col 5:
+        //@ requires false;
+            ^
+Associated declaration is "NL.java", line 103, col 21:
+        public void qqm(/*@ non_null */ Object o) {
+                            ^
+------------------------------------------------------------------------
+    [TIME]  failed
+
+NL: qqmm2() ...
+------------------------------------------------------------------------
+NL.java:57: Warning: Possible assignment of null to variable declared non_null (NonNull)
+                (new NLS()).qqm(oo);   // FAILS
+                               ^
+Associated declaration is "NL.java", line 103, col 21:
+        public void qqm(/*@ non_null */ Object o) {
+                            ^
+------------------------------------------------------------------------
+    [TIME]  failed
+
+NL: n2(java.lang.Object) ...
+------------------------------------------------------------------------
+NL.java:62: Warning: Possible assignment of null to variable declared non_null (NonNull)
+                nonnull(o); // FAILS
+                       ^
+Associated declaration is "NL.java", line 91, col 25:
+        public void nonnull(/*@ non_null */ Object o);
+                                ^
+------------------------------------------------------------------------
+    [TIME]  failed
+
+NL: n(java.lang.Object) ...
+------------------------------------------------------------------------
+NL.java:66: Warning: Possible assignment of null to variable declared non_null (NonNull)
+                o = null;  // OK   // FIXME
+                  ^
+Associated declaration is "NL.java", line 65, col 19:
+        public void n(/*@ non_null */ Object o) {
+                          ^
+------------------------------------------------------------------------
+    [TIME]  failed
+
+NL: nn() ...
+    [TIME]  passed
+
+NL: nn2() ...
+    [TIME]  passed
+
+NL: p(java.lang.Object) ...
+------------------------------------------------------------------------
+NL.java:76: Warning: Possible assignment of null to variable declared non_null (NonNull)
+                o = null;  // FAILS
+                  ^
+Associated declaration is "NL.java", line 75, col 19:
+        public void p(/*@ non_null */ Object o) {
+                          ^
+------------------------------------------------------------------------
+    [TIME]  failed
+
+NL: p2(java.lang.Object) ...
+    [TIME]  passed
+
+NL: pp() ...
+------------------------------------------------------------------------
+NL.java:82: Warning: Possible assignment of null to variable declared non_null (NonNull)
+                p(oo);  // FAILS
+                 ^
+Associated declaration is "NL.java", line 75, col 19:
+        public void p(/*@ non_null */ Object o) {
+                          ^
+Associated declaration is "NL.java", line 114, col 19:
+        public void p(/*@ non_null */ Object o) {
+                          ^
+------------------------------------------------------------------------
+    [TIME]  failed
+
+NL: pp2() ...
+------------------------------------------------------------------------
+NL.java:85: Warning: Possible assignment of null to variable declared non_null (NonNull)
+                (new NLS()).p(oo); // FAILS 
+                             ^
+Associated declaration is "NL.java", line 114, col 19:
+        public void p(/*@ non_null */ Object o) {
+                          ^
+------------------------------------------------------------------------
+    [TIME]  failed
+
+NL: NL() ...
+    [TIME]  passed
+  [TIME total]
+
+NLS ...
+
+NLS: nonnull(java.lang.Object) ...
+    [TIME]  passed immediately
+
+NLS: m(java.lang.Object) ...
+------------------------------------------------------------------------
+NL.java:94: Warning: Possible assignment of null to variable declared non_null (NonNull)
+                o = null;  // FAILS
+                  ^
+Associated declaration is "NL.java", line 93, col 19:
+        public void m(/*@ non_null */ Object o) {
+                          ^
+------------------------------------------------------------------------
+    [TIME]  failed
+
+NLS: m2(java.lang.Object) ...
+    [TIME]  passed
+
+NLS: qm(java.lang.Object) ...
+------------------------------------------------------------------------
+NL.java:99: Warning: Possible assignment of null to variable declared non_null (NonNull)
+                o = null;  // FAILS
+                  ^
+Associated declaration is "NL.java", line 98, col 20:
+        public void qm(/*@ non_null */ Object o) {
+                           ^
+------------------------------------------------------------------------
+    [TIME]  failed
+
+NLS: qm2(java.lang.Object) ...
+    [TIME]  passed
+
+NLS: qqm(java.lang.Object) ...
+------------------------------------------------------------------------
+NL.java:104: Warning: Possible assignment of null to variable declared non_null (NonNull)
+                o = null;  // FAILS
+                  ^
+Associated declaration is "NL.java", line 103, col 21:
+        public void qqm(/*@ non_null */ Object o) {
+                            ^
+------------------------------------------------------------------------
+    [TIME]  failed
+
+NLS: qqm2(java.lang.Object) ...
+    [TIME]  passed
+
+NLS: n(java.lang.Object) ...
+    [TIME]  passed
+
+NLS: n2(java.lang.Object) ...
+------------------------------------------------------------------------
+NL.java:112: Warning: Possible assignment of null to variable declared non_null (NonNull)
+                nonnull(o); // FAILS
+                       ^
+Associated declaration is "NL.java", line 91, col 25:
+        public void nonnull(/*@ non_null */ Object o);
+                                ^
+------------------------------------------------------------------------
+    [TIME]  failed
+
+NLS: p(java.lang.Object) ...
+------------------------------------------------------------------------
+NL.java:115: Warning: Possible assignment of null to variable declared non_null (NonNull)
+                o = null;  // FAILS
+                  ^
+Associated declaration is "NL.java", line 114, col 19:
+        public void p(/*@ non_null */ Object o) {
+                          ^
+------------------------------------------------------------------------
+    [TIME]  failed
+
+NLS: p2(java.lang.Object) ...
+    [TIME]  passed
+
+NLS: NLS() ...
+    [TIME]  passed
+  [TIME total]
+16 warnings

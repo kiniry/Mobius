@@ -1,0 +1,392 @@
+This is a completely revised README for building and running Escjava2,
+a revision of the original escjava from DEC/Compaq/HP.  The revisions were
+mostly performed by Joe Kiniry and David Cok. You can read the general
+background on the original Escjava in README.txt.   - DRCok 7/2/2003
+
+If you obtained Escjava2 as part of a binary release, you should also
+consult README.release for installation and execution instructions 
+concerning the release.
+
+----------------------------------------------------------------------------
+
+PURPOSE OF ESCJAVA2
+
+The primary purpose of the work on Escjava2 is to alter the tool so
+that it parses the current version of JML (Java Modeling Language -
+http://www.jmlspecs.org), while checking at least the same set of
+features that the current version of Escjava checks.
+
+A secondary purpose is to increase the number of features of JML that
+ESC/Java checks.
+
+A third purpose is to provide a distribution in a form that is more
+widely available and more easily accessible, in order to promote the
+use of specification and associated static and dynamic checking.
+
+A fourth purpose is to bring some of the other tools (Rcc, Houdini,
+Calvin) to a similar state - working and accessible.
+
+----------------------------------------------------------------------------
+
+OTHER DOCUMENTATION
+
+Each major subdirectory of this release contains a README file.  For
+the most part these are original, untouched readmes as provided by
+Compaq/H.P. as part of the "Java Programming Toolkit Source Release".
+When necessary we have updated them for correctness and clarity.
+
+The original design documentation for ESC/Java was made available by
+H.P. in 2Q 2003.  We have added that documentation in its original
+form to the CVS repository in ESCTools/docs/design-notes.  Note that
+these are, for the most part, historically illuminating short
+documents about the high-level design decisions and goals for ESC/Java
+and related tools, but they are in no way complete, proscriptive, or
+accurate with respect to the current architecture.
+
+A snapshot of the "ESC/Java User's Manual" that documents the final
+Compaq/H.P. release of ESC/Java (from November 2001) is found in the
+file ESCTools/Escjava/doc/SRC-2000-002.html.
+
+An "ESC/Java Quick Reference Manual" for the final H.P. release is also
+available in the file ESCTools/Escjava/doc/SRC-2000-004.html.
+
+In general, the only documentation that we are trying to keep up to
+date are the "ESC/Java User's Manual", "ESC/Java Implementation
+Notes", and "JML Reference Manual", the last of which has an appendix
+on ESC/Java.
+
+The new "ESC/Java User's Manual" is found in the file
+ESCTools/docs/ESCJAVA-UsersManual.html.  It is currently in HTML
+format, but we have plans on moving to Texinfo like the other main
+JML documents.
+
+The "ESC/Java Implementation Notes" are a running summary of the work
+that has gone on to make ESC/Java2, based upon the semi-open sourced
+ESC/Java 1 from November, 2001 a reality.
+
+Finally, the "JML Reference Manual" is part of the Java Modeling
+Language (JML) distribution.  See http://www.jmlspecs.org/ for more
+information.
+
+We are working on obtaining design documentation on Simplify.  In
+July, 2003 we were notified at ECOOP that a detailed design document
+would soon be made available from H.P..  Unfortunately, as of the
+first week of August, the document is still unavailable.
+
+----------------------------------------------------------------------------
+
+OBTAINING THE ORIGINAL SOURCE FOR SRC's "Java Programming Toolkit
+Source Release" (which includes EscJava):
+
+The source has been available from
+  http://www.research.compaq.com/downloads.html 
+
+The availability can be intermittent.  Note the license restrictions
+on further distribution of the source.
+
+----------------------------------------------------------------------------
+
+OBTAINING CURRENT SOURCE/BINARY FOR ESC/Java2
+
+There is as yet no binary release of ESC/Java2.  A CVS repository of
+the current work is maintained by Joe Kiniry <kiniry@acm.org>.  Build
+and execution instructions are provided later in this README file.
+
+To obtain access to the CVS distribution, you will need:
+- a sufficiently current version of CVS
+- development tools and a VM for Java 1.4
+- a working version of SSH, in order to securely transfer files to and from
+  the CVS repository
+- Building it will require other UNIX tools: e.g. flex, cc, diff, bash, tcsh
+- Some tests use JUnit
+- To (optionally) build the SImplify tool you will need a Modula-3 compiler
+
+To obtain access to the CVS distribution, follow these steps:
+
+a) Provide evidence to Joe that you have obtained the original sources from
+   SRC (see above) and agreed to the license restrictions.  Sufficient
+   evidence is the size (in bytes) of the Javafe and ESC/Java archives
+   you have downloaded from SRC.
+
+b) Joe will send you a username and password for the CVS server.
+
+c) cd to a place in your computer directories where you would like to
+   have the CVS distribution installed.  The following commands will
+   create a subdirectory of the current directory, name it ESCTools and
+   place a working copy of the CVS repository in ESCTools.
+
+d) Execute a CVS checkout on the server (replacing the characters
+   'username' in the command below with your username on Joe's server):
+
+   cvs -d :ext:username@kindsoftware.com/cvsroot checkout ESCTools 
+
+e) If you want to avoid using your password on every CVS transaction, you will
+  need to generate a public key/private key pair and copy the public key to
+  your account on kindsoftware.com.  Login to this computer is only
+  allowed via SSH:
+	i) On your own computer, create (if necessary) and cd into ~/.ssh
+	ii) If there are no files id_dsa and id_dsa.pub, create them by running
+		ssh-keygen -t dsa
+	iii) Be sure id_dsa is readable only by you
+		(chmod go-rwx ~/.ssh/id_dsa)
+        iv) type out the id_dsa.pub file (cat id_dsa.pub)
+	v) Login in to the CVS server:  ssh username@kindsoftware.com
+		(replace 'username' by your username on kindsoftware.com)
+	vi) On kindsoftware.com, edit the file ~/.ssh/authorized_keys,
+		pasting in the contents of id_dsa.pub on a line of its own
+		(being careful not to introduce any spurious line breaks)
+	vii) Be sure that ~/.ssh/authorized_keys is readable only by you
+		(chmod go-rwx ~/.ssh/authorized_keys)
+
+----------------------------------------------------------------------------
+
+SETTING UP YOUR ENVIRONMENT FOR BUILDING AND RUNNING ESC/Java2
+
+Development has taken place on Linux (Redhat 8), MacOSX (10.2), The
+build environment uses GNU make.  Developers use both bash and tcsh as
+working shells.
+
+No work has yet been done to make the environment portable to Cygwin,
+where the file separator and path separators are different than on
+Linux and Mac OS X.  Volunteers are welcome!
+
+Step (d) above created a subdirectory named ESCTools in a directory of
+your choice.  We will refer to this directory as ESCTools or
+$ESCTOOLS_ROOT. It has subdirectories Javafe, ESC/Java, etc. for the
+major subsytems of the ESC tools.  We will use the symbol
+$ESCTOOLS_ROOT to denote a path to this directory; if you like you may
+define ESCTOOLS_ROOT in your login script as an environment variable
+whose value is the absolute path to ESCTools.
+
+The user (you) must specify two variables.  These are needed both in
+building and in executing.  You can specify them either:
+
+a) as environment variables (defined in your login script or by
+   defining them explicitly either manually or by invoking a setup
+   script); these will then apply both to Makefiles and to scripts
+   that are run
+
+b) for Makefiles, by creating a file $ESCTOOLS_ROOT/Makefile.local
+   containing the definitions of the variables (see
+   Makefile.local.sample for a starting point).
+
+c) for executables, namely escj, by creating a wrapper script file
+   that sets the variables prior to invoking escj.  A sample such
+   wrapper script is found in $ESCTOOLS_ROOT/Escjava/escjava.sample .
+
+The two required variables are:
+
+ESCTOOLS_ROOT - defined to be the absolute path to the ESCTools
+        directory
+
+SIMPLIFY - defined to be the *name* of (*not* path to) an appropriate
+	Simplify executable in
+	$ESCTOOLS_ROOT/Escjava/release/master/bin
+	(e.g. Simplify-1.5.4.linux). The Makefile makes a guess at an
+	appropriate value for some platforms, but defining it yourself
+	will avoid the warning messages.
+
+When a release is built, these two variables are used:
+
+ESC_PROJECT - the name of the project, e.g. 'ESCTools'
+ESC_VERSION - the version number
+
+The two values of the two variables are used to create a string
+that becomes part of the name of the created tar file and is
+part of the version information produced by the ESC/Java2 tool
+when it starts execution.
+
+There are other variables you may set to alter your working
+environment.  Those that are executables must be on your path:
+
+JAVA - set to the name of a java VM executable.  By default this is
+        'java'.
+
+JAVAC - set to the name of a java compiler.  By default this is
+        'javac', but an alternate value might be, for example, 'jikes'
+
+JAVADOC - set to the name of the javadoc executable
+
+JDK_BINARIES - the value is an alternate set of directories (in
+        classpath form) that will be used in place of the system
+        defined set of Java system class files.  Typically the tools
+        can find this out from the Java environment.
+
+JDK_SOURCES - the directory that contains the source files for the
+        Java system classes.  This is currently just used in testing,
+        though it could also be used in static checking.
+
+JUNITLIB - the location of the JUnit library, used in compiling and
+        running some of the tests that are JUnit based.  There is a
+        version of the JUnit library included in the CVS distribution,
+        but you can substitute your own by defining this variable.
+        All testing is performed with the version included in CVS.
+
+----------------------------------------------------------------------------
+
+BUILDING A WORKING VERSION OF ESC/Java2 FROM CVS SOURCES
+
+With the environment set up as described above, you should be able to
+execute, while in the $ESCTOOLS_ROOT directory (in either a bash or
+tcsh shell, and likely others):
+
+	make clean build test
+
+The clean target deletes any generated files.  There should not be any
+in a new install, but it is a good idea to build from a 'clean slate'
+after any major modifications.  Compiling is reasonably quick.
+
+The build target generates a working version of the software.  This
+target does build incrementally, speeding development for any minor
+modifications.
+
+The test target runs the tests on all the subsystems for which tests
+exist.
+
+Other targets:
+
+alltests - does test + some additional time-consuming or not yet
+           debugged tests.  This executes all tests known.
+
+docs - generates the documentation (including javadoc pages).  Note
+       that nearly all of the ESC/Java source code is NOT annotated
+       with Javadoc comments as this was seemingly the standard
+       practice at SRC.  We have been lazily rewriting the
+       documentation using Javadoc and correct XHTML, but this
+       task will take some time to complete.
+
+release - generates a release package (uses the variables ESC_PROJECT
+          and ESC_VERSION)
+
+The $ESCTOOLS_ROOT directory contains a number of major subsystems:
+	Utils - utility material used by multiple subsystems
+	Javafe - the front-end Java parser (used by the other tools)
+	Simplify - a fast, automatic theorem prover (used by the other
+                   tools),
+  	  (Simplify IS NOT CURRENTLY PART OF THE MAKE SYSTEM.  For
+           information on building Simplify, see below.)
+	Escjava - the Extended Static Checker
+	Calvin - NOT YET WORKING
+	Rcc - NOT YET WORKING
+	Houdini - NOT YET WORKING
+The make targets above can be executed in each of the subsystem
+directories.  This avoids running make over all of the subsystems just
+to build an individual one.  Building all of the subsystems is fairly
+fast, but testing is time-consuming.
+
+There are in addition Makefiles in various subdirectories of the major
+subsystems.  However, these have not been edited to be used
+stand-alone, for the most part.  Where those Makefiles are usable
+directly, there are comments in the Makefile to that effect.
+
+Additionally, there is a nearly complete Ant build.xml file for all
+the Java parts of Javafe and Escjava in the top-level directory.  Use
+at your own risk, as it is not currently being kept up-to-date.
+
+----------------------------------------------------------------------------
+
+RUNNING THE escjava2 TOOL
+
+The script $ESCTOOLS_ROOT/Escjava/escj runs the escjava2 tool.  You
+need to have the variables ESCTOOLS_ROOT and SIMPLIFY defined as
+described above, either in your environment or in a wrapper script.
+
+The tool is invoked with command-line options followed by filenames
+(they may not be intermixed); its behavior is also affected by the
+environment variables defined below.
+
+There is a set of commonly used command-line options and also many
+(generally undocumented) experimental options.  A list of the former
+can be obtained by executing "$ESCTOOLS_ROOT/Escjava/escj -help".
+Commonly used options are:
+        -classpath <pathlist>  Defines the path to find referenced classes
+	-quiet                 Suppresses informational output
+	-nowarn <name>         Selectively suppresses warnings
+	-nocheck               Just parse and typecheck, no static checking
+	-package <packagename> Run the tool on all the files in the package
+
+After any command-line options, you should list any files you wish to
+be checked by escjava2.  Any relative paths are relative to the
+current directory.  Any classes referenced by the given files are
+found using the CLASSPATH (or the value of the -classpath option).
+If you use the -package option to run the tool on an entire package, the
+package is found on the CLASSPATH.
+
+These variables may also be used to modify the behavior of the
+executable:
+	CLASSPATH - set this to contain the classpath of all of the
+		directories needed by classes specified on the command
+		line.  The default is the value of CLASSPATH set by
+		the environment; in the absence of that the default is
+		the current directory.
+	JAVA - set this to contain the VM executable (default is 'java')
+	JDK_BINARIES - set to contain the classpath for the Java
+		system classes.  The default is not set, in which case
+		the system default path is used.
+	ESCJ_STDARGS - set to contain a set of standard arguments for
+		the escjava tool.  The default is currently '-nowarn
+		Deadlock' which turns off checking for multi-threaded
+		deadlock possibilities
+	ESC_REMOTE_DEBUG - set to a non-empty string if you want to
+		invoke the Java VM with the options necessary for
+		debugging (you may need to alter the script to supply
+		the settings you need on your platform, or simply
+		define JAVA_VM_DEBUG_FLAGS directly.
+	JAVA_VM_FLAGS - set to contain any options to be supplied to
+		the VM (as opposed to the application)
+	ESCJ_VERBOSE - set to non-empty to print the options being
+		invoked on escj
+
+ESC/Java uses Simplify.  There are numerous environment variables that
+affect the behavior of Simplify.  The most important are:
+
+	PROVER_KILL_TIME - set to the maximum number of seconds
+		Simplify should attempt to solve a given predicate
+		(i.e.., the amount of time Simplify should spend
+		verifying each Java method).  The default is 300
+		seconds.
+	PROVER_CC_LIMIT - the maximum number of counterexamples to
+		find.  The default is 10.
+	ESCJ_SIMPLIFY_DIR - the directory in which to find the
+		executable named by $SIMPLIFY.  This is by default
+		automatically set to a directory in the release or
+		in the CVS distribution.
+	ESCJ_SIMPLIFY_ARGS - the default arguments to use when
+		invoking Simplify (default is '-noprune -noplunge').
+
+----------------------------------------------------------------------------
+
+BUILDING A WORKING VERSION OF Simplify FROM CVS SOURCES
+
+We have modified Simplify slightly so that it will build properly on
+OS X 10.2 using the Critical Mass Modula-3 (CM3) compiler.  We also
+use CM3 on Linux.
+
+We had to patch the following modules so that they would build
+correctly on OS X with CM3 5.2.0:
+  m3-comm/tcp     m3-libs/set     m3-libs/table-list,
+  m3-tools/mtex   m3-ui/X11R4     m3-ui/ui
+
+The patched versions of these modules are available in
+ESCTools/Simplify/libs.
+
+We have not compared these patched versions with those available now
+that CM3 5.2.6 is available.  It may be the case that these modules
+now build properly on all platforms with more recent CM3 releases.
+
+Note that Simplify relies upon many modules.  You *must* install all of
+these modules prior to building Simplify.  The full list of necessary
+modules is found in the file ESCTools/Simplify/README.
+
+You can obtain the compiler either by using fink or directly from
+Elgosoft.  See the following URLs for more information:
+  http://www.elegosoft.com/cm3/                  (Elgosoft)
+  http://fink.sourceforge.net/                   (Fink)
+
+----------------------------------------------------------------------------
+----------------------------------------------------------------------------
+
+Other things to comment on: (FIXME)
+- Mocha
+- Describing the tests
+
