@@ -6,8 +6,8 @@ clean:
 .PHONY: build
 build: classes.stamp
 
-classes.stamp:
-	javac -classpath ${JUNITLIB} *.java
+classes.stamp: *.java
+	javac -classpath ${JUNITLIB} $?
 	touch classes.stamp
 
 .PHONY: test
