@@ -66,44 +66,6 @@ public class Utils {
 	System.setErr(pse);
     }
 
-    /** Executes the given command as an external executable, reads the text
-	produced and tokenizes it into Strings (separated by whitespace).
-	This differs from ExternalInputIterator that simply returns lines.
-    */
-    //@ requires command != null;
-    //@ ensures \result != null;
-/*
-    static public ArrayList parseResult(String command) throws java.io.IOException {
-	Iterator flaglist = new ExternalInputIterator(command);
-	ArrayList a = new ArrayList(10); 
-	while (flaglist.hasNext()) {
-	    java.util.StringTokenizer flags = new java.util.StringTokenizer((String)flaglist.next());
-	    while (flags.hasMoreTokens()) { a.add(flags.nextToken()); }
-	}
-	return a;
-    }
-*/
-
-    /** Finds the first line with the given String in the given file and parses the content
-	into tokens.  Returns an empty array if the String is not present in the file.
-    */
-    //@ requires content != null && filename != null;
-    //@ ensures \result != null;
-/*
-    static public ArrayList parseFoundLine(String content, String filename) throws java.io.IOException {
-	ArrayList a = new ArrayList(10);
-	Iterator i = new FileIterator(filename);
-	while (i.hasNext()) {
-		String s = (String)(i.next());
-		if (s.indexOf(content) != -1) {
-			QuoteTokenizer f = new QuoteTokenizer(s);
-			while (f.hasMoreTokens()) { a.add(f.nextToken()); }
-			return a;
-		}
-	}
-	return a;
-    }
-*/
 
     /** Parses a string into arguments as if it were a command-line, using
 	the QuoteTokenizer to parse the tokens.
