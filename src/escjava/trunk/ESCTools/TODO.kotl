@@ -1,3 +1,10 @@
+* Automated Tests
+
+** Determine why the following Javafe tests fail:
+*** test6
+*** test1007
+*** test1103
+
 * ASTGen's childAt() generation.
 
  Why does the generated childAt() method not include a throws
@@ -14,13 +21,17 @@
 ** Javafe/doc/abstract-syntax.html
 *** Inner classes.
 
-* Need to augment naming.html for resolution in spec files, jml files, etc.
+* Documentation
 
-* Support non_null in method declaration for return value.  E.g. SubProcess
+** Need to augment naming.html for resolution in spec files, jml files, etc.
+
+* Full JML Support
+
+** Support non_null in method declaration for return value.  E.g. SubProcess
 
     //@ requires P != null;
     //@ ensures \result != null
     public /*@ non_null @*/ SList readSList() {
 
-* Duplicate existing parser tests with also_* uses to extract out JML
+** Duplicate existing parser tests with also_* uses to extract out JML
   "also" keyword.

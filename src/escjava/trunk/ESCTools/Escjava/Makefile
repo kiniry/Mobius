@@ -104,7 +104,7 @@ clean_escjava: clean_escjava_ast clean_escjava_backpred clean_escjava_parser \
 clean_tests: clean_escjava_parser_test clean_test_escjava
 
 clean_classfiles:
-	cd classfiles; find . -name *.class -exec rm -f {} \;
+	cd classfiles; find . -name "*.class" -exec rm -f {} \;
 
 clean_docs:
 	rm -f doc/escjava.html doc/escjava-public.html doc/man1/*.1
