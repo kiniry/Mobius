@@ -1,6 +1,6 @@
 // Checks the pure declarations on class and interface
 public class PureCheck2 extends SuperPure implements IPure {
-	//@ requires spm() + ipm() + npm() > 0;
+	//@ requires spm() + ipm() + npm() > 0;  // ERROR -needs also
 	//@ pure
 	public int ipm() { return 0; }
 

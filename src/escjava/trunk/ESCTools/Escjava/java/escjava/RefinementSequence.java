@@ -739,6 +739,7 @@ public class RefinementSequence extends CompilationUnit {
 	    ErrorSet.fatal(td.getStartLoc(),
 		"Not implemented: Unable to process this type in Refinement.cleancopy: " + td.getClass());
 	}
+	newtd.specOnly = td.specOnly;
 	return newtd;
     }
 

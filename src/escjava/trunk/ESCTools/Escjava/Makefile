@@ -31,11 +31,15 @@ JAVASOURCEFILES = ${ESCJAVA_SOURCE_DIR}/escjava/ast/*.java \
 	${ESCJAVA_SOURCE_DIR}/escjava/*.java \
 	${ESCJAVA_SOURCE_DIR}/escjava/Version.java
 
+## FIXME - Version.java is listed above because it might not exist when *.java
+## is expanded, but isn't that true for ast/*.java as well???
+
 OTHERSOURCEFILES = /dev/null
 TESTHARNESSFILES = /dev/null
 
 # The executable to run escjava
 export ESCJ = ${ESCJAVA_ROOT}/escj
+export ESCJ_SOURCEPATH=${ESCTOOLS_ROOT}/Javafe/java:${ESCTOOLS_ROOT}/Escjava/java:${ESCTOOLS_ROOT}/specs
 
 ## These definitions are used in subsidiary makes, hence are exported
 export CLASSDIRECTORY=${ESCJAVA_CLASSFILES}
@@ -337,8 +341,8 @@ test_matrix:
 .PHONY: self_test
 self_test: compile
 	cd ${ESCJAVA_SOURCE_DIR}/escjava; \
-	${ESCJ} -source 1.4 -nocheck -v \*.java ast/*.java parser/*.java \
-	  tc/*.java bacpred/*.java prover/*.java
+	${ESCJ} -classpath ${ESCJ_SOURCEPATH} \
+		-source 1.4 -nocheck -quiet -noSemicolonWarnings ${JAVASOURCEFILES}
 
 ## This tests a binary release that is present in the RELTEMP directory,
 ## with RELCLASSPATH pointing to the relevant esctools2.jar file.

@@ -10,12 +10,12 @@ public class Initially {
 	//@ modifies i;
 	void m() {} // OK
 
-	//@ modifies i;
+	//@ modifies this.*;
 	public Initially() {
 		i = 6;
 	} // OK
 
-	//@ modifies i;
+	//@ modifies this.*;
 	public Initially(int j) {
 	} // ERROR
 }

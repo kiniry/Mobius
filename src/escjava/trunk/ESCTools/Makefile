@@ -47,12 +47,10 @@ build buildall test:
 	    $(MAKE) -C $$d $@ || exit 1; \
 	done
 
-test: specs-test
-
 .PHONY: alltests
 alltests:
 	${MAKE} test ALLTESTS=1
-	${MAKE} specs-test
+	##${MAKE} specs-test
 
 ########################################### general
 
@@ -113,6 +111,18 @@ clean-norel-noreltemp:
 	$(MAKE) -C Javafe clean
 	rm -f jars/*.jar		## FIXME is this used?
 	rm -f tags TAGS
+
+########################################### jmlspecs
+
+.PHONY: jmlspecs-jar
+jmlspecs-jar:
+ifdef JML_ROOT
+	${MAKE} -C ${JML_ROOT}/JML2 jmlspecs-jar
+	cp ${JML_ROOT}/JML2/bin/jmlspecs.jar ${ESCTOOLS_ROOT}
+else
+	@true
+endif
+
 
 ########################################### docs
 
@@ -214,6 +224,7 @@ binary-release: build docs
 	cp ${ESCJ_SIMPLIFY_DIR}/Simplify-1.5.4* ${RELTEMP}
 	cp README.first README.txt ${RELTEMP}
 	cd release-files; cp `ls | grep -v CVS` ${RELTEMP}
+	cp jmlspecs.jar ${RELTEMP}
 	cd ${RELTEMP}; tar cjvf ${RELDIR}/${RELTAR} *
 	rm -rf ${RELTEMP}
 
@@ -252,6 +263,7 @@ test-patch-release:
 	cd ${RELTEST}; \
 		tar xvjf ${RELDIR}/*patch.tbz ;\
 		unset ESCTOOLS_ROOT ;\
+		unset ESC_SPECS; \
 		unset JUNIT_LIB ;\
 		unset PATCH_DIR ;\
 		unset RELDIR ;\

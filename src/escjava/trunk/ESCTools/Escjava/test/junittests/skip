@@ -1,5 +1,5 @@
 TestSuite.java
-# Do these seprately
+# Do these seperately
 FormalNonnullInheritance.java
 Desugaring.java
 DesugaringA.java
@@ -12,12 +12,6 @@ Helper.java
 InheritNull.java
 PreconditionWarnings.java
 NonNullResult.java
-## Pure and embedded checks
-Embedded.java
-EmbeddedA.java
-PureCheck2.java
-ParsePure.java
-ModifiesPure.java
 ## A bug / tests to be fixed
 GhostFieldOverride.java
 MethodInSpec.java
@@ -25,4 +19,3 @@ MethodInSpec.java
 ModEverything.java
 ## New tests
 Privacy.java
-DataGroup.java

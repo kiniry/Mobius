@@ -112,8 +112,8 @@ public abstract class BufferedCorrelatedReader extends CorrelatedReader
    * Closes us.  No other I/O operations may be called on us after
    * we have been closed.
    */
-  //@ also_modifies buf;
-  //@ also_ensures buf == null;
+  //@ also modifies buf;
+  //@      ensures buf == null;
 
   public void close() {
     buf = null;

@@ -128,8 +128,8 @@ class CECEnum implements Enumeration {
     /**
      ** Returns true iff any more elements exist in this enumeration.
      **/
-    //@ also_modifies simplifyDone, pending.elementCount
-    //@ also_ensures \result ==> pending.elementCount>0
+    //@ also modifies simplifyDone, pending.elementCount;
+    //@      ensures \result ==> pending.elementCount>0;
     final public boolean hasMoreElements() {
 	if (pending.size()==0 && !simplifyDone)
 	    readFromSimplify();
@@ -143,7 +143,7 @@ class CECEnum implements Enumeration {
      ** method will enumerate successive elements.  Throws
      ** NoSuchElementException if no more elements are left.
      **/
-    //@ also_modifies simplifyDone
+    //@ also modifies simplifyDone
     public Object nextElement() /*throws NoSuchElementException*/ {
 	if (!hasMoreElements())
 	    throw new NoSuchElementException();

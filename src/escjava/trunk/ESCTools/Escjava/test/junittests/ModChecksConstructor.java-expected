@@ -12,9 +12,21 @@ ModChecksConstructor: ModChecksConstructor(int) ...
     [TIME]  passed
 
 ModChecksConstructor: ModChecksConstructor(java.lang.Object) ...
+ModChecksConstructor.java:17: Error: There is no assignable clause allowing this assignment
+        public ModChecksConstructor(Object o) {
+                                              ^
+/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml:40: Associated declaration: 
+    //@ public non_null model JMLDataGroup objectState;
+                              ^
+ModChecksConstructor.java:17: Error: There is no assignable clause allowing this assignment
+        public ModChecksConstructor(Object o) {
+                                              ^
+/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml:47: Associated declaration: 
+    /*@ ghost public Object owner;
+                     ^
 ModChecksConstructor.java:18: Error: There is no assignable clause allowing this assignment
             i = 0; // WARNING
             ^
     [TIME]  passed
   [TIME total]
-1 error
+3 errors

@@ -58,7 +58,7 @@ test50  Good	parsing pragmas out of comments
 test51  Good	multiple loop iterations
 test52  Good	tests previous problem with sibling constructors
 test53	Good	array subtypes
-test54	Good	helper pragma
+test54	FIX 	helper pragma
 test55	Good	3 inline flags
 test56	Good	parsing of modifier pragmas after formal parameters
 test57	Good	DTTFSA

@@ -101,7 +101,7 @@ Desugared specifications for Object.wait
    requires true
    modifies \everything if true
 Desugared specifications for Object.wait
-   requires (\lblneg Pre:4.54.8 0 <= timeout:5..) && (\lblneg Pre:4.55.8 0 <= nanos:5.. && nanos:5.. <= 999999)
+   requires (\lblneg Pre:4.53.8 0 <= timeout:5..) && (\lblneg Pre:4.54.8 0 <= nanos:5.. && nanos:5.. <= 999999)
    modifies \everything if \old(0 <= timeout:5.. && 0 <= nanos:5.. && nanos:5.. <= 999999)
 Desugared specifications for Object.wait
    requires true
@@ -110,9 +110,6 @@ Desugared specifications for Object.finalize
    requires true
    modifies \everything if true
 Desugared specifications for Object.<clinit>
-   requires true
-   modifies \everything if true
-Desugared specifications for JMLDataGroup.JMLDataGroup
    requires true
    modifies \everything if true
 Desugared specifications for Exception.Exception

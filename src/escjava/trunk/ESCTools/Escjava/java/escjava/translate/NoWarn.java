@@ -47,9 +47,10 @@ public class NoWarn
 
     // This will be set to one of the three kinds of checking
     // (CHK_AS_ASSERT/ASSUME/SKIP).
-    //@ invariant globalStatus == CHK_AS_ASSUME || 
-    //@           globalStatus == CHK_AS_ASSERT ||
-    //@           globalStatus == CHK_AS_SKIP;
+    /*@ invariant globalStatus == CHK_AS_ASSUME || 
+      @           globalStatus == CHK_AS_ASSERT ||
+      @           globalStatus == CHK_AS_SKIP;
+      @*/
     public static int globalStatus;
 
     /**
@@ -57,11 +58,12 @@ public class NoWarn
      * one of the CHK... constants defined in TagConstants, and status
      * should be one of CHK_AS_ASSUME/CHK_AS_ASSERT/CHK_AS_SKIP.
      */
-    //@ requires TagConstants.FIRSTESCCHECKTAG <= tag &&
-    //@          tag <= TagConstants.LASTESCCHECKTAG;
-    //@ requires status == CHK_AS_ASSUME || status == CHK_AS_ASSERT ||
-    //@          status == CHK_AS_SKIP;
-    //@ ensures chkStatus[tag - TagConstants.FIRSTESCCHECKTAG] == status;
+    /*@ requires TagConstants.FIRSTESCCHECKTAG <= tag &&
+      @          tag <= TagConstants.LASTESCCHECKTAG;
+      @ requires status == CHK_AS_ASSUME || status == CHK_AS_ASSERT ||
+      @          status == CHK_AS_SKIP;
+      @ ensures chkStatus[tag - TagConstants.FIRSTESCCHECKTAG] == status;
+      @*/
     public static void setChkStatus( int tag, int status ) {
         Assert.notFalse( TagConstants.FIRSTESCCHECKTAG <= tag
                          && tag <= TagConstants.LASTESCCHECKTAG );
@@ -78,8 +80,9 @@ public class NoWarn
      * one of the CHK... constants defined in TagConstants. The result
      * is be one of CHK_AS_ASSUME/CHK_AS_ASSERT/CHK_AS_SKIP.
      */
-    //@ requires TagConstants.FIRSTESCCHECKTAG <= tag &&
-    //@          tag <= TagConstants.LASTESCCHECKTAG;
+    /*@ requires TagConstants.FIRSTESCCHECKTAG <= tag &&
+      @          tag <= TagConstants.LASTESCCHECKTAG;
+      @*/
     public static int getChkStatus( int tag ) {
         Assert.notFalse( TagConstants.FIRSTESCCHECKTAG <= tag
                          && tag <= TagConstants.LASTESCCHECKTAG );
@@ -228,8 +231,9 @@ public class NoWarn
      * one of the CHK... constants defined in TagConstants. The result
      * is one of CHK_AS_ASSUME/CHK_AS_ASSERT/CHK_AS_SKIP.
      */
-    //@ requires TagConstants.FIRSTESCCHECKTAG <= tag &&
-    //@          tag <= TagConstants.LASTESCCHECKTAG;
+    /*@ requires TagConstants.FIRSTESCCHECKTAG <= tag &&
+      @          tag <= TagConstants.LASTESCCHECKTAG;
+      @*/
     public static int getChkStatus(int tag, int locUse, int locPragmaDecl) {
         Assert.notFalse( TagConstants.FIRSTESCCHECKTAG <= tag
                          && tag <= TagConstants.LASTESCCHECKTAG );

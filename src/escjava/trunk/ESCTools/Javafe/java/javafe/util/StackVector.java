@@ -123,6 +123,7 @@ public final class StackVector
      * <esc> ensures \result >= 0 </esc>
      */
     //@ ensures \result == (elementCount - currentStackBottom)
+    //@ pure
     public final int size() {
 	return elementCount - currentStackBottom;
     }

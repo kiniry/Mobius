@@ -29,6 +29,7 @@ public class Options extends javafe.SrcToolOptions
 	{ "-pgc", "Print the guarded commands"},
 	{ "-ppvc", "Prettyprint the VCs generated with -v"},
         { "-pxLog <log>", "PrettyPrint the commands sent to Simplify in the file named <log>"},
+        { "-specs <dirpath>", "The jar file or directory path of the set of system specs to use; these are appended to the sourcepath, if specified, or else the classpath." },
         { "-sxLog <log>", "Print the commands sent to Simplify in the file named <log>"},
 	{ "-typecheck", "Do only parsing and typechecking, no generation or proving of verification conditions" },
 	{"-useFcns","Use functions for reasoning about model variables, method calls, and object allocations in annotations"},
@@ -56,6 +57,9 @@ public class Options extends javafe.SrcToolOptions
     public boolean counterexample = false;
     public boolean stats = false;
     public boolean plainWarning = false;
+
+    /** The dirpath or jar file of system specs to use. */
+    public String specspath = null;
 
     /** Statically check against redundant specs?  Default is true. */
     public boolean checkRedundantSpecs = true;
@@ -308,6 +312,13 @@ public class Options extends javafe.SrcToolOptions
                      e.toString());
             }
             return offset+1;
+        } else if (option.equals("-specs")) {
+	    if (offset >= args.length) {
+                throw new UsageError("Option " + option +
+                                     " requires one String argument");
+            }
+	    specspath = args[offset];
+	    return offset+1;
         } else if (option.equals("-vclimit")) {
             if (offset>=args.length) {
                 throw new UsageError("Option " + option +

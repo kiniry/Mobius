@@ -409,7 +409,7 @@ public class TagConstants extends GeneratedTags
         }
 
         String s = toString(tag);
-        //@ assume toString.length > 0;
+        //@ assume s.length() > 0;
         if (s.charAt(0) == '\\') {
             s = s.substring(1);
         }

@@ -59,9 +59,9 @@ public final class Translate
      * while still having the same set of targets.  escjava.Main is currently using
      * this trick as a kludge to compute the syntactic targets upper bound.
      */
-    //@ @require rd.body != null;
-    public GuardedCmd trBody(RoutineDecl /*@ non_null */ rd,
-                             FindContributors /*@ non_null */ scope,
+    //@ requires rd.body != null;
+    public GuardedCmd trBody(/*@ non_null */ RoutineDecl rd,
+                             /*@ non_null */ FindContributors scope,
                              Hashtable premap,
                              Set predictedSynTargs,
                              Translate inlineParent,
@@ -221,7 +221,7 @@ public final class Translate
      * Auxiliary routine used by trBody to translate the body of a constructor, as
      * described in ESCJ 16, section 8.
      */
-    //@ @requires cd.body != null;
+    //@ requires cd.body != null;
     private void trConstructorBody(/*@ non_null */ ConstructorDecl cd,
 				   Hashtable premap) {
 	// assume !isAllocated(objectToBeConstructed, alloc);
@@ -564,7 +564,7 @@ public final class Translate
      *
      * (This partially handles ESCJ 23b, case 4.)
      */
-    //@ @requires (* v accesses a special variable. *)
+    //@ requires (* v accesses a special variable. *);
     private VariableAccess adorn(VariableAccess v) {
 	Assert.precondition(v.decl.locId == UniqName.specialVariable);
 
@@ -582,7 +582,7 @@ public final class Translate
      *
      * (This partially handles ESCJ 23b, case 13.)
      */
-    //@ @requires (* v accesses a normal Java variable. *)
+    //@ requires (* v accesses a normal Java variable. *);
     private VariableAccess initadorn(/*@ non_null */ LocalVarDecl d) {
 	Identifier idn = Identifier.intern(d.id + "@init");
 
@@ -3612,9 +3612,10 @@ public final class Translate
     }
 
     private void modifiesCheckArray(Expr array, Expr arrayIndex, int loc) {
-	modifiesCheckArray(array,arrayIndex,loc,Location.NULL);
+	modifiesCheckArray(array,arrayIndex,loc,Location.NULL,null);
     }
-    private void modifiesCheckArray(Expr array, Expr arrayIndex, int loc, int locdecl) {
+    private void modifiesCheckArray(Expr array, Expr arrayIndex, int loc, int locdecl,
+		Expr callee_tpred) {
 	// FIXME - I don't think this handles this and super that are not the
 	// prefix.
 	if (!issueCautions) return;
@@ -3632,7 +3633,8 @@ public final class Translate
 	//		fields must have the same object designator
 	//		arrays must have the same array expression and same index
 	ExprVec ev = ExprVec.make(10);
-	addAllocExpression(ev,array);
+	addAllocExpression(ev,array); 
+	if (callee_tpred != null) ev.addElement(GC.not(callee_tpred));
 	ModifiesIterator caller_iterator = new ModifiesIterator(rdCurrent);
 	while (caller_iterator.hasNext()) {
 	    Object ex = caller_iterator.next();
@@ -3640,7 +3642,6 @@ public final class Translate
 	    Expr caller_tpred = null;
 	    if (!isTrueLiteral(caller_pred)) caller_tpred = 
 			modTranslate(caller_pred,true,null);
-	    Expr disjunct = null;
 	    if (ex instanceof FieldAccess) {
 	    } else if (ex instanceof FieldDecl) {
 	    } else if (ex instanceof ArrayRefExpr) {
@@ -3653,20 +3654,13 @@ public final class Translate
 		    ao = GC.nary(TagConstants.REFEQ,array,ao);
 		    ai = GC.nary(TagConstants.INTEGRALEQ,arrayIndex,ai);
 		    ao = GC.and(ao,ai);
-		    if (caller_tpred != null) {
-			ao = GC.and(ao, caller_tpred);
-		    }
-		    disjunct = ao;
+		    addTImplication(ev,ao,callee_tpred,caller_tpred);
 		}
 	    } else if (ex instanceof NothingExpr) {
 		//System.out.println("MATCHING AGAINST NOTHING " );
 	    } else if (ex instanceof EverythingExpr) {
-		if (caller_tpred == null) {
-		    //System.out.println("TRIVIAL PERMISSION - EVERYTHING");
-		    return;
-		}
 		//System.out.println("MATCHING AGAINST EVERYTHING " );
-		disjunct = caller_tpred;
+		if (addTImplication(ev,callee_tpred,caller_tpred)) return;
 		
 	    } else if (ex instanceof ArrayRangeRefExpr) {
 		if (array != null) {
@@ -3685,15 +3679,12 @@ public final class Translate
 		    al = al == null ? ah : ah == null ? al :
 			    GC.and(al,ah);
 		    ao = al == null ? ao : GC.and(ao,al);
-		    if (caller_tpred != null) ao = GC.and(ao,caller_tpred);
-		    disjunct = ao;
+		    addTImplication(ev,ao,callee_tpred,caller_tpred);
 		}
 	    } else if (ex instanceof WildRefExpr) {
 	    } else {
 		System.out.println("COMPARE TO " + ex.getClass());
 	    }
-	    // System.out.println(EscPrettyPrint.inst.toString(disjunct));
-	    if (disjunct != null) ev.addElement(disjunct);
 	}
 	modChecksComplete(ev,loc,locdecl);
     }
@@ -3823,7 +3814,7 @@ public final class Translate
 	    } else if (ex instanceof ArrayRefExpr) {
 		Expr array= modTranslate(((ArrayRefExpr)ex).array, false,  eod, args );
 		Expr index= modTranslate(((ArrayRefExpr)ex).index, false,  eod, args );
-		modifiesCheckArray(array,index,loccall,locdecl);
+		modifiesCheckArray(array,index,loccall,locdecl,callee_tpred);
 	    } else if (ex instanceof WildRefExpr) {
 		ObjectDesignator odd = ((WildRefExpr)ex).od;
 		Expr e1 = null;

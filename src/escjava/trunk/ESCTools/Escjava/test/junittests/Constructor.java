@@ -1,11 +1,11 @@
 // Tests a constructor spec
-// FIXME - add a modifies this.* when supported.
+
 
 public class Constructor {
 
 	/*@
 		requires k==0;
-		modifies j,k;
+		modifies j,k,this.*;
 		ensures j == i;
 		ensures k == 1;
 		callable m();

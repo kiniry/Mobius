@@ -8,6 +8,7 @@ ESCJAVA = ${ESCTOOLS_ROOT}/Escjava/escj -nowarn Deadlock -verboseTrace
 _CLASSPATH = $(call canonicalize,${ESCJAVA_CLASSPATH}:${JUNIT_UTILS_PATH}:.)
 _TMP = $(call canonicalize,/tmp)
 _SIMP = $(call canonicalize,${ESCJ_SIMPLIFY})
+_SPECS = $(call canonicalize,${ESC_SPECS})
 
 # Used to invoke text-based JUnit tests
 export JUNIT = ${JAVA} -Xmx256M -classpath "${_CLASSPATH}" \
@@ -16,11 +17,6 @@ export JUNIT = ${JAVA} -Xmx256M -classpath "${_CLASSPATH}" \
 # Used to invoke GUI-based JUnit tests
 export JUNITSW = $(JAVA) -Xmx256M -classpath "${_CLASSPATH}" \
 	-Djava.io.tmpdir=${_TMP} -Dsimplify=${_SIMP} junit.swingui.TestRunner
-
-# The default is to run tests without any spec files.  This is to keep them
-# robust against changes in specs.  You can adjust this by adding 
-# explicit command-line settings in any particular test.
-export ESC_SPECS = $(call canonicalize,../../../specs)
 
 ##############################################################################
 .PHONY: buildtests
@@ -32,12 +28,17 @@ buildtests:
 
 .PHONY: test runtests
 test runtests: buildtests
+	@echo TESTING Escjava: junittests
 	$(MAKE) skips
 	$(MAKE) dotests
 
 .PHONY: dotests
 dotests: lists
 	$(MAKE) notjunittests
+	$(MAKE) junittests
+
+.PHONY: junittests
+junittests:
 	$(JUNIT) TestSuite
 
 .PHONY: dotests-nolist
@@ -60,7 +61,7 @@ ifdef COMSPEC
 	@touch .canonicalized
 endif
 
-ALWAYSFLAGS = -nowarn Deadlock -verboseTrace -testMode -classpath .:${ESC_SPECS}
+ALWAYSFLAGS = -nowarn Deadlock -verboseTrace -testMode -classpath .:${_SPECS}
 DEFAULTFLAGS = " "
 
 ## This lists files without .java suffixes that need to be added to the

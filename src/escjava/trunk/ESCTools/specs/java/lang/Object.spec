@@ -10,7 +10,6 @@ public class Object {
      * clauses.
      */
     //@ public non_null model JMLDataGroup objectState;
-    //@ model public class JMLDataGroup {}
 
     /**
      ** The Object that has a field pointing to this Object.

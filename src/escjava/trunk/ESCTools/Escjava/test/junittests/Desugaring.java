@@ -1,5 +1,5 @@
 // Tests the desugaring of method specs
-//#FLAGS: -showDesugaredSpecs
+//#FLAGS: -showDesugaredSpecs -specs ../../../specs
 public class Desugaring  extends JJ {
 	boolean p,q,r,s,t;
 

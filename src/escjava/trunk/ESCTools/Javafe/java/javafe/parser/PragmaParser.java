@@ -52,7 +52,7 @@ public interface PragmaParser
      */
 
     //@ requires in != null
-    void restart(CorrelatedReader in, boolean eolComment);
+    void restart(/*@ non_null */ CorrelatedReader in, boolean eolComment);
 
 
     /**
@@ -71,7 +71,7 @@ public interface PragmaParser
      */
 
     //@ requires destination != null
-    boolean getNextPragma(Token destination);
+    boolean getNextPragma(/*@ non_null */ Token destination);
 
 
     /**

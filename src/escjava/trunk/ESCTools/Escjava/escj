@@ -152,9 +152,9 @@ if ( ! $?CLASSPATH ) setenv CLASSPATH .
 
 if ( ! $?ESC_SPECS ) then
 	if ( $?ESCTOOLS_RELEASE ) then
-		setenv ESC_SPECS  $ESCTOOLS_RELEASE/specs
+		setenv ESC_SPECS  $ESCTOOLS_RELEASE/jmlspecs.jar
 	else
-		setenv ESC_SPECS  $ESCTOOLS_ROOT/specs
+		setenv ESC_SPECS  $ESCTOOLS_ROOT/jmlspecs.jar
 	endif
 endif
 
@@ -207,9 +207,8 @@ endif
 
 # ESC/Java's class and spec path.
 if ( $?COMSPEC ) then 
-    setenv ESC_CLASS_SPEC_PATH `cygpath -p -m ${CLASSPATH}:${ESC_SPECS}`
-else
-    setenv ESC_CLASS_SPEC_PATH ${CLASSPATH}:${ESC_SPECS}
+    setenv CLASSPATH `cygpath -p -m ${CLASSPATH}`
+    setenv ESC_SPECS `cygpath -p -m ${ESC_SPECS}`
 endif
 
 if ( $?ESCJ_VERBOSE ) then
@@ -226,7 +225,8 @@ if ( $?ESCJ_VERBOSE ) then
     echo "  -classpath ${ESC_CLASSPATH}";
     echo "  escjava.Main";
     echo "  " ${JBIN} ;
-    echo "  -classpath ${ESC_CLASS_SPEC_PATH}";
+    echo "  -classpath ${CLASSPATH}";
+    echo "  -specs ${ESC_SPECS}";
     echo "  ${ESCJ_STDARGS}";
     echo "  $*";
     echo "=================================================================="
@@ -234,4 +234,4 @@ endif
 
 ${JAVA} ${JAVA_VM_FLAGS} -Dsimplify=${ESCJ_SIMPLIFY} \
     -classpath ${ESC_CLASSPATH} escjava.Main \
-    ${JBIN} -classpath ${ESC_CLASS_SPEC_PATH} ${ESCJ_STDARGS} $*
+    ${JBIN} -classpath ${CLASSPATH} -specs ${ESC_SPECS} ${ESCJ_STDARGS} $*

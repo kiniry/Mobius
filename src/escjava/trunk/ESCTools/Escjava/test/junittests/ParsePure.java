@@ -1,6 +1,7 @@
+//#FLAGS: -quiet -classpath .
+// Tests inheritance of purity
 //@ pure
 public class ParsePure {
-
 	//@ pure model int m() {}
 	//@ public pure model int m1() {}
 	//@ pure public model int m2() {}
@@ -11,6 +12,7 @@ public class ParsePure {
 	//@ model public pure int n2();
 	//@ model pure public int n3();
 
+	//@ modifies \everything;
 	//@ pure
 	public ParsePure() {}
 
@@ -22,9 +24,13 @@ public class ParsePure {
 
 class A extends B implements C,E {
 
+	//@ also modifies \everything; // ERROR
 	public void a() {}
+	//@ also modifies \everything; // ERROR
 	public void b() {}
+	//@ also modifies \everything; // ERROR
 	public void c() {}
+	//@ also modifies \everything;  // ERROR
 	public void d() {}
 }
 
@@ -35,6 +41,9 @@ class B extends D {
 
 //@ pure
 class D {
+	//@ modifies \everything;
+	D();
+
 	public void d() {}
 }
 

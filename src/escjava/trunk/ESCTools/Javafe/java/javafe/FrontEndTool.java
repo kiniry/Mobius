@@ -51,7 +51,9 @@ public abstract class FrontEndTool extends Tool {
      * Also initializes PrettyPrint.inst and TypeCheck.inst to their
      * default front end values.
      */
-    public void setup() {
+    protected String compositeSourcePath;
+    protected String compositeClassPath;
+    public void setupPaths() {
 
 	String classPath = options.userPath;
 	if (classPath==null)
@@ -71,14 +73,20 @@ public abstract class FrontEndTool extends Tool {
 	    }
 	    classPath += sys;
 	}
+	compositeSourcePath = sourcePath;
+	compositeClassPath = classPath;
+    }
 
-	Info.out("[Full classpath is " + classPath + "]");
-	Info.out("[Full sourcepath is " + sourcePath + "]");
+    public void setup() {
+	setupPaths();
+	Info.out("[Full classpath is " + compositeClassPath + "]");
+	Info.out("[Full sourcepath is " + compositeSourcePath + "]");
 
 	// It is ok if sourcePath is null; it then shares a database of the
 	// contents of the directory path with classpath, rather than 
 	// creating a separate, identical database.
-	OutsideEnv.init(makeStandardTypeReader(classPath, sourcePath,
+	OutsideEnv.init(makeStandardTypeReader(compositeClassPath, 
+					       compositeSourcePath,
 					       makePragmaParser()));
 
 	PrettyPrint.inst = makePrettyPrint();

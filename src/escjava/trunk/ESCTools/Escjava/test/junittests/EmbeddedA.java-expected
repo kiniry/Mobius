@@ -12,8 +12,10 @@ EmbeddedA.java:26: Error: Pragma in javadoc comment is not correctly terminated 
         <JML>
         ^
   Prover started:TIME
+    [TIME]
 
 EmbeddedA ...
+    [TIME]
 
 EmbeddedA: m() ...
     [TIME]  passed immediately

@@ -37,6 +37,7 @@ test_and_clean: test clean
 
 test_escjava: CLASSPATH = $(call canonicalize,.:${ESCJAVA_CLASSPATH}:${SYSTEM_SPECS})
 test_escjava:
+	@echo "TESTING Escjava: test_escjava"
 ifdef ESCTOOLS_RELEASE
 	env ESCTOOLS_RELEASE=$(ESCTOOLS_RELEASE) \
 	env ESC_CLASSPATH=$(call canonicalize,${ESCJAVA_ROOT}/classfiles:${ESCJAVA_ROOT}/../Javafe/classfiles) \
@@ -60,7 +61,7 @@ temp:
 CD_AND_JAVA = cd $(PARSER_TEST_DIR); $(JAVA) -classpath $(call canonicalize,$(ESCJAVA_CLASSPATH)) $(PARSER_TEST_PACKAGE)
 
 test_lexer: compile_escjava_parser_test_programs
-	@echo "test_lexer: "
+	@echo "TESTING Escjava: test_lexer"
 	$(CD_AND_JAVA).TestLex GoodPragmas.j | tee GoodPragmas.out | ${DIFF} - GoodPragmas.ans
 	$(CD_AND_JAVA).TestLex GoodSpecExpr.j | tee GoodSpecExpr.out | ${DIFF} - GoodSpecExpr.ans
 	$(CD_AND_JAVA).TestLex GoodJmlPragmas.j | tee GoodJmlPragmas.out | ${DIFF} - GoodJmlPragmas.ans
@@ -69,11 +70,13 @@ test_lexer: compile_escjava_parser_test_programs
 	$(CD_AND_JAVA).TestLex lookahead GoodJmlPragmas.j | tee GoodJmlPragmas-lookahead.out | ${DIFF} - GoodJmlPragmas.ans
 
 test_parser: compile_escjava_parser_test_programs
+	@echo "TESTING Escjava: test_parser"
 	$(CD_AND_JAVA).TestEscPragmaParser print TypeDeclElemPragmas1.java | \
 		tee TypeDeclElemPragmas1.out | \
 		${DIFF} - TypeDeclElemPragmas1.ans
 
 test_parser_idempotence: compile_escjava_parser_test_programs
+	@echo "TESTING Escjava: test_parser_idempotence"
 	$(CD_AND_JAVA).TestEscPragmaParser progress check idempotence \
 		*.java ../../../../java/escjava/ast/*.java
 

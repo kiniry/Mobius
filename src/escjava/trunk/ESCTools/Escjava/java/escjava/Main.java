@@ -199,6 +199,20 @@ public class Main extends javafe.SrcTool
                 (options().testMode?"VERSION":version));
     }
 
+    public void setupPaths() {
+	super.setupPaths();
+	if (options().specspath == null) return;
+	if (compositeSourcePath == null) {
+		compositeClassPath += 
+			System.getProperty("path.separator")
+		    +   options().specspath;
+	} else {
+		compositeSourcePath += 
+			System.getProperty("path.separator")
+		    +   options().specspath;
+	}
+    }
+
     /**
      * Hook for any work needed before <code>handleCU</code> is called
      * on each <code>CompilationUnit</code> to process them.

@@ -14,7 +14,7 @@ public class Constraint {
 		++i;
 	} // ERROR
 
-	//@ modifies i;
+	//@ modifies i, this.*;
 	public Constraint() {} // OK
 }
 

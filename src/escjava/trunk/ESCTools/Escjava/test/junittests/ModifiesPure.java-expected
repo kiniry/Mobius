@@ -1,33 +1,24 @@
 ESC/Java version VERSION
   Prover started:TIME
+    [TIME]
 
 ModifiesPure ...
-ModifiesPure.java:11: Error: A pure method may not have an assignable clause
-        //@     assignable i;
+ModifiesPure.java:7: Error: A pure method may not have a modifies clause
+        //@ modifies i;                 // WARNING
+            ^
+ModifiesPure.java:12: Error: A pure method may not have a modifies clause
+        //@     assignable i;           // WARNING
                 ^
-
-ModifiesPure: m() ...
-    [TIME]  passed immediately
-
-ModifiesPure: n() ...
-    [TIME]  passed immediately
-
-ModifiesPure: ModifiesPure() ...
-    [TIME]  passed
-  [TIME total]
+Caution: Turning off extended static checking due to type error(s)
+  [TIME total] (aborted)
 
 ModifiesPureA ...
-ModifiesPure.java:29: Error: A pure method may not have an assignable clause
-        //@     assignable i;
+ModifiesPure.java:24: Error: A pure method may not have a modifies clause
+        //@ modifies i;                 // WARNING
+            ^
+ModifiesPure.java:30: Error: A pure method may not have a modifies clause
+        //@     assignable i;           // WARNING
                 ^
-
-ModifiesPureA: m() ...
-    [TIME]  passed immediately
-
-ModifiesPureA: n() ...
-    [TIME]  passed immediately
-
-ModifiesPureA: ModifiesPureA() ...
-    [TIME]  passed
-  [TIME total]
-2 errors
+  [TIME total] (aborted)
+1 caution
+4 errors
