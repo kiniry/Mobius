@@ -1,5 +1,46 @@
 2005-03-29  Joseph Kiniry <joseph.kiniry@ucd.ie>
 
+	* docs/escjava.css:
+	* docs/ns4_toxins.css:
+	* docs/overview.html:
+	New initial stylesheets and overview HTML file for Javadocs and
+	JMLDocs.
+
+	* specs/java/util/SortedMap.spec: Fixed parenthesization problem.
+
+	* Escjava/Makefile:
+	* Escjava/test/jdktests/Makefile:
+	* Escjava/test/junittests/Makefile:
+	* Javafe/test/javafe/parser/test/Makefile:
+	* Javafe/test/javafe/test/fe/Makefile:
+	* Makefile:
+	* Makefile.defs:
+	* papers/Makefile:
+	* slides/ETAPSTutorial/Makefile:
+	* slides/Makefile:
+	Updates for new 2.0a9 release.  Primary change to build system is
+	moving the jar files into a jars subdirectory, refactoring .PHONY
+	targets to make the Makefile more readable, testing rewritten release
+	targets for all the changes of the past few months, building Javadocs
+	and including with patch release, and including papers, slides, and
+	new booklets in binary release.
+
+	* Escjava/test/jdktests/.cvsignore:
+	* docs/Escjava2-Extending/Escjava2-Extending.texinfo:
+	* docs/Escjava2-ImplementationNotes/Escjava2-ImplementationNotes.texinfo:
+	* docs/Escjava2-Logics/Escjava2-Logics.texinfo:
+	* docs/Escjava2-Provers/Escjava2-Provers.texinfo:
+	* papers/jml_homework.texinfo:
+	Updates for new 2.0a9 release.
+
+	* slides/ETAPSTutorial/PPRerik.sty:
+	Convenience copy for easy slide building.
+
+	* Makefile, Makefile.defs:
+	Updates for ETAPS (2.0a9) release and merge with work at home.
+
+	* README.first, ChangeLog: Update for ETAPS (2.0a9) release.
+
 	* slides/ETAPSTutorial/.cvsignore:
 	Prep-work for release.
 
@@ -651,57 +692,6 @@
 	* Escjava/test/escjava/parser/test/GoodJmlPragmas.j:
 	Added initial Universe type system keywords '\peer', '\rep', and
 	'readonly' to good JML pragmas test.
-
-	* Escjava/escj:
-	Quoted PWD use as suggested by user to make script more robust to
-	various shells and OSes.
-
-	* Escjava/Makefile:
-	Added new rule to test_escjava_parser rule to ensure Javafe parser
-	test classes are built.
-
-	* Makefile.defs:
-	Added switch to diff to ignore whitespace differences because some of
-	our tests have answers written with Windows EOLs and babysitting such
-	to keep UNIX EOLs is too much trouble.
-
-2005-02-28  Joseph Kiniry <joseph.kiniry@ucd.ie>
-
-	* Javafe/java/javafe/Options.java:
-	Put back in verbose flag; everything seems to be working fine with
-	"escj -h" and "escj -v -h".
-
-	* Escjava/java/escjava/parser/EscPragmaParser.java:
-	Added Universe type system keywords '\peer', '\rep', and '\readonly'
-	to AST as SimpleModifierPragmas.
-
-	Also reformatted use of blocks in case statements for consistency
-	because the use of these constructs can introduce subtle bugs and if
-	they are syntactically uniform they are easier to see and understand.
-
-	* Escjava/java/escjava/ast/EscPrettyPrint.java:
-	* Escjava/java/escjava/ast/TagConstants.java:
-	* Escjava/java/escjava/ast/hierarchy.j:
-	Added Universe type system keywords '\peer', '\rep', and '\readonly'
-	to AST as SimpleModifierPragmas.
-
-	* Escjava/java/escjava/parser/EscPragmaLex.java:
-	* Javafe/java/javafe/FrontEndTool.java:
-	* Javafe/java/javafe/Tool.java:
-	Syntactic reformatting and some new comments.
-
-	* Escjava/test/escjava/test/Makefile:
-	Added a CD_AND_JAVA_DEBUG variable for running front-end tests with a
-	debugger.
-
-	* Escjava/test/escjava/parser/test/TestLex.java:
-	Trivial reformatting for better IDE class parsing; class starting '{'
-	in column 0 is optimized in Emacs, e.g..
-
-	* Escjava/test/escjava/parser/test/GoodJmlPragmas.ans:
-	* Escjava/test/escjava/parser/test/GoodJmlPragmas.j:
-	Added initial Universe type system keywords '\peer', '\rep', and
-	'\readonly' to good JML pragmas test.
 
 	* Escjava/escj:
 	Quoted PWD use as suggested by user to make script more robust to
