@@ -13,6 +13,8 @@ import javafe.util.Location;
 import javafe.util.Assert;
 import javafe.util.ErrorSet;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * <code>OutsideEnv</code> implements the top-level environment
@@ -333,7 +335,17 @@ public final class OutsideEnv {
 	return cu;
     }
 
-
+    /** Adds all relevant files from the given package; 'relevant' is defined
+	by the 'findFiles' method of the current reader.
+    */
+    //@ requires pname != null;
+    public static void addSources(String[] pname) {
+	ArrayList a = reader.findFiles(pname);
+	Iterator i = a.iterator();
+	while (i.hasNext()) {
+	    addSource((GenericFile)i.next());
+	}
+    }
     /**
      * Attempt to add the package-member types contained in a named
      * source file to the package-member-types environment, returning
