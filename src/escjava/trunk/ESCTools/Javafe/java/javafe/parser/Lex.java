@@ -266,7 +266,7 @@ public class Lex extends Token
 
     protected final TokenQueue lookaheadq = new TokenQueue();
 
-    protected /*@ non_null @*/ LexicalPragmaVec lexicalPragmas;
+    public /*@ non_null @*/ LexicalPragmaVec lexicalPragmas;
 
     //@ invariant inPragma ==> pragmaParser != null
     protected PragmaParser pragmaParser;
