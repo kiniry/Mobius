@@ -3,22 +3,30 @@
 class FormalModifiers
 {
    void foo(String x /*@ non_null */, Object[] z /*@ non_null */, int[] q /*@ non_null */ /*@ non_null */)
-    /*@ requires (/*boolean*/ (/*boolean*/ (/*boolean*/ (\lblneg NonNull:7.26 (/*boolean*/ (/*java.lang.String*/ x:7.21) != (/*null*/ null)))) && (/*boolean*/ (\lblneg NonNull:8.21 (/*boolean*/ (/*java.lang.Object[]*/ z:8.14) != (/*null*/ null))))) && (/*boolean*/ (\lblneg NonNull:9.18 (/*boolean*/ (/*int[]*/ q:9.13) != (/*null*/ null))))); */ 
+    /*@ requires (/*boolean*/ (/*boolean*/ (/*boolean*/ (\lblneg NonNull:7.26 (/*boolean*/ (/*java.lang.String*/ x:7.21) != (/*null*/ null)))) && (/*boolean*/ (\lblneg NonNull:8.21 (/*boolean*/ (/*java.lang.Object[]*/ z:8.14) != (/*null*/ null))))) && (/*boolean*/ (\lblneg NonNull:9.18 (/*boolean*/ (/*int[]*/ q:9.13) != (/*null*/ null))))); */
+    /*@ modifies (/*UNAVAILABLE*/ \nothing) if (/*boolean*/ \old((/*boolean*/ (/*boolean*/ (/*boolean*/ (/*java.lang.String*/ x:7.21) != (/*null*/ null)) && (/*boolean*/ (/*java.lang.Object[]*/ z:8.14) != (/*null*/ null))) && (/*boolean*/ (/*int[]*/ q:9.13) != (/*null*/ null))))); */
+    /*@ pure */ 
    {
    }
 
    void bar(String a /*@ non_null */ /*@ non_null */)
-    /*@ requires (/*boolean*/ (\lblneg NonNull:11.17 (/*boolean*/ (/*java.lang.String*/ a:11.35) != (/*null*/ null)))); */ 
+    /*@ requires (/*boolean*/ (\lblneg NonNull:11.17 (/*boolean*/ (/*java.lang.String*/ a:11.35) != (/*null*/ null)))); */
+    /*@ modifies (/*UNAVAILABLE*/ \nothing) if (/*boolean*/ \old((/*boolean*/ (/*java.lang.String*/ a:11.35) != (/*null*/ null)))); */
+    /*@ pure */ 
    {
    }
 
    void b1(int b)
-    /*@ requires (/*boolean*/ (\lblneg Pre (/*boolean*/ true))); */ 
+    /*@ requires (/*boolean*/ true); */
+    /*@ modifies (/*UNAVAILABLE*/ \nothing) if (/*boolean*/ true); */
+    /*@ pure */ 
    {
    }
 
    void b2(String b /*@ non_null */)
-    /*@ requires (/*boolean*/ (\lblneg NonNull:14.16 (/*boolean*/ (/*java.lang.String*/ b:14.34) != (/*null*/ null)))); */ 
+    /*@ requires (/*boolean*/ (\lblneg NonNull:15.16 (/*boolean*/ (/*java.lang.String*/ b:15.34) != (/*null*/ null)))); */
+    /*@ modifies (/*UNAVAILABLE*/ \nothing) if (/*boolean*/ \old((/*boolean*/ (/*java.lang.String*/ b:15.34) != (/*null*/ null)))); */
+    /*@ pure */ 
    {
    }
 

@@ -6,7 +6,7 @@
 // First test writable_if on ghost fields...
 class WritableIf {
     //@ ghost public Object mono //@ writable_if mono==null
-
+    //@ pure
     WritableIf() {
 	Object newthing = new Object();
 
@@ -14,7 +14,7 @@ class WritableIf {
 	//@ set mono = newthing;       // ok, 1st time
 	//@ set mono = newthing;       // error, 2nd time
     }
-
+    //@ pure
     WritableIf(int x) {
 	Object newthing = new Object();
 
@@ -28,14 +28,14 @@ class WritableIf {
 class NonNull {
     //@ ghost public /*@non_null*/ Object foo
     //@ ghost public static /*@non_null*/ Object s
-
+    //@ pure
     void foo(/*@non_null*/ Object x) {
 	//@ assert foo!=null
 	//@ set foo = x        // ok since x!=null
 	//@ set foo = null     // error
 	//@ set foo = foo      // ok since foo is known to be non-null
     }
-
+    //@ pure
     void foo2(/*@non_null*/ Object x) {
 	//@ assert s!=null
 	//@ set s = x        // ok since x!=null
@@ -50,7 +50,7 @@ class MonitoredBy {
     public Object mutex;
 
     //@ ghost public Object x //@ monitored_by mutex
-
+    //@ pure
     void foo(Object foo) {
 	//@ assert x==x        // ok: annotations don't "read" variables...
 	//@ set x = foo         // error
