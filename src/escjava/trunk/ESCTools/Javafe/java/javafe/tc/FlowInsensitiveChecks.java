@@ -1354,10 +1354,11 @@ public class FlowInsensitiveChecks
                 Assert.notNull(av.name);
                 Expr resolved = env.disambiguateExprName(av.name);
                 if(resolved == null) {
-                    if (av.name.size() == 1)
+                    if (av.name.size() == 1) {
                         ErrorSet.error(av.getStartLoc(),
                                        "Undefined variable '" + av.name.printName() + "'");
-                    else ErrorSet.error(av.getStartLoc(),
+			setType(x, Types.errorType);
+                    } else ErrorSet.error(av.getStartLoc(),
                                         "Cannot resolve variable access '"
                                         +av.name.printName()+"'");
                     return av;
@@ -1777,7 +1778,8 @@ public class FlowInsensitiveChecks
                                    "Left hand side of assignment operator "+
                                    "is not a location");
                 } else if(op == TagConstants.ASSIGN) {
-                    if(!assignmentConvertable(right, leftType))
+                    if(!assignmentConvertable(right, leftType) &&
+			!Types.isErrorType(getType(right)) && !Types.isErrorType(leftType))
                         ErrorSet.error(loc,
                                        "Value of type "+Types.printName(getType(right))
                                        +" cannot be assigned to location of type "
@@ -2024,18 +2026,23 @@ public class FlowInsensitiveChecks
                                           ASTNode ctxt, 
                                           Env env) {
         if(v != null)
-            for(int i=0; i<v.size(); i++)
-                checkModifierPragma(v.elementAt(i), ctxt, env);
+            for(int i=0; i<v.size(); i++) {
+		boolean remove =
+		    checkModifierPragma(v.elementAt(i), ctxt, env);
+		if (remove) v.removeElementAt(i--);
+	    }
     }
 
     /**
      * Hook to do additional processing on <code>Modifier</code>s.  The
      * <code>ASTNode</code> is the parent of the <code>ModifierPragma</code>, and
      * <code>env</code> is the current environment.
+     * @return true if pragma should be deleted
      */
     //@ requires p != null && env != null
-    protected void checkModifierPragma(ModifierPragma p, ASTNode ctxt, Env env) {
+    protected boolean checkModifierPragma(ModifierPragma p, ASTNode ctxt, Env env) {
         // Assert.fail("Unexpected ModifierPragma");
+	return false;
     }
 
     //@ requires e != null && s != null
