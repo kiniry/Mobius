@@ -1,3 +1,64 @@
+2003-04-24  Joseph R. Kiniry  <kiniry@acm.org>
+
+	* Javafe/java/javafe/parser/Lex.java:
+	* Javafe/java/javafe/parser/ParseUtil.java:
+	Documentation and specification cleanup.
+
+	* Escjava/java/escjava/parser/EscPragmaParser.java:
+	Added support for JML keywords 'behavior', 'normal_behavior',
+	'exceptional_behavior', '\not_specified', 'pure', and 'instance'.
+	Updated grammar documentation for privacy modifiers and behavior
+	keywords.
+
+	* Escjava/test/escjava/parser/test/GoodJmlPragmas.j:
+	Added some comments to simple parse tests.  Added new tests for
+	behavior keywords and the '\not_specified' keyword.
+
+	* Escjava/java/escjava/ast/TagConstants.java:
+	Added JML keywords 'behavior', 'normal_behavior',
+	'exceptional_behavior', '\not_specified', 'pure', and 'instance'.
+
+	* Escjava/java/escjava/parser/EscPragmaLex.java:
+	Added support for lexing new JML keywords.
+
+	* Escjava/java/escjava/parser/EscPragmaParser.java:
+	Last changes to support JML "also" keyword.  Also converted DEFINED_IF
+	into READABLE_IF as per discussions on the JML and ESC/Java mailing
+	lists.
+
+	* Escjava/test/escjava/test/test1/Modifiers1.java:
+	* Escjava/test/escjava/test/test1/run:
+	* Escjava/java/escjava/ast/EscPrettyPrint.java:
+	* Escjava/java/escjava/ast/TagConstants.java:
+	* Escjava/java/escjava/backpred/FindContributors.java:
+	* Escjava/java/escjava/tc/FlowInsensitiveChecks.java:
+	* Escjava/java/escjava/translate/Translate.java:
+	* Escjava/java/escjava/ast/hierarchy.j:
+	DEFINED_IF becomes READABLE_IF
+
+	* Escjava/escj:
+	Added check for environmental variable ESC_REMOTE_DEBUG.  If this
+	variable is set when the escj script is run then the Java VM will be
+	passed arguments appropriate for setting up a debugging session
+	controlled via port 8000.
+
+	* Escjava/java/houdini/AnnotationGuesser.java:
+	defined_if becomes readable_if
+
+	* Escjava/test/escjava/parser/test/GoodJmlPragmas.ans:
+	* Escjava/test/escjava/parser/test/GoodJmlPragmas.j:
+	Added readable_if and writeable_if tests.
+
+	* Javafe/astgen/.cvsignore:
+	* Escjava/test/escjava/test/test*/.cvsignore:
+	Standard .cvsignore files to ignore tests' output and diffs.
+
+2003-04-21  David Cok  <cok@frontiernet.net>
+
+	* Escjava/java/escjava/parser/EscPragmaParser.java:
+	Skipping public/protected/private modifiers at the beginning of
+	pragmas - probably in more places than JML allows such modifiers.
+
 2003-04-16  Joseph R. Kiniry  <kiniry@acm.org>
 
 	* README.first:
@@ -5,7 +66,7 @@
 	test6).  Test1103 still fails; it is just a problem with the generated
 	'sources' file and relative paths.
 
-	* Many Java files:
+	* **/*.java:
 	Cleaned up documentation and formatting of many classes to more
 	closely conform to modern Java standards, use of Javadoc, etc.
 
@@ -44,47 +105,9 @@
 	deleting classfiles that cannot be built because we don't have their
 	source.
 
-2003-03-27  cok  <cok@kind.cs.kun.nl>
+2003-03-27  David Cok  <cok@frontiernet.net>
 
 	* Makefile: A top-level Makefile
-
-2003-03-11  Joseph R. Kiniry  <kiniry@acm.org>
-
-	* Escjava/java/escjava/parser/EscPragmaParser.java:
-	Continuing to add support for JML "also" keyword (JML_ALSO).  This
-	commit is simply some code cleanup, extending an invariant, and
-	beginning to drop in code to handle the ALSO case in the large
-	keyword/classifier switch.
-
-	* Simplify/simplify/test/test.out:
-	Our in-house-built Simpilfy outputs this new data.  It is unclear why
-	it is different from the pre-built shipped Simplify binary.
-
-	* Javafe/test/javafe/test/fe/sources:
-	Generated source list to be full absolute path.  I still need to add a
-	Makefile rule to automatically generate such.  This data is simply a
-	placeholder for now.
-
-	* Escjava/test/escjava/test/test1/Modifiers2.java:
-	* Escjava/test/escjava/test/test1/ans:
-	* Escjava/test/escjava/test/test25/MethodSpec.java:
-	* Escjava/test/escjava/test/test34/BogusInput.java:
-	* Escjava/test/escjava/test/test34/BogusSpec.java:
-	* Escjava/test/escjava/test/test34/BogusVisibility.java:
-	* Escjava/test/escjava/test/test37/Exsures.java:
-	* Escjava/test/escjava/test/test37/Exsures2.java:
-	* Escjava/test/escjava/test/test59/Typecheck.java:
-	* Escjava/test/escjava/test/test60/C.java:
-	* Escjava/test/escjava/test/test60/Typecheck.java:
-	* Escjava/test/escjava/test/test60/ans:
-	* Escjava/test/escjava/test/test60/out.raw:
-	Some initial outlines of new unit tests for extended JML support.
-
-	* Escjava/escj: Rewrote as a bash script.
-
-	* Escjava/Makefile:
-	Abstracting use of Java compiler and ensuring that -g is used during
-	compilation.
 
 2003-03-11  Joseph R. Kiniry  <kiniry@kind.cs.kun.nl>
 
