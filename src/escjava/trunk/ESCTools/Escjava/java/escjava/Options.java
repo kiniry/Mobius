@@ -152,6 +152,7 @@ public class Options extends javafe.SrcToolOptions {
     public boolean filterMethodSpecs = false;
 
     public Set routinesToCheck = null;  // null means "check everything"
+    public Set routinesToSkip = null;  // null means "skip nothing"
 
     // do the inlined constructor experiment?
     public boolean inlineConstructors = false;
@@ -446,6 +447,19 @@ public class Options extends javafe.SrcToolOptions {
 		routinesToCheck = new Set();
 	    }
 	    routinesToCheck.add(routine);
+	    return offset+1;
+        } else if (option.equals("-skip")) {
+	    // the argument to "-skip" is either a simple routine name or a fully
+	    // qualified routine name with signature, but we won't ever parse these
+	    if (offset == args.length) {
+                throw new UsageError("Option " + option +
+                                     " requires one argument");
+	    }
+	    String routine = args[offset].intern();
+	    if (routinesToSkip == null) {
+		routinesToSkip = new Set();
+	    }
+	    routinesToSkip.add(routine);
 	    return offset+1;
         } else if (option.equals("-routineIndirect")) {
 	    if (offset == args.length) {

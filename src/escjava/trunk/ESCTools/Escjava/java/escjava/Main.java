@@ -499,6 +499,11 @@ public class Main extends javafe.SrcTool
         String fullName = sig.toString() + "." + simpleName +
             TypeCheck.inst.getSignature(r);
         fullName = removeSpaces(fullName).intern();
+        if (options().routinesToSkip != null &&
+                (options().routinesToSkip.contains(simpleName) ||
+                options().routinesToSkip.contains(fullName))) {
+            return "skipped";
+	}
         if (options().routinesToCheck != null &&
                 !options().routinesToCheck.contains(simpleName) &&
                 !options().routinesToCheck.contains(fullName)) {
