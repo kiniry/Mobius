@@ -1,0 +1,1277 @@
+\input texinfo  @c -*-texinfo-*-
+@c %**start of header
+@setfilename Escjava2-ImplementationNotes.info
+@settitle Escjava-2 Implementation Notes
+@c @setchapternewpage odd
+@c %**end of header
+
+
+
+@comment ----- title and copyright pages
+@titlepage
+@title Escjava-2 Implementation Notes
+@subtitle VERY MUCH A PRELIMINARY, INCOMPLETE DRAFT
+
+@author by David R. Cok
+
+@sp 1
+
+
+@center July 2003
+
+
+@sp 2
+
+@b{Keywords:}  Behavioral interface specification, Java,
+JML, Escjava, ESC/Java, model-based specification, assertion,
+precondition, postcondition, frame.
+
+@b{2000 CR Categories:}
+D.2.1 [@i{Software Engineering}]
+        Requirements/Specifications --- languages, tools, theory,
+        Larch, Eiffel, JML, ESC/Java;
+D.2.4 [@i{Software Engineering}]
+        Software/Program Verification --- assertion checkers, class invariants,
+        formal methods, programming by contract;
+D.2.7 [@i{Software Engineering}]
+        Distribution and Maintenance --- documentation;
+F.3.1 [@i{Logics and Meanings of Programs}]
+        Specifying and Verifying and Reasoning about Programs ---
+                assertions, invariants, logics of programs,
+                pre- and post-conditions, specification techniques.
+
+@sp 1
+
+Copyright @copyright{} 2003 David R. Cok
+
+
+@sp 2
+
+@center cok@@frontiernet.net
+@end titlepage
+
+@contents
+
+@synindex vr cp
+@synindex fn cp
+@synindex ky cp
+@synindex tp cp
+
+@c node  Top, Introduction, (dir), (dir)
+
+@comment FIXME - the menu goes here
+
+
+@c ------ chapter Introduction --------
+@c node Introduction, Acknowledgements, Top, Top
+@c  node-name,  next,  previous,  up
+@chapter Introduction
+
+@c ------ section Motivation and Background --------
+@c node Motivation and Background, Acknowledgements, Top, Top
+@c  node-name,  next,  previous,  up
+@section Motivation and Background
+
+
+Escjava-2 extends the pioneering work on ESC/Java by a group at the Systems
+ Research Center at DEC, later Compaq, now HP. [@url{www.research.compaq.com}] 
+Esc/java parses 
+JML-like annotations in a Java program and warns, in a modular way, about
+annotations that may not be justified given the Java source of given
+classes and the specifications of other classes.  The tool works accurately and
+fast enough that is has been found to be a useful tool.
+Its usefulness is diminished by limitations in the kind of annotations that it can 
+parse and check and also in that its annotation language is similar to but 
+is neither a subset nor a superset of JML.
+
+The goal of the Escjava-2 work is to extend the use of Esc/java by
+@enumerate a
+@item updating the parser of Esc/java so that it is consistent with the current definition of JML;
+@item extending, where possible, the range of JML annotations that can be checked by Esc/java;
+@item packaging the updated tool so that it is more easily available to a 
+larger set of users,
+ consistent with the source code license provisions of the Esc/java source code.
+@end enumerate
+
+This document records the status of this implementation.  It is not intended to be a
+tutorial or a reference guide.  Rather it records the status of the features of JML:
+the status of their implementation in Escjava-2,
+the degree to which the annotation is
+logically checked, and any differences between Escjava-2 and either JML or Java.
+@itemize @bullet
+@item More detailed information on JML is available at the web site 
+@url{www.jmlspecs.org}; the details of the JML definition are published in the Preliminary Design of JML (Leavens, Baker, Ruby) and in the JML Reference Manual (Leavens, Poll, Clifton, Cheon, Ruby).
+@item Information on the original ESC/Java tool, 
+most of which still applies, is provided in ESC/Java User's Manual, SRC Technical note 2000-002 (Leino, Nelson, Saxe), available at @url{gatekeeper.dec.com/pub/DEC/SRC/technical-notes/SRC-2000-002.html}.
+@end itemize
+
+
+@c ------ section Acknowledgements --------
+@c node  Acknowledgements, ???, Top, Top
+@c  node-name,  next,  previous,  up
+@section Acknowledgements
+
+
+To date, the work on Escjava-2 has been carried out primarily by Joe Kiniry
+(@url{www.kindsoftware.com}) and David Cok.  Patrice Chalin and colleagues 
+have contributed particularly to the facilities for safe numeric reasoning. 
+Gary Leavens has provided guidance on the current and future state of JML.  
+K. Rustan M. Leino has provided advice with respect to the original ESC/Java.
+
+The work of producing Escjava-2 stands on the very much more considerable 
+effort of 
+the ESC/Java team (led by Leino at DEC SRC) in conceiving of and 
+producing ESC/Java, Simplify and related tools in the first place. 
+
+
+@c ------ section Dependencies and license restrictions --------
+@c node  Dependencies and license restrictions, ???, Top, Top
+@c  node-name,  next,  previous,  up
+@section Dependencies and license restrictions
+
+
+The Escjava-2 tool relies on the following software packages that are separately 
+available and may have their own license restrictions.
+@itemize @bullet
+
+@cindex ESC/Java
+@cindex Simplify
+@item The original source for ESC/Java, Simplify and related tools, available at 
+@url{www.research.compaq.com/downloads.html}.
+
+
+@cindex Mocha
+@item Part of the Mocha tool from UCBerkeley (optional), available at
+@url{www-cad.eecs.berkeley.edu/~mocha/download/j-mocha}.
+
+
+@cindex JUnit
+@item The testing framework JUnit version 3.8.1, available at 
+@url{www.junit.org}.
+
+
+@cindex JML
+@item Escjava-2 does not depend on the JML tool set, but it is useful to use the
+two in combination.  JML is available at @url{www.jmlspecs.org}.
+@end itemize
+
+
+@c ------ chapter Status of JML features --------
+@c node  Status of JML features, ???, Top, Top
+@c  node-name,  next,  previous,  up
+@chapter Status of JML features
+
+@section Error checking
+Escjava-2 will parse correctly formatted JML files, with the exceptions 
+described below.  
+JML files must be correct Java source with correctly formatted annotations, which
+appear to Java as comments.  Although Escjava-2 does some error reporting 
+during parsing,
+it does not report all parsing errors in either Java or JML, 
+nor does it necessarily 
+terminate normally if the input is not legal Java/JML.  There are a number of tools 
+supporting JML that can be used to check the well-formedness of the JML annotations
+in a file; a Java compiler can be used to check the format of the Java source code.
+
+The authors encourage any report of a legal Java/JML file that Escjava-2 will not 
+parse.  Furthermore, despite the caveat above, the authors do want Escjava-2 to be a
+useful tool; hence they are interested in examples of illegal Java/JML source code 
+that cause abnormal termination and in examples in which the absence of error 
+messages or the occurrence of an inappropriate error message is particularly
+misleading to the user.
+
+@cindex error messages
+@cindex fatal errors
+@cindex cautions
+@cindex warnings
+Escjava-2 continues ESC/Java's use of four levels of error messages:
+@itemize @bullet
+@item  @strong{fatal} errors are problems (usually invalid syntax) that prevent 
+Escjava from proceding further in parsing and checking files;
+@item  @strong{errors} indicate illegally formed input files, though processing may
+continue to find other errors or even to attempt static checking of the files 
+(errors or checks subsequent to the first problem may be erroneous as a result of
+earlier problems);
+@item  @strong{cautions} indicate situations that are not illegal, but may be
+misleading to the user - a common example is features that are parsed 
+but not checked;
+@item  @strong{warnings} indicate situations in which the static checking phase could
+not determine that annotation specifications were maintained, such as an inability
+to determine that an object reference is non-Null when it is dereferenced.
+@end itemize
+
+
+
+@cindex file names
+@cindex suffixes
+@section File naming
+- suffixes, finding files in the file system
+
+???
+
+
+@section Format of annotations
+
+@cindex format of annotations
+@cindex annotation markers
+@cindex comments, annotation
+@cindex @code{//@@}
+@cindex @code{/*@@}
+@cindex @code{/*+@@}
+@cindex @code{*/}
+@cindex @code{@@*/}
+@cindex @code{@@+*/}
+
+@itemize @bullet
+@item @strong{Comment format:} JML annotations are included in a Java program as 
+specially formatted comments.  
+In particular, JML annotations recognized by Escjava-2 are either
+@itemize @bullet
+
+@item single-line comments beginning with @code{//@@}, or
+
+@item multi-line comments enclosed between @code{/*@@} and either 
+@code{*/} or @code{@*/} [Escjava-2 allows multiple @@ symbols before
+the closing @code{*/}], or
+
+@cindex @code{<esc>}
+@cindex @code{<ESC>}
+@cindex @code{<jml>}
+@cindex @code{<JML>}
+
+@item annotations embedded in a javadoc comment between any of the 
+four pairs of markers
+@code{<esc>} and @code{</esc>}, 
+@code{<ESC>} and @code{</ESC>}, 
+@code{<jml>} and @code{</jml>}, or
+@code{<JML>} and @code{</JML>}.
+The original ESC/java only recognized the first pair.  These annotation pairs
+may not be nested, but there may be multiple annotations in sequence.  Escjava-2
+and JML do not restrict where in the javadoc comment an annotation may occur.
+However, javadoc requires the annotation to be
+a part of the textual description and to preceed any tag descriptions that are
+part of the comment.  The jmldoc tool allows multiple annotations to be intermixed
+with the tag descriptions.  Similarly, escjava-2 does not require the annotation
+to be enclosed between @code{<pre>} and @code{</pre>} tags;
+however, if you expect reasonable formatting in a javadoc produced HTML
+page, you will likely wish to do so.  The jmldoc tool does not require 
+@code{<pre>} and @code{</pre>} tags to produce good
+formatting.
+[ FIXME - JML requires <pre> and </pre> ]
+
+@end itemize
+Note that JML recognizes additional annotations in these forms:
+@itemize @bullet
+
+@item single-line comments beginning with @code{//+@@}  ;
+
+@item multi-line comments enclosed between @code{/*+@@} and either 
+@code{*/} or @code{@@*/} or @code{@@+*/}  ;
+
+@item annotations embedded in a javadoc comment between the markers
+@code{<pre><jml>} and @code{<\jml><\pre>}.
+JML also allows, @code{pre}, @code{jml}, and
+ @code{esc}  to be uppercase.
+[FIXME - any restrictions on the location within the javadoc comment???]
+
+@end itemize
+These latter forms are part of JML but not escjava to allow for syntax defined by
+JML but not recognized by escjava.  It is hoped that the result of this work on
+escjava-2 will diminish the need for the JML-only comments.  They may remain useful
+as a way to retain JML annotations that are not processed (though they could be)
+by Escjava-2.
+
+@item @strong{-parsePlus option:} The @code{-parsePlus} command-line option
+instructs Escjava-2 to parse all annotations recognized by JML.  This is used mainly
+in testing to find and attempt to process the JML-only annotations, but may be useful
+in other circumstances. [ FIXME - currently the jml annotations embedded in javadoc
+are not parsed using -parsePlus.]
+
+@item @strong{Initial '@' symbols in annotations:} Within a multi-line annotation,
+ a sequence of '@' symbols
+that follow whitespace at the beginning of a line are treated as white space.
+Within an annotation embedded in a Javadoc comment, a sequence of '*' symbols
+(but not '@' symbols)
+that follow whitespace at the beginning of a line are treated as white space.
+
+@item @strong{Splitting annotations across comments:} 
+ JML will correctly parse and process
+ annotations that are split across multiple comments (e.g. a multi-line annotation
+ in which each line begins with @code{//@@}).  Escjava-2 expects an annotation
+ to be entirely contained within one single- or multi-line comment.  The latter
+ behavior is 'correct' JML; however, the JML tools will correctly process and not
+ warn about multi-comment annotations. (FIXME - TBD)
+@item @strong{Multiple annotations per comment:} It is legal JML to include multiple
+annotations per comment; in fact it is common practice and good style to include
+many related annotations within one multi-line comment.  However, Escjava-2 currently
+may silently lose modifiers from the annotations other than the first.  This can be
+avoided by putting the JML keyword (e.g. model or ghost) first.
+@item @strong{Terminating semicolons:} JML requires annotations to be terminated by
+semicolons.  The original Esc/java did not.  The absence of semicolons is illegal
+JML, but is sometimes tolerated by Escjava-2. [ Warning for this ??? FIXME]
+@end itemize
+
+
+
+@section Compilation Unit annotations
+Compilation Unit annotations are placed prior to the declaration of any type within 
+a file.
+
+@subsection refine statements
+@itemize @bullet
+@item @strong{Description:} A JML refine statement indicates that the containing 
+compilation unit adds additional
+specifications to those contained in the referenced file.  If present, it must
+be located after any Java package statement and before any Java or model import 
+statements.
+It has the form
+@code{
+//@ refine "<I>filename</I>";
+}
+The given name must have the same name with a different suffix as the current file.
+[see the discussion on suffixes...] [Location of refine statement in CU - FIXME] [FIXME - this has changed... define the refinement sequence]
+
+
+@item @strong{Status:} The refine statement is implemented in escjava-2.
+
+@item @strong{Differences from JML or Java:} ... decribe differences....
+
+@end itemize
+
+@subsection model import statements
+@itemize @bullet
+@item @strong{Description:}
+A model import statement has the form
+@code{
+//@ model <I>java-import-statement</I>;
+}
+Note that simply including a Java import statement in an annotation is not legal JML
+(in otherwords, omitting the @strong{model} keyword).
+A model import statement may occur wherever a Java import statement may be placed.
+A model import statement introduces types that are used only by annotations.
+Annotations may also use types introduced by Java import statements.
+
+@item @strong{Status:}  Model import statements are fully implemented.
+
+@item @strong{Differences from JML or Java:}  The model import statements are parsed by 
+Escjava-2 as if they were Java import statements.  Thus they may introduce or resolve
+an ambiguity in class name resolution of names used in the Java source code in a
+compilation unit, or cause misinterpretation of a type name.
+If an ambiguity is introduced, the workaround is to add a type-specific model import
+statement.
+
+
+@item @strong{Comment:} Though legal, there is no point to a statement of the form
+@code{
+/*@ model @*/ import "<I>filename</I>";
+}
+This is equivalent to simply using a Java import statement.
+@end itemize
+
+
+
+@section Type modifiers
+These modifiers may appear (within an annotation) as one of the modifiers that
+may be part of the definition of a class or interface, preceeding the 
+@code{class} or @code{interface} keyword.
+@subsection pure
+@itemize @bullet
+@item @strong{Description:} The @code{pure} modifier, when applied to a class or
+interface, indicates that every method of the class or interface is @code{pure}.
+Thus, no method may modify variables other than those declared within the body
+of the routine.  Constructors may only modify the fields of the object.
+
+@item @strong{Status:} Parsed and fully implemented.
+
+@item @strong{Differences from JML or Java:} None.
+
+@end itemize
+
+
+@subsection Privacy modifiers
+@itemize @bullet
+@item @strong{Description:} description.... (including spec_publicc, spec_protected)
+
+@item @strong{Status:} status....
+
+@item @strong{Differences from JML or Java:} bugs...
+
+@end itemize
+
+
+@subsection weakly
+
+@strong{Status:}  (not present in Esc/java).
+
+@itemize @bullet
+@item @strong{Description:} This annotation is used to modify super classes and 
+super interfaces in a class
+or interface declaration.
+
+@item @strong{Status:} Parsed and ignored by Escjava-2.
+
+@item @strong{Differences from JML or Java:} Implements the JML specification.  This 
+feature is not present in ESc/java.
+
+@end itemize
+
+@subsection other Java modifiers
+@itemize @bullet
+@item @strong{Description:} All the other usual Java modifiers permitted on a class
+(final, static, ...???) 
+are permitted (outside of annotations)
+and have their usual meaning.
+
+@item @strong{Status:}All parsed and implemented. - which are they? is this correct?
+
+@item @strong{Differences from JML or Java:}None.
+
+@end itemize
+
+
+
+@section Annotations pertinent to a class or interface
+These annotations may appear anywhere a type declaration 
+within a class or interface may appear.  They define specification-only
+ghost or model fields of the type and specifications that apply to
+the whole object (not just individual methods).
+
+@subsection Ghost fields
+@itemize @bullet
+@item @strong{Description:}A ghost field is a field of the object that can hold a
+value or reference to an object, but is used only in specifications.  Its
+value is changed using the @code{set} annotation within the body of
+a method or constructor.  A ghost field may have an initializer, just as a 
+Java program field may, but the ghost field may be initialized in only one
+compilation unit of a refinement sequence.  A ghost field may have modifiers that
+a Java field declaration would have ( what are they??) as well as the JML
+modifiers @strong{non_null}, @strong{instance}.
+
+An interface may also declare ghost fields; these fields may be 
+referenced by annotations in the interface or its subtypes.
+  Such ghost fields are by default static,
+but may be modified by the JML modifier @code{instance}, in which case they are
+a field of every object that implements the interface.
+
+What about declarations in the middle of a refinement sequence that change the name
+resolution
+
+
+@item @strong{Status:}Ghost fields are completely supported, except for initializers, which are parsed but not handled by the verification logic.
+
+@item @strong{Differences from JML or Java:} Check that that rule about at most one
+initialization is actually checked/enforced/correct.  Check on the allegation that
+ghsot fields have a different scope than regular fields (in the JML/ESC differences
+document).  Check that ghost fields are inherited properly.  How about inherited 
+from interfaces.  Verify the behavior of instance fields. CHeck on initializations
+(FIXME) [Check that modifiers work.]
+
+@end itemize
+
+
+
+@subsection Model fields
+@itemize @bullet
+@item @strong{Description:} description....
+
+@item @strong{Status:} status....
+
+@item @strong{Differences from JML or Java:} bugs...
+
+@end itemize
+
+
+@subsection Model methods
+@itemize @bullet
+@item @strong{Description:} description....
+
+@item @strong{Status:} status....
+
+@item @strong{Differences from JML or Java:} bugs...
+
+@end itemize
+
+@subsection Model constructors
+@itemize @bullet
+@item @strong{Description:} description....
+
+@item @strong{Status:} status....
+
+@item @strong{Differences from JML or Java:} bugs...
+
+@end itemize
+
+@subsection model class and model interface
+@itemize @bullet
+@item @strong{Description:} description....
+
+@item @strong{Status:} status....
+
+@item @strong{Differences from JML or Java:} bugs...
+
+@end itemize
+
+
+@subsection initializer
+@itemize @bullet
+@item @strong{Description:} description....
+
+@item @strong{Status:} status....
+
+@item @strong{Differences from JML or Java:} bugs...
+
+@end itemize
+
+
+
+
+
+@subsection static_initializer
+@itemize @bullet
+@item @strong{Description:} description....
+
+@item @strong{Status:} status....
+
+@item @strong{Differences from JML or Java:} bugs...
+
+@end itemize
+
+@section Annotation clauses for a class or interface
+
+@subsection invariant, invariant_redundantly
+@itemize @bullet
+@item @strong{Description:} description....
+
+@item @strong{Status:} status....
+
+@item @strong{Differences from JML or Java:} bugs...
+
+@end itemize
+
+@subsection constraint, constraint_redundantly
+@itemize @bullet
+@item @strong{Description:} description....
+
+@item @strong{Status:} status....
+
+@item @strong{Differences from JML or Java:} bugs...
+
+@end itemize
+
+@subsection represents, represents_redundantly
+@itemize @bullet
+@item @strong{Description:} description....
+
+@item @strong{Status:} status....
+
+@item @strong{Differences from JML or Java:} bugs...
+
+@end itemize
+
+@subsection depends, depends_redundantly
+@itemize @bullet
+@item @strong{Description:} The @strong{depends} clause is obsolete; it is replaced by
+@strong{in} and @strong{maps},
+
+@item @strong{Status:} Depends clauses are parsed and ignored.
+
+
+
+@end itemize
+
+@subsection axiom
+@itemize @bullet
+@item @strong{Description:} description....
+
+@item @strong{Status:} status....
+
+@item @strong{Differences from JML or Java:} bugs...
+
+
+@end itemize
+
+@subsection initially, initially_redundantly
+@itemize @bullet
+@item @strong{Description:} description....
+
+@item @strong{Status:} status....
+
+@item @strong{Differences from JML or Java:} bugs...
+
+
+@end itemize
+
+@subsection readable
+@itemize @bullet
+@item @strong{Description:} description....
+
+@item @strong{Status:} status....
+
+@item @strong{Differences from JML or Java:} bugs...
+
+
+@end itemize
+
+@subsection monitors_for
+@itemize @bullet
+@item @strong{Description:} description....
+
+@item @strong{Status:} status....
+
+@item @strong{Differences from JML or Java:} bugs...
+
+
+@end itemize
+
+@subsection in
+@itemize @bullet
+@item @strong{Description:} description....
+
+@item @strong{Status:} status....
+
+@item @strong{Differences from JML or Java:} bugs...
+
+
+@end itemize
+
+@subsection maps
+@itemize @bullet
+@item @strong{Description:} description....
+
+@item @strong{Status:} status....
+
+@item @strong{Differences from JML or Java:} bugs...
+
+
+@end itemize
+
+
+@subsection where
+@itemize @bullet
+@item @strong{Description:} description....
+
+@item @strong{Status:} status....
+
+@item @strong{Differences from JML or Java:} bugs...
+
+
+@end itemize
+
+
+
+@section Modifiers for elements of type declarations
+
+
+@subsection Privacy modifiers
+@itemize @bullet
+@item @strong{Description:} description....(including spec_public, spec_protected)
+
+@item @strong{Status:} status....
+
+@item @strong{Differences from JML or Java:} bugs...
+
+
+@end itemize
+
+@subsection static and instance
+@itemize @bullet
+@item @strong{Description:} description....
+
+@item @strong{Status:} status....
+
+@item @strong{Differences from JML or Java:} bugs...
+
+
+@end itemize
+
+@subsection uninitialized
+@itemize @bullet
+@item @strong{Description:} description....
+
+@item @strong{Status:} status....
+
+@item @strong{Differences from JML or Java:} bugs...
+
+
+@end itemize
+
+
+
+@subsection other Java modifiers
+@itemize @bullet
+@item @strong{Description:} description....
+
+@item @strong{Status:} status....
+
+@item @strong{Differences from JML or Java:} bugs...
+
+
+@end itemize
+
+
+
+
+
+
+@section Annotations for a method or constructor
+
+
+@subsection Lightweight specifications
+
+
+@subsection Heavyweight specifications
+-- nesting
+
+@subsection also
+-- note the old ESC also_ syntax
+
+
+@subsection model program
+- include discussion of these statements: abrupt_behavior, continues, choose, choose_if, breaks, returns, or
+
+@subsection subclassing_contract
+@subsection implies_that
+@subsection for_example
+
+@section Annotation clauses for a method or constructor
+
+
+
+
+Annotation clauses for a method (or constructor) appear ... 
+
+[What about annotations between the signature and the opening brace???]
+
+??? -- remember to provide both lightweight and heavyweight defaults
+
+@subsection forall
+
+
+@subsection old
+
+@subsection @strong{requires} (@strong{requires_redundantly}, @strong{pre}, pre_redundantly)
+@itemize @bullet
+@item @strong{Syntax:} @code{requires <I>predicate</I>}
+@item @strong{Description:} A requires clause begins a sequence of specification clauses 
+(the other method/constructor clauses described in this section).  The remaining 
+clauses must hold whenever the requires clause (or the conjunction of multiple
+requires clauses) holds.
+
+@item @strong{Status:} The requires clause is implemented and is utilized by Escjava-2
+in generating verification conditions.
+@item @strong{Differences from JML or Java:} None known.
+@end itemize
+
+@subsection ensures, ensures_redundantly, post, post_redundantly
+@itemize @bullet
+@item @strong{Description:} description....
+
+@item @strong{Status:} status....
+
+@item @strong{Differences from JML or Java:} bugs...
+
+
+@end itemize
+
+@subsection signals, exsures, signals_redundantly, exsures_redundantly
+@itemize @bullet
+@item @strong{Description:} description....
+
+@item @strong{Status:} status....
+
+@item @strong{Differences from JML or Java:} bugs...
+
+
+@end itemize
+
+@subsection modifies, modifiable, assignable, modifies_redundantly, modifiable_redundantly, assignable_redundantly
+@itemize @bullet
+@item @strong{Description:} description....
+
+@item @strong{Status:} status....
+
+@item @strong{Differences from JML or Java:} bugs...
+
+
+@end itemize
+
+@subsection diverges, diverges_redundantly
+@itemize @bullet
+@item @strong{Description:} description....
+
+@item @strong{Status:} status....
+
+@item @strong{Differences from JML or Java:} bugs...
+
+
+@end itemize
+
+@subsection when
+@itemize @bullet
+@item @strong{Description:} description....
+
+@item @strong{Status:} status....
+
+@item @strong{Differences from JML or Java:} bugs...
+
+
+@end itemize
+
+@subsection duration
+@itemize @bullet
+@item @strong{Description:} description....
+
+@item @strong{Status:} status....
+
+@item @strong{Differences from JML or Java:} bugs...
+
+
+@end itemize
+
+@subsection working_space
+@itemize @bullet
+@item @strong{Description:} description....
+
+@item @strong{Status:} status....
+
+@item @strong{Differences from JML or Java:} bugs...
+
+
+@end itemize
+
+@subsection accessible
+@itemize @bullet
+@item @strong{Description:} description....
+
+@item @strong{Status:} status....
+
+@item @strong{Differences from JML or Java:} bugs...
+
+
+@end itemize
+
+
+@subsection measured_by (in subclassing contract)
+@itemize @bullet
+@item @strong{Description:} description....
+
+@item @strong{Status:} status....
+
+@item @strong{Differences from JML or Java:} bugs...
+
+
+@end itemize
+
+
+@subsection callable (in subclassing contract)
+@itemize @bullet
+@item @strong{Description:} description....
+
+@item @strong{Status:} status....
+
+@item @strong{Differences from JML or Java:} bugs...
+
+
+@end itemize
+
+
+@subsection accessible (in subclassing contract)
+@itemize @bullet
+@item @strong{Description:} description....
+
+@item @strong{Status:} status....
+
+@item @strong{Differences from JML or Java:} bugs...
+@end itemize
+
+
+
+@subsection implies_that specification
+@itemize @bullet
+@item @strong{Description:} description....
+
+@item @strong{Status:} status....
+
+@item @strong{Differences from JML or Java:} bugs...
+
+
+@end itemize
+
+
+@subsection for_example specification
+@itemize @bullet
+@item @strong{Description:} description....
+
+@item @strong{Status:} status....
+
+@item @strong{Differences from JML or Java:} bugs...
+
+
+@end itemize
+
+@subsection Redundancy
+Many clauses have a redundant form, indicated by using a keyword with a @strong{_redundantly} suffix.
+The intention of these clauses is to indicate specifications that are implied by
+other, nonredundant, specifications.  The writer may choose to include the
+redundant specifications in order to point out some non-obvious implications of other
+specification, either to facilitate understanding by the reader or to assist the
+prover in verifying conclusions.
+
+Note that the implies_that and for_example specifications are additional forms of
+redundancy.
+
+The handling of redundant clauses within Escjava-2 is TBD.
+
+
+@section Annotation modifiers for a method or constructor
+
+
+Annotation modifiers can appear between the last specification clause or  
+javadoc comment and the type designator or class name that is part of the method
+or constructor.  JML modifiers and Java modifiers may appear in any order.
+
+@subsection pure
+
+@subsection non_null
+
+@subsection helper
+
+@subsection monitored
+
+@subsection initialized???
+
+
+@subsection Java modifiers (static, public, protected, private, native, synchronized...???)
+??? helper
+
+@section Annotation modifiers for a field declaration
+
+A field declaration may have some JML modifiers and it may be followed by a 
+variable assertion, introduced by a @strong{where} keyword.
+
+@subsection maps, \into, in
+
+@subsection pure
+
+@subsection non_null
+
+@subsection monitored
+
+@subsection initialized???
+
+
+@subsection Java modifiers (static, public, protected, private, synchronized...???)
+
+
+@section Annotation modifiers for formal parameters
+
+
+These modifiers may preceed the type name of a formal parameter within the 
+declaration of the method or constructor.
+
+
+@subsection non_null
+@itemize @bullet
+@item @strong{Description:} Modifying a formal parameter with a @code{non_null}
+modifier is equivalent to adding a precondition stating that the parameter is not
+equal to @code{null} and to requiring that any assignment to that variable 
+assign a non-null value.  It is only legal for reference types, not for 
+primitive types.  
+
+FIX THIS: Since a subclass must satisfy the entire specification of its
+super classes and super interfaces, if a parameter is not modified as
+@code{non_null} in a method declaration (in a class or interface),
+ it may not be modified as 
+@code{non_null} in any overriding method declaration.  An overriding
+declaration may declare a parameter as @code{non_null} only if all of the
+overridden declarations of that method so declare the parameter; 
+in this case, the modification
+of the declaration in the subclass or interface
+is redundant and not required, but may be useful for clarity.
+
+
+@item @strong{Status:} The modifier is implemented for parsing and in the Escjava-2
+logic.
+
+@item @strong{Differences from JML or Java:} None known. [FIXME - does JML detect 
+problems with overriding methods?]
+
+
+@item @strong{Comment:} The original escjava did not permit a subclass to modify a
+formal parameter as @code{non_null} in an overriding declaration.  The 
+declarations of the top-most declaration were used for all overriding declarations.
+@end itemize
+
+@subsection final
+
+@section Annotation statements within the body of a method or constructor
+
+
+@subsection @strong{assume} (@strong{assume_redundantly})
+???
+@subsection @strong{assert} (@strong{assert_redundantly})
+???
+@subsection @strong{set}
+???
+@subsection @strong{unreachable}
+???
+@subsection @strong{hence_by}
+???
+@subsection @strong{loop_invariant, maintaining, loop_invariant_redundantly, maintaining_redundantly}
+???
+@subsection @strong{decreases, decreasing, decreases_redundantly, decreasing_redundantly}
+???
+@subsection ghost declarations
+???
+
+@subsection non_null as a modifier of local declarations
+
+
+@itemize @bullet
+@item @strong{Description:} A local declaration of a variable of reference type
+within the body of a method or 
+constructor may be modified with the JML annotation @strong{non_null}.  This
+requires that the initial value and any subsequently assigned value for that
+variable must not be null.
+
+@item @strong{Status:} Fully implemented (in Esc/java and Escjava-2).
+
+@item @strong{Differences from JML or Java:} None.
+
+
+@end itemize
+@section Nowarn comments
+
+???
+
+
+@section JML functions (extensions to expressions)
+
+JML defines a number of new operators, functions, and other constructions for use within expressions
+that are part of annotations.
+
+@subsection New operators in JML
+[??? Precendence]
+@itemize @bullet
+@item @code{<==>} : 
+This operator (equivalent) takes two boolean arguments; it returns a boolean value of 
+@strong{true} if the two arguments are both true or both false, and 
+@strong{false} otherwise.  
+It is fully implemented.
+@item @code{<=!=>} : 
+This operator (inequivalent) takes two boolean arguments; it returns a boolean value of 
+@strong{false} if the two arguments are both true or both false, and 
+@strong{true} otherwise.  @code{(A <==> B)} is equivalent to 
+@code{!(A <=!=&gt B)}.
+It is fully implemented.
+@item @code{==>} : 
+This operator (implies) takes two boolean arguments and returns a boolean value of 
+@strong{true} if the first is @strong{false} or the second is @strong{true},
+and returns @strong{false} if the first is @strong{true} and the second is @strong{false}.  
+It is fully implemented.
+
+@cindex @code{<==}
+@item @code{<==} : 
+This operator (reverse implication, or explies) takes two boolean arguments and returns a boolean value of 
+@strong{true} if the second is @strong{false} or the first is @strong{true},
+and returns @strong{false} if the second is @strong{true} and the first is @strong{false}.  
+@code{(A ==> B)} is equivalent to @code{(B <== A)}.
+It is fully implemented.
+
+@cindex @code{<:}
+@item @code{<:} : 
+This operator takes two arguments of type @strong{\TYPE}; it returns @strong{true}
+if the left-hand argument is the same type as or a subtype of the right-hand
+argument. 
+It is fully implemented.
+
+@cindex @code{<}
+@cindex @code{<=}
+@item @code{<} , @code{<=} : 
+In addition to their usual meaning in Java (and corresponding meanings in JML), the
+less-than and less-than-or-equal operators are used to compare locks.  Any object that is listed as a 
+monitor (in a @strong{monitors_for} clause) or is indentified implicitly or 
+explicitly in a Java synchronization statement is a lock,
+in addition to its declared use as an object.  In order to reason about deadlocks,
+the user must define a partial order on locks and have the code acquire the locks
+only in increasing order.  The partial order is defined using @strong{axiom} clauses;
+the operators are used to compare locks.  
+They take two locks as arguments and return
+@strong{true} if the left-hand object is less than (or less than or equal to) the right-hand object according to the partial order axioms,
+and returns false otherwise.
+The comparison is independent of whether the locks have actually been acquired; 
+the @strong{\lockset} expression supplies that information.  The Esc/java reference
+manual provides additional information and examples about Deadlock and Race detection.
+These operators are fully implemented.
+@end itemize
+
+
+@subsection New JML expressions (functions and values)
+
+@itemize @bullet
+
+@cindex \result
+@item \result
+
+@cindex \old
+@item \old
+
+@item \not_modified
+
+@item \fresh
+@item \reach
+@item \duration
+@item \space
+@item \working_space
+
+@item \nonnullelements
+@item \typeof
+@item \elemtype
+@item \type
+
+@item \is_initialized
+@item \invariant_for
+@item \lblneg
+@item \lblpos
+
+@item \lockset : This value has type @code{\LockSet}.  It is a set of objects whose
+locks are held by the current thread. 
+<BR>@strong{Status:} This feature is fully implemented by Escjava-2 (inherited from ESC/Java).
+
+@cindex @code{\max}
+@item @code{\max} : This function takes an argument of type @code{\LockSet}.  
+It returns an object of type @code{java.lang.Object}.  The result is one of the
+elements of the argument; the function satisfies the following for any 
+@code{\LockSet} @code{s} and Object @code{o} in @code{s}: @code{o <= \max(s)}.
+<BR>@strong{Status:} This feature is fully implemented by Escjava-2 (inherited from ESC/Java).
+
+
+@item \nowarn, \nowarn_op, \warn, \warn_op : These operators take an
+integer-typed expression as argument and return the value of the same expression.
+They are used to check or to suppress checking of overflow and underflow in the
+use of unary negation and binary addition, subtraction, multiplication and division 
+on any integer-typed arguments.  More detail is provided in the JML reference 
+manual.
+<BR>@strong{Status:} These expressions are parsed but are currently treated as identity
+ operators.  They are not part of ESC/Java.
+
+@item <I>informal predicate</I>
+
+@end itemize
+
+@subsection New JML types
+@itemize @bullet
+@item @code{\TYPE} : This is a JML type name used to denote the type of type designations.
+For example, @strong{\typeof} and @strong{\type} produce results of type @strong{\TYPE}, 
+and the @strong{<=} operator takes arguments of type @strong{\TYPE}.  Values of type
+@strong{\TYPE} can also be compared using the @strong{==} operator.
+<BR>@strong{Status:} This is fully implemented.
+
+@item @code{\bigint} : This is a new type name used in JML to denote an integral type 
+equivalent to the mathematical integers.  That is, it has infinite range and no
+underflow or overflow as a result of a fixed bit depth.
+<BR>@strong{Status:} The type name is parsed but is equivalent to @strong{long}.
+
+@item @code{\real} : This is a new type name used in JML to denote a type 
+equivalent to the mathematical real numbers.  That is, it has infinite range 
+and precision and no
+underflow, overflow, or rounding error as do @strong{float} and @strong{double}.
+<BR>@strong{Status:} The type name is parsed but is equivalent to @strong{double}.
+
+@end itemize
+
+@cindex quantified expressions
+@cindex @code{\forall}
+@cindex @code{\exists}
+@cindex @code{\num_of}
+@cindex @code{\max}
+@cindex @code{\min}
+@cindex @code{\sum}
+@cindex @code{\product}
+@subsection quantified expressions - \forall, \exists, \num_of, \max, \min, \sum, \product
+As described in the JML documentation, quantified expressions take the form<BR>
+<center>@code{( <I>quantifier-keyword</I> <I>type</I> <I>idlist</I> ; <I>range-expr</I> ; <I>expr</I> )}</center>
+or
+<center>@code{( <I>quantifier-keyword</I> <I>type</I> <I>idlist</I> ; ; <I>expr</I> )}</center>
+or
+<center>@code{( <I>quantifier-keyword</I> <I>type</I> <I>idlist</I> ; <I>expr</I> )}</center>
+The <I>range-expr</I> is a boolean expression; its default value is @strong{true}.
+The <I>idlist</I> is a comma-separated list of identifiers; these are the bound
+variables of the quantification.
+<BR>@strong{Status:} 
+@itemize @bullet
+@item \forall, \exists: Fully implemented and used in static checking.
+@item \num_of, \max, \min, \sum, \product: Parsed and ignored.  The expressions are translated to values of 0, and so may lead to unexpected results.
+@end itemize
+@strong{Comment:} The keyword @code{\max} is used both as a quantifier and as
+a function.  The parser is able to distinguish the two usages.
+
+@subsection set comprehension
+
+@subsection \fields_of ???
+@subsection \nothing ???
+@subsection \everything ???
+@subsection \other ???
+@subsection \not_specified ???
+@subsection \private_data ???
+
+@subsection use of methods and constructors on annotation expressions
+
+@subsection new instance expressions
+@subsection new array expressions
+
+
+@subsection Other Java operators and expression syntax
+
+
+
+@section Other issues
+@itemize @bullet
+@item  Escjava-2 allows methods and constructors in Java source without bodies
+@item  redundant specifications
+@item  Original Esc/java also_ specifications
+@item  Desugaring of heavyweight specifications
+@item  anonymous classes
+@end itemize
+???
+@c -----------------------------------------------------------------------------
+@chapter Incompatibilities 
+
+
+@section Incompatibilities with Esc/Java
+
+@subsection Error messages and warnings
+Escjava-2 has added error messages to conform with current JML semantics.  Some old Esc/java errors and warnings are no longer appropriate and
+have been removed.
+
+
+@subsection  also
+@subsection  monitored_by
+@subsection  readable_if
+@subsection non_null on formal parameters
+
+@section Non-JML features in Escjava-2
+
+There are some syntactic constructs accepted by ESC/Java and continue to be 
+accepted by Escjava-2 that are not part of JML.
+
+@subsection  loop_predicate
+@subsection  skolem_constant
+@subsection  still_deferred
+@subsection  writable_deferred
+@subsection  writable_if
+@subsection  dttfsa
+
+@subsection logical operators
+Discuss the behavior of logical and short-circuit operators in the presence of undefined expressions (or expressions that throw exceptions).
+
+
+
+
+@c node  Concept Index,  , , Top
+@c node-name, next, previous, up
+@unnumbered Concept Index
+
+@printindex cp
+
+@bye
