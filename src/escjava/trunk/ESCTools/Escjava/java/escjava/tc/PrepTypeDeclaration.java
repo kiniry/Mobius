@@ -58,7 +58,7 @@ public class PrepTypeDeclaration extends javafe.tc.PrepTypeDeclaration {
 	numJmlFields = ((Integer)numJmlList.removeFirst()).intValue();
 	
 	if (!escjava.Main.options().showFields) return;
-	System.out.println("DUMP " + sig.simpleName + " " + sig.getClass());
+	System.out.println("DUMP " + sig );
 	print("Java fields",sig.getFieldsRaw());
 	print("Hidden Java fields",sig.getHiddenFields());
 	print("Jml fields",s.jmlFields);

@@ -36,7 +36,7 @@ public class GCProver implements Prover
     private Vector allInvalidClauses = new Vector();
     private jbdd oldValid;
     
-    private PrintStream ps = Main.prover.subProcessToStream();
+    private PrintStream ps = ProverManager.prover().subProcessToStream();
     private VarMap subst;
     int queriesConsidered=0, queriesTried=0, queriesValid=0;
     long milliSecsUsed;
@@ -57,10 +57,13 @@ public class GCProver implements Prover
 	GuardedCmd gc = DSA.dsa(g,out);
 	Expr vc = SPVC.computeN(gc);
 	subst = out.n;
+	ProverManager.push(vc);
+/*
 	ps.print("\n(BG_PUSH ");
 	VcToString.computePC(vc, ps);
 	ps.println(")");
 	Main.prover.sendCommands("");
+*/
 
     }
 
@@ -80,10 +83,10 @@ public class GCProver implements Prover
 	  case UNKNOWN:
 	    // query is possible invariant, call simplify
 	    milliSecsUsed -= java.lang.System.currentTimeMillis();
-	    Main.prover.startProve();
+	    ProverManager.prover().startProve();
 	    VcToString.compute( subst.apply(concretize( query )),
 				ps);
-	    Enumeration results = Main.prover.streamProve();
+	    Enumeration results = ProverManager.prover().streamProve();
 	    boolean queryvalid = processSimplifyOutput(results);
 	    if( noisy ) say( "SIMPLIFY: "+(queryvalid ? "valid" : "invalid"));
 	    queriesTried++;
@@ -172,7 +175,7 @@ public class GCProver implements Prover
     }
 
     public void done() {
-	Main.prover.sendCommand("(BG_POP)");
+	ProverManager.pop();
     }
 	    
     public String printClause(jbdd b) {

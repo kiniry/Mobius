@@ -49,7 +49,7 @@ class WritableIf
 
    WritableIf()
     /*@ requires (/*boolean*/ true); */
-    /*@ modifies (/*UNAVAILABLE*/ (/*WritableIf*/ this).*) if (/*boolean*/ true); */
+    /*@ modifies (/*boolean*/ true) ==> ((/*UNAVAILABLE*/ (/*WritableIf*/ this).*) if (/*boolean*/ true)); @*/
     /*@ pure */ 
    {
       super();
@@ -61,7 +61,7 @@ class WritableIf
 
    WritableIf(int x)
     /*@ requires (/*boolean*/ true); */
-    /*@ modifies (/*UNAVAILABLE*/ (/*WritableIf*/ this).*) if (/*boolean*/ true); */
+    /*@ modifies (/*boolean*/ true) ==> ((/*UNAVAILABLE*/ (/*WritableIf*/ this).*) if (/*boolean*/ true)); @*/
     /*@ pure */ 
    {
       super();
@@ -82,7 +82,7 @@ class NonNull
    void foo(Object x /*@ non_null */)
     /*@ pure */
     /*@ requires (/*boolean*/ (\lblneg NonNull:0.32.16 (/*boolean*/ (/*java.lang.Object*/ x:32.34) != (/*null*/ null)))); */
-    /*@ modifies (/*UNAVAILABLE*/ \nothing) if (/*boolean*/ \old((/*boolean*/ (/*java.lang.Object*/ x:32.34) != (/*null*/ null)))); */ 
+    /*@ modifies (/*boolean*/ \old((/*boolean*/ (/*java.lang.Object*/ x:32.34) != (/*null*/ null)))) ==> ((/*UNAVAILABLE*/ \nothing) if (/*boolean*/ \old((/*boolean*/ (/*java.lang.Object*/ x:32.34) != (/*null*/ null))))); @*/ 
    {
       /*@ assert (/*boolean*/ (/*java.lang.Object*/ foo) != (/*null*/ null)); */
       /*@ set (/*java.lang.Object*/ foo) = (/*java.lang.Object*/ x:32.34); */
@@ -93,7 +93,7 @@ class NonNull
    void foo2(Object x /*@ non_null */)
     /*@ pure */
     /*@ requires (/*boolean*/ (\lblneg NonNull:0.39.17 (/*boolean*/ (/*java.lang.Object*/ x:39.35) != (/*null*/ null)))); */
-    /*@ modifies (/*UNAVAILABLE*/ \nothing) if (/*boolean*/ \old((/*boolean*/ (/*java.lang.Object*/ x:39.35) != (/*null*/ null)))); */ 
+    /*@ modifies (/*boolean*/ \old((/*boolean*/ (/*java.lang.Object*/ x:39.35) != (/*null*/ null)))) ==> ((/*UNAVAILABLE*/ \nothing) if (/*boolean*/ \old((/*boolean*/ (/*java.lang.Object*/ x:39.35) != (/*null*/ null))))); @*/ 
    {
       /*@ assert (/*boolean*/ (/*java.lang.Object*/ s) != (/*null*/ null)); */
       /*@ set (/*java.lang.Object*/ s) = (/*java.lang.Object*/ x:39.35); */
@@ -113,7 +113,7 @@ class MonitoredBy
 
    void foo(Object foo)
     /*@ requires (/*boolean*/ true); */
-    /*@ modifies (/*UNAVAILABLE*/ \nothing) if (/*boolean*/ true); */
+    /*@ modifies (/*boolean*/ true) ==> ((/*UNAVAILABLE*/ \nothing) if (/*boolean*/ true)); @*/
     /*@ pure */ 
    {
       /*@ assert (/*boolean*/ (/*java.lang.Object*/ x) == (/*java.lang.Object*/ x)); */

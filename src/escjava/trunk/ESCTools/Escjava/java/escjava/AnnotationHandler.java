@@ -645,7 +645,7 @@ added, it doesn't change whether a routine appears to have a spec or not.
 	    resultList.addElement(defaultModifies(tde.getStartLoc(),req,tde));
 	}
     }
-    public final static CondExprModifierPragma defaultModifies(int loc, 
+    public final static ModifiesGroupPragma defaultModifies(int loc, 
 				Expr req, RoutineDecl rd) {
 	boolean everythingIsDefault = true;
 	boolean nothing = !everythingIsDefault;
@@ -665,8 +665,12 @@ added, it doesn't change whether a routine appears to have a spec or not.
 	}
 
 	// FIXME - need default for COnstructor, ModelConstructor
-	return CondExprModifierPragma.make(
-		TagConstants.MODIFIES,e,loc,req);
+	ModifiesGroupPragma r = ModifiesGroupPragma.make(
+					TagConstants.MODIFIES,loc);
+	r.addElement( CondExprModifierPragma.make(
+		TagConstants.MODIFIES,e,loc,req));
+	r.precondition = req;
+	return r;
     }
 
 

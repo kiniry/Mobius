@@ -155,7 +155,7 @@ public class Main extends javafe.SrcTool
     public void clear() {
         super.clear();
         gctranslator = new Translate();
-        if (!keepProver) prover = null;
+        if (!keepProver) ProverManager.kill();
         // restore ordinary checking of assertions
         NoWarn.useGlobalStatus = false; 
 	NoWarn.setAllChkStatus(TagConstants.CHK_AS_ASSERT);
@@ -181,12 +181,6 @@ public class Main extends javafe.SrcTool
 
 
     // SrcTool-instance specific processing
-
-    /**
-     * Our Simplify instance, or null iff stages < 6.
-     */
-    public static Simplify prover = null;
-    //@ invariant (prover == null) == (stages<6)
 
     /** An instance of the GC->VC translator */
     public static Translate gctranslator = new Translate();
@@ -234,18 +228,9 @@ public class Main extends javafe.SrcTool
             
             
         if (6 <= stages || options().predAbstract) {
-            long startTime = java.lang.System.currentTimeMillis();
-            if (!keepProver || prover == null) prover = new Simplify();
-            
-            if (!options().quiet)
-                System.out.println("  Prover started:" + timeUsed(startTime));
+	    ProverManager.start();
         }
         
-        if (prover != null) {
-            escjava.backpred.BackPred.genUnivBackPred(prover.subProcessToStream());
-            prover.sendCommands("");
-        }
-    
     }
 
     /**
@@ -284,10 +269,7 @@ public class Main extends javafe.SrcTool
             o.close();
         }
 
-        if (prover != null && !keepProver) {
-            prover.close();
-            prover = null;
-        }
+	if (!keepProver) ProverManager.kill();
     }
 
     /**
@@ -366,6 +348,8 @@ public class Main extends javafe.SrcTool
      */
     //@ requires (* td is not from a binary file. *);
     private boolean processTD(TypeDecl td) {
+	try {
+
         // ==== Start stage 1 ====
 
         /*
@@ -424,14 +408,6 @@ public class Main extends javafe.SrcTool
             o.close();
         }
 
-        if (prover != null) {
-            PrintStream ps = prover.subProcessToStream();
-            ps.print("\n(BG_PUSH ");
-            escjava.backpred.BackPred.genTypeBackPred(scope, ps);
-            ps.println(")");
-            prover.sendCommands("");
-        }
-
         // Turn off extended static checking and abort if any type errors
         // occured while generating the type-specific background predicate:
         if (errorCount < ErrorSet.errors) {
@@ -445,6 +421,9 @@ public class Main extends javafe.SrcTool
 
         // ==== Start stage 3 ====
         if (3 <= stages) {
+
+	    if (6 <= stages || options().predAbstract)
+		ProverManager.push(scope);
 
             LabelInfoToString.reset();
             InitialState initState = new InitialState(scope);
@@ -471,10 +450,17 @@ public class Main extends javafe.SrcTool
         }
 
         // ==== all done; clean up ====
-        if (prover != null)
-            prover.sendCommand("(BG_POP)");
+	ProverManager.pop();
         
-        return false;
+	} catch (FatalError e) {
+		// Error already reported
+	    throw e;
+	} catch (Throwable e) {
+		System.out.println("Exception " + e + " thrown while processing " + TypeSig.getSig(td));
+		e.printStackTrace(System.out);
+	    return true;
+	}
+	return false;
     }
 
 
@@ -686,22 +672,14 @@ public class Main extends javafe.SrcTool
         if (stages<6)
             return "ok";
 
-        // Check the VC:
-        prover.startProve();
-
-        VcToString.compute(vc, prover.subProcessToStream());
-        //,,,
-        //  FindContributors scope = new FindContributors(sig);
-        //  System.out.println("+++");
-        //  escjava.backpred.BackPred.genTypeBackPred(scope, System.out);
-        //  VcToString.compute(vc, System.out);
-        //  System.out.println("+++");
-        Enumeration results = prover.streamProve();
+	Enumeration results = ProverManager.prove(vc);
 
         // Process Simplify's output
         String status = "unexpectedly missing Simplify output";
+	try {
+
         boolean nextWarningNeedsPrecedingLine = true;
-        while (results.hasMoreElements()) {
+	if (results != null) while (results.hasMoreElements()) {
             SimplifyOutput so = (SimplifyOutput)results.nextElement();
             switch (so.getKind()) {
                 case SimplifyOutput.VALID:
@@ -806,6 +784,10 @@ public class Main extends javafe.SrcTool
                     break;
             }
         }
+
+	} catch (FatalError e) {
+	   ProverManager.died();
+	}
 
         String proofTime = timeUsed(startTime);
         if (options().stats) {
@@ -958,3 +940,4 @@ public class Main extends javafe.SrcTool
         }
     }
 }
+

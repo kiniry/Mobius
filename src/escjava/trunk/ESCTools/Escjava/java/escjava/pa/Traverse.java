@@ -18,14 +18,18 @@ import javafe.util.Assert;
 public class Traverse
 {
     public static void compute(GuardedCmd g, InitialState initState, Translate tr) {
+	ProverManager.push(initState.getInitialState());
+/*
         PrintStream ps = Main.prover.subProcessToStream();
         ps.print("\n(BG_PUSH ");
         VcToString.compute(initState.getInitialState(), ps);
         ps.println(")");
         Main.prover.sendCommands("");
+*/
         Set env = new Set();
         GuardedCmd h = computeHelper(g, GC.skip(), env);
-        Main.prover.sendCommand("(BG_POP)");
+	ProverManager.pop();
+        //Main.prover.sendCommand("(BG_POP)");
         desugarLoops(g, tr);
     }
 

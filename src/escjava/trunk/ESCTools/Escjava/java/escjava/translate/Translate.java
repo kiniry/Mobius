@@ -3885,6 +3885,14 @@ public final class Translate
     private void modifiesCheckMethodI(ModifiesGroupPragmaVec calleeFrameConditions, Expr eod, int loccall, Hashtable args, boolean freshResult) {
 	for (int i=0; i<calleeFrameConditions.size(); ++i) {
 	    ModifiesGroupPragma mg = calleeFrameConditions.elementAt(i);
+// FIXME - the precondition should not be null - guarding against bugs
+// upstream - e.g. current ArcType, but that may be because of model type problems
+if (mg.precondition == null) {
+	//System.out.println("ADDING LIT " + Location.toString(mg.clauseLoc));
+	mg.precondition = LiteralExpr.make
+		(TagConstants.BOOLEANLIT, Boolean.TRUE, Location.NULL);
+	javafe.tc.FlowInsensitiveChecks.setType(mg.precondition,Types.booleanType);
+}
 	    Expr tp = modTranslate(mg.precondition,false,eod,args);
 	    modifiesCheckMethod(eod, loccall, mg.items, args, freshResult,tp);
 	}

@@ -2989,7 +2989,8 @@ try{
 
 
 
-    public boolean parseFieldDeclTail(Token dst, int loc, int locId, Type type, Identifier id, ModifierPragmaVec modifierPragmas) {
+    public boolean parseFieldDeclTail(Token dst, int loc, int locId, 
+		Type type, Identifier id, ModifierPragmaVec modifierPragmas) {
 	int tag = savedGhostModelPragma.getTag();
 
 	// Parse any additional brackets and add them to the type
@@ -3087,6 +3088,7 @@ try{
 		if (scanner.ttype == TagConstants.IDENT &&
 		    (scanner.identifierVal.toString().equals("in")||
 		     scanner.identifierVal.toString().equals("in_redundantly"))) {
+		    boolean isRed = !scanner.identifierVal.toString().equals("in");
 		    scanner.getNextToken(); // skip the in token
 
 		    boolean first = true;
@@ -3106,6 +3108,7 @@ try{
 		if (scanner.ttype == TagConstants.IDENT &&
 		    (scanner.identifierVal.toString().equals("maps") ||
 		     scanner.identifierVal.toString().equals("maps_redundantly"))) {
+		    boolean isRed = !scanner.identifierVal.toString().equals("maps");
 		    scanner.getNextToken(); // skip the maps token
 		    // Already parsed something - should be an identifier
 		    //System.out.println("MAPPING " + scanner.identifierVal.toString());
@@ -3126,9 +3129,9 @@ try{
 			while (ig.hasNext()) {
 			    Expr e = (Expr)ig.next();
 			    MapsExprModifierPragma ppragma =
-				MapsExprModifierPragma.make(TagConstants.unRedundant(tag), 
+				MapsExprModifierPragma.make(TagConstants.MAPS, 
 						    idd, mapsod, loc, e);
-			    if (TagConstants.isRedundant(tag)) ppragma.setRedundant(true);
+			    if (isRed) ppragma.setRedundant(true);
 			    if (decl.pmodifiers == null)
 				decl.pmodifiers = ModifierPragmaVec.make();
 			    decl.pmodifiers.addElement(ppragma);

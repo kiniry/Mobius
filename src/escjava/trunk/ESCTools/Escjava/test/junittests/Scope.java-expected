@@ -3,7 +3,7 @@ ESC/Java version VERSION
     [TIME]
 
 Scope ...
-DUMP Object class escjava.tc.TypeSig
+DUMP java.lang.Object
  Java fields
  Hidden Java fields
  Jml fields
@@ -12,7 +12,7 @@ DUMP Object class escjava.tc.TypeSig
     objectTimesFinalized "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 155, col 24
  Jml hidden fields
  DUMP-END
-DUMP <the root interface> class escjava.tc.TypeSig
+DUMP java.lang.<the root interface>
  Java fields
  Hidden Java fields
  Jml fields
@@ -21,7 +21,7 @@ DUMP <the root interface> class escjava.tc.TypeSig
     objectTimesFinalized "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 155, col 24
  Jml hidden fields
  DUMP-END
-DUMP ScopeII class escjava.tc.TypeSig
+DUMP ScopeII
  Java fields
     j "Scope.java", line 33, col 7
     jj "Scope.java", line 34, col 7
@@ -32,7 +32,7 @@ DUMP ScopeII class escjava.tc.TypeSig
     objectTimesFinalized "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 155, col 24
  Jml hidden fields
  DUMP-END
-DUMP ScopeS class escjava.tc.TypeSig
+DUMP ScopeS
  Java fields
     i "Scope.java", line 40, col 8
     gsi "Scope.java", line 41, col 8
@@ -52,7 +52,7 @@ DUMP ScopeS class escjava.tc.TypeSig
     objectTimesFinalized "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 155, col 24
  Jml hidden fields
  DUMP-END
-DUMP ScopeI class escjava.tc.TypeSig
+DUMP ScopeI
  Java fields
     dupj "Scope.java", line 26, col 15
     dupmm "Scope.java", line 29, col 8
@@ -67,7 +67,7 @@ DUMP ScopeI class escjava.tc.TypeSig
     objectTimesFinalized "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 155, col 24
  Jml hidden fields
  DUMP-END
-DUMP Scope class escjava.tc.TypeSig
+DUMP Scope
  Java fields
     i "Scope.java", line 5, col 8
     j "Scope.java", line 6, col 8
@@ -125,7 +125,7 @@ Scope.java:18: Error: Ambiguous field for type Scope
 Scope.java:19: Error: Ambiguous field for type Scope
         public int zz = dupj; // ERROR - dupj is in two java parents
                         ^
-DUMP JMLDataGroup class escjava.tc.TypeSig
+DUMP org.jmlspecs.lang.JMLDataGroup
  Java fields
     IT "/Users/cok/ESCTools/jmlspecs.jar:org/jmlspecs/lang/JMLDataGroup.java", line 48, col 41
  Hidden Java fields
