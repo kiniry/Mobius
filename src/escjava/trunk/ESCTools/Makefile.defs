@@ -172,6 +172,7 @@ export RELDIR  ?= ${ESCTOOLS_ROOT}/release
 export RELNAME ?= ${ESC_PROJECT}-${ESC_VERSION}
 export RELNAME-DATE ?= ${RELNAME}-${ESC_RELEASE_DATE}
 export RELJAR  ?= esctools2.jar
+export RELSRCJAR  ?= esctools2src.jar
 export RELTAR  ?= ${RELNAME-DATE}-binary.tbz
 export RELPATCHTAR  ?= ${RELNAME-DATE}-patch.tbz
 export RELCLASSPATH = ${RELDIR}/${RELJAR}

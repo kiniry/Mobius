@@ -230,6 +230,18 @@ jar:
 	rm -rf ${RELTEMP}/sub
 	cp ${RELTEMP}/${RELJAR} ${ESCTOOLS_ROOT}
 
+.PHONY: srcjar
+srcjar:
+	mkdir -p ${RELTEMP}/sub
+	cp -r ${ESCTOOLS_ROOT}/Javafe/java/* ${RELTEMP}/sub
+	cp -r ${ESCTOOLS_ROOT}/Escjava/java/* ${RELTEMP}/sub
+	mkdir -p ${RELTEMP}/sub/junitutils
+	(cd ${ESCTOOLS_ROOT}/Utils/junitutils; cp `find . -name '*.java'` ${RELTEMP}/sub/junitutils)
+	( cd ${RELTEMP}/sub; rm -rf `find . -name CVS`; )
+	( cd ${RELTEMP}/sub; jar cf ../${RELSRCJAR} *; )
+	rm -rf ${RELTEMP}/sub
+	cp ${RELTEMP}/${RELSRCJAR} ${ESCTOOLS_ROOT}
+
 
 .PHONY: binary-release
 binary-release: build docs javadoc
