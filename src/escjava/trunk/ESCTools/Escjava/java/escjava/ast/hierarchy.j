@@ -93,6 +93,7 @@ import javafe.util.Location;
  *                   // Modifiers, AlsoModifiers, Assignable, Modifiable
  *         + VarExprModifierPragma (GenericVarDecl arg, Expr expr)
  *                   // Exsures, AlsoExsures, Signals, AlsoSignals
+ *         + ModelProgramModifierPragma()
  *    - LexicalPragma ()
  *      + NowarnPragma (Identifier* checks)
  *      + ImportPragma (ImportDecl decl)
@@ -694,6 +695,17 @@ public class SkolemConstantPragma extends StmtPragma
   //# int eloc
   public int getStartLoc() { return sloc; }
   public int getEndLoc() { return eloc; }
+}
+
+public class ModelProgamModifierPragma extends ModifierPragma
+{
+  //# int tag
+  //# int loc
+
+  //# ManualTag
+  public final int getTag() { return tag; }
+
+  public int getStartLoc() { return loc; }
 }
 
 public class SimpleModifierPragma extends ModifierPragma
