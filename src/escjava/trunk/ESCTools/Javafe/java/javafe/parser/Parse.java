@@ -345,7 +345,7 @@ public class Parse extends ParseStmt
 
   //@ requires l != null && l.m_in != null
   //@ ensures \result != null
-  TypeNameVec parseTypeNames(Lex l, int keyword)
+  protected TypeNameVec parseTypeNames(Lex l, int keyword)
   {
     if( l.ttype != keyword ) 
       return TypeNameVec.make();
@@ -487,11 +487,12 @@ VariableDeclarator:
     } 
     else if( l.ttype == TagConstants.TYPEDECLELEMPRAGMA ) {
       // TypeDeclElemPragma
-      if( modifiers != Modifiers.NONE || modifierPragmas != null )
-	fail(l.startingLoc, 
-	     "Cannot have modifiers on a TypeDeclElem pragma");
+// Model methods have modifiers, so this cannot be forbidden
+//      if( modifiers != Modifiers.NONE || modifierPragmas != null )
+//	fail(l.startingLoc, 
+//	     "Cannot have modifiers on a TypeDeclElem pragma");
       TypeDeclElemPragma pragma = (TypeDeclElemPragma)l.auxVal;
-      seqTypeDeclElem.addElement( pragma );
+      if (pragma != null) seqTypeDeclElem.addElement( pragma );
       l.getNextToken();
     }
     else {
