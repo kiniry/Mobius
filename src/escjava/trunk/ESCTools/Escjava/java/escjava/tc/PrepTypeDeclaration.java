@@ -95,6 +95,18 @@ public class PrepTypeDeclaration extends javafe.tc.PrepTypeDeclaration {
 
 	    getEnvForCurrentSig(currentSig, true).resolveType( currentSig, x.type);
 
+	} else if (e instanceof MethodDecl) {
+
+	    MethodDecl md = (MethodDecl)e;
+	    boolean isAbstract = Modifiers.isAbstract(md.modifiers);
+
+	    super.visitMethodDecl(md,currentSig,abstractMethodsOK, 
+			inFinalClass, inInterface);
+
+	    if (!isAbstract && md.body != null
+		&& Utils.findModifierPragma(md.pmodifiers,TagConstants.MODEL) != null) 
+		md.modifiers = md.modifiers & ~ Modifiers.ACC_ABSTRACT;
+
 /*
 	These are not needed at present because routines and types are 
 	converted into regular Java routines and types prior to any
