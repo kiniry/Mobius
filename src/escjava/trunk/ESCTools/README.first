@@ -335,6 +335,19 @@ jUnit-based tests to complete successfully.  By modifying this script,
 or your path, one can test ESC/Java2 releases with multiple versions
 of ESC/Java itself.
 
+The test target takes some time to complete.  Here are some timing
+results for comparison (release 2.0a5):
+ o Linux 2.6.0 on a 2.4GHz Pentium 4 with 1GB RAM:
+ o Mac OS X 10.3 on a 1.25GHz PPC with 512MB RAM:  under 28 minutes
+ o Mac OS X 10.2.8 on a 500MHz PPC with 512MB RAM: 
+
+A clean build, on the other hand, is actually fairly quick, even when
+using the JDK's javac, as we do:
+ o Linux 2.6.0 on a 2.4GHz Pentium 4 with 1GB RAM: under 11 seconds
+ o Mac OS X 10.3 on a 1.25GHz PPC with 512MB RAM:  under 33 seconds
+ o Mac OS X 10.2.8 on a 500MHz PPC with 512MB RAM: under 45 seconds
+
+
 Other targets:
 
 alltests - does test + some additional time-consuming or not yet
