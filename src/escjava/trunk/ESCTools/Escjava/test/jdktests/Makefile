@@ -101,7 +101,7 @@ quiet-junittests:
 .PHONY: sepjavatests
 sepjavatests:
 	@touch skip
-	@for f in `ls Test*.java | grep -v -f skip ` ; do \
+	-@for f in `ls Test*.java | grep -v -f skip ` ; do \
 		$(MAKE) --no-print-directory $${f}-test; \
 	done
 

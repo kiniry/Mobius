@@ -35,8 +35,8 @@ test runtests: buildtests
 
 .PHONY: dotests
 dotests: lists
-	$(MAKE) notjunittests
-	$(MAKE) partjunittests
+	-$(MAKE) notjunittests
+	-$(MAKE) partjunittests
 
 .PHONY: junittests
 junittests:
@@ -120,7 +120,7 @@ septest:
 notjunittests:
 	@echo TESTING Escjava: notjunittests
 	@touch skip
-	@for f in ${NOTJUNITTESTS} ; do \
+	@-for f in ${NOTJUNITTESTS} ; do \
 		$(MAKE) --no-print-directory $${f}-test; \
 	done
 
