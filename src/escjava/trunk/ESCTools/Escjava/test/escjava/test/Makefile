@@ -35,12 +35,12 @@ CD_AND_JAVA = cd $(PARSER_TEST_DIR); $(JAVA) -classpath $(ESCJAVA_CLASSPATH) $(P
 
 test_lexer: compile_escjava_parser_test_programs
 	@echo "test_lexer: "
-	$(CD_AND_JAVA).TestLex GoodPragmas.j    | diff - GoodPragmas.ans
-	$(CD_AND_JAVA).TestLex GoodSpecExpr.j   | diff - GoodSpecExpr.ans
-	$(CD_AND_JAVA).TestLex GoodJmlPragmas.j | diff - GoodJmlPragmas.ans
-	$(CD_AND_JAVA).TestLex lookahead GoodPragmas.j | diff - GoodPragmas.ans
-	$(CD_AND_JAVA).TestLex lookahead GoodSpecExpr.j   | diff - GoodSpecExpr.ans
-	$(CD_AND_JAVA).TestLex lookahead GoodJmlPragmas.j | diff - GoodJmlPragmas.ans
+	$(CD_AND_JAVA).TestLex GoodPragmas.j    | tee GoodPragmas.out | diff - GoodPragmas.ans
+	$(CD_AND_JAVA).TestLex GoodSpecExpr.j   | tee GoodSpecExpr.out | diff - GoodSpecExpr.ans
+	$(CD_AND_JAVA).TestLex GoodJmlPragmas.j | tee GoodJmlPragmas.out | diff - GoodJmlPragmas.ans
+	$(CD_AND_JAVA).TestLex lookahead GoodPragmas.j | tee GoodPragmas-lookahead.out | diff - GoodPragmas.ans
+	$(CD_AND_JAVA).TestLex lookahead GoodSpecExpr.j | tee GoodSpecExpr-lookahead.out  | diff - GoodSpecExpr.ans
+	$(CD_AND_JAVA).TestLex lookahead GoodJmlPragmas.j | tee GoodJmlPragmas-lookahead.out | diff - GoodJmlPragmas.ans
 
 test_parser: compile_escjava_parser_test_programs
 	$(CD_AND_JAVA).TestEscPragmaParser print TypeDeclElemPragmas1.java | \
