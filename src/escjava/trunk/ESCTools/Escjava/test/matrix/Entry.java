@@ -9,11 +9,14 @@ class Entry
     Entry prev_row;  // Previous entry in row
     Entry prev_col;  // Previous entry in col
     long val;
-    
-    //@ invariant next_row != null;
-    //@ invariant next_col != null;
-    //@ invariant prev_row != null;
-    //@ invariant prev_col != null;
-    //@ invariant val != Rational.zero;
+    boolean initialized;
+
+    //@ invariant row >= 0;
+    //@ invariant col >= 0;
+    //@ invariant initialized ==> (next_row != null);
+    //@ invariant initialized ==> (next_col != null);
+    //@ invariant initialized ==> (prev_row != null);
+    //@ invariant initialized ==> (prev_col != null);
+    //@ invariant initialized ==> (val != Rational.zero);
 }
 

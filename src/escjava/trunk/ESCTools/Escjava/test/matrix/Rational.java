@@ -72,7 +72,10 @@ abstract class Rational
 	long n2 = r2 >> 32;
 	long d1 = r1 & 0xFFFFFFFFL;
 	long d2 = r2 & 0xFFFFFFFFL;
-	if (n2 == 0) { System.out.println(toString(r2)); throw new ArithmeticException(); }
+	if (n2 == 0) { 
+            System.out.println(toString(r2));  //@ nowarn Null
+            throw new ArithmeticException(); 
+        }
 	long n = n1 * d2;
 	long d = d1 * n2;
 	if (n2 < 0) { n = -n; d = -d; }

@@ -12,17 +12,17 @@ package matrix;
 class ElementaryMatrix
 {
     int col;        // non-identity column
+    //@ invariant col >= 0;
+
     int n;          // # of nonzeros in column
-    long[] entries; // non-zero entries (Rationals)
-    int[] rows;     // rows that non-zero entries are in (increasing order)
-    
     //@ invariant n >= 0;
-    //@ invariant entries != null;
-    //@ invariant rows != null;
+
+    /*@ non_null */ long[] entries; // non-zero entries (Rationals)
+
+    /*@ non_null */ int[] rows;     // rows that non-zero entries are in (increasing order)
     
-    //@ requires data != null;
-    ElementaryMatrix(int col, long[] data)
-    {
+    //@ requires col >= 0;
+    ElementaryMatrix(int col, /*@ non_null */ long[] data) {
 	n = 0;
 	for(int i = 0; i < data.length; i++)
 	    if (data[i] != Rational.zero) n++;
@@ -41,9 +41,9 @@ class ElementaryMatrix
 	//X.assert(j == n);
 	this.col = col;
     }
-    //@ requires v != null;
-    ElementaryMatrix(int col, SparseVector v)
-    {
+
+    //@ requires col >= 0;
+    ElementaryMatrix(int col, /*@ non_null */ SparseVector v) {
 	n = v.n;
 	
 	entries = new long[n];
@@ -57,9 +57,7 @@ class ElementaryMatrix
     /** Apply matrix to a dense vector by multiplying on the left.
         if data = <x1 x2 x3 x4 x5 x6>, the result is
 	   data = <x1+a1x4 x2+a2x4 x3+a3x4 a4x4 x5+a5x4 x6+a6x4>. */
-    //@ requires data != null;
-    void apply_left(long[] data)
-    {
+    void apply_left(/*@ non_null */ long[] data) {
 	long piv = data[col];                 // x4 in example.
 	if (piv == Rational.zero) return;
 	
@@ -77,9 +75,7 @@ class ElementaryMatrix
     /** Apply matrix to a dense vector by multiplying on the right.
         if data = <x1 x2 x3 x4 x5 x6>, the result is
 	   data = <x1 x2 x3 (a1x1+a2x2+...+a6x6) x5 x6>. */
-    //@ requires data != null;
-    void apply_right(long[] data)
-    {
+    void apply_right(/*@ non_null */ long[] data) {
 	long v = Rational.zero;
 	
 	for(int i = 0; i < n; i++)
@@ -91,9 +87,7 @@ class ElementaryMatrix
 	data[col] = v;
     }
     
-    //@ requires v != null;
-    void apply_left(SparseVector v)
-    {
+    void apply_left(/*@ non_null */ SparseVector v) {
 	// Cache pointers to matrix and vector data.
 	long[] mentries = entries;
 	int[] mrows = rows;
@@ -105,8 +99,7 @@ class ElementaryMatrix
 	// First, find pivot (x4).
 	long piv = Rational.zero;
 	for(int i = 0; i < vn; i++)
-	    if (vrows[i] == col)
-	    {
+	    if (vrows[i] == col) {
 		piv = ventries[i];
 		ventries[i] = Rational.zero;
 		break;
@@ -126,10 +119,8 @@ class ElementaryMatrix
 	int vector_idx = 0;
 	int matrix_row = mrows[0];
 	int vector_row = vrows[0];
-	while(true)
-	{
-	    if (matrix_row == vector_row)
-	    {
+	while(true) {
+	    if (matrix_row == vector_row) {
 		if (matrix_row == Integer.MAX_VALUE) break;
 		
 		// compute x + a * piv
@@ -142,18 +133,14 @@ class ElementaryMatrix
 		vector_idx++;
 		matrix_row = mrows[matrix_idx];
 		vector_row = vrows[vector_idx];
-	    }
-	    else if (matrix_row > vector_row)
-	    {
+	    } else if (matrix_row > vector_row) {
 		// a = 0, so just copy x value.
 		e[k] = v.entries[vector_idx];
 		r[k] = vector_row;
 		k++;
 		vector_idx++;
 		vector_row = vrows[vector_idx];
-	    }
-	    else
-	    {
+	    } else {
 		// x = 0, so just put a * piv value.
 		e[k] = Rational.mul(entries[matrix_idx], piv);
 		r[k] = matrix_row;
@@ -169,9 +156,7 @@ class ElementaryMatrix
 	v.n = k;
     }
     
-    //@ requires v != null;
-    void apply_right(SparseVector v)
-    {
+    void apply_right(/*@ non_null */ SparseVector v) {
 	// Cache pointers to matrix and vector data.
 	long[] mentries = entries;
 	int[] mrows = rows;
