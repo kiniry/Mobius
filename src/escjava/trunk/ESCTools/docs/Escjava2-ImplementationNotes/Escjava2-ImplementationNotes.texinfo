@@ -293,6 +293,7 @@ Changes to static checking in ESC/Java2
 * Handling of specification inheritance::  
 * nonnull::                     
 * Translation of the Java assert statement::  
+* Semantics of String::         
 * TYPE and Class::              
 * The initially clause::        
 * The constraint clause::       
@@ -304,6 +305,12 @@ Changes to static checking in ESC/Java2
 * Use of pure routines in annotations::  
 * Model Fields::                
 * not modified::                
+
+Semantics of String
+
+* Concatenation operators::     
+* Explicit String literals::    
+* The intern method::           
 
 Incompatibilities
 
@@ -317,6 +324,7 @@ Incompatibilities
 
 Major features of Java not implemented in ESC/Java2
 
+* Java 1.5::                    
 * anonymous and block-level classes::  
 * serialization::               
 * most multi-threading considerations::  
@@ -5129,6 +5137,7 @@ are described in this chapter.
 * Handling of specification inheritance::  
 * nonnull::                     
 * Translation of the Java assert statement::  
+* Semantics of String::         
 * TYPE and Class::              
 * The initially clause::        
 * The constraint clause::       
@@ -5187,6 +5196,13 @@ Esc/Java2.  These properties are the following:
 @item The intern method of the String class
 @end itemize
 
+@menu
+* Concatenation operators::     
+* Explicit String literals::    
+* The intern method::           
+@end menu
+
+@node Concatenation operators, Explicit String literals, Semantics of String, Semantics of String
 @subsection Concatentation operators
 
 Note that the += operator is equivalent to an expression using the + operator, namely
@@ -5197,6 +5213,7 @@ produces a fresh (newly allocated) object.  This is important because within
 a pure method a fresh object may be modified, just as a newly constructed
 object may be modified.
 
+@node Explicit String literals, The intern method, Concatenation operators, Semantics of String
 @subsection Explicit String literals
 
 The important semantic property of String literals in Java is that two 
@@ -5220,6 +5237,7 @@ module, replacing each one by a unique symbol, but using the same symbol
 for syntactically identical literals.  The concatenation of String literals
 is performed by the parser.
 
+@node The intern method,  , Explicit String literals, Semantics of String
 @subsection The intern method
 
 The intern operation maps Strings that compare equal using the equals 
@@ -5237,7 +5255,7 @@ Thus
 Interning is not yet implemented in ESC/Java2.
 
 @c ----------------------------------------------------------------------------
-@node TYPE and Class, The initially clause, Translation of the Java assert statement, Changes to static checking
+@node TYPE and Class, The initially clause, Semantics of String, Changes to static checking
 @section The @code{\TYPE} and @code{java.lang.Class} types
 
 In JML and ESC/Java2, uses of @code{\TYPE} values and @code{java.lang.Class}
@@ -5386,6 +5404,7 @@ replacing it with the predicate @code{ x == \old(x) } for each argument
 @section Major features of Java not implemented in ESC/Java2
 
 @menu
+* Java 1.5::                    
 * anonymous and block-level classes::  
 * serialization::               
 * most multi-threading considerations::  
@@ -5393,12 +5412,14 @@ replacing it with the predicate @code{ x == \old(x) } for each argument
 @end menu
 
 @c ----------------------------------------------------------------------------
-@subsection Java 1.5
+@node Java 1.5, anonymous and block-level classes, Major features of Java not implemented, Major features of Java not implemented
 @cindex Java 1.5
+@subsection Java 1.5
+
 ESC/Java2 does not implement any of the new features in Java 1.5.
 
 @c ----------------------------------------------------------------------------
-@node anonymous and block-level classes, serialization, Major features of Java not implemented, Major features of Java not implemented
+@node anonymous and block-level classes, serialization, Java 1.5, Major features of Java not implemented
 @subsection anonymous and block-level classes
 
 These are supported, but the bodies of methods are not checked.
