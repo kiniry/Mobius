@@ -1,0 +1,15 @@
+ESC/Java version VERSION
+SourcePath2.java:3: Error: Could not find file referenced in refine annotation: SourcePath2.spec
+//@ refine "SourcePath2.spec";
+    ^
+  Prover started:TIME
+
+SourcePath2 ...
+
+SourcePath2: m() ...
+    [TIME]  passed
+
+SourcePath2: SourcePath2() ...
+    [TIME]  passed
+  [TIME total]
+1 error

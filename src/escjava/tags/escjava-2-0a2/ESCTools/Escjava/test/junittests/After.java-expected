@@ -1,0 +1,11 @@
+ESC/Java version VERSION
+  Prover started:TIME
+
+After ...
+After.java:19: Error: Method m is used in an annotation but is not pure (After.java:5)
+                    ensures purem() && m();
+                                       ^
+Caution: Turning off extended static checking due to type error(s)
+  [TIME total] (aborted)
+1 caution
+1 error

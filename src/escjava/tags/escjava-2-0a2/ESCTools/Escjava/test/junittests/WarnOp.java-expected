@@ -1,0 +1,11 @@
+ESC/Java version VERSION
+  Prover started:TIME
+
+WarnOp ...
+
+WarnOp: m() ...
+    [TIME]  passed
+
+WarnOp: WarnOp() ...
+    [TIME]  passed
+  [TIME total]

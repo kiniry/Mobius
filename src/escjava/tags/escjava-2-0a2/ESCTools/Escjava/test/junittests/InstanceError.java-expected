@@ -1,0 +1,56 @@
+ESC/Java version VERSION
+  Prover started:TIME
+
+InstanceSuperC ...
+InstanceError.java:6: Error: May not specify both static and instance on a declaration
+        //@ static instance ghost public int fff; // ERROR
+                   ^
+InstanceError.java:7: Error: May not specify both static and instance on a declaration
+        //@ static ghost instance public int ffff; // ERROR
+                         ^
+InstanceError.java:8: Error: May not specify both static and instance on a declaration
+        //@ ghost static instance public int fffff; // ERROR
+                         ^
+InstanceError.java:10: Error: May not specify both static and instance on a declaration
+        //@ static instance model public int mmm; // ERROR
+                   ^
+Caution: Turning off extended static checking due to type error(s)
+  [TIME total] (aborted)
+
+InstanceSuper ...
+InstanceError.java:16: Error: May not specify both static and instance on a declaration
+        //@ static instance ghost public int fff; // ERROR
+                   ^
+InstanceError.java:17: Error: May not specify both static and instance on a declaration
+        //@ static ghost instance public int ffff; // ERROR
+                         ^
+InstanceError.java:18: Error: May not specify both static and instance on a declaration
+        //@ ghost static instance public int fffff; // ERROR
+                         ^
+InstanceError.java:20: Error: May not specify both static and instance on a declaration
+        //@ static instance model public int mmm; // ERROR
+                   ^
+  [TIME total] (aborted)
+
+InstanceError ...
+InstanceError.java:24: Error: May not specify both static and instance on a declaration
+        //@ public instance static ghost boolean b1; // ERROR
+                   ^
+InstanceError.java:25: Error: May not specify both static and instance on a declaration
+        //@ public static instance ghost boolean b2; // ERROR
+                          ^
+InstanceError.java:26: Error: May not specify both static and instance on a declaration
+        //@ public instance ghost static boolean b3; // ERROR
+                   ^
+InstanceError.java:27: Error: May not specify both static and instance on a declaration
+        //@ public static ghost instance boolean b4; // ERROR
+                                ^
+InstanceError.java:28: Error: May not specify both static and instance on a declaration
+        //@ public ghost instance static boolean b5; // ERROR
+                         ^
+InstanceError.java:29: Error: May not specify both static and instance on a declaration
+        //@ public ghost static instance boolean b6; // ERROR
+                                ^
+  [TIME total] (aborted)
+1 caution
+14 errors

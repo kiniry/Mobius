@@ -1,0 +1,51 @@
+ESC/Java version VERSION
+  Prover started:TIME
+
+PureCheck2 ...
+PureCheck2.java:3: Error: Method npm is used in an annotation but is not pure (PureCheck2.java:21)
+        //@ requires spm() + ipm() + npm() > 0;
+                                     ^
+
+PureCheck2: ipm() ...
+------------------------------------------------------------------------
+PureCheck2.java:5: Warning: Postcondition possibly not established (Post)
+        public int ipm() { return 0; }
+                                     ^
+Associated declaration is "PureCheck2.java", line 16, col 5:
+        //@ ensures \result == -2;
+            ^
+Execution trace information:
+    Executed return in "PureCheck2.java", line 5, col 20.
+
+------------------------------------------------------------------------
+    [TIME]  failed
+
+PureCheck2: PureCheck2() ...
+    [TIME]  passed
+  [TIME total]
+
+SuperPure ...
+
+SuperPure: spm() ...
+    [TIME]  passed
+
+SuperPure: SuperPure() ...
+    [TIME]  passed
+  [TIME total]
+
+IPure ...
+
+IPure: ipm() ...
+    [TIME]  passed immediately
+  [TIME total]
+
+NonPure ...
+
+NonPure: npm() ...
+    [TIME]  passed
+
+NonPure: NonPure() ...
+    [TIME]  passed
+  [TIME total]
+1 warning
+1 error

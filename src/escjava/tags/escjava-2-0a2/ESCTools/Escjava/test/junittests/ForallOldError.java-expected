@@ -1,0 +1,18 @@
+ESC/Java version VERSION
+ForallOldError.java:6: Error: forall annotations may not have initializers
+        //@ forall Object o = null ; // ERROR
+                            ^
+ForallOldError.java:7: Error: old annotations must be initialized
+        //@ old Object x;   // ERROR
+                       ^
+  Prover started:TIME
+
+ForallOldError ...
+
+ForallOldError: z() ...
+    [TIME]  passed
+
+ForallOldError: ForallOldError() ...
+    [TIME]  passed
+  [TIME total]
+2 errors

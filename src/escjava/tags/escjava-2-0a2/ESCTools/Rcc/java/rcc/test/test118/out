@@ -1,0 +1,13 @@
+C.java:19: Warning: possible race condition.  Lock 'a' may not be held.  Locks currently held are '()'. (Race)
+        CC/*#{a}*/ c = a.c;
+                       ^
+Associated declaration is "C.java", line 16, col 24:
+    CC/*#{this}*/ c /*# guarded_by this */;
+                        ^
+C.java:26: Warning: possible race condition.  Lock 'a' may not be held.  Locks currently held are '()'. (Race)
+            CC/*#{a}*/ c = a.c;
+                           ^
+Associated declaration is "C.java", line 16, col 24:
+    CC/*#{this}*/ c /*# guarded_by this */;
+                        ^
+2 warnings
