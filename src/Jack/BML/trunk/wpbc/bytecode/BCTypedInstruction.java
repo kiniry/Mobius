@@ -13,11 +13,11 @@ import bcexpression.javatype.JavaType;
 /**
  * @author mpavlova
  *
- * To change the template for this generated type comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
- */
+ *Get the type associated with an instruction, int for ILOAD, or the type of the field of a PUTFIELD instruction, e.g..
+ *
+ **/
 public interface BCTypedInstruction {
-
+	
 	public JavaType getType();
 	public void setType(JavaType _type );
 }

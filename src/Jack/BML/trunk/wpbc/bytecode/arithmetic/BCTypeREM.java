@@ -89,7 +89,7 @@ public class BCTypeREM extends BCArithmeticInstructionWithException {
 			//                  else ExcPostcondition 
 			Formula _excPost =
 				getWpForException(
-					JavaType.getJavaClass("java.lang.ArithmeticException"),
+					JavaType.getJavaRefType("java.lang.ArithmeticException"),
 					_exc_Postcondition);
 			Formula wpExceptionExecution =
 				new Formula(divisorIsZero, _excPost, Connector.IMPLIES);

@@ -1,5 +1,6 @@
 package bytecode.localvarinstruction;
 
+import org.apache.bcel.generic.IINC;
 import org.apache.bcel.generic.InstructionHandle;
 
 import specification.ExceptionalPostcondition;
@@ -8,22 +9,35 @@ import formula.Formula;
 
 import org.apache.bcel.generic.LocalVariableInstruction;
 
+import bcclass.BCLocalVariable;
+import bcexpression.LocalVariableAccess;
+import bcexpression.NumberLiteral;
 import bcexpression.javatype.JavaType;
 import bytecode.BCInstruction;
 
 /**
  * @author mpavlova
  *
+ * iinc 	index 	const
+ * No changes on the stack are done.
+ * 
+ *  The index is an unsigned byte that must be an index into the local variable array of the current frame . 
+ * The const is an immediate signed byte. The local variable at index must contain an int. 
+ * The value const is first sign-extended to an int, and then the local variable at index is incremented by that amount.
+ *  	
  */
-public class BCIINC extends BCInstruction implements BCLocalVariableInstruction{
-	
-	private int index;
-	
-	public BCIINC(InstructionHandle _instruction) {
-		super(_instruction);
-		setIndex(((LocalVariableInstruction)(_instruction.getInstruction())).getIndex());
-		
-		// TODO Auto-generated constructor stub
+public class BCIINC extends BCLocalVariableInstruction {
+
+	/**
+	 * the value by which the local variable will be incremented
+	 */
+	private NumberLiteral constant;
+	private JavaType type;
+
+	public BCIINC(InstructionHandle _instruction, BCLocalVariable _lv) {
+		super(_instruction, _lv);
+		setType(JavaType.JavaINT);
+		setConstant(((IINC) (_instruction.getInstruction())).getIncrement());
 	}
 
 	/**
@@ -31,41 +45,30 @@ public class BCIINC extends BCInstruction implements BCLocalVariableInstruction{
 	 */
 	public void BCLocalVariableInstruction() {
 	}
+
 	/**
-	 * @see bytecode.BCLocalVariableInstruction#setIndex(int)
+	 * @param literal
 	 */
-	public void setIndex(int _index) {
-		index = _index;
+	public void setConstant(int literal) {
+		constant = new NumberLiteral(literal);
 	}
 	/**
-	 * @see bytecode.BCLocalVariableInstruction#getIndex()
+	 * @param literal
 	 */
-	public int getIndex() {
-		return index;
+	public NumberLiteral getConstant() {
+		return constant;
 	}
 
-
-	/* (non-Javadoc)
-	 * @see bytecode.BCTypedInstruction#getType()
-	 */
-	public JavaType getType() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	/* (non-Javadoc)
-	 * @see bytecode.BCTypedInstruction#setType(bcexpression.javatype.JavaType)
-	 */
-	public void setType(JavaType _type) {
-		// TODO Auto-generated method stub
-		
-	}
-	
 	/**
-	 * @see bytecode.BCInstruction#wp(formula.Formula, specification.ExceptionalPostcondition)
-	 */
-	public Formula wp(Formula arg0, ExceptionalPostcondition arg1) {
-		return null;
+		 * @see bytecode.BCInstruction#wp(formula.Formula, specification.ExceptionalPostcondition)
+		 */
+	public Formula wp(
+		Formula _normal_Postcondition,
+		ExceptionalPostcondition _exc_Postcondition) {
+		Formula wp;
+		LocalVariableAccess lva = new LocalVariableAccess(getIndex());
+		wp = _normal_Postcondition.substitute(lva, constant);
+		return wp;
 	}
+
 }

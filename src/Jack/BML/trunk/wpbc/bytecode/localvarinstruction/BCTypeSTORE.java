@@ -10,68 +10,45 @@ import org.apache.bcel.generic.InstructionHandle;
 
 import specification.ExceptionalPostcondition;
 import formula.Formula;
-import org.apache.bcel.generic.LocalVariableInstruction;
 
-import bcexpression.javatype.JavaType;
-import bytecode.BCInstruction;
+import bcclass.BCLocalVariable;
+import bcexpression.Expression;
+import bcexpression.LocalVariableAccess;
+import bcexpression.vm.Stack;
+
 
 /**
  * @author mpavlova
  *
- * To change the template for this generated type comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
+ * Operation: Store the stack top  into local variable
+ * 
+ * Format : astore index 	
+ * 
+ * Operand Stack:   ..., objectref ==> ...
+ * 
+ * wp = psi^n[t < -- t -1][o ==local(index)  <-- S( t)] 
  */
-public class BCTypeSTORE extends BCInstruction  implements BCLocalVariableInstruction{
-	//ASTORE, DSTORE, FSTORE, ISTORE, LSTORE
-	/**
-	 * index of local variable 
-	 */
-	private int index ;
+public class BCTypeSTORE extends BCLocalVariableInstruction {
+	//ASTORE, ISTORE, LSTORE
 	
 	/**
 	 * @param _instruction
 	 */
-	public BCTypeSTORE(InstructionHandle _instruction) {
-		super(_instruction);
-		setIndex(((LocalVariableInstruction)(_instruction.getInstruction())).getIndex());
-		
-		// TODO Auto-generated constructor stub
-	}
-
-	/**
-	 * @see bytecode.BCLocalVariableInstruction#setIndex(int)
-	 */
-	public void setIndex(int _index) {
-		index = _index;
-	}
-	/**
-	 * @see bytecode.BCLocalVariableInstruction#getIndex()
-	 */
-	public int getIndex() {
-		return index;
-	}
-	/* (non-Javadoc)
-	 * @see bytecode.ByteCode#wp(formula.Formula, specification.ExceptionalPostcondition)
-	 */
-	public Formula wp(Formula _normal_Postcondition, ExceptionalPostcondition _exc_Postcondition) {
-		// TODO Auto-generated method stub
-		return null;
+	public BCTypeSTORE(InstructionHandle _instruction, BCLocalVariable _lv) {
+		super(_instruction, _lv);
+		setType(_lv.getType());
 	}
 
 	/* (non-Javadoc)
-	 * @see bytecode.BCTypedInstruction#getType()
-	 */
-	public JavaType getType() {
-		// TODO Auto-generated method stub
-		return null;
+		 * @see bytecode.ByteCode#wp(formula.Formula, specification.ExceptionalPostcondition)
+		 */
+	public Formula wp(
+		Formula _normal_Postcondition,
+		ExceptionalPostcondition _exc_Postcondition) {
+		Formula wp;
+		wp = _normal_Postcondition.substitute(Expression.getCounter(), Expression.getCounter_minus_1());
+		Stack stackTop = new Stack(Expression.getCounter());
+		wp = wp.substitute(new LocalVariableAccess(getIndex()), stackTop  );
+		return wp;
 	}
-
-	/* (non-Javadoc)
-	 * @see bytecode.BCTypedInstruction#setType(bcexpression.javatype.JavaType)
-	 */
-	public void setType(JavaType _type) {
-		// TODO Auto-generated method stub
-		
-	}
-
 }

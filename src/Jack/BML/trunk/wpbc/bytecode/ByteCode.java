@@ -6,16 +6,7 @@
  */
 package bytecode;
 
-
-import java.util.HashMap;
-import java.util.Vector;
-
-import org.apache.bcel.generic.ConstantPoolGen;
-
 import specification.ExceptionalPostcondition;
-
-import bcexpression.vm.Stack;
-
 import formula.Formula;
 
 /**
@@ -27,8 +18,7 @@ import formula.Formula;
 public interface ByteCode  {
 	
 	/**
-	 * 
-	 * @return a vector of formulas that should be valid before execution of the bytecode
+	 * @return the wp for this bytecode
 	 */
 	public Formula wp(Formula _normal_Postcondition,   ExceptionalPostcondition _exc_Postcondition );
 	

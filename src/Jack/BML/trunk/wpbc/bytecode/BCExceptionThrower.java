@@ -54,7 +54,7 @@ public  abstract class BCExceptionThrower extends BCUnconditionalBranch {
 		}
 		exception_targetBlock = new HashMap();
 		for (int i = 0; i < _exceptions.length; i++) {
-			exception_targetBlock.put( JavaType.getJavaClass(_exceptions[i].getName()), null );
+			exception_targetBlock.put( JavaType.getJavaRefType(_exceptions[i].getName()), null );
 		}
 	}
 	

@@ -10,14 +10,13 @@ import org.apache.bcel.generic.InstructionHandle;
 
 import constants.ArrayLengthConstant;
 import specification.ExceptionalPostcondition;
-import bcexpression.ArithmeticExpression;
+
 import bcexpression.ArrayAccessExpression;
 import bcexpression.Expression;
-import bcexpression.ExpressionConstants;
+
 import bcexpression.FieldAccessExpression;
-import bcexpression.NumberLiteral;
 import bcexpression.javatype.JavaType;
-import bcexpression.vm.Counter;
+
 import bcexpression.vm.Stack;
 import formula.Connector;
 import formula.Formula;
@@ -102,7 +101,7 @@ public class BCTypeASTORE
 				stackTop_minus_2,
 				Expression.NULL,
 				PredicateSymbol.EQ);
-		Formula nullPointer = getWpForException(JavaType.getJavaClass("java.lang.NullPointerException"), _exc_Postcondition);
+		Formula nullPointer = getWpForException(JavaType.getJavaRefType("java.lang.NullPointerException"), _exc_Postcondition);
 		wps[1] = new Formula(array_null, nullPointer, Connector.IMPLIES );	
 		
 		  //S(t-1) > S(t-2).length ==> _exc_Postcondition(java.lang. ArrayIndexOutOfBoundsException)
@@ -113,7 +112,7 @@ public class BCTypeASTORE
 					  new ArrayLengthConstant(),
 					  stackTop_minus_2),
 				  PredicateSymbol.GRTEQ);
-		Formula outOfBounds = getWpForException(JavaType.getJavaClass("java.lang. ArrayIndexOutOfBoundsException"), _exc_Postcondition);
+		Formula outOfBounds = getWpForException(JavaType.getJavaRefType("java.lang. ArrayIndexOutOfBoundsException"), _exc_Postcondition);
 		wps[2] = new Formula(arr_index_not_correct, outOfBounds, Connector.IMPLIES);
 	 	wp = new Formula(wps, Connector.AND);
 		return wp;		

@@ -28,8 +28,8 @@ import type.BCType;
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
 public class JavaType  extends Expression   implements BCType {
-	protected Type  bcelType;
-	private JML_CONST_TYPE    oftype;
+	protected Type  bcelType;//stil reference to the bcel type object
+	private JML_CONST_TYPE    type;
 	private BCConstantClass constantClassCp;
 	
 	
@@ -66,10 +66,10 @@ public class JavaType  extends Expression   implements BCType {
 	 * @see bcexpression.Expression#setType()
 	 */
 	public void setType() {
-		if(oftype != null){
+		if(type != null){
 			return;
 		}
-		oftype = new JML_CONST_TYPE();
+		type = new JML_CONST_TYPE();
 		
 	}
 
@@ -86,7 +86,15 @@ public class JavaType  extends Expression   implements BCType {
 	 * @see bcexpression.Expression#getType()
 	 */
 	public BCType getType() {
-		return oftype;
+		return type;
+	}
+	
+	public static JavaType getJavaType(Type _type) {
+		JavaType _jt = getJavaBasicType(_type);
+		if (_jt != null) {
+			return _jt;
+		}
+		return getJavaRefType(_type);
 	}
 	
 	public static JavaType getJavaBasicType( Type _type) {
@@ -112,6 +120,7 @@ public class JavaType  extends Expression   implements BCType {
 		return null;
 	}
 	
+	
 	public static JavaBasicType getJavaBasicType( int _baseType) {
 		if (_baseType == BaseTypeCharacters.Z ) {
 			return JavaBOOLEAN;	
@@ -135,7 +144,12 @@ public class JavaType  extends Expression   implements BCType {
 		return null;
 	}
 	
-	public static JavaReferenceType getJavaClass( String _signature)  {
+	
+	
+	public static JavaReferenceType getJavaRefType( Type _type){
+		return getJavaRefType( _type.getSignature());
+	}
+	public static JavaReferenceType getJavaRefType( String _signature)  {
 		if (_signature.equals("java.lang.String")) {
 			return JavaSTRING;
 		}
@@ -162,12 +176,12 @@ public class JavaType  extends Expression   implements BCType {
 	 * @param _class_name String that represents a valid java class name , i.e. java.lang.String. Only classes are stored here
  	 * @return
 	 */
-	public static JavaReferenceType getJavaClass(Integer _cpIndex, ConstantPoolGen _cpg)  {
+	public static JavaReferenceType getJavaRefType(Integer _cpIndex, ConstantPoolGen _cpg)  {
 		JavaReferenceType _jt = null;
 		ConstantClass _cc = (ConstantClass)_cpg.getConstant(_cpIndex.intValue() );
 //		BCConstantClass bcc = new BCConstantClass(_cc , _cpIndex.intValue());
 //		Type _bcelt = Type.getType(_cc.getBytes(_cpg.getConstantPool()));
-		_jt = getJavaClass(_cc.getBytes(_cpg.getConstantPool()));
+		_jt = getJavaRefType(_cc.getBytes(_cpg.getConstantPool()));
 	   //_jt.setBCConstantClass(bcc);
 		return _jt;
 	}

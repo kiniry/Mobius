@@ -60,4 +60,6 @@ public interface BCInstructionCodes {
 	public static final byte IAND = 28;
 	public static final byte LAND = 29;
 	
+	public static final byte ATHROW = 30;
+	
 }

@@ -87,7 +87,7 @@ public class BCTypeALOAD  extends BCExceptionThrower implements  BCTypedInstruct
 		  //  execution terminating with java.lang.IndexOutOfBoundsException
 		  //S(t-1).length <= S(t) ==> excPost(IndexOutOfBoundsException)
 		  Formula _index_out_of_bounds = new Predicate2Ar( _arrlength,   _stackTop,  PredicateSymbol.LESSEQ); 
-		  Formula _wp_arr_out_of_bounds = getWpForException(JavaType.getJavaClass("java.lang.IndexOutOfBoundsException"), _e_Postcondition);
+		  Formula _wp_arr_out_of_bounds = getWpForException(JavaType.getJavaRefType("java.lang.IndexOutOfBoundsException"), _e_Postcondition);
 		  Formula _out_of_bound_termination = new Formula(_index_out_of_bounds, 
 																							_wp_arr_out_of_bounds , 
 																							Connector.IMPLIES);
@@ -95,7 +95,7 @@ public class BCTypeALOAD  extends BCExceptionThrower implements  BCTypedInstruct
 		  // execution terminating with  NullPointerException
 		  //S(t-1) == null ==> excPost(NullPointerException) 
 		  Formula _arr_null = new Predicate2Ar(_stackTop_minus_1, Expression.NULL,  PredicateSymbol.EQ );
-		  Formula _wp_null_pointer =  getWpForException(JavaType.getJavaClass("java.lang.NullPointerException"), _e_Postcondition);;
+		  Formula _wp_null_pointer =  getWpForException(JavaType.getJavaRefType("java.lang.NullPointerException"), _e_Postcondition);;
 		  Formula _null_pointer_termination = new Formula(_arr_null, 
 														  _wp_null_pointer,
 														  Connector.IMPLIES);

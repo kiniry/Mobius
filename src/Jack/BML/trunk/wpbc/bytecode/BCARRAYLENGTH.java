@@ -8,8 +8,18 @@ package bytecode;
 
 import org.apache.bcel.generic.InstructionHandle;
 
+import constants.ArrayLengthConstant;
+
+import bcexpression.Expression;
+import bcexpression.FieldAccessExpression;
+import bcexpression.javatype.JavaType;
+import bcexpression.vm.Stack;
+
 import specification.ExceptionalPostcondition;
+import formula.Connector;
 import formula.Formula;
+import formula.atomic.Predicate2Ar;
+import formula.atomic.PredicateSymbol;
 
 /**
  * @author mpavlova
@@ -31,8 +41,24 @@ public class BCARRAYLENGTH  extends BCExceptionThrower {
 	 * @see bytecode.ByteCode#wp(formula.Formula, specification.ExceptionalPostcondition)
 	 */
 	public Formula wp(Formula _normal_Postcondition, ExceptionalPostcondition _exc_Postcondition) {
-		// TODO Auto-generated method stub
-		return null;
+		Formula wp;
+		Stack topStack = new Stack(Expression.getCounter());
+		
+		//wp in case of normal termination
+		Formula objNotNull = new Predicate2Ar(topStack, Expression.NULL, PredicateSymbol.NOTEQ);
+		//S(t).length
+		FieldAccessExpression arrLength =  new FieldAccessExpression( new ArrayLengthConstant(), topStack) ;
+		_normal_Postcondition.substitute(topStack, arrLength);
+		Formula wpNormalTermination = new Formula(objNotNull, _normal_Postcondition , Connector.IMPLIES);
+		
+		//wp in case of throwing exception
+		Formula objNull = new Predicate2Ar(topStack, Expression.NULL, PredicateSymbol.EQ);
+		Formula excPrecondition = getWpForException(JavaType.getJavaRefType("java.lang.NullPointerException"),_exc_Postcondition);
+		Formula wpExceptionalTermination = new Formula(objNull, excPrecondition, Connector.IMPLIES);
+		wp = new Formula(wpNormalTermination, wpExceptionalTermination, Connector.AND );
+		
+		
+		return wp;
 	}
 
 }

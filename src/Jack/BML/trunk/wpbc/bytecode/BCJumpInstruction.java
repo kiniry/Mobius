@@ -7,15 +7,13 @@
 package bytecode;
 
 import java.util.Enumeration;
-import bcexpression.vm.Stack;
 import java.util.Vector;
 
 import org.apache.bcel.generic.BranchInstruction;
 import org.apache.bcel.generic.InstructionHandle;
 
-import specification.ExceptionalPostcondition;
 import utils.Util;
-import formula.Formula;
+
 
 /**
  * @author mpavlova

@@ -61,4 +61,5 @@ public interface BCConstants {
 	public static final byte AND_INT = 30;
 	public static final byte AND_LONG = 31;
 	
+
 }

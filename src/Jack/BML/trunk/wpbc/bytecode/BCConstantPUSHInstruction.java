@@ -18,7 +18,7 @@ import bcexpression.NumberLiteral;
  *
  * Denotes a push instruction that produces a literal on the stack : BIPUSH, DCONST, FCONST, ICONST, LCONST, SIPUSH
  */
-public class BCConstantPUSHInstruction extends BCInstruction {
+public abstract class BCConstantPUSHInstruction extends BCInstruction {
 	//    BIPUSH, DCONST, FCONST, ICONST, LCONST, SIPUSH
 	
 	NumberLiteral value; 
@@ -31,10 +31,9 @@ public class BCConstantPUSHInstruction extends BCInstruction {
 		setValue(cp.getValue());
 	}
 	
-	private void setValue(Number _value) {
-		value = new NumberLiteral(_value);
-	} 
-
+	protected abstract  void setValue(Number _value)  ;
+	
+	
 	public Expression getValue() {
 		return null;
 	}

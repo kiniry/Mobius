@@ -1,6 +1,11 @@
 package bytecode.localvarinstruction;
 
+import org.apache.bcel.generic.InstructionHandle;
+
+import bcclass.BCLocalVariable;
+import bcexpression.javatype.JavaType;
 import bytecode.BCIndexedInstruction;
+import bytecode.BCInstruction;
 
 /**
  * @author Mariela
@@ -10,16 +15,54 @@ import bytecode.BCIndexedInstruction;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public interface BCLocalVariableInstruction extends BCIndexedInstruction {
+public abstract class  BCLocalVariableInstruction extends BCInstruction implements  BCIndexedInstruction {
 	/**
-	 * sets the index of the local variable that this instructions deals with
-	 * @param index
+	 * index in the local variable table that contains the local variable incremented by this instruction 
 	 */
-	public void setIndex(int index);
+	private int index;
+	
+	/**
+	 * the type of  the local variable is returned
+	 */
+	private JavaType type;
+	
+	public BCLocalVariableInstruction(InstructionHandle _instruction, BCLocalVariable _lv) {
+		 super(_instruction);
+		 setIndex(_lv.getIndex());
+		
+	}
+	
+	/**
+	 * @see bytecode.BCLocalVariableInstruction#setIndex(int)
+	 */
+	public void setIndex(int _index) {
+		index = _index;
+	}
 	
 	/**
 	 * returns the index of the local variable that this instructiction treats
 	 * @return int
 	 */
-	public int getIndex();
+	public int getIndex()  {
+		return index;
+	}
+	
+	/* (non-Javadoc)
+	 * @see bytecode.BCTypedInstruction#getType()
+	 */
+	public JavaType getType() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	/* (non-Javadoc)
+	 * @see bytecode.BCTypedInstruction#setType(bcexpression.javatype.JavaType)
+	 */
+	public void setType(JavaType _type) {
+		type = _type;
+	}
+	
+	
+
 }

@@ -7,10 +7,15 @@
 package bytecode.localvarinstruction;
 
 import org.apache.bcel.classfile.LocalVariable;
+import org.apache.bcel.generic.ALOAD;
 import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.LocalVariableInstruction;
 
+import bcclass.BCLocalVariable;
+import bcexpression.Expression;
+import bcexpression.LocalVariableAccess;
 import bcexpression.javatype.JavaType;
+import bcexpression.vm.Stack;
 import bytecode.BCInstruction;
 
 import specification.ExceptionalPostcondition;
@@ -19,63 +24,39 @@ import formula.Formula;
 /**
  * @author mpavlova
  *
- * To change the template for this generated type comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
+ * Operation: Load reference from local variable
+ * 
+ * Operand Stack : ... ==> ..., objectref
+ * 
+ * Description:   The index is an unsigned byte that must be an index into the local variable array of the current frame. 
+ * The local variable at index must contain a reference. 
+ * The objectref in the local variable at index is pushed onto the operand stack.
+ * 
+ *  wp = psi^n[t <-- t +1][S(t+1) <-- local(i)]
  */
-public  class BCTypeLOAD  extends BCInstruction implements BCLocalVariableInstruction{
-	//ALOAD, DLOAD, FLOAD, ILOAD, LLOAD 
-	/**
-	 * index of local variable 
-	 */
-	private int index ;
+public  class BCTypeLOAD  extends  BCLocalVariableInstruction{
+	//ALOAD,  ILOAD, LLOAD 
+
 	/**
 	 * @param _instruction
 	 */
-	public BCTypeLOAD(InstructionHandle _instruction) {
-		super(_instruction);
-		setIndex(((LocalVariableInstruction)(_instruction.getInstruction())).getIndex());
+	public BCTypeLOAD(InstructionHandle _instruction, BCLocalVariable _lv) {
+		super(_instruction, _lv);
+		setType(_lv.getType());
 		// TODO Auto-generated constructor stub
 	}
+
+	
 
 	/* (non-Javadoc)
 	 * @see bytecode.ByteCode#wp(formula.Formula, specification.ExceptionalPostcondition)
 	 */
 	public Formula wp(Formula _normal_Postcondition, ExceptionalPostcondition _exc_Postcondition) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	/**
-	 * @see bytecode.BCLocalVariableInstruction#BCLocalVariableInstruction()
-	 */
-	public void BCLocalVariableInstruction() {
-	}
-	/**
-	 * @see bytecode.BCLocalVariableInstruction#setIndex(int)
-	 */
-	public void setIndex(int _index) {
-		index = _index;
-	}
-	/**
-	 * @see bytecode.BCLocalVariableInstruction#getIndex()
-	 */
-	public int getIndex() {
-		return index;
-	}
-
-	/* (non-Javadoc)
-	 * @see bytecode.BCTypedInstruction#getType()
-	 */
-	public JavaType getType() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	/* (non-Javadoc)
-	 * @see bytecode.BCTypedInstruction#setType(bcexpression.javatype.JavaType)
-	 */
-	public void setType(JavaType _type) {
-		// TODO Auto-generated method stub
-		
+		Formula wp;
+		wp = _normal_Postcondition.substitute(Expression.getCounter(), Expression.getCounter_plus_1());
+		Stack topStack= new Stack( Expression.getCounter_plus_1());
+		wp = wp.substitute(topStack, new LocalVariableAccess(getIndex()));
+		return wp;
 	}
 
 }
