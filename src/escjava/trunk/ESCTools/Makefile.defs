@@ -146,7 +146,8 @@ export ESCJAVA_CLASSFILES = ${ESCJAVA_ROOT}/classfiles
 export MOCHA_LIB = ${ESCTOOLS_ROOT}/jars/mochalib.jar
 
 ## This is the path needed to *run* Escjava.
-export ESC_CLASSPATH = $(call canonicalize,${JAVAFE_CLASSFILES}:${ESCJAVA_CLASSFILES}:${ESCTOOLS_ROOT}/Utils:${MOCHA_LIB})
+export ESC_CLASSPATH_S = ${JAVAFE_CLASSFILES}:${ESCJAVA_CLASSFILES}:${ESCTOOLS_ROOT}/Utils:${MOCHA_LIB}
+export ESC_CLASSPATH = $(call canonicalize,${ESC_CLASSPATH_S})
 
 ## The front-end for Escjava that should be used for testing.
 export ESCJ = ${ESCJAVA_ROOT}/escj -nowarn Modifies

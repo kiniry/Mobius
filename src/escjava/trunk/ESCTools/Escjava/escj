@@ -203,8 +203,13 @@ if ( ! $?ESC_CLASSPATH ) then
 	    setenv ESC_CLASSPATH ${ESCTOOLS_ROOT}/Escjava/classfiles:${ESCTOOLS_ROOT}/Javafe/classfiles:${ESCTOOLS_ROOT}/Utils
 	endif
     endif
+else
+    if ( $?COMSPEC ) then
+	setenv ESC_CLASSPATH `cygpath -p -m ${ESC_CLASSPATH_S}`
+    else
+	setenv ESC_CLASSPATH $ESC_CLASSPATH_S
+    endif
 endif
-set ESC_CLASSPATHX = ${ESC_CLASSPATH}
 
 ## Simplify settings
 if ($?PROVER_KILL_TIME) then
@@ -234,7 +239,7 @@ if ( $?ESCJ_VERBOSE ) then
     echo "Executing:";
     echo "${JAVA} ${JAVA_VM_FLAGS}";
     echo "  -Dsimplify=${ESCJ_SIMPLIFY}";
-    echo "  -classpath ${ESC_CLASSPATHX}";
+    echo "  -classpath ${ESC_CLASSPATH}";
     echo "  " ${MAIN} ;
     echo "  " ${JBIN} ;
     echo "  -classpath ${CLASSPATH}";
@@ -245,5 +250,5 @@ if ( $?ESCJ_VERBOSE ) then
 endif
 
 ${JAVA} ${JAVA_VM_FLAGS} -Dsimplify=${ESCJ_SIMPLIFY} \
-    -classpath ${ESC_CLASSPATHX} ${MAIN} \
+    -classpath ${ESC_CLASSPATH} ${MAIN} \
     ${JBIN} -classpath ${CLASSPATH} -specs ${ESC_SPECS} ${ESCJ_STDARGS} $*

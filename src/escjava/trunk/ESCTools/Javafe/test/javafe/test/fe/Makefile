@@ -76,6 +76,7 @@ summary: test*
 ## Must have variables JAVA and JAVAFE_ROOT set
 do%: testclasses
 	@( cd $*; \
+	   export TOOLCMD="${TOOLCMD}" ;\
 	   export TOOL="${TOOL} -classpath ." ; \
 	   ./run 2>&1 | sed "s|`pwd`|<TEST>|g" > out)
 	@diff $*/out $*/ans || echo Test $* failed
