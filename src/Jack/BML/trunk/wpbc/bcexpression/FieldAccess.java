@@ -98,7 +98,7 @@ public class FieldAccess extends Expression {
 //		Util.dump("***************************************************");
 //		Util.dump("*****FieldAccessExpression.substitute : " + toString() + "[" + _e1.toString() + " <--- " + _e2.toString() + "]");
 		if (this.equals(_e1)) {
-			return _e2;
+			return _e2.copy();
 		}
 		Expression constantFieldRef =  getFieldConstRef();
 		Expression obj = getSubExpressions()[1];
