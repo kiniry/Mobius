@@ -1,14 +1,14 @@
-#!/bin/csh
+#!/bin/bash
 
 rm -rf ../_tmp_classes
 mkdir ../_tmp_classes
 
-setenv CLASSPATH `pwd`
+export CLASSPATH=`pwd`
 
-setenv TOOLCMD "${OLD_JAVAC} -d `pwd`/../_tmp_classes"
-setenv TOOLARGS ""
+export TOOLCMD="${OLD_JAVAC} -d `pwd`/../_tmp_classes"
+unset TOOLARGS
 
-setenv TOOL "${TOOLCMD} ${TOOLARGS}"
+export TOOL="${TOOLCMD} ${TOOLARGS}"
 
 ./run |& sed "s|`pwd`|<TEST>|g"
 
