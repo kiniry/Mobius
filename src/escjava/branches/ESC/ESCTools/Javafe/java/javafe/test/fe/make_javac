@@ -1,0 +1,15 @@
+#!/bin/csh -f
+
+foreach i (test? test?? test??? test???? test?????)
+  echo "  Running $i..."
+  rm -rf _tmp_classes
+  mkdir _tmp_classes
+  setenv CLASSPATH	`pwd`
+  setenv TOOLCMD	"${JAVAC} -d `pwd`/_tmp_classes"
+  setenv TOOLARGS	""
+  setenv TOOL		"${TOOLCMD} ${TOOLARGS}"
+
+  (cd $i; ./run |& sed "s|`pwd`|<TEST>|g" > outc)
+end
+
+rm -rf _tmp_classes

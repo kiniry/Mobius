@@ -1,0 +1,13 @@
+#!/bin/sh -f
+# usage: run FLAGS
+
+rm -rf outdir
+CLASSPATH="../../../src/Ambit-noAnnot:${CLASSPATH}"
+export CLASSPATH
+#${RCCW} $* -inpath ../src/Ambit-noAnnot outdir progSources.txt > houdini.out 2>&1
+${RCCW} $* -inpath ../src/Ambit-noAnnot outdir progSources.txt 
+cat outdir/html/warnings.html
+
+
+
+

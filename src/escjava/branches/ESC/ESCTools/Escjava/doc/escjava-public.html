@@ -1,0 +1,260 @@
+<!-- This file generated automatically by mtex2html(1) -->
+<HTML>
+<HEAD>
+<TITLE>The escjava command</TITLE>
+</HEAD>
+
+<BODY BGCOLOR="#ffffff" VLINK="#006633">
+<H2>escjava(1)</H2>
+
+<H3>NAME</H3>
+<BLOCKQUOTE>
+<B>escjava</B> - Checks Java source files for possible errors
+</BLOCKQUOTE>
+
+<H3>SYNOPSIS</H3>
+<BLOCKQUOTE>
+<B>escjava</B> <I>options</I> <I>source_filename</I>...
+</BLOCKQUOTE>
+
+<H3>DESCRIPTION</H3>
+<BLOCKQUOTE>
+<P>
+
+The <B>escjava</B> command takes a list of Java source files (i.e.,
+<I>filename</I><TT>.java</TT>) and checks the classes contained within those
+files for possible errors.  If the <B>-depend</B> option is supplied, then
+any class on which a checked class depends will also be checked.<P>
+
+More information can be obtained from the ESC/Java User's Manual,
+which is provided as
+<A HREF="http://research.compaq.com/SRC/publications/">Technical Note 2000-002</A>,
+Compaq Systems Research Center.
+</BLOCKQUOTE>
+
+<H3>OPTIONS</H3>
+<BLOCKQUOTE>
+<P>
+
+<DL>
+
+<DT><B>-bootclasspath</B> <I>path</I><DD>
+Overrides <B>escjava</B>'s built-in path for locating <TT>.spec</TT> and
+<TT>.class</TT> files for the system classes (<TT>java.lang.String</TT>, etc.)
+with <I>path</I>.  This option is provided so that files may be checked
+against a different version of JDK than the one escjava comes with
+(currently a version of JDK 1.2 augmented with a limited number of
+spec files).  Note: if the <B>-v</B> option is supplied, <B>escjava</B> will
+print the complete classpath it is using when it starts up.<P>
+
+<DT><B>-classpath</B> <I>path</I><DD>
+Sets the path to be used to locate user classes not supplied on the
+command line to <I>path</I>.  Overrides all previous <B>-classpath</B>
+options and the <B>CLASSPATH</B> environment variable.  The actual
+classpath <B>escjava</B> uses is the user path followed by the
+bootclasspath (see <B>-bootclasspath</B>); this allows users to add new
+<TT>.spec</TT> files for the system classes.  Note: if the <B>-v</B> option
+is supplied, <B>escjava</B> will print the complete classpath it is
+using when it starts up.<P>
+
+<DT><B>-counterexample</B><DD>
+Causes a pretty printed version of the counterexample context to be
+displayed after each warning message.  Elements
+of the counterexample context that are almost certainly irrelevant are
+not printed.  Use the <B>-pcc</B> option to get the raw, unadulterated
+counterexample context.<P>
+
+<DT><B>-depend</B><DD>
+Normally, <B>escjava</B> checks only the classes contained in the source
+files given to it on the command line.  If the <B>-depend</B> option is
+given, however, <B>escjava</B> also checks any classes on which those
+classes depend (including indirectly).<P>
+
+<DT><B>-f</B> <I>file</I><DD>
+Instructs <B>escjava</B> to append to the list of source files given
+directly on the command line the files named on separate lines in
+<I>file</I>.  Multiple <B>-f</B> flags may be used.<P>
+
+<DT><B>-loop</B> <I>n</I><DD>
+Instructs <B>escjava</B> to unroll loops <I>n</I> iterations.  The number
+of iterations <I>n</I> can be specified in increments of one half; more
+precisely, the syntax of <I>n</I> is a natural number optionally followed
+by <B>.0</B> or <B>.5</B>.  A "half" iteration consists of evaluating the
+initial guard, if any.  The default value for <I>n</I> is 1.5.  For faster,
+less thorough checking, consider using a value of 1.<P>
+
+<DT><B>-nocheck</B><DD>
+Causes no extended static checking to be done.  Syntax and Java type
+checking as well as verification-condition generation is still
+performed, however.<P>
+
+<DT><B>-notrace</B><DD>
+Do not print the execution trace that leads to the potential error
+being warned about.<P>
+
+<DT><B>-nowarn</B> <I>category</I><DD>
+Turns off all extended static checking of type <I>category</I>.  See the
+user manual for a complete list of valid categories.  If <I>category</I>
+is <B>All</B>, turns off all checking, which can be a useful option in
+conjunction with the <B>-warn</B> switch.<P>
+
+<DT><B>-plainwarning</B><DD>
+By default, <B>escjava</B> will sometimes accompany an error message with
+selected details of the counterexample it found.  The <B>-plainwarning</B>
+option suppresses this information; this may be helpful when
+<B>escjava</B>'s output is to be fed to a program.<P>
+
+<DT><B>-quiet</B><DD>
+Turns off display of the progress messages that <B>escjava</B> normally
+prints.<P>
+
+<DT><B>-routine</B> <I>routinename</I><DD>
+If <B>-routine</B> is used, <B>escjava</B> checks only the routines specified
+by <B>-routine</B> arguments.  The <I>routinename</I> can either be a simple
+method or constructor name (which specifies all routines with this name), or
+a fully qualified routine signature (which specifies a routine uniquely).
+For example, <I>routinename</I> may be <TT>String</TT> or
+<TT>java.lang.String.String(char[],int,int)</TT>.<P>
+
+<DT><B>-routineIndirect</B> <I>file</I><DD>
+This option is equivalent to having the <B>-routine</B> flag present and
+using each line of <I>file</I> as an argument to <B>-routine</B>.<P>
+
+<DT><B>-start</B> <I>n</I><DD>
+This option causes <B>escjava</B> to start checking the first file on the
+command line at line number <I>n</I>.  (Later files are checked from the
+beginning as normal.)  Starting checking at line <I>n</I> means that
+all possible warnings before line <I>n</I> are automatically nowarned.
+(Only the possible warnings themselves are so nowarned, not their
+associated declarations.  For example, <B>escjava</B> may still issue a
+warning that a method declared after line <I>n</I> fails to maintain an
+invariant declared before line <I>n</I>.)  Since no warnings would be
+produced for types and type members whose declarations end before
+line <I>n</I>, these are skipped.<P>
+
+<DT><B>-suggest</B><DD>
+After each warning, suggest an annotation that will suppress the
+warning.  Although it is human-readable, the suggestion is mainly
+intended for use by the ESC/Java Annotation Wizard.  Note: the
+suggestion may or may not correspond to the programmer's intended
+design, so it may be inappropriate to actually follow the suggestion.<P>
+
+<DT><B>-v</B><DD>
+Turns on verbose mode, which causes <B>escjava</B> to print additional
+information that may be helpful in some cases, for example when
+debugging problems related to the classpath (since verbose mode prints
+the complete classpath).<P>
+
+<DT><B>-vclimit</B> <I>n</I><DD>
+Sets the maximum size verification condition that <B>escjava</B> will
+attempt to verify.  Defaults to 500,000.  This limit exists to handle
+the rare cases where <B>escjava</B> generates exponential-size VCs.<P>
+
+<DT><B>-warn</B> <I>category</I><DD>
+Turns on all extended static checking of type <I>category</I> if it is
+currently turned off.  See the user manual for a complete list of valid
+categories.<P>
+
+</DL>
+<P>
+
+</BLOCKQUOTE>
+
+<H3>DIAGNOSTICS</H3>
+<BLOCKQUOTE>
+<P>
+
+Source-file line numbers are counted starting at 1, while column numbers
+are counted starting at 0, treating tabs as one character each.  When
+source is displayed, however, tabs are expanded using 8-space tab stops.<P>
+
+For more information, see the user's manual, and especially the section
+entitled Warnings.
+</BLOCKQUOTE>
+
+<H3>ENVIRONMENT VARIABLES</H3>
+<BLOCKQUOTE>
+<P>
+
+The following environment variables affect the execution of
+<B>escjava</B>:<P>
+
+<DL>
+
+<DT><B>CLASSPATH</B><DD>
+If set, specifies the path to be used to locate user classes not
+supplied on the command line.  Defaults to the current working
+directory.  The <B>-classpath</B> option overrides this variable.  Where
+to find the system classes is specified separately using the
+<B>-bootclasspath</B> option.<P>
+
+<DT><B>ESCJ_SIMPLIFY</B><DD>
+If set, specifies the pathname to use to invoke the Simplify Theorem
+prover.<P>
+
+<DT><B>ESCJ_SIMPLIFY_ARGS</B><DD>
+If set, specifies the arguments to pass to the Simplify Theorem prover
+when it is invoked.  Defaults to "-noprune -noplunge".<P>
+
+<DT><B>ESCJ_STDARGS</B><DD>
+If set, specifies a set of default <B>escjava</B> arguments.  These
+arguments will be processed before any command-line arguments.
+Currently defaults to "-nowarn Deadlock".<P>
+
+<DT><B>PROVER_CC_LIMIT</B><DD>
+If set, specifies the maximum number of warnings to generate per
+routine.  Should be set to a positive integer.  Defaults to 10.<P>
+
+<DT><B>PROVER_KILL_TIME</B><DD>
+If set, specifies a rough upper bound of how many seconds <B>escjava</B>
+should spend attempting to prove error free any given method or
+constructor.  Should be set to a positive integer greater than 50.
+Defaults to 300 (5 minutes).<P>
+
+</DL>
+<P>
+
+</BLOCKQUOTE>
+
+<H3>RELATED FILES</H3>
+<BLOCKQUOTE>
+<P>
+
+<DL>
+<P>
+
+<DT>escjava/examples/<DD>
+This directory, where <I>escjava</I> denotes the directory into
+which <B>escjava</B> is installed, contains example code.<P>
+
+<DT>escjava/lib/specs/<DD>
+This directory, where <I>escjava</I> denotes the directory into
+which <B>escjava</B> is installed,
+contains <TT>.spec</TT> files for selected JDK library types.
+It is considered part of the system libraries by <B>escjava</B> and is
+thus included as part of the bootclasspath (see the <B>-bootclasspath</B>
+flag above).<P>
+
+</DL>
+<P>
+
+</BLOCKQUOTE>
+
+<H3>AUTHORS</H3>
+<BLOCKQUOTE>
+<P>
+
+<A HREF="http://research.compaq.com/SRC/esc/">Compaq Systems Research Center</A>.
+</BLOCKQUOTE>
+
+<H3>SEE ALSO</H3>
+<BLOCKQUOTE>
+<P>
+
+<B>CLASSPATH</B>, <B>JAVA</B>(5)
+</BLOCKQUOTE>
+
+This page was generated automatically by
+<A HREF="http://www.research.digital.com/SRC/mtex/">mtex software</A>.
+</BODY>
+</HTML>

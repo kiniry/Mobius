@@ -1,0 +1,10 @@
+#!/bin/csh -f
+
+## Generates all flow insensitive type errors and recoverable parser errors
+
+foreach f (*.java)
+   echo "==== ${f}: ===="
+
+   ${TOOL} $f
+
+end

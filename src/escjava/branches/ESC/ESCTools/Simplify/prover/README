@@ -1,0 +1,5 @@
+/proj/m3/pkg/prover -- created Wed Mar 17 15:48:12 1993 by detlefs
+
+This package contains modules used in the theorem prover Simplify,
+which is built by the sibling package "simplify".
+

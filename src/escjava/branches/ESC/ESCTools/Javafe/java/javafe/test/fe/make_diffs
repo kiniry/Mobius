@@ -1,0 +1,37 @@
+#!/bin/csh -f
+
+rm -f log
+touch log
+
+set errors = 0
+
+foreach i (test? test?? test??? test???? test?????)
+  if (-e $i/ans) then
+    diff $i/out $i/ans > log.tmp
+    if ("$status" == 1) then
+	echo "****************************** $i ******************************" >> log
+	cat log.tmp >> log
+	echo "Test $i failed"
+	@ errors = $errors + 1
+    endif
+  else
+	echo "****************************** $i ******************************" >> log
+    echo "[No reference answer available]" >> log
+    cat $i/out >> log
+    echo "Test $i failed"
+    @ errors = $errors + 1
+  endif
+
+  echo -n "."
+end
+rm -f log.tmp
+echo ""
+
+echo "************************************************************" >> log
+echo "Total tests with (potential) differences: $errors" >> log
+
+echo "Total tests with (potential) differences: $errors"
+
+if ("$errors" != 0) then
+    exit 1
+endif

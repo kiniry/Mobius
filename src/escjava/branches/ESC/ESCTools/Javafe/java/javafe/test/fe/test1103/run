@@ -1,0 +1,7 @@
+#!/bin/csh -f
+
+## Test source file reader with all sources in front end.
+
+cd ${JAVAFE_ROOT}/java
+
+${TOOL} -classpath ${DECSRCLIBRARY} `cat ../sources`
