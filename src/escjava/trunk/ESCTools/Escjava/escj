@@ -42,7 +42,11 @@ setenv ESCJAVA_ROOT ${ESCTOOLS_ROOT}/Escjava
 
 ############ Setting ESCJ_SIMPLIFY_DIR, if necessary
 if ( ! $?ESCJ_SIMPLIFY_DIR) then
-setenv ESCJ_SIMPLIFY_DIR ${ESCJAVA_ROOT}/release/master/bin
+    if ( $?ESCTOOLS_RELEASE ) then
+        setenv ESCJ_SIMPLIFY_DIR ${ESCTOOLS_RELEASE}
+    else
+	setenv ESCJ_SIMPLIFY_DIR ${ESCJAVA_ROOT}/release/master/bin
+    endif
 endif
 
 ############ Setting ESCJ_SIMPLIFY, if necessary

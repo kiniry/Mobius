@@ -26,18 +26,6 @@ endif
 
 setenv ESCTOOLS_ROOT $ESCTOOLS_RELEASE
 
-######### Define ESC_CLASSPATH if it is not defined
-
-if ( ! $?ESC_CLASSPATH ) then
-	setenv ESC_CLASSPATH $ESCTOOLS_RELEASE/esctools.jar
-endif
-
-######### Define ESCJ_SIMPLIFY if it is not defined
-
-if ( ! $?ESCJ_SIMPLIFY ) then
-	setenv ESCJ_SIMPLIFY $ESCTOOLS_RELEASE/Simplify
-endif
-
 ######## Execute
 
 $ESCTOOLS_RELEASE/escj $*
