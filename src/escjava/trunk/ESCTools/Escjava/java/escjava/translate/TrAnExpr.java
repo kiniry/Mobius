@@ -238,6 +238,20 @@ public final class TrAnExpr {
 	return ne;
       }
 
+      case TagConstants.NEWARRAYEXPR: {
+	NewArrayExpr nae = (NewArrayExpr)e;
+// FIXME - need to put in the type and the dimension array
+// also need to make SImplify understand the make$Array function
+	ExprVec ev = ExprVec.make(0); // should be 2
+	//ev.addElement( trSpecExpr( nae.args.element(0), sp, st) );
+	//ev.addElement( trSpecExpr( nae.args.element(1), sp, st) );
+	Expr ne = GC.nary(e.getStartLoc(), e.getEndLoc(),
+			TagConstants.METHODCALL, ev);
+	((NaryExpr)ne).methodName = 
+		Identifier.intern("make$Array");
+	return ne;
+      }
+
       case TagConstants.EXPLIES: {
 	// handle as implies, but with arguments reversed
         BinaryExpr be = (BinaryExpr)e;
