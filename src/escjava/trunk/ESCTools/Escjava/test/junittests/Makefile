@@ -34,12 +34,16 @@ test runtests: buildtests
 .PHONY: dotests
 dotests: lists
 	$(MAKE) notjunittests
-	$(MAKE) junittests
+	$(MAKE) partjunittests
 
 .PHONY: junittests
 junittests:
 	@echo TESTING Escjava: junittests
 	$(JUNIT) TestSuite
+
+.PHONY: quiet-junittests
+quiet-junittests:
+	@$(JUNIT) TestSuite
 
 .PHONY: dotests-nolist
 dotests-nolist:
@@ -105,10 +109,28 @@ notjunittests:
 		$(MAKE) --no-print-directory $${f}-test; \
 	done
 
+CHUNK = 40
+
+.PHONY: partjunittests
+partjunittests:
+	@echo "TESTING Escjava: junittests (in parts)"
+	@$(MAKE) --no-print-directory lists
+	@cp listtests listteststemp
+	@cp listteststemp templist
+	@while test -s templist ; do \
+	    head -n ${CHUNK} templist > listtests ;\
+	    ${MAKE} --no-print-directory quiet-junittests ;\
+	    tail +${CHUNK} templist > templista ;\
+	    mv templista templist; \
+	done 
+	@rm -f templist templista
+	@mv listteststemp listtests
+
+
 .PHONY: sepjavatests
 sepjavatests:
 	@touch skip
-	@for f in `ls *.java | grep -v -f skip` ; do \
+	@for f in `ls *.java | grep -v -f skip -f notjunittests` ; do \
 		$(MAKE) --no-print-directory $${f}-test; \
 	done
 
