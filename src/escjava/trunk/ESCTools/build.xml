@@ -90,7 +90,7 @@
       (jmlc) classes for binary delivery. -->
   <property name="final_jars_dir" value="jars"/>
 
-  <property name="build.compiler" value="jikes"/>
+  <property name="build.compiler" value="javac1.1"/>
   <property name="build.compiler.emacs" value="true"/>
   <property name="build.compiler.fulldepend" value="true"/>
   <property name="build.compiler.pedantic" value="true"/>
@@ -102,6 +102,7 @@
 
   <patternset id="classfiles" >
     <include name="**/*.class"/>
+    <exclude name="decsrc/util/*.class"/>
   </patternset>
 
   <!-- General useful file sets. -->
@@ -482,7 +483,7 @@
     </description>
     <javac srcdir="${javafe_source_dir}:${javafe_test_dir}"
            destdir="${javafe_classes_dir}"
-           excludes="javafe/test/**,javafe/tc/test/**,jtools/**"
+           excludes="javafe/test/fe/**,javafe/test/lex/**,javafe/tc/test/**,jtools/**"
            debug="on"
            deprecation="off"
            optimize="off"
