@@ -1,5 +1,17 @@
 2003-04-29  Joseph R. Kiniry  <kiniry@acm.org>
 
+	* Escjava/java/escjava/parser/EscPragmaParser.java:
+	Added initial grammar documentation for duration and space-related
+	specification constructs.
+
+	Annotated all currently unsupported JML constructs with information
+	about whether each is potentially statically checkable, whether
+	handling the construct can happen entirely at parse-time, and an
+	estimate of the difficulty of correctly handling the construct.
+
+	Factored out duration, space, and generalized quantifiers as I'm
+	working on parsing them next.
+
 	* Escjava/Makefile:
 	Renamed rule test_escjava to test_escjava_parser since that is all it
 	does.  Added default ESCJAVA_CLASSPATH definition if the env variable
