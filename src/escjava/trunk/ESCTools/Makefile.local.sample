@@ -35,10 +35,13 @@ export JDK_BINARIES ?= ${JAVA_HOME}/jre/lib/rt.jar
 # bytecodes that the decsrc package can parse, and (b) contains some
 # classes (e.g., java.util.Arrays) on which ESC/Java depends.
 
-
 ## Define the location of the junit.jar file
 ## (This can alternatively be the location of the junit class files)
-export JUNIT_JAR ?= ${JUNIT_LIB}
+export JUNIT_LIB ?= ${ESCTOOLS_ROOT}/Utils/junit.jar
+
+## Define the path for anything needed for JUnit tests
+
+export JUNIT_UTILS_PATH = ${ESCTOOLS_ROOT}/Utils:${JUNIT_LIB}
 
 
 ## Define the location of any specification files for the JDK.
