@@ -24,7 +24,6 @@ source: ASTNode.java typevecs
 .PHONY: typevecs
 typevecs: $(TypeVec) 
 
-.PHONY: $(ASTFILELIST) $(ASTGEN)
 $(ASTFILELIST) $(ASTGEN):
 	${MAKE} -C ${JAVAFE_ROOT}/astgen
 
