@@ -21,3 +21,8 @@ ModifiesPure.java
 EX.java
 ## dangling also
 Heavyweight.java
+## New tests
+Nowarn.java
+Privacy.java
+Instance.java
+Helper.java
