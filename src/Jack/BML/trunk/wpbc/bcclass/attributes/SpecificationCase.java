@@ -6,14 +6,9 @@
  */
 package bcclass.attributes;
 
-import com.sun.jndi.cosnaming.CNNameParser;
-
-import modifexpression.ModifiesExpression;
-import bcexpression.Expression;
 import formula.Connector;
 import formula.Formula;
 import formula.atomic.Predicate;
-import formula.atomic.Predicate0Ar;
 
 /**
  * @author mpavlova

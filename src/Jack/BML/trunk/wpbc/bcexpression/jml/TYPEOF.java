@@ -1,14 +1,10 @@
 package bcexpression.jml;
 
 import bcexpression.Expression;
-import bcexpression.javatype.JavaBasicType;
 import bcexpression.javatype.JavaReferenceType;
-import bcexpression.javatype.JavaType;
 import bcexpression.ref.Reference;
 import bcexpression.substitution.FunctionApplication;
 import bcexpression.substitution.RefFunction;
-import bcexpression.substitution.SubstitutionTree;
-import bcexpression.substitution.SubstitutionUnit;
 /**
  * @author mpavlova
  * 

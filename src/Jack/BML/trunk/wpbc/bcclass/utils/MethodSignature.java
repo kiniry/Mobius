@@ -34,10 +34,15 @@ public class MethodSignature {
 		
 		for(int i=0; i < length; i++) {
 			if (argTypes[i] instanceof ArrayType ) {
-				if ( ! argTypes[i].getSignature().startsWith("L") ) {
-					buf.append("L" + argTypes[i].getSignature() + ";");
-					continue;
+				String argSig =  argTypes[i].getSignature() ;
+				if ( ! argTypes[i].getSignature().startsWith("[") ) {
+					argSig = "[" + argSig;
 				}
+				if (! argTypes[i].getSignature().endsWith(";")) {
+					argSig = argSig + ";";
+				}
+				buf.append(argSig);
+				continue;
 			}
 			buf.append(argTypes[i].getSignature());
 		}

@@ -63,7 +63,7 @@ public class JavaApplication {
 		}
 		
 		JavaClass clazz = Repository.lookupClass(_name);
-		Util.dump("ADD CLASS WITH NAME " + "----" + _name + "----");
+		/*Util.dump("ADD CLASS WITH NAME " + "----" + _name + "----");*/
 		BCClass bcClass = new BCClass(clazz);
 		classes.put(_name, bcClass);
 		return bcClass;

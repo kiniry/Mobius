@@ -101,7 +101,7 @@ public class ClassStateVector {
 				}
 				BCClass c = JavaApplication.Application.getClass(className);
 				
-				if ( (!c.getName().startsWith("test.")) || (classesVisited.contains(c))) {
+				if ( (!c.getName().startsWith("bcclass.")) || (classesVisited.contains(c))) {
 					continue;
 				}
 				

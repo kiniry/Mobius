@@ -138,7 +138,7 @@ public class FieldAccess extends Expression {
 	 */
 	public Expression copy() {
 		Expression[] copySubExpr = copySubExpressions();
-		FieldAccess copy = new FieldAccess((BCConstantFieldRef)copySubExpr[0] ,copySubExpr[1] );
+		FieldAccess copy = new FieldAccess(copySubExpr[0] ,copySubExpr[1] );
 		return copy;
 	}
 	

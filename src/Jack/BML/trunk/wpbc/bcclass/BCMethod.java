@@ -6,144 +6,18 @@
  */
 package bcclass;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Vector;
 
-import modifexpression.ArrayElemFromTo;
 import modifexpression.Everything;
-import modifexpression.ModifiesArray;
-import modifexpression.ModifiesDOT;
 import modifexpression.ModifiesExpression;
-import modifexpression.ModifiesIdent;
-import modifexpression.Nothing;
 
 import org.apache.bcel.classfile.Attribute;
 import org.apache.bcel.classfile.LineNumber;
 import org.apache.bcel.classfile.LineNumberTable;
 import org.apache.bcel.classfile.Unknown;
-import org.apache.bcel.generic.AALOAD;
-import org.apache.bcel.generic.AASTORE;
-import org.apache.bcel.generic.ANEWARRAY;
-import org.apache.bcel.generic.ARRAYLENGTH;
-import org.apache.bcel.generic.ATHROW;
-import org.apache.bcel.generic.ArithmeticInstruction;
-import org.apache.bcel.generic.ArrayInstruction;
-import org.apache.bcel.generic.BALOAD;
-import org.apache.bcel.generic.BASTORE;
-import org.apache.bcel.generic.CALOAD;
-import org.apache.bcel.generic.CASTORE;
-import org.apache.bcel.generic.CHECKCAST;
-import org.apache.bcel.generic.CPInstruction;
-import org.apache.bcel.generic.ACONST_NULL;
-import org.apache.bcel.generic.BIPUSH;
-import org.apache.bcel.generic.ConstantPoolGen;
-import org.apache.bcel.generic.ConversionInstruction;
-import org.apache.bcel.generic.DALOAD;
-import org.apache.bcel.generic.DASTORE;
-import org.apache.bcel.generic.DUP;
-import org.apache.bcel.generic.DUP2;
-import org.apache.bcel.generic.DUP2_X1;
-import org.apache.bcel.generic.DUP2_X2;
-import org.apache.bcel.generic.DUP_X1;
-import org.apache.bcel.generic.DUP_X2;
-import org.apache.bcel.generic.FALOAD;
-import org.apache.bcel.generic.FASTORE;
-import org.apache.bcel.generic.FieldOrMethod;
-import org.apache.bcel.generic.GETFIELD;
-import org.apache.bcel.generic.GETSTATIC;
-import org.apache.bcel.generic.GotoInstruction;
-import org.apache.bcel.generic.I2B;
-import org.apache.bcel.generic.I2C;
+import org.apache.bcel.generic.*;
 
-import org.apache.bcel.generic.I2S;
-import org.apache.bcel.generic.IADD;
-import org.apache.bcel.generic.IALOAD;
-import org.apache.bcel.generic.IAND;
-import org.apache.bcel.generic.IASTORE;
-import org.apache.bcel.generic.ICONST;
-import org.apache.bcel.generic.IDIV;
-import org.apache.bcel.generic.IFEQ;
-import org.apache.bcel.generic.IFGE;
-import org.apache.bcel.generic.IFGT;
-import org.apache.bcel.generic.IFLE;
-import org.apache.bcel.generic.IFLT;
-import org.apache.bcel.generic.IFNE;
-import org.apache.bcel.generic.IFNONNULL;
-import org.apache.bcel.generic.IFNULL;
-import org.apache.bcel.generic.IF_ACMPEQ;
-import org.apache.bcel.generic.IF_ACMPNE;
-import org.apache.bcel.generic.IF_ICMPEQ;
-import org.apache.bcel.generic.IF_ICMPGE;
-import org.apache.bcel.generic.IF_ICMPGT;
-import org.apache.bcel.generic.IF_ICMPLE;
-import org.apache.bcel.generic.IF_ICMPLT;
-import org.apache.bcel.generic.IF_ICMPNE;
-import org.apache.bcel.generic.IINC;
-import org.apache.bcel.generic.IMUL;
-import org.apache.bcel.generic.INEG;
-import org.apache.bcel.generic.INSTANCEOF;
-import org.apache.bcel.generic.INVOKEINTERFACE;
-import org.apache.bcel.generic.INVOKESPECIAL;
-import org.apache.bcel.generic.INVOKESTATIC;
-import org.apache.bcel.generic.INVOKEVIRTUAL;
-import org.apache.bcel.generic.IOR;
-import org.apache.bcel.generic.IREM;
-import org.apache.bcel.generic.ISHL;
-import org.apache.bcel.generic.ISHR;
-import org.apache.bcel.generic.ISUB;
-import org.apache.bcel.generic.IUSHR;
-import org.apache.bcel.generic.IXOR;
-import org.apache.bcel.generic.IfInstruction;
-import org.apache.bcel.generic.Instruction;
-import org.apache.bcel.generic.InstructionHandle;
-import org.apache.bcel.generic.InstructionList;
-import org.apache.bcel.generic.InvokeInstruction;
-import org.apache.bcel.generic.JsrInstruction;
-import org.apache.bcel.generic.LALOAD;
-import org.apache.bcel.generic.LASTORE;
-import org.apache.bcel.generic.Type;
-
-import org.apache.bcel.generic.LDC;
-import org.apache.bcel.generic.LDC2_W;
-import org.apache.bcel.generic.LoadInstruction;
-import org.apache.bcel.generic.LocalVariableGen;
-import org.apache.bcel.generic.LocalVariableInstruction;
-import org.apache.bcel.generic.MULTIANEWARRAY;
-import org.apache.bcel.generic.MethodGen;
-import org.apache.bcel.generic.NEW;
-import org.apache.bcel.generic.NEWARRAY;
-import org.apache.bcel.generic.NOP;
-import org.apache.bcel.generic.POP;
-import org.apache.bcel.generic.POP2;
-import org.apache.bcel.generic.PUTFIELD;
-import org.apache.bcel.generic.PushInstruction;
-import org.apache.bcel.generic.RET;
-import org.apache.bcel.generic.ReturnInstruction;
-import org.apache.bcel.generic.SALOAD;
-import org.apache.bcel.generic.SASTORE;
-import org.apache.bcel.generic.SIPUSH;
-import org.apache.bcel.generic.StackInstruction;
-import org.apache.bcel.generic.StoreInstruction;
-import org.apache.bcel.generic.TypedInstruction;
-
-import constants.ArrayLengthConstant;
-import constants.BCConstantClass;
-import constants.BCConstantFieldRef;
-
-import utils.FreshIntGenerator;
 import utils.Util;
-
-import formula.Connector;
-import formula.Formula;
-import formula.Quantificator;
-import formula.atomic.Predicate;
-import formula.atomic.Predicate0Ar;
-import formula.atomic.Predicate1Ar;
-import formula.atomic.Predicate2Ar;
-import formula.atomic.PredicateSymbol;
-
 import bc.io.AttributeReader;
 import bc.io.ReadAttributeException;
 import bcclass.attributes.Assert;
@@ -153,31 +27,17 @@ import bcclass.attributes.BCExceptionHandlerTable;
 import bcclass.attributes.BCLineNumber;
 import bcclass.attributes.BlockSpecification;
 import bcclass.attributes.ExceptionHandler;
-import bcclass.attributes.Exsures;
 import bcclass.attributes.ExsuresTable;
-import bcclass.attributes.HistoryConstraints;
-import bcclass.attributes.ModifiesSet;
-import bcclass.attributes.SingleLoopSpecification;
-
 import bcclass.attributes.LoopSpecification;
 import bcclass.attributes.MethodSpecification;
-
+import bcclass.attributes.ModifiesSet;
+import bcclass.attributes.SingleLoopSpecification;
 import bcclass.attributes.SpecificationCase;
-import bcexpression.*;
-import bcexpression.ArithmeticExpression;
+import bcexpression.BCLocalVariable;
 import bcexpression.Expression;
-import bcexpression.ExpressionConstants;
-import bcexpression.FieldAccess;
-
-import bcexpression.NumberLiteral;
-import bcexpression.Variable;
-import bcexpression.javatype.ClassNames;
 import bcexpression.javatype.JavaArrType;
 import bcexpression.javatype.JavaObjectType;
-
 import bcexpression.javatype.JavaType;
-import bcexpression.jml.OLD;
-import bcexpression.jml.TYPEOF;
 import bytecode.BCATHROW;
 import bytecode.BCInstruction;
 import bytecode.BCLoopEnd;
@@ -185,7 +45,6 @@ import bytecode.BCLoopStart;
 import bytecode.BCNOP;
 import bytecode.BCRET;
 import bytecode.BCTypeRETURN;
-
 import bytecode.arithmetic.BCTypeADD;
 import bytecode.arithmetic.BCTypeAND;
 import bytecode.arithmetic.BCTypeDIV;
@@ -219,8 +78,6 @@ import bytecode.branch.BCIF_ICMPNE;
 import bytecode.branch.BCJSR;
 import bytecode.conversioninstruction.BCI2B;
 import bytecode.conversioninstruction.BCI2C;
-//import bytecode.exception.BCAttributeEcxeption;
-
 import bytecode.conversioninstruction.BCI2S;
 import bytecode.loadstoreinstruction.BCACONST_NULL;
 import bytecode.loadstoreinstruction.BCBIPUSH;
@@ -232,9 +89,9 @@ import bytecode.loadstoreinstruction.BCTypeSTORE;
 import bytecode.objectmanipulation.BCANEWARRAY;
 import bytecode.objectmanipulation.BCARRAYLENGTH;
 import bytecode.objectmanipulation.BCCHECKCAST;
-import bytecode.objectmanipulation.BCINSTANCEOF;
 import bytecode.objectmanipulation.BCGETFIELD;
 import bytecode.objectmanipulation.BCGETSTATIC;
+import bytecode.objectmanipulation.BCINSTANCEOF;
 import bytecode.objectmanipulation.BCINVOKEINTERFACE;
 import bytecode.objectmanipulation.BCINVOKESPECIAL;
 import bytecode.objectmanipulation.BCINVOKESTATIC;
@@ -255,6 +112,11 @@ import bytecode.stackinstruction.BCDUP_X1;
 import bytecode.stackinstruction.BCDUP_X2;
 import bytecode.stackinstruction.BCPOP;
 import bytecode.stackinstruction.BCPOP2;
+import formula.Connector;
+import formula.Formula;
+import formula.atomic.Predicate;
+import formula.atomic.Predicate2Ar;
+import formula.atomic.PredicateSymbol;
 /**
  * @author mpavlova
  * 
@@ -378,10 +240,10 @@ public class BCMethod {
 		}
 		for (int i = 0; i < asserts.length; i++) {
 			int pos = asserts[i].getPosition();
-			Formula assert = asserts[i].getPredicate();
+			Formula assertion = asserts[i].getPredicate();
 			BCInstruction instr =
 				Util.getBCInstructionAtPosition(bytecode, pos);
-			instr.setAssert(assert);
+			instr.setAssert(assertion);
 		}
 	}
 	
@@ -548,9 +410,26 @@ public class BCMethod {
 	}
 
 	private void setSpecification() {
-		Util.dump("setSpecification = " + name);
-		BCConstantPool constantPool = clazz.getConstantPool();
-/*		if (name.equals("half")) {
+		Util.dump("setSpecification for method  " + name);
+		if (name.equals("wrapByteCode")) {
+			SingleLoopSpecification loopSpec =
+				new SingleLoopSpecification(489, new ModifiesSet(new ModifiesExpression[]{null}, clazz.getConstantPool()), Predicate.TRUE, null);
+			SingleLoopSpecification[] loopSpecs =
+				new SingleLoopSpecification[] { loopSpec };
+			loopSpecification = new LoopSpecification(loopSpecs);
+		}
+		SpecificationCase specCase =
+			new SpecificationCase(
+				Predicate.TRUE,
+				Predicate.TRUE,
+				new ModifiesSet(new ModifiesExpression[]{Everything.EVERYTHING}, clazz.getConstantPool()),
+				null);
+		methodSpecification =
+			new MethodSpecification(
+				Predicate.TRUE,
+				new SpecificationCase[] { specCase });
+		/*BCConstantPool constantPool = clazz.getConstantPool();
+		if (name.equals("half")) {
 
 			//////////////////////////////////////////////////////////////////////////////////////////////////////////
 			// POSTCONDITION = f1 /\ f2 //////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -633,7 +512,7 @@ public class BCMethod {
 				new SingleLoopSpecification[] { loopSpec };
 			loopSpecification = new LoopSpecification(loopSpecs);
 
-		}*/
+		}
 		if (name.equals("testMethodInvokation")) {
 			Predicate2Ar postcondition =
 				new Predicate2Ar(
@@ -695,7 +574,7 @@ public class BCMethod {
 
 		}
 
-/*		if (name.equals("mod")) {
+		if (name.equals("mod")) {
 			//METHOD SPEC
 			//postcondition :  \result ==\old(  loc(1) ) mod loc(2)
 			ArithmeticExpression mod =
@@ -1131,7 +1010,9 @@ public class BCMethod {
 						_bc[i] = new BCSIPUSH(_iharr[i]);
 					}
 				}
+				_bc[i].setBytecode(_bc);
 				_bc[i].setBCIndex(i);
+			
 				//				Util.dump(_bc[i].toString());
 				//set the bytecode command at the previous position and at the
 				// next positition
@@ -1284,13 +1165,7 @@ public class BCMethod {
 		return signature;
 	}
 
-	/**
-	 * Sets the signature.
-	 * @param signature The signature to set
-	 */
-	public void setSignature(String signature) {
-		this.signature = signature;
-	}
+
 
 	/**
 	 * Returns the argNames.

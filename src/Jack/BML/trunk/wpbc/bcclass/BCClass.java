@@ -172,8 +172,8 @@ public class BCClass {
 	 */
 	public BCMethod lookupMethod(String signature) throws ReadAttributeException {
 		BCMethod m = null;
-	/*	Util.dump("search for method " + signature + "   in class "  + className );
-	*/	
+		/*Util.dump("search for method " + signature + "   in class "  + className );
+		Util.dumpMethods(this);*/
 		m = (BCMethod) methods.get(signature);
 		if (m != null) {
 			return m;
@@ -227,6 +227,10 @@ public class BCClass {
 		}
 	}
 
+	
+	public Collection getMethodKeys() {
+		return methods.keySet();
+	}
 	/**
 	 * @return Returns the methods.
 	 */

@@ -20,22 +20,7 @@ import modifexpression.SpecArray;
 
 import org.apache.bcel.classfile.Unknown;
 
-import com.sun.corba.se.internal.core.Constant;
-
-import constants.ArrayLengthConstant;
-import constants.BCConstant;
-import constants.BCConstantFieldRef;
-import constants.BCConstantMethodRef;
-import constants.BCConstantUtf8;
-
-import formula.Connector;
-import formula.Formula;
-import formula.atomic.Predicate;
-import formula.atomic.Predicate2Ar;
-import formula.atomic.PredicateSymbol;
 import bcclass.BCConstantPool;
-import bcclass.BCMethod;
-
 import bcclass.attributes.Assert;
 import bcclass.attributes.AssertTable;
 import bcclass.attributes.BCAttribute;
@@ -71,6 +56,16 @@ import bcexpression.jml.OLD;
 import bcexpression.jml.RESULT;
 import bcexpression.jml.TYPEOF;
 import bcexpression.jml._TYPE;
+import constants.ArrayLengthConstant;
+import constants.BCConstant;
+import constants.BCConstantFieldRef;
+import constants.BCConstantMethodRef;
+import constants.BCConstantUtf8;
+import formula.Connector;
+import formula.Formula;
+import formula.atomic.Predicate;
+import formula.atomic.Predicate2Ar;
+import formula.atomic.PredicateSymbol;
 
 /**
  * @author mpavlova
