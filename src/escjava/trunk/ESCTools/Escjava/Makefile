@@ -322,7 +322,7 @@ PARSER_TEST_PACKAGE = escjava.parser.test
 PARSER_TEST_DIR = ${TESTSOURCEDIRECTORY}/escjava/parser/test
 
 test_escjava_parser: compile_escjava_parser_test_programs \
-		test_lexer test_parser test_parser_idempotence
+		test_lexer test_parser_only test_parser_idempotence
 
 compile_escjava_parser_test_programs:
 	@${JAVAC} ${JAVAC_FLAGS} \
@@ -333,10 +333,10 @@ clean_escjava_parser_test:
 	rm -f ${PARSER_TEST_DIR}/*.out
 	rm -f ${CLASSDIRECTORY}/javafe/parser/test/*.class
 
-CD_AND_JAVA = echo "."; cd $(PARSER_TEST_DIR); $(JAVA) -classpath $(ESCJAVA_CLASSPATH) $(PARSER_TEST_PACKAGE)
+CD_AND_JAVA = cd $(PARSER_TEST_DIR); $(JAVA) -classpath $(ESCJAVA_CLASSPATH) $(PARSER_TEST_PACKAGE)
 
 test_lexer: compile_escjava_parser_test_programs
-	echo "text_lexer: "
+	@echo "test_lexer: "
 	$(CD_AND_JAVA).TestLex GoodPragmas.j    | diff - GoodPragmas.ans
 	$(CD_AND_JAVA).TestLex GoodSpecExpr.j   | diff - GoodSpecExpr.ans
 	$(CD_AND_JAVA).TestLex GoodJmlPragmas.j | diff - GoodJmlPragmas.ans
@@ -344,7 +344,7 @@ test_lexer: compile_escjava_parser_test_programs
 	$(CD_AND_JAVA).TestLex lookahead GoodSpecExpr.j   | diff - GoodSpecExpr.ans
 	$(CD_AND_JAVA).TestLex lookahead GoodJmlPragmas.j | diff - GoodJmlPragmas.ans
 
-test_parser: compile_escjava_parser_test_programs
+test_parser_only: compile_escjava_parser_test_programs
 	$(CD_AND_JAVA).TestEscPragmaParser print TypeDeclElemPragmas1.java | \
 		diff - TypeDeclElemPragmas1.ans
 
