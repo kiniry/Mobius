@@ -867,6 +867,7 @@ public class TypeSig extends Type
 	if (this.state < TypeSig.PREPPED)
 	    prep();
 
+        typecheckSuperTypes();
 	long start = 0;
 	if (Info.on) start = javafe.Tool.currentTime();
 	if (Info.on) Info.out("[typechecking " + this + "]");
@@ -874,6 +875,17 @@ public class TypeSig extends Type
 	if (Info.on) Info.out("[typechecking-end " + this + " " + javafe.Tool.timeUsed(start) + "]");
 	// FlowSensitiveChecks.checkTypeDeclaration(this);
 	this.state = TypeSig.CHECKED;
+    }
+
+    public void typecheckSuperTypes() {
+        TypeSig t = superClass();
+        if (t != null) t.typecheck();
+        TypeDecl decl = getTypeDecl();
+        for (int i=0; i<decl.superInterfaces.size(); i++ ) {
+            TypeName superInterfaceName = decl.superInterfaces.elementAt(i);
+            TypeSig ts = getSig(superInterfaceName);
+            ts.typecheck();
+        }
     }
 
     /***************************************************
