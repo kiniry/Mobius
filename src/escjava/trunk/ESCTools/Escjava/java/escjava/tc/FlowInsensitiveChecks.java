@@ -211,12 +211,16 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
         if (e.getTag() == TagConstants.INITBLOCK) {
             InitBlock ib = (InitBlock)e;
             if (ib.pmodifiers != null) {
+		checkModifierPragmaVec(ib.pmodifiers,ib,
+		    Modifiers.isStatic(ib.modifiers) ? rootSEnv : rootIEnv);
+/*
                 for (int i = 0; i < ib.pmodifiers.size(); i++) {
                     ModifierPragma mp = (ModifierPragma)ib.pmodifiers.elementAt(i);
                     ErrorSet.error(mp.getStartLoc(),
 			   TagConstants.toString(mp.getTag()) +
 			   " pragma cannot be applied to initializer block");
                 }
+*/
             }
         }
     
@@ -1984,13 +1988,10 @@ FIXME - see uses of countFreeVarsAccess
                 {
                     ExprModifierPragma emp = (ExprModifierPragma)p;
 
-                    if( !(ctxt instanceof RoutineDecl ) ) {
-                        ErrorSet.error(p.getStartLoc(), TagConstants.toString(tag) +
-                                       " annotations can occur only on method" +
-                                       ((tag == TagConstants.REQUIRES || 
-                                         tag == TagConstants.PRECONDITION) ? " and constructor" : "") +
-                                       " declarations");
-                    } else {
+                    if( ctxt instanceof InitBlock ) {
+			if (emp.expr.getTag() != TagConstants.NOTSPECIFIEDEXPR)
+			    emp.expr = checkPredicate(env, emp.expr);
+                    } else if( ctxt instanceof RoutineDecl ) {
                         RoutineDecl rd = (RoutineDecl)ctxt;
 
                         int ms = getOverrideStatus(rd);
@@ -2010,7 +2011,13 @@ FIXME - see uses of countFreeVarsAccess
 			    emp.expr = checkPredicate(newenv, emp.expr);
                         accessibilityLowerBound = oldAccessibilityLowerBound;
                         accessibilityContext = oldAccessibilityContext;
-                    }
+                    } else {
+                        ErrorSet.error(p.getStartLoc(), TagConstants.toString(tag) +
+                                       " annotations can occur only on method" +
+                                       ((tag == TagConstants.REQUIRES || 
+                                         tag == TagConstants.PRECONDITION) ? " and constructor" : "") +
+                                       " declarations");
+		    }
                     break;
                 }
 
@@ -2062,12 +2069,21 @@ FIXME - see uses of countFreeVarsAccess
                 {
                     ExprModifierPragma emp = (ExprModifierPragma)p;
 
-                    if( !(ctxt instanceof RoutineDecl ) ) {
-                        ErrorSet.error(p.getStartLoc(),
-                                       TagConstants.toString(tag)
-                                       +" annotations can occur only on "
-                                       +"method and constructor declarations");
-                    } else {
+                    if( ctxt instanceof InitBlock ) {
+                        boolean oldIsRESContext = isRESContext;
+                        boolean oldIsTwoStateContext = isTwoStateContext;
+                        boolean oldIsPrivFieldAccessAllowed = isPrivateFieldAccessAllowed;
+			try {
+			    isRESContext = true;
+			    isTwoStateContext = true;
+			    if (emp.expr.getTag() != TagConstants.NOTSPECIFIEDEXPR)
+				emp.expr = checkPredicate(env, emp.expr);
+			} finally {
+			    isRESContext = oldIsRESContext;
+			    isTwoStateContext = oldIsTwoStateContext;
+			    isPrivateFieldAccessAllowed = oldIsPrivFieldAccessAllowed;
+			}
+                    } else if( ctxt instanceof RoutineDecl ) {
                         RoutineDecl rd = (RoutineDecl)ctxt;
                         boolean oldIsRESContext = isRESContext;
                         boolean oldIsTwoStateContext = isTwoStateContext;
@@ -2087,7 +2103,12 @@ FIXME - see uses of countFreeVarsAccess
 			    isTwoStateContext = oldIsTwoStateContext;
 			    isPrivateFieldAccessAllowed = oldIsPrivFieldAccessAllowed;
 			}
-                    }
+                    } else {
+                        ErrorSet.error(p.getStartLoc(),
+                                       TagConstants.toString(tag)
+                                       +" annotations can occur only on "
+                                       +"initializer, method and constructor declarations");
+		    }
                     break;
                 }
 
@@ -2202,17 +2223,17 @@ FIXME - see uses of countFreeVarsAccess
 
 	    case TagConstants.MODIFIESGROUPPRAGMA: {
 		ModifiesGroupPragma mg = (ModifiesGroupPragma)p;
-                if (!(ctxt instanceof RoutineDecl ) ) {
-                    ErrorSet.error(mg.clauseLoc,
-                                   "A modifies annotation " +
-                                   "can occur only on " +
-                                   "method and constructor declarations");
-		} else {
+                if (ctxt instanceof InitBlock || ctxt instanceof RoutineDecl ) {
 		    CondExprModifierPragmaVec v = mg.items;
 		    for (int i=0; i<v.size(); ++i) {
 			checkModifierPragma(v.elementAt(i),ctxt,env);
 		    }
 		    if (mg.precondition != null) mg.precondition = checkPredicate(env,mg.precondition); // FIXME - pre environment ?
+		} else {
+                    ErrorSet.error(mg.clauseLoc,
+                                   "A modifies annotation " +
+                                   "can occur only on " +
+                                   "method and constructor declarations");
 		}
 		break;
 	    }

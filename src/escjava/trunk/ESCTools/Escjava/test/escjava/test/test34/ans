@@ -139,13 +139,13 @@ BogusInput.java:46: Error: requires annotations can occur only on method and con
 BogusInput.java:47: Error: A modifies annotation can occur only on method and constructor declarations
   //@ modifies a[\result]
       ^
-BogusInput.java:48: Error: ensures annotations can occur only on method and constructor declarations
+BogusInput.java:48: Error: ensures annotations can occur only on initializer, method and constructor declarations
   //@ ensures \result == 0
       ^
 BogusInput.java:49: Error: A modifies annotation can occur only on method and constructor declarations
   //@ also modifies a[\result]
            ^
-BogusInput.java:50: Error: ensures annotations can occur only on method and constructor declarations
+BogusInput.java:50: Error: ensures annotations can occur only on initializer, method and constructor declarations
   //@ also ensures \result == 0;
            ^
 BogusInput.java:53: Error: The uninitialized annotation can occur only on local variable declarations
@@ -1108,7 +1108,7 @@ BogusModifiers.java:44: Error: requires annotations can occur only on method and
 BogusModifiers.java:45: Error: A modifies annotation can occur only on method and constructor declarations
     /*@ modifies x0 */ int x3 = 0;
         ^
-BogusModifiers.java:46: Error: ensures annotations can occur only on method and constructor declarations
+BogusModifiers.java:46: Error: ensures annotations can occur only on initializer, method and constructor declarations
     /*@ ensures true; */ int x4 = 0;
         ^
 BogusModifiers.java:47: Error: exsures annotations can occur only on method and constructor declarations

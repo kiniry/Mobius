@@ -10,40 +10,40 @@ T.java:18: Warning: Possible violation of object invariant (Invariant)
 Associated declaration is "T.java", line 8, col 8:
     //@ invariant k>0
         ^
-Typecheck.java:7: Error: non_null pragma cannot be applied to initializer block
+Typecheck.java:7: Error: The non_null pragma can be applied only to variables, fields, parameters, and methods
   //@ non_null
       ^
-Typecheck.java:10: Error: requires pragma cannot be applied to initializer block
-  //@ requires x < y;
-      ^
-Typecheck.java:11: Error: ensures pragma cannot be applied to initializer block
+Typecheck.java:11: Error: Undefined variable 'z'
   //@ ensures x + y + z;  // this doesn't even type check, but that's  ...
-      ^
+                      ^
+Typecheck.java:11: Error: Cannot convert int to boolean
+  //@ ensures x + y + z;  // this doesn't even type check, but that's  ...
+              ^
 Typecheck.java:18: Error: An instance method may be invoked only via an object and/or from a non-static context or an inner class enclosed by a type possessing that method.
     m();  // can't do this in static initializer block
     ^
 Typecheck.java:19: Error: An instance field may be accessed only via an object and/or from a non-static context or an inner class enclosed by a type possessing that field.
     y++;  // can't do this in static initializer block
     ^
-Typecheck.java:14: Error: modifies pragma cannot be applied to initializer block
-  //@ modifies x < y;
-      ^
-Typecheck.java:15: Error: ensures pragma cannot be applied to initializer block
+Typecheck.java:15: Error: An instance field may be accessed only via an object and/or from a non-static context or an inner class enclosed by a type possessing that field.
   //@ ensures x + y + z;  // this doesn't even type check, but that's  ...
-      ^
-Typecheck.java:23: Error: ensures pragma cannot be applied to initializer block
-  //@ ensures true;
-      ^
-Typecheck.java:25: Error: monitored pragma cannot be applied to initializer block
+                  ^
+Typecheck.java:15: Error: Undefined variable 'z'
+  //@ ensures x + y + z;  // this doesn't even type check, but that's  ...
+                      ^
+Typecheck.java:15: Error: Cannot convert int to boolean
+  //@ ensures x + y + z;  // this doesn't even type check, but that's  ...
+              ^
+Typecheck.java:25: Error: The monitored annotation can occur only on field declarations
   //@ monitored
       ^
-Typecheck.java:28: Error: readable_if pragma cannot be applied to initializer block
+Typecheck.java:28: Error: The readable_if annotation can occur only on field declarations and local variable declarations
   //@ readable_if false;
       ^
-Typecheck.java:29: Error: monitored pragma cannot be applied to initializer block
+Typecheck.java:29: Error: The monitored annotation can occur only on field declarations
   //@ monitored
       ^
-Typecheck.java:30: Error: monitored_by pragma cannot be applied to initializer block
+Typecheck.java:30: Error: The monitored_by annotation can occur only on field declarations
   //@ monitored_by x << true;
       ^
 Caution: Turning off extended static checking due to type error(s)
