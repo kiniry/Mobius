@@ -1,4 +1,4 @@
-unset/bash
+#!/bin/bash
 # Copyright 2000, 2001, Compaq Computer Corporation
 #
 # This file must be sourced before running gnumake anywhere in this
@@ -14,6 +14,9 @@ export JAVAFE_CLASSFILES=${JAVAFE_ROOT}/classfiles
 
 export ESCTOOLS_ROOT=`pwd`/..
 export ESCTOOLS_JARS=${ESCTOOLS_ROOT}/jars
+
+export JUNITLIB=${ESCTOOLS_ROOT}/Utils/junit.jar
+export SIMPLIFY=/usr/bin/Simplify
 
 export ESCJAVA_ROOT=`pwd`
 if ! [ -a ${ESCJAVA_ROOT}/setup.sh ]; then
