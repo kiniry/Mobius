@@ -36,6 +36,9 @@ public class ParseUtil
     //@ ensures false
     public static void fail(int loc, String m) { ErrorSet.fatal(loc, m); }
 
+    //@ requires loc != Location.NULL
+    public static void error(int loc, String m) { ErrorSet.error(loc, m); }
+
     /** 
      Takes an expected token from the input stream, 
      calls <TT>fail</TT> on error.
@@ -173,12 +176,12 @@ public class ParseUtil
                     // Token is modifier keyword 
                     int modifierBit = 1<<i;
                     if( (modifiers & modifierBit) != 0 ) {
-                        fail(l.startingLoc, "Duplicate occurrence of modifier '"
+                        error(l.startingLoc, "Duplicate occurrence of modifier '"
                              +PrettyPrint.inst.toString(l.ttype)+"'");
                     }
                     if( (modifiers & Modifiers.ACCESS_MODIFIERS) != 0 &&
                         (modifierBit & Modifiers.ACCESS_MODIFIERS) != 0 ) {
-                        fail(l.startingLoc, 
+                        error(l.startingLoc, 
                              "Cannot have more than one of the access modifiers "+
                              "public, protected, private");
                     }
