@@ -1780,7 +1780,7 @@ System.out.println("");
 		    specialThisExpr = fcall;
 		}
 
-		ModifierPragmaVec v = rd.pmodifiers;
+		ModifierPragmaVec v = Utils.getAllSpecs(rd);
 		ExprVec conjuncts = ExprVec.make(v.size());
 		// FIXME - what about ensures clauses with \old in them
 		// Note - if there is an ensures clause with object fields, then it is

@@ -210,5 +210,34 @@ public final class Utils {
 
     public static final ASTDecoration representsDecoration =
 			new ASTDecoration("representsClauses");
+
+    public static final ASTDecoration allSpecs = new ASTDecoration("allSpecs");
+
+    static public ModifierPragmaVec getAllSpecs(RoutineDecl rd) {
+	Object o = allSpecs.get(rd);
+        if (o != null) return (ModifierPragmaVec)o;
+	ModifierPragmaVec result = ModifierPragmaVec.make();
+	allSpecs.set(rd,result);
+	result.append(rd.pmodifiers);
+	if (rd instanceof ConstructorDecl) return result;
+	MethodDecl rrd = (MethodDecl)rd;
+	Type[] argtypes = rd.argTypes();
+	TypeSig td = TypeSig.getSig(rd.parent);
+	java.util.Iterator i = td.superInterfaces().iterator();
+	td = td.superClass();
+	while (td != null) {
+	    MethodDecl md = td.hasMethod(rrd.id, argtypes);
+	    if (md != null) result.append(md.pmodifiers);
+	    td = td.superClass();
+	}
+
+	while (i.hasNext()) {
+	    td = (TypeSig)i.next();
+	    MethodDecl md = td.hasMethod(rrd.id, argtypes);
+	    if (md != null) result.append(md.pmodifiers);
+	}
+	
+	return result;
+    }
 }
 

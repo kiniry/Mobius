@@ -1451,6 +1451,26 @@ public class TypeSig extends Type
 	return superClass;
     }
 
+    /* This class returns a Collection containing all of the super interfaces
+	of the receiver TypeSig.  No interface is repeated.
+    */
+    public java.util.Collection superInterfaces() {
+	TypeSig t = this;
+	java.util.ArrayList result = new java.util.ArrayList();
+	int j = 0;
+	while (true) {
+	    TypeNameVec tv = t.getTypeDecl().superInterfaces;
+	    for (int i = 0; i<tv.size(); ++i) {
+		TypeName tt = tv.elementAt(i);
+		TypeSig tts = getSig(tt);
+		if (!result.contains(tts)) result.add(tts);
+	    }
+	    if (j >= result.size()) break;
+	    t = (TypeSig)result.get(j++);
+	}
+	return result;
+    }
+
 } // end of class TypeSig
 
 /*

@@ -42,6 +42,9 @@ all: clean build jars test quiet-docs
 .PHONY: all+
 all+: clean build jars quiet-docs alltests
 
+.PHONY: nodocs
+nodocs: clean build jars alltests
+
 .PHONY: jars
 jars: jmlspecs-jar jar srcjar
 

@@ -984,7 +984,8 @@ while (ee.hasMoreElements()) {
 
 	boolean isConstructor = spec.dmd.isConstructor();
 	InvariantInfo ii = mergeInvariants(collectInvariants(scope, spec.preVarMap));
-	// FIXME - Possibly causes bloated VCs
+	// FIXME - Possibly causes bloated VCs -- I haven't found an example
+	// yet that needs this,  but it seems it ought.
         //HashSet axs = collectInvariantsAxsToAdd;
         //ExprVec assumptions = addNewAxs(axs,null);
         //spec.preAssumptions.append(assumptions);
