@@ -79,7 +79,7 @@ public class MAIN {
 	}
 
 	// Moore example
-	public static void main(String[] args) throws ReadAttributeException, IllegalLoopException {
+	public static void mainHalf(String[] args) throws ReadAttributeException, IllegalLoopException {
 		BCClass clazz = JavaApplication.Application.getClass("test.Half");
 		//			BCClass clazz = JavaApplication.Application.getClass("bytecode.objectmanipulation.BCInvoke");
 		clazz.wp();
@@ -159,6 +159,13 @@ public class MAIN {
 	//ExampleBV  -- a loop 	caused by jsr
 	public static void mainBV(String[] args) throws ReadAttributeException, IllegalLoopException {
 		BCClass clazz = JavaApplication.Application.getClass("test.ExampleBV");
+		//			BCClass clazz = JavaApplication.Application.getClass("bytecode.objectmanipulation.BCInvoke");
+		clazz.wp();
+	} 
+	
+//	ExampleBV  -- a loop 	caused by jsr
+	public static void main(String[] args) throws ReadAttributeException, IllegalLoopException {
+		BCClass clazz = JavaApplication.Application.getClass("test.MethCall");
 		//			BCClass clazz = JavaApplication.Application.getClass("bytecode.objectmanipulation.BCInvoke");
 		clazz.wp();
 	} 

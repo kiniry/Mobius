@@ -239,7 +239,6 @@ public class AttributeReader {
 
 	private static SingleLoopSpecification readSingleLoopSpecification(byte[] bytes)
 		throws ReadAttributeException {
-//		Util.dump(" 888888888888888888888888888888888888888888888888 " ) ;
 		
 		int lineNumber = readShort(bytes);
 //		int loopStartPcInd  = lineNumberTable.getLineNumberTable()[ lineNumber].getStartPC();

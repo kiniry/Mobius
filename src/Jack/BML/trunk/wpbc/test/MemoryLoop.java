@@ -31,15 +31,17 @@ public class MemoryLoop {
 	 		new A();
 	 		new A();
 	 		i++;
+	 		
+		 	while ( i <  3) {
+		 		memory = memory  + 4;
+		 		new A();
+		 		new A();
+		 		new A();
+		 		i++;
+		 	}
 	 	}
 	 	
-	 	while ( i <  3) {
-	 		memory = memory  + 4;
-	 		new A();
-	 		new A();
-	 		new A();
-	 		i++;
-	 	}
+
 	 	
 	 	while ( i <  3) {
 	 		memory = memory  + 4; 	

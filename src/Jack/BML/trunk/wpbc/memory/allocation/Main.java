@@ -58,8 +58,8 @@ public class Main {
 		initMethodAlloc(clazz);
 		getMemoryForMethodsInClass(clazz);
 		setSpec();
-		clazz.wp();
-	}
+		/*clazz.wp();
+*/	}
 
 /*	public static BCMethod initParticularMethod(BCClass _class)
 			throws ReadAttributeException, IllegalLoopException {
