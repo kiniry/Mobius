@@ -2,8 +2,19 @@
 
 # Need to source setup before calling gnumake
 
-all: clean depend escjava doc runtest
+.PHONY: all
+all: clean escjava doc runtest
 
+# Check that 'source setup' has been run in the Javafe directory:
+# if ESCJ is defined, then the following line will fail
+.PHONY: sourcecheck
+sourcecheck:
+	@if [ ! ${ESCJAVA_ROOT} ]; then \
+	  echo "You must source the 'setup[.sh]' script before running make."; \
+	  false; \
+	fi
+
+.PHONY: zip
 zip: 
 	rm -f ${CLASSDIRECTORY}/escjava.zip
 	rm -f ${CLASSDIRECTORY}/decsrc
@@ -14,38 +25,42 @@ zip:
 	rm -f ${CLASSDIRECTORY}/decsrc
 	rm -f ${CLASSDIRECTORY}/javafe
 
+.PHONY: source
 source:
 	cd java/escjava; ${MAKE} source
 
+.PHONY: clean
 clean: cleanclasses
 	cd java/escjava; ${MAKE} clean
 	cd test; ${MAKE} clean
+	cd test/escjava/test; ${MAKE} clean
 	rm -f doc/escjava.html doc/man1/*.1
-	cd doc/javadoc; rm -f *.html
+	find doc/javadoc -name "*.html" -exec rm -f {} \;
 	find . -name mon.out -exec rm -f {} \;
 	rm -f ${CLASSDIRECTORY}/escjava.zip ${CLASSDIRECTORY}/javafe
 	rm -f ${CLASSDIRECTORY}/compiled.zip
 
+.PHONY: cleanclasses
 cleanclasses:
-	cd classes; find . -name \*.class -exec \rm -f {} \;
+	cd classfiles; find . -name \*.class -exec \rm -f {} \;
 
+.PHONY: doc
 doc:	javadoc
 	cd java/escjava; ${MAKE} doc
 
-#
-# JBKBINARIES added here as a kludge to make sure javadoc sees java.util.Arrays
-#
+.PHONY: javadoc
 javadoc: source
 	cd java; \
-	${JAVADOC} -d ${JAVADOCDIRECTORY} \
-		-sourcepath ${CLASSPATH}:${JAVAFE_ROOT}/java:${JDKBINARIES} \
-		-package \
-                escjava escjava.ast escjava.backpred escjava.parser \
-		escjava.prover escjava.tc escjava.translate \
-                javafe javafe.ast javafe.parser  \
-		javafe.reader javafe.genericfile javafe.filespace \
-		javafe.tc javafe.util 
+	${JAVADOC} -classpath ${CLASSPATH} \
+	  -sourcepath ${SOURCEDIRECTORY}:${TESTSOURCEDIRECTORY}:${JAVAFE_ROOT}/java \
+	  -d ${JAVADOCDIRECTORY} \
+          escjava escjava.ast escjava.backpred escjava.parser \
+	  escjava.prover escjava.tc escjava.translate \
+          javafe javafe.ast javafe.parser  \
+	  javafe.reader javafe.genericfile javafe.filespace \
+	  javafe.tc javafe.util 
 
+.PHONY: fastdoc
 fastdoc: source
 	cd java; \
 	CLASSPATH="${CLASSPATH}:${JAVAFE_ROOT}/java"; \
@@ -53,53 +68,40 @@ fastdoc: source
 	${JAVADOC} -d ${JAVADOCDIRECTORY} \
                 escjava escjava.ast escjava.parser escjava.prover escjava.tc
 
+.PHONY: fixdoc
 fixdoc:
 	find doc/javadoc -name \*.html -exec doc/fixup {} \;
 
-
+.PHONY: runtest
 runtest:
 	cd java/escjava; ${MAKE} runtest
 	cd test; ${MAKE} runtest
+	cd test/escjava/test; ${MAKE} runtest
 
-houdinitest:
-	cd java/houdini/test; ${MAKE} runtest
-
+.PHONY: bigtest
 bigtest:
 	cd ${ESCJAVA_ROOT}/java/escjava; \
 	escjava -nocheck -v \*.java ast/*.java parser/*.java tc/*.java bacpred/*.java prover/*.java
 
+.PHONY: wc
 wc:
 	cd java/escjava; ${MAKE} wc
 
-
-#
-# Code for fast incremental recompilation of escjava:
-#
-
-ESCJAVATARGETS =	escjava.Main				\
-			escjava.parser.test.TestLex		\
-			escjava.parser.test.TestEscPragmaParser \
-			escwizard.AnnotationInserter		\
-			houdini.Main				\
-			houdini.AnnLinks			\
-			tohtml.DeclLinks			\
-			instrumenter.Main			\
-			houdini.CopyLoaded			\
-			escjava.prover.SimplifyTest		
-
-
+.PHONY: depend
 depend: source
 	cd java; CLASSPATH=${LCLASSPATH} \
 		javadepend -g -d ${CLASSDIRECTORY} ${ESCJAVATARGETS} \
 		| grep -v /udir/qadeer > ../sources
 
-escjava: source		# depend
+.PHONY: escjava
+escjava: source
 	cd java; \
-		javac -g -d ${CLASSDIRECTORY} `cat ../sources`
+	javac -g -classpath ${CLASSPATH}:${SOURCEDIRECTORY}:${JAVAFE_CLASSFILES} \
+	-d ${CLASSDIRECTORY} `find escjava -name "*.java"`
 
-
+.PHONY: compile
 compile: escjava
-	(cd classes; swift -O2  ${ESCTOOLS_JARS}/javafe.jar \
-		`sed 's/\.java/\.class/' ../sources` \
-		-o ${CLASSDIRECTORY}/compiled.zip)
+# 	(cd classfiles; swift -O2  ${ESCTOOLS_JARS}/javafe.jar \
+# 		`sed 's/\.java/\.class/' ../sources` \
+# 		-o ${CLASSDIRECTORY}/compiled.zip)
 
