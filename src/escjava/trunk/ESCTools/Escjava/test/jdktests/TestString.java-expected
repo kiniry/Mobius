@@ -1,0 +1,76 @@
+TestString.java:23: Warning: Possible assertion failure (Assert)
+//@ assert false; // TEST FOR CONSISTENCY - 1
+    ^
+TestString.java:46: Warning: Possible assertion failure (Assert)
+//@ assert false; // TEST FOR CONSISTENCY - 2
+    ^
+Execution trace information:
+    Routine call returned exceptionally in "TestString.java", line 41, col 13.
+
+TestString.java:63: Warning: Possible assertion failure (Assert)
+//@ assert false; // TEST FOR CONSISTENCY - 3
+    ^
+TestString.java:80: Warning: Possible assertion failure (Assert)
+//@ assert false; // TEST FOR CONSISTENCY - 4
+    ^
+Execution trace information:
+    Routine call returned exceptionally in "TestString.java", line 74, col 13.
+
+TestString.java:92: Warning: Possible assertion failure (Assert)
+//@ assert false; // TEST FOR CONSISTENCY - 5
+    ^
+TestString.java:107: Warning: Possible assertion failure (Assert)
+//@ assert false; // TEST FOR CONSISTENCY - 5a
+    ^
+TestString.java:163: Warning: Possible assertion failure (Assert)
+//@ assert false; // TEST FOR CONSISTENCY - 6
+    ^
+Execution trace information:
+    Routine call returned exceptionally in "TestString.java", line 114, col 13.
+    Routine call returned exceptionally in "TestString.java", line 121, col 13.
+    Routine call returned exceptionally in "TestString.java", line 128, col 13.
+    Routine call returned exceptionally in "TestString.java", line 135, col 13.
+    Routine call returned exceptionally in "TestString.java", line 142, col 13.
+    Routine call returned exceptionally in "TestString.java", line 158, col 13.
+
+TestString.java:247: Warning: Possible assertion failure (Assert)
+//@ assert false; // TEST FOR CONSISTENCY - 7
+    ^
+Execution trace information:
+    Routine call returned exceptionally in "TestString.java", line 182, col 21.
+    Routine call returned exceptionally in "TestString.java", line 189, col 21.
+    Routine call returned exceptionally in "TestString.java", line 197, col 21.
+    Routine call returned exceptionally in "TestString.java", line 206, col 21.
+    Routine call returned exceptionally in "TestString.java", line 213, col 21.
+    Routine call returned exceptionally in "TestString.java", line 220, col 21.
+    Routine call returned exceptionally in "TestString.java", line 227, col 21.
+    Routine call returned exceptionally in "TestString.java", line 242, col 21.
+
+TestString.java:292: Warning: Possible assertion failure (Assert)
+//@ assert false; // TEST FOR CONSISTENCY  - 8
+    ^
+Execution trace information:
+    Routine call returned exceptionally in "TestString.java", line 255, col 21.
+    Routine call returned exceptionally in "TestString.java", line 262, col 21.
+    Routine call returned exceptionally in "TestString.java", line 274, col 21.
+    Routine call returned exceptionally in "TestString.java", line 287, col 21.
+
+TestString.java:300: Warning: Possible assertion failure (Assert)
+//@ assert false; // TEST FOR CONSISTENCY - 9
+    ^
+TestString.java:329: Warning: Possible assertion failure (Assert)
+//@ assert false; // TEST FOR CONSISTENCY - 10
+    ^
+TestString.java:340: Warning: Precondition possibly not established (Pre)
+    assertTrue( s4.length() == s.length() + ss.length() );  // FIXME
+              ^
+Associated declaration is ".\LocalTestCase.java", line 19, col 6:
+  //@ requires b;
+      ^
+TestString.java:363: Warning: Possible assertion failure (Assert)
+//@ assert false; // TEST FOR CONSISTENCY - 11 
+    ^
+Execution trace information:
+    Routine call returned exceptionally in "TestString.java", line 357, col 8.
+
+13 warnings
