@@ -61,7 +61,7 @@ testparsejdkidempotence:
 	cat jdk-1.1.18-files | xargs ${JAVA} javafe.parser.test.TestParse progress silent idempotence
 	cat jdk-1.2.2-files | xargs ${JAVA} javafe.parser.test.TestParse progress silent idempotence
 	cat jdk-1.3.1-files | xargs ${JAVA} javafe.parser.test.TestParse progress silent idempotence
-	cat jdk-1.4.1-files | xargs ${JAVA} javafe.parser.test.TestParse progress silent idempotence
+	cat jdk-1.4.1-files | xargs ${JAVA} javafe.parser.test.TestParse progress idempotence
 
 testparse:
 	${JAVA} javafe.parser.test.TestParse progress check print verboseprogress\
