@@ -14,10 +14,10 @@ package formula;
  */
 public interface Connector {
 	
-	public static final byte AND = 0; // "&& ";
-	public static final byte OR = 1; //"||";
-	public static final byte NOT = 2; //"!";
-	public static final byte IMPLIES = 3; //"==>";
-	public static final byte EQUIV = 4; //"<==>";
+	public static final byte AND = 1; // "&& ";
+	public static final byte OR = 2; //"||";
+	public static final byte NOT = 3; //"!";
+	public static final byte IMPLIES = 4; //"==>";
+	public static final byte EQUIV = 5; //"<==>";
 	
 }

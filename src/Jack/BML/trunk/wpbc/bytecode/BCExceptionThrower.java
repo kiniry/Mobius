@@ -1,17 +1,20 @@
 package bytecode;
 
-import java.util.HashMap;
+
 
 import org.apache.bcel.generic.InstructionHandle;
 
 import formula.Formula;
 import formula.atomic.Predicate;
+import formula.atomic.Predicate0Ar;
 
 import utils.FreshIntGenerator;
 
 import bcclass.attributes.ExsuresTable;
 import bcexpression.EXCEPTIONVariable;
+import bcexpression.Expression;
 import bcexpression.ref.Reference;
+import bcexpression.vm.Stack;
 
 import bcexpression.javatype.JavaObjectType;
 import bytecode.block.*;
@@ -26,7 +29,7 @@ import bytecode.block.*;
  */
 public abstract class BCExceptionThrower extends BCInstruction {
 	private JavaObjectType[] exceptionsThrown;
-	private HashMap excHandleBlocks;
+	
 	private Trace trace;
 
 	/**
@@ -59,13 +62,17 @@ public abstract class BCExceptionThrower extends BCInstruction {
 	 * @see bytecode.ByteCode#wp(formula.Formula, specification.ExceptionalPostcondition)
 	 */
 	public Formula getWpForException(
-		JavaObjectType _exc_type,
-		ExsuresTable _exc_post) {
+		JavaObjectType _exc_type) {
 			Formula _exc_termination = trace.getWpForExcThrownAt(_exc_type, getPosition());
 			if (_exc_termination == null) {
-				return Predicate.FALSE;
+				return Predicate0Ar.FALSE;
+			}
+			if ((_exc_termination == Predicate0Ar.FALSE) || ( _exc_termination == Predicate0Ar.TRUE)) {
+				return _exc_termination;
 			}
 			Formula _exc_termination_copy = (Formula)_exc_termination.copy();
+			// set the stack top to 
+			_exc_termination_copy =  (Formula)_exc_termination_copy.substitute(new Stack( Expression.COUNTER) , new Reference(FreshIntGenerator.getInt() , _exc_type));
 			_exc_termination_copy = (Formula)_exc_termination_copy.substitute(
 				new EXCEPTIONVariable(FreshIntGenerator.getInt(), _exc_type),
 				new Reference(FreshIntGenerator.getInt(), _exc_type));

@@ -19,6 +19,7 @@ import bytecode.branch.BCConditionalBranch;
 import formula.Connector;
 import formula.Formula;
 import formula.atomic.Predicate;
+import formula.atomic.Predicate0Ar;
 import formula.atomic.Predicate2Ar;
 import formula.atomic.PredicateSymbol;
 
@@ -105,8 +106,8 @@ public class BCLoopEnd extends BCInstruction {
 	private Formula _wp(Formula wp, ExsuresTable _exc_Postcondition) {
 	/*	wp = (Formula)wp.atState(getPosition() );*/
 		//forall fields (f ) f==f_at_loop_end /\ forall i : locVar index.  loc(i) = loc_at_start_end
-		Formula localVarStateAssume = Predicate.TRUE;
-		Formula  vectorOfFieldToAssume = Predicate.TRUE;
+		Formula localVarStateAssume = Predicate0Ar.TRUE;
+		Formula  vectorOfFieldToAssume = Predicate0Ar.TRUE;
 	
 		ModifiesExpression[] modifExpr = modifies.getModifiesExpressions();
 		for (int i = 0; i < modifExpr.length ; i++ ) {

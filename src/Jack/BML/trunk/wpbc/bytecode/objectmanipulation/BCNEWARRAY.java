@@ -44,7 +44,7 @@ import bytecode.BCAllocationInstruction;
  * 
  * Runtime Exception: If count is less than zero, newarray throws a NegativeArraySizeException. 
  * 
- * wp = S(t) >= 0 ==> psi^n_psi^n[length( with o == new ArrayObject(type, S(t)) <-- S(t)][S(t) <-- new ArrayObject(type, S(t))]
+ * wp = S(t) >= 0 ==> psi^n[S(t) <-- new ArrayRef(type, S(t))]
  * 		&&
  * 		S(t) < 0 ==> psi^e
  */
@@ -97,18 +97,18 @@ public class BCNEWARRAY extends BCAllocationInstruction {
 				getType(),
 				new Stack(Expression.COUNTER));
         
-		//_psi^n[S(t) <-- new Ref[index] (S(t) )]
+		//_psi^n[S(t) <-- new ArrayRef[index] (S(t) )]
 		Formula topStack_grt_0_implies =
 		(Formula)_normal_Postcondition.substitute(
 				new Stack(Expression.COUNTER),
 				new_arr_ref);
 
-		//			length( new ArrayObject(type, S(t) ) ) 
+		//			length( new ArrayRef(type, S(t) ) ) 
 		FieldAccess arr_length_access =
 			new FieldAccess(ArrayLengthConstant.ARRAYLENGTHCONSTANT, new_arr_ref);
 		
 		// substitute the access to the length field of the created array by stack top
-		//_psi^n[length( new ArrayObject(type, S(t)) <-- S(t)]
+		//_psi^n[length( new ArrayRef(type, S(t)) <-- S(t)]
 		topStack_grt_0_implies =
 		(Formula)topStack_grt_0_implies.substitute(
 				arr_length_access,
@@ -131,8 +131,7 @@ public class BCNEWARRAY extends BCAllocationInstruction {
 		Formula topStack_lesseq_0_implies =
 			getWpForException(
 				(JavaObjectType) JavaType.getJavaRefType(
-					ClassNames.NEGATIVEARRAYSIZEException),
-				_exc_Postcondition);
+					ClassNames.NEGATIVEARRAYSIZEException));
 		
 		Formula excWpTermination =
 			Formula.getFormula(

@@ -68,10 +68,10 @@ public class BCIFNE extends BCConditionalBranch {
 		Formula wp;
 		//in case of jump S(t) == 0
 		Formula stackTop_eq_0 =
-			new Predicate2Ar(
+			Formula.getFormula( new Predicate2Ar(
 				new Stack(Expression.COUNTER),
 				new NumberLiteral(0),
-				PredicateSymbol.NOTEQ);
+				PredicateSymbol.EQ), Connector.NOT);
 		Formula eq_branch  =
 		(Formula)_normal_Postcondition.substitute(
 				Expression.COUNTER,

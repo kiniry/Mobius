@@ -144,8 +144,7 @@ public class BCCHECKCAST
 			// in case the object cannot be cast - Ljava/lang/ClassCastException; is thrown
 		Formula excWp =
 			getWpForException(
-				getExceptionsThrown()[0],
-				_exc_Postcondition);
+				getExceptionsThrown()[0]);
 		Formula excTermination =
 		Formula.getFormula(objectNotCastableToType, excWp, Connector.IMPLIES);
 		wp = Formula.getFormula(nTermination, excTermination, Connector.AND);

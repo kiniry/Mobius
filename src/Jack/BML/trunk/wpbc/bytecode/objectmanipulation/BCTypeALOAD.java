@@ -99,10 +99,11 @@ public class BCTypeALOAD
 
 		//S(t - 1) != null
 		Formula _arr_not_null =
+			Formula.getFormula( 
 			new Predicate2Ar(
 			new Stack(Expression.getCOUNTER_MINUS_1()),
 				Expression._NULL,
-				PredicateSymbol.NOTEQ);
+				PredicateSymbol.EQ), Connector.NOT);
 
 		//S(t-1).length > S( t )
 		FieldAccess _arrlength =
@@ -129,8 +130,7 @@ public class BCTypeALOAD
 		Formula _wp_arr_out_of_bounds =
 			getWpForException(
 				(JavaObjectType) JavaType.getJavaRefType(
-					"Ljava/lang/IndexOutOfBoundsException;"),
-				_e_Postcondition);
+					"Ljava/lang/IndexOutOfBoundsException;"));
 		Formula _out_of_bound_termination =
 		Formula.getFormula(
 				_index_out_of_bounds,
@@ -147,8 +147,7 @@ public class BCTypeALOAD
 		Formula _wp_null_pointer =
 			getWpForException(
 				(JavaObjectType) JavaType.getJavaRefType(
-					"java.lang.NullPointerException"),
-				_e_Postcondition);
+					"java.lang.NullPointerException"));
 		;
 		Formula _null_pointer_termination =
 		Formula.getFormula(_arr_null, _wp_null_pointer, Connector.IMPLIES);

@@ -41,10 +41,10 @@ public class BCIFNULL extends BCConditionalBranch {
 
 		// in case of executing next instruction
 		Formula stackTop_noteq_null =
-			new Predicate2Ar(
+			Formula.getFormula(new Predicate2Ar(
 				new Stack(Expression.COUNTER),
 				Expression._NULL,
-				PredicateSymbol.NOTEQ);
+				PredicateSymbol.EQ), Connector.NOT);
 		Formula noteq_branch =
 		(Formula)_normal_Postcondition.substitute(
 				Expression.COUNTER,

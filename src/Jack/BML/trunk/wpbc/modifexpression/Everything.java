@@ -8,6 +8,7 @@ package modifexpression;
 
  
 import formula.atomic.Predicate;
+import formula.atomic.Predicate0Ar;
 import bcclass.BCConstantPool;
 import bcexpression.ValueOfConstantAtState;
 import bcexpression.Expression;
@@ -103,7 +104,7 @@ public class Everything  extends ModifiesExpression {
 	 */
 	public Expression getPostCondition(int state) {
 		// TODO Auto-generated method stub
-		return Predicate.TRUE;
+		return Predicate0Ar.TRUE;
 	}
 
 

@@ -30,6 +30,7 @@ import bcexpression.javatype.JavaObjectType;
 import bcexpression.javatype.JavaType;
 import bcexpression.jml.RESULT;
 import bcexpression.vm.Stack;
+import bytecode.block.IllegalLoopException;
 import constants.BCConstantClass;
 import constants.BCConstantFieldRef;
 import constants.BCConstantMethodRef;
@@ -37,6 +38,7 @@ import formula.Connector;
 import formula.Formula;
 import formula.Quantificator;
 import formula.atomic.Predicate;
+import formula.atomic.Predicate0Ar;
 /**
  * @author mpavlova
  * 
@@ -55,7 +57,7 @@ public class BCInvoke extends BCFieldOrMethodInstruction {
 		super(_instruction, _type, _classType, _cp);
 	}
 	
-	protected BCMethod getInvokedMethod() {
+	public BCMethod getInvokedMethod() throws IllegalLoopException {
 		BCConstantMethodRef method_constant = (BCConstantMethodRef) (getConstantPool()
 				.getConstant(getIndex()));
 		String clazz_name = ((BCConstantClass) (getConstantPool()
@@ -66,8 +68,9 @@ public class BCInvoke extends BCFieldOrMethodInstruction {
 		BCMethod method = null;
 		
 		try {
-			method = clazz.lookupMethod(MethodSignature.getSignature(
-					method_constant.getName(), method_constant.getSignature()));
+			String signature = MethodSignature.getSignature(
+					method_constant.getName(), method_constant.getSignature() );
+			method = clazz.lookupMethod(signature);
 		} catch (ReadAttributeException e) {
 			e.printStackTrace();
 		}
@@ -82,7 +85,13 @@ public class BCInvoke extends BCFieldOrMethodInstruction {
 	public Formula wp(Formula _normal_Postcondition,
 			ExsuresTable _exc_Postcondition) {
 		Formula wp = null;
-		BCMethod method =  getInvokedMethod();
+		BCMethod method = null;
+		try {
+			method = getInvokedMethod();
+		} catch (IllegalLoopException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		//take the method pre and postconditons
 		/* Formula precondition = (Formula) method.getPrecondition().copy(); */
 		int number_args = method.getNumberArguments();
@@ -102,14 +111,14 @@ public class BCInvoke extends BCFieldOrMethodInstruction {
 		Formula requiresCalledMethod = null;
 		SpecificationCase[] specCases = null;
 		if ( methodSpecification == null) {
-			requiresCalledMethod =Predicate.TRUE;
+			requiresCalledMethod =Predicate0Ar.TRUE;
 		} else { 
 			requiresCalledMethod = methodSpecification.getPrecondition();
 			specCases = methodSpecification
 					.getSpecificationCases();
 		}
 		
-		Formula wp_spec_cases = Predicate.FALSE;
+		Formula wp_spec_cases = Predicate0Ar.FALSE;
 		int top_minus_number_args_minus_obj_plus_res = 0;
 		Variable fresh_result = null;
 		if ( ! (this instanceof BCINVOKESTATIC ) ) {
@@ -138,6 +147,8 @@ public class BCInvoke extends BCFieldOrMethodInstruction {
 								top_minus_number_args_minus_obj_plus_res),
 						ExpressionConstants.SUB);
 //		psi^n[t <-- t - arg_n_plus_1 ]
+		///// substitute in the postcondition of the invokation the top of the stack with the result that the
+		//// invoked method returns
 		_normal_Postcondition = (Formula) _normal_Postcondition.substitute(
 				Expression.COUNTER, counter_minus_arg_num_plus_1);
 	
@@ -156,14 +167,14 @@ public class BCInvoke extends BCFieldOrMethodInstruction {
 			
 			//Formula post = (Formula)specCases[n].getPostcondition().copy();
 			Formula precondition = specCases[n].getPrecondition();
-			Formula modPostCalled = Predicate.TRUE;
+			Formula modPostCalled = Predicate0Ar.TRUE;
 			Quantificator quantifyOnResult = null;
 			
 			//post(method(index) )[result <-- fresh ]
 			if (method.getReturnType() != JavaType.JavaVOID) {
 				RESULT result = Expression._RESULT;
-				fresh_result = new Variable(FreshIntGenerator.getInt(), method
-						.getReturnType());
+				/*fresh_result = new Variable(FreshIntGenerator.getInt(), method
+						.getReturnType());*/
 				postcondition = (Formula) postcondition.substitute(result,
 						fresh_result);
 				quantifyOnResult = new Quantificator(Quantificator.FORALL,
@@ -217,7 +228,7 @@ public class BCInvoke extends BCFieldOrMethodInstruction {
 			// ==>
 			// psi^n[ S(t ) <-- fresh]
 			
-			Formula modifiesCondition = Predicate.TRUE;
+			Formula modifiesCondition = Predicate0Ar.TRUE;
 			for (int i = 0; i < modifiesSubst.length ; i++ ) {
 				if (modifiesSubst[i] == null) {
 					continue;
@@ -285,7 +296,7 @@ public class BCInvoke extends BCFieldOrMethodInstruction {
 										stack_at_counter_minus_arg_num_plus_i);
 					}
 					excPostOfThisMethodForExc = getWpForException(
-							exceptionsThrown[s], _exc_Postcondition);
+							exceptionsThrown[s]);
 					wpForExcTermination[s] = Formula.getFormula(
 							excPostOfCalledMethodForExc,
 							excPostOfThisMethodForExc, Connector.IMPLIES);

@@ -1,4 +1,4 @@
-package bcexpression.substitution;
+package bcexpression.overload;
 
 import utils.Util;
 import bcexpression.ArrayAccessExpression;
@@ -23,17 +23,17 @@ public class FunctionApplication extends Expression {
 	
 	private RefFunction function;
 	/*private Expression argument;*/
-	private SubstitutionTree map;
+	private OverloadList overloads;
 
 	
 	public FunctionApplication(RefFunction _function, Expression _arg,Expression _value  ) {
 		function = _function;
-		map = new SubstitutionTree( _arg, _value);
+		overloads = new OverloadList( _arg, _value);
 	}
 	
-	public FunctionApplication(RefFunction _function, SubstitutionTree _map) {
+	public FunctionApplication(RefFunction _function, OverloadList _map) {
 		function = _function;
-		map = _map;
+		overloads = _map;
 	}
 	
 	/* (non-Javadoc)
@@ -59,11 +59,17 @@ public class FunctionApplication extends Expression {
 		TYPEOF expr = (TYPEOF)function;
 		Expression subExpr = expr.getSubExpressions()[0];
 		subExpr = subExpr.substitute(_e1, _e2);
-		map = (SubstitutionTree)map.substitute(_e1, _e2);
-		
+		overloads = (OverloadList)overloads.substitute(_e1, _e2);
 		if ( _e2 instanceof Reference ) {
 			JavaReferenceType refType = (JavaReferenceType)_e2.getType();
-			map = new SubstitutionTree(map , new SubstitutionUnit(_e2, refType));
+			overloads.overload( new OverloadEqUnit(_e2, refType));
+//			 a simplification is done over the
+			// If the typeof(+ a_i -> b_i) (expr) is such that 
+			// after the substitution there is a_i == expr then return b_i 
+			Expression overLoadingType = overloads.getExpressionOverloading(subExpr);
+			if (overLoadingType != null) {
+				return  (JavaReferenceType)refType;
+			}
 			return this;
 		}
 		/*TYPEOF typeof_expr = (TYPEOF)expr;*/
@@ -72,24 +78,33 @@ public class FunctionApplication extends Expression {
 			return JML_CONST_TYPE.JML_CONST_TYPE;
 		}
 		Expression type = _expr.getType();
-		
 		if (type == null) {
 			return this;
 		}
 		if (type instanceof JavaBasicType) {
 			return (JavaBasicType)type;
-		}
-		
+		}		
 		return this;
 	}
 	
 	private Expression substituteElemType(Expression _e1, Expression _e2) {
 		ELEMTYPE expr = (ELEMTYPE)function;
-		Expression subExpr = expr.getSubExpressions()[0];
-		subExpr = subExpr.substitute(_e1, _e2);
-		map = (SubstitutionTree)map.substitute(_e1, _e2);
-		if (_e2 instanceof ArrayReference) {
-			map = new SubstitutionTree(map, new SubstitutionUnit(_e2, (JavaArrType)_e2.getType()));
+		Expression arrRef = expr.getSubExpressions()[0];
+		arrRef = arrRef.substitute(_e1, _e2);
+		overloads = (OverloadList)overloads.substitute(_e1, _e2);
+
+		if (_e1 instanceof ArrayReference) {
+			overloads.overload(new OverloadEqUnit(_e1, (JavaArrType)_e2.getType()));
+			//////////////////////////////////
+			///////////////substitution///////////////////
+			// see if the there is an overloading for the value of the the object 
+			Expression overloadingArray =  overloads.getExpressionOverloading( arrRef );
+			
+			if (overloadingArray != null) {
+				// if the object coincides with one of the overloadings return the overloading value 
+				return overloadingArray;
+			}
+			
 		}
 		return this;
 	}
@@ -102,7 +117,7 @@ public class FunctionApplication extends Expression {
 		Expression index = arrayAccess.getIndex();
 		index = index.substitute(_e1, _e2);
 		arrayAccess.setSubExpressions(new Expression[]{array, index } );
-		map = (SubstitutionTree)map.substitute(_e1, _e2);
+		overloads = (OverloadList)overloads.substitute(_e1, _e2);
 		if (! (_e1 instanceof ArrayAccessExpression) ) {
 			return this;
 		}
@@ -111,9 +126,17 @@ public class FunctionApplication extends Expression {
 		Expression e1Array =  e1AtIndex.getArray();
 		JavaType e1ElemType = e1AtIndex.getType(); 
 		Expression e1Index =  e1AtIndex.getIndex();*/
+
+		overloads.overload(new OverloadEqUnit(_e1, _e2));
+//////////////////////////////////
+		///////////////substitution///////////////////
+		// see if the there is an overloading for the value of the the object 
+		Expression overloadingArray =  overloads.getExpressionOverloading( arrayAccess );
 		
-		map = new SubstitutionTree(map, new SubstitutionUnit(_e1, _e2));
-		
+		if (overloadingArray != null) {
+			// if the object coincides with one of the overloadings return the overloading value 
+			return overloadingArray;
+		}
 		return this;
 	}
 
@@ -133,18 +156,18 @@ public class FunctionApplication extends Expression {
 		
 		
 		if (function instanceof TYPEOF) {
-			String s = "[ typeof (" + map.toString() + ") " +_expr.toString() +" ]";
+			String s = "[ typeof (" + overloads.toString() + ") " +_expr.toString() +" ]";
 			return s;
 		}
 		if (function instanceof ELEMTYPE) {
-			String s = "[ elemtype ( " + map.toString() + " ) " +_expr.toString() +" ]";
+			String s = "[ elemtype ( " + overloads.toString() + " ) " +_expr.toString() +" ]";
 			return s;
 		}
 		if (function instanceof ArrayAccessExpression ) {
 			ArrayAccessExpression arrayAtIndex = (ArrayAccessExpression)function; 
 			Expression index = arrayAtIndex.getIndex();
 			Expression array = arrayAtIndex.getArray();
-			String s = "[ arrayAccess ( " + map.toString() + " ) (arr: " + array + " , ind: " + index + ")"; 
+			String s = "[ arrayAccess ( " + overloads.toString() + " ) (arr: " + array + " , ind: " + index + ")"; 
 			return s;
 		}
 		return null;
@@ -155,7 +178,7 @@ public class FunctionApplication extends Expression {
 	 */
 	public Expression copy() {
 		Expression fCopy = ((Expression)function).copy();
-		SubstitutionTree mapCopy = (SubstitutionTree)map.copy();
+		OverloadList mapCopy = (OverloadList)overloads.copy();
 		FunctionApplication thisCopy = new FunctionApplication((RefFunction)fCopy, mapCopy);
 		return thisCopy;
 	}
@@ -163,7 +186,7 @@ public class FunctionApplication extends Expression {
 	public RefFunction getFunction() {
 		return function;
 	}
-	public SubstitutionTree getMap() {
-		return map;
+	public OverloadList getMap() {
+		return overloads;
 	}
 }

@@ -15,6 +15,7 @@ import constants.ArrayLengthConstant;
 import bcclass.attributes.ExsuresTable;
 import bcexpression.ArrayAccessExpression;
 import bcexpression.Expression;
+import bcexpression.NumberLiteral;
 
 import bcexpression.FieldAccess;
 import bcexpression.javatype.ClassNames;
@@ -100,10 +101,11 @@ public class BCTypeASTORE
 
 		//S(t-2 ) != null
 		Formula array_not_null =
+			Formula.getFormula( 
 			new Predicate2Ar(
 			new Stack(Expression.getCOUNTER_MINUS_2()),
 				Expression._NULL,
-				PredicateSymbol.NOTEQ);
+				PredicateSymbol.EQ), Connector.NOT );
 		//S(t-1) < S(t-2).length
 		Formula arr_index_correct =
 			new Predicate2Ar(
@@ -122,7 +124,7 @@ public class BCTypeASTORE
 		
 		wps[0] = Formula.getFormula(condition, _n_Postcondition, Connector.IMPLIES);
 	
-		/*	Util.dump(" wps[0] " + wps[0]);*/
+		
 		//exceptional termination
 		//S(t-2 ) == null ==> _exc_Postcondition(java.lang.NullPointerException)
 		Formula array_null =
@@ -133,26 +135,31 @@ public class BCTypeASTORE
 		Formula nullPointer =
 			getWpForException(
 				(JavaObjectType) JavaType.getJavaRefType(
-					ClassNames.NULLPOINTERException),
-				_exc_Postcondition);
+					ClassNames.NULLPOINTERException));
 		wps[1] = Formula.getFormula(array_null, nullPointer, Connector.IMPLIES);
 		/*Util.dump(" wps[1] " + wps[1]);*/
 		
 		//S(t-1) > S(t-2).length ==> _exc_Postcondition(java.lang. ArrayIndexOutOfBoundsException)
-		Formula arr_index_not_correct =
-			new Predicate2Ar(
-			new Stack(Expression.getCOUNTER_MINUS_1()),
+		
+		Formula indGrtLen = new Predicate2Ar(
+				new Stack(Expression.getCOUNTER_MINUS_1()),
 				new FieldAccess(
 						ArrayLengthConstant.ARRAYLENGTHCONSTANT,
 			new Stack(Expression.getCOUNTER_MINUS_2())),
 				PredicateSymbol.GRTEQ);
+		Formula indLe0 = new Predicate2Ar(
+				new Stack(Expression.getCOUNTER_MINUS_1()),
+				new NumberLiteral(0 ),
+				PredicateSymbol.LESS);
+		
+		Formula arr_index_not_correct = Formula.getFormula( indGrtLen, indLe0, Connector.OR);
+			
 		/*Util.dump(" arr_index_not_correct " + arr_index_not_correct);*/
 		
 		Formula outOfBounds =
 			getWpForException(
 				(JavaObjectType) JavaType.getJavaRefType(
-					ClassNames.ARRAYINDEXOUTOFBOUNDException),
-				_exc_Postcondition);
+					ClassNames.ARRAYINDEXOUTOFBOUNDException));
 		/*Util.dump(" excPost" + outOfBounds);*/
 		
 		wps[2] =

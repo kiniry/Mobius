@@ -68,10 +68,10 @@ public class BCIF_ACMPNE extends BCConditionalBranch {
 		Formula wp;
 		//top two stack values are not equal
 		Formula stackTop_not_equals_stackTop_minus_1 =
-			new Predicate2Ar(
+			Formula.getFormula( new Predicate2Ar(
 				new Stack(Expression.COUNTER),
 				new Stack(Expression.getCOUNTER_MINUS_1()),
-				PredicateSymbol.NOTEQ);
+				PredicateSymbol.EQ) , Connector.NOT);
 
 		Formula not_eq_branch =
 		(Formula)_normal_Postcondition.substitute(

@@ -14,10 +14,8 @@ import org.apache.bcel.generic.InstructionHandle;
 import utils.Util;
 
 import bcexpression.javatype.JavaType;
+import bcexpression.jml.SET;
 import formula.Formula;
-
-
-
 
 
 /**
@@ -26,14 +24,12 @@ import formula.Formula;
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public abstract  class BCInstruction  implements ByteCode{
-
-
-	
+public abstract  class BCInstruction  implements ByteCode {
 	/**
 	 * this field should disappear in the end. Only the needed information extracted from the object should reamain.
 	 */
 	public InstructionHandle instructionHandle;	
+	
 	
 	/**
 	 * the preceding instruction in the bytecode
@@ -66,6 +62,10 @@ public abstract  class BCInstruction  implements ByteCode{
 
 
 	private Formula assertion;
+
+	// this is what are the variables to be set after the execution of this instruction
+	private SET[] set ;
+	
 	
 	/**
 	 * exceptions that this throw instruction may cause
@@ -133,7 +133,7 @@ public abstract  class BCInstruction  implements ByteCode{
 		return bcIndex;
 	}
 	
-	/*
+	/**
 	 * @return - the offset of the instruction 
 	 * from the beginning 
 	 */
@@ -141,6 +141,10 @@ public abstract  class BCInstruction  implements ByteCode{
 		return position;
 	}
 	
+	/**
+	 * sets the offset of the instruction 
+	 * @param _position
+	 */
 	public void setPosition(int  _position) {
 		position = _position;
 	}
@@ -238,6 +242,22 @@ public abstract  class BCInstruction  implements ByteCode{
 	public void setAssert(Formula assertion) {
 		this.assertion = assertion;
 	}
+	
+	/**
+	 * Sets the invariant if there is one specified
+	 * @param invariant The invariant to set
+	 */
+	public void setAssignToModel(SET[] _set) {
+		this.set = _set;
+	}
+	
+	/**
+	 * Sets the invariant if there is one specified
+	 * @param invariant The invariant to set
+	 */
+	public SET[] getAssignToModel() {
+		return set;
+	}
 
 	public String toString() {
 		return ""+  getPosition() + " :  "+ getInstructionHandle().getInstruction() ;
@@ -255,4 +275,24 @@ public abstract  class BCInstruction  implements ByteCode{
 	public BCInstruction[] getBytecode() {
 		return bytecode;
 	}
+	
+	/////////////////////////////////////////////////////////
+	//////////////Allocation/////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////
+	
+	/*private  int allocate= 0;
+	
+	*//**
+	 * @return Returns the allocate.
+	 *//*
+	public int getAllocate() {
+		return allocate;
+	}
+	
+	*//**
+	 * @param allocate The allocate to set.
+	 *//*
+	public void setAllocate(int _allocate) {
+		allocate = allocate +  _allocate;
+	}*/
 }

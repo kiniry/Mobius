@@ -9,6 +9,7 @@ package modifexpression;
 import bcclass.BCConstantPool;
 import bcexpression.Expression;
 import formula.atomic.Predicate;
+import formula.atomic.Predicate0Ar;
 
 /**
  * @author mpavlova
@@ -33,7 +34,7 @@ public class ModifiesIdent extends ModifiesExpression {
 		Quantificator q = new Quantificator(Quantificator.FORALL, o );
 		QuantifiedFormula for_all_o = new QuantifiedFormula(f, q );
 		return for_all_o;*/
-		return Predicate.TRUE;
+		return Predicate0Ar.TRUE;
 	}
 	
 	/* (non-Javadoc)

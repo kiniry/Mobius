@@ -31,14 +31,12 @@ public final class Stack extends Expression  {
 	 *  (non-Javadoc)
 	 * @see bcexpression.Expression#setType()
 	 */
-	public void setType() {
-		// TODO Auto-generated method stub
-		
+	public void setType() {		
 	}
 
 
 	public String toString() {
-		return "Stack(" + getSubExpressions()[0].toString() + ")"; 
+		return "St(" + getSubExpressions()[0].toString() + ")"; 
 	}
 
 	/* (non-Javadoc)

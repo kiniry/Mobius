@@ -17,6 +17,12 @@ import formula.Formula;
  */
 public class Predicate0Ar extends Predicate {
 
+	public static final Predicate0Ar  FALSE = new Predicate0Ar();
+	public static final Predicate0Ar  TRUE = new Predicate0Ar();
+
+	private Predicate0Ar() {	
+	}
+	
 	public Expression copy() {
 		return this;
 	}
@@ -26,9 +32,9 @@ public class Predicate0Ar extends Predicate {
 	}
 	
 	public String toString() {
-		if (this.equals( Predicate.TRUE)) {
+		if (this.equals( Predicate0Ar.TRUE)) {
 			return "TRUE";
-		} else if(this.equals( Predicate.FALSE) ) {
+		} else if(this.equals( Predicate0Ar.FALSE) ) {
 			return "FALSE";
 		}
 		return null;

@@ -42,10 +42,10 @@ public class BCIFEQ extends BCConditionalBranch {
 
 		// in case of executing next instruction  - S(t) != 0
 		Formula stackTop_not_eq_0 =
-			new Predicate2Ar(
+			Formula.getFormula( new Predicate2Ar(
 				new Stack(Expression.COUNTER),
 				new NumberLiteral(0),
-				PredicateSymbol.NOTEQ);
+				PredicateSymbol.EQ), Connector.NOT);
 		Formula not_eq_branch =
 		(Formula)_normal_Postcondition.substitute(
 				Expression.COUNTER,

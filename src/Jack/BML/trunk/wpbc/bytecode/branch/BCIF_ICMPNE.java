@@ -81,10 +81,10 @@ public class BCIF_ICMPNE extends BCConditionalBranch {
 		//S(t)!= S(t-1)
 
 		Formula stackTop_not_eq_stackTop_minus_1 =
-			new Predicate2Ar(
+			Formula.getFormula( new Predicate2Ar(
 				new Stack(Expression.COUNTER),
 				new Stack(Expression.getCOUNTER_MINUS_1()),
-				PredicateSymbol.NOTEQ);
+				PredicateSymbol.EQ), Connector.NOT );
 
 		//		Util.dump("wpBranch condition " + stackTop_not_eq_stackTop_minus_1);
 

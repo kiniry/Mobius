@@ -12,6 +12,8 @@ import java.util.Vector;
 
 import utils.Util;
 import bcclass.attributes.ExsuresTable;
+import bcexpression.Expression;
+import bcexpression.jml.SET;
 import bytecode.BCATHROW;
 import bytecode.BCInstruction;
 import bytecode.BCLoopEnd;
@@ -97,6 +99,17 @@ public class Block implements ByteCode {
 			}
 			
 			_np = _instr.wp(_np, _exc_Postcondition);
+			SET[] assignModelVars = _instr.getAssignToModel();
+			
+			// making the necessary substitutions for any assignments that appear in the "set" of this instruction 
+			if (assignModelVars != null) {
+				for (int i = 0; i < assignModelVars.length ; i++ ) {
+					Expression model = assignModelVars[i].getSubExpressions()[0];
+					Expression assignToModel = assignModelVars[i].getSubExpressions()[1];
+					_np.substitute(model, assignToModel.copy());
+				}
+			}
+			
 			Formula assertion = _instr.getAssert();
 			if (assertion != null) {
 				_np = Formula.getFormula(_np, assertion, Connector.AND);
@@ -146,7 +159,7 @@ public class Block implements ByteCode {
 		Formula _normal_postcondition,
 		ExsuresTable _exc_postcondition) {
 		if (targeterBlocks == null) {
-			Util.dump("------------- This path ended -------------------");
+			/*Util.dump("------------- This path ended -------------------");*/
 			return;
 		}
 		for (int k = 0; k < targeterBlocks.size(); k++) {
@@ -198,7 +211,7 @@ public class Block implements ByteCode {
 	public void setTargetBlocks(HashMap blocks) {
 		BCInstruction last = getLast();
 		if (last instanceof BCJSR) {
-			BCInstruction targetInstr = ((BCJSR) last).getTarget();
+			BCInstruction targetInstr = ((BCJSR) last).getNext();
 			Block b =
 				(Block) blocks.get(new Integer(targetInstr.getPosition()));
 			setTargetSeqBlock(b);
@@ -237,7 +250,7 @@ public class Block implements ByteCode {
 		if ((prev != null)
 			&& !(prev instanceof BCRET)
 			&& !(prev instanceof BCTypeRETURN)
-			&& !(prev instanceof BCJSR)
+			/*&& !(prev instanceof BCJSR)*/
 			&& !(prev instanceof BCGOTO)
 			&& !(prev instanceof BCATHROW) 
 			&& !(prev instanceof BCLoopEnd)) {

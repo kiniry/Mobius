@@ -65,12 +65,13 @@ public class BCTypeREM extends BCArithmeticInstructionWithException {
 		Formula wp = null;
 //		Stack stackTop = new Stack(Expression.COUNTER);
 //		Stack stackTop_minus_1 = new Stack(Expression.COUNTER_MINUS_1);
-		// stack(top ) != null 
+		// stack(top ) != 0
+		
 		Formula divisorNonZero =
-			new Predicate2Ar(
+			Formula.getFormula( new Predicate2Ar(
 				new Stack(Expression.COUNTER),
 				new NumberLiteral(0),
-				PredicateSymbol.NOTEQ);
+				PredicateSymbol.EQ) , Connector.NOT) ;
 		ArithmeticExpression remResult =
 			(ArithmeticExpression)ArithmeticExpression.getArithmeticExpression(
 				new Stack(Expression.COUNTER),
@@ -98,8 +99,7 @@ public class BCTypeREM extends BCArithmeticInstructionWithException {
 		Formula _excPost =
 			getWpForException(
 				(JavaObjectType) JavaType.getJavaRefType(
-					"Ljava/lang/ArithmeticException;"),
-				_exc_Postcondition);
+					"Ljava/lang/ArithmeticException;"));
 		Formula wpExceptionExecution =
 		Formula.getFormula(divisorIsZero, _excPost, Connector.IMPLIES);
 		// stack(top)  != null ==>_normal_Postcondition[t <-- t-1][S(t-1) <-- S(t-1) rem S(t)] 

@@ -22,8 +22,7 @@ public class QuantifiedFormula extends Formula {
 	
 	public QuantifiedFormula(Formula _formula, Quantificator _q) {
 		super(_formula);
-		quantificators = new Quantificator[1];
-		quantificators[0] = _q;
+		quantificators = new Quantificator[]{_q};
 	}
 
 	public QuantifiedFormula(Formula _formula, Quantificator[] _q) {
@@ -36,7 +35,7 @@ public class QuantifiedFormula extends Formula {
 	 * @param _q
 	 * @return true and quantifies if the formula is not uop to now quantified 
 	 * false - if it is already quantified over the expression and  does the quantification 
-	 */
+	 *//*
 	public boolean addQuantificator(Quantificator _q) {
 		// verify if it is not already quantified over the same variable
 		for (int i = 0; i < quantificators.length; i++) {
@@ -52,7 +51,8 @@ public class QuantifiedFormula extends Formula {
 		}
 		quantificators[quantificators.length - 1] = _q;
 		return true;
-	}
+	}*/
+	
 	/**
 	 * @return Returns the quantificator.
 	 */
@@ -94,11 +94,13 @@ public class QuantifiedFormula extends Formula {
 	 */
 	public Expression rename(Expression expr1, Expression expr2) {
 		for (int i = 0; i < quantificators.length; i++) {
-			Expression boundExpr = quantificators[i].getBoundVar();
-			if (expr1.equals(boundExpr)) {
-				boundExpr = boundExpr.rename(expr1, expr2);
-				quantificators[i].setBoundVar(boundExpr);
+			Expression[] boundExpr = quantificators[i].getBoundVars();
+			for (int j = 0; j < boundExpr.length; j++) {
+				if (expr1.equals(boundExpr[i])) {
+					boundExpr[i] = boundExpr[i].rename(expr1, expr2);
+				}
 			}
+			quantificators[i].setBoundVars(boundExpr);
 		}
 		Expression[] subformula = getSubExpressions();
 		subformula[0] = subformula[0].rename(expr1, expr2);

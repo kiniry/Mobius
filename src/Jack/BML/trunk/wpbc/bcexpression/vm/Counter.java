@@ -7,6 +7,7 @@
 package bcexpression.vm;
 
 
+import bcexpression.ArithmeticExpression;
 import bcexpression.Expression;
 
 import bcexpression.javatype.JavaBasicType;
@@ -20,7 +21,7 @@ import bcexpression.javatype.JavaType;
  * To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
-public class Counter  extends Expression {
+public class Counter  extends ArithmeticExpression {
 
 	private final JavaBasicType type = JavaType.JavaINT ; 
 	private static Counter counter ;
@@ -53,7 +54,7 @@ public class Counter  extends Expression {
 	}
 	
 	public String toString() {
-		return "counter";
+		return "c";
 	}
 	
 	public   boolean equals(Expression _expr) {

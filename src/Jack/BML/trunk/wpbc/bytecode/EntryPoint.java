@@ -15,18 +15,21 @@ import bytecode.branch.BCConditionalBranch;
 import formula.Connector;
 import formula.Formula;
 import formula.atomic.Predicate;
+import formula.atomic.Predicate0Ar;
 
 
 /**
  * @author mpavlova
  *
- * To change the template for this generated type comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
+ *This class models a program entry point , entry points to subroutines and entry points to exception handlers
  */
 public class EntryPoint extends BCInstruction {
-	BCInstruction instr;
+	/**
+	 * the wrapped instruction that appears to be an entry point 
+	 */
+	private BCInstruction instr;
 	
-	Vector wp;
+	private Vector wp;
 	
 	
 	public EntryPoint(BCInstruction _instr) {
@@ -37,7 +40,6 @@ public class EntryPoint extends BCInstruction {
 				setPrev(_instr.getPrev());
 				setBCIndex(_instr.getBCIndex());
 				setTargeters(_instr.getTargeters());
-				//		updateTargets(_instruction.getTargeters());
 				setPosition(_instr.getPosition());
 
 				//actualise the values in the previous and the next instruction
@@ -51,6 +53,9 @@ public class EntryPoint extends BCInstruction {
 				}
 	}
 
+	public BCInstruction getWrappedInstruction() {
+		return instr;
+	}
 	/* (non-Javadoc)
 	 * @see bytecode.ByteCode#wp(formula.Formula, bcclass.attributes.ExsuresTable)
 	 */
@@ -92,7 +97,7 @@ public class EntryPoint extends BCInstruction {
 			return null;
 		}
 		Enumeration eWp = wp.elements();
-		Formula wps = Predicate.TRUE;
+		Formula wps = Predicate0Ar.TRUE;
 		while (eWp.hasMoreElements() ) {
 			Formula f = (Formula)eWp.nextElement();
 			wps = Formula.getFormula(wps, f, Connector.AND);

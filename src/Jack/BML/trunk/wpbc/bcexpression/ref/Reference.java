@@ -37,6 +37,19 @@ public class Reference extends Expression {
 	public Expression getType()  {
 		return type;
 	}
+	
+	
+	public boolean equals(Expression _expr) {
+		boolean eq = super.equals(_expr);
+		if (eq) {
+			int refId  = ( (Reference)_expr).getId();
+			if (refId == id) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	/**
 	 * 
 	 * references are constants so substitution over a reference results in the same reference
@@ -65,4 +78,10 @@ public class Reference extends Expression {
 	
 	
 	
+	/**
+	 * @return Returns the id.
+	 */
+	public int getId() {
+		return id;
+	}
 }

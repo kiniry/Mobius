@@ -142,8 +142,7 @@ public class BCANEWARRAY
 		//in the  case where the specified size is negative -  "Ljava/lang/NegativeArraySizeException;" is thrown
 		Formula topStack_lesseq_0_implies =
 			getWpForException(
-				getExceptionsThrown()[0],
-				_exc_Postcondition);
+				getExceptionsThrown()[0]);
 		Formula excWpTermination =
 		Formula.getFormula(
 				(Formula)topStack_grt_0.copy(),

@@ -71,7 +71,9 @@ public class BCGETFIELD extends BCFieldOrMethodInstruction {
 		//normal termination
 		//S(t) != null
 		Formula stackTopNotNull =
-			new Predicate2Ar(new Stack(Expression.COUNTER), Expression._NULL, PredicateSymbol.NOTEQ);
+			Formula.getFormula(
+					new Predicate2Ar(new Stack(Expression.COUNTER), Expression._NULL, PredicateSymbol.EQ),
+					Connector.NOT);
 	
 
 		FieldAccess fieldAccess =
@@ -109,8 +111,7 @@ public class BCGETFIELD extends BCFieldOrMethodInstruction {
 		// if there if the object is null throw a "Ljava/lang/NullPointerException;"
 		Formula stackTopNullImplies =
 			getWpForException(
-				getExceptionsThrown()[0],
-				_exc_Postcondition);
+				getExceptionsThrown()[0]);
 
 		//S(t) == null ==> psi^e("Ljava/lang/NullPointerException;")
 		Formula wpStackTopNull =

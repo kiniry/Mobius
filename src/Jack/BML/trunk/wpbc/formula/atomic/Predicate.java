@@ -18,10 +18,6 @@ public class Predicate extends Formula {
 	private byte predicateSymbol;
 	
 	
-	public static final Predicate0Ar  TRUE = new Predicate0Ar();
-	public static final Predicate0Ar  FALSE = new Predicate0Ar();
-	
-
 	protected void setPredicateSymbol(byte _predicateSymbol) {
 		predicateSymbol =  _predicateSymbol;
 	}

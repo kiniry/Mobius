@@ -51,7 +51,8 @@ public class BCARRAYLENGTH extends BCExceptionThrower {
 
 		//wp in case of normal termination
 		Formula objNotNull =
-			new Predicate2Ar( new Stack(Expression.COUNTER), Expression._NULL, PredicateSymbol.NOTEQ);
+			Formula.getFormula(
+					new Predicate2Ar( new Stack(Expression.COUNTER), Expression._NULL, PredicateSymbol.EQ), Connector.NOT);
 		//S(t).length
 		FieldAccess arrLength =
 			new FieldAccess(ArrayLengthConstant.ARRAYLENGTHCONSTANT,  new Stack(Expression.COUNTER));
@@ -66,8 +67,7 @@ public class BCARRAYLENGTH extends BCExceptionThrower {
 			// in case the array object is null - Ljava/lang/NullPointerException; is thrown 
 		Formula excPrecondition =
 			getWpForException(
-				getExceptionsThrown()[0],
-				_exc_Postcondition);
+				getExceptionsThrown()[0]);
 		Formula wpExceptionalTermination =
 		Formula.getFormula(objNull, excPrecondition, Connector.IMPLIES);
 		wp =

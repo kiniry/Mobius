@@ -121,19 +121,20 @@ public class BCMULTIANEWARRAY
 		Formula domain =
 		Formula.getFormula(i_less_counter, i_bigger_dims, Connector.AND);
 
-		//forall i. (i > t - dims and i < t)
+		//forall i. 
 		Quantificator quantificator =
-			new Quantificator(Quantificator.FORALL, boundVar, domain);
+			new Quantificator(Quantificator.FORALL, boundVar);
 
 	Stack _anyArrLength = new Stack(boundVar);
-		// S(i) >= 0  
+		// (i > t - dims and i < t) ==> S(i) >= 0  
 		Formula opened_formula =
 			new Predicate2Ar(
 				_anyArrLength,
 				new NumberLiteral(0),
 				PredicateSymbol.GRTEQ);
+		opened_formula =Formula.getFormula(domain, opened_formula , Connector.IMPLIES);
 
-		//forall  i. (i > t - dims and i < t). S(i) >= 0
+		//forall  i : int.(  (i > t - dims and i < t) ==> S(i) >= 0)
 		QuantifiedFormula conditionForNormalTermination =
 			new QuantifiedFormula(opened_formula, quantificator);
 
@@ -220,7 +221,7 @@ public class BCMULTIANEWARRAY
 
 		// exista i. (i > t - dims and i < t)
 		Quantificator quantificator1 =
-			new Quantificator(Quantificator.EXISTS, boundVar1, domain1);
+			new Quantificator(Quantificator.EXISTS, boundVar1);
 
 		Stack _anyArrLength1 = new Stack(boundVar1);
 
@@ -231,16 +232,15 @@ public class BCMULTIANEWARRAY
 				new NumberLiteral(0),
 				PredicateSymbol.LESS);
 
-		//forall  i. (i > t - dims and i < t). S(i) <= 0
+		//forall  i. (i > t - dims and i < t ==> S(i) <= 0)
 		QuantifiedFormula conditionForExcTermination =
-			new QuantifiedFormula(opened_formula1, quantificator1);
+			new QuantifiedFormula(Formula.getFormula(domain1, opened_formula1, Connector.IMPLIES ), quantificator1);
 
 		//psi^(e)
 		Formula excT =
 			getWpForException(
 				(JavaObjectType) JavaType.getJavaRefType(
-					"Ljava/lang/NegativeArraySizeException;"),
-				_exc_Postcondition);
+					"Ljava/lang/NegativeArraySizeException;"));
 		Formula wpExcTernination =
 		Formula.getFormula(conditionForExcTermination, excT, Connector.IMPLIES);
 

@@ -55,12 +55,17 @@ public class ModifiesDOT extends ModifiesExpression {
 		Variable obj = new Variable(FreshIntGenerator.getInt());
 		// the upper limit for the obj type
 		Expression type = objDeref.getType();
-
-			//typeof(obj) <: typeof(derefObj)
+		
+/*		
+		BCConstantFieldRef constField = (BCConstantFieldRef)getConstantFieldRef();
+		Expression type  = */
+		
+		//typeof(obj) <: typeof(derefObj)
 		Predicate2Ar objTypeSubTypeOf= new Predicate2Ar( new TYPEOF(obj), type, PredicateSymbol.SUBTYPE);
 		
 		// obj != objDeref
-		Predicate2Ar objNotEqobjDeref = new Predicate2Ar( obj, objDeref, PredicateSymbol.NOTEQ);
+		Formula objNotEqobjDeref = Formula.getFormula( new Predicate2Ar( obj, objDeref, PredicateSymbol.EQ), 
+				Connector.NOT);
 		
 		// 
 		Expression objDerefDotcopy = objDerefDotField.copy();
@@ -74,8 +79,9 @@ public class ModifiesDOT extends ModifiesExpression {
 			objDotFieldEqOldObjDotField = new Predicate2Ar( objDotField, fieldAtState, PredicateSymbol.EQ);
 			
 		}
-		Formula f = Formula.getFormula(objNotEqobjDeref, objDotFieldEqOldObjDotField, Connector.IMPLIES );
-		f = Formula.getFormula( f, new Quantificator(Quantificator.FORALL, obj, objTypeSubTypeOf ));
+		/*Formula f = Formula.getFormula(objNotEqobjDeref, objDotFieldEqOldObjDotField, Connector.IMPLIES );*/
+		/*Formula f = Formula.getFormula( Formula.getFormula( Formula.getFormula( objNotEqobjDeref, objTypeSubTypeOf, Connector.AND ) , objDotFieldEqOldObjDotField, Connector.IMPLIES ), new Quantificator(Quantificator.FORALL, obj));
+*/		Formula f = Formula.getFormula( Formula.getFormula( objNotEqobjDeref, objTypeSubTypeOf, Connector.AND ) , objDotFieldEqOldObjDotField, Connector.IMPLIES );
 		return f;
 	}
 

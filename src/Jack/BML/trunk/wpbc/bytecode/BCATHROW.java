@@ -9,28 +9,31 @@ package bytecode;
 import org.apache.bcel.generic.ATHROW;
 import org.apache.bcel.generic.InstructionHandle;
 
-import formula.Formula;
+import utils.Util;
 
+import formula.Formula;
+import formula.atomic.Predicate0Ar;
+
+import bcclass.attributes.ExceptionHandler;
 import bcclass.attributes.ExsuresTable;
 import bcexpression.Expression;
 import bcexpression.javatype.JavaObjectType;
 import bcexpression.javatype.JavaType;
 import bcexpression.jml.TYPEOF;
-import bcexpression.substitution.FormulaWITH;
+import bcexpression.overload.FormulaOverload;
 import bcexpression.vm.Stack;
+
 //import bytecode.block.*;
 
 /**
  * @author mpavlova
- *
+ * 
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class BCATHROW
-	extends BCExceptionThrower
- {
+public class BCATHROW extends BCExceptionThrower {
 
-//	private Block blockEndingWithThis;
+	//	private Block blockEndingWithThis;
 	/**
 	 * @param _branchInstruction
 	 */
@@ -38,29 +41,21 @@ public class BCATHROW
 		super(_throwInstruction);
 		setInstructionCode(BCInstructionCodes.ATHROW);
 		setExceptionThrown(_throwInstruction);
-		//dump(_branchInstruction.toString() + " throws "  + getExceptions().length);	
+		//dump(_branchInstruction.toString() + " throws " +
+		// getExceptions().length);
 	}
-
-//	/* (non-Javadoc)
-//		 * @see bytecode.EndBlockInstruction#setBlock(bytecode.block.Block)
-//		 */
-//	public void setBlock(Block block) {
-//		blockEndingWithThis = block;
-//	}
 
 	/**
 	 * sets the exception that this particular athrow instruction throws
 	 */
 	private void setExceptionThrown(InstructionHandle _throwInstruction) {
-		Class excThrownClass =
-			((ATHROW) _throwInstruction.getInstruction()).getExceptions()[0];
+		Class excThrownClass = ((ATHROW) _throwInstruction.getInstruction())
+				.getExceptions()[0];
 
-		JavaObjectType excThrown =
-			(JavaObjectType) JavaType.getJavaRefType(excThrownClass.getName());
+		JavaObjectType excThrown = (JavaObjectType) JavaType
+				.getJavaRefType(excThrownClass.getName());
 		super.setExceptionsThrown(new JavaObjectType[] { excThrown });
 	}
-
-	
 
 	/**
 	 * gets the exception that this particular athrow instruction throws
@@ -69,33 +64,38 @@ public class BCATHROW
 		return getExceptionsThrown()[0];
 	}
 
-
-
-	/* (non-Javadoc)
-	 * @see bytecode.ByteCode#wp(formula.Formula, specification.ExceptionalPostcondition)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see bytecode.ByteCode#wp(formula.Formula,
+	 *      specification.ExceptionalPostcondition)
 	 */
-	public Formula wp(
-		Formula _normal_Postcondition,
-		ExsuresTable _exc_Postcondition) {
-
-	
+	public Formula wp(Formula _normal_Postcondition,
+			ExsuresTable _exc_Postcondition) {
 		Stack topStack = new Stack(Expression.COUNTER);
-		Expression typeOfTopStack = new TYPEOF(topStack); 
-		FormulaWITH wp = new FormulaWITH( getTrace(), typeOfTopStack, this);
-//		JavaObjectType excThrown = getExceptionThrown();
-//		Formula wp =
-//			getWpForException(excThrown, _exc_Postcondition);
+		Expression typeOfTopStack = new TYPEOF(topStack);
+
+		// check if there is any information about the checked or thrown
+		// exception as well if there
+		// are exsures clause
+		JavaObjectType[] exceptionsThrown = getTrace().getMethod()
+				.getExceptionsThrown();
+		ExceptionHandler[] excHandlers = getTrace().getMethod()
+				.getExceptionHandlers();
+
+		// in case there is no any specified exception then any thrown exception
+		// implies false
+		// in the post state
+		if ((exceptionsThrown == null || exceptionsThrown.length == 0)
+				&& (excHandlers == null || excHandlers.length == 0)
+				&& (_exc_Postcondition == null
+						|| _exc_Postcondition.getExsures() == null || _exc_Postcondition
+						.getExsures().length == 0)) {
+			return Predicate0Ar.FALSE;
+		}
+		FormulaOverload wp = new FormulaOverload(getTrace(), typeOfTopStack,
+				this);
 		return wp;
 	}
-
-//	/* (non-Javadoc)
-//	 * @see bytecode.EndBlockInstruction#calculateRecursively(formula.Formula, bcclass.attributes.ExsuresTable)
-//	 */
-//	public Formula calculateRecursively(
-//		Formula _normal_postcondition,
-//		ExsuresTable _exs_postcondition) {
-//		Formula  wp = blockEndingWithThis.calculateRecursively(_normal_postcondition, _exs_postcondition);
-//		return wp;
-//	}
 
 }

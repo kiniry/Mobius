@@ -61,12 +61,12 @@ public class BCTypeDIV extends BCArithmeticInstructionWithException {
 		Formula wp = null;
 //		Stack stackTop = new Stack(Expression.COUNTER);
 //		Stack stackTop_minus_1 = new Stack(Expression.COUNTER_MINUS_1);
-		// stack(top ) != null 
+		// ! (stack(top ) == 0) 
 		Formula divisorNonZero =
-			new Predicate2Ar(
+			Formula.getFormula(new Predicate2Ar(
 				new Stack(Expression.COUNTER),
 				new NumberLiteral(0),
-				PredicateSymbol.NOTEQ);
+				PredicateSymbol.EQ) , Connector.NOT );
 		ArithmeticExpression divResult =
 			(ArithmeticExpression)ArithmeticExpression.getArithmeticExpression(
 				new Stack(Expression.COUNTER),
@@ -94,11 +94,10 @@ public class BCTypeDIV extends BCArithmeticInstructionWithException {
 		Formula _excPost =
 			getWpForException(
 				(JavaObjectType) JavaType.getJavaRefType(
-					"Ljava/lang/ArithmeticException;"),
-				_exc_Postcondition);
+					"Ljava/lang/ArithmeticException;"));
 		Formula wpExceptionExecution =
 		Formula.getFormula(divisorIsZero, _excPost, Connector.IMPLIES);
-		// stack(top)  != null ==> _normal_Postcondition[t <-- t-1][S(t-1) <-- S(t-1) / S(t)] 
+		// stack(top)  != null ==>ï¿½_normal_Postcondition[t <-- t-1][S(t-1) <-- S(t-1) / S(t)] 
 		// &&
 		// stack(top)  == null ==> excPost
 		wp =

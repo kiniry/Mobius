@@ -8,7 +8,10 @@ package bytecode.branch;
 
 import org.apache.bcel.generic.InstructionHandle;
 
+import utils.Util;
+
 import bcclass.attributes.ExsuresTable;
+import bytecode.block.Trace;
 
 
 
@@ -21,8 +24,10 @@ import formula.Formula;
  * 
  *wp (psi^n, psi^e) = psi^n
  */
-public class BCJSR extends  BCUnconditionalBranch {
+public class BCJSR extends  BCJumpInstruction {
 
+	 private Trace trace;
+	
 	/**
 	 * @param _branchInstruction
 	 */
@@ -34,13 +39,17 @@ public class BCJSR extends  BCUnconditionalBranch {
 	 * @see bytecode.ByteCode#wp(formula.Formula, specification.ExceptionalPostcondition)
 	 */
 	public Formula wp(Formula _normal_Postcondition, ExsuresTable _exc_Postcondition) {
-		Formula wp;
 //		Block subroutine = getTargetBlock();
 //		
 //		// the wp for the jsr instruction is the wp of the block that represents the subroutine
 //		wp = subroutine.wp( _normal_Postcondition, _exc_Postcondition);
-		wp = _normal_Postcondition;
+		int subRtPos = getTargetPosition();
+		
+		Formula wp = trace.getWpForSubrotineAt(subRtPos , _normal_Postcondition );
 		return wp;
 	}
 
+	public void setTrace(Trace _trace) {
+		trace = _trace;
+	}
 }

@@ -7,6 +7,7 @@
 package modifexpression;
 
 import formula.atomic.Predicate;
+import formula.atomic.Predicate0Ar;
 import bcexpression.ValueOfConstantAtState;
 import bcexpression.Expression;
 
@@ -29,7 +30,7 @@ public class Nothing extends ModifiesExpression {
 	 * @see modifexpression.ModifiesExpression#getPostCondition()
 	 */
 	public Expression getPostCondition(int state) {
-		return Predicate.TRUE;
+		return Predicate0Ar.TRUE;
 	}
 
 	/* (non-Javadoc)

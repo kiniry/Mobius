@@ -2,13 +2,21 @@ package bytecode.objectmanipulation;
 
 import org.apache.bcel.generic.CPInstruction;
 import org.apache.bcel.generic.InstructionHandle;
+
+import constants.MemUsedConstant;
 import utils.FreshIntGenerator;
 
 import formula.Formula;
+import formula.atomic.Predicate2Ar;
 
 import bcclass.attributes.ExsuresTable;
+import bcexpression.ArithmeticExpression;
 import bcexpression.Expression;
+import bcexpression.ExpressionConstants;
+import bcexpression.FieldAccess;
+import bcexpression.NumberLiteral;
 import bcexpression.javatype.JavaType;
+import bcexpression.jml.SET;
 import bcexpression.ref.Reference;
 import bcexpression.vm.Stack;
 import bytecode.BCAllocationInstruction;
@@ -43,6 +51,7 @@ public class BCNEW extends BCAllocationInstruction implements BCCPInstruction  {
 		super(_instruction, _type);
 		setIndex( ( (CPInstruction)_instruction.getInstruction()).getIndex());
 		setType(_type);
+		setAssignToMem();
 	}
 	
 	/* (non-Javadoc)
@@ -81,9 +90,16 @@ public class BCNEW extends BCAllocationInstruction implements BCCPInstruction  {
 		wp =   (Formula)_normal_Postcondition.substitute(Expression.COUNTER, Expression.getCOUNTER_PLUS_1());
 		Stack topStack_plus1 = new Stack(Expression.getCOUNTER_PLUS_1());
 		Reference  new_ref= new Reference(FreshIntGenerator.getInt(), getType() );
-		
 		wp =  (Formula)wp.substitute(topStack_plus1,  new_ref );
-		
 		return wp;
+	}
+	
+	////////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////// MEMORY ALLOCATION SPECIFICATION/////////////
+	/////////////////////////////////////////////////////////////////////////////////////
+	public void setAssignToMem() {
+		Expression memInc = ArithmeticExpression.getArithmeticExpression( new FieldAccess(MemUsedConstant.MemUsedCONSTANT), new NumberLiteral(1) , ExpressionConstants.ADD);
+		SET set = new SET( new FieldAccess(MemUsedConstant.MemUsedCONSTANT), memInc );
+		setAssignToModel(new SET[]{set});
 	}
 }

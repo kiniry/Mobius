@@ -116,7 +116,9 @@ public class BCINSTANCEOF
 
 		//S(t) != null
 		Formula topStackNotNull =
-			new Predicate2Ar(new Stack(Expression.COUNTER), Expression._NULL, PredicateSymbol.NOTEQ);
+			Formula.getFormula(
+			new Predicate2Ar(new Stack(Expression.COUNTER), Expression._NULL, PredicateSymbol.EQ), 
+			Connector.NOT );
 
 		//S(t) <: Type && S(t) != null
 		Formula condition0 =

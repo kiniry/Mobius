@@ -99,7 +99,8 @@ public class BCPUTFIELD extends BCFieldOrMethodInstruction {
 
 		// S(t-1 ) != null
 		Formula objNotNull =
-			new Predicate2Ar(obj, Expression._NULL, PredicateSymbol.NOTEQ);
+			Formula.getFormula ( new Predicate2Ar(obj, Expression._NULL, PredicateSymbol.EQ), 
+					Connector.NOT);
 
 		//psi^n[t <-- t-2 ]
 		Formula wpObjNotNullImpl =
@@ -137,7 +138,7 @@ public class BCPUTFIELD extends BCFieldOrMethodInstruction {
 		//		///////////////////////////////////////////////////////////////////////////
 		/////////////////////////////////////////////////////////////////////////////
 		//exceptional termination - null object access
-		//S(t) == null
+		//S(t - 1) == null
 		Formula objNull =
 			new Predicate2Ar(
 				new Stack(
@@ -151,9 +152,9 @@ public class BCPUTFIELD extends BCFieldOrMethodInstruction {
 		//psi^e ("Ljava/lang/NullPointerException;")
 		// if there if the object is null throw a "Ljava/lang/NullPointerException;"
 		Formula objNullImplies =
-			getWpForException(getExceptionsThrown()[0], _exc_Postcondition);
+			getWpForException(getExceptionsThrown()[0]);
 
-		//S(t) == null ==> psi^e("Ljava/lang/NullPointerException;")
+		//S(t -1) == null ==> psi^e("Ljava/lang/NullPointerException;")
 		Formula wpObjNull =
 			Formula.getFormula(objNull, objNullImplies, Connector.IMPLIES);
 

@@ -36,6 +36,7 @@ public abstract class BCJumpInstruction extends BCInstruction {
 	 */
 	public void setTarget(BCInstruction _t) {
 		if (_t == null) {
+			targetPosition = -1;
 			return;
 		}
 		targetPosition = _t.getPosition();

@@ -6,8 +6,10 @@
  */
 package modifexpression;
 
+import constants.ArrayLengthConstant;
 import constants.BCConstantClass;
 import constants.BCConstantFieldRef;
+import constants.MemUsedConstant;
 import bcclass.BCConstantPool;
 import bcexpression.ArrayAccessExpression;
 import bcexpression.BCLocalVariable;
@@ -107,17 +109,33 @@ public abstract class ModifiesExpression extends Expression {
 	}
 	/**
 	 * for an expression a.b.c 
-	 * the method determines the class b belongs to.  
+	 * the method determines the class of subexpression b   
 	 * @param expr
 	 * @param cp
 	 * @return
 	 */
 	private void  setType( BCConstantPool cp ) {
 		Expression expr = getExpression();
+		
+		// added recently
+		if (expr instanceof ArrayLengthConstant  ) {
+			type = JavaType.JavaINT;
+			return;
+		}
+		if (expr instanceof MemUsedConstant ) {
+			type = JavaType.JavaINT;
+			return;
+		}
+		// new added recently
+		
+		
 		if (expr instanceof BCConstantFieldRef) {
 			int index = ((BCConstantFieldRef)expr).getClassIndex();
 			JavaReferenceType _type = (JavaReferenceType) JavaType.getJavaType( ((BCConstantClass)cp.getConstant(index)).getName() );
 			type = _type;
+		}
+		if (expr instanceof MemUsedConstant) {
+			type = JavaType.JavaINT;
 		}
 		if (expr instanceof FieldAccess) {
 			FieldAccess fAccess = (FieldAccess)expr;
@@ -132,7 +150,7 @@ public abstract class ModifiesExpression extends Expression {
 			type = _type;
 		}
 		if (expr instanceof QuantifiedExpression) {
-			Expression quantifExpr = ( (QuantifiedExpression)expr).getQuantifiedExpression();
+			Expression quantifExpr = ( (QuantifiedExpression)expr).getTheExpressionQuantified();
 			if (quantifExpr instanceof ArrayAccessExpression) {
 				ArrayAccessExpression arrAccess = (ArrayAccessExpression)quantifExpr;
 				Expression arrayAccess = arrAccess.getArray();

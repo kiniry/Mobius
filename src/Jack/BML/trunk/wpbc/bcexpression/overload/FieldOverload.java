@@ -4,7 +4,7 @@
  * To change the template for this generated file go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-package bcexpression.substitution;
+package bcexpression.overload;
 
 import bcexpression.Expression;
 import bcexpression.FieldAccess;
@@ -16,11 +16,11 @@ import constants.BCConstantFieldRef;
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class FieldWITH extends Expression {
+public class FieldOverload extends Expression {
 	// 
 	private Expression constantFieldRef;
 	private Expression object;
-	private SubstitutionTree with;
+	private OverloadList overloads;
 
 	/**
 	 * constructs a with expression where :
@@ -30,23 +30,23 @@ public class FieldWITH extends Expression {
 	 * substituteExpression
 	 * @param substituteWIth  - see the explanation for objWith
 	 */
-	public FieldWITH(
+	public FieldOverload(
 		Expression _constantFieldRef,
 		Expression concreteObject,
 		Expression objWith,
 		Expression substituteWIth) {
 		constantFieldRef = _constantFieldRef;
 		object = concreteObject;
-		with = new SubstitutionTree(objWith, substituteWIth);
+		overloads = new OverloadList(objWith, substituteWIth);
 	}
 	
-	private  FieldWITH(
+	private  FieldOverload(
 	Expression _constantFieldRef,
 	Expression concreteObject,
-	SubstitutionTree _tree) {
+	OverloadList _tree) {
 		constantFieldRef = _constantFieldRef;
 		object = concreteObject;
-		with = _tree;
+		overloads = _tree;
 	}
 
 	/* (non-Javadoc)
@@ -54,8 +54,19 @@ public class FieldWITH extends Expression {
 	 */
 	public Expression substitute(Expression _e1, Expression _e2) {
 		object = object.substitute(_e1, _e2);
-		with = (SubstitutionTree)with.substitute(_e1, _e2);
+		overloads = (OverloadList)overloads.substitute(_e1, _e2);
 		constantFieldRef = constantFieldRef.substitute(_e1, _e2);
+		
+		//////////////////////////////////
+		///////////////substitution///////////////////
+		// see if the there is an overloading for the value of the the object 
+		Expression overloadingField =  overloads.getExpressionOverloading( object);
+		if (overloadingField != null) {
+			// if the object coincides with one of the overloadings return the overloading value 
+			return overloadingField;
+		}
+		
+		
 		// if _e1 is not a field access expression  then return 
 		if (!(_e1 instanceof FieldAccess)) {
 			return this;
@@ -64,11 +75,12 @@ public class FieldWITH extends Expression {
 		if (constantFieldRef != _e1.getSubExpressions()[0]) {
 			return this;
 		}
+		
 		// else if it is  field access expression to the same field as this fieldWITH then 
 		// include it in the substitution tree
 		Expression withObj = (((FieldAccess)_e1).getSubExpressions()[1]).copy();
 		Expression substituteWith =  _e2.copy();
-		with = new SubstitutionTree(with, new SubstitutionUnit(withObj, substituteWith));
+		overloads.overload(  new OverloadEqUnit(withObj, substituteWith)); //new Overload(with, new OverloadUnit(withObj, substituteWith));
 		return this;
 	}
 
@@ -86,8 +98,8 @@ public class FieldWITH extends Expression {
 	public Expression getObject() {
 		return object;
 	}
-	public SubstitutionTree getWith() {
-		return with;
+	public OverloadList getWith() {
+		return overloads;
 	}
 	/* (non-Javadoc)
 	 * @see bcexpression.Expression#toString()
@@ -97,7 +109,7 @@ public class FieldWITH extends Expression {
 			"["
 				+ constantFieldRef.toString()
 				+ " <+ "
-				+ with.toString()
+				+ overloads.toString()
 				+" (" +  object.toString() + ")  ]";
 		return s;
 	}
@@ -107,8 +119,8 @@ public class FieldWITH extends Expression {
 		 */
 	public Expression copy() {
 		Expression objectCopy = object.copy(); 
-		SubstitutionTree withCopy  = (SubstitutionTree) with.copy();
-		FieldWITH copy = new FieldWITH(constantFieldRef, objectCopy, withCopy );
+		OverloadList withCopy  = (OverloadList) overloads.copy();
+		FieldOverload copy = new FieldOverload(constantFieldRef, objectCopy, withCopy );
 		return copy;
 	}
 }
