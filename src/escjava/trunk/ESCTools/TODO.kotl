@@ -1,0 +1,23 @@
+* ASTGen's childAt() generation.
+
+ Why does the generated childAt() method not include a throws
+ IndexOutOfBoundsException?  It is currently commented out.
+
+* Existing specifications cleanup.
+
+** Add semicolons to the end of all existing specification expressions.
+** Put type annotations like non_null inside of /*@ @*/ blocks.
+** Standard clean spacing in expressions (i.e., "!=null").
+
+* Update abstract syntax grammar for Java 1.1 features.
+
+** Javafe/doc/abstract-syntax.html
+*** Inner classes.
+
+* Need to augment naming.html for resolution in spec files, jml files, etc.
+
+** Support for "also" JML keyword
+
+*** FlowInsensitiveChecks
+    Will need a flag for each spec declaration that makes all
+    following requires/ensures also-prefixed.
