@@ -60,6 +60,7 @@ import bcexpression.Expression;
 import bcexpression.ExpressionConstants;
 import bcexpression.FieldAccess;
 import bcexpression.LocalVariable;
+import bcexpression.NULL;
 import bcexpression.NumberLiteral;
 import bcexpression.javatype.JavaObjectType;
 import bcexpression.javatype.JavaType;
@@ -764,6 +765,8 @@ public class AttributeReader {
 			Expression _this = new LocalVariable(0);
 			Expression oldThis = new OLD(_this);
 			return oldThis;
+		} else if (_byte == Code.NULL) {
+			return NULL._NULL;
 		} else if (
 			(_byte == Code.OLD_FIELD_REF)
 				|| (_byte == Code.OLD_JML_MODEL_FIELD)) {
