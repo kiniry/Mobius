@@ -127,7 +127,7 @@ clean_archives:
 
 TOP_ESCJAVA_TEST_DIR = $(TESTSOURCEDIRECTORY)/escjava/test
 
-.PHONY: self_test test_escjava
+.PHONY: self_test test_escjava_parser
 
 self_test: compile
 	cd $(ESCJAVA_SOURCE_DIR)/escjava; \
@@ -223,6 +223,8 @@ $(AST_DIR)/GeneratedTags.java: $(ASTGEN) $(ESCJAVA_AST_HIERARCHY)
 	grep -v "//@" GuardedCmd.java > GuardedCmd.tmp; \
 	mv GuardedCmd.tmp GuardedCmd.java)
 
+ESCJAVA_CLASSPATH ?= $(ESCJAVA_ROOT)/Javafe/classfiles:$(ESCJAVA_ROOT)/Escjava/classfiles:$(ESCJAVA_ROOT)/jars/mochalib.jar:$(ESCJAVA_ROOT)/jars/javafe.jar:$(ESCJAVA_ROOT)/jars/escjava.jar:$(ESCJAVA_ROOT)/jars/decsrc.jar:..:.:
+
 JAVAC_FLAGS = -g -classpath $(ESCJAVA_CLASSPATH) \
 	-sourcepath $(SOURCEPATH) \
 	-d $(CLASSDIRECTORY) 
@@ -302,14 +304,10 @@ test_lexer: compile_escjava_parser_test_programs
 	(cd $(PARSER_TEST_DIR); \
 	$(JAVA) $(PARSER_TEST_PACKAGE).TestLex GoodPragmas.j | diff - GoodPragmas.ans; \
 	$(JAVA) $(PARSER_TEST_PACKAGE).TestLex GoodSpecExpr.j | diff - GoodSpecExpr.ans; \
-	$(JAVA) $(PARSER_TEST_PACKAGE).TestLex GoodJmlPragmas.j | grep -v "Caution:" | \
-		grep -v "line text not available" | grep -v "Warning:" | \
-		diff - GoodJmlPragmas.ans; \
+	$(JAVA) $(PARSER_TEST_PACKAGE).TestLex GoodJmlPragmas.j | diff - GoodJmlPragmas.ans; \
 	$(JAVA) $(PARSER_TEST_PACKAGE).TestLex lookahead GoodPragmas.j | diff - GoodPragmas.ans; \
 	$(JAVA) $(PARSER_TEST_PACKAGE).TestLex lookahead GoodSpecExpr.j | diff - GoodSpecExpr.ans; \
-	$(JAVA) $(PARSER_TEST_PACKAGE).TestLex lookahead GoodJmlPragmas.j | grep -v "Caution:" | \
-		grep -v "line text not available" | grep -v "Warning:" | \
-		diff - GoodJmlPragmas.ans)
+	$(JAVA) $(PARSER_TEST_PACKAGE).TestLex lookahead GoodJmlPragmas.j | diff - GoodJmlPragmas.ans)
 
 test_parser: compile_escjava_parser_test_programs
 	(cd $(PARSER_TEST_DIR); \
