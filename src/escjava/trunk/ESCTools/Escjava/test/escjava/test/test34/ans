@@ -517,11 +517,8 @@ BogusFunctions.java:42: Error: Cannot convert TYPE to java.lang.Object
 BogusFunctions.java:43: Error: Cannot convert int to java.lang.Object
   /*@ ensures \fresh(ii); */  // illegal
                      ^
-BogusFunctions.java:44: Error: The function fresh takes only one argument
+BogusFunctions.java:44: Error: The function fresh must have at least one argument
   /*@ ensures \fresh(); */  // illegal
-              ^
-BogusFunctions.java:45: Error: The function fresh takes only one argument
-  /*@ ensures \fresh(this, null); */  // illegal
               ^
 BogusFunctions.java:52: Error: Quantified expressions are not allowed in this context
  ... ctions bf; bf.aa != null) ==> \old((\forall BogusFunctions bf; bf ...
@@ -582,7 +579,7 @@ BogusFunctions.java:75: Error: Invalid types (boolean and int) in equality compa
                                                  ^
 Caution: Turning off extended static checking due to type error(s)
 1 caution
-34 errors
+33 errors
 BogusGhost.java:14: Error: Another field named 'l' already exists in this type
   //@ ghost public int l;
                        ^

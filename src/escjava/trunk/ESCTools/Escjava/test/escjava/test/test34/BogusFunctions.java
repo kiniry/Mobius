@@ -42,7 +42,7 @@ class BogusFunctions {
   /*@ ensures \fresh(tt); */  // illegal
   /*@ ensures \fresh(ii); */  // illegal
   /*@ ensures \fresh(); */  // illegal
-  /*@ ensures \fresh(this, null); */  // illegal
+  /*@ ensures \fresh(this, null); */  // now ok
   void mFresh() {
   }
 
