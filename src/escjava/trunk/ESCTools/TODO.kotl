@@ -16,8 +16,8 @@
 
 * Need to augment naming.html for resolution in spec files, jml files, etc.
 
-** Support for "also" JML keyword
+* Support non_null in method declaration for return value.  E.g. SubProcess
 
-*** FlowInsensitiveChecks
-    Will need a flag for each spec declaration that makes all
-    following requires/ensures also-prefixed.
+    //@ requires P != null;
+    //@ ensures \result != null
+    public /*@ non_null @*/ SList readSList() {

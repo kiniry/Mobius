@@ -23,5 +23,4 @@ else
 	setenv	PROVER_CC_LIMIT		"10"
 endif
 
-
 ${ESCJ_SIMPLIFY} ${ESCJ_SIMPLIFY_ARGS}
