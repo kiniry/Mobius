@@ -3,21 +3,22 @@
 <!--
  ESCTools Ant Build File
  Copyright (c) 2002,2003 Joseph R. Kiniry and the University of Nijmegen
+ Copyright (c) 2004 Joseph R. Kiniry and University College Dublin
  All Rights Reserved
 -->
 
-<!-- =================================================================== -->
-<!-- SUMMARY:      Ant build file for ESCTools.                          -->
+<!-- ======================================================================= -->
+<!-- SUMMARY:      Ant build file for ESCTools.                              -->
 
-<!-- AUTHOR:       Joseph R. Kiniry                                      -->
-<!-- ORG:          SOS Group, University of Nijmegen                     -->
-<!-- E-MAIL:       Joseph R. Kiniry <kiniry@cs.kun.nl>                   -->
+<!-- AUTHOR:       Joseph R. Kiniry                                          -->
+<!-- ORG:          Department of Computer Science, University College Dublin -->
+<!-- E-MAIL:       Joseph R. Kiniry <kiniry@acm.org>                         -->
 
-<!-- FILE ID:      $Id$ -->
-<!-- REVISION:     $Revision$                                      -->
-<!-- DATE:         $Date$                          -->
-<!-- LAST AUTHOR:  $Author$                                     -->
-<!-- =================================================================== -->
+<!-- FILE ID:      $Id$     -->
+<!-- REVISION:     $Revision$                                          -->
+<!-- DATE:         $Date$                              -->
+<!-- LAST AUTHOR:  $Author$                                         -->
+<!-- ======================================================================= -->
 
 <project name="ESCTools" default="all">
 
