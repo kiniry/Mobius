@@ -30,7 +30,7 @@ public abstract class AnnotationGuesser {
 				    /*@ non_null */ Annotator modifiesAnnotator,
 				    /*@ non_null */ Annotator ensuresAnnotator,
 				    Annotator exsuresAnnotator,
-				    /* @defined_if requiresAnnotator != null */
+				    /*@ readable_if requiresAnnotator != null */
 				    Hashtable envReq,
 				    /*@ non_null */ Hashtable envMod,
 				    /*@ non_null */ Hashtable envEns);
