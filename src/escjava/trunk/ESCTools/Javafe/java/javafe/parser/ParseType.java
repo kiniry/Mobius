@@ -41,7 +41,7 @@ public class ParseType extends ParseUtil
                 fail(l.startingLoc, 
                      "Expected an identifier; Unrecognized keyword");
             else
-                fail(l.startingLoc, "Expected an identifier");
+                fail(l.startingLoc, "Expected an identifier, found " + TagConstants.toString(l.ttype) );
 	}
 	Identifier r = l.identifierVal;
 	l.getNextToken();
