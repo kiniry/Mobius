@@ -1807,13 +1807,31 @@ present in interfaces. ]]]
 
 @c ---------------------------------------------------------------------------
 @node readable, monitorsfor, initially, Type Annotation clauses
-@subsection readable
+@subsection readable and writable
 @itemize @bullet
-@item @strong{Description:} description.... [[[ Description needed ]]]
+@item @strong{Description:} 
+JML allows class-level clauses of the form 
+@*@center @code{readable} @emph{field} @code{if} @emph{predicate} @code{;}
+@*and
+@*@center @code{writable} @emph{field} @code{if} @emph{predicate} @code{;}
+@*These specify a predicate that must be true in the state in which a read
+or write access of a class field is attempted.  These are useful to 
+specify the access protocol for a variable shared across threads, but can also
+be used simply to indicate under what circumstances a field's value is 
+defined.
 
-@item @strong{Status:} Not implemented.
+@item @strong{Status:} Implemented.  However, the semantics is
+not well-defined for the situation
+in which the field referred to in the clause is declared in a super class of
+the class declaration containing the clause.
 
-@item @strong{Differences from JML or Java:} [[[bugs...]]]
+@item @strong{Differences from JML or Java:}
+ESC/Java also allows a @code{readable_if} and @code{writable_if} modifier
+for field declarations (each taking simply a predicate and are positioned
+just prior to the field declaration, as, for example, a @code{non_null}
+modifier would be).  @code{readable_if} is deprecated in JML and 
+@code{writable_if} is not defined at all.  Hence these forms are discouraged 
+in ESC/Java2 as well.
 
 
 @end itemize
