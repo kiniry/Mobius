@@ -378,7 +378,35 @@ core JML tools, and another ``lightweight'' specification that was
 meant to be used with DEC/SRC ESC/Java and other verification tools
 like Jack, Krakatoa, and the Loop tool~\cite{a,b,c}.
 
+Writing, verifying, and maintaining these two specifications was
+sometimes a troublesome experience.  Because of limitations of various
+tools which depended upon the specifications, several alternate forms
+of specifications were sometimes required.  What's more, it was
+sometimes the case that the alternate forms were not equivalent, nor
+had obvious logical relationships between them.
 
+This experience was one of the motivators for the SoS group's support
+of this work on ESC/Java2.  Now that multiple tools are available that
+fully cover the JML language, specification reuse is rising and
+negative maintenance issues are decreasing.  
+
+Early evidence for the success this transition is beginning to appear.
+
+First, the specifications of a small case
+study~\cite{BreunesseJacobsBerg02} were updated and re-verified by one
+of the authors using ESC/Java2.  The original work depended upon
+lightweight JML specifications of core Java Card classes and the
+verification was performed with DEC/SRC ESC/Java and the Loop tool.
+On the contrary, the re-verfication effort used the full
+``heavyweight'' Java and Java Card specifications and was accomplished
+in a single afternoon.
+
+Second, several members of the SoS group are contributing to updating
+the ``heavyweight'' JML specifications of the Java Card API.  As a
+part of this work, the Gemplus Electronic Purse case study, which has
+been verified partially with DEC/SRC ESC/Java~\cite{CatanoHuisman02}
+and completely with the Loop tool~\cite{JoachimsThesis?}, is being
+re-verified.
 
 --general opinion of work--
 --transition of pov--
