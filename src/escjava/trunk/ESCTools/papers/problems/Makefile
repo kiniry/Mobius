@@ -54,7 +54,7 @@ jmlrac:
 
 verify:
 #	CLASSPATH=..; escjava2 -jmlAssertions JavaAssertionsKey.java
-	CLASSPATH=..; escjava2 -source 1.4 -specs ~/JML2/:~/JML2/specs/ PrePostConditionsKey.java
+	CLASSPATH=..; escjava2 -source 1.4 -specs ~/JML2/:~/JML2/specs/ FrameConditionsKey.java
 
 clean:
 	rm -f `find . -name "*.class"`

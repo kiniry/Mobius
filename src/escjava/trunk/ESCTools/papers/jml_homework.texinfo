@@ -224,6 +224,10 @@ In JML, an assertion statement has the form
 @display
 @var{assert-statement} ::= @code{assert} @var{expression} [ @code{:} @var{expression} ] @code{;}
 @end display
+@i{(Note that all specifications of JML grammar in this document are
+highly simplified from the actual JML grammar.  Only the basic forms
+of each statement or clause are shown and are sufficient for the
+purpose of this homework.)}
 
 The first expression is the predicate that must be true.  The second
 (optional) expression must be of type @code{String}.  The value of this
@@ -456,7 +460,7 @@ A @emph{method contract} consists of two basic assertions: a
 is guaranteed to behave correctly, and a @emph{postcondition} which
 states what is true when the method completes executing.
 
-@unumberedsubsec Preconditions
+@unnumberedsubsec Preconditions
 @cindex Preconditions
 
 The assume statements written for the preceding problems that were
@@ -483,7 +487,7 @@ the caller, prior to making the call.  Thus, one can only
 (legitimately) express assertions in precoditions that are ``at least
 as visible'' as the method they are guarding.
 
-@strong{Problem 3.} @anchor{Problem-3} Annotate the following code
+@strong{Problem 4.} @anchor{Problem-4} Annotate the following code
 with @emph{preconditions} only.  Consider what are the
 @emph{necessary} conditions for the method bodies to (a) not fail
 abnormally (e.g., throw @code{NullPointerExceptions},
@@ -545,7 +549,7 @@ is used to references values in the pre-state of the method; that is,
 you can refer to the state of any values just @emph{before} the method
 began executing.
 
-@strong{Problem 4.} @anchor{Problem-4} Annotate the code of the
+@strong{Problem 5.} @anchor{Problem-5} Annotate the code of the
 previous problem with @emph{postconditions} that match your
 preconditions.  Consider what is known to be true when each method
 terminates @emph{normally}.  Check your postconditions with ESC/Java2.
@@ -588,7 +592,8 @@ signals clause.  E.g.,
 @end example
 which is equivalent to the signals clause
 @example
-  //@@ signals (java.lang.Exception e) (e instanceof IOException) ==> ioe.getMessage().equals("I/O Error!");
+  //@@ signals (java.lang.Exception e) (e instanceof IOException) ==>
+  //@@                                 ioe.getMessage().equals("I/O Error!");
 @end example
 
 The default exceptional postcondition for ESC/Java2 is currently
@@ -608,12 +613,14 @@ exceptions'' (descendents of the class
 @code{java.lang.RuntimeException}) are also rarely specified using
 exceptional postconditions.
 
-@strong{Problem 5.} @anchor{Problem-5} Annotate the code of the
+@strong{Problem 6.} @anchor{Problem-6} Annotate the code of the
 previous problem with @emph{exceptional postconditions}.  Consider
 what is known to be true when each method terminates
 @emph{abnormally}.  If a method @emph{cannot} terminate abnormally,
 annotate such using an exceptional postcondition with a @code{false}
 predicate.  Check your exceptional postconditions with ESC/Java2.
+
+@c comments on Key, particularly the method calls of main
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @node  Modifies, Heavyweight, PrePost, Core
@@ -621,25 +628,72 @@ predicate.  Check your exceptional postconditions with ESC/Java2.
 
 @cindex Frame Axioms
 
-@c class C {
-@c   static int i;
+Frame axioms are used to denote which fields @emph{may} (@emph{not
+must}) be modified by a method.  Frame axioms are specified in JML
+using the @emph{assignable} clause:
+@display
+@var{assignable-clause} ::= @code{assignable} @var{store-ref} [ @code{,} @var{store-ref} ] @dots{} @code{;}
+@end display
 
-@c   public void l() {
-@c     //@ assume i == 0;
-@c     m();
-@c     //@ assert true == false;
-@c   }
+Special keywords @code{\everything} and @code{\nothing} are used to
+state that a method may modify @emph{any} visible field (in the former
+case), or may modify @emph{no} visible field (in the case of the
+latter).  To specify that all visible field of an object @var{o} may
+be modified a globbing-like syntax is used, e.g., @code{assignable
+o.*}.
 
-@c   //@ behavior
-@c   //@ requires i == 0;
-@c   //@ modifies C.*;
-@c   //@ ensures i == 1;
-@c   public void m() {
-@c     i++;
-@c   }
-@c }
+The default assignable clause for ESC/Java2 is
+@example
+  //@@ assignable \everything;
+@end example
 
-@page
+Specifying the frame axioms of your methods is @emph{vital} to correct
+reasoning with ESC/Java2.  If your frame axioms are incorrect,
+verification is unsound.  Consider the following example.
+
+@example
+@include problems/BogusFrameConditions.java.texinfo
+@end example
+
+ESC/Java2 produces the following output:
+@example
+BogusFrameConditions: l() ...
+    [TIME]  passed
+
+BogusFrameConditions: m() ...
+    [TIME]  passed
+
+BogusFrameConditions: n() ...
+------------------------------------------------------------------------
+BogusFrameConditions.java:20: Warning: Possible assertion failure (Assert)
+    //@ assert true == false;
+        ^
+------------------------------------------------------------------------
+    [TIME]  failed
+
+BogusFrameConditions: o() ...
+------------------------------------------------------------------------
+BogusFrameConditions.java:26: Warning: Possible assertion failure (Assert)
+    //@ assert true == false;
+        ^
+------------------------------------------------------------------------
+    [TIME]  failed
+@end example
+
+Notice that the methods @code{l()} and @code{m()} @emph{pass}, proving
+the bogus assertion @code{true == false}.  The reason these methods
+pass is because the verification of methods whose frame axiom is
+@code{assignable \everything;} is incomplete.
+
+@c checking frame axioms
+@c
+
+@strong{Problem 7.} @anchor{Problem-7} Annotate the code of the
+previous problem with @emph{frame axioms}.  Make your assignable
+clauses as precise as possible, given the body of the methods.  Check
+your frame axioms with ESC/Java2.
+
+@c comments on Key, particularly the method calls of main
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @node Heavyweight, Invariants, Modifies, Core
