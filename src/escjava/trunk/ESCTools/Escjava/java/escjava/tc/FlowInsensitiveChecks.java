@@ -2303,4 +2303,12 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
         }
         return null;
     }
-}
+} // end of class FlowInsensitiveChecks
+
+/*
+ * Local Variables:
+ * Mode: Java
+ * fill-column: 85
+ * End:
+ */
+

@@ -2,7 +2,6 @@
 
 package escjava.ast;
 
-
 import java.util.Hashtable;
 
 import javafe.ast.*;
@@ -13,13 +12,11 @@ import javafe.ast.*;
 import javafe.util.Assert;
 import javafe.util.Location;
 
-
 // Convention: unless otherwise noted, integer fields named "loc" refer
 // to the locaction of the first character of the syntactic unit
 
 //# TagBase javafe.tc.TagConstants.LAST_TAG + 1
 //# VisitorRoot javafe.ast.Visitor
-
 
 //# EndHeader
 
@@ -118,7 +115,6 @@ import javafe.util.Location;
 
 public abstract class AnOverview extends ASTNode
 { }
-
 
 //// Spec expressions
 
@@ -335,7 +331,6 @@ public class SimpleCmd extends GuardedCmd
   //# ManualTag
   public final int getTag() { return cmd; }
 
-
   //# PostCheckCall
   private void postCheck() {
     boolean goodtag =
@@ -355,7 +350,6 @@ public class ExprCmd extends GuardedCmd
 
   //# ManualTag
   public final int getTag() { return cmd; }
-
 
   //# PostCheckCall
   private void postCheck() {
@@ -620,7 +614,6 @@ public class StillDeferredDeclPragma extends TypeDeclElemPragma
   public int getStartLoc() { return loc; }
 }
 
-
 public class SimpleStmtPragma extends StmtPragma
 {
   //# int tag
@@ -878,4 +871,3 @@ public class DefPred extends ASTNode
 
     public int getStartLoc() { return body.getStartLoc(); }
 }
-

@@ -22,20 +22,20 @@ public abstract class Types extends javafe.tc.Types
 
     public static PrimitiveType
 	    rangeType = PrimitiveType.make(TagConstants.DOTDOT, Location.NULL);
+
     /**
-     * This routine overrides {@link javafe.tc.Types#lookupField()}.
-     * Unlike that routine, it knows about ghost fields and
-     * spec_public.
+     * This routine overrides {@link javafe.tc.Types#lookupField()}.  Unlike that
+     * routine, it knows about ghost fields and spec_public.
      *
-     * <p> This routine assumes we are in an annotation so ghost
-     * fields are visible and spec_public is equivalent to public.
+     * <p> This routine assumes we are in an annotation so ghost fields are visible
+     * and spec_public is equivalent to public. </a>
      */
     //@ requires t != null
     public static FieldDecl lookupField(Type t, Identifier id, TypeSig caller) 
 	    throws LookupException {
 	Assert.notNull(t);
 	if (t instanceof TypeName)
-	    t = TypeSig.getSig( (TypeName) t );
+	    t = TypeSig.getSig((TypeName) t);
 	Assert.notNull(t);
 
 	/*
@@ -69,14 +69,21 @@ public abstract class Types extends javafe.tc.Types
 	GhostEnv G = new GhostEnv(sig.getEnclosingEnv(), sig, false);
 	FieldDecl decl = G.getGhostField(id.toString(), null);
 	if (decl==null)
-	    throw new LookupException( LookupException.NOTFOUND );
+	    throw new LookupException(LookupException.NOTFOUND);
 
 	// Make sure the ghost field is not ambiguous:
 	if (G.getGhostField(id.toString(), decl) != null)
-	    throw new LookupException( LookupException.AMBIGUOUS );
+	    throw new LookupException(LookupException.AMBIGUOUS);
 
 	// Ghost fields are always public, so no access checking required...
 
 	return decl;
     }
-}
+} // end of class Types
+
+/*
+ * Local Variables:
+ * Mode: Java
+ * fill-column: 85
+ * End:
+ */

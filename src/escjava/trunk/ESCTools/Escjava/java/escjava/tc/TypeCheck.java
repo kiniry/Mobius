@@ -11,21 +11,19 @@ import javafe.util.Info;
 public class TypeCheck extends javafe.tc.TypeCheck
 {
     /**
-     * Creates a singleton instance of this class, and sets the
-     * <code>inst</code> field to this instance. Only one instance
-     * should be created.  Also initializes {@link
-     * PrepTypeDeclaration}.
+     * Creates a singleton instance of this class, and sets the <code>inst</code>
+     * field to this instance. Only one instance should be created.  Also initializes
+     * {@link PrepTypeDeclaration}.
      */
     public TypeCheck() {
 	inst = this;
     }
 
     /**
-     * Called to obtain the algorithm for performing name resolution
-     * and type checking.
+     * Called to obtain the algorithm for performing name resolution and type
+     * checking.
      *
-     * @return an instance of
-     * <code>escjava.tc.FlowInsensitiveChecks</code>.
+     * @return an instance of <code>escjava.tc.FlowInsensitiveChecks</code>.
      */
     public javafe.tc.FlowInsensitiveChecks makeFlowInsensitiveChecks() {
 	return new escjava.tc.FlowInsensitiveChecks();
@@ -33,7 +31,7 @@ public class TypeCheck extends javafe.tc.TypeCheck
 
     /**
      * Override {@link javafe.tc.TypeCheck.canAccess()} to account for
-     * spec_public.
+     * <code>spec_public</code>.
      */
     public boolean canAccess(TypeSig from, TypeSig target,
                              int modifiers,
@@ -54,7 +52,11 @@ public class TypeCheck extends javafe.tc.TypeCheck
 
 	return false;
     }
-}
+} // end of class TypeCheck
 
-
-
+/*
+ * Local Variables:
+ * Mode: Java
+ * fill-column: 85
+ * End:
+ */

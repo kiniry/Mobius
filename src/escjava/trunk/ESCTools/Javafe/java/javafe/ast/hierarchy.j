@@ -6,7 +6,6 @@ import javafe.util.Assert;
 import javafe.util.Location;
 import javafe.util.ErrorSet;
 
-
 // Convention: unless otherwise noted, integer fields named "loc" refer
 // to the location of the first character of the syntactic unit
 
@@ -197,7 +196,6 @@ public abstract class ASTNode implements Cloneable
       return start;
   }
 
-
   //@ ensures \result != null;
   //@ ensures \typeof(\result) == \typeof(this);
   //@ ensures \result.owner == null;
@@ -331,7 +329,6 @@ public abstract class TypeDecl extends ASTNode implements TypeDeclElem
   //# int locOpenBrace NotNullLoc
   //# int locCloseBrace NotNullLoc
 
-
   //@ invariant hasParent ==> parent != null;
   public TypeDecl parent;
 
@@ -432,7 +429,6 @@ public abstract class RoutineDecl extends ASTNode implements TypeDeclElem
   public TypeDecl getParent() { return parent; }
   public void setParent(TypeDecl p) { parent = p; }
 
-
   public int getModifiers() { return modifiers; }
   public void setModifiers(int m) { modifiers = m; }
   public int getStartLoc() { return loc; }
@@ -509,7 +505,6 @@ public abstract class TypeDeclElemPragma
   public boolean isRedundant() { return redundant; }
   public void setRedundant(boolean v) { redundant = v; }
 }
-
 
 /* ---------------------------------------------------------------------- */
 
@@ -590,8 +585,8 @@ public class FieldDecl extends GenericVarDecl implements TypeDeclElem
   }
 }
 
-
-/** Represents a FormalParameter. 
+/**
+ * Represents a FormalParameter. 
  */
 
 public class FormalParaDecl extends GenericVarDecl
@@ -971,7 +966,6 @@ public class ConstructorInvocation extends Stmt
     return args.elementAt(args.size()-1).getEndLoc();
   }
 
-
   //# NoMaker
   //@ requires enclosingInstance != null && superCall ==> locDot != Location.NULL;
   //
@@ -1104,7 +1098,6 @@ public class LiteralExpr extends Expr
       ) */
   //# Object value NullOK NoCheck
 
-
   //# int loc NotNullLoc
   public final int getTag() { return this.tag; }
 
@@ -1135,7 +1128,6 @@ public class LiteralExpr extends Expr
   }
   public int getStartLoc() { return loc; }
   public int getEndLoc() { return loc; }
-
 
   //# NoMaker
   /*@ requires (
@@ -1229,7 +1221,6 @@ public class NewInstanceExpr extends Expr
     } else return decl.getEndLoc();
   }
 
-
   //# NoMaker
   //@ requires (enclosingInstance == null) == (locDot==Location.NULL);
   //
@@ -1320,7 +1311,6 @@ public class NewArrayExpr extends Expr
     if (init != null)
         Assert.notFalse(dims.size()==1);
   }
-
 
   //# NoMaker
   //@ requires init != null ==> dims.count==1;
@@ -1437,7 +1427,6 @@ public class BinaryExpr extends Expr
   }
   public int getStartLoc() { return left.getStartLoc(); }
   public int getEndLoc() { return right.getEndLoc(); }
-
 
   //# NoMaker
   /*@ requires (op == TagConstants.OR || op == TagConstants.AND
@@ -1574,7 +1563,6 @@ public class VariableAccess extends Expr
   }
   public int getStartLoc() { return loc; }
 
-
   //# NoMaker
   //@ requires decl.id == id;
   //
@@ -1701,7 +1689,6 @@ public class MethodInvocation extends Expr
     return args.elementAt(args.size()-1).getEndLoc();
   }
 
-
   //# NoMaker
   //@ requires locId != javafe.util.Location.NULL;
   //@ requires locOpenParen != javafe.util.Location.NULL;
@@ -1743,7 +1730,6 @@ public class ClassLiteral extends Expr
   }
 }
 
-
 /**
  * Designates the object or type used for a field or method access.
  * Subclasses represent "expr.", "type.", or "super."
@@ -1755,7 +1741,6 @@ public abstract class ObjectDesignator extends ASTNode
 
     public int getEndLoc() { return locDot; }
 }
-
 
 /**
  * Represents an ObjectDesignator of the form "Expr . ".
@@ -1867,12 +1852,10 @@ public class PrimitiveType extends Type
   //# ManualTag
   //# int tag
 
-
   //@ invariant syntax ==> loc != Location.NULL;
   //# int loc
 
   public int getStartLoc() { return loc; }
-
 
   public final int getTag() { return this.tag; }
 
@@ -1919,7 +1902,6 @@ public class PrimitiveType extends Type
      //@ set result.syntax = false;
      return result;
   }
-
 
   //# PostCheckCall
   private void postCheck() {
@@ -2038,8 +2020,6 @@ public abstract class Name extends ASTNode
      */
     public abstract boolean equals(Object other);
 
-
-
     /**
      * The number of identifiers we contain
      */
@@ -2049,7 +2029,6 @@ public abstract class Name extends ASTNode
     /** Return the number of identifiers in <code>this</code>. */
     //@ ensures \result==length;
     public abstract int size();
-
 
     /**
      * Return the ith identifier of <code>this</code>.
@@ -2073,7 +2052,6 @@ public abstract class Name extends ASTNode
     //@ ensures \result != Location.NULL;
     public abstract int locDotAfter(int i);
 
-
     /**
      * Return the first <code>len</code> identifiers in
      * <code>this</code> in an array.  Requires that <code>len</code>
@@ -2092,8 +2070,6 @@ public abstract class Name extends ASTNode
     public String[] toStrings() {
 	return toStrings(size());
     }
-
-
 
     /**
      * Make a <code>Name</code> with the given identifiers and
@@ -2142,7 +2118,6 @@ public abstract class Name extends ASTNode
 	for(int i = 0; i < sz; i++)
 	    ids.addElement(Identifier.intern(components[i]));
 
-
 	if (sz == 1)
 	    return SimpleName.make(ids.elementAt(0), loc);
 
@@ -2156,8 +2131,6 @@ public abstract class Name extends ASTNode
 	return make(newLocIds, newLocDots, ids);
     }
 
-
-
     /**
      * Return a <code>Name</code> consisting of the first
      * <code>len</code> identifiers of <code>this</code>.  Requires
@@ -2168,8 +2141,6 @@ public abstract class Name extends ASTNode
     //@ ensures \result != null;
     public abstract Name prefix(int len);
 
-
-
     /**
      * Override getEndLoc so it refers to the actual end of us.
      */
@@ -2177,7 +2148,6 @@ public abstract class Name extends ASTNode
 	return Location.inc(getStartLoc(),
 			    Math.max(0, printName().length()-1));
     }
-
 
     /**
      * Avoid allocating more than one of these.
@@ -2187,7 +2157,6 @@ public abstract class Name extends ASTNode
     protected static String[] emptyStringArray = new String[0];
 
 }
-
 
 public class SimpleName extends Name
 {
@@ -2385,7 +2354,6 @@ public class CompoundName extends Name
   public int locDotAfter(int i) { return locDots[i]; }
 
   public int getStartLoc() { return locIds[0]; }
-
 
   //# NoMaker
   //@ requires ids.count>1;

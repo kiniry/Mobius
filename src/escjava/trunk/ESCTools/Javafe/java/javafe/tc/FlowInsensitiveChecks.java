@@ -2,33 +2,35 @@
 
 package javafe.tc;
 
-
 import java.util.Hashtable;
 
 import javafe.ast.*;
 import javafe.util.*;
 
-
 /**
- * Does disambiguation and flow insensitive checks on a type declaration. 
+ * Does disambiguation and flow insensitive checks on a type
+ * declaration.
  */
 
-public class FlowInsensitiveChecks {
-
-    /** Controls whether or not implicit super-calls in constructors
+public class FlowInsensitiveChecks
+{
+    /**
+     * Controls whether or not implicit super-calls in constructors
      * are made explicit.  By default they are.
      */
-  
     public static boolean dontAddImplicitConstructorInvocations = false;
 
-    /** */
-
+    /**
+     * @review kiniry 29 Jul 2003 - Why is an empty parameterless
+     * constructor provided?
+     */
     protected FlowInsensitiveChecks() {}
 
-
-    /** Factory method so subclasses can override */
-    //@ requires s!=null
-    //@ ensures \result!=null
+    /**
+     * Factory method so subclasses can override.
+     */
+    //@ requires s != null
+    //@ ensures \result != null
     protected EnvForTypeSig makeEnvForTypeSig(TypeSig s,
 					      boolean staticContext) {
 	return s.getEnv(staticContext);
@@ -38,51 +40,51 @@ public class FlowInsensitiveChecks {
     ///////////////////////////////////////////////////////////////////////
     //                                                                   //
     // Information that remains the same during processing of entire     //
-    // type decl							 //
+    // type decl.							 //
     //                                                                   //
     ///////////////////////////////////////////////////////////////////////
 
-
-    //@ invariant sig!=null ==> rootIEnv!=null && rootSEnv!=null
-    /*@spec_public*/ protected TypeSig sig;
-
-    // Inv: rootIEnv.peer == sig; !rootIEnv.staticContext
-    /*@spec_public*/ protected EnvForTypeSig rootIEnv;
+    //@ invariant sig != null ==> rootIEnv != null && rootSEnv != null
+    /*@ spec_public */ protected TypeSig sig;
 
     // Inv: rootIEnv.peer == sig; !rootIEnv.staticContext
-    /*@spec_public*/ protected EnvForTypeSig rootSEnv;
+    /*@ spec_public */ protected EnvForTypeSig rootIEnv;
+
+    // Inv: rootIEnv.peer == sig; !rootIEnv.staticContext
+    /*@ spec_public */ protected EnvForTypeSig rootSEnv;
   
 
     ///////////////////////////////////////////////////////////////////////
     //                                                                   //
     // Information that changes for the processing of each member of     //
-    // the decl								 //
+    // the decl.							 //
     //                                                                   //
     ///////////////////////////////////////////////////////////////////////
   
-    //* Cant access fields defined later? 
+    //* Cannot access fields defined later? 
     protected boolean leftToRight;
 
     //* Type for return statements. 
     protected Type returnType;
   
 
-    // --- Information that changes within a member in a stack-like manner
+    ///////////////////////////////////////////////////////////////////////
+    // Information that changes within a member in a stack-like          //
+    // manner.                                                           //
+    ///////////////////////////////////////////////////////////////////////
   
-    //@ invariant allowedExceptions!=null
-    protected TypeSigVec allowedExceptions  = TypeSigVec.make();
+    //@ invariant allowedExceptions != null
+    protected TypeSigVec allowedExceptions = TypeSigVec.make();
 
-    //@ invariant enclosingLabels!=null
-    protected StmtVec enclosingLabels       = StmtVec.make();
-
-
-
+    //@ invariant enclosingLabels != null
+    protected StmtVec enclosingLabels = StmtVec.make();
 
     // -------------------------------------------------------------
-    /** Moves <CODE>s</CODE> into implementation checked state.  
-
-     * <p>Requires: <code>s</code> is in prepped state. */
-
+    /**
+     * Moves <code>s</code> into implementation checked state.
+     *
+     * @require <code>s</code> is in prepped state.
+     */
     //@ requires s.state >= TypeSig.PREPPED
     public void checkTypeDeclaration(/*@non_null*/ TypeSig s) {
         Assert.precondition(s.state >= TypeSig.PREPPED);
@@ -95,22 +97,22 @@ public class FlowInsensitiveChecks {
         TypeDecl d = s.getTypeDecl();
 
         // Process ModifierPragmas
-        checkModifierPragmaVec( d.pmodifiers, d, rootSEnv );
+        checkModifierPragmaVec(d.pmodifiers, d, rootSEnv);
 
         // Process each member declaration
         for(int i = 0, sz = d.elems.size(); i < sz; i++) {
             TypeDeclElem e = d.elems.elementAt(i);
 
-            checkTypeDeclElem( e );
+            checkTypeDeclElem(e);
         }
     }
 
     // -------------------------------------------------------------
 
     /**
-     * Moves <CODE>fd</CODE> into implementation checked state.<p>
+     * Moves <code>fd</code> into implementation checked state.
      *
-     * Requires: <code>fd</code> is in prepped state.
+     * @require <code>fd</code> is in prepped state.
      */
     //@ modifies sig
     public void checkFieldDecl(/*@non_null*/ FieldDecl fd) {
@@ -129,7 +131,7 @@ public class FlowInsensitiveChecks {
 	}
 
 
-	TypeSig sig = TypeSig.getSig( fd.parent );
+	TypeSig sig = TypeSig.getSig(fd.parent);
 	if (sig.state < TypeSig.CHECKED) {
 	    // Type check this decl
 	
@@ -141,19 +143,19 @@ public class FlowInsensitiveChecks {
 	    rootIEnv = makeEnvForTypeSig(sig, false);
 	    this.sig = sig;
 
-	    checkTypeDeclElem( fd );
+	    checkTypeDeclElem(fd);
 	}
 	this.sig = null;
     }
 
     //------------------------------------------------------------
 
-    // Note: e must already have been prepped!
-    //@ requires e!=null && sig!=null
+    // @note e must already have been prepped!
+    //@ requires e != null && sig != null
     //@ requires sig.state >= TypeSig.PREPPED;
     protected void checkTypeDeclElem(TypeDeclElem e) {
 
-        Assert.notNull( sig );
+        Assert.notNull(sig);
         Assert.notFalse(sig.state>= TypeSig.PREPPED);
         TypeDecl d = sig.getTypeDecl();
         boolean specOnly = d.specOnly;
@@ -165,17 +167,17 @@ public class FlowInsensitiveChecks {
 	
                 // Process ModifierPragmas
                 Env rootEnv = Modifiers.isStatic(fd.modifiers) ? rootSEnv : rootIEnv;
-                checkModifierPragmaVec( fd.pmodifiers, fd, rootEnv );
+                checkModifierPragmaVec(fd.pmodifiers, fd, rootEnv);
                 checkTypeModifiers(rootEnv, fd.type);
 
                 // Resolve the initializer of a field decl
                 if (fd.init != null) {
                     leftToRight = true;
                     allowedExceptions.removeAllElements();
-                    Assert.notFalse( allowedExceptions.size() == 0 );
+                    Assert.notFalse(allowedExceptions.size() == 0);
                     fd.init = checkInit(rootEnv, fd.init, fd.type);
                 }
-                else if (Modifiers.isFinal( fd.modifiers ) && !specOnly) {
+                else if (Modifiers.isFinal(fd.modifiers) && !specOnly) {
                     // Removed for 1.1:
                     //  ErrorSet.caution(fd.locId, 
                     //    "Final variables must be initialized");
@@ -190,7 +192,7 @@ public class FlowInsensitiveChecks {
                     ? rootSEnv : rootIEnv;
 	  
                 // First do method/constructor specific stuff
-                if( rd instanceof MethodDecl ) {
+                if(rd instanceof MethodDecl) {
 	    
                     MethodDecl md = (MethodDecl) e;
 
@@ -200,16 +202,16 @@ public class FlowInsensitiveChecks {
 
                     if (md.body != null && !specOnly) {
 	      
-                        if( Modifiers.isAbstract( md.modifiers) )
+                        if(Modifiers.isAbstract(md.modifiers))
                             ErrorSet.error(md.loc, 
                                            "An abstract method cannot include a body");
-                        if( Modifiers.isNative( md.modifiers) )
+                        if(Modifiers.isNative(md.modifiers))
                             ErrorSet.error(md.loc, 
                                            "A native method cannot include a body");
                     } else {
 /* We allow any method to have no body -- DRCok
-                        if(!Modifiers.isAbstract( md.modifiers)
-                           && !Modifiers.isNative( md.modifiers) && !specOnly)
+                        if(!Modifiers.isAbstract(md.modifiers)
+                           && !Modifiers.isNative(md.modifiers) && !specOnly)
                             ErrorSet.error(md.loc, 
                                            "Method must include a body unless "
                                            +"it is declared abstract or native");
@@ -220,20 +222,20 @@ public class FlowInsensitiveChecks {
                     ConstructorDecl cd = (ConstructorDecl)rd;
 
                     // Was checked in parser
-                    Assert.notFalse( !(d instanceof InterfaceDecl) ); //@ nowarn Pre
+                    Assert.notFalse(!(d instanceof InterfaceDecl)); //@ nowarn Pre
 
                     // Modifiers were checked when we prep'ed the constructed
                     returnType = Types.voidType;
 
                     // Check if we need to add an implicit constructor invocation
-                    //@ assume !specOnly ==> cd.body!=null
-                    if( !dontAddImplicitConstructorInvocations && !specOnly &&
+                    //@ assume !specOnly ==> cd.body != null
+                    if(!dontAddImplicitConstructorInvocations && !specOnly &&
 			cd.body != null && // FIXME - we've broken the assumption above by allowing spec files - need to fix that uniformly
                         !(cd.body.stmts.size() > 0
                           && cd.body.stmts.elementAt(0) instanceof 
                           ConstructorInvocation)) {
                         // no explicit constructor invocation
-                        if( sig != Types.javaLangObject() ) {
+                        if(sig != Types.javaLangObject()) {
                             // add implicit constructor invocation
 
                             ExprVec args = ExprVec.make();
@@ -241,22 +243,22 @@ public class FlowInsensitiveChecks {
                                 = ConstructorInvocation.make(true, null, Location.NULL,
                                                              cd.body.locOpenBrace,
                                                              cd.body.locOpenBrace, args);
-                            cd.body.stmts.insertElementAt( ci, 0 );
+                            cd.body.stmts.insertElementAt(ci, 0);
                         }
                     }
                 }
-	  
-                // Now do stuff common to methods and constructors
-	  
+
+                // Now do stuff common to methods and constructors.
+
                 leftToRight = false;
                 enclosingLabels.removeAllElements();
 	  
                 allowedExceptions.removeAllElements();
-                for( int j=0; j<rd.raises.size(); j++ ) {
+                for(int j=0; j<rd.raises.size(); j++) {
                     TypeName n = rd.raises.elementAt(j);
-                    rootEnv.resolveType( n );
+                    rootEnv.resolveType(n);
                     checkTypeModifiers(rootEnv, n);
-                    allowedExceptions.addElement( TypeSig.getSig(n) );
+                    allowedExceptions.addElement(TypeSig.getSig(n));
                 }
 
                 Env env = rootEnv;
@@ -264,15 +266,15 @@ public class FlowInsensitiveChecks {
                     FormalParaDecl formal = rd.args.elementAt(j);
                     PrepTypeDeclaration.inst.
                         checkModifiers(formal.modifiers, Modifiers.ACC_FINAL, 
-                                       formal.getStartLoc(), "formal parameter" );
-                    checkModifierPragmaVec( formal.pmodifiers, formal, rootEnv );
+                                       formal.getStartLoc(), "formal parameter");
+                    checkModifierPragmaVec(formal.pmodifiers, formal, rootEnv);
 
                     env = new EnvForLocals(env, formal);
                     checkTypeModifiers(env, formal.type);
                 }
 
                 // Process ModifierPragmas
-                checkModifierPragmaVec( rd.pmodifiers, rd, env );
+                checkModifierPragmaVec(rd.pmodifiers, rd, env);
 	  
                 if (rd.body != null && !specOnly) {
                     checkStmt(env, rd.body);
@@ -285,7 +287,7 @@ public class FlowInsensitiveChecks {
                 InitBlock si = (InitBlock) e;
                 PrepTypeDeclaration.inst.
                     checkModifiers(si.modifiers, Modifiers.ACC_STATIC, 
-                                   si.getStartLoc(), "initializer body" );
+                                   si.getStartLoc(), "initializer body");
                 Env rootEnv = Modifiers.isStatic(si.modifiers) ? rootSEnv : rootIEnv;
                 returnType = null;
                 checkStmt(rootEnv, si.block);
@@ -299,8 +301,8 @@ public class FlowInsensitiveChecks {
             }
 
             default:
-                if( e instanceof TypeDeclElemPragma )
-                    checkTypeDeclElemPragma( (TypeDeclElemPragma)e );
+                if(e instanceof TypeDeclElemPragma)
+                    checkTypeDeclElemPragma((TypeDeclElemPragma)e);
                 else
                     Assert.fail("Switch fall-through (" + e.getTag() + ")");
         }
@@ -308,18 +310,17 @@ public class FlowInsensitiveChecks {
 
 
     /**
-     * Typecheck a statement in a given environment then return the
-     * environment in effect for statements that follow the given
-     * statement. <p>
+     * Typecheck a statement in a given environment then return the environment in
+     * effect for statements that follow the given statement.
      *
-     * (The returned environment will be the same as the one passed
-     * in unless the statement is a declaration.) <p>
+     * <p> (The returned environment will be the same as the one passed in unless the
+     * statement is a declaration.)
      *
-     * Requires: <CODE>s</CODE> is not a case label.<p>
+     * @require <code>s</code> is not a case label. </p>
      */
-    //@ requires e!=null && s!=null
+    //@ requires e != null && s != null
     //@ requires !(e instanceof EnvForCU)
-    //@ requires sig!=null
+    //@ requires sig != null
     //@ ensures \result != null;
     //@ ensures !(\result instanceof EnvForCU);
     protected Env checkStmt(Env e, Stmt s) {
@@ -332,12 +333,12 @@ public class FlowInsensitiveChecks {
 
             case TagConstants.VARDECLSTMT: {
                 LocalVarDecl x = ((VarDeclStmt)s).decl;
-                e.resolveType( x.type );
-                checkTypeModifiers(e, x.type );
+                e.resolveType(x.type);
+                checkTypeModifiers(e, x.type);
                 PrepTypeDeclaration.inst.
                     checkModifiers(x.modifiers, Modifiers.ACC_FINAL,
                                    x.locId, "local variable");
-                checkModifierPragmaVec( x.pmodifiers, x, e );
+                checkModifierPragmaVec(x.pmodifiers, x, e);
 
                 Env newEnv = new EnvForLocals(e, x);
                 if (x.init != null)
@@ -385,7 +386,7 @@ public class FlowInsensitiveChecks {
                 Hashtable switchValues = new Hashtable();
 
                 boolean defaultEncountered = false;
-                enclosingLabels.addElement( c );
+                enclosingLabels.addElement(c);
 
                 for(int i = 0, sz = c.stmts.size(); i < sz; i++) {
                     Stmt stmt = c.stmts.elementAt(i);
@@ -394,26 +395,26 @@ public class FlowInsensitiveChecks {
                         SwitchLabel x = (SwitchLabel)stmt;
                         if (x.expr != null) {
                             x.expr = checkExpr(env, x.expr);
-                            Object val = ConstantExpr.eval( x.expr );
-                            // System.out.println("At "+Location.toString( x.expr.getStartLoc() ));
+                            Object val = ConstantExpr.eval(x.expr);
+                            // System.out.println("At "+Location.toString(x.expr.getStartLoc()));
 	      
-                            if( val == null )		
-                                ErrorSet.error( x.loc, "Non-constant value in switch label");
-                            else if( !ConstantExpr.
-                                     constantValueFitsIn( val, (PrimitiveType)switchType ) ) 
+                            if(val == null)		
+                                ErrorSet.error(x.loc, "Non-constant value in switch label");
+                            else if(!ConstantExpr.
+                                     constantValueFitsIn(val, (PrimitiveType)switchType)) 
                                 ErrorSet.error(x.loc, 
                                                "Case label value (" + val
                                                +") not assignable to "
                                                +"the switch expression type "
-                                               +Types.printName(switchType) );
+                                               +Types.printName(switchType));
                             else {
                                 // Check if it is a duplicate
                                 // val may be Integer or Long, convert to Long for
                                 // duplicate checking
                                 Assert.notFalse(val instanceof Long    //@ nowarn Pre
                                                 || val instanceof Integer);
-                                Long valLong = new Long( ConstantExpr.getLongConstant(val) );
-                                if( switchValues.containsKey(valLong) ) {
+                                Long valLong = new Long(ConstantExpr.getLongConstant(val));
+                                if(switchValues.containsKey(valLong)) {
                                     ErrorSet.error(x.loc, 
                                                    "Duplicate case label "+val
                                                    +" in switch statement");
@@ -423,7 +424,7 @@ public class FlowInsensitiveChecks {
                             }
                         } else {
                             // this is default
-                            if( defaultEncountered )
+                            if(defaultEncountered)
                                 ErrorSet.error(x.loc, 
                                                "Duplicate default label in switch statement");
                             else
@@ -453,7 +454,7 @@ public class FlowInsensitiveChecks {
                     s.getTag() == TagConstants.BREAKSTMT ? "switch, while, do, or for" 
                     : "while, do or for" ;
 	    
-                for( int i=size-1; i>=0 && dest==null; i-- ) {
+                for(int i=size-1; i>=0 && dest==null; i--) {
                     Stmt ati = enclosingLabels.elementAt(i);
                     Stmt target 
                         = ati instanceof LabelStmt ? ((LabelStmt)ati).stmt : ati;
@@ -463,24 +464,24 @@ public class FlowInsensitiveChecks {
                     // labelled break can be any statement
 	  
                     boolean loopTarget = 
-                        (target instanceof ForStmt )
-                        || (target instanceof WhileStmt )
-                        || (target instanceof DoStmt );
+                        (target instanceof ForStmt)
+                        || (target instanceof WhileStmt)
+                        || (target instanceof DoStmt);
 
                     boolean validTarget = 
                         loopTarget
                         || (s.getTag() == TagConstants.BREAKSTMT 
                             && (target instanceof SwitchStmt
-                                || bs.label != null ));
+                                || bs.label != null));
 
-                    if( bs.label == null ) {
-                        if( validTarget )
+                    if(bs.label == null) {
+                        if(validTarget)
                             dest = target;
                         else 
                             continue;
-                    } else if( ati instanceof LabelStmt
-                               && ((LabelStmt)ati).label == bs.label ) {
-                        if( !validTarget )
+                    } else if(ati instanceof LabelStmt
+                               && ((LabelStmt)ati).label == bs.label) {
+                        if(!validTarget)
                             ErrorSet.caution(bs.loc, 
                                              "Enclosing statement labelled '"
                                              +bs.label+"' is not a "
@@ -491,13 +492,13 @@ public class FlowInsensitiveChecks {
                     // else continue
                 }
 
-                if( dest == null ) {
+                if(dest == null) {
                     ErrorSet.error(bs.loc, 
                                    bs.label == null 
                                    ? "No enclosing unlabelled "+expectedStmtKind+" statement"
                                    : "No enclosing "+expectedStmtKind+" statement labelled '"+bs.label+"'");
                 } else
-                    setBranchLabel( bs, dest );
+                    setBranchLabel(bs, dest);
 
                 return e;
             }
@@ -508,26 +509,26 @@ public class FlowInsensitiveChecks {
             case TagConstants.RETURNSTMT: {
                 ReturnStmt rs = (ReturnStmt)s;
 
-                if( rs.expr != null ) 
+                if(rs.expr != null) 
                     rs.expr = checkExpr(e, rs.expr);
 
-                if( returnType == null ) 
+                if(returnType == null) 
                     ErrorSet.error(rs.loc, 
                                    "Returns are not allowed in a static initializer");
                 else {
-                    if( rs.expr != null ) {
+                    if(rs.expr != null) {
                         Type res = getType(rs.expr);
 
-                        if( Types.isSameType( returnType, Types.voidType ) )
+                        if(Types.isSameType(returnType, Types.voidType))
                             ErrorSet.error(rs.loc, 
                                            "This routine is not expected to return a value");
-                        else if( !assignmentConvertable( rs.expr, returnType ) ) 
-                            ErrorSet.error( rs.loc, 
-                                            "Cannot convert "+Types.printName( res )
-                                            +" to return type "+Types.printName(returnType) );
+                        else if(!assignmentConvertable(rs.expr, returnType)) 
+                            ErrorSet.error(rs.loc, 
+                                            "Cannot convert "+Types.printName(res)
+                                            +" to return type "+Types.printName(returnType));
                     } else {
-                        if( !Types.isSameType( returnType, Types.voidType ) )
-                            ErrorSet.error( rs.loc, "This routine must return a value");
+                        if(!Types.isSameType(returnType, Types.voidType))
+                            ErrorSet.error(rs.loc, "This routine must return a value");
                     }
                 }
                 return e;
@@ -538,21 +539,21 @@ public class FlowInsensitiveChecks {
                 t.expr = checkExpr(e, t.expr);
                 Type res = getType(t.expr);
 
-                if( !Types.isSubclassOf( res, Types.javaLangThrowable() ) ) {
-                    ErrorSet.error( t.loc, 
+                if(!Types.isSubclassOf(res, Types.javaLangThrowable())) {
+                    ErrorSet.error(t.loc, 
                                     "Cannot throw values of type "+Types.printName(res));
                 } else {
 
                     if (Types.isCheckedException(res)) {
 	  
                         // Must be caught by try or throws clause
-                        for( int i=0; i<allowedExceptions.size(); i++ ) {
-                            if( Types.isSubclassOf( res, allowedExceptions.elementAt(i) ) )
+                        for(int i=0; i<allowedExceptions.size(); i++) {
+                            if(Types.isSubclassOf(res, allowedExceptions.elementAt(i)))
                                 // is ok
                                 return e;
                         }
                         // Not caught
-                        ErrorSet.error( t.loc, 
+                        ErrorSet.error(t.loc, 
                                         "Exception must be caught by an enclosing try "
                                         +"or throws clause");
                     }
@@ -566,8 +567,8 @@ public class FlowInsensitiveChecks {
       
             case TagConstants.WHILESTMT: {
                 WhileStmt w = (WhileStmt)s;
-                w.expr = checkExpr( e, w.expr, Types.booleanType );
-                enclosingLabels.addElement( w );
+                w.expr = checkExpr(e, w.expr, Types.booleanType);
+                enclosingLabels.addElement(w);
                 checkStmt(e, w.stmt);
                 enclosingLabels.pop();
                 return e;
@@ -575,8 +576,8 @@ public class FlowInsensitiveChecks {
       
             case TagConstants.DOSTMT: {
                 DoStmt d = (DoStmt)s;
-                d.expr = checkExpr( e, d.expr, Types.booleanType );
-                enclosingLabels.addElement( d );
+                d.expr = checkExpr(e, d.expr, Types.booleanType);
+                enclosingLabels.addElement(d);
                 checkStmt(e, d.stmt);
                 enclosingLabels.pop();
                 return e;
@@ -584,7 +585,7 @@ public class FlowInsensitiveChecks {
       
             case TagConstants.IFSTMT: {
                 IfStmt i = (IfStmt)s;
-                i.expr = checkExpr( e, i.expr, Types.booleanType );
+                i.expr = checkExpr(e, i.expr, Types.booleanType);
                 checkStmt(e, i.thn);
                 checkStmt(e, i.els);
                 return e;
@@ -592,7 +593,7 @@ public class FlowInsensitiveChecks {
       
             case TagConstants.SYNCHRONIZESTMT: {
                 SynchronizeStmt ss = (SynchronizeStmt)s;
-                ss.expr = checkExpr( e, ss.expr, Types.javaLangObject() );
+                ss.expr = checkExpr(e, ss.expr, Types.javaLangObject());
                 checkStmt(e, ss.stmt);
                 return e;
             }
@@ -605,15 +606,15 @@ public class FlowInsensitiveChecks {
       
             case TagConstants.LABELSTMT: {
                 LabelStmt ls = (LabelStmt)s;
-                for( int i=0; i<enclosingLabels.size(); i++ ) {
+                for(int i=0; i<enclosingLabels.size(); i++) {
                     Stmt enclosing = enclosingLabels.elementAt(i);
-                    if( enclosing instanceof LabelStmt 
-                        && ((LabelStmt)enclosing).label == ls.label )
+                    if(enclosing instanceof LabelStmt 
+                        && ((LabelStmt)enclosing).label == ls.label)
                         ErrorSet.error(ls.locId, 
                                        "Label '"+ls.label+"' already used in this scope");
                 }
     
-                enclosingLabels.addElement( ls );
+                enclosingLabels.addElement(ls);
                 checkStmt(e, ls.stmt);
                 enclosingLabels.pop();
 
@@ -632,20 +633,20 @@ public class FlowInsensitiveChecks {
                 TypeSigVec newExceptions = allowedExceptions.copy();
 
                 // add all catch clause exceptions to allowedExceptions
-                for( int i=0; i<tc.catchClauses.size(); i++ ) {
+                for(int i=0; i<tc.catchClauses.size(); i++) {
                     CatchClause c = tc.catchClauses.elementAt(i);
                     Type t = c.arg.type;
-                    e.resolveType( t );
-                    checkTypeModifiers(e, t );
-                    if( !Types.isSubclassOf( t, Types.javaLangThrowable() ) )
-                        ErrorSet.error( c.loc, 
+                    e.resolveType(t);
+                    checkTypeModifiers(e, t);
+                    if(!Types.isSubclassOf(t, Types.javaLangThrowable()))
+                        ErrorSet.error(c.loc, 
                                         "Declared type of a catch formal parameter "
                                         +"must be a subclass of java.lang.Throwable");
                     else {
                         if (t instanceof TypeName) {
-                            t = TypeSig.getSig( (TypeName)t );
+                            t = TypeSig.getSig((TypeName)t);
                         }
-                        newExceptions.addElement( (TypeSig)t );
+                        newExceptions.addElement((TypeSig)t);
                     }
                     PrepTypeDeclaration.inst.checkModifiers(c.arg.modifiers,
                                                             Modifiers.ACC_FINAL,
@@ -677,7 +678,7 @@ public class FlowInsensitiveChecks {
                 TypeSig calleeSig =
                     ci.superCall 
                     ? TypeSig.getSig(((ClassDecl)sig.getTypeDecl()) //@nowarn Cast,NonNull
-                                     .superClass )
+                                     .superClass)
                     : sig;
 
                 /*
@@ -686,7 +687,7 @@ public class FlowInsensitiveChecks {
                  */
                 Env sEnv = e.asStaticContext();
 
-                Type[] argTypes = checkExprVec( sEnv, ci.args );
+                Type[] argTypes = checkExprVec(sEnv, ci.args);
 
 
                 /*
@@ -700,15 +701,15 @@ public class FlowInsensitiveChecks {
 
                 // If calleeSig has an enclosing instance and the user didn't supply
                 // a value for it, try to infer one:
-                if (ci.enclosingInstance==null && enclosingInstanceType!=null) {
+                if (ci.enclosingInstance==null && enclosingInstanceType != null) {
                     ci.locDot = ci.getStartLoc();
                     ci.enclosingInstance =
                         sEnv.lookupEnclosingInstance(enclosingInstanceType,
                                                      ci.getStartLoc());
                 }
 
-                if (ci.enclosingInstance!=null) {
-                    if (enclosingInstanceType!=null)
+                if (ci.enclosingInstance != null) {
+                    if (enclosingInstanceType != null)
                         ci.enclosingInstance = checkExpr(sEnv,
                                                          ci.enclosingInstance,
                                                          enclosingInstanceType);
@@ -716,7 +717,7 @@ public class FlowInsensitiveChecks {
                         ErrorSet.error(ci.enclosingInstance.getStartLoc(),
                                        "An enclosing instance may be provided only "
                                        + "when the superclass has an enclosing instance");
-                } else if (enclosingInstanceType!=null) {
+                } else if (enclosingInstanceType != null) {
                     /*
                      * Compute appropriate error message details:
                      */
@@ -745,10 +746,10 @@ public class FlowInsensitiveChecks {
 
                 try {
                     ConstructorDecl cd 
-                        = calleeSig.lookupConstructor( argTypes, sig );
-                    Assert.notNull( cd );
+                        = calleeSig.lookupConstructor(argTypes, sig);
+                    Assert.notNull(cd);
                     ci.decl = cd;
-                } catch( LookupException ex) {
+                } catch(LookupException ex) {
                     // Don't print an error if superclass is an interface (an
                     // error has already been reported in this case)
                     if (! ci.superCall
@@ -765,8 +766,8 @@ public class FlowInsensitiveChecks {
             }
 
             default:
-                if( s instanceof StmtPragma )
-                    checkStmtPragma( e, (StmtPragma)s );
+                if(s instanceof StmtPragma)
+                    checkStmtPragma(e, (StmtPragma)s);
                 else {
                     Assert.fail("Switch fall-through (" + s.getTag() + ")");
                 }
@@ -775,7 +776,7 @@ public class FlowInsensitiveChecks {
     }
 
     //@ requires !(se instanceof EnvForCU)
-    //@ requires sig!=null
+    //@ requires sig != null
     protected void checkForLoopAfterInit(/*@ non_null */ Env se,
                                          /*@ non_null */ ForStmt f) {
         f.test = checkExpr(se, f.test);
@@ -783,15 +784,15 @@ public class FlowInsensitiveChecks {
             Expr ex = checkExpr(se, f.forUpdate.elementAt(i));
             f.forUpdate.setElementAt(ex, i);
         }
-        enclosingLabels.addElement( f );
+        enclosingLabels.addElement(f);
         checkStmt(se, f.body);
         enclosingLabels.pop();
     }
 
-    //@ requires env!=null && v!=null
+    //@ requires env != null && v != null
     //@ requires !(env instanceof EnvForCU)
-    //@ requires sig!=null
-    //@ ensures \result!=null
+    //@ requires sig != null
+    //@ ensures \result != null
     //@ ensures !(\result instanceof EnvForCU)
     protected Env checkStmtVec(Env env, StmtVec v) {
 	for(int i = 0, sz = v.size(); i < sz; i++) {
@@ -804,11 +805,11 @@ public class FlowInsensitiveChecks {
     }
 
   
-    //@ requires env!=null && ev!=null  
+    //@ requires env != null && ev != null  
     //@ requires !(env instanceof EnvForCU)
-    //@ requires sig!=null
+    //@ requires sig != null
     //@ ensures \nonnullelements(\result)
-    protected Type[] checkExprVec( Env env, ExprVec ev ) {
+    protected Type[] checkExprVec(Env env, ExprVec ev) {
 
         Type[] r = new Type[ ev.size() ];
 
@@ -816,29 +817,29 @@ public class FlowInsensitiveChecks {
             Expr expr = ev.elementAt(i);
             Expr newExpr = checkExpr(env, expr);
             ev.setElementAt(newExpr, i);
-            r[i] = getType( newExpr );
+            r[i] = getType(newExpr);
         }
 
         return r;
     }
 
 
-    //@ requires sig!=null
+    //@ requires sig != null
     //@ requires !(env instanceof EnvForCU)
-    //@ requires env!=null && x!=null && expectedResult!=null
-    //@ ensures \result!=null
+    //@ requires env != null && x != null && expectedResult != null
+    //@ ensures \result != null
     //@ ensures (x instanceof ArrayInit) ==> \result instanceof ArrayInit
     protected VarInit checkInit(Env env, VarInit x, Type expectedResult) {
         if (x instanceof ArrayInit) {
             ArrayInit ai = (ArrayInit)x;
 
-            if( expectedResult instanceof ArrayType ) {
+            if(expectedResult instanceof ArrayType) {
                 Type elemType = ((ArrayType)expectedResult).elemType;
-                for( int i=0; i< ai.elems.size(); i++ ) {
-                    VarInit disamb = checkInit(env, ai.elems.elementAt(i), elemType );
-                    ai.elems.setElementAt( disamb, i);
+                for(int i=0; i< ai.elems.size(); i++) {
+                    VarInit disamb = checkInit(env, ai.elems.elementAt(i), elemType);
+                    ai.elems.setElementAt(disamb, i);
                 }
-                setType( ai, expectedResult );
+                setType(ai, expectedResult);
             } else {
                 ErrorSet.error(ai.locOpenBrace, 
                                "Unexpected array value in initializer");
@@ -851,10 +852,10 @@ public class FlowInsensitiveChecks {
         }
     }
 
-    //@ requires env!=null && e!=null
+    //@ requires env != null && e != null
     //@ requires !(env instanceof EnvForCU)
-    //@ requires sig!=null
-    //@ ensures \result!=null
+    //@ requires sig != null
+    //@ ensures \result != null
     protected Expr checkDesignator(Env env, Expr e) {
         Expr result = checkExpr(env, e);
         if (result.getTag() == TagConstants.FIELDACCESS) {
@@ -872,34 +873,34 @@ public class FlowInsensitiveChecks {
         return result;
     }
 
-    //@ requires env!=null && expr!=null && t!=null
+    //@ requires env != null && expr != null && t != null
     //@ requires !(env instanceof EnvForCU)
-    //@ requires sig!=null
-    //@ ensures \result!=null
+    //@ requires sig != null
+    //@ ensures \result != null
     protected Expr checkExpr(Env env, Expr expr, Type t) {
         Expr ne = checkExpr(env,expr);
-        checkType( ne, t);
+        checkType(ne, t);
         return ne;
     }
 
-    /** This method should call <code>setType</code> on <code>x</code>
-     * before its done.<p>
+    /**
+     * This method should call <code>setType</code> on <code>x</code> before its
+     * done.
      */
-
-    //@ requires env!=null && x!=null
+    //@ requires env != null && x != null
     //@ requires !(env instanceof EnvForCU)
-    //@ requires sig!=null
-    //@ ensures \result!=null
+    //@ requires sig != null
+    //@ ensures \result != null
     protected Expr checkExpr(Env env, Expr x) {
 
         // System.out.println("Checking: "+Location.toString(x.getStartLoc()));
 
-        if (getTypeOrNull(x) != null )
+        if (getTypeOrNull(x) != null)
             // already done
             return x;
 
         // set default result type to integer, in case there is an error
-        setType( x, Types.intType );
+        setType(x, Types.intType);
 
         switch (x.getTag()) {
     
@@ -912,7 +913,7 @@ public class FlowInsensitiveChecks {
                 }
 
                 Type referredType = sig;
-                if (t.classPrefix!=null) {
+                if (t.classPrefix != null) {
                     env.resolveType(t.classPrefix);
                     referredType = t.classPrefix;
                     checkTypeModifiers(env, referredType);
@@ -934,55 +935,55 @@ public class FlowInsensitiveChecks {
             }
     
             case TagConstants.STRINGLIT:
-                setType( x, Types.javaLangString() );
+                setType(x, Types.javaLangString());
                 return x;
 
             case TagConstants.CHARLIT:
-                setType( x, Types.charType );
+                setType(x, Types.charType);
                 return x;
 
             case TagConstants.BOOLEANLIT:
-                setType( x, Types.booleanType );
+                setType(x, Types.booleanType);
                 return x;
 
             case TagConstants.FLOATLIT:
-                setType( x, Types.floatType );
+                setType(x, Types.floatType);
                 return x;
 
             case TagConstants.DOUBLELIT:
-                setType( x, Types.doubleType );
+                setType(x, Types.doubleType);
                 return x;
 
             case TagConstants.INTLIT: 
-                setType( x, Types.intType );
+                setType(x, Types.intType);
                 return x;
 
             case TagConstants.LONGLIT:
-                setType( x, Types.longType );
+                setType(x, Types.longType);
                 return x;
 
             case TagConstants.NULLLIT:
-                setType( x, Types.nullType );
+                setType(x, Types.nullType);
                 return x;
     
             case TagConstants.ARRAYREFEXPR: {
                 ArrayRefExpr r = (ArrayRefExpr)x;
 	
                 r.array = checkExpr(env, r.array);
-                Type arrType = getType( r.array );
+                Type arrType = getType(r.array);
 	
-                if( arrType instanceof ArrayType ) {
-                    setType( r, ((ArrayType)arrType).elemType );
+                if(arrType instanceof ArrayType) {
+                    setType(r, ((ArrayType)arrType).elemType);
                 } else {
-                    setType( r, Types.intType );
-                    ErrorSet.error( r.locOpenBracket, 
+                    setType(r, Types.intType);
+                    ErrorSet.error(r.locOpenBracket, 
                                     "Attempt to index an non-array value");
                 }
 	  
                 r.index = checkExpr(env, r.index);
-                Type t = getType( r.index );
-                Type ndxType = Types.isNumericType( t ) ? Types.unaryPromote( t ) : t;
-                if( !Types.isSameType( ndxType, Types.intType ) ) 
+                Type t = getType(r.index);
+                Type ndxType = Types.isNumericType(t) ? Types.unaryPromote(t) : t;
+                if(!Types.isSameType(ndxType, Types.intType)) 
                     ErrorSet.error(r.locOpenBracket, "Array index is not an integer");
 
                 return r;
@@ -1001,7 +1002,7 @@ public class FlowInsensitiveChecks {
                     // 1.0 case:  new N(...) ...
                     env.resolveType(ne.type);
                     checkTypeModifiers(env, ne.type);
-                    calleeSig = TypeSig.getSig( ne.type );
+                    calleeSig = TypeSig.getSig(ne.type);
                 } else {
                     // 1.1 case: E.new I(...) ...
 
@@ -1046,23 +1047,23 @@ public class FlowInsensitiveChecks {
 
                 // If calleeSig has an enclosing instance and the user didn't supply
                 // a value for it, try to infer one:
-                if (ne.enclosingInstance==null && enclosingInstanceType!=null) {
+                if (ne.enclosingInstance==null && enclosingInstanceType != null) {
                     Expr enclosingInstance =
                         env.lookupEnclosingInstance(enclosingInstanceType,
                                                     ne.getStartLoc());
-                    if (enclosingInstance!=null) {
+                    if (enclosingInstance != null) {
                         ne.locDot = ne.getStartLoc();
                         ne.enclosingInstance = enclosingInstance;
                         checkExpr(env, ne.enclosingInstance, enclosingInstanceType);
                     }
                 }
 
-                if (ne.enclosingInstance!=null) {
+                if (ne.enclosingInstance != null) {
                     if (enclosingInstanceType==null)
                         ErrorSet.error(ne.enclosingInstance.getStartLoc(),
                                        "An enclosing instance may be provided only "
                                        + "when the named instance type is an inner class");
-                } else if (enclosingInstanceType!=null) {
+                } else if (enclosingInstanceType != null) {
                     ErrorSet.error(ne.getStartLoc(),
                                    "No enclosing instance of class "
                                    + enclosingInstanceType
@@ -1081,7 +1082,7 @@ public class FlowInsensitiveChecks {
                 /*
                  * Handle anonymous class case:
                  */
-                if (ne.anonDecl!=null) {
+                if (ne.anonDecl != null) {
                     // Update anonDecl to have proper supertype:
                     if (calleeSig.getTypeDecl() instanceof ClassDecl) {
                         Assert.notFalse(ne.anonDecl.superClass==null);  //@ nowarn Pre
@@ -1095,12 +1096,12 @@ public class FlowInsensitiveChecks {
                     TypeSig T = Types.makeTypeSig(null, env, ne.anonDecl);
                     T.typecheck();
                     caller = T;
-                    setType( ne, T );
+                    setType(ne, T);
                 } else
-                    setType( ne, ne.type );
+                    setType(ne, ne.type);
 
 
-                Type[] argTypes = checkExprVec( env, ne.args );
+                Type[] argTypes = checkExprVec(env, ne.args);
 
                 if (!(calleeSig.getTypeDecl() instanceof ClassDecl))
                     ErrorSet.error(ne.loc, 
@@ -1113,7 +1114,7 @@ public class FlowInsensitiveChecks {
                     try {
                         ConstructorDecl cd = calleeSig.lookupConstructor(argTypes, caller);
                         ne.decl = cd;
-                    } catch( LookupException e) {
+                    } catch(LookupException e) {
                         reportLookupException(e, "constructor", 
                                               Types.printName(calleeSig), ne.loc);
                     }
@@ -1130,13 +1131,13 @@ public class FlowInsensitiveChecks {
                 for(int i = 0; i < na.dims.size(); i++) {
                     Expr e = na.dims.elementAt(i);
                     Expr newExpr = checkExpr(env, e, Types.intType);
-                    na.dims.setElementAt( newExpr, i );
-                    r = ArrayType.make( r, na.locOpenBrackets[i] );
+                    na.dims.setElementAt(newExpr, i);
+                    r = ArrayType.make(r, na.locOpenBrackets[i]);
                     checkTypeModifiers(env, r); 
                 }
-                setType( na, r );
+                setType(na, r);
 
-                if (na.init!=null)
+                if (na.init != null)
                     na.init = (ArrayInit)checkInit(env, na.init, r);
 
                 return na;
@@ -1149,10 +1150,10 @@ public class FlowInsensitiveChecks {
                 ce.els = checkExpr(env, ce.els);
 
                 Type res = tryCondExprMatch(ce.thn, ce.els);
-                if (res!=null)
-                    setType( ce, res );
+                if (res != null)
+                    setType(ce, res);
                 else
-                    ErrorSet.error( ce.locQuestion,
+                    ErrorSet.error(ce.locQuestion,
                                     "Incompatible arguments to the ?: operator");
 
                 return ce;
@@ -1161,36 +1162,36 @@ public class FlowInsensitiveChecks {
             case TagConstants.INSTANCEOFEXPR: {
                 InstanceOfExpr ie = (InstanceOfExpr)x;
                 ie.expr = checkExpr(env, ie.expr);
-                Type exprType = getType( ie.expr );
+                Type exprType = getType(ie.expr);
                 env.resolveType(ie.type);
                 checkTypeModifiers(env, ie.type);
-                if( !Types.isReferenceType( ie.type ) ) {
+                if(!Types.isReferenceType(ie.type)) {
                     ErrorSet.error(ie.loc, "Non-reference type in instanceof operation");
                 }
-                else if( !Types.isCastable( exprType, ie.type ) ) {
+                else if(!Types.isCastable(exprType, ie.type)) {
                     ErrorSet.error(ie.loc, 
                                    "Invalid instanceof operation: "+
                                    "A value of type "+Types.printName(exprType)
                                    +" can never be an instance of "
                                    +Types.printName(ie.type));
                 }
-                setType( ie, Types.booleanType );
+                setType(ie, Types.booleanType);
                 return ie;
             }
 
             case TagConstants.CASTEXPR: {
                 CastExpr ce = (CastExpr)x;
                 ce.expr = checkExpr(env, ce.expr);
-                Type exprType = getType( ce.expr );
+                Type exprType = getType(ce.expr);
                 env.resolveType(ce.type);
                 checkTypeModifiers(env, ce.type); 
  
-                if( !Types.isCastable( exprType, ce.type ) ) {
+                if(!Types.isCastable(exprType, ce.type)) {
                     ErrorSet.error(ce.locOpenParen, 
                                    "Bad cast from "+Types.printName(exprType)
                                    +" to "+Types.printName(ce.type));
                 }
-                setType( ce, ce.type );
+                setType(ce, ce.type);
                 return ce;
             }
 
@@ -1198,7 +1199,7 @@ public class FlowInsensitiveChecks {
                 ClassLiteral cl = (ClassLiteral)x;
                 env.resolveType(cl.type);
                 checkTypeModifiers(env, cl.type); 
-                setType( cl, Types.javaLangClass() );
+                setType(cl, Types.javaLangClass());
                 return cl;
             }
 
@@ -1216,7 +1217,7 @@ public class FlowInsensitiveChecks {
                 be.left = checkExpr(env, be.left);
                 be.right = checkExpr(env, be.right);
                 Type t = checkBinaryExpr(be.op, be.left, be.right, be.locOp);
-                setType( be, t );
+                setType(be, t);
                 return be;
             }
       
@@ -1230,7 +1231,7 @@ public class FlowInsensitiveChecks {
                 be.left = checkDesignator(env, be.left);
                 be.right = checkExpr(env, be.right);
                 Type t = checkBinaryExpr(be.op, be.left, be.right, be.locOp);
-                setType( be, t );
+                setType(be, t);
                 return be;
             }
 
@@ -1241,10 +1242,10 @@ public class FlowInsensitiveChecks {
                 UnaryExpr ue = (UnaryExpr)x;
                 ue.expr = checkExpr(env, ue.expr);
                 // Argument must be primitive numeric type
-                Type t = getType( ue.expr );
-                if( checkNumericType( ue.expr ) ) {
+                Type t = getType(ue.expr);
+                if(checkNumericType(ue.expr)) {
                     // Result is value of unary promoted type of arg
-                    setType( ue, Types.unaryPromote( getType(ue.expr) ) );
+                    setType(ue, Types.unaryPromote(getType(ue.expr)));
                 }
                 return ue;
             }
@@ -1253,9 +1254,9 @@ public class FlowInsensitiveChecks {
                 UnaryExpr ue = (UnaryExpr)x;
                 ue.expr = checkExpr(env, ue.expr);
                 // Argument must be primitive numeric type
-                if( checkIntegralType( ue.expr ) ) {
+                if(checkIntegralType(ue.expr)) {
                     // Result is value of unary promoted type of arg
-                    setType( ue, Types.unaryPromote( getType(ue.expr) ) );
+                    setType(ue, Types.unaryPromote(getType(ue.expr)));
                 } 
                 return ue;
             }
@@ -1265,13 +1266,13 @@ public class FlowInsensitiveChecks {
                 UnaryExpr ue = (UnaryExpr)x;
                 ue.expr = checkDesignator(env, ue.expr);
                 // Argument must be primitive numeric variable type
-                if (checkNumericType( ue.expr )) {
-                    if( !isVariable(ue.expr) )
-                        ErrorSet.error( ue.locOp,
+                if (checkNumericType(ue.expr)) {
+                    if(!isVariable(ue.expr))
+                        ErrorSet.error(ue.locOp,
                                         "Argument of increment/decrement operation "
                                         +"is not a location");
                     // Result is of same type
-                    setType( ue, getType(ue.expr) );
+                    setType(ue, getType(ue.expr));
                 }
                 return ue;
             }
@@ -1279,23 +1280,23 @@ public class FlowInsensitiveChecks {
             case TagConstants.NOT: {
                 // Argument must be boolean, result is boolean
                 UnaryExpr ue = (UnaryExpr)x;
-                ue.expr = checkExpr(env, ue.expr, Types.booleanType );
-                setType( ue, Types.booleanType );
+                ue.expr = checkExpr(env, ue.expr, Types.booleanType);
+                setType(ue, Types.booleanType);
                 return ue;
             }
       
             case TagConstants.PARENEXPR: {
                 ParenExpr pe = (ParenExpr)x;
                 pe.expr = checkExpr(env, pe.expr);
-                setType( pe, getType( pe.expr ) );
+                setType(pe, getType(pe.expr));
                 return pe;
             }
 
             case TagConstants.AMBIGUOUSVARIABLEACCESS: {
                 AmbiguousVariableAccess av = (AmbiguousVariableAccess)x;
-                Assert.notNull( av.name );
+                Assert.notNull(av.name);
                 Expr resolved = env.disambiguateExprName(av.name);
-                if( resolved == null ) {
+                if(resolved == null) {
                     if (av.name.size() == 1)
                         ErrorSet.error(av.getStartLoc(),
                                        "Undefined variable '" + av.name.printName() + "'");
@@ -1305,17 +1306,17 @@ public class FlowInsensitiveChecks {
                     return av;
                 }
                 Assert.notFalse(resolved.getTag() !=
-                                TagConstants.AMBIGUOUSVARIABLEACCESS ); 
-                return checkExpr( env, resolved );
+                                TagConstants.AMBIGUOUSVARIABLEACCESS); 
+                return checkExpr(env, resolved);
             }
 
             case TagConstants.FIELDACCESS: {
                 FieldAccess fa = (FieldAccess)x;
-                Type t = checkObjectDesignator( env, fa.od);
-                if( t != null ) {
+                Type t = checkObjectDesignator(env, fa.od);
+                if(t != null) {
                     try {
-                        fa.decl = Types.lookupField( t, fa.id, sig );
-                        setType( fa, fa.decl.type );
+                        fa.decl = Types.lookupField(t, fa.id, sig);
+                        setType(fa, fa.decl.type);
 
                         if (fa.od instanceof TypeObjectDesignator &&
                             !Modifiers.isStatic(fa.decl.modifiers)) {
@@ -1339,7 +1340,7 @@ public class FlowInsensitiveChecks {
                                                + " may not be accessed from type "
                                                + sig);
                         }
-                    } catch( LookupException ex) {
+                    } catch(LookupException ex) {
                         reportLookupException(ex, "field", Types.printName(t), fa.locId);
                     }
                 }
@@ -1352,21 +1353,21 @@ public class FlowInsensitiveChecks {
                 if (resolved == null) {
                     // This currently never happens because non-resolvable
                     // ambiguous methods result in a fatal error.  (See EnvForTypeSig)
-                    ErrorSet.error( ami.getStartLoc(),
+                    ErrorSet.error(ami.getStartLoc(),
                                     "Ambiguous method invocation");
                     return ami;
                 }
-                return checkExpr( env, resolved );
+                return checkExpr(env, resolved);
             }
 
             case TagConstants.METHODINVOCATION: {
                 MethodInvocation mi = (MethodInvocation)x;
-                Type t = checkObjectDesignator( env, mi.od);
-                Type[] argTypes = checkExprVec( env, mi.args );
-                if( t != null ) {
+                Type t = checkObjectDesignator(env, mi.od);
+                Type[] argTypes = checkExprVec(env, mi.args);
+                if(t != null) {
                     try {
-                        mi.decl = Types.lookupMethod( t, mi.id, argTypes, sig );
-                        setType( mi, mi.decl.returnType );
+                        mi.decl = Types.lookupMethod(t, mi.id, argTypes, sig);
+                        setType(mi, mi.decl.returnType);
 
                         if (mi.od instanceof TypeObjectDesignator &&
                             !Modifiers.isStatic(mi.decl.modifiers)) {
@@ -1390,7 +1391,7 @@ public class FlowInsensitiveChecks {
                                                + " may not be invoked from type "
                                                + sig);
                         }
-                    } catch( LookupException ex) {
+                    } catch(LookupException ex) {
                         reportLookupException(ex, 
                                               "method "+mi.id
                                               +Types.printName(argTypes), 
@@ -1402,8 +1403,8 @@ public class FlowInsensitiveChecks {
 
             case TagConstants.VARIABLEACCESS: {
                 VariableAccess lva = (VariableAccess)x;
-                setType( lva, lva.decl.type );
-                Assert.notNull( getType(lva) );
+                setType(lva, lva.decl.type);
+                Assert.notNull(getType(lva));
 
                 // Front-end VariableAccess's never point to fields:
                 Assert.notFalse(!(lva.decl instanceof FieldDecl)); //@ nowarn Pre
@@ -1421,25 +1422,26 @@ public class FlowInsensitiveChecks {
             }
 
             default:
-System.out.println("FAIL " + x);
-                Assert.fail("Switch fall-through (" + TagConstants.toString(x.getTag()) + ")");
+                System.out.println("FAIL " + x);
+                Assert.fail("Switch fall-through (" + 
+                            TagConstants.toString(x.getTag()) + ")");
                 return null;		// Dummy
         }
     }
 
     // ======================================================================
 
-    //@ requires env!=null && od!=null
+    //@ requires env != null && od != null
     //@ requires !(env instanceof EnvForCU)
-    //@ requires sig!=null
+    //@ requires sig != null
     protected Type checkObjectDesignator(Env env, ObjectDesignator od) {
 
-        switch( od.getTag() ) {
+        switch(od.getTag()) {
       
             case TagConstants.EXPROBJECTDESIGNATOR: {
                 ExprObjectDesignator eod = (ExprObjectDesignator)od;
                 eod.expr = checkExpr(env, eod.expr);
-                return getType( eod.expr );
+                return getType(eod.expr);
             }
 
             case TagConstants.TYPEOBJECTDESIGNATOR: {
@@ -1447,16 +1449,16 @@ System.out.println("FAIL " + x);
                 // Type has been created by disambiguation code, so it is ok.
 
                 Type t = tod.type;
-                if( t instanceof TypeName )
-                    t = TypeSig.getSig( (TypeName)t );
-                Assert.notFalse( t instanceof TypeSig);
+                if(t instanceof TypeName)
+                    t = TypeSig.getSig((TypeName)t);
+                Assert.notFalse(t instanceof TypeSig);
                 checkTypeModifiers(env, t);  
                 return (TypeSig)t;
             }
 
             case TagConstants.SUPEROBJECTDESIGNATOR: {
                 SuperObjectDesignator sod = (SuperObjectDesignator)od;
-                if( env.isStaticContext() ) {
+                if(env.isStaticContext()) {
                     ErrorSet.error(sod.locSuper,
                                    "Keyword super cannot be used in a static context");
                     return null;
@@ -1467,14 +1469,14 @@ System.out.println("FAIL " + x);
                         TypeName superClass = ((ClassDecl)d).superClass;
                         if (superClass==null) {
                             Assert.notFalse(sig==Types.javaLangObject()); //@ nowarn Pre
-                            ErrorSet.error( sod.locDot, 
+                            ErrorSet.error(sod.locDot, 
                                             "Can't use keyword super in java.lang.Object");
                             return null;
                         }
 
                         return TypeSig.getSig(superClass);
                     } else {
-                        ErrorSet.error( sod.locDot, 
+                        ErrorSet.error(sod.locDot, 
                                         "Can't use keyword super in an interface");
                         return null;
                     }
@@ -1490,15 +1492,15 @@ System.out.println("FAIL " + x);
     // ======================================================================
 
     /**
-     * Return the type of a E1 : L ? R expression given the
-     * typechecked Expr's for L and R, as per JLS 15.24. <p>
+     * Return the type of a E1 : L ? R expression given the typechecked Expr's for L
+     * and R, as per JLS 15.24.
      *
-     * Returns null if the given combination is illegal.<p>
+     * @return null if the given combination is illegal.
      */
-    //@ requires leftExpr!=null && rightExpr!=null
-    private Type tryCondExprMatch(Expr leftExpr, Expr rightExpr ) {
-        Type leftType = getType( leftExpr );
-	Type rightType = getType( rightExpr );
+    //@ requires leftExpr != null && rightExpr != null
+    private Type tryCondExprMatch(Expr leftExpr, Expr rightExpr) {
+        Type leftType = getType(leftExpr);
+	Type rightType = getType(rightExpr);
 					  
 	/*
 	 * If the second and third operands have the same type,
@@ -1535,14 +1537,14 @@ System.out.println("FAIL " + x);
                  Types.isSameType(leftType, Types.shortType) ||
                  Types.isSameType(leftType, Types.charType))
 		&& ConstantExpr.
-		constantValueFitsIn(ConstantExpr.eval( rightExpr ),
-				    (PrimitiveType)leftType ) )
+		constantValueFitsIn(ConstantExpr.eval(rightExpr),
+				    (PrimitiveType)leftType))
 		return leftType;
 	    if ((Types.isSameType(rightType, Types.byteType) ||
                  Types.isSameType(rightType, Types.shortType) ||
                  Types.isSameType(rightType, Types.charType))
 		&& ConstantExpr.
-		constantValueFitsIn(ConstantExpr.eval( leftExpr ),
+		constantValueFitsIn(ConstantExpr.eval(leftExpr),
 				    (PrimitiveType)rightType))
 		return rightType;
 
@@ -1552,7 +1554,7 @@ System.out.println("FAIL " + x);
 	     * to the operand types, and the type of the conditional
 	     * expression is the promoted type:
 	     */
-	    return Types.binaryNumericPromotion( leftType, rightType );
+	    return Types.binaryNumericPromotion(leftType, rightType);
 	}
 
 
@@ -1591,20 +1593,20 @@ System.out.println("FAIL " + x);
 
     // ======================================================================
 
-    //@ requires left!=null && right!=null
+    //@ requires left != null && right != null
     //@ requires loc!=Location.NULL
-    //@ ensures \result!=null  
+    //@ ensures \result != null  
     protected Type checkBinaryExpr(int op, Expr left, Expr right, int loc) {
   
         Type leftType = getType(left);
         Type rightType = getType(right);
 
-        switch( op ) {
+        switch(op) {
     
             case TagConstants.ADD:
     
-                if( Types.isSameType( leftType, Types.javaLangString() ) 
-                    || Types.isSameType( rightType, Types.javaLangString() ) ) {
+                if(Types.isSameType(leftType, Types.javaLangString()) 
+                    || Types.isSameType(rightType, Types.javaLangString())) {
       
                     // Operation is string concatenation
                     return Types.javaLangString();
@@ -1615,9 +1617,9 @@ System.out.println("FAIL " + x);
             case TagConstants.DIV: 
             case TagConstants.MOD: 
             case TagConstants.SUB: {
-                if( checkNumericType( left )
-                    && checkNumericType( right ) )
-                    return Types.binaryNumericPromotion( leftType, rightType );
+                if(checkNumericType(left)
+                    && checkNumericType(right))
+                    return Types.binaryNumericPromotion(leftType, rightType);
                 else
                     // error recovery
                     return Types.intType;
@@ -1630,9 +1632,9 @@ System.out.println("FAIL " + x);
                 // Arguments must be primitive integral types
                 // result is unary promoted type of left operand
       
-                if( checkIntegralType( left ) 
-                    && checkIntegralType( right ) )
-                    return Types.unaryPromote( leftType );
+                if(checkIntegralType(left) 
+                    && checkIntegralType(right))
+                    return Types.unaryPromote(leftType);
                 else
                     // error recovery
                     return Types.intType;
@@ -1645,22 +1647,22 @@ System.out.println("FAIL " + x);
                 // Arguments must be primitive numeric types
                 // result is boolean
       
-                checkNumericType( left );
-                checkNumericType( right );
+                checkNumericType(left);
+                checkNumericType(right);
                 return Types.booleanType;
       
             case TagConstants.BITAND: 
             case TagConstants.BITOR: 
             case TagConstants.BITXOR: {
-                if( !Types.isBooleanType( leftType) ) {
+                if(!Types.isBooleanType(leftType)) {
 	  
                     // Arguments are primitive integral
                     // binary numeric promotion is performed
                     // type of result is promoted type of operands
 	  
-                    if( checkIntegralType( left )
-                        && checkIntegralType( right ) )
-                        return Types.binaryNumericPromotion( leftType, rightType );
+                    if(checkIntegralType(left)
+                        && checkIntegralType(right))
+                        return Types.binaryNumericPromotion(leftType, rightType);
                     else
                         // error recovery
                         return Types.intType;
@@ -1672,22 +1674,22 @@ System.out.println("FAIL " + x);
             case TagConstants.AND: 
             case TagConstants.OR: {
                 // Arguments must be boolean, result is also boolean
-                checkType( left, Types.booleanType );
-                checkType( right, Types.booleanType );
+                checkType(left, Types.booleanType);
+                checkType(right, Types.booleanType);
                 return Types.booleanType;
             }
       
             case TagConstants.EQ: 
             case TagConstants.NE:
-                if(   (Types.isNumericType(leftType) 
+                if( (Types.isNumericType(leftType) 
                        && Types.isNumericType(rightType))
                       || (!Types.isVoidType(leftType)
                           && Types.isSameType(leftType, rightType))
                       || (Types.isReferenceOrNullType(leftType) 
                           && Types.isReferenceOrNullType(rightType))) {
 	
-                    if(   Types.isCastable( leftType, rightType ) 
-                          || Types.isCastable( rightType, leftType ) ) {
+                    if(  Types.isCastable(leftType, rightType) 
+                          || Types.isCastable(rightType, leftType)) {
                         // is ok, result boolean
                         return Types.booleanType;
                     } 
@@ -1713,21 +1715,21 @@ System.out.println("FAIL " + x);
             case TagConstants.ASGBITAND:
             case TagConstants.ASGBITOR: 
             case TagConstants.ASGBITXOR: {
-                if( !isVariable( left ) ) {
+                if(!isVariable(left)) {
                     ErrorSet.error(loc,
                                    "Left hand side of assignment operator "+
                                    "is not a location");
-                } else if( op == TagConstants.ASSIGN ) {
-                    if( !assignmentConvertable( right, leftType ) )
+                } else if(op == TagConstants.ASSIGN) {
+                    if(!assignmentConvertable(right, leftType))
                         ErrorSet.error(loc,
-                                       "Value of type "+Types.printName( getType(right) )
+                                       "Value of type "+Types.printName(getType(right))
                                        +" cannot be assigned to location of type "
-                                       + Types.printName(leftType) );
+                                       + Types.printName(leftType));
                 } else {
                     // E1 op= E2 is equivalent to
                     // E1 = (T)(E1 op E2), where T is type of E1
                     int simpleop;
-                    switch( op ) {
+                    switch(op) {
                         case TagConstants.ASGMUL:    simpleop=TagConstants.STAR;    break;
                         case TagConstants.ASGDIV:    simpleop=TagConstants.DIV;     break;
                         case TagConstants.ASGREM:    simpleop=TagConstants.MOD;     break;
@@ -1743,11 +1745,11 @@ System.out.println("FAIL " + x);
                     }
                     Type result = checkBinaryExpr(simpleop, left, right, loc);
                     // Check if result is convertable to leftType
-                    if( !Types.isCastable( result, leftType ) )
+                    if(!Types.isCastable(result, leftType))
                         ErrorSet.error(loc, 
                                        "Result type "+Types.printName(result)
                                        +" of assignment operation cannot be cast to type "
-                                       +Types.printName(leftType) );
+                                       +Types.printName(leftType));
                 }  
                 // done
                 return leftType;
@@ -1761,11 +1763,11 @@ System.out.println("FAIL " + x);
 
     // *********************************************************************
 
-    //@ requires e!=null
-    static boolean checkIntegralType( Expr e) {
+    //@ requires e != null
+    static boolean checkIntegralType(Expr e) {
         Type t = getType(e);
-        if( !Types.isIntegralType( t ) ) {
-            ErrorSet.error( e.getStartLoc(), 
+        if(!Types.isIntegralType(t)) {
+            ErrorSet.error(e.getStartLoc(), 
                             "Cannot convert "+Types.printName(t)
                             +" to an integral type");
             return false;
@@ -1774,11 +1776,11 @@ System.out.println("FAIL " + x);
         }
     }
 
-    //@ requires e!=null
-    static boolean checkNumericType( Expr e) {
+    //@ requires e != null
+    static boolean checkNumericType(Expr e) {
         Type t = getType(e);
-        if( !Types.isNumericType( t ) ) {
-            ErrorSet.error( e.getStartLoc(), 
+        if(!Types.isNumericType(t)) {
+            ErrorSet.error(e.getStartLoc(), 
                             "Cannot convert "+Types.printName(t)
                             +" to a numeric type ");
             return false;
@@ -1787,9 +1789,9 @@ System.out.println("FAIL " + x);
         }    
     }
 
-    //@ requires e!=null
+    //@ requires e != null
     static boolean isVariable(Expr e) {
-        switch( e.getTag() ) {
+        switch(e.getTag()) {
             case TagConstants.ARRAYREFEXPR:
             case TagConstants.VARIABLEACCESS:
             case TagConstants.FIELDACCESS: 
@@ -1803,15 +1805,14 @@ System.out.println("FAIL " + x);
     // ======================================================================
 
     /**
-     * Decorates <code>VarInit</code>
-     * nodes to point to <code>Type</code> objects.
+     * Decorates <code>VarInit</code> nodes to point to <code>Type</code> objects.
      */
-    //@ invariant typeDecoration!=null
+    //@ invariant typeDecoration != null
     //@ invariant typeDecoration.decorationType == \type(Type)
     private static ASTDecoration typeDecoration
         = new ASTDecoration("typeDecoration");
 
-    //@ requires i!=null && t!=null
+    //@ requires i != null && t != null
     public static VarInit setType(VarInit i, Type t) {
         if (t instanceof TypeName)
             t = TypeSig.getSig((TypeName)t);
@@ -1819,88 +1820,87 @@ System.out.println("FAIL " + x);
 	return i;
     }
 
-    /** Retrieves the <code>Type</code> of a <code>VarInit</code>.  This
-     * type is associated with an expression by the typechecking
-     * pass. If the expression does not have an associated type, then
-     * null is returned. */
-
-    //@ requires i!=null
+    /**
+     * Retrieves the <code>Type</code> of a <code>VarInit</code>.  This type is
+     * associated with an expression by the typechecking pass. If the expression does
+     * not have an associated type, then null is returned.
+     */
+    //@ requires i != null
     protected static Type getTypeOrNull(VarInit i) {
         return (Type)typeDecoration.get(i);
     }
 
-    /** Retrieves the <code>Type</code> of a <code>VarInit</code>.  This
-     * type is associated with an expression by the typechecking
-     * pass. If the expression does not have an associated type, then
-     * <code>Assert.fail</code> is called. */
-
-
-    //@ requires i!=null
-    //@ ensures \result!=null
+    /**
+     * Retrieves the <code>Type</code> of a <code>VarInit</code>.  This type is
+     * associated with an expression by the typechecking pass. If the expression does
+     * not have an associated type, then <code>Assert.fail</code> is called.
+     */
+    //@ requires i != null
+    //@ ensures \result != null
     public static Type getType(VarInit i) {
         Type t = getTypeOrNull(i);
-        if( t==null ) 
+        if(t==null) 
             Assert.fail("getType at "+i.getTag()+" "+
                         PrettyPrint.inst.toString(i) +
-                        Location.toString( i.getStartLoc() ));
+                        Location.toString(i.getStartLoc()));
         return t;
     }
 
 
     // ======================================================================
 
-    /** Decorates <code>BranchStmt</code>
-     * nodes to point to labelled <code>Stmt</code> objects. */
-
-    //@ invariant branchDecoration!=null
+    /**
+     * Decorates <code>BranchStmt</code> nodes to point to labelled <code>Stmt</code>
+     * objects.
+     */
+    //@ invariant branchDecoration != null
     //@ invariant branchDecoration.decorationType == \type(Stmt)
     private static ASTDecoration branchDecoration
         = new ASTDecoration("branchDecoration");
 
-    //@ requires s!=null && l!=null
+    //@ requires s != null && l != null
     private static void setBranchLabel(BranchStmt s, Stmt l) {
-        Assert.notFalse( branchDecoration.get(s) == null );	//@ nowarn Pre
+        Assert.notFalse(branchDecoration.get(s) == null);	//@ nowarn Pre
         branchDecoration.set(s,l);
     }
 
-    /** Retrieves the <code>Stmt</code> target of a
-     * <code>BranchStmt</code>.  This <code>Stmt</code> may be mentioned
-     * either explicitly (as in <code>break label;</code>), or
-     * implicitly (as in <code>break;</code>) by the
-     * <code>BranchStmt</code>.  The correct <code>Stmt</code> target is
-     * associated with the <code>BranchStmt</code> by the typechecking
-     * pass. This type is associated with an expression by the
-     * typechecking pass. If the <code>BranchStmt</code> does not have
-     * an associated <code>Stmt</code> target, then
-     * <code>Assert.fail</code> is called. */
-
-    //@ requires s!=null
+    /**
+     * Retrieves the <code>Stmt</code> target of a <code>BranchStmt</code>.  This
+     * <code>Stmt</code> may be mentioned either explicitly (as in <code>break
+     * label;</code>), or implicitly (as in <code>break;</code>) by the
+     * <code>BranchStmt</code>.  The correct <code>Stmt</code> target is associated
+     * with the <code>BranchStmt</code> by the typechecking pass. This type is
+     * associated with an expression by the typechecking pass. If the
+     * <code>BranchStmt</code> does not have an associated <code>Stmt</code> target,
+     * then <code>Assert.fail</code> is called.
+     */
+    //@ requires s != null
     static Stmt getBranchLabel(BranchStmt s) {
         Stmt l = (Stmt)branchDecoration.get(s);
-        if( l==null )
-            Assert.fail( "getBranchLabel failed at "+s.getTag() );
+        if(l==null)
+            Assert.fail("getBranchLabel failed at "+s.getTag());
         return l;
     }
 
     // ======================================================================
 
-    //@ requires expr!=null && t!=null
-    static void checkType( Expr expr, Type t ) {
-        if( !assignmentConvertable( expr, t ) ) {
-            ErrorSet.error( expr.getStartLoc(), 
+    //@ requires expr != null && t != null
+    static void checkType(Expr expr, Type t) {
+        if(!assignmentConvertable(expr, t)) {
+            ErrorSet.error(expr.getStartLoc(), 
                             "Cannot convert "+Types.printName(getType(expr))
-                            +" to "+Types.printName(t) );
+                            +" to "+Types.printName(t));
         }
     
     }
 
-    //@ requires e!=null && s!=null && t!=null
+    //@ requires e != null && s != null && t != null
     //@ requires loc!=Location.NULL
     protected static void reportLookupException(LookupException e, 
                                                 String s, 
                                                 String t, 
                                                 int loc) {
-        switch( e.reason ) {
+        switch(e.reason) {
             case LookupException.NOTFOUND:
                 ErrorSet.error(loc, "No such "+s+" in type "+t);
                 break;
@@ -1918,29 +1918,28 @@ System.out.println("FAIL " + x);
         }
     }
 
-    /** Checks if Exp e can be assigned to Type t. 
-     This method is here instead of in javafe.tc.Types, 
-     because it needs to mess with constants.
+    /**
+     * Checks if Exp e can be assigned to Type t.  This method is here instead of in
+     * {@link javafe.tc.Types}, because it needs to mess with constants.
      */ 
-
-    //@ requires e!=null && t!=null
-    static boolean assignmentConvertable( Expr e, Type t ) {
+    //@ requires e != null && t != null
+    static boolean assignmentConvertable(Expr e, Type t) {
 
         Type te = getType(e);
 
-        if( Types.isInvocationConvertable( te, t ) )
+        if(Types.isInvocationConvertable(te, t))
             return true;
 
         // Check if t is byte/short/char, 
         // and e a constant expression whose value fits in t.
 
-        switch( t.getTag() ) {
+        switch(t.getTag()) {
             case TagConstants.BYTETYPE:
             case TagConstants.SHORTTYPE:
             case TagConstants.CHARTYPE:
-                Object val = ConstantExpr.eval( e );
-                if( val != null
-                    && ConstantExpr.constantValueFitsIn( val, (PrimitiveType)t ) )
+                Object val = ConstantExpr.eval(e);
+                if(val != null
+                    && ConstantExpr.constantValueFitsIn(val, (PrimitiveType)t))
                     return true;
                 else return false;
             default:
@@ -1950,51 +1949,50 @@ System.out.println("FAIL " + x);
 
     // ======================================================================
 
-    //@ requires e!=null
+    //@ requires e != null
     protected void checkTypeDeclElemPragma(TypeDeclElemPragma e) {
         Assert.fail("Unexpected TypeDeclElemPragma");
     }
 
-    /** Hook to do additional processing on <code>ModifierVec</code>s.
-     * The <code>ASTNode</code> is the parent of the
-     * <code>ModifierPragma</code>, and <code>env</code> is the current
-     * environment. */
-
-    //@ requires env!=null
+    /**
+     * Hook to do additional processing on <code>ModifierVec</code>s.  The
+     * <code>ASTNode</code> is the parent of the <code>ModifierPragma</code>, and
+     * <code>env</code> is the current environment.
+     */
+    //@ requires env != null
     protected void checkModifierPragmaVec(ModifierPragmaVec v, 
                                           ASTNode ctxt, 
                                           Env env) {
-        if( v != null )
-            for( int i=0; i<v.size(); i++)
-                checkModifierPragma( v.elementAt(i), ctxt, env );
+        if(v != null)
+            for(int i=0; i<v.size(); i++)
+                checkModifierPragma(v.elementAt(i), ctxt, env);
     }
 
-    /** Hook to do additional processing on <code>Modifier</code>s.  The
-     * <code>ASTNode</code> is the parent of the
-     * <code>ModifierPragma</code>, and <code>env</code> is the current
-     * environment.<p>
+    /**
+     * Hook to do additional processing on <code>Modifier</code>s.  The
+     * <code>ASTNode</code> is the parent of the <code>ModifierPragma</code>, and
+     * <code>env</code> is the current environment.
      */
-
-    //@ requires p!=null && env!=null
+    //@ requires p != null && env != null
     protected void checkModifierPragma(ModifierPragma p, ASTNode ctxt, Env env) {
         // Assert.fail("Unexpected ModifierPragma");
     }
 
-    //@ requires e!=null && s!=null
+    //@ requires e != null && s != null
     protected void checkStmtPragma(Env e, StmtPragma s) {
         Assert.fail("Unexpected StmtPragma");
     }
 
-    //@ requires env!=null
+    //@ requires env != null
     protected void checkTypeModifierPragmaVec(TypeModifierPragmaVec v, 
                                               ASTNode ctxt, 
                                               Env env) {
-        if( v != null )
-            for( int i=0; i<v.size(); i++)
-                checkTypeModifierPragma( v.elementAt(i), ctxt, env );
+        if(v != null)
+            for(int i=0; i<v.size(); i++)
+                checkTypeModifierPragma(v.elementAt(i), ctxt, env);
     }
     
-    //@ requires p!=null && env!=null
+    //@ requires p != null && env != null
     protected void checkTypeModifierPragma(TypeModifierPragma p,
                                            ASTNode ctxt,
                                            Env env) {
@@ -2005,13 +2003,12 @@ System.out.println("FAIL " + x);
      * This may be called more than once on a Type t.
      */
     //@ requires t != null
-    protected void  checkTypeModifiers(Env env, Type t) {
-        // don't know context for type, so pull it out of the
-        //   type's decorations.
-        if (env==null) {
+    protected void checkTypeModifiers(Env env, Type t) {
+        // don't know context for type, so pull it out of the type's decorations.
+        if (env == null) {
             env = (Env)Env.typeEnv.get(t);
         }	
-        Assert.notFalse(env!=null);  //@ nowarn Pre
+        Assert.notFalse(env != null);  //@ nowarn Pre
         checkTypeModifierPragmaVec(t.tmodifiers, t, env);
         if (t instanceof ArrayType) {
             checkTypeModifiers(env, ((ArrayType)t).elemType);
@@ -2019,3 +2016,10 @@ System.out.println("FAIL " + x);
     }
 
 }
+
+/*
+ * Local Variables:
+ * Mode: Java
+ * fill-column: 85
+ * End:
+ */
