@@ -98,6 +98,7 @@ import javafe.util.Location;
  *    - LexicalPragma ()
  *      + NowarnPragma (Identifier* checks)
  *      + ImportPragma (ImportDecl decl)
+ *      + RefinePragma (String filename)
  *    + Spec (MethodDecl md, Expr* targets, Hashtable preVarMap, 
  *            Condition* pre, Condition* post)
  *    + Condition(int label, Expr pred)
@@ -805,6 +806,14 @@ public class NowarnPragma extends LexicalPragma
 public class ImportPragma extends LexicalPragma
 {
   //# ImportDecl decl
+  //# int loc
+
+  public int getStartLoc() { return loc; }
+}
+
+public class RefinePragma extends LexicalPragma
+{
+  //# String filename NoCheck
   //# int loc
 
   public int getStartLoc() { return loc; }

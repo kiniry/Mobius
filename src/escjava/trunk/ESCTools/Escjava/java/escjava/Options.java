@@ -54,6 +54,11 @@ public class Options extends javafe.SrcToolOptions {
      */
     public boolean testMode = false;
 
+    /** When true, pretty prints each compilation unit on the command-line;
+        this is only used for testing, to test the combining of refinements.
+     */
+    public boolean testRef = false;
+
     /** When true, parses pragmas that begin with /*+@, which are normally
      parsed only by JML; this allows test runs in which everything JML
      parses is parsed by escjava, to see if we have full coverage of all
@@ -636,6 +641,9 @@ public class Options extends javafe.SrcToolOptions {
             return offset;
         } else if (option.equals("-testMode")) {
             testMode = true;
+            return offset;
+        } else if (option.equals("-testRef")) {
+            testRef = true;
             return offset;
         }
     

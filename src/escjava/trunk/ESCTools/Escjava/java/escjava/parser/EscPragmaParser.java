@@ -11,6 +11,7 @@ import escjava.ast.Modifiers;
 import java.io.IOException;
 
 import javafe.ast.*;
+import javafe.SrcTool;
 import javafe.parser.Lex;
 import javafe.parser.Parse;
 import javafe.parser.PragmaParser;
@@ -826,8 +827,9 @@ public class EscPragmaParser extends Parse implements PragmaParser
                     ErrorSet.caution(loc,"An import statement in an annotation " +
                                      "should begin with 'model import'");
                     scanner.lexicalPragmas.addElement( 
-                                                      ImportPragma.make(parseImportDeclaration(scanner),
+			  ImportPragma.make(parseImportDeclaration(scanner),
                                                                         loc));
+// FIXME - the next line doesn't eat the semicolon ????
                     semiNotOptional = true;
                     return getNextPragma(dst);
 
@@ -1247,6 +1249,22 @@ public class EscPragmaParser extends Parse implements PragmaParser
                     return getNextPragma(dst);
                 }
 
+                case TagConstants.REFINE:
+		{
+		    int sloc = scanner.startingLoc;
+		    Expr e = parsePrimaryExpression(scanner);
+		    if (!(e instanceof LiteralExpr) || 
+                            e.getTag() != TagConstants.STRINGLIT) {
+			ErrorSet.error(sloc,"Expected a string literal after 'refine'");
+			eatThroughSemiColon();
+		    } else {
+			expect(scanner,TagConstants.SEMICOLON);
+			scanner.lexicalPragmas.addElement( 
+			  RefinePragma.make( (String)((LiteralExpr)e).value, loc));
+		    }
+                    return getNextPragma(dst);
+		}
+
                 // Unsupported JML clauses/keywords.
 
                 // The following clauses must be followed by a semi-colon.
@@ -1275,7 +1293,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
                     // unclear syntax and semantics (kiniry)
                 case TagConstants.OLD:
                     // unclear semantics (kiniry)
-                case TagConstants.REFINE:
+                //case TagConstants.REFINE:
                     // SC HPT AAST 3
                 case TagConstants.REPRESENTS_REDUNDANTLY:
                     // SC HPT AAST 4 (cok)

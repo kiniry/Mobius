@@ -8,7 +8,7 @@ SpecFileRef: n() ...
 SpecFileRef.java:4: Warning: Precondition possibly not established (Pre)
                 m();
                  ^
-Associated declaration is "./SpecFile.refines-java", line 4, col 5:
+Associated declaration is "./SpecFile.jml", line 4, col 5:
         //@ requires false;
             ^
 ------------------------------------------------------------------------

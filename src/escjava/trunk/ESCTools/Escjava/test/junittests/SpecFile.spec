@@ -1,3 +1,4 @@
+//@ refine "SpecFile.jml";
 public class SpecFile {
 
 

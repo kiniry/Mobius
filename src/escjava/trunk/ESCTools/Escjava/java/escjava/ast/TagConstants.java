@@ -324,8 +324,8 @@ public class TagConstants extends javafe.tc.TagConstants
     public static final int NORMAL_EXAMPLE = NORMAL_BEHAVIOR + 1;
     // nowarn -- an ESC keyword
     public static final int OLD = NORMAL_EXAMPLE + 1;
-    public static final int OR = OLD + 1;
-    public static final int POSTCONDITION_REDUNDANTLY = OR + 1;
+    public static final int MODELPROGRAM_OR = OLD + 1;
+    public static final int POSTCONDITION_REDUNDANTLY = MODELPROGRAM_OR + 1;
     public static final int POSTCONDITION = POSTCONDITION_REDUNDANTLY + 1;
     public static final int PRECONDITION_REDUNDANTLY = POSTCONDITION + 1;
     public static final int PRECONDITION = PRECONDITION_REDUNDANTLY + 1;

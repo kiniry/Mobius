@@ -49,6 +49,7 @@ NowarnPragma.java
 NumericalQuantifiedExpr.java
 QuantifiedExpr.java
 ReachModifierPragma.java
+RefinePragma.java
 RepresentsPragma.java
 ResExpr.java
 RestoreFromCmd.java

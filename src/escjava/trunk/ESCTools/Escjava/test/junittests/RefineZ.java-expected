@@ -1,0 +1,4 @@
+ESC/Java version VERSION
+Error: The command-line argument RefineZ.java was not in the refinement sequence for type sub.RefineZ: ./sub/RefineZ.spec
+  Prover started:TIME
+1 error

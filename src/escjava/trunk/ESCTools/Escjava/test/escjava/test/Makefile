@@ -29,7 +29,7 @@ test:	compile_escjava_parser_test_programs \
 
 test_and_clean: test clean
 
-test_escjava: CLASSPATH = ${ESCJAVA_CLASSPATH}
+test_escjava: CLASSPATH = .:${ESCJAVA_CLASSPATH}
 test_escjava:
 	./rtestall
 
