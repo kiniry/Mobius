@@ -358,31 +358,28 @@ the value of \texttt{E} in the pre-state of the method invocation.
 \item {\tt$\backslash$result.} Within an \texttt{ensures} clause
 belonging to a non-void method, this represents the value returned by
 the method.
-
 \end{itemize}
 
 
-\begin{figure}[tbh]
+\begin{figure}
 \rule{\linewidth}{0.3mm}
-\begin{tabbing}
-ddd\=ddd\=ddd\=ddd\=ddd\=ddddddddddddddddddddddddddddd \kill
-{\it /*@ } \\
-\>{\it modifies nbData, data[nbData] ; } \\
-\>{\it ensures nbData $==$ ($\backslash$old(nbData) $<$ MAX$\_$DATA $?$ $\backslash$old(nbData)$+$1 $:$$\backslash$old(nbData)) ; } \\
-\>{\it ensures data$[\backslash$old(nbData)$]$ $==$ ($\backslash$old(nbData) $<$ MAX$\_$DATA $?$ cur$:$ data$[$nbData$]$) ; } \\
-{\it */ } \\
-$\mathtt{void\ {\bf addCurrency}(byte\ cur)\ \{}$ \\
-\>$\mathtt{if(nbData\ <\ MAX\_DATA) \{}$ \\
-\>\>$\mathtt{data[nbData]\ =\ cur\ ;}$ \\
-\>\>$\mathtt{nbData++\ ;}$ \\
-\>$\mathtt{\}}$ \\
-$\mathtt{\}}$ 
-\end{tabbing}
+\begin{verbatim}
+/*@
+   modifies nbData, data[nbData] ;
+   ensures nbData == \old(nbData)<MAX_DATA ? \old(nbData)+1 :\old(nbData) ; 
+   ensures data[\old(nbData)] == (\old(nbData)<MAX_DATA ? cur : data[nbData]) ;
+*/
+void addCurrency(byte cur){
+   if(nbData < MAX_DATA) {
+      data[nbData] = cur ;
+      nbData++ ;
+   }
+}
+\end{verbatim}
 \caption{Example ESC/Java specification}
 \label{fig-add-cur}
 \rule{\linewidth}{0.3mm}
 \end{figure}
-
 
 
 Figure~\ref{fig-add-cur} shows a typical annotation example using
@@ -551,30 +548,29 @@ which helps in finding errors.
 \subsubsection{Implementation mistakes}
 This section presents some examples of common programming
 errors. Usually, these errors are caused by an inappropriate informal
-specification of the application and although they could be found by
-hand, using a tool like Esc/Java give us the certainty most of cases
-will be considered.
+specification of the application and although they could have been
+found by hand, using a tool like Esc/Java give us the certainty all
+cases will be considered.
 
 
 \paragraph{The isGreaterEqualThan method}
 
-The \texttt{Decimal} class allows us to
-represent a floating point number as
-composing by a decimal part and a integer part. These concepts are
+The \texttt{Decimal} class
+represents a floating point number as
+composed by a decimal part and a integer part. These concepts are
 represented by instance variables called respectively \texttt{intPart}
 and \texttt{decPart}. The
-method \texttt{isGreaterEqualThan} (see figure~\ref{fig-cla-dec})
+method \texttt{isGreaterEqualThan} (see Figure~\ref{fig-cla-dec})
 belongs to the \texttt{Decimal} class and it aims to verify when the
 decimal represented by \texttt{this} is greater or equal than its parameter
-\texttt{d}. Consequently, we have established a post-condition
-corresponding to this desirable condition. This work is done by an
-\texttt{ensures} assertion.
+\texttt{d}. Consequently, we have speficied a post-condition to express
+this desirable condition.
 
-After running ESC/Java tool on this asserted method, a warning
-issue is shown. This warning suggest that this post-condition
-will not be hold. If we see carefully the source
-code, we can find a \emph{``copy paste''} error on the line $6$. On this
-line, a same
+After running ESC/Java on this asserted method, a warning is
+issued. This warning suggests that this post-condition
+does not hold. A careful inspection of the code reveals a
+\emph{``copy paste''} error on line $6$. On this
+line, the same
 condition is checked in both sides of the \emph{or} Java operator. A
 detailed revision of this code show us that this source code really
 implements a supposed \emph{isGreatherThan} method. So, if for example 
@@ -583,38 +579,31 @@ code would implement really what its informal specification aims,
 although this one it would not be the most reduced one. One nicer
 way to do it would consist of taking the \texttt{ensure} clause self,
 for instead.
-\begin{center}
 \begin{figure}[hbt]
 \rule{\linewidth}{0.3mm}
-\rule{0em}{0.1ex}
-\begin{tabbing}
-pub\=lic\=cla\=ssD\=ecimale\=xtendsObject\kill
+\begin{verbatim}
+    /*@
+      //modifies \nothing
+      requires d != null ;
+      ensures \result == (intPart>d.intPart ||
+        (intPart == d.intPart && (decPart == d.decPart||decPart > d.decPart))) ;
+    */}
+1.  public boolean isGreaterEqualThan(Decimal d){
+2.    boolean resu = false ;
 
-\>\>{\it /*@}  \\
-\>\>\>{\it //modifies $\backslash$nothing} \\
-\>\>\>{\it requires d $!=$ null;} \\
-\>\>\>{\it ensures $\backslash$ result $==$ (intPart $>$ d.intPart $||$} \\
-\>\>\>\>{\it (intPart $==$ d.intPart $\&\&$ (decPart $==$ d.decPart
-$||$ decPart $>$ d.decPart))) ;} \\
-\>\>{\it */} \\
-\emph{1.}\>\>$\mathtt{public\ boolean\ {\bf isGreaterEqualThan}(Decimal\ d)\{}$ \\
-\emph{2.}\>\>\>$\mathtt{boolean\ resu\ =\ false\ ;}$ \\
-\\
-\emph{3.}\>\>\>$\mathtt{if(intPart\ >\ d.getIntPart())}$ $\mathtt{resu\ =\ true\ ;}$ \\
-\emph{4.}\>\>\>$\mathtt{else\ if\ (intPart\ <\ d.getIntPart())}$ $\mathtt{resu\ =\ false\ ;}$ \\
-\emph{5.}\>\>\>$\mathtt{else\ if(intPart\ ==\ d.getIntPart())\{} $        \\
-\emph{6.}\>\>\>\>$\mathtt{if((decPart\ >\ d.getDecPart())\ ||\ (decPart\ >\
-d.getDecPart()))}$ $\mathtt{resu\ =\ true\ ;}$ \\
-\emph{7.}\>\>\>\>$\mathtt{else\ if\ (decPart\ <\ d.getDecPart())}$ $\mathtt{resu = false;}$ \\
-\emph{8.}\>\>\>$\mathtt{\}}$ \\
-\emph{9.}\>\>\>$\mathtt{return\ resu\ ;}$ \\
-\emph{10.}\>\>$\mathtt{\}}$
-\end{tabbing}
-\caption{Piece of {\tt Decimal} class}
+3.    if(intPart>d.getIntPart()) resu = true ;
+4.    else if(intPart<d.getIntPart()) resu = false ;
+5.    else if(intPart==d.getIntPart()){
+6.      if((decPart>d.getDecPart()) || (decPart>d.getDecPart())) resu=true ;
+7.      else if(decPart<d.getDecPart()) resu = false ;
+8.    }
+9.    return resu ;
+10. }
+\end{verbatim}
+\caption{Method {\tt isGreaterEqualThan}}
 \label{fig-cla-dec}
 \rule{\linewidth}{0.3mm}
 \end{figure}
-\end{center}
 
 
 
@@ -623,69 +612,59 @@ d.getDecPart()))}$ $\mathtt{resu\ =\ true\ ;}$ \\
 
 \paragraph{Final modifiers}
 
-The \texttt{Annee} class allows to represent a \textit{year} for the
-purse. This class declares two 
+The \texttt{Annee} class represents a \textit{year}. This class
+declares two
 static variables called \texttt{MIN} and \texttt{MAX}, which represent
-the minimum and maximum year allowed by the application
-respectively. Its declarations looks like$:$
+the minimum and maximum year allowed by the application.
+Its declarations are as follows $:$
 \begin{verbatim}
 public static byte MIN = (byte)99 ;
 public static byte MAX = (byte)127 ;
 \end{verbatim}
 
-The \texttt{Annee} class declares also a method \texttt{check} which is used to
-verify that a value is between these variables. The \texttt{Date} class
-represents a date for the application$:$ \texttt{jour}(day),
+The \texttt{Annee} class defines also a method \texttt{check}, which is
+used to determine that a value is between these variables. The
+\texttt{Date} class
+represents $:$ \texttt{jour}(day),
 \texttt{mois}(month), \texttt{annee}(year). The method
-\texttt{setDate} which is presented in the figure~\ref{fig-cla-dat}
-belongs to this class, and it assigns the formal parameters to the
-class variables as long as they lie in valid intervals (see
-\texttt{requires} pragmas). In the particular case of the parameter
-that represents a year (the third one), \texttt{setDate} uses the
-method \texttt{check} of the \texttt{Annee} class to verify this
-value. Nevertheless, ESC/Java complains when it
-finds a declaration such
+\texttt{setDate}, which is presented in Figure~\ref{fig-cla-dat}
+belongs to this class, and assigns the arguments to the
+instance variables as long as they are in a valid interval (see
+\texttt{requires} pragma). In the particular case of the parameter
+that represents a year, \texttt{setDate} uses the
+method \texttt{check} of the \texttt{Annee} class to check this
+value is in range. Nevertheless, ESC/Java complains when it
+finds a statement such as
 \mbox{\tt date.setDate((byte)1, (byte)1, (byte)110);} (where date is a
-\texttt{Date} instance). The warning message issues that its third
-parameter does not verify the condition established by one of the
-\texttt{requires} clause of the method \texttt{setDate} (see line
-$5$). This warning is shown in spite of this call respect the
+instance of class \texttt{Date}). The warning message states that the
+third does not verify the third condition. This warning is shown in
+spite of this call respect the
 requires condition, i.e, $110>=99\ \&\&\ 110<= 127$.
 
-The problem is happened due to the wrong declaration of \textsc{MIN}
+The problem is caused by the wrong declaration of \textsc{MIN}
 and \textsc{MAX} variables belonging to the \texttt{Annee}
 class. These variables were not declared as \texttt{final}\footnote{{\sc
 Java} does not allow to change in runtime the value of a final {\tt
-final} variable.}. Thus, their values could be changed in runtime by
-mean of a direct assignation\footnote{In fact, due to these variables
+final} variable.}, thus, their values could be changed in runtime by
+a direct assignation\footnote{In fact, due to these variables
 are declared are \texttt{public}} and the pre-condition would be not
 satisfied. 
-
-
-The declaration variables as \texttt{static} (common for all instances)
-and \texttt{final} (which can not be changed) prevent us of doing
-any assumption that will be hold any more by an
-application. This kind of control is carried out by
-ESC/Java. 
 
 
 
 \begin{center}
 \begin{figure}[hbt]
 \rule{\linewidth}{0.3mm}
-\\[2.0ex]
-\begin{tabbing}
-pub\=lic\=cla\=ssD\=ate\=ext\=endsObject  \kill
-\emph{1. }\>{\it /*@} \\ 
-\emph{2. }\>\>{\it modifies jour, mois, annee ;} \\
-\emph{3. }\>\>{\it requires j $>=$ Jour.MIN  $\&\&$ j $<=$ Jour.MAX ;} \\
-\emph{4. }\>\>{\it requires m $>=$ Mois.MIN  $\&\&$ m $<=$ Mois.MAX ;} \\
-\emph{5. }\>\>{\it requires a $>=$ Annee.MIN $\&\&$ a $<=$ Annee.MAX ;} \\
-\emph{6. }\>\>{\it ensures jour $==$ j $\&\&$ annee $==$ a $\&\&$ mois $==$ m ;}\\
-\emph{7. }\>{\it */} \\
-\>$\mathtt{public\ void\ {\bf setDate}(byte\ j,\ byte\ m,\ byte\ a)\
-throws\ DateException\{ \dots \}}$ 
-\end{tabbing}
+\begin{verbatim}
+1.  /*@
+2.    modifies jour, mois, annee ;
+3.    requires j >= Jour.MIN  && j <= Jour.MAX ;
+4.    requires m >= Mois.MIN  && m <= Mois.MAX ;
+5.    requires a >= Annee.MIN && a <= Annee.MAX ;
+6.    ensures jour == j && annee == a && mois == m ;
+7.   */
+     public void setDate(byte j, byte m, byte a) throws DateException{...} 
+\end{verbatim}
 \caption{Piece of {\tt Date} class}
 \label{fig-cla-dat}
 \rule{\linewidth}{0.3mm}
