@@ -382,8 +382,9 @@ public class SubProcess
      * <code>stops</code>.
      */
     //@ requires P != null;
-    //@ ensures (for_all int i; 0 <= i && i <= \result.length;
-    //@                         stops.indexOf(\result.charAt(i)) == -1);
+    /*@ ensures (\forall int i; 0 <= i && i <= \result.length;
+      @                  stops.indexOf(\result.charAt(i)) == -1);
+      @*/
     //@ ensures \result != null;
     public /*@ non_null @*/ String readWord(/*@ non_null @*/ String stops) {
 	StringBuffer soFar = new StringBuffer();
