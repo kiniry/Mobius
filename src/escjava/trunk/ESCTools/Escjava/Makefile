@@ -30,6 +30,8 @@ JAVASOURCEFILES = ${ESCJAVA_SOURCE_DIR}/escjava/ast/*.java \
 OTHERSOURCEFILES = /dev/null
 TESTHARNESSFILES = /dev/null
 
+export ESCJ = ${ESCJAVA_ROOT}/escj
+
 ## These are the options to JAVAC used to build Escjava.
 ## FIXME - what does SOURCEPATH do ?
 JAVAC_FLAGS += -classpath ${ESCJAVA_BUILD_CLASSPATH} \
@@ -298,7 +300,7 @@ self_test: compile
 .PHONY: test_escjava_parser
 test_escjava: build build_javafe_test test_escjava_parser clean_test_escjava
 	(cd ${TOP_ESCJAVA_TEST_DIR}; \
-	rtestall)
+	./rtestall)
 
 .PHONY: build_javafe_test
 build_javafe_test:
