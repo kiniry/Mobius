@@ -496,9 +496,10 @@ void outputEndOfAstFile(const char *text, int len,
     fclose(visitorOutputFile);
   }
 
-  int makeClass = 1;
   { /* Output constants */
     FILE *constOutputFile = fopen(TAGSBASECLASS ".java", "w");
+    int makeClass = 1;
+    ClassListNode *c;
 
     if (! constOutputFile) {
       perror("astgen constants file");
@@ -555,7 +556,6 @@ void outputEndOfAstFile(const char *text, int len,
     if (makeClass) {
 	fprintf(constOutputFile,"\n\n    static public String toString(int tag) {\n");
 	fprintf(constOutputFile,"      switch (tag) {\n");
-	ClassListNode *c;
 	for(c = classes; c != NULL; c = c->next) {
 	    int manualtag = FALSE;
 	    DirectiveListNode *d;
