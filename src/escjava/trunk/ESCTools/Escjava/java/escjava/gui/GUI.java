@@ -258,15 +258,20 @@ static {
                 status = Status.TYPECHECKED_OK;  
         }
 
+	} catch (Stop e) {
+		status = Status.NOTPROCESSED;
+		throw e;
 	} catch (FatalError e) {
 		status = Status.TYPECHECKED_ERROR;
 	} catch (Throwable t) {
-		// FIXME - record data
+	    System.out.println("Exception thrown while handling a type declaration: " + t);
+	    t.printStackTrace(System.out);
 	} finally {
 	    junitutils.Utils.restoreStreams(true);
+	    String out = ba.toString();
+	    if (status == Status.NOTPROCESSED) out = "";
+	    tdn.setStatus(status,out);
 	}
-	String out = ba.toString();
-	tdn.setStatus(status,out);
     }
 
     // This applies the given action to the given routine, doing the
@@ -325,28 +330,32 @@ static {
 		    // FIXME if (stages<6) ???
 
 		    status = Status.STATICCHECKED_ERROR;
-		    try {
-			    GUI.gui.escframe.showGuiLight(1);
-			    status = doProving(vc,r,directTargets,tdn.scope);
-			    //System.out.println("DOPROVING " + status);
-		    } catch (Throwable t) {
-				// FIXME - do we need an output here?
-		    }
-		    GUI.gui.escframe.showGuiLight(2);
+
+		    GUI.gui.escframe.showGuiLight(1);
+		    status = doProving(vc,r,directTargets,tdn.scope);
+		    //System.out.println("DOPROVING " + status);
 		} else {
 		    status = Status.NOTPROCESSED;
 		}
 	    }
 	}
 
+	} catch (Stop t) {
+	    status = Status.NOTPROCESSED;
+	    throw t;
+	} catch (Throwable t) {
+	    status = Status.STATICCHECKED_ERROR;
+	    System.out.println("An exception was thrown while processing a routine declaration: " + t);
+	    t.printStackTrace(System.out);
 	} finally {
 	    junitutils.Utils.restoreStreams(true);
+	    GUI.gui.escframe.showGuiLight(2);
+	    String out = ba.toString();
+	    if (ErrorSet.errorsSinceMark()) status = Status.STATICCHECKED_ERROR;
+	    else if (ErrorSet.cautionsSinceMark() && status == Status.STATICCHECKED_OK)
+		    status = Status.STATICCHECKED_CAUTION;
+	    rdn.setStatus(status,out);
 	}
-	String out = ba.toString();
-	if (ErrorSet.errorsSinceMark()) status = Status.STATICCHECKED_ERROR;
-	else if (ErrorSet.cautionsSinceMark() && status == Status.STATICCHECKED_OK)
-		status = Status.STATICCHECKED_CAUTION;
-	rdn.setStatus(status,out);
     }
 
     static abstract class EscTreeValue {
@@ -413,23 +422,31 @@ static {
 	public void processThis(int action) {
 	    stopCheck(true);
 	    if (action == CLEAR) { clearCheck(); return; }
-	    //System.out.println("CALLED-" + type() + " " + this + " " + action + " " + Status.toString(status));
 	    int actualAction = actualAction(action);
 	    if (actualAction == -10) return;
 	    if (actionComplete(status, actualAction)) return;
 
 	    EscTreeValue ien = getParent();
 	    if (ien != null) {
-		if (!actionComplete(ien.status, actualAction)) ien.processThis(actualAction);
+		if (!actionComplete(ien.status, actualAction)) 
+						ien.processThis(actualAction);
 		if (Status.isError(ien.status)) return;
 	    }
-	    //System.out.println("DOING-" +type() + " " + this + " " + actionString(actualAction));
 	    escframe.label.setText(actionString(actualAction) + toString());
-	    int s = processThisAction(actualAction);
-	    escframe.label.setText(" ");
-	    showOutput(false);
-	    //System.out.println("COMPLETED-" + type() + " " + this + " " + Status.toString(s));
-	    if (ien != null) ien.propagateStatus(status);
+	    try {
+		processThisAction(actualAction);
+	    } catch (Stop t) {
+		status = Status.NOTPROCESSED;
+		throw t;
+	    } catch (Throwable t) {
+		System.out.println("An exception was thrown while processing."
+			+ Project.eol + t);
+		t.printStackTrace(System.out);
+	    } finally {
+		escframe.label.setText(" ");
+		showOutput(false);
+		if (ien != null) ien.propagateStatus(status);
+	    }
 	}
         abstract public int actualAction(int action);
 	abstract public int processThisAction(int action);
@@ -492,11 +509,12 @@ static {
         public int processThisAction(int action) {
 	    ArrayList a = null;
 	    ErrorSet.mark();
-	    int s = Status.RESOLVED_OK;
+	    int s = Status.RESOLVED_ERROR;
 
 	    ByteArrayOutputStream ba = Utils.setStreams();
 	    try {
 		a = gui.resolveInputEntry(ie);
+		s = Status.RESOLVED_OK;
 	    } catch (Exception e) {
 		System.out.println("Failed to resolve " + ie.name + ": " + e);
 		s = Status.RESOLVED_ERROR;
@@ -568,17 +586,24 @@ static {
 		// parse the GenericFile
 	    ErrorSet.mark();
 	    ByteArrayOutputStream ba = Utils.setStreams();
-	    int s = Status.PARSED_OK; 
+	    int s = Status.PARSED_ERROR; 
 	    CompilationUnit cu = null;
 	    try {
 		cu = OutsideEnv.addSource(gf);
-	    } catch (Exception e) {
+		s = Status.PARSED_OK;
+	    } catch (Stop t) {
+		s = Status.NOTPROCESSED;
+		ErrorSet.mark();
+		throw t;
+	    } catch (Throwable e) {
 		System.out.println("Parsing failed for " + gf.getHumanName()
 			+ ": " + e);
+		e.printStackTrace(System.out);
+		s = Status.PARSED_ERROR;
 	    } finally {
 		Utils.restoreStreams(true);
-	    }
 	    String out = ba.toString();
+	    if (status == Status.NOTPROCESSED) out = "";
 	    if (ErrorSet.errorsSinceMark()) s = Status.PARSED_ERROR;
 	    else if (ErrorSet.cautionsSinceMark()) s = Status.PARSED_CAUTION;
 	    if (cu != null)  {
@@ -591,9 +616,12 @@ static {
 		    gui.buildCUTree(this);
 		}
 		    // FIXME use TYPECHECKED_WAITING???
+	    } else {
+		s = Status.PARSED_ERROR;
 	    }
 
 	    setStatus( s, out);  // Notifies the GUI object
+	    }
 	    return s;
         }
     }
@@ -786,6 +814,8 @@ static {
 
     static void processTasks() {
 	while (true) {
+	    try {
+
 	    GUI.gui.escframe.showGuiLight(0);
 	    Object o = processTasks.getTask();
 	    GUI.gui.escframe.showGuiLight(2);
@@ -795,24 +825,25 @@ static {
 		if (action == RELOAD) {
 		    gui.restart(null);
 		} else {
-		    try {
-			gui.doAll(action);
-		    } catch (Stop e) {
-			//System.out.println("CAUGHT STOP");
-		    }
+		    gui.doAll(action);
 		}
 	    } else if (o instanceof EscTreeValue) {
 		EscTreeValue v = (EscTreeValue)o;
 		//System.out.println("PROCESSING " + v.action + " " + o.getClass() + " " + o.toString());
-		try {
-		    v.process(v.action);
-		} catch (Stop e) {
-		    //System.out.println("CAUGHT STOP");
-		}
+		v.process(v.action);
 	    } else if (o instanceof Stop) {
 		stop = false;
 	    } else {
 		System.out.println("UNKNOWN TASK: " + o);
+	    }
+
+	    } catch (Stop e) {
+		    //System.out.println("CAUGHT STOP");
+	    } catch (Throwable t) {
+		JOptionPane.showMessageDialog(GUI.gui.escframe,
+		    "An exception was thrown while processing: " + t
+		    + Project.eol);
+		t.printStackTrace(System.out);
 	    }
 	    stopCheck(false);
 	}
@@ -908,7 +939,6 @@ static {
 
 /* Issues:
 
-- Try a different spec path and make sure it works
 - Want skeletons for a whole missing file, a new file in ref sequence, a new method in a file
 - Integrate other tools - JML, Daikon
 - Check what happens if there is an error in the RS but not the given file
@@ -946,12 +976,10 @@ really rebuild the whole pane).
 
 - Check that all tooltips are available
  
--Traffic lights to show status of prover
 - Show project name in title
 - Allow editing of order of items inthe tree?
 - Show timem information
 - Allow skipping of tree items
-- Show space information, allow garbage collection
 - Cleaing, repainting after an input change takese too long
 - How to show refinement sequences when creasting an editor
 - Display a warning when nothing is selected
@@ -990,7 +1018,6 @@ Accelerator keys
 
 - Be able to filter error messages
 - keep track of file times and allow updates; track dependencies
-- change look and feel
 
 - auto skip items
 
@@ -1003,5 +1030,31 @@ Accelerator keys
 - Figure out how to reliably set the user.dir from the application
 
 - allow changing the Look and Feel
+
+- the pgc pdsa pvc options don't work (removing duplicated code will help)
+
+- why does the memory usage keep rising when nothing is happening
+
+
+An exception was thrown while processing a routine declaration: javafe.util.AssertionFailureException
+javafe.util.AssertionFailureException
+	at javafe.util.Assert.notNull(Assert.java:54)
+	at escjava.prover.SubProcess.peekChar(SubProcess.java:218)
+	at escjava.prover.SubProcess.eatWhitespace(SubProcess.java:372)
+	at escjava.prover.CECEnum.readFromSimplify(CECEnum.java:186)
+	at escjava.prover.CECEnum.hasMoreElements(CECEnum.java:135)
+	at escjava.Main.doProving(Main.java:837)
+	at escjava.gui.GUI.processRoutineDecl(GUI.java:335)
+	at escjava.gui.GUI$RDTreeValue.processThisAction(GUI.java:780)
+	at escjava.gui.GUI$EscTreeValue.processThis(GUI.java:437)
+	at escjava.gui.GUI$EscTreeValue.processHelper(GUI.java:411)
+	at escjava.gui.GUI$EscTreeValue.processHelper(GUI.java:417)
+	at escjava.gui.GUI$EscTreeValue.processHelper(GUI.java:417)
+	at escjava.gui.GUI$EscTreeValue.processHelper(GUI.java:417)
+	at escjava.gui.GUI$EscTreeValue.process(GUI.java:406)
+	at escjava.gui.GUI.doAll(GUI.java:214)
+	at escjava.gui.GUI.processTasks(GUI.java:828)
+	at escjava.gui.GUI.main(GUI.java:101)
+
 */
 
