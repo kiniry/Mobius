@@ -75,10 +75,14 @@ public class ErrorSet
 
 
     /**
-     * The number of errors reported so far.
+     * The number of errors reported so far, including fatal errors.
      */
     public static int errors = 0;
 
+    /**
+     * The number of fatal errors so far (some my have been caught and handled)
+     */
+    public static int fatals = 0;
 
     /**
      * If <code>gag</code> is true, then no output is produced by
@@ -90,6 +94,7 @@ public class ErrorSet
 
     /** Resets all error and warning counts. */
     public static void clear() {
+	fatals = 0;
 	errors = 0;
 	warnings = 0;
 	cautions = 0;
@@ -212,8 +217,9 @@ public class ErrorSet
      */
     //@ ensures false
     public static void fatal(String msg) /*throws FatalError*/ {
+	fatals++;
 	errors++;
-	report(FATALERROR, msg);
+	if (msg != null) report(FATALERROR, msg);
 	throw new FatalError();
     }    //@ nowarn Exception
 
@@ -234,6 +240,7 @@ public class ErrorSet
     //@ requires loc!=Location.NULL
     //@ ensures false
     public static void fatal(int loc, String msg) /*throws FatalError*/ {
+	fatals++;
 	errors++;
 	report(loc, FATALERROR, msg);
 	throw new FatalError();
