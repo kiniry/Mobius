@@ -1,0 +1,45 @@
+ESC/Java version VERSION
+  Prover started:TIME
+    [TIME]
+
+NonNullBad ...
+NonNullBad.java:5: Caution: The non_null annotation is ignored because this method overrides a method declaration in which this parameter is not declared non_null: 
+        public void m(/*@ non_null */ Object o,
+                          ^
+NonNullBad.java:30: Associated declaration: 
+        public void m(Object o, /*@ non_null */ Object oo, /*@ non_nul ...
+                      ^
+NonNullBad.java:7: Caution: The non_null annotation is ignored because this method overrides a method declaration in which this parameter is not declared non_null: 
+                        /*@ non_null */ Object ooo);
+                            ^
+NonNullBad.java:20: Associated declaration: 
+ ... ject o, /*@ non_null */ Object oo, Object ooo);
+                                        ^
+NonNullBad.java:9: Error: 'non_null' can only be used with methods whose result type is a reference type
+        //@ non_null
+        ^
+NonNullBad.java:12: Error: 'non_null' can only be used with methods whose result type is a reference type
+        //@ non_null
+        ^
+NonNullBad.java:15: Error: The non_null pragma can be applied only to variables, fields, and parameters of reference types
+        public void mmmm(/*@ non_null */ int i);
+                                             ^
+Caution: Turning off extended static checking due to type error(s)
+  [TIME total] (aborted)
+
+NonNullBadS ...
+  [TIME total]
+
+NonNullBadI ...
+NonNullBad.java:25: Caution: The non_null annotation is ignored because this method overrides a method declaration in which this parameter is not declared non_null: 
+        public void m(/*@ non_null */ Object o, /*@ non_null */ Object ...
+                          ^
+NonNullBad.java:30: Associated declaration: 
+        public void m(Object o, /*@ non_null */ Object oo, /*@ non_nul ...
+                      ^
+  [TIME total]
+
+NonNullBadII ...
+  [TIME total]
+4 cautions
+3 errors

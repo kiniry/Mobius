@@ -1,0 +1,35 @@
+#!/bin/csh -f
+
+if (! $?JDK_SOURCES) ( echo typecheckJDK needs JDK_SOURCES and related variables; \
+ echo See Makefile.local in ESCTools for details; exit 0 )
+
+foreach jdk_version ( ${JDK_PRE14_SOURCES} )
+
+    setenv CLASSPATH ${jdk_version}
+
+    foreach d ( java/applet java/awt java/beans java/io java/lang \
+           java/math java/net java/rmi java/security java/sql sun/tools )
+
+    echo ===== Typechecking $d/\*.java of ${jdk_version} =====
+    ${JAVA} -classpath ${CLASSDIRECTORY} javafe.test.Print \
+        -classpath ${CLASSPATH} \
+        -typecheck -noprint ${jdk_version}/$d/*.java
+
+    end
+end
+
+foreach jdk_version ( ${JDK_14_SOURCES} )
+
+    setenv CLASSPATH ${jdk_version}
+
+    foreach d ( java/applet java/awt java/beans java/io java/lang \
+           java/math java/net java/rmi java/security java/sql sun/tools )
+
+    echo ===== Typechecking $d/\*.java of ${jdk_version} =====
+    ${JAVA} -classpath ${CLASSDIRECTORY} javafe.test.Print \
+        -classpath ${CLASSPATH} -source 1.4 \
+        -typecheck -noprint ${jdk_version}/$d/*.java
+
+    end
+end
+

@@ -1,0 +1,13 @@
+ESC/Java version VERSION
+  Prover started:TIME
+    [TIME]
+
+Constructor ...
+    [TIME]
+
+Constructor: Constructor(int) ...
+    [TIME]  passed
+
+Constructor: m() ...
+    [TIME]  passed
+  [TIME total]

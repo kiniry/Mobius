@@ -1,0 +1,33 @@
+ESC/Java version VERSION
+  Prover started:TIME
+
+ModifiesPure ...
+ModifiesPure.java:11: Error: A pure method may not have an assignable clause
+        //@     assignable i;
+                ^
+
+ModifiesPure: m() ...
+    [TIME]  passed immediately
+
+ModifiesPure: n() ...
+    [TIME]  passed immediately
+
+ModifiesPure: ModifiesPure() ...
+    [TIME]  passed
+  [TIME total]
+
+ModifiesPureA ...
+ModifiesPure.java:29: Error: A pure method may not have an assignable clause
+        //@     assignable i;
+                ^
+
+ModifiesPureA: m() ...
+    [TIME]  passed immediately
+
+ModifiesPureA: n() ...
+    [TIME]  passed immediately
+
+ModifiesPureA: ModifiesPureA() ...
+    [TIME]  passed
+  [TIME total]
+2 errors
