@@ -138,6 +138,8 @@ releases:
 	${MAKE} build
 	${MAKE} test
 	${MAKE} releases-notests
+	${MAKE} test-binary-release-before-tar
+	rm -rf ${RELTEMP}
 	${MAKE} test-binary-release
 	${MAKE} test-patch-release
 
@@ -154,7 +156,7 @@ patch-release: clean
 	${MAKE} generate-patches generate-toplevel-archive zero-length-files
 	cp ${ESCTOOLS_ROOT}/install.sh ${PATCH_DIR}
 	mkdir -p ${RELDIR}
-	cd ${PATCH_DIR}; tar cvjf ${RELDIR}/${PATCH_NAME}.tbz .
+	cd ${PATCH_DIR}; tar cvjf ${RELDIR}/${PATCH_NAME}-patch.tbz .
 	rm -rf ${PATCH_DIR}
 
 .PHONY: binary-release
@@ -175,7 +177,6 @@ binary-release: build
 	cp README.first README.txt ${RELTEMP}
 	cd release-files; cp `ls | grep -v CVS` ${RELTEMP}
 	cd ${RELTEMP}; tar cjvf ${RELDIR}/${RELTAR} *
-	##rm -rf ${RELTEMP}
 
 ## FIXME - simplify script, simplify binary; alter escj to use alternate simplify script
 ## FIXME - also zip up the source and ship it as well.
@@ -193,13 +194,16 @@ test-binary-release:
 	    tar xjf ${RELTEST}/*binary.tbz ;\
 	    ${RELTEST}/quicktest
 
-zzz:
+.PHONY: test-binary-release-before-tar
+test-binary-release-before-tar:
+	@echo Testing binary release - before tarring
+	cd ${RELTEMP} ;\
 	    unset JUNIT_LIB; \
 	    unset ESCTOOLS_ROOT ; \
 	    unset ESCJ_SIMPLIFY_DIR; \
-	    export ESCTOOLS_RELEASE=${RELTEST} ;\
-	${MAKE} -C Javafe  test-release ;\
-	${MAKE} -C Escjava test-release 
+	    export ESCTOOLS_RELEASE=${RELTEMP} ;\
+	    ${MAKE} -C Javafe  test-release ;\
+	    ${MAKE} -C Escjava test-release 
 
 
 .PHONY: test-patch-release
@@ -208,17 +212,12 @@ test-patch-release:
 	@echo test-patch-release target not yet functional
 	rm -rf ${RELTEST}
 	mkdir -p ${RELTEST}
-	##cd ${RELTEST}; \
-		##tar xvjf ${RELDIR}/*.tbz ;\
+	cd ${RELTEST}; \
+		tar xvjf ${RELDIR}/*patch.tbz ;\
+		unset ESCTOOLS_ROOT ;\
+		unset ESCJ_SIMPLIFY_DIR ;\
 		##./install.sh  ${ORIGINAL_TAR_DIR}
 		
-install:
-	cd ${RELTEST}; \
-		./install.sh  ${ORIGINAL_TAR_DIR}
-		
-
-
-
 
 ## For this target to work, you must unpack the original ESCTools
 ## archives (e.g., Calvin.tar.Z, Escjava.tar.Z, etc.) into a directory
@@ -290,6 +289,6 @@ zero-length-files:
 	mkdir -p ${PATCH_DIR}
 	cd ${ESCTOOLS_ROOT}; \
 	tar cjf ${PATCH_PREFIX}-ZeroLengthFiles.tbz \
-		`find . -empty -not -name .M3SHIP`
+		`find . -empty ! -name .M3SHIP`
 	( cd ${ESCTOOLS_ROOT}; for f in `cd ${ESCTOOLS_ORIGINAL}; find . -empty`; do if [ ! -e $$f ]; then echo $$f; fi; done ) > ${PATCH_PREFIX}-emptyFilesThatDisappeared
 
