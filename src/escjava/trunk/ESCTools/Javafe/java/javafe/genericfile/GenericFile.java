@@ -83,7 +83,10 @@ public interface GenericFile {
      * java.io.IOEXception may be thrown for many reasons, including no
      * such file and read permission denied.<p>
      */
+    //@ modifies objectState;
+    //@ ensures \fresh(\result);
     //@ ensures \result != null;
+    //@ ensures \result.isOpen;
     public abstract InputStream getInputStream() throws IOException;
 
 

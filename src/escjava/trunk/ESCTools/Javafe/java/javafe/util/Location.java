@@ -49,6 +49,8 @@ import javafe.genericfile.*;
 
 public class Location
 {
+  //@ public model JMLDataGroup internalState;
+
   /** Private constructor. Never called. */
 
   private Location() {}
@@ -66,9 +68,10 @@ public class Location
    * whole file, or dummy location).
    *********************************************************************/
 
-  public static boolean isWholeFileLoc(int loc) {
-    return LocationManagerCorrelatedReader.isWholeFileLoc(loc);
-  }
+    //@ modifies \nothing;
+    public static boolean isWholeFileLoc(int loc) {
+	return LocationManagerCorrelatedReader.isWholeFileLoc(loc);
+    }
 
 
   /**********************************************************************
@@ -79,6 +82,7 @@ public class Location
    *********************************************************************/
 
     //@ requires loc != Location.NULL
+    //@ modifies \nothing;
     //@ ensures \result != null;
     public static GenericFile toFile(int loc) {
 	return LocationManagerCorrelatedReader.locToFile(loc);
@@ -93,6 +97,7 @@ public class Location
    *********************************************************************/
 
     //@ requires loc != Location.NULL
+    //@ modifies \nothing;
     //@ ensures \result != null;
     public static String toFileName(int loc) {
 	return LocationManagerCorrelatedReader.locToFile(loc).getHumanName();
@@ -107,7 +112,8 @@ public class Location
    * <p>Precondition: loc should be a regular location.
    *********************************************************************/
 
-    //@ requires loc != Location.NULL
+    //@ requires loc != Location.NULL;
+    //@ modifies \nothing;
     public static int toOffset(int loc) {
 	return LocationManagerCorrelatedReader.locToOffset(loc);
     }
@@ -120,7 +126,8 @@ public class Location
    * <p>Precondition: loc should be a regular location.
    *********************************************************************/
 
-    //@ requires loc != Location.NULL
+    //@ requires loc != Location.NULL;
+    //@ modifies \nothing;
     //@ ensures \result >= 1
     public static int toLineNumber(int loc) {
 	return LocationManagerCorrelatedReader.locToLineNumber(loc);
@@ -135,6 +142,7 @@ public class Location
    *********************************************************************/
 
     //@ requires loc != Location.NULL
+    //@ modifies \nothing;
     //@ ensures \result >= 0
     public static int toColumn(int loc) {
 	return LocationManagerCorrelatedReader.locToColumn(loc);

@@ -55,6 +55,7 @@ public class Info
      * <p> This may be especially useful if <code>countNodes()</code>
      * is an expensive operation.
      */
+    //@ requires msg != null;
     public static void out(String msg) {
       if (on) {
 	System.out.println(msg);

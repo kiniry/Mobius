@@ -1,4 +1,5 @@
 /* Copyright 2000, 2001, Compaq Computer Corporation */
+// Modifications Copyright 2004, David Cok.
 
 package javafe.util;
 
@@ -38,12 +39,12 @@ import javafe.FrontEndTool;
  *	language spec(s), but the tool accepts anyways for
  *	compatibility with other tools.  (It must not force
  *      aborting.) <br>
- *      (2) something that inhibits the tool's ability to catch
- *	errors, but is not wrong.  Often caused by poor use of
- *	annotations in escjava.
+ *      (2) something that is not technically illegal, but is likely
+ *	to be misleading. (The user is encouraged to adjust the
+ *	environment or the code to remove the caution.)
  *
  * <dt> Warning: <dd>something that the Tool believes, but is not
- *	sure, is a serious problem.
+ *	sure, is a serious problem - used for static checking reports.
  * </dl>
  *
  * @see Location
@@ -52,6 +53,9 @@ import javafe.FrontEndTool;
 
 public class ErrorSet
 {
+    // The options field must be initialized before any calls here.
+    //@ invariant FrontEndTool.options != null;
+
     // Prevent javadoc from displaying a public constructor
     private ErrorSet() {};
 
@@ -80,7 +84,7 @@ public class ErrorSet
     public static int errors = 0;
 
     /**
-     * The number of fatal errors so far (some my have been caught and handled)
+     * The number of fatal errors so far (some may have been caught and handled)
      */
     public static int fatals = 0;
 
@@ -113,6 +117,10 @@ public class ErrorSet
      * The message will be marked as a caution when it is displayed to
      * the user.  Increments <code>cautions</code> by one.<p>
      */
+    //@ requires msg != null;
+    //@ modifies cautions, System.out.output;
+    //@ ensures gag ==> \not_modified(System.out.output);
+    //@ ensures FrontEndTool.options.noCautions ==> \not_modified(System.out.output);
     public static void caution(String msg) {
 	if (FrontEndTool.options.noCautions) {
 
@@ -131,7 +139,9 @@ public class ErrorSet
      * The message will be marked as a caution when it is displayed to
      * the user.  Increments <code>cautions</code> by one.<p>
      */
-    //@ requires loc != Location.NULL
+    //@ requires loc != Location.NULL;
+    //@ requires msg != null;
+    //@ modifies cautions, System.out.output;
     public static void caution(int loc, String msg) {
 	if (FrontEndTool.options.noCautions) {
 	    return;
@@ -140,14 +150,16 @@ public class ErrorSet
 	report(loc, CAUTION, msg);
     }
 
+    //@ requires loc != Location.NULL;
+    //@ requires msg != null;
+    //@ modifies cautions, System.out.output;
     public static void caution(int loc, String msg, int addLoc) {
 	if (FrontEndTool.options.noCautions) {
 	    return;
 	}
 	cautions++;
 	report(loc, CAUTION, msg);
-	if (addLoc != Location.NULL)
-		report(addLoc, "Associated declaration", "");
+	assocLoc(addLoc);
     }
 
 
@@ -157,6 +169,8 @@ public class ErrorSet
      * The message will be marked as a warning when it is displayed to
      * the user.  Increments <code>warnings</code> by one.<p>
      */
+    //@ requires msg != null;
+    //@ modifies warnings, System.out.output;
     public static void warning(String msg) {
 	warnings++;
 	report(WARNING, msg);
@@ -171,7 +185,9 @@ public class ErrorSet
      * The message will be marked as a warning when it is displayed to
      * the user.  Increments <code>warnings</code> by one.<p>
      */
-    //@ requires loc != Location.NULL
+    //@ requires loc != Location.NULL;
+    //@ requires msg != null;
+    //@ modifies warnings, System.out.output;
     public static void warning(int loc, String msg) {
 	warnings++;
 	report(loc, WARNING, msg);
@@ -184,6 +200,8 @@ public class ErrorSet
      * The message will be marked as an error when it is displayed to
      * the user.  Increments <code>errors</code> by one.<p>
      */
+    //@ requires msg != null;
+    //@ modifies errors, System.out.output;
     public static void error(String msg) {
 	errors++;
 	report(ERROR, msg);
@@ -198,19 +216,24 @@ public class ErrorSet
      * The message will be marked as an error when it is displayed to
      * the user.  Increments <code>errors</code> by one. <p>
      */
-    //@ requires loc != Location.NULL
+    //@ requires loc != Location.NULL;
+    //@ requires msg != null;
+    //@ modifies errors, System.out.output;
     public static void error(int loc, String msg) {
 	errors++;
 	report(loc, ERROR, msg);
     }
 
+    //@ requires loc != Location.NULL;
+    //@ requires msg != null;
+    //@ modifies errors, System.out.output;
     public static void error(int loc, String msg, int addLoc) {
 	errors++;
 	report(loc, ERROR, msg);
-	if (addLoc != Location.NULL)
-	    report(addLoc, "Associated declaration", "");
+	assocLoc(addLoc);
     }
 
+    //@ modifies System.out.output;
     public static void assocLoc(int loc) {
 	if (loc != Location.NULL)
 	    report(loc, "Associated declaration", "");
@@ -228,15 +251,20 @@ public class ErrorSet
      * <code>FatalError</code>, so that it can do whatever cleanup is
      * required before exiting.<p>
      */
-    //@ ensures false
+    //@ requires msg != null;
+    //@ modifies fatals, errors, System.out.output;
+    //@ ensures false;
+    //@ signals (Throwable) fatals == \old(fatals)+1;
+    //@ signals (Throwable) errors == \old(errors)+1;
+    //@ signals (Exception e) (e instanceof FatalError);
     public static void fatal(String msg) /*throws FatalError*/ {
 	if (msg != null) {
 	    fatals++;
 	    errors++;
 	    report(FATALERROR, msg);
 	}
-	throw new FatalError();
-    }    //@ nowarn Exception
+	throw new FatalError(); 
+    }                 //@ nowarn Exception;
 
     /**
      * Report a fatal error associated with a location.  Warning: This
@@ -252,22 +280,33 @@ public class ErrorSet
      * <code>FatalError</code>, so that it can do whatever cleanup is
      * required before exiting.<p>
      */
-    //@ requires loc != Location.NULL
-    //@ ensures false
+    //@ requires loc != Location.NULL;
+    //@ requires msg != null;
+    //@ modifies fatals, errors, System.out.output;
+    //@ ensures false;
+    //@ signals (Throwable) fatals == \old(fatals)+1;
+    //@ signals (Throwable) errors == \old(errors)+1;
+    //@ signals (Exception e) (e instanceof FatalError);
     public static void fatal(int loc, String msg) /*throws FatalError*/ {
 	fatals++;
 	errors++;
 	report(loc, FATALERROR, msg);
-	throw new FatalError();
-    }    //@ nowarn Exception
+	throw new FatalError(); 
+    }				//@ nowarn Exception;
 
     /** Special call to report unimplemented features, so they can be caught
 	and handled more easily.
     */
+		// FIXME - do we need this?
+    //@ requires msg != null;
+    //@ requires loc != Location.NULL;
+    //@ modifies System.out.output;
+    //@ ensures false;
+    //@ signals (Exception e) ( e instanceof NotImplementedException);
     public static void notImplemented(boolean print, int loc, String msg) {
 	if (print) report(loc, "Not implemented", msg);
-	throw new NotImplementedException(msg);
-    }
+	throw new NotImplementedException(msg); 
+    } 				//@ nowarn Exception;
 
     /***************************************************
      *                                                 *
@@ -294,19 +333,25 @@ public class ErrorSet
      * This function is not responsible for incrementing counts or
      * other ErrorSet functionality.<p>
      */
+    //@ requires msg != null && type != null;
+    //@ modifies System.out.output;
+    //@ ensures gag ==> \not_modified(System.out.output);
     private static void report(/*@ non_null */ String type, /*@ non_null */ String msg) {
 	if (! gag)
 	    report(type + ": " + msg);
 
         // Hack so we can see where error occurred, for debugging:
-	if (javafe.Tool.options.showErrorLocation) dump(null);
+	if (javafe.Tool.options.showErrorLocation) dump(null); //@nowarn Modifies;
+		// Ignore the modifications caused by the debugging line
 	
-    }
+    } //@ nowarn Post; // dump does not satisfy the postcondition
 
     /**
      *  Reports a general message, implemented here in order to
      *  have a single location through which error reporting happens.
      */
+    //@ requires msg != null;
+    //@ modifies System.out.output;
     public static void report(/*@ non_null @*/ String msg) {
 	System.out.println(msg);
     }
@@ -326,18 +371,24 @@ public class ErrorSet
      * This function is not responsible for incrementing counts or
      * other ErrorSet functionality.<p>
      */
-    //@ requires loc != Location.NULL
+    //@ requires msg != null && type != null;
+    //@ requires loc != Location.NULL;
+    //@ modifies System.out.output;
     private static void report(int loc, String type, String msg) {
 	if (gag)
 	    return;
 
         // Hack so we can see where error occurred, for debugging:
-	if (javafe.Tool.options.showErrorLocation) dump(null);
+	if (javafe.Tool.options.showErrorLocation) dump(null); //@ nowarn Modifies;
+		// Ignore the modifications caused by the debugging line
 
-	if (loc==Location.NULL)
-	    Assert.fail("NULL location erroneously passed to ErrorSet;"
+	if (loc==Location.NULL) {
+	    errors++;
+	    report("INTERNAL ERROR: ",
+			"NULL location erroneously passed to ErrorSet;"
 			+ " Associated information is `" + type
 			+ ": " + msg + "'");
+	}
 
 	// Display the file human-readable name and line # if available:
 	System.out.print(Location.toFileName(loc) + ":");
@@ -368,7 +419,11 @@ public class ErrorSet
      *
      * No error is reported if an I/O error occurs.
      */
-    //@ requires loc != Location.NULL
+    //@ requires loc != Location.NULL;
+    //@ modifies \nothing;
+    //@ ensures \result != null ==> \result.isOpen;
+    //@ ensures \fresh(\result); // FIXME - not sure about this
+    //@ signals (Throwable) false;
     private static InputStream getFile(int loc) {
 	try {
 	    return Location.toFile(loc).getInputStream();
@@ -387,23 +442,31 @@ public class ErrorSet
      *
      * No error is reported if an I/O error occurs.
      */
-    //@ requires loc != Location.NULL
+    //@ requires loc != Location.NULL;
+    //@ modifies \nothing;
+    //@ ensures true;
+    //@ ensures \fresh(\result);
+    //@ signals (Throwable) false;
     private static String getLine(int loc) {
 	InputStream i = getFile(loc);
 	if (i==null)
 	    return null;
 
+		// FIXME - why not use a buffered Reader here to read
+		// characters?
         try {
 	    /*
 	     * skip to the start of the line in question:
 	     */
 	    long charsLeft = (Location.toOffset(loc)-1)
 			    - Location.toColumn(loc);
-	    while ((charsLeft -= i.skip(charsLeft))>0) {
-		i.read();
+		// FIXME - wrong if offset is 0 - see if esc catches it
+	    while ((charsLeft -= i.skip(charsLeft))>0) { // skip all but 1 byte
+		i.read();  // skip the last byte
 		charsLeft--;
 	    }
 
+		// FIXME - this seems awfully inefficient
 	    StringBuffer line = new StringBuffer(100);
 	    for (int c=i.read(); c != 10/*newline*/ && c!= -1/*EOF*/; c=i.read())
 		line.append((char)c);
@@ -419,17 +482,26 @@ public class ErrorSet
     /** See documentation for two-argument version of <code>displayColumn</code>.
       * This version differs in that the default clip policy is applied.
       */
-    //@ requires loc != Location.NULL
+    //@ requires loc != Location.NULL;
+    //@ requires !Location.isWholeFileLoc(loc);
+    //@ modifies System.out.output;
+    //@ ensures true;
+    //@ signals (Throwable t) false;
     public static void displayColumn(int loc) {
       displayColumn(loc, null);
     }
 
+    static private final int TABSTOP = 8;
     /**
      * Display (part of) the line that loc occurs on, then indicate via
      * a caret (^) which column loc points to. <p>
      *
      * Tabs are expanded before the line is displayed using 8-character
-     * tab stops.<p>
+     * tab stops.  8 spaces is perhaps not what the user intended, but
+     * there will not be any other lines portrayed against which it must
+     * match, and the caret positioning will be consistent with the 8
+     * character spacing; at worst, the line will be spread out more than
+     * it would be with shorter tabs. <p>
      *
      * Precondition: <code>loc</code> is a regular location (e.g., not
      * a whole-file location).<p>
@@ -441,10 +513,15 @@ public class ErrorSet
      * By using a non-null <code>policy</code> argument, a caller can fine-
      * tune the policy used for introducing ellipses in the printed line.
      */
-    //@ requires loc != Location.NULL
+    //@ public normal_behavior
+    //@ requires loc != Location.NULL;
+    //@ requires !Location.isWholeFileLoc(loc);
+    //@ modifies System.out.output;
+    //@ ensures true;
     public static void displayColumn(int loc, ClipPolicy policy) {
 	String line = getLine(loc);
 	int col = Location.toColumn(loc);	// zero-based
+	//@ assume col >= 0 && col < line.length();  // FIXME
 	if (line==null) {
 	     System.out.println("(line text not available; see column "
 					+ col + ")");
@@ -466,7 +543,7 @@ public class ErrorSet
 	    } else {
 		adjusted.append(' ');		// Tab always non-zero skip
 		x++;
-		while (x%8 != 0) {		// Skip to next tab stop
+		while (x%TABSTOP != 0) {	// Skip to next tab stop
 		    adjusted.append(' ');
 		    x++;
 
@@ -489,15 +566,16 @@ public class ErrorSet
 
 	String noclipLine = line;
 	int noclipCol = col;
-	int LINELENGTH = 80;	// HACK? !!!!
+	final int LINELENGTH = 80;	// HACK? !!!!
 
 	/*
 	 * Clip the start of line if column would otherwise be too far to
 	 * the right:
 	 */
 	if (col>LINELENGTH-15) {
-	    int clip = col-(LINELENGTH/2) + 5;
-	    col = (LINELENGTH/2);
+	    int clip = col-(LINELENGTH/2 - 5); 
+	    //@ assert col - clip + 5 < LINELENGTH - 15;
+	    col = col + 5 - clip; // This 5 is the length of " ... "
 	    line = " ... " + line.substring(clip);
 	}
 
@@ -523,7 +601,9 @@ public class ErrorSet
         and a current stack trace,
 	to be used for debugging with print statements.
     */
-    //@ modifies \nothing; // except the content of System.out
+    //@ public normal_behavior
+    //@ modifies System.out.output;
+    //@ ensures true;
     static public void dump(String s) {
 	if (s != null) System.out.println(s);
 	(new Exception()).printStackTrace();

@@ -15,6 +15,9 @@ import java.io.IOException;
 public abstract class LocationManagerCorrelatedReader 
     extends BufferedCorrelatedReader
 {
+  // Represents the internal state - changes to this should be
+  // benevolent side effects.
+  //@ public model JMLDataGroup internalState; 
 
   /* ************************************************
    *                                                 *
@@ -64,7 +67,7 @@ public abstract class LocationManagerCorrelatedReader
   //@ invariant curLineNo <= NLOA.length;
   /*@ invariant (\forall int i; 0 <= i && i < curLineNo ==> 0 <= NLOA[i]); */
 
-  /*@ spec_public */ private /*@ non_null */ int[] NLOA;
+  /*@ spec_public */ private /*@ non_null */ int[] NLOA; //@ in internalState;
 
   /** The default initial size to allocate an NLOA array */
   //@ invariant NLOA_DEFAULT_SIZE <= NLOA.length;
@@ -181,6 +184,7 @@ public abstract class LocationManagerCorrelatedReader
    * [0, allCorrStreams.size()) ), an assertion failure occurs. <p>
    */
   //@ requires 0 <= i && i < allCorrStreams.elementCount;
+  //@ modifies \nothing;
   //@ ensures \result != null;
 
   protected static LocationManagerCorrelatedReader getCorrStreamAt(int i) {
@@ -252,6 +256,7 @@ public abstract class LocationManagerCorrelatedReader
    * Requires that loc be a valid location. <p>
    */
   //@ requires loc != Location.NULL;
+  //@ modifies \nothing;
   //@ ensures \result != null;
   //@ ensures \result.minLoc <= loc && loc <= \result.beforeBufLoc + \result.curNdx;
 
@@ -268,9 +273,10 @@ public abstract class LocationManagerCorrelatedReader
    *
    * Requires that loc be a valid location. <p>
    */
+  //@ public normal_behavior
   //@ requires loc != Location.NULL;
+  //@ modifies \nothing;
   //@ ensures 0 <= \result && \result < allCorrStreams.elementCount;
-
   static int locToStreamId(int loc) {
     // This is somewhat inefficient:
     for(int i = 0; i < allCorrStreams.size(); i++) {
@@ -291,6 +297,7 @@ public abstract class LocationManagerCorrelatedReader
    * Requires that loc be a valid location or NULL. <p>
    */
 
+  //@ modifies \nothing;
   static boolean isWholeFileLoc(int loc) {
     if (loc == Location.NULL) {
       return false;

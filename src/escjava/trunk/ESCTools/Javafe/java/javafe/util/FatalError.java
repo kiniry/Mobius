@@ -24,6 +24,8 @@ public class FatalError extends java.lang.RuntimeException
      * Create a <code>FatalError</code> exception.  This constructor is
      * intended to be called only by <code>ErrorSet.fatal</code>.
      */
+    //@ public normal_behavior
+    //@ modifies this.*;
     /* package*/ FatalError() {
 	super("A fatal Error has occurred");
     }

@@ -15,7 +15,7 @@ public class ClipPolicy
    * within <code>s</code>.
    */
 
-  //@ requires 0 <= pos && pos < s.count;
+  //@ requires 0 <= pos && pos < s.length();
   public boolean containsEndOfConstruct(/*@ non_null */ String s, int pos) {
     return true;
   }
