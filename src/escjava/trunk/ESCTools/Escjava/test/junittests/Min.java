@@ -57,12 +57,12 @@ public class Min {
 	    /*@ assert 
                         (\exists Object o; c.contains(o)) ==>
                         (\exists Object o; c.contains(o) &&
-			    (\min Object ooo; c.contains(ooo); ooo.hashValue())
-				== o.hashValue() );
+			    (\min Object ooo; c.contains(ooo); ooo.theHashValue)
+				== o.theHashValue );
 	    */
 	    /*@ assert (\forall Object o; c.contains(o); 
-			    (\min Object ooo; c.contains(ooo); ooo.hashValue())
-				<= o.hashValue() );
+			    (\min Object ooo; c.contains(ooo); ooo.theHashValue)
+				<= o.theHashValue );
 	    */
 	}
 }

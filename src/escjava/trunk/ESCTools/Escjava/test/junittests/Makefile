@@ -6,6 +6,7 @@ include ${TOP}/Makefile.defs
 ESCJAVA = ${ESCTOOLS_ROOT}/Escjava/escj 
 
 ##_CLASSPATH = $(call canonicalize,${ESCTOOLS_ROOT}/Escjava/java/daikon-instrumented:${ESC_CLASSPATH}:${JUNIT_UTILS_PATH}:.:/home/cok/Daikon/daikon/daikon.jar:/home/cok/Daikon/daikon/java/ajax-ship/ajax.jar)
+  ## FIXME - the following line does not properly concatenate
 _CLASSPATH = ${ESC_CLASSPATH}$(call canonicalize,:${JUNIT_UTILS_PATH}:.)
 _TMP = $(call canonicalize,/tmp)
 _SIMP = $(call canonicalize,${ESCJ_SIMPLIFY})
