@@ -42,7 +42,7 @@
 //@ normal_behavior
 //@ exceptional_behavior
 
-//@ \not_specified
+// \not_specified
 
 // redundant specifications
 
