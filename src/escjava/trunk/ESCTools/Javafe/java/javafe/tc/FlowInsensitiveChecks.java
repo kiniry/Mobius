@@ -1811,10 +1811,11 @@ public class FlowInsensitiveChecks {
         = new ASTDecoration("typeDecoration");
 
     //@ requires i!=null && t!=null
-    protected static void setType(VarInit i, Type t) {
+    public static VarInit setType(VarInit i, Type t) {
         if (t instanceof TypeName)
             t = TypeSig.getSig((TypeName)t);
         typeDecoration.set(i, t);
+	return i;
     }
 
     /** Retrieves the <code>Type</code> of a <code>VarInit</code>.  This
@@ -1835,7 +1836,7 @@ public class FlowInsensitiveChecks {
 
     //@ requires i!=null
     //@ ensures \result!=null
-    protected static Type getType(VarInit i) {
+    public static Type getType(VarInit i) {
         Type t = getTypeOrNull(i);
         if( t==null ) 
             Assert.fail("getType at "+i.getTag()+" "+
