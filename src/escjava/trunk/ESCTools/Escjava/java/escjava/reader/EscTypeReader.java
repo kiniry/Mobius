@@ -118,10 +118,18 @@ public class EscTypeReader extends StandardTypeReader
      * Return true iff the fully-qualified outside type P.T exists.
      */
     public boolean exists(String[] P, String T) {
-	return super.exists(P, T)
-	    || (javaFileSpace.findFile(P, T, "spec") != null);
+	if ( super.exists(P, T)) return true;
+	for (int i=0; i<suffixes.length; ++i) {
+	    if (javaFileSpace.findFile(P, T, suffixes[i]) != null) {
+		return true;
+	    }
+	}
+	return false;
     }
 
+    String[] suffixes = { "refines-java", "refines-spec", "refines-jml",
+			  "spec", "jml",
+			  "java-refined", "spec-refined", "jml-refined" };
 
     // Reading
 
@@ -134,14 +142,19 @@ public class EscTypeReader extends StandardTypeReader
 	// If a source exists and we wish to avoid specs, use it:
 	if (avoidSpec) {
 	    GenericFile src = locateSource(P, T, true);
-	    if (src != null)
+	    if (src != null) {
 		return super.read(src, true);
+	    }
 	}
 
 	// If not, use spec file if available:
-	GenericFile spec = javaFileSpace.findFile(P, T, "spec");
-	if (spec != null)
-	    return super.read(spec, false);
+	for (int i=0; i<suffixes.length; ++i) {
+	    GenericFile spec = javaFileSpace.findFile(P, T, suffixes[i]);
+	    if (spec != null) {
+		//System.out.println("READ " + T + " " + suffixes[i]);
+	        return super.read(spec, false);
+	    }
+	}
 
 	// Lastly, try source in spec mode then the binary:
 	GenericFile source = locateSource(P, T, true);
