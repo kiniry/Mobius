@@ -166,6 +166,7 @@ public class Types
 	s_javaLangCloneable = null;
 	s_javaLangRuntimeException = null;
 	s_javaLangClass = null;
+	s_javaLangSystem = null;
     }
 
     /***************************************************
@@ -221,6 +222,15 @@ public class Types
         return s_javaLangObject;
     }
     private static TypeSig s_javaLangObject;
+
+    //* Returns the TypeSig for java.lang.System.
+    //@ ensures \result != null
+    public static TypeSig javaLangSystem() {
+        if (s_javaLangSystem == null)
+            s_javaLangSystem = getJavaLang("System");
+        return s_javaLangSystem;
+    }
+    private static TypeSig s_javaLangSystem;
 
     //* Returns the TypeSig for java.lang.Error.
     //@ ensures \result != null

@@ -2027,10 +2027,14 @@ FIXME - see uses of countFreeVarsAccess
                                 // The array "length" field has already been checked
                                 // insuper.checkDesignator().
                                 fa.decl != Types.lengthFieldDecl) {
-				// FIXME - this is a caution because of the
-				// issues with java.lang.System.in, out, err
-                                ErrorSet.caution(fa.locId, "a final field is not allowed as " +
-                                               "the designator in a modifies clause");
+
+				// java.lang.System has fields in, out, err that are special
+				// cases.  Somehow, Java allows them to be final and yet be
+				// modified by public routines.  Instead of a general 
+				// mechanism, we just do a special case here.
+				if (fa.decl.parent != Types.javaLangSystem().getTypeDecl())
+				    ErrorSet.caution(fa.locId, "a final field is not allowed as " +
+					   "the designator in a modifies clause");
                             }
                             break;
                         }
