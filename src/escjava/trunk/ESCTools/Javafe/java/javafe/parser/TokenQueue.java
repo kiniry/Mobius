@@ -70,6 +70,16 @@ class TokenQueue
         return toks[ndx];
     }   //@ nowarn Exception
 
+    public void setElementAt(int n,Token t) {
+        int sa = (start <= end ? 0 : toks.length);
+        int size = (end + sa) - start;
+        if (n < 0 || size <= n)
+            throw new IndexOutOfBoundsException();
+        int ndx = start + n;
+        if (toks.length <= ndx) ndx -= toks.length;
+        toks[ndx] = t;
+    }   //@ nowarn Exception
+
 
     /** Empties lookahead queue. */
 
