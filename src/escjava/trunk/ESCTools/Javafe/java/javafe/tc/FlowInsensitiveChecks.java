@@ -228,6 +228,7 @@ public class FlowInsensitiveChecks {
                     // Check if we need to add an implicit constructor invocation
                     //@ assume !specOnly ==> cd.body!=null
                     if( !dontAddImplicitConstructorInvocations && !specOnly &&
+			cd.body != null && // FIXME - we've broken the assumption above by allowing spec files - need to fix that uniformly
                         !(cd.body.stmts.size() > 0
                           && cd.body.stmts.elementAt(0) instanceof 
                           ConstructorInvocation)) {

@@ -186,7 +186,7 @@ public final class Translate {
     // From here on, return "true" unless there is a call to a sibling
     // constructor.
 
-    if (cd.body.getTag() != TagConstants.BLOCKSTMT) {
+    if (cd.body == null || cd.body.getTag() != TagConstants.BLOCKSTMT) {
       return true;
     }
     GenericBlockStmt body = (GenericBlockStmt)cd.body;
@@ -220,6 +220,9 @@ public final class Translate {
 	}
 
 
+	if (cd.body == null) return; 
+		// FIXME - not entirely sure we should omit everything
+		// from here on if there is no body.
 	/*
 	 * Find the call to the superclass or sibling constructor, if
 	 * any.  In particular, set both "body" and "ccall" to
