@@ -47,6 +47,8 @@ public class EscjavaChecker extends escjava.Main
 		javafe.util.ErrorSet.setReporter(this);
 	}
 	
+	private String simplifyloc;
+	
 	/**
 	 * Called by the EscJava infrastructure to report problems found
 	 * in the analyzed code.
@@ -59,6 +61,11 @@ public class EscjavaChecker extends escjava.Main
 	 */
 	public void report(int severity, int loc, int length,
 						String message) {
+	  if (message.indexOf("Simplify") != -1) {
+	    Utils.showMessageInUI(null,"Simplify problem",
+	        "Could not invoke Simplify.  Check to be sure that "
+	        + simplifyloc + " exists and is EXECUTABLE.");
+	  }
 	  if (!Options.quiet.getValue()) oldReporter.report(severity,loc,length,message);
     
 		String filename = null;
@@ -178,6 +185,7 @@ public class EscjavaChecker extends escjava.Main
 	  }
 	  inputs.add("-simplify");
 	  inputs.add(loc);
+	  simplifyloc = loc;
 	  if (Log.on) Log.log("Using simplify executable at " + loc);
 	  Options.getOptions(inputs);
 	  
