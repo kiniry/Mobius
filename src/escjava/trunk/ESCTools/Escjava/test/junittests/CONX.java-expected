@@ -1,8 +1,3 @@
-
-c:\cygwin\ESC\ESCTools\Escjava\test\junittests>echo -nowarn Deadlock -verboseTrace -testMode -classpath .;c:/cygwin/ESC/ESCTools/jmlspecs.jar -classpath . -quiet CONX.java 
--nowarn Deadlock -verboseTrace -testMode -classpath .;c:/cygwin/ESC/ESCTools/jmlspecs.jar -classpath . -quiet CONX.java
-
-c:\cygwin\ESC\ESCTools\Escjava\test\junittests>java  -Dsimplify=C:/cygwin/ESC/ESCTools\Simplify-1.5.4.exe -classpath "C:/cygwin/ESC/ESCTools\esctools2.jar" escjava.Main -classpath  "C:/cygwin/ESC/ESCTools\jmlspecs.jar;." -nowarn Deadlock -nowarn Deadlock -verboseTrace -testMode -classpath .;c:/cygwin/ESC/ESCTools/jmlspecs.jar -classpath . -quiet CONX.java 
 CONX.java:18: Error: There is no assignable clause allowing this method call
                 Object o = new CONX(0); // WARNING
                                    ^
