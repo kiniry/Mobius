@@ -444,8 +444,9 @@ public final class GetSpec {
 
         // translates modifies list
 
-        for (int i = 0; i < dmd.modifies.size(); i++) {
-            Expr designator = dmd.modifies.elementAt(i).expr;
+	Translate.ModifiesIterator ii = new Translate.ModifiesIterator(dmd.modifies);
+	while (ii.hasNext()) {
+	    Expr designator = (Expr)ii.next();
 	    if (Utils.isModel(designator)) continue;
             Expr gcDesignator = TrAnExpr.trSpecExpr(designator);
 		// Returns null for modifies \nothing, \everything  FIXME?

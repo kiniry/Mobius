@@ -3396,7 +3396,7 @@ public final class Translate
         locList.clear(); // Help the garbage collector...
     }
 
-    static private class ModifiesIterator {
+    static class ModifiesIterator {
 	private CondExprModifierPragmaVec mp;
 	private List others = new LinkedList();
 	private int i = 0;
