@@ -224,7 +224,16 @@ endif
 
 # ESC/Java's class and spec path.
 if ( $?COMSPEC ) then 
+    ## Need to convert to forward slashes.  However, -m presumes the input
+    ## is a unix-style path, which is incorrect.  So we first convert from
+    ## windows to unix and then from unix to windows-with-forward-slashes.
+    ## It is necessary to have Windows style drive letters and ; for separators
+    ## but the script below balks at backslashes
+    ( echo ${CLASSPATH} | grep cygdrive > /dev/null )  || \
+                          setenv CLASSPATH `cygpath -p -u ${CLASSPATH}`
     setenv CLASSPATH `cygpath -p -m ${CLASSPATH}`
+    ( echo ${ESC_SPECS} | grep cygdrive > /dev/null )  || \
+                          setenv ESC_SPECS `cygpath -p -u ${ESC_SPECS}`
     setenv ESC_SPECS `cygpath -p -m ${ESC_SPECS}`
 endif
 
@@ -249,6 +258,6 @@ if ( $?ESCJ_VERBOSE ) then
     echo "=================================================================="
 endif
 
-${JAVA} ${JAVA_VM_FLAGS} -Dsimplify=${ESCJ_SIMPLIFY} \
-    -classpath ${ESC_CLASSPATH} ${MAIN} \
-    ${JBIN} -classpath ${CLASSPATH} -specs ${ESC_SPECS} ${ESCJ_STDARGS} $*
+${JAVA} ${JAVA_VM_FLAGS} -Dsimplify="${ESCJ_SIMPLIFY}" \
+    -classpath "${ESC_CLASSPATH}" ${MAIN} \
+    ${JBIN} -classpath "${CLASSPATH}" -specs "${ESC_SPECS}" ${ESCJ_STDARGS} $*
