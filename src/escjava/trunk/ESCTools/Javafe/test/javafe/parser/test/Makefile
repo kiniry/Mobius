@@ -2,6 +2,10 @@
 
 JAVA ?= java
 
+parseidempotence_java_files = $(wildcard *.java) \
+	$(wildcard ${JAVAFE_ROOT}/java/javafe/parser/*.java) \
+	$(wildcard ${JAVAFE_ROOT}/java/javafe/ast/*.java)
+
 runtest: testlex testexpr testparseidempotence testpragmalexer testpragmaparser
 
 big: runtest testexprbig testparsejdkidempotence
@@ -10,41 +14,40 @@ clean:
 	rm -f *~ *.out
 
 testlex:
-	${JAVA} javafe.parser.test.TestLex \
+	${JAVA} -classpath ${CLASSPATH} javafe.parser.test.TestLex \
 	  < simpletoks > simpletoks.out \
-	  && diff simpletoks.Lex simpletoks.out
-	${JAVA} javafe.parser.test.TestLex \
+	  && diff --strip-trailing-cr simpletoks.Lex simpletoks.out
+	${JAVA} -classpath ${CLASSPATH} javafe.parser.test.TestLex \
 	  < literaltoks > literaltoks.out \
-	  && diff literaltoks.Lex literaltoks.out
-	${JAVA} javafe.parser.test.TestLex lookahead javakeywords \
+	  && diff --strip-trailing-cr literaltoks.Lex literaltoks.out
+	${JAVA} -classpath ${CLASSPATH} javafe.parser.test.TestLex lookahead javakeywords \
 	  < simpletoks > simpletoks.out \
-	  && diff simpletoks.Lookahead simpletoks.out
-	${JAVA} javafe.parser.test.TestLex lookahead javakeywords \
+	  && diff --strip-trailing-cr simpletoks.Lookahead simpletoks.out
+	${JAVA} -classpath ${CLASSPATH} javafe.parser.test.TestLex lookahead javakeywords \
 	  < literaltoks > literaltoks.out \
-	  && diff literaltoks.Lookahead literaltoks.out
+	  && diff --strip-trailing-cr literaltoks.Lookahead literaltoks.out
 
 testpragmalexer:
-	${JAVA} javafe.parser.test.TestLex parsepragmas javakeywords \
+	${JAVA} -classpath ${CLASSPATH} javafe.parser.test.TestLex parsepragmas javakeywords \
 	  < pragmatoks >pragmatoks.out \
-	&& diff pragmatoks.out pragmatoks.ans
+	&& diff --strip-trailing-cr pragmatoks.out pragmatoks.ans
 
 testpragmaparser:
-	${JAVA} javafe.parser.test.TestParse idempotence check HasPragmas.j
+	${JAVA} -classpath ${CLASSPATH} javafe.parser.test.TestParse idempotence check HasPragmas.j
 
 testexpr:
-	${JAVA} javafe.parser.test.TestExpr check < test-exprs1.j
-	${JAVA} javafe.parser.test.TestExpr check compare < compare-exprs-small.j
+	${JAVA} -classpath ${CLASSPATH} javafe.parser.test.TestExpr check < test-exprs1.j
+	${JAVA} -classpath ${CLASSPATH} javafe.parser.test.TestExpr check compare < compare-exprs-small.j
 
 testparseidempotence:
-	${JAVA} javafe.parser.test.TestParse diff simpletoks simpletoks
-	${JAVA} javafe.parser.test.TestParse progress check idempotence \
-		compilation-unit.j *.java ${JAVAFE_ROOT}/java/javafe/parser/*.java \
-		${JAVAFE_ROOT}/java/javafe/ast/*.java
+	${JAVA} -classpath ${CLASSPATH} javafe.parser.test.TestParse diff simpletoks simpletoks
+	${JAVA} -classpath ${CLASSPATH} javafe.parser.test.TestParse progress check idempotence \
+		compilation-unit.j $(call canonicalize,${parseidempotence_java_files})
 # The first line above tests the diff algorithm...
 
 
 testexprbig:
-	${JAVA} javafe.parser.test.TestExpr check compare < compare-exprs-big.j
+	${JAVA} -classpath ${CLASSPATH} javafe.parser.test.TestExpr check compare < compare-exprs-big.j
 
 .PHONY: jdk_source_listings
 jdk_source_listings:
@@ -56,17 +59,17 @@ jdk_source_listings:
 
 .PHONY: testparsejdkidempotence
 testparsejdkidempotence:
-	${JAVA} javafe.parser.test.TestParse diff simpletoks simpletoks assert
+	${JAVA} -classpath ${CLASSPATH} javafe.parser.test.TestParse diff simpletoks simpletoks assert
 	for d in  ${JDK10_SOURCES} ${JDK11_SOURCES} ${JDK12_SOURCES} ${JDK13_SOURCES} ${JDK14_SOURCES} ; do \
 	   echo "Executing TestParse on " $$d  ; \
-	    CLASSPATH=${CLASSPATH}:. ; \
+	    CLASSPATH=$(call canonicalize,${CLASSPATH}:.) ; \
 	   ( cd $$d; find . -follow -name "*.java" -print | \
 		xargs -n 1000 -s 1024 \
-			${JAVA} javafe.parser.test.TestParse assert progress silent idempotence );\
+			${JAVA} -classpath ${CLASSPATH} javafe.parser.test.TestParse assert progress silent idempotence );\
 	done
 
 testparse:
-	${JAVA} javafe.parser.test.TestParse progress check print verboseprogress \
+	${JAVA} -classpath ${CLASSPATH} javafe.parser.test.TestParse progress check print verboseprogress \
 		compilation-unit.j *.java \
 		${JAVAFE_ROOT}/java/javafe/parser/*.java \
 		${JAVAFE_ROOT}/java/javafe/ast/*.java

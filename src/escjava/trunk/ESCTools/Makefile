@@ -95,7 +95,7 @@ clean-norel: clean-norel-noreltemp
 clean-norel-noreltemp:
 	rm -rf ${PATCH_DIR}
 	for d in $(SUBDIRS) ; do \
-		if [ ! $$d == Javafe ]; then \
+		if [ !"$$d"=="Javafe" ]; then \
 		    ( $(MAKE) -C $$d clean || exit 1) ; fi ; \
 	done
 	$(MAKE) -C docs clean
@@ -129,8 +129,8 @@ javadoc:  build
 	mkdir -p $(JAVADOC_GEN_DIR)
 	mkdir -p $(JAVADOC_GEN_DIR)/images
 	cp $(JAVAFE_ROOT)/doc/javadoc/images/*.gif $(JAVADOC_GEN_DIR)/images
-	$(JAVADOC) -sourcepath $(JAVADOC_SOURCEPATH):$(JUNIT_SOURCEPATH) \
-	  -classpath ${CLASSPATH}:${JUNIT_LIB} \
+	$(JAVADOC) -sourcepath $(call canonicalize,$(JAVADOC_SOURCEPATH):$(JUNIT_SOURCEPATH)) \
+	  -classpath $(call canonicalize,${CLASSPATH}:${JUNIT_LIB}) \
 	  -private \
 	  -doctitle "ESCTools API" \
 	  -windowtitle "ESCTools" \
@@ -229,7 +229,7 @@ test-binary-release-before-tar:
 	    unset ESC_SPECS; \
 	    unset ESCJ_SIMPLIFY_DIR; \
 	    export RELDIR=${RELTEMP}; \
-	    export RELCLASSPATH=${RELTEMP}/${RELJAR} ;\
+	    export RELCLASSPATH=$(call canonicalize,${RELTEMP}/${RELJAR}) ;\
 	    export ESCTOOLS_RELEASE=${RELTEMP} ;\
 	    ${MAKE} -C Escjava test-release ;\
 	    ${MAKE} -C Javafe  test-release ;\
@@ -329,3 +329,8 @@ zero-length-files:
 	  for f in `cd ${ESCTOOLS_ORIGINAL}; find . -empty`; do \
 	      if [ ! -e $$f ]; then echo $$f; fi; \
 	  done ) > ${PATCH_PREFIX}-emptyFilesThatDisappeared
+
+.PHONY: make-test
+make-test:
+	echo `cygpath -m $(ESCJ_SIMPLIFY_DIR)`
+	echo ${foo}

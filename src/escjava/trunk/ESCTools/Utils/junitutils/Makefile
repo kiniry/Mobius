@@ -1,3 +1,6 @@
+export TOP = ../..
+include ${TOP}/Makefile.defs
+# The above defines JUNIT_LIB and JAVAC.
 
 .PHONY: clean
 clean:
@@ -7,7 +10,7 @@ clean:
 build: classes.stamp
 
 classes.stamp: *.java
-	${JAVAC} -classpath ${JUNIT_LIB} $?
+	${JAVAC} -classpath $(call canonicalize,${JUNIT_LIB}) $?
 	touch classes.stamp
 
 .PHONY: test

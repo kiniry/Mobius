@@ -10,21 +10,34 @@
 ## definitions here mostly reflect the directory organization of the
 ## ESC tools; changing them will likely break something.
 
-## >>> Tell us if you find that something needs to be changed for your platform
+## Please tell us if you find that something needs to be changed for
+## your platform!
+
+## Set up Java path and file separators on a per-platform basis.
+empty:=
+space:=		$(empty) $(empty)
 
 ## This include file contains any user-customized definitions.
 export TOP ?= .
 ifneq ($(wildcard ${TOP}/Makefile.*local),)
-include ${TOP}/Makefile.local
+  include ${TOP}/Makefile.local
+endif
+
+## Define a function to canonicalize paths that are parameters
+## to native programs (e.g., "javac").
+ifdef COMSPEC
+  canonicalize = `cygpath -p -m $(1)`
+else
+  canonicalize = $(1)
 endif
 
 ######### Check if ESCTOOLS_ROOT is set
 
 ifndef ESCTOOLS_ROOT
-$(error You must have ESCTOOLS_ROOT defined, either as an environment variable or in the file Makefile.local in the same directory as Makefile.defs )
+  $(error You must have ESCTOOLS_ROOT defined, either as an environment variable or in the file Makefile.local in the same directory as Makefile.defs )
 endif
 
-######### Check if ESCJ_SIMPLIFY_DIR is set
+######### Make sure that ESCJ_SIMPLIFY_DIR is set
 
 export ESCJ_SIMPLIFY_DIR ?= ${ESCTOOLS_ROOT}/Escjava/release/master/bin
 
@@ -33,31 +46,31 @@ export ESCJ_SIMPLIFY_DIR ?= ${ESCTOOLS_ROOT}/Escjava/release/master/bin
 ## (Caution: don't use tabs here, just spaces)
 
 ifndef SIMPLIFY
-        os = $(shell uname -s)
-        processor = $(shell uname -p)
-        ifeq ("${os}","Linux")
-            export SIMPLIFY =  Simplify-1.5.4.linux
-            $(warning Guessing a value for SIMPLIFY: ${SIMPLIFY})
-        endif
-        ifeq ("${os}","Darwin")
-            export SIMPLIFY =  Simplify-1.5.4.macosx
-            $(warning Guessing a value for SIMPLIFY: ${SIMPLIFY})
-        endif
-        ifeq ("${os}","CYGWIN_NT-5.1")
-            export SIMPLIFY =  Simplify-1.5.4.exe
-            $(warning Guessing a value for SIMPLIFY: ${SIMPLIFY})
-        endif
-        ifeq ("${os}","SunOS")
-             ifeq ("${processor}","sparc")
-                  export SIMPLIFY =  Simplify-1.5.4.solaris
-                  $(warning Guessing a value for SIMPLIFY: ${SIMPLIFY})
-             else
-                  $(error No Simplify binary exists for SunOS on your processor architecture: ${processor}.  Consider building one for us.)
-             endif
-        endif
+  os = $(shell uname -s)
+  processor = $(shell uname -p)
+  ifeq ("${os}","Linux")
+    export SIMPLIFY =  Simplify-1.5.4.linux
+    $(warning Guessing a value for SIMPLIFY: ${SIMPLIFY})
+  endif
+  ifeq ("${os}","Darwin")
+    export SIMPLIFY =  Simplify-1.5.4.macosx
+    $(warning Guessing a value for SIMPLIFY: ${SIMPLIFY})
+  endif
+  ifeq ("${os}","CYGWIN_NT-5.1")
+    export SIMPLIFY =  Simplify-1.5.4.exe
+    $(warning Guessing a value for SIMPLIFY: ${SIMPLIFY})
+  endif
+  ifeq ("${os}","SunOS")
+    ifeq ("${processor}","sparc")
+      export SIMPLIFY =  Simplify-1.5.4.solaris
+      $(warning Guessing a value for SIMPLIFY: ${SIMPLIFY})
+    else
+      $(error No Simplify binary exists for SunOS on your processor architecture: ${processor}.  Consider building one for us.)
+    endif
+  endif
 endif
 ifndef SIMPLIFY
-	$(error You must have SIMPLIFY defined, either as an environment variable or in the file Makefile.local in the same directory as Makefile.defs.  It should be defined to be the name of, not the path to, an appropriate Simplify executable in $ESCTOOLS_ROOT/Escjava/release/master/bin: os = ${os})
+  $(error You must have SIMPLIFY defined, either as an environment variable or in the file Makefile.local in the same directory as Makefile.defs.  It should be defined to be the name of, not the path to, an appropriate Simplify executable in $ESCTOOLS_ROOT/Escjava/release/master/bin: os = ${os})
 endif
 export ESCJ_SIMPLIFY = ${ESCJ_SIMPLIFY_DIR}/${SIMPLIFY}
 
@@ -242,77 +255,3 @@ export SOURCEPATH = ${JAVAFE_SOURCE_DIR}:${ESCJAVA_SOURCE_DIR}:${MOCHA_SOURCE_DI
 # need the binaries because don't have source for sun.* classes...
 #
 export JDKSPEC = ${JDKSPEC_ROOT}
- 
-#################################################################
-# Everything from here down was added by Joe on 16 May 2003 to show
-# how one might perform automatic setup of CLASSPATH, perform OS
-# detection for file separators, etc.  These definitions are not
-# currently used, but will be evaluated by the Concordia folks as they
-# attempt to build on Cygwin.
-
-# # Auto-library discovery of core JDK libs.
-# 
-# jdkdir =	/usr/local/Java/jdk-1.3
-# jdklibs0 =	$(subst $(space),:,$(wildcard $(jdkdir)/jre/lib/*.jar))
-# jdklibs1 =	$(subst $(space),:,$(wildcard $(jdkdir)/jre/lib/ext/*.jar))
-# jdklibs2 =	$(subst $(space),:,$(wildcard /usr/local/Java/libs/*.jar))
-# jdklibs =	$(jdklibs0):$(jdklibs1):$(jdklibs2)
-# 
-# # Auto-library discovery for UNIX and Windows.
-# 
-# empty:=
-# space:=		$(empty) $(empty)
-# unixlibpath =	$(subst $(space),:,$(wildcard $(libdir)/*.jar))
-# doslibpath =	$(subst $(space),;,$(wildcard $(libdir)/*.jar))
-# unixparents =	..:../..:../../..:../../../..:../../../../..
-# dosparents =	..;../..;../../..;../../../..;../../../../..
-# unixclasspath =	$(jdklibs):$(unixparents):$(unixlibpath):$(srcbasedir)
-# dosclasspath =	$(jdklibs);$(dosparents);$(doslibpath);$(srcbasedir)
-# 
-# # Check to see if we are building on Windows.  If so, quote CLASSPATH
-# # but not JIKESPATH.  That's just how it works - it doesn't match the
-# # documentation.
-# 
-# ifdef COMSPEC
-# 	export CLASSPATH = "$(dosclasspath)"
-# else
-# 	export CLASSPATH = $(unixclasspath)
-# endif
-# 
-# ifdef COMSPEC
-# 	export JIKESPATH = "$(CLASSPATH)"
-# else
-# 	export JIKESPATH = $(CLASSPATH)
-# endif
-# 
-# # If the environmental variable QUIETJIKES is set to anything we'll tell
-# # jikes to not be pedantic and complain about "rendundant" interface
-# # information and the like that we actually like.
-# 
-# ifndef QUIETJIKES
-# 	jikesflags =	$(corejikesflags) +P
-# else
-# 	jikesflags =	$(corejikesflags)
-# endif
-# 
-# # If the environmental variable USEEMACS is set to anything we'll tell
-# # jikes to output errors and warning in an emacs-compatible format.
-# 
-# ifdef USEEMACS
-# 	jflags =	$(jikesflags) +E
-# else
-# 	jflags =	$(jikesflags)
-# endif
-# 
-# # If the environmental variable JAVAC is set to anything, we'll try
-# # to build with classic javac.  Otherwise, we'll use jikes.
-# 
-# ifdef JAVAC
-# 	jc =		javac
-# 	jflags =	$(javacflags)
-# else
-# 	jc =		jikes
-# endif
-
- 
-

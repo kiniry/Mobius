@@ -19,7 +19,7 @@ export SOURCEDIRECTORY = ${JAVAFE_ROOT}/java
 export TESTSOURCEDIRECTORY = ${JAVAFE_ROOT}/test
 
 ## This one is needed in submakes that don't define their own classpath
-export CLASSPATH = ${CLASSDIRECTORY}
+export CLASSPATH = $(call canonicalize,${CLASSDIRECTORY})
 
 ##############################################################################
 
@@ -54,8 +54,8 @@ CLASSESSTAMP = classes.stamp
 compile: ${CLASSDIRECTORY} source ${CLASSESSTAMP}
 
 ${CLASSESSTAMP}: ${SOURCEFILES}
-	${JAVAC} ${JAVAC_FLAGS} -classpath ${CLASSDIRECTORY}:${SOURCEDIRECTORY} \
-	  -d ${CLASSDIRECTORY} $?
+	${JAVAC} ${JAVAC_FLAGS} -classpath $(call canonicalize,${CLASSDIRECTORY}:${SOURCEDIRECTORY}) \
+	  -d $(call canonicalize,${CLASSDIRECTORY}) $?
 	touch ${CLASSESSTAMP}
 
 .PHONY: compileall
@@ -64,9 +64,10 @@ compileall: ${CLASSDIRECTORY} source javafeall
 .PHONY: javafeall
 javafeall:
 	( cd java; \
-	${JAVAC} ${JAVAC_FLAGS} -classpath ${CLASSDIRECTORY}:${SOURCEDIRECTORY} \
-	  -d ${CLASSDIRECTORY} `find javafe -name "*.java"` \
-				`find tohtml -name "*.java"` )
+	${JAVAC} ${JAVAC_FLAGS} -classpath $(call canonicalize,${CLASSDIRECTORY}:${SOURCEDIRECTORY}) \
+	  -d $(call canonicalize,${CLASSDIRECTORY}) \
+	  `find javafe -name "*.java"` \
+	  `find tohtml -name "*.java"` )
 	touch ${CLASSESSTAMP}
 
 .PHONY: source
@@ -133,7 +134,7 @@ JAVAFETESTTARGETS = \
 		javafe/test/lex/TestLex.java		\
 		javafe/parser/test/TestLex.java		\
 		javafe/parser/test/TestExpr.java	\
-		javafe/parser/test/TestParse.java	\
+		javafe/parser/test/TestParse.java
 
 
 .PHONY: runtest
@@ -164,18 +165,19 @@ typecheckTests: javafe_test
 .PHONY: test-release
 test-release: 
 	@ echo TESTING RELEASE - Javafe
-	${MAKE} JAVAFE_CLASSPATH=${RELCLASSPATH} CLASSDIRECTORY=${RELTEMP} javafe_test
-	${MAKE} ALLTESTS=1 CLASSPATH=${RELCLASSPATH} -C java/javafe/util runtest
-	${MAKE} ALLTESTS=1 JAVAFE_CLASSPATH=${RELCLASSPATH} CLASSPATH=${RELCLASSPATH}:${RELTEMP} -C test/javafe/test runtest
-	${MAKE} ALLTESTS=1 CLASSPATH=${RELCLASSPATH}:${RELTEMP} -C test/javafe/parser/test runtest
+	${MAKE} JAVAFE_CLASSPATH=$(call canonicalize,${RELCLASSPATH}) CLASSDIRECTORY=$(call canonicalize,${RELTEMP}) javafe_test
+	${MAKE} ALLTESTS=1 CLASSPATH=$(call canonicalize,${RELCLASSPATH}) -C java/javafe/util runtest
+	${MAKE} ALLTESTS=1 JAVAFE_CLASSPATH=$(call canonicalize,${RELCLASSPATH}) CLASSPATH=$(call canonicalize,${RELCLASSPATH}:${RELTEMP}) -C test/javafe/test runtest
+	${MAKE} ALLTESTS=1 CLASSPATH=$(call canonicalize,${RELCLASSPATH}:${RELTEMP}) -C test/javafe/parser/test runtest
 	rm -rf ${RELTEMP}/*
 
 ## This builds tests; presumes that the build has been made
 .PHONY: javafe_test
 javafe_test:
 	( cd test; \
-	${JAVAC} -classpath ${JAVAFE_CLASSPATH}:${TESTSOURCEDIRECTORY} \
-	  -d ${CLASSDIRECTORY} ${JAVAFETESTTARGETS} )
+	  ${JAVAC} -classpath $(call canonicalize,${JAVAFE_CLASSPATH}:${TESTSOURCEDIRECTORY}) \
+	  -d $(call canonicalize,${CLASSDIRECTORY}) \
+	  ${JAVAFETESTTARGETS} )
 
 ###########################################################################
 ## misc targets -- FIXME
@@ -200,5 +202,6 @@ wc:
 esc: source
 	cd java; \
 	date; \
-	escjava -classpath ${CLASSDIRECTORY} -f `find javafe -name "*.java"` \
+	escjava -classpath $(call canonicalize,${CLASSDIRECTORY}) \
+		-f `find javafe -name "*.java"` \
 	date

@@ -1,8 +1,8 @@
 # Copyright 2000, 2001, Compaq Computer Corporation
 
 runtest:
-	${JAVA} javafe.util.CorrelatedReaderTest subreader <CorrelatedReader.java
-	${JAVA} javafe.util.CorrelatedReaderTest reset <CorrelatedReader.java
+	${JAVA} -classpath ${CLASSPATH} javafe.util.CorrelatedReaderTest subreader < CorrelatedReader.java
+	${JAVA} -classpath ${CLASSPATH} javafe.util.CorrelatedReaderTest reset < CorrelatedReader.java
 
 
 	#

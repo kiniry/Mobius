@@ -14,7 +14,6 @@
 # The directory containing the release files
 ESCTOOLS_RELEASE='/usr/local/escjava'
 
-# ESC_CLASSPATH="$ESCTOOLS_RELEASE/esctools2.jar"
 ESC_CLASSPATH=`cygpath -aw "$ESCTOOLS_RELEASE/esctools2.jar"`
 
 # The name of a Simplify executable in $ESCTOOLS_RELEASE

@@ -2,17 +2,22 @@
 
 LEX =		flex
 CFLAGS = 	-g
+ifdef COMSPEC
+  CC = gcc
+else
+  CC = cc
+endif
 
 all: astgen astfilelist
 
 astgen: lex.yy.o astutil.o astactions.o astoutput.o
-	cc -o astgen lex.yy.o astutil.o astactions.o astoutput.o
+	${CC} -o astgen lex.yy.o astutil.o astactions.o astoutput.o
 
 astfilelist: lex.yy.o astutil.o astfilelistactions.o
-	cc -o astfilelist lex.yy.o astutil.o astfilelistactions.o
+	${CC} -o astfilelist lex.yy.o astutil.o astfilelistactions.o
 
 lex.yy.c: astgen.l
-	flex astgen.l
+	${LEX} astgen.l
 
 lex.yy.o: lex.yy.c astactions.h
 

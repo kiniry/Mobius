@@ -1,7 +1,7 @@
 # Copyright 2000, 2001, Compaq Computer Corporation
 
 all: man1/jls.1 man1/jls.html
-	${JAVAC} -d ${CLASSDIRECTORY} *.java
+	${JAVAC} -d $(call canonicalize,${CLASSDIRECTORY}) *.java
 
 clean: 
 	rm -f *.class

@@ -114,14 +114,22 @@ endif
         echo "Error: The SIMPLIFY environment variable must be set to an appropriate value (the name of, not path to, an executable in $ESCJ_SIMPLIFY_DIR )"
 	exit 1
     endif
-    setenv ESCJ_SIMPLIFY ${ESCJ_SIMPLIFY_DIR}/${SIMPLIFY}
+    if ( $?COMSPEC ) then
+	setenv ESCJ_SIMPLIFY `cygpath -p -m ${ESCJ_SIMPLIFY_DIR}/${SIMPLIFY}`
+    else
+	setenv ESCJ_SIMPLIFY ${ESCJ_SIMPLIFY_DIR}/${SIMPLIFY}
+    endif
     
 ## (Optional) If the OS does not supply the class path for Java system files,
 ## or you want to override it, then supply a definition for BOOTCLASSPATH
 if ( ! $?BOOTCLASSPATH ) then
     set JBIN=""
 else
-    set JBIN="-bootclasspath ${BOOTCLASSPATH}"
+    if ( $?COMSPEC ) then
+	set JBIN="-bootclasspath `cygpath -p -m ${BOOTCLASSPATH}`"
+    else
+        set JBIN="-bootclasspath ${BOOTCLASSPATH}"
+    endif
 endif
 
 ## (Optional) Supply a definition for JAVA if you want to use a different VM
@@ -172,9 +180,17 @@ endif
 ## release
 if ( ! $?ESC_CLASSPATH ) then
     if ( $?ESCTOOLS_RELEASE ) then
-        setenv ESC_CLASSPATH $ESCTOOLS_RELEASE/esctools2.jar
+	if ( $?COMSPEC ) then
+	    setenv ESC_CLASSPATH `cygpath -a -w ${ESCTOOLS_RELEASE}/esctools2.jar`
+	else
+	    setenv ESC_CLASSPATH $ESCTOOLS_RELEASE/esctools2.jar
+	endif
     else
-        setenv ESC_CLASSPATH ${ESCTOOLS_ROOT}/Escjava/classfiles:${ESCTOOLS_ROOT}/Javafe/classfiles
+	if ( $?COMSPEC ) then
+	    setenv ESC_CLASSPATH `cygpath -p -m ${ESCTOOLS_ROOT}/Escjava/classfiles:${ESCTOOLS_ROOT}/Javafe/classfiles`
+        else
+	    setenv ESC_CLASSPATH ${ESCTOOLS_ROOT}/Escjava/classfiles:${ESCTOOLS_ROOT}/Javafe/classfiles
+	endif
     endif
 endif
 
@@ -189,11 +205,19 @@ else
         setenv  PROVER_CC_LIMIT         "10"
 endif
 
-
+# ESC/Java's class and spec path.
+if ( $?COMSPEC ) then 
+    setenv ESC_CLASS_SPEC_PATH `cygpath -p -m ${CLASSPATH}:${ESC_SPECS}`
+else
+    setenv ESC_CLASS_SPEC_PATH ${CLASSPATH}:${ESC_SPECS}
+endif
 
 if ( $?ESCJ_VERBOSE ) then
     if ( "$ESCJ_VERBOSE" == 2 ) then
       echo "=================================================================="
+      echo " ESCJ_SIMPLIFY_DIR = ${ESCJ_SIMPLIFY_DIR}";
+      echo " SIMPLIFY = ${SIMPLIFY}";
+      echo " ESCJ_SIMPLIFY = ${ESCJ_SIMPLIFY}";
     endif
     echo "=================================================================="
     echo "Executing:";
@@ -202,13 +226,12 @@ if ( $?ESCJ_VERBOSE ) then
     echo "  -classpath ${ESC_CLASSPATH}";
     echo "  escjava.Main";
     echo "  " ${JBIN} ;
-    echo "  -classpath ${CLASSPATH}:${ESC_SPECS}";
+    echo "  -classpath ${ESC_CLASS_SPEC_PATH}";
     echo "  ${ESCJ_STDARGS}";
     echo "  $*";
-    echo "Also: ESCJ_SIMPLIFY = $ESCJ_SIMPLIFY"
     echo "=================================================================="
 endif
 
 ${JAVA} ${JAVA_VM_FLAGS} -Dsimplify=${ESCJ_SIMPLIFY} \
     -classpath ${ESC_CLASSPATH} escjava.Main \
-    ${JBIN} -classpath ${CLASSPATH}:${ESC_SPECS} ${ESCJ_STDARGS} $*
+    ${JBIN} -classpath ${ESC_CLASS_SPEC_PATH} ${ESCJ_STDARGS} $*

@@ -12,19 +12,19 @@ export JAVA ?= java
 ## it is in ${JAVAFE_ROOT}
 export CLASSDIRECTORY ?= ${JAVAFE_ROOT}/classfiles
 ## Define, use CLASSPATH so it can be overridden during release testing
-export CLASSPATH ?= ${CLASSDIRECTORY}
+export CLASSPATH ?= $(call canonicalize,${CLASSDIRECTORY})
 
 ## These define the executable and the options used to run the tests.  The
 ## -classpath option is tacked on in the do% target below since it is 
 ## specific to the test directory.
 ifdef JDK_BINARIES
-JBIN = -bootclasspath ${JDK_BINARIES}
+  JBIN = -bootclasspath $(call canonicalize,${JDK_BINARIES})
 else
-JBIN =
+  JBIN =
 endif
 
-export TOOLCMD = ${JAVA} -mx40m -classpath ${CLASSDIRECTORY} javafe.test.Print ${JBIN}
-export TOOLARGS = -noprint -typecheck -quiet
+export TOOLCMD = ${JAVA} -mx40m -classpath $(call canonicalize,${CLASSDIRECTORY}) javafe.test.Print ${JBIN}
+export TOOLARGS = -canonpaths -noprint -typecheck -quiet
 export TOOL = ${TOOLCMD} ${TOOLARGS}
 
 runtest: septests
@@ -74,7 +74,7 @@ summary: test*
 ## Must have variables JAVA and JAVAFE_ROOT set
 do%: testclasses
 	@( cd $*; \
-	   export TOOL="${TOOL} -classpath `pwd`" ; \
+	   export TOOL="${TOOL} -classpath ." ; \
 	   ./run 2>&1 | sed "s|`pwd`|<TEST>|g" > out)
 	@diff $*/out $*/ans || echo Test $* failed
 
@@ -85,11 +85,12 @@ ${CLASSDIRECTORY}/javafe/test/Print.class:
 
 ## This target simply executes a given test, e.g. 'make extest1' runs test1
 ## Must have variables JAVA and JAVAFE_ROOT set
+
 %-run:
 	(  cd $*; \
-	   export JAVAFE=${ESCTOOLS_ROOT}/Javafe; \
-	   export CLASSPATH=`pwd` ;\
-	   export TOOL="${TOOL} -classpath `pwd` " ; \
+	   export JAVAFE=$(call canonicalize,${ESCTOOLS_ROOT}/Javafe); \
+	   export CLASSPATH=$(call canonicalize,$*) ;\
+	   export TOOL="${TOOL} -classpath ." ; \
 	   ./run )
 
 clean: 

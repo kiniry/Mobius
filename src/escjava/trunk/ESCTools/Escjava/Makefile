@@ -43,7 +43,7 @@ export SOURCEDIRECTORY=${ESCJAVA_SOURCE_DIR}
 export TESTSOURCEDIRECTORY=${ESCJAVA_ROOT}/test
 
 ## This is the path for classfiles (not sources) needed to build Escjava
-export ESCJAVA_BUILD_CLASSPATH = ${JAVAFE_CLASSFILES}:${ESCJAVA_CLASSFILES}:${MOCHA_LIB}
+export ESCJAVA_BUILD_CLASSPATH = $(call canonicalize,${JAVAFE_CLASSFILES}:${ESCJAVA_CLASSFILES}:${MOCHA_LIB})
 
 ###########################################################################
 .PHONY: all
@@ -102,8 +102,8 @@ compile: ${CLASSDIRECTORY} generate_files mocha ${STAMPFILE}
 compileall: generate_files ${MOCHA_LIB} ${CLASSDIRECTORY}
 	@${JAVAC} ${JAVAC_FLAGS} \
 		-classpath ${ESCJAVA_BUILD_CLASSPATH} \
-		-sourcepath ${SOURCEPATH} \
-		-d ${CLASSDIRECTORY} \
+		-sourcepath $(call canonicalize,${SOURCEPATH}) \
+		-d $(call canonicalize,${CLASSDIRECTORY}) \
 		${JAVASOURCEFILES}
 	touch ${STAMPFILE}
 
@@ -134,15 +134,15 @@ ${ESCJAVA_SOURCE_DIR}/escjava/Main.java: ${ESCJAVA_SOURCE_DIR}/escjava/Version.j
 ${STAMPFILE}: ${JAVASOURCEFILES}
 	${JAVAC} ${JAVAC_FLAGS} \
 		-classpath ${ESCJAVA_BUILD_CLASSPATH} \
-		-sourcepath ${SOURCEPATH} \
-		-d ${CLASSDIRECTORY} \
-		$?
+		-sourcepath $(call canonicalize,${SOURCEPATH}) \
+		-d $(call canonicalize,${CLASSDIRECTORY}) \
+		$(foreach file,$?,$(call canonicalize,$(file)))
 	touch $@
 
 ###########################################################################
 ## mocha
 
-MOCHA_DIR = ${ESCJAVA_ROOT}/mochalib
+MOCHA_DIR = ./mochalib
 MOCHA_SOURCES = ${MOCHA_DIR}/java/mocha/*/*/*.java
 MOCHA_CLASSES_DIR = ${MOCHA_DIR}/classes
 
@@ -150,8 +150,8 @@ MOCHA_CLASSES_DIR = ${MOCHA_DIR}/classes
 mocha: ${MOCHA_CLASSES_DIR} ${MOCHA_LIB}
 
 ${MOCHA_LIB}: ${MOCHA_SOURCES}
-	${JAVAC} -d ${MOCHA_CLASSES_DIR} $?
-	(cd ${MOCHA_CLASSES_DIR}; jar cf ${MOCHA_LIB} mocha/*/*/*.class )
+	${JAVAC} -d $(call canonicalize,${MOCHA_CLASSES_DIR}) `find ${MOCHA_DIR} -name "*.java"`
+	(cd ${MOCHA_CLASSES_DIR}; jar cf $(call canonicalize,${MOCHA_LIB}) mocha)
 
 ${MOCHA_CLASSES_DIR}:
 	mkdir $@
@@ -345,10 +345,10 @@ self_test: compile
 .PHONY: test-release
 test-release:
 	@echo TESTING RELEASE - Escjava
-	$(MAKE) JAVAFE_CLASSPATH=${RELCLASSPATH}:${RELTEMP} \
+	$(MAKE) JAVAFE_CLASSPATH=$(call canonicalize,${RELCLASSPATH}:${RELTEMP}) \
 		CLASSDIRECTORY=${RELTEMP} \
 		build_javafe_test
-	$(MAKE) ESCJAVA_CLASSPATH=${RELCLASSPATH}:${RELTEMP} \
+	$(MAKE) ESCJAVA_CLASSPATH=$(call canonicalize,${RELCLASSPATH}:${RELTEMP}) \
 		CLASSDIRECTORY=${RELTEMP} \
 		ALLTESTS=1 \
 		ESCJ=${RELTEMP}/escj \

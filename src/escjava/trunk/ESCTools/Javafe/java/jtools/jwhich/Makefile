@@ -1,7 +1,7 @@
 # Copyright 2000, 2001, Compaq Computer Corporation
 
 all: man1/jwhich.1 man1/jwhich.html
-	${JAVAC} -d ${CLASSDIRECTORY} *.java
+	${JAVAC} -d $(call canonicalize,${CLASSDIRECTORY}) *.java
 
 clean: 
 	rm -f *.class
