@@ -31,8 +31,8 @@
 %
 % For tracking purposes - this is V2.6SP - OCTOBER 2002
 
-\documentclass{acm_proc_article-sp}
-%\documentclass{sig-alternate}
+%\documentclass{acm_proc_article-sp}
+\documentclass{sig-alternate}
 
 \newif\ifpdf
 \ifx\pdfoutput\undefined
@@ -155,7 +155,7 @@
 
 The ESC/Java tool developed at DEC/SRC was a pioneering tool in the
 application of static program analysis and verification technology to
-annotated Java programs~\cite{ESCJava} [TODO-better ref].  The tool and its built-in
+annotated Java programs~\cite{Flanagan-etal02}.  The tool and its built-in
 prover operated automatically with reasonable performance and needed
 only program annotations against which to check a program's source
 code.  The annotations needed were easily read, written and understood
@@ -169,6 +169,11 @@ studies (e.g.,~\cite{Hub03,HOP04}).
 Its long-term utility, however, was lessened by a number of factors.
 First, the match to JML was not complete and JML continued to evolve
 as research on the needs of annotations for program checking advanced.
+JML has also grown in
+popularity.  A number of tools have been developed that work with it [TODO-refs],
+representing the work of several groups.  JML's goal of being a language
+accessible to Java programmers not familiar with verification logic appears to
+contribute to its easy adoption.   
 Second, some of the deficiencies of the annotation language used by
 DEC/SRC ESC/Java, while appropriate in a research 
 and demonstration mode, reduced the
@@ -182,7 +187,7 @@ was no continuing development of the original tool, making it
 less useful as the Java language itself evolved and limiting the
 amount of continuing support.
 
-However, the initial positive experience prompted a vision for a
+The initial positive experience of ESC/Java prompted a vision for a
 reasonably industrial-strength tool that would also be useful for
 ongoing research in annotation and verification.  Thus, when the
 source code for the DEC/SRC ESC/Java tool was made available for
@@ -199,7 +204,7 @@ variety of environments, consistent with the licensing provisions of
 the source code release;
 and
 (5) as a long-term goal and if appropriate, to update the related
-tools that use the same code base (Calvin, Houdini, RCC) and to
+tools that use the same code base (Calvin, RCC, Houdini \cite{flanagan01houdini}) and to
 integrate with other JML-based tools.  Success in the above will
 enable testing the utility of the tool to improve programmer
 productivity on a broader range of significant bodies of Java source,
@@ -215,8 +220,10 @@ subject to fairly open licensing provisions.  The discussion below of various
 features of JML and ESC/Java2 is necessarily brief; more detail is
 available in the implementation notes that are part of an ESC/Java2 release.
 
-The subsequent sections will discuss the principal changes made to DEC/SRC ESC/Java in creating ESC/Java2 including the extensions to static checking, the backwards incompatibilities introduced, the outstanding features of JML yet to be implemented, unresolved semantic issues in JML, the direction of the ongoing work in this project, and the implications of this 
-work in the area of programming productivity.  We fully acknowledge
+The subsequent sections will discuss the principal changes made to DEC/SRC ESC/Java in creating ESC/Java2 including the extensions to static checking, the backwards incompatibilities introduced, unresolved semantic issues in JML, the direction of the ongoing work in this project, and the implications of this 
+work in the area of programming productivity.  An appendix lists 
+those features of JML that are not yet implemented in ESC/Java2.
+We fully acknowledge
 that the on-going work described here builds on the very substantial
 and innovative work to produce ESC/Java and the Simplify prover in the
 first place and on the effort to define the Java Modeling Language.
@@ -241,6 +248,7 @@ feature whose behavior is to be modeled.  The corresponding behavior is to raise
  \texttt{AssertionError} exception under appropriate circumstances.  Alternatively, 
 a Java assert statement may be interpreted as a JML assert statement.  In this case, the
 static checker will report a warning if the assertion predicate cannot be established to be true.
+Both alternatives are available through user-specified options.
 
 \subsection{Current JML}
 The Java Modeling Language is a research project in itself; hence the
@@ -274,6 +282,8 @@ Reference Manual have been resolved.
 % I don't think that there was ever a paper published summarizing 
 % these differences. -JRK
 
+TODO - gary's comment: organize the above into categories.
+
 \subsection{New verification checks}
 Though all of JML is parsed, not all of it is currently checked.
 Static checking of the following features has been added to that performed by
@@ -291,6 +301,7 @@ writing specifications, particularly for interfaces and abstract classes \cite{C
 to abstraction and allow much more natural and readable specifications.
 \end{itemize}
 
+TODO - Gary's comment: expand on the above.
 
 \subsection{Backwards incompatibilities}
 The DEC/SRC ESC/Java specification language and JML arose separately.  There
@@ -315,40 +326,8 @@ introduced.  The principal such incompatibilities are these:
   in non-Java specification files.
 \end{itemize}
 
-\section{Unimplemented Aspects of JML}
-
-Though the core is well-supported, there are several features of JML
-which are parsed and ignored, some of them experimental or not yet
-endowed with a clear semantics, and some in the process of being implemented.
-  The features that are currently ignored are the following:
-\setlength{\partopsep}{0in}\setlength{\parskip}{0in}\setlength{\itemsep}{0in}\setlength{\topsep}{0in}
-\begin{itemize}
-\setlength{\partopsep}{0in}\setlength{\parskip}{0in}\setlength{\itemsep}{0in}\setlength{\topsep}{0in}
-\item checking of access modifiers on annotations and of the
- \texttt{strictfp}, \texttt{volatile},
-  \texttt{transient} and \texttt{weakly} modifiers;
-\item the \texttt{diverges}, \texttt{hence\_by},
-  \texttt{code\_contract}, \texttt{when}, and \texttt{measured\_by}
-  clauses;
-\item the annotations within \texttt{implies\_that} and {\tt
-    for\_example} sections;
-\item some of the semantics associated with initialization (prior to
-  construction);
-\item multi-threading support beyond that already provided in DEC/SRC ESC/\-Java;
-\item serialization;
-\item annotations regarding space and time consumption;
-\item full support of recursive \texttt{maps} declarations;
-\item model programs;
-\item equivalence of \texttt{\char'134 TYPE} and \texttt{java.lang.Class};
-\item some aspects of store-ref expressions;
-\item verification of anonymous and block-level classes;
-\item verification of set comprehension and some forms of quantified
-  expressions;
-\item implementation of \texttt{modifies \char'134 everything;} within
-  the body of routines.
-\end{itemize}
-
 \section{Unresolved semantic issues}
+TODO - Gary suggest concentrating on the important issues.
 
 The work on ESC/Java2 has been useful in exposing and resolving
 semantic issues in JML.  Since ESC/Java2 is built on a different
@@ -356,7 +335,7 @@ source code base than other JML tools, differences of interpretation
 in both syntax and semantics arise on occasion.  These are generally
 resolved and documented via mailing list discussions\footnote{See \texttt{jmlspecs-interest@lists.sourceforge.net}, 
 \texttt{jmlspecs-developers@lists.sourceforge.net}, and
-\texttt{jmlspecs-escjava@lists.sourceforge.net}}
+\texttt{jmlspecs-escjava@lists.sourceforge.net} [TODO - gary suggests listing the archive URL}
 by interested
 parties.  There are, however, still unresolved issues, most of which
 are the subject of ongoing research.
@@ -374,7 +353,7 @@ always present, such as changes to the stack or heap or external effects such as
 see as innocuous, benevolent side-effects, such as maintaining a private cached value or logging debugging information in an output file.
 An interpretation of the combination of purity and benevolent (or ignorable)
   side-effects that is suitable for both static and run-time checking and is convenient and intuitive
-for users is not yet available.
+for users is not yet available. See also the discussion of purity checking in \cite{Leavens-etal03a}.
 \item \textit{exceptions in pure expressions}:  The expressions used in annotations must not have
 side-effects, but they may still throw exceptions.  In that case the result is ill-defined.  A
 semantics that is suitable for both run-time checking and static verification needs to be 
@@ -433,6 +412,8 @@ tools which depended upon the specifications, several alternate forms
 of specifications were sometimes required.  Additionally, it was
 sometimes the case that the alternate forms were not equivalent nor
 had obvious logical relationships between them.
+
+TODO - Gary suggests that stuff up to here or the next paragrraph go to the introduction as motivation.
 
 This experience was one of the motivators for the SoS group's support
 of this work on ESC/Java2.  Now that multiple tools are available that
@@ -528,7 +509,7 @@ JML compiler jmlc~\cite{Cheon-Leavens02b} dynamically checks
 specifications given test data or in actual operation; 
 Bogor \cite{Bogor03} does so using model checking;
 the ESC/Java2 tool statically checks specifications;
-Daikon [[TODO - ref]] generates specifications from execution histories (and demonstrated an
+Daikon \cite{Ernst-etal01} generates specifications from execution histories (and demonstrated an
 integrated working style
 with DEC/SRC ESC/Java~\cite{NimmerErnst01});
 the JML Unit Test tool jmlunit~\cite{Cheon-Leavens02} generates test
@@ -594,6 +575,8 @@ in elapsed run-time, but also in the time needed to interpret and act upon the r
 They must integrate well with other tools of the same family and with the commonly used
 programmer's working environments. 
 
+TODO - Gary doesn't like the second part of the following paragraph
+
 There is progress on enough of the above vectors that one might well be optimistic about the
 eventual success of the enterprise as a whole.  After all, the goal need not be fully
 automated verification of an
@@ -629,6 +612,7 @@ is useful.  Joseph Kiniry is supported by the NWO Pionier research
 project on Program Security and Correctness and the VerifiCard
 research project.
 
+
 %
 % The following two commands are all you need in the
 % initial runs of your .tex file to
@@ -638,6 +622,7 @@ research project.
 % To create the self-contained file - comment out the line above and include the
 % contents of the .bbl file here
 
+
 % You must have a proper ".bib" file
 %  and remember to run:
 % latex bibtex latex latex
@@ -646,7 +631,44 @@ research project.
 % ACM needs 'a single self-contained file'!
 %
 %APPENDICES are optional
-\balancecolumns
+
+%\balancecolumns
+
+\appendix
+\section{Aspects of JML not yet implemented in ESC/Java2}
+
+Though the core is well-supported, there are several features of JML
+which are parsed and ignored, some of them experimental or not yet
+endowed with a clear semantics, and some in the process of being implemented.
+For those interested in the details of JML and ESC/java2,
+ the features that are currently ignored are the following:
+\setlength{\partopsep}{0in}\setlength{\parskip}{0in}\setlength{\itemsep}{0in}\setlength{\topsep}{0in}
+\begin{itemize}
+\setlength{\partopsep}{0in}\setlength{\parskip}{0in}\setlength{\itemsep}{0in}\setlength{\topsep}{0in}
+\item checking of access modifiers on annotations and of the
+ \texttt{strictfp}, \texttt{volatile},
+  \texttt{transient} and \texttt{weakly} modifiers;
+\item the \texttt{diverges}, \texttt{hence\_by},
+  \texttt{code\_contract}, \texttt{when}, and \texttt{measured\_by}
+  clauses;
+\item the annotations within \texttt{implies\_that} and {\tt
+    for\_example} sections;
+\item some of the semantics associated with initialization (prior to
+  construction);
+\item multi-threading support beyond that already provided in DEC/SRC ESC/\-Java;
+\item serialization;
+\item annotations regarding space and time consumption;
+\item full support of recursive \texttt{maps} declarations;
+\item model programs;
+\item equivalence of \texttt{\char'134 TYPE} and \texttt{java.lang.Class};
+\item some aspects of store-ref expressions;
+\item verification of anonymous and block-level classes;
+\item verification of set comprehension and some forms of quantified
+  expressions;
+\item implementation of \texttt{modifies \char'134 everything;} within
+  the body of routines.
+\end{itemize}
+
 
 % That's all folks!
 \end{document}
