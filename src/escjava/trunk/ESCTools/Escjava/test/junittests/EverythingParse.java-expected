@@ -17,4 +17,4 @@ EverythingParse.java:19: Fatal error: Unexpected token '\everything' in Primary 
 EverythingParse.java:21: Fatal error: Unexpected token '\everything' in Primary expression
         //@     measured_by \everything;
                             ^
-7 errors
+6 errors

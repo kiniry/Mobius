@@ -17,4 +17,4 @@ Nothing.java:18: Fatal error: Unexpected token '\nothing' in Primary expression
 Nothing.java:20: Fatal error: Unexpected token '\nothing' in Primary expression
         //@     measured_by \nothing;
                             ^
-7 errors
+6 errors
