@@ -1,12 +1,15 @@
 
 // This test corresponds to the bug reported in #955950
 // It tests that P(o) in the code corresponds to P(o) in the annotation.
-class M2 {
-  M2();
-  boolean b;
-  SS obj;
+// See also M2.java - this version, which uses String, fails to establish
+// an invariant that String pulls in.  I think it is a prover failure.
 
-  /*@ pure @*/ boolean P(SS o) {
+class M2String {
+  M2String();
+  boolean b;
+  String obj;
+
+  /*@ pure @*/ boolean P(String o) {
     return b;
   }
 
@@ -20,7 +23,7 @@ class M2 {
         modifies o.owner;
         ensures \result;
   */
-  boolean m(/*@ non_null @*/ SS o) {
+  boolean m(/*@ non_null @*/ String o) {
     boolean b;
     if (P(o)) {
       b = false;
@@ -30,8 +33,4 @@ class M2 {
     }
     return b;
   }
-}
-
-class SS {
-  SS();
 }
