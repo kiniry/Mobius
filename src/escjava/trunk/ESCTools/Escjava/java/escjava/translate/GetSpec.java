@@ -446,7 +446,7 @@ public final class GetSpec {
           .elementAt(k).items, true, true);
       while (ii.hasNext()) {
         Expr designator = (Expr)ii.next();
-        if (Utils.isModel(designator)) continue;
+        //if (Utils.isModel(designator)) continue;
         Expr gcDesignator = TrAnExpr.trSpecExpr(designator);
         // Returns null for modifies \nothing, \everything FIXME?
         // array-range, wild-ref expressions FIXME!!
