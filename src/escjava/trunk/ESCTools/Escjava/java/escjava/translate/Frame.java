@@ -919,6 +919,46 @@ public class Frame {
     Object value = lit.value;
     return ((Boolean)value).booleanValue() ;
   }
+/*
+  static class ModifiesIteratorSpecs {
+    private boolean expandDatagroups;
+
+    private boolean expandWildRefs;
+
+    private int specsPos = 0;
+
+    final private ModifiesGroupPragmaVec specs;
+
+    private ModifiesIterator iterator = null;
+
+    public ModifiesIteratorSpecs(ModifiesGroupPragmaVec specs, boolean expandDatagroups, boolean expandWildRefs) {
+System.out.println("MISOECS " + specs.size());
+      this.expandDatagroups = expandDatagroups;
+      this.expandWildRefs = expandWildRefs;
+      this.specs = specs;
+      specsPos = 0;
+    }
+
+    public boolean hasNext() {
+System.out.println("MISO-HN");
+	if (iterator != null) {
+	    if (iterator.hasNext()) return true;
+	}
+	while (specsPos < specs.size()) {
+	    ModifiesGroupPragma m = specs.elementAt(specsPos++);
+	    iterator = new ModifiesIterator(((ModifiesGroupPragma)m).items,
+			    expandDatagroups,expandWildRefs);
+	    if (iterator.hasNext()) return true;
+	}
+	return false;
+    }
+
+    public Object next() {
+System.out.println("MISO-NEXT");
+	return iterator.next();
+    }
+  }
+  */
   
   /** This class enables iterating over the set of store-ref
    * locations in a ModifiesGroupPragma.  It also has the ability
@@ -966,6 +1006,7 @@ public class Frame {
     public ModifiesIterator(CondExprModifierPragmaVec mp, boolean expandDatagroups) {
       this(mp,expandDatagroups,false);
     }
+
     
     /** Creates an iterator over the store-ref locations in
      * the CondExprModifierPragmaVec.

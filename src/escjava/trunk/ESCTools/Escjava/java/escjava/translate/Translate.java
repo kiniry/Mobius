@@ -2,42 +2,133 @@
 
 package escjava.translate;
 
+import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
-import java.util.Enumeration;
-import java.util.Map;
-import java.util.Vector;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.io.ByteArrayOutputStream;
+import java.util.Map;
+import java.util.Vector;
 
-import javafe.ast.*;
-import javafe.util.Location;
-import javafe.util.StackVector;
+import javafe.Tool;
+import javafe.ast.ASTDecoration;
+import javafe.ast.ASTNode;
+import javafe.ast.ArrayInit;
+import javafe.ast.ArrayRefExpr;
+import javafe.ast.ArrayType;
+import javafe.ast.AssertStmt;
+import javafe.ast.BinaryExpr;
+import javafe.ast.BreakStmt;
+import javafe.ast.CastExpr;
+import javafe.ast.CatchClause;
+import javafe.ast.ClassDecl;
+import javafe.ast.ClassLiteral;
+import javafe.ast.CondExpr;
+import javafe.ast.ConstructorDecl;
+import javafe.ast.ConstructorInvocation;
+import javafe.ast.ContinueStmt;
+import javafe.ast.DoStmt;
+import javafe.ast.EvalStmt;
+import javafe.ast.Expr;
+import javafe.ast.ExprObjectDesignator;
+import javafe.ast.ExprVec;
+import javafe.ast.FieldAccess;
+import javafe.ast.FieldDecl;
+import javafe.ast.ForStmt;
+import javafe.ast.FormalParaDecl;
+import javafe.ast.GenericBlockStmt;
+import javafe.ast.GenericVarDecl;
+import javafe.ast.Identifier;
+import javafe.ast.IfStmt;
+import javafe.ast.InitBlock;
+import javafe.ast.InstanceOfExpr;
+import javafe.ast.LabelStmt;
+import javafe.ast.LiteralExpr;
+import javafe.ast.LocalVarDecl;
+import javafe.ast.MethodDecl;
+import javafe.ast.MethodInvocation;
+import javafe.ast.ModifierPragma;
+import javafe.ast.NewArrayExpr;
+import javafe.ast.NewInstanceExpr;
+import javafe.ast.ParenExpr;
+import javafe.ast.PrettyPrint;
+import javafe.ast.PrimitiveType;
+import javafe.ast.ReturnStmt;
+import javafe.ast.RoutineDecl;
+import javafe.ast.Stmt;
+import javafe.ast.SwitchLabel;
+import javafe.ast.SwitchStmt;
+import javafe.ast.SynchronizeStmt;
+import javafe.ast.ThisExpr;
+import javafe.ast.ThrowStmt;
+import javafe.ast.TryCatchStmt;
+import javafe.ast.TryFinallyStmt;
+import javafe.ast.Type;
+import javafe.ast.TypeDecl;
+import javafe.ast.TypeDeclElem;
+import javafe.ast.TypeName;
+import javafe.ast.UnaryExpr;
+import javafe.ast.VarDeclStmt;
+import javafe.ast.VarInit;
+import javafe.ast.VariableAccess;
+import javafe.ast.WhileStmt;
+import javafe.tc.TypeSig;
 import javafe.util.Assert;
-import javafe.util.Set;
 import javafe.util.ErrorSet;
 import javafe.util.Info;
-import javafe.tc.TypeSig;
-import javafe.tc.EnvForTypeSig;
-import javafe.Tool;
-
+import javafe.util.Location;
+import javafe.util.Set;
+import javafe.util.StackVector;
 import escjava.Main;
 import escjava.Options;
-import escjava.tc.Datagroups;
-
-import escjava.ast.*;
-import escjava.ast.TagConstants;
+import escjava.ast.ArrayRangeRefExpr;
+import escjava.ast.Call;
+import escjava.ast.CmdCmdCmd;
+import escjava.ast.Condition;
+import escjava.ast.ConditionVec;
+import escjava.ast.DecreasesInfo;
+import escjava.ast.DecreasesInfoVec;
+import escjava.ast.DerivedMethodDecl;
+import escjava.ast.DynInstCmd;
+import escjava.ast.EscPrettyPrint;
+import escjava.ast.EverythingExpr;
+import escjava.ast.ExprCmd;
+import escjava.ast.ExprModifierPragma;
+import escjava.ast.ExprStmtPragma;
+import escjava.ast.ExprStmtPragmaVec;
+import escjava.ast.GenericVarDeclVec;
+import escjava.ast.GetsCmd;
+import escjava.ast.GhostDeclPragma;
+import escjava.ast.GuardedCmd;
+import escjava.ast.GuardedCmdVec;
+import escjava.ast.LabelExpr;
+import escjava.ast.LocalVarDeclVec;
+import escjava.ast.LoopCmd;
+import escjava.ast.ModelDeclPragma;
 import escjava.ast.Modifiers;
-import escjava.tc.FlowInsensitiveChecks;
-
+import escjava.ast.ModifiesGroupPragma;
+import escjava.ast.ModifiesGroupPragmaVec;
+import escjava.ast.NaryExpr;
+import escjava.ast.NothingExpr;
+import escjava.ast.RestoreFromCmd;
+import escjava.ast.SeqCmd;
+import escjava.ast.SetStmtPragma;
+import escjava.ast.SimpleModifierPragma;
+import escjava.ast.SkolemConstantPragma;
+import escjava.ast.Spec;
+import escjava.ast.SubGetsCmd;
+import escjava.ast.SubSubGetsCmd;
+import escjava.ast.TagConstants;
+import escjava.ast.TypeExpr;
+import escjava.ast.Utils;
+import escjava.ast.VarInCmd;
+import escjava.ast.WildRefExpr;
 import escjava.backpred.FindContributors;
-
-import escjava.tc.Types;
+import escjava.tc.FlowInsensitiveChecks;
 import escjava.tc.TypeCheck;
+import escjava.tc.Types;
 
 public final class Translate
 {
@@ -3646,14 +3737,15 @@ public final class Translate
     }
 
     // The given "e" had the form "elems[array][index]"
-    Assert.notFalse(etag == TagConstants.SELECT);
-    nary = (NaryExpr)e;
-    VariableAccess elems = (VariableAccess)nary.exprs.elementAt(0);
-    Expr array = nary.exprs.elementAt(1);
-    if (pt != null) {
-      array = GC.subst(Location.NULL, Location.NULL, pt, array);
-    }
-    return GC.subsubgets(elems, array, index, newVal);
+    //Assert.notFalse(etag == TagConstants.SELECT);
+    //nary = (NaryExpr)e;
+    //VariableAccess elems = (VariableAccess)nary.exprs.elementAt(0);
+    //Expr array = nary.exprs.elementAt(1);
+    //if (pt != null) {
+    //  array = GC.subst(Location.NULL, Location.NULL, pt, array);
+    //}
+    //return GC.subsubgets(elems, array, index, newVal);
+    return null;
   }
 
 
@@ -3730,7 +3822,7 @@ public final class Translate
       ptDomain.addElement( ((VariableAccess)e.nextElement()).decl );
     Hashtable pt = GetSpec.makeSubst( ptDomain.elements(),
                                       UniqName.locToSuffix(call.scall) );
-
+    
     /* if the dontCheckPreconditions flag is set, turn off the following 
        checks for non_null parameters and preconditions */
     if (inline != null) {
@@ -3738,6 +3830,7 @@ public final class Translate
     }
 
     // var p*@L = e* in
+    Hashtable argsMap = new Hashtable();
     VariableAccess[] piLs = new VariableAccess[ call.args.size() ];
     for(int i=0; i<spec.dmd.args.size(); i++) {
       GenericVarDecl pi = spec.dmd.args.elementAt(i);
@@ -3752,6 +3845,7 @@ public final class Translate
          TagConstants.CHKNONNULL, nonnull.getStartLoc());
          }
       */
+      argsMap.put(pi,piLs[i]);
       code.addElement(GC.gets(piLs[i], call.args.elementAt(i)));
     }
 
@@ -3780,7 +3874,8 @@ public final class Translate
 
     // Add a check that all the locations that might be assigned by the callee
     // are allowed to be assigned by the caller
-    frameHandler.modifiesCheckMethodI(GetSpec.getCombinedMethodDecl(rd).modifies,
+    DerivedMethodDecl calledSpecs = GetSpec.getCombinedMethodDecl(rd);
+    frameHandler.modifiesCheckMethodI(calledSpecs.modifies,
                          eod, locOpenParen, pt,freshResult);
 
     if (inline != null && Main.options().traceInfo > 0) {
@@ -3847,13 +3942,175 @@ public final class Translate
     }
 
     else {
+      Type savedType = GC.thisvar.decl.type;
+      GC.thisvar.decl.type = TypeSig.getSig(calledSpecs.getContainingClass());
+
+      // We need to evaluate all of the expressions in the
+      // modifies clauses before we set the locations that are
+      // in the modifies clauses to arbitrary values, since
+      // some of the expressions might also be modified.
+      // For example, a clause might be modifies i,a[i];
+      // We don't try to see what expressions are modified;
+      // we simply translate all of them, assigning the results
+      // to some temporary variables.  Those temporary variables
+      // are then used later.
+      
+      // For each item in the modifies clauses we add 0 or more
+      // items to the translations and locations lists.  Later
+      // we iterate over the modifies clauses again, in precisely
+      // the same order - being sure to take off EXACTLY the same
+      // items as we put on, for each kind of entry in the modifies 
+      // clause.
+/*      System.out.println("ARGS " );
+      { java.util.Iterator im = argsMap.keySet().iterator();
+      while (im.hasNext()) {
+        Object o = im.next();
+        System.out.println("ITEM " + o + " ::: " + argsMap.get(o));
+      }
+      }*/
+      Expr thisTrans = eod;
+ /*     System.out.println("THISTRSANS");
+      if (thisTrans != null) EscPrettyPrint.inst.print(System.out,0,thisTrans);
+      System.out.println("");*/
+      LinkedList translations = new LinkedList();
+      LinkedList locations = new LinkedList();
+      ModifiesGroupPragmaVec mgpv = calledSpecs.modifies;
+      for (int i=0; i<mgpv.size(); ++i) {
+        ModifiesGroupPragma mgp = mgpv.elementAt(i);
+        Frame.ModifiesIterator iter = new Frame.ModifiesIterator(mgp.items,true,true);
+        while (iter.hasNext()) {
+          Object o = iter.next();
+          if (o instanceof FieldAccess) {
+            FieldAccess fa = (FieldAccess)o;
+            //System.out.println("FIELD ACCESS " + fa + " " + Location.toString(fa.getStartLoc()) + " " + Location.toString(fa.decl.getStartLoc()));
+            Expr b = TrAnExpr.trSpecExpr(fa,argsMap,argsMap,eod);
+            if (b instanceof NaryExpr && ((NaryExpr)b).op == TagConstants.SELECT) {
+              // instance fields
+              NaryExpr n = (NaryExpr)b;
+              translations.add(n.exprs.elementAt(0));
+              translations.add(cacheValue(n.exprs.elementAt(1)));
+              locations.add(new Integer(fa.getStartLoc()));
+            } else if (b instanceof VariableAccess) {
+              // static fields
+              translations.add(b);
+              translations.add(null);
+              locations.add(new Integer(fa.getStartLoc()));
+            } else if (b instanceof NaryExpr && ((NaryExpr)b).op == TagConstants.METHODCALL) {
+              // model variable - skip
+              translations.add(null);
+            } else {
+              translations.add(null);
+              // FIXME - turn into an internal error
+              System.out.println("UNSPPORTRED-EB " + b.getClass() + " " + TagConstants.toString(((NaryExpr)b).op));
+              escjava.ast.EscPrettyPrint.inst.print(System.out,0,b);
+              System.out.println("");
+            }
+          } else if (o instanceof ArrayRefExpr) {
+            // array elements like a[i]
+            ArrayRefExpr arr = (ArrayRefExpr)o;
+            Expr a = TrAnExpr.trSpecExpr(arr.array,argsMap,argsMap,thisTrans);
+            Expr index = arr.index == null ? GC.zerolit :
+              TrAnExpr.trSpecExpr(arr.index,argsMap,argsMap,thisTrans);
+            translations.add(cacheValue(a));
+            locations.add(new Integer(arr.getStartLoc()));
+            translations.add(cacheValue(index));
+          } else if (o instanceof ArrayRangeRefExpr){
+            // array ranges like a[i..j] or a[*]
+            ArrayRangeRefExpr arr = (ArrayRangeRefExpr)o;
+            Expr a = TrAnExpr.trSpecExpr(arr.array,argsMap,argsMap,thisTrans);
+            Expr low = arr.lowIndex == null ? GC.zerolit :
+              TrAnExpr.trSpecExpr(arr.lowIndex,argsMap,argsMap,thisTrans);
+            Expr hi = arr.highIndex == null ? 
+                GC.nary(TagConstants.INTEGRALSUB,GC.nary(TagConstants.ARRAYLENGTH,a),GC.onelit) :
+                  TrAnExpr.trSpecExpr(arr.highIndex,argsMap,argsMap,thisTrans);
+            translations.add(cacheValue(a));
+            translations.add(cacheValue(low));
+            translations.add(cacheValue(hi));
+          } else if (o instanceof NothingExpr) {
+            // skip
+          } else if (o instanceof EverythingExpr) {
+            // skip
+          } else if (o instanceof WildRefExpr) {
+            // store refs like a.* or this.* or Type.* or super.*
+            // skip - the wildref expression is expanded into
+            // all of the fields by the iterator
+          } else {
+            // FIXME - turn into internal error
+            System.out.println("UNSUPPORTED " + o.getClass());
+          }
+        }
+      }
+
+      GC.thisvar.decl.type = savedType; // FIXME - put in finally clause?
+
       // An assignment generated for each modified target
       // of the form   i:7.19 = after@16.2:20.19
-      // modify IndexSubst[[ D*, pt ]]
-      for(int i=0; i<spec.targets.size(); i++) {
-        Expr target = spec.targets.elementAt(i);
-        code.addElement(modify(target, pt, scall));
+      
+      // Here we handle special variables like alloc and state
+      for(int i=0; i<spec.specialTargets.size(); i++) {
+        Expr target = spec.specialTargets.elementAt(i);
+        GuardedCmd gc = modify(target, pt, scall);
+
+        if (gc != null) code.addElement(gc); 
       }
+      
+      // Here we set everything in the modifies clauses to
+      // unspecified values.  For instance, for simple variables
+      // we add the command: i:7.19 = after@16.2:20.19
+      // There is nothing specified about the after variables.
+      mgpv = calledSpecs.modifies;
+      for (int i=0; i<mgpv.size(); ++i) {
+        ModifiesGroupPragma mgp = mgpv.elementAt(i);
+        Frame.ModifiesIterator iter = new Frame.ModifiesIterator(mgp.items,true,true);
+        while (iter.hasNext()) {
+          Object o = iter.next();
+          if (o instanceof FieldAccess) {
+            VariableAccess a = (VariableAccess)translations.removeFirst();
+              if (a != null) {
+                Expr obj = (Expr)translations.removeFirst();
+                // if obj == null, the variable is static
+                int loc = ((Integer)(locations.removeFirst())).intValue();
+                VariableAccess newVal = 
+                  temporary("after@" + UniqName.locToSuffix(scall),
+                    loc, loc);
+                GuardedCmd g = obj != null ?
+                    GC.subgets(a, obj, newVal ) :
+                    GC.gets(a, newVal);
+                code.addElement(g);
+              }
+          } else if (o instanceof ArrayRefExpr) {
+            Expr a = (Expr)translations.removeFirst();
+            Expr index = (Expr)translations.removeFirst();
+            int loc = ((Integer)(locations.removeFirst())).intValue();
+            VariableAccess newVal = temporary("after@" + UniqName.locToSuffix(scall),
+                loc, loc);
+            GuardedCmd g = GC.subsubgets(GC.elemsvar, a, index, newVal);
+            code.addElement(g);
+          } else if (o instanceof ArrayRangeRefExpr){
+            // This one is slightly different.  The array a is
+            // replaced by a new array unset(a,low,hi).
+            // In the background predicate, unset(a,i,j) has the
+            // same array elements as a, except for values between
+            // i and j, inclusive.
+            Expr a = (Expr)translations.removeFirst();
+            Expr low = (Expr)translations.removeFirst();
+            Expr hi = (Expr)translations.removeFirst();
+            GuardedCmd g = GC.subgets(GC.elemsvar, a, GC.nary(TagConstants.UNSET, GC.select(GC.elemsvar,a), low, hi));
+            code.addElement(g);
+          } else if (o instanceof NothingExpr) {
+            // skip
+          } else if (o instanceof EverythingExpr) {
+            // FIXME !!!
+          } else if (o instanceof WildRefExpr) {
+            // skip - the wildref expression is expanded into
+            // all of the fields by the iterator
+          } else {
+            // FIXME - turn into an internal error
+            System.out.println("UNSUPPORTED " + o.getClass());
+          }
+        }
+      }
+
       if (spec.modifiesEverything) {
         EverythingLoc el = new EverythingLoc(scall,pt);
         modifyEverythingLocations.add(el);
@@ -3881,6 +4138,9 @@ public final class Translate
       }
       code.addElement(modify(GC.xresultvar, scall));
 
+      // FIXME - we might be doing statevar twice - once
+      // up above before the assignments of after values to
+      // all the items in the modifies clause
       if (!Utils.isPure(rd))
         code.addElement(modify(GC.statevar, scall));
 						 
@@ -4358,7 +4618,7 @@ public final class Translate
         completed.add( ((VariableAccess)e).decl );
       }
       GuardedCmd gc = modify(e, pt, loc);
-      gcseq.cmds.addElement(gc);
+      if (gc != null) gcseq.cmds.addElement(gc);
     }
   }
 
@@ -4421,6 +4681,14 @@ public final class Translate
       map.put(s,i);
       return i;
     }
+  }
+
+  private Identifier cacheVar = Identifier.intern("modCache");
+
+  public VariableAccess cacheValue(Expr e) {
+	VariableAccess va = GC.makeVar(cacheVar, e.getStartLoc());
+	code.addElement(GC.gets(va,e));
+        return va;
   }
 } // end of class Translate
 

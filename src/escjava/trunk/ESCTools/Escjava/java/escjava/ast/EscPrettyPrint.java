@@ -1062,6 +1062,7 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
       case TagConstants.TYPEEQ:
       case TagConstants.TYPENE:
       case TagConstants.TYPELE:
+      case TagConstants.UNSET:
       case TagConstants.VALLOCTIME:
         write(o, TagConstants.toString(tag));
       self.print(o, ind, ((NaryExpr)e).exprs);

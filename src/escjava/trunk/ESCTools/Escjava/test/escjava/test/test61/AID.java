@@ -12,6 +12,20 @@ class AID {
     /*@ requires dest != null &&
                  offset >= 0 &&
                  offset + theAID.length <= dest.length;
+        modifies dest[offset .. offset+theAID.length-1];
+        ensures (\forall int i;
+                         i < offset || i >= offset + theAID.length ==>
+                         dest[i] == \old(dest[i]));
+    */
+    {
+      System.arraycopy(theAID, (short)0, dest, offset, (short)theAID.length);
+      return (byte)theAID.length;
+    }
+
+    public byte getBytesA (byte[] dest, short offset)
+    /*@ requires dest != null &&
+                 offset >= 0 &&
+                 offset + theAID.length <= dest.length;
         modifies dest[*];
         ensures (\forall int i;
                          i < offset || i >= offset + theAID.length ==>

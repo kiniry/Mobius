@@ -130,15 +130,17 @@ public class TrAnExpr {
     int tag = e.getTag();
     switch (tag) {
       case TagConstants.THISEXPR: {
-        if (specialThisExpr != null) {
-          return specialThisExpr;
-        }
         ThisExpr t = (ThisExpr)e;
-        if (t.classPrefix != null)
-          return trSpecExpr(Inner.unfoldThis(t), sp, st);
-        
-        return apply(sp, makeVarAccess(GC.thisvar.decl, e.getStartLoc()));
-      }
+        Expr a;
+        if (t.classPrefix != null) {
+          a = trSpecExprI(Inner.unfoldThis(t), sp, st);
+        } else if (specialThisExpr != null) {
+          a = specialThisExpr;
+        } else {
+          a = apply(sp, makeVarAccess(GC.thisvar.decl, e.getStartLoc()));
+        }
+        return a;
+        }
       
       // Literals (which are already GCExpr's
       case TagConstants.BOOLEANLIT: 
@@ -192,7 +194,8 @@ public class TrAnExpr {
           } else {
             ts = (TypeSig)od.type();
           }
-          TypeDeclElemVec reps = GetSpec.getRepresentsClauses(
+          TypeDeclElemVec reps = ts == null ? null : // FIXME
+            GetSpec.getRepresentsClauses(
               ts.getTypeDecl(), fa.decl);
           if (reps == null || reps.size() == 0) {
             boolean b = translate.frameHandler.isDefinitelyNotAssignable(

@@ -11,6 +11,10 @@
 			  (EQ (select (store m i x) j)
 			      (select m j)))))
 
+(BG_PUSH (FORALL (m i j k x)
+                 (IMPLIES (OR (< k i) (< j k))
+                          (EQ (select (unset m i j) k) (select m k)))))
+
 ; === ESCJ 8: Section 1.1
 
 (DEFPRED (<: t0 t1))

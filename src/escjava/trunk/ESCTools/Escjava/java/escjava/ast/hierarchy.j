@@ -1074,6 +1074,7 @@ public class Spec extends ASTNode
 {
   //# DerivedMethodDecl dmd NoCheck
   //# Expr* targets
+  //# Expr* specialTargets
   //# Hashtable preVarMap NoCheck
   //# Expr* preAssumptions
   //# Condition* pre

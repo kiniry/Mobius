@@ -682,6 +682,7 @@ public class VcToString
     case TagConstants.TYPENE:
     case TagConstants.TYPELE:
     case TagConstants.TYPEOF:
+    case TagConstants.UNSET:
     case TagConstants.VALLOCTIME:
       {
         NaryExpr ne = (NaryExpr)e;

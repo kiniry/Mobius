@@ -174,7 +174,8 @@ public class TagConstants extends GeneratedTags
     public static final int TYPENE = TYPEEQ + 1; 
     public static final int TYPELE = TYPENE + 1; // a.k.a. "<:"
     // TYPEOF -- an ESC keyword
-    public static final int VALLOCTIME = TYPELE + 1;
+    public static final int UNSET = TYPELE + 1;
+    public static final int VALLOCTIME = UNSET + 1;
     public static final int LASTFUNCTIONTAG = VALLOCTIME;
 
     // Constants used in deciding how to translate CHKs
@@ -806,6 +807,7 @@ public class TagConstants extends GeneratedTags
         "typeEQ",
         "typeNE",
         "typeLE",
+        "unset",
         "vAllocTime"
     };
 
