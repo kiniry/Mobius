@@ -1673,12 +1673,13 @@ System.out.println("");
 				makeVarAccess( alloc2, Location.NULL));
 		    conjuncts.addElement(ee);
 		} else {
-
-		    // add an axiom about the type of the method result?
+		    // add an axiom about the type of the method result
 		    Type type = ((MethodDecl)rd).returnType;
-		    Expr ee = GC.nary(TagConstants.TYPELE,
-			GC.nary(TagConstants.TYPEOF, fcall),
-			GC.nary(TagConstants.CLASSLITERALFUNC, trType(type)));
+		    // Is allows the result to be null for reference types
+		    // but is equivalent to \typeof() == . for primitive types
+		    Expr ee = GC.nary(TagConstants.IS,
+			fcall,
+			trType(type));
 		    conjuncts.addElement(ee);
 		}
 
