@@ -330,6 +330,24 @@ public class RefinementSequence extends CompilationUnit {
     //System.out.println("Combining routine "+Location.toString(newrd.getStartLoc()) + " " +Location.toString(rd.getStartLoc()) + " " + rd.binaryArgNames + " " + Modifiers.toString(rd.modifiers) );
     //System.out.println(newrd.id() + " " + (newrd.body!= null) + (rd.body != null));
     rd.loc = newrd.loc;
+    {
+       for (int i=0; i<newrd.raises.size(); ++i) {
+	   TypeName t = newrd.raises.elementAt(i);
+           boolean found = false;
+	   for (int j=0; j<rd.raises.size(); ++j) {
+              TypeName tt = rd.raises.elementAt(j);
+              if (equalTypes(t,tt)) { found = true; break; }
+	   }
+           if (found) continue;
+           // The following line is necessary because the parser (at least the
+           // class file parser) uses a dedicated singleton object for all 
+           // empty lists
+           if (rd.raises.size() == 0) rd.raises = TypeNameVec.make();
+           rd.raises.addElement(t);
+           //System.out.println("ADDING EXCEPTION " + t + " TO SIGNATURE FOR "
+           //        + rd.parent.id + "#" + rd.id());
+       }
+    }
     // FIXME - check exceptions
     for (int i=0; i<newrd.args.size(); ++i) {
       FormalParaDecl newarg = newrd.args.elementAt(i);
