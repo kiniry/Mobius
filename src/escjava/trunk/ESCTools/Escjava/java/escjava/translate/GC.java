@@ -571,6 +571,16 @@ public final class GC {
   public static Expr typeExpr(Type t)
     { return TypeExpr.make(Location.NULL, Location.NULL, t); }
 
+  public static Expr cast(Expr e, Type t) {
+	if (e instanceof LiteralExpr)
+		return LiteralExpr.cast((LiteralExpr)e,
+			t == Types.doubleType ? TagConstants.DOUBLELIT :
+			t == Types.floatType ? TagConstants.FLOATLIT :
+			t == Types.longType ? TagConstants.LONGLIT :
+				TagConstants.INTLIT);
+	return nary(TagConstants.CAST, e, typeExpr(t));
+  }
+
   // Various forms of nary()
 
   public static Expr nary(int tag, /*@ non_null */ Expr e) {
