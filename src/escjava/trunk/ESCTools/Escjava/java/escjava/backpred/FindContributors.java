@@ -640,9 +640,11 @@ public class FindContributors
 				       boolean addTypes, 
 				       int inlined, LinkedList visited) {
 	if (rd == null) return; // FIXME - this happens with some NewInstanceExpr
-	if (visited.contains(rd)) return;
-	visited.addFirst(rd);
-        Assert.notFalse(inlined != 1 || !visitedRoutines.contains(rd));
+	// FIXME - remove references to visited
+	//if (visited.contains(rd)) return;
+	//visited.addFirst(rd);
+	if (inlined==0 && visitedRoutines.contains(rd)) return;
+        //Assert.notFalse(inlined != 1 || !visitedRoutines.contains(rd));
         visitedRoutines.add(rd);
 
 	TypeSig thisType = TypeSig.getSig(rd.parent);
@@ -694,7 +696,7 @@ public class FindContributors
 	}
 
 	GC.thisvar.decl.type = savedType;
-	visited.removeFirst();
+	//visited.removeFirst();
     }
 
 
