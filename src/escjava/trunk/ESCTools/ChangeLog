@@ -1,3 +1,50 @@
+2003-09-18  Joseph R. Kiniry  <kiniry@acm.org>
+
+	* release-files/RELEASE_NOTES.txt:
+	Summarized changes for 2.0a1 release.
+
+	* Makefile: Made sure *_tags files are executable.  Added
+	generate-patch-based-release target to build compressed tar file of
+	all patches for download.  Adjusted generate-patches actions to use
+	new patchname variables from Makefile.defs.
+
+	* README.first:
+	Expanded discussion of SIMPLIFY settings for various OSes.
+
+	* Makefile.local.sample:
+	Added support for optional source locations of various JDK releases
+	for large-scale parser testing in different Java versions.
+
+	* Makefile.defs:
+	Added guess-support for Cygwin/Windows and Solaris.  Made many of the
+	env vars for building the release conditionally assigned (?=) because
+	the release build process forks new makes with the vars pre-set.
+	Added vars for target patchfile names.
+
+	* Escjava/escj: Added guess-support for Cygwin/Windows and Solaris.
+
+	* Escjava/release/master/bin/Simplify-1.5.1.exe:
+	* Escjava/release/master/bin/Simplify-1.5.1.exe.win:
+	* Escjava/release/master/bin/Simplify-1.5.2.exe:
+	* Escjava/release/master/bin/Simplify-1.5.2.exe.win:
+	* Escjava/release/master/bin/Simplify-1.5.4.exe:
+	* Escjava/release/master/bin/Simplify-1.5.4.exe.win:
+	Renamed Windows binaries of Simplify to .exe so that they are
+	actually seen as executables.
+
+	* Calvin/release/master/bin/Simplify-1.5.2.solaris:
+	* Calvin/release/master/bin/Simplify-1.5.2.tru64:
+	* Calvin/release/master/bin/Simplify-1.5.1.linux:
+	* Calvin/release/master/bin/Simplify-1.5.1.solaris:
+	* Calvin/release/master/bin/Simplify-1.5.1.tru64:
+	* Calvin/release/master/bin/Simplify-1.5.2.bsd:
+	* Calvin/release/master/bin/Simplify-1.5.2.exe.win:
+	* Calvin/release/master/bin/Simplify-1.5.2.linux:
+	* Calvin/release/master/bin/Simplify-1.5.1.exe.win:
+	Removed redundant old Simplify binaries from Calvin tree.
+
+	* ChangeLog: Updated ChangeLog per all of David's recent commits.
+
 2003-09-17  David Cok  <cok@frontiernet.net>
 
 	* docs/Escjava2-ImplementationNotes/Escjava2-ImplementationNotes.texinfo:
@@ -56,7 +103,7 @@
 	* Makefile: Cleaning out javadoc directcory before building.
 
 	* Javafe/java/javafe/util/ErrorSet.java:
-	Additional change in error handlling to stay backwards compatible.
+	Additional change in error handling to stay backwards compatible.
 
 	* Escjava/test/escjava/test/test67/ans:
 	Slight change due to changes in error handling.
@@ -2589,7 +2636,7 @@
 
 	* Makefile: A top-level Makefile
 
-2003-03-11  Joseph R. Kiniry  <kiniry@kind.cs.kun.nl>
+2003-03-11  Joseph R. Kiniry  <kiniry@acm.org>
 
 	* Escjava/java/escjava/parser/EscPragmaParser.java:
 	Continuing to add support for JML "also" keyword (JML_ALSO).  This
@@ -2627,7 +2674,7 @@
 	Abstracting use of Java compiler and ensuring that -g is used during
 	compilation.
 
-2003-02-17  Joseph R. Kiniry  <kiniry@kind.cs.kun.nl>
+2003-02-17  Joseph R. Kiniry  <kiniry@acm.org>
 
 	* Escjava/java/escjava/ast/EscPrettyPrint.java:
 	First cut at JML keyword "also" support.
@@ -2960,7 +3007,7 @@
 	* Escjava/java/escjava/ast/:
 	Removed generated Escjava AST files.
 
-2003-01-30  Joseph R. Kiniry  <kiniry@kind.cs.kun.nl>
+2003-01-30  Joseph R. Kiniry  <kiniry@acm.org>
 
 	* simplify: 
 	Added support for automatic use of ESCTools-built simplify.
@@ -3013,13 +3060,13 @@
 	* java/escjava/ast/:
 	Removed generated Escjava AST files.
 
-2003-01-15  Joseph R. Kiniry  <kiniry@kind.cs.kun.nl>
+2003-01-15  Joseph R. Kiniry  <kiniry@acm.org>
 
 	* setup.sh:
 	Switched to use of JDK 1.2 as minimal JDK due to class dependencies in
 	ESC/Java source (e.g., java.util.Arrays).
 
-2003-01-15  Joseph R. Kiniry  <kiniry@kind.cs.kun.nl>
+2003-01-15  Joseph R. Kiniry  <kiniry@acm.org>
 
 	* build.xml:
 	Removed houdini and docs dependencies temporarily so that we can focus
@@ -3041,7 +3088,7 @@
 	* Houdini/classes/**/*.class:
 	Removed extraneous classfiles from repository.
 
-2003-01-14  Joseph R. Kiniry  <kiniry@kind.cs.kun.nl>
+2003-01-14  Joseph R. Kiniry  <kiniry@acm.org>
 
 	* build.xml:
 	Refined reference to decsrc classfiles so that they are not deleted
@@ -3113,7 +3160,7 @@
 	Removing all shipped classfiles as they are not useful and should not
 	be in the repository.
 
-2003-01-14  Joseph R. Kiniry  <kiniry@kind.cs.kun.nl>
+2003-01-14  Joseph R. Kiniry  <kiniry@acm.org>
 
 	* build.xml:
 	Refined reference to decsrc classfiles so that they are not deleted
@@ -3184,7 +3231,7 @@
 	Removing all shipped classfiles as they are not useful and should not
 	be in the repository.
 
-2003-01-13  Joseph R. Kiniry  <kiniry@kind.cs.kun.nl>
+2003-01-13  Joseph R. Kiniry  <kiniry@acm.org>
 
 	* build.xml: Added new properties to denote top-level envelope and test
 	directories.  Added supplied decsrclib classpath to the
@@ -3229,7 +3276,7 @@
 	parsing the source available for all JDKs from 1.0 to 1.4.  Removed
 	old JDK files list.
 
-2003-01-13  Joseph R. Kiniry  <kiniry@kind.cs.kun.nl>
+2003-01-13  Joseph R. Kiniry  <kiniry@acm.org>
 
 	* build.xml: Added new properties to denote top-level envelope and test
 	directories.  Added supplied decsrclib classpath to the
@@ -3274,7 +3321,7 @@
 	parsing the source available for all JDKs from 1.0 to 1.4.  Removed
 	old JDK files list.
 
-2003-01-06  Joseph R. Kiniry  <kiniry@kind.cs.kun.nl>
+2003-01-06  Joseph R. Kiniry  <kiniry@acm.org>
 
 	* Javafe/java/javafe/ast/:
 	Dependent files generated with Makefile-sed fun.  Since we won't
@@ -3295,7 +3342,7 @@
 	* Javafe/test/:
 	Moved Javafe test hierarchy.
 
-2003-01-02  Joseph R. Kiniry  <kiniry@kind.cs.kun.nl>
+2003-01-02  Joseph R. Kiniry  <kiniry@acm.org>
 
 	* ChangeLog: Initial ChangeLog.
 
@@ -3341,7 +3388,7 @@
 	documentation generation, initial jmlc support, clean, archives,
 	etc. is included.
 
-2003-01-02  Joseph R. Kiniry  <kiniry@kind.cs.kun.nl>
+2003-01-02  Joseph R. Kiniry  <kiniry@acm.org>
 
 	* build.xml:
 	Extended excludes of compile_rcc target to include the rccwizard/test
