@@ -104,7 +104,6 @@ year         = 2000
     year = "2000",
 }
 
-
 @inproceedings{BlumW96,
     author = "M. Blum and H. Wasserman",
     title = "Reflections on the Pentium Division Bug",
@@ -331,6 +330,7 @@ editor = "H. Hussmann",
 PAGES        = "284--299",
 number = "2029",
 booktitle = "Fundamental Approaches to Software Engineering",
+}
 
 @book{ HansmannNS00,
     author = "U. Hansmann and M. S. Nicklous and T. Sch{\"a}ck and F. Seliger",
@@ -380,28 +380,29 @@ booktitle = "Fundamental Approaches to Software Engineering",
   author = 	 {K. Havelund and G. Ro\c su},
   title = 	 {{Java PathExplorer~{--}~A Runtime Verification Tool}},
   booktitle = 	 {6th International Symposium on AI, Robotics and Automation in Space},
-  OPTcrossref =  {},
-  OPTkey = 	 {},
-  OPTpages = 	 {},
   year = 	 {2001},
-  OPTeditor = 	 {},
-  OPTvolume = 	 {},
-  OPTnumber = 	 {},
-  OPTseries = 	 {},
-  OPTaddress = 	 {},
   month = 	 {June},
-  OPTorganization = {},
-  OPTpublisher = {},
-  OPTnote = 	 {},
-  OPTannote = 	 {}
+}
+
+@techreport{HavelundR01a,
+  author = "Klaus Havelund and Grigore Ro\c su",
+  title = "Monitoring programs using rewriting",
+  institution = "RIACS",
+  year  = "2001",
+}
+
+@techreport{HavelundR01b,
+  author = "Klaus Havelund and Grigore Ro\c su",
+  title = "Monitoring programs using rewriting",
+  institution = "RIACS technical report 01.19",
+  month = "May",
+  year  = "2001",
 }
 
 @misc{HavelundJavaPathFiderUserGuide,
   author = "Klaus Havelund",
   title = "Java PathFinder User Guide",
 }
-
-
 
 @incollection{Hoare89,
     author = "{C.A.R} {H}oare",
@@ -721,17 +722,14 @@ number = 828
 @InProceedings{Pnueli77,
   author =       "Amir Pnueli",
   title =        "The temporal logic of programs",
-  booktitle =    "Proceedings of the 18th IEEE Symposium on the
-                 Foundations of Computer Science (FOCS-77)",
+  booktitle =    "Proceedings of the 18th IEEE Symposium on the Foundations of Computer Science (FOCS-77)",
   address =      "Providence, Rhode Island",
   publisher =    "IEEE Computer Society Press",
   organization = "IEEE",
   month =        oct # " 31--" # nov # " 2",
   year =         "1977",
   pages =        "46--57",
-  annote =       "[to read] Presents the idea of reactive systems and
-                  temporal logic in contrast to transformationel
-                  systems using Hoare Logic."
+  annote =       "[to read] Presents the idea of reactive systems and temporal logic in contrast to transformationel systems using Hoare Logic.",
 }
 
 @article{Pnueli81,
@@ -764,11 +762,30 @@ number = 828
         month     = "September" ,
 }
 
+@inproceedings{PrensaNieto00,
+  author =       {Leonor Prensa-Nieto},
+  title =        {Verifying Single and Multi-mutator Garbage Collectors with Owicki-Gries in Isabelle/HOL},
+  editor =       {},
+  booktitle =    {MFCS},
+  series =       LNCS,
+  number =       {1893},
+  pages =        {619--628},
+  publisher =    {Springer-Verlag},
+  year =         "2000",
+}
+
+@misc{PrensaNieto01,
+  title   = {Completeness of the Owicki-Gries System for Parameterized Parallel Programs},
+  author  = {Leonor Prensa-Nieto},
+  year    = {2001},
+  oganization = {FMPPTA},
+}
+
 @misc{PurseUrl,
-title        = {{Applet Benchmark Kit}},
-author       = "Gemplus",
-key       = {Purse},
-note    = {\\\texttt{http://www.gemplus.com/smart/r\_d/publications/case-study/}}
+  title   = "Applet Benchmark Kit",
+  author  = "Gemplus",
+  key     = "Purse",
+  note    = {\texttt{http://www.gemplus.com/smart/r\_d/publications/case-study/}},
 }
 
 @MastersThesis{Robby00,
@@ -785,3 +802,57 @@ note    = {\\\texttt{http://www.gemplus.com/smart/r\_d/publications/case-study/}
     year = {1999},
     note    = "\texttt{http://www.gemplus.com/smart/r\_d/publications/case-study/}",
 }
+
+@article{ ShatzTMD96,
+    author = "Sol M. Shatz and Shengru Tu and Tadao Murata and Sastry Duri",
+    title = "Application of {Petri} net reduction for {Ada} tasking deadlock analysis",
+    journal = "IEEE Transactions on Parallel and Distributed Systems",
+    volume = "7",
+    number = "12",
+    pages = "1307--1322",
+    year = "1996",
+}
+
+@misc{SpinURL,
+  title   = {Model-checking with {SPIN}},
+  key     = {SPING},
+  note    = {\texttt{http://netlib.bell-labs.com/netlib/spin/whatispin.html}}
+}
+
+@inproceedings{ CorbettDHLPZ00,
+    author = "James C. Corbett and Matthew B. Dwyer and John Hatcliff and Shawn Laubach and Corina S. Pasareanu and Robby and Hongjun Zheng",
+    title = "Bandera: extracting finite-state models from Java source code",
+    booktitle = "International Conference on Software Engineering",
+    pages = "439-448",
+    year = "2000",
+}
+
+@inproceedings{ EmersonH86,
+  author = "E. Emerson J.Y. Halpern",
+  title = {"Sometimes" and "Not Never"},
+  booktitle = {On branching verus linear time temporal logic},
+  series = "Journal of the ACM",
+  volume ="33(1)",
+  pages = "151-178",
+  year  = "1986",
+}
+
+@misc{ LeeKKSV99,
+  author = "I. Lee and S. Kannan and M. Kim and O. Sokolsky and M. Viswanathan",
+  title = "Runtime assurance based on formal specifications",
+  series = "In Proceedings of the International Conference on Parallel and Distributed Processing Techniques and Applications",
+  year = "1999",
+}
+
+@InProceedings{KimKLS01,
+  author =       {M. Kim and S. Kannan and I. Lee and O. Sokolsky},
+  title =        {Java-MaC: a Run-time Assurance Tool for Java Programs},
+  booktitle =    {First Workshop on Run-time Verification},
+  series =       {Electronic Notes in Theoretical Computer Science},
+  year =         2001,
+  publisher =    {Elsevier},
+  month =        {July},
+}
+
+
+
