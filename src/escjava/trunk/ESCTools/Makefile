@@ -131,26 +131,23 @@ javadoc:  build
 
 ## FIXME: get mocha right
 
-.PHONY: release
-releases: 
-	@echo Making and testing release version ${ESC_PROJECT}-${ESC_VERSION}
-	${MAKE} clean
-	${MAKE} build
-	##${MAKE} test
-	${MAKE} releases-notests
-	##${MAKE} test-binary-release-before-tar
+.PHONY: releases
+releases: releases-notests 
+	@echo "Testing release versions .........."
+	${MAKE} test-binary-release-before-tar
 	rm -rf ${RELTEMP}
 	${MAKE} test-binary-release
 	${MAKE} test-patch-release
 
 .PHONY: releases-notests
 releases-notests:
-	@echo Making - without testing - release version ${ESC_PROJECT}-${ESC_VERSION}
+	@echo "Making release versions ${ESC_PROJECT}-${ESC_VERSION} ........"
 	${MAKE} patch-release  ## does a clean as well
 	${MAKE} binary-release
 
 .PHONY: patch-release
 patch-release: clean
+	@echo "Creating patch release .........."
 	rm -rf ${PATCH_DIR}
 	mkdir -p ${PATCH_DIR}
 	${MAKE} generate-patches generate-toplevel-archive zero-length-files
@@ -161,6 +158,7 @@ patch-release: clean
 
 .PHONY: binary-release
 binary-release: build
+	@echo "Creating binary release .........."
 	mkdir -p ${RELDIR}
 	rm -rf ${RELTEMP}
 	mkdir -p ${RELTEMP}
@@ -186,7 +184,7 @@ RELTEST = ${ESCTOOLS_ROOT}/release-test
 
 .PHONY: test-binary-release
 test-binary-release:
-	@echo Testing binary release
+	@echo "Testing binary release ............"
 	rm -rf ${RELTEST}
 	mkdir -p ${RELTEST}
 	cp ${RELDIR}/esctools2*binary.tbz ${RELTEST}
@@ -196,35 +194,36 @@ test-binary-release:
 
 .PHONY: test-binary-release-before-tar
 test-binary-release-before-tar:
-	@echo Testing binary release - before tarring
+	@echo "Testing binary release - before tarring .........."
+	${MAKE} -C ${ESCTOOLS_ROOT} build
 	cd ${ESCTOOLS_ROOT} ;\
 	    unset JUNIT_LIB; \
-	    unset ESCTOOLS_ROOT ; \
 	    unset ESCJ_SIMPLIFY_DIR; \
+	    export RELDIR=${RELTEMP}; \
+	    export RELCLASSPATH=${RELTEMP}/${RELJAR} ;\
 	    export ESCTOOLS_RELEASE=${RELTEMP} ;\
+	    ${MAKE} -C Escjava test-release ;\
 	    ${MAKE} -C Javafe  test-release ;\
-	    ${MAKE} -C Escjava test-release 
 
 
 .PHONY: test-patch-release
 test-patch-release:
-	@echo Testing patch release
-	@echo test-patch-release target not yet functional
+	@echo "Testing patch release ........"
 	rm -rf ${RELTEST}
 	mkdir -p ${RELTEST}
 	cd ${RELTEST}; \
 		tar xvjf ${RELDIR}/*patch.tbz ;\
 		unset ESCTOOLS_ROOT ;\
+		unset JUNIT_LIB ;\
 		unset ESCJ_SIMPLIFY_DIR ;\
-		##./install.sh  ${ORIGINAL_TAR_DIR}
+		./install.sh  ${ORIGINAL_TAR_DIR}
 		
 
 ## For this target to work, you must unpack the original ESCTools
 ## archives (e.g., Calvin.tar.Z, Escjava.tar.Z, etc.) into a directory
-## "${ESCTOOLS_ORIGINAL}" that is adjacent to your "ESCTools" sandbox.  The
+## "${ESCTOOLS_ORIGINAL}".  The
 ## Simplify package must be unpacked into the directory
-## "${ESCTOOLS_ORIGINAL}/Simplify".  Then, this rule is run from the
-## directory above the two ESCTools{.orig} directories.
+## "${ESCTOOLS_ORIGINAL}/Simplify".  
 
 ## These patches are used by unpacking the original
 ## Compaq/H.P. ESCTools sources as appropriate, cd-ing to the

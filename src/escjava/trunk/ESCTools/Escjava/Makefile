@@ -340,19 +340,21 @@ self_test: compile
 	${ESCJ} -source 1.4 -nocheck -v \*.java ast/*.java parser/*.java \
 	  tc/*.java bacpred/*.java prover/*.java
 
+## This tests a binary release that is present in the RELTEMP directory,
+## with RELCLASSPATH pointing to the relevant esctools2.jar file.
 .PHONY: test-release
 test-release:
 	@echo TESTING RELEASE - Escjava
-	$(MAKE) JAVAFE_CLASSPATH=${RELCLASSPATH} \
+	$(MAKE) JAVAFE_CLASSPATH=${RELCLASSPATH}:${RELTEMP} \
 		CLASSDIRECTORY=${RELTEMP} \
 		build_javafe_test
 	$(MAKE) ESCJAVA_CLASSPATH=${RELCLASSPATH}:${RELTEMP} \
 		CLASSDIRECTORY=${RELTEMP} \
 		ALLTESTS=1 \
-		ESCJ=${RELDIR}/escj \
+		ESCJ=${RELTEMP}/escj \
 		ESC_CLASSPATH=${RELCLASSPATH} \
-		ESCJ_SIMPLIFY_DIR=${RELDIR} \
-		ESCJ_SIMPLIFY_SCRIPT=${RELDIR}/simplify-script \
+		ESCJ_SIMPLIFY_DIR=${RELTEMP} \
+		ESCJ_SIMPLIFY_SCRIPT=${RELTEMP}/simplify-script \
 		tests
 
 

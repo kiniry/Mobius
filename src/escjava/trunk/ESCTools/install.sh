@@ -57,8 +57,6 @@ chmod +x `find . -name rtest`
 ###### Wait for them to finish.
 
 export ESCTOOLS_ROOT=`pwd`
-unset JUNIT_LIB
-unset ESCJ_SIMPLIFY_DIR
 
 echo Building and testing the patched release in ${ESCTOOLS_ROOT}
 

@@ -152,6 +152,10 @@ else
 	@true
 endif
 
+## This tests a binary release that is untarred in the RELTEMP directory,
+## with RELCLASSPATH pointing to the esctools1.jar file that is being tested.
+## The current directory should be the usual ESCTOOLS_ROOT directory so that
+## the tests are available.
 .PHONY: test-release
 test-release: 
 	@ echo TESTING RELEASE - Javafe
