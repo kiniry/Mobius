@@ -514,6 +514,7 @@ public final class Translate
             defaultValue = GC.falselit;
             break;
 	      
+          case TagConstants.BIGINTTYPE:
           case TagConstants.INTTYPE:
           case TagConstants.LONGTYPE:
           case TagConstants.CHARTYPE:
@@ -548,7 +549,7 @@ public final class Translate
           case TagConstants.NULLTYPE:
           default:
             /*@ unreachable ;*/
-            Assert.fail("Unexpected type tag");
+            Assert.fail("Unexpected type tag " + TagConstants.toString(fd.type.getTag()));
             break;
           }
           if (defaultValue != null)
@@ -1731,7 +1732,6 @@ public final class Translate
         code.push();
         trStmt(x.tryClause,decl);
         GuardedCmd tryGC = GC.seq(GuardedCmdVec.popFromStackVector(code));
-
 
         GuardedCmd els = GC.raise();
 
