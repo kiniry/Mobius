@@ -9,8 +9,6 @@
 @string{fase01          = "Fundamental Approaches to Software Engineering (FASE 2001)"}
 
 
-
-
 @book{Alexander79,
   author = {C. Alexander},
   title = {The Timeless Way of Building},
@@ -33,6 +31,7 @@
   code =        "ATPSDT",
   issn =         "0164-0925",
 }
+
 
 @misc{BanderaURL,
 title        = {{The Bandera project}},
@@ -105,7 +104,20 @@ year         = 2000
     year = "2000",
 }
 
-@inproceedings{ borger99programmer,
+
+@inproceedings{BlumW96,
+    author = "M. Blum and H. Wasserman",
+    title = "Reflections on the Pentium Division Bug",
+    organization = "IEE",
+    publisher = "IEEE Transactions on Computers",
+    month = "April",
+    year = "1996",
+    pages = "385--393",
+    volume = "45",
+    issue = "4",
+}
+
+@inproceedings{ Borger99programmer,
   author = "E. Borger and W. Schulte",
   title = "A programmer friendly modular definition of the semantics of \textsc{Java}",
   booktitle = "Formal Syntax and Semantics of \textsc{Java}",
@@ -114,6 +126,15 @@ year         = 2000
   volume       = "1523",
   pages       = " 353--404",
   year         = "1999",
+}
+
+@misc{BratKPV00,
+  author = "G. Brat and K. Havelund and S. Park and W. Visser",
+  title = "Java PathFinder - Second Generation of a Java Model Checker",
+  text = "G. Brat, and K. Havelund, and S. Park and W. Visser. Java PathFinder - Second
+    Generation of a Java Model Checker. In Proc. of Post-CAV Workshop on Advances
+    in Verification, Chicago, July 2000.",
+  year = "2000",
 }
 
 @techreport{BretagneMGL00,
@@ -158,6 +179,7 @@ year = 2002
   school = 	 {Universit\'e de Paris $VII$},
   year = 	 {2001}
 }
+
 
 @InProceedings{ClarkeE81,
   author =       "E. M. Clarke and E. A. Emerson",
@@ -227,6 +249,7 @@ year = 2002
   month = 	 {March},
 }
 
+
 @Misc{Dwyer00,
   key = 	 {spec},
   OPTauthor = 	 {},
@@ -238,6 +261,14 @@ year = 2002
   OPTannote = 	 {}
 }
 
+@book{Edwards99core,
+  author = 	 {W. Keith Edwards},
+  publisher = 	 {Prentice-Hall Inc.},
+  title = 	 {Core Jini},
+  Teditor = 	 {Joanne Anzalone},
+  year = 	 {1999},
+  address = 	 "\texttt{http://developer.java.sun.com/developer/Books/corejava/}",
+}
 
 @InProceedings{EmersonH82,
   author = "E. A. Emerson and J. Y. Halpern",
@@ -298,6 +329,42 @@ pages = {500--517}
     year = "2000"
 }
 
+@techreport{HatcliffD00,
+  author = "J. Hatcliff and M. Dwyer",
+  title = "Using the Bandera Tool Set to {Model-check} Properties of Concurrent {Java} Sotware",
+  institution = "{SAnToS} Laboratory, Department of Computing and Information Sciences, Kansas State University",
+  year =   "2000",
+}
+
+
+@techreport{HatcliffTBanderaManual01,
+  author = "J. Hatcliff and O. Tkachuk",
+  title = "The Bandera Tools for Model-checking Java Source Code: A User's Manual",
+  institution = "{SAnToS} Laboratory, Department of Computing and Information Sciences, Kansas State University",
+  year =   "2001",
+}
+
+@article{HavelundLP01formal,
+    author = "Klaus Havelund and Michael R. Lowry and John Penix",
+    title = "Formal Analysis of a Space-Craft Controller Using {SPIN}",
+    journal = "Software Engineering",
+    volume = "27",
+    number = "8",
+    pages = "1000-9999",
+    year = "2001",
+}
+
+
+@article{HavelundP00model,
+    author = "Klaus Havelund and Thomas Pressburger",
+    title = "Model Checking {JAVA} Programs using {JAVA} PathFinder",
+    journal = "International Journal on Software Tools for Technology Transfer",
+    volume = "2",
+    number = "4",
+    pages = "366-381",
+    year = "2000",
+}
+
 @InProceedings{HavelundR01,
   author = 	 {K. Havelund and G. Ro\c su},
   title = 	 {{Java PathExplorer - A Runtime Verification Tool}},
@@ -318,6 +385,13 @@ pages = {500--517}
   OPTannote = 	 {}
 }
 
+@misc{HavelundJavaPathFiderUserGuide,
+  author = "Klaus Havelund",
+  title = "Java PathFinder User Guide",
+}
+
+
+
 @incollection{Hoare89,
     author = "{C.A.R} {H}oare",
     title = "An Axiomatic Basis for Computer Programming",
@@ -334,6 +408,7 @@ pages = {500--517}
     publisher = "Prentice Hall",
     year = "1989",
 }
+
 
 @PhdThesis{Huisman01,
   author = 	 {M. Huisman},
@@ -352,7 +427,6 @@ pages        = "332--352",
 year         = 2001
 }
 
-
 @inproceedings{HuismanJ00,
   author = 	 {M. Huisman and B. Jacobs},
   title = 	 {{Java Program Verification via a Hoare Logic with Abrupt Termination}},
@@ -363,6 +437,7 @@ year         = 2001
   series = 	 LNCS,
   publisher = springer,
 }
+
 
 @article{JacobsMP01,
   author = 	 {B. Jacobs and H. Meijer and E. Poll},
@@ -403,7 +478,7 @@ note= {\texttt{http://java.sun.com/products/javacard/}}
 }
 
 
-@misc{javaSpecificLanguage,
+@misc{JavaSpecificLanguage,
     key =   {Jav},
     title = "The \textsc{Java} Language Specification",
     note = "Sun {Microsystems} Inc, {http$:$//java.sun.com/docs/books/jls/index.html}", 
@@ -417,6 +492,16 @@ key     = {JCONTRACT},
 note    = {\texttt{http$://$www.parasoft.com$/$products$/$jtract$/$}},
 }
 
+
+@book{JoyJiniSpecification99,
+  author = 	 {B. Joy},
+  publisher = 	 {Addison-Wesley},
+  title = 	 {The {Jini} Specification},
+  Teditor = 	 {Lisa Friendly and Ken Arnold},
+  year = 	 {1999},
+  address = 	 "\texttt{http://java.sun.com/docs/books/jini/spec/}",
+}
+
 @inproceedings{ Krammer98,
     author = "Reto Kramer",
     title = "{iContract}$:$ The {J}ava {D}esigns by {C}ontract Tool",
@@ -424,6 +509,9 @@ note    = {\texttt{http$://$www.parasoft.com$/$products$/$jtract$/$}},
     publisher = "IEEE CS Press, Los Alamitos",
     year = "1998"
 }
+
+
+
 
 @incollection{ LeavensBR99b,
     author = "Gary T. Leavens and Albert L. Baker and Clyde Ruby",
@@ -497,6 +585,7 @@ key = {ESC/Javaspec},
 note= {\newline \texttt{http://www.cs.kun.nl/\~{}erikpoll/publications/jc211\_specs.html}}
 }
 
+
 @misc{LoopUrl,
 title        = {{The LOOP project}},
 key       = {LOOP},
@@ -564,6 +653,7 @@ publisher = {Springer-Verlag}
   number =       279,
 }
 
+
 @PhdThesis{Mueller01,
   author = {M{\"u}ller, P.},
   title =  {Modular Specification and Verification of Object Oriented Programs, PhD Thesis},
@@ -579,6 +669,14 @@ publisher = {Springer-Verlag}
   number =      "01-03",
   year =        2001,
   month =       {April},
+}
+
+@book{OaksWJiniNuthcell00,
+  author = 	 {S. Oaks and H. Wong},
+  title = 	 {{Jini} in A Nutchell: A Desktop Quick Reference},
+  publisher = 	 {O'Reilly},
+  Teditor = 	 {Mike Moukides},
+  year = 	 {2000},
 }
 
 @inproceedings{OwreRRSS96, 
@@ -654,7 +752,7 @@ number = 828
         editor    = "J. Domingo-Ferrer and D. Chan and A. Watson",
         pages     = "135--154",
         year      = "1999",
-        month     = "September" 
+        month     = "September" ,
 }
 
 @misc{PurseUrl,
@@ -672,9 +770,9 @@ note    = {\\\texttt{http://www.gemplus.com/smart/r\_d/publications/case-study/}
 }
 
 @misc{ SM99,
-    key = "JCard",
-    title = "\textsc{JavaCard} 2.1 Application Programming Interface",
+    key = {JCard},
+    title = {\textsc{JavaCard} 2.1 Application Programming Interface},
     howpublished = "Sun Microsystems Inc. {http$:$//java.sun.com/products/javacard/}",
-    year = "1999",
-    note    = {\texttt{http://www.gemplus.com/smart/r\_d/publications/case-study/}}
+    year = {1999},
+    note    = "\texttt{http://www.gemplus.com/smart/r\_d/publications/case-study/}",
 }

@@ -1,0 +1,82 @@
+Remarks:
+
+1. Some expressions (belonging to jml syntax) are not considered by us:
+
+modifies \nothing
+modifies \everything 
+modifies \not_specified
+modifies this
+modifies super
+
+We only consider expressions such as :
+modifies x
+modifies a[i...j]
+modifies a[*]
+modifies \fields_of(EXPRESSION) (but we only counts on rules for
+EXPRESSION=e1.e2. ... .ei with i possibly equal to 1)
+
+Now, What can we do to consider this kind of constructions ?
+
+1.1 "modifies \nothing"
+I think is enough to explicit the 'standard' definition of "in". Thus, 
+for example:
+
+XXX in {\nothing} is false for all XXX
+
+On the other hand, It'd should be fobitten specification such as
+"modifies \nothing, YYY"
+    
+1.2 "modifies \everything"
+Firstly, we might know what \everything means. I guess that mean "any
+expression". So (again) I would do explicit the standard definition of 
+"in". Thus
+
+XXX in {\everything} is true for all XXX
+
+1.3 "modifies \not_specified" makes no sense to me. Perhaps it would
+means "modifies \everything".
+
+1.4 "modifies this". If this expression means "modifies
+\fields_of(this)", we could consider to modify the rules IN-THIS,
+IN-ARR-FLD, IN-EXP-FLD, IN-EXP-ARR-FLD by adding in their upper part
+"OR this in Y".
+
+1.5 "modifies super". I find that is not obvious to give certain
+definition to this expression.
+
+
+
+
+2. For deriving some expression such as (I'll do it up to down):
+
+	a[3]=5 modEXP {a[3]}
+-------------------------------- [ASSG]
+a[3] in' {a[3]}		a[3] modPE {a[3]}  5 modEXP  {a[3]}
+----------------	------------       -------------
+ (CAN NOT BE DERIVED)	    |			|
+			    |			|
+
+
+So, I think we should change IN-SIMP, IN-THIS, IN-REACH, IN-ARR,
+IN-ARR-FLD, IN-ARR-REACH by version where are not considered "this."
+in their lower part. Then we must explain that, for example in the
+rule IN-EXP, "e.x in Y" means 
+
+1. e.x is found in Y (si "e" is diferent to "this")
+2. e.x is found in Y OR x is found in Y (si "e" is equal to "this")
+
+(Another option would be to duplicate the rules mentioned above but
+that is awkard).
+
+2.1 If we replace this example by
+
+a[i]=5 modEXP {a[3]}, we couldn't decide "a[i] in' {a[3]}" because at
+this point we dont' what is the vaule of "i", but if it's done a more
+elegant specfication of the method such as "modifies fields_of(a)" we
+might derive it.
+
+
+What do you think ?
+
+
+thanks,
