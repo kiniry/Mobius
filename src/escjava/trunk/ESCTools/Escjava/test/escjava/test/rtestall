@@ -23,6 +23,6 @@ set errs = 0
 foreach f (`grep Good alltests | awk '{print $1;}'`)
   ./rtest $f $*  || set errs = 1
 end
-echo
+echo " "
 echo Completed tests in `pwd`
 exit $errs
