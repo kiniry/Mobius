@@ -354,6 +354,8 @@ public final class TrAnExpr {
       case TagConstants.SUM:
       case TagConstants.PRODUCT:
 	{
+	    ErrorSet.notImplemented(!Main.options().noNotCheckedWarnings,
+		e.getStartLoc(),"Not checking predicates containing generalized quantifier expressions");
 	    // FIXME - ignore these till we can figure out how to reason
 	    return LiteralExpr.make(TagConstants.INTLIT,new Integer(0),Location.NULL);
         }
@@ -420,6 +422,12 @@ public final class TrAnExpr {
 	  }
 	}
 	//@ unreachable
+      }
+
+      case TagConstants.SETCOMPEXPR: {
+	ErrorSet.notImplemented(!Main.options().noNotCheckedWarnings,
+		e.getStartLoc(),"Not checking predicates containing set comprehension expressions");
+	return null;
       }
 
       case TagConstants.LABELEXPR: {

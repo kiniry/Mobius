@@ -333,6 +333,10 @@ public class Substitute {
 	  BinaryExpr be = (BinaryExpr)e;
 	  result = BinaryExpr.make(be.op, doSubst(subst,be.left,rhsVars),
 				   doSubst(subst,be.right,rhsVars), be.locOp);
+	} else if (e instanceof SetCompExpr) {
+	  SetCompExpr se = (SetCompExpr)e;
+	  // FIXME - how do bound vars affect substitution?
+	  return e;
 	} else if (e instanceof MethodInvocation) {
 	  MethodInvocation me = (MethodInvocation)e;
 	  ExprVec args = ExprVec.make(me.args.size());

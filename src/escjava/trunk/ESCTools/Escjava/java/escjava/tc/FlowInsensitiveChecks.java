@@ -166,15 +166,18 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 		inAnnotation = true;
 		inModelBody = true;
 	}
-        super.checkTypeDeclElem(e);
-	if (e instanceof MethodDecl || e instanceof ConstructorDecl) {
-		// Desugaring presumes that typechecking has already
-		// been performed
-		RoutineDecl m = (RoutineDecl)e;
-		annotationHandler.desugar(m); 
+	try {
+	    super.checkTypeDeclElem(e);
+	    if (e instanceof MethodDecl || e instanceof ConstructorDecl) {
+		    // Desugaring presumes that typechecking has already
+		    // been performed
+		    RoutineDecl m = (RoutineDecl)e;
+		    annotationHandler.desugar(m); 
+	    }
+	} finally {
+	    inAnnotation = savedInAnnotation;
+	    inModelBody = savedInModelBody;
 	}
-	inAnnotation = savedInAnnotation;
-	inModelBody = savedInModelBody;
 
 	// Do a separate set of checks - purity checking
 	// FIXME - perhaps these should be moved into this routine
@@ -284,18 +287,21 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 				TagConstants.GHOST) != null) {
 		    boolean savedInAnnotation = inAnnotation;
 		    inAnnotation = true;
-		    env.resolveType(x.type);
-		    checkTypeModifiers(env, x.type);
-		    javafe.tc.PrepTypeDeclaration.inst.
-			checkModifiers(x.modifiers, Modifiers.ACC_FINAL,
-			    x.locId, "local ghost variable");
-		    checkModifierPragmaVec(x.pmodifiers, x, env);
+		    try {
+			env.resolveType(x.type);
+			checkTypeModifiers(env, x.type);
+			javafe.tc.PrepTypeDeclaration.inst.
+			    checkModifiers(x.modifiers, Modifiers.ACC_FINAL,
+				x.locId, "local ghost variable");
+			checkModifierPragmaVec(x.pmodifiers, x, env);
 
-		    Env newEnv = new EnvForGhostLocals(env,x);
-		    if (x.init != null)
-			x.init = checkInit(newEnv, x.init, x.type);
-		    env = newEnv;
-		    inAnnotation = savedInAnnotation;
+			Env newEnv = new EnvForGhostLocals(env,x);
+			if (x.init != null)
+			    x.init = checkInit(newEnv, x.init, x.type);
+			env = newEnv;
+		    } finally {
+			inAnnotation = savedInAnnotation;
+		    }
 		    break;
 		}
 
@@ -330,9 +336,12 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 		boolean savedInAnnotation = inAnnotation;
                 inAnnotation = true;
                 isTwoStateContext = true;
-                s.expr = checkPredicate(env, s.expr);
-                inAnnotation = savedInAnnotation;
-                isTwoStateContext = false;
+		try {
+		    s.expr = checkPredicate(env, s.expr);
+		} finally {
+		    inAnnotation = savedInAnnotation;
+		    isTwoStateContext = false;
+		}
             } else {
                 errorExpectingLoop(s.getStartLoc(), TagConstants.LOOP_INVARIANT);
             }
@@ -350,8 +359,11 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                 Assert.notFalse(!inAnnotation);
 		boolean savedInAnnotation = inAnnotation;
                 inAnnotation = true;
-                s.expr = checkExpr(env, s.expr, Types.intType);
-                inAnnotation = savedInAnnotation;
+		try {
+		    s.expr = checkExpr(env, s.expr, Types.intType);
+		} finally {
+		    inAnnotation = savedInAnnotation;
+		}
             } else {
                 errorExpectingLoop(s.getStartLoc(), TagConstants.DECREASES);
             }
@@ -369,9 +381,12 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 		boolean savedInAnnotation = inAnnotation;
                 inAnnotation = true;
                 isTwoStateContext = true;
-                s.expr = checkPredicate(env, s.expr);
-                inAnnotation = savedInAnnotation;
-                isTwoStateContext = false;
+		try {
+		    s.expr = checkPredicate(env, s.expr);
+		} finally {
+		    inAnnotation = savedInAnnotation;
+		    isTwoStateContext = false;
+		}
             } else {
                 errorExpectingLoop(s.getStartLoc(), TagConstants.LOOP_PREDICATE);
             }
@@ -388,10 +403,13 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 		boolean savedInAnnotation = inAnnotation;
                 inAnnotation = true;
                 isTwoStateContext = true;
-                env.resolveType(s.type);
-                env = new EnvForLocals(env, s);
-                inAnnotation = savedInAnnotation;
-                isTwoStateContext = false;	
+		try {
+		    env.resolveType(s.type);
+		    env = new EnvForLocals(env, s);
+		} finally {
+		    inAnnotation = savedInAnnotation;
+		    isTwoStateContext = false;	
+		}
             } else {
                 errorExpectingLoop(s.getStartLoc(), TagConstants.SKOLEM_CONSTANT);
             }
@@ -1196,6 +1214,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
         int tag = e.getTag();
 	boolean savedInAnnotation = inAnnotation;
         inAnnotation = true;	// Must be reset before we exit!
+	try {
 
         switch(tag) {
             case TagConstants.AXIOM:
@@ -1416,13 +1435,16 @@ FIXME - see uses of countFreeVarsAccess
                 Assert.fail("Unexpected tag " + tag + 
 				" " + TagConstants.toString(tag));
         }
+	} finally {
         inAnnotation = savedInAnnotation;
+	}
     }
 
     protected Env checkModifierPragma(ModifierPragma p, ASTNode ctxt, Env env) {
 
 	boolean savedInAnnotation = inAnnotation;
         inAnnotation = true;	// Must be reset before we exit!
+	try {
         int tag = p.getTag();
         switch(tag) 
         {
@@ -1794,16 +1816,19 @@ FIXME - see uses of countFreeVarsAccess
                         if (rd instanceof MethodDecl && isOverridable((MethodDecl)rd)) {
                             isPrivateFieldAccessAllowed = false;
                         }
-			if (tag == TagConstants.MEASURED_BY) {
-				// FIXME - what type to use?
-			    emp.expr = checkExpr(env, emp.expr);
-			} else if (emp.expr.getTag() != TagConstants.NOTSPECIFIEDEXPR)
-			    emp.expr = checkExpr(env, emp.expr, Types.longType);
-                        if (emp.cond != null)
-			 emp.cond = checkExpr(env, emp.cond, Types.booleanType);
-                        isRESContext = oldIsRESContext;
-                        isTwoStateContext = oldIsTwoStateContext;
-                        isPrivateFieldAccessAllowed = oldIsPrivFieldAccessAllowed;
+			try {
+			    if (tag == TagConstants.MEASURED_BY) {
+				    // FIXME - what type to use?
+				emp.expr = checkExpr(env, emp.expr);
+			    } else if (emp.expr.getTag() != TagConstants.NOTSPECIFIEDEXPR)
+				emp.expr = checkExpr(env, emp.expr, Types.longType);
+			    if (emp.cond != null)
+			     emp.cond = checkExpr(env, emp.cond, Types.booleanType);
+			} finally {
+			    isRESContext = oldIsRESContext;
+			    isTwoStateContext = oldIsTwoStateContext;
+			    isPrivateFieldAccessAllowed = oldIsPrivFieldAccessAllowed;
+			}
                     }
                     break;
                 }
@@ -1833,11 +1858,14 @@ FIXME - see uses of countFreeVarsAccess
                         if (rd instanceof MethodDecl && isOverridable((MethodDecl)rd)) {
                             isPrivateFieldAccessAllowed = false;
                         }
-			if (emp.expr.getTag() != TagConstants.NOTSPECIFIEDEXPR)
-			    emp.expr = checkPredicate(env, emp.expr);
-                        isRESContext = oldIsRESContext;
-                        isTwoStateContext = oldIsTwoStateContext;
-                        isPrivateFieldAccessAllowed = oldIsPrivFieldAccessAllowed;
+			try {
+			    if (emp.expr.getTag() != TagConstants.NOTSPECIFIEDEXPR)
+				emp.expr = checkPredicate(env, emp.expr);
+			} finally {
+			    isRESContext = oldIsRESContext;
+			    isTwoStateContext = oldIsTwoStateContext;
+			    isPrivateFieldAccessAllowed = oldIsPrivFieldAccessAllowed;
+			}
                     }
                     break;
                 }
@@ -1903,9 +1931,11 @@ FIXME - see uses of countFreeVarsAccess
 
                         Env subenv = new EnvForLocals(env, vemp.arg);
 // FIXME - below we say that this is a twostate context, in which case we should not set this to static???
+/*
                         if (rd instanceof ConstructorDecl) {
                             subenv = subenv.asStaticContext();
                         }
+*/
 
                         // Check the expression to be an appropriate predicate
                         boolean oldIsTwoStateContext = isTwoStateContext;
@@ -1916,10 +1946,13 @@ FIXME - see uses of countFreeVarsAccess
                         if (rd instanceof MethodDecl && isOverridable((MethodDecl)rd)) {
                             isPrivateFieldAccessAllowed = false;
                         }
-			if (vemp.expr.getTag() != TagConstants.NOTSPECIFIEDEXPR)
-			    vemp.expr = checkPredicate(subenv, vemp.expr);
-                        isTwoStateContext = oldIsTwoStateContext;
-                        isPrivateFieldAccessAllowed = oldIsPrivFieldAccessAllowed;
+			try { 
+			    if (vemp.expr.getTag() != TagConstants.NOTSPECIFIEDEXPR)
+				vemp.expr = checkPredicate(subenv, vemp.expr);
+			} finally {
+			    isTwoStateContext = oldIsTwoStateContext;
+			    isPrivateFieldAccessAllowed = oldIsPrivFieldAccessAllowed;
+			}
                     }
                     break;
                 }
@@ -2089,7 +2122,9 @@ FIXME - see uses of countFreeVarsAccess
 				" tag");
 		break;
         }
-        inAnnotation = savedInAnnotation;
+	} finally {
+	    inAnnotation = savedInAnnotation;
+	}
 	return env;
     }
 
@@ -2126,6 +2161,7 @@ FIXME - see uses of countFreeVarsAccess
     protected Env checkStmtPragma(Env e, StmtPragma s) {
 	boolean savedInAnnotation = inAnnotation;
         inAnnotation = true;	// Must be reset before we exit!
+	try {
         int tag = s.getTag();
         switch(tag) {
             case TagConstants.UNREACHABLE:
@@ -2193,7 +2229,9 @@ FIXME - see uses of countFreeVarsAccess
                 Assert.fail("Unexpected tag " + tag +" "+s +
 				" " + Location.toString(s.getStartLoc()));
         }
-        inAnnotation = savedInAnnotation;
+	} finally {
+	    inAnnotation = savedInAnnotation;
+	}
 	return e;
     }
 

@@ -907,15 +907,9 @@ BogusSpec.java:121: Error: Keyword \result is not allowed in this context
 BogusSpec.java:121: Error: Invalid types (SomeException and int) in equality comparison
   //@ exsures (SomeException se) se == \result && se == this && se ==  ...
                                     ^
-BogusSpec.java:121: Error: Unqualified this cannot be used in static contexts
-  //@ exsures (SomeException se) se == \result && se == this && se ==  ...
-                                                        ^
 BogusSpec.java:121: Error: Invalid types (SomeException and BogusSpec) in equality comparison
   //@ exsures (SomeException se) se == \result && se == this && se ==  ...
                                                      ^
-BogusSpec.java:121: Error: An instance field may be accessed only via an object and/or from a non-static context or an inner class enclosed by a type possessing that field.
- ...  == \result && se == this && se == x;
-                                        ^
 BogusSpec.java:122: Error: Undefined variable 'se'
   //@ exsures (Throwable tt) tt == se;
                                    ^
@@ -925,15 +919,9 @@ BogusSpec.java:130: Error: Keyword \result is not allowed in this context
 BogusSpec.java:130: Error: Invalid types (SomeException and int) in equality comparison
   //@ exsures (SomeException se) se == \result && se == this && se ==  ...
                                     ^
-BogusSpec.java:130: Error: Unqualified this cannot be used in static contexts
-  //@ exsures (SomeException se) se == \result && se == this && se ==  ...
-                                                        ^
 BogusSpec.java:130: Error: Invalid types (SomeException and BogusSpec) in equality comparison
   //@ exsures (SomeException se) se == \result && se == this && se ==  ...
                                                      ^
-BogusSpec.java:130: Error: An instance field may be accessed only via an object and/or from a non-static context or an inner class enclosed by a type possessing that field.
- ...  == \result && se == this && se == x;
-                                        ^
 BogusSpec.java:131: Error: Undefined variable 'se'
   //@ exsures (Throwable tt) tt == se;
                                    ^
@@ -1056,7 +1044,7 @@ BogusSpec.java:228: Caution: No initial also expected since there are no overrid
   //@ also modifies this.xx;
       ^
 24 cautions
-98 errors
+94 errors
 BogusVisibility.java:150: Error: Original ESC/Java keywords beginning with also_ are obsolete; they have been replaced with the corresponding JML keywords and the use of 'also' - note that the semantics has also changed.
   //@ also_ensures privSub == pack && prot == publ;
       ^
