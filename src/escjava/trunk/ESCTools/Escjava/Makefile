@@ -229,6 +229,8 @@ clean_javadocs:
 clean_misc:
 	rm -f $(STAMPFILE)
 	find . -name mon.out -exec rm -f {} \;
+	rm -f ${TESTSOURCEDIRECTORY}/escjava/test/*/log ${TESTSOURCEDIRECTORY}/matrix/log
+	find . -name 'core.*' -exec rm -f {} \;
 
 clean_jars:
 	rm -f $(ESCTOOLS_JARS)/*.jar
@@ -270,16 +272,20 @@ self_test: compile
 	escjava -nocheck -v \*.java ast/*.java parser/*.java \
 	  tc/*.java bacpred/*.java prover/*.java
 
-test_escjava: compile_escjava test_escjava_parser clean_test_escjava
+test_escjava: build build_javafe_test test_escjava_parser clean_test_escjava
 	(cd $(TOP_ESCJAVA_TEST_DIR); \
 	rtestall)
+
+.PHONY: build_javafe_test
+build_javafe_test:
+	make -C ${JAVAFE_ROOT} javafe_test
 
 clean_test_escjava:
 	(cd $(TOP_ESCJAVA_TEST_DIR); \
 	rm -f test*/out test*/diff)
 
 test_matrix:
-	(cd $(TOP_ESCJAVA_TEST_DIR)/matrix; \
+	(cd $(TESTSOURCEDIRECTORY)/matrix; \
 	escjava *.java;)
 
 
