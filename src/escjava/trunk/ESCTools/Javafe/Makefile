@@ -1,11 +1,10 @@
 # Copyright 2000, 2001, Compaq Computer Corporation
 
-# Need to source setup before calling gnumake
+# Need to source setup{.sh} before calling gnumake
 
 all: clean depend javafe javadoc runtest
 
-
-install: clean depend javafe javadoc prot zip
+install: clean depend javafe javadoc zip
 
 # Check that 'source setup' has been run in the Javafe directory:
 # if ESCJ is defined, then the following line will fail
@@ -15,17 +14,12 @@ classdirCheck:
 zip: classdirCheck
 	rm -f ${CLASSDIRECTORY}/javafe.zip
 	cd ${CLASSDIRECTORY}; jar -cf0 javafe.zip javafe tohtml
-	chmod a+rw ${CLASSDIRECTORY}/javafe.zip
-
-prot:
-	chmod -fR a+rwX .
-	find /src/escjava/CVS -exec chmod -f a+rwX {} \;
+	chmod a+r ${CLASSDIRECTORY}/javafe.zip
 
 source:
 	cd astgen;			${MAKE}
 	cd java/javafe/ast; 		${MAKE} source
 	cd java/javafe/tc; 		${MAKE} source
-
 
 clean: cleanclasses classdirCheck
 	rm -f ${CLASSDIRECTORY}/compiled.zip
@@ -40,7 +34,6 @@ clean: cleanclasses classdirCheck
 cleanclasses:
 	cd classes; find . -name \*.class | xargs rm -f
 	rm -f classes/.javamake
-
 
 jtools:	javafe
 	cd java/jtools; ${MAKE}
@@ -57,12 +50,10 @@ javadoc: source
 #		jtools.jcheck \
 #		jtools.jcheck.parseTypes
 
-
 runtest:
 	cd test/javafe/parser/test; 	${MAKE} runtest
-	cd test/javafe/util; 		${MAKE} runtest
+	cd java/javafe/util; 		${MAKE} runtest
 	cd test/javafe/test; 		${MAKE} runtest
-
 
 OTHERSOURCEFILES = astgen/ast*.c astgen/ast*.h astgen/ast*.l
 TESTHARNESSFILES = test/javafe/parser/test/Test*.java test/javafe/test/*.java
@@ -78,7 +69,6 @@ wc:
 	wc ${TESTHARNESSFILES}
 	${JAVA} javafe.CountLines ${TESTHARNESSFILES}
 	# jrun javafe.parser.test.TestParse print ${TESTHARNESSFILES} | wc
-
 
 #
 # Code for fast incremental recompilation of javafe:
