@@ -1,9 +1,6 @@
 TypeChecking.java:3: Error: The non_null pragma can be applied only to variables, fields, and parameters of reference types
     /*@non_null*/ int x;        // error: non-reference type
                       ^
-TypeChecking.java:13: Error: non_null cannot be applied to parameters of this method override; overridden method is declared at "TypeChecking.java", line 9, col 4
-    void get(/*@non_null*/ Object x) {}         // error: overrides!
-                ^
 TypeChecking.java:19: Error: The non_null pragma can be applied only to variables, fields, parameters, and methods
   /*@non_null*/ Returns() { }  // error: cannot be used with construct ...
      ^
@@ -13,7 +10,7 @@ TypeChecking.java:27: Error: 'non_null' can only be used with methods whose resu
 TypeChecking.java:28: Error: 'non_null' can only be used with methods whose result type is a reference type
   /*@ non_null */ void q1() { }  // error:  non-reference result type
   ^
-5 errors
+4 errors
 Basic.java:5: Warning: Field declared non_null possibly not initialized (NonNullInit)
     Basic() { }         // error: x not initialized to a non-null valu ...
               ^
