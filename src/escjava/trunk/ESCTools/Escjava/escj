@@ -144,19 +144,20 @@ if ( ! $?ESCJ_STDARGS ) then
     setenv ESCJ_STDARGS "-nowarn Deadlock"
 endif
 
-# CLASSPATH is the path on which source files and specs referenced by the files
-# on the command-line will be found.  Include here the classpath for the
-# files on the command-line, source or class files referenced by them, and
-# the paths to any spec files that are needed.  The Java system files are
-# automatically included.  Default is the value of CLASSPATH set in the
-# environment.  If that is not set, the default is the current directory.
+# CLASSPATH is the path on which source files and specs referenced by
+# the files on the command-line will be found.  Include here the
+# classpath for the files on the command-line, source or class files
+# referenced by them, and the paths to any spec files that are needed.
+# The Java system files are automatically included.  Default is the
+# value of CLASSPATH set in the environment.  If that is not set, the
+# default is the current directory.
 if ( ! $?CLASSPATH ) setenv CLASSPATH .
 
 if ( ! $?ESC_SPECS ) then
 	if ( $?ESCTOOLS_RELEASE ) then
-		setenv ESC_SPECS  $ESCTOOLS_RELEASE/jmlspecs.jar
+		setenv ESC_SPECS $ESCTOOLS_RELEASE/jmlspecs.jar
 	else
-		setenv ESC_SPECS  $ESCTOOLS_ROOT/jmlspecs.jar
+		setenv ESC_SPECS $ESCTOOLS_ROOT/jmlspecs.jar
 	endif
 endif
 
