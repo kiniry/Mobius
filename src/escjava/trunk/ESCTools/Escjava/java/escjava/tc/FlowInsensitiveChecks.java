@@ -153,6 +153,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
     protected void checkTypeDeclElem(TypeDeclElem e) {
 	boolean savedInAnnotation = inAnnotation;
 	boolean savedInModelBody = inModelBody;
+// FIXME - should this use Utils.isModel ???
 	if (e instanceof ConstructorDecl &&
 		null != Utils.findModifierPragma(((ConstructorDecl)e).pmodifiers,TagConstants.MODEL)) {
 		inAnnotation = true;
@@ -1379,20 +1380,37 @@ FIXME - see uses of countFreeVarsAccess
                     Env rootEnv = rootIEnv;
 		    ep.target = checkExpr(rootEnv, ep.target);
 
-                    invariantContext = false;
-		    isTwoStateContext = false;
-                    boolean oldIsLocksetContext = isLocksetContext;
-                    isLocksetContext = false;
-                    if (invariantContext){
+		    if (ep.target instanceof FieldAccess) {
+			invariantContext = false;
+			isTwoStateContext = false;
+			boolean oldIsLocksetContext = isLocksetContext;
+			isLocksetContext = false;
+			if (invariantContext){
  // FIXME                       Assert.notFalse(countFreeVarsAccesses == 0);
-                        countFreeVarsAccesses = 0;
-                    }
-	
-                    ep.expr = checkPredicate(rootEnv, ep.expr);
-			// FIXME - check that this is a field access
-			// check that it is a modelfield
-                    isLocksetContext = oldIsLocksetContext;
+			    countFreeVarsAccesses = 0;
+			}
+	    
+			ep.expr = checkPredicate(rootEnv, ep.expr);
+			    // check that it is a modelfield FIXME
+			isLocksetContext = oldIsLocksetContext;
 
+			FieldAccess fa = (FieldAccess)ep.target;
+			TypeDeclElemVec tv = (TypeDeclElemVec)Utils.representsDecoration.get(fa.decl);
+			if (tv == null) tv = TypeDeclElemVec.make(10);
+			tv.addElement(ep);
+			Utils.representsDecoration.set(fa.decl,tv);
+			if (!Utils.isModel(fa.decl)) {
+			    ErrorSet.error(fa.getStartLoc(),
+				"A represents clause must name a model field",
+				fa.decl.locId);
+			}
+		    } else if (!(ep.target instanceof AmbiguousVariableAccess)){
+			// If the type is Ambiguous, then an Undefined variable
+			// error has already been issued.  I'm not actually
+			// sure that this point is reachable.
+			ErrorSet.error(ep.target.getStartLoc(),
+			    "Expected a field identifier here");
+		    }
                     break;
                 }
 	    case TagConstants.DEPENDS:
@@ -1777,6 +1795,7 @@ FIXME - see uses of countFreeVarsAccess
 		    if (!(ctxt instanceof GhostDeclPragma) &&
 			!(ctxt instanceof ModelDeclPragma)) {
 
+// FIXME - should this use Utils.isModel ???
 			if (ctxt instanceof FieldDecl &&
 			    (Utils.findModifierPragma( ((FieldDecl)ctxt).pmodifiers, TagConstants.MODEL) != null ||
 			    Utils.findModifierPragma( ((FieldDecl)ctxt).pmodifiers, TagConstants.GHOST) != null )) {

@@ -189,7 +189,7 @@ public class Options extends javafe.SrcToolOptions
     public boolean printCompilationUnitsOnLoad = false;
 
     // Flags to control the treatment of model variables and routines calls
-    public boolean useFcnsForModelVars = false;
+    public boolean useFcnsForModelVars = true;
     public boolean useFcnsForMethods = true;
     public boolean useFcnsForAllocations = true;
 

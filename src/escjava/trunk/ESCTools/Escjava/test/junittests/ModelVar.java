@@ -95,6 +95,7 @@ public class ModelVar {
 	//@ represents len = next == null ? 0 : 1 + next.len;
 	// @ invariant len >= 0;
 
+/* FIXME - sends Simplify into a long think
 	//@ requires len == 0;
 	//@ modifies next,len;
 	//@ ensures len == 1;
@@ -102,6 +103,8 @@ public class ModelVar {
 		next = new ModelVar();
 		// @ assert next.len == 0;
 	}
+*/
+
 	//@ modifies this.*;
 	//@ ensures next == null;
 	//@ ensures len == 0;

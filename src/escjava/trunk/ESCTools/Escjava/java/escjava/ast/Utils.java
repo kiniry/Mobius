@@ -169,7 +169,8 @@ public final class Utils {
 			!= null) return true;
 	    if (!isPure(rd)) return false;
 	    // If non-static, the owning class must be immutable
-	    if (!Modifiers.isStatic(rd.modifiers)) {
+	    // Constructors don't depend on the owning class
+	    if (!Modifiers.isStatic(rd.modifiers) && (rd instanceof MethodDecl)) {
 		if ( ! isImmutable(rd.parent) ) return false;
 	    }
 	    // All argument types must be primitive or immutable
@@ -203,4 +204,11 @@ public final class Utils {
     public static boolean isImmutable(TypeDecl cd) {
 	return immutableDecoration.isTrue(cd);
     }
+
+
+    public static final ASTDecoration axiomDecoration = new ASTDecoration("axioms");
+
+    public static final ASTDecoration representsDecoration =
+			new ASTDecoration("representsClauses");
 }
+

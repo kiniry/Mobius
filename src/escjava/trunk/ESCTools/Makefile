@@ -244,23 +244,15 @@ test-binary-release:
 	    tar xjf ${RELTEST}/${RELTAR} ;\
 	    ${RELTEST}/quicktest
 
-## FIXME - used?
-.PHONY: test-binary-release-before-tar
-test-binary-release-before-tar:
-	@echo "Testing binary release - before tarring .........."
-	${MAKE} -C ${ESCTOOLS_ROOT} build
-	cd ${ESCTOOLS_ROOT} ;\
-	    unset JUNIT_LIB; \
-	    unset ESC_SPECS; \
-	    unset ESC_CLASSPATH; \
-	    unset ESCJ_SIMPLIFY_DIR; \
-	    export RELDIR=${RELTEMP}; \
-	    export RELCLASSPATH=$(call canonicalize,${RELTEMP}/${RELJAR}) ;\
-	    export ESCTOOLS_RELEASE=${RELTEMP} ;\
-	    ${MAKE} -C Escjava test-release ;\
-	    ${MAKE} -C Javafe  test-release ;\
 
-
+## Note - we need to unset lots of environmental variables here because we
+## want them to be reset based on the value of ESC_RELEASE in install.sh.
+## Otherwise, since the variables are only conditionally set in Makefile.defs
+## or in Makefile, they will continue to have the value already set in the
+## current environment (when this Make was invoked) rather than getting new
+## values when the Make in install.sh is invoked.  So include here any variable
+## that is conditionally set and might have a different value when running a
+## release than when running from the build environment.
 .PHONY: test-patch-release
 test-patch-release:
 	@echo "Testing patch release ........"

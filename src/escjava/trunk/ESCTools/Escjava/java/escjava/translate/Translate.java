@@ -1223,6 +1223,7 @@ public final class Translate
         // fails to pop "declaredLocals".  Better would be not to even
         // check the "if", but to always pop from the stack vector, and
         // then let "GC.block" do the optimization.  --KRML, 29 Sep 1999
+	// Actually, popDeclBlock is not called with declaredLocals.size()==0
         if (declaredLocals.size() == 0)
             return body;
         GenericVarDeclVec locals
@@ -1739,6 +1740,9 @@ public final class Translate
 			VariableAccess valhs = (VariableAccess)lhs;
 			name = valhs.decl.id.toString();
 			code.addElement(GC.gets(valhs, rval));
+			if (Modifiers.isStatic(valhs.decl.modifiers)) {
+			    code.addElement(modify(GC.statevar,s.getStartLoc()));
+			}
 		    } else {
 			// Instance field
 			NaryExpr target = (NaryExpr)lhs;
@@ -1746,6 +1750,7 @@ public final class Translate
 			name = field.decl.id.toString();
 			Expr obj = target.exprs.elementAt(1);
 			code.addElement(GC.subgets(field, obj,rval));
+			code.addElement(modify(GC.statevar,s.getStartLoc()));
 		    }
 		    return;
 /*
@@ -1798,6 +1803,7 @@ public final class Translate
 		    }
 
 		    code.addElement(GC.subsubgets(GC.elemsvar, array, index, rval));
+		    code.addElement(modify(GC.statevar,lhs.getStartLoc()));
 		    Expr a= GC.select(GC.elemsvar, array);
 		    return;
 	    
@@ -1818,7 +1824,7 @@ public final class Translate
                     ExprStmtPragma x = (ExprStmtPragma)stmt;
 		    TrAnExpr.initForClause();
                     Expr p = TrAnExpr.trSpecExpr(x.expr);
-		    if (TrAnExpr.extraSpecs) addNewAssumptions();
+		    if (TrAnExpr.extraSpecs) addNewAssumptionsNow();
                     code.addElement(GC.assume(p));
                     return;
                 }
@@ -1827,7 +1833,7 @@ public final class Translate
                 ExprStmtPragma x = (ExprStmtPragma)stmt;
 		TrAnExpr.initForClause();
                 Expr p = TrAnExpr.trSpecExpr(x.expr);
-		if (TrAnExpr.extraSpecs) addNewAssumptions();
+		if (TrAnExpr.extraSpecs) addNewAssumptionsNow();
                 code.addElement(GC.check(x.getStartLoc(), TagConstants.CHKASSERT,
                                          p, Location.NULL));
                 return;
@@ -2495,6 +2501,9 @@ public final class Translate
                         VariableAccess init= getInitVar(lhs.decl);
                         if (init != null)
                             code.addElement(GC.gets(init, GC.truelit));
+			if (Modifiers.isStatic(lhs.decl.modifiers)) {
+			    code.addElement(modify(GC.statevar,x.getStartLoc()));
+			}
                         return protect(protect, left, x.locOp, lhs.decl.id.toString() + "=");
 	    
                     } else if (ltag == TagConstants.FIELDACCESS) {
@@ -2515,6 +2524,7 @@ public final class Translate
                             Expr obj= target.exprs.elementAt(1);
                             code.addElement(GC.subgets(field, obj, rval));
                         }
+			code.addElement(modify(GC.statevar,x.locOp));
                         return protect(protect, lhs, x.locOp, name + "=");
 	    
                     } else if (ltag == TagConstants.ARRAYREFEXPR) {
@@ -2536,6 +2546,7 @@ public final class Translate
                         }
 
                         code.addElement(GC.subsubgets(GC.elemsvar, array, index, rval));
+			code.addElement(modify(GC.statevar,x.locOp));
                         Expr a= GC.select(GC.elemsvar, array);
                         return protect(protect, GC.select(a, index), x.locOp);
 	    
@@ -2637,6 +2648,7 @@ public final class Translate
                             Expr obj= target.exprs.elementAt(1);
                             code.addElement(GC.subgets(field, obj, rval));
                         }
+			code.addElement(modify(GC.statevar,locOp));
                         if (returnold) {
                             return oldLval;
                         } else {
@@ -2669,6 +2681,7 @@ public final class Translate
                         rval= addRelAsgCast(rval, lType, rType);
     
                         code.addElement(GC.subsubgets(GC.elemsvar, array, index, rval));
+			code.addElement(modify(GC.statevar,locOp));
                         if (returnold) {
                             return oldLval;
                         } else {
@@ -3484,6 +3497,7 @@ public final class Translate
 	return modTranslate(e,old,thisexpr,null);
     }
     private Expr modTranslate(Expr e, boolean old, Expr thisexpr, Hashtable args) {
+	TrAnExpr.initForClause(true);
 	if (old) return TrAnExpr.trSpecExpr(e,premap,premap,thisexpr);
 	else if (args == null)  return TrAnExpr.trSpecExpr(e,thisexpr);
 	else     return TrAnExpr.trSpecExpr(e,args,args,thisexpr);
@@ -3692,6 +3706,7 @@ public final class Translate
     private void modChecksComplete(ExprVec ev, int loc, int aloc) {
 	if (NoWarn.getChkStatus(TagConstants.CHKMODIFIES,loc,aloc==Location.NULL?loc:aloc)
 				!= TagConstants.CHK_AS_ASSERT) {
+	    TrAnExpr.closeForClause();
 	    return;
         }
 	if (ev.size() == 0) {
@@ -3701,11 +3716,14 @@ public final class Translate
 		    "There is no assignable clause allowing this assignment",aloc);
 	} else if (aloc == Location.NULL) {
 	    //System.out.println("Generating a modifies check " + ev.size());    
+	    addNewAssumptionsNow();
 	    addCheck(loc,TagConstants.CHKMODIFIES, GC.or(ev));
         } else {
 	    //System.out.println("Generating a modifies check " + ev.size());    
+	    addNewAssumptionsNow();
 	    addCheck(loc,TagConstants.CHKMODIFIES, GC.or(ev),aloc);
 	}
+	TrAnExpr.closeForClause();
     }
 
     private boolean isTrueLiteral(Expr p) {
@@ -4015,6 +4033,21 @@ public final class Translate
     }
 
     private void addNewAssumptions() {
+	addNewAssumptionsHelper();
+        axsToAdd.addAll(TrAnExpr.trSpecAuxAxiomsNeeded);
+	TrAnExpr.closeForClause();
+    }
+    private void addNewAssumptionsNow() {
+	addNewAssumptionsHelper();
+        axsToAdd.addAll(TrAnExpr.trSpecAuxAxiomsNeeded);
+	ExprVec ev = ExprVec.make(10);
+	GetSpec.addAxioms(axsToAdd,ev);
+	for (int i=0; i<ev.size(); ++i) {
+	    code.addElement(GC.assume(ev.elementAt(i)));
+	}
+	TrAnExpr.closeForClause();
+    }
+    private void addNewAssumptionsHelper() {
 	if (TrAnExpr.trSpecModelVarsUsed != null) {
 	  // These assignments with a null rhs are used to indicate
 	  // that the target has some unknown new value.
@@ -4026,8 +4059,6 @@ public final class Translate
 	}
 	addAssumptions(TrAnExpr.trSpecExprAuxConditions);
 	addAssumptions(TrAnExpr.trSpecExprAuxAssumptions);
-        axsToAdd.addAll(TrAnExpr.trSpecAuxAxiomsNeeded);
-	TrAnExpr.closeForClause();
     }
     /**
      * Return the <code>VariableAccesss</code> associated with <code>d</code> by a
@@ -4300,6 +4331,9 @@ public final class Translate
             if (freshResult) code.addElement(GC.gets(GC.resultvar, eod));
 	    else            code.addElement(modify(GC.resultvar, scall));
             code.addElement(modify(GC.xresultvar, scall));
+
+	    // FIXME - only if not pure
+	    code.addElement(modify(GC.statevar, scall));
 						 
 	    for (int i=0; i<spec.postAssumptions.size(); ++i) {
 		addAssumption(spec.postAssumptions.elementAt(i));

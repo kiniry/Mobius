@@ -544,8 +544,6 @@ public final class GC {
 							    UniqName.specialVariable);
   public static final VariableAccess statevar = makeVar("state",
 						  UniqName.specialVariable);
-  public static final VariableAccess modifiesvar = makeVar("modifiesvar",
-						  UniqName.specialVariable);
 
   // LSvar is not final because it is temporarily updated at
   // synchronized expressions. See trExpr
@@ -628,6 +626,12 @@ public final class GC {
 	Expr e = nary(Location.NULL, Location.NULL, TagConstants.METHODCALL, ev);
 	((NaryExpr)e).methodName = id;
 	return e;
+  }
+
+  public static Expr nary(Identifier id, Expr e) {
+	ExprVec ev = ExprVec.make(1);
+	ev.addElement(e);
+	return nary(id,ev);
   }
 
   public static Expr nary(int sloc, int eloc, Identifier id, ExprVec ev) {

@@ -38,6 +38,7 @@ public class NewObject {
 }
 
 class NewObjectA {
+	//@ pure
 	NewObjectA();
 
 	//@ invariant len == 7;

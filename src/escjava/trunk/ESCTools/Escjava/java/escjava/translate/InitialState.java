@@ -99,6 +99,10 @@ public final class InitialState {
     conjuncts.addElement(GC.nary(TagConstants.ANYEQ,
 				 addMapping(GC.allocvar.decl), GC.allocvar));
 
+    // state@pre == state
+    conjuncts.addElement(GC.nary(TagConstants.ANYEQ,
+				 addMapping(GC.statevar.decl), GC.statevar));
+
     // conjoin the conjuncts
     is = GC.and(conjuncts);
   }

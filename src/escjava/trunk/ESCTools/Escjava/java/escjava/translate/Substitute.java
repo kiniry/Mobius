@@ -316,10 +316,20 @@ public class Substitute {
 	    newNopats.addElement(doSubst(subst, qe.nopats.elementAt(i), rhsVars));
 	  }
 	}
-if (newNopats != null && qe.pats != null) System.out.println("CANT HAVE BOTH PATS AND NOPATS"); // FIXME
+
+	ExprVec newPats;
+	if (qe.pats == null) {
+	  newPats = null;
+	} else {
+	  newPats = ExprVec.make(qe.pats.size());
+	  for (int i = 0; i < qe.pats.size(); i++) {
+	    newPats.addElement(doSubst(subst, qe.pats.elementAt(i), rhsVars));
+	  }
+	}
+
 	result = QuantifiedExpr.make( qe.sloc, qe.eloc, qe.quantifier,
 		  	   	      qe.vars, doSubst(subst,qe.expr,rhsVars),
-				      newNopats, qe.pats);
+				      newNopats, newPats);
 	break;
       }
 	  

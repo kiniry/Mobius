@@ -876,9 +876,8 @@ while (ee.hasMoreElements()) {
 		ASTNode o = (ASTNode)axsToAdd.iterator().next();
 		axsToAdd.remove(o);
 		if (!axsDone.add(o)) continue;
-		Expr e = TrAnExpr.getEquivalentAxioms(o);
+		Expr e = TrAnExpr.getEquivalentAxioms(o,null);
 		assumptions.addElement(e);
-		//post.addElement(GC.assumeCondition(e,Location.NULL));
 		axsToAdd.addAll( TrAnExpr.getAxiomSet(o));
 	    }
     }
@@ -1392,6 +1391,7 @@ while (ee.hasMoreElements()) {
 
         ExprVec r = ExprVec.make();
 
+	TrAnExpr.initForClause();
         for( Enumeration enum = scope.typeSigs();
              enum.hasMoreElements(); )
         {
@@ -1409,11 +1409,18 @@ while (ee.hasMoreElements()) {
                 } else if (tde.getTag() == TagConstants.REPRESENTS &&
 				Main.options().useFcnsForModelVars ) {
 		    NamedExprDeclPragma p = (NamedExprDeclPragma)tde;
-		    r.addElement( TrAnExpr.getRepresentsAxiom(p));
+		    FieldDecl fd = ((FieldAccess)p.target).decl;
+		    Expr e = TrAnExpr.getRepresentsAxiom(p,null);
+		    ExprVec ev = (ExprVec)Utils.axiomDecoration.get(fd);
+		    if (ev == null) ev = ExprVec.make(10);
+		    ev.addElement(e);
+		    Utils.axiomDecoration.set(fd,ev);
+		    r.addElement( e );
 		}
             }
         }
 
+	TrAnExpr.closeForClause();
         return r;
     }
 
@@ -1505,7 +1512,7 @@ while (ee.hasMoreElements()) {
 		ASTNode o = (ASTNode)axsToAdd.iterator().next();
 		axsToAdd.remove(o);
 		if (!axsDone.add(o)) continue;
-		Expr e = TrAnExpr.getEquivalentAxioms(o);
+		Expr e = TrAnExpr.getEquivalentAxioms(o,null);
 		axsToAdd.addAll( TrAnExpr.getAxiomSet(o));
                 // Add a new node at the end of "ii"
                 InvariantInfo invinfo = new InvariantInfo();
