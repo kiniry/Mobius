@@ -2412,9 +2412,31 @@ command-line options to achieve each of these behaviors.
 @item Treat them as a JML assert statement, namely, as equivalent to
 @*@center{@code{//@@ assert }@emph{predicate}@code{;}}
 @end enumerate
- 
+@noindent
+The command line options for these three cases are
+@enumerate A
+@item @code{-source 1.4}
+@item @code{-javaAssertions} or @code{-eajava}
+@item @code{-jmlAssertions} or @code{-eajml}
+@end enumerate
+@noindent
 
-[[[ What are the command-line options ??? ]]]
+
+Note that there are, internally, three independent conditions:
+@itemize @bullet
+@item The version of Java being recognized.  This is controlled by the @code{-source} option.
+@item Whether Java assert statements are enabled (given that Java 1.4 source is
+being processed).  Java has them disabled by 
+default.  This is controlled by the options @code{-disableassertions}, 
+@code{-enableassertions}, @code{-da}, @code{-ea}.  The use, as in Java, of
+package names with these assertions or of enabling or disabling system
+assertions is not implemented in ESC/Java2.
+@item Whether to treat Java 1.4 assert statements in Java mode or JML mode (given
+that Java assertions are enabled).  This is controlled by the
+@code{-javaAssertions} and @code{-jmlAssertions} options.  @code{-javaAssertions}
+is the default; both options also effectively do @code{-source 1.4 -ea}.
+@end itemize
+
 
 Here are some examples of use:
 @itemize @bullet
@@ -3131,8 +3153,29 @@ being used)
 binary (.class) files for types are sought; the default is to use the value of
 the CLASSPATH environment variable, or to use just the current directory if 
 neither -classpath nor CLASSPATH is specified [[[ What about java property ]]]
+@cindex -da
+@item @code{-da} : synonym for @code{-disableassertions}
+@cindex -ea
+@item @code{-ea} : synonym for @code{-enableassertions}
+@cindex -eajava
+@item @code{-eajava} : synonym for @code{-javaAssertions}
+@cindex -eajml
+@item @code{-eajml} : synonym for @code{-jmlAssertions}
+@cindex -disableassertions
+@item @code{-disableassertions} : as in Java, causes parsing to read Java 1.4 source but ignores
+ any Java assert statements
+@cindex -enableassertions
+@item @code{-enableassertions} : as in Java, causes parsing to read Java 1.4 source
+and to use Java assert statements 
 @cindex -help
 @item @code{-help} : causes the program to print information about command-line options and then to terminate [ESC/Java2 only]
+@cindex -javaAssertions
+@item @code{-javaAssertions} : causes parsing to read Java 1.4 source and to treat
+Java assert statements as Java does, as a throw of a @code{java.lang.AssertionError}
+exception
+@cindex -jmlAssertions
+@item @code{-jmlAssertions} : causes parsing to read Java 1.4 source and to treat
+Java assert statements like JML assert statements
 @cindex -noCautions
 @cindex cautions
 @item @code{-noCautions} : suppresses the reporting of any cautions
@@ -3158,7 +3201,9 @@ the markers @code{//+@@} and @code{/*+@@} (@pxref{Format of annotations}).
 definition of Java for the given version.  The only implemented effect of this
 option is the interpretation of @code{assert} as a keyword if the version is
 @code{1.4} and as a normal identifier if the version is not @code{1.4}.  The default
-is version @code{1.3}.  @xref{Java and JML assert statements}.
+is version @code{1.3}.  In the absence of other options, enabling Java 1.4 will
+cause Java assertions to be treated as exceptions (the @code{-javaAssertions} mode).
+@xref{Java and JML assert statements}.
 @cindex -sourcepath
 @cindex sourcepath
 @item @code{-sourcepath} @emph{directory-path} : specifies the directories in which
