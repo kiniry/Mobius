@@ -554,7 +554,7 @@ public class ExprModifierPragma extends ModifierPragma
     //# PostCheckCall
     private void postCheck() {
         boolean goodtag =
-            (tag == TagConstants.DEFINED_IF || tag == TagConstants.WRITABLE_IF
+            (tag == TagConstants.READABLE_IF || tag == TagConstants.WRITABLE_IF
              || tag == TagConstants.REQUIRES || tag == TagConstants.ALSO_REQUIRES
              || tag == TagConstants.ENSURES || tag == TagConstants.ALSO_ENSURES
              || tag == TagConstants.MONITORED_BY || tag == TagConstants.MODIFIES

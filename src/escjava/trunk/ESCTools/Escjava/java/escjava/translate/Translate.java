@@ -2995,7 +2995,7 @@ public final class Translate {
 	  addCheck(locId, TagConstants.CHKINITIALIZATION, init, prag);
 	  break;
 
-	case TagConstants.DEFINED_IF:
+	case TagConstants.READABLE_IF:
 	  map = initializeRWCheckSubstMap(map, actualSelf, locId);
 	  Expr dc = TrAnExpr.trSpecExpr(((ExprModifierPragma)prag).expr, map, null);
 	  addCheck(locId, TagConstants.CHKDEFINEDNESS, dc, prag);
@@ -3113,7 +3113,7 @@ public final class Translate {
       int tag= prag.getTag();
       switch (tag) {
 	case TagConstants.UNINITIALIZED:
-	case TagConstants.DEFINED_IF:
+	case TagConstants.READABLE_IF:
 	case TagConstants.SPEC_PUBLIC:
 	case TagConstants.NON_NULL:		// handled above
 	  break;

@@ -109,7 +109,7 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
                 write(o, " */");
                 break;
 
-            case TagConstants.DEFINED_IF:
+            case TagConstants.READABLE_IF:
             case TagConstants.WRITABLE_IF:
             case TagConstants.REQUIRES:
             case TagConstants.ALSO_REQUIRES:

@@ -1192,7 +1192,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                 }
                 break;
 	  
-            case TagConstants.DEFINED_IF:
+            case TagConstants.READABLE_IF:
                 {
                     ExprModifierPragma emp = (ExprModifierPragma)p;
 

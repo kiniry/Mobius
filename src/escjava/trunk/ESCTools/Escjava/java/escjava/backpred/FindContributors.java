@@ -579,7 +579,7 @@ public class FindContributors
 
 	    /*
 	     * We need to walk the "spec" part of fd as well to handle
-	     * defined_if and the like:
+	     * readable_if and the like:
 	     */
 	    if (fd.pmodifiers!=null) {
 		for (int i=0; i<fd.pmodifiers.size(); i++)

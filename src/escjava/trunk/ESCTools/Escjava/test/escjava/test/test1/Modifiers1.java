@@ -11,7 +11,7 @@ public class Modifiers1 {
   /*@ writable_deferred */
   public int v1 /*@ monitored_by mu1 */;
 
-  public int v2 /*@ monitored_by mu1, mu2; defined_if 10 < v1 */;
+  public int v2 /*@ monitored_by mu1, mu2; readable_if 10 < v1 */;
 
   public int update(Modifiers1 v1)
     /*@ requires max(LS) == mu1 & 10 < v1.v1 */

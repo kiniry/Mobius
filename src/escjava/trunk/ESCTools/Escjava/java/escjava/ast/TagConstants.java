@@ -46,8 +46,7 @@ public class TagConstants extends javafe.tc.TagConstants
     public static final int ASSERT = ASSUME + 1;
     public static final int AXIOM = ASSERT + 1;
     public static final int DECREASES = AXIOM + 1;
-    public static final int DEFINED_IF = DECREASES + 1;
-    public static final int DTTFSA = DEFINED_IF + 1;
+    public static final int DTTFSA = DECREASES + 1;
     public static final int ENSURES = DTTFSA + 1;
     public static final int ELEMSNONNULL = ENSURES + 1; // Function
     public static final int ELEMTYPE = ELEMSNONNULL + 1; // Function
@@ -70,7 +69,8 @@ public class TagConstants extends javafe.tc.TagConstants
     public static final int NON_NULL = MONITORED_BY + 1;
     public static final int NOWARN = NON_NULL + 1;
     public static final int PRE = NOWARN + 1;
-    public static final int RES = PRE + 1;
+    public static final int READABLE_IF = PRE + 1;
+    public static final int RES = READABLE_IF + 1;
     public static final int REQUIRES = RES + 1;
     public static final int SET = REQUIRES + 1;
     public static final int SPEC_PUBLIC = SET + 1;
@@ -324,7 +324,6 @@ public class TagConstants extends javafe.tc.TagConstants
         Identifier.intern("assert"),
         Identifier.intern("axiom"),
         Identifier.intern("decreases"),
-        Identifier.intern("readable_if"),
         Identifier.intern("\\dttfsa"),
         Identifier.intern("ensures"),
         Identifier.intern("\\nonnullelements"),
@@ -348,6 +347,7 @@ public class TagConstants extends javafe.tc.TagConstants
         Identifier.intern("non_null"),
         Identifier.intern("nowarn"),
         Identifier.intern("\\old"),
+        Identifier.intern("readable_if"),
         Identifier.intern("\\result"),
         Identifier.intern("requires"),
         Identifier.intern("set"),
