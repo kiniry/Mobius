@@ -23,9 +23,11 @@ the compiled executables must be present for the target platform and are
 used directly.
 (FIXME).
 
-(FIXME) Two issues which need resolution:
+(FIXME) Issues which need resolution:
 	- control of where the compiled packages are placed
-	- removing the user-specific path in simplify/src/m3overrides
+	- removing the user-specific path in simplify/src/m3overrides (DONE)
+	- verify that it works on a different Mac (to be sure it is not using my environment)
+	- there are packages in libs that are not built
 
-				- David Cok, 3 July 2003
+				- David Cok, 3 July 2003; 15 nov 2003
 
