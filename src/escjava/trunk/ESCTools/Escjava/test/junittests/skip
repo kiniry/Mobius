@@ -19,6 +19,7 @@ ParsePure.java
 ModifiesPure.java
 ## A bug
 EX.java
+FormalNonnullInheritance.java
 ## dangling also
 Heavyweight.java
 ## Modify everything tests
