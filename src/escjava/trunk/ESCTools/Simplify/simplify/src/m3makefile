@@ -8,7 +8,7 @@
 /*      modified on Wed Oct 21 15:07:36 PDT 1998 by gnelson                  */
 /*      modified on Fri Apr 19 16:04:32 PDT 1996 by detlefs                  */
 
-m3_option("-g2 -times")
+%m3_option("-g2 -times")
 /* m3_option("-X2%-p%") */
 
 %m3_option("-verbose")
@@ -32,7 +32,7 @@ implementation("Simplify")
 % On systems that do not support shared libraries the following
 % line (or, on some systems, the one after it) is necessary:
 % option("standalone", "T")
-% build_standalone()
+build_standalone()
 % Using cm3 on OS X, neither line is necessary.
 
 Program("Simplify")
