@@ -36,12 +36,16 @@ import javafe.util.Location;
  *           + LabelExpr (Identifier label, Expr expr)
  *           + NaryExpr (int op, Identifier methodName, Expr* exprs)
  *           + QuantifiedExpr (GenericVarDecl* vars, Expr expr)
+ *           + GeneralizedQuantifiedExpr (GenericVarDecl* vars, Expr expr)
+ *                // Sum, Product, Max, Min
+ *           + NumericalQuantifiedExpr (GenericVarDecl* vars, Expr expr)
+ *                // NumOf
  *           + SubstExpr (GenericVarDecl var, Expr val, Expr target)
  *           + TypeExpr (Type type)
- *         + LockSetExpr ()
  *         + EverythingExpr ()
- *         + NothingExpr ()
+ *         + LockSetExpr ()
  *         + NotSpecifiedExpr ()
+ *         + NothingExpr ()
  *         + ResExpr ()
  *         + WildRefExpr (Expr expr)
  *         + GuardExpr (Expr expr)
@@ -72,20 +76,31 @@ import javafe.util.Location;
  *    - Stmt ()
  *       - StmtPragma ()
  *         + SimpleStmtPragma () // Unreachable
- *         + ExprStmtPragma (Expr expr) // Assume, Assert, LoopInvariant, LoopPredicate
+ *         + ExprStmtPragma (Expr expr, Expr label) 
+ *             // Assume, Assert, LoopInvariant, LoopPredicate
  *         + SetStmtPragma (Expr target, Expr value) 
  *         + SkolemConstantPragma (LocalVarDecl* decl)
  *    - ModifierPragma ()
- *         + SimpleModifierPragma () // Uninitialized, Monitored, Nonnull, WritableDeferred, Helper
- *         + ExprModifierPragma (Expr expr) // DefinedIf, Writable, Requires, Ensures, AlsoEnsures, MonitoredBy, Constraint
- *           // plus JML keywords: Also, Pre, Post (kiniry)
- *	   + CondExprModifierPragma (Expr expr, Expr cond) // Modifiers, AlsoModifiers, Assignable, Modifiable // (cok)
- *         + VarExprModifierPragma (GenericVarDecl arg, Expr expr) // Exsures, AlsoExsures
- *           // plus JML keywords: Signals
+ *         + SimpleModifierPragma () 
+ *                   // Uninitialized, Monitored, NonNull, WritableDeferred, Helper
+ *         + ExprModifierPragma (Expr expr) 
+ *                   // DefinedIf, Writable, Requires, Pre, Ensures, Post, AlsoEnsures, 
+ *                   // MonitoredBy, Constraint, InvariantFor, Space
+ *         + StmtModifierPragma (Stmt stmt)
+ *                   // \Duration, \WorkingSpace
+ *         + IdentifierModifierPramga (Identifier id)
+ *                   // IsInitialized
+ *         + ReachModifierPragma (Expr expr, Identifier id, StoreRefExpr)
+ *                   // \Reach
+ *	   + CondExprModifierPragma (Expr expr, Expr cond) 
+ *                   // Modifiers, AlsoModifiers, Assignable, Modifiable
+ *         + VarExprModifierPragma (GenericVarDecl arg, Expr expr)
+ *                   // Exsures, AlsoExsures, Signals, AlsoSignals
  *    - LexicalPragma ()
  *      + NowarnPragma (Identifier* checks)
  *      + ImportPragma (ImportDecl decl)
- *    + Spec (MethodDecl md, Expr* targets, Hashtable preVarMap, Condition* pre, Condition* post)
+ *    + Spec (MethodDecl md, Expr* targets, Hashtable preVarMap, 
+ *            Condition* pre, Condition* post)
  *    + Condition(int label, Expr pred)
  *    + DefPred (Identifier predId, GenericVarDecl* args, Expr body)
  * </pre>
@@ -160,6 +175,47 @@ public class QuantifiedExpr extends GCExpr
 
 }
 
+public class GeneralizedQuantifiedExpr extends GCExpr
+{
+  // Sum, Product, Max, Min
+  //# int quantifier
+  //# GenericVarDecl* vars
+  //# Expr expr
+  //# Expr* nopats NullOK
+
+  //# ManualTag
+  public final int getTag() { return quantifier; }
+
+  //# PostCheckCall
+  private void postCheck() {
+    boolean goodtag =
+      (quantifier == TagConstants.JML_MIN
+       || quantifier == TagConstants.JML_PRODUCT
+       || quantifier == TagConstants.MAX
+       || quantifier == TagConstants.JML_SUM);
+    Assert.notFalse(goodtag);
+  }
+}
+
+public class NumericalQuantifiedExpr extends GCExpr
+{
+  // NumOf
+  //# int quantifier
+  //# GenericVarDecl* vars
+  //# Expr expr
+  //# Expr* nopats NullOK
+
+  //# ManualTag
+  public final int getTag() { return quantifier; }
+
+  //# PostCheckCall
+  private void postCheck() {
+    boolean goodtag =
+      (quantifier == TagConstants.JML_NUM_OF);
+    Assert.notFalse(goodtag);
+  }
+}
+
 public class SubstExpr extends GCExpr
 {
   //# GenericVarDecl var
@@ -185,8 +241,6 @@ public class LabelExpr extends GCExpr
   //# boolean positive
   //# Identifier label
   //# Expr expr
-
-
 }
 
 public class WildRefExpr extends Expr
@@ -552,6 +606,43 @@ public class SimpleStmtPragma extends StmtPragma
   public int getStartLoc() { return loc; }
 }
 
+public class IdentifierModifierPragma extends ModifierPragma
+{
+  //# int tag
+  //# Identifier id
+  //# int loc
+
+  //# PostCheckCall
+  private void postCheck() {
+    boolean goodtag =
+      (tag == TagConstants.JML_IS_INITIALIZED);
+    Assert.notFalse(goodtag);
+  }
+
+  public int getStartLoc() { return loc; }
+}
+
+public class StmtModifierPragma extends ModifierPragma
+{
+  //# int tag
+  //# Stmt stmt
+  //# int loc
+
+  //# ManualTag
+  public final int getTag() { return tag; }
+
+  //# PostCheckCall
+  private void postCheck() {
+    boolean goodtag =
+      (tag == TagConstants.JML_WACK_DURATION || 
+       tag == TagConstants.JML_WACK_WORKING_SPACE);
+    Assert.notFalse(goodtag);
+  }
+
+  public int getStartLoc() { return loc; }
+  public int getEndLoc() { return stmt.getEndLoc(); }
+}
+
 public class ExprStmtPragma extends StmtPragma
 {
   //# int tag
@@ -685,6 +776,16 @@ public class CondExprModifierPragma  extends ModifierPragma {
     public int getEndLoc() { return cond.getEndLoc(); }
 }
 
+public class ReachModifierPragma extends ModifierPragma
+{
+    //# Expr expr
+    //# Identifier id
+    //# Identifier* storerefs
+    //# int loc
+
+    public int getStartLoc() { return loc; }
+}
+
 public class VarExprModifierPragma extends ModifierPragma
 {
     // Extended to support JML
@@ -709,7 +810,6 @@ public class VarExprModifierPragma extends ModifierPragma
     public int getStartLoc() { return loc; }
     public int getEndLoc() { return expr.getEndLoc(); }
 }
-
 
 public class NowarnPragma extends LexicalPragma
 {
