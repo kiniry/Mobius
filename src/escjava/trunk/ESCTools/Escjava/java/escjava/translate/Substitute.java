@@ -448,6 +448,12 @@ public class Substitute {
 			me.loc, me.locOpenParen);
 	  r.decl = me.decl;
 	  result = r;
+	} else if (e instanceof AmbiguousVariableAccess) {
+	  // This will happen if there has been an undefined variable in
+	  // another compilation unit.  We ignore it here, rather than
+	  // throwing the Assertion failure, in order to continue as 
+	  // gracefully as possible.
+	  result = e;
 	} else {
 
 	    Assert.fail("Bad expr in Substitute.doSubst: "+e+ " " 

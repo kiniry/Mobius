@@ -1349,6 +1349,11 @@ wrap those variables being modified and not everything.
 				"Failed to translate some unimplemented construct");
       naryTag = -1; // dummy assignment
     } else if (Types.isErrorType(rightType)) {
+	if (be.right instanceof AmbiguousVariableAccess)
+	ErrorSet.notImplemented(!Main.options().noNotCheckedWarnings,be.right.getStartLoc(),
+				"Unknown variable");
+	else
+	
 	ErrorSet.notImplemented(!Main.options().noNotCheckedWarnings,be.right.getStartLoc(),
 				"Failed to translate some unimplemented construct");
       naryTag = -1; // dummy assignment
