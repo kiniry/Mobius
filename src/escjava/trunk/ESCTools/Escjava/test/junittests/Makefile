@@ -3,13 +3,17 @@ include ${TOP}/Makefile.defs
 
 ############################################################################
 # ESCJAVA is (only) used for standalone tests
-ESCJAVA = ${ESCTOOLS_ROOT}/Escjava/escj -nowarn Deadlock -verboseTrace
+ifdef COMSPEC
+ESCJAVA = ${ESCTOOLS_ROOT}/Escjava/escj.bat
+else
+ESCJAVA = ${ESCTOOLS_ROOT}/Escjava/escj 
+endif
 
-_CLASSPATH = $(call canonicalize,${ESCTOOLS_ROOT}/Escjava/java/daikon-instrumented:${ESC_CLASSPATH}:${JUNIT_UTILS_PATH}:.:/home/cok/Daikon/daikon/daikon.jar:/home/cok/Daikon/daikon/java/ajax-ship/ajax.jar)
-##_CLASSPATH = $(call canonicalize,${ESC_CLASSPATH}:${JUNIT_UTILS_PATH}:.)
+##_CLASSPATH = $(call canonicalize,${ESCTOOLS_ROOT}/Escjava/java/daikon-instrumented:${ESC_CLASSPATH}:${JUNIT_UTILS_PATH}:.:/home/cok/Daikon/daikon/daikon.jar:/home/cok/Daikon/daikon/java/ajax-ship/ajax.jar)
+_CLASSPATH = ${ESC_CLASSPATH}$(call canonicalize,:${JUNIT_UTILS_PATH}:.)
 _TMP = $(call canonicalize,/tmp)
 _SIMP = $(call canonicalize,${ESCJ_SIMPLIFY})
-_SPECS = $(call canonicalize,${ESC_SPECS})
+_SPECS = $(call canonicalize,.:${ESC_SPECS})
 
 # Used to invoke text-based JUnit tests
 export JUNIT = ${JAVA} -Xmx256M -classpath "${_CLASSPATH}" \
@@ -22,6 +26,7 @@ export JUNITSW = $(JAVA) -Xmx256M -classpath "${_CLASSPATH}" \
 ##############################################################################
 .PHONY: buildtests
 buildtests:
+	echo "${_CLASSPATH}"
 	$(JAVAC) -classpath "${_CLASSPATH}" TestSuite.java
 	cp Binary.javax Binary.java
 	javac Binary.java
@@ -66,7 +71,8 @@ ifdef COMSPEC
 	@touch .canonicalized
 endif
 
-ALWAYSFLAGS = -nowarn Deadlock -verboseTrace -testMode -classpath .:${_SPECS}
+ALWAYSFLAGS = -nowarn Deadlock -verboseTrace -testMode -classpath "${_SPECS}"
+
 DEFAULTFLAGS = " "
 
 ## This lists files without .java suffixes that need to be added to the
@@ -92,7 +98,9 @@ lists:
 		echo -n ${ALWAYSFLAGS} " " >> listtests ; \
 		( grep FLAGS $$f || echo ${DEFAULTFLAGS} ) \
 		| sed -e 's?//#FLAGS:??' -e "s/\$$/ $$f/"  \
-		| sed -e "s@ESCTOOLS_ROOT@${ESCTOOLS_ROOT}@" >> listtests ; \
+		| sed -e "s@ESCTOOLS_ROOT@${ESCTOOLS_ROOT}@" \
+		| sed -e "s@.:..@.;..@" \
+		>> listtests ; \
 	done
 
 .PHONY: septest
@@ -121,7 +129,7 @@ partjunittests:
 	@while test -s templist ; do \
 	    head -n ${CHUNK} templist > listtests ;\
 	    ${MAKE} --no-print-directory quiet-junittests ;\
-	    tail +${CHUNK} templist > templista ;\
+	    tail +${CHUNK} templist | tail +2 > templista ;\
 	    mv templista templist; \
 	done 
 	@rm -f templist templista
@@ -145,7 +153,7 @@ othertests: $(addsuffix -test,${OTHERTESTS})
 
 %-test: 
 	@echo Testing $* 
-	@if [ ! -e $* ] ; then \
+	if [ ! -e $* ] ; then \
 		echo No such file $* ;\
 	else \
 	(${ESCJAVA} ${ALWAYSFLAGS} \
