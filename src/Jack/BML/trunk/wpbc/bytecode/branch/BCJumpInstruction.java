@@ -35,6 +35,9 @@ public abstract class BCJumpInstruction extends BCInstruction {
 	 *            the instruction to which this jump instruction targets to
 	 */
 	public void setTarget(BCInstruction _t) {
+		if (_t == null) {
+			return;
+		}
 		targetPosition = _t.getPosition();
 	}
 	/**
