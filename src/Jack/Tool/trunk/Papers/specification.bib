@@ -20,7 +20,7 @@
 @string{amast02         = "Algebraic Methodology And Software
                   Technology (AMAST'02)"}
 @string{fme02           = "Formal Methods Europe (FME'02)"}
-@string{fme03           = "Formal Methods Europe (FME'03)"}
+@string{fme03           = "Formal Methods (FME'03)"}
 
 @string{jlap = "Journal of Logic and Algebraic Programming"}
 
@@ -128,6 +128,18 @@ year         = 2000
     year = "2000",
 }
 
+@article{BieberCGLWZ00,
+	author = {P. Bieber and J. Cazin  and
+                  P. Girard and J.-L. Lanet and V. Wiels and G. Zanon},
+	title = {Checking Secure Interactions of Smart Card Applets},
+	journal = {Journal of Computer Security},
+	year = 2002,
+	volume = 10,
+	number = 4,
+	pages = {369--398}
+}
+
+
 @inproceedings{BlumW96,
     author = "M. Blum and H. Wasserman",
     title = "Reflections on the Pentium Division Bug",
@@ -191,10 +203,11 @@ number = 2422,
 editor = "H. Kirchner and C. Ringeissen"
 }
 
-@misc{BreunesseCHJ03,
+@techreport{BreunesseCHJ03,
 title = {{Formal Methods for Smart Cards: an experience report}},
 author = "C. Breunesse and N. Cata{\~n}o and M. Huisman and B. Jacobs",
-note = "Manuscript",
+number = "NIII-R0316",
+institution = "NIII, University of Nijmegen",
 year = 2003
 }
 
@@ -205,7 +218,8 @@ year = 2003,
 booktitle = fme03,
 publisher = springer,
 series = lncs,
-note = "To appear"
+number = 2805, 
+pages = "422--439"
 }
 
 @inproceedings{BurdyCCEKLLP03,
@@ -271,6 +285,14 @@ publisher = springer
   month =        {April},
   day =          {14},
 }
+
+@techreport{Chalin03,
+  author = "P. Chalin",
+  title = "{JML} Support for Primitive Arbitrary Precision Numeric Types: Definition and Semantics",
+  institution = "Concordia University 002.1.1",
+  year  = "2003",
+}
+
 
 
 @INPROCEEDINGS{ClarkeE81,
@@ -620,6 +642,21 @@ year = 2001
 }		  
 
 
+@article{BartJacobsWP,
+author = "B. Jacobs",
+title = "Weakest Precondition Reasoning for {Java} Programs with {JML} Annotations",
+journal = "Journal of Logic and Algebraic Programming",
+year = 2003,
+note = "To appear"
+}
+
+@UNPUBLISHED{Jacobs03b, 
+AUTHOR       = "B. Jacobs", 
+TITLE        = "{Java}'s Integral Types in {PVS}",
+NOTE         = "Manuscript, 
+                \\\verb+http://www.cs.kun.nl/~bart/PAPERS/integral.ps.gz+", 
+YEAR         = "2003"}
+
 @misc{JassUrl,
 title        = {{The JASS project}},
 key       = {JASS},
@@ -717,6 +754,16 @@ publisher = "ACM Press",
 note = {Also as Technical Report TR \#00-15, Iowa State University}
 }
 
+
+@unpublished{Leavens03,
+AUTHOR = "G.T. Leavens and E. Poll and C. Clifton and Y. Cheon and C. Ruby",
+TITLE  = "{JML} Reference Manual",
+NOTE   = "Preliminary draft \\\verb+http://www.cs.iastate.edu/~leavens/JML/jmlrefman/jmlrefman_toc.html+"}
+
+@MISC{VERIF,
+KEY = "VER",
+AUTHOR   = "VerifiCard Project homepage",
+NOTE    = "\texttt{http://www.verificard.org}"}
 
 @misc{ LeeKKSV99,
   author = "I. Lee and S. Kannan and M. Kim and O. Sokolsky and M. Viswanathan",
@@ -938,6 +985,13 @@ number = 828
 } 
 
 
+@misc{PavlovaBBHL03,
+author = "M. Pavlova and L. Burdy and G. Barthe and M. Huisman and J.-L. Lanet",
+title = "Enforcing High-Level Security Properties for Applets",
+year = 2003,
+note = "Submitted to TACAS 2004"
+}
+
 @article{Pnueli81,
   author =       "A. Pnueli",
   title =        "The temporal semantics of concurrent programs",
@@ -1065,35 +1119,6 @@ editor = "H. Kirchner and C. Ringeissen"
 }
 
 
-@article{BartJacobsWP,
-author = "B. Jacobs",
-title = "Weakest Precondition Reasoning for {Java} Programs with {JML} Annotations",
-journal = "Journal of Logic and Algebraic Programming",
-year = 2003,
-note = "To appear (copy: \verb+http://www.cs.kun.nl/~bart/PAPERS/jmlwp.ps.Z+)"
-}
 
-@techreport{Chalin03,
-  author = "P. Chalin",
-  title = "{JML} Support for Primitive Arbitrary Precision Numeric Types: Definition and Semantics",
-  institution = "Concordia University 002.1.1",
-  year  = "2003",
-}
 
-@UNPUBLISHED{Jacobs03b, 
-AUTHOR       = "B. Jacobs", 
-TITLE        = "{Java}'s Integral Types in {PVS}",
-NOTE         = "Manuscript, 
-                \\\verb+http://www.cs.kun.nl/~bart/PAPERS/integral.ps.gz+", 
-YEAR         = "2003"}
-
-@unpublished{Leavens03,
-AUTHOR = "G.T. Leavens and E. Poll and C. Clifton and Y. Cheon and C. Ruby",
-TITLE  = "{JML} Reference Manual",
-NOTE   = "Preliminary draft \\\verb+http://www.cs.iastate.edu/~leavens/JML/jmlrefman/jmlrefman_toc.html+"}
-
-@MISC{VERIF,
-KEY = "VER",
-AUTHOR   = "VerifiCard Project homepage",
-NOTE    = "\texttt{http://www.verificard.org}"}
 
