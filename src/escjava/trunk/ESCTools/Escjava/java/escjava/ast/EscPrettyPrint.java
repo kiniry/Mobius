@@ -113,38 +113,53 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
     public void print(OutputStream o, int ind, ModifierPragma mp) {
         int tag = mp.getTag();
         switch (tag) {
-            case TagConstants.UNINITIALIZED:
-            case TagConstants.MONITORED:
-            case TagConstants.NON_NULL:
-            case TagConstants.SPEC_PUBLIC:
-            case TagConstants.WRITABLE_DEFERRED:
-            case TagConstants.HELPER:
             case TagConstants.JML_ALSO:
                 write(o, "/*@ "); 
                 write(o, TagConstants.toString(tag)); 
                 write(o, " */");
                 break;
 
-            case TagConstants.READABLE_IF:
-            case TagConstants.WRITABLE_IF:
-            case TagConstants.REQUIRES:
-            case TagConstants.JML_REQUIRES_REDUNDANTLY:
+	    case TagConstants.JML_CLOSEPRAGMA:
+	    case TagConstants.JML_OPENPRAGMA:
+                assert false : "Open and close pragmas are not yet handled.";
+                break;
+
+            case TagConstants.HELPER:
+            case TagConstants.JML_EXAMPLE:
+            case TagConstants.JML_EXCEPTIONAL_EXAMPLE:
+            case TagConstants.JML_FOR_EXAMPLE:
+            case TagConstants.JML_IMPLIES_THAT:
+            case TagConstants.JML_INSTANCE:
+            case TagConstants.JML_NORMAL_EXAMPLE:
+            case TagConstants.JML_PURE:
+            case TagConstants.JML_SPEC_PROTECTED: // SC HPT AAST 3
+            case TagConstants.MONITORED:
+            case TagConstants.NON_NULL:
+            case TagConstants.SPEC_PUBLIC:
+            case TagConstants.UNINITIALIZED:
+            case TagConstants.WRITABLE_DEFERRED:
+                write(o, "/*@ "); 
+                write(o, TagConstants.toString(tag)); 
+                write(o, " */");
+                break;
+
+            case TagConstants.ALSO_ENSURES:
             case TagConstants.ALSO_REQUIRES:
             case TagConstants.ENSURES:
+            case TagConstants.JML_DIVERGES:
+            case TagConstants.JML_DIVERGES_REDUNDANTLY:
             case TagConstants.JML_ENSURES_REDUNDANTLY:
-            case TagConstants.ALSO_ENSURES:
-            case TagConstants.MONITORED_BY:
-            case TagConstants.MODIFIES:
-            case TagConstants.JML_MODIFIES_REDUNDANTLY:
-            case TagConstants.ALSO_MODIFIES:
-            case TagConstants.JML_PRE:
-            case TagConstants.JML_PRE_REDUNDANTLY:
             case TagConstants.JML_POST:
             case TagConstants.JML_POST_REDUNDANTLY:
-            case TagConstants.JML_MODIFIABLE:
-            case TagConstants.JML_MODIFIABLE_REDUNDANTLY:
-            case TagConstants.JML_ASSIGNABLE:
-            case TagConstants.JML_ASSIGNABLE_REDUNDANTLY: {
+            case TagConstants.JML_PRE:
+            case TagConstants.JML_PRE_REDUNDANTLY:
+            case TagConstants.JML_REQUIRES_REDUNDANTLY:
+            case TagConstants.JML_WHEN:
+            case TagConstants.JML_WHEN_REDUNDANTLY:
+            case TagConstants.MONITORED_BY: // from EscPragmaParser.continuePragma(Token)
+            case TagConstants.READABLE_IF:
+            case TagConstants.REQUIRES:
+            case TagConstants.WRITABLE_IF: {
                 Expr e = ((ExprModifierPragma)mp).expr;
                 write(o, "/*@ "); 
                 write(o, TagConstants.toString(tag)); 
@@ -153,10 +168,29 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
                 write(o, "  */");
                 break;
             }
-    
+
+            case TagConstants.ALSO_MODIFIES: // from EscPragmaParser.continuePragma(Token)
+            case TagConstants.JML_ASSIGNABLE: // from EscPragmaParser.continuePragma(Token)
+            case TagConstants.JML_ASSIGNABLE_REDUNDANTLY: // from EscPragmaParser.continuePragma(Token)
+            case TagConstants.JML_MEASURED_BY: // from EscPragmaParser.continuePragma(Token)
+            case TagConstants.JML_MEASURED_BY_REDUNDANTLY: // from EscPragmaParser.continuePragma(Token)
+            case TagConstants.JML_MODIFIABLE: // from EscPragmaParser.continuePragma(Token)
+            case TagConstants.JML_MODIFIABLE_REDUNDANTLY: // from EscPragmaParser.continuePragma(Token)
+            case TagConstants.JML_MODIFIES_REDUNDANTLY: // from EscPragmaParser.continuePragma(Token)
+            case TagConstants.JML_NOT_MODIFIED: // from EscPragmaParser.continuePragma(Token)
+            case TagConstants.MODIFIES: { // from EscPragmaParser.continuePragma(Token)
+                Expr e = ((CondExprModifierPragma)mp).expr;
+                write(o, "/*@ "); 
+                write(o, TagConstants.toString(tag)); 
+                write(o, ' ');
+                self.print(o, ind, e); 
+                write(o, "  */");
+                break;
+            }
+                
+            case TagConstants.ALSO_EXSURES: 
             case TagConstants.EXSURES:
             case TagConstants.JML_EXSURES_REDUNDANTLY:
-            case TagConstants.ALSO_EXSURES: 
             case TagConstants.JML_SIGNALS:
             case TagConstants.JML_SIGNALS_REDUNDANTLY: {
                 VarExprModifierPragma vemp = (VarExprModifierPragma)mp;
@@ -170,7 +204,15 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
                 write(o, "  */");
                 break;
             }
-      
+                
+            case TagConstants.JML_BEHAVIOR:
+            case TagConstants.JML_EXCEPTIONAL_BEHAVIOR:
+            case TagConstants.JML_NORMAL_BEHAVIOR:
+                write(o, "/*@ "); 
+                write(o, TagConstants.toString(tag));
+                write(o, "  */");
+                break;
+
             default:
                 write(o, "/* Unknown ModifierPragma (tag = " + tag + ") */");
                 break;
@@ -186,19 +228,19 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
       write(o, " */");
       break;
 
-    case TagConstants.ASSUME:
-    case TagConstants.JML_ASSUME_REDUNDANTLY:
     case TagConstants.ASSERT:
-    case TagConstants.JML_ASSERT_REDUNDANTLY:
+    case TagConstants.ASSUME:
     case TagConstants.DECREASES:
+    case TagConstants.JML_ASSERT_REDUNDANTLY:
+    case TagConstants.JML_ASSUME_REDUNDANTLY:
     case TagConstants.JML_DECREASES_REDUNDANTLY:
     case TagConstants.JML_DECREASING:
     case TagConstants.JML_DECREASING_REDUNDANTLY:
-    case TagConstants.LOOP_PREDICATE:
-    case TagConstants.LOOP_INVARIANT:
     case TagConstants.JML_LOOP_INVARIANT_REDUNDANTLY: 
     case TagConstants.JML_MAINTAINING:
-    case TagConstants.JML_MAINTAINING_REDUNDANTLY: {
+    case TagConstants.JML_MAINTAINING_REDUNDANTLY:
+    case TagConstants.LOOP_INVARIANT:
+    case TagConstants.LOOP_PREDICATE: {
       Expr e = ((ExprStmtPragma)sp).expr;
       write(o, "/*@ "); 
       write(o, TagConstants.toString(tag)); 
