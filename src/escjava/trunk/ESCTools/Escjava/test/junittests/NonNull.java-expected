@@ -9,8 +9,11 @@ non_null: non_null() ...
 
 NonNull ...
 
+NonNull: qq(non_null) ...
+    [TIME]  passed
+
 NonNull: q(java.lang.Object) ...
-    [TIME]  passed immediately
+    [TIME]  passed
 
 NonNull: m(int) ...
     [TIME]  passed immediately
@@ -61,7 +64,7 @@ NonNull.java:34: Warning: Possible assignment of null to variable declared non_n
                 q(o);
                   ^
 Associated declaration is "NonNull.java", line 8, col 12:
-        void q(/*@ non_null */ Object o);
+        void q(/*@ non_null */ Object o) {}
                    ^
 ------------------------------------------------------------------------
     [TIME]  failed
@@ -72,7 +75,7 @@ NonNull.java:40: Warning: Possible assignment of null to variable declared non_n
                 q(o);
                   ^
 Associated declaration is "NonNull.java", line 8, col 12:
-        void q(/*@ non_null */ Object o);
+        void q(/*@ non_null */ Object o) {}
                    ^
 ------------------------------------------------------------------------
     [TIME]  failed

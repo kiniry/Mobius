@@ -4,8 +4,8 @@ class non_null {
 }
 
 public class NonNull {
-
-	void q(/*@ non_null */ Object o);
+	void qq(non_null n) {}
+	void q(/*@ non_null */ Object o) {}
 /*@
 	model void m(int i);
 	model void m(non_null Object i);

@@ -1,4 +1,4 @@
-public class PureCheck {
+public class PureCheck extends A implements B {
 
 	//@ invariant m() + n() == 0;
 	//@ constraint n() == \old(n());
@@ -61,4 +61,34 @@ public class PureCheck {
 	//@ ensures true;
 	//@ pure
 	public boolean kk(int i) { return true; }
+
+	int am();
+	int aq();
+	public int an();
+	public int ap();
+
+	//@ invariant am() + ap() + an() + aq() == 0;
+}
+
+class A extends D implements C {
+	//@ pure
+	int am();
+
+	int aq();
+
+}
+
+interface B {
+	//@ pure
+	int an();
+}
+
+interface C {
+	//@ pure
+	int ap();
+}
+
+class D {
+	//@ pure 
+	int aq();
 }
