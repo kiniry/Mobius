@@ -1146,11 +1146,11 @@ public class EscPragmaParser extends Parse implements PragmaParser
                     dst.ttype = TagConstants.MODIFIERPRAGMA;
                     noteUnsupportedCheckableJmlPragma(loc, tag);
                     expect(scanner, TagConstants.LPAREN);
-                    Stmt stmt = parseStatement(scanner);
+                    Expr expr = parsePrimaryExpression(scanner);
                     expect(scanner, TagConstants.RPAREN);
                     expect(scanner, TagConstants.SEMICOLON);
-                    dst.auxVal = StmtModifierPragma.make(TagConstants.WACK_DURATION,
-                                                         stmt, loc);
+                    dst.auxVal = ExprModifierPragma.make(TagConstants.WACK_DURATION,
+                                                         expr, loc);
                     return getNextPragma(dst);
                 }
 
@@ -1160,12 +1160,12 @@ public class EscPragmaParser extends Parse implements PragmaParser
                     dst.ttype = TagConstants.MODIFIERPRAGMA;
                     noteUnsupportedCheckableJmlPragma(loc, tag);
                     expect(scanner, TagConstants.LPAREN);
-                    Stmt stmt = parseStatement(scanner);
+                    Expr expr = parsePrimaryExpression(scanner);
                     expect(scanner, TagConstants.RPAREN);
                     expect(scanner, TagConstants.SEMICOLON);
                     dst.auxVal = 
-                        StmtModifierPragma.make(TagConstants.WACK_WORKING_SPACE,
-                                                stmt, loc);
+                        ExprModifierPragma.make(TagConstants.WACK_WORKING_SPACE,
+                                                expr, loc);
                     return getNextPragma(dst);
                 }
 
@@ -1291,6 +1291,11 @@ public class EscPragmaParser extends Parse implements PragmaParser
                 // after them up to the next new block must be skipped.
                 case TagConstants.ABRUPT_BEHAVIOR:
                     // unclear syntax and semantics (kiniry)
+                    ErrorSet.fatal(loc, 
+                                   "Encountered a keyword we recognize, " + 
+                                   "but do not know how to handle: " +
+                                   tag + " " + TagConstants.toString(tag));
+                    break;
 
                 // The following clauses are isolated keywords and can be skipped
                 // trivially.
@@ -1319,6 +1324,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
                                    "Encountered a keyword we recognize, " + 
                                    "but do not know how to parse: " +
                                    tag + " " + TagConstants.toString(tag));
+                    break;
 	
                 default:
                     ErrorSet.fatal(loc, "Unrecognized pragma: " + tag + " " +
