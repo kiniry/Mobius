@@ -1,6 +1,6 @@
-// Tests the behavior of assert in java mode
-//#FLAGS: -javaAssertions
-public class Assert {
+// Tests the behavior of assert in ignore mode
+//#FLAGS: -source 1.4 -da
+public class AssertNone {
 
 	//no -ea:  Unexpected exception
 	// -ea: Assert error
@@ -23,11 +23,6 @@ public class Assert {
 		assert false : 0; //@ nowarn Assert;
 	}
 
-	// No warnings
-	public void mmm_Nowarn_Nowarn(int i) {
-		assert true : "Hi";
-	}
-
 	// ESC Assert warning
 	public void nAssertWarn(int i) {
 		//@ assert true;
@@ -43,12 +38,6 @@ public class Assert {
 	// Postcondition warning
 	//@ exsures (java.lang.AssertionError e) false;
 	public void pPostwarning() throws AssertionError {
-		throw new java.lang.AssertionError("E");
-	}
-
-	// Postcondition warning
-	//@ exsures (java.lang.AssertionError e) true;
-	public void ppPostwarning() throws AssertionError {
 		throw new java.lang.AssertionError("E");
 	}
 

@@ -1,5 +1,5 @@
 ESC/Java version VERSION
-BadAccess.java:3: Caution: ghost annotation has a repeated access modifier
+BadAccess.java:3: Caution: ghost annotation has a repeated modifier
         //@ public ghost public int i;
                    ^
   Prover started:TIME

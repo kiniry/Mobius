@@ -1,4 +1,4 @@
-//#FLAGS: -source 1.4 -ea
+//#FLAGS: -jmlAssertions
 public class JavaAndJmlAssert
 {
     public void trivial_true() {

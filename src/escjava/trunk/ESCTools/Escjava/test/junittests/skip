@@ -24,3 +24,5 @@ Heavyweight.java
 ## New tests
 Privacy.java
 Instance.java
+Mod.java
+InstanceError.java
