@@ -141,13 +141,13 @@ runtest: javafe_test
 .PHONE: extensive_tests
 extensive_tests: javafe_test
 	${MAKE} -C test/javafe/parser/test big
-	${MAKE} -C test/javafe/test/fe prepjdk
 
 .PHONY: typecheckTests
 typecheckTests: javafe_test
 ifdef ALLTESTS
-	test/javafe/test/typecheckJavafe
-	test/javafe/test/typecheckJDK
+	@test/javafe/test/typecheckJavafe
+	@echo 
+	@test/javafe/test/typecheckJDK
 else
 	@true
 endif
@@ -186,9 +186,6 @@ wc:
 	wc ${TESTHARNESSFILES}
 	${JAVA} javafe.CountLines ${TESTHARNESSFILES}
 	# jrun javafe.parser.test.TestParse print ${TESTHARNESSFILES} | wc
-
-
-
 
 .PHONY: esc
 esc: source
