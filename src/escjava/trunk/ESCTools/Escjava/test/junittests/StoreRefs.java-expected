@@ -12,18 +12,6 @@ StoreRefs.java:26: Not implemented: Wild-ref expression not yet implemented
     [TIME]
 
 StoreRefs: m() ...
-StoreRefs.java:25: Not implemented: Wild-ref expression not yet implemented
-        //@ modifies StoreRefs.*;
-                     ^
-StoreRefs.java:26: Not implemented: Wild-ref expression not yet implemented
-        //@ modifies java.lang.Object.*;
-                     ^
-StoreRefs.java:25: Not implemented: Wild-ref expression not yet implemented
-        //@ modifies StoreRefs.*;
-                     ^
-StoreRefs.java:26: Not implemented: Wild-ref expression not yet implemented
-        //@ modifies java.lang.Object.*;
-                     ^
     [TIME]  passed
 
 StoreRefs: StoreRefs() ...
