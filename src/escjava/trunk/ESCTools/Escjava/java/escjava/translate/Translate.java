@@ -3617,7 +3617,7 @@ public final class Translate
 	    Object ex = caller_iterator.next();
 	    Expr caller_pred = caller_iterator.cond();
 	    Expr caller_tpred = null;
-	    if (!isTrueLiteral(caller_pred)) caller_tpred = 
+	    if (addConds && !isTrueLiteral(caller_pred)) caller_tpred = 
 			modTranslate(caller_pred,true,null);
 	    if (ex instanceof FieldAccess || ex instanceof FieldDecl) {
 		FieldDecl fdd;
