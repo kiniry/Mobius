@@ -1,4 +1,4 @@
-#!/proj/system/bin/tcsh
+#!/bin/tcsh
 # ESC/Java annotation wizard
 # Copyright (c) 1999, Compaq Computer Corporation
 # Change history:

@@ -1,4 +1,4 @@
-#!/proj/system/bin/tcsh
+#!/bin/tcsh
 # Program to reset what an invocation of the ESC/Java annotation wizard did
 # Copyright (c) 1999, Compaq Computer Corporation
 # Change history:
