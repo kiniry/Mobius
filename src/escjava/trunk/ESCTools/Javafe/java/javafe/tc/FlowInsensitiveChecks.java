@@ -207,11 +207,13 @@ public class FlowInsensitiveChecks {
                             ErrorSet.error(md.loc, 
                                            "A native method cannot include a body");
                     } else {
+/* We allow any method to have no body -- DRCok
                         if(!Modifiers.isAbstract( md.modifiers)
                            && !Modifiers.isNative( md.modifiers) && !specOnly)
                             ErrorSet.error(md.loc, 
                                            "Method must include a body unless "
                                            +"it is declared abstract or native");
+*/
                     }
                 } else {
                     // Constructor
