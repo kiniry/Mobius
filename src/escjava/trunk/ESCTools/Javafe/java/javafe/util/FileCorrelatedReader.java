@@ -90,6 +90,7 @@ public class FileCorrelatedReader extends LocationManagerCorrelatedReader
 
         this.buf = new byte[DEFAULTBUFSIZE];
         this.endBufNdx = 0;
+	//System.out.println("NEW STREAM " + streamid + " " + file.getHumanName());
     }
 
     /**

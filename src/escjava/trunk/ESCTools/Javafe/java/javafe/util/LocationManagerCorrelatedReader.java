@@ -75,6 +75,7 @@ public abstract class LocationManagerCorrelatedReader
 
   private static final int NLOA_DEFAULT_SIZE = 200;
 
+  protected int streamid;
 
     /**
      * This constructor allocates a range of location for use by the
@@ -99,6 +100,7 @@ public abstract class LocationManagerCorrelatedReader
 	this.NLOA = new int[NLOA_DEFAULT_SIZE];
 	this.NLOA[0] = 0;
 	
+        streamid = allCorrStreams.size();
 	allCorrStreams.addElement(this);
     }
 
