@@ -6,6 +6,7 @@
 # testing.
 
 # Javafe/setup.sh union Escjava/setup.sh:
+unset ANT_LIB
 unset BOOTCLASSPATH
 unset CLASSDIRECTORY
 unset CLASSES
@@ -35,7 +36,7 @@ unset JDK_SOURCES
 unset JML_HOME
 unset JML_SPECS
 unset JUNIT_HOME
-unset JUNIT_JAR
+unset JUNIT_LIB
 unset MOCHA_CLASSES
 unset MOCHA_ROOT
 unset SOURCEDIRECTORY
