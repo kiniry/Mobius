@@ -1,3 +1,90 @@
+2003-06-05  cok  <cok@kind.cs.kun.nl>
+
+	* Javafe/java/javafe/ast/TypeDeclElem.j:
+	* Javafe/java/javafe/ast/hierarchy.j:
+	Adding methods to get and set modifier bits
+
+	* Escjava/test/escjava/test/test38/ans:
+	* Escjava/test/escjava/test/test58/out.raw:
+	Corrected test results
+
+	* Javafe/java/javafe/parser/Lex.java:
+	Slight changes in lexing so that 0..x is not recognized as a
+	double followed by an (illegal) .
+
+	* Escjava/java/escjava/AnnotationHandler.java:
+	Enabling checks of class purity and checking purity of new
+	instance expressions in annotations
+
+	* Escjava/java/escjava/parser/EscPragmaParser.java:
+	Fixing a bug in handling of depends clauses
+
+	* Escjava/java/escjava/tc/FlowInsensitiveChecks.java:
+	Adding purity checks, conditional duration and working_space,
+	fixing other small bugs
+
+	* Escjava/java/escjava/translate/TrAnExpr.java:
+	Adding partial support for new array expressions in annotations
+
+	* Escjava/test/escjava/test/Makefile:
+	Slight changes to be able to capture actual output
+
+2003-05-27  David Cok  <cok@frontiernet.net>
+
+	* Escjava/test/escjava/test/test57/ans:
+	* Escjava/test/escjava/test/test58/ans:
+	* Escjava/test/escjava/test/test58/out.raw:
+	* Escjava/test/escjava/test/test60/out.raw:
+	* Escjava/test/escjava/test/test65/ans:
+	* Escjava/test/escjava/test/test65/out.raw:
+	* Escjava/java/escjava/AnnotationHandler.java:
+	* Escjava/java/escjava/Main.java:
+	* Escjava/java/escjava/ast/EscPrettyPrint.java:
+	* Escjava/java/escjava/ast/TagConstants.java:
+	* Escjava/java/escjava/parser/EscPragmaParser.java:
+	* Escjava/java/escjava/tc/FlowInsensitiveChecks.java:
+	* Escjava/java/escjava/translate/GetSpec.java:
+	* Escjava/java/escjava/translate/TrAnExpr.java:
+	* Escjava/java/escjava/translate/Translate.java:
+	* Escjava/test/escjava/parser/test/GoodJmlPragmas.ans:
+	* Escjava/test/escjava/test/Makefile:
+	* Escjava/test/escjava/test/alltests:
+	* Escjava/test/escjava/test/test15/ans:
+	* Escjava/test/escjava/test/test38/ans:
+	* Escjava/test/escjava/test/test40/ans:
+	* Escjava/test/escjava/test/test47/ans:
+	* Escjava/test/escjava/test/test49/ans:
+	* Escjava/test/escjava/test/test50/ans:
+	* Makefile.defs, Escjava/escj:
+	A grab bag of improvements (sorry it is all at once): parsing of
+	duration, working_space, contraint clauses; fixed minor bugs in
+	redundancy handling; enabled checking that methods used in
+	annotations are pure; added a -noNotCheckedWarnings, especially
+	for testing; allowed informal predicates where they were causing
+	aborts; implemented some checked on spec_protected; enabled
+	initializers on ghost variables (parsing only); allows non_null on
+	formal parameters if it is present in overridden declarations.
+
+	* Escjava/test/escjava/test/rtest:
+	Putting -quiet, as expected, on the running of escj for the tests
+
+	* Javafe/java/javafe/tc/PrepTypeDeclaration.java:
+	COmmenting out an error no appropriate for java 1.4
+
+	* Javafe/java/javafe/tc/FlowInsensitiveChecks.java:
+	* Escjava/java/escjava/translate/Substitute.java:
+	* Escjava/java/escjava/translate/Purity.java:
+	Embellishing the error message
+
+	* Escjava/java/escjava/tc/Types.java:
+	Added a range type for the .. operator; no use of it yet
+
+	* Escjava/java/escjava/parser/JmlCorrelatedReader.java:
+	Fixing a bug with -parsePlus support (ending a comment with @+*/)
+
+	* Escjava/java/escjava/backpred/FindContributors.java:
+	Fixing spelling error
+
 2003-05-23  Joseph R. Kiniry  <kiniry@acm.org>
 
 	* Escjava/java/escjava/ast/EscPrettyPrint.java:
