@@ -183,6 +183,12 @@ public class AnnotationHandler {
 			((MethodDecl)tde).id
 		: tde.getParent().id;
 	//javafe.util.Info.out("Desugaring specifications for " + tde.parent.id + "." + id);
+/*
+	if (Main.options().desugaredSpecs) {
+	  System.out.println("Desugaring specifications for " + tde.parent.id + "." + id);
+	    printSpecs(tde);
+	}
+*/
 	try { // Just for safety's sake
 	    tde.pmodifiers = desugarAnnotations(pmodifiers,tde);
 	} catch (Exception e) {
@@ -229,6 +235,8 @@ public class AnnotationHandler {
 		    + (mpe.arg.id == TagConstants.ExsuresIdnName ? "" :
 			" " + mpe.arg.id.toString()) + ")");
 		print(mpe.expr);
+	    } else {
+		EscPrettyPrint.inst.print(System.out,0,mp);
 	    }
 	    System.out.println("");
     }
@@ -257,18 +265,29 @@ public class AnnotationHandler {
 	if (!overrides && nonnullBehavior.size()==0) {
 	    // Add a default 'requires true' clause if there are no
 	    // specs at all and the routine is not overriding anything
-//if (tde instanceof MethodDecl)
-//System.out.println("QQQ " +  ((MethodDecl)tde).id + " " + overrides + " " + nonnullBehavior.size() + " " + pm.size());
 	    boolean doit = pm.size() == 0;
 	    if (!doit) {
 		// Need to determine if there are any clause specs
 		doit = true;
+		int k = pm.size();
+		while ((--k)>=0) {
+		    ModifierPragma mpp = pm.elementAt(k);
+		    if (!(mpp instanceof ParsedSpecs)) {
+			break;
+		    }
+		    if (((ParsedSpecs)mpp).specs.specs.size() != 0) {
+			doit = false;
+			break;
+		    }
+		}
+/*
 		ModifierPragma mpp = pm.elementAt(pm.size()-1);
 		if (mpp instanceof ParsedSpecs) {
 //System.out.println("QRR " + ((ParsedSpecs)mpp).specs.specs.size());
 		    doit = ((ParsedSpecs)mpp).specs.specs.size() == 0;
 		}
 		else doit = false;
+*/
 // FIXME - why do we get ExprModifierPragmas here (e.g. test8)
 //System.out.println("QT " + mpp.getClass());
 	    }

@@ -316,8 +316,11 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
 		writeln(o,"/*@");
 		if (s.initialAlso != null) self.print(o,ind,s.initialAlso);
 		java.util.Iterator i = s.specs.iterator();
+		int k = 0;
 		while (i.hasNext()) {
-		    print(o,ind,(ModifierPragmaVec)i.next());
+		    Object oo = i.next();
+		    if (oo == mp || oo == s) break;
+		    print(o,ind,(ModifierPragmaVec)oo);
 		}
 		if (s.impliesThat.size() > 0) writeln(o, "implies_that");
 		i = s.impliesThat.iterator();
@@ -330,7 +333,7 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
 		    print(o,ind,(ModifierPragmaVec)i.next());
 		}
 		for (int j=0; j<s.modifiers.size(); ++j) {
-		    print(o,ind,s.modifiers.elementAt(j));
+		    //print(o,ind,s.modifiers.elementAt(j));
 		}
 		writeln(o,"@*/");
 		break;
