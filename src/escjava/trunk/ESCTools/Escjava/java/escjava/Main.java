@@ -79,15 +79,15 @@ public class Main extends javafe.SrcTool
     //@ invariant 0 <= traceInfo && traceInfo < 3;
 
     /** When true, no variable output (e.g. execution time) is printed,
-	so that output can be compared to an oracle output file.
-    */
+     so that output can be compared to an oracle output file.
+     */
     public static boolean testMode = false;
 
     /** When true, parses pragmas that begin with /*+@, which are normally
-	parsed only by JML; this allows test runs in which everything JML
-	parses is parsed by escjava, to see if we have full coverage of all
-	of JML.
-    */
+     parsed only by JML; this allows test runs in which everything JML
+     parses is parsed by escjava, to see if we have full coverage of all
+     of JML.
+     */
     public static boolean parsePlus = false;
 
     public static boolean spvc = true;
@@ -1214,8 +1214,8 @@ public class Main extends javafe.SrcTool
 	startTime = java.lang.System.currentTimeMillis();
 	// Translate VC to a string
 	Info.out("[converting VC to a string]");
-	// String vcsexpr = VcToString.compute(vc);  -- modified to use stream
-
+        if (Info.on && traceInfo > 0)
+            VcToString.compute(vc, System.out);
         if (guardedVC) {
             String fn = UniqName.locToSuffix(r.locId) + ".method." + 
                 guardedVCFileExt;
