@@ -1,0 +1,464 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin
+   id="escjava.plugin"
+   name="Escjava2 UI"
+   version="1.0.2"
+   provider-name="David R. Cok"
+   class="escjava.plugin.EscjavaPlugin">
+
+   <runtime>
+      <library name="EscjavaPlugin.jar">
+         <export name="*"/>
+      </library>
+   </runtime>
+
+   <requires>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.eclipse.jdt.core"/>
+      <import plugin="org.eclipse.ui.ide"/>
+      <import plugin="org.eclipse.jface.text"/>
+      <import plugin="org.eclipse.ui.console"/>
+      <import plugin="escjava.esctools"/>
+      <import plugin="escjava.simplify"/>
+      <import plugin="org.eclipse.jdt.ui"/>
+      <import plugin="org.eclipse.debug.core"/>
+      <import plugin="org.eclipse.ui.editors"/>
+      <import plugin="org.eclipse.ui.workbench.texteditor"/>
+   </requires>
+
+   <!-- This extension defines the Esc/Java project nature -->
+     
+   <extension
+         id="autocheckEscjavaNature"
+         name="EscjavaAutocheck"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run
+               class="escjava.plugin.AutoCheckNature">
+         </run>
+      </runtime>
+      <requires-nature
+            id="org.eclipse.jdt.core.javanature">
+      </requires-nature>
+      <builder
+            id="escjava.plugin.autocheckEscjavaBuilder">
+      </builder>
+   </extension>
+
+<!-- This extension defines the automatic builder that 
+	runs Esc/Java on files -->
+	   
+   <extension
+         id="autocheckEscjavaBuilder"
+         name="Esc/Java2 Autocheck Builder"
+         point="org.eclipse.core.resources.builders">
+      <builder>
+         <run
+               class="escjava.plugin.AutoCheckBuilder">
+         </run>
+      </builder>
+   </extension>
+   
+
+<!-- This extension adds the preference page -->
+   <extension
+         id="escjava.plugin.preferencesPage"
+         name="EscJava Preferences"
+         point="org.eclipse.ui.preferencePages">
+      <page 
+         id="escjava.plugin.preferences.EscJava" 
+         name="Esc/Java2" 
+         class="escjava.plugin.PreferencePage"
+         category="org.eclipse.jdt.ui.preferences.JavaBasePreferencePage"> 
+      </page>
+   </extension>
+   
+<!-- This extension adds a property page to hold the various
+		options for Esc/Java checking. -->
+<!-- Currently no project-specific values
+		
+   <extension
+         point="org.eclipse.ui.propertyPages">
+      <page
+            objectClass="org.eclipse.core.resources.IResource"
+            name="Escjava Properties"
+            nameFilter="*"
+            class="escjava.plugin.EscjavaProperties"
+            id="escjava.plugin.EscjavaPropertyPage">
+         <filter
+               name="nature"
+               value="org.eclipse.jdt.core.javanature">
+         </filter>
+      </page>
+      <page
+            objectClass="org.eclipse.jdt.core.IJavaElement"
+            name="Escjava Properties"
+            nameFilter="*"
+            class="escjava.plugin.EscjavaProperties"
+            id="escjava.plugin.EscjavaPropertyPage2">
+          <filter
+               name="nature"
+               value="org.eclipse.jdt.core.javanature">
+         </filter>
+     </page>
+
+   </extension>
+-->
+
+<!-- This extension defines a new marker type for Esc/Java problems -->
+<!-- The attribute is used to associate additional information with the marker -->  
+   <extension
+         id="escjavaWarningMarker"
+         name="Esc/Java2 Warning"
+         point="org.eclipse.core.resources.markers">
+      <super
+            type="org.eclipse.jdt.core.problem">
+      </super>
+      <persistent
+            value="true">
+      </persistent>
+      <attribute name="declarationInfo"/>
+   </extension>
+
+   <!-- Provides the image for the markers -->
+   <extension
+         point="org.eclipse.ui.editors.markerAnnotationSpecification">
+      <specification
+            icon="icons/escjava_problem.gif"
+            annotationType="escjava.plugin.escjavaProblemAnnotation">
+      </specification>
+   </extension>
+   
+   <!-- Sets the marker type to use in the editor -->
+   <extension
+         point="org.eclipse.ui.editors.annotationTypes">
+      <type
+            markerType="escjava.plugin.escjavaWarningMarker"
+            super="org.eclipse.ui.workbench.texteditor.error"
+            name="escjava.plugin.escjavaProblemAnnotation"
+            markerSeverity="2">
+      </type>
+   </extension>
+
+	<!-- FIXME The examples of other tools seem to indicate 
+	that the following would produce special icons in the
+	Problems View.  But this does not.  -->
+<!--
+   <extension
+         point="org.eclipse.ui.ide.markerImageProviders">
+      <imageprovider
+            markertype="escjava.plugin.escjavaWarningMarker"
+            icon="icons/escjava_problem.gif"
+            class="escjava.plugin.EscjavaMarker$Provider"
+            id="escjava.plugin.escjavaMarkerImageProvider">
+      </imageprovider>
+   </extension>
+-->
+
+<!-- FIXME - comment here -->
+
+   <extension
+	    point="org.eclipse.ui.ide.markerResolution">
+	  <markerResolutionGenerator
+		markerType="escjava.plugin.escjavaWarningMarker"
+		class="escjava.plugin.MarkerResolutionGenerator">
+	  </markerResolutionGenerator>
+   </extension>
+		 
+	<!-- This extension adds menubar and toolbar items for initiating
+		various Esc/Java operations.  The menu itmes are placed under 
+		the same top-level menu item as JML operations (named 'JML')
+		but in a different group.  The toolbar itetm is placed in the
+		same toolbar group.
+		-->
+		 
+   <extension
+         point="org.eclipse.ui.actionSets">
+         <actionSet
+            label="EscJava Actions"
+            visible="true"
+            id="escjava.plugin.actionSet">
+         <menu
+               label="JML"
+               id="JMLMenu">
+            <separator
+                  name="EscjavaGroup">
+            </separator>
+         </menu>
+        
+         <action
+               label="Disable auto ESC/Java2 checking"
+               tooltip="Disables selected objects for auto ESC/Java2 checking"
+               class="escjava.plugin.EscjavaAction$DisableESC"
+               menubarPath="JMLMenu/EscjavaGroup"
+               id="escjava.plugin.EscjavaAction.DisableESC"
+			   definitionId="escjava.plugin.commands.DisableESC">
+         </action>
+         <action
+               label="Enable auto ESC/Java2 checking"
+               tooltip="Enables selected objects for auto ESC/Java2 checking"
+               class="escjava.plugin.EscjavaAction$EnableESC"
+               menubarPath="JMLMenu/EscjavaGroup"
+               id="escjava.plugin.EscjavaAction.EnableESC"
+			   definitionId="escjava.plugin.commands.EnableESC">
+         </action>
+         <action
+               label="Go to associated declaration"
+               tooltip="Opens an editor and positions it at the location specified by some information associated with a marker"
+               class="escjava.plugin.EscjavaAction$GoToDecl"
+               menubarPath="JMLMenu/EscjavaGroup"
+               id="escjava.plugin.GoToDeclAction"
+               definitionId="escjava.plugin.commands.GoToDeclaration">
+         </action>         
+         <action
+               label="Clear Esc/Java2 Markers"
+               tooltip="Clears any Esc/Java2 markers in the selected object"
+               class="escjava.plugin.EscjavaAction$Clear"
+               menubarPath="JMLMenu/EscjavaGroup"
+               id="escjava.plugin.ClearMarkerAction"
+               definitionId="escjava.plugin.commands.ClearMarkers">
+         </action>
+         <action
+               label="Esc/Java2"
+               tooltip="Runs Esc/Java2 static checks"
+               class="escjava.plugin.EscjavaAction$Check"
+               menubarPath="JMLMenu/EscjavaGroup"
+               id="escjava.plugin.EscjavaAction.Check"
+               definitionId="escjava.plugin.commands.CheckEscjava">
+         </action>
+
+         <action
+               toolbarPath="additions"
+               label="ESC"
+               tooltip="Runs Esc/Java2 static checks"
+               class="escjava.plugin.EscjavaAction$Check"
+               id="escjava.plugin.EscjavaAction.Check.Toolbar">
+         </action>
+<!--
+            <action
+               label="Test Information"
+               tooltip="Experimental information"
+               class="org.jmlspecs.JMLPlugin.actions.TestInfo"
+               menubarPath="JMLMenu/JMLTest"
+               id="org.jmlspecs.JMLPlugin.actions.TestInfo">
+         </action> 
+-->
+         <menu
+               label="Setup"
+               path="JMLMenu/JMLSetupGroup"
+               id="JMLSetup"
+               >
+               <separator name="JMLSetupSubmenu"/>
+         </menu>           
+         <action
+               label="Disable Esc/Java Nature, remove Builder in SELECTED projects"
+               tooltip="Removes the Esc/Java Nature from the project and the Esc/Java Builder from the Incremental builder"
+               class="escjava.plugin.EscjavaAction$DisableEscjava"
+               menubarPath="JMLMenu/JMLSetup/JMLSetupSubmenu"
+               id="escjava.plugin.EscjavaAction.DisableEscjava"
+			   definitionId="escjava.plugin.commands.DisableEscjava">
+         </action> 
+         <action
+               label="Enable Esc/Java Nature, add Builder in SELECTED projects"
+               tooltip="Adds the Esc/Java Nature to the project and the Esc/Java Builder to the Incremental builder"
+               class="escjava.plugin.EscjavaAction$EnableEscjava"
+               menubarPath="JMLMenu/JMLSetup/JMLSetupSubmenu"
+               id="escjava.plugin.EscjavaAction.EnableJML"
+			   definitionId="escjava.plugin.commands.EnableEscjava">
+         </action> 
+     </actionSet>
+   </extension>
+
+   <!-- These extensions add a menu item named 'Run ESC/Java2'
+   		to the context menus of projects/packages/compilation units
+   		and types in the Package Navigator and other views
+   	-->
+   <extension point="org.eclipse.ui.popupMenus">
+	<objectContribution 
+			objectClass="org.eclipse.jdt.core.IJavaElement" 
+			id="escjava.plugin.EscjavaActionPopupCheck">
+  		<action 
+  			label="Run ESC/Java2" 
+  			tooltip="Runs ESC/Java2 on the project" 
+  			class="escjava.plugin.EscjavaAction$Check" 
+  			menubarPath="additions"
+  			id="escjava.plugin.Check.Popup" /> 
+  	</objectContribution>
+   </extension>
+
+<!-- FIXME - comment here -->
+<!-- This shows the menu item, but I can't get it to work
+     <extension
+         point="org.eclipse.ui.popupMenus">
+      <viewerContribution
+            targetID="#CompilationUnitRulerContext"
+            id="org.eclipse.jdt.ui.CompilationUnitEditorPopupActions">
+         <action
+               label="Go to Referenced Declaration"
+               tooltip="Opens the declaration referenced by an Esc/Java2 warning"
+               class="escjava.plugin.WarningDeclarationsAction"
+               menubarPath="additions"
+               id="escjava.plugin.WarningDeclarationsAction">
+         </action>
+
+      </viewerContribution>
+   </extension>
+   -->
+
+<!-- FIXME - comment here  - why do we need this? -->
+<!--
+      <extension
+         id="org.eclipse.jdt.ui.javaeditor"
+         point="org.eclipse.ui.editors">
+      <editor
+            name="%JavaEditor.label"
+            default="true"
+            icon="icons/full/obj16/jcu_obj.gif"
+            extensions="spec"
+            id="org.eclipse.jdt.ui.CompilationUnitEditor">
+      </editor>
+      </extension>
+-->
+
+<!-- The following creates commands that are referenced by
+	actions above and can be mapped to keys -->      
+	
+  <extension
+	point="org.eclipse.ui.commands">
+      <category
+            name="Esc/Java2"
+            description="Esc/Java related commands"
+            id="escjava.plugin.EscjavaCommandCategory">
+      </category>
+<!--      <command
+            name="Enable Esc/Java2 autochecking"
+            description="Enables Esc/Java2 autochecking of selected resources"
+            category="escjava.plugin.EscjavaCommandCategory"
+            id="escjava.plugin.commands.EnableESC">
+      </command> 
+      <command
+            name="Disable Esc/Java2 autochecking"
+            description="Disables Esc/Java2 autochecking of selected resources"
+            category="escjava.plugin.EscjavaCommandCategory"
+            id="escjava.plugin.commands.DisableESC">
+      </command>   -->
+      <command
+            name="Install Esc/Java2"
+            description="Installs Esc/Java2 nature and builder on the selected projects"
+            category="escjava.plugin.EscjavaCommandCategory"
+            id="escjava.plugin.commands.EnableEscjava">
+      </command>
+      <command
+            name="Remove Esc/Java2"
+            description="Removes Esc/Java2 nature and builder from the given project"
+            category="escjava.plugin.EscjavaCommandCategory"
+            id="escjava.plugin.commands.DisableEscjava">
+      </command>
+      <command
+            name="Check Esc/Java2"
+            description="Performs Esc/Java2 checks on selected Java elements"
+            category="escjava.plugin.EscjavaCommandCategory"
+            id="escjava.plugin.commands.CheckEscjava">
+      </command>
+      <command
+            name="Clear Esc/Java2 Markers"
+            description="Clears all Esc/Java2 Markers on selected objects"
+            category="escjava.plugin.EscjavaCommandCategory"
+            id="escjava.plugin.commands.ClearMarkers">
+      </command>
+      <command
+            name="Go to associated declaration"
+            description="Highlights the declaration being violated by a given problem marker"
+            category="escjava.plugin.EscjavaCommandCategory"
+            id="escjava.plugin.commands.GoToDeclaration">
+      </command>
+  </extension>
+
+<!-- This decorator is applied to compilation units; the associated
+	class dynamically determines whether (a) a file and the project
+	are enabled for ESC/Java2 checking, (b) only the file is, (c) the file is not.
+	It then sets the decorator to one of two icons for (a) and (b)
+	and no icon for (c).
+	FIXME - is location and icon needed here?
+	-->
+<!--	
+<extension
+         point="org.eclipse.ui.decorators">
+      <decorator
+            lightweight="true"
+            location="TOP_LEFT"
+            label="ESC/Java2"
+            icon="icons/JMLSmall.png"
+            state="true"
+            class="escjava.plugin.EscjavaDecorator"
+            id="escjava.plugin.ESCDecorator">
+         <description>
+            ESC/Java2 checking is enabled for this resource (if assertion checking is enabled globally in the Project Builders Properties page)
+         </description>
+        <enablement>
+                <objectClass name="org.eclipse.jdt.core.ICompilationUnit"/> 
+         </enablement>
+      </decorator>
+ </extension>
+-->
+
+<!-- This decorator is applied to Java projects to indicate whether
+	they have a Esc/Java2 Nature (with decorator) or not (no decorator).
+	-->
+<extension
+         point="org.eclipse.ui.decorators">
+      <decorator
+            lightweight="true"
+            location="TOP_RIGHT"
+            label="ESC/Java2"
+            icon="icons/JMLSmall.png"
+            state="true"
+            id="escjava.plugin.ESCDecoratorA">
+         <description>
+            ESC/Java2 nature is enabled for this project
+         </description>
+        <enablement>
+        	<and>
+                <objectState name="nature" value="escjava.plugin.autocheckEscjavaNature"/>
+                <objectClass name="org.eclipse.jdt.core.IJavaProject"/> 
+             </and>
+         </enablement>
+         </decorator>
+ </extension>
+
+<!-- Not sure if this works or what it is for FIXME
+<extension
+         point="org.eclipse.ui.decorators">
+      <decorator
+            lightweight="true"
+            location="TOP_RIGHT"
+            label="ESC/Java2"
+            icon="icons/escjava_problem.gif"
+            state="true"
+            id="escjava.plugin.ESCDecorator1">
+         <description>
+            The problem was found by the ESC/Java2 tools
+         </description>
+        <enablement>
+                <objectState name="id" value="escjava.plugin.escjavaError"/>
+< !- -        	<and>
+                <objectState name="id" value="escjava.plugin.escjavaError"/>
+                <objectClass name="org.eclipse.jdt.core.IJavaProject"/> 
+             </and> - - >
+         </enablement>
+         </decorator>
+ </extension>
+ -->
+
+   <!-- This extension adds help information.
+   	-->
+   <extension
+         point="org.eclipse.help.toc">
+      <toc file="escjavaHelp.xml" primary="true" />
+   </extension>
+   
+  
+</plugin>

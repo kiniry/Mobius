@@ -1,0 +1,758 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+     "http://www.w3.org/TR/REC-html40/loose.dtd">
+<HTML>
+<HEAD>
+<TITLE>ESC/Java2 Eclipse plug-in</TITLE>
+</HEAD>
+<BODY>
+
+<CENTER><H1>ESC/Java2 Eclipse Plugin</H1></CENTER>
+<CENTER>Author: David Cok</CENTER>
+<CENTER> Version alpha, 3 February 2005</CENTER>
+<CENTER>Feedback to: <A href="mailto:FIXME">FIXME</CENTER>
+<P>
+Contents:
+<!-- start toc.  do not edit; run html-update-toc instead -->
+    <ul>
+      <li><a href="#Overview">Overview</a>
+      <li><a href="#Installation">Installation</a>
+      <li><a href="#General_comments">General comments</a>
+      <li><a href="#Menus">Menu and toolbar functionality</a>
+        <ul>
+          <li><a href="#Checks">Esc/Java2 Checking</a>
+          <li><a href="#Clear">Clear Esc/Java2 Markers</a>
+          <li><a href="#GoTo">Go to associated declaration</a>
+          <li><a href="#Setup">Setup</a>
+          <li><a href="#Enable">Enable ESC/Java2 auto checking</a>
+          <li><a href="#Disable">Disable ESC/Java2 auto checking</a>
+        </ul>
+      <li><a href="#Preferences">Esc/Java2 Preferences</a>
+        <ul>
+          <li><A href="#EclipseOptions">Options for Esc/Java2-Eclipse</A>
+          <li><A href="#EscjavaOptions">Options related to ESC/Java2</A>
+          <li><A href="#EscjavaWarnings">Esc/Java2 Warnings</A>
+        </ul>
+      <li><a href="#Features">Other Features</a>
+        <ul>
+          <li><A href="#Markers">Esc/Java2 Problem Markers</A>
+          <li><A href="#Console">Esc/Java2 console</A>
+          <li><A href="#Context">Context Menus</A>
+          <li><A href="#Builder">Esc/Java2 automatic builder</A>
+          <li><A href="#Decorators">Esc/Java2 Label Decoration</A>
+          <li><A href="#Commands">Esc/Java2 Key bindings</A>
+          <li><A href="#Help">Esc/Java2 Help</A>
+        </ul>
+      <li><a href="#TODO">Problems to fix and features to add</a>
+      <li><a href="#Versions">Version History</a>
+      <li><a href="#Tutorial">Getting Started Tutorial</a>
+      <li><A href="#DevNotes">Notes for Developers</a>
+    </ul>
+<!-- end toc -->
+</P>
+
+<H2><A NAME="Overview">Overview</A></H2>
+<P>
+This plug-in provides
+<A HREF="http://secure.ucd.ie/products/opensource/ESCJava2/">ESC/Java2</A>
+<!-- <A HREF="http://www.sos.cs.ru.nl/research/escjava/main.html">ESC/Java2</A> -->
+functionality as an Eclipse plug-in into the Java development environment of Eclipse.
+ESC/Java2 checks that Java programs obey specifications written as
+Java Modeling Language (<A HREF="http://www.jmlspecs.org">JML</A>) annotations.
+You may want to use the plug-in along with the 
+<A HREF="http://projects.cis.ksu.edu/projects/jmleclipse">JMLEclipse plug-in</A> and the
+<A HREF="http://pag.csail.mit.edu/daikon/download">Daikon plug-in</A>.  The JML plug-in
+in particular provides functionality for checking and manipulating annotation
+files.  The Daikon plug-in generates JML annotations from execution traces of
+programs.
+<P>
+The plug-in adds the following functionality to Eclipse's Java Perspective:
+<UL>
+<LI>A menubar item labeled 'JML' with a number of submenu items that
+invoke various tools and manage the environment.
+<LI>A toolbar item labeled 'ESC' that invokes the ESC/Java2 checker.
+<LI>A problem marker (a red disk with an 'E' on it) for ESC/Java2 problems;
+these must be enabled in the Filters menu of the Problems view (they are
+disabled by default).
+<LI>Context menu items in various views 
+and on Java editors that replicate some
+of the above menu items for Java Projects, source
+folders, packages, and compilation
+units.
+<LI>A console page to which output from Esc/Java2 is sent.
+<LI>An ESC/Java2 preferences page in the Java group of preference pages
+(under Window &gt;&gt; Preferences).
+<LI>An ESC/Java2 builder that is visible (when the ESC/Java2 Builder is enabled) 
+in the Project Properties Builders page.
+<LI>A decoration visible in the package explorer (and other places)
+on Java Projects with autochecking enabled.  There is a toggle
+named 'ESC/Java2' to enable these decorations in the Label Decorations page of
+the workbench preferences.
+<LI>A new category of commands in the Workbench &gt;&gt; Keys page of the workbench
+preferences.  The category is named 'ESC/Java2' and allows key bindings to be 
+defined for the various new menu actions. 
+<LI>A Help document describing the ESC/Java2 plug-in functionality available
+through the Help &gt;&gt; HelpContents menu (this document).
+</UL>
+
+The capabilities of the command-line ESC/Java2 checker are integrated into
+the plug-in, along with preferences that are equivalent to the various
+command-line options of the ESC/Java2 tool.
+</P>
+
+<H2><A name="Installation">Installation</A></H2>
+<P>
+The plug-in is installed from a standard Eclipse update site as follows.
+    <ul>
+     <li> Start Eclipse.
+     <li> Open the dialog at Help &gt;&gt; Software Updates &gt;&gt; Find and Install.
+     <li> Choose "Search for new features to install" and "Next&gt;".
+     <li> Select "New Remote Site".  Fill in the dialog with the name "Esc/Java2"
+          and the URL "???", and press "OK". <!-- FIXME -->
+     <li> Select "Esc/Java2" in the list of sites to search and press "Next&gt;".
+     <li> If all is well, the available versions of the plug-in will be displayed;
+          select the most recent Esc/Java2 version and press "Next&gt;".  
+     <li> Read and accept the license terms, and press "Next&gt;".
+     <LI> Choose the local installation site into which you want to install the plug-in
+          (or add a new one for experimentation); then press 'Finish'.  You will likely
+          be asked to restart the workspace, which you should do, otherwise the menu
+          items may not appear.
+     <LI> The plug-in will be available from any newly opened workspace from this
+          installation site.
+     <LI> The plug-in can be disabled or uninstalled 
+          using Help &gt;&gt; Software Updates &gt;&gt; Manage Configuration.
+    </ul>
+    </p>
+
+    <p> The <A
+      HREF="FIXME">source
+      code</A> for the plug-in is available, in accord with the <A
+      HREF=http://www.eclipse.org/legal/cpl-v10.html>Eclipse Common Public
+      License</A>.
+</p>
+<P>
+If you simply want to update a previous installation of ESC/Java2,
+then do the following:
+<UL>
+     <LI> Open an Eclipse workspace and choose Help &gt;&gt; Software Updates &gt;&gt; Find and Install.
+     <LI> Choose "Search for updates..." and "Next&gt;"
+     <LI> Select the feature version to install and "Next&gt;"
+     <LI> Read and accept the license terms, and press "Next&gt;".
+     <LI> Choose the local installation site into which you want to install the plug-in
+          (or add a new one for experimentation); then press 'Finish'.  You will likely
+          be asked to restart the workspace, which you should do.
+     <LI> The updated plug-in will be available from any newly opened workspace from this
+          installation site. <!-- FIXME - verify the above -->
+</UL>
+</P>
+
+<P>In order to uninstall the plugin, do the following:
+<UL>
+<LI> Choose Help &gt;&gt; Software Updates &gt;&gt; Manage Configuration
+<LI> Click the + symbol by the install location from which you wish to uninstall the plugin
+<LI> Choose the Esc/Java2 feature from the list of installed features
+<LI> Select Uninstall in the right hand panel
+<LI> Confirm the Uninstall and restart the workbench
+</UL>
+
+<P>
+
+Once installed, there are a few setup actions that the user needs to
+do to avoid becoming confused later on. 
+<UL>
+<LI><B>Enable the ESC/Java2 markers</B> - By default new marker types
+are not displayed in the 'Problems' View.  To correct this, open
+the 'Problems' View (typically in the lower right pane in a Java
+Perspective), and then open the 'Filter' dialog using the toolbar
+item or the menu on the right end of the Problems view's toolbar.
+Make sure that the 'ESC/Java2 Warning' entry is checked.
+<LI><B>Define file associations for specification file suffixes</B> -
+The Java perspective does not treat specification files as first-class
+Java files, but it is at least helpful to be able to use the
+Java editor on these files.  So choose Window &gt;&gt; Preferences and
+then Workbench &gt;&gt; File Associations.  In turn, add the entries
+'*.refines-java', '*.refines-spec', '*.refines-jml', '*.spec'
+and '*.jml' as new file types in the upper panel and add the
+Java Editor as the default editor for each of these suffixes in the lower
+panel.
+<LI>Be sure the <B>ESC/Java2 Label Decorations</B> are turned on in the 
+Label Decorations page of the Workbench preferences.
+<LI>Optionally define any desired <B>key bindings</B> for the various menu actions.
+Use the ESC/Java2 category in the Keys page of the Workbench preferences to do this.
+Add the key bindings to be effective in Windows or in Dialogs & Windows.
+<LI>Other preferences relevant to the Esc/Java2 plug-in may be set on the
+<B>Esc/Java2 preferences page</B> under the Java category.  (The preferences page is
+obtained from the Window &gt;&gt; Preferences menu item.)
+</UL>
+</P>
+<P>
+There is one other important action that is taken care of automatically
+but that the user should be aware of.
+<UL>
+
+<LI><B>JML specifications for the Java system and JML Model classes</B> - To use
+ESC/Java2 (or other JML-based tools) effectively, the tool needs to reference a
+copy of the JML specifications for the Java system classes.  A copy of these
+is contained in the ESC/Java2 plug-in.  When a project is enabled for
+ESC/Java2 checking, a specification project (named JmlSpecs) is automatically
+created and added to the workspace.  This project contains a link to the 
+library of system specifications; the project is also added to the classpath
+of the enabled project, so that the specifications are seen when individual
+files are checked.
+<P>
+You may need to adjust the position of the specifications in the classpath.
+<P>
+If you have other versions of the system specifications (or other sets 
+of specifications for other libraries), you can conveniently add them
+to your Java Projects by ...
+<!-- TODO - FIXME
+using the JML &gt;&gt; Setup &gt;&gt; Link in Specs Library 
+menu item.  This allows you the choice of adding a set of specifications
+as either a stand-alone project or as a new source folder in a 
+specific project.  Using a standalone project makes it easier to 
+share the specs among multiple projects and to toggle the use of the
+specs on and off within a given project.
+-->
+
+</UL>
+</P>
+
+<H2><A name="General_comments">General comments</A></H2>
+<P>
+Here are some aspects to be aware of in using the plug-in.
+<UL>
+<LI>
+The ESC/Java2 functionality is provided by integrating the 
+Eclipse extension capabilities directly with the ESC/Java2 tool.
+ESC/Java2 is a standalone tool with its own
+parser and compiler for Java.  Consequently, when ESC/Java2 operations
+are run within Eclipse, the Java files are parsed over again.
+This can result in duplicate error messages (as well as slower than 
+ideal performance).
+<LI>
+ESC/Java2 operates on files as they exist in the file system.  
+Thus editors within Eclipse must be saved if ESC/Java2 is to see any 
+newly edited material.
+<LI>
+Defining the Java Editor as the editor for the specification file suffixes
+goes only part of the way towards convenient handling of specification files within
+Eclipse.  In particular, one difficulty is that editing specification files 
+will not trigger an
+incremental compilation. <!-- [other difficulties? - FIXME]. -->
+<LI>
+The Eclipse framework operates on projects one by one.  This is 
+required because attributes such as the relevant classpath for
+compiling the project may differ from project to project.  Hence
+ESC/Java2 (and JML tools) must also operate project by project; this is ordinarily
+not a problem but can in some circumstances lead to slow or 
+undesirable results.  This problem is avoided if everything that
+can be compiled with a given classpath is contained in one project,
+with one output bin directory,
+possibly using multiple source folders.
+<LI>
+ESC/Java2 was not designed for interactive use.
+Consequently operations cannot be canceled and restarted readily,
+so the user may experience a slow response to cancellation.  The
+tool also is not designed to support incremental analysis.
+<LI>
+Internal errors or unexpected exceptional situations are logged in 
+Eclipse's error log.  The ESC/Java2 page of the Eclipse Console
+ may be used to report progress and general debugging information, if
+ that output is enabled in the ESC/Java2 preferences page.
+</UL>
+</P>
+
+<A NAME="#Menus"/>
+<H2>Menu and toolbar functionality</H2>
+<P>
+The top menubar provides the following functionality.  The toolbar
+and the context menus replicate some of this functionality.  The menubar
+item is labeled 'JML' because it is shared with menu items from the JMLEclipse
+plug-in.
+</P>
+<P>
+Each of the menu operations act on the currently selected set of objects.
+If an editor is selected and active, the operation will apply to the
+one Java compilation unit in that editor.  
+In Eclipse's Package Explorer view, multiple items may
+be selected.  The operations will act appropriately on 
+each selected Java Project,
+source folder and Package Fragment root within a Java Project, 
+Java Package Fragment, Java compilation unit, or non-.java 
+specification file within a Java Project.  Selecting a container item will cause
+the relevant operation to be performed on all the items within the 
+container.
+</P>
+<A NAME="#Checks"/>
+<H3>ESC/Java2 Checking</H3>
+<P>
+This operation runs an Esc/Java2 check on each selected item or its contents.
+The operation can be initiated from the menu item or by the 'ESC' item on the
+toolbar or from various context menus.
+Any syntax errors or Esc/Java2 warnings are presented as problem markers.  
+The problem markers are shown along the left edge of each editor at the line
+corresponding to the problem.  If
+problem markers are enabled in the Problems View, then details of the problem
+are shown in the Problems View.  Additional information, such as the
+specification that is being violated by the line in question, can be obtained
+using the 'Go to associated declaration' menu operation.  This menu item performs
+a check whether or not the Esc/Java2 nature is enabled for automatic checking.
+</P><P>  
+<B>Be sure to save any edited files before invoking an ESC/Java2 check!</B>
+ESC/Java2 operates only on the files as they exist in the file system and not
+on material in an editor within Eclipse.
+</P><P>
+An ESC/Java2 Check operation needs to parse files other than those selected
+if they are referenced by the selected files.  Thus errors may be
+detected (and markers produced) in files other than those selected.
+
+</P><P>
+Prior to executing the checking operation, all markers are cleared 
+from the selected files, so that a fresh set of error reports is
+available.  However, non-selected files are not cleared, which may
+result in multiple markers being produced for problems in other files.
+Also, if the error is subsequently corrected but the file with the marker is
+not selected when the JML Checker is run again, the marker will not be
+cleared even though the problem is no longer present.
+</P>
+<A NAME="#Clear"/>
+<H3>Clear Esc/Java2 Markers</H3>
+The Clear operation removes all problem markers from any selected files or
+files within selected containers.
+
+<A NAME="#GoTo"/>
+<H3>Go to associated declaration</H3>
+Most Esc/Java2 warnings have an associated declaration.  For example, an 
+assignment of a value to a field may violate a specification that the field
+always be non-null.  That specification is located at the declaration of the
+field, and not at the line with the invalid assignment.  The problem marker
+will be located at the line with the invalid assignment; the associated 
+declaration is the non-null specification of the field declaration.  This menu
+item operates on a selected problem marker and will open the file containing
+the associated declaration and highlight the line containing the declaration.
+A problem marker can be selected by either highlighting the problem marker in
+the Problems View or by selecting some text in the line in the editor containing
+the problem.  It is not sufficient to simply place the cursor in the offending
+line; you must select a range of text. 
+<A NAME="#Setup"/>
+<H3>Setup</H3>
+The submenu items in this menu allow the installing and deinstalling of 
+the Esc/Java2 automatic checker within projects.  
+
+<A NAME="#Enable"/>
+<H3>Enable Esc/Java2 checking</H3>
+Enabling the Esc/Java2
+checker will install the Esc/Java2 nature on the project and enable the
+automatic builder.  Then after any compilation (even an incremental compilation),
+the Esc/Java2 checker will be run on all the compilation units of the project.
+The checker will be run on the entire project immediately upon enabling the
+automatic builder.
+
+<A NAME="#Disable"/>
+<H3>Disable Esc/Java2 checking</H3>
+This menu action disables the Esc/Java2 automatic checking.
+Note that you can also disable automatic checking on the Builders page of the
+Project &gt;&gt; Properties menu item.
+
+<!-- FIXME
+<P>
+<A NAME="#EnableSelected"/>
+<H4>Enable JML in SELECTED projects</H4>
+This operation will install JML and add the builders, specifications, and 
+runtime library in any project that is
+selected (or has an element that is selected).  If a project is already
+enabled, no action occurs.  Note that the builders are always added in
+default mode (checker and RAC enabled, jmldoc disabled) regardless of 
+any previous state.  A decoration appears on the Project icon in
+the Package Explorer indicating that the project has JML installed.
+<A NAME="#DisableSelected"/>
+<H4>Disable JML in SELECTED projects</H4> 
+This operation will disable JML and remove the builders from any project that is
+selected (or has an element that is selected).  If a project is already
+disabled, no action occurs.   Specifications and the runtime library will remain.
+<A NAME="#EnableAll"/>
+<H4>Enable JML in ALL projects</H4>
+Enables JML as described above for all Java projects (but not necessarily for new ones),
+ignoring any selection.
+<A NAME="#DisableAll"/>
+<H4>Disable JML in ALL projects</H4>
+Disables JML as described above for all Java projects, ignoring any selection.
+<A NAME="#LinkSpecs"/>
+<H4>Link in Specs library...</H4>
+The default specifications library is inserted into JML-enabled projects
+automatically.  This menu item allows the user to perform this task 
+manually or to add to a project a different set of specifications.  There 
+are two ways to add specifications to a project.
+<UL>
+<LI><B>As a project</B>:  In this case (the easier to work with), the specifications
+will appear in a new project of their own and the project will be added to
+the classpath of any selected Java projects.  Leave
+the check box ("Link in as project") checked, choose a name for the project
+that is to contain the specs and a name for the source folder within
+the project.  The project name must be one that you will not use for
+other purposes; the folder name can be any legal source folder name.
+Then type in or browse to the file system location of the specifications
+that you want to make available to the project.  These must be in source 
+file, not jar, format.  Select 'OK'.  You may also want to adjust the
+oder of items in the classpath in the project's properties ('JavaBuild Path' page, 
+'Order and Export' tab).  If you like, you may also add other specification
+libraries to the new project.
+<LI><B>As a source folder</B>: In this case the selected projects will
+each be modified by the addition of a new source folder within the project that will be linked
+to the file system location of the specifications.  Uncheck the
+toggle marked "Link in as project".  The project name is ignored; choose
+a source folder name that will not conflict with other source folders
+that you have or will create in the selected projects.  Type in or
+browse to the file-system location of the specifications you wish to 
+use.  Select 'OK' and adjust, if necessary, the order of items in the
+project's classpath.
+</UL>
+-->
+
+
+
+<A NAME="#Preferences"/>
+<H2>ESC/Java2 preferences</H2>
+The plug-in provides a new preference page under Window&gt;&gt;Preferences; it is
+contained under the 'Java' heading.
+All the items in the ESC/Java2 preferences page are global to all 
+Java projects.  
+
+<A NAME="#EclipseOptions"/>
+<H3>Options for Escjava-Eclipse</H3>
+This group of options does not affect Esc/Java2 per se.  Rather they control 
+aspects of the plug-in.
+
+<P>
+<B>Enable Eclipse informational messages.</B> 
+Enabling this option turns on printing of 
+progress and debug messages relating to the operation
+of the plug-in itself. (Default is off.) Errors and warnings are always displayed.
+</P><P>
+<B>Log to the Eclipse console.</B>
+Error and informational output from the plug-in
+can be directed to one of two places, depending on the
+status of this toggle.  If the toggle is checked (the default),
+progress and debug output is sent to the Eclipse console of the instance
+of Eclipse that is running the program being executed.  If the toggle
+is not checked, then the output is sent to <code>System.out</code>.  Depending
+on the way in which Eclipse was started, this output may end up in the
+terminal from which Eclipse was started, the console of a parent
+Eclipse process, or may be lost entirely.
+</P><P>
+<B>Send informational output to the log file also.</B>
+When unchecked (the default), only error output is recorded in the system
+log file (as seen in Eclipse's Error Log view).  By enabling this option,
+informational output is also logged in the log and can be seen in the Error
+Log view.  Normally this simply clutters up the Error Log, but it can be helpful
+in some situations to capture all of the output in one place.
+</P>
+
+<A NAME="#EscjavaOptions"/>
+<H3>Options related to ESC/Java2</H3>
+
+<P>
+<B>Simplify executable to use.</B>
+The default behavior is for the plug-in to use a version of Simplify that is
+included in the released plug-in.  If there is a need to select a different
+version of the Simplify executable, the path to that executable should be set
+here.  Such a situation is rare; the default of a blank text field should be
+almost always adequate.  (Simplify is the back-end decision procedure used by 
+the tool).
+</P><P>
+<B>Type check only.</B>
+With this option enabled, only syntax and typechecking is performed.  No
+checks are made as to whether JML annotations are adhered to by the source code.
+It can be used to quickly check that the annotations (and source code) are 
+well-formed, without trying any time-consuming verification.  The default is to
+do both typechecking and static checking. (<code>-typecheck</code> option)
+</P><P>
+<B>No semicolon warnings.</B>
+JML requires that annotations be terminated with semicolons.  The original
+Esc/Java did not require this.  Esc/Java2 will warn about missing semicolons,
+but can successfully process some annotations that are missing these terminating
+semicolons.  Enabling this toggle will turn off warnings about semicolons.
+The default is to warn about semicolon errors. (<code>-nosemicolonwarnings</code> option)
+</P>
+<P><B>Enable caution messages.</B> 
+This option (equivalent to the inverse of the command-line option <code>-nocautions</code>)
+turns on Caution messages.  Cautions include syntactical errors that have an
+obvious correction, non-implemented features and internal errors that Esc/Java2
+recovers from. (default is to issue cautions)
+</P>
+<P><B>Enables checking that annotations are pure.</B>
+If enabled (the default), all expressions within annotations, including method
+calls, are required to be pure, as JML requires. (<code>-checkPurity</code> option)
+</P>
+<P><B>Enables output of counterexample information.</B>
+If enabled, then in cases where verification of an assertion fails, cryptic
+information giving a counterexample is output. The default is off.
+(<code>-counterexample</code> option)
+</P>
+<P><B>Enables output of suggestion information.</B>
+If enabled, then in cases where verification of an assertion fails, 
+information giving suggested annotations to fix the problem is output. The default is off.
+(<code>-suggest</code> option)
+</P>
+<P><B>Disable ESC/Java2 informational messages.</B>
+ESC/Java2 can issue informational messages about its progress.  These are 
+ disabled by default.  They can be enabled by turning off this toggle.  The
+ messages will appear in the Eclipse console. <!-- FIXME - what option -->
+</P>
+
+<P><B>Java source version.</B>
+Use this option to specify the version of Java source code that is being used.
+Using version "1.4" enables the <code>assert</code> identifier to be treated as
+a keyword and for the assert statement to be interpreted as specified by Java.
+Using "1.5" enables all of the Java 5.0 (1.5) language enhancements [which are
+not yet implemented in Esc/Java2.]
+The default is version 1.4.  (<code>-source</code> option)
+</P>
+<P><B>Behavior of assert statement.</B>
+Use this option to define the behavior of Java 1.4 assert statements.  The options
+are to ignore assert statements, to treat them as Java statements (the default),
+ or to convert
+them to JML assertions.<!-- FIXME - what option -->
+</P>
+
+<A NAME="#EscjavaWarnings"/>
+<H3>Esc/Java2 Warnings</H3>
+Esc/Java2 checks for various potential violations of JML specifications. Where
+it suspects problems (or cannot prove that a problem will not happen), it
+issues a <em>warning</em>.  There are various kinds of warnings.  These are 
+listed on the right side of the preferences page.  By default, Esc/Java2 checks
+for all warning types except Deadlock.  The user can select which warnings
+Esc/Java2 should check for and which to ignore.  Explanations of each of these
+warnings are given in the documentation about Esc/Java2.  A brief explanation
+is given in the tooltip on the option.
+
+<A NAME="#Features"/>
+<H2>Other Features</H2> 
+<A NAME="#Markers"/A>
+<H3>ESC/Java2 Problem Markers</H3>
+<P>
+The plug-in defines a new type of Problem marker that is used to indicate
+syntax errors or warnings about potential specification violations
+that the Esc/Java2 tool finds.  The marker icon is a 
+black 'E' superimposed on a red dot.  The icon is shown in the ruler along the
+left edge of Java editors at the line where a problem is identified.  Tooltip
+information, shown when the mouse pointer remains steady over the icon for a short
+period of time, gives details of the problem. 
+</P><P>
+The 
+details of the problem are also shown in the Problems View.  Note that the Problems 
+View has a filter that chooses which types of problems are to be shown.  The
+ESC/Java2 problem type is NOT shown by default and must be enabled in the 
+filters menu of the Problems View.  (The filters menu is found by selecting either
+the Filters icon or the down-arrow Menu icon in the upper right corner of the
+Problems View).
+</P>
+<A NAME="#Console"/A>
+<H3>Esc/Java2 Console</H3>
+The Eclipse Console View is available to plug-ins to show textual output from
+plug-in tools.  The Console has a number of panes.  The Esc/Java2 plug-in adds
+a new pane, called 'Esc/Java2', to which output from the Esc/Java2 plug-in or
+tool is sent.  The Console view generally automatically switches to the pane
+with recent output, but on some occasions the user may have to choose the
+pane manually to see the Esc/Java2 output.
+
+<A NAME="#Context"/>
+<H3>Context Menus</H3>
+The context menu in the Package Navigator (obtained with a right mouse press over
+an item in the Package Navigator tree hierarchy) has menu options pertinent
+to the context in which the menu is invoked.  A 'Run Esc/Java2' action is added
+to the Package Navigator context menus; this action is the equivalent of the
+'Esc/Java2' checking action under 'JML' in the menubar.  The additional menu
+item is also available in the Outline View.
+
+<A NAME="#Builder"/>
+<H3>ESC/Java2 Automatic Builder</H3>
+<P>
+When ESC/Java2 is enabled for a project
+(e.g. by the JML &gt;&gt; Setup &gt;&gt; Enable Esc/Java2 menu item), then 
+a new Incremental Builder becomes available on the Project's
+Builders Properties page.  Once present, the builders can be 
+enabled and disabled on the Builders page.
+</P>
+<P>
+When the 'ESC/Java2 AutoCheck' Builder is enabled, then whenever compilation
+takes place within a project, all files in that project are ESC/Java2-checked
+after being compiled.
+Success or failure of this checking is shown by the presence of 
+ESC/Java2 markers
+in each file, just as errors from the Java compiler are show by Java Problem markers.
+</P>
+<P>Enabling auto checking will cause Eclipse to immediately run a compilation
+cycle.
+</P>
+<P>
+Note that changing the options on the ESC/Java2 preferences page does not
+constitute changing the file and will not provoke an incremental
+recompilation (and ESC/Java2 rechecking) of the files.  Instead, if you
+change the ESC/Java2 options (when you have auto checking enabled),
+do a clean rebuild of the files (or a gratuitous edit and save within them).
+Be sure to save any edited files, or have 'Save automatically before build'
+enabled on the Workbench Preferences page (from the Window&gt;&gt;Preferences menu item). 
+</P>
+
+<A NAME="#Decorators"/>
+<H3>ESC/Java2 Label Decorations</H3>
+The plug-in adds a new label decoration to the Eclipse framework.  
+Label Decorators can be
+enabled or disabled on the Workbench&gt;&gt;Label Decorations page of the
+workbench Preferences.  When enabled here, a decoration may be shown on
+icons in the Package Explorer view.
+<UL>
+<LI>A miniscule version of the JML logo (a mostly yellow coffee cup)
+appears as an Upper Right
+overlay for Java Projects that have ESC/Java2 enabled.
+ (It lies on top of the
+blue J indicating a Java Project.)
+<!-- FIXME
+<LI>Java Compilation Unit icons have an Upper Left overlay indicating
+the following states:
+<UL>
+<LI>ESC/Java2 enabled for this file AND the ESC/Java2 builder is enabled 
+for the containing project - the overlay is
+the miniscule JML logo
+<LI>ESC/Java2 enabled for this file, but the ESC/Java2 builder is not enabled 
+for this project - the overlay is a 
+JML logo with a red circle-and-diagonal-line (NO) symbol through it
+<LI>ESC/Java2 not enabled for this file - no decoration
+</UL>
+-->
+</UL>
+
+<A NAME="#Commands"/>
+<H3>ESC/Java2 Key Bindings</H3>
+The 'Keys' page of the Workbench preferences allows the user to 
+associate key bindings with any 
+command.  There is a ESC/Java2 category of commands.  
+No key bindings are defined by default, but the
+user may choose to add some.  Make sure they are enabled for 'Windows'
+or 'Dialogs and Windows'.
+
+<A NAME="#Help"/>
+<H3>ESC/Java2 Help</H3>
+Help information (this document) is available through the Help menu.
+Select the Help menu item on the menubar and the 'Help Contents'
+sub-menu item.  One of the help topics shown is 'ESC/Java2'.   Selecting
+that topic will bring up the ESC/Java2 Help document.
+<P>
+In addition all the various toolbar and dialog box controls have tool tip
+information that gives a bit more explanation of the purpose of the item.
+</P>
+
+<A NAME="#TODO"/>
+<H2>Problems to fix and features to add</H2>
+
+This section summarizes in bullet form  
+outstanding issues and future would-be-nice features.
+
+<H3>Major nuisances</H3>
+<UL>
+<LI>Implement and document how to insert alternate sets of specs
+<LI>Implement going to an associated declaration from the cursor position or
+from the context menu of a marker in the ruler or from the context menu in the
+problem view
+<LI>Implement and document checking just one method
+<LI>Implement and document incremental checking
+<LI>Implement and document appropriate dependencies in checking, including 
+dependencies on specification files (adding, removing, editing them)
+<LI>Implement and document cleaning as part of auto building
+<LI>Implement and document autosaving as part of manual checking
+<LI>Implement cancelation and progress dialogs
+<LI>Capture the output for a given method in a way that can be shown for each 
+method, rather than strung out in the Console.
+<LI>Need the rest of Esc/java2 command-line options as GUI options
+<LI>Be able to show the VCs in FRIENDLY way
+<LI>Be able to show counterexamples in a user-friendly way
+<LI>Better handling of editors for spec files
+</UL>
+<H3>Minor nuisances</H3>
+<UL>
+<LI>Check documentation of updating a feature
+<LI>The warning types need tooltips
+<LI>Use the build problem reporting facilities
+<LI>Make the use of Esc/Java2 and ESC/java2 consistent.
+<LI>The icon in the Problems View ought to be the Esc/Java2 problem icon.
+<LI>The JDK specs include the esctools files themselves.
+<LI>Should we have the option of using the JDK specs as a library in the project
+rather than a separate project.
+<LI>Allow a choice of which pane of the Console to use? (JML or Esc/Java2)
+<LI>Need an option for the name of the specs project
+<LI>Some markers have more than one associated declaration - be able to 
+highlight them all
+<LI>All squiggly underlining for problems is two characters long.
+</UL>
+<H3>Would be nice</H3>
+<UL>
+<LI>Java 1.5 features
+<LI>Quickfix: put in quickfix functionality for ESC/Java2 problems
+<LI>The plug-in needs a set of regression tests
+<LI>Markers should be enabled by default
+<LI>Implement Cheat sheets
+<LI>Document a tutorial
+<LI>Implement F1 Help (a.k.a InfoPops), Hover help
+<LI>Should we allow enabling and disabling individual files for automatic
+checking?
+</UL>
+
+<H3>Uncateogrized issues</H3>
+<UL>
+<LI>Files in linked source folders don't show line numbers or markers when edited
+<LI>The use of nested source folders is not tested
+<LI>Editor registry needs to be set manually for JML suffixes
+<LI>Folders with only spec files do not behave well in the Eclipse JDT 
+(because it does not think they are packages)
+<LI>Recursive does not work as expected because of problems with folders of spec files
+<LI>Default packages do not work everywhere.  
+e.g. Checking/Clearing a default package seems to apply to the whole project
+<LI>Java editor does not like method declarations without bodies, though that is what spec files have.
+<LI>Should we be using project-specific properties or global preferences? (currently the latter)
+<LI>The JML logo needs an appropriate alpha channel
+<LI>Marker help?
+<LI>Dynamic help? (e.g. giving specs for a method call)
+<LI>Editing: Put in actions for frequent code edits, e.g. Insert pure; 
+insert/remove non_null on arguments or return values
+<LI>Be able to provide help in proving ???
+<LI>Provide various tools for easy editing and testing of specifications
+<LI>Integrate with the Eclipse compiler
+<LI>Not all dialog parameters get remembered
+<LI>Should we be using the dialog preference structure to remember parameters?
+<LI>There is a problem with lots of error dialogs locking up a progress monitor
+<LI>Review the code to be sure resource manipulations happen on the right thread; 
+same with UI operations
+<LI>Use subprogress monitors and better initial work estimates
+<LI>Why don't menu items and decorations appear in the Navigator view
+<LI>How do we add progress messages to progress monitors?
+<LI>Make specs (at least plug-in supplied specs) readonly
+<LI>Get line numbers and problem markers displayed in editors showing
+linked to files
+<LI>Put in better builder error reporting using a BUILD_FAILED status code
+<LI>Sort out the use of recursive and source folders and default
+packages, especially in the presence of spec-only directories
+<LI>Need to make sure we are batching workspace changes
+<LI>Pay attention to exclusion filters on source folders appropriately
+<LI>Honoring single-click?
+<LI>Follow accessibility guidelines?  Use mnemonics?
+<LI>Move strings to a properties area?
+</UL>
+
+<A NAME="#Versions"/A>
+<H2>Version history</H2>
+<UL>
+<LI>The plug-in is currently still in a pre-release state.
+</UL>
+
+
+<A NAME="#Tutorial"/A>
+<H2>Getting Started Tutorial</H2>
+--- not written yet -- (FIXME)
+
+
+<A NAME="#DevNotes"/A>
+<H2>Notes for Developers</H2>
+--- not written yet -- (FIXME)
+
+</BODY>
+</HTML>
