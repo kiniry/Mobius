@@ -2,10 +2,23 @@
 # Copyright 2001, Compaq Computer Corporation
 # Copyright 2003 University of Nijmegen
 
-# Make sure that setup.sh has been sourced.
-if [ -z "${ESCJ}" ]; then
-    echo "Error: setup must be sourced first"
+if [ -z ${ESCJAVA_ROOT} ]; then
+    echo "Error: ESCJAVA_ROOT is not set."
     exit 2
+fi
+
+if [ -z "${ESC_CLASSPATH}" ]; then
+    echo "Error: ESC_CLASSPATH is not set."
+    exit 2
+fi
+
+if [ -z "${BOOTCLASSPATH}" ]; then
+    echo "Error: BOOTCLASSPATH is not set."
+    exit 2
+fi
+
+if [ -z ${JAVA} ]; then
+  JAVA=java
 fi
 
 # If no standard arguments are set, set some escjava defaults for now.
@@ -26,15 +39,23 @@ if ! [ -z ${ESC_REMOTE_DEBUG} ]; then
 -Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=y"
 fi
 
-echo "Executing:"
-echo "${JAVA} ${JAVA_VM_FLAGS}"
-echo "  -Dsimplify=${ESCJAVA_ROOT}/simplify"
-echo "  -classpath ${ESC_CLASSPATH}"
-echo "  escjava.Main"
-echo "  -bootclasspath ${BOOTCLASSPATH}"
-echo "  -classpath ${USERPATH}"
-echo "  ${ESCJ_STDARGS}"
-echo "  ${@}"
+if ! [ -z ${ESCJ_VERBOSE} ]; then
+    if [ "${ESCJ_VERBOSE}" == 2 ]; then
+      echo "=================================================================="
+      set
+    fi
+    echo "=================================================================="
+    echo "Executing:";
+    echo "${JAVA} ${JAVA_VM_FLAGS}";
+    echo "  -Dsimplify=${ESCJAVA_ROOT}/simplify";
+    echo "  -classpath ${ESC_CLASSPATH}";
+    echo "  escjava.Main";
+    echo "  -bootclasspath ${BOOTCLASSPATH}";
+    echo "  -classpath ${USERPATH}";
+    echo "  ${ESCJ_STDARGS}";
+    echo "  ${@}";
+    echo "=================================================================="
+fi
 
 JAVA_VM_FLAGS=${JAVA_VM_DEBUG_FLAGS}
 
