@@ -482,7 +482,132 @@ public class TagConstants extends javafe.tc.TagConstants
         Assert.fail("unrecognized check string: \"" + s + "\"");
         return -1;
     }
+
+    /**
+     * @return a "redundant-fied" version of the passed tag if it can
+     * be made redundant; otherwise, return the parameter unchanged.
+     */
+    public static int makeRedundant(int tag) {
+        int Result = tag;
+        switch (tag) {
+	    case TagConstants.REQUIRES:
+                Result = TagConstants.JML_REQUIRES_REDUNDANTLY; break;
+            case TagConstants.ENSURES:
+                Result = TagConstants.JML_ENSURES_REDUNDANTLY; break;
+            case TagConstants.JML_PRE:
+                Result = TagConstants.JML_PRE_REDUNDANTLY; break;
+            case TagConstants.JML_DIVERGES:
+                Result = TagConstants.JML_DIVERGES_REDUNDANTLY; break;
+            case TagConstants.JML_WHEN:
+                Result = TagConstants.JML_WHEN_REDUNDANTLY; break;
+            case TagConstants.JML_POST:
+                Result = TagConstants.JML_POST_REDUNDANTLY; break;
+            case TagConstants.EXSURES:
+                Result = TagConstants.JML_EXSURES_REDUNDANTLY; break;
+            case TagConstants.JML_SIGNALS:
+                Result = TagConstants.JML_SIGNALS_REDUNDANTLY; break;
+            case TagConstants.JML_MODIFIABLE:
+                Result = TagConstants.JML_MODIFIABLE_REDUNDANTLY; break;
+            case TagConstants.JML_ASSIGNABLE:
+                Result = TagConstants.JML_ASSIGNABLE_REDUNDANTLY; break;
+            case TagConstants.MODIFIES:
+                Result = TagConstants.JML_MODIFIES_REDUNDANTLY; break;
+            case TagConstants.JML_MEASURED_BY:
+                Result = TagConstants.JML_MEASURED_BY_REDUNDANTLY; break;
+            case TagConstants.ASSERT:
+                Result = TagConstants.JML_ASSERT_REDUNDANTLY; break;
+            case TagConstants.ASSUME:
+                Result = TagConstants.JML_ASSUME_REDUNDANTLY; break;
+            case TagConstants.LOOP_INVARIANT:
+                Result = TagConstants.JML_LOOP_INVARIANT_REDUNDANTLY; break;
+            case TagConstants.JML_MAINTAINING:
+                Result = TagConstants.JML_MAINTAINING_REDUNDANTLY; break;
+            case TagConstants.DECREASES:
+                Result = TagConstants.JML_DECREASES_REDUNDANTLY; break;
+            case TagConstants.INVARIANT:
+                Result = TagConstants.JML_INVARIANT_REDUNDANTLY; break;
+            case TagConstants.JML_CONSTRAINT:
+                Result = TagConstants.JML_CONSTRAINT_REDUNDANTLY; break;
+            case TagConstants.JML_DECREASING:
+                Result = TagConstants.JML_DECREASING_REDUNDANTLY; break;
+        }
+        return Result;
+    }
     
+    /**
+     * @return an "unredundant-fied" version of the passed tag if it
+     * is redundant; otherwise, return the parameter unchanged.
+     */
+    public static int unRedundant(int tag) {
+        int Result = tag;
+        switch (tag) {
+	    case TagConstants.JML_REQUIRES_REDUNDANTLY:
+                Result = TagConstants.REQUIRES; break;
+            case TagConstants.JML_ENSURES_REDUNDANTLY:
+                Result = TagConstants.ENSURES; break;
+            case TagConstants.JML_PRE_REDUNDANTLY:
+                Result = TagConstants.JML_PRE; break;
+            case TagConstants.JML_DIVERGES_REDUNDANTLY:
+                Result = TagConstants.JML_DIVERGES; break;
+            case TagConstants.JML_WHEN_REDUNDANTLY:
+                Result = TagConstants.JML_WHEN; break;
+            case TagConstants.JML_POST_REDUNDANTLY:
+                Result = TagConstants.JML_POST; break;
+            case TagConstants.JML_EXSURES_REDUNDANTLY:
+                Result = TagConstants.EXSURES; break;
+            case TagConstants.JML_SIGNALS_REDUNDANTLY:
+                Result = TagConstants.JML_SIGNALS; break;
+            case TagConstants.JML_MODIFIABLE_REDUNDANTLY:
+                Result = TagConstants.JML_MODIFIABLE; break;
+            case TagConstants.JML_ASSIGNABLE_REDUNDANTLY:
+                Result = TagConstants.JML_ASSIGNABLE; break;
+            case TagConstants.JML_MODIFIES_REDUNDANTLY:
+                Result = TagConstants.MODIFIES; break;
+            case TagConstants.JML_MEASURED_BY_REDUNDANTLY:
+                Result = TagConstants.JML_MEASURED_BY; break;
+            case TagConstants.JML_ASSERT_REDUNDANTLY:
+                Result = TagConstants.ASSERT; break;
+            case TagConstants.JML_ASSUME_REDUNDANTLY:
+                Result = TagConstants.ASSUME; break;
+            case TagConstants.JML_LOOP_INVARIANT_REDUNDANTLY:
+                Result = TagConstants.LOOP_INVARIANT; break;
+            case TagConstants.JML_MAINTAINING_REDUNDANTLY:
+                Result = TagConstants.JML_MAINTAINING; break;
+            case TagConstants.JML_DECREASES_REDUNDANTLY:
+                Result = TagConstants.DECREASES; break;
+            case TagConstants.JML_INVARIANT_REDUNDANTLY:
+                Result = TagConstants.INVARIANT; break;
+            case TagConstants.JML_CONSTRAINT_REDUNDANTLY:
+                Result = TagConstants.JML_CONSTRAINT; break;
+            case TagConstants.JML_DECREASING_REDUNDANTLY:
+                Result = TagConstants.JML_DECREASING; break;
+        }
+        return Result;
+    }
+
+    public static boolean isRedundant(int tag) {
+	return (tag == TagConstants.JML_REQUIRES_REDUNDANTLY) ||
+            (tag == TagConstants.JML_ENSURES_REDUNDANTLY) ||
+            (tag == TagConstants.JML_PRE_REDUNDANTLY) ||
+            (tag == TagConstants.JML_DIVERGES_REDUNDANTLY) ||
+            (tag == TagConstants.JML_WHEN_REDUNDANTLY) ||
+            (tag == TagConstants.JML_POST_REDUNDANTLY) ||
+            (tag == TagConstants.JML_EXSURES_REDUNDANTLY) ||
+            (tag == TagConstants.JML_SIGNALS_REDUNDANTLY) ||
+            tag == TagConstants.JML_MODIFIABLE_REDUNDANTLY ||
+            tag == TagConstants.JML_ASSIGNABLE_REDUNDANTLY ||
+            tag == TagConstants.JML_MODIFIES_REDUNDANTLY ||
+            tag == TagConstants.JML_MEASURED_BY_REDUNDANTLY ||
+            tag == TagConstants.JML_ASSERT_REDUNDANTLY ||
+            tag == TagConstants.JML_ASSUME_REDUNDANTLY ||
+            tag == TagConstants.JML_LOOP_INVARIANT_REDUNDANTLY ||
+            tag == TagConstants.JML_MAINTAINING_REDUNDANTLY ||
+            tag == TagConstants.JML_DECREASES_REDUNDANTLY ||
+            tag == TagConstants.JML_INVARIANT_REDUNDANTLY ||
+            tag == TagConstants.JML_CONSTRAINT_REDUNDANTLY ||
+            tag == TagConstants.JML_DECREASING_REDUNDANTLY;
+    }
+
     private static Identifier[] esckeywords = {
         Identifier.intern("also_ensures"),
         Identifier.intern("also_exsures"),

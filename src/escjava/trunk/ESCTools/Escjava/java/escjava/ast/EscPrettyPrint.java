@@ -19,96 +19,96 @@ import escjava.ast.TagConstants;
 
 
 public class EscPrettyPrint extends DelegatingPrettyPrint {
-  public EscPrettyPrint() { }
+    public EscPrettyPrint() { }
 
-  public EscPrettyPrint(PrettyPrint self, PrettyPrint del) {
-    super(self, del);
-  }
-
-  public void print(OutputStream o, LexicalPragma lp) {
-    if (lp.getTag() == TagConstants.NOWARNPRAGMA) {
-      write(o, "//@ ");
-      write(o, TagConstants.toString(TagConstants.NOWARN));
-      NowarnPragma nwp = (NowarnPragma)lp;
-      for (int i = 0; i < nwp.checks.size(); i++) {
-	if (i == 0) write(o, ' ');
-	else write(o, ", ");
-	write(o, nwp.checks.elementAt(i).toString());
-      }
-      write(o, "\n");
-    } else writeln(o, "// Unknown LexicalPragma (tag = " + lp.getTag() + ')');
-  }
-
-  public void exsuresPrintDecl(OutputStream o, GenericVarDecl d) {
-    if (d == null)
-      write(o, "<null GenericVarDecl>");
-    else {
-      self.print(o, d.type);
-      if (!(d.id.equals(TagConstants.ExsuresIdnName))) {
-	write (o, ' ');
-	write(o, d.id.toString());
-      }
-    }
-  }
-
-  public void print(OutputStream o, int ind, TypeDeclElemPragma tp) {
-    int tag = tp.getTag();
-    switch (tag) {
-    case TagConstants.AXIOM:
-    case TagConstants.INVARIANT:
-    case TagConstants.JML_INVARIANT_REDUNDANTLY: {
-      Expr e = ((ExprDeclPragma)tp).expr;
-      write(o, "/*@ "); 
-      write(o, TagConstants.toString(tag)); 
-      write(o, ' ');
-      self.print(o, ind, e); write(o, "  */");
-      break;
-    }
-    case TagConstants.MODELDECLPRAGMA: {
-      FieldDecl d = ((ModelDeclPragma)tp).decl;
-      /*
-       * Below is a "//@" to prevent illegal nested /* ...  comments
-       * that otherwise might result from any attached modifier pragmas.
-       *
-       * We rely on the fact that no ESC modifier can generate newlines
-       * when pretty printed.  !!!!
-       */
-      write(o, "//@ model ");
-      self.print(o, ind, d, true); 
-      // write(o, "  */\n");
-      write(o, "\n");
-      break;
+    public EscPrettyPrint(PrettyPrint self, PrettyPrint del) {
+        super(self, del);
     }
 
-    case TagConstants.GHOSTDECLPRAGMA: {
-      FieldDecl d = ((GhostDeclPragma)tp).decl;
-      /*
-       * Below is a "//@" to prevent illegal nested /* ...  comments
-       * that otherwise might result from any attached modifier pragmas.
-       *
-       * We rely on the fact that no ESC modifier can generate newlines
-       * when pretty printed.  !!!!
-       */
-      write(o, "//@ ghost ");
-      self.print(o, ind, d, true); 
-      // write(o, "  */\n");
-      write(o, "\n");
-      break;
+    public void print(OutputStream o, LexicalPragma lp) {
+        if (lp.getTag() == TagConstants.NOWARNPRAGMA) {
+            write(o, "//@ ");
+            write(o, TagConstants.toString(TagConstants.NOWARN));
+            NowarnPragma nwp = (NowarnPragma)lp;
+            for (int i = 0; i < nwp.checks.size(); i++) {
+                if (i == 0) write(o, ' ');
+                else write(o, ", ");
+                write(o, nwp.checks.elementAt(i).toString());
+            }
+            write(o, "\n");
+        } else writeln(o, "// Unknown LexicalPragma (tag = " + lp.getTag() + ')');
     }
-    case TagConstants.STILLDEFERREDDECLPRAGMA: {
-      Identifier v = ((StillDeferredDeclPragma)tp).var;
-      write(o, "/*@ ");
-      write(o, TagConstants.toString(TagConstants.STILL_DEFERRED));
-      write(o, " "); 
-      write(o,v.toString()); 
-      write(o, "  */");
-      break;
+
+    public void exsuresPrintDecl(OutputStream o, GenericVarDecl d) {
+        if (d == null)
+            write(o, "<null GenericVarDecl>");
+        else {
+            self.print(o, d.type);
+            if (!(d.id.equals(TagConstants.ExsuresIdnName))) {
+                write (o, ' ');
+                write(o, d.id.toString());
+            }
+        }
     }
-    default:
-      write(o, "/* Unknown TypeDeclElemPragma (tag = " + tag + ") */");
-      break;
+
+    public void print(OutputStream o, int ind, TypeDeclElemPragma tp) {
+        int tag = tp.getTag();
+        switch (tag) {
+            case TagConstants.AXIOM:
+            case TagConstants.INVARIANT:
+            case TagConstants.JML_INVARIANT_REDUNDANTLY: {
+                Expr e = ((ExprDeclPragma)tp).expr;
+                write(o, "/*@ "); 
+                write(o, TagConstants.toString(tag)); 
+                write(o, ' ');
+                self.print(o, ind, e); write(o, "; */");
+                break;
+            }
+            case TagConstants.MODELDECLPRAGMA: {
+                FieldDecl d = ((ModelDeclPragma)tp).decl;
+                /*
+                 * Below is a "//@" to prevent illegal nested /* ...  comments
+                 * that otherwise might result from any attached modifier pragmas.
+                 *
+                 * We rely on the fact that no ESC modifier can generate newlines
+                 * when pretty printed.  !!!!
+                 */
+                write(o, "//@ model ");
+                self.print(o, ind, d, true); 
+                // write(o, "  */\n");
+                write(o, "\n");
+                break;
+            }
+
+            case TagConstants.GHOSTDECLPRAGMA: {
+                FieldDecl d = ((GhostDeclPragma)tp).decl;
+                /*
+                 * Below is a "//@" to prevent illegal nested /* ...  comments
+                 * that otherwise might result from any attached modifier pragmas.
+                 *
+                 * We rely on the fact that no ESC modifier can generate newlines
+                 * when pretty printed.  !!!!
+                 */
+                write(o, "//@ ghost ");
+                self.print(o, ind, d, true); 
+                // write(o, "  */\n");
+                write(o, "\n");
+                break;
+            }
+            case TagConstants.STILLDEFERREDDECLPRAGMA: {
+                Identifier v = ((StillDeferredDeclPragma)tp).var;
+                write(o, "/*@ ");
+                write(o, TagConstants.toString(TagConstants.STILL_DEFERRED));
+                write(o, " "); 
+                write(o,v.toString()); 
+                write(o, "; */");
+                break;
+            }
+            default:
+                write(o, "/* Unknown TypeDeclElemPragma (tag = " + tag + ") */");
+                break;
+        }
     }
-  }
 
     public void print(OutputStream o, int ind, ModifierPragma mp) {
         int tag = mp.getTag();
@@ -147,66 +147,87 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
             case TagConstants.ALSO_REQUIRES:
             case TagConstants.ENSURES:
             case TagConstants.JML_DIVERGES:
-            case TagConstants.JML_DIVERGES_REDUNDANTLY:
-            case TagConstants.JML_ENSURES_REDUNDANTLY:
             case TagConstants.JML_POST:
-            case TagConstants.JML_POST_REDUNDANTLY:
             case TagConstants.JML_PRE:
-            case TagConstants.JML_PRE_REDUNDANTLY:
-            case TagConstants.JML_REQUIRES_REDUNDANTLY:
             case TagConstants.JML_WHEN:
-            case TagConstants.JML_WHEN_REDUNDANTLY:
             case TagConstants.MONITORED_BY: // from EscPragmaParser.continuePragma(Token)
             case TagConstants.READABLE_IF:
             case TagConstants.REQUIRES:
             case TagConstants.WRITABLE_IF: {
                 Expr e = ((ExprModifierPragma)mp).expr;
                 write(o, "/*@ "); 
-                write(o, TagConstants.toString(tag)); 
+                if (mp.isRedundant())
+                    write(o, TagConstants.toString(TagConstants.makeRedundant(tag))); 
+                else
+                    write(o, TagConstants.toString(tag)); 
                 write(o, ' ');
                 self.print(o, ind, e); 
-                write(o, "  */");
+                write(o, "; */");
                 break;
             }
 
-            case TagConstants.ALSO_MODIFIES: // from EscPragmaParser.continuePragma(Token)
-            case TagConstants.JML_ASSIGNABLE: // from EscPragmaParser.continuePragma(Token)
-            case TagConstants.JML_ASSIGNABLE_REDUNDANTLY: // from EscPragmaParser.continuePragma(Token)
-            case TagConstants.JML_MEASURED_BY: // from EscPragmaParser.continuePragma(Token)
-            case TagConstants.JML_MEASURED_BY_REDUNDANTLY: // from EscPragmaParser.continuePragma(Token)
-            case TagConstants.JML_MODIFIABLE: // from EscPragmaParser.continuePragma(Token)
-            case TagConstants.JML_MODIFIABLE_REDUNDANTLY: // from EscPragmaParser.continuePragma(Token)
-            case TagConstants.JML_MODIFIES_REDUNDANTLY: // from EscPragmaParser.continuePragma(Token)
-            case TagConstants.JML_NOT_MODIFIED: // from EscPragmaParser.continuePragma(Token)
-            case TagConstants.MODIFIES: { // from EscPragmaParser.continuePragma(Token)
+            // All redundant tokens should not exist in the AST
+            // anymore; they are represented with redundant fields in
+            // the AST nodes.
+            case TagConstants.JML_ASSERT_REDUNDANTLY:
+            case TagConstants.JML_ASSIGNABLE_REDUNDANTLY:
+            case TagConstants.JML_ASSUME_REDUNDANTLY:
+            case TagConstants.JML_DECREASES_REDUNDANTLY:
+            case TagConstants.JML_DECREASING_REDUNDANTLY:
+            case TagConstants.JML_DIVERGES_REDUNDANTLY:
+            case TagConstants.JML_ENSURES_REDUNDANTLY:
+            case TagConstants.JML_EXSURES_REDUNDANTLY:
+            case TagConstants.JML_LOOP_INVARIANT_REDUNDANTLY: 
+            case TagConstants.JML_MAINTAINING_REDUNDANTLY:
+            case TagConstants.JML_MEASURED_BY_REDUNDANTLY:
+            case TagConstants.JML_MODIFIABLE_REDUNDANTLY:
+            case TagConstants.JML_MODIFIES_REDUNDANTLY:
+            case TagConstants.JML_POST_REDUNDANTLY:
+            case TagConstants.JML_PRE_REDUNDANTLY:
+            case TagConstants.JML_REQUIRES_REDUNDANTLY:
+            case TagConstants.JML_SIGNALS_REDUNDANTLY:
+            case TagConstants.JML_WHEN_REDUNDANTLY:
+                assert false : "Redundant keywords should not be in AST!";
+                break;
+
+            case TagConstants.ALSO_MODIFIES:
+            case TagConstants.JML_ASSIGNABLE:
+            case TagConstants.JML_MEASURED_BY:
+            case TagConstants.JML_MODIFIABLE:
+            case TagConstants.JML_NOT_MODIFIED:
+            case TagConstants.MODIFIES: {
                 Expr e = ((CondExprModifierPragma)mp).expr;
                 Expr p = ((CondExprModifierPragma)mp).cond;
                 write(o, "/*@ "); 
-                write(o, TagConstants.toString(tag)); 
+                if (mp.isRedundant())
+                    write(o, TagConstants.toString(TagConstants.makeRedundant(tag))); 
+                else
+                    write(o, TagConstants.toString(tag)); 
                 write(o, ' ');
                 self.print(o, ind, e); 
 		if (p != null) {
 		    write(o, " if ");
 		    self.print(o, ind, p); 
 		}
-                write(o, "  */");
+                write(o, "; */");
                 break;
             }
                 
             case TagConstants.ALSO_EXSURES: 
             case TagConstants.EXSURES:
-            case TagConstants.JML_EXSURES_REDUNDANTLY:
-            case TagConstants.JML_SIGNALS:
-            case TagConstants.JML_SIGNALS_REDUNDANTLY: {
+            case TagConstants.JML_SIGNALS: {
                 VarExprModifierPragma vemp = (VarExprModifierPragma)mp;
                 write(o, "/*@ "); 
-                write(o, TagConstants.toString(tag));
+                if (vemp.isRedundant())
+                    write(o, TagConstants.toString(TagConstants.makeRedundant(tag)));
+                else
+                    write(o, TagConstants.toString(tag));
                 write(o, " ("); 
                 //self.print(o, vemp.arg);
                 exsuresPrintDecl(o, vemp.arg); 
                 write(o, ") ");
                 self.print(o, ind, vemp.expr); 
-                write(o, "  */");
+                write(o, "; */");
                 break;
             }
                 
@@ -215,7 +236,7 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
             case TagConstants.JML_NORMAL_BEHAVIOR:
                 write(o, "/*@ "); 
                 write(o, TagConstants.toString(tag));
-                write(o, "  */");
+                write(o, " */");
                 break;
 
             default:
@@ -236,22 +257,19 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
     case TagConstants.ASSERT:
     case TagConstants.ASSUME:
     case TagConstants.DECREASES:
-    case TagConstants.JML_ASSERT_REDUNDANTLY:
-    case TagConstants.JML_ASSUME_REDUNDANTLY:
-    case TagConstants.JML_DECREASES_REDUNDANTLY:
     case TagConstants.JML_DECREASING:
-    case TagConstants.JML_DECREASING_REDUNDANTLY:
-    case TagConstants.JML_LOOP_INVARIANT_REDUNDANTLY: 
     case TagConstants.JML_MAINTAINING:
-    case TagConstants.JML_MAINTAINING_REDUNDANTLY:
     case TagConstants.LOOP_INVARIANT:
     case TagConstants.LOOP_PREDICATE: {
       Expr e = ((ExprStmtPragma)sp).expr;
       write(o, "/*@ "); 
-      write(o, TagConstants.toString(tag)); 
+      if (sp.isRedundant())
+          write(o, TagConstants.toString(TagConstants.makeRedundant(tag)));
+      else
+          write(o, TagConstants.toString(tag)); 
       write(o, ' ');
       self.print(o, ind, e); 
-      write(o, "  */");
+      write(o, "; */");
       break;
     }
 
@@ -263,7 +281,7 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
 	self.print(o, ind, s.target);
 	write(o, " = ");
 	self.print(o, ind, s.value);
-	write(o, "  */");
+	write(o, "; */");
 	break;
     }
 

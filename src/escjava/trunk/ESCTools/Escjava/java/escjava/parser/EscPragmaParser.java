@@ -622,26 +622,26 @@ public class EscPragmaParser extends Parse implements PragmaParser
 
             switch (tag) {
 
-// FIXME - these three cases should not be here, I think, since the
-// items will only appear in expressions??? -- DRCok
-                case TagConstants.JML_NOT_SPECIFIED:
-                    dst.ttype = TagConstants.MODIFIERPRAGMA;
-                    NotSpecifiedExpr nse =
-                        NotSpecifiedExpr.make(loc);
-                    dst.auxVal = ExprModifierPragma.make(inProcessTag, nse, loc);
-                    break;
+                // FIXME - these three cases should not be here, I think, since the
+                // items will only appear in expressions??? -- DRCok
+//                 case TagConstants.JML_NOT_SPECIFIED:
+//                     dst.ttype = TagConstants.MODIFIERPRAGMA;
+//                     NotSpecifiedExpr nse =
+//                         NotSpecifiedExpr.make(loc);
+//                     dst.auxVal = ExprModifierPragma.make(inProcessTag, nse, loc);
+//                     break;
                 
-                case TagConstants.JML_EVERYTHING:
-                    dst.ttype = TagConstants.MODIFIERPRAGMA;
-                    EverythingExpr ee = EverythingExpr.make(loc);
-                    dst.auxVal = ExprModifierPragma.make(inProcessTag, ee, loc);
-                    break;
+//                 case TagConstants.JML_EVERYTHING:
+//                     dst.ttype = TagConstants.MODIFIERPRAGMA;
+//                     EverythingExpr ee = EverythingExpr.make(loc);
+//                     dst.auxVal = ExprModifierPragma.make(inProcessTag, ee, loc);
+//                     break;
                     
-                case TagConstants.JML_NOTHING:
-                    dst.ttype = TagConstants.MODIFIERPRAGMA;
-                    NothingExpr ne = NothingExpr.make(loc);
-                    dst.auxVal = ExprModifierPragma.make(inProcessTag, ne, loc);
-                    break;
+//                 case TagConstants.JML_NOTHING:
+//                     dst.ttype = TagConstants.MODIFIERPRAGMA;
+//                     NothingExpr ne = NothingExpr.make(loc);
+//                     dst.auxVal = ExprModifierPragma.make(inProcessTag, ne, loc);
+//                     break;
 
                 case TagConstants.JML_BEHAVIOR:
                 case TagConstants.JML_EXCEPTIONAL_BEHAVIOR:
@@ -692,7 +692,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
 
                 case TagConstants.JML_DEPENDS:                 // SC AAST 4
                 case TagConstants.JML_DEPENDS_REDUNDANTLY: {   // SC AAST 4
-                    inProcessTag = tag;
+                    inProcessTag = TagConstants.unRedundant(tag);
                     inProcessLoc = loc;
                     dst.ttype = TagConstants.TYPEDECLELEMPRAGMA;
                     Expr target = parseExpression(scanner);
@@ -708,7 +708,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
                     DependsPragma pragma = 
                         DependsPragma.make(tag, target,
                                            ExprVec.make(list), loc);
-                    if (isRedundant(tag))
+                    if (TagConstants.isRedundant(tag))
                         pragma.setRedundant(true);
                     dst.auxVal = pragma;
 		    semiNotOptional = true;
@@ -735,8 +735,9 @@ public class EscPragmaParser extends Parse implements PragmaParser
                 case TagConstants.LOOP_INVARIANT: {
                     dst.ttype = TagConstants.STMTPRAGMA;
                     ExprStmtPragma pragma = 
-                        ExprStmtPragma.make(tag, parseExpression(scanner), loc);
-                    if (isRedundant(tag))
+                        ExprStmtPragma.make(TagConstants.unRedundant(tag), 
+                                            parseExpression(scanner), loc);
+                    if (TagConstants.isRedundant(tag))
                         pragma.setRedundant(true);
                     dst.auxVal = pragma;
                     semiNotOptional = true;
@@ -791,8 +792,9 @@ public class EscPragmaParser extends Parse implements PragmaParser
                 case TagConstants.JML_INVARIANT_REDUNDANTLY: {
                     dst.ttype = TagConstants.TYPEDECLELEMPRAGMA;
                     ExprDeclPragma pragma = 
-                        ExprDeclPragma.make(tag, parseExpression(scanner), loc);
-                    if (isRedundant(tag))
+                        ExprDeclPragma.make(TagConstants.unRedundant(tag), 
+                                            parseExpression(scanner), loc);
+                    if (TagConstants.isRedundant(tag))
                         pragma.setRedundant(true);
                     dst.auxVal = pragma;
                     semiNotOptional = true;
@@ -990,8 +992,9 @@ public class EscPragmaParser extends Parse implements PragmaParser
                     dst.ttype = TagConstants.MODIFIERPRAGMA;
                     // SpecExpr [';']
                     ExprModifierPragma pragma =
-			ExprModifierPragma.make(tag, parseExpression(scanner), loc);
-                    if (isRedundant(tag))
+			ExprModifierPragma.make(TagConstants.unRedundant(tag), 
+                                                parseExpression(scanner), loc);
+                    if (TagConstants.isRedundant(tag))
                         pragma.setRedundant(true);
                     dst.auxVal = pragma;
                     semiNotOptional = true;
@@ -1019,8 +1022,9 @@ public class EscPragmaParser extends Parse implements PragmaParser
 		    else
 			expr = parseExpression(scanner);
                     VarExprModifierPragma pragma =
-                        VarExprModifierPragma.make(tag, arg, expr, loc);
-                    if (isRedundant(tag))
+                        VarExprModifierPragma.make(TagConstants.unRedundant(tag), 
+                                                   arg, expr, loc);
+                    if (TagConstants.isRedundant(tag))
                         pragma.setRedundant(true);
                     dst.auxVal = pragma;
                     semiNotOptional = true;
@@ -1182,7 +1186,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
 //                     case TagConstants.JML_WORKING_SPACE_REDUNDANTLY: SC HPT 2 eaten-not-parsed (kiniry)
                     eatThroughSemiColon();
                     noteUnsupportedCheckableJmlPragma(loc, tag);
-                    break;
+                    return getNextPragma(dst);
 	
                 default:
                     ErrorSet.fatal(loc, "Unrecognized pragma: " + tag + " " +
@@ -1199,12 +1203,22 @@ public class EscPragmaParser extends Parse implements PragmaParser
         }
     }
 
+    /**
+     * Emit an error message to the user that support for the supplied
+     * tag at the specified location is underway by a particular
+     * developer.
+     */
     private void notePragmaUnderway(int loc, int tag, String username) {
         ErrorSet.fatal(loc, "Unsupported pragma: " + 
                        TagConstants.toString(tag) +
                        "; " + username + "@users.sf.net is working on it.");
     }
-
+    
+    /**
+     * Emit a caution to the user if verbosity is enabled that the
+     * supplied tag at the specified location is unsupported by the
+     * current version of ESC/Java but is statically checkable.
+     */
     private void noteUnsupportedCheckableJmlPragma(int loc, int tag) {
         if (Info.on)
             ErrorSet.caution(loc, "Unsupported pragma '" + 
@@ -1212,6 +1226,11 @@ public class EscPragmaParser extends Parse implements PragmaParser
                              "'; ESC/Java will not statically check this spec.");
     }
 
+    /**
+     * Emit a caution to the user if verbosity is enabled that the
+     * supplied tag at the specified location is unsupported by the
+     * current version of ESC/Java and is statically uncheckable.
+     */
     private void noteUnsupportedUncheckableJmlPragma(int loc, int tag) {
         if (Info.on)
             ErrorSet.caution(loc, "Unsupported uncheckable pragma '" + 
@@ -1240,6 +1259,13 @@ public class EscPragmaParser extends Parse implements PragmaParser
         return sb.toString();
     }
 
+    /**
+     * Eat the next token if it is a semi-colon and, if the next
+     * token is a pragma (not EOF, thus not the end of the pragma)
+     * then issue and error message indicating the the specified
+     * identifier must be semi-colon terminated if it is followed by
+     * more pragmas.
+     */
     private void eatSemiColon(Identifier kw) {
         if (scanner.ttype == TagConstants.SEMICOLON) scanner.getNextToken();
         else if (scanner.ttype != TagConstants.EOF)
@@ -1272,8 +1298,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
             dst.startingLoc = inProcessLoc;
 	    int tempInProcessTag = inProcessTag;
 	    int t = scanner.lookahead(0);
-// FIXME - if \nothing, \everything, \not_specified are parsed as part of
-// expressions we don't need to catch them here -- DRCok
+            // deal with special case expressions
 	    if (t == TagConstants.JML_NOTHING) {
 		scanner.getNextToken();
 		dst.auxVal = ExprModifierPragma.make(tempInProcessTag, 
@@ -1306,8 +1331,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
 	    int tempInProcessTag = inProcessTag;
 	    int t = scanner.lookahead(0);
 	    Expr e = null;
-// FIXME - if \nothing, \everything, \not_specified are parsed as part of
-// expressions we don't need to catch them here -- DRCok
+            // deal with special case expressions
 	    if (t == TagConstants.JML_NOTHING) {
 		scanner.getNextToken();
 		e = NothingExpr.make(scanner.startingLoc);
@@ -1323,6 +1347,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
                 // SpecDesignators terminated with an optional ';'
 	        e = parseExpression(scanner);
             }
+            // deal with option conditional ('if' <predicate>)
 	    t = scanner.ttype;
 	    Expr cond = null;
 	    if (t == TagConstants.IF) {
@@ -1330,12 +1355,14 @@ public class EscPragmaParser extends Parse implements PragmaParser
 		cond = parseExpression(scanner);
             }
             // A CondExprModifierPragma is used regardless of whether
-            // the modifier is conditional or not.  If it is not, then
-            // the condition is just "null".
+            // the modifier is conditional or not.  If the full
+            // expression is not really a conditional expression
+            // (i.e. it has no 'if'), then the condition parameter is
+            // just "null".
             CondExprModifierPragma pragma = 
-                CondExprModifierPragma.make(tempInProcessTag, 
+                CondExprModifierPragma.make(TagConstants.unRedundant(tempInProcessTag),
                                             e, inProcessLoc, cond);
-            if (isRedundant(inProcessTag))
+            if (TagConstants.isRedundant(tempInProcessTag))
                 pragma.setRedundant(true);
             dst.auxVal = pragma;
             dst.ttype = TagConstants.MODIFIERPRAGMA;
@@ -2037,29 +2064,5 @@ public class EscPragmaParser extends Parse implements PragmaParser
                     = ModifierPragmaVec.popFromStackVector(seqModifierPragma);
             return modifiers;
         }
-    }
-
-    public boolean isRedundant(int tag) {
-	return (tag == TagConstants.JML_REQUIRES_REDUNDANTLY) ||
-            (tag == TagConstants.JML_ENSURES_REDUNDANTLY) ||
-            (tag == TagConstants.JML_PRE_REDUNDANTLY) ||
-            (tag == TagConstants.JML_DIVERGES_REDUNDANTLY) ||
-            (tag == TagConstants.JML_WHEN_REDUNDANTLY) ||
-            (tag == TagConstants.JML_POST_REDUNDANTLY) ||
-            (tag == TagConstants.JML_EXSURES_REDUNDANTLY) ||
-            (tag == TagConstants.JML_SIGNALS_REDUNDANTLY) ||
-            tag == TagConstants.JML_MODIFIABLE_REDUNDANTLY ||
-            tag == TagConstants.JML_ASSIGNABLE_REDUNDANTLY ||
-            tag == TagConstants.JML_MODIFIES_REDUNDANTLY ||
-            tag == TagConstants.JML_MEASURED_BY_REDUNDANTLY ||
-            tag == TagConstants.JML_ASSERT_REDUNDANTLY ||
-            tag == TagConstants.JML_ASSUME_REDUNDANTLY ||
-            tag == TagConstants.JML_LOOP_INVARIANT_REDUNDANTLY ||
-            tag == TagConstants.JML_MAINTAINING_REDUNDANTLY ||
-            tag == TagConstants.JML_DECREASES_REDUNDANTLY ||
-            tag == TagConstants.JML_INVARIANT_REDUNDANTLY ||
-            tag == TagConstants.JML_CONSTRAINT_REDUNDANTLY ||
-            tag == TagConstants.JML_DECREASING_REDUNDANTLY;
-
     }
 }
