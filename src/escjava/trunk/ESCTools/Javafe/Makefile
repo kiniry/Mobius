@@ -18,8 +18,8 @@ export CLASSDIRECTORY = ${JAVAFE_ROOT}/classfiles
 export SOURCEDIRECTORY = ${JAVAFE_ROOT}/java
 export TESTSOURCEDIRECTORY = ${JAVAFE_ROOT}/test
 
-export CLASSES = ${CLASSDIRECTORY}
-export CLASSPATH = ${CLASSES}:.
+## This one is needed in submakes that don't define their own classpath
+export CLASSPATH = ${CLASSDIRECTORY}
 
 ##############################################################################
 
@@ -36,11 +36,7 @@ build: compile
 buildall: compileall
 
 .PHONY: test
-test: javafe_test runtest
-
-## FIXME - install stuff needs work
-.PHONY: install
-install: clean build javafe_test javadoc zip
+test: runtest typecheckTests
 
 ###########################################################################
 # build targets
@@ -54,7 +50,7 @@ CLASSESSTAMP = classes.stamp
 compile: ${CLASSDIRECTORY} source ${CLASSESSTAMP}
 
 ${CLASSESSTAMP}: ${SOURCEFILES}
-	${JAVAC} ${JAVAC_FLAGS} -classpath ${CLASSPATH}:${SOURCEDIRECTORY} \
+	${JAVAC} ${JAVAC_FLAGS} -classpath ${CLASSDIRECTORY}:${SOURCEDIRECTORY} \
 	  -d ${CLASSDIRECTORY} $?
 	touch ${CLASSESSTAMP}
 
@@ -64,7 +60,7 @@ compileall: ${CLASSDIRECTORY} source javafeall
 .PHONY: javafeall
 javafeall:
 	( cd java; \
-	${JAVAC} ${JAVAC_FLAGS} -classpath ${CLASSPATH}:${SOURCEDIRECTORY} \
+	${JAVAC} ${JAVAC_FLAGS} -classpath ${CLASSDIRECTORY}:${SOURCEDIRECTORY} \
 	  -d ${CLASSDIRECTORY} `find javafe -name "*.java"` \
 				`find tohtml -name "*.java"` )
 	touch ${CLASSESSTAMP}
@@ -83,9 +79,8 @@ jtools:
 	${MAKE} -C java/jtools
 
 ###########################################################################
-## install targets
 
-## FIXME - FIX THIS, and install in general
+## FIXME - FIX THIS
 
 .PHONY: zip
 zip:
@@ -105,7 +100,7 @@ clean: cleanclasses
 	${MAKE} -C java/javafe/tc clean
 	${MAKE} -C test/javafe/test clean
 	${MAKE} -C java/jtools clean
-	${MAKE} -C astgen clean          ##  Has to be last
+	${MAKE} -C astgen clean     ##  Has to be last - used by others
 
 .PHONY: cleanclasses
 cleanclasses:
@@ -117,6 +112,7 @@ cleanclasses:
 
 .PHONY: docs
 docs:	
+	@true
 
 ## javadocs are generated from the parent directory
 
@@ -137,19 +133,41 @@ JAVAFETESTTARGETS = \
 
 
 .PHONY: runtest
-runtest:
+runtest: javafe_test
 	${MAKE} -C test/javafe/parser/test runtest
 	${MAKE} -C java/javafe/util        runtest
 	${MAKE} -C test/javafe/test        runtest
 
+.PHONY: typecheckTests
+typecheckTests: javafe_test
+ifdef ALLTESTS
+	test/javafe/test/typecheckJavafe
+	test/javafe/test/typecheckJDK
+else
+	@true
+endif
+
+.PHONY: test-release
+test-release: 
+	@ echo TESTING RELEASE - Javafe
+	${MAKE} JAVAFE_CLASSPATH=${RELCLASSPATH} CLASSDIRECTORY=${RELTEMP} javafe_test
+	${MAKE} ALLTESTS=1 CLASSPATH=${RELCLASSPATH} -C java/javafe/util        runtest
+	${MAKE} ALLTESTS=1 JAVAFE_CLASSPATH=${RELCLASSPATH} CLASSPATH=${RELCLASSPATH}:${RELTEMP} -C test/javafe/test        runtest
+	${MAKE} ALLTESTS=1 CLASSPATH=${RELCLASSPATH}:${RELTEMP} -C test/javafe/parser/test runtest
+	rm -rf ${RELTEMP}/*
+
+
+
+
+## This builds tests; presumes that the build has been made
 .PHONY: javafe_test
 javafe_test:
 	( cd test; \
-	${JAVAC} -classpath ${CLASSPATH}:${SOURCEDIRECTORY}:${TESTSOURCEDIRECTORY} \
+	${JAVAC} -classpath ${JAVAFE_CLASSPATH}:${TESTSOURCEDIRECTORY} \
 	  -d ${CLASSDIRECTORY} ${JAVAFETESTTARGETS} )
 
 ###########################################################################
-## misc targets
+## misc targets -- FIXME
 
 OTHERSOURCEFILES = astgen/ast*.c astgen/ast*.h astgen/ast*.l
 TESTHARNESSFILES = test/javafe/parser/test/Test*.java test/javafe/test/*.java
@@ -174,5 +192,5 @@ wc:
 esc: source
 	cd java; \
 	date; \
-	escjava -classpath ${CLASSPATH} -f `find javafe -name "*.java"` \
+	escjava -classpath ${CLASSDIRECTORY} -f `find javafe -name "*.java"` \
 	date

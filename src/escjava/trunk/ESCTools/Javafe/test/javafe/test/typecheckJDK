@@ -1,11 +1,14 @@
 #!/bin/csh -f
 
+if (! $?JDK_SOURCES) ( echo typecheckJDK needs JDK_SOURCES; exit 0)
+setenv CLASSPATH ${JDK_SOURCES}
+
 foreach d (java/applet java/awt java/beans java/io java/lang \
            java/math java/net java/rmi java/security java/sql sun/tools)
 
    echo ===== Typechecking $d/\*.java =====
-   ${JAVA} -prof -classpath ${JDK_BINARIES}:${CLASSPATH} javafe.test.Print \
-        -classpath ${JDK_SOURCES}:${CLASSPATH}:${JDK_BINARIES} \
+   ${JAVA} -classpath ${CLASSDIRECTORY} javafe.test.Print \
+        -classpath ${CLASSPATH} \
         -typecheck -noprint ${JDK_SOURCES}/$d/*.java
 
 end

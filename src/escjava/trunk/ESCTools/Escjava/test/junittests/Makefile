@@ -1,23 +1,32 @@
 TOP = ../../..
 include ${TOP}/Makefile.defs
 
-##export CLASSPATH=
+############################################################################
+# ESCJAVA is (only) used for standalone tests
+## FIXME: escjava is not part of the CVS infrastructure
 export ESCJAVA = escjava -nowarn Deadlock -verboseTrace
-export JUNIT = $(JAVA) -Xmx256M -classpath ${ESCJAVA_CLASSPATH}:${JUNIT_UTILS_PATH}:. -Djava.io.tmpdir=/tmp -Dsimplify=${ESCJAVA_ROOT}/simplify junit.textui.TestRunner
-export JUNITSW = $(JAVA) -Xmx256M -classpath ${ESCJAVA_CLASSPATH}:${JUNIT_UTILS_PATH}:. -Djava.io.tmpdir=/tmp -Dsimplify=${ESCJAVA_ROOT}/simplify junit.swingui.TestRunner
 
+# Used to invoke text-based JUnit tests
+export JUNIT = $(JAVA) -Xmx256M -classpath ${ESCJAVA_CLASSPATH}:${JUNIT_UTILS_PATH}:. -Djava.io.tmpdir=/tmp -Dsimplify=${ESCJ_SIMPLIFY_SCRIPT} junit.textui.TestRunner
+
+# Used to invoke GUI-based JUnit tests
+export JUNITSW = $(JAVA) -Xmx256M -classpath ${ESCJAVA_CLASSPATH}:${JUNIT_UTILS_PATH}:. -Djava.io.tmpdir=/tmp -Dsimplify=${ESCJ_SIMPLIFY_SCRIPT} junit.swingui.TestRunner
+
+##############################################################################
 .PHONY: buildtests
 buildtests:
-	javac -classpath .:${JUNIT_UTILS_PATH}:${ESCJAVA_CLASSPATH} TestSuite.java
+	$(JAVAC) -classpath .:${JUNIT_UTILS_PATH}:${ESCJAVA_CLASSPATH} TestSuite.java
 
-test runtests: buildtests skips lists dotests
+test runtests: buildtests
+	$(MAKE) skips
+	$(MAKE) dotests
 
 .PHONY: dotests
-dotests:
+dotests: lists
 	$(JUNIT) TestSuite
 
 .PHONY: swtests
-swtests:
+swtests: lists
 	$(JUNITSW) TestSuite
 
 ALWAYSFLAGS = -nowarn Deadlock -verboseTrace -testMode

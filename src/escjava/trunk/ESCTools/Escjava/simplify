@@ -1,16 +1,14 @@
 #!/bin/csh -f
 
+## The environment must set ESCJ_SIMPLIFY
+## Typically the user sets SIMPLIFY and the scripts construct ESCJ_SIMPLIFY
+
 #
 # Handle defaults:
 #
 if ($?ESCJ_SIMPLIFY_ARGS) then
 else
 	setenv	ESCJ_SIMPLIFY_ARGS	"-noprune -noplunge"
-endif
-
-if ($?ESCJ_SIMPLIFY) then
-else
-	setenv	ESCJ_SIMPLIFY	${ESCTOOLS_ROOT}/Simplify/simplify/LINUXLIBC6/Simplify
 endif
 
 if ($?PROVER_KILL_TIME) then

@@ -1,9 +1,15 @@
 #!/bin/csh -f
 
+ifdef JDK_BINARIES
+setenv JBIN "-bootclasspath ${JDK_BINARIES}"
+else
+setenv JBIN ""
+endif
+
 foreach i (test? test?? test??? test???? test?????)
   echo "  Running $i..."
 
-  setenv TOOLCMD "${JAVA} -mx40m javafe.test.Print -classpath `pwd`/${i}:${CLASSPATH}: -bootclasspath ${JDK_BINARIES}"
+  setenv TOOLCMD "${JAVA} -mx40m javafe.test.Print -classpath `pwd`/${i}:${CLASSPATH}: ${JBIN}"
   setenv TOOLARGS "-noprint -typecheck"
 
   setenv TOOL "${TOOLCMD} ${TOOLARGS}"

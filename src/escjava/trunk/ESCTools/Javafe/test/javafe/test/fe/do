@@ -1,6 +1,12 @@
 #!/bin/csh
 
-setenv TOOLCMD "${JAVA} -mx40m javafe.test.Print -classpath `pwd`:${CLASSPATH}: -bootclasspath ${JDK_BINARIES}"
+ifdef JDK_BINARIES
+setenv JBIN "-bootclasspath ${JDK_BINARIES}"
+else
+setenv JBIN ""
+endif
+
+setenv TOOLCMD "${JAVA} -mx40m javafe.test.Print -classpath `pwd`:${CLASSPATH}: ${JBIN}"
 
 setenv TOOLARGS "-noprint -typecheck"
 

@@ -140,10 +140,12 @@ public class Main extends javafe.SrcTool
         clear(); // resets any static variables left from a previous instantiation
     }
 
+    boolean keepProver = false;
+
     public void clear() {
         super.clear();
         gctranslator = new Translate();
-        prover = null;
+        if (!keepProver) prover = null;
         // restore ordinary checking of assertions
         NoWarn.useGlobalStatus = false; 
 	NoWarn.setAllChkStatus(TagConstants.CHK_AS_ASSERT);
@@ -205,7 +207,7 @@ public class Main extends javafe.SrcTool
             
         if (6 <= stages || options().predAbstract) {
             long startTime = java.lang.System.currentTimeMillis();
-            prover = new Simplify();
+            if (!keepProver || prover == null) prover = new Simplify();
             
             if (!options().quiet)
                 System.out.println("  Prover started:" + timeUsed(startTime));
@@ -254,7 +256,7 @@ public class Main extends javafe.SrcTool
             o.close();
         }
 
-        if (prover != null) {
+        if (prover != null && !keepProver) {
             prover.close();
             prover = null;
         }

@@ -1,0 +1,43 @@
+#! /bin/tcsh -f
+
+## This script presumes it is operating from a release.
+## In particular, the directory $ESCTOOLS_RELEASE contains
+##	escjava2
+##	escj
+##	Simplify
+##	simplify-script
+
+########## Check if ESCTOOL_RELEASE is defined; try to guess it if it is not
+
+if ( ! $?ESCTOOLS_RELEASE ) then
+    set NAME=$PWD/$0
+    if ( -e $NAME ) then
+	setenv ESCTOOLS_RELEASE  $NAME:h
+        echo Guessing ESCTOOLS_RELEASE = $ESCTOOLS_RELEASE
+    else if ( -e $0 ) then
+        setenv ESCTOOLS_RELEASE  $0:h
+        echo Guessing ESCTOOLS_RELEASE = $ESCTOOLS_RELEASE
+    endif
+    if ( ! $?ESCTOOLS_RELEASE ) then
+        echo "Error: ESCTOOLS_RELEASE is not set and guessing was unsuccessful."
+        exit 2
+    endif
+endif
+
+setenv ESCTOOLS_ROOT $ESCTOOLS_RELEASE
+
+######### Define ESC_CLASSPATH if it is not defined
+
+if ( ! $?ESC_CLASSPATH ) then
+	setenv ESC_CLASSPATH $ESCTOOLS_RELEASE/esctools.jar
+endif
+
+######### Define ESCJ_SIMPLIFY if it is not defined
+
+if ( ! $?ESCJ_SIMPLIFY ) then
+	setenv ESCJ_SIMPLIFY $ESCTOOLS_RELEASE/Simplify
+endif
+
+######## Execute
+
+$ESCTOOLS_RELEASE/escj $*

@@ -1,0 +1,43 @@
+#! /bin/tcsh -f
+
+unsetenv ESCTOOLS_ROOT
+
+
+set TMP = /tmp
+
+echo "### Trying a quick test of the release in directory " $TMP
+
+if ( ! $?ESCTOOLS_RELEASE ) then
+    set NAME = $PWD/$0
+    if ( -e $NAME ) then
+	set ESCTOOLS_RELEASE=$NAME:h
+	echo Guessing ESCTOOLS_RELEASE = $ESCTOOLS_RELEASE
+    else if ( -e $0 ) then
+	set ESCTOOLS_RELEASE=$0:h
+	echo Guessing ESCTOOLS_RELEASE = $ESCTOOLS_RELEASE
+    endif
+endif
+if ( ! $?ESCTOOLS_RELEASE ) then
+	echo "You need to set the environment variables ESCTOOLS_RELEASE to the location of the escjava2 release files"
+	exit 1
+endif
+
+cd $TMP
+echo "## Running with a bad argument to get a usage message"
+
+$ESCTOOLS_RELEASE/escjava2 -help
+
+
+echo
+echo "## Creating a simple java file and testing it - should produce a warning"
+echo "   (This also checks that Simplify will run) "
+
+echo "public class A {" > A.java
+echo "  public void m(Object o) { String s = o.toString(); }" >> A.java
+echo "}" >> A.java
+
+$ESCTOOLS_RELEASE/escjava2 A.java
+rm -f A.java
+
+echo
+echo "## End of quick test"

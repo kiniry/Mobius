@@ -11,11 +11,19 @@ export JAVA ?= java
 ## be run via this Makefile directly.  The definition here must be the same as
 ## it is in ${JAVAFE_ROOT}
 export CLASSDIRECTORY ?= ${JAVAFE_ROOT}/classfiles
+## Define, use CLASSPATH so it can be overridden during release testing
+export CLASSPATH ?= ${CLASSDIRECTORY}
 
 ## These define the executable and the options used to run the tests.  The
 ## -classpath option is tacked on in the do% target below since it is 
 ## specific to the test directory.
-export TOOLCMD = ${JAVA} -mx40m -classpath ${CLASSDIRECTORY} javafe.test.Print -bootclasspath ${JDK_BINARIES}
+ifdef JDK_BINARIES
+JBIN = -bootclasspath ${JDK_BINARIES}
+else
+JBIN =
+endif
+
+export TOOLCMD = ${JAVA} -mx40m -classpath ${CLASSPATH} javafe.test.Print ${JBIN}
 export TOOLARGS = -noprint -typecheck
 export TOOL = ${TOOLCMD} ${TOOLARGS}
 
@@ -24,13 +32,22 @@ runtest: septests
 
 all: outputs javac diffs compare summary
 
+ifdef ALLTESTS
 FILELIST = `ls | grep test | grep -v -f skip`
-#FILELIST = test9 test1007 test12 test13 test15 test18 test20 test4 test5 test6
+else
+FILELIST = `ls | grep test | grep -v -f skip -f skipunlessall `
+endif
 
 # Runs each test and does its comparison; also utilizes the skip file
 septests:
-	@touch skip
-	@echo SKIPPING tests: `cat skip`
+	@touch skip skipunlessall
+	@echo Performing tests with
+	@echo "    TOOL: ${TOOL}"
+	@echo "    CLASSPATH: ${CLASSPATH}"
+	@echo SKIPPING tests: `grep -v '^#' skip`
+ifndef ALLTESTS
+	@echo tests NOT INCLUDED - ALLTESTS not defined: ` grep -v '^#' skipunlessall`
+endif
 	@for t in ${FILELIST} ; do \
 		echo "   Testing" $$t ... ;\
 		${MAKE} --no-print-directory do$$t ; \
@@ -56,7 +73,6 @@ summary: test*
 ## Must have variables JAVA and JAVAFE_ROOT set
 do%:
 	@( cd $*; \
-	   export CLASSPATH=`pwd`; \
 	   export TOOL="${TOOL} -classpath `pwd`" ; \
 	   ./run 2>&1 | sed "s|`pwd`|<TEST>|g" > out)
 	@diff $*/out $*/ans

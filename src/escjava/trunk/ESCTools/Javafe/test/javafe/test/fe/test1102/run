@@ -2,8 +2,8 @@
 
 ## Test binary class file reader with all sources in front end.
 
-cd ${JAVAFE_ROOT}/java/javafe
+cd ${JAVAFE_SOURCE_DIR}/javafe
 
 foreach i (*.java */*.java)
-  ${TOOL} -classpath ${JAVAFE_ROOT}/classfiles $i
+  ${TOOL} -classpath ${JAVAFE_CLASSPATH} $i
 end

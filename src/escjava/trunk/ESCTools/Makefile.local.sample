@@ -11,48 +11,48 @@
 
 # Each variable is 'export'ed so that it applies to submakes.
 
+##### You must have values for ESCTOOLS_ROOT and SIMPLIFY defined somehow,
+##### either in the environment, on the Make command line or in a Makefile.local
+##### Other variables have reasonable defaults.
+
 ## This must be the directory containing the various ESC tools, 
 ## For example, it must contain this file (Makefile.local), 
 ## the top-level Makefile, and the directories Javafe, EscJava
 export ESCTOOLS_ROOT ?= /home/cok/ESCTools/ESCTools
 
-## Define JAVA_HOME if it is not defined in the environment
-## The directory ${JAVA_HOME} should contain the subdirectory 'bin',
-## which should contain executables such as java and javac
-ifndef JAVA_HOME
-export JAVA_HOME =
-endif
+## This defines the version of Simplify to be used (the executables are
+## platform dependent).  See the selection in 
+## ${ESCTOOLS_ROOT}/Escjava/release/master/bin and set the variable to the 
+## name of, not the path to, the most recent version for the platform you are 
+## on.  If there is not an appropriate binary you will not be able to do static
+## checking (but you can check files for syntactic errors); new binaries
+## require new builds of Simplify (see Simplify/README.txt).
+export SIMPLIFY ?=
+
 
 ## Define the location of the source files for the JDK
+## This is only used in tests, in which the Javafe lexer/parser is 
+## exercised by running it on all the JDK source, if it is available.
+## (The test is typecheckJDK; // FIXME - what about PrintTest)
 export JDK_SOURCES ?= ${JAVASOURCE}
 
 ## Define the location of the class files for the JDK.
 ## This can be a classpath of multiple locations (e.g. on MacOSX), but
-## on most platforms is simply the rt.jar file.
-export JDK_BINARIES ?= ${JAVA_HOME}/jre/lib/rt.jar
-
-# @note kiniry 15 Jan 2003 - We must use JDK 1.2 as it (a) compiles to
-# bytecodes that the decsrc package can parse, and (b) contains some
-# classes (e.g., java.util.Arrays) on which ESC/Java depends.
+## may be simply the rt.jar file.
+## Typically the java tools are prebuilt knowing the location of the system
+## class files, but you can set this variable if you need to alter the
+## set of files used.
+###export JDK_BINARIES ?= ${JAVA_HOME}/jre/lib/rt.jar
+export JDK_BINARIES ?= 
 
 ## Define the location of the junit.jar file
 ## (This can alternatively be the location of the junit class files)
-export JUNIT_LIB ?= ${ESCTOOLS_ROOT}/Utils/junit.jar
-
-## Define the path for anything needed for JUnit tests
-
-export JUNIT_UTILS_PATH = ${ESCTOOLS_ROOT}/Utils:${JUNIT_LIB}
-
-
-## Define the location of any specification files for the JDK.
-## This definition is optional.  
-## The default will be the spec files provided as
-## part of the Esc release.
-ifndef JDKSPEC_ROOT
-#export JDKSPEC_ROOT =
-endif
+## This is only needed to run some of the tests, which use JUnit
+## A version of JUnit is also supplied as part of the ESCTools distribution. 
+export JUNITLIB ?= ${ESCTOOLS_ROOT}/Utils/junit.jar
 
 ## Other optional definitions
+
 ## Name of the executable to run java programs (must be on the PATH)
 #export JAVA ?= java
 

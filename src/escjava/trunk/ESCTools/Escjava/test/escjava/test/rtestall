@@ -2,6 +2,14 @@
 
 # use: rtestall FLAGS
 
+echo Executing rtestall in `pwd` using
+echo "    ESCJ: $ESCJ"
+echo "    ESC_CLASSPATH: $ESC_CLASSPATH"
+if ( $?CLASSPATH ) then
+echo "    CLASSPATH: $CLASSPATH"
+endif
+echo "    ESCJ_SIMPLIFY: $ESCJ_SIMPLIFY"
+
 foreach f (`grep Good alltests | awk '{print $1;}'`)
   ./rtest $f $* || exit 1
 end

@@ -5,8 +5,10 @@
 
 export TOP = ..
 include ${TOP}/Makefile.defs
-# Makefile.defs and the parent Makefile provide definitions of the following variables needed here:
-# unset JAVAC, JAVAC_FLAGS, ESCJAVA_ROOT, ESCJAVA_CLASSPATH, ESCJAVA_CLASSFILES, JAVAFE_ROOT, JAVAFE_SOURCE_DIR
+# Makefile.defs and the parent Makefile provide definitions of the 
+# following variables needed here:
+# JAVAC, JAVAC_FLAGS, ESCJAVA_ROOT, ESCJAVA_CLASSPATH, ESCJAVA_CLASSFILES, 
+# JAVAFE_ROOT, JAVAFE_SOURCE_DIR
 # (Building Escjava relies on the AST building tools in ${JAVAFE_ROOT}/astgen)
 
 # Various conventional UNIX tools are used in the following, including
@@ -30,24 +32,16 @@ JAVASOURCEFILES = ${ESCJAVA_SOURCE_DIR}/escjava/ast/*.java \
 OTHERSOURCEFILES = /dev/null
 TESTHARNESSFILES = /dev/null
 
+# The executable to run escjava
 export ESCJ = ${ESCJAVA_ROOT}/escj
-
-## These are the options to JAVAC used to build Escjava.
-## FIXME - what does SOURCEPATH do ?
-## kiniry - SOURCEPATH should include all directories that
-## contain source code on which Escjava depends.  That
-## should include all the source for Javafe, Escjava,
-## Mocha, etc.  We use -sourcepath because all of these
-## different collections of source code have no common root.
-
-JAVAC_FLAGS += -classpath ${ESCJAVA_BUILD_CLASSPATH} \
-	-sourcepath ${SOURCEPATH} \
-	-d ${ESCJAVA_CLASSFILES} 
 
 ## These definitions are used in subsidiary makes, hence are exported
 export CLASSDIRECTORY=${ESCJAVA_CLASSFILES}
 export SOURCEDIRECTORY=${ESCJAVA_SOURCE_DIR}
 export TESTSOURCEDIRECTORY=${ESCJAVA_ROOT}/test
+
+## This is the path for classfiles (not sources) needed to build Escjava
+export ESCJAVA_BUILD_CLASSPATH = ${JAVAFE_CLASSFILES}:${ESCJAVA_CLASSFILES}:${MOCHA_LIB}
 
 ###########################################################################
 .PHONY: all
@@ -71,6 +65,7 @@ test: test_escjava
 .PHONY: docs
 #docs: docs_escjava
 docs:
+	@true
 
 ESCJAVA_CORE_DOC = ${ESCJAVA_SOURCE_DIR}/escjava/escjava.mtex
 
@@ -99,14 +94,15 @@ STAMPFILE = classes.stamp
 ## file has not been modified.  If in doubt do a clean before a build
 ## - it doesn't take long.
 .PHONY: compile
-compile: ${CLASSDIRECTORY} generate_files ${MOCHA_LIB} ${STAMPFILE}
+compile: ${CLASSDIRECTORY} generate_files mocha ${STAMPFILE}
 
 .PHONY: compileall
-compileall: ${CLASSDIRECTORY} generate_files allclasses
-
-.PHONY: allclasses
-allclasses:
-	@${JAVAC} ${JAVAC_FLAGS} ${JAVASOURCEFILES}
+compileall: generate_files ${MOCHA_LIB} ${CLASSDIRECTORY}
+	@${JAVAC} ${JAVAC_FLAGS} \
+		-classpath ${ESCJAVA_BUILD_CLASSPATH} \
+		-sourcepath ${SOURCEPATH} \
+		-d ${CLASSDIRECTORY} \
+		${JAVASOURCEFILES}
 	touch ${STAMPFILE}
 
 ${CLASSDIRECTORY}:
@@ -116,7 +112,11 @@ ${CLASSDIRECTORY}:
 generate_files: generate_escjava_ast_source generate_escjava_backpred
 
 ${STAMPFILE}: ${JAVASOURCEFILES}
-	${JAVAC} ${JAVAC_FLAGS} $?
+	${JAVAC} ${JAVAC_FLAGS} \
+		-classpath ${ESCJAVA_BUILD_CLASSPATH} \
+		-sourcepath ${SOURCEPATH} \
+		-d ${CLASSDIRECTORY} \
+		$?
 	touch $@
 
 ###########################################################################
@@ -127,8 +127,10 @@ MOCHA_SOURCES = ${MOCHA_DIR}/java/mocha/*/*/*.java
 MOCHA_CLASSES_DIR = ${MOCHA_DIR}/classes
 
 .PHONY: mocha
-mocha ${MOCHA_LIB}: ${MOCHA_CLASSES_DIR}
-	${JAVAC} -d ${MOCHA_CLASSES_DIR} ${MOCHA_SOURCES}
+mocha: ${MOCHA_CLASSES_DIR} ${MOCHA_LIB}
+
+${MOCHA_LIB}: ${MOCHA_SOURCES}
+	${JAVAC} -d ${MOCHA_CLASSES_DIR} $?
 	(cd ${MOCHA_CLASSES_DIR}; jar cf ${MOCHA_LIB} mocha/*/*/*.class )
 
 ${MOCHA_CLASSES_DIR}:
@@ -250,7 +252,7 @@ clean: clean_classfiles clean_docs clean_escjava clean_tests \
 clean_escjava: clean_escjava_ast clean_escjava_backpred 
 
 clean_tests:
-	make -C ${TOP_ESCJAVA_TEST_DIR} clean
+	${MAKE} -C ${TOP_ESCJAVA_TEST_DIR} clean
 
 clean_classfiles:
 	rm -rf ${CLASSDIRECTORY}
@@ -297,14 +299,17 @@ jar_escjava_complete: compile_escjava
 
 TOP_ESCJAVA_TEST_DIR = ${TESTSOURCEDIRECTORY}/escjava/test
 
-.PHONY: self_test
-self_test: compile
-	cd ${ESCJAVA_SOURCE_DIR}/escjava; \
-	${ESCJAVA} -nocheck -v \*.java ast/*.java parser/*.java \
-	  tc/*.java bacpred/*.java prover/*.java
 
 .PHONY: test_escjava
-test_escjava: build build_javafe_test junittests test_escjava_parser 
+test_escjava: build build_javafe_test 
+	$(MAKE) tests
+
+.PHONY: tests
+tests:
+	$(MAKE) junittests
+	$(MAKE) test_escjava_parser
+	##$(MAKE) test_matrix   ## FIXME
+	##$(MAKE) self_test     ## FIXME
 
 .PHONY: build_javafe_test
 build_javafe_test:
@@ -314,14 +319,36 @@ build_javafe_test:
 junittests:
 	$(MAKE) -C test/junittests runtests
 
-test_parser: build test_escjava_parser test_matrix self_test
-
+.PHONY: test_escjava_parser
 test_escjava_parser:
 	$(MAKE) -C ${TOP_ESCJAVA_TEST_DIR} test
 
+.PHONY: test_matrix
 test_matrix:
 	(cd ${TESTSOURCEDIRECTORY}/matrix; \
 	${ESCJAVA} *.java;)
+
+.PHONY: self_test
+self_test: compile
+	cd ${ESCJAVA_SOURCE_DIR}/escjava; \
+	${ESCJAVA} -nocheck -v \*.java ast/*.java parser/*.java \
+	  tc/*.java bacpred/*.java prover/*.java
+
+.PHONY: test-release
+test-release:
+	@echo TESTING RELEASE - Escjava
+	$(MAKE) JAVAFE_CLASSPATH=${RELCLASSPATH} \
+		CLASSDIRECTORY=${RELTEMP} \
+		build_javafe_test
+	$(MAKE) ESCJAVA_CLASSPATH=${RELCLASSPATH}:${RELTEMP} \
+		CLASSDIRECTORY=${RELTEMP} \
+		ALLTESTS=1 \
+		ESCJ=${RELDIR}/escj \
+		ESC_CLASSPATH=${RELCLASSPATH} \
+		ESCJ_SIMPLIFY=${RELDIR}/${SIMPLIFY} \
+		ESCJ_SIMPLIFY_SCRIPT=${RELDIR}/simplify-script \
+		tests
+
 
 ###########################################################################
 # Miscellaneous targets.
@@ -339,6 +366,5 @@ word_count:
 	wc ${TESTHARNESSFILES}
 	java javafe.parser.test.TestParse print ${TESTHARNESSFILES} | wc
 
-# @todo Add javancss count here as well.
 
 

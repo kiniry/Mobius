@@ -1,70 +1,276 @@
-To build ESC/Java, follow this sequence.
+This is a completely revised README for building and running Escjava2,
+a revision of the original escjava from DEC/Compaq/HP.  The revisions were
+mostly performed by Joe Kiniry and David Cok. You can read the general
+background on the original Escjava in README.txt.   - DRCok 7/2/2003
 
-Editing the setup.sh scripts only need be done once, of course.
+If you obtained Escjava2 as part of a binary release, you should also
+consult README.release for installation and execution instructions 
+concerning the release.
 
-JDK 1.2 is needed to build ESC/Java properly due to classfile parsing
-issues.
+----------------------------------------------------------------------------
 
-Note that following this sequence only builds the Java front-end
-lexer/parser (Javafe) and the ESC/Java tool; it does *not* build
-Simplify.
+PURPOSE OF ESCJAVA2
 
-ESC/Java depends upon the Javafe package (a general Java lexer/parser)
-and the Mocha library (an interface to a BDD library).  Additionally,
-a number of Java files are automatically generated using a custom AST
-generation tool called astgen.
+The primary purpose of the work on Escjava2 is to alter the tool so that it
+parses the current version of JML (Java Modeling Language -
+http://www.jmlspecs.org), while checking at least the same set of features
+that the current version of Escjava checks.
 
-Two build systems are included with this release; one based upon the
-Apache Group's Ant tool, and one based upon GNU make.  Neither is
-complete at this time, as the behind-the-scenes build process for
-ESC/Java is quite complex.  We working hard on simplifying the build
-process.
+A secondary purpose is to increase the number of features of JML that Escjava
+checks.
 
-The GNU make-based build processes for Javafe and Escjava are still
-not very tuned.  In particular, they perform a clean *everytime* a
-build takes place whether you like it or not.  This means that builds
-really are not incremental.
+A third purpose is to provide a distribution in a form that is more widely
+available and more easily accessible, in order to promote the use of 
+specification and associated static and dynamic checking.
 
-Here are the general steps to follow:
+A fourth purpose is to bring some of the other tools (Rcc, Houdini, Calvin) to
+a similar state - working and accessible.
 
- 0. Make sure you are in a bash shell.
+----------------------------------------------------------------------------
 
- 1. Change to the Javafe directory.
+OTHER DOCUMENTATION
 
- 2. Edit the file "setup.sh" to match your local configuration. In
-    particular, see the JAVA_HOME, JDK_SOURCES, and JML_HOME
-    environment variables
+ -- FIXME: Add stuff here
 
- 3. Perform a "source setup.sh".
+----------------------------------------------------------------------------
 
- 4. Run "make -k" to build the Javafe libraries.
+OBTAINING THE ORIGINAL SOURCE FOR SRC's Java Programming Toolkit Source
+Release (which includes EscJava):
 
-    A top-level make will clean out the build hierarchy, build the
-    astgen tool, use the astgen tool to generate the AST for Javafe,
-    compile all generated and manually written code for Javafe,
-    compile all test code for Javafe, then run all lexer and parser
-    tests for Javafe.  These tests can take several minutes to run.
-    All tests should complete normally.
+The source has been available from http://www.research.compaq.com/downloads.html
+The availability can be intermittent.  Note the license restrictions on
+further distribution of the source.
 
- 5. Change to the Escjava directory (../Escjava from Javafe).
+----------------------------------------------------------------------------
 
- 6. Edit the file "setup.sh" in the same fashion as #2.
+OBTAINING CURRENT SOURCE/BINARY FOR Escjava2
 
- 7. Perform a "source setup.sh".
+There is as yet no binary release of Escjava2.
+A CVS repository of the current work is maintained by Joe Kiniry.  
+Build and execution instructions are provided later in this README file.
 
- 8. run "make -k" to build the ESC/Java tool.
+To obtain access to the CVS distribution, you will need:
+- a sufficiently current version of CVS
+- development tools and a VM for Java 1.4
+- a working version of SSH, in order to securely transfer files to and from
+the CVS repository
+- Building it will require other UNIX tools: e.g. flex, cc, diff, bash, tcsh
+- Some tests use JUnit
 
-    A top-level make will clean out the build hierarchy, generated the
-    Escjava AST with astgen, generate the default background predicate
-    for Simplify, compile all library and tools source code (generated
-    or not), compile all test code, and run all tests.
+To obtain access to the CVS distribution, follow these steps:
+a) Provide evidence to Joe that you have obtained the original sources from
+SRC (see above) and agreed to the license restrictions.
+b) Obtain from Joe (kiniry@acm.org) a username and password for the CVS
+server.
+c) cd to a place in your computer directories where you would like to have
+the CVS distribution installed.  The following commands will create a
+subdirectory of the current directory, name it ESCTools and place a working
+copy of the CVS repository in ESCTools.
+d) Execute a CVS checkout on the server (replacing the characters
+'username' in the command below with your username on Joe's server:
+cvs -d :ext:username@kindsoftware.com/cvsroot checkout ESCTools 
+e) If you want to avoid using your password on every CVS transaction, you will
+need to generate a public key/private key pair and copy the public key to
+your account on kindsoftware.com.  Login to this computer is only allowed
+via SSH:
+	i) On your own computer, create (if necessary) and cd into ~/.ssh
+	ii) If there are no files id_dsa and id_dsa.pub, create them by running
+		ssh-keygen -t dsa
+	iii) Be sure id_dsa is readable only by you
+		(chmod go-rwx ~/.ssh/id_dsa)
+        iv) type out the id_dsa.pub file (cat id_dsa.pub)
+	v) Login in to the CVS server:  ssh username@kindsoftware.com
+		(replace 'username' by your username on kindsoftware.com)
+	vi) On kindsoftware.com, edit the file ~/.ssh/authorized_keys,
+		pasting in the contents of id_dsa.pub on a line of its own
+		(being careful not to introduce any spurious line breaks)
+	vii) Be sure that ~/.ssh/authorized_keys is readable only by you
+		(chmod go-rwx ~/.ssh/authorized_keys)
 
- 9. Review the shell scripts "escj" and "simplify" for your local
-    installation.  Both scripts are located in the Escjava directory.
-    Neither should require customization, but it is important to know
-    the environmental variables therein.
 
-You are done.  Have fun with your own build of ESC/Java.
-    
+----------------------------------------------------------------------------
+
+SETTING UP YOUR ENVIRONMENT FOR BUILDING AND RUNNING Escjava2
+
+Development has taken place on Linux (Redhat), MacOSX (10.2),
+	-- ??? any others (FIXME)
+The build environment uses either Make or Ant.
+Developers use both bash and tcsh as working shells.
+No work has yet been done to make the environment portable to Cygwin (where
+the file separator and path separators are different than on Linux and MacOSX).
+
+Step (d) above created a subdirectory named ESCTools in a directory of your
+choice.  We will refer to this directory as ESCTools or $ESCTOOLS_ROOT. It has
+subdirectories Javafe, Escjava etc. for the major subsytems of the ESC tools.
+We will use the symbol $ESCTOOLS_ROOT to denote a path to this directory;
+if you like you may define ESCTOOLS_ROOT in your login script as an
+environment variable whose value is the absolute path to ESCTools.
+
+The user (you) must specify two variables.  These are needed both in building
+and in executing.  You can specify them either
+a) as environment variables (defined in your login script or by defining
+them explicitly either manually or by invoking a setup script); these will
+then apply both to Makefiles and to scripts that are run
+b) for Makefiles, by creating a file $ESCTOOLS_ROOT/Makefile.local containing
+the definitions of the variables (see Makefile.local.sample for a starting
+point).
+c) for executables, namely escj, by creating a wrapper script file that sets
+the variables prior to invoking escj.  A sample such wrapper script is
+found in $ESCTOOLS_ROOT/Escjava/escjava.sample .
+
+The two required variables are:
+ESCTOOLS_ROOT - defined to be the absolute path to the ESCTools directory
+SIMPLIFY - defined to be the name of (not path to) an appropriate Simplify
+	executable in $ESCTOOLS_ROOT/Escjava/release/master/bin
+	The Makefile makes a guess at an appropriate value for some 
+	platforms, but defining it yourself will avoid the warning messages.
+
+There are other variables you may set to alter your working environment.
+Those that are executables must be on your path:
+JAVA - set to the name of a java VM executable.  By default this is 'java'.
+JAVAC - set to the name of a java compiler.  By default this is 'javac',
+	but an alternate value might be, for example, 'jikes'
+JAVADOC - set to the name of the javadoc executable
+
+JDK_BINARIES - the value is an alternate set of directories (in classpath
+	form) that will be used in place of the system defined set of Java
+	system class files.  Typically the tools can find this out from the
+	Java environment.
+
+JDK_SOURCES - the directory that contains the source
+	files for the Java system classes.  This is currently just used in
+	testing, though it could also be used in static checking.
+
+JUNITLIB - the location of the JUnit library, used in compiling and running
+	some of the tests that are JUnit based.  There is a version of the
+	JUnit library included in the CVS distribution, but you can substitute
+	your own by defining this variable.  All testing is performed with
+	the version included in CVS.
+
+----------------------------------------------------------------------------
+
+BUILDING A WORKING VERSION OF Escjava2 FROM CVS SOURCES (using make)
+
+With the environment set up as described above, you should be able to 
+execute, while in the $ESCTOOLS_ROOT directory (in either a bash or tcsh
+shell, and likely others)
+
+	make clean build test
+
+The clean target deletes any generated files.  There should not be any in
+a new install, but it is a good idea to build from a 'clean slate' after any
+major modifications.  Compiling is reasonably quick.
+
+The build target generates a working version of the software.  This target
+does build incrementally, speeding development for any minor modifications.
+
+The test target runs the tests on all the subsystems for which tests exist.
+
+Other targets:
+
+alltests - does test + some additional time-consuming or not yet debugged 
+	tests.  This executes all tests known.
+
+docs - generates the documentation (including javadoc pages) (NOT YET WORKING)
+
+release - generates a release package (NOT YET WORKING)
+
+The $ESCTOOLS_ROOT directory contains a number of major subsystems:
+	Utils - utility material used by multiple subsystems
+	Javafe - the front-end Java parser (used by the other tools)
+	Simplify - a fast, automatic theorem prover (used by the other tools),
+		(Simplify IS NOT CURRENTLY PART OF THE MAKE SYSTEM)
+	Escjava - the Extended Static Checker
+	Calvin - NOT YET WORKING
+	Rcc - NOT YET WORKING
+	Houdini - NOT YET WORKING
+The make targets above can be executed in each of the subsystem directories.
+This avoids running make over all of the subsystems just to build an individual
+one.  Building all of the subsystems is fairly fast, but testing is time-
+consuming.
+
+There are in addition Makefiles in various subdirectories of the major 
+subsystems.  However, these have not been edited to be used stand-alone, for
+the most part.  Where those Makefiles are usable directly, there are comments
+in the Makefile to that effect.
 
 
+----------------------------------------------------------------------------
+
+BUILDING A WORKING VERSION OF Escjava2 FROM CVS SOURCES (using ant)
+
+-- FIXME: Don't know if this is currently working or not, or what the
+instructions are.  DRCok
+
+----------------------------------------------------------------------------
+
+RUNNING THE escjava2 TOOL
+
+The script $ESCTOOLS_ROOT/Escjava/escj runs the escjava2 tool.  You need to
+have the variables ESCTOOLS_ROOT and ESCJ_SIMPLIFY defined as described above,
+either in your environment or in a wrapper script.
+
+The tool is invoked with command-line options followed by filenames (they may 
+not be intermixed); its behavior is also affected by the environment variables
+defined below.
+
+There is a set of commonly used command-line options and also many 
+(generally undocumented) experimental options.  A list of the former can
+be obtained by executing "$ESCTOOLS_ROOT/Escjava/escj -help".
+Commonly used options are
+	-classpath <pathlist>      Defines the path to find referenced classes
+	-quiet                     Suppresses informational output
+	-nowarn <name>             Selectively suppresses warnings
+	-nocheck                   Just parse and typecheck, no static checking
+
+After any command-line options, you should list any files you wish to be
+checked by escjava2.  Any relative paths are relative to the current
+directory.  Any classes referenced by the given
+files are found using the CLASSPATH (or the value of the -classpath option).
+
+These variables may also be used to modify the behavior of the executable:
+	CLASSPATH - set this to contain the classpath of all of the directories
+		needed by classes specified on the command line.  The default
+		is the value of CLASSPATH set by the environment; in the
+		absence of that the default is the current directory.
+	JAVA - set this to contain the VM executable (default is 'java')
+	JDK_BINARIES - set to contain the classpath for the Java system
+		classes.  The default is not set, in which case the system
+		default path is used.
+	ESCJ_STDARGS - set to contain a set of standard arguments for the
+		escjava tool.  The default is currently '-nowarn Deadlock'
+		which turns off checking for multi-threaded deadlock 
+		possibilities
+	ESC_REMOTE_DEBUG - set to a non-empty string if you want to invoke
+		the Java VM with the options necessary for debugging (you
+		may need to alter the script to supply the settings you need
+		on your platform, or simply define JAVA_VM_DEBUG_FLAGS
+		directly.
+	JAVA_VM_FLAGS - set to contain any options to be supplied to the
+		VM (as opposed to the application)
+	ESCJ_VERBOSE - set to non-empty to print the options being invoked
+		on escj
+
+Escjava uses Simplify.  There are numerous environment variables that affect 
+the behavior of Simplify (cf. ??? FIXME).  The most important are
+
+	PROVER_KILL_TIME - set to the maximum number of seconds Simplify
+		should ??? (spend on a given query??? be active??? FIXME)
+		The default is 300 seconds.
+	PROVER_CC_LIMIT - ???
+		The default is 10 ???
+	ESCJ_SIMPLIFY - as described above, the executable (and arguments if
+		you like) to use for Simplify
+	ESCJ_SIMPLIFY_ARGS - the default arguments to use when invoking
+		Simplify (default is '-noprune -noplunge')
+
+
+
+----------------------------------------------------------------------------
+
+Other things to comment on: (FIXME)
+- Mocha
+- Describing the tests
+- Description of SImplify, bulding SImplify?
+- References to the original documentation for Escjava, Simplify
+- Other documentation - other READMEs on Makefile, ref manual on Escjava, Escjava2

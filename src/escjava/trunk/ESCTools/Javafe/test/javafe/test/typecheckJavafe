@@ -1,8 +1,14 @@
-#!/bin/csh -f
+#!/bin/tcsh -f
 
-foreach f (ast parser tc util filespace reader)
+if ( ! $?ESCTOOLS_ROOT ) ( echo Must define ESCTOOLS_ROOT ; exit 1 )
+
+if ( ! $?SOURCEDIRECTORY ) setenv SOURCEDIRECTORY ${ESCTOOLS_ROOT}/Javafe/java
+
+if ( ! $?CLASSDIRECTORY ) setenv CLASSDIRECTORY ${ESCTOOLS_ROOT}/Javafe/classfiles
+
+foreach f (ast parser tc util filespace reader decsrc genericfile)
    echo ===== Typechecking javafe/$f/\*.java =====
-   ${JAVA} -classpath ${JDK_BINARIES}:${CLASSPATH} javafe.test.Print \
-        -classpath ${JDK_SOURCES}:${JDK_BINARIES}:${CLASSPATH} -typecheck -noprint \
+   ${JAVA} -classpath ${CLASSDIRECTORY} javafe.test.Print \
+        -classpath ${SOURCEDIRECTORY} -typecheck -noprint \
         ${SOURCEDIRECTORY}/javafe/$f/*.java
 end

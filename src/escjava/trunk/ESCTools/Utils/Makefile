@@ -17,4 +17,5 @@ checkjunitjar:
 
 .PHONY: docs
 docs:
+	@true
 

@@ -1,5 +1,10 @@
 Copyright 2001, Compaq Computer Corporation.
 
+NOTE: Aside from this note, this is the original README file from the
+source release from HP/Compaq.  It provides general background, but the
+build procedure has been considerably altered, simplified, and automated.
+Read the contents of README.first for details. - DRCok 7/1/2003
+
 This is the README.txt file that accompanies the source release
 of Javafe, Escjava, Rcc, Houdini, and Simplify.  This README.txt
 file will refer to these collections of sources as "envelopes",

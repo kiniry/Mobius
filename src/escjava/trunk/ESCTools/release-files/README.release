@@ -1,0 +1,22 @@
+
+--------------------  ESCJAVA2 ---------------------------------
+
+These files constitute a release of Escjava2, an ugrade of the
+original Esc/Java from DEC-SRC/Compaq/HP.  It consists of the
+following files:
+
+	README.release - this file
+	README.txt - the original readme from DEC/SRC
+	README.first - a longer description of the ESCjava2 project
+	escjava2.jar - the Java classes constituting the Escjava2 tool
+	escj - a script to run the tool
+	simplify_script - a script used by escj to run Simplify
+	Simplify* - various builds of the Simplify theorem prover from DEC/SRC
+	src.zip - a zip file of all of the sources and build environment
+	RELEASE_NOTES.txt - descriptions of changes and previous versions
+
+-----------------------INSTALLATION ----------------------------
+
+
+---------------------- RUNNING THE TOOL ------------------------
+
