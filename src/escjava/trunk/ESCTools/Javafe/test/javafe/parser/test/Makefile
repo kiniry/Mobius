@@ -46,22 +46,35 @@ testparseidempotence:
 testexprbig:
 	${JAVA} javafe.parser.test.TestExpr check compare < compare-exprs-big.j
 
-# @note kiniry 13 Jan 2002 - Should cause two exceptions in 1.4.1 files.
+.PHONY: jdk_source_listings
+jdk_source_listings:
+	find /usr/local/Java/src/jdk-1.0 -follow -name "*.java" -print > jdk-1.0-files 
+	find /usr/local/Java/src/jdk-1.1 -follow -name "*.java" -print > jdk-1.1-files 
+	find /usr/local/Java/src/jdk-1.2 -follow -name "*.java" -print > jdk-1.2-files 
+	find /usr/local/Java/src/jdk-1.3 -follow -name "*.java" -print > jdk-1.3-files 
+	find /usr/local/Java/src/jdk-1.4 -follow -name "*.java" -print > jdk-1.4-files 
+
+# @note kiniry 13 Jan 2002 - Should cause two exceptions in 1.4.1
+# files.
+
+# @note kiniry 6 Aug 2003 - JDK 1.2's java.awt.Component should fail
+# because it uses "assert" as an identifier.
+
 testparsejdk:
-	cat jdk-1.0.2-files | xargs ${JAVA} javafe.parser.test.TestParse progress check silent
-	cat jdk-1.1.18-files | xargs ${JAVA} javafe.parser.test.TestParse progress check silent
-	cat jdk-1.2.2-files | xargs ${JAVA} javafe.parser.test.TestParse progress check silent
-	cat jdk-1.3.1-files | xargs ${JAVA} javafe.parser.test.TestParse progress check silent
-	cat jdk-1.4.1-files | xargs ${JAVA} javafe.parser.test.TestParse progress check silent
+	cat jdk-1.0-files | xargs ${JAVA} javafe.parser.test.TestParse progress check silent
+	cat jdk-1.1-files | xargs ${JAVA} javafe.parser.test.TestParse progress check silent
+	cat jdk-1.2-files | xargs -n 1000 -s 1024 ${JAVA} javafe.parser.test.TestParse progress check silent
+	cat jdk-1.3-files | xargs -n 1000 -s 1024 ${JAVA} javafe.parser.test.TestParse progress check silent
+	cat jdk-1.4-files | xargs -n 1000 -s 1024 ${JAVA} javafe.parser.test.TestParse progress check silent
 
 # @note kiniry 13 Jan 2002 - Should cause two exceptions in 1.4.1 files.
 testparsejdkidempotence:
 	${JAVA} javafe.parser.test.TestParse diff simpletoks simpletoks
-	cat jdk-1.0.2-files | xargs ${JAVA} javafe.parser.test.TestParse progress silent idempotence
-	cat jdk-1.1.18-files | xargs ${JAVA} javafe.parser.test.TestParse progress silent idempotence
-	cat jdk-1.2.2-files | xargs ${JAVA} javafe.parser.test.TestParse progress silent idempotence
-	cat jdk-1.3.1-files | xargs ${JAVA} javafe.parser.test.TestParse progress silent idempotence
-	cat jdk-1.4.1-files | xargs ${JAVA} javafe.parser.test.TestParse progress idempotence
+	cat jdk-1.0-files | xargs ${JAVA} javafe.parser.test.TestParse progress silent idempotence
+	cat jdk-1.1-files | xargs ${JAVA} javafe.parser.test.TestParse progress silent idempotence
+	cat jdk-1.2-files | xargs -n 1000 -s 1024 ${JAVA} javafe.parser.test.TestParse progress silent idempotence
+	cat jdk-1.3-files | xargs -n 1000 -s 1024 ${JAVA} javafe.parser.test.TestParse progress silent idempotence
+	cat jdk-1.4-files | xargs -n 1000 -s 1024 ${JAVA} javafe.parser.test.TestParse progress silent idempotence
 
 testparse:
 	${JAVA} javafe.parser.test.TestParse progress check print verboseprogress\
