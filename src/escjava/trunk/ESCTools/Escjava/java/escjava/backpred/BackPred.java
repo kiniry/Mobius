@@ -274,6 +274,8 @@ public class BackPred
 				      
         for( int i=0; i<d.superInterfaces.size(); i++ )
             saySubType( sig, d.superInterfaces.elementAt(i), proverStream );
+
+        saySuper(d, proverStream);
     }
 
 
@@ -294,6 +296,32 @@ public class BackPred
                                     /*@ non_null */ PrintStream proverStream ) {
 
         bg( "(<: "+simplifyTypeName(x)+" "+simplifyTypeName(y)+")" , proverStream);
+
+    }
+
+    private static void saySuper(TypeDecl d, /*@ non_null*/ PrintStream proverStream) {
+        TypeSig sig = TypeCheck.inst.getSig(d);
+        String n = simplifyTypeName(sig);
+        StringBuffer b = new StringBuffer();
+        b.append( "(FORALL (t) (PATS (<: "+n+" t)) " +
+                   "(IFF (<: "+n+" t) (OR (EQ t "+n+") ");
+        if( d instanceof ClassDecl ) {
+            ClassDecl cd = (ClassDecl)d;
+
+            if( cd.superClass != null ) {
+                String sp = simplifyTypeName(cd.superClass);
+                b.append("(<: "+sp+" t) ");
+            }
+        } else {
+            b.append( "(EQ t |T_java.lang.Object|) ");
+        }
+        for( int i=0; i<d.superInterfaces.size(); i++ ) {
+            String tt = simplifyTypeName(d.superInterfaces.elementAt(i));
+            b.append( "(<: " +tt+" t) ");
+        }
+        b.append(" )))");
+
+        bg(b.toString(),proverStream);
 
     }
 
