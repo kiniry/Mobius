@@ -41,22 +41,38 @@ public class PPOutputStream extends FilterOutputStream {
      */
     public void write(int b) throws IOException {
 	if (b == lp) {
-            super.write('\n'); //FIXME - multiplatform ???
-            int n = 2*parenDepth;
-            while (--n >= 0) super.write(' ');
+	    if (!recentNL) {
+		super.write('\n'); //FIXME - multiplatform ???
+		int n = 2*parenDepth;
+		while (--n >= 0) super.write(' ');
+	    }
             ++parenDepth;
         }
-	super.write(b);
-/*
+
 	if (b == rp) {
+	    super.write(b);
             super.write('\n'); //FIXME - multiplatform ???
             --parenDepth;
             int n = 2*parenDepth;
             while (--n >= 0) super.write(' ');
+	    recentNL = true;
+	} else if (b == ' ' || b == '\t') {
+	    if (!recentNL) super.write(b);
+	} else if (b == '\n' || b == '\r') {
+	    if (!recentNL) {
+		super.write(b);
+		int n = 2*parenDepth;
+		while (--n >= 0) super.write(' ');
+		if (parenDepth > 0) recentNL = true;
+	    }
+	} else {
+	    super.write(b);
+	    recentNL = false;
         }
-*/
+
     }
 
+    boolean recentNL = false;
     /**
      * Writes <code>b.length</code> bytes to this output stream. 
      * <p>
@@ -81,6 +97,7 @@ public class PPOutputStream extends FilterOutputStream {
      * @exception  IOException  if an I/O error occurs.
      * @see        java.io.FilterOutputStream#write(int)
      */
+/*
     public void write(byte b[], int off, int len) throws IOException {
         int e = off+len;
 	int n = len;
@@ -95,7 +112,7 @@ public class PPOutputStream extends FilterOutputStream {
                 while (--nn >= 0) super.write(' ');
                 ++parenDepth;
                 ++i;
-/*
+
             } else if (bb == rp) {
                 ++i;
                 super.write(b,off,i-off);
@@ -104,14 +121,14 @@ public class PPOutputStream extends FilterOutputStream {
                 super.write('\n'); //FIXME - multiplatform ???
                 int nn = 2*parenDepth;
                 while (--nn >= 0) super.write(' ');
-*/
+
             } else {
                 ++i;
             }
         }
         super.write(b, off, e-off);
     }
-
+*/
     /**
      * Flushes this output stream and forces any buffered output bytes 
      * to be written out to the stream. 
