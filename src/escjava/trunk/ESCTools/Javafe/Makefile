@@ -7,9 +7,9 @@ all: clean depend javafe javadoc runtest
 
 install: clean depend javafe javadoc prot zip
 
+# Check that 'source setup' has been run in the Javafe directory:
+# if ESCJ is defined, then the following line will fail
 classdirCheck:
-	# Check that 'source setup' has been run in the Javafe directory:
-	# if ESCJ is defined, then the following line will fail
 	expandpath .${ESCJ}${ESCJ}${ESCJ}
 
 zip: classdirCheck
@@ -31,9 +31,9 @@ clean: cleanclasses classdirCheck
 	rm -f ${CLASSDIRECTORY}/compiled.zip
 	cd doc/javadoc; rm -f *.html
 	cd java/javafe/ast;         	${MAKE} clean
-	cd java/javafe/parser/test; 	${MAKE} clean
+	cd test/javafe/parser/test; 	${MAKE} clean
 	cd java/javafe/tc;          	${MAKE} clean
-	cd java/javafe/test;        	${MAKE} clean
+	cd test/javafe/test;        	${MAKE} clean
 	cd java/jtools; 	    	${MAKE} clean
 	cd astgen; 		    	${MAKE} clean
 
@@ -59,13 +59,13 @@ javadoc: source
 
 
 runtest:
-	cd java/javafe/parser/test; 	${MAKE} runtest
-	cd java/javafe/util; 		${MAKE} runtest
-	cd java/javafe/test; 		${MAKE} runtest
+	cd test/javafe/parser/test; 	${MAKE} runtest
+	cd test/javafe/util; 		${MAKE} runtest
+	cd test/javafe/test; 		${MAKE} runtest
 
 
 OTHERSOURCEFILES = astgen/ast*.c astgen/ast*.h astgen/ast*.l
-TESTHARNESSFILES = java/javafe/parser/test/Test*.java java/javafe/test/*.java
+TESTHARNESSFILES = test/javafe/parser/test/Test*.java test/javafe/test/*.java
 
 wc:
 	# --- Non-java Source files ---
