@@ -854,7 +854,9 @@ public abstract class ParseExpr extends ParseType
     
         // Next is Name or PrimitiveType
         Type type = parsePrimitiveTypeOrTypeName(l);
-    
+   	return parseNewExpressionTail(l,type,locNew); 
+    }
+    public Expr parseNewExpressionTail(Lex l, Type type, int locNew) {
         switch( l.ttype ) {
       
             case TagConstants.LSQBRACKET:
