@@ -1782,15 +1782,16 @@ public final class Translate
                 // Only process if we are supposed to be parsing Java
                 // 1.4 or later and assertions are enabled.
 		AssertStmt assertStmt = (AssertStmt)stmt;
-		if (!Tool.options.assertIsKeyword) {
-			// Should not be encountering an assert statement
-			// if assert is not a keyword
-		} else if (Tool.options.enableAssertions) {
+		if (!Tool.options.assertIsKeyword || !Tool.options.assertionsEnabled) {
+			// continue - simply skip the assertions
+		} else if (Main.options().assertionMode ==
+				Options.JML_ASSERTIONS) {
 			// Treat a Java assert as a JML assert
                     Expr predicate = TrAnExpr.trSpecExpr(assertStmt.pred);
                     code.addElement(GC.check(assertStmt.getStartLoc(), TagConstants.CHKASSERT,
                                              predicate, Location.NULL));
-		} else {
+		} else if (Main.options().assertionMode ==
+				Options.JAVA_ASSERTIONS) {
 			// Treat a Java assert as a (conditional) throw
                     trIfStmt(assertStmt.ifStmt.expr, assertStmt.ifStmt.thn, assertStmt.ifStmt.els);
                 }
