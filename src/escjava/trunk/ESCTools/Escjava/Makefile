@@ -340,6 +340,7 @@ test_escjava: build build_javafe_test
 .PHONY: tests
 tests:
 	$(MAKE) junittests
+	$(MAKE) jdktests
 	$(MAKE) test_escjava_parser
 	$(MAKE) -C test/nijmegen/OCF runtests
 	$(MAKE) -C test/nijmegen/JCF runtests
@@ -352,6 +353,10 @@ build_javafe_test:
 .PHONY: junittests
 junittests:
 	$(MAKE) -C test/junittests runtests
+
+.PHONY: jdktests
+jdktests:
+	$(MAKE) -C test/jdktests runtests
 
 .PHONY: javaspecs
 javaspecs:
