@@ -135,6 +135,15 @@ public class ErrorSet
 	report(loc, CAUTION, msg);
     }
 
+    public static void caution(int loc, String msg, int addLoc) {
+	if (FrontEndTool.options.noCautions) {
+	    return;
+	}
+	cautions++;
+	report(loc, CAUTION, msg);
+	report(addLoc, "Associated declaration", "");
+    }
+
 
     /**
      * Report a warning. <p>
