@@ -20,7 +20,8 @@ public class TagConstants extends javafe.ast.TagConstants
     // Pragma tokens
     public static final int LEXICALPRAGMA = MAX_LONG_PLUS_ONE + 1;
     public static final int MODIFIERPRAGMA = LEXICALPRAGMA + 1;
-    public static final int STMTPRAGMA = MODIFIERPRAGMA + 1;
+    public static final int POSTMODIFIERPRAGMA = MODIFIERPRAGMA + 1;
+    public static final int STMTPRAGMA = POSTMODIFIERPRAGMA + 1;
     public static final int TYPEDECLELEMPRAGMA = STMTPRAGMA + 1;
     public static final int TYPEMODIFIERPRAGMA = TYPEDECLELEMPRAGMA + 1;
 
@@ -200,7 +201,8 @@ public class TagConstants extends javafe.ast.TagConstants
         "IDENT",
         "CHARLIT", "INTLIT", "2147483648",
         "LONGLIT", "9223372036854775808L", "FLOATLIT", "DOUBLELIT", "STRINGLIT",
-        "LEXICALPRAGMA", "MODIFIERPRAGMA", "STMTPRAGMA", "TYPEDECLELEMPRAGMA", 
+        "LEXICALPRAGMA", "MODIFIERPRAGMA", "POSTMODIFIERPRAGMA",
+	"STMTPRAGMA", "TYPEDECLELEMPRAGMA", 
         "TYPEMODIFIERPRAGMA", "EOF"
     };
 
@@ -209,7 +211,8 @@ public class TagConstants extends javafe.ast.TagConstants
         IDENT,
         CHARLIT, INTLIT, MAX_INT_PLUS_ONE,
         LONGLIT, MAX_LONG_PLUS_ONE, FLOATLIT, DOUBLELIT, STRINGLIT,
-        LEXICALPRAGMA, MODIFIERPRAGMA, STMTPRAGMA, TYPEDECLELEMPRAGMA,
+        LEXICALPRAGMA, MODIFIERPRAGMA, POSTMODIFIERPRAGMA,
+	STMTPRAGMA, TYPEDECLELEMPRAGMA,
         TYPEMODIFIERPRAGMA, EOF
     };
 

@@ -72,7 +72,8 @@ public class TagConstants extends javafe.tc.TagConstants
     public static final int LOOP_PREDICATE = LOOP_INVARIANT + 1;
     public static final int LS = LOOP_PREDICATE + 1;
     public static final int MAPS = LS + 1; 
-    public static final int MAX = MAPS + 1; // Function
+    public static final int MAPS_REDUNDANTLY = MAPS + 1; 
+    public static final int MAX = MAPS_REDUNDANTLY + 1; // Function
     public static final int MODIFIES = MAX + 1;
     public static final int MONITORED = MODIFIES + 1;
     public static final int MONITORED_BY = MONITORED + 1;
@@ -556,6 +557,8 @@ public class TagConstants extends javafe.tc.TagConstants
                 Result = TagConstants.WORKING_SPACE_REDUNDANTLY; break;
             case TagConstants.IN:
                 Result = TagConstants.IN_REDUNDANTLY; break;
+            case TagConstants.MAPS:
+                Result = TagConstants.MAPS_REDUNDANTLY; break;
         }
         return Result;
     }
@@ -615,6 +618,8 @@ public class TagConstants extends javafe.tc.TagConstants
                 Result = TagConstants.WORKING_SPACE; break;
             case TagConstants.IN_REDUNDANTLY:
                 Result = TagConstants.IN; break;
+            case TagConstants.MAPS_REDUNDANTLY:
+                Result = TagConstants.MAPS; break;
         }
         return Result;
     }
@@ -641,6 +646,7 @@ public class TagConstants extends javafe.tc.TagConstants
             tag == TagConstants.ASSUME_REDUNDANTLY ||
             tag == TagConstants.LOOP_INVARIANT_REDUNDANTLY ||
             tag == TagConstants.IN_REDUNDANTLY ||
+            tag == TagConstants.MAPS_REDUNDANTLY ||
             tag == TagConstants.MAINTAINING_REDUNDANTLY ||
             tag == TagConstants.DECREASES_REDUNDANTLY ||
             tag == TagConstants.DECREASING_REDUNDANTLY;
@@ -674,6 +680,7 @@ public class TagConstants extends javafe.tc.TagConstants
         Identifier.intern("loop_predicate"),
         Identifier.intern("\\lockset"),
 	Identifier.intern("maps"),
+	Identifier.intern("maps_redundantly"),
         Identifier.intern("\\max"),
         Identifier.intern("modifies"),
         Identifier.intern("monitored"),

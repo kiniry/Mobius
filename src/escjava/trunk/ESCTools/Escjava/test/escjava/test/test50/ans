@@ -49,15 +49,15 @@ JavaDocCheck.java:31: Warning: Code marked as unreachable may possibly be reache
     //@ unreachable
         ^
 1 warning
-JavaDocFatal0.java:9: Error: Unrecognized pragma: 167 null
+JavaDocFatal0.java:9: Error: Unrecognized pragma: 168 null
       /** <esc>notAnEscPragma hello</esc>  <--- error
                ^
 1 error
-JavaDocFatal1.java:10: Error: Unrecognized pragma: 167 null
+JavaDocFatal1.java:10: Error: Unrecognized pragma: 168 null
         * <esc>notAnEscPragma hello</esc>  <--- error
                ^
 1 error
-JavaDocFatal2.java:11: Error: Unrecognized pragma: 167 null
+JavaDocFatal2.java:11: Error: Unrecognized pragma: 168 null
         * <esc>notAnEscPragma hello</esc>  <--- error */
                ^
 1 error

@@ -2033,6 +2033,11 @@ FIXME - see uses of countFreeVarsAccess
 		break;
 	      }
 
+	    case TagConstants.IN:
+	    case TagConstants.MAPS:
+		//System.out.println("FOUND " + TagConstants.toString(tag) + " for " + ((FieldDecl)ctxt).id );
+		break;
+
             default:
                 ErrorSet.error(p.getStartLoc(),
 				"Ignored unexpected " +  

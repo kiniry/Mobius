@@ -585,7 +585,18 @@ VariableDeclarator:
 	    parseMoreModifierPragmas( l, modifierPragmas );
 
 	    // End of Declaration 
+
+	    // JML added some clauses that can follow type declarations.
+	    // This bit of hackery is to check if there are any such
+	    // and associate them with the correct declaration.  All other
+	    // modifiers precede the declaration with which they are 
+	    // associated (or at least precede the terminating semicolon).
             l.getNextToken();
+	    while (l.ttype == TagConstants.POSTMODIFIERPRAGMA) {
+		modifierPragmas.addElement((ModifierPragma)l.auxVal);
+		l.getNextToken();
+	    }
+
             return;
           } else {
             expect( l, TagConstants.COMMA );

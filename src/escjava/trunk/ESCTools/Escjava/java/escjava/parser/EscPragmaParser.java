@@ -1391,13 +1391,75 @@ System.out.println("ADVANCING AT " + TagConstants.toString(tag));
                     return getNextPragma(dst);
 		}
 
-                // Unsupported JML clauses/keywords.
-
                 // The following clauses must be followed by a semi-colon.
 		case TagConstants.IN:
-		case TagConstants.IN_REDUNDANTLY:
+		case TagConstants.IN_REDUNDANTLY: {
+			// FIXME - need to define and construct an
+			// appropriate ModifierPragma
+		    //parseIdentifier(scanner);
+		    if (scanner.ttype != TagConstants.IDENT) {
+			ErrorSet.error(scanner.startingLoc,
+				"Expected an identifier here");
+			eatThroughSemiColon();
+			semicolonExpected = false;
+			return getNextPragma(dst);
+		    }
+
+		    //System.out.println("IN " + scanner.identifierVal);
+		    scanner.getNextToken();
+		    while (scanner.ttype == TagConstants.COMMA) {
+			scanner.getNextToken();
+			Identifier id = parseIdentifier(scanner);
+			//System.out.println("IN " + id);
+		    }
+
+		    ExprModifierPragma pragma =
+			ExprModifierPragma.make(TagConstants.unRedundant(tag), 
+					    null, loc);
+		    if (TagConstants.isRedundant(tag))
+			pragma.setRedundant(true);
+		    dst.ttype = TagConstants.POSTMODIFIERPRAGMA;
+                    dst.auxVal = pragma;
+                    semicolonExpected = true;
+                    break;
+		  }
 		case TagConstants.MAPS:
-		    // Ignored for now
+		case TagConstants.MAPS_REDUNDANTLY:
+			// FIXME - need to define and construct an
+			// appropriate ModifierPragma
+		  {
+		    // Already parsed something - should be an identifier
+		    //System.out.println("MAPPING " + scanner.identifierVal.toString());
+		    parseMapsMemberFieldRef(scanner);
+		    if (scanner.identifierVal == null ||
+			!scanner.identifierVal.toString().equals("\\into")) {
+			ErrorSet.error(scanner.startingLoc,
+				"Expected \\into in the maps clause here");
+			eatThroughSemiColon();
+			semicolonExpected = false;
+		    } else {
+			parseIdentifier(scanner);
+			//System.out.println("INTO " + scanner.identifierVal);
+			scanner.getNextToken();
+			while (scanner.ttype == TagConstants.COMMA) {
+			    scanner.getNextToken();
+			    //System.out.println("INTO " + scanner.identifierVal);
+			    scanner.getNextToken();
+			}
+
+			ExprModifierPragma pragma =
+			    ExprModifierPragma.make(TagConstants.unRedundant(tag), 
+						null, loc);
+			if (TagConstants.isRedundant(tag))
+			    pragma.setRedundant(true);
+			dst.ttype = TagConstants.POSTMODIFIERPRAGMA;
+			dst.auxVal = pragma;
+			semicolonExpected = true;
+		    }
+                    break;
+		  }
+
+                // Unsupported JML clauses/keywords.
 
                 case TagConstants.ACCESSIBLE_REDUNDANTLY:
                     // SC HPT AAST 2 unclear syntax and semantics (kiniry)
@@ -2587,7 +2649,39 @@ System.out.println("ADVANCING AT " + TagConstants.toString(tag));
 			pragma);
 
 	}
-	return true;
+	if (scanner.ttype == TagConstants.SEMICOLON) {
+		// The following is an unfortunate hack to the overall
+		// design caused by the fact the the in and maps clauses
+		// *follow* the field declarations to which they belong.
+		// All other modifiers precede the declaration.  The
+		// Javafe parser does not like this, so we have to do
+		// some special lookahead here to make the right associations.
+	    savedGhostModelPragma = null; // Need this so the calls of
+			// getNextPragma below do not fail
+	    Token temp = new Token();
+	    scanner.getNextToken();
+	    while(true) {
+		// FIXME - what if there are multiple FIeldDecls generated
+		// above - to which do these apply?
+		// FIXME - I don't think the code below is robust against
+		// parsing errors in the in or maps clause.
+		if (scanner.ttype == TagConstants.IDENT &&
+		    scanner.identifierVal.toString().equals("in")) {
+		    getNextPragma(temp);
+		    decl.pmodifiers.addElement((ModifierPragma)temp.auxVal);
+		    continue;
+		}
+		if (scanner.ttype == TagConstants.IDENT &&
+		    scanner.identifierVal.toString().equals("maps")) {
+		    getNextPragma(temp);
+		    decl.pmodifiers.addElement((ModifierPragma)temp.auxVal);
+		    continue;
+		}
+		break;
+	    }
+	    return false; // already ate the semicolon
+	}
+	return true; // semicolon still to eat
     }
 
     public boolean parseConstructorDeclTail(Token dst, int loc, Type type,
@@ -2727,6 +2821,51 @@ System.out.println("ADVANCING AT " + TagConstants.toString(tag));
 
 	GhostDeclPragma gd = (GhostDeclPragma)l.auxVal;
 	return gd.decl;
+    }
+
+    // Starting state is looking at the initial identifier
+    public void parseMapsMemberFieldRef(Lex scanner) {
+	Identifier startid = scanner.identifierVal;
+	scanner.getNextToken();
+	boolean foundSomething = false;
+	while (scanner.ttype == TagConstants.LSQBRACKET) {
+	    int openLoc = scanner.startingLoc;
+	    scanner.getNextToken();
+	    if (scanner.ttype == TagConstants.STAR) {
+		scanner.getNextToken();
+	    } else {
+		parseExpression(scanner);
+		if (scanner.ttype == TagConstants.DOTDOT) {
+		    scanner.getNextToken();
+		    parseExpression(scanner);
+		}
+	    }
+	    if (scanner.ttype != TagConstants.RSQBRACKET) {
+		ErrorSet.error(scanner.startingLoc,
+		    "Expected a ] here, matching the opening bracket",
+		    openLoc);
+	    }
+	    foundSomething = true;
+	    scanner.getNextToken();
+	}
+	
+	if (scanner.ttype == TagConstants.FIELD) { // the dot
+	    scanner.getNextToken();
+	    if (scanner.ttype == TagConstants.IDENT) {
+		scanner.getNextToken();
+	    } else if (scanner.ttype == TagConstants.STAR) {
+		scanner.getNextToken();
+	    } else {
+		ErrorSet.error(scanner.startingLoc,
+		    "Expected either a * or an identifier here");
+	    }
+	    foundSomething = true;
+	    
+	} 
+	if (!foundSomething) {
+	    ErrorSet.error(scanner.startingLoc,
+		"Expected either a . or a [ in the maps field reference here");
+	}
     }
 
 } // end of class EscPragmaParser

@@ -327,6 +327,10 @@ public class TypeSig extends Type
 	return (TypeSig)map.get(getKey(P,T));
     }
 
+	// FIXME - the type lookup ends up parsing a qualified name into
+	// pieces and then reassembling them through getKey into a 
+	// qualified name.  This could be improved by providing a 
+	// direct lookup from a fully qualified name
 
     /**
      * If a TypeSig representing the package-member type named P.T
