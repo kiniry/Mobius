@@ -2,14 +2,12 @@
 
 package javafe.test;
 
-
 import java.util.Enumeration;
 import java.util.Vector;
 
 import javafe.*;
 import javafe.ast.*;
 import javafe.tc.*;
-import javafe.tc.TagConstants; // Work around compiler bug
 import javafe.parser.*;
 import javafe.util.*;
 
