@@ -27,10 +27,6 @@ ParseErrors.java:11: Fatal error: Switch body must start with a label
       ^
 1 error
 ==== TestCatch.java: ====
-TestCatch.java:11: Error: Variable 'x' is already defined here.
-        } catch (Exception x) {}    // Error: x redefined
-                           ^
-1 error
 ==== TypeErrors1.java: ====
 TypeErrors1.java:4: Error: An abstract method cannot include a body
   abstract void m1() { }
@@ -38,16 +34,13 @@ TypeErrors1.java:4: Error: An abstract method cannot include a body
 TypeErrors1.java:7: Error: A native method cannot include a body
   native void m2() { }
   ^
-TypeErrors1.java:10: Error: Method must include a body unless it is declared abstract or native
-  void m3();
-  ^
 TypeErrors1.java:15: Error: Undefined variable 'i'
     int l = (i+1)++;
              ^
 TypeErrors1.java:15: Error: Argument of increment/decrement operation is not a location
     int l = (i+1)++;
                  ^
-5 errors
+4 errors
 ==== TypeErrors2.java: ====
 TypeErrors2.java:4: Error: This routine is not expected to return a value
   void m4() { return 1; }
@@ -91,7 +84,7 @@ TypeErrors2.java:53: Error: Unexpected array value in initializer
 TypeErrors2.java:55: Error: Variable 'i' is already defined here.
     int i=0;            // error: duplicate declaration of i
         ^
-TypeErrors2.java:58: Error: Attempt to index an non-array value
+TypeErrors2.java:58: Error: Attempt to index a non-array value
     int j = i[0];
              ^
 TypeErrors2.java:62: Error: Array index is not an integer
