@@ -10,6 +10,7 @@ DefPredApplExpr.java
 DefPredLetExpr.java
 DefPredVec.java
 DynInstCmd.java
+EverythingExpr.java
 ExprCmd.java
 ExprDeclPragma.java
 ExprDeclPragmaVec.java
@@ -31,6 +32,8 @@ LocalVarDeclVec.java
 LockSetExpr.java
 LoopCmd.java
 NaryExpr.java
+NotSpecifiedExpr.java
+NothingExpr.java
 NowarnPragma.java
 QuantifiedExpr.java
 ResExpr.java
@@ -51,4 +54,5 @@ VarExprModifierPragma.java
 VarExprModifierPragmaVec.java
 VarInCmd.java
 Visitor.java
+VisitorArgResult.java
 WildRefExpr.java
