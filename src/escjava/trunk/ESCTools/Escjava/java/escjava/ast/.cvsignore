@@ -23,6 +23,7 @@ ExprModifierPragmaVec.java
 ExprStmtPragma.java
 ExprStmtPragmaVec.java
 FieldDeclVec.java
+FieldsOfExpr.java
 GCExpr.java
 GeneralizedQuantifiedExpr.java
 GeneratedTags.java

@@ -284,6 +284,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 				TagConstants.GHOST) != null) {
 		    boolean savedInAnnotation = inAnnotation;
 		    inAnnotation = true;
+		    env.resolveType(x.type);
 		    checkTypeModifiers(env, x.type);
 		    javafe.tc.PrepTypeDeclaration.inst.
 			checkModifiers(x.modifiers, Modifiers.ACC_FINAL,
@@ -301,6 +302,14 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 		env = super.checkStmt(env, s);
                 break;
 
+	    }
+	    case TagConstants.CLASSDECLSTMT: {
+		ClassDeclStmt cds = (ClassDeclStmt)s;
+		ClassDecl cd = cds.decl;
+		(new escjava.AnnotationHandler.NestedPragmaParser()).parseAllRoutineSpecs(cd);
+                env = super.checkStmt(env, s);
+		annotationHandler.desugar(cd);
+		break;
 	    }
             default:
                 env = super.checkStmt(env, s);
@@ -509,6 +518,25 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                                                        TagConstants.SPEC_PUBLIC) != null) {
                             // public and spec_public fields are always accessible
                             isAccessibleEnough = true;
+			} else if (GetSpec.findModifierPragma(fa.decl,
+					TagConstants.SPEC_PROTECTED)!=null) {
+
+			    // Copied from the protected case down below.
+                            isAccessibleEnough = false;
+                            if (accessibilityLowerBound == ACC_LOW_BOUND_Package) {
+                                isAccessibleEnough = true;
+                            } else if (accessibilityLowerBound == ACC_LOW_BOUND_Protected) {
+                                TypeDecl tdContext;
+                                if (accessibilityContext instanceof FieldDecl) {
+                                    tdContext = ((FieldDecl)accessibilityContext).parent;
+                                } else {
+                                    tdContext = ((RoutineDecl)accessibilityContext).parent;
+                                }
+                                TypeSig tsContext = TypeSig.getSig(tdContext);
+                                if (tsContext.isSubtypeOf(TypeSig.getSig(fa.decl.parent))) {
+                                    isAccessibleEnough = true;
+                                }
+                            }
 	    
                         } else if (Modifiers.isPrivate(fa.decl.modifiers)) {
                             // Note: if "fa" type-checked so far, then "fa.decl" and
@@ -721,7 +749,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                     setType(e, resultType);
                     return e;
                 }
-/*
+
 	    case TagConstants.WACK_NOWARN:
 	    case TagConstants.NOWARN_OP:
 	    case TagConstants.WARN:
@@ -735,13 +763,14 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                                        " takes only one argument");
 			setType( e, Types.errorType );
                     } else {
-                        nu = checkExpr(env, ne.exprs.elementAt(0));
-                        ne.exprs.setElementAt( nu, 0 );			
-			setType( e, getType(nu) );
+			// Get rid of this - FIXME - these are an obsolete definition
+                        e = checkExpr(env, ne.exprs.elementAt(0));
+                        //ne.exprs.setElementAt( nu, 0 );			
+			//setType( e, getType(nu) );
                     }
                     return e;
                 }
-*/
+
             case TagConstants.ELEMTYPE:
                 {
                     NaryExpr ne = (NaryExpr)e;
@@ -873,10 +902,11 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 	        {
                     NumericalQuantifiedExpr qe = (NumericalQuantifiedExpr)e;
 	
-                    if (!isCurrentlyPredicateContext) {
-                        ErrorSet.error(qe.getStartLoc(),
-			   "Quantified expressions are not allowed in this context");
-                    } else {
+                   // if (!isCurrentlyPredicateContext) {
+                   //     ErrorSet.error(qe.getStartLoc(),
+		//	   "Quantified expressions are not allowed in this context");
+                 //   } else 
+		    {
                         Env subenv = env;
 	
                         for( int i=0; i<qe.vars.size(); i++) {
@@ -899,10 +929,12 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                 {
                     GeneralizedQuantifiedExpr qe = (GeneralizedQuantifiedExpr)e;
 	
+/*
                     if (!isCurrentlyPredicateContext) {
                         ErrorSet.error(qe.getStartLoc(),
 			   "Quantified expressions are not allowed in this context");
-                    } else {
+                    } else */ 
+		    {
                         Env subenv = env;
 	
                         for( int i=0; i<qe.vars.size(); i++) {
@@ -1682,6 +1714,7 @@ FIXME - see uses of countFreeVarsAccess
 	        {
 		    VarDeclModifierPragma vd = (VarDeclModifierPragma)p;
 		    LocalVarDecl x = vd.decl;
+		    env.resolveType( vd.decl.type );
 		    checkTypeModifiers(env, x.type);
 		    javafe.tc.PrepTypeDeclaration.inst.
 			checkModifiers(x.modifiers, Modifiers.NONE,
@@ -1720,9 +1753,12 @@ FIXME - see uses of countFreeVarsAccess
                         int ms = getOverrideStatus(rd);
 
 			Env newenv = env;
+/* Interpret constructor as acting on an existing object, to initialize it,
+   so this and fields are in scope.
                         if (rd instanceof ConstructorDecl) {
                             newenv = env.asStaticContext();
                         }
+*/
                         int oldAccessibilityLowerBound = accessibilityLowerBound;
                         ASTNode oldAccessibilityContext = accessibilityContext;
                         accessibilityLowerBound = getAccessibility(rd.modifiers);
@@ -1939,11 +1975,14 @@ FIXME - see uses of countFreeVarsAccess
                         case TagConstants.FIELDACCESS: {
                             FieldAccess fa = (FieldAccess)emp.expr;
                             if (fa.decl != null &&
+				(ctxt instanceof MethodDecl) && // FIXME - what about constructors
                                 Modifiers.isFinal(fa.decl.modifiers) &&
                                 // The array "length" field has already been checked
                                 // insuper.checkDesignator().
                                 fa.decl != Types.lengthFieldDecl) {
-                                ErrorSet.error(fa.locId, "a final field is not allowed as " +
+				// FIXME - this is a caution because of the
+				// issues with java.lang.System.in, out, err
+                                ErrorSet.caution(fa.locId, "a final field is not allowed as " +
                                                "the designator in a modifies clause");
                             }
                             break;
@@ -1962,7 +2001,7 @@ FIXME - see uses of countFreeVarsAccess
 					// The expression is not a designator
 					// but we allow an informal predicate
                                 ErrorSet.error(emp.expr.getStartLoc(),
-                                               "Not a specification designator expression");
+                                               "Not a specification designator expression " + TagConstants.toString(emp.expr.getTag()) + " " + TagConstants.toString(TagConstants.FIELDACCESS) );
 			    } else {
 			       emp.expr = null;
 			    }

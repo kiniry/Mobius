@@ -634,6 +634,7 @@ public class FindContributors
 				       FieldDeclVec fields,
 				       boolean addTypes, 
 				       int inlined) {
+	if (rd == null) return; // FIXME - this happens with some NewInstanceExpr
         Assert.notFalse(inlined != 1 || !visitedRoutines.contains(rd));
         visitedRoutines.add(rd);
 

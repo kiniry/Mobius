@@ -161,6 +161,7 @@ public class RefinementSequence extends CompilationUnit {
 		    if (types.elementAt(j).id.equals(td.id)) {
 			foundMatch = true;
 			combineType(td,types.elementAt(j),!hasJavaDef);
+			break;
 		    }
 		}
 		if (!foundMatch) {
@@ -396,7 +397,8 @@ Info.out("Combining type " + newtd.id);
 			td.elems.addElement(tde);
 			tde.setParent(td);
 		    } else {
-		      if (((RoutineDecl)tde).parent instanceof InterfaceDecl) {
+		      if (((RoutineDecl)tde).parent instanceof InterfaceDecl &&
+				(tde instanceof MethodDecl) ) {
 			    // An interface may specify some methods that
 			    // it does not declare, but 'knows' that its
 			    // classes implement.  For example CharSequence
@@ -408,8 +410,13 @@ Info.out("Combining type " + newtd.id);
 			    // eventually we should detect that the method
 			    // is a method of Object and either say nothing
 			    // or give an error.  FIXME
-			ErrorSet.caution(((RoutineDecl)tde).locId,
-			    "Method is not declared in the java/class file");
+			TypeDecl otd = getObjectDecl();
+			MethodDecl md = (MethodDecl)tde;
+			md = findMatchingMethod(md,otd);
+			if (md == null) {
+			    ErrorSet.caution(((RoutineDecl)tde).locId,
+				"Method is not declared in the java/class file");
+			}
 		      } else {
 			ErrorSet.error(((RoutineDecl)tde).locId,
 			    "Method is not declared in the java/class file");
@@ -529,6 +536,24 @@ Info.out("Combining type " + newtd.id);
 		ErrorSet.error(tde.getStartLoc(),"This type of type declaration element is not implemented - please report the problem: " + tde.getClass());
 	    }
 	}
+    }
+
+    MethodDecl findMatchingMethod(MethodDecl md, TypeDecl td) {
+	for (int k=0; k<td.elems.size(); ++k) {
+	    TypeDeclElem tdee = td.elems.elementAt(k);
+	    if (!(tdee instanceof MethodDecl)) continue;
+	    if (match( md, (RoutineDecl)tdee )) return (MethodDecl)tdee;
+	}
+	return null;
+    }
+
+    private TypeDecl objectDecl = null;
+    TypeDecl getObjectDecl() {
+	if (objectDecl != null) return objectDecl;
+	String[] pack = { "java", "lang"};
+	CompilationUnit ocu = javafe.tc.OutsideEnv.lookup(pack,"Object").getCompilationUnit();
+	objectDecl = ocu.elems.elementAt(0);
+	return objectDecl;
     }
 
     /* These cleancopy routines produce a fresh, somewhat deep copy of a set

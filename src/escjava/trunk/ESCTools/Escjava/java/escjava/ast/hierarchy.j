@@ -48,6 +48,7 @@ import escjava.ParsedRoutineSpecs;
  *         + GuardExpr (Expr expr)
  *         + DefPredLetExpr (DefPred* preds, Expr body)
  *         + DefPredApplExpr (Identifier predId, Expr* args)
+ *         + FieldsOfExpr (Expr expr, Identifier id, )
  *    + GuardedCmd
  *      + SimpleCmd (int cmd) // Skip, Raise
  *      + ExprCmd (int cmd, Expr pred) // Assert, Assume
@@ -307,6 +308,16 @@ public class NothingExpr extends Expr
 public class NotSpecifiedExpr extends Expr
 {
   //# int loc
+
+  public int getStartLoc() { return loc; }
+}
+
+public class FieldsOfExpr extends Expr
+{
+  //# int loc
+  //# Expr expr
+  //# TypeName type
+  //# Expr storeExpr
 
   public int getStartLoc() { return loc; }
 }

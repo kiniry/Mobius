@@ -283,7 +283,9 @@ public class Main extends javafe.SrcTool
         NoWarn.setStartLine(options().startLine, cu);
 
         UniqName.setDefaultSuffixFile(cu.getStartLoc());
+	try {
         super.handleCU(cu);
+	} catch (FatalError e) {}
 
         options().startLine = -1;        // StartLine applies only to first CU
     }
@@ -322,7 +324,7 @@ public class Main extends javafe.SrcTool
         TypeDecl decl = sig.getTypeDecl();
         for (int i=0; i<decl.elems.size(); i++) {
             if (decl.elems.elementAt(i) instanceof TypeDecl)
-            handleTD((TypeDecl)decl.elems.elementAt(i));
+		handleTD((TypeDecl)decl.elems.elementAt(i));
         }
     }
 

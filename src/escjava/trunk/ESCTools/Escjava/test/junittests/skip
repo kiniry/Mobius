@@ -6,6 +6,7 @@ Methods.java
 Represents.java
 Test.java
 Test2.java
+## ModParsingErrors.java - temporarily in, but needs fixing
 # Problem when run separately, but not in junit tests?
 ParsePlus.java 
 ## Platform dependent

@@ -334,6 +334,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
 	scanner.addKeyword("\\TYPE", TagConstants.TYPETYPE);
 	scanner.addKeyword("\\everything",TagConstants.EVERYTHING);
 	scanner.addKeyword("\\nothing",TagConstants.NOTHING);
+	scanner.addKeyword("\\fields_of",TagConstants.FIELDS_OF);
 	scanner.addKeyword("\\not_specified",TagConstants.NOT_SPECIFIED);
 	scanner.addKeyword("\\such_that",TagConstants.SUCH_THAT);
 	inProcessTag = NOTHING_ELSE_TO_PROCESS;
@@ -875,7 +876,7 @@ System.out.println("ADVANCING AT " + TagConstants.toString(tag));
 			// not \nothing, \not_specified, or \everything, so
 			// can only be a comma-separated list of
 			// SpecDesignators terminated with an optional ';'
-			e = parseExpression(scanner);
+			e = parseStoreRef(scanner);
 			// FIXME - should we parse something more restricted
 			// than an Expression - grammar says a store-ref
 		    }
@@ -891,17 +892,22 @@ System.out.println("ADVANCING AT " + TagConstants.toString(tag));
 		    // expression is not really a conditional expression
 		    // (i.e. it has no 'if'), then the condition parameter is
 		    // just "null".
-		    CondExprModifierPragma pragma = 
-			CondExprModifierPragma.make(
-				TagConstants.unRedundant(tag),
+		    if (e != null) {
+			CondExprModifierPragma pragma = 
+			    CondExprModifierPragma.make(
+				    TagConstants.unRedundant(tag),
 						    e, loc, cond);
-		    if (TagConstants.isRedundant(tag))
-			pragma.setRedundant(true);
-		    savePragma(loc,TagConstants.MODIFIERPRAGMA, pragma);
+			if (TagConstants.isRedundant(tag))
+			    pragma.setRedundant(true);
+			savePragma(loc,TagConstants.MODIFIERPRAGMA, pragma);
+		    }
 		    if (scanner.ttype != TagConstants.COMMA) break;
 		    scanner.getNextToken(); // skip comma
 		   } while (true);
-		    getPragma(dst);
+		    if (!getPragma(dst)) {
+			expect(scanner,TagConstants.SEMICOLON);
+			return getNextPragma(dst);
+		    }
 		    semicolonExpected = true;
                     if (DEBUG)
                         Info.out("getNextPragma: parsed a frame axiom: " + 
@@ -1201,6 +1207,23 @@ System.out.println("ADVANCING AT " + TagConstants.toString(tag));
 			semicolonExpected = false;
 		    } else {
 			semicolonExpected = true;
+			while (scanner.ttype == TagConstants.COMMA) {
+			    scanner.getNextToken();
+			    int locId2 = scanner.startingLoc;
+			    Identifier id2 = parseIdentifier(scanner);
+			    Type vartype2 = parseBracketPairs(scanner,type);
+			    if (scanner.ttype == TagConstants.ASSIGN) {
+				ErrorSet.error(scanner.startingLoc,
+				    "forall annotations may not have initializers");
+				eatThroughSemiColon();
+				semicolonExpected = false;
+				break;
+			    }
+			    LocalVarDecl decl2 = LocalVarDecl.make(Modifiers.NONE,
+				null, id2, vartype2, locId2, null, Location.NULL);
+			    savePragma(locId2, TagConstants.MODIFIERPRAGMA, 
+					VarDeclModifierPragma.make(tag,decl2,loc,locId2));
+			}
 		    }
 		    LocalVarDecl decl = LocalVarDecl.make(Modifiers.NONE,
 			null, id, vartype, locId, null, Location.NULL);
@@ -2359,15 +2382,16 @@ System.out.println("ADVANCING AT " + TagConstants.toString(tag));
     }
 
     /**
-     * Parse a FieldsOfExpr and discard it.
+     * Parse a FieldsOfExpr.
      *
      * <pre>
      * '\fields_of' '(' SpecExpr [ ',' Idn [ ',' StoreRefExpr ] ] ')' ';'
      * </pre>
      */
     //@ requires l.m_in != null
-    public void parseFieldsOfExpr(/*@ non_null @*/ EscPragmaLex l) {
-        int loc = l.startingLoc;
+    public Expr parseFieldsOfExpr(/*@ non_null @*/ EscPragmaLex l) {
+        int loc = l.startingLoc; // start of \fields_of
+	l.getNextToken(); // Skip the \fields_of token that we already saw
         int tag = TagConstants.fromIdentifier(l.identifierVal);
         Expr expr = null;
         TypeName typeName = null;
@@ -2380,36 +2404,32 @@ System.out.println("ADVANCING AT " + TagConstants.toString(tag));
                 parseStoreRefExpr(l);
         }
         expect(l, TagConstants.RPAREN);
-        noteUnsupportedCheckableJmlPragma(loc, tag);
+	return FieldsOfExpr.make(loc,expr,typeName,storeRefExpr);
     }
 
     /**
      * Parse a StoreRef and discard it.
      */
     //@ requires l.m_in != null
-    public void parseStoreRef(/*@ non_null @*/ EscPragmaLex l) {
+    public Expr parseStoreRef(/*@ non_null @*/ EscPragmaLex l) {
         // StoreRefKeyword
-        if (l.ttype == TagConstants.NOTHING || 
-            l.ttype == TagConstants.EVERYTHING ||
-            l.ttype == TagConstants.NOT_SPECIFIED ||
-            l.ttype == TagConstants.PRIVATE_DATA)
+	int loc = l.startingLoc;
+	if (l.ttype == TagConstants.FIELDS_OF) {
+            parseFieldsOfExpr(l);
+	    return null;
+	} else if (l.ttype == TagConstants.PRIVATE_DATA)
             // PRIVATE_DATA recognized and discarded, unclear semantics (kiniry)
         {
             l.getNextToken();
-            return;
-        }
-        // \fields_of ...
-        if (l.ttype == TagConstants.FIELDS_OF) {
-            parseFieldsOfExpr(l);
-            return;
+            return null; // FIXME
         }
         // InformalDescription
-        if (l.ttype == TagConstants.INFORMALPRED_TOKEN) {
+        else if (l.ttype == TagConstants.INFORMALPRED_TOKEN) {
             l.getNextToken();
-            return;
+            return null; // FIXME
         }
         // StoreRefExpr
-        parseStoreRefExpr(l);
+        return parseStoreRefExpr(l);
     }
 
     /**
@@ -2460,20 +2480,30 @@ System.out.println("ADVANCING AT " + TagConstants.toString(tag));
      * Parse a StoreRefExpr and discard it
      */
     //@ requires l.m_in != null
-    public void parseStoreRefExpr(/*@ non_null @*/ EscPragmaLex l) {
-
+    public Expr parseStoreRefExpr(/*@ non_null @*/ EscPragmaLex l) {
+	return parseExpression(l);
+/*
+	int loc = l.startingLoc;
         // Must start with Idn | 'super' | 'this'
-        if (l.ttype == TagConstants.IDENT ||
-            l.ttype == TagConstants.SUPER ||
-            l.ttype == TagConstants.THIS) {
+        if (l.ttype == TagConstants.IDENT) {
+	    Identifier id = l.identifierVal;
             l.getNextToken();
+	    parseStoreRefNameSuffix(l);
+	    return AmbiguousVariableAccess.make(loc,id);
+	} else if (l.ttype == TagConstants.SUPER) {
+            l.getNextToken();
+	    parseStoreRefNameSuffix(l);
+	} else if (l.ttype == TagConstants.THIS) {
+            l.getNextToken();
+	    parseStoreRefNameSuffix(l);
         } else {
             fail(scanner.startingLoc,
                  "storage reference expression must start with an " + 
                  "identifier, 'super', or 'this'.");
         }
         // Optional StoreRefNameSuffix.
-        parseStoreRefNameSuffix(l);
+	return null;
+*/
     }
 
     protected int modifiers = Modifiers.NONE;
@@ -2687,6 +2717,10 @@ System.out.println("ADVANCING AT " + TagConstants.toString(tag));
 		if (scanner.ttype == TagConstants.IDENT &&
 		    scanner.identifierVal.toString().equals("maps")) {
 		    getNextPragma(temp);
+		    decl.pmodifiers.addElement((ModifierPragma)temp.auxVal);
+		    continue;
+		}
+		if (scanner.ttype == TagConstants.POSTMODIFIERPRAGMA) {
 		    decl.pmodifiers.addElement((ModifierPragma)temp.auxVal);
 		    continue;
 		}
