@@ -159,6 +159,10 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
                 write(o, " */");
                 break;
 
+            case TagConstants.GHOST:
+            case TagConstants.MODEL:
+		break;
+
             case TagConstants.ALSO_ENSURES:
             case TagConstants.ALSO_REQUIRES:
             case TagConstants.ENSURES:
