@@ -7,9 +7,9 @@ package escjava.ast;
 */
 public class Modifiers extends javafe.ast.Modifiers {
 
-  public static final int ACC_MODEL = 0x8000; // model fields and methods
-  public static final int ACC_PURE =  0x4000; // pure methods, model or not
-  public static final int ACC_HELPER = 0x2000; // helper method, model or not
+  public static final int ACC_MODEL = 0x80000; // model fields and methods
+  public static final int ACC_PURE =  0x40000; // pure methods, model or not
+  public static final int ACC_HELPER = 0x20000; // helper method, model or not
 
   public static boolean isModel(int modifiers) {
 	return (modifiers&ACC_MODEL) != 0;
