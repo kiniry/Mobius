@@ -144,7 +144,6 @@ clean-norel-noreltemp:
 	$(MAKE) -C papers clean
 	$(MAKE) -C slides clean
 	$(MAKE) -C Javafe clean
-	find . -name ".DS_Store" -exec rm -f {} \;
 	rm -f jars/*.jar		## FIXME  - should adjust to have alljar files in the jars directory
 	rm -f tags TAGS
 
