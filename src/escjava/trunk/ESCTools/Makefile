@@ -51,13 +51,18 @@ jars: jmlspecs-jar jar srcjar
 ########################################### build, test
 
 .PHONY: build buildall test
-build buildall test: 
+build buildall: fix-perms
+	for d in $(SUBDIRS) ; do \
+	    $(MAKE) -C $$d $@ || exit 1; \
+	done
+
+test: build
 	for d in $(SUBDIRS) ; do \
 	    $(MAKE) -C $$d $@ || exit 1; \
 	done
 
 .PHONY: alltests
-alltests:
+alltests:	build
 	${MAKE} test ALLTESTS=1
 	##${MAKE} specs-test
 
@@ -75,7 +80,9 @@ endif
 
 .PHONY: fix-perms
 fix-perms:
-	find $(ESCTOOLS_ROOT) -type f \
+	@if [ ! -x ./Javafe/java/javafe/ast/insert_ensures ]; \
+	then \
+		find $(ESCTOOLS_ROOT) -type f \
 		-name "*.[0-9]" -or \
 		-name "*.[chjlo]" -or \
 		-name "*ans" -or \
@@ -90,13 +97,16 @@ fix-perms:
 		-name "README*" -or \
 		-name "*.txt" -or \
 		-name "*.zip" \
-		-exec chmod 644 {} \;
-	find $(ESCTOOLS_ROOT) -type f \
+		-exec chmod 644 {} \; \
+		find $(ESCTOOLS_ROOT) -type f \
 		-name "rtest*" -or \
 		-name "run" \
 		-name "*_tags" \
 		-name "insert_ensures" \
-		-exec chmod 755 {} \;
+		-exec chmod 755 {} \; \
+	else \
+		echo "false"; \
+	fi
 
 ########################################### clean
 
@@ -131,6 +141,7 @@ clean-norel-noreltemp:
 	$(MAKE) -C papers clean
 	$(MAKE) -C slides clean
 	$(MAKE) -C Javafe clean
+	find . -name ".DS_Store" -exec rm -f {} \;
 	rm -f jars/*.jar		## FIXME  - should adjust to have alljar files in the jars directory
 	rm -f tags TAGS
 
@@ -165,9 +176,7 @@ slides:
 papers:
 	${MAKE} -C papers build
 
-############################################
-
-PACKAGE_LIST = escjava escjava.ast escjava.backpred escjava.parser \
+PACKAGE_LIST = escjava escjava.ant escjava.ast escjava.backpred escjava.parser \
 	  escjava.prover escjava.tc escjava.translate escjava.sp \
 	  escjava.reader escjava.gui \
           javafe javafe.ast javafe.parser  \
@@ -179,6 +188,8 @@ JAVADOC_SOURCEPATH = $(subst : ,:,$(addsuffix /java:,$(addprefix $(ESCTOOLS_ROOT
 
 ## Javadoc depends on the build target since some of the .java files
 ## are generated in the course of the build (e.g. the AST classes).
+## TODO: Should have -overview , header, footer, bottom, group, stylesheetfile
+## link/linkoffline, subpackages -FIXME Kiniry
 .PHONY: javadoc
 javadoc:  build
 	rm -rf $(JAVADOC_GEN_DIR)
@@ -186,7 +197,7 @@ javadoc:  build
 	mkdir -p $(JAVADOC_GEN_DIR)/images
 	cp $(JAVAFE_ROOT)/doc/javadoc/images/*.gif $(JAVADOC_GEN_DIR)/images
 	$(JAVADOC) -sourcepath $(call canonicalize,$(JAVADOC_SOURCEPATH):$(JUNIT_SOURCEPATH)) \
-	  -classpath $(call canonicalize,${CLASSPATH}:${JUNIT_LIB}) \
+	  -classpath $(call canonicalize,${CLASSPATH}:${JUNIT_LIB}:${ANT_LIB}) \
 	  -private \
 	  -doctitle "ESCTools API" \
 	  -windowtitle "ESCTools" \
@@ -196,8 +207,27 @@ javadoc:  build
 	  -d $(JAVADOC_GEN_DIR) \
           $(PACKAGE_LIST)
 
-## Should have -overview , header, footer, bottom, group, stylesheetfile
-##    link/linkoffline, subpackages  FIXME
+## JMLDOC does not yet work with ESC/Java2 because of the use of old
+## keywords, missing terminating semi-colons, etc.  We'll continue
+## to update all specs to match modern JML syntax and soon we'll
+## be able to use jmldoc in all its glory. -Kiniry
+
+.PHONY: jmldoc
+jmldoc:  build
+	rm -rf $(JMLDOC_GEN_DIR)
+	mkdir -p $(JMLDOC_GEN_DIR)
+	mkdir -p $(JMLDOC_GEN_DIR)/images
+	cp $(JAVAFE_ROOT)/doc/javadoc/images/*.gif $(JMLDOC_GEN_DIR)/images
+	$(JMLDOC) -sourcepath $(call canonicalize,$(JAVADOC_SOURCEPATH):$(JUNIT_SOURCEPATH)) \
+	  -classpath $(call canonicalize,${CLASSPATH}:${JUNIT_LIB}:${ANT_LIB}) \
+	  -private --source 1.4 \
+	  -doctitle "ESCTools API" \
+	  -windowtitle "ESCTools" \
+	  -author -version -use \
+	  -linksource \
+	  -tag warning -tag todo -tag note -tag design -tag usage \
+	  -d $(JMLDOC_GEN_DIR) \
+          $(PACKAGE_LIST)
 
 ########################################### release
 
@@ -324,6 +354,7 @@ test-patch-release:
 		unset ESCTOOLS_ROOT ;\
 		unset ESC_SPECS; \
 		unset JUNIT_LIB ;\
+		unset ANT_LIB ;\
 		unset PATCH_DIR ;\
 		unset RELDIR ;\
 		unset RELTEMP ;\
@@ -444,6 +475,6 @@ check-specs:	build jmlspecs.jar
 		((i=i+1)); \
 	done
 	echo "}" >> SpecTest.java
-	CLASSPATH=$(call canonicalize,${CLASSPATH}:${JUNIT_LIB}); $(ESCJAVA) -v SpecTest.java
+	CLASSPATH=$(call canonicalize,${CLASSPATH}:${JUNIT_LIB}:${ANT_LIB}); $(ESCJAVA) -v SpecTest.java
 	rm -f .specs SpecTest.java
 
