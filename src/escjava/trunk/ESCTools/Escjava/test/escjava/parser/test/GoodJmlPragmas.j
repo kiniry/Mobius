@@ -137,7 +137,7 @@
 //@ post_redundantly predicate;
 
 //@ pre_redundantly predicate;
-
+//@ represents_redundantly store_ref_expression = spec_expression;
 //@ represents_redundantly store_ref_expression <- spec_expression;
 //@ represents_redundantly store_ref_expression \such_that predicate;
 
