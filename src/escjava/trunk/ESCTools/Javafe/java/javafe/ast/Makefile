@@ -16,7 +16,7 @@ TypeVec = ImportDeclVec.java TypeDeclVec.java TypeNameVec.java \
           CatchClauseVec.java \
           VarInitVec.java ExprVec.java IdentifierVec.java \
           ModifierPragmaVec.java LexicalPragmaVec.java \
-          TypeModifierPragmaVec.java  
+          TypeModifierPragmaVec.java  MethodDeclVec.java FieldDeclVec.java
 
 .PHONY: source
 source: ASTNode.java typevecs

@@ -11,7 +11,6 @@ import javafe.ast.*;
 import escjava.ast.*;
 import escjava.ast.TagConstants;
 import escjava.ast.Modifiers;
-import escjava.ast.FieldDeclVec;		// compiler bug workaround
 import escjava.ast.ExprDeclPragmaVec;		// compiler bug workaround
 
 import javafe.tc.*;

@@ -3007,15 +3007,19 @@ try{
 		init = null;
 	    }
 	}
+	ModifierPragmaVec allModifierPragmas;
 	if (scanner.ttype == TagConstants.MODIFIERPRAGMA) {
 	    // FIXME - only need this for old ESC/Java pragmas
 	    // but some old tests rely on it
-	    modifierPragmas = parseMoreModifierPragmas(scanner,
-				modifierPragmas);
+	    allModifierPragmas = modifierPragmas.copy();
+	    allModifierPragmas = parseMoreModifierPragmas(scanner,
+				allModifierPragmas);
+	} else {
+	    allModifierPragmas = modifierPragmas;
 	}
 
 	FieldDecl decl
-	    = FieldDecl.make(modifiers, modifierPragmas, 
+	    = FieldDecl.make(modifiers, allModifierPragmas, 
 			     id, vartype, locId, init, locAssignOp );
 	Object pragma = null;
 	if (tag == TagConstants.GHOST) {
@@ -3040,8 +3044,17 @@ try{
 		scanner.getNextToken();
 		init = parseVariableInitializer(scanner, false);
 	    }
+	    if (scanner.ttype == TagConstants.MODIFIERPRAGMA) {
+		// FIXME - only need this for old ESC/Java pragmas
+		// but some old tests rely on it
+		allModifierPragmas = modifierPragmas.copy();
+		allModifierPragmas = parseMoreModifierPragmas(scanner,
+				    allModifierPragmas);
+	    } else {
+		allModifierPragmas = modifierPragmas;
+	    }
 	    decl = FieldDecl.make(
-		modifiers, null,
+		modifiers, allModifierPragmas,
 		id, vartype2, locId, init, locAssignOp);
 	    if (tag == TagConstants.GHOST) {
 		pragma = GhostDeclPragma.make(decl, locId);

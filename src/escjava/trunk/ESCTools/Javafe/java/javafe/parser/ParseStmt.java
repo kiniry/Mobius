@@ -557,7 +557,7 @@ public abstract class ParseStmt extends ParseExpr
         StmtVec body = StmtVec.popFromStackVector(seqStmt);
         int closeloc = l.startingLoc;
         l.getNextToken(); // Discard '}'
-        return BlockStmt.make(body, openloc, closeloc);
+        return specOnly ? null : BlockStmt.make(body, openloc, closeloc);
     }
 
     /**

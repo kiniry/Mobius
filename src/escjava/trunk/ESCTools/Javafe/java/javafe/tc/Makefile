@@ -2,7 +2,7 @@
 
 .PHONY: source clean
 
-source: FieldDeclVec.java MethodDeclVec.java TypeSigVec.java
+source: TypeSigVec.java
 
 clean: 
 	rm -rf *Vec.java

@@ -28,6 +28,7 @@ ExprObjectDesignator.java
 ExprVec.java
 FieldAccess.java
 FieldDecl.java
+FieldDeclVec.java
 ForStmt.java
 FormalParaDecl.java
 FormalParaDeclVec.java
@@ -48,6 +49,7 @@ LexicalPragmaVec.java
 LiteralExpr.java
 LocalVarDecl.java
 MethodDecl.java
+MethodDeclVec.java
 MethodInvocation.java
 ModifierPragma.java
 ModifierPragmaVec.java

@@ -119,7 +119,7 @@ public class RefinementCachedReader extends CachedReader
 	refinementSequence = null;
 	CompilationUnit cu = super.read(target,avoidSpec);
 	if (cu == null) return null;
-	CompilationUnit result = readRefinements(cu);
+	CompilationUnit result = readRefinements(cu,avoidSpec);
 
 	// Do anything to pragmas that must be done before type signatures
 	// are created - includes, for example, handling model imports.
@@ -136,7 +136,7 @@ public class RefinementCachedReader extends CachedReader
 
     protected ArrayList refinementSequence;
 
-    public CompilationUnit readRefinements(CompilationUnit cu) {
+    public CompilationUnit readRefinements(CompilationUnit cu, boolean avoidSpec) {
      
 	    // Get and parse the package name
 	    Name pkgName = cu.pkgName;
@@ -212,7 +212,7 @@ public class RefinementCachedReader extends CachedReader
 	    // Note that this parses each of the files in the RS.
 	    // Note also that 'cu' need not be in its own RS if it isn't,
 	    // then it is not part of the list returned.
-	    refinementSequence = getRefinementSequence(pkgStrings, type, cu);
+	    refinementSequence = getRefinementSequence(pkgStrings, type, cu, avoidSpec);
 		// Error occurred (already reported) such that we don't
 		// want to add a new compilation unit to the environment
 	    if (refinementSequence == null) return null;
@@ -333,7 +333,7 @@ public class RefinementCachedReader extends CachedReader
 	// result is a list of CompilationUnits
 	// result will contain something, perhaps just the given cu
 	ArrayList getRefinementSequence(String[] pkgStrings, Identifier type, 
-				CompilationUnit cu) {
+				CompilationUnit cu, boolean avoidSpec) {
 	    ArrayList refinements = new ArrayList();
 	    GenericFile mrcufile;
 	    GenericFile gf = cu.sourceFile();
@@ -358,7 +358,7 @@ public class RefinementCachedReader extends CachedReader
 		    ccu = cu;
 		    foundCommandLineFileInRS = true;
                 } else {
-		    ccu = underlyingReader.read(gfile,false);
+		    ccu = underlyingReader.read(gfile,avoidSpec);
 		}
 		annotationHandler.parseAllRoutineSpecs(ccu);
 		refinements.add(ccu);

@@ -62,7 +62,7 @@ public class SrcReader extends Reader
      *
      * By default, we attempt to read only a spec (e.g., specOnly is set
      * in the resulting CompilationUnit) to save time.  If avoidSpec is
-     * true, we always return a non-spec.<p>
+     * true, we always return a non-spec (if the file is a .java file).<p>
      *
      *
      * The result of this function is not cached.<p>
@@ -80,6 +80,7 @@ public class SrcReader extends Reader
 	    javafe.util.ErrorSet.error("I/O error: " + e.getMessage());
 	    return null;
 	}
+	if (avoidSpec && !target.getLocalName().endsWith(".java")) avoidSpec = false;
 	CompilationUnit result =
 	    readParser.parseCompilationUnit(readLex, !avoidSpec);
 	readLex.close();

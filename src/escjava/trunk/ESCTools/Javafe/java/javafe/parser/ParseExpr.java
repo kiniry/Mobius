@@ -67,7 +67,7 @@ public abstract class ParseExpr extends ParseType
      can be in expressions.  However, the body lives in Parse.java */
     //@ requires loc != Location.NULL
     //@ requires elems != null;
-    abstract void addDefaultConstructor(TypeDeclElemVec elems, int loc);
+    abstract void addDefaultConstructor(TypeDeclElemVec elems, int loc, boolean specOnly);
 
     /** Parse an element of a type declaration into "seq".
      "keyword" should be the kind of type decl, one of CLASS or INTERFACE.

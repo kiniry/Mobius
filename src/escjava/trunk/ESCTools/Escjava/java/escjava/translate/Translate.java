@@ -3494,7 +3494,7 @@ public final class Translate
 		else
 		    env = (EnvForTypeSig)FlowInsensitiveChecks.envDecoration.get(ts.getTypeDecl());
 		if (env == null) env = ((TypeSig)type).getEnv(stat);
-		javafe.tc.FieldDeclVec fds = env.getFields();
+		javafe.ast.FieldDeclVec fds = env.getFields();
 		for (int i=0; i<fds.size(); ++i) {
 		    FieldDecl fd = fds.elementAt(i);
 		    if (stat != Modifiers.isStatic(fd.modifiers)) continue;

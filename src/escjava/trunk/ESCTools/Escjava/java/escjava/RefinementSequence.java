@@ -327,6 +327,7 @@ public class RefinementSequence extends CompilationUnit {
 	*/
     void combineRoutine(RoutineDecl newrd, RoutineDecl rd) {
 	//System.out.println("Combining routine "+Location.toString(newrd.getStartLoc()) + " " +Location.toString(rd.getStartLoc()) + " " + rd.binaryArgNames + " " + Modifiers.toString(rd.modifiers) );
+	//System.out.println(newrd.id() + " " + (newrd.body!= null) + (rd.body != null));
 	rd.loc = newrd.loc;
 	// FIXME - check exceptions
 	for (int i=0; i<newrd.args.size(); ++i) {

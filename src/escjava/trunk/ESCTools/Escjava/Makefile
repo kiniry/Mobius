@@ -191,9 +191,9 @@ ${ASTFILELIST} ${ASTGEN}:
 
 VECTEMPLATE = ${JAVAFE_SOURCE_DIR}/javafe/util/_TYPE_Vec.j
 
-# The component type for these (e.g. FieldDecl.java) is in Javafe.
+# The component type for these is in Javafe.
 JavafeTypeVec = \
-	${AST_DIR}/FieldDeclVec.java ${AST_DIR}/LocalVarDeclVec.java \
+	${AST_DIR}/LocalVarDeclVec.java \
 	${AST_DIR}/GenericVarDeclVec.java
 
 # The component type for these (e.g. GuardedCmd.java) is in Escjava.

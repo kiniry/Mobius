@@ -285,7 +285,7 @@ public class Parse extends ParseStmt
 
     TypeDecl result;
     if (keyword == TagConstants.CLASS) {
-      addDefaultConstructor(elems, locOpenBrace);
+      addDefaultConstructor(elems, locOpenBrace, specOnly);
       result = ClassDecl.make(modifiers, modifierPragmas, id, 
 			      superInterfaces, tmodifiers, elems,
 			      loc, locId, locOpenBrace, locCloseBrace,
@@ -321,7 +321,7 @@ public class Parse extends ParseStmt
   /** If no constructors are found in "elems", adds a default one to it.
     If a default constructor is created, the "loc" and "locId" fields of
     the default constructor will be set to "loc". */
-  void addDefaultConstructor(TypeDeclElemVec elems, int loc) {
+  void addDefaultConstructor(TypeDeclElemVec elems, int loc, boolean specOnly) {
       // Return if a constructor is already present:
       for (int i=0; i<elems.size(); i++) {
 	  if (elems.elementAt(i) instanceof ConstructorDecl)
@@ -335,7 +335,7 @@ public class Parse extends ParseStmt
        * Don't put super constructor invocation in --  it is added by
        * the type checker.
        */
-      BlockStmt blk = BlockStmt.make(StmtVec.make(), loc, loc);
+      BlockStmt blk = specOnly ? null :BlockStmt.make(StmtVec.make(), loc, loc);
       TypeNameVec raises = TypeNameVec.make();
       FormalParaDeclVec formals = FormalParaDeclVec.make();
       ConstructorDecl cd
