@@ -48,26 +48,12 @@ testexprbig:
 
 .PHONY: jdk_source_listings
 jdk_source_listings:
-	find /usr/local/Java/src/jdk-1.0 -follow -name "*.java" -print > jdk-1.0-files 
-	find /usr/local/Java/src/jdk-1.1 -follow -name "*.java" -print > jdk-1.1-files 
-	find /usr/local/Java/src/jdk-1.2 -follow -name "*.java" -print > jdk-1.2-files 
-	find /usr/local/Java/src/jdk-1.3 -follow -name "*.java" -print > jdk-1.3-files 
-	find /usr/local/Java/src/jdk-1.4 -follow -name "*.java" -print > jdk-1.4-files 
+	find ${JDK10_SOURCES} -follow -name "*.java" -print > jdk-1.0-files 
+	find ${JDK11_SOURCES} -follow -name "*.java" -print > jdk-1.1-files 
+	find ${JDK12_SOURCES} -follow -name "*.java" -print > jdk-1.2-files 
+	find ${JDK13_SOURCES} -follow -name "*.java" -print > jdk-1.3-files 
+	find ${JDK14_SOURCES} -follow -name "*.java" -print > jdk-1.4-files 
 
-# @note kiniry 13 Jan 2002 - Should cause two exceptions in 1.4.1
-# files.
-
-# @note kiniry 6 Aug 2003 - JDK 1.2's java.awt.Component should fail
-# because it uses "assert" as an identifier.
-
-testparsejdk:
-	cat jdk-1.0-files | xargs ${JAVA} javafe.parser.test.TestParse progress check silent
-	cat jdk-1.1-files | xargs ${JAVA} javafe.parser.test.TestParse progress check silent
-	cat jdk-1.2-files | xargs -n 1000 -s 1024 ${JAVA} javafe.parser.test.TestParse progress check silent
-	cat jdk-1.3-files | xargs -n 1000 -s 1024 ${JAVA} javafe.parser.test.TestParse progress check silent
-	cat jdk-1.4-files | xargs -n 1000 -s 1024 ${JAVA} javafe.parser.test.TestParse progress check silent
-
-# @note kiniry 13 Jan 2002 - Should cause two exceptions in 1.4.1 files.
 testparsejdkidempotence:
 	${JAVA} javafe.parser.test.TestParse diff simpletoks simpletoks
 	cat jdk-1.0-files | xargs ${JAVA} javafe.parser.test.TestParse progress silent idempotence
@@ -77,7 +63,7 @@ testparsejdkidempotence:
 	cat jdk-1.4-files | xargs -n 1000 -s 1024 ${JAVA} javafe.parser.test.TestParse progress silent idempotence
 
 testparse:
-	${JAVA} javafe.parser.test.TestParse progress check print verboseprogress\
+	${JAVA} javafe.parser.test.TestParse progress check print verboseprogress \
 		compilation-unit.j *.java \
 		${JAVAFE_ROOT}/java/javafe/parser/*.java \
 		${JAVAFE_ROOT}/java/javafe/ast/*.java
