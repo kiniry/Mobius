@@ -1108,6 +1108,7 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
       
       case TagConstants.TYPECODE:
       case TagConstants.LOCKSET:
+      case TagConstants.OBJECTSET:
         write(o, TagConstants.toString(t.getTag()) );
       break;
       

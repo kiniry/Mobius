@@ -47,6 +47,9 @@ public class Types extends javafe.tc.Types
             locksetType = PrimitiveType.make(TagConstants.LOCKSET, Location.NULL);
 
     public static PrimitiveType
+            objectsetType = PrimitiveType.make(TagConstants.OBJECTSET, Location.NULL);
+
+    public static PrimitiveType
 	    rangeType = PrimitiveType.make(TagConstants.DOTDOT, Location.NULL);
 
     //@ invariant bigintType != null;

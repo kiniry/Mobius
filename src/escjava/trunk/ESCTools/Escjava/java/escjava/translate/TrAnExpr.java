@@ -550,7 +550,7 @@ public class TrAnExpr {
       
       case TagConstants.METHODINVOCATION: {
         /* We can handle a method invocation in a spec expression in two ways.
-         a) We can turn the method invocation into a funcction call within the target
+         a) We can turn the method invocation into a function call within the target
          logic.  The we add axioms for that function call corresponding to the 
          postconditions of the method in the Java program.  We add the implicit this
          parameter as an argument of the function if the method is not static.
@@ -570,8 +570,10 @@ public class TrAnExpr {
         
         MethodInvocation me = (MethodInvocation)e;
         
-        // FIXME - when is me.decl null ?
-        boolean isFunction = me.decl == null ? false : Utils.isFunction(me.decl);
+        // FIXME - when is me.decl null ? When it is a built-in method like
+	// \reach().has()
+
+        boolean isFunction = me.decl == null ? true : Utils.isFunction(me.decl);
         // The above result will be true if the method is declared to be a function
         // or if it has only immutable arguments.
         
@@ -1029,16 +1031,21 @@ public class TrAnExpr {
         NaryExpr ne = (NaryExpr)e;
         int sloc = ne.getStartLoc();
         int eloc = ne.getEndLoc();
-        Expr arg = trSpecExpr(ne.exprs.elementAt(0), sp, st);
-        // arg != null
-        Expr nonnull = GC.nary(sloc, eloc,
+        int n = ne.exprs.size();
+        ExprVec ev = ExprVec.make(n);
+        for (int i=0; i<ne.exprs.size(); ++i) {
+          Expr arg = trSpecExpr(ne.exprs.elementAt(i), sp, st);
+          // arg != null
+          Expr nonnull = GC.nary(sloc, eloc,
             TagConstants.REFNE, arg, GC.nulllit);
-        // isAllocated(arg, alloc@pre)
-        Expr isAlloced = GC.nary(sloc, eloc, TagConstants.ISALLOCATED,
+          // isAllocated(arg, alloc@pre)
+          Expr isAlloced = GC.nary(sloc, eloc, TagConstants.ISALLOCATED,
             arg, apply(st, GC.allocvar));
-        // !isAllocated(arg, alloc@pre)
-        Expr newlyallocated = GC.not(sloc, eloc, isAlloced);
-        return GC.and(sloc, eloc, nonnull, newlyallocated);
+          // !isAllocated(arg, alloc@pre)
+          Expr newlyallocated = GC.not(sloc, eloc, isAlloced);
+          ev.addElement(GC.and(sloc, eloc, nonnull, newlyallocated));
+        }
+        return GC.and(ev);
       }
       
       case TagConstants.DOTDOT:

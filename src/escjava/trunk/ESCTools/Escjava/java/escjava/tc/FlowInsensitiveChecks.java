@@ -510,6 +510,11 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
           if (t instanceof TypeName)
             t = TypeSig.getSig( (TypeName) t );
 
+          if (Types.isErrorType(t)) {
+            setType( fa, Types.errorType );
+            return fa;
+          }
+
           try {
             fa.decl = escjava.tc.Types.lookupField( t, fa.id, sig );
           } catch( LookupException ex) {
@@ -665,17 +670,18 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
       case TagConstants.METHODINVOCATION:
         {
           countFreeVarsAccesses++;
-          /*                    if (!inAnnotation)
-                                return super.checkExpr(env, e);
-	
-                                MethodInvocation mi = (MethodInvocation)e;
-                                ErrorSet.error(mi.locId,
-                                "Specification expressions are not allowed to "+
-                                "contain method invocations");
-                                setType(e, Types.voidType);
-                                return e;
-          */
-          return super.checkExpr(env,e);
+	  MethodInvocation mi = (MethodInvocation)e;
+          Type t = checkObjectDesignator(env, mi.od);
+          if (mi.od instanceof ExprObjectDesignator && Types.objectsetType == t) {
+// FIXME - all reach expressions are true for now
+            Expr ee = LiteralExpr.make(TagConstants.BOOLEANLIT,Boolean.TRUE,
+                                          Location.NULL);
+            setType(ee, Types.booleanType);
+            return ee;
+          } else {
+	    Expr ee = super.checkExpr(env,e);
+	    return ee;
+          }
         }
       
       case TagConstants.IMPLIES:
@@ -736,33 +742,42 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
         }
 
       case TagConstants.REACH: {
-        //ErrorSet.notImplemented(!Main.options().noNotCheckedWarnings,
-        //		e.getStartLoc(),"reach is not implemented");
         // FIXME - just enough to get by for now
         NaryExpr ne = (NaryExpr)e;
         Expr nu = 
           checkExpr(env, ne.exprs.elementAt(0));
         ne.exprs.setElementAt(nu, 0);			
-        setType(e, Types.errorType);
+        if (ne.exprs.size() != 1) {
+          ErrorSet.error(ne.sloc,
+               "A \\reach expression expects just one argument");
+          setType(e, Types.errorType);
+        } else if (!Types.isReferenceOrNullType(getType(nu))) {
+          ErrorSet.error(nu.getStartLoc(),
+               "A \\reach expression expects an Object argument");
+        } else {
+          setType(e, Types.objectsetType);
+        }
         return e;
       }
 
       case TagConstants.FRESH:
         {
           NaryExpr ne = (NaryExpr)e;
-          if (ne.exprs.size() != 1) {
+          if (ne.exprs.size() == 0) {
             ErrorSet.error(ne.sloc, 
-                           "The function fresh takes only one argument");
+		       "The function fresh must have at least one argument");
           } else if (!isTwoStateContext) {
             ErrorSet.error(ne.sloc, 
-                           "The function \\fresh cannot be used in this context");
+		       "The function \\fresh cannot be used in this context");
           } else if (isInsidePRE) {
             ErrorSet.error(ne.sloc, "The function \\fresh cannot be used "+
                            "inside a \\old expression");
           } else {
-            Expr nu = 
-              checkExpr(env, ne.exprs.elementAt(0), Types.javaLangObject());
-            ne.exprs.setElementAt(nu, 0);			
+            for (int i = 0; i<ne.exprs.size(); ++i) {
+              Expr nu = 
+                checkExpr(env, ne.exprs.elementAt(i), Types.javaLangObject());
+              ne.exprs.setElementAt(nu, i);			
+            }
           }
           setType(e, Types.booleanType);
           return e;

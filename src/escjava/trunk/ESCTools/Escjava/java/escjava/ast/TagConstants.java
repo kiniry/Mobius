@@ -34,9 +34,10 @@ public class TagConstants extends GeneratedTags
     public static final int BIGINTTYPE = TYPECODE + 1;
     public static final int REALTYPE = BIGINTTYPE + 1;
     public static final int LOCKSET = REALTYPE + 1;
+    public static final int OBJECTSET = LOCKSET + 1;
     
     //// Tags for guarded commands
-    public static final int ASSERTCMD = LOCKSET + 1;
+    public static final int ASSERTCMD = OBJECTSET + 1;
     public static final int ASSUMECMD = ASSERTCMD + 1;
     public static final int CHOOSECMD = ASSUMECMD + 1;
     public static final int RAISECMD = CHOOSECMD + 1;
@@ -479,6 +480,8 @@ public class TagConstants extends GeneratedTags
                 return "TYPE";
             case LOCKSET:
                 return "LOCKSET";
+            case OBJECTSET:
+                return "OBJECTSET";
             case CHK_AS_ASSUME:
                 return "CHK_AS_ASSUME";
             case CHK_AS_ASSERT:
