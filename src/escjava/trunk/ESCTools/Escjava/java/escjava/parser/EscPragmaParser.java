@@ -77,7 +77,7 @@ import java.util.Iterator;
  | 'non_null' | 'instance' | 'pure' 
  | 'spec_public' | 'writable_deferred' | 'helper' 
  | 'public' | 'private' | 'protected' 
- | 'spec_protected' | 'model' | 'transient'
+ | 'spec_protected' | 'model' | 'transient' | '\peer' | '\readonly' | '\rep'
  
  @note kiniry 29 Apr 2003 - the last three above are not yet fully supported
  
@@ -237,8 +237,9 @@ import java.util.Iterator;
  * @see escjava.Options#checkRedundantSpecs
  */
 
-public class EscPragmaParser extends Parse implements PragmaParser {
-
+public class EscPragmaParser extends Parse 
+  implements PragmaParser
+{
   private static final boolean DEBUG = false;
 
   /** 
@@ -886,16 +887,19 @@ public class EscPragmaParser extends Parse implements PragmaParser {
 
         case TagConstants.ALSO_MODIFIES:
           tag = TagConstants.MODIFIES;
-          ErrorSet.error(
-                  loc,
-                  "Original ESC/Java keywords beginning with also_ are obsolete; they have been replaced with the corresponding JML keywords and the use of 'also' - note that the semantics has also changed.");
+          ErrorSet.error(loc,
+                         "Original ESC/Java keywords beginning with also_ are " + 
+                         "obsolete; they have been replaced with the " + 
+                         "corresponding JML keywords and the use of 'also' - " + 
+                         "note that the semantics has also changed.");
         // fall through
         case TagConstants.ASSIGNABLE: // SUPPORT COMPLETE (kiniry)
         case TagConstants.ASSIGNABLE_REDUNDANTLY: // SUPPORT COMPLETE (kiniry)
         case TagConstants.MODIFIABLE: // SUPPORT COMPLETE (kiniry)
         case TagConstants.MODIFIABLE_REDUNDANTLY: // SUPPORT COMPLETE (kiniry)
         case TagConstants.MODIFIES_REDUNDANTLY: // SUPPORT COMPLETE (kiniry)
-        case TagConstants.MODIFIES: {
+        case TagConstants.MODIFIES:
+        {
           checkNoModifiers(tag, loc);
           ModifiesGroupPragma group = ModifiesGroupPragma.make(tag, loc);
           if (TagConstants.isRedundant(tag)) group.setRedundant(true);
@@ -932,7 +936,8 @@ public class EscPragmaParser extends Parse implements PragmaParser {
           break;
         }
 
-        case TagConstants.STILL_DEFERRED: {
+        case TagConstants.STILL_DEFERRED:
+        {
           checkNoModifiers(tag, loc);
           inProcessTag = tag;
           inProcessLoc = loc;
@@ -943,7 +948,8 @@ public class EscPragmaParser extends Parse implements PragmaParser {
           return true;
         }
 
-        case TagConstants.MONITORED_BY: {
+        case TagConstants.MONITORED_BY:
+        {
           checkNoModifiers(tag, loc);
           semicolonExpected = true;
           int t = scanner.lookahead(0);
@@ -964,7 +970,8 @@ public class EscPragmaParser extends Parse implements PragmaParser {
         }
 
         case TagConstants.WRITABLE:
-        case TagConstants.READABLE: {
+        case TagConstants.READABLE:
+        {
           checkNoModifiers(tag, loc);
           do {
             Expr e = parseStoreRef(scanner);
@@ -993,7 +1000,8 @@ public class EscPragmaParser extends Parse implements PragmaParser {
           break;
         }
 
-        case TagConstants.MONITORS_FOR: {
+        case TagConstants.MONITORS_FOR:
+        {
           //checkNoModifiers(tag,loc);
           int locId = scanner.startingLoc;
           Identifier target = parseIdentifier(scanner);
@@ -1019,12 +1027,13 @@ public class EscPragmaParser extends Parse implements PragmaParser {
           }
           break;
         }
+
         case TagConstants.DEPENDS:
-        case TagConstants.DEPENDS_REDUNDANTLY: {
-          ErrorSet
-              .caution(
-                  loc,
-                  "The depends clause is obsolete; it has been replaced by the in and maps clauses");
+        case TagConstants.DEPENDS_REDUNDANTLY:
+        {
+          ErrorSet.caution(loc,
+                           "The depends clause is obsolete; it has been " +
+                           "replaced by the in and maps clauses");
           int tempTag = TagConstants.unRedundant(tag);
           dst.ttype = TagConstants.TYPEDECLELEMPRAGMA;
           // FIXME - should this be a primary expression
@@ -1054,7 +1063,8 @@ public class EscPragmaParser extends Parse implements PragmaParser {
           // The ASSERT token is not obtained from an identifier
           // so the scanner was not advanced.
           scanner.getNextToken();
-        case TagConstants.ASSERT_REDUNDANTLY: { // SUPPORT COMPLETE (kiniry)
+        case TagConstants.ASSERT_REDUNDANTLY: // SUPPORT COMPLETE (kiniry)
+        {
           checkNoModifiers(tag, loc);
           dst.ttype = TagConstants.STMTPRAGMA;
           Expr assertion = parseExpression(scanner);
@@ -1065,7 +1075,8 @@ public class EscPragmaParser extends Parse implements PragmaParser {
           }
           ExprStmtPragma pragma = ExprStmtPragma.make(TagConstants
               .unRedundant(tag), assertion, label, loc);
-          if (TagConstants.isRedundant(tag)) pragma.setRedundant(true);
+          if (TagConstants.isRedundant(tag))
+            pragma.setRedundant(true);
           dst.auxVal = pragma;
           semicolonExpected = true;
           break;
@@ -1082,7 +1093,8 @@ public class EscPragmaParser extends Parse implements PragmaParser {
         case TagConstants.LOOP_INVARIANT_REDUNDANTLY: // SUPPORT COMPLETE (kiniry)
         case TagConstants.MAINTAINING: // SUPPORT COMPLETE (kiniry)
         case TagConstants.MAINTAINING_REDUNDANTLY: // SUPPORT COMPLETE (kiniry)
-        case TagConstants.LOOP_INVARIANT: {
+        case TagConstants.LOOP_INVARIANT:
+        {
           checkNoModifiers(tag, loc);
           dst.ttype = TagConstants.STMTPRAGMA;
           ExprStmtPragma pragma = ExprStmtPragma.make(TagConstants
@@ -1104,7 +1116,8 @@ public class EscPragmaParser extends Parse implements PragmaParser {
                   + dst.ztoString());
           return true;
 
-        case TagConstants.SET: {
+        case TagConstants.SET:
+        {
           checkNoModifiers(tag, loc);
           dst.ttype = TagConstants.STMTPRAGMA;
           Expr target = parsePrimaryExpression(scanner);
@@ -1151,11 +1164,12 @@ public class EscPragmaParser extends Parse implements PragmaParser {
           e.setRedundant(TagConstants.isRedundant(tag));
           dst.auxVal = e;
           semicolonExpected = true;
-        }
           break;
+        }
 
         case TagConstants.CONSTRAINT_REDUNDANTLY: // SC AAST 4
-        case TagConstants.CONSTRAINT: { // SC AAST 4
+        case TagConstants.CONSTRAINT: // SC AAST 4
+        {
           // FIXME - need to utilize modifiers
           dst.ttype = TagConstants.TYPEDECLELEMPRAGMA;
           ExprDeclPragma pragma = ExprDeclPragma.make(TagConstants
@@ -1176,7 +1190,8 @@ public class EscPragmaParser extends Parse implements PragmaParser {
         // fall-through
         case TagConstants.INVARIANT:
         case TagConstants.INITIALLY: // SC AAST 4 parsed (cok)
-        case TagConstants.INVARIANT_REDUNDANTLY: { // SUPPORT COMPLETE (kiniry)
+        case TagConstants.INVARIANT_REDUNDANTLY: // SUPPORT COMPLETE (kiniry)
+        {
           // Need to utilize modifiers -- FIXME
           dst.ttype = TagConstants.TYPEDECLELEMPRAGMA;
           ExprDeclPragma pragma = ExprDeclPragma.make(TagConstants
@@ -1195,9 +1210,8 @@ public class EscPragmaParser extends Parse implements PragmaParser {
           scanner.lexicalPragmas.addElement(ImportPragma.make(
               parseImportDeclaration(scanner), loc));
           // parseImportDeclaration parses the semicolon
-
           return getNextPragmaHelper(dst);
-        // no fall-through
+          // no fall-through
 
         case TagConstants.GHOST:
           // modifiers are used later when we get to the declaration
@@ -1233,7 +1247,8 @@ public class EscPragmaParser extends Parse implements PragmaParser {
           dst.auxVal = SimpleModifierPragma.make(tag, loc);
           break;
 
-        case TagConstants.SKOLEM_CONSTANT: {
+        case TagConstants.SKOLEM_CONSTANT:
+        {
           checkNoModifiers(tag, loc);
           dst.ttype = TagConstants.STMTPRAGMA;
 
@@ -1297,9 +1312,11 @@ public class EscPragmaParser extends Parse implements PragmaParser {
           //if (!getPragma(dst)) return getNextPragmaHelper(dst);
           dst.ttype = TagConstants.NULL;
           semicolonExpected = true;
-        }
           break;
-        case TagConstants.OLD: {
+        }
+
+        case TagConstants.OLD:
+        {
           Type type = parseType(scanner);
           if (scanner.ttype == TagConstants.ASSIGN) {
             ErrorSet.error(scanner.startingLoc, "Missing type or id");
@@ -1372,6 +1389,9 @@ public class EscPragmaParser extends Parse implements PragmaParser {
         case TagConstants.NON_NULL: // incomplete
         case TagConstants.UNINITIALIZED: // incomplete
         case TagConstants.WRITABLE_DEFERRED: // incomplete
+        case TagConstants.PEER: // parsed but not typechecked - Universe type annotation (cjbooms)
+        case TagConstants.READONLY: // parsed but not typechecked - Universe type annotation (cjbooms)
+        case TagConstants.REP: // parsed but not typechecked - Universe type annotation (cjbooms)
           // let modifiers accumulate
           dst.ttype = TagConstants.MODIFIERPRAGMA;
           dst.auxVal = SimpleModifierPragma.make(tag, loc);
@@ -1384,10 +1404,11 @@ public class EscPragmaParser extends Parse implements PragmaParser {
             tag = TagConstants.ENSURES;
           else if (tag == TagConstants.ALSO_REQUIRES)
               tag = TagConstants.REQUIRES;
-          ErrorSet
-              .error(
-                  loc,
-                  "Original ESC/Java keywords beginning with also_ are obsolete; they have been replaced with the corresponding JML keywords and the use of 'also' - note that the semantics has also changed.");
+          ErrorSet.error(loc,
+                         "Original ESC/Java keywords beginning with also_ are " +
+                         "obsolete; they have been replaced with the corresponding " + 
+                         "JML keywords and the use of 'also' - note that the " + 
+                         "semantics has also changed.");
         // fall through
         case TagConstants.ENSURES:
         case TagConstants.DIVERGES: // parsed (cok)
@@ -1402,7 +1423,8 @@ public class EscPragmaParser extends Parse implements PragmaParser {
         case TagConstants.WHEN_REDUNDANTLY: // ditto
         case TagConstants.READABLE_IF:
         case TagConstants.REQUIRES:
-        case TagConstants.WRITABLE_IF: {
+        case TagConstants.WRITABLE_IF:
+        {
           checkNoModifiers(tag, loc);
           dst.ttype = TagConstants.MODIFIERPRAGMA;
           ExprModifierPragma pragma;
@@ -1454,15 +1476,17 @@ public class EscPragmaParser extends Parse implements PragmaParser {
 
         case TagConstants.ALSO_EXSURES:
           tag = TagConstants.EXSURES;
-          ErrorSet
-              .error(
-                  loc,
-                  "Original ESC/Java keywords beginning with also_ are obsolete; they have been replaced with the corresponding JML keywords and the use of 'also' - note that the semantics has also changed.");
+          ErrorSet.error(loc,
+                         "Original ESC/Java keywords beginning with also_ are " +
+                         "obsolete; they have been replaced with the " +
+                         "corresponding JML keywords and the use of 'also' - " +
+                         "note that the semantics has also changed.");
         // fall through
         case TagConstants.EXSURES:
         case TagConstants.EXSURES_REDUNDANTLY: // SUPPORT COMPLETE (kiniry)
         case TagConstants.SIGNALS: // SUPPORT COMPLETE (kiniry)
-        case TagConstants.SIGNALS_REDUNDANTLY: {
+        case TagConstants.SIGNALS_REDUNDANTLY:
+        {
           checkNoModifiers(tag, loc);
           dst.ttype = TagConstants.MODIFIERPRAGMA;
           expect(scanner, TagConstants.LPAREN);
@@ -1487,7 +1511,8 @@ public class EscPragmaParser extends Parse implements PragmaParser {
           break;
         }
 
-        case TagConstants.SIGNALS_ONLY: {
+        case TagConstants.SIGNALS_ONLY:
+        {
           checkNoModifiers(tag, loc);
           int ploc = loc;
           dst.ttype = TagConstants.MODIFIERPRAGMA;
@@ -1524,7 +1549,8 @@ public class EscPragmaParser extends Parse implements PragmaParser {
           break;
         }
 
-        case TagConstants.REFINE: {
+        case TagConstants.REFINE:
+        {
           checkNoModifiers(tag, loc);
           int sloc = scanner.startingLoc;
           Expr e = parsePrimaryExpression(scanner);
@@ -1542,7 +1568,8 @@ public class EscPragmaParser extends Parse implements PragmaParser {
 
         // The following clauses must be followed by a semi-colon.
         case TagConstants.IN:
-        case TagConstants.IN_REDUNDANTLY: {
+        case TagConstants.IN_REDUNDANTLY:
+        {
           boolean first = true;
           do {
             boolean more = parseInPragmas(tag, loc, dst, first);
@@ -1558,8 +1585,10 @@ public class EscPragmaParser extends Parse implements PragmaParser {
           semicolonExpected = true;
           break;
         }
+
         case TagConstants.MAPS:
-        case TagConstants.MAPS_REDUNDANTLY: {
+        case TagConstants.MAPS_REDUNDANTLY:
+        {
           // Already parsed something - should be an identifier
           //System.out.println("MAPPING " + scanner.identifierVal.toString());
           Identifier id = scanner.identifierVal;
@@ -1637,7 +1666,8 @@ public class EscPragmaParser extends Parse implements PragmaParser {
           noteUnsupportedCheckableJmlPragma(loc, tag);
           return getNextPragmaHelper(dst);
 
-        case TagConstants.MODEL_PROGRAM: {
+        case TagConstants.MODEL_PROGRAM:
+        {
           // unclear syntax and semantics (cok/kiniry)
           // SKIP the compound statement
           //checkNoModifiers(tag,loc);
@@ -1752,8 +1782,9 @@ public class EscPragmaParser extends Parse implements PragmaParser {
     }
   }
 
-  /** Issues an error if any Java modifiers have accumulated, and resets the
-   accumulated modifiers to NONE.
+  /**
+   * Issues an error if any Java modifiers have accumulated, and resets the
+   * accumulated modifiers to NONE.
    */
   //@ private normal_behavior
   //@   requires modifiers == 0;
@@ -1767,7 +1798,7 @@ public class EscPragmaParser extends Parse implements PragmaParser {
   private void checkNoModifiers(int tag, int loc) {
     if (modifiers != 0) {
       ErrorSet.caution(loc, "Access modifiers are not allowed prior to "
-          + TagConstants.toString(tag));
+                       + TagConstants.toString(tag));
       modifiers = Modifiers.NONE;
     }
   }
@@ -1962,7 +1993,8 @@ public class EscPragmaParser extends Parse implements PragmaParser {
         l.getNextToken();
         break;
 
-      case TagConstants.IDENT: {
+      case TagConstants.IDENT:
+      {
         // First comes a Name...
         int loc = l.startingLoc;
         Name n = parseName(l);
@@ -1981,7 +2013,8 @@ public class EscPragmaParser extends Parse implements PragmaParser {
             // fail(loc, "Annotations may not contain method calls");
           } else {
             switch (tag) {
-              case TagConstants.IS_INITIALIZED: {
+              case TagConstants.IS_INITIALIZED:
+              {
                 l.getNextToken();
                 Type subexpr = parseType(l);
                 primary = TypeExpr.make(loc, l.startingLoc, subexpr);
@@ -1992,7 +2025,8 @@ public class EscPragmaParser extends Parse implements PragmaParser {
                 break;
               }
 
-              case TagConstants.TYPE: {
+              case TagConstants.TYPE:
+              {
                 l.getNextToken();
                 Type subexpr = parseType(l);
                 primary = TypeExpr.make(loc, l.startingLoc, subexpr);
@@ -2000,7 +2034,8 @@ public class EscPragmaParser extends Parse implements PragmaParser {
                 break;
               }
 
-              case TagConstants.DTTFSA: {
+              case TagConstants.DTTFSA:
+              {
                 l.getNextToken();
                 Type t = parseType(l);
                 TypeExpr te = TypeExpr.make(loc, l.startingLoc, t);
@@ -2011,7 +2046,8 @@ public class EscPragmaParser extends Parse implements PragmaParser {
                 break;
               }
 
-              case TagConstants.NOT_MODIFIED: {
+              case TagConstants.NOT_MODIFIED:
+              {
                 int sloc = l.startingLoc;
                 l.getNextToken(); // parse (
                 primary = NotModifiedExpr.make(sloc, parseExpression(l));
@@ -2072,7 +2108,8 @@ public class EscPragmaParser extends Parse implements PragmaParser {
               case TagConstants.ELEMTYPE:
               case TagConstants.MAX:
               case TagConstants.PRE: // \\old
-              case TagConstants.TYPEOF: {
+              case TagConstants.TYPEOF:
+              {
                 l.getNextToken();
                 ExprVec args = parseExpressionList(l, TagConstants.RPAREN);
                 primary = NaryExpr.make(loc, l.startingLoc, tag, null, args);
@@ -2082,7 +2119,8 @@ public class EscPragmaParser extends Parse implements PragmaParser {
 
               case TagConstants.WACK_DURATION:
               case TagConstants.WACK_WORKING_SPACE:
-              case TagConstants.SPACE: {
+              case TagConstants.SPACE:
+              {
                 l.getNextToken();
                 ExprVec args = parseExpressionList(l, TagConstants.RPAREN);
                 primary = NaryExpr.make(loc, l.startingLoc, tag, null, args);
@@ -2132,7 +2170,8 @@ public class EscPragmaParser extends Parse implements PragmaParser {
         break;
       }
 
-      case TagConstants.LPAREN: {
+      case TagConstants.LPAREN:
+      {
         // LPAREN Expression RPAREN
         int locOpenParen = l.startingLoc;
         l.getNextToken();
@@ -2180,7 +2219,8 @@ public class EscPragmaParser extends Parse implements PragmaParser {
         break;
       }
 
-      case TagConstants.NEW: {
+      case TagConstants.NEW:
+      {
         int locNew = l.startingLoc;
         l.getNextToken();
 
@@ -2965,7 +3005,6 @@ public class EscPragmaParser extends Parse implements PragmaParser {
                       + TagConstants.toString(dst.ttype));
                 }
               } while (getPragma(dst));
-
           break;
         }
       }
@@ -3449,7 +3488,8 @@ public class EscPragmaParser extends Parse implements PragmaParser {
       if (scanner.ttype != TagConstants.COMMA) break;
       scanner.getNextToken(); // skip comma
     }
-    if (scanner.ttype == TagConstants.SEMICOLON) scanner.getNextToken(); // skip semicolon
+    // skip semicolon
+    if (scanner.ttype == TagConstants.SEMICOLON) scanner.getNextToken();
     return res;
   }
 
