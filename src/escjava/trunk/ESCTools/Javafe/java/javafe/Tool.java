@@ -106,11 +106,17 @@ public abstract class Tool {
         if (options.testMode) return "TIME";
         long delta = java.lang.System.currentTimeMillis() - startTime;
      
-        return (delta/1000.0) + " s";
+        return (delta/1000.0) + " s" + " " + spaceUsed();
     }
  
     public static long currentTime() {
         return java.lang.System.currentTimeMillis();
     }
  
+    public static String spaceUsed() {
+	long used = rt.totalMemory() - rt.freeMemory();
+	return used + " bytes";
+    }
+
+    private static Runtime rt = Runtime.getRuntime();
 }
