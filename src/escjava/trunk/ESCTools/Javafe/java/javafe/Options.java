@@ -41,7 +41,7 @@ public class Options
    * Option to generate lots of output indicating what is happening
    * during execution.
    */
-  // public boolean v = false;
+  public boolean v = false;
 
   /**
    * When true, no variable output (e.g., execution time) is
