@@ -37,9 +37,9 @@ buildall: compileall
 
 .PHONY: test
 ifdef ALLTESTS
-test: runtest
-else
 test: runtest typecheckTests
+else
+test: runtest
 endif
 
 ###########################################################################
