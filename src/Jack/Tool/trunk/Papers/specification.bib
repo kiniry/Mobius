@@ -94,7 +94,7 @@ year         = 2001}
   year =         2001
 }
 
-@inproceedings{BHJP99,
+@inproceedings{BergHJP99,
 author       = "Berg, J. van den and M. Huisman and B. Jacobs
 		and E. Poll",
 title        = "A Type-Theoretic Memory Model for Verification of
@@ -108,7 +108,7 @@ publisher    = springer,
 year         = 2000
 }
 
-@techreport{ BBJP01,
+@techreport{ BergBJP01,
  title = "On the Role of Invariants in Reasoning about Object Oriented Languages",
  year = "2001",
  author = "Joachim {van den} Berg and Cees-Bart Breunesse and Bart Jacobs and Erik Poll",
@@ -136,16 +136,16 @@ year         = 2000
     issue = "4",
 }
 
-@inproceedings{ Borger99programmer,
-  author = "E. Borger and W. Schulte",
-  title = "A programmer friendly modular definition of the semantics of \textsc{Java}",
-  booktitle = "Formal Syntax and Semantics of \textsc{Java}",
-  editor = "In J. Alves-Foss",
-  publisher    = "Springer, Berlin",
-  volume       = "1523",
-  pages       = " 353--404",
-  year         = "1999",
-}
+@INPROCEEDINGS{BoergerS99a,
+AUTHOR       = "E. B{\"o}rger and W. Schulte", 
+TITLE        = " Programmer Friendly Modular Definition of the Semantics of {Java}",
+BOOKTITLE    = "Formal Syntax and Semantics of Java", 
+EDITOR       = "J. Alves-Foss", 
+PAGES        = "353-404", 
+PUBLISHER    = springer,
+SERIES       = LNCS, 
+NUMBER       = "1523", 
+YEAR         = "1999"}
 
 @article{BorgidaMR95,
 author = "A. Borgida and J. Mylopoulos and R. Reiter",
@@ -181,7 +181,8 @@ year = 2002,
 booktitle = amast02,
 publisher = springer,
 series = lncs,
-note = "To appear"
+number = 2422,
+editor = "H. Kirchner and C. Ringeissen"
 }
 
 @misc{CatanoH01URL,
@@ -211,10 +212,10 @@ pages = "272--289"
 }
 
 @misc{CatanoH02b,
-title = {{A static checker for JML's \emph{assignable} clause}},
+title = "Chase: a Static Checker for JML's Assignable Clause",
 author = "N. Cata{\~n}o and M. Huisman",
-note = "Manuscript",
-year = 2002
+year = 2002,
+note = "Manuscript"
 }
 
 @MastersThesis{CatanoMasterThesis01,
@@ -234,17 +235,17 @@ year = 2002
 }
 
 
-@InProceedings{ClarkeE81,
-  author =       "E. M. Clarke and E. A. Emerson",
-  title =        "Design and synthesis of synchronization skeletons using branching time temporal logic.",
-  booktitle =    "Proc. Logics of Programs",
-  address =      "Yorktown Heights, New York",
-  publisher =    "Lecture Notes in Computer Science",
-  organization = "LNCS",
-  month =        "may ",
-  year =         "1981",
-  pages =        "52--71",
-}
+@INPROCEEDINGS{ClarkeE81,
+AUTHOR       = "E.M. Clarke and E.A. Emerson", 
+TITLE        = "Design and synthesis of synchronization skeletons
+		using Branching Time Temporal Logic", 
+BOOKTITLE    = "Logics of Programs", 
+SERIES       = lncs, 
+NUMBER       = "131", 
+EDITOR       = "D. Kozen", 
+PUBLISHER    = springer, 
+PAGES        = "52--71", 
+YEAR         = 1981}
 
 @article{ClarkeGL94,
     author = "Edmund M. Clarke and O. Grumberg and David E. Long",
@@ -286,6 +287,7 @@ year = 2002
   year = 	 {2000},
   month = 	 {June},
 }
+
 
 @article{DennisRO97,
   author =       {D. Dennis and G. Rob and G. Orna},
@@ -341,6 +343,16 @@ year = 2002
   pages =        "169--180",
 }
 
+@inproceedings{ EmersonH86,
+  author = "E. Emerson J.Y. Halpern",
+  title = {"Sometimes" and "Not Never"},
+  booktitle = {On branching verus linear time temporal logic},
+  series = "Journal of the ACM",
+  volume ="33(1)",
+  pages = "151-178",
+  year  = "1986",
+}
+
 @misc{ESCJavaUrl,
 title        = {{Extended static checking for Java}},
 key       = {ESC},
@@ -374,12 +386,15 @@ pages = {500--517}
     year = "1967",
 }
 
-@techreport{ gordon93mechanized,
-  author = "Mike Gordon",
-  title = "A mechanized {H}oare logic of state transitions",
-  institution = "University of Cambridge Computer Laboratory",
-  year = "1993",
+@inproceedings{Gordon94,
+author = {M.J.C. Gordon},
+title = {A mechanized {Hoare} logic of state transitions},
+booktitle = {A classical mind: essays in honour of {C.A.R. Hoare}},
+editor = {A.W. Roscoe},
+year = 1994,
+publisher = {Prentice Hall},
 }
+
 
 @BOOK{GoslingJSB00, 
 AUTHOR       = "J. Gosling and B. Joy and G. Steele and G. Bracha", 
@@ -389,16 +404,6 @@ SERIES       = "The Java Series",
 YEAR         = 2000}
 
 
-@INPROCEEDINGS{JacobsP01,
-AUTHOR = "B. Jacobs and E. Poll",
-title = {A Logic for the {Java Modeling Language JML}},
-series = lncs,
-publisher = springer,
-editor = "H. Hussmann",
-PAGES        = "284--299",
-number = "2029",
-booktitle = "Fundamental Approaches to Software Engineering",
-}
 
 @book{ HansmannNS00,
     author = "U. Hansmann and M. S. Nicklous and T. Sch{\"a}ck and F. Seliger",
@@ -504,17 +509,24 @@ pages        = "332--352",
 year         = 2001
 }
 
-@inproceedings{HuismanJ00,
-  author = 	 {M. Huisman and B. Jacobs},
-  title = 	 {{Java Program Verification via a Hoare Logic with Abrupt Termination}},
-  booktitle = 	 {Fundamental Approaches to Software Engineering},
-  pages = 	 {284--303},
-  year = 	 {2000},
-  number = 	 {1783},
-  series = 	 LNCS,
-  publisher = springer,
-}
+@INPROCEEDINGS{HuismanJ00a, 
+AUTHOR       = "M. Huisman and B. Jacobs", 
+TITLE        = "{Java} Program Verification via a {Hoare} Logic with 
+                Abrupt Termination", 
+BOOKTITLE    = "Fundamental Approaches to Software Engineering (FASE 2000)",
+PUBLISHER    = springer, 
+editor = "T. Maibaum",
+pages = "284--303",
+SERIES       = LNCS, 
+NUMBER       = "1783",            
+YEAR         = 2000}
 
+
+@misc{InsurePP,
+title   = {{ParaSoft Insure$++$}},
+key     = {INSURE},
+note    = {\texttt{{http://www.parasoft.com/insure}}}
+}
 
 @article{JacobsMP01,
   author = 	 {B. Jacobs and H. Meijer and E. Poll},
@@ -524,17 +536,18 @@ year         = 2001
   year = 	 {2001},
 }
 
-@inproceedings{JacobsP01,
-author = "B. Jacobs and E. Poll",
+@INPROCEEDINGS{JacobsP01,
+AUTHOR = "B. Jacobs and E. Poll",
 title = {A Logic for the {Java Modeling Language JML}},
 series = lncs,
+pages = "284--299",
 publisher = springer,
 editor = "H. Hussmann",
-pages  = "284--299",
 number = "2029",
 booktitle = fase01,
 year = 2001
 }		  
+
 
 @misc{JassUrl,
 title        = {{The JASS project}},
@@ -565,11 +578,6 @@ note= {\texttt{http://java.sun.com/products/javacard/}}
     year = "2001", 
 }
 
-@misc{InsurePP,
-title   = {{ParaSoft Insure$++$}},
-key     = {INSURE},
-note    = {\texttt{{http://www.parasoft.com/insure}}}
-}
 
 @book{JoyJiniSpecification99,
   author = 	 {B. Joy},
@@ -580,7 +588,17 @@ note    = {\texttt{{http://www.parasoft.com/insure}}}
   address = 	 "\texttt{http://java.sun.com/docs/books/jini/spec/}",
 }
 
-@inproceedings{ Krammer98,
+@InProceedings{KimKLS01,
+  author =       {M. Kim and S. Kannan and I. Lee and O. Sokolsky},
+  title =        {Java-MaC: a Run-time Assurance Tool for Java Programs},
+  booktitle =    {First Workshop on Run-time Verification},
+  series =       {Electronic Notes in Theoretical Computer Science},
+  year =         2001,
+  publisher =    {Elsevier},
+  month =        {July},
+}
+
+@inproceedings{ Kramer98,
     author = "Reto Kramer",
     title = "{iContract}$:$ The {J}ava {D}esigns by {C}ontract Tool",
     booktitle = "Proc. Technology of Object Oriented Languages and Systems, {TOOLS} 26, Santa Barbara/{CA}, {USA}",
@@ -589,29 +607,15 @@ note    = {\texttt{{http://www.parasoft.com/insure}}}
 }
 
 
+@INPROCEEDINGS{LeavensBR99b,
+Author = "G.T. Leavens and A.L. Baker and C. Ruby",
+Title  = "{JML}: A notation for detailed design",
+Booktitle = "Behavioral Specifications for Businesses and Systems",
+Editor = "H. Kilov and B. Rumpe and W. Harvey",
+PUBLISHER = kluwer,
+Pages = "175-188",
+YEAR = 1999}
 
-
-@incollection{ LeavensBR99b,
-    author = "Gary T. Leavens and Albert L. Baker and Clyde Ruby",
-    title = "\textsc{Jml}$:$ {A} Notation for Detailed Design",
-    booktitle = "Behavioral Specifications of Businesses and Systems",
-    publisher = "Kluwer Academic Publishers",
-    editor = "Haim Kilov and Bernhard Rumpe and Ian Simmonds",
-    pages = "175--188",
-    year = "1999",
-}
-
-@techreport{LeavensBR00,
-  Author =      "G.T. Leavens and A.L. Baker and C. Ruby",
-  Title =       "{Preliminary Design of JML:
-        a Behavioral Interface Specification Language for Java}",
-  Institution = "Iowa State University, Department of Computer Science",
-  Year =        2000,
-  number =      "98-06",
-  url = "ftp://ftp.cs.iastate.edu/pub/techreports/TR98-06/TR.ps.gz"
-}
-
-% double!!!
 @techreport{LeavensBR99,
   Author =      "G.T. Leavens and A.L. Baker and C. Ruby",
   Title =       "{Preliminary Design of JML:
@@ -635,6 +639,14 @@ Java}",
   Pages =       "105--106",
   URL =         "ftp://ftp.cs.iastate.edu/pub/techreports/TR00-15/TR.ps.gz",
 }
+
+@misc{ LeeKKSV99,
+  author = "I. Lee and S. Kannan and M. Kim and O. Sokolsky and M. Viswanathan",
+  title = "Runtime assurance based on formal specifications",
+  series = "In Proceedings of the International Conference on Parallel and Distributed Processing Techniques and Applications",
+  year = "1999",
+}
+
 
 @phdthesis{Leino95,
   author = "K. Rustan M. Leino",
@@ -718,12 +730,13 @@ pages = "463--502"
   pages  =       {165--178},
 }
 
-@book{Meyer97, 
-author       = "B. Meyer",
-title        = "{Object-Oriented Software Construction}",
-publisher    = "Prentice Hall",
-edition      = "2nd rev.",
-year         = 1997}
+@BOOK{Meyer97, 
+AUTHOR       = "B. Meyer",
+TITLE        = "Object-Oriented Software Construction",
+PUBLISHER    = "Prentice Hall",
+EDITION      = "$2^{\textrm{nd}}$ rev.",
+YEAR         = 1997}
+
 
 @inproceedings{MeyerP00,
 author = {J. Meyer and A. Poetzsch-Heffter},
@@ -823,18 +836,6 @@ series = LNCS,
 number = 828
 } 
 
-@InProceedings{Pnueli77,
-  author =       "Amir Pnueli",
-  title =        "The temporal logic of programs",
-  booktitle =    "Proceedings of the 18th IEEE Symposium on the Foundations of Computer Science (FOCS-77)",
-  address =      "Providence, Rhode Island",
-  publisher =    "IEEE Computer Society Press",
-  organization = "IEEE",
-  month =        oct # " 31--" # nov # " 2",
-  year =         "1977",
-  pages =        "46--57",
-  annote =       "[to read] Presents the idea of reactive systems and temporal logic in contrast to transformationel systems using Hoare Logic.",
-}
 
 @article{Pnueli81,
   author =       "A. Pnueli",
@@ -849,21 +850,12 @@ number = 828
 
 @inproceedings{PollBJ00,
     author = "Erik Poll and Joachim {van den} Berg and Bart Jacobs",
-    title = "Specification of the \textsc{JavaCard} \textsc{Api} in \textsc{Jml}",
-    booktitle = "Fourth Smart Card Research and Advanced Application Conference ({IFIP} Cardis)",
-    publisher = "Kluwer Academic Publishers",
-    year = "2000",
-}
-
-@inproceedings{PollBergJacobs99,
-        author    = {E. Poll and J. van den Berg and B. Jacobs},
         title     = {{Specification of the \mbox{JavaCard} API in JML}},
-        booktitle = {proceedings of 4th Smart Card Research and Advanced Application
-                Conference},
+    booktitle = "Fourth Smart Card Research and Advanced Application Conference ({IFIP} Cardis)",
+    publisher = kluwer,
         editor    = "J. Domingo-Ferrer and D. Chan and A. Watson",
         pages     = "135--154",
-        year      = "1999",
-        month     = "September" ,
+    year = "2000",
 }
 
 @inproceedings{PrensaNieto00,
@@ -923,40 +915,7 @@ number = 828
   note    = {\texttt{http://netlib.bell-labs.com/netlib/spin/whatispin.html}}
 }
 
-@inproceedings{ CorbettDHLPZ00,
-    author = "James C. Corbett and Matthew B. Dwyer and John Hatcliff and Shawn Laubach and Corina S. Pasareanu and Robby and Hongjun Zheng",
-    title = "Bandera: extracting finite-state models from Java source code",
-    booktitle = "International Conference on Software Engineering",
-    pages = "439-448",
-    year = "2000",
-}
 
-@inproceedings{ EmersonH86,
-  author = "E. Emerson J.Y. Halpern",
-  title = {"Sometimes" and "Not Never"},
-  booktitle = {On branching verus linear time temporal logic},
-  series = "Journal of the ACM",
-  volume ="33(1)",
-  pages = "151-178",
-  year  = "1986",
-}
-
-@misc{ LeeKKSV99,
-  author = "I. Lee and S. Kannan and M. Kim and O. Sokolsky and M. Viswanathan",
-  title = "Runtime assurance based on formal specifications",
-  series = "In Proceedings of the International Conference on Parallel and Distributed Processing Techniques and Applications",
-  year = "1999",
-}
-
-@InProceedings{KimKLS01,
-  author =       {M. Kim and S. Kannan and I. Lee and O. Sokolsky},
-  title =        {Java-MaC: a Run-time Assurance Tool for Java Programs},
-  booktitle =    {First Workshop on Run-time Verification},
-  series =       {Electronic Notes in Theoretical Computer Science},
-  year =         2001,
-  publisher =    {Elsevier},
-  month =        {July},
-}
 
 @article{ SavageBNSA97,
     author = "Stefan Savage and Michael Burrows and Greg Nelson and Patrick Sobalvarro and Thomas Anderson",
@@ -975,7 +934,10 @@ year = 2002,
 booktitle = amast02,
 publisher = springer,
 series = lncs,
-note = "To appear"
+pages = "334-348",
+number = 2422,
+editor = "H. Kirchner and C. Ringeissen"
 }
+
 
 
