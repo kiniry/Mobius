@@ -45,7 +45,7 @@ public class RefinementSequence extends CompilationUnit {
 
 
     //@ requires refinements != null;
-    //+@ requires refinements.size() > 0;
+    //@ requires refinements.size() > 0;
     public RefinementSequence(
 		ArrayList refinements, // list of CompilationUnit
 		CompilationUnit javacu,
@@ -104,11 +104,12 @@ public class RefinementSequence extends CompilationUnit {
 	// the CU that we are given:
 	//  - no Java CU and a single element of the refinement sequence
 	//  - a Java CU that is the same as the single element of the RS
-
+/*
 	if (refinements.size() == 1) {
 	    CompilationUnit cu = (CompilationUnit)refinements.get(0);
 	    if (javacu == null || javacu == cu) return cu;
 	}
+*/
 
 	// Otherwise we set up a clean version of the types into which we
 	// put everything as we accumulate declarations from the RS.
@@ -127,7 +128,9 @@ public class RefinementSequence extends CompilationUnit {
 
 	for (int k=refinements.size()-1; k>=0; --k) {
 	    CompilationUnit cu = (CompilationUnit)refinements.get(k);
-	    //Info.out("Combining " + cu.sourceFile().getHumanName());
+	    Info.out("Combining " + cu.sourceFile().getHumanName());
+
+	    //escjava.ast.EscPrettyPrint.inst.print(System.out,cu);
 
 	    // Check that the package name is always consistent
 	    String p = pkgName==null ? "" : pkgName.printName();
@@ -153,6 +156,40 @@ public class RefinementSequence extends CompilationUnit {
 		// FIXME - this may duplicate a lot of them
 	    imports.append(cu.imports);
 
+	    // Stick in any top-level model type declarations
+/*
+	    TypeDeclElemVec tdev = cu.otherPragmas;
+	    for (int kk=0; kk<tdev.size(); ++kk) {
+		TypeDeclElem tde = tdev.elementAt(kk);
+		if (tde instanceof ModelTypePragma) {
+		    types.addElement( ((ModelTypePragma)tde).decl );
+		} else {
+		    System.out.println("NOT A MODEL TYPE " + tde.getClass() + " " + tde);
+		}
+	    }
+*/
+
+	    TypeDeclElemVec tdev = cu.otherPragmas;
+	    for (int kk=0; kk<tdev.size(); ++kk) {
+		TypeDeclElem tde = tdev.elementAt(kk);
+		if (!(tde instanceof ModelTypePragma)) {
+		    System.out.println("NOT A MODEL TYPE " + tde.getClass() + " " + tde);
+		    continue;
+		}
+		TypeDecl td = ((ModelTypePragma)tde).decl;
+		boolean foundMatch = false;
+		for (int j=0; j<types.size(); ++j) {
+		    if (types.elementAt(j).id.equals(td.id)) {
+			foundMatch = true;
+			combineType(td,types.elementAt(j),true);
+			break;
+		    }
+		}
+		if (!foundMatch) {
+		    // model types need not have a Java declaration
+		    types.addElement(td);
+		}
+	    }
 	    // Combine all of the top-level type declarations
 	    TypeDeclVec typevec = cu.elems;
 	    for (int i=0; i<typevec.size(); ++i) {
@@ -175,7 +212,7 @@ public class RefinementSequence extends CompilationUnit {
 		}
 	    }
 	}
-	return CompilationUnit.make(pkgName,lexicalPragmaVec,imports,types,loc);
+	return CompilationUnit.make(pkgName,lexicalPragmaVec,imports,types,loc,null);
     }
  
     void combineFields(FieldDecl newfd, FieldDecl fd) {
@@ -185,7 +222,7 @@ public class RefinementSequence extends CompilationUnit {
 	if (newfd.pmodifiers != null) {
 	    if (fd.pmodifiers == null)
 		fd.pmodifiers = newfd.pmodifiers.copy();
-	    fd.pmodifiers.append(newfd.pmodifiers); 
+	    else fd.pmodifiers.append(newfd.pmodifiers); 
 	}
 	if (newfd.init != null && fd.init != newfd.init &&
 		Utils.findModifierPragma(newfd.pmodifiers,TagConstants.GHOST)
@@ -317,14 +354,23 @@ public class RefinementSequence extends CompilationUnit {
 	// (We don't check the case of no Java body but a spec body
 	//   for a Java routine.)
 	if (newrd.body != null) {
+	    boolean isModel = 
+		Utils.findModifierPragma(newrd.parent.pmodifiers,
+			TagConstants.MODEL) != null ||
+		Utils.findModifierPragma(newrd.pmodifiers,
+			TagConstants.MODEL) != null;
 	    // If the bodies are the same object then we are just adding
 	    // back the java method that was part of the starting CU.
 	    // If 'implicit' is true, then the method is added by the 
 	    // compiler, and is the same method (e.g. default constructor).
-	    if (newrd.body != rd.body && !newrd.implicit && !rd.implicit) {
+	    if (!isModel && newrd.body != rd.body && !newrd.implicit && !rd.implicit) {
 		ErrorSet.error(newrd.body.locOpenBrace,
 		    "Routine body may not be specified in a specification file");
 	    }
+	    if (isModel && newrd.body != rd.body && rd.body != null &&
+			!newrd.implicit && !rd.implicit)
+		ErrorSet.error(newrd.body.locOpenBrace,
+		    "Model routine body is specified more than once", rd.body.locOpenBrace);
 	}
 
 	// combine pragmas

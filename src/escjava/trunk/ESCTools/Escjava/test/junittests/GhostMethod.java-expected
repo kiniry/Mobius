@@ -8,10 +8,10 @@ GhostMethod.java:4: Error: A method may not be declared ghost
 GhostMethod ...
     [TIME]
 
-GhostMethod: n() ...
-    [TIME]  passed immediately
-
 GhostMethod: GhostMethod() ...
     [TIME]  passed
+
+GhostMethod: n() ...
+    [TIME]  passed immediately
   [TIME total]
 1 error

@@ -251,6 +251,7 @@ public class CompilationUnit extends ASTNode
   //# ImportDecl* imports
   //# TypeDecl* elems NoCheck
   //# int loc NotNullLoc
+  //# TypeDeclElem* otherPragmas NoCheck
 
   //# PostCheckCall
   private void postCheck() {

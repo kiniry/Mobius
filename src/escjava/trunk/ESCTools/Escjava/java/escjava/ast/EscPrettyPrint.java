@@ -10,6 +10,7 @@ import javafe.util.Location;
 import javafe.util.Assert;
 import escjava.parser.EscPragmaParser;
 import escjava.ast.TagConstants;
+import escjava.ParsedRoutineSpecs;
 
 public class EscPrettyPrint extends DelegatingPrettyPrint {
     public EscPrettyPrint() { }
@@ -63,6 +64,15 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
                 self.print(o, ind, e);
                 write(o, "; */");
                 break;
+            }
+
+	    case TagConstants.MODELTYPEPRAGMA: {
+		ModelTypePragma mtp = (ModelTypePragma)tp;
+		write(o, "/*@ model ");
+		self.print(o, ind, mtp.decl);
+		write(o, "@*/");
+
+	        break;
             }
 
             case TagConstants.MODELDECLPRAGMA: {
@@ -127,11 +137,14 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
                 write(o, " */");
                 break;
 
-	    case TagConstants.CLOSEPRAGMA:
 	    case TagConstants.OPENPRAGMA:
-			// FIXME - do these but they have to be part of a 
-			// bigger pragma; also indenting?
-                Assert.fail("Open and close pragmas are not yet handled.");
+		writeln(o, "{|");
+		++ind;
+		break;
+
+	    case TagConstants.CLOSEPRAGMA:
+		--ind;
+		writeln(o, "|}");
                 break;
 
 	    case TagConstants.MODEL_PROGRAM:
@@ -275,6 +288,31 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
                 write(o, TagConstants.toString(tag));
                 write(o, " */");
                 break;
+
+	    case TagConstants.PARSEDSPECS: {
+		ParsedRoutineSpecs s = ((ParsedSpecs)mp).specs;
+		writeln(o,"/*@");
+		if (s.initialAlso != null) self.print(o,ind,s.initialAlso);
+		java.util.Iterator i = s.specs.iterator();
+		while (i.hasNext()) {
+		    print(o,ind,(ModifierPragmaVec)i.next());
+		}
+		if (s.impliesThat.size() > 0) writeln(o, "implies_that");
+		i = s.impliesThat.iterator();
+		while (i.hasNext()) {
+		    print(o,ind,(ModifierPragmaVec)i.next());
+		}
+		if (s.examples.size() > 0) writeln(o, "for_example");
+		i = s.examples.iterator();
+		while (i.hasNext()) {
+		    print(o,ind,(ModifierPragmaVec)i.next());
+		}
+		for (int j=0; j<s.modifiers.size(); ++j) {
+		    print(o,ind,s.modifiers.elementAt(j));
+		}
+		writeln(o,"@*/");
+		break;
+	    }
 
             default:
                 write(o, "/* Unknown ModifierPragma (tag = " + TagConstants.toString(tag) + ") */");

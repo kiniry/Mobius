@@ -5,20 +5,6 @@ ESC/Java version VERSION
 EmbeddedAnnotation ...
     [TIME]
 
-EmbeddedAnnotation: mx() ...
-------------------------------------------------------------------------
-EmbeddedAnnotation.java:7: Warning: Method declared non_null may return null (NonNullResult)
- ... / final Object mx() { return null; }
-                                        ^
-Associated declaration is "EmbeddedAnnotation.java", line 7, col 29:
-        //@ model public /*@ non_null */ /*@  pure */ final Object mx( ...
-                             ^
-Execution trace information:
-    Executed return in "EmbeddedAnnotation.java", line 7, col 74.
-
-------------------------------------------------------------------------
-    [TIME]  failed
-
 EmbeddedAnnotation: EmbeddedAnnotation() ...
 ------------------------------------------------------------------------
 EmbeddedAnnotation.java:3: Warning: Field declared non_null possibly not initialized (NonNullInit)
@@ -29,6 +15,20 @@ Associated declaration is "EmbeddedAnnotation.java", line 6, col 29:
                              ^
 Execution trace information:
     Executed implicit return in "EmbeddedAnnotation.java", line 3, col 32.
+
+------------------------------------------------------------------------
+    [TIME]  failed
+
+EmbeddedAnnotation: mx() ...
+------------------------------------------------------------------------
+EmbeddedAnnotation.java:7: Warning: Method declared non_null may return null (NonNullResult)
+ ... / final Object mx() { return null; }
+                                        ^
+Associated declaration is "EmbeddedAnnotation.java", line 7, col 29:
+        //@ model public /*@ non_null */ /*@  pure */ final Object mx( ...
+                             ^
+Execution trace information:
+    Executed return in "EmbeddedAnnotation.java", line 7, col 74.
 
 ------------------------------------------------------------------------
     [TIME]  failed

@@ -606,6 +606,7 @@ public class ModelDeclPragma extends TypeDeclElemPragma
     if (decl.pmodifiers == null) {
 	decl.pmodifiers = modifierPragmas;
     } else if (modifierPragmas != null) {
+	// FIXME - should be prepen???
 	decl.pmodifiers.append(modifierPragmas); 
     }
   }
@@ -643,6 +644,7 @@ public class ModelConstructorDeclPragma extends TypeDeclElemPragma
     if (decl.pmodifiers == null) {
 	decl.pmodifiers = modifierPragmas;
     } else if (modifierPragmas != null) {
+	// FIXME - should be prepen???
 	decl.pmodifiers.append(modifierPragmas); 
     }
   }
@@ -664,6 +666,7 @@ public class ModelTypePragma extends TypeDeclElemPragma
   public void decorate(ModifierPragmaVec modifierPragmas) {
     if (decl.pmodifiers == null) {
 	decl.pmodifiers = modifierPragmas;
+	// FIXME - should be prepen???
     } else if (modifierPragmas != null) {
 	decl.pmodifiers.append(modifierPragmas); 
     }
@@ -687,6 +690,7 @@ public class ModelMethodDeclPragma extends TypeDeclElemPragma
     if (decl.pmodifiers == null) {
 	decl.pmodifiers = modifierPragmas;
     } else if (modifierPragmas != null) {
+	// FIXME - should be prepen???
 	decl.pmodifiers.append(modifierPragmas); 
     }
   }
@@ -708,6 +712,7 @@ public class GhostDeclPragma extends TypeDeclElemPragma
     if (decl.pmodifiers == null) {
 	decl.pmodifiers = modifierPragmas;
     } else if (modifierPragmas != null) {
+	// FIXME - should be prepen???
 	decl.pmodifiers.append(modifierPragmas); 
     }
   }

@@ -37,6 +37,8 @@ public class Object {
     //@ ensures \result != null;
     //@ ensures \typeof(\result) == \typeof(this);
     //@ ensures \result.owner == null;
+    //@ ensures (this instanceof Cloneable);
+    //@ signals (CloneNotSupportedException) !(this instanceof Cloneable);
     protected native Object clone() throws CloneNotSupportedException;
 
     //@ modifies \nothing;

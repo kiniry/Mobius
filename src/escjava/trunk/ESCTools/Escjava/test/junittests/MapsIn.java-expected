@@ -26,7 +26,4 @@ MapsIn.java:36: Error: Expected either a . or a [ in the maps field reference he
 MapsIn.java:36: Error: Expected \into in the maps clause here
         //@ maps i j 
                    ^
-MapsIn.java:35: Fatal error: Expected a Name, got '//'
-        //@ maps i;
-        ^
-10 errors
+9 errors

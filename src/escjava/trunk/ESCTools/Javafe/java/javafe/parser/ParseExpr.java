@@ -74,7 +74,7 @@ public abstract class ParseExpr extends ParseType
      "containerId" should be the name of the containing type decl.
      Lives in Parse.java; more doc can be found there.  */
     //@ requires l != null && l.m_in != null
-    abstract void parseTypeDeclElemIntoSeqTDE(Lex l, int keyword,
+    abstract TypeDeclElem parseTypeDeclElemIntoSeqTDE(Lex l, int keyword,
                                               /*@non_null*/ Identifier
                                               containerId,
                                               boolean specOnly);

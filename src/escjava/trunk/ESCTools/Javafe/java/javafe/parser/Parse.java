@@ -134,19 +134,35 @@ public class Parse extends ParseStmt
     ImportDeclVec imports = ImportDeclVec.popFromStackVector(seqImportDecl);
 
     /* Type Declarations */
+    seqTypeDeclElem.push();
     seqTypeDecl.push();
     while( l.ttype != TagConstants.EOF ) {
       if( l.ttype == TagConstants.SEMICOLON )
         l.getNextToken();
-      else
-	seqTypeDecl.addElement( parseTypeDeclaration(l, specOnly) );
+      else {
+	int locstart = l.startingLoc;
+	int modifiers = parseModifiers(l);
+	ModifierPragmaVec modifierPragmas = this.modifierPragmas;
+
+	  if (l.ttype == TagConstants.TYPEDECLELEMPRAGMA) {
+	    TypeDeclElemPragma pragma = (TypeDeclElemPragma)l.auxVal;
+	    pragma.decorate(modifierPragmas);
+		// FIXME - what about modifiers ?
+	    seqTypeDeclElem.addElement( pragma );
+	    l.getNextToken();
+	  } else {
+	    TypeDecl td = parseTypeDeclaration(l, specOnly,modifiers,modifierPragmas,locstart);
+	    if (td != null) seqTypeDecl.addElement( td );
+	  }
+      }
     }
     TypeDeclVec elems = TypeDeclVec.popFromStackVector( seqTypeDecl );
+    TypeDeclElemVec extras = TypeDeclElemVec.popFromStackVector( seqTypeDeclElem);
 
     LexicalPragmaVec lexicalPragmas = l.getLexicalPragmas();
 
     return CompilationUnit.make(pkgName, lexicalPragmas, 
-				imports, elems, loc );
+				imports, elems, loc, extras );
   }
 
   /** Parse an <TT>ImportDeclaration</TT>.
@@ -195,28 +211,17 @@ public class Parse extends ParseStmt
   //@ requires l != null && l.m_in != null
   //@ ensures \result != null
   protected TypeDecl parseTypeDeclaration(Lex l, boolean specOnly) {
-    TypeDeclElemVec extras = null;
-    if (l.ttype == TagConstants.TYPEDECLELEMPRAGMA) {
-      seqTypeDeclElem.push();
-      while (l.ttype == TagConstants.TYPEDECLELEMPRAGMA) {
-	TypeDeclElemPragma pragma = (TypeDeclElemPragma)l.auxVal;
-	seqTypeDeclElem.addElement( pragma );
-	l.getNextToken();
-      }
-      extras = TypeDeclElemVec.popFromStackVector(seqTypeDeclElem);
-    }
-    int loc = l.startingLoc;
+    int locstart = l.startingLoc;
     int modifiers = parseModifiers(l);
     ModifierPragmaVec modifierPragmas = this.modifierPragmas;
+    return parseTypeDeclaration(l,specOnly,modifiers,modifierPragmas,
+					locstart);
+  }
+  protected TypeDecl parseTypeDeclaration(Lex l, boolean specOnly,
+			int modifiers, ModifierPragmaVec modifierPragmas,
+			int loc) {
     TypeDecl result =
 	parseTypeDeclTail(l, specOnly, loc, modifiers, modifierPragmas);
-    if (extras != null) {
-	for (int i = 0; i < extras.size(); i++) {
-	  extras.elementAt(i).setParent(result);
-	}
-	extras.append(result.elems);
-	result.elems = extras;
-    }
     return result;
   }
 
@@ -230,12 +235,16 @@ public class Parse extends ParseStmt
         interface Identifier [TypeModifierPragma]* [extends TypeNameList] { TypeDeclElem* }
      </PRE> */
 
+  protected
   TypeDecl parseTypeDeclTail(Lex l, boolean specOnly, int loc, 
 			     int modifiers, ModifierPragmaVec modifierPragmas){
     int keyword = l.ttype;
    
-    if( keyword != TagConstants.CLASS && keyword != TagConstants.INTERFACE )
-      fail(l.startingLoc, "expected 'class' or 'interface'");
+    if( keyword != TagConstants.CLASS && keyword != TagConstants.INTERFACE ) {
+      if (keyword == TagConstants.EOF) return null;
+      fail(l.startingLoc, "expected 'class' or 'interface' instead of "
+		+ TagConstants.toString(keyword));
+    }
 
     l.getNextToken();              // swallow keyword
 
@@ -409,12 +418,14 @@ VariableDeclarator:
 
 */
 
-  void parseTypeDeclElemIntoSeqTDE(Lex l, int keyword, Identifier containerId,
+  protected TypeDeclElem
+  parseTypeDeclElemIntoSeqTDE(Lex l, int keyword, Identifier containerId,
 				   boolean specOnly)			
   {
     int loc = l.startingLoc;
     int modifiers = parseModifiers(l);
     ModifierPragmaVec modifierPragmas = this.modifierPragmas;
+    TypeDeclElem result = null;
 
     if( l.ttype == TagConstants.SEMICOLON 
        && modifiers == Modifiers.NONE
@@ -423,7 +434,7 @@ VariableDeclarator:
       // but accepted by javac and in many java progs
       // so allow them and do nothing
       l.getNextToken();
-      return;
+      return null;
     } 
     else if( l.ttype == TagConstants.CLASS 
 	  || l.ttype == TagConstants.INTERFACE) {
@@ -432,7 +443,7 @@ VariableDeclarator:
       nested.modifiers = modifiers;
       nested.pmodifiers = modifierPragmas;
       seqTypeDeclElem.addElement(nested);
-      return;
+      return nested;
     } 
     else if( l.ttype == TagConstants.LBRACE ) {
       /* Initialization block */
@@ -441,10 +452,11 @@ VariableDeclarator:
 	     "Cannot have initializer blocks in an interface");
       if (specOnly)
 	parseBlock(l, true);
-      else
-	seqTypeDeclElem.addElement( InitBlock.make( modifiers, modifierPragmas,
+      else {
+	seqTypeDeclElem.addElement( result = InitBlock.make( modifiers, modifierPragmas,
 						    parseBlock(l,false) ) );
-      return;
+      }
+      return result;
     } 
     else if( atStartOfConstructorOrMethod(l) ) {
       // Constructor declaration 
@@ -485,7 +497,7 @@ VariableDeclarator:
 				    : parseConstructorBody(l);
 
       }
-      seqTypeDeclElem.addElement( ConstructorDecl.make( modifiers,
+      seqTypeDeclElem.addElement( result = ConstructorDecl.make( modifiers,
 							modifierPragmas,
 							tmodifiers,
 							args, 
@@ -493,7 +505,7 @@ VariableDeclarator:
 							locOpenBrace,
 							loc, locId, 
 							locThrowsKeyword ) );
-      return;
+      return result;
     } 
     else if( l.ttype == TagConstants.TYPEDECLELEMPRAGMA ) {
       // TypeDeclElemPragma
@@ -552,7 +564,7 @@ VariableDeclarator:
                                         loc, locId, locThrowsKeyword,
 					id, type, locType);
         seqTypeDeclElem.addElement( md );
-        return;
+        return md;
 
       } else {
 
@@ -601,7 +613,7 @@ VariableDeclarator:
 		l.getNextToken();
 	    }
 
-            return;
+            return fielddecl;
           } else {
             expect( l, TagConstants.COMMA );
             /* And go around loop again */
@@ -609,6 +621,7 @@ VariableDeclarator:
         } /* loop thru field declarations */
       } /* is field declarations */
     } /* field or method declarations */
+    return null;
   } /* parseTypeDeclElemIntoSeqTDE */
 
   /**********************************************************************

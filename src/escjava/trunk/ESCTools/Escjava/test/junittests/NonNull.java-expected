@@ -18,6 +18,20 @@ NonNull: qq(non_null) ...
 NonNull: q(java.lang.Object) ...
     [TIME]  passed
 
+NonNull: r() ...
+------------------------------------------------------------------------
+NonNull.java:40: Warning: Possible assignment of null to variable declared non_null (NonNull)
+                q(o);
+                 ^
+Associated declaration is "NonNull.java", line 8, col 24:
+        /*@ pure */ void q(/*@ non_null */ Object o) {}
+                               ^
+------------------------------------------------------------------------
+    [TIME]  failed
+
+NonNull: NonNull() ...
+    [TIME]  passed
+
 NonNull: m(int) ...
     [TIME]  passed immediately
 
@@ -71,19 +85,5 @@ Associated declaration is "NonNull.java", line 8, col 24:
                                ^
 ------------------------------------------------------------------------
     [TIME]  failed
-
-NonNull: r() ...
-------------------------------------------------------------------------
-NonNull.java:40: Warning: Possible assignment of null to variable declared non_null (NonNull)
-                q(o);
-                 ^
-Associated declaration is "NonNull.java", line 8, col 24:
-        /*@ pure */ void q(/*@ non_null */ Object o) {}
-                               ^
-------------------------------------------------------------------------
-    [TIME]  failed
-
-NonNull: NonNull() ...
-    [TIME]  passed
   [TIME total]
 4 warnings

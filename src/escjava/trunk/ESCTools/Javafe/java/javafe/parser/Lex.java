@@ -362,6 +362,10 @@ public class Lex extends Token
 
     //// Public members for scanning
 
+    public void replaceLookaheadToken(int k, Token t) {
+	lookaheadq.setElementAt(k,t);
+    }
+
     /** Scans next token from input stream.  Returns the code of the
      next token in the token stream and fills in the <code>Token</code>
      fields of <CODE>this</CODE>.  Note that the
@@ -440,6 +444,11 @@ public class Lex extends Token
     //@ invariant savedState != null
     protected Token savedState = new Token();
 
+    public Token lookaheadToken(int k) {
+	if (k==0) return this;
+	lookahead(k);
+	return lookaheadq.elementAt(k-1);
+    }
 
     /** Returns the set of lexical pragmas collected.  It also clears
      the set of lexical pragmas so that the next call will not include

@@ -47,6 +47,10 @@ public class StandardPrettyPrint extends PrettyPrint {
             self.print(o, 0, cu.elems.elementAt(j));
             writeln(o);
         }
+	for (int j=0; j<cu.otherPragmas.size(); ++j) {
+	    TypeDeclElemPragma tde = (TypeDeclElemPragma)cu.otherPragmas.elementAt(j);
+	    self.print(o, 0, tde);
+        }
     }
 
     public void printnoln(OutputStream o, int ind, TypeDecl d) {

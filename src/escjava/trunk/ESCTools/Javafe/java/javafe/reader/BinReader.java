@@ -69,7 +69,7 @@ public class BinReader extends Reader
 				     null,
 				     emptyImportDeclVec,
 				     types,
-				     parser.classLocation);
+				     parser.classLocation,null);
 	    return result;
 	}
 	catch (IOException e)
