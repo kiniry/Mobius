@@ -1,6 +1,6 @@
 \documentclass[a4paper]{llncs}
 
-\title{The \modif~clause: semantics, verification and application}
+\title{Specification of the \emph{assignable} clause of \jml}
 
 \author{
   N\'estor Cata\~no and Marieke Huisman  \\
@@ -19,17 +19,18 @@
 \newcommand{\jcontract}{\textsc{JContract}}
 \newcommand{\loopp}{\textsc{Loop}}
 \newcommand{\java}{\textsc{Java}}
+\newcommand{\cPP}{\texttt{C/C}\nolinebreak\hspace{-.05em}\raisebox{.4ex}{\tiny\bf
++}\nolinebreak\hspace{-.10em}\raisebox{.4ex}{\tiny\bf +}}
 \newcommand{\gplus}{\textsc{GemPlus}}
 \newcommand{\eiff}{\textsc{Eiffel}}
 \newcommand{\ctl}{\textsc{Ctl}}
 \newcommand{\pltl}{\textsc{Pltl}}
 \newcommand{\csrc}{\textsc{Compaq Src}}
+\newcommand{\insPP}{\textsc{Insure\nolinebreak\hspace{-.05em}\raisebox{.4ex}{\tiny\bf
++}\nolinebreak\hspace{-.10em}\raisebox{.4ex}{\tiny\bf +}}}
 
-\newcommand{\modtool}{\texttt{mod$:$tool}}
+\newcommand{\modtool}{\texttt{assignable$:$tool}}
 
-
-\newcommand{\modif}{\textit{modifiable}}
-\newcommand{\modifies}{\textit{modifies}}
 \newcommand{\sem}[1]{\ensuremath{\mbox{[\![} {#1} \mbox{]\!]}\/}}
 
 \newtheorem {df}{Definition}
@@ -45,42 +46,29 @@
 \pagestyle{plain}
 
 \begin{abstract}
-not yet
-%We have worked in \jml, which is a specification language
-%tailored to Java. \jml~allows us to specify the functional behavior
-%of methods$:$ preconditions and postconditions, and apart from that,
-%class invariants. Unfortunately, using only the functional
-%specification of a
-%method is not enough to reason about arbitrary method
-%invocations. Therefore, the so-called \modif~clauses are
-%introduced. By asserting a
-%method with a \modif~clause, it is stated this method may only modify
-%the set of expressions represented by its \modif~clause. There are
-%several projects studying \modif~clauses such as \jml~and \escj~(a
-%subset of \jml). The \jml~specification language gives a definition
-%for the \modif~clause, but when the \jml~tool is run on an asserted
-%\java~program, it does not do any checking on its \modif~clause
-%specification. In the \loopp~project the
-%implementation of some \jml~assertions pragmas are defined, including
-%the \modif~ one. This implementation is based on a underlying memory
-%model
-%and the logic representation of \java~and the \jml~pragmas. This
-%implementation is not yet an easy and fast method for its verification
-%. This paper presents a first solution to achieve this in a context
-%without \textit{aliasing}. For this specification we have made
-%an implementation, which extends the functionality of the
-%\jml~parser. Our approach presents some advantages over the
-%\loopp~project approach, namely$:$ $(i)$~it is faster, and $(ii)$~the
-%verification carried out is closer to the specification
-%language. Additionally, an electronic banking case study has been used
-%to demonstrate the usability of our approach~\cite{CH02}.
+This paper presents a method for checking the specification of
+\emph{assignable} clauses in \java~programs with assertions \jml. We
+propose syntactical rules for each type of \java~instruction. These
+rules check for each \java~instruction occurring in a method
+declaration that locations assigned by the instruction belong to set
+of variable locations the method has specified as
+\emph{assignable}. Hence, our specification does not concern with
+modification but the assignment. We show the feasibility of our
+approach presenting several specifications gaps found in the case
+study \emph{Formal Specification and Static Checking of \gplus's
+Electronic Purse Using \textsc{Esc/Java}}~\cite{CatanoH02a}.
 \end{abstract}
+
+
+
+
+
 
 \section{Introduction}
 \label{sec-intro}
 
 \paragraph{\bf Background.}
-Some decades ago, the \emph{formal methods} were considered as a merely
+Several decades ago, the \emph{formal methods} were considered as a merely
 theoretical issue in computer science, not suitable for real
 problems$:$ \emph{complicated} notations taken from the logic and
 the lack of tools supporting formal methods could not compete with the
@@ -90,17 +78,20 @@ change. Firstly, the specification languages are now closer to
 programming languages than ever before and the techniques used are
 more suitable to the actual programming paradigms (object oriented
 and distributed programming). Secondly, industry has started to feel
-the need for certified software. An example$:$ during
-$1995$\cite{Borger99programmer},
+the need for certified software. An
+example~\cite{Borger99programmer}$:$ during $1995$,
 \textsc{Intel} found a problem with its microprocessors
 \textsc{Pentium}. This company was forced to replace around two
 million processors. Thus, it realized that the costs of formal
 verification would have been much lower than the costs required to
 fix this bug.
 
-There are two approaches for verification of software systems$:$
-\textit{model-checking} and\textit{theorem proving}.
-Model-checking is based on constructing a finite model of a
+Currently, with the interest of the industry and the academic world,
+the developments in formal methods have become
+increased. These developments are specially concerned with techniques
+such as
+\textit{model-checking} and \textit{theorem proving}.
+Model-checking is technique based on constructing a finite model of a
 problem and exhaustively checking the satisfaction of certain
 properties. Model-checking is
 a strong technique, as it is \emph{decidable}, but it presents some
@@ -117,13 +108,14 @@ proof, and $(iii)$~it requires expressing and understanding the
 semantics underlying the
 programming language in the logic of the theorem prover, in order to
 do program verification. 
- %Testing checks whether a program produces
+%Testing checks whether a program produces
 %correct output on certain input. This technique is important for
 %checking some properties before applying a formal technique. A
 %disadvantage of this approach is that one spends too much of time in the
 %process of constructing all possible testing cases. Moreover,
 %sometimes it is not possible to check all possible
 %inputs. 
+
 Recently, several approaches have been
 proposed to overcome these kind of problems and although they can not
 actually replace formal verification techniques, they constitute
@@ -133,111 +125,143 @@ checking} is a kind of extended checking where, in addition to checking
 the input-output behavior, it is checked whether certain specific
 conditions are
 satisfied at particular points in the program. For checking these
-conditions, the original program is converted into another
-one,
-which can be then executed. If this execution raises an exception,
+conditions, the original program is expressed into another
+one
+which can be then executed. If the execution throws an exception,
 this indicates that the original program does not fulfill the
 expected conditions.
 
-The \emph{static checking} techniques check the behavior of programs
+\emph{Static checking} techniques check the behavior of programs
 from its source code. This technique can be complemented with
-complemented with a automatic theorem prover which automatically can
-some specific problems. It is expected this checking is efficient in
-time.
+an automatic theorem prover which automatically can detect
+some specific problems. It is expected not to expend too much time in
+this process.
 
-When using static and run-time checking techniques is expected to
-state some specifications in which we are interested to check. These
-specifications allow to state the functional behavior of methods as
-pre- and postcondtions, besides class invariants. These specifications
-can be provided to the checking tools as part of the source and
-written and some specific language. 
+When using static and run-time checking techniques on software systems,
+it is possible to state
+some specifications which we are interested to check. These
+specifications can be provided to the checking tools as part of the
+source code and written by using a suitable
+specific-specification language. 
 
-Currently, several specific specification languages have been proposed
-for \java. \jml is a language developed at the Iowa University and
-doing run-time checking. For constructing predicates, in addition to
-the java boolean operators, 
-\jml~ counts on several logical operators. Additionally in \jml is
-possible to use methods invocation as part of the predicates as long
-as those do not have \emph{side effects}.
+Currently, several specification languages have been proposed
+for \java~and \cPP. \jml~\ (\java~Model
+Language)~\cite{LeavensBR00} is a tool developed at the Iowa State
+University
+doing run-time checking. Its specification language follows the
+\eiff's approach of \emph{Design by
+Contract}~\cite{Meyer97}, hence
+it is possible to state the functional behavior of methods as
+pre- and postconditions as well as class
+invariants. For
+constructing predicates, in addition to the \java~boolean operators, 
+\jml~relies on several logical operators such as the equivalence,
+\texttt{<==>}, and the implication \texttt{==>}, and several
+quantifiers as the existential,
+\texttt{$\backslash$exists}, and the universal, \texttt{$\backslash$forall}.
+Additionally, in \jml~ it is possible to use method
+invocations inside the predicates provide that
+those do not have \emph{side effects}.
 
-It relies on several specific constructs whifor
-expressing the \emph{normal behavior} of methods (when no exception is 
-thrown) an 
+\insPP~is a automatic run-time error detector for
+\cPP~\cite{InsurePP}. This checker keeps track of a \cPP~program and
+complains whether a block of memory is liberated too many times, a memory
+block is used without being initialized or there exist memory leaks.
 
-~such as
-\jml~\cite{LeavensBR00}, \jcontract~\cite{JContractUrl},
-\jass~\cite{JassUrl} and \escj~\cite{LeinoNS00} (a subset of
-\jml~\cite{EscJmlDiff})
+\jass\~ (\java~With Assertions)~\cite{bartetzko01assertions} is a Design
+by Contract extension for \java~which allows to annotate
+\java~programs. The \jass~tool~\cite{JassUrl} is developed at the
+University of Oldenburg by the group Semantics. \jass~supports the
+concept of \emph{trace assertions} which are used to monitor the
+dynamic behavior of objects in run-time. This language provides a
+construct called \texttt{changeonly} to specify the list of
+attributes than \emph{may} be modified for a method invocation. This
+list of attributes just consist of identifiers separated by ``.''.
 
-
-
-%For expressing these conditions, some specification languages are
-%commonly used and they are typically \emph{asserted} as comments in
-%the
-program source code. 
-
+\escj~\cite{ESCJavaUrl} is a specification language developed at
+\csrc, conceived as a subset of the \jml~specification
+language~\cite{EscJmlDiff}. The \escj~tool advocates for doing static
+checking of annotated \java~programs. Additionally it relies on an
+automatic theorem prover for checking some specific problems. These
+problems cover \texttt{ArrayIndexOutOfBoundExceptions},
+\texttt{NullPointerExceptions} and \emph{Deadlock} and \emph{Race}
+problems in multi-thread \java~programs. \escj~neither is sound nor
+complete, hence whether it issues a warning it does not necessary
+means that some problem occurs. \escj~ships with a specific construct,
+\texttt{modifies}, for specifying the \emph{assignable} behavior of a
+method, but unlike the \jass~tool the variable locations one can
+annotate as assignable can become intricate. Thus, it is possible,
+for instance, to state as assignable all elements of some array
+(\texttt{a[$*$]}) or the fields of some object
+expression $e$ (\texttt{fields\_of($e$)}). \escj~tool does not check
+the correct specification of the assignable behavior of a method,
+hence some verifications problems arise.
 %The annotation language for \eiff~is the first
 %example of such a specification language, following the \emph{design
 %by contract} approach~\cite{Meyer97}. 
 
 
-. Usually, these specifications serve to state
-the functional behavior of the methods (typically as preconditions and
-postconditions) and also class invariants. However, the
-functional behavior of the methods is often not enough to reason about
-arbitrary method invocations. It is thus necessary to specify the
-\emph{changeable} behavior of methods. By way of example, ...
 
-The \jass~tool comes with the construct \textit{changeonly}, which
-provides only a basic way to specify what expressions a method intends
-to change, typically as variables joined by ``.''. The
-\escj~specification
-language provides an assertion construct,
-\modifies, which specifies the set of expressions which a method
-\emph{may} modify, but its tool does not check these kind of
-specifications. Therefore, some verification problems occur.
+\paragraph{\bf The side-effects freeness problem.}
+The functional behavior as can be expressed by pre- and postconditions
+is not enough to reason about arbitrary method invocations. Suppose we 
+have the example presented below. 
+\begin{alltt}
+public class C\verb!{!
+  int[] arr;
+  /*@
+    ensures arr.length >= 4;
+   */
+  public void m()\verb!{!
+    arr = new int[5]; n();
+  \verb!}!
+  public void n()\verb!{}!
+\verb!}!
+\end{alltt}
+The functional behavior of \texttt{n} is not enough to \emph{ensure}
+the post-condition of \texttt{m}, \emph{i.e.}, to ensure that the
+length of \texttt{arr} still will be greater or equal than $4$ after
+the invocation of \texttt{n}. Hence, it arises the need of specifying
+the \emph{changeable} behavior of methods,\emph{i.e}, of specifying what
+is set of variables locations a certain method modifies.
 
 
 
 
-
-
-\paragraph{\bf This paper.}We propose a static checker for
-\modif~clauses in \java~programs with \jml~assertions\footnote{For
-reasons of compatibility between \jml~and \escj~, we will 
-use indistinctly the words \emph{modifiable} and \emph{modifies}},
-based on a syntactical analysis of the source program. This
-checker is neither sound nor complete (following the \escj~approach),
-but is useful
-for detecting some typical specification errors such as
-forgetting to mention some variable
-as \modif~when a method implementation actually may modify it, or
-declaring a method without side-effects when it modifies some
-expression. We can not always detect the most subtle errors because they 
-require a detailed analysis, but by using our approach the most
-simple errors can be detected quickly. We have defined certain
-syntactical rules for every \java~construct, stating which
-variables may be modified. Moreover, we have implemented
-this approach by extending the \jml~parser and embedding these
-conditions as \java~code. The viability of our approach is
-shown by presenting some gaps found in the process of expressing the
-\emph{changeable} behavior of a realistic case study~\cite{CatanoH02a} and
-checking these specifications with our tool.
+\paragraph{\bf This paper.}We propose a static checker for the correct
+specification of the
+\emph{assignable} (as a subset of \emph{modifiable}) behavior of
+\jml~annotated programs. For this purpose, we define a set
+of rules for each \java~construct which state the variable locations
+these instructions \emph{may} modify. This checker carries out an
+syntactical analysis of the source program and checks whether its
+methods declarations fulfill their assignable specifications. By using
+these rules one can detect errors such as
+declaring a method without \emph{side-effects} when it actually modifies 
+some variable location. Our rules are neither sound nor complete
+(following the \escj~approach), as we can not detect the most subtle
+errors since they require a detailed analysis, but using them the
+most simple errors can be detected quickly. We have developed the tool
+\modtool~which implements these rules, by using the Abstract syntax
+tree generated by the parser of \jml. The feasibility of our approach is
+shown by presenting some gaps found in the process of checking the
+specification of the
+assignable behavior of a realistic case study~\cite{CatanoH02a}.
 
 
 The rest of this paper is organized as follows$:$
 Section~\ref{sec-esc-prg} presents briefly the specification language
-\escj~together with its more important assertion
-constructs. Section~\ref{sec-sem-mod-cla} shows the problems which
-arise when the specifications of \modif~clauses are not
-checked. Section~\ref{sec-giv-sin-def}
-presents our approach for checking \modif~clauses and the definition
-of the respective syntactical rules. Section~\ref{sec-imp-iss}
-presents a modifiable checker (~\modtool) implementing these
-rules. Additionally, we discuss some problems found using our tool on a
-realistic case study~\cite{CatanoH02a}.
-Finally, Section~\ref{sec-con}
-gives conclusions and presents future work. 
+\escj~together with its most important assertion
+constructs. Section~\ref{sec-syn-met-che-ass-cla}
+presents our approach for checking assignable clauses and the
+definition of our rules. Section~\ref{sec-che-for-ass-cla}
+presents our assignable checker (\modtool) implementing these
+rules. Additionally, we discuss some problems we have found using our
+tool on a realistic case study \emph{Formal Specification and Static
+Checking of \gplus's Electronic Purse Using
+\textsc{Esc/Java}}~\cite{CatanoH02a}. Finally,
+Section~\ref{sec-con-and-fut-wor} gives conclusions and presents
+future work.
 
 
 
@@ -247,11 +271,14 @@ gives conclusions and presents future work.
 \section{Static checking of \java~programs with \escj}
 \label{sec-esc-prg}
 \escj~is a static checker for \java~programs developed
-at \csrc~\cite{ESCJavaUrl}, enabling a user to find common programming
-errors of \java~programs. It counts on a dedicated theorem prover for
-finding problems such as \emph{array index bounds},
-\emph{nil deference} and \emph{synchronization} in multi-thread
-programs. The basic idea is that
+at \csrc~\cite{ESCJavaUrl} which allows a user to find common
+programming errors. It relies on a dedicated theorem prover to
+find specific problems such as\texttt{NullPointerExceptions},
+\texttt{ArrayIndexOutOfBoundExceptions},
+ and \emph{Deadlock} and \emph{Race}
+problems in multi-thread \java~programs.
+
+The basic idea is that
 a user specifies the behavior of a class and its methods, by
 using the specification language of \escj. This
 behavior can be expressed as \textit{preconditions},
@@ -261,40 +288,41 @@ specification and it issues a warning
 message if it can not establish this. Such a
 warning does not necessarily mean that the program is
 wrong, since the \escj~approach is neither sound nor
-complete. 
+complete. \escj~is enriched with several
+specific-specification constructs. Among them on can find the
+\texttt{modifies} one. This construct allow one to model the
+assignable behavior of a method, although this kind of specification
+are not checked by the tool.
 
-\escj~is enriched with several
-specification-specific pragmas. Below, we present
-the main \escj~pragmas together with an example of their
+Below, we present
+the main \escj~constructs together with an example of their
 use. Their full description can be found in~\cite{LeinoNS00}. 
 
 
-
-
-\paragraph{\bf Pragmas for specifying methods} 
+\paragraph{\bf Constructs for specifying methods} 
 \begin{itemize}
 \item{\texttt{requires P}.} 
-This pragma specifies a precondition {\tt P}. 
+This construct specifies a precondition {\tt P}. 
 When \escj~checks the body of a
 method, it assumes that \texttt{P} holds initially and when checking
 a method call, \escj~will issue a warning if 
 it can not establish that \texttt{P} holds at the call point. 
  
 \item{\texttt{ensures Q}.} 
-This pragma specifies a postcondition \texttt{Q}. This postcondition
+This construct specifies a postcondition \texttt{Q}. This postcondition
 is checked against the body of method and assumed for any method
 invocation if the method terminates normally (without throwing an
 exception).
  
 \item{\texttt{exsures (E) R}.}
-This pragma specifies an exceptional condition. This condition is 
+This construct specifies an exceptional condition \texttt{R}. This
+condition is
 supposed to hold if the method finishes abruptly and if
 the exception \texttt{e} that is thrown is a subclass of \texttt{E}. 
  
 \item{\texttt{modifies L}.} 
-This pragma specifies that the method \emph{may} only modify any of 
-the state components listed in \texttt{L}, the formal parameters of 
-the method and the variables local to the method. 
+This construct specifies \texttt{L} as the set of variable locations that
+a method \emph{may} modify.
 \end{itemize}
  
  
@@ -304,8 +332,8 @@ the method and the variables local to the method.
 \item{\texttt{==>}} is the logical implication. So, \texttt{P 
 ==> Q} is true if and only if \texttt{P} is false or \texttt{Q} is 
 true, where \texttt{P} and \texttt{Q} are specification expressions of  
-\texttt{boolean} type. Furthermore, \texttt{<==>} represents the 
-equivalence relation and \texttt{<=!=>} specifies non-equivalence. 
+\texttt{boolean} type. Furthermore, \texttt{<==>} represents the logical
+equivalence and \texttt{<=!=>} specifies non-equivalence. 
  
 \item {($\backslash$\texttt{forall T V; E)} and 
 ($\backslash$\texttt{exists T V; E})} are quantifier expressions (of 
@@ -324,11 +352,25 @@ pre-state of the method.
 a non-void method. It can only be used within an
 \texttt{ensures} clause.
 \end{itemize}
-Figure~\ref{fig-add-cur} shows a typical annotation example using 
+Below we present a typical annotation example using 
 \escj. This example was taken from the formal specification of an
-\emph{electronic purse} presented in~\cite{CatanoH02a}\footnote{The overall
-specifications of this application can be taken
-from~\cite{CatanoH01URL}}. The \texttt{addCurrency} method belongs
+\emph{electronic purse} as presented in~\cite{CatanoH02a}\footnote{The whole
+specification can be taken
+from~\cite{CatanoH01URL}.}. 
+%%%%%%%
+\begin{alltt}
+/*@
+  modifies nbData, data[nbData];
+  ensures (\verb!\!old(nbData) < MAX_DATA) ?
+      (nbData == \verb!\!old(nbData) + 1 && data[\verb!\!old(nbData)] == cur) :
+      (nbData == \verb!\!old(nbData));
+*/
+void addCurrency(byte cur)\verb!{!
+   if(nbData < MAX_DATA)\verb!{!data[nbData] = cur; nbData++;\verb!}!
+\verb!}!
+\end{alltt}
+%%%%%%%%
+The \texttt{addCurrency} method belongs
 to a class \texttt{Currencies}. This class stores all currencies 
 supported by the purse application. The method 
 \texttt{addCurrency} adds a new currency to the list of valid 
@@ -347,200 +389,257 @@ will increase its value by one and the value of the formal parameter
 Inside the postcondition, the expression 
 \texttt{$\backslash$old(nbData)} refers to the value of 
 \texttt{nbData} before the method invocation. 
-\begin{figure}[tbh]
-\rule{\linewidth}{0.25mm}
-\begin{verbatim}
-/*@
-  modifies nbData, data[nbData];
-  ensures (\old(nbData) < MAX_DATA) ?
-      (nbData == \old(nbData) + 1 && data[\old(nbData)] == cur) :
-      (nbData == \old(nbData));
-*/
-void addCurrency(byte cur){
-   if(nbData < MAX_DATA){data[nbData] = cur; nbData++;}
-}
-\end{verbatim}
-\caption{Example of \escj~specification} 
-\label{fig-add-cur} 
-\rule{\linewidth}{0.25mm} 
-\end{figure} 
-
-
-\section{On the use of \modif~clauses}
-\label{sec-sem-mod-cla}
-The checking of \modif~clauses is especially important for rejecting
-incorrect specifications. Figure~\ref{fig-mod-spe} presents
-a typical example, where \escj~accepts an incorrect specification. The
-specification of the method
-\texttt{m()} states that after a method invocation the length of the
-instance variable \texttt{arr} will be greater or equal than $4$. This
-property holds after the assignment in the
-method body, but to establish this property holds after \texttt{m()},
-it is necessary to check that the method \texttt{n()} will not modify the
-instance variable \texttt{arr}. What \escj~does is to look at the
-modifiable specification of the method \texttt{n()}, and from that
-establish
-if this method modifies this instance variable. When a method is
-asserted without any \modif~clause, \escj~takes by default a
-\texttt{modifies $\backslash$nothing} specification, but it {\bf does
-not} check it. Therefore, in regards to this example, \escj~assumes
-the method \texttt{n()} does not modify any variable, \emph{i.e.}, it
-assumes \texttt{n()} is a method without side-effects. Consequently,
-when using this specification in the method \texttt{m()},
-\escj~establishes that after a call to \texttt{m()}, its
-postcondition will hold. Hence, it does not reject the specification of
-\texttt{m()}.
-\begin{figure}[tbh]
-\rule{\linewidth}{0.25mm}
-\begin{verbatim}
-public class C{
-  int[] arr;
-  /*@ modifies arr.length
-      ensures arr.length >= 4; */
-  public void m(){
-    arr = new int[5]; n();
-  }
-
-  public void n(){arr = new int [3];}
-}
-\end{verbatim}
-\caption{Modifiable specifications} 
-\label{fig-mod-spe} 
-\rule{\linewidth}{0.25mm} 
-\end{figure} 
-This problem is caused because \escj~does not check any \modif~clause,
-even though the specification of the \escj~language claims to do so. We
-have specified and implemented a static checker for \modif~clauses,
-which can detect these kind of inconsistencies in \java~asserted
-programs. 
-
-Below we present our method to check \modif~clauses. In
-Section~\ref{sec-imp-iss}, we discuss how we implemented this method
-in our \modtool~and we show
-some problems found in the formal specification of an
-\emph{electronic purse}, by using it.
 
 
 
 
 
 
-\section{A syntactical method to check \modif~clauses}
-\label{sec-giv-sin-def}
-We present a set of syntactical rules which check the correct
-specification of \modif~clauses in \java~asserted programs. These
-rules have been defined taking into account both of the \jml~grammar
-specification and the definition of \modif~clauses presented
-in~\cite{LeavensBR00}.
+\section{A syntactical method to check assignable clauses}
+\label{sec-syn-met-che-ass-cla}
+We present a set of syntactical rules which define the conditions that
+must be fulfilled for any instruction occurring in a
+\java~annotated program. We have profited the syntax of \java~for
+defining our rules. Thus, for instance, we rely on rules for
+expressions, statements, and so on. The basic idea is that for each
+sort of instruction occurring in a method
+declaration, these rules check that the variable locations they assign
+belongs to the set of variable locations that the
+method \emph{may} modify.
+
+Our specification just does not concern with the modification but the
+assignment, hence in a context with \emph{Aliasing} we miss the
+variable modified. Thereby, suppose we have a class \texttt{C} as
+presented below. 
+%%%%%%%%
+\begin{alltt}
+public class C\verb!{!
+  O y = new O(), x = new O();    
+  //@modifies x, y.i
+  public void p()\verb!{!
+     x = y ;
+     y.i = 7;
+  \verb!}!    
+\verb!}!
+public class O\verb!{!
+  public int i;
+\verb!}!
+\end{alltt}
+%%%%%%%%%%
+The specification of the method \texttt{p} states it may modify
+\texttt{x} and
+the field \texttt{i} of the object \texttt{y}. Although the expression 
+\texttt{y.i = 7;}, in addition to modify the field \texttt{i} of the
+object \texttt{y}, modifies the field \texttt{i} of the object
+\texttt{x} (since the aliasing between \texttt{x} and \texttt{y} as
+consequence of the \emph{assignment} \texttt{x = y}), our rules
+accept as valid this specification.
+
+On the other hand, in the process of specifying abstract classes, some
+times is useful to define fields
+which \emph{represents} or \emph{depends} of certain properties of those
+classes. Due to the nature of the abstract classes it becomes not
+convenient to define these fields in an implementation
+level. \jml~provides the construct \texttt{model} to overcome this
+difficulty. This construct allow one to define fields in a
+specification level, hence they do not have to be implemented. Besides 
+this construct, \jml~provide the constructs
+\texttt{depends} and \texttt{represents}. Our specification does not do any 
+analyses of this type as ``it is reasonable to wait until we clarify
+the precise semantics of dependencies''\footnote{Text taken from an
+email from Gary Leavens.}.
+
+The rest of this section is organized as it follows. Section
+\ref{sub-sec-ass-beh} present the syntax of specification of
+assignable clause and certain other definitions used in the
+specification of our rules. Sections \ref{sub-sec-rul-con-met},
+\ref{sub-sec-rul-con-pri-suf-and-pri-exp}, \ref{sub-sec-rul-con-ass},
+\ref{sub-sec-rul-con-ope}, \ref{sub-sec-rul-con-sta}, and
+\ref{sub-sec-tra-rul} present the rules for the different
+\java~constructs. Section \ref{sub-sec-the-rel-mem} the definition of
+membership operator used in the specification of our rules.
 
 
 
 
-\subsection{Modifiable behavior}
-Below we present the definition of the specification of the modifiable
-behavior of a method.
-\begin{df}[clause {\bf \it modifiable}]
+
+
+\subsection{Assignable Behavior}
+\label{sub-sec-ass-beh}
+\jml~as well as \escj~provides a construct for specifying the
+assignable behavior of a method. For historical reasons this construct
+can be named \texttt{assignable}, \texttt{modifiable} or
+\texttt{modifies} like in \escj. In the following we use indistinctly
+any among them. 
+
+The syntax of specification of a assignable clause in a
+\java~annotated program
+is presented by the figure~\ref{fig-syn-mod-spe}. From this scheme, it
+is possible to specify as assignable expressions like
+\texttt{a$[$i$\dots$j$]$}. A such expression declares as assignable
+the variable locations
+\texttt{a$[$i$],$a$[$i$+1],\dots$a$[$j$]$}. Something similar happens
+with an expression like
+\texttt{a$[*]$}, which denotes the variable locations
+\texttt{a$[$i$]$}, for all \texttt{i} lying between $0$ and
+\texttt{sizeOf(a)}. An expression like
+\texttt{$\backslash$fields\_of(x)} denotes \texttt{x[*]} if \texttt{x}
+is an array, otherwise the set of fields of \texttt{x}. The construct
+\texttt{$\backslash$reach} only can occur inside a \texttt{fields\_of}
+construct. An specification like \texttt{$\backslash$reach(x)} denotes
+the minimal set containing \texttt{x}, the fields of \texttt{x} and
+all objects
+reachable from the fields of \texttt{x}. A specification like
+\texttt{modifies \!\!$\backslash$nothing} expresses the method as not
+having
+side-effects. Additionally, a specification like \texttt{modifies
+\!\!$\backslash$everything} expresses that the method may modify any
+variable location.
+%%%%%%%%%%%%%%%%%%
+\begin{figure}[hbt]
+\begin{tabular}{lll}
+$<$\textsf{Assignable-spec}$>$ &::= &$<$\textsf{Assignable-clause}$>$ $<$\textsf{Assignable-exps}$>$ \\
+$<$\textsf{Assignable-exps}$>$ &::= &$<$\textsf{Assignable-exp}$>$\texttt{,}$<$\textsf{Assignable-exps}$>$ $|| $\\
+                           &    &$<$\textsf{Assignable-exp}$>$ \\
+$<$\textsf{Assignable-exp}$>$  &::= &$<$\textsf{Identifier}$>$ $||$ \\
+                           &    &$<$\textsf{Array-exp}$>$  $||$ \\
+                           &  &$\backslash$\texttt{fields\_of(}$<$\textsf{Field-exp}$>$\texttt{)} $||$ \\
+                           &  &$\backslash$\texttt{nothing} $||$\\
+                           &  &$\backslash$\texttt{everything} \\
+$<$\textsf{Array-exp}$>$      &::=  &$<$\textsf{Identifier}$>$\texttt{[}\textsf{Exp}\ldots \textsf{Exp}\texttt{]} $||$ \\
+                           &  &$<$\textsf{Identifier}$>$\texttt{[}\textsf{Exp}\texttt{]} $||$ \\
+                           &  &$<$\textsf{Identifier}$>$\texttt{[}*\texttt{]} \\
+$<$\textsf{Field-exp}$>$      &::=  &$\backslash$\texttt{reach(}$<$\textsf{Point-identif}$>$\texttt{)} $||$ \\
+                           &     &\texttt{reach(}\texttt{this}\texttt{)} $||$ \\
+                           &     &$<$\textsf{Point-identif}$>$ $||$ \\
+                           &     &\texttt{this} \\
+$<$\textsf{Point-identif}$>$   &::=  &$<$\textsf{Identifier}$>$\texttt{.}$<$\textsf{Point-identif}$> $$||$ \\
+                           &     &$<$\textsf{Identifier}$>$ \\
+$<$\textsf{Assignable-clause}$>$ &::= &\texttt{assignable} $||$  \\
+                             &    &\texttt{modifiable} $||$  \\
+                             &    &\texttt{modifies} \\
+\end{tabular}
+\label{fig-syn-mod-spe}
+\caption{Syntax of a assignable specification}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%
+%We present a set of syntactical rules which check the correct
+%specification of assignable clauses in \java~asserted programs. These
+%rules have been defined taking into account both of the \jml~grammar
+%%specification and the definition of assignable clauses presented
+%in~\cite{LeavensBR00}.
+
+We present the definition concerning the conditions about the assigment
+of expressions in \jml. This definition was taken directly
+from~\cite{LeavensBR00}.
+\begin{df}
 \label{def-mod}
-A method may modify an expression provided that$:$ 
+In \jml, a method may modify a location \emph{loc} provided that$:$
 \begin{itemize}
-\item This expression is mentioned in the \modif~clause
-\item The expression is a local variable to the method or in a
-parameter
+\item \emph{loc} is mentioned in the \emph{assignable} clause, or
+\item \emph{loc} is a local variable to the method, or 
+\item \emph{loc} is a parameter
 \end{itemize}
 \end{df}
-This definition makes no dependency analysis as introduced by
-\emph{model} pragmas (see~\cite{LeavensBR00}). Apart from that, from this
-definition it can be
-gathered that a method can not modify fields of any parameter.
 
-In \jml, the modifiable behavior of a method can be specified with
-aid of clauses \modif, as presented for \escj~in
-Section~\ref{sec-esc-prg}. The expressions that can appear in this
-clause cover any
-\java~identifiers and all expressions constructed using some
-\jml~specific constructs. These constructs are presented below.
-
-\paragraph{\bf \textsc{Jml} specific constructs.}
-\begin{itemize} %%%%%%
-\item{\texttt{a$[$i$\dots$j$]$}}. It denotes
-\texttt{a$[$i$],$a$[$i$+1],\ \dots$ a$[$j$]$}.
-\item{\texttt{x$[*]$}}. It denotes \texttt{x$[i]$} for all
-\texttt{i}, such as $0\leq$\texttt{i}$\le$\texttt{sizeOf(x)}.
-\item{\texttt{$\backslash$fields\_of(x)}}. It denotes
-\texttt{x[*]} if \texttt{x} is an array, otherwise it denotes the set
-of fields belonging to \texttt{x}.
-\item{\texttt{$\backslash$reach(x)}}. It denotes the
-minimal set containing \texttt{x}, the fields of \texttt{x} and all
-objects reachable from the fields of \texttt{x}.
-\end{itemize} %%%%%%
-\begin{df}[mod] %%%%%
+We have adapted this definition in the presentation of our \textsf{mod}
+rules. Thereby the definition~\ref{df-mod}.
+%%%%%%%%%%%%%%
+\begin{df}[\textsf{mod}]
 \label{df-mod}
-\textup{S}\ \textit{mod}\ \textsc{Y} $=$ $\forall x \in LC.
+$S$\ \textsf{mod}\ $Y$ $\Leftrightarrow$ $\forall x \in LC.
 x\not\in$ \textsc{Y}$\ \Rightarrow Pre(x) = Post(x)$ \\
-where $LC$ is a global set of expressions, $Pre(x)$
+where $LC$ is a global set of variable locations, $Pre(x)$
 refers to the state of $x$ before executing $S$,
 $Post(x)$ refers to the state of $x$ after executing
-$S$ and \textsc{Y} is the set of variables that can be mentioned
-inside a \modif~clause).
-\end{df} %%%%%%
-Consequently, a derivation rule such as \\
-\begin{prooftree}
-\rule[1ex]{0em}{1.5ex}
-\textup{e}_1\ \textit{mod}\ \textsc{Y}, \cdots ,\textup{e}_n\ \textit{mod}\ \textsc{Y}
-\justifies
-\textup{f}_1\textup{(e}_1\textup{, f}_2\textup{(e}_2\textup{,}\cdots
-\textup{(f}_n\textup{(e}_n\textup{))))}\ \textit{mod}\ \textsc{Y} 
-\end{prooftree}\\ \\
-states that if some method \texttt{m} specifies that, it may modify the set
-of expressions \textsc{Y}, and in its method body occur expressions or
-declarations such as \textup{f}$_1$\textup{(e}$_1$\textup{,
-f}$_2$\textup{(e}$_2$\textup{,}$\cdots$
-\textup{(f}$_n$\textup{(e}$_n$\textup{))))}, then their correctness
-will be established in terms of the correctness of each subexpression
-\textup{e}$_i$ \emph{w.r.t} \textsc{Y}. 
+$S$ and $Y$ is the set of variables that can be mentioned
+inside a assignable clause as well as parameters and local variable to the 
+method.
+\end{df}
+%%%%%%%%%%%%%%
+These \textsf{mod} rules have beeing reformulated in other more
+specific ones, considering the syntactical structure of
+\java. Consequently, we rely on \textsf{modEXP} for
+expressions, \textsf{modSTM} for statements and so on. Each rule
+checks that the set of locations modified by the corresponding
+instruction \emph{belongs} to a set of locations specifined as modified for
+the method. This concept $\underline\in$ of membership must be
+formulated considering
+the syntaxis of the assignable declarations (see
+Figure~\ref{fig-syn-mod-spe}), but intituivaly subsumes the standard
+concept $\in$. Section~\ref{sub-sec-the-rel-mem} shows the definition
+of this concept. 
 
-When trying method
-calls we have to make some special
-considerations (as we will see later). For this purpose, we
-present the following definitions$:$
-\begin{df}[$\sqsubseteq$] %%%%%%
+Once we count on the definition of membership for assignable
+locations, we should give the definition for the
+inclusion. Figure~\ref{def-subseq} presents the definition of inclusion of
+assignable locations.
+%%%%%%%%%%
+\begin{df}[$\sqsubseteq$]
 \label{def-subseq}
 $X \sqsubseteq Y$ iff $\forall x.\ x\underline{\in}X\Rightarrow
-x\underline\in Y$.
-\end{df} %%%%%
-\begin{df}[$\overrightarrow{mod}$] %%%%%%
+x\underline\in Y$
+\end{df} 
+%%%%%%%%%%
+Definition~\ref{def-mod-lis} generalize the concept introduce by
+Definition~\ref{df-mod}, by extending it for set of instructions.
+%%%%%%%%%
+\begin{df}[$\overrightarrow{\textsf{mod}}$]
 \label{def-mod-lis}
-$X\ \overrightarrow{mod}\ Y$ iff $\forall x.\ x\in X\Rightarrow x\ mod\ Y$
-\end{df} %%%%%%
-Definition~\ref{def-subseq} presents the concept of inclusion of
-modifiable expressions. This definition is made in terms of a no
-standard concept $\underline\in$. This concept will be defined later,
-but intuitively includes the standard membership concept $\in$.
-Definition~\ref{def-mod-lis} gives a more general specification of the
-concept introduced by Definition~\ref{df-mod}.
+$X\ \overrightarrow{\textsf{mod}}\ Y$ iff $\forall x.\ x\in
+X\Rightarrow x\ \textsf{mod}\ Y$
+\end{df}
+%%%%%%%%%%
+
+%We have also introduced some other \emph{mod}
+%constructs by exploiting the \java~syntax. These \emph{mod}
+%constructs cover concepts such as \textit{modSTM}, \textit{modEXP},
+%\textit{modPE}, \textit{modPRM} and \textit{modPS}, which redefine the
+%original concept \textit{mod} in terms of concepts for
+%\emph{statements}, \emph{expressions}, \emph{post-expressions},
+%\emph{primary} and \emph{suffixes} expressions respectively. A primary
+%\java~expression can be seen as the first expression in a
+%sequence of \java~expressions joined by the symbol \texttt{``.''}. All 
+%of the other expressions make up the suffix of the original
+%expression.
+%
+%expresses that if the set of assignable variable locations of certain
+%method is represented by locations $Y$, then this method may modify the set
+%of expressions \textsc{Y}, and in its method body occur expressions or
+%declarations such as \textup{f}$_1$\textup{(e}$_1$\textup{,
+%f}$_2$\textup{(e}$_2$\textup{,}$\cdots$
+%\textup{(f}$_n$\textup{(e}$_n$\textup{))))}, then their correctness
+%will be established in terms of the correctness of each subexpression
+%\textup{e}$_i$ \emph{w.r.t} \textsc{Y}. 
 
 
 
 
 
 
-\subsection{Syntactical rules}
-We have defined certain syntactical rules for every \java~construct,
-stating which variables may be modified. Our rules check for
-all \java~constructs that the expressions modified by instructions
-inside all method bodies are according to
-their modifiable specification. We present the derivation rules for
-the most important \java~constructs. The whole set of rules can be found
-in~\cite{CatanoMasterThesis01}.
+\subsection{Rules concerning methods}
+\label{sub-sec-rul-con-met}
+%We have defined certain syntactical rules for every \java~construct,
+%stating which variables may be modified. Our rules check for
+%all \java~constructs that the expressions modified by instructions
+%inside all method bodies are according to
+%their assignable specification. We present the derivation rules for
+%the most important \java~constructs. The whole set of rules can be found
+%in~\cite{CatanoMasterThesis01}.
 
-\textup{METH-DEC} is the
-general rule corresponding to a method declaration
-\texttt{m(}$\overrightarrow{\texttt{o}}$\texttt{)}, which has
-specified it may modify the set of expressions \textsc{Y}.
+\textsf{Meth-Dec} is the rule corresponding to a method declaration
+\texttt{m(}$\overrightarrow{\texttt{o}}$\texttt{)} that has
+specified may modify the set of variable locations $Y$. This rule
+states that for this method declaration, it is enough to
+check every instruction in its method body
+(\texttt{m(}$\overrightarrow{\texttt{o}}$\texttt{).body}) with respect
+to \textsc{Y}, the set of parameters and the local variables to the
+method. As can be seen, this rule essentially formalizes
+Definition~\ref{def-mod}. 
 %%%%%
 \[
 \begin{tabular}{ll}
-\textsf{(METH-DEC)}\,\,\,&
+\textsf{(Meth-Dec)}\,\,\,&
 \begin{prooftree} 
 \texttt{m(}\overrightarrow{\texttt{o}}\texttt{).body}\
 \overrightarrow{\textsf{mod}}\ 
@@ -552,39 +651,25 @@ Y\cup \{\overrightarrow{\texttt{o}}\}\cup \{
 \end{tabular}
 \]
 %%%%%
-This rule states that for this
-method declaration, it is enough to
-check every instruction in its method body
-\texttt{m(}$\overrightarrow{\texttt{o}}$\texttt{).body} with respect
-to \textsc{Y}, the set of parameters and the local variables to the
-method. As can be seen, this rule essentially rephrases
-Definition~\ref{def-mod}. 
 
-We have introduced some other \emph{mod}
-constructs by exploiting the \java~syntax. These \emph{mod}
-constructs cover concepts such as \textit{modSTM}, \textit{modEXP},
-\textit{modPE}, \textit{modPRM} and \textit{modPS}, which redefine the
-original concept \textit{mod} in terms of concepts for
-\emph{statements}, \emph{expressions}, \emph{post-expressions},
-\emph{primary} and \emph{suffixes} expressions respectively. A primary
-\java~expression can be seen as the first expression in a
-sequence of \java~expressions joined by the symbol \texttt{``.''}. All 
-of the other expressions make up the suffix of the original
-expression.
-
-When an instruction is represented by a method invocation
-\textup{e}\texttt{.m(}$\overrightarrow{\texttt{q}}$\texttt{)}, it 
-must fulfill the \modif~clause specification corresponding to its
-method declaration \texttt{m(}$\overrightarrow{\texttt{o}}$\texttt{)}
-after changing the formal parameters
-$\overrightarrow{\texttt{o}}$ by the real parameters
-$\overrightarrow{\texttt{q}}$. Additionally, if \emph{this} appears in 
-the formal parameters $\overrightarrow{\texttt{o}}$, it must be
-changed by the path \textup{e}.
+A method invocation
+$e\texttt{.m(}\overrightarrow{\texttt{q}}\texttt{)}$,
+must fulfill the assignable specification corresponding to its
+method declaration $\texttt{m(}\overrightarrow{\texttt{o}}\texttt{)}$
+previous replacing$:$ $(i)$~\texttt{this} by $e$ and
+$(ii)$~$\overrightarrow{\texttt{o}}$ by
+$\overrightarrow{\texttt{q}}$. Additionally, the actual parameters
+$\overrightarrow{\texttt{q}}$ must be checked for
+side-effects. It similar to the expression $e$ (see rule
+\textsf{Meth-Inv}). As can be seen this rules use \textsf{modEXP}
+and \textsf{modPE} rules. \textsf{modEXP} stands for expressions and
+\textsf{modPE} for post-fix expressions. A \java~post-fix
+expression represents a sort of \emph{primary} expressions linked by
+``.''. A typical primary \java~expression is a \java~identifier.
 %%%%%%
 \[
 \begin{tabular}{ll}
-\textsf{(METH-INV)}\,\, &
+\textsf{(Meth-Inv)}\,\, &
 \begin{prooftree}
 \sem{e\texttt{.m(}\overrightarrow{\texttt{o}})\texttt{.modifies}}
 [\overrightarrow{\texttt{o}}\backslash \overrightarrow{\texttt{q}},
@@ -596,29 +681,63 @@ e\texttt{.m(}\overrightarrow{\texttt{q}}\texttt{)}\ \textsf{modPE}\ Y
 \end{prooftree}
 \end{tabular}
 \]
- %%%%%%
-This fact is shown by the rule
-\textup{METH-INV}.  One must also check the formal parameters
-of the method by using \emph{modEXP} rules
-($\overrightarrow{\texttt{q}}\ \overrightarrow{\textit{modEXP}}$) since,
-according to the \java~syntax, they can represent expressions. A similar
-situation occurs with the path \textup{e}.
+%%%%%%
 
-When an assignment \textup{e}$_1$\ $\oplus$\
-\textup{e}$_2$ occurs inside of a method body, we must check that
-\textup{e}$_1$ belongs to set of expressions that the method may modify
-(\textup{e}$_1\underline{\in}$\ \textsc{Y}), since \textup{e}$_1$ is
+
+
+
+
+\subsection{Rules concerning primary suffix and primary expressions}
+\label{sub-sec-rul-con-pri-suf-and-pri-exp}
+\java~\emph{post-fix} expressions can be seen as set of \emph{suffix}
+expressions linked by ``.''. The first expression of which must be a
+\emph{primary} expression. Typical primary expressions correspond to
+identifiers, constants, the special \java~keywords \texttt{this},
+\texttt{static} and \texttt{super}, method invocations (as presented
+before) and \emph{new} expressions. 
+
+In the case of \emph{new} expressions (see rule \textsf{New-Exp}), the
+expressions passed as parameters must be checked for side-effects by
+using \textsf{modEXP} rules. The other cases of primary expression do
+not require an additional analyze.
+%%%%%%%%
+\[
+\begin{tabular}{ll}
+\textsf{(New-Exp)}\,\, & 
+\begin{prooftree}
+\overrightarrow{e}\ \overrightarrow{\textsf{modEXP}}\ Y
+\justifies
+\texttt{new T(}\overrightarrow{e}\texttt{)}\ \textsf{modPRM}\ Y
+\end{prooftree}
+\end{tabular}
+\]
+%%%%%%%%%%
+
+
+
+
+
+
+
+
+
+
+\subsection{Rules concerning assignments}
+\label{sub-sec-rul-con-ass}
+When an assignment $e_1\oplus e_2$ occurs inside a method body, we
+must check that
+$e_1$ belongs to set of locations the method may modify
+(\textup{e}$_1\underline{\in}$\ \textsc{Y}), since $e_1$ is
 target of an assignment. Additionally, and according to the
-\java~syntax, we must check \textup{e}$_1$ and \textup{e}$_2$ by
-using the \textit{modPE} and \textit{modEXP} rules respectively. This
-fact is showed by the rule \textup{ASSG}.
+\java~syntax, we must check $e_1$ and $e_2$ by
+using the \textsf{modPE} and \textsf{modEXP} rules respectively. This
+is showed by the rule \textsf{(Assg)}.
 %%%%%%%%%
 \[
 \begin{tabular}{ll}
-\textsf{(ASSG)}\,\,\, & 
+\textsf{(Assg)}\,\,\, & 
 \begin{prooftree}
-e_1\underline{\in}Y,\ \ e_1\
-\textsf{modPE}\ Y,\ \ e_2\ \textsf{modEXP}\ Y
+e_1\underline{\in}Y,\ \ e_1\ \textsf{modPE}\ Y,\ \ e_2\ \textsf{modEXP}\ Y
 \justifies
 e_1\oplus \textup{e}_2\ \textsf{modEXP}\ Y
 \using
@@ -627,16 +746,18 @@ e_1\oplus \textup{e}_2\ \textsf{modEXP}\ Y
 \end{tabular}
 \]
 %%%%%%%%
-An instruction in a method body can be represented by a local
-declaration. In this way, if some variable \texttt{x} is declared and is
-provided an initial value, that variable must belong to the
-set \textsc{Y} of expressions modifiable by the method. Rule
-\textup{VAR-DECL-ASSG} states this fact. Additionally, one must
-keep checking \textup{e} by using expressions rules.
+An assignment can also be occurred in the declaration of a local
+variable. Suppose we have the declaration of certain variable
+\texttt{x} which is initialized with the value corresponding to
+certain expression $e$. The location
+corresponding a this variable must belong to the set $Y$ of possible
+assignable locations. Rule \textsf{Var-Decl-Assg} states this
+fact. Additionally, one must check the expression $e$ by using
+expressions rules.
 %%%%%%%%%
 \[
 \begin{tabular}{ll}
-\textsf{(VAR-DECL-ASSG)}\,\, & 
+\textsf{(Var-Decl-Assg)}\,\, & 
 \begin{prooftree}
 \rule[1ex]{0em}{1.5ex}
 \texttt{x}\underline{\in}Y,\ \ e\ \textsf{modEXP}\ Y
@@ -646,32 +767,19 @@ keep checking \textup{e} by using expressions rules.
 \end{tabular}
 \]
 %%%%%%%
-Contrary to that, if the variable is not
-assigned while is declared, we do not have to do any
-membership checking. This fact is presented by the rule
-\textup{VAR-DECL}.
-%%%%%
-\[
-\begin{tabular}{ll}
-\textsf{(VAR-DECL)}\,\,\, & 
-\begin{prooftree}
-\justifies
-\texttt{T x}\ \textsf{modEXP}\ Y
-\end{prooftree}
-\end{tabular}
-\]
-%%%%%%
-\java~instructions can also be represented by pre and post
-expressions. These can be seen as \emph{in place} allocations. Rule
-\textup{POST-PLUS} presents the case for post-increment expressions.
-That rule states that the expression \textup{e}, which is the target
-of an assignment, has to belong to set of expressions \textup{Y}
-modifiable by the method. Additionally, \textup{e} must be checked using
-expression rules.
+
+\java~instructions can also be represented by pre- and
+\emph{post-expressions}. A post-expression can be seen as \emph{in
+place} assignment. Rule \textsf{(Post-Plus)} presents the case for
+post-increment expressions. This rule states that the expression $e$,
+which is the target
+of an assignment, has to belong to set of expressions $Y$ which may
+modified by the method. Additionally, $e$ must be checked for
+side-effects.
 %%%%%%
 \[
 \begin{tabular}{ll}
-\textsf{(POST-PLUS)}\,\, &
+\textsf{(Post-Plus)}\,\, &
 \begin{prooftree}
 e\underline{\in}Y,\ \ e\ \textsf{modPE}\ Y
 \justifies
@@ -680,20 +788,28 @@ e\texttt{++}\ \textsf{modEXP}\ Y
 \end{tabular}
 \]
 %%%%%%%%
-The \textup{BINARY} rule is applicable
+
+
+
+
+
+
+\subsection{Rules concerning \java~operators}
+\label{sub-sec-rul-con-ope}
+The rule \textsf{Binary} is applicable
 to arithmetic, relational and logic operators. This rule
 does not take into account any consideration about membership of
-expressions \textup{e}$_i$ to some set \textsc{Y}, since no expression
+expressions $e_i$ to $Y$, since no expression
 is directly modified by these
-operators, although eventually some subexpression could modify some
-variable. This analysis also works for \java~operators as \texttt{unary},
-\texttt{instanceof}, \texttt{()} (\emph{casting}) and $?$, as
-presented by rules \textup{UNARY}, \textup{INSTANCE}, \textup{CAST}
-and \textup{CONDITIONAL}.
+operators. This analysis also works for \java~operators as
+\textsf{unary}, \texttt{instanceof}, \texttt{()} (\emph{casting}) and
+$?$, as presented by rules \textsf{Unary}, \textsf{Instance},
+\textsf{Cast} and \textsf{Conditional}.
+
 %%%%%%%%%
 \[
 \begin{tabular}{ll}
-\textsf{(BINARY)} & 
+\textsf{(Binary)} & 
 \begin{prooftree} 
 e_1\ \textsf{modPE}\ Y,\ \ e_2\ \textsf{modEXP}\ Y
 \justifies
@@ -706,8 +822,8 @@ e_1\oplus e_2\ \textsf{modEXP}\ Y
 	\end{array}
 	\}
 \end{prooftree}
-\\[3.5ex]
-\textsf{(UNARY)} & 
+\\[3.0ex] 
+\textsf{(Unary)} & 
 \begin{prooftree} 
 e\ \textsf{modEXP}\ Y
 \justifies
@@ -715,22 +831,22 @@ e\ \textsf{modEXP}\ Y
 \using
 \oplus \in \{\texttt{+,-,$\sim$,!}\}
 \end{prooftree}
-\\[3.5ex]
-\textsf{(INSTANCE)} & 
+\\[3.0ex] 
+\textsf{(Instance)} & 
 \begin{prooftree} 
 e\ \textsf{modEXP}\ Y
 \justifies
 e\ \texttt{instanceof C}\ \textsf{modEXP}\ Y
 \end{prooftree}
-\\[3.5ex]
-\textsf{(CAST)} & 
+\\[3.0ex] 
+\textsf{(Cast)} & 
 \begin{prooftree}
 e\ \textsf{modEXP}\ Y
 \justifies
 \texttt{(T)}e\ \textsf{modEXP}\ Y
 \end{prooftree}
-\\[3.5ex]
-\textsf{(CONDITIONAL)}\,\, & 
+\\[3.0ex] 
+\textsf{(Conditional)}\,\, & 
 \begin{prooftree} 
 e_1\ \textsf{modEXP}\ Y,\ \ e_2\ \textsf{modEXP}\ Y,\ \ e_3\
 \textsf{modEXP}\ Y
@@ -741,459 +857,267 @@ e_1\texttt{?}e_2\texttt{:}e_3\ \textsf{modEXP}\ Y
 \]
 %%%%%%%%%%
 
-So far, the rules defined here enable us to detect the kind of problems
-presented in Section~\ref{sec-sem-mod-cla} (see
-figure~\ref{fig-mod-spe}). Thus, by applying the rule
-\textup{METH-DEC}, the checking condition for the method \texttt{n()}
-will become $\mathtt{\{myArr\ =\ new\ int[3]\}}$ \textit{mod}
-$\phi$. Then,
-by applying the rule \textup{ASSG}, we would should be able to
-deduce $myArr\underline\in\ \phi$. That is not possible. Hence, the
-checking of the method \texttt{n()} will
-fail. Figure~\ref{fig-der-cor-fig-esc} presents the whole derivation
-corresponding to this problem.
-%%%%%%%
-\begin{figure}[tbh]
-\rule{\linewidth}{0.25mm}
-\\[0.5ex]
-\begin{prooftree}
-   \[
-     \[
-       \[
-	 \texttt{false}
-         \justifies 
-         \texttt{myArr}\ \in\ \phi
-	 \using
-         \textsf{(AX)}
-       \]
-       \justifies 
-       \texttt{myArr}\ \underline\in\ \phi
-       \using
-       \textsf{(IN-SIMP)}
-     \]
-     \[
-       \[
-         \proofdotseparation=1.2ex 
-         \proofdotnumber=3
-         \leadsto 
-       \]
-       \justifies 
-       \texttt{myArr}\ \textsf{modPE}\ \phi
-     \]
-     \[
-       \[
-         \proofdotseparation=1.2ex 
-         \proofdotnumber=3
-         \leadsto 
-       \]
-       \justifies 
-       \texttt{new int[3]}\ \textsf{modEXP}\ \phi
-     \]
-     \justifies
-     \texttt{myArr = new int[3]}\ \textsf{mod}\ \phi
-     \using
-     \textsf{(ASSG)}
-   \]
-   \justifies
-   \texttt{m}\ \textsf{mod}\ \phi
-   \using
-   \textsf{(METH-DEC)}
-\end{prooftree}
-\caption{Detecting not modifiable definitions}
-\label{fig-der-cor-fig-esc}
-\rule{\linewidth}{0.25mm}
-\end{figure} %%%%%%%%
 
-Following our initial presentation, \java~expressions can be
-represented by primary and suffix expressions. Primary rules
-\textup{ID-FLD}, \textup{SUPER}, \textup{THIS}, \textup{STATIC},
-\textup{CONST} do not take into account any consideration of
-membership of expressions \textup{e}$_i$ to some set, since they do
-not change any expression.
-%%%%%%%%%
-\[
-\begin{tabular}{ll}
-\textsf{(ID-FLD)}\,\, &
-\begin{prooftree}
-\justifies
-\texttt{x}\ \textsf{modPRM}\ Y
-\end{prooftree}
-\\[3.0ex]
-\textsf{(SUPER)}\,\, & 
-\begin{prooftree}
-\justifies
-\texttt{super}\ \textsf{modPRM}\ Y
-\end{prooftree}
-\\[3.0ex]
-\textsf{(THIS)}\,\, & 
-\begin{prooftree}
-\justifies
-\texttt{this}\ \textsf{modPRM}\ Y
-\end{prooftree}
-\\[3.0ex]
-\textsf{(STATIC)}\,\, &
-\begin{prooftree}
-\justifies
-\texttt{A}\ \textsf{modPRM}\ Y
-\end{prooftree}
-\\[3.0ex]
-\textsf{(CONST)}\,\, &
-\begin{prooftree}
-\justifies
-\texttt{b}\ \textsf{modPRM}\ Y
-\using
-\texttt{b}\in Constant
-\end{prooftree}
-\end{tabular}
-\]
-%%%%%%%%%%%%%
 
-Rule \textup{ARR-FLD} shows that for array primary expressions one
-must check the corresponding parameter expression \textup{e} using
-\textit{modEXP} rules.
-%%%%%%%%%
-\[
-\begin{tabular}{ll}
-\textsf{(ARR-FLD)}\,\, &
-\begin{prooftree}
-e\ \textsf{modEXP}\ Y
-\justifies
-\texttt{a[}e\texttt{]}\ \textsf{modPRM}\ Y
-\end{prooftree}
-\end{tabular}
-\]
-%%%%%%%%%%%%%
-The rule \textup{METH} expresses the fact that a primary expression
-can be represented by a method invocation. This rule is similar to
-\textup{METH-INV} presented above. 
-%%%%%%%
-\[
-\begin{tabular}{ll}
-\textsf{(METH)}\,\, &
-\begin{prooftree}
-\sem{\texttt{this.m(}\overrightarrow{\texttt{o}}\texttt{).modifies}}[\overrightarrow{\texttt{o}} 
-\backslash \overrightarrow{\texttt{q}}]\sqsubseteq Y,\ \
-\overrightarrow{\texttt{q}}\ \overrightarrow{\textsf{modEXP}}\
-\textsc{Y}
-\justifies
-\texttt{m(}\overrightarrow{\texttt{q}}\texttt{)}\ \textsf{modPRM}\ \textsc{Y}
-\end{prooftree}
-\end{tabular}
-\]
-%%%%%%%%
-Rules \textup{NEW-EXP} and \textup{NEW-ARR} show the cases when
-primary expressions are represented by \java~\emph{new}
-expressions. Both rules express that the expressions passed as
-parameters must be checked by using \textit{modEXP} rules. To suffix
-expressions, we have rules \textup{ID-FLD}, \textup{ARR-FLD},
-\textup{THIS} and \textup{SUPER} similar to those presented for primary
-expressions.
-%%%%%%%%
-\[
-\begin{tabular}{ll}
-\textsf{(NEW-EXP)}\,\, & 
-\begin{prooftree}
-\overrightarrow{e}\ \overrightarrow{\textsf{modEXP}}\ Y
-\justifies
-\texttt{new T(}\overrightarrow{e}\texttt{)}\ \textsf{modPRM}\ Y
-\end{prooftree}
-\\[3.5ex]
-\textsf{(NEW-ARR)}\,\, & 
-\begin{prooftree}
-e\ \textsf{modEXP}\ Y
-\justifies
-\texttt{new T[}{e}\texttt{]}\ \textsf{modPRM}\ Y
-\end{prooftree}
-\end{tabular}
-\]
+
+
+
+\subsection{Rules concerning statements}
+\label{sub-sec-rul-con-sta}
+Typical \java~statements are
+\texttt{if(}c\texttt{)\{$\overrightarrow{s}$\texttt{\}}},
+\texttt{if(}c\texttt{)\{$\overrightarrow{s}$\texttt{\}}else\{$\overrightarrow{t}$\}},
+\texttt{while(c)\{$\overrightarrow{s}$\}}. For the first case, for
+instance, the guard $c$ must be checked using
+\textsf{modEXP} rules since a guard
+corresponds to an expression. The set of instructions occurring in its
+body $\overrightarrow{s}$ must be checked using the most general rules
+\textsf{mod}. This is showed by the rule \textsf{(If-Then)}. For the
+others \java~statements a similar analysis can be done.
 %%%%%%%%%%
-\java~instructions can be also represented by statements. In case
-of \texttt{if...then...} statements, rule
-\textup{IF-THEN} states that its guard must be checked using
-\textit{modEXP} rules since, according to the \java~syntax, a guard
-corresponds to an expression. Its body \textsc{S} can be represented by
-a set of
-statements (an expression can be seen as a statement), thus it must be
-checked by using rules for statements. A similar analysis can be
-formulated for \texttt{if...then...else...} and \texttt{while} constructs.
-%%%%%%
 \[
 \begin{tabular}{ll}
-\textsf{(IF-THEN)}\,\, & 
+\textsf{(If-Then)}\,\, & 
 \begin{prooftree}
-c\ \textsf{modEXP}\ Y,\ \ s\ \textsf{modSTM}\ Y
+c\ \textsf{modEXP}\ Y,\ \ \overrightarrow{s}\ \overrightarrow{\textsf{mod}}\ Y
 \justifies
-\texttt{if(}c\texttt{)\{}s\ \texttt{\}}\ 
+\texttt{if(}c\texttt{)\{}\overrightarrow{s}\ \texttt{\}}\ 
 \textsf{modSTM}\ Y
-\end{prooftree}
-\\[3.5ex]
-\textsf{(IF-THEN-ELSE)}\,\, & 
-\begin{prooftree}
-c\ \textsf{modEXP}\ Y,\ \ s\ \textsf{modSTM}\ Y,\ \ \textsf{t}\
-\textsf{modSTM}\ Y
-\justifies
-\texttt{if(}c\texttt{)\{}s\texttt{\}else\{}t\texttt{\}}\
-\textsf{modSTM}\ Y
-\end{prooftree}
-\\[3.5ex]
-\textsf{(WHILE)}\,\,\, & 
-\begin{prooftree}
-c\ \textsf{modEXP}\ Y,\ \ b\ \textsf{modSTM}\ Y
-\justifies
-\texttt{while(}c\texttt{)\{}b\texttt{\}}
 \end{prooftree}
 \end{tabular}
 \]
 %%%%%%%%%%%
 
-Rules \textup{SKIP}, \textup{BREAK}, \textup{BREAK-LBL},
-\textup{CONTINUE} and \textup{CONTINUE-LBL}
-present the analysis for the \texttt{skip},
-\texttt{break}, \texttt{break} \emph{lbl}, \texttt{continue} and
-\texttt{continue} \emph{lbl} \java~statements. 
-%%%%%%%%%%%%
+
+
+
+
+
+\subsection{Transition rules}
+\label{sub-sec-tra-rul}
+In addition to define rules for each \java~construct, we need also
+certain \emph{transition} rules which allow us to pass from more
+general rules to more particular ones, depending on the kind of the
+instruction. So, for example, we need transition rules from the most
+general case to expressions statements (\textsf{Mod-To-Exp} and
+\textsf{Mod-To-Stm}), from expressions to post-fix expressions
+(\textsf{Exp-To-Pe}), and from post-fix expressions to primary suffix
+and primary expressions.
+%%%%%%%%%%
 \[
 \begin{tabular}{ll}
-\textsf{(SKIP)} &  
+\textsf{(Mod-To-Exp)}\,\, & 
 \begin{prooftree}
+e\ \textsf{modEXP}\ Y
 \justifies
-\texttt{skip}\ \textsf{modSTM}\ Y
+e\ \textsf{mod}\ Y
+\using
+e\in Expression
 \end{prooftree}
 \\[3.0ex]
-\textsf{(BREAK)} & 
+\textsf{(Mod-To-Stm)} & 
 \begin{prooftree}
+e\ \textsf{modSTM}\ Y
 \justifies
-\texttt{break}\ \textsf{modSTM}\ Y
+e\ \textsf{mod}\ Y
+\using
+e\in Statement
 \end{prooftree}
 \\[3.0ex]
-\textsf{(BREAK-LBL)} &
+\textsf{(Exp-To-Pe)}\,\, & 
 \begin{prooftree}
+e\ \textsf{modPE}\ Y
 \justifies
-\texttt{break\! lbl}\ \textsf{modSTM}\ Y
+e\ \textsf{modEXP}\ Y
+\using
+e\in Post\!\!-\! expression
 \end{prooftree}
 \\[3.0ex]
-\textsf{(CONTINUE)} & 
-\begin{prooftree} 
+\textsf{(Pe-To-Ps)} &
+\begin{prooftree}
+e_1\ \textsf{modPE}\ Y,\ e_2\ \textsf{modPS}\ Y
 \justifies
-\texttt{continue}\ \textsf{modSTM}\ Y
+e_1\ \texttt{.}\ e_2\ \textsf{modPE}\ Y
 \end{prooftree}
 \\[3.0ex]
-\textsf{(CONTINUE-LBL)}\,\, & 
-\begin{prooftree} 
+\textsf{(Pe-to-Prm)} &
+\begin{prooftree}
+e\ \textsf{modPRM}\ Y
 \justifies
-\texttt{continue\! lbl}\ \textsf{modSTM}\ Y
-\end{prooftree}
-\\[3.0ex]
-\textsf{(RETURN)} & 
-\begin{prooftree} \justifies
-\texttt{return}\ \textsf{modSTM}\ Y
+e\ \textsf{modPE}\ Y
+\using
+e\in \ \textsf{Primary}
 \end{prooftree}
 \end{tabular}
 \]
-%%%%%%%%%%%%%
+%%%%%%%%%%%
 
-Rule \textup{SEQ} presents the analysis for the composition of
-\java~instructions. This rule
-states that the composition of instructions \textup{S} and \textup{T}
-may modify \textsc{Y} if \textup{S} may modify \textsc{Y} and
-\textup{T} may modify \textsc{Y}. This rule enables us to express
-modifiable conditions for different \java~instructions as the
-sequentialization of their respective conditions.
-%%%%%%%%%%%%%
-\[
-\begin{tabular}{ll}
-\textsf{(SEQ)}\,\, & 
-\begin{prooftree}
-s\ \textsf{modSTM}\ Y,\ \ t\
-\textsf{modSTM}\ Y
-\justifies
-s\texttt{;}t\ \textsf{modSTM}\ Y
-\end{prooftree} 
-\end{tabular}
-\]
-%%%%%%%%%%%%%
-%%%%%%%%%%%%%
-%\[
-%\begin{tabular}{ll}
-%\textsf{RETURN-EXP}\,\, & 
-%\begin{prooftree} 
-%e\ \textsf{modEXP}\ Y
-%\justifies
-%\texttt{return}\ e\ \textsf{modSTM}\ Y
-%\end{prooftree}
-%\end{tabular}
-%\]
-%%%%%%%%%%%%%
-Finally, another aspect that must be analyzed is
-the different constructs that can appear in modifiable
-specifications. According to \jml~specifications, 
-\texttt{$\backslash$fields}$\_$\texttt{of} and
-\texttt{$\backslash$reach} pragmas can occur inside of such modifiable
-specifications. Hence, when establishing membership conditions
-\textup{e}$_1$\texttt{.}\textup{e}$_2$$\underline\in$ \textsc{Y}, we
-also need to define rules taking into account the fact that these constructs can
-occur inside of \textsc{Y}. 
 
-Typically, if none of these pragmas occur in the modifiable
-clause we fall on the standard definition of membership (see rules
-rules \textup{IN-SIMP}, \textup{IN-ARR}, \textup{IN-EXP},
-\textup{IN-EXP-ARR}).
+
+
+\subsection{The relation of membership $\underline{\in}$}
+\label{sub-sec-the-rel-mem}
+Another important aspect that must be analyzed is
+the different constructs that can appear in assignable
+specifications. According to the syntax of the assignable clause as
+presented by Figure~\ref{fig-syn-mod-spe},
+\texttt{$\backslash$fields\_of} and \texttt{$\backslash$reach}
+constructs can occur inside of such assignable specifications, the
+latter only occurring inside the former. Hence, when establishing
+membership conditions $e\underline\in Y$, we need to define suitable
+rules taking into account the fact that these constructs can occur
+inside $Y$.
+
+Typically, if none of these constructs occur in the assignable clause
+we fall on the standard definition of membership (see rules rules
+\textsf{In-Var},\textsf{In-Arr}, \textsf{In-Exp} and
+\textsf{In-Exp-Arr}).
 %%%%%%%
 \[
 \begin{tabular}{ll}
-\textsf{(IN-SIMP)} &
+\textsf{(In-Var)} &
 \begin{prooftree}
 \texttt{x}\in \textsc{Y}
 \justifies
 \texttt{x}\underline{\in}Y
 \end{prooftree}
-\\[3.5ex]
-\textsf{(IN-ARR)} &
+\\[3.0ex]
+\textsf{(In-Arr)} &
 \begin{prooftree}
 \texttt{a[}e\texttt{]}\in Y
 \justifies
 \texttt{a[}e\texttt{]}\underline{\in}Y
 \end{prooftree}
-\\[3.5ex]
-\textsf{(IN-EXP)} &
+\\[3.0ex]
+\textsf{(In-Exp)} &
 \begin{prooftree}
 e\texttt{.x}\in Y
 \justifies
 e\texttt{.x}\underline{\in} Y
 \end{prooftree}
-\\[3.5ex]
-\textsf{(IN-EXP-ARR)}\,\, &
+\\[3.0ex]
+\textsf{(In-Exp-Arr)}\,\, &
 \begin{prooftree}
-e_2\texttt{.a[}e_1\texttt{]}\in Y
+e\texttt{.a[}e_1\texttt{]}\in Y
 \justifies
-e_2\texttt{.a[}e_1\texttt{]}\underline{\in} Y
+e\texttt{.a[}e_1\texttt{]}\underline{\in} Y
 \end{prooftree}
 \end{tabular}
 \]
 %%%%%%%%%%
 
-Moreover, if we are checking simple array membership conditions as
-\texttt{a[}\textup{e}\texttt{]}$\underline{\in}$ \textsc{Y}, it will
-be enough to find a \jml~construct in \textsc{Y} specifying that the
-corresponding method may modify any element of \texttt{a} (rule
-\textup{TIMES-ARR}) or certain intervale where the value
-of \textup{e} is found (rule INTERV-ARR).
+Moreover, when we are checking simple array membership conditions as
+\texttt{a[}$e$\texttt{]$\underline{\in} Y$}, it is
+enough to find a \jml~construct in $Y$ specifying that the
+corresponding method may modify any element of \texttt{a}
+(\textsf{Times-Arr}) or a certain interval where the value of $e$ is
+found (rule \textsf{Interv-Arr}).
 %%%%%%%%%%
 \[
 \begin{tabular}{ll}
-\textsf{(INTERV-ARR)}\,\, & 
+\textsf{(Times-Arr)}\,\, &
+\begin{prooftree}
+\texttt{a[}*\texttt{]}\in Y
+\justifies
+\texttt{a[}e_1\texttt{]}\underline{\in} Y
+\end{prooftree}
+\\[3.0ex]
+\textsf{(Interv-Arr)}\,\, & 
 \begin{prooftree}
 \texttt{a[}i..j\texttt{]}\in Y,\ i\leq e\leq j
 \justifies
 \texttt{a[}e\texttt{]}\underline{\in} Y
 \end{prooftree}
-\\[3.0ex]
-\textsf{(TIMES-ARR)}\,\, &
-\begin{prooftree}
-\texttt{a[}*\texttt{]}\in Y
-\justifies
-\texttt{a[}e\texttt{]}\underline{\in} Y
-\end{prooftree}
 \end{tabular}
 \]
 %%%%%%%%%%%
-When establishing membership conditions
-\textup{e}$_1$\texttt{.}\textup{e}$_2$$\underline\in$ \textsc{Y}, we
-have to consider some cases according to the shape of \textup{e}$_2$. If
-\textup{e}$_2$ is not an array expression, it will be enough to have
-\texttt{$\backslash$fields$\_$of(}\textup{e}$_1$\texttt{)} occurring 
-in \textsc{Y} to establish the original condition of membership
-(see rules \textup{IN-THIS} and \textup{IN-EXP-FLD}). Otherwise, if
-\textup{e}$_2$ is an array expression
-\texttt{a[}\textup{e}$_3$\texttt{]}, it will be enough to have
-\texttt{$\backslash$fields$\_$of(}\textup{e}$_1$\texttt{.a}\texttt{)}
-occurring in \textsc{Y} (see rules \textup{IN-ARR-FLD} and
-\textup{IN-EXP-ARR-FLD}).
-%%%%%%
+If these rules do not apply, we
+have to consider some cases according to the shape of $e$. If
+$e$ has shape $e_1\texttt{.}e_2$ and $e_2$ is not an array expression,
+it will be enough to have \texttt{$\backslash$fields\_of($e_1$)}
+occurring in $Y$ to establish the original condition of membership
+(rule \textsf{In-Fld-Exp-Var}). Otherwise, if $e_2$ is an array
+expression \texttt{a[$e_3$]}, it will be enough to have
+\texttt{$\backslash$fields\_of($e_1$.a)} occurring in $Y$ (see rule
+\textsf{In-Fld-Exp-Arr}). We have similar rules when $e$ is an
+expression not linked by ``.'' (see rules \textsf{In-Fld-Var} and
+\textsf{In-Fld-Arr}).
+%%%%%%%%%%%
 \[
 \begin{tabular}{ll}
-\textsf{(IN-THIS)} &
-\begin{prooftree}
-\backslash \texttt{fields\_of(this)}\in Y
-\justifies
-\texttt{this.x}\underline{\in} Y
-\end{prooftree}
-\\[3.0ex]
-\textsf{(IN-EXP-FLD)}\,\, &
+\textsf{(In-Fld-Exp-Var)}\,\, &
 \begin{prooftree}
 \backslash \texttt{fields\_of(}e\texttt{)}\in Y
 \justifies
 e\texttt{.x}\underline{\in} Y
 \end{prooftree}
-\end{tabular}
-\]
-%%%%%%%%%%%
-
-%%%%%%%%%%%
-\[
-\begin{tabular}{ll}
-\textsf{(IN-ARR-FLD)}\,\, &
+\\[3.0ex]
+\textsf{(In-Fld-Exp-Arr)}\,\, &
+\begin{prooftree}
+\backslash \texttt{fields\_of(}e\texttt{.a)}\in Y
+\justifies
+e\texttt{.a[}e_1\texttt{]}\underline{\in} Y
+\end{prooftree}
+\\[3.0ex]
+\textsf{(In-Fld-Var)} &
+\begin{prooftree}
+\backslash \texttt{fields\_of(this)}\in Y
+\justifies
+\texttt{x}\underline{\in} Y
+\end{prooftree}
+\\[3.0ex]
+\textsf{(In-Fld-Arr)}\,\, &
 \begin{prooftree}
 \backslash \texttt{fields\_of(a)}\in Y
 \justifies
-\texttt{this.a[}e_3\texttt{]}\underline{\in} Y
-\end{prooftree}
-\\[3.0ex]
-\textsf{(IN-EXP-ARR-FLD)}\,\, &
-\begin{prooftree}
-\backslash \texttt{fields\_of(}e_1\texttt{.a)}\in Y
-\justifies
-e_1\texttt{.a[}e_3\texttt{]}\underline{\in} Y
+\texttt{a[}e_1\texttt{]}\underline{\in} Y
 \end{prooftree}
 \end{tabular}
 \]
 %%%%%%%%%%%
 
-Similarly, \texttt{$\backslash$reach}
-expressions can occur in \modif~clauses\footnote{According to the
-\jml~syntax $\backslash$\texttt{reach} expressions can only occur
-inside of a $\backslash$\texttt{fields}$\_$\texttt{of}
-expression.}. So, if expressions such as
-$\backslash$\texttt{fields}$\_$\texttt{of($\backslash$reach(}\textup{e}$_1$\texttt{))}
-occur in \textsc{Y} (and we would like to establish
-\textup{e}\texttt{.x}$\underline\in$\textsc{Y}) it will be enough to
-have \textup{e}\texttt{.x} belonging to set expressions reachable from
-\textup{e}$_1$. This situation is presented by the rule
-\textup{IN-EXP-REACH}. Something similar happens when \texttt{x} is an
-array expression. This
-is presented by rules \textup{IN-REACH}, \textup{IN-ARR-REACH} and
-\textup{IN-EXP-ARR-REACH}.
+Furthermore, \texttt{$\backslash$reach} expressions can occur in
+assignable clauses. So, if an expression such as
+\texttt{$\backslash$fields\_of($\backslash$reach($e_1$))} occurs in
+$Y$ it is sufficient having $e$ belonging to set expressions reachable
+from $e_1$ for establish the condition \texttt{$e$.x$\underline\in
+Y$}. This situation is presented by the rule
+\textsf{In-Reach-Exp}. Something similar happens when \texttt{x} is an
+array expression. This is presented by rules
+\textsf{In-Reach-Exp-Arr}. The rules \textsf{In-Reach-Var} and
+\textsf{In-Reach-Arr} present the cases when we intend to establish
+membership conditions for expressions not linked by ``.''.
 %%%%%%%%%
 \[
 \begin{tabular}{ll}
-\textsf{(IN-EXP-REACH)} &
-\begin{prooftree}
-\backslash \texttt{fields\_of(}\backslash
-\texttt{reach(}e_1\texttt{))}\in Y,\ \ e\texttt{.x}\in \backslash
-\texttt{reach(}e_1\texttt{)}
-\justifies
-e\texttt{.x}\underline{\in} Y
-\end{prooftree}
-\\[3.5ex]
-\textsf{(IN-REACH)} &
+\textsf{(In-Reach-Var)} &
 \begin{prooftree}
 \backslash
 \texttt{fields\_of(}\backslash\texttt{reach(}e\texttt{))}\in Y,\ \
 \texttt{this}\in \backslash \texttt{reach(}e\texttt{)} 
 \justifies
-\texttt{this.x}\underline{\in} Y
+\texttt{x}\underline{\in} Y
 \end{prooftree}
 \\[3.0ex]
-\textsf{(IN-ARR-REACH)} &
+\textsf{(In-Reach-Arr)} &
 \begin{prooftree}
 \backslash \texttt{fields}\_\texttt{of(}\backslash
 \texttt{reach(}e_1\texttt{))}\in Y,\ \ \texttt{this.a}\in \backslash
 \texttt{reach(}e\texttt{)} 
 \justifies
-\texttt{this.a[}e\texttt{]}\underline{\in} Y
+\texttt{a[}e\texttt{]}\underline{\in} Y
 \end{prooftree}
 \\[3.0ex]
-\textsf{(IN-EXP-ARR-REACH)}\,\, &
+\textsf{(In-Reach-Exp)} &
+\begin{prooftree}
+\backslash \texttt{fields\_of(}\backslash
+\texttt{reach(}e_1\texttt{))}\in Y,\ \ e\in \backslash
+\texttt{reach(}e_1\texttt{)}
+\justifies
+e\texttt{.x}\underline{\in} Y
+\end{prooftree}
+\\[3.0ex]
+\textsf{(In-Reach-Exp-Arr)}\,\, &
 \begin{prooftree}
 \backslash \texttt{fields\_of(}\backslash
 \texttt{reach(}e\texttt{))}\in Y,\ \ e_2\texttt{.a}\in \backslash
@@ -1204,519 +1128,134 @@ e_2\texttt{.a[}e_1\texttt{]}\underline{\in} Y
 \end{tabular}
 \]
 %%%%%%%%%%%
-
-%Appendix ~\ref{ane-der-exa} shows some derivation examples of checking
-%\java~asserted programs using the rules we present below. These examples
-%allow us to see how incorrect modifiable specifications can be
-%detected using our rules.
+HERE I HAVE TO PRESENT AN DERIVATION EXAMPLE.
+%%%%%%%%%%%
 
 
 
 
 
 
-\section{A checker for \modif~clauses}
-\label{sec-imp-iss}
-We present the implementation of a modifiable checker (\modtool)
-implementing the syntactical rules presented during
-Section~\ref{sec-giv-sin-def}. For doing such an implementation we
-have taken certain \jml~classes for representing the \java~syntactical 
-constructs. Additionally, we have used the \jml~parser for parsing
-\java~asserted programs, storing the underlying context on which
-modifiable specifications are made and embedding the calls of
-respective classes which implement our syntactical rules.
+\section{A checker for assignable clauses}
+\label{sec-che-for-ass-cla}
+We present some implementation issues concerning \modtool$:$ a
+modifiable checker implementing the approach and rules presented in
+Section~\ref{sec-syn-met-che-ass-cla}.
 
-Section~\ref{abo-jml-cla-use} gives a general overview about the
-\jml~classes we used for representing \java~constructs and doing
-parsing. Section~\ref{fig-out-met-cal-con} shows how the
-context underlying method specifications is determined and how
-the calls to methods which implement our syntactical
-rules are made. Section~\ref{mod-and-con-clab} presents classes
-\texttt{Context} and \texttt{Modifiable}, which implement the
-underlying method contexts and modifiable syntactical rules.
+We have reused the syntactical analyzer of \jml~for recovering the
+structure of programs we are checking. This parser returns an
+\emph{Abstract syntax tree} as an \texttt{AST} (see
+Section~\ref{abo-jml-cla-use}). We use this Abstract syntax tree
+for$:$ $(i)$~figuring out the \emph{context} of all method
+declarations in the program and $(ii)$~recovering the structure of the
+program for applying our checking rules.
+
+We have implemented our specification rules as static methods
+parameterized by the context under which the respective instruction is
+found.
+
+Section~\ref{abo-jml-cla-use} gives a general overview of the class
+for handling Abstract syntax trees coming with
+\jml. Section~\ref{sub-sec-cla-ast-con} summarizes the implementation
+of the class \texttt{ASTContext} which is in charge of figuring out
+context of method declarations. Section~\ref{sub-sec-the-cla-ass}
+presents the class \texttt{Assignable}, which implement our
+syntactical rules. Finally, Section ~\ref{sub-sec-usi-the-too}
+summarizes our experience using the tool \modtool.
 
 
 
 
-\subsection{About \jml~classes}
+\subsection{Representing Abstract syntax trees with \jml}
 \label{abo-jml-cla-use}
-We have taken two \jml~classes for modeling \java~constructs$:$
-\texttt{AST} and \texttt{ASTFactory}. Abstract class \texttt{AST}
-represents \java~constructs as tree structures and class
-\texttt{ASTFactory} defines a set of operations for handling
-\texttt{AST} trees. These operations cover \texttt{create{AST}},
-\texttt{dupTree{AST}} and \texttt{ASTChild(AST)} which create,
-duplicate and add a child to a tree.
 
-Class \texttt{JmlParser} implements the \jml~syntactical analyzer and
-can be extended by embedding \java~source code implementing any
-specific functionality.
+\jml~ships with several classes for representing and handling abstract
+syntax trees. The class \texttt{AST} allow one to represent piece of
+code as the sequence of a node a \emph{sibling}. The former
+represented as a tuple of an \texttt{int} and a \texttt{String}, and
+the latter of type \texttt{AST}.
 
-\subsection{Determining contexts of calling}
-\label{fig-out-met-cal-con}
-We have extended the \jml~parser by adding semantics actions for
-determining contexts under which instructions have occurred. These
-semantics actions have been embedded as \java~code in the parser. A
-context for a method consists of its parameters, its local variables
-and the set of variables declared as modifiable for it. Determining
-the context for a method allows us to apply the general rule for method
-declarations \textup{METH-DEC}, defined during
-Section~\ref{sec-giv-sin-def}. Additionally, the contexts enable us to
-apply the rest of the rules
-for any instruction occurring inside of this method, since the context
-for any instruction coincides with the context of the method in which
-they occur.
+\jml~also ships the utility \texttt{ASTFactory} with operation
+covering create and duplicate trees. Finally, the distribution of
+\jml~comes with the class \texttt{ASTArray} for representing an array
+of trees having type \texttt{AST}.
 
-Figure~\ref{fig-out-par} shows the source code embedded in the
-\jml~parser for adding any parameter to a method
-context. Specifically, this code is added in the
-\texttt{param$\_$declaration()} method. To do this, the variable
-\texttt{currentContext} (having \texttt{Context} type and which serves
-to store the current method context0 makes a call to
-\texttt{addParameter(AST)} and passes it the parameter just
-parsed. The Implementation of the class \texttt{Context} will be
-presented in
-Section~\ref{mod-and-con-clab}. Similar actions are
-considered for the declaration of modifiable and local variables.
-\begin{figure}[tbh]
-\rule{\linewidth}{0.25mm}
+
+
+
+
+\subsection{The class \texttt{ASTContext}}
+\label{sub-sec-cla-ast-con}
+The class \texttt{ASTContext} represent the context of any method
+declaration. A method context consists of the representation of its
+assignable locations, its parameters and its local variables. This
+representation is based on the definition~\ref{def-mod}. Additionally
+we provide representation for the package and class where the method
+occurs and the class that it extends (if any).
+
+These contexts, are passed as parameter to the methods of the class
+\texttt{Assignable}, which implements the rules presented in
+Section~\ref{sec-che-for-ass-cla}.
+
+
+
+
+\subsection{The class \texttt{Assignable}}
+\label{sub-sec-the-cla-ass}
+
+The class \texttt{Assignable} implements the assignable rules like
+static method. As an example, in the case of \textsf{modEXP} rules
+(see below), one must pass to it the expression \texttt{e} currently
+analyzed, the context \texttt{cxt} of the method where the expression
+\texttt{e} occurs and the contexts \texttt{cxts} of all known classes.
+
+When the expression \texttt{e} is, for instance, an assignment
+$e_1=e_2$ check that $e_1$ belongs to set of assignable expressions of
+the method (\texttt{\_in\_PRIME($\cdots$)}) and then it applies the
+\textsf{modPE} rules on $e_1$ (\texttt{\_modPE($\cdots$)}) and the
+\textsf{modEXP} rules on $e_2$ (\texttt{\_modEXP($\cdots$)}).
 \begin{alltt}
-   public final void param_declaration() throws \dots \verb!{! 
-      \vdots
-      AST tmp87_AST = null;
-      if(inputState.guessing == 0) \verb!{!
-         tmp87_AST = (AST)astFactory.create(LT(1));
-         astFactory.addASTChild(currentAST, tmp87_AST);
-         {\it//code added for modifiable checker: parameter of the method}
-         currentContext.addParameter(astFactory.dupTree(tmp87_AST));
-      \verb!}!
-      \vdots
-   \verb!}!
-\end{alltt}
-\caption{Determining out parameters}
-\label{fig-out-par}
-\rule{\linewidth}{0.25mm}
-\end{figure}
-
-
-
-
-\subsection{Making calls to static rules}
-\label{mak-cal-sta-rul}
-After determining the context of each method and its instructions, we
-are ready to statically call methods of the \texttt{Modifiable} class
-and thus check its modifiable declarations. Figure~\ref{fig-cal-whi-rul}
-shows the case for the rule corresponding a \texttt{while}
-construct. Its
-respective rule \textup{WHILE} is presented below.
-%%%%%%%%%%
-\[
-\begin{tabular}{ll}
-WHILE\,\, & 
-\begin{prooftree}
-c\ \textsf{modEXP}\ Y,\ \ b\ \textsf{modSTM}\ Y
-\justifies
-\texttt{while(}c\texttt{)\{}b\texttt{\}}
-\end{prooftree}
-\end{tabular}
-\]
-%%%%%%%%%
-
-As can be seen, as far as the method \texttt{statement} parses the
-different parts of a \texttt{while} statement, we store the guard
-and block constructs as variables of type \texttt{AST}
-\texttt{temp4$\_$MOD} and \texttt{temp5$\_$MOD}\footnote{In the rule
-above, these correspond to \textsc{C} and \textsc{B}
-respectively}. Finally, we use the static Al method \texttt{$\_$WHILE}
-of \texttt{Modifiable} class for doing the corresponding checking. In
-addition to variables \texttt{temp4$\_$MOD} and \texttt{temp5$\_$MOD},
-we have to pass to method \texttt{$\_$WHILE} the context of the method
-where this statement is declared and a list of all other known
-contexts. Class \texttt{Modifiable} will be presented in
-Section~\ref{mod-and-con-clab}.
-\begin{figure}[tbh]
-\rule{\linewidth}{0.25mm}
-\begin{alltt}
-   public final void statement(boolean in_model_prog) \dots \verb!{!
-      \vdots
-      case LITERAL_while:
-         match(LITERAL_while);\dots match(LPAREN); \dots expression(side_effects_allowed);
-         {\it //code added for modifiable checker}
-         AST temp4_MOD = (AST)astfactoryMOD.dupTree(returnAST);
-         match(RPAREN); \dots statement(in_model_prog);
-         {\it //code added for modifiable checker}
-         AST temp5_MOD = (AST)astfactoryMOD.dupTree(returnAST);
-         Modifiable._WHILE(temp4_MOD,temp5_MOD, currentContext.getY(), contextStack);
-    \verb!}!
-\end{alltt}
-\caption{Calling of {\tt while} rule}
-\label{fig-cal-whi-rul}
-\rule{\linewidth}{0.25mm}
-\end{figure}
-
-
-
-
-\subsection{\texttt{Modifiable} and \texttt{Context} classes}
-\label{mod-and-con-clab}
-The \texttt{Modifiable} class implements rules presented in
-Section~\ref{sec-giv-sin-def} as static methods. As an example
-Figure~\ref{fig-met-sta-whi} shows method \textup{$\_$WHILE}, which
-implements the rule \textup{WHILE} presented above. This method makes
-calls to \texttt{$\_$modEXP($\dots$)} and
-\texttt{$\_$modSTM($\dots$)} static methods, which implements rules
-\texttt{modEXP} and \texttt{modSTM} respectively.
-
-
-
-
-\begin{figure}[tbh]
-\rule{\linewidth}{0.25mm}
-\begin{alltt}
-public static boolean _WHILE(AST C, AST B, Vector Y, Stack contexts)\verb!{!
-  return(_modEXP(C,Y,contexts) && {\it //C modEXP Y}
-         _modSTM(B, Y, contexts); {\it //B modSTM Y}
-        );
-\verb!}!
-
-
-public static boolean _modEXP(AST e, Vector Y, Stack contexts)\verb!{!
-  boolean tempRes;
-  switch(e.getType())\verb!{!
-    case JavaTokenTypes.ASSIGN: case JavaTokenTypes.PLUS_ASSIGN:
-    case JavaTokenTypes.MINUS_ASSIGN: case JavaTokenTypes.STAR_ASSIGN:
-    case JavaTokenTypes.DIV_ASSIGN: case JavaTokenTypes.BITWISE_ASSIGNMENT_OP:
-    tempRes = _in_PRIME(astfactoryMOD.dupTree(e.getFirstChild()),Y,contexts) &&
-     _modPE(astfactoryMOD.dupTree(e.getFirstChild()),Y,contexts) &&
-     _modEXP(astfactoryMOD.dupTree(e.getFirstChild().getNextSibling()),Y,contexts);
-    break;
-    \vdots
+public static boolean _modEXP(AST e, ASTContext cxt, Vector cxts)\verb!{!	
+  boolean tempRes;	
+  switch(e.getType())\verb!{!	
+    case JavaTokenTypes.ASSIGN:{\it // =}
+      tempRes = _in_PRIME(e.getFirstChild(),cxt,cxts) &&
+       _modPE(e.getFirstChild(),currentCxt,cxts) &&
+       _modEXP(e.getFirstChild().getNextSibling(),cxt,cxts);
+      return tempRes;
+    \vdots 
   \verb!}!
-  return tempRes;
 \verb!}!
 \end{alltt}
-\caption{Static method \texttt{$\_$WHILE}}
-\label{fig-met-sta-whi}
-\rule{\linewidth}{0.25mm}
-\end{figure}
 
 
-\section{Conclusion}
-\label{sec-con}
 
 
+\subsection{Experiences using \modtool}
+\label{sub-sec-usi-the-too}
+
+
+
+
+
+
+\section{Conclusion and future work}
+\label{sec-con-and-fut-wor}
+We have presented a method for checking \emph{side-effects}
+freeness. We are defined syntactical rules for each \java~construct
+checking that they only assign local declared as
+\emph{assignable}. Hence, our method does not concern with
+modification but assignment. Therefore in a context with aliasing, our
+method can miss the variable modified. Several solutions have been
+proposed for solving this problem. In~\cite{Leino97} a solution with
+\emph{Data groups} is proposed, which enables modular checking.
+
+Our rules, and the implementation we are done, allow one to check for
+side-efects efficiently, as no too much is spend in it. 
+
+BLA-BLA-BLA
 
 \bibliographystyle{alpha}
 \bibliography{../specification}
 
 \end{document}
-
-
-
-
-\appendix
-\section{Checking specifications}
-\label{ane-der-exa}
-
-
-This appendix presents some derivation examples of checking
-\java~asserted programs using the rules we presented in
-Section~\ref{sec-giv-sin-def}.
-
-
-
-We present some derivation examples in
-figures~\ref{fig-der-tre-c-cal-n},~\ref{fig-der-tre-this-m},~\ref{fig-der-tre-val-n}
-and~\ref{fig-der-tre-c-cal-n} corresponding to
-figure~\ref{fig-der-exa}.
-\begin{figure}[tbh]
-\rule{\linewidth}{0.25mm}
-\rule{0em}{0.1ex}
-\begin{alltt}
-  public class C\verb!{!
-    public int k = 0;
-
-    {\it //@modifies arr[pos];}
-    public void m(int[] arr, int pos)\verb!{! arr[pos] = this.k; \verb!}!
-    public C getC()\verb!{! return this; \verb!}!
-  \verb!}!
-  public class D\verb!{!
-    int[] myArr = new int[5];
-    int myPos = 3;
-    C c = new C();
-
-    {\it //@modifies \verb!\!fields_of(\verb!\!reach(this));}
-    public void n(int val)\verb!{! c.getC().k = val++; c.m(myArr, myPos); \verb!}!
-  \verb!}!
-\end{alltt}
-\caption{Derivation example}
-\label{fig-der-exa}
-\rule{\linewidth}{0.25mm}
-\end{figure} %%%%%%%
-\begin{landscape} %%%%%%%%
-\begin{center} 
-\begin{figure}[tbh]
-\rule{\linewidth}{0.25mm}
-\\[2.0ex]
-\begin{prooftree}
-   \[
-      \[
-        \[
-	  \justifies
-	  \mathtt{arr[pos]}\in\ \textsc{Y}
-	\]
-	\justifies
-	\mathtt{arr[pos]}\underline\in\ \textsc{Y}
-	\using
-	\textsc{\tiny IN-SIMP}
-      \]
-      \[
-	\[
-	  \[
-            \[
-	      \[
-		\justifies
-	 	\texttt{pos}\  \textit{modPRM}\ \textsc{Y}
-		\using
-		\textsc{\tiny CONST}
-	      \]
-	      \justifies
-	      \texttt{pos}\  \textit{modPE}\ \textsc{Y}
-	      \using
-	      \textsc{\tiny EXP-PRM}	      
-	    \]
-	    \justifies
-    \texttt{pos}\  \textit{modEXP}\ \textsc{Y}
-	    \using
-	    \textsc{\tiny EXP-TO-PE}
-          \]
- 	  \justifies
-	  \mathtt{arr[pos]}\  \textit{modPRM}\ \textsc{Y}
-	  \using
-	  \textsc{\tiny ARR-FLD}
-	\]
- 	\justifies
-	\mathtt{arr[pos]}\  \textit{modPE}\ \textsc{Y}
-	\using
-	\textsc{\tiny EXP-PRM}
-      \]
-      \[ %1
-        \[ %2
-          \[ %2
-	     \[ %3
-	       \justifies
-	       \texttt{this}\ \textit{modPRM}\ \textsc{Y}
-	       \using
-	       \textsc{\tiny THIS}
-	     \] %3
-	     \justifies
-	     \texttt{this}\ \textit{modPE}\ \textsc{Y}
-	     \using
-	     \textsc{\tiny EXP-PRM}
-          \] %2
-	  \[ %3
-	    \justifies
-	    \texttt{k}\ \textit{modPS}\ \textsc{Y}
-	    \using
-	    \textsc{\tiny ID-FLD}
-	  \] %3
- 	  \justifies
-	  \texttt{this.k}\ \textit{modPE}\ \textsc{Y}
-	  \using
-	  \textsc{\tiny PE-TO-PE}
- 	\] %2
- 	 \justifies
-	 \texttt{this.k}\ \textit{modEXP}\ \textsc{Y}
-	 \using
-         \textsc{\tiny EXP-TO-PE}
-     \] %1
-     \justifies
-     \mathtt{arr[pos] = this.k}\  \textit{mod}\ \mathtt{\{arr[pos],arr,pos\}}
-     \using
-     \textsc{\tiny ASSG}
-   \]
-   \justifies
-   \texttt{m(arr,pos)}\ \textit{mod}\ \mathtt{\{arr[pos]\}}
-   \using
-   \textsc{\tiny METH-DEC}
-\end{prooftree}
-\caption{Derivation tree for the method \texttt{m(int$[]$, int)}}
-\label{fig-der-tre-this-m}
-\rule{\linewidth}{0.25mm}
-\end{figure}
-\end{center} %%%%%%%%%%%
-\begin{center} %%%%%%%%%%%
-\begin{figure}[tbh]
-\rule{\linewidth}{0.25mm}
-\\[2.0ex]
-\begin{prooftree}
-\footnotesize
-   \[
-     \[
-       \mathtt{fields\_of(\backslash reach(this))}\in \textsc{Y},\ \
-\mathtt{c.getC()}\in \backslash\texttt{reach(this)}
-       \justifies
-       \mathtt{c.getC().k}\underline\in\ \textsc{Y} %
-       \using
-       \textsc{\tiny IN-EXP-REACH}
-     \]
-     \[
-       \[
-	 \[
-	   \justifies
-	   \phi \sqsubseteq \textsc{Y}
-	   \using
-	   \textsc{\tiny AX}
-	 \]
-	 \[
-           \[
-             \proofdotseparation=1.2ex 
-             \proofdotnumber=3
-             \leadsto 
-           \]
-	   \justifies
-	   \texttt{c}\ \textit{modPE}\ \textsc{Y} 
-	   \using 
-	 \]
-         \justifies
-	 \mathtt{c.getC()}\ \textit{modPE}\ \textsc{Y} 
-       \]
-       \[
-         \justifies
-	 \mathtt{k}\ \textit{modPS}\ \textsc{Y} 
-	 \using
-	 \textsc{\tiny ID-FLD}
-       \]
-       \justifies
-       \mathtt{c.getC().k}\ \textit{modPE}\ \textsc{Y} %
-       \using
-       \textsc{\tiny PE-TO-PE}
-     \]
-      \[ %1
-         \[ %2
-           \[ %3
-            \justifies 
-	     \texttt{val}\in \textsc{Y}\
-	     \using
-	     \textsc{\tiny AX}
-	   \] %3
-           \justifies 
-           \texttt{val}\underline\in \textsc{Y}\ 
-	   \using
-	   \textsc{\tiny IN-SIMP}
-	 \] %2
-         \[ %2
-   \[ %3
-             \justifies
-             \texttt{val}\ \textit{modPRM}\ \textsc{Y}
-	     \using
-	     \textsc{\tiny ID-FLD}	
-	   \] %3  
-           \justifies
-           \texttt{val}\ \textit{modPE}\ \textsc{Y}
-	   \using
-	   \textsc{\tiny EXP-PRM}
-	 \] %2
-       \justifies
-       \mathtt{val ++}\ \textit{modEXP}\ \textsc{Y} %
-       \using
-       \textsc{\tiny POST-PLUS}
-     \] %1
-    \justifies
-     \mathtt{c.getC().k = val ++}\ \textit{modEXP}\
-\mathtt{\{\backslash fields\_of(\backslash reach(this)), val\}}
-     \using
-     \textsc{\tiny ASSG}
-   \] %0
-   \justifies
-   \texttt{n(val)}\ \textit{mod}\ \mathtt{\{\backslash fields\_of(\backslash reach(this))\}}
-   \using
-   \textsc{\tiny METH-DEC}
-\end{prooftree}
-\caption{Derivation tree for $\mathtt{c.getC().k = val ++}$ in {\tt n(int)}}
-\label{fig-der-tre-val-n}
-\rule{\linewidth}{0.25mm}
-\end{figure}
-\end{center}
-
-
-
-
-\begin{center}
-\begin{figure}[tbh]
-\rule{\linewidth}{0.25mm}
-\\[2.0ex]
-\begin{prooftree}
-   \[
-       \[ %1
-         \[ %---
-         \[ %2
-	   \[ %3
-             \mathtt{\backslash fields\_of(\backslash reach(this))}\in 
-\texttt{Y},\ \ \texttt{myArr}\in \mathtt{\backslash reach(this)}
-	     \justifies
-             \mathtt{myArr[myPos]}\underline\in\textsc{Y}
-             \using
-             \textsc{\tiny IN-ARR-REACH}
-	   \] %3
-           \justifies
-	   \mathtt{\{myArr[myPos]\}}\sqsubseteq\textsc{Y}
-	   \using
-	   \sqsubseteq
-         \] %2
-         \[ %2
-	   \[ %3
-             \proofdotseparation=1.2ex 
-             \proofdotnumber=3
-            \leadsto 
-           \] %3
-	   \justifies
-	   \texttt{c}\ \textit{modPE}\ \textsc{Y}
-         \] %2
-         \[ %2 
-           \[ %3
-             \proofdotseparation=1.2ex 
-             \proofdotnumber=3
-             \leadsto 
-           \] %3
-	   \justifies
-   \texttt{myArr}\ \textit{modEXP}\ \textsc{Y}
-	 \]  %2
-	 \[  %2
-           \[ %3
-             \proofdotseparation=1.2ex 
-             \proofdotnumber=3
-             \leadsto 
-           \] %3	
-	   \justifies	
-	   \texttt{myPos}\ \textit{modEXP}\ \textsc{Y}
-	 \]  %2
-         \justifies
-         \texttt{c.m(myArr, myPos)}\ \textit{modPE}\ \textsc{Y}
-         \using
-         \textsc{\tiny EXP-METH}
-        \] %-----
-        \justifies
-         \texttt{c.m(myArr, myPos)}\ \textit{modEXP}\ \textsc{Y}
-         \using
-         \textsc{\tiny EXP-TO-PE}
-     \] %1
-     \justifies
-     \texttt{c.m(myArr, myPos)}\ \textit{mod}\ \mathtt{\{\backslash
-fields\_of(\backslash reach(this)), val, myArr\}}
-     \using
-     \textsc{\tiny MOD-TO-EXP}
-   \] %0
-   \justifies
-   \texttt{n(val)}\ \textit{mod}\ \mathtt{\{\backslash fields\_of(\backslash reach(this))\}}
-   \using
-   \textsc{\tiny METH-DEC}
-\end{prooftree}
-\caption{Derivation tree for {\tt c.m(myArr, myPos)} in {\tt n(int)}}
-\label{fig-der-tre-c-cal-n}
-\rule{\linewidth}{0.25mm}
-\end{figure}
-\end{center}
-
-\end{landscape}
-
