@@ -10,23 +10,26 @@ import javafe.genericfile.*;
 
 
 /**
- ** A PkgTree is a filtered representation of a filespace Tree
- ** (cf. PathComponent) where some files and directories that are
- ** clearly not part of the Java namespace have been filtered out; the
- ** remaining nodes can be divided into two categories: (a) (usually
- ** interior) nodes that correspond to potential Java packages, and (b)
- ** exterior nodes that correspond to files that reside in one of the
- ** potential Java packages and that have an extension (e.g., .java).<p>
+ ** A PkgTree is a filtered representation of a filespace {@link Tree}
+ ** (cf {@link PathComponent}) where some files and directories that
+ ** are clearly not part of the Java namespace have been filtered out;
+ ** the remaining nodes can be divided into two categories: (a)
+ ** (usually interior) nodes that correspond to potential Java
+ ** packages, and (b) exterior nodes that correspond to files that
+ ** reside in one of the potential Java packages and that have an
+ ** extension (e.g., .java).<p>
  **
- ** A function, isPackage, is provided to distinguish the two
- ** categories.  A convenience function, packages(), is provided to
- ** enumerate all the potential Java packages in a PkgTree.<p>
+ ** A function, {@link #isPackage(Tree)}, is provided to distinguish
+ ** the two categories.  A convenience function, {@link
+ ** #packages(Tree)}, is provided to enumerate all the potential Java
+ ** packages in a PkgTree.<p>
  **
- ** isPackage depends only on a node's label; this ensures that a
- ** UnionTree of several PkgTree's never combines package and
- ** non-package nodes into a single node.  (This is why (b) excludes
- ** files without extensions.)  Accordingly, PkgTree's accessors and
- ** enumerators can also be used on UnionTrees of PkgTrees.<p>
+ ** {@link #isPackage(Tree)} depends only on a node's label; this
+ ** ensures that a {@link UnionTree} of several PkgTree's never
+ ** combines package and non-package nodes into a single node.  (This
+ ** is why (b) excludes files without extensions.)  Accordingly,
+ ** PkgTree's accessors and enumerators can also be used on {@link
+ ** UnionTree}s of PkgTrees.<p>
  **
  ** This module is meant to do a reasonable job of identifying potential
  ** packages.  It is not 100% accurate, however, erring on the side of

@@ -8,15 +8,16 @@ import java.util.NoSuchElementException;
 
 
 /**
- ** This layer describes how to implement an Enumeration in terms of a
- ** single function that returns the next element in a series, or null if
- ** the series is exhausted.<p>
+ ** This layer describes how to implement an {@link Enumeration} in
+ ** terms of a single function that returns the next element in a
+ ** series, or null if the series is exhausted.<p>
  **
- ** Using one function instead of the two used by Enumeration has the
- ** advantage of avoiding possible duplication of code to determine
- ** whether or not any elements remain in in the series.<p>
+ ** Using one function instead of the two used by {@link Enumeration}
+ ** has the advantage of avoiding possible duplication of code to
+ ** determine whether or not any elements remain in the series.<p>
  **
- ** Limitation: null cannot belong to the resulting Enumerations.<p>
+ ** Limitation: <code>null</code> cannot belong to the resulting
+ ** {@link Enumeration}s.<p>
  **/
 
 abstract class LookAheadEnum implements Enumeration {

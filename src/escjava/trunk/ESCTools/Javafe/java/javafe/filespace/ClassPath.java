@@ -24,8 +24,8 @@ public class ClassPath {
 
     /**
      ** Return our current classpath; if the Java system property
-     ** java.class.path.skip is set to n, we ignore the first n
-     ** components of the path. <p>
+     ** <code>java.class.path.skip</code> is set to <var>n</var>, we
+     ** ignore the first <var>n</var> components of the path. <p>
      **
      ** This makes it easier to write Java applications that use the
      ** classpath because we can append the path component containing
@@ -56,7 +56,7 @@ public class ClassPath {
 
     /**
      ** Set our current classpath by changing the property
-     ** java.class.path.<p>
+     ** <code>java.class.path</code>.<p>
      **
      ** <esc> requires newClassPath!=null </esc>
      **/
@@ -74,17 +74,19 @@ public class ClassPath {
      ************************************************************/
 
     /**
-     ** Get the filtered filespace (cf. PathComponent) specified by a
-     ** classpath.  (Filtering is performed using PkgTree on each of the
-     ** path components before they are union'ed together).<p>
+     ** Get the filtered filespace (cf {@link PathComponent})
+     ** specified by a classpath.  (Filtering is performed using
+     ** {@link PkgTree} on each of the path components before they are
+     ** union'ed together).<p>
      **
-     ** All PkgTree accessors and enumerators can be used on the
-     ** resulting filespace.<p>
+     ** All {@link PkgTree} accessors and enumerators can be used on
+     ** the resulting filespace.<p>
      **
-     ** May throw an IOException if errors occur.<p>
+     ** May throw an {@link IOException} if errors occur.<p>
      **
-     ** Iff complain is set, we throw IOExceptions if non-existent
-     ** or ill-formed path components are present in the classpath.<p>
+     ** Iff complain is set, we throw {@link IOException}s if
+     ** non-existent or ill-formed path components are present in the
+     ** classpath.<p>
      **
      ** <esc> requires classpath!=null;  ensures \result!=null</esc>
      **/
@@ -110,8 +112,9 @@ public class ClassPath {
      ** Get the namespace specified by the current classpath using open;
      ** this is a convenience function.<p>
      **
-     ** Iff complain is set, we throw IOExceptions if non-existent
-     ** or ill-formed path components are present in the classpath.<p>
+     ** Iff complain is set, we throw {@link IOException}s if
+     ** non-existent or ill-formed path components are present in the
+     ** classpath.<p>
      **/
     //@ ensures \result!=null
     public static Tree open(boolean complain) throws IOException {
@@ -128,8 +131,8 @@ public class ClassPath {
     /**
      ** A nicer, formatted version of print.<p>
      **
-     **  P must be a filespace filtered via PkgTree; moreover
-     ** PkgTree.isPackage(P) should be true.<p>
+     ** @param P must be a filespace filtered via {@link PkgTree};
+     ** moreover <code>PkgTree.isPackage(P)</code> should be true.<p>
      **/
     //@ requires P!=null
     public static void displayPackage(Tree P) {

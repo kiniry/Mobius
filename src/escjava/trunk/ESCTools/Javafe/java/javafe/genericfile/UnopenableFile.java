@@ -8,14 +8,15 @@ import java.io.InputStream;
 
 
 /**
- ** Instances of UnopenableFile are Genericfile's that cannot be opened. <p>
+ ** Instances of UnopenableFile are {@link GenericFile}s that cannot
+ ** be opened. <p>
  **
  ** Their value lies solely in their associated naming, etc., info.<p>
  **
- ** Example: javafe.util.CorrelatedReader's keeps an open InputStream
- **          and an associated Genericfile.  In the case of
- **          unreopenable streams like stdin, the associated
- **          Genericfile is an UnopenableFile with the name "stdin".
+ ** Example: {@link javafe.util.CorrelatedReader}'s keeps an open
+ ** {@link InputStream} and an associated {@link GenericFile}.  In the
+ ** case of unreopenable streams like stdin, the associated {@link
+ ** GenericFile} is an UnopenableFile with the name "stdin".
  **/
 
 public class UnopenableFile implements GenericFile {
