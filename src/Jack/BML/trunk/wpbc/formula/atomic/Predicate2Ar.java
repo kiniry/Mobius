@@ -119,6 +119,7 @@ public class Predicate2Ar extends Predicate {
 	public Expression substitute(Expression _e, Expression _v) {
 
 		//		Util.dump("substitute [" +_e  +"<- " +  _v + "] in"+  term1.toString());	
+		
 		term1 = term1.substitute(_e, _v);
 
 		term2 = term2.substitute(_e, _v);
@@ -155,6 +156,9 @@ public class Predicate2Ar extends Predicate {
 		}
 		if (getPredicateSymbol() == PredicateSymbol.LESSEQ) {
 			op = " <= ";
+		}
+		if (getPredicateSymbol() == PredicateSymbol.SUBTYPE ) {
+			op = " <: ";
 		}
 
 		return "(" + term1 + op + term2 + ")";

@@ -13,7 +13,7 @@ import utils.FreshIntGenerator;
 
 import bcclass.attributes.ExsuresTable;
 import bcexpression.Expression;
-import bcexpression.FieldAccessExpression;
+import bcexpression.FieldAccess;
 import bcexpression.NumberLiteral;
 
 import bcexpression.javatype.ClassNames;
@@ -104,8 +104,8 @@ public class BCNEWARRAY extends BCAllocationInstruction {
 				new_arr_ref);
 
 		//			length( new ArrayObject(type, S(t) ) ) 
-		FieldAccessExpression arr_length_access =
-			new FieldAccessExpression(new ArrayLengthConstant(), new_arr_ref);
+		FieldAccess arr_length_access =
+			new FieldAccess(new ArrayLengthConstant(), new_arr_ref);
 		
 		// substitute the access to the length field of the created array by stack top
 		//_psi^n[length( new ArrayObject(type, S(t)) <-- S(t)]

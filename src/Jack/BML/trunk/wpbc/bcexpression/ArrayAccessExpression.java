@@ -7,17 +7,19 @@
 package bcexpression;
 
 import bcexpression.javatype.JavaArrType;
-import bcexpression.javatype.JavaType;
-import type.BCType;
+import bcexpression.substitution.FunctionApplication;
+import bcexpression.substitution.RefFunction;
+import bcexpression.vm.Stack;
+
 
 
 /**
  * @author mpavlova
  * the class represents array access expression, i.e.  a[i]
  */
-public class ArrayAccessExpression extends Expression {
+public class ArrayAccessExpression extends Expression implements RefFunction {
 	
-	protected JavaType type;
+	
 	
 	/**
 	 * @param _array the array object whose element at index _arrIndex is accessed 
@@ -26,26 +28,6 @@ public class ArrayAccessExpression extends Expression {
 	public ArrayAccessExpression(Expression  _array, Expression _arrIndex  ) {
 		super(new Expression[]{_array, _arrIndex});
 	}
-
-
-	public BCType getType( ) {
-		return type;
-	}
-
-	/* (non-Javadoc)
-	 * @see bcexpression.Expression#setType()
-	 */
-	public void setType() {
-		type = ((JavaArrType)getSubExpressions()[0].getType()).getElementType();		
-	}
-
-
-/*	 (non-Javadoc)
-	 * @see bcexpression.Expression#equals(bcexpression.Expression)
-	 
-	public boolean equals(Expression _expr) {
-		return super.equals(_expr);
-	}*/
 
 
 	/* (non-Javadoc)
@@ -60,8 +42,25 @@ public class ArrayAccessExpression extends Expression {
 		for (int i = 0; i< subExpr.length; i++) {
 			subExpr[i] = subExpr[i].substitute( _e1, _e2);
 		}
-		return this;
+		
+		if (! ( _e1 instanceof ArrayAccessExpression) ) {
+			return this;
+		}
+		ArrayAccessExpression _eArr  = (ArrayAccessExpression)_e1;
+		
+		FunctionApplication with =  new FunctionApplication(this, _e1.copy(), _e2.copy() );
+		return with ;
 	}
+
+	public Expression getIndex() {
+		Expression index = getSubExpressions()[1];
+		return index;
+	}
+	public Expression getArray() {
+		Expression index = getSubExpressions()[0];
+		return index;
+	}
+	
 
 
 	/* (non-Javadoc)

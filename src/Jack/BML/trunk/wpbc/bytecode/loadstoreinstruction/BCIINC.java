@@ -10,7 +10,7 @@ import bcclass.BCLocalVariable;
 import bcclass.attributes.ExsuresTable;
 import bcexpression.ArithmeticExpression;
 import bcexpression.ExpressionConstants;
-import bcexpression.LocalVariableAccess;
+import bcexpression.LocalVariable;
 import bcexpression.NumberLiteral;
 import bcexpression.javatype.JavaType;
 
@@ -65,7 +65,7 @@ public class BCIINC extends BCLocalVariableInstruction {
 		Formula _normal_Postcondition,
 		ExsuresTable _exc_Postcondition) {
 		Formula wp;
-		LocalVariableAccess lva = new LocalVariableAccess(getIndex());
+		LocalVariable lva = new LocalVariable(getIndex());
 		ArithmeticExpression inc = (ArithmeticExpression)ArithmeticExpression.getArithmeticExpression(constant, lva, ExpressionConstants.ADD ) ;
 		wp = (Formula)_normal_Postcondition.substitute(lva, inc);
 		return wp; 

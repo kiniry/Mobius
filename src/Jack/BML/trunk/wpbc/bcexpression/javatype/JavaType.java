@@ -16,7 +16,6 @@ import constants.BCConstantClass;
 import bcexpression.Expression;
 import bcexpression.NumberLiteral;
 import bcexpression.jml.JML_CONST_TYPE;
-import type.BCType;
 
 
 /**
@@ -25,7 +24,7 @@ import type.BCType;
  * To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
-public class JavaType extends Expression implements BCType {
+public class JavaType extends Expression  {
 	protected Type bcelType; //still keeping reference to the bcel type object
 
 	/**
@@ -94,7 +93,7 @@ public class JavaType extends Expression implements BCType {
 	/**
 	 * return  JML_CONST_TYPE;
 	 */
-	public BCType getType() {
+	public Expression getType() {
 		return JML_CONST_TYPE.JML_CONST_TYPE;
 	}
 

@@ -5,7 +5,9 @@
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 package constants;
+import bcexpression.Expression;
 import bcexpression.javatype.JavaType;
+import bcexpression.substitution.RefFunction;
 /**
  * @author mpavlova
  * 
@@ -17,7 +19,7 @@ import bcexpression.javatype.JavaType;
  * 						   u2 name_and_type_index; 
  * 						  }
  */
-public class BCConstantFieldRef extends BCConstantRef {
+public class BCConstantFieldRef extends BCConstantRef implements RefFunction {
 	/**
 	 * the type of the field
 	 */
@@ -47,7 +49,8 @@ public class BCConstantFieldRef extends BCConstantRef {
 		super(_cpIndex, _CONSTANT_classref_index, _name);
 		type = _type;
 	}
-	public JavaType getType() {
+	
+	public Expression getType() {
 		return type;
 	}
 

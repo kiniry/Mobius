@@ -16,16 +16,18 @@ import bcexpression.Expression;
  */
 public class QuantifiedFormula extends Formula {
 	private Quantificator[] quantificators;
-	private Formula subformula;
+	/*private Formula subformula;
+*/
 
+	
 	public QuantifiedFormula(Formula _formula, Quantificator _q) {
-		subformula = _formula;
+		super(_formula);
 		quantificators = new Quantificator[1];
 		quantificators[0] = _q;
 	}
 
 	public QuantifiedFormula(Formula _formula, Quantificator[] _q) {
-		subformula = _formula;
+		super(_formula);
 		quantificators = _q;
 	}
 
@@ -66,16 +68,18 @@ public class QuantifiedFormula extends Formula {
 	}
 
 	public Expression copy() {
+		Formula subformula = (Formula)getSubExpressions()[0];
 		Formula _subformula = (Formula)subformula.copy();
 		Quantificator[] q = new Quantificator[quantificators.length];
 		for (int i = 0; i < quantificators.length; i++) {
-			q[i] = quantificators[i].copy();
+			q[i] = (Quantificator)quantificators[i].copy();
 		}
 		Formula _copy = new QuantifiedFormula(_subformula, q);
 		return _copy;
 	}
 
 	public String toString() {
+		Formula subformula = (Formula)getSubExpressions()[0];
 		String s = "";
 		for (int i = 0; i < quantificators.length; i++) {
 			s = s + quantificators[i];
@@ -96,7 +100,9 @@ public class QuantifiedFormula extends Formula {
 				quantificators[i].setBoundVar(boundExpr);
 			}
 		}
-		subformula = (Formula)subformula.rename(expr1, expr2);
+		Expression[] subformula = getSubExpressions();
+		subformula[0] = subformula[0].rename(expr1, expr2);
+	
 		return this;
 	}
 	
@@ -114,7 +120,31 @@ public class QuantifiedFormula extends Formula {
 				return this;
 			}
 		}
-		subformula = (Formula)subformula.substitute(_e,_v);
+		Expression[] subformula = getSubExpressions();
+		subformula[0] = subformula[0].substitute(_e,_v);
 		return this;
+	}
+	
+	public boolean equals(Formula formula) {
+		boolean eq = super.equals( formula);
+		if ( ! eq ) {
+			return false;
+		}
+		if ( ! (formula instanceof QuantifiedFormula )) {
+			return false;
+		} 
+		/*Formula f = (Formula)getSubExpressions()[0];
+		Formula _f = (Formula)formula.getSubExpressions()[0];
+		 eq = f.equals(_f);*/
+		Quantificator[] _q =  ((QuantifiedFormula)formula).getQuantificators();
+		if (_q.length != quantificators.length) {
+			return false;
+		}
+		for (int i = 0; i < quantificators.length; i++) {
+			if (! quantificators[i].equals( _q[i])) {
+				return false;
+			}
+		}
+		return true;
 	}
 }

@@ -7,7 +7,6 @@
 package bcexpression;
 
 import formula.Formula;
-import type.BCType;
 
 /**
  * @author mpavlova
@@ -16,22 +15,16 @@ import type.BCType;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class ConditionalExpression extends Expression {
-	private Formula condition;
+	/*private Formula condition;*/
 	
 	public ConditionalExpression(Formula condition, Expression expr1, Expression expr2  ) {
-		super(expr1, expr2);
-		this.condition = condition;
+		super(new Expression[]{condition, expr1, expr2});
+		/*this.condition = condition;*/
 	}
 	
 	
 	public boolean equals(Expression expr) {
 		boolean eq = super.equals(expr);
-		if (!eq ) {
-			return false;
-		}
-		ConditionalExpression conditionalExpr = (ConditionalExpression) expr;
-		Formula _condition = conditionalExpr.getCondition();
-		eq = condition.equals(_condition);
 		return eq;
 	}
 	/* (non-Javadoc)
@@ -42,17 +35,18 @@ public class ConditionalExpression extends Expression {
 		if ( equals( _e1)) {
 			return _e2;
 		}
-		condition =  (Formula)condition.substitute(_e1, _e2);
+		
 		Expression[] sExprs = getSubExpressions();
 		sExprs[0] = sExprs[0].substitute(_e1, _e2);
 		sExprs[1] = sExprs[1].substitute(_e1, _e2);
+		sExprs[2] = sExprs[2].substitute(_e1, _e2);
 		return this;
 	}
 
 	/* (non-Javadoc)
 	 * @see bcexpression.Expression#getType()
 	 */
-	public BCType getType() {
+	public Expression getType() {
 		Expression expr = getSubExpressions()[0];
 		return expr.getType();
 	}
@@ -61,7 +55,7 @@ public class ConditionalExpression extends Expression {
 	 * @see bcexpression.Expression#toString()
 	 */
 	public String toString() {
-		String s = condition + " ? " + getSubExpressions()[0] + " : " + getSubExpressions()[1];
+		String s = getSubExpressions()[0] + " ? " + getSubExpressions()[1] + " : " + getSubExpressions()[2];
 		return s;
 	}
 
@@ -69,10 +63,10 @@ public class ConditionalExpression extends Expression {
 	 * @see bcexpression.Expression#copy()
 	 */
 	public Expression copy() {
-		Formula conditionCopy = (Formula)condition.copy();
 		Expression expr0Copy = getSubExpressions()[0].copy();
 		Expression expr1Copy = getSubExpressions()[1].copy();
-		ConditionalExpression copy = new ConditionalExpression(conditionCopy, expr0Copy, expr1Copy);
+		Expression expr2Copy = getSubExpressions()[2].copy();
+		ConditionalExpression copy = new ConditionalExpression((Formula)expr0Copy, expr1Copy, expr2Copy);
 		return copy;
 	}
 
@@ -80,7 +74,7 @@ public class ConditionalExpression extends Expression {
 	 * @return
 	 */
 	public Formula getCondition() {
-		return condition;
+		return (Formula)getSubExpressions()[0];
 	}
 
 }

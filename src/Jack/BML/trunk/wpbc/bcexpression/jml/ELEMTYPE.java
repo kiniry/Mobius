@@ -6,12 +6,12 @@
  */
 package bcexpression.jml;
 
-import type.BCType;
 import bcexpression.Expression;
 import bcexpression.javatype.JavaArrType;
 import bcexpression.javatype.JavaReferenceType;
 import bcexpression.ref.ArrayReference;
 import bcexpression.substitution.FunctionApplication;
+import bcexpression.substitution.RefFunction;
 
 
 /**
@@ -19,26 +19,17 @@ import bcexpression.substitution.FunctionApplication;
  *
  * the class represents the JML constant elementype : array (JavaType) ---> JML_CONST_Type 
  */
-public class ELEMTYPE extends JMLExpression {
+public class ELEMTYPE extends JMLExpression implements RefFunction{
 
 	
 	private JML_CONST_TYPE type;
 	
 	public ELEMTYPE(Expression _subExpr) {
 		super(_subExpr);
-		setType();
-	}
-
-	
-	/* (non-Javadoc)
-	 * @see bcexpression.Expression#setType()
-	 */
-	public void setType() {
-		type = JML_CONST_TYPE.JML_CONST_TYPE;
 	}
 	
-	public BCType getType() {
-		return type;
+	public Expression getType() {
+		return JML_CONST_TYPE.JML_CONST_TYPE;
 	}
 	
 	public Expression substitute(Expression _e1 , Expression _e2) { 

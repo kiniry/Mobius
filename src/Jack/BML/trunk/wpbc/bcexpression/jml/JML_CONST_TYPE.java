@@ -7,14 +7,13 @@
 package bcexpression.jml;
 
 import bcexpression.Expression;
-import type.BCType;
 
 /**
  * @author io
  *
  * this class represents the JML constant TYPE that is the type of all Java types
  *  */
-public class JML_CONST_TYPE extends JMLExpression implements BCType  {
+public class JML_CONST_TYPE extends JMLExpression   {
 	
 	public static final  JML_CONST_TYPE JML_CONST_TYPE = new JML_CONST_TYPE();
 	
@@ -22,18 +21,11 @@ public class JML_CONST_TYPE extends JMLExpression implements BCType  {
 		//setExpressionType(ExpressionConstants.TYPE);
 	}
 
-	/* (non-Javadoc)
-	 * @see bcexpression.Expression#setType()
-	 */
-	public void setType() {
-		// TODO Auto-generated method stub
-		
-	}
 
 	/* (non-Javadoc)
 	 * @see bcexpression.Expression#getType()
 	 */
-	public BCType getType() {
+	public Expression getType() {
 		return this; //?may be this is a problem
 	}
 	

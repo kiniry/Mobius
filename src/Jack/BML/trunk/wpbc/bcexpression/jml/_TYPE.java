@@ -8,7 +8,7 @@ package bcexpression.jml;
 
 import bcexpression.Expression;
 import bcexpression.javatype.JavaType;
-import type.BCType;
+
 
 
 /**
@@ -17,29 +17,19 @@ import type.BCType;
  * this class represents the JML constant type : 
  */
 public class _TYPE extends JMLExpression  {
-	private JML_CONST_TYPE type;
 	
 	//jml expression : type( expression) where expression is a java type 
 	public _TYPE(JavaType _type) {
 		super(_type);
-		setType();
 	}
 
-	/* (non-Javadoc)
-	 * @see bcexpression.Expression#setType()
-	 */
-	public void setType() {
-		type = JML_CONST_TYPE.JML_CONST_TYPE;
-	}
 
 	/* (non-Javadoc)
 	 * @see bcexpression.Expression#getType()
 	 */
-	public BCType getType() {
-		if (type == null) {
-			setType();
-		}
-		return type;
+	public Expression getType() {
+
+		return JML_CONST_TYPE.JML_CONST_TYPE;
 	} 
 	
 	public   boolean equals(Expression _expr){ 
@@ -57,7 +47,7 @@ public class _TYPE extends JMLExpression  {
 	 * @see bcexpression.Expression#toString()
 	 */
 	public String toString() {
-		return "\type(" + type + ")";
+		return "\type(" + getType() + ")";
 	}
 
 	/* (non-Javadoc)

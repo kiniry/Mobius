@@ -10,7 +10,7 @@ package bcexpression.ref;
 
 import java.util.Vector;
 
-import type.BCType;
+
 import bcexpression.Expression;
 import bcexpression.javatype.JavaType;
 
@@ -27,17 +27,14 @@ public class Reference extends Expression {
 	
 	public Reference(int _id, JavaType _type) {
 		id = _id;
-		setType(_type);
-	}
-	
-	private void setType(JavaType _type) {
 		type = _type;
 	}
+	
 	
 	/* (non-Javadoc)
 	 * @see bcexpression.Expression#getType()
 	 */
-	public BCType getType()  {
+	public Expression getType()  {
 		return type;
 	}
 	/**

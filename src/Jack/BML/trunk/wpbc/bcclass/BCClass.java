@@ -6,6 +6,7 @@
  */
 package bcclass;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -172,4 +173,10 @@ public class BCClass {
 		}
 	}
 
+	/**
+	 * @return Returns the methods.
+	 */
+	public Collection getMethods() {
+		return methods.values();
+	}
 }

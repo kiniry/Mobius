@@ -6,7 +6,7 @@
  */
 package bcexpression;
 
-import type.BCType;
+
 
 import bcexpression.javatype.JavaType;
 
@@ -17,7 +17,7 @@ import bcexpression.javatype.JavaType;
  */
 public class Variable extends Expression  {
 	private int id;
-	private JavaType type;
+	private Expression type;
 	
 	public static final Variable DummyVariable = new Variable( 0);
 	
@@ -29,7 +29,7 @@ public class Variable extends Expression  {
 		id  = _id;
 	}
 	
-	public Variable( int _id, JavaType _type) {
+	public Variable( int _id, Expression _type) {
 		type = _type;
 		id = _id;
 	}
@@ -43,7 +43,7 @@ public class Variable extends Expression  {
 	/* (non-Javadoc)
 	 * @see bcexpression.Expression#getType()
 	 */
-	public BCType getType() {
+	public Expression getType() {
 		return type;
 	}
 

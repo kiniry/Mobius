@@ -8,7 +8,7 @@ package bcexpression;
 
 import bcexpression.javatype.JavaBasicType;
 import bcexpression.javatype.JavaType;
-import type.BCType;
+
 
 /**
  * @author io
@@ -20,7 +20,7 @@ public class NumberLiteral extends ArithmeticExpression {
 
 	private int literal;
 
-	private JavaBasicType type;
+	
 	
 	/**
 	 * this constructor expects that _literal must be a correct representation of an integer litreral.
@@ -28,24 +28,24 @@ public class NumberLiteral extends ArithmeticExpression {
 	 * e.g. new  NumberLiteral("12")
 	 */
 	public NumberLiteral( int _literal)  {
-		this(_literal, JavaType.JavaINT);
+		literal = _literal;	
 	}
 
 	/** 
 	 * @param value - a correct value
 	 * @param radix - the radix in which the value is interpreted
-	 */
+	 *//*
 	public NumberLiteral(int _literal,  JavaBasicType _type) {
 		literal = _literal;	
 		type = _type;
-	}
+	}*/
 	
 
 	/* (non-Javadoc)
 	 * @see bcexpression.Expression#getType()
 	 */
-	public BCType getType()  {
-		return type;
+	public Expression getType()  {
+		return JavaBasicType.JavaINT;
 	}
 	
 	/**

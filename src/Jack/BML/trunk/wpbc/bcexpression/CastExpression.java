@@ -6,7 +6,6 @@
  */
 package bcexpression;
 
-import type.BCType;
 import bcexpression.javatype.JavaType;
 
 /**
@@ -25,8 +24,8 @@ public class CastExpression extends Expression {
 	 * @return the java type that the cast expression must  be cast to, i.e.
 	 * (JavaType, Expression ) --> JavaType 
 	 */
-	public JavaType getCastType() {
-		JavaType type = (JavaType) getSubExpressions()[0];
+	public Expression getCastType() {
+		Expression type = getSubExpressions()[0];
 		return type;
 	}
 
@@ -56,9 +55,9 @@ public class CastExpression extends Expression {
 	/* (non-Javadoc)
 	 * @see bcexpression.Expression#getType()
 	 */
-	public BCType getType() {
-		JavaType type = (JavaType)getSubExpressions()[0];
-		return type;
+	public Expression getType() {
+		return getCastType();
+		
 	}
 
 	/* (non-Javadoc)

@@ -7,8 +7,6 @@
 package bcexpression.vm;
 
 
-import type.BCType;
-
 import bcexpression.Expression;
 
 
@@ -46,7 +44,7 @@ public final class Stack extends Expression  {
 	/* (non-Javadoc)
 	 * @see bcexpression.Expression#getType()
 	 */
-	public BCType getType() {
+	public Expression getType() {
 		// TODO Auto-generated method stub
 		return null;
 	} 

@@ -6,7 +6,9 @@
  */
 package bcexpression;
 import java.util.Vector;
-import type.BCType;
+
+import bcexpression.javatype.JavaBasicType;
+
 import utils.Util;
 /**
  * @author mpavlova
@@ -65,9 +67,8 @@ public class ArithmeticExpression extends Expression {
 		Expression _subExpr1,
 		Expression _subExpr2,
 		byte _arithmetic_op) {
-
+		super(new Expression[] { _subExpr1, _subExpr2 });
 		arithmetic_op = _arithmetic_op;
-		setSubExpressions(new Expression[] { _subExpr1, _subExpr2 });
 	}
 	/**
 	 * constructor for arithmetic expressions that contain only one
@@ -403,17 +404,19 @@ public class ArithmeticExpression extends Expression {
 	public byte getArithmeticOperation() {
 		return arithmetic_op;
 	}
-	public BCType getType() {
-		return null;
+	public Expression getType() {
+		return JavaBasicType.JavaINT;
 	}
-	/*
+	
+/*	
 	 * (non-Javadoc)
 	 * 
 	 * @see bcexpression.Expression#setType()
-	 */
+	 
 	public void setType() {
 		// TODO Auto-generated method stub
-	}
+	}*/
+	
 	/*
 	 * (non-Javadoc)
 	 * 

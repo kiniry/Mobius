@@ -5,7 +5,7 @@
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 package bcexpression;
-import type.BCType;
+
 /**
  * @author mpavlova
  * 
@@ -37,7 +37,7 @@ public class BitExpression extends Expression {
 	 * 
 	 * @see bcexpression.Expression#getType()
 	 */
-	public BCType getType() {
+	public Expression getType() {
 		// TODO Auto-generated method stub
 		return null;
 	}

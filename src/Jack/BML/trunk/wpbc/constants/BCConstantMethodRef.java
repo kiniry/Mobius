@@ -7,6 +7,7 @@
 package constants;
 
 import bcexpression.javatype.JavaType;
+import bcexpression.substitution.RefFunction;
 
 /**
  * @author mpavlova
@@ -19,7 +20,7 @@ import bcexpression.javatype.JavaType;
  *     }
  *
  */
-public class BCConstantMethodRef  extends BCConstantRef {
+public class BCConstantMethodRef  extends BCConstantRef implements RefFunction {
 	JavaType returnType ;
 	JavaType[] argTypes;
 	

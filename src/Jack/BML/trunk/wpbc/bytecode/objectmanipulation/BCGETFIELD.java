@@ -13,7 +13,7 @@ import formula.atomic.PredicateSymbol;
 import bcclass.BCConstantPool;
 import bcclass.attributes.ExsuresTable;
 import bcexpression.Expression;
-import bcexpression.FieldAccessExpression;
+import bcexpression.FieldAccess;
 import bcexpression.javatype.ClassNames;
 import bcexpression.javatype.JavaObjectType;
 import bcexpression.javatype.JavaType;
@@ -74,8 +74,8 @@ public class BCGETFIELD extends BCFieldOrMethodInstruction {
 			new Predicate2Ar(new Stack(Expression.COUNTER), Expression._NULL, PredicateSymbol.NOTEQ);
 	
 
-		FieldAccessExpression fieldAccess =
-			new FieldAccessExpression(
+		FieldAccess fieldAccess =
+			new FieldAccess(
 				(BCConstantFieldRef) getConstantPool().getConstant(getIndex()),
 				new Stack(Expression.COUNTER));
 

@@ -6,7 +6,9 @@
  */
 package bcclass.attributes;
 
+import formula.Connector;
 import formula.Formula;
+import formula.atomic.Predicate;
 import bcexpression.javatype.JavaObjectType;
 
 /**
@@ -19,6 +21,7 @@ public class Exsures {
 	JavaObjectType excType;
 	
 	private Formula exsuresFormula;
+	/*private Formula modifiesPostcondition;*/
 	
 	public Exsures(Formula f, JavaObjectType _exc) {
 		exsuresFormula =	f;
@@ -40,4 +43,18 @@ public class Exsures {
 		return exsuresFormula;
 	}
 
+	
+	
+	/**
+	 * @param modifiesPostcondition The modifiesPostcondition to set.
+	 */
+	public void setModifiesPostcondition(Formula modifiesPostcondition) {
+		if (modifiesPostcondition == null) {
+			return;
+		}
+		if (modifiesPostcondition == Predicate.TRUE) {
+			return;
+		}
+		exsuresFormula  = Formula.getFormula( exsuresFormula, modifiesPostcondition, Connector.AND );
+	}
 }

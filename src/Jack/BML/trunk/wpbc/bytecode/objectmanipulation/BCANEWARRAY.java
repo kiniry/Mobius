@@ -14,7 +14,7 @@ import formula.atomic.PredicateSymbol;
 
 import bcclass.attributes.ExsuresTable;
 import bcexpression.Expression;
-import bcexpression.FieldAccessExpression;
+import bcexpression.FieldAccess;
 import bcexpression.NumberLiteral;
 
 import bcexpression.javatype.ClassNames;
@@ -115,8 +115,8 @@ public class BCANEWARRAY
 		//			length( new ArrayObject(type, S(t) ) ) 
 		//WITH length_with_new_arr_ref = new WITH(new_arr_ref);
 
-		FieldAccessExpression arr_length_access =
-			new FieldAccessExpression(
+		FieldAccess arr_length_access =
+			new FieldAccess(
 				new ArrayLengthConstant(),
 				new_arr_ref);
 		//_psi^n[length( with o == new ArrayObject(type, S(t)) <-- S(t)]

@@ -6,8 +6,9 @@
  */
 package bcexpression;
 import bcexpression.jml.RESULT;
+import bcexpression.jml.TYPEOF;
 import bcexpression.vm.Counter;
-import type.BCType;
+
 /**
  * @author io
  * 
@@ -107,9 +108,13 @@ public abstract class Expression {
 	 * @return - this object with the substitutions made
 	 */
 	public abstract Expression substitute(Expression _e1, Expression _e2);
-	public abstract BCType getType();
+	
 	public abstract String toString();
 
+	
+	public  Expression getType() {
+		return new TYPEOF( this );
+	}
 	/**
 	 * two expressions are equals if they are from the same type and if they
 	 * have the same number of subexpressions and they are equal.
@@ -178,7 +183,25 @@ public abstract class Expression {
 		}
 		return this;
 	}
-
+	/**
+	 * generalises qn expression 
+	 * example : generalise(1, var ) ==> returns var  
+	 * @param _e1
+	 * @param _e2
+	 * @return
+	 */
+	public Expression generalize(Expression _e1 , Expression _e2) {
+		if ( this.equals(_e1)) { 
+				return _e2;
+		}
+		if ( subExpressions == null) {
+			return this;
+		} 
+		for (int i = 0; i < subExpressions.length; i++) {
+			subExpressions[i] = subExpressions[i].generalize(_e1, _e2);
+		}
+		return this;
+	}
 	public abstract Expression copy();
 
 }

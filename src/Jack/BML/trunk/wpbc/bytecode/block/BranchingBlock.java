@@ -102,9 +102,9 @@ public class BranchingBlock extends Block {
 		return wp;
 	}
 
-	public void dump(String _offset) {
-		System.out.print("BRANCH    ");
-		super.dump("");
+	public String toString(String _offset) {
+		return "BRANCH  " + super.toString();
+	
 
 	}
 }

@@ -177,19 +177,8 @@ public class Block implements ByteCode {
 		}
 	}
 
-	public void dump(String _offset) {
-		if (Util.DUMP) {
-			String offset = "     ";
-			System.out.println(_offset + "Block( ");
-			System.out.println(
-				_offset + offset + "fst: " + " " + getFirst().toString());
-
-			System.out.println(
-				_offset + offset + "end:  " + getLast().toString());
-			System.out.println(_offset + ")");
-
-			//			BCInstruction _i = first;
-		}
+	public String toString() {
+		return " Block( fst: " + " " + getFirst().toString() + "\\ end:  " + getLast().toString()+ " )" ;		
 	}
 
 	public boolean equals(Block _block) {

@@ -6,9 +6,8 @@
  */
 package bcexpression.substitution;
 
-import type.BCType;
 import bcexpression.Expression;
-import bcexpression.FieldAccessExpression;
+import bcexpression.FieldAccess;
 import constants.BCConstantFieldRef;
 
 /**
@@ -57,17 +56,17 @@ public class FieldWITH extends Expression {
 		object = object.substitute(_e1, _e2);
 		with = (SubstitutionTree)with.substitute(_e1, _e2);
 		// if _e1 is not a field access expression  then return 
-		if (!(_e1 instanceof FieldAccessExpression)) {
+		if (!(_e1 instanceof FieldAccess)) {
 			return this;
 		}
 		// if this is a field access expression but is not a field access to  to the same field as this fieldWITH expression
-		if (((FieldAccessExpression) _e1).getFieldConstRef().getCPIndex()
+		if (((FieldAccess) _e1).getFieldConstRef().getCPIndex()
 			!= constantFieldRef.getCPIndex()) {
 			return this;
 		}
 		// else if it is  field access expression to the same field as this fieldWITH then 
 		// include it in the substitution tree
-		Expression withObj = (((FieldAccessExpression)_e1).getSubExpressions()[0]).copy();
+		Expression withObj = (((FieldAccess)_e1).getSubExpressions()[1]).copy();
 		Expression substituteWith =  _e2.copy();
 		with = new SubstitutionTree(with, new SubstitutionUnit(withObj, substituteWith));
 		return this;
@@ -76,7 +75,7 @@ public class FieldWITH extends Expression {
 	/* (non-Javadoc)
 	 * @see bcexpression.Expression#getType()
 	 */
-	public BCType getType() {
+	public Expression getType() {
 		// TODO Auto-generated method stub
 		return null;
 	}

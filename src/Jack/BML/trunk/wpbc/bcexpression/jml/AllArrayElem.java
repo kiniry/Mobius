@@ -35,7 +35,7 @@ public class AllArrayElem  extends JMLExpression {
 	/* (non-Javadoc)
 	 * @see bcexpression.Expression#getType()
 	 */
-	public BCType getType() {
+	public Expression getType() {
 		// TODO Auto-generated method stub
 		return null;
 	}

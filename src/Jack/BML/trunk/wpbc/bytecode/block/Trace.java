@@ -10,11 +10,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import formula.Formula;
-import formula.atomic.Predicate;
 
 import bcclass.BCMethod;
 import bcclass.attributes.ExceptionHandler;
 import bcclass.attributes.ExsuresTable;
+import bcclass.attributes.SpecificationCase;
 import bcexpression.javatype.JavaObjectType;
 
 import bytecode.*;
@@ -38,6 +38,9 @@ public class Trace {
 
 	private BCMethod method;
 	private Block entryBlock;
+	private Formula postcondition;
+	private ExsuresTable exsTable;
+
 
 	public Trace(BCMethod _method) {
 		method = _method;
@@ -106,9 +109,9 @@ public class Trace {
 		addToComponent(b, normalComponent);
 	}
 
-	private void addToComponent(Block b, HashMap normalComponent) {
+	private void addToComponent(Block b, HashMap component) {
 		
-		normalComponent.put(new Integer(b.getFirst().getPosition()), b);
+		component.put(new Integer(b.getFirst().getPosition()), b);
 		BCInstruction last = b.getLast();
 		Util.dump("ADD ToComponent : " +  last.toString());
 		if (last instanceof BCTypeRETURN) {
@@ -133,30 +136,30 @@ public class Trace {
 					return;
 				}
 				Block _b = addBlock(jumpInstr.getTarget());
-				addToComponent(_b, normalComponent);
+				addToComponent(_b, component);
 				return;
 			}
 			Block _b = addBlock(next);
-			addToComponent(_b, normalComponent);
+			addToComponent(_b, component);
 			return;
 		}
 		if (last instanceof BCConditionalBranch) {
 			BCConditionalBranch cBranch = (BCConditionalBranch) last;
 			Block _b0 = addBlock(cBranch.getNext());
-			addToComponent(_b0, normalComponent);
+			addToComponent(_b0, component);
 			Block _b1 = addBlock(cBranch.getTarget());
-			addToComponent(_b1, normalComponent);
+			addToComponent(_b1, component);
 			return;
 		}
 		if (last instanceof BCUnconditionalBranch) {
 			BCUnconditionalBranch cBranch = (BCUnconditionalBranch) last;
 			Block _b = addBlock(cBranch.getTarget());
-			addToComponent(_b, normalComponent);
+			addToComponent(_b, component);
 			return;
 		}
 		BCInstruction next = last.getNext();
 		Block _b = addBlock(next);
-		addToComponent(_b, normalComponent);
+		addToComponent(_b, component);
 	}
 	
 	public ExceptionHandler getExceptionHandlerForExceptionThrownAt(
@@ -208,8 +211,9 @@ public class Trace {
 		int handlerStart = excH.getHandlerPC();
 		// get the component that represents the exception handle
 		HashMap excHandlerBlocks = (HashMap)excHandlerComponents.get( new Integer(handlerStart));
-		//this implementation is very bad , must be  a class which wraps the entry points and access the wp for an exception handler like this
-		wp((Formula)method.getPostcondition().copy(),method.getExsures(), excHandlerBlocks );
+		//this implementation is very bad , must be  a class which wraps 
+		//the entry points and access the wp for an exception handler like this
+		wp((Formula)postcondition.copy(),exsTable, excHandlerBlocks );
 		EntryPoint excHandlerEntryPoint = (EntryPoint)Util.getBCInstructionAtPosition(method.getBytecode(), handlerStart); 
 		wp = excHandlerEntryPoint.getWp();
 		return wp;
@@ -247,7 +251,7 @@ public class Trace {
 		while (iter.hasNext()) {
 			Block b = (Block) iter.next();
 
-			b.dump("");
+			Util.dump(b.toString());
 		}
 	}
 
@@ -362,7 +366,7 @@ public class Trace {
 		Block b = null;
 		while (en.hasNext()) {
 			b = (Block) (en.next());
-			b.dump("");
+			Util.dump(b.toString());
 		}
 	}
 
@@ -385,8 +389,10 @@ public class Trace {
 		}
 	}
 	
-	public void wp(Formula postcondition, ExsuresTable exsures) {
-		wp(postcondition, exsures, normalComponent);
+	public void wp(Formula _n_post, ExsuresTable _exsTable ) {
+		postcondition = _n_post;
+		exsTable = _exsTable;
+		wp(postcondition, exsTable, normalComponent);
 	}
 	
 	private void wp(Formula postcondition, ExsuresTable exsures, HashMap component) {
@@ -408,6 +414,7 @@ public class Trace {
 				Formula loopInvariant = (Formula)loopEnd.getInvariant().copy();
 				b.calculateRecursively(loopInvariant, exsures);
 			} else if (b.getLast() instanceof BCATHROW ) {
+				 
 				b.calculateRecursively((Formula)postcondition.copy(), exsures);
 			}
 		}
@@ -419,4 +426,10 @@ public class Trace {
 		return method;
 	}
 
+	/**
+	 * @return Returns the exsTable.
+	 */
+	public ExsuresTable getExsTable() {
+		return exsTable;
+	}
 }

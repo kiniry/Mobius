@@ -7,9 +7,6 @@
 package bcexpression.vm;
 
 
-
-import type.BCType;
-
 import bcexpression.Expression;
 
 import bcexpression.javatype.JavaBasicType;
@@ -51,7 +48,7 @@ public class Counter  extends Expression {
 	/* (non-Javadoc)
 	 * @see bcexpression.Expression#getType()
 	 */
-	public BCType getType() {
+	public Expression getType() {
 		return JavaType.JavaINT;
 	}
 	

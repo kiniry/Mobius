@@ -6,7 +6,7 @@
  */
 package formula;
 
-import type.BCType;
+import utils.Util;
 import formula.atomic.Predicate;
 
 import bcexpression.Expression;
@@ -20,29 +20,30 @@ import bcexpression.javatype.JavaType;
  */
 public class Formula   extends Expression {
 
-	private Formula[] subformulas;
+	/*private Formula[] subformulas;*/
 
 	private byte connector;
 
 	protected Formula() {
 	}
-
+	protected Formula(Formula _f) {
+		super( _f);
+	}
+	
 	private Formula(Formula[] _f, byte _conn) {
+		super( _f);
 		setConnector(_conn);
-		subformulas = _f;
 	}
 
 	private Formula(Formula _f, byte _conn) {
+		super(_f);
 		setConnector(_conn);
-		subformulas = new Formula[1];
-		subformulas[0] = _f;
 	}
 
 	private Formula(Formula _left, Formula _right, byte _conn) {
+		super(_left, _right );
 		setConnector(_conn);
-		subformulas = new Formula[2];
-		subformulas[0] = _left;
-		subformulas[1] = _right;
+		
 	}
 
 	public static Formula getFormula(Formula f1, Quantificator[] quantifiers) {
@@ -110,9 +111,10 @@ public class Formula   extends Expression {
 		return f;
 	}
 
-	public Formula[] getSubformulas() {
+	/*public Formula[] getSubformulas() {
+		Formula[] subformulas = (Formula[])getSubexpressions();
 		return subformulas;
-	}
+	}*/
 
 	public static Formula getFormula(
 		Formula _f1,
@@ -198,7 +200,7 @@ public class Formula   extends Expression {
 			return _f2;
 		}
 		if (_f2.getConnector() == Connector.IMPLIES) {
-			Formula hyp = _f2.getSubformulas()[0];
+			Formula hyp = (Formula)_f2.getSubExpressions()[0];
 			if (hyp.equals(_f1)) {
 				return _f2;
 			}
@@ -228,19 +230,27 @@ public class Formula   extends Expression {
 	 */
 	public Expression substitute(Expression _e, Expression _v) {
 		//Util.dump(toString());
-
+		Expression[] subformulas = (Expression[])getSubExpressions();
 		for (int i = 0; i < subformulas.length; i++) {
-			subformulas[i] = (Formula)subformulas[i].substitute(_e, _v);
+			subformulas[i] = subformulas[i].substitute(_e, _v);
 		}
 		return this;
 	}
 
 	public Expression copy() {
-		Formula[] _subformulas = new Formula[subformulas.length];
+		Expression[]  subformulas = getSubExpressions();
+		
+		
+/*		if ( !(subformulas instanceof Formula[]) ) {
+			Util.dump("ill  formula : subexpression is not formula but:  its type is " + subformulas[0].getClass() + " its super type is " + subformulas[0].getClass().getSuperclass() ) ;
+			Util.dump("ill  formula : subexpression is not formula but:  its type is " + subformulas[1].getClass() + " its super type is " + subformulas[1].getClass().getSuperclass() ) ;
+			Util.dump("ill  formula : subexpressions are not formulas:  " + subformulas[0].getClass() + "  " + subformulas[1].getClass() );
+		}*/
+		Expression[] _subformulas = new Formula[subformulas.length];
 		for (int i = 0; i < subformulas.length; i++) {
 			_subformulas[i] = (Formula)subformulas[i].copy();
 		}
-		Formula _copy = new Formula(_subformulas, connector);
+		Formula _copy = new Formula((Formula[])_subformulas, connector);
 		return _copy;
 	}
 
@@ -258,7 +268,7 @@ public class Formula   extends Expression {
 		if (connector == Connector.NOT) {
 			con = " ! ";
 		}
-
+		Expression[]  subformulas = getSubExpressions();
 		if (subformulas.length == 1) {
 			return "(" + con + subformulas[0] + ")";
 		} else {
@@ -280,11 +290,12 @@ public class Formula   extends Expression {
 	 * @return
 	 */
 	public Expression rename(Expression expr1, Expression expr2) {
+		Expression[]  subformulas = getSubExpressions();
 		if (subformulas == null) {
 			return this;
 		}
 		for (int i = 0; i < subformulas.length; i++) {
-			subformulas[i] = (Formula)subformulas[i].rename(expr1, expr2);
+			subformulas[i] = ((Formula)subformulas[i]).rename(expr1, expr2);
 		}
 		return this;
 	}
@@ -301,18 +312,39 @@ public class Formula   extends Expression {
 		if (formula.getConnector() != getConnector()) {
 			return false;
 		}
-		if ( ( subformulas == null ) && (formula.getSubformulas() == null) ) {
+		Expression[] subformulas = getSubExpressions();
+		Expression[] _subformulas = formula.getSubExpressions();
+		if ( (( subformulas == null ) && (_subformulas == null))
+		) {
 			return true;
 		}
-		boolean subFormulasEq = subformulas[0].equals( formula.getSubformulas()[0]);
-		subFormulasEq = subFormulasEq && subformulas[1].equals(formula.getSubformulas()[1]);
-		return subFormulasEq;
+		if( subformulas.length != _subformulas.length) {
+			return true;
+		}
+		boolean subFormulasEq;
+		for ( int i = 0; i <= subformulas.length; i++ ) {
+			Formula f = (Formula)subformulas[i];
+			Formula _f = (Formula)_subformulas[i];
+			subFormulasEq = f.equals(_f);
+			if ( !( subFormulasEq )) {
+				return false;
+			}
+		}
+		return true;
+/*		boolean eq = super.equals(formula);
+		if ( ! eq ) {
+			return false;
+		}
+		if (formula.getConnector() != getConnector()) {
+			return false;
+		}
+		return true;*/
 	}
 
 	/* (non-Javadoc)
 	 * @see bcexpression.Expression#getType()
 	 */
-	public BCType getType() {
+	public Expression getType() {
 		return JavaType.JavaBOOLEAN;
 	}
 }

@@ -1,6 +1,7 @@
 package bcexpression.substitution;
 
-import type.BCType;
+import utils.Util;
+import bcexpression.ArrayAccessExpression;
 import bcexpression.Expression;
 import bcexpression.javatype.JavaArrType;
 import bcexpression.javatype.JavaBasicType;
@@ -20,17 +21,18 @@ import bcexpression.ref.Reference;
  */
 public class FunctionApplication extends Expression {
 	
-	private Expression expr;
+	private RefFunction function;
+	/*private Expression argument;*/
 	private SubstitutionTree map;
 
 	
-	public FunctionApplication(Expression _expr, Expression _arg,Expression _value  ) {
-		expr = _expr;
+	public FunctionApplication(RefFunction _function, Expression _arg,Expression _value  ) {
+		function = _function;
 		map = new SubstitutionTree( _arg, _value);
 	}
 	
-	public FunctionApplication(Expression _expr, SubstitutionTree _map) {
-		expr = _expr;
+	public FunctionApplication(RefFunction _function, SubstitutionTree _map) {
+		function = _function;
 		map = _map;
 	}
 	
@@ -38,11 +40,14 @@ public class FunctionApplication extends Expression {
 	 * @see bcexpression.Expression#substitute(bcexpression.Expression, bcexpression.Expression)
 	 */
 	public Expression substitute(Expression _e1, Expression _e2) {
-		if ( expr instanceof TYPEOF) {
+		if ( function instanceof TYPEOF) {
 			return substituteTypeOf(_e1, _e2);
 		}
-		if (expr instanceof ELEMTYPE) {
+		if (function instanceof ELEMTYPE) {
 			return substituteElemType(_e1, _e2);
+		}
+		if( function instanceof ArrayAccessExpression ) {
+			return substituteArrayAtIndex(_e1, _e2);
 		}
 		return null;
 	}
@@ -51,6 +56,7 @@ public class FunctionApplication extends Expression {
 	 * @return
 	 */
 	private Expression substituteTypeOf(Expression _e1, Expression _e2) {
+		TYPEOF expr = (TYPEOF)function;
 		Expression subExpr = expr.getSubExpressions()[0];
 		subExpr = subExpr.substitute(_e1, _e2);
 		map = (SubstitutionTree)map.substitute(_e1, _e2);
@@ -60,12 +66,12 @@ public class FunctionApplication extends Expression {
 			map = new SubstitutionTree(map , new SubstitutionUnit(_e2, refType));
 			return this;
 		}
-		TYPEOF typeof_expr = (TYPEOF)expr;
+		/*TYPEOF typeof_expr = (TYPEOF)expr;*/
 		Expression _expr = expr.getSubExpressions()[0];
 		if(_expr instanceof JavaType) {
 			return JML_CONST_TYPE.JML_CONST_TYPE;
 		}
-		BCType type = _expr.getType();
+		Expression type = _expr.getType();
 		
 		if (type == null) {
 			return this;
@@ -78,6 +84,7 @@ public class FunctionApplication extends Expression {
 	}
 	
 	private Expression substituteElemType(Expression _e1, Expression _e2) {
+		ELEMTYPE expr = (ELEMTYPE)function;
 		Expression subExpr = expr.getSubExpressions()[0];
 		subExpr = subExpr.substitute(_e1, _e2);
 		map = (SubstitutionTree)map.substitute(_e1, _e2);
@@ -86,12 +93,33 @@ public class FunctionApplication extends Expression {
 		}
 		return this;
 	}
+	
+	private Expression substituteArrayAtIndex(Expression _e1, Expression _e2) {
+		ArrayAccessExpression arrayAccess = (ArrayAccessExpression)function;
+		Expression array = arrayAccess.getArray();
+		array = array.substitute(_e1, _e2);
+		Expression index = arrayAccess.getIndex();
+		index = index.substitute(_e1, _e2);
+		map = (SubstitutionTree)map.substitute(_e1, _e2);
+		if (! (_e1 instanceof ArrayAccessExpression) ) {
+			return this;
+		}
+		/*JavaType elemType = (JavaArrType)arrayAccess.getType() 
+		ArrayAccessExpression e1AtIndex = (ArrayAccessExpression)_e1;
+		Expression e1Array =  e1AtIndex.getArray();
+		JavaType e1ElemType = e1AtIndex.getType(); 
+		Expression e1Index =  e1AtIndex.getIndex();*/
+		
+		map = new SubstitutionTree(map, new SubstitutionUnit(_e1, _e2));
+		
+		return this;
+	}
 
 
 	/* (non-Javadoc)
 	 * @see bcexpression.Expression#getType()
 	 */
-	public BCType getType() {
+	public Expression getType() {
 		return JML_CONST_TYPE.JML_CONST_TYPE;
 	}
 
@@ -99,13 +127,22 @@ public class FunctionApplication extends Expression {
 	 * @see bcexpression.Expression#toString()
 	 */
 	public String toString() {
-		Expression _expr = expr.getSubExpressions()[0]; 
-		if (expr instanceof TYPEOF) {
+		Expression _expr = ((Expression)function).getSubExpressions()[0]; 
+		
+		
+		if (function instanceof TYPEOF) {
 			String s = "[ typeof (" + map.toString() + ") " +_expr.toString() +" ]";
 			return s;
 		}
-		if (expr instanceof ELEMTYPE) {
+		if (function instanceof ELEMTYPE) {
 			String s = "[ elemtype ( " + map.toString() + " ) " +_expr.toString() +" ]";
+			return s;
+		}
+		if (function instanceof ArrayAccessExpression ) {
+			ArrayAccessExpression arrayAtIndex = (ArrayAccessExpression)function; 
+			Expression index = arrayAtIndex.getIndex();
+			Expression array = arrayAtIndex.getArray();
+			String s = "[ arrayAccess ( " + map.toString() + " ) (arr: " + array + " , ind: " + index + ")"; 
 			return s;
 		}
 		return null;
@@ -115,9 +152,9 @@ public class FunctionApplication extends Expression {
 	 * @see bcexpression.Expression#copy()
 	 */
 	public Expression copy() {
-		Expression exprCopy = expr.copy();
+		Expression fCopy = ((Expression)function).copy();
 		SubstitutionTree mapCopy = (SubstitutionTree)map.copy();
-		FunctionApplication thisCopy = new FunctionApplication(exprCopy, mapCopy);
+		FunctionApplication thisCopy = new FunctionApplication((RefFunction)fCopy, mapCopy);
 		return thisCopy;
 	}
 

@@ -5,13 +5,16 @@
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 package constants;
+
+import bcexpression.Expression;
+
 /**
  * @author mpavlova
  * 
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class BCConstant {
+public class BCConstant extends Expression {
 	private int cpIndex;
 	private byte tag;
 	//used just for the arraylength constant
@@ -40,6 +43,16 @@ public class BCConstant {
 			return true;
 		}
 		return false;
+	}
+	
+	public Expression substitute(Expression _e1, Expression _e2) {
+		// TODO Auto-generated method stub
+		return this;
+	}
+
+	public Expression copy() {
+		// TODO Auto-generated method stub
+		return this;
 	}
 	
 	

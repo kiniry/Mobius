@@ -7,9 +7,9 @@
 package bcexpression;
 
 
+import bcexpression.jml.TYPEOF;
 import bcexpression.substitution.FieldWITH;
 
-import type.BCType;
 import utils.Util;
 import constants.BCConstantFieldRef;
 /**
@@ -18,40 +18,44 @@ import constants.BCConstantFieldRef;
  * To change the template for this generated type comment go to Window -
  * Preferences - Java - Code Generation - Code and Comments
  */
-public class FieldAccessExpression extends Expression {
-	private BCConstantFieldRef constantFieldRef;
-
+public class FieldAccess extends Expression {
+	/*private BCConstantFieldRef constantFieldRef;
+*/
 	/**
 	 * @param _right
 	 * @param _left
 	 */
-	public FieldAccessExpression(
+	public FieldAccess(
 		BCConstantFieldRef _constantFieldRef,
 		Expression _obj_ref) {
-		super(_obj_ref);
-		constantFieldRef = _constantFieldRef;
+		super(_constantFieldRef, _obj_ref);
+		/*constantFieldRef = _constantFieldRef;*/
 	}
 	
 	/*
 	 * (non-Javadoc)
 	 * @see bcexpression.Expression#getType()
 	 */
-	public BCType getType() {
-		// TODO Auto-generated method stub
-		return null;
+	public Expression getType() {
+		return new TYPEOF(this );
 	}
 	public BCConstantFieldRef getFieldConstRef() {
+		BCConstantFieldRef constantFieldRef = (BCConstantFieldRef)getSubExpressions()[0];
 		return constantFieldRef;
 	}
-
+	public Expression getObject() {
+		return getSubExpressions()[1];
+	} 
+	
 	/*
 	 * (non-Javadoc)
 	 * @see bcexpression.Expression#equals(bcexpression.Expression)
 	 */
 	public boolean equals(Expression _expr) {
 		boolean equals = super.equals(_expr);
+		BCConstantFieldRef constantFieldRef =  getFieldConstRef();
 		if (equals == true) {
-			FieldAccessExpression fAccess = (FieldAccessExpression) _expr;
+			FieldAccess fAccess = (FieldAccess) _expr;
 			BCConstantFieldRef _constantFieldRef = fAccess.getFieldConstRef();
 			equals =
 				equals
@@ -73,32 +77,38 @@ public class FieldAccessExpression extends Expression {
 	 * a.X[ ref == a <-- V ].X[ ref == a.X[ ref == a <-- V ] <-- V ]
 	 */
 
+	
+	
+	
+	
 	/* (non-Javadoc)
 	 * @see bcexpression.Expression#substitute(bcexpression.Expression, bcexpression.Expression)
 	*/
 	public Expression substitute(Expression _e1, Expression _e2) {
+		BCConstantFieldRef constantFieldRef =  getFieldConstRef();
 //		Util.dump("***************************************************");
 //		Util.dump("*****FieldAccessExpression.substitute : " + toString() + "[" + _e1.toString() + " <--- " + _e2.toString() + "]");
 		if (this.equals(_e1)) {
 			return _e2;
 		}
 		// the object whose field is dereferenced by this object 
-		Expression obj = getSubExpressions()[0];
+		Expression obj = getSubExpressions()[1];
 		// in case _e1 is not an object of type FieldAccessExpression
-		if ( !( _e1 instanceof FieldAccessExpression ) )  {
+		if ( !( _e1 instanceof FieldAccess ) )  {
 			obj = obj.substitute(_e1, _e2);
-			setSubExpressions(new Expression[]{obj});
+			setSubExpressions(new Expression[]{constantFieldRef, obj});
 			return this;
 		}
-		FieldAccessExpression fieldAccess = (FieldAccessExpression)_e1;
+		FieldAccess fieldAccess = (FieldAccess)_e1;
 		// in case _e1 is of type FieldAccessExpression but is not dereferncing the same field as this object
 		if ( fieldAccess.getFieldConstRef().getCPIndex() != constantFieldRef.getCPIndex() ) {
 			obj = obj.substitute(_e1, _e2);
+			setSubExpressions(new Expression[]{constantFieldRef, obj});
 			return this;
 		}
 		// in case _e1 is a reference to the same field
 		obj = obj.substitute( _e1, _e2);
-		FieldWITH with  = new FieldWITH(constantFieldRef,  obj, _e1.getSubExpressions()[0].copy(), _e2.copy()); 
+		FieldWITH with  = new FieldWITH(constantFieldRef,  obj, _e1.getSubExpressions()[1].copy(), _e2.copy()); 
 		return with;
 	}
 	
@@ -107,23 +117,17 @@ public class FieldAccessExpression extends Expression {
 	 * @see bcexpression.Expression#toString()
 	 */
 	public String toString() {
-		if (constantFieldRef == null) {
-			Util.dump("constantFieldRef is null");
-		}
-
-		if (getSubExpressions()[0] == null) {
-			Util.dump("reference is null");
-		}
 		String s =
-			constantFieldRef.toString() + "(" + getSubExpressions()[0] + ")";
+			getSubExpressions()[0] + "(" + getSubExpressions()[1] + ")";
 		return s;
 	}
+	
 	/* (non-Javadoc)
 	 * @see bcexpression.Expression#copy()
 	 */
 	public Expression copy() {
 		Expression[] copySubExpr = copySubExpressions();
-		FieldAccessExpression copy = new FieldAccessExpression(constantFieldRef, copySubExpr[0] );
+		FieldAccess copy = new FieldAccess((BCConstantFieldRef)copySubExpr[0] ,copySubExpr[1] );
 		return copy;
 	}
 

@@ -1,10 +1,12 @@
 /*
- * Created on Mar 4, 2004
+ * Created on Sep 15, 2004
  *
  * To change the template for this generated file go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-package bcclass;
+package bcexpression.javatype;
+
+import bcexpression.Expression;
 
 /**
  * @author mpavlova
@@ -12,11 +14,7 @@ package bcclass;
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class BCField {
-	private String name;
-	
-	public String getName( ) {
-		return name;
-	}
-	
+public class Pair {
+	private Expression left;
+	private Expression right;
 }

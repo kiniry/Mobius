@@ -54,17 +54,9 @@ public class ArrayReference extends Reference  {
 	public ArrayReference(int _id, JavaType _elType, Expression _length ) {
 		super(_id, _elType);
 		length = _length;	
-//		element = _element;
 	}
 
-	/**
-	 * sets the type of this array reference object given the type of the elements of the array
-	 * @param _type
-	 */
-	private void setType(JavaType _type ) {
-		String signature ="[" + _type.getSignature();
-		type = (JavaArrType)JavaType.getJavaRefType(signature);
-	}
+
 
 	public Expression getDimensions() {
 		return new NumberLiteral( type.getDimensions());

@@ -18,7 +18,7 @@ import bcexpression.javatype.JavaType;
 import bcexpression.vm.Stack;
 import bcexpression.ArrayAccessExpression;
 import bcexpression.Expression;
-import bcexpression.FieldAccessExpression;
+import bcexpression.FieldAccess;
 import bytecode.BCExceptionThrower;
 import bytecode.BCTypedInstruction;
 
@@ -104,8 +104,8 @@ public class BCTypeALOAD
 				PredicateSymbol.NOTEQ);
 
 		//S(t-1).length > S( t )
-		FieldAccessExpression _arrlength =
-			new FieldAccessExpression(
+		FieldAccess _arrlength =
+			new FieldAccess(
 				new ArrayLengthConstant(),
 			new Stack(Expression.getCOUNTER_MINUS_1()));
 		Formula _arr_index_correct =

@@ -11,7 +11,7 @@ import java.util.Vector;
 
 import bcexpression.Expression;
 
-import type.BCType;
+
 /**
  * @author io
  * 
@@ -38,12 +38,13 @@ public class RESULT extends JMLExpression {
 	public void setType() {
 		// TODO Auto-generated method stub
 	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see bcexpression.Expression#getType()
 	 */
-	public BCType getType() {
+	public Expression getType() {
 		// TODO Auto-generated method stub
 		return null;
 	}

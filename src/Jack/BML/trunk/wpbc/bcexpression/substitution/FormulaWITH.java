@@ -6,6 +6,7 @@
  */
 package bcexpression.substitution;
 
+import utils.Util;
 import bcclass.attributes.BCExceptionHandlerTable;
 import bcclass.attributes.ExceptionHandler;
 import bcclass.attributes.Exsures;
@@ -29,7 +30,7 @@ public class FormulaWITH extends Formula {
 	public FormulaWITH(Trace _trace, Expression _expr, BCInstruction _instr) {
 		expression = _expr;
 		setSubstitutionTree(_trace, _instr);
-
+		Util.dump("FormulaWITH " + this.toString());
 	}
 
 	/**
@@ -57,6 +58,25 @@ public class FormulaWITH extends Formula {
 				}
 			}
 		}
+		
+		Exsures[] exsures = _trace.getExsTable().getExsures();
+		if (( exsures != null ) && (exsures.length > 0 )){
+			
+			for (int i = 0; i < exsures.length; i++) {
+				
+				if (with == null) {
+					with = new SubstitutionTree(exsures[i].getExcType(), exsures[i].getPredicate());
+					continue;
+				}
+				with =
+					new SubstitutionTree(
+						with,
+						new SubstitutionUnit(exsures[i].getExcType(), exsures[i].getPredicate()));
+			}
+		}
+		
+		
+		/////////////the rest of the exceptions 
 		JavaObjectType[] exceptionsThrown =
 			_trace.getMethod().getExceptionsThrown();
 		if (exceptionsThrown == null) {
@@ -84,7 +104,7 @@ public class FormulaWITH extends Formula {
 						new SubstitutionUnit(exceptionsThrown[i], excPost));
 			}
 		}
-		ExsuresTable exsTable = _trace.getMethod().getExsures();
+		/*ExsuresTable exsTable = _trace.getMethod().getExsures();*/
 	}
 
 	public Expression substitute(Expression _e1, Expression _e2) {

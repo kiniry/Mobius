@@ -15,7 +15,7 @@ import bcclass.attributes.ExsuresTable;
 import bcexpression.ArithmeticExpression;
 import bcexpression.Expression;
 import bcexpression.ExpressionConstants;
-import bcexpression.FieldAccessExpression;
+import bcexpression.FieldAccess;
 import bcexpression.NumberLiteral;
 
 import bcexpression.javatype.ClassNames;
@@ -113,8 +113,8 @@ public class BCPUTFIELD extends BCFieldOrMethodInstruction {
 		// index -the index of the field in the cp for the field that is accessed; 
 		// S(t-1) - the object whose field is dereferenced):   
 		// This results in :  index(  S(t-1)  )
-		FieldAccessExpression fieldAccess =
-			new FieldAccessExpression(
+		FieldAccess fieldAccess =
+			new FieldAccess(
 				(BCConstantFieldRef) (getConstantPool()
 					.getConstant(getIndex())),
 				new Stack(

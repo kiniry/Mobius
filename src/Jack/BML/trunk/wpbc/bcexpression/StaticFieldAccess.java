@@ -8,7 +8,8 @@ package bcexpression;
 
 import bcexpression.javatype.JavaReferenceType;
 import bcexpression.javatype.JavaType;
-import type.BCType;
+import bcexpression.jml.TYPEOF;
+
 import constants.BCConstantClass;
 import constants.BCConstantFieldRef;
 /**
@@ -17,37 +18,40 @@ import constants.BCConstantFieldRef;
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class StaticFieldAccess extends Expression {
-	private BCConstantFieldRef constantStaticFieldRef;
-	private BCConstantClass clazz;
+public class StaticFieldAccess extends FieldAccess {
+	
 
 	public StaticFieldAccess(
 		BCConstantFieldRef _constantFieldRef,
 		BCConstantClass _clazz) {
-		constantStaticFieldRef = _constantFieldRef;
-		clazz = _clazz;
+		super( _constantFieldRef, _clazz);
+		
 	}
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see bcexpression.Expression#getType()
 	 */
-	public BCType getType() {
-		// TODO Auto-generated method stub
-		return null;
+	public Expression getType() {
+		return new TYPEOF(this);
 	}
 	/**
 	 * @return
 	 */
 	public BCConstantFieldRef getConstantStaticFieldRef() {
+		BCConstantFieldRef constantStaticFieldRef = (BCConstantFieldRef)getSubExpressions()[0];
 		return constantStaticFieldRef;
 	}
+	
+
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see bcexpression.Expression#equals(bcexpression.Expression)
 	 */
 	public boolean equals(Expression _expr) {
+		BCConstantFieldRef constantStaticFieldRef =  getConstantStaticFieldRef(); 
+		BCConstantClass clazz = getClazz();
 		boolean equals = super.equals(_expr);
 		if (equals == false) {
 			return false;
@@ -70,6 +74,8 @@ public class StaticFieldAccess extends Expression {
 	 * reference of _e1
 	 */
 	public Expression substitute(Expression _e1, Expression _e2) {
+		BCConstantFieldRef constantStaticFieldRef =  getConstantStaticFieldRef(); 
+		BCConstantClass clazz = getClazz();
 		if (this.equals(_e1)) {
 			return _e2;
 		}
@@ -89,16 +95,16 @@ public class StaticFieldAccess extends Expression {
 		}
 		return this;
 	}
-	/**
-	 * @return Returns the clazz.
-	 */
 	public BCConstantClass getClazz() {
+		BCConstantClass clazz = (BCConstantClass)getSubExpressions()[1];
 		return clazz;
 	}
 	/* (non-Javadoc)
 	 * @see bcexpression.Expression#toString()
 	 */
 	public String toString() {
+		BCConstantFieldRef constantStaticFieldRef =  getConstantStaticFieldRef(); 
+		BCConstantClass clazz = getClazz();
 		String s = "" + constantStaticFieldRef.getCPIndex();
 		String className = clazz.getName();
 		s = s + "(" + className + ")";
@@ -108,6 +114,8 @@ public class StaticFieldAccess extends Expression {
 	 * @see bcexpression.Expression#copy()
 	 */
 	public Expression copy() {
+		BCConstantFieldRef constantStaticFieldRef =  getConstantStaticFieldRef(); 
+		BCConstantClass clazz = getClazz();
 		StaticFieldAccess copy =
 			new StaticFieldAccess(constantStaticFieldRef, clazz);
 		return copy;

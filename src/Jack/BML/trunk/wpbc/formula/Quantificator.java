@@ -14,7 +14,7 @@ import bcexpression.Expression;
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class Quantificator {
+public class Quantificator extends Expression {
 	public static final String FORALL = "forall";
 	public static final String EXISTS = "exists";
 
@@ -46,7 +46,7 @@ public class Quantificator {
 
 	}
 
-	public Quantificator copy() {
+	public Expression copy() {
 		return this;
 	}
 	
@@ -54,6 +54,19 @@ public class Quantificator {
 //		return null;
 //	}
 
+	public boolean equals(Quantificator quantificator) {
+		if (!quantificator.getBoundVar().equals(getBoundVar()) ) {
+			return false;
+		}
+		if (!quantificator.getQuantifier().equals(getQuantifier()) ) {
+			return false;
+		}
+		if (!quantificator.getDomain().equals(getDomain()) ) {
+			return false;
+		}
+		return true;
+		
+	}
 	
 	public String toString( ) {
 		if (domain == null) {
@@ -76,4 +89,24 @@ public class Quantificator {
 		boundVar = expression;
 	}
 
+	/* (non-Javadoc)
+	 * @see bcexpression.Expression#substitute(bcexpression.Expression, bcexpression.Expression)
+	 */
+	public Expression substitute(Expression _e1, Expression _e2) {
+		// TODO Auto-generated method stub
+		return this;
+	}
+
+	/**
+	 * @return Returns the domain.
+	 */
+	public Formula getDomain() {
+		return domain;
+	}
+	/**
+	 * @return Returns the quantifier.
+	 */
+	public String getQuantifier() {
+		return quantifier;
+	}
 }

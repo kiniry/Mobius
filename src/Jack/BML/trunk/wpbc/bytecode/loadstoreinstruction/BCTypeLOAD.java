@@ -13,7 +13,7 @@ import org.apache.bcel.generic.InstructionHandle;
 import bcclass.BCLocalVariable;
 import bcclass.attributes.ExsuresTable;
 import bcexpression.Expression;
-import bcexpression.LocalVariableAccess;
+import bcexpression.LocalVariable;
 import bcexpression.vm.Stack;
 
 import formula.Formula;
@@ -52,7 +52,7 @@ public  class BCTypeLOAD  extends  BCLocalVariableInstruction{
 //		Util.dump("wp aload psi " + _normal_Postcondition.toString());
 		wp = (Formula)_normal_Postcondition.substitute(Expression.COUNTER, Expression.getCOUNTER_PLUS_1());
 //		Util.dump("wp aload psi[ t <--- t +1 ] " + wp.toString());
-		wp = (Formula)wp.substitute(new Stack( Expression.getCOUNTER_PLUS_1()), new LocalVariableAccess(getIndex()));
+		wp = (Formula)wp.substitute(new Stack( Expression.getCOUNTER_PLUS_1()), new LocalVariable(getIndex()));
 //		Util.dump("wp aload = psi[ t <--- t +1 ][s(t+1) <-- index ]  " + wp.toString());
 //		if (getPrev() == null) {
 //			Util.dump("wp aload " + wp.toString());

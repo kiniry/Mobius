@@ -5,6 +5,7 @@ import java.util.HashMap;
 import bcexpression.javatype.JavaObjectType;
 import bcexpression.javatype.JavaType;
 
+import formula.Connector;
 import formula.Formula;
 import formula.atomic.Predicate;
 /**
@@ -16,6 +17,14 @@ import formula.atomic.Predicate;
  */
 public class ExsuresTable implements BCAttribute {
 	private Exsures[] excPostcondition;
+	
+	protected void setModifiedPostCondition(Formula _modifiesPostcondition) {
+		for (int i = 0; i < excPostcondition.length; i++) {
+			excPostcondition[i].setModifiesPostcondition((Formula)_modifiesPostcondition.copy());
+		}
+	}
+	
+
 	/**
 	 * @param exsures -a
 	 *            n array of exsuers objects with which the internal hashmap is
@@ -24,6 +33,7 @@ public class ExsuresTable implements BCAttribute {
 	public ExsuresTable(Exsures[] exsures) {
 		excPostcondition = exsures;
 	}
+	
 	
 	public Formula getExcPostconditionFor(String exc_class_name) {
 		Exsures exs;
@@ -45,7 +55,16 @@ public class ExsuresTable implements BCAttribute {
 		if (exsures == null) {
 			return Predicate.FALSE;
 		}
-		return exsures.getPredicate();
+		Formula exsFormula = (Formula)exsures.getPredicate().copy();
+		return exsFormula;
 	}
 
+	/**
+	 * @return Returns the excPostcondition.
+	 */
+	public Exsures[] getExsures() {
+		
+		return excPostcondition;
+	}
+	
 }

@@ -6,7 +6,7 @@
  */
 package bcexpression.jml;
 
-import type.BCType;
+
 import bcexpression.Expression;
 import bcexpression.javatype.JavaType;
 
@@ -24,20 +24,13 @@ public class OLD extends JMLExpression {
 		super(_left);
 	}
 
-	/* (non-Javadoc)
-	 * @see bcexpression.Expression#setType()
-	 */
-	public void setType() {
-		type = (JavaType) ((Expression) getSubExpressions()[0]).getType();
-	}
+
 
 	/* (non-Javadoc)
 	 * @see bcexpression.Expression#getType()
 	 */
-	public BCType getType() {
-		if (type == null) {
-			setType();
-		}
+	public Expression getType() {
+		Expression type = getSubExpressions()[0].getType();
 		return type;
 	}
 

@@ -6,7 +6,8 @@
  */
 package bcexpression;
 
-import type.BCType;
+import bcexpression.jml.TYPEOF;
+
 
 /**
  * @author io
@@ -14,14 +15,14 @@ import type.BCType;
  * To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
-public class LocalVariableAccess extends Expression  {
+public class LocalVariable extends Expression  {
 	private int localVariableIndex;
 	//private int local_index;
 	
 //	private Vector with;
 	
 
-	public LocalVariableAccess(int _index_of_localVariable) {
+	public LocalVariable(int _index_of_localVariable) {
 		localVariableIndex = _index_of_localVariable;
 	}
 
@@ -37,15 +38,14 @@ public class LocalVariableAccess extends Expression  {
 	/* (non-Javadoc)
 	 * @see bcexpression.Expression#getType()
 	 */
-	public BCType getType() {
-		// TODO Auto-generated method stub
-		return null;
+	public Expression getType() {
+		return new TYPEOF(this);
 	}
 	
 	public boolean equals(Expression _expr) { 
 		boolean equals = super.equals( _expr);
 		if (equals == true) {
-			LocalVariableAccess lva = (LocalVariableAccess)_expr;
+			LocalVariable lva = (LocalVariable)_expr;
 			equals = equals && (lva.getIndex() == getIndex() ? true : false); 
 		}
 		return equals;

@@ -6,7 +6,19 @@
  */
 package bc.io;
 
+import modifexpression.AllArrayElem;
+import modifexpression.ArrayElemFromTo;
+import modifexpression.Everything;
+import modifexpression.ModifiesArray;
+import modifexpression.ModifiesDOT;
+import modifexpression.ModifiesExpression;
+import modifexpression.ModifiesIdent;
+import modifexpression.SingleIndex;
+import modifexpression.SpecArray;
+
 import org.apache.bcel.classfile.Unknown;
+
+import com.sun.corba.se.internal.core.Constant;
 
 import constants.ArrayLengthConstant;
 import constants.BCConstant;
@@ -20,6 +32,7 @@ import formula.atomic.Predicate;
 import formula.atomic.Predicate2Ar;
 import formula.atomic.PredicateSymbol;
 import bcclass.BCConstantPool;
+import bcclass.BCMethod;
 
 import bcclass.attributes.Assert;
 import bcclass.attributes.AssertTable;
@@ -43,14 +56,12 @@ import bcexpression.CharLiteral;
 import bcexpression.ConditionalExpression;
 import bcexpression.Expression;
 import bcexpression.ExpressionConstants;
-import bcexpression.FieldAccessExpression;
-import bcexpression.LocalVariableAccess;
+import bcexpression.FieldAccess;
+import bcexpression.LocalVariable;
 import bcexpression.NumberLiteral;
 import bcexpression.javatype.JavaObjectType;
 import bcexpression.javatype.JavaType;
-import bcexpression.jml.AllArrayElem;
 import bcexpression.jml.ELEMTYPE;
-import bcexpression.jml.Everything;
 import bcexpression.jml.JML_CONST_TYPE;
 import bcexpression.jml.OLD;
 import bcexpression.jml.RESULT;
@@ -226,7 +237,7 @@ public class AttributeReader {
 		int loopStartPcInd  = lineNumberTable[ lineNumber].getStartPC();
 //		Util.dump(" loopStartPC  pos = " +pos) ;
 //		int modifiesCount = readShort(bytes);
-		Expression[] modifies = readModifies(bytes);
+		ModifiesExpression[] modifies = readModifies(bytes);
 //		Util.dump("readModifies pos = " + pos );
 		Formula invariant = readFormula(bytes);
 		Expression decreases = readExpression(bytes);
@@ -318,7 +329,7 @@ public class AttributeReader {
 	private static SpecificationCase readSpecificationCase(byte[] bytes)
 		throws ReadAttributeException {
 		Formula precondition = readFormula(bytes);
-		Expression[] modifies = readModifies(bytes);
+		ModifiesExpression[] modifies = readModifies(bytes);
 
 		Formula postcondition = readFormula(bytes);
 		ExsuresTable exsures = readExsuresTable(bytes);
@@ -335,18 +346,17 @@ public class AttributeReader {
 	 * @param bytes
 	 * @return
 	 */
-	private static Expression[] readModifies(byte[] bytes)
+	private static ModifiesExpression[] readModifies(byte[] bytes)
 		throws ReadAttributeException {
-//		Util.dump("8888888888888888888888888888888888888888");
+
 //		Util.dump("readModifies pos = " + pos );
 		int modifiesCount = readAttributeCount(bytes);
 //		Util.dump("modifies count  = " + modifiesCount );
 //		Util.dump("readAttributeCount pos = " + pos );
-		Expression[] modifies = null;
+		ModifiesExpression[] modifies = null;
 		int _byte;
-
 		if (modifiesCount > 0) {
-			modifies = new Expression[modifiesCount];
+			modifies = new ModifiesExpression[modifiesCount];
 			modifies[0] = readModifiesExpression(bytes);
 			if(modifies[0] == null) {
 				return modifies;
@@ -361,7 +371,7 @@ public class AttributeReader {
 		return modifies;
 	}
 	
-	private static Expression readModifiesExpression(byte[] bytes) throws ReadAttributeException {
+	private static ModifiesExpression readModifiesExpression(byte[] bytes) throws ReadAttributeException {
 		int _byte = readByte(bytes);
 		if (_byte == Code.MODIFIES_NOTHING) {
 			return null;
@@ -370,33 +380,47 @@ public class AttributeReader {
 			return Everything.EVERYTHING;
 		}
 		if (_byte == Code.MODIFIES_IDENT) {
-			Expression expr = readModifiesExpression(bytes);
-			return expr;
+			Expression  e = readExpression(bytes);
+			ModifiesIdent modifId = new ModifiesIdent(e, constantPool);
+			return modifId;
 		}
 		if (_byte == Code.MODIFIES_DOT) {
-			BCConstantFieldRef constant = (BCConstantFieldRef)readConstant(bytes);
+			
+			ModifiesExpression  ident = readModifiesExpression(bytes);
 			Expression expr = readExpression(bytes);
-			Expression fieldAccessExpr =
-				new FieldAccessExpression(constant, expr);
+			ModifiesDOT modifDot =  new ModifiesDOT( ident, expr, constantPool);
+			return modifDot;
 		}
+		
+		if (_byte == Code.MODIFIES_ARRAY ) {
+			ModifiesExpression arrExpr = readModifiesExpression(bytes);
+			SpecArray specArray = readSpecArray(bytes);
+			ModifiesArray modArray = new ModifiesArray( arrExpr, specArray, constantPool);
+			return modArray;
+		}		
+		return null;
+	}
+
+	private static SpecArray readSpecArray(byte[] bytes) throws ReadAttributeException {
+		int _byte = readByte(bytes);
+		
 		if (_byte == Code.MODIFIES_SINGLE_INDICE) {
-			
-			
+			Expression singleIndice = readExpression(bytes);
+			SingleIndex index = new SingleIndex(singleIndice); 
+			return index;
 		}
 		if (_byte == Code.MODIFIES_INTERVAL) {
 			Expression start = readExpression(bytes);
 			Expression end = readExpression(bytes);
-			Expression array = readExpression(bytes);
-			
-		}
+			ArrayElemFromTo interval = new ArrayElemFromTo(start,end);
+			return interval;
+		} 
 		if (_byte == Code.MODIFIES_STAR) {
-			
-			
-		}
+			return AllArrayElem.ALLARRAYELEM;
+		}	
 		return null;
-		
 	}
-
+	
 	/**
 	 * reads an exsures table
 	 * @param bytes
@@ -695,7 +719,7 @@ public class AttributeReader {
 		} else if (_byte == Code.METHOD_CALL) {
 			// what to do here - there is not encoding offered for the method references
 			// methodRef expression n expression^n
-			BCConstant mRef = readConstant(bytes);
+			BCConstant mRef = (BCConstantMethodRef)readExpression(bytes);
 			Expression ref = readExpression(bytes);
 			int numberArgs = readShort(bytes);
 			Expression[] args = new Expression[numberArgs];
@@ -710,12 +734,13 @@ public class AttributeReader {
 			CastExpression castExpr = new CastExpression(type, expr);
 			return castExpr;
 		} else if (_byte == Code.FULL_QUALIFIED_NAME) { // .
-			BCConstant constant = readConstant(bytes);
 			Expression expr = readExpression(bytes);
+			Expression constant = readExpression(bytes);
+			
 			if (constant instanceof BCConstantFieldRef) {
 				BCConstantFieldRef fCp = (BCConstantFieldRef) constant;
 				Expression fieldAccessExpr =
-					new FieldAccessExpression(fCp, expr);
+					new FieldAccess(fCp, expr);
 				return fieldAccessExpr;
 			}
 			// else null; e.i. if a qualified  name is found it must a field access expression
@@ -728,10 +753,10 @@ public class AttributeReader {
 				new ConditionalExpression(condition, expr1, expr2);
 			return conditionExpr;
 		} else if (_byte == Code.THIS) { // this expression 
-			Expression _this = new LocalVariableAccess(0);
+			Expression _this = new LocalVariable(0);
 			return _this;
 		} else if (_byte == Code.OLD_THIS) {
-			Expression _this = new LocalVariableAccess(0);
+			Expression _this = new LocalVariable(0);
 			Expression oldThis = new OLD(_this);
 			return oldThis;
 		} else if (
@@ -744,23 +769,67 @@ public class AttributeReader {
 		} else if (_byte == Code.LOCAL_VARIABLE) {
 			// the index of the local variable 
 			int ind = readShort(bytes);
-			Expression lVarAccess = new LocalVariableAccess(ind);
+			Expression lVarAccess = new LocalVariable(ind);
 			return lVarAccess;
 		} else if (_byte == Code.OLD_LOCAL_VARIABLE) {
 			// the index of the local variable
 			int ind = readShort(bytes);
-			Expression lVarAccess = new LocalVariableAccess(ind);
+			Expression lVarAccess = new LocalVariable(ind);
 			Expression oldValue = new OLD(lVarAccess);
 			return oldValue;
+		} else if (_byte == Code.ARRAYLENGTH) {
+			ArrayLengthConstant length = new ArrayLengthConstant();
+			return length;
+		} else if (_byte == Code.FIELD_REF) {
+			// read the index of the field_ref in the constant pool
+//			int cpIndex = readShort(bytes);
+			int cpIndex = readShort(bytes);
+			// find the object in the constant field
+			BCConstant constantField = constantPool.getConstant(cpIndex);
+			if (!(constantField instanceof BCConstantFieldRef)) {
+				throw new ReadAttributeException(
+					"Error reading in the Constant Pool : reason : CONSTANT_Fieldref  expected at index "
+						+ cpIndex);
+			}
+			return constantField;
+		} else if (_byte == Code.JML_MODEL_FIELD) {
+//			int cpIndex = readShort(bytes);
+			int cpIndex = readShort(bytes);
+			BCConstant constantField = constantPool.getConstant(cpIndex);
+			if (!(constantField instanceof BCConstantFieldRef)) {
+				throw new ReadAttributeException(
+					"Error reading in the Constant Pool :reason :  CONSTANT_Fieldref expected for a model field ref at index "
+						+ cpIndex);
+			}
+			return constantField;
+		} else if (_byte == Code.METHOD_REF) {
+			int cpIndex = readShort(bytes);
+			BCConstant consantMethodRef = constantPool.getConstant(cpIndex);
+			if (!(consantMethodRef instanceof BCConstantMethodRef)) {
+				throw new ReadAttributeException(
+					"Error reading in the Constant Pool :  reason: CONSTANT_Methodref  expected  at index "
+						+ cpIndex);
+			}
+			return consantMethodRef;
+		} else if (_byte == Code.JAVA_TYPE) {
+			int cpIndex = readShort(bytes);
+			BCConstant constantUtf8 = constantPool.getConstant(cpIndex);
+			if (!(constantUtf8 instanceof BCConstantUtf8)) {
+				throw new ReadAttributeException(
+					"Error reading in the Constant Pool : reason:   CONSTANT_Utf8  expected  at index "
+						+ cpIndex);
+			}
+			return constantUtf8;
 		}
+		// may be there should be translation for strings
 		return null;
 	}
 
-	/**
+/*	*//**
 	 * reads the encoding of a cp constant 
 	 * @param bytes
 	 * @return
-	 */
+	 *//*
 	private static final BCConstant readConstant(byte[] bytes)
 		throws ReadAttributeException {
 		int _byte = readByte(bytes);
@@ -810,7 +879,7 @@ public class AttributeReader {
 		}
 		// may be there should be translation for strings
 		return null;
-	}
+	}*/
 
 	//	private static final Expression readJavaExpression(byte[] bytes) {
 	//		return null;
@@ -822,11 +891,11 @@ public class AttributeReader {
 	 */
 	private static JavaType readJavaType(byte[] bytes)
 		throws ReadAttributeException {
-		BCConstant constant = readConstant(bytes);
+		Expression constant = readExpression(bytes);
 		if (!(constant instanceof BCConstantUtf8)) {
 			throw new ReadAttributeException(
 				" Error reading a JavaType : reason : expected Constant Utf8 Info structure in the constant pool  at index "
-					+ constant.getCPIndex());
+					+ ((BCConstantUtf8)constant).getCPIndex());
 		}
 		BCConstantUtf8 CONSTANT_Class = (BCConstantUtf8) constant;
 		String name = CONSTANT_Class.getLiteral().toString();

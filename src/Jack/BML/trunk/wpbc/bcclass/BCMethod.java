@@ -8,6 +8,12 @@ package bcclass;
 
 import java.util.Vector;
 
+import modifexpression.ArrayElemFromTo;
+import modifexpression.ModifiesArray;
+import modifexpression.ModifiesDOT;
+import modifexpression.ModifiesExpression;
+import modifexpression.ModifiesIdent;
+
 import org.apache.bcel.classfile.Attribute;
 import org.apache.bcel.classfile.LineNumber;
 import org.apache.bcel.classfile.LineNumberTable;
@@ -150,8 +156,8 @@ import bcclass.attributes.SpecificationCase;
 import bcexpression.ArithmeticExpression;
 import bcexpression.Expression;
 import bcexpression.ExpressionConstants;
-import bcexpression.FieldAccessExpression;
-import bcexpression.LocalVariableAccess;
+import bcexpression.FieldAccess;
+import bcexpression.LocalVariable;
 import bcexpression.NumberLiteral;
 import bcexpression.javatype.ClassNames;
 import bcexpression.javatype.JavaObjectType;
@@ -253,7 +259,7 @@ public class BCMethod {
 	private BlockSpecification blockSpecification;
 	private MethodSpecification methodSpecification;
 
-	private Formula proofObligation;
+	private Vector proofObligation;
 
 	private BCLineNumber[] lineNumberTable;
 	private BCLocalVariable[] localVariables;
@@ -315,6 +321,7 @@ public class BCMethod {
 		setLineNumbers(
 			bcelMethod.getLineNumberTable(bcelMethod.getConstantPool()));
 		setAttributes(bcelMethod.getAttributes());
+
 		setSpecification();
 		initTrace();
 		setAsserts();
@@ -403,6 +410,7 @@ public class BCMethod {
 	private void setAttributes(Attribute[] _attributes)
 		throws ReadAttributeException {
 		Unknown privateAttr = null;
+
 		for (int i = 0; i < _attributes.length; i++) {
 			if (_attributes[i] instanceof Unknown) {
 				privateAttr = (Unknown) _attributes[i];
@@ -471,16 +479,16 @@ public class BCMethod {
 			Predicate2Ar loc1_eq_loc0Div2 =
 				new Predicate2Ar(
 					ArithmeticExpression.getArithmeticExpression(
-						new OLD(new LocalVariableAccess(1)),
+						new OLD(new LocalVariable(1)),
 						new NumberLiteral(2),
 						ExpressionConstants.DIV),
-					new LocalVariableAccess(2),
+					new LocalVariable(2),
 					PredicateSymbol.EQ);
 
 			// f2	: even( loc(0) ) 		
 			Predicate1Ar loc_0_even =
 				new Predicate1Ar(
-					new LocalVariableAccess(1),
+					new LocalVariable(1),
 					PredicateSymbol.EVEN);
 
 			Formula postcondition =
@@ -491,14 +499,14 @@ public class BCMethod {
 			//loc(0)>=0
 			Predicate2Ar precondition =
 				new Predicate2Ar(
-					new LocalVariableAccess(1),
+					new LocalVariable(1),
 					new NumberLiteral(0),
 					PredicateSymbol.GRTEQ);
 
 			//			MODIFIES
-			Expression modif_loc1 = new LocalVariableAccess(1);
-			Expression modif_loc2 = new LocalVariableAccess(2);
-			Expression[] modifies = new Expression[] { modif_loc1, modif_loc2 };
+			ModifiesIdent modif_loc1 = new ModifiesIdent( new LocalVariable(1), constantPool );
+			ModifiesIdent modif_loc2 = new ModifiesIdent( new LocalVariable(2), constantPool  );
+			ModifiesExpression[] modifies = new ModifiesExpression[] { modif_loc1, modif_loc2 };
 
 			SpecificationCase specCase =
 				new SpecificationCase(
@@ -517,7 +525,7 @@ public class BCMethod {
 				(
 					ArithmeticExpression) ArithmeticExpression
 						.getArithmeticExpression(
-					new LocalVariableAccess(2),
+					new LocalVariable(2),
 					new NumberLiteral(2),
 					ExpressionConstants.MULT);
 			ArithmeticExpression loc1_mult_2_plus_loc0 =
@@ -525,13 +533,13 @@ public class BCMethod {
 					ArithmeticExpression) ArithmeticExpression
 						.getArithmeticExpression(
 					loc1_mult_2,
-					new LocalVariableAccess(1),
+					new LocalVariable(1),
 					ExpressionConstants.ADD);
 
 			//LOOP INVARIANT
 			Predicate invariant =
 				new Predicate2Ar(
-					new OLD(new LocalVariableAccess(1)),
+					new OLD(new LocalVariable(1)),
 					loc1_mult_2_plus_loc0,
 					PredicateSymbol.EQ);
 
@@ -566,20 +574,20 @@ public class BCMethod {
 			Predicate2Ar postcondition =
 				new Predicate2Ar(
 					Expression._RESULT,
-					new LocalVariableAccess(0),
+					new LocalVariable(0),
 					PredicateSymbol.EQ);
 			//precondition
 			Predicate0Ar precondition = Predicate.TRUE;
 			// modifies
-			Expression[] modifies =
-				new Expression[] { new LocalVariableAccess(1)};
+			ModifiesExpression[] modifies =
+				new ModifiesExpression[] { new ModifiesArray( new ModifiesDOT(new ModifiesIdent( constantPool.getConstant(15), constantPool), new LocalVariable(0) ,constantPool ), new ArrayElemFromTo(new NumberLiteral(1), new NumberLiteral(5) ),constantPool )};
 			// exsures 
 			Expression arrayLength =
-				new FieldAccessExpression(
+				new FieldAccess(
 					new ArrayLengthConstant(),
-					new FieldAccessExpression(
+					new FieldAccess(
 						(BCConstantFieldRef) constantPool.getConstant(15),
-						new LocalVariableAccess(0)));
+						new LocalVariable(0)));
 			Formula exsPost =
 				new Predicate2Ar(
 					arrayLength,
@@ -612,8 +620,8 @@ public class BCMethod {
 				(
 					ArithmeticExpression) ArithmeticExpression
 						.getArithmeticExpression(
-					new LocalVariableAccess(1),
-					new LocalVariableAccess(2),
+					new LocalVariable(1),
+					new LocalVariable(2),
 					ExpressionConstants.REM);
 			Predicate2Ar postcondition =
 				new Predicate2Ar(Expression._RESULT, mod, PredicateSymbol.EQ);
@@ -621,10 +629,10 @@ public class BCMethod {
 			Predicate0Ar precondition = Predicate.TRUE;
 
 			// modifies loc(1)
-			Expression modif_loc1 = new LocalVariableAccess(1);
-			Expression modif_loc4 = new LocalVariableAccess(4);
+			ModifiesIdent modif_loc1 = new ModifiesIdent( new LocalVariable(1), constantPool  );
+			ModifiesIdent modif_loc4 = new ModifiesIdent ( new LocalVariable(4), constantPool );
 
-			Expression[] modifies = new Expression[] { modif_loc1, modif_loc4 };
+			ModifiesExpression[] modifies = new ModifiesExpression[] { modif_loc1, modif_loc4 };
 			SpecificationCase specCase =
 				new SpecificationCase(
 					precondition,
@@ -641,19 +649,19 @@ public class BCMethod {
 				(
 					ArithmeticExpression) ArithmeticExpression
 						.getArithmeticExpression(
-					new LocalVariableAccess(4),
-					new LocalVariableAccess(2),
+					new LocalVariable(4),
+					new LocalVariable(2),
 					ExpressionConstants.MULT);
 			ArithmeticExpression loc_4_mult_loc_2_plus_loc_1 =
 				(
 					ArithmeticExpression) ArithmeticExpression
 						.getArithmeticExpression(
 					loc_4_mult_loc_2,
-					new LocalVariableAccess(1),
+					new LocalVariable(1),
 					ExpressionConstants.ADD);
 			Formula invariant =
 				new Predicate2Ar(
-					new LocalVariableAccess(3),
+					new LocalVariable(3),
 					loc_4_mult_loc_2_plus_loc_1,
 					PredicateSymbol.EQ);
 			Expression[] loopModif =
@@ -711,17 +719,7 @@ public class BCMethod {
 	public BCInstruction[] getCode() {
 		return bytecode;
 	}
-	/**
-	 * @return the exsures specification clause
-	 */
-	public ExsuresTable getExsures() {
-		if (methodSpecification == null) {
-			return null;
-		}
-		SpecificationCase[] specCases =
-			methodSpecification.getSpecificationCases();
-		return specCases[0].getExsures();
-	}
+	
 	/**
 	 * @return the predicate that must be true in the state after the execution
 	 *         of the method
@@ -744,6 +742,7 @@ public class BCMethod {
 	 * @return the predicate that must be true in the state after the execution
 	 *         of the method
 	 */
+	 /*
 	public Formula getPostcondition() {
 		if (methodSpecification == null) {
 			return Predicate.TRUE;
@@ -751,11 +750,11 @@ public class BCMethod {
 		SpecificationCase[] specCases =
 			methodSpecification.getSpecificationCases();
 		return specCases[0].getPostcondition();
-	}
-	/**
+	}*/
+/*	*//**
 	 * @return the predicate that must be true in the state before the
 	 *         execution of the method
-	 */
+	 *//*
 	public Formula getPrecondition() {
 		if (methodSpecification == null) {
 			return Predicate.TRUE;
@@ -763,7 +762,7 @@ public class BCMethod {
 		SpecificationCase[] specCases =
 			methodSpecification.getSpecificationCases();
 		return specCases[0].getPrecondition();
-	}
+	}*/
 	/**
 	 * @return
 	 */
@@ -1067,17 +1066,18 @@ public class BCMethod {
 
 		return _bc;
 	}
-	/**
+	
+/*	*//**
 	 * @return
-	 */
-	public Expression[] getModifies() {
+	 *//*
+	public ModifiesExpression[] getModifies() {
 		if (methodSpecification == null) {
 			return null;
 		}
 		SpecificationCase[] specCases =
 			methodSpecification.getSpecificationCases();
 		return specCases[0].getModifies();
-	}
+	}*/
 	public int getNumberArguments() {
 		return argNames.length;
 	}
@@ -1109,6 +1109,7 @@ public class BCMethod {
 			return;
 		}
 		for (int i = 0; i < specCases.length; i++) {
+			
 			trace.wp(
 				specCases[i].getPostcondition(),
 				specCases[i].getExsures());
@@ -1176,5 +1177,17 @@ public class BCMethod {
 
 	public String toString() {
 		return name +  "  " +  signature;
+	}
+	/**
+	 * @return Returns the methodSpecification.
+	 */
+	public MethodSpecification getMethodSpecification() {
+		return methodSpecification;
+	}
+	/**
+	 * @return Returns the proofObligation.
+	 */
+	public Vector getProofObligation() {
+		return proofObligation;
 	}
 }
