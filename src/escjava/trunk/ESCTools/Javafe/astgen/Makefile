@@ -1,7 +1,7 @@
 # Copyright 2000, 2001, Compaq Computer Corporation
 
-LEX=flex
-CFLAGS = -g
+LEX =		flex
+CFLAGS = 	-g
 
 all: astgen astfilelist
 
