@@ -348,6 +348,13 @@ public final class TrAnExpr {
       case TagConstants.TYPEEXPR:
 	return e;
 
+      case TagConstants.REACH: {
+	    ErrorSet.notImplemented(!Main.options().noNotCheckedWarnings,
+		e.getStartLoc(),"Not checking predicates containing reach expressions");
+	    // FIXME - ignore these till we can figure out how to reason
+	    return null;
+        }
+
       case TagConstants.NUM_OF:
       case TagConstants.MIN:
       case TagConstants.MAXQUANT:
@@ -877,6 +884,14 @@ wrap those variables being modified and not everything.
     } else if (Types.isTypeType(leftType)
 	       && Types.isTypeType(rightType)) {
       naryTag = binary_table[i][6];
+    } else if (Types.isErrorType(leftType)) {
+	ErrorSet.notImplemented(!Main.options().noNotCheckedWarnings,be.left.getStartLoc(),
+				"Failed to translate some unimplemented construct");
+      naryTag = -1; // dummy assignment
+    } else if (Types.isErrorType(rightType)) {
+	ErrorSet.notImplemented(!Main.options().noNotCheckedWarnings,be.right.getStartLoc(),
+				"Failed to translate some unimplemented construct");
+      naryTag = -1; // dummy assignment
     } else {
 	System.out.println("LTYPE " + leftType);
 	System.out.println("RTYPE " + rightType);
@@ -946,7 +961,10 @@ wrap those variables being modified and not everything.
     if (Types.isBooleanType(argType)) col = 1;
     else if (Types.isIntegralType(argType)) col = 2;
     else if (Types.isNumericType(argType)) col = 3;
-    else Assert.fail("Bad type");
+    else if (Types.isErrorType(argType)) {
+	ErrorSet.notImplemented(true || !Main.options().noNotCheckedWarnings,e.expr.getStartLoc(),
+				"Failed to translate some unimplemented construct");
+    } else Assert.fail("Bad type");
 
     int result = unary_table[row][col];
     Assert.notFalse(result != -1, "Bad type combination");

@@ -335,7 +335,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
 	scanner.addKeyword("\\everything",TagConstants.EVERYTHING);
 	scanner.addKeyword("\\nothing",TagConstants.NOTHING);
 	scanner.addKeyword("\\fields_of",TagConstants.FIELDS_OF);
-	scanner.addKeyword("\\reach",TagConstants.FIELDS_OF);
+	//scanner.addKeyword("\\reach",TagConstants.REACH);
 	scanner.addKeyword("\\not_specified",TagConstants.NOT_SPECIFIED);
 	scanner.addKeyword("\\such_that",TagConstants.SUCH_THAT);
 	inProcessTag = NOTHING_ELSE_TO_PROCESS;
@@ -1929,6 +1929,7 @@ System.out.println("ADVANCING AT " + TagConstants.toString(tag));
 				case TagConstants.WARN:
 				case TagConstants.WARN_OP:
                                 case TagConstants.FRESH: 
+                                case TagConstants.REACH: 
                                 case TagConstants.ELEMSNONNULL:
                                 case TagConstants.ELEMTYPE:
                                 case TagConstants.MAX: 

@@ -696,6 +696,20 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                     return e;
                 }
 
+	    case TagConstants.REACH: {
+
+
+		    //ErrorSet.notImplemented(!Main.options().noNotCheckedWarnings,
+		//		e.getStartLoc(),"reach is not implemented");
+		// FIXME - just enough to get by for now
+                    NaryExpr ne = (NaryExpr)e;
+                        Expr nu = 
+                            checkExpr(env, ne.exprs.elementAt(0));
+                        ne.exprs.setElementAt(nu, 0);			
+                    setType(e, Types.errorType);
+                    return e;
+		}
+
             case TagConstants.FRESH:
                 {
                     NaryExpr ne = (NaryExpr)e;
