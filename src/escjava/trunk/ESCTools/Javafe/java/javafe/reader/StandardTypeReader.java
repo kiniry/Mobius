@@ -433,7 +433,7 @@ public class StandardTypeReader extends TypeReader
     return null;
   }
 
-  //@ requires \nonnullelements(args)
+  //@ requires \nonnullelements(args);
   public static void main(String[] args)
     throws java.io.IOException {
     if (args.length != 2) {

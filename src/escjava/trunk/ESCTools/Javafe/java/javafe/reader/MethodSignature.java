@@ -27,22 +27,22 @@ class MethodSignature
    * Construct a new method signature with an empty sequence of parameter
    * types and a void return type.
    */
-  //@ requires classLocation != Location.NULL
+  //@ requires classLocation != Location.NULL;
   MethodSignature(int classLocation)
   {
     this.parameters = new Vector();
     this.return_    = PrimitiveType.make(TagConstants.VOIDTYPE, classLocation);
 
-    //@ set parameters.elementType = \type(Type)
-    //@ set parameters.containsNull = false
+    //@ set parameters.elementType = \type(Type);
+    //@ set parameters.containsNull = false;
   }
 
   /**
    * Count the number of parameter types in this method signature.
    * @return  the number of parameter types
    */
-  //@ ensures \result>=0
-  //@ ensures \result==parameters.elementCount
+  //@ ensures \result>=0;
+  //@ ensures \result==parameters.elementCount;
   int countParameters()
   {
     return parameters.size();
@@ -53,13 +53,13 @@ class MethodSignature
    * @param index  the index of the parameter type to return
    * @return       the parameter type at index index
    */
-  //@ requires 0<=index && index<parameters.elementCount
+  //@ requires 0<=index && index<parameters.elementCount;
   //@ ensures \result != null;
-  //@ ensures \result.syntax
+  //@ ensures \result.syntax;
   Type parameterAt(int index)
   {
     return (Type)parameters.elementAt(index);
-  }    //@ nowarn Post  // Unenforceable invariant on parameters
+  }    //@ nowarn Post;  // Unenforceable invariant on parameters
 
   /**
    * Append a parameter type to this method signature.
@@ -76,7 +76,7 @@ class MethodSignature
    * @return  the return type
    */
   //@ ensures \result != null;
-  //@ ensures \result.syntax
+  //@ ensures \result.syntax;
   Type getReturn()
   {
     return return_;
@@ -87,7 +87,7 @@ class MethodSignature
    * @param return_  the new return type
    */
   //@ requires return_ != null;
-  //@ requires return_.syntax
+  //@ requires return_.syntax;
   void setReturn(Type return_)
   {
     this.return_ = return_;
@@ -100,8 +100,8 @@ class MethodSignature
    * Initialized by constructor.
    */
   //@ invariant parameters != null;
-  //@ invariant parameters.elementType == \type(Type)
-  //@ invariant !parameters.containsNull
+  //@ invariant parameters.elementType == \type(Type);
+  //@ invariant !parameters.containsNull;
   // Unenforceable invariant: contents are syntax
   /*@spec_public*/ private Vector parameters;
 
@@ -110,7 +110,7 @@ class MethodSignature
    * Initialized by constructor.
    */
   //@ invariant return_ != null;
-  //@ invariant return_.syntax
+  //@ invariant return_.syntax;
   private Type return_;
 
 }

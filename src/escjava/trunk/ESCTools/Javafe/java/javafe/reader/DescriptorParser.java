@@ -54,11 +54,11 @@ class DescriptorParser
       if (i<count-1)
 	locations2[i] = classLocation;
     }
-    //@ assume \nonnullelements(identifiers)
+    //@ assume \nonnullelements(identifiers);
     /*@ assume (\forall int i; (0<=i && i<locations1.length)
-			==> locations1[i] != Location.NULL) */
+			==> locations1[i] != Location.NULL); */
     /*@ assume (\forall int i; (0<=i && i<locations2.length)
-			==> locations2[i] != Location.NULL) */
+			==> locations2[i] != Location.NULL); */
 
     return TypeName.make(Name.make(locations1, locations2,
 				   IdentifierVec.make(identifiers)));

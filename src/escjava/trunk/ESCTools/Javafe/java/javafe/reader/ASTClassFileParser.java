@@ -42,14 +42,14 @@ class ASTClassFileParser extends ClassFileParser
      * Initialized by constructor (by way of parse_file).
      */
     //@ invariant typeDecl != null;
-    //@ invariant typeDecl.specOnly
+    //@ invariant typeDecl.specOnly;
     public TypeDecl typeDecl;
 
     /**
      * A dummy location representing the class being parsed.
      * Initialized by constructor.
      */
-    //@ invariant classLocation != Location.NULL
+    //@ invariant classLocation != Location.NULL;
     public int classLocation;
 
 
@@ -83,7 +83,7 @@ class ASTClassFileParser extends ClassFileParser
 	    this.inputFile = inputFile;
 	    this.classLocation = Location.createWholeFileLoc(inputFile);
 	    stream = new DataInputStream(inputFile.getInputStream());
-	    parse_file(stream);  //@ nowarn Invariant  // "parse_file" is a helper
+	    parse_file(stream);  //@ nowarn Invariant;  // "parse_file" is a helper
 	} finally {
 	    if (stream != null) {
 		try { stream.close(); }
@@ -128,7 +128,7 @@ class ASTClassFileParser extends ClassFileParser
     protected void addNonSyntheticDecls(/*@ non_null */ TypeDeclElemVec v, 
 	                                /*@ non_null */ TypeDeclElem elems[]) { 
 	for (int i = 0; i < elems.length; i++) {
-	    if (synthetics.contains(elems[i])) { //@ nowarn
+	    if (synthetics.contains(elems[i])) { //@ nowarn;
 		continue;
 	    }
 	    if ((modifiers & ACC_INTERFACE) != 0 &&
@@ -138,7 +138,7 @@ class ASTClassFileParser extends ClassFileParser
 		    continue;
 		}
 	    }
-	    v.addElement(elems[i]);  //@ nowarn Pre
+	    v.addElement(elems[i]);  //@ nowarn Pre;
 	}
     }
 
@@ -152,7 +152,7 @@ class ASTClassFileParser extends ClassFileParser
 	super.parse_file(stream);
 
 	TypeNameVec interfaceVec =
-	    TypeNameVec.make(interfaces); //@ nowarn Pre
+	    TypeNameVec.make(interfaces); //@ nowarn Pre;
 
 	int predict = classMembers.size() + routines.length + fields.length;
 	TypeDeclElemVec elementVec = TypeDeclElemVec.make(predict);
@@ -206,7 +206,7 @@ class ASTClassFileParser extends ClassFileParser
     protected void set_const(int i, int ctype, Object value)
 	throws ClassFormatError
     {
-	constants[i] = ctype==CONSTANT_Class ?	//@ nowarn IndexTooBig
+	constants[i] = ctype==CONSTANT_Class ?	//@ nowarn IndexTooBig;
 	    DescriptorParser.parseClass((String)value) : value;
 	rawConstants[i] = value;
     }
@@ -291,7 +291,7 @@ class ASTClassFileParser extends ClassFileParser
     {
 	// record the class type and synthesize a location for the class binary
 
-	TypeName   typeName  = (TypeName)constants[cindex];	//@ nowarn Cast, IndexTooBig
+	TypeName   typeName  = (TypeName)constants[cindex];	//@ nowarn Cast, IndexTooBig;
 	//@ assume typeName != null;
 
 	Name       qualifier = getNameQualifier(typeName.name);
@@ -315,7 +315,7 @@ class ASTClassFileParser extends ClassFileParser
     protected void set_super_class(int cindex)
 	throws ClassFormatError
     {
-	super_class = (TypeName)constants[cindex];	//@ nowarn Cast, IndexTooBig
+	super_class = (TypeName)constants[cindex];	//@ nowarn Cast, IndexTooBig;
     }
 
     /**
@@ -333,7 +333,7 @@ class ASTClassFileParser extends ClassFileParser
     protected void set_interface(int index, int cindex)
 	throws ClassFormatError
     {
-	interfaces[index] = (TypeName)constants[cindex];	//@ nowarn Cast,IndexTooBig
+	interfaces[index] = (TypeName)constants[cindex];	//@ nowarn Cast,IndexTooBig;
     }
 
     /**
@@ -351,7 +351,7 @@ class ASTClassFileParser extends ClassFileParser
     protected void set_field(int i, String fname, String type, int mod)
 	throws ClassFormatError
     {
-	fields[i] =			//@ nowarn IndexTooBig
+	fields[i] =			//@ nowarn IndexTooBig;
 	    FieldDecl.make(mod, null, Identifier.intern(fname),
 			   DescriptorParser.parseField(type), classLocation,
 			   null, classLocation);
@@ -365,8 +365,8 @@ class ASTClassFileParser extends ClassFileParser
     {
 	// construct a literal expression for the initializer
 
-	FieldDecl field = fields[i];		//@ nowarn IndexTooBig
-	//@ assume field != null	
+	FieldDecl field = fields[i];		//@ nowarn IndexTooBig;
+	//@ assume field != null	;
 
 	int       tag;
 	Object    literal;
@@ -375,39 +375,39 @@ class ASTClassFileParser extends ClassFileParser
 	    {
 	    case TagConstants.BOOLEANTYPE:
 		tag     = TagConstants.BOOLEANLIT;
-		literal = Boolean.valueOf(((Integer)value).intValue() != 0);	//@ nowarn Cast,Null
+		literal = Boolean.valueOf(((Integer)value).intValue() != 0);	//@ nowarn Cast,Null;
 		break;
 
 	    case TagConstants.INTTYPE:
 	    case TagConstants.BYTETYPE:
 	    case TagConstants.SHORTTYPE:
 		tag     = TagConstants.INTLIT;
-		literal = (Integer)value;     //@ nowarn Cast
+		literal = (Integer)value;     //@ nowarn Cast;
 		break;
 
 	    case TagConstants.LONGTYPE:
 		tag     = TagConstants.LONGLIT;
-		literal = (Long)value;       //@ nowarn Cast
+		literal = (Long)value;       //@ nowarn Cast;
 		break;
 
 	    case TagConstants.CHARTYPE:
 		tag     = TagConstants.CHARLIT;
-		literal = (Integer)value;    //@ nowarn Cast
+		literal = (Integer)value;    //@ nowarn Cast;
 		break;
 
 	    case TagConstants.FLOATTYPE:
 		tag     = TagConstants.FLOATLIT;
-		literal = (Float)value;     //@ nowarn Cast
+		literal = (Float)value;     //@ nowarn Cast;
 		break;
 
 	    case TagConstants.DOUBLETYPE:
 		tag     = TagConstants.DOUBLELIT;
-		literal = (Double)value;    //@ nowarn Cast
+		literal = (Double)value;    //@ nowarn Cast;
 		break;
 
 	    default:
 		tag     = TagConstants.STRINGLIT;
-		literal = (String)value;    //@ nowarn Cast
+		literal = (String)value;    //@ nowarn Cast;
 		break;
 	    }
 
@@ -435,7 +435,7 @@ class ASTClassFileParser extends ClassFileParser
 	    FormalParaDeclVec.make(makeFormals(signature));
 	BlockStmt body = null;
 
-	routines[i] =			//@ nowarn IndexTooBig
+	routines[i] =			//@ nowarn IndexTooBig;
 	    mname.equals("<init>") ?
 	    (RoutineDecl)ConstructorDecl.make(
 					      mod, null, null, formalVec, emptyTypeNameVec, body, Location.NULL,
@@ -455,7 +455,7 @@ class ASTClassFileParser extends ClassFileParser
     {
 	// put in a dummy body
 	if (!includeBodies) return;
-	routines[i].body =	//@ nowarn Null, IndexTooBig
+	routines[i].body =	//@ nowarn Null, IndexTooBig;
 	    BlockStmt.make(StmtVec.make(), classLocation, classLocation);
 	routines[i].locOpenBrace = classLocation;
     }
@@ -481,9 +481,9 @@ class ASTClassFileParser extends ClassFileParser
 	// necessary
 
 	if (aname.equals("Exceptions")) {
-	    routines[i].raises = TypeNameVec.make(parseTypeNames((DataInputStream)stream)); //@ nowarn Null, Cast, IndexTooBig
+	    routines[i].raises = TypeNameVec.make(parseTypeNames((DataInputStream)stream)); //@ nowarn Null, Cast, IndexTooBig;
 	} else if (aname.equals("Synthetic")) {
-	    synthetics.addElement(routines[i]);  //@ nowarn 
+	    synthetics.addElement(routines[i]);  //@ nowarn ;
 	} else {
 	    stream.skipBytes(n);
 	}
@@ -514,7 +514,7 @@ class ASTClassFileParser extends ClassFileParser
      * InterfaceMethodRef  null
      */
     //@ invariant constants != null;
-    //@ invariant \typeof(constants) == \type(Object[])
+    //@ invariant \typeof(constants) == \type(Object[]);
     private Object[] constants;
 
     /**
@@ -524,7 +524,7 @@ class ASTClassFileParser extends ClassFileParser
      * by set_const and set_num_constants.
      */
     //@ invariant rawConstants != null;
-    //@ invariant \typeof(rawConstants) == \type(Object[])
+    //@ invariant \typeof(rawConstants) == \type(Object[]);
     //@ invariant constants.length == rawConstants.length;
     private Object[] rawConstants;
 
@@ -558,7 +558,7 @@ class ASTClassFileParser extends ClassFileParser
      * Elements initialized by set_interface.
      */
     //@ invariant interfaces != null;
-    //@ invariant \typeof(interfaces) == \type(TypeName[])
+    //@ invariant \typeof(interfaces) == \type(TypeName[]);
     private TypeName[] interfaces;
 
     /**
@@ -574,7 +574,7 @@ class ASTClassFileParser extends ClassFileParser
      * Elements initialized by set_field.
      */
     //@ invariant fields != null;
-    //@ invariant \typeof(fields) == \type(FieldDecl[])
+    //@ invariant \typeof(fields) == \type(FieldDecl[]);
     private FieldDecl[] fields;
 
     /**
@@ -583,7 +583,7 @@ class ASTClassFileParser extends ClassFileParser
      * Elements initialized by set_method.
      */
     //@ invariant routines != null;
-    //@ invariant \typeof(routines) == \type(RoutineDecl[])
+    //@ invariant \typeof(routines) == \type(RoutineDecl[]);
     private RoutineDecl[] routines;
 
     /**
@@ -601,8 +601,8 @@ class ASTClassFileParser extends ClassFileParser
      * @exception ClassFormatError  if the type names are not class constants
      */
     //@ requires stream != null;
-    //@ ensures \nonnullelements(\result)
-    //@ ensures \typeof(\result)==\type(TypeName[])
+    //@ ensures \nonnullelements(\result);
+    //@ ensures \typeof(\result)==\type(TypeName[]);
     private TypeName[] parseTypeNames(DataInputStream stream)
 	throws IOException, ClassFormatError
     {
@@ -633,8 +633,8 @@ class ASTClassFileParser extends ClassFileParser
      * @return           the formal parameters
      */
     //@ requires signature != null;
-    //@ ensures \nonnullelements(\result)
-    //@ ensures \typeof(\result) == \type(FormalParaDecl[])
+    //@ ensures \nonnullelements(\result);
+    //@ ensures \typeof(\result) == \type(FormalParaDecl[]);
     private FormalParaDecl[] makeFormals(MethodSignature signature)
     {
 	int              length  = signature.countParameters();
