@@ -126,6 +126,15 @@ public class RefinementSequence extends CompilationUnit {
 	    imports = javacu.imports.copy();
 	    types = cleancopy(javacu.elems);
 	}
+	IdentifierVec ids = IdentifierVec.make(3);
+	ids.addElement(Identifier.intern("org"));
+	ids.addElement(Identifier.intern("jmlspecs"));
+	ids.addElement(Identifier.intern("lang"));
+	int[] nulls = new int[] {Location.NULL,Location.NULL,Location.NULL};
+	//@ assert nulls.length == ids.size();
+	lexicalPragmaVec.addElement( ImportPragma.make(
+		OnDemandImportDecl.make(Location.NULL,CompoundName.make(ids,
+			nulls,nulls) ),Location.NULL) );
 
 	int loc = ((CompilationUnit)refinements.get(0)).loc;
 

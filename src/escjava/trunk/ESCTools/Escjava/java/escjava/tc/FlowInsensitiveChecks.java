@@ -2279,22 +2279,37 @@ FIXME - see uses of countFreeVarsAccess
 		break;
 	      }
 
-	    case TagConstants.IN:
 	    case TagConstants.MAPS: {
+		Identifier fid = ((FieldDecl)ctxt).id;
+	        MapsExprModifierPragma ep = (MapsExprModifierPragma)p;
+		//System.out.println("FOUND " + TagConstants.toString(tag) + " for " + fid + " " + ep.id);
+		if (ep.expr != null) ep.expr = checkExpr(env,ep.expr);
+		isSpecDesignatorContext = true;
+		if (ep.mapsexpr != null) ep.mapsexpr = checkDesignator(env,ep.mapsexpr);
+		isSpecDesignatorContext = false;
+		Expr e = ep.expr;
+		if (e == null || TypeCheck.inst.getType(e) == Types.errorType) {
+		} else if (e instanceof FieldAccess) {
+		    Datagroups.add(((FieldAccess)e).decl,ep.mapsexpr);
+		} else {
+		    ErrorSet.error(e.getStartLoc(),
+			"Expected a field reference here, found " +
+			e.getClass());
+		}
+		break;
+	    }
+
+	    case TagConstants.IN: {
 		//System.out.println("FOUND " + TagConstants.toString(tag) + " for " + ((FieldDecl)ctxt).id );
-	        ExprModifierPragma ep = (ExprModifierPragma)p;
+	        MapsExprModifierPragma ep = (MapsExprModifierPragma)p;
 		if (ep.expr != null) ep.expr = checkExpr(env,ep.expr);
 		Expr e = ep.expr;
 		if (e == null || TypeCheck.inst.getType(e) == Types.errorType) {
 		} else if (e instanceof FieldAccess) {
-		    FieldDecl fd = ((FieldAccess)e).decl;
-/*
-		    System.out.println("FIELD " + fd.id + " " + 
-			Location.toString(fd.getStartLoc()) + " GETTING " + 
-			((FieldDecl)ctxt).id + " " +
-			Location.toString(ctxt.getStartLoc()));
-*/
-		    Datagroups.add(fd,(FieldDecl)ctxt);
+		    FieldDecl fd = (FieldDecl)ctxt;
+		    Expr eva = AmbiguousVariableAccess.make(SimpleName.make(fd.id,fd.getStartLoc()));
+		    eva = checkExpr(env,eva);
+		    Datagroups.add(((FieldAccess)e).decl,eva);
 		} else {
 		    ErrorSet.error(e.getStartLoc(),
 			"Expected a field reference here, found " +

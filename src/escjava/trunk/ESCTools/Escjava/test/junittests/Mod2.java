@@ -1,4 +1,4 @@
-
+//#FLAGS: -nowarn Modifies
 
 public class Mod2 {
 

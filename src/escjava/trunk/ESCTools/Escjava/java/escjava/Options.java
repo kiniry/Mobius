@@ -134,6 +134,8 @@ public class Options extends javafe.SrcToolOptions
     public int loopUnrollCount = 1;
     public boolean loopUnrollHalf = true;
 
+    public int mapsUnrollCount = 2;
+
     public boolean preciseTargets = false;
 
     public boolean predAbstract = false;
@@ -588,6 +590,13 @@ public class Options extends javafe.SrcToolOptions
         } else if (option.equals("-loopFallThru")) {
             loopTranslation = LOOP_FALL_THRU;
             return offset;
+        } else if (option.equals("-mapsUnrollCount")) {
+	    if (offset == args.length) {
+                throw new UsageError("Option " + option +
+                                     " requires one argument");
+	    }
+	    mapsUnrollCount = Integer.parseInt(args[offset]);
+	    return offset+1;
         } else if (option.equals("-predAbstract")) {
             predAbstract = true;
             loopTranslation = LOOP_SAFE;
@@ -743,7 +752,7 @@ public class Options extends javafe.SrcToolOptions
                 throw new UsageError("Option " + option +
                                      " requires one integer argument");
             }
-            rewriteDepth = new Integer(args[offset]).intValue();
+            rewriteDepth = Integer.parseInt(args[offset]);
             return offset+1;
 	} else if (option.equals("-noSemicolonWarnings")) {
 	    noSemicolonWarnings = true;

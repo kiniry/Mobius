@@ -9,6 +9,10 @@ import javafe.util.ErrorSet;
 import javafe.util.CorrelatedReader;	// For test harness only
 import javafe.util.Location;
 
+import java.util.List;
+import java.util.LinkedList;
+import java.util.Iterator;
+
 /**
  * Parses java source.
  * 
@@ -518,7 +522,7 @@ VariableDeclarator:
       l.getNextToken();
     }
     else if (l.ttype == TagConstants.POSTMODIFIERPRAGMA) {
-	System.out.println("ORPHAN POSTMODIFIERPRAGMA");
+	System.out.println("ORPHAN POSTMODIFIERPRAGMA " + Location.toString(l.startingLoc));
 	// FIXME - ignore for now
       l.getNextToken();
     }
@@ -578,6 +582,7 @@ VariableDeclarator:
 	if( modifierPragmas == null )
 	  modifierPragmas = ModifierPragmaVec.make();
 
+        List fds = new LinkedList(); // a list of all the fds produced here
         for(;;) {
           int locId     = l.startingLoc;
           Identifier id = parseIdentifier(l);
@@ -591,15 +596,16 @@ VariableDeclarator:
             init = parseVariableInitializer(l, specOnly);
           }
           FieldDecl fielddecl
-	    = FieldDecl.make(modifiers, modifierPragmas, 
+	    = FieldDecl.make(modifiers, modifierPragmas.copy(), 
 			     id, vartype, locId, init, locAssignOp );
           seqTypeDeclElem.addElement( fielddecl );
+	  fds.add(fielddecl);
 
           if(l.ttype == TagConstants.MODIFIERPRAGMA
 		    || l.ttype == TagConstants.SEMICOLON ) 
 	  {
 	    // if modifier pragma, retroactively add to modifierPragmas
-	    parseMoreModifierPragmas( l, modifierPragmas );
+	    parseMoreModifierPragmas( l, fielddecl.pmodifiers );
 
 	    // End of Declaration 
 
@@ -610,7 +616,13 @@ VariableDeclarator:
 	    // associated (or at least precede the terminating semicolon).
             l.getNextToken();
 	    while (l.ttype == TagConstants.POSTMODIFIERPRAGMA) {
-		modifierPragmas.addElement((ModifierPragma)l.auxVal);
+		Identifier idd = ((javafe.ast.IdPragma)l.auxVal).id();
+		Iterator i = fds.iterator();
+		while (i.hasNext()) {
+		    FieldDecl fd = (FieldDecl)i.next();
+		    if (idd == null || idd == fd.id)
+			fd.pmodifiers.addElement((ModifierPragma)l.auxVal);
+		}
 		l.getNextToken();
 	    }
 

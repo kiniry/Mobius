@@ -98,6 +98,8 @@ import escjava.ParsedRoutineSpecs;
  *                   // \Reach
  *	   + CondExprModifierPragma (Expr expr, Expr cond) 
  *                   // Modifiers, AlsoModifiers, Assignable, Modifiable
+ *         + MapsExprModifierPragma (Identifier id, Expr mapsexpr, Expr expr) 
+ *		     // maps
  *         + VarExprModifierPragma (GenericVarDecl arg, Expr expr)
  *                   // Exsures, AlsoExsures, Signals, AlsoSignals
  *         + ModelProgramModifierPragma()
@@ -329,8 +331,8 @@ public class ArrayRangeRefExpr extends Expr
 {
   //# int locOpenBracket
   //# Expr array
-  //# Expr lowIndex
-  //# Expr highIndex
+  //# Expr lowIndex	NullOK
+  //# Expr highIndex	NullOK
 
   public int getStartLoc() { return locOpenBracket; }
 }
@@ -928,6 +930,28 @@ public class CondExprModifierPragma  extends ModifierPragma {
 
     public int getStartLoc() { return loc; }
     public int getEndLoc() { return cond.getEndLoc(); }
+}
+public class MapsExprModifierPragma  extends ModifierPragma implements javafe.ast.IdPragma {
+    // Extended to support JML
+
+    //# int tag
+    //# Identifier id
+    //# Expr mapsexpr
+    //# int loc
+    //# Expr expr
+
+    //# ManualTag
+    public final int getTag() { return tag; }
+
+    //# PostCheckCall
+    private void postCheck() {
+        boolean goodtag = (tag == TagConstants.MAPS);
+        Assert.notFalse(goodtag);
+    }
+
+    public Identifier id() { return id; }
+    public int getStartLoc() { return loc; }
+    public int getEndLoc() { return expr.getEndLoc(); }
 }
 
 public class ReachModifierPragma extends ModifierPragma

@@ -42,6 +42,15 @@ public final class TrAnExpr {
         return trSpecExpr(e, null, null);
     }
 
+    public static Expr trSpecExpr(Expr e, Expr thisExpr) {
+	try {
+	    specialThisExpr = thisExpr;
+	    return trSpecExpr(e);
+	} finally {
+	    specialThisExpr = null;
+	}
+    }
+
     public static void initForClause() {
 	extraSpecs = true;
 	trSpecExprAuxConditions = ExprVec.make();
@@ -92,6 +101,14 @@ public final class TrAnExpr {
     private static Expr specialResultExpr = null;
     private static Expr specialThisExpr = null;
 
+    public static Expr trSpecExpr(Expr e, Hashtable sp, Hashtable st, Expr thisExpr) {
+	try {
+	    specialThisExpr = thisExpr;
+	    return trSpecExpr(e,sp,st);
+	} finally {
+	    specialThisExpr = null;
+	}
+    }
     public static Expr trSpecExpr(Expr e, Hashtable sp, Hashtable st) {
         int tag = e.getTag();
         switch (tag) {

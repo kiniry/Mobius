@@ -25,6 +25,8 @@ import javafe.util.Location;
 
 import java.util.ArrayList;
 import java.util.Vector;
+import java.util.LinkedList;
+import java.util.Iterator;
 /**
  Grammar:
 
@@ -1538,56 +1540,30 @@ try{
                 // The following clauses must be followed by a semi-colon.
 		case TagConstants.IN:
 		case TagConstants.IN_REDUNDANTLY: {
+		    boolean first = true;
 		    do {
-			int n = 0;
-			if (scanner.ttype == TagConstants.SUPER) {
-			    if (scanner.lookahead(1) != TagConstants.FIELD) {
-				ErrorSet.error(
-				    scanner.lookaheadToken(1).startingLoc,
-				    "Expected a . after super");
-				eatThroughSemiColon();
-				return getNextPragmaHelper(dst);
-			    }
-			    n = 2;
-			}
-			if (scanner.lookahead(n) != TagConstants.IDENT) {
-			    ErrorSet.error(scanner.lookaheadToken(n).startingLoc,
-				    "Expected an identifier here");
-			    eatThroughSemiColon();
-			    return getNextPragmaHelper(dst);
-			}
-			int t = scanner.lookahead(n+1);
-			if (t != TagConstants.COMMA && t != TagConstants.SEMICOLON) {
-			    ErrorSet.error(
-				scanner.lookaheadToken(n+1).startingLoc,
-				"Expected a comma or semicolon here");
-			    eatThroughSemiColon();
-			    return getNextPragmaHelper(dst);
-			}
-			Expr e = parseExpression(scanner);
-			ExprModifierPragma pragma =
-			    ExprModifierPragma.make(TagConstants.unRedundant(tag), 
-						e, loc);
-			if (TagConstants.isRedundant(tag)) pragma.setRedundant(true);
-			dst.startingLoc = loc;
-			dst.auxVal = pragma;
-			dst.ttype = TagConstants.POSTMODIFIERPRAGMA;
-			if (scanner.ttype != TagConstants.COMMA) break;
-			savePragma(dst);
-			scanner.getNextToken(); // skip comma
+			boolean more = parseInPragmas(tag, loc, dst,first);
+			if (more) savePragma(dst);
+			else if (first) return getNextPragmaHelper(dst);
+			else break;
+			first = false;
 		    } while (true);
+		    dst.ttype = TagConstants.NULL;
 		    semicolonExpected = true;
 		    break;
 		}
 		case TagConstants.MAPS:
 		case TagConstants.MAPS_REDUNDANTLY:
-			// FIXME - need to define and construct an
-			// appropriate ModifierPragma
 		  {
 		    // Already parsed something - should be an identifier
 		    //System.out.println("MAPPING " + scanner.identifierVal.toString());
-		    parseMapsMemberFieldRef(scanner);
-		    if (scanner.identifierVal == null ||
+		    Identifier id = scanner.identifierVal;
+		    Expr mapsod = parseMapsMemberFieldRef(scanner);
+		    if (mapsod == null) {
+			// already wrote an error message
+			eatThroughSemiColon();
+			semicolonExpected = false;
+		    } else if (scanner.identifierVal == null ||
 			!scanner.identifierVal.toString().equals("\\into")) {
 			ErrorSet.error(scanner.startingLoc,
 				"Expected \\into in the maps clause here");
@@ -1595,36 +1571,23 @@ try{
 			semicolonExpected = false;
 		    } else {
 			scanner.getNextToken(); // skip \into
-			boolean sup = false;
-			if (scanner.ttype == TagConstants.SUPER) {
-			    scanner.getNextToken(); // skip super
-			    expect(scanner,TagConstants.FIELD); // skip .
-			    sup = true;
+			LinkedList groups = parseGroupList();
+			Iterator ig = groups.iterator();
+			while (ig.hasNext()) {
+			    Expr e = (Expr)ig.next();
+			    MapsExprModifierPragma pragma =
+				MapsExprModifierPragma.make(TagConstants.unRedundant(tag), 
+						    id, mapsod, loc, e);
+			    if (TagConstants.isRedundant(tag)) pragma.setRedundant(true);
+			    dst.startingLoc = loc;
+			    dst.auxVal = pragma;
+			    dst.ttype = TagConstants.POSTMODIFIERPRAGMA;
+			    savePragma(dst);
 			}
-			parseIdentifier(scanner);
-			//System.out.println("INTO " + scanner.identifierVal);
-			while (scanner.ttype == TagConstants.COMMA) {
-			    scanner.getNextToken(); // skip comma
-			    //System.out.println("INTO " + scanner.identifierVal);
-			    sup = false;
-			    if (scanner.ttype == TagConstants.SUPER) {
-				scanner.getNextToken();
-				expect(scanner,TagConstants.FIELD);
-				sup = true;
-			    }
-			    parseIdentifier(scanner);
-			}
-
-			ExprModifierPragma pragma =
-			    ExprModifierPragma.make(TagConstants.unRedundant(tag), 
-						null, loc);
-			if (TagConstants.isRedundant(tag))
-			    pragma.setRedundant(true);
-			dst.ttype = TagConstants.POSTMODIFIERPRAGMA;
-			dst.auxVal = pragma;
-			semicolonExpected = true;
+			dst.ttype = TagConstants.NULL;
+			semicolonExpected = false;
+			break;
 		    }
-                    break;
 		  }
 
                 // Unsupported JML clauses/keywords.
@@ -2594,13 +2557,13 @@ try{
 	int t = l.ttype;
 	if (t == TagConstants.NOTHING) {
 	    scanner.getNextToken();
-	    return NothingExpr.make(scanner.startingLoc);
+	    return NothingExpr.make(loc);
 	} else if (t == TagConstants.NOT_SPECIFIED) {
 	    scanner.getNextToken();
-	    return NotSpecifiedExpr.make(scanner.startingLoc);
+	    return NotSpecifiedExpr.make(loc);
 	} else if (t == TagConstants.EVERYTHING) {
 	    scanner.getNextToken();
-	    return EverythingExpr.make(scanner.startingLoc);
+	    return EverythingExpr.make(loc);
 	} else if (t == TagConstants.PRIVATE_DATA) {
             // PRIVATE_DATA recognized and discarded, unclear semantics (kiniry)
 		// FIXME
@@ -3101,21 +3064,54 @@ try{
 	    Token temp = new Token();
 	    scanner.getNextToken();
 	    while(true) {
-		// FIXME - what if there are multiple FIeldDecls generated
-		// above - to which do these apply?
-		// FIXME - I don't think the code below is robust against
-		// parsing errors in the in or maps clause.
+		// FIXME - when there are multiple FieldDecls in one declaration,
+		// an in pragma applies to them all and a maps pragma applies to
+		// the ones with a matching leading identifier.  This is not implemented
+		// here.
+		// FIXME - the following code is another reason why the handling of pragmas
+		// should be totally refactored here and within javafe.
 		if (scanner.ttype == TagConstants.IDENT &&
 		    scanner.identifierVal.toString().equals("in")) {
-		    getNextPragmaHelper(temp);
-		    decl.pmodifiers.addElement((ModifierPragma)temp.auxVal);
+		    scanner.getNextToken(); // skip the in token
+
+		    boolean first = true;
+		    boolean more;
+		    do {
+			more = parseInPragmas(TagConstants.IN, scanner.startingLoc, temp,first);
+			if (more) decl.pmodifiers.addElement((ModifierPragma)temp.auxVal);
+			first = false;
+		    } while (more);
+		    expect(scanner,TagConstants.SEMICOLON);
 		    continue;
 		}
 		if (scanner.ttype == TagConstants.IDENT &&
 		    scanner.identifierVal.toString().equals("maps")) {
-		    getNextPragmaHelper(temp);
-		    decl.pmodifiers.addElement((ModifierPragma)temp.auxVal);
-		    continue;
+		    scanner.getNextToken(); // skip the maps token
+		    // Already parsed something - should be an identifier
+		    //System.out.println("MAPPING " + scanner.identifierVal.toString());
+		    Identifier idd = scanner.identifierVal;
+		    Expr mapsod = parseMapsMemberFieldRef(scanner);
+		    if (mapsod == null) {
+			// already wrote an error message
+			eatThroughSemiColon();
+		    } else if (scanner.identifierVal == null ||
+			!scanner.identifierVal.toString().equals("\\into")) {
+			ErrorSet.error(scanner.startingLoc,
+				"Expected \\into in the maps clause here");
+			eatThroughSemiColon();
+		    } else {
+			scanner.getNextToken(); // skip \into
+			LinkedList groups = parseGroupList(); // parses through the semicolon
+			Iterator ig = groups.iterator();
+			while (ig.hasNext()) {
+			    Expr e = (Expr)ig.next();
+			    MapsExprModifierPragma ppragma =
+				MapsExprModifierPragma.make(TagConstants.unRedundant(tag), 
+						    idd, mapsod, loc, e);
+			    if (TagConstants.isRedundant(tag)) ppragma.setRedundant(true);
+			    decl.pmodifiers.addElement(ppragma);
+			}
+		    }
 		}
 		if (scanner.ttype == TagConstants.POSTMODIFIERPRAGMA) {
 		    decl.pmodifiers.addElement((ModifierPragma)temp.auxVal);
@@ -3200,7 +3196,7 @@ try{
     }
 
     public boolean parseMethodDeclTail(Token dst, int loc, Type type, 
-			int locType, Identifier id, int locId, ModifierPragmaVec modifierPragmas){
+	    int locType, Identifier id, int locId, ModifierPragmaVec modifierPragmas){
  
 	// Must be a model method
 	inModelRoutine = true;
@@ -3277,8 +3273,10 @@ try{
     }
 
     // Starting state is looking at the initial identifier
-    public void parseMapsMemberFieldRef(Lex scanner) {
+    public Expr parseMapsMemberFieldRef(Lex scanner) {
 	Identifier startid = scanner.identifierVal;
+	Expr expr = AmbiguousVariableAccess.make(
+				SimpleName.make(startid,scanner.startingLoc));
 	scanner.getNextToken();
 	boolean foundSomething = false;
 	while (scanner.ttype == TagConstants.LSQBRACKET) {
@@ -3286,11 +3284,16 @@ try{
 	    scanner.getNextToken();
 	    if (scanner.ttype == TagConstants.STAR) {
 		scanner.getNextToken();
+		expr = ArrayRangeRefExpr.make(openLoc,expr,null,null);
 	    } else {
-		parseExpression(scanner);
+		Expr lo = parseExpression(scanner);
+		Expr hi = null;
 		if (scanner.ttype == TagConstants.DOTDOT) {
 		    scanner.getNextToken();
-		    parseExpression(scanner);
+		    hi = parseExpression(scanner);
+		    expr = ArrayRangeRefExpr.make(openLoc,expr,lo,hi);
+		} else {
+		    expr = ArrayRefExpr.make(expr,lo,openLoc,scanner.startingLoc);
 		}
 	    }
 	    if (scanner.ttype != TagConstants.RSQBRACKET) {
@@ -3303,10 +3306,15 @@ try{
 	}
 	
 	if (scanner.ttype == TagConstants.FIELD) { // the dot
+	    int locDot = scanner.startingLoc;
 	    scanner.getNextToken();
 	    if (scanner.ttype == TagConstants.IDENT) {
+		expr = FieldAccess.make(
+			ExprObjectDesignator.make(locDot,expr),
+			scanner.identifierVal, scanner.startingLoc);
 		scanner.getNextToken();
 	    } else if (scanner.ttype == TagConstants.STAR) {
+		expr = WildRefExpr.make(expr,null);
 		scanner.getNextToken();
 	    } else {
 		ErrorSet.error(scanner.startingLoc,
@@ -3318,8 +3326,95 @@ try{
 	if (!foundSomething) {
 	    ErrorSet.error(scanner.startingLoc,
 		"Expected either a . or a [ in the maps field reference here");
+	    return null;
 	}
+	return expr;
     }
+
+    private boolean parseInPragmas(int tag, int loc, Token dst, boolean first) {
+	if (!first) {
+			if (scanner.ttype == TagConstants.SEMICOLON) return false;
+			if (scanner.ttype == TagConstants.COMMA) scanner.getNextToken(); // skip comma
+	}
+			int n = 0;
+			if (scanner.ttype == TagConstants.SUPER ||
+			    scanner.ttype == TagConstants.THIS) {
+			    if (scanner.lookahead(1) != TagConstants.FIELD) {
+				ErrorSet.error(
+				    scanner.lookaheadToken(1).startingLoc,
+				    "Expected a . after super");
+				eatThroughSemiColon();
+				return false;
+			    }
+			    n = 2;
+			}
+			if (scanner.lookahead(n) != TagConstants.IDENT) {
+			    ErrorSet.error(scanner.lookaheadToken(n).startingLoc,
+				    "Expected an identifier here");
+			    eatThroughSemiColon();
+			    return false;
+			}
+			int t = scanner.lookahead(n+1);
+			if (t != TagConstants.COMMA && t != TagConstants.SEMICOLON) {
+			    ErrorSet.error(
+				scanner.lookaheadToken(n+1).startingLoc,
+				"Expected a comma or semicolon here");
+			    eatThroughSemiColon();
+			    return false;
+			}
+			Expr e = parseExpression(scanner);
+			MapsExprModifierPragma pragma =
+			    MapsExprModifierPragma.make(TagConstants.unRedundant(tag), 
+						null, null, loc, e);
+			if (TagConstants.isRedundant(tag)) pragma.setRedundant(true);
+			dst.startingLoc = loc;
+			dst.auxVal = pragma;
+			dst.ttype = TagConstants.POSTMODIFIERPRAGMA;
+	return true;
+    }
+
+
+
+
+
+    public LinkedList parseGroupList() {
+	LinkedList res= new LinkedList();
+	while (true) {
+	    int n = 0;
+	    if (scanner.ttype == TagConstants.SUPER ||
+		scanner.ttype == TagConstants.THIS) {
+		if (scanner.lookahead(1) != TagConstants.FIELD) {
+		    ErrorSet.error(
+			scanner.lookaheadToken(1).startingLoc,
+			"Expected a . after super");
+		    eatThroughSemiColon();
+		    return res;
+		}
+		n = 2;
+	    }
+	    if (scanner.lookahead(n) != TagConstants.IDENT) {
+		ErrorSet.error(scanner.lookaheadToken(n).startingLoc,
+			"Expected an identifier here");
+		eatThroughSemiColon();
+		return res;
+	    }
+	    int t = scanner.lookahead(n+1);
+	    if (t != TagConstants.COMMA && t != TagConstants.SEMICOLON) {
+		ErrorSet.error(
+		    scanner.lookaheadToken(n+1).startingLoc,
+		    "Expected a comma or semicolon here");
+		eatThroughSemiColon();
+		return res;
+	    }
+	    Expr e = parseExpression(scanner);
+	    res.add(e);
+	    if (scanner.ttype != TagConstants.COMMA) break;
+	    scanner.getNextToken(); // skip comma
+	}
+	if (scanner.ttype == TagConstants.SEMICOLON) scanner.getNextToken(); // skip semicolon
+	return res;
+    }
+
 
 } // end of class EscPragmaParser
 

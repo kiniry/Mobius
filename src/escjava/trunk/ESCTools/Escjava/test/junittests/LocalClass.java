@@ -1,6 +1,6 @@
 // This tests that the use of a type name inside a local block-level 
 // declaration of that type resolves ok.  It was a bug.
-
+//#FLAGS: -nowarn Modifies
 public abstract class LocalClass 
 {
     public LocalClass() ;

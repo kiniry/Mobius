@@ -1,6 +1,6 @@
 public class MapsIn extends MapsInS {
 
-	//@ ghost JMLDataGroup j,k;
+	//@ model JMLDataGroup j,k;
 
 	public int i;
 	//@ in j,k;

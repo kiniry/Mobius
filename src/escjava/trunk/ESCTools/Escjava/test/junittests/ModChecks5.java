@@ -9,6 +9,14 @@ public class ModChecks5 {
 		j = 0;
 		i = 0;
 	}
+
+	public int k,kk; //@ in i;
+
+	//@ modifies i;
+	void mm() {
+		k = 0;
+		kk = 0;
+	}
 }
 
 

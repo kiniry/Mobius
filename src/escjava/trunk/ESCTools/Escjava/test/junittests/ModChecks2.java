@@ -15,12 +15,27 @@ public class ModChecks2 extends S{
 	//@ ghost int gi;
 
 	//@ modifies \nothing;
-	void me() {
+	void meA() {
 		i = 0;			// ERROR
+	}
+	//@ modifies \nothing;
+	void meB() {
 		j++;			// ERROR
-		a = new int[15];	// ERROR
+	}
+	//@ modifies \nothing;
+	void meC() {
 		a[0] = 7;		// ERROR
+	}
+	//@ modifies \nothing;
+	void meD() {
+		a = new int[15];	// ERROR
+	}
+	//@ modifies \nothing;
+	void meE() {
 		//@ set gi = 0;		// ERROR
+	}
+	//@ modifies \nothing;
+	void meF() {
 		o.j += 3;		// ERROR
 	}
 
