@@ -222,6 +222,9 @@ public class EnvForTypeSig extends Env {
 	return peer.hasField(id);
     }
 
+    public FieldDeclVec getFields() {
+	return peer.getFields();
+    }
 
     protected boolean hasMethod(Identifier id) {
 	MethodDeclVec methods = peer.getMethods();
