@@ -2,6 +2,8 @@ package escjava.tc;
 
 import javafe.ast.TypeDeclElem;
 import javafe.tc.TypeSig;
+import javafe.ast.Expr;
+import javafe.ast.FieldAccess;
 import javafe.ast.FieldDecl;
 import javafe.ast.FieldDeclVec;
 import javafe.ast.MethodDecl;

@@ -1451,8 +1451,8 @@ public class AnnotationHandler {
     }
   }
   
+/*
   public static List findRepresents(FieldDecl fd) {
-    List results = new LinkedList();
     TypeDecl td = fd.parent;
     TypeDeclElemVec tdepv = td.elems;
     for (int i=0; i<tdepv.size(); ++i) {
@@ -1471,6 +1471,7 @@ public class AnnotationHandler {
     }	
     return results;
   }
+*/
   static private ModifierPragma heavyweightFlag = SimpleModifierPragma.make(TagConstants.BEHAVIOR,
 				Location.NULL);
 }

@@ -1460,6 +1460,12 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                }
                tv.addElement(ep);
             */
+               TypeDeclElemVec tv = (TypeDeclElemVec)Utils.representsDecoration.get(fa.decl);
+               if (tv == null) {
+		   tv = TypeDeclElemVec.make(10);
+		   Utils.representsDecoration.set(fa.decl,tv);
+               }
+               tv.addElement(ep);
           } else if (!(ep.target instanceof AmbiguousVariableAccess)){
             // If the type is Ambiguous, then an Undefined variable
             // error has already been issued.  I'm not actually

@@ -427,7 +427,7 @@ public abstract class SList extends SExp
 	    else if (first.equals("floatingNeg") ||
 		     first.equals("integralNeg"))
 		op = "-";
-	    else if (first.equals("array")) {
+	    else if (first.equals("_array")) {
 		at(1).prettyPrint(out);
 		out.print("[]");
 		return true;
