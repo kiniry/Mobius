@@ -24,8 +24,6 @@
 package junitutils;
 import java.io.PrintStream;
 import java.io.*;
-import java.util.Iterator;
-import java.util.ArrayList;
 import java.lang.reflect.Method;
 
 /** This class contains miscellaneous (static) utility functions that are
@@ -33,12 +31,17 @@ import java.lang.reflect.Method;
 */
 public class Utils {
 
+    /** Setting this field to true disables the capturing of the output;
+        one would do this only for debugging purposes.
+     */
     static public boolean disable = false;
 
     /** A cached value of the usual System out stream. */
+    //@ non_null
     final private static PrintStream pso = System.out;
 
     /** A cached value of the usual System err stream. */
+    //@ non_null
     final private static PrintStream pse = System.err;
     
     /** Redirects System.out and System.err to the given PrintStream. 
@@ -58,6 +61,13 @@ public class Utils {
 	System.setErr(ps);
     }
 
+    /** Creates a new output stream (which is returned) and makes it
+	the stream into which the standard and error outputs are captured.
+
+	@return an output stream into which standard and error output 
+                is captured
+     */
+    //@ ensures \result != null;
     static public ByteArrayOutputStream setStreams() {
 	ByteArrayOutputStream ba = new ByteArrayOutputStream(10000);
 	PrintStream ps = new PrintStream(ba);
@@ -68,6 +78,7 @@ public class Utils {
     /** Restores System.out and System.err to the initial, 
 	system-defined values. It is ok to call this method
 	even if setStreams has not been called.
+	<p>
 	Note that setStreams/restoreStreams operate on the global
 	values of System.out and System.err; these implementations
 	are not synchronized - you will need to take care of any
@@ -77,6 +88,16 @@ public class Utils {
 	restoreStreams(false);
     }
 
+//FIXME - clarify the use ofthe close argument
+    /** Restores System.out and System.err to the initial, 
+	system-defined values. It is ok to call this method
+	even if setStreams has not been called.
+	<p>
+	Note that setStreams/restoreStreams operate on the global
+	values of System.out and System.err; these implementations
+	are not synchronized - you will need to take care of any
+	race conditions if you utilize these in more than one thread.
+    */
     static public void restoreStreams(boolean close) {
 	if (disable) return;
 	if (close) {
@@ -97,6 +118,7 @@ public class Utils {
     */
     //@ requires s != null;
     //@ ensures \result != null;
+    //@ ensures !\nonnullelements(\result);
     static public String[] parseLine(String s) {
 	QuoteTokenizer q = new QuoteTokenizer(s);
 	java.util.ArrayList args = new java.util.ArrayList();
@@ -115,20 +137,37 @@ public class Utils {
 	// quoted strings that are not the whole token, e.g.
 	// a b c+"asd"  should be three tokens, "a", "b", and  c+"asd" .
     static public class QuoteTokenizer {
-	String ss;
-	char[] cc;
-	int pos = 0;
+	/*@ non_null */ String ss;
+	/*@ non_null */ char[] cc;
+	int pos = 0;                /*@ invariant pos >= 0;
+					invariant pos <= cc.length;
+				     */
 	
+        //@ requires s != null;
 	public QuoteTokenizer(String s) {
 	    ss = s;
 	    cc = s.toCharArray();
 	}
 	
+	/*@ 
+	    ensures \result ==> (pos < cc.length);
+	    ensures \result == !(\forall int i; pos<=i && i < cc.length;
+						Character.isWhitespace(cc[i]));
+	    model pure boolean moreTokens();
+	*/
+
+	//@ ensures \result == moreTokens();
+	//@ ensures \result ==> !Character.isWhitespace(cc[pos]);
 	public boolean hasMoreTokens() {
 	    while (pos < cc.length && Character.isWhitespace(cc[pos])) ++pos;
 	    return pos < cc.length;
 	}
 	
+	//@ 	requires moreTokens();
+	//@	ensures \result != null;
+	//@ also
+	//@	requires !moreTokens();
+	//@	ensures \result == null;
 	public String nextToken() {
 	    String res = null;
 	    while (pos < cc.length && Character.isWhitespace(cc[pos])) ++pos;
@@ -154,7 +193,14 @@ public class Utils {
 	
     /** Deletes the contents of a directory, including subdirectories.  
 	If the second argument is true, the directory itself is deleted as well.
+
+	@param d The directory whose contents are deleted
+	@param removeDirectoryItself if true, the directory itself is deleted
+
+	@return  false if something could not be deleted; 
+                 true if everything was successfully deleted
     */
+    //@ requires d != null;
     static public boolean recursivelyRemoveDirectory(File d, 
 					boolean removeDirectoryItself) {
 	if (!d.exists()) return true;
@@ -179,8 +225,16 @@ public class Utils {
     /** Reads the contents of the file with the given name, returning a String.
 	This is an optimized version that uses the byte array provided and 
 	presumes that the file is shorter than the length of the array.
+
+	@param filename		The file to be read
+	@param cb		A temporary byte array to speed reading
+
+	@return			The contents of the file
     */
 // FIXME - can we check that the file is too long without losing the efficiency benefits?
+    //@ requires filename != null;
+    //@ requires cb != null;
+    //@ ensures \result != null;
     static public String readFile(String filename, byte[] cb) 
 					throws java.io.IOException {
 	int i = 0;
@@ -194,6 +248,7 @@ public class Utils {
 	return new String(cb,0,i);
     }
     
+    //@ requires filename != null;
     static public String readFileX(String filename) {
 	try {
 		return readFile(filename);
@@ -205,7 +260,12 @@ public class Utils {
     /** Reads the contents of the file with the given name, returning a String. 
 	This version presumes the file is shorter than an internal buffer.
 FIXME
+
+	@param filename		The file to be read
+	@return 		The contents of the file
     */
+    //@ requires filename != null;
+    //@ ensures \result != null;
     static public String readFile(String filename) throws java.io.IOException {
 	StringBuffer sb = new StringBuffer(10000);
 	char[] cb = new char[10000];
@@ -219,6 +279,9 @@ FIXME
 	return sb.toString();
     }
     
+    //@ requires cls != null;
+    //@ requires args != null;
+    //@ requires !\nonnullelements(args);
     static public String executeCompile(Class cls, String[] args) {
 	return executeMethod(cls,"compile",args);
     }
@@ -227,6 +290,10 @@ FIXME
 	the method must have a single argument of type String[].  The 'args'
 	parameter is supplied to it as its argument.
     */
+    //@ requires cls != null;
+    //@ requires methodname != null;
+    //@ requires args != null;
+    //@ requires !\nonnullelements(args);
     static public String executeMethod(Class cls, String methodname, String[] args) {
 	try {
             Method method = cls.getMethod(methodname, new Class[] { String[].class });
@@ -243,6 +310,9 @@ FIXME
 	output and error output is collected and returned as the String 
 	return value.
     */
+    //@ requires method != null;
+    //@ requires args != null;
+    //@ requires !\nonnullelements(args);
     static public String executeMethod(Method method, String[] args) {
 	try {
 	    ByteArrayOutputStream ba = new ByteArrayOutputStream(10000);
@@ -296,6 +366,7 @@ FIXME
 	characters and at most one '*', since I'm not going to rewrite
 	an RE library.
     */
+    //@ requires pattern != null;
     static public void removeFiles(String pattern) {
 	File[] list;
 	int k = pattern.indexOf("*");

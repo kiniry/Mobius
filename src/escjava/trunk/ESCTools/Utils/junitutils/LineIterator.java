@@ -34,6 +34,7 @@ import java.util.Iterator;
 public class LineIterator implements Iterator {
 
     /** A reader that reads lines from the file. */
+    //@ non_null
     private BufferedReader r;
     
     /** The next value to be returned by the iterator.  We read ahead one so
@@ -46,7 +47,7 @@ public class LineIterator implements Iterator {
      */
     //@ requires filename != null;
     //@ ensures (* file is readable *);
-    //@ signals (java.io.Exception) (* file is not readable *);
+    //@ signals (java.io.IOException) (* file is not readable *);
     public LineIterator(String filename) throws java.io.IOException  {
 	r = new BufferedReader(new FileReader(filename)); 
 	nextLine = r.readLine();
@@ -55,7 +56,7 @@ public class LineIterator implements Iterator {
 
 
     /** Per a standard iterator, returns true if there is another value waiting. */
-    public boolean hasNext() {
+    public boolean hasNext() throws RuntimeException {
 	try {
 	    if (nextLine == null) {
 		r.close();
@@ -70,7 +71,7 @@ public class LineIterator implements Iterator {
 	java.util.NoSuchElementException if the list has been exhausted 
 	(hasNext() returns false).
     */
-    public Object next() {
+    public Object next() throws java.util.NoSuchElementException, RuntimeException {
 	if (nextLine == null) 
 	    throw new java.util.NoSuchElementException();
 	try {
@@ -85,10 +86,11 @@ public class LineIterator implements Iterator {
 
     /** This operation will throw an exception, as there is no need for 
 	remove in this context. */
+    //@ also
     //@ requires \typeof(this)==\type(LineIterator);
     //@ ensures false;
     //@ signals (UnsupportedOperationException) true;
-    public void remove() {
+    public void remove() throws UnsupportedOperationException {
 	throw new java.lang.UnsupportedOperationException();
     }
 

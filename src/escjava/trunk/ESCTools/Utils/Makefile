@@ -2,8 +2,8 @@
 export TOP = ..
 include ${TOP}/Makefile.defs
 
-.PHONY: clean test build
-clean test build:
+.PHONY: clean test build esctest
+clean test build esctest:
 	@${MAKE} -C junitutils $@
 
 build: checkjunitjar

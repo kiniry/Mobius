@@ -23,7 +23,6 @@
 package junitutils;
 import junit.framework.*;
 import java.io.*;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.lang.reflect.Method;
 
@@ -47,7 +46,11 @@ import java.lang.reflect.Method;
 */
 public class TestFilesTestSuite  extends TestSuite {
 
+    //@ ghost  boolean initialized = false;
+
+    //@ ensures !initialized;
     protected TestFilesTestSuite() {}
+
     /*
     Create derived classes with alternate tests by deriving a class from this 
     one. It should contain an inner Helper class derived from 
@@ -62,9 +65,11 @@ public class TestFilesTestSuite  extends TestSuite {
     // -------------------------------------------------------------
 
     /** The name of this test suite. */
+    //@ protected invariant initialized ==> (testName != null);
     protected String testName;
 
     /** The method that is to be executed on the command-line arguments. */
+    //@ protected invariant initialized ==> (method != null);
     protected Method method;
 
     final static String SAVED_SUFFIX = "-ckd";
@@ -81,9 +86,11 @@ public class TestFilesTestSuite  extends TestSuite {
                         method will be applied to, with the filename added on
 	@param cls	The class in which to find the static compile method
     */
-    public TestFilesTestSuite(String testName, String fileOfTestFilenames,
-				String[] args, // Ignored!
-				Class cls
+    //@ ensures initialized;
+    public TestFilesTestSuite(/*@ non_null */ String testName, 
+				/*@ non_null */ String fileOfTestFilenames,
+				String[] args, // Ignored! FIXME
+				/*@ non_null */ Class cls
 				) { 
 	super(testName);
 	this.testName = testName;
@@ -105,6 +112,7 @@ public class TestFilesTestSuite  extends TestSuite {
 	} catch (java.io.IOException e) {
 	    throw new RuntimeException(e.toString());
 	}
+	//@ set initialized = true;
     }
 
 
@@ -145,6 +153,8 @@ public class TestFilesTestSuite  extends TestSuite {
 	/** This is the framework around the test.  It sets up the streams to
 	    capture output, and catches all relevant exceptions.
 	*/
+        //@ also
+        //@ requires initialized;
 	public void runTest() throws java.io.IOException {
 	    //System.out.println("\nTest suite " + testName + ": "  + fileToTest);
 	    //for (int kk=0; kk<args.length; ++kk) System.out.println(args[kk]);
@@ -190,9 +200,9 @@ public class TestFilesTestSuite  extends TestSuite {
 	output is expected to 
 	match and the result of the compile to be true or false, depending on
 	whether errors or warnings were reported.  Override this method in derived tests.
-	
-	@param ba contains stuff written to the output stream in this test
+	 
     */
+    //@ requires initialized;
     protected Object dotest(String fileToTest, String[] args) 
 	    throws IllegalAccessException, IllegalArgumentException, 
 			    java.lang.reflect.InvocationTargetException {
@@ -201,6 +211,10 @@ public class TestFilesTestSuite  extends TestSuite {
     }
 	    
     
+    //@ requires initialized;
+    //@ requires fileToTest != null;
+    //@ requires output != null;
+    //@ requires returnedValue != null;
     protected String doOutputCheck(String fileToTest, String output, 
 				Object returnedValue) {
       try {
@@ -226,6 +240,10 @@ public class TestFilesTestSuite  extends TestSuite {
       }
     }
 
+    //@ requires initialized;
+    //@ requires fileToTest != null;
+    //@ requires expectedOutput != null;
+    //@ requires returnedValue != null;
     public String checkReturnValue(String fileToTest, String expectedOutput,
 					Object returnedValue) {
 	if (returnedValue instanceof Boolean) {
@@ -244,6 +262,9 @@ public class TestFilesTestSuite  extends TestSuite {
 
 
     /** Returns null if ok, otherwise returns failure message. */
+    //@ requires initialized;
+    //@ requires fileToTest != null;
+    //@ requires expectedOutput != null;
     public String expectedStatusReport(String fileToTest,
 				int ecode, String expectedOutput) {
 	int ret = expectedIntegerStatus(fileToTest,expectedOutput);
@@ -251,6 +272,9 @@ public class TestFilesTestSuite  extends TestSuite {
 	return "The compile produced an invalid return value.  It should be " + ret + " but instead is " + ecode;
     }
 
+    //@ requires initialized;
+    //@ requires fileToTest != null;
+    //@ requires expectedOutput != null;
     public String expectedStatusReport(String fileToTest,
 				boolean b, String expectedOutput) {
 	boolean status = expectedBooleanStatus(fileToTest,expectedOutput);
@@ -260,10 +284,16 @@ public class TestFilesTestSuite  extends TestSuite {
 		(b?"no ":"") + "error output but instead is " + b);
     }
 
+    //@ requires initialized;
+    //@ requires fileToTest != null;
+    //@ requires expectedOutput != null;
     public boolean expectedBooleanStatus(String fileToTest, String expectedOutput) {
 	return expectedOutput.length()==0;
     }
 
+    //@ requires initialized;
+    //@ requires fileToTest != null;
+    //@ requires expectedOutput != null;
     public int expectedIntegerStatus(String fileToTest, String expectedOutput) {
 	return 0;
     }

@@ -1,6 +1,6 @@
 export TOP = ../..
 include ${TOP}/Makefile.defs
-# The above defines JUNIT_LIB and JAVAC.
+# The above defines JUNIT_LIB and JAVAC and ESCJ.
 
 .PHONY: clean
 clean:
@@ -15,3 +15,9 @@ classes.stamp: *.java
 
 .PHONY: test
 test:
+
+CP = ${call canonicalize,${JUNIT_LIB}:${ESCTOOLS_ROOT}/Utils}
+
+.PHONY: esctest
+esctest:
+	${ESCJ} -classpath ${CP} *.java
