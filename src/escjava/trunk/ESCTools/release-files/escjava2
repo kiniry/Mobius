@@ -1,13 +1,16 @@
 #! /bin/tcsh -f
 
 ## This script presumes it is operating from a release.
-## In particular, the directory $ESCTOOLS_RELEASE contains
-##	escjava2
-##	escj
-##	Simplify
-##	simplify-script
+## It checks and sets various environment variables and then invokes the
+## escj script to run the escjava2 tool.
 
-########## Check if ESCTOOL_RELEASE is defined; try to guess it if it is not
+## To save the work of guessing appropriate values for the environment 
+## variables, the user should set these:
+
+## setenv ESCTOOLS_RELEASE ??? ## The directory containing the release files
+## setenv SIMPLIFY ??? ## The name of a SImplify executable in $ESCTOOLS_RELEASE
+
+########## Check if ESCTOOLS_RELEASE is defined; try to guess it if it is not
 
 if ( ! $?ESCTOOLS_RELEASE ) then
     set NAME=$PWD/$0
@@ -23,8 +26,6 @@ if ( ! $?ESCTOOLS_RELEASE ) then
         exit 2
     endif
 endif
-
-setenv ESCTOOLS_ROOT $ESCTOOLS_RELEASE
 
 ######## Execute
 

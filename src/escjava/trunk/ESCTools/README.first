@@ -94,7 +94,7 @@ SETTING UP YOUR ENVIRONMENT FOR BUILDING AND RUNNING Escjava2
 
 Development has taken place on Linux (Redhat), MacOSX (10.2),
 	-- ??? any others (FIXME)
-The build environment uses either Make or Ant.
+The build environment uses Make.
 Developers use both bash and tcsh as working shells.
 No work has yet been done to make the environment portable to Cygwin (where
 the file separator and path separators are different than on Linux and MacOSX).
@@ -122,6 +122,7 @@ The two required variables are:
 ESCTOOLS_ROOT - defined to be the absolute path to the ESCTools directory
 SIMPLIFY - defined to be the *name* of (*not* path to) an appropriate Simplify
 	executable in $ESCTOOLS_ROOT/Escjava/release/master/bin
+	(e.g. Simplify-1.5.4.linux)
 	The Makefile makes a guess at an appropriate value for some 
 	platforms, but defining it yourself will avoid the warning messages.
 
@@ -173,7 +174,8 @@ alltests - does test + some additional time-consuming or not yet debugged
 
 docs - generates the documentation (including javadoc pages) (NOT YET WORKING)
 
-release - generates a release package (NOT YET WORKING)
+release - generates a release package (uses the variables ESC_PROJECT and 
+	ESC_VERSION)
 
 The $ESCTOOLS_ROOT directory contains a number of major subsystems:
 	Utils - utility material used by multiple subsystems
@@ -194,20 +196,12 @@ subsystems.  However, these have not been edited to be used stand-alone, for
 the most part.  Where those Makefiles are usable directly, there are comments
 in the Makefile to that effect.
 
-
-----------------------------------------------------------------------------
-
-BUILDING A WORKING VERSION OF Escjava2 FROM CVS SOURCES (using ant)
-
--- FIXME: Don't know if this is currently working or not, or what the
-instructions are.  DRCok
-
 ----------------------------------------------------------------------------
 
 RUNNING THE escjava2 TOOL
 
 The script $ESCTOOLS_ROOT/Escjava/escj runs the escjava2 tool.  You need to
-have the variables ESCTOOLS_ROOT and ESCJ_SIMPLIFY defined as described above,
+have the variables ESCTOOLS_ROOT and SIMPLIFY defined as described above,
 either in your environment or in a wrapper script.
 
 The tool is invoked with command-line options followed by filenames (they may 

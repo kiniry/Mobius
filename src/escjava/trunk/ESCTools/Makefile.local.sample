@@ -27,7 +27,7 @@ export ESCTOOLS_ROOT ?= /home/cok/ESCTools/ESCTools
 ## on.  If there is not an appropriate binary you will not be able to do static
 ## checking (but you can check files for syntactic errors); new binaries
 ## require new builds of Simplify (see Simplify/README.txt).
-export SIMPLIFY ?=
+export SIMPLIFY ?= Simplify-1.5.4.linux
 
 
 ## Define the location of the source files for the JDK

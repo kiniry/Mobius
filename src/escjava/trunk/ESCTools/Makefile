@@ -96,11 +96,11 @@ javadoc:  build
 
 ########################################### docs
 
-## FIXME: get version number correct
-## FIXME: get mocha right; test final build
+## FIXME: get mocha right
 
 .PHONY: release
 release: 
+	@echo Making release version ${ESC_PROJECT}-${ESC_VERSION}
 	${MAKE} clean
 	${MAKE} build
 	${MAKE} test
@@ -127,14 +127,16 @@ make-release:
 	cp ${ESCJAVA_ROOT}/escj ${RELDIR}
 	cp ${ESCJ_SIMPLIFY_DIR}/Simplify-1.5.4* ${RELDIR}
 	cp ${ESCJAVA_ROOT}/simplify ${RELDIR}/simplify-script
+	cp README.first README.txt ${RELDIR}
 	cd release-files; cp `ls | grep -v CVS` ${RELDIR}
-	cd ${RELDIR}; tar cvf escjava2.tar *
+	cd ${RELDIR}; tar cvf ${RELTAR} *
+
 ## FIXME - simplify script, simplify binary; alter escj to use alternate simplify script
 ## FIXME - also zip up the source and ship it as well.
 ## FIXME - tar the result; do we need an install file?  DO need install instructions and a README
-## FIXME - Fix the name of Simplify - put in all of them?
-## FIXME - version number in Main, version number in name of tar?
+
 .PHONY: test-release
 test-release:
-	${MAKE} -C Javafe  test-release
+	ESCTOOLS_RELEASE=${RELDIR} ;\
+	${MAKE} -C Javafe  test-release ;\
 	${MAKE} -C Escjava test-release

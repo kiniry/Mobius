@@ -1,4 +1,7 @@
 #! /bin/tcsh -f
+## This script executes a short test that an installation was successful
+## You should have ESCTOOLS_RELEASE set to the directory containing the
+## release, but if it is not set, this script attempts to guess it.
 
 unsetenv ESCTOOLS_ROOT
 
@@ -23,6 +26,24 @@ if ( ! $?ESCTOOLS_RELEASE ) then
 endif
 
 cd $TMP
+echo "## Running with a bad argument to get a usage message"
+
+$ESCTOOLS_RELEASE/escj -help
+
+
+echo
+echo "## Creating a simple java file and testing it - should produce a warning"
+echo "   (This also checks that Simplify will run) "
+
+echo "public class A {" > A.java
+echo "  public void m(Object o) { String s = o.toString(); }" >> A.java
+echo "}" >> A.java
+
+$ESCTOOLS_RELEASE/escj A.java
+rm -f A.java
+
+echo
+echo "## Now testing the escjava2 script"
 echo "## Running with a bad argument to get a usage message"
 
 $ESCTOOLS_RELEASE/escjava2 -help

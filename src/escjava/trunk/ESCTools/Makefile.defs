@@ -65,16 +65,11 @@ export JAVADOC ?= javadoc -J-mx200m -source 1.4 -breakiterator -quiet
 ##########################################################################
 
 ## Variables that define the release.  They will be used to build
-## archives for distribution.  They should corrolate with the
-## version flag in escjava.Main.
+## archives for distribution.  They are used to create the Version.java
+## file, which is used by Main.java to provide a version string.
 
-## @todo kiniry 15 May 2003 - Make escjava.Main load the definition of
-## its "version" variable from these environment variable, and fall
-## back to a reasonable default value if they are unavailable. (FIXME)
-
-## These are likely to change slowly as releases are issued.
 export ESC_PROJECT ?= ESCTools
-export ESC_VERSION ?= May-2003
+export ESC_VERSION ?= CURRENT-CVS
 
 ##########################################################################
 
@@ -85,8 +80,6 @@ export ESC_VERSION ?= May-2003
 ## packages because the tools are used by each other (e.g. all tools use
 ## Javafe).
 
-
-export ESCTOOLS_JARS = ${ESCTOOLS_ROOT}/jars
 export JAVADOC_GEN_DIR ?= ${ESCTOOLS_ROOT}/javadoc
 
 ## Pertinent definitions for Javafe
@@ -124,7 +117,8 @@ export JDKSPEC_ROOT ?= ${ESCJAVA_ROOT}/release/master/specs
 
 export RELTEMP = ${ESCTOOLS_ROOT}/release-temp
 export RELDIR  = ${ESCTOOLS_ROOT}/release
-export RELJAR  = esctools.jar
+export RELJAR  = esctools2.jar
+export RELTAR  = esctools2-${ESC_VERSION}.tar
 export RELCLASSPATH = ${RELDIR}/${RELJAR}
 
 ############################### JUnit
