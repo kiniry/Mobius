@@ -90,7 +90,7 @@ JAVADOC_SOURCEPATH = $(subst : ,:,$(addsuffix /java:,$(addprefix $(ESCTOOLS_ROOT
 javadoc:  build
 	mkdir -p $(JAVADOC_GEN_DIR)/images
 	cp $(JAVAFE_ROOT)/doc/javadoc/images/*.gif $(JAVADOC_GEN_DIR)/images
-	$(JAVADOC) -sourcepath $(JAVADOC_SOURCEPATH) \
+	$(JAVADOC) -source 1.4 -sourcepath $(JAVADOC_SOURCEPATH) \
 	  -d $(JAVADOC_GEN_DIR) \
           $(PACKAGE_LIST)
 
