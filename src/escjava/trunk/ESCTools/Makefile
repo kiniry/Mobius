@@ -246,24 +246,7 @@ test-patch-release:
 		unset ESCJ_SIMPLIFY_DIR ;\
 		./install.sh  ${ORIGINAL_TAR_DIR}
 
-## For this target to work, you must unpack the original ESCTools
-## archives (e.g., Calvin.tar.Z, Escjava.tar.Z, etc.) into a directory
-## "${ESCTOOLS_ORIGINAL}".  The
-## Simplify package must be unpacked into the directory
-## "${ESCTOOLS_ORIGINAL}/Simplify".  
 
-## THis seems to duplicate material in the 'patch-release' target ??? FIXME
-.PHONY: generate-patch-based-release
-generate-patch-based-release: generate-patches generate-archives zero-length-files
-	mkdir -p ${RELDIR}
-	(cd ${PATCH_DIR}; \
-	cp ${ESCTOOLS_ROOT}/install.sh . ; \
-	tar cjvf ${RELDIR}/${RELPATCHTAR} \
-		${CALVIN_PATCHES} ${ESCJAVA_PATCHES} ${HOUDINI_PATCHES} \
-		${JAVAFE_PATCHES} ${RCC_PATCHES} ${SIMPLIFY_PATCHES} \
-		install.sh \
-		${SPECS_TAR} ${TOPLEVEL_TAR} ${ZERO_LENGTH_TAR}; \
-	)
 
 ## These patches are used by unpacking the original
 ## Compaq/H.P. ESCTools sources as appropriate, cd-ing to the
