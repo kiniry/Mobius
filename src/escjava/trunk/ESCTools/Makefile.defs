@@ -13,14 +13,19 @@
 ## Please tell us if you find that something needs to be changed for
 ## your platform!
 
-## Set up Java path and file separators on a per-platform basis.
-empty:=
-space:=		$(empty) $(empty)
-
 ## This include file contains any user-customized definitions.
 export TOP ?= .
 ifneq ($(wildcard ${TOP}/Makefile.*local),)
   include ${TOP}/Makefile.local
+endif
+
+## Set up Java path and file separators on a per-platform basis.
+ifdef COMPSEC
+     export SEP = '\'
+     export PSEP = ';'
+else
+     export SEP = '/'
+     export PSEP = ':'
 endif
 
 ## Define a function to canonicalize paths that are parameters
@@ -91,9 +96,9 @@ export PROVER_CC_LIMIT ?= 10
 ## You need to have some specs defined.  Use either 
 ##   a) jmlspecs.jar from a JML release (not currently recommended as they
 ##              are rather complex specifications)
-##   b) ${ESCTOOLS_ROOT}/jmlspecs.jar, which is a jar of (c)
+##   b) ${ESCTOOLS_ROOT}/escspecs.jar, which is a jar of (c)
 ##   c) ${ESCTOOLS_ROOT}/specs, which is a set of specs designed for Esc/java
-export ESC_SPECS ?= ${ESCTOOLS_ROOT}/specs
+export ESC_SPECS ?= ${TOP}/specs
 
 ##########################################################################
 ## Definitions of Java tools.
