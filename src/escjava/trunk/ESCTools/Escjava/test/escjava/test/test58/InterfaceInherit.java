@@ -1,21 +1,21 @@
 interface A {
-  //@ ghost public int a;
+  //@ ghost instance public int a;
   //@ invariant -10 < a && a != 0 && a < 10;
-  //@ ghost public int aZero;
+  //@ ghost instance public int aZero;
   //@ invariant aZero < 10;
 }
 
 interface B {
-  //@ ghost /*@ non_null */ public int[] b;
+  //@ ghost instance /*@ non_null */ public int[] b;
 }
 
 interface C extends A, B {
 }
 
 interface D extends A {
-  //@ ghost public int d;
+  //@ ghost instance public int d;
   //@ invariant d != 0 && d <= a;
-  //@ ghost public int dZero;
+  //@ ghost instance public int dZero;
   //@ invariant 0 <= dZero;
   //@ invariant dZero <= aZero;
 }

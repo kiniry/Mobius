@@ -1,20 +1,20 @@
 interface A {
-  //@ ghost public int a;
+  //@ ghost instance public int a;
   //@ invariant 10 <= a;
 }
 
 interface B {
-  //@ ghost public int b;
+  //@ ghost instance public int b;
   //@ invariant 10 <= b;
 }
 
 interface C {
-  //@ ghost public int c;
+  //@ ghost instance public int c;
   //@ invariant 10 <= c;
 }
 
 interface D {
-  //@ ghost public int d;
+  //@ ghost instance public int d;
   //@ invariant 10 <= d;
 }
 

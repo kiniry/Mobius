@@ -62,7 +62,7 @@ test54	Good	helper pragma
 test55	Good	3 inline flags
 test56	Good	parsing of modifier pragmas after formal parameters
 test57	Good	DTTFSA
-test58	FIX	"invariant" and "non_null" inheritance from interfaces
+test58	Good	"invariant" and "non_null" inheritance from interfaces
 test59	Good	instance initializers 
 
 test60	Omit	inheriting method specifications and non_null from interfaces - Omitted because the also_ syntax and the inheritance semantics are now obsolete

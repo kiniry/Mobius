@@ -11,7 +11,7 @@ class Test {
 }
 
 interface Intf {
-    //@ ghost public int x;
+    //@ ghost instance public int x;
     //@ invariant 0 < x;
 }
 

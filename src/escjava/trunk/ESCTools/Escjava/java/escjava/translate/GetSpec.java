@@ -1087,7 +1087,7 @@ while (ee.hasMoreElements()) {
         for (InvariantInfo ii = mergeInvariants(collectInvariants(scope,spec.preVarMap));
              ii != null; ii = ii.next) {
 	    int tag = ii.prag.getTag();
-            addInvariantBody(ii, spec, synTargs, true, true);
+            addInvariantBody(ii, spec, synTargs);
         }
 
         ExprVec axioms = collectAxioms(scope);
@@ -1180,16 +1180,19 @@ while (ee.hasMoreElements()) {
 
     private static void addInvariantBody(/*@ non_null */ InvariantInfo ii,
                                          /*@ non_null */ Spec spec,
-                                         /*@ non_null */ Set synTargs,
-					boolean includeInPre,
-					boolean includeInPostOrig) {
+                                         /*@ non_null */ Set synTargs) {
 
 
         Set invFV = Substitute.freeVars( ii.J );
 
         /* Include invariant in post only if intersection of vars of
          invariant and vars modified in the method body is nonempty. */
+	// Also include it if we are dealing with a constructor, since then
+	// the invariant might never have been established.
 
+	boolean isConstructor = spec.dmd.isConstructor();
+	boolean includeInPre = true;
+	boolean includeInPostOrig = true;
         boolean includeInPost = includeInPostOrig && (Main.options().useAllInvPostBody ||
             invFV.containsAny(synTargs));
 
@@ -1367,9 +1370,9 @@ while (ee.hasMoreElements()) {
             boolean Jvisible = !Main.options().filterInvariants ||
                 exprIsVisible( scope.originType, J );
 	  
-            // System.out.print( (Jvisible?"Visible":"Invisible")+": ");
-            // javafe.ast.PrettyPrint.inst.print(System.out, J );
-            // System.out.println();
+           // System.out.print( (Jvisible?"Visible":"Invisible")+": ");
+           // javafe.ast.PrettyPrint.inst.print(System.out, 0, J );
+           // System.out.println();
 	  
             if( Jvisible ) {
 
