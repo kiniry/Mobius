@@ -442,6 +442,7 @@ public final class GetSpec {
 
         for (int i = 0; i < dmd.modifies.size(); i++) {
             Expr designator = dmd.modifies.elementAt(i).expr;
+	    if (Utils.isModel(designator)) continue;
             Expr gcDesignator = TrAnExpr.trSpecExpr(designator);
 		// Returns null for modifies \nothing
             if (gcDesignator != null) targets.addElement(gcDesignator);
@@ -871,7 +872,7 @@ while (ee.hasMoreElements()) {
     }
 
 
-    static private void addAxioms(java.util.Set axsToAdd, ExprVec assumptions) {
+    static public void addAxioms(java.util.Set axsToAdd, ExprVec assumptions) {
 	    java.util.Set axsDone = new java.util.HashSet();
 	    while (! axsToAdd.isEmpty()) {
 		ASTNode o = (ASTNode)axsToAdd.iterator().next();
@@ -1407,7 +1408,11 @@ while (ee.hasMoreElements()) {
                         exprIsVisible(scope.originType, axiom.expr)) {
                         r.addElement( TrAnExpr.trSpecExpr( axiom.expr, null, null ) );
                     }
-                }
+                } else if (tde.getTag() == TagConstants.REPRESENTS &&
+				Main.options().useFcnsForModelVars ) {
+		    NamedExprDeclPragma p = (NamedExprDeclPragma)tde;
+		    r.addElement( TrAnExpr.getRepresentsAxiom(p));
+		}
             }
         }
 

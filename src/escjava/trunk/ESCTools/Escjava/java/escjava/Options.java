@@ -31,6 +31,10 @@ public class Options extends javafe.SrcToolOptions
         { "-pxLog <log>", "PrettyPrint the commands sent to Simplify in the file named <log>"},
         { "-sxLog <log>", "Print the commands sent to Simplify in the file named <log>"},
 	{ "-typecheck", "Do only parsing and typechecking, no generation or proving of verification conditions" },
+	{"-useFcns","Use functions for reasoning about model variables, method calls, and object allocations in annotations"},
+	{"-useVars","Use skolem variables for reasoning about model variables, method calls, and object allocations in annotations"},
+	{"-useFcnsForModelVars","Use functions for reasoning about model variables in annotations"},
+	{"-useVarsForModelVars","Use skolem variables for reasoning about model variables in annotations"},
     };
 
     // Global escjava flags
@@ -177,6 +181,11 @@ public class Options extends javafe.SrcToolOptions
     public Set ignoreAnnSet = null;
 
     public boolean printCompilationUnitsOnLoad = false;
+
+    // Flags to control the treatment of model variables and routines calls
+    public boolean useFcnsForModelVars = false;
+    public boolean useFcnsForMethods = true;
+    public boolean useFcnsForAllocations = true;
 
     // filter invariants and axioms
     public boolean filterInvariants = false;
@@ -738,6 +747,28 @@ public class Options extends javafe.SrcToolOptions
             return offset+1;
 	} else if (option.equals("-noSemicolonWarnings")) {
 	    noSemicolonWarnings = true;
+	    return offset;
+	} else if (option.equals("-useFcns")) {
+	    useFcnsForModelVars = true;
+	    useFcnsForMethods = true;
+	    useFcnsForAllocations = true;
+	    return offset;
+	} else if (option.equals("-useVars")) {
+	    useFcnsForModelVars = false;
+	    useFcnsForMethods = false;
+	    useFcnsForAllocations = false;
+	    return offset;
+	} else if (option.equals("-useFcnsForModelVars")) {
+	    useFcnsForModelVars = true;
+	    return offset;
+	} else if (option.equals("-useVarsForModelVars")) {
+	    useFcnsForModelVars = false;
+	    return offset;
+	} else if (option.equals("-useFcnsForMethods")) {
+	    useFcnsForMethods = true;
+	    return offset;
+	} else if (option.equals("-useVarsForMethods")) {
+	    useFcnsForMethods = false;
 	    return offset;
 	}
     

@@ -873,6 +873,7 @@ public class Main extends javafe.SrcTool
                                               predictedSynTargs, null,
                                               /* issueCautions */ true);
 
+
         Set fullSynTargs = Targets.normal(body);
         Set synTargs;
         if (options().noDirectTargetsOpt)
@@ -896,6 +897,7 @@ public class Main extends javafe.SrcTool
 
         Spec spec = GetSpec.getSpecForBody(r, scope, synTargs,
                                            initState.getPreMap());
+        GetSpec.addAxioms(Translate.axsToAdd,spec.preAssumptions);
 	gctranslator.addMoreLocations(spec.postconditionLocations);
 
         // if the current RoutineDecl corresponds to one of our

@@ -19,6 +19,7 @@ import javafe.ast.ArrayType;
 import javafe.ast.PrimitiveType;
 import javafe.ast.FormalParaDecl;
 import javafe.ast.FormalParaDeclVec;
+import javafe.ast.*;
 import escjava.Main;
 
 import javafe.util.*;
@@ -77,6 +78,27 @@ public final class Utils {
     static public boolean isModel(ModifierPragmaVec m) {
 	if (m == null) return false;
 	return findModifierPragma(m,TagConstants.MODEL) != null;
+    }
+
+	// Used for designator expressions, as in a modifies clause.
+    static public boolean isModel(Expr e) {
+	if (e instanceof VariableAccess) {
+	    VariableAccess va = (VariableAccess)e;
+	    if (va.decl instanceof FieldDecl) {
+		return isModel( (FieldDecl)va.decl );
+	    }
+	    System.out.println("ISMODEL-VA " + va.decl.getClass());
+        } else if (e instanceof FieldAccess) {
+	    return isModel( ((FieldAccess)e).decl );
+	} else if (e instanceof NothingExpr) {
+	    return true; 
+	} else if (e instanceof EverythingExpr) {
+	    return false;
+	} else if (e instanceof ArrayRefExpr) {
+	    return isModel( ((ArrayRefExpr)e).array );
+	}
+	else System.out.println("ISMODEL " + e.getClass());
+	return false; // default
     }
 
     static protected abstract class BooleanDecoration extends ASTDecoration {

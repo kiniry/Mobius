@@ -47,7 +47,7 @@ public final class TrAnExpr {
 	trSpecExprAuxConditions = ExprVec.make();
 	trSpecExprAuxAssumptions = ExprVec.make();
 	trSpecAuxAxiomsNeeded = new java.util.HashSet();
-	trSpecModelVarsUsed = new java.util.HashSet();
+	trSpecModelVarsUsed = new java.util.HashMap();
 	boundStack.clear();
     }
 
@@ -75,7 +75,7 @@ public final class TrAnExpr {
     public static boolean extraSpecs = false;
     public static ExprVec trSpecExprAuxConditions = null;
     public static ExprVec trSpecExprAuxAssumptions = null;
-    public static java.util.Set trSpecModelVarsUsed = null;
+    public static java.util.Map trSpecModelVarsUsed = null;
     public static java.util.Set trSpecAuxAxiomsNeeded = null;
     public static int tempn = 100;
     public static LinkedList declStack = new LinkedList();
@@ -143,29 +143,40 @@ public final class TrAnExpr {
             VariableAccess va = makeVarAccess(fa.decl, fa.locId);
             // va accesses the field
 	    if (Utils.isModel(va.decl.pmodifiers)) {
-		if (trSpecModelVarsUsed != null) trSpecModelVarsUsed.add(va);
-		java.util.List reps = escjava.AnnotationHandler.findRepresents(fa.decl);
-		java.util.Iterator it = reps.iterator();
-		while (it.hasNext()) {
-		    Expr ex = (Expr)it.next();
-	
-		    if (doRewrites() && !declStack.contains(fa.decl)) {
-			declStack.addFirst(fa.decl);
+                if (Main.options().useFcnsForModelVars) {
+		    // All represents clauses are automatically turned into axioms in collectAxioms
+		    // whether or not they are used.  So here we just rewrite the model
+		    // var reference as a method call.
+		    Identifier id = representsMethodName(va);
+		    if (Modifiers.isStatic(fa.decl.modifiers)) {
+			return GC.nary(id,ExprVec.make()); // FIXME or should this be a function of the class object
+		    }
+		} else { // Use a skolem variables for model var
+		    java.util.List reps = escjava.AnnotationHandler.findRepresents(fa.decl);
+		    java.util.Iterator it = reps.iterator();
+		    while (it.hasNext()) {
+			Expr ex = (Expr)it.next();
+	    
+			if (doRewrites() && !declStack.contains(fa.decl)) {
+			    declStack.addFirst(fa.decl);
+			    if (trSpecModelVarsUsed != null &&
+				!trSpecModelVarsUsed.containsKey(fa.decl) ) trSpecModelVarsUsed.put(fa.decl,va);
 
-			Hashtable h = new Hashtable();
-			if (fa.od instanceof ExprObjectDesignator) {
-			    if (!(((ExprObjectDesignator)fa.od).expr instanceof ThisExpr)) {
-				h.put(Substitute.thisexpr, ((ExprObjectDesignator)fa.od).expr);
-			    }
-			} else if (fa.od instanceof SuperObjectDesignator) {
-				// FIXME
-			    System.out.println("NOT SUPPORTED-A " + fa.od.getClass());
-			} // fall-through for TypeObjectDesignator
-			    
-			ex = Substitute.doSubst(h,ex);
-			Expr ee = trSpecExpr(ex,sp,st);
-			trSpecExprAuxConditions.addElement(ee);
-			declStack.removeFirst();
+			    Hashtable h = new Hashtable();
+			    if (fa.od instanceof ExprObjectDesignator) {
+				if (!(((ExprObjectDesignator)fa.od).expr instanceof ThisExpr)) {
+				    h.put(Substitute.thisexpr, ((ExprObjectDesignator)fa.od).expr);
+				}
+			    } else if (fa.od instanceof SuperObjectDesignator) {
+				    // FIXME
+				System.out.println("NOT SUPPORTED-A " + fa.od.getClass());
+			    } // fall-through for TypeObjectDesignator
+				
+			    ex = Substitute.doSubst(h,ex);
+			    Expr ee = trSpecExpr(ex,sp,st);
+			    trSpecExprAuxConditions.addElement(ee);
+			    declStack.removeFirst();
+			}
 		    }
 		}
 	    }
@@ -199,7 +210,12 @@ public final class TrAnExpr {
                 if (fa.decl == Types.lengthFieldDecl)
                     return GC.nary(fa.getStartLoc(), fa.getEndLoc(),
                                    TagConstants.ARRAYLENGTH, lhs);
-                else
+	        else if (Utils.isModel(va.decl.pmodifiers) && Main.options().useFcnsForModelVars) {
+		    Identifier id = representsMethodName(va);
+		    ExprVec arg = ExprVec.make(1);
+		    arg.addElement(lhs);
+		    return GC.nary(id,arg);
+                } else
                     return GC.nary(fa.getStartLoc(), fa.getEndLoc(),
                                    TagConstants.SELECT, apply(sp, va), lhs);
             }
@@ -1607,5 +1623,48 @@ System.out.println("");
   static public java.util.Set getAxiomSet(ASTNode o) {
 	// presumes getEquivalentAxioms has been run at least once
 	return (java.util.Set)axiomSetDecoration.get(o);
+  }
+
+  static public Expr getRepresentsAxiom(NamedExprDeclPragma p) {
+	boolean isStatic;
+	if (p.target instanceof FieldAccess) {
+	    isStatic = Modifiers.isStatic(((FieldAccess)p.target).decl.modifiers);
+	} else {
+	    System.out.println("UNSUPPORTED OPTION-GRA " + p.target.getClass());  // FIXME - array access ??
+	    isStatic = false;
+	}
+	GenericVarDecl newThis = UniqName.newBoundThis();
+	specialThisExpr = makeVarAccess( newThis, Location.NULL);
+	ExprVec args = ExprVec.make(1);
+	if (!isStatic) args.addElement(specialThisExpr);
+	ExprVec pats = ExprVec.make(1);
+	Expr fcall = GC.nary(representsMethodName(p.target), args);
+	pats.addElement(fcall);
+	Expr e = TrAnExpr.trSpecExpr(p.expr, null, null);
+	e = GC.forallwithpats(newThis,e,pats);
+	specialThisExpr = null;
+	return e;
+  }
+
+  static public Identifier representsMethodName(Expr pt) {
+	String id = "ZZZZZZZZZZZZZZ";
+	FieldDecl d;
+
+	if (pt instanceof FieldAccess) {
+	    FieldAccess fa = (FieldAccess)pt;
+	    d = fa.decl;
+	} else if (pt instanceof VariableAccess) {
+	    GenericVarDecl dd = ((VariableAccess)pt).decl;
+	    if (dd instanceof FieldDecl) d = (FieldDecl)dd;
+	    else {
+		System.out.println("RMN " + dd.getClass() + " " + dd.toString() );
+		return Identifier.intern(id);
+	    }
+	} else {
+	    System.out.println("RMN " + pt.getClass());
+	    return Identifier.intern(id);
+	}
+	id = TypeSig.getSig(d.parent).getExternalName() + "#"  + d.id.toString();
+	return Identifier.intern(id);
   }
 }

@@ -35,6 +35,11 @@ import escjava.tc.TypeCheck;
 
 public final class Translate
 {
+	// The Set contains method declarations for which axioms derived
+	// from postconditions nmeed to be added to the assumptions
+	// for verifying the body.
+    public static java.util.Set axsToAdd = new java.util.HashSet();
+
     /**
      * Translates the body of a method or constructor, as described in ESCJ 16,
      * section 8.
@@ -56,6 +61,9 @@ public final class Translate
                              Set predictedSynTargs,
                              Translate inlineParent,
                              boolean issueCautions) {
+
+	axsToAdd = new java.util.HashSet();
+
         // Reset the state of the AuxInfo module if this is top-level call to trBody
         if (inlineParent == null) {
             AuxInfo.reset();
@@ -1669,13 +1677,7 @@ public final class Translate
                     boolean isUninitialized = false;
 		    boolean isGhost = false;
                     if (vd.pmodifiers != null) {
-                        for (int i= 0; i < vd.pmodifiers.size(); i++) {
-                            ModifierPragma prag= vd.pmodifiers.elementAt(i);
-                            if (prag.getTag() == TagConstants.GHOST) {
-				isGhost = true;
-				break;
-			    }
-			}
+			isGhost = Utils.findModifierPragma(vd.pmodifiers,TagConstants.GHOST) != null;
                         for (int i= 0; i < vd.pmodifiers.size(); i++) {
                             ModifierPragma prag= vd.pmodifiers.elementAt(i);
                             if (prag.getTag() == TagConstants.UNINITIALIZED) {
@@ -1691,8 +1693,10 @@ public final class Translate
                     if (null != vd.init) {
                         Assert.notFalse(vd.locAssignOp != Location.NULL);
                         VariableAccess lhs = TrAnExpr.makeVarAccess(vd, vd.getStartLoc());
+			TrAnExpr.initForClause();
                         Expr rval = isGhost ? TrAnExpr.trSpecExpr((Expr)vd.init) :
 						ptrExpr(vd.init);
+			if (TrAnExpr.extraSpecs) addNewAssumptions();
                         if (! isUninitialized) {
                             writeCheck(lhs, vd.init, rval, vd.locAssignOp, false);
                         }
@@ -1718,8 +1722,10 @@ public final class Translate
 
 		if (s.target instanceof FieldAccess) {
 		    FieldAccess fa = (FieldAccess)s.target;
+		    TrAnExpr.initForClause();
 		    Expr lhs= trFieldAccess(true, fa);
 		    Expr rval = TrAnExpr.trSpecExpr(s.value);
+		    if (TrAnExpr.extraSpecs) addNewAssumptions();
 		    writeCheck(lhs, s.value, rval, s.locOp, false);
 		    String name;
 		    if (lhs.getTag() == TagConstants.VARIABLEACCESS) {
@@ -1727,6 +1733,7 @@ public final class Translate
 			name = valhs.decl.id.toString();
 			code.addElement(GC.gets(valhs, rval));
 		    } else {
+			// Instance field
 			NaryExpr target = (NaryExpr)lhs;
 			VariableAccess field = (VariableAccess)target.exprs.elementAt(0);
 			name = field.decl.id.toString();
@@ -1752,8 +1759,11 @@ public final class Translate
 */
 
 		} else if (s.target instanceof VariableAccess) {
+		    // Assignments to local ghost variables end here
 		    VariableAccess lhs = (VariableAccess)s.target;
+		    TrAnExpr.initForClause();
 		    Expr rval = TrAnExpr.trSpecExpr(s.value);
+		    if (TrAnExpr.extraSpecs) addNewAssumptions();
 		    writeCheck(lhs, s.value, rval, s.locOp, false);
 		    code.addElement(GC.gets(lhs,rval));
 		    VariableAccess init = getInitVar(lhs.decl);
@@ -1763,9 +1773,11 @@ public final class Translate
 		} else if (s.target instanceof ArrayRefExpr) {
 		    ArrayRefExpr lhs= (ArrayRefExpr)s.target;
 
+		    TrAnExpr.initForClause();
 		    Expr array= TrAnExpr.trSpecExpr(lhs.array);
 		    Expr index= TrAnExpr.trSpecExpr(lhs.index);
 		    Expr rval= TrAnExpr.trSpecExpr(s.value);
+		    if (TrAnExpr.extraSpecs) addNewAssumptions();
 
 		    arrayAccessCheck(lhs.array, array, lhs.index, index, lhs.locOpenBracket);
 		    if (! isFinal(TypeCheck.inst.getType(lhs.array))) {
@@ -1796,7 +1808,9 @@ public final class Translate
             case TagConstants.ASSUME:
                 {
                     ExprStmtPragma x = (ExprStmtPragma)stmt;
+		    TrAnExpr.initForClause();
                     Expr p = TrAnExpr.trSpecExpr(x.expr);
+		    if (TrAnExpr.extraSpecs) addNewAssumptions();
                     code.addElement(GC.assume(p));
                     return;
                 }
@@ -1805,19 +1819,7 @@ public final class Translate
                 ExprStmtPragma x = (ExprStmtPragma)stmt;
 		TrAnExpr.initForClause();
                 Expr p = TrAnExpr.trSpecExpr(x.expr);
-		if (TrAnExpr.trSpecModelVarsUsed != null) {
-		  Iterator ii = TrAnExpr.trSpecModelVarsUsed.iterator();
-		  while (ii.hasNext()) {
-		    VariableAccess d = (VariableAccess)ii.next();
-		    code.addElement(GC.gets(d,null));
-		  }
-		}
-		if (TrAnExpr.trSpecExprAuxConditions != null) {
-		  for (int ii=0; ii<TrAnExpr.trSpecExprAuxConditions.size(); ++ii) {
-		    code.addElement(GC.assume( 
-			    TrAnExpr.trSpecExprAuxConditions.elementAt(ii)));
-		  } 
-		}
+		if (TrAnExpr.extraSpecs) addNewAssumptions();
                 code.addElement(GC.check(x.getStartLoc(), TagConstants.CHKASSERT,
                                          p, Location.NULL));
                 return;
@@ -1869,6 +1871,7 @@ public final class Translate
 		} else if (Main.options().assertionMode ==
 				Options.JML_ASSERTIONS) {
 			// Treat a Java assert as a JML assert
+		    // Since it is a Java statement, it can't contain JML constructs
 		    Expr predicate = TrAnExpr.trSpecExpr(assertStmt.pred);
                     code.addElement(GC.check(assertStmt.getStartLoc(), TagConstants.CHKASSERT,
                                              predicate, Location.NULL));
@@ -3461,6 +3464,28 @@ public final class Translate
 	code.addElement(GC.assume(pred));
     }
 
+    private void addAssumptions(ExprVec ev) {
+	if (ev == null) return;
+	for (int i=0; i<ev.size(); ++i) {
+	    addAssumption(ev.elementAt(i));
+	}
+    }
+
+    private void addNewAssumptions() {
+	if (TrAnExpr.trSpecModelVarsUsed != null) {
+	  // These assignments with a null rhs are used to indicate
+	  // that the target has some unknown new value.
+	  Iterator ii = TrAnExpr.trSpecModelVarsUsed.values().iterator();
+	  while (ii.hasNext()) {
+	    VariableAccess d = (VariableAccess)ii.next();
+	    code.addElement(GC.gets(d,null));  // FIXME - what about array model vars, static model vars
+	  }
+	}
+	addAssumptions(TrAnExpr.trSpecExprAuxConditions);
+	addAssumptions(TrAnExpr.trSpecExprAuxAssumptions);
+        axsToAdd.addAll(TrAnExpr.trSpecAuxAxiomsNeeded);
+	TrAnExpr.closeForClause();
+    }
     /**
      * Return the <code>VariableAccesss</code> associated with <code>d</code> by a
      * call to <code>setInitVar</code>.  If none has been associated with
@@ -4230,6 +4255,11 @@ public final class Translate
 	}
     }
 } // end of class Translate
+
+// FIXME - translation of model vars is handled for set, assume, assert, ghost decls
+// But still need to do so for other types of statement pragmas
+// Also need to do so for quantified expresssions.
+// What about for old expressions?
 
 /*
  * Local Variables:
