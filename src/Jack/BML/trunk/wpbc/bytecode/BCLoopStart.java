@@ -10,24 +10,14 @@ import java.util.Vector;
 
 import modifexpression.ModifiesExpression;
 import modifexpression.ModifiesLocalVariable;
-import constants.BCConstantFieldRef;
-
-import utils.FreshIntGenerator;
-
-import bcclass.BCClass;
 import bcclass.BCMethod;
-import bcclass.ClassStateVector;
 import bcclass.attributes.ExsuresTable;
 import bcclass.attributes.ModifiesSet;
 import bcexpression.BCLocalVariable;
-import bcexpression.Expression;
-import bcexpression.Variable;
-import bcexpression.javatype.JavaType;
 import bytecode.branch.BCJumpInstruction;
+import constants.BCConstantFieldRef;
 import formula.Connector;
 import formula.Formula;
-import formula.Quantificator;
-import formula.QuantifiedFormula;
 import formula.atomic.Predicate;
 
 /**
@@ -65,6 +55,7 @@ public class BCLoopStart extends BCInstruction {
 		setPrev(_instruction.getPrev());
 		setBCIndex(_instruction.getBCIndex());
 		setTargeters(_instruction.getTargeters());
+		setBytecode(_instruction.getBytecode());
 		//		updateTargets(_instruction.getTargeters());
 		setPosition(_instruction.getPosition());
 
@@ -102,11 +93,11 @@ public class BCLoopStart extends BCInstruction {
 		
 		
 		
-		Formula invariant_implies_wp =
+		Formula wp =
 			Formula.getFormula((Formula)invariant.copy(), wpInstr, Connector.IMPLIES);
-		Formula invariantHoldsAtState = (Formula)invariant.copy();
-		Formula wp = Formula.getFormula( invariantHoldsAtState, invariant_implies_wp, Connector.AND); 
-
+		
+/*		Formula wp = Formula.getFormula( invariantHoldsAtState, invariant_implies_wp, Connector.AND); 
+*/
 		ModifiesExpression[] modifExpr = modifies.getModifiesExpressions();
 		Formula assumeStateOfVars = Predicate.TRUE;
 		for (int i = 0; i < modifExpr.length ; i++ ) {
@@ -127,6 +118,7 @@ public class BCLoopStart extends BCInstruction {
 		}
 		
 		wp = Formula.getFormula( assumeStateOfVars, wp, Connector.IMPLIES);
+		wp = Formula.getFormula((Formula)invariant.copy(),wp,  Connector.AND);
 		return wp;
 		
 		

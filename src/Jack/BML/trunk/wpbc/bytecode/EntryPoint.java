@@ -27,8 +27,11 @@ public class EntryPoint extends BCInstruction {
 	BCInstruction instr;
 	
 	Vector wp;
+	
+	
 	public EntryPoint(BCInstruction _instr) {
-		instr = _instr;
+				instr = _instr;
+				setBytecode (_instr.getBytecode());
 				instructionHandle = _instr.getInstructionHandle();
 				setNext(_instr.getNext());
 				setPrev(_instr.getPrev());

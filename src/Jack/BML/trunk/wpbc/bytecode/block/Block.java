@@ -10,21 +10,16 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Vector;
 
+import utils.Util;
 import bcclass.attributes.ExsuresTable;
-
 import bytecode.BCATHROW;
 import bytecode.BCInstruction;
 import bytecode.BCLoopEnd;
 import bytecode.BCRET;
 import bytecode.BCTypeRETURN;
 import bytecode.ByteCode;
-
 import bytecode.branch.BCGOTO;
 import bytecode.branch.BCJSR;
-import bytecode.branch.BCJumpInstruction;
-
-import utils.Util;
-
 import formula.Connector;
 import formula.Formula;
 
@@ -100,10 +95,11 @@ public class Block implements ByteCode {
 			if (_instr == null) {
 				return _np;
 			}
+			
 			_np = _instr.wp(_np, _exc_Postcondition);
-			Formula assert = _instr.getAssert();
-			if (assert != null) {
-				_np = Formula.getFormula(_np, assert, Connector.AND);
+			Formula assertion = _instr.getAssert();
+			if (assertion != null) {
+				_np = Formula.getFormula(_np, assertion, Connector.AND);
 			}
 			Util.dump(" wp instr :  " + _instr + "  = " + _np);
 			BCInstruction first = getFirst();
@@ -244,7 +240,7 @@ public class Block implements ByteCode {
 			&& !(prev instanceof BCATHROW) 
 			&& !(prev instanceof BCLoopEnd)) {
 			//not good
-			if ((targeterBlock = trace.getBlockEndAt(prev)) != null) {
+			if ((targeterBlock = trace.getBlockEndAt(prev, blocks)) != null) {
 				if (targeterBlocks == null) {
 					targeterBlocks = new Vector();
 				}
@@ -261,7 +257,7 @@ public class Block implements ByteCode {
 		while (targeters.hasMoreElements()) {
 			targeter = (BCInstruction) targeters.nextElement();
 
-			if ((targeterBlock = trace.getBlockEndAt(targeter)) != null) {
+			if ((targeterBlock = trace.getBlockEndAt(targeter, blocks)) != null) {
 				if (targeterBlocks == null) {
 					targeterBlocks = new Vector();
 				}

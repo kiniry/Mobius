@@ -8,11 +8,7 @@ package bytecode.objectmanipulation;
 
 import org.apache.bcel.generic.InstructionHandle;
 
-import formula.Formula;
-
 import bcclass.BCConstantPool;
-
-import bcclass.attributes.ExsuresTable;
 import bcexpression.javatype.JavaType;
 
 
@@ -43,14 +39,6 @@ public class BCINVOKESTATIC extends BCInvoke {
 
 	}
 
-	/* (non-Javadoc)
-	 * @see bytecode.ByteCode#wp(formula.Formula, specification.ExceptionalPostcondition)
-	 */
-	public Formula wp(
-		Formula _normal_Postcondition,
-		ExsuresTable _exc_Postcondition) {
-		Formula wp = null;
-		return wp;
-	}
+
 }
 

@@ -5,41 +5,36 @@
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 package bytecode.objectmanipulation;
-import modifexpression.Everything;
 import modifexpression.ModifiesExpression;
-import modifexpression.Nothing;
 
 import org.apache.bcel.generic.InstructionHandle;
+
+import utils.FreshIntGenerator;
+import application.JavaApplication;
 import bc.io.ReadAttributeException;
+import bcclass.BCClass;
 import bcclass.BCConstantPool;
+import bcclass.BCMethod;
 import bcclass.attributes.ExsuresTable;
 import bcclass.attributes.MethodSpecification;
-import bcclass.attributes.ModifiesSet;
 import bcclass.attributes.SpecificationCase;
-import bcexpression.javatype.JavaObjectType;
-import bcexpression.javatype.JavaReferenceType;
-import bcexpression.javatype.JavaType;
-import formula.Formula;
-import constants.BCConstantClass;
-import constants.BCConstantFieldRef;
-import constants.BCConstantMethodRef;
-import application.JavaApplication;
-import bcclass.BCClass;
-import bcclass.BCMethod;
 import bcclass.utils.MethodSignature;
 import bcexpression.ArithmeticExpression;
 import bcexpression.BCLocalVariable;
-import bcexpression.ValueOfConstantAtState;
 import bcexpression.EXCEPTIONVariable;
 import bcexpression.Expression;
 import bcexpression.ExpressionConstants;
 import bcexpression.NumberLiteral;
 import bcexpression.Variable;
+import bcexpression.javatype.JavaObjectType;
+import bcexpression.javatype.JavaType;
 import bcexpression.jml.RESULT;
 import bcexpression.vm.Stack;
-import utils.FreshIntGenerator;
-import utils.Util;
+import constants.BCConstantClass;
+import constants.BCConstantFieldRef;
+import constants.BCConstantMethodRef;
 import formula.Connector;
+import formula.Formula;
 import formula.Quantificator;
 import formula.atomic.Predicate;
 /**
@@ -59,15 +54,8 @@ public class BCInvoke extends BCFieldOrMethodInstruction {
 			JavaType _classType, BCConstantPool _cp) {
 		super(_instruction, _type, _classType, _cp);
 	}
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see bytecode.ByteCode#wp(formula.Formula,
-	 *      specification.ExceptionalPostcondition)
-	 */
-	public Formula wp(Formula _normal_Postcondition,
-			ExsuresTable _exc_Postcondition) {
-		Formula wp = null;
+	
+	protected BCMethod getInvokedMethod() {
 		BCConstantMethodRef method_constant = (BCConstantMethodRef) (getConstantPool()
 				.getConstant(getIndex()));
 		String clazz_name = ((BCConstantClass) (getConstantPool()
@@ -83,6 +71,18 @@ public class BCInvoke extends BCFieldOrMethodInstruction {
 		} catch (ReadAttributeException e) {
 			e.printStackTrace();
 		}
+		return method;
+	}
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see bytecode.ByteCode#wp(formula.Formula,
+	 *      specification.ExceptionalPostcondition)
+	 */
+	public Formula wp(Formula _normal_Postcondition,
+			ExsuresTable _exc_Postcondition) {
+		Formula wp = null;
+		BCMethod method =  getInvokedMethod();
 		//take the method pre and postconditons
 		/* Formula precondition = (Formula) method.getPrecondition().copy(); */
 		int number_args = method.getNumberArguments();
@@ -112,14 +112,26 @@ public class BCInvoke extends BCFieldOrMethodInstruction {
 		Formula wp_spec_cases = Predicate.FALSE;
 		int top_minus_number_args_minus_obj_plus_res = 0;
 		Variable fresh_result = null;
-		if (method.getReturnType() == JavaType.JavaVOID) {
-			top_minus_number_args_minus_obj_plus_res = number_args + 1;
+		if ( ! (this instanceof BCINVOKESTATIC ) ) {
+			if (method.getReturnType() == JavaType.JavaVOID) {
+				top_minus_number_args_minus_obj_plus_res = number_args + 1;
+			} else {
+				top_minus_number_args_minus_obj_plus_res = number_args;
+					RESULT result = Expression._RESULT;
+					fresh_result = new Variable(FreshIntGenerator.getInt(), method
+							.getReturnType());
+			}
 		} else {
-			top_minus_number_args_minus_obj_plus_res = number_args;
-				RESULT result = Expression._RESULT;
-				fresh_result = new Variable(FreshIntGenerator.getInt(), method
-						.getReturnType());
+			if (method.getReturnType() == JavaType.JavaVOID) {
+				top_minus_number_args_minus_obj_plus_res = number_args;
+			} else {
+				top_minus_number_args_minus_obj_plus_res = number_args - 1;
+					RESULT result = Expression._RESULT;
+					fresh_result = new Variable(FreshIntGenerator.getInt(), method
+							.getReturnType());
+			}		
 		}
+		
 		ArithmeticExpression counter_minus_arg_num_plus_1 = (ArithmeticExpression) ArithmeticExpression
 				.getArithmeticExpression(Expression.COUNTER,
 						new NumberLiteral(
@@ -128,6 +140,7 @@ public class BCInvoke extends BCFieldOrMethodInstruction {
 //		psi^n[t <-- t - arg_n_plus_1 ]
 		_normal_Postcondition = (Formula) _normal_Postcondition.substitute(
 				Expression.COUNTER, counter_minus_arg_num_plus_1);
+	
 //		//psi^n[ S(t ) <-- fresh]
 		if (fresh_result != null) {
 			_normal_Postcondition = (Formula) _normal_Postcondition
@@ -189,6 +202,9 @@ public class BCInvoke extends BCFieldOrMethodInstruction {
 						stack_at_counter_minus_arg_num_plus_i);
 				if (modifiesSubst != null) {
 					for (int m = 0; m < modifiesSubst.length; m++) {
+						if ( modifiesSubst[m] == null) {
+							continue;
+						}
 						modifiesSubst[m] = (ModifiesExpression)modifiesSubst[m].substitute(local_i, stack_at_counter_minus_arg_num_plus_i);
 					}
 				}
@@ -208,11 +224,11 @@ public class BCInvoke extends BCFieldOrMethodInstruction {
 				}
 				Formula f = (Formula)modifiesSubst[i].getPostCondition(getBCIndex());
 				BCConstantFieldRef fieldRef =  (BCConstantFieldRef)modifiesSubst[i].getConstantFieldRef();
-				postcondition =  (Formula)postcondition.substitute( fieldRef, fieldRef.atState( getBCIndex()));
+				postcondition =  (Formula)postcondition.substitute( fieldRef, fieldRef.atState( getPosition()));
 				_normal_Postcondition = (Formula)_normal_Postcondition.substitute( fieldRef, fieldRef.atState( getPosition()));
 				modifiesCondition  = Formula.getFormula(modifiesCondition, f, Connector.AND);
 			}
-			postcondition = Formula.getFormula(postcondition, modifiesCondition, Connector.AND );
+			postcondition = Formula.getFormula(modifiesCondition, postcondition,  Connector.AND );
 			Formula wpNormal = Formula.getFormula(postcondition,
 						_normal_Postcondition, Connector.IMPLIES);
 				

@@ -6,16 +6,8 @@
  */
 package bytecode;
 
-import java.util.Vector;
-
 import bcclass.attributes.ExsuresTable;
-import bytecode.block.Block;
-import bytecode.block.BranchingBlock;
-import bytecode.block.Path;
-import bytecode.block.Trace;
-import formula.Connector;
 import formula.Formula;
-import formula.atomic.Predicate;
 
 /**
  * @author mpavlova

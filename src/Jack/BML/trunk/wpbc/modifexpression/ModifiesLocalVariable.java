@@ -6,19 +6,12 @@
  */
 package modifexpression;
 
-import java.net.ConnectException;
-
-import formula.Connector;
-import formula.Formula;
-import formula.Quantificator;
-import formula.atomic.Predicate;
-import formula.atomic.Predicate2Ar;
-import formula.atomic.PredicateSymbol;
 import bcclass.BCConstantPool;
 import bcexpression.BCLocalVariable;
-import bcexpression.ValueOfConstantAtState;
 import bcexpression.Expression;
-import bcexpression.jml.OLD;
+import formula.Formula;
+import formula.atomic.Predicate2Ar;
+import formula.atomic.PredicateSymbol;
 
 /**
  * @author mpavlova

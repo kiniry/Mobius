@@ -88,7 +88,9 @@ public class BranchingBlock extends Block {
 		BCConditionalBranch last = (BCConditionalBranch) getLast();
 		
 		wp = last.wpBranch(wp, _exc_postcondition);
-	
+		if (last.getBCIndex() == 2494) {
+			Util.dump("this is the ILL INSTRUCTION ");
+		}
 		Util.dump(
 			" wp instr : "
 				+ last

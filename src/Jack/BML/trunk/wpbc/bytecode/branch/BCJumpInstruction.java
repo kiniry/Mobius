@@ -7,6 +7,7 @@
 package bytecode.branch;
 import org.apache.bcel.generic.BranchInstruction;
 import org.apache.bcel.generic.InstructionHandle;
+
 import bytecode.BCInstruction;
 
 //import bytecode.block.*;
@@ -18,7 +19,7 @@ import bytecode.BCInstruction;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public abstract class BCJumpInstruction extends BCInstruction {
-	private BCInstruction target;
+	
 	private int targetPosition;
 	
 //	protected Block targetBlock;
@@ -34,14 +35,19 @@ public abstract class BCJumpInstruction extends BCInstruction {
 	 *            the instruction to which this jump instruction targets to
 	 */
 	public void setTarget(BCInstruction _t) {
-		target = _t;
+		targetPosition = _t.getPosition();
 	}
 	/**
 	 * return BCInstruction -- the instruction to which this jump instruction
 	 * targets to
 	 */
 	public BCInstruction getTarget() {
+		if (targetPosition == -1) {
+			return null;
+		}
+		BCInstruction target = utils.Util.getBCInstructionAtPosition( getBytecode(), targetPosition);
 		return target;
+		
 	}
 
 	

@@ -7,18 +7,12 @@
 package modifexpression;
 
 
-import com.sun.rsasign.c;
-
 import utils.FreshIntGenerator;
-import utils.Util;
 import bcclass.BCConstantPool;
-import bcclass.BCMethod;
 import bcclass.ClassStateVector;
-import bcexpression.ValueOfConstantAtState;
 import bcexpression.Expression;
 import bcexpression.FieldAccess;
 import bcexpression.Variable;
-import bcexpression.javatype.JavaBasicType;
 import bcexpression.javatype.JavaType;
 import bcexpression.jml.OLD;
 import bcexpression.jml.TYPEOF;
@@ -29,8 +23,6 @@ import constants.BCConstantMethodRef;
 import formula.Connector;
 import formula.Formula;
 import formula.Quantificator;
-import formula.QuantifiedFormula;
-import formula.atomic.Predicate;
 import formula.atomic.Predicate2Ar;
 import formula.atomic.PredicateSymbol;
 

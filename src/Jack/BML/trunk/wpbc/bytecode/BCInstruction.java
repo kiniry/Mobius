@@ -11,6 +11,8 @@ import java.util.Vector;
 
 import org.apache.bcel.generic.InstructionHandle;
 
+import utils.Util;
+
 import bcexpression.javatype.JavaType;
 import formula.Formula;
 
@@ -36,12 +38,12 @@ public abstract  class BCInstruction  implements ByteCode{
 	/**
 	 * the preceding instruction in the bytecode
 	 */
-	private BCInstruction prev;
+	private int prev = -1;
 	
 	/**
 	 * the next instruction in the bytecode
 	 */	
-	private BCInstruction next;
+	private int next = -1;
 	
 	/**
 	 * a list of instructions that target to this one 
@@ -53,6 +55,8 @@ public abstract  class BCInstruction  implements ByteCode{
 	//the index at which this instruction  is in the bytecode
 	private int position;
 	
+	private BCInstruction[] bytecode;
+	
 	/**
 	 * the index in the bytecode array at which this instruction appears
 	 */
@@ -61,7 +65,7 @@ public abstract  class BCInstruction  implements ByteCode{
 	private byte instructionCode;
 
 
-	private Formula assert;
+	private Formula assertion;
 	
 	/**
 	 * exceptions that this throw instruction may cause
@@ -81,19 +85,35 @@ public abstract  class BCInstruction  implements ByteCode{
 	}
 	
 	public void setNext(BCInstruction _next)  {
-		next = _next;
+		if ( _next == null) {
+			next = -1;
+			return; 
+		}
+		next = _next.getPosition();
 	}
 	
 	public void setPrev(BCInstruction _prev )  {
-		prev = _prev;
+		if ( _prev == null) {
+			prev = -1;
+			return;
+		}
+		prev = _prev.getPosition();
 	}
 	
 	public BCInstruction getNext() {
-		return next;
+		if (next == -1) {
+			return null;
+		}
+		BCInstruction instrNext = Util.getBCInstructionAtPosition( bytecode, next);
+		return instrNext;
 	}
 	
 	public BCInstruction getPrev() {
-		return prev;
+		if (prev == -1) {
+			return null;
+		}
+		BCInstruction instrPrev = Util.getBCInstructionAtPosition( bytecode, prev);
+		return instrPrev;
 	}
 
 	/**
@@ -128,14 +148,35 @@ public abstract  class BCInstruction  implements ByteCode{
 	 * @return
 	 */
 	public Vector getTargeters() {
-		return targeters;
+		if (targeters == null) {
+			return null;
+		}
+		Vector targetersInstr = new Vector();
+		
+		for (int i = 0; i < targeters.size(); i++) {
+			int pos = ( (Integer)targeters.elementAt(i)).intValue();
+			if (pos  == -1 ) {
+				continue;
+			}
+			BCInstruction instr = Util.getBCInstructionAtPosition( bytecode, pos );
+			targetersInstr.add(instr);
+		}
+		return targetersInstr;
 	}
 
 	/**
 	 * @param vector
+	 * the vector should contain objects of type BCInstruction
 	 */
 	public void setTargeters(Vector vector) {
-		targeters = vector;
+		if (vector == null) {
+			return;
+		}
+		targeters = new Vector();
+		for (int i = 0; i < vector.size() ; i++) {
+			BCInstruction instr = (BCInstruction)vector.elementAt(i);
+			targeters.add(new Integer( instr.getPosition()));
+		}
 	}
 	
 	/**
@@ -146,7 +187,7 @@ public abstract  class BCInstruction  implements ByteCode{
 		if  (targeters == null) {
 			targeters = new Vector();
 		}
-		targeters.add(_t);
+		targeters.add(new Integer( _t.getPosition()));
 	} 
 	
 	
@@ -159,7 +200,7 @@ public abstract  class BCInstruction  implements ByteCode{
 		if (targeters == null) {
 			return;
 		}
-		targeters.remove(instr);
+		targeters.remove(new Integer( instr.getPosition() ));
 	}
 	
 	public void dump(String _s) {
@@ -187,19 +228,31 @@ public abstract  class BCInstruction  implements ByteCode{
 	 * otherwise returns null
 	 */
 	public Formula getAssert() {
-		return assert;
+		return assertion;
 	}
 
 	/**
 	 * Sets the invariant if there is one specified
 	 * @param invariant The invariant to set
 	 */
-	public void setAssert(Formula assert) {
-		this.assert = assert;
+	public void setAssert(Formula assertion) {
+		this.assertion = assertion;
 	}
 
 	public String toString() {
 		return ""+  getPosition() + " :  "+ getInstructionHandle().getInstruction() ;
 	}
 
+	/**
+	 * @return Returns the bytecode.
+	 */
+	public void setBytecode(BCInstruction[]  b) {
+		 bytecode = b;
+	}
+	/**
+	 * @return Returns the bytecode.
+	 */
+	public BCInstruction[] getBytecode() {
+		return bytecode;
+	}
 }

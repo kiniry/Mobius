@@ -5,7 +5,9 @@
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 package utils;
+import java.util.Collection;
 import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.Vector;
 
 import org.apache.bcel.generic.Instruction;
@@ -14,6 +16,8 @@ import org.apache.bcel.generic.InstructionList;
 import formula.Formula;
 
 
+import bcclass.BCClass;
+import bcclass.BCMethod;
 import bytecode.BCInstruction;
 
 import bytecode.branch.BCJumpInstruction;
@@ -69,7 +73,16 @@ public class Util {
 		return null;
 	}
 	
+	public static void  dump(BCInstruction[] instrs ){
+		
+		if (instrs == null) {
+			return;
+		}
+		for (int i =0; i < instrs.length; i++) {
+			System.out.println(instrs[i]);
+		}
 	
+	}	
 	public static void  dump(InstructionList list ){
 		Instruction[] instrs = list.getInstructions();
 		if (instrs == null) {
@@ -94,4 +107,13 @@ public class Util {
 			Util.dump(b.toString());
 		}
 	} 
+	
+	public static void dumpMethods(BCClass clazz) {
+		Iterator c = clazz.getMethodKeys().iterator();
+		while (c.hasNext()) { 
+			String m = (String)c.next();
+			Util.dump(m);
+		}
+		
+	}
 }

@@ -5,32 +5,28 @@
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 package modifexpression;
-import constants.ArrayLengthConstant;
 import utils.FreshIntGenerator;
-import formula.Connector;
-import formula.Formula;
-import formula.Quantificator;
-import formula.QuantifiedFormula;
-import formula.atomic.Predicate2Ar;
-import formula.atomic.PredicateSymbol;
 import bcclass.BCConstantPool;
 import bcclass.ClassStateVector;
 import bcexpression.ArrayAccessExpression;
-import bcexpression.ValueOfConstantAtState;
 import bcexpression.Expression;
 import bcexpression.FieldAccess;
 import bcexpression.NumberLiteral;
 import bcexpression.QuantifiedExpression;
-import bcexpression.QuantifiedExpression;
 import bcexpression.Variable;
-import bcexpression.javatype.JavaArrType;
 import bcexpression.javatype.JavaBasicType;
 import bcexpression.javatype.JavaReferenceType;
 import bcexpression.javatype.JavaType;
 import bcexpression.jml.JML_CONST_TYPE;
 import bcexpression.jml.OLD;
 import bcexpression.jml.TYPEOF;
-import bcexpression.vm.Stack;
+import constants.ArrayLengthConstant;
+import formula.Connector;
+import formula.Formula;
+import formula.Quantificator;
+import formula.QuantifiedFormula;
+import formula.atomic.Predicate2Ar;
+import formula.atomic.PredicateSymbol;
 /**
  * @author mpavlova
  * 

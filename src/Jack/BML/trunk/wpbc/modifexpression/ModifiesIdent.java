@@ -6,22 +6,9 @@
  */
 package modifexpression;
 
-import constants.BCConstant;
-import constants.BCConstantFieldRef;
-import formula.Connector;
-import formula.Formula;
-import formula.Quantificator;
-import formula.QuantifiedFormula;
-import formula.atomic.Predicate;
-import formula.atomic.Predicate2Ar;
-import formula.atomic.PredicateSymbol;
-
-import utils.FreshIntGenerator;
 import bcclass.BCConstantPool;
-import bcexpression.ValueOfConstantAtState;
 import bcexpression.Expression;
-import bcexpression.Variable;
-import bcexpression.jml.OLD;
+import formula.atomic.Predicate;
 
 /**
  * @author mpavlova

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import org.apache.bcel.generic.InstructionHandle;
 
 import formula.Formula;
+import formula.atomic.Predicate;
 
 import utils.FreshIntGenerator;
 
@@ -61,6 +62,9 @@ public abstract class BCExceptionThrower extends BCInstruction {
 		JavaObjectType _exc_type,
 		ExsuresTable _exc_post) {
 			Formula _exc_termination = trace.getWpForExcThrownAt(_exc_type, getPosition());
+			if (_exc_termination == null) {
+				return Predicate.FALSE;
+			}
 			Formula _exc_termination_copy = (Formula)_exc_termination.copy();
 			_exc_termination_copy = (Formula)_exc_termination_copy.substitute(
 				new EXCEPTIONVariable(FreshIntGenerator.getInt(), _exc_type),

@@ -42,6 +42,8 @@ public class BCLoopEnd extends BCInstruction {
 	
 	private BCMethod method;
 	
+	private BCInstruction[] bytecode;
+	
 	/**
 	 * @param _instruction
 	 * @param _loopStartPosition
@@ -50,6 +52,7 @@ public class BCLoopEnd extends BCInstruction {
 		loopEndInstruction = _instruction; 
 		loopStartPosition = _loopStartPosition;
 		instructionHandle = _instruction.getInstructionHandle();
+		setBytecode(_instruction.getBytecode());
 		setNext( _instruction.getNext());
 		setPrev( _instruction.getPrev());
 		setBCIndex(_instruction.getBCIndex());
