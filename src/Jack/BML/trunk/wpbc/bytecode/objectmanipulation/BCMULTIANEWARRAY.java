@@ -1,13 +1,14 @@
-package bytecode;
+package bytecode.objectmanipulation;
 
 import org.apache.bcel.generic.CPInstruction;
 import org.apache.bcel.generic.InstructionHandle;
+import specification.ExceptionalPostcondition;
 
 import formula.Formula;
 
-import specification.ExceptionalPostcondition;
-
 import bcexpression.javatype.JavaType;
+import bytecode.BCAllocationInstruction;
+import bytecode.objectmanipulation.*;
 
 /**
  * @author Mariela
@@ -17,16 +18,30 @@ import bcexpression.javatype.JavaType;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class BCNEWARRAY extends BCAllocationInstruction  {
-
+public class BCMULTIANEWARRAY extends BCAllocationInstruction implements BCCPInstruction {
+	
+	private int index;
 	private JavaType type;
 	
-	public BCNEWARRAY(InstructionHandle _instruction, JavaType _type) {
+	public BCMULTIANEWARRAY(InstructionHandle _instruction, JavaType _type) {
 		super(_instruction, _type);
+		setIndex( ( (CPInstruction)_instruction.getInstruction()).getIndex());
 		setType(_type);
 	}
-
 	
+	/* (non-Javadoc)
+	 * @see bytecode.BCIndexedInstruction#setIndex(int)
+	 */
+	public void setIndex(int _index) {
+		index = _index;
+	}
+
+	/* (non-Javadoc)
+	 * @see bytecode.BCIndexedInstruction#getIndex()
+	 */
+	public int getIndex() {
+		return index;
+	}
 
 	/* (non-Javadoc)
 	 * @see bytecode.BCTypedInstruction#getType()
@@ -41,7 +56,6 @@ public class BCNEWARRAY extends BCAllocationInstruction  {
 	public void setType(JavaType _type) {
 		type = _type;
 	}
-	
 	/* (non-Javadoc)
 	 * @see bytecode.ByteCode#wp(formula.Formula, specification.ExceptionalPostcondition)
 	 */
@@ -49,4 +63,6 @@ public class BCNEWARRAY extends BCAllocationInstruction  {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	
 }

@@ -37,20 +37,6 @@ public class BCBIPUSH extends BCConstantPUSHInstruction {
 		setType(JavaType.JavaBYTE);
 	}
 
-	
-
-	
-
-	/* (non-Javadoc)
-	 * @see bytecode.ByteCode#wp(formula.Formula, specification.ExceptionalPostcondition)
-	 */
-	public Formula wp(Formula _normal_Postcondition, ExceptionalPostcondition _exc_Postcondition) {
-		Formula wp;
-		wp = _normal_Postcondition.substitute(Expression.getCounter(), Expression.getCounter_plus_1());
-		Stack topStack = new Stack(Expression.getCounter_plus_1());
-		wp = wp.substitute(topStack, getValue());
-		return wp;
-	}
 
 
 }

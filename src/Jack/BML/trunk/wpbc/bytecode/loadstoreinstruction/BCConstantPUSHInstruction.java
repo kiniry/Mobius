@@ -9,8 +9,14 @@ package bytecode.loadstoreinstruction;
 import org.apache.bcel.generic.ConstantPushInstruction;
 import org.apache.bcel.generic.InstructionHandle;
 
+import specification.ExceptionalPostcondition;
+
+import formula.Formula;
+
+import bcexpression.Expression;
 import bcexpression.NumberLiteral;
 import bcexpression.javatype.JavaType;
+import bcexpression.vm.Stack;
 import bytecode.BCInstruction;
 import bytecode.BCTypedInstruction;
 
@@ -19,14 +25,15 @@ import bytecode.BCTypedInstruction;
  *
  * Denotes a push instruction that produces a literal on the stack : BIPUSH, DCONST, FCONST, ICONST, LCONST, SIPUSH
  */
-public abstract class BCConstantPUSHInstruction
+public class BCConstantPUSHInstruction
 	extends BCInstruction
 	implements BCTypedInstruction {
-	//    BIPUSH, DCONST, FCONST, ICONST, LCONST, SIPUSH
+	//  ACONST_NULL,  BIPUSH, DCONST, FCONST, ICONST, LCONST, SIPUSH
 
 	private NumberLiteral value;
 	
 	private JavaType type;
+	
 	/**
 	 * @param _instruction
 	 */
@@ -53,6 +60,17 @@ public abstract class BCConstantPUSHInstruction
 	 */
 	public void setType(JavaType _type) {
 		type = _type;
+	}
+
+	/* (non-Javadoc)
+	 * @see bytecode.ByteCode#wp(formula.Formula, specification.ExceptionalPostcondition)
+	 */
+	public Formula wp(Formula _normal_Postcondition, ExceptionalPostcondition _exc_Postcondition) {
+		Formula wp;
+		wp = _normal_Postcondition.substitute(Expression.getCounter(), Expression.getCounter_plus_1());
+		Stack topStack = new Stack(Expression.getCounter_plus_1());
+		wp = wp.substitute(topStack, getValue());
+		return wp;
 	}
 
 }

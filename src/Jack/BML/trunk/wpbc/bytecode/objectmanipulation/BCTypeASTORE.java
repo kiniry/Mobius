@@ -4,7 +4,7 @@
  * To change the template for this generated file go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-package bytecode;
+package bytecode.objectmanipulation;
 
 import org.apache.bcel.generic.InstructionHandle;
 
@@ -18,6 +18,8 @@ import bcexpression.FieldAccessExpression;
 import bcexpression.javatype.JavaType;
 
 import bcexpression.vm.Stack;
+import bytecode.BCExceptionThrower;
+import bytecode.BCTypedInstruction;
 import formula.Connector;
 import formula.Formula;
 import formula.atomic.Predicate2Ar;

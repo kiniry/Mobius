@@ -4,7 +4,7 @@
  * To change the template for this generated file go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-package bytecode;
+package bytecode.objectmanipulation;
 
 import org.apache.bcel.generic.InstructionHandle;
 
@@ -14,6 +14,7 @@ import bcexpression.Expression;
 import bcexpression.FieldAccessExpression;
 import bcexpression.javatype.JavaType;
 import bcexpression.vm.Stack;
+import bytecode.BCExceptionThrower;
 
 import specification.ExceptionalPostcondition;
 import formula.Connector;
@@ -24,8 +25,7 @@ import formula.atomic.PredicateSymbol;
 /**
  * @author mpavlova
  *
- * To change the template for this generated type comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
+ * Operation Get length of array
  */
 public class BCARRAYLENGTH  extends BCExceptionThrower {
 
@@ -48,15 +48,14 @@ public class BCARRAYLENGTH  extends BCExceptionThrower {
 		Formula objNotNull = new Predicate2Ar(topStack, Expression.NULL, PredicateSymbol.NOTEQ);
 		//S(t).length
 		FieldAccessExpression arrLength =  new FieldAccessExpression( new ArrayLengthConstant(), topStack) ;
-		_normal_Postcondition.substitute(topStack, arrLength);
-		Formula wpNormalTermination = new Formula(objNotNull, _normal_Postcondition , Connector.IMPLIES);
+		Formula _nps = _normal_Postcondition.substitute(topStack, arrLength);
+		Formula wpNormalTermination = new Formula(objNotNull, _nps , Connector.IMPLIES);
 		
 		//wp in case of throwing exception
 		Formula objNull = new Predicate2Ar(topStack, Expression.NULL, PredicateSymbol.EQ);
 		Formula excPrecondition = getWpForException(JavaType.getJavaRefType("java.lang.NullPointerException"),_exc_Postcondition);
 		Formula wpExceptionalTermination = new Formula(objNull, excPrecondition, Connector.IMPLIES);
 		wp = new Formula(wpNormalTermination, wpExceptionalTermination, Connector.AND );
-		
 		
 		return wp;
 	}

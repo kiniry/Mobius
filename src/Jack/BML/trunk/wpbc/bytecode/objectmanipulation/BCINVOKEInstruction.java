@@ -4,15 +4,16 @@
  * To change the template for this generated file go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-package bytecode.cpinstruction;
+package bytecode.objectmanipulation;
 
 import org.apache.bcel.generic.CPInstruction;
 import org.apache.bcel.generic.InstructionHandle;
 
-import specification.ExceptionalPostcondition;
 import bcexpression.javatype.JavaType;
 import bytecode.BCExceptionThrower;
-import bytecode.cpinstruction.*;
+import bytecode.objectmanipulation.*;
+
+import specification.ExceptionalPostcondition;
 import formula.Formula;
 
 /**
@@ -21,14 +22,16 @@ import formula.Formula;
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class BCINSTANCEOF  extends  BCExceptionThrower implements BCCPInstruction {
-	private JavaType type;
+public class BCINVOKEInstruction extends BCExceptionThrower 
+								  implements BCCPInstruction   {
+
 	private int index;
-	
+	private JavaType type;
+
 	/**
 	 * @param _instruction
 	 */
-	public BCINSTANCEOF(InstructionHandle _instruction, JavaType _type) {
+	public BCINVOKEInstruction(InstructionHandle _instruction, JavaType _type)  {
 		super(_instruction);
 		setIndex( ( (CPInstruction)_instruction.getInstruction()).getIndex());
 		setType(_type);
@@ -38,7 +41,7 @@ public class BCINSTANCEOF  extends  BCExceptionThrower implements BCCPInstructio
 	 * @see bytecode.BCIndexedInstruction#setIndex(int)
 	 */
 	public void setIndex(int _index) {
-		index = _index;
+		index = _index;		
 	}
 
 	/* (non-Javadoc)
@@ -51,7 +54,7 @@ public class BCINSTANCEOF  extends  BCExceptionThrower implements BCCPInstructio
 	/* (non-Javadoc)
 	 * @see bytecode.BCTypedInstruction#getType()
 	 */
-	public JavaType getType() {
+	public JavaType getType()  {
 		return type;
 	}
 
@@ -59,16 +62,15 @@ public class BCINSTANCEOF  extends  BCExceptionThrower implements BCCPInstructio
 	 * @see bytecode.BCTypedInstruction#setType(bcexpression.javatype.JavaType)
 	 */
 	public void setType(JavaType _type) {
-		type =_type;
+		type = _type;
 	}
 
 	/* (non-Javadoc)
 	 * @see bytecode.ByteCode#wp(formula.Formula, specification.ExceptionalPostcondition)
 	 */
 	public Formula wp(Formula _normal_Postcondition, ExceptionalPostcondition _exc_Postcondition) {
-		// TODO Auto-generated method stub
+		// TODO Auto - generated method stub
 		return null;
 	}
-	
 
 }

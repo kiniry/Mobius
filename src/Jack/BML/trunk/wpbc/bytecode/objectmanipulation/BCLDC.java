@@ -4,34 +4,32 @@
  * To change the template for this generated file go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-package bytecode.cpinstruction;
+package bytecode.objectmanipulation;
 
 import org.apache.bcel.generic.CPInstruction;
 import org.apache.bcel.generic.InstructionHandle;
 
 import specification.ExceptionalPostcondition;
 import bcexpression.javatype.JavaType;
-import bytecode.BCInstruction;
-import bytecode.cpinstruction.*;
+import bytecode.BCExceptionThrower;
+import bytecode.objectmanipulation.*;
 import formula.Formula;
 
 /**
  * @author mpavlova
  *
- * To change the template for this generated type comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
+ *  Push item from constant pool - LDC , LDC_W
  */
-public class BCLDC2_W extends BCInstruction implements  BCCPInstruction {
+public class BCLDC extends BCExceptionThrower implements BCCPInstruction {
 	private int index;
 	private JavaType type;
-	
 	/**
 	 * @param _instruction
 	 */
-	public BCLDC2_W(InstructionHandle _instruction, JavaType _type) {
+	public BCLDC(InstructionHandle _instruction, JavaType _type ) {
 		super(_instruction);
 		setIndex( ( (CPInstruction)_instruction.getInstruction()).getIndex());
-		setType(_type);
+	    setType(_type);
 	}
 
 	/* (non-Javadoc)

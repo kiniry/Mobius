@@ -1,34 +1,39 @@
-package bytecode.cpinstruction;
+/*
+ * Created on Apr 6, 2004
+ *
+ * To change the template for this generated file go to
+ * Window>Preferences>Java>Code Generation>Code and Comments
+ */
+package bytecode.objectmanipulation;
 
 import org.apache.bcel.generic.CPInstruction;
 import org.apache.bcel.generic.InstructionHandle;
-import specification.ExceptionalPostcondition;
 
+import specification.ExceptionalPostcondition;
+import bcexpression.javatype.JavaType;
+import bytecode.BCInstruction;
+import bytecode.objectmanipulation.*;
 import formula.Formula;
 
-import bcexpression.javatype.JavaType;
-import bytecode.BCAllocationInstruction;
-import bytecode.cpinstruction.*;
-
 /**
- * @author Mariela
+ * @author mpavlova
  *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * To change the template for this generated type comment go to
+ * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class BCMULTIANEWARRAY extends BCAllocationInstruction implements BCCPInstruction {
-	
+public class BCLDC2_W extends BCInstruction implements  BCCPInstruction {
 	private int index;
 	private JavaType type;
 	
-	public BCMULTIANEWARRAY(InstructionHandle _instruction, JavaType _type) {
-		super(_instruction, _type);
+	/**
+	 * @param _instruction
+	 */
+	public BCLDC2_W(InstructionHandle _instruction, JavaType _type) {
+		super(_instruction);
 		setIndex( ( (CPInstruction)_instruction.getInstruction()).getIndex());
 		setType(_type);
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see bytecode.BCIndexedInstruction#setIndex(int)
 	 */
@@ -54,8 +59,9 @@ public class BCMULTIANEWARRAY extends BCAllocationInstruction implements BCCPIns
 	 * @see bytecode.BCTypedInstruction#setType(bcexpression.javatype.JavaType)
 	 */
 	public void setType(JavaType _type) {
-		type = _type;
+		type =_type;
 	}
+
 	/* (non-Javadoc)
 	 * @see bytecode.ByteCode#wp(formula.Formula, specification.ExceptionalPostcondition)
 	 */
@@ -63,6 +69,5 @@ public class BCMULTIANEWARRAY extends BCAllocationInstruction implements BCCPIns
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
-	
+
 }

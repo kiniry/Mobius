@@ -1,4 +1,4 @@
-package bytecode.cpinstruction;
+package bytecode.objectmanipulation;
 
 import org.apache.bcel.generic.CPInstruction;
 import org.apache.bcel.generic.InstructionHandle;
@@ -8,7 +8,7 @@ import formula.Formula;
 
 import bcexpression.javatype.JavaType;
 import bytecode.BCAllocationInstruction;
-import bytecode.cpinstruction.*;
+import bytecode.objectmanipulation.*;
 
 /**
  * @author Mariela
@@ -18,18 +18,16 @@ import bytecode.cpinstruction.*;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class BCNEW extends BCAllocationInstruction implements BCCPInstruction  {
-	
+public class BCANEWARRAY extends BCAllocationInstruction implements BCCPInstruction  {
 	private int index;
 	private JavaType type;
-	
-	public BCNEW(InstructionHandle _instruction, JavaType _type) {
+	public BCANEWARRAY(InstructionHandle _instruction, JavaType _type) {
 		super(_instruction, _type);
 		setIndex( ( (CPInstruction)_instruction.getInstruction()).getIndex());
 		setType(_type);
 	}
-	
-	/* (non-Javadoc)
+
+		/* (non-Javadoc)
 	 * @see bytecode.BCIndexedInstruction#setIndex(int)
 	 */
 	public void setIndex(int _index) {

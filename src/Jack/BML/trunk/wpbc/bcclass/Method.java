@@ -71,32 +71,32 @@ import formula.Formula;
 
 import bcexpression.Expression;
 import bcexpression.javatype.JavaType;
-import bytecode.BCARRAYLENGTH;
 import bytecode.BCATHROW;
 import bytecode.BCConditionalBranch;
 import bytecode.BCGOTO;
 import bytecode.BCInstruction;
 import bytecode.BCJSR;
-import bytecode.BCNEWARRAY;
 import bytecode.BCNOP;
 import bytecode.BCRET;
 import bytecode.BCStackInstruction;
-import bytecode.BCTypeALOAD;
-import bytecode.BCTypeASTORE;
 import bytecode.BCTypeRETURN;
 import bytecode.Trace;
 import bytecode.arithmetic.BCLCMP;
-import bytecode.cpinstruction.BCANEWARRAY;
-import bytecode.cpinstruction.BCCheckCastInstruction;
-import bytecode.cpinstruction.BCGETFIELD;
-import bytecode.cpinstruction.BCINSTANCEOF;
-import bytecode.cpinstruction.BCINVOKEInstruction;
-import bytecode.cpinstruction.BCLDC;
-import bytecode.cpinstruction.BCLDC2_W;
-import bytecode.cpinstruction.BCMULTIANEWARRAY;
-import bytecode.cpinstruction.BCNEW;
-import bytecode.cpinstruction.BCPUTFIELD;
-import bytecode.localvarinstruction.BCIINC;
+import bytecode.objectmanipulation.BCANEWARRAY;
+import bytecode.objectmanipulation.BCARRAYLENGTH;
+import bytecode.objectmanipulation.BCCheckCastInstruction;
+import bytecode.objectmanipulation.BCGETFIELD;
+import bytecode.objectmanipulation.BCINSTANCEOF;
+import bytecode.objectmanipulation.BCINVOKEInstruction;
+import bytecode.objectmanipulation.BCLDC;
+import bytecode.objectmanipulation.BCLDC2_W;
+import bytecode.objectmanipulation.BCMULTIANEWARRAY;
+import bytecode.objectmanipulation.BCNEW;
+import bytecode.objectmanipulation.BCNEWARRAY;
+import bytecode.objectmanipulation.BCPUTFIELD;
+import bytecode.objectmanipulation.BCTypeALOAD;
+import bytecode.objectmanipulation.BCTypeASTORE;
+import bytecode.loadstoreinstruction.BCIINC;
 
 /**
  * @author mpavlova

@@ -1,4 +1,4 @@
-package bytecode.cpinstruction;
+package bytecode.objectmanipulation;
 
 import org.apache.bcel.generic.InstructionHandle;
 
