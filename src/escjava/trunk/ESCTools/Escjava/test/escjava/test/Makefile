@@ -66,6 +66,7 @@ test_lexer: compile_escjava_parser_test_programs
 
 test_parser: compile_escjava_parser_test_programs
 	$(CD_AND_JAVA).TestEscPragmaParser print TypeDeclElemPragmas1.java | \
+		tee TypeDeclElemPragmas1.out | \
 		diff - TypeDeclElemPragmas1.ans
 
 test_parser_idempotence: compile_escjava_parser_test_programs
