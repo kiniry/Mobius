@@ -2,22 +2,22 @@
 
 <!--
  ESCTools Ant Build File
- Copyright (c) 2002 Joseph R. Kiniry and the University of Nijmegen
+ Copyright (c) 2002,2003 Joseph R. Kiniry and the University of Nijmegen
  All Rights Reserved
 -->
 
-<!-- ============================================================ -->
-<!-- SUMMARY:      Ant build file for ESCTools.                   -->
+<!-- =================================================================== -->
+<!-- SUMMARY:      Ant build file for ESCTools.                          -->
 
-<!-- AUTHOR:       Joseph R. Kiniry                               -->
-<!-- ORG:          SOS Group, University of Nijmegen              -->
-<!-- E-MAIL:       Joseph R. Kiniry <kiniry@cs.kun.nl>            -->
+<!-- AUTHOR:       Joseph R. Kiniry                                      -->
+<!-- ORG:          SOS Group, University of Nijmegen                     -->
+<!-- E-MAIL:       Joseph R. Kiniry <kiniry@cs.kun.nl>                   -->
 
 <!-- FILE ID:      $Id$ -->
 <!-- REVISION:     $Revision$                                      -->
 <!-- DATE:         $Date$                          -->
 <!-- LAST AUTHOR:  $Author$                                     -->
-<!-- ============================================================ -->
+<!-- =================================================================== -->
 
 <project name="ESCTools" default="all">
 
@@ -103,6 +103,8 @@
   <patternset id="classfiles" >
     <include name="**/*.class"/>
     <exclude name="**/decsrc/util/*.class"/>
+    <exclude name="Javafe/test/javafe/tc/test/*.class"/>
+    <exclude name="Escjava/mochalib/classes/mocha/wrappers/jbdd/*.class"/>
   </patternset>
 
   <!-- General useful file sets. -->
@@ -339,17 +341,19 @@
   </target>
 
   <!-- Tags files for various IDEs. -->
+  <!-- We use Exuberant Ctags 5.5 -->
+  <!-- See http://ctags.sourceforge.net for more information. -->
 
   <target name="tags">
     <description>
       Build vi and Emacs tags tables for code base.
     </description>
     <exec dir="." 
-          executable="/usr/bin/ctags">
+          executable="/usr/local/bin/ctags">
       <arg line="-e -R"/>
     </exec>
     <exec dir="." 
-          executable="/usr/bin/ctags">
+          executable="/usr/local/bin/ctags">
       <arg line="-R"/>
     </exec>
   </target>
@@ -985,7 +989,7 @@
                includes="escjava.jar,houdini.jar,javafe.jar"/>
     </delete>            
     <delete>
-      <fileset dir="." includes="*.txt"/>
+      <fileset dir="." includes="*.txt" excludes="README.txt"/>
     </delete>
     <delete>
       <fileset dir=".">
