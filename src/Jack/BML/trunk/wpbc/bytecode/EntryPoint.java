@@ -7,10 +7,14 @@
 package bytecode;
 
 
+import java.util.Enumeration;
+import java.util.Vector;
+
 import bcclass.attributes.ExsuresTable;
 import bytecode.branch.BCConditionalBranch;
 import formula.Connector;
 import formula.Formula;
+import formula.atomic.Predicate;
 
 
 /**
@@ -22,7 +26,7 @@ import formula.Formula;
 public class EntryPoint extends BCInstruction {
 	BCInstruction instr;
 	
-	Formula wp;
+	Vector wp;
 	public EntryPoint(BCInstruction _instr) {
 		instr = _instr;
 				instructionHandle = _instr.getInstructionHandle();
@@ -46,7 +50,8 @@ public class EntryPoint extends BCInstruction {
 	 * @see bytecode.ByteCode#wp(formula.Formula, bcclass.attributes.ExsuresTable)
 	 */
 	public Formula wp(Formula _normal_Postcondition, ExsuresTable _exc_Postcondition) {
-		wp= instr.wp(_normal_Postcondition, _exc_Postcondition); 
+		Formula wp = instr.wp(_normal_Postcondition, _exc_Postcondition); 
+		addFormula(wp);
 		return wp;
 	}
 
@@ -62,9 +67,9 @@ public class EntryPoint extends BCInstruction {
 	
 	private Formula addFormula(Formula _wp ) {
 		if (this.wp == null) {
-			this.wp = _wp;
+			this.wp = new Vector();
 		}
-		this.wp= Formula.getFormula(this.wp, _wp, Connector.AND);
+		wp.add(_wp);
 		
 		return _wp;
 	} 
@@ -78,7 +83,32 @@ public class EntryPoint extends BCInstruction {
 	 * @return
 	 */
 	public Formula getWp() {
+		if (wp == null) {
+			return null;
+		}
+		Enumeration eWp = wp.elements();
+		Formula wps = Predicate.TRUE;
+		while (eWp.hasMoreElements() ) {
+			Formula f = (Formula)eWp.nextElement();
+			wps = Formula.getFormula(wps, f, Connector.AND);
+		}
+		return wps;
+	}
+	
+	/**
+	 * 
+	 * @return a vector of the weakest preconditions for
+	 * every path
+	 */
+	public Vector getWps() {
 		return wp;
 	}
 
+	/**
+	 * @return
+	 */
+	public void initWP() {
+		wp = null;
+	}
+	
 }

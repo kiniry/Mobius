@@ -8,6 +8,7 @@ package modifexpression;
 
  
 import formula.atomic.Predicate;
+import bcclass.BCConstantPool;
 import bcexpression.Expression;
 import bcexpression.jml.JMLExpression;
 
@@ -24,7 +25,8 @@ public class Everything  extends ModifiesExpression {
 	public static Everything EVERYTHING = new  Everything(); 
 
 
-	private Everything() {
+	private Everything( ) {
+		
 	}
 	
 	

@@ -67,27 +67,16 @@ public class JavaType extends Expression  {
 		bcelType = _type;
 		constantClassCp = _cc;
 		computationalType = _compType;
-		setType();
 	}
 
 	protected JavaType(Type _type, NumberLiteral _compType) {
 		bcelType = _type;
 		computationalType = _compType;
-		setType();
-	}
-
-	/** 
-	 * method does nothiong as the type is a static final variable
-	 */
-	public void setType() {
-		//		if(type != null){
-		//			return;
-		//		}
-		//		type = new JML_CONST_TYPE();
 	}
 
 	public String getSignature() {
-		return bcelType.getSignature();
+		String signature =bcelType.getSignature();
+		return signature;
 	}
 
 	/**

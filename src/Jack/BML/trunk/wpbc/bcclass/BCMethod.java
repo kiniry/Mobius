@@ -6,13 +6,18 @@
  */
 package bcclass;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Vector;
 
 import modifexpression.ArrayElemFromTo;
+import modifexpression.Everything;
 import modifexpression.ModifiesArray;
 import modifexpression.ModifiesDOT;
 import modifexpression.ModifiesExpression;
 import modifexpression.ModifiesIdent;
+import modifexpression.Nothing;
 
 import org.apache.bcel.classfile.Attribute;
 import org.apache.bcel.classfile.LineNumber;
@@ -124,12 +129,15 @@ import org.apache.bcel.generic.StoreInstruction;
 import org.apache.bcel.generic.TypedInstruction;
 
 import constants.ArrayLengthConstant;
+import constants.BCConstantClass;
 import constants.BCConstantFieldRef;
 
+import utils.FreshIntGenerator;
 import utils.Util;
 
 import formula.Connector;
 import formula.Formula;
+import formula.Quantificator;
 import formula.atomic.Predicate;
 import formula.atomic.Predicate0Ar;
 import formula.atomic.Predicate1Ar;
@@ -147,6 +155,8 @@ import bcclass.attributes.BlockSpecification;
 import bcclass.attributes.ExceptionHandler;
 import bcclass.attributes.Exsures;
 import bcclass.attributes.ExsuresTable;
+import bcclass.attributes.HistoryConstraints;
+import bcclass.attributes.ModifiesSet;
 import bcclass.attributes.SingleLoopSpecification;
 
 import bcclass.attributes.LoopSpecification;
@@ -159,11 +169,13 @@ import bcexpression.ExpressionConstants;
 import bcexpression.FieldAccess;
 import bcexpression.LocalVariable;
 import bcexpression.NumberLiteral;
+import bcexpression.Variable;
 import bcexpression.javatype.ClassNames;
 import bcexpression.javatype.JavaObjectType;
 
 import bcexpression.javatype.JavaType;
 import bcexpression.jml.OLD;
+import bcexpression.jml.TYPEOF;
 import bytecode.BCATHROW;
 import bytecode.BCInstruction;
 import bytecode.BCLoopEnd;
@@ -252,8 +264,9 @@ public class BCMethod {
 	private BCInstruction[] bytecode;
 	private Trace trace;
 	private String name;
-	//	//specification
-
+	
+	
+	//specification
 	private AssertTable assertTable;
 	private LoopSpecification loopSpecification;
 	private BlockSpecification blockSpecification;
@@ -263,9 +276,6 @@ public class BCMethod {
 
 	private BCLineNumber[] lineNumberTable;
 	private BCLocalVariable[] localVariables;
-	private BCConstantPool constantPool;
-	//the constant pool added after to the class file ad an attribute
-	//	private BCConstantPool secondConstantPool;
 
 	private String signature;
 	private String[] argNames;
@@ -274,9 +284,10 @@ public class BCMethod {
 	private JavaType[] argTypes;
 	private JavaObjectType[] exceptionsThrown;
 	private BCExceptionHandlerTable exceptionHandlerTable;
-
+	
+	private BCClass  clazz;
 	private boolean initialised = false;
-
+	
 	private MethodGen bcelMethod;
 
 	/**
@@ -287,18 +298,20 @@ public class BCMethod {
 	 *            structures
 	 * @param _constantPool
 	 */
-	public BCMethod(MethodGen _mg, BCConstantPool _constantPool)
+	public BCMethod(MethodGen _mg, BCClass _class)
 		throws ReadAttributeException {
+		clazz = _class;
 		setLocalVariables(_mg.getLocalVariables());
 		setExceptionsThrown(_mg.getExceptions());
-		constantPool = _constantPool;
+/*		constantPool = _class.getConstantPool();
+		invariant = _class.getClassInvariant();*/
 		name = _mg.getName();
 		signature = _mg.getSignature();
 		setArgNames(_mg.getArgumentNames());
 		setArgumentTypes(_mg.getArgumentTypes());
 		setReturnType(_mg.getReturnType());
 		bcelMethod = _mg;
-
+		
 //		Util.dump(
 //			"init method  delcared in class:  "
 //				+ _mg.getClassName()
@@ -315,17 +328,21 @@ public class BCMethod {
 			return;
 		}
 		bytecode =
-			BCMethod.wrapByteCode(bcelMethod, constantPool, localVariables);
+			BCMethod.wrapByteCode(bcelMethod, clazz.getConstantPool(), localVariables);
 		exceptionHandlerTable =
 			new BCExceptionHandlerTable(bcelMethod.getExceptionHandlers());
 		setLineNumbers(
 			bcelMethod.getLineNumberTable(bcelMethod.getConstantPool()));
 		setAttributes(bcelMethod.getAttributes());
-
-		setSpecification();
+/*		if(methodSpecification != null) {
+			methodSpecification.setInvariant(clazz.getClassInvariant());
+			methodSpecification.setHistoryConstraint(clazz.getHistoryConstraints() );
+		}*/
+		/*setSpecification();*/
 		initTrace();
 		setAsserts();
 		setLoopInvariants();
+		
 		initialised = true;
 	}
 
@@ -417,10 +434,11 @@ public class BCMethod {
 				BCAttribute bcAttribute =
 					AttributeReader.readAttribute(
 						privateAttr,
-						constantPool,
+						clazz.getConstantPool(),
 						lineNumberTable);
 				if (bcAttribute instanceof MethodSpecification) {
 					methodSpecification = (MethodSpecification) bcAttribute;
+					
 				} else if (bcAttribute instanceof AssertTable) {
 					assertTable = (AssertTable) bcAttribute;
 				} else if (bcAttribute instanceof LoopSpecification) {
@@ -430,6 +448,7 @@ public class BCMethod {
 				}
 			}
 		}
+		
 	}
 
 	/**
@@ -469,7 +488,8 @@ public class BCMethod {
 
 	private void setSpecification() {
 		Util.dump("setSpecification = " + name);
-		if (name.equals("half")) {
+		BCConstantPool constantPool = clazz.getConstantPool();
+/*		if (name.equals("half")) {
 
 			//////////////////////////////////////////////////////////////////////////////////////////////////////////
 			// POSTCONDITION = f1 /\ f2 //////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -504,15 +524,15 @@ public class BCMethod {
 					PredicateSymbol.GRTEQ);
 
 			//			MODIFIES
-			ModifiesIdent modif_loc1 = new ModifiesIdent( new LocalVariable(1), constantPool );
-			ModifiesIdent modif_loc2 = new ModifiesIdent( new LocalVariable(2), constantPool  );
+			ModifiesIdent modif_loc1 = new ModifiesIdent( new LocalVariable(1), clazz.getConstantPool() );
+			ModifiesIdent modif_loc2 = new ModifiesIdent( new LocalVariable(2), clazz.getConstantPool() );
 			ModifiesExpression[] modifies = new ModifiesExpression[] { modif_loc1, modif_loc2 };
 
 			SpecificationCase specCase =
 				new SpecificationCase(
 					precondition,
 					postcondition,
-					modifies,
+					new ModifiesSet(modifies),
 					null);
 			//LOOP SPEC
 			// old(n) == n + a*2; 
@@ -547,12 +567,12 @@ public class BCMethod {
 				new Expression[] { modif_loc1, modif_loc2 };
 
 			SingleLoopSpecification loopSpec =
-				new SingleLoopSpecification(11, loopModif, invariant, null);
+				new SingleLoopSpecification(11, new ModifiesSet(loopModif), invariant, null);
 			SingleLoopSpecification[] loopSpecs =
 				new SingleLoopSpecification[] { loopSpec };
 			loopSpecification = new LoopSpecification(loopSpecs);
 
-		}
+		}*/
 		if (name.equals("testMethodInvokation")) {
 			Predicate2Ar postcondition =
 				new Predicate2Ar(
@@ -582,6 +602,7 @@ public class BCMethod {
 			ModifiesExpression[] modifies =
 				new ModifiesExpression[] { new ModifiesArray( new ModifiesDOT(new ModifiesIdent( constantPool.getConstant(15), constantPool), new LocalVariable(0) ,constantPool ), new ArrayElemFromTo(new NumberLiteral(1), new NumberLiteral(5) ),constantPool )};
 			// exsures 
+			
 			Expression arrayLength =
 				new FieldAccess(
 					new ArrayLengthConstant(),
@@ -604,7 +625,7 @@ public class BCMethod {
 				new SpecificationCase(
 					precondition,
 					postcondition,
-					modifies,
+					new ModifiesSet(modifies, clazz.getConstantPool()),
 					exsTable);
 			methodSpecification =
 				new MethodSpecification(
@@ -613,7 +634,7 @@ public class BCMethod {
 
 		}
 
-		if (name.equals("mod")) {
+/*		if (name.equals("mod")) {
 			//METHOD SPEC
 			//postcondition :  \result ==\old(  loc(1) ) mod loc(2)
 			ArithmeticExpression mod =
@@ -637,7 +658,7 @@ public class BCMethod {
 				new SpecificationCase(
 					precondition,
 					postcondition,
-					modifies,
+					new ModifiesSet(modifies),
 					null);
 			methodSpecification =
 				new MethodSpecification(
@@ -672,7 +693,7 @@ public class BCMethod {
 				new SingleLoopSpecification[] { loopSpec };
 			loopSpecification = new LoopSpecification(loopSpecs);
 
-		}
+		}*/
 
 	}
 
@@ -1104,18 +1125,77 @@ public class BCMethod {
 		}
 		SpecificationCase[] specCases =
 			methodSpecification.getSpecificationCases();
+		Formula invariant = clazz.getClassInvariant();
+		Formula historyConstraints = clazz.getHistoryConstraints();
 		if (specCases == null) {
-			trace.wp(Predicate.TRUE, null);
+			Formula post = Predicate.TRUE;
+			if ( invariant != null ) {
+				post = invariant;
+			}
+			if (historyConstraints != null) {
+				post = Formula.getFormula( post , (Formula)historyConstraints.copy(), Connector.AND);
+			}
+			trace.wp(post, null);
 			return;
 		}
 		for (int i = 0; i < specCases.length; i++) {
-			
+			Formula nonModifFields = specCases[i].getConditionForNonModifiedFields();
+			Formula modPost = specCases[i].getModifiesPostcondition();
+			Formula post = (Formula)specCases[i].getPostcondition().copy();
+			post = Formula.getFormula( post, nonModifFields, Connector.AND  );
+			post = Formula.getFormula( modPost, post, Connector.AND);
+			if ( invariant != null ) {
+				post = Formula.getFormula( post,  (Formula)invariant.copy(), Connector.AND);
+			}
+			if (historyConstraints != null) {
+				post = Formula.getFormula( post , (Formula)historyConstraints.copy(), Connector.AND);
+			}
 			trace.wp(
-				specCases[i].getPostcondition(),
+				post,
 				specCases[i].getExsures());
+			Formula casePrecondition = (Formula)specCases[i].getPrecondition().copy();
+			Formula gPrecondition =  methodSpecification.getPrecondition();
+			Formula precondition = Formula.getFormula(casePrecondition, gPrecondition, Connector.AND);
+			setWP( precondition);
+			initWp();
 		}
+		/*Util.dump(" Proof obligation " + getName());*/
+		Util.dump(proofObligation);
+	}
+	
+	/**
+	 * reinitiliases to nul all the wps stored in the entrypoint instructions
+	 */
+	private void initWp() {
+		trace.initWp();
+		
 	}
 
+	/**
+	 * generates the proof obligations for one specification case
+	 * @param precondition
+	 */
+	public void setWP(Formula precondition ) {
+		Vector v = trace.getWP();
+		if (proofObligation == null) {
+			proofObligation = new Vector();
+		}
+		Formula invariant = clazz.getClassInvariant();
+		for (int i = 0; i < v.size();i++) {
+			 
+			Formula wp = (Formula)v.elementAt(i);
+			wp  = Formula.getFormula(precondition, wp, Connector.IMPLIES );
+			// if not a constructor then then  the invariant should hold in the prestate of method execution 
+			if (getName() != "<init>" ) {
+				wp = Formula.getFormula( wp , invariant, Connector.AND );
+			}
+			proofObligation.add(wp);
+			
+		}
+		
+	} 
+	
+	
 	public ExceptionHandler[] getExceptionHandlers() {
 		return exceptionHandlerTable.getExcHandlers();
 	}

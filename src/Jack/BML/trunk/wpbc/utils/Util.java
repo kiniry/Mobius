@@ -11,6 +11,8 @@ import java.util.Vector;
 import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.InstructionList;
 
+import formula.Formula;
+
 
 import bytecode.BCInstruction;
 
@@ -86,11 +88,10 @@ public class Util {
 	
 	public static void   dump(Vector v ) {
 		Enumeration en = v.elements();
-		BCInstruction b;
+		Formula b;
 		while (en.hasMoreElements()) {
-			b =(BCInstruction)en.nextElement();
+			b =(Formula)en.nextElement();
 			Util.dump(b.toString());
-			
 		}
 	} 
 }

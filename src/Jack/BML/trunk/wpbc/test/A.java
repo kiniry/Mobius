@@ -2,67 +2,50 @@ package test;
 public class A {
 	public A b;
 	public int arr[] = new int[5];
+	//@ invariant b != null;
 	
-/*	//@ensures \result == b;
+	//@ensures \result == b;
 	public A testMethodInvokation() throws NullPointerException {
 		b = b.testThisAccess(b, b);
 		return b;
 	}
 	
 	//@ requires true;
-	//@ modifies arr[1];
+	//@ modifies arr[1..3];
 	//@ ensures arr[1] == arr[2];
 	public void modifyArray() {
 		arr[2] = 3;
 	}
-	*/
+	
+
+	
 	//@ requires true;
-	//@ modifies arr[1], b;
+	//@ modifies this.arr[1], this.b;
 	//@ ensures \result == this;
 	//@ exsures (ArrayIndexOutOfBoundsException e) arr.length < 2;
 	public A testThisAccess(A a1, A a2)  {
-		/*try {*/
-			/*a1.b.b = this;*/
-			/*b = a1.b.b;*/
+		try {
+			a1.b.b = this;
+			b = a1.b.b;
 			arr[1] = 1;
 			arr = new int[2];
 			arr = new int[3];
-			/*a1 = new A();*/
-			/*return a1;*/
-			throw new ArrayIndexOutOfBoundsException();
-		/*} catch (ArrayIndexOutOfBoundsException e) {
+			a1 = new A();
+			return a1;
+			
+		} catch (ArrayIndexOutOfBoundsException e) {
 			arr = new int[2];
 			arr[1] = 1;
-		}*/
-		/*return a1.b.b;*/
+		}
+		/*throw new ArrayIndexOutOfBoundsException();*/
+		return a1.b.b;
 	} 
 	
 
 	
-	/*
-	 * this = loc(0) i = loc(1) k = loc(2) constant = loc(3) s = loc( 4 )
-	 */
-	//	//@ requires true;
-	//	//@ ensures \result == \old(i) % k;
-	//	public int mod(int i, int k) {
-	//		int constant = i;
-	//		/*@
-	//		  loop_modifies i, s;
-	//		  loop_invariant constant == s * k + i ;
-	//		  decreases i;
-	//		 */
-	//		for (int s = 0; true; s++) {
-	//			if (i <= k) {
-	//				break;
-	//			}
-	//			i = i - k; // loc(1) = loc(1) - loc( 2 )
-	//		}
-	//		if (i == k) {
-	//			return 0;
-	//		}
-	//		return i;
-	//	}
-	//	
+
+		
+				//	
 	////
 	//// public void testLoop() {
 	//// int k = 10;

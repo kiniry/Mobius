@@ -22,7 +22,7 @@ public class StaticFieldAccess extends FieldAccess {
 	
 
 	public StaticFieldAccess(
-		BCConstantFieldRef _constantFieldRef,
+		Expression _constantFieldRef,
 		BCConstantClass _clazz) {
 		super( _constantFieldRef, _clazz);
 		

@@ -99,7 +99,7 @@ public class BCLoopStart extends BCInstruction {
 			//make a copy of every of the modified expressions 
 			for (int i = 0; i < modifies.length; i++) {
 				//				modifies1[i] = modifies[i].copy();
-				modifies1[i] = new Variable(FreshIntGenerator.getInt(), (JavaType)modifies[i].getType());
+				modifies1[i] = new Variable(FreshIntGenerator.getInt(), modifies[i].getType());
 				forall_modified_expressions_invariant_implies_wp.rename(modifies[i], modifies1[i]);
 			}
 

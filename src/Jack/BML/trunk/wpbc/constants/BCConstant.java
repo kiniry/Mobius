@@ -46,7 +46,9 @@ public class BCConstant extends Expression {
 	}
 	
 	public Expression substitute(Expression _e1, Expression _e2) {
-		// TODO Auto-generated method stub
+		if (_e1 == this ) {
+			return _e2;
+		}
 		return this;
 	}
 

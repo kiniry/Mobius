@@ -19,10 +19,10 @@ public class SingleLoopSpecification {
 	// the cp index in the bytecode that corresponds to the beginning of the loop
 	private int cpIndex;
 	private Formula invariant;
-	private Expression[] modifies;
+	private ModifiesSet modifies;
 	private Expression decreases;
 	
-	public SingleLoopSpecification(int _cpIndex, Expression[] _modifies, Formula _invariant, Expression _decreases) {
+	public SingleLoopSpecification(int _cpIndex, ModifiesSet _modifies, Formula _invariant, Expression _decreases) {
 		cpIndex  = _cpIndex;
 		invariant = _invariant;
 		decreases = _decreases;
@@ -47,7 +47,7 @@ public class SingleLoopSpecification {
 	 * @return
 	 */
 	public Expression[] getModifies() {
-		return modifies;
+		return modifies.getExpressions();
 	}
 
 

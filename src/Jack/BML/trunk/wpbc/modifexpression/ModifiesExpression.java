@@ -56,6 +56,24 @@ public abstract class ModifiesExpression extends Expression {
 		return (ModifiesExpression) getSubExpressions()[0];
 	}
 	
+	/**
+	 * 
+	 * @return the constant field reference that is "modified"
+	 */
+	public Expression getConstantFieldRef() {
+		if ( this instanceof ModifiesIdent) {
+			return getExpression();
+		}
+		if ( this instanceof ModifiesDOT ) {
+			return getModifies().getConstantFieldRef();
+		}
+		if (this instanceof ModifiesArray) {
+			return getModifies().getConstantFieldRef();
+		}
+		return null;
+		
+	}
+	
 	public Expression getObjectDereferenced() {
 		if ( this instanceof ModifiesIdent) {
 			return getExpression();
@@ -103,6 +121,42 @@ public abstract class ModifiesExpression extends Expression {
 			Expression javaType = new TYPEOF( expr); 
 				/*(JavaReferenceType) ((LocalVariable)expr).getType();*/
 			return javaType;
+		}
+		return null;
+	}
+	
+	/* (non-Javadoc)
+	 * @see bcexpression.Expression#substitute(bcexpression.Expression, bcexpression.Expression)
+	 */
+	public Expression substitute(Expression _e1, Expression _e2) {
+		Expression[] subExprs = getSubExpressions();
+		for (int i = 0; i < subExprs.length; i++) {
+			subExprs[i] = subExprs[i].substitute(_e1, _e2);
+		}
+		setSubExpressions(subExprs);
+		return this;
+	}
+	
+	public Expression copy() {
+		Expression[] expr = getSubExpressions();
+		if (this instanceof ModifiesIdent ) {
+			Expression exprIdentCopy = expr[0].copy();
+			ModifiesIdent modCopy = new ModifiesIdent(exprIdentCopy, constantPool);
+			return modCopy;
+		}
+		if (this instanceof ModifiesDOT ) {
+			Expression[] exprCopy = new Expression[expr.length];
+			exprCopy[0] = expr[0].copy();
+			exprCopy[1] = expr[1].copy();
+			ModifiesDOT modCopy = new ModifiesDOT( (ModifiesExpression)exprCopy[0], exprCopy[1] , constantPool);
+			return modCopy;
+		}
+		if (this instanceof ModifiesArray ) {
+			Expression[] exprCopy = new Expression[expr.length];
+			exprCopy[0] = expr[0].copy();
+			exprCopy[1] = expr[1].copy();
+			ModifiesArray modCopy = new ModifiesArray( (ModifiesExpression)exprCopy[0], (SpecArray)exprCopy[1] , constantPool);
+			return modCopy;
 		}
 		return null;
 	}

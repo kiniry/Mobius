@@ -11,11 +11,16 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import org.apache.bcel.classfile.Attribute;
+import org.apache.bcel.classfile.Field;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Method;
 import org.apache.bcel.classfile.Unknown;
 import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.MethodGen;
+import org.apache.bcel.generic.Type;
+
+import formula.Formula;
+import formula.atomic.Predicate;
 
 import bc.io.AttributeReader;
 import bc.io.ReadAttributeException;
@@ -60,6 +65,20 @@ public class BCClass {
 		setAttributes(attributes);
 		Method[] methods = _clazz.getMethods();
 		initMethods(methods, cpg);
+		
+		Field[] f = _clazz.getFields();
+		initFields(f);
+	}
+	
+	private void initFields( Field[] _fields ) {
+		if ( _fields == null ) {
+			return;
+		}
+		fields = new HashMap();
+		for (int i = 0; i < _fields.length; i++) {
+			BCField f = new BCField(_fields[i]);
+			fields.put(f.getName(), f);
+		}
 	}
 
 	private void setAttributes(Attribute[] _attributes)
@@ -118,13 +137,14 @@ public class BCClass {
 	 */
 	public BCMethod lookupMethod(String signature) throws ReadAttributeException {
 		BCMethod m = null;
-		Util.dump("search for method " + signature + "   in class "  + className );
+	/*	Util.dump("search for method " + signature + "   in class "  + className );
+	*/	
 		m = (BCMethod) methods.get(signature);
 		if (m != null) {
 			return m;
 		}
-		Util.dump("search for method " + signature + "            in superclass "  + superClassName );
-		BCClass superClass = getSuperClass();
+	/*	Util.dump("search for method " + signature + "            in superclass "  + superClassName );
+*/		BCClass superClass = getSuperClass();
 		m = superClass.lookupMethod(signature);
 		if (m != null) {
 			return m;
@@ -151,15 +171,14 @@ public class BCClass {
 		//	for (int i = 0; i < _methods.length; i++)  {
 		for (int i = 0; i < _methods.length ;i++) {
 			MethodGen mg = new MethodGen(_methods[i], className, cp);
-//			BCMethod bcm = new BCMethod(mg, cp, constantPool);
-			BCMethod bcm = new BCMethod(mg,  constantPool);
-			String key = MethodSignature.getSignature(mg.getName(), mg.getSignature());
-			methods.put(
-							key,
-							bcm);
+			BCMethod bcm = new BCMethod(mg,  this);
+			String signature = mg.getSignature();	
+			String key = MethodSignature.getSignature(mg.getName(), mg.getArgumentTypes(), mg.getReturnType());
+			/*Util.dump(" add method " + key + " in class " + getName() );*/
+			methods.put(key,bcm);
 		}
 	}
-	
+
 	public String getName() {
 		return className;
 	}
@@ -178,5 +197,29 @@ public class BCClass {
 	 */
 	public Collection getMethods() {
 		return methods.values();
+	}
+	/**
+	 * @return Returns the classInvariant.
+	 */
+	public Formula getClassInvariant() {
+		if (classInvariant == null) {
+			return Predicate.TRUE;
+		}
+		return classInvariant.getClassInvariant();
+	}
+	/**
+	 * @return Returns the historyConstraints.
+	 */
+	public Formula getHistoryConstraints() {
+		if (historyConstraints == null) {
+			return Predicate.TRUE;
+		}
+		return historyConstraints.getPredicate();
+	}
+	/**
+	 * @return Returns the fields.
+	 */
+	public HashMap getFields() {
+		return fields;
 	}
 }

@@ -5,12 +5,16 @@
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 package bytecode.objectmanipulation;
+import modifexpression.Everything;
 import modifexpression.ModifiesExpression;
+import modifexpression.Nothing;
+
 import org.apache.bcel.generic.InstructionHandle;
 import bc.io.ReadAttributeException;
 import bcclass.BCConstantPool;
 import bcclass.attributes.ExsuresTable;
 import bcclass.attributes.MethodSpecification;
+import bcclass.attributes.ModifiesSet;
 import bcclass.attributes.SpecificationCase;
 import bcexpression.javatype.JavaObjectType;
 import bcexpression.javatype.JavaType;
@@ -22,6 +26,7 @@ import bcclass.BCClass;
 import bcclass.BCMethod;
 import bcclass.utils.MethodSignature;
 import bcexpression.ArithmeticExpression;
+import bcexpression.ConstantVariable;
 import bcexpression.EXCEPTIONVariable;
 import bcexpression.Expression;
 import bcexpression.ExpressionConstants;
@@ -104,16 +109,42 @@ public class BCInvoke extends BCFieldOrMethodInstruction {
 		
 		
 		Formula wp_spec_cases = Predicate.FALSE;
+		int top_minus_number_args_minus_obj_plus_res = 0;
+		Variable fresh_result = null;
+		if (method.getReturnType() == JavaType.JavaVOID) {
+			top_minus_number_args_minus_obj_plus_res = number_args + 1;
+		} else {
+			top_minus_number_args_minus_obj_plus_res = number_args;
+				RESULT result = Expression._RESULT;
+				fresh_result = new Variable(FreshIntGenerator.getInt(), method
+						.getReturnType());
+		}
+		ArithmeticExpression counter_minus_arg_num_plus_1 = (ArithmeticExpression) ArithmeticExpression
+				.getArithmeticExpression(Expression.COUNTER,
+						new NumberLiteral(
+								top_minus_number_args_minus_obj_plus_res),
+						ExpressionConstants.SUB);
+//		psi^n[t <-- t - arg_n_plus_1 ]
+		_normal_Postcondition = (Formula) _normal_Postcondition.substitute(
+				Expression.COUNTER, counter_minus_arg_num_plus_1);
+//		//psi^n[ S(t ) <-- fresh]
+		if (fresh_result != null) {
+			_normal_Postcondition = (Formula) _normal_Postcondition
+					.substitute(new Stack(Expression.COUNTER), fresh_result);
+		}
 		if ( specCases == null ) {
 			wp = Formula.getFormula(_normal_Postcondition, requiresCalledMethod, Connector.AND );
 			return wp ;
 		}
 		for (int n = 0; n < specCases.length; n++) {
 			Formula postcondition = specCases[n].getPostcondition();
+			/*Formula nonModifFields = specCases[n].getConditionForNonModifiedFields();*/
+			Formula modPost = specCases[n].getModifiesPostcondition();
+			Formula post = (Formula)specCases[n].getPostcondition().copy();
 			Formula precondition = specCases[n].getPrecondition();
-			Variable fresh_result = null;
+			
 			// quantify over the result of the invoked method
-			Quantificator[] quantificators = null;
+			/*Quantificator[] quantificators = null;*/
 			//quantifiers for the exceptional termination
 			Quantificator quantifyOnResult = null;
 			//post(method(index) )[o with result <-- fresh ]
@@ -134,15 +165,7 @@ public class BCInvoke extends BCFieldOrMethodInstruction {
 			// local(0) <-- S( t - arg_num(method(index) ) + 0),
 			// local(1) <-- S( t - arg_num(method(index) ) + 1),
 			// local(i) <-- S( t - arg_num(method(index) ) + i)
-			ModifiesExpression[] modifies = specCases[n].getModifies();
-			Expression[] modifiesSubst = null;
-			if ((modifies != null) && (modifies.length > 0)) {
-				modifiesSubst = new Expression[modifies.length];
-				for (int i = 0; i < modifies.length; i++) {
-					modifiesSubst[i] = modifies[i].getExpression()
-							.copy();
-				}
-			}
+			
 			for (int i = 0; i < number_args; i++) {
 				ArithmeticExpression counter_minus_arg_num_plus_i = (ArithmeticExpression) ArithmeticExpression
 						.getArithmeticExpression(counter_minus_arg_num,
@@ -158,32 +181,16 @@ public class BCInvoke extends BCFieldOrMethodInstruction {
 				// local(i) <-- S(t - arg_num(method(index)) + i)]
 				postcondition = (Formula) postcondition.substitute(local_i,
 						stack_at_counter_minus_arg_num_plus_i);
-				if (modifiesSubst != null) {
+				/*if (modifiesSubst != null) {
 					for (int m = 0; m < modifiesSubst.length; m++) {
 						modifiesSubst[m] = modifiesSubst[m].substitute(local_i,
 								stack_at_counter_minus_arg_num_plus_i);
 					}
-				}
+				}*/
 			}
-			//		//psi^n[ S(t ) <-- fresh]
-			if (fresh_result != null) {
-				_normal_Postcondition = (Formula) _normal_Postcondition
-						.substitute(new Stack(Expression.COUNTER), fresh_result);
-			}
+			
 			//psi^n[t <-- t - arg_n_plus_1 ]
-			int top_minus_number_args_minus_obj_plus_res = 0;
-			if (method.getReturnType() == JavaType.JavaVOID) {
-				top_minus_number_args_minus_obj_plus_res = number_args + 1;
-			} else {
-				top_minus_number_args_minus_obj_plus_res = number_args;
-			}
-			ArithmeticExpression counter_minus_arg_num_plus_1 = (ArithmeticExpression) ArithmeticExpression
-					.getArithmeticExpression(Expression.COUNTER,
-							new NumberLiteral(
-									top_minus_number_args_minus_obj_plus_res),
-							ExpressionConstants.SUB);
-			_normal_Postcondition = (Formula) _normal_Postcondition.substitute(
-					Expression.COUNTER, counter_minus_arg_num_plus_1);
+		
 			// in case of normal termination this formula must hold
 			// post(method(index) )[result <-- fresh ] [ local(i) <-- S(t -
 			// arg_num(method(index)) + i)]
@@ -191,40 +198,25 @@ public class BCInvoke extends BCFieldOrMethodInstruction {
 			// psi^n[ S(t ) <-- fresh]
 			Formula wpNormal = Formula.getFormula(postcondition,
 					_normal_Postcondition, Connector.IMPLIES);
-			////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-			// if the modifies clause of the called method is not empty then
-			// substitute in the modifies clauses with the necessary
-			// substitutions - the local variables
-			// rename the s
-			// quantify
-			Expression[] modifies1 = null;
-			if ((modifiesSubst != null) && (modifiesSubst.length > 0)) {
-				modifies1 = new Expression[modifiesSubst.length];
-				//create fresh variables for every modified expression
-				for (int i = 0; i < modifiesSubst.length; i++) {
-					modifies1[i] = new Variable(FreshIntGenerator.getInt(),
-							modifies[i].getExpression().getType());
-				}
-				for (int i = 0; i < modifies1.length; i++) {
-					//rename the modified expressions by variables
-					wpNormal = (Formula) wpNormal.rename(modifiesSubst[i],
-							modifies1[i]);
-				}
-				quantificators = new Quantificator[modifies1.length];
-				// quantify over the renamed modifies expressions
-				for (int i = 0; i < modifies1.length; i++) {
-					quantificators[i] = new Quantificator(Quantificator.FORALL,
-							modifies1[i]);
-				}
-				wpNormal = Formula.getFormula(wpNormal, quantificators);
+			
+			ModifiesSet modifiesSet = specCases[n].getModifies().copy();
+			/*Expression[] modifiesSubst = null;*/
+			ModifiesExpression[] modifies = modifiesSet.getModifiesExpressions();
+			for (int i = 0 ; i < modifies.length; i++){
+				Expression constantFieldRef = modifies[i].getConstantFieldRef();
+				ConstantVariable constantVar = new ConstantVariable(FreshIntGenerator.getInt()) ;
+				modifies[i] = (ModifiesExpression)modifies[i].substitute(constantFieldRef, constantVar );
+				wpNormal = (Formula)wpNormal.substitute( constantFieldRef , constantVar);
 			}
+			
+			
 			// if there is a value returned by the invoked method then quantify
 			// over it
 			if (quantifyOnResult != null) {
 				wpNormal = Formula.getFormula(wpNormal, quantifyOnResult);
 			}
 			Formula wpSpecCase = Formula.getFormula(wpNormal, precondition, Connector.AND);
-			Util.dump("normal wp specCase " + n + " :  " + wpSpecCase);
+			/*Util.dump("normal wp specCase " + n + " :  " + wpSpecCase);*/	
 			/////////////////////////////////////////////////////////////////////////////////////////////////////////
 			////////////////////////Exceptional
 			// Termination/////////////////////////////////////////////
@@ -261,8 +253,7 @@ public class BCInvoke extends BCFieldOrMethodInstruction {
 						Stack stack_at_counter_minus_arg_num_plus_i = new Stack(
 								counter_minus_arg_num_plus_i);
 						LocalVariable local_i = new LocalVariable(i);
-						//excPost(method(index) )[ o with local(i) <-- S( t -
-						// arg_num(method(index) ) + i )]
+						//excPost(method(index) )[ o with local(i) <-- S( t - arg_num(method(index) ) + i )]
 						excPostOfCalledMethodForExc = (Formula) excPostOfCalledMethodForExc
 								.substitute(local_i,
 										stack_at_counter_minus_arg_num_plus_i);
@@ -272,27 +263,33 @@ public class BCInvoke extends BCFieldOrMethodInstruction {
 					wpForExcTermination[s] = Formula.getFormula(
 							excPostOfCalledMethodForExc,
 							excPostOfThisMethodForExc, Connector.IMPLIES);
-					if ((modifiesSubst != null) && (modifies1.length > 0)) {
+					/*wpForExcTermination[s] = Formula.getFormula(
+							wpForExcTermination[s], quantifyOnResult);*/
+					/*if ((modifiesSubst != null) && (modifies1.length > 0)) {
 						for (int j = 0; j < modifies1.length; j++) {
 							//rename the modified expressions by variables
 							wpForExcTermination[s] = (Formula) wpForExcTermination[s]
 									.rename(modifiesSubst[j], modifies1[j]);
 						}
-						wpForExcTermination[s] = Formula.getFormula(
-								wpForExcTermination[s], quantificators);
-					}
+						
+					}*/
 				}
-			}
+			}	
 			if (wpForExcTermination != null) {
 				Formula wpExc = Formula.getFormula(wpForExcTermination,
 						Connector.AND);
 				wpSpecCase = Formula.getFormula(wpSpecCase, wpExc, Connector.AND);
+				
 			}
+			Formula modifPost = modifiesSet.getPostcondition();
+			Formula nonModifPost = modifiesSet.getConditionForNonModifiedFields();
+			wpSpecCase = Formula.getFormula(wpSpecCase, modifPost, Connector.AND );
+			wpSpecCase = Formula.getFormula(wpSpecCase, nonModifPost, Connector.AND );
 			wp_spec_cases = Formula.getFormula(wp_spec_cases, wpSpecCase, Connector.OR );
 		}
 		
 		wp = Formula.getFormula(wp_spec_cases, requiresCalledMethod, Connector.AND );
-	
+		
 		// exceptional termination
 		return wp;
 	}

@@ -45,27 +45,7 @@ public class ModifiesArray extends ModifiesExpression {
 		return (SpecArray) getSubExpressions()[1];
 	}
 
-	/**
-	 * @author mpavlova
-	 * 
-	 * To change the template for this generated type comment go to
-	 * Window>Preferences>Java>Code Generation>Code and Comments
-	 * @return forall o : ElemType( ). forall i:int . (i >= startInterval && i = <
-	 *         endInterval) . o != array[i] ==> old(o )== o
-	 */
-	public Expression getCondition() {
-		/*
-		 * Variable o = new Variable(FreshIntGenerator.getInt() ,
-		 * array.getType()); Formula condition = ( Formula)getCondition(o);
-		 * Quantificator q = new Quantificator(Quantificator.FORALL,o ); //o ==
-		 * old(o) Formula o_Eq_Old_o = new Predicate2Ar(o, new OLD(o),
-		 * PredicateSymbol.EQ ) ; // o != array[index] ==> o == old(o) Formula
-		 * oNotEqArrayInIntervalImpliesoEqOldo = Formula.getFormula(condition,
-		 * o_Eq_Old_o, Connector.IMPLIES); oNotEqArrayInIntervalImpliesoEqOldo =
-		 * new QuantifiedFormula(oNotEqArrayInIntervalImpliesoEqOldo, q);
-		 */
-		return null;
-	}
+
 	/**
 	 * method returns the object for which the array is accessed, i.e. for ( [,
 	 * arr(local(0)) , 2)
@@ -363,16 +343,7 @@ public Expression getConditionForInterval() {
 				new ArrayAccessExpression(modExpr, i));
 		return f;
 	}
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see bcexpression.Expression#substitute(bcexpression.Expression,
-	 *      bcexpression.Expression)
-	 */
-	public Expression substitute(Expression _e1, Expression _e2) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -390,14 +361,5 @@ public Expression getConditionForInterval() {
 	public String toString() {
 		String s = getModifies().toString() + " [" + getSpecArray() +  "]";
 		return s;
-	}
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see bcexpression.Expression#copy()
-	 */
-	public Expression copy() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 }

@@ -18,6 +18,16 @@ import application.JavaApplication;
  */
 public class MAIN {
 
+	public static void main2(String[] args) {
+		try {
+			BCClass clazz = JavaApplication.Application.getClass("test.Modulo");
+			//		BCClass clazz = JavaApplication.Application.getClass("bytecode.objectmanipulation.BCInvoke");
+			clazz.wp();
+		} catch (ReadAttributeException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public static void main(String[] args) {
 		try {
 			BCClass clazz = JavaApplication.Application.getClass("test.A");

@@ -13,6 +13,7 @@ import modifexpression.ModifiesArray;
 import modifexpression.ModifiesDOT;
 import modifexpression.ModifiesExpression;
 import modifexpression.ModifiesIdent;
+import modifexpression.Nothing;
 import modifexpression.SingleIndex;
 import modifexpression.SpecArray;
 
@@ -45,6 +46,7 @@ import bcclass.attributes.ExsuresTable;
 import bcclass.attributes.HistoryConstraints;
 import bcclass.attributes.LoopSpecification;
 import bcclass.attributes.MethodSpecification;
+import bcclass.attributes.ModifiesSet;
 import bcclass.attributes.SingleBlockSpecification;
 import bcclass.attributes.SingleLoopSpecification;
 import bcclass.attributes.SpecificationCase;
@@ -237,7 +239,7 @@ public class AttributeReader {
 		int loopStartPcInd  = lineNumberTable[ lineNumber].getStartPC();
 //		Util.dump(" loopStartPC  pos = " +pos) ;
 //		int modifiesCount = readShort(bytes);
-		ModifiesExpression[] modifies = readModifies(bytes);
+		ModifiesSet modifies = readModifies(bytes);
 //		Util.dump("readModifies pos = " + pos );
 		Formula invariant = readFormula(bytes);
 		Expression decreases = readExpression(bytes);
@@ -329,7 +331,7 @@ public class AttributeReader {
 	private static SpecificationCase readSpecificationCase(byte[] bytes)
 		throws ReadAttributeException {
 		Formula precondition = readFormula(bytes);
-		ModifiesExpression[] modifies = readModifies(bytes);
+		ModifiesSet modifies = readModifies(bytes);
 
 		Formula postcondition = readFormula(bytes);
 		ExsuresTable exsures = readExsuresTable(bytes);
@@ -346,7 +348,7 @@ public class AttributeReader {
 	 * @param bytes
 	 * @return
 	 */
-	private static ModifiesExpression[] readModifies(byte[] bytes)
+	private static ModifiesSet readModifies(byte[] bytes)
 		throws ReadAttributeException {
 
 //		Util.dump("readModifies pos = " + pos );
@@ -357,24 +359,22 @@ public class AttributeReader {
 		int _byte;
 		if (modifiesCount > 0) {
 			modifies = new ModifiesExpression[modifiesCount];
-			modifies[0] = readModifiesExpression(bytes);
-			if(modifies[0] == null) {
-				return modifies;
-			}
-			if(modifies[0] instanceof Everything ) {
-				return modifies;
-			}
-			for (int i = 1; i < modifiesCount; i++) {	
+			for (int i = 0; i < modifiesCount; i++) {	
 				modifies[i] = readModifiesExpression(bytes);
 			}
 		}
-		return modifies;
+		if ( modifies == null) {
+			ModifiesSet modifSet = new ModifiesSet(new ModifiesExpression[]{Everything.EVERYTHING}, constantPool);
+			return modifSet;
+		}
+		ModifiesSet modifSet = new ModifiesSet(modifies, constantPool );
+		return modifSet;
 	}
 	
 	private static ModifiesExpression readModifiesExpression(byte[] bytes) throws ReadAttributeException {
 		int _byte = readByte(bytes);
 		if (_byte == Code.MODIFIES_NOTHING) {
-			return null;
+			return Nothing.NOTHING;
 		}
 		if (_byte == Code.MODIFIES_EVERYTHING) {
 			return Everything.EVERYTHING;
@@ -385,13 +385,11 @@ public class AttributeReader {
 			return modifId;
 		}
 		if (_byte == Code.MODIFIES_DOT) {
-			
 			ModifiesExpression  ident = readModifiesExpression(bytes);
 			Expression expr = readExpression(bytes);
 			ModifiesDOT modifDot =  new ModifiesDOT( ident, expr, constantPool);
 			return modifDot;
 		}
-		
 		if (_byte == Code.MODIFIES_ARRAY ) {
 			ModifiesExpression arrExpr = readModifiesExpression(bytes);
 			SpecArray specArray = readSpecArray(bytes);
@@ -556,6 +554,13 @@ public class AttributeReader {
 			Expression expr2 = readExpression(bytes);
 			Formula predicate =
 				Predicate2Ar.getPredicate(expr1, expr2, PredicateSymbol.EQ);
+			return predicate;
+		}
+		if (_byte == Code.NOTEQ) {
+			Expression expr1 = readExpression(bytes);
+			Expression expr2 = readExpression(bytes);
+			Formula predicate =
+				Predicate2Ar.getPredicate(expr1, expr2, PredicateSymbol.NOTEQ);
 			return predicate;
 		}
 		if (_byte == Code.INSTANCEOF) {

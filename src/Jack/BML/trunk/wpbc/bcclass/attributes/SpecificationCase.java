@@ -6,10 +6,13 @@
  */
 package bcclass.attributes;
 
+import com.sun.jndi.cosnaming.CNNameParser;
+
 import modifexpression.ModifiesExpression;
 import bcexpression.Expression;
 import formula.Connector;
 import formula.Formula;
+import formula.atomic.Predicate;
 import formula.atomic.Predicate0Ar;
 
 /**
@@ -22,14 +25,16 @@ public class SpecificationCase {
 	private Formula precondition;
 	private Formula postcondition;
 	private ExsuresTable exsures;
-	private ModifiesExpression[] modifies;
+	private ModifiesSet modifies;
 	
+	private Formula invariant;
+	private Formula historyConstraint;
 	private Formula modifiedPostcondition;
 
 	public SpecificationCase(
 		Formula precondition,
 		Formula postcondition,
-		ModifiesExpression[] modifies,
+		ModifiesSet modifies,
 		ExsuresTable exsures) {
 		this.precondition = precondition;
 		this.postcondition = postcondition;
@@ -48,7 +53,7 @@ public class SpecificationCase {
 	/**
 	 * @return
 	 */
-	public ModifiesExpression[] getModifies() {
+	public ModifiesSet getModifies() {
 		return modifies;
 	}
 
@@ -56,19 +61,7 @@ public class SpecificationCase {
 		if (modifiedPostcondition != null) {
 			return modifiedPostcondition;
 		}
-		ModifiesExpression[] mExpr = getModifies();
-		if (mExpr == null ) {
-			return postcondition;
-		} 
-		Formula modPost = Predicate0Ar.TRUE;
-		for (int i = 0; i < mExpr.length; i++) {
-			Formula f = (Formula)mExpr[i].getPostCondition();
-			if ( f == null) {
-				continue;
-			}
-			modPost = Formula.getFormula(modPost, f, Connector.AND);
-		}
-		modifiedPostcondition = modPost;
+		modifiedPostcondition = modifies.getPostcondition();
 		return modifiedPostcondition;
 	}
 	
@@ -76,10 +69,11 @@ public class SpecificationCase {
 	 * @return
 	 */
 	public Formula getPostcondition() {
-		Formula modPost = getModifiesPostcondition();
-		if ( modPost != Predicate0Ar.TRUE) {
-			postcondition = Formula.getFormula(postcondition , modPost , Connector.AND);
-		}
+		
+		
+		if ( (invariant != null)&&(invariant != Predicate.TRUE) ) {
+			postcondition = Formula.getFormula( invariant, postcondition, Connector.AND);
+		} 
 		return postcondition;
 	}
 
@@ -89,4 +83,26 @@ public class SpecificationCase {
 	public Formula getPrecondition() {
 		return precondition;
 	}
+	
+/*	public void setInvariant(Formula _invariant) {
+		invariant = _invariant;
+	}
+	*/
+
+	/**
+	 * @param invariant2
+	 */
+	public void setHistoryConstraint(Formula _historyConstraint) {
+		 historyConstraint = _historyConstraint;
+	}
+
+	/**
+	 * @return
+	 */
+	public Formula getConditionForNonModifiedFields() {
+		Formula f = modifies.getConditionForNonModifiedFields();
+		return f;
+	}
+	
+	
 }

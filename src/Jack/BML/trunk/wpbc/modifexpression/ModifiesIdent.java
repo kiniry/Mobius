@@ -84,12 +84,6 @@ public class ModifiesIdent extends ModifiesExpression {
 		return "modifiesIdent " + getSubExpressions()[0];
 	}
 
-	/* (non-Javadoc)
-	 * @see bcexpression.Expression#copy()
-	 */
-	public Expression copy() {
-		// TODO Auto-generated method stub
-		return  this;
-	}
+	
 
 }

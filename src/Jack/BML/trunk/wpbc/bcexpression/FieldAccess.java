@@ -26,7 +26,7 @@ public class FieldAccess extends Expression {
 	 * @param _left
 	 */
 	public FieldAccess(
-		BCConstantFieldRef _constantFieldRef,
+		Expression _constantFieldRef,
 		Expression _obj_ref) {
 		super(_constantFieldRef, _obj_ref);
 		/*constantFieldRef = _constantFieldRef;*/

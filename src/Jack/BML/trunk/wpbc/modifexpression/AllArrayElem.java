@@ -40,24 +40,10 @@ public class AllArrayElem  extends SpecArray {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
-	public Expression substitute(Expression _e1 , Expression _e2) { 
-		return this;
-	}
-
-
 	/* (non-Javadoc)
 	 * @see bcexpression.Expression#toString()
 	 */
 	public String toString() {
 		return "*";
-	}
-
-
-	/* (non-Javadoc)
-	 * @see bcexpression.Expression#copy()
-	 */
-	public Expression copy() {
-		return this;
 	}
 }

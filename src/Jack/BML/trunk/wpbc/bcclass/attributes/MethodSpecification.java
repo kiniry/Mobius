@@ -6,7 +6,9 @@
  */
 package bcclass.attributes;
 
+import formula.Connector;
 import formula.Formula;
+import formula.atomic.Predicate;
 
 /**
  * @author mpavlova
@@ -24,6 +26,16 @@ public class MethodSpecification implements BCAttribute {
 		this.specificationCases = specificationCases;
 	}
 	
+
+
+	public void setHistoryConstraint(Formula invariant) {
+		if (specificationCases == null) {
+			return;
+		}		
+		for (int i = 0; i < specificationCases.length; i++ ) {
+			specificationCases[i].setHistoryConstraint(invariant);
+		}
+	}
 
 
 	/**

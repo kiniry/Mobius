@@ -1,5 +1,10 @@
 package bcclass.utils;
 
+import org.apache.bcel.generic.ArrayType;
+import org.apache.bcel.generic.Type;
+
+import bcexpression.javatype.JavaType;
+
 /**
  * @author Mariela
  *
@@ -14,4 +19,43 @@ public class MethodSignature {
 	public static String getSignature(String name ,String signature) {
 		return name + "|" + signature;
 	}
+	
+	public static String getSignature(String name ,Type[] argTypes, Type returnType) {
+		String signature = getSignature(argTypes, returnType);
+		return name + "|" + signature;
+	}
+	public static String getSignature(String name ,JavaType[] argTypes, JavaType returnType) {
+		String signature = getSignature(argTypes, returnType);
+		return name + "|" + signature;
+	}
+	public static String getSignature(Type[] argTypes, Type returnType) {
+		StringBuffer buf = new StringBuffer("(");
+		int length = (argTypes == null)? 0 : argTypes.length;
+		
+		for(int i=0; i < length; i++) {
+			if (argTypes[i] instanceof ArrayType ) {
+				if ( ! argTypes[i].getSignature().startsWith("L") ) {
+					buf.append("L" + argTypes[i].getSignature() + ";");
+					continue;
+				}
+			}
+			buf.append(argTypes[i].getSignature());
+		}
+		buf.append(')');
+		buf.append(returnType.getSignature());
+		return buf.toString();
+	}
+	
+	public static String getSignature(JavaType[] argTypes, JavaType returnType) {
+		StringBuffer buf = new StringBuffer("(");
+		int length = (argTypes == null)? 0 : argTypes.length;
+		
+		for(int i=0; i < length; i++)
+		buf.append(argTypes[i].getSignature());
+		buf.append(')');
+		buf.append(returnType.getSignature());
+		return buf.toString();
+	}
+	
+	
 }

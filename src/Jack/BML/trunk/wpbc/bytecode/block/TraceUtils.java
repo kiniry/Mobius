@@ -26,24 +26,6 @@ import bytecode.stackinstruction.BCStackInstruction;
  */
 public class TraceUtils {
 
-	//	/**
-	//	 * wraps all instructions that are the start of an exception handler 
-	//	 * @param method
-	//	 */
-	//	public static void  initExceptionandlerStartInstructions( BCMethod method ) {
-	//		ExceptionHandler[] excHandlers = method.getExceptionHandlers();
-	//		if (excHandlers == null){
-	//			return;
-	//		}
-	//		BCInstruction[] instrs = method.getBytecode();
-	//		for (int i = 0; i  < excHandlers.length; i++) {
-	//			int pos = excHandlers[i].getHandlerPC() ;
-	//			BCInstruction _excHandlerStart = Util.getBCInstructionAtPosition(instrs, pos);
-	//			ExceptionHandlerStartInstruction excHandlerStart = new ExceptionHandlerStartInstruction(_excHandlerStart);
-	//			Util.update(instrs, excHandlerStart); 
-	//		}
-	//	}
-	//	
 	/**
 	 * looks for backedges - blocks that are making a loop in the  
 	 * path 
@@ -229,17 +211,13 @@ public class TraceUtils {
 			//in case there isa  loop do the  needed mofifiations = may be even more change 
 			//the references of targets and targeters to the looppend and loopstart objects respectively
 			if ((next != null) && (path.contains(next))) {
-//				BCInstruction prevStart = next.getPrev();
 				BCInstruction nextStart = next.getNext();
 				BCInstruction prevLast = instr.getPrev();
-//				BCInstruction nextLast = instr.getNext();
+
 				instr.setNext(null);
 				next.setPrev(null);
 				BCLoopStart loopStart =
 					wrapLoopStart(next, instr.getPosition());
-//				if (prevStart != null) {
-//					prevStart.setNext(loopStart);
-//				}
 				if (nextStart != null) {
 					nextStart.setPrev(loopStart);
 				}
@@ -333,6 +311,7 @@ public class TraceUtils {
 			return;
 		}
 		BCInstruction instruction = new EntryPoint(method.getBytecode()[0]);
+		
 		Util.update(method.getBytecode(), instruction);
 		ExceptionHandler[] excHs = method.getExceptionHandlers();
 		if (excHs == null) {

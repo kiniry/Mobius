@@ -8,6 +8,7 @@ package bytecode.block;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Vector;
 
 import formula.Formula;
 
@@ -40,21 +41,22 @@ public class Trace {
 	private Block entryBlock;
 	private Formula postcondition;
 	private ExsuresTable exsTable;
-
+	// contains the following instructions :
+	// the entry point, the start point for every exception handle
+	private Vector entryPoints;
 
 	public Trace(BCMethod _method) {
 		method = _method;
 		TraceUtils.initLoopInstructions(method.getBytecode()[0], method.getBytecode());
-		Util.dump("after LOOPS");
+		/*Util.dump("after LOOPS");*/
 		TraceUtils.initEntryPoints(method);
-		Util.dump("after ENTRYPOINTS");
+		/*Util.dump("after ENTRYPOINTS");*/
 		initNormalComponent();
-		Util.dump("after INITNORMALCOMPONENT");
-		
+		/*Util.dump("after INITNORMALCOMPONENT");
+		*/
 		initExceptionHandlerComponents();
 		setBlockRelation();
-	
-		dumpBlocks();
+		/*dumpBlocks();*/
 		//		TraceUtils.initExceptionandlerStartInstructions(method);
 		initTraceForExcThrower();
 	}
@@ -113,7 +115,7 @@ public class Trace {
 		
 		component.put(new Integer(b.getFirst().getPosition()), b);
 		BCInstruction last = b.getLast();
-		Util.dump("ADD ToComponent : " +  last.toString());
+		/*Util.dump("ADD ToComponent : " +  last.toString());*/
 		if (last instanceof BCTypeRETURN) {
 			return;
 		}
@@ -432,4 +434,22 @@ public class Trace {
 	public ExsuresTable getExsTable() {
 		return exsTable;
 	}
+
+	/**
+	 * @return
+	 */
+	public Vector getWP() {
+		Vector f = ((EntryPoint)entryBlock.getFirst()).getWps();
+		return f;
+	}
+	
+	public void initWp() {
+		BCInstruction[] instrs = getMethod().getBytecode();
+		for (int i = 0; i < instrs.length; i++) {
+			if (instrs[i] instanceof EntryPoint ) {
+				((EntryPoint)instrs[i]).initWP();
+			}
+		}
+	}
+	
 }
