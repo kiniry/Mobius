@@ -24,6 +24,9 @@
 
 @string{jlap = "Journal of Logic and Algebraic Programming"}
 
+@STRING{TCS     = "Theor. Comp. Sci."}
+@STRING{ACI     = "Acta Informatica"}
+
 @book{Alexander79,
   author = {C. Alexander},
   title = {The Timeless Way of Building},
@@ -289,6 +292,19 @@ publisher = springer
   day =          {14},
 }
 
+@inproceedings{CenciarelliKRW99,
+ author = "P. Cenciarelli and A. Knapp and B. Reus and M. Wirsing",
+ title = "An Event-Based Structural Operational Semantics of
+                  Multi-Threaded {J}ava", 
+ editor = "J. Alves-Foss",
+ booktitle = "Formal Syntax and Semantics of Java",
+ publisher=springer,
+ series=lncs,
+ number    = {1523},
+ pages = "175--200",
+ year = "1999",
+}
+
 @techreport{Chalin03,
   author = "P. Chalin",
   title = "{JML} Support for Primitive Arbitrary Precision Numeric Types: Definition and Semantics",
@@ -320,6 +336,13 @@ YEAR         = 1981}
     publisher = "ACM Press",
     pages = "1512--1542",
     year = "1994"
+}
+
+@inproceedings{ClarkeLM89,
+author = "E.M. Clarke and D.E. Long and K.L. McMillan",
+title = "Compositional Model Checking",
+year = "1989",
+booktitle = "Fourth IEEE Symposium on Logic in Computer Science"
 }
 
 @inproceedings{ ClavelDELMMQ99,
@@ -475,6 +498,16 @@ number = 2404,
 publisher = springer
 }
 
+@inproceedings{FlanaganF04,
+author = "C. Flanagan and S.N. Freund",
+title = "Atomizer: A Dynamic Atomicity Checker for Multithreaded
+                  Programs",
+booktitle = "Priciple of Programming Languages (POPL 2004)",
+year = 2004,
+pages = "256--267",
+editor = "X. Leroy"
+}
+
 @book{Floyd67,
     author = "R. W. Floyd",
     title = "Assigning meanings to programs",
@@ -510,7 +543,7 @@ YEAR         = 2000}
 
 @techreport{HatcliffD00,
   author = "J. Hatcliff and M. Dwyer",
-  title = "Using the Bandera Tool Set to {Model-check} Properties of Concurrent {Java} Sotware",
+  title = "Using the Bandera Tool Set to {Model-check} Properties of Concurrent {Java} Software",
   institution = "{SAnToS} Laboratory, Department of Computing and Information Sciences, Kansas State University",
   year =   "2000",
 }
@@ -520,6 +553,33 @@ YEAR         = 2000}
   title = "The Bandera Tools for Model-checking Java Source Code: A User's Manual",
   institution = "{SAnToS} Laboratory, Department of Computing and Information Sciences, Kansas State University",
   year =   "2001",
+}
+
+@inproceedings{HatcliffCDSZ99,
+title = "A Formal Study of Slicing for Multi-threaded Programs with
+                  {JVM} Concurrency Primitives",   
+year = "1999",
+author = "J. Hatcliff and J.C. Corbett and M.B. Dwyer and  
+          S. Sokolowski and H.  Zheng",
+booktitle ="International Symposium on Static Analysis (SAS'99)",
+series = lncs,
+number = "1694",
+pages = "1-- 18",
+publisher = springer
+}
+
+@inproceedings{HatcliffRD04,
+title = "Verifying Atomicity Specifications for Concurrent
+                  Object-Oriented Software using Model Checking",
+year = "2004",
+author = "J. Hatcliff and Robby and M.B. Dwyer",
+booktitle = "Verification, Model Checking and Abstract Interpretation
+                  (VMCAI 2004)",
+editor = "B. Steffen and G. Levi",
+series = lncs,
+number = 2937,
+pages = "175--190",
+publisher = springer
 }
 
 @article{HavelundLP01formal,
@@ -692,6 +752,13 @@ key = {JavaCard},
 note= {\texttt{http://java.sun.com/products/javacard/}}
 }
 
+@misc{ SM99,
+    key = {JCard},
+    title = {\textsc{JavaCard} 2.1 Application Programming Interface},
+    howpublished = "Sun Microsystems Inc. {http$:$//java.sun.com/products/javacard/}",
+    year = {1999},
+    note    = "\texttt{http://www.gemplus.com/smart/r\_d/publications/case-study/}",
+}
 
 @misc{JavaSpecificLanguage,
     key =   {Jav},
@@ -961,6 +1028,14 @@ publisher = {Springer-Verlag}
   month =       {April},
 }
 
+@Book{NipkowPW02,
+  author	= {T. Nipkow and L.C. Paulson and M. Wenzel},
+  title		= {Isabelle/HOL --- A Proof Assistant for Higher-Order Logic},
+  publisher	= springer,
+  series	= lncs,
+  number	= 2283,
+  year		= 2002}
+
 @book{OaksWJiniNuthcell00,
   author = 	 {S. Oaks and H. Wong},
   title = 	 {{Jini} in A Nutchell: A Desktop Quick Reference},
@@ -1054,6 +1129,15 @@ title = "{Formal interface Java specifications for the Java Card API 2.1.1}",
 note = "\texttt{http://www.cs.kun.nl/\homedir erikpoll/publications/jc211\unsc specs.html}, with contributions by other members of the LOOP project"
 }
 
+@article{PrasetyaS02,
+author = "I. Prasetya and S. Swierstra",
+title = "Factorizing Fault Tolerance",
+journal = TCS,
+volume = "290(2)",
+year = "2002",
+pages = "1201--1222"
+}
+
 @inproceedings{PrensaNieto00,
   author =       {Leonor Prensa-Nieto},
   title =        {Verifying Single and Multi-mutator Garbage Collectors with Owicki-Gries in Isabelle/HOL},
@@ -1087,13 +1171,27 @@ note = "\texttt{http://www.cs.kun.nl/\homedir erikpoll/publications/jc211\unsc s
   year = 	 {2000},
 }
 
-@misc{ SM99,
-    key = {JCard},
-    title = {\textsc{JavaCard} 2.1 Application Programming Interface},
-    howpublished = "Sun Microsystems Inc. {http$:$//java.sun.com/products/javacard/}",
-    year = {1999},
-    note    = "\texttt{http://www.gemplus.com/smart/r\_d/publications/case-study/}",
+
+@article{Santone02,
+author = "A. Santone",
+title = "Automatic Verification of Concurrent Systems Using a
+  Formula-Based Compositional Approach",
+journal = ACI,
+volume = "38",
+pages = "531--564",
+year = "2002"
 }
+
+@article{ SavageBNSA97,
+    author = "Stefan Savage and Michael Burrows and Greg Nelson and Patrick Sobalvarro and Thomas Anderson",
+    title = "{Eraser}: {A} Dynamic Data Race Detector for Multithreaded Programs",
+    journal = "ACM Transactions on Computer Systems",
+    volume = "15",
+    number = "4",
+    pages = "391--411",
+    year = "1997",
+}
+
 
 @article{ ShatzTMD96,
     author = "Sol M. Shatz and Shengru Tu and Tadao Murata and Sastry Duri",
@@ -1111,18 +1209,12 @@ note = "\texttt{http://www.cs.kun.nl/\homedir erikpoll/publications/jc211\unsc s
   note    = {\texttt{http://netlib.bell-labs.com/netlib/spin/whatispin.html}}
 }
 
-
-
-@article{ SavageBNSA97,
-    author = "Stefan Savage and Michael Burrows and Greg Nelson and Patrick Sobalvarro and Thomas Anderson",
-    title = "{Eraser}: {A} Dynamic Data Race Detector for Multithreaded Programs",
-    journal = "ACM Transactions on Computer Systems",
-    volume = "15",
-    number = "4",
-    pages = "391--411",
-    year = "1997",
+@inproceedings{SpotoP03,
+   author = {F. Spoto and E. Poll},
+   booktitle = {{F}oundations of {O}bject-{O}riented {L}anguages (FOOL10)},
+   title = {Static Analysis for {JML}'s assignable Clauses},
+   year = {2003}
 }
-
 
 @inproceedings{TKL03:rv,
 title={Testing and Monitoring Model-based Generated Program},
