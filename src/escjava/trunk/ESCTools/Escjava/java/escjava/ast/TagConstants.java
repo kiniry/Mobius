@@ -536,6 +536,8 @@ public class TagConstants extends javafe.tc.TagConstants
                 Result = TagConstants.DECREASES_REDUNDANTLY; break;
             case TagConstants.INVARIANT:
                 Result = TagConstants.INVARIANT_REDUNDANTLY; break;
+            case TagConstants.REPRESENTS:
+                Result = TagConstants.REPRESENTS_REDUNDANTLY; break;
             case TagConstants.CONSTRAINT:
                 Result = TagConstants.CONSTRAINT_REDUNDANTLY; break;
             case TagConstants.DECREASING:
@@ -591,6 +593,8 @@ public class TagConstants extends javafe.tc.TagConstants
                 Result = TagConstants.DECREASES; break;
             case TagConstants.INVARIANT_REDUNDANTLY:
                 Result = TagConstants.INVARIANT; break;
+            case TagConstants.REPRESENTS_REDUNDANTLY:
+                Result = TagConstants.REPRESENTS; break;
             case TagConstants.CONSTRAINT_REDUNDANTLY:
                 Result = TagConstants.CONSTRAINT; break;
             case TagConstants.DECREASING_REDUNDANTLY:
@@ -625,6 +629,7 @@ public class TagConstants extends javafe.tc.TagConstants
             tag == TagConstants.DECREASES_REDUNDANTLY ||
             tag == TagConstants.INVARIANT_REDUNDANTLY ||
             tag == TagConstants.CONSTRAINT_REDUNDANTLY ||
+            tag == TagConstants.REPRESENTS_REDUNDANTLY ||
             tag == TagConstants.DECREASING_REDUNDANTLY;
     }
 
