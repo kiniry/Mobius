@@ -15,12 +15,15 @@ clean:
 testlex:
 	${JAVA} ${P}.TestLex GoodPragmas.j | diff - GoodPragmas.ans
 	${JAVA} ${P}.TestLex GoodSpecExpr.j | diff - GoodSpecExpr.ans
+	${JAVA} ${P}.TestLex GoodJmlPragmas.j | grep -v "Caution:" | diff - GoodJmlPragmas.ans
 	${JAVA} ${P}.TestLex lookahead GoodPragmas.j | diff - GoodPragmas.ans
 	${JAVA} ${P}.TestLex lookahead GoodSpecExpr.j | diff - GoodSpecExpr.ans
+	${JAVA} ${P}.TestLex lookahead GoodJmlPragmas.j | grep -v "Caution:" | diff - GoodJmlPragmas.ans
 
 testparse:
-	${JAVA} ${P}.TestEscPragmaParser print TypeDeclElemPragmas1.java | diff - TypeDeclElemPragmas1.ans
+	${JAVA} ${P}.TestEscPragmaParser print TypeDeclElemPragmas1.java | \
+		diff - TypeDeclElemPragmas1.ans
 
 testparseidempotence:
 	${JAVA} ${P}.TestEscPragmaParser progress check idempotence \
-		*.java ../*.java ../../ast/*.java
+		*.java ${SOURCEDIRECTORY}/escjava/ast/*.java

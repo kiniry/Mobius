@@ -1,0 +1,17 @@
+GoodJmlPragmas.j:1: /*@ pre true  */
+GoodJmlPragmas.j:2: /*@ post false  */
+GoodJmlPragmas.j:3: /*@ pre a_boolean_expression  */
+GoodJmlPragmas.j:4: /*@ pre a_boolean_expression  */
+GoodJmlPragmas.j:4: /*@ post q  */
+GoodJmlPragmas.j:5: /*@ post q  */
+GoodJmlPragmas.j:5: /*@ post q2  */
+GoodJmlPragmas.j:7: /*@ assignable x  */
+GoodJmlPragmas.j:7: /*@ assignable y  */
+GoodJmlPragmas.j:8: /*@ modifiable z  */
+GoodJmlPragmas.j:9: /*@ assignable x[0]  */
+GoodJmlPragmas.j:9: /*@ modifiable z[0][y]  */
+GoodJmlPragmas.j:11: /*@ signals (Exception e) true == false  */
+GoodJmlPragmas.j:12: /*@ signals (Throwable t) x < y  */
+GoodJmlPragmas.j:13: /*@ signals (TYPE tt) tt == \type(SomeException)  */
+GoodJmlPragmas.j:15: /*@ maintaining x  */
+GoodJmlPragmas.j:16: /*@ decreasing z - 1  */
