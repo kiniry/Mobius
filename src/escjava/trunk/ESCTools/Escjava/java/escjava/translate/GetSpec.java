@@ -89,6 +89,7 @@ public final class GetSpec {
 	return spec;
     }
 
+    static private ASTDecoration dmdDecoration = new ASTDecoration("dmd");
 
     /**
      ** Implement GetCombinedMethodDecl from ESCJ 16c section 7:<p>
@@ -100,7 +101,11 @@ public final class GetSpec {
      **/
     //@ ensures \result != null;
     public static DerivedMethodDecl getCombinedMethodDecl(/*@ non_null */ RoutineDecl rd) {
-	DerivedMethodDecl dmd = new DerivedMethodDecl(rd);
+	DerivedMethodDecl dmd = (DerivedMethodDecl)dmdDecoration.get(rd);
+	if (dmd != null) return dmd;
+
+	dmd = new DerivedMethodDecl(rd);
+	dmdDecoration.set(rd,dmd);
 
 	dmd.throwsSet = rd.raises;
 	dmd.requires  = ExprModifierPragmaVec.make();
