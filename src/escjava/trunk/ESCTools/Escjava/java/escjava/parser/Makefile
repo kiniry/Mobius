@@ -8,9 +8,8 @@ source:
 	echo Nothing to do
 
 clean: 
-	cd test; ${MAKE} clean
 	rm -f *~
 	rm -rf *.class ${CLASSDIRECTORY}/escjava/parser/*.class
 
 runtest:
-	cd ../../../test/escjava/parser/test; ${MAKE} runtest
+	cd ${TESTSOURCEDIRECTORY}/escjava/parser/test; ${MAKE} runtest
