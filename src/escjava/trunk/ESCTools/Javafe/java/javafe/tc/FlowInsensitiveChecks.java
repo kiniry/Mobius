@@ -1947,8 +1947,8 @@ public class FlowInsensitiveChecks
     /**
      * Decorates <code>VarInit</code> nodes to point to <code>Type</code> objects.
      */
-    //@ invariant typeDecoration != null;
-    //@ invariant typeDecoration.decorationType == \type(Type);
+    //@ private invariant typeDecoration != null;
+    //@ private invariant typeDecoration.decorationType == \type(Type);
     private static ASTDecoration typeDecoration
         = new ASTDecoration("typeDecoration");
 
@@ -1993,8 +1993,8 @@ public class FlowInsensitiveChecks
      * Decorates <code>BranchStmt</code> nodes to point to labelled <code>Stmt</code>
      * objects.
      */
-    //@ invariant branchDecoration != null;
-    //@ invariant branchDecoration.decorationType == \type(Stmt);
+    //@ private invariant branchDecoration != null;
+    //@ private invariant branchDecoration.decorationType == \type(Stmt);
     private static ASTDecoration branchDecoration
         = new ASTDecoration("branchDecoration");
 

@@ -141,7 +141,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
    * Counts the number of accesses of free variables and fields used for checking
    * the appropriateness of invariants.
    */
-  //@ readable_if invariantContext;
+  //@ readable countFreeVarsAccesses if invariantContext;
   protected int countFreeVarsAccesses = 0 ;
 
   /**
@@ -468,7 +468,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
     return ee;
   }
 
-  //@ requires e != null;
+  //@ also requires e != null;
   protected Expr checkExpr(Env env, Expr e) {
     // Anticipate that the next context is probably not one suitable for
     // quantifications and labels.  "isPredicateContext" must revert to its old
