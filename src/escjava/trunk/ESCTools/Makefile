@@ -155,6 +155,7 @@ ifdef JML_ROOT
 	${MAKE} -C ${JML_ROOT}/JML2 jmlspecs-jar
 	cp ${JML_ROOT}/JML2/bin/jmlspecs.jar ${ESCTOOLS_ROOT}
 else
+	@echo NOT REMAKING JARS FROM JML - since JML_ROOT not defined
 	@true
 endif
 
