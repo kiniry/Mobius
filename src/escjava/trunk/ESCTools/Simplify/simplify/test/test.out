@@ -171,14 +171,14 @@ Counterexample:
       (NEQ (select |absP%0| (|ind%1| (store c1 self 0))) true)
       (NEQ (select |absP%0| self) true)
       (EQ (|ind%1| (store c2 self true)) self)
-      (EQ (select c1 (|ind%1| (store c1 self 0))) true)
       (EQ (|ind%1| |absP%0|) self)
       (EQ (select c1 self) 1)
-      (EQ (select c1 (|ind%1| c1)) true)
+      (EQ (select c1 (|ind%1| (store c1 self 0))) true)
       (EQ (select c2 (|ind%1| c2)) true)
+      (EQ (select c1 (|ind%1| c1)) true)
       (EQ (+ (select c2 self) 1) true)
-      (<= (select c2 (|ind%1| c1)) 0)
       (<= (select c1 (|ind%1| c2)) 0)
+      (<= (select c2 (|ind%1| c1)) 0)
       (< 0 (select c2 self))
       (<= (select c2 (|ind%1| (store c1 self 0))) 0)
     )
@@ -190,13 +190,13 @@ Counterexample:
     (AND
       (NEQ (select |absP%0| (|ind%1| (store c1 self 0))) true)
       (NEQ (select |absP%0| self) true)
-      (EQ (select c2 (|ind%1| c2)) true)
       (EQ (|ind%1| (store c2 self true)) self)
-      (EQ (+ (select c2 self) 1) true)
       (EQ (|ind%1| |absP%0|) self)
-      (EQ (select c1 (|ind%1| (store c1 self 0))) true)
       (EQ (select c1 self) 1)
+      (EQ (select c1 (|ind%1| (store c1 self 0))) true)
+      (EQ (select c2 (|ind%1| c2)) true)
       (EQ (select c1 (|ind%1| c1)) true)
+      (EQ (+ (select c2 self) 1) true)
       (<= (select c2 (|ind%1| (store c1 self 0))) 0)
       (<= (select c2 (|ind%1| c1)) 0)
       (< 0 (select c2 self))
@@ -221,7 +221,6 @@ Counterexample:
 Counterexample:
   context:
     (AND
-      (EQ (FOO (EVT 1)) 1)
       (EQ (FOO (EVT 6)) 6)
       (EQ (FOO (EVT 2)) 2)
       (EQ (FOO (EVT 7)) 7)
@@ -230,6 +229,7 @@ Counterexample:
       (EQ (FOO (EVT 4)) 4)
       (EQ (FOO (EVT 0)) 0)
       (EQ (FOO (EVT 5)) 5)
+      (EQ (FOO (EVT 1)) 1)
       (< (EVT 8) (EVT 6))
       (< (EVT 2) (EVT 8))
       (< (EVT 6) (EVT 7))
@@ -260,9 +260,9 @@ Counterexample:
   context:
     (AND
       (EQ (g (|y%1| 8)) 8)
+      (EQ (g (|y%1| 13)) (f 18))
       (EQ (f 13) 8)
       (EQ (f 8) T)
-      (EQ (g (|y%1| 13)) (f 18))
       (<= 8 (f 18))
       (<= 8 (g (|y%1| 18)))
     )
@@ -272,13 +272,15 @@ Counterexample:
 Counterexample:
   context:
     (AND
-      (NEQ b a)
+      (NEQ a b)
       (EQ (LT z u) |@true|)
       (EQ (LT x y) |@true|)
-      (EQ (LE x z) |@true|)
-      (EQ (LE x u) |@true|)
-      (EQ (LT y z) |@true|)
       (EQ (LE z u) |@true|)
+      (EQ (LE x y) |@true|)
+      (EQ (LT y u) |@true|)
+      (EQ (LT y z) |@true|)
+      (EQ (LE y u) |@true|)
+      (EQ (LE y z) |@true|)
     )
 
 8: Invalid.
@@ -286,7 +288,7 @@ Counterexample:
 Counterexample:
   context:
     (AND
-      (NEQ b a)
+      (NEQ a b)
       (EQ (LE z u) |@true|)
       (EQ (LE x y) |@true|)
       (EQ (LE y u) |@true|)
@@ -324,7 +326,7 @@ Counterexample:
   labels: (|e1|)
   context:
     (AND
-      (NEQ x 7)
+      (NEQ 7 x)
       (EQ (f x) (f 7))
     )
 
@@ -399,9 +401,9 @@ Counterexample:
   labels: (|e|)
   context:
     (AND
-      (NEQ F T)
-      (EQ (R1 a) T)
+      (NEQ T F)
       (EQ (Q1 a) T)
+      (EQ (R1 a) T)
     )
 
 21: Invalid.
@@ -418,9 +420,9 @@ Counterexample:
 Counterexample:
   context:
     (AND
-      (NEQ F T)
-      (EQ (R2 a) T)
+      (NEQ T F)
       (EQ (Q1 a) T)
+      (EQ (R2 a) T)
     )
 
 23: Invalid.
@@ -477,7 +479,7 @@ Counterexample:
 Counterexample:
   context:
     (AND
-      (NEQ (r b) (q b))
+      (NEQ (q b) (r b))
       (<= 9 (f a))
     )
 
@@ -488,7 +490,7 @@ Bad input: a is used as both a variable and a function symbol.
 Counterexample:
   context:
     (AND
-      (NEQ n 6)
+      (NEQ 6 n)
       (<= n 6)
     )
 
@@ -497,7 +499,7 @@ Counterexample:
 Counterexample:
   context:
     (AND
-      (NEQ y 6)
+      (NEQ 6 y)
     )
 
 33: Invalid.
@@ -515,7 +517,7 @@ Counterexample:
 Counterexample:
   context:
     (AND
-      (NEQ m (f j))
+      (NEQ (f j) m)
       (EQ x y)
     )
 
@@ -536,17 +538,17 @@ Counterexample:
 Counterexample:
   context:
     (AND
-      (NEQ (f Edge1x1E Edge1x2S) (f Edge1x2S Edge1x2S))
-      (NEQ (f Edge1x1E Edge1x2E) (f Edge1x2S Edge1x2S))
-      (NEQ (f Edge1x2S Edge1x2S) (f Edge1x2S Edge1x1E))
-      (NEQ (f Edge2x2E Edge1x2S) (f Edge1x2S Edge1x2S))
-      (NEQ (f Edge2x1E Edge1x2S) (f Edge1x2S Edge1x2S))
-      (NEQ (f Edge1x2S Edge1x2E) (f Edge1x2S Edge1x2S))
-      (NEQ (f Edge1x2E Edge1x2S) (f Edge1x2S Edge1x2S))
-      (NEQ (f Edge2x1E Edge2x2E) (f Edge1x2S Edge1x2S))
-      (EQ Edge1x3S T)
-      (EQ Edge1x1S T)
+      (NEQ (f Edge1x1E Edge1x3S) (f Edge1x3S Edge1x3S))
+      (NEQ (f Edge1x1E Edge1x2E) (f Edge1x3S Edge1x3S))
+      (NEQ (f Edge1x3S Edge1x1E) (f Edge1x3S Edge1x3S))
+      (NEQ (f Edge2x2E Edge1x3S) (f Edge1x3S Edge1x3S))
+      (NEQ (f Edge2x1E Edge1x3S) (f Edge1x3S Edge1x3S))
+      (NEQ (f Edge1x3S Edge1x2E) (f Edge1x3S Edge1x3S))
+      (NEQ (f Edge1x2E Edge1x3S) (f Edge1x3S Edge1x3S))
+      (NEQ (f Edge2x1E Edge2x2E) (f Edge1x3S Edge1x3S))
       (EQ Edge1x2S T)
+      (EQ Edge1x1S T)
+      (EQ Edge1x3S T)
     )
 
 2: Invalid.
@@ -554,7 +556,7 @@ Counterexample:
 Counterexample:
   context:
     (AND
-      (NEQ (select a i knd) x)
+      (NEQ x (select a i knd))
     )
 
 3: Invalid.
@@ -571,7 +573,7 @@ Counterexample:
 Counterexample:
   context:
     (AND
-      (NEQ (select a 9 knd) (select a 8 knd))
+      (NEQ (select a 8 knd) (select a 9 knd))
       (EQ j 5)
     )
 
@@ -588,7 +590,7 @@ Counterexample:
 Counterexample:
   context:
     (AND
-      (NEQ (NUMBER b) (NUMBER a))
+      (NEQ (NUMBER a) (NUMBER b))
     )
 
 7: Invalid.
@@ -596,7 +598,7 @@ Counterexample:
 Counterexample:
   context:
     (AND
-      (NEQ (select a i knd) x)
+      (NEQ x (select a i knd))
       (EQ i j)
     )
 
@@ -605,11 +607,12 @@ Counterexample:
 Counterexample:
   context:
     (AND
-      (NEQ (select b 3 knd) (select b 2 knd))
-      (EQ (|Is$MATHINT| 2 |@DUMMY|) |@true|)
-      (EQ (|Is$ORDINAL| 2 |@DUMMY|) |@true|)
-      (EQ (select a 6 knd) (select b 2 knd))
+      (NEQ (select a 6 knd) (select b 3 knd))
       (EQ (|Is$MATHINT| 8 |@DUMMY|) |@true|)
+      (EQ (|Is$ORDINAL| 8 |@DUMMY|) |@true|)
+      (EQ (|Is$MATHINT| 2 |@DUMMY|) |@true|)
+      (EQ (select b 2 knd) (select a 6 knd))
+      (EQ (|Is$ORDINAL| 2 |@DUMMY|) |@true|)
     )
 
 9: Invalid.
@@ -617,7 +620,7 @@ Counterexample:
 Counterexample:
   context:
     (AND
-      (NEQ 10 (NUMBER |a.15|))
+      (NEQ (NUMBER |a.15|) 10)
     )
 
 10: Invalid.
@@ -632,6 +635,7 @@ Counterexample:
       (EQ |i.11| 10)
       (EQ (NUMBER |a.9|) 10)
       (EQ (|Is$MATHINT| 10 |@DUMMY|) |@true|)
+      (EQ (|Is$MATHINT| 11 |@DUMMY|) |@true|)
       (EQ (|Is$ORDINAL| 10 |@DUMMY|) |@true|)
     )
 
@@ -643,6 +647,7 @@ Counterexample:
       (EQ |i.11| 10)
       (EQ (NUMBER |a.9|) 10)
       (EQ (|Is$MATHINT| 10 |@DUMMY|) |@true|)
+      (EQ (|Is$ORDINAL| 10 |@DUMMY|) |@true|)
     )
 
 13: Invalid.
@@ -660,7 +665,6 @@ Counterexample:
     (AND
       (EQ (NUMBER a) 10)
       (EQ (|Is$MATHINT| 10 |@DUMMY|) |@true|)
-      (EQ (|Is$ORDINAL| 10 |@DUMMY|) |@true|)
       (<= i 7)
       (<= 5 i)
     )
@@ -671,8 +675,6 @@ Counterexample:
   context:
     (AND
       (EQ (NUMBER a) (+ i 1))
-      (EQ (|Is$MATHINT| i |@DUMMY|) |@true|)
-      (EQ (|Is$ORDINAL| i |@DUMMY|) |@true|)
       (<= 2 (+ i 1))
       |ERROR.INDEX.8.11|
     )
@@ -682,7 +684,7 @@ Counterexample:
 Counterexample:
   context:
     (AND
-      (NEQ 7 (g (f a b)))
+      (NEQ (g (f a b)) 7)
       (EQ (f a b) (f b a))
     )
 
@@ -693,10 +695,6 @@ Counterexample:
     (AND
       (EQ (+ (select Ipre r 0) 1) (select I_tmp r 0))
       (EQ (+ (select j_tmp r 0) 1) (select Ipre r 0))
-      (EQ (|Is$MATHINT| (select Ipre r 0) |@DUMMY|) |@true|)
-      (EQ (|Is$ORDINAL| (select Ipre r 0) |@DUMMY|) |@true|)
-      (EQ (|Is$MATHINT| (select I_tmp r 0) |@DUMMY|) |@true|)
-      (EQ (|Is$ORDINAL| (select I_tmp r 0) |@DUMMY|) |@true|)
     )
 
 18: Invalid.
@@ -704,31 +702,31 @@ Counterexample:
 Counterexample:
   context:
     (AND
-      (NEQ |IntSeqRep.Public.TYPECODE| |IntSeq.T.TYPECODE|)
-      (NEQ |IntSeqRep.Public.TYPECODE| |IntSeq.Public.TYPECODE|)
-      (NEQ |IntSeq.Public.TYPECODE| |IntSeq.T.TYPECODE|)
       (NEQ |TYPE@17.TYPECODE| |IntSeq.T.TYPECODE|)
       (NEQ |TYPE@17.TYPECODE| |IntSeqRep.Public.TYPECODE|)
       (NEQ |TYPE@17.TYPECODE| |IntSeqRep.RefArray.TYPECODE|)
       (NEQ |TYPE@17.TYPECODE| |IntSeq.Public.TYPECODE|)
+      (NEQ |IntSeqRep.Public.TYPECODE| |IntSeq.T.TYPECODE|)
+      (NEQ |IntSeqRep.Public.TYPECODE| |IntSeq.Public.TYPECODE|)
+      (NEQ |IntSeq.Public.TYPECODE| |IntSeq.T.TYPECODE|)
       (NEQ |@true| |@false|)
+      (NEQ (|Is_TYPE@17| |res$2%0|) |@true|)
       (NEQ (|Is_TYPE@38| |IntSeqRep.RefArray`|) |@true|)
       (NEQ (|Is_IntSeq.Public| |s%0|) |@true|)
       (NEQ (select |$AllocObjs| |res$2%0| |@ARRAY|) |@true|)
-      (NEQ (|Is_IntSeq.T| |res$2%0|) |@true|)
+      (NEQ (|Is_IntSeqRep.Public| |res$2%0|) |@true|)
       (NEQ (|Is_TYPE@38| (store |IntSeqRep.Public.elem`| |s`| |res$2%0|)) |@true|)
       (NEQ (|Is_IntSeqRep.RefArray| |s%0|) |@true|)
-      (NEQ (|Is_TYPE@17| |res$2%0|) |@true|)
+      (NEQ (|Is_IntSeq.Public| |res$2%0|) |@true|)
       (NEQ |IntSeqRep.RefArray.TYPECODE| |IntSeq.T.TYPECODE|)
       (NEQ |IntSeqRep.RefArray.TYPECODE| |IntSeqRep.Public.TYPECODE|)
       (NEQ |IntSeqRep.RefArray.TYPECODE| |IntSeq.Public.TYPECODE|)
-      (NEQ (|Is_IntSeqRep.Public| |res$2%0|) |@true|)
       (NEQ (|Is_TYPE@38| |$AllocObjs|) |@true|)
       (NEQ (|Is_TYPE@17| |s%0|) |@true|)
-      (NEQ (|Is_IntSeq.Public| |res$2%0|) |@true|)
+      (NEQ (|Is_IntSeq.T| |res$2%0|) |@true|)
       (EQ |Word.Size| 32)
-      (EQ |IntSeqRep.RefArray.TYPECODE| (TYPECODE |res$2%0| |@DUMMY|))
       (EQ |sizeHint`| 0)
+      (EQ |IntSeqRep.RefArray.TYPECODE| (TYPECODE |res$2%0| |@DUMMY|))
       (EQ (|Is_TYPE@38| (select |IntSeqRep.RefArray`| |res$2%0| |@ARRAY|)) |@true|)
       (EQ (TYPECODE |s%0| |@DUMMY|) |NULL.TYPECODE|)
       (EQ (SUBTYPE |NULL.TYPECODE| |IntSeq.T.TYPECODE|) |@true|)
@@ -751,7 +749,7 @@ Counterexample:
     (AND
       (NEQ (Node m) true)
       (EQ |n2%0| n)
-      (EQ (Node |n2%0|) true)
+      (EQ (Node n) true)
       (EQ (Node Root) true)
     )
 
@@ -763,27 +761,26 @@ Counterexample:
       (NEQ |EXCEPTION.val$3%0| |$NIL|)
       (NEQ |EXCEPTION.val$1%0| |$NIL|)
       (NEQ |res$4%0| |$NIL|)
+      (NEQ |Pathname.Invalid| CheckedRuntimeError)
       (NEQ |EXCEPTION.code%0| |Pathname.Invalid|)
       (NEQ |EXCEPTION.code%0| CheckedRuntimeError)
-      (NEQ CheckedRuntimeError |Pathname.Invalid|)
-      (NEQ ExtSepText |$NIL|)
-      (NEQ DirSepText |$NIL|)
       (NEQ EXIT |EXCEPTION.code%0|)
       (NEQ EXIT |Pathname.Invalid|)
       (NEQ EXIT CheckedRuntimeError)
+      (NEQ ExtSepText |$NIL|)
       (NEQ |@true| |@false|)
+      (NEQ DirSepText |$NIL|)
       (NEQ (TYPECODE a |@DUMMY|) |NULL.TYPECODE|)
-      (EQ DirSepChar 47)
-      (EQ |EXCEPTION.code$5%0| RETURN)
       (EQ |EXCEPTION.code$4%0| RETURN)
-      (EQ |EXCEPTION.val$4%0| |i$4%0|)
-      (EQ |EXCEPTION.val$2%0| |@true|)
-      (EQ |EXCEPTION.code$2%0| RETURN)
       (EQ |EXCEPTION.code$1%0| RETURN)
+      (EQ |EXCEPTION.code$5%0| RETURN)
+      (EQ |EXCEPTION.code$2%0| RETURN)
       (EQ ExtSepChar 46)
+      (EQ |EXCEPTION.val$2%0| |@true|)
+      (EQ |EXCEPTION.val$4%0| |i$4%0|)
       (EQ |EXCEPTION.code%0| RETURN)
+      (EQ DirSepChar 47)
       (EQ (Is_TEXT |t%0| |@DUMMY|) |@true|)
-      (EQ (select |TextSeq.Public_Size| a |@ARRAY|) |EXCEPTION.val%0|)
       (EQ (|Is_TextSeq.Public| a |@DUMMY|) |@true|)
       (EQ (|Is$MATHINT| |EXCEPTION.val$4%0| |@DUMMY|) |@true|)
       (EQ (Is_TEXT ExtSepText |@DUMMY|) |@true|)
@@ -792,11 +789,13 @@ Counterexample:
       (EQ (Is_TEXT |res$4%0| |@DUMMY|) |@true|)
       (EQ (select (select |Text.Value| |res$4%0| |@ARRAY|) 0 |@ARRAY|) 47)
       (EQ (select |@AllocObjs| ExtSepText |@ARRAY|) |@true|)
+      (EQ (NUMBER (select |Text.Value| |EXCEPTION.val$3%0| |@ARRAY|)) |i$4%0|)
       (EQ (select |@AllocObjs| |res$4%0| |@ARRAY|) |@true|)
       (EQ (|Is$ORDINAL| |EXCEPTION.val$4%0| |@DUMMY|) |@true|)
       (EQ (Is_CARDINAL |EXCEPTION.val$4%0| |@DUMMY|) |@true|)
       (EQ (Is_TEXT |EXCEPTION.val$3%0| |@DUMMY|) |@true|)
       (EQ (Is_CARDINAL |EXCEPTION.val%0| |@DUMMY|) |@true|)
+      (EQ (select |TextSeq.Public_Size| a |@ARRAY|) |EXCEPTION.val%0|)
       (EQ (Is_TEXT |EXCEPTION.val$1%0| |@DUMMY|) |@true|)
       (EQ (Is_TEXT DirSepText |@DUMMY|) |@true|)
       (EQ (Is_INTEGER |EXCEPTION.code$6%0| |@DUMMY|) |@true|)
@@ -806,7 +805,6 @@ Counterexample:
       (EQ (NUMBER (select |Text.Value| DirSepText |@ARRAY|)) 1)
       (EQ (NUMBER (select |Text.Value| ExtSepText |@ARRAY|)) 1)
       (EQ (NUMBER (select |Text.Value| |res$4%0| |@ARRAY|)) 1)
-      (EQ (NUMBER (select |Text.Value| |EXCEPTION.val$3%0| |@ARRAY|)) |i$4%0|)
       (EQ (SUBTYPE (TYPECODE a |@DUMMY|) |TextSeq.Public.TYPECODE|) |@true|)
       (EQ (Is_BOOLEAN |@true| |@DUMMY|) |@true|)
       (EQ (Is_TEXT |arc%0| |@DUMMY|) |@true|)
@@ -855,7 +853,6 @@ Counterexample:
   context:
     (AND
       (EQ (|Is$INTEGER| 16 |@DUMMY|) |@true|)
-      (EQ (|Is$INTEGER| (* (FLOAT n REAL) |IntIntTbl.IdealDensityReciprocal|) |@DUMMY|) |@true|)
       (< (* (FLOAT n REAL) |IntIntTbl.IdealDensityReciprocal|) (FLOAT |IntIntTbl.MaxBuckets| REAL))
       (<= |Word.Size| RES)
       (< |IntIntTbl.MaxBuckets| 0)
@@ -871,6 +868,10 @@ Counterexample:
     (AND
       (EQ b |@true|)
       (EQ |Test11.g$1%0| |Test11.g|)
+      (EQ (|Is$INTEGER| |Test11.g$1%0| |@DUMMY|) |@true|)
+      (EQ (|Is$ORDINAL| |Test11.g$1%0| |@DUMMY|) |@true|)
+      (<= |INTEGER.FIRST| |Test11.g$1%0|)
+      (<= |Test11.g$1%0| |INTEGER.LAST|)
     )
 
 1: Invalid.
@@ -879,15 +880,18 @@ Counterexample:
   labels: (|ERROR.CALL.31.4|)
   context:
     (AND
-      (EQ |Test11.g'%0| 0)
       (EQ |EXCEPTION.code%0| RETURN)
+      (EQ (- |Test11.g'%0| 1) -1)
+      (EQ (|Is$MATHINT| -1 |@DUMMY|) |@true|)
+      (EQ (NUMBER (ADDR |x%0|) |Test11.g'%0|) 4)
+      (EQ (|Is$INTEGER| |Test11.g'%0| |@DUMMY|) |@true|)
       (EQ (|Is$INTEGER| |y%0| |@DUMMY|) |@true|)
       (EQ (|Is$TYPE@24| |x%0| |@DUMMY|) |@true|)
+      (EQ (|Is$ORDINAL| -1 |@DUMMY|) |@true|)
+      (EQ (|Is$ORDINAL| |Test11.g'%0| |@DUMMY|) |@true|)
+      (EQ (|Is$ORDINAL| |y%0| |@DUMMY|) |@true|)
       (EQ (SUBSET ALLOCATED |ALLOCATED'%0|) |@true|)
-      (EQ (|Is$MATHINT| -1 |@DUMMY|) |@true|)
-      (EQ (select |ALLOCATED'%0| |$NIL| |@SPECIAL|) |@true|)
-      (EQ (|Is$MATHINT| |y%0| |@DUMMY|) |@true|)
-      (EQ (NUMBER (ADDR |x%0|) 0) 4)
+      (EQ (|Is$MATHINT| 4 |@DUMMY|) |@true|)
       (<= |y%0| |INTEGER.LAST|)
       (<= |INTEGER.FIRST| |y%0|)
     )
@@ -968,7 +972,7 @@ Counterexample:
 Counterexample:
   context:
     (AND
-      (NEQ y x)
+      (NEQ x y)
       (NEQ (GT1 x y) |@true|)
       (EQ (GE1 x y) |@true|)
     )
