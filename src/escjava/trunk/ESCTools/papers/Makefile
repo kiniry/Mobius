@@ -19,11 +19,11 @@ pdffiles =	$(foreach texfile,$(texfiles),\
 
 all:	$(dvifiles) $(psfiles) $(pdffiles)
 
-# %.pdf: %.tex
-# 	pdflatex $< $@
+%.pdf: %.tex
+	pdflatex $< $@
 
-%.pdf: %.ps
-	ps2pdf $<
+# %.pdf: %.ps
+# 	ps2pdf $<
 
 %.pdf.gz: %.pdf
 	gzip -c $< > $@
