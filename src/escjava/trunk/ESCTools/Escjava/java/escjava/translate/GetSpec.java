@@ -984,10 +984,11 @@ while (ee.hasMoreElements()) {
 
 	boolean isConstructor = spec.dmd.isConstructor();
 	InvariantInfo ii = mergeInvariants(collectInvariants(scope, spec.preVarMap));
-        HashSet axs = collectInvariantsAxsToAdd;
-        ExprVec assumptions = addNewAxs(axs,null);
-        spec.preAssumptions.append(assumptions);
-        spec.postAssumptions.append(assumptions);
+	// FIXME - Possibly causes bloated VCs
+        //HashSet axs = collectInvariantsAxsToAdd;
+        //ExprVec assumptions = addNewAxs(axs,null);
+        //spec.preAssumptions.append(assumptions);
+        //spec.postAssumptions.append(assumptions);
         
 	for (; ii != null; ii = ii.next) {
 
@@ -1195,10 +1196,11 @@ while (ee.hasMoreElements()) {
         }
 
         InvariantInfo ii = mergeInvariants(collectInvariants(scope,spec.preVarMap));
-        HashSet axsToAdd = collectInvariantsAxsToAdd;
-        ExprVec assumptions = addNewAxs(axsToAdd,null);
-        spec.preAssumptions.append(assumptions);
-        spec.postAssumptions.append(assumptions);
+ 		// FIXME - Possibly causing bloated VCs
+        //HashSet axsToAdd = collectInvariantsAxsToAdd;
+        //ExprVec assumptions = addNewAxs(axsToAdd,null);
+        //spec.preAssumptions.append(assumptions);
+        //spec.postAssumptions.append(assumptions);
         
         for (; ii != null; ii = ii.next) {
 	    int tag = ii.prag.getTag();
@@ -1212,6 +1214,7 @@ while (ee.hasMoreElements()) {
                                                    Location.NULL ) );
         }
         
+        // FIXME - possibly causing bloated VCs
         for(int i=0; i<axioms.size(); i++) {
             spec.postAssumptions.addElement( axioms.elementAt(i) );
         }
@@ -1587,8 +1590,9 @@ while (ee.hasMoreElements()) {
 //System.out.println("COLLECTING INVARIANT-END " + Location.toString(ep.getStartLoc()));
             }
           }
-          collectInvariantsAxsToAdd = new java.util.HashSet();
-          collectInvariantsAxsToAdd.addAll(TrAnExpr.trSpecAuxAxiomsNeeded);
+          // FIXME - Possibly causing bloated VCs
+          //collectInvariantsAxsToAdd = new java.util.HashSet();
+          //collectInvariantsAxsToAdd.addAll(TrAnExpr.trSpecAuxAxiomsNeeded);
 	  java.util.Set axsToAdd = new java.util.HashSet();
 	  //axsToAdd.addAll(TrAnExpr.trSpecAuxAxiomsNeeded);
 	  java.util.Set axsDone = new java.util.HashSet();
