@@ -667,7 +667,7 @@ public class TypeSig extends Type
 		TypeDecl td = (TypeDecl)e;
 		TypeSig t = getSig(td);
 		if (caller == null) return t;
-                if (TypeCheck.inst.canAccess(caller, t, td.modifiers,
+                if (TypeCheck.inst.canAccess(caller, this, td.modifiers,
                                                 td.pmodifiers) ) {
 		    return t;
 		}
