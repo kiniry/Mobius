@@ -8,9 +8,10 @@ import javafe.SrcTool;
 import javafe.ast.TypeDecl;
 import javafe.tc.TypeCheck;
 import javafe.tc.OutsideEnv;
+import javafe.util.UsageError;
 
 
-/**
+/** This class reports the number of files loaded after all parsing is completed.
  **/
 
 public class CountFilesLoaded extends SrcTool {
@@ -28,42 +29,42 @@ public class CountFilesLoaded extends SrcTool {
      **/
     public String name() { return "CountFilesLoaded"; }
 
-    /**
-     ** Print option information to <code>System.err</code>.  Each
-     ** printed line should be preceeded by two blank spaces. <p>
-     **
-     ** Each overriding method should first call
-     ** <code>super.showOptions()</code>.<p>
-     **/
-    public void showOptions() {
-        super.showOptions();
-
-	System.err.println("  -eager");
-    }
-
-
-    /***************************************************
-     *                                                 *
-     * Generic option processing:		       *
-     *                                                 *
-     ***************************************************/
-
-    /**
-     ** Process next tool option. <p>
-     **
-     ** See <code>Tool.processOption</code> for the complete
-     ** specification of this routine.<p>
-     **/
-    public int processOption(String option, String[] args, int offset) {
-	if (option.equals("-eager")) {
-	    OutsideEnv.eagerRead = true;
-	    return offset;
+    public javafe.Options makeOptions() { return new Options(); }
+    
+    public class Options extends javafe.SrcToolOptions {
+    
+        public Options() {
+            OutsideEnv.eagerRead = false;
+        }
+    
+	public String showOptions(boolean all) {
+	    return super.showOptions(all) +("  -eager")+eol;
 	}
 
-	// Pass on unrecognized options:
-	return super.processOption(option, args, offset);
-    }
 
+	/***************************************************
+	 *                                                 *
+	 * Generic option processing:		       *
+	 *                                                 *
+	 ***************************************************/
+    
+	/**
+	 ** Process next tool option. <p>
+	 **
+	 ** See <code>Tool.processOption</code> for the complete
+	 ** specification of this routine.<p>
+	 **/
+	public int processOption(String option, String[] args, int offset) 
+                                 throws UsageError {
+	    if (option.equals("-eager")) {
+		OutsideEnv.eagerRead = true;
+		return offset;
+	    }
+	
+	    // Pass on unrecognized options:
+	    return super.processOption(option, args, offset);
+	}
+    }
 
     /***************************************************
      *                                                 *
@@ -74,19 +75,12 @@ public class CountFilesLoaded extends SrcTool {
     /**
      ** Start up an instance of this tool using command-line arguments
      ** <code>args</code>. <p> 
-     **
-     ** <b>Note</b>: this code needs to be copied verbatim to each
-     ** subclass of <code>Tool</code> except with the name of the actual
-     ** subclass inserted after the new operator and the comment
-     ** characters (//) removed.<p>
-     **
-     ** (This needs to be done because static methods cannot be
-     ** inherited.)<p>
      **/
     //@ requires \nonnullelements(args)
     public static void main(String[] args) {
 	Tool t = new CountFilesLoaded();
-	t.run(args);
+	int result = t.run(args);
+	if (result != 0) System.exit(result);
     }
 
 
@@ -111,6 +105,6 @@ public class CountFilesLoaded extends SrcTool {
      **/
     public void handleTD(TypeDecl td) {
 	if (!td.specOnly)
-	    TypeCheck.inst.checkTypeDecl(td);
+		TypeCheck.inst.checkTypeDecl(td);
     }
 }

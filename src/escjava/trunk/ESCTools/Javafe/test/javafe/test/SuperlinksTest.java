@@ -50,8 +50,9 @@ public class SuperlinksTest extends javafe.SrcTool {
      **/
     //@ requires \nonnullelements(args)
     public static void main(String[] args) {
-	Tool t = new SuperlinksTest();
-	t.run(args);
+		Tool t = new SuperlinksTest();
+		int result = t.run(args);
+		if (result != 0) System.exit(result);
     }
 
     SuperlinksTest() {
@@ -82,12 +83,12 @@ public class SuperlinksTest extends javafe.SrcTool {
      ** on each <code>CompilationUnit</code> to process them.
      **/
     public void postprocess() {
-	// Make sure invariants haven't been broken
-	for (int k=0; k<decls.size(); k++) {
-	    TypeDecl decl = (TypeDecl)decls.elementAt(k);
-
-	    TypeCheck.inst.getSig(decl).check();
-	}
+		// Make sure invariants haven't been broken
+		for (int k=0; k<decls.size(); k++) {
+		    TypeDecl decl = (TypeDecl)decls.elementAt(k);
+	
+		    TypeCheck.inst.getSig(decl).check();
+		}
     }
 
 
@@ -99,8 +100,8 @@ public class SuperlinksTest extends javafe.SrcTool {
      ** then has its supertype links resolved.
      **/
     public void handleTD(TypeDecl td) {
-	decls.addElement(td);
-
-	TypeCheck.inst.getSig(td).resolveSupertypeLinks();
+		decls.addElement(td);
+	
+		TypeCheck.inst.getSig(td).resolveSupertypeLinks();
     }
 }

@@ -33,70 +33,84 @@ public class Print extends SrcTool {
      **/
     public String name() { return "Print"; }
 
+    public javafe.Options makeOptions() { return new Options(); }
+    
+    public final Options options() { return (Options)options; }
 
-    /**
-     ** Print option information to
-     ** <code>System.err</code>. <p>
-     **/
-    public void showOptions() {
-      super.showOptions();
-      System.err.println("  -typecheck -noprint -printtype -showinferred");
-    }
-
-
-    /***************************************************
-     *                                                 *
-     * Option processing:			       *
-     *                                                 *
-     ***************************************************/
-
-    private boolean typecheck = false;
-    private boolean print = true;
-    private boolean printType = false;
-    // -showinferred controls PrettyPrint.displayInferred
-
-
-    /**
-     ** Process next tool option. <p>
-     **
-     ** See <code>Tool.processOption</code> for the complete
-     ** specification of this routine.<p>
-     **/
-    public int processOption(String option, String[] args, int offset) {
-	if (option.equals("-typecheck")) {
-	    typecheck = true;
-	    return offset;
-	} else if (option.equals("-noprint")) {
-	    print = false;
-	    return offset;
-	} else if (option.equals("-printtype")) {
-	    printType = true;
-	    return offset;
-	} else if (option.equals("-showinferred")) {
-	    PrettyPrint.displayInferred = true;
-	    return offset;
+    public class Options extends SrcToolOptions {
+    
+        public Options() {
+            PrettyPrint.displayInferred = false;
+        }
+        
+	/**
+	 ** Print option information to
+	 ** <code>System.err</code>. <p>
+	 **/
+	public String showOptions(boolean all) {
+	  return super.showOptions(all) +
+		"  -typecheck" + eol +
+		"  -noprint" + eol +
+		"  -printtype" + eol +
+		"  -showinferred" + eol;
 	}
 
-	// Pass on unrecognized options:
-	return super.processOption(option, args, offset);
+
+	/***************************************************
+	 *                                                 *
+	 * Option processing:			       *
+	 *                                                 *
+	 ***************************************************/
+    
+	private boolean typecheck = false;
+	private boolean print = true;
+	private boolean printType = false;
+	// -showinferred controls PrettyPrint.displayInferred
+    
+    
+	/**
+	 ** Process next tool option. <p>
+	 **
+	 ** See <code>Tool.processOption</code> for the complete
+	 ** specification of this routine.<p>
+	 **/
+	public int processOption(String option, String[] args, int offset) 
+                                   throws UsageError {
+	    if (option.equals("-typecheck")) {
+		typecheck = true;
+		return offset;
+	    } else if (option.equals("-noprint")) {
+		print = false;
+		return offset;
+	    } else if (option.equals("-printtype")) {
+		printType = true;
+		return offset;
+	    } else if (option.equals("-showinferred")) {
+		PrettyPrint.displayInferred = true;
+		return offset;
+	    }
+    
+	    // Pass on unrecognized options:
+	    return super.processOption(option, args, offset);
+	}
     }
 
 
     /***************************************************
-     *                                                 *
-     * Front-end setup:				       *
-     *                                                 *
-     ***************************************************/
+    *                                                 *
+    * Front-end setup:				       *
+    *                                                 *
+    ***************************************************/
 
     /**
-     ** Setup: see FrontEnd.setup for original spec. <p>
-     **
-     ** Print overrides this method to handle printtype.
-     **/
+    ** Setup: see FrontEnd.setup for original spec. <p>
+    **
+    ** Print overrides this method to handle printtype.
+    **/
     public void setup() {
 	super.setup();
 
-	if (printType) {
+	if (options().printType) {
 	    TypePrint T = new TypePrint();	//@ nowarn Pre
 	    PrettyPrint.inst = new StandardPrettyPrint(T);
 	    T.del = PrettyPrint.inst;		// Establish del!=null
@@ -126,7 +140,8 @@ public class Print extends SrcTool {
     //@ requires \nonnullelements(args)
     public static void main(String[] args) {
 	Tool t = new Print();
-	t.run(args);
+	int result = t.run(args);
+	if (result != 0) System.exit(result);
     }
 
 
@@ -141,22 +156,21 @@ public class Print extends SrcTool {
      ** that this tool processes. <p>
      **/
     public void handleCU(CompilationUnit cu) {
-	if (!typecheck)
+	if (!options().typecheck)
 	    System.out.println("=== File: " + Location.toFileName(cu.loc)
 			 +" ===");
 	super.handleCU(cu);
-	if (print)
-	  PrettyPrint.inst.print(System.out, cu);
+	if (options().print) PrettyPrint.inst.print(System.out, cu);
     }
-
-
+	
+	
     /**
      ** This method is called on the TypeDecl of each
      ** outside type that SrcTool is to process. <p>
      **/
     public void handleTD(TypeDecl td) {
 	td.check();
-	if (typecheck && !td.specOnly) {
+	if (options().typecheck && !td.specOnly) {
 	    TypeCheck.inst.checkTypeDecl(td);
 	    TypeSig sig = TypeSig.getSig(td);
 	    Assert.notFalse(sig.state == TypeSig.CHECKED);  //@ nowarn Pre
