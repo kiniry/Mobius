@@ -32,7 +32,8 @@ testlex:
 
 testpragmalexer:
 	@echo "TESTING Javafe: testpragmalexer"
-	${JAVA} -classpath ${CLASSPATH} javafe.parser.test.TestLex parsepragmas javakeywords \
+	${JAVA} -classpath ${CLASSPATH} javafe.parser.test.TestLex \
+	  parsepragmas javakeywords \
 	  < pragmatoks >pragmatoks.out \
 	&& ${DIFF} pragmatoks.out pragmatoks.ans
 

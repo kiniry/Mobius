@@ -28,6 +28,26 @@ HOMEWORK =	jml_homework.dvi jml_homework.ps jml_homework.pdf jml_homework.txt
 PERL=perl
 CODE2TEXI=$(PERL) -e 'BEGIN: while (<>) { s/\r//g; s/@/@@/g; s/\{/@\{/g; s/\}/@\}/g; } continue { print; }'
 
+.PHONY: all build
+all:	build
+
+build:	$(PAPERS) $(HOMEWORK)
+
+jml_homework.dvi:	jml_homework.texinfo $(javatexinfofiles)
+
+CASSIS2004.pdf:	CASSIS2004.tex koa_state_diagram.pdf
+	pdflatex CASSIS2004; bibtext CASSIS2004; pdflatex CASSIS2004; pdflatex CASSIS2004;
+	make cleanup
+
+CASSIS2004.dvi:	CASSIS2004.tex koa_state_diagram.eps
+	latex CASSIS2004; bibtext CASSIS2004; latex CASSIS2004; latex CASSIS2004;
+
+koa_state_diagram.eps: koa_state_diagram.fig
+	fig2dev -L eps koa_state_diagram.fig koa_state_diagram.eps
+
+koa_state_diagram.pdf: koa_state_diagram.fig
+	fig2dev -L pdf koa_state_diagram.fig koa_state_diagram.pdf
+
 $(PROBLEMS)/%.java.texinfo : $(PROBLEMS)/%.java
 	@$(CODE2TEXI) $< > $@
 
@@ -75,25 +95,8 @@ $(PROBLEMS)/%.java.texinfo : $(PROBLEMS)/%.java
 %.dvi:	%.texinfo
 	texi2dvi $<
 
-.PHONY: all build
-all:	build
-
-build:	$(PAPERS) $(HOMEWORK)
-
-jml_homework.dvi:	jml_homework.texinfo $(javatexinfofiles)
-
-CASSIS2004.pdf:	CASSIS2004.tex koa_state_diagram.pdf
-	pdflatex CASSIS2004; bibtext CASSIS2004; pdflatex CASSIS2004; pdflatex CASSIS2004;
-	make cleanup
-
-CASSIS2004.dvi:	CASSIS2004.tex koa_state_diagram.eps
-	latex CASSIS2004; bibtext CASSIS2004; latex CASSIS2004; latex CASSIS2004;
-
-koa_state_diagram.eps: koa_state_diagram.fig
-	fig2dev -L eps koa_state_diagram.fig koa_state_diagram.eps
-
-koa_state_diagram.pdf: koa_state_diagram.fig
-	fig2dev -L pdf koa_state_diagram.fig koa_state_diagram.pdf
+%.pdf:	%.texinfo
+	texi2pdf $<
 
 cleanup:
 	rm -f _region_* *.aux *.log \

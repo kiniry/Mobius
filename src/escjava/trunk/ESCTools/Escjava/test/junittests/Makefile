@@ -109,11 +109,11 @@ else
 	done
 endif
 
-.PHONY: septest
-septest:
+.PHONY: separate_tests
+separate_tests:
 	$(MAKE) skips
 	$(MAKE) othertests
-	$(MAKE) sepjavatests
+	$(MAKE) separate_java_tests
 	$(MAKE) notjunittests
 
 .PHONY: notjunittests
@@ -142,8 +142,8 @@ partjunittests:
 	@mv listteststemp listtests
 
 
-.PHONY: sepjavatests
-sepjavatests:
+.PHONY: separate_java_tests
+separate_java_tests:
 	@touch skip
 	@for f in `ls *.java | grep -v -f skip -f notjunittests` ; do \
 		$(MAKE) --no-print-directory $${f}-test; \

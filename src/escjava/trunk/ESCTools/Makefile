@@ -1,12 +1,13 @@
-## This file is part of the 2003 Revision of the ESC Tools
+## This file is part of ESC/Java2 from 2003 onward.
 ##
-## author: David Cok - 26 March 2003
+## author: David Cok
 ## author: Joe Kiniry
 ##
 
 export TOP = .
 include Makefile.defs
 
+################################################################################
 ## These are the standard targets.  They are executed in all the
 ## subdirectories that are listed in the SUBDIRS variable:
 ##	clean - removes all files created by a build
@@ -17,10 +18,11 @@ include Makefile.defs
 ##	docs  - creates all docs; to get javadocs you must execute the
 ##		make from this directory
 ##	all   - does all of the above
-##	patch-release - makes the tar file constituting a patch release
+##	patch-release  - makes the tar file constituting a patch release
+##      source-release - makes the tar file constituting a full source release
 ##	binary-release - makes the tar file constituting a binary release
 ##	releases-notests - makes both releases without doing any tests
-##	releases	- makes both releases with tests after
+##	releases	 - makes both releases with tests after
 ##
 ## You can run each of these in a subdirectory and only apply it to
 ## the code in that subdirectory, if you like.  Note though, that the
@@ -30,30 +32,28 @@ include Makefile.defs
 export ESCJAVA = ${ESCTOOLS_ROOT}/Escjava/escj
 
 # List subprojects in the order in which they should be built.  Javafe
-# must be before any other Esctool directories.
+# must be before any other ESCTools directories.
 SUBDIRS = Utils Javafe Escjava 
 
-.PHONY: default
+.PHONY: default all all+ nodocs nodocs+ jars
+
 default: build
 
-.PHONY: all
 all: clean build jars test quiet-docs
 
-.PHONY: all+
 all+: clean build jars quiet-docs alltests
 
-.PHONY: nodocs
 nodocs: clean build jars test
 
-.PHONY: nodocs+
 nodocs+: clean build jars alltests
 
-.PHONY: jars
-jars: build escspecs-jar jmlspecs-jar jar srcjar
+jars: $(ESCJAVA2_SPECS_JAR) $(JML2_SPECS_JAR) jar srcjar
 
-########################################### build, test
+################################################################################
+## Top-level build and test rules
 
-.PHONY: build buildall test
+.PHONY: build buildall test alltests findbugs
+
 build buildall: fix-perms
 	for d in $(SUBDIRS) ; do \
 	    $(MAKE) -C $$d $@ || exit 1; \
@@ -64,24 +64,22 @@ test: build
 	    $(MAKE) -C $$d $@ || exit 1; \
 	done
 
-.PHONY: alltests
 alltests:	build
 	${MAKE} test ALLTESTS=1
-	##${MAKE} specs-test
+	${MAKE} specs-test
 
 ifdef FINDBUGS
-.PHONY: findbugs
 findbugs: jar
 	${FINDBUGS} -textui esctools2.jar
 endif
 
-########################################### general
-
-## It does not appear that this is used anywhere - is it needed? FIXME
-## I think this is needed because CVS does not properly keep
-## permissions (expecially x bits), so sometimes we need a reset. -JOE
+################################################################################
+## General rules to clean up build tree
 
 .PHONY: fix-perms
+
+## This rule is needed because CVS does not properly keep permissions
+## (expecially x bits), so sometimes we need a reset.
 fix-perms:
 	@if [ ! -x ./Javafe/java/javafe/ast/insert_ensures ]; \
 	then \
@@ -111,64 +109,63 @@ fix-perms:
 		echo "false"; \
 	fi
 
-########################################### clean
+################################################################################
+## Clean rules
+
+.PHONY: clean clean-release clean-norel clean-release-test clean-norel-noreltemp
 
 # To really clean, we need to clean Javafe last since some of its
 # tools are used in cleaning.
-.PHONY: clean
 clean: clean-norel clean-release clean-release-test
 
-.PHONY: clean-release
+# Cleans out the release directory
 clean-release:
 	rm -rf ${RELDIR}
 
 # Cleans everything except the release directory
-.PHONY: clean-norel
 clean-norel: clean-norel-noreltemp
 	rm -rf ${RELTEMP}
 
 # Cleans release test directory
-.PHONY: clean-release-test
 clean-release-test:
 	rm -rf ${RELTEST}
 
-# Cleans everything except the various release directories (test, temp, release)
-.PHONY: clean-norel-noreltemp
+# Cleans everything except the various release directories (test,
+# temp, release)
 clean-norel-noreltemp:
 	rm -rf ${PATCH_DIR}
 	for d in $(SUBDIRS) ; do \
-		if [ !"$$d"=="Javafe" ]; then \
-		    ( $(MAKE) -C $$d clean || exit 1) ; fi ; \
+	  if [ !"$$d"=="Javafe" ]; then \
+	    ( $(MAKE) -C $$d clean || exit 1) ; fi ; \
 	done
 	$(MAKE) -C docs clean
 	$(MAKE) -C papers clean
 	$(MAKE) -C slides clean
 	$(MAKE) -C Javafe clean
-	rm -f jars/*.jar		## FIXME  - should adjust to have alljar files in the jars directory
-	rm -f tags TAGS
+	rm -f $(JAR_FILES)/*.jar
+	rm -f tags TAGS SpecTest.java .specs
 
-########################################### jmlspecs
+################################################################################
+## Specifications
 
-.PHONY: escspecs-jar
-escspecs-jar:
-	(cd specs; jar cf ../escspecs.jar . )
+$(ESCJAVA2_SPECS_JAR):
+	(cd specs; jar cf $(ESCJAVA2_SPECS_JAR) .)
 
-
-.PHONY: jmlspecs-jar
-jmlspecs-jar:
+$(JML2_SPECS_JAR):
 ifdef JML_ROOT
 	${MAKE} -C ${JML_ROOT}/JML2 jmlspecs-jar
-	cp ${JML_ROOT}/JML2/bin/jmlspecs.jar ${ESCTOOLS_ROOT}
+	cp ${JML_ROOT}/JML2/bin/jmlspecs.jar $(JML2_SPECS_JAR)
 else
 	@echo NOT REMAKING JARS FROM JML - since JML_ROOT not defined
 	@true
 endif
 
+################################################################################
+## Rules to build documentation
 
-########################################### docs
+.PHONY: alldocs textdocs quiet-docs docs slides papers javadoc jmldoc jml
 
-.PHONY: alldocs textdocs quiet-docs docs slides papers
-alldocs: textdocs
+alldocs: textdocs javadoc
 
 textdocs: quiet-docs slides papers
 
@@ -199,16 +196,22 @@ SPECS = ${JML_ROOT}/JML2/specs:${JML_ROOT}/JML2
 
 ## Javadoc depends on the build target since some of the .java files
 ## are generated in the course of the build (e.g. the AST classes).
-## TODO: Should have -overview , header, footer, bottom, group, stylesheetfile
-## link/linkoffline, subpackages -FIXME Kiniry
-.PHONY: javadoc
+## TODO: Should have -overview , header, footer, bottom, group,
+## stylesheetfile link/linkoffline, subpackages -FIXME Kiniry
 javadoc:  build
 	rm -rf $(JAVADOC_GEN_DIR)
 	mkdir -p $(JAVADOC_GEN_DIR)
 	mkdir -p $(JAVADOC_GEN_DIR)/images
+	cp $(DOCS_STYLESHEET) $(JAVADOC_GEN_DIR)
 	cp $(JAVAFE_ROOT)/doc/javadoc/images/*.gif $(JAVADOC_GEN_DIR)/images
-	$(JAVADOC) -sourcepath $(call canonicalize,$(JAVADOC_SOURCEPATH):$(JUNIT_SOURCEPATH)) \
+	$(JAVADOC) -sourcepath \
+	  $(call canonicalize,$(JAVADOC_SOURCEPATH):$(JUNIT_SOURCEPATH)) \
 	  -classpath $(call canonicalize,${CLASSPATH}:${JUNIT_LIB}:${ANT_LIB}) \
+	  -overview docs/overview.html \
+	  -header $(COPYRIGHT) \
+	  -footer $(COPYRIGHT) \
+	  -bottom '<a href="http://secure.ucd.ie/products/opensource/ESCJava2/">The ESC/Java2 Project Homepage</a>' \
+	  -stylesheetfile $(DOCS_STYLESHEET) \
 	  -private \
 	  -doctitle "ESCTools API" \
 	  -windowtitle "ESCTools" \
@@ -226,14 +229,13 @@ javadoc:  build
 ## keywords, missing terminating semi-colons, etc.  We'll continue
 ## to update all specs to match modern JML syntax and soon we'll
 ## be able to use jmldoc in all its glory. -Kiniry
-
-.PHONY: jmldoc
 jmldoc:  build
 	rm -rf $(JMLDOC_GEN_DIR)
 	mkdir -p $(JMLDOC_GEN_DIR)
 	mkdir -p $(JMLDOC_GEN_DIR)/images
 	cp $(JAVAFE_ROOT)/doc/javadoc/images/*.gif $(JMLDOC_GEN_DIR)/images
-	$(JMLDOC) -sourcepath $(call canonicalize,$(JAVADOC_SOURCEPATH):$(SPECS):$(JUNIT_SOURCEPATH)) \
+	$(JMLDOC) -sourcepath \
+	  $(call canonicalize,$(JAVADOC_SOURCEPATH):$(SPECS):$(JUNIT_SOURCEPATH)) \
 	  -classpath "$(call canonicalize,$(JAVADOC_SOURCEPATH):${JUNIT_LIB}:${ANT_LIB}:${SPECS}:)${CLASSPATH}" \
 	  -private --source 1.4 \
 	  -doctitle "ESCTools API" \
@@ -249,87 +251,90 @@ jmldoc:  build
 	  -A \
           $(PACKAGE_LIST)
 
-.PHONY: jml
-jml:  build
-	$(JML) -A -sourcepath $(call canonicalize,$(JAVADOC_SOURCEPATH):$(SPECS):$(JUNIT_SOURCEPATH)) \
+jml: build
+	$(JML) -A \
+	  -sourcepath $(call canonicalize,$(JAVADOC_SOURCEPATH):$(SPECS):$(JUNIT_SOURCEPATH)) \
 	  -classpath "$(call canonicalize,$(JAVADOC_SOURCEPATH):${JUNIT_LIB}:${ANT_LIB}:${SPECS}:)${CLASSPATH}" \
 	$(PACKAGE_LIST)
 
-########################################### release
+################################################################################
+## Rules to build various release types
+
+.PHONY: releases test-releases releases-notests source-release patch-release \
+	jar srcjar binary-release test-binary-release test-patch-release \
+	generate-patches generate-archives generate-specs-archive \
+	generate-toplevel-archive zero-length-files
 
 ## FIXME: get mocha right
 
-.PHONY: releases
 releases: releases-notests 
 	${MAKE} test-releases
 
-.PHONY: test-releases
 test-releases:
 	@echo "Testing release versions .........."
 	${MAKE} test-binary-release
 	${MAKE} test-patch-release
+	${MAKE} test-source-release
 
-
-.PHONY: releases-notests
 releases-notests:
 	@echo "Making release versions ${ESC_PROJECT}-${ESC_VERSION} ........"
-	${MAKE} patch-release  ## does a clean as well
+	${MAKE} patch-release
 	${MAKE} binary-release
+	${MAKE} source-release
 
+source-release:
+	@echo "Creating source release .........."
 
-.PHONY: patch-release
 patch-release: clean
 	@echo "Creating patch release .........."
 	rm -rf ${PATCH_DIR}
 	mkdir -p ${PATCH_DIR}
-	${MAKE} generate-patches generate-archives zero-length-files
+	${MAKE} jars generate-patches generate-archives zero-length-files
 	cp ${ESCTOOLS_ROOT}/install.sh ${PATCH_DIR}
 	mkdir -p ${RELDIR}
 	cd ${PATCH_DIR}; tar cvjf ${RELDIR}/${RELPATCHTAR} .
 	rm -rf ${PATCH_DIR}
 
-
-.PHONY: jar
-jar:
+jar:	build
 	mkdir -p ${RELTEMP}/sub
 	cp -r ${JAVAFE_CLASSFILES}/* ${RELTEMP}/sub
 	cp -r ${ESCJAVA_CLASSFILES}/* ${RELTEMP}/sub
 	mkdir -p ${RELTEMP}/sub/junitutils
-	(cd ${ESCTOOLS_ROOT}/Utils/junitutils; cp `find . -name '*.class'` ${RELTEMP}/sub/junitutils)
-	( cd ${RELTEMP}/sub; jar xf ../../escspecs.jar )
+	( cd ${ESCTOOLS_ROOT}/Utils/junitutils; \
+	  cp `find . -name '*.class'` ${RELTEMP}/sub/junitutils )
+	( cd ${RELTEMP}/sub; jar xf $(ESCJAVA2_SPECS_JAR) )
 	( cd ${RELTEMP}/sub; rm -rf `find . -name CVS`; )
-	( cd ${RELTEMP}/sub; jar cmf ../../manifest.txt ../${RELJAR} *; )
-	##${JARMUPDATE} manifest.txt ${RELTEMP}/${RELJAR}
+	( cd ${RELTEMP}/sub; jar cmf ../../manifest.txt \
+	  ${RELJAR} *; )
+	## ${JARMUPDATE} manifest.txt ${RELJAR}
 	rm -rf ${RELTEMP}/sub
-	cp ${RELTEMP}/${RELJAR} ${ESCTOOLS_ROOT}
+	cp ${RELJAR} ${ESCTOOLS_ROOT}
 
-.PHONY: srcjar
 srcjar:
 	mkdir -p ${RELTEMP}/sub
 	cp -r ${ESCTOOLS_ROOT}/Javafe/java/* ${RELTEMP}/sub
 	cp -r ${ESCTOOLS_ROOT}/Escjava/java/* ${RELTEMP}/sub
-	cp -r ${ESCTOOLS_ROOT}/specs ${RELTEMP}/sub/specs
+	cp -r ${ESCJAVA2_SPECS} ${RELTEMP}/sub/specs
 	cp -r ${ESCTOOLS_ROOT}/original-specs ${RELTEMP}/sub/original-specs
 	mkdir -p ${RELTEMP}/sub/junitutils
-	(cd ${ESCTOOLS_ROOT}/Utils/junitutils; cp `find . -name '*.java'` ${RELTEMP}/sub/junitutils)
+	(cd ${ESCTOOLS_ROOT}/Utils/junitutils; \
+	  cp `find . -name '*.java'` ${RELTEMP}/sub/junitutils)
 	( cd ${RELTEMP}/sub; rm -rf `find . -name CVS`; )
-	( cd ${RELTEMP}/sub; jar cf ../${RELSRCJAR} *; )
+	( cd ${RELTEMP}/sub; jar cf ${RELSRCJAR} *; )
 	rm -rf ${RELTEMP}/sub
-	cp ${RELTEMP}/${RELSRCJAR} ${ESCTOOLS_ROOT}
+	cp ${RELSRCJAR} ${ESCTOOLS_ROOT}
 
-
-.PHONY: binary-release
-binary-release: build jars docs ## FIXME javadoc
+binary-release: build jars alldocs
 	@echo "Creating binary release .........."
 	## RELDIR is the staging area for all files
 	## First copy all .class files to sub and build a jar file
 	mkdir -p ${RELDIR}
 	rm -rf ${RELTEMP}
 	mkdir -p ${RELTEMP}
-	${MAKE} jar
+	${MAKE} jars
 	## Now copy in all specs
 	rm -rf ${RELTEMP}/specs
-	cp -r ${ESCTOOLS_ROOT}/specs ${RELTEMP}
+	cp -r ${ESCJAVA2_SPECS} ${RELTEMP}
 	-find ${RELTEMP}/specs -name "CVS" -exec rm -rf {} \; > /dev/null  2>&1
 	## Copy papers and slides and other documentation
 	mkdir ${RELTEMP}/papers
@@ -345,22 +350,19 @@ binary-release: build jars docs ## FIXME javadoc
 	cp docs/ESCJAVA-UsersManual.html ${RELTEMP}/docs
 	cp -r Escjava/release/master/examples ${RELTEMP}
 	-find ${RELTEMP}/examples -name "CVS" -exec rm -rf {} \; > /dev/null 2>&1
+#	cp $(ESCJAVA2_SPECS_JAR) ${RELTEMP}
+#	cp $(JML2_SPECS_JAR) ${RELTEMP}
 	## Copy other miscellaneous files
 	${MAKE} clean-norel-noreltemp
 	${MAKE} -C Utils/junitutils build
 	cp ${ESCJAVA_ROOT}/escj ${RELTEMP}
 	cp ${ESCJAVA_ROOT}/escjava2.exe ${RELTEMP}
 	cp ${ESCJ_SIMPLIFY_DIR}/Simplify-1.5.4* ${RELTEMP}
-	cp README.first README.txt ${RELTEMP}
 	cd release-files; cp `ls | grep -v CVS` ${RELTEMP}
-	cp escspecs.jar ${RELTEMP}
-	cp jmlspecs.jar ${RELTEMP}
 	-find ${RELTEMP} -name "*~" -exec rm -f {} \; > /dev/null 2>&1
 	cd ${RELTEMP}; tar cjvf ${RELDIR}/${RELTAR} *
 	rm -rf ${RELTEMP}
 
-
-.PHONY: test-binary-release
 test-binary-release:
 	@echo "Testing binary release ............"
 	rm -rf ${RELTEST}
@@ -371,7 +373,6 @@ test-binary-release:
 	    tar xjf ${RELTAR} ;\
 	    ./quicktest
 
-
 ## Note - we need to unset lots of environmental variables here because we
 ## want them to be reset based on the value of ESC_RELEASE in install.sh.
 ## Otherwise, since the variables are only conditionally set in Makefile.defs
@@ -380,7 +381,6 @@ test-binary-release:
 ## values when the Make in install.sh is invoked.  So include here any variable
 ## that is conditionally set and might have a different value when running a
 ## release than when running from the build environment.
-.PHONY: test-patch-release
 test-patch-release:
 	@echo "Testing patch release ........"
 	rm -rf ${RELTEST}
@@ -399,8 +399,6 @@ test-patch-release:
 		unset ESC_CLASSPATH ;\
 		./install.sh  ${ORIGINAL_TAR_DIR}
 
-
-
 ## These patches are used by unpacking the original
 ## Compaq/H.P. ESCTools sources as appropriate, cd-ing to the
 ## top-level directory "ESCTools" and running
@@ -408,7 +406,6 @@ test-patch-release:
 ## the appropriate number of times.
 
 PATCH_PREFIX = ${PATCH_DIR}/${PATCH_NAME}
-.PHONY: generate-patches
 generate-patches: clean
 	( cd ${ESCTOOLS_ROOT}/.. ; mkdir -p ${PATCH_DIR}; \
 	LC_ALL=C TZ=UTC0 diff -Naur --exclude=*.class --exclude=.#* --exclude=CVS \
@@ -433,22 +430,20 @@ generate-patches: clean
 		| bzip2 > ${PATCH_DIR}/${SIMPLIFY_PATCHES}; \
 	)
 
-.PHONY: generate-archives
 generate-archives: generate-toplevel-archive generate-specs-archive
 
-.PHONY: generate-specs-archive
-generate-specs-archive:   ## Contains both specs and original-specs for the patch release
+## Contains both specs and original-specs for the patch release
+generate-specs-archive:
 	mkdir -p ${RELTEMP}
 	rm -rf ${RELTEMP}/specs
 	rm -rf ${RELTEMP}/original-specs
-	cp -r ${ESCTOOLS_ROOT}/specs ${RELTEMP}
+	cp -r ${ESCJAVA2_SPECS} ${RELTEMP}
 	cp -r ${ESCTOOLS_ROOT}/original-specs ${RELTEMP}
 	-find ${RELTEMP}/specs -name "CVS" -exec rm -rf {} \;  > /dev/null 2>&1
 	-find ${RELTEMP}/original-specs -name "CVS" -exec rm -rf {} \;  > /dev/null 2>&1
 	(cd ${RELTEMP}; tar cjf ${PATCH_DIR}/${SPECS_TAR} specs original-specs;) 
 	rm -rf ${RELTEMP}/specs ${RELTEMP}/original-specs
 
-.PHONY: generate-toplevel-archive
 generate-toplevel-archive: clean
 	rm -rf ${RELTEMP}/ESCTools
 	mkdir -p ${RELTEMP}/ESCTools
@@ -462,9 +457,9 @@ generate-toplevel-archive: clean
 	cp -r ${ESCTOOLS_ROOT}/papers ${RELTEMP}/ESCTools
 	cp -r ${ESCTOOLS_ROOT}/slides ${RELTEMP}/ESCTools
 	cp -r ${ESCTOOLS_ROOT}/Utils ${RELTEMP}/ESCTools
-	cp -r ${ESCTOOLS_ROOT}/jars ${RELTEMP}/ESCTools
-	cp ${ESCTOOLS_ROOT}/jmlspecs.jar ${RELTEMP}/ESCTools
-	cp ${ESCTOOLS_ROOT}/escspecs.jar ${RELTEMP}/ESCTools
+	cp -r ${JAR_FILES} ${RELTEMP}/ESCTools
+# 	cp $(JML2_SPECS_JAR) ${RELTEMP}/ESCTools
+# 	cp $(ESCJAVA2_SPECS_JAR) ${RELTEMP}/ESCTools
 	mkdir -p ${RELTEMP}/ESCTools/Escjava/release/master/bin
 	cp ${ESCTOOLS_ROOT}/Escjava/release/master/bin/Simplify-1.5.4.macosx \
 		${RELTEMP}/ESCTools/Escjava/release/master/bin
@@ -474,7 +469,6 @@ generate-toplevel-archive: clean
 
 ## Until we can figure out how to have diff/patch detect and generate
 ## 0 length files, we have to archive them up all independently.
-.PHONY: zero-length-files
 zero-length-files:
 	mkdir -p ${PATCH_DIR}
 	cd ${ESCTOOLS_ROOT}; \
@@ -486,35 +480,47 @@ zero-length-files:
 	  done ) > ${PATCH_PREFIX}-emptyFilesThatDisappeared
 
 ############################################################################
+## Testing our specifications
+
+.PHONY: specs-test check-specs
 
 ## Run escjava on the specs
-.PHONY: specs-test
 specs-test:
 	@echo TESTING specs
 	cd specs; ${ESCJAVA} -quiet -classpath . -specs "" java/*/*.spec
 
-## This is simply a smoke test of the Makefile (particularly for Windows)
-.PHONY: make-test
-make-test:
-	echo `cygpath -m $(ESCJ_SIMPLIFY_DIR)`
-	echo ${foo}
-
 ## Experimental rule to generate a file that references every type
-## that currently has a spec and run escjava2 on it to try to detect problems
-## with package- and private-level types.
-check-specs:	build jmlspecs.jar
-	jar tf jmlspecs.jar | sed -e s+\\.spec++ | \
-		sed -e s+\\.refines-spec++ | sed -e s+\\.refines++ | \
-		sed -e s+\\.jml++ | sed -e s+\\.java++ | sed -e s+-java++ | \
-		sed -e s+\\.refines-java++ | sed -e s+/+.+g | \
-		grep -v VERSION | grep -v META | sort > .specs
+## that currently has a spec and run escjava2 on it to try to detect
+## problems with package- and private-level types.
+check-specs: build $(JML2_SPECS_JAR)
+	find specs -type f | grep -v Entries | grep -v Repository | grep -v Root | \
+	  grep -v "*~" | sed -e s+specs/++ | sed -e s+\\.spec++ | \
+	  sed -e s+\\.refines-spec++ | sed -e s+\\.refines++ | \
+	  sed -e s+\\.jml++ | sed -e s+\\.java++ | sed -e s+-java++ | \
+	  sed -e s+\\.refines-java++ | sed -e s+/+.+g | \
+	  grep -v VERSION | grep -v META | grep -v '\.\.' | \
+	  grep -v "\.$$" | sort > .specs
 	cat .specs | sed -e s+.*+import\ \&\;+ > SpecTest.java
 	echo "class SpecTest {" >> SpecTest.java
 	i=0; for f in `cat .specs`; do \
-		echo "$$f x$$i ;" >> SpecTest.java ; \
-		((i=i+1)); \
+	  echo "$$f x$$i ;" >> SpecTest.java ; \
+	  ((i=i+1)); \
 	done
 	echo "}" >> SpecTest.java
-	CLASSPATH=$(call canonicalize,${CLASSPATH}:${JUNIT_LIB}:${ANT_LIB}); $(ESCJAVA) -v SpecTest.java
+	CLASSPATH=$(call canonicalize,${CLASSPATH}:${JUNIT_LIB}:${ANT_LIB}); $(ESCJAVA) \
+	  SpecTest.java
 	rm -f .specs SpecTest.java
 
+################################################################################
+## Simple smoke tests
+
+.PHONY: make-test
+
+## This is simply a smoke test of the Makefile, specific to Windows,
+## thus the guard using the environmental variable COMSPEC defined by
+## cygwin.
+make-test:
+ifdef COMSPEC
+	echo `cygpath -m $(ESCJ_SIMPLIFY_DIR)`
+	echo ${foo}
+endif

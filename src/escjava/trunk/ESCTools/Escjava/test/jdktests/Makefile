@@ -25,23 +25,23 @@ export JUNITSW = $(JAVA) -Xmx256M -classpath "${_CLASSPATH}" \
 	junit.swingui.TestRunner
 
 ##############################################################################
+
 .PHONY: buildtests
 buildtests: lists
-	$(JAVAC) -classpath "${_ECLASSPATH}" -source 1.4 `cat listfiles` AllTests.java Suite.java LocalTestCase.java
+	$(JAVAC) -classpath "${_ECLASSPATH}" -source 1.4 `cat listfiles` \
+		AllTests.java Suite.java LocalTestCase.java
 	echo "abc" > testfile
 
 .PHONY: test runtests
-test runtests: extests sepjavatests
+test runtests: extests separate_java_tests
 
 .PHONY: extests
-extests: buildtests
+extests: lists
 	-${JUNIT} AllTests
-
 
 .PHONY: swtests
 swtests: lists
 	-$(JUNITSW) AllTests
-
 
 DEFAULTFLAGS = " "
 ALWAYSFLAGS = -quiet -nowarn Deadlock -specs "${_SPECS}" -classpath "${_CLASSPATH}"
@@ -99,8 +99,8 @@ partjunittests: lists buildtests
 quiet-junittests:
 	@$(JUNIT) Suite
 
-.PHONY: sepjavatests
-sepjavatests:
+.PHONY: separate_java_tests
+separate_java_tests:
 	@touch skip
 	-@for f in `ls Test*.java | grep -v -f skip ` ; do \
 		$(MAKE) --no-print-directory $${f}-test; \

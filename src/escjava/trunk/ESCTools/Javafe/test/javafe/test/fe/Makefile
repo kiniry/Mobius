@@ -29,7 +29,7 @@ export TOOLCMD = ${JAVA} -mx40m -classpath ${CAN_CLASSDIRECTORY} javafe.test.Pri
 export TOOLARGS = -noprint -typecheck -quiet -testMode
 export TOOL = ${TOOLCMD} ${TOOLARGS}
 
-runtest: septests
+runtest: separate_tests diffs
 #runtest: diffs
 
 all: outputs javac diffs compare summary
@@ -41,7 +41,7 @@ FILELIST = `ls | grep test | grep -v -f skip -f skipunlessall `
 endif
 
 # Runs each test and does its comparison; also utilizes the skip file
-septests:
+separate_tests:
 	@touch skip skipunlessall
 	@echo Performing tests with
 	@echo "    TOOL: ${TOOL}"

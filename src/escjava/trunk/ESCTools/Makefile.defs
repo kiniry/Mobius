@@ -44,18 +44,23 @@ else
     export DIFF = diff -w
 endif
 
-######### Check if ESCTOOLS_ROOT is set
+################################################################################
+## Check if ESCTOOLS_ROOT is set
 
 ifndef ESCTOOLS_ROOT
   $(error You must have ESCTOOLS_ROOT defined, either as an environment variable or in the file Makefile.local in the same directory as Makefile.defs )
 endif
 
-######### Make sure that ESCJ_SIMPLIFY_DIR is set
+################################################################################
+## Make sure that ESCJ_SIMPLIFY_DIR is set
 
 export ESCJ_SIMPLIFY_DIR ?= ${ESCTOOLS_ROOT}/Escjava/release/master/bin
 
-######### Check if SIMPLIFY is set; guess a value if not
-######### Set ESCJ_SIMPLIFY as appropriate
+################################################################################
+## Simplify setup
+
+## Check if SIMPLIFY is set; guess a value if not
+## Set ESCJ_SIMPLIFY as appropriate
 ## (Caution: don't use tabs here, just spaces)
 
 ifndef SIMPLIFY
@@ -92,13 +97,22 @@ export PROVER_KILL_TIME ?= 300
 export PROVER_CC_LIMIT ?= 10
 
 ##########################################################################
+## Specifications
+
+## Where we put all of our jar files
+export JAR_FILES = ${ESCTOOLS_ROOT}/jars
 
 ## You need to have some specs defined.  Use either 
-##   a) jmlspecs.jar from a JML release (not currently recommended as they
-##              are rather complex specifications)
-##   b) ${ESCTOOLS_ROOT}/escspecs.jar, which is a jar of (c)
+##   a) ${JAR_FILES}/jmlspecs.jar from a JML release (not
+##      currently recommended as they are rather complex specifications)
+
+##   b) ${JAR_FILES}/escspecs.jar, which is a jar of (c)
 ##   c) ${ESCTOOLS_ROOT}/specs, which is a set of specs designed for Esc/java
-export ESC_SPECS := ${TOP}/specs
+export JML2_SPECS_JAR := ${JAR_FILES}/jmlspecs.jar
+export ESCJAVA2_SPECS_JAR := ${JAR_FILES}/escspecs.jar
+export ESCJAVA2_SPECS := ${ESCTOOLS_ROOT}/specs
+
+export ESC_SPECS := ${ESCJAVA2_SPECS}
 
 ##########################################################################
 ## Definitions of Java tools.
@@ -115,7 +129,6 @@ export JML ?= jml
 export JDK_14_SOURCES = ${JAVA_HOME}/src
 
 ##########################################################################
-
 ## Variables that define the release.  They will be used to build
 ## archives for distribution.  They are used to create the Version.java
 ## file, which is used by Main.java to provide a version string.
@@ -123,8 +136,9 @@ export JDK_14_SOURCES = ${JAVA_HOME}/src
 export ESC_PROJECT ?= ESCJava
 export ESC_VERSION ?= CURRENT-CVS
 
-##########################################################################
+export COPYRIGHT = 'ESC/Java2<br />&copy; 2003,2004,2005 David Cok and Joseph Kiniry<br />&copy; 2005 University College Dublin<br />&copy; 2003,2004 Radboud University Nijmegen<br />&copy; 1999,2000 Compaq Computer Corporation<br />&copy; 1997,1998,1999 Digital Equipment Corporation<br />All Rights Reserved'
 
+##########################################################################
 ## The following definitions are used in various Makefiles and should
 ## be common for all users and environments.  (at least those environments
 ## that have '/' as the path separator.
@@ -132,8 +146,11 @@ export ESC_VERSION ?= CURRENT-CVS
 ## packages because the tools are used by each other (e.g. all tools use
 ## Javafe).
 
+## Where we create API documentation and the stylesheets and copyright
+## information files we use for such.
 export JAVADOC_GEN_DIR = ${ESCTOOLS_ROOT}/docs/api
 export JMLDOC_GEN_DIR = ${ESCTOOLS_ROOT}/docs/jmlapi
+export DOCS_STYLESHEET = ${ESCTOOLS_ROOT}/docs/kind.css
 
 ## Definitions for Utils
 export UTILS_SOURCE_DIR = ${ESCTOOLS_ROOT}/Utils
@@ -148,23 +165,24 @@ export JAVAFE_BUILD_CLASSPATH = ${JAVAFE_CLASSFILES}:${ESCTOOLS_ROOT}/Utils
 
 # This is the path needed to run Javafe (only used for testing)
 export JAVAFE_CLASSPATH = ${JAVAFE_CLASSFILES}:${ESCTOOLS_ROOT}/Utils
- 
+
 ## Pertinent things for Escjava
 export ESCJAVA_ROOT = ${ESCTOOLS_ROOT}/Escjava
 export ESCJAVA_SOURCE_DIR = ${ESCJAVA_ROOT}/java
 export ESCJAVA_CLASSFILES = ${ESCJAVA_ROOT}/classfiles
 
 ## Paths to Mocha components
-export MOCHA_LIB = ${ESCTOOLS_ROOT}/jars/mochalib.jar
+export MOCHA_LIB = ${JAR_FILES}/mochalib.jar
 
 ## This is the path needed to *run* Escjava.
-export ESC_CLASSPATH_S = ${JAVAFE_CLASSFILES}:${ESCJAVA_CLASSFILES}:${ESCTOOLS_ROOT}/Utils:${MOCHA_LIB}
+export ESC_CLASSPATH_S = \
+	${JAVAFE_CLASSFILES}:${ESCJAVA_CLASSFILES}:${ESCTOOLS_ROOT}/Utils:${MOCHA_LIB}
 export ESC_CLASSPATH = $(call canonicalize,${ESC_CLASSPATH_S})
 
 ## The front-end for Escjava that should be used for testing.
 export ESCJ = ${ESCJAVA_ROOT}/escj -nowarn Modifies
 
-############################### Release
+################################################################################
 ## Pertinent locations for building a release
 
 # Do something like this when you build a release:
@@ -183,9 +201,9 @@ export RELDIR  ?= ${ESCTOOLS_ROOT}/release
 # Variables relevant to names of release files
 export RELNAME ?= ${ESC_PROJECT}-${ESC_VERSION}
 export RELNAME-DATE ?= ${RELNAME}-${ESC_RELEASE_DATE}
+export RELJAR  ?= ${JAR_FILES}/esctools2.jar
+export RELSRCJAR  ?= ${JAR_FILES}/esctools2src.jar
 export RELCODENAME ?= "ETAPS 2005"
-export RELJAR  ?= esctools2.jar
-export RELSRCJAR  ?= esctools2src.jar
 export RELTAR  ?= ${RELNAME-DATE}-binary.tbz
 export RELPATCHTAR  ?= ${RELNAME-DATE}-patch.tbz
 export RELCLASSPATH = ${RELDIR}/${RELJAR}
@@ -207,24 +225,29 @@ export PATCH_DIR ?= ${ESCTOOLS_ROOT}/patches
 # The prefix of the name of the patch release tar file
 export PATCH_NAME ?= ${RELNAME-DATE}
 
-############################### Original ESCTools material
+################################################################################
+## Original ESCTools material
 
 # Directory containing the (uncompressed) tar files of the original
 # ESCTools and Simplify release
-export ORIGINAL_TAR_DIR ?= ${ESCTOOLS_ROOT}/../ESCTools-original-tars
+export ORIGINAL_TAR_DIR ?= ${ESCTOOLS_ROOT}/original_tars
 
 # Directory containing the original files of the original 
 # ESCTools and Simplify releases, as obtained from the tar files
-export ESCTOOLS_ORIGINAL ?= ${ESCTOOLS_ROOT}/../ESCTools.orig
+export ESCTOOLS_ORIGINAL ?= ${ESCTOOLS_ROOT}/original_archives
 
-############################### JUnit
+################################################################################
+## JUnit
+
 ## The location of the JUnit library as obtained from the JUnit
 ## project You can override this default setting in Makefile.local or
 ## in your environment.
 export JUNIT_LIB ?= ${ESCTOOLS_ROOT}/Utils/junit.jar
 export JUNIT_SOURCEPATH ?= /usr/local/Java/junit/src
 
-############################### Ant
+################################################################################
+## Ant
+
 ## The location of the Ant jar, a part of the Jakarta Ant project.
 ## You can override this default setting in Makefile.local or in your
 ## environment.
@@ -273,10 +296,11 @@ export MOCHA_ROOT = ${ESCJAVA_ROOT}/mochalib
 export MOCHA_SOURCE_DIR = ${MOCHA_ROOT}/java
 export MOCHA_TWO_ROOT = /usr/local/Java/j-mocha.2.0/mocha
 export LD_LIBRARY_PATH = ${MOCHA_TWO_ROOT}/platform/linux
-export MOCHA_CLASSES = ${MOCHA_SOURCE_DIR}:${ESCJAVA_ROOT}/jars/mochalib.jar
- 
-######################### classpaths #########################
- 
+export MOCHA_CLASSES = ${MOCHA_SOURCE_DIR}:${JAR_FILES}/mochalib.jar
+
+################################################################################
+## Classpaths
+
 ## FIXME -- check which of these are actually needed - they come from
 ## the setup file so some are for execution.
 
@@ -289,4 +313,3 @@ export SOURCEPATH = ${JAVAFE_SOURCE_DIR}:${ESCJAVA_SOURCE_DIR}:${MOCHA_SOURCE_DI
 # need the binaries because don't have source for sun.* classes...
 #
 export JDKSPEC = ${JDKSPEC_ROOT}
-

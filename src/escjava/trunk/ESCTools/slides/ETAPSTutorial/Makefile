@@ -1,3 +1,4 @@
+.PHONY: all clean intro warnings more tool tips
 
 all: intro warnings more tool tips
 
@@ -7,8 +8,10 @@ clean:
 	rm *.ps
 	rm *.pdf
 	rm *.dvi
-		
-intro: 1_intro_jml.tex
+
+intro: 1_intro_jml.pdf
+
+1_intro_jml.pdf: 1_intro_jml.tex
 	latex 1_intro_jml.tex 
 	dvips -Ppdf -G0 1_intro_jml.dvi
 	ps2pdf 1_intro_jml.ps
@@ -16,7 +19,9 @@ intro: 1_intro_jml.tex
 	ps2pdf 1_intro_jml4up.ps
 	rm 1_intro_jml.dvi
 
-tool: 2_tool.tex
+tool: 2_tool.pdf
+
+2_tool.pdf: 2_tool.tex
 	latex 2_tool.tex 
 	dvips -Ppdf -G0 2_tool.dvi
 	ps2pdf 2_tool.ps
@@ -24,7 +29,9 @@ tool: 2_tool.tex
 	ps2pdf 2_tool4up.ps
 	rm 2_tool.dvi
 
-warnings: 3_warnings.tex
+warnings: 3_warnings.pdf
+
+3_warnings.pdf: 3_warnings.tex
 	latex 3_warnings.tex 
 	dvips -Ppdf -G0 3_warnings.dvi
 	ps2pdf 3_warnings.ps
@@ -32,7 +39,9 @@ warnings: 3_warnings.tex
 	ps2pdf 3_warnings4up.ps
 	rm 3_warnings.dvi
 
-tips: 4_tips.tex
+tips: 4_tips.pdf
+
+4_tips.pdf: 4_tips.tex
 	latex 4_tips.tex 
 	dvips -Ppdf -G0 4_tips.dvi
 	ps2pdf 4_tips.ps
@@ -40,7 +49,9 @@ tips: 4_tips.tex
 	ps2pdf 4_tips4up.ps
 	rm 4_tips.dvi
 
-more: 5_more_jml.tex
+more: 5_more_jml.pdf
+
+5_more_jml.pdf: 5_more_jml.tex
 	latex 5_more_jml.tex 
 	dvips -Ppdf -G0 5_more_jml.dvi
 	ps2pdf 5_more_jml.ps

@@ -362,7 +362,7 @@ jdktests:
 checkspecs:
 	@echo Type-checking the Esc/Java specs
 #ifdef JML_ROOT
-	jml -Q ${ESCTOOLS_ROOT}/specs
+	jml -Q ${ESCJAVA2_SPECS}
 #endif
 	escjava -Q */*/*.* */*/*/*.*
 .PHONY: javaspecs
@@ -393,7 +393,7 @@ typecheckEscjava:
 test_matrix:
 	${ESCJ} -source 1.4 -sourcepath ${TESTSOURCEDIRECTORY} \
 		-classpath "${call canonicalize,${TESTSOURCEDIRECTORY}:${ESCTOOLS_ROOT}/Javafe/java:${ESCTOOLS_ROOT}/Escjava/java:${ESCTOOLS_ROOT}/Utils}" \
-		-specs "${call canonicalize,${ESCTOOLS_ROOT}/specs-kiniry:${ESCTOOLS_ROOT}/jmlspecs.jar}" \
+		-specs "${call canonicalize,${ESCTOOLS_ROOT}/specs-kiniry:${JML2_SPECS_JAR}" \
 		${TESTSOURCEDIRECTORY}/matrix/*.java
 
 .PHONY: self_test
@@ -433,7 +433,7 @@ test-release:
 string:
 	${ESCJ} \
 		-classpath "${call canonicalize,${ESCTOOLS_ROOT}/Javafe/java:${ESCTOOLS_ROOT}/Escjava/java:${ESCTOOLS_ROOT}/Utils}" \
-		-specs "${call canonicalize,${ESCTOOLS_ROOT}/specs-kiniry:${ESCTOOLS_ROOT}/jmlspecs.jar}" \
+		-specs "${call canonicalize,${ESCTOOLS_ROOT}/specs-kiniry:${JML2_SPECS_JAR}" \
 		-nowarn Deadlock -nowarn Post -nowarn Invariant \
 		-source 1.4 -quiet -noSemicolonWarnings \
 		../specs-kiniry/java/lang/String.java \

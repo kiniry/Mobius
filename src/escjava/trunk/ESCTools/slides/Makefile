@@ -22,6 +22,7 @@ SLIDES =	escjava_demo.pdf introjml.pdf
 all:	build
 
 build:	$(SLIDES)
+	make -C ETAPSTutorial all
 
 # %.pdf: %.tex
 # 	pdflatex $< $@
