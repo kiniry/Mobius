@@ -19,15 +19,14 @@
 
 \institute{
   INRIA Sophia-Antipolis, France \\ 
-  \email{Nestor.Catano@sophia.inria.fr,
-         Marieke.Huisman@sophia.inria.fr}
+  \email{\{Nestor.Catano, Marieke.Huisman\}@sophia.inria.fr}
 }
 
 
 \newcommand{\comment}[1]{\marginpar{\framebox{\begin{minipage}{\marginparwidth}{#1}\end{minipage}}}}
 
 \begin{document}
-\input{texdefs.tex}
+%\input{texdefs.tex}
 
 \maketitle
 
@@ -38,9 +37,108 @@
 
 \section{Introduction}
 \label{SectIntro}
-rien pour le moment
 
+\paragraph{Background}
+When developing a large software application, a significant part of
+the work goes into writing clear and concise documentation for
+it. This documentation servers several purposes: it helps the
+developers of the application (to understand the implementation
+decisions taken by a colleague, but also to understand ones own
+decisions after a certain period of time), but it also is used if
+somebody else builds a new application, using features provided by the
+application at hand. 
 
+However, such program documentation is only useful if it correctly
+describes the implementation. Preferablely, one would like to have
+some trust in the correctness of the specification. A way to achieve
+this is to write a formal specification and then prove the correctness
+of the implementation \emph{w.r.t.}~this specification, but this is
+difficult (as it requires a good understanding of the semantics
+underlying the specification and programming language), and
+labour-intensive (see \emph{e.g.}~\cite{HuismanJB00a} for an example of
+full program verification), thus although it is feasible to do this,
+the costs in general do not outweight the benefits.
+
+Recently, several suggestions have been made to overcome these
+problems. To encourage application developers to write formal
+specifications, specification languages have been developed which are
+close to programming languages. The annotation language for
+Eiffel~\cite{Meyer97} is first example of this, and recently several
+annotation language for Java have been proposed, following the same
+strategy, \emph{e.g.}~JML~\cite{LeavensBR99}, Esc/Java~\cite{ESCJavaUrl},
+and the Jass annotation language~\cite{JassUrl}. For JML and Esc/Java, some
+effort has been put into making these specification languages
+converge~\cite{EscJmlDiff}. Typical for these languages is that
+expressions are written as Java expressions, extended with some
+specification-specific constructs. 
+
+Together with the Esc/Java language, a static checker has been
+developed~\cite{ESCJavaUrl}, which can be used to check simple, but useful
+properties. The static checker tries to check that the program
+satisfies the annotations, by using a dedicated, automated theorem
+prover. This automated theorem prover has been fine-tuned to find
+problems in a program like \texttt{NullpointerException}s, and
+\texttt{ArrayIndexOutOf\-BoundException}s, but it also can be used to
+try to check other annotations. If it cannot establish that a certain
+specification is satisfied, it issues a warning. However, this does
+not necessarily mean that the program is wrong, because the Esc/Java
+approach is neither sound, nor complete. When designing the system, a
+compromise has been made between soundness, completeness, and
+efficiency. The result is an efficient checker, that can increase the
+confidence in the correctness of programs, and that finds many common
+programming errors. However, if one wishes to establish formally the
+correctness of a complicated algorithm, other verification techniques
+have to be used, \emph{e.g.}~as advocated in the LOOP
+project~\cite{LOOPUrl} or the Jive project~\cite{MeyerP00}. But even in these 
+cases it can be useful to first Esc/Java, to find a first
+approximation of the errors in the algorithm and, or specification,
+before diving into the complete formal verification. 
+
+Annotating programs with Esc/Java specifications can thus be helpful
+to create -- reasonably quickly -- clear and concise documentation for
+a software application, which is accordingly to the implementation.
+
+\paragraph{This paper}
+To demonstrate the usefulness of this approach, this paper describes
+the Esc/Java annotation of a smart card application case study, which
+is describing the implementation of an electronic purse. The original
+source code comes from Gemplus~\cite{PurseUrl}, and in this paper we describe 
+the annotations for the source code, and several possibilities for
+improvement that we encountered.  
+
+The result of this work does not give a fully verified specification,
+but it gives a reasonable description of the electronic purse
+implementation, which could serve as a basis for further formal
+verification, \emph{e.g.}~using the LOOP compiler.  The main
+contribution of this paper is that it shows that by making light
+weigth use of formal verification techniques, it is feasible to
+\emph{(i)} write a formal specification of an application, and
+\emph{(ii)} have this specification checked so as to increase
+confidence in the specification. When specifying the purse we have
+found several (simple) properties which were informally
+documented, but which were not preserved by the implementation. It was 
+straightforward to formally specify these properties (typically as
+class invariants) and Esc/Java would immediately find the places where 
+these properties were not preserved in the implementation.
+
+Furthermore, this case study has been one of the first larger case
+studies done by using Esc/Java\comment{Is this correct?}, and we found
+several points for improvement in the static checker and its
+specification language. This lead us to a wishlists on improvements in
+the specification language and to the development of a checker for
+so-called modifiable clauses. This checker will be fully described in
+a separate paper, but we used it here to get further confidence in the
+accurateness of the specification.
+
+The remaining of this paper is organised as
+follows. Section~\ref{SectGenPurse} describes the general outline of
+the case study. Section~\ref{SectStatic} describes the tools that we
+used for the static checking of the specification: Esc/Java and our
+own modifiability checker. Section~\ref{SectSpecPurse} describes the
+annotations of the purse in more detail, in discusses several
+interesting aspects of the specification. Finally,
+Section~\ref{SectConcl} gives conclusions and focusses further on the
+value of this work.
 
 
 
@@ -62,7 +160,7 @@ general outline of \textit{the electronic purse}.
 \rule{\linewidth}{0.3mm}
 \\[2.5ex]
 \centering
-\epsfig{file=figures/javacard.eps, width=11cm, clip=}
+%\epsfig{file=figures/javacard.eps, width=11cm, clip=}
 \caption{Outline of the purse}
 \label{fig-cas-pur}
 \rule{\linewidth}{0.3mm}
@@ -108,14 +206,14 @@ change the currency. In this case, the terminal request to the bank a
 new exchange rate and a certificate. The purse verifies than the bank is 
 really the expected bank and it validates the exchange rate. After
 changing the balance value, the purse must modify all the variables
-that are related to the currency. \\
+that are related to the currency. 
 
 When a currency change occurs, the purse sends to the loyalties a
 \textit{changeCurrency} warning. It is expected than each loyalty
 requests to the purse all logged transaction.  Then the purse may erase 
 the log transaction file. The purse can be associated to different
 loyalties and it must differentiate them when the purse is sending
-their logged transactions. \\
+their logged transactions. 
 
 
 
@@ -132,7 +230,7 @@ their logged transactions. \\
 Compaq SRC (Compaq Systems Research Center), which allow us to find
 some errors in \textsc{Java} programs. \textsc{Esc/Java} allow us to
 detect, at compile time, errors which usually are not detected until
-run time. \\
+run time. 
 
 \textsc{Esc/Java} includes an annotation langage with which
 programmers can express design decisions using light weight
@@ -141,7 +239,7 @@ says than parameter is not null, or declare an object invariant that
 says than an integer field lies between $0$ and the length of some
 array field. \textsc{Esc/Java} uses the given annotations in reducing
 spurious warnings, and also checks that the program is consistent with 
-the given annotations. \\
+the given annotations. 
 
 \textsc{Esc/Java} performs a \textit{modular checking}, i.e,
 \textsc{Esc/Java} checks each class separately. That means that
@@ -176,7 +274,7 @@ verification tool can be used to find them.
 
 
 
-\subsubsection{Coding errors}
+\paragraph{Coding errors}
 The \texttt{Decimal} class is a purse class and it allows us to
 represent a floating point number as
 composing by a decimal part and a integer part. These concepts are
@@ -187,7 +285,7 @@ represented by \texttt{this} is greater or equal than its parameter
 \texttt{d}. Therefore, by mean of a \textsc{Esc/Java} assertion, we
 have established a post-condition corresponding to this
 specification. This work is done by an \texttt{ensures} comment, which
-is shown on the line $8$. \\
+is shown on the line $8$. 
 
 After running the \textsc{Esc/Java} tool on this method, a warning
 signal is activated. This warning suggest that this post-condition
@@ -247,7 +345,7 @@ d.getDecPart()))}$ \\
 
 
 
-\subsubsection{Final modifiers}
+\paragraph{Final modifiers}
 The \texttt{Annee} class allows to represent a \textit{year} in the
 \texttt{purse} application. The Figure~\ref{fig-cla-ann} presents its
 source code with \textsc{Esc/Java}assertions. This class declares two 
@@ -256,7 +354,7 @@ the minimum and maximum year allowed by the application
 respectively. This class declares
 also an invariant which relates these values. The static method
 \texttt{check} allow us to verify that its parameter is a valid
-year. \\
+year. 
 
 The figure~\ref{fig-cla-dat} shows the \texttt{Date} class. This class
 represents a date for the application$:$ \texttt{jour}(day),
@@ -269,15 +367,15 @@ conditions expressed by the clauses ensures. In this way, if the
 pre-condition is satisfied, the internal variables will be assigned
 with the values of their parameters. Otherwise, the method will raise
 an \texttt{DateException} exception. This abnormality condition is
-declared by the \texttt{exsures} clause. \\
+declared by the \texttt{exsures} clause. 
 
-\textsc{Esc/Java} complains when it finds a declaration such as$:$ \\
+\textsc{Esc/Java} complains when it finds a declaration such as$:$ 
 \mbox{\tt date.setDate((byte)1, (byte)1, (byte)110);} (where date is a
 \texttt{Date} instance). The warning message signals that its third
 parameter does not verify the condition established by the clause
 \texttt{requires} belonging to the method \texttt{setDate} (line
 $5$). This warning is desployed in spite of this call respect the
-requires condition, i.e, $110>=99\ \&\&\ 110<= 127$. \\
+requires condition, i.e, $110>=99\ \&\&\ 110<= 127$. 
 
 The problem is happend due to the wrong declaration of \textsc{MIN}
 and \textsc{MAX} variables belonging to the \texttt{Annee}
@@ -286,14 +384,14 @@ Java} does not allow to change in runtime the value of a final {\tt
 final} variable.}. Thus, their values could be changed in runtime by
 mean of a direct assignation~\footnote{In fact, due to these variables
 are declared are \texttt{public}} and the pre-condition would be not
-satisfied. \\
+satisfied. 
 
 
 The declaration variables as \texttt{static} (commun for all instance)
 and \texttt{final} (which can not be changed) prevent us of doing
 any assumption that will be not satisfied any more by an
 application. This kind of control is carried out by
-\textsc{Esc/Java}. \\
+\textsc{Esc/Java}. 
 
 
 \begin{center}
@@ -395,7 +493,7 @@ $\mathtt{\}}$ \\
 
 
 
-\subsubsection{Implicit invariants}
+\paragraph{Implicit invariants}
 The figure~\ref{fig-cla-acc} shows the \texttt{AccessCondition}
 class. This class models the access conditions for the purse
 commands. These access conditions are represented by the variables
@@ -403,7 +501,7 @@ commands. These access conditions are represented by the variables
 \texttt{SECURE$\_$MESSAGING}. The internal variable \texttt{condition} 
 may take one of these values. According to the purse
 specification~\cite{BMGL00}, the \texttt{AccessCondition} class have
-to verify the following invariant$:$ \\
+to verify the following invariant$:$ 
 
 \begin{tabbing}
 //@ invariant \=condition == FREE || condition == LOCKED \kill
@@ -477,12 +575,12 @@ pac\=kag\=eco\=m.gemplus.pacap.purse; \kill
 
 
 
-\subsubsection{Unnecessary try-catches}
+\paragraph{Unnecessary try-catches}
 
 
 
 
-\subsubsection{``Ugly'' modifications}
+\paragraph{``Ugly'' modifications}
 
 
 
@@ -496,6 +594,12 @@ pac\=kag\=eco\=m.gemplus.pacap.purse; \kill
 
 \section{Conclusions}
 \label{SectConcl}
+\begin{itemize}
+\item Future work: develop application from scratch, with annotations
+\end{itemize}
+
+\bibliographystyle{plain}
+\bibliography{../specification}
 
 \end{document}
 
