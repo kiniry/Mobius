@@ -4,11 +4,11 @@
 # Dependence on astgen programs:
 #
 
-ASTGEN = ../../../astgen/astgen
-ASTFILELIST = ../../../astgen/astfilelist
+ASTGEN = ${JAVAFE_ROOT}/astgen/astgen
+ASTFILELIST = ${JAVAFE_ROOT}/astgen/astfilelist
 
 $(ASTFILELIST) $(ASTGEN):
-	(cd ../../../astgen; ${MAKE})
+	(cd ${JAVAFE_ROOT}/astgen; ${MAKE})
 
 #
 # Generating Java files:
