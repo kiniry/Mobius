@@ -270,7 +270,7 @@ clean: clean_classfiles clean_docs clean_escjava clean_tests \
 	clean_mocha
 
 clean_escjava: clean_escjava_ast clean_escjava_backpred 
-	rm -f ${VERSION_FILE}
+	rm -f ${VERSION_FILE} ${VERSION_TEMP}
 
 clean_tests:
 	${MAKE} -C ${TOP_ESCJAVA_TEST_DIR} clean

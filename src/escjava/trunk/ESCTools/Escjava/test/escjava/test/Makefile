@@ -11,6 +11,10 @@ PARSER_TEST_DIR = ${TESTSOURCEDIRECTORY}/escjava/parser/test
 export ESC_CLASSPATH ?= ${ESCJAVA_ROOT}/classfiles:${ESCJAVA_ROOT}/../Javafe/classfiles
 export ESCJ ?= ${ESCJAVA_ROOT}/escj
 
+## Some tests need a few system spec files.  We include the ones that are part
+## of the build so that they are consistent across platforms and users for tests
+export SYSTEM_SPECS = ${ESCTOOLS_ROOT}/Escjava/release/master/specs
+
 ###########################################################################
 
 compile_escjava_parser_test_programs:
@@ -29,7 +33,7 @@ test:	compile_escjava_parser_test_programs \
 
 test_and_clean: test clean
 
-test_escjava: CLASSPATH = .:${ESCJAVA_CLASSPATH}
+test_escjava: CLASSPATH = .:${ESCJAVA_CLASSPATH}:${SYSTEM_SPECS}
 test_escjava:
 ifdef ESCTOOLS_RELEASE
 	env ESCTOOLS_RELEASE=$(ESCTOOLS_RELEASE) \
@@ -39,7 +43,8 @@ else
 endif
 
 %-run:
-	./rtest $*
+	env CLASSPATH=.:${ESCJAVA_CLASSPATH}:${SYSTEM_SPECS} \
+	./rtest $* || diff $*/out $*/ans
 
 
 CD_AND_JAVA = cd $(PARSER_TEST_DIR); $(JAVA) -classpath $(ESCJAVA_CLASSPATH) $(PARSER_TEST_PACKAGE)

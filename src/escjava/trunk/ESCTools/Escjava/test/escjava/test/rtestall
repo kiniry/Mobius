@@ -16,6 +16,8 @@ echo "    CLASSPATH: $CLASSPATH"
 endif
 echo "    ESCJ_SIMPLIFY: $ESCJ_SIMPLIFY"
 
+echo TESTS OMITTED: `grep Omit alltests | awk '{print $1; }'`
+echo TESTS TO BE FIXED: `grep FIX alltests | awk '{print $1; }'`
 set errs = 0
 foreach f (`grep Good alltests | awk '{print $1;}'`)
   ./rtest $f $*  || set errs = 1

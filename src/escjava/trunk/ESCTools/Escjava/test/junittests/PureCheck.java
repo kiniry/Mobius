@@ -68,6 +68,7 @@ public class PureCheck extends A implements B {
 	public int ap();
 
 	//@ invariant am() + ap() + an() + aq() == 0;
+	//@ invariant bp() + br() + bq() + bs() == 0;
 }
 
 class A extends D implements C {
@@ -75,6 +76,13 @@ class A extends D implements C {
 	int am();
 
 	int aq();
+
+	/*@ pure model int bp();
+	    model pure int bq();
+	    pure model int br();
+	*/
+
+	public /*@ pure */ int bs() { return 0; }
 
 }
 

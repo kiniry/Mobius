@@ -11,41 +11,41 @@ test8	Good	switch, sync, try, unreachable
 test9	Good	uninitialized
 
 test10	Good	Sort 2 element array
-test11  FIX	OwnerNull // FIXME - altered error messages
-test12  Omit	Empty
+test11  Good	OwnerNull
+test12  Empty	Empty
 test13	Good	loops
 test14	Good	labels, breaks, and continues
 test15	Good	InitialState fn equates vars with their pre values
-test16	Omit	Empty
+test16	Empty	Empty
 test17	Good	Method calls
 test18	Good	sumarray
 test19	Good	The Bag demo
 
 test20	Good	Simple non_null assumption tests
-test21	Omit	Pascal-F program
+test21	Empty	Pascal-F program
 test22  Good	ghost fields (ints and bools) in postconditions and invariants
 test23	Good	loops
 test24	Good	reference of pragma in another file
-test25	FIX	Tests that FindContrbutors finds enough contributors -- FIXME altered error messages
+test25	Good	Tests that FindContrbutors finds enough contributors
 test26	Good	postconditions
 test27	Good	type predicates
 test28	Omit	invariants
-test29  Omit	Empty (created with the intension of testing CorrelatedReader)
+test29  Empty	Empty (created with the intension of testing CorrelatedReader)
 
-test30  Omit	Empty (created with the intension of testing SPVC)
+test30  Empty	Empty (created with the intension of testing SPVC)
 test31  Good	Limited tests that FindContributors doesn't find too much
 test32  Good	error message caret positions
-test33	Omit	Empty
-test34	Omit	annotation type checking - FIXME also_ checking
+test33	Empty	Empty
+test34	FIX	annotation type checking - FIXME also_ checking
 test35	Good	fresh
 test36	Good	Exceptional return from constructors
-test37	Omit	exsures and also_exsures -- FIXME also_ checking
+test37	FIX	exsures and also_exsures -- FIXME also_ checking
 test38	Good	Tests knowledge of constants and final fields with initializers
 test39  Good    relative assignments (op=) with shift operators
 
 test40	Good	non_null
 test41  Good    test for a previously discovered bug in MODIFIES substitution
-test42	FIX	class literals (see also fe/test100) -- FIXME altered error messages
+test42	Good	class literals (see also fe/test100)
 test43  Good    substitution for "this" in field-decl modifier pragmas
 test44  Good    inclusion of types of literals into FindContributors
 test45  Good    "alloc morass" (that something new is not the field of something old)
@@ -63,9 +63,9 @@ test55	Good	3 inline flags
 test56	Good	parsing of modifier pragmas after formal parameters
 test57	Good	DTTFSA
 test58	Good	"invariant" and "non_null" inheritance from interfaces
-test59	Omit	instance initializers // FIXME - simple formatting
+test59	FIX	instance initializers // FIXME - simple formatting
 
-test60	Omit	inheriting method specifications and non_null from interfaces // An _also test - review FIXME
+test60	FIX	inheriting method specifications and non_null from interfaces // An _also test - review FIXME
 test61	Good	elements left unchanged by arraycopy (based on ex from Bart Jacobs)
 test62	Good	order of testing assertions
 test63	Good	integer division
@@ -84,7 +84,7 @@ test95	Good	simple ghost field tests, and checking that a.length is not set
 test96	Good	Unknown ghost fields test
 test97  Good    ghost fields of array type
 test98  Good	ghost fields of type object
-test99	Omit	Empty
+test99	Empty	Empty
 
 test100 Good    safe checking of loop invariants
 test101 Omit    predicate abstraction
