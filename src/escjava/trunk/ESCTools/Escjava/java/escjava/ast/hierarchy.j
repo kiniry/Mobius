@@ -85,8 +85,7 @@ import javafe.util.Location;
  *                   // Uninitialized, Monitored, NonNull, WritableDeferred, Helper
  *         + ExprModifierPragma (Expr expr) 
  *                   // DefinedIf, Writable, Requires, Pre, Ensures, Post, AlsoEnsures, 
- *                   // MonitoredBy, Constraint, InvariantFor, Space
- *         + StmtModifierPragma (Stmt stmt)
+ *                   // MonitoredBy, Constraint, InvariantFor, Space, 
  *                   // \Duration, \WorkingSpace
  *         + IdentifierModifierPramga (Identifier id)
  *                   // IsInitialized
@@ -624,27 +623,6 @@ public class IdentifierModifierPragma extends ModifierPragma
   public int getStartLoc() { return loc; }
 }
 
-public class StmtModifierPragma extends ModifierPragma
-{
-  //# int tag
-  //# Stmt stmt
-  //# int loc
-
-  //# ManualTag
-  public final int getTag() { return tag; }
-
-  //# PostCheckCall
-  private void postCheck() {
-    boolean goodtag =
-      (tag == TagConstants.WACK_DURATION || 
-       tag == TagConstants.WACK_WORKING_SPACE);
-    Assert.notFalse(goodtag);
-  }
-
-  public int getStartLoc() { return loc; }
-  public int getEndLoc() { return stmt.getEndLoc(); }
-}
-
 public class ExprStmtPragma extends StmtPragma
 {
   //# int tag
@@ -658,14 +636,13 @@ public class ExprStmtPragma extends StmtPragma
 
   //# PostCheckCall
   private void postCheck() {
-    boolean goodtag =
-      (tag == TagConstants.ASSERT || 
-       tag == TagConstants.ASSUME || 
-       tag == TagConstants.DECREASES ||
-       tag == TagConstants.DECREASING ||
-       tag == TagConstants.MAINTAINING || 
-       tag == TagConstants.LOOP_INVARIANT || 
-       tag == TagConstants.LOOP_PREDICATE);
+    boolean goodtag = (tag == TagConstants.ASSERT || 
+                       tag == TagConstants.ASSUME || 
+                       tag == TagConstants.DECREASES ||
+                       tag == TagConstants.DECREASING ||
+                       tag == TagConstants.MAINTAINING || 
+                       tag == TagConstants.LOOP_INVARIANT || 
+                       tag == TagConstants.LOOP_PREDICATE);
     Assert.notFalse(goodtag);
   }
 
@@ -731,19 +708,23 @@ public class ExprModifierPragma extends ModifierPragma
 
     //# PostCheckCall
     private void postCheck() {
-        boolean goodtag =
-            tag == TagConstants.READABLE_IF || tag == TagConstants.WRITABLE_IF
-             || tag == TagConstants.REQUIRES || tag == TagConstants.ALSO_REQUIRES
-             || tag == TagConstants.ENSURES || tag == TagConstants.ALSO_ENSURES
-             || tag == TagConstants.MONITORED_BY; 
+        boolean goodtag = (tag == TagConstants.READABLE_IF 
+                           || tag == TagConstants.WRITABLE_IF
+                           || tag == TagConstants.REQUIRES 
+                           || tag == TagConstants.ALSO_REQUIRES
+                           || tag == TagConstants.ENSURES 
+                           || tag == TagConstants.ALSO_ENSURES
+                           || tag == TagConstants.MONITORED_BY 
+                           || tag == TagConstants.WACK_DURATION
+                           || tag == TagConstants.WACK_WORKING_SPACE);
         boolean isJMLExprModifier = isJMLExprModifier();
         Assert.notFalse(goodtag || isJMLExprModifier);
     }
 
     private boolean isJMLExprModifier() {
         return tag == TagConstants.ALSO 
-                || tag == TagConstants.PRECONDITION
-                || tag == TagConstants.POSTCONDITION;
+            || tag == TagConstants.PRECONDITION
+            || tag == TagConstants.POSTCONDITION;
     }
 
     public int getStartLoc() { return loc; }
