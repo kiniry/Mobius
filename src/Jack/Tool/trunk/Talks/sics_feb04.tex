@@ -295,7 +295,7 @@ Two phases:
 Method \textttbf{beginTransaction}
 \begin{alltt}
 \Blue{\textbf{/*@ requires TRANSACT == 0;
-  @ assignable TRANSACT;
+  @ modifies TRANSACT;
   @ ensures TRANSACT == 1; @*/}}
 \textbf{public static native 
    void beginTransaction() 
@@ -348,7 +348,8 @@ Similar annotations for \textttbf{commitTransaction},
 
 \begin{slide}{Some assumptions we make}
 \begin{itemize}
-  \item Only variables in annotations are static and ghost of primitive type
+  \item Only static and ghost variables of primitive type allowed in
+annotations  
   \item Appropriate modelling of programs
   \item Existence of function {\large\textsf{\Red{mod}}}: set of static ghost
 variables modified by statement 
@@ -402,8 +403,8 @@ public static native void
    commitTransaction() 
          throws TransactionException;}
 \end{alltt}
-\ \medskip\\
-Annotation propagated to each statement block, ending with commit.
+%\ \medskip\\
+%Annotation propagated to each statement block, ending with commit.
 \end{slide}
 
 \begin{slide}{Experiments: checking atomicity properties}
@@ -429,20 +430,20 @@ transactions
 
 \begin{slide}{Uncaught exception within transaction}
 \begin{alltt}
+\Blue{/*@ exsures (Exception) TRANSACT == 0; @*/} 
 \textbf{void appExchangeCurrency(...) \{
    ...
-   \Blue{/*@ exsures (Exception) TRANSACT == 0; @*/} \{
-      ...
-      JCSystem.beginTransaction();	
-      try \{balance.setValue(decimal2);
+   JCSystem.beginTransaction();	
+   try \{balance.setValue(decimal2);
             ...
-      \} catch (DecimalException e) \{
-         ISOException.throwIt(
-              PurseApplet.OVERFLOW);
-      \}
-      JCSystem.commitTransaction();
+   \} catch (DecimalException e) \{
+       ISOException.throwIt(
+            PurseApplet.OVERFLOW);
    \}
-   ...\}}
+   JCSystem.commitTransaction();
+   \}
+   ...
+\}}
 \end{alltt}
 \end{slide}
 
@@ -453,6 +454,7 @@ transactions
 blocking/error upon unwanted behaviour 
 \item Use security automata to express security properties
 \item Automatic generation of core-annotations
+\item Propagation of annotations
 \item Use any JML tool to check whether program respects the property
 \end{itemize}
 \end{slide}
@@ -460,14 +462,14 @@ blocking/error upon unwanted behaviour
 \overlays{2}{
 \begin{slide}{Correctness}
 \begin{center}
-\Blue{If program satisfies annotations \\
+\Blue{If program statically satisfies annotations \\
       then it respects the security property}
 \end{center}
 \ \smallskip\\
 \FromSlide{2}
 \begin{itemize}
 \item First soundness proof for simple while-language on the way
-\item In some cases also completeness
+\item In some cases also completeness?
 \end{itemize}
 \end{slide}
 }
@@ -477,7 +479,7 @@ blocking/error upon unwanted behaviour
       then it respects the security property}
 Approach:
 \begin{itemize}
-\item If fully annotated program verified, run-time monitoring it (with
+\item If fully annotated program verified, run-time monitoring  (with
 \texttt{jmlc}) will not block  \\
 \OliveGreen{\(P \models_{ST} \mathsf{prop}(P, \mathsf{core}(\mathcal{T})) \Rightarrow
 P \models_{RV} \mathsf{prop}(P, \mathsf{core}(\mathcal{T}))\)}
@@ -523,7 +525,7 @@ void n() \{
 \}}
 \end{alltt}
 \ \smallskip\\
-Run-time verification ok
+Run-time verification okay
 \end{slide}
 
 \begin{slide}{Example: propagation does not preserve run-time verification}
