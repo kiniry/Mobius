@@ -26,17 +26,18 @@ public class TagConstants extends OperatorTags
 
   public static final int ERRORTYPE = IDENT + 1;
   public static final int BOOLEANTYPE = ERRORTYPE + 1;
-  public static final int INTTYPE = BOOLEANTYPE + 1;
-  public static final int LONGTYPE = INTTYPE + 1;
-  public static final int CHARTYPE = LONGTYPE + 1;
-  public static final int FLOATTYPE = CHARTYPE + 1;
-  public static final int DOUBLETYPE = FLOATTYPE + 1;
-  public static final int VOIDTYPE = DOUBLETYPE + 1;
+  public static final int CHARTYPE = BOOLEANTYPE + 1;
+  public static final int VOIDTYPE = CHARTYPE + 1;
   public static final int NULLTYPE = VOIDTYPE + 1;
+	// The following must be in the order of implicit promotion
   public static final int BYTETYPE = NULLTYPE + 1;
   public static final int SHORTTYPE = BYTETYPE + 1;
+  public static final int INTTYPE = SHORTTYPE + 1;
+  public static final int LONGTYPE = INTTYPE + 1;
+  public static final int FLOATTYPE = LONGTYPE + 1;
+  public static final int DOUBLETYPE = FLOATTYPE + 1;
 
-  public static final int BOOLEANLIT = SHORTTYPE+1;
+  public static final int BOOLEANLIT = DOUBLETYPE +1;
   public static final int INTLIT = BOOLEANLIT + 1;
   public static final int LONGLIT = INTLIT + 1;
   public static final int CHARLIT = LONGLIT + 1;
@@ -44,13 +45,15 @@ public class TagConstants extends OperatorTags
   public static final int DOUBLELIT = FLOATLIT + 1;
   public static final int STRINGLIT = DOUBLELIT + 1;
   public static final int NULLLIT = STRINGLIT + 1;
+  public static final int BYTELIT = NULLLIT + 1;
+  public static final int SHORTLIT = BYTELIT + 1;
 
   public static final int LAST_TAG = NULLLIT;
 
   private static final String[] tags = { "IDENT", "ERRORTYPE",
-	"BOOLEANTYPE", "INTTYPE", "LONGTYPE", "CHARTYPE",
-	"FLOATTYPE", "DOUBLETYPE", "VOIDTYPE", "NULLTYPE",
-	"BYTETYPE", "SHORTTYPE", 
+	"BOOLEANTYPE", "CHARTYPE", "VOIDTYPE", "NULLTYPE",
+	"BYTETYPE", "SHORTTYPE", "INTTYPE", "LONGTYPE",
+	"FLOATTYPE", "DOUBLETYPE",
 	"BOOLEANLIT", "INTLIT", "LONGLIT", "CHARLIT",
 	"FLOATLIT", "DOUBLELIT", "STRINGLIT", "NULLLIT" };
 
