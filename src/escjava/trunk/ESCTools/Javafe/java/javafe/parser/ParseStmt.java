@@ -22,6 +22,9 @@ import javafe.util.Assert;
  * | Idn ':' Stmt
  * | Expr ';'
  * | '{' BlockStmt* '}'
+ * // In an assert, BoolExpr must be of type boolean, NonVoidExpr must 
+ * // not be of type void
+ * | 'assert' BoolExpr [ ':' NonVoidExpr ] ';'
  * | 'break' [ Idn ] ';'
  * | 'continue' [ Idn ] ';'
  * | 'return' [ Expr ] ';'
@@ -61,7 +64,8 @@ public abstract class ParseStmt extends ParseExpr
     }
 
     /**
-     * Internal working storage for many ParseStmt functions.
+     * Internal working storage for many <code>ParseStmt</code>
+     * functions.
      */
     //@ invariant seqStmt.elementType == \type(Stmt)
     //@ invariant seqStmt.owner == this
@@ -74,12 +78,12 @@ public abstract class ParseStmt extends ParseExpr
     protected final /*@non_null*/ StackVector seqCatchClause
             = new StackVector();
 
-
-      
-    /** Parse a type declaration stating at the class/interface keyword.
-     A declaration of this method is needed because class declarations
-     can be in statements.  However, the body (and more documentation)
-     lives in Parse.java */
+    /**
+     * Parse a type declaration stating at the class/interface
+     * keyword.  A declaration of this method is needed because class
+     * declarations can be in statements.  However, the body (and more
+     * documentation) lives in Parse.java.
+     */
     //@ requires l != null && l.m_in != null
     //@ requires loc != Location.NULL
     //@ modifies l.ttype
@@ -89,20 +93,18 @@ public abstract class ParseStmt extends ParseExpr
                                         int modifiers,
                                         ModifierPragmaVec modifierPragmas);
   
-
-    /** Method for parsing a <CODE>Stmt</CODE>.
-
-     <P>Modifies: <CODE>seqStmt</CODE>, <CODE>l</CODE>
-
-     <P>Effects: Parses a single <CODE>Stmt</CODE> according to the
-     grammar at the top of this file, <EM>except</EM> that it does not
-     accept variable-declaration statements.  If no syntax errors are
-     encountered, it adds one or more <CODE>Stmt</CODE> to
-     <CODE>seqStmt</CODE>, leaving <CODE>l</CODE> at the token just after
-     the trailing <CODE>}</CODE> of the statement.  More than one
-     statement is added only in the case of variable declarations that
-     declare more than one variable. */
-
+    /**
+     * Method for parsing a <code>Stmt</code>.
+     *
+     * <p> Effects: Parses a single <code>Stmt</code> according to the
+     * grammar at the top of this file, <em>except</em> that it does
+     * not accept variable-declaration statements.  If no syntax
+     * errors are encountered, it adds one or more <code>Stmt</code>
+     * to <code>seqStmt</code>, leaving <code>l</code> at the token
+     * just after the trailing <code>}</code> of the statement.  More
+     * than one statement is added only in the case of variable
+     * declarations that declare more than one variable.
+     */
     //@ requires l != null && l.m_in != null
     //@ ensures \result != null
     public Stmt parseStatement(Lex l) {
@@ -127,23 +129,21 @@ public abstract class ParseStmt extends ParseExpr
         }
     }
 
-
-    /** Internal method for parsing a <CODE>Stmt</CODE>.
-
-     <P>Modifies: <CODE>seqStmt</CODE>, <CODE>l</CODE>
-
-     <P>Effects: Parses a single <CODE>Stmt</CODE> according to the
-     grammar at the top of this file.  If no syntax errors are
-     encountered, it adds one or more <CODE>Stmt</CODE> to
-     <CODE>seqStmt</CODE>, leaving <CODE>l</CODE> at the token just after
-     the trailing <CODE>}</CODE> of the statement.  More than one
-     statement is added only in the case of variable declarations that
-     declare more than one variable. */
-
+    /**
+     * Internal method for parsing a <code>Stmt</code>.
+     *
+     * <p> Effects: Parses a single <code>Stmt</code> according to the
+     * grammar at the top of this file.  If no syntax errors are
+     * encountered, it adds one or more <code>Stmt</code> to
+     * <code>seqStmt</code>, leaving <code>l</code> at the token just
+     * after the trailing <code>}</code> of the statement.  More than
+     * one statement is added only in the case of variable
+     * declarations that declare more than one variable.
+     */
     //@ requires l != null && l.m_in != null
     //@ modifies seqStmt.elementCount, seqStmt.currentStackBottom
     /*@ ensures (seqStmt.elementCount - seqStmt.currentStackBottom) >
-     (\old(seqStmt.elementCount) - \old(seqStmt.currentStackBottom)) */
+     (\old(seqStmt.elementCount) - \old(seqStmt.currentStackBottom)) @*/
     private void addStmt(Lex l) {
         int ttype = l.ttype;
 
@@ -159,6 +159,7 @@ public abstract class ParseStmt extends ParseExpr
         //          | Idn { '[' ']' }* { Idn ['=' InitExpr] },+
         //          | Expr ';'
         if (ttype == TagConstants.IDENT) {
+            //@ assert (!l.toString().equals("assert")));
             Expr e = parseExpression(l);
             if (e.getTag() == TagConstants.AMBIGUOUSVARIABLEACCESS) {
                 Name n = ((AmbiguousVariableAccess)e).name;
@@ -201,6 +202,18 @@ public abstract class ParseStmt extends ParseExpr
         // Stmt ::= <keyword> ...
         int keywordloc = l.startingLoc;
         switch (ttype) {
+            case TagConstants.ASSERT: { // 'assert' BoolExpr [ ':' NonVoidExpr ] ';'
+                l.getNextToken(); // Discard the keyword
+                Expr assertion = parseExpression(l);
+                Expr label = null;
+                if (l.ttype == TagConstants.COLON) {
+                    l.getNextToken();
+                    label = parseExpression(l);
+                }
+                expect(l, TagConstants.SEMICOLON);
+                seqStmt.addElement(AssertStmt.make(assertion, label, keywordloc));
+                return;
+            }
       
             case TagConstants.BREAK: // 'break' [ Idn ] ';'
             case TagConstants.CONTINUE: { // 'continue' [ Idn ] ';'
@@ -250,8 +263,8 @@ public abstract class ParseStmt extends ParseExpr
                 } else
                     // set the location of the implicit Skip to be that of the If
                     alternative = SkipStmt.make(keywordloc);
-                seqStmt.addElement( IfStmt.make(test, consequence, alternative,
-                                                keywordloc));
+                seqStmt.addElement(IfStmt.make(test, consequence, alternative,
+                                               keywordloc));
                 return;
             }
 
@@ -365,23 +378,19 @@ public abstract class ParseStmt extends ParseExpr
         return;
     }
 
-
-
-    /** Method for parsing a <CODE>ConstructorBody</CODE>.
-
-     <P>Modifies: <CODE>l</CODE>
-
-     <P>Effects: Parses the following grammar:
-
-     <PRE>
-     Block ::=
-     '{' [ { 'this' | 'super' ] '(' ArgumentList ')' ] { VarDeclInit | Stmt }* '}'
-     </PRE>
-
-     <P> If no syntax errors are encountered, it returns a parse tree
-     for the parsed input, leaving <CODE>l</CODE> at the token just
-     after the trailing <CODE>}</CODE> of the statement. */
-
+    /**
+     * Method for parsing a <code>ConstructorBody</code>.
+     *
+     * <p> Effects: Parses the following grammar:
+     * <pre>
+     * Block ::=
+     * '{' [ { 'this' | 'super' ] '(' ArgumentList ')' ] { VarDeclInit | Stmt }* '}'
+     * </pre>
+     *
+     * <p> If no syntax errors are encountered, it returns a parse
+     * tree for the parsed input, leaving <code>l</code> at the token
+     * just after the trailing <code>}</code> of the statement.
+     */
     //@ requires l != null && l.m_in != null
     //@ ensures \result != null
     public BlockStmt parseConstructorBody(Lex l) {
@@ -450,10 +459,9 @@ public abstract class ParseStmt extends ParseExpr
             }
         }
 
-        // No explicit constructor invocation
-        // We do not know if this class is java.lang.Object,
-        // so we cannot add a constructor invocation here 
-        // we will do it in type checking
+        // No explicit constructor invocation.  We do not know if this
+        // class is java.lang.Object, so we cannot add a constructor
+        // invocation here; we will do it in type checking.
       
         // Handle rest of body
         {
@@ -471,22 +479,19 @@ public abstract class ParseStmt extends ParseExpr
         return BlockStmt.make(body, openloc, closeloc);
     }
 
-
-    /** Method for parsing a <CODE>Block</CODE>.
-
-     <P>Modifies: <CODE>l</CODE>
-
-     <P>Effects: Parses the following grammar:
-
-     <PRE>
-     Block ::=
-     '{' { VarDeclInit | Stmt }* '}'
-     </PRE>
-
-     <P> If no syntax errors are encountered, it returns a parse tree
-     for the parsed input, leaving <CODE>l</CODE> at the token just
-     after the trailing <CODE>}</CODE> of the statement. */
-
+    /**
+     * Method for parsing a <code>Block</code>.
+     *
+     * <p> Effects: Parses the following grammar:
+     * <pre>
+     * Block ::=
+     * '{' { VarDeclInit | Stmt }* '}'
+     * </pre>
+     *
+     * <p> If no syntax errors are encountered, it returns a parse
+     * tree for the parsed input, leaving <code>l</code> at the token
+     * just after the trailing <code>}</code> of the statement.
+     */
     //@ requires l != null && l.m_in != null
     //@ ensures \result != null
     public BlockStmt parseBlock(Lex l, boolean specOnly) {
@@ -515,26 +520,23 @@ public abstract class ParseStmt extends ParseExpr
         return BlockStmt.make(body, openloc, closeloc);
     }
 
-
-    /** Internal method for parsing a switch statement.
-
-     <P>Modifies: <CODE>l</CODE>
-
-     <P>Effects: Parses the following grammar:
-
-     <PRE>
-     ForStmtRemainder ::=
-     '(' [VDeclInit | StmtExpr,* ] ';' Expr ';' StmtExpr,* ')' Stmt
-     </PRE>
-
-     Note that it assumes the leading <CODE>for</CODE> has already
-     been parsed; <CODE>keywordloc</CODE> is the location assumed for the
-     <CODE>for</CODE> token.
-
-     <P> If no syntax errors are encountered, it returns a parse tree
-     for the parsed input, leaving <CODE>l</CODE> at the token just
-     after the trailing <CODE>}</CODE> of the statement. */
-
+    /**
+     * Internal method for parsing a switch statement.
+     *
+     * <p> Effects: Parses the following grammar:
+     * <pre>
+     * ForStmtRemainder ::=
+     * '(' [VDeclInit | StmtExpr,* ] ';' Expr ';' StmtExpr,* ')' Stmt
+     * </pre>
+     *
+     * <p> Note that it assumes the leading <code>for</code> has
+     * already been parsed; <code>keywordloc</code> is the location
+     * assumed for the <code>for</code> token.
+     *
+     * <p> If no syntax errors are encountered, it returns a parse
+     * tree for the parsed input, leaving <code>l</code> at the token
+     * just after the trailing <code>}</code> of the statement.
+     */
     //@ requires l != null && l.m_in != null
     //@ requires keywordloc != Location.NULL
     //@ ensures \result != null
@@ -596,7 +598,7 @@ public abstract class ParseStmt extends ParseExpr
             forInit = StmtVec.popFromStackVector(seqStmt);
         }
 
-        // Parse <PRE> Test ::= [ Expr ] ';' </PRE>
+        // Parse <pre> Test ::= [ Expr ] ';' </pre>
         Expr test;
         if (l.ttype != TagConstants.SEMICOLON)
             test = parseExpression(l);
@@ -605,7 +607,7 @@ public abstract class ParseStmt extends ParseExpr
                                      l.startingLoc );
         expect(l, TagConstants.SEMICOLON);
 
-        // Parse <PRE> ForUpdate ::= StmtExpr,* ')' </PRE>
+        // Parse <pre> ForUpdate ::= StmtExpr,* ')' </pre>
         ExprVec forUpdate;
         {
             seqExpr.push();
@@ -629,27 +631,23 @@ public abstract class ParseStmt extends ParseExpr
                             locFirstSemi);
     }
 
-
-
-    /** Internal method for parsing a switch statement.
-
-     <P>Modifies: <CODE>l</CODE>
-
-     <P>Effects: Parses the following grammar:
-
-     <PRE>
-     SwitchStmtRemainder ::=
-     '(' Expr ')' '{' { 'case' Expr ':' | 'default ':' | Stmt }* '}'
-     </PRE>
-
-     Note that it assumes the trailing <CODE>switch</CODE> has already
-     been parsed; <CODE>keywordLoc</CODE> is the location assumed for the
-     <CODE>switch</CODE> token.
-
-     <P> If no syntax errors are encountered, it returns a parse tree
-     for the parsed input, leaving <CODE>l</CODE> at the token just
-     after the trailing <CODE>}</CODE> of the statement. */
-
+    /**
+     * Internal method for parsing a switch statement.
+     *
+     * <p> Effects: Parses the following grammar:
+     * <pre>
+     * SwitchStmtRemainder ::=
+     * '(' Expr ')' '{' { 'case' Expr ':' | 'default ':' | Stmt }* '}'
+     * </pre>
+     *
+     * <p> Note that it assumes the trailing <code>switch</code> has
+     * already been parsed; <code>keywordLoc</code> is the location
+     * assumed for the <code>switch</code> token.
+     *
+     * <p> If no syntax errors are encountered, it returns a parse
+     * tree for the parsed input, leaving <code>l</code> at the token
+     * just after the trailing <code>}</code> of the statement.
+     */
     //@ requires l != null && l.m_in != null
     //@ requires keywordloc != Location.NULL
     //@ ensures \result != null
@@ -696,25 +694,20 @@ public abstract class ParseStmt extends ParseExpr
         return SwitchStmt.make(body, openloc, closeloc, value, keywordloc);
     }
 
-
-    /** Internal routine for parsing zero or more catch clauses.
-
-     <P>Modifies: <CODE>l</CODE>
-
-     <P>Effects: Parses the following grammar:
-
-     <PRE> Catches ::= { 'catch' '(' [Modifiers] Type Idn ')' Block }* </PRE>
-
-     At the start of each iteration (including the first), if the first
-     token is not <CODE>catch</CODE>, it stops trying to parse,
-     returning the (possibly empty) sequence of catch clauses parsed
-     already and leaving the token at the first token following the
-     last catch clause parsed.  If the first token is
-     <CODE>catch</CODE>, then it tries to parse a catch clause,
-     throwing an exception if a syntax error is found.
-
+    /**
+     * Internal routine for parsing zero or more catch clauses.
+     *
+     * <p> Effects: Parses the following grammar:
+     * <pre> Catches ::= { 'catch' '(' [Modifiers] Type Idn ')' Block }* </pre>
+     *
+     * At the start of each iteration (including the first), if the
+     * first token is not <code>catch</code>, it stops trying to
+     * parse, returning the (possibly empty) sequence of catch clauses
+     * parsed already and leaving the token at the first token
+     * following the last catch clause parsed.  If the first token is
+     * <code>catch</code>, then it tries to parse a catch clause,
+     * throwing an exception if a syntax error is found.
      */
-
     //@ requires l != null && l.m_in != null
     private CatchClauseVec parseCatches(Lex l) {
         if (l.ttype != TagConstants.CATCH) return null;
@@ -732,35 +725,29 @@ public abstract class ParseStmt extends ParseExpr
         return CatchClauseVec.popFromStackVector(seqCatchClause);
     }
 
-
-    /** Internal routine for parsing variable declarations
-     <EM>after</EM> the leading type has been parsed.
-
-     <P>Modifies: <CODE>seqStmt</CODE>, <CODE>l</CODE>
-
-     <P>Effects: Parses the following grammar:
-
-     <PRE>
-     VarDeclRemainder ::=
-     { Idn { '[' ']' }* [ '=' VariableInitializer ] },*
-     </PRE>
-
-     Each <CODE>VarDeclRemainder</CODE> found is combined with
-     <CODE>basetype</CODE> to create a <CODE>VarDeclStmt</CODE> which
-     is added to the end of <CODE>seqStmt</CODE>.
-
-     <P> On entry, it assumes at least one
-     <CODE>VarDeclRemainder</CODE> is available, and throws an
-     exception if one isn't.  At the end of each iteration, it stops
-     trying to parse if the comma is not present, leaving the token at
-     the first token following the last <CODE>VarDeclRemainder</CODE>
-     parsed.  If a comma is found, then it tries to parse the next
-     <CODE>VarDeclRemainder</CODE>, throwing an exception if a syntax
-     error is found.
-
+    /**
+     * Internal routine for parsing variable declarations
+     * <em>after</em> the leading type has been parsed.
+     * 
+     * <p>Effects: Parses the following grammar:
+     * <pre>
+     * VarDeclRemainder ::=
+     * { Idn { '[' ']' }* [ '=' VariableInitializer ] },*
+     * </pre>
+     * 
+     * <p> Each <code>VarDeclRemainder</code> found is combined with
+     * <code>basetype</code> to create a <code>VarDeclStmt</code>
+     * which is added to the end of <code>seqStmt</code>.
+     * 
+     * <p> On entry, it assumes at least one
+     * <code>VarDeclRemainder</code> is available, and throws an
+     * exception if one isn't.  At the end of each iteration, it stops
+     * trying to parse if the comma is not present, leaving the token
+     * at the first token following the last
+     * <code>VarDeclRemainder</code> parsed.  If a comma is found,
+     * then it tries to parse the next <code>VarDeclRemainder</code>,
+     * throwing an exception if a syntax error is found.
      */
-
-
     //@ requires l != null && basetype != null && l.m_in != null
     //@ requires basetype.syntax
     private void addVarDeclStmts(Lex l, int modifiers, 
@@ -809,19 +796,15 @@ public abstract class ParseStmt extends ParseExpr
     }
 
 
-    /** Routine for parsing a single formal parameter declarations.
-
-     <P>Modifies: <CODE>l</CODE>
-
-     <P>Effects: Parses the following grammar:
-
-     <PRE> FormalParaDecl ::= { [Modifiers] Type Idn
-     ModifierPragma* } </PRE>
-
-     returning an ASTNode representing the result.  Leaves
-     <CODE>l</CODE> pointing to the token just after the
-     <CODE>FormalParaDecl</CODE>. */
-
+    /**
+     * Routine for parsing a single formal parameter declarations.
+     * 
+     * <p> Effects: Parses the following grammar:
+     * <pre> FormalParaDecl ::= { [Modifiers] Type Idn ModifierPragma* } </pre>
+     * returning an ASTNode representing the result.  Leaves
+     * <code>l</code> pointing to the token just after the
+     * <code>FormalParaDecl</code>.
+     */
     //@ requires l != null && l.m_in != null
     //@ ensures \result != null
     public FormalParaDecl parseFormalParaDecl(Lex l) {
@@ -839,10 +822,11 @@ public abstract class ParseStmt extends ParseExpr
                                    idn, paratype, locId);
     }
 
-    /** Returns true iff <CODE>e</CODE> is a Java
-     <CODE>StatementExpression</CODE> as defined in the grammar given
-     in the language spec. */
-
+    /**
+     * @return true iff <code>e</code> is a Java
+     * <code>StatementExpression</code> as defined in the grammar
+     * given in the language spec.
+     */
     //@ requires e != null
     public static boolean isStatementExpression(Expr e) {
         switch (e.getTag()) {

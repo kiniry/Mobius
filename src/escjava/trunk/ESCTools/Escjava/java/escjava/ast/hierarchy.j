@@ -556,6 +556,8 @@ public class ExprStmtPragma extends StmtPragma
 {
   //# int tag
   //# Expr expr
+  // label only used for "assert" keyword
+  //# Expr label NullOK
   //# int loc
 
   //# ManualTag
@@ -564,13 +566,13 @@ public class ExprStmtPragma extends StmtPragma
   //# PostCheckCall
   private void postCheck() {
     boolean goodtag =
-      (tag == TagConstants.ASSUME 
-       || tag == TagConstants.ASSERT
-       || tag == TagConstants.LOOP_INVARIANT 
-       || tag == TagConstants.LOOP_PREDICATE
-       || tag == TagConstants.JML_MAINTAINING 
-       || tag == TagConstants.DECREASES
-       || tag == TagConstants.JML_DECREASING);
+      (tag == TagConstants.ASSERT || 
+       tag == TagConstants.ASSUME || 
+       tag == TagConstants.DECREASES ||
+       tag == TagConstants.JML_DECREASING ||
+       tag == TagConstants.JML_MAINTAINING || 
+       tag == TagConstants.LOOP_INVARIANT || 
+       tag == TagConstants.LOOP_PREDICATE);
     Assert.notFalse(goodtag);
   }
 

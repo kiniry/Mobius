@@ -3,11 +3,11 @@ GoodPragmas.j:18: /*@ unreachable */
 GoodPragmas.j:19: /*@ assume false == false; */
 GoodPragmas.j:20: /*@ assume true; */
 GoodPragmas.j:21: /*@ unreachable */
-GoodPragmas.j:21: /*@ assume assert + modifies; */
-GoodPragmas.j:22: /*@ assert assert + assume; */
+GoodPragmas.j:21: /*@ assume assertt + modifies; */
+GoodPragmas.j:22: /*@ assert assertt + assume; */
 GoodPragmas.j:22: /*@ unreachable */
 GoodPragmas.j:23: /*@ unreachable */
-GoodPragmas.j:23: /*@ loop_invariant assert; */
+GoodPragmas.j:23: /*@ loop_invariant assertt; */
 GoodPragmas.j:23: /*@ unreachable */
 GoodPragmas.j:25: /*@ still_deferred x; */
 GoodPragmas.j:26: /*@ still_deferred x; */

@@ -50,8 +50,7 @@ public class TagConstants extends javafe.tc.TagConstants
     public static final int ALSO_MODIFIES = ALSO_EXSURES + 1;
     public static final int ALSO_REQUIRES = ALSO_MODIFIES + 1;
     public static final int ASSUME = ALSO_REQUIRES + 1;
-    public static final int ASSERT = ASSUME + 1;
-    public static final int AXIOM = ASSERT + 1;
+    public static final int AXIOM = ASSUME + 1;
     public static final int DECREASES = AXIOM + 1;
     public static final int DTTFSA = DECREASES + 1;
     public static final int ENSURES = DTTFSA + 1;
@@ -614,7 +613,6 @@ public class TagConstants extends javafe.tc.TagConstants
         Identifier.intern("also_modifies"),
         Identifier.intern("also_requires"),
         Identifier.intern("assume"),
-        Identifier.intern("assert"),
         Identifier.intern("axiom"),
         Identifier.intern("decreases"),
         Identifier.intern("\\dttfsa"),

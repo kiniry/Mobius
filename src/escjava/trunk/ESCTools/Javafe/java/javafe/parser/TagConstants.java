@@ -47,7 +47,8 @@ public class TagConstants extends javafe.ast.TagConstants
     // Keywords
     public static final int FIRST_KEYWORD = EOL_COMMENT + 1;
     public static final int ABSTRACT = FIRST_KEYWORD;
-    public static final int BOOLEAN  = ABSTRACT + 1;
+    public static final int ASSERT   = ABSTRACT + 1;
+    public static final int BOOLEAN  = ASSERT + 1;
     public static final int BREAK    = BOOLEAN + 1;
     public static final int BYTE     = BREAK + 1;
     public static final int CASE     = BYTE + 1;
@@ -108,7 +109,7 @@ public class TagConstants extends javafe.ast.TagConstants
      * inherited from <code>OperatorTags</code>).
      */
 
-    //@ ensures \result != null
+    //@ ensures \result != null;
     public static String toString(int code) {
         if (FIRST_KEYWORD <= code && code <= LAST_KEYWORD)
             return getString(code - FIRST_KEYWORD);
@@ -130,7 +131,7 @@ public class TagConstants extends javafe.ast.TagConstants
      * <code>addJavaPunctuation</code>.
      */
 
-    //@ invariant \nonnullelements(punctuationStrings)
+    //@ invariant \nonnullelements(punctuationStrings);
     static final String punctuationStrings[] = {
         "!", "!=", "%", "%=", "&", "&&", "&=", "(", ")", "*", "*=",
         "+", "++", "+=", ",", "-", "--", "-=", ".", "/", "/=", ":", ";",
@@ -146,24 +147,24 @@ public class TagConstants extends javafe.ast.TagConstants
      * <code>addJavaPunctuation</code>.
      */
 
-    //@ invariant punctuationCodes.length == punctuationStrings.length
+    //@ invariant punctuationCodes.length == punctuationStrings.length;
     /*@ invariant (\forall int i; 0 <= i && i <= punctuationCodes.length
-     ==> punctuationCodes[i] != TagConstants.NULL ) */
+      @           ==> punctuationCodes[i] != TagConstants.NULL); */
     /*@ invariant (\forall int i; 0 <= i && i <= punctuationCodes.length
-     ==>  punctuationCodes[i] != TagConstants.IDENT &&
-     punctuationCodes[i] != TagConstants.BOOLEANLIT &&
-     punctuationCodes[i] != TagConstants.INTLIT &&
-     punctuationCodes[i] != TagConstants.LONGLIT &&
-     punctuationCodes[i] != TagConstants.FLOATLIT &&
-     punctuationCodes[i] != TagConstants.DOUBLELIT &&
-     punctuationCodes[i] != TagConstants.STRINGLIT &&
-     punctuationCodes[i] != TagConstants.CHARLIT &&
-     punctuationCodes[i] != TagConstants.LEXICALPRAGMA &&
-     punctuationCodes[i] != TagConstants.MODIFIERPRAGMA &&
-     punctuationCodes[i] != TagConstants.STMTPRAGMA &&
-     punctuationCodes[i] != TagConstants.TYPEDECLELEMPRAGMA &&
-     punctuationCodes[i] != TagConstants.TYPEMODIFIERPRAGMA) */
-    //@ invariant punctuationCodes.owner instanceof TagConstants 
+      @           ==>  punctuationCodes[i] != TagConstants.IDENT &&
+      @                punctuationCodes[i] != TagConstants.BOOLEANLIT &&
+      @                punctuationCodes[i] != TagConstants.INTLIT &&
+      @                punctuationCodes[i] != TagConstants.LONGLIT &&
+      @                punctuationCodes[i] != TagConstants.FLOATLIT &&
+      @                punctuationCodes[i] != TagConstants.DOUBLELIT &&
+      @                punctuationCodes[i] != TagConstants.STRINGLIT &&
+      @                punctuationCodes[i] != TagConstants.CHARLIT &&
+      @                punctuationCodes[i] != TagConstants.LEXICALPRAGMA &&
+      @                punctuationCodes[i] != TagConstants.MODIFIERPRAGMA &&
+      @                punctuationCodes[i] != TagConstants.STMTPRAGMA &&
+      @                punctuationCodes[i] != TagConstants.TYPEDECLELEMPRAGMA &&
+      @                punctuationCodes[i] != TagConstants.TYPEMODIFIERPRAGMA); */
+    //@ invariant punctuationCodes.owner instanceof TagConstants;
     static final int punctuationCodes[] = {
         NOT, NE, MOD, ASGREM, BITAND, AND, ASGBITAND, LPAREN, RPAREN, STAR, ASGMUL,
         ADD, INC, ASGADD, COMMA, SUB, DEC, ASGSUB, FIELD, DIV, ASGDIV, COLON,
@@ -177,14 +178,14 @@ public class TagConstants extends javafe.ast.TagConstants
 
     /**
      * Alphabetical list of Java keywords.  The keyword codes are also
-     * alphabetical, which menas that if X is code of keyword K, then
+     * alphabetical, which means that if X is code of keyword K, then
      * keywordStrings[X - FIRST_KEYWORD] should equal K.
      */
 
-    //@ invariant keywordStrings.length == 1 + LAST_KEYWORD - FIRST_KEYWORD
-    //@ invariant \nonnullelements(keywordStrings)
+    //@ invariant keywordStrings.length == 1 + LAST_KEYWORD - FIRST_KEYWORD;
+    //@ invariant \nonnullelements(keywordStrings);
     private static final String keywordStrings[] = {
-        "abstract", "boolean", "break", "byte", "case", "catch", "char",
+        "abstract", "assert", "boolean", "break", "byte", "case", "catch", "char",
         "class", "const", "continue", "default", "do", "double", "else",
         "extends", "false", "final", "finally", "float", "for", "goto", "if",
         "implements", "import", "instanceof", "int", "interface", "long", 
@@ -194,7 +195,7 @@ public class TagConstants extends javafe.ast.TagConstants
         "throw", "throws", "transient", "true", "try", "void", "volatile", "while"
     };
 
-    //@ invariant \nonnullelements(otherStrings)
+    //@ invariant \nonnullelements(otherStrings);
     private static final String otherStrings[] = {
         "IDENT",
         "CHARLIT", "INTLIT", "2147483648",
@@ -203,7 +204,7 @@ public class TagConstants extends javafe.ast.TagConstants
         "TYPEMODIFIERPRAGMA", "EOF"
     };
 
-    //@ invariant otherCodes.length == otherStrings.length
+    //@ invariant otherCodes.length == otherStrings.length;
     private static final int otherCodes[] = {
         IDENT,
         CHARLIT, INTLIT, MAX_INT_PLUS_ONE,
@@ -218,7 +219,7 @@ public class TagConstants extends javafe.ast.TagConstants
         keywordStrings.length + punctuationStrings.length + otherStrings.length;
 
 
-    //@ requires 0<=index && index<noTokens
+    //@ requires 0 <= index && index < noTokens;
     private static int getCode(int index) {
         Assert.precondition(0 <= index && index < noTokens);
         if (index < 1 + LAST_KEYWORD - FIRST_KEYWORD) return FIRST_KEYWORD + index;
@@ -231,8 +232,8 @@ public class TagConstants extends javafe.ast.TagConstants
         return -1; // Dummy
     }
 
-    //@ requires 0 <= index && index < noTokens
-    //@ ensures \result != null
+    //@ requires 0 <= index && index < noTokens;
+    //@ ensures \result != null;
     private static String getString(int index) {
         Assert.precondition(0 <= index && index < noTokens);
         if (index < keywordStrings.length)

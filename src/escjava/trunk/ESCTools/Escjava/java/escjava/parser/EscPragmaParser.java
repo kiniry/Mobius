@@ -722,9 +722,26 @@ public class EscPragmaParser extends Parse implements PragmaParser
                     break;
 	
                 case TagConstants.ASSERT:
+                case TagConstants.JML_ASSERT_REDUNDANTLY: {
+                    dst.ttype = TagConstants.STMTPRAGMA;
+                    Expr assertion = parseExpression(scanner);
+                    Expr label = null;
+                    if (scanner.ttype == TagConstants.COLON) {
+                        scanner.getNextToken();
+                        label = parseExpression(scanner);
+                    }
+                    ExprStmtPragma pragma = 
+                        ExprStmtPragma.make(TagConstants.unRedundant(tag), 
+                                            assertion, label, loc);
+                    if (TagConstants.isRedundant(tag))
+                        pragma.setRedundant(true);
+                    dst.auxVal = pragma;
+                    semiNotOptional = true;
+                    break;
+                }
+
                 case TagConstants.ASSUME:
                 case TagConstants.DECREASES:
-                case TagConstants.JML_ASSERT_REDUNDANTLY:
                 case TagConstants.JML_ASSUME_REDUNDANTLY:
                 case TagConstants.JML_DECREASES_REDUNDANTLY:
                 case TagConstants.JML_DECREASING:
@@ -736,7 +753,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
                     dst.ttype = TagConstants.STMTPRAGMA;
                     ExprStmtPragma pragma = 
                         ExprStmtPragma.make(TagConstants.unRedundant(tag), 
-                                            parseExpression(scanner), loc);
+                                            parseExpression(scanner), null, loc);
                     if (TagConstants.isRedundant(tag))
                         pragma.setRedundant(true);
                     dst.auxVal = pragma;
@@ -838,7 +855,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
                     if (modifierPragmas == null)
                         modifierPragmas = ModifierPragmaVec.make();
 	      
-                    int locId     = scanner.startingLoc;
+                    int locId = scanner.startingLoc;
                     Identifier id = parseIdentifier(scanner);
                     Type vartype = parseBracketPairs(scanner, type);
 	      
@@ -1369,7 +1386,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
         } else if (inProcessTag == TagConstants.LOOP_PREDICATE) {
             dst.startingLoc = inProcessLoc;
             Expr e = parseExpression(scanner);
-            dst.auxVal = ExprStmtPragma.make(inProcessTag, e, inProcessLoc);
+            dst.auxVal = ExprStmtPragma.make(inProcessTag, e, null, inProcessLoc);
             dst.ttype = TagConstants.STMTPRAGMA;
         } else if (inProcessTag == TagConstants.JML_DEPENDS) {
             // FIXME - not sure why we end up here or what we are supposed to do

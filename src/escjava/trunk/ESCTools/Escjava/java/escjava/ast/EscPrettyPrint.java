@@ -2,21 +2,14 @@
 
 package escjava.ast;
 
-
 import java.io.OutputStream;
-
 import java.util.Enumeration;
 import java.util.Hashtable;
-
-
 import javafe.ast.*;
 import javafe.util.Location;
 import javafe.util.Assert;
-
 import escjava.parser.EscPragmaParser;
-
 import escjava.ast.TagConstants;
-
 
 public class EscPrettyPrint extends DelegatingPrettyPrint {
     public EscPrettyPrint() { }
@@ -61,7 +54,8 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
                 write(o, "/*@ "); 
                 write(o, TagConstants.toString(tag)); 
                 write(o, ' ');
-                self.print(o, ind, e); write(o, "; */");
+                self.print(o, ind, e);
+                write(o, "; */");
                 break;
             }
             case TagConstants.MODELDECLPRAGMA: {
@@ -121,7 +115,7 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
 
 	    case TagConstants.JML_CLOSEPRAGMA:
 	    case TagConstants.JML_OPENPRAGMA:
-                assert false : "Open and close pragmas are not yet handled.";
+                Assert.fail("Open and close pragmas are not yet handled.");
                 break;
 
             case TagConstants.HELPER:
@@ -166,9 +160,9 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
                 break;
             }
 
-            // All redundant tokens should not exist in the AST
-            // anymore; they are represented with redundant fields in
-            // the AST nodes.
+                // All redundant tokens should not exist in the AST
+                // anymore; they are represented with redundant fields in
+                // the AST nodes.
             case TagConstants.JML_ASSERT_REDUNDANTLY:
             case TagConstants.JML_ASSIGNABLE_REDUNDANTLY:
             case TagConstants.JML_ASSUME_REDUNDANTLY:
@@ -187,7 +181,7 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
             case TagConstants.JML_REQUIRES_REDUNDANTLY:
             case TagConstants.JML_SIGNALS_REDUNDANTLY:
             case TagConstants.JML_WHEN_REDUNDANTLY:
-                assert false : "Redundant keywords should not be in AST!";
+                Assert.fail("Redundant keywords should not be in AST!");
                 break;
 
             case TagConstants.ALSO_MODIFIES:
@@ -245,51 +239,68 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
         }
     }
 
-  public void print(OutputStream o, int ind, StmtPragma sp) {
-    int tag = sp.getTag();
-    switch (tag) {
-    case TagConstants.UNREACHABLE:
-      write(o, "/*@ "); 
-      write(o, TagConstants.toString(tag)); 
-      write(o, " */");
-      break;
+    public void print(OutputStream o, int ind, StmtPragma sp) {
+        int tag = sp.getTag();
+        switch (tag) {
+            case TagConstants.UNREACHABLE:
+                write(o, "/*@ "); 
+                write(o, TagConstants.toString(tag)); 
+                write(o, " */");
+                break;
 
-    case TagConstants.ASSERT:
-    case TagConstants.ASSUME:
-    case TagConstants.DECREASES:
-    case TagConstants.JML_DECREASING:
-    case TagConstants.JML_MAINTAINING:
-    case TagConstants.LOOP_INVARIANT:
-    case TagConstants.LOOP_PREDICATE: {
-      Expr e = ((ExprStmtPragma)sp).expr;
-      write(o, "/*@ "); 
-      if (sp.isRedundant())
-          write(o, TagConstants.toString(TagConstants.makeRedundant(tag)));
-      else
-          write(o, TagConstants.toString(tag)); 
-      write(o, ' ');
-      self.print(o, ind, e); 
-      write(o, "; */");
-      break;
-    }
+            case TagConstants.ASSERT: {
+                Expr e = ((ExprStmtPragma)sp).expr;
+                Expr l = ((ExprStmtPragma)sp).label;
+                write(o, "/*@ "); 
+                if (sp.isRedundant())
+                    write(o, TagConstants.toString(TagConstants.makeRedundant(tag)));
+                else
+                    write(o, TagConstants.toString(tag)); 
+                write(o, " ");
+                self.print(o, ind, e);
+                if (l != null) {
+                    write(o, " : ");
+                    self.print(o, ind, l);
+                }
+                write(o, "; */");
+                break;
+            }
 
-    case TagConstants.SETSTMTPRAGMA: {
-	SetStmtPragma s = (SetStmtPragma)sp;
-	write(o, "/*@ ");
-	write(o, TagConstants.toString(TagConstants.SET));
-	write(o, " ");
-	self.print(o, ind, s.target);
-	write(o, " = ");
-	self.print(o, ind, s.value);
-	write(o, "; */");
-	break;
-    }
+            case TagConstants.ASSUME:
+            case TagConstants.DECREASES:
+            case TagConstants.JML_DECREASING:
+            case TagConstants.JML_MAINTAINING:
+            case TagConstants.LOOP_INVARIANT:
+            case TagConstants.LOOP_PREDICATE: {
+                Expr e = ((ExprStmtPragma)sp).expr;
+                write(o, "/*@ "); 
+                if (sp.isRedundant())
+                    write(o, TagConstants.toString(TagConstants.makeRedundant(tag)));
+                else
+                    write(o, TagConstants.toString(tag)); 
+                write(o, ' ');
+                self.print(o, ind, e); 
+                write(o, "; */");
+                break;
+            }
 
-    default:
-      write(o, "/* Unknown StmtPragma (tag = " + tag + ") */");
-      break;
+            case TagConstants.SETSTMTPRAGMA: {
+                SetStmtPragma s = (SetStmtPragma)sp;
+                write(o, "/*@ ");
+                write(o, TagConstants.toString(TagConstants.SET));
+                write(o, " ");
+                self.print(o, ind, s.target);
+                write(o, " = ");
+                self.print(o, ind, s.value);
+                write(o, "; */");
+                break;
+            }
+
+            default:
+                write(o, "/* Unknown StmtPragma (tag = " + tag + ") */");
+                break;
+        }
     }
-  }
 
   /** Print a guarded command.  Assumes that <code>g</code> should be
     printed starting at the current position of <code>o</code>.  It

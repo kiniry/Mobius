@@ -110,6 +110,7 @@ import javafe.util.ErrorSet;
  *       GenericBlockStmt (Stmt* stmts)
  *          BlockStmt ()
  *          SwitchStmt (Expr expr)
+ *       AssertStmt (Expr expr, String l)
  *       VarDeclStmt (LocalVarDecl decl)
  *       ClassDeclStmt (ClassDecl anonDecl)
  *       WhileStmt (Expr expr, Stmt stmt)
@@ -587,9 +588,8 @@ public class FormalParaDecl extends GenericVarDecl
 public abstract class Stmt extends ASTNode
 { }
 
-/** Abstract class containing common parts of Block and SwitchBlock
- *  syntactic units. 
- */
+// Abstract class containing common parts of Block and SwitchBlock
+// syntactic units.
 
 public abstract class GenericBlockStmt extends Stmt
 {
@@ -617,6 +617,14 @@ public class BlockStmt extends GenericBlockStmt
 public class SwitchStmt extends GenericBlockStmt
 {
   //# Expr expr
+  //# int loc NotNullLoc
+  public int getStartLoc() { return loc; }
+}
+
+public class AssertStmt extends Stmt
+{
+  //# Expr expr
+  //# Expr label NoCheck
   //# int loc NotNullLoc
   public int getStartLoc() { return loc; }
 }
@@ -1992,7 +2000,6 @@ public class ArrayType extends Type
 
 public abstract class Name extends ASTNode
 {
-
     /**
      * Return our printname, which will be of one of the forms X, X.Y,
      * X.Y.Z, ...
@@ -2170,12 +2177,11 @@ public class SimpleName extends Name
 
   //# int loc NotNullLoc
 
-
   //@ invariant length == 1;
 
-
-  /** Return a String representation of <code>this</code> in Java's
-    syntax.
+  /**
+   * @return a String representation of <code>this</code> in Java's
+   * syntax.
    */
   public String printName() {
     return id.toString();
@@ -2201,11 +2207,11 @@ public class SimpleName extends Name
     return id.hashCode();
   }
 
-    /**
-     * Return the first <code>len</code> identifiers in
-     * <code>this</code> in an array.  Requires that <code>len</code>
-     * be between 0 and length of <code>this</code> inclusive.
-     */
+  /**
+   * @return the first <code>len</code> identifiers in
+   * <code>this</code> in an array.  Requires that <code>len</code> be
+   * between 0 and length of <code>this</code> inclusive.
+   */
   public String[] toStrings(int len) {
     Assert.precondition(len == 0 || len == 1);
     if (len == 0) return emptyStringArray;
@@ -2270,9 +2276,10 @@ public class CompoundName extends Name
     Assert.notFalse(locIds.length == locDots.length+1);
   }
 
-  /** Return a String representation of <code>this</code> in Java's
-    syntax. */
-
+  /**
+   * @return a String representation of <code>this</code> in Java's
+   * syntax.
+   */
   public String printName() {
     int sz = ids.size();
     StringBuffer result = new StringBuffer(10*sz);
@@ -2329,11 +2336,11 @@ public class CompoundName extends Name
     return result;
   }
 
-    /**
-     * Return the first <code>len</code> identifiers in
-     * <code>this</code> in an array.  Requires that <code>len</code>
-     * be between 0 and length of <code>this</code> inclusive.
-     */
+  /**
+   * @return the first <code>len</code> identifiers in
+   * <code>this</code> in an array.  Requires that <code>len</code> be
+   * between 0 and length of <code>this</code> inclusive.
+   */
   public String[] toStrings(int len) {
     Assert.precondition(0 <= len && len <= ids.size());
     if (len == 0) return emptyStringArray;

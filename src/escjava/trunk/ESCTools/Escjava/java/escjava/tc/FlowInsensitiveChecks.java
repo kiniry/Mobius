@@ -1741,12 +1741,11 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
             }
 
             case TagConstants.ASSUME:
-            case TagConstants.ASSERT:
-                {
-                    ExprStmtPragma es = (ExprStmtPragma)s;
-                    es.expr = checkPredicate(e, es.expr);
-                    break;
-                }
+            case TagConstants.ASSERT: {
+                ExprStmtPragma es = (ExprStmtPragma)s;
+                es.expr = checkPredicate(e, es.expr);
+                break;
+            }
       
             case TagConstants.LOOP_INVARIANT:
             case TagConstants.JML_MAINTAINING:

@@ -137,6 +137,12 @@ public abstract class VisitorArgResult {
 
   //@ requires x!=null
   //@ ensures \result!=null
+  public Object visitAssertStmt(AssertStmt x, Object o) {
+    return visitStmt(x, o);
+  }
+
+  //@ requires x!=null
+  //@ ensures \result!=null
   public Object visitVarDeclStmt(VarDeclStmt x, Object o) {
     return visitStmt(x, o);
   }

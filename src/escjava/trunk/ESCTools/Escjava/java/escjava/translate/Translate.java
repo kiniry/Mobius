@@ -1753,14 +1753,13 @@ public final class Translate {
 	  return;
 	}
 
-      case TagConstants.ASSERT:
-	{
+      case TagConstants.ASSERT: {
 	  ExprStmtPragma x = (ExprStmtPragma)stmt;
 	  Expr p = TrAnExpr.trSpecExpr(x.expr);
 	  code.addElement(GC.check(x.getStartLoc(), TagConstants.CHKASSERT,
 				   p, Location.NULL));
 	  return;
-	}
+      }
 
       case TagConstants.LOOP_INVARIANT:
       case TagConstants.JML_MAINTAINING:

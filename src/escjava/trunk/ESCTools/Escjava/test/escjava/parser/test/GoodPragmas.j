@@ -1,10 +1,10 @@
-/*@ nowarn; */
-/*@nowarn;*/
-//@ nowarn;
+/*@ nowarn */
+/*@nowarn*/
+//@ nowarn
 /*@ nowarn NullPointerException; */
 /*@ nowarn IndexOutOfBoundsException, ClassCastException; */
 //@ nowarn ArrayStoreException, ArithmeticException, NegativeArraySizeException, AssertViolation, PreconditionViolation;
-/*@ nowarn ModifiesViolation ; */
+/*@ nowarn ModifiesViolation; */
 //@nowarn ObjectInvariantViolation, InitialLoopInvariantViolation;
 /*@nowarn IterativeLoopInvariantViolation,SharingViolation, LockingOrderViolation,InitializationViolation,DefinednessViolation; */
 /*@nowarn
@@ -18,9 +18,9 @@ UnenforcableObjectInvariantWarning,ModifiesExtensionWarning
 //@ unreachable;
 /*@ assume false == false; */
 //@ assume true;
-//@ unreachable; assume assert + modifies;
-/*@ assert assert + assume; unreachable; */
-/*@ unreachable; loop_invariant assert; unreachable; */
+//@ unreachable; assume assertt + modifies;
+/*@ assert assertt + assume; unreachable; */
+/*@ unreachable; loop_invariant assertt; unreachable; */
 
 //@ still_deferred x;
 //@still_deferred x;
