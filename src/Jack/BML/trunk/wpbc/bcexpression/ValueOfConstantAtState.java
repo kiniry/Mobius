@@ -53,6 +53,9 @@ public class ValueOfConstantAtState extends Expression {
 	}
 
 
+	public int getAtInstruction() {
+		return atInstruction;
+	}
 	/* (non-Javadoc)
 	 * @see bcexpression.Expression#copy()
 	 */
