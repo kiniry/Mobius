@@ -51,7 +51,8 @@ export JDK_SOURCES       = ${JDK_SOURCE_DIR}/jdk-1.4
 export JDK_BINARIES ?= 
 
 ## If you have a JML development directory structure on your machine,
-## you may set this variable to its root.
+## you may set this variable to its root.  I.e., this directory
+## contains the directory "JML2".
 #export JML_ROOT = /Users/cok/JML
 
 ## Define the location of the junit.jar file
