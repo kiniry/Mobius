@@ -81,7 +81,7 @@ class SparseVector
 	my_arraycopy(v.rows, 0, rows, 0, n);
     }
     
-    //@ requires data.length <= length
+    //@ requires data.length <= length;
     void copy_from(/*@ non_null */ long[] data) {
 	int k = 0;
 	for(int i = 0; i < data.length; i++) {
@@ -109,7 +109,7 @@ class SparseVector
 		return ret;
 	    }
         assert false;
-	//@ nowarn Reachable
+	//@ nowarn Reachable;
 	return 0;
     }
     
