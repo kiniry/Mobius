@@ -652,7 +652,6 @@ public class ExprStmtPragma extends StmtPragma
 {
   //# int tag
   //# Expr expr
-  // label only used for "assert" keyword
   //# Expr label NullOK
   //# int loc
 
