@@ -52,7 +52,7 @@ endif
 		echo -n '.' ; \
 		${MAKE} --no-print-directory do$$t ; \
 	done
-	echo " "
+	@echo " "
 
 outputs:
 	./make_outputs
