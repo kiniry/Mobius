@@ -396,7 +396,8 @@ public class Lex extends Token
                 t != TagConstants.EOL_COMMENT) {
                 return t;
             }
-            else { scanComment(t);
+            else { 
+		scanComment(t);
 	    }
         }
     }
@@ -619,8 +620,8 @@ public class Lex extends Token
 		for(;;) {
 		    if (nextchr == -1) {
 			ErrorSet.fatal(
-                                       startingLoc,
-                                       "Unterminated or improperly nested comment or pragma");
+			   startingLoc,
+			   "Unterminated or improperly nested comment or pragma");
 		    }
 		    int oldchr = nextchr;
 		    nextchr = m_in.read();
