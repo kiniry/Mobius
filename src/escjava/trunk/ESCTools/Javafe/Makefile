@@ -138,6 +138,11 @@ runtest: javafe_test
 	${MAKE} -C java/javafe/util        runtest
 	${MAKE} -C test/javafe/test        runtest
 
+.PHONE: extensive_tests
+extensive_tests: javafe_test
+	${MAKE} -C test/javafe/parser/test big
+	${MAKE} -C test/javafe/test/fe prepjdk
+
 .PHONY: typecheckTests
 typecheckTests: javafe_test
 ifdef ALLTESTS
@@ -151,13 +156,10 @@ endif
 test-release: 
 	@ echo TESTING RELEASE - Javafe
 	${MAKE} JAVAFE_CLASSPATH=${RELCLASSPATH} CLASSDIRECTORY=${RELTEMP} javafe_test
-	${MAKE} ALLTESTS=1 CLASSPATH=${RELCLASSPATH} -C java/javafe/util        runtest
-	${MAKE} ALLTESTS=1 JAVAFE_CLASSPATH=${RELCLASSPATH} CLASSPATH=${RELCLASSPATH}:${RELTEMP} -C test/javafe/test        runtest
+	${MAKE} ALLTESTS=1 CLASSPATH=${RELCLASSPATH} -C java/javafe/util runtest
+	${MAKE} ALLTESTS=1 JAVAFE_CLASSPATH=${RELCLASSPATH} CLASSPATH=${RELCLASSPATH}:${RELTEMP} -C test/javafe/test runtest
 	${MAKE} ALLTESTS=1 CLASSPATH=${RELCLASSPATH}:${RELTEMP} -C test/javafe/parser/test runtest
 	rm -rf ${RELTEMP}/*
-
-
-
 
 ## This builds tests; presumes that the build has been made
 .PHONY: javafe_test
