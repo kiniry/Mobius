@@ -531,6 +531,7 @@ premap generated from the uses of \old in the body of the method + the spec of t
 
 	// Make the disjunction of all of the preconditions
 
+	java.util.Set axsToAdd = new java.util.HashSet();
 	if (dmd.requires.size() != 0) {
 	    Expr expr = dmd.requires.elementAt(0).expr;
 	    int loc = dmd.requires.elementAt(0).getStartLoc();
@@ -541,11 +542,36 @@ premap generated from the uses of \old in the body of the method + the spec of t
 			e.expr, loc);
 		javafe.tc.FlowInsensitiveChecks.setType(expr,Types.booleanType);
 	    }
-	    Expr gcExpr = TrAnExpr.trSpecExpr(expr);
-            Condition cond = GC.condition(TagConstants.CHKPRECONDITION, gcExpr,
+	    TrAnExpr.initForClause();
+	    Expr pred = TrAnExpr.trSpecExpr(expr);
+		if (TrAnExpr.trSpecExprAuxConditions != null) {
+		    for (int j=0; j<TrAnExpr.trSpecExprAuxAssumptions.size(); ++j) {
+			Expr g = TrAnExpr.trSpecExprAuxAssumptions.elementAt(j);
+			pre.addElement(GC.assumeCondition(g,Location.NULL));
+		    }
+		    if (TrAnExpr.trSpecExprAuxConditions.size() != 0) {
+			Expr g = GC.nary(Location.NULL, Location.NULL,
+				TagConstants.BOOLAND, 
+				TrAnExpr.trSpecExprAuxConditions);
+			pred = GC.implies(pred.getStartLoc(),pred.getEndLoc(),g,pred);
+		    }
+		}
+		axsToAdd.addAll(TrAnExpr.trSpecAuxAxiomsNeeded);
+		TrAnExpr.trSpecExprAuxConditions = null;
+		Condition cond = GC.condition(TagConstants.CHKPRECONDITION, pred,
                                           loc);
+
             pre.addElement(cond);
 	}
+	    java.util.Set axsDone = new java.util.HashSet();
+	    while (! axsToAdd.isEmpty()) {
+		ASTNode o = (ASTNode)axsToAdd.iterator().next();
+		axsToAdd.remove(o);
+		if (!axsDone.add(o)) continue;
+		Expr e = TrAnExpr.getEquivalentAxioms(o);
+		pre.addElement(GC.assumeCondition(e,Location.NULL));
+		axsToAdd.addAll( TrAnExpr.getAxiomSet(o));
+	    }
 		
         return pre;
     }
@@ -1126,20 +1152,21 @@ while (ee.hasMoreElements()) {
                                           /*@ non_null */ FindContributors scope,
                                           /*@ non_null */ Set synTargs) {
     
-	ClassDecl cd = (ClassDecl)spec.dmd.getContainingClass();
+	TypeDecl td = spec.dmd.getContainingClass();
 	boolean isConstructor = spec.dmd.isConstructor();
 
         // Add NonNullInit checks
         if (isConstructor &&
             !spec.dmd.isConstructorThatCallsSibling()) {
             // first check fields in first-inherited interfaces
+	    ClassDecl cd = (ClassDecl)td;
             Enumeration enum = getFirstInheritedInterfaces(cd);
             while (enum.hasMoreElements()) {
                 TypeDecl tdSuperInterface = (TypeDecl)enum.nextElement();
                 nonNullInitChecks(tdSuperInterface, spec.post);
             }
             // then check fields in the current class
-            nonNullInitChecks(cd, spec.post);
+            nonNullInitChecks(td, spec.post);
         }
 
         for (InvariantInfo ii = mergeInvariants(collectInvariants(scope,spec.preVarMap));

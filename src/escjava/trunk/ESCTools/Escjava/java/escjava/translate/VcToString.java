@@ -293,6 +293,19 @@ public class VcToString {
 	  out.print(") ");
 	  insideNoPats = false;
 	}
+	if (qe.pats != null && qe.pats.size() != 0) {
+	  Assert.notFalse(!insideNoPats);
+	  insideNoPats = true;
+	  if (qe.pats.size() == 1) out.print("(PATS");
+	  else                     out.print("(MPAT");
+	  for (int i = 0; i < qe.pats.size(); i++) {
+	    out.print(" ");
+	    Expr nopat = qe.pats.elementAt(i);
+	    printTerm(out, subst, nopat);
+	  }
+	  out.print(") ");
+	  insideNoPats = false;
+	}
 	printFormula( out, subst, qe.expr);
 	out.print(")");
 	break;

@@ -148,13 +148,16 @@ public final class Utils {
 	}
     };
     public static boolean isFunction(RoutineDecl rd) {
+	// FIXME - try all methods being true
+	if (rd instanceof MethodDecl) return true;
 	return functionDecoration.isTrue(rd);
     }
 
     private static final BooleanDecoration immutableDecoration = new BooleanDecoration("immutable") {
 	public boolean calculate(ASTNode o) {
 	    return findModifierPragma(((TypeDecl)o).pmodifiers, TagConstants.PURE)
-			!= null;
+			!= null ||
+		   findModifierPragma(((TypeDecl)o).pmodifiers, TagConstants.IMMUTABLE) != null;
 	}
     };
     public static boolean isImmutable(TypeDecl cd) {

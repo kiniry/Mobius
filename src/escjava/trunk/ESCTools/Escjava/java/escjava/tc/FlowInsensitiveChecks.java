@@ -1881,6 +1881,15 @@ FIXME - see uses of countFreeVarsAccess
                 }
                 break;
 	  
+	    case TagConstants.IMMUTABLE:
+		{
+		    if (!(ctxt instanceof TypeDecl)) {
+			ErrorSet.error(p.getStartLoc(),
+			    "The immutable modifier may be applied only to type declarations");
+		    }
+		}
+		break;
+
             case TagConstants.READABLE_IF:
                 {
                     ExprModifierPragma emp = (ExprModifierPragma)p;

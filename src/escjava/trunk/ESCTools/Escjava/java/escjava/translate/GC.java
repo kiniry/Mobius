@@ -822,6 +822,11 @@ public final class GC {
     return forall( Location.NULL, Location.NULL, v, e, nopats );
   }
 
+  public static Expr forallwithpats(GenericVarDecl v, Expr e, ExprVec pats) {
+    return quantifiedExpr( Location.NULL, Location.NULL, 
+		TagConstants.FORALL, v, e, null, pats );
+  }
+
   public static Expr forall(int sloc, int eloc, GenericVarDecl v, Expr e) {
     return forall(sloc, eloc, v, e, null);
   }
@@ -862,21 +867,21 @@ public final class GC {
     }
 
     // could not do the substitution
-    return quantifiedExpr(sloc, eloc, TagConstants.FORALL, v, e, nopats);
+    return quantifiedExpr(sloc, eloc, TagConstants.FORALL, v, e, nopats, null);
   }
 
   public static Expr quantifiedExpr(int sloc, int eloc, int tag,
 				    GenericVarDecl v, Expr e,
-				    ExprVec nopats)
+				    ExprVec nopats, ExprVec pats)
     {
       GenericVarDeclVec vs = GenericVarDeclVec.make();
       vs.addElement(v);
-      return quantifiedExpr(sloc, eloc, tag, vs, e, nopats );
+      return quantifiedExpr(sloc, eloc, tag, vs, e, nopats, pats );
     }
 
   public static Expr quantifiedExpr(int sloc, int eloc, int tag,
 				    GenericVarDeclVec vs, Expr e,
-				    ExprVec nopats)
+				    ExprVec nopats, ExprVec pats)
     {
       Assert.notFalse( tag == TagConstants.FORALL
 		       || tag == TagConstants.EXISTS );
@@ -903,12 +908,12 @@ public final class GC {
 	    }
 	  }
 	  return QuantifiedExpr.make( sloc, eloc, tag, copy, qe.expr,
-				      nopats );
+				      nopats, qe.pats );
 	}
       }
 
       // No optimization done
-      return QuantifiedExpr.make( sloc, eloc, tag, vs, e, nopats );
+      return QuantifiedExpr.make( sloc, eloc, tag, vs, e, nopats, pats );
     }
 
   public static boolean isSimple(Expr e) {

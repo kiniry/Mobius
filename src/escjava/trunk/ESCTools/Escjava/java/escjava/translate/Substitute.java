@@ -299,9 +299,10 @@ public class Substitute {
 	    newNopats.addElement(doSubst(subst, qe.nopats.elementAt(i), rhsVars));
 	  }
 	}
+if (newNopats != null && qe.pats != null) System.out.println("CANT HAVE BOTH PATS AND NOPATS"); // FIXME
 	result = QuantifiedExpr.make( qe.sloc, qe.eloc, qe.quantifier,
 		  	   	      qe.vars, doSubst(subst,qe.expr,rhsVars),
-				      newNopats);
+				      newNopats, qe.pats);
 	break;
       }
 	  

@@ -172,6 +172,7 @@ public class QuantifiedExpr extends GCExpr
   //# GenericVarDecl* vars
   //# Expr expr
   //# Expr* nopats NullOK
+  //# Expr* pats NullOK
 
   //# ManualTag
   public final int getTag() { return quantifier; }

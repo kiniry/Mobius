@@ -674,7 +674,7 @@ System.out.println("");
 }
 */
 	  return GC.quantifiedExpr(locStart, locEnd, tag,
-				   qe.vars, body, null);
+				   qe.vars, body, null, null);
 	} else if (Main.options().nestQuantifiers) {
 	  GenericVarDecl decl = qe.vars.elementAt(0);
 
@@ -695,7 +695,7 @@ System.out.println("");
 //if (doRewrites()) System.out.println("FORALL-ENDB " + Location.toString(e.getStartLoc()));
 	  return GC.quantifiedExpr(qe.getStartLoc(), qe.getEndLoc(),
 				   qe.getTag(),
-				   decl, body, null);
+				   decl, body, null, null);
 	} else {
 	  int locStart = e.getStartLoc();
 	  int locEnd = e.getEndLoc();
@@ -725,7 +725,7 @@ System.out.println("");
 	      if (doRewrites()) boundStack.removeLast();
 //if (doRewrites()) System.out.println("FORALL-ENDC " + Location.toString(e.getStartLoc()));
 	      return GC.quantifiedExpr(locStart, locEnd, tag,
-				       dummyDecls, qbody, null);
+				       dummyDecls, qbody, null, null);
 	    }
 	  }
 	}
@@ -1442,14 +1442,31 @@ System.out.println("");
 */
   }
 
+  // This creates a unique name for a function call for a routine, without
+  // having to append all of the signature.
   static public Identifier fullName(RoutineDecl rd) {
-    String fullname = TypeSig.getSig(rd.parent).getExternalName() + "." ;
-    if (rd instanceof MethodDecl) fullname = fullname + ((MethodDecl)rd).id.toString();
-    return Identifier.intern(fullname + "." + rd.args.size()); 
-				// FIXME -- with type signature as well ???
+    int loc = rd.getStartLoc();
+    String fullname = TypeSig.getSig(rd.parent).getExternalName() + "." 
+    		+ rd.id().toString() + "." ;
+    int line = Location.toLineNumber(loc);
+    if (line == 1) {
+	// If the reference is to a binary file, there is no unique 
+	// declaration location, so we append a hash code
+	fullname = fullname + rd.hashCode();
+    } else {
+	fullname = fullname + line + "." + Location.toColumn(loc);
+    }
+    return Identifier.intern(fullname); 
   }
 
+  /* This decoration (on a RoutineDecl) is an Expr that is an axiom that 
+     defines the behavior of the routine.  The routine must be a pure function.
+  */
   static private ASTDecoration axiomDecoration = new ASTDecoration("axioms");
+
+  /* This decoration (on a RoutineDecl) is a ??? of RoutineDecl whose axioms
+     are needed by the routine.
+  */
   static private ASTDecoration axiomSetDecoration = new ASTDecoration("axiomset");
 
   static public Expr getEquivalentAxioms(ASTNode astn) {
@@ -1487,6 +1504,8 @@ System.out.println("");
 		// Note - if there is an ensures clause with object fields, then it is
 		// not a great candidate for a function call
 
+		// FIXME - need to guard this with signals and diverges
+		// conditions as well
 		// find ensures pragmas and translate them into axioms
 		ModifierPragmaVec v = rd.pmodifiers;
 		ExprVec conjuncts = ExprVec.make(v.size());
@@ -1528,9 +1547,11 @@ System.out.println("");
 
 		// create a composite AND and wrap it in a forall
 		Expr ee = GC.and(conjuncts);
+		ExprVec pats = ExprVec.make(1);
+		pats.addElement(fcall);
 		for (int k=bounds.size()-1; k>=0; --k) {
 		    GenericVarDecl o = (GenericVarDecl)bounds.get(k);
-		    ee = GC.forall(o,ee);
+		    ee = GC.forallwithpats(o,ee,pats);
 		}
 		ax = ee;
 	    } else {

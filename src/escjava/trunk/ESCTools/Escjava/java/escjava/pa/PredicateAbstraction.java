@@ -218,7 +218,7 @@ public class PredicateAbstraction
 					decls,
 					GC.implies( GC.and( ttc ),
 						    inv ),
-					    null );
+					    null, null );
 	    r.addElement( f );
 	}
 	

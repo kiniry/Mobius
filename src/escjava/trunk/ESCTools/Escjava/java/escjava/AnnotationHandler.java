@@ -624,7 +624,7 @@ added, it doesn't change whether a routine appears to have a spec or not.
 	int loc = foralls.elementAt(0).getStartLoc();
 	int endLoc = foralls.elementAt(foralls.size()-1).getStartLoc();
 	return QuantifiedExpr.make(loc,endLoc,TagConstants.FORALL,
-		foralls,e,null);
+		foralls,e,null,null);
     }
 
     public void deNest(ArrayList ps, ModifierPragmaVec prefix, ArrayList deNestedSpecs) {
@@ -724,10 +724,10 @@ added, it doesn't change whether a routine appears to have a spec or not.
 		if (floc == Location.NULL) floc = loc;
 		boolean nn = emp.expr instanceof NonNullExpr;
 		Expr le = LabelExpr.make(
-				emp.getStartLoc(), emp.getEndLoc(), false, 
-				escjava.translate.GC.makeFullLabel(
-					nn?"NonNull":"Pre",loc,Location.NULL),
-				emp.expr);
+		    emp.getStartLoc(), emp.getEndLoc(), false, 
+		    escjava.translate.GC.makeFullLabel(
+			nn?"NonNull":"Pre",loc,Location.NULL), // FIXME - does this get translated to include an @ location ?
+		    emp.expr);
 		javafe.tc.FlowInsensitiveChecks.setType(le,Types.booleanType);
 		if (!isTrue(emp.expr)) e = and(e, le);
 		else if (e == null) e = le;

@@ -1355,6 +1355,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
                 case TagConstants.PURE:
                 case TagConstants.FUNCTION:
                 case TagConstants.HELPER:
+                case TagConstants.IMMUTABLE:
                 case TagConstants.SPEC_PROTECTED: // SC HPT AAST 3, SUPPORT COMPLETE (cok)
                 case TagConstants.SPEC_PUBLIC: // incomplete
                 case TagConstants.INSTANCE: // complete (cok)
@@ -2334,11 +2335,11 @@ public class EscPragmaParser extends Parse implements PragmaParser
         if (tag == TagConstants.FORALL) {
 	    if (rangeExpr != null) rest = BinaryExpr.make(TagConstants.IMPLIES,
 						 rangeExpr, rest, locSemi);
-            returnExpr = QuantifiedExpr.make(loc, endLoc, tag, vs, rest, null);
+            returnExpr = QuantifiedExpr.make(loc, endLoc, tag, vs, rest, null, null);
         } else if (tag == TagConstants.EXISTS) {
 	    if (rangeExpr != null) rest = BinaryExpr.make(TagConstants.AND, 
 						rangeExpr, rest, locSemi);
-            returnExpr = QuantifiedExpr.make(loc, endLoc, tag, vs, rest, null);
+            returnExpr = QuantifiedExpr.make(loc, endLoc, tag, vs, rest, null, null);
         } else if (tag == TagConstants.MAXQUANT || tag == TagConstants.MIN ||
                    tag == TagConstants.PRODUCT || tag == TagConstants.SUM) {
 	    if (rangeExpr == null) {
