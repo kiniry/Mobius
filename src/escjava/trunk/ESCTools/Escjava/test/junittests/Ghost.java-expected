@@ -1,10 +1,10 @@
 ESC/Java version VERSION
-Ghost.java:48: Error: Expected a declaration within the annotation following the ghost keyword
-        /*@ ghost */ int jjj; // ERROR
-            ^
 Ghost.java:46: Error: Cannot have modifiers outside of the annotation on a TypeDeclElem pragma
         //@ ghost int iii; // ERROR
         ^
+Ghost.java:48: Error: Expected a declaration within the annotation following the ghost keyword
+        /*@ ghost */ int jjj; // ERROR
+            ^
   Prover started:TIME
 
 Ghost ...

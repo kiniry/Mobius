@@ -39,7 +39,7 @@ Associated declaration is "Ghost.java", line 52, col 34:
 **** Source code with types:
 class WritableIf
 {
-   //@ ghost public Object mono /*@ writable_if (/*boolean*/ (/*java.lang.Object*/ mono) == (/*null*/ null)); */;
+   //@ ghost public Object mono /*@ writable_if (/*boolean*/ (/*java.lang.Object*/ mono) == (/*null*/ null)); */ ;
 
    WritableIf()
     /*@ requires (/*boolean*/ true); */
@@ -69,9 +69,9 @@ class WritableIf
 **** Source code with types:
 class NonNull
 {
-   //@ ghost public Object foo /*@ non_null */;
+   //@ ghost public Object foo  /*@ non_null */;
 
-   //@ ghost public static Object s /*@ non_null */;
+   //@ ghost public static Object s  /*@ non_null */;
 
    void foo(Object x /*@ non_null */)
     /*@ requires (/*boolean*/ (\lblneg NonNull:32.16 (/*boolean*/ (/*java.lang.Object*/ x:32.34) != (/*null*/ null)))); */
@@ -103,7 +103,7 @@ class MonitoredBy
 {
    public Object mutex;
 
-   //@ ghost public Object x /*@ monitored_by (/*java.lang.Object*/ mutex); */;
+   //@ ghost public Object x /*@ monitored_by (/*java.lang.Object*/ mutex); */ ;
 
    void foo(Object foo)
     /*@ requires (/*boolean*/ true); */
