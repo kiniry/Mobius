@@ -252,6 +252,7 @@ public class AnnotationHandler {
 
 	javafe.util.Set overrideSet = null;
 	if (!isConstructor) overrideSet = FlowInsensitiveChecks.getDirectOverrides((MethodDecl)tde);
+
 	boolean overrides = !isConstructor && !overrideSet.isEmpty();
 	
 
@@ -293,8 +294,16 @@ public class AnnotationHandler {
 		    ErrorSet.caution(ps.getStartLoc(),"JML requires a specification to begin with 'also' when the method overrides other methods" ,((MethodDecl)overrideSet.elements().nextElement()).locType);
 		}
 		if (!overrides && ps.specs.initialAlso != null) {
-		    ErrorSet.caution(ps.specs.initialAlso.getStartLoc(),
-			"No initial also expected since there are no overridden or refined methods");
+		    if (!(tde.parent instanceof InterfaceDecl)) {
+			ErrorSet.caution(ps.specs.initialAlso.getStartLoc(),
+			    "No initial also expected since there are no overridden or refined methods");
+		    } else {
+			MethodDecl omd = Types.javaLangObject().hasMethod(
+				((MethodDecl)tde).id, tde.argTypes());
+			if (omd == null || Modifiers.isPrivate(omd.modifiers) )
+			    ErrorSet.caution(ps.specs.initialAlso.getStartLoc(),
+				"No initial also expected since there are no overridden or refined methods");
+		    }
 		}
 		break;
 	    }

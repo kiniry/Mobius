@@ -254,6 +254,7 @@ public class EscTypeReader extends StandardTypeReader
 	    CompilationUnit newcu = new RefinementSequence(refinements,
 						javacu,annotationHandler);
 
+/* WRONG: cus without implementations may still have model methods with impleemntations to be checked.
 	    // If there is no java file we set all types to spec-only
 	    // (don't try to check the implementations of routines because
 	    // there should not be any).
@@ -263,6 +264,7 @@ public class EscTypeReader extends StandardTypeReader
 		    newcu.elems.elementAt(kk).specOnly = true;
 		}
 	    }
+*/
 	    
 	    javafe.util.Info.out("Constructed refinement sequence");
 	    return newcu;

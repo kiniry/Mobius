@@ -817,8 +817,9 @@ public class PrepTypeDeclaration {
 		}
 		
 		// Record that the method is overridden if it is not hidden:
-		if (!Modifiers.isStatic(overridingMethod.modifiers))
+		if (!Modifiers.isStatic(overridingMethod.modifiers)) {
 		  addOverride( overridingMethod, superMethod );
+		}
 		
 	      }
 	  }
@@ -943,7 +944,7 @@ the same package.
      * java.lang.Object turned into abstract methods.<p>
      */
     //@ ensures \result!=null
-    private TypeSig getRootInterface() {
+    static public TypeSig getRootInterface() {
 	if (_rootCache!=null)
 	    return _rootCache;
 
@@ -998,7 +999,7 @@ the same package.
     }
 
 
-    private TypeSig _rootCache = null;
+    static private TypeSig _rootCache = null;
 
 
 

@@ -39,6 +39,16 @@ public class Substitute {
     return doSubst(subst, e, new SetRef());
   }
 
+  //@ ensures e != null ==> \result != null;
+  public static Expr doSimpleSubst(/*@ non_null */ Hashtable subst, Expr e) {
+    if (e == null) {
+	return null;
+    }
+    return doSubst(subst, e, null);
+  }
+
+
+
   /**
    ** Does substitution on GCExprs union (resolved) SpecExprs. <p>
    **
@@ -50,7 +60,7 @@ public class Substitute {
    **/
 
   //@ modifies rhsVars.s;
-  //@ ensures \old(rhsVars.s) != null ==> rhsVars.s == \old(rhsVars.s);
+  //@ ensures rhsVars != null ==> \old(rhsVars.s) != null ==> rhsVars.s == \old(rhsVars.s);
   //@ ensures \result != null;
   private static Expr doSubst(/*@ non_null */ Hashtable subst, Expr e,
 			      /*@ non_null */ SetRef rhsVars) {
@@ -173,15 +183,17 @@ public class Substitute {
 	// the routine also requires that the variables in the right-hand
 	// sides of the substitution are not captured by the quantified
 	// expression, so here's a check for that
-	if (rhsVars.s == null) {
-	  rhsVars.s = new Set();
-	  for (Enumeration enum = subst.elements(); enum.hasMoreElements(); ) {
-	    Expr ee = (Expr)enum.nextElement();
-	    rhsVars.s.union(freeVars(ee));
-	  }
-	}
-	for (int i = 0; i < qe.vars.size(); i++) {
-	  Assert.notFalse(!rhsVars.s.contains(qe.vars.elementAt(i)));
+	if (rhsVars != null) {
+	    if (rhsVars.s == null) {
+	      rhsVars.s = new Set();
+	      for (Enumeration enum = subst.elements(); enum.hasMoreElements(); ) {
+		Expr ee = (Expr)enum.nextElement();
+		rhsVars.s.union(freeVars(ee));
+	      }
+	    }
+	    for (int i = 0; i < qe.vars.size(); i++) {
+	      Assert.notFalse(!rhsVars.s.contains(qe.vars.elementAt(i)));
+	    }
 	}
 
 	ExprVec newNopats;
@@ -256,15 +268,17 @@ public class Substitute {
 	// the routine also requires that the variables in the right-hand
 	// sides of the substitution are not captured by the quantified
 	// expression, so here's a check for that
-	if (rhsVars.s == null) {
-	  rhsVars.s = new Set();
-	  for (Enumeration enum = subst.elements(); enum.hasMoreElements(); ) {
-	    Expr ee = (Expr)enum.nextElement();
-	    rhsVars.s.union(freeVars(ee));
-	  }
-	}
-	for (int i = 0; i < qe.vars.size(); i++) {
-	  Assert.notFalse(!rhsVars.s.contains(qe.vars.elementAt(i)));
+	if (rhsVars != null) {
+	    if (rhsVars.s == null) {
+	      rhsVars.s = new Set();
+	      for (Enumeration enum = subst.elements(); enum.hasMoreElements(); ) {
+		Expr ee = (Expr)enum.nextElement();
+		rhsVars.s.union(freeVars(ee));
+	      }
+	    }
+	    for (int i = 0; i < qe.vars.size(); i++) {
+	      Assert.notFalse(!rhsVars.s.contains(qe.vars.elementAt(i)));
+	    }
 	}
 
 	ExprVec newNopats;

@@ -442,6 +442,15 @@ public abstract class RoutineDecl extends ASTNode implements TypeDeclElem
 
 	return body.getEndLoc();
     }
+  private Type[] argtypes = null;
+  public Type[] argTypes() {
+	if (argtypes != null) return argtypes;
+	argtypes = new Type[args.size()];
+	for (int i=0; i<args.size(); ++i) {
+		argtypes[i] = args.elementAt(i).type;
+	}
+	return argtypes;
+  }
 }
 
 /** Represents a ConstructorDeclaration.
@@ -465,15 +474,6 @@ public class MethodDecl extends RoutineDecl
 
   //# MakerSpec requires body != null ==> locOpenBrace != Location.NULL;
 
-  private Type[] argtypes = null;
-  public Type[] argTypes() {
-	if (argtypes != null) return argtypes;
-	argtypes = new Type[args.size()];
-	for (int i=0; i<args.size(); ++i) {
-		argtypes[i] = args.elementAt(i).type;
-	}
-	return argtypes;
-  }
 }
 
 /** Represents an initializing block of code as a class member

@@ -53,6 +53,8 @@ public final class TrAnExpr {
 	currentAlloc = GC.allocvar;
     }
 
+    public static int level = 0;
+    public static int maxLevel = 2; // FIXME if this is much bigger the JML specs file java.math.BigInteger.parse runs out of memory
     public static ExprVec trSpecExprAuxConditions = null;
     public static ExprVec trSpecExprAuxAssumptions = null;
     public static int tempn = 100;
@@ -285,89 +287,104 @@ public final class TrAnExpr {
 
       case TagConstants.NEWINSTANCEEXPR: {
 	NewInstanceExpr me = (NewInstanceExpr)e;
-	ExprVec ev = ExprVec.make(me.args.size());
-		// FIXME - 'this' argument???
-		// FIXME - enclosingInstance ???
-	for (int i=0; i<me.args.size(); ++i) {
-	    ev.addElement( trSpecExpr( me.args.elementAt(i), sp, st));
-	}
-	Expr ne = GC.nary(me.getStartLoc(), me.getEndLoc(),
-			TagConstants.METHODCALL,ev);
-	((NaryExpr)ne).methodName = Identifier.intern(
-		"new#" + me.args.size() + "#" + me.type.name.printName());
-		// FIXME - does the name need to be unique across signatures?
 	Type type = TypeCheck.inst.getType(me);
-	if (trSpecExprAuxConditions != null && !declStack.contains(me.decl)) {
-	    Identifier n = Identifier.intern("tempNewObject"+(++tempn));
-	    VariableAccess v =  VariableAccess.make(n, e.getStartLoc(), 
-			    LocalVarDecl.make(Modifiers.NONE, null,n,
-				    type,
-				    UniqName.temporaryVariable,
-				    null, Location.NULL));
+	Identifier n = Identifier.intern("tempNewObject"+(++tempn));
+	VariableAccess v =  VariableAccess.make(n, e.getStartLoc(), 
+			LocalVarDecl.make(Modifiers.NONE, null,n,
+				type,
+				UniqName.temporaryVariable,
+				null, Location.NULL));
+	if (trSpecExprAuxConditions == null || level > maxLevel
+		|| declStack.contains(me.decl)) {
+	    return v;
+	}
+//System.out.println("NEWINST " + Location.toString(me.decl.getStartLoc()) + " " + declStack.contains(me.decl));
+	++level;
+	declStack.addFirst(me.decl);
+	if (false) { // FIXME - do this if a functional constructor
+	    ExprVec ev = ExprVec.make(me.args.size());
+		    // FIXME - 'this' argument???
+		    // FIXME - enclosingInstance ???
+	    for (int i=0; i<me.args.size(); ++i) {
+		ev.addElement( trSpecExpr( me.args.elementAt(i), sp, st));
+	    }
+	    Expr ne = GC.nary(me.getStartLoc(), me.getEndLoc(),
+			    TagConstants.METHODCALL,ev);
+	    ((NaryExpr)ne).methodName = Identifier.intern(
+		    "new#" + me.args.size() + "#" + me.type.name.printName());
+		    // FIXME - does the name need to be unique across signatures?
 	    Expr ee = GC.nary(TagConstants.ANYEQ, v, ne);
 	    // FIXME - should add the following mapping of the temp variable
 	    // to the method only if the method is a function call - pure
 	    // method of immutable objects, and either static or has the
 	    // this object inserted as an argument.
 	    trSpecExprAuxConditions.addElement(ee);
-	    ee = GC.nary(TagConstants.REFNE, v, 
-		LiteralExpr.make(TagConstants.NULLLIT, null, Location.NULL));
-	    trSpecExprAuxConditions.addElement(ee);
-	    ee = GC.nary(TagConstants.TYPEEQ,
-		GC.nary(TagConstants.TYPEOF, v),
-		TypeExpr.make(Location.NULL, Location.NULL, type));
-	    trSpecExprAuxConditions.addElement(ee);
-	    VariableAccess newAlloc =
-		apply(sp,GC.makeVar(GC.allocvar.id,e.getStartLoc())); // alloc
-	    trSpecExprAuxAssumptions.addElement(
-		GC.nary(TagConstants.ALLOCLT, currentAlloc, newAlloc));
-	    trSpecExprAuxConditions.addElement(
-		GC.nary(TagConstants.BOOLNOT,
-		    GC.nary(TagConstants.ISALLOCATED, v, currentAlloc)));
-	    trSpecExprAuxConditions.addElement(
-		GC.nary(TagConstants.ISALLOCATED, v, newAlloc));
-	    currentAlloc = newAlloc;
-	    declStack.addFirst(me.decl);
-	    getCalledSpecs(me.decl,null,me.args,v,sp,st); // adds to trSpecExprAuxConditions
-	    declStack.removeFirst();
-	    return v;
 	}
-	return ne;
+	Expr ee = GC.nary(TagConstants.REFNE, v, 
+	    LiteralExpr.make(TagConstants.NULLLIT, null, Location.NULL));
+	trSpecExprAuxConditions.addElement(ee);
+	ee = GC.nary(TagConstants.TYPEEQ,
+	    GC.nary(TagConstants.TYPEOF, v),
+	    TypeExpr.make(Location.NULL, Location.NULL, type));
+	trSpecExprAuxConditions.addElement(ee);
+	VariableAccess newAlloc =
+	    apply(sp,GC.makeVar(GC.allocvar.id,e.getStartLoc())); // alloc
+	trSpecExprAuxAssumptions.addElement(
+	    GC.nary(TagConstants.ALLOCLT, currentAlloc, newAlloc));
+	trSpecExprAuxConditions.addElement(
+	    GC.nary(TagConstants.BOOLNOT,
+		GC.nary(TagConstants.ISALLOCATED, v, currentAlloc)));
+	trSpecExprAuxConditions.addElement(
+	    GC.nary(TagConstants.ISALLOCATED, v, newAlloc));
+	currentAlloc = newAlloc;
+	getCalledSpecs(me.decl,null,me.args,v,sp,st); // adds to trSpecExprAuxConditions
+//System.out.println("END-NEWINST " + Location.toString(me.decl.getStartLoc()) + " " + declStack.contains(me.decl));
+	declStack.removeFirst();
+	--level;
+	return v;
+		// FIXME could allow for functional constructors
       }
 
       case TagConstants.METHODINVOCATION: {
 	
 	MethodInvocation me = (MethodInvocation)e;
 
-	ExprVec ev = ExprVec.make(me.args.size());
-		// FIXME - 'this' argument???
-	for (int i=0; i<me.args.size(); ++i) {
-	    ev.addElement( trSpecExpr( me.args.elementAt(i), sp, st));
-	}
 	boolean isFunction = (GetSpec.findModifierPragma(me.decl.pmodifiers,TagConstants.FUNCTION) != null);
 
-	Expr ne = GC.nary(me.getStartLoc(), me.getEndLoc(),
-			TagConstants.METHODCALL,ev);
-	((NaryExpr)ne).methodName = 
-		Identifier.intern(me.id.toString() + "." + me.args.size()); // FIXME -- full name ??? with type signature as well
 	Identifier n = Identifier.intern("tempMethodReturn"+(++tempn));
 	VariableAccess v =  VariableAccess.make(n, e.getStartLoc(), 
 			LocalVarDecl.make(Modifiers.NONE, null,n,
 				TypeCheck.inst.getType(me),
 				UniqName.temporaryVariable,
 				null, Location.NULL));
-	if (trSpecExprAuxConditions != null && !declStack.contains(me.decl)) {
-	    Expr ee = GC.nary(TagConstants.ANYEQ, v, ne);
-	    if (isFunction) trSpecExprAuxConditions.addElement(ee);
-	    declStack.addFirst(me.decl);
-	    getCalledSpecs(me.decl,me.od,me.args,v,sp,st); // adds to trSpecExprAuxConditions
-	    declStack.removeFirst();
-	    return v;
-	} else if (isFunction) {
-	    return ne;
-	} else {
+	if (trSpecExprAuxConditions == null || level > maxLevel 
+		|| declStack.contains(me.decl)) {
 	    return v;
 	}
+//for (int ind=0; ind<level; ++ind) System.out.print(" " ); System.out.println("METHINV " + Location.toString(me.decl.getStartLoc()) + " " + declStack.contains(me.decl));
+
+	++level;
+	declStack.addFirst(me.decl);
+
+	if (isFunction) {
+	    ExprVec ev = ExprVec.make(me.args.size());
+		    // FIXME - 'this' argument???
+	    for (int i=0; i<me.args.size(); ++i) {
+		ev.addElement( trSpecExpr( me.args.elementAt(i), sp, st));
+	    }
+	    Expr ne = GC.nary(me.getStartLoc(), me.getEndLoc(),
+			    TagConstants.METHODCALL,ev);
+	    ((NaryExpr)ne).methodName = 
+		    Identifier.intern(me.id.toString() + "." + me.args.size()); // FIXME -- full name ??? with type signature as well
+	    Expr ee = GC.nary(TagConstants.ANYEQ, v, ne);
+	    trSpecExprAuxConditions.addElement(ee);
+	}
+
+	getCalledSpecs(me.decl,me.od,me.args,v,sp,st); // adds to trSpecExprAuxConditions
+	--level;
+//for (int ind=0; ind<level; ++ind) System.out.print(" " ); System.out.println("END-METHINV " + Location.toString(me.decl.getStartLoc()) + " " + declStack.contains(me.decl));
+	declStack.removeFirst();
+	return v;
 
       }
 
@@ -1147,6 +1164,7 @@ wrap those variables being modified and not everything.
 			ObjectDesignator od, ExprVec ev, 
 			VariableAccess resultVar,
 			Hashtable sp, Hashtable st) {
+//System.out.println("GCS " + decl.parent.id + " " + (decl instanceof MethodDecl ? (((MethodDecl)decl).id.toString()) : "" ) + " " + Location.toString(decl.getStartLoc()) + " " + (declStack.contains(decl)) );
     ModifierPragmaVec md = decl.pmodifiers;
     if (md == null) return;
     for (int i=0; i<md.size(); ++i) {
@@ -1172,7 +1190,7 @@ wrap those variables being modified and not everything.
 		for (int j=0; j<args.size(); ++j) {
 		    h.put(args.elementAt(j), ev.elementAt(j));
 		}
-		e = Substitute.doSubst(h,e);
+		e = Substitute.doSimpleSubst(h,e);
 		e = trSpecExpr(e,sp,st);
 		trSpecExprAuxConditions.addElement(e);
 	     }
@@ -1203,7 +1221,7 @@ wrap those variables being modified and not everything.
 		} else if (od == null) { // Constructor case
 		    h.put(Substitute.thisexpr, resultVar);
 		} // fall-through for TypeObjectDesignator 
-		ee = Substitute.doSubst(h,ee);
+		ee = Substitute.doSimpleSubst(h,ee);
 		ee = trSpecExpr(ee,sp,st);
 		trSpecExprAuxConditions.addElement(ee);
 	    }

@@ -983,6 +983,14 @@ public class TypeSig extends Type
         return false;
     }
     
+    public MethodDecl hasMethod(Identifier id, Type[] args) {
+	try {
+	    return lookupMethod(id,args,this);
+	} catch (LookupException e) {
+	    return null;
+	}
+    }
+
     /** TBW */
     
     //@ requires \nonnullelements(args) && caller!=null
@@ -1323,6 +1331,9 @@ public class TypeSig extends Type
 	    return true;
 	if (this == jlo)
 	    return false;
+	// Need to allow interfaces to be subtypes of the root interface
+	// (but not Object)
+	if (s2 == PrepTypeDeclaration.getRootInterface()) return true;
 
 	TypeDecl d = getTypeDecl();
 	if (d.getTag() == TagConstants.CLASSDECL &&
