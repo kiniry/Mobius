@@ -208,6 +208,7 @@ public class AnnotationHandler {
     static public void printSpec(ModifierPragma mp) {
 	    if (mp instanceof ModifiesGroupPragma) {
 		EscPrettyPrint.inst.print(System.out,0,(ModifiesGroupPragma)mp);
+		System.out.println("");
 		return;
 	    }
 	    System.out.print("   " + 
