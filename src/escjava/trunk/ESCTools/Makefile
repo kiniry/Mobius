@@ -37,10 +37,13 @@ SUBDIRS = Utils Javafe Escjava
 default: build
 
 .PHONY: all
-all: clean build jmlspecs-jar jar test docs
+all: clean build jars test quiet-docs
 
 .PHONY: all+
-all: clean build jmlspecs-jar jar docs alltests
+all+: clean build jars quiet-docs alltests
+
+.PHONY: jars
+jars: jmlspecs-jar jar srcjar
 
 ########################################### build, test
 
@@ -125,7 +128,7 @@ clean-norel-noreltemp:
 	$(MAKE) -C papers clean
 	$(MAKE) -C slides clean
 	$(MAKE) -C Javafe clean
-	rm -f jars/*.jar		## FIXME is this used?
+	rm -f jars/*.jar		## FIXME  - should adjust to have alljar files in the jars directory
 	rm -f tags TAGS
 
 ########################################### jmlspecs
@@ -142,10 +145,13 @@ endif
 
 ########################################### docs
 
-.PHONY: alldocs textdocs docs slides papers
+.PHONY: alldocs textdocs quiet-docs docs slides papers
 alldocs: textdocs
 
-textdocs: docs slides papers
+textdocs: quiet-docs slides papers
+
+quiet-docs:
+	${MAKE} docs > docs_log 2>&1
 
 docs:
 	${MAKE} -C docs build
@@ -155,6 +161,8 @@ slides:
 
 papers:
 	${MAKE} -C papers build
+
+############################################
 
 PACKAGE_LIST = escjava escjava.ast escjava.backpred escjava.parser \
 	  escjava.prover escjava.tc escjava.translate escjava.sp \
@@ -232,7 +240,7 @@ jar:
 	(cd ${ESCTOOLS_ROOT}/Utils/junitutils; cp `find . -name '*.class'` ${RELTEMP}/sub/junitutils)
 	( cd ${RELTEMP}/sub; jar xf ../../jmlspecs.jar )
 	( cd ${RELTEMP}/sub; jar cmf ../../manifest.txt ../${RELJAR} *; )
-	##jar umf manifest.txt ${RELTEMP}/${RELJAR}
+	##${JARMUPDATE} manifest.txt ${RELTEMP}/${RELJAR}
 	rm -rf ${RELTEMP}/sub
 	cp ${RELTEMP}/${RELJAR} ${ESCTOOLS_ROOT}
 
@@ -409,7 +417,7 @@ zero-length-files:
 .PHONY: specs-test
 specs-test:
 	@echo TESTING specs
-	cd specs; ${ESCJAVA} -quiet -classpath . java/*/*.spec
+	cd specs; ${ESCJAVA} -quiet -classpath . -specs "" java/*/*.spec
 
 ## This is simply a smoke test of the Makefile (particularly for Windows)
 .PHONY: make-test
