@@ -167,6 +167,7 @@ public class RefinementSequence extends CompilationUnit {
       
       // Combine imports
       // FIXME - this may duplicate a lot of them
+      // FIXME - might adding imports change the interpretation of any types?
       imports.append(cu.imports);
       
       // Stick in any top-level model type declarations
@@ -331,7 +332,8 @@ public class RefinementSequence extends CompilationUnit {
     //System.out.println(newrd.id() + " " + (newrd.body!= null) + (rd.body != null));
     rd.loc = newrd.loc;
     {
-       for (int i=0; i<newrd.raises.size(); ++i) {
+       int nn = newrd.raises.size();
+       for (int i=0; i<nn; ++i) {
 	   TypeName t = newrd.raises.elementAt(i);
            boolean found = false;
 	   for (int j=0; j<rd.raises.size(); ++j) {
@@ -342,7 +344,10 @@ public class RefinementSequence extends CompilationUnit {
            // The following line is necessary because the parser (at least the
            // class file parser) uses a dedicated singleton object for all 
            // empty lists
-           if (rd.raises.size() == 0) rd.raises = TypeNameVec.make();
+           if (rd.raises.size() == 0) {
+               rd.raises = TypeNameVec.make();
+	       rd.locThrowsKeyword = newrd.locThrowsKeyword;
+           }
            rd.raises.addElement(t);
            //System.out.println("ADDING EXCEPTION " + t + " TO SIGNATURE FOR "
            //        + rd.parent.id + "#" + rd.id());
@@ -362,8 +367,10 @@ public class RefinementSequence extends CompilationUnit {
       }
       // If rd is from a binary file, the argument names will
       // be non-existent, so we need to fix them.
-      if (rd.binaryArgNames) arg.id = newarg.id;
-      else if (!arg.id.toString().equals(newarg.id.toString())) {
+      if (rd.binaryArgNames) {
+        arg.id = newarg.id;
+        arg.locId = newarg.locId;
+      } else if (!arg.id.toString().equals(newarg.id.toString())) {
         ErrorSet.error(newarg.locId,
             "Refinements may not change the names of formal parameters (" +
             newarg.id + " vs. " + arg.id + ")", arg.locId);
@@ -668,16 +675,30 @@ public class RefinementSequence extends CompilationUnit {
         }
         
       } else if (tde instanceof TypeDeclElemPragma) {
+        // This include model types
         // FIXME - should we allow merging ???
         // Can always add specification stuff
         // Could really just at it at the end, but then a bunch
         // of tests fail because things get out of order.
+        // FIXME - on a debug run it appeared that ln was always 1
         int line = Location.toLineNumber(tde.getStartLoc());
         int z;
         for (z=0; z<td.elems.size(); ++z) {
           int ln = Location.toLineNumber( td.elems.elementAt(z).getStartLoc() );
           if (line < ln) break;
         }
+/*
+        if (tde instanceof ModelTypePragma) {
+          System.out.println("MODEL TYPE " + ((ModelTypePragma)tde).decl.id);
+          TypeDecl tdd = ((ModelTypePragma)tde).decl;
+          for (int ik=0; ik<tdd.elems.size(); ++ik) {
+            TypeDeclElem tdee = tdd.elems.elementAt(ik);
+            System.out.println("    " + tdee);
+          }
+        }
+*/
+
+        
         td.elems.insertElementAt(tde,z);
         tde.setParent(td);
       } else {

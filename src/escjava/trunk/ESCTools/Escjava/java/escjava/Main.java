@@ -175,10 +175,7 @@ public class Main extends javafe.SrcTool
     public void clear(boolean complete) {
         // restore ordinary checking of assertions
         super.clear(complete);
-	if (complete) {
-	    NoWarn.useGlobalStatus = false; 
-	    NoWarn.setAllChkStatus(TagConstants.CHK_AS_ASSERT);
-	}
+	if (complete) NoWarn.init();
         gctranslator = new Translate();
         if (!keepProver) ProverManager.kill();
         // Disallow the -avoidSpec option:

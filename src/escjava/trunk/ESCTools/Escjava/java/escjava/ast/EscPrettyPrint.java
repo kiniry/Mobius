@@ -46,6 +46,7 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
   
   public void print(OutputStream o, int ind, TypeDeclElemPragma tp) {
     int tag = tp.getTag();
+    int otag = tag; if (tp.isRedundant()) otag = TagConstants.makeRedundant(tag);
     switch (tag) {
       case TagConstants.AXIOM:
       case TagConstants.INVARIANT:
@@ -55,9 +56,7 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
             ((NamedExprDeclPragma)tp).expr :
               ((ExprDeclPragma)tp).expr;
         write(o, "/*@ "); 
-        write(o, TagConstants.toString(
-            tp.isRedundant() ? TagConstants.makeRedundant(tag)
-                : tag)); 
+        write(o, TagConstants.toString(otag));
         write(o, ' ');
         self.print(o, ind, e);
         write(o, "; */");
@@ -131,7 +130,7 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
     switch (tag) {
       case TagConstants.ALSO:
         write(o, "/*@ "); 
-      write(o, TagConstants.toString(tag)); 
+      write(o, TagConstants.toString(mp.originalTag())); 
       write(o, " */");
       break;
       
@@ -291,10 +290,7 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
       case TagConstants.SIGNALS: {
         VarExprModifierPragma vemp = (VarExprModifierPragma)mp;
         write(o, "/*@ "); 
-        if (vemp.isRedundant())
-          write(o, TagConstants.toString(TagConstants.makeRedundant(tag)));
-        else
-          write(o, TagConstants.toString(tag));
+        write(o, TagConstants.toString(mp.originalTag()));
         write(o, " ("); 
         //self.print(o, vemp.arg);
         exsuresPrintDecl(o, vemp.arg); 
@@ -348,10 +344,11 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
   
   public void print(OutputStream o, int ind, StmtPragma sp) {
     int tag = sp.getTag();
+    int otag = sp.originalTag();
     switch (tag) {
       case TagConstants.UNREACHABLE:
         write(o, "/*@ "); 
-      write(o, TagConstants.toString(tag)); 
+      write(o, TagConstants.toString(otag)); 
       write(o, " */");
       break;
       
@@ -359,10 +356,7 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
         Expr e = ((ExprStmtPragma)sp).expr;
         Expr l = ((ExprStmtPragma)sp).label;
         write(o, "/*@ "); 
-        if (sp.isRedundant())
-          write(o, TagConstants.toString(TagConstants.makeRedundant(tag)));
-        else
-          write(o, TagConstants.toString(tag)); 
+        write(o, TagConstants.toString(otag)); 
         write(o, " ");
         self.print(o, ind, e);
         if (l != null) {
@@ -382,10 +376,7 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
       case TagConstants.LOOP_PREDICATE: {
         Expr e = ((ExprStmtPragma)sp).expr;
         write(o, "/*@ "); 
-        if (sp.isRedundant())
-          write(o, TagConstants.toString(TagConstants.makeRedundant(tag)));
-        else
-          write(o, TagConstants.toString(tag)); 
+        write(o, TagConstants.toString(otag)); 
         write(o, ' ');
         self.print(o, ind, e); 
         write(o, "; */");
@@ -405,7 +396,7 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
       }
       
       default:
-        write(o, "/* Unknown StmtPragma (tag = " + TagConstants.toString(tag) + ") */");
+        write(o, "/* Unknown StmtPragma (tag = " + TagConstants.toString(otag) + ") */");
       break;
     }
   }

@@ -213,6 +213,9 @@ public static boolean isFunction(RoutineDecl rd) {
 }
 
 
+  public static final ASTDecoration exceptionDecoration = 
+                                     new ASTDecoration("originalExceptions");
+
   public static final ASTDecoration axiomDecoration = new ASTDecoration("axioms");
 
   public static final ASTDecoration representsDecoration =

@@ -29,6 +29,8 @@ import javafe.ast.PrettyPrint;
 import javafe.ast.RoutineDecl;
 import javafe.ast.ThisExpr;
 import javafe.ast.Type;
+import javafe.ast.TypeName;
+import javafe.ast.TypeNameVec;
 import javafe.ast.TypeDecl;
 import javafe.ast.TypeDeclElem;
 import javafe.ast.TypeDeclElemVec;
@@ -237,10 +239,6 @@ public class AnnotationHandler {
 
     try { // Just for safety's sake
       tde.pmodifiers = desugarAnnotations(pmodifiers, tde);
-      if ((tde instanceof MethodDecl)
-          && !Modifiers.isStatic(tde.getModifiers())) {
-        //tde.pmodifiers = Utils.addInheritedSpecs(tde,tde.pmodifiers);
-      }
     } catch (Exception e) {
       tde.pmodifiers = ModifierPragmaVec.make();
       ErrorSet.error(tde.getStartLoc(),
@@ -303,7 +301,6 @@ public class AnnotationHandler {
 
     ModifierPragmaVec newpm = ModifierPragmaVec.make();
 
-    //boolean isPure = Utils.isPure(tde);
     boolean isConstructor = tde instanceof ConstructorDecl;
 
     // Get non_null specs
@@ -343,6 +340,7 @@ public class AnnotationHandler {
             T, tde.getStartLoc());
         newpm.addElement(e);
         newpm.addElement(defaultModifies(tde.getStartLoc(), T, tde));
+        newpm.addElement(defaultSignalsOnly(tde, T));
       }
     }
 
@@ -412,6 +410,7 @@ public class AnnotationHandler {
       }
     }
 
+
     ModifierPragmaVec r = desugar(accumulatedSpecs.specs, tde);
     // accumulatedSpecs.impliesThat = desugar(accumulatedSpecs.impliesThat);
     // accumulatedSpecs.examples = desugar(accumulatedSpecs.examples); // FIXME
@@ -441,14 +440,71 @@ public class AnnotationHandler {
             // Purposely ignore this
           }
     }
+    checkSignalsOnly(newpm,tde);
     return newpm;
   }
 
-  // NOTE: If we do desugaring after typechecking, we need to put in
-  // all of the types for the expressions we construct. If we do
-  // desugaring before typechecking, we do not, or we risk not
-  // checking any of the details of that expression. Currently
-  // desugaring comes first.
+  public void checkSignalsOnly(ModifierPragmaVec mpv, RoutineDecl tde) {
+    Utils.exceptionDecoration.set(tde,new Integer(tde.raises.size()));
+    int throwsLoc = tde.locThrowsKeyword;
+    if (throwsLoc == Location.NULL) throwsLoc = tde.getStartLoc();
+    for (int i=0; i<mpv.size(); i++) {
+        ModifierPragma m = mpv.elementAt(i);
+        int tag = m.originalTag();
+        if (tag == TagConstants.SIGNALS_ONLY) {
+	    TypeNameVec tv = tde.raises;
+	    if (tv.size() == 0) tde.raises = tv = TypeNameVec.make();
+	    Expr e = ((VarExprModifierPragma)m).expr;
+	    checkMaybeAdd(e,tv,throwsLoc);
+        }
+    }
+  }
+
+  private void checkMaybeAdd(Expr e, TypeNameVec tv, int locThrows) {
+    int tag = e.getTag();
+    if (tag == TagConstants.OR) {
+        checkMaybeAdd( ((BinaryExpr)e).left, tv, locThrows);
+        checkMaybeAdd( ((BinaryExpr)e).right, tv, locThrows);
+    } else if (tag == TagConstants.INSTANCEOFEXPR) {
+        Type t = ((InstanceOfExpr)e).type;
+        TypeSig ts = Types.toClassTypeSig(t);
+        boolean found = false;
+        for (int i=0; i<tv.size(); ++i) {
+            TypeSig tts = TypeSig.getSig(tv.elementAt(i));
+            if (!ts.isSubtypeOf(tts)) continue;
+            found = true;
+            break;
+        }
+        if (!found) {
+            // NOTE: The original Esc/java may have prefered that we warn about
+            // every exception in a signals_only clause that was not listed
+            // in the throws clause.  Instead, we silently add types that are
+            // subtypes of RuntimeException.
+            if (!ts.isSubtypeOf(Types.javaLangRuntimeException())) {
+              ErrorSet.error(t.getStartLoc(),
+                "The signals_only clause may not contain an exception type " +
+                Types.printName(t) +
+                " that is not a subtype of either RuntimeException or " +
+                "a type in the routine's throws clause",
+                locThrows);
+            } else {
+              tv.addElement((TypeName)t);
+            }
+        }
+    } else if (tag == TagConstants.BOOLEANLIT) {
+        // skip
+    } else if (tag == TagConstants.IMPLIES) {
+        // left side is the precondition
+        checkMaybeAdd( ((BinaryExpr)e).right, tv, locThrows);
+    } else {
+        System.out.println("INTERNAL ERROR " + TagConstants.toString(tag));
+    }   
+  }
+
+  // NOTE: We are doing desugaring after typechecking, so we need to
+  // be sure to annotate any created expressions with types.
+  // (If expressions are created before typechecking they must not be
+  // annotated with types, so that typechecking happens properly).
 
   public ModifierPragmaVec getNonNull(RoutineDecl rd) {
     ModifierPragmaVec result = ModifierPragmaVec.make(2);
@@ -588,6 +644,7 @@ public class AnnotationHandler {
 
     // Now transform each non-requires pragma
     boolean foundDiverges = false;
+    VarExprModifierPragma foundSignalsOnly = null;
     ExprModifierPragma defaultDiverges = null;
     boolean foundModifies = false;
     boolean isLightweight = true;
@@ -613,8 +670,16 @@ public class AnnotationHandler {
           break;
         }
 
-        case TagConstants.SIGNALS:
-        case TagConstants.EXSURES: {
+        case TagConstants.SIGNALS: {
+          if (mp.originalTag() == TagConstants.SIGNALS_ONLY) {
+             if (foundSignalsOnly != null) {
+                 ErrorSet.error(mp.getStartLoc(),
+                   "Only one signals_only clause is allowed per specification case",
+                   foundSignalsOnly.getStartLoc());
+             } else {
+                 foundSignalsOnly = (VarExprModifierPragma)mp;
+             }
+          }
           VarExprModifierPragma mm = (VarExprModifierPragma)mp;
           if (mm.expr.getTag() == TagConstants.NOTSPECIFIEDEXPR) break;
           if (mm.expr.getTag() == TagConstants.INFORMALPRED_TOKEN) break;
@@ -686,30 +751,50 @@ public class AnnotationHandler {
           break;
       }
     }
+    if (foundSignalsOnly == null) {
+        Expr defaultExpr = AnnotationHandler.F;
+        // Create a default signals_only clause using the list of exceptions
+        // prior to any adjustment
+        VarExprModifierPragma newmp = defaultSignalsOnly(tde,req);
+        resultList.addElement(newmp);
+        m.insertElementAt(newmp,0);
+
+    }
     if (!foundDiverges) {
-      // lightweight default - req ==> true which is true
-      // heavyweight default - req ==> false which is !req
-      // The lightweight default need not be added since it does
-      // not need any verification.
-      isLightweight = false; // FIXME - no way to distinguis at present
-      if (Utils.isPure(tde) && isLightweight) {
-        // Routine is pure and there is no diverges clause
-        // and this is a lightweight spec case
-        // FIXME - this is turned off because it will cause too many cautions
-        // right now
-        //        ErrorSet.caution(Utils.findModifierPragma(tde.pmodifiers,TagConstants.PURE).getStartLoc(),
-        //             "A lightweight specification case for a pure method or constructor
-        // must have an explicit 'diverges false' clause");
-        isLightweight = false; // Force a false diverges default clause
-      }
+      // The default diverges clause is 'false'
       resultList.addElement(ExprModifierPragma.make(TagConstants.DIVERGES,
-          implies(req, isLightweight ? AnnotationHandler.T
-              : AnnotationHandler.F), Location.NULL));
+          implies(req, AnnotationHandler.F), Location.NULL));
     }
 
     if (!foundModifies) {
       resultList.addElement(defaultModifies(tde.getStartLoc(), req, tde));
     }
+  }
+
+  public final static VarExprModifierPragma defaultSignalsOnly(
+                        RoutineDecl tde, Expr req) {
+        int throwsLoc = tde.locThrowsKeyword;
+        if (throwsLoc == Location.NULL) throwsLoc = tde.getStartLoc();
+	Expr defaultExpr = AnnotationHandler.F;
+        TypeNameVec tv = tde.raises;
+        Identifier id = TagConstants.ExsuresIdnName;
+        FormalParaDecl arg = FormalParaDecl.make(0, null, id,
+		      Types.javaLangException(), throwsLoc);
+        for (int i=0; i<tv.size(); ++i) {
+            TypeName tn =tv.elementAt(i);
+            int loc = tn.getStartLoc();
+            Expr e = InstanceOfExpr.make(
+		  VariableAccess.make(id, loc, arg), tn, loc);
+            FlowInsensitiveChecks.setType(e, Types.booleanType);
+            defaultExpr = BinaryExpr.make(TagConstants.OR,
+                           defaultExpr, e, loc);
+            FlowInsensitiveChecks.setType(defaultExpr, Types.booleanType);
+        }
+        VarExprModifierPragma newmp = VarExprModifierPragma.make(
+              TagConstants.SIGNALS, arg, defaultExpr, throwsLoc);
+        newmp.setOriginalTag(TagConstants.SIGNALS_ONLY);
+        newmp.expr = implies(req, newmp.expr);
+	return newmp;
   }
 
   public final static ModifiesGroupPragma defaultModifies(int loc, Expr req,
@@ -812,6 +897,8 @@ public class AnnotationHandler {
   }
 
   public void fixDefaultSpecs(ModifierPragmaVec prefix) {
+    // This step is necessary because a singleton instance of a default
+    // Pragma can be used.  Since we are going to change the expression.
     for (int i = 0; i < prefix.size(); ++i) {
       ModifierPragma mp = prefix.elementAt(i);
       if (mp.getTag() == TagConstants.SIGNALS) {
@@ -819,6 +906,7 @@ public class AnnotationHandler {
         if (isFalse(vmp.expr)) {
           VarExprModifierPragma newvmp = VarExprModifierPragma.make(vmp.tag,
               vmp.arg, vmp.expr, vmp.loc);
+          newvmp.setOriginalTag(vmp.originalTag());
           prefix.setElementAt(newvmp, i);
         }
       }
@@ -827,6 +915,7 @@ public class AnnotationHandler {
         if (isFalse(vmp.expr)) {
           ExprModifierPragma newvmp = ExprModifierPragma.make(vmp.tag,
               vmp.expr, vmp.loc);
+          newvmp.setOriginalTag(vmp.originalTag());
           if (Utils.ensuresDecoration.isTrue(vmp))
             Utils.ensuresDecoration.set(newvmp,true);
           prefix.setElementAt(newvmp, i);
@@ -1300,7 +1389,8 @@ public class AnnotationHandler {
               mpv.addElement(VarExprModifierPragma.make(TagConstants.SIGNALS,
                   FormalParaDecl.make(0, null, TagConstants.ExsuresIdnName,
                       Types.javaLangException(), mp.getStartLoc()),
-                  AnnotationHandler.F, mp.getStartLoc()));
+                  AnnotationHandler.F, mp.getStartLoc()).
+                       setOriginalTag(TagConstants.SIGNALS_ONLY));
               break;
             case TagConstants.EXCEPTIONAL_BEHAVIOR:
               if (behaviorMode == 2)
@@ -1326,7 +1416,8 @@ public class AnnotationHandler {
               mpv.addElement(VarExprModifierPragma.make(TagConstants.SIGNALS,
                   FormalParaDecl.make(0, null, TagConstants.ExsuresIdnName,
                       Types.javaLangException(), mp.getStartLoc()),
-                  AnnotationHandler.F, mp.getStartLoc()));
+                  AnnotationHandler.F, mp.getStartLoc()).
+                      setOriginalTag(TagConstants.SIGNALS_ONLY));
               break;
             case TagConstants.EXCEPTIONAL_EXAMPLE:
               if (behaviorMode == 1)

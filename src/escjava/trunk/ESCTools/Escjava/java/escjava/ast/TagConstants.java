@@ -83,7 +83,8 @@ public class TagConstants extends GeneratedTags
     public static final int CHKSHARINGALLNULL = CHKSHARING + 1;
     public static final int CHKUNENFORCEBLEOBJECTINVARIANT = CHKSHARINGALLNULL + 1;
     public static final int CHKUNEXPECTEDEXCEPTION = CHKUNENFORCEBLEOBJECTINVARIANT + 1;
-    public static final int CHKWRITABLEDEFERRED = CHKUNEXPECTEDEXCEPTION + 1;
+    public static final int CHKUNEXPECTEDEXCEPTION2 = CHKUNEXPECTEDEXCEPTION + 1;
+    public static final int CHKWRITABLEDEFERRED = CHKUNEXPECTEDEXCEPTION2 + 1;
     public static final int CHKWRITABLE = CHKWRITABLEDEFERRED + 1;
     public static final int CHKQUIET = CHKWRITABLE + 1;
     public static final int CHKASSUME = CHKQUIET + 1;
@@ -735,6 +736,7 @@ public class TagConstants extends GeneratedTags
 	"RaceAllNull",
         "Unenforcable",
         "Exception",
+        "SpecificationException",
         "Deferred",
         "Writable",
         "vc.Quiet",  // printed in debugging output only

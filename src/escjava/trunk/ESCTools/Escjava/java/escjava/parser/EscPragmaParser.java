@@ -1055,7 +1055,7 @@ public class EscPragmaParser extends Parse
         case TagConstants.UNREACHABLE:
           checkNoModifiers(tag, loc);
           dst.ttype = TagConstants.STMTPRAGMA;
-          dst.auxVal = SimpleStmtPragma.make(tag, loc);
+          dst.auxVal = SimpleStmtPragma.make(tag, loc).setOriginalTag(tag);
           if (scanner.ttype == TagConstants.SEMICOLON) scanner.getNextToken();
           break;
 
@@ -1077,6 +1077,7 @@ public class EscPragmaParser extends Parse
               .unRedundant(tag), assertion, label, loc);
           if (TagConstants.isRedundant(tag))
             pragma.setRedundant(true);
+          pragma.setOriginalTag(tag);
           dst.auxVal = pragma;
           semicolonExpected = true;
           break;
@@ -1100,6 +1101,7 @@ public class EscPragmaParser extends Parse
           ExprStmtPragma pragma = ExprStmtPragma.make(TagConstants
               .unRedundant(tag), parseExpression(scanner), null, loc);
           if (TagConstants.isRedundant(tag)) pragma.setRedundant(true);
+          pragma.setOriginalTag(tag);
           dst.auxVal = pragma;
           semicolonExpected = true;
           break;
@@ -1124,7 +1126,8 @@ public class EscPragmaParser extends Parse
           int locOp = scanner.startingLoc;
           expect(scanner, TagConstants.ASSIGN);
           Expr value = parseExpression(scanner);
-          dst.auxVal = SetStmtPragma.make(target, locOp, value, loc);
+          dst.auxVal = SetStmtPragma.make(target, locOp, value, loc)
+                                                .setOriginalTag(tag);
           semicolonExpected = true;
           break;
         }
@@ -1395,7 +1398,7 @@ public class EscPragmaParser extends Parse
           // let modifiers accumulate
           dst.ttype = TagConstants.MODIFIERPRAGMA;
           dst.auxVal = SimpleModifierPragma.make(tag, loc);
-          break;
+				  break;
 
         case TagConstants.ALSO_ENSURES:
         case TagConstants.ALSO_REQUIRES:
@@ -1504,8 +1507,9 @@ public class EscPragmaParser extends Parse
           } else
             expr = parseExpression(scanner);
           VarExprModifierPragma pragma = VarExprModifierPragma.make(
-              TagConstants.unRedundant(tag), arg, expr, loc);
+              TagConstants.SIGNALS, arg, expr, loc);
           if (TagConstants.isRedundant(tag)) pragma.setRedundant(true);
+          pragma.setOriginalTag(tag);
           dst.auxVal = pragma;
           semicolonExpected = true;
           break;
@@ -1519,10 +1523,12 @@ public class EscPragmaParser extends Parse
           Name name;
           semicolonExpected = true;
           Expr expr = LiteralExpr.make(TagConstants.BOOLEANLIT, Boolean.FALSE, loc);
-          Identifier id = Identifier.intern("__e");
+          Identifier id = TagConstants.ExsuresIdnName;
           FormalParaDecl arg = FormalParaDecl.make(0,null,
               id, javafe.tc.Types.javaLangException(), ploc);
-          while (true) {
+          if (scanner.ttype == TagConstants.SEMICOLON) {
+            // skip - expression is false
+          } else while (true) {
             if (scanner.ttype == TagConstants.IDENT) {
               name = parseName(scanner);
               int thisloc = name.getStartLoc();
@@ -1545,6 +1551,7 @@ public class EscPragmaParser extends Parse
           VarExprModifierPragma pragma = VarExprModifierPragma.make(
               TagConstants.SIGNALS, 
               arg, expr, ploc);
+          pragma.setOriginalTag(TagConstants.SIGNALS_ONLY);
           dst.auxVal = pragma;
           break;
         }
@@ -1911,7 +1918,8 @@ public class EscPragmaParser extends Parse
     } else if (inProcessTag == TagConstants.LOOP_PREDICATE) {
       dst.startingLoc = inProcessLoc;
       Expr e = parseExpression(scanner);
-      dst.auxVal = ExprStmtPragma.make(inProcessTag, e, null, inProcessLoc);
+      dst.auxVal = ExprStmtPragma.make(inProcessTag, e, null, inProcessLoc)
+					       .setOriginalTag(inProcessTag);
       dst.ttype = TagConstants.STMTPRAGMA;
       //        } else if (inProcessTag == TagConstants.DEPENDS) {
       // FIXME - not sure why we end up here or what we are supposed to do
@@ -3025,9 +3033,13 @@ public class EscPragmaParser extends Parse
       if (result instanceof TypeDeclElemPragma) {
         ((TypeDeclElemPragma)result).decorate(mpv);
       } else if (result instanceof MethodDecl) {
-        ((MethodDecl)result).pmodifiers = mpv;
+        MethodDecl rd =(MethodDecl)result;
+        if (rd.pmodifiers != null) mpv.append(rd.pmodifiers);
+        rd.pmodifiers = mpv;
       } else if (result instanceof ConstructorDecl) {
-        ((ConstructorDecl)result).pmodifiers = mpv;
+        ConstructorDecl rd =(ConstructorDecl)result;
+        if (rd.pmodifiers != null) mpv.append(rd.pmodifiers);
+        rd.pmodifiers = mpv;
       } else {
         // FIXME
         System.out.println("MODS FOR " + result.getClass());

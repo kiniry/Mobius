@@ -419,6 +419,9 @@ public final class ErrorMsg
 	    r = ("Possible unexpected exception");
 	    // "strLocDecl" may or may not be null
 	    break;
+	case TagConstants.CHKUNEXPECTEDEXCEPTION2:
+            r = ("Possible exception allowed by the specification (perhaps inherited) but not declared by the method's throws clause");
+            break;
 	case TagConstants.CHKCONSTRUCTORLEAK:
 	case TagConstants.CHKINITIALIZERLEAK:
 	case TagConstants.CHKUNENFORCEBLEOBJECTINVARIANT:

@@ -26,7 +26,13 @@ public class NoWarn
                       TagConstants.FIRSTESCCHECKTAG + 1];
 
     static {
+        init();
+    }
+
+    static public void init() {
+        useGlobalStatus = false;
         setAllChkStatus(TagConstants.CHK_AS_ASSERT);
+        setChkStatus(TagConstants.CHKUNEXPECTEDEXCEPTION2, TagConstants.CHK_AS_ASSUME);
     }
 
     public static void setAllChkStatus(int status) {

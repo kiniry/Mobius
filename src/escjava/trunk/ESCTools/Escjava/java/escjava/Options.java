@@ -266,6 +266,8 @@ public class Options extends javafe.SrcToolOptions
   */
   public boolean checkPurity = false;
 
+  public boolean strictExceptions = false;
+
   /** When true, parses pragmas that begin with /*+@, which are normally
       parsed only by JML; this allows test runs in which everything JML
       parses is parsed by escjava, to see if we have full coverage of all
@@ -951,6 +953,9 @@ public class Options extends javafe.SrcToolOptions
       return offset;
     } else if (option.equals("-testref")) {
       testRef = true;
+      return offset;
+    } else if (option.equals("-strictexceptions")) {
+      strictExceptions = true;
       return offset;
     } else if (option.equals("-checkpurity")) {
       checkPurity = true;

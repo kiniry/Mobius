@@ -288,8 +288,11 @@ public final class GetSpec {
   /** Perform a substitution on a VarExprModifierPragma * */
   private static VarExprModifierPragma doSubst(Hashtable subst,
       VarExprModifierPragma vemp) {
-    return VarExprModifierPragma.make(vemp.tag, vemp.arg, Substitute.doSubst(
+    VarExprModifierPragma v =
+      VarExprModifierPragma.make(vemp.tag, vemp.arg, Substitute.doSubst(
         subst, vemp.expr), vemp.loc);
+    v.setOriginalTag(vemp.originalTag());
+    return v;
   }
   
   //@ ensures \result != null;
@@ -648,7 +651,12 @@ public final class GetSpec {
       Expr pred = GC.nary(TagConstants.ANYEQ, GC.ecvar, GC.ec_return);
       Condition cond = GC.condition(TagConstants.CHKUNEXPECTEDEXCEPTION, pred,
           Location.NULL);
-      post.addElement(cond);
+      if (NoWarn.getChkStatus(TagConstants.CHKUNEXPECTEDEXCEPTION)
+            == TagConstants.CHK_AS_ASSERT) post.addElement(cond);
+      cond = GC.condition(TagConstants.CHKUNEXPECTEDEXCEPTION2, pred,
+          Location.NULL);
+      if (NoWarn.getChkStatus(TagConstants.CHKUNEXPECTEDEXCEPTION2)
+            == TagConstants.CHK_AS_ASSERT) post.addElement(cond);
     } else {
       // Free: EC == ecThrow ==>
       //          XRES != null && typeof(XRES) <: Throwable &&
@@ -679,20 +687,40 @@ public final class GetSpec {
       Expr except = GC.nary(TagConstants.ANYEQ, GC.ecvar, GC.ec_throw);
       Expr typeofXRES = GC.nary(TagConstants.TYPEOF, GC.xresultvar);
       ev.removeAllElements();
-      for (int i = 0; i < dmd.throwsSet.size(); i++) {
+      int num = dmd.throwsSet.size();
+      Object originalnum = Utils.exceptionDecoration.get(dmd.original);
+      if (originalnum != null) num = ((Integer)originalnum).intValue(); 
+      for (int i = 0; i < num; i++) {
         TypeName x = dmd.throwsSet.elementAt(i);
         p = GC.nary(TagConstants.TYPELE, typeofXRES, GC.typeExpr(x));
         ev.addElement(p);
       }
+      Expr pp = GC.or(normal, GC.and(except, GC.or(ev)));
+
+      if (!Main.options().strictExceptions) {
+      for (int i = num; i < dmd.throwsSet.size(); i++) {
+        TypeName x = dmd.throwsSet.elementAt(i);
+        p = GC.nary(TagConstants.TYPELE, typeofXRES, GC.typeExpr(x));
+        ev.addElement(p);
+      }
+      }
+
       Expr eOutcomes;
       eOutcomes = GC.or(ev);
       
       p = GC.or(normal, GC.and(except, eOutcomes));
       
-      Assert.notFalse(dmd.original.locThrowsKeyword != Location.NULL);
+      // Note: This is commented out because we sometimes fabricate a 
+      // throws clause where there was none before. - DRCok
+      //Assert.notFalse(dmd.original.locThrowsKeyword != Location.NULL);
       cond = GC
       .condition(TagConstants.CHKUNEXPECTEDEXCEPTION, p, Location.NULL);
-      post.addElement(cond);
+      if (NoWarn.getChkStatus(TagConstants.CHKUNEXPECTEDEXCEPTION)
+            == TagConstants.CHK_AS_ASSERT) post.addElement(cond);
+      cond = GC
+      .condition(TagConstants.CHKUNEXPECTEDEXCEPTION2, pp, Location.NULL);
+      if (NoWarn.getChkStatus(TagConstants.CHKUNEXPECTEDEXCEPTION2)
+            == TagConstants.CHK_AS_ASSERT) post.addElement(cond);
     }
     
     // constructors ensure that the new object's owner field is null
@@ -1811,6 +1839,7 @@ public final class GetSpec {
   private static void checkConditions(ConditionVec cv, int loc, StackVector code) {
     for (int i = 0; i < cv.size(); i++) {
       Condition cond = cv.elementAt(i);
+      if (cond.label == TagConstants.CHKUNEXPECTEDEXCEPTION2) continue;
       Translate.setop(cond.pred);
       // if the condition is an object invariant, send its guarded command
       // translation as auxiliary info to GC.check

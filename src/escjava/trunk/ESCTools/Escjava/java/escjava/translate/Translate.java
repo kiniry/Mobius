@@ -3928,6 +3928,7 @@ public final class Translate
       // check all postconditions
       for(int i=0; i<spec.post.size(); i++) {
         Condition cond = spec.post.elementAt(i);
+        if (cond.label == TagConstants.CHKUNEXPECTEDEXCEPTION2) continue;
         addCheck(rd.getEndLoc(),
                  cond.label,
                  GC.subst( call.scall, call.ecall, pt, cond.pred),
@@ -4153,14 +4154,45 @@ public final class Translate
         addAssumption(spec.postAssumptions.elementAt(i));
       }
 
+      addAssumption(
+        GC.or(
+          GC.nary(TagConstants.ANYEQ,GC.ecvar,GC.ec_return),
+          GC.and(
+            GC.nary(TagConstants.ANYEQ,GC.ecvar,GC.ec_throw),
+            GC.nary(TagConstants.TYPELE,
+              GC.nary(TagConstants.TYPEOF,GC.xresultvar),
+              TypeExpr.make(Location.NULL,Location.NULL,Types.javaLangException())
+            )
+          )
+        )
+      );
+
       // assume postconditions
+      Condition exceptionCondition = null;
       for(int i=0; i<spec.post.size(); i++) {
         Condition cond = spec.post.elementAt(i);
+        if (cond.label == TagConstants.CHKUNEXPECTEDEXCEPTION) {
+          continue;
+        }
+        if (cond.label == TagConstants.CHKUNEXPECTEDEXCEPTION2) {
+          exceptionCondition = cond;
+          continue;
+        }
         code.addElement(GC.assumeAnnotation(cond.locPragmaDecl,
                                             GC.subst(call.scall, call.ecall,
                                                      pt, cond.pred)));
       }
-
+      if (exceptionCondition != null &&
+            NoWarn.getChkStatus(TagConstants.CHKUNEXPECTEDEXCEPTION2) == 
+                                             TagConstants.CHK_AS_ASSERT) {
+        Condition cond = exceptionCondition;
+        int loc = rd.locThrowsKeyword;
+        if (loc == Location.NULL) loc = rd.getStartLoc();
+        addCheck(call.scall,
+                 TagConstants.CHKUNEXPECTEDEXCEPTION2,
+                 GC.subst( call.scall, call.ecall, pt, cond.pred),
+                 loc);
+      }
     }
     
     if( spec.dmd.throwsSet != null && spec.dmd.throwsSet.size() != 0 ) {	
@@ -4170,7 +4202,7 @@ public final class Translate
       //   assume EC == ec$return []
       //   assume EC == ec$throw; assume !isAllocated(objectToBeConstructed, alloc); raise
       // #end
-	
+
       code.push();
       code.addElement( GC.assume( GC.nary(TagConstants.ANYEQ, GC.ecvar, GC.ec_return )));
 	

@@ -182,10 +182,11 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
     }
     try {
       super.checkTypeDeclElem(e);
-      if (e instanceof MethodDecl || e instanceof ConstructorDecl) {
+      if (e instanceof RoutineDecl) {
         // Desugaring presumes that typechecking has already
         // been performed
         RoutineDecl m = (RoutineDecl)e;
+/*
         if ((m instanceof ConstructorDecl) && m.implicit) {
           // The desugaring of m can require the desugared
           // specs of a parent constructor, so we have to be
@@ -193,6 +194,25 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
           TypeSig s = TypeSig.getSig(m.parent).superClass();
           if (s != null) checkTypeDeclElem(s.getTypeDecl());
         }
+*/
+/*
+        if (m.originalRaises != null && 
+            m.originalRaises.size() != m.raises.size()) {
+
+            for (int i=m.originalRaises.size()+1; i < m.raises.size(); ++i) {
+
+              TypeSig t = TypeSig.getSig(m.raises.elementAt(i));
+System.out.println("FOUND " + t);
+              if (!t.isSubtypeOf(Types.javaLangRuntimeException())) {
+                 ErrorSet.error(m.raises.elementAt(i).getStartLoc(),
+                   "The type " + t + " is not a subtype of " +
+                   "RuntimeException and is not declared by the API, and " +
+                   "consequently may not be declared in a specification.");
+                 System.out.println("BAD");
+              }
+            }
+        }
+*/
         annotationHandler.desugar(m); 
       }
     } finally {
@@ -2161,10 +2181,9 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
           }
 
 
-        case TagConstants.EXSURES:
-        case TagConstants.ALSO_EXSURES:
         case TagConstants.SIGNALS:
           {
+            tag = p.originalTag();
             VarExprModifierPragma vemp = (VarExprModifierPragma)p;
 
             if( !(ctxt instanceof RoutineDecl ) ) {
@@ -2217,6 +2236,14 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                    }
                    }
                 */
+              }
+
+              if (tag == TagConstants.SIGNALS_ONLY) {
+                  // Check that all Exceptions listed are either in the
+                  // throws list or are RuntimeExceptions
+
+                  // FIXME
+
               }
 
               Env subenv = new EnvForLocals(env, vemp.arg);
