@@ -51,11 +51,11 @@ represent partial semantics for Java and JML.  Some are sets of axioms
 that are part of the Java logic (and thus are always included in the
 background predicate) and sets of axioms that are introduced to the
 background predicate when the Java program being checked contains
-various constructs.  A weakest precondition calculi described herein
-describes the translation of Java into guarded commands.  The
-assumptions and assertions produced by this translation are also
-discussed when this will help the reader understand the interaction
-between the wp-based translation and the logic.
+various constructs.  The strongest postcondition and weakest
+precondition calculi described herein describes the translation of Java
+into guarded commands.  The assumptions and assertions produced by this
+translation are also discussed when this will help the reader understand
+the interaction between the wp-based translation and the logic.
 
 This is edition $Revision$.
 
@@ -145,8 +145,8 @@ See @uref{http://creativecommons.org/licenses/by-nc-sa/2.0/legalcode}
 ESC/Java, ESC/Java2, Java Modeling Language, JML, Extended Static
 Checking, Extended Static Checker, Design by Contract, Java,
 Verification, BISL, Object-oriented Logic, Behavioral Interface
-Specification Language, Weakest Precondition, Unsorted, Many-Sorted,
-Kiniry
+Specification Language, Strongest Postcondition, Weakest Precondition,
+Unsorted, Many-Sorted, Kiniry
 @end documentdescription
 
 @c Output the table of contents at the beginning.
@@ -173,15 +173,15 @@ are always included in the background predicate), and (b) the axioms
 that are introduced to the background predicate when the Java program
 being checked contains various constructs.
 
-The weakest precondition calculus that is used to translate Java
-programs into verification conditions in a guarded command form is also
-discussed.
+The strongest postcondition and weakest precondition calculi that are
+used to translate Java programs into verification conditions in a
+guarded command form is also discussed.
 
 @menu
 * Introduction::                  An introduction to this document.
 * Unsorted Logic::                The unsorted object logic.
 * Many-Sorted Logics::            Two many-sorted objects logics.
-* Weakest Precondition Calculus:: Translating Java to verification conditions.
+* Calculi::                       Translating Java to verification conditions.
 * Unsorted Construct Index::      An index of all unsorted pseudo-declarations.
 * Motivating Examples::           A small set of motivating examples.
 * List of Possible Experiments::  Ideas for future work, experiementation, etc.
@@ -264,15 +264,16 @@ Stata, and Flanagan.
 
 The ESC/Java tool attempts to find errors in Java programs by
 translating annotated Java programs into guarded commands, deriving
-weakest preconditions for those guarded commands, and testing those
-preconditions with a theorem prover.  We have chosen to use
+strongest postconditions or weakest preconditions for those guarded
+commands, and testing those preconditions with a theorem prover.  We
+have chosen to use
 @uref{http://www.research.digital.com/SRC/esc/Simplify.html, Simplify}
-as that theorem prover.  Our design of the logic of ESC/Java is
-strongly influenced both by the underlying logic of Simplify (of which
-our logic is an extension) and by efficiency considerations specific
-to Simplify.  In this section, we describe, more or less, what the
-reader needs to know about Simplify in order to understand the logic
-and the motivation for some of our design decisions.
+as that theorem prover.  Our design of the logic of ESC/Java is strongly
+influenced both by the underlying logic of Simplify (of which our logic
+is an extension) and by efficiency considerations specific to Simplify.
+In this section, we describe, more or less, what the reader needs to
+know about Simplify in order to understand the logic and the motivation
+for some of our design decisions.
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @menu
@@ -343,7 +344,7 @@ as a user-defined predicate symbol.
 We said above that Simplify has term constants and variables, but we
 weren't specific about what distinguishes them.  Constants include not
 only numeric literals such as 6, but also symbolic constants that the
-uninitiated reader might na&iuml;vely perceive as variables.  Symbol
+uninitiated reader might naively perceive as variables.  Symbol
 names are considered variables only when they are bound by a
 quantifier.  As an example, consider the following axioms for group
 theory:
@@ -2255,20 +2256,32 @@ that says that all @code{String} lengths are non-negative.  We propose
 to add such functions and axioms only as the need becomes evident.
 
 @c =============================================================================
-@node Many-Sorted Logics, Weakest Precondition Logic, Unsorted Logic, Top
+@node Many-Sorted Logics, Calculi, Unsorted Logic, Top
 @chapter Many-Sorted Logics
 
 Discussion of new logics.
 
 @c =============================================================================
-@node Weakest Precondition Calculus, Unsorted Construct Index, Many-Sorted Logics, Top
-@chapter Weakest Precondition Calculus
+@node Calculi, Unsorted Construct Index, Many-Sorted Logics, Top
+@chapter Calculi
+
+Discussion of ESC/Java2's strongest postcondition and weakest
+precondition calculi for translating Java into verification conditions
+via a guarded command language.
+
+@section Strongest Postcondition Calculus
+
+Discussion of ESC/Java2's strongest postcondtion calculus for
+translating Java into verification conditions via a guarded command
+language.
+
+@section Weakest Precondition Calculus
 
 Discussion of ESC/Java2's weakest precondition calculus for translating
 Java into verification conditions via a guarded command language.
 
 @c =============================================================================
-@node Unsorted Construct Index, Motivating Examples, Weakest Precondition Logic, Top
+@node Unsorted Construct Index, Motivating Examples, Calculi, Top
 @appendix Index of Constructs in Unsorted Logic
 
 @cindex Index of Predicates, Functions, and Constants
