@@ -1,0 +1,495 @@
+M3 v4.2
+N0 Simplify
+
+M0 1 34 0 1 2 0 97 0 0 78 0 0
+N1 Main
+A1
+N2 Sx
+B2
+N3 Thread
+B3
+N4 Prover
+B4
+N5 Stdio
+B5
+N6 RTCollectorSRC
+B6
+N7 FloatMode
+B7
+N8 Lex
+B8
+N9 RefSeq
+B9
+N10 Trit
+B10
+N11 Time
+B11
+N12 Date
+B12
+N13 FmtTime
+B13
+N14 FileWr
+B14
+N15 RdCopy
+B15
+N16 Atom
+B16
+N17 Fmt
+B17
+N18 Pathname
+B18
+N19 Env
+B19
+N20 TextRd
+B20
+N21 Bundle
+B21
+N22 Text
+B22
+N23 OSError
+B23
+N24 Process
+B24
+N25 FileRd
+B25
+N26 Params
+B26
+N27 RdClass
+B27
+N28 Rd
+B28
+N29 Wr
+B29
+N30 RefList
+B30
+N31 CGITrans
+B31
+N32 Html
+B32
+N33 Axioms
+B33
+N34 PredSx
+B34
+N35 RTHooks
+B35
+N36 MutexRep
+C36
+D28
+N37 ThreadPosix
+D37
+N38 ReadError
+V0 2 38 e5e0d7c272d4b9ac
+i0
+N39 Alerted
+V1 3 39 3ae605d9dcab0e20
+i1
+N40 Error
+V2 4 40 58632b3ae2907e74
+i2
+N41 stdin
+V3 5 41 9537971fce0acc72
+i3
+N42 stdout
+V4 5 42 921b2ed7a3149e12
+i4
+N43 stderr
+V5 5 43 01579af7ea80fe1a
+i5
+N44 TextLitInfo
+V6 35 44 fdc7f49fa7f061c3
+i6
+N45 TextLitGetChar
+V7 35 45 bf853738ef95b58f
+i7
+N46 TextLitGetWideChar
+V8 35 46 6b44a8081c4ee8f1
+i8
+N47 TextLitGetChars
+V9 35 47 e51aa8c54a895201
+i9
+N48 TextLitGetWideChars
+V10 35 48 face384698a06a95
+i10
+N49 T
+V11 28 49 2ddda687a60c6245
+i11
+N50 PutText
+V12 29 50 004d23e0fae46c51
+i12
+N51 Flush
+V13 29 51 93db3bd2acaaef5c
+i13
+N52 Exit
+V14 24 52 b5f2661c51af8e4c
+i14
+N53 ReportFault
+V15 35 53 e0ad157f9f695006
+i15
+N54 CopySyntax
+V16 2 54 fbf080403dff4267
+i16
+N55 Allocate
+V17 35 55 3920bbe96d2a2daf
+i17
+N56 SetReadMacro
+V18 2 56 9ce031de8d399a39
+i18
+N57 EndOfFile
+V19 28 57 f8334b2e80728123
+i19
+N58 Read
+V20 2 58 ebec7645851ad32c
+i20
+N59 CheckIsType
+V21 35 59 79b363ebba6780e2
+i21
+N60 Raise
+V22 35 60 543d89ab72cb48cc
+i22
+N61 Trap
+V23 7 61 9c647fbc81e88604
+i23
+V24 8 40 855e4f3193446c3b
+i24
+N62 Int
+V25 8 62 fec09607c02a0154
+i25
+N63 GetChar
+V26 28 63 5a0ab79226373e5d
+i26
+N64 List1
+V27 30 64 7279c9971deb14fd
+i27
+N65 Assert
+V28 4 65 c9569377bd4198aa
+i28
+N66 UnitConsequences
+V29 4 66 0a361c0078da69ee
+i29
+N67 oldOutput
+V30 4 67 9d9f4f2f961e04f3
+i30
+N68 ToText
+V31 16 68 cacbfa0534e58a18
+i31
+N69 Concat
+V32 35 69 2bcdb700e948c590
+i32
+N70 Print
+V33 2 70 8fcf7e11ba321d56
+i33
+N71 trueSym
+V34 34 71 0f77a0493ec24eb0
+i34
+N72 FromText
+V35 16 72 b169255174f49277
+i35
+N73 incremental
+V36 6 73 9bcfd965e3504620
+i36
+N74 generational
+V37 6 74 42118ca678c155fa
+i37
+N75 Init
+V38 4 75 f0ddb70b3c43ec95
+i38
+N76 Get
+V39 26 76 cab4951bce7307aa
+i39
+N77 Equal
+V40 22 77 7b8a753f7d187f80
+i40
+N78 Count
+V41 26 78 d4453e9fb5f9a7f7
+i41
+N79 showCC
+V42 4 79 6be383a877a51334
+i42
+N80 ccLimitGlobal
+V43 4 80 29eda5fc99032231
+i43
+N81 noPlunge
+V44 4 81 976745d758fc98ad
+i44
+V45 32 76 6089d05f87ab230c
+i45
+V46 21 76 da13ab526ad37923
+i46
+N82 ToWriter
+V47 15 82 bbbb3552eefd4091
+i47
+V48 31 40 513c174f9c58631f
+i48
+N83 P
+V49 31 83 0d77141c9230d7e5
+i49
+N84 OpenAppend
+V50 14 84 7a634b59dc4b54b9
+i50
+N85 Length
+V51 22 85 cf54e5d02c45f598
+i51
+N86 Now
+V52 11 86 0dfd00a64c25011e
+i52
+N87 FromTime
+V53 12 87 f8e03b7496aa14df
+i53
+N88 DateLong
+V54 13 88 a6b2aefdaab10b0a
+i54
+N89 Close
+V55 29 89 451a2e5f987e2057
+i55
+N90 New
+V56 20 90 28a2e81e7293bbd3
+i56
+N91 E
+V57 23 91 9834c238cadf6ee8
+i57
+N92 Open
+V58 25 92 b6deced1041dc021
+i58
+V59 19 76 f1cb85c5994b2640
+i59
+V60 33 76 c76a3fd95297fb41
+i60
+N93 AddAxioms
+V61 4 93 15d7372351a98965
+i61
+N94 Join
+V62 18 94 84a22734f630a36b
+i62
+N95 internDebug
+V63 4 95 b2ca514b538761b9
+i63
+V64 22 63 ccdfe3e5f258863b
+i64
+N96 PutChar
+V65 29 96 125cb84633df1a5f
+i65
+N97 Push
+V66 4 97 284e947505c0f98e
+i66
+N98 Pop
+V67 4 98 573bc7e4c58d64cc
+i67
+N99 defPredSym
+V68 34 99 72882c47b7de03a7
+i68
+N100 defPredMapSym
+V69 34 100 d8b4046cc473ada6
+i69
+N101 PredDef
+V70 4 101 fa48aabd48d56e44
+i70
+N102 Cons
+V71 30 102 1afcc65e120de4c0
+i71
+N103 proofSym
+V72 34 103 4a8267ee13f8e603
+i72
+V73 30 85 e7f70073fced0cdf
+i73
+N104 Nth
+V74 30 104 80560c1da6de3aee
+i74
+N105 Prove
+V75 4 105 8821f1ffd830b228
+i75
+N106 ScanTypecase
+V76 35 106 6c0355050f2d5a7c
+i76
+N107 Prune
+V77 4 107 3dbf486aa026c733
+i77
+V78 17 62 bb2b6ce9ab4d2f5d
+i78
+V79 9 49 a9bc44605f2109aa
+i79
+V80 10 49 9690b7ab0245f004
+i80
+N108 Unknown
+V81 10 108 b5dc8709fb865d5f
+i81
+N109 True
+V82 10 109 ccdebad8e0f383c0
+i82
+V83 2 49 5fd1904a6ff00951
+i83
+N110 PrintError
+V84 2 110 dddde6f0b3c75293
+i84
+N111 Syntax
+V85 2 111 9ff91caf829a9d03
+i85
+N112 ReadMacro
+V86 2 112 d3b9935e07257171
+i86
+N113 Failure
+V87 28 113 ef0c170abd2591bc
+i87
+V88 29 49 77ec1ed10766de4d
+i88
+V89 29 113 c1eeb923fd032d53
+i89
+V90 30 49 a127f1eced98158a
+i90
+N114 PostMeth
+V91 31 114 21232865c605d115
+i91
+N115 DefCT
+V92 31 115 d065dba9076a4d33
+i92
+N116 Timeout
+V93 4 116 ec173bfb69d9d12c
+i93
+N117 ResKind
+V94 4 117 c57a5475c8be50d2
+i94
+N118 ProveRes
+V95 4 118 62d2c391a370f082
+i95
+N119 ResClosure
+V96 4 119 f33e847a2d97bcbf
+i96
+tfa67ef2f
+t62761487
+td61dea16
+t16ba8299
+ta6aa7593
+tb95a4f1b
+t987badcf
+tbed0313c
+t1504fe3f
+td51c43e3
+td1d9dd0e
+t38df5df5
+t6d871b27
+tb750d684
+tb964357b
+t9132dde7
+tc9e236c8
+t89cd34bd
+t966fe87f
+ta19bdc21
+t7c17275c
+t1bee6e85
+tc5f201d2
+t69c9f5bb
+t51ddfe9b
+ta4bb9882
+ted86c002
+t7cfe252f
+tfdb1591d
+t6843ec47
+te3a385c3
+t656bdc20
+tf6456f96
+t7264446f
+t2aa4581f
+t5bb5f155
+tf53e5287
+t208c57fa
+t0a19e9f7
+tad398276
+t317b8480
+t97f166d3
+t0b782ec9
+tc472454b
+t8f7dfaea
+teae22395
+tc9d11604
+t04e57c9c
+t16e4f4a8
+t6d1d59dd
+t6409e3b2
+tfa938a7f
+t4b4d3eea
+t040b398c
+tc0c98bc7
+t6c104196
+te4e28466
+tb2389b3c
+t188952bf
+ted3c3679
+t2947d483
+te21fb03f
+t165611a2
+t1e89577b
+t55a7d415
+tea8be5fc
+ta5d24926
+t8e76abe7
+t7b78c34f
+t477539b0
+td85515fd
+t7f686acc
+tf8690983
+t2834cef2
+t9b134ca4
+te016a58e
+tf2a35a9d
+t0a0ae874
+o36 e422a136 9d8fb489 0 8 64
+p37 1541f475 e422a136 64 32 0
+p28 1cd6268f 1541f475 0 8 0
+O3e88e174 d61dea16 32 32 0
+O29f1ef33 9d8fb489 64 32 0
+Ob20e07b0 bed0313c 32 32 0
+Oc391bf9e bed0313c 0 8 0
+Oebb6dc84 d61dea16 0 8 0
+r27 fa67ef2f 7c17275c
+
+M32 1 5 0 0 0 1 10 0 0 19 0 0
+A32
+B22
+N120 BundleRep
+B120
+B21
+B35
+B32
+J45
+i6
+i7
+i8
+i9
+i10
+V97 21 49 4b8c3f5079f9d1bf
+i97
+i17
+N121 AllocateOpenArray
+V98 35 121 969bbff1aa993659
+i98
+i15
+i40
+t6d1d59dd
+t9d19e327
+tf173dc91
+t04e57c9c
+t38df5df5
+t6d871b27
+tb750d684
+tb964357b
+t9132dde7
+tc9e236c8
+t89cd34bd
+t966fe87f
+ta19bdc21
+t1068a8e8
+t7cfe252f
+t983b02e7
+tf400f3db
+ta4bb9882
+tc9d11604
+O7a3b0bda 6d1d59dd 0 8 0
+r120 6d1d59dd 1068a8e8
+
+I32 1 2 0 0 0 0 1 0 1 1 1 0
+A32
+B21
+B35
+i97
+e45
+t6d1d59dd
+T04e57c9c
