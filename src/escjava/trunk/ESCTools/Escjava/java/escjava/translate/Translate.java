@@ -7,6 +7,8 @@ import java.util.Enumeration;
 import java.util.Vector;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.io.ByteArrayOutputStream;
 
 import javafe.ast.*;
@@ -22,6 +24,7 @@ import javafe.Tool;
 
 import escjava.Main;
 import escjava.Options;
+import escjava.tc.Datagroups;
 
 import escjava.ast.*;
 import escjava.ast.TagConstants;
@@ -3428,50 +3431,61 @@ public final class Translate
 	//		arrays must have the same array expression and same index
 	int sz = mods.size();
 	ExprVec ev = ExprVec.make(sz);
-	Expr disjunct;
+	List others = new LinkedList();
 	for (int i=0; i<sz; ++i) {
 	    CondExprModifierPragma mp = mods.elementAt(i);
-	    Expr ex = mp.expr;
 	    Expr pred = mp.cond;
 	    Expr tpred = null;
 	    if (!isTrueLiteral(pred)) tpred = 
 			modTranslate(pred,true,inAnnotation);
-	    if (ex instanceof FieldAccess) {
-		FieldDecl fdd = ((FieldAccess)ex).decl;
-		if (fd != fdd) continue;
-		if (Modifiers.isStatic(fd.modifiers) != Modifiers.isStatic(fdd.modifiers)) continue;
-		ObjectDesignator odd = ((FieldAccess)ex).od;
-		if (Modifiers.isStatic(fd.modifiers)) {
-		   // Both are static and we already know that they point
-		   // to the same declaration.  So they match.
-		   if (tpred == null) return;
-		   disjunct = tpred;
+	    Object ex = mp.expr;
+	    do {
+	    Expr disjunct = null;
+	    if (ex instanceof FieldAccess || ex instanceof FieldDecl) {
+		FieldDecl fdd;
+		ObjectDesignator odd;
+		if (ex instanceof FieldAccess) {
+		    fdd = ((FieldAccess)ex).decl;
+		    odd = ((FieldAccess)ex).od;
 		} else {
-		    Expr e1 = eod;
-		    Expr e2 = odd instanceof ExprObjectDesignator ?
-				((ExprObjectDesignator)odd).expr:
-				ThisExpr.make(null,Location.NULL);
-		    if (e1 instanceof ThisExpr && e2 instanceof ThisExpr && 
-			tpred == null) {
-			//System.out.println("TRIVIAL PERMISSION - THIS FIELDS" );
-			return;
-		    } 
-	    	    //System.out.println("FF " + e1.getClass() + " " + e2.getClass());
-		    ExprVec evv = ExprVec.make(1);
-		    evv.addElement(e2);
-		    e1 = eod;
-		    e2 = modTranslate(e2,true,inAnnotation);
-		    Expr e = GC.nary(TagConstants.REFEQ,e1,e2);
-		    if (tpred != null) {
-			e = GC.and(e, tpred);
+		    fdd = (FieldDecl)ex;
+		    odd = null;
+		}
+		others.addAll(Datagroups.get(fdd));
+		if (fd == fdd && Modifiers.isStatic(fd.modifiers) == 
+					Modifiers.isStatic(fdd.modifiers)) {
+		    if (Modifiers.isStatic(fd.modifiers)) {
+		       // Both are static and we already know that they point
+		       // to the same declaration.  So they match.
+		       if (tpred == null) return;
+		       disjunct = tpred;
+		    } else {
+			Expr e1 = eod;
+			Expr e2 = odd instanceof ExprObjectDesignator ?
+				    ((ExprObjectDesignator)odd).expr:
+				    ThisExpr.make(null,Location.NULL);
+			if (e1 instanceof ThisExpr && e2 instanceof ThisExpr && 
+			    tpred == null) {
+			    //System.out.println("TRIVIAL PERMISSION - THIS FIELDS" );
+			    return;
+			} 
+			//System.out.println("FF " + e1.getClass() + " " + e2.getClass());
+			ExprVec evv = ExprVec.make(1);
+			evv.addElement(e2);
+			e1 = eod;
+			e2 = modTranslate(e2,true,inAnnotation);
+			Expr e = GC.nary(TagConstants.REFEQ,e1,e2);
+			if (tpred != null) {
+			    e = GC.and(e, tpred);
+			}
+			disjunct = e;
 		    }
-		    disjunct = e;
 		}
 	    } else if (ex instanceof ArrayRefExpr) {
-		continue;
+		// skip
 	    } else if (ex instanceof NothingExpr) {
 		//System.out.println("MATCHING AGAINST NOTHING " );
-		continue;
+		// skip
 	    } else if (ex instanceof EverythingExpr) {
 		if (tpred == null) {
 		    //System.out.println("TRIVIAL PERMISSION - EVERYTHING");
@@ -3481,34 +3495,41 @@ public final class Translate
 		disjunct = tpred;
 		
 	    } else if (ex instanceof ArrayRangeRefExpr) {
-		continue;
+		// skip
 	    } else if (ex instanceof WildRefExpr) {
 		ObjectDesignator odd = ((WildRefExpr)ex).od;
 		if (odd instanceof TypeObjectDesignator) {
-		    if (!Modifiers.isStatic(fd.modifiers)) continue;
-		    Type t = TypeCheck.inst.getSig(fd.parent);
-		    Type tt = ((TypeObjectDesignator)odd).type;
-		    if (t != tt) continue;
-		    if (tpred == null) return;
-		    disjunct = tpred;
+		    if (Modifiers.isStatic(fd.modifiers)) {
+			Type t = TypeCheck.inst.getSig(fd.parent);
+			Type tt = ((TypeObjectDesignator)odd).type;
+			if (t == tt) {
+			    if (tpred == null) return;
+			    disjunct = tpred;
+			}
+		    }
 		} else if (odd instanceof ExprObjectDesignator) {
-		    if (Modifiers.isStatic(fd.modifiers)) continue;
+		  if (!Modifiers.isStatic(fd.modifiers)) {
 		    Expr e1 = eod;
 		    Expr e2 = modTranslate(((ExprObjectDesignator)odd).expr,
 					true,inAnnotation);
 		    e1 = GC.nary(TagConstants.REFEQ,e1,e2);
 		    if (tpred != null) e1 = GC.and(e1,tpred);
 		    disjunct = e1;
+		  }
 		} else {
 		    System.out.println("COMPARE TO " + odd.getClass());
-		    continue;
 		}
 	    } else {
 		System.out.println("COMPARE TO " + ex.getClass());
-		continue;
 	    }
 	    // System.out.println(EscPrettyPrint.inst.toString(disjunct));
-	    ev.addElement(disjunct);
+	    if (disjunct != null) ev.addElement(disjunct);
+	    ex = null;
+	    if (!others.isEmpty()) {
+		Object o = others.remove(0);
+		ex = o;
+	    }
+	    } while (ex != null);
 	}
 	if (ev.size() == 0) {
 	    if (NoWarn.getChkStatus(TagConstants.CHKMODIFIES,loc,loc)
@@ -3543,18 +3564,22 @@ public final class Translate
 	//		arrays must have the same array expression and same index
 	int sz = mods.size();
 	ExprVec ev = ExprVec.make(sz);
-	Expr disjunct;
+	List others = new LinkedList();
 	for (int i=0; i<sz; ++i) {
 	    CondExprModifierPragma mp = mods.elementAt(i);
-	    Expr ex = mp.expr;
 	    Expr pred = mp.cond;
 	    Expr tpred = null;
 	    if (!isTrueLiteral(pred)) tpred = 
 			modTranslate(pred,true,inAnnotation);
+	    Object ex = mp.expr;
+	    do {
+	    Expr disjunct = null;
 	    if (ex instanceof FieldAccess) {
-		continue;
+		others.addAll( Datagroups.get( ((FieldAccess)ex).decl ));
+	    } else if (ex instanceof FieldDecl) {
+		others.addAll( Datagroups.get( (FieldDecl)ex ));
 	    } else if (ex instanceof ArrayRefExpr) {
-		if (array == null) continue;
+		if (array != null) {
 		//System.out.println("MATCHING AGAINST ARRAY " );
 		Expr ao = ((ArrayRefExpr)ex).array;
 		Expr ai = ((ArrayRefExpr)ex).index;
@@ -3567,9 +3592,9 @@ public final class Translate
 		    ao = GC.and(ao, tpred);
 		}
 		disjunct = ao;
+		}
 	    } else if (ex instanceof NothingExpr) {
 		//System.out.println("MATCHING AGAINST NOTHING " );
-		continue;
 	    } else if (ex instanceof EverythingExpr) {
 		if (tpred == null) {
 		    //System.out.println("TRIVIAL PERMISSION - EVERYTHING");
@@ -3579,7 +3604,7 @@ public final class Translate
 		disjunct = tpred;
 		
 	    } else if (ex instanceof ArrayRangeRefExpr) {
-		if (array == null) continue;
+		if (array != null) {
 		//System.out.println("MATCHING AGAINST ARRAY RANGE " );
 		ArrayRangeRefExpr a = (ArrayRangeRefExpr)ex;
 		Expr ao = modTranslate(a.array,true,inAnnotation);
@@ -3597,14 +3622,16 @@ public final class Translate
 		ao = al == null ? ao : GC.and(ao,al);
 		if (tpred != null) ao = GC.and(ao,tpred);
 		disjunct = ao;
+		}
 	    } else if (ex instanceof WildRefExpr) {
-		continue;
 	    } else {
 		System.out.println("COMPARE TO " + ex.getClass());
-		continue;
 	    }
 	    // System.out.println(EscPrettyPrint.inst.toString(disjunct));
-	    ev.addElement(disjunct);
+	    if (disjunct != null) ev.addElement(disjunct);
+	    ex = null;
+	    if (!others.isEmpty()) ex = (Expr)others.remove(0);
+	    } while (ex != null);
 	}
 	if (ev.size() == 0) {
 	    if (NoWarn.getChkStatus(TagConstants.CHKMODIFIES,loc,loc)

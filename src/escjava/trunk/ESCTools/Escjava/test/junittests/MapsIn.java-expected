@@ -5,10 +5,10 @@ MapsIn.java:29: Error: Expected an identifier here
 MapsIn.java:30: Error: Expected an identifier here
         //@ in ;
                ^
-MapsIn.java:31: Fatal error: Semicolon required when a in pragma is followed by another pragma (found IDENT instead).
+MapsIn.java:31: Error: Expected a comma or semicolon here
         //@ in i j
                  ^
-MapsIn.java:32: Fatal error: Expected an identifier, found ,
+MapsIn.java:32: Error: Expected an identifier here
         //@ in i,,
                  ^
 MapsIn.java:33: Error: Expected an identifier here
@@ -26,4 +26,23 @@ MapsIn.java:36: Error: Expected either a . or a [ in the maps field reference he
 MapsIn.java:36: Error: Expected \into in the maps clause here
         //@ maps i j 
                    ^
-9 errors
+  Prover started:TIME
+    [TIME]
+
+MapsIn ...
+MapsIn.java:7: Error: No such field in type MapsInS
+        //@ in super.i, super.j;
+                              ^
+Caution: Turning off extended static checking due to type error(s)
+  [TIME total] (aborted)
+
+MapsInS ...
+  [TIME total]
+
+JMLDataGroup ...
+  [TIME total]
+
+MapsT ...
+  [TIME total]
+1 caution
+10 errors

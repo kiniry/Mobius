@@ -1538,47 +1538,47 @@ try{
                 // The following clauses must be followed by a semi-colon.
 		case TagConstants.IN:
 		case TagConstants.IN_REDUNDANTLY: {
-			// FIXME - need to define and construct an
-			// appropriate ModifierPragma
-		    //parseIdentifier(scanner);
-		    boolean sup = false;
-		    if (scanner.ttype == TagConstants.SUPER) {
-			scanner.getNextToken();
-			expect(scanner,TagConstants.FIELD);
-			sup = true;
-		    }
-		    if (scanner.ttype != TagConstants.IDENT) {
-			ErrorSet.error(scanner.startingLoc,
-				"Expected an identifier here");
-			eatThroughSemiColon();
-			semicolonExpected = false;
-			return getNextPragmaHelper(dst);
-		    }
-
-		    //System.out.println("IN " + scanner.identifierVal);
-		    scanner.getNextToken();
-		    while (scanner.ttype == TagConstants.COMMA) {
-			scanner.getNextToken();
-			sup = false;
+		    do {
+			int n = 0;
 			if (scanner.ttype == TagConstants.SUPER) {
-			    scanner.getNextToken();
-			    expect(scanner,TagConstants.FIELD);
-			    sup = true;
+			    if (scanner.lookahead(1) != TagConstants.FIELD) {
+				ErrorSet.error(
+				    scanner.lookaheadToken(1).startingLoc,
+				    "Expected a . after super");
+				eatThroughSemiColon();
+				return getNextPragmaHelper(dst);
+			    }
+			    n = 2;
 			}
-			Identifier id = parseIdentifier(scanner);
-			//System.out.println("IN " + id);
-		    }
-
-		    ExprModifierPragma pragma =
-			ExprModifierPragma.make(TagConstants.unRedundant(tag), 
-					    null, loc);
-		    if (TagConstants.isRedundant(tag))
-			pragma.setRedundant(true);
-		    dst.ttype = TagConstants.POSTMODIFIERPRAGMA;
-                    dst.auxVal = pragma;
-                    semicolonExpected = true;
-                    break;
-		  }
+			if (scanner.lookahead(n) != TagConstants.IDENT) {
+			    ErrorSet.error(scanner.lookaheadToken(n).startingLoc,
+				    "Expected an identifier here");
+			    eatThroughSemiColon();
+			    return getNextPragmaHelper(dst);
+			}
+			int t = scanner.lookahead(n+1);
+			if (t != TagConstants.COMMA && t != TagConstants.SEMICOLON) {
+			    ErrorSet.error(
+				scanner.lookaheadToken(n+1).startingLoc,
+				"Expected a comma or semicolon here");
+			    eatThroughSemiColon();
+			    return getNextPragmaHelper(dst);
+			}
+			Expr e = parseExpression(scanner);
+			ExprModifierPragma pragma =
+			    ExprModifierPragma.make(TagConstants.unRedundant(tag), 
+						e, loc);
+			if (TagConstants.isRedundant(tag)) pragma.setRedundant(true);
+			dst.startingLoc = loc;
+			dst.auxVal = pragma;
+			dst.ttype = TagConstants.POSTMODIFIERPRAGMA;
+			if (scanner.ttype != TagConstants.COMMA) break;
+			savePragma(dst);
+			scanner.getNextToken(); // skip comma
+		    } while (true);
+		    semicolonExpected = true;
+		    break;
+		}
 		case TagConstants.MAPS:
 		case TagConstants.MAPS_REDUNDANTLY:
 			// FIXME - need to define and construct an

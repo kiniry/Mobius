@@ -518,6 +518,7 @@ VariableDeclarator:
       l.getNextToken();
     }
     else if (l.ttype == TagConstants.POSTMODIFIERPRAGMA) {
+	System.out.println("ORPHAN POSTMODIFIERPRAGMA");
 	// FIXME - ignore for now
       l.getNextToken();
     }

@@ -430,6 +430,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
         return ee;
     }
 
+    //@ requires e != null;
     protected Expr checkExpr(Env env, Expr e) {
         // Anticipate that the next context is probably not one suitable for
         // quantifications and labels.  "isPredicateContext" must revert to its old
@@ -477,6 +478,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 			if (!Types.isErrorType(t))
 			    reportLookupException(ex, "field", 
 					Types.printName(t), fa.locId);
+			setType( fa, Types.errorType );
                         return fa;
                     }
                     setType( fa, fa.decl.type );
@@ -2278,9 +2280,28 @@ FIXME - see uses of countFreeVarsAccess
 	      }
 
 	    case TagConstants.IN:
-	    case TagConstants.MAPS:
+	    case TagConstants.MAPS: {
 		//System.out.println("FOUND " + TagConstants.toString(tag) + " for " + ((FieldDecl)ctxt).id );
+	        ExprModifierPragma ep = (ExprModifierPragma)p;
+		if (ep.expr != null) ep.expr = checkExpr(env,ep.expr);
+		Expr e = ep.expr;
+		if (e == null || TypeCheck.inst.getType(e) == Types.errorType) {
+		} else if (e instanceof FieldAccess) {
+		    FieldDecl fd = ((FieldAccess)e).decl;
+/*
+		    System.out.println("FIELD " + fd.id + " " + 
+			Location.toString(fd.getStartLoc()) + " GETTING " + 
+			((FieldDecl)ctxt).id + " " +
+			Location.toString(ctxt.getStartLoc()));
+*/
+		    Datagroups.add(fd,(FieldDecl)ctxt);
+		} else {
+		    ErrorSet.error(e.getStartLoc(),
+			"Expected a field reference here, found " +
+			e.getClass());
+		}
 		break;
+	    }
 
             default:
                 ErrorSet.error(p.getStartLoc(),
