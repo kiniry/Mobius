@@ -2,7 +2,7 @@
 # $Id$
 #
 
-paper =		PASTE2004
+paper =		FTFJP2004
 
 talk =		talk
 
