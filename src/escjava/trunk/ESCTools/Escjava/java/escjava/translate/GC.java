@@ -278,7 +278,7 @@ public final class GC {
       return assume(pred);
     case TagConstants.CHK_AS_ASSERT:
       LabelInfoToString.recordAnnotationAssumption(locPragmaDecl);
-      return assert(locUse, errorName, pred, locPragmaDecl, aux);
+      return assertPredicate(locUse, errorName, pred, locPragmaDecl, aux);
     case TagConstants.CHK_AS_SKIP:
       return skip();
     default:
@@ -343,10 +343,10 @@ public final class GC {
   private static int assertContinueCounter = 0;
 
   //@ requires locUse != Location.NULL;
-  private static GuardedCmd assert(int locUse,
-				   int errorName, Expr pred,
-				   int locPragmaDecl,
-				   Object aux) {
+  private static GuardedCmd assertPredicate(int locUse,
+                                            int errorName, Expr pred,
+                                            int locPragmaDecl,
+                                            Object aux) {
     if (Main.assertContinue) {
       Identifier idn = Identifier.intern("assertContinue" +
 					 assertContinueCounter);
