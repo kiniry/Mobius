@@ -269,14 +269,14 @@ binary-release: build docs javadoc
 	## Now copy in all specs
 	rm -rf ${RELTEMP}/specs
 	cp -r ${ESCTOOLS_ROOT}/specs ${RELTEMP}
-	-find ${RELTEMP}/specs -name "CVS" -exec rm -rf {} \; >& /dev/null 
+	-find ${RELTEMP}/specs -name "CVS" -exec rm -rf {} \; > /dev/null  2>&1
 	## Copy papers and slides and other documentation
 	# cp papers/*.pdf ${RELTEMP}
 	# cp slides/*.pdf ${RELTEMP}
 	cp docs/Escjava2-ImplementationNotes/*.pdf ${RELTEMP}
 	cp docs/ESCJAVA-UsersManual.html ${RELTEMP}
 	cp -r Escjava/release/master/examples ${RELTEMP}
-	-find ${RELTEMP}/examples -name "CVS" -exec rm -rf {} \; >& /dev/null
+	-find ${RELTEMP}/examples -name "CVS" -exec rm -rf {} \; > /dev/null 2>&1
 	## Copy other miscellaneous files
 	${MAKE} clean-norel-noreltemp
 	${MAKE} -C Utils/junitutils build
@@ -286,7 +286,7 @@ binary-release: build docs javadoc
 	cp README.first README.txt ${RELTEMP}
 	cd release-files; cp `ls | grep -v CVS` ${RELTEMP}
 	cp jmlspecs.jar ${RELTEMP}
-	-find ${RELTEMP} -name "*~" -exec rm -f {} \; >& /dev/null
+	-find ${RELTEMP} -name "*~" -exec rm -f {} \; > /dev/null 2>&1
 	cd ${RELTEMP}; tar cjvf ${RELDIR}/${RELTAR} *
 	rm -rf ${RELTEMP}
 

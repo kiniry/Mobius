@@ -14,9 +14,9 @@ clean:
 TESTOR=javafe.test.lex.TestLex
 
 test1.out test2.out: test1.in test2.in
-	echo ${JAVAFE_CLASSPATH_CAN}
-	${JAVA} -classpath ${JAVAFE_CLASSPATH_CAN} ${TESTOR} < test1.in > test1.out
-	${JAVA} -classpath ${JAVAFE_CLASSPATH_CAN} ${TESTOR} < test2.in > test2.out
+	echo "${JAVAFE_CLASSPATH_CAN}"
+	${JAVA} -classpath "${JAVAFE_CLASSPATH_CAN}" ${TESTOR} < test1.in > test1.out
+	${JAVA} -classpath "${JAVAFE_CLASSPATH_CAN}" ${TESTOR} < test2.in > test2.out
 
 runtest: test1.out test2.out
 	${DIFF} test1.out test1.ans
