@@ -471,6 +471,12 @@ public class EscPragmaParser extends Parse implements PragmaParser
             }
             //@ assume scanner.m_in != null;  // TBW: is this right??  --KRML
 
+	    // Skip any access modifiers
+	    if (scanner.ttype == TagConstants.PUBLIC ||
+		scanner.ttype == TagConstants.PROTECTED ||
+                scanner.ttype == TagConstants.PRIVATE)
+		scanner.getNextToken();
+
             // Start a new pragma
             int loc = scanner.startingLoc;
             if (scanner.ttype != TagConstants.IDENT)
