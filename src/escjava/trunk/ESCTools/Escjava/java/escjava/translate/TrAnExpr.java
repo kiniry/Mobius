@@ -359,7 +359,17 @@ public final class TrAnExpr {
 				null, Location.NULL));
 	if (trSpecExprAuxConditions == null || level > maxLevel 
 		|| declStack.contains(me.decl)) {
-	    return v;
+	    if (!isFunction) return v;
+	    ExprVec ev = ExprVec.make(me.args.size());
+		    // FIXME - 'this' argument???
+	    for (int i=0; i<me.args.size(); ++i) {
+		ev.addElement( trSpecExpr( me.args.elementAt(i), sp, st));
+	    }
+	    Expr ne = GC.nary(me.getStartLoc(), me.getEndLoc(),
+			    TagConstants.METHODCALL,ev);
+	    ((NaryExpr)ne).methodName = 
+		    Identifier.intern(me.id.toString() + "." + me.args.size()); // FIXME -- full name ??? with type signature as well
+	    return ne;
 	}
 //for (int ind=0; ind<level; ++ind) System.out.print(" " ); System.out.println("METHINV " + Location.toString(me.decl.getStartLoc()) + " " + declStack.contains(me.decl));
 
