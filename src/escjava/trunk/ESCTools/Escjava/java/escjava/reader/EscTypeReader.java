@@ -10,6 +10,7 @@ import javafe.ast.Name;
 import javafe.ast.*;
 import javafe.ast.TypeDecl;
 import javafe.ast.TypeDeclVec;
+import javafe.tc.TypeSig;
 import javafe.ast.PrettyPrint;			// Debugging methods only
 import javafe.ast.StandardPrettyPrint;		// Debugging methods only
 import javafe.ast.DelegatingPrettyPrint;	// Debugging methods only
@@ -111,6 +112,7 @@ public class EscTypeReader extends StandardTypeReader
 
 	public CompilationUnit read(GenericFile target, boolean avoidSpec) {
 	    javafe.util.Info.out("Reading " + target);
+	    //System.out.println("Reading " + target);
 	    boolean refining = this.refining;
 	    this.refining = false;
 	    CompilationUnit result = super.read(target,avoidSpec);
@@ -125,7 +127,6 @@ public class EscTypeReader extends StandardTypeReader
 	    // Get and parse the package name
 	    Name pkgName = cu.pkgName;
 	    String pkg = pkgName == null ? "" : pkgName.printName();
-	    //System.out.println("CU " + pkg + " " + type);
 	    String[] pkgStrings = pkgName == null ? new String[0] : 
 					pkgName.toStrings();
 
@@ -143,6 +144,23 @@ public class EscTypeReader extends StandardTypeReader
 		}
 	    }
 
+	    // Check one of the ids to see if the type is already loaded.
+	    if (types.size() != 0) {
+		String typeToCheck;
+		if (type != null) typeToCheck = type.toString();
+		else typeToCheck = types.elementAt(0).id.toString();
+		TypeSig sig = TypeSig.lookup(pkgStrings,typeToCheck);
+		if (sig != null && sig.isPreloaded()) {
+		    CompilationUnit pcu = sig.getCompilationUnit();
+		    ErrorSet.caution("Type " + pkg + 
+			(pkgName==null?"":".") + typeToCheck + 
+			" in " + cu.sourceFile().getHumanName() + 
+			" is alrady loaded from " + 
+			pcu.sourceFile().getHumanName());
+		    return null;
+		}
+	    }
+
 	    // See if there is a java file for this type.
 	    // Note that if there is no public type, then type == null,
 	    // and we don't look for a java file.
@@ -157,18 +175,21 @@ public class EscTypeReader extends StandardTypeReader
 		if (s.endsWith(".java")) javafile = cu.sourceFile();
 		
 	    } else {
-	    	javafile = ((EscTypeReader)OutsideEnv.reader).findSrcFile(pkgStrings,type.toString()+".java");
+	    	javafile = ((EscTypeReader)OutsideEnv.reader).
+			findSrcFile(pkgStrings,type.toString()+".java");
 
 	    }
 
 	    // Now find the refinement sequence belonging to the given type.
 	    // If there is none, or if type is null, then a refinement sequence
 	    // consisting of just the one compilation unit cu is returned.
-	    // If an error happens while tracing the RS, null is returned.
 	    // Note that this parses each of the files in the RS.
-	    // Note also that 'cu' need not be in its own RS.
+	    // Note also that 'cu' need not be in its own RS if it isn't,
+	    // then it is not part of the list returned.
 	    ArrayList refinements = getRefinementSequence(pkgStrings, type, cu);
-	    if (refinements == null) return null; // Error already reported
+		// Error occurred (already reported) such that we don't
+		// want to add a new compilation unit to the environment
+	    if (refinements == null) return null;
 
 
 		// FIXME - Probably does not work for nested classes.
@@ -230,7 +251,6 @@ public class EscTypeReader extends StandardTypeReader
         boolean refining = false;
 
 	// result is a list of CompilationUnits
-	// result is null if there was an error
 	// result will contain something, perhaps just the given cu
 	ArrayList getRefinementSequence(String[] pkgStrings, Identifier type, 
 				CompilationUnit cu) {
@@ -301,8 +321,12 @@ public class EscTypeReader extends StandardTypeReader
 			err += " " + ((CompilationUnit)refinements.get(k)).
 					sourceFile().getHumanName();
 		    }
+		    /* If the command-line file is not in the refinement
+			sequence, we use the refinement sequence, since,
+			if the type was referenced from another class it
+			is the refinement sequence that would be found.
+		    */
 		    ErrorSet.error(err);
-		    return null;
 		}
 	    }
 	    javafe.util.Info.out("Found refinement sequence files");

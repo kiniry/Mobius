@@ -69,10 +69,10 @@ endif
 if ( ! $?ESCTOOLS_RELEASE ) then
 if ( ! $?ESCTOOLS_ROOT ) then
     if ( -e $NAME ) then
-	set ESCTOOLS_ROOT=$NAME:h:h
+	setenv ESCTOOLS_ROOT $NAME:h:h
 	echo Warning: Guessing ESCTOOLS_ROOT = $ESCTOOLS_ROOT
     else if ( -e $0 ) then
-	set ESCTOOLS_ROOT=$0:h:h
+	setenv ESCTOOLS_ROOT $0:h:h
 	echo Warning: Guessing ESCTOOLS_ROOT = $ESCTOOLS_ROOT
     endif
     if ( ! $?ESCTOOLS_ROOT ) then
@@ -200,7 +200,7 @@ if ( $?ESCJ_VERBOSE ) then
     echo "  -classpath ${ESC_CLASSPATH}";
     echo "  escjava.Main";
     echo "  " ${JBIN} ;
-    echo "  -classpath ${CLASSPATH}";
+    echo "  -classpath ${CLASSPATH}:${ESC_SPECS}";
     echo "  ${ESCJ_STDARGS}";
     echo "  $*";
     echo "Also: ESCJ_SIMPLIFY = $ESCJ_SIMPLIFY"

@@ -12,6 +12,11 @@ export JUNIT = $(JAVA) -Xmx256M -classpath ${ESCJAVA_CLASSPATH}:${JUNIT_UTILS_PA
 # Used to invoke GUI-based JUnit tests
 export JUNITSW = $(JAVA) -Xmx256M -classpath ${ESCJAVA_CLASSPATH}:${JUNIT_UTILS_PATH}:. -Djava.io.tmpdir=/tmp -Dsimplify=${ESCJ_SIMPLIFY_SCRIPT} junit.swingui.TestRunner
 
+# The default is to run tests without any spec files.  This is to keep them
+# robust against changes in specs.  You can adjust this by adding 
+# explicit command-line settings in any particular test.
+export ESC_SPECS = :
+
 ##############################################################################
 .PHONY: buildtests
 buildtests:
@@ -25,11 +30,14 @@ test runtests: buildtests
 dotests: lists
 	$(JUNIT) TestSuite
 
+dotests-nolist: 
+	$(JUNIT) TestSuite
+
 .PHONY: swtests
 swtests: lists
 	$(JUNITSW) TestSuite
 
-ALWAYSFLAGS = -nowarn Deadlock -verboseTrace -testMode
+ALWAYSFLAGS = -nowarn Deadlock -verboseTrace -testMode -classpath .
 DEFAULTFLAGS = " "
 
 OTHERTESTS = RefineT.t SpecFile.jml RefineNoJava.refines-java
@@ -41,7 +49,8 @@ lists:
 	@for f in `ls *.java ${OTHERTESTS} | grep -v -f skip`; do \
 		echo -n ${ALWAYSFLAGS} " " >> listtests ; \
 		( grep FLAGS $$f || echo ${DEFAULTFLAGS} ) \
-		| sed -e 's?//#FLAGS:??' -e "s/\$$/ $$f/" >> listtests ; \
+		| sed -e 's?//#FLAGS:??' -e "s/\$$/ $$f/"  \
+		| sed -e "s@ESCTOOLS_ROOT@${ESCTOOLS_ROOT}@" >> listtests ; \
 	done
 
 septest: 
@@ -61,7 +70,7 @@ skips:
 
 othertests: $(addsuffix -test,${OTHERTESTS})
 
-# The sed -e s/x/x/ is just meant to be a noop since I can't seem
+# I can't seem
 # to get 2>&1 > to work in order to output directly into the -ckd file
 # (FIXME)
 %-test: 
@@ -69,7 +78,7 @@ othertests: $(addsuffix -test,${OTHERTESTS})
 	@if [ ! -e $* ] ; then \
 		echo No such file $* ;\
 	else \
-	(${ESCJAVA} -testMode `grep '//#FLAGS:' $* | sed -e "sx//#FLAGS:xx" ` $* 2>&1 | sed -e s/x/x/ > $*-ckd ) || exit 0; \
+	(${ESCJAVA} -testMode -classpath . `grep '//#FLAGS:' $* | sed -e "sx//#FLAGS:xx" -e "s@ESCTOOLS_ROOT@${ESCTOOLS_ROOT}@" ` $* 2>&1 | sed -e s/x/x/ > $*-ckd ) || exit 0; \
 	if [ -e $*-expected ] ; then \
 		diff $*-ckd $*-expected  \
 		  && rm $*-ckd ;\
@@ -84,3 +93,4 @@ othertests: $(addsuffix -test,${OTHERTESTS})
 
 clean:
 	@rm -f `cat .cvsignore` core*
+

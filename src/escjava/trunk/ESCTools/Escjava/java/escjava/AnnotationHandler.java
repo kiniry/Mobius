@@ -1593,6 +1593,10 @@ added, it doesn't change whether a routine appears to have a spec or not.
     the nested structure (and checking of it) needs to be completed prior
     to type checking so that the variable references are properly 
     determined.  The ultimate desugaring then happens after typechecking.
+
+    The resulting pmodifiers vector for each routine consists of a
+    possibly-empty sequence of simple routine modifiers (e.g. pure, non_null)
+    terminated with a single ParsedSpecs element.
  */    
 
 class NestedPragmaParser {
@@ -1630,6 +1634,21 @@ class NestedPragmaParser {
 	    ParsedRoutineSpecs pms = new ParsedRoutineSpecs();
 	    pms.modifiers.addElement(ParsedSpecs.make(rd,pms));
 	    rd.pmodifiers = pms.modifiers;
+	    return;
+	}
+	if (pm.elementAt(pm.size()-1) instanceof ParsedSpecs) {
+	    // It is a bit of a design problem that the parsing of the
+	    // sequence of pragmas produces a new ModifierPragmaVec that
+	    // overwrites the old one.  That means that if we call 
+	    // parseROutineSpecs twice on a routine we get problems.
+	    // This test is here to avoid problems if a bug elsewhere
+	    // causes this to happen.
+	    // In fact there currently is such a bug - if the same type is
+	    // listed more than once on the command-line, the refinement
+	    // file list gets redetermined and the files within it are
+	    // parsed a second time.  That may be fixed by the time you
+	    // read this, but until then...
+	    System.out.println("OUCH - attempt to reparse " + Location.toString(rd.getStartLoc()));
 	    return;
 	}
 
@@ -1675,6 +1694,8 @@ class NestedPragmaParser {
  
     static public boolean isRoutineModifier(int tag) {
         return tag == TagConstants.PURE ||
+                tag == TagConstants.SPEC_PUBLIC ||
+                tag == TagConstants.SPEC_PROTECTED ||
                 tag == TagConstants.HELPER ||
                 tag == TagConstants.GHOST || // Actually should not occur
                 tag == TagConstants.MODEL ||
@@ -1699,8 +1720,12 @@ class NestedPragmaParser {
 	    ++pos;
 	    switch (behaviorTag) {
 		case TagConstants.MODEL_PROGRAM:
-		    mpv.addElement(mp);
-		    result.add(mpv);
+		    if (behaviorMode == 2) ErrorSet.error(mp.getStartLoc(),
+			"Model programs may not be in the examples section");
+		    else {
+			mpv.addElement(mp);
+			result.add(mpv);
+		    }
 		    if (pm.elementAt(pos).getTag() != TagConstants.ALSO) break;
 		    ++pos;
 		    continue;
@@ -1757,7 +1782,7 @@ class NestedPragmaParser {
 	    }
 	    pos = parseSeq(pos,pm,0,behavior,mpv);
             if (mpv.size() != 0) result.add(mpv);
-	    else if (behaviorMode == 0) {
+	    else if (behaviorMode == 0 || result.size() != 0) {
 		ErrorSet.error(pm.elementAt(pos).getStartLoc(),
 			"JML does not allow empty clause sequences");
 	    }
@@ -1798,9 +1823,7 @@ class NestedPragmaParser {
 		case TagConstants.MODEL_PROGRAM:
 		    if (behaviorMode == 0) ErrorSet.error(mp.getStartLoc(),
 			"Model programs may not be nested");
-		    if (behaviorMode == 2) ErrorSet.error(mp.getStartLoc(),
-			"Model programs may not be in the examples section");
-// FIXME - parse model program
+		    ++pos;
 		    break;
 
 		case TagConstants.BEHAVIOR:
@@ -1826,10 +1849,8 @@ class NestedPragmaParser {
                     } else {
 			++pos;
 		    }
-		    if (s.size() == 0) {
-			ErrorSet.error(openLoc,
-				"JML does not allow an empty clause sequence");
-		    } else {
+		    // Empty sequences are noted in parseAlsoSeq
+		    if (s.size() != 0) {
 			result.addElement(NestedModifierPragma.make(s));
 		    }
                   }

@@ -99,6 +99,12 @@ Associated declaration is "U.java", line 7, col 6:
 U.java:18: Warning: Possible violation of object invariant (Invariant)
   }
   ^
+Associated declaration is "U.java", line 7, col 6:
+  //@ invariant 10 <= z;
+      ^
+U.java:18: Warning: Possible violation of object invariant (Invariant)
+  }
+  ^
 Associated declaration is "U.java", line 5, col 6:
   //@ invariant 10 <= y;
       ^
@@ -107,12 +113,6 @@ U.java:18: Warning: Possible violation of object invariant (Invariant)
   ^
 Associated declaration is "U.java", line 3, col 6:
   //@ invariant 10 <= x;
-      ^
-U.java:18: Warning: Possible violation of object invariant (Invariant)
-  }
-  ^
-Associated declaration is "U.java", line 7, col 6:
-  //@ invariant 10 <= z;
       ^
 U.java:22: Warning: Possible violation of object invariant (Invariant)
   }  // warning about x's invariant when checking m

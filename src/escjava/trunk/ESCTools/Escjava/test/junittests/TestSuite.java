@@ -9,7 +9,7 @@ public class TestSuite extends junitutils.TestFilesTestSuite {
 	    new TestFilesTestSuite(
 		"escjava-junittests",
 		"listtests",
-		new String[]{"-quiet"},
+		new String[]{}, // Ignored
 		escjava.Main.class) {
 		    public int expectedIntegerStatus(String f, String o) {
 			if (javafe.util.ErrorSet.errors > 0) return 2;
