@@ -56,6 +56,21 @@ public class TestException extends LocalTestCase {
     tt.initCause(t);
     assertTrue (tt.getCause() == t);
   }
+
+  /** Can't be your own cause */
+  public void testSelfCause() {
+    Exception t = new Exception("THR");
+    Exception tt = new Exception();
+    try {
+      tt.initCause(tt);
+      assertTrue (false);
+    } catch (Exception e) {
+      assertTrue (e instanceof IllegalArgumentException );
+    }
+    assertTrue (tt.getCause() == null);
+    tt.initCause(t);
+    assertTrue (tt.getCause() == t);
+  }
   
   /** Once initCause is called, you can't call it again,
    *  even if the argument is null
@@ -101,4 +116,12 @@ public class TestException extends LocalTestCase {
     }
   }
 
+  public void testO() {
+    Exception e = new Exception();
+    assertTrue (e.getClass() == Exception.class);
+    //@ assert \typeof(e) == \type(Exception);
+    e = new NullPointerException();
+    assertTrue (e.getClass() == NullPointerException.class);
+    //@ assert \typeof(e) == \type(NullPointerException);
+  }
 }

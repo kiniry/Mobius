@@ -1,2 +1,5 @@
 *.class
+*.java-ckd
 listtests
+listfiles
+testfile

@@ -5,6 +5,7 @@ public class TestObject extends LocalTestCase {
         //@ assert o.owner == null;
         Object oo = new Object();
         //@ assert o.owner == null;
+//@ assert false; // TEST FOR CONSISTENCY
     }
 
     public void testClass() {
@@ -23,6 +24,7 @@ public class TestObject extends LocalTestCase {
         assertTrue( s.equals(o.toString())); // theString has not changed
         //@ assert o.owner == ooo;
         //@ assert o.getClass() == \type(Object);
+//@ assert false; // TEST FOR CONSISTENCY
     }
 
     public void testHashCode() {
@@ -36,6 +38,7 @@ public class TestObject extends LocalTestCase {
         assertTrue( s.equals(o.toString())); // theString has not changed
         //@ assert o.owner == ooo;
         //@ assert o.getClass() == \type(Object);
+//@ assert false; // TEST FOR CONSISTENCY
     }
 
     public void testToString() {
@@ -49,6 +52,7 @@ public class TestObject extends LocalTestCase {
         assertTrue( s.equals(o.toString())); // theString has not changed
         //@ assert o.owner == ooo;
         //@ assert o.getClass() == \type(Object);
+//@ assert false; // TEST FOR CONSISTENCY
     }
 
     public boolean b; // arbitrary value
@@ -64,6 +68,7 @@ public class TestObject extends LocalTestCase {
         assertTrue (o.equals(o));
         assertTrue (o.equals(ooo) == ooo.equals(o));
         assertTrue ( !o.equals(ooo) || (ooo.equals(oooo) == o.equals(oooo)));
+//@ assert false; // TEST FOR CONSISTENCY
     }
 
     public void testEquals2() {
@@ -78,6 +83,7 @@ public class TestObject extends LocalTestCase {
         assertTrue( s.equals(o.toString())); // theString has not changed
         //@ assert o.owner == ooo;
         //@ assert o.getClass() == \type(Object);
+//@ assert false; // TEST FOR CONSISTENCY
     }
 
     public void testClone() throws CloneNotSupportedException {
@@ -89,6 +95,7 @@ public class TestObject extends LocalTestCase {
         } catch (Exception ex) {
             assertTrue (ex instanceof CloneNotSupportedException);
         }
+//@ assert false; // TEST FOR CONSISTENCY
     }
 
 class A implements Cloneable {

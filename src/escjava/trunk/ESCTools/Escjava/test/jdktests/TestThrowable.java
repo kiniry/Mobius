@@ -30,6 +30,27 @@ public class TestThrowable extends LocalTestCase {
     assertTrue ((new Throwable(null,null)).getMessage() == null);
     assertTrue ((new Throwable((Throwable)null)).getMessage()==null);
   }
+
+  public void testToString() {
+    String s = "abcd";
+    Throwable t = new Throwable("THR");
+    assertTrue ((new Throwable()).toString() != null);
+    assertTrueNP ((new Throwable()).toString().equals("java.lang.Throwable"));
+    assertTrue ((new Throwable((String)null)).toString() != null);
+    assertTrueNP ((new Throwable((String)null)).toString().equals("java.lang.Throwable"));
+    assertTrue ((new Throwable(s)).toString() != null);
+    assertTrueNP ((new Throwable(s)).toString().equals("java.lang.Throwable: " + s));
+    assertTrue ((new Throwable(s,t)).toString() != null);
+    assertTrueNP ((new Throwable(s,t)).toString().equals( "java.lang.Throwable: " + s));
+    assertTrue ((new Throwable(t)).toString() != null);
+    assertTrueNP ((new Throwable(t)).toString().equals("java.lang.Throwable: java.lang.Throwable: THR"));
+    assertTrue ((new Throwable(s,null)).toString() != null);
+    assertTrueNP ((new Throwable(s,null)).toString().equals("java.lang.Throwable: " + s));
+    assertTrue ((new Throwable(null,null)).toString() != null);
+    assertTrueNP ((new Throwable(null,null)).toString().equals("java.lang.Throwable"));
+    assertTrue ((new Throwable((Throwable)null)).toString()!=null);
+    assertTrueNP ((new Throwable((Throwable)null)).toString().equals("java.lang.Throwable"));
+  }
   
   /** getCause() returns what was supplied in the constructor,
    *  or null
@@ -55,8 +76,9 @@ public class TestThrowable extends LocalTestCase {
     String s = "abcd";
     Throwable t = new Throwable("THR");
     Throwable tt = new Throwable();
-    tt.initCause(t);
+    Throwable ttt = tt.initCause(t);
     assertTrue (tt.getCause() == t);
+    assertTrue (ttt == tt);
   }
   
   /** Once initCause is called, you can't call it again,
@@ -178,4 +200,9 @@ public class TestThrowable extends LocalTestCase {
     }  
   }
 
+  public void testO() {
+    Throwable t = new Throwable();
+    //@ assert t.getClass() == \type(Throwable);
+    assertTrue ( t.getClass() == Throwable.class);
+  }
 }

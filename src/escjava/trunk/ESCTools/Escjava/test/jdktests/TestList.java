@@ -1,25 +1,50 @@
 
 import java.util.*;
 
-public class TestSet extends LocalTestCase {
+public class TestList extends LocalTestCase {
 
-
-    public void testSet() {
-       testSet(new HashSet());
-       testSetR(new HashSet());
-       testSet2(new HashSet());
-       testSet3(new HashSet());
-       testSet4(new HashSet());
-       testSet5(new HashSet());
+    public void testList() {
+        testList(new LinkedList());
+        testListR(new LinkedList());
+        testList2(new LinkedList());
+        testList3(new LinkedList());
+        testList4(new LinkedList());
+        testList5(new LinkedList());
+        testList6(new LinkedList());
+        testList7(new LinkedList());
+        testList8(new LinkedList());
     }
 
+    public void testVector() {
+       testList(new Vector());
+       testListR(new Vector());
+       testList2(new Vector());
+       testList3(new Vector());
+       testList4(new Vector());
+       testList5(new Vector());
+       testList6(new Vector());
+       testList7(new Vector());
+       testList8(new Vector());
+    }
+
+    public void testArray() {
+       testList(new ArrayList());
+       testListR(new ArrayList());
+       testList2(new ArrayList());
+       testList3(new ArrayList());
+       testList4(new ArrayList());
+       testList5(new ArrayList());
+       testList6(new ArrayList());
+       testList7(new ArrayList());
+       testList8(new ArrayList());
+    }
 
     //@ non_null
     Object o = new Object();
 
     //@ requires c != null;
     //@ requires c.isEmpty();
-    private void testSet(Set c) {
+    private void testList(List c) {
         boolean b;
 
         assertTrue( c.isEmpty());
@@ -49,12 +74,6 @@ public class TestSet extends LocalTestCase {
         assertTrueNP ( !c.contains(o));
         //@ assert !c.containsObject(o);
 
-        //@ assert c.contains(i);
-        //@ assert \typeof(i) <: c.elementType;
-        //@ assert i != null;
-        b =c.add(i);
-        assertTrue(!b);
-
         Integer ii = new Integer(1);
         //@ assert !ii.equals(i);
         //@ assume !c.contains(ii); // FIXME - would like to prove this
@@ -68,7 +87,8 @@ public class TestSet extends LocalTestCase {
 
     //@ requires c != null;
     //@ requires c.isEmpty();
-    public void testSetR(Set c) {
+    public void testListR(List c) {
+/* FIXME - takes too much time
         //@ set c.elementType = \type(Number);
         //@ assert (\forall Object o; !c.contains(o) );
 
@@ -119,12 +139,13 @@ public class TestSet extends LocalTestCase {
         }
         b = c.contains(i);
         assertTrue (b);
+*/
 //@ assert false; // TEST FOR CONSISTENCY
     }
 
     //@ requires c != null;
     //@ requires c.isEmpty();
-    public void testSet2(Set c) {
+    public void testList2(List c) {
         //@ set c.elementType = \type(Number);
         boolean b;
         Integer i = new Integer(0);
@@ -152,7 +173,7 @@ public class TestSet extends LocalTestCase {
 
     //@ requires c != null;
     //@ requires c.isEmpty();
-    public void testSet3(Set c) {
+    public void testList3(List c) {
         //@ set c.elementType = \type(Number);
         boolean b;
         Integer i = new Integer(0);
@@ -181,21 +202,21 @@ public class TestSet extends LocalTestCase {
 
     //@ requires c != null;
     //@ requires c.isEmpty();
-    public void testSet4(Set c) {
+    public void testList4(List c) {
         //@ set c.elementType = \type(Number);
 
         Object[] a;
-        // a = c.toArray();
-        // assertTrue ( a.getClass() == Object[].class);
-        // assertTrue ( a.length == 0);
+        a = c.toArray();
+        assertTrue ( a.getClass() == Object[].class);
+        assertTrue ( a.length == 0);
 
         Integer i = new Integer(0);
         c.add(i);
 
-        // a = c.toArray();
-        // assertTrue ( a.getClass() == Object[].class);
-        // assertTrue ( a.length == 1);
-        // //@ assert Collection.contain(a,i);
+        a = c.toArray();
+        assertTrue ( a.getClass() == Object[].class);
+        assertTrue ( a.length == 1);
+        //@ assert Arrays.contains(a,i);
 
         a = new Object[10];
         //@ assert a != null;
@@ -220,13 +241,13 @@ public class TestSet extends LocalTestCase {
         } catch (Exception e) {
             assertTrue( e instanceof NullPointerException);
         }
-        //assertTrue (false);
 //@ assert false; // TEST FOR CONSISTENCY
     }
 
     //@ requires c != null;
     //@ requires c.isEmpty();
-    public void testSet5(Set c) {
+    //@ requires c.elementType == \type(Object);
+    public void testList5(List c) {
         //@ set c.elementType = \type(Object);
 
         c.add(o);
@@ -238,36 +259,127 @@ public class TestSet extends LocalTestCase {
         assertTrue (!c.contains(o));
 //@ assert false; // TEST FOR CONSISTENCY
     }
+
+    //@ requires c != null;
+    //@ requires c.isEmpty();
+    //@ requires c.elementType == \type(Object);
+    public void testList6(List c) {
+        c.add(o);
+        assertTrue( c.size() == 1);
+        try {
+           c.get(1);
+        } catch (Exception e) {
+           assertTrue( e instanceof IndexOutOfBoundsException);
+        }
+        try {
+           c.get(-1);
+        } catch (Exception e) {
+           assertTrue( e instanceof IndexOutOfBoundsException);
+        }
+        try {
+           c.set(1,o);
+        } catch (Exception e) {
+           assertTrue( e instanceof IndexOutOfBoundsException);
+        }
+        try {
+           c.set(-1,o);
+        } catch (Exception e) {
+           assertTrue( e instanceof IndexOutOfBoundsException);
+        }
+        try {
+           c.remove(1);
+        } catch (Exception e) {
+           assertTrue( e instanceof IndexOutOfBoundsException);
+        }
+        try {
+           c.remove(-1);
+        } catch (Exception e) {
+           assertTrue( e instanceof IndexOutOfBoundsException);
+        }
+        try {
+           c.add(-1,o);
+        } catch (Exception e) {
+           assertTrue( e instanceof IndexOutOfBoundsException);
+        }
+        try {
+           c.add(3,o);
+        } catch (Exception e) {
+           assertTrue( e instanceof IndexOutOfBoundsException);
+        }
+        assertTrue( c.size() == 1);
+        c.set(0,o);
+        assertTrue( c.size() == 1);
+        c.remove(0);
+        assertTrue( c.size() == 0);
+        try {
+           c.add(0,o);
+        } catch (Exception e) {
+           assertTrue( false );
+        }
+
+//@ assert false; // TEST FOR CONSISTENCY
+    }
+
+    //@ requires c != null;
+    //@ requires c.isEmpty();
+    //@ requires c.elementType == \type(Object);
+    public void testList7(List c) {
+        Integer i = new Integer(0);
+        Integer ii = new Integer(1);
+        Integer iii = new Integer(2);
+        c.add(i);
+        assertTrue( c.get(0) == i);
+        c.add(0,ii);
+        assertTrue( c.get(0) == ii);
+        assertTrue( c.get(1) == i);
+        c.set(0,iii);
+        assertTrue( c.get(0) == iii);
+        assertTrue( c.get(1) == i);
+        c.remove(0);
+        assertTrue( c.get(0) == i);
+//@ assert false; // TEST FOR CONSISTENCY
+    }
+
+    //@ requires c != null;
+    //@ requires c.isEmpty();
+    //@ requires c.elementType == \type(Object);
+    public void testList8(List c) {
+/* FIXME - takes too long
+        Integer i = new Integer(0);
+        Integer ii = new Integer(1);
+        Integer iii = new Integer(2);
+        c.add(i);
+        c.add(ii);
+        c.add(i);
+        //@ assert !i.equals(ii);
+        //@ assert !ii.equals(iii);
+        //@ assert !i.equals(iii);
+        //@ assert c.size() == 3;
+        //@ assert Collection.nullequals(i,c.get(0));
+        int k = c.indexOf(i);
+        //@ assert c.contains(i);
+        //@ assert Collection.nullequals(i,c.get(0));
+        //@ assert k == 0;
+        assertTrue (c.indexOf(i) == 0); // FIXME - see List.indexOf
+        assertTrue (c.indexOf(ii) == 1); // FIXME - see List.indexOf
+        assertTrue (c.indexOf(iii) == -1);
+        assertTrue (c.lastIndexOf(i) == 2);
+        assertTrue (c.lastIndexOf(ii) == 1);
+        assertTrue (c.lastIndexOf(iii) == -1);
+*/
+//@ assert false; // TEST FOR CONSISTENCY
+    }
+
 // FIXME - need other tests with addAll, retainAll, removeAll
 
         // FIXME - need to test add, remove with containsNull, elementType
 
         // FIXME = need to test toArray (both), with containsNull, elementType
 
-        // FIXME - Need to test iterator()
+        // FIXME - Need to test iterator(), listIterator()
 
         
 
-    //@ requires c != null;
-    //@ requires c.isEmpty();
-    private void testSetA(Set c) {
-        boolean b;
 
-        //@ set c.elementType = \type(Number);
-        Integer i = new Integer(0);
-
-        b = c.add( i );
-        //@ assert b;
-        //@ assert c.containsObject(i);
-        //@ assert c.contains(i);
-
-        //@ assert \typeof(i) <: c.elementType;
-        //@ assert i != null;
-        //@ assert c.containsObject(i);
-        b = c.add(i);
-        //@ assert !b;
-
-//@ assert false; // TEST FOR CONSISTENCY
-    }
 
 }

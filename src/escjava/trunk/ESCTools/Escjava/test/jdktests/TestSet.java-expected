@@ -1,0 +1,22 @@
+TestSet.java:66: Warning: Possible assertion failure (Assert)
+//@ assert false; // TEST FOR CONSISTENCY
+    ^
+TestSet.java:79: Warning: Possible assertion failure (Assert)
+        //@ assert (\forall Object o; c.contains(o); o.equals(i) );
+            ^
+TestSet.java:83: Warning: Possible assertion failure (Assert)
+        //@ assert !c.containsObject(ii);
+            ^
+TestSet.java:96: Warning: Possible assertion failure (Assert)
+        //@ assert c.containsObject(i);
+            ^
+TestSet.java:100: Warning: Possible assertion failure (Assert)
+        //@ assert c.containsObject(i);
+            ^
+TestSet.java:239: Warning: Possible assertion failure (Assert)
+//@ assert false; // TEST FOR CONSISTENCY
+    ^
+TestSet.java:270: Warning: Possible assertion failure (Assert)
+//@ assert false; // TEST FOR CONSISTENCY
+    ^
+7 warnings

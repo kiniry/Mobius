@@ -7,7 +7,8 @@ ESCJAVA = ${ESCTOOLS_ROOT}/Escjava/escj
 
 ##_CLASSPATH = $(call canonicalize,${ESCTOOLS_ROOT}/Escjava/java/daikon-instrumented:${ESC_CLASSPATH}:${JUNIT_UTILS_PATH}:.:/home/cok/Daikon/daikon/daikon.jar:/home/cok/Daikon/daikon/java/ajax-ship/ajax.jar)
     ## FIXME - the following line does not properly concatenate
-_CLASSPATH = ${ESC_CLASSPATH}$(call canonicalize,:${JUNIT_UTILS_PATH}:.)
+_ECLASSPATH = ${ESC_CLASSPATH}$(call canonicalize,:${JUNIT_UTILS_PATH}:.)
+_CLASSPATH = $(call canonicalize,:${JUNIT_UTILS_PATH}:.)
 _TMP = $(call canonicalize,/tmp)
 _SIMP = $(call canonicalize,${ESCJ_SIMPLIFY})
 _SPECS = $(call canonicalize,${ESC_SPECS})
@@ -24,8 +25,9 @@ export JUNITSW = $(JAVA) -Xmx256M -classpath "${_CLASSPATH}" \
 
 ##############################################################################
 .PHONY: buildtests
-buildtests:
-	$(JAVAC) -classpath "${_CLASSPATH}" -source 1.4 *.java
+buildtests: lists
+	$(JAVAC) -classpath "${_ECLASSPATH}" -source 1.4 `cat listfiles` AllTests.java Suite.java LocalTestCase.java
+	echo "abc" > testfile
 
 .PHONY: test runtests
 test runtests: extests sepjavatests
@@ -46,11 +48,12 @@ ALWAYSFLAGS = -quiet -nowarn Deadlock -specs "${_SPECS}" -classpath "${_CLASSPAT
 CHUNK = 40
 
 .PHONY: lists
-lists: Test*.java
-	@rm -f listtests
+lists: Test*.java skip
+	@rm -f listtests listfiles
 	@touch listtests
+	@(ls Test*.java | grep -v -f skip > listfiles)
 ifdef COMSPEC
-	@for f in `ls Test*.java | grep -v -f skip `; do \
+	@for f in `cat listfiles `; do \
 	        echo -n ${ALWAYSFLAGS} " " >> listtests ; \
 	        ( grep FLAGS $$f || echo ${DEFAULTFLAGS} ) \
 	        | sed -e 's?//#FLAGS:??' -e "s/\$$/ $$f/"  \
@@ -59,7 +62,7 @@ ifdef COMSPEC
 	        >> listtests ; \
 	done
 else
-	@for f in `ls Test*.java | grep -v -f skip `; do \
+	@for f in `cat listfiles `; do \
 	        echo -n ${ALWAYSFLAGS} " " >> listtests ; \
 	        ( grep FLAGS $$f || echo ${DEFAULTFLAGS} ) \
 	        | sed -e 's?//#FLAGS:??' -e "s/\$$/ $$f/"  \
@@ -104,8 +107,9 @@ sepjavatests:
 
 %.test:
 	@echo Testing $*
-	$(JUNIT) $*
-	(${ESCJAVA} -counterexample ${ALWAYSFLAGS} -classpath "${_CLASSPATH}" -specs "${_SPECS}"\
+	$(JAVAC) -classpath "${_CLASSPATH}" $*.java
+	-$(JUNIT) $*
+	(${ESCJAVA} ${ALWAYSFLAGS} -classpath "${_CLASSPATH}" -specs "${_SPECS}"\
 		`grep '//#FLAGS:' $*.java | \
 		sed -e "sx//#FLAGS:xx" -e "s@ESCTOOLS_ROOT@${ESCTOOLS_ROOT}@" ` \
 		$(addsuffix .java,$*))

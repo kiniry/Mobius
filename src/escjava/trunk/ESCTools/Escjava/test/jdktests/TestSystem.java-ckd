@@ -1,0 +1,68 @@
+TestSystem.java:32: Caution: May not assign to a final field
+        //@ set System.allowNullStreams = true;
+                      ^
+c:\cygwin\ESC\ESCTools\specs\java\lang\System.spec:37: Associated declaration: 
+    //@ public final ghost static boolean allowNullStreams = false;
+                                  ^
+TestSystem.java:47: Caution: May not assign to a final field
+        //@ set System.allowNullStreams = false;
+                      ^
+c:\cygwin\ESC\ESCTools\specs\java\lang\System.spec:37: Associated declaration: 
+    //@ public final ghost static boolean allowNullStreams = false;
+                                  ^
+TestSystem.java:77: Caution: May not assign to a final field
+        //@ set System.allowNullStreams = true;
+                      ^
+c:\cygwin\ESC\ESCTools\specs\java\lang\System.spec:37: Associated declaration: 
+    //@ public final ghost static boolean allowNullStreams = false;
+                                  ^
+TestSystem.java:93: Caution: May not assign to a final field
+        //@ set System.allowNullStreams = false;
+                      ^
+c:\cygwin\ESC\ESCTools\specs\java\lang\System.spec:37: Associated declaration: 
+    //@ public final ghost static boolean allowNullStreams = false;
+                                  ^
+TestSystem.java:37: Warning: Possible null dereference (Null)
+            int c = System.in.read();  // ERROR
+                             ^
+TestSystem.java:54: Warning: Precondition possibly not established (Pre)
+    System.setIn(null);  // ERROR
+                ^
+Associated declaration is "c:\cygwin\ESC\ESCTools\specs\java\lang\System.spec", line 59, col 8:
+    //@ requires allowNullStreams || i != null;
+        ^
+TestSystem.java:82: Warning: Possible null dereference (Null)
+            System.out.print("");  // ERROR
+                      ^
+TestSystem.java:100: Warning: Precondition possibly not established (Pre)
+        System.setOut(null);           // ERROR
+                     ^
+Associated declaration is "c:\cygwin\ESC\ESCTools\specs\java\lang\System.spec", line 64, col 8:
+    //@ requires allowNullStreams || o != null;
+        ^
+TestSystem.java:149: Warning: Precondition possibly not established (Pre)
+    assertTrue (s != null);  // NOT PROVABLE
+               ^
+Associated declaration is ".\LocalTestCase.java", line 19, col 6:
+  //@ requires b;
+      ^
+TestSystem.java:151: Warning: Precondition possibly not established (Pre)
+    assertTrue (s == ss); // NOT PROVABLE
+               ^
+Associated declaration is ".\LocalTestCase.java", line 19, col 6:
+  //@ requires b;
+      ^
+TestSystem.java:153: Warning: Precondition possibly not established (Pre)
+    assertTrue (s == null); // NOT PROVABLE
+               ^
+Associated declaration is ".\LocalTestCase.java", line 19, col 6:
+  //@ requires b;
+      ^
+TestSystem.java:155: Warning: Precondition possibly not established (Pre)
+    assertTrue (s == "yyy"); // NOT PROVABLE
+               ^
+Associated declaration is ".\LocalTestCase.java", line 19, col 6:
+  //@ requires b;
+      ^
+4 cautions
+8 warnings

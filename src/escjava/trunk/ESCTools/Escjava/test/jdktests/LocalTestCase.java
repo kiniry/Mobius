@@ -17,12 +17,14 @@ public class LocalTestCase extends TestCase {
 
   //@ public normal_behavior
   //@ requires b;
+  //@ pure
   static public void assertTrue(boolean b) {
     junit.framework.TestCase.assertTrue(b);
   }
 
   //@ public normal_behavior
   // No specs - nothing to prove
+  //@ pure
   static public void assertTrueNP(boolean b) {
     junit.framework.TestCase.assertTrue(b);
   }

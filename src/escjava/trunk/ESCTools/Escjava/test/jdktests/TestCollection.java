@@ -1,25 +1,36 @@
 
 import java.util.*;
 
-public class TestSet extends LocalTestCase {
+public class TestCollection extends LocalTestCase {
 
-
-    public void testSet() {
-       testSet(new HashSet());
-       testSetR(new HashSet());
-       testSet2(new HashSet());
-       testSet3(new HashSet());
-       testSet4(new HashSet());
-       testSet5(new HashSet());
+    public void testList() {
+        testCollection(new LinkedList());
+        testCollectionR(new LinkedList());
+        testCollection2(new LinkedList());
+        testCollection3(new LinkedList());
+        testCollection4(new LinkedList());
+        testCollection5(new LinkedList());
     }
 
+    public void testSet() {
+       testCollection(new HashSet());
+       testCollectionR(new HashSet());
+       testCollection2(new HashSet());
+       testCollection3(new HashSet());
+       testCollection4(new HashSet());
+       testCollection5(new HashSet());
+    }
+
+    //public void testBag() {
+//       testCollection(new MultiSet());
+    //}
 
     //@ non_null
     Object o = new Object();
 
     //@ requires c != null;
     //@ requires c.isEmpty();
-    private void testSet(Set c) {
+    private void testCollection(Collection c) {
         boolean b;
 
         assertTrue( c.isEmpty());
@@ -49,12 +60,6 @@ public class TestSet extends LocalTestCase {
         assertTrueNP ( !c.contains(o));
         //@ assert !c.containsObject(o);
 
-        //@ assert c.contains(i);
-        //@ assert \typeof(i) <: c.elementType;
-        //@ assert i != null;
-        b =c.add(i);
-        assertTrue(!b);
-
         Integer ii = new Integer(1);
         //@ assert !ii.equals(i);
         //@ assume !c.contains(ii); // FIXME - would like to prove this
@@ -68,7 +73,8 @@ public class TestSet extends LocalTestCase {
 
     //@ requires c != null;
     //@ requires c.isEmpty();
-    public void testSetR(Set c) {
+    public void testCollectionR(Collection c) {
+        try {
         //@ set c.elementType = \type(Number);
         //@ assert (\forall Object o; !c.contains(o) );
 
@@ -120,11 +126,13 @@ public class TestSet extends LocalTestCase {
         b = c.contains(i);
         assertTrue (b);
 //@ assert false; // TEST FOR CONSISTENCY
+        } catch (Exception e) {}
+//@ assert false; // TEST FOR CONSISTENCY
     }
 
     //@ requires c != null;
     //@ requires c.isEmpty();
-    public void testSet2(Set c) {
+    public void testCollection2(Collection c) {
         //@ set c.elementType = \type(Number);
         boolean b;
         Integer i = new Integer(0);
@@ -146,13 +154,13 @@ public class TestSet extends LocalTestCase {
 	    assertTrue (b);
         } catch (Exception e) {}
 
-
 //@ assert false; // TEST FOR CONSISTENCY
+
     }
 
     //@ requires c != null;
     //@ requires c.isEmpty();
-    public void testSet3(Set c) {
+    public void testCollection3(Collection c) {
         //@ set c.elementType = \type(Number);
         boolean b;
         Integer i = new Integer(0);
@@ -175,13 +183,13 @@ public class TestSet extends LocalTestCase {
             assertTrue( c.isEmpty());
         } catch (Exception e) {
         }
-
 //@ assert false; // TEST FOR CONSISTENCY
+
     }
 
     //@ requires c != null;
     //@ requires c.isEmpty();
-    public void testSet4(Set c) {
+    public void testCollection4(Collection c) {
         //@ set c.elementType = \type(Number);
 
         Object[] a;
@@ -220,13 +228,12 @@ public class TestSet extends LocalTestCase {
         } catch (Exception e) {
             assertTrue( e instanceof NullPointerException);
         }
-        //assertTrue (false);
 //@ assert false; // TEST FOR CONSISTENCY
     }
 
     //@ requires c != null;
     //@ requires c.isEmpty();
-    public void testSet5(Set c) {
+    public void testCollection5(Collection c) {
         //@ set c.elementType = \type(Object);
 
         c.add(o);
@@ -246,28 +253,9 @@ public class TestSet extends LocalTestCase {
 
         // FIXME - Need to test iterator()
 
+        // FIXME - need to test clone, equals
         
 
-    //@ requires c != null;
-    //@ requires c.isEmpty();
-    private void testSetA(Set c) {
-        boolean b;
 
-        //@ set c.elementType = \type(Number);
-        Integer i = new Integer(0);
-
-        b = c.add( i );
-        //@ assert b;
-        //@ assert c.containsObject(i);
-        //@ assert c.contains(i);
-
-        //@ assert \typeof(i) <: c.elementType;
-        //@ assert i != null;
-        //@ assert c.containsObject(i);
-        b = c.add(i);
-        //@ assert !b;
-
-//@ assert false; // TEST FOR CONSISTENCY
-    }
 
 }
