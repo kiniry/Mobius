@@ -20,7 +20,7 @@ import javafe.ast.*;
 
 import escjava.ast.*;
 import escjava.ast.TagConstants;
-import escjava.parser.EscPragmaLex;
+//import escjava.parser.EscPragmaLex;
 
 public final class EscPragmaLex extends Lex {
 
