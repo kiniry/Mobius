@@ -159,7 +159,7 @@ public class PrepTypeDeclaration extends javafe.tc.PrepTypeDeclaration {
 	    MethodDecl md = (MethodDecl)e;
 	    boolean isAbstract = Modifiers.isAbstract(md.modifiers);
 
-	    super.visitMethodDecl(md,currentSig,abstractMethodsOK, 
+	    visitMethodDecl(md,currentSig,abstractMethodsOK, 
 			inFinalClass, inInterface);
 
 	    if (!isAbstract && md.body != null
@@ -224,6 +224,76 @@ public class PrepTypeDeclaration extends javafe.tc.PrepTypeDeclaration {
 	} else 
 	    super.visitTypeDeclElem(e,currentSig,abstractMethodsOK, 
 			inFinalClass, inInterface);
+    }
+
+    public void visitMethodDecl(MethodDecl x, TypeSig currentSig,
+			boolean abstractMethodsOK,
+                        boolean inFinalClass,
+                        boolean inInterface) {
+        if (Utils.findModifierPragma(x.pmodifiers,TagConstants.MODEL) == null) {
+	    super.visitMethodDecl(x,currentSig,abstractMethodsOK,inFinalClass,inInterface);
+        } else {
+
+        // Careful - the following is almost, but not quite, a duplicate of super.visitMethodDecl 
+
+    if (Modifiers.isStatic(x.modifiers) && !inInterface
+        && !currentSig.isTopLevelType())
+        ErrorSet.error(x.locId,
+                       "Only methods of top-level classes may be static");
+
+    // Modifiers can only be:
+    //   public protected private abstract static final synchronized native
+    //   strictfp
+    checkModifiers( x.modifiers,
+                   inInterface
+                   ? (Modifiers.ACC_PUBLIC | Modifiers.ACC_ABSTRACT | Modifiers.ACC_STATIC)
+                   : (Modifiers.ACCESS_MODIFIERS | Modifiers.ACC_ABSTRACT
+                   | Modifiers.ACC_FINAL | Modifiers.ACC_SYNCHRONIZED
+                   | Modifiers.ACC_STATIC | Modifiers.ACC_NATIVE
+                   | Modifiers.ACC_STRICT),
+                   x.loc, inInterface ? "interface method" : "method" );
+
+    // If in interface, method is implicitly public
+    // But model methods are not implicitly abstract
+    if( inInterface )
+        x.modifiers |= Modifiers.ACC_PUBLIC;
+
+    // private methods implicitly final
+    // members of final class are implicitly final
+    if( Modifiers.isPrivate(x.modifiers) || inFinalClass )
+      x.modifiers |= Modifiers.ACC_FINAL;
+
+    // Error if an abstract method is also
+    // private, static, final, native, or synchronized.
+    if( Modifiers.isAbstract(x.modifiers) &&
+       (Modifiers.isPrivate(x.modifiers)
+        | Modifiers.isStatic(x.modifiers)
+        | Modifiers.isFinal(x.modifiers)
+        | Modifiers.isNative(x.modifiers)
+        | Modifiers.isSynchronized(x.modifiers)) )
+      ErrorSet.error( x.locId,
+        "Incompatible modifiers for abstract method");
+
+    // resolve types
+     getEnvForCurrentSig(currentSig, true).resolveType( currentSig, x.returnType
+ );
+    for( int i=0; i<x.raises.size(); i++ )
+      getEnvForCurrentSig(currentSig, true).resolveType( currentSig, x.raises.elementAt(i) );
+    for( int i=0; i<x.args.size(); i++ )
+      getEnvForCurrentSig(currentSig, true).resolveType( currentSig, x.args.elementAt(i).type );
+
+    // Error if two methods in type body with same signature
+    for( int i=0; i<methodSeq.size(); i++ )
+      {
+        if(Types.isSameMethodSig( x, (MethodDecl)methodSeq.elementAt(i) ) )
+          ErrorSet.error(x.loc,
+                         "Duplicate declaration of method "
+                         +"with same signature");
+      }
+
+    methodSeq.addElement(x);
+
+    }
     }
 
     protected void addInheritedMembers(javafe.tc.TypeSig type,
@@ -349,4 +419,5 @@ public class PrepTypeDeclaration extends javafe.tc.PrepTypeDeclaration {
 
 
     }
+
 }
