@@ -1,3 +1,247 @@
+2003-09-26  David Cok  <cok@frontiernet.net>
+
+	* Escjava/test/escjava/test/test59/Typecheck.java:
+	* Escjava/test/escjava/test/test59/ans:
+	* Escjava/test/escjava/test/test64/ans:
+	* Escjava/test/junittests/After.java:
+	* Escjava/test/junittests/After.java-expected:
+	* Escjava/test/junittests/Constructor.java:
+	* Escjava/test/junittests/ForallOld.java:
+	* Escjava/test/junittests/ForallOld.java-expected:
+	* Escjava/test/junittests/ForallOldError.java:
+	* Escjava/test/junittests/ForallOldError.java-expected:
+	* Escjava/test/junittests/Helper2.java:
+	* Escjava/test/junittests/Informal.java:
+	* Escjava/test/junittests/Informal.java-expected:
+	* Escjava/test/junittests/NotSpecified.java:
+	* Escjava/test/junittests/SourcePath.refines-java:
+	* Escjava/test/junittests/SpecFile.jml-expected:
+	* Escjava/test/junittests/skip:
+	* Javafe/java/javafe/tc/FlowInsensitiveChecks.java:
+	* docs/Escjava2-ImplementationNotes/Escjava2-ImplementationNotes.texinfo:
+	* Escjava/java/escjava/ast/.cvsignore:
+	* Escjava/java/escjava/ast/EscPrettyPrint.java:
+	* Escjava/java/escjava/ast/TagConstants.java:
+	* Escjava/java/escjava/ast/hierarchy.j:
+	* Escjava/java/escjava/parser/EscPragmaParser.java:
+	* Escjava/java/escjava/parser/OldVarDecl.java:
+	* Escjava/java/escjava/reader/EscTypeReader.java:
+	* Escjava/java/escjava/tc/FlowInsensitiveChecks.java:
+	* Escjava/java/escjava/translate/Substitute.java:
+	* Escjava/java/escjava/translate/TrAnExpr.java:
+	* Escjava/test/escjava/test/alltests:
+	* Escjava/test/escjava/test/test34/BogusInput.java:
+	* Escjava/test/escjava/test/test34/BogusSpec.java:
+	* Escjava/test/escjava/test/test34/ans:
+	* Escjava/test/escjava/test/test37/ans:
+	* Escjava/test/escjava/test/test37/run:
+	* Escjava/test/escjava/test/test49/ans:
+	* Escjava/test/escjava/test/test54/Simple2.java:
+	* Escjava/test/escjava/test/test54/ans:
+	* Escjava/test/escjava/test/test56/ans:
+	* Escjava/java/escjava/AnnotationHandler.java:
+	* Escjava/java/escjava/Main.java:
+	* Escjava/java/escjava/ParsedRoutineSpecs.java:
+	* Escjava/java/escjava/RefinementSequence.java:
+	Major refactoring of the processing of refinements in order to
+	handle forall and old clauses; both are implemented - forall needs
+	some clarification of semantics and in any case Simplify does not
+	handle quantification well; old is implemented by substitution.
+	Variable lookup in both cases works.  ALso added tests plus
+	cleaned up tests that were broken because of syntax changes and
+	the like.
+
+2003-09-23  David Cok  <cok@frontiernet.net>
+
+	* Escjava/test/escjava/test/test95/ans:
+	* Escjava/test/junittests/GhostFieldOverride.java:
+	* Escjava/test/junittests/GhostFieldOverride.java-expected:
+	* Escjava/test/junittests/GhostLocal.java:
+	* Escjava/test/junittests/GhostLocal.java-expected:
+	* Escjava/test/junittests/GhostLocalScope.java:
+	* Escjava/test/junittests/GhostLocalScope.java-expected:
+	* Escjava/test/junittests/Makefile:
+	* Javafe/java/javafe/parser/ParseStmt.java:
+	* Javafe/java/javafe/tc/FlowInsensitiveChecks.java:
+	* Javafe/java/javafe/tc/PrepTypeDeclaration.java:
+	* Javafe/java/javafe/util/ErrorSet.java:
+	* Javafe/test/javafe/test/fe/test106/ans:
+	* Escjava/java/escjava/tc/FlowInsensitiveChecks.java:
+	* Escjava/java/escjava/translate/Translate.java:
+	* Escjava/java/escjava/Main.java:
+	Fixed a bunch mmore issues with respect to ghost declarations -
+	multiple variables in one declaration; improper reports of
+	duplicate declarations; better error messages; tests to check
+	reasoning with instance ghost fields.
+
+2003-09-22  David Cok  <cok@frontiernet.net>
+
+	* Escjava/java/escjava/tc/EnvForGhostLocals.java:
+	Missed a file needed for local ghost declarations.
+
+	* Escjava/java/escjava/AnnotationHandler.java:
+	* Escjava/java/escjava/parser/ErrorPragmaParser.java:
+	* Escjava/java/escjava/parser/EscPragmaParser.java:
+	* Escjava/java/escjava/tc/FlowInsensitiveChecks.java:
+	* Escjava/java/escjava/translate/Translate.java:
+	* Escjava/test/junittests/GhostFieldOverride.java:
+	* Escjava/test/junittests/GhostLocal.java:
+	* Escjava/test/junittests/GhostLocal.java-expected:
+	* Escjava/test/junittests/GhostLocalError.java:
+	* Escjava/test/junittests/GhostLocalError.java-expected:
+	* Escjava/test/junittests/GhostLocalScope.java:
+	* Escjava/test/junittests/GhostLocalScope.java-expected:
+	* Escjava/test/junittests/InstanceError.java:
+	* Escjava/test/junittests/InstanceError.java-expected:
+	* Escjava/test/junittests/ModelConstructors.java:
+	* Escjava/test/junittests/ModelConstructors.java-ckd:
+	* Escjava/test/junittests/ModelConstructors.java-expected:
+	* Escjava/test/junittests/skip:
+	* Javafe/java/javafe/tc/FlowInsensitiveChecks.java:
+	* Javafe/test/javafe/parser/test/TestLex.java:
+	* Javafe/java/javafe/parser/ParseStmt.java:
+	* Javafe/java/javafe/parser/PragmaParser.java:
+	Implemented local ghost declarations and allowed set statements to
+	operate on such variables; some improvements in error reporting;
+	also new tests.
+
+2003-09-20  David Cok  <cok@frontiernet.net>
+
+	* Escjava/test/escjava/test/rtestall: Tweak of the output.
+
+	* Escjava/java/escjava/parser/EscPragmaLex.java:
+	* Escjava/java/escjava/prover/SubProcess.java:
+	* Javafe/java/javafe/ast/PrettyPrint.java:
+	* Javafe/java/javafe/parser/Lex.java:
+	* Javafe/java/javafe/util/FileCorrelatedReader.java:
+	* Javafe/java/javafe/util/LocationManagerCorrelatedReader.java:
+	* Javafe/test/javafe/parser/test/TestLex.java:
+	* Javafe/test/javafe/test/fe/Makefile:
+	* Javafe/test/javafe/test/fe/skip:
+	* Utils/Makefile:
+	* Utils/junitutils/Makefile:
+	Fixing warnings about using deprecated classes/methods.
+
+	* Makefile: Revmoing redundancies (and shortening) the release testing.
+
+	* Escjava/test/junittests/skip: Skipping some platform dependent tests.
+
+	* docs/Escjava2-ImplementationNotes/Escjava2-ImplementationNotes.texinfo:
+	Updates for model/field/constructor keywords and set comprehension.
+
+	* Escjava/escj: Typo.
+
+	* Makefile: Cleaning up.
+
+	* Javafe/test/javafe/test/fe/test106/ans:
+	* Javafe/test/javafe/test/fe/test111/NewII.java:
+	* Javafe/test/javafe/test/fe/test111/ans:
+	* Escjava/test/junittests/SetComprehension.java:
+	* Escjava/test/junittests/SetComprehension.java-expected:
+	* Javafe/test/javafe/test/fe/Makefile:
+	Additional tests and test cleanup.
+
+	* Escjava/java/escjava/ast/.cvsignore:
+	* Escjava/java/escjava/ast/hierarchy.j:
+	* Escjava/java/escjava/parser/EscPragmaParser.java:
+	* Escjava/java/escjava/tc/FlowInsensitiveChecks.java:
+	* Escjava/java/escjava/translate/Purity.java:
+	* Escjava/java/escjava/translate/Translate.java:
+	Implementation of parsing of set comprehension.
+
+	* Javafe/java/javafe/tc/FlowInsensitiveChecks.java:
+	Improvements on error messages.
+
+	* Javafe/java/javafe/parser/ParseExpr.java:
+	Refactoring to support parsing set comprehension.
+
+2003-09-20  Joseph R. Kiniry  <kiniry@acm.org>
+
+	* Makefile:
+	Added original ESC/Java 1 User's Manual to binary release due to user
+	demand.
+
+	* docs/Escjava2-ImplementationNotes/Makefile:
+	The OS X tetex I have does not include texi2pdf, so I made the pdf
+	target conditional.  So now to generate a pdf version of the impl
+	notes one either goes directly from texi (if texi2pdf is available) or
+	otherwise goes dvi->ps->pdf.
+
+	* Escjava/escj: Correct name of Simplify executable on Windows.
+
+2003-09-19  David Cok  <cok@frontiernet.net>
+
+	* Escjava/test/escjava/test/test49/ans:
+	* Escjava/test/junittests/FMCKeywords.java:
+	* Escjava/test/junittests/FMCKeywords.java-expected:
+	* Escjava/test/junittests/Ghost.java-expected:
+	* Escjava/test/junittests/skip:
+	Test updates.
+
+	* Escjava/java/escjava/translate/GetSpec.java:
+	* Escjava/java/escjava/translate/TrAnExpr.java:
+	* Escjava/java/escjava/translate/Translate.java:
+	Misc improvements.
+
+	* Escjava/java/escjava/ast/TagConstants.java:
+	* Escjava/java/escjava/parser/EscPragmaParser.java:
+	* Escjava/java/escjava/tc/FlowInsensitiveChecks.java:
+	Implementing the field, method, constructor keywords.
+
+	* Escjava/java/escjava/ast/hierarchy.j:
+	Adding data to enable semantic check later.
+
+	* Escjava/java/escjava/AnnotationHandler.java:
+	Handling ghost and model tags.
+
+	* Escjava/java/escjava/Main.java: Adding some error recovery.
+
+	* Escjava/java/escjava/ast/EscPrettyPrint.java: Adding missing tags.
+
+	* Javafe/java/javafe/tc/FlowInsensitiveChecks.java:
+	Avoiding cascading error messages.
+
+	* Javafe/java/javafe/tc/PrepTypeDeclaration.java:
+	Embellishing the error message.
+
+	* Javafe/java/javafe/tc/TypeSig.java:
+	Adding a method to clear the stored state.
+
+	* Javafe/test/javafe/test/fe/skip:
+	Skipping a test until I have a chance to fix it.
+
+	* Javafe/test/javafe/test/fe/Makefile: Typo in command.
+
+	* Javafe/java/javafe/Options.java:
+	* Javafe/java/javafe/util/ErrorSet.java:
+	Option to print out stack traces for error messages.
+
+	* Makefile: One last fix ...
+
+	* Makefile:
+	* Makefile.defs: Fixing Joe's release target.
+
+	* README.first: Additional edits and material about ESC_SPECS.
+
+	* Makefile:
+	* Makefile.defs:
+	* install.sh:
+	Some fixes to the building/testing of patch releases.
+
+	* Escjava/escj:
+	Some preparatory work to introducing/requiring the specifications.
+
+	* Escjava/test/junittests/ParseInitially.java:
+	* Escjava/test/junittests/ParseInitially.java-expected:
+	Removing obsolete tests.
+
+2003-09-18  David Cok  <cok@frontiernet.net>
+
+	* Escjava/test/escjava/test/Makefile:
+	* Escjava/test/junittests/skip:
+	* Javafe/java/javafe/tc/FlowInsensitiveChecks.java:
+	Minor corrections.
+
 2003-09-18  Joseph R. Kiniry  <kiniry@acm.org>
 
 	* release-files/RELEASE_NOTES.txt:
