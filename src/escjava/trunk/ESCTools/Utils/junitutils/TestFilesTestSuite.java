@@ -82,7 +82,7 @@ public class TestFilesTestSuite  extends TestSuite {
 	@param cls	The class in which to find the static compile method
     */
     public TestFilesTestSuite(String testName, String fileOfTestFilenames,
-				String[] args,
+				String[] args, // Ignored!
 				Class cls
 				) { 
 	super(testName);
