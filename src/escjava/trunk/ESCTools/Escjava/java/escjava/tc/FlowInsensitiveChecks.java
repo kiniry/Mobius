@@ -1060,9 +1060,9 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
         int tag = p.getTag();
         switch(tag) 
         {
-	    case TagConstants.EVERYTHING:
+	    case TagConstants.JML_EVERYTHING:
 	    case TagConstants.EVERYTHINGEXPR:
-	    case TagConstants.NOTHING:
+	    case TagConstants.JML_NOTHING:
 	    case TagConstants.NOTHINGEXPR:
 	    case TagConstants.JML_NOT_SPECIFIED:
 	    case TagConstants.NOTSPECIFIEDEXPR:
