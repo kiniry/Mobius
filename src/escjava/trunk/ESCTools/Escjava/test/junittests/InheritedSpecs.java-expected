@@ -143,11 +143,11 @@ InheritedSpecs: nn5e() ...
 InheritedSpecs.java:85: Warning: Precondition possibly not established (Pre)
                 n5(-1); // FAILS
                   ^
-Associated declaration is "InheritedSpecs.java", line 147, col 5:
-        //@ requires i>=0;
-            ^
 Associated declaration is "InheritedSpecs.java", line 41, col 5:
         //@ requires i%2 == 0;
+            ^
+Associated declaration is "InheritedSpecs.java", line 147, col 5:
+        //@ requires i>=0;
             ^
 ------------------------------------------------------------------------
     [TIME]  failed

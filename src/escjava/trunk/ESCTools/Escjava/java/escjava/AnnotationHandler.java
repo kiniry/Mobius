@@ -1159,7 +1159,7 @@ added, it doesn't change whether a routine appears to have a spec or not.
 		boolean nn = emp.expr instanceof NonNullExpr;
 		Expr le = LabelExpr.make(
 				emp.getStartLoc(), emp.getEndLoc(), false, 
-				escjava.translate.GC.makeLabel(
+				escjava.translate.GC.makeFullLabel(
 					nn?"NonNull":"Pre",loc,Location.NULL),
 				emp.expr);
 		javafe.tc.FlowInsensitiveChecks.setType(le,Types.booleanType);

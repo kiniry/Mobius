@@ -376,6 +376,15 @@ public final class GC {
 	    lab += "@" + UniqName.locToSuffix(locUse);
 	return Identifier.intern(lab);
   }
+  public static Identifier makeFullLabel(String name, int locPragmaDecl, int locUse) {
+	String lab = name;
+	if (locPragmaDecl != Location.NULL) {
+	    lab = lab + ":" + UniqName.locToSuffix(locPragmaDecl,false);
+	}
+	if (locUse != Location.NULL)
+	    lab += "@" + UniqName.locToSuffix(locUse,false);
+	return Identifier.intern(lab);
+  }
 	    
   //@ requires subst != null && target != null ;
   //@ requires subst.keyType == \type(GenericVarDecl) ;

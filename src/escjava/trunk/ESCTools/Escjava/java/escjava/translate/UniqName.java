@@ -53,6 +53,10 @@ public final class UniqName {
   //@ requires loc != Location.NULL;
   //@ ensures \result != null;
   public static String locToSuffix(int loc) {
+	return locToSuffix(loc,true);
+  }
+
+  public static String locToSuffix(int loc, boolean useDefault) {
     Assert.notFalse(loc != Location.NULL);
 
     int streamID = Location.toStreamId(loc);
@@ -60,7 +64,14 @@ public final class UniqName {
       return streamID + "..";
 
     String suffix = Location.toLineNumber(loc) + "." + Location.toColumn(loc);
-    if (streamID == idDefaultSuffixFile && !escjava.Main.options().guardedVC)
+	// We can't always use the default suffix file because we put label expressions
+	// into preconditions during desugaring.  That way we can report the
+	// location of a portion of a composite precondition.  But when the
+	// precondition gets used by a routine in another file, the default
+	// stream id has now changed and the suffix specified is invalid.
+	// I think the only problem is extra characters in the communication
+	// to and from Simplify. -- DRCok
+    if (useDefault && streamID == idDefaultSuffixFile && !escjava.Main.options().guardedVC)
       return suffix;
     else
       return streamID + "." + suffix;

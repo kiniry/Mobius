@@ -141,10 +141,10 @@ NL: pp() ...
 NL.java:82: Warning: Possible assignment of null to variable declared non_null (NonNull)
                 p(oo);  // FAILS
                  ^
-Associated declaration is "NL.java", line 75, col 31:
+Associated declaration is "NL.java", line 114, col 31:
         /*@ pure */ public void p(/*@ non_null */ Object o) {
                                       ^
-Associated declaration is "NL.java", line 114, col 31:
+Associated declaration is "NL.java", line 75, col 31:
         /*@ pure */ public void p(/*@ non_null */ Object o) {
                                       ^
 ------------------------------------------------------------------------

@@ -3,13 +3,13 @@ ESC/Java version VERSION
 
 Desugaring ...
 Desugared specifications for Desugaring.m
-   requires (\lblneg Pre:7.1 p) || (\lblneg Pre:10.1 r) && (\lblneg Pre:11.1 t)
+   requires (\lblneg Pre:131.7.1 p) || (\lblneg Pre:131.10.1 r) && (\lblneg Pre:131.11.1 t)
    ensures \old(p) ==> q
    modifies \nothing if \old(p)
    ensures \old(r && t) ==> s
    modifies \nothing if \old(r && t)
 Desugared specifications for Desugaring.mm
-   requires (\lblneg Pre:17.2 p) || (\lblneg Pre:17.2 p) && (\lblneg Pre:21.3 s) || (\lblneg Pre:17.2 p) && (\lblneg Pre:25.4 t)
+   requires (\lblneg Pre:131.17.2 p) || (\lblneg Pre:131.17.2 p) && (\lblneg Pre:131.21.3 s) || (\lblneg Pre:131.17.2 p) && (\lblneg Pre:131.25.4 t)
    ensures \old(p) ==> q
    modifies \nothing if \old(p)
    ensures \old(p && s) ==> t
@@ -31,16 +31,16 @@ Desugared specifications for Desugaring.m5
    ensures \result != null
    modifies \nothing if true
 Desugared specifications for Desugaring.m6
-   requires (\lblneg NonNull:47.15 o:47.34 != null)
+   requires (\lblneg NonNull:131.47.15 o:47.34 != null)
    modifies \nothing if \old(o:47.34 != null)
 Desugared specifications for Desugaring.m13
-   requires (\lblneg Pre:50.2 p) || (\lblneg Pre:52.2 q)
+   requires (\lblneg Pre:131.50.2 p) || (\lblneg Pre:131.52.2 q)
    ensures \old(p) ==> false
    modifies \nothing if \old(p)
    signals (java.lang.Exception)\old(q) ==> false
    modifies \nothing if \old(q)
 Desugared specifications for Desugaring.ppp
-   requires (\lblneg Pre:58.2 p)
+   requires (\lblneg Pre:131.58.2 p)
    ensures \old(p) ==> q
    modifies \nothing if \old(p)
 Desugared specifications for Desugaring.ppp1
@@ -52,7 +52,7 @@ Desugared specifications for JJ.ppp
    requires true
    modifies \nothing if true
 Desugared specifications for JJ.ppp1
-   requires (\lblneg Pre:72.5 pp)
+   requires (\lblneg Pre:131.72.5 pp)
    ensures \old(pp) ==> qq
    modifies \nothing if \old(pp)
 Desugared specifications for JJ.ppp2

@@ -217,12 +217,14 @@ public abstract class LocationManagerCorrelatedReader
     }
 
     if (line>s.curLineNo) {
-      Assert.fail("line number too large");
+	System.out.println("INTERNAL ERROR: invalid request to form a location (out of range line number): " + streamId + " " + line + " " + col + " " + streamIdToFile(streamId).getHumanName());
+	line = 1; col = 0;
     }
 
     if ((line==s.curLineNo && col+1>s.curNdx) ||
 	(line!=s.curLineNo && col+1>(s.NLOA[line]-s.NLOA[line-1]))) {
-      Assert.fail("column number too large");
+	System.out.println("INTERNAL ERROR: invalid request to form a location (out of range column number): " + streamId + " " + line + " " + col + " " + streamIdToFile(streamId).getHumanName());
+	col = 0;
     }
 
     int loc;
