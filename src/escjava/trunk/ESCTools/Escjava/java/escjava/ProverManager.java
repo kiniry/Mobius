@@ -108,9 +108,9 @@ public class ProverManager {
 	    }
 	}
 	if (listener != null) listener.stateChanged(2);
-        prover.startProve();
-        VcToString.compute(vc, prover.subProcessToStream());
 	try {
+	    prover.startProve();
+	    VcToString.compute(vc, prover.subProcessToStream());
 	    Enumeration en = prover.streamProve();
 	    if (listener != null) listener.stateChanged(1);
 	    return en;
