@@ -136,13 +136,13 @@ public class EscEditor extends JFrame implements ActionListener {
 	    pack();
 	    
 	} catch (Exception e) {
-		editor.setText("An exception occurred while trying to set up an editor for file " + filename + ": " + e);
-		line = 0;
+	    if (editor != null) editor.setText("An exception occurred while trying to set up an editor for file " + filename + ": " + e);
+	    line = 0;
 	} finally {
 	    try {
 		if (r != null) r.close();
 	    } catch (IOException e) {
-		editor.setText("An exception occurred while trying to set up an editor for file " + filename + ": " + e);
+		if (editor != null) editor.setText("An exception occurred while trying to set up an editor for file " + filename + ": " + e);
 	    }
 	}
 	this.editor = editor;

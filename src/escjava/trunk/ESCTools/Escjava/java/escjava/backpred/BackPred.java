@@ -43,10 +43,14 @@ public class BackPred
         }
         String filename = escjava.Main.options().univBackPredFile;
         try {
-            FileInputStream fis = new FileInputStream(filename);
-            int c;
-            while( (c=fis.read()) != -1 ) proverStream.print((char)c);
-            fis.close();
+            FileInputStream fis = null;
+            try {
+                fis = new FileInputStream(filename);
+                int c;
+                while( (c=fis.read()) != -1 ) proverStream.print((char)c);
+            } finally {
+                if (fis != null) fis.close();
+            }
         } catch( IOException e) {
             ErrorSet.fatal("IOException: "+e);
         }
@@ -95,24 +99,25 @@ public class BackPred
 
         // Handle constant fields' contribution:
         for( Enumeration enum = scope.fields();
-             enum.hasMoreElements(); ) {
+        enum.hasMoreElements(); ) {
             FieldDecl fd = (FieldDecl)enum.nextElement();
             if (!Modifiers.isFinal(fd.modifiers) || fd.init==null)
                 continue;
-
+            
             int loc = fd.init.getStartLoc();
             VariableAccess f = VariableAccess.make(fd.id, loc, fd);
-
+            
             if (Modifiers.isStatic(fd.modifiers)) {
-                genFinalInitInfo(fd.init, null, null, f, fd.type, loc, proverStream);
+                genFinalInitInfo(fd.init, null, null, f, fd.type, loc, 
+                        proverStream);
             } else {
                 LocalVarDecl sDecl = UniqName.newBoundVariable('s');
                 VariableAccess s = TrAnExpr.makeVarAccess(sDecl, Location.NULL);
-                genFinalInitInfo(fd.init, sDecl, s, GC.select(f, s), fd.type, loc,
-                                 proverStream);
+                genFinalInitInfo(fd.init, sDecl, s, GC.select(f, s), fd.type, 
+                        loc, proverStream);
             }
         }
-
+        
         proverStream.print(")");
     }
 

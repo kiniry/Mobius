@@ -276,12 +276,12 @@ public class Main extends javafe.SrcTool
 	if (compositeSourcePath == null) {
 		compositeClassPath = 
 		        options().specspath
-		+	System.getProperty("path.separator")
+		+	java.io.File.pathSeparator
 		+	compositeClassPath;
 	} else {
 		compositeSourcePath = 
 		        options().specspath
-		+	System.getProperty("path.separator")
+		+	java.io.File.pathSeparator
 		+	compositeSourcePath;
 	}
     }

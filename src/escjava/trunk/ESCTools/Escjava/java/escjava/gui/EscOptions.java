@@ -51,7 +51,7 @@ public class EscOptions extends JPanel implements ActionListener {
 		"/*@' comments are parsed by the ESC/Java2 tool" },
 	{"Control of Output:",null,null},
 	{"noCautions", 	"noCautions",
-		"When enabled, no Caution meesages are output" },
+		"When enabled, no Caution messages are output" },
 	{"noSemicolonWarnings", "noSemicolonWarnings",
 		"When enabled, no warnings about missing semicolons\n"+
 		"are issued (JML requires terminating semicolons)" },

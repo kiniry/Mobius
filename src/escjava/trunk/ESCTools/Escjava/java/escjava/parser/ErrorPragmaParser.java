@@ -35,7 +35,7 @@ public class ErrorPragmaParser implements PragmaParser
     /** Report an error for each annotation comment **/
     public void restart(CorrelatedReader in, boolean eolComment) {
 	try {
-	    int c = in.read();
+	    in.read();
 	} catch (IOException e) {
 	    ErrorSet.fatal(in.getLocation(), e.toString());
 	}

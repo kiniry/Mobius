@@ -60,7 +60,7 @@ public class Project {
 		return;
 	} finally {
 	    try {
-		r.close();
+		if (r != null) r.close();
 	    } catch (IOException e) {
 		JOptionPane.showMessageDialog(GUI.gui.escframe,
 			"The selected file, " + 

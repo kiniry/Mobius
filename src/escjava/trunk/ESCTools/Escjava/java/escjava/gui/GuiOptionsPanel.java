@@ -20,7 +20,7 @@ public class GuiOptionsPanel extends JPanel implements ActionListener {
     public Settings settings = new Settings();
 
 	/**  The array contains the text string, field name and the tooltip. */
-    static public String[][] info = {
+    static final public String[][] info = {
 	{ "Auto Expand the nodes", "autoExpand", "Automatically expands the nodes as processing progresses"},
 	{ "Auto scroll", "autoScroll", "Automatically scroll the window to keep processing point in view (will also expand nodes)"},
 	{ "Breadth first checking", "breadthFirst", "Check all nodes at a given level (parsing, typechecking, static checking) before moving to the next level, rather than doing all checks for a given node before checking the next node"},

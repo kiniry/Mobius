@@ -249,7 +249,7 @@ public class AnnotationHandler {
 
 	ModifierPragmaVec newpm = ModifierPragmaVec.make();
 
-	boolean isPure = Utils.isPure(tde);
+	//boolean isPure = Utils.isPure(tde);
 	boolean isConstructor = tde instanceof ConstructorDecl;
 
 	// Get non_null specs
@@ -513,7 +513,7 @@ System.out.println("END_MPV");
 	}
 	ExprModifierPragma conjunction = and(list);
 	boolean reqIsTrue = conjunction == null || isTrue(conjunction.expr);
-	boolean reqIsFalse = conjunction != null && isFalse(conjunction.expr);
+	//boolean reqIsFalse = conjunction != null && isFalse(conjunction.expr);
 	Expr reqexpr = conjunction==null? null : conjunction.expr;
 //System.out.println("REQ " + reqexpr);
 	Expr req = T;

@@ -782,16 +782,16 @@ public class EscFrame extends JFrame {
 		    setBackground(selected ? cc : c);
 		    setToolTipText(u.getStatusText());
 		    setText(u.toString());
-		    Dimension d1 = getMinimumSize();
+		    //Dimension d1 = getMinimumSize();
 		    Dimension d2 = getPreferredSize();
-		    Dimension d3 = getMaximumSize();
+		    //Dimension d3 = getMaximumSize();
 //System.out.println("DIM " + d1.width + " " + d1.height + " " + d2.width + " " + d2.height + " " + d3.width + " " + d3.height);
 		    int w = treeView.getViewport().getWidth();
 //System.out.println("SZ " + w);
 		    if (w == 0) w = 500;
 //System.out.println("LOC " + getX() + " " + getY());
 		    setPreferredSize(new Dimension(w - 100,d2.height));
-		    CellRendererPane cp = (CellRendererPane)getParent();
+//		    CellRendererPane cp = (CellRendererPane)getParent();
 //		    if (cp != null) cp.setSize(600,d2.height);
 //if (cp != null) System.out.println("PAR " + cp.getPreferredSize().width + " " + cp.getPreferredSize().height + " " + cp.getMaximumSize().width + " " + cp.getMaximumSize().height + " " + cp.getX() + " " + cp.getY());
 		}

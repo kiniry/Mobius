@@ -28,10 +28,10 @@ public class Options extends javafe.SrcToolOptions
 	{ "-noSemicolonWarnings", "Suppress warnings about semicolons missing at the end of annotations (to support old ESC/Java)" },
 	{ "-pgc", "Print the guarded commands"},
 	{ "-ppvc", "Prettyprint the VCs generated with -v"},
-        { "-pxLog <log>", "PrettyPrint the commands sent to Simplify in the file named <log>"},
+    { "-pxLog <log>", "PrettyPrint the commands sent to Simplify in the file named <log>"},
 	{ "-simplify", "The path to the SIMPLIFY executable"},
-        { "-specs <dirpath>", "The jar file or directory path of the set of system specs to use; these are appended to the sourcepath, if specified, or else the classpath." },
-        { "-sxLog <log>", "Print the commands sent to Simplify in the file named <log>"},
+    { "-specs <dirpath>", "The jar file or directory path of the set of system specs to use; these are appended to the sourcepath, if specified, or else the classpath." },
+    { "-sxLog <log>", "Print the commands sent to Simplify in the file named <log>"},
 	{ "-typecheck", "Do only parsing and typechecking, no generation or proving of verification conditions" },
     };
 
@@ -393,14 +393,14 @@ public class Options extends javafe.SrcToolOptions
             pcc = true;
             return offset;
         } else if (option.equals("-nospvc")) {
-	    spvc = false;
-	    return offset;
+            spvc = false;
+            return offset;
         } else if (option.equals("-passify")) {
-	    passify = true;
-	    return offset;
+            passify = true;
+            return offset;
         } else if (option.equals("-wpp")) {
-	    wpp = true;
-	    return offset;
+            wpp = true;
+            return offset;
         } else if (option.equals("-useDefpred")) {
             useDefpred = true;
             return offset;
@@ -413,7 +413,7 @@ public class Options extends javafe.SrcToolOptions
             return offset;
         } else if (option.equals("-pvc")) {
             pvc = true;
-	    prettyPrintVC = true;
+            prettyPrintVC = true;
             return offset;
         } else if (option.equals("-wpnxw")) {
             if (offset >= args.length) {
@@ -434,8 +434,8 @@ public class Options extends javafe.SrcToolOptions
             stats = true;
             return offset;
         } else if (option.equals("-checkSpecs")) {
-	    checkSpecs = true;
-	    return offset;
+            checkSpecs = true;
+            return offset;
         } else if (option.equals("-pjt")) {
             pjt = true;
             return offset;
@@ -493,7 +493,7 @@ public class Options extends javafe.SrcToolOptions
                                      " requires one directory argument");
             }
             guardedVC = true;
-	    guardedVCDir = args[offset];
+            guardedVCDir = args[offset];
             return offset+1;
         } else if (option.equals("-ignoreAnnFile")) {
             if (offset >= args.length) {
@@ -504,69 +504,69 @@ public class Options extends javafe.SrcToolOptions
             // System.out.println("Ignore set: "+ignoreAnnSet+"\n");
             return offset+1;
         } else if (option.equals("-routine")) {
-	    // the argument to "-routine" is either a simple routine name or a fully
-	    // qualified routine name with signature, but we won't ever parse these
-	    if (offset == args.length) {
+            // the argument to "-routine" is either a simple routine name or a fully
+            // qualified routine name with signature, but we won't ever parse these
+            if (offset == args.length) {
                 throw new UsageError("Option " + option +
-                                     " requires one argument");
-	    }
-	    String routine = args[offset].intern();
-	    if (routinesToCheck == null) {
-		routinesToCheck = new Set();
-	    }
-	    routinesToCheck.add(routine);
-	    return offset+1;
+                " requires one argument");
+            }
+            String routine = args[offset].intern();
+            if (routinesToCheck == null) {
+                routinesToCheck = new Set();
+            }
+            routinesToCheck.add(routine);
+            return offset+1;
         } else if (option.equals("-skip")) {
-	    // the argument to "-skip" is either a simple routine name or a fully
-	    // qualified routine name with signature, but we won't ever parse these
-	    if (offset == args.length) {
+            // the argument to "-skip" is either a simple routine name or a fully
+            // qualified routine name with signature, but we won't ever parse these
+            if (offset == args.length) {
                 throw new UsageError("Option " + option +
-                                     " requires one argument");
-	    }
-	    String routine = args[offset].intern();
-	    if (routinesToSkip == null) {
-		routinesToSkip = new Set();
-	    }
-	    routinesToSkip.add(routine);
-	    return offset+1;
+                " requires one argument");
+            }
+            String routine = args[offset].intern();
+            if (routinesToSkip == null) {
+                routinesToSkip = new Set();
+            }
+            routinesToSkip.add(routine);
+            return offset+1;
         } else if (option.equals("-routineIndirect")) {
-	    if (offset == args.length) {
+            if (offset == args.length) {
                 throw new UsageError("Option " + option +
-                                     " requires one argument");
-	    }
-	    if (routinesToCheck == null) {
-		routinesToCheck = new Set();
-	    }
-	    String routineIndirectionFilename = args[offset];
-	    BufferedReader in = null;
-	    try {
-		in = new BufferedReader(
-				   new FileReader(routineIndirectionFilename));
-		while (true) {
-		    String routine = in.readLine();
-		    if (routine == null) {
-			break;
-		    }
-		    routine = routine.intern();
-		    routinesToCheck.add(routine);
-		}
-	    } catch (IOException e) {
-		throw new UsageError("error reading routine indirection file '" +
-			       routineIndirectionFilename + "': " +
-			       e.toString());
-	    } finally {
-		try {
-		    if (in != null) in.close();
-		} catch (IOException e) {
-		    throw new UsageError(
-			"error closing routine indirection file '" +
-			   routineIndirectionFilename + "': " +
-			   e.toString());
-		}
-	    }
-	    return offset+1;
+                " requires one argument");
+            }
+            if (routinesToCheck == null) {
+                routinesToCheck = new Set();
+            }
+            String routineIndirectionFilename = args[offset];
+            BufferedReader in = null;
+            try {
+                in = new BufferedReader(
+                        new FileReader(routineIndirectionFilename));
+                while (true) {
+                    String routine = in.readLine();
+                    if (routine == null) {
+                        break;
+                    }
+                    routine = routine.intern();
+                    routinesToCheck.add(routine);
+                }
+            } catch (IOException e) {
+                throw new UsageError("error reading routine indirection file '" +
+                        routineIndirectionFilename + "': " +
+                        e.toString());
+            } finally {
+                try {
+                    if (in != null) in.close();
+                } catch (IOException e) {
+                    throw new UsageError(
+                            "error closing routine indirection file '" +
+                            routineIndirectionFilename + "': " +
+                            e.toString());
+                }
+            }
+            return offset+1;
         } else if (option.equals("-loopSafe")) {
-	    loopTranslation = LOOP_SAFE;
+            loopTranslation = LOOP_SAFE;
             return offset;
         } else if (option.equals("-preciseTargets")) {
             preciseTargets = true;
@@ -576,50 +576,50 @@ public class Options extends javafe.SrcToolOptions
             // syntax:  -loop <N>[.0|.5]
             if (offset == args.length) {
                 throw new UsageError("Option " + option +
-                                     " requires one argument");
-	    }
-	    String number = args[offset];
-	    if (number.length() == 0 || option.charAt(0) == '.') {
-		throw new UsageError("illegal argument to -loop: " + number);
-	    }
-	    // any other parsing error will be caught in the following loop
-	    int cnt = 0;
-	    boolean andAHalf = false;
-	    for (int i = 0; i < number.length(); i++) {
-		char ch = number.charAt(i);
-		if ('0' <= ch && ch <= '9') {
-		    if (10000 <= cnt) {
-			throw new UsageError("-loop specifies too many iterations: " +
-				       number);
-		    }
-		    cnt = 10*cnt + ch - '0';
-		    continue;
-		} else if (ch == '.') {
-		    if (number.length() == i+2) {
-			if (number.charAt(i+1) == '5') {
-			    andAHalf = true;
-			    break;
-			} else if (number.charAt(i+1) == '0') {
-			    andAHalf = false;
-			    break;
-			}
-		    }
-		}
-		throw new UsageError("illegal argument to -loop: " + number);
-	    }
-	    loopUnrollCount = cnt;
-	    loopUnrollHalf = andAHalf;
-	    return offset+1;
+                " requires one argument");
+            }
+            String number = args[offset];
+            if (number.length() == 0 || option.charAt(0) == '.') {
+                throw new UsageError("illegal argument to -loop: " + number);
+            }
+            // any other parsing error will be caught in the following loop
+            int cnt = 0;
+            boolean andAHalf = false;
+            for (int i = 0; i < number.length(); i++) {
+                char ch = number.charAt(i);
+                if ('0' <= ch && ch <= '9') {
+                    if (10000 <= cnt) {
+                        throw new UsageError("-loop specifies too many iterations: " +
+                                number);
+                    }
+                    cnt = 10*cnt + ch - '0';
+                    continue;
+                } else if (ch == '.') {
+                    if (number.length() == i+2) {
+                        if (number.charAt(i+1) == '5') {
+                            andAHalf = true;
+                            break;
+                        } else if (number.charAt(i+1) == '0') {
+                            andAHalf = false;
+                            break;
+                        }
+                    }
+                }
+                throw new UsageError("illegal argument to -loop: " + number);
+            }
+            loopUnrollCount = cnt;
+            loopUnrollHalf = andAHalf;
+            return offset+1;
         } else if (option.equals("-loopFallThru")) {
             loopTranslation = LOOP_FALL_THRU;
             return offset;
         } else if (option.equals("-mapsUnrollCount")) {
-	    if (offset == args.length) {
+            if (offset == args.length) {
                 throw new UsageError("Option " + option +
-                                     " requires one argument");
-	    }
-	    mapsUnrollCount = Integer.parseInt(args[offset]);
-	    return offset+1;
+                " requires one argument");
+            }
+            mapsUnrollCount = Integer.parseInt(args[offset]);
+            return offset+1;
         } else if (option.equals("-predAbstract")) {
             predAbstract = true;
             loopTranslation = LOOP_SAFE;
@@ -680,53 +680,53 @@ public class Options extends javafe.SrcToolOptions
             counterexample = true;
             return offset;
         } else if (option.equals("-bubbleNotDown")) {
-	    bubbleNotDown = true;
-	    return offset;
+            bubbleNotDown = true;
+            return offset;
         } else if (option.equals("-noOutCalls")) {
-	    noOutCalls = true;
-	    return offset;
+            noOutCalls = true;
+            return offset;
         } else if (option.equals("-backpredfile")) {
             if (offset>=args.length) {
                 throw new UsageError("Option " + option +
-                                     " requires one argument");
+                " requires one argument");
             }
             univBackPredFile = args[offset];
             return offset+1;
         } else if (option.equals("-sxLog")) {
             if (offset>=args.length) {
                 throw new UsageError("Option " + option +
-                                     " requires one argument");
+                " requires one argument");
             }
             sxLog = args[offset];
             return offset+1;
         } else if (option.equals("-pxLog")) {
             if (offset>=args.length) {
                 throw new UsageError("Option " + option +
-                                     " requires one argument");
+                " requires one argument");
             }
             sxLog = args[offset];
-	    prettyPrintVC = true;
+            prettyPrintVC = true;
             return offset+1;
         } else if (option.equals("-nowarn")) {
             if (offset>=args.length) {
                 throw new UsageError("Option " + option +
-                                     " requires one argument");
+                " requires one argument");
             }
             if (args[offset].equals("All")) {
-		NoWarn.setAllChkStatus(TagConstants.CHK_AS_ASSUME);
+                NoWarn.setAllChkStatus(TagConstants.CHK_AS_ASSUME);
             } else {
-		int tag = NoWarn.toNoWarnTag(args[offset]);
-		if (tag==0) {
-		    throw new UsageError("'" + args[offset]
-				   + "' is not a legal warning category");
-		}
-		NoWarn.setChkStatus(tag, TagConstants.CHK_AS_ASSUME);
+                int tag = NoWarn.toNoWarnTag(args[offset]);
+                if (tag==0) {
+                    throw new UsageError("'" + args[offset]
+                                                    + "' is not a legal warning category");
+                }
+                NoWarn.setChkStatus(tag, TagConstants.CHK_AS_ASSUME);
             }
             return offset+1;
         } else if (option.equals("-warn")) {
             if (offset>=args.length) {
                 throw new UsageError("Option " + option +
-                                     " requires one argument");
+                " requires one argument");
             }
             // Note:  There's an intentional lack of symmetry with -nowarn
             // here, in that "-warn All" is not supported.  This design
@@ -736,7 +736,7 @@ public class Options extends javafe.SrcToolOptions
             int tag = NoWarn.toNoWarnTag(args[offset]);
             if (tag==0) {
                 throw new UsageError("'" + args[offset]
-                           + "' is not a legal warning category");
+                                                + "' is not a legal warning category");
             }
             NoWarn.setChkStatus(tag, TagConstants.CHK_AS_ASSERT);
             return offset+1;
@@ -749,70 +749,70 @@ public class Options extends javafe.SrcToolOptions
         } else if (option.equals("-testRef")) {
             testRef = true;
             return offset;
-	} else if (option.equals("-checkPurity")) {
-	    checkPurity = true;
-	    return offset;
-	} else if (option.equals("-ppvc") | option.equals("-prettyPrintVC")) {
-	    prettyPrintVC = true;
-	    return offset;
-	} else if (option.equals("-showDesugaredSpecs")) {
-	    desugaredSpecs = true;
-	    return offset;
-	} else if (option.equals("-javaAssertions") ||
-		   option.equals("-eajava")) {
-	    assertionMode = JAVA_ASSERTIONS;
-	    assertionsEnabled = true;
-	    assertIsKeyword = true;
-	    return offset;
-	} else if (option.equals("-jmlAssertions") ||
-		   option.equals("-eajml")) {
-	    assertionMode = JML_ASSERTIONS;
-	    assertIsKeyword = true;
-	    assertionsEnabled = true;
-	    return offset;
+        } else if (option.equals("-checkPurity")) {
+            checkPurity = true;
+            return offset;
+        } else if (option.equals("-ppvc") | option.equals("-prettyPrintVC")) {
+            prettyPrintVC = true;
+            return offset;
+        } else if (option.equals("-showDesugaredSpecs")) {
+            desugaredSpecs = true;
+            return offset;
+        } else if (option.equals("-javaAssertions") ||
+                option.equals("-eajava")) {
+            assertionMode = JAVA_ASSERTIONS;
+            assertionsEnabled = true;
+            assertIsKeyword = true;
+            return offset;
+        } else if (option.equals("-jmlAssertions") ||
+                option.equals("-eajml")) {
+            assertionMode = JML_ASSERTIONS;
+            assertIsKeyword = true;
+            assertionsEnabled = true;
+            return offset;
         } else if (option.equals("-rewriteDepth")) {
             if (offset >= args.length) {
                 throw new UsageError("Option " + option +
-                                     " requires one integer argument");
+                " requires one integer argument");
             }
             rewriteDepth = Integer.parseInt(args[offset]);
             return offset+1;
-	} else if (option.equals("-noSemicolonWarnings")) {
-	    noSemicolonWarnings = true;
-	    return offset;
-	} else if (option.equals("-useFcns")) {
-	    useFcnsForModelVars = true;
-	    useFcnsForMethods = true;
-	    useFcnsForAllocations = true;
-	    return offset;
-	} else if (option.equals("-useVars")) {
-	    useFcnsForModelVars = false;
-	    useFcnsForMethods = false;
-	    useFcnsForAllocations = false;
-	    return offset;
-	} else if (option.equals("-useFcnsForModelVars")) {
-	    useFcnsForModelVars = true;
-	    return offset;
-	} else if (option.equals("-useVarsForModelVars")) {
-	    useFcnsForModelVars = false;
-	    return offset;
-	} else if (option.equals("-useFcnsForMethods")) {
-	    useFcnsForMethods = true;
-	    return offset;
-	} else if (option.equals("-useVarsForMethods")) {
-	    useFcnsForMethods = false;
-	    return offset;
-	} else if (option.equals("-showFields")) {
-	    showFields = true;
-	    return offset;
-	} else if (option.equals("-simplify")) {
-		// FIXME - shcek for additional argument
-	    simplify = args[offset];
-	    //System.setProperty("simplify",args[offset]);
-	    return offset+1;
-	} else if (option.equals("-EscProjectFileV0")) {
-	    // Ignored, but also used to mark a project file.
-	    return offset;
+        } else if (option.equals("-noSemicolonWarnings")) {
+            noSemicolonWarnings = true;
+            return offset;
+        } else if (option.equals("-useFcns")) {
+            useFcnsForModelVars = true;
+            useFcnsForMethods = true;
+            useFcnsForAllocations = true;
+            return offset;
+        } else if (option.equals("-useVars")) {
+            useFcnsForModelVars = false;
+            useFcnsForMethods = false;
+            useFcnsForAllocations = false;
+            return offset;
+        } else if (option.equals("-useFcnsForModelVars")) {
+            useFcnsForModelVars = true;
+            return offset;
+        } else if (option.equals("-useVarsForModelVars")) {
+            useFcnsForModelVars = false;
+            return offset;
+        } else if (option.equals("-useFcnsForMethods")) {
+            useFcnsForMethods = true;
+            return offset;
+        } else if (option.equals("-useVarsForMethods")) {
+            useFcnsForMethods = false;
+            return offset;
+        } else if (option.equals("-showFields")) {
+            showFields = true;
+            return offset;
+        } else if (option.equals("-simplify")) {
+            // FIXME - shcek for additional argument
+            simplify = args[offset];
+            //System.setProperty("simplify",args[offset]);
+            return offset+1;
+        } else if (option.equals("-EscProjectFileV0")) {
+            // Ignored, but also used to mark a project file.
+            return offset;
         }
     
         // Pass on unrecognized options:

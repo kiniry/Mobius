@@ -370,9 +370,10 @@ public class GUI extends escjava.Main {
 	    t.printStackTrace(System.out);
 	} finally {
 	    GUI.gui.escframe.showGuiLight(2);
-	    if (ErrorSet.errorsSinceMark()) status = Status.STATICCHECKED_ERROR;
+	    if (ErrorSet.errorsSinceMark()) 
+	        status = Status.STATICCHECKED_ERROR;
 	    else if (ErrorSet.cautionsSinceMark() && status == Status.STATICCHECKED_OK)
-		    status = Status.STATICCHECKED_CAUTION;
+		status = Status.STATICCHECKED_CAUTION;
 	}
 	return status;
     }
