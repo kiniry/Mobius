@@ -2,7 +2,7 @@
 
 rem To install ESC/Java2 on a new machine, change the following two
 rem lines appropriately:
-set ESCJAVA_ROOT=F:\ESCJava-2.0a5
+set ESCJAVA_ROOT=F:\ESCJava-2.0a7
 set JAVA=F:\jsdk\1.4.2\bin\Java.exe
 
 

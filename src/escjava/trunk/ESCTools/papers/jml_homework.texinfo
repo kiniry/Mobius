@@ -20,6 +20,9 @@ to learn JML and ESC/Java.  It was begun by Joseph R. Kiniry
 and Automatic Verification for Java with JML and ESC/Java2'' presented
 at ECOOP 2004 in Oslo, Norway in June 2004.  This is edition $Revision$.
 
+This document is still very much a work in progress.  Suggestions and input 
+are welcome.
+
 @copying
 The JML and ESC/Java Homework Exercises are licensed under the Creative
 Commons Attribution-NonCommercial-ShareAlike 2.0 license.  See
@@ -73,7 +76,7 @@ See http://creativecommons.org/licenses/by-nc-sa/2.0/legalcode
 @title JML and ESC/Java Homework Exercises
 @subtitle Learning JML and ESC/Java Through Example
 @subtitle Edition $Revision$, May 2004
-@subtitle These exercises use JML version 5.0rc1 and ESC/Java2 version 2.0a6
+@subtitle These exercises use JML version 5.0rc1 and ESC/Java2 version 2.0a7
 @author Joseph R. Kiniry <kiniry@@cs.kun.nl>
 
 @c The following two commands start the copyright page.
@@ -81,7 +84,7 @@ See http://creativecommons.org/licenses/by-nc-sa/2.0/legalcode
 @vskip 0pt plus 1filll
 @insertcopying
 
-Published by the Nijmegen Institute for Computing and Information
+Will be published by the Nijmegen Institute for Computing and Information
 Science at the University of Nijmegen as technical report NIII-R04XX.
 See http://www.cs.kun.nl/research/reports/
 @end titlepage

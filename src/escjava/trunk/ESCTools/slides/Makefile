@@ -17,9 +17,11 @@ psfiles =	$(foreach texfile,$(texfiles),\
 pdffiles =	$(foreach texfile,$(texfiles),\
 		$(subst .tex,.pdf,$(texfile)))
 
+SLIDES =	escjava_demo.pdf introjml.pdf
+
 all:	build
 
-build:	escjava_demo.pdf introjml.pdf
+build:	$(SLIDES)
 
 # %.pdf: %.tex
 # 	pdflatex $< $@
@@ -69,6 +71,7 @@ cleanup:
 
 clean:
 	rm -rf auto _region_* \
+		$(SLIDES) \
 		*.aux *.log *~ *.dvi ${paper}.ps ${paper}.pdf *.brf *.txt \
 		*.bbl *.blg *.toc *.thm *.out *.cb \
 		*.lof *.lot *.gz *.Z #*

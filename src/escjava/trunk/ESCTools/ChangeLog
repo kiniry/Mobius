@@ -1,5 +1,31 @@
 2004-06-18  Joseph Kiniry  <kiniry@cs.kun.nl>
 
+	* papers/koa_state_diagram.eps:
+	* papers/koa_state_diagram.pdf:
+	Add PDF and PS version of illustration so that building the paper
+	is not dependent upon having xfig and all of its dependencies
+	installed.
+
+	* docs/design-notes/escj14.pdf:
+	* docs/design-notes/escj15.pdf:
+	* docs/design-notes/escj16c.txt:
+	* docs/design-notes/escj19.pdf:
+	* docs/design-notes/escj20.pdf:
+	* docs/design-notes/escj22.pdf:
+	* docs/design-notes/escj25b.pdf:
+	* docs/design-notes/escj28.pdf:
+	* docs/design-notes/escj32.pdf:
+	More conversions of design documents from proprietary to open formats.
+
+	* ChangeLog:
+	* Makefile:
+	* papers/Makefile:
+	* papers/jml_homework.texinfo:
+	* release-files/RELEASE_NOTES.txt:
+	* slides/Makefile:
+	Working on incorporating new slides and papers directories into
+	release and clean targets of build system.
+
 	* papers/jml_homework.texinfo:
 	* papers/problems/BogusFrameConditions.java:
 	* papers/problems/ContractsAbstractList.java:

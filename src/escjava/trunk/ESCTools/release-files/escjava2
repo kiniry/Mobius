@@ -7,8 +7,11 @@
 ## To save the work of guessing appropriate values for the environment 
 ## variables, the user should set these:
 
-## setenv ESCTOOLS_RELEASE ??? ## The directory containing the release files
-## setenv SIMPLIFY ??? ## The name of a Simplify executable in $ESCTOOLS_RELEASE
+## The directory containing the release files
+## setenv ESCTOOLS_RELEASE /usr/local/ESCJava2
+
+## The name of a Simplify executable in $ESCTOOLS_RELEASE
+## setenv SIMPLIFY Simplify-1.5.4.linux
 
 ########## Check if ESCTOOLS_RELEASE is defined; try to guess it if it is not
 

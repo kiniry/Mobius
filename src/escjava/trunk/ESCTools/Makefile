@@ -241,13 +241,14 @@ binary-release: build docs javadoc
 	rm -rf ${RELTEMP}/specs
 	cp -r ${ESCTOOLS_ROOT}/specs ${RELTEMP}
 	-find ${RELTEMP}/specs -name "CVS" -exec rm -rf {} \; >& /dev/null 
-	## Copy papers and slides
-	find docs -name "*.pdf" -exec cp {} ${RELTEMP} \; >& /dev/null
-	find papers -name "*.pdf" -exec cp {} ${RELTEMP} \; >& /dev/null
-	find slides -name "*.pdf" -exec cp {} ${RELTEMP} \; >& /dev/null
-	#cp docs/Escjava2-ImplementationNotes/*.pdf ${RELTEMP}
-	## Copy other miscellaneous files
+	## Copy papers and slides and other documentation
+	# cp papers/*.pdf ${RELTEMP}
+	# cp slides/*.pdf ${RELTEMP}
+	cp docs/Escjava2-ImplementationNotes/*.pdf ${RELTEMP}
 	cp docs/ESCJAVA-UsersManual.html ${RELTEMP}
+	cp -r Escjava/release/master/examples ${RELTEMP}
+	-find ${RELTEMP}/examples -name "CVS" -exec rm -rf {} \; >& /dev/null
+	## Copy other miscellaneous files
 	${MAKE} clean-norel-noreltemp
 	${MAKE} -C Utils/junitutils build
 	cp ${ESCJAVA_ROOT}/escj ${RELTEMP}
@@ -355,6 +356,8 @@ generate-toplevel-archive: clean
 		${ESCTOOLS_ROOT}/TODO.kotl ${ESCTOOLS_ROOT}/build.xml \
 		${ESCTOOLS_ROOT}/clean_env.sh ${RELTEMP}/ESCTools
 	cp -r ${ESCTOOLS_ROOT}/docs ${RELTEMP}/ESCTools
+	cp -r ${ESCTOOLS_ROOT}/papers ${RELTEMP}/ESCTools
+	cp -r ${ESCTOOLS_ROOT}/slides ${RELTEMP}/ESCTools
 	cp -r ${ESCTOOLS_ROOT}/Utils ${RELTEMP}/ESCTools
 	cp -r ${ESCTOOLS_ROOT}/jars ${RELTEMP}/ESCTools
 	cp ${ESCTOOLS_ROOT}/jmlspecs.jar ${RELTEMP}/ESCTools

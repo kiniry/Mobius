@@ -12,6 +12,7 @@ New features include:
   o Improvements to error messages.
   o Initial support of readable and writable constructs.
   o Improved organization of ESC/Java2 GUI.
+  o Included examples from User's Manual with release.
 
 The following bugs are FIXED in this release:
   [ 970242 ] Incompleteness of checking frame axioms.

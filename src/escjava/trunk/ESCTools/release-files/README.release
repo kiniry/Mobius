@@ -28,6 +28,13 @@ following files:
     incompatibilities are documented in the aforementioned
     implementation notes.  We plan on providing a new ESC/Java2 User's
     Guide in a future ESC/Java2 release.
+  examples/ - this directory structure contains all of the examples
+    discussed in the User's Manual.
+  escjava_demo.pdf introjml.pdf - introductory slides on ESC/Java2 and 
+    JML, some of which have been used in tutorials.
+  CASSIS2004.pdf FTFJP2004.pdf NIII-R0413.pdf PASTE2004.pdf - papers
+    written about ESC/Java2.
+  jml_homework.pdf - homework exercises for learning JML and ESC/Java2
 
 -----------------------INSTALLATION ----------------------------
 
