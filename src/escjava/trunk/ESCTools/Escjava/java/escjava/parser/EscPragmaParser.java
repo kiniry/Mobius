@@ -1098,11 +1098,6 @@ public class EscPragmaParser extends Parse implements PragmaParser
 		   inProcessTag == TagConstants.JML_ASSIGNABLE_REDUNDANTLY) {
             dst.startingLoc = inProcessLoc;
 	    int tempInProcessTag = inProcessTag;
-/*
-	    if (inAlsoClause && inProcessTag != TagConstants.MONITORED_BY) {
-		tempInProcessTag = TagConstants.ALSO_MODIFIES;
-	    }
-*/
 	    int t = scanner.lookahead(0);
 	    Expr e = null;
 	    if (t == TagConstants.JML_NOTHING) {
