@@ -13,8 +13,7 @@ class WorkerState {
     HoudiniServer parent;
 
     /** command socket */
-    SocketCommand command;
- 
+    SocketCommand command; 
     
     /** worker I.D. */
     int id;
@@ -92,7 +91,7 @@ class WorkerState {
 	    parent.cp.makeRoot();
 	    return Integer.toString(id);
 	}
-    };
+    }
     
     /**
      * Format:  "vcdir?" -->  "<dir>"
@@ -121,7 +120,7 @@ class WorkerState {
 	    }
 	    return b.toString();
 	}
-    };
+    }
     
     /**
      * Format:  "vc?" -->  "fileName"
@@ -135,10 +134,9 @@ class WorkerState {
 	    status = BUSY;
 	    return currentJob.getFile();
 	}
-    };
+    }
     
-    
-/**
+    /**
      * Format:  "error <str>" -->  "ack"
      */    
     class ErrorCommand extends Command {
@@ -149,10 +147,9 @@ class WorkerState {
 	    parent.cp.reportError(id, currentJob, args[1]);
 	    return "ack";
 	}
-    };
+    }
     
-    
-/**
+    /**
      * Format:  "done t1 t2 t3 t4 t5 t6 t7" -->  "ack"
      */    
     class DoneCommand extends Command {
@@ -183,10 +180,9 @@ class WorkerState {
 	    }
 	    return "ack";
 	}
-    };
+    }
     
-    
-/**
+    /**
      * Format:  "refuted <guard>" -->  "rerun/ack"
      */        
     class RefutedCommand extends Command {
@@ -212,10 +208,9 @@ class WorkerState {
 	    }
 	    return reply;
 	}
-    };
+    }
     
-    
-/**
+    /**
      * Format:  "exit" -->  ""
      */    
     class ExitCommand extends Command {
