@@ -1,6 +1,34 @@
 -------------------------------------------------------------------
+version 2.0a1
+
+18-September-2003: Second "Friends & Family" alpha release.
+
+Major changes to this release include:
+  * Additional support for Java 2 assert statement.  We now support
+    all semantic variants---see the new switches:
+      -eajava, -javaAssertions, -eajml, -jmlAssertions, -source
+  * New support for statically checking JML keyword "non_null".
+  * New support for statically checking JML keyword "modifies".
+  * New support for printing verification conditions generated
+    by Escjava2 for Simplify.  See the switches:
+                           -v, -pgc, -ppvc
+  * Rewrote parsing support for ghost and model fields and model
+    routines.  The intent is to consistently parse these constructs
+    regardless of modifier ordering and use of pragmas.
+
+-------------------------------------------------------------------
+version 2.0a0
+
+05-September-2003: First "Friends & Family" alpha release.
+
+Major changes to this release include:
+  * Parses the full Java 2 and JML languages.
+
+-------------------------------------------------------------------
 
 11-July-2003: work in progress - alpha quality
 
 -------------------------------------------------------------------
+
+
 
