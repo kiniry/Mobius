@@ -6,10 +6,11 @@
  */
 package bcexpression.jml;
 import java.util.Vector;
+
+
+
 import bcexpression.Expression;
-import bcexpression.WITH;
-import bcexpression.javatype.JavaReferenceType;
-import bcexpression.javatype.JavaType;
+
 import type.BCType;
 /**
  * @author io
@@ -19,9 +20,16 @@ import type.BCType;
  */
 public class RESULT extends JMLExpression {
 	private Vector with;
-	
-	public RESULT() {
+
+	private static RESULT result = new RESULT();
+
+	private RESULT() {
 	}
+	
+	public static RESULT getResult() {
+		return result;
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -43,14 +51,30 @@ public class RESULT extends JMLExpression {
 		if (this.equals(_e1)) {
 			return _e2;
 		}
-		if ((getType() instanceof JavaReferenceType)
-				&& (JavaType.subType((JavaType) this.getType(), (JavaType) _e1
-						.getType()))) {
-			if (with == null) {
-				with = new Vector();
-			}
-			with.add(new WITH(_e1, _e2));
-		}
 		return this;
+//		
+//		if ((getType() instanceof JavaReferenceType)
+//				&& (JavaType.subType((JavaType) this.getType(), (JavaType) _e1
+//						.getType()))) {
+//			if (with == null) {
+//				with = new Vector();
+//			}
+//			with.add(new EqualsObjects(_e1, _e2));
+//		}
+//		return this;
+	}
+
+	/* (non-Javadoc)
+	 * @see bcexpression.Expression#toString()
+	 */
+	public String toString() {	
+		return "result";
+	}
+
+	/* (non-Javadoc)
+	 * @see bcexpression.Expression#copy()
+	 */
+	public Expression copy() {
+		return	this;
 	}
 }

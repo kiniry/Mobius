@@ -38,7 +38,29 @@ public class ELEMTYPE extends JMLExpression {
 	}
 	
 	public Expression substitute(Expression _e1 , Expression _e2) { 
-		
+		Expression subExpr = getSubExpressions()[0];
+		subExpr = subExpr.substitute( _e1, _e2);
+		//setSubExpressions( new Expression[]{subExpr});
 		return this;
+	}
+
+
+	/* (non-Javadoc)
+	 * @see bcexpression.Expression#toString()
+	 */
+	public String toString() {
+		Expression expr = getSubExpressions()[0];
+		String s = "elemType("   +expr.toString() + ")";
+		return s;
+	}
+
+
+	/* (non-Javadoc)
+	 * @see bcexpression.Expression#copy()
+	 */
+	public Expression copy() {
+		Expression[] copySubExpressions = copySubExpressions();
+		ELEMTYPE copy = new ELEMTYPE(copySubExpressions[0]);
+		return copy;
 	}
 }

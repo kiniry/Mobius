@@ -10,10 +10,7 @@ import java.util.Vector;
 
 import type.BCType;
 import bcexpression.Expression;
-import bcexpression.WITH;
-import bcexpression.javatype.JavaReferenceType;
 
-import constants.BCConstantFieldRef;
 
 /**
  * Deprecated - this expression when found ibn the specification will be  
@@ -46,5 +43,14 @@ public class AllArrayElem  extends JMLExpression {
 	
 	public Expression substitute(Expression _e1 , Expression _e2) { 
 		return this;
+	}
+
+
+	/* (non-Javadoc)
+	 * @see bcexpression.Expression#toString()
+	 */
+	public String toString() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

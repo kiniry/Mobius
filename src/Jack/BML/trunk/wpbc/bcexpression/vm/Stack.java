@@ -8,6 +8,7 @@ package bcexpression.vm;
 
 
 import type.BCType;
+import utils.Util;
 import bcexpression.Expression;
 
 
@@ -21,11 +22,10 @@ import bcexpression.Expression;
  */
 public final class Stack extends Expression  {
 	
-	
-	public Expression counter;
+//	private Expression counter;
 	
 	public Stack(Expression _counter) {
-		counter = _counter;
+		super(_counter);
 	}
 	
 	/*
@@ -40,7 +40,7 @@ public final class Stack extends Expression  {
 
 
 	public String toString() {
-		return "StackTop(" + counter.toString() + ")"; 
+		return "StackTop(" + getSubExpressions()[0].toString() + ")"; 
 	}
 
 	/* (non-Javadoc)
@@ -58,11 +58,25 @@ public final class Stack extends Expression  {
 	 * 		and replace the old counter by the new one counter = counter[_e1<-- _e2 ]
 	 */
 	public  Expression substitute(Expression _e1, Expression _e2){
+//		Util.dump("Stack.substitute in  " + toString() + "    " + _e1.toString() + " by " + _e2.toString()) ;
 		if (this.equals(_e1) ) {
 			return _e2;
 		}
+		
+		Expression counter =getSubExpressions()[0];
 		counter = counter.substitute( _e1, _e2);
+		setSubExpressions(new Expression[]{counter});
 		return this;
+	}
+
+	/* (non-Javadoc)
+	 * @see bcexpression.Expression#copy()
+	 */
+	public Expression copy() {
+		Expression counter = getSubExpressions()[0];
+		Expression copyCounter = counter.copy();
+		Stack  copy = new Stack(copyCounter);
+		return copy;
 	}
 		
 }

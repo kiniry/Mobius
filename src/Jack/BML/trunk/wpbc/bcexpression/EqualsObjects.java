@@ -8,22 +8,23 @@ package bcexpression;
 
 import type.BCType;
 /**
+ * @deprecated
  * @author mpavlova
  * 
  * this class represents an expression that is out of the Java language. It
- * models references . Example (a (o) (WITH r)) is desugared to : if o == r
- * then a (r) else a(o)
+ * models references . Example (a  WITH r := s)(o) is desugared to : if o == r
+ * then s else a(o)
  */
-public class WITH extends Expression {
+public class EqualsObjects extends Expression {
 	/**
 	 * represents the field the WITH reference
 	 */
 	private Expression with;
-	/**
-	 * represents the field that is tested if it is equal to the reference
-	 * alias
-	 */
-	private Expression objReference;
+//	/**
+//	 * represents the field that is tested if it is equal to the reference
+//	 * alias
+//	 */
+//	private Expression objReference;
 	
 	/**
 	 * substitute with this object if with == objReference
@@ -41,9 +42,9 @@ public class WITH extends Expression {
 		substituteWith = _substituteWith;
 	}*/
 	
-	public WITH( Expression _alias, Expression _substituteWith) {
+	public EqualsObjects( Expression _with, Expression _substituteWith) {
 		//objReference = _objReference;
-		with = _alias;
+		with = _with;
 		substituteWith = _substituteWith;
 	}
 	/*
@@ -55,23 +56,43 @@ public class WITH extends Expression {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	/**
-	 * @return Returns the objReference.
-	 */
-	public Expression getObjReference() {
-		return objReference;
-	}
+//	/**
+//	 * @return Returns the objReference.
+//	 */
+//	public Expression getObjReference() {
+//		return objReference;
+//	}
+
+
 	/**
 	 * @return Returns the with.
 	 */
 	public Expression getWith() {
 		return with;
 	}
-	/* (non-Javadoc)
-	 * @see bcexpression.Expression#substitute(bcexpression.Expression, bcexpression.Expression)
+	
+	/**
+	 * substitute in both expressions 
 	 */
 	public Expression substitute(Expression _e1, Expression _e2) {
-		// TODO Auto-generated method stub
+		with  = with.substitute(_e1, _e2);
+		substituteWith = substituteWith.substitute(_e1, _e2);
+		
+		//substituteWith = substituteWith.substitute(_e1, _e2);
 		return this;
+	}
+	/* (non-Javadoc)
+	 * @see bcexpression.Expression#toString()
+	 */
+	public String toString() {
+		String s = with.toString() + "<---" +substituteWith.toString();
+		return s;
+	}
+	/* (non-Javadoc)
+	 * @see bcexpression.Expression#copy()
+	 */
+	public Expression copy() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

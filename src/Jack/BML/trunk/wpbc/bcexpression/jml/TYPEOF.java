@@ -42,4 +42,19 @@ public class TYPEOF extends JMLExpression {
 		return this;
 	}
 	
+	/* (non-Javadoc)
+	 * @see bcexpression.Expression#toString()
+	 */
+	public String toString() {
+		Expression expr = getSubExpressions()[0];
+		String s = "typeof(" + expr.toString() + ")";
+		return s;
+	}
+
+	public Expression copy() {
+		Expression[] copySubExpressions = copySubExpressions();
+		TYPEOF copy = new TYPEOF(copySubExpressions[0]);
+		return copy;
+	}
+	
 }

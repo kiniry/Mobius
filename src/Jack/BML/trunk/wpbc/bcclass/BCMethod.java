@@ -7,6 +7,7 @@
 package bcclass;
 import java.util.HashMap;
 
+
 import org.apache.bcel.generic.AALOAD;
 import org.apache.bcel.generic.AASTORE;
 import org.apache.bcel.generic.ANEWARRAY;
@@ -87,6 +88,7 @@ import org.apache.bcel.generic.InvokeInstruction;
 import org.apache.bcel.generic.JsrInstruction;
 import org.apache.bcel.generic.LALOAD;
 import org.apache.bcel.generic.LASTORE;
+import org.apache.bcel.generic.Type;
 
 import org.apache.bcel.generic.LDC;
 import org.apache.bcel.generic.LDC2_W;
@@ -110,9 +112,14 @@ import org.apache.bcel.generic.SIPUSH;
 import org.apache.bcel.generic.StackInstruction;
 import org.apache.bcel.generic.StoreInstruction;
 import org.apache.bcel.generic.TypedInstruction;
+
+import constants.BCConstantFieldRef;
 import utils.Util;
 import formula.Connector;
 import formula.Formula;
+import formula.atomic.Predicate;
+import formula.atomic.Predicate2Ar;
+import formula.atomic.PredicateSymbol;
 import bcclass.attributes.AssertTable;
 import bcclass.attributes.BCExceptionTable;
 import bcclass.attributes.ExceptionHandler;
@@ -120,9 +127,13 @@ import bcclass.attributes.ExsuresTable;
 import bcclass.attributes.Postcondition;
 import bcclass.attributes.Precondition;
 import bcexpression.Expression;
+import bcexpression.FieldAccessExpression;
+import bcexpression.LocalVariableAccess;
+import bcexpression.NumberLiteral;
 import bcexpression.javatype.JavaObjectType;
 
 import bcexpression.javatype.JavaType;
+import bcexpression.jml.RESULT;
 import bytecode.BCATHROW;
 import bytecode.BCInstruction;
 import bytecode.BCNOP;
@@ -211,21 +222,24 @@ public class BCMethod {
 	private Precondition precondition;
 	private Postcondition postcondition;
 	private AssertTable assertTable;
+	private Expression[] modifies;
+	private Formula proofObligation;
 	
-	
-	private Expression[] modified;
 	private BCLocalVariable[] localVariables;
 	private BCConstantPool constantPool;
 	//the constant pool added after to the class file ad an attribute
 	private BCConstantPool secondConstantPool;
 	
 	
+	private String signature;
+	private String[] argNames;
+	
+	
 	private JavaType returnType;	
 	private JavaType[] argTypes;
-	
 	private JavaObjectType[] exceptionsThrown;
 	private BCExceptionTable exceptionTable;
-	private Formula proofObligation;
+	
 	
 	/**
 	 * @param _mg
@@ -236,13 +250,12 @@ public class BCMethod {
 	 * @param _constantPool
 	 */
 	public BCMethod(MethodGen _mg, ConstantPoolGen _bcel_cp,
-			BCConstantPool _constantPool) {
-		
-		//initiliasition
-		setCode(code);
+			BCConstantPool _constantPool)  {
 		setLocalVariables(_mg.getLocalVariables());
 		setExceptionsThrown(_mg.getExceptions());
 		constantPool = _constantPool;
+		signature = _mg.getSignature();
+		Util.dump(" method signature " + signature);
 		code = BCMethod.wrapByteCode(_mg.getInstructionList(), _mg, _bcel_cp,
 				constantPool, localVariables);
 		exceptionTable = new BCExceptionTable(_mg.getExceptionHandlers());
@@ -252,21 +265,86 @@ public class BCMethod {
 		setPostcondition();
 		setPrecondition();
 		setExsures();
-	}
-	
-	private void setAssertTable( ) {
+		setModifies();
+		setInvariants();
+		setArgumentTypes( _mg.getArgumentTypes());
+		setReturnType(_mg.getReturnType());
 		
 	}
+	
+	/**
+	 * sets the invariants for the loops of this code 
+	 */
+	private void setInvariants() {
+		// TODO Auto-generated method stub
+	}
+
+	/**
+	 * sets the expressions that this method may modify
+	 */
+	private void setModifies() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/**
+	 * @param type
+	 */
+	private void setReturnType(Type _type) {
+		returnType =  JavaType.getJavaType( _type);	
+	}
+
+	/**
+	 * @param types
+	 */
+	private void setArgumentTypes(Type[] _types) {
+		if (_types == null) {
+			return;
+		}
+		if (_types.length == 0) {
+			return;
+		}
+		argTypes = new JavaType[_types.length];
+		for (int i= 0; i < _types.length; i++) {
+			JavaType type = JavaType.getJavaType( _types[i]);
+			argTypes[i] = type;  
+		}
+	}
+	
+	/**
+	 * @param exceptionsThrown The exceptionsThrown to set.
+	 */
+	public void setExceptionsThrown(String[] _exc ) {
+		exceptionsThrown = new JavaObjectType[_exc.length];
+		for (int i = 0; i <  _exc.length; i++) {
+			exceptionsThrown[i] = (JavaObjectType) JavaType.getJavaRefType( _exc[i]);
+		}
+	}
+	
+	private void setAssertTable( ) {	
+	}
+	
 	private void setPostcondition( ) {
-		
-	}
-	private void setPrecondition( ) {
-		
+//		postcondition = new Postcondition( new Predicate2Ar( Expression._RESULT, new NumberLiteral(2), PredicateSymbol.EQ));	
+		BCConstantFieldRef fieldRef =  (BCConstantFieldRef)constantPool.getConstant(41);
+//		*********************************** test for the method ***********************************
+//		/*
+//		   * @ensures result == j;
+//		   */ 
+//		public int TestReferenceSubstitution(A a) {
+//			a.j = 2;
+//			return a.j; 
+//		}
+		postcondition = new Postcondition( new Predicate2Ar( Expression._RESULT, new FieldAccessExpression(fieldRef,  new  LocalVariableAccess( 0) ), PredicateSymbol.EQ));	
 	}
 	
-	private void setExsures( ) {
-		
+	private void setPrecondition( ) {
+		precondition = new Precondition(Predicate._TRUE);
 	}
+	
+	private void setExsures( ) {	
+	}
+	
 	/**
 	 * @param gens
 	 */
@@ -331,12 +409,7 @@ public class BCMethod {
 	public Trace getTrace() {
 		return trace;
 	}
-	/**
-	 * @param codes
-	 */
-	public void setCode(BCInstruction[] codes) {
-		code = codes;
-	}
+
 	/**
 	 * @param formula
 	 */
@@ -368,9 +441,10 @@ public class BCMethod {
 		InstructionHandle[] _iharr = _il.getInstructionHandles();
 		BCInstruction[] _bc = new BCInstruction[_iharr.length];
 		Instruction instr;
+//		Util.dump( " ****************** wrapByteCode ************* " );
 		for (int i = 0; i < _iharr.length; i++) {
 			instr = _iharr[i].getInstruction();
-			Util.dump(" instruction type " + instr.getClass() );
+			Util.dump(instr.toString() );
 			if (instr instanceof ReturnInstruction) {
 				_bc[i] = new BCTypeRETURN(_iharr[i]);
 			} else if (instr instanceof RET) {
@@ -595,8 +669,8 @@ public class BCMethod {
 	/**
 	 * @return
 	 */
-	public Expression[] getModified() {
-		return modified;
+	public Expression[] getModifies() {
+		return modifies;
 	}
 	public int getNumberArguments() {
 		return 0;
@@ -616,18 +690,13 @@ public class BCMethod {
 		if (trace == null){
 			return ;
 		}
-		Formula  f = trace.wp();
-		f = new Formula( precondition.getPredicate(), f, Connector.IMPLIES) ;
+		//commented for test purposes
+		Formula  f = trace.wp(postcondition.getPredicate(), exsures); 
+		Util.dump(f.toString());
+		
+		f = Formula.getFormula( precondition.getPredicate(), f, Connector.IMPLIES) ;
 	}
-	/**
-	 * @param exceptionsThrown The exceptionsThrown to set.
-	 */
-	public void setExceptionsThrown(String[] _exc ) {
-		exceptionsThrown = new JavaObjectType[_exc.length];
-		for (int i = 0; i <  _exc.length; i++) {
-			exceptionsThrown[i] = (JavaObjectType) JavaType.getJavaRefType( _exc[i]);
-		}
-	}
+
 	
 	public ExceptionHandler[] getExceptionHandlers() {
 			return exceptionTable.getExcHandlers();

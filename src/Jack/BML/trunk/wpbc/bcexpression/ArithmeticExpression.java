@@ -16,35 +16,58 @@ import utils.Util;
  */
 public class ArithmeticExpression extends Expression {
 	private byte arithmetic_op;
-	
-	
-	public static ArithmeticExpression getArithmeticExpression(Expression _subExpr1, Expression _subExpr2, byte _op) {
-		ArithmeticExpression simplify = simplify(_subExpr1, _subExpr2, _op);
-		if ( simplify != null ) {
+
+	/**
+	 * outside from this class only this method may be called in order to get a new arithmetic expressions.
+	 * It simplifies the _subExpr1 and _subExpr2 and may not create a new instance of ArithmeticExpression class form them and the operation
+	 * op. If there is possible to execute an evaluation step then it does it
+	 * 
+	 * @param _subExpr1
+	 * @param _subExpr2
+	 * @param _op
+	 * @return
+	 */
+	public static Expression getArithmeticExpression(
+		Expression _subExpr1,
+		Expression _subExpr2,
+		byte _op) {
+		Expression simplify = simplify(_subExpr1, _subExpr2, _op);
+		if (simplify != null) {
 			return simplify;
-		} 
-		return new ArithmeticExpression(_subExpr1, _subExpr2,  _op);	
-	}
-	
-	public static ArithmeticExpression getArithmeticExpression(Expression _subExpr1 , byte _op) {
-		if (! (_subExpr1 instanceof ArithmeticExpression ) ) {
-			new ArithmeticExpression(_subExpr1, _op);	
 		}
-		ArithmeticExpression simplify = simplify((ArithmeticExpression)_subExpr1,  _op);
-		if ( simplify != null ) {
-			return simplify;
-		} 
-		return new ArithmeticExpression(_subExpr1, _op);	
+		return new ArithmeticExpression(_subExpr1, _subExpr2, _op);
 	}
-	
-	
+	/**
+	 * outside from this class only this method may be called in order to get a new arithmetic expressions.
+	 * It simplifies the _subExpr1 and may not create a new instance of ArithmeticExpression class
+	 *  
+	 * @param _subExpr1
+	 * @param _op
+	 * @return
+	 */
+	public static ArithmeticExpression getArithmeticExpression(
+		Expression _subExpr1,
+		byte _op) {
+		if (!(_subExpr1 instanceof ArithmeticExpression)) {
+			new ArithmeticExpression(_subExpr1, _op);
+		}
+		ArithmeticExpression simplify =
+			simplify((ArithmeticExpression) _subExpr1, _op);
+		if (simplify != null) {
+			return simplify;
+		}
+		return new ArithmeticExpression(_subExpr1, _op);
+	}
+
 	public ArithmeticExpression() {
 	}
-	private  ArithmeticExpression(Expression _subExpr1, Expression _subExpr2,
-			byte _arithmetic_op) {
+	private ArithmeticExpression(
+		Expression _subExpr1,
+		Expression _subExpr2,
+		byte _arithmetic_op) {
 
 		arithmetic_op = _arithmetic_op;
-		setSubExpressions(new Expression[]{_subExpr1, _subExpr2});
+		setSubExpressions(new Expression[] { _subExpr1, _subExpr2 });
 	}
 	/**
 	 * constructor for arithmetic expressions that contain only one
@@ -56,10 +79,9 @@ public class ArithmeticExpression extends Expression {
 	 */
 	private ArithmeticExpression(Expression _subExpr, byte _arithmetic_op) {
 		arithmetic_op = _arithmetic_op;
-		setSubExpressions(new Expression[]{_subExpr});
+		setSubExpressions(new Expression[] { _subExpr });
 	}
-	
-	
+
 	/**
 	 * simplify arithmetic expressions containing one subexpression _ called
 	 * from constructor ArithmeticExpression(Expression _subExpr, byte
@@ -79,7 +101,9 @@ public class ArithmeticExpression extends Expression {
 	 * the subexpressions that are semantically equiv to "op expr" either null
 	 * if no simplification occurred
 	 */
-	protected static ArithmeticExpression simplify(ArithmeticExpression expr, byte op) {
+	protected static ArithmeticExpression simplify(
+		ArithmeticExpression expr,
+		byte op) {
 		Vector r = null;
 		if (expr instanceof NumberLiteral) {
 			int v = ((NumberLiteral) expr).getLiteral();
@@ -99,7 +123,7 @@ public class ArithmeticExpression extends Expression {
 		}
 		// in case this expression is of the form -( a - b) ==> b - a
 		if ((expr.getArithmeticOperation() == ExpressionConstants.SUB)
-				&& (op == ExpressionConstants.SUB)) {
+			&& (op == ExpressionConstants.SUB)) {
 			r = new Vector();
 			Expression[] _aeSubExp = expr.getSubExpressions();
 			Expression[] _simplSubExp = new Expression[_aeSubExp.length];
@@ -121,31 +145,38 @@ public class ArithmeticExpression extends Expression {
 		//in case nothing is modified
 		return null;
 	}
-	
+
 	/**
 	 * @param l1
 	 * @param l2
 	 * @param op
 	 * @return
 	 */
-	protected static NumberLiteral simplify(NumberLiteral l1, NumberLiteral l2, byte op) {
+	protected static NumberLiteral simplify(
+		NumberLiteral l1,
+		NumberLiteral l2,
+		byte op) {
 		NumberLiteral l = eval(l1, l2, op);
 		return l;
 	}
-	
-	
-	private static ArithmeticExpression _simplifyAdditive(ArithmeticExpression expr1,
-			NumberLiteral expr2, byte op) {
+
+	private static Expression _simplifyAdditive(
+		ArithmeticExpression expr1,
+		NumberLiteral expr2,
+		byte op) {
 		//convert substraction to addition
+		if (expr2.getLiteral() == 0) {
+			return expr1;
+		}
 		if (expr1.getArithmeticOperation() == ExpressionConstants.SUB) {
 			expr1.setArithmetic_op(ExpressionConstants.ADD);
 			Expression[] sube = expr1.getSubExpressions();
 			if (sube[1] instanceof NumberLiteral) {
-				sube[1] = new NumberLiteral(-((NumberLiteral) sube[1])
-						.getLiteral());
+				sube[1] =
+					new NumberLiteral(- ((NumberLiteral) sube[1]).getLiteral());
 			} else {
-				sube[1] = new ArithmeticExpression(sube[1],
-						ExpressionConstants.SUB);
+				sube[1] =
+					new ArithmeticExpression(sube[1], ExpressionConstants.SUB);
 			}
 		}
 		// if the operation is not additive then return
@@ -157,125 +188,164 @@ public class ArithmeticExpression extends Expression {
 			return l;
 		}
 
-		ArithmeticExpression simpl1 = null;
-		ArithmeticExpression simpl2 = null;
-		
+		Expression simpl1 = null;
+		Expression simpl2 = null;
+
 		if (expr1.getSubExpressions()[0] instanceof ArithmeticExpression) {
 			Expression subExpr1Ofexpr1 = expr1.getSubExpressions()[1];
-			
+
 			//else try if the left subexpression is an aithlmetic
 			// expression to simplify it
-			simpl1 = simplify(((ArithmeticExpression) expr1.getSubExpressions()[0]), expr2, op);
+			simpl1 =
+				simplify(
+					((ArithmeticExpression) expr1.getSubExpressions()[0]),
+					expr2,
+					op);
 
-		} 
-		if (simpl1 != null  ) {
-			expr1.setSubExpressions(new Expression[]{simpl1, expr1.getSubExpressions()[1] } );
+		}
+		//start :new code
+		if ((simpl1 != null)
+			&& (simpl1 instanceof NumberLiteral)
+			&& (((NumberLiteral) simpl1).getLiteral() == 0)) {
+			return expr1.getSubExpressions()[1];
+		}
+		//end : new code
+
+		if (simpl1 != null) {
+			expr1.setSubExpressions(
+				new Expression[] { simpl1, expr1.getSubExpressions()[1] });
 			return expr1;
 		}
-		simpl2 = simplify(((ArithmeticExpression) expr1.getSubExpressions()[1]), expr2, op);
-		if ( simpl2 != null ) {
-			expr1.setSubExpressions(new Expression[]{ expr1.getSubExpressions()[0], simpl2 } );
+		simpl2 =
+			simplify(
+				((ArithmeticExpression) expr1.getSubExpressions()[1]),
+				expr2,
+				op);
+		//start :new code
+		if ((simpl2 != null)
+			&& (simpl2 instanceof NumberLiteral)
+			&& (((NumberLiteral) simpl2).getLiteral() == 0)) {
+			return  expr1.getSubExpressions()[0];
+		}
+		//end : new code
+		if (simpl2 != null) {
+			expr1.setSubExpressions(
+				new Expression[] { expr1.getSubExpressions()[0], simpl2 });
 			return expr1;
 		}
 		return null;
 	}
-	
-	
+
 	private static ArithmeticExpression _simplifyMultiplicative(
-			ArithmeticExpression expr1, NumberLiteral expr2, byte op) {
+		ArithmeticExpression expr1,
+		NumberLiteral expr2,
+		byte op) {
 		if (expr1 instanceof NumberLiteral) {
 			NumberLiteral l = eval((NumberLiteral) expr1, expr2, op);
 			return l;
 		}
 		if (expr1.getArithmeticOperation() == ExpressionConstants.MULT
-				|| expr1.getArithmeticOperation() == ExpressionConstants.DIV
-				|| expr1.getArithmeticOperation() == ExpressionConstants.REM) {
+			|| expr1.getArithmeticOperation() == ExpressionConstants.DIV
+			|| expr1.getArithmeticOperation() == ExpressionConstants.REM) {
 
-			Expression simpl1 = simplify(expr1.getSubExpressions()[0], expr2,
-					op);
+			Expression simpl1 =
+				simplify(expr1.getSubExpressions()[0], expr2, op);
 			Expression simpl2 = null;
 			if (simpl1 != null) {
-				expr1.setSubExpressions(new Expression[]{simpl1,
-						expr1.getSubExpressions()[1]});
+				expr1.setSubExpressions(
+					new Expression[] { simpl1, expr1.getSubExpressions()[1] });
 				return expr1;
-			} else if (expr1.getSubExpressions().length > 1 ){
-				simpl2 = simplify(expr1.getSubExpressions()[1] , expr2, op);
+			} else if (expr1.getSubExpressions().length > 1) {
+				simpl2 = simplify(expr1.getSubExpressions()[1], expr2, op);
 			}
 			if (simpl2 != null) {
-				expr1.setSubExpressions(new Expression[]{
-						expr1.getSubExpressions()[0], simpl2});
+				expr1.setSubExpressions(
+					new Expression[] { expr1.getSubExpressions()[0], simpl2 });
 				return expr1;
 			}
 			return null;
 		}
 		if (expr1.getArithmeticOperation() == ExpressionConstants.ADD
-				|| expr1.getArithmeticOperation() == ExpressionConstants.SUB) {
+			|| expr1.getArithmeticOperation() == ExpressionConstants.SUB) {
 			//arithmetic_op = expr1.getArithmeticOperation();
-			ArithmeticExpression simpl1 = simplify(
-					expr1.getSubExpressions()[0], expr2, op);
-			ArithmeticExpression simpl2 = null;
-			if (expr1.getSubExpressions().length > 1 ) {
-				simpl2 = simplify(
-					expr1.getSubExpressions()[1], expr2, op);
+			Expression simpl1 =
+				simplify(expr1.getSubExpressions()[0], expr2, op);
+			Expression simpl2 = null;
+			if (expr1.getSubExpressions().length > 1) {
+				simpl2 = simplify(expr1.getSubExpressions()[1], expr2, op);
 			}
 			if ((simpl1 == null) && (simpl2 == null)) {
 				return null;
 			}
-			if ((simpl1 != null) && (simpl2 != null)) { 
-				expr1.setSubExpressions(new Expression[]{simpl1, simpl2});
+			if ((simpl1 != null) && (simpl2 != null)) {
+				expr1.setSubExpressions(new Expression[] { simpl1, simpl2 });
 				return expr1;
 			}
 			//in case that the simplification occurred only in the left part
 			// modify the right part as miltiplicative operations are
 			// distributive over
 			// additives
-			if ((simpl1 != null) && (simpl2 == null) && (expr1.getSubExpressions().length > 1 )) {
+			if ((simpl1 != null)
+				&& (simpl2 == null)
+				&& (expr1.getSubExpressions().length > 1)) {
 				simpl2 = new ArithmeticExpression();
-				simpl2.setSubExpressions(new Expression[]{
-						expr1.getSubExpressions()[1], expr2});
-				simpl2.setArithmetic_op(op);
-				expr1.setSubExpressions(new Expression[]{simpl1, simpl2});
+				simpl2.setSubExpressions(
+					new Expression[] { expr1.getSubExpressions()[1], expr2 });
+				((ArithmeticExpression)simpl2).setArithmetic_op(op);
+				expr1.setSubExpressions(new Expression[] { simpl1, simpl2 });
 				return expr1;
 			}
 			if ((simpl1 == null) && (simpl2 != null)) {
 				simpl1 = new ArithmeticExpression();
-				simpl1.setSubExpressions(new Expression[]{
-						expr1.getSubExpressions()[0], expr2});
-				simpl1.setArithmetic_op(op);
-				expr1.setSubExpressions(new Expression[]{simpl1, simpl2});
+				simpl1.setSubExpressions(
+					new Expression[] { expr1.getSubExpressions()[0], expr2 });
+				((ArithmeticExpression)simpl1).setArithmetic_op(op);
+				expr1.setSubExpressions(new Expression[] { simpl1, simpl2 });
 				return expr1;
 			}
-			
+
 		}
 		return null;
 	}
-	
-	public static ArithmeticExpression simplify( Expression expr1, Expression expr2, byte op ) {
-		if ((expr1 instanceof NumberLiteral) && (expr2 instanceof NumberLiteral)  ) {
-			return simplify( (NumberLiteral)expr1,(NumberLiteral)expr2, op);
-		} 
-		if ((expr1 instanceof ArithmeticExpression) && (expr2 instanceof NumberLiteral) &&
-				( op == ExpressionConstants.MULT || op == ExpressionConstants.DIV || op == ExpressionConstants.REM ) ) {
-			return _simplifyMultiplicative( (ArithmeticExpression)expr1,(NumberLiteral)expr2, op);
+
+	public static Expression simplify(
+		Expression expr1,
+		Expression expr2,
+		byte op) {
+		if ((expr1 instanceof NumberLiteral)
+			&& (expr2 instanceof NumberLiteral)) {
+			return simplify((NumberLiteral) expr1, (NumberLiteral) expr2, op);
 		}
-		
-		if ((expr1 instanceof ArithmeticExpression) && (expr2 instanceof NumberLiteral) && 
-				( op == ExpressionConstants.ADD || op == ExpressionConstants.SUB ) ) {
-			return _simplifyAdditive( (ArithmeticExpression)expr1,(NumberLiteral)expr2, op);
+		if ((expr1 instanceof ArithmeticExpression)
+			&& (expr2 instanceof NumberLiteral)
+			&& (op == ExpressionConstants.MULT
+				|| op == ExpressionConstants.DIV
+				|| op == ExpressionConstants.REM)) {
+			return _simplifyMultiplicative(
+				(ArithmeticExpression) expr1,
+				(NumberLiteral) expr2,
+				op);
+		}
+
+		if ((expr1 instanceof ArithmeticExpression)
+			&& (expr2 instanceof NumberLiteral)
+			&& (op == ExpressionConstants.ADD || op == ExpressionConstants.SUB)) {
+			return _simplifyAdditive(
+				(ArithmeticExpression) expr1,
+				(NumberLiteral) expr2,
+				op);
 		}
 		return null;
-	}	
-	
-	
-	
-	/*	*//**
-				  * simplifies the arithmetic expression
-				  * 
-				  * example : ( a +1) -2 = a -1
-				  * 
-				  * @param expr1
-				  * @param expr2
-				  */
+	}
+
+	/*	*/ /**
+						  * simplifies the arithmetic expression
+						  * 
+						  * example : ( a +1) -2 = a -1
+						  * 
+						  * @param expr1
+						  * @param expr2
+						  */
 	/*
 	 * protected ArithmeticExpression simplify(ArithmeticExpression expr1,
 	 * NumberLiteral expr2, byte op) { boolean simplified = false; //if the
@@ -302,7 +372,10 @@ public class ArithmeticExpression extends Expression {
 	 * @param b
 	 * @return
 	 */
-	public static NumberLiteral eval(NumberLiteral l1, NumberLiteral l2, byte op) {
+	public static NumberLiteral eval(
+		NumberLiteral l1,
+		NumberLiteral l2,
+		byte op) {
 		int v1 = l1.getLiteral();
 		int v2 = l2.getLiteral();
 		int r = 0;
@@ -347,25 +420,34 @@ public class ArithmeticExpression extends Expression {
 	 * @see bcexpression.Expression#equals(bcexpression.Expression)
 	 */
 	public boolean equals(Expression _expr) {
-		if (!(_expr instanceof ArithmeticExpression)) {
+		//		if (!(_expr instanceof ArithmeticExpression)) {
+		//			return false;
+		//		}
+		//		ArithmeticExpression arithExpr = (ArithmeticExpression) _expr;
+		//		if (arithExpr.getArithmeticOperation() != getArithmeticOperation()) {
+		//			return false;
+		//		}
+		//		//test if the subexpressions are equal
+		//		boolean subExprEquals = true;
+		//		Expression[] subEofThis = getSubExpressions();
+		//		Expression[] subEofExpr = arithExpr.getSubExpressions();
+		//		for (int i = 0; i < subEofThis.length; i++) {
+		//			subExprEquals = subExprEquals
+		//					&& subEofThis[i].equals(subEofExpr[i]);
+		//		}
+		//		return subExprEquals;
+		boolean equals = super.equals(_expr);
+		if (!equals) {
 			return false;
 		}
 		ArithmeticExpression arithExpr = (ArithmeticExpression) _expr;
-		if (arithExpr.getArithmeticOperation() != getArithmeticOperation()) {
-			return false;
+		if (arithmetic_op == arithExpr.getArithmeticOperation()) {
+			return true;
 		}
-		//test if the subexpressions are equal
-		boolean subExprEquals = true;
-		Expression[] subEofThis = getSubExpressions();
-		Expression[] subEofExpr = arithExpr.getSubExpressions();
-		for (int i = 0; i < subEofThis.length; i++) {
-			subExprEquals = subExprEquals
-					&& subEofThis[i].equals(subEofExpr[i]);
-		}
-		return subExprEquals;
+		return false;
+
 	}
-	
-	
+
 	/**
 	 * substitute the subexpression (if there are ) equal to _e1 with _e2
 	 * 
@@ -374,17 +456,47 @@ public class ArithmeticExpression extends Expression {
 	 * @return - this object with the substitutions made
 	 */
 	public Expression substitute(Expression _e1, Expression _e2) {
+//		Util.dump("*********************************************************");
+//		Util.dump(
+//			"ArithemticExpression.substitute in  "
+//				+ toString()
+//				+ "["
+//				+ _e1.toString()
+//				+ "<-"
+//				+ _e2.toString()
+//				+ "]");
 		if (this.equals(_e1)) {
+//			Util.dump(
+//				"after substitute   "
+//					+ toString()
+//					+ "["
+//					+ _e1.toString()
+//					+ "<-"
+//					+ _e2.toString()
+//					+ "] = "
+//					+ toString());
+
 			return _e2;
 		}
 		Expression[] subExpr = getSubExpressions();
+		Expression[] subExpr1 = new Expression[subExpr.length];
 		for (int i = 0; i < subExpr.length; i++) {
-			subExpr[i] = subExpr[i].substitute(_e1, _e2);
+			Util.dump(subExpr[i].toString());
+			subExpr1[i] = subExpr[i].substitute(_e1, _e2.copy());
 		}
-		return this;
+
+		setSubExpressions(subExpr1);
+		//if it can be evaluated then evaluate itS
+		Expression simplify =
+			simplify(
+				getSubExpressions()[0],
+				getSubExpressions()[1],
+				arithmetic_op);
+//		Util.dump("after substitute   " + simplify.toString());
+//		Util.dump("*********************************************************");
+		return simplify;
 	}
-	
-	
+
 	/**
 	 * @param arithmetic_op
 	 *            The arithmetic_op to set.
@@ -416,35 +528,67 @@ public class ArithmeticExpression extends Expression {
 			return "(" + subExpr[0] + op + subExpr[1] + ")";
 		}
 	}
-	
-	
+
 	public static void main(String[] args) {
+		//		(counter + 1)[counter<-(counter + 1)]
+		ArithmeticExpression count_plus_1 =
+			new ArithmeticExpression(
+				Expression.COUNTER,
+				new NumberLiteral(1),
+				ExpressionConstants.ADD);
+		Expression subst =
+			count_plus_1.substitute(
+				Expression.COUNTER,
+				new ArithmeticExpression(
+					Expression.COUNTER,
+					new NumberLiteral(1),
+					ExpressionConstants.ADD));
+		Util.dump(" count _plus_1" + count_plus_1.toString());
+		Util.dump("substitute " + subst.toString());
+	}
+
+	public static void main1(String[] args) {
 		NumberLiteral _1 = new NumberLiteral(1);
 		NumberLiteral _2 = new NumberLiteral(2);
-		ArithmeticExpression _counter_minus_1 = getArithmeticExpression(_1,
-				Expression.COUNTER, ExpressionConstants.SUB);
-		
-		ArithmeticExpression.dump(" 1 - counter : " + _counter_minus_1.toString());
-		
+		ArithmeticExpression _counter_minus_1 =
+			(ArithmeticExpression)getArithmeticExpression(
+				_1,
+				Expression.COUNTER,
+				ExpressionConstants.SUB);
 
-		ArithmeticExpression _2_minus_counter = getArithmeticExpression(
-				_counter_minus_1, new NumberLiteral(3), ExpressionConstants.SUB);
-		
-		ArithmeticExpression.dump("-2 + (- counter) :  " + _2_minus_counter.toString());
-		
-		ArithmeticExpression a1= getArithmeticExpression(
-				_2_minus_counter, new NumberLiteral(5), ExpressionConstants.MULT);
-		ArithmeticExpression.dump("-10 + ( (-counter)*5) :  " +  a1.toString());
-		
-		ArithmeticExpression a2 = getArithmeticExpression(
-				a1, new NumberLiteral(2), ExpressionConstants.MULT);
-		ArithmeticExpression.dump("-20 + ( (-counter)*10) :  " +  a2.toString());
-		
-		ArithmeticExpression a3 = getArithmeticExpression(
-				a2, new NumberLiteral(2), ExpressionConstants.DIV);
-		ArithmeticExpression.dump("-20 + ( (-counter)*10) :  " +  a2.toString());
-		
-		
+		ArithmeticExpression.dump(
+			" 1 - counter : " + _counter_minus_1.toString());
+
+		ArithmeticExpression _2_minus_counter =
+			(ArithmeticExpression)getArithmeticExpression(
+				_counter_minus_1,
+				new NumberLiteral(3),
+				ExpressionConstants.SUB);
+
+		ArithmeticExpression.dump(
+			"-2 + (- counter) :  " + _2_minus_counter.toString());
+
+		ArithmeticExpression a1 =
+			(ArithmeticExpression)getArithmeticExpression(
+				_2_minus_counter,
+				new NumberLiteral(5),
+				ExpressionConstants.MULT);
+		ArithmeticExpression.dump("-10 + ( (-counter)*5) :  " + a1.toString());
+
+		ArithmeticExpression a2 =
+			(ArithmeticExpression)getArithmeticExpression(
+				a1,
+				new NumberLiteral(2),
+				ExpressionConstants.MULT);
+		ArithmeticExpression.dump("-20 + ( (-counter)*10) :  " + a2.toString());
+
+		ArithmeticExpression a3 =
+			(ArithmeticExpression)getArithmeticExpression(
+				a2,
+				new NumberLiteral(2),
+				ExpressionConstants.DIV);
+		ArithmeticExpression.dump("-20 + ( (-counter)*10) :  " + a2.toString());
+
 		/*
 		 * ArithmeticExpression twicecounter_minus_4_plus1 = new
 		 * ArithmeticExpression( twicecounter_minus_4, new NumberLiteral(1),
@@ -465,4 +609,23 @@ public class ArithmeticExpression extends Expression {
 			System.out.println(str);
 		}
 	}
+
+	/* (non-Javadoc)
+	 * @see bcexpression.Expression#copy()
+	 */
+	public Expression copy() {
+		Expression[] copySubExpr = copySubExpressions();
+		ArithmeticExpression copy = null;
+		if (copySubExpr.length == 1) {
+			copy = new ArithmeticExpression(copySubExpr[0], arithmetic_op);
+		} else {
+			copy =
+				new ArithmeticExpression(
+					copySubExpr[0],
+					copySubExpr[1],
+					arithmetic_op);
+		}
+		return copy;
+	}
+
 }

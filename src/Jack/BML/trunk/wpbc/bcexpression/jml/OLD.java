@@ -10,17 +10,16 @@ import type.BCType;
 import bcexpression.Expression;
 import bcexpression.javatype.JavaType;
 
-
 /**
  * @author io
  *
  * To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
-public class OLD extends JMLExpression  {
-	
-	private JavaType type ;
-	
+public class OLD extends JMLExpression {
+
+	private JavaType type;
+
 	public OLD(Expression _left) {
 		super(_left);
 	}
@@ -29,7 +28,7 @@ public class OLD extends JMLExpression  {
 	 * @see bcexpression.Expression#setType()
 	 */
 	public void setType() {
-		type = (JavaType) ((Expression)getSubExpressions()[0]).getType();
+		type = (JavaType) ((Expression) getSubExpressions()[0]).getType();
 	}
 
 	/* (non-Javadoc)
@@ -42,8 +41,6 @@ public class OLD extends JMLExpression  {
 		return type;
 	}
 
-
-
 	/* (non-Javadoc)
 	 * @see bcexpression.Expression#substitute(bcexpression.Expression, bcexpression.Expression)
 	 */
@@ -52,9 +49,25 @@ public class OLD extends JMLExpression  {
 			return _e2;
 		}
 		Expression[] subExpr = getSubExpressions();
-		subExpr[0] = subExpr[0].substitute( _e1, _e2);
+		subExpr[0] = subExpr[0].substitute(_e1, _e2);
 		return this;
 	}
-	
-	
+
+	/* (non-Javadoc)
+	 * @see bcexpression.Expression#toString()
+	 */
+	public String toString() {
+		Expression expr = getSubExpressions()[0];
+		String s = "old(" + expr.toString() + ")";
+		return s;
+	}
+
+	/* (non-Javadoc)
+	 * @see bcexpression.Expression#copy()
+	 */
+	public Expression copy() {
+		Expression[] copySubExpressions = copySubExpressions();
+		OLD copy = new OLD(copySubExpressions[0]);
+		return copy;
+	}
 }

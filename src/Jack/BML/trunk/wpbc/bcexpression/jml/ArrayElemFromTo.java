@@ -8,7 +8,7 @@ package bcexpression.jml;
 
 import type.BCType;
 import bcexpression.Expression;
-import constants.BCConstantFieldRef;
+
 
 /**
  * @author io
@@ -79,6 +79,14 @@ public class ArrayElemFromTo extends JMLExpression {
 	 * @see bcexpression.Expression#substitute(bcexpression.Expression, bcexpression.Expression)
 	 */
 	public Expression substitute(Expression _e1, Expression _e2) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see bcexpression.Expression#toString()
+	 */
+	public String toString() {
 		// TODO Auto-generated method stub
 		return null;
 	}

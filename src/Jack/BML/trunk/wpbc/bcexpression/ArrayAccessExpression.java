@@ -62,4 +62,25 @@ public class ArrayAccessExpression extends Expression {
 		}
 		return this;
 	}
+
+
+	/* (non-Javadoc)
+	 * @see bcexpression.Expression#toString()
+	 */
+	public String toString() {
+		String s ;
+		Expression[] subExpr = getSubExpressions();
+		s = subExpr[0] + "[" + subExpr[1] + "]";
+		return s;
+	}
+
+
+	/* (non-Javadoc)
+	 * @see bcexpression.Expression#copy()
+	 */
+	public Expression copy() {
+		Expression[] copySubExpr = copySubExpressions();
+		ArrayAccessExpression copy = new ArrayAccessExpression(copySubExpr[0], copySubExpr[1] );
+		return copy;
+	}
 }

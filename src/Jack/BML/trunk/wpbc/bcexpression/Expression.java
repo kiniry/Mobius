@@ -5,6 +5,7 @@
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
 package bcexpression;
+import bcexpression.jml.RESULT;
 import bcexpression.vm.Counter;
 import type.BCType;
 /**
@@ -16,19 +17,21 @@ import type.BCType;
 public abstract class Expression implements Cloneable {
 	private Expression[] subExpressions;
 	public static final Counter COUNTER = Counter.getCounter();
-	public static final ArithmeticExpression COUNTER_PLUS_2 = ArithmeticExpression.getArithmeticExpression(
+	public static final ArithmeticExpression COUNTER_PLUS_2 = (ArithmeticExpression)ArithmeticExpression.getArithmeticExpression(
 			COUNTER, new NumberLiteral(2), ExpressionConstants.ADD);
-	public static final ArithmeticExpression COUNTER_PLUS_1 = ArithmeticExpression.getArithmeticExpression(
+	public static final ArithmeticExpression COUNTER_PLUS_1 = (ArithmeticExpression)ArithmeticExpression.getArithmeticExpression(
 			COUNTER, new NumberLiteral(1), ExpressionConstants.ADD);
-	public static final ArithmeticExpression COUNTER_MINUS_1 = ArithmeticExpression.getArithmeticExpression(
+	public static final ArithmeticExpression COUNTER_MINUS_1 = (ArithmeticExpression)ArithmeticExpression.getArithmeticExpression(
 			COUNTER, new NumberLiteral(1), ExpressionConstants.SUB);
-	public static final ArithmeticExpression COUNTER_MINUS_2 = ArithmeticExpression.getArithmeticExpression(
+	public static final ArithmeticExpression COUNTER_MINUS_2 = (ArithmeticExpression)ArithmeticExpression.getArithmeticExpression(
 			COUNTER, new NumberLiteral(2), ExpressionConstants.SUB);
-	public static final ArithmeticExpression COUNTER_MINUS_3 = ArithmeticExpression.getArithmeticExpression(
+	public static final ArithmeticExpression COUNTER_MINUS_3 = (ArithmeticExpression)ArithmeticExpression.getArithmeticExpression(
 			COUNTER, new NumberLiteral(3), ExpressionConstants.SUB);
-	public static final ArithmeticExpression COUNTER_MINUS_4 = ArithmeticExpression.getArithmeticExpression(
+	public static final ArithmeticExpression COUNTER_MINUS_4 = (ArithmeticExpression)ArithmeticExpression.getArithmeticExpression(
 			COUNTER, new NumberLiteral(4), ExpressionConstants.SUB);
-	public static final NULL NULL = new NULL();
+	public static final NULL _NULL = NULL.getNULL();
+	
+	public static final RESULT _RESULT = RESULT.getResult();
 	protected Expression() {
 	}
 	public Expression(Expression _subExpr) {
@@ -59,6 +62,8 @@ public abstract class Expression implements Cloneable {
 	protected void setSubExpressions(Expression[] subExpressions) {
 		this.subExpressions = subExpressions;
 	}
+	
+	
 	/**
 	 * substitute the subexpression (if there are ) equal to _e1 with _e2
 	 * 
@@ -68,10 +73,9 @@ public abstract class Expression implements Cloneable {
 	 */
 	public abstract Expression substitute(Expression _e1, Expression _e2);
 	public abstract BCType getType();
+	public abstract String toString();
 	
-	public String toString() {
-		return null;
-	}
+	
 	/**
 	 * two expressions are equals if they are from the same type and if they
 	 * have the same number of subexpressions and they are equals.
@@ -105,9 +109,22 @@ public abstract class Expression implements Cloneable {
 		}
 		return subExprEquals;
 	}
-	public Expression copy() {
-		Expression copy = null;
-		return copy;
+	
+	public Expression[] copySubExpressions() {
+		if (subExpressions == null) {
+			return null;
+		}
+		if (subExpressions.length == 0) {
+			return null;
+		}
+		Expression[] copySubExpr = new Expression[subExpressions.length];
+		for (int i = 0; i <  copySubExpr.length; i++){
+			copySubExpr[i] = subExpressions[i].copy();
+		}  
+		return copySubExpr;
 	}
+	
+	
+	public abstract Expression copy() ;
 	
 }

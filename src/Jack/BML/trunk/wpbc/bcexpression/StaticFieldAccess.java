@@ -5,7 +5,7 @@
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 package bcexpression;
-import java.util.Vector;
+
 import bcexpression.javatype.JavaReferenceType;
 import bcexpression.javatype.JavaType;
 import type.BCType;
@@ -19,14 +19,11 @@ import constants.BCConstantFieldRef;
  */
 public class StaticFieldAccess extends Expression {
 	private BCConstantFieldRef constantStaticFieldRef;
-	//in case the static field is accessed directly from the class
-	//the expression may represent either an object of type that has this
-	// static
-	//field either a java class
 	private BCConstantClass clazz;
-	private Vector with;
-	public StaticFieldAccess(BCConstantFieldRef _constantFieldRef,
-			BCConstantClass _clazz) {
+
+	public StaticFieldAccess(
+		BCConstantFieldRef _constantFieldRef,
+		BCConstantClass _clazz) {
 		constantStaticFieldRef = _constantFieldRef;
 		clazz = _clazz;
 	}
@@ -59,9 +56,10 @@ public class StaticFieldAccess extends Expression {
 		if (clazz != fAccess.getClazz()) {
 			return false;
 		}
-		BCConstantFieldRef _constantFieldRef = fAccess
-				.getConstantStaticFieldRef();
-		equals = equals
+		BCConstantFieldRef _constantFieldRef =
+			fAccess.getConstantStaticFieldRef();
+		equals =
+			equals
 				&& (_constantFieldRef == constantStaticFieldRef ? true : false);
 		return equals;
 	}
@@ -77,11 +75,13 @@ public class StaticFieldAccess extends Expression {
 		}
 		if (_e1 instanceof StaticFieldAccess) {
 			StaticFieldAccess sfa = (StaticFieldAccess) _e1;
-			if (sfa.getConstantStaticFieldRef().equals(constantStaticFieldRef)) {
-				JavaReferenceType _type_this = JavaType.getJavaRefType(clazz
-						.getName());
-				JavaReferenceType _type_e1 = JavaType.getJavaRefType(sfa
-						.getClazz().getName());
+			if (sfa
+				.getConstantStaticFieldRef()
+				.equals(constantStaticFieldRef)) {
+				JavaReferenceType _type_this =
+					JavaType.getJavaRefType(clazz.getName());
+				JavaReferenceType _type_e1 =
+					JavaType.getJavaRefType(sfa.getClazz().getName());
 				if (JavaType.subType(_type_this, _type_e1)) {
 					return _e2;
 				}
@@ -94,5 +94,22 @@ public class StaticFieldAccess extends Expression {
 	 */
 	public BCConstantClass getClazz() {
 		return clazz;
+	}
+	/* (non-Javadoc)
+	 * @see bcexpression.Expression#toString()
+	 */
+	public String toString() {
+		String s = "" + constantStaticFieldRef.getCPIndex();
+		String className = clazz.getName();
+		s = s + "(" + className + ")";
+		return s;
+	}
+	/* (non-Javadoc)
+	 * @see bcexpression.Expression#copy()
+	 */
+	public Expression copy() {
+		StaticFieldAccess copy =
+			new StaticFieldAccess(constantStaticFieldRef, clazz);
+		return copy;
 	}
 }

@@ -31,9 +31,7 @@ public class NumberLiteral extends ArithmeticExpression {
 		this(_literal, JavaType.JavaINT);
 	}
 
-
-	/**
-	 * 
+	/** 
 	 * @param value - a correct value
 	 * @param radix - the radix in which the value is interpreted
 	 */
@@ -87,4 +85,7 @@ public class NumberLiteral extends ArithmeticExpression {
 		return this;
 	}
 	
+	public Expression copy() {
+		return this;
+	}
 }

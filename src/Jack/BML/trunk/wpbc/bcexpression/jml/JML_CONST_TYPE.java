@@ -38,4 +38,18 @@ public class JML_CONST_TYPE extends JMLExpression implements BCType  {
 	public Expression substitute(Expression _e1 , Expression _e2) { 
 		return this;
 	}
+
+	/* (non-Javadoc)
+	 * @see bcexpression.Expression#toString()
+	 */
+	public String toString() {
+		return "TYPE";
+	}
+
+	/* (non-Javadoc)
+	 * @see bcexpression.Expression#copy()
+	 */
+	public Expression copy() {
+		return this;
+	}
 }

@@ -6,8 +6,7 @@
  */
 package bcclass;
 
-import java.util.Collection;
-import java.util.Enumeration;
+
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -40,6 +39,11 @@ public class BCClass {
 	private BCConstantPool secondConstantPool;;
 	
 	
+	private BCClass superClass;
+	
+	private HashMap interfaces;
+	
+	
 	public BCClass( JavaClass _clazz)  {
 		className = _clazz.getClassName();
 		ConstantPoolGen cpg = new ConstantPoolGen(_clazz.getConstantPool());
@@ -48,12 +52,42 @@ public class BCClass {
 		initMethods(methods, cpg);
 	}
 	
+	
+	//sets the super class of this class
+	private void setSuperClass(  JavaClass _clazz ) {
+	
+	}
+	
+	//sets the interfaces implemented by this class
+	private void setInterfaces(  JavaClass _clazz ) {
+	
+	}
 
 	/**
 	 * @return an object that represents constant pool of the class
 	 */
 	public BCConstantPool getConstantPool() {
 		return constantPool;
+	}
+	
+	/**
+	 * NB :  if a method with this signature is not found then may be an exception must be thrown 
+	 * @param signature
+	 * @return
+	 */
+	public BCMethod lookupMethod( String signature ) {
+		
+		BCMethod m = null;
+		m = getMethod(signature);
+		if ( m != null) {
+			return m;
+		}
+		
+		m = superClass.lookupMethod(signature);
+		if ( m != null) {
+			return m;
+		}
+		return m;
 	}
 
 	/**
@@ -88,8 +122,8 @@ public class BCClass {
 	private void initMethods(Method[] _methods, ConstantPoolGen cp)  {
 		methods = new HashMap();
 	//	for (int i = 0; i < _methods.length; i++)  {
-			MethodGen mg = new MethodGen(_methods[3], className, cp);
-			Util.dump("methodName "  + mg.getName());
+			MethodGen mg = new MethodGen(_methods[2], className, cp);
+			Util.dump("methodName ---   "  + mg.getName() + "   ---");
 			BCMethod bcm = new BCMethod( mg, cp, constantPool) ;
 			bcm.initTrace();
 			methods.put(mg.getSignature(), bcm);
@@ -103,7 +137,7 @@ public class BCClass {
 		fields = new HashMap();
 		for (int i = 0; i < _fields.length; i++)  {
 					
-		
+		//
 		}
 	}
 	

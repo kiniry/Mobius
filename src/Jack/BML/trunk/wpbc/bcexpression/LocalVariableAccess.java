@@ -6,11 +6,7 @@
  */
 package bcexpression;
 
-import java.util.Vector;
-
 import type.BCType;
-
-import bcexpression.javatype.JavaType;
 
 /**
  * @author io
@@ -19,14 +15,14 @@ import bcexpression.javatype.JavaType;
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
 public class LocalVariableAccess extends Expression  {
-	private int index_of_localVariable;
+	private int localVariableIndex;
 	//private int local_index;
 	
-	private Vector with;
+//	private Vector with;
 	
 
 	public LocalVariableAccess(int _index_of_localVariable) {
-		index_of_localVariable = _index_of_localVariable;
+		localVariableIndex = _index_of_localVariable;
 	}
 
 
@@ -56,22 +52,39 @@ public class LocalVariableAccess extends Expression  {
 	}
 	
 	/**
-	 * if this == _e1 ==> this[ this<-- _e2] 
-	 *    else this
+	 * if this == _e1 then  _e2   else this
 	 */ 
 	public Expression substitute(Expression _e1 , Expression _e2) {
-		if (this.equals( _e1)) {
-			return _e2;
-		}
-		if ( JavaType.subType((JavaType) _e1.getType(),(JavaType)getType() )) {
-			WITH with = new WITH( _e1, _e2);
-		}
-		return this;
+			if (this.equals( _e1)) {
+				return _e2;
+			}
+			return this;
 	}
+	
 	/**
 	 * @return Returns the index_of_localVariable.
 	 */
 	public int getIndex() {
-		return index_of_localVariable;
+		return localVariableIndex;
+	}
+
+	/* (non-Javadoc)
+	 * @see bcexpression.Expression#toString()
+	 */
+	public String toString() {
+		String s = "local(" +  localVariableIndex + ")";
+		return s;
+	}
+
+
+	/* (non-Javadoc)
+	 * @see bcexpression.Expression#copy()
+	 */
+	 /**
+	  * an instance of a local variable cannot be copied. teh methopd    
+	  * returns the same instance
+	  */
+	public Expression copy() {
+		return this;
 	}
 }

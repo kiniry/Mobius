@@ -2,6 +2,7 @@ package bcclass.attributes;
 import java.util.HashMap;
 
 import formula.Formula;
+import formula.atomic.Predicate;
 /**
  * @author Mariela
  * 
@@ -26,8 +27,9 @@ public class ExsuresTable implements BCAttribute {
 	
 	public Formula getExcPostconditionFor(String exc_class_name) {
 		Exsures exs;
+		//if for this exception thrown no postcondition is specified, the default one is returned - TRUE
 		if( ( exs = (Exsures)excPostcondition.get(exc_class_name)) == null) {
-			return null;
+			return Predicate._TRUE;
 		}
 		return exs.getPredicate();
 		

@@ -70,4 +70,27 @@ public class BitExpression extends Expression {
 		}
 		return this;
 	}
+	/* (non-Javadoc)
+	 * @see bcexpression.Expression#toString()
+	 */
+	public String toString() {
+		String op = null;
+		switch ( bitwise_op ) {
+		
+		case ExpressionConstants.BITWISEAND  : { op = "&" ; break;}
+		case ExpressionConstants.BITWISEOR :    { op = "|" ; break;}
+		case ExpressionConstants.BITWISEXOR :    { op = "xor" ; break;}
+		}
+		Expression[] subExp = getSubExpressions();
+		String s = subExp[0] + op + subExp[1];
+		return s;
+	}
+	/* (non-Javadoc)
+	 * @see bcexpression.Expression#copy()
+	 */
+	public Expression copy() {
+		Expression[] copySubExpr = copySubExpressions();
+		BitExpression copy = new BitExpression(copySubExpr[0], copySubExpr[1], bitwise_op );
+		return copy;
+	}
 }

@@ -6,10 +6,8 @@ package bcexpression.javatype;
 
 import java.util.HashMap;
 
-import org.apache.bcel.classfile.ConstantClass;
-
 import org.apache.bcel.generic.ArrayType;
-import org.apache.bcel.generic.ConstantPoolGen;
+
 import org.apache.bcel.generic.ObjectType;
 import org.apache.bcel.generic.Type;
 
@@ -19,7 +17,7 @@ import bcexpression.Expression;
 import bcexpression.NumberLiteral;
 import bcexpression.jml.JML_CONST_TYPE;
 import type.BCType;
-import utils.Util;
+
 
 /**
  * @author io
@@ -250,6 +248,21 @@ public class JavaType extends Expression implements BCType {
 	}
 	
 	public Expression substitute(Expression _e1 , Expression _e2) { 
+		return this;
+	}
+
+	/* (non-Javadoc)
+	 * @see bcexpression.Expression#toString()
+	 */
+	public String toString() {
+		
+		return getSignature();
+	}
+
+	/* (non-Javadoc)
+	 * @see bcexpression.Expression#copy()
+	 */
+	public Expression copy() {
 		return this;
 	}
 	

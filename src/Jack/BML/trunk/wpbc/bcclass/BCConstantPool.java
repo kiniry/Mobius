@@ -19,6 +19,7 @@ import org.apache.bcel.classfile.ConstantString;
 import org.apache.bcel.classfile.ConstantUtf8;
 import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.Type;
+import utils.Util;
 
 import bcexpression.javatype.JavaType;
 
@@ -49,8 +50,8 @@ public class BCConstantPool {
 	private void init( ConstantPoolGen _cpg) {
 		constants = new HashMap();
 		size = _cpg.getSize();
-		for(int i = 1; i <= size ;  i++) {
-			
+		for(int i = 1; i < size ;  i++) {
+//			Util.dump( " cp constant at "+ i + "is " +  _cpg.getConstant(i).toString() );
 			if (_cpg.getConstant(i) instanceof ConstantString  ) {
 				ConstantString constant = ( ConstantString)_cpg.getConstant(i);
 				String value = (String) constant.getConstantValue(_cpg.getConstantPool());

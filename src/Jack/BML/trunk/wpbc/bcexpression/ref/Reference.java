@@ -12,7 +12,6 @@ import java.util.Vector;
 
 import type.BCType;
 import bcexpression.Expression;
-import bcexpression.WITH;
 import bcexpression.javatype.JavaType;
 
 /**
@@ -51,4 +50,23 @@ public class Reference extends Expression {
 		
 		return this;
 	}
+
+	/* (non-Javadoc)
+	 * @see bcexpression.Expression#toString()
+	 */
+	public String toString() {
+		String s = "ref(" + id  + ")"; 
+		return s;
+	}
+
+	/* (non-Javadoc)
+	 * @see bcexpression.Expression#copy()
+	 */
+	public Expression copy() {
+		
+		return this;
+	}
+	
+	
+	
 }

@@ -74,6 +74,14 @@ public class Counter  extends Expression {
 		}
 		return this;
 	}
+
+	/* (non-Javadoc)
+	 * @see bcexpression.Expression#copy()
+	 */
+	public Expression copy() {
+		
+		return this;
+	}
 	
 	
 }

@@ -52,4 +52,19 @@ public class _TYPE extends JMLExpression  {
 	public Expression substitute(Expression _e1 , Expression _e2) { 
 		return this;
 	}
+
+	/* (non-Javadoc)
+	 * @see bcexpression.Expression#toString()
+	 */
+	public String toString() {
+		return "type(" + type + ")";
+	}
+
+	/* (non-Javadoc)
+	 * @see bcexpression.Expression#copy()
+	 */
+	public Expression copy() {
+	
+		return this;
+	}
 }

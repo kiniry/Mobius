@@ -57,4 +57,15 @@ public class StringLiteral extends Expression {
 		return this;
 	}
 	
+	
+	public String toString() {
+		return literal;
+	}
+
+	/* (non-Javadoc)
+	 * @see bcexpression.Expression#copy()
+	 */
+	public Expression copy() {
+		return this;
+	}
 }

@@ -16,6 +16,14 @@ import type.BCType;
  */
 public class NULL extends Expression {
 
+	private static final NULL NULL = new NULL();
+	private NULL() {}
+	
+	public static NULL getNULL() {
+		return NULL;
+	}
+	
+	
 	/* (non-Javadoc)
 	 * @see bcexpression.Expression#setType()
 	 */
@@ -41,6 +49,20 @@ public class NULL extends Expression {
 	
 	
 	public Expression substitute(Expression _e1 , Expression _e2) { 
+		return this;
+	}
+
+	/* (non-Javadoc)
+	 * @see bcexpression.Expression#toString()
+	 */
+	public String toString() {
+		return "null";
+	}
+
+	/* (non-Javadoc)
+	 * @see bcexpression.Expression#copy()
+	 */
+	public Expression copy()  {
 		return this;
 	}
 	
