@@ -55,6 +55,9 @@ alltests:
 ########################################### general
 
 ## It does not appear that this is used anywhere - is it needed? FIXME
+## I think this is needed because CVS does not properly keep
+## permissions (expecially x bits), so sometimes we need a reset. -JOE
+
 .PHONY: fix-perms
 fix-perms:
 	find $(ESCTOOLS_ROOT) -type f \
@@ -65,6 +68,7 @@ fix-perms:
 		-name "*.el" -or \
 		-name "*.gif" -or \
 		-name "*.html" -or \
+		-name "*.spec" -or \
 		-name "*.j*" -or \
 		-name "*Make*" -or \
 		-name "*out" -or \
@@ -76,6 +80,7 @@ fix-perms:
 		-name "rtest*" -or \
 		-name "run" \
 		-name "*_tags" \
+		-name "insert_ensures" \
 		-exec chmod 755 {} \;
 
 ########################################### clean
@@ -234,9 +239,9 @@ test-binary-release:
 	@echo "Testing binary release ............"
 	rm -rf ${RELTEST}
 	mkdir -p ${RELTEST}
-	cp ${RELDIR}/ESCTools*-binary.tbz ${RELTEST}
+	cp ${RELDIR}/${RELTAR} ${RELTEST}
 	cd ${RELTEST} ;\
-	    tar xjf ${RELTEST}/*binary.tbz ;\
+	    tar xjf ${RELTEST}/${RELTAR} ;\
 	    ${RELTEST}/quicktest
 
 ## FIXME - used?
@@ -288,24 +293,24 @@ generate-patches: clean
 	( cd ${ESCTOOLS_ROOT}/.. ; mkdir -p ${PATCH_DIR}; \
 	LC_ALL=C TZ=UTC0 diff -Naur --exclude=*.class --exclude=.#* --exclude=CVS \
 		--exclude=Simplify-1* ${ESCTOOLS_ORIGINAL}/Calvin ESCTools/Calvin \
-		| bzip2 -9 > ${PATCH_DIR}/${CALVIN_PATCHES}; \
+		| bzip2 > ${PATCH_DIR}/${CALVIN_PATCHES}; \
 	LC_ALL=C TZ=UTC0 diff -Naur --exclude=*.class --exclude=.#* --exclude=CVS \
 		--exclude=Simplify-1* --exclude=javadoc \
 		${ESCTOOLS_ORIGINAL}/Escjava ESCTools/Escjava \
-		| bzip2 -9 > ${PATCH_DIR}/${ESCJAVA_PATCHES}; \
+		| bzip2 > ${PATCH_DIR}/${ESCJAVA_PATCHES}; \
 	LC_ALL=C TZ=UTC0 diff -Naur --exclude=*.class --exclude=.#* --exclude=CVS \
 		${ESCTOOLS_ORIGINAL}/Houdini ESCTools/Houdini \
-		| bzip2 -9 > ${PATCH_DIR}/${HOUDINI_PATCHES}; \
+		| bzip2 > ${PATCH_DIR}/${HOUDINI_PATCHES}; \
 	LC_ALL=C TZ=UTC0 diff -Naur --exclude=*.class --exclude=.#* --exclude=CVS \
 		${ESCTOOLS_ORIGINAL}/Javafe ESCTools/Javafe \
-		| bzip2 -9 > ${PATCH_DIR}/${JAVAFE_PATCHES}; \
+		| bzip2 > ${PATCH_DIR}/${JAVAFE_PATCHES}; \
 	LC_ALL=C TZ=UTC0 diff -Naur --exclude=*.class --exclude=.#* --exclude=CVS \
 		${ESCTOOLS_ORIGINAL}/Rcc ESCTools/Rcc \
-		| bzip2 -9 > ${PATCH_DIR}/${RCC_PATCHES}; \
+		| bzip2 > ${PATCH_DIR}/${RCC_PATCHES}; \
 	LC_ALL=C TZ=UTC0 diff -Naur --exclude=PPC_DARWIN --exclude=.#* --exclude=CVS \
 		--exclude=*.dylib --exclude=*.a --exclude=*.io --exclude=*.mo \
 		${ESCTOOLS_ORIGINAL}/Simplify ESCTools/Simplify \
-		| bzip2 -9 > ${PATCH_DIR}/${SIMPLIFY_PATCHES}; \
+		| bzip2 > ${PATCH_DIR}/${SIMPLIFY_PATCHES}; \
 	)
 
 .PHONY: generate-archives
