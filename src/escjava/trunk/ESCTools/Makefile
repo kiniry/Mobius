@@ -29,7 +29,7 @@ include Makefile.defs
 
 # List subprojects in the order in which they should be built.  Javafe
 # must be before any other Esctool directories.
-SUBDIRS = Utils Javafe Escjava
+SUBDIRS = Utils Javafe Escjava 
 
 .PHONY: default
 default: build
@@ -103,7 +103,7 @@ clean-norel-noreltemp:
 
 .PHONY: docs
 docs: javadoc
-	for d in $(SUBDIRS) ; do \
+	for d in $(SUBDIRS) docs ; do \
 	    $(MAKE) -C $$d $@ || exit 1; \
 	done
 
@@ -157,7 +157,7 @@ patch-release: clean
 	rm -rf ${PATCH_DIR}
 
 .PHONY: binary-release
-binary-release: build
+binary-release: build docs
 	@echo "Creating binary release .........."
 	mkdir -p ${RELDIR}
 	rm -rf ${RELTEMP}
@@ -167,6 +167,7 @@ binary-release: build
 	cp -r ${ESCJAVA_CLASSFILES}/* ${RELTEMP}/sub
 	cd ${RELTEMP}/sub; jar cf ../${RELJAR} *
 	rm -rf ${RELTEMP}/sub
+	cp docs/Escjava2-ImplementationNotes/*.pdf ${RELTEMP}
 	${MAKE} clean-norel-noreltemp
 	${MAKE} -C Utils/junitutils build
 	cp ${ESCJAVA_ROOT}/escj ${RELTEMP}
