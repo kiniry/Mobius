@@ -161,7 +161,10 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
       case TagConstants.IMPLIES_THAT:
       case TagConstants.INSTANCE:
       case TagConstants.NORMAL_EXAMPLE:
+      case TagConstants.PEER: // Universe type annotation
       case TagConstants.PURE:
+      case TagConstants.READONLY: // Universe type annotation
+      case TagConstants.REP: // Universe type annotation
       case TagConstants.SPEC_PROTECTED: // SC HPT AAST 3
       case TagConstants.MONITORED:
       case TagConstants.NON_NULL:

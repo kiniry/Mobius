@@ -86,7 +86,7 @@ import escjava.ParsedRoutineSpecs;
  *         + SkolemConstantPragma (LocalVarDecl* decl)
  *    - ModifierPragma ()
  *         + SimpleModifierPragma () 
- *                   // Uninitialized, Monitored, NonNull, WritableDeferred, Helper
+ *                   // Uninitialized, Monitored, NonNull, WritableDeferred, Helper, \Peer, \ReadOnly, \Rep
  *	   + NestedModifierPragma (ArrayList list)
  *         + ExprModifierPragma (Expr expr) 
  *                   // DefinedIf, Writable, Requires, Pre, Ensures, Post, AlsoEnsures, 
@@ -872,7 +872,10 @@ public class SimpleModifierPragma extends ModifierPragma
        || tag == TagConstants.NON_NULL
        || tag == TagConstants.SPEC_PUBLIC
        || tag == TagConstants.WRITABLE_DEFERRED
-       || tag == TagConstants.HELPER);
+       || tag == TagConstants.HELPER
+       || tag == TagConstants.PEER
+       || tag == TagConstants.READONLY
+       || tag == TagConstants.REP);
     Assert.notFalse(goodtag);
   }
 

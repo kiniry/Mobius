@@ -399,7 +399,11 @@ public class TagConstants extends GeneratedTags
     public static final int ALSO_EXSURES = ALSO_ENSURES + 1;
     public static final int ALSO_MODIFIES = ALSO_EXSURES + 1;
     public static final int ALSO_REQUIRES = ALSO_MODIFIES + 1;
-    public static final int LASTESCKEYWORDTAG = ALSO_REQUIRES;
+    // Include the Universe type annotation keywords (cjbooms)
+    public static final int PEER = ALSO_REQUIRES + 1;
+    public static final int READONLY = PEER + 1;
+    public static final int REP = READONLY + 1;
+    public static final int LASTESCKEYWORDTAG = REP;
 
     public static final int LAST_TAG = LASTESCKEYWORDTAG;
 
@@ -984,6 +988,10 @@ public class TagConstants extends GeneratedTags
         Identifier.intern("also_exsures"),
         Identifier.intern("also_modifies"),
         Identifier.intern("also_requires"),
+        // Universe type annotations (cjbooms)
+ 	Identifier.intern("\\peer"),
+        Identifier.intern("\\readonly"),
+        Identifier.intern("\\rep")
     };
 
     public static void main(String[] args) {
