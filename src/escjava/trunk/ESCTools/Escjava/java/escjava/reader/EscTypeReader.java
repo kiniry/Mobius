@@ -333,13 +333,17 @@ public class EscTypeReader extends StandardTypeReader
     }
 
     public ArrayList findFiles(String[] P) {
-	ArrayList a = new ArrayList();
 	Enumeration e = javaFileSpace.findFiles(P);
+	if (e == null) return null;
+	ArrayList a = new ArrayList();
 	while (e.hasMoreElements()) {
 	    Tree t = (Tree)e.nextElement();
 	    String s = t.getLabel();
+	    int p = s.lastIndexOf('.');
+	    if (p == -1) continue;
+	    String suffix = s.substring(p+1);
 	    for (int i=0; i<activeSuffixes.length; ++i) {
-		if (s.endsWith(activeSuffixes[i])) { 
+		if (suffix.equals(activeSuffixes[i])) { 
 		    a.add(t.data); 
 		    break; 
 		}
