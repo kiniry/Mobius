@@ -170,7 +170,7 @@ Its long-term utility, however, was lessened by a number of factors.
 First, the match to JML was not complete and JML continued to evolve
 as research on the needs of annotations for program checking advanced.
 JML has also grown in
-popularity.  A number of tools have been developed that work with it [TODO-refs],
+popularity.  A number of tools have been developed that work with the language (e.g.,~\cite{jmlpapers,Bogor03,NimmerErnst01Leavens-etal00},
 representing the work of several groups.  JML's goal of being a language
 accessible to Java programmers not familiar with verification logic appears to
 contribute to its easy adoption.   
@@ -287,7 +287,7 @@ TODO - gary's comment: organize the above into categories.
 \subsection{New verification checks}
 Though all of JML is parsed, not all of it is currently checked.
 Static checking of the following features has been added to that performed by
-DEC/SRC ESC/Java.
+DEC/SRC ESC/Java.  The space available in this paper permits only a summary of the emdedding of the above into the underlying ESC/Java logic.  
 \setlength{\partopsep}{0in}\setlength{\parskip}{0in}\setlength{\itemsep}{0in}\setlength{\topsep}{0in}
 \begin{itemize}
 \setlength{\partopsep}{0in}\setlength{\parskip}{0in}\setlength{\itemsep}{0in}\setlength{\topsep}{0in}
@@ -301,7 +301,34 @@ writing specifications, particularly for interfaces and abstract classes \cite{C
 to abstraction and allow much more natural and readable specifications.
 \end{itemize}
 
-TODO - Gary's comment: expand on the above.
+
+\paragraph*{Constraint and Initially clause}
+These two clauses are variations on the more common \texttt{invariant} clause.  They apply to the whole class.  A constraint states a condition that must hold between the pre-state and the post-state of a method call, such as
+\begin{center}
+\texttt{constraint maxSize = \char'134 old(maxSize); }
+\end{center}
+to state that a given quantity is not changed by any method of the class.  It is implemented by 
+adding it as a postcondition to every (non-helper) method in the type (and its derived types).
+
+Similarly, \texttt{initially} states a condition that must hold of every object after construction.  It is implemented by adding its predicate as a postcondition of every constructor of the type (but not 
+of its derived types).
+
+\paragraph*{\texttt{\char'134 not\_modified} expression}
+The \texttt{not\_modified} pseudo-function is a shorthand way of saying, within a postcondition, that a particular 
+expression has the same value in the pre-state and the post-state.  That is,
+\begin{center}
+\texttt{\char'134 not\_modified(x+y) $\equiv$ (x(+y) == \char'134 old(x+y) )  }.
+\end{center}
+Uses of the expression in postconditions are expanded inline according to this definition .
+
+\paragraph*{Checking of datagroups and frame conditions}
+TODO
+
+\paragraph*{Annotations containing routine calls and dynamic allocations}
+TODO
+
+\paragraph*{model fields and represents clauses}
+TODO
 
 \subsection{Backwards incompatibilities}
 The DEC/SRC ESC/Java specification language and JML arose separately.  There
@@ -335,7 +362,7 @@ source code base than other JML tools, differences of interpretation
 in both syntax and semantics arise on occasion.  These are generally
 resolved and documented via mailing list discussions\footnote{See \texttt{jmlspecs-interest@lists.sourceforge.net}, 
 \texttt{jmlspecs-developers@lists.sourceforge.net}, and
-\texttt{jmlspecs-escjava@lists.sourceforge.net} [TODO - gary suggests listing the archive URL}
+\texttt{jmlspecs-escjava@lists.sourceforge.net} or the corresponding archives at \url{http://sourceforge.net/projects/jmlspecs}}
 by interested
 parties.  There are, however, still unresolved issues, most of which
 are the subject of ongoing research.
