@@ -803,10 +803,17 @@ public class PrepTypeDeclaration {
 		if( !Types.isCompatibleAccess(overridingMethod.modifiers 
 					      & Modifiers.ACCESS_MODIFIERS,
 					      superMethod.modifiers
-					      & Modifiers.ACCESS_MODIFIERS) )
+					      & Modifiers.ACCESS_MODIFIERS) ) {
 		  ErrorSet.error(overridingMethod.loc,
 			 "Incompatible access modifiers between "+
-			 "overridden(hidden) and overriding(hiding) methods");
+			 "overridden(hidden) ["
+			  + Modifiers.toString(superMethod.modifiers & 
+				Modifiers.ACCESS_MODIFIERS)
+			  + ", " + Location.toString(superMethod.loc)
+			  + "] and overriding(hiding) methods ["
+			  + Modifiers.toString(overridingMethod.modifiers & 
+				Modifiers.ACCESS_MODIFIERS) + "]");
+		}
 		
 		// Record that the method is overridden if it is not hidden:
 		if (!Modifiers.isStatic(overridingMethod.modifiers))
