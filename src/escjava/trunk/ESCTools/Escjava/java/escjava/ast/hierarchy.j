@@ -42,6 +42,7 @@ import escjava.ParsedRoutineSpecs;
  *         + LockSetExpr ()
  *         + NotSpecifiedExpr ()
  *         + NothingExpr ()
+ *         + StoreRefExpr(Expr,Expr)
  *         + NotModifiedExpr(Expr)
  *         + ResExpr ()
  *	   + SetCompExpr(Type type, Type typeBound, Identifier id, Expr e)
@@ -49,7 +50,7 @@ import escjava.ParsedRoutineSpecs;
  *         + GuardExpr (Expr expr)
  *         + DefPredLetExpr (DefPred* preds, Expr body)
  *         + DefPredApplExpr (Identifier predId, Expr* args)
- *         + FieldsOfExpr (Expr expr, Identifier id, )
+ *	   + ArrayRangeRefExpr(Expr, Expr, Expr)
  *    + GuardedCmd
  *      + SimpleCmd (int cmd) // Skip, Raise
  *      + ExprCmd (int cmd, Expr pred) // Assert, Assume
@@ -256,12 +257,11 @@ public class LabelExpr extends GCExpr
 
 public class WildRefExpr extends Expr
 {
-  //# Expr expr
-  //# int locOpenBracket
-  //# int locCloseBracket
+  //# Expr var
+  //# ObjectDesignator od
 
-  public int getStartLoc() { return expr.getStartLoc(); }
-  public int getEndLoc() { return expr.getEndLoc(); }
+  public int getStartLoc() { return od.getStartLoc(); }
+  public int getEndLoc() { return od.getEndLoc(); }
 }
 
 public class GuardExpr extends Expr
@@ -324,14 +324,14 @@ public class NotModifiedExpr extends Expr
   public int getStartLoc() { return loc; }
 }
 
-public class FieldsOfExpr extends Expr
+public class ArrayRangeRefExpr extends Expr
 {
-  //# int loc
-  //# Expr expr
-  //# TypeName type
-  //# Expr storeExpr
+  //# int locOpenBracket
+  //# Expr array
+  //# Expr lowIndex
+  //# Expr highIndex
 
-  public int getStartLoc() { return loc; }
+  public int getStartLoc() { return locOpenBracket; }
 }
 
 public class DefPredLetExpr extends Expr

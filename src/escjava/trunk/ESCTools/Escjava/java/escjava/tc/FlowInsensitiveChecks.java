@@ -1050,23 +1050,30 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                 {
                     WildRefExpr r = (WildRefExpr)e;
                     if (!isCurrentlySpecDesignatorContext) {
-                        setType(r, Types.intType);
-                        ErrorSet.error(r.locOpenBracket,
-                                       "Array index wild cards allowed only as "+
+                        setType(r, Types.errorType);
+                        ErrorSet.error(r.getStartLoc(),
+                                       "Reference wild cards allowed only as "+
                                        "specification designators");
                     } else {
-                        r.expr = checkExpr(env, r.expr);
-                        Type arrType = getType( r.expr );
-	
-                        if( arrType instanceof ArrayType ) {
-                            setType( r, ((ArrayType)arrType).elemType );
-                        } else {
-                            setType( r, Types.errorType );
-			    if (!Types.isErrorType(arrType))
-				ErrorSet.error( r.locOpenBracket, 
-                                            "Attempt to index a non-array value");
-                        }
-                    }
+			// Can't set the type, but need to check the type of the od
+			if (r.od == null) {
+			    if (r.var instanceof AmbiguousVariableAccess) {
+				AmbiguousVariableAccess a = (AmbiguousVariableAccess)r.var;
+				Object o = env.disambiguateTypeOrFieldName(a.name);
+				if (o instanceof TypeSig) {
+				    r.od = TypeObjectDesignator.make(r.var.getStartLoc(),
+								(TypeSig)o );
+				} else {
+				    r.var = (Expr)o;
+				}
+			    } else {
+				r.var = checkExpr(env,r.var);
+			    }
+			} else {
+			    Type t = checkObjectDesignator(env,r.od);
+System.out.println("TYPE " + t);
+			}
+		    } 
                     return r;
                 }      
 
@@ -1103,6 +1110,50 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                     return r;
                 }
 
+	    case TagConstants.ARRAYRANGEREFEXPR:
+		{
+                    ArrayRangeRefExpr r = (ArrayRangeRefExpr)e;
+                    if (!isCurrentlySpecDesignatorContext) {
+                        setType(r, Types.errorType);
+                        ErrorSet.error(r.getStartLoc(),
+                                       "Array ranges are allowed only as "+
+                                       "specification designators");
+                    } else {
+	
+			r.array = checkExpr(env, r.array);
+			Type arrType = getType( r.array );
+			if (r.lowIndex != null) r.lowIndex = checkExpr(env, r.lowIndex);
+			if (r.highIndex != null) r.highIndex = checkExpr(env, r.highIndex);
+			Type t = r.lowIndex == null ? null : getType( r.lowIndex );
+			Type tt = r.highIndex == null ? null : getType( r.highIndex );
+
+			if( arrType instanceof ArrayType ) {
+			    setType( r, ((ArrayType)arrType).elemType );
+			    if (t != null) {
+				Type ndxType = 
+				    Types.isNumericType( t ) ? Types.unaryPromote( t ) : t;
+				if( !Types.isSameType( ndxType, Types.intType ) &&
+				    !Types.isErrorType(ndxType) ) 
+				    ErrorSet.error(r.locOpenBracket, "Array index is not an integer");
+			    }
+			    if (tt != null) {
+				Type ndxType = 
+				    Types.isNumericType( tt ) ? Types.unaryPromote( tt ) : tt;
+				if( !Types.isSameType( ndxType, Types.intType ) &&
+				    !Types.isErrorType(ndxType) ) 
+				    ErrorSet.error(r.locOpenBracket, "Array index is not an integer");
+			    }
+
+			} else {
+			    setType( r, Types.errorType );
+			    if (!Types.isErrorType(arrType) )
+				ErrorSet.error( r.locOpenBracket, 
+					    "Attempt to index a non-array value");
+			}
+		    }
+
+                    return r;
+                }
             case TagConstants.RESEXPR:
                 {
                     if (!isRESContext || returnType == null) {
@@ -2136,6 +2187,7 @@ FIXME - see uses of countFreeVarsAccess
                         }
 	  
 			case TagConstants.ARRAYREFEXPR:
+			case TagConstants.ARRAYRANGEREFEXPR:
 			case TagConstants.WILDREFEXPR:
 			case TagConstants.EVERYTHINGEXPR:
 			case TagConstants.NOTHINGEXPR:

@@ -198,6 +198,10 @@ public final class TrAnExpr {
         }
 
         case TagConstants.WILDREFEXPR: {
+		// SHould never get here.
+		ErrorSet.notImplemented(true,e.getStartLoc(),
+			"Did not expect a wild-reference designator in an expression");
+/*
             WildRefExpr r = (WildRefExpr)e;
 
             VariableAccess elems = apply(sp, makeVarAccess(GC.elemsvar.decl,
@@ -205,6 +209,7 @@ public final class TrAnExpr {
 	Expr arr = trSpecExpr(r.expr, sp, st);
 	return GC.nary(e.getStartLoc(), r.locCloseBracket,
 		       TagConstants.SELECT, elems, arr);
+*/
       }
 
       case TagConstants.PARENEXPR: {

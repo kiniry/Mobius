@@ -860,28 +860,9 @@ public class EscPragmaParser extends Parse implements PragmaParser
                 case TagConstants.MODIFIES: {
 		    checkNoModifiers(tag,loc);
 		   do {
-		    int t = scanner.ttype;
-		    Expr e = null;
-		    // deal with special case expressions
-		    if (t == TagConstants.NOTHING) {
-			scanner.getNextToken();
-			e = NothingExpr.make(scanner.startingLoc);
-		    } else if (t == TagConstants.NOT_SPECIFIED) {
-			scanner.getNextToken();
-			e = NotSpecifiedExpr.make(scanner.startingLoc);
-		    } else if (t == TagConstants.EVERYTHING) {
-			scanner.getNextToken();
-			e = EverythingExpr.make(scanner.startingLoc);
-		    } else {
-			// not \nothing, \not_specified, or \everything, so
-			// can only be a comma-separated list of
-			// SpecDesignators terminated with an optional ';'
-			e = parseStoreRef(scanner);
-			// FIXME - should we parse something more restricted
-			// than an Expression - grammar says a store-ref
-		    }
+		    Expr e = parseStoreRef(scanner);
 		    // deal with optional conditional ('if' <predicate>)
-		    t = scanner.ttype;
+		    int t = scanner.ttype;
 		    Expr cond = null;
 		    if (t == TagConstants.IF) {
 			scanner.getNextToken();
@@ -2194,11 +2175,18 @@ public class EscPragmaParser extends Parse implements PragmaParser
      * @param primary the primary expression previously parsed.
      * @return the parsed expression.
      */
+
     protected Expr parsePrimarySuffix(Lex l, Expr primary) {
         while(true) {
-            primary = super.parsePrimarySuffix(l, primary);
 
-            if ((l.ttype == TagConstants.LSQBRACKET) &&
+            if (l.ttype == TagConstants.FIELD &&
+		l.lookahead(1) == TagConstants.STAR) {
+                l.getNextToken();
+		int loc = l.startingLoc;
+                l.getNextToken();
+                primary = WildRefExpr.make(primary, null);
+
+            } else if ((l.ttype == TagConstants.LSQBRACKET) &&
                 (l.lookahead(1) == TagConstants.STAR) &&
                 (l.lookahead(2) == TagConstants.RSQBRACKET)) {
                 int locOpen = l.startingLoc;
@@ -2206,14 +2194,35 @@ public class EscPragmaParser extends Parse implements PragmaParser
                 l.getNextToken();
                 int locClose = l.startingLoc;
                 l.getNextToken();
-                primary = WildRefExpr.make(primary, locOpen, locClose);
+                primary = ArrayRangeRefExpr.make(locOpen, primary, null, null);
                 // and go around again
+            } else if (l.ttype == TagConstants.LSQBRACKET) {
+                int locOpen = l.startingLoc;
+                l.getNextToken();
+		Expr e1 = parseExpression(l);
+		if (l.ttype == TagConstants.DOTDOT) {
+		    l.getNextToken();
+		    Expr e2 = parseExpression(l);
+		    expect(l, TagConstants.RSQBRACKET);
+		    primary = ArrayRangeRefExpr.make(locOpen, primary, e1, e2);
+		} else if (l.ttype == TagConstants.RSQBRACKET) {
+		    int locClose = l.startingLoc;
+		    l.getNextToken();
+		    primary = ArrayRefExpr.make(primary, e1, locOpen, locClose);
+		} else {
+			// PROBLEM
+		    ErrorSet.error(l.startingLoc, 
+			"Expected either .. or ] after an index expression");
+		    return null;
+		}
             } else {
-                // no PrimarySuffix left, all done
-                return primary;
+		Expr nprimary = super.parsePrimarySuffix(l, primary);
+		if (nprimary == primary) return primary;
+		primary = nprimary;
             }
         }
     }
+
 
     /**
      * Parse the balance (everything after the quantifier to the end
@@ -2491,138 +2500,128 @@ public class EscPragmaParser extends Parse implements PragmaParser
     }
 
     /**
-     * Parse a FieldsOfExpr.
-     *
-     * <pre>
-     * '\fields_of' '(' SpecExpr [ ',' Idn [ ',' StoreRefExpr ] ] ')' ';'
-     * </pre>
-     */
-    //@ requires l.m_in != null
-    public Expr parseFieldsOfExpr(/*@ non_null @*/ EscPragmaLex l) {
-        int loc = l.startingLoc; // start of \fields_of
-	l.getNextToken(); // Skip the \fields_of token that we already saw
-        int tag = TagConstants.fromIdentifier(l.identifierVal);
-        Expr expr = null;
-        TypeName typeName = null;
-        Expr storeRefExpr = null;
-        expect(l, TagConstants.LPAREN);
-        expr = parsePrimaryExpression(l);
-        if (l.lookahead(0) == TagConstants.COMMA) {
-            typeName = parseTypeName(l);
-            if (l.lookahead(0) == TagConstants.COMMA)
-                parseStoreRefExpr(l);
-        }
-        expect(l, TagConstants.RPAREN);
-	return FieldsOfExpr.make(loc,expr,typeName,storeRefExpr);
-    }
-
-    /**
-     * Parse a StoreRef and discard it.
+     * Parse a StoreRef 
      */
     //@ requires l.m_in != null
     public Expr parseStoreRef(/*@ non_null @*/ EscPragmaLex l) {
         // StoreRefKeyword
 	int loc = l.startingLoc;
-	if (l.ttype == TagConstants.FIELDS_OF) {
-            parseFieldsOfExpr(l);
-	    return null;
-	} else if (l.ttype == TagConstants.PRIVATE_DATA)
+	int t = l.ttype;
+	if (t == TagConstants.NOTHING) {
+	    scanner.getNextToken();
+	    return NothingExpr.make(scanner.startingLoc);
+	} else if (t == TagConstants.NOT_SPECIFIED) {
+	    scanner.getNextToken();
+	    return NotSpecifiedExpr.make(scanner.startingLoc);
+	} else if (t == TagConstants.EVERYTHING) {
+	    scanner.getNextToken();
+	    return EverythingExpr.make(scanner.startingLoc);
+	} else if (t == TagConstants.PRIVATE_DATA) {
             // PRIVATE_DATA recognized and discarded, unclear semantics (kiniry)
-        {
+		// FIXME
             l.getNextToken();
             return null; // FIXME
-        }
-        // InformalDescription
-        else if (l.ttype == TagConstants.INFORMALPRED_TOKEN) {
+        } else if (t == TagConstants.INFORMALPRED_TOKEN) {
+	    // InformalDescription
             l.getNextToken();
             return null; // FIXME
         }
         // StoreRefExpr
-        return parseStoreRefExpr(l);
+	return parseExpression(l);
+        //return parseStoreRefExpr(l);
     }
 
     /**
-     * Parses an <em>optional</em> StoreRefNameSuffix and discards it.
-     */
-    //@ requires l.m_in != null
-    public void parseStoreRefNameSuffix(/*@ non_null @*/ EscPragmaLex l) {
-        // StoreRefNameSuffix ::= '.' Idn | '.' 'this' | '[' SpecArrayRefExpr ']'
-        if (l.ttype == TagConstants.FIELD ||
-            l.ttype == TagConstants.LSQBRACKET) {
-            if (l.ttype == TagConstants.FIELD) {
-                l.getNextToken();
-                if (l.ttype == TagConstants.IDENT ||
-                    l.ttype == TagConstants.THIS) {
-                    l.getNextToken();
-                    return;
-                } else {
-                    fail(scanner.startingLoc,
-                         "storage reference name suffix be an " + 
-                         "identifier or 'this'.");
-                }
-            } else {
-                // SpecArrayRefExpr
-                Expr firstExpr = parsePrimaryExpression(l);
-                if (l.ttype == TagConstants.RSQBRACKET ||
-                    l.ttype == TagConstants.STAR) {
-                    expect(l, TagConstants.RSQBRACKET);
-                    return;
-                }
-                if ((l.ttype == TagConstants.FIELD &&
-                     l.lookahead(1) != TagConstants.FIELD) ||
-                    l.ttype != TagConstants.FIELD) {
-                    fail(scanner.startingLoc,
-                         "A range expression in an array should be of the form '[" +
-                         "<spec-expr> .. <spec-expr>]'.  Note the two dots.");
-                } else {
-                    // Skip two dots then parse and toss SpecExpr.
-                    l.getNextToken(); l.getNextToken();
-                    Expr secondExpr = parsePrimaryExpression(l);
-                    expect(l, TagConstants.RSQBRACKET);
-                    return;
-                }
-            }
-        }
-    }
-
-    /**
-     * Parse a StoreRefExpr and discard it
+     * Parse a StoreRefExpr
      */
     //@ requires l.m_in != null
     public Expr parseStoreRefExpr(/*@ non_null @*/ EscPragmaLex l) {
-	if ((l.ttype == TagConstants.IDENT || l.ttype == TagConstants.THIS) &&
-		l.lookahead(1) == TagConstants.FIELD &&
-		l.lookahead(2) == TagConstants.STAR) {
-
-		l.getNextToken();
-		l.getNextToken();
-		l.getNextToken();
-		return null;
-	}
-	return parseExpression(l);
-/*
 	int loc = l.startingLoc;
-        // Must start with Idn | 'super' | 'this'
-        if (l.ttype == TagConstants.IDENT) {
-	    Identifier id = l.identifierVal;
-            l.getNextToken();
-	    parseStoreRefNameSuffix(l);
-	    return AmbiguousVariableAccess.make(loc,id);
-	} else if (l.ttype == TagConstants.SUPER) {
-            l.getNextToken();
-	    parseStoreRefNameSuffix(l);
+	Name n = null;
+	Expr e = null;
+	ObjectDesignator od = null;
+	Expr result = null;
+	if (l.ttype == TagConstants.IDENT) {
+	    if (l.lookahead(1) == TagConstants.LPAREN) {
+		result = parsePrimaryExpression(l);
+	    } else if (l.lookahead(1) != TagConstants.FIELD) {
+		result = parseExpression(l);
+	    } else {
+		n = parseName(l);
+		result = AmbiguousVariableAccess.make(n);
+	    }
 	} else if (l.ttype == TagConstants.THIS) {
-            l.getNextToken();
-	    parseStoreRefNameSuffix(l);
+	    if (l.lookahead(1) != TagConstants.FIELD) {
+		result = parseExpression(l);
+	    } else {
+		result = ThisExpr.make(null,loc);
+		l.getNextToken();
+	    }
+	} else if (l.ttype == TagConstants.SUPER) {
+	    l.getNextToken();
+	    od = SuperObjectDesignator.make(l.startingLoc,loc);
         } else {
-            fail(scanner.startingLoc,
-                 "storage reference expression must start with an " + 
-                 "identifier, 'super', or 'this'.");
+	    ErrorSet.error(l.startingLoc,
+		"Expected an identifier, this or super here");
+	    return null;
+	}
+	while(true) {
+        // StoreRefNameSuffix ::= '.' Idn | '.' 'this' | '.' '*' | '[' SpecArrayRefExpr ']'
+	    if (l.ttype == TagConstants.FIELD) {
+		int locDot = l.startingLoc;
+		l.getNextToken();
+		if (l.ttype == TagConstants.IDENT) {
+		    if (od == null) {
+			od = ExprObjectDesignator.make(locDot,result);
+		    }
+		    result = FieldAccess.make(od,l.identifierVal,l.startingLoc);
+		    od = null;
+		} else if (l.ttype == TagConstants.THIS) {
+			// Will we ever get here?
+		    ErrorSet.error(l.startingLoc, "Syntax not yet supported - StoreRefB");
+			// FIXME
+			return null;
+		} else if (l.ttype == TagConstants.STAR) {
+		    result = WildRefExpr.make(result,od);
+		    od = null;
+			// FIXME - no more after this
+		} else {
+		    ErrorSet.error(scanner.startingLoc,
+			 "storage reference name suffix must be an " + 
+			 "identifier or 'this' or '*' ");
+		    return null;
+		}
+		l.getNextToken();
+	    } else if (l.ttype == TagConstants.LSQBRACKET) {
+		int locOpenBracket = l.startingLoc;
+		l.getNextToken();
+		    // SpecArrayRefExpr
+		if (l.ttype == TagConstants.STAR) {
+		    l.getNextToken();
+		    result = ArrayRangeRefExpr.make(locOpenBracket,result,null,null);
+		} else {
+		    Expr firstExpr = parsePrimaryExpression(l);
+		    if (l.ttype == TagConstants.DOTDOT) {
+			l.getNextToken();
+			Expr secondExpr = parsePrimaryExpression(l);
+			result = ArrayRangeRefExpr.make(locOpenBracket,result,firstExpr,secondExpr);
+		    } else {
+			// Simple array reference
+			int locCloseBracket = l.startingLoc;
+			result = ArrayRefExpr.make(result,firstExpr,locOpenBracket,locCloseBracket);
+		    }
+		}
+		if (l.ttype != TagConstants.RSQBRACKET) {
+		    ErrorSet.error(l.startingLoc, "Expected a ]");
+		    return null;
+		}
+		l.getNextToken(); // skip the [
+	    } else {
+		break;
+	    }
         }
-        // Optional StoreRefNameSuffix.
-	return null;
-*/
-    }
+	return result;
+    }	
 
     protected int modifiers = Modifiers.NONE;
 

@@ -1,0 +1,21 @@
+AID.java:15: Not implemented: Array-range expression not yet implemented
+        modifies dest[*];
+                     ^
+/home/cok/ESCTools/ESCTools/specs/java/lang/System.spec:34: Not implemented: Array-range expression not yet implemented
+    //@ modifies \dttfsa(Object[], "identity", dst)[*];
+                                                   ^
+AID.java:15: Not implemented: Array-range expression not yet implemented
+        modifies dest[*];
+                     ^
+/home/cok/ESCTools/ESCTools/specs/java/lang/System.spec:34: Not implemented: Array-range expression not yet implemented
+    //@ modifies \dttfsa(Object[], "identity", dst)[*];
+                                                   ^
+/home/cok/ESCTools/ESCTools/specs/java/lang/System.spec:34: Not implemented: Array-range expression not yet implemented
+    //@ modifies \dttfsa(Object[], "identity", dst)[*];
+                                                   ^
+/home/cok/ESCTools/ESCTools/specs/java/lang/System.spec:34: Not implemented: Array-range expression not yet implemented
+    //@ modifies \dttfsa(Object[], "identity", dst)[*];
+                                                   ^
+AID.java:15: Not implemented: Array-range expression not yet implemented
+        modifies dest[*];
+                     ^

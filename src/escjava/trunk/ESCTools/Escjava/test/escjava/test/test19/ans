@@ -1,6 +1,30 @@
+/home/cok/ESCTools/ESCTools/specs/java/lang/System.spec:34: Not implemented: Array-range expression not yet implemented
+    //@ modifies \dttfsa(Object[], "identity", dst)[*];
+                                                   ^
+/home/cok/ESCTools/ESCTools/specs/java/lang/System.spec:34: Not implemented: Array-range expression not yet implemented
+    //@ modifies \dttfsa(Object[], "identity", dst)[*];
+                                                   ^
+/home/cok/ESCTools/ESCTools/specs/java/lang/System.spec:34: Not implemented: Array-range expression not yet implemented
+    //@ modifies \dttfsa(Object[], "identity", dst)[*];
+                                                   ^
+/home/cok/ESCTools/ESCTools/specs/java/lang/System.spec:34: Not implemented: Array-range expression not yet implemented
+    //@ modifies \dttfsa(Object[], "identity", dst)[*];
+                                                   ^
 C3.java:6: Warning: Possible null dereference (Null)
     n = input.length;  // null dereference
              ^
+/home/cok/ESCTools/ESCTools/specs/java/lang/System.spec:34: Not implemented: Array-range expression not yet implemented
+    //@ modifies \dttfsa(Object[], "identity", dst)[*];
+                                                   ^
+/home/cok/ESCTools/ESCTools/specs/java/lang/System.spec:34: Not implemented: Array-range expression not yet implemented
+    //@ modifies \dttfsa(Object[], "identity", dst)[*];
+                                                   ^
+/home/cok/ESCTools/ESCTools/specs/java/lang/System.spec:34: Not implemented: Array-range expression not yet implemented
+    //@ modifies \dttfsa(Object[], "identity", dst)[*];
+                                                   ^
+/home/cok/ESCTools/ESCTools/specs/java/lang/System.spec:34: Not implemented: Array-range expression not yet implemented
+    //@ modifies \dttfsa(Object[], "identity", dst)[*];
+                                                   ^
 C3.java:30: Warning: Possible null dereference (Null)
       if (a[i] < m) {  // null dereference
            ^
@@ -13,10 +37,34 @@ C3.java:38: Warning: Possible null dereference (Null)
 C3.java:38: Warning: Possible negative array index (IndexNegative)
       a[mi] = a[n];
                ^
+/home/cok/ESCTools/ESCTools/specs/java/lang/System.spec:34: Not implemented: Array-range expression not yet implemented
+    //@ modifies \dttfsa(Object[], "identity", dst)[*];
+                                                   ^
+/home/cok/ESCTools/ESCTools/specs/java/lang/System.spec:34: Not implemented: Array-range expression not yet implemented
+    //@ modifies \dttfsa(Object[], "identity", dst)[*];
+                                                   ^
+/home/cok/ESCTools/ESCTools/specs/java/lang/System.spec:34: Not implemented: Array-range expression not yet implemented
+    //@ modifies \dttfsa(Object[], "identity", dst)[*];
+                                                   ^
+/home/cok/ESCTools/ESCTools/specs/java/lang/System.spec:34: Not implemented: Array-range expression not yet implemented
+    //@ modifies \dttfsa(Object[], "identity", dst)[*];
+                                                   ^
 C3.java:60: Warning: Array index possibly too large (IndexTooBig)
       if (a[i] < m) {  // array bounds error
            ^
 C3.java:68: Warning: Possible negative array index (IndexNegative)
       a[mi] = a[n];
                ^
+/home/cok/ESCTools/ESCTools/specs/java/lang/System.spec:34: Not implemented: Array-range expression not yet implemented
+    //@ modifies \dttfsa(Object[], "identity", dst)[*];
+                                                   ^
+/home/cok/ESCTools/ESCTools/specs/java/lang/System.spec:34: Not implemented: Array-range expression not yet implemented
+    //@ modifies \dttfsa(Object[], "identity", dst)[*];
+                                                   ^
+/home/cok/ESCTools/ESCTools/specs/java/lang/System.spec:34: Not implemented: Array-range expression not yet implemented
+    //@ modifies \dttfsa(Object[], "identity", dst)[*];
+                                                   ^
+/home/cok/ESCTools/ESCTools/specs/java/lang/System.spec:34: Not implemented: Array-range expression not yet implemented
+    //@ modifies \dttfsa(Object[], "identity", dst)[*];
+                                                   ^
 7 warnings

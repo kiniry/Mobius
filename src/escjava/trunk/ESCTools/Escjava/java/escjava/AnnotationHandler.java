@@ -1409,6 +1409,13 @@ javafe.util.ErrorSet.dump("OUCH");
                 tag == TagConstants.FUNCTION ||
                 tag == TagConstants.NON_NULL;
     }
+
+    static public boolean isEndingModifier(int tag) {
+	return tag == TagConstants.END ||
+		tag == TagConstants.ALSO ||
+		tag == TagConstants.IMPLIES_THAT ||
+		tag == TagConstants.FOR_EXAMPLE;
+    }
  
     // behaviorMode == 0 : nested call
     // behaviorMode == 1 : outer call - non-example mode, model programs allowed
@@ -1433,8 +1440,8 @@ javafe.util.ErrorSet.dump("OUCH");
 			ErrorSet.error(mp.getStartLoc(),
 			"Model programs may not be in the examples section");
 			encounteredError = true;
-		    } else if (pm.elementAt(pos).getTag() != TagConstants.ALSO
-		      && pm.elementAt(pos).getTag() != TagConstants.END) {
+		    } else if (!isEndingModifier(pm.elementAt(pos).getTag()) && 
+				!isRoutineModifier(pm.elementAt(pos).getTag()) ) {
 			ErrorSet.error(mp.getStartLoc(),
 			    "A model_program may not be combined with other clauses");
 		    } else {

@@ -127,6 +127,7 @@ public class RefinementSequence extends CompilationUnit {
 
 	for (int k=refinements.size()-1; k>=0; --k) {
 	    CompilationUnit cu = (CompilationUnit)refinements.get(k);
+	    //Info.out("Combining " + cu.sourceFile().getHumanName());
 
 	    // Check that the package name is always consistent
 	    String p = pkgName==null ? "" : pkgName.printName();
@@ -507,6 +508,13 @@ public class RefinementSequence extends CompilationUnit {
 			tdee.setModifiers(tdee.getModifiers() | tde.getModifiers()); // trim & check
 			    // FIXME - check types and modifiers
 			// FIXME - what combining to do???
+			RoutineDecl rd = ((ModelMethodDeclPragma)tde).decl;
+			RoutineDecl rde = ((ModelMethodDeclPragma)tdee).decl;
+			if (rd.body != null && rde.body != null && rd.body != rde.body) {
+			    ErrorSet.error(rd.body.getStartLoc(),
+				"Model method has more than one implementation",
+				rde.body.getStartLoc());
+			}
 			found = true;
 		    }
 		}
@@ -526,6 +534,13 @@ public class RefinementSequence extends CompilationUnit {
 			tdee.setModifiers(tdee.getModifiers() | tde.getModifiers()); // trim & check
 			    // FIXME - check types and modifiers
 			// FIXME - what combining to do???
+			RoutineDecl rd = ((ModelConstructorDeclPragma)tde).decl;
+			RoutineDecl rde = ((ModelConstructorDeclPragma)tdee).decl;
+			if (rd.body != null && rde.body != null && rd.body != rde.body) {
+			    ErrorSet.error(rd.body.getStartLoc(),
+				"Model constructor has more than one implementation",
+				rde.body.getStartLoc());
+			}
 			found = true;
 		    }
 		}

@@ -896,10 +896,25 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
       write(o, ")");
       break;
 
+    case TagConstants.ARRAYRANGEREFEXPR: {
+      ArrayRangeRefExpr we = (ArrayRangeRefExpr)e;
+      print( o, ind, we.array );
+      write(o, "[");
+      if (we.lowIndex == null && we.highIndex == null) {
+	write(o, "*");
+      } else {
+	print(o, ind, we.lowIndex);
+	write(o,"..");
+	print(o, ind, we.highIndex);
+      }
+      write(o, "]");
+      break;
+    }
+
     case TagConstants.WILDREFEXPR: {
       WildRefExpr we = (WildRefExpr)e;
-      print( o, ind, we.expr );
-      write(o, "[*]");
+      print( o, ind, we.od );
+      write(o, ".*");
       break;
     }
 

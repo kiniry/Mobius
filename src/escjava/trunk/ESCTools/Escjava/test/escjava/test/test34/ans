@@ -295,21 +295,15 @@ BogusInput.java:140: Error: The monitored annotation can occur only on field dec
 BogusInput.java:144: Error: Unqualified this cannot be used in static contexts
     this.pp();  // "this" is not allowed in this context
     ^
-BogusInput.java:148: Error: Array index wild cards allowed only as specification designators
+BogusInput.java:148: Error: Array ranges are allowed only as specification designators
   //@ requires mus[*] == null;
                   ^
-BogusInput.java:148: Error: Invalid types (int and null) in equality comparison
-  //@ requires mus[*] == null;
-                      ^
-BogusInput.java:150: Error: Array index wild cards allowed only as specification designators
+BogusInput.java:150: Error: Array ranges are allowed only as specification designators
   //@ modifies iarr[iarr[*]];
                         ^
-BogusInput.java:151: Error: Array index wild cards allowed only as specification designators
+BogusInput.java:151: Error: Array ranges are allowed only as specification designators
   //@ ensures mus[*] == null;
                  ^
-BogusInput.java:151: Error: Invalid types (int and null) in equality comparison
-  //@ ensures mus[*] == null;
-                     ^
 BogusInput.java:156: Error: Undefined variable 'blah'
   //@ axiom new Object(blah);
                        ^
@@ -420,7 +414,7 @@ BogusInput.java:192: Error: Labeled predicates are not allowed in this context
                                                                ^
 Caution: Turning off extended static checking due to type error(s)
 1 caution
-130 errors
+128 errors
 BogusAssignments.java:4: Caution: May not assign to a final field
     x = 3;  // this is a "final" field, but we don't currently disallo ...
     ^

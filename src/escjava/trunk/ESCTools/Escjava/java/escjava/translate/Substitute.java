@@ -71,6 +71,13 @@ public class Substitute {
      * Cases needed only for SpecExprs:
      */
 
+    case TagConstants.WILDREFEXPR:
+	ErrorSet.notImplemented(true,e.getStartLoc(),"Wild-ref expression not yet implemented");
+	break;
+    case TagConstants.ARRAYRANGEREFEXPR:
+	ErrorSet.notImplemented(true,e.getStartLoc(),"Array-range expression not yet implemented");
+	break;
+
     case TagConstants.ARRAYREFEXPR:
       {
 	ArrayRefExpr ae = (ArrayRefExpr)e;
@@ -310,7 +317,6 @@ public class Substitute {
       }
     case TagConstants.TYPEEXPR:
     case TagConstants.LOCKSETEXPR:
-    case TagConstants.WILDREFEXPR:
     case TagConstants.CLASSLITERAL:
 
     case TagConstants.BOOLEANLIT: 

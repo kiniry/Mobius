@@ -225,6 +225,7 @@ public class SPVC
             case TagConstants.LOCKSETEXPR:
             case TagConstants.RESEXPR:
             case TagConstants.WILDREFEXPR:
+            case TagConstants.ARRAYRANGEREFEXPR:
             case TagConstants.THISEXPR:
             case TagConstants.CLASSLITERAL:
 
