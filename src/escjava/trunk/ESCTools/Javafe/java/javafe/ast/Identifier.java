@@ -5,39 +5,40 @@ package javafe.ast;
 import javafe.parser.TagConstants;
 import javafe.util.Assert;
 
+/**
+ * An <code>Identifier</code> is a symbol, that is, a sequence of
+ * characters.  <code>Identifier</code>s are interned: for any given
+ * sequence of characters, we create exactly one instance of
+ * <code>Identifier</code> to represent it (we say that the sequence
+ * of characters is <I>associated with</I> this
+ * <code>Identifier</code> instance).  This allows us to use object
+ * equality (that is, <code>==</code>) to check symbol equality.
+ *
+ * <p> This class is thread-safe: multiple threads can enter its any
+ * of its methods (static or non-static) simultaneously. </p>
+ */
 
-/** An <CODE>Identifier</CODE> is a symbol, that is, a sequence of
-  characters.  <CODE>Identifier</CODE>s are interned: for any given
-  sequence of characters, we create exactly one instance of
-  <CODE>Identifier</CODE> to represent it (we say that the sequence of
-  characters is <I>associated with</I> this <CODE>Identifier</CODE>
-  instance).  This allows us to use object equality (that is,
-  <CODE>==</CODE>) to check symbol equality.
-
-  <P> This class is thread-safe: multiple threads can enter its
-  any of its methods (static or non-static) simultaneously. */
-
-public final class Identifier {
-
+public final class Identifier
+{
   //// Private, static variables
 
   /** Size of intern table. */
   private static final int TABLE_SIZE = 128;
 
-  /** Table containing every instance of <CODE>Identifier</CODE>
+  /** Table containing every instance of <code>Identifier</code>
      created.  If a symbol <TT>s</TT> has been interned, its
-     associated <CODE>Identifier</CODE> is found by hashing it to
+     associated <code>Identifier</code> is found by hashing it to
      integer <TT>h</TT> such that <TT>0 &lt;= h &lt;= TABLE_SIZE</TT>,
      looking up <TT>v = chains[h]</TT>, which is a an array of arrays
-     of <CODE>Identifier</CODE>s, then searching <TT>v</TT> for the
-     <CODE>Identifier</CODE> associated with <TT>s</TT>.  If no such
+     of <code>Identifier</code>s, then searching <TT>v</TT> for the
+     <code>Identifier</code> associated with <TT>s</TT>.  If no such
      element exists, then <TT>s</TT> hasn't been interned yet.
 
      <P> This table is only extended, old parts are never updated.
      Thus, reading the table can occur without any locks being held.
      Extension of the table is protected by the mutex associated with
      the table itself (that is, the object pointed to by
-     <CODE>chains</CODE>. */
+     <code>chains</code>. */
 
   /*@ invariant (\forall int i; 0<=i && i<chains.length
 	==> chains[i]==null || chains[i].length>0) */
@@ -51,12 +52,12 @@ public final class Identifier {
   // Private, instance variables
 
   /** Sequence of characters represented by this Identifier (never
-    <CODE>null</CODE>). */
+    <code>null</code>). */
   //@ invariant chars!=null
   private char[] chars;
 
-  /** Memoization of <CODE>String.valueOf(chars, 0,
-    chars.length)</CODE>; may be <CODE>null</CODE>.  This variable may
+  /** Memoization of <code>String.valueOf(chars, 0,
+    chars.length)</code>; may be <code>null</code>.  This variable may
     be written exactly once. */
   private String equiv;
 
@@ -72,7 +73,7 @@ public final class Identifier {
 
 
     /**
-     * This field defaults to <CODE>TagConstants.IDENT</CODE>, but
+     * This field defaults to <code>TagConstants.IDENT</code>, but
      * is set to other values by the scanner to indicate keywords.
      */
     /*@ invariant tokenType!=TagConstants.BOOLEANLIT &&
@@ -98,7 +99,7 @@ public final class Identifier {
   }
 
 
-  /** Returns the <CODE>Identifier</CODE> associated with
+  /** Returns the <code>Identifier</code> associated with
     <TT>s</TT>. */
   //@ requires s!=null
   //@ ensures \result!=null
@@ -115,11 +116,11 @@ public final class Identifier {
 
   /** Intern a sequence of characters with a pre-computed hashcode.
 
-    <BR> Requires: <CODE>hashcode = Identifier.hash(text, textlen)</CODE> 
+    <BR> Requires: <code>hashcode = Identifier.hash(text, textlen)</code> 
 
-    <P> Ensures: returns the <CODE>Identifier</CODE> instance
+    <P> Ensures: returns the <code>Identifier</code> instance
     associated with the symbol consisting of the first
-    <CODE>textlen</CODE> characters of <CODE>text</CODE>. */
+    <code>textlen</code> characters of <code>text</code>. */
 
   //@ requires text!=null
   //@ requires 0<=textlen && textlen<=text.length
@@ -176,7 +177,7 @@ public final class Identifier {
 
 
   /** Return a string containing the symbol associated with
-    <CODE>this</CODE>. */
+    <code>this</code>. */
   public String toString() {
     if (equiv == null) equiv = String.valueOf(chars);
     return equiv;
@@ -215,7 +216,7 @@ public final class Identifier {
   }
 
 
-  /** Used by <CODE>check</CODE>; checks for duplicates. */
+  /** Used by <code>check</code>; checks for duplicates. */
   //@ requires s!=null
   private static Identifier slowFind(String s) {
     Identifier result = null;

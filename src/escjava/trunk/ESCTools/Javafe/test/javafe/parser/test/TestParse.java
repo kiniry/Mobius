@@ -69,8 +69,10 @@ public class TestParse
             else if (argv[i].equals("print")) { print = true; continue; }
             else if (argv[i].equals("progress")) { progress = true; continue; }
             else if (argv[i].equals("silent")) { ErrorSet.gag = true; continue; }
-            else if (argv[i].equals("assert")) { javafe.Tool.options.assertIsKeyword = true; continue; }
-            else if (argv[i].equals("idempotence")) { idempotence = true; continue; }
+            else if (argv[i].equals("assert")) {
+                javafe.Tool.options.assertIsKeyword = true; 
+                continue;
+            } else if (argv[i].equals("idempotence")) { idempotence = true; continue; }
 
             if (verboseprogress) System.out.println("Checking: " + argv[i]);
             else if (progress) {
@@ -111,8 +113,9 @@ public class TestParse
     }
 
     /**
-     * Compares two files.  Prints a message and returns true if
-     * they're different; otherwise, returns false.
+     * Compares two files.  Prints a message and returns
+     * <code>true</code> if they're different; otherwise, returns
+     * <code>false</code>.
      */
 
     //@ requires in1 != null && in2 != null;
