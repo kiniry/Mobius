@@ -148,9 +148,11 @@ javadoc:  build
 
 .PHONY: releases
 releases: releases-notests 
+	${MAKE} test-releases
+
+.PHONY: test-releases
+test-releases:
 	@echo "Testing release versions .........."
-	${MAKE} test-binary-release-before-tar
-	rm -rf ${RELTEMP}
 	${MAKE} test-binary-release
 	${MAKE} test-patch-release
 
@@ -199,6 +201,7 @@ binary-release: build docs
 	cp README.first README.txt ${RELTEMP}
 	cd release-files; cp `ls | grep -v CVS` ${RELTEMP}
 	cd ${RELTEMP}; tar cjvf ${RELDIR}/${RELTAR} *
+	rm -rf ${RELTEMP}
 
 ## FIXME - simplify script, simplify binary; alter escj to use alternate simplify script
 ## FIXME - also zip up the source and ship it as well.
