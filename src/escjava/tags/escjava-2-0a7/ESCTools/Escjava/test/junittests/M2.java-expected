@@ -1,0 +1,16 @@
+ESC/Java version VERSION
+    [TIME]
+
+M2 ...
+  Prover started:TIME
+    [TIME]
+
+M2: M2() ...
+    [TIME]  passed immediately
+
+M2: P(java.lang.String) ...
+    [TIME]  passed
+
+M2: m(java.lang.String) ...
+    [TIME]  passed
+  [TIME total]

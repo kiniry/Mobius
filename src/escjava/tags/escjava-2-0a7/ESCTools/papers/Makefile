@@ -1,0 +1,110 @@
+#
+# $Id$
+#
+
+paper =		
+
+talk =		
+
+texfiles =	$(wildcard *.tex)
+
+dvifiles =	$(foreach texfile,$(texfiles),\
+		$(subst .tex,.dvi,$(texfile)))
+
+psfiles =	$(foreach texfile,$(texfiles),\
+		$(subst .tex,.ps,$(texfile)))
+
+pdffiles =	$(foreach texfile,$(texfiles),\
+		$(subst .tex,.pdf,$(texfile)))
+
+javafiles =		$(wildcard problems/*.java)
+javatexinfofiles =	$(addsuffix .texinfo,$(javafiles))
+
+PROBLEMS =	problems
+PAPERS =	CASSIS2004.pdf FTFJP2004.pdf PASTE2004.pdf NIII-R0413.pdf
+HOMEWORK =	jml_homework.dvi jml_homework.ps jml_homework.ps2pdf
+
+PERL=perl
+CODE2TEXI=$(PERL) -e 'BEGIN: while (<>) { s/\r//g; s/@/@@/g; s/\{/@\{/g; s/\}/@\}/g; } continue { print; }'
+
+$(PROBLEMS)/%.java.texinfo : $(PROBLEMS)/%.java
+	@$(CODE2TEXI) $< > $@
+
+%.pdf: %.tex
+	pdflatex $< $@
+	make cleanup
+
+%.ps2pdf: %.ps
+	ps2pdf $<
+
+%.pdf.gz: %.pdf
+	gzip -c $< > $@
+
+%.ps: %.dvi
+	dvips -Pcmz -Pamz -f < $< > $@
+
+%.ps.gz: %.ps
+	gzip -c $< > $@
+
+%.dvi: %.tex
+	latex $<
+
+# ${paper}.dvi: ${paper}.tex
+# 	latex ${paper}; latex ${paper}; bibtex ${paper}; \
+# 	latex ${paper}; latex ${paper}; \
+
+# ${paper}.dvi: ${paper}.tex
+# 	latex ${paper}; latex ${paper};
+
+# ${talk}.ps: ${talk}.dvi
+# 	dvips -ta4 -Pcmz -Pamz -f < $< > $@
+
+# ${talk}.dvi: ${talk}.tex
+# 	latex ${talk};
+
+%.info:	%.texinfo
+	makeinfo $<
+
+%.txt:	%.texinfo
+	makeinfo --no-headers $< -o $@
+
+%.html:	%.texinfo
+	makeinfo --html	$<
+
+%.dvi:	%.texinfo
+	texi2dvi $<
+
+.PHONY: all build
+all:	build
+
+build:	$(PAPERS) $(HOMEWORK)
+
+jml_homework.dvi:	jml_homework.texinfo $(javatexinfofiles)
+
+CASSIS2004.pdf:	CASSIS2004.tex koa_state_diagram.pdf
+	pdflatex CASSIS2004; bibtext CASSIS2004; pdflatex CASSIS2004; pdflatex CASSIS2004;
+	make cleanup
+
+CASSIS2004.dvi:	CASSIS2004.tex koa_state_diagram.eps
+	latex CASSIS2004; bibtext CASSIS2004; latex CASSIS2004; latex CASSIS2004;
+
+koa_state_diagram.eps: koa_state_diagram.fig
+	fig2dev -L eps koa_state_diagram.fig koa_state_diagram.eps
+
+koa_state_diagram.pdf: koa_state_diagram.fig
+	fig2dev -L pdf koa_state_diagram.fig koa_state_diagram.pdf
+
+cleanup:
+	rm -f _region_* *.aux *.log \
+		*.cp *.cps *.fn *.ky *.pg *.tp *.vr \
+		*# *~
+
+clean:
+	rm -rf auto _region_* \
+		$(PAPERS) $(HOMEWORK) \
+		*.aux *.log *~ *.dvi *.brf \
+		*.cp *.cps *.fn *.ky *.pg *.tp *.vr \
+		*.bbl *.blg *.toc *.thm *.out *.cb \
+		*.lof *.lot *.gz *.Z #*
+	rm -rf jml_homework
+	rm -f problems/*.texinfo

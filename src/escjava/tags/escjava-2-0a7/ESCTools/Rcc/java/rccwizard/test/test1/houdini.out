@@ -1,0 +1,38 @@
+rccwiz version 1.1.1, 31 May 2000
+Fri Dec 15 17:27:15 PST 2000: Copying files...
+Fri Dec 15 17:27:16 PST 2000: Creating candidate annotation set for readonly annotations...
+running: CLASSPATH=.:/udir/freund/jdksrc/:/udir/flanagan/Proj/Rcc/jdk1.1/share/java:/udir/flanagan/Proj/Rcc/jdk1.1/share/sun:/tmp_mnt/monica/r/dlusers4/freund/proj/Rcc/Rcc/classes:/tmp_mnt/monica/r/dlusers4/freund/proj/Rcc/Rcc/../Javafe/classes/javafe.zip:/src/java:/tmp_mnt/monica/r/dlusers4/freund/proj/Rcc/Rcc/java:/tmp_mnt/monica/r/dlusers4/freund/proj/Rcc/Rcc/classes:/tmp_mnt/monica/r/dlusers4/freund/proj/Rcc/Rcc/../Javafe/classes/javafe.zip:/src/java:.:/tmp_mnt/monica/r/dlusers4/freund/proj/Rcc/Rcc/classes:/tmp_mnt/monica/r/dlusers4/freund/proj/Rcc/Rcc/../Javafe/classes/javafe.zip:/src/java srcjava1.2 rccwizard.Main -classpath .:/udir/freund/jdksrc/:/udir/flanagan/Proj/Rcc/jdk1.1/share/java:/udir/flanagan/Proj/Rcc/jdk1.1/share/sun:/tmp_mnt/monica/r/dlusers4/freund/proj/Rcc/Rcc/classes:/tmp_mnt/monica/r/dlusers4/freund/proj/Rcc/Rcc/../Javafe/classes/javafe.zip:/src/java:/tmp_mnt/monica/r/dlusers4/freund/proj/Rcc/Rcc/java:/tmp_mnt/monica/r/dlusers4/freund/proj/Rcc/Rcc/classes:/tmp_mnt/monica/r/dlusers4/freund/proj/Rcc/Rcc/../Javafe/classes/javafe.zip:/src/java:. -readonly -f /tmp_mnt/monica/r/dlusers4/freund/proj/Rcc/Rcc/java/rccwizard/test/test1/outdir/log/progIndirectFiles
+Fri Dec 15 17:27:22 PST 2000: Inserting annotations...
+Fri Dec 15 17:27:24 PST 2000: Annotation completed
+Fri Dec 15 17:27:24 PST 2000: Iteration 0 
+Annotations remaining:          6 program,          0 library
+Fri Dec 15 17:27:38 PST 2000: Iteration 1 
+Annotations remaining:          6 program,          0 library
+Fri Dec 15 17:27:52 PST 2000, Reached fixpoint after 2 iterations
+Fri Dec 15 17:27:52 PST 2000: Creating candidate annotation set for locking annotations...
+running: CLASSPATH=.:/udir/freund/jdksrc/:/udir/flanagan/Proj/Rcc/jdk1.1/share/java:/udir/flanagan/Proj/Rcc/jdk1.1/share/sun:/tmp_mnt/monica/r/dlusers4/freund/proj/Rcc/Rcc/classes:/tmp_mnt/monica/r/dlusers4/freund/proj/Rcc/Rcc/../Javafe/classes/javafe.zip:/src/java:/tmp_mnt/monica/r/dlusers4/freund/proj/Rcc/Rcc/java:/tmp_mnt/monica/r/dlusers4/freund/proj/Rcc/Rcc/classes:/tmp_mnt/monica/r/dlusers4/freund/proj/Rcc/Rcc/../Javafe/classes/javafe.zip:/src/java:.:/tmp_mnt/monica/r/dlusers4/freund/proj/Rcc/Rcc/classes:/tmp_mnt/monica/r/dlusers4/freund/proj/Rcc/Rcc/../Javafe/classes/javafe.zip:/src/java srcjava1.2 rccwizard.Main -classpath .:/udir/freund/jdksrc/:/udir/flanagan/Proj/Rcc/jdk1.1/share/java:/udir/flanagan/Proj/Rcc/jdk1.1/share/sun:/tmp_mnt/monica/r/dlusers4/freund/proj/Rcc/Rcc/classes:/tmp_mnt/monica/r/dlusers4/freund/proj/Rcc/Rcc/../Javafe/classes/javafe.zip:/src/java:/tmp_mnt/monica/r/dlusers4/freund/proj/Rcc/Rcc/java:/tmp_mnt/monica/r/dlusers4/freund/proj/Rcc/Rcc/classes:/tmp_mnt/monica/r/dlusers4/freund/proj/Rcc/Rcc/../Javafe/classes/javafe.zip:/src/java:. -f /tmp_mnt/monica/r/dlusers4/freund/proj/Rcc/Rcc/java/rccwizard/test/test1/outdir/log/progIndirectFiles
+Fri Dec 15 17:27:58 PST 2000: Inserting annotations...
+Fri Dec 15 17:27:59 PST 2000: Annotation completed
+Fri Dec 15 17:28:00 PST 2000: Iteration 2 
+Annotations remaining:         36 program,          0 library
+Fri Dec 15 17:28:13 PST 2000: Iteration 3 
+Annotations remaining:         36 program,          0 library
+Fri Dec 15 17:28:26 PST 2000: Iteration 4 
+Annotations remaining:         36 program,          0 library
+Fri Dec 15 17:28:40 PST 2000: Iteration 5 
+Annotations remaining:         36 program,          0 library
+Fri Dec 15 17:28:53 PST 2000: Iteration 6 
+Annotations remaining:         36 program,          0 library
+Fri Dec 15 17:29:06 PST 2000, Reached fixpoint after 7 iterations
+Fri Dec 15 17:29:06 PST 2000: Computing Annotation links
+Determining reference-to-declaration links
+Creating HTML-ized sources...
+C.java
+Lines of code: 71
+Creating warnings file...
+
+./C.java 1 25./C.java 1 25./C.java 37 25./C.java 37 25./C.java 52 25./C.java 52 25
+./C.java 13 4./C.java 1 25./C.java 68 3./C.java 52 25./C.java 42 4./C.java 37 25./C.java 7 4./C.java 1 25./C.java 57 10./C.java 52 25./C.java 18 4./C.java 1 25
+./C.java 1 25type CB./C.java 37 25type CC./C.java 52 25type CCC
+./C.java 1 25/*# thread_local */./C.java 37 25/*# thread_local */./C.java 52 25/*# thread_local */
+Fri Dec 15 17:29:31 PST 2000: Done

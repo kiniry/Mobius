@@ -1,0 +1,50 @@
+ESC/Java version VERSION
+    [TIME]
+
+GhostLocal ...
+  Prover started:TIME
+    [TIME]
+
+GhostLocal: GhostLocal() ...
+    [TIME]  passed immediately
+
+GhostLocal: m() ...
+    [TIME]  passed
+
+GhostLocal: pred(int) ...
+    [TIME]  passed immediately
+
+GhostLocal: mm() ...
+GhostLocal.java:26: Caution: Unable to use quantification because no trigger found: (FORALL (|ii:26.30|) (OR (>= 0 |ii:26.30|) (NOT (> 4 |ii:26.30|))))
+                //@ ghost int i = (\max int ii; 0<ii && ii<4; ii+2);
+                                            ^
+    [TIME]  passed
+  [TIME total]
+
+GhostLocalA ...
+    [TIME]
+
+GhostLocalA: m() ...
+------------------------------------------------------------------------
+GhostLocal.java:47: Warning: Possible assertion failure (Assert)
+                //@ assert a.i == 3; // ERROR
+                    ^
+------------------------------------------------------------------------
+    [TIME]  failed
+
+GhostLocalA: GhostLocalA() ...
+    [TIME]  passed
+  [TIME total]
+
+GhostLocalS ...
+    [TIME]
+
+GhostLocalS: GhostLocalS() ...
+    [TIME]  passed
+  [TIME total]
+
+GhostLocalI ...
+    [TIME]
+  [TIME total]
+1 caution
+1 warning

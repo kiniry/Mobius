@@ -1,0 +1,15 @@
+.emacs.desktop
+Makefile.local
+OOBR
+docs
+esctools2.jar
+jars
+javadoc
+jmlc
+libs
+optimized
+prj.el
+release
+release-temp
+release-test
+semantic.cache

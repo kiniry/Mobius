@@ -1,0 +1,122 @@
+ESC/Java version VERSION
+    [TIME]
+
+ModelVarMod ...
+  Prover started:TIME
+    [TIME]
+
+ModelVarMod: p() ...
+    [TIME]  passed
+
+ModelVarMod: p2() ...
+    [TIME]  passed
+
+ModelVarMod: p3() ...
+------------------------------------------------------------------------
+ModelVarMod.java:68: Warning: Possible assertion failure (Assert)
+            //@ assert m == 6; // ERROR
+                ^
+------------------------------------------------------------------------
+    [TIME]  failed
+
+ModelVarMod: p3a() ...
+------------------------------------------------------------------------
+ModelVarMod.java:87: Warning: Postcondition possibly not established (Post)
+        }
+        ^
+Associated declaration is "ModelVarMod.java", line 81, col 5:
+        //@ ensures a.m == 0; // ERROR - how do we know a != this
+            ^
+Execution trace information:
+    Executed implicit return in "ModelVarMod.java", line 87, col 1.
+
+------------------------------------------------------------------------
+    [TIME]  failed
+
+ModelVarMod: pp() ...
+------------------------------------------------------------------------
+ModelVarMod.java:97: Warning: Possible assertion failure (Assert)
+            //@ assert m == 6;  // ERROR
+                ^
+------------------------------------------------------------------------
+    [TIME]  failed
+
+ModelVarMod: pp2() ...
+------------------------------------------------------------------------
+ModelVarMod.java:109: Warning: Possible assertion failure (Assert)
+            //@ assert ms == 4;  // ERROR
+                ^
+------------------------------------------------------------------------
+    [TIME]  failed
+
+ModelVarMod: ModelVarMod() ...
+    [TIME]  passed
+  [TIME total]
+
+ModelVarModPS ...
+    [TIME]
+
+ModelVarModPS: ModelVarModPS() ...
+    [TIME]  passed
+  [TIME total]
+
+ModelVarModS ...
+    [TIME]
+
+ModelVarModS: ModelVarModS() ...
+    [TIME]  passed
+  [TIME total]
+
+ModelVarModD ...
+    [TIME]
+
+ModelVarModD: ModelVarModD() ...
+    [TIME]  passed
+  [TIME total]
+
+ModelVarModStatic ...
+    [TIME]
+
+ModelVarModStatic: q() ...
+    [TIME]  passed
+
+ModelVarModStatic: q2() ...
+    [TIME]  passed
+
+ModelVarModStatic: q3() ...
+------------------------------------------------------------------------
+ModelVarMod.java:198: Warning: Possible assertion failure (Assert)
+            //@ assert m == 6; // ERROR
+                ^
+------------------------------------------------------------------------
+    [TIME]  failed
+
+ModelVarModStatic: q3a() ...
+    [TIME]  passed
+
+ModelVarModStatic: qq() ...
+------------------------------------------------------------------------
+ModelVarMod.java:229: Warning: Possible assertion failure (Assert)
+            //@ assert m == 6;  // ERROR
+                ^
+------------------------------------------------------------------------
+    [TIME]  failed
+
+ModelVarModStatic: qq2() ...
+------------------------------------------------------------------------
+ModelVarMod.java:245: Warning: Possible assertion failure (Assert)
+            //@ assert ms == 4;  // ERROR
+                ^
+------------------------------------------------------------------------
+    [TIME]  failed
+
+ModelVarModStatic: qq2a() ...
+    [TIME]  passed
+
+ModelVarModStatic: qq2b() ...
+    [TIME]  passed
+
+ModelVarModStatic: ModelVarModStatic() ...
+    [TIME]  passed
+  [TIME total]
+7 warnings
