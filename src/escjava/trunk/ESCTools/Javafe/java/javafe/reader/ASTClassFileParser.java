@@ -66,6 +66,9 @@ class ASTClassFileParser extends ClassFileParser
     private boolean syntheticClass = false;
 
     protected boolean includeBodies;
+
+    protected boolean omitPrivateFields = true;
+
     /**
      * Parse a class into a new class parser.  Resulting class file is
      * stored in <code>typeDecl</code>; this will be a "spec only"
@@ -138,6 +141,11 @@ class ASTClassFileParser extends ClassFileParser
 		    continue;
 		}
 	    }
+            if (omitPrivateFields && elems[i] instanceof FieldDecl) {
+                if (Modifiers.isPrivate( ((FieldDecl)elems[i]).modifiers )) {
+                    continue;
+                }
+            }
 	    v.addElement(elems[i]);  //@ nowarn Pre;
 	}
     }
