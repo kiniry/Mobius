@@ -70,6 +70,10 @@ buildall: version compileall
 .PHONY: test
 test: test_escjava
 
+.PHONY: alltests
+alltests: test_escjava 
+	-$(MAKE) typecheckEscjava
+	##-$(MAKE) self_test     ## FIXME
 
 ###########################################################################
 # Documentation targets.
@@ -330,7 +334,6 @@ tests:
 	$(MAKE) junittests
 	$(MAKE) test_escjava_parser
 	##$(MAKE) test_matrix   ## FIXME
-	##$(MAKE) self_test     ## FIXME
 
 .PHONY: build_javafe_test
 build_javafe_test:
@@ -343,6 +346,21 @@ junittests:
 .PHONY: test_escjava_parser
 test_escjava_parser:
 	$(MAKE) -C ${TOP_ESCJAVA_TEST_DIR} test
+
+.PHONY: typecheckEscjava
+typecheckEscjava:
+	@echo ===== Typechecking the Escjava package =====
+	cd ${ESCTOOLS_ROOT}/Escjava/java && \
+	for d in ast backpred gui parser tc reader prover sp translate ; do \
+	echo -n $${d} ;\
+	echo `find escjava/$${d} -name '*.java'` | xargs -n 300 \
+	    ${JAVA} -classpath ../../Javafe/classfiles javafe.test.Print \
+	    -classpath "${call canonicalize,.:../../Javafe/java:../../Utils}" \
+	    -typecheck -noprint  ;\
+	done && \
+	    ${JAVA} -classpath ../../Javafe/classfiles javafe.test.Print \
+	    -classpath "${call canonicalize,.:../../Javafe/java:../../Utils}" \
+	    -typecheck -noprint  escjava/*.java 
 
 .PHONY: test_matrix
 test_matrix:
