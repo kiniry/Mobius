@@ -181,7 +181,7 @@ b) for Makefiles, by creating a file $ESCTOOLS_ROOT/Makefile.local
 
 c) for executables, namely escj, by creating a wrapper script file
    that sets the variables prior to invoking escj.  A sample such
-   wrapper script is found in $ESCTOOLS_ROOT/Escjava/escjava.sample
+   wrapper script is found in $ESCTOOLS_ROOT/Escjava/escjava2.sample
 
 The required variables are:
 
@@ -189,34 +189,36 @@ ESCTOOLS_ROOT - defined to be the absolute path to the ESCTools
         directory
 
 SIMPLIFY - defined to be the *name* of (*not* the path to) an
-        appropriate Simplify executable in the directory
-           $ESCTOOLS_ROOT/Escjava/release/master/bin
+        appropriate Simplify executable, currently one of
+		Simplify-1.5.4.macosx
+		Simplify-1.5.4.exe   (for Windows) 
+		Simplify-1.5.4.linux
+		Simplify-1.5.4.solaris (not tested on Solaris)
 
 	For example, with a bash shell:
            export SIMPLIFY=Simplify-1.5.4.linux
 
         The Makefile and Escjava shell scripts make a guess at an
 	appropriate value for some platforms, but defining it yourself
-	will avoid the warning messages.  A guess is only made for
-	Linux, Darwin on PowerPC (OS X), SPARC/Solaris, and Cygwin on
-	recent versions of Windows.  No guess is made for Compaq
-	True64 as we do not have access to such a machine.  If you
-	have a True64 machine, please send us the output of "uname
-	-a"!
+	will avoid the warning messages.
 
 Additionally the following variable is important:
 
-ESC_SPECS - defined to be a classpath containing directories of JML
-	specification files.  If there is no definition provided, the
-	executables will use the location of a small set of
-	specification files for Java system classes that is part of
-	the release.  You may instead want to obtain a current copy of
+ESC_SPECS - defined to be a classpath containing directories or jar
+	files of JML specification files.  If there is no definition 
+	provided, the executables will use the location of a snapshot 
+	of the specifications from the JML project that is included 
+	in the ESC/Java2 release.
+	You may instead want to obtain a current copy of
 	the specification files provided by the JML project and define
 	this variable to reference them.  If you use the JML
 	specification files (in .../JML/JML2/specs) you also need the
 	model files that are rooted at .../JML/JML2.  You may also
 	want to include in this classpath any specification files for
 	your own projects.
+	[ ESC/Java2 will append this classpath to the sourcepath if a
+	sourcepath is specified; otherwise it is appended to the 
+	classpath used to find the files on which ESC/Java2 operates.]
 
 When a release is built, these two variables are used:
 
@@ -381,7 +383,7 @@ you use the -package option to run the tool on an entire package, the
 package is found on the CLASSPATH.
 
 These variables may also be used to modify the behavior of the
-executable:
+escj executable:
 	CLASSPATH - set this to contain the classpath of all of the
 		directories needed by classes specified on the command
 		line.  The default is the value of CLASSPATH set by
@@ -419,8 +421,6 @@ affect the behavior of Simplify.  The most important are:
 		executable named by $SIMPLIFY.  This is by default
 		automatically set to a directory in the release or
 		in the CVS distribution.
-	ESCJ_SIMPLIFY_ARGS - the default arguments to use when
-		invoking Simplify (default is '-noprune -noplunge').
 
 ----------------------------------------------------------------------------
 
