@@ -180,7 +180,7 @@ verifying, and maintaining specifications of non-trivial APIs
 troublesome (as discussed in Section~\ref{sec:usage-exper-date}).
 
 Additionally, JML has grown significantly in popularity.  A number of
-tools have been developed use JML, representing the work of several
+tools have been developed that use JML, representing the work of several
 groups~\cite{Burdy-etal03jmlpapers,Bogor03,NimmerErnst01Leavens-etal00}.
 Thus, many new research tools worked well with ``modern'' JML, but
 DEC/SRC ESC/Java did not.
@@ -213,7 +213,7 @@ and
 tools that use the same code base (Calvin, RCC, and Houdini~\cite{flanagan01houdini}) and to
 integrate with other JML-based tools.  This integration will
 enable testing of the tool's utility in improving programmer
-productivity on a broader range of significant bodies of Java source,
+productivity on significant bodies of Java source,
 and to use the tool as a basis for research in unexplored aspects of
 annotation and static program analysis.
   
@@ -284,8 +284,9 @@ of annotation fields matches that of Java and other JML tools;
 \item generalizing the use of \texttt{\char'134 old}, \texttt{set} statements and local ghost variables, to provide more flexibility in writing specifications;
 \item introduction of the \texttt{constraint}, \texttt{represents}, \texttt{field}, \texttt{method},
 \texttt{constructor}, 
-\texttt{\char'134 not\_modified}, \texttt{forall}, \texttt{old}, \texttt{instance}, \texttt{pure} keywords as defined in JML;
-\item and, consistency in the format of annotations, in order to match the language handled by other JML tools.
+\texttt{\char'134 not\_modified}, \texttt{forall}, \texttt{old},
+\texttt{instance}, \texttt{pure} keywords as defined in JML; and
+\item consistency in the format of annotations in order to match the language handled by other JML tools.
 \end{itemize}
 In addition, virtually all of the differences between DEC/SRC ESC/Java
 and JML noted in the JML Reference Manual have been resolved.
@@ -297,7 +298,9 @@ and JML noted in the JML Reference Manual have been resolved.
 \subsection{New verification checks}
 Though all of JML is parsed, not all of it is currently checked.
 Static checking of the following features has been added to that performed by
-DEC/SRC ESC/Java.  The space available in this paper permits only a summary of the emdedding of the above into the underlying ESC/Java logic.  
+DEC/SRC ESC/Java.  The space available in this paper permits only a
+summary of the embedding of the above features into the underlying
+ESC/Java logic.
 \setlength{\partopsep}{0in}\setlength{\parskip}{0in}\setlength{\itemsep}{0in}\setlength{\topsep}{0in}
 \begin{itemize}
 \setlength{\partopsep}{0in}\setlength{\parskip}{0in}\setlength{\itemsep}{0in}\setlength{\topsep}{0in}
@@ -378,6 +381,7 @@ are the subject of ongoing research.
 \setlength{\partopsep}{0in}\setlength{\parskip}{0in}\setlength{\itemsep}{0in}\setlength{\topsep}{0in}
 \begin{itemize}
 \setlength{\partopsep}{0in}\setlength{\parskip}{0in}\setlength{\itemsep}{0in}\setlength{\topsep}{0in}
+%% There are "however" in 5 of the 7 sections below. -JRK
 \item \textit{pure routines}:  It is convenient and modular to use model and Java methods within
 annotations.  The semantics of such use is clearer and simpler if such routines are {\em pure}, that is, they do not have side-effects.  This is important when evaluating annotations during
 execution, since the checking of specifications should not affect the operation of the program being
@@ -439,8 +443,8 @@ integrating several JML-based tools~\cite{Hub03}.
 These and other VerifiCard projects relied upon the specifications of
 the Java Card 2.1.1 API written and verified by Poll, Meijer, and
 others~\cite{MeijerPoll01}.  This specification originally came in two
-forms: one ``complete'' specification that used JML models,
-heavyweight specifications, and refinements, and another
+forms: one ``heavyweight'' specification that used JML models,
+heavyweight contract specifications, and refinements, and another
 ``lightweight'' specification that was meant to be used with DEC/SRC
 ESC/Java and other verification tools like Jack, Krakatoa, and the
 Loop tool~\cite{BergJ01,BurdyRequet02,MarchePaulinMohringUrbain04}.
@@ -449,8 +453,8 @@ Writing, verifying, and maintaining these two specifications was a
 troublesome experience.  Because of limitations of various tools which
 depended upon the specifications, several alternate forms of
 specifications were required.  Additionally, it was sometimes the case
-that the alternate forms were not equivalent nor had obvious logical
-relationships between them.
+that the alternate forms were neither equivalent nor had obvious
+logical relationships between them.
 
 %% TODO - Gary suggests that stuff up to here or the next paragrraph
 %% go to the introduction as motivation. -DrCok   I've added such to
@@ -462,13 +466,13 @@ This experience was one of the motivators for the SoS group's support
 of this work on ESC/Java2.  Now that multiple tools are available that
 fully cover the JML language, the incidence of specification reuse is
 rising and painful maintenance issues are becoming a thing of the
-past.  As a result, early evidence for the success this transition is
+past.  As a result, early evidence for the success of this transition is
 beginning to appear.
 
 First, the specifications of a small case
 study~\cite{BreunesseJacobsBerg02} were updated and re-verified by one
 of this paper's authors (Kiniry) using ESC/Java2.  The original work
-depended upon light\-weight JML specifications of core Java Card classes
+depended upon ``light\-weight'' JML specifications of core Java Card classes
 and the verification was performed with DEC/SRC ESC/Java and the Loop
 tool.  The re-verification effort used the full ``heavyweight'' Java
 and Java Card specifications and was accomplished in a single
@@ -514,19 +518,19 @@ warnings, and to the overall user experience such tools provide.
 
 \paragraph*{Case Studies} The current implementation supports the
 static checking of a stable core of JML.  With this initial
-implementation of frame condition checking and of model fields,
+implementation of frame condition checking, of model fields,
 represents clauses and use of routine calls in annotations, ESC/Java2
 can now be used on complex and abstract specifications of larger
 bodies of software.  Consequently, there is a considerable need for
 good experimental usage studies that confirm that this core of JML is
-useful in annotations and that the operation of ESC/Java2 (and
+useful in annotations, and that the operation of ESC/Java2 (and
 Simplify) on that core is correct and valuable.
 
 \paragraph*{Verification Logic} The logic into which Java and JML are
 embedded in both DEC/SRC ESC/Java and ESC/Java2 is, by design and admission of the original
 authors, neither complete or fully sound.  This was the result of an
 engineering judgment in favor of performance and usability.  Research
-that studies expanded and larger use cases may show whether this
+studying expanded and larger use cases may show whether this
 design decision is generally useful in practical static checking or
 whether a fuller and more complicated state-based logic is required
 for significant results to be obtained. 
@@ -611,8 +615,8 @@ are implied by the specifications but not exercised during execution.
 %% to this goal.  I do not believe that he has yet seen our work
 %% on ESC/Java2, and will be very encouraged and excited by it. -JRK
 
-This work on implementing ESC/Java2 and evaluating its use is in
-progress, so a set of data-driven conclusions is premature.  Instead,
+Because this work on implementing ESC/Java2 and evaluating its use is
+in progress, a set of data-driven conclusions is premature.  Instead,
 let us posit a hypothesis in the form of a vision.
 
 One can observe this work in tool creation and evaluation from a
