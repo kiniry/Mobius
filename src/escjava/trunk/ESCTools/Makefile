@@ -66,6 +66,10 @@ fix-perms:
 		-name "*.txt" -or \
 		-name "*.zip" \
 		-exec chmod 644 {} \;
+	find $(ESCTOOLS_ROOT) -type f \
+		-name "rtest*" -or \
+		-name "run" \
+		-exec chmod 755 {} \;
 
 ########################################### clean
 
@@ -122,7 +126,7 @@ javadoc:  build
 release: 
 	@echo Making release version ${ESC_PROJECT}-${ESC_VERSION}
 	${MAKE} clean
-	${MAKE} -k generate-patches
+	${MAKE} -k generate-patches generate-toplevel-archive
 	${MAKE} build
 	${MAKE} test
 	${MAKE} make-release
@@ -131,7 +135,7 @@ release:
 .PHONY: release-notest
 release-notest:
 	${MAKE} clean
-	${MAKE} -k generate-patches
+	${MAKE} -k generate-patches generate-toplevel-archive
 	${MAKE} build
 	${MAKE} make-release
 
@@ -169,6 +173,12 @@ test-release:
 ## Simplify package must be unpacked into the directory
 ## "ESCTools.orig/Simplify".  Then, this rule is run from the
 ## directory above the two ESCTools{.orig} directories.
+
+## These patches are used by unpacking the original
+## Compaq/H.P. ESCTools sources as appropriate, cd-ing to the
+## top-level directory "ESCTools" and running
+##   bzcat ~/ESCTools-<version>-<date>-<envelope>.patch.bz | patch -Np1
+## the appropriate number of times.
 .PHONY: generate-patches
 generate-patches: clean
 	(cd ..; \
@@ -182,6 +192,9 @@ generate-patches: clean
 	LC_ALL=C TZ=UTC0 diff -Naur --exclude=*.class --exclude=.#* --exclude=CVS \
 		ESCTools.orig/Houdini ESCTools/Houdini \
 		| bzip2 -9 > ${ESC_PROJECT}-${ESC_VERSION}-`date "+%d-%m-%y"`-Houdini.patch.bz; \
+	LC_ALL=C TZ=UTC0 diff -Naur --exclude=*.class --exclude=.#* --exclude=CVS \
+		ESCTools.orig/Javafe ESCTools/Javafe \
+		| bzip2 -9 > ${ESC_PROJECT}-${ESC_VERSION}-`date "+%d-%m-%y"`-Javafe.patch.bz; \
 	LC_ALL=C TZ=UTC0 diff -Naur --exclude=*.class --exclude=.#* --exclude=CVS \
 		ESCTools.orig/Rcc ESCTools/Rcc \
 		| bzip2 -9 > ${ESC_PROJECT}-${ESC_VERSION}-`date "+%d-%m-%y"`-Rcc.patch.bz; \
@@ -200,8 +213,19 @@ generate-toplevel-archive: clean
 	cp -r ${ESCTOOLS_ROOT}/docs ${RELTEMP}/ESCTools; \
 	cp -r ${ESCTOOLS_ROOT}/Utils ${RELTEMP}/ESCTools; \
 	cp -r ${ESCTOOLS_ROOT}/jars ${RELTEMP}/ESCTools; \
+	mkdir -p ${RELTEMP}/ESCTools/Escjava/release/master/bin; \
+	cp ${ESCTOOLS_ROOT}/Escjava/release/master/bin/Simplify-1.5.4.macosx ${RELTEMP}/ESCTools/Escjava/release/master/bin; \
 	find ${RELTEMP} -name "CVS" -exec rm -rf {} \; ; \
 	(cd ${RELTEMP}; \
 		tar cjf ${ESCTOOLS_ROOT}/../${ESC_PROJECT}-${ESC_VERSION}-`date "+%d-%m-%y"`-TopLevel.tbz \
 		ESCTools;); \
 	rm -rf ${RELTEMP}/ESCTools
+
+## Until we can figure out how to have diff/patch detect and generate
+## 0 length files, we have to archive them up all independently.
+.PHONY: zero-length-files
+zero-length-files:
+	cd ${ESCTOOLS_ROOT}; \
+	tar cjf ../${ESC_PROJECT}-${ESC_VERSION}-`date "+%d-%m-%y"`-ZeroLengthFiles.tbz \
+		`find . -size 0`
+
