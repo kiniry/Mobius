@@ -57,6 +57,11 @@ public class Options extends javafe.SrcToolOptions
      */
     public boolean testRef = false;
 
+    /** Temporary option to turn on purity checking, since it is off by
+	default until purity issues with inheritance are resolved.
+    */
+    public boolean checkPurity = false;
+
     /** When true, parses pragmas that begin with /*+@, which are normally
      parsed only by JML; this allows test runs in which everything JML
      parses is parsed by escjava, to see if we have full coverage of all
@@ -657,6 +662,9 @@ public class Options extends javafe.SrcToolOptions
         } else if (option.equals("-testRef")) {
             testRef = true;
             return offset;
+	} else if (option.equals("-checkPurity")) {
+	    checkPurity = true;
+	    return offset;
         }
     
         // Pass on unrecognized options:
