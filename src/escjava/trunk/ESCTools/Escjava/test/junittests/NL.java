@@ -1,5 +1,5 @@
 // Tests the behavior of non_null under inheritance
-public class NL extends S {
+public class NL extends NLS {
 	Object oo;
 // CASE 2:
 	// Parent has non_null
@@ -16,7 +16,7 @@ public class NL extends S {
 		m(oo);  // FAILS
 	}
 	public void mm2() {
-		(new S()).m(oo);  // FAILS
+		(new NLS()).m(oo);  // FAILS
 	}
 // CASE 1:
 	// Parent has non_null
@@ -35,7 +35,7 @@ public class NL extends S {
 		qm(oo); // OK 
 	}
 	public void qmm2() {
-		(new S()).qm(oo);   // FAILS
+		(new NLS()).qm(oo);   // FAILS
 	}
 // CASE 1b:
 	// Parent has non_null
@@ -54,7 +54,7 @@ public class NL extends S {
 		qqm(oo); // FAILS 
 	}
 	public void qqmm2() {
-		(new S()).qqm(oo);   // FAILS
+		(new NLS()).qqm(oo);   // FAILS
 	}
 // CASE 3:
 	// Parent is not non_null
@@ -69,7 +69,7 @@ public class NL extends S {
 		n(oo);  // OK
 	}
 	public void nn2() {
-		(new S()).n(oo);  // OK
+		(new NLS()).n(oo);  // OK
 	}
 
 	public void p(/*@ non_null */ Object o) {
@@ -82,12 +82,12 @@ public class NL extends S {
 		p(oo);  // FAILS
 	}
 	public void pp2() {
-		(new S()).p(oo); // FAILS 
+		(new NLS()).p(oo); // FAILS 
 	}
 
 }
 
-class S {
+class NLS {
 	public void nonnull(/*@ non_null */ Object o);
 
 	public void m(/*@ non_null */ Object o) {
