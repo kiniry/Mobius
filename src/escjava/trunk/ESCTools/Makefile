@@ -71,6 +71,7 @@ fix-perms:
 	find $(ESCTOOLS_ROOT) -type f \
 		-name "rtest*" -or \
 		-name "run" \
+		-name "*_tags" \
 		-exec chmod 755 {} \;
 
 ########################################### clean
@@ -184,12 +185,13 @@ binary-release: build docs
 	cp docs/Escjava2-ImplementationNotes/*.pdf ${RELTEMP}
 	${MAKE} clean-norel-noreltemp
 	${MAKE} -C Utils/junitutils build
-	cp ${ESCJAVA_ROOT}/escj ${RELTEMP}
-	cp ${ESCJ_SIMPLIFY_DIR}/Simplify-1.5.4* ${RELTEMP}
-	cp ${ESCJAVA_ROOT}/simplify ${RELTEMP}/simplify-script
-	cp README.first README.txt ${RELTEMP}
-	cd release-files; cp `ls | grep -v CVS` ${RELTEMP}
-	cd ${RELTEMP}; tar cjvf ${RELDIR}/${RELTAR} *
+	mkdir -p ${RELTEMP}
+	cp ${ESCJAVA_ROOT}/escj ${RELDIR}
+	cp ${ESCJ_SIMPLIFY_DIR}/Simplify-1.5.4* ${RELDIR}
+	cp ${ESCJAVA_ROOT}/simplify ${RELDIR}/simplify-script
+	cp README.first README.txt ${RELDIR}
+	cd release-files; cp `ls | grep -v CVS` ${RELDIR}
+	cd ${RELDIR}; tar cjvf ${RELTAR} *
 
 ## FIXME - simplify script, simplify binary; alter escj to use alternate simplify script
 ## FIXME - also zip up the source and ship it as well.
@@ -232,13 +234,21 @@ test-patch-release:
 		unset JUNIT_LIB ;\
 		unset ESCJ_SIMPLIFY_DIR ;\
 		./install.sh  ${ORIGINAL_TAR_DIR}
-		
 
 ## For this target to work, you must unpack the original ESCTools
 ## archives (e.g., Calvin.tar.Z, Escjava.tar.Z, etc.) into a directory
 ## "${ESCTOOLS_ORIGINAL}".  The
 ## Simplify package must be unpacked into the directory
 ## "${ESCTOOLS_ORIGINAL}/Simplify".  
+
+.PHONY: generate-patch-based-release
+generate-patch-based-release: generate-patches generate-toplevel-archive zero-length-files
+	(cd ${ESCTOOLS_ROOT}/..; \
+	tar cjvf ${RELPATCHTAR} \
+		${CALVIN_PATCHES} ${ESCJAVA_PATCHES} ${HOUDINI_PATCHES} \
+		${JAVAFE_PATCHES} ${RCC_PATCHES} ${SIMPLIFY_PATCHES} \
+		${TOPLEVEL_TAR} ${ZERO_LENGTH_TAR}; \
+	)
 
 ## These patches are used by unpacking the original
 ## Compaq/H.P. ESCTools sources as appropriate, cd-ing to the
@@ -249,28 +259,28 @@ test-patch-release:
 PATCH_PREFIX = ${PATCH_DIR}/${PATCH_NAME}
 .PHONY: generate-patches
 generate-patches: clean
-	mkdir -p ${PATCH_DIR}
-	(cd ..; \
+	(cd ${ESCTOOLS_ROOT}/..; \
+	mkdir -p ${PATCH_DIR}; \
 	LC_ALL=C TZ=UTC0 diff -Naur --exclude=*.class --exclude=.#* --exclude=CVS \
 		--exclude=Simplify-1* ${ESCTOOLS_ORIGINAL}/Calvin ESCTools/Calvin \
-		| bzip2 -9 > ${PATCH_PREFIX}-Calvin.patch.bz; \
+		| bzip2 -9 > ${CALVIN_PATCHES}; \
 	LC_ALL=C TZ=UTC0 diff -Naur --exclude=*.class --exclude=.#* --exclude=CVS \
 		--exclude=Simplify-1* --exclude=javadoc \
 		${ESCTOOLS_ORIGINAL}/Escjava ESCTools/Escjava \
-		| bzip2 -9 > ${PATCH_PREFIX}-Escjava.patch.bz; \
+		| bzip2 -9 > ${ESCJAVA_PATCHES}; \
 	LC_ALL=C TZ=UTC0 diff -Naur --exclude=*.class --exclude=.#* --exclude=CVS \
 		${ESCTOOLS_ORIGINAL}/Houdini ESCTools/Houdini \
-		| bzip2 -9 > ${PATCH_PREFIX}-Houdini.patch.bz; \
+		| bzip2 -9 > ${HOUDINI_PATCHES}; \
 	LC_ALL=C TZ=UTC0 diff -Naur --exclude=*.class --exclude=.#* --exclude=CVS \
 		${ESCTOOLS_ORIGINAL}/Javafe ESCTools/Javafe \
-		| bzip2 -9 > ${PATCH_PREFIX}-Javafe.patch.bz; \
+		| bzip2 -9 > ${JAVAFE_PATCHES}; \
 	LC_ALL=C TZ=UTC0 diff -Naur --exclude=*.class --exclude=.#* --exclude=CVS \
 		${ESCTOOLS_ORIGINAL}/Rcc ESCTools/Rcc \
-		| bzip2 -9 > ${PATCH_PREFIX}-Rcc.patch.bz; \
+		| bzip2 -9 > ${RCC_PATCHES}; \
 	LC_ALL=C TZ=UTC0 diff -Naur --exclude=PPC_DARWIN --exclude=.#* --exclude=CVS \
 		--exclude=*.dylib --exclude=*.a --exclude=*.io --exclude=*.mo \
 		${ESCTOOLS_ORIGINAL}/Simplify ESCTools/Simplify \
-		| bzip2 -9 > ${PATCH_PREFIX}-Simplify.patch.bz; \
+		| bzip2 -9 > ${SIMPLIFY_PATCHES}; \
 	)
 
 .PHONY: generate-toplevel-archive
@@ -304,5 +314,7 @@ zero-length-files:
 	cd ${ESCTOOLS_ROOT}; \
 	tar cjf ${PATCH_PREFIX}-ZeroLengthFiles.tbz \
 		`find . -empty ! -name .M3SHIP`
-	( cd ${ESCTOOLS_ROOT}; for f in `cd ${ESCTOOLS_ORIGINAL}; find . -empty`; do if [ ! -e $$f ]; then echo $$f; fi; done ) > ${PATCH_PREFIX}-emptyFilesThatDisappeared
-
+	( cd ${ESCTOOLS_ROOT}; \
+	  for f in `cd ${ESCTOOLS_ORIGINAL}; find . -empty`; do \
+	      if [ ! -e $$f ]; then echo $$f; fi; \
+	  done ) > ${PATCH_PREFIX}-emptyFilesThatDisappeared
