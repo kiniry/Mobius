@@ -302,8 +302,8 @@ public class TagConstants extends javafe.tc.TagConstants
     public static final int JML_MAINTAINING = JML_MAINTAINING_REDUNDANTLY + 1;
     public static final int JML_MEASURED_BY_REDUNDANTLY = JML_MAINTAINING + 1;
     public static final int JML_MEASURED_BY = JML_MEASURED_BY_REDUNDANTLY + 1;
-    public static final int JML_MODEL_PROGRAM = JML_MEASURED_BY + 1;
-    // model -- an ESC keyword
+    public static final int JML_MODEL = JML_MEASURED_BY + 1;
+    public static final int JML_MODEL_PROGRAM = JML_MODEL + 1;
     public static final int JML_MODIFIABLE_REDUNDANTLY = JML_MODEL_PROGRAM + 1;
     public static final int JML_MODIFIABLE = JML_MODIFIABLE_REDUNDANTLY + 1;
     public static final int JML_MODIFIES_REDUNDANTLY = JML_MODIFIABLE + 1;
@@ -688,6 +688,7 @@ public class TagConstants extends javafe.tc.TagConstants
         Identifier.intern("maintaining"),
         Identifier.intern("measured_by_redundantly"),
         Identifier.intern("measured_by"),
+        Identifier.intern("model"),
         Identifier.intern("model_program"),
         Identifier.intern("modifiable_redundantly"),
         Identifier.intern("modifiable"),
