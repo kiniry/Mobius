@@ -88,11 +88,11 @@ is neither a subset nor a superset of JML.
 
 The goal of the ESC/Java2 work is to extend the use of Esc/Java by
 @enumerate a
-@item updating the parser of Esc/java so that it is consistent with the current definition of JML;
+@item updating the parser of Esc/Java so that it is consistent with the current definition of JML;
 @item packaging the updated tool so that it is more easily available to a 
 larger set of users,
- consistent with the source code license provisions of the Esc/java source code;
-@item and extending, where possible, the range of JML annotations that can be checked by Esc/java.
+ consistent with the source code license provisions of the Esc/Java source code;
+@item and extending, where possible, the range of JML annotations that can be checked by Esc/Java.
 @end enumerate
 
 This document records the status of this implementation.  It is not intended to be a
@@ -141,34 +141,34 @@ available and may have their own license restrictions.
 @cindex ESC/Java
 @cindex Simplify
 @item The original source for ESC/Java, Simplify and related tools, available at 
-@url{www.research.compaq.com/downloads.html}.
+@uref{www.research.compaq.com/downloads.html}.
 
 @cindex Mocha
 @item Part of the Mocha tool from UCBerkeley (optional), available at
-@url{www-cad.eecs.berkeley.edu/~mocha/download/j-mocha}.
+@uref{www-cad.eecs.berkeley.edu/~mocha/download/j-mocha}.
 
 @cindex JUnit
 @item The testing framework JUnit version 3.8.1, available at 
-@url{www.junit.org}.
+@uref{www.junit.org}.
 
 @cindex JML
 @item ESC/Java2 does not depend on the JML tool set, but it is useful to use the
-two in combination.  JML is available at @url{www.jmlspecs.org}.
+two in combination.  JML is available at @uref{www.jmlspecs.org}.
 @end itemize
 
 @c ---------Contacts ------------------
 @section Contacts and information
 
 Further information about JML and ESC/Java2 can be obtained from these sources.
-@c FIXME - check all these
-@itemize bullet
-@item The JML web site:  @url{www.jmlspecs.org}
-@item The JML project on sourceforge: @url{sourceforge.net/projects/jmlspecs} FIXME
-@item The JML interest mailing list on sourceforge: jmlspecs-interest@lists.sourceforge.net
-@item The JML development mailing list on sourceforge: jmlspecs-devel@lists.sourceforge.net
-@item The ESC/Java2 mailing list on sourceforge: jmlspecs-escjava@lists.sourceforge.net
-@item The multijava website: @url{www.multijava.org}
-@item The multijava project on sourceforge: @url{sourceforge.net/projects/multijava}
+
+@itemize @bullet
+@item The JML web site:  @uref{www.jmlspecs.org}
+@item The JML project on sourceforge: @uref{sourceforge.net/projects/jmlspecs}
+@item The JML interest mailing list on sourceforge: @email{jmlspecs-interest@@lists.sourceforge.net}
+@item The JML development mailing list on sourceforge: @email{jmlspecs-developers@@lists.sourceforge.net}
+@item The ESC/Java2 mailing list on sourceforge: @email{jmlspecs-escjava@@lists.sourceforge.net}
+@item The multijava website: @uref{www.multijava.org}
+@item The multijava project on sourceforge: @uref{sourceforge.net/projects/multijava}
 @end itemize
 
 @c ------ chapter Status of JML features --------
@@ -316,9 +316,9 @@ that follow whitespace at the beginning of a line are treated as white space.
  it also requires that modifiers 
  (e.g. @code{public}, @code{non_null}) be in the
  same comment as a JML annotation (e.g. @code{behavior} or model method) that it modifies.
-  Thus, @code{requires and @code{ensures} clauses must be within
+  Thus, @code{requires} and @code{ensures} clauses must be within
  an annotation; individual modifiers such as @code{pure}, @code{normal_behavior},
- @code{also}, @code{{|}
+ @code{also}, @code{@{|}
  or @code{implies_that} may be in annotations by themselves.
  [[[ FIXME - JML rules need to be clarified.]]]
  
@@ -347,8 +347,8 @@ specifications to those contained in the referenced file.  If present, it must
 be located after any Java package statement and before any Java or model import 
 statements.
 It has the form
-@center{@code{//@@ refine "}@emph{filename}@code{";}}
-The given name must have the same name with a different suffix as the current file.
+@*@center{@code{//@@ refine "}@emph{filename}@code{";}}
+@*The given name must have the same name with a different suffix as the current file.
 [see the discussion on suffixes...] [Location of refine statement in CU - FIXME] [FIXME - this has changed... define the refinement sequence]
 
 
@@ -362,9 +362,8 @@ The given name must have the same name with a different suffix as the current fi
 @itemize @bullet
 @item @strong{Description:}
 A model import statement has the form
-@center{@code{//@@ model }@emph{java-import-statement}@code{;}}
-
-Note that simply including a Java import statement in an annotation is not legal JML
+@*@center{@code{//@@ model }@emph{java-import-statement}@code{;}}
+@*Note that simply including a Java import statement in an annotation is not legal JML
 (in other words, omitting the @strong{model} keyword).
 A model import statement may occur wherever a Java import statement may be placed.
 A model import statement introduces types that are used only by annotations.
@@ -382,7 +381,7 @@ compilation unit, or cause misinterpretation of a type name.  For example, in
 @code{
 import java.io.*;
 //@@ model import myclasses.File;
-public class C extends File {@}
+public class C extends File @{@}
 }
 the use of @code{File} in the Java code will be silently 
 altered by the presence of the 
@@ -390,7 +389,7 @@ model import statement.  Similarly, in
 @code{
 import java.io.*;
 //@@ model import myclasses.*; // class myclasses.File exists
-public class C extends File {@}
+public class C extends File @{@}
 }
 the use of @code{File} in the Java code is made ambiguous by the model import
 declaration.  These are as yet unresolved bugs.
@@ -398,7 +397,7 @@ declaration.  These are as yet unresolved bugs.
 
 @item @strong{Comment:} Though legal, there is no point to a statement of the form
 @center{@code{/*@@ model @@*/ import }@emph{filename}@code{;}}
-This is equivalent to simply using a Java import statement.
+@* This is equivalent to simply using a Java import statement.
 @end itemize
 
 
@@ -443,7 +442,7 @@ methods and constructors pure. [FIXME - Verify with JML]
 @item @strong{Description:} This annotation is used to modify super classes and 
 super interfaces in a class
 or interface declaration.  An example of its syntax is this:
-@center{@code{public class A extends B /*@@ weakly */ implements C /*@@ weakly */, D /*@@ weakly */ { ... @}}}
+@center{@code{public class A extends B /*@@ weakly */ implements C /*@@ weakly */, D /*@@ weakly */ @{ ... @}}}
 
 @item @strong{Status:} Parsed and ignored by ESC/Java2.
 
@@ -454,6 +453,7 @@ feature is not present in ESC/Java.
 @end itemize
 
 @subsection other Java modifiers
+
 @itemize @bullet
 @item @strong{Description:} All the other usual Java modifiers permitted on a class
 (final, static, ...???FIXME) 
@@ -660,7 +660,9 @@ constructor of the containing type.
 
 @item @strong{Differences from JML or Java:} None
 
-@end itemize@subsection constraint, constraint_redundantly
+@end itemize
+
+@subsection constraint, constraint_redundantly
 @itemize @bullet
 @item @strong{Description:} A @code{constraint} clauses specifies a relation that
 must hold between the pre- and post-conditions of any (non-helper) method or
@@ -854,7 +856,7 @@ constrain the order of clauses as rigidly as do JML tools.
 @item @strong{Comment:} The ESC/Java2 (and ESC/Java) static checker accepts a set
 of specification clauses in lightweight form.  In order to handle the nested 
 heavyweight form or the combination of specifications using @code{also}, either
-within on source file or across a refinement sequence, ESC/Java2 @emph(desugars}
+within on source file or across a refinement sequence, ESC/Java2 @emph{desugars}
 the more complicated syntax into simpler forms.  For this purpose ESC/Java2 largely
 follows the desugaring as outlined in [FIXME - provided ref], but it does not need
 to desugar all clause types down to one instance of that clause type.  That paper
@@ -874,7 +876,7 @@ made.  Otherwise, for each clause group a composite precondition predicate is
 formed by taking the conjunction of the predicates in each of the @code{requires}
 clauses in that clause group, and making that conjunction the argument of an 
 @code{\old} function:
-@center(@emph{pre-predicate} = @code{\old(} @emph{p1} @code{&&} @emph{p2} ... @code{)}}.  
+@center{@emph{pre-predicate} = @code{\old(} @emph{p1} @code{&&} @emph{p2} ... @code{)} }.  
 Each clause within the clause group is altered by
 constraining its action using that conjunction.  Calling that combined predicate
 @emph{pre-predicate}, we transform each clause as follows:
@@ -944,13 +946,17 @@ abrupt_behavior, continues, choose, choose_if, breaks, returns, or ]]]
 @subsection subclassing_contract
 @itemize bullet
 @item @strong{Description:} A subclassing contract is a separate part of a method's
-specification containing its own clause types.
+specification containing its own clause types.  It may contain only
+@code{measured_by}, @code{callable}, and @code{accessible} clauses.
 
 @item @strong{Status:} Fully parsed and typechecked.  No desugaring is needed as
-there are non associated preconditions.  The static checker does not do any
+there are no associated preconditions or nesting.
+  The static checker does not do any
 reasoning with the clauses of the subclassing contract.
 
-@item @strong{Differences from JML or Java:} None.
+@item @strong{Differences from JML or Java:} None.  The semantics of these clauses
+in JML is not well-defined.
+
 @end itemize
 
 @subsection implies_that
@@ -980,7 +986,9 @@ the specifications.  Hence they must be logical consequences of the
 other
 specifications.
 @item @strong{Status:} The specifications in a @code{for_example} section are
-parsed and typechecked, but not used within any static checking, nor is it 
+parsed and typechecked, including the @code{example}, @code{normal_example},
+and @code{exceptional_example} keywords.
+However, they are not used within any static checking, nor is it 
 verified that they follow from the other specifications.
 
 @item @strong{Differences from JML or Java:} None.
@@ -1047,7 +1055,9 @@ requires clauses) holds.
 
 @item @strong{Status:} The requires clause is implemented and is utilized by ESC/Java2
 in generating verification conditions.
-@item @strong{Differences from JML or Java:} None known.
+@item @strong{Differences from JML or Java:} ESC/Java2 will warn about the use of
+instance variables in the precondition of a constructor (since those variables do
+not yet exist prior to allocation); JML does not.
 @end itemize
 
 @subsection ensures, ensures_redundantly, post, post_redundantly
@@ -1063,7 +1073,7 @@ hold in the pre-state and the method or constructor exits normally.
 
 @subsection signals, exsures, signals_redundantly, exsures_redundantly
 @itemize @bullet
-@item @strong{Description:} A signals clause states a conditdion that must hold in
+@item @strong{Description:} A signals clause states a condition that must hold in
 the post-state of a method or constructor whenever the associated preconditions
 hold in the pre-state and the method or constructor exits with an exception of
 (or a subclass of) the designated type.
@@ -1089,22 +1099,23 @@ for the routine for which it is a specification.  It does use the modifies claus
 when reasoning about other routines that use the the routine in question.  
 For example, given 
 
-@code{
+@example
 int i;
 int k;
 
 //@@ modifies i;
-void m() { i = 9; @}
+void m() @{ i = 9; @}
 
 //@@ modifies k;
-void n() { i = 10; @}
+void n() @{ i = 10; @}
 
-void p() {
+void p() @{
         m();
         n();
 @}
-}
+@end example
 
+@noindent
 ESC/Java2 does not complain that routine @code{n} actually does modify the field
 @code{i}, even though it claims to modify only @code{k}.  Also, in reasoning about
 method @code{p}, it will know that after the call to @code{m}, the field @code{i}
@@ -1112,7 +1123,9 @@ may have a value different from the value before the call of @code{m}; but becau
 @code{n} claims not to modify @code{i}, ESC/Java2 will presume that the value of
 @code{i} after the call of @code{n} is the same as the value before the call.
 
-@item @strong{Differences from JML or Java:} None.
+@item @strong{Differences from JML or Java:} JML has recently implemented data 
+groups using the @code{in} and @code{maps} annotations.  These are not yet 
+handled by ESC/Java2.
 
 
 @end itemize
@@ -1121,7 +1134,8 @@ may have a value different from the value before the call of @code{m}; but becau
 @itemize @bullet
 @item @strong{Description:} This clause states a predicate that must hold 
 (in the pre-state) if the
-method never terminates (given the associated precondition holds in the pre-state).
+method never terminates (given that
+the associated precondition holds in the pre-state).
 
 @item @strong{Status:} Parsed and typechecked, but not used in any static checking.
 
@@ -1188,7 +1202,8 @@ The handling of redundant clauses within ESC/Java2 is yet to be defined.
 
 @item @strong{Status:} Currently in ESC/Java2 a command-line option selects 
 between using redundant specifications in the same way as nonredundant 
-specifications (the default) or ignoring them.
+specifications (the default) or ignoring them (when the option @code{-noredundancy}
+is chosen).
 
 
 @section Subclassing contract clauses for a method or constructor
@@ -1251,8 +1266,7 @@ In the case of a constructor, the only fields that may be modified are the field
 of the object itself, which are initialized as a result of the action of the 
 constructor.  In this case the @code{pure} modifier is equivalent to 
 specifications of the form
-@center{@code{modifies \fields_of(this);}}
-[[[ FIXME - has this changed to modifies this.*; ? ]]]
+@center{@code{modifies this.*;}}
 Note that if a method is declared pure, then all overriding methods are also pure,
 whether or not they have an explicit declaration to that effect.
 
@@ -1270,10 +1284,21 @@ is valid only for methods that return objects as return values (and not for
 constructors).  The modifier specifies that the return value is never null.  It is
 equivalent to a specification of 
 @center{@code{ensures \result != null; }}
-added to each clause group of the method's specification.
+added to each clause group of the method's specification (but not of a 
+superclass's specification of that method).
+
 Note that by inheritance of specifications, any overriding methods will also be
 subject to the requirement that the return value be non-null, whether or not the
 overriding method is declared @code{non_null}.
+
+Note also that having a superclass declaration of a method without a non_null
+modifier, but an overriding method with a non_null declaration
+is legal but may lead to confusion.  The specification needs to be understood
+by combining the two sets of specifications according to the usual desugaring;
+the clause groups associated with the overriding method have
+@code{ensures \result != null; }
+implictly added to them, whereas the clause groups from the overridden method do
+not.
 
 @item @strong{Status:} Parsed and supported by the static checker.
 
@@ -1293,7 +1318,8 @@ explicitly associated with this method or constructor.
 @item @strong{Status:} Parsed and supported by the static checker.
 
 @item @strong{Differences from JML or Java:} JML only allows private methods and
-constructors to be helpers.  ESC/Java2 also allows any constructor, final methods or methods of
+constructors to be helpers.  ESC/Java2 also allows any constructors, 
+final methods or methods of
 final classes to be helpers.  (ESC/Java2's rule is that only routines that cannot
 be overridden may be helpers.)
 @end itemize
@@ -1335,14 +1361,23 @@ overridden.
 
 @section Annotation modifiers for a field declaration
 
-A field declaration may have some JML modifiers and it may be followed by a 
-variable assertion, introduced by a @strong{where} keyword.   In addition to those
+A field declaration may have some JML modifiers and it may be followed by the 
+field assertions, which are introduced by the @code{in} and @code{maps}
+keywords.   In addition to those
 described in section [FIXME], the following modifiers are relevant.
 
-@subsection maps, \into, in
+@subsection maps, \into
 @itemize @bullet
-@item @strong{Description:} FIXME
-@item @strong{Status:} FIXME
+@item @strong{Description:} FIXME - Note that these *follow* the declaration.
+@item @strong{Status:} Not implemented.
+@item @strong{Differences from JML or Java:} FIXME
+@end itemize
+
+
+@subsection in
+@itemize @bullet
+@item @strong{Description:} FIXME - Note that these *follow* the declaration.
+@item @strong{Status:} Not implemented.
 @item @strong{Differences from JML or Java:} FIXME
 @end itemize
 
@@ -1350,7 +1385,7 @@ described in section [FIXME], the following modifiers are relevant.
 @subsection non_null
 @itemize @bullet
 @item @strong{Description:} This modifier on a field declaration indicates that the
-field in question never has a null value.  It is eequivalent to a class invariant
+field in question never has a null value.  It is equivalent to a class invariant
 of the form
 @center{@code{invariant @emph{field} != null}}
 
@@ -1368,6 +1403,13 @@ of the form
 @subsection initialized???
 @itemize @bullet
 @item @strong{Description:} FIXME
+@item @strong{Status:} FIXME
+@item @strong{Differences from JML or Java:} FIXME
+@end itemize
+
+@subsection uninitialized
+@itemize @bullet
+@item @strong{Description:} FIXME - ESC/Java does not allow this on a field declaration, but should it?
 @item @strong{Status:} FIXME
 @item @strong{Differences from JML or Java:} FIXME
 @end itemize
@@ -1509,7 +1551,7 @@ constructor may be modified with the JML annotation @strong{non_null}.  This
 requires that the initial value and any subsequently assigned value for that
 variable must not be null.
 
-@item @strong{Status:} Fully implemented (in Esc/java and ESC/Java2).
+@item @strong{Status:} Fully implemented (in ESC/Java and ESC/Java2).
 
 @item @strong{Differences from JML or Java:} None.
 [[[ FIXME - verify that this is relevant to model fields.]]]
@@ -1535,15 +1577,17 @@ been assigned a new value.
 @item @strong{Description:} 
 A nowarn annotation has the form
 @center{@code{//@@ nowarn @emph{list-of-warning-types};}}
+or simply
+@center{@code{//@@ nowarn ;}}
 It is associated with the line in the source file on which it is located, rather 
-than with an grammatical construct.  It is used to suppress warnings from the
+than with a grammatical construct.  It is used to suppress warnings from the
 static checker associated with a construct on that line.  If there is no list of
 warning types, then all warnings associated with this line are suppressed.  All
 the warnings of a given type can also be suppressed using command-line options.
 The nowarn annotations have no effect on errors or cautions, since these are
 produced by parsing or semantic errors in the source code itself.
 
-@item @strong{Status:} Needs verification, but otherwise no change from ESC/Java.
+@item @strong{Status:} Needs verification (FIXME), but otherwise no change from ESC/Java.
 
 @item @strong{Differences from JML or Java:} JML supports the parsing of these
 annotations, but since JML does no static checking, it ignores them.  ESC/Java
@@ -1559,16 +1603,17 @@ JML defines a number of new operators, functions, and other constructions for us
 that are part of annotations.
 
 @subsection New operators in JML
-[??? Precendence]
+[FIXME - describe precendence]
+
 @itemize @bullet
 @item @code{<==>} : 
-This operator (equivalent) takes two boolean arguments; it returns a boolean value of 
-@strong{true} if the two arguments are both true or both false, and 
+This operator (equivalence) takes two boolean arguments; it returns a boolean value of 
+@strong{true} if the two arguments are both @strong{true} or both @strong{false}, and 
 @strong{false} otherwise.  
 It is fully implemented.
 @item @code{<=!=>} : 
 This operator (inequivalent) takes two boolean arguments; it returns a boolean value of 
-@strong{false} if the two arguments are both true or both false, and 
+@strong{false} if the two arguments are both @strong{true} or both @strong{false}, and 
 @strong{true} otherwise.  @code{(A <==> B)} is equivalent to 
 @code{!(A <=!=&gt B)}.
 It is fully implemented.
@@ -1598,17 +1643,17 @@ It is fully implemented.
 @item @code{<} , @code{<=} : 
 In addition to their usual meaning in Java (and corresponding meanings in JML), the
 less-than and less-than-or-equal operators are used to compare locks.  Any object that is listed as a 
-monitor (in a @strong{monitors_for} clause) or is indentified implicitly or 
+monitor (in a @strong{monitors_for} clause) or is identified implicitly or 
 explicitly in a Java synchronization statement is a lock,
 in addition to its declared use as an object.  In order to reason about deadlocks,
 the user must define a partial order on locks and have the code acquire the locks
 only in increasing order.  The partial order is defined using @strong{axiom} clauses;
-the operators are used to compare locks.  
+the operators are used to compare locks by this partial order.  
 They take two locks as arguments and return
 @strong{true} if the left-hand object is less than (or less than or equal to) the right-hand object according to the partial order axioms,
-and returns false otherwise.
+and returns @strong{false} otherwise.
 The comparison is independent of whether the locks have actually been acquired; 
-the @strong{\lockset} expression supplies that information.  The Esc/java reference
+the @strong{\lockset} expression supplies that information.  The ESC/Java reference
 manual provides additional information and examples about Deadlock and Race detection.
 These operators are fully implemented.
 @end itemize
@@ -1619,30 +1664,30 @@ These operators are fully implemented.
 @itemize @bullet
 
 @cindex \result
-@item \result
+@item \result - FIXME
 
 @cindex \old
-@item \old
+@item \old - FIXME
 
-@item \not_modified
+@item \not_modified - FIXME
 
-@item \fresh
-@item \reach
-@item \duration
-@item \space
-@item \working_space
+@item \fresh - FIXME
+@item \reach - FIXME
+@item \duration - FIXME
+@item \space - FIXME
+@item \working_space - FIXME
 
-@item \nonnullelements
-@item \typeof
-@item \elemtype
-@item \type
+@item \nonnullelements - FIXME
+@item \typeof - FIXME
+@item \elemtype - FIXME
+@item \type - FIXME
 
-@item \is_initialized
-@item \invariant_for
-@item \lblneg
-@item \lblpos
+@item \is_initialized - FIXME
+@item \invariant_for - FIXME
+@item \lblneg - FIXME
+@item \lblpos - FIXME
 
-@item \lockset : This value has type @code{\LockSet}.  It is a set of objects whose
+@item \lockset : This value has type @code{\LockSet}.  The value is the set of objects whose
 locks are held by the current thread. 
 @*@strong{Status:} This feature is fully implemented by ESC/Java2 (inherited from ESC/Java).
 
@@ -1654,26 +1699,26 @@ elements of the argument; the function satisfies the following for any
 @*@strong{Status:} This feature is fully implemented by ESC/Java2 (inherited from ESC/Java).
 
 
-@item \nowarn, \nowarn_op, \warn, \warn_op : These operators take an
-integer-typed expression as argument and return the value of the same expression.
-They are used to check or to suppress checking of overflow and underflow in the
-use of unary negation and binary addition, subtraction, multiplication and division 
-on any integer-typed arguments.  More detail is provided in the JML reference 
-manual.
-@*@strong{Status:} These expressions are parsed but are currently treated as identity
- operators.  They are not part of ESC/Java.
+@item Operators for overflow checking : These are under development in JML and are
+not yet implemented in ESC/Java2.
 
-@item @emph{informal predicate}
+
+@item @emph{informal predicate} - FIXME
 
 @end itemize
 
 @subsection New JML types
+
+JML adds some new types that may be used as type names in declarations of
+variables within annotations.
+
 @itemize @bullet
 @item @code{\TYPE} : This is a JML type name used to denote the type of type designations.
-For example, @strong{\typeof} and @strong{\type} produce results of type @strong{\TYPE}, 
-and the @strong{<=} operator takes arguments of type @strong{\TYPE}.  Values of type
-@strong{\TYPE} can also be compared using the @strong{==} operator.
-@*@strong{Status:} This is fully implemented.
+For example, @code{\typeof} and @code{\type} produce results of type @strong{\TYPE}, 
+and the @code{<=} operator takes arguments of type @code{\TYPE}.  Values of type
+@code{\TYPE} can also be compared using the @code{==} operator.
+@*@strong{Status:} This is fully implemented.  It is equivalent to using the
+type @code{java.lang.Class}.  [[[ FIXME - cross comparisons are not implemented. ]]]
 
 @item @code{\bigint} : This is a new type name used in JML to denote an integral type 
 equivalent to the mathematical integers.  That is, it has infinite range and no
@@ -1683,8 +1728,8 @@ underflow or overflow as a result of a fixed bit depth.
 @item @code{\real} : This is a new type name used in JML to denote a type 
 equivalent to the mathematical real numbers.  That is, it has infinite range 
 and precision and no
-underflow, overflow, or rounding error as do @strong{float} and @strong{double}.
-@*@strong{Status:} The type name is parsed but is equivalent to @strong{double}.
+underflow, overflow, or rounding error as do @code{float} and @code{double}.
+@*@strong{Status:} The type name is parsed but is equivalent to @code{double}.
 
 @end itemize
 
@@ -1697,12 +1742,12 @@ underflow, overflow, or rounding error as do @strong{float} and @strong{double}.
 @cindex @code{\sum}
 @cindex @code{\product}
 @subsection quantified expressions - \forall, \exists, \num_of, \max, \min, \sum, \product
-As described in the JML documentation, quantified expressions take the form@*
-<center>@code{( @emph{quantifier-keyword} @emph{type} @emph{idlist} ; @emph{range-expr} ; @emph{expr} )}</center>
+As described in the JML documentation, quantified expressions take the form
+@center{@code{( @emph{quantifier-keyword} @emph{type} @emph{idlist} ; @emph{range-expr} ; @emph{expr} )}}
 or
-<center>@code{( @emph{quantifier-keyword} @emph{type} @emph{idlist} ; ; @emph{expr} )}</center>
+@center{@code{( @emph{quantifier-keyword} @emph{type} @emph{idlist} ; ; @emph{expr} )}}
 or
-<center>@code{( @emph{quantifier-keyword} @emph{type} @emph{idlist} ; @emph{expr} )}</center>
+@center{@code{( @emph{quantifier-keyword} @emph{type} @emph{idlist} ; @emph{expr} )}}
 The @emph{range-expr} is a boolean expression; its default value is @strong{true}.
 The @emph{idlist} is a comma-separated list of identifiers; these are the bound
 variables of the quantification.
@@ -1711,47 +1756,150 @@ variables of the quantification.
 @item \forall, \exists: Fully implemented and used in static checking.
 @item \num_of, \max, \min, \sum, \product: Parsed and ignored.  The expressions are translated to values of 0, and so may lead to unexpected results.
 @end itemize
+@noindent
 @strong{Comment:} The keyword @code{\max} is used both as a quantifier and as
 a function.  The parser is able to distinguish the two usages.
 
 @subsection set comprehension
+FIXME
 
-@subsection \fields_of ???
-@subsection \nothing ???
-@subsection \everything ???
-@subsection \other ???
-@subsection \not_specified ???
-@subsection \private_data ???
+@subsection store-ref expressions
+Some annotations require a list of @emph{store-ref expressions}, which are 
+expressions whose value is a set of references to fields of classes or objects;
+in particular, the value has type @code{org.jmlspecs.models.JMLObjectSet}.
+For example, the @code{modifies} clause designates a set 
+(that is, a @code{JMLObjectSet} of @emph{store-refs} that
+are allowed to be assigned to within a method.  This section describes the 
+syntactic features that designate such sets.
 
-@subsection use of methods and constructors in annotation expressions
+@itemize bullet
+
+
+@item [ @emph{ident} | @code{super} | @code{this} ] @code{.} [ @emph{ident} | @code{this} ]
+@*This designates a field of an object.
+@*@strong{Status: } Implemented within modifies clauses.
+
+@item [ @emph{ident} | @code{super} | @code{this} ] @code{.*}  
+@*This designates all static and instance fields, of any privacy level, including
+those inherited from superclasses and interfaces, of the given object.
+@*@strong{Status: } Not implemented.
+
+@item [ @emph{ident} | @code{super} | @code{this} ] @code{[@emph{expr}]}  
+@*This designates an element of the given array object.
+@*@strong{Status: } Not implemented.
+
+@item [ @emph{ident} | @code{super} | @code{this} ] @code{[@emph{expr}..@emph{expr2}]}  
+@*This designates a range of elements of the given array object.
+@*@strong{Status: } Not implemented.
+
+@item [ @emph{ident} | @code{super} | @code{this} ] @code{[*]}  
+@*This designates all the elements of the given array object.
+@*@strong{Status: } Not implemented.
+
+@item @emph{classname}.* 
+@*This designates all static fields, of any privacy level, including
+those in superclasses and interfaces, of the given class.
+@*@strong{Status: } Not implemented.
+
+@item \nothing 
+@*This designates an empty set of spec-refs.
+@*@strong{Status: } Not implemented.
+
+@item \everything 
+@*This designates a universal set - the set of references to all object and class
+fields for every object and class allocated in the current state of the program.
+@*@strong{Status: } Not implemented.
+
+@end itemize
+
+@subsection \not_specified
+This may be used, within the guidelines of the JML grammar, as the predicate or
+store-ref expression in a annotation clause.  It is equivalent to stating that there
+is no specification of that clause type.
+@*@strong{Status: } Not implemented.
+
+@subsection \private_data
+- FIXME - is this still used
+
+
+@item \other 
+- FIXME
+
+@subsection the use of methods and constructors in annotation expressions
+- FIXME
 
 @subsection new instance expressions
+- FIXME
+
 @subsection new array expressions
+- FIXME
 
 @subsection Other Java operators and expression syntax
+- FIXME
 
 
 @section Other issues
-@itemize @bullet
-@item  ESC/Java2 allows methods and constructors in Java source without bodies
-@item  redundant specifications
-@item  Original Esc/java also_ specifications
-@item  Desugaring of heavyweight specifications
-@item  anonymous classes
-@item  method and constructor keywords
+FIXME - descriptions needed here
+
+@subsection Java and JML assert statements
+@subsection  ESC/Java2 allows methods and constructors in Java source without bodies
+@subsection  redundant specifications
+@subsection  Original Esc/java also_ specifications
+@subsection  Desugaring of heavyweight specifications
+@subsection  anonymous classes
+@subsection  @code{field}, @code{method} and @code{constructor} keywords
+
+
+@section Nowarn warning types
+
+The static checker used in ESC/Java2 (and in ESC/Java) produces warnings (rather
+than errors or cautions) when it detects source code that might violate the
+specifications.  These warnings are categorized into types and can be suppressed
+or enabled by warning type name (using either command-line options or the 
+@code{nowarn} annotation).  This is a list of the warning types used.
+
+@itemize bullet
+@item FIXME - need warning types - check if these are in the ESC/Java documentation
 @end itemize
-???
+
+@section Command-line options
+
+ESC/Java2 has implemented a number of command-line options that are not present
+in ESC/Java, as well as documenting some of those in ESC/Java.  ESC/Java2 also
+kept many experimental (and undocumented) options from ESC/Java.  The following 
+is a partial list of command-line options available in ESC/Java2.
+
+@itemize
+@item -help : causes the program to print information about command-line options
+and then to terminate
+
+
+@item FIXME - check for others to be documented
+
+@end itemize
+
 @c -----------------------------------------------------------------------------
-@chapter Incompatibilities 
+@chapter Incompatibilities
+
+@section Major features of JML not implemented in ESC/Java2
+@itemize bullet
+@item inner and nested classes and interfaces
+@item anonymous classes
+@item subclassing contracts: These are parsed but not checked
+@item any handling of implies_that and for_example behavior:  These are parsed but not checked
+@end itemize 
 
 @section Incompatibilities with ESC/Java
 @subsection Error messages and warnings
-ESC/Java2 has added error messages to conform with current JML semantics.  Some old Esc/java errors and warnings are no longer appropriate and
+ESC/Java2 has added error messages to conform with current JML semantics.  
+Some old ESC/Java errors and warnings are no longer appropriate and
 have been removed.
 
-@subsection  also
-@subsection  monitored_by
-@subsection  readable_if
+FIXME - discussion needed
+
+@subsection also
+@subsection monitored_by
+@subsection readable_if
 @subsection non_null on formal parameters
 
 @section Non-JML features in ESC/Java2
@@ -1759,11 +1907,14 @@ have been removed.
 There are some syntactic constructs accepted by ESC/Java and continue to be 
 accepted by ESC/Java2 that are not part of JML.
 
+FIXME - discussion needed
+
 @subsection  loop_predicate
 @subsection  skolem_constant
 @subsection  still_deferred
 @subsection  writable_deferred
 @subsection  writable_if
+@subsection  readable_if
 @subsection  dttfsa
 
 @subsection logical operators
@@ -1781,11 +1932,4 @@ Discuss the behavior of logical and short-circuit operators in the presence of u
 @bye
 
 ISSUES:
-- don't allow a subclassing contract in a constructor spec
-- is desugaring any different for a constructor - no prestate?
-- check that subclassing contract clauses are indeed parsed and ignored.
-- document ignoring redundant specs
-- document command line options
-- document status of various forms of spec ref designators
-- uninitialized is not part of JML
-- listing of Nowarn warning types
+- clause defaults
