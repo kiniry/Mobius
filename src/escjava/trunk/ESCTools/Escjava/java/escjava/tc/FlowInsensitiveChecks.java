@@ -33,62 +33,62 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
      ***************************************************/
 
     /**
-     ** Are we in the middle of processing an annotation? <p>
-     **
-     ** (Used by GhostEnv)<p>
-     **/
+     * Are we in the middle of processing an annotation?
+     *
+     * <p> (Used by GhostEnv) </p>
+     */
     public static boolean inAnnotation = false;
 
-    /** Indicates whether <code>LS</code> is allowed in this context.
-     * The default is <code>true</code>.  For contexts where <code>LS</code>
-     * is not allowed, <code>isLocksetContext</code> should be set
-     * <code>false</code> only temporarily.
-     **/
-  
+    /**
+     * Indicates whether <code>LS</code> is allowed in this context.
+     * The default is <code>true</code>.  For contexts where
+     * <code>LS</code> is not allowed, <code>isLocksetContext</code>
+     * should be set <code>false</code> only temporarily.
+     */
     protected boolean isLocksetContext = true;
 
-    /** <code>\result</code> is allowed in this context when
+    /**
+     * <code>\result</code> is allowed in this context when
      * <code>isRESContext</code> is <code>true</code> and
-     * <code>returnType != null</code>.
-     * The default value of <code>isRESContext</code> is <code>false</code>.
-     * For contexts where <code>isRESContext</code> should be <code>true</code>,
-     * <code>isRESContext</code> should be set to <code>true</code> only
-     * temporarily.
-     **/
-  
+     * <code>returnType != null</code>.  The default value of
+     * <code>isRESContext</code> is <code>false</code>.  For contexts
+     * where <code>isRESContext</code> should be <code>true</code>,
+     * <code>isRESContext</code> should be set to <code>true</code>
+     * only temporarily.
+     */
     protected boolean isRESContext = false;
 
-    /** Indicates whether <code>\old</code> and <code>\fresh</code> are
+    /**
+     * Indicates whether <code>\old</code> and <code>\fresh</code> are
      * allowed in this context.  The default is <code>false</code>.
      * For contexts where these functions are allowed,
      * <code>isTwoStateContext</code> should be set <code>true</code>
      * only temporarily.
-     **/
-  
+     */
     protected boolean isTwoStateContext = false;
 
-    /** Indicates whether checking is currently being done inside a
-     * <code>PRE</code>.  This is used by the code that disallows nested
-     * <code>PRE</code> expressions.  Note: alternatively, one could use
-     * <code>isTwoStateContext</code> to implement this functionality,
-     * but by having a separate bit, a more precise error message can be
-     * produced.
-     **/
-  
+    /**
+     * Indicates whether checking is currently being done inside a
+     * <code>PRE</code>.  This is used by the code that disallows
+     * nested <code>PRE</code> expressions.  Note: alternatively, one
+     * could use <code>isTwoStateContext</code> to implement this
+     * functionality, but by having a separate bit, a more precise
+     * error message can be produced.
+     */
     protected boolean isInsidePRE = false;
 
-    /** Indicates whether a quantification or labeled predicate is allowed
-     * in this context.  This boolean is used only between one call of
-     * <code>checkExpr</code> to a following recursive call.
-     **/
-  
+    /**
+     * Indicates whether a quantification or labeled predicate is
+     * allowed in this context.  This boolean is used only between one
+     * call of <code>checkExpr</code> to a following recursive call.
+     */
     protected boolean isPredicateContext = false;
 
-    /** Indicates whether private field accesses are allowed in the current
-     * context.  Private field accesses are allowed everywhere, except
-     * in postconditions of overridable methods.
-     **/
-
+    /**
+     * Indicates whether private field accesses are allowed in the
+     * current context.  Private field accesses are allowed
+     * everywhere, except in postconditions of overridable methods.
+     */
     protected boolean isPrivateFieldAccessAllowed = true;
 
     protected int accessibilityLowerBound = ACC_LOW_BOUND_Private;
@@ -98,56 +98,59 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
     protected static final int ACC_LOW_BOUND_Protected = 2;
     protected static final int ACC_LOW_BOUND_Public = 3;
 
-    /** If <code>accessibilityLowerBound != ACC_LOW_BOUND_Private</code>,
-     * then <code>accessibilityContext</code> is the field or routine
-     * whose modifier pragma is being type checked.
-     **/
-  
+    /**
+     * If <code>accessibilityLowerBound !=
+     * ACC_LOW_BOUND_Private</code>, then
+     * <code>accessibilityContext</code> is the field or routine whose
+     * modifier pragma is being type checked.
+     */
     /*@ invariant accessibilityContext == null ||
      accessibilityContext instanceof FieldDecl ||
      accessibilityContext instanceof RoutineDecl; */
     //@ readable_if accessibilityLowerBound != ACC_LOW_BOUND_Private;
     protected ASTNode accessibilityContext;
 
-    /** Acts as a parameter to <code>checkExpr</code>.  Its value is
-     * meaningful only on entry to <code>checkExpr</code>.  It indicates
-     * whether the expression to be checked is in a specification
-     * designator context.  In particular, this parameter is used to
-     * disallow array index wild cards in non-spec designator contexts.
-     **/
-  
+    /**
+     * Acts as a parameter to <code>checkExpr</code>.  Its value is
+     * meaningful only on entry to <code>checkExpr</code>.  It
+     * indicates whether the expression to be checked is in a
+     * specification designator context.  In particular, this
+     * parameter is used to disallow array index wild cards in
+     * non-spec designator contexts.
+     */
     protected boolean isSpecDesignatorContext = false;
   
-    /** Contains the loop invariant statement pragmas seen so far and not
-     * yet processed.
-     **/
-
+    /**
+     * Contains the loop invariant statement pragmas seen so far and
+     * not yet processed.
+     */
     protected ExprStmtPragmaVec loopInvariants = ExprStmtPragmaVec.make();
 
-    /** Contains the loop decreases statement pragmas seen so far and not
-     * yet processed.
-     **/
-
+    /**
+     * Contains the loop decreases statement pragmas seen so far and
+     * not yet processed.
+     */
     protected ExprStmtPragmaVec loopDecreases = ExprStmtPragmaVec.make();
 
     protected ExprStmtPragmaVec loopPredicates = ExprStmtPragmaVec.make();
 
     protected LocalVarDeclVec skolemConstants = LocalVarDeclVec.make();
 
-    /** Indicates whether we are are checking an invariant pragma.
-     **/
-
+    /**
+     * Indicates whether we are are checking an invariant pragma.
+     */
     protected boolean invariantContext = false;
 
-    /** Counts the number of accesses of free variables and fields
-     * used for checking the appropriateness of invariants.
-     **/
-
+    /**
+     * Counts the number of accesses of free variables and fields used
+     * for checking the appropriateness of invariants.
+     */
     //@ readable_if invariantContext;
     protected int countFreeVarsAccesses =0 ;
 
-  
-    /** Override so that we use GhostEnv instead of EnvForTypeSig **/
+    /**
+     * Override so that we use GhostEnv instead of EnvForTypeSig.
+     */
     protected EnvForTypeSig makeEnvForTypeSig(TypeSig s,
 					      boolean staticContext) {
 	return new GhostEnv(s.getEnclosingEnv(), s, staticContext);
