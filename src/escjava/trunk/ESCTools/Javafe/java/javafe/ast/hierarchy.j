@@ -480,6 +480,8 @@ public class InitBlock extends ASTNode implements TypeDeclElem
 public abstract class TypeDeclElemPragma
          extends ASTNode implements TypeDeclElem
 {
+  /* denotes that a pragma is redundant (e.g. "invariant_redundantly") */
+  //# boolean redundant
 
   //@ invariant hasParent ==> parent != null;
   public TypeDecl parent;
@@ -487,6 +489,9 @@ public abstract class TypeDeclElemPragma
   public TypeDecl getParent() { return parent; }
   public void setParent(TypeDecl p) { parent = p; }
   public void decorate(ModifierPragmaVec modifierPragmas) {}
+
+  public boolean isRedundant() { return redundant; }
+  public void setRedundant(boolean v) { redundant = v; }
 }
 
 
@@ -878,7 +883,13 @@ public class TryCatchStmt extends Stmt
 }
 
 public abstract class StmtPragma extends Stmt
-{ }
+{
+  /* denotes that a pragma is redundant (e.g. "assume_redundantly") */
+  //# boolean redundant
+
+  public boolean isRedundant() { return redundant; }
+  public void setRedundant(boolean v) { redundant = v; }
+}
 
 /**
  * Represents an ExplicitConstructorInvocation. 
@@ -2376,7 +2387,13 @@ public class CompoundName extends Name
 }
 
 public abstract class ModifierPragma extends ASTNode
-{ }
+{
+  /* denotes that a pragma is redundant (e.g. "requires_redundantly") */
+  //# boolean redundant
+
+  public boolean isRedundant() { return redundant; }
+  public void setRedundant(boolean v) { redundant = v; }
+}
 
 public abstract class LexicalPragma extends ASTNode
 { }
