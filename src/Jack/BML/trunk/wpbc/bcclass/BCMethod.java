@@ -136,6 +136,9 @@ public class BCMethod {
 	private BlockSpecification blockSpecification;
 	private MethodSpecification methodSpecification;
 
+	public BCLocalVariable[] getLocalVariables() {
+		return localVariables;
+	}
 	private Vector proofObligation;
 
 	private BCLineNumber[] lineNumberTable;
