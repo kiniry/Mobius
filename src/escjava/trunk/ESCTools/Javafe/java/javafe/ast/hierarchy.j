@@ -2161,7 +2161,7 @@ public abstract class Name extends ASTNode
      * precondition: <code>N.length()>0</code><p>
      */
     //@ requires N != null;
-    //@ requires N.count>0;
+    //@ requires N.length()>0;
     //@ requires loc != Location.NULL;
     //@ ensures \result != null;
     public static Name make(String N, int loc) {

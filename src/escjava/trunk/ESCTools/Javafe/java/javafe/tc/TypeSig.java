@@ -22,7 +22,7 @@ public class TypeSig extends Type
     /**
      * The name of the package we belong to.  Always non-null.
      */
-    //@ invariant \nonnullelements(packageName)
+    //@ invariant \nonnullelements(packageName);
     public /*public readonly*/ String[] packageName;
 
     /**
