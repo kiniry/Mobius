@@ -37,7 +37,7 @@ SUBDIRS = Utils Javafe Escjava
 default: build
 
 .PHONY: all
-all: clean build jmlspecs-jar jar tests docs
+all: clean build jmlspecs-jar jar test docs
 
 .PHONY: all+
 all: clean build jmlspecs-jar jar docs alltests
@@ -54,6 +54,12 @@ build buildall test:
 alltests:
 	${MAKE} test ALLTESTS=1
 	##${MAKE} specs-test
+
+ifdef FINDBUGS
+.PHONY: findbugs
+findbugs: jar
+	${FINDBUGS} -textui esctools2.jar
+endif
 
 ########################################### general
 
@@ -136,8 +142,8 @@ endif
 
 ########################################### docs
 
-.PHONY: docs textdocs docs slides papers
-docs: textdocs
+.PHONY: alldocs textdocs docs slides papers
+alldocs: textdocs
 
 textdocs: docs slides papers
 
