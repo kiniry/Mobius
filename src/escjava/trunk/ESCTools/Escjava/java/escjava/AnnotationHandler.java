@@ -666,6 +666,7 @@ public class AnnotationHandler {
 		case TagConstants.PURE:
 		case TagConstants.NON_NULL:
 		case TagConstants.HELPER:
+		case TagConstants.INSTANCE:
 		    if (currentBehavior == null) 
 				currentBehavior = new Behavior();
 		    currentBehavior.extras.add(m);
