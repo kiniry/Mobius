@@ -1,3 +1,7 @@
+%
+% $Id$
+%
+
 \documentclass{llncs}
 
 \newif\ifpdf
@@ -7,6 +11,9 @@
   \pdfoutput=1  % PDFLaTeX
    \pdftrue
 \fi
+
+\usepackage{times}
+\usepackage{a4wide}
 
 \ifpdf
 \usepackage[pdftex,bookmarks=false,
@@ -533,6 +540,8 @@ due also to Leavens who commented on a draft of this paper.
 Joseph Kiniry is supported by the NWO Pionier research project on
 Program Security and Correctness and the VerifiCard research project.
 
+\newpage
+
 %
 % The following two commands are all you need in the
 % initial runs of your .tex file to
@@ -743,7 +752,7 @@ Robby, E.~Rodr\'{i}guez, M.~B. Dwyer, and J.~Hatcliff.
 In addition, virtually all of the differences between JML and DEC/SRC
 ESC/Java noted in the JML Reference Manual have been resolved.
 
-\section{Aspects of JML not yet\\implemented in ESC/Java2}
+\section{Aspects of JML not yet implemented in ESC/Java2}
 
 Though the core is well-supported, there are several features of JML
 which are parsed and ignored, some of them experimental or not yet
