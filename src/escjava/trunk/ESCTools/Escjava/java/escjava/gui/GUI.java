@@ -90,7 +90,7 @@ public class GUI extends escjava.Main {
 	escframe = new EscFrame();
 
 	Thread.currentThread().setPriority( Thread.currentThread().getPriority()-1); 
-						// Leave the event queue at a higher priority
+				// Leave the event queue at a higher priority
 
 	processTasks();
     }
