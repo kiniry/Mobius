@@ -22,6 +22,11 @@ import escjava.Main;
 
 public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 {
+    static {
+	inst = new FlowInsensitiveChecks();
+    }
+    static public javafe.tc.FlowInsensitiveChecks inst() { return inst; }
+
     // Setup for ghost variables
 
     /**
@@ -187,7 +192,8 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 			// specs of a parent constructor, so we have to be
 			// sure that the parent constructor is typechecked.
 			// This does not appear to result in the constructor
-			// being type checked twice (or at least not in 				// double error messages).
+			// being type checked twice (or at least not in
+			// double error messages).
 			TypeSig s = TypeSig.getSig(m.parent).superClass();
 			if (s != null) checkTypeDeclElem(s.getTypeDecl());
 		    }
@@ -213,6 +219,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                 }
             }
         }
+    
     }
 
     // Extensions to Expr and Stmt checkers.
@@ -534,7 +541,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                                            "The instance fields of type "
                                            + ((TypeObjectDesignator)fa.od).type
                                            + " may not be accessed from type "
-                                           + sig);
+                                           + sig );
                     }
 
 /* FIXME -- need to clean up testing of access modifiers and to make them
@@ -2751,6 +2758,12 @@ FIXME - see uses of countFreeVarsAccess
 	}
 	return -1; // OK for TypeObjectDesignator and SuperObjectDesignator
     }
+
+    protected boolean assignmentConvertable(Expr e, Type t) {
+	if (super.assignmentConvertable(e,t)) return true;
+	return Types.isTypeType(t) && Types.isTypeType(getType(e));
+    }
+
 } // end of class FlowInsensitiveChecks
 
 /*

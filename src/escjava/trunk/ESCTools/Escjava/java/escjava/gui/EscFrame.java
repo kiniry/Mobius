@@ -41,6 +41,7 @@ public class EscFrame extends JFrame {
     public GuiOptionsPanel guioptionPanel;
     private JTextArea listArea;
     static JLabel label;
+    JScrollPane treeView;
     JLabel sizeinfo;
     JComponent guilight;
     JComponent proverlight;
@@ -259,7 +260,9 @@ public class EscFrame extends JFrame {
 	r.setLeafIcon(null);
 	r.setOpenIcon(null);
 	r.setClosedIcon(null);
-	tree.setCellRenderer(r);
+/*
+	TreeCellRenderer r = new EscTreeCellRenderer();
+*/
 	tree.addMouseListener(
 	    new MouseInputAdapter() {
 		public void mouseClicked(MouseEvent e) {
@@ -269,7 +272,7 @@ public class EscFrame extends JFrame {
 				    getLastPathComponent()).getUserObject();
 		    if ((e.getModifiers() & MouseEvent.ALT_MASK) != 0)
 			// Alt + click --> error window
-			GUI.windowTasks.addTask(o);
+			WindowThread.windowTasks.addTask(o);
 		    else if ((e.getModifiers() & MouseEvent.CTRL_MASK) != 0) {
 			// Ctrl + click --> editor window
 			if (o instanceof GUI.EscTreeValue) {
@@ -277,6 +280,7 @@ public class EscFrame extends JFrame {
 			}
 		    }
 		}}); 
+	tree.setCellRenderer(r);
 
 	tree.putClientProperty("JTree.lineStyle", "Angled");
 	tree.setShowsRootHandles(true);
@@ -284,8 +288,9 @@ public class EscFrame extends JFrame {
 	tree.setRootVisible(false);
 	//tree.setEditable(true);
 	//tree.setDragEnabled(true);
-	JScrollPane treeView = new JScrollPane(tree);
-	treeView.setPreferredSize(new Dimension(400,300));
+	treeView = new JScrollPane(tree);
+	//treeView.setPreferredSize(new Dimension(400,300));
+	treeView.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 	tabbedPane.addTab("Results", null, treeView,
 		"Results of checking the project files");
 	// Default tab is Project tab if there are no files set,
@@ -393,7 +398,7 @@ public class EscFrame extends JFrame {
 		    Object o = ((DefaultMutableTreeNode)paths[i].
 				    getLastPathComponent()).
 				    getUserObject();
-		    GUI.windowTasks.addTask(o);
+		    WindowThread.windowTasks.addTask(o);
 		}
 	    }
 	});
@@ -495,6 +500,26 @@ public class EscFrame extends JFrame {
 		    System.gc();
 		}
 	});
+
+	menubar.add(menu = new JMenu("L&F"));
+	UIManager.LookAndFeelInfo[] looks = UIManager.getInstalledLookAndFeels();
+	try {
+	    UIManager.setLookAndFeel(
+              UIManager.getSystemLookAndFeelClassName());
+	} catch (Exception eee) {}
+	LookAndFeel current = UIManager.getLookAndFeel();
+	String name = current.getClass().toString().substring(6); // 6 is the length of "class "
+	ButtonGroup bg = new ButtonGroup();
+	LAF milaf;
+	for (int i=0; i<looks.length; ++i) {
+	    menu.add(milaf = new LAF(looks[i]));
+	    milaf.addActionListener(milaf);
+	    if (name.equals(looks[i].getClassName())) {
+		milaf.setSelected(true);
+	    }
+	    bg.add(milaf);
+	}
+
 	menubar.add(menu = new JMenu("Help"));
 /*
 	menu.add(mi = new JMenuItem("Usage"));
@@ -510,7 +535,7 @@ public class EscFrame extends JFrame {
 	mi.addActionListener(
 	    new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
-		    GUI.windowTasks.addTask(new GUI.HtmlTask("Documentation",
+		    WindowThread.windowTasks.addTask(new WindowThread.HtmlTask("Documentation",
 				"escjava/gui/escjava2gui.html"));
 		}
 	    });
@@ -519,11 +544,27 @@ public class EscFrame extends JFrame {
 	mi.addActionListener(
 	    new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
-		    GUI.windowTasks.addTask(new GUI.HtmlTask(
+		    WindowThread.windowTasks.addTask(new WindowThread.HtmlTask(
 				"Issues & Notes","escjava/gui/issues.html"));
 		}
 	    });
 	
+    }
+
+    static private class LAF extends JRadioButtonMenuItem implements ActionListener {
+	public UIManager.LookAndFeelInfo laf;
+	public LAF(UIManager.LookAndFeelInfo laf) {
+	    super(laf.getName());
+	    this.laf = laf;
+	}
+	public void actionPerformed(ActionEvent e) {
+	    try {
+		UIManager.setLookAndFeel(laf.getClassName());
+		SwingUtilities.updateComponentTreeUI(GUI.gui.escframe);
+	    } catch (Exception ee) {
+		JOptionPane.showMessageDialog(GUI.gui.escframe,"Could not find Look & Feel named " + laf.getName());
+	    }
+	}
     }
 
     public void showEditor(GUI.EscTreeValue v) {
@@ -539,14 +580,14 @@ public class EscFrame extends JFrame {
 		    CompilationUnit rcu = (CompilationUnit)i.next();
 		    String name = rcu.sourceFile().getHumanName();
 		    if (!name.equals(vname))
-			GUI.windowTasks.addTask(name + ":1:");
+			WindowThread.windowTasks.addTask(name + ":1:");
 			// FIXME - would like other elements of the compilation
 			// unit to be scrolled to the same method
 		}
 	    }
 	}
 
-        GUI.windowTasks.addTask( vname + ":" + v.getLine() + ":");
+        WindowThread.windowTasks.addTask( vname + ":" + v.getLine() + ":");
     }
 
     public void init() {
@@ -699,5 +740,64 @@ public class EscFrame extends JFrame {
     }
     public void showProverLight(int i) {
 	proverlight.setBackground(i == 0? Color.BLACK : i == 2? Color.GREEN : Color.BLUE);
+    }
+
+    public class EscTreeCellRenderer extends JPanel implements TreeCellRenderer {
+        JLabel label;
+	JCheckBox cb;
+
+	public EscTreeCellRenderer() {
+	    setLayout(new BoxLayout(this,BoxLayout.LINE_AXIS));
+	    add(label = new JLabel());
+	    add(Box.createHorizontalGlue());
+	    add(cb = new JCheckBox("",true));
+	}
+
+	public void setText(String s) {
+	    label.setText(s);
+	}
+
+	public boolean isShowing() { return true; }
+
+	public Component getTreeCellRendererComponent(JTree tree,
+                                              Object value,
+                                              boolean selected,
+                                              boolean expanded,
+                                              boolean leaf,
+                                              int row,
+                                              boolean hasFocus) {
+
+	    if (value instanceof DefaultMutableTreeNode) {
+		Object o = ((DefaultMutableTreeNode)value).getUserObject();
+	        if (o instanceof GUI.EscTreeValue) {
+		    GUI.EscTreeValue u = (GUI.EscTreeValue)o;
+		    Color c = Status.toColor(u.status);
+		    Color cc = c == null ? new Color(200,200,255) :
+				    new Color((c.getRed()+510)/3,(c.getGreen()+510)/3,
+					    (c.getBlue()+510)/3);
+		    if (c == null) c = Color.WHITE;
+
+		    setBackground(selected ? cc : c);
+		    setToolTipText(u.getStatusText());
+		    setText(u.toString());
+		    Dimension d1 = getMinimumSize();
+		    Dimension d2 = getPreferredSize();
+		    Dimension d3 = getMaximumSize();
+//System.out.println("DIM " + d1.width + " " + d1.height + " " + d2.width + " " + d2.height + " " + d3.width + " " + d3.height);
+		    int w = treeView.getViewport().getWidth();
+//System.out.println("SZ " + w);
+		    if (w == 0) w = 500;
+//System.out.println("LOC " + getX() + " " + getY());
+		    setPreferredSize(new Dimension(w - 100,d2.height));
+		    CellRendererPane cp = (CellRendererPane)getParent();
+//		    if (cp != null) cp.setSize(600,d2.height);
+//if (cp != null) System.out.println("PAR " + cp.getPreferredSize().width + " " + cp.getPreferredSize().height + " " + cp.getMaximumSize().width + " " + cp.getMaximumSize().height + " " + cp.getX() + " " + cp.getY());
+		}
+	    }
+	    return this;
+
+	}
+
+
     }
 }

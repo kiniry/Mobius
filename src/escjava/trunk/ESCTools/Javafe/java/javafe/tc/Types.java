@@ -484,6 +484,9 @@ public class Types
   
     //@ requires s != null && t != null;
     public static boolean isCastable( Type s, Type t ) {
+        // Replace TypeNames by corresponding TypeSigs
+        if( s instanceof TypeName ) s = TypeSig.getSig( (TypeName)s);
+        if( t instanceof TypeName ) t = TypeSig.getSig( (TypeName)t);
         return inst.isCastableInstance(s, t);
     }
   
@@ -492,10 +495,6 @@ public class Types
         Assert.notNull( s );
         Assert.notNull( t );
 
-        // Replace TypeNames by corresponding TypeSigs
-
-        if( s instanceof TypeName ) s = TypeSig.getSig( (TypeName)s);
-        if( t instanceof TypeName ) t = TypeSig.getSig( (TypeName)t);
     
         if( s instanceof PrimitiveType ) 
         {
@@ -623,12 +622,13 @@ public class Types
 
     //@ requires x != null && y != null;
     public static boolean isInvocationConvertable( Type x, Type y ) {
+        if( x instanceof TypeName ) x = TypeSig.getSig( (TypeName)x);
+        if( y instanceof TypeName ) y = TypeSig.getSig( (TypeName)y);
         return inst.isInvocationConvertableInstance(x, y);
     }
   
     //@ requires x != null && y != null;
     protected boolean isInvocationConvertableInstance( Type x, Type y ) {
-
         if( isSameType(x,y) ) return true;
         if( isWideningPrimitiveConvertable(x,y) ) return true;
         if( isWideningReferenceConvertable(x,y) ) return true;

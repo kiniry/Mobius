@@ -1051,10 +1051,15 @@ public class TypeSig extends Type
                 // accessible, same name and number of args
 
                 somethingFound = true;
-                for(int j=0; j<args.length; j++)
+                for(int j=0; j<args.length; j++) {
+		    // FIXME - the argument (particularly the second) might be just a
+		    // Typename - ought to resolve it once and for all, instead of doing so
+		    // each time the following method is called.
                     if(! Types.isInvocationConvertable(args[j], 
-                                                       md.args.elementAt(j).type))
+                                                       md.args.elementAt(j).type)) {
                         continue search;
+		    }
+		}
                 // accessible and applicable
       
                 if (mostSpecific == null 

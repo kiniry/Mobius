@@ -61,7 +61,8 @@ import junitutils.Utils;
 
 public class GUI extends escjava.Main {
 
-	static public String jarlocation = null;
+    static public String jarlocation = null;
+
 static {
 	    String myClassName = "escjava/gui/GUI.class";
 	    java.net.URL urlJar =
@@ -71,6 +72,7 @@ static {
 	    int to = urlStr.indexOf("!/");
 	    if (to != -1) jarlocation = urlStr.substring(from, to);
 }
+
     static public class Stop extends RuntimeException {}
     static public final Stop STOP = new Stop();
 
@@ -78,7 +80,7 @@ static {
     static private void stopCheck(boolean thr) { 
 	if (!stop) return;
 	//System.out.println("STOPPED");  
-	if (thr) throw new Stop(); 
+	if (thr) throw STOP; 
     }
 
     static GUI gui;
@@ -86,8 +88,6 @@ static {
     static DefaultMutableTreeNode topNode = new DefaultMutableTreeNode("");
     static DefaultTreeModel treeModel = new DefaultTreeModel(topNode);
     EscOutputFrame currentOutputFrame;
-
-    static TaskQueue windowTasks = new TaskQueue();
 
     public static void main(String[] args) {
 	//junitutils.Utils.disable = true;
@@ -101,7 +101,8 @@ static {
 
 	escframe = new EscFrame();
 
-	Thread.currentThread().setPriority( Thread.currentThread().getPriority()-1); // Leave the event queue at a higher priority
+	Thread.currentThread().setPriority( Thread.currentThread().getPriority()-1); 
+						// Leave the event queue at a higher priority
 
 	processTasks();
     }
@@ -158,16 +159,44 @@ static {
 */
     }
 
+    public ArrayList extractChildren(DefaultMutableTreeNode d) {
+	ArrayList list = new ArrayList();
+	Enumeration e = d.children();
+	while (e.hasMoreElements()) {
+	    list.add(e.nextElement());
+	}
+	d.removeAllChildren();
+        return list;
+    }
+
+    public DefaultMutableTreeNode findIEMatch(InputEntry ie, ArrayList oc) {
+	Iterator ii = oc.iterator();
+	while (ii.hasNext()) {
+	    DefaultMutableTreeNode d = (DefaultMutableTreeNode)ii.next();
+	    IETreeValue v = (IETreeValue)d.getUserObject();
+	    if (ie.match(v.ie)) {
+		ii.remove();
+		return d;
+	    }
+	}
+	return null;
+    }
+
     /** Builds the top-level tree, containing just the InputEntry nodes. */
     public void handleAllInputEntries() {
 	ArrayList args = options().inputEntries;
-	topNode.removeAllChildren();
+	ArrayList oldchildren = extractChildren(topNode);
 	Iterator i = args.iterator();
 	while (i.hasNext()) {
 	    InputEntry ie = (InputEntry)i.next();
 	    ie = ie.resolve();
-	    DefaultMutableTreeNode ienode = IETreeValue.makeNode(ie);
-	    topNode.add(ienode);
+	    DefaultMutableTreeNode ienode = findIEMatch(ie,oldchildren);
+	    if (ienode != null) {
+		topNode.add(ienode);
+	    } else {
+		ienode = IETreeValue.makeNode(ie);
+		topNode.add(ienode);
+	    }
         }
 	treeModel.reload();
     }
@@ -373,8 +402,26 @@ static {
 
     static abstract class EscTreeValue {
 	public int status = Status.NOTPROCESSED; 
+	public boolean outOfDate = false;
+	public void setOutOfDate() {
+	    outOfDate = true;
+	    setOutOfDate(holder);
+	}
+	static public void setOutOfDate(DefaultMutableTreeNode h) {
+	    Enumeration e = h.children();
+	    while (e.hasMoreElements()) {
+		Object o = e.nextElement();
+		if (!(o instanceof DefaultMutableTreeNode)) return;
+		DefaultMutableTreeNode d = (DefaultMutableTreeNode)o;
+		if (d.getUserObject() instanceof EscTreeValue) {
+		    EscTreeValue v = (EscTreeValue)d.getUserObject();
+		    v.setOutOfDate();
+	        }
+	    }
+	}
 	public String getStatusText() {
-	    return type() + infoString() + ": " + Status.toString(status);
+	    return type() + (outOfDate ? " (OUT OF DATE) " : "" )
+		+ infoString() + ": " + Status.toString(status);
 	}
 	public String infoString() { return toString(); }
 	public String outputText = null;
@@ -421,6 +468,10 @@ static {
 	    //System.out.println("ENDPROCESS-" + type() + " " + this + " " + action + " " + Status.toString(status));
         }
 	public void processHelper(int action) {
+	    if (outOfDate) {
+		outOfDate = false;
+		status = Status.NOTPROCESSED;
+	    }
 	    processThis(action);
 	    if (status == Status.PARSED_ERROR) return;
 	    if (status == Status.TYPECHECKED_ERROR) return;
@@ -838,6 +889,7 @@ static {
 		//System.out.println("PROCESSING EVERYTHING " + action);
 		if (action == RELOAD) {
 		    gui.restart(null);
+		    //EscTreeValue.setOutOfDate(topNode);
 		} else {
 		    gui.doAll(action);
 		}
@@ -859,95 +911,9 @@ static {
 		    + Project.eol);
 		t.printStackTrace(System.out);
 	    }
-	    stopCheck(false);
 	}
     }
 
-    static class HtmlTask {
-	String filename;
-	String title;
-	public HtmlTask(String title, String filename) {
-	    this.title = title;
-	    this.filename = filename;
-	}
-    }
-
-    static class WindowThread extends Thread {
-	public void run() {
-	    while (true) {
-		Object o = windowTasks.getTask();
-		String out = "";
-	        if (o instanceof EscTreeValue) {
-		    ((EscTreeValue)o).showOutput(true);
-		} else if (o instanceof HtmlTask) {
-		    HtmlTask ht = (HtmlTask)o;
-		    EscHtml jf = EscHtml.make(ht.title,ht.filename,
-			GUI.gui.escframe,500,0,600,400);
-		    jf.showit();
-		} else if (o instanceof String) {
-		    // Pop up an editor window
-		    try {
-			// Here we parse the various kinds of error messages
-			// that Esc/java2 produces to find a file name and
-			// line number
-			final String aheader =
-			    "Associated declaration is \"";
-			final String linetext = "\", line ";
-			final String coltext = ", col ";
-			String s = (String)o;
-			String name;
-			int lin;
-			if (s.startsWith(aheader)) {
-			    int i = s.indexOf('\"',aheader.length());
-			    name = s.substring(aheader.length(),i);
-			    i += linetext.length();
-			    int j = s.indexOf(',',i);
-			    try {
-				lin = Integer.parseInt(s.substring(i,j));
-			    } catch (NumberFormatException e) {
-				lin = 0;
-			    }
-			} else {
-			    final String jarending = ".jar:";
-			    int i = s.indexOf(jarending);
-			    i = i == -1 ? 0 : i + jarending.length();
-			    i = s.indexOf(':',i);
-			    if (i == -1) return;
-			    name = s.substring(0,i);
-			    i++;
-			    int ii = s.indexOf(':',i);
-			    if (ii == -1) continue;
-			    try {
-				lin = Integer.parseInt(s.substring(i,ii));
-			    } catch (NumberFormatException e) {
-				lin = 0;
-			    }
-			}
-			if (name.endsWith(".class")) {
-			    int result =
-			    JOptionPane.showConfirmDialog(GUI.gui.escframe,
-				"The referenced location is in a class file, "
-			      + " so there is probably no java or specification"
-			      + Project.eol
-			      + " file for this class.  Would you like to "
-			      + " create a skeleton specification file and edit it?" + Project.eol + "[[[ Sorry - not yet implemented ]]]",
-				"Generate skeleton?",
-				JOptionPane.YES_NO_OPTION);
-			    if (result == JOptionPane.NO_OPTION) continue;
-			    continue;
-
-			}
-			EscEditor.make(name,lin,null,null).showit();
-		    } catch (Exception e) {
-			JOptionPane.showMessageDialog(GUI.gui.escframe,
-			    "Failed to open editor window: " + Project.eol +
-			    out + 
-			    o + Project.eol + e);
-		    }
-		}
-	    }
-	}
-    }
 }
 	
 
@@ -1043,32 +1009,9 @@ Accelerator keys
 
 - Figure out how to reliably set the user.dir from the application
 
-- allow changing the Look and Feel
-
 - the pgc pdsa pvc options don't work (removing duplicated code will help)
 
 - why does the memory usage keep rising when nothing is happening
 
 
-An exception was thrown while processing a routine declaration: javafe.util.AssertionFailureException
-javafe.util.AssertionFailureException
-	at javafe.util.Assert.notNull(Assert.java:54)
-	at escjava.prover.SubProcess.peekChar(SubProcess.java:218)
-	at escjava.prover.SubProcess.eatWhitespace(SubProcess.java:372)
-	at escjava.prover.CECEnum.readFromSimplify(CECEnum.java:186)
-	at escjava.prover.CECEnum.hasMoreElements(CECEnum.java:135)
-	at escjava.Main.doProving(Main.java:837)
-	at escjava.gui.GUI.processRoutineDecl(GUI.java:335)
-	at escjava.gui.GUI$RDTreeValue.processThisAction(GUI.java:780)
-	at escjava.gui.GUI$EscTreeValue.processThis(GUI.java:437)
-	at escjava.gui.GUI$EscTreeValue.processHelper(GUI.java:411)
-	at escjava.gui.GUI$EscTreeValue.processHelper(GUI.java:417)
-	at escjava.gui.GUI$EscTreeValue.processHelper(GUI.java:417)
-	at escjava.gui.GUI$EscTreeValue.processHelper(GUI.java:417)
-	at escjava.gui.GUI$EscTreeValue.process(GUI.java:406)
-	at escjava.gui.GUI.doAll(GUI.java:214)
-	at escjava.gui.GUI.processTasks(GUI.java:828)
-	at escjava.gui.GUI.main(GUI.java:101)
-
 */
-

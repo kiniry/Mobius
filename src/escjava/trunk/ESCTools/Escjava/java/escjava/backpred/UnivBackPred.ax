@@ -528,6 +528,11 @@
 	      (is (classLiteral t) |T_java.lang.Class|)
               (isAllocated (classLiteral t) alloc))))
 
+(BG_PUSH
+ (FORALL (t)
+	 (PATS (classLiteral t))
+	 (EQ (classLiteral t) t)
+))
 
 ; === Axioms about properties of integral &, |, and /
 

@@ -4,7 +4,8 @@ DUMP java.lang.Object
  Jml fields
     objectState "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 40, col 30
     owner "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 47, col 21
-    objectTimesFinalized "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 155, col 24
+    _getClass "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 64, col 30
+    objectTimesFinalized "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 167, col 24
  Jml hidden fields
  DUMP-END
 DUMP java.lang.<the root interface>
@@ -13,7 +14,8 @@ DUMP java.lang.<the root interface>
  Jml fields
     objectState "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 40, col 30
     owner "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 47, col 21
-    objectTimesFinalized "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 155, col 24
+    _getClass "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 64, col 30
+    objectTimesFinalized "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 167, col 24
  Jml hidden fields
  DUMP-END
 DUMP ScopeII
@@ -24,7 +26,8 @@ DUMP ScopeII
  Jml fields
     objectState "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 40, col 30
     owner "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 47, col 21
-    objectTimesFinalized "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 155, col 24
+    _getClass "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 64, col 30
+    objectTimesFinalized "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 167, col 24
  Jml hidden fields
  DUMP-END
 DUMP ScopeS
@@ -44,7 +47,8 @@ DUMP ScopeS
     dupmm "Scope.java", line 48, col 17
     objectState "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 40, col 30
     owner "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 47, col 21
-    objectTimesFinalized "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 155, col 24
+    _getClass "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 64, col 30
+    objectTimesFinalized "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 167, col 24
  Jml hidden fields
  DUMP-END
 DUMP ScopeI
@@ -59,7 +63,8 @@ DUMP ScopeI
     dupm "Scope.java", line 28, col 18
     objectState "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 40, col 30
     owner "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 47, col 21
-    objectTimesFinalized "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 155, col 24
+    _getClass "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 64, col 30
+    objectTimesFinalized "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 167, col 24
  Jml hidden fields
  DUMP-END
 DUMP Scope
@@ -94,7 +99,8 @@ DUMP Scope
     dupmm "Scope.java", line 48, col 17
     objectState "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 40, col 30
     owner "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 47, col 21
-    objectTimesFinalized "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 155, col 24
+    _getClass "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 64, col 30
+    objectTimesFinalized "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 167, col 24
     dup "Scope.java", line 27, col 18
  Jml hidden fields
     ggi "Scope.java", line 45, col 17
@@ -127,7 +133,8 @@ DUMP org.jmlspecs.lang.JMLDataGroup
  Jml fields
     objectState "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 40, col 30
     owner "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 47, col 21
-    objectTimesFinalized "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 155, col 24
+    _getClass "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 64, col 30
+    objectTimesFinalized "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 167, col 24
  Jml hidden fields
  DUMP-END
 Scope.java:21: Error: Ambiguous field for type Scope

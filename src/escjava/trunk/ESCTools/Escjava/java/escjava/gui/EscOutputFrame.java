@@ -41,7 +41,7 @@ public class EscOutputFrame extends JFrame {
 		    textArea.setSelectionStart(textArea.getLineStartOffset(line));
 		    textArea.setSelectionEnd(textArea.getLineEndOffset(line));
 		    String s = textArea.getSelectedText();
-		    GUI.windowTasks.addTask(s);
+		    WindowThread.windowTasks.addTask(s);
 		} catch (Exception ee) {}
 			// If an exception occurs, we simply don't display a window
 	    }

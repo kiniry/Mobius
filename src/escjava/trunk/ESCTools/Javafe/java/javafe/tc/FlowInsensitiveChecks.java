@@ -14,17 +14,17 @@ import javafe.util.*;
 
 public class FlowInsensitiveChecks
 {
+    static public FlowInsensitiveChecks inst = new FlowInsensitiveChecks();
+    static public FlowInsensitiveChecks inst() { return inst; }
+
     /**
      * Controls whether or not implicit super-calls in constructors
      * are made explicit.  By default they are.
      */
     public static boolean dontAddImplicitConstructorInvocations = false;
 
-    /**
-     * @todo kiniry 29 Jul 2003 - Why is an empty parameterless
-     * constructor provided?
-     */
-    protected FlowInsensitiveChecks() {}
+    // Use this to get an instance in order to get proper derived behavior.
+    protected FlowInsensitiveChecks() { }
 
     /**
      * Factory method so subclasses can override.
@@ -102,9 +102,9 @@ public class FlowInsensitiveChecks
         // Process each member declaration
         for(int i = 0, sz = d.elems.size(); i < sz; i++) {
             TypeDeclElem e = d.elems.elementAt(i);
-
             checkTypeDeclElem(e);
         }
+	sig = null;
     }
 
     // -------------------------------------------------------------
@@ -2021,7 +2021,7 @@ public class FlowInsensitiveChecks
 
     //@ requires expr != null && t != null;
     static void checkType(Expr expr, Type t) {
-        if(!assignmentConvertable(expr, t)) {
+        if(!inst.assignmentConvertable(expr, t)) {
 	    if (!Types.isErrorType(getType(expr)))
 		ErrorSet.error(expr.getStartLoc(), 
                             "Cannot convert "+Types.printName(getType(expr))
@@ -2059,7 +2059,7 @@ public class FlowInsensitiveChecks
      * {@link javafe.tc.Types}, because it needs to mess with constants.
      */ 
     //@ requires e != null && t != null;
-    static boolean assignmentConvertable(Expr e, Type t) {
+    protected boolean assignmentConvertable(Expr e, Type t) {
 
         Type te = getType(e);
 

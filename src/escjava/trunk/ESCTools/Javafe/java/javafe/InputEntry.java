@@ -61,6 +61,10 @@ public class InputEntry {
     }
     public InputEntry resolve() { return this; }
 
+    public boolean match(InputEntry ie) {
+	return getClass() == ie.getClass() && name.equals(ie.name);
+    }
+
     static public class Unknown extends InputEntry {
 	public Unknown(String n) { super(n); auto=true; }
 	public String type() { return "Unknown"; }

@@ -41,7 +41,7 @@ public class Types extends javafe.tc.Types
 
     public static PrimitiveType
             typecodeType = PrimitiveType.make(TagConstants.TYPECODE, Location.NULL);
-	//public static TypeSig typecodeType = javaLangClass();
+    //public static Type typecodeType = javaLangClass();
 
     public static PrimitiveType
             locksetType = PrimitiveType.make(TagConstants.LOCKSET, Location.NULL);
@@ -49,14 +49,12 @@ public class Types extends javafe.tc.Types
     public static PrimitiveType
 	    rangeType = PrimitiveType.make(TagConstants.DOTDOT, Location.NULL);
 
-    static private Type javaLangClass = javaLangClass();
-
     public static boolean isTypeType(Type t) {
-	return t.getTag() == TagConstants.TYPECODE;
-	//return t.getTag() == TagConstants.TYPECODE || t.equals(javaLangClass);
+	//return t.getTag() == TagConstants.TYPECODE;
+	return t.getTag() == TagConstants.TYPECODE || t.equals(javaLangClass());
     }
 
-/*
+
     public boolean isSameTypeInstance(Type t, Type tt) {
 	if (isTypeType(t) && isTypeType(tt)) return true;
 	return super.isSameTypeInstance(t,tt);
@@ -65,13 +63,13 @@ public class Types extends javafe.tc.Types
     public boolean isCastableInstance(Type t, Type tt) {
 	boolean b = super.isCastableInstance(t,tt);
 	if (b) return b;
-	if (isTypeType(t))
-		return super.isCastableInstance(javaLangClass,tt);
-	if (isTypeType(tt))
-		return super.isCastableInstance(t,javaLangClass);
+	if (t.getTag() == TagConstants.TYPECODE)
+		return super.isCastableInstance(javaLangClass(),tt);
+	if (tt.getTag() == TagConstants.TYPECODE)
+		return super.isCastableInstance(t,javaLangClass());
 	return b;
     }
-*/
+
     /**
      * This routine overrides {@link javafe.tc.Types#lookupField}.  Unlike that
      * routine, it knows about ghost fields and spec_public.
