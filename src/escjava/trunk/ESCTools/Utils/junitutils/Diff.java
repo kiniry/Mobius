@@ -81,7 +81,8 @@ public class Diff {
     int nPos = 0;
     int lastOldMatch = -1;
     int lastNewMatch = -1;
-    while (oPos < oldTextLines.length || nPos < newTextLines.length) {
+    if (oldTextLines.length > 0 && newTextLines.length > 0)
+     while (oPos < oldTextLines.length || nPos < newTextLines.length) {
       // this is a pretty dumb algorithm that doesn't handle
       // things like the insertion of a single new line in one
       // string or grouping
