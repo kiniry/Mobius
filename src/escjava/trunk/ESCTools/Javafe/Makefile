@@ -154,9 +154,8 @@ test_jdk_sources:
 ## Runs the Javafe tool on bodies of code
 .PHONY: typecheckTests
 typecheckTests: javafe_test
-	@test/javafe/test/typecheckJDK
-	@echo 
-	@test/javafe/test/typecheckJavafe
+	${MAKE} -C test/javafe/test typecheckJDK
+	${MAKE} -C test/javafe/test typecheckJavafe
 
 ## This tests a binary release that is untarred in the RELTEMP directory,
 ## with RELCLASSPATH pointing to the esctools1.jar file that is being tested.

@@ -1072,8 +1072,13 @@ wrap those variables being modified and not everything.
 	} else {
 	    pre = trSpecExpr(ee,st,null);
 	}
+	
+	Type t = TypeCheck.inst.getType(ee);
+	int ftag = TagConstants.ANYEQ;
+	if (Types.isBooleanType(t)) ftag = TagConstants.BOOLEQ;
+	
 	return LabelExpr.make(ee.getStartLoc(),ee.getEndLoc(),
-		false,GC.makeLabel("AdditionalInfo",ee.getStartLoc(),Location.NULL),GC.nary(TagConstants.ANYEQ,post,pre));
+		false,GC.makeLabel("AdditionalInfo",ee.getStartLoc(),Location.NULL),GC.nary(ftag,post,pre));
       }
 
       default:
@@ -1881,7 +1886,8 @@ System.out.println("");
 	Expr fcall = GC.nary(representsMethodName(p.target), args);
 	pats.addElement(fcall);
 	Expr e = TrAnExpr.trSpecExpr(p.expr, null, null);
-	e = GC.forallwithpats(newThis,e,pats);
+	//e = GC.forallwithpats(newThis,e,pats);
+	e = GC.forall(newThis,e);
 	specialThisExpr = null;
 	return e;
   }

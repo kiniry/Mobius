@@ -30,6 +30,6 @@ rem :endGetargs
 rem USERPATH is a variable local to this batch file
 if "%CLASSPATH%"=="" set USERPATH=.
 if not "%CLASSPATH%"=="" set USERPATH=%CLASSPATH%
-@echo on
-echo %ESCJ_ARGS%
+rem @echo on
+rem echo %ESCJ_ARGS%
 java  -Dsimplify=%ESCJ_SIMPLIFY% -classpath "%ESCJAVA_ROOT%\esctools2.jar" escjava.Main -classpath  "%ESCJAVA_ROOT%\jmlspecs.jar;." %ESCJ_STDARGS% %ESCJ_ARGS%

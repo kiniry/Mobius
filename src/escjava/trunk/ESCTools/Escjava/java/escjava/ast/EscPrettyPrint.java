@@ -1072,6 +1072,13 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
       self.print(o, ind, ((NaryExpr)e).exprs);
       break;
 
+    case TagConstants.NOTMODIFIEDEXPR:
+      write(o, TagConstants.toString(TagConstants.NOT_MODIFIED));
+      write(o, "(");
+      self.print(o, ind, ((NotModifiedExpr)e).expr);
+      write(o, ")");
+      break;
+
     case TagConstants.EVERYTHINGEXPR:
       write(o, TagConstants.toString(TagConstants.EVERYTHING));
       break;

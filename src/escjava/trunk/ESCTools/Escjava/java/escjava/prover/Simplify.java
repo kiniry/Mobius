@@ -91,7 +91,7 @@ public class Simplify
                            new String[] {
                                java.lang.System.getProperty("simplify",
                                                             "/usr/local/escjava/bin/Simplify"),
-                               "-noprune",
+			       "-noprune",
                                "-noplunge"}, // FIXME - make controllable
                            null);
 	eatPrompt();

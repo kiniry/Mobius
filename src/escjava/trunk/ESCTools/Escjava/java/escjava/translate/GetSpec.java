@@ -462,6 +462,7 @@ public final class GetSpec
       
         ExprVec targets  = ExprVec.make();
 
+        targets.addElement(GC.statevar);
         if( dmd.usesFresh )
             targets.addElement( GC.allocvar );
 
@@ -1210,6 +1211,10 @@ while (ee.hasMoreElements()) {
             spec.pre.addElement( GC.freeCondition( axioms.elementAt(i),
                                                    Location.NULL ) );
         }
+        
+        for(int i=0; i<axioms.size(); i++) {
+            spec.postAssumptions.addElement( axioms.elementAt(i) );
+        }
 
         return spec;
     }
@@ -1487,7 +1492,6 @@ while (ee.hasMoreElements()) {
 	td.
      */
     static public TypeDeclElemVec getRepresentsClauses(TypeDecl td, FieldDecl fd) {
-//System.out.println("GETTING REP CL " + td.id + " " + fd.id);
 	TypeDeclElemVec mpv = (TypeDeclElemVec)Utils.representsDecoration.get(td);
 	TypeDeclElemVec n = TypeDeclElemVec.make(mpv.size());
 	for (int i=0; i<mpv.size(); ++i) {
@@ -1495,7 +1499,6 @@ while (ee.hasMoreElements()) {
 	    if (!(m instanceof NamedExprDeclPragma)) continue;
 	    NamedExprDeclPragma nem = (NamedExprDeclPragma)m;
 	    if (((FieldAccess)nem.target).decl == fd) n.addElement(m);
-	    //if (((FieldAccess)nem.target).decl == fd) System.out.println("    FOUND AT " + Location.toString(m.getStartLoc() ));
 	}
 	return n;
     }
@@ -1860,7 +1863,7 @@ while (ee.hasMoreElements()) {
      **/
   
     private static void checkConditions(ConditionVec cv, int loc, StackVector code) {
-        for (int i = 0; i < cv.size(); i++) {
+    	for (int i = 0; i < cv.size(); i++) {
             Condition cond = cv.elementAt(i);
             Translate.setop(cond.pred);
             // if the condition is an object invariant, send its guarded command

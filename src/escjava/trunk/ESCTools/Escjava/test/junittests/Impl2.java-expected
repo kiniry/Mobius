@@ -1,0 +1,26 @@
+ESC/Java version VERSION
+    [TIME]
+
+Impl2 ...
+  Prover started:TIME
+    [TIME]
+
+Impl2: shrink() ...
+    [TIME]  passed
+
+Impl2: clear() ...
+    [TIME]  passed
+
+Impl2: Impl2() ...
+    [TIME]  passed
+  [TIME total]
+
+IntList ...
+    [TIME]
+
+IntList: shrink() ...
+    [TIME]  passed immediately
+
+IntList: clear() ...
+    [TIME]  passed immediately
+  [TIME total]

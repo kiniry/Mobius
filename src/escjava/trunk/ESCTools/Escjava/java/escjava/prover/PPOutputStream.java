@@ -18,6 +18,7 @@ import java.io.IOException;
 public class PPOutputStream extends FilterOutputStream {
 
     int parenDepth = 0;
+    boolean inComment = false;
     static final int lp = '(';
     static final int rp = ')';
 
@@ -40,6 +41,19 @@ public class PPOutputStream extends FilterOutputStream {
      * @exception  IOException  if an I/O error occurs.
      */
     public void write(int b) throws IOException {
+	if (inComment) {
+		super.write(b);
+		if (b == '\n' || b == '\r') {
+			inComment = false;
+		} else {
+			return;
+		}
+	}
+	if (b == ';') {
+		inComment = true;
+		super.write(b);
+		return;
+	}
 	if (b == lp) {
 	    if (!recentNL) {
 		super.write('\n'); //FIXME - multiplatform ???
