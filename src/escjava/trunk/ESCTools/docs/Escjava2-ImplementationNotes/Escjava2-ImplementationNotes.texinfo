@@ -548,7 +548,7 @@ Information about multijava can be obtained from these sources.
 There are three essential items that you need in order to run
 ESC/Java2: a build of ESC/Java2 itself, an executable for Simplify for
 your platform, and a version of the JML specifications for the Java
-system classes.  These are available as a single release from the
+system classes.  These are available together as a single release from the
 ESC/Java2 website (@url{http://www.cs.kun.nl/sos/research/nl}).
 However, you may want to substitute an alternate version of the JML
 specifications that you generate yourself or you obtain from the JML
@@ -561,25 +561,28 @@ options are described in @ref{Command-line options}.
 1. Double-click the esctools2.jar file that comes with the release.
 This launches a GUI tool that runs ESC/Java2.  The jar file has the
 JML specs built-in and uses them by default.  You will have to tell
-the GUI tool the location of the apporpriate Simplify executable for
-your platform.  Several versions of Simplify are supplied with the
-release.
+the GUI tool the location of the appropriate Simplify executable for
+your platform, what value of @env{CLASSPATH} to use, and what the
+input files and other options should be.  Versions of Simplify for
+several platforms are supplied with the release.
 
 2. Execute the esctools2.jar file using the command @command{java -jar
 esctools2.jar} .  This allows you to launch the GUI tool from the
-command-line and to add other command-line options.  In particular you
+command-line and to add other command-line options as initial settings
+of the GUI tool.  In particular you
 can specify the location of the Simplify executable with the option
 @code{-simplify }@emph{PathToSimplify}, in which you supply an
 absolute path to the correct Simplify executable.  A directory path
 for alternate Java specifications can be supplied as the argument to
-the @code{-specs} option.
+the @code{-specs} option.  The classpath is specified with the
+@code{-classpath} option.
 
 3. Execute a non-GUI version of ESC/Java2 using the script supplied
 with the release: @command{./escj} .  The script can guess the
 location of the release and of the Simplify executable.  You can help
 it by defining the environment variable @code{ESCTOOLS_ROOT} as the
 absolute path to the location of the directory containing the release.
-You do need to define the variable @code{SIMPLIFY} as the name of (not
+and by defining the variable @code{SIMPLIFY} as the name of (not
 the path to) the Simplify executable.  If your working directory is
 something other than the directory containing the release, you will
 need to provide a suitable path to the @code{escj} script when you
@@ -589,7 +592,9 @@ invoke it.
 @command{java -cp esctools2.jar escjava.Main} .  In this case you need
 to specify the location (path and name) of the Simplify executable
 using the @code{-simplify} option and the location of the reference
-specifications using the @code{-specs} option.
+specifications using the @code{-specs} option.  You also need to 
+specify the classpath using @code{-classpath} and any other input files
+and options.
 
 @c ------ chapter Status of JML features --------
 @node  Status, features, Running ESCJava2, Top
@@ -4936,7 +4941,14 @@ and classpath for a type, then always use the java file
 
 
 @cindex -quiet
-@item @code{-quiet} : turns off any informational messages, leaving only reports of errors, warnings and cautions.
+@item @code{-quiet} : turns off any informational messages, 
+leaving only reports of errors, warnings and cautions.
+
+@cindex{-simplify} 
+@item @code{-simplify} @emph{filename} : used to specify the 
+Simplify executable that should be used by ESC/Java2.  The executable
+chosen must be the appropriate one for the platform on which you are
+running.
 
 @cindex -source
 @cindex 1.3
