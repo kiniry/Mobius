@@ -36,14 +36,14 @@ ASTNode.java TypeDeclElem.java tags: hierarchy.j $(ASTGEN) $(ASTFILELIST) make_t
 	grep -v 'BinaryExpr' | grep -v 'UnaryExpr' | \
 	grep -v 'LiteralExpr' | grep -v 'PrimitiveType' | \
 	sed 's/.* class \([^ ]*\).*/\1/' | \
-	make_tags > tags
+	./make_tags > tags
 	@grep -v "#" manual_tags >> tags
 	#
-	@cat tags | insert_ensures ASTNode > ASTNode.tmp
+	@cat tags | ./insert_ensures ASTNode > ASTNode.tmp
 	@mv ASTNode.tmp ASTNode.java
 	#
 	@cp TypeDeclElem.j TypeDeclElem.java
-	@cat tags | insert_ensures TypeDeclElem > TypeDeclElem.tmp
+	@cat tags | ./insert_ensures TypeDeclElem > TypeDeclElem.tmp
 	@mv TypeDeclElem.tmp TypeDeclElem.java
 
 IntegerVec.java: ../util/_TYPE_Vec.j
@@ -62,7 +62,7 @@ IntegerVec.java: ../util/_TYPE_Vec.j
 clean: $(ASTFILELIST)
 	@$(ASTFILELIST) < hierarchy.j | xargs rm -f 
 	@rm -f *~ ${TypeVec} ASTGEN* zASTGEN* *Vec.spec
-	@rm -f tags ASTNode.before ASTNode.after ASTNode.tmp
+	@rm -f tags ASTNode.before ASTNode.after ASTNode.tmp ASTNode.java
 	@rm -rf *.class ${CLASSDIRECTORY}/javafe/ast/*.class
 	@rm -f TypeDeclElem.java TypeDeclElem.before TypeDeclElem.after
 	@rm -f TypeDeclElem.tmp

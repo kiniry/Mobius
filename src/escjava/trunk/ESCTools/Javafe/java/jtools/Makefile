@@ -1,14 +1,11 @@
 # Copyright 2000, 2001, Compaq Computer Corporation
 
-all:
-	#echo JAVAC = ${JAVAC}
-	cd jwhich; ${MAKE} 
-	cd jls; ${MAKE} 
-	cd jcheck; ${MAKE} 
+all clean:
+	${MAKE} -C jwhich $@
+	${MAKE} -C jls $@
+	${MAKE} -C jcheck $@
 
+clean: clean-classes
 
-clean:
-	cd jwhich; ${MAKE} clean
-	cd jls; ${MAKE} clean
-	cd jcheck; ${MAKE} clean
+clean-classes:
 	rm -rf *.class

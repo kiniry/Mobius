@@ -11,7 +11,7 @@ javac:
 	make_javac
 
 diffs: outputs
-	make_diffs
+	-make_diffs
 
 compare: outputs javac
 	make_comparsions
