@@ -490,10 +490,11 @@
       @todo Compile all Rcc source code.
       @todo kiniry 2 Jan 2002 - Rcc does not yet build---there are several missing 
             classes (e.g. javafe.ast.CloneVisitor) that I have written HP about.
+      @review kiniry 2 Jan 2002 - Should rccwizard be built or not?
     </description>
     <javac srcdir="${rcc_source_dir}"
            destdir="${rcc_classes_dir}"
-           excludes="rcc/test/**,rcc/parser/test/**"
+           excludes="rcc/test/**,rcc/parser/test/**,rccwizard/test/**"
            debug="on"
            deprecation="off"
            optimize="off"
