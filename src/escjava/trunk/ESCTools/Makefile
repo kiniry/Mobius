@@ -106,7 +106,7 @@ clean-norel-noreltemp:
 	$(MAKE) -C docs clean
 	$(MAKE) -C Javafe clean
 	rm -f jars/*.jar
-	rm tags TAGS
+	rm -f tags TAGS
 
 ########################################### docs
 
