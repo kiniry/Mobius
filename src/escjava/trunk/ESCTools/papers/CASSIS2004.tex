@@ -50,12 +50,14 @@ to verify portions of an Internet voting tally system}
   Rochester, NY 14650-1816, USA\\
   \email{cok@frontiernet.net}
   \and
-  Security of Systems Group,
-  Nijmegen Institute for Computing and Information Science,\\
-  University of Nijmegen,
-  Toernooiveld 1\\
-  6525 ED Nijmegen, The Netherlands\\
-  \email{kiniry@cs.kun.nl}}
+  Department of Computer Science, University College Dublin,\\
+  Belfield, Dublin 4, Ireland\footnote{Formerly with the
+  Security of Systems Group at the 
+%  Nijmegen Institute for Computing and Information Science,
+  University of Nijmegen.}\\
+%   Toernooiveld 1
+%   6525 ED Nijmegen, The Netherlands\\
+  \email{kiniry@acm.org}}
 \date{May 2004}
 
 \maketitle
@@ -135,12 +137,10 @@ verifying, and maintaining specifications of non-trivial APIs
 troublesome (as discussed in Section~\ref{sec:usage-exper-date}).
 
 Additionally, JML has grown significantly in popularity.  The
-activities of
-several
+activities of several
 groups~\cite{jmlpapers,Burdy-etal03,Leavens-etal00,NimmerErnst01,Bogor03}
-generated a number of tools that work with JML.
-Thus, many new research tools worked well with ``modern'' JML, but
-ESC/Java did not.
+generated a number of tools that work with JML.  Thus, many new
+research tools worked well with ``modern'' JML, but ESC/Java did not.
 
 Finally, some of the deficiencies of the annotation language used by
 ESC/Java reduced the overall usability of the tool.  For example,
@@ -196,10 +196,12 @@ substantial prior efforts: the definition of the Java Modeling Language and
 the production of ESC/Java and the Simplify prover in the first place.
 
 \section{JML Example}
-The Java Modeling language is described in detail in several other publications
-(\cite{Leavens-etal00} and various papers listed at \cite{jmlpapers}), so here we will give just one example showing some of the syntax.  The class in Fig.~\ref{fig:example}
-uses an array to implement a List.  A few methods with partial specifications are shown.
-They demonstrate the following features of JML:
+The Java Modeling language is described in detail in several other
+publications (\cite{Leavens-etal00} and various papers listed at
+\cite{jmlpapers}), so here we will give just one example showing some
+of the syntax.  The class in Fig.~\ref{fig:example} uses an array to
+implement a List.  A few methods with partial specifications are
+shown.  They demonstrate the following features of JML:
 %\begin{BFIGURE}
 %\input{Example.java}
 %\caption{A List class with a partial specification.}
@@ -253,37 +255,57 @@ public class Example {
 \label{fig:example}
 \end{figure}
 \begin{itemize}
-\item JML annotations are contained in comments beginning with \texttt{//@} or \texttt{/*@}.
-\item \texttt{model import} statements declare classes imported for use in annotations.
-\item \texttt{spec\_public} indicates that the field named {\em seq} has public visibility in specifications.
-\item The \texttt{invariant} states that after construction {\em seq} is never null and is an array with \texttt{Object}s as elements.
-\item The \texttt{requires} keyword states a precondition for the {\em reverse} method, namely 
-its argument is presumed to be non-null.
-\item The \texttt{modifies} keyword states a frame condition for the {\em reverse} method, namely 
-that the only fields that are assigned during its execution are the elements of the \texttt{out} argument.
-\item The \texttt{signals} keyword states a postcondition for the {\em reverse} method that must hold if an exception is thrown, in this case 
+\item JML annotations are contained in comments beginning with
+\texttt{//@} or \texttt{/*@}.
+\item \texttt{model import} statements declare classes imported for
+use in annotations.
+\item \texttt{spec\_public} indicates that the field named {\em seq}
+has public visibility in specifications.
+\item The \texttt{invariant} states that after construction {\em seq}
+is never null and is an array with \texttt{Object}s as elements.
+\item The \texttt{requires} keyword states a precondition for the {\em
+reverse} method, namely its argument is presumed to be non-null.
+\item The \texttt{modifies} keyword states a frame condition for the
+{\em reverse} method, namely that the only fields that are assigned
+during its execution are the elements of the \texttt{out} argument.
+\item The \texttt{signals} keyword states a postcondition for the {\em
+reverse} method that must hold if an exception is thrown, in this case
 that it never throws a \texttt{NullPointerException}.
-\item The \texttt{ensures} keyword states a postcondition for the {\em reverse} method that must hold if the method terminates normally.
-\item The \texttt{model} declaration declares a public field used in specifications, typically as an abstract representation of the class.  In this case, the class represents a \texttt{List}.
-\item The \texttt{represents} statement indicates the relationship between the value of the model
-field and the implementation.
-\item The next set of declarations constitute a model method declaration and its specifications;
-a model method is only used in annotations and need not have an implementation.
-\item The \texttt{modifies} clause on the {\em insert} method indicates that it may modify the value
-of the model field {\em list} or any field in its {\em datagroup}; the \texttt{in} and \texttt{map} annotations on the declaration of
-{\em seq} stipulate that the {\em seq} field and its array elements are in the {\em list} datagroup.
-\item The \texttt{pure} modifier on the {\em length} method indicates that that method has no
-side effects (it does not assign to any fields).
+\item The \texttt{ensures} keyword states a postcondition for the {\em
+reverse} method that must hold if the method terminates normally.
+\item The \texttt{model} declaration declares a public field used in
+specifications, typically as an abstract representation of the class.
+In this case, the class represents a \texttt{List}.
+\item The \texttt{represents} statement indicates the relationship
+between the value of the model field and the implementation.
+\item The next set of declarations constitute a model method
+declaration and its specifications; a model method is only used in
+annotations and need not have an implementation.
+\item The \texttt{modifies} clause on the {\em insert} method
+indicates that it may modify the value of the model field {\em list}
+or any field in its {\em datagroup}; the \texttt{in} and \texttt{map}
+annotations on the declaration of {\em seq} stipulate that the {\em
+seq} field and its array elements are in the {\em list} datagroup.
+\item The \texttt{pure} modifier on the {\em length} method indicates
+that that method has no side effects (it does not assign to any
+fields).
 \end{itemize}
 
-This class will compile with javac and will pass all the checks of the jml checker.  If it is subjected to the ESC/Java2 tool described in this paper, three warnings are produced, correctly pointing out three potential problems with this code:
+This class will compile with javac and will pass all the checks of the
+jml checker.  If it is subjected to the ESC/Java2 tool described in
+this paper, three warnings are produced, correctly pointing out three
+potential problems with this code:
 \begin{itemize}
-\item The default constructor does not set the value of \texttt{seq} to a non null array as required
-by the invariant.
-\item The assignment to \texttt{out[i++]} on line 16 is problematic because the index may be too large for the array; this is fixed by stating that the length of \texttt{out} must be equal to the length of \texttt{seq}.
-\item An additional warning on that line indicates that the type of the \texttt{out} array may possibly not allow
-assignments of Object references to its elements.
-\end{itemize} 
+\item The default constructor does not set the value of \texttt{seq}
+to a non null array as required by the invariant.
+\item The assignment to \texttt{out[i++]} on line 16 is problematic
+because the index may be too large for the array; this is fixed by
+stating that the length of \texttt{out} must be equal to the length of
+\texttt{seq}.
+\item An additional warning on that line indicates that the type of
+the \texttt{out} array may possibly not allow assignments of Object
+references to its elements.
+\end{itemize}
 \section{Changes to DEC/SRC ESC/Java}
 
 Creating ESC/Java2 required a number of changes to the ESC/Java tool.
@@ -338,23 +360,25 @@ methods may be declared as helper methods.}
 
 \subsection{New verification checks}
 Though all of JML is parsed, not all of it is currently checked.
-ESC/Java concentrated on checking for possible
-unexpected exceptions arising from conditions such as null pointers or out-of-bounds 
-array indices, since these did not need annotations to be found; annotations
-were used, however, to state conditions on method arguments or class fields
-that would preclude such errors.  Thus ESC/Java was capable of checking the
-pre- and post-conditions of methods as well.  However, these could only be expressed
-at a low-level given the limitations of the ESC/Java input language.
+ESC/Java concentrated on checking for possible unexpected exceptions
+arising from conditions such as null pointers or out-of-bounds array
+indices, since these did not need annotations to be found; annotations
+were used, however, to state conditions on method arguments or class
+fields that would preclude such errors.  Thus ESC/Java was capable of
+checking the pre- and post-conditions of methods as well.  However,
+these could only be expressed at a low-level given the limitations of
+the ESC/Java input language.
 
-The expanded capabilities of ESC/Java2 allow more thorough checking at a
-higher level of abstraction.  This has required only minor changes in the background
-axioms used by the theorem prover (mostly regarding primitive types, though additions
-to handle the semantics of String objects are needed).  Most of the changes are implemented
-by the appropriate translation of JML features into the theorem prover's input logic.
-The space available in this paper permits only
-a summary of the embedding of the above into the underlying ESC/Java
+The expanded capabilities of ESC/Java2 allow more thorough checking at
+a higher level of abstraction.  This has required only minor changes
+in the background axioms used by the theorem prover (mostly regarding
+primitive types, though additions to handle the semantics of String
+objects are needed).  Most of the changes are implemented by the
+appropriate translation of JML features into the theorem prover's
+input logic.  The space available in this paper permits only a summary
+of the embedding of the above into the underlying ESC/Java
 logic\footnote{Subsequent papers are planned that will describe these
-  embeddings in more detail.}.  
+  embeddings in more detail.}.
 
 Static checking of the following features has been added to that
 performed by ESC/Java.  
@@ -416,9 +440,9 @@ datagroup and the match may be to any element of the datagroup.
 All of this syntax is parsed, and checks are implemented in the logic except
 where induction is needed to handle recursive definitions.
 
-Recursive definitions of frame conditions (arising from recursive structures
-such as linked lists and trees) are indeed the most substantial complication 
-in checking datagroups.  As an example,
+Recursive definitions of frame conditions (arising from recursive
+structures such as linked lists and trees) are indeed the most
+substantial complication in checking datagroups.  As an example,
 consider the datagroup of all of the `next' fields of a linked list.
 ESC/Java2 currently deals with this by unrolling the recursion to a
 fixed depth; since in ESC/Java loops are also unrolled to a fixed
@@ -426,16 +450,16 @@ number of iterations, this solution handles common cases of iterating
 over recursive structures.
 
 \paragraph*{Annotations containing method and constructor calls}
-JML, but not ESC/Java, allows pure method and constructor calls (that is, methods
-and constructors without side-effects) to be
-used in annotations.  This allows both a degree of abstraction and
-more readable and writable specifications.
+JML, but not ESC/Java, allows pure method and constructor calls (that
+is, methods and constructors without side-effects) to be used in
+annotations.  This allows both a degree of abstraction and more
+readable and writable specifications.
 
 ESC/Java2 supports the JML syntax and also performs some static
 checking.  The underlying prover, Simplify, does support function
 definitions and reasoning with functions.  But, as is the rule in
-first-order logic, the result of a function in Simplify depends only on its
-arguments and not on hidden arguments or on global structures
+first-order logic, the result of a function in Simplify depends only
+on its arguments and not on hidden arguments or on global structures
 referenced by the arguments.  Consequently there is a mismatch between
 the concept of a pure method in Java and the concept of a function in
 the prover.  However, a moderate degree of checking can be performed
@@ -446,12 +470,12 @@ parameter, and (c) incorporate the specifications of the called method
 as additional axioms.
 
 Dynamic allocations of objects using constructors are simply static
-method calls that return new objects and are treated 
-in the same way as other method calls.  The logic 
-includes axioms that ensure that a newly allocated object is distinct (reference values
-are unequal) from any previously allocated object.  Dynamic allocations of
-arrays are translated into first-order logic as functions without
-difficulty, as they were in ESC/Java.
+method calls that return new objects and are treated in the same way
+as other method calls.  The logic includes axioms that ensure that a
+newly allocated object is distinct (reference values are unequal) from
+any previously allocated object.  Dynamic allocations of arrays are
+translated into first-order logic as functions without difficulty, as
+they were in ESC/Java.
 
 \paragraph*{model fields and represents clauses}
 The combination of \texttt{represents} clauses and model fields
@@ -466,11 +490,12 @@ in other, non-owner, objects).  This allows a useful degree of
 reasoning when combined with the class invariants that describe the
 behavior of the model fields.
 
-\paragraph*{} The Simplify theorem prover used by both ESC/Java and ESC/Java2 remains unchanged,
-except for being compiled for a new platform (MacOSX).  It is written in Modula-3
-and consequently requires compilation for each supported platform.  Although the prover
-has definite limitations, as pointed out below, revising it would be a significant project in
-its own right.
+\paragraph*{} The Simplify theorem prover used by both ESC/Java and
+ESC/Java2 remains unchanged, except for being compiled for a new
+platform (Apple's OS X).  It is written in Modula-3 and consequently
+requires compilation for each supported platform.  Although the prover
+has definite limitations, as pointed out below, revising it would be a
+significant project in its own right.
 
 \subsection{Backwards incompatibilities}
 The ESC/Java specification language and JML arose separately; there
@@ -615,7 +640,7 @@ depended upon ``light\-weight'' JML specifications of core Java Card
 classes and the verification was performed with ESC/Java and
 the Loop tool.  The re-verification effort used the full
 ``heavyweight'' Java and Java Card specifications and was accomplished
-in a single afternoon.
+in a single afternoon by an ESC/Java expert.
 
 Second, several members of the SoS group are contributing to updating
 the ``heavyweight'' JML specifications of the Java Card API.  As a
@@ -711,6 +736,27 @@ the week of 24 May, 2004.  Assertions were counted by simply counting
 the number of uses of appropriate core specification keywords
 (requires, ensures, invariant, non\_null, in, set, and modifies).
 
+The size of the code and specifications gives a strong indication of
+the complexity of the verification effort.  Longer methods take
+significantly more time to specify and verify than short ones.
+Classes with many methods, on the other hand, do not necessarily take
+much more time to deal with than shorter classes, as effort is coupled
+to the complexity of the methods, their specs, and the class
+invariants (e.g., many short, simple methods are trivial to verify,
+while one long method might take days).
+
+There is very little inheritance in this system.  Visual components
+all inherit from a top-level \texttt{Task} class which implements all
+state changes in response to external input, and the I/O classes
+inherit from an \texttt{AbstractObjectReader}, an Apache licensed
+helper class.  Other than that, all classes have no parent (beside
+\texttt{Object}).  
+
+Because there is little inheritance and we adopt a closed-system view
+on the vote tally system (no classloading is permitted), ESC/Java2's
+weak strong support for specifying and reasoning about dynamic binding
+is not an issue.
+
 \subsubsection{Specification Coverage and Methodology}
 
 Unsurprisingly, the GUI portion of KOA is the largest subsystem with
@@ -745,6 +791,13 @@ files.
 
 The core subsystem understandably has the highest specification
 coverage, at over one line of specification for every line of code.
+This part of the system was designed by contract, and a small-step
+development process was used throughout (i.e., every time a single line
+of the specification or the code was changed ESC/Java2 was
+re-executed).  Contractual specifications (e.g., requires/ensures-style
+and invariants) accounted for the vast majority of the specification;
+assertions and invariants were only used to assist the verification
+process.
 
 The verification of the key properties of the system, particularly the
 property of having a correct tally of votes, are directly tied to the
@@ -762,14 +815,14 @@ initialized, but all of its invariants hold.
 At this time, verification coverage of the core subsystem is good, but
 not 100\%.  Approximately 10\% of the core methods (8 methods) are
 unverified due to issues with ESC/Java's Simplify theorem prover
-(e.g., either the prover does not terminate or terminates abnormally).
-Another 31\% of the core methods (26 methods) have postconditions that
-cannot be verified, typically due to completeness issues discussed
-above, and 12\% of the methods (10 methods) fail to verify due to
-invariant issues, most of which are due to suspected inconsistencies
-in the specifications of the core Java class libraries or JML model
-classes.  The remaining 47\% (39 methods) of the core verifies
-completely.
+(e.g., either the prover does not terminate or terminates abnormally,
+as discussed below).  Another 31\% of the core methods (26 methods)
+have postconditions that cannot be verified, typically due to
+completeness issues discussed above, and 12\% of the methods (10
+methods) fail to verify due to invariant issues, most of which are due
+to suspected inconsistencies in the specifications of the core Java
+class libraries or JML model classes.  The remaining 47\% (39 methods)
+of the core verifies completely.
 
 Since 100\% verification coverage was not possible in the timeframe of
 the project, and to ensure the KOA application is of the highest
@@ -835,12 +888,21 @@ The primary issues that arose include:
 \item \emph{Aliasing issues and specification convenience constructs
     for such.}  As usual, reasoning about reference types and avoiding
   aliasing was one of the key issues in verifying the KOA application.
-  For example, frequently we wished to say that the elements of a set of references
- were pairwise unequal.  The only way to
-  state this in JML today is quite cumbersome, thus the introduction
-  of a new specification construct for such seems warranted.
-%\item \emph{The Simplify prover backend and alternate provers.}
-% Add discussion of Simplify and moves on that front.   TODO
+  For example, frequently we wished to say that the elements of a set
+  of references were pairwise unequal.  The only way to state this in
+  JML today is quite cumbersome, thus the introduction of a new
+  specification construct for such seems warranted.
+\item \emph{The Simplify prover backend and alternate provers.}
+  Simplify is a relatively robust automatic first-order prover,
+  especially given its age and the fact that no one has supported it
+  in many years.  Unfortunately, Simplify sometimes fails
+  catastrophically in one of two ways: it crashes due to an internal
+  exception or assertion failure, or it (rarely) consumes as much
+  memory as possible and halts.  Neither of these situations is
+  reasonable, of course, but as there is no support for Simplify, the
+  problems indicated by these affects are rarely correctable.  It is
+  our intention to initially augment, then eventually replace,
+  Simplify with an alternative modern, supported prover.
 \end{itemize}
 
 % JML test runs: 18/19 (meaningful/total)
@@ -875,10 +937,10 @@ Simplify) on that core is correct and valuable.
 
 \paragraph*{Verification Logic} The logic into which Java and JML are
 embedded in both ESC/Java and ESC/Java2, by design and admission of
-the original authors, neither identifies all potential errors (e.g., because not
-all aspects of Java are modeled in the logic) nor avoids all false alarms (e.g., 
-because of limitations in the prover).  This was the
-result of an engineering judgment in favor of performance and
+the original authors, neither identifies all potential errors (e.g.,
+because not all aspects of Java are modeled in the logic) nor avoids
+all false alarms (e.g., because of limitations in the prover).  This
+was the result of an engineering judgment in favor of performance and
 usability.  Research studying expanded and larger use cases may show
 whether this design decision is generally useful in practical static
 checking or whether a fuller and more complicated state-based logic is
@@ -904,9 +966,11 @@ that it is difficult to determine a root cause from the counterexample
 information provided by the tool, whether it is a failed proof or an
 invalid test or execution history.  The ESC/Java project implemented
 some work towards appropriately pruning and interpreting
-counterexample and trace information~\cite{PruningPaper}, but there
-remains room for improvement.  Machine reading of the Simplify output
-coupled with other tools is also a means to easier interpretation~\cite{csallner05check}.
+counterexample and trace
+information~\cite{LeinoMillsteinSaxe:ErrorTraces}, but there remains
+room for improvement.  Machine reading of the Simplify output coupled
+with other tools is also a means to easier
+interpretation~\cite{csallner05check}.
 
 \paragraph*{Tool Integration} Finally, though not part of this specific
 project, an integration of tools that support JML would be beneficial
@@ -922,29 +986,20 @@ that allows efficient and iterative behavior.
 
 \section{Conclusion}
 
-%% I find this first paragraph, and actually the whole of the
-%% conclusion a bit odd and weak.  Perhaps some lead in using Hoare03
-%% would strengthen the discussion?  In case you have not yet read
-%% that paper David, Tony has stated that a fully verifying compiler
-%% should be one of the premire challenges of computer science for
-%% the 21st century, and cites ESC/Java as the nearest approximation
-%% to this goal.  I do not believe that he has yet seen our work
-%% on ESC/Java2, and will be very encouraged and excited by it. -JRK - TODO
+The progress and case studies described above have shown that
+ESC/Java2 is ready for serious evaluation and use, even in its early
+``alpha'' releases.  Our ability to verify large portions of a
+critical, public system in a very short time frame is a strong
+statement about the state of the tool and the underlying theory of
+extended static checking.
 
-The progress and case studies described above
-have shown that ESC/Java2 is ready for serious
-evaluation and use, even in its early ``alpha'' releases.  Our ability
-to verify large portions of a critical, public system in a very short
-timeframe is a strong statement about the state of the tool and the underlying
-theory of extended static checking.  
-
-Additional evidence comes from several groups around the world that are using
-ESC/Java2 for instruction and research.  We are aware of over a half dozen
-groups that are using ESC/Java2 for new research in verification, and
-nearly ten classes are using it for instruction in software
-engineering, verification, pedagogical instruction of Java, and
-grading.  We continue to see growing interest in ESC/Java2, verification,
-and extended static checking in general.
+Additional evidence comes from several groups around the world that
+are using ESC/Java2 for instruction and research.  We are aware of
+over a half dozen groups that are using ESC/Java2 for new research in
+verification, and nearly ten courses are using it for instruction in
+software engineering, verification, pedagogical instruction of Java,
+and grading.  We continue to see growing interest in ESC/Java2,
+verification, and extended static checking in general.
 
 One can observe this work in tool creation and evaluation from a
 number of perspectives.  Certainly such work creates working
@@ -986,13 +1041,6 @@ writing for others and we expect that the authors could explain their
 programs to their colleagues, we may well have a chance at being able
 to explain those programs to a computer.
 
-%\large\textbf{TODO:}\normalsize Perhaps discuss the fact that a
-%verifying compiler might be closer than some notable computer
-%scientists think~\cite{Hoare03}?  Discuss how far we think that we can
-%take this application of basic logics, first-order provers, and
-%related technologies.  Also reinforce the changing balance between
-%automated and interactive proving, discussed in the usage experience
-%section above. -JRK
 
 %ACKNOWLEDGMENTS are optional
 \section{Acknowledgments}
@@ -1038,29 +1086,40 @@ Program Security and Correctness and the VerifiCard research project.
 \begin{itemize}
 \setlength{\partopsep}{0in}\setlength{\parskip}{0in}\setlength{\itemsep}{0in}\setlength{\topsep}{0in}
 \item[] \textit{Language semantics}
-\item inheritance of annotations and of \texttt{non\_null}
-  modifiers that is consistent with the behavioral inheritance of JML;
-\item support for datagroups and \texttt{in} and \texttt{maps} clauses, which provides a sound framework for reasoning about the combination of frame conditions and subtyping;
-\item model import statements and model fields, routines, and types, which allow abstraction 
-and modularity in writing specifications;
-\item enlarging the use and correcting the handling of scope of ghost fields, so that the syntactic behavior 
-of annotation fields matches that of Java and other JML tools;
+\item inheritance of annotations and of \texttt{non\_null} modifiers
+  that is consistent with the behavioral inheritance of JML;
+\item support for datagroups and \texttt{in} and \texttt{maps}
+  clauses, which provides a sound framework for reasoning about the
+  combination of frame conditions and subtyping;
+\item model import statements and model fields, routines, and types,
+  which allow abstraction and modularity in writing specifications;
+\item enlarging the use and correcting the handling of scope of ghost
+  fields, so that the syntactic behavior of annotation fields matches
+  that of Java and other JML tools;
 \item[]
 \item[] \textit{Language parsing}
 \item parsing of all of current JML, even if the constructs are
   ignored with respect to typechecking or verification;
-\item support for refinement files, which allow specifications to be supplied in files separate from the source code or in the absence of source code;
-\item heavyweight annotations, which allow some degree of modularity and nesting;
-\item auto model import of the \texttt{org.jmlspecs.lang} package, similar to Java's auto import of \texttt{java.lang};
-\item generalizing the use of \texttt{\char'134 old}, \texttt{set} statements and local ghost variables, to provide more flexibility in writing specifications;
-\item introduction of the \texttt{constraint}, \texttt{represents}, \texttt{field}, \texttt{method},
-\texttt{constructor}, 
-\texttt{\char'134 not\_modified}, \texttt{instance}, \texttt{old}, \texttt{forall},
-\texttt{pure} keywords as defined in JML;
-\item consistency in the format of annotations in order to match the language handled by other JML tools;
+\item support for refinement files, which allow specifications to be
+  supplied in files separate from the source code or in the absence of
+  source code;
+\item heavyweight annotations, which allow some degree of modularity
+  and nesting;
+\item auto model import of the \texttt{org.jmlspecs.lang} package,
+  similar to Java's auto import of \texttt{java.lang};
+\item generalizing the use of \texttt{\char'134 old}, \texttt{set}
+  statements and local ghost variables, to provide more flexibility in
+  writing specifications;
+\item introduction of the \texttt{constraint}, \texttt{represents},
+  \texttt{field}, \texttt{method}, \texttt{constructor},
+  \texttt{\char'134 not\_modified}, \texttt{instance}, \texttt{old},
+  \texttt{forall}, \texttt{pure} keywords as defined in JML;
+\item consistency in the format of annotations in order to match the
+  language handled by other JML tools;
 \item equivalence of \texttt{\char'134 TYPE} and \texttt{java.lang.Class};
-\item a beginning of a semantics for String objects, namely the freshness of the result of built-in +
-and equality and inequality of String literals.
+\item a beginning of a semantics for String objects, namely the
+  freshness of the result of built-in + and equality and inequality of
+  String literals.
 \end{itemize}
 In addition, all of the differences between JML and ESC/Java noted in
 the JML Reference Manual have been resolved.
@@ -1101,444 +1160,409 @@ ESC/Java2, the features that are currently ignored are the following:
 % That's all folks!
 \end{document}
 
-%       From:     Marieke.Huisman@sophia.inria.fr
-%       Subject:        Re: Reminder: deadline submissions for Cassis is approaching 
-%       Date:   21 July, 2004 11:37:28 CDT
-%       To:       kiniry@acm.org
-%       Cc:       cassis04@belle.inria.fr
+      From:     Marieke.Huisman@sophia.inria.fr
+      Subject:        Re: Reminder: deadline submissions for Cassis is approaching 
+      Date:   21 July, 2004 11:37:28 CDT
+      To:       kiniry@acm.org
+      Cc:       cassis04@belle.inria.fr
 
-% Dear Joe,
+Dear Joe,
 
-% We are pleased to inform you that your paper
+We are pleased to inform you that your paper
 
-%   ESC/Java2: Uniting ESC/Java and JML
+  ESC/Java2: Uniting ESC/Java and JML
 
-% has been accepted to appear in the proceedings of Cassis 2004.
-% All papers have been carefully reviewed by at least three reviewers. 
-% Please follow closely their suggestions for the final version of your 
-% paper.
+has been accepted to appear in the proceedings of Cassis 2004.
+All papers have been carefully reviewed by at least three reviewers. 
+Please follow closely their suggestions for the final version of your 
+paper.
 
-% Please send us your camera-ready manuscript by September 17, 2004. We 
-% ask you to follow precisely Springer's formatting guidelines for the 
-% LNCS series (available at http://www.springer.de/comp/lncs/authors.htm
-% l) and to send the LaTeX sources, the final ps and pdf in due time to 
-% cassis04@sophia.inria.fr.
+Please send us your camera-ready manuscript by September 17, 2004. We 
+ask you to follow precisely Springer's formatting guidelines for the 
+LNCS series (available at http://www.springer.de/comp/lncs/authors.htm
+l) and to send the LaTeX sources, the final ps and pdf in due time to 
+cassis04@sophia.inria.fr.
 
-% The reviews and comments are attached below.  Again, do your best to 
-% follow the advice in revising your paper.
+The reviews and comments are attached below.  Again, do your best to 
+follow the advice in revising your paper.
 
-% Congratulations on your fine work.  If you have any additional 
-% questions, please feel free to get in touch.
+Congratulations on your fine work.  If you have any additional 
+questions, please feel free to get in touch.
 
-% Best regards,
+Best regards,
 
-% The Cassis organisers
+The Cassis organisers
 
-% Gilles Barthe
-% Lilian Burdy
-% Marieke Huisman
-% Jean-Louis Lanet
-% Traian Muntean
+Gilles Barthe
+Lilian Burdy
+Marieke Huisman
+Jean-Louis Lanet
+Traian Muntean
 
-% Review 1
-% ========
+Review 1
+========
 
-% Title:  ESC/Java2: Uniting ESC/Java and JML
-% Author: David Cok and Joseph Kiniry
-
-
-
-% Overall opinion: Strong Accept/Weak Accept/Weak Reject/Strong Reject
+Title:  ESC/Java2: Uniting ESC/Java and JML
+Author: David Cok and Joseph Kiniry
 
 
-% Weak Accept
 
-% Confidencen: Expert/Average/Low
-
-
-% Expert
-
-% Summary of the paper
+Overall opinion: Strong Accept/Weak Accept/Weak Reject/Strong Reject
 
 
-% This is a status report on the ESC/Java2 tool, and the progress in 
-% enhancing
-% it to fit in with full JML (Java Modelling Language).
+Weak Accept
 
-% General comments
+Confidencen: Expert/Average/Low
 
 
-% This a a good description of what has been done to ESC/Java2, and some
-% of the problems that have arisen as it has been extended to handle 
-% full JML
-% and solutions to those problems.   It then describes an impressive 
-% case
-% study
-% in which ESC/Java2 was used, with some successes but also some 
-% problems.
-% There are two main problems with the paper currently, which need to be
-% addressed before it is published for wider reading than CASSIS:
+Expert
 
-% 1.  A lot of JML concepts and terminology are used without 
-% explanation.
-%     For many readers, this will be a problem.  So a short 
-% introduction
-% (1 page max)
-%     should be added, giving an example of a very small JML class 
-% spec,
-% and introducing
-%     the terminology: ensures, requires, invariant, model, datagroups, 
-% represents etc.
+Summary of the paper
+
+
+This is a status report on the ESC/Java2 tool, and the progress in 
+enhancing
+it to fit in with full JML (Java Modelling Language).
+
+General comments
+
+This a a good description of what has been done to ESC/Java2, and some
+of the problems that have arisen as it has been extended to handle 
+full JML
+and solutions to those problems.   It then describes an impressive 
+case
+study
+in which ESC/Java2 was used, with some successes but also some 
+problems.
+There are two main problems with the paper currently, which need to be
+addressed before it is published for wider reading than CASSIS:
+
+1.  A lot of JML concepts and terminology are used without
+explanation.  For many readers, this will be a problem.  So a short
+introduction (1 page max) should be added, giving an example of a
+very small JML class spec, and introducing the terminology: ensures,
+requires, invariant, model, datagroups, represents etc.
 
 Example added.
 
-% 2. Some of the descriptions of the problems that came up, and 
-% (especially)
-%     the solutions that were taken, are too terse or missing.  A 
-% little more
-%     detail is needed in places like:
+2. Some of the descriptions of the problems that came up, and
+(especially) the solutions that were taken, are too terse or
+missing.  A little more detail is needed in places like:
 
-%    Last sentence of Sect 2.2 says "virtually all of the diffs betwee 
-% JML
-% and ...
-%    have been resolved."   -- explain which ones have not, or at least 
-% say
-%    how many have not and why.
+Last sentence of Sect 2.2 says "virtually all of the diffs betwee
+JML and ...  have been resolved."  -- explain which ones have not,
+or at least say how many have not and why.
 
 A footnote was added to list the two (known) minor differences.
 
-%    p4: The discussion of expr.* locations is interesting -- you leave 
-% it
-% unclear
-%    how much of this is currently supported.
+p4: The discussion of expr.* locations is interesting -- you leave
+it unclear how much of this is currently supported.
 
 Clarified.
 
-%    p4: "Annotations containing routine calls and dynamic allocations"
-%    These seem to be two separate topics, so could be discussed 
-% separately.
-%    The two sentences about dynamic allocations are unclear, so need 
-% rewriting.
+p4: "Annotations containing routine calls and dynamic allocations"
+These seem to be two separate topics, so could be discussed
+separately.  The two sentences about dynamic allocations are
+unclear, so need rewriting.
 
 Revised and expanded a bit.
 
-%    p5: "This also changed the usage and semantics of the also 
-% keyword."
-%    Explain!
+p5: "This also changed the usage and semantics of the also keyword."
+Explain!
 
 Explained and references added.
 
-% Detailed comments
+Detailed comments
 
-
-% p4: "Consequently there is [still] a mismatch between the concept of 
-% a
-% [pure?]
-%        method in Java and the concept of a function in the prover."
-%       (It was unclear if you are talking of arbitrary Java methods, 
-% or
-% just the pure ones).
+p4: "Consequently there is [still] a mismatch between the concept of
+a [pure?]  method in Java and the concept of a function in the
+prover."  (It was unclear if you are talking of arbitrary Java
+methods, or just the pure ones).
 
 Clarified.
 
-% p4: "as functions of the object that owns them and the global state."
-%       (Why the global state as well?)
+p4: "as functions of the object that owns them and the global
+state."  (Why the global state as well?)
 
 Explanation added.
 
-% p9: "vote courting process"   :-)
+p9: "vote courting process"   :-)
 
 Fixed.
 
-% p11: "a set of references where unique"  (should be "were").
+p11: "a set of references where unique"  (should be "were").
 
 Fixed.
 
-% p13: The conclusions are a bit weak.  Surely you could be a little 
-% more
-%        positive based on the results of your case study? 
+p13: The conclusions are a bit weak.  Surely you could be a little 
+more positive based on the results of your case study? 
 
-TODO!!!!
-
-
-% Review 2
-% ========
-% Title: ESC/Java2: Uniting ESC/Java and JML
-
-% Author: David R. Cok and Joseph R. Kiniry
-
-% Overall opinion: Strong Accept
-
-% Confidence: Expert
+Revised to make stronger earlier.
 
 
-% Summary of the paper
-% --------------------
+Review 2
+========
+Title: ESC/Java2: Uniting ESC/Java and JML
 
-% This paper gives a brief overview of the ESC/Java2 tool, discussing
-% its features and limitations, and relating an experience with using
-% the tool on an industrial-strength example.  The ESC/Java2 tool is an
-% extension of the extended static checker ESC/Java, which was developed
-% in the late 1990s at the Compaq Systems Research Center.  The main
-% difference between the two tools is that ESC/Java2 is better suited
-% for JML specifications: not only can it parse more JML, but it is also
-% more faithful to the semantics of JML.  Furthermore, it is under
-% active development, and can therefore keep up with changes in the Java
-% language.  Besides describing how ESC/Java2 differs from its
-% predecessor and describing its capabilities with regard to handling
-% JML specifications, the authors also relate their experiences with
-% applying the tool to the verification of an electronic voting system
-% for the Dutch Parliament.
+Author: David R. Cok and Joseph R. Kiniry
+
+Overall opinion: Strong Accept
+
+Confidence: Expert
 
 
-% General comments
-% ----------------
+Summary of the paper
+--------------------
 
-% Although this paper is not a technical paper (nor claims to be one),
-% it will be of interest to anyone who is interested in static
-% verification of Java programs.  It gives a good overview of the
-% current state of verification of Java programs with JML annotations.
-% It is also fairly well-written, so I think it deserves publication.
+This paper gives a brief overview of the ESC/Java2 tool, discussing
+its features and limitations, and relating an experience with using
+the tool on an industrial-strength example.  The ESC/Java2 tool is an
+extension of the extended static checker ESC/Java, which was developed
+in the late 1990s at the Compaq Systems Research Center.  The main
+difference between the two tools is that ESC/Java2 is better suited
+for JML specifications: not only can it parse more JML, but it is also
+more faithful to the semantics of JML.  Furthermore, it is under
+active development, and can therefore keep up with changes in the Java
+language.  Besides describing how ESC/Java2 differs from its
+predecessor and describing its capabilities with regard to handling
+JML specifications, the authors also relate their experiences with
+applying the tool to the verification of an electronic voting system
+for the Dutch Parliament.
 
-% However, there are a few issues that should be addressed.  The first
-% is that the authors should make an attempt to make the paper
-% accessible to a wider audience interested in program verification.
-% For instance, the paper could use some introductory text describing
-% ESC/Java and what made it different (e.g., that it is a modular
-% checker which uses VC generation and a general-purpose
-% theorem-prover).  Currently, the paper gives some history of the
-% ESC/Java project, but very little by way of technical introduction.
+
+General comments
+----------------
+
+Although this paper is not a technical paper (nor claims to be one),
+it will be of interest to anyone who is interested in static
+verification of Java programs.  It gives a good overview of the
+current state of verification of Java programs with JML annotations.
+It is also fairly well-written, so I think it deserves publication.
+
+However, there are a few issues that should be addressed.  The first
+is that the authors should make an attempt to make the paper
+accessible to a wider audience interested in program verification.
+For instance, the paper could use some introductory text describing
+ESC/Java and what made it different (e.g., that it is a modular
+checker which uses VC generation and a general-purpose
+theorem-prover).  Currently, the paper gives some history of the
+ESC/Java project, but very little by way of technical introduction.
 
 Several sentences added.
 
-% A second issue is related to ambition of properties to be checked.
-% Although the original ESC/Java could be used to check functional
-% properties, as its authors pointed out in their PLDI paper, it was
-% designed for simpler checks like array bound violations, and null
-% pointer dereferences.  It is unclear if the ESC/Java2 tool is also
-% intended to be used in a similar way.  In the discussion in secion 4.2
-% (bottom of page 9), the authors note that one of the properties they
-% checked for the voting system was that of "having a correct tally of
-% votes", which seems to indicate that they are using their tool more as
-% a functional verifier.  If this is indeed the case, the authors should
-% describe what changes they are making to the background axioms (if
-% any) in order to make the tool more amenable to such functional
-% verification.
+A second issue is related to ambition of properties to be checked.
+Although the original ESC/Java could be used to check functional
+properties, as its authors pointed out in their PLDI paper, it was
+designed for simpler checks like array bound violations, and null
+pointer dereferences.  It is unclear if the ESC/Java2 tool is also
+intended to be used in a similar way.  In the discussion in secion 4.2
+(bottom of page 9), the authors note that one of the properties they
+checked for the voting system was that of "having a correct tally of
+votes", which seems to indicate that they are using their tool more as
+a functional verifier.  If this is indeed the case, the authors should
+describe what changes they are making to the background axioms (if
+any) in order to make the tool more amenable to such functional
+verification.
 
-Some clarification added, though a full treatment would take a lot more space
+Some clarification added, though a full treatment would take a lot
+more space.
 
-% Finally, the authors nowhere address the concern that the underlying
-% prover, Simplify, is written in Modula-3.  Although the source for it
-% is now available, building it is increasingly more difficult, and
-% making changes to it all but impossible.  If these are concerns, they
-% should be listed somewhere, possibly in the bulleted list at the end
-% of section 4, under "Impressions of ESC/Java2".  (Or, if they are not
-% concerns, maybe they should note that fact somewhere.)
+Finally, the authors nowhere address the concern that the underlying
+prover, Simplify, is written in Modula-3.  Although the source for it
+is now available, building it is increasingly more difficult, and
+making changes to it all but impossible.  If these are concerns, they
+should be listed somewhere, possibly in the bulleted list at the end
+of section 4, under "Impressions of ESC/Java2".  (Or, if they are not
+concerns, maybe they should note that fact somewhere.)
 
-A paragraph added abot Simplify.
+A paragraph added about Simplify.
 
-% Detailed comments
-% -----------------
+Detailed comments
+-----------------
 
-% [Note: The page numbers below assume that the first page is page 1.]
+[Note: The page numbers below assume that the first page is page 1.]
 
-% overall: your use of the phrase "DEC/SRC ESC/Java" is quite a 
-% mouthful, and
-%   after a while, becomes distracting.  It would be better to simply 
-% use
-%   "ESC/Java" (or "SRC ESC/Java" if you are concerned about the 
-% similarity
-%   of the names).
+overall: your use of the phrase "DEC/SRC ESC/Java" is quite a
+mouthful, and after a while, becomes distracting.  It would be
+better to simply use "ESC/Java" (or "SRC ESC/Java" if you are
+concerned about the similarity of the names).
 
 This is fixed by uniform replacement.
 
-% p.1, bottom of page
-%   When introducing ESC/Java, you should mention that it was a 
-% successor to
-%   ESC/Modula-3 (and give a reference to the ESC/Modula-3 tech report).
+p.1, bottom of page
+When introducing ESC/Java, you should mention that it was a
+successor to ESC/Modula-3 (and give a reference to the ESC/Modula-3
+tech report).
 
 Done.
 
-% p.2, last line: "the principal changes made to DEC/SRC ESC/Java in
-% creating ESC/Java" should be "the principal changes [..] in creating
-% ESC/Java2"
+p.2, last line: "the principal changes made to DEC/SRC ESC/Java in
+creating ESC/Java" should be "the principal changes [..] in creating
+ESC/Java2"
 
 Reworded.
 
-% p.3, end of 2nd line: should read
-%   "Also discussed is ESC/Java2's first serious use:"
-%                  ^^^^
+p.3, end of 2nd line: should read
+  "Also discussed is ESC/Java2's first serious use:"
+                 ^^^^
 
 Fixed.
 
-% p.5, last line: you say there was "some initial but incomplete work to
-% unify" ESC/Java and JML.  Would be helpful to give some references to
-% this work here.
+p.5, last line: you say there was "some initial but incomplete work to
+unify" ESC/Java and JML.  Would be helpful to give some references to
+this work here.
 
 Reference added.
 
-% p.6, first bullet in section 3
-%   "It is convenient and modular to use model and Java methods within
-%   annotations" Please explain what you mean by "model methods" here?
-%   (Similar comment about "model variables" on p.11.)
+p.6, first bullet in section 3
+  "It is convenient and modular to use model and Java methods within
+  annotations" Please explain what you mean by "model methods" here?
+  (Similar comment about "model variables" on p.11.)
 
 Explanation added.
 
-% p.9, Table 1: What does "NCSS" stand for?  ("non-commented source <?>
-% ")
+p.9, Table 1: What does "NCSS" stand for?  ("non-commented source <?>
+")
 
-TODO!!!!
+Fixed with parenthetical remark.
 
-% p.10, invariant at top of page
-%   How exactly is the ordering ">=" on states defined?
+p.10, invariant at top of page
+  How exactly is the ordering ">=" on states defined?
 
-TODO!!!!
+Explicitely state that it is a total order.
 
-% p.10, you mention that 10% of the core methods were not verified due 
-% to
-%   "issues with" Simplify.  Could you elaborate on this, maybe by 
-% listing a
-%   few of these issues?
+p.10, you mention that 10% of the core methods were not verified due
+to "issues with" Simplify.  Could you elaborate on this, maybe by
+listing a few of these issues?
 
-TODO!!!!
+Discussion added.
 
-% p.10, last line should read
-%   "While Java Strings are [..], they are effectively a pseudo-base 
-% type"
-%                                ^^^^^^
-%   Same sentence: replace "prolific application" with "widespread use"
-%   Next sentence, should read "it is vital that this issue be 
-% addressed"
-%                                                          ^^^^
+p.10, last line should read
+  "While Java Strings are [..], they are effectively a pseudo-base 
+type"
+                               ^^^^^^
+  Same sentence: replace "prolific application" with "widespread use"
+  Next sentence, should read "it is vital that this issue be 
+addressed"
+                                                         ^^^^
 
 Fixed.
 
-% p.11, 2nd-to-last sentence in last para of section 4 should read
-%   "For example, it was frequently the case [..] set of references 
-% were unique"
+p.11, 2nd-to-last sentence in last para of section 4 should read
+  "For example, it was frequently the case [..] set of references 
+were unique"
 
-% ^^^^^^
+^^^^^^
 
 Reworded.
 
-% p.11, last line should read
-%   "is now broad enough that an accompanying formal reference [..]"
-%                            ^^^^
+p.11, last line should read
+  "is now broad enough that an accompanying formal reference [..]"
+                           ^^^^
 
 Fixed.
 
-% p.12, under "User Feedback", you write that the SRC ESC/Java project
-%   "implemented some work towards appropriately pruning and
-%   interpreting counterexamples".  Could you add some references here?
+p.12, under "User Feedback", you write that the SRC ESC/Java project
+"implemented some work towards appropriately pruning and
+interpreting counterexamples".  Could you add some references here?
 
 A reference is added.
 
-% p.12, 3rd-to-last line
-%   delete extra "the" in "these tools would need the them to be 
-% integrated"
+p.12, 3rd-to-last line
+  delete extra "the" in "these tools would need the them to be 
+integrated"
 
 Fixed.
 
-% p.13, 1st sentence of section 7 
-% In the phrases "team that generated
-% [..] ESC/Java" and "generated JML", replace "generated" by
-% "developed".
+p.13, 1st sentence of section 7 
+In the phrases "team that generated
+[..] ESC/Java" and "generated JML", replace "generated" by
+"developed".
 
 Fixed.
 
-% p.14, last line in first paragraph: "early" is misspelled
+p.14, last line in first paragraph: "early" is misspelled
 
 Fixed.
 
-% References, in number 20, E. Rodriguez's last name is misspelled
+References, in number 20, E. Rodriguez's last name is misspelled
 
 Fixed. (He uses an accent)
 
 
-% Review 3
-% ========
-% Title:
-% ESC/Java2: Uniting ESC/Java and JML
-% Progress and issues in building and using ESC/Java2 and
-% a report on a case study involving the use of ESC/Java2
-% to verify portions of an Internet voting tally system
+Review 3
+========
+Title:
+ESC/Java2: Uniting ESC/Java and JML
+Progress and issues in building and using ESC/Java2 and
+a report on a case study involving the use of ESC/Java2
+to verify portions of an Internet voting tally system
 
-% Author: David R. Cok1 and Joseph R. Kiniry
-
-
-% Overall opinion: Strong Accept
-
-% Confidence : Expert in ESC (static checking)...
+Author: David R. Cok and Joseph R. Kiniry
 
 
-% Summary of the paper  Uniting ESC/Java and JML  with a report on a 
-% case study
+Overall opinion: Strong Accept
+
+Confidence : Expert in ESC (static checking)...
+
+Summary of the paper  Uniting ESC/Java and JML  with a report on a 
+case study
+
+General comments
+
+ - It's very important for the community to continue the work started
+ by DEC(ESC/Java).
+ - ESC/Java2 remain an essential pedagogical tool in computer science
+ for static verification.
+ - They are 2 aspects in the Uniting ESC-Java2 and JML : (i) the
+ syntax , (ii) the semantic
+       - syntax : thanks to the authors ESC/JAVA2 is now much more
+       closer to JML
+       - semantic : unresolved issues remains in ESC/JAVA2 (due to the
+       underlayed logic ? to the prover SIMPLIFY ?)
 
 
-% General comments
+Detailed comments : 
+-Which is the really effort to go to ESC/JAVA_2 from ESC/JAVA_DEC ?
+syntax ok. but semantic, for example the updating of "modifies
+clauses". "A single afternoon" for J. Kiniry and can be a couple of
+days for us...
 
-%  - It's very important for the community to continue the work started
-%  by DEC(ESC/Java).
-%  - ESC/Java2 remain an essential pedagogical tool in computer science
-%  for static verification.
-%  - They are 2 aspects in the Uniting ESC-Java2 and JML : (i) the
-%  syntax , (ii) the semantic
-%        - syntax : thanks to the authors ESC/JAVA2 is now much more
-%        closer to JML
-%        - semantic : unresolved issues remains in ESC/JAVA2 (due to the
-%        underlayed logic ? to the prover SIMPLIFY ?)
+Added some clarification.
 
+-"pure" in ESC-JAVA2 have it a sense ?
 
-% Detailed comments : 
-% -Which is the really effort to go to ESC/JAVA_2 from ESC/JAVA_DEC ?
-% syntax ok. but semantic, for example the updating of "modifies
-% clauses". "A single afternoon" for J. Kiniry and can be a couple of
-% days for us...
+Handled in several places where enhanced discussions of pure appear.
 
-TODO!!!!
+- Which is the inheritance graph of the software in the internet
+voting system ?
 
-% -"pure" in ESC-JAVA2 have it a sense ?
+Added paragraph summarizing (flat) system structure.
 
-TODO!!!!
+- The dynamic binding can't be specified in ESC-Java, is this
+penalizing for the voting system ?
 
-% - Which is the inheritance graph of the software in the internet
-% voting system ?
+Added short paragraph stating this is not a problem with this system.
 
-TODO!!!!
+The report on a case study could be supplemented, with more explicit
+details. For example
 
-% - The dynamic binding can't be specified in ESC-Java, is this
-% penalizing for the voting system ?
+ - the table1 is difficult to understand : 
+    Which is the relevance of NCSS in this context ?  
+    Which is the rate of methods specified compared to the unspecified
+    methods ?
+    Which is the importance of the programming by contracts (usage of
+    ensures, requires)
+    compared to the specification according to Hoare logic 
+    (loop_invariant, decreases, assert, assume) ?
 
-TODO!!!!
+Added paragraph discussing this balance.
 
+conclusion
+ - It seems that the efforts relate to syntax and the generated logic
+ formulas but is it considered an evolution of the simplify theorem
+ prover ?
 
-% The report on a case study could be supplemented, with more explicit
-% details. For example
+Handled in earlier discussion about Simplify.
 
-TODO!!!!
-
-%  - the table1 is difficult to understand : 
-%     Which is the relevance of NCSS in this context ?  
-%     Which is the rate of methods specified compared to the unspecified
-%     methods ?
-%     Which is the importance of the programming by contracts (usage of
-%     ensures, requires)
-%     compared to the specification according to Hoare logic(
-%     loop_invariant, decreases, assert, assume) ?
-
-TODO!!!!
-
-% conclusion
-%  - It seems that the efforts relate to syntax and the generated logic
-%  formulas but is it considered an evolution of the simplify theorem
-%  prover ?
-
-TODO!!!!
-
-TODO _ Missing the reference for ESCModula-3
-TODO Missing the reference for  PruningPaper
-
-% ps: the counterexample (by simplify) remain obscure for us ...
-
-
-
+ps: the counterexample (by simplify) remain obscure for us ...
