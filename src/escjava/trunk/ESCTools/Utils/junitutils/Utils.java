@@ -44,6 +44,8 @@ public class Utils {
 	values of System.out and System.err; these implementations
 	are not synchronized - you will need to take care of any
 	race conditions if you utilize these in more than one thread.
+
+	@param ps The stream that is the new output and error stream
     */
     //@ requires ps != null;
     static public void setStreams(PrintStream ps) {
@@ -69,6 +71,9 @@ public class Utils {
 
     /** Parses a string into arguments as if it were a command-line, using
 	the QuoteTokenizer to parse the tokens.
+
+	@param s The String to parse
+	@return The input string parsed into command-line arguments
     */
     //@ requires s != null;
     //@ ensures \result != null;
@@ -82,7 +87,7 @@ public class Utils {
 	return (String[])args.toArray(new String[args.size()]);
     }
     
-    /** An enumerator that parse a string into tokens, according to the
+    /** An enumerator that parses a string into tokens, according to the
 	rules a command-line would use.  White space separates tokens,
 	with double-quoted and single-quoted strings recognized.
     */

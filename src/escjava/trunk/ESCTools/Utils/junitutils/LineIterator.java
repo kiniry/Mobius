@@ -41,7 +41,12 @@ public class LineIterator implements Iterator {
     */
     private String nextLine;
 
-    /** Starts an iterator reading from the given external process. */
+    /** Starts an iterator reading from the given external process. 
+	@param filename The name of the file to be read
+     */
+    //@ requires filename != null;
+    //@ ensures (* file is readable *);
+    //@ signals (java.io.Exception) (* file is not readable *);
     public LineIterator(String filename) throws java.io.IOException  {
 	r = new BufferedReader(new FileReader(filename)); 
 	nextLine = r.readLine();
@@ -80,6 +85,9 @@ public class LineIterator implements Iterator {
 
     /** This operation will throw an exception, as there is no need for 
 	remove in this context. */
+    //@ requires \typeof(this)==\type(LineIterator);
+    //@ ensures false;
+    //@ signals (UnsupportedOperationException) true;
     public void remove() {
 	throw new java.lang.UnsupportedOperationException();
     }
