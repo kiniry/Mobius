@@ -1,0 +1,192 @@
+\input texinfo   @c -*-texinfo-*-
+@c %**start of header
+
+@setfilename Escjava2-Prover.info
+@settitle The Provers of ESC/Java2 $Revision$
+@c Other commands that globally affect the document formatting: 
+@c synindex, footnotestyle
+@afourwide
+@paragraphindent 0
+@c firstparagraphindent 0
+@c %**end of header
+@c =============================================================================
+
+@c =============================================================================
+@c Definitions of new indices for this document
+
+@c =============================================================================
+@c Functions are indexed using the built-in @findex
+@c Predicates are indexed using @pindex
+@defcodeindex p
+@c Constants are indexed using @kindex
+@defcodeindex k
+
+@c Map predicates (pindex) and constants (kindex) the function index.
+
+@syncodeindex p fn
+@syncodeindex k fn
+
+@c =============================================================================
+
+@c =============================================================================
+@c %**summary and copyright
+
+Original version by Joseph Kiniry, with assistance from Cesare Tinelli
+and Silvio Ranise beginning on 21 June 2004.
+
+Current editor Joseph Kiniry.
+
+This document describes the provers used by ESC/Java2. It describes the
+expected general interface (for I/O) and functionality (mathematically,
+in terms of built-in theories, and functionally, in terms of proof
+commands) of ESC/Java2 provers, provides a ESC/Java2 Prover API in
+several forms (as a JML-annotated API, as a WDSL web service API, etc.),
+provides implementation details for distributed, current, and
+high-performance prover interfaces.
+@c add xref to other documents as appropriate
+
+This is edition $Revision$.
+
+This document is a work in progress.  Suggestions and input are always
+welcome.
+
+@copying
+``The Provers of ESC/Java2'' is licensed under the Creative Commons
+Attribution-NonCommercial-ShareAlike 2.0 license.  See
+@uref{http://creativecommons.org/licenses/by-nc-sa/2.0/}
+
+Copyright @copyright{} 2004 Joseph R. Kiniry and the University of
+Nijmegen.
+
+@quotation
+You are free:
+@itemize
+@item
+to copy, distribute, display, and perform the work
+@item
+to make derivative works
+@end itemize
+
+Under the following conditions:
+@itemize
+@item
+Attribution. You must give the original author credit.
+@item
+Noncommercial. You may not use this work for commercial purposes.
+@item
+Share Alike. If you alter, transform, or build upon this work, you may
+distribute the resulting work only under a license identical to this
+one.
+@end itemize
+
+For any reuse or distribution, you must make clear to others the license
+terms of this work.
+
+Any of these conditions can be waived if you get permission from the
+author.
+
+Your fair use and other rights are in no way affected by the above.
+
+This is a human-readable summary of the Legal Code.
+
+See @uref{http://creativecommons.org/licenses/by-nc-sa/2.0/legalcode}
+@end quotation
+
+@end copying
+
+@c %**end of summary and copyright
+@c =============================================================================
+
+@c =============================================================================
+@c %**title, contents, and copyright
+
+@titlepage
+@title The Provers of ESC/Java2
+@subtitle Their Necessary Functionality, Interfaces, and Use
+@subtitle Edition $Revision$, May 2004
+@subtitle This document describes the provers of ESC/Java2 version 2.0a7.
+@author Joseph R. Kiniry <kiniry@@cs.kun.nl>
+
+@c The following two commands start the copyright page.
+@page
+@vskip 0pt plus 1filll
+@insertcopying
+
+To be published by the Nijmegen Institute for Computing and Information
+Science at the University of Nijmegen as technical report NIII-R04XX.
+See @uref{http://www.cs.kun.nl/research/reports/}
+@end titlepage
+
+@c metadata used in HTML
+@documentdescription
+Prover, First-Order, Validity, ESC/Java, ESC/Java2, Java Modeling
+Language, JML, Extended Static Checking, Extended Static Checker, Design
+by Contract, Java, Verification, BISL, Object-oriented Logic, Behavioral
+Interface Specification Language, Kiniry
+@end documentdescription
+
+@c Output the table of contents at the beginning.
+@contents
+
+@c %**end of title, contents, and copyright
+@c =============================================================================
+
+@c =============================================================================
+@c %**top node and master menu
+
+@c We recommend including the copying permissions here as well as the
+@c segments above.
+@ifnottex
+@node Top, Introduction, (dir), (dir)
+@top The Provers of ESC/Java2
+
+@insertcopying
+@end ifnottex
+
+This document describes the provers used by ESC/Java2. It describes the
+expected general interface (for I/O) and functionality (mathematically,
+in terms of built-in theories, and functionally, in terms of proof
+commands) of ESC/Java2 provers, provides a ESC/Java2 Prover API in
+several forms (as a JML-annotated API, as a WDSL web service API, etc.),
+provides implementation details for distributed, current, and
+high-performance prover interfaces.
+
+@menu
+* Introduction::                An introduction to this document.
+* Copying::                     Your rights and freedoms.
+* Index::                       Complete index.
+
+@end menu
+
+@c %**end top node and master menu
+@c =============================================================================
+
+@c =============================================================================
+@c %**body
+
+@node Introduction, Copying, Top, Top
+@chapter Introduction
+
+@cindex Introduction
+
+
+@c =============================================================================
+@node Copying, Index, Introduction, Top
+@chapter Copying
+
+@cindex Copying
+
+@insertcopying
+
+@c %**end of body
+@c =============================================================================
+
+@c =============================================================================
+@c %**end of document
+
+@node Index,  , Copying, Top
+@unnumbered Index
+
+@printindex cp
+
+@bye
