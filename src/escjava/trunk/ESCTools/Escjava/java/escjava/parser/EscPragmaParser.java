@@ -749,7 +749,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
 		scanner.getNextToken();
 	    }
 
-            boolean semiNotOptional = false;
+            boolean semicolonExpected = false;
 
             if (DEBUG)
                 Info.out("next tag is: " + tag);
@@ -776,18 +776,26 @@ public class EscPragmaParser extends Parse implements PragmaParser
                 case TagConstants.NOWARN:
                     dst.ttype = TagConstants.LEXICALPRAGMA;
                     seqIdentifier.push();
-                    if (scanner.ttype == TagConstants.IDENT)
+                    if (scanner.ttype == TagConstants.IDENT) {
+			semicolonExpected = true;
                         while (true) {
                             seqIdentifier.addElement(parseIdentifier(scanner));
                             if (scanner.ttype != TagConstants.COMMA) break;
                             scanner.getNextToken(); // Discard COMMA
                         }
+		    } else if (scanner.ttype == TagConstants.EOF) {
+			semicolonExpected = false;
+		    } else if (scanner.ttype == TagConstants.SEMICOLON) {
+			semicolonExpected = true;
+		    } else {
+			ErrorSet.error(loc, "Syntax error in nowarn pragma");
+			eatThroughSemiColon();
+			inProcessTag = NEXT_TOKEN_STARTS_NEW_PRAGMA;
+			semicolonExpected = false;
+			break;
+		    }
                     IdentifierVec checks = IdentifierVec.popFromStackVector(seqIdentifier);
                     dst.auxVal = NowarnPragma.make(checks, loc);
-                    if (scanner.ttype == TagConstants.SEMICOLON) 
-			scanner.getNextToken();
-                    if (scanner.ttype != TagConstants.EOF)
-                        ErrorSet.fatal(loc, "Syntax error in nowarn pragma");
                     break;
 
                 case TagConstants.MEASURED_BY: // parsed, unclear semantics (cok)
@@ -843,7 +851,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
 		    scanner.getNextToken(); // skip comma
 		   } while (true);
 		    getPragma(dst);
-		    semiNotOptional = true;
+		    semicolonExpected = true;
                     if (DEBUG)
                         Info.out("getNextPragma: parsed a frame axiom: " + 
                                  dst.ztoString());
@@ -885,7 +893,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
                     if (TagConstants.isRedundant(tag))
                         pragma.setRedundant(true);
                     dst.auxVal = pragma;
-		    semiNotOptional = true;
+		    semicolonExpected = true;
                     break;
 		}
 
@@ -910,7 +918,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
                     if (TagConstants.isRedundant(tag))
                         pragma.setRedundant(true);
                     dst.auxVal = pragma;
-                    semiNotOptional = true;
+                    semicolonExpected = true;
                     break;
                 }
 
@@ -931,7 +939,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
                     if (TagConstants.isRedundant(tag))
                         pragma.setRedundant(true);
                     dst.auxVal = pragma;
-                    semiNotOptional = true;
+                    semicolonExpected = true;
                     break;
                 }
 
@@ -939,7 +947,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
                     inProcessTag = tag;
                     inProcessLoc = loc;
                     continuePragma(dst);
-                    semiNotOptional = true;
+                    semicolonExpected = true;
                     if (DEBUG)
                         Info.out("getNextPragma: parsed a loop predicate: " + 
                                  dst.ztoString());
@@ -952,7 +960,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
                     expect(scanner, TagConstants.ASSIGN);
                     Expr value = parseExpression(scanner);
                     dst.auxVal = SetStmtPragma.make(target, locOp, value, loc);
-                    semiNotOptional = true;
+                    semicolonExpected = true;
                     break;
                 }
 
@@ -991,7 +999,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
 			}
 			e.setRedundant(TagConstants.isRedundant(tag));
 			dst.auxVal = e;
-                        semiNotOptional = true;
+                        semicolonExpected = true;
 		    }
                     break;
 
@@ -1004,11 +1012,11 @@ public class EscPragmaParser extends Parse implements PragmaParser
                     if (TagConstants.isRedundant(tag))
                         pragma.setRedundant(true);
                     dst.auxVal = pragma;
-                    semiNotOptional = true;
+                    semicolonExpected = true;
 		    if (scanner.ttype != TagConstants.SEMICOLON) {
 			// FIXME - for clause of constraint needs implementing
 			eatThroughSemiColon();
-			semiNotOptional = false;
+			semicolonExpected = false;
 		    }
                     break;
                 }
@@ -1024,7 +1032,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
                     if (TagConstants.isRedundant(tag))
                         pragma.setRedundant(true);
                     dst.auxVal = pragma;
-                    semiNotOptional = true;
+                    semicolonExpected = true;
                     break;
                 }
 
@@ -1231,13 +1239,13 @@ public class EscPragmaParser extends Parse implements PragmaParser
 
 			}
 			inProcessTag = NEXT_TOKEN_STARTS_NEW_PRAGMA;
-			semiNotOptional = true;
+			semicolonExpected = true;
 			if (scanner.ttype == TagConstants.IDENT &&
 			    scanner.identifierVal.toString().equals("initially")) {
 			    // This usage of 'initially' is deprecated
 			    // To get rid of it, just eliminate this if block.
 			    // FIXME
-                            semiNotOptional = false;
+                            semicolonExpected = false;
 			}
 		    }
                     break;
@@ -1279,7 +1287,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
 
                     dst.auxVal = SkolemConstantPragma.make(v, locType, 
 					scanner.startingLoc);
-                    semiNotOptional = true;
+                    semicolonExpected = true;
                     break;
                 }
 
@@ -1338,7 +1346,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
 		    if (TagConstants.isRedundant(tag))
 			pragma.setRedundant(true);
                     dst.auxVal = pragma;
-                    semiNotOptional = true;
+                    semicolonExpected = true;
                     break;
                 }
 
@@ -1365,7 +1373,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
 		    if (TagConstants.isRedundant(tag))
 			pragma.setRedundant(true);
                     dst.auxVal = pragma;
-                    semiNotOptional = true;
+                    semicolonExpected = true;
 		    if (scanner.ttype == TagConstants.IF) {
 			scanner.getNextToken(); // read the if
 			pragma.cond = parseExpression(scanner);
@@ -1394,7 +1402,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
                     if (TagConstants.isRedundant(tag))
                         pragma.setRedundant(true);
                     dst.auxVal = pragma;
-                    semiNotOptional = true;
+                    semicolonExpected = true;
                     break;
                 }
 
@@ -1526,7 +1534,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
 		    return false;
             }
 
-            if (semiNotOptional) {
+            if (semicolonExpected) {
                 eatSemiColon(kw);
                 inProcessTag = NEXT_TOKEN_STARTS_NEW_PRAGMA;
 	    }
@@ -1608,6 +1616,9 @@ public class EscPragmaParser extends Parse implements PragmaParser
 		   "Semicolon required when a " + kw.toString()
 		    + " pragma is followed by another pragma (found "
 		    + TagConstants.toString(scanner.ttype) + " instead).");
+//	else
+//	    ErrorSet.caution(scanner.startingLoc,
+//		"JML requires annotations to be terminated with a semicolon");
     }
 
     /*@ requires inProcessTag == TagConstants.ALSO_MODIFIES ||
