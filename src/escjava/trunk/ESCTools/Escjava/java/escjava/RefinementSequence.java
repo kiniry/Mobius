@@ -255,8 +255,9 @@ public class RefinementSequence extends CompilationUnit {
 	    // testing equality before type resolution.
 	    String s = ((TypeName)t).name.printName();
 	    String ss = ((TypeName)tt).name.printName();
-	    //System.out.println("COMP NAMES " + s + " " + ss);
-	    return s.endsWith(ss) || ss.endsWith(s);
+	    boolean b = s.equals(ss) || s.endsWith("." + ss) || ss.endsWith("." + s);
+	    //System.out.println("COMP NAMES " + s + " " + ss + " " + b);
+	    return b;
 	} else {
 	    ErrorSet.error("Implementation error: Unknown type in RefinementSequence.equalType " + t.getClass());
 	    return t.getClass() == tt.getClass();
@@ -273,7 +274,8 @@ public class RefinementSequence extends CompilationUnit {
 	even if there is only one item in the refinement sequence.
 	*/
     void combineRoutine(RoutineDecl newrd, RoutineDecl rd) {
-	//System.out.println("Combining routine "+Location.toString(newrd.getStartLoc()) + " " + rd.binaryArgNames);
+	//System.out.println("Combining routine "+Location.toString(newrd.getStartLoc()) + " " +Location.toString(rd.getStartLoc()) + " " + rd.binaryArgNames + " " + Modifiers.toString(rd.modifiers) );
+	rd.loc = newrd.loc;
 	// FIXME - check exceptions
 	for (int i=0; i<newrd.args.size(); ++i) {
 	    FormalParaDecl newarg = newrd.args.elementAt(i);
