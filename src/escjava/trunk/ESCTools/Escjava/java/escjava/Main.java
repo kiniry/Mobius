@@ -144,7 +144,7 @@ public class Main extends javafe.SrcTool
         NoWarn.registerNowarns(justLoaded.lexicalPragmas);
     
         if (options().printCompilationUnitsOnLoad) {
-            String pkgName = justLoaded.pkgName.printName();
+            String pkgName = justLoaded.pkgName == null ? "" : justLoaded.pkgName.printName();
             String filename = Location.toFileName(justLoaded.loc);
             System.out.println("LOADED: " + pkgName + " " + filename);
         }
