@@ -118,10 +118,10 @@
 \maketitle
 \begin{abstract}
 The ESC/Java tool was a useful advance in effective static checking of realistic Java programs,
-but had become somewhat out of date with respect to Java and the Java Modeling Language (JML).
+but has become somewhat out of date with respect to Java and the Java Modeling Language (JML).
 The ESC/Java2 project, whose progress is described in this paper, builds on ESC/Java to parse
-all of JML, to increase the amount of static checking performed, and to make the tool widely
-available.  It is intended that ESC/Java2 be used for further research in annotation and verification, for larger-scale case studies of annotation and verification, and for studies in programmer productivity that may result from integration with other tools that work with JML.
+all of JML, to increase the amount of static checking performed, and to enalrge the tool's
+availability.  It is intended that ESC/Java2 be used for further research in annotation and verification, for larger-scale case studies of annotation and verification, and for studies in programmer productivity that may result from integration with other tools that work with JML.
 \end{abstract}
 
 \category{D.2.4}{Software Engineering}
@@ -134,7 +134,7 @@ available.  It is intended that ESC/Java2 be used for further research in annota
 
 %% TODO \terms{Delphi theory}
 
-\keywords{JML, ESC/Java, TODO} % NOT required for Proceedings
+\keywords{JML, ESC/Java, ESC/Java2, static analysis, verification, annotation languages} 
 
 %% I think that we currently have far too many bulleted lists.  They do 
 %% not read well, nor are they space efficient.  I would hope we could
@@ -161,7 +161,7 @@ Second, some of the deficiencies of the annotation language used by
 ESC/Java, while appropriate in a research mode, reduced the overall
 usability of the tool.  For example, frame conditions were not
 checked, but errors in frame conditions could cause the prover to
-reach incorrect conclusions; the annotation language lacked the
+reach incorrect conclusions.  Also, the annotation language lacked the
 ability to use methods in annotations, limiting the annotations to
 statements only about low-level representations.  Finally, as
 companies were bought and sold and research groups disbanded, there
@@ -185,9 +185,11 @@ following goals:
   consistent with the original engineering goals of ESC/Java
   (usability at the expense of full completeness and soundness);
 and (5) as a long-term goal and if appropriate, to update the related
-  tools that use the same code base, namely Calvin, Houdini, and RCC.
+  tools that use the same code base (Calvin, Houdini, RCC) and to
+ integrate with other JML-based tools.
 Success in the above will enable us to
- test the utility of the tool on a broader range of significant
+ test the utility of the tool to improve programmer productivity
+ on a broader range of significant
   bodies of Java source, and
 to use the tool as a basis for research in unexplored aspects of
   annotation and static program analysis.
@@ -254,7 +256,7 @@ ESC/Java:
 The ESC/Java specification language and JML arose separately.  There
 was some initial but uncompleted work to unify the two.  The ESC/Java2
 project intends to have the tool reflect JML as precisely as possible.
-In some cases, discussion resulted in changes to JML.  In
+In some cases, discussion about differences resulted in changes to JML.  In
 a few cases, some backwards incompatibilities in ESC/Java were
 introduced.  The principal such incompatibilities are these:
 \setlength{\partopsep}{0in}\setlength{\parskip}{0in}\setlength{\itemsep}{0in}\setlength{\topsep}{0in}
@@ -283,13 +285,11 @@ endowed with a clear semantics.  The features that are currently ignored are:
 \item checking of access modifiers,
 \item the \texttt{weakly}, \texttt{strictfp}, \texttt{volatile}, and
   \texttt{transient} modifiers,
-\item the \texttt{diverges}, \texttt{hence\_by}, \texttt{measured\_by}, \texttt{when}, and
-\texttt{code\_contract}
-  clauses,
-\item annotations labeled as redundant are handled just like other
-  annotations, or are ignored (e.g. \texttt{implies\_that} and {\tt
+\item the \texttt{diverges}, \texttt{hence\_by}, \texttt{code\_contract}\texttt{when}, and
+ \texttt{measured\_by} clauses,
+\item annotations within \texttt{implies\_that} and {\tt
     for\_example} sections),
-\item any semantics associated with initialization (prior to
+\item some of the semantics associated with initialization (prior to
   construction),
 \item multi-threading support beyond that in ESC/Java,
 \item serialization,
@@ -307,7 +307,7 @@ endowed with a clear semantics.  The features that are currently ignored are:
 \section{Unresolved semantic issues}
 
 The work on ESC/Java2 has been useful in exposing and resolving
-semantic issues in JML.  Since the ESC/Java2 is built on a different
+semantic issues in JML.  Since ESC/Java2 is built on a different
 source code base than other JML tools, differences of interpretation
 in both syntax and semantics arise on occasion.  These are generally
 resolved and documented via mailing list discussions by interested
@@ -334,14 +334,19 @@ are the subject of ongoing research:
 the SoS group with using ESC/Java for verification of core JDK classes
 and Smart Card applets. -JRK]
 
-\section{Future work}
+\section{Ongoing work}
 The work on ESC/Java2 to date has resulted in a number of software
 alpha releases and the work is continuing on a number of fronts.
 
-1. As the previous sections show, there is a fair amount of
-  additional software implementation to complete.  As is usually the
-  case, users would also appreciate attention to performance and to
-  the clarity of errors and warnings.
+1. Two obvious and related ongoing tasks are the completion of 
+ additional features of JM, accompanied in some 
+ cases by additional research to clarify the semantics and usability of
+  outstanding features of JML.  Usage of JML is now broad enough that
+  accompanying formal reference documentation would be valuable.  As tools
+ such as ESC/Java2 become more widely used,
+ users will also appreciate attention to performance, to
+  the clarity of errors and warnings, and to the overall user experience such
+ tools provide.
 
 2. The current implementation supports the static checking of a
   stable core of JML.  With this initial implementation of frame
@@ -362,9 +367,18 @@ alpha releases and the work is continuing on a number of fronts.
   and more complicated state-based logic is required for useful
   results to be obtained.
 
-In addition, research is required to clarify the semantics and usability of
-  outstanding features of JML.  Usage of JML is now broad enough that
-  formal reference documentation would also be valuable.
+4. The purpose of  using theorem provers for static analysis, runtime
+ assertion checking or model checking is to find errors and thereby 
+ improve the correctness of the resulting software.  Thus the orientation
+ of a tool must be towards effectively finding {\em and interpreting} examples
+ of incorrect behavior.   A common complaint in using any of these tools
+ is that it is difficult to determine a root cause from the counterexample information
+ provided by the tool whether it is a failed proof or an invalid test or execution history.
+ The ESC/Java project reported some work towards appropriately pruning
+ and interpreting counterexample information, but there remains room for
+ improvement.
+
+
 
 Finally, though not part of this project, there is another set of beneficial
 work to be done.  There are now a number of tools~\cite{Burdy-etal03},
@@ -376,9 +390,21 @@ integrated with the DEC/SRC version of ESC/Java~\cite{NimmerErnst01});
 jmlunit~\cite{Cheon-Leavens02} generates test cases from
 specifications.  A productive prgrammer's working environment for a
 large-scale project that uses these tools would need the tools to be integrated
-in a way that their outputs and inputs seamlessly inter-communicate, but
-also that the user can iterate among the tools as writing, testing, 
-annotating, and verifying each incrementally advance.
+in a way that their outputs and inputs seamlessly inter-communicate.
+A programmer using the tools would naturally move among the 
+various tasks of designing, possibly using abstract specifications, 
+writing, testing, annotating, verifying and debugging.  Thus the tools
+would need to be integrated in a way that allows efficient, incremental
+behavior.  For example, once specifications generated by a Daikon-like
+tool are generalized and incorporated into a method's annotations,
+repeated running of Daikon will only produce results already implied by
+the existing specifications.  That m,ay be cause to ignore those
+subsumed results until changes elsewhere in the program or new test
+data show that the annotations are incorrect.  On the other hand, if the
+specifications generated by analyzing the execution history are 
+implied by but narrower than the written specifications, one might conclude
+that either the test data is too limited or the written specifications (at least
+in this usage) are overly broad.
 
 \section{Conclusion}
 TODO ???
@@ -387,7 +413,11 @@ TODO ???
 \section{Acknowledgments}
 The authors would like to acknowledge both the work of the team that
 generated ESC/Java as well as Gary Leavens and collaborators at Iowa
-State University who generated JML.  These teams provided the twin
+State University who generated JML.  In addition, Leavens and students
+engaged in
+and helped resolve syntactic and semantic issues in JML raised by 
+the work on ESC/Java2.
+These teams provided the twin
 foundations on which the current work is built.  In addition, the many
 other research groups that use and critique both JML and ESC/Java2
 have provided a research environment in which the work described here
