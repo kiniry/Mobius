@@ -102,7 +102,7 @@
 
   <patternset id="classfiles" >
     <include name="**/*.class"/>
-    <exclude name="decsrc/util/*.class"/>
+    <exclude name="**/decsrc/util/*.class"/>
   </patternset>
 
   <!-- General useful file sets. -->
@@ -173,7 +173,7 @@
   <path id="javafe_classpath">
     <path refid="base_classpath"/>
     <pathelement path="${javafe_classes_dir}"/>
-    <pathelement path="${javafe_root}/decsrclib"/>
+    <pathelement path="${javafe_root_dir}/decsrclib"/>
   </path>
 
   <path id="rcc_classpath">
@@ -536,10 +536,11 @@
       Compile all ESC/Java source code.
     </description>
     <!-- :${escjava_test_dir} -->
-    <javac srcdir="${escjava_source_dir}"
+    <javac srcdir="${escjava_source_dir}:${escjava_test_dir}"
            destdir="${escjava_classes_dir}"
            excludes="instrumenter/**,escwizard/**,houdini/**,
-                     escjava/reader/**,escjava/pa/**,escjava/test/**"
+                     escjava/reader/**,escjava/pa/**,
+                     escjava/test/**,CausedAnError**"
            debug="on"
            deprecation="off"
            optimize="off"
