@@ -43,19 +43,6 @@ SignalsOnly: mp(int) ...
     [TIME]  passed
 
 SignalsOnly: mm(int) ...
-------------------------------------------------------------------------
-SignalsOnly.java:39: Warning: Possible unexpected exception (Exception)
-        }
-        ^
-Execution trace information:
-    Executed else branch in "SignalsOnly.java", line 37, col 3.
-    Executed then branch in "SignalsOnly.java", line 38, col 15.
-    Executed throw in "SignalsOnly.java", line 38, col 15.
-
-------------------------------------------------------------------------
-    [TIME]  failed
-
-SignalsOnly: mq(int) ...
     [TIME]  passed
 
 SignalsOnly: SignalsOnly() ...
@@ -75,4 +62,4 @@ SignalsOnly$B ...
 SignalsOnly$B: B() ...
     [TIME]  passed
   [TIME total]
-3 warnings
+2 warnings

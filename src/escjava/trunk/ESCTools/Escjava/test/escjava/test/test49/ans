@@ -50,6 +50,7 @@ class WritableIf
    WritableIf()
     /*@ requires (/*boolean*/ true); */
     /*@ modifies (/*boolean*/ true) ==> ((/*UNAVAILABLE*/ (/*WritableIf*/ this).*)); @*/
+    /*@ signals_only (java.lang.Exception) (/*boolean*/ false); */
     /*@ pure */ 
    {
       super();
@@ -62,6 +63,7 @@ class WritableIf
    WritableIf(int x)
     /*@ requires (/*boolean*/ true); */
     /*@ modifies (/*boolean*/ true) ==> ((/*UNAVAILABLE*/ (/*WritableIf*/ this).*)); @*/
+    /*@ signals_only (java.lang.Exception) (/*boolean*/ false); */
     /*@ pure */ 
    {
       super();
@@ -82,6 +84,7 @@ class NonNull
    void foo(Object x /*@ non_null */)
     /*@ pure */
     /*@ requires (/*boolean*/ (\lblneg Pre:0.32.16 (/*boolean*/ (/*boolean*/ (/*NonNull*/ this) instanceof NonNull) && (/*boolean*/ (/*java.lang.Object*/ x:32.34) != (/*null*/ null))))); */
+    /*@ signals_only (java.lang.Exception) (/*boolean*/ (/*boolean*/ \old((/*boolean*/ (/*boolean*/ (/*NonNull*/ this) instanceof NonNull) && (/*boolean*/ (/*java.lang.Object*/ x:32.34) != (/*null*/ null))))) ==> (/*boolean*/ false)); */
     /*@ diverges (/*boolean*/ (/*boolean*/ \old((/*boolean*/ (/*boolean*/ (/*NonNull*/ this) instanceof NonNull) && (/*boolean*/ (/*java.lang.Object*/ x:32.34) != (/*null*/ null))))) ==> (/*boolean*/ false)); */
     /*@ modifies (/*boolean*/ \old((/*boolean*/ (/*boolean*/ (/*NonNull*/ this) instanceof NonNull) && (/*boolean*/ (/*java.lang.Object*/ x:32.34) != (/*null*/ null))))) ==> ((/*UNAVAILABLE*/ \nothing)); @*/ 
    {
@@ -94,6 +97,7 @@ class NonNull
    void foo2(Object x /*@ non_null */)
     /*@ pure */
     /*@ requires (/*boolean*/ (\lblneg Pre:0.39.17 (/*boolean*/ (/*boolean*/ (/*NonNull*/ this) instanceof NonNull) && (/*boolean*/ (/*java.lang.Object*/ x:39.35) != (/*null*/ null))))); */
+    /*@ signals_only (java.lang.Exception) (/*boolean*/ (/*boolean*/ \old((/*boolean*/ (/*boolean*/ (/*NonNull*/ this) instanceof NonNull) && (/*boolean*/ (/*java.lang.Object*/ x:39.35) != (/*null*/ null))))) ==> (/*boolean*/ false)); */
     /*@ diverges (/*boolean*/ (/*boolean*/ \old((/*boolean*/ (/*boolean*/ (/*NonNull*/ this) instanceof NonNull) && (/*boolean*/ (/*java.lang.Object*/ x:39.35) != (/*null*/ null))))) ==> (/*boolean*/ false)); */
     /*@ modifies (/*boolean*/ \old((/*boolean*/ (/*boolean*/ (/*NonNull*/ this) instanceof NonNull) && (/*boolean*/ (/*java.lang.Object*/ x:39.35) != (/*null*/ null))))) ==> ((/*UNAVAILABLE*/ \nothing)); @*/ 
    {
@@ -116,6 +120,7 @@ class MonitoredBy
    void foo(Object foo)
     /*@ requires (/*boolean*/ true); */
     /*@ modifies (/*boolean*/ true) ==> ((/*UNAVAILABLE*/ \nothing)); @*/
+    /*@ signals_only (java.lang.Exception) (/*boolean*/ false); */
     /*@ pure */ 
    {
       /*@ assert (/*boolean*/ (/*java.lang.Object*/ x) == (/*java.lang.Object*/ x)); */

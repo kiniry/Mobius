@@ -118,12 +118,38 @@ public class TestProperties extends LocalTestCase {
     String c = "c";
     String d = "d";
     Properties p = new Properties();
+    //@ assert !c.equals(a);
+    p.setProperty(a,b);
+    assertTrue (p.getProperty(a) == b);
+    assertTrue (p.getProperty(c) == null);
+    Properties pp = new Properties(p);
+    //@ assert !c.equals(a);
+    assertTrue (p.getProperty(a) == b);
+    assertTrue (p.getProperty(c) == null);
+    assertTrue( pp.getProperty(c) == null); 
+    p.setProperty(c,d);
+    //@ assert p != pp;
+    //@ assert !pp.content.hasMap(c);
+    //@ assert pp.defaults == p;
+    //@ assert pp.defaults.getProperty(c) == d;
+    //@ assert p.defaults == null;
+    assertTrue( pp.getProperty(c) == d);
+//@ assert false; // TEST FOR CONSISTENCY
+  }
+
+  // The same test with fewer helpful steps
+  public void testDef2() {
+    String a = "a";
+    String b = "b";
+    String c = "c";
+    String d = "d";
+    Properties p = new Properties();
     p.setProperty(a,b);
     Properties pp = new Properties(p);
-    //@ assume !c.equals(a);
-    assertTrueNP( pp.getProperty(c) == null);  // FIXME - would like to be able to prove this line and the one two lines below
+    //@ assert !c.equals(a);
+    assertTrue( pp.getProperty(c) == null);
     p.setProperty(c,d);
-    assertTrueNP( pp.getProperty(c) != null);
+    assertTrue( pp.getProperty(c) == d);
 //@ assert false; // TEST FOR CONSISTENCY
   }
 }

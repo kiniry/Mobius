@@ -23,7 +23,10 @@ TestProperties.java:101: Warning: Possible assertion failure (Assert)
 TestProperties.java:110: Warning: Possible assertion failure (Assert)
 //@ assert false; // TEST FOR CONSISTENCY
     ^
-TestProperties.java:127: Warning: Possible assertion failure (Assert)
+TestProperties.java:137: Warning: Possible assertion failure (Assert)
 //@ assert false; // TEST FOR CONSISTENCY
     ^
-6 warnings
+TestProperties.java:153: Warning: Possible assertion failure (Assert)
+//@ assert false; // TEST FOR CONSISTENCY
+    ^
+7 warnings

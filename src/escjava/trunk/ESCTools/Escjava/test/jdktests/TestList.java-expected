@@ -4,13 +4,79 @@ TestList.java:85: Warning: Possible assertion failure (Assert)
 TestList.java:143: Warning: Possible assertion failure (Assert)
 //@ assert false; // TEST FOR CONSISTENCY
     ^
-TestList.java:260: Warning: Possible assertion failure (Assert)
+TestList.java:164: Warning: Possible assertion failure (Assert)
 //@ assert false; // TEST FOR CONSISTENCY
     ^
-TestList.java:340: Warning: Possible assertion failure (Assert)
+TestList.java:183: Warning: Precondition possibly not established (Pre)
+            assertTrue (b);   // FIXME
+                       ^
+Associated declaration is ".\LocalTestCase.java", line 19, col 6:
+  //@ requires b;
+      ^
+Execution trace information:
+    Routine call returned exceptionally in "TestList.java", line 178, col 11.
+
+TestList.java:186: Warning: Possible assertion failure (Assert)
 //@ assert false; // TEST FOR CONSISTENCY
     ^
-TestList.java:370: Warning: Possible assertion failure (Assert)
+Execution trace information:
+    Routine call returned exceptionally in "TestList.java", line 178, col 11.
+
+TestList.java:204: Warning: Precondition possibly not established (Pre)
+        assertTrue (b);
+                   ^
+Associated declaration is ".\LocalTestCase.java", line 19, col 6:
+  //@ requires b;
+      ^
+Execution trace information:
+    Routine call returned exceptionally in "TestList.java", line 198, col 11.
+
+TestList.java:215: Warning: Possible assertion failure (Assert)
 //@ assert false; // TEST FOR CONSISTENCY
     ^
-5 warnings
+Execution trace information:
+    Routine call returned exceptionally in "TestList.java", line 198, col 11.
+
+TestList.java:259: Warning: Possible assertion failure (Assert)
+//@ assert false; // TEST FOR CONSISTENCY
+    ^
+Execution trace information:
+    Routine call returned exceptionally in "TestList.java", line 254, col 11.
+
+TestList.java:275: Warning: Possible assertion failure (Assert)
+//@ assert false; // TEST FOR CONSISTENCY
+    ^
+TestList.java:339: Warning: Possible assertion failure (Assert)
+           //@ assert c.elementType == \type(Object);  // FIXME - this ...
+               ^
+Execution trace information:
+    Routine call returned exceptionally in "TestList.java", line 285, col 13.
+    Routine call returned exceptionally in "TestList.java", line 291, col 13.
+    Routine call returned exceptionally in "TestList.java", line 297, col 13.
+    Routine call returned exceptionally in "TestList.java", line 303, col 13.
+    Routine call returned exceptionally in "TestList.java", line 309, col 13.
+    Routine call returned exceptionally in "TestList.java", line 315, col 13.
+    Routine call returned exceptionally in "TestList.java", line 321, col 13.
+    Routine call returned exceptionally in "TestList.java", line 327, col 13.
+    Routine call returned exceptionally in "TestList.java", line 334, col 10.
+
+TestList.java:349: Warning: Possible assertion failure (Assert)
+//@ assert false; // TEST FOR CONSISTENCY
+    ^
+Execution trace information:
+    Routine call returned exceptionally in "TestList.java", line 285, col 13.
+    Routine call returned exceptionally in "TestList.java", line 291, col 13.
+    Routine call returned exceptionally in "TestList.java", line 297, col 13.
+    Routine call returned exceptionally in "TestList.java", line 303, col 13.
+    Routine call returned exceptionally in "TestList.java", line 309, col 13.
+    Routine call returned exceptionally in "TestList.java", line 315, col 13.
+    Routine call returned exceptionally in "TestList.java", line 321, col 13.
+    Routine call returned exceptionally in "TestList.java", line 327, col 13.
+
+TestList.java:371: Warning: Possible assertion failure (Assert)
+//@ assert false; // TEST FOR CONSISTENCY
+    ^
+TestList.java:401: Warning: Possible assertion failure (Assert)
+//@ assert false; // TEST FOR CONSISTENCY
+    ^
+13 warnings

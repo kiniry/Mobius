@@ -150,13 +150,6 @@ public class TestList extends LocalTestCase {
         boolean b;
         Integer i = new Integer(0);
         c.add(i);
-
-        try {
-	    b = c.retainAll(null);
-            assertTrue( false);
-        } catch (Exception e) {
-            assertTrue( e instanceof NullPointerException);
-        }
         b = c.contains(i);
         assertTrue (b);
 
@@ -164,9 +157,31 @@ public class TestList extends LocalTestCase {
 	    b = c.retainAll(c);
 	    assertTrue(!b);
 	    b = c.contains(i);
-	    assertTrue (b);
+	    assertTrue (b); 
         } catch (Exception e) {}
 
+
+//@ assert false; // TEST FOR CONSISTENCY
+    }
+
+    //@ requires c != null;
+    //@ requires c.isEmpty();
+    public void testList2b(List c) {
+        //@ set c.elementType = \type(Number);
+        boolean b;
+        Integer i = new Integer(0);
+        c.add(i);
+        b = c.contains(i);
+        assertTrue (b);       
+
+        try {
+	    b = c.retainAll(null);
+            assertTrue( false);
+        } catch (Exception e) {
+            assertTrue( e instanceof NullPointerException);
+	    b = c.contains(i);
+	    assertTrue (b);   // FIXME
+        }
 
 //@ assert false; // TEST FOR CONSISTENCY
     }
@@ -268,53 +283,67 @@ public class TestList extends LocalTestCase {
         assertTrue( c.size() == 1);
         try {
            c.get(1);
+           assertTrue (false);
         } catch (Exception e) {
            assertTrue( e instanceof IndexOutOfBoundsException);
         }
         try {
            c.get(-1);
+           assertTrue (false);
         } catch (Exception e) {
            assertTrue( e instanceof IndexOutOfBoundsException);
         }
         try {
            c.set(1,o);
+           assertTrue (false);
         } catch (Exception e) {
            assertTrue( e instanceof IndexOutOfBoundsException);
         }
         try {
            c.set(-1,o);
+           assertTrue (false);
         } catch (Exception e) {
            assertTrue( e instanceof IndexOutOfBoundsException);
         }
         try {
            c.remove(1);
+           assertTrue (false);
         } catch (Exception e) {
            assertTrue( e instanceof IndexOutOfBoundsException);
         }
         try {
            c.remove(-1);
+           assertTrue (false);
         } catch (Exception e) {
            assertTrue( e instanceof IndexOutOfBoundsException);
         }
         try {
            c.add(-1,o);
+           assertTrue (false);
         } catch (Exception e) {
-           assertTrue( e instanceof IndexOutOfBoundsException);
+           assertTrue( e instanceof RuntimeException);
         }
         try {
            c.add(3,o);
         } catch (Exception e) {
            assertTrue( e instanceof IndexOutOfBoundsException);
         }
+           //@ assert c.elementType == \type(Object);
+        try {
         assertTrue( c.size() == 1);
         c.set(0,o);
         assertTrue( c.size() == 1);
         c.remove(0);
         assertTrue( c.size() == 0);
+        } catch (RuntimeException e) {
+           //@ assert c.elementType == \type(Object);  // FIXME - this should be ok
+           //@ set c.elementType = \type(Object);
+        }
         try {
            c.add(0,o);
-        } catch (Exception e) {
+        } catch (IndexOutOfBoundsException e) {
            assertTrue( false );
+        } catch (RuntimeException e) {
         }
 
 //@ assert false; // TEST FOR CONSISTENCY
@@ -327,6 +356,7 @@ public class TestList extends LocalTestCase {
         Integer i = new Integer(0);
         Integer ii = new Integer(1);
         Integer iii = new Integer(2);
+        try {
         c.add(i);
         assertTrue( c.get(0) == i);
         c.add(0,ii);
@@ -337,6 +367,7 @@ public class TestList extends LocalTestCase {
         assertTrue( c.get(1) == i);
         c.remove(0);
         assertTrue( c.get(0) == i);
+        } catch (RuntimeException e) {}
 //@ assert false; // TEST FOR CONSISTENCY
     }
 

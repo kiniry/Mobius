@@ -44,9 +44,9 @@ public class TestSet extends LocalTestCase {
         assertTrue (b);
         assertTrue ( !c.isEmpty());
         assertTrue ( c.size() == 1);
-        assertTrueNP ( c.contains(i));
+        assertTrueNP ( c.contains(i));  // FIXME - would like to prove this
         //@ assert c.containsObject(i);
-        assertTrueNP ( !c.contains(o));
+        assertTrueNP ( !c.contains(o));  // FIXME - would like to prove this
         //@ assert !c.containsObject(o);
 
         //@ assert c.contains(i);
@@ -74,13 +74,13 @@ public class TestSet extends LocalTestCase {
 
         boolean b;
         Integer i = new Integer(0);
-        //@ assume !i.equals(o);
+        //@ assume !i.equals(o);   // FIXME - ought to be provable
         c.add(i);
-        //@ assert (\forall Object o; c.contains(o); o.equals(i) );
+        //@ assert (\forall Object o; c.contains(o); o.equals(i) ); // FIXME
 
         Integer ii = new Integer(1);
         //@ assert !ii.equals(i);
-        //@ assert !c.containsObject(ii);
+        //@ assert !c.containsObject(ii);  // FIXME
         //@ assume !c.contains(ii); // FIXME - would like to prove this
         b = c.add(ii);
         //@ assume !ii.equals(o);
@@ -93,12 +93,12 @@ public class TestSet extends LocalTestCase {
         b = c.remove(ii);
         assertTrue(b);
         //@ assert !c.containsObject(ii);
-        //@ assert c.containsObject(i);
+        //@ assert c.containsObject(i);    // FIXME
 
         b = c.remove(ii);
-        assertTrue(!b);
-        //@ assert c.containsObject(i);
-        //@ assert !c.containsObject(ii);
+        assertTrue(!b);                      // FIXME
+        //@ assert c.containsObject(i);     // FIXME
+        //@ assert !c.containsObject(ii);   // FIXME
 
         try {
 	    b = c.containsAll(null);
@@ -118,7 +118,7 @@ public class TestSet extends LocalTestCase {
             assertTrue( e instanceof NullPointerException);
         }
         b = c.contains(i);
-        assertTrue (b);
+        assertTrue (b);      // FIXME
 //@ assert false; // TEST FOR CONSISTENCY
     }
 
@@ -137,7 +137,7 @@ public class TestSet extends LocalTestCase {
             assertTrue( e instanceof NullPointerException);
         }
         b = c.contains(i);
-        assertTrue (b);
+        assertTrue (b);      // FIXME
 
         try {
 	    b = c.retainAll(c);
@@ -165,7 +165,7 @@ public class TestSet extends LocalTestCase {
             assertTrue( e instanceof NullPointerException);
         }
         b = c.contains(i);
-        assertTrue (b);
+        assertTrue (b);     // FIXME
 
         try {
 	    b = c.removeAll(c);

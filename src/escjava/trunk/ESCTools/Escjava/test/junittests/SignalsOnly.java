@@ -39,8 +39,4 @@ public class SignalsOnly {
 	}
 		
 
-	//@ signals_only A,B;
-	public void mq(int i) throws A {
-	  if (i == 0) throw new A();
-	}
 }

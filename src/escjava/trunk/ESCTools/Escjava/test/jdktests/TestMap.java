@@ -1,5 +1,5 @@
+//#FLAGS: -quiet
 import java.util.*;
-
 public class TestMap extends LocalTestCase {
 
     public Map map;
@@ -46,16 +46,17 @@ public class TestMap extends LocalTestCase {
         assertTrue (map.containsKey(o1));
         assertTrue (map.containsValue(o2));
         //@ assert (\forall Object o; map.content.hasMapObject(o) ==> o1 == o);
-        //@ assert (\forall Object o; map.containsKey(o) ==> o1.equals(o));
         //@ assume !o1.equals(o);
-        assertTrue ( map.get(o) == null);
+        //@ assume !o.equals(o1);
+        //@ assert (\forall Object oo; map.containsKey(oo) ==> oo.equals(o1));  // FIXME
+        assertTrue ( map.get(o) == null); // FIXME
         assertTrue (map.get(o1) == o2);
 
         map.remove(o1);
         assertTrue ( map.get(o1) == null);
 //@ assert false;  // TEST FOR CONSISTENCY
       } catch (Exception e) {}
-//@ assert false;  // TEST FOR CONSISTENCY
+ //@ assert false;  // TEST FOR CONSISTENCY
     }
 
     //@ requires map != null && map.isEmpty();
@@ -93,7 +94,7 @@ public class TestMap extends LocalTestCase {
         String stwo = "two";
         Integer one = new Integer(1);
         Integer two = new Integer(2);
-        //@ assume !sone.equals(stwo);
+        //@ assert !sone.equals(stwo);
         map.put(sone,one);
         assertTrue ( map.get(sone) == one);
 
@@ -111,7 +112,7 @@ public class TestMap extends LocalTestCase {
         String stwo = "two";
         Integer one = new Integer(1);
         Integer two = new Integer(2);
-        //@ assume !sone.equals(stwo);
+        //@ assert !sone.equals(stwo);
         map.put(sone,one);
         assertTrue ( map.get(sone) == one);
 
@@ -121,8 +122,8 @@ public class TestMap extends LocalTestCase {
 
         map.put(stwo,two);
         //@ assert map.get(stwo) == two;
-        //@ assert map.content.mapsObject(sone) == one;
-        //@ assert map.get(sone) == one;
+        //@ assert map.content.mapsObject(sone) == one;  // FIXME
+        //@ assert map.get(sone) == one;    // FIXME
         o = map.get(sone);
         assertTrue ( o == one);
         //@ assert map.get(stwo) == two;
@@ -143,7 +144,7 @@ public class TestMap extends LocalTestCase {
         Integer two = new Integer(2);
         map.put("two",two);
         //@ assert map.get("two") == two;
-        //@ assert map.get("one") == one;
+        //@ assert map.get("one") == one;   // FIXME
         o = map.get("one");
         assertTrue ( o == one);
         //@ assert map.get("two") == two;

@@ -3,7 +3,7 @@ import java.util.*;
 
 public class TestCollection extends LocalTestCase {
 
-    public void testList() {
+    public void testList() throws RuntimeException {
         testCollection(new LinkedList());
         testCollectionR(new LinkedList());
         testCollection2(new LinkedList());
@@ -12,7 +12,7 @@ public class TestCollection extends LocalTestCase {
         testCollection5(new LinkedList());
     }
 
-    public void testSet() {
+    public void testSet() throws RuntimeException {
        testCollection(new HashSet());
        testCollectionR(new HashSet());
        testCollection2(new HashSet());
@@ -21,7 +21,7 @@ public class TestCollection extends LocalTestCase {
        testCollection5(new HashSet());
     }
 
-    //public void testBag() {
+    //public void testBag() throws RuntimeException {
 //       testCollection(new MultiSet());
     //}
 
@@ -30,7 +30,7 @@ public class TestCollection extends LocalTestCase {
 
     //@ requires c != null;
     //@ requires c.isEmpty();
-    private void testCollection(Collection c) {
+    private void testCollection(Collection c) throws RuntimeException {
         boolean b;
 
         assertTrue( c.isEmpty());
@@ -132,7 +132,7 @@ public class TestCollection extends LocalTestCase {
 
     //@ requires c != null;
     //@ requires c.isEmpty();
-    public void testCollection2(Collection c) {
+    public void testCollection2(Collection c) throws RuntimeException {
         //@ set c.elementType = \type(Number);
         boolean b;
         Integer i = new Integer(0);
@@ -160,7 +160,7 @@ public class TestCollection extends LocalTestCase {
 
     //@ requires c != null;
     //@ requires c.isEmpty();
-    public void testCollection3(Collection c) {
+    public void testCollection3(Collection c) throws RuntimeException {
         //@ set c.elementType = \type(Number);
         boolean b;
         Integer i = new Integer(0);
@@ -233,7 +233,7 @@ public class TestCollection extends LocalTestCase {
 
     //@ requires c != null;
     //@ requires c.isEmpty();
-    public void testCollection5(Collection c) {
+    public void testCollection5(Collection c) throws RuntimeException {
         //@ set c.elementType = \type(Object);
 
         c.add(o);

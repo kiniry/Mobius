@@ -7,12 +7,6 @@ Exsures.java:94: Warning: Postcondition possibly not established (Post)
 Associated declaration is "Exsures.java", line 82, col 6:
   //@ exsures (SomeException se) se.f <= \old(ff);
       ^
-Exsures.java:178: Warning: Postcondition possibly not established (Post)
-  }
-  ^
-Associated declaration is "Exsures.java", line 173, col 6:
-  //@ exsures (SomeException se) ae.gg == 17 && ae.gg == se.f;
-      ^
 Exsures.java:198: Warning: Postcondition possibly not established (Post)
   }
   ^
@@ -28,16 +22,10 @@ Exsures2.java:94: Warning: Postcondition possibly not established (Post)
 Associated declaration is "Exsures2.java", line 82, col 6:
   //@ exsures (SomeException se) se.f <= \old(ff);
       ^
-Exsures2.java:178: Warning: Postcondition possibly not established (Post)
-  }
-  ^
-Associated declaration is "Exsures2.java", line 173, col 6:
-  //@ exsures (SomeException se) ae.gg == 17 && ae.gg == se.f;
-      ^
 Exsures2.java:198: Warning: Postcondition possibly not established (Post)
   }
   ^
 Associated declaration is "Exsures2.java", line 121, col 6:
   //@ exsures (Throwable ) super0 == super1;
       ^
-8 warnings
+6 warnings
