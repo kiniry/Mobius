@@ -24,6 +24,6 @@
 # the 'run' file is prepended to the 'ans' and 'out' files.
 
 setenv PROVER_CC_LIMIT 20
-${ESCJ} $* C.java >! out.raw
+${ESCJ} -useOldStringHandling $* C.java >! out.raw
 sort out.raw | cat run -
 sort ans.raw | cat run - >! ans

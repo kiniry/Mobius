@@ -1,7 +1,7 @@
 #!/bin/csh -f
 # usage: run FLAGS
 
-set ARGS = (`echo $* | sed -e 's/-notrace//g'`)
+set ARGS = ( -useOldStringHandling `echo $* | sed -e 's/-notrace//g'`)
 
 ${ESCJ} ${ARGS} final.java
 ${ESCJ} ${ARGS} notRecursive.java
