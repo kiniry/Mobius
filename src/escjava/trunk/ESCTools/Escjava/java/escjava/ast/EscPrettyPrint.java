@@ -109,6 +109,13 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
         }
     }
 
+    public void print(OutputStream o, int ind, ModifierPragmaVec v) {
+	int n = v.size();
+	for (int i=0; i<n; ++i) {
+		print(o,ind,v.elementAt(i));
+	}
+    }
+
     public void print(OutputStream o, int ind, ModifierPragma mp) {
         int tag = mp.getTag();
         switch (tag) {
