@@ -155,6 +155,9 @@ public class FindContributors
      */
     private Set contributorFields = new Set();
 
+    public int preFieldMode = 0;
+    public Set preFields = new Set();
+
     /**
      * A mapping from fields (FieldDecls) to possible invariant
      * contributors (ExprDeclPragmaVec). <p>
@@ -395,12 +398,17 @@ public class FindContributors
 	/*
 	 * Handle relevant backedges:
 	 */
-	if (N instanceof VariableAccess)
+	if (N instanceof VariableAccess) {
 	    backedgeToGenericVarDecl(((VariableAccess)N).decl,
 				     fields, addTypes);
-	if (N instanceof FieldAccess)
+	}
+	if (N instanceof FieldAccess) {
+	    if (preFieldMode > 0) {
+		preFields.add(N);
+	    }
 	    backedgeToGenericVarDecl(((FieldAccess)N).decl,
 				     fields, addTypes);
+	}
 
 	if (N instanceof ConstructorInvocation) {
 	    ConstructorInvocation ci = (ConstructorInvocation) N;
@@ -436,17 +444,28 @@ public class FindContributors
 					   fields, addTypes);
 	}
 
+	if (N.getTag() == TagConstants.PRE) {
+	    ++preFieldMode;
+	}
+
+
 	
 	/*
 	 * Recurse to subnodes (this automatically ignores backedges):
 	 *
 	 * We intentionally skip TypeDecls so that we stay in the same type.
 	 */
-	int size = N.childCount();
-	for (int i=0; i<size; i++) {
-	    Object child = N.childAt(i);
-	    if (child instanceof ASTNode && !(child instanceof TypeDecl))
-		walk((ASTNode)child, fields, addTypes);
+	try {
+	    int size = N.childCount();
+	    for (int i=0; i<size; i++) {
+		Object child = N.childAt(i);
+		if (child instanceof ASTNode && !(child instanceof TypeDecl))
+		    walk((ASTNode)child, fields, addTypes);
+	    }
+	} finally {
+	    if (N.getTag() == TagConstants.PRE) {
+		--preFieldMode;
+	    }
 	}
     }
 
@@ -558,6 +577,7 @@ public class FindContributors
 	if (decl instanceof FieldDecl) {
 	    FieldDecl fd = (FieldDecl)decl;
 	    typecheck(TypeSig.getSig(fd.parent));
+
 
 	    // The range and domain types of fd are "mentioned":
 	    addType(fd.type);

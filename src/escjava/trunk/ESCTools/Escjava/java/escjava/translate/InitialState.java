@@ -52,6 +52,39 @@ public final class InitialState {
 	  conjuncts.addElement(typeCorrect);
     }
 
+	/* The preFields Set accumulates every location that occurs inside a \old()
+	   construct.  These are the mappings needed to map variable uses that occur
+	   in expressions back to a token representing the pre-state value.
+	   This should be all that is needed (though it is overkill for any one method),
+	   and we should not need the set added above (which are those locations that
+	   appear in modifies clauses), but we keep those for good measure (to avoid
+	   introducing bugs because some kind of access does not make it into a proper
+	   representation in the loop below).
+	   By using all the \old() locations we (a) make the verification of method bodies
+	   robust against errors in the modifies clauses and (b) allow the implementation
+	   of modifies \everything.
+        */
+    enum = scope.preFields.elements();
+    while (enum.hasMoreElements()) {
+	  FieldDecl fd = ((FieldAccess)enum.nextElement()).decl;
+	  if (premap.get(fd) != null) continue;
+	  
+	  VariableAccess va = TrAnExpr.makeVarAccess(fd, Location.NULL);
+	  VariableAccess variant = addMapping(fd);
+
+	  // g@pre == g    and    f@pre == f
+	  conjuncts.addElement(GC.nary(TagConstants.ANYEQ, variant, va));
+	  Expr typeCorrect;
+	  if (Modifiers.isStatic(fd.modifiers)) {
+	    // TypeCorrect[[ g ]]
+	    typeCorrect = TrAnExpr.typeCorrect(fd);
+	  } else {
+	    // FieldTypeCorrect[[ f ]]
+	    typeCorrect = TrAnExpr.fieldTypeCorrect(fd);
+	  }
+	  conjuncts.addElement(typeCorrect);
+    }
+
     // elems@pre == elems
     conjuncts.addElement(GC.nary(TagConstants.ANYEQ,
 				 addMapping(GC.elemsvar.decl), GC.elemsvar));

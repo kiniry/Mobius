@@ -3,12 +3,9 @@
 package escjava.ast;
 
 import java.util.Hashtable;
+import java.util.Set;
 
 import javafe.ast.*;
-//import escjava.ast.Visitor;      // Work around 1.0.2 compiler bug
-//import escjava.ast.TagConstants; // Work around 1.0.2 compiler bug
-//import escjava.ast.GeneratedTags;// Work around 1.0.2 compiler bug
-//import escjava.ast.AnOverview;   // Work around 1.0.2 compiler bug
 import javafe.util.Assert;
 import javafe.util.Location;
 
@@ -737,6 +734,7 @@ public class ExprModifierPragma extends ModifierPragma
     //# int tag
     //# Expr expr
     //# int loc
+    public int errorTag = 0;
 
     //# ManualTag
     public final int getTag() { return tag; }
@@ -860,6 +858,8 @@ public class Spec extends ASTNode
   //# Hashtable preVarMap NoCheck
   //# Condition* pre
   //# Condition* post
+  //# boolean modifiesEverything
+  //# Set postconditionLocations  NoCheck
 
   public int getStartLoc() { return dmd.original.getStartLoc(); }
   public int getEndLoc() { return dmd.original.getEndLoc(); }

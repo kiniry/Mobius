@@ -10,7 +10,8 @@ import javafe.util.Location;
 import escjava.ast.*;
 import escjava.ast.TagConstants;
 import escjava.ast.Modifiers;
-import javafe.tc.FlowInsensitiveChecks;
+import escjava.translate.GetSpec;
+import escjava.tc.FlowInsensitiveChecks;
 import javafe.tc.Types;
 
 import java.util.ArrayList;
@@ -222,9 +223,9 @@ public class AnnotationHandler {
 	// Get non_null specs
 	Behavior nonnullBehavior = getNonNull(tde);
 
-	boolean overrides = 
-	    !(isConstructor ||
-		escjava.tc.FlowInsensitiveChecks.getDirectOverrides((MethodDecl)tde).isEmpty());
+	javafe.util.Set overrideSet = null;
+	if (!isConstructor) overrideSet = escjava.tc.FlowInsensitiveChecks.getDirectOverrides((MethodDecl)tde);
+	boolean overrides = !isConstructor && !overrideSet.isEmpty();
 	
 	if (pm.size() == 0 && !overrides && nonnullBehavior.isEmpty()) {
 		// No specs at all and no overridden methods.
@@ -255,7 +256,8 @@ public class AnnotationHandler {
 		int tag = pm.elementAt(q).getTag();
 		if (! (tag==TagConstants.PURE || tag == TagConstants.NON_NULL
 		  || tag == TagConstants.HELPER || tag == TagConstants.END)) {
-	    		ErrorSet.caution(pm.elementAt(0).getStartLoc(),"JML requires a specification to begin with 'also' when the method overrides other methods");
+			MethodDecl ex = (MethodDecl)(overrideSet.elements().nextElement());
+	    		ErrorSet.caution(pm.elementAt(0).getStartLoc(),"JML requires a specification to begin with 'also' when the method overrides other methods (e.g. " + Location.toString(ex.getStartLoc()) + ")");
 			break;
 		}
 	    }
@@ -301,11 +303,17 @@ public class AnnotationHandler {
 	// postconditions - otherwise desugaring of inheritance does not
 	// work soundly.
 	{
+	    boolean defaultIsModifiesNothing =
+		isConstructor && ( ((RoutineDecl)tde).implicit ||
+		    javafe.tc.TypeSig.getSig(tde.parent) == javafe.tc.Types.javaLangObject())
+		 || escjava.tc.FlowInsensitiveChecks.isPure(tde) ;
+
 	    ArrayList orList = new ArrayList(); // Set of spec-cases to be
 				// ored together to form the final clause
 	    for (Iterator ii = results.iterator(); ii.hasNext();) {
 		Object o = ii.next();
 		Behavior b = (Behavior)o;
+		b.defaultIsModifiesNothing = defaultIsModifiesNothing;
 		accumulatedBehavior.combine(b,orList);
 	    }
 	    if (orList.isEmpty()) {
@@ -382,6 +390,31 @@ public class AnnotationHandler {
     public Behavior getNonNull(RoutineDecl rd) {
 	Behavior b = new Behavior();
 	FormalParaDeclVec args = rd.args;
+
+	// Check that non_null on parameters is allowed
+	if (rd instanceof MethodDecl) {
+	    MethodDecl md = (MethodDecl)rd;
+		// Need to check all overrides, because we may not have processed a
+		// given direct override yet, removing its spurious non_null
+	    javafe.util.Set overrides = FlowInsensitiveChecks.getAllOverrides(md);
+	    if (overrides != null && !overrides.isEmpty()) {
+		for (int i=0; i<args.size(); ++i) {
+		    FormalParaDecl arg = args.elementAt(i);
+		    ModifierPragma m = GetSpec.findModifierPragma(arg,TagConstants.NON_NULL);
+		    if (m != null) { // overriding method has non_null for parameter i
+			MethodDecl smd = FlowInsensitiveChecks.getSuperNonNullStatus(md,i,overrides);
+			if (smd != null) { // overridden method does not have non_null for i
+			    FormalParaDecl sf = smd.args.elementAt(i);
+			    ErrorSet.caution(m.getStartLoc(),
+				    "The non_null annotation is ignored because this method overrides a method declaration in which this parameter is not declared non_null: ",sf.getStartLoc());
+			    GetSpec.removeModifierPragma(arg,TagConstants.NON_NULL);
+			}
+		    }
+		}
+	    }
+	}
+
+	// Handle non_null on any parameter
 	for (int i=0; i<args.size(); ++i) {
 	    FormalParaDecl arg = args.elementAt(i);
 	    ModifierPragma m = findModifierPragma(arg.pmodifiers,TagConstants.NON_NULL);
@@ -393,17 +426,20 @@ public class AnnotationHandler {
 			locNN)
 		);
 	}
+
+	// Handle non_null on the result
 	ModifierPragma m = findModifierPragma(rd.pmodifiers,TagConstants.NON_NULL);
 	if (m != null) {
 	    int locNN = m.getStartLoc();
 	    Expr r = ResExpr.make(locNN);
+	    javafe.tc.FlowInsensitiveChecks.setType(r, ((MethodDecl)rd).returnType);
 	    Expr n = LiteralExpr.make(TagConstants.NULLLIT, null, locNN);
 	    javafe.tc.FlowInsensitiveChecks.setType(n, Types.nullType);
 	    Expr e = BinaryExpr.make(TagConstants.NE, r, n, locNN);
 	    javafe.tc.FlowInsensitiveChecks.setType(e, Types.booleanType);
-	    b.ensures.add(
-		ExprModifierPragma.make(TagConstants.ENSURES, e, locNN)
-		);
+	    ExprModifierPragma emp = ExprModifierPragma.make(TagConstants.ENSURES, e, locNN);
+	    emp.errorTag = TagConstants.CHKNONNULLRESULT;
+	    b.ensures.add(emp);
 	}
 	return b;
     }
@@ -855,6 +891,14 @@ public class AnnotationHandler {
 		TagConstants.BOOLEANLIT, Boolean.FALSE, Location.NULL),
 		Types.booleanType);
 
+	public final static CondExprModifierPragma defaultModifies(int loc, boolean nothing) {
+			return CondExprModifierPragma.make(
+				TagConstants.MODIFIES,
+				nothing ? (Expr)NothingExpr.make(loc) :
+					    (Expr)EverythingExpr.make(loc),
+				loc,null);
+	}
+
 	public final static ExprModifierPragma ensuresFalse(int loc) {
 			return ExprModifierPragma.make(
 			    TagConstants.ENSURES,
@@ -874,6 +918,7 @@ public class AnnotationHandler {
 	public boolean isLightweight = true;
 	public boolean isNormal = false;
 	public boolean isExceptional = false;
+	public boolean defaultIsModifiesNothing = false;
 	public ModifierPragma openPragma = null;
 
 	public boolean isEmpty() {
@@ -918,6 +963,7 @@ public class AnnotationHandler {
 		    ExprModifierPragma mm = 
 			ExprModifierPragma.make(m.getTag(),
 				m.expr,m.loc);
+		    mm.errorTag = m.errorTag;
 		    b.ensures.add(mm);
 		}
 		b.when = new ArrayList(when);
@@ -940,11 +986,6 @@ public class AnnotationHandler {
 		b.diverges.add(ExprModifierPragma.make(
 				TagConstants.DIVERGES,
 				Behavior.F,Location.NULL));
-
-	    // FIXME - this needs to be "modifies \everything;"
-	    // but escjava does not know how to reason about that yet
-	    //if (modifies.size() == 0) 
-		//modifies.add(Behavior.DefaultModifies);
 
 
 	    // The requires statements combine as an OR of the groups
@@ -999,6 +1040,11 @@ public class AnnotationHandler {
 
 	    // Add in all the annotations from the argument, taking care
 	    // to guard them with the precondition
+
+	    if (b.modifies.size() == 0) {
+		b.modifies.add(Behavior.defaultModifies(Location.NULL,
+					b.defaultIsModifiesNothing));
+	    }
 	    Iterator i = b.modifies.iterator();
 	    while (i.hasNext()) {
 		CondExprModifierPragma m = (CondExprModifierPragma)i.next();

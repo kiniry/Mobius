@@ -26,6 +26,7 @@ public class DerivedMethodDecl {
   public boolean usesFresh;
   public ExprModifierPragmaVec requires;
   public CondExprModifierPragmaVec modifies;
+  public boolean modifiesEverything = false;
   public ExprModifierPragmaVec ensures;
   public VarExprModifierPragmaVec exsures;
   public SimpleModifierPragma nonnull;  // refers to any one of the method's non_null pragmas, or null if none

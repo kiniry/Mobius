@@ -76,7 +76,7 @@ public final class GetSpec {
 	try {
 	    if (filtered.isConstructor() && !T.isTopLevelType()) {
 		Inner.firstThis0 = Inner.getEnclosingInstanceArg(
-                                                                 (ConstructorDecl)filtered.original);
+					 (ConstructorDecl)filtered.original);
 	    }
 
 	    spec = trMethodDecl(filtered, premap);
@@ -176,6 +176,7 @@ public final class GetSpec {
 		GenericVarDecl newDecl = dmd.original.args.elementAt(i);
 		GenericVarDecl oldDecl = rd.args.elementAt(i);
 
+		// This may no longer be necessary, but it doesn't hurt
 		SimpleModifierPragma nonnull = NonNullPragma(oldDecl);
 		if (nonnull!=null)
 		    setNonNullPragma(newDecl, nonnull);
@@ -213,9 +214,14 @@ public final class GetSpec {
 			int t = emp.expr.getTag();
 			// FIXME - no contribution to spec for these keywords
 			if (t == TagConstants.EVERYTHINGEXPR ||
-			    t == TagConstants.NOTHINGEXPR ||
-			    t == TagConstants.NOTSPECIFIEDEXPR) break;
-                        emp = doSubst(subst, emp);
+			    t == TagConstants.NOTSPECIFIEDEXPR) {
+				dmd.modifiesEverything = true;
+				break;
+			} else if (t == TagConstants.NOTHINGEXPR ) {
+			    // no action
+			} else {
+			    emp = doSubst(subst, emp);
+			}
                         dmd.modifies.addElement(emp);
                         break;
                     }
@@ -224,14 +230,18 @@ public final class GetSpec {
                 case TagConstants.POSTCONDITION:
                     {
                         ExprModifierPragma emp = (ExprModifierPragma)mp;
+			int t = emp.errorTag;
                         emp = doSubst(subst, emp);
+			emp.errorTag = t;
                         dmd.ensures.addElement(emp);
                         break;
                     }
                 case TagConstants.NON_NULL:
+/*
                     if (dmd.nonnull == null) {
                         dmd.nonnull = (SimpleModifierPragma)mp;
                     }
+*/
                     break;
                 case TagConstants.EXSURES:
                 case TagConstants.ALSO_EXSURES:
@@ -339,6 +349,7 @@ public final class GetSpec {
                 if (vecNew != null) {
                     vecNew.addElement(vemp);
                 }
+System.out.println("KEEPING " + vemp);
             } else {
                 // filter out this pragma
                 if (vecNew == null) {
@@ -347,6 +358,7 @@ public final class GetSpec {
                         vecNew.addElement(vec.elementAt(j));
                     }
                 }
+System.out.println("OMITTING " + vemp);
             }
         }
         if (vecNew == null) {
@@ -419,7 +431,8 @@ public final class GetSpec {
         for (int i = 0; i < dmd.modifies.size(); i++) {
             Expr designator = dmd.modifies.elementAt(i).expr;
             Expr gcDesignator = TrAnExpr.trSpecExpr(designator);
-            targets.addElement(gcDesignator);
+		// Returns null for modifies \nothing
+            if (gcDesignator != null) targets.addElement(gcDesignator);
         }
 
         // handle targets stuff, and create preVarMap
@@ -433,17 +446,36 @@ public final class GetSpec {
             roots.add( shaved.decl );
 	}
 
-        Hashtable preVarMap;
+        Hashtable preVarMap = premap;
         if (premap == null)
             preVarMap = makeSubst( roots.elements(), "pre" );
-        else
-            preVarMap = restrict( premap, roots.elements() );
+        //else
+        //    preVarMap = restrict( premap, roots.elements() );
 
+/* Re the change above: premap is a map from variables with a @pre suffix to their 
+declarations; preVarMap is the relevant piece of this for the currnet method.  However,
+that was determined by the set of locations specified in modifies clauses.  That leads to
+erroneous behavior if the modifies clause is incorrect.  
+
+The change is to use the premap without restriction.  That allows the verification of a body
+of a method to proceed without dependence on the accuracy of the modifies clause.  However
+it also adds a lot of conjuncts into the verification condition - and the premap is 
+accumulated from the entire class declaration.  An improvement would be to simply use the
+premap generated from the uses of \old in the body of the method + the spec of the method
++ the spec of the class.
+*/
         // Now create the postconditions
 
         ConditionVec post = trMethodDeclPostcondition(dmd, preVarMap);
 
-        Spec spec = Spec.make(dmd, targets, preVarMap, pre, post);
+	java.util.Set postlocs = new java.util.HashSet();
+	int size = post.size();
+	for (int ic = 0; ic < size; ++ic) {
+		collectFields(post.elementAt(ic).pred, postlocs);
+	}
+
+        Spec spec = Spec.make(dmd, targets, preVarMap, pre, post,
+				false && dmd.modifiesEverything, postlocs); // FIXME - turning off modifies everything for now
 
         GC.thisvar.decl.type = savedType;
         return spec;
@@ -674,17 +706,27 @@ public final class GetSpec {
                 ExprModifierPragma prag = dmd.ensures.elementAt(i);
                 Expr pred = TrAnExpr.trSpecExpr(prag.expr, map, wt);
                 pred = GC.implies(ante, pred);
-                Condition cond = GC.condition(TagConstants.CHKPOSTCONDITION,
-                                              pred, prag.getStartLoc());
+		int tag = prag.errorTag == 0 ? TagConstants.CHKPOSTCONDITION : prag.errorTag;
+                Condition cond = GC.condition(tag, pred, prag.getStartLoc());
                 post.addElement(cond);
             }
+/* This is handled by desugaring now
             if (dmd.nonnull != null) {
                 Expr pred = GC.nary(TagConstants.REFNE, GC.resultvar, GC.nulllit);
                 Condition cond = GC.condition(TagConstants.CHKNONNULLRESULT,
                                               pred, dmd.nonnull.getStartLoc());
                 post.addElement(cond);
             }
+*/
         }
+/*
+System.out.println("WT");
+Enumeration ee = wt.keys();
+while (ee.hasMoreElements()) {
+	Object o = ee.nextElement();
+	System.out.println("MAP: " + o + " -->> " + wt.get(o));
+}
+*/
         // Then exceptional postconditions
         {
             // EC == ecThrow
@@ -729,12 +771,17 @@ public final class GetSpec {
     private static Spec extendSpecForCall(/*@ non_null */ Spec spec,
                                           /*@ non_null */ FindContributors scope,
                                           Set predictedSynTargs) {
+// FIXME - I'm not sure that \old variables not in the modifies list get translated here
+// I think those translations are in scope but not in spec.  
+// spec.preVarMap contains the modified variables for the current routine
+// but it is the preVarMap in the initialState generated from scope that has the
+// relevant mappings of variables mentioned in \old expressions
 
         // The set of variables modified by *this* GC call:
         Set modifiedVars = new Set( spec.preVarMap.keys() );
     
         ParamAndGlobalVarInfo vars = null;
-    
+
         for (InvariantInfo ii = mergeInvariants(collectInvariants(scope));
              ii != null; ii = ii.next) {
 
@@ -743,14 +790,14 @@ public final class GetSpec {
              */
             Set invFV = Substitute.freeVars( ii.J );
             boolean mentionsModifiedVars = Main.options().useAllInvPostCall ||
-                invFV.containsAny(modifiedVars);
+                invFV.containsAny(modifiedVars) || spec.modifiesEverything;
 
             /*
              * Does ii mention a variable that the body that is making the
              * GC call ever modifies?
              */
             boolean falsifiable = true;
-            if (predictedSynTargs!=null) {
+            if (predictedSynTargs!=null || spec.modifiesEverything) {
                 Assert.notFalse(!Main.options().useAllInvPreBody);
                 falsifiable = invFV.containsAny(predictedSynTargs);
             }
@@ -900,6 +947,7 @@ public final class GetSpec {
                     Expr p = TrAnExpr.trSpecExpr(ii.prag.expr,
                                                  TrAnExpr.union(spec.preVarMap, ii.map),
                                                  null);
+		    if (spec.modifiesEverything) collectFields(p, spec.postconditionLocations);
                     ev.addElement(p);
 
                     Expr ante = GC.and(ev);
@@ -1379,6 +1427,18 @@ public final class GetSpec {
         return null;  // not present
     }
 
+    static public void removeModifierPragma(/*@ non_null */ GenericVarDecl vdecl, int tag) {
+        if (vdecl.pmodifiers != null) {
+            for (int j = 0; j < vdecl.pmodifiers.size(); j++) {
+                ModifierPragma prag= vdecl.pmodifiers.elementAt(j);
+                if (prag.getTag() == tag) {
+			vdecl.pmodifiers.removeElementAt(j);
+			--j;
+		}
+            }
+        }
+    }
+
     /** Creates and returns a new map that is <code>map</code> restricted
      * to the domain <code>e</code>.  Assumes that every element in
      * <code>e</code> is in the domain of <code>map</code>.
@@ -1614,6 +1674,33 @@ public final class GetSpec {
         }
     }
 
+    static public void collectFields(Expr e, java.util.Set s) {
+// FIXME - have to avoid collecting bound variables of quantifiers
+	switch (e.getTag()) {
+	    case TagConstants.PRE:
+		return;
+	    case TagConstants.VARIABLEACCESS:
+		VariableAccess va = (VariableAccess)e;
+		if ( va.decl instanceof FormalParaDecl) {
+			//System.out.println("PARA " + ((VariableAccess)e).decl );
+			return;
+		}
+		if ( va.id.toString().endsWith("@pre")) return;
+		//System.out.println("COLLECTED-VA " + e);
+		s.add(e);
+		break;
+	    default:
+	}
+
+	// Recurse over all children
+	for(int i=0; i<e.childCount(); i++ ) {
+	    Object o = e.childAt(i);
+	    if( o instanceof Expr ) collectFields((Expr)o,s);
+	}
+
+
+    }
+
 
     /***************************************************
      *                                                 *
@@ -1681,6 +1768,7 @@ public final class GetSpec {
             nonnullDecoration.get(v);
 	return mark;
     }
+
 }
 
 
@@ -1712,3 +1800,4 @@ class ParamAndGlobalVarInfo {
     boolean isNonnull;
     ParamAndGlobalVarInfo next;
 }
+

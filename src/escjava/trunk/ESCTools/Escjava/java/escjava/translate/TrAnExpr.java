@@ -85,7 +85,8 @@ public final class TrAnExpr {
             // va accesses the field
 
             if (Modifiers.isStatic(fa.decl.modifiers)) {
-                return apply(sp, va);
+		VariableAccess nva = apply(sp, va);
+                return nva;
             } else {
                 // select expression whose rhs is an instance variable
                 Expr lhs;
@@ -411,23 +412,24 @@ public final class TrAnExpr {
 	   *  the union of sp and st.
 	   */
 
+/* FIXME - disable this for now.  We use \old in AnnotationHandler when we
+are desugaring annotations, to wrap around a requires predicate when it is
+being combined with an ensures predicate.  This error would have us only
+wrap those variables being modified and not everything.
 	  int cReplacementsBefore = getReplacementCount();
 	  Expr tmpExpr = trSpecExpr(ne.exprs.elementAt(0), st, null);
 	  if (cReplacementsBefore == getReplacementCount()) {
 	      int loc = ne.getStartLoc();
 	      String locStr = Location.toString(loc).intern();
 	      if (!(issuedPRECautions.contains(locStr))) {
-/* FIXME - disable this for now.  We use \old in AnnotationHandler when we
-are desugaring annotations, to wrap around a requires predicate when it is
-being combined with an ensures predicate.  This error would have us only
-wrap those variables being modified and not everything.
 		  ErrorSet.caution (loc, 
 		      "Variables in \\old not mentioned in modifies pragma.");
-*/
 		  issuedPRECautions.add(locStr);
 	      }
 	  }
-	  return trSpecExpr(ne.exprs.elementAt(0), union(sp, st), null);
+*/
+	  return trSpecExpr(ne.exprs.elementAt(0), st, null);
+	  //return trSpecExpr(ne.exprs.elementAt(0), union(sp, st), null);
       }
 
       case TagConstants.FRESH: {
@@ -467,6 +469,9 @@ wrap those variables being modified and not everything.
 	// FIXME - translation of these is not implemented.
 	// Set it to (long)0 for now.
 	return LiteralExpr.make(TagConstants.LONGLIT, new Long(0), 0);
+
+      case TagConstants.NOTHINGEXPR:
+	return null;
 
       default:
 	Assert.fail("UnknownTag<"+e.getTag()+","+
@@ -921,8 +926,9 @@ wrap those variables being modified and not everything.
   private static int cSubstReplacements = 0;
 
   private static VariableAccess apply(Hashtable map, VariableAccess va) {
-    if (map == null)
+    if (map == null) {
       return va;
+    }
     VariableAccess v = (VariableAccess)map.get(va.decl);
     if (v != null) {
       cSubstReplacements++;
