@@ -1,7 +1,7 @@
 package junittests;
 public class RefineA {
 
-	//@ ghost boolean b = true;
+	//@ ghost public boolean b = true;
 
 	//@ requires i == 0;
 	//@ ensures \result == 0;

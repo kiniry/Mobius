@@ -3,7 +3,7 @@ public class ParseExample {
 	/*@
 		requires true;
 		ensures true;
-	also
+
 	implies_that
 		requires i>0;
 		ensures true;

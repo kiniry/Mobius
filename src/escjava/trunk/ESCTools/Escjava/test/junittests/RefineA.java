@@ -12,6 +12,7 @@ public class RefineA {
 
 	//@ ensures b;
 	public int n() {
+		return 0;
 	}
 
 }

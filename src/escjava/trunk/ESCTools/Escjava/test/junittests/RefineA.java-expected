@@ -6,21 +6,21 @@ junittests.RefineA ...
 junittests.RefineA: m(int) ...
     [TIME]  passed
 
-junittests.RefineA: RefineA() ...
-    [TIME]  passed
-
 junittests.RefineA: n() ...
 ------------------------------------------------------------------------
-RefineA.java:15: Warning: Postcondition possibly not established (Post)
+RefineA.java:16: Warning: Postcondition possibly not established (Post)
         }
         ^
 Associated declaration is "RefineA.java", line 13, col 5:
         //@ ensures b;
             ^
 Execution trace information:
-    Executed implicit return in "RefineA.java", line 15, col 1.
+    Executed return in "RefineA.java", line 15, col 2.
 
 ------------------------------------------------------------------------
     [TIME]  failed
+
+junittests.RefineA: RefineA() ...
+    [TIME]  passed
   [TIME total]
 1 warning

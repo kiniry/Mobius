@@ -16,3 +16,8 @@ Embedded.java
 EmbeddedA.java
 PureCheck2.java
 ParsePure.java
+ModifiesPure.java
+## A bug
+EX.java
+## dangling also
+Heavyweight.java

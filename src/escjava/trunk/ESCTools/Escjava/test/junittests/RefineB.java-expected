@@ -6,9 +6,6 @@ RefineB ...
 RefineB: m(int) ...
     [TIME]  passed
 
-RefineB: RefineB() ...
-    [TIME]  passed
-
 RefineB: n() ...
 ------------------------------------------------------------------------
 RefineB.java:13: Warning: Postcondition possibly not established (Post)
@@ -22,5 +19,8 @@ Execution trace information:
 
 ------------------------------------------------------------------------
     [TIME]  failed
+
+RefineB: RefineB() ...
+    [TIME]  passed
   [TIME total]
 1 warning

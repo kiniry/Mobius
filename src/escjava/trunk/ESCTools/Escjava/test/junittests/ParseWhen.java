@@ -7,6 +7,6 @@ public class ParseWhen {
 	public void m();
 
 	//@ requires bb;
-	//@ measured_by b if bb;
+
 	public void n();
 }
