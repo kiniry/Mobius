@@ -96,10 +96,11 @@ public class SubProcess
      * obtain the subprocess.  E.g., "/usr/bin/emacs".
      */
     public SubProcess(/*@ non_null @*/ String name, 
-                      /*@ non_null @*/ String path) {
+                      /*@ non_null @*/ String[] pathAndArgs,
+		      String[] envp) {
 	this.name = name;
 	try {
-	    P = Runtime.getRuntime().exec(path);
+	    P = Runtime.getRuntime().exec(pathAndArgs,envp);
 	    if (P==null)
 		throw new IOException();
 	} catch (IOException e) {

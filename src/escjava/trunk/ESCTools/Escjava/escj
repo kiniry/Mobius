@@ -188,6 +188,19 @@ if ( ! $?ESCJ_SIMPLIFY_SCRIPT ) then
     endif
 endif
 
+## Simplify settings
+if ($?PROVER_KILL_TIME) then
+else
+        setenv  PROVER_KILL_TIME        "300"
+endif
+
+if ($?PROVER_CC_LIMIT) then
+else
+        setenv  PROVER_CC_LIMIT         "10"
+endif
+
+
+
 if ( $?ESCJ_VERBOSE ) then
     if ( "$ESCJ_VERBOSE" == 2 ) then
       echo "=================================================================="
@@ -206,6 +219,6 @@ if ( $?ESCJ_VERBOSE ) then
     echo "=================================================================="
 endif
 
-${JAVA} ${JAVA_VM_FLAGS} -Dsimplify=${ESCJ_SIMPLIFY_SCRIPT} \
+${JAVA} ${JAVA_VM_FLAGS} -Dsimplify=${ESCJ_SIMPLIFY} \
     -classpath ${ESC_CLASSPATH} escjava.Main \
     ${JBIN} -classpath ${CLASSPATH}:${ESC_SPECS} ${ESCJ_STDARGS} $*

@@ -44,7 +44,7 @@ ifndef SIMPLIFY
             $(warning Guessing a value for SIMPLIFY: ${SIMPLIFY})
         endif
         ifeq ("${os}","CYGWIN_NT-5.1")
-            export SIMPLIFY =  Simplify-1.5.4.win
+            export SIMPLIFY =  Simplify-1.5.4.exe
             $(warning Guessing a value for SIMPLIFY: ${SIMPLIFY})
         endif
         ifeq ("${os}","SunOS")
@@ -61,7 +61,11 @@ ifndef SIMPLIFY
 endif
 export ESCJ_SIMPLIFY = ${ESCJ_SIMPLIFY_DIR}/${SIMPLIFY}
 
-export ESCJ_SIMPLIFY_SCRIPT = ${ESCJAVA_ROOT}/simplify
+### Simplify settings
+export PROVER_KILL_TIME ?= 300
+export PROVER_CC_LIMIT ?= 10
+
+##########################################################################
 
 export ESC_SPECS ?= ${ESCTOOLS_ROOT}/specs
 

@@ -7,10 +7,10 @@ include ${TOP}/Makefile.defs
 export ESCJAVA = escjava -nowarn Deadlock -verboseTrace
 
 # Used to invoke text-based JUnit tests
-export JUNIT = $(JAVA) -Xmx256M -classpath ${ESCJAVA_CLASSPATH}:${JUNIT_UTILS_PATH}:. -Djava.io.tmpdir=/tmp -Dsimplify=${ESCJ_SIMPLIFY_SCRIPT} junit.textui.TestRunner
+export JUNIT = $(JAVA) -Xmx256M -classpath ${ESCJAVA_CLASSPATH}:${JUNIT_UTILS_PATH}:. -Djava.io.tmpdir=/tmp -Dsimplify=${ESCJ_SIMPLIFY} junit.textui.TestRunner
 
 # Used to invoke GUI-based JUnit tests
-export JUNITSW = $(JAVA) -Xmx256M -classpath ${ESCJAVA_CLASSPATH}:${JUNIT_UTILS_PATH}:. -Djava.io.tmpdir=/tmp -Dsimplify=${ESCJ_SIMPLIFY_SCRIPT} junit.swingui.TestRunner
+export JUNITSW = $(JAVA) -Xmx256M -classpath ${ESCJAVA_CLASSPATH}:${JUNIT_UTILS_PATH}:. -Djava.io.tmpdir=/tmp -Dsimplify=${ESCJ_SIMPLIFY} junit.swingui.TestRunner
 
 # The default is to run tests without any spec files.  This is to keep them
 # robust against changes in specs.  You can adjust this by adding 

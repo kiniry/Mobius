@@ -198,7 +198,6 @@ binary-release: build docs
 	${MAKE} -C Utils/junitutils build
 	cp ${ESCJAVA_ROOT}/escj ${RELTEMP}
 	cp ${ESCJ_SIMPLIFY_DIR}/Simplify-1.5.4* ${RELTEMP}
-	cp ${ESCJAVA_ROOT}/simplify ${RELTEMP}/simplify-script
 	cp README.first README.txt ${RELTEMP}
 	cd release-files; cp `ls | grep -v CVS` ${RELTEMP}
 	cd ${RELTEMP}; tar cjvf ${RELDIR}/${RELTAR} *
