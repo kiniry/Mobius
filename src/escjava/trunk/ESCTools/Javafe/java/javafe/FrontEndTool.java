@@ -64,11 +64,17 @@ public abstract class FrontEndTool
 	String sourcePath = options.userSourcePath;
 
 	String sys = options.sysPath;
-	if (sys == null)
+	if (sys == null) {
 	    // This works only on Sun implementations of Java...
 	    sys = System.getProperty("sun.boot.class.path", null);
-	if (sys == null)
-	    sys = System.getProperty("java.home") + "/jre/lib/rt.jar";
+//System.out.println("SYS-SUN " + sys);
+	}
+	if (sys == null) {
+	    sys = System.getProperty("java.home") + 
+		java.io.File.separator + "lib" + 
+		java.io.File.separator + "rt.jar";
+//System.out.println("SYS-JH " + sys);
+	}
 
 	if (sys != null && !sys.equals("")) {
 	    if (!classPath.equals("")) {
