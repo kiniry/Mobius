@@ -555,7 +555,7 @@ public class PrepTypeDeclaration {
 	FieldDecl e = (FieldDecl)fieldSeq.elementAt(i);
 	if( e.id == x.id )
 	  ErrorSet.error(x.locId, 
-			 "Duplicate field with same identifier");
+			 "Duplicate field with same identifier",e.locId);
       }
 
     getEnvForCurrentSig(currentSig, true).resolveType( x.type );

@@ -41,3 +41,43 @@ public class GhostLocalScope {
 		kk = k; // ERROR
 	}
 }
+
+// Checks that all of the variables in a declaration end up properly declared as ghost
+// variables
+class GhostDup {
+
+	//@ ghost public int a = 9, b, c = a+b;
+
+	void m() {
+		//@ ghost int x = a+b+c, y, z = a+b+c+x+y;
+
+		//@ set a = b+c+x+y+z;
+	}
+}
+
+class GhostTemp {
+	//@ ghost public int a;
+	public int b;
+}
+
+class GhostArray {
+	//@ ghost public int[] a = new int[10];
+	public int[] b = new int[10];
+	//@ ghost public GhostTemp gt = new GhostTemp();
+	public GhostTemp gta = new GhostTemp();
+
+	public void m() {
+		//@ set x = 0; // ERROR - nonexistent variable
+		//@ set a[0] = 0;
+		//@ set b[0] = 0; // ERROR
+		b[0] = a[0]; // ERROR
+		//@ set gt.a = 0; // OK
+		//@ set gt.b = 0; // OK
+		//@ set gta.a = 0; // OK
+		//@ set gta.b = 0; // ERROR
+		gt.a = 0; // ERROR
+		gt.b = 0; // ERROR
+		gta.a = 0; // ERROR
+		gta.b = 0; // OK
+	}
+}

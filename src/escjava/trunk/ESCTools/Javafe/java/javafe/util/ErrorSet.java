@@ -146,7 +146,8 @@ public class ErrorSet
 	}
 	cautions++;
 	report(loc, CAUTION, msg);
-	report(addLoc, "Associated declaration", "");
+	if (addLoc != Location.NULL)
+		report(addLoc, "Associated declaration", "");
     }
 
 
@@ -206,7 +207,8 @@ public class ErrorSet
     public static void error(int loc, String msg, int addLoc) {
 	errors++;
 	report(loc, ERROR, msg);
-	report(addLoc, "Associated declaration", "");
+	if (addLoc != Location.NULL)
+	    report(addLoc, "Associated declaration", "");
     }
 
 
@@ -285,8 +287,7 @@ public class ErrorSet
 	    System.out.println(type + ": " + msg);
 
         // Hack so we can see where error occurred, for debugging:
-	if (javafe.Tool.options.showErrorLocation)
-		(new Throwable()).printStackTrace();
+	if (javafe.Tool.options.showErrorLocation) dump(null);
 	
     }
 
@@ -311,8 +312,7 @@ public class ErrorSet
 	    return;
 
         // Hack so we can see where error occurred, for debugging:
-	if (javafe.Tool.options.showErrorLocation)
-		(new Throwable()).printStackTrace();
+	if (javafe.Tool.options.showErrorLocation) dump(null);
 
 	if (loc==Location.NULL)
 	    Assert.fail("NULL location erroneously passed to ErrorSet;"
@@ -497,5 +497,15 @@ public class ErrorSet
 	for (int o=0; o<col; o++)
 	  System.out.print(" ");
 	System.out.println("^");
+    }
+
+    /** Prints to System.out the given String (if not null)
+        and a current stack trace,
+	to be used for debugging with print statements.
+    */
+    //@ modifies \nothing; // except the content of System.out
+    static public void dump(String s) {
+	if (s != null) System.out.println(s);
+	(new Exception()).printStackTrace();
     }
 }

@@ -1038,9 +1038,10 @@ public class FlowInsensitiveChecks
                 if(arrType instanceof ArrayType) {
                     setType(r, ((ArrayType)arrType).elemType);
                 } else {
-                    setType(r, Types.intType);
-                    ErrorSet.error(r.locOpenBracket, 
-                                    "Attempt to index an non-array value");
+                    setType(r, Types.errorType);
+		    if (!Types.isErrorType(arrType))
+			ErrorSet.error(r.locOpenBracket, 
+                                    "Attempt to index a non-array value");
                 }
 	  
                 r.index = checkExpr(env, r.index);
@@ -1328,6 +1329,27 @@ public class FlowInsensitiveChecks
             case TagConstants.POSTFIXINC: case TagConstants.POSTFIXDEC: {
                 UnaryExpr ue = (UnaryExpr)x;
                 ue.expr = checkDesignator(env, ue.expr);
+		if (ue.expr instanceof VariableAccess) {
+		    GenericVarDecl v = ((VariableAccess)ue.expr).decl;
+		    if (Modifiers.isFinal(v.modifiers))
+			ErrorSet.caution(ue.expr.getStartLoc(),
+			    "May not assign to a final variable",
+			    v.getStartLoc());
+		} else if (ue.expr instanceof FieldAccess) {
+		    GenericVarDecl v = ((FieldAccess)ue.expr).decl;
+		    // v is null if there was an error such as a field
+		    // name that does not exist
+		    if (v == Types.lengthFieldDecl) 
+			ErrorSet.error(ue.expr.getStartLoc(),
+			    "May not assign to array's length field");
+		    else if (v != null && Modifiers.isFinal(v.modifiers))
+			ErrorSet.caution(ue.expr.getStartLoc(),
+			    "May not assign to a final field",
+			    v.getStartLoc());
+
+		}
+		    // FIXME - need checks of more complicated expressions
+
                 // Argument must be primitive numeric variable type
                 if (checkNumericType(ue.expr)) {
                     if(!isVariable(ue.expr))
@@ -1788,6 +1810,27 @@ public class FlowInsensitiveChecks
             case TagConstants.ASGBITAND:
             case TagConstants.ASGBITOR: 
             case TagConstants.ASGBITXOR: {
+		if (left instanceof VariableAccess) {
+		    GenericVarDecl v = ((VariableAccess)left).decl;
+		    if (Modifiers.isFinal(v.modifiers))
+			ErrorSet.caution(left.getStartLoc(),
+			    "May not assign to a final variable",
+			    v.getStartLoc());
+		} else if (left instanceof FieldAccess) {
+		    GenericVarDecl v = ((FieldAccess)left).decl;
+		    // v is null if there was an error such as a field
+		    // name that does not exist
+		    if (v == Types.lengthFieldDecl) 
+			ErrorSet.error(left.getStartLoc(),
+			    "May not assign to array's length field");
+		    else if (v != null && Modifiers.isFinal(v.modifiers))
+			ErrorSet.caution(left.getStartLoc(),
+			    "May not assign to a final field",
+			    v.getStartLoc());
+
+		}
+		    // FIXME - need checks of more complicated expressions
+
                 if(!isVariable(left)) {
                     if (!Types.isErrorType(leftType)) ErrorSet.error(loc,
                                    "Left hand side of assignment operator "+

@@ -3,9 +3,33 @@ ESC/Java version VERSION
 
 GhostLocal ...
 
+GhostLocal: GhostLocal() ...
+    [TIME]  passed immediately
+
 GhostLocal: m() ...
     [TIME]  passed
+  [TIME total]
 
-GhostLocal: GhostLocal() ...
+GhostLocalA ...
+
+GhostLocalA: m() ...
+------------------------------------------------------------------------
+GhostLocal.java:35: Warning: Possible assertion failure (Assert)
+                //@ assert a.i == 3; // ERROR
+                    ^
+------------------------------------------------------------------------
+    [TIME]  failed
+
+GhostLocalA: GhostLocalA() ...
     [TIME]  passed
   [TIME total]
+
+GhostLocalS ...
+
+GhostLocalS: GhostLocalS() ...
+    [TIME]  passed
+  [TIME total]
+
+GhostLocalI ...
+  [TIME total]
+1 warning

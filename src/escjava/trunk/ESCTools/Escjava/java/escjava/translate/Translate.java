@@ -1710,9 +1710,26 @@ public final class Translate
 
 		if (s.target instanceof FieldAccess) {
 		    FieldAccess fa = (FieldAccess)s.target;
-
 		    Expr lhs= trFieldAccess(true, fa);
-		    writeCheck(lhs, s.value, TrAnExpr.trSpecExpr(s.value), s.locOp, false);
+		    Expr rval = TrAnExpr.trSpecExpr(s.value);
+		    writeCheck(lhs, s.value, rval, s.locOp, false);
+		    String name;
+		    if (lhs.getTag() == TagConstants.VARIABLEACCESS) {
+			VariableAccess valhs = (VariableAccess)lhs;
+			name = valhs.decl.id.toString();
+			code.addElement(GC.gets(valhs, rval));
+		    } else {
+			NaryExpr target = (NaryExpr)lhs;
+			VariableAccess field = (VariableAccess)target.exprs.elementAt(0);
+			name = field.decl.id.toString();
+			Expr obj = target.exprs.elementAt(1);
+			code.addElement(GC.subgets(field, obj,rval));
+		    }
+		    return;
+/*
+	This was originally here.  The if block just above was inserted to
+	make the correspondence with assignment complete.
+	Not sure if the protect expressions belong ??? FIXME
 
 		    VariableAccess field = VariableAccess.make(fa.id, fa.locId, fa.decl);
 		    if (Modifiers.isStatic(fa.decl.modifiers)) {
@@ -1724,12 +1741,38 @@ public final class Translate
 						    TrAnExpr.trSpecExpr(obj),
 						    TrAnExpr.trSpecExpr(s.value) ));
 		    }
+*/
 
 		} else if (s.target instanceof VariableAccess) {
 		    VariableAccess lhs = (VariableAccess)s.target;
 		    Expr rval = TrAnExpr.trSpecExpr(s.value);
 		    writeCheck(lhs, s.value, rval, s.locOp, false);
 		    code.addElement(GC.gets(lhs,rval));
+		    VariableAccess init = getInitVar(lhs.decl);
+		    if (init != null) 
+			code.addElement(GC.gets(init, GC.truelit));
+		    return;
+		} else if (s.target instanceof ArrayRefExpr) {
+		    ArrayRefExpr lhs= (ArrayRefExpr)s.target;
+
+		    Expr array= trExpr(true, lhs.array);
+		    Expr index= trExpr(true, lhs.index);
+		    Expr rval= trExpr(false, s.value);
+
+		    arrayAccessCheck(lhs.array, array, lhs.index, index, lhs.locOpenBracket);
+		    if (! isFinal(TypeCheck.inst.getType(lhs.array))) {
+			addCheck(s.loc,
+				 TagConstants.CHKARRAYSTORE,
+				 GC.nary(TagConstants.IS, rval,
+					 GC.nary(TagConstants.ELEMTYPE,
+						 GC.nary(TagConstants.TYPEOF, array))),
+				 Location.NULL, lhs.array);
+		    }
+
+		    code.addElement(GC.subsubgets(GC.elemsvar, array, index, rval));
+		    Expr a= GC.select(GC.elemsvar, array);
+		    return;
+	    
 		} else {
 
 			ErrorSet.fatal(s.getStartLoc(),
@@ -3177,6 +3220,7 @@ public final class Translate
             ModifierPragma prag= d.pmodifiers.elementAt(i);
             int tag= prag.getTag();
             switch (tag) {
+                case TagConstants.INSTANCE:
                 case TagConstants.UNINITIALIZED:
                 case TagConstants.READABLE_IF:
                 case TagConstants.SPEC_PUBLIC:

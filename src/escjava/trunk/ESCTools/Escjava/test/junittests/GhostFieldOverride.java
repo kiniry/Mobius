@@ -1,16 +1,14 @@
 public class GhostFieldOverride extends CHA {
 
-	public int i;
-	//@ ghost public int s;
+	//@ ghost public int s; // OK
+	//@ ghost public int i; // OK
 
-	static void m() {
-		int j = i;
-	}
-/*@
-	model static void ms() {
-		int k = s;
-	}
-*/
+	int z;
+	//@ ghost public int z;
+	int y;
+	//@ model public int y;
+	//@ ghost int x;
+	//@ model int x;
 }
 
 class CHA {

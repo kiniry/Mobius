@@ -929,10 +929,4 @@ public class Main extends javafe.SrcTool
             s = s.substring(0, k) + s.substring(k+1);
         }
     }
-
-    /** Prints out (to System.out) the current stack trace, for quick and easy debugging. */
-    static public void dump(String s) {
-	System.out.println(s);
-	(new Exception()).printStackTrace();
-    }
 }

@@ -361,25 +361,33 @@ public abstract class ParseStmt extends ParseExpr
 	    // are not statement pragmas (because they are indistinguishable
 	    // from other pragmas).
 	    if (l.ttype == TagConstants.TYPEDECLELEMPRAGMA) {
-		TypeDeclElemPragma tdp = (TypeDeclElemPragma)l.auxVal;
-		tdp.decorate(pmodifiers);
-		FieldDecl fd = l.pragmaParser.isPragmaDecl(l);
-		if (modifiers != Modifiers.NONE) {
-		    ErrorSet.caution(tdp.getStartLoc(),
-			"Misplaced Java modifiers prior to this point");
-		}
-		if (fd != null) {
-		    LocalVarDecl d
-			= LocalVarDecl.make(fd.modifiers, fd.pmodifiers, 
-				fd.id, fd.type, fd.locId, fd.init, fd.locAssignOp);
-		    seqStmt.addElement( VarDeclStmt.make(d) );
-		    l.getNextToken();
-		    // FIXME - might be more than one?
-		    return;
-		} else {
-		    l.getNextToken();
-		    return;
-		}
+		do {
+		    TypeDeclElemPragma tdp = (TypeDeclElemPragma)l.auxVal;
+		    tdp.decorate(pmodifiers);
+		    FieldDecl fd = l.pragmaParser.isPragmaDecl(l);
+		    if (modifiers != Modifiers.NONE) {
+			ErrorSet.caution(tdp.getStartLoc(),
+			    "Misplaced Java modifiers prior to this point");
+		    }
+		    if (fd != null) {
+			LocalVarDecl d
+			    = LocalVarDecl.make(fd.modifiers, fd.pmodifiers, 
+				    fd.id, fd.type, fd.locId, fd.init, fd.locAssignOp);
+			seqStmt.addElement( VarDeclStmt.make(d) );
+			l.getNextToken();
+			// There might be more than one variable declared in
+			// the one declaration.  We could simply let the 
+			// parser handle it by returning here, but then we
+			// lose the pmodifiers information up above.
+			if (l.ttype == TagConstants.TYPEDECLELEMPRAGMA)
+				continue;
+			break;
+		    } else {
+			l.getNextToken();
+			break;
+		    }
+		} while(true);
+		return;
 	    } else if (l.ttype == TagConstants.CLASS) {
                 ClassDecl cd = (ClassDecl)parseTypeDeclTail(l, false, keywordloc,
                                                             modifiers, pmodifiers);

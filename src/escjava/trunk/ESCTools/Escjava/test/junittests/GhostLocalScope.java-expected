@@ -2,9 +2,9 @@ ESC/Java version VERSION
   Prover started:TIME
 
 GhostLocalScope ...
-GhostLocalScope.java:19: Error: Can use set only on ghost variables
+GhostLocalScope.java:19: Error: May use set only with assignment targets that are declared ghost
                 //@ set kk = 8; // ERROR
-                        ^
+                    ^
 GhostLocalScope.java:10: Associated declaration: 
                 int kk = 0;
                 ^
@@ -37,5 +37,41 @@ GhostLocalScope.java:41: Error: Undefined variable 'k'
                      ^
 Caution: Turning off extended static checking due to type error(s)
   [TIME total] (aborted)
+
+GhostDup ...
+  [TIME total]
+
+GhostTemp ...
+  [TIME total]
+
+GhostArray ...
+GhostLocalScope.java:70: Error: Undefined variable 'x'
+                //@ set x = 0; // ERROR - nonexistent variable
+                        ^
+GhostLocalScope.java:72: Error: May use set only with assignment targets that are declared ghost
+                //@ set b[0] = 0; // ERROR
+                    ^
+GhostLocalScope.java:65: Associated declaration: 
+        public int[] b = new int[10];
+               ^
+GhostLocalScope.java:73: Error: Undefined variable 'a'
+                b[0] = a[0]; // ERROR
+                       ^
+GhostLocalScope.java:77: Error: May use set only with assignment targets that are declared ghost
+                //@ set gta.b = 0; // ERROR
+                    ^
+GhostLocalScope.java:67: Associated declaration: 
+        public GhostTemp gta = new GhostTemp();
+               ^
+GhostLocalScope.java:78: Error: Cannot resolve variable access 'gt.a'
+                gt.a = 0; // ERROR
+                ^
+GhostLocalScope.java:79: Error: Cannot resolve variable access 'gt.b'
+                gt.b = 0; // ERROR
+                ^
+GhostLocalScope.java:80: Error: No such field in type GhostTemp
+                gta.a = 0; // ERROR
+                    ^
+  [TIME total] (aborted)
 1 caution
-9 errors
+16 errors

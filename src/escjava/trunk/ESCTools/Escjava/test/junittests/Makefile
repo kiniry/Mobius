@@ -66,13 +66,17 @@ othertests: $(addsuffix -test,${OTHERTESTS})
 # (FIXME)
 %-test: 
 	@echo Testing $* 
-	@-(${ESCJAVA} -testMode `grep '//#FLAGS:' $* | sed -e "sx//#FLAGS:xx" ` $* 2>&1 | sed -e s/x/x/ > $*-ckd ) || exit 0;
-	@if [ -e $*-expected ] ; then \
+	@if [ ! -e $* ] ; then \
+		echo No such file $* ;\
+	else \
+	(${ESCJAVA} -testMode `grep '//#FLAGS:' $* | sed -e "sx//#FLAGS:xx" ` $* 2>&1 | sed -e s/x/x/ > $*-ckd ) || exit 0; \
+	if [ -e $*-expected ] ; then \
 		diff $*-ckd $*-expected  \
 		  && rm $*-ckd ;\
 	else \
 		echo ... Creating $*-expected ;\
 		mv $*-ckd $*-expected ;\
+	fi ;\
 	fi ;\
 
 %-expected: %

@@ -979,9 +979,10 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                         if( arrType instanceof ArrayType ) {
                             setType( r, ((ArrayType)arrType).elemType );
                         } else {
-                            setType( r, Types.intType );
-                            ErrorSet.error( r.locOpenBracket, 
-                                            "Attempt to index an non-array value");
+                            setType( r, Types.errorType );
+			    if (!Types.isErrorType(arrType))
+				ErrorSet.error( r.locOpenBracket, 
+                                            "Attempt to index a non-array value");
                         }
                     }
                     return r;
@@ -1009,9 +1010,10 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                             ErrorSet.error(r.locOpenBracket, 
                                            "Can only index \\lockset with a reference type");
                     } else {
-                        setType( r, Types.intType );
-                        ErrorSet.error( r.locOpenBracket, 
-                                        "Attempt to index an non-array value");
+                        setType( r, Types.errorType );
+			if (!Types.isErrorType(arrType))
+			    ErrorSet.error( r.locOpenBracket, 
+                                        "Attempt to index a non-array value");
                     }
 
                     return r;
@@ -1256,7 +1258,9 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                     ? rootSEnv
                     : rootIEnv;
 
+                rootEnv.resolveType( decl.type );
                 checkModifierPragmaVec( decl.pmodifiers, decl, rootEnv );
+		checkTypeModifiers(rootEnv, decl.type);
 
 		// Check for both static and instance declarations
 
@@ -1270,18 +1274,25 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                 /*
                  * Check for other fields with the same name:
                  */
-                if (sig.hasField(decl.id) ||
-                    (((GhostEnv)rootEnv).getGhostField(decl.id.toString(), decl)
-                     !=null)) {
-                    ErrorSet.error(decl.locId,
+                {
+		    TypeDeclElemVec elems = decl.parent.elems;
+		    FieldDecl fd;
+		    for (int i = 0; i<elems.size(); ++i) {
+			TypeDeclElem tde = elems.elementAt(i);
+			if (tde instanceof FieldDecl) {
+			    fd = (FieldDecl)tde;
+			} else if (tde instanceof GhostDeclPragma) {
+			    fd = ((GhostDeclPragma)tde).decl;
+			} else if (tde instanceof ModelDeclPragma) {
+			    fd = ((ModelDeclPragma)tde).decl;
+			} else
+			    continue;
+			if (fd.id ==  decl.id && fd != decl)
+			    ErrorSet.error(decl.locId,
                                    "Another field named '"+decl.id.toString()
-                                   +"' already exists in this type");
+                                   +"' already exists in this type", fd.locId);
+		    }
                 }
-
-                /*
-                 * All that remains to be done is to prep the Type:
-                 */
-                rootEnv.resolveType( decl.type );
 
                 break;
             }
@@ -1292,7 +1303,10 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                     ? rootSEnv
                     : rootIEnv;
 
+                rootEnv.resolveType( decl.type );
                 checkModifierPragmaVec( decl.pmodifiers, decl, rootEnv );
+		checkTypeModifiers(rootEnv, decl.type);
+
 
 		// Check for both static and instance declarations
 
@@ -1317,18 +1331,26 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                 /*
                  * Check for other fields with the same name:
                  */
-                if (sig.hasField(decl.id) ||
-                    (((GhostEnv)rootEnv).getGhostField(decl.id.toString(), decl)
-                     !=null)) {
-                    ErrorSet.error(decl.locId,
+		{
+		    TypeDeclElemVec elems = decl.parent.elems;
+		    FieldDecl fd;
+		    for (int i = 0; i<elems.size(); ++i) {
+			TypeDeclElem tde = elems.elementAt(i);
+			if (tde instanceof FieldDecl) {
+			    fd = (FieldDecl)tde;
+			} else if (tde instanceof GhostDeclPragma) {
+			    fd = ((GhostDeclPragma)tde).decl;
+			} else if (tde instanceof ModelDeclPragma) {
+			    fd = ((ModelDeclPragma)tde).decl;
+			} else
+			    continue;
+			if (fd.id ==  decl.id && fd != decl)
+			    ErrorSet.error(decl.locId,
                                    "Another field named '"+decl.id.toString()
-                                   +"' already exists in this type");
+                                   +"' already exists in this type", fd.locId);
+		    }
                 }
 
-                /*
-                 * All that remains to be done is to prep the Type:
-                 */
-                rootEnv.resolveType( decl.type );
 
                 break;
             }
@@ -1939,23 +1961,6 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                 } else {
                     RoutineDecl rd = (RoutineDecl)ctxt;
 	    
-                    /*
-                     if (getOverrideStatus(rd) != MSTATUS_NEW_ROUTINE) {
-                     if (tag == TagConstants.MODIFIES
-                     || tag == TagConstants.MODIFIABLE
-                     || tag == TagConstants.ASSIGNABLE) {
-                     ErrorSet.error(p.getStartLoc(),
-                     "modifies cannot be used on method " +
-                     "overrides; use also_modifies instead");
-                     }
-                     } else {
-                     if (tag == TagConstants.ALSO_MODIFIES) {
-                     ErrorSet.error(p.getStartLoc(),
-                     "also_modifies can be used only on method " +
-                     "overrides; use modifies instead");
-                     }
-                     }
-                     */
                     Assert.notFalse(!isSpecDesignatorContext);
                     isSpecDesignatorContext = true;
 /*
@@ -2089,26 +2094,17 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                 set.value = checkExpr(e, set.value);
                 checkBinaryExpr(TagConstants.ASSIGN, set.target,
                                 set.value, set.locOp);
-
-                if (set.target instanceof FieldAccess) {
-                    FieldAccess fa = (FieldAccess)set.target;
-                    if (fa.decl == null || !GhostEnv.isGhostField(fa.decl))
-                        ErrorSet.error(fa.locId,
-                                       "Can use set only on ghost fields");
-		
-		} else if (set.target instanceof VariableAccess) {
-		    VariableAccess va = (VariableAccess)set.target;
-		    GenericVarDecl gd = va.decl;
-		    if ( escjava.translate.GetSpec.findModifierPragma(
-				gd.pmodifiers,TagConstants.GHOST) == null)
-                        ErrorSet.error(va.loc,
-			       "Can use set only on ghost variables",
-				gd.getStartLoc());
-                } else {
-                    ErrorSet.error(set.getStartLoc(),
-                                   "Can use set only on ghost variables and fields");
-
+		Expr t = set.target;
+		int nonGhostLoc = isGhost(t);
+		if (nonGhostLoc != 0) {
+		    ErrorSet.error(s.getStartLoc(),"May use set only with assignment targets that are declared ghost",nonGhostLoc);
 		}
+/*
+		if (t instanceof FieldAccess &&
+		    ((FieldAccess)t).decl == Types.lengthFieldDecl) {
+		    ErrorSet.error(s.getStartLoc(),"The length field of an array may not be set");
+		}
+*/
                 break;
             }
 
@@ -2363,6 +2359,50 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 		RoutineDecl m = (RoutineDecl)ctxt;
 		annotationHandler.desugar(m);
 	}
+    }
+
+    /** Returns non-zero if the expression is a ghost expression - that is, it
+	would not exist if all ghost declarations were removed.  Otherwise
+	returns a Location value of a relevant non-ghost declaration.
+     */
+    public int isGhost(Expr t) {
+	if (t instanceof ArrayRefExpr) {
+	    t = ((ArrayRefExpr)t).array;
+	}
+	if (t instanceof FieldAccess) {
+	    FieldAccess fa = (FieldAccess)t;
+	    if (fa.decl == null || GhostEnv.isGhostField(fa.decl))
+		return 0;
+	    int gl = isGhost(fa.od);
+	    if (gl == 0) return 0;
+	    if (gl == -1) return fa.decl.getStartLoc();
+	    return gl;
+	} else if (t instanceof VariableAccess) {
+	    VariableAccess va = (VariableAccess)t;
+	    GenericVarDecl gd = va.decl;
+	    if ( escjava.translate.GetSpec.findModifierPragma(
+			gd.pmodifiers,TagConstants.GHOST) == null)
+		return gd.getStartLoc();
+	} else if (t instanceof ParenExpr) {
+	    return isGhost( ((ParenExpr)t).expr );
+	} else if (t instanceof CastExpr) {
+	    return isGhost( ((CastExpr)t).expr );
+	}
+	return 0;
+	// FIXME - need some test that the expression in advance of
+	// a . in a field reference or the [] in an array reference
+	    // only designates ghost fields/variables
+		// e.g. what about method calls, operator expressions?
+
+    }
+
+    public int isGhost(ObjectDesignator od) {
+	if (od instanceof ExprObjectDesignator) {
+	    Expr e = ((ExprObjectDesignator)od).expr;
+	    if (e == null || e instanceof ThisExpr) return -1;
+	    return isGhost(e);
+	}
+	return -1; // OK for TypeObjectDesignator and SuperObjectDesignator
     }
 } // end of class FlowInsensitiveChecks
 
