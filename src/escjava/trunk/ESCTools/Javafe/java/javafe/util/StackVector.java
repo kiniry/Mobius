@@ -339,4 +339,20 @@ public final class StackVector
 
 	vectorCount--;
     }
+
+    /**
+     ** Returns the contents of all the vectors on the stack as a single
+     ** vector.<p>
+     **/
+    public Vector stackContents() {
+        Vector vec = new Vector();
+        for (int i = 0; i < elementCount; i++) {
+            Object o = elements[i];
+            if (o != null) {
+                vec.addElement(o);
+            }
+        }
+        return vec;
+    }
+
 }
