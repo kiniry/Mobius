@@ -2,13 +2,14 @@
   :notes "SMT-LIB realization of ESC/Java2's object logic.
           by Cesare Tinelli and Joe Kiniry
           Begun 24 June 2004
-          $Id$
+          $Revision$
           Based upon SRC ESC/Java object logic
             (design document ESCJ8a)"
 
   :sorts ( # sort that represents *values* of Java's boolean base type
            Boolean
-           # sort that represents *values* of all Java's base types but Boolean
+           # sort that represents *values* of all Java's base types
+           # but for Boolean
            Number
            # sort that represents all Java non-base types
            ReferenceType
@@ -37,17 +38,42 @@
           (0       Number)
           (1       Number)
           
-          (java.lang.Long.MAX_VALUE  Number)  (java.lang.Long.MIN_VALUE  Number)
-          (maxInt   Number)                   (minInt   Number)
-          (maxShort Number)                   (minShort Number)
-          (maxByte  Number)                   (minByte  Number)
-          (maxChar  Number)                   (minChar  Number)
+          (java.lang.Long.MAX_VALUE    Number)
+          (java.lang.Long.MIN_VALUE    Number)
+          (java.lang.Integer.MAX_VALUE Number)
+          (java.lang.Integer.MIN_VALUE Number)
+          (java.lang.Short.MAX_VALUE   Number)
+          (java.lang.Short.MIN_VALUE   Number)
+          (java.lang.Byte.MAX_VALUE    Number)
+          (java.lang.Byte.MIN_VALUE    Number)
+          (java.lang.Char.MAX_VALUE    Number)
+          (java.lang.Char.MIN_VALUE    Number)
 
-          (java.lang.Boolean.TRUE    Boolean) (java.lang.Boolean.FALSE   Boolean)
+          (java.lang.Boolean.TRUE Boolean)
+          (java.lang.Boolean.FALSE Boolean)
+
+          # numeric downcasting (truncation)
+          (narrowDouble2Float Number Number)
+          (narrowDouble2Long  Number Number)
+          (narrowDouble2Int   Number Number)
+
+          (narrowFloat2Long  Number Number)
+          (narrowFloat2Int   Number Number)
 
           (narrowLong2Int   Number Number)
           (narrowLong2Short Number Number)
-          ...etc...
+          (narrowLong2Byte  Number Number)
+          (narrowLong2Char  Number Number)
+
+          (narrowInt2Short Number Number)
+          (narrowInt2Byte  Number Number)
+          (narrowInt2Char  Number Number)
+
+          (narrowShort2Byte  Number Number)
+          (narrowShort2Char  Number Number)
+
+          (castByte2Char  Number Number)
+          (castChar2Byte  Number Number)
 
           (NULL     Reference)
           (+        Number Number Number)
@@ -80,13 +106,16 @@
 
           # TODO: perhaps rename getX and xGet
           
-          # Get/set a value from/at a specific index in an array of numbers.
+          # Get/set a value from/at a specific index in an
+          # array of numbers.
           (getNumber Object Number Number)
           (setNumber Object Number Number Object)
-          # Get/set a value from/at a specific index in an array of booleans.
+          # Get/set a value from/at a specific index in an
+          # array of booleans.
           (getBoolean Object Number Boolean)
           (setBoolean Object Number Boolean Object)
-          # Get/set a value from/at a specific index in an array of objects.
+          # Get/set a value from/at a specific index in an
+          # array of objects.
           (getObject Object Number Reference)
           (setObject Object Number Reference Object)
 
@@ -127,8 +156,9 @@
            # type predicate for mathematical integers
            (isZ      Number)
 
-           # Java class and interface inheritance ("extends" and "implements", but
-           # only smallest "implements" of a class, not inherited implements)
+           # Java class and interface inheritance ("extends" and
+           # "implements", but only smallest "implements" of a class,
+           # not inherited implements)
            (extends ReferenceType ReferenceType)
            # Java subtyping
            (<:      ReferenceType ReferenceType :reflex :trans)
@@ -139,10 +169,12 @@
            (<= Number Number)
            ...etc...
 
-           # is-a predicate.  Corresponds to the static type of a Java reference.
+           # is-a predicate.  Corresponds to the static type of a
+           # Java reference.
            (isa Reference ReferenceType)
 
-           # abstract classes and interfaces are not instantiable in Java
+           # abstract classes and interfaces are not instantiable
+           # in Java
            (instantiable ReferenceType)
 
            # Is the referenced object allocated at the specified time?
@@ -226,7 +258,8 @@
                                 (< ?y (+ ?x 1)))
                            (not (isZ ?y))))))
 
-            # all Object Reference are NULL or have a unique dynamic subtype
+            # all Object Reference are NULL or have a unique
+            # dynamic subtype
             (forall ?x Reference
               (forall ?t ReferenceType 
                 (iff (isa ?x ?t)
@@ -340,15 +373,17 @@
               (forall ?t Number
                 (iff (isAllocated ?r ?t) (< (vAllocTime ?r ?t) ?t))))
 
-            # definition of fClosedTime.  Intuitively, what we are representing
-            # is that, if an object is allocated, then all of its fields are allocated.
+            # definition of fClosedTime.  Intuitively, what we are
+            # representing is that, if an object is allocated, then
+            # all of its fields are allocated.
             (forall ?h Memory
               (forall ?r Reference
                  (forall ?f ReferenceField
                     (forall ?t Number
                       (implies (and (< (fClosedTime ?f) ?t)
                                     (isAllocated ?r ?t))
-                               (isAllocated (referenceSelect ?f (memGet ?h ?r)) ?t)))))
+                               (isAllocated (referenceSelect ?f
+                                               (memGet ?h ?r)) ?t)))))
             # and the same axiom applies to arrays and their values
             (forall ?h Memory
               (forall ?r Reference
@@ -356,7 +391,8 @@
                     (forall ?t Number
                       (implies (and (< (eClosedTime ?h) ?t)
                                     (isAllocated ?r ?t))
-                               (isAllocated (getObject (memGet ?h ?r) ?i) ?t)))))
+                               (isAllocated (getObject
+                                               (memGet ?h ?r) ?i) ?t)))))
 
             # length of arrays
             (forall ?r Reference
