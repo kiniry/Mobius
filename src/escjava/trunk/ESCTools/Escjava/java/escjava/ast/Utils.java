@@ -196,9 +196,9 @@ public final class Utils {
 
     private static final BooleanDecoration immutableDecoration = new BooleanDecoration("immutable") {
 	public boolean calculate(ASTNode o) {
-	    return findModifierPragma(((TypeDecl)o).pmodifiers, TagConstants.PURE)
-			!= null ||
-		   findModifierPragma(((TypeDecl)o).pmodifiers, TagConstants.IMMUTABLE) != null;
+	    return findModifierPragma(((TypeDecl)o).pmodifiers, TagConstants.IMMUTABLE)
+			!= null ;
+	    //|| findModifierPragma(((TypeDecl)o).pmodifiers, TagConstants.PURE) != null;
 	}
     };
     public static boolean isImmutable(TypeDecl cd) {
