@@ -911,8 +911,10 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
             case TagConstants.NEWARRAYEXPR:
                 {
                     if (inAnnotation) {
+/* FIXME - Yes it can, but it must be pure!
                         ErrorSet.error(e.getStartLoc(),
-                                       "new cannot be used in specification expressions");
+			   "new cannot be used in specification expressions");
+*/
                     }
                     return super.checkExpr(env, e);
                 }
@@ -957,6 +959,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 
         switch(tag) {
             case TagConstants.AXIOM:
+	    case TagConstants.JML_INITIALLY:
             case TagConstants.INVARIANT:
 	    case TagConstants.JML_CONSTRAINT: // FIXME - do we need to change the logic below to handle constraints?
 	    case TagConstants.JML_REPRESENTS:
@@ -978,14 +981,14 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                     TypeSig sig = TypeSig.getSig(e.getParent());
                     if (sig==javafe.tc.Types.javaLangObject() ||
                         sig==javafe.tc.Types.javaLangCloneable()) {
-                        ErrorSet.fatal(e.getStartLoc(),
-                                       "java.lang.Object and java.lang.Cloneable may not"
-                                       + " contain invariants.");
+                        if (invariantContext) ErrorSet.fatal(e.getStartLoc(),
+			   "java.lang.Object and java.lang.Cloneable may not"
+			   + " contain invariants.");
                     }
                     if (invariantContext && countFreeVarsAccesses == 0){
                         ErrorSet.error(e.getStartLoc(),
-                                       "Class invariants must mention program variables"
-                                       + " or fields.");
+			   "Class invariants must mention program variables"
+			   + " or fields.");
                     }
 
                     if (invariantContext) {countFreeVarsAccesses = 0;}
@@ -1199,9 +1202,11 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                     case TagConstants.METHODDECL: {
                         MethodDecl md = (MethodDecl) ctxt;
                         if (getOverrideStatus(md) != MSTATUS_NEW_ROUTINE) {
+/* FIXME - only give this error if the overridden method is not non_null
                             ErrorSet.error(md.getStartLoc(),
                                            "'non_null' cannot be used on method overrides; "+
                                            "use 'also_ensures \\result != null;' instead");
+*/
                         } else if (!Types.isReferenceType(md.returnType)) {
                             ErrorSet.error(md.getStartLoc(),
                                            "'non_null' can only be used with methods whose "+
@@ -1257,8 +1262,10 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 		    } else if (ctxt instanceof MethodDecl) {
 			((MethodDecl)ctxt).modifiers |= Modifiers.ACC_PURE;
 		    } else {
+/* FIXME - pure can modify a class or interface - need to implement
 			ErrorSet.error(p.getStartLoc(),
 				"Expected pure to modify a constructor or method declaration");
+*/
 		    }
 		    break;
 		}
@@ -1363,10 +1370,12 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                         int ms = getOverrideStatus(rd);
                         if (ms == MSTATUS_NEW_ROUTINE) {
                             if (tag == TagConstants.ALSO_REQUIRES) {
+/* FIXME
                                 ErrorSet.error(p.getStartLoc(), TagConstants.toString(tag) +
                                                " can only be used on method overrides; use " +
                                                TagConstants.toString(TagConstants.REQUIRES) +
                                                " instead");
+*/
                             }
                         } else if (ms == MSTATUS_CLASS_NEW_METHOD) {
                             if (tag == TagConstants.REQUIRES || tag == TagConstants.JML_PRE) {
@@ -1377,15 +1386,19 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                                 } else {
                                     remedy = "try declaring in supertype instead";
                                 }
+/* FIXME
                                 ErrorSet.error(p.getStartLoc(), TagConstants.toString(tag) +
                                                " cannot be used on method overrides; " +
                                                remedy);
+*/
                             }
                         } else {
                             Assert.notFalse(ms == MSTATUS_OVERRIDE);
                             if (tag == TagConstants.REQUIRES || tag == TagConstants.JML_PRE) {
+/* FIXME
                                 ErrorSet.error(p.getStartLoc(), TagConstants.toString(tag) +
                                                " cannot be used on method overrides");
+*/
                             } else {
                                 ErrorSet.error(p.getStartLoc(), TagConstants.toString(tag) + 
                                                " can only be used on class-new method overrides");
@@ -1409,6 +1422,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 	    case TagConstants.JML_DIVERGES:
 	    case TagConstants.JML_DIVERGES_REDUNDANTLY:
             case TagConstants.ENSURES:
+            case TagConstants.JML_ENSURES_REDUNDANTLY:
             case TagConstants.ALSO_ENSURES:
             case TagConstants.JML_POST:
 	    case TagConstants.JML_WHEN:
@@ -1475,15 +1489,19 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                         if (getOverrideStatus(rd) != MSTATUS_NEW_ROUTINE) {
                             if (tag == TagConstants.EXSURES ||
                                 tag == TagConstants.JML_SIGNALS) {
+/* FIXME
                                 ErrorSet.error(p.getStartLoc(),
                                                "exsures cannot be used on method overrides; "+
                                                "use also_exsures instead");
+*/
                             }
                         } else {
                             if (tag == TagConstants.ALSO_EXSURES) {
+/* FIXME
                                 ErrorSet.error(p.getStartLoc(),
                                                "also_exsures can be used only on method " +
                                                "overrides; use exsures instead");
+*/
                             }
                         }
 
@@ -1517,11 +1535,16 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                                 }
                             }
                             if (!okay) {
+				if (!( (vemp.expr instanceof LiteralExpr) &&
+					((LiteralExpr)vemp.expr).value.equals(Boolean.FALSE))) {
+/* FIXME - what about Error exceptions, must they be mentioned? 
                                 ErrorSet.error(vemp.arg.type.getStartLoc(),
                                                "The type of the " +
                                                TagConstants.toString(tag) +
                                                " argument must be comparable to some type " +
                                                "mentioned in the routine's throws set");
+*/
+				}
                             }
                         }
 
@@ -1642,6 +1665,11 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 	    case TagConstants.JML_OPENPRAGMA:
 	    case TagConstants.JML_CLOSEPRAGMA:
 	    case TagConstants.JML_ALSO:
+	    case TagConstants.JML_IMPLIES_THAT:
+	    case TagConstants.JML_FOR_EXAMPLE:
+	    case TagConstants.JML_NORMAL_EXAMPLE:
+	    case TagConstants.JML_EXCEPTIONAL_EXAMPLE:
+	    case TagConstants.JML_EXAMPLE:
 	    case TagConstants.JML_NORMAL_BEHAVIOR:
 	    case TagConstants.JML_EXCEPTIONAL_BEHAVIOR:
 	    case TagConstants.JML_BEHAVIOR:
@@ -1649,7 +1677,8 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 		break;
 
             default:
-                Assert.fail("Unexpected tag " + tag);
+                Assert.fail("Unexpected tag " + tag + 
+				" " + TagConstants.toString(tag));
         }
         inAnnotation = false;
     }

@@ -233,7 +233,8 @@ public final class TrAnExpr {
 	}
 	Expr ne = GC.nary(me.getStartLoc(), me.getEndLoc(),
 			TagConstants.METHODCALL,ev);
-	((NaryExpr)ne).methodName = me.id; // FIXME -- full name ???
+	((NaryExpr)ne).methodName = 
+		Identifier.intern(me.id.toString() + "." + me.args.size()); // FIXME -- full name ??? with type signature as well
 	return ne;
       }
 
@@ -385,8 +386,13 @@ public final class TrAnExpr {
 	      int loc = ne.getStartLoc();
 	      String locStr = Location.toString(loc).intern();
 	      if (!(issuedPRECautions.contains(locStr))) {
+/* FIXME - disable this for now.  We use \old in AnnotationHandler when we
+are desugaring annotations, to wrap around a requires predicate when it is
+being combined with an ensures predicate.  This error would have us only
+wrap those variables being modified and not everything.
 		  ErrorSet.caution (loc, 
 		      "Variables in \\old not mentioned in modifies pragma.");
+*/
 		  issuedPRECautions.add(locStr);
 	      }
 	  }

@@ -344,13 +344,15 @@ public class VcToString {
     case TagConstants.METHODCALL:
       {
 	NaryExpr ne = (NaryExpr)e;
-	out.print("(");
-	out.print("---METHODCALL--- ");
-	int n = ne.childCount();
-	for (int i=0; i<n; ++i) {
-	    printFormula( out, subst, ne.exprs.elementAt(i));
+	out.print("(EQ |@true| ( |");
+	out.print(ne.methodName);
+	out.print("| ");
+	int n = ne.exprs.size();
+	for (int i=0; i<n; i++) {
+	    printTerm( out, subst, ne.exprs.elementAt(i));
+	    out.print(" ");
 	}
-	out.print(")");
+	out.print("))");
 	break;
       }
 

@@ -10,6 +10,8 @@ import javafe.util.Location;
 import escjava.ast.*;
 import escjava.ast.TagConstants;
 import escjava.ast.Modifiers;
+import javafe.tc.FlowInsensitiveChecks;
+import javafe.tc.Types;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -90,7 +92,6 @@ public class AnnotationHandler {
     }
 
     protected void process(RoutineDecl tde) {
-	//System.out.println("METHOD " + tde.id + " " + Modifiers.toString(tde.modifiers));
 	ModifierPragmaVec pmodifiers = tde.pmodifiers;
 	if (pmodifiers == null) return;
 	for (int i = 0; i<pmodifiers.size(); ++i) {
@@ -107,14 +108,15 @@ public class AnnotationHandler {
 	    if (mp instanceof ExprModifierPragma)
 	      (new CheckPurity()).visitNode(((ExprModifierPragma)mp).expr);
 	}
-	tde.pmodifiers = desugarAnnotations(pmodifiers);
-	//if (tde.pmodifiers != pmodifiers) return;
-
-
 	Identifier id =
 		tde instanceof MethodDecl ?
 			((MethodDecl)tde).id
 		: tde.getParent().id;
+	//System.out.println("Desugaring specifications for " + id);
+	tde.pmodifiers = desugarAnnotations(pmodifiers);
+	//if (tde.pmodifiers != pmodifiers) return;
+
+
 
 // FIXME - control this with an option
 	if (false) {
@@ -171,6 +173,7 @@ public class AnnotationHandler {
 	     || t == TagConstants.JML_NORMAL_BEHAVIOR
 	     || t == TagConstants.JML_EXCEPTIONAL_BEHAVIOR
 	     || t == TagConstants.JML_ALSO
+	     || t == TagConstants.JML_IMPLIES_THAT
 	     || t == TagConstants.JML_OPENPRAGMA) {
 		isHeavyweight = true;
 		break;
@@ -183,6 +186,7 @@ public class AnnotationHandler {
 	Behavior currentBehavior = new Behavior();
 	Behavior commonBehavior = null;
 	ModifierPragma openPragma = null;
+	whileloop:
 	while (n < size) {
 	    m = pm.elementAt(n++);
 	    int t = m.getTag();
@@ -194,14 +198,14 @@ public class AnnotationHandler {
 		    currentBehavior = new Behavior();
 		    currentBehavior.isNormal = true;
 		// set a false signals clause
-
-		    currentBehavior.signals.add(Behavior.DefaultSignalFalse);
+			// FIXME - we need to turn signals off
+		    //currentBehavior.signals.add(Behavior.DefaultSignalFalse);
 		    break;
 		case TagConstants.JML_EXCEPTIONAL_BEHAVIOR:
 		    currentBehavior = new Behavior();
 		    currentBehavior.isExceptional = true;
 		    // set a false ensures clause
-		    currentBehavior.ensures.add(Behavior.F);
+		    currentBehavior.ensures.add(Behavior.EnsuresFalse);
 		    break;
 
 		case TagConstants.REQUIRES:
@@ -290,6 +294,18 @@ public class AnnotationHandler {
 		    }
 		    break;
 
+		case TagConstants.JML_IMPLIES_THAT:
+		case TagConstants.JML_EXAMPLE:
+		case TagConstants.JML_NORMAL_EXAMPLE:
+		case TagConstants.JML_EXCEPTIONAL_EXAMPLE:
+			// FIXME _ for now count this as the end of annotations
+			currentBehavior = null;
+			break whileloop;
+
+		case TagConstants.JML_FOR_EXAMPLE:
+			// FIXME _ for now count this as the end of annotations
+			break whileloop;
+
 	        default:
 		    ErrorSet.warning(m.getStartLoc(),
 			"Desugaring does not support "
@@ -362,14 +378,17 @@ public class AnnotationHandler {
     }
 
     static public Expr or(Expr e1, Expr e2) {
-	if (e1 == null || isTrue(e1)) return e2;
-	if (e2 == null || isTrue(e2)) return e1;
+	if (e1 == null || isFalse(e1)) return e2;
+	if (e2 == null || isFalse(e2)) return e1;
+	if (isTrue(e1) || isTrue(e2)) return Behavior.T;
 	return BinaryExpr.make(TagConstants.OR,e1,e2,Location.NULL);
     }
 
     static public Expr implies(Expr e1, Expr e2) {
 	if (isTrue(e1)) return e2;
 	if (isTrue(e2)) return e2; // Yes, e2
+	if (isFalse(e1)) return Behavior.T;
+	if (isFalse(e2)) return Behavior.F;
 	return BinaryExpr.make(TagConstants.IMPLIES,e1,e2,Location.NULL);
     }
 
@@ -387,10 +406,19 @@ public class AnnotationHandler {
 
     static public class Behavior {
 
-	public final static LiteralExpr T = LiteralExpr.make(
-		TagConstants.BOOLEANLIT, new Boolean(true), Location.NULL);
-	public final static LiteralExpr F = LiteralExpr.make(
-		TagConstants.BOOLEANLIT, new Boolean(false), Location.NULL);
+	public final static LiteralExpr T = 
+		(LiteralExpr)FlowInsensitiveChecks.setType(LiteralExpr.make(
+		TagConstants.BOOLEANLIT, Boolean.TRUE, Location.NULL),
+		Types.booleanType);
+	public final static LiteralExpr F = 
+		(LiteralExpr)FlowInsensitiveChecks.setType(LiteralExpr.make(
+		TagConstants.BOOLEANLIT, Boolean.FALSE, Location.NULL),
+		Types.booleanType);
+	public final static ExprModifierPragma EnsuresFalse =
+			ExprModifierPragma.make(
+			    TagConstants.ENSURES,
+			    Behavior.F,
+			    Location.NULL);
 	public final static VarExprModifierPragma DefaultSignalTrue =
 			VarExprModifierPragma.make(
 			    TagConstants.JML_SIGNALS,
@@ -452,8 +480,9 @@ public class AnnotationHandler {
 		diverges.add(ExprModifierPragma.make(
 				TagConstants.JML_DIVERGES,
 				Behavior.F,Location.NULL));
-	    if (signals.size() == 0) 
-		signals.add(Behavior.DefaultSignalTrue);
+	// FIXME - we need a default here
+	    //if (signals.size() == 0) 
+	//	signals.add(Behavior.DefaultSignalTrue);
 	// FIXME - this needs to be "modifies \everything;"
 	// but escjava does not know how to reason about that yet
 	    //if (modifies.size() == 0) 
@@ -467,17 +496,19 @@ public class AnnotationHandler {
 	    Expr req = NaryExpr.make(Location.NULL,
 				b.requires.getStartLoc(),TagConstants.PRE,
 				Identifier.intern("\\old"),arg);
+	    javafe.tc.FlowInsensitiveChecks.setType(req,
+			javafe.tc.FlowInsensitiveChecks.getType(b.requires));
 		    // FIXME - should find an efficient way to avoid replicating the method name here
 	    Iterator i = b.ensures.iterator();
 	    while (i.hasNext()) {
 		ExprModifierPragma m = (ExprModifierPragma)i.next();
-		m.expr = implies(req,m.expr);
+		if (!reqIsTrue) m.expr = implies(req,m.expr);
 		ensures.add(m);
 	    }
 	    i = b.when.iterator();
 	    while (i.hasNext()) {
 		ExprModifierPragma m = (ExprModifierPragma)i.next();
-		m.expr = implies(req,m.expr);
+		if (!reqIsTrue) m.expr = implies(req,m.expr);
 		when.add(m);
 	    }
 	    i = b.diverges.iterator();
@@ -489,7 +520,7 @@ public class AnnotationHandler {
 	    i = b.signals.iterator();
 	    while (i.hasNext()) {
 		VarExprModifierPragma m = (VarExprModifierPragma)i.next();
-		m.expr = implies(req,m.expr);
+		if (!reqIsTrue) m.expr = implies(req,m.expr);
 		signals.add(m);
 	    }
 	    i = b.measuredby.iterator();
@@ -516,10 +547,12 @@ public class AnnotationHandler {
 		case TagConstants.METHODINVOCATION:
 		    MethodInvocation m = (MethodInvocation)x;
 		    if (!Modifiers.isPure(m.decl.modifiers)) {
+/* FIXME - wait to enable this error.  ALso need it for constructors.
 			ErrorSet.error(m.locId,
 			    "Method " + m.id + " is used in an annotation" +
 			    " but is not pure (" + 
 			    Location.toFileLineString(m.decl.loc) + ")");
+*/
 		    }
 		    break;
 		default:

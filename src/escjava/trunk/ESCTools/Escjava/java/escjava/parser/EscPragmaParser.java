@@ -720,6 +720,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
                     break;
 
                 case TagConstants.AXIOM:
+		case TagConstants.JML_INITIALLY:
                 case TagConstants.INVARIANT:
                 case TagConstants.JML_INVARIANT_REDUNDANTLY:
 		case TagConstants.JML_CONSTRAINT:
@@ -737,6 +738,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
                     break;
 
 		case TagConstants.IMPORT:
+			ErrorSet.caution(loc,"An import statement in an annotation should begin with 'model import'");
 			scanner.lexicalPragmas.addElement( 
 			    ImportPragma.make(parseImportDeclaration(scanner),
 						 loc));
@@ -831,7 +833,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
 		  
 			if (scanner.ttype == TagConstants.COMMA)
 			    fail(scanner.startingLoc,
-				 "Only one ghost field may be declared per ghost annotation.");
+				 "Only one field may be declared per ghost or model annotation.");
 		  
 			if (tag == TagConstants.GHOST) {
 			    dst.auxVal = GhostDeclPragma.make(decl, loc);
@@ -839,6 +841,12 @@ public class EscPragmaParser extends Parse implements PragmaParser
 			    dst.auxVal = ModelDeclPragma.make(decl, loc);
 			}
 			semiNotOptional = true;
+// FIXME - monitored_by as well??
+// FIXME - test this without replciating the string
+			if (scanner.ttype == TagConstants.IDENT &&
+			    scanner.identifierVal.toString().equals("initially")) {
+				semiNotOptional = false;
+			}
 		    }
                     break;
                 }
@@ -894,6 +902,11 @@ public class EscPragmaParser extends Parse implements PragmaParser
                 case TagConstants.HELPER:
 		case TagConstants.JML_OPENPRAGMA:
 		case TagConstants.JML_CLOSEPRAGMA:
+		case TagConstants.JML_IMPLIES_THAT:
+		case TagConstants.JML_FOR_EXAMPLE:
+		case TagConstants.JML_EXAMPLE:
+		case TagConstants.JML_NORMAL_EXAMPLE:
+		case TagConstants.JML_EXCEPTIONAL_EXAMPLE:
                     dst.ttype = TagConstants.MODIFIERPRAGMA;
                     dst.auxVal = SimpleModifierPragma.make(tag, loc);
                     break;
@@ -944,7 +957,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
                     Expr expr = null;
 		    if (scanner.ttype == TagConstants.SEMICOLON)
 			expr = LiteralExpr.make(TagConstants.BOOLEANLIT,
-				new Boolean(true),scanner.startingLoc);
+				Boolean.TRUE,scanner.startingLoc);
 		    else
 			expr = parseExpression(scanner);
 		    dst.auxVal
@@ -1032,17 +1045,17 @@ public class EscPragmaParser extends Parse implements PragmaParser
                 //case TagConstants.JML_DIVERGES_REDUNDANTLY:   // Parsed (cok)
                 //case TagConstants.JML_DIVERGES:               // parsed (cok)
                 // case TagConstants.JML_ENSURES_REDUNDANTLY: support complete (kiniry)
-                case TagConstants.JML_EXAMPLE:                // NOT SC
+                // case TagConstants.JML_EXAMPLE:                // NOT SC // parsed - cok
                 // case TagConstants.JML_EXCEPTIONAL_BEHAVIOR: support complete (kiniry)
-                case TagConstants.JML_EXCEPTIONAL_EXAMPLE:    // NOT SC
+                // case TagConstants.JML_EXCEPTIONAL_EXAMPLE:    // NOT SC - parsed cok
                 // case TagConstants.JML_EXSURES_REDUNDANTLY: support complete (kiniry)
                 case TagConstants.JML_FORALL:                 // unclear semantics
-                case TagConstants.JML_FOR_EXAMPLE:            // NOT SC
-                case TagConstants.JML_IMPLIES_THAT:           // NOT SC
+                // case TagConstants.JML_FOR_EXAMPLE:            // NOT SC // parsed - cok
+                //case TagConstants.JML_IMPLIES_THAT:           // NOT SC // parsed - cok
                 case TagConstants.JML_HENCE_BY_REDUNDANTLY:   // unclear semantics
                 case TagConstants.JML_HENCE_BY:               // unclear semantics
                 case TagConstants.JML_INITIALIZER:            // SC AAST 4
-                case TagConstants.JML_INITIALLY:              // SC AAST 4
+                // case TagConstants.JML_INITIALLY:              // SC AAST 4 // parsed - cok
                 // case TagConstants.JML_INSTANCE: parses but no semantics (cok) SC AAST 3
                 // case TagConstants.JML_INVARIANT_REDUNDANTLY: support complete (kiniry)
                 // case TagConstants.JML_LOOP_INVARIANT_REDUNDANTLY: support complete (kiniry)
@@ -1055,7 +1068,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
                 // case TagConstants.JML_MODIFIABLE: support complete (kiniry)
                 // case TagConstants.JML_MODIFIES_REDUNDANTLY: support complete (kiniry)
                 // case TagConstants.JML_NORMAL_BEHAVIOR: support complete (kiniry)
-                case TagConstants.JML_NORMAL_EXAMPLE:         // NOT SC
+                // case TagConstants.JML_NORMAL_EXAMPLE:         // NOT SC // parsed cok
                 case TagConstants.JML_OLD:                    // unclear semantics
                 case TagConstants.JML_OR:                     // unclear semantics
                 // case TagConstants.JML_POST_REDUNDANTLY: support complete (kiniry)
@@ -1329,8 +1342,8 @@ public class EscPragmaParser extends Parse implements PragmaParser
 					null, locOpenParen, args);
                             //    ErrorSet.fatal(loc, "Unknown ESC function symbol " + kw);
                         }
-                        break;
 			}
+                        break;
                     }
 
                     // Look for 'TypeName . this'
