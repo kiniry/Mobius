@@ -409,6 +409,10 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
       break;
     }
   }
+
+  public static void print(GuardedCmd g) {
+    ((EscPrettyPrint)inst).print(System.out,0,g);
+  }
   
   /** Print a guarded command.  Assumes that <code>g</code> should be
    printed starting at the current position of <code>o</code>.  It
