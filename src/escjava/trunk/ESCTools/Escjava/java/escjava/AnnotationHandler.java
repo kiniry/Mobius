@@ -40,26 +40,50 @@ public class AnnotationHandler {
 			cu.imports.addElement(((ImportPragma)p).decl);
 	}
 
-	// move any model methods into the list of methods
 	TypeDeclVec elems = cu.elems;
 	for (int i=0; i<elems.size(); ++i) {
 	    TypeDecl td = elems.elementAt(i);
-	    handleModelMethods(td);
+	    handleTypeDecl(td);
 	}
     }
 
     /** After parsing, but before type checking, we need to convert model
 	methods to regular methods (with the MODEL modifier bit set), so that
-	names are resolved correctly.
+	names are resolved correctly; also need to set ACC_PURE bits correctly
+	in all classes so that later checks get done correctly.
     */ // FIXME - possibly should put these in GhostEnv??
-    public void handleModelMethods(TypeDecl td) {
+    public void handleTypeDecl(TypeDecl td) {
+	handlePragmas(td);
 	for (int j=0; j<td.elems.size(); ++j) {
 	    TypeDeclElem tde = td.elems.elementAt(j);
 	    // Handle nested types
-	    if (tde instanceof TypeDecl) handleModelMethods((TypeDecl)tde);
+	    if (tde instanceof TypeDecl) {
+		handleTypeDecl((TypeDecl)tde);
+	    }
+	    // move any model methods into the list of methods
 	    if (tde instanceof ModelMethodDeclPragma) {
+		handlePragmas(tde);
 		ModelMethodDeclPragma mmp = (ModelMethodDeclPragma)tde;
 		td.elems.setElementAt(((ModelMethodDeclPragma)tde).decl,j);
+	    }
+	    // handle PURE pragmas
+	    if (tde instanceof MethodDecl ||
+		tde instanceof ConstructorDecl) {
+		handlePragmas(tde);
+	    }
+	}
+    }
+
+    public void handlePragmas(TypeDeclElem tde) {
+	ModifierPragmaVec mpp = 
+	    (tde instanceof TypeDecl) ? ((TypeDecl)tde).pmodifiers:
+	    (tde instanceof RoutineDecl) ? ((RoutineDecl)tde).pmodifiers :
+	    null;
+
+	if (mpp != null) for (int i=0; i<mpp.size(); ++i) {
+	    ModifierPragma m = mpp.elementAt(i);
+	    if (m.getTag() == TagConstants.JML_PURE) {
+		tde.setModifiers(tde.getModifiers() | Modifiers.ACC_PURE);
 	    }
 	}
     }
@@ -87,6 +111,8 @@ public class AnnotationHandler {
 		break;
 
 	    case TagConstants.FIELDDECL:
+		break;
+
 	    case TagConstants.GHOSTDECLPRAGMA:
 	    case TagConstants.MODELDECLPRAGMA:
 	    case TagConstants.INVARIANT:
@@ -582,16 +608,26 @@ public class AnnotationHandler {
 	    switch (x.getTag()) {
 		case TagConstants.METHODINVOCATION:
 		    MethodInvocation m = (MethodInvocation)x;
-		    if (!Modifiers.isPure(m.decl.modifiers)) {
+		    if (!Modifiers.isPure(m.decl.modifiers) &&
+			!Modifiers.isPure(m.decl.getParent().modifiers)) {
 			ErrorSet.error(m.locId,
 			    "Method " + m.id + " is used in an annotation" +
 			    " but is not pure (" + 
 			    Location.toFileLineString(m.decl.loc) + ")");
-/* FIXME - wait to enable this error.  ALso need it for constructors.
-*/
 		    }
 		    break;
-		default:
+		case TagConstants.NEWINSTANCEEXPR:
+		    NewInstanceExpr c = (NewInstanceExpr)x;
+		    if (!Modifiers.isPure(c.decl.modifiers) &&
+			!Modifiers.isPure(c.decl.getParent().modifiers)) {
+			ErrorSet.error(c.loc,
+			    "Constructor is used in an annotation" +
+			    " but is not pure (" + 
+			    Location.toFileLineString(c.decl.loc) + ")");
+		    }
+		    break;
+	    }
+	    {
 		    int n = x.childCount();
 		    for (int i = 0; i < n; ++i) {
 			if (x.childAt(i) instanceof ASTNode)
