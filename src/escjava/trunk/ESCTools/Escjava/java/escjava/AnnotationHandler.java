@@ -218,6 +218,8 @@ public class AnnotationHandler {
 	}
 	boolean isPure = Modifiers.isPure(tde.modifiers) || 
 		         Modifiers.isPure(tde.getParent().modifiers);
+	boolean isConstructor = 
+		tde instanceof ConstructorDecl;
 	// check whether this is lightweight or heavyweight
 	// it is heavyweight if there is an also, a behavior annotation
 	// or a OPENPRAGMA
@@ -318,10 +320,17 @@ public class AnnotationHandler {
 		case TagConstants.MODIFIES:
 		case TagConstants.ALSO_MODIFIES: {
 		    currentBehavior.modifies.add(m);
-		    if (isPure) {
-			ErrorSet.error(m.getStartLoc(),
-			    "A pure method may not have an assignable clause");
+		    if (isPure && !isConstructor) {
+			CondExprModifierPragma cm = 
+				(CondExprModifierPragma)m;
+			if (! ( cm.expr instanceof NothingExpr &&
+				cm.cond == null)) {
+			    ErrorSet.error(m.getStartLoc(),
+			     "A pure method may not have an assignable clause");
+			}
 		    }
+			// FIXME - for constructors, should check that 
+			//  the assignable clause has only the allowed stuff.
 		    break;
 		}
 
@@ -379,9 +388,12 @@ public class AnnotationHandler {
 			break;
 
 	        default:
+// FIXME
+/*
 		    ErrorSet.warning(m.getStartLoc(),
 			"Desugaring does not support "
 			+ TagConstants.toString(m.getTag()));
+*/
 		    currentBehavior.extras.add(m);
 		    break;
             }

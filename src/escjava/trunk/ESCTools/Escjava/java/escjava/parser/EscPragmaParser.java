@@ -1103,7 +1103,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
 			    scanner.getNextToken(); // eats semicolon
 			} else if (scanner.ttype == TagConstants.LBRACE) {
 			    locOpenBrace = scanner.startingLoc;
-			    body = parseBlock(scanner, true);
+			    body = parseBlock(scanner, false);
                             // FIXME - the above parses with specOnly=true which will not provide the body
 			} else {
 			    ErrorSet.fatal(scanner.startingLoc,
@@ -1161,7 +1161,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
 			    scanner.getNextToken(); // eats semicolon
 			} else if (scanner.ttype == TagConstants.LBRACE) {
 			    locOpenBrace = scanner.startingLoc;
-			    body = parseBlock(scanner, true);
+			    body = parseBlock(scanner, false);
                             // FIXME - the above parses with specOnly=true which will not provide the body
 			} else {
 			    ErrorSet.fatal(scanner.startingLoc,
@@ -2452,19 +2452,25 @@ public class EscPragmaParser extends Parse implements PragmaParser
 		l.getNextToken();	// swallow COMMA
 		int modifiers = parseModifiers(l);
 		ModifierPragmaVec modifierPragmas = this.modifierPragmas;
+		int typeLoc = l.startingLoc;
 		Type type = parseType(l);
 		Identifier id = null;
 		if (argListInAnnotation && type instanceof TypeName &&
-			((TypeName)type).name.printName().equals("non_null")) {
-		    Type type2 = parseType(l);
-			// add a non_null modifier - FIXME
-		    if (l.ttype == TagConstants.COMMA ||
-			l.ttype == TagConstants.RPAREN) {
-			// non_null is the type after all
-			// FIXME
-		    } else {
-			type = type2;
-		    }
+			((TypeName)type).name.printName().equals("non_null") &&
+			!(  l.ttype == TagConstants.IDENT &&
+			    (l.lookahead(1) == TagConstants.COMMA ||
+			    l.lookahead(1) == TagConstants.RPAREN))) {
+		    // The non_null is a modifier, not a type
+		    // [ A model method or constructor does not need to 
+		    //   enclose the 'non_null' in annotation markers; hence
+		    //   we can have either 'non_null i' in which non_null
+		    //   is a type or 'non_null int i' in which non_null is
+		    //   a modifier.]
+		    type = parseType(l);
+		    if (modifierPragmas == null)
+			modifierPragmas = ModifierPragmaVec.make();
+		    modifierPragmas.addElement(SimpleModifierPragma.make(
+				TagConstants.NON_NULL,typeLoc));
 		}
 		int locId = l.startingLoc;
 		if (id == null) id = parseIdentifier(l);

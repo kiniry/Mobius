@@ -5,9 +5,6 @@ ModifiesPure ...
 ModifiesPure.java:11: Error: A pure method may not have an assignable clause
         //@     assignable i;
                 ^
-ModifiesPure.java:13: Error: A pure method may not have an assignable clause
-        //@     assignable \nothing;
-                ^
 
 ModifiesPure: m() ...
     [TIME]  passed immediately
@@ -23,9 +20,6 @@ ModifiesPureA ...
 ModifiesPure.java:29: Error: A pure method may not have an assignable clause
         //@     assignable i;
                 ^
-ModifiesPure.java:31: Error: A pure method may not have an assignable clause
-        //@     assignable \nothing;
-                ^
 
 ModifiesPureA: m() ...
     [TIME]  passed immediately
@@ -36,4 +30,4 @@ ModifiesPureA: n() ...
 ModifiesPureA: ModifiesPureA() ...
     [TIME]  passed
   [TIME total]
-4 errors
+2 errors
