@@ -177,14 +177,3 @@ javafe_test:
 	  ${JAVAC} -classpath $(call canonicalize,${JAVAFE_CLASSPATH}:${TESTSOURCEDIRECTORY}) \
 	  -d $(call canonicalize,${CLASSDIRECTORY}) \
 	  ${JAVAFETESTTARGETS} )
-
-###########################################################################
-## misc targets -- FIXME
-
-.PHONY: esc
-esc: source
-	cd java; \
-	date; \
-	escjava -classpath $(call canonicalize,${CLASSDIRECTORY}) \
-		-f `find javafe -name "*.java"` \
-	date

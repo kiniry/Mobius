@@ -1,12 +1,16 @@
-This is a completely revised README for building and running Escjava2,
-a revision of the original ESC/Java from DEC/Compaq/HP.  The revisions
-were mostly performed by David Cok and Joe Kiniry. You can read the
-general background on the original ESC/Java in README.txt.  - DRCok
-7/2/2003
+This is a completely revised README for building and running
+ESC/Java2, a revision of the original DEC/SRC ESC/Java developed at
+DEC/Compaq/HP.  The revisions were performed by David Cok and Joe
+Kiniry. You can read the general background on the original DEC/SRC
+ESC/Java in README.txt.
 
-If you obtained Escjava2 as part of a binary release, you should also
+If you obtained ESC/Java2 as part of a binary release, you should also
 consult README.release for installation and execution instructions
 concerning the release.
+
+This document is meant to describe the patch/source release of
+ESC/Java2, thus the paths herein are in reference to the patch/source
+release, not the binary release.
 
 ----------------------------------------------------------------------------
 

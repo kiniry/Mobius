@@ -2,7 +2,6 @@
 
 package javafe;
 
-
 import javafe.ast.PrettyPrint;
 import javafe.ast.StandardPrettyPrint;
 
@@ -18,20 +17,20 @@ import java.util.ArrayList;
 
 /**
  * <code>FrontEndTool</code> is an abstract class for tools that use
- * our Java front end. <p>
+ * our Java front end.
  *
- * It handles parsing the standard options for setting
- * up the front end and initializing the front end using those options.
- * At the end of a run, it prints a count of how many cautions,
- * warnings, and errors occurred (cf. <code>ErrorSet</code>).  It also
- * handles catching <code>FatalError</code>s (see
+ * <p> It handles parsing the standard options for setting up the
+ * front end and initializing the front end using those options.  At
+ * the end of a run, it prints a count of how many cautions, warnings,
+ * and errors occurred (cf. <code>ErrorSet</code>).  It also handles
+ * catching <code>FatalError</code>s (see
  * <code>ErrorSet.fatal</code>).  The remaining processing, if any, is
- * front-end-tool specific.<p>
+ * front-end-tool specific. </p>
  */
 
-public abstract class FrontEndTool extends Tool {
-    
-
+public abstract class FrontEndTool
+    extends Tool
+{
     /***************************************************
      *                                                 *
      * Standard front-end setup:		       *
@@ -40,31 +39,32 @@ public abstract class FrontEndTool extends Tool {
 
     /**
      * Setup: initialize the front end using the standard
-     * front-end-tool option variables (<code>userPath, sysPath</code>). <p>
+     * front-end-tool option variables ({@link #userPath}, {@link
+     * #sysPath}).
      *
-     * This can be done only once.  The standard front-end-tool option
-     * variables have no effect after this point.  May exit with an
-     * error (via <code>ErrorSet.fatal</code>).<p>
+     * <p> This can be done only once.  The standard front-end-tool
+     * option variables have no effect after this point.  May exit
+     * with an error (via {@link ErrorSet#fatal()}). </p>
      *
-     * Ensures <code>OutsideEnv</code> has been properly initialized
-     * (except if an error occurs).<p>
+     * <p> Ensures {@link OutsideEnv} has been properly initialized
+     * (except if an error occurs). </p>
      *
-     * Also initializes PrettyPrint.inst and TypeCheck.inst to their
-     * default front end values.
+     * <p> Also initializes {@link PrettyPrint#inst} and {@link
+     * TypeCheck#inst} to their default front end values. </p>
      */
     protected String compositeSourcePath;
     protected String compositeClassPath;
-    public void setupPaths() {
 
+    public void setupPaths() {
 	String classPath = options.userPath;
-	if (classPath==null)
+	if (classPath == null)
 	    // The behavior of this code differs between 1.1 and 1.2:
 	    classPath = javafe.filespace.ClassPath.current();
 
 	String sourcePath = options.userSourcePath;
 
 	String sys = options.sysPath;
-	if (sys==null)
+	if (sys == null)
 	    // This works only on Sun implementations of Java...
 	    sys = System.getProperty("sun.boot.class.path", null);
 
@@ -83,9 +83,9 @@ public abstract class FrontEndTool extends Tool {
 	Info.out("[Full classpath is " + compositeClassPath + "]");
 	Info.out("[Full sourcepath is " + compositeSourcePath + "]");
 
-	// It is ok if sourcePath is null; it then shares a database of the
-	// contents of the directory path with classpath, rather than 
-	// creating a separate, identical database.
+	// It is ok if sourcePath is null; it then shares a database
+	// of the contents of the directory path with classpath,
+	// rather than creating a separate, identical database.
 	OutsideEnv.init(makeStandardTypeReader(compositeClassPath, 
 					       compositeSourcePath,
 					       makePragmaParser()));
@@ -94,10 +94,11 @@ public abstract class FrontEndTool extends Tool {
 	TypeCheck.inst = makeTypeCheck();
     }
 
-    /** Called to clear any static initializations, so that the parser can be
-        called multiple times within one process.  Called as part of
-        construction of a new Main.
-    */
+    /**
+     * Called to clear any static initializations, so that the parser
+     * can be called multiple times within one process.  Called as
+     * part of construction of a new Main.
+     */
     public void clear(boolean complete) {
         ErrorSet.clear();
 	// FIXME LocationManagerCorrelatedReader.clear();
@@ -105,8 +106,8 @@ public abstract class FrontEndTool extends Tool {
     }
 
     /**
-     * Called to obtain the StandardTypeReader to be used for locating
-     * and reading in types.
+     * Called to obtain the {@link StandardTypeReader} to be used for
+     * locating and reading in types.
      */
     //@ ensures \result != null;
     public StandardTypeReader makeStandardTypeReader(String path,
@@ -116,8 +117,8 @@ public abstract class FrontEndTool extends Tool {
     }
 
     /**
-     * Called to obtain the pragma parser to be used for parsing
-     * input files.  If <code>null</code> is returned, then no pragma
+     * Called to obtain the pragma parser to be used for parsing input
+     * files.  If <code>null</code> is returned, then no pragma
      * parsing is done.  (By default, returns <code>null</code>).
      */
     public PragmaParser makePragmaParser() {
@@ -125,9 +126,9 @@ public abstract class FrontEndTool extends Tool {
     }
     
     /**
-     * Called to create a new Options object.
+     * Called to create a new {@link Options} object.
      */
-     //@ ensures \result != null;
+    //@ ensures \result != null;
     public Options makeOptions() {
      	return new Options();
     }
@@ -137,10 +138,9 @@ public abstract class FrontEndTool extends Tool {
     }
 
     /**
-     * Called to obtain the pretty printer to set
-     * <code>PrettyPrint.inst</code> to.  May not return
-     * <code>null</code>.  By default, returns
-     * <code>javafe.ast.StandardPrettyPrint</code>.
+     * Called to obtain the pretty printer to set {@link
+     * PrettyPrint#inst} to.  May not return <code>null</code>.  By
+     * default, returns {@link javafe.ast.StandardPrettyPrint}.
      */
     //@ ensures \result != null;
     public PrettyPrint makePrettyPrint() {
@@ -148,15 +148,15 @@ public abstract class FrontEndTool extends Tool {
     }
 
     /**
-     * Called to obtain an instance of the javafe.tc.TypeCheck class
-     * (or a subclass thereof). May not return <code>null</code>.  By
-     * default, returns <code>javafe.tc.TypeCheck</code>.
+     * Called to obtain an instance of the {@link javafe.tc.TypeCheck}
+     * class (or a subclass thereof) to be used for typechecking. May
+     * not return <code>null</code>.  By default, returns {@link
+     * javafe.tc.TypeCheck}.
      */
     //@ ensures \result != null;
     public TypeCheck makeTypeCheck() {
         return new TypeCheck();
     }
-
 
     /***************************************************
      *                                                 *
@@ -166,15 +166,15 @@ public abstract class FrontEndTool extends Tool {
 
     /**
      * Start up an instance of this tool using command-line arguments
-     * <code>args</code>. <p> 
+     * <code>args</code>.
      *
-     * <b>Note</b>: this code needs to be copied verbatim to each
-     * subclass of <code>Tool</code> except with the name of the actual
-     * subclass inserted after the new operator and the comment
-     * characters (//) removed.<p>
+     * <p> <strong>Note</strong>: this code needs to be copied
+     * verbatim to each subclass of {@link Tool} except with the name
+     * of the actual subclass inserted after the new operator and the
+     * comment characters (//) removed. </p>
      *
-     * (This needs to be done because static methods cannot be
-     * inherited.)<p>
+     * <p> (This needs to be done because static methods cannot be
+     * inherited.) </p>
      */
     //@ requires \nonnullelements(args);
     public static void main(String[] args) {
@@ -183,13 +183,14 @@ public abstract class FrontEndTool extends Tool {
         // if (result != 0) System.exit(result);
     }
 
-    /** Parses the options into a new instance of an Options
-	subclass.  Returns -1 if all is well and the program
-	should continue with processing.  Otherwise returns
-	an exit code.
-<P>
-	If the argument is null, the tool is initialized with the
-	existing options.
+    /**
+     * Parses the options into a new instance of an {@link Options}
+     * subclass.  Returns <code>-1</code> if all is well and the
+     * program should continue with processing.  Otherwise, returns an
+     * exit code.
+     *
+     * <p> If the argument is null, the tool is initialized with the
+     * existing options. </p>
      */
     public int handleOptions(String[] args) {
 	if (args != null) {
@@ -217,18 +218,19 @@ public abstract class FrontEndTool extends Tool {
 
     /**
      * A tool's main entry point; <code>args</code> are the
-     * command-line arguments we have been invoked with. <p> 
+     * command-line arguments we have been invoked with.
      */
-    //@ requires args != null;
+    /*@ public normal_behavior
+      @  requires args != null;
+      @  modifies \everything;
+      @*/
     public final int run(String[] args) {
 	int r = handleOptions(args);
 	if (r != -1) return r;
 	
 	if (ErrorSet.errors == 0) try {
-		
 	    // Do our front-end-tool-specific processing:
 	    frontEndToolProcessing(options.inputEntries);
-	
         } catch (FatalError e) {
 	    Info.out("[" + name() + " exiting due to a fatal error]");
 	}
@@ -245,7 +247,7 @@ public abstract class FrontEndTool extends Tool {
 	
 	// If we call exit here, we will break GUI-based clients.
 	// Return error status to caller:
-	if (ErrorSet.errors>0)
+	if (ErrorSet.errors > 0)
 	    return errorExitCode;
 	else {
 	    return okExitCode;
@@ -253,12 +255,12 @@ public abstract class FrontEndTool extends Tool {
     }
 
     /**
-     * Perform any front-end-tool-specific processing. <p>
+     * Perform any front-end-tool-specific processing.
      *
-     * The remaining arguments are <code>args[offset]</code>,
-     * <code>args[offset+1]</code>, ...<p>
+     * <p> The remaining arguments are <code>args[offset]</code>,
+     * <code>args[offset+1]</code>, ...</p>
      */
-    //@ requires \nonnullelements(args);
-    //@ requires 0 <= offset && offset <= args.length;
+    // requires \nonnullelements(args);
+    // requires 0 <= offset && offset <= args.length;
     public abstract void frontEndToolProcessing(ArrayList args);
 }

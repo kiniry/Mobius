@@ -5,6 +5,29 @@ New features include:
   o Implementation of a simple GUI for running ESC/Java2.
   o Improved specifications from the JML project.
 
+The following bugs are FIXED in this release:
+  [ 781415 ] \TYPE and java.lang.Class should be the same
+  [ 919276 ] weird errors when throw new RuntimeException
+  [ 919359 ] Correct paths mentioned in README to User's Guide
+  [ 924295 ] A type error in Object.jml
+  [ 924302 ] A type error due to Pattern
+  [ 852580 ] Error: Ambiguous field for type
+
+The following bugs are known to STILL EXIST in this release:
+  [ 821466 ] Unexpected output from Simplify
+  [ 866268 ] Scripts should warn when specified paths do not exist
+  [ 868258 ] Unit test Desugaring.java OS-dependency
+  [ 876093 ] Supplying the same command-line switch multiple times
+  [ 879832 ] Implicit constructor postconditions
+  [ 879849 ] SecurityKey & KeySet example
+  [ 888368 ] remaining scope problem with java/jml fields
+
+The following feature requests are still unfulfilled:
+  [ 919162 ] model methods in interfaces
+
+The bug tracking system is available via
+  http://sourceforge.net/tracker/?func=browse&group_id=65346&atid=510629
+
 -------------------------------------------------------------------
 version 2.0a5
 

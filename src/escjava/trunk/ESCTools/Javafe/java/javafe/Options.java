@@ -142,14 +142,14 @@ public class Options
      * problem.
      */
     //@ requires \nonnullelements(args);
-    //@ ensures 0 <= \result && \result <= args.length;
+    // ensures 0 <= \result && \result <= args.length;
     public final void processOptions(String[] args) throws UsageError {
 	inputEntries = new ArrayList(args.length);
 	processOptionsLoop(args);
     }
 
     //@ requires \nonnullelements(args);
-    //@ ensures 0 <= \result && \result <= args.length;
+    //  ensures 0 <= \result && \result <= args.length;
     protected final void processOptionsLoop(String[] args) throws UsageError {
 	int offset = 0;
 

@@ -350,7 +350,7 @@ test_matrix:
 	${ESCJ} *.java;)
 
 .PHONY: self_test
-self_test: compile
+self_test: build
 	${ESCJ} -classpath ${ESCTOOLS_ROOT}/Javafe/java:${ESCTOOLS_ROOT}/Escjava/java:${ESCTOOLS_ROOT}/Utils \
 		-nocheck -source 1.4 -quiet -noSemicolonWarnings \
 		${OTHERSOURCEFILES} ${JAVASOURCEFILES}
