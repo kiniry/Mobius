@@ -2,14 +2,27 @@
 
 package escjava.ast;
 
-
+import javafe.ast.ASTNode;
+import javafe.ast.ASTDecoration;
 import javafe.ast.ModifierPragma;
 import javafe.ast.ModifierPragmaVec;
 import javafe.ast.GenericVarDecl;
+import javafe.ast.ASTDecoration;
+import javafe.ast.RoutineDecl;
+import javafe.ast.MethodDecl;
+import javafe.ast.ClassDecl;
+import javafe.ast.TypeDecl;
+import javafe.tc.TypeSig;
+import javafe.ast.Type;
+import javafe.ast.TypeName;
+import javafe.ast.ArrayType;
+import javafe.ast.PrimitiveType;
+import javafe.ast.FormalParaDecl;
+import javafe.ast.FormalParaDeclVec;
 import escjava.Main;
 
 import javafe.util.*;
-
+import java.util.Enumeration;
 
 
 public final class Utils {
@@ -22,6 +35,7 @@ public final class Utils {
      * use method <code>NonNullPragma</code> instead, for it properly
      * handles inheritance of <code>non_null</code> pragmas.
      **/
+
 
     static public ModifierPragma findModifierPragma(/*@ non_null */ GenericVarDecl vdecl,
                                                     int tag) {
@@ -56,4 +70,94 @@ public final class Utils {
         }
     }
 
+    static protected abstract class BooleanDecoration extends ASTDecoration {
+	private static final Object decFALSE = new Object();
+	private static final Object decTRUE = new Object();
+	public BooleanDecoration(String s) {
+	    super(s);
+	}
+	public void set(ASTNode o, boolean b) {
+	    set(o, b?decTRUE:decFALSE);
+	}
+	public boolean isTrue(ASTNode o) {
+	    Object res = get(o);
+	    if (res == null) {
+		boolean b = calculate(o);
+		set(o,b);
+		return b;
+	    }
+	    return res == decTRUE;
+	}
+	public abstract boolean calculate(ASTNode o);
+    }
+
+    static private BooleanDecoration pureDecoration = new BooleanDecoration("pure") {
+        public boolean calculate(ASTNode o) {
+	    RoutineDecl rd = (RoutineDecl)o;
+	    if (findModifierPragma(rd.pmodifiers,TagConstants.PURE)!=null)
+		return true;
+	    else if (findModifierPragma(rd.parent.pmodifiers,TagConstants.PURE)
+			!= null)
+		return true;
+	    else if (rd instanceof MethodDecl) {
+		MethodDecl md = (MethodDecl)rd;
+		Set direct = javafe.tc.PrepTypeDeclaration.inst.getOverrides(md.parent, md);
+		Enumeration e = direct.elements();
+		while (e.hasMoreElements()) {
+		    MethodDecl directMD = (MethodDecl)e.nextElement();
+		    if (isPure(directMD)) { 
+			return true;
+		    }
+	        }
+		return false;
+	    } else {
+		return false;
+	    }
+	}
+    };
+    static public boolean isPure(RoutineDecl rd) {
+	return pureDecoration.isTrue(rd);
+    }
+    static public void setPure(RoutineDecl rd) {
+	pureDecoration.set(rd,true);
+    }
+
+    private static final BooleanDecoration functionDecoration = new BooleanDecoration("function") {
+	public boolean calculate(ASTNode o) {
+	    RoutineDecl rd = (RoutineDecl)o;
+	    if (findModifierPragma(rd.pmodifiers,TagConstants.FUNCTION)
+			!= null) return true;
+	    if (!isPure(rd)) return false;
+	    // If non-static, the owning class must be immutable
+	    if (!Modifiers.isStatic(rd.modifiers)) {
+		if ( ! isImmutable(rd.parent) ) return false;
+	    }
+	    // All argument types must be primitive or immutable
+	    FormalParaDeclVec args = rd.args;
+	    for (int i=0; i<args.size(); ++i) {
+		FormalParaDecl f = args.elementAt(i);
+		Type t = f.type;
+		if (t instanceof TypeName) t = TypeSig.getSig((TypeName)t);
+		if (t instanceof PrimitiveType) continue;
+		if (t instanceof ArrayType) return false;
+		if (t instanceof TypeSig) {
+		    if (! isImmutable(((TypeSig)t).getTypeDecl())) return false;
+		}
+	    }
+	    return true;
+	}
+    };
+    public static boolean isFunction(RoutineDecl rd) {
+	return functionDecoration.isTrue(rd);
+    }
+
+    private static final BooleanDecoration immutableDecoration = new BooleanDecoration("immutable") {
+	public boolean calculate(ASTNode o) {
+	    return findModifierPragma(((TypeDecl)o).pmodifiers, TagConstants.PURE)
+			!= null;
+	}
+    };
+    public static boolean isImmutable(TypeDecl cd) {
+	return immutableDecoration.isTrue(cd);
+    }
 }
