@@ -62,7 +62,7 @@ public class Vector extends AbstractList
       @    requires initialCapacity >= 0 && capacityIncrement >= 0;
       @    ensures maxCapacity == initialCapacity
       @        && this.capacityIncrement == capacityIncrement;
-      @    ensures elementType == \type(Object);
+      @    ensures elementType == \type(Object) && containsNull;
       @    ensures isEmpty();
       @    ensures elementCount == 0;
       @*/
@@ -72,7 +72,7 @@ public class Vector extends AbstractList
       @    requires initialCapacity >= 0;
       @    ensures maxCapacity == initialCapacity
       @        && capacityIncrement == 0;
-      @    ensures elementType == \type(Object) && !containsNull;
+      @    ensures elementType == \type(Object) && containsNull;
       @    ensures isEmpty();
       @    ensures elementCount == 0;
       @*/
@@ -81,7 +81,7 @@ public class Vector extends AbstractList
     /*@  public normal_behavior
       @    assignable objectState;
       @    assignable  maxCapacity, capacityIncrement, elementType, containsNull;
-      @    ensures !containsNull;
+      @    ensures containsNull;
       @    ensures maxCapacity > 0 && capacityIncrement == 0;
       @    ensures elementCount == 0;
       @    ensures size() == 0;
@@ -113,7 +113,13 @@ public class Vector extends AbstractList
     public synchronized void copyInto(Object[] anArray);
 
     /*@ public normal_behavior
-      @    assignable maxCapacity;
+      @    assignable objectState;
+      @    ensures \not_modified(theString,theHashCode);
+               // theHashCode is not changed because the result does not
+               // changes equals
+      @    ensures \not_modified(elementCount,containsNull,elementType);
+      @    ensures \not_modified(size());
+      @    ensures (\forall int i; 0<=i && i<size(); get(i) == \old(get(i)));
       @    ensures maxCapacity == elementCount;
       @*/
     public synchronized void trimToSize();
@@ -121,10 +127,14 @@ public class Vector extends AbstractList
     /*@  public normal_behavior
       @  {|
       @    requires minCapacity <= maxCapacity;
+      @    assignable \nothing;
       @    ensures true;
       @  also
       @    requires minCapacity > maxCapacity;
       @    assignable objectState;
+      @    ensures \not_modified(theString,theHashCode);
+               // theHashCode is not changed because the result does not
+               // changes equals
       @    ensures \not_modified(elementCount,containsNull,elementType);
               // FIXME - this is the implementation described for Vector
               // is it required of subclasses?
@@ -147,6 +157,7 @@ public class Vector extends AbstractList
       @    requires 0 <= newSize;
       @    requires newSize <= elementCount;
       @    assignable objectState; 
+      @    ensures \not_modified(theString,theHashCode);
       @    ensures \not_modified(containsNull,elementType);
       @    ensures elementCount == newSize;
       @    ensures (\forall int i; 0<=i && i<elementCount;
@@ -155,6 +166,7 @@ public class Vector extends AbstractList
       @    old int oldSize = elementCount;
       @    requires newSize > elementCount;
       @    assignable objectState;
+      @    ensures \not_modified(theString,theHashCode);
       @    ensures \not_modified(containsNull,elementType);
       @    ensures (\forall int i; 0<=i && i<oldSize;
                           elementData[i] == \old(elementData[i]));
@@ -220,6 +232,7 @@ public class Vector extends AbstractList
       @    ensures \result != -1 ==> get(\result).equals(elem);
       @    ensures (\forall int i; \result<i && i<=index; 
                                                 !nullequals(elem,get(i)));
+             // FIXME - exceptions
       @*/
     public /*@ pure @*/ synchronized int lastIndexOf(Object elem, int index);
 

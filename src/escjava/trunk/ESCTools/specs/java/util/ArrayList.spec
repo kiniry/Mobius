@@ -37,7 +37,6 @@ public class ArrayList extends AbstractList
     // METHODS AND CONSTRUCTORS
     /*@  public normal_behavior
       @   requires 0 <= initialCapacity;
-      @   assignable objectState;
       @   ensures capacity == initialCapacity;
       @   ensures this.isEmpty();
       @ also
@@ -49,7 +48,6 @@ public class ArrayList extends AbstractList
     /*@ pure @*/ public ArrayList(int initialCapacity);
 
     /*@  public normal_behavior
-      @   assignable objectState;
       @   ensures capacity == 10;
       @   ensures this.isEmpty();
       @*/
@@ -58,10 +56,9 @@ public class ArrayList extends AbstractList
     /*@  public normal_behavior
       @   requires c != null;
       @   requires c.size()*1.1 <= Integer.MAX_VALUE;
-      @   assignable objectState;
       @   ensures this.size() == c.size();
       @   ensures (\forall int i; 0 <= i && i < c.size();
-      @                     this.get(i).equals(c.iterator().nthNextElement(i)));
+      @                     this.get(i) == (c.iterator().nthNextElement(i)));
       @   ensures capacity == c.size()*1.1;
       @ also
       @  public exceptional_behavior
@@ -73,13 +70,19 @@ public class ArrayList extends AbstractList
 
     /*@  public normal_behavior
       @   assignable objectState;
+      @   ensures \not_modified(containsNull,elementType);
       @   ensures capacity == this.size();
+      @   ensures size() == \old(size());
+      @   ensures (\forall int i; 0<=i && i<size(); get(i) == \old(get(i)));
       @*/
     public void trimToSize();
 
     /*@  public normal_behavior
       @   assignable objectState;
       @   ensures capacity >= minCapacity;
+      @   ensures \not_modified(containsNull,elementType);
+      @   ensures size() == \old(size());
+      @   ensures (\forall int i; 0<=i && i<size(); get(i) == \old(get(i)));
       @*/
     public void ensureCapacity(int minCapacity);
 
@@ -105,6 +108,8 @@ public class ArrayList extends AbstractList
       @   ensures \result.getClass() == this.getClass();
       @   ensures \result.equals(this);
       @   ensures \result != null;
+      @   ensures ((List)\result).containsNull == this.containsNull;
+      @   ensures ((List)\result).elementType == this.elementType;
       @   ensures ((ArrayList)\result).size() == this.size();
       @   ensures (\forall int i; 0 <= i && i < this.size();
       @             ((ArrayList)\result).get(i) == this.get(i));
@@ -117,6 +122,8 @@ public class ArrayList extends AbstractList
     // specification inherited from List
     /*@ also
       @  public exceptional_behavior
+          // FIXME - not quite - won't get an exception unless an actual
+          // element has the wrong type
       @   requires elementType <: \elemtype(\typeof(a));
       @   assignable \nothing;
       @   signals (ArrayStoreException);

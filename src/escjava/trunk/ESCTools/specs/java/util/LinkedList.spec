@@ -31,12 +31,15 @@ public class LinkedList extends AbstractSequentialList
 	
     /*@ public normal_behavior
       @   ensures isEmpty();
+      @   ensures containsNull;
+      @   ensures elementType == Object.class;
       @*/
     /*@ pure @*/ public LinkedList();
           
-    /*@   public normal_behavior
-      @     requires c != null;
-      @     assignable objectState;
+    /*@ public normal_behavior
+      @   requires c != null;
+      @   ensures containsNull;
+      @   ensures elementType == Object.class;
       @ also
       @   public exceptional_behavior
       @     requires c == null;
@@ -46,7 +49,9 @@ public class LinkedList extends AbstractSequentialList
     
     /*@  public normal_behavior
       @    requires !isEmpty();
+      @    ensures !containsNull ==> \result != null;
       @    ensures (\result == null) || \typeof(\result) <: elementType;
+      @    ensures \result == get(0);
       @ also
       @  public exceptional_behavior
       @    requires isEmpty();
@@ -56,7 +61,9 @@ public class LinkedList extends AbstractSequentialList
     
     /*@  public normal_behavior
       @    requires !isEmpty();
+      @    ensures !containsNull ==> \result != null;
       @    ensures (\result == null) || \typeof(\result) <: elementType;
+      @    ensures \result == get(size()-1);
       @ also
       @  public exceptional_behavior
       @    requires isEmpty();
@@ -67,7 +74,13 @@ public class LinkedList extends AbstractSequentialList
     /*@  public normal_behavior
       @    requires !isEmpty();
       @     assignable objectState;
+      @    ensures !containsNull ==> \result != null;
       @    ensures ((\result == null) || \typeof(\result) <: elementType);
+      @    ensures \result == get(0);
+      @    ensures size() == \old(size()-1);
+      @    ensures \not_modified(containsNull,elementType);
+      @    ensures (\forall int i; 0<=i && i<size();
+                                 get(i) == \old(get(i+1)));
       @ also
       @  public exceptional_behavior
       @    requires isEmpty();
@@ -78,8 +91,14 @@ public class LinkedList extends AbstractSequentialList
  
     /*@  public behavior
       @    requires !isEmpty();
-      @     assignable objectState;
+      @    assignable objectState;
+      @    ensures !containsNull ==> \result != null;
       @    ensures ((\result == null) || \typeof(\result) <: elementType);
+      @    ensures \result == get(0);
+      @    ensures size() == \old(size()-1);
+      @    ensures \not_modified(containsNull,elementType);
+      @    ensures (\forall int i; 0<=i && i<size();
+                                 get(i) == \old(get(i)));
       @ also 
       @  public exceptional_behavior
       @    requires isEmpty();
@@ -89,12 +108,26 @@ public class LinkedList extends AbstractSequentialList
     public Object removeLast();
   
     /*@ public normal_behavior
-      @     assignable objectState;
+      @    requires containsNull || o != null;
+      @    requires o == null || \typeof(o) <: elementType;
+      @    assignable objectState;
+      @    ensures size() == \old(size()+1);
+      @    ensures \not_modified(containsNull,elementType);
+      @    ensures get(0) == o;
+      @    ensures (\forall int i; 1<=i && i<size();
+                                 get(i) == \old(get(i-1)));
       @*/    
     public void addFirst(Object o);
 
     /*@ public normal_behavior
-      @     assignable objectState;
+      @    requires containsNull || o != null;
+      @    requires o == null || \typeof(o) <: elementType;
+      @    assignable objectState;
+      @    ensures size() == \old(size()+1);
+      @    ensures \not_modified(containsNull,elementType);
+      @    ensures get(size()-1) == o;
+      @    ensures (\forall int i; 0<=i && i<(size()-1);
+                                 get(i) == \old(get(i)));
       @*/     
     public void addLast(Object o);
     
