@@ -61,7 +61,7 @@ public class BCTypeREM extends BCArithmeticInstructionWithException {
 			Formula divisorNonZero =
 				new Predicate2Ar(
 					stackTop,
-					new NumberLiteral(new Integer(0)),
+					new NumberLiteral("0",10, JavaType.JavaINT),
 					PredicateSymbol.NOTEQ);
 			ArithmeticExpression remResult =
 				new ArithmeticExpression(
@@ -82,7 +82,7 @@ public class BCTypeREM extends BCArithmeticInstructionWithException {
 			Formula divisorIsZero =
 				new Predicate2Ar(
 					stackTop,
-					new NumberLiteral(new Integer(0)),
+					new NumberLiteral("0",10, JavaType.JavaINT),
 					PredicateSymbol.EQ);
 
 			//_excPost = if exists exceptionHandler for NullPointerException then  wp(exceptionHandler,  normalPost) else 

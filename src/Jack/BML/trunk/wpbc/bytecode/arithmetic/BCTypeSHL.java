@@ -56,7 +56,7 @@ public class BCTypeSHL extends BCArithmeticInstruction {
 		BitExpression low5bitsofTopStack =
 			new BitExpression(
 				topStack,
-				new NumberLiteral(new Integer(31)),
+				new NumberLiteral("1F",16, JavaType.JavaINT),
 				ExpressionConstants.BITWISEAND);
 		BitExpression shift =
 			new BitExpression(

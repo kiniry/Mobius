@@ -61,7 +61,7 @@ public class BCTypeDIV extends BCArithmeticInstructionWithException {
 		Stack stackTop_minus_1 = new Stack(Expression.getCounter_minus_1());
 		// stack(top ) != null 
 		Formula divisorNonZero =
-			new Predicate2Ar(stackTop, new NumberLiteral(new Integer(0)), PredicateSymbol.NOTEQ);
+			new Predicate2Ar(stackTop, new NumberLiteral("0", 10, JavaType.JavaINT), PredicateSymbol.NOTEQ);
 		ArithmeticExpression divResult =
 			new ArithmeticExpression(
 				stackTop,
@@ -79,7 +79,7 @@ public class BCTypeDIV extends BCArithmeticInstructionWithException {
 				Connector.IMPLIES);
 		//stack(top ) == null 
 		Formula divisorIsZero =
-			new Predicate2Ar(stackTop, new NumberLiteral(new Integer(0)), PredicateSymbol.EQ);
+			new Predicate2Ar(stackTop, new NumberLiteral("0", 10, JavaType.JavaINT), PredicateSymbol.EQ);
 
 		//_excPost = if exists exceptionHandler for NullPointerException then  wp(exceptionHandler,  normalPost) else 
 		//                  else ExcPostcondition 
