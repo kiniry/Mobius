@@ -1,4 +1,4 @@
-TOP = ../../..
+export TOP = ../../..
 include ${TOP}/Makefile.defs
 
 ############################################################################
@@ -11,6 +11,7 @@ _ECLASSPATH = ${ESC_CLASSPATH}$(call canonicalize,:${JUNIT_UTILS_PATH}:.)
 _CLASSPATH = $(call canonicalize,:${JUNIT_UTILS_PATH}:.)
 _TMP = $(call canonicalize,/tmp)
 _SIMP = $(call canonicalize,${ESCJ_SIMPLIFY})
+
 _SPECS = $(call canonicalize,${ESC_SPECS})
 
 # Used to invoke text-based JUnit tests

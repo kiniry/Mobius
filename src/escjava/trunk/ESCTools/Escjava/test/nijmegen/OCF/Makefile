@@ -1,4 +1,6 @@
 
+export TOP  = ../../../..
+include ${TOP}/Makefile.defs
 
 runtests:  check
 
