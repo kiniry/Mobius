@@ -42,7 +42,7 @@ public class EscHtml extends JFrame {
 	this();
 	setTitle(title);
 	editor.setPage(url);
-	pack();
+	//pack();
 	if (w != 0) setSize(w,h);
 	setLocation(x,y);
     }

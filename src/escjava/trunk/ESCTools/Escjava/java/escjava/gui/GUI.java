@@ -907,6 +907,15 @@ static {
 	
 
 /* Issues:
+
+- Try a different spec path and make sure it works
+- Want skeletons for a whole missing file, a new file in ref sequence, a new method in a file
+- Integrate other tools - JML, Daikon
+- Check what happens if there is an error in the RS but not the given file
+- Chekc the BLue for timeout/big VC
+- What happens if typechecking depdns on new options after a clear.
+- Check all the GUI/ESC options
+
 - Want browse buttons for Classpath, Specpath, Input content
 - Need checks that Simplify, classpath, spec patah are well-formed
 - Highlighting a selection on scrolling in an editor does not work
