@@ -1,0 +1,613 @@
+\documentclass{sig-alternate}
+\usepackage{url}
+\usepackage{verbatim}
+\usepackage{graphicx}
+\input{boxed-figure-new}
+\input{obey}
+
+\newif\ifpdf
+\ifx\pdfoutput\undefined
+   \pdffalse     % no PDFLaTeX
+\else
+  \pdfoutput=1  % PDFLaTeX
+   \pdftrue
+\fi
+
+\ifpdf
+\usepackage[pdftex,bookmarks=false,
+            plainpages=false,naturalnames=true,
+            colorlinks=true,pdfstartview=FitV,
+            linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\else
+\usepackage[dvips]{hyperref}
+\fi
+
+% macros for program code
+%%\input{program-code}
+
+\newcommand{\INCLUDECOMMENT}[1]{\textrm{$\langle$ {#1} $\rangle$}}
+
+\begin{document}
+
+\renewcommand{\floatpagefraction}{0.9} 
+\renewcommand{\textfraction}{0.1}
+
+%%% The following for acm style
+\conferenceinfo{FTFJP}{Oslo, Norway}
+\CopyrightYear{2004} 
+
+\title{Reasoning with specifications containing method calls in JML and first-order provers}
+%\subtitle{}
+
+\numberofauthors{2}
+\author{
+\alignauthor David R. Cok\\
+       \affaddr{457 Hillside Avenue}\\
+       \affaddr{Rochester, NY   14610}\\
+       \affaddr{USA}\\
+       \email{cok@frontiernet.net}
+\alignauthor Joseph Kiniry\\
+       \affaddr{Security of Systems Group}\\
+       \affaddr{Computing Science Department}\\
+       \affaddr{University of Nijmegen}\\
+       \affaddr{Toernooiveld 1}\\
+       \affaddr{6525 ED Nijmegen}\\
+       \affaddr{The Netherlands}\\
+       \email{kiniry@cs.kun.nl}
+}
+
+\date{30 March 2004}
+
+%%% The following for llncs style
+%\pagestyle{headings}  % switches on printing of running heads
+%\addtocmark{XXXXXXXXX} % additional mark in the TOC
+%
+
+%\mainmatter
+%\title{Reasoning with specifications containing method calls in JML}
+%\titlerunning{YYYYYYY}
+
+
+%\author{David R. Cok\inst{1} \and Joseph Kiniry\inst{2}}
+
+%\institute{457 Hillside Avenue\\
+%       			Rochester, NY   14610\\
+%      			USA \\
+%       		{\tt cok@frontiernet.net} \\
+%	\and
+%		Security of Systems Group\\
+ %     		Computing Science Department\\
+ %      		University of Nijmegen\\
+%       		Toernooiveld 1\\
+%       		6525 ED Nijmegen\\
+%       		The Netherlands\\
+%       		{\tt kiniry@cs.kun.nl}
+%}
+
+%\authorrunning{Cok and Kiniry}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\date{27 March 2004}
+
+\newcommand{\myhref}[2]{\ifpdf\href{#1}{#2}\else\htmladdnormallinkfoot{#2}{#1}\fi}
+
+\maketitle
+\begin{abstract}
+Program verification requires translating the constructs of an annotation 
+into a suitable logic for an underlying theorem prover.   Providing modularity
+and comprehensibility by allowing 
+annotations containing method calls and other abstractions is as important in 
+specifications as it is in the program itself.  However, method invocations do not
+map neatly into the first-order logics that are often used for assuring the correctness
+of specifications.  The ESC/Java2 tool
+has been able to achieve a practical solution to this difficulty within the design constraints
+of its parent tool, ESC/Java.  Furthermore, the techniques used are applicable to other
+specification constructs such as quantifiers and model variables.
+
+\end{abstract}
+
+%%\category{D.2.4}{Software Engineering}
+%%                {Software/Program Verification}
+%%                [Formal methods, Programming by Contract]
+%%\category{F.3.1}{Logics and Meanings of Programs}
+%%                {Specifying and Verifying and Reasoning about Programs}
+ %%               [assertions, invariants, logics of programs,
+%%                pre- and post-conditions, specification techniques]
+
+
+%%\keywords{JML, ESC/Java, ESC/Java2, static analysis, verification, annotation languages, program specification} 
+
+\section{Introduction}
+
+Research in program verification is proceeding along many fronts: 
+increasing sophistication of annotation languages, increasing
+understanding of the nuances of programming language semantics as they
+relate to verification challenges, increasing sophistication of 
+provers, and increasing experience in using implemented systems on
+industrial-scale problems.  Early treatments ignored complicated
+aspects such as object references and method calls, which are
+essential in application to existing software.  Allowing
+the use of methods in specifications provides a level of abstraction 
+and conciseness that
+promotes reading, writing and understanding specifications and will 
+likely assist in their automated verification as well.  
+
+One such system,
+ESC/Java [[[Ref???]]] was successful at checking annotations, but its
+absence of method calls in annotations limited those annotations to
+low-level representations.  That system translated Java programs into
+an untyped first-order language.  In this paper we discuss the implementation
+of an extension to ESC/Java that allows the use of routine calls in
+specifications.  With that accomplished, several other programming
+language constructs can also be handled by the underlying prover.
+The approach described here is applicable to any source code translator
+that must interface with a prover that operates in a generic first-order 
+logic (as opposed to a logic designed to handle programming language
+constructs).
+
+The next section presents previous work on this topic in the context of other
+verification systems.  Sections 3, 4, and 5 describe the Java Modeling
+Language, the ESC/Java2 project, and the Simplify prover; these systems
+are the context in which the solution described here was implemented 
+and tested.  Section 6 describes our solution for translating method calls.
+Applications to other specification language features are described in section 7,
+and we end with some outstanding issues in section 8.
+
+\section{Background: Related work}
+
+[[[ Need discussion of how the LOOP tool treats method calls, as well as other tools, if there is published literature about them. ]]]
+
+\section{The Java Modeling Language}
+
+The Java Modeling Language (JML) has by now been described in several publications
+[[[Ref???]]], and we will not repeat that full description here.  This language is suitable for
+describing the issues at hand and is used in the implementation of the solution.
+ The advance described in this paper
+can be illustrated by simple invariants and lightweight preconditions,
+frame conditions and postconditions.  
+A class with examples of these annotations is shown in Fig.~\ref{fig:SS}.
+
+\begin{BFIGURE}
+\verbatiminput{SortedSequence.java}
+\caption{The specification and code for the class \texttt{SortedSequence}.  This class maintains a Bag of integer values, always returning the largest value.  For demonstration purposes, 
+the sorting of values is performed only on demand.}
+\label{fig:SS}
+\end{BFIGURE}
+
+Specifications are included in the text of a Java program by placing them in 
+specially formatted comments; these comments are either single-line comments
+beginning with  \texttt{//@} or are multi-line comments beginning with  \texttt{/*@}.
+Some specifications are properties of the class, such as the \texttt{invariant} clause
+in Fig.~\ref{fig:SS}.
+It contains a predicate that is expected to be satisfied in 
+each 'visible' state, that is, in the program state just after execution of constructors and
+just before and after execution of methods of the object.  In addition each routine may
+have a set of specifications: a \texttt{requires} clause 
+stipulates a precondition that must be satisfied in the program state just prior to a call
+of the method with which it is associated; an \texttt{ensures} clause stipulates the 
+postcondition that must be satisfied in the program state just after method execution;
+the \texttt{assignable} clause lists the only memory locations that may be assigned to (and hence 
+potentially modified) in the course of execution of the method.  The \texttt{pure} modifier on the \texttt{sort} method states that that method does not assign to any non-local memory locations
+and does not have any side-effects (that is, it does not change any observable aspect of 
+the program state).
+
+The syntax of the specification predicates follows Java closely.  It excludes any operations 
+that have side effects, such as the increment operator
+ \texttt{++}.  Other operations, such as arithmetic and 
+comparison operators, have the same syntax and semantics as in Java.  In particular, 
+predicates may include method calls, if those methods are designated \texttt{pure},
+indicating that the method has no side-effects.  Purity is
+required because annotations must be statements
+about the annotated program and may not modify its state.  This is particularly the case for
+tools which execute and check annotations at run-time.
+
+\section{ESC/Java2}
+
+The ESC/Java tool developed at DEC/SRC 
+(and subsequently at Compaq) was a pioneering tool in the
+application of static program analysis and verification technology to
+annotated Java programs~\cite{Flanagan-etal02}.  The tool and its built-in
+prover operated automatically with reasonable performance and needed
+only program annotations against which to check a program's source
+code.  The annotations needed were easily read, written and understood
+by those familiar with Java and were partially consistent with the syntax
+and semantics of the separate Java Modeling Language (JML)
+project~\cite{jmlpapers,Leavens-etal00}.  Consequently, the original
+ESC/Java was a research success
+and was also successfully used by other groups for a variety of case
+studies (e.g.,~\cite{Hub03,HOP04}).
+
+Its long-term utility, however, was lessened by a number of factors.  
+The ESC/Java2 project [[[ Ref???]]] aims to extend the work of ESC/Java 
+in a number of directions to improve its utility.
+\begin{itemize}
+\item As companies were bought and sold and research groups
+disbanded, there was no continuing development or support of 
+ESC/Java, making it less useful as time went by.  As a result of these
+marketplace changes, the tool was untouched for over two years and its
+source code was not available.  The ESC/Java2 project has established
+an open-source repository for the tool, brought the code up to the current
+definition of Java, and provided a degree of ongoing development and
+maintenance.
+\item The problem of lack of support for ESC/Java was compounded by its
+incomplete match to JML.  Furthermore, JML continued to evolve as
+research on the needs of annotations for program checking advanced.
+This unavoidable divergence of specification languages made writing,
+verifying, and maintaining specifications of non-trivial APIs
+troublesome.
+Additionally, JML has grown significantly in popularity.  A number of
+tools have been developed that use JML, representing the work of several
+groups~\cite{Burdy-etal03,jmlpapers,Bogor03,NimmerErnst01,Leavens-etal00}.
+Thus, many new research tools worked well with ``modern'' JML, but
+ESC/Java did not.  ESC/Java2 has evolved from ESC/Java to be
+consistent with the current definition of JML.
+\item Finally, and most relevant to this paper,
+not all of the specification constructs of JML were checked by ESC/Java.  For
+example, frame conditions were not checked, but errors in frame
+conditions could cause the prover to reach incorrect conclusions.
+Also, the annotation language lacked the ability to use methods in
+annotations, limiting the annotations to statements only about
+low-level representations.
+\end{itemize}
+
+The engineering goals of ESC/Java were to be automatic and useful in finding bugs
+and violations of program specifications.  It was not designed to be complete nor
+entirely sound.  ESC/Java2 has continued that spirit, though some unsound aspects have
+been corrected.
+
+\section{SIMPLIFY and the target verification condition language}
+
+As is customary in this field, ESC/Java2 (following the parent tool ESC/Java) translates program source code
+into verification conditions (VCs).  These conditions are passed to an accompanying prover which
+judges them to be valid or invalid and may produce counterexamples to demonstrate
+invalidity.  With an appropriately general definition of the syntax and semantics of the verification
+condition language, various provers could be used and compared.  ESC/Java2 uses the
+Simplify [[[Ref???]]] prover, accepting verification conditions expressed in a
+first-order logic (including universal and existential quantification) with equality and untyped total
+functions, extended with a simple theory of arithmetic.
+
+Briefly, the input language for VCs consists of the following:
+\begin{itemize}
+\item a VC is a logical formula, constructed using the conventional constants and connectors
+\texttt{TRUE}, \texttt{FALSE}, \texttt{AND}, \texttt{OR}, \texttt{NOT}, \texttt{IMPLIES},
+\texttt{IFF}, \texttt{FORALL}, \texttt{EXISTS}, \texttt{EQ}, and \texttt{NEQ}.  Here \texttt{EQ} and
+\texttt{NEQ} are equality and the negation of equality among pairs of terms.
+\item Terms are either constants, variables (as used in quantification), or function terms.
+\item Function terms consist of function symbols and zero or more arguments, which are also
+terms.  Function symbols are typically uninterpreted, but may have a meaning supplied by
+one of the supporting theories.  For example, numeric literals will have an interpreted meaning
+to Simplify's theory of linear inequalities over rational variables.
+\item Constants are uninterpreted symbols or ground constants of one of the theories.
+\end{itemize}
+
+Different provers will implement different sets of decision procedures on this input language.
+Simplify includes four interacting subtheories that cooperate to assess the satisfiability of a 
+set of input formulas:
+\begin{itemize}
+\item an e-graph sub-theory, which reasons about the equality (as in \texttt{EQ}) of sets of
+(uninterpreted) terms;
+\item a simplex sub-theory, which reasons about arithmetic inequalities over linear combinations
+of terms;
+\item an ordering sub-theory, which reasons about partial orders among terms;
+\item a matching sub-theory, which reasons about quantified formulas.
+\end{itemize}
+
+In the context of a programming language, the prover has built-in knowledge of numerical and
+boolean values and operators on those values.  A base set of axioms describes the behavior 
+of types and the subtype relationship and of arrays.  Object identity corresponds to a simple
+equality relationship among untyped, uninterpreted constants.  Object fields are modeled as
+arrays: a field named \texttt{f} is considered an array, and a field reference \texttt{o.f} is
+translated as the array reference \texttt{f[o]}.
+
+\section{Translating method calls}
+
+\subsection{Issues with method calls within annotations}
+
+The problem at hand is to translate expressions containing method calls into the target logic described above.  An assertion in the target logic concerning some equivalent of a method call is of no value in reasoning, however, unless there are other logical assertions that provide some 
+information to the prover about that translation of the method call.  That information resides in
+the specifications of the method being called.  Thus, we need to translate the method specifications
+in a manner similar to that used to translate the calling expression.
+
+In some cases there exists an expression whose value is the result of the method call.  For
+instance, if a method's specifications have a postcondition of the form
+\begin{center}\texttt{ensures \char'134 result == ... ; }\end{center}
+then one could extract such an expression, at least under the preconditions for which the
+postcondition holds.  (The JML symbol \texttt{\char'134 result} represents the result returned by a method.)  
+That expression could then be substituted for the method call itself,
+after appropriate substitution of actual for formal arguments.  This procedure does not work
+in general however.  There may not be such an expression available.  There may be more than
+one such
+expression available, requiring a prescient choice of the best one to substitute for the method call.
+Alternatively, the expression being substituted may contain other method calls that
+will themselves require substitution; the substitution procedure may not terminate if there is
+any recursive use of method calls in the annotations.  Even without recursion, the depth of
+rewriting can create very large verification conditions (easily consuming 256M on the ordinary
+but realistic sets of specifications contained in the JML library, in our experiments).
+
+However, since the logic does allow terms containing uninterpreted functions, defining a new
+uninterpreted function for each method is not a difficulty.  A naive translation of methods to
+function terms would translate a method call of \texttt{sort()} into a function term with no
+arguments, namely, \texttt{(sort)}.  This procedure encounters the following complications.
+\begin{itemize}
+\item
+As will be obvious to any Java programmer, the argument list of the method does not 
+actually contain all of the relevant arguments to the method.  If the method is not static, the
+argument list must include the receiver object (\texttt{this}) as well.  Not quite as obviously,
+functions representing constructors of inner classes must also include a reference to the
+enclosing class as an argument.  Thus \texttt{sort()} must be translated as \texttt{(sort this)}.
+This allows a natural distinction between method calls \texttt{sort()}, \texttt{a.sort()}, and
+\texttt{b.sort()}.  These are translated into the terms \texttt{(sort this)}, \texttt{(sort a')}, and
+\texttt{(sort b')} (here \texttt{a'} and \texttt{b'} are the translations into terms of
+the programming language expressions \texttt{a} and \texttt{b}, respectively).  
+Aliasing is naturally handled as well, since if it is established, for example, that
+\texttt{(EQ this a')}, then \texttt{(EQ (sort this) (sort a'))} will immediately follow.
+
+\item
+Secondly, the method implementation may depend on other static or instance fields
+of the receiving object that are not listed in the argument list.  The values of instance fields
+may be considered to be implicitly included via the \texttt{this} argument, but their values then
+depend on the current program state.  In our running example, the value of the \texttt{sort} term
+will depend on the values of \texttt{this.n} and the values of the elements of \texttt{this.seq}.
+
+\item
+Most importantly, the semantics of equality among function terms is not appropriate to the
+reference semantics of an object-oriented language such as Java.  Two function terms in the
+logic are equal if they have the same function symbol, the same number of arguments, and the
+arguments are pairwise equal.  This definition of equality is fine for the immutable
+values of Java's primitive types, but not for reference values.  Reference values to the
+same object in different program
+states will test equal even though their internal states may be different.  For example,
+\texttt{this.sort()} will have a different value in the pre-state and the post-state of a call of the 
+\texttt{push} method.  However, in the logic \texttt{(sort this)} will be the same term, and therefore
+equal, in those two states, since there is no knowledge of a program state in the underlying
+logic or embedded in the reference value of \texttt{this} in the logic.
+\end{itemize}
+
+\subsection{The translation procedure}
+
+Two options were explored to overcome the difficulty presented in the previous section.
+
+First, one could expand the argument list of a method to include directly all the fields of all
+of the objects (including \texttt{this}) in the argument list.  This can create very long
+argument lists.  In general, it is not even possible to do this syntactically since the reference
+arguments may refer to recursive data structures.
+
+The more useful alternative is to include as an argument of the method a value indicating the
+program state in which the method is being evaluated.  A different state constant is defined
+for the pre-state and the post-state if the method is not \texttt{pure}; a common state
+constant can be used if the method is \texttt{pure}.  This state constant is uninterpreted.
+That is we do not use it in any context other than to distinguish different program states 
+in method calls.
+This may limit the conclusions that may be drawn about relationships among states, but has
+been simple to apply and suitably effective in practice.
+
+The translation, then, consists of the following steps,
+
+.... [[[ Complete ]]]
+
+[[[ Experience; example of what is not possible to conclude ]]]
+
+\section{Application to other \\ annotation constructs}
+
+With translation of method calls to an underlying first-order logic enabled in ESC/Java2, 
+several other specification constructs can be readily translated and used in static checking as 
+well.  These are described briefly in this section.
+ 
+\subsection{Constructor calls}
+
+Constructor calls can be treated as calls of static methods.  That is, they do not depend on an
+implict \texttt{this} argument, though, if they are constructors of a java inner class, they will depend 
+on an implicit argument representing an instance of the enclosing class.  Since some of the 
+arguments may be reference values, the translated function must also have a state constant
+as an argument.  The axioms about the constructed value are formed from the postconditions
+of the constructor declaration.
+
+Constructors are different than methods in that they dynamically allocate new objects on the 
+heap.  Thus the result is a reference value not equal to any previous reference value.  ESC/Java2
+(following ESC/Java) provides axioms concerning allocation that ensure this behavior, but 
+those are beyond the scope of this paper.
+
+\subsection{Array allocation}
+
+Translating expressions such as \texttt{new int[9]} that allocate new arrays is quite straightforward.
+These expressions do not depend on the current state nor on any implicit receiver argument.
+Consequently a function whose arguments are simply the type and number of the array 
+elements is all that is needed.
+Just as for constructors, axioms regarding allocation are required, 
+so that the value produced by a new array
+expression is known to be different than any previously produced reference value.
+
+A new array expression has no explicit pre-conditions or post-conditions, but there are some implicit axioms:
+the result of the new array allocation is not null, is freshly allocated,
+ and has a specific dynamic type, 
+a specific length, and each
+element is equal to a zero-equivalent value (e.g. integer 0, boolean \texttt{false}, or
+reference \texttt{null}).
+
+\subsection{Quantified expressions}
+
+JML includes in its expression syntax various generalized quantified expressions.  Besides
+the usual universal (\texttt{forall}) and existential (\texttt{exists}) quantified expressions, JML
+also defines the quantifiers \texttt{\char'134 min}, \texttt{\char'134 max}, \texttt{\char'134 numof},
+\texttt{\char'134 sum}, and \texttt{\char'134 prod}.  For example, the value of the expression
+\begin{center} \texttt{(\char'134 min int i; i <= 0 \&\& i < 10; p(i))} \end{center}
+is the smallest value of \texttt{p(i)} for \texttt{i} in the given range.  Similarly, \texttt{\char'134 max}
+produces the largest of a given set of \texttt{int} values;  \texttt{\char'134 numof} yields the number
+of true values in a set of boolean values; the value of the
+ \texttt{\char'134 sum} and \texttt{\char'134 prod}
+expressions is the sum and product, respectively, of the set of given values.
+
+The translation of each of these consists of syntactically replacing the expression with a
+function call (unique to that syntactic location).  Implicit receiver and state arguments are needed
+as described previously.  If the quantifier is within the scope of another quantified
+expression, there will also need to be function arguments for any bound variable used
+in the replaced expression.
+
+One must also introduce axioms concerning the value of this introduced function, 
+corresponding to the value of the original quantified expression.  For example, the
+axioms associated with
+\begin{center} ( \texttt{\char'134 min} {\em decl}; {\em range-expr}; {\em expr}) \end{center}
+are 
+\begin{center} ( \texttt{\char'134 exists} {\em decl}; {\em range-expr}) \texttt{==>} \\
+( \texttt{\char'134 exists} {\em decl}; {\em range-expr}; \texttt{MIN() ==} {\em expr}) \end{center}
+and
+\begin{center} ( \texttt{\char'134 exists} {\em decl}; {\em range-expr}) \texttt{==>} \\
+( \texttt{\char'134 forall} {\em decl}; {\em range-expr}; \texttt{MIN() <=} {\em expr}), \end{center}
+where \texttt{MIN()} is replaced by the actual skolem function call expression.
+
+
+\subsection{Model variables}
+
+Model variables are declarations of fields within annotation comments that are not treated
+as fields of the object.  Rather a model variable is given a representation, typically in 
+terms of the internal state of the object.  The model variable may be used in annotations
+as an abstract representation, or {\em model}, of some quantity related to the object at hand.
+For example, [[[ ... provide example ]]]
+
+Model variables in JML may have a functional representation, a predicate representation, or 
+no representation at all.  Work on translation of model variables in JML for the LOOP tool 
+occurred concurrently with the work in this paper and is discussed in 
+\cite{BreunessePoll03}.  We came to
+a similar solution and offer some additional observations here.
+
+\subsubsection {Functional representations}
+
+A functional representation is denoted in JML by the syntax
+\begin{center} //@ \texttt{represents x <- }{\em ... expression ... } ; \end{center}
+There is a specific value, provided by the expression, for the model variable (in a given program 
+state).   This expression could be simply substituted for occurences of the model variable, as
+stated by \cite{BreunessePoll03}.  However, this is successful only in simple cases.  If there
+is heavy use of model variables, the nested substitutions can be quite deep.  Furthermore,
+JML allows multiple redundant representations, requiring a choice of which to use.  Finally,
+direct or mutual recursion would prohibit simple substitution.  In our implementation in
+ESC/Java2, we found that representing functional model variables by method
+calls was the better
+solution.
+
+\subsubsection{Predicate representations}
+
+JML also allows the values of model variables to be specified with a predicate representation:
+\begin{center} \texttt{represents x \char'134 such\_that }{\em ... predicate ... } ; \end{center}
+In this case the predicate does not necessarily give an executable expression for the
+model variable and may not even constrain the model variable to a single value.  As
+\cite{BreunessePoll03} points out, if there are no possible values satisfying the predicate, 
+inconsistency in the generated axioms can result, if appropriate care is not taken.
+
+In this case, we represent the model variable by a method call, with state and receiver arguments
+as discussed above.
+
+\subsubsection{Model variables with no representation}
+
+A model variable, particularly in an abstract class or interface, may have no representation
+at all.  It may be used in the specification of various methods, but its representation would be
+supplied by derived classes that implement the interface.  An example of such an interface is
+in Fig.~\ref{fig:norep}.  In this situation, we still translate the model variables as method calls,
+but now there are no axioms generated from the represents clauses.  Instead, only the
+pre- and post-conditions provide information about the behavior of the variable.
+
+\begin{BFIGURE}
+\verbatiminput{NoRep.java}
+\caption{The specification and code for the interface \texttt{NoRep},
+demonstrating a model variable with no representation.}
+\label{fig:norep}
+\end{BFIGURE}
+
+Representation-less model variables do pose a difficulty in the translation and checking of model bodies.  If the model variable is \texttt{assignable} for a given method, then its value may 
+change in the course of execution of the body of that method.  But without a representation,
+there is no way to reason about its value during any (symbolic) execution of the body.
+\footnote{The requirements on JML's  \texttt{in} clause, not discussed here, do provide information
+on which other fields of the class contribute to the value of a model variable and consequently
+at which program points the value of a model variable might change.}
+
+\subsubsection{Unmodified model variables}
+
+There is a special case of using model variables that allows a simplification in their translation.
+If a model variable is not listed \footnote{including not listed via a JML datagroup} in a
+method's \texttt{assignable} clause, then its value may not change during the course of the
+body of the method.  Thus for that method's body and the checking of its pre- and
+post-conditions, the model variable may be treated as a constant.  The value of the model 
+variable can be constrained by the value of its representation evaluated in the pre-state
+(or any state) of the method.
+
+\section{Outstanding issues in using \\ method calls in annotations}
+
+Although the translation for method calls described above is implemented with 
+favorable experience in verification, there remain some open issues and opportunities 
+for improvement.
+
+\subsection{Immutable values}
+
+The complication of introducing state constants as additional arguments is a result of the underlying logic using uninterpreted values for reference quantities in the programming language.
+Since these reference values refer to mutable objects, one must retain a state value to 
+indicate which state of the object is meant.  If all of the arguments were primitive type values
+such as integers and booleans, then a state value would not be needed.  These values of
+non-reference types are immutable: if two values compare equal, they will always have the same
+properties in any program state. 
+
+Some reference types are also immutable.  For example, values of \texttt{java.lang.String} that
+compare equal (with \texttt{==}) will always have identical properties even in different program
+states.  One requirement for the values of a type to be immutable is that no method of the type
+modify the internal state of the object; this condition is assured to hold if all methods of the type are
+\texttt{pure} and all methods of any subtype are \texttt{pure}.  However, it is also at least
+necessary for immutability
+that the internal representation not contain mutable objects and
+that the representation not be exposed  in a way that the internal state could be modified by 
+some external means.
+
+Reasoning with immutable objects is potentially simpler and more efficient that with typical
+mutable objects.  For example, JML includes a library of classes representing mathematical 
+concepts useful in specifying classes [[[Ref???]]]; it may be advantageous if it could be 
+established that values of these classes are immutable.  For this to be possible, we need 
+a set of sufficient conditions for immutability that can be statically checked, a proof of 
+soundness regarding immutability, and a demonstration by a working implementation
+of the utility of immutable classes in program verification .
+
+\subsection{Constancy}
+
+-- acknowledge Erik???
+--- Whats the problem
+[[[[ complete ...]]]
+
+
+\subsection{Exceptions}
+
+[[[[ complete ...]]]
+
+\section{Conclusion}
+
+[[[[ complete ...]]]
+
+\section{Acknowledgments}
+
+Joseph Kiniry is supported by the NWO Pionier research
+project on Program Security and Correctness and the VerifiCard
+research project. 
+
+
+%
+% The following two commands are all you need in the
+% initial runs of your .tex file to
+% produce the bibliography for the citations in your paper.
+\bibliographystyle{abbrv}
+%\bibliographystyle{plain}
+
+\bibliography{PASTE2004}  
+% To create the self-contained file - comment out the line above and include the
+% contents of the .bbl file here
+
+
+% You must have a proper ".bib" file
+%  and remember to run:
+% latex bibtex latex latex
+% to resolve all references
+%
+% ACM needs 'a single self-contained file'!
+%
+%APPENDICES are optional
+
+%\balancecolumns
+
+
+% That's all folks!
+\end{document}
