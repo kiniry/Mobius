@@ -22,7 +22,8 @@ javatexinfofiles =	$(addsuffix .texinfo,$(javafiles))
 
 PROBLEMS =	problems
 PAPERS =	CASSIS2004.pdf FTFJP2004.pdf PASTE2004.pdf NIII-R0413.pdf
-HOMEWORK =	jml_homework.dvi jml_homework.ps jml_homework.ps2pdf
+DIAGRAMS =	koa_state_diagram.eps koa_state_diagram.pdf
+HOMEWORK =	jml_homework.dvi jml_homework.ps jml_homework.pdf jml_homework.txt
 
 PERL=perl
 CODE2TEXI=$(PERL) -e 'BEGIN: while (<>) { s/\r//g; s/@/@@/g; s/\{/@\{/g; s/\}/@\}/g; } continue { print; }'
@@ -101,7 +102,7 @@ cleanup:
 
 clean:
 	rm -rf auto _region_* \
-		$(PAPERS) $(HOMEWORK) \
+		$(PAPERS) $(HOMEWORK) ${DIAGRAMS} \
 		*.aux *.log *~ *.dvi *.brf \
 		*.cp *.cps *.fn *.ky *.pg *.tp *.vr \
 		*.bbl *.blg *.toc *.thm *.out *.cb \

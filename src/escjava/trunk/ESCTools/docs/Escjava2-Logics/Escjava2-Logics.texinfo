@@ -2,7 +2,7 @@
 @c %**start of header
 
 @setfilename Escjava2-Logics.info
-@settitle The Logics of ESC/Java2 $Revision$
+@settitle The Logics and Calculi of ESC/Java2 $Revision$
 @c Other commands that globally affect the document formatting: 
 @c synindex, footnotestyle
 @afourwide
@@ -31,25 +31,31 @@
 @c =============================================================================
 @c %**summary and copyright
 
-Original version (ESCJ 8) by K. Rustan Leino and Jim Saxe, 30 December
-1997.  Some additions by Cormac Flanagan, 24 April 1998.  Modified by
-K. Rustan Leino, 13 September 1999 (making ESCJ 8a from ESCJ 8).
+Original version of logic documentation (ESCJ 8) by K. Rustan M. Leino
+and Jim Saxe, 30 December 1997.  Some additions by Cormac Flanagan, 24
+April 1998.  Modified by K. Rustan Leino, 13 September 1999 (making ESCJ
+8a from ESCJ 8).
+
+Original version of Java to Guarded Command Translation (ESCJ 16c) by
+K. Rustan M. Leino and Jim Sax, 26 August 1998.  First draft by Rustan
+and Raymie Stata, 11 April 1997.  Additional comments by Cormac
+Flanagan.
 
 Modified by Joseph Kiniry, with initial input from Cesare Tinelli and
 input from Silvio Ranise, beginning on 21 June 2004.
 
 Current editor Joseph Kiniry.
 
-This document describes the logic of ESC/Java2. It describes axioms
-that are part of the logic (and thus are always included in the
-background predicate) and axioms that are introduced to the background
-predicate when the Java program being checked contains various
-constructs.  It is not the purpose of this document to describe the
-translation of Java into guarded commands, but we describe some of the
-assumptions and assertions produced by the translation when this will
-help the reader understand the interaction between the translation and
-the logic.
-@c add xref to guarded command document
+This document describes the logics of ESC/Java2.  All of these logics
+represent partial semantics for Java and JML.  Some are sets of axioms
+that are part of the Java logic (and thus are always included in the
+background predicate) and sets of axioms that are introduced to the
+background predicate when the Java program being checked contains
+various constructs.  A weakest precondition calculi described herein
+describes the translation of Java into guarded commands.  The
+assumptions and assertions produced by this translation are also
+discussed when this will help the reader understand the interaction
+between the wp-based translation and the logic.
 
 This is edition $Revision$.
 
@@ -57,8 +63,8 @@ This document is a work in progress.  Suggestions and input are always
 welcome.
 
 @copying
-``The Logics of ESC/Java2'' is licensed under the Creative Commons
-Attribution-NonCommercial-ShareAlike 2.0 license.  See
+``The Logics and Calculi of ESC/Java2'' is licensed under the Creative
+Commons Attribution-NonCommercial-ShareAlike 2.0 license.  See
 @uref{http://creativecommons.org/licenses/by-nc-sa/2.0/}
 
 Copyright @copyright{} 1997 K. Rustan Leino, Jim Saxe, and Digital
@@ -72,6 +78,9 @@ Corporation.
 
 Copyright @copyright{} 2004 Joseph R. Kiniry and the University of
 Nijmegen.
+
+Copyright @copyright{} 2004 Joseph R. Kiniry and University College
+Dublin.
 
 @quotation
 You are free:
@@ -116,19 +125,19 @@ See @uref{http://creativecommons.org/licenses/by-nc-sa/2.0/legalcode}
 @c %**title, contents, and copyright
 
 @titlepage
-@title The Logics of ESC/Java2
-@subtitle Edition $Revision$, May 2004
-@subtitle This document describes the logics of ESC/Java2 version 2.0a7.
-@author Joseph R. Kiniry <kiniry@@cs.kun.nl>
+@title The Logics and Calculi of ESC/Java2
+@subtitle Edition $Revision$, November 2004
+@subtitle This document describes the logics of ESC/Java2 version 2.0a8 and later.
+@author Joseph R. Kiniry <kiniry@@acm.org>
 
 @c The following two commands start the copyright page.
 @page
 @vskip 0pt plus 1filll
 @insertcopying
 
-To be published by the Nijmegen Institute for Computing and Information
-Science at the University of Nijmegen as technical report NIII-R04XX.
-See @uref{http://www.cs.kun.nl/research/reports/}
+@c To be published by the Nijmegen Institute for Computing and Information
+@c Science at the University of Nijmegen as technical report NIII-R04XX.
+@c See @uref{http://www.cs.kun.nl/research/reports/}
 @end titlepage
 
 @c metadata used in HTML
@@ -136,7 +145,8 @@ See @uref{http://www.cs.kun.nl/research/reports/}
 ESC/Java, ESC/Java2, Java Modeling Language, JML, Extended Static
 Checking, Extended Static Checker, Design by Contract, Java,
 Verification, BISL, Object-oriented Logic, Behavioral Interface
-Specification Language, Kiniry
+Specification Language, Weakest Precondition, Unsorted, Many-Sorted,
+Kiniry
 @end documentdescription
 
 @c Output the table of contents at the beginning.
@@ -157,15 +167,21 @@ Specification Language, Kiniry
 @insertcopying
 @end ifnottex
 
-This document describes the logics of ESC/Java2.  Each logic is described by:
-(a) a set of axioms that constitute the logic and are thus are always included in the
-background predicate), and (b) axioms that are introduced to the background
-predicate when the Java program being checked contains various constructs.
+This document describes the logics of ESC/Java2.  Each logic is
+described by: (a) a set of axioms that constitute the logic and are thus
+are always included in the background predicate), and (b) the axioms
+that are introduced to the background predicate when the Java program
+being checked contains various constructs.
+
+The weakest precondition calculus that is used to translate Java
+programs into verification conditions in a guarded command form is also
+discussed.
 
 @menu
 * Introduction::                  An introduction to this document.
 * Unsorted Logic::                The unsorted object logic.
 * Many-Sorted Logics::            Two many-sorted objects logics.
+* Weakest Precondition Calculus:: Translating Java to verification conditions.
 * Unsorted Construct Index::      An index of all unsorted pseudo-declarations.
 * Motivating Examples::           A small set of motivating examples.
 * List of Possible Experiments::  Ideas for future work, experiementation, etc.
@@ -223,7 +239,9 @@ open design issues.
 This document was written under the heavy influence of Leino, Saxe,
 and Flanagan's @emph{The Logic of ESC/Java},
 which was in turn written under the heavy influence of Dave Detlefs's 
-@emph{Logic of ESC/Modula-3}.
+@emph{Logic of ESC/Modula-3}.  This document also includes the updated
+contents of @emph{Java to Guarded Command Translation} by Leino, Saxe,
+Stata, and Flanagan.
 
 @c =============================================================================
 @node Unsorted Logic, Many-Sorted Logics, Introduction, Top
@@ -2237,13 +2255,20 @@ that says that all @code{String} lengths are non-negative.  We propose
 to add such functions and axioms only as the need becomes evident.
 
 @c =============================================================================
-@node Many-Sorted Logics, Unsorted Construct Index, Unsorted Logic, Top
+@node Many-Sorted Logics, Weakest Precondition Logic, Unsorted Logic, Top
 @chapter Many-Sorted Logics
 
 Discussion of new logics.
 
 @c =============================================================================
-@node Unsorted Construct Index, Motivating Examples, Many-Sorted Logics, Top
+@node Weakest Precondition Calculus, Unsorted Construct Index, Many-Sorted Logics, Top
+@chapter Weakest Precondition Calculus
+
+Discussion of ESC/Java2's weakest precondition calculus for translating
+Java into verification conditions via a guarded command language.
+
+@c =============================================================================
+@node Unsorted Construct Index, Motivating Examples, Weakest Precondition Logic, Top
 @appendix Index of Constructs in Unsorted Logic
 
 @cindex Index of Predicates, Functions, and Constants
@@ -2421,7 +2446,7 @@ From @ref{Reflecting the Conditional Operator}:
 @cindex Motivating Examples
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-@node Array Type-Constant Axioms Example
+@node Array Type-Constant Axioms Example, Final Type Axioms Example, Motivating Examples, Motivating Examples
 @appendixsection Array Type-Constant Axioms Example
 
 @cindex Array type-constant axioms example
@@ -2703,7 +2728,7 @@ not (Throwable <: RuntimeException)
 This motivates the need for the antisymmetry axiom.
 
 @c =============================================================================
-@node List of Possible Experiments, Copying, Motivating Examples, Top
+@node List of Possible Experiments, Logics, Motivating Examples, Top
 @appendix List of Possible Experiments
 
 @cindex List of Possible Experiments
@@ -2711,7 +2736,7 @@ This motivates the need for the antisymmetry axiom.
 To be filled in.
 
 @c =============================================================================
-@node Logics, Index, List of Possible Experiments, Top
+@node Logics, Copying, List of Possible Experiments, Top
 @appendix Logics
 
 @cindex Logics
@@ -2745,13 +2770,13 @@ framework and the PVS higher-order theorem prover.
 * PVS Realization of Many-Sorted Logics::  
 @end menu
 
-@node Unsorted Logics
+@node Unsorted Logics,  , Logics, Logics
 @appendixsection Unsorted Logics
 
 @cindex Unsorted Logics
 
 @c -----------------------------------------------------------------------------
-@node Original Logic
+@node Original Logic, Additional Axioms Introduced in Calvin and Houdini, Unsorted Logics, Unsorted Logics
 @appendixsubsec Original Logic
 
 @example
@@ -2759,7 +2784,7 @@ framework and the PVS higher-order theorem prover.
 @end example
 
 @c -----------------------------------------------------------------------------
-@node Additional Axioms Introduced in Calvin and Houdini
+@node Additional Axioms Introduced in Calvin and Houdini, Additional Axioms Introduced in ESC/Java2, Original Logic, Unsorted Logics
 @appendixsubsec Additional Axioms Introduced in Calvin and Houdini
 
 The following axioms were added to the object logic of Calvin.  They
@@ -2772,7 +2797,7 @@ have not yet been evaluated for inclusion in ESC/Java2.
 Houdini introduced no new axioms.
 
 @c -----------------------------------------------------------------------------
-@node Additional Axioms Introduced in ESC/Java2
+@node Additional Axioms Introduced in ESC/Java2, SMT-LIB Many-Sorted Logic, Additional Axioms Introduced in Calvin and Houdini, Unsorted Logics
 @appendixsubsec Additional Axioms Introduced in ESC/Java2
 
 The following axioms were introduced to the unsorted object logic to
@@ -2783,7 +2808,7 @@ reason about new constructs introduced in ESC/Java2.
 @end example
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-@node Many-Sorted Logics
+@node Many-Sorted Logics,  , Unsorted Logics, Logics
 
 @appendixsection Many-Sorted Logics
 
@@ -2793,7 +2818,7 @@ This appendix section contains several different many-sorted object
 logics.
 
 @c -----------------------------------------------------------------------------
-@node SMT-LIB Many-Sorted Logic
+@node SMT-LIB Many-Sorted Logic, Many-Sorted Logic with Subsorts, Additional Axioms Introduced in ESC/Java2, Unsorted Logics
 @appendixsubsec SMT-LIB Many-Sorted Logic
 
 What follows is a many-sorted object logic for Java, written in
@@ -2804,25 +2829,25 @@ SMT-LIB.
 @end example
 
 @c -----------------------------------------------------------------------------
-@node Many-Sorted Logic with Subsorts
+@node Many-Sorted Logic with Subsorts, Maude Realization of Many-Sorted Logics, SMT-LIB Many-Sorted Logic, Unsorted Logics
 @appendixsubsec Many-Sorted Logic with Subsorts
 
 TBD
 
 @c -----------------------------------------------------------------------------
-@node Maude Realization of Many-Sorted Logics
+@node Maude Realization of Many-Sorted Logics, PVS Realization of Many-Sorted Logics, Many-Sorted Logic with Subsorts, Unsorted Logics
 @appendixsubsec Maude Realization of Many-Sorted Logics
 
 TBD
 
 @c -----------------------------------------------------------------------------
-@node PVS Realization of Many-Sorted Logics
+@node PVS Realization of Many-Sorted Logics,  , Maude Realization of Many-Sorted Logics, Unsorted Logics
 @appendixsubsec PVS Realization of Many-Sorted Logics
 
 TBD
 
 @c =============================================================================
-@node Copying, Index, List of Possible Experiments, Top
+@node Copying, Index, Logics, Top
 @appendix Copying
 
 @cindex Copying

@@ -2,7 +2,7 @@
 @c %**start of header
 
 @setfilename jml_homework.info
-@settitle JML and ESC/Java Homework Exercises $Revision$
+@settitle JML and ESC/Java2 Homework Exercises $Revision$
 @c Other commands that globally affect the document formatting: 
 @c synindex, footnotestyle
 @afourwide
@@ -15,16 +15,17 @@
 @c %**summary and copyright
 
 This document contains a set of homework exercises for those that wish
-to learn JML and ESC/Java.  It was begun by Joseph R. Kiniry
-<kiniry@@cs.kun.nl> in May 2004 for the tutorial ``Design by Contract
+to learn JML and ESC/Java2.  It was begun by Joseph R. Kiniry
+<kiniry@@acm.org> in May 2004 for the tutorial ``Design by Contract
 and Automatic Verification for Java with JML and ESC/Java2'' presented
-at ECOOP 2004 in Oslo, Norway in June 2004.  This is edition $Revision$.
+at ECOOP 2004 in Oslo, Norway in June 2004.  This is edition
+$Revision$.
 
 This document is still very much a work in progress.  Suggestions and input 
 are welcome.
 
 @copying
-The JML and ESC/Java Homework Exercises are licensed under the Creative
+The JML and ESC/Java2 Homework Exercises are licensed under the Creative
 Commons Attribution-NonCommercial-ShareAlike 2.0 license.  See
 http://creativecommons.org/licenses/by-nc-sa/2.0/
 
@@ -73,20 +74,20 @@ See http://creativecommons.org/licenses/by-nc-sa/2.0/legalcode
 @c %**title, contents, and copyright
 
 @titlepage
-@title JML and ESC/Java Homework Exercises
-@subtitle Learning JML and ESC/Java Through Example
+@title JML and ESC/Java2 Homework Exercises
+@subtitle Learning JML and ESC/Java2 Through Example
 @subtitle Edition $Revision$, May 2004
-@subtitle These exercises use JML version 5.0rc1 and ESC/Java2 version 2.0a7
-@author Joseph R. Kiniry <kiniry@@cs.kun.nl>
+@subtitle These exercises use at least JML version 5.0rc1 and ESC/Java2 version 2.0a7.
+@author Joseph R. Kiniry <kiniry@@acm.org>
 
 @c The following two commands start the copyright page.
 @page
 @vskip 0pt plus 1filll
 @insertcopying
 
-Will be published by the Nijmegen Institute for Computing and Information
-Science at the University of Nijmegen as technical report NIII-R04XX.
-See http://www.cs.kun.nl/research/reports/
+@c Will be published by the Nijmegen Institute for Computing and Information
+@c Science at the University of Nijmegen as technical report NIII-R04XX.
+@c See http://www.cs.kun.nl/research/reports/
 @end titlepage
 
 @c metadata used in HTML

@@ -105,16 +105,16 @@ See @uref{http://creativecommons.org/licenses/by-nc-sa/2.0/legalcode}
 @subtitle Their Necessary Functionality, Interfaces, and Use
 @subtitle Edition $Revision$, May 2004
 @subtitle This document describes the provers of ESC/Java2 version 2.0a7.
-@author Joseph R. Kiniry <kiniry@@cs.kun.nl>
+@author Joseph R. Kiniry <kiniry@@acm.org>
 
 @c The following two commands start the copyright page.
 @page
 @vskip 0pt plus 1filll
 @insertcopying
 
-To be published by the Nijmegen Institute for Computing and Information
-Science at the University of Nijmegen as technical report NIII-R04XX.
-See @uref{http://www.cs.kun.nl/research/reports/}
+@c To be published by the Nijmegen Institute for Computing and Information
+@c Science at the University of Nijmegen as technical report NIII-R04XX.
+@c See @uref{http://www.cs.kun.nl/research/reports/}
 @end titlepage
 
 @c metadata used in HTML
