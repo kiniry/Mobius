@@ -206,6 +206,9 @@ class CECEnum implements Enumeration {
 	case 'V':
 	  P.checkString("Valid.");
 	  kind = SimplifyOutput.VALID;
+	  P.eatWhitespace();
+	  if (P.peekChar() == '(')
+		P.checkString("(Added to background predicate).");
 	  break;
 	case 'I':
 	  P.checkString("Invalid.");
