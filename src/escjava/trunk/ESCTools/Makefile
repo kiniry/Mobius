@@ -241,11 +241,12 @@ jmldoc:  build
 	  -tag warning -tag todo -tag note -tag design -tag usage \
 	  -tag requires \
 	  -d $(JMLDOC_GEN_DIR) \
+	  -A \
           $(PACKAGE_LIST)
 
 .PHONY: jml
 jml:  build
-	$(JML) -sourcepath $(call canonicalize,$(JAVADOC_SOURCEPATH):$(SPECS):$(JUNIT_SOURCEPATH)) \
+	$(JML) -A -sourcepath $(call canonicalize,$(JAVADOC_SOURCEPATH):$(SPECS):$(JUNIT_SOURCEPATH)) \
 	  -classpath "$(call canonicalize,$(JAVADOC_SOURCEPATH):${JUNIT_LIB}:${ANT_LIB}:${SPECS}:)${CLASSPATH}" \
 	$(PACKAGE_LIST)
 
