@@ -71,4 +71,8 @@ public class OLD extends JMLExpression {
 		OLD copy = new OLD(copySubExpressions[0]);
 		return copy;
 	}
+	
+	public Expression atState(int state) {
+		return this;
+	}
 }

@@ -9,6 +9,7 @@ package modifexpression;
  
 import formula.atomic.Predicate;
 import bcclass.BCConstantPool;
+import bcexpression.ValueOfConstantAtState;
 import bcexpression.Expression;
 import bcexpression.jml.JMLExpression;
 
@@ -30,20 +31,7 @@ public class Everything  extends ModifiesExpression {
 	}
 	
 	
-//	/* (non-Javadoc)
-//	 * @see bcexpression.Expression#substitute(bcexpression.Expression, bcexpression.Expression)
-//	 */
-//	public Expression substitute(Expression _e1, Expression _e2) {
-//		return EVERYTHING;
-//	}
 
-//	/* (non-Javadoc)
-//	 * @see bcexpression.Expression#getType()
-//	 */
-//	public BCType getType() {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
 
 	/* (non-Javadoc)
 	 * @see bcexpression.Expression#toString()
@@ -68,7 +56,7 @@ public class Everything  extends ModifiesExpression {
 	 */
 	public Expression substitute(Expression _e1, Expression _e2) {
 		// TODO Auto-generated method stub
-		return null;
+		return this;
 	}
 
 
@@ -113,9 +101,12 @@ public class Everything  extends ModifiesExpression {
 	/* (non-Javadoc)
 	 * @see modifexpression.ModifiesExpression#getPostCondition()
 	 */
-	public Expression getPostCondition() {
+	public Expression getPostCondition(int state) {
 		// TODO Auto-generated method stub
 		return Predicate.TRUE;
 	}
+
+
+
 
 }

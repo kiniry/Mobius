@@ -106,7 +106,7 @@ public class BCTypeALOAD
 		//S(t-1).length > S( t )
 		FieldAccess _arrlength =
 			new FieldAccess(
-				new ArrayLengthConstant(),
+					ArrayLengthConstant.ARRAYLENGTHCONSTANT,
 			new Stack(Expression.getCOUNTER_MINUS_1()));
 		Formula _arr_index_correct =
 			new Predicate2Ar(_arrlength, new Stack(Expression.COUNTER), PredicateSymbol.GRT);

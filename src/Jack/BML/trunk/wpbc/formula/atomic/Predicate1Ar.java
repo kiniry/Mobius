@@ -60,7 +60,10 @@ public class Predicate1Ar extends Predicate {
 		boolean termsEq = term.equals(_term);
 		return termsEq;
 	}
-
+	public Expression atState(int instrIndex) {
+		term = term.atState(instrIndex);
+		return this;
+	}
 	public String toString() {
 		String s = "";
 		if (getPredicateSymbol() == PredicateSymbol.ODD) {

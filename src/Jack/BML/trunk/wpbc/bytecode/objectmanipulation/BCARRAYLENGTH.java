@@ -54,7 +54,7 @@ public class BCARRAYLENGTH extends BCExceptionThrower {
 			new Predicate2Ar( new Stack(Expression.COUNTER), Expression._NULL, PredicateSymbol.NOTEQ);
 		//S(t).length
 		FieldAccess arrLength =
-			new FieldAccess(new ArrayLengthConstant(),  new Stack(Expression.COUNTER));
+			new FieldAccess(ArrayLengthConstant.ARRAYLENGTHCONSTANT,  new Stack(Expression.COUNTER));
 		Formula _nps = (Formula)_normal_Postcondition.substitute( new Stack(Expression.COUNTER), arrLength);
 		Formula wpNormalTermination =
 		Formula.getFormula(objNotNull, _nps, Connector.IMPLIES);

@@ -9,6 +9,7 @@ package bcclass;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Vector;
 
 import org.apache.bcel.classfile.Attribute;
 import org.apache.bcel.classfile.Field;
@@ -27,6 +28,7 @@ import bc.io.ReadAttributeException;
 import bcclass.attributes.BCAttribute;
 import bcclass.attributes.ClassInvariant;
 import bcclass.attributes.HistoryConstraints;
+import bcclass.attributes.ModifiesSet;
 import bcclass.utils.MethodSignature;
 import utils.Util;
 import application.JavaApplication;
@@ -39,7 +41,7 @@ import application.JavaApplication;
  */
 public class BCClass {
 	private HashMap methods;
-	private HashMap fields;
+	private BCField[] fields;
 
 	private String className;
 
@@ -54,6 +56,7 @@ public class BCClass {
 
 	private HistoryConstraints historyConstraints;
 	private ClassInvariant classInvariant;
+	private ClassStateVector stateVector;
 
 	public BCClass(JavaClass _clazz) throws ReadAttributeException {
 		className = _clazz.getClassName();
@@ -70,14 +73,46 @@ public class BCClass {
 		initFields(f);
 	}
 	
+	public Formula getVectorAtState(int state) {
+		if (stateVector == null ) {
+			initStateVector(null);
+		}
+		Formula f = stateVector.atState(state);
+		return f;
+	}
+	
+	public Formula getVectorAtState(int state, ModifiesSet modifSet) {
+		if (stateVector == null ) {
+			initStateVector(null);
+		}
+		Formula f = stateVector.atState(state, modifSet);
+		if (f == null) {
+			return Predicate.TRUE;
+		}
+		return f;
+	}
+	
+	/**
+	 * initialises the state vector
+	 * @param classesVisited
+	 * @return
+	 */
+	public ClassStateVector initStateVector( Vector classesVisited) {
+		if ( stateVector == null) {
+			stateVector = new ClassStateVector(this);
+			stateVector.initStateVector(classesVisited);
+		}
+		return stateVector;
+	}
+ 	
 	private void initFields( Field[] _fields ) {
 		if ( _fields == null ) {
 			return;
 		}
-		fields = new HashMap();
+		fields = new BCField[_fields.length];
 		for (int i = 0; i < _fields.length; i++) {
-			BCField f = new BCField(_fields[i]);
-			fields.put(f.getName(), f);
+			fields[i] = new BCField(_fields[i]);
+			
 		}
 	}
 
@@ -88,7 +123,7 @@ public class BCClass {
 			if (_attributes[i] instanceof Unknown) {
 				privateAttr = (Unknown) _attributes[i];
 				BCAttribute bcAttribute =
-					AttributeReader.readAttribute(privateAttr, constantPool, null);
+					AttributeReader.readAttribute(privateAttr, constantPool, null, null);
 				if (bcAttribute instanceof ClassInvariant) {
 					classInvariant = (ClassInvariant) bcAttribute;
 				} else if (bcAttribute instanceof HistoryConstraints) {
@@ -219,7 +254,11 @@ public class BCClass {
 	/**
 	 * @return Returns the fields.
 	 */
-	public HashMap getFields() {
+	public BCField[] getFields() {
 		return fields;
+	}
+	
+	public String toString() {
+		return getName();
 	}
 }

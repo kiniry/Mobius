@@ -6,6 +6,8 @@
  */
 package modifexpression;
 
+import formula.atomic.Predicate;
+import bcexpression.ValueOfConstantAtState;
 import bcexpression.Expression;
 
 /**
@@ -26,9 +28,8 @@ public class Nothing extends ModifiesExpression {
 	/* (non-Javadoc)
 	 * @see modifexpression.ModifiesExpression#getPostCondition()
 	 */
-	public Expression getPostCondition() {
-		// TODO Auto-generated method stub
-		return null;
+	public Expression getPostCondition(int state) {
+		return Predicate.TRUE;
 	}
 
 	/* (non-Javadoc)
@@ -54,4 +55,6 @@ public class Nothing extends ModifiesExpression {
 		// TODO Auto-generated method stub
 		return this;
 	}
+
+
 }

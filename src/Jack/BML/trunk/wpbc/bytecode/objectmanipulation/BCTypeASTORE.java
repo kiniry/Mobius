@@ -109,7 +109,7 @@ public class BCTypeASTORE
 			new Predicate2Ar(
 			new Stack(Expression.getCOUNTER_MINUS_1()),
 				new FieldAccess(
-					new ArrayLengthConstant(),
+						ArrayLengthConstant.ARRAYLENGTHCONSTANT,
 			new Stack(Expression.getCOUNTER_MINUS_2())),
 				PredicateSymbol.LESS);
 
@@ -142,7 +142,7 @@ public class BCTypeASTORE
 			new Predicate2Ar(
 			new Stack(Expression.getCOUNTER_MINUS_1()),
 				new FieldAccess(
-					new ArrayLengthConstant(),
+						ArrayLengthConstant.ARRAYLENGTHCONSTANT,
 			new Stack(Expression.getCOUNTER_MINUS_2())),
 				PredicateSymbol.GRTEQ);
 /*		Util.dump(" arr_index_not_correct " + arr_index_not_correct);

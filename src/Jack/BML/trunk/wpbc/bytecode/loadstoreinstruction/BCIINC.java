@@ -6,11 +6,10 @@ import org.apache.bcel.generic.InstructionHandle;
 
 import formula.Formula;
 
-import bcclass.BCLocalVariable;
 import bcclass.attributes.ExsuresTable;
 import bcexpression.ArithmeticExpression;
+import bcexpression.BCLocalVariable;
 import bcexpression.ExpressionConstants;
-import bcexpression.LocalVariable;
 import bcexpression.NumberLiteral;
 import bcexpression.javatype.JavaType;
 
@@ -65,9 +64,8 @@ public class BCIINC extends BCLocalVariableInstruction {
 		Formula _normal_Postcondition,
 		ExsuresTable _exc_Postcondition) {
 		Formula wp;
-		LocalVariable lva = new LocalVariable(getIndex());
-		ArithmeticExpression inc = (ArithmeticExpression)ArithmeticExpression.getArithmeticExpression(constant, lva, ExpressionConstants.ADD ) ;
-		wp = (Formula)_normal_Postcondition.substitute(lva, inc);
+		ArithmeticExpression inc = (ArithmeticExpression)ArithmeticExpression.getArithmeticExpression(constant, getLocalVariable(), ExpressionConstants.ADD ) ;
+		wp = (Formula)_normal_Postcondition.substitute(getLocalVariable(), inc);
 		return wp; 
 	}
 

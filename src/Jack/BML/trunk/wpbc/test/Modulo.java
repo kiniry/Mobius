@@ -18,7 +18,7 @@ public class Modulo {
 	 * this = loc(0) i = loc(1) k = loc(2) constant = loc(3) s = loc( 4 )
 	 */
 		//@ requires true;
-		//@ ensures \result == \old(i) % k;
+		//@ ensures \result == \old(i) % \old(k);
 		public int mod(int i, int k) {
 			int constant = i;
 			
@@ -36,5 +36,29 @@ public class Modulo {
 			}
 			return i;
 		}
+		
+		
+	/*	
+		 * this = loc(0) i = loc(1) k = loc(2) constant = loc(3) s = loc( 4 )
+		 
+			//@ requires true;
+			//@ ensures \result == \old(i) % k;
+			public int mod1(int k) {
+				int constant = i;
+				
+				//@  loop_modifies i, s;
+				//@  loop_invariant constant == s * k + i ;
+				//@  decreases i;
+				for (int s = 0; true; s++) {
+					if (i <= k) {
+						break;
+					}
+					i = i - k; // loc(1) = loc(1) - loc( 2 )
+				}
+				if (i == k) {
+					return 0;
+				}
+				return i;
+			}*/
 
 }

@@ -19,60 +19,52 @@ import constants.BCConstantClass;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class JavaReferenceType extends JavaType {
-	private BCConstantClass bcc;
+	/*private BCConstantClass bcc;*/
+	
+	public static final JavaReferenceType ReferenceType = new JavaReferenceType();
+	
+	public JavaReferenceType() {
+		
+	}
 		
 	/**
 	 * @param _type
 	 */
-	protected JavaReferenceType(ReferenceType _type, BCConstantClass _cc) {
-		super(_type, _cc, JavaType.COMPUTATIONAL_TYPE_1);
+	protected JavaReferenceType(ReferenceType _type) {
+		super(_type,  JavaType.COMPUTATIONAL_TYPE_1);
 	}
 	
 	/**
 	 * @param _type
 	 */
-	protected JavaReferenceType(Class _class, BCConstantClass _cc) {
-		this((ReferenceType)Type.getType(_class), _cc);
+	protected JavaReferenceType(Class _class) {
+		this((ReferenceType)Type.getType(_class));
 	}
 	
 	
 	///////////////////////////////////////////////
 	/////
 	////////////////////////////////////////
-	/**
-	 * @param _type
-	 * constructor used for default types, that do not have data structure representing them in the constant pool
-	 * that is do not have a corresponding ConstantClass object
-	 */
-	protected JavaReferenceType(ReferenceType _type ) {
-		super(_type, JavaType.COMPUTATIONAL_TYPE_1);
-	}
 
-	/**
-	 * @param _type
-	 * constructor used for default types, that do not have data structure representing them in the constant pool
-	 * that is do not have a corresponding ConstantClass object
-	 */
-	protected JavaReferenceType(Class _class) {
-		this((ReferenceType)Type.getType(_class));
 
-	}
+
 	
-	/**
+/*	*//**
 	 * 
 	 * @param _bcc
 	 * sets the constantClass_info from the constant pool that describe this class  
-	 */
+	 *//*
 	public void setBCConstantClass(BCConstantClass _bcc) {
 		bcc = _bcc;
-	}
+	}*/
 	
-	/**
+/*	*//**
 	 * @param _bcc
 	 * sets the constantClass_info from the constant pool that describe this class  
-	 */
+	 *//*
 	public BCConstantClass getBCConstantClass() {
 		return bcc ;
-	}
-
+	}*/
+	
+	
 }

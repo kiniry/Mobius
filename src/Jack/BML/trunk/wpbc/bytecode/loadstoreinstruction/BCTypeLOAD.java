@@ -10,10 +10,11 @@ package bytecode.loadstoreinstruction;
 import org.apache.bcel.generic.InstructionHandle;
 
 
-import bcclass.BCLocalVariable;
 import bcclass.attributes.ExsuresTable;
+import bcexpression.BCLocalVariable;
 import bcexpression.Expression;
-import bcexpression.LocalVariable;
+
+import bcexpression.javatype.JavaType;
 import bcexpression.vm.Stack;
 
 import formula.Formula;
@@ -39,7 +40,7 @@ public  class BCTypeLOAD  extends  BCLocalVariableInstruction{
 	 */
 	public BCTypeLOAD(InstructionHandle _instruction, BCLocalVariable _lv) {
 		super(_instruction, _lv);
-		setType(_lv.getType());
+		setType((JavaType)_lv.getType());
 	}
 
 	
@@ -52,7 +53,7 @@ public  class BCTypeLOAD  extends  BCLocalVariableInstruction{
 //		Util.dump("wp aload psi " + _normal_Postcondition.toString());
 		wp = (Formula)_normal_Postcondition.substitute(Expression.COUNTER, Expression.getCOUNTER_PLUS_1());
 //		Util.dump("wp aload psi[ t <--- t +1 ] " + wp.toString());
-		wp = (Formula)wp.substitute(new Stack( Expression.getCOUNTER_PLUS_1()), new LocalVariable(getIndex()));
+		wp = (Formula)wp.substitute(new Stack( Expression.getCOUNTER_PLUS_1()), getLocalVariable());
 //		Util.dump("wp aload = psi[ t <--- t +1 ][s(t+1) <-- index ]  " + wp.toString());
 //		if (getPrev() == null) {
 //			Util.dump("wp aload " + wp.toString());

@@ -7,17 +7,23 @@
 package modifexpression;
 
 
+import com.sun.rsasign.c;
+
 import utils.FreshIntGenerator;
 import utils.Util;
 import bcclass.BCConstantPool;
 import bcclass.BCMethod;
+import bcclass.ClassStateVector;
+import bcexpression.ValueOfConstantAtState;
 import bcexpression.Expression;
 import bcexpression.FieldAccess;
 import bcexpression.Variable;
 import bcexpression.javatype.JavaBasicType;
+import bcexpression.javatype.JavaType;
 import bcexpression.jml.OLD;
 import bcexpression.jml.TYPEOF;
 import constants.BCConstant;
+import constants.BCConstantClass;
 import constants.BCConstantFieldRef;
 import constants.BCConstantMethodRef;
 import formula.Connector;
@@ -44,12 +50,13 @@ public class ModifiesDOT extends ModifiesExpression {
 	/* (non-Javadoc)
 	 * @see modifexpression.ModifiesExpression#getPostCondition()
 	 */
+
 	/**
 	 * forall o : Type (Type <: type(ref) ) . o!= ref ==> old(b(o)) == b(o)
 	 * 
 	 * where b is the field that is accessed 
 	 */
-	public Expression getPostCondition() {
+	public Expression getPostCondition(int state) {
 		Expression objDeref = getObjectDereferenced();
 		Expression objDerefDotField = getExpression();
 		
@@ -67,15 +74,54 @@ public class ModifiesDOT extends ModifiesExpression {
 		Expression objDerefDotcopy = objDerefDotField.copy();
 	
 		Expression objDotField = objDerefDotcopy.generalize(objDeref , obj  );
-		
-		Predicate2Ar objDotFieldEqOldObjDotField = new Predicate2Ar( objDotField, new OLD(objDotField), PredicateSymbol.EQ);
-		
+		Predicate2Ar objDotFieldEqOldObjDotField ;
+		if (state == ClassStateVector.RETURN_STATE ) {
+			objDotFieldEqOldObjDotField = new Predicate2Ar( objDotField, new OLD(objDotField), PredicateSymbol.EQ);
+		} else {
+			Expression fieldAtState = objDotField.copy().atState( state);
+			objDotFieldEqOldObjDotField = new Predicate2Ar( objDotField, fieldAtState, PredicateSymbol.EQ);
+			
+		}
 		Formula f = Formula.getFormula(objNotEqobjDeref, objDotFieldEqOldObjDotField, Connector.IMPLIES );
 		f = Formula.getFormula( f, new Quantificator(Quantificator.FORALL, obj, objTypeSubTypeOf ));
 		return f;
 	}
 
 
+	/**
+	 * 
+	 * @param constantVar
+	 * @return the postcondition for invokations of the method that contains this modifies clause
+	 *//*
+	public Expression getPostConditionWhenCalled(ValueOfConstantAtState constantVar) {
+		Expression objDeref = getObjectDereferenced();
+		Expression objDerefDotField = getExpression();
+		
+		Variable obj = new Variable(FreshIntGenerator.getInt());
+		// the upper limit for the obj type
+		Expression type = objDeref.getType();
+
+		//typeof(obj) <: typeof(derefObj)
+		Predicate2Ar objTypeSubTypeOf= new Predicate2Ar( new TYPEOF(obj), type, PredicateSymbol.SUBTYPE);
+		
+		// obj != objDeref
+		Predicate2Ar objNotEqobjDeref = new Predicate2Ar( obj, objDeref, PredicateSymbol.NOTEQ);
+		
+		// 
+		Expression objDerefDotcopy = objDerefDotField.copy();
+	
+		Expression objDotField = objDerefDotcopy.generalize(objDeref , obj  );
+		
+		Expression objDotFieldPrim = objDotField.copy();
+		objDotFieldPrim = objDotFieldPrim.substitute(getConstantFieldRef() , constantVar  );
+		
+		Predicate2Ar objDotFieldEqOldObjDotField = new Predicate2Ar( objDotField, objDotFieldPrim, PredicateSymbol.EQ);
+		
+		Formula f = Formula.getFormula(objNotEqobjDeref, objDotFieldEqOldObjDotField, Connector.IMPLIES );
+		f = Formula.getFormula( f, new Quantificator(Quantificator.FORALL, obj, objTypeSubTypeOf ));
+		return f;
+	}
+*/
 	
 	/* (non-Javadoc)
 	 * @see modifexpression.ModifiesExpression#getModifiedExpression()
@@ -99,8 +145,9 @@ public class ModifiesDOT extends ModifiesExpression {
 	 * @see bcexpression.Expression#getType()
 	 */
 	public Expression getType() {
-		// TODO Auto-generated method stub
-		return null;
+		BCConstantFieldRef constField = (BCConstantFieldRef)getConstantFieldRef();
+		JavaType type = JavaType.getJavaType( ((BCConstantClass)constantPool.getConstant(constField.getClassIndex())).getName() );
+		return type;
 	}
 
 	 
@@ -111,6 +158,8 @@ public class ModifiesDOT extends ModifiesExpression {
 		String s = getModifies()  + "( " + getSubExpressions()[1]  + ")"; 
 		return null;
 	}
+
+
 
 
 }

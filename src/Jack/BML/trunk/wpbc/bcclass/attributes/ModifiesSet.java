@@ -6,25 +6,18 @@
  */
 package bcclass.attributes;
 
-import utils.FreshIntGenerator;
-import constants.BCConstantClass;
-import constants.BCConstantFieldRef;
-import bcclass.BCConstantPool;
-import bcexpression.Expression;
-import bcexpression.FieldAccess;
-import bcexpression.Variable;
-import bcexpression.javatype.JavaType;
-import bcexpression.jml.OLD;
-import bcexpression.jml.TYPEOF;
-import formula.Connector;
-import formula.Formula;
-import formula.Quantificator;
-import formula.atomic.Predicate;
-import formula.atomic.Predicate2Ar;
-import formula.atomic.PredicateSymbol;
 import modifexpression.Everything;
 import modifexpression.ModifiesExpression;
 import modifexpression.Nothing;
+
+import constants.BCConstantFieldRef;
+import bcclass.BCConstantPool;
+import bcexpression.Expression;
+
+import formula.Connector;
+import formula.Formula;
+import formula.atomic.Predicate;
+
 
 /**
  * @author io
@@ -45,7 +38,7 @@ public class ModifiesSet implements BCAttribute {
 		return modifiesExpression;
 	}
 	 
-	public Formula getPostcondition( ) {
+	public Formula getPostcondition( int state) {
 		Formula modPost = Predicate.TRUE;
 		if (modifiesExpression == null ) {
 			return modPost;
@@ -54,7 +47,7 @@ public class ModifiesSet implements BCAttribute {
 			if (modifiesExpression[i] == null) {
 				continue;
 			}
-			Formula f = (Formula)modifiesExpression[i].getPostCondition();
+			Formula f = (Formula)modifiesExpression[i].getPostCondition(state);
 			if ( f == null) {
 				continue;
 			}
@@ -79,77 +72,49 @@ public class ModifiesSet implements BCAttribute {
 		return expressions;
 	}
 	
-	public Formula getConditionForNonModifiedFields( /*ModifiesExpression[] modifiesExpressions*/ ) {
-		
-		Formula noModifCondition = Predicate.TRUE;
-		if (modifiesExpression[0] == Nothing.NOTHING ) {
-			// then make for every constant field in the constant pool a formula that states
-			// that the field is not modified
-			
-			for (int i = 1; i< constantPool.getSize() ; i++ ) {		
-				if (constantPool.getConstant(i) instanceof BCConstantFieldRef ) {
-					BCConstantFieldRef constField = (BCConstantFieldRef)constantPool.getConstant(i);
-					BCConstantClass bcConstantClass = (BCConstantClass)constantPool.getConstant( constField.getClassIndex() ); 
-					JavaType type = JavaType.getJavaType(bcConstantClass.getName());
-					Variable var = new Variable(FreshIntGenerator.getInt());
-					 
-					FieldAccess fAccess = new FieldAccess( constField,  var);
-					Predicate2Ar fAccessRqOldfAccess = new  Predicate2Ar(fAccess, new OLD(fAccess), PredicateSymbol.EQ );
-					Quantificator quantif = new Quantificator(Quantificator.FORALL, var, new Predicate2Ar( new TYPEOF( var), type , PredicateSymbol.SUBTYPE) );
-					Formula f = Formula.getFormula( fAccessRqOldfAccess, quantif);
-					noModifCondition = Formula.getFormula( noModifCondition, f, Connector.AND);
-				}
-			}
-			return noModifCondition;
+	public boolean modifiesNothing() {
+		if (modifiesExpression[0] == Nothing.NOTHING) {
+			return true;
 		}
+		return false;
+	}
+	
+	public boolean modifiesEverything() {
 		if (modifiesExpression[0] == Everything.EVERYTHING) {
-			// then it can change anything it wants so
-			// do nothing here butq when method is called quantify over ebery possible cionstant
-			// field application
-			return noModifCondition;
-		} 
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * @param fieldRef
+	 * @return
+	 */
+	public boolean modifies(BCConstantFieldRef fieldRef) {
 		
-		for (int i = 1; i< constantPool.getSize() ; i++ ) {		
-			if (constantPool.getConstant(i) instanceof BCConstantFieldRef ) {
-				BCConstantFieldRef constField = (BCConstantFieldRef)constantPool.getConstant(i);
-				int k;
-				for (k = 0; k < modifiesExpression.length; k++ ) {
-					BCConstantFieldRef modConstFieldRef = (BCConstantFieldRef)modifiesExpression[k].getConstantFieldRef() ;
-					// if there is  an expression over this field then do nothing for this field
-					if ( modConstFieldRef == constField) {
-						break;
-					}					
-				}
-				//in case this field is not said to be modified then state that it's not changed by the method
-				if ( k == modifiesExpression.length) {
-					 BCConstantClass bcConstantClass = (BCConstantClass)constantPool.getConstant( constField.getClassIndex()); 
-					 JavaType type = JavaType.getJavaType(bcConstantClass.getName());
-					 Variable var = new Variable(FreshIntGenerator.getInt());
-					 
-					 FieldAccess fAccess = new FieldAccess( constField,  var);
-					 Predicate2Ar fAccessRqOldfAccess = new  Predicate2Ar(fAccess, new OLD(fAccess), PredicateSymbol.EQ );
-					 Quantificator quantif = new Quantificator(Quantificator.FORALL, var, new Predicate2Ar( new TYPEOF( var), type, PredicateSymbol.SUBTYPE ) );
-					 Formula f = Formula.getFormula( fAccessRqOldfAccess, quantif);
-					 noModifCondition = Formula.getFormula( noModifCondition, f, Connector.AND);
-				}	
-			}
-			
+		if (modifiesExpression == null) 
+		for (int k = 0; k < modifiesExpression.length; k++ ) {
+			if (modifiesExpression[k] == null) {
+				continue;
+			} 
+			BCConstantFieldRef modConstFieldRef = (BCConstantFieldRef)modifiesExpression[k].getConstantFieldRef() ;
+			// if there is  a modifies expression that modifies this field then return true 
+			if ( modConstFieldRef == fieldRef) {
+				return true;
+			}					
 		}
-		/////////////////////// then the same for all the references in the cosntant pool that are not
-		////////// should not be modified by the method
-		return noModifCondition;
-	}
-	
-	
-	public ModifiesSet copy() {
-		ModifiesExpression[] modExprCopy = new ModifiesExpression[modifiesExpression.length];
-		for (int i = 0 ; i < modifiesExpression.length; i++) {
-			modExprCopy[i] = (ModifiesExpression)modifiesExpression[i].copy();
-		}
-		ModifiesSet copy = new ModifiesSet( modExprCopy, constantPool);
-		return copy;
+		return false;
 	}
 	
 	
 	
+	
+	
+	
+	/**
+	 * @return Returns the constantPool.
+	 */
+	public BCConstantPool getConstantPool() {
+		return constantPool;
+	}
 }

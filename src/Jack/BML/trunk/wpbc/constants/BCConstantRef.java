@@ -6,6 +6,8 @@
  */
 package constants;
 
+import bcclass.BCConstantPool;
+
 
 /**
  * @author mpavlova
@@ -20,13 +22,15 @@ public class BCConstantRef extends BCConstant {
 	
 	private String name;
 
+	private BCConstantPool cPool;
 	public BCConstantRef( ) {
 	}
 	
-	public BCConstantRef( int CONSTANT_X_info_index, int _CONSTANT_class_Index , String _name) {
+	public BCConstantRef( int CONSTANT_X_info_index, int _CONSTANT_class_Index , String _name, BCConstantPool _cPool) {
 		super(CONSTANT_X_info_index);
 		CONSTANT_class_Index = _CONSTANT_class_Index;
 		name = _name;
+		cPool = _cPool;
 	}
 	
 	public int getClassIndex() {
@@ -35,5 +39,9 @@ public class BCConstantRef extends BCConstant {
 	
 	public String getName() {
 		return name;
+	}
+	
+	public BCConstantClass getConstantClass() {
+		return (BCConstantClass)cPool.getConstant(getClassIndex());
 	}
 }

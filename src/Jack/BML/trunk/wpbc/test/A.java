@@ -1,8 +1,10 @@
 package test;
 public class A {
 	public A b;
-	public int arr[] = new int[5];
-	//@ invariant b != null;
+	public A arr[] = new A[5];
+	/*
+	//@ invariant b == null;
+	*/
 	
 	//@ensures \result == b;
 	public A testMethodInvokation() throws NullPointerException {
@@ -10,35 +12,36 @@ public class A {
 		return b;
 	}
 	
+	
 	//@ requires true;
 	//@ modifies arr[1..3];
 	//@ ensures arr[1] == arr[2];
 	public void modifyArray() {
-		arr[2] = 3;
+		arr[0] = new A();
 	}
 	
 
 	
 	//@ requires true;
-	//@ modifies this.arr[1], this.b;
+	//@ modifies this.arr[1..3] ;
 	//@ ensures \result == this;
 	//@ exsures (ArrayIndexOutOfBoundsException e) arr.length < 2;
 	public A testThisAccess(A a1, A a2)  {
-		try {
+		/*try {*/
 			a1.b.b = this;
-			b = a1.b.b;
-			arr[1] = 1;
-			arr = new int[2];
-			arr = new int[3];
+/*			b = a1.b.b;*/
+			arr = new A[2];
+/*			arr = new A[2];*/
+/*			arr = new A[3];*/
 			a1 = new A();
-			return a1;
+			return a1.b.b;
 			
-		} catch (ArrayIndexOutOfBoundsException e) {
+		/*} catch (ArrayIndexOutOfBoundsException e) {
 			arr = new int[2];
 			arr[1] = 1;
-		}
+		}*/
 		/*throw new ArrayIndexOutOfBoundsException();*/
-		return a1.b.b;
+		/*return a1.b.b;*/
 	} 
 	
 

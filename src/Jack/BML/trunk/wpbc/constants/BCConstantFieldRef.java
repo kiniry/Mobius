@@ -5,7 +5,11 @@
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 package constants;
+import org.apache.bcel.classfile.ConstantFieldref;
+
+import bcclass.BCConstantPool;
 import bcexpression.Expression;
+import bcexpression.ValueOfConstantAtState;
 import bcexpression.javatype.JavaType;
 import bcexpression.substitution.RefFunction;
 /**
@@ -45,13 +49,40 @@ public class BCConstantFieldRef extends BCConstantRef implements RefFunction {
 		int _cpIndex,
 		int _CONSTANT_classref_index,
 		String _name,
-		JavaType _type) {
-		super(_cpIndex, _CONSTANT_classref_index, _name);
+		JavaType _type,
+		BCConstantPool pool) {
+		super(_cpIndex, _CONSTANT_classref_index, _name, pool);
 		type = _type;
 	}
 	
 	public Expression getType() {
 		return type;
 	}
+	
+	public Expression atState(int instrIndex) {
+		ValueOfConstantAtState valueOfFieldAtState = new ValueOfConstantAtState(this , instrIndex);
+		return valueOfFieldAtState;
+	}
+	
+/*	public boolean equals(Expression expr ) {
+		if ( !(expr instanceof BCConstantFieldRef)) {
+			return false;
+		}
+		BCConstantFieldRef constFieldRef = (BCConstantFieldRef )expr;
+		String clazzWhereDeclared = constFieldRef.getConstantClass().getName();
+		
+		if (!(clazzWhereDeclared.equals( getConstantClass().getName()))) {
+			return false;
+		}
+		String name = constFieldRef.getName();
+		if (!(name.equals(getName()))) {
+			return false;
+		}
+		JavaType type = (JavaType)constFieldRef.getType();
+		if ( !(type.equals(getType() ) ) ) {
+			return false;
+		}
+		return true;
+	} */
 
 }

@@ -180,6 +180,12 @@ public class Predicate2Ar extends Predicate {
 	public Expression getRightExpression() {
 		return term2;
 	}
+	public Expression atState(int instrIndex) {
+		term1 = term1.atState(instrIndex);
+		term2 = term2.atState(instrIndex);
+		return this;
+	}
+	
 	public boolean equals(Formula formula) { 
 		boolean eq = super.equals(formula);
 		// if the super class equals returns false then return false

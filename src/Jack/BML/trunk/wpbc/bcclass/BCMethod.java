@@ -163,14 +163,16 @@ import bcclass.attributes.LoopSpecification;
 import bcclass.attributes.MethodSpecification;
 
 import bcclass.attributes.SpecificationCase;
+import bcexpression.*;
 import bcexpression.ArithmeticExpression;
 import bcexpression.Expression;
 import bcexpression.ExpressionConstants;
 import bcexpression.FieldAccess;
-import bcexpression.LocalVariable;
+
 import bcexpression.NumberLiteral;
 import bcexpression.Variable;
 import bcexpression.javatype.ClassNames;
+import bcexpression.javatype.JavaArrType;
 import bcexpression.javatype.JavaObjectType;
 
 import bcexpression.javatype.JavaType;
@@ -321,7 +323,7 @@ public class BCMethod {
 //		Util.dump(" method signature " + signature);
 
 	}
-
+	
 	// called from outside when the method should be initialised
 	public void initMethod() throws ReadAttributeException {
 		if (initialised) {
@@ -382,7 +384,41 @@ public class BCMethod {
 			instr.setAssert(assert);
 		}
 	}
+	
+	
+	public Formula getStateVectorAtInstr(int state) {
+			Formula fieldsAtInstr = (Formula)clazz.getVectorAtState(state);
+			Formula localVarsAtInstr = (Formula)getLocalVariableStateAtInstr(state);
+			Formula  f = Formula.getFormula(fieldsAtInstr, localVarsAtInstr, Connector.AND);
+			return f;
+	}
+	public Formula getStateVectorAtInstr(int state, ModifiesSet modifies) {
+		Formula fieldsAtInstr = (Formula)clazz.getVectorAtState(state, modifies);
+		Formula localVarsAtInstr = getLocalVariableStateAtInstr(state);
+		Formula  f = Formula.getFormula(fieldsAtInstr, localVarsAtInstr, Connector.AND);
+		return f;
+	}
 
+	/**
+	 * generates the following assertion :
+	 * 
+	 * forall i : 0 <= i < locVar.length. loc(i) == loc(i)^atState(instr)
+	 * @param state
+	 * @return
+	 */
+	public Formula getLocalVariableStateAtInstr(int state) {
+		Formula localVarsAtInstr = Predicate.TRUE;
+		if (localVariables == null) {
+			return localVarsAtInstr;
+		}
+		for (int i = 1; i < localVariables.length; i++) {
+			Expression localVarAtInstr = localVariables[i].atState(state);
+			Predicate localVarAtInstrEqLocVar = new Predicate2Ar(localVariables[i], localVarAtInstr, PredicateSymbol.EQ );
+			localVarsAtInstr = Formula.getFormula(localVarsAtInstr, localVarAtInstrEqLocVar, Connector.AND );
+		}		
+		return localVarsAtInstr;
+	}
+	
 	/**
 	 * 
 	 * called in BCClass.initMethods(Method[] _methods, ConstantPoolGen cp)
@@ -408,6 +444,7 @@ public class BCMethod {
 			BCLoopStart loopStart =
 				(BCLoopStart) Util.getBCInstructionAtPosition(bytecode, pos);
 			loopStart.setInvariant(loopInvariant);
+			loopStart.setMethod(this);
 			/* in the loop start no need to know the decreases formula .Needed only in the end of the loop */
 			//			loopStart.setDecreases(decreases);
 			loopStart.setModifies(loop.getModifies());
@@ -420,6 +457,8 @@ public class BCMethod {
 						loopEndPos);
 				loopEnd.setInvariant(loopInvariant);
 				loopEnd.setDecreases(decreases);
+				loopEnd.setMethod(this);
+				loopEnd.setModifies(loop.getModifies());
 			}
 		}
 	}
@@ -435,7 +474,8 @@ public class BCMethod {
 					AttributeReader.readAttribute(
 						privateAttr,
 						clazz.getConstantPool(),
-						lineNumberTable);
+						lineNumberTable, 
+						localVariables);
 				if (bcAttribute instanceof MethodSpecification) {
 					methodSpecification = (MethodSpecification) bcAttribute;
 					
@@ -594,21 +634,21 @@ public class BCMethod {
 			Predicate2Ar postcondition =
 				new Predicate2Ar(
 					Expression._RESULT,
-					new LocalVariable(0),
+					localVariables[0],
 					PredicateSymbol.EQ);
 			//precondition
 			Predicate0Ar precondition = Predicate.TRUE;
 			// modifies
 			ModifiesExpression[] modifies =
-				new ModifiesExpression[] { new ModifiesArray( new ModifiesDOT(new ModifiesIdent( constantPool.getConstant(15), constantPool), new LocalVariable(0) ,constantPool ), new ArrayElemFromTo(new NumberLiteral(1), new NumberLiteral(5) ),constantPool )};
+				new ModifiesExpression[] { new ModifiesArray( new ModifiesDOT(new ModifiesIdent( constantPool.getConstant(15), constantPool), localVariables[0] ,constantPool ), new ArrayElemFromTo(new NumberLiteral(1), new NumberLiteral(5) ),constantPool )};
 			// exsures 
 			
 			Expression arrayLength =
 				new FieldAccess(
-					new ArrayLengthConstant(),
+					ArrayLengthConstant.ARRAYLENGTHCONSTANT,
 					new FieldAccess(
 						(BCConstantFieldRef) constantPool.getConstant(15),
-						new LocalVariable(0)));
+						localVariables[0]));
 			Formula exsPost =
 				new Predicate2Ar(
 					arrayLength,
@@ -1035,7 +1075,8 @@ public class BCMethod {
 					} else if (instr instanceof NEW) {
 						_bc[i] = new BCNEW(_iharr[i], _type);
 					} else if (instr instanceof ANEWARRAY) {
-						_bc[i] = new BCANEWARRAY(_iharr[i], _type);
+						JavaArrType arrType = JavaType.getJavaArrTypeWithBasicType(_type);
+						_bc[i] = new BCANEWARRAY(_iharr[i], arrType);
 					} else if (instr instanceof MULTIANEWARRAY) {
 						_bc[i] = new BCMULTIANEWARRAY(_iharr[i], _type);
 					} else if (instr instanceof INSTANCEOF) {
@@ -1139,11 +1180,10 @@ public class BCMethod {
 			return;
 		}
 		for (int i = 0; i < specCases.length; i++) {
-			Formula nonModifFields = specCases[i].getConditionForNonModifiedFields();
-			Formula modPost = specCases[i].getModifiesPostcondition();
+			Formula stateCondition = clazz.getVectorAtState(ClassStateVector.RETURN_STATE, specCases[i].getModifies() );	
 			Formula post = (Formula)specCases[i].getPostcondition().copy();
-			post = Formula.getFormula( post, nonModifFields, Connector.AND  );
-			post = Formula.getFormula( modPost, post, Connector.AND);
+			post = Formula.getFormula( post, stateCondition, Connector.AND  );
+			
 			if ( invariant != null ) {
 				post = Formula.getFormula( post,  (Formula)invariant.copy(), Connector.AND);
 			}

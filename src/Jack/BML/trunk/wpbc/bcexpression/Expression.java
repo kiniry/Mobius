@@ -199,9 +199,38 @@ public abstract class Expression {
 		} 
 		for (int i = 0; i < subExpressions.length; i++) {
 			subExpressions[i] = subExpressions[i].generalize(_e1, _e2);
+			setSubExpressions(subExpressions);
 		}
 		return this;
 	}
 	public abstract Expression copy();
+	
+	/**
+	 * @param instrIndex - the instruction at which the value of the expression
+	 * is instantiated 
+	 * the method converts the expression in an expression that represents
+	 * the value of the expression in a state instrIndex
+	 */
+	public Expression atState(int instrIndex) {
+		Expression[] subExpr = getSubExpressions();
+		if (subExpr == null) {
+			return this;
+		}
+		Expression[] subExprAtState = new Expression[subExpr.length];
+		for ( int i = 0; i < subExpr.length; i++ ) {
+			subExprAtState[i] = subExpr[i].atState( instrIndex);
+		}	
+		setSubExpressions(subExprAtState);
+		return this;
+	}
 
 }
+
+
+
+
+
+
+
+
+

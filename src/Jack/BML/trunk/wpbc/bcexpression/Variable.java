@@ -9,6 +9,7 @@ package bcexpression;
 
 
 import bcexpression.javatype.JavaType;
+import bcexpression.jml.TYPEOF;
 
 /**
  * @author mpavlova
@@ -44,7 +45,10 @@ public class Variable extends Expression  {
 	 * @see bcexpression.Expression#getType()
 	 */
 	public Expression getType() {
-		return type;
+		if (type != null) {
+			return type;
+		}
+		return new TYPEOF(this);
 	}
 
 
@@ -88,8 +92,5 @@ public class Variable extends Expression  {
 		Variable copy = new Variable(id, type) ;
 		return copy;
 	}
-	
-	
-	
 		
 }

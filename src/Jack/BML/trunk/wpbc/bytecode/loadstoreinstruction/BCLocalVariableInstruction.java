@@ -2,7 +2,7 @@ package bytecode.loadstoreinstruction;
 
 import org.apache.bcel.generic.InstructionHandle;
 
-import bcclass.BCLocalVariable;
+import bcexpression.BCLocalVariable;
 import bcexpression.javatype.JavaType;
 import bytecode.BCIndexedInstruction;
 import bytecode.BCInstruction;
@@ -19,8 +19,8 @@ public abstract class  BCLocalVariableInstruction extends BCInstruction implemen
 	/**
 	 * index in the local variable table that contains the local variable incremented by this instruction 
 	 */
-	private int localVariableIndex;
 	
+	private BCLocalVariable localVariable;
 	/**
 	 * the type of  the local variable is returned
 	 */
@@ -28,15 +28,14 @@ public abstract class  BCLocalVariableInstruction extends BCInstruction implemen
 	
 	public BCLocalVariableInstruction(InstructionHandle _instruction, BCLocalVariable _lv) {
 		 super(_instruction);
-		 setIndex(_lv.getIndex());
-		
+		 localVariable = _lv;
 	}
 	
 	/**
 	 * @see bytecode.BCLocalVariableInstruction#setIndex(int)
 	 */
 	public void setIndex(int _index) {
-		localVariableIndex = _index;
+		
 	}
 	
 	/**
@@ -44,7 +43,7 @@ public abstract class  BCLocalVariableInstruction extends BCInstruction implemen
 	 * @return int
 	 */
 	public int getIndex()  {
-		return localVariableIndex;
+		return localVariable.getIndex();
 	}
 	
 	/* (non-Javadoc)
@@ -65,4 +64,10 @@ public abstract class  BCLocalVariableInstruction extends BCInstruction implemen
 	
 	
 
+	/**
+	 * @return Returns the localVariable.
+	 */
+	public BCLocalVariable getLocalVariable() {
+		return localVariable;
+	}
 }

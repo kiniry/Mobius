@@ -105,7 +105,7 @@ public class BCNEWARRAY extends BCAllocationInstruction {
 
 		//			length( new ArrayObject(type, S(t) ) ) 
 		FieldAccess arr_length_access =
-			new FieldAccess(new ArrayLengthConstant(), new_arr_ref);
+			new FieldAccess(ArrayLengthConstant.ARRAYLENGTHCONSTANT, new_arr_ref);
 		
 		// substitute the access to the length field of the created array by stack top
 		//_psi^n[length( new ArrayObject(type, S(t)) <-- S(t)]

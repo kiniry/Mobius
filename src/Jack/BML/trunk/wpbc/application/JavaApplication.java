@@ -61,8 +61,9 @@ public class JavaApplication {
 			String n = (String) enum.nextElement();
 			
 		}
-		Util.dump("ADD CLASS WITH NAME " + "----" + _name + "----");
+		
 		JavaClass clazz = Repository.lookupClass(_name);
+		Util.dump("ADD CLASS WITH NAME " + "----" + _name + "----");
 		BCClass bcClass = new BCClass(clazz);
 		classes.put(_name, bcClass);
 		return bcClass;

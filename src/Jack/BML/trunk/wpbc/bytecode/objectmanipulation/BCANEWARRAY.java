@@ -117,14 +117,14 @@ public class BCANEWARRAY
 
 		FieldAccess arr_length_access =
 			new FieldAccess(
-				new ArrayLengthConstant(),
+				ArrayLengthConstant.ARRAYLENGTHCONSTANT,
 				new_arr_ref);
 		//_psi^n[length( with o == new ArrayObject(type, S(t)) <-- S(t)]
+		
 		Formula topStack_grt_0_implies =
-		(Formula)_normal_Postcondition.substitute(arr_length_access, new Stack(Expression.COUNTER));
+		(Formula)_normal_Postcondition.substitute(new Stack(Expression.COUNTER), new_arr_ref);
 		topStack_grt_0_implies =
-		(Formula)topStack_grt_0_implies.substitute(new Stack(Expression.COUNTER), new_arr_ref);
-
+			(Formula)topStack_grt_0_implies.substitute(arr_length_access, new Stack(Expression.COUNTER));
 		Formula nWpTermination =
 		Formula.getFormula(
 				topStack_grt_0,

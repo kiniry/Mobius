@@ -146,6 +146,15 @@ public class Formula   extends Expression {
 	}
 
 	private static Formula simplifyAND(Formula _f1, Formula _f2) {
+		/*if (_f1 == null ) {
+			return _f2;
+		}
+		if (_f2 == null) {
+			return _f1;
+		}
+		if ( (_f1 == null )  && (_f2 == null)) {
+			return Predicate.TRUE;
+		}*/
 		if (_f1.equals(_f2)) {
 			return _f1;
 		}
@@ -322,7 +331,7 @@ public class Formula   extends Expression {
 			return true;
 		}
 		boolean subFormulasEq;
-		for ( int i = 0; i <= subformulas.length; i++ ) {
+		for ( int i = 0; i < subformulas.length; i++ ) {
 			Formula f = (Formula)subformulas[i];
 			Formula _f = (Formula)_subformulas[i];
 			subFormulasEq = f.equals(_f);

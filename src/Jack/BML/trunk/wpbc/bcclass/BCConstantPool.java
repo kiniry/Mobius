@@ -73,7 +73,7 @@ public class BCConstantPool {
 				String fieldName = nameAndType.getName( _cpg.getConstantPool());
 				String signature = nameAndType.getSignature( _cpg.getConstantPool());
 				JavaType fieldType = JavaType.getJavaType( signature);
-				BCConstantFieldRef bcconstant = new BCConstantFieldRef(i, classIndex, fieldName, fieldType );
+				BCConstantFieldRef bcconstant = new BCConstantFieldRef(i, classIndex, fieldName, fieldType, this );
 				constants[i] =  bcconstant;
 			} else if (_cpg.getConstant(i ) instanceof ConstantMethodref ) {
 				ConstantMethodref constant = (ConstantMethodref)_cpg.getConstant(i);
@@ -90,7 +90,7 @@ public class BCConstantPool {
 				}
 				Type retType = Type.getReturnType(methodSignature);
 				JavaType bcRetType  = JavaType.getJavaType(retType);
-				BCConstantMethodRef bcconstant = new BCConstantMethodRef(i,classIndex, methodName, bcRetType, bcArgTypes );
+				BCConstantMethodRef bcconstant = new BCConstantMethodRef(i,classIndex, methodName, bcRetType, bcArgTypes, this );
 				constants[i] = bcconstant;
 			} else if (_cpg.getConstant(i ) instanceof ConstantInterfaceMethodref ) {
 				ConstantInterfaceMethodref constant = (ConstantInterfaceMethodref)_cpg.getConstant(i);
@@ -107,7 +107,7 @@ public class BCConstantPool {
 				}
 				Type retType = Type.getReturnType(methodSignature);
 				JavaType bcRetType  = JavaType.getJavaType(retType);
-				BCConstantInterfaceMethodRef bcconstant = new BCConstantInterfaceMethodRef(i,classIndex, methodName, bcRetType, bcArgTypes );
+				BCConstantInterfaceMethodRef bcconstant = new BCConstantInterfaceMethodRef(i,classIndex, methodName, bcRetType, bcArgTypes, this );
 				constants[i] = bcconstant;
 			} else if (_cpg.getConstant(i ) instanceof ConstantUtf8 ) {
 				ConstantUtf8 constantUtf8 = (ConstantUtf8)_cpg.getConstant(i ); 

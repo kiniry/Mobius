@@ -7,11 +7,15 @@
 package modifexpression;
 
 import constants.BCConstantClass;
+import constants.BCConstantFieldRef;
 import bcclass.BCConstantPool;
 import bcexpression.ArrayAccessExpression;
+import bcexpression.BCLocalVariable;
+import bcexpression.QuantifiedExpression;
+import bcexpression.ValueOfConstantAtState;
 import bcexpression.Expression;
 import bcexpression.FieldAccess;
-import bcexpression.LocalVariable;
+
 import bcexpression.javatype.JavaArrType;
 import bcexpression.javatype.JavaReferenceType;
 import bcexpression.javatype.JavaType;
@@ -40,17 +44,21 @@ import bcexpression.jml.TYPEOF;
 //extends Expression
 public abstract class ModifiesExpression extends Expression {
 	BCConstantPool constantPool;
+	private Expression type ;
 	protected ModifiesExpression() {
+		
 	}
 	
 	public ModifiesExpression(Expression _e, BCConstantPool _constantPool) {	
 		super(_e);
 		constantPool = _constantPool;
+		setType(constantPool);
 	}
 	
 	public ModifiesExpression(Expression _e1, Expression _e2, BCConstantPool _constantPool) {	
 		super(_e1, _e2);	
 		constantPool = _constantPool;
+		setType(constantPool);
 	}
 	public ModifiesExpression getModifies() {
 		return (ModifiesExpression) getSubExpressions()[0];
@@ -104,25 +112,45 @@ public abstract class ModifiesExpression extends Expression {
 	 * @param cp
 	 * @return
 	 */
-	public static Expression getClass( Expression expr , BCConstantPool cp ) {
+	private void  setType( BCConstantPool cp ) {
+		Expression expr = getExpression();
+		if (expr instanceof BCConstantFieldRef) {
+			int index = ((BCConstantFieldRef)expr).getClassIndex();
+			JavaReferenceType _type = (JavaReferenceType) JavaType.getJavaType( ((BCConstantClass)cp.getConstant(index)).getName() );
+			type = _type;
+		}
 		if (expr instanceof FieldAccess) {
 			FieldAccess fAccess = (FieldAccess)expr;
-			int index = fAccess.getFieldConstRef().getClassIndex();
-			JavaReferenceType javaType = (JavaReferenceType) JavaType.getJavaType( ((BCConstantClass)cp.getConstant(index)).getName() );
-			return javaType;
+			int index = ((BCConstantFieldRef)fAccess.getFieldConstRef()).getClassIndex();
+			JavaReferenceType _type = (JavaReferenceType) JavaType.getJavaType( ((BCConstantClass)cp.getConstant(index)).getName() );
+			type = _type;
 		}
 		if ( expr instanceof ArrayAccessExpression  ) {
 			ArrayAccessExpression arrAccess = (ArrayAccessExpression)expr;
-			JavaReferenceType javaType = 
-				(JavaReferenceType) (( JavaArrType)arrAccess.getArray().getType() ).getElementType();
-			return javaType;
+			JavaType _type = 
+				(JavaType) (( JavaArrType)arrAccess.getArray().getType() ).getElementType();
+			type = _type;
 		}
-		if ( expr instanceof LocalVariable) {
-			Expression javaType = new TYPEOF( expr); 
-				/*(JavaReferenceType) ((LocalVariable)expr).getType();*/
-			return javaType;
+		if (expr instanceof QuantifiedExpression) {
+			Expression quantifExpr = ( (QuantifiedExpression)expr).getQuantifiedExpression();
+			if (quantifExpr instanceof ArrayAccessExpression) {
+				ArrayAccessExpression arrAccess = (ArrayAccessExpression)quantifExpr;
+				Expression arrayAccess = arrAccess.getArray();
+				
+				JavaType arrType = (JavaType)arrayAccess.getType();
+				JavaType _type = ( ( JavaArrType)arrType).getElementType();
+				type = _type;
+			}
+			
 		}
-		return null;
+		if ( expr instanceof BCLocalVariable) {
+			Expression _type = ( (BCLocalVariable)expr).getType(); 
+			type = _type;
+		}
+	}
+	
+	public Expression getType() {
+		return type;
 	}
 	
 	/* (non-Javadoc)
@@ -163,14 +191,10 @@ public abstract class ModifiesExpression extends Expression {
 	
 	//////////////////////////////////
 	///////////abstract//////////////////
-	public abstract  Expression getPostCondition();
-	public abstract  Expression getExpression();
+	public abstract  Expression getPostCondition(int state);
+	
+	/*public abstract Expression getPostConditionWhenCalled(ValueOfConstantAtState constantVar); 
+*/	public abstract  Expression getExpression();
 
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	//////////////////test////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	public static void main(String[] s) {
-		LocalVariable _this = new LocalVariable( 0);	
-		/* ModifiesArray mArr = new ModifiesArray( );*/
-	} 
+	
 }

@@ -27,11 +27,14 @@ import bcexpression.jml.JML_CONST_TYPE;
 public class JavaType extends Expression  {
 	protected Type bcelType; //still keeping reference to the bcel type object
 
+	public JavaType() {
+	}
+	
 	/**
 	 * this is a static variable that representing the type of all types 
 	 */
 //	private static final JML_CONST_TYPE  JML_CONST_TYPE = new JML_CONST_TYPE();
-	private BCConstantClass constantClassCp;
+	/*private BCConstantClass constantClassCp;*/
 	private NumberLiteral computationalType;
 
 	//	(computational type1 : boolean, byte, char, short, int, float(not considered in this application) , reference, returnAddress)
@@ -63,16 +66,11 @@ public class JavaType extends Expression  {
 
 	private static HashMap loadedTypes;
 
-	protected JavaType(Type _type, BCConstantClass _cc, NumberLiteral _compType) {
-		bcelType = _type;
-		constantClassCp = _cc;
-		computationalType = _compType;
-	}
-
 	protected JavaType(Type _type, NumberLiteral _compType) {
 		bcelType = _type;
 		computationalType = _compType;
 	}
+
 
 	public String getSignature() {
 		String signature =bcelType.getSignature();
@@ -158,6 +156,15 @@ public class JavaType extends Expression  {
 		return getJavaRefType(_type.getSignature());
 	}
 	
+	public static JavaArrType getJavaArrTypeWithBasicType(JavaType type ) {
+		String sig = type.getSignature();
+		String arrSig = "[" +sig;
+		JavaArrType arrType = (JavaArrType)getJavaRefType(arrSig);
+		if (arrType != null ) {
+			return arrType;
+		}
+		return new JavaArrType(type);
+	}
 
 	/**
 	 * 
@@ -167,7 +174,7 @@ public class JavaType extends Expression  {
 	 */
 	public static JavaReferenceType getJavaRefType(String _signature) {
 		_signature = _signature.replace('.', '/');
-		if (!_signature.startsWith("L")) {
+		if ((!_signature.startsWith("L")) &&  (!_signature.startsWith("["))) {
 			_signature =  "L".concat(_signature);
 		}
 		if (!_signature.endsWith(";")) {
@@ -243,7 +250,9 @@ public class JavaType extends Expression  {
 	 * @see bcexpression.Expression#toString()
 	 */
 	public String toString() {
-		
+		if (this == JavaReferenceType.ReferenceType  ) {
+			return "ReferenceType";
+		} 
 		return getSignature();
 	}
 

@@ -29,6 +29,9 @@ public abstract class  SpecArray extends Expression {
 	 * @see bcexpression.Expression#substitute(bcexpression.Expression, bcexpression.Expression)
 	 */
 	public Expression substitute(Expression _e1, Expression _e2) {
+		if (this.equals(_e1) ) {
+			return _e2;
+		}
 		Expression[] exprs = getSubExpressions();
 		for (int i = 0; i < exprs.length; i++) {
 			exprs[i] = exprs[i].substitute(_e1, _e2);

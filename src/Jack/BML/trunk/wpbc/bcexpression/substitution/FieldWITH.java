@@ -18,7 +18,7 @@ import constants.BCConstantFieldRef;
  */
 public class FieldWITH extends Expression {
 	// 
-	private BCConstantFieldRef constantFieldRef;
+	private Expression constantFieldRef;
 	private Expression object;
 	private SubstitutionTree with;
 
@@ -41,7 +41,7 @@ public class FieldWITH extends Expression {
 	}
 	
 	private  FieldWITH(
-	BCConstantFieldRef _constantFieldRef,
+	Expression _constantFieldRef,
 	Expression concreteObject,
 	SubstitutionTree _tree) {
 		constantFieldRef = _constantFieldRef;
@@ -55,13 +55,13 @@ public class FieldWITH extends Expression {
 	public Expression substitute(Expression _e1, Expression _e2) {
 		object = object.substitute(_e1, _e2);
 		with = (SubstitutionTree)with.substitute(_e1, _e2);
+		constantFieldRef = constantFieldRef.substitute(_e1, _e2);
 		// if _e1 is not a field access expression  then return 
 		if (!(_e1 instanceof FieldAccess)) {
 			return this;
 		}
 		// if this is a field access expression but is not a field access to  to the same field as this fieldWITH expression
-		if (((FieldAccess) _e1).getFieldConstRef().getCPIndex()
-			!= constantFieldRef.getCPIndex()) {
+		if (constantFieldRef != _e1.getSubExpressions()[0]) {
 			return this;
 		}
 		// else if it is  field access expression to the same field as this fieldWITH then 
@@ -80,7 +80,7 @@ public class FieldWITH extends Expression {
 		return null;
 	}
 
-	public BCConstantFieldRef getConstantFieldRef() {
+	public Expression getConstantFieldRef() {
 		return constantFieldRef;
 	}
 	public Expression getObject() {

@@ -18,6 +18,7 @@ import formula.atomic.PredicateSymbol;
 
 import utils.FreshIntGenerator;
 import bcclass.BCConstantPool;
+import bcexpression.ValueOfConstantAtState;
 import bcexpression.Expression;
 import bcexpression.Variable;
 import bcexpression.jml.OLD;
@@ -37,7 +38,7 @@ public class ModifiesIdent extends ModifiesExpression {
 	/* (non-Javadoc)
 	 * @see modifexpression.ModifiesExpression#getCondition()
 	 */
-	public Expression getPostCondition() {
+	public Expression getPostCondition(int state) {
 		/*Variable o = new Variable(FreshIntGenerator.getInt() );
 		Predicate2Ar condition = new Predicate2Ar( o, expr, PredicateSymbol.NOTEQ);
 		Formula p = new Predicate2Ar(o, new OLD(o), PredicateSymbol.EQ);
@@ -56,13 +57,7 @@ public class ModifiesIdent extends ModifiesExpression {
 		return getSubExpressions()[0];
 	}
 
-	/* (non-Javadoc)
-	 * @see bcexpression.Expression#substitute(bcexpression.Expression, bcexpression.Expression)
-	 */
-	public Expression substitute(Expression _e1, Expression _e2) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+
 
 	/* (non-Javadoc)
 	 * @see bcexpression.Expression#getType()
@@ -83,6 +78,7 @@ public class ModifiesIdent extends ModifiesExpression {
 		// TODO Auto-generated method stub
 		return "modifiesIdent " + getSubExpressions()[0];
 	}
+
 
 	
 

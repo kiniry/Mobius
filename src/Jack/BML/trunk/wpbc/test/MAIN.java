@@ -18,7 +18,7 @@ import application.JavaApplication;
  */
 public class MAIN {
 
-	public static void main2(String[] args) {
+	public static void main3(String[] args) {
 		try {
 			BCClass clazz = JavaApplication.Application.getClass("test.Modulo");
 			//		BCClass clazz = JavaApplication.Application.getClass("bytecode.objectmanipulation.BCInvoke");

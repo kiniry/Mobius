@@ -29,18 +29,13 @@ public class JavaObjectType extends JavaReferenceType {
 		super(_type);
 	}
 	
-	/**
-	 * @param _type
-	 */
-	protected JavaObjectType(ObjectType _type, BCConstantClass _cc) {
-		super(_type, _cc);
-	}
+	
 	
 	/**
 	 * @param _type
 	 */
-	protected JavaObjectType(Class _class, BCConstantClass _cc) {
-		this((ObjectType)Type.getType(_class), _cc);
+	protected JavaObjectType(Class _class) {
+		this((ObjectType)Type.getType(_class));
 	}
 	
 	/**

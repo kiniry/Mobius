@@ -46,8 +46,8 @@ public class SingleLoopSpecification {
 	/**
 	 * @return
 	 */
-	public Expression[] getModifies() {
-		return modifies.getExpressions();
+	public ModifiesSet getModifies() {
+		return modifies;
 	}
 
 

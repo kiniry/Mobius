@@ -112,16 +112,17 @@ public class QuantifiedFormula extends Formula {
 	 * 
 	 * @return the substituted formula
 	 */
-	public Expression substitute(Expression _e, Expression _v) {
+	public Expression substitute(Expression _e1, Expression _e2) {
 		//Util.dump(toString());
 		for (int i = 0; i < quantificators.length; i++) {
-			Expression boundExpr = quantificators[i].getBoundVar();
+			/*Expression boundExpr = quantificators[i].getBoundVar();
 			if (_e.equals(boundExpr)) {
 				return this;
-			}
+			}*/
+			quantificators[i].substitute(_e1, _e2);
 		}
 		Expression[] subformula = getSubExpressions();
-		subformula[0] = subformula[0].substitute(_e,_v);
+		subformula[0] = subformula[0].substitute(_e1,_e2);
 		return this;
 	}
 	

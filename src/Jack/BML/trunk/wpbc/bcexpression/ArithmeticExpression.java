@@ -526,9 +526,9 @@ public class ArithmeticExpression extends Expression {
 		}
 		Expression[] subExpr = getSubExpressions();
 		if (getSubExpressions().length == 1) {
-			return "(" + op + subExpr[0] + ")";
+			return  op + subExpr[0] ;
 		} else {
-			return "(" + subExpr[0] + op + subExpr[1] + ")";
+			return subExpr[0] + op + subExpr[1] ;
 		}
 	}
 

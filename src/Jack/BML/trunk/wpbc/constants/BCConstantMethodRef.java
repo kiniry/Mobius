@@ -6,6 +6,7 @@
  */
 package constants;
 
+import bcclass.BCConstantPool;
 import bcclass.utils.MethodSignature;
 import bcexpression.javatype.JavaType;
 import bcexpression.substitution.RefFunction;
@@ -25,8 +26,8 @@ public class BCConstantMethodRef  extends BCConstantRef implements RefFunction {
 	JavaType returnType ;
 	JavaType[] argTypes;
 	
-	public BCConstantMethodRef (  int _cpIndex, int _CONSTANT_classref_info_index, String _name , JavaType _returnType,  JavaType[] _argTypes) {
-		super( _cpIndex, _CONSTANT_classref_info_index, _name);
+	public BCConstantMethodRef (  int _cpIndex, int _CONSTANT_classref_info_index, String _name , JavaType _returnType,  JavaType[] _argTypes, BCConstantPool pool) {
+		super( _cpIndex, _CONSTANT_classref_info_index, _name, pool);
 		returnType = _returnType;
 		argTypes = _argTypes;
 	}

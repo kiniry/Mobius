@@ -13,6 +13,7 @@ import modifexpression.ModifiesArray;
 import modifexpression.ModifiesDOT;
 import modifexpression.ModifiesExpression;
 import modifexpression.ModifiesIdent;
+import modifexpression.ModifiesLocalVariable;
 import modifexpression.Nothing;
 import modifexpression.SingleIndex;
 import modifexpression.SpecArray;
@@ -52,6 +53,7 @@ import bcclass.attributes.SingleLoopSpecification;
 import bcclass.attributes.SpecificationCase;
 import bcexpression.ArithmeticExpression;
 import bcexpression.ArrayAccessExpression;
+import bcexpression.BCLocalVariable;
 import bcexpression.BitExpression;
 import bcexpression.CastExpression;
 import bcexpression.CharLiteral;
@@ -59,7 +61,6 @@ import bcexpression.ConditionalExpression;
 import bcexpression.Expression;
 import bcexpression.ExpressionConstants;
 import bcexpression.FieldAccess;
-import bcexpression.LocalVariable;
 import bcexpression.NULL;
 import bcexpression.NumberLiteral;
 import bcexpression.javatype.JavaObjectType;
@@ -81,14 +82,17 @@ public class AttributeReader {
 	private static int pos;
 	private static BCConstantPool constantPool;
 	private static BCLineNumber[] lineNumberTable;
-
+	private static BCLocalVariable[] localVariables;
+	
 	public static BCAttribute readAttribute(
 		Unknown privateAttr,
 		BCConstantPool _constantPool,
-		BCLineNumber[] _lineNumberTable)
+		BCLineNumber[] _lineNumberTable,
+		BCLocalVariable[] _localVariables)
 		throws ReadAttributeException {
 		constantPool = _constantPool;
 		lineNumberTable = _lineNumberTable; 
+		localVariables = _localVariables;
 		String name = privateAttr.getName();
 		if (name.equals(BCAttribute.ASSERT)) {
 			return readAssertTable(privateAttr.getBytes());
@@ -382,6 +386,10 @@ public class AttributeReader {
 		}
 		if (_byte == Code.MODIFIES_IDENT) {
 			Expression  e = readExpression(bytes);
+			if (e instanceof BCLocalVariable) {
+				ModifiesLocalVariable modifLocVar = new ModifiesLocalVariable((BCLocalVariable)e, constantPool);
+				return modifLocVar;
+			}
 			ModifiesIdent modifId = new ModifiesIdent(e, constantPool);
 			return modifId;
 		}
@@ -759,11 +767,10 @@ public class AttributeReader {
 				new ConditionalExpression(condition, expr1, expr2);
 			return conditionExpr;
 		} else if (_byte == Code.THIS) { // this expression 
-			Expression _this = new LocalVariable(0);
+			Expression _this = localVariables[0];
 			return _this;
 		} else if (_byte == Code.OLD_THIS) {
-			Expression _this = new LocalVariable(0);
-			Expression oldThis = new OLD(_this);
+			Expression oldThis = new OLD(localVariables[0]);
 			return oldThis;
 		} else if (_byte == Code.NULL) {
 			return NULL._NULL;
@@ -777,16 +784,16 @@ public class AttributeReader {
 		} else if (_byte == Code.LOCAL_VARIABLE) {
 			// the index of the local variable 
 			int ind = readShort(bytes);
-			Expression lVarAccess = new LocalVariable(ind);
+			Expression lVarAccess = localVariables[ind];
 			return lVarAccess;
 		} else if (_byte == Code.OLD_LOCAL_VARIABLE) {
 			// the index of the local variable
 			int ind = readShort(bytes);
-			Expression lVarAccess = new LocalVariable(ind);
+			Expression lVarAccess = localVariables[ind];
 			Expression oldValue = new OLD(lVarAccess);
 			return oldValue;
 		} else if (_byte == Code.ARRAYLENGTH) {
-			ArrayLengthConstant length = new ArrayLengthConstant();
+			ArrayLengthConstant length = ArrayLengthConstant.ARRAYLENGTHCONSTANT;
 			return length;
 		} else if (_byte == Code.FIELD_REF) {
 			// read the index of the field_ref in the constant pool
@@ -903,7 +910,7 @@ public class AttributeReader {
 		if (!(constant instanceof BCConstantUtf8)) {
 			throw new ReadAttributeException(
 				" Error reading a JavaType : reason : expected Constant Utf8 Info structure in the constant pool  at index "
-					+ ((BCConstantUtf8)constant).getCPIndex());
+					+ ((BCConstant)constant).getCPIndex());
 		}
 		BCConstantUtf8 CONSTANT_Class = (BCConstantUtf8) constant;
 		String name = CONSTANT_Class.getLiteral().toString();

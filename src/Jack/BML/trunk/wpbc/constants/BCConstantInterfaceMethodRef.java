@@ -6,6 +6,7 @@
  */
 package constants;
 
+import bcclass.BCConstantPool;
 import bcexpression.javatype.JavaType;
 
 /**
@@ -19,7 +20,7 @@ import bcexpression.javatype.JavaType;
  */
 public class BCConstantInterfaceMethodRef  extends BCConstantMethodRef {
 	
-	public BCConstantInterfaceMethodRef (  int _cpIndex, int _CONSTANT_class_info_index, String _name, JavaType _returnType,  JavaType[] _argTypes) {
-		super( _cpIndex, _CONSTANT_class_info_index, _name, _returnType, _argTypes );
+	public BCConstantInterfaceMethodRef (  int _cpIndex, int _CONSTANT_class_info_index, String _name, JavaType _returnType,  JavaType[] _argTypes, BCConstantPool pool) {
+		super( _cpIndex, _CONSTANT_class_info_index, _name, _returnType, _argTypes,pool );
 	}
 }

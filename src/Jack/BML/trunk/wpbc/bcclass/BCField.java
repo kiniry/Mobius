@@ -33,4 +33,12 @@ public class BCField extends AccessFlags {
 	public JavaType getType() {
 		return type;
 	}
+
+	/**
+	 * @return
+	 */
+	public boolean isVisible() {
+		
+		return isPublic() || isProtected();
+	}
 }

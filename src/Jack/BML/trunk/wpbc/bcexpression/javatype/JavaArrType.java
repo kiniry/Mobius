@@ -19,19 +19,32 @@ public class JavaArrType extends JavaReferenceType {
 	private int dimensions;
 	private JavaType elementType;
 	private JavaType basicType;
-	protected JavaArrType(ArrayType _type, BCConstantClass _cc) {
-		super(_type, _cc);
-		setBasicType(_type.getBasicType());
-		setElementType(_type.getElementType());
+	
+	protected JavaArrType(JavaType _type) {
+		if (_type instanceof JavaArrType) {
+			setElementType(((JavaArrType)_type).getElementType());
+			setBasicType(((JavaArrType)_type).getBasicType());
+			setDimensions(((JavaArrType)_type).getDimensions() + 1);
+			return;
+		}
+		setElementType(_type);
+		setBasicType(_type);
+		setDimensions(1);
+	}
+	
+	protected JavaArrType(ArrayType _type) {
+		super(_type);
+		setBasicType(JavaType.getJavaType(_type.getBasicType()));
+		setElementType(JavaType.getJavaType(_type.getElementType()));
 		setSize(_type.getSize());
 		setDimensions(_type.getDimensions());
 	}
-	protected JavaArrType(ArrayType _type) {
-		super(_type);
-	}
+	
+
 	protected JavaArrType(Class _class) {
 		this((ArrayType) Type.getType(_class));
 	}
+	
 	/**
 	 * @return Returns the size.
 	 */
@@ -65,23 +78,23 @@ public class JavaArrType extends JavaReferenceType {
 		return elementType;
 	}
 	/**
-	 * First looks for the correspônding object representing the type if it is
+	 * First looks for the corresp?nding object representing the type if it is
 	 * already charged as a JavaType object. If it is already created it
 	 * returns the object, otherwise it is cretaed by the JavaType object and
 	 * is returned example : for int[][] sets to int[] the field elementType
 	 * 
 	 * @param type
 	 */
-	private void setElementType(Type _type) {
-		elementType = JavaType.getJavaType(_type);
+	private void setElementType(JavaType _type) {
+		elementType = _type;
 	}
 	/**
 	 * example : for int[][] sets to int the field basicType
 	 * 
 	 * @param _type
 	 */
-	private void setBasicType(Type _type) {
-		basicType = JavaType.getJavaType(_type);
+	private void setBasicType(JavaType _type) {
+		basicType = _type;
 	}
 	/**
 	 * @return basic type of array, i.e., for int[][][] the basic type is int

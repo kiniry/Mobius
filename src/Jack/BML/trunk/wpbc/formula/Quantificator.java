@@ -20,7 +20,7 @@ public class Quantificator extends Expression {
 
 	private Expression boundVar;
 	private String quantifier;
-	private Formula domain;
+	private Expression domain;
 
 	public Quantificator(String _quantifier, Expression _boundVar) {
 		quantifier = _quantifier;
@@ -30,7 +30,7 @@ public class Quantificator extends Expression {
 	public Quantificator(
 		String _quantifier,
 		Expression _boundVar,
-		Formula _domain) {
+		Expression _domain) {
 		this(_quantifier, _boundVar);
 		domain = _domain;
 	}
@@ -72,7 +72,7 @@ public class Quantificator extends Expression {
 		if (domain == null) {
 			return  "(" + quantifier + "  " + boundVar + "  )";
 		}
-		return  "(" + quantifier + "  " + boundVar +  ": "+ domain.toString() + ")";
+		return  "(" + quantifier + "  " + boundVar +  "."+ domain.toString() + ")";
 	}
 
 	/**
@@ -93,14 +93,19 @@ public class Quantificator extends Expression {
 	 * @see bcexpression.Expression#substitute(bcexpression.Expression, bcexpression.Expression)
 	 */
 	public Expression substitute(Expression _e1, Expression _e2) {
-		// TODO Auto-generated method stub
+		if (boundVar.equals(_e1) ) {
+			return this;
+		}
+		if (domain != null) {
+			domain = domain.substitute(_e1, _e2);
+		}
 		return this;
 	}
 
 	/**
 	 * @return Returns the domain.
 	 */
-	public Formula getDomain() {
+	public Expression getDomain() {
 		return domain;
 	}
 	/**

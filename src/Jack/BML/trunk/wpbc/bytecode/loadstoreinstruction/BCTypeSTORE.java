@@ -10,10 +10,10 @@ import org.apache.bcel.generic.InstructionHandle;
 
 import formula.Formula;
 
-import bcclass.BCLocalVariable;
 import bcclass.attributes.ExsuresTable;
+import bcexpression.BCLocalVariable;
 import bcexpression.Expression;
-import bcexpression.LocalVariable;
+import bcexpression.javatype.JavaType;
 import bcexpression.vm.Stack;
 
 
@@ -36,7 +36,7 @@ public class BCTypeSTORE extends BCLocalVariableInstruction {
 	 */
 	public BCTypeSTORE(InstructionHandle _instruction, BCLocalVariable _lv) {
 		super(_instruction, _lv);
-		setType(_lv.getType());
+		setType((JavaType)_lv.getType());
 	}
 
 	/* (non-Javadoc)
@@ -48,7 +48,7 @@ public class BCTypeSTORE extends BCLocalVariableInstruction {
 		Formula wp;
 		
 		wp = (Formula)_normal_Postcondition.substitute(Expression.COUNTER, Expression.getCOUNTER_MINUS_1());
-		wp = (Formula)wp.substitute(new LocalVariable(getIndex()),  new Stack(Expression.COUNTER) );
+		wp = (Formula)wp.substitute(getLocalVariable(),  new Stack(Expression.COUNTER) );
 		return wp;
 	}
 }

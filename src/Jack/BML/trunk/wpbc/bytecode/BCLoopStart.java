@@ -10,7 +10,11 @@ import java.util.Vector;
 
 import utils.FreshIntGenerator;
 
+import bcclass.BCClass;
+import bcclass.BCMethod;
+import bcclass.ClassStateVector;
 import bcclass.attributes.ExsuresTable;
+import bcclass.attributes.ModifiesSet;
 import bcexpression.Expression;
 import bcexpression.Variable;
 import bcexpression.javatype.JavaType;
@@ -37,7 +41,10 @@ public class BCLoopStart extends BCInstruction {
 	// when a terminationmust be proven - and may be decreases is an expression rather  than formula ? 
 	private Formula decreases;
 
-	private Expression[] modifies;
+	private ModifiesSet modifies;
+	
+	
+	private BCMethod method; 
 
 	/**
 	 * @param _instruction
@@ -89,12 +96,13 @@ public class BCLoopStart extends BCInstruction {
 		// Invariant ==> wp
 		Formula invariant_implies_wp =
 			Formula.getFormula((Formula)invariant.copy(), wpInstr, Connector.IMPLIES);
-
+		invariant_implies_wp = (Formula)invariant_implies_wp.atState(getBCIndex());
+		Formula vectorStateAtThisInstruction = method.getStateVectorAtInstr( getBCIndex(), modifies);
 		//if the set of modified expressions for the bytecode that loop is part of is not empty then copy them
-		Expression[] modifies1 = null;
-		Formula forall_modified_expressions_invariant_implies_wp =
-			invariant_implies_wp;
-		if ((modifies != null) && (modifies.length > 0)) {
+		/*Expression[] modifies1 = null;*/
+		/*Formula forall_modified_expressions_invariant_implies_wp =
+			invariant_implies_wp;*/
+/*		if ((modifies != null) && (modifies.length > 0)) {
 			modifies1 = new Expression[modifies.length];
 			//make a copy of every of the modified expressions 
 			for (int i = 0; i < modifies.length; i++) {
@@ -110,20 +118,24 @@ public class BCLoopStart extends BCInstruction {
 			if ((modifies1 != null) && (modifies1.length > 0)) {
 				for (int i = 0; i < modifies1.length; i++) {
 					qunatificators[i] =
-						new Quantificator(Quantificator.FORALL, modifies1[i]);
+						new Quantificator(Quantificator.FORALL, modifies1[i], modifies1[i].getType() );
 				}
 				forall_modified_expressions_invariant_implies_wp =
 					new QuantifiedFormula(
 						forall_modified_expressions_invariant_implies_wp,
 						qunatificators);
 			}
-		}
+		}*/
+		
+		Formula invariantHoldsAtState = (Formula)invariant.copy();
+		invariantHoldsAtState = (Formula)invariantHoldsAtState.atState(getBCIndex());
 		Formula wp = null;
 		wp =
 			Formula.getFormula(
-			(Formula)invariant.copy(),
-				forall_modified_expressions_invariant_implies_wp,
+			invariantHoldsAtState,
+			invariant_implies_wp,
 				Connector.AND);
+		wp = Formula.getFormula( wp,vectorStateAtThisInstruction , Connector.AND);
 		return wp;
 	}
 
@@ -158,15 +170,15 @@ public class BCLoopStart extends BCInstruction {
 	/**
 	 * @return
 	 */
-	public Expression[] getModifies() {
+	public ModifiesSet getModifies() {
 		return modifies;
 	}
 
 	/**
 	 * @param expressions
 	 */
-	public void setModifies(Expression[] expressions) {
-		modifies = expressions;
+	public void setModifies(ModifiesSet modSet) {
+		modifies = modSet;
 	}
 
 	/**
@@ -183,4 +195,16 @@ public class BCLoopStart extends BCInstruction {
 		invariant = formula;
 	}
 
+	/**
+	 * @return Returns the method.
+	 */
+	public BCMethod getMethod() {
+		return method;
+	}
+	/**
+	 * @param method The method to set.
+	 */
+	public void setMethod(BCMethod method) {
+		this.method = method;
+	}
 }

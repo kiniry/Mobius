@@ -128,8 +128,8 @@ public class Block implements ByteCode {
 		Formula _normalPostcondition,
 		ExsuresTable _exc_postcondition) {
 		BCInstruction last = getLast();
-		Formula _np = (Formula)_normalPostcondition.copy();
-		Formula wp = last.wp(_np, _exc_postcondition);
+		/*Formula _np = (Formula)_normalPostcondition.copy();*/
+		Formula wp = last.wp(_normalPostcondition, _exc_postcondition);
 		
 		Util.dump(
 			" wp instr : "

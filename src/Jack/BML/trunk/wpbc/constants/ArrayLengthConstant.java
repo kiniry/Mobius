@@ -15,6 +15,11 @@ package constants;
 public class ArrayLengthConstant  extends BCConstantFieldRef {
 
 	
+	public static final ArrayLengthConstant ARRAYLENGTHCONSTANT = new ArrayLengthConstant();
+		
+		
+	private ArrayLengthConstant() {
+	}
 	
 	public String toString() {
 		return "_length" ;

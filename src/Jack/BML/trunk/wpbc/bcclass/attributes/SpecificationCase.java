@@ -46,7 +46,7 @@ public class SpecificationCase {
 	 * @return
 	 */
 	public ExsuresTable getExsures() {
-		exsures.setModifiedPostCondition(getModifiesPostcondition());
+		/*exsures.setModifiedPostCondition(getModifiesPostcondition());*/
 		return exsures;
 	}
 
@@ -57,14 +57,7 @@ public class SpecificationCase {
 		return modifies;
 	}
 
-	public Formula getModifiesPostcondition() {
-		if (modifiedPostcondition != null) {
-			return modifiedPostcondition;
-		}
-		modifiedPostcondition = modifies.getPostcondition();
-		return modifiedPostcondition;
-	}
-	
+
 	/**
 	 * @return
 	 */
@@ -96,13 +89,6 @@ public class SpecificationCase {
 		 historyConstraint = _historyConstraint;
 	}
 
-	/**
-	 * @return
-	 */
-	public Formula getConditionForNonModifiedFields() {
-		Formula f = modifies.getConditionForNonModifiedFields();
-		return f;
-	}
 	
 	
 }

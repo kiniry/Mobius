@@ -18,11 +18,11 @@ import formula.atomic.Predicate;
 public class ExsuresTable implements BCAttribute {
 	private Exsures[] excPostcondition;
 	
-	protected void setModifiedPostCondition(Formula _modifiesPostcondition) {
+/*	protected void setModifiedPostCondition(Formula _modifiesPostcondition) {
 		for (int i = 0; i < excPostcondition.length; i++) {
 			excPostcondition[i].setModifiesPostcondition((Formula)_modifiesPostcondition.copy());
 		}
-	}
+	}*/
 	
 
 	/**
