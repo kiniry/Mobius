@@ -25,8 +25,8 @@ public abstract class Types extends javafe.tc.Types
      * Unlike that routine, it knows about ghost fields and
      * spec_public.
      *
-     * This routine assumes we are in an annotation so ghost fields
-     * are visible and spec_public is equivalent to public.
+     * <p> This routine assumes we are in an annotation so ghost
+     * fields are visible and spec_public is equivalent to public.
      */
     //@ requires t != null
     public static FieldDecl lookupField(Type t, Identifier id, TypeSig caller) 

@@ -11,9 +11,10 @@ import javafe.util.Info;
 public class TypeCheck extends javafe.tc.TypeCheck
 {
     /**
-     * Creates a instance of TypeCheck, and sets the <code>inst</code>
-     * field to this instance. Only one instance should be created. 
-     * Also initializes PrepTypeDeclaration.
+     * Creates a singleton instance of this class, and sets the
+     * <code>inst</code> field to this instance. Only one instance
+     * should be created.  Also initializes {@link
+     * PrepTypeDeclaration}.
      */
     public TypeCheck() {
 	inst = this;
@@ -21,7 +22,7 @@ public class TypeCheck extends javafe.tc.TypeCheck
 
     /**
      * Called to obtain the algorithm for performing name resolution
-     * and type checking. 
+     * and type checking.
      *
      * @return an instance of
      * <code>escjava.tc.FlowInsensitiveChecks</code>.
@@ -43,11 +44,11 @@ public class TypeCheck extends javafe.tc.TypeCheck
 	if (!escjava.tc.FlowInsensitiveChecks.inAnnotation)
 	    return false;
 
-	if (pmodifiers==null)
+	if (pmodifiers == null)
 	    return false;
 
-	for (int i=0; i<pmodifiers.size(); i++) {
-	    if (pmodifiers.elementAt(i).getTag()==TagConstants.SPEC_PUBLIC)
+	for (int i = 0; i < pmodifiers.size(); i++) {
+	    if (pmodifiers.elementAt(i).getTag() == TagConstants.SPEC_PUBLIC)
 		return true;
 	}
 

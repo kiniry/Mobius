@@ -12,17 +12,18 @@ import escjava.ast.ModelDeclPragma;
 import javafe.tc.*;
 
 /**
- * This class overrides <code>EnvForTypeSig</code> so that it "sees"
- * ghost and model fields if {@link
- * escjava.tc.FlowInsensitiveChecks#inAnnotation} is <code>true</code>.
+ * This class overrides {@link EnvForTypeSig} so that it "sees" ghost
+ * and model fields if 
+ * {@link escjava.tc.FlowInsensitiveChecks#inAnnotation} is
+ * <code>true</code>.
  */
 
 public class GhostEnv extends EnvForTypeSig
 {
     // Creation
 
-    public GhostEnv(/*@non_null*/ Env parent,
-		    /*@non_null*/ TypeSig peer,
+    public GhostEnv(/*@ non_null */ Env parent,
+		    /*@ non_null */ TypeSig peer,
 		    boolean staticContext) {
 	super(parent, peer, staticContext);
     }
@@ -30,12 +31,12 @@ public class GhostEnv extends EnvForTypeSig
     // Current/enclosing instances
 
     /**
-     * Returns a new Env that acts the same as us, except that its
-     * current instance (if any) is not accessible. <p>
+     * Returns a new {@link Env} that acts the same as us, except that
+     * its current instance (if any) is not accessible.
      *
-     * Note: this routine is somewhat inefficient and should be
+     * @note This routine is somewhat inefficient and should be
      * avoided unless an unknown environment needs to be coerced in
-     * this way. <p>
+     * this way.
      */
     public Env asStaticContext() {
 	return new GhostEnv(parent, peer, true);
@@ -44,8 +45,8 @@ public class GhostEnv extends EnvForTypeSig
     // Debugging functions
 
     /**
-     * Display information about an Env to System.out.  This function
-     * is intended only for debugging use.
+     * Display information about an {@link Env} to {@link System#out}.
+     * This function is intended only for debugging use.
      */
     public void display() {
 	parent.display();
@@ -59,9 +60,13 @@ public class GhostEnv extends EnvForTypeSig
 
     /**
      * Attempts to find a ghost field that belongs to us (including
-     * supertypes) with name n that is not equal to excluded.
-     * Returns the ghost field decl if successfull, otherwise null.
-     * Excluded may be null.
+     * supertypes) with name <code>n</code> that is not equal to
+     * <code>excluded</code>, which may be <code>null</code>.
+     *
+     * @param n the name of the ghost field to get.
+     * @param excluded a field declaration to avoid.
+     * @return the ghost field declaration if successful, otherwise
+     * <code>null</code>.
      */
     public FieldDecl getGhostField(String n, FieldDecl excluded) {
 	Enumeration e = collectGhostFields().elements();
@@ -83,14 +88,15 @@ public class GhostEnv extends EnvForTypeSig
     private Hashtable fields;	// used like a set
 
     /**
-     * Add all new ghost fields found in s (including its supertypes)
-     * to fields.  Also preps them (just resolves their types if needed).
+     * Add all new ghost fields found in <code>s</code> (including its
+     * supertypes) to the hashtable {@link #fields}.  Also preps them
+     * (just resolves their types if needed).
      */
     private void collectGhostFields(TypeSig s) {
 	// Iterate over all TypeDeclElems in s:
 	TypeDecl d = s.getTypeDecl();
 	TypeDeclElemVec elems = d.elems;
-	for (int i=0; i<elems.size(); i++) {
+	for (int i = 0; i < elems.size(); i++) {
 	    TypeDeclElem elem = elems.elementAt(i);
 	    if (elem instanceof GhostDeclPragma) {
 		FieldDecl ghost = ((GhostDeclPragma)elem).decl;
@@ -115,13 +121,14 @@ public class GhostEnv extends EnvForTypeSig
 	} else if (d instanceof InterfaceDecl)
 	    collectGhostFields(Types.javaLangObject());
 
-	for (int i=0; i<d.superInterfaces.size(); i++)
+	for (int i = 0; i < d.superInterfaces.size(); i++)
 	    collectGhostFields(TypeSig.getSig(
 		d.superInterfaces.elementAt(i) ));
     }
 
     /**
-     * Return all our ghost fields (including our supertypes) as "set".
+     * @return all our ghost fields (including our supertypes) as
+     * "set" encoded in a hashtable.
      */
     private Hashtable collectGhostFields() {
 	if (fields != null)
@@ -135,24 +142,25 @@ public class GhostEnv extends EnvForTypeSig
     // Misc. routines
 
     /**
-     * Is a given FieldDecl a ghost field? <p>
+     * @return a flag that indicates if the fielddecl
+     * <code>field</code> a ghost field.
      *
-     * WARNING: The current implementation of this is slow.  If
-     * you need to call this routine a lot, rewrite it so it runs
+     * @time-complexity The current implementation of this is slow.
+     * If you need to call this routine a lot, rewrite it so it runs
      * faster.
      */
     public static boolean isGhostField(FieldDecl field) {
 	TypeDecl d = field.getParent();
-	if (d==null)
+	if (d == null)
 	    return false; // special fields like "length" can't be ghost fields
 
 
 	TypeDeclElemVec elems = d.elems;
-	for (int i=0; i<elems.size(); i++) {
+	for (int i = 0; i < elems.size(); i++) {
 	    TypeDeclElem elem = elems.elementAt(i);
 	    if (elem instanceof GhostDeclPragma) {
 		FieldDecl ghost = ((GhostDeclPragma)elem).decl;
-		if (field==ghost)
+		if (field == ghost)
 		    return true;
 	    }
 	}
@@ -161,8 +169,9 @@ public class GhostEnv extends EnvForTypeSig
     }
 
     /**
-     * Override to make ghost fields visible if
-     * escjava.tc.FlowInsensitiveChecks.inAnnotation is true.
+     * Override to make ghost fields visible if {@link
+     * escjava.tc.FlowInsensitiveChecks#inAnnotation} is
+     * <code>true</code>.
      */
     protected boolean hasField(Identifier id) {
 	if (peer.hasField(id))
