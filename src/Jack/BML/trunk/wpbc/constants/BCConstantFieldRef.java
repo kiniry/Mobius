@@ -85,7 +85,7 @@ public class BCConstantFieldRef extends BCConstantRef implements RefFunction {
 		return valueOfFieldAtState;
 	}
 	
-/*	public boolean equals(Expression expr ) {
+	public boolean equals(Expression expr ) {
 		if ( !(expr instanceof BCConstantFieldRef)) {
 			return false;
 		}
@@ -104,6 +104,6 @@ public class BCConstantFieldRef extends BCConstantRef implements RefFunction {
 			return false;
 		}
 		return true;
-	} */
-
+	} 
+	
 }

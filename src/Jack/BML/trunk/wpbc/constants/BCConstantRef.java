@@ -44,6 +44,16 @@ public class BCConstantRef extends BCConstant {
 	public BCConstantClass getConstantClass() {
 		return (BCConstantClass)cPool.getConstant(getClassIndex());
 	}
+	
+	public String getAbsoluteName() {
+		String className = getConstantClass().getName();
+		String absoluteName = className + "." + name;
+		return absoluteName;
+	}
+	
+	public String toString() {
+		return getAbsoluteName();
+	}
 	/**
 	 * @return Returns the cPool.
 	 *//*

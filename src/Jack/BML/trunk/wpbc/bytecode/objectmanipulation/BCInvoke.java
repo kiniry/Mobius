@@ -185,7 +185,7 @@ public class BCInvoke extends BCFieldOrMethodInstruction {
 			for (int i = 0; i < modifies.length; i++) {
 				modifiesSubst[i] = (ModifiesExpression)modifies[i].copy();
 			}
-			for (int i = 0; i < number_args; i++) {
+			for (int i = 0; i < number_args + 1; i++) {
 				ArithmeticExpression counter_minus_arg_num_plus_i = (ArithmeticExpression) ArithmeticExpression
 						.getArithmeticExpression(counter_minus_arg_num,
 								new NumberLiteral(i), ExpressionConstants.SUB);
