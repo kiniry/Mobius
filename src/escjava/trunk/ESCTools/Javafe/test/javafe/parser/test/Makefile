@@ -1,5 +1,8 @@
 # Copyright 2000, 2001, Compaq Computer Corporation
 
+JAVA ?= java
+JAVAFE_SRC_ROOT = ../../../..
+
 runtest: testlex testexpr testparseidempotence testpragmalexer testpragmaparser
 
 big: runtest testexprbig testparsejdkidempotence
@@ -36,21 +39,34 @@ testexpr:
 testparseidempotence:
 	${JAVA} javafe.parser.test.TestParse diff simpletoks simpletoks
 	${JAVA} javafe.parser.test.TestParse progress check idempotence \
-		compilation-unit.j *.java ../*.java ../../ast/*.java
+		compilation-unit.j *.java ${JAVAFE_SRC_ROOT}/java/javafe/parser/*.java \
+		${JAVAFE_SRC_ROOT}/java/javafe/ast/*.java
 # The first line above tests the diff algorithm...
 
 
 testexprbig:
 	${JAVA} javafe.parser.test.TestExpr check compare < compare-exprs-big.j
 
+# @note kiniry 13 Jan 2002 - Should cause two exceptions in 1.4.1 files.
 testparsejdk:
-	cat jdk-files | xargs ${JAVA} javafe.parser.test.TestParse progress check silent
+	cat jdk-1.0.2-files | xargs ${JAVA} javafe.parser.test.TestParse progress check silent
+	cat jdk-1.1.18-files | xargs ${JAVA} javafe.parser.test.TestParse progress check silent
+	cat jdk-1.2.2-files | xargs ${JAVA} javafe.parser.test.TestParse progress check silent
+	cat jdk-1.3.1-files | xargs ${JAVA} javafe.parser.test.TestParse progress check silent
+	cat jdk-1.4.1-files | xargs ${JAVA} javafe.parser.test.TestParse progress check silent
 
+# @note kiniry 13 Jan 2002 - Should cause two exceptions in 1.4.1 files.
 testparsejdkidempotence:
 	${JAVA} javafe.parser.test.TestParse diff simpletoks simpletoks
-	cat jdk-files | xargs ${JAVA} javafe.parser.test.TestParse progress silent idempotence
+	cat jdk-1.0.2-files | xargs ${JAVA} javafe.parser.test.TestParse progress silent idempotence
+	cat jdk-1.1.18-files | xargs ${JAVA} javafe.parser.test.TestParse progress silent idempotence
+	cat jdk-1.2.2-files | xargs ${JAVA} javafe.parser.test.TestParse progress silent idempotence
+	cat jdk-1.3.1-files | xargs ${JAVA} javafe.parser.test.TestParse progress silent idempotence
+	cat jdk-1.4.1-files | xargs ${JAVA} javafe.parser.test.TestParse progress silent idempotence
 
 testparse:
 	${JAVA} javafe.parser.test.TestParse progress check print verboseprogress\
-		compilation-unit.j *.java ../*.java ../../ast/*.java
+		compilation-unit.j *.java \
+		${JAVAFE_SRC_ROOT}/java/javafe/parser/*.java \
+		${JAVAFE_SRC_ROOT}/java/javafe/ast/*.java
 
