@@ -19,7 +19,6 @@ import escjava.Main;
 
 import java.io.IOException;
 
-
 /**
  Grammar:
 
@@ -164,13 +163,14 @@ public class EscPragmaParser extends Parse implements PragmaParser
      */
     private int inProcessTag;
     /*@ invariant inProcessTag==-2 || inProcessTag==-1 ||
-     inProcessTag==TagConstants.STILL_DEFERRED ||
-     inProcessTag==TagConstants.MONITORED_BY ||
-     inProcessTag==TagConstants.MODIFIES ||
-     inProcessTag==TagConstants.ALSO_MODIFIES ||
-     inProcessTag==TagConstants.JML_MODIFIABLE ||
-     inProcessTag==TagConstants.JML_ASSIGNABLE ||
-     inProcessTag==TagConstants.LOOP_PREDICATE; */
+      inProcessTag==TagConstants.STILL_DEFERRED ||
+      inProcessTag==TagConstants.MONITORED_BY ||
+      inProcessTag==TagConstants.MODIFIES ||
+      inProcessTag==TagConstants.ALSO_MODIFIES ||
+      inProcessTag==TagConstants.JML_MODIFIABLE ||
+      inProcessTag==TagConstants.JML_ASSIGNABLE ||
+      inProcessTag==TagConstants.LOOP_PREDICATE ||
+      inProcessTag==TagConstants.JML_ALSO; */
 
     private int inProcessLoc;
     private CorrelatedReader pendingJavadocComment;
@@ -258,41 +258,41 @@ public class EscPragmaParser extends Parse implements PragmaParser
             // System.out.println("restart: c = '"+(char)c+"'");
 
             switch (c) {
-                case '@':
-                    /* Normal escjava annotation: */
+            case '@':
+                /* Normal escjava annotation: */
 
-                    eatWizardComment(in);
-                    in = new JmlCorrelatedReader(in,
-                                                 eolComment ?
-                                                 JmlCorrelatedReader.EOL_COMMENT :
-                                                 JmlCorrelatedReader.C_COMMENT);
-                    /*
-                     * At this point, <code>in</code> has been
-                     * trimmed/replaced as needed to represent the
-                     * annotation part of the comment (if any -- it
-                     * may be empty).
-                     */
-                    scanner.restart(in);
-                    inProcessTag = -1;
-                    break;
+                eatWizardComment(in);
+                in = new JmlCorrelatedReader(in,
+                                             eolComment ?
+                                             JmlCorrelatedReader.EOL_COMMENT :
+                                             JmlCorrelatedReader.C_COMMENT);
+                /*
+                 * At this point, <code>in</code> has been
+                 * trimmed/replaced as needed to represent the
+                 * annotation part of the comment (if any -- it
+                 * may be empty).
+                 */
+                scanner.restart(in);
+                inProcessTag = -1;
+                break;
 
-                case '*':
-                    if (eolComment) {
-                        // This is not a Javadoc comment, so ignore
-                        inProcessTag = -2;
-                    } else {
-                        // Javadoc comment -- look for <esc> ... </esc> inside
+            case '*':
+                if (eolComment) {
+                    // This is not a Javadoc comment, so ignore
+                    inProcessTag = -2;
+                } else {
+                    // Javadoc comment -- look for <esc> ... </esc> inside
 
-                        if (pendingJavadocComment != null) {
-                            pendingJavadocComment.close();
-                        }
-                        pendingJavadocComment = in;
-                        processJavadocComment();
+                    if (pendingJavadocComment != null) {
+                        pendingJavadocComment.close();
                     }
-                    break;
+                    pendingJavadocComment = in;
+                    processJavadocComment();
+                }
+                break;
 
-                default:
-                    Assert.fail("Bad starting character on comment:"+ c + " " + (char)c);
+            default:
+                Assert.fail("Bad starting character on comment:"+ c + " " + (char)c);
             }
         } catch (IOException e) {
             ErrorSet.fatal(in.getLocation(), e.toString());
@@ -353,7 +353,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
      * @param in the stream from which to read.
      */
     private void eatWizardComment(/*@ non_null */ CorrelatedReader in) 
-            throws IOException {
+        throws IOException {
         in.mark();
         int cc = in.read();
         if (cc != '(') {
@@ -389,7 +389,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
      */
     private int scanFor(/*@ non_null */ CorrelatedReader in,
 			/*@ non_null */ String match)
-            throws IOException
+        throws IOException
     {
 
 	int start = match.charAt(0);
@@ -476,20 +476,20 @@ public class EscPragmaParser extends Parse implements PragmaParser
 
             switch (tag) {
                 
-                case TagConstants.NOWARN:
-                    dst.ttype = TagConstants.LEXICALPRAGMA;
-                    seqIdentifier.push();
-                    if (scanner.ttype == TagConstants.IDENT)
-                        for (;;) {
-                            seqIdentifier.addElement(parseIdentifier(scanner));
-                            if (scanner.ttype != TagConstants.COMMA) break;
-                            scanner.getNextToken(); // Discard COMMA
-                        }
-                    IdentifierVec checks = IdentifierVec.popFromStackVector(seqIdentifier);
-                    dst.auxVal = NowarnPragma.make(checks, loc);
-                    if (scanner.ttype == TagConstants.SEMICOLON) scanner.getNextToken();
-                    if (scanner.ttype != TagConstants.EOF)
-                        ErrorSet.fatal(loc, "Syntax error in nowarn pragma");
+            case TagConstants.NOWARN:
+                dst.ttype = TagConstants.LEXICALPRAGMA;
+                seqIdentifier.push();
+                if (scanner.ttype == TagConstants.IDENT)
+                    for (;;) {
+                        seqIdentifier.addElement(parseIdentifier(scanner));
+                        if (scanner.ttype != TagConstants.COMMA) break;
+                        scanner.getNextToken(); // Discard COMMA
+                    }
+                IdentifierVec checks = IdentifierVec.popFromStackVector(seqIdentifier);
+                dst.auxVal = NowarnPragma.make(checks, loc);
+                if (scanner.ttype == TagConstants.SEMICOLON) scanner.getNextToken();
+                if (scanner.ttype != TagConstants.EOF)
+ErrorSet.fatal(loc, "Syntax error in nowarn pragma");
                     break;
 
                 case TagConstants.STILL_DEFERRED:
@@ -679,8 +679,9 @@ public class EscPragmaParser extends Parse implements PragmaParser
                         ErrorSet.warning(loc, "Already in an 'also' specification; " + 
                                          "duplicate 'also' ignored.");
                     inAlsoClause = true;
-                    // Assert.fail("JML keyword 'also' unsupported.");
-                    break;
+                    dst.ttype = TagConstants.MODIFIERPRAGMA;
+                    semiNotOptional = true;
+                    return true;
 
                 case TagConstants.EXSURES:
                 case TagConstants.ALSO_EXSURES:
@@ -718,13 +719,13 @@ public class EscPragmaParser extends Parse implements PragmaParser
     }
 
     /*@ requires inProcessTag==TagConstants.STILL_DEFERRED ||
-     inProcessTag==TagConstants.MONITORED_BY ||
-     inProcessTag==TagConstants.MODIFIES ||
-     inProcessTag==TagConstants.ALSO_MODIFIES ||
-     inProcessTag==TagConstants.JML_MODIFIABLE ||
-     inProcessTag==TagConstants.JML_ASSIGNABLE ||
-     inProcessTag==TagConstants.LOOP_PREDICATE */
-    //@ requires dst!=null
+      @          inProcessTag==TagConstants.MONITORED_BY ||
+      @          inProcessTag==TagConstants.MODIFIES ||
+      @          inProcessTag==TagConstants.ALSO_MODIFIES ||
+      @          inProcessTag==TagConstants.JML_MODIFIABLE ||
+      @          inProcessTag==TagConstants.JML_ASSIGNABLE ||
+      @          inProcessTag==TagConstants.LOOP_PREDICATE */
+    //@ requires dst != null
     //@ requires scanner.startingLoc != Location.NULL;
     //@ requires scanner.m_in != null;
     private void continuePragma(Token dst) throws IOException {
