@@ -206,7 +206,7 @@ public class Lex extends Token
      * This is null iff we are closed.
      */
 
-    /*@spec_public*/ protected CorrelatedReader m_in = null;
+    /*@ spec_public @*/ protected CorrelatedReader m_in = null;
 
     /** Each call to <code>getNextToken</code> reads ahead one character
      and leaves the result in <code>m_nextchr</code>.  In other words,
@@ -233,7 +233,7 @@ public class Lex extends Token
      not be used throughout the lifetime of the lexer.  */
 
     //@ invariant text != null
-    //@ invariant text.length>4
+    //@ invariant text.length > 4
     protected char[] text = new char[64]; // Invariant: text.length > 4
     // 64 should be large enough that overflows won't happen for most inputs
 
@@ -242,7 +242,7 @@ public class Lex extends Token
      <TT>getNextToken</TT> (there is no "current token" between
      creation of a lexer and the first call to getNextToken).  */
 
-    //@ invariant 0<=textlen &&  textlen <= text.length
+    //@ invariant 0 <= textlen &&  textlen <= text.length
     protected int textlen = 0;
 
     /** Append 'c' to <CODE>text</CODE>, expanding if necessary. */
@@ -266,7 +266,7 @@ public class Lex extends Token
 
     protected final TokenQueue lookaheadq = new TokenQueue();
 
-    protected /*@non_null*/ LexicalPragmaVec lexicalPragmas;
+    protected /*@ non_null @*/ LexicalPragmaVec lexicalPragmas;
 
     //@ invariant inPragma ==> pragmaParser != null
     protected PragmaParser pragmaParser;
@@ -275,19 +275,22 @@ public class Lex extends Token
 
     //// Constructors
 
-    /** Creates a lexical analyzer that will tokenize the characters
-     read from an underlying <code>CorrelatedReader</code>.  Before the
-     newly-created scanner can be used, its <code>restart</code> method
-     must be called on a <code>CorrelatedReader</code>.  The
-     <code>pragmaParser</code> object is used to parse pragmas out of
-     comments; if it is <code>null</code>, all comments are discareded.
-     The <code>isJava</code> flag controls the initial set of keywords
-     and punctuation strings; if <code>true</code>, the new scanner
-     will recognize Java's keywords and punctuation strings, if
-     <code>false</code>, the new scanner will recognize <em>no</em>
-     keywords or punctuation strings.  If <code>isJava</code> is true,
-     the token codes used for the Java's keywords and punctuation
-     strings are those defined by the <code>TagConstants</code> class. */
+    /**
+     * Creates a lexical analyzer that will tokenize the characters
+     * read from an underlying <code>CorrelatedReader</code>.  Before
+     * the newly-created scanner can be used, its <code>restart</code>
+     * method must be called on a <code>CorrelatedReader</code>.  The
+     * <code>pragmaParser</code> object is used to parse pragmas out
+     * of comments; if it is <code>null</code>, all comments are
+     * discarded.  The <code>isJava</code> flag controls the initial
+     * set of keywords and punctuation strings; if <code>true</code>,
+     * the new scanner will recognize Java's keywords and punctuation
+     * strings, if <code>false</code>, the new scanner will recognize
+     * <em>no</em> keywords or punctuation strings.  If
+     * <code>isJava</code> is true, the token codes used for the
+     * Java's keywords and punctuation strings are those defined by
+     * the <code>TagConstants</code> class. 
+     */
 
     //@ ensures m_in==null
     public Lex(PragmaParser pragmaParser, boolean isJava) {

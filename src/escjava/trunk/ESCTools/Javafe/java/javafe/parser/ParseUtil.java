@@ -132,20 +132,19 @@ public class ParseUtil
 
     /**
      * Parse a list of modifiers.  Ensures no duplicate Java modifiers
-     * and only one
-     * of the access modifiers public, protected, private.  Return
-     * integer encoding the Java modifiers.
+     * and only one of the access modifiers public, protected,
+     * private.  Return integer encoding the Java modifiers.
      *
      * <p> In addition to parsing Java modifiers, also handles pragma
      * parsers.  If no pragma parsers are seen, sets
-     * <c>modifierPragmas</c> to <c>null</c>.  Otherwise, sets it to be
-     * the list of modifier pragmas seen.
+     * <c>modifierPragmas</c> to <c>null</c>.  Otherwise, sets it to
+     * be the list of modifier pragmas seen.
      *
      * @see javafe.ast.ModifierConstants
      */
     //@ requires l.m_in != null
     //@ modifies modifierPragmas
-    public int parseModifiers(/*@non_null*/ Lex l) {
+    public int parseModifiers(/*@ non_null @*/ Lex l) {
         boolean seenPragma = false;
         int modifiers = Modifiers.NONE;
 
