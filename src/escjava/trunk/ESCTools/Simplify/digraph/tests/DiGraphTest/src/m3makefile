@@ -13,9 +13,10 @@ digraph		("Int", "Int", "Integer", "Integer")
 digraph		("Int", "Null", "Integer", "NullEdgeType")
 implementation	("DiGraphTest")
 
-% On systems that do not support shared libriaries the following
+% On systems that do not support shared libraries the following
 % line (or, on some systems, the one after it) is necessary:
- option("standalone", "T")
+% option("standalone", "T")
 % "build_standalone()
+% Using cm3 on OS X, neither line is necessary.
 
 program		("DiGraphTest")
