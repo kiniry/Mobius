@@ -1,3 +1,71 @@
+2003-08-09  Joseph R. Kiniry  <kiniry@acm.org>
+
+	* Javafe/java/javafe/parser/ParseExpr.java:
+	Added support for conditionally parsing "assert" keyword as identifier
+	if the -source 1.4 option is *not* passed to ESC/Java.
+
+	* Javafe/java/javafe/parser/ParseStmt.java:
+	Corrected error message (missing space).
+
+	* Javafe/Makefile: Turned off echo of typecheckTests execution.
+
+	* Javafe/test/javafe/test/fe/Makefile: Removed unused "prepjdk" target.
+
+	* Javafe/test/javafe/test/typecheckJavafe: Added information message.
+
+	* Javafe/test/javafe/test/typecheckJDK:
+	Added support for parsing multiple JDK versions installed.  New
+	variables JDK10_SOURCES ... JDK14_SOURCES are used, as defined in
+	Make.local.
+
+	* Javafe/test/javafe/parser/test/Makefile:
+	Removed unused testparsejdk target.  Added support for generating the
+	file list and parsing multiple JDK versions installed.  New variables
+	JDK10_SOURCES ... JDK14_SOURCES are used, as defined in Make.local.
+
+	* Javafe/astgen/astoutput.c:
+	Tweaking the output so that specs are more readable and semi-colon
+	terminated.
+
+	* Escjava/test/matrix/ElementaryMatrix.java:
+	* Escjava/test/matrix/Entry.java:
+	* Escjava/test/matrix/Rational.java:
+	* Escjava/test/matrix/SparseVector.java:
+	Some initial cleanup of this test code, particularly adding new specs
+	so that the new Escjava will check it properly.  About half of the
+	classes are done (the easy ones).
+
+	* Escjava/Makefile:
+	Tweaked test_matrix and self_test rules to use current ESCJ variable
+	to run Escjava.  Also added -source 1.4 to the latter invocation since
+	our source now has Java asserts in it.
+
+	* Escjava/java/escjava/parser/EscPragmaParser.java:
+	Corrected many misplaced non_null pragmas and one requires that was
+	missing its 's'.
+
+	* Escjava/java/escjava/prover/SubProcess.java: Typo in \forall keyword.
+
+	* Escjava/test/escjava/typecheckJDK:
+	New JDK typechecking script that mirrors that in the Javafe package
+	but uses Escjava to typecheck all installed JDKs.
+
+	* Makefile:
+	* Makefile.defs:
+	Added new targets:
+	  o fix-perms - to set the file permissions properly for
+	    non-executable files (644), as CVS does not maintain them properly.
+	  o generate-patches - automatically generates generic patch files,
+	    one for each "envelope" of the original ESCTools release.
+	  o generate-toplevel-archive - generates a compressed tar of all
+	    the "top-level" stuff in the ESCTools hierarchy (e.g., READMEs,
+	    Makefiles, docs, Utils, etc.).
+
+	I've also tested all patch, release building, and release testing
+	targets and everything works great.  I'm planning on putting together
+	a new ESC/Java2 web page and putting up our first alpha release in
+	the next 48 hours.
+
 2003-08-08  Joseph R. Kiniry  <kiniry@acm.org>
 
 	* Escjava/java/escjava/translate/Translate.java:
