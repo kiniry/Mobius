@@ -15,7 +15,7 @@ test11  Good	OwnerNull
 test12  Empty	Empty
 test13	Good	loops
 test14	Good	labels, breaks, and continues
-test15	Good	InitialState fn equates vars with their pre values
+test15	Drop	InitialState fn equates vars with their pre values -- no longer valid with change in specification inheritance
 test16	Empty	Empty
 test17	Good	Method calls
 test18	Good	sumarray
@@ -43,7 +43,7 @@ test37	FIX	exsures and also_exsures -- FIXME also_ checking
 test38	Good	Tests knowledge of constants and final fields with initializers
 test39  Good    relative assignments (op=) with shift operators
 
-test40	Good	non_null
+test40	Drop	non_null -- dropped since rules on inheriting non_null have changed
 test41  Good    test for a previously discovered bug in MODIFIES substitution
 test42	Good	class literals (see also fe/test100)
 test43  Good    substitution for "this" in field-decl modifier pragmas
@@ -69,7 +69,7 @@ test60	FIX	inheriting method specifications and non_null from interfaces // An _
 test61	Good	elements left unchanged by arraycopy (based on ex from Bart Jacobs)
 test62	Good	order of testing assertions
 test63	Good	integer division
-test64	Good	-inlineFromConstructors flag
+test64	FIX	-inlineFromConstructors flag
 test65	Good	continued-line ellipses at the end of associated declarations
 test66	Good	-excuseNullInitializers flag
 test67	Good	comment parsing, including @-signs at beginning of lines

@@ -42,6 +42,7 @@ class WritableIf
    //@ ghost public Object mono /*@ writable_if (/*boolean*/ (/*java.lang.Object*/ mono) == (/*null*/ null)); */;
 
    WritableIf()
+    /*@ requires (/*boolean*/ (\lblneg Pre (/*boolean*/ true))); */ 
    {
       super();
       Object newthing = (/*java.lang.Object*/ new Object());
@@ -51,6 +52,7 @@ class WritableIf
    }
 
    WritableIf(int x)
+    /*@ requires (/*boolean*/ (\lblneg Pre (/*boolean*/ true))); */ 
    {
       super();
       Object newthing = (/*java.lang.Object*/ new Object());
@@ -68,6 +70,7 @@ class NonNull
    //@ ghost public static Object s /*@ non_null */;
 
    void foo(Object x /*@ non_null */)
+    /*@ requires (/*boolean*/ (\lblneg NonNull:32.16 (/*boolean*/ (/*java.lang.Object*/ x:32.34) != (/*null*/ null)))); */ 
    {
       /*@ assert (/*boolean*/ (/*java.lang.Object*/ foo) != (/*null*/ null)); */
       /*@ set (/*java.lang.Object*/ foo) = (/*java.lang.Object*/ x:32.34); */
@@ -76,6 +79,7 @@ class NonNull
    }
 
    void foo2(Object x /*@ non_null */)
+    /*@ requires (/*boolean*/ (\lblneg NonNull:39.17 (/*boolean*/ (/*java.lang.Object*/ x:39.35) != (/*null*/ null)))); */ 
    {
       /*@ assert (/*boolean*/ (/*java.lang.Object*/ s) != (/*null*/ null)); */
       /*@ set (/*java.lang.Object*/ s) = (/*java.lang.Object*/ x:39.35); */
@@ -94,6 +98,7 @@ class MonitoredBy
    //@ ghost public Object x /*@ monitored_by (/*java.lang.Object*/ mutex); */;
 
    void foo(Object foo)
+    /*@ requires (/*boolean*/ (\lblneg Pre (/*boolean*/ true))); */ 
    {
       /*@ assert (/*boolean*/ (/*java.lang.Object*/ x) == (/*java.lang.Object*/ x)); */
       /*@ set (/*java.lang.Object*/ x) = (/*java.lang.Object*/ foo:54.20); */
