@@ -10,7 +10,7 @@ endif
 
 if ($?ESCJ_SIMPLIFY) then
 else
-	setenv	ESCJ_SIMPLIFY	/proj/system/bin/Simplify
+	setenv	ESCJ_SIMPLIFY	${ESCTOOLS_ROOT}/Simplify/simplify/LINUXLIBC6/Simplify
 endif
 
 if ($?PROVER_KILL_TIME) then
