@@ -115,7 +115,7 @@ public class TypeSig extends Type {
     public static TypeSig getSig(/*@non_null*/ TypeDecl d) {
 	TypeSig r = (TypeSig)sigDecoration.get(d);
 	Assert.notNull(r,      //@ nowarn Pre
-	       "getSig called on a TypeDecl not associated with a TypeSig");
+	       "getSig called on a TypeDecl (" + d.id + ") not associated with a TypeSig");
 	return r;
     }
 
