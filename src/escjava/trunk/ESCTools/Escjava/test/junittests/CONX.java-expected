@@ -1,0 +1,43 @@
+
+c:\cygwin\ESC\ESCTools\Escjava\test\junittests>echo -nowarn Deadlock -verboseTrace -testMode -classpath .;c:/cygwin/ESC/ESCTools/jmlspecs.jar -classpath . -quiet CONX.java 
+-nowarn Deadlock -verboseTrace -testMode -classpath .;c:/cygwin/ESC/ESCTools/jmlspecs.jar -classpath . -quiet CONX.java
+
+c:\cygwin\ESC\ESCTools\Escjava\test\junittests>java  -Dsimplify=C:/cygwin/ESC/ESCTools\Simplify-1.5.4.exe -classpath "C:/cygwin/ESC/ESCTools\esctools2.jar" escjava.Main -classpath  "C:/cygwin/ESC/ESCTools\jmlspecs.jar;." -nowarn Deadlock -nowarn Deadlock -verboseTrace -testMode -classpath .;c:/cygwin/ESC/ESCTools/jmlspecs.jar -classpath . -quiet CONX.java 
+CONX.java:18: Error: There is no assignable clause allowing this method call
+                Object o = new CONX(0); // WARNING
+                                   ^
+CONX.java:40: Associated declaration: 
+        //@ modifies i;
+                     ^
+CONX.java:16: Associated declaration: 
+        //@ modifies \nothing;
+            ^
+CONX.java:28: Error: There is no assignable clause allowing this method call
+                Object oo = new CONX(o); // WARNING
+                                    ^
+CONX.java:48: Associated declaration: 
+        //@ modifies CONX.*;
+                     ^
+CONX.java:26: Associated declaration: 
+        //@ modifies \nothing;
+            ^
+CONX.java:85: Warning: Possible violation of modifies clause (Modifies)
+                new CONX(0,0.0);  // WARNING
+                        ^
+Associated declaration is "CONX.java", line 89, col 14:
+        //@ modifies ii if i >= 3;
+                     ^
+Associated declaration is "CONX.java", line 82, col 5:
+        //@ modifies i;
+            ^
+CONX.java:104: Warning: Possible violation of modifies clause (Modifies)
+            this(0,0); // WARNING
+                ^
+Associated declaration is "CONX.java", line 68, col 14:
+        //@ modifies j if i >= 3;
+                     ^
+Associated declaration is "CONX.java", line 102, col 5:
+        //@ modifies i;
+            ^
+2 warnings
+2 errors
