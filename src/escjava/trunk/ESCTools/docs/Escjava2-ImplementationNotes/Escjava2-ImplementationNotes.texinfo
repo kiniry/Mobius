@@ -1223,7 +1223,7 @@ unresolved bugs.
 
 @item @strong{Comment:} This form is also illegal:
 @*@center @code{/*@@ model @@*/ import }@emph{typename}@code{;}
-@* Either use a Java import statement (without a @code{model) keyword) or
+@* Either use a Java import statement (without a @code{model} keyword) or
 enclose the entire model import statement in an annotation comment.
 @end itemize
 
