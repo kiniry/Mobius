@@ -26,7 +26,7 @@ endif
 ## Define a function to canonicalize paths that are parameters
 ## to native programs (e.g., "javac").
 ifdef COMSPEC
-  canonicalize = `cygpath -p -m $(1)`
+  canonicalize = `cygpath --path -m "$(1)"`
 else
   canonicalize = $(1)
 endif
@@ -149,7 +149,7 @@ export MOCHA_LIB = ${ESCTOOLS_ROOT}/jars/mochalib.jar
 export ESC_CLASSPATH = $(call canonicalize,${JAVAFE_CLASSFILES}:${ESCJAVA_CLASSFILES}:${ESCTOOLS_ROOT}/Utils:${MOCHA_LIB})
 
 ## The front-end for Escjava that should be used for testing.
-export ESCJ = ${ESCJAVA_ROOT}/escj
+export ESCJ = ${ESCJAVA_ROOT}/escj -nowarn Modifies
 
 ############################### Release
 ## Pertinent locations for building a release
