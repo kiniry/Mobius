@@ -58,6 +58,8 @@
 
 \date{30 March 2004}
 
+\toappear{Submitted to the Formal Techniques for Java-like Programs 
+workshop at ECOOP 2004}
 %%% The following for llncs style
 %\pagestyle{headings}  % switches on printing of running heads
 %\addtocmark{XXXXXXXXX} % additional mark in the TOC
@@ -94,7 +96,7 @@
 
 \maketitle
 \begin{abstract}
-Program verification requires translating the constructs of an annotation 
+Program verification requires translating the constructs of a specification 
 into a suitable logic for an underlying theorem prover.   Providing modularity
 and comprehensibility by allowing 
 annotations containing method calls and other abstractions is as important in 
@@ -134,8 +136,8 @@ promotes reading, writing and understanding specifications and will
 likely assist in their automated verification as well.  
 
 One such system,
-ESC/Java \cite{ESCJava} was successful at checking annotations, but its
-absence of method calls in annotations limited those annotations to
+ESC/Java \cite{ESCJava} was successful at checking annotated programs, but its
+absence of method calls in specifications limited those annotations to
 low-level representations.  That system translated Java programs into
 an untyped first-order language.  In this paper we discuss the implementation
 of an extension to ESC/Java that allows the use of routine calls in
@@ -143,43 +145,22 @@ specifications.  With that accomplished, several other programming
 language constructs can also be handled by the underlying prover.
 The approach described here is applicable to any source code translator
 that must interface with a prover that operates in a generic first-order 
-logic (as opposed to a logic designed to handle programming language
+logic (as opposed to a logic specifically designed to handle programming language
 constructs).
 
-The next section presents previous work on this topic in the context of other
-verification systems.  Sections 3, 4, and 5 describe the Java Modeling
+Sections2, 3, and 4 describe the Java Modeling
 Language, the ESC/Java2 project, and the Simplify prover; these systems
 are the context in which the solution described here was implemented 
-and tested.  Section 6 describes our solution for translating method calls.
-Applications to other specification language features are described in section 7,
+and tested.  Section 5 describes our solution for translating method calls.
+Applications to other specification language features are described in section 6.
+Section 7 describes some related work,
 and we end with some outstanding issues in section 8.
 
-\section{Background: Related work}
-
-There are by now a number of research tools that translate Java into verification conditions
-appropriate to some logical reasoning engine.  There are numerous tools that insert
-assertion checking code into compiled Java programs, and others that do model checking,
-but
-we are aware only of these tools that do static
-checking of assertions:
-\begin{itemize}
-\item Krakatoa [[[ref]]] uses the Coq prover, and 
-translates all statements with reference to a current program state. 
-\item The LOOP tool [[[ref]]] uses PVS, interactively.  
-\item The CHASE tool [[[Ref]]] checks frame conditions.
-\item Jive -- [[[need a reference and describption]]]
-\item JACK - [[[need a reference and description]]]
-\end{itemize}
-
-
-[[[ Need discussion of how the LOOP tool treats method calls, as well as other tools, if there is published literature about them. ]]]
-[[[ What is different about ESC/java2's approach ]]]
-[[[ Should this section be moved to the end? ]]]
 
 \section{The Java Modeling Language}
 
 The Java Modeling Language (JML) has by now been described in several publications
-\cite{Leavens-Baker-Ruby99b,Leavens-Baker-Ruby02,jmlpapers} and we will not repeat that full description here.  This language is suitable for
+\cite{jmlpapers,Leavens-Baker-Ruby99b,Leavens-Baker-Ruby02} and we will not repeat that full description here.  This language is suitable for
 describing the issues at hand and is used in the implementation of the solution.
  The advances described in this paper
 can be illustrated using simple invariants and lightweight preconditions,
@@ -196,8 +177,8 @@ the sorting of values is performed only on demand.}
 Specifications are included in the text of a Java program by placing them in 
 specially formatted comments; these comments are either single-line comments
 beginning with  \texttt{//@} or are multi-line comments beginning with  \texttt{/*@}.
-Some specifications are properties of the class, such as the \texttt{invariant} clause
-in Fig.~\ref{fig:SS}.
+Some specifications, such as the \texttt{invariant} clause
+in Fig.~\ref{fig:SS},  are properties of the class.
 It contains a predicate that is expected to be satisfied in 
 each 'visible' state, that is, in the program state just after execution of constructors and
 just before and after execution of methods of the object.  In addition each routine may
@@ -222,10 +203,10 @@ tools which execute and check annotations at run-time.
 
 \section{ESC/Java2}
 
-The ESC/Java tool developed at DEC/SRC 
+The ESC/Java tool~\cite{Flanagan-etal02} developed at DEC/SRC 
 (and subsequently at Compaq) was a pioneering tool in the
 application of static program analysis and verification technology to
-annotated Java programs~\cite{Flanagan-etal02}.  The tool and its built-in
+annotated Java programs.  The tool and its built-in
 prover operated automatically with reasonable performance and needed
 only program annotations against which to check a program's source
 code.  The annotations needed were easily read, written and understood
@@ -236,27 +217,26 @@ ESC/Java was a research success
 and was also successfully used by other groups for a variety of case
 studies (e.g.,~\cite{Hub03,HOP04}).
 
-Its long-term utility, however, was lessened by a number of factors.  
-The ESC/Java2 project \cite{CokKiniry04} aims to extend the work of ESC/Java 
-in a number of directions to improve its utility.
+The ESC/Java2 project \cite{CokKiniry04} was begun to extend ESC/Java
+and its long-term utility by addressing a number of issues.
 \begin{itemize}
+\setlength{\itemsep}{0in}
+\setlength{\parsep}{0in}
 \item As companies were bought and sold and research groups
 disbanded, there was no continuing development or support of 
-ESC/Java, making it less useful as time went by.  As a result of these
-marketplace changes, the tool was untouched for over two years and its
+ESC/Java and the tool was untouched for over two years and its
 source code was not available.  The ESC/Java2 project has established
 an open-source repository for the tool, brought the code up to the current
 definition of Java, and provided a degree of ongoing development and
 maintenance.
-\item The problem of lack of support for ESC/Java was compounded by its
-incomplete match to JML.  Furthermore, JML continued to evolve as
+\item  ESC/Java only partially supported JML and JML continued to evolve as
 research on the needs of annotations for program checking advanced.
 This unavoidable divergence of specification languages made writing,
 verifying, and maintaining specifications of non-trivial APIs
 troublesome.
 Additionally, JML has grown significantly in popularity.  A number of
 tools have been developed that use JML, representing the work of several
-groups~\cite{Burdy-etal03,jmlpapers,Bogor03,NimmerErnst01,Leavens-etal00}.
+groups~\cite{jmlpapers,Burdy-etal03,Leavens-etal00,NimmerErnst01,Bogor03,BergJ01}.
 Thus, many new research tools worked well with ``modern'' JML, but
 ESC/Java did not.  ESC/Java2 has evolved from ESC/Java to be
 consistent with the current definition of JML.
@@ -276,7 +256,8 @@ been corrected.
 
 \section{SIMPLIFY and the target verification condition language}
 
-As is customary in this field, ESC/Java2 (following the parent tool ESC/Java) translates program source code
+As is customary in this field, ESC/Java2 (following the parent tool ESC/Java) translates program source code into guarded commands, then into a single-assignment representation, and 
+finally
 into verification conditions (VCs).  These conditions are passed to an accompanying prover which
 judges them to be valid or invalid and may produce counterexamples to demonstrate
 invalidity.  With an appropriately general definition of the syntax and semantics of the verification
@@ -305,7 +286,7 @@ set of input formulas:
 \begin{itemize}
 \item an e-graph sub-theory, which reasons about the equality (as in \texttt{EQ}) of sets of
 (uninterpreted) terms;
-\item a simplex sub-theory, which reasons about arithmetic inequalities over linear combinations
+\item a simplex sub-theory, which reasons about arithmetic equalities and inequalities (including less-than and greater-than) over linear combinations
 of terms;
 \item an ordering sub-theory, which reasons about partial orders among terms;
 \item a matching sub-theory, which reasons about quantified formulas.
@@ -324,7 +305,8 @@ translated as the array reference \texttt{f[o]}.
 
 The problem at hand is to translate expressions containing method calls into the target logic described above.  An assertion in the target logic concerning some equivalent of a method call is of no value in reasoning, however, unless there are other logical assertions that provide some 
 information to the prover about that translation of the method call.  That information resides in
-the specifications of the method being called.  Thus, we need to translate the method specifications
+the specifications of the method being called.  Thus, we need to translate the specifications
+of the called method
 in a manner similar to that used to translate the calling expression.
 
 In some cases there exists an expression whose value is the result of the method call.  For
@@ -365,7 +347,8 @@ Aliasing is naturally handled as well, since if it is established, for example, 
 Secondly, the method implementation may depend on other static or instance fields
 of the receiving object that are not listed in the argument list.  The values of instance fields
 may be considered to be implicitly included via the \texttt{this} argument, but their values then
-depend on the current program state.  In our running example, the value of the \texttt{sort} term
+depend on the current program state.  In the context of Fig.~\ref{fig:SS}, 
+the value of the \texttt{sort} term
 will depend on the values of \texttt{this.n} and the values of the elements of \texttt{this.seq}.
 
 \item
@@ -397,8 +380,12 @@ for the pre-state and the post-state if the method is not \texttt{pure}; a commo
 constant can be used if the method is \texttt{pure}.  This state constant is uninterpreted.
 That is we do not use it in any context other than to distinguish different program states 
 in method calls.
-This may limit the conclusions that may be drawn about relationships among states, but has
-been simple to apply and suitably effective in practice.
+Thus we keep the relative simplicity of the single-assignment translation into a first-order
+logic without embedding a full state-based representation of the programming language into the 
+logic.
+This may limit the conclusions that may be drawn about relationships among 
+program states, but has
+been simple to apply and thus far suitably effective in practice.
 
 The translation, then, consists of the following steps,
 \begin{itemize}
@@ -414,9 +401,27 @@ into the Simplify input language as a function call.  Use the unique identifier 
 type of the method as the function name.  Include as arguments the translations of (a) the
 state constant for this pre- or post-state, (b) the receiver object (if the method is not static),
 and (c) each of the usual arguments of the method.
+\item The specifications of the called method must be turned into assumptions.  The 
+specifications must first be desugared by combining preconditions and postconditions
+into stand-alone implications of the form (\cite{Raghavan-Leavens03} describes the details): \\
+{\centering \texttt{ensures } {\em precondition}\texttt{ ==> }{\em postcondition}; }.\\
+Any instance of \texttt{\char'134 result} is replaced by an instance of the method call, with
+formal names for its arguments.  The expression is enclosed in a universal quantification over
+its formal parameters.  Thus (in a class named \texttt{Z})\\
+\texttt{requires i != 0;}\\
+\texttt{ensures \char'134 result == i+1; }\\
+\texttt{public int next(int i);}\\
+in a state with state constant \texttt{stateX} creates the axiom \\
+\texttt{ (\char'134 forall Z object; (\char'134 forall int i;  i != 0 ==> \\
+             next(stateX,object,i) == i + 1; ))} \\
+Since we do not extract all values (e.g. of fields) out of a program state, we do not quantify over
+the state constant.  Instead we repeat the assumption above in each context where the method
+is called and translate any free variables in the context of that call.
+\item JML allows annotations to appear in the body of a method as well, using \texttt{assert}
+statements for example.  These are translated in the same way as postconditions; they simply
+use a different state constant.
 \end{itemize}
 
-[[[ Mention method calls in annotations within the body of a routine as well.]]]
 [[[ Experience; example of what is not possible to conclude ]]]
 
 \section{Application to other \\ annotation constructs}
@@ -546,15 +551,15 @@ demonstrating a model variable with no representation.}
 
 Representation-less model variables do pose a difficulty in the translation and checking of model bodies.  If the model variable is \texttt{assignable} for a given method, then its value may 
 change in the course of execution of the body of that method.  But without a representation,
-there is no way to reason about its value during any (symbolic) execution of the body.
-\footnote{The requirements on JML's  \texttt{in} clause, not discussed here, do provide information
+there is no way to reason about its value during any (symbolic) execution of the 
+body.~\footnote{The requirements on JML's  \texttt{in} clause, not discussed here, do provide information
 on which other fields of the class contribute to the value of a model variable and consequently
 at which program points the value of a model variable might change.}
 
 \subsubsection{Unmodified model variables}
 
 There is a special case of using model variables that allows a simplification in their translation.
-If a model variable is not listed \footnote{including not listed via a JML datagroup} in a
+If a model variable is not listed~\footnote{including not listed via a JML datagroup} in a
 method's \texttt{assignable} clause, then its value may not change during the course of the
 body of the method.  Thus for that method's body and the checking of its pre- and
 post-conditions, the model variable may be treated as a constant.  The value of the model 
@@ -595,12 +600,7 @@ a set of sufficient conditions for immutability that can be statically checked, 
 soundness regarding immutability, and a demonstration by a working implementation
 of the utility of immutable classes in program verification .
 
-\subsection{Constancy}
-
--- acknowledge Erik???
---- Whats the problem
-[[[[ complete ...]]]
-
+%%% No room for a discussion of constancy
 
 \subsection{Exceptions}
 
@@ -636,9 +636,51 @@ writing specifications and the success of achieving the goal of defining specifi
 at least) so that they are unsurprising to Java programmers.  ESC/Java2 currently has
 undefined behavior if a specification expression might terminate abruptly.
 
-\section{Conclusion}
 
-[[[[ complete ...]]]
+\section{Background: Related work}
+
+There are by now a number of research tools that translate Java into verification conditions
+appropriate to some logical reasoning engine.  There are numerous tools that insert
+assertion checking code into compiled Java programs, and others that do model checking,
+but
+we are aware only of the following tools that do static
+checking of assertions:
+\begin{itemize}
+\setlength{\itemsep}{0in}
+\item Krakatoa \cite{krakatoa03a} uses the Coq prover and 
+translates all statements with reference to a current program state. 
+\item The LOOP tool \cite{JacobsPoll01a,Jacobs03}
+ translates Java using weakest-preconditions in a Hoare logic,
+which are then proved using PVS \cite{OwreRRSS96}, interactively.  
+\item The ChAsE tool \cite{CH03} is an extension of ESC/Java that checks frame conditions.
+\item Jive \cite{MeyerMuellerPoetzsch-Heffter00} translates a subset of Java into proof
+obligations for PVS; it supplies an interactive tool for managing the proofs.
+\item JACK \cite{JACK} generates proof conditions directly for the Atelier B prover; 
+most, but not all, of
+the proof obligations can be handled automatically. 
+\end{itemize}
+
+ESC/Java2, Krakatoa and ChAsE are made publicly available.  Only ESC/Java2 targets a
+generic first-order prover and seeks to be completely automatic.  On the other hand, ESC/Java
+did not intend to be sound or complete, but made some engineering compromises in order to
+be automatic and reasonably useful to programmers not familiar with proof techiques or
+interactive proof tools.  The approaches taken by the Krakatoa and LOOP tools in mapping
+Java into the underlying logic are the most well-documented.
+
+ESC/Java2 does not utilize a full state-based logic, employing program states only where needed.
+Krakatoa uses a reference to the state of the heap throughout its translation; though this is an
+accurate model of Java semantics, it can be complex to use in actual proofs.  The separation of
+values in ESC/Java2 by using separate arrays for each field helps to automatically resolve some
+aliasing problems.
+
+The LOOP tool utilizes a special-purpose logic appropriate for translating imperative programming
+langauges.  The representation of a program is then converted into PVS theories and proved
+using the PVS theorem prover.
+
+Though there are similar aspects among these approaches, the solution used by ESC/Java2
+for translating method calls demonstrates a straightforward translation in the context of 
+a general purpose logic and prover.  In doing so it maintains the design philosophy and usefulness
+of the original ESC/Java tool.
 
 \section{Acknowledgments}
 
