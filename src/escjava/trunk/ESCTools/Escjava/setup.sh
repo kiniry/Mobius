@@ -106,9 +106,11 @@ export JARS=${ESCTOOLS_JARS}/decsrc.jar:${ESCTOOLS_JARS}/mochalib.jar:${ESCTOOLS
 
 export CLASSFILES=${CLASSDIRECTORY}:${MOCHA_CLASSES}:${JAVAFE_CLASSFILES}:${DECSRCCLASSDIRECTORY}
 
-export CLASSPATH=${CLASSFILES}:${JARS}:.:
+export CLASSES=${CLASSFILES}:${JARS}:.:
 
-export ESC_CLASSPATH=${CLASSPATH}:${JDK_BINARIES}:${JDK_SOURCES}
+export CLASSPATH=${CLASSES}
+
+export ESC_CLASSPATH=${CLASSES}:${JDK_BINARIES}:${JDK_SOURCES}
 
 export SOURCEPATH=${SOURCEDIRECTORY}:${TESTSOURCEDIRECTORY}:${JAVAFE_ROOT}/java
 
@@ -164,5 +166,7 @@ alias escself="escjava -classpath ${ESCSPEC}"
 #alias	escwizardself	${ESCJAVA_ROOT}/escwiz -classpath ${ESCSPEC}
 
 ######################### misc cmds #########################
+
+export ESCJ_SIMPLIFY=/usr/local/Java/escjava/bin/Simplify
 
 alias copyloaded="${ESCJAVA_ROOT}/java/houdini/copyloaded"
