@@ -54,6 +54,8 @@ echo Fixing permissions
 chmod +x `find . -name run`
 chmod +x `find . -name rtestall`
 chmod +x `find . -name rtest`
+chmod +x `find . -name make_tags`
+chmod +x `find . -name insert_ensures`
 
 ###### Have the user create their own Makefile.local.
 ###### Wait for them to finish.
