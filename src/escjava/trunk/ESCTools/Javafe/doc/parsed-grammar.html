@@ -1,205 +1,200 @@
-<HTML>
-<HEAD>
-   <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
-   <META NAME="GENERATOR" CONTENT="Mozilla/4.01 [en] (Win95; U) [Netscape]">
-   <META NAME="Author" CONTENT="DEC SRC">
-   <META NAME="Description" CONTENT="Grammar that javafe.parser parses">
-   <TITLE>Parsed Grammar</TITLE>
-</HEAD>
-<BODY TEXT="#000000" BGCOLOR="#EEEEFF" LINK="#0000FF" VLINK="#000077" ALINK="#FF0000">
+<html>
 
-<H1>
-Parsed Grammar</H1>
-This document describes the grammar parsed by <TT>javafe.parser.Parse.</TT>
+<head>
+<title>Parsed Grammar</title>
+</head>
 
-<P>We first enumerate the differences between this grammar and the grammar
-described in Chapter 19 of <A HREF="http://java.sun.com/docs/books/jls/html/index.html">"The
-Java Language Specification"</A>.
-<BR>&nbsp;
-<OL>
-<LI>
-We introduce the meta-symbols '(', ')', '[', ']', '*', '+' and '|', with
-their usual meanings.</LI>
+<body>
 
-<LI>
-We merge <I>ClassBodyDeclaration</I> and <I>InterfaceMemberDeclaration</I>
-to the non-terminal <I>TypeDeclElem</I>.</LI>
+<h1>Parsed Grammar</h1>
 
-<LI>
-Change <I>Modifiers</I> to include empty modifier set, exclude duplicates
-and duplicate access protection modifiers.</LI>
+<p> This document describes the grammar parsed by
+<tt>javafe.parser.Parse.</tt> </p>
 
-<LI>
-Change <I>FormalParameterList</I> to include enclosing parens, and allow
-empty parameter list.Ditto for <I>ArgumentList</I>.</LI>
+<p> We first enumerate the differences between this grammar and the
+grammar described in Chapter 19 of <a
+HREF="http://java.sun.com/docs/books/jls/html/index.html">"The Java
+Language Specification, first edition"</a>. </p>
 
-<LI>
-We relax the left hand side of an <I>Assignment</I> to be a <I>ConditionalExpression.</I></LI>
+<ol>
 
-<LI>
-We tighten <I>CastExpression.</I></LI>
+  <li> We introduce the meta-symbols '(', ')', '[', ']', '*', '+' and
+      '|', with their usual meanings. </li>
 
-<LI>
-We merge <I>PrimaryNoNewArray</I> into <I>Primary</I>, and use greedy parsing
-to appropriately resolve the resulting ambuigity on expressions such as
-<TT>new int[2][2]</TT>.</LI>
+  <li> We merge <i>ClassBodyDeclaration</i> and
+      <i>InterfaceMemberDeclaration</i> to the non-terminal
+      <i>TypeDeclElem</i>. </li>
 
-<LI>
-We merge <I>PostfixExpression</I> into <I>Primary. </I>The resulting grammar
-is looser, but the type checker with catch programs such as <TT>x++[3]</TT>.</LI>
+  <li> Change <i>Modifiers</i> to include empty modifier set, exclude
+      duplicates and duplicate access protection modifiers. </li>
 
-<LI>
-We merge <I>ClassInstanceCreationExpression </I>and <I>ArrayCreationExpression
-</I>into <I>NewExpression</I>.</LI>
+  <li> Change <i>FormalParameterList</i> to include enclosing parens,
+      and allow empty parameter list.Ditto for
+      <i>ArgumentList</i>. </li>
 
-<LI>
-We inline <I>FieldAccess, ArrayAccess</I> and <I>MethodInvocation.</I></LI>
+  <li> We relax the left hand side of an <i>Assignment</i> to be a
+      <i>ConditionalExpression.</i> </li>
 
-<LI>
-We express <I>Primary</I> as <I>PrimaryCore PrimarySuffix*</I>.</LI>
+  <li> We tighten <i>CastExpression.</i> </li>
 
-<LI>
-Add <TT>void</TT> to <I>PrimitiveType.</I></LI>
+  <li> We merge <i>PrimaryNoNewArray</i> into <i>Primary</i>, and use
+      greedy parsing to appropriately resolve the resulting ambuigity
+      on expressions such as <tt>new int[2][2]</tt>. </li>
 
-<LI>
-Allow semicolons between member declarations. These semicolons are not
-allowed according to JLS, but are accepted by javac and present in many
-programs in the JDK toolkit.</LI>
-</OL>
-The parser is split into several classes. We list separately the grammar
-productions implemented in each class.
+  <li> We merge <i>PostfixExpression</i> into <i>Primary. </i>The
+      resulting grammar is looser, but the type checker with catch
+      programs such as <tt>x++[3]</tt>. </li>
 
-<P>
-<HR WIDTH="100%">
-<H2>
-Productions for <TT>ParseType</TT></H2>
+  <li> We merge <i>ClassInstanceCreationExpression </i>and
+      <i>ArrayCreationExpression </i>into <i>NewExpression</i>. </li>
 
-<UL>
-<PRE><I>Type:
-</I><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ </TT><I>PrimitiveType | TypeName ] BracketPair*
+  <li> We inline <i>FieldAccess, ArrayAccess</i> and
+      <i>MethodInvocation.</i> </li>
+
+  <li> We express <i>Primary</i> as <i>PrimaryCore
+      PrimarySuffix*</i>. </li>
+
+  <li> Add <tt>void</tt> to <i>PrimitiveType.</i> </li>
+
+  <li> Allow semicolons between member declarations. These semicolons
+      are not allowed according to JLS, but are accepted by javac and
+      present in many programs in the JDK toolkit. </li>
+      
+</ol>
+
+<p> The parser is split into several classes. We list separately the grammar
+productions implemented in each class. </p>
+
+<hr />
+
+<h2>Productions for <tt>ParseType</tt></h2>
+
+<ul>
+<pre><i>Type:
+</i><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ </tt><i>PrimitiveType | TypeName ] BracketPair*
 
 PrimitiveType: one of
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </I><TT>byte short int long char float double boolean void
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </i><tt>byte short int long char float double boolean void
 
-</TT><I>TypeName</I>:
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>Name
+</tt><i>TypeName</i>:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>Name
 
 Name:
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Identifier ( , Identifier )*</I></PRE>
-</UL>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Identifier ( , Identifier )*</i></pre>
+</ul>
 
-<HR WIDTH="100%">
-<H2>
-Productions for <TT>Parse</TT></H2>
+<hr WIDTH="100%">
+<h2>
+Productions for <tt>Parse</tt></h2>
 
-<UL>
-<PRE><I>CompilationUnit:
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ package Name ; ]</I><TT> </TT><I>ImportDeclaration*</I><TT> </TT><I>TypeDeclaration*
+<ul>
+<pre><i>CompilationUnit:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ package Name ; ]</i><tt> </tt><i>ImportDeclaration*</i><tt> </tt><i>TypeDeclaration*
 
 ImportDeclaration:
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>SingleTypeImportDeclaration
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>TypeImportOnDemandDeclaration
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>SingleTypeImportDeclaration
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>TypeImportOnDemandDeclaration
 
 SingleTypeImportDeclaration:
-</I><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; import </TT><I>Name</I><TT> ;
+</i><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; import </tt><i>Name</i><tt> ;
 
-</TT><I>TypeImportOnDemandDeclaration:
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </I><TT>import </TT><I>Name</I><TT> . * ;
+</tt><i>TypeImportOnDemandDeclaration:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </i><tt>import </tt><i>Name</i><tt> . * ;
 
-</TT><I>TypeDeclaration:
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>ClassDeclaration
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>InterfaceDeclaration
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <TT>;</TT></PRE>
+</tt><i>TypeDeclaration:
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>ClassDeclaration
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>InterfaceDeclaration
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <tt>;</tt></pre>
 
-<PRE><TT><I>ClassDeclaration:
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>Modifiers</I> class <I>Identifier</I> [extends TypeName] [implements TypeNameList]
-<I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; { TypeDeclElem* }</I></TT></PRE>
+<pre><tt><i>ClassDeclaration:
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>Modifiers</i> class <i>Identifier</i> [extends TypeName] [implements TypeNameList]
+<i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; { TypeDeclElem* }</i></tt></pre>
 
-<PRE><I>InterfaceDeclaration:
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>Modifiers</I><TT> interface </TT><I>Identifier</I><TT> [extends TypeNameList]
-<I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; { TypeDeclElem* }</I></TT></PRE>
+<pre><i>InterfaceDeclaration:
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>Modifiers</i><tt> interface </tt><i>Identifier</i><tt> [extends TypeNameList]
+<i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; { TypeDeclElem* }</i></tt></pre>
 
-<PRE><TT>TypeNameList:
-<I>&nbsp;&nbsp;</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; TypeName ( , TypeName )*</TT></PRE>
+<pre><tt>TypeNameList:
+<i>&nbsp;&nbsp;</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; TypeName ( , TypeName )*</tt></pre>
 
-<PRE>TypeDeclElem:
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>FieldDeclaration
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>MethodDeclaration
+<pre>TypeDeclElem:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>FieldDeclaration
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>MethodDeclaration
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ConstructorDeclaration
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>StaticInitializer
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </I>;</PRE>
-</UL>
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>StaticInitializer
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </i>;</pre>
+</ul>
 
-<UL>
-<PRE><I>FieldDeclaration:
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Modifiers</I><TT> </TT><I>Type</I><TT> </TT><I>VariableDeclarator ( , VariableDeclarator )*</I><TT> ;
+<ul>
+<pre><i>FieldDeclaration:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Modifiers</i><tt> </tt><i>Type</i><tt> </tt><i>VariableDeclarator ( , VariableDeclarator )*</i><tt> ;
 
-</TT><I>VariableDeclarator:
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>Identifier BracketPair* [ = VariableInitializer ]
+</tt><i>VariableDeclarator:
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>Identifier BracketPair* [ = VariableInitializer ]
 
 MethodDeclaration:
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Modifiers Type Identifier FormalParameterList BracketPair*
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [throws TypeNameList] ( ; | Block )</PRE>
-</UL>
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Modifiers Type Identifier FormalParameterList BracketPair*
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [throws TypeNameList] ( ; | Block )</pre>
+</ul>
 
-<UL>
-<PRE><I>ConstructorDeclaration:
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Modifiers</I><TT> Identifier FormalParameterList Block</TT></PRE>
+<ul>
+<pre><i>ConstructorDeclaration:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Modifiers</i><tt> Identifier FormalParameterList Block</tt></pre>
 
-<PRE><I>StaticInitializer:
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Modifiers<TT> </TT><I>Block</I></PRE>
-<I><TT>FormalParameterList:</TT></I>
-<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LPAREN <I>FormalParameter
-( , FormalParameter )* RPAREN</I></TT></UL>
+<pre><i>StaticInitializer:
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Modifiers<tt> </tt><i>Block</i></pre>
+<i><tt>FormalParameterList:</tt></i>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LPAREN <i>FormalParameter
+( , FormalParameter )* RPAREN</i></tt></ul>
 
-<UL>
-<PRE><TT>Modifiers:
-<I>&nbsp;&nbsp;</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Modifier*, with no duplicates, and only one of private, protected, public
+<ul>
+<pre><tt>Modifiers:
+<i>&nbsp;&nbsp;</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Modifier*, with no duplicates, and only one of private, protected, public
 
-</TT><I>Modifier: one of
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </I><TT>public protected private
+</tt><i>Modifier: one of
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </i><tt>public protected private
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; static
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; abstract final native synchronized transient volatile</TT></PRE>
-</UL>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; abstract final native synchronized transient volatile</tt></pre>
+</ul>
 
-<PRE>
-<HR WIDTH="100%"></PRE>
+<pre>
+<hr WIDTH="100%"></pre>
 
-<H2>
-Productions for <TT>ParseStmt</TT></H2>
+<h2>
+Productions for <tt>ParseStmt</tt></h2>
 
-<UL>
-<PRE><I>Block:
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <TT>{ </TT><I>BlockStatements<SUB>opt</SUB></I><TT> }
+<ul>
+<pre><i>Block:
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <tt>{ </tt><i>BlockStatements<sub>opt</sub></i><tt> }
 
-</TT><I>BlockStatements:
-</I><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </TT><I>BlockStatement
-</I><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </TT><I>BlockStatements</I><TT> </TT><I>BlockStatement
+</tt><i>BlockStatements:
+</i><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </tt><i>BlockStatement
+</i><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </tt><i>BlockStatements</i><tt> </tt><i>BlockStatement
 
 BlockStatement:
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>LocalVariableDeclarationStatement
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>Statement
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>LocalVariableDeclarationStatement
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>Statement
 
 LocalVariableDeclarationStatement:
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>LocalVariableDeclaration</I><TT> ;
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>LocalVariableDeclaration</i><tt> ;
 
-</TT><I>LocalVariableDeclaration:
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>Type</I><TT> </TT><I>VariableDeclarators
+</tt><i>LocalVariableDeclaration:
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>Type</i><tt> </tt><i>VariableDeclarators
 
 Statement:
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>StatementWithoutTrailingSubstatement
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>LabeledStatement
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>IfThenStatement
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>IfThenElseStatement
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>WhileStatement
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>ForStatement
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>StatementWithoutTrailingSubstatement
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>LabeledStatement
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>IfThenStatement
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>IfThenElseStatement
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>WhileStatement
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>ForStatement
 
 StatementNoShortIf:
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>StatementWithoutTrailingSubstatement
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>LabeledStatementNoShortIf
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>IfThenElseStatementNoShortIf
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>WhileStatementNoShortIf
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>ForStatementNoShortIf
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>StatementWithoutTrailingSubstatement
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>LabeledStatementNoShortIf
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>IfThenElseStatementNoShortIf
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>WhileStatementNoShortIf
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>ForStatementNoShortIf
 
 StatementWithoutTrailingSubstatement:
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Block
@@ -215,252 +210,252 @@ StatementWithoutTrailingSubstatement:
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; TryStatement
 
 EmptyStatement:
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <TT>;
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <tt>;
 
-</TT><I>LabeledStatement:
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>Identifier</I><TT> : </TT><I>Statement
+</tt><i>LabeledStatement:
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>Identifier</i><tt> : </tt><i>Statement
 
 LabeledStatementNoShortIf:
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>Identifier</I><TT> : </TT><I>StatementNoShortIf
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>Identifier</i><tt> : </tt><i>StatementNoShortIf
 
 ExpressionStatement:
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>StatementExpression</I><TT> ;
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>StatementExpression</i><tt> ;
 
-</TT><I>StatementExpression:
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>Assignment
+</tt><i>StatementExpression:
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>Assignment
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; PreIncrementExpression
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; PreDecrementExpression
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; PostIncrementExpression
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; PostDecrementExpression
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MethodInvocation
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ClassInstanceCreationExpression</I></PRE>
-</UL>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ClassInstanceCreationExpression</i></pre>
+</ul>
 
-<UL>
-<PRE><I>IfThenStatement:
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <TT>if ( </TT><I>Expression</I><TT> ) </TT><I>Statement
+<ul>
+<pre><i>IfThenStatement:
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <tt>if ( </tt><i>Expression</i><tt> ) </tt><i>Statement
 
 IfThenElseStatement:
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <TT>if ( </TT><I>Expression</I><TT> ) </TT><I>StatementNoShortIf</I><TT> else </TT><I>Statement
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <tt>if ( </tt><i>Expression</i><tt> ) </tt><i>StatementNoShortIf</i><tt> else </tt><i>Statement
 
 IfThenElseStatementNoShortIf:
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <TT>if ( </TT><I>Expression</I><TT> ) </TT><I>StatementNoShortIf</I><TT> else </TT><I>StatementNoShortIf
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <tt>if ( </tt><i>Expression</i><tt> ) </tt><i>StatementNoShortIf</i><tt> else </tt><i>StatementNoShortIf
 
 SwitchStatement:
-</I><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; switch ( </TT><I>Expression</I><TT> ) </TT><I>SwitchBlock
+</i><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; switch ( </tt><i>Expression</i><tt> ) </tt><i>SwitchBlock
 
 SwitchBlock:
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <TT>{ </TT><I>SwitchBlockStatementGroups<SUB>opt</SUB></I><TT> </TT><I>SwitchLabels<SUB>opt</SUB></I><TT> }
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <tt>{ </tt><i>SwitchBlockStatementGroups<sub>opt</sub></i><tt> </tt><i>SwitchLabels<sub>opt</sub></i><tt> }
 
-</TT><I>SwitchBlockStatementGroups:
-</I><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </TT><I>SwitchBlockStatementGroup
-</I><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </TT><I>SwitchBlockStatementGroups</I><TT> </TT><I>SwitchBlockStatementGroup
+</tt><i>SwitchBlockStatementGroups:
+</i><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </tt><i>SwitchBlockStatementGroup
+</i><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </tt><i>SwitchBlockStatementGroups</i><tt> </tt><i>SwitchBlockStatementGroup
 
 SwitchBlockStatementGroup:
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>SwitchLabels</I><TT> </TT><I>BlockStatements
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>SwitchLabels</i><tt> </tt><i>BlockStatements
 
 SwitchLabels:
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>SwitchLabel
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>SwitchLabels</I><TT> </TT><I>SwitchLabel
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>SwitchLabel
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>SwitchLabels</i><tt> </tt><i>SwitchLabel
 
 SwitchLabel:
-</I><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; case </TT><I>ConstantExpression</I><TT> :
+</i><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; case </tt><i>ConstantExpression</i><tt> :
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; default :
 
-</TT><I>WhileStatement:
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <TT>while ( </TT><I>Expression</I><TT> ) </TT><I>Statement
+</tt><i>WhileStatement:
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <tt>while ( </tt><i>Expression</i><tt> ) </tt><i>Statement
 
 WhileStatementNoShortIf:
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <TT>while ( </TT><I>Expression</I><TT> ) </TT><I>StatementNoShortIf
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <tt>while ( </tt><i>Expression</i><tt> ) </tt><i>StatementNoShortIf
 
 DoStatement:
-</I><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; do </TT><I>Statement</I><TT> while ( </TT><I>Expression</I><TT> ) ;</TT></PRE>
-</UL>
+</i><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; do </tt><i>Statement</i><tt> while ( </tt><i>Expression</i><tt> ) ;</tt></pre>
+</ul>
 
-<UL>
-<PRE><I>ForStatement:
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <TT>for ( </TT><I>ForInit<SUB>opt</SUB></I><TT> ; </TT><I>Expression<SUB>opt</SUB></I><TT> ; </TT><I>ForUpdate<SUB>opt</SUB></I><TT> )
-</TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>Statement
+<ul>
+<pre><i>ForStatement:
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <tt>for ( </tt><i>ForInit<sub>opt</sub></i><tt> ; </tt><i>Expression<sub>opt</sub></i><tt> ; </tt><i>ForUpdate<sub>opt</sub></i><tt> )
+</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>Statement
 
 ForStatementNoShortIf:
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <TT>for ( </TT><I>ForInit<SUB>opt</SUB></I><TT> ; </TT><I>Expression<SUB>opt</SUB></I><TT> ; </TT><I>ForUpdate<SUB>opt</SUB></I><TT> )
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </TT><I>StatementNoShortIf
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <tt>for ( </tt><i>ForInit<sub>opt</sub></i><tt> ; </tt><i>Expression<sub>opt</sub></i><tt> ; </tt><i>ForUpdate<sub>opt</sub></i><tt> )
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </tt><i>StatementNoShortIf
 
 ForInit:
-</I><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </TT><I>StatementExpressionList
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>LocalVariableDeclaration
+</i><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </tt><i>StatementExpressionList
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>LocalVariableDeclaration
 
 ForUpdate:
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>StatementExpressionList
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>StatementExpressionList
 
 StatementExpressionList:
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>StatementExpression
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>StatementExpressionList</I><TT> , </TT><I>StatementExpression
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>StatementExpression
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>StatementExpressionList</i><tt> , </tt><i>StatementExpression
 
 BreakStatement:
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <TT>break </TT><I>Identifier<SUB>opt</SUB></I><TT> ;
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <tt>break </tt><i>Identifier<sub>opt</sub></i><tt> ;
 
-</TT><I>ContinueStatement:
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <TT>continu</TT><I>e Identifier<SUB>opt</SUB></I><TT> ;
+</tt><i>ContinueStatement:
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <tt>continu</tt><i>e Identifier<sub>opt</sub></i><tt> ;
 
-</TT><I>ReturnStatement:
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <TT>return </TT><I>Expression<SUB>opt</SUB></I><TT> ;
+</tt><i>ReturnStatement:
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <tt>return </tt><i>Expression<sub>opt</sub></i><tt> ;
 
-</TT><I>ThrowStatement:
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <TT>throw </TT><I>Expression</I><TT> ;
+</tt><i>ThrowStatement:
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <tt>throw </tt><i>Expression</i><tt> ;
 
-</TT><I>SynchronizedStatement:
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <TT>synchronized ( </TT><I>Expression</I><TT> ) </TT><I>Block
+</tt><i>SynchronizedStatement:
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <tt>synchronized ( </tt><i>Expression</i><tt> ) </tt><i>Block
 
 TryStatement:
-</I><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; try </TT><I>Block</I><TT> </TT><I>CatchClause+
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </I><TT>try </TT><I>Block</I><TT> </TT><I>CatchClause*</I><TT> </TT><I>Finally
+</i><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; try </tt><i>Block</i><tt> </tt><i>CatchClause+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </i><tt>try </tt><i>Block</i><tt> </tt><i>CatchClause*</i><tt> </tt><i>Finally
 
 CatchClause:
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <TT>catch ( </TT><I>FormalParameter</I><TT> ) </TT><I>Block
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <tt>catch ( </tt><i>FormalParameter</i><tt> ) </tt><i>Block
 
 Finally:
-</I><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; finally </TT><I>Block</I></PRE>
-</UL>
+</i><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; finally </tt><i>Block</i></pre>
+</ul>
 
-<PRE>
-<HR WIDTH="100%"></PRE>
+<pre>
+<hr WIDTH="100%"></pre>
 
-<H2>
-Productions for <TT>ParseExpr</TT></H2>
+<h2>
+Productions for <tt>ParseExpr</tt></h2>
 
-<UL>
-<PRE><I>Primary:
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; PrimaryCore PrimarySuffix*</PRE>
+<ul>
+<pre><i>Primary:
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; PrimaryCore PrimarySuffix*</pre>
 
-<PRE><I>PrimaryCore:
+<pre><i>PrimaryCore:
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Literal
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Name
-</I><TT>&nbsp;</TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>Name</I><TT> </TT><I>ArgumentList
-</I><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; this
-</TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <TT>super . </TT><I>Identifier
-</I><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; super . </TT><I>Identifier</I><TT> </TT><I>ArgumentList
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; New<I>Expression
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LPAREN<TT> </TT><I>Expression</I><TT> RPAREN
+</i><tt>&nbsp;</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>Name</i><tt> </tt><i>ArgumentList
+</i><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; this
+</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <tt>super . </tt><i>Identifier
+</i><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; super . </tt><i>Identifier</i><tt> </tt><i>ArgumentList
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; New<i>Expression
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LPAREN<tt> </tt><i>Expression</i><tt> RPAREN
 
-</TT><I>Literal:
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>IntegerLiteral
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>FloatingPointLiteral
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>BooleanLiteral
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>CharacterLiteral
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>StringLiteral
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>NullLiteral</I></PRE>
+</tt><i>Literal:
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>IntegerLiteral
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>FloatingPointLiteral
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>BooleanLiteral
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>CharacterLiteral
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>StringLiteral
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>NullLiteral</i></pre>
 
-<PRE><TT>PrimarySuffix:
-</TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <TT>. </TT><I>Identifier
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <TT>. </TT><I>Identifier</I><TT> </TT><I>ArgumentList
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LSQBRACKET<TT> </TT><I>Expression</I><TT> RSQBRACKET
+<pre><tt>PrimarySuffix:
+</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <tt>. </tt><i>Identifier
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <tt>. </tt><i>Identifier</i><tt> </tt><i>ArgumentList
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LSQBRACKET<tt> </tt><i>Expression</i><tt> RSQBRACKET
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ++
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; --
 
-</TT><I>NewExpression:
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <TT>new </TT><I>TypeName</I><TT> </TT><I>ArgumentList
-<SUB>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </SUB></I><TT>new </TT><I>PrimitiveTypeOrTypeName</I><TT> </TT><I>DimExpr+</I><TT> BracketPair*
+</tt><i>NewExpression:
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <tt>new </tt><i>TypeName</i><tt> </tt><i>ArgumentList
+<sub>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </sub></i><tt>new </tt><i>PrimitiveTypeOrTypeName</i><tt> </tt><i>DimExpr+</i><tt> BracketPair*
 
-</TT><I>DimExpr:
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LSQBRACKET<TT> </TT><I>Expression</I><TT> RSQBRACKET
+</tt><i>DimExpr:
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LSQBRACKET<tt> </tt><i>Expression</i><tt> RSQBRACKET
 
-</TT><I>ArgumentList:
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LPAREN [ Expression ( , Expression )* ]RPAREN
+</tt><i>ArgumentList:
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LPAREN [ Expression ( , Expression )* ]RPAREN
 
-<I>BracketPair:
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <TT>[ ]
+<i>BracketPair:
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <tt>[ ]
 
-</TT><I>UnaryExpression:
-</I><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ++ </TT><I>UnaryExpression
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <TT>-- </TT><I>UnaryExpression
-</I><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; + </TT><I>UnaryExpression
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <TT>- </TT><I>UnaryExpression
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>UnaryExpressionNotPlusMinus
+</tt><i>UnaryExpression:
+</i><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ++ </tt><i>UnaryExpression
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <tt>-- </tt><i>UnaryExpression
+</i><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; + </tt><i>UnaryExpression
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <tt>- </tt><i>UnaryExpression
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>UnaryExpressionNotPlusMinus
 
 UnaryExpressionNotPlusMinus:
-</I><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ~ </TT><I>UnaryExpression
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <TT>! </TT><I>UnaryExpression
-</I><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </TT><I>CastExpression
-</I><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </TT><I>PostfixExpression
+</i><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ~ </tt><i>UnaryExpression
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <tt>! </tt><i>UnaryExpression
+</i><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </tt><i>CastExpression
+</i><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </tt><i>PostfixExpression
 
 CastExpression:
-</I><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ( </TT><I>PrimitiveType</I><TT> </TT><I>Dims<SUB>opt</SUB></I><TT> ) </TT><I>UnaryExpression
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </I><TT>( </TT><I>Name</I><TT> </TT><I>Dims<SUB>opt</SUB></I><TT> ) </TT><I>UnaryExpressionNotPlusMinus
+</i><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ( </tt><i>PrimitiveType</i><tt> </tt><i>Dims<sub>opt</sub></i><tt> ) </tt><i>UnaryExpression
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </i><tt>( </tt><i>Name</i><tt> </tt><i>Dims<sub>opt</sub></i><tt> ) </tt><i>UnaryExpressionNotPlusMinus
 
-MultiplicativeExpression</I>:
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>UnaryExpression
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>MultiplicativeExpression</I><TT> * </TT><I>UnaryExpression
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>MultiplicativeExpression</I><TT> / </TT><I>UnaryExpression
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>MultiplicativeExpression</I><TT> % </TT><I>UnaryExpression
+MultiplicativeExpression</i>:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>UnaryExpression
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>MultiplicativeExpression</i><tt> * </tt><i>UnaryExpression
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>MultiplicativeExpression</i><tt> / </tt><i>UnaryExpression
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>MultiplicativeExpression</i><tt> % </tt><i>UnaryExpression
 
 AdditiveExpression:
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>MultiplicativeExpression
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>AdditiveExpression</I><TT> + </TT><I>MultiplicativeExpression
-</I><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </TT><I>AdditiveExpression</I><TT> - </TT><I>MultiplicativeExpression
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>MultiplicativeExpression
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>AdditiveExpression</i><tt> + </tt><i>MultiplicativeExpression
+</i><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </tt><i>AdditiveExpression</i><tt> - </tt><i>MultiplicativeExpression
 
 ShiftExpression:
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>AdditiveExpression
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>ShiftExpression</I><TT> &lt;&lt; </TT><I>AdditiveExpression
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>ShiftExpression</I><TT> >> </TT><I>AdditiveExpression
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>ShiftExpression</I><TT> >>> </TT><I>AdditiveExpression
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>AdditiveExpression
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>ShiftExpression</i><tt> &lt;&lt; </tt><i>AdditiveExpression
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>ShiftExpression</i><tt> >> </tt><i>AdditiveExpression
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>ShiftExpression</i><tt> >>> </tt><i>AdditiveExpression
 
 RelationalExpression:
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>ShiftExpression
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>RelationalExpression</I><TT> &lt; </TT><I>ShiftExpression
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>RelationalExpression</I><TT> > </TT><I>ShiftExpression
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>RelationalExpression</I><TT> &lt;= </TT><I>ShiftExpression
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>RelationalExpression</I><TT> >= </TT><I>ShiftExpression
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>RelationalExpression</I><TT> instanceof </TT><I>ReferenceType
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>ShiftExpression
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>RelationalExpression</i><tt> &lt; </tt><i>ShiftExpression
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>RelationalExpression</i><tt> > </tt><i>ShiftExpression
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>RelationalExpression</i><tt> &lt;= </tt><i>ShiftExpression
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>RelationalExpression</i><tt> >= </tt><i>ShiftExpression
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>RelationalExpression</i><tt> instanceof </tt><i>ReferenceType
 
 EqualityExpression:
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>RelationalExpression
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>EqualityExpression</I><TT> == </TT><I>RelationalExpression
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>EqualityExpression</I><TT> != </TT><I>RelationalExpression
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>RelationalExpression
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>EqualityExpression</i><tt> == </tt><i>RelationalExpression
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>EqualityExpression</i><tt> != </tt><i>RelationalExpression
 
 AndExpression:
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>EqualityExpression
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>AndExpression</I><TT> &amp; </TT><I>EqualityExpression
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>EqualityExpression
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>AndExpression</i><tt> &amp; </tt><i>EqualityExpression
 
 ExclusiveOrExpression:
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>AndExpression
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>ExclusiveOrExpression</I><TT> ^ </TT><I>AndExpression
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>AndExpression
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>ExclusiveOrExpression</i><tt> ^ </tt><i>AndExpression
 
 InclusiveOrExpression:
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>ExclusiveOrExpression
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>InclusiveOrExpression</I><TT> | </TT><I>ExclusiveOrExpression
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>ExclusiveOrExpression
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>InclusiveOrExpression</i><tt> | </tt><i>ExclusiveOrExpression
 
 ConditionalAndExpression:
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>InclusiveOrExpression
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>ConditionalAndExpression</I><TT> &amp;&amp; </TT><I>InclusiveOrExpression
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>InclusiveOrExpression
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>ConditionalAndExpression</i><tt> &amp;&amp; </tt><i>InclusiveOrExpression
 
 ConditionalOrExpression:
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>ConditionalAndExpression
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>ConditionalOrExpression</I><TT> || </TT><I>ConditionalAndExpression
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>ConditionalAndExpression
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>ConditionalOrExpression</i><tt> || </tt><i>ConditionalAndExpression
 
 ConditionalExpression:
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>ConditionalOrExpression
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>ConditionalOrExpression</I><TT> ? </TT>Expression<TT> : </TT><I>ConditionalExpression
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>ConditionalOrExpression
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>ConditionalOrExpression</i><tt> ? </tt>Expression<tt> : </tt><i>ConditionalExpression
 
 Assignment:
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ConditionalExpression<TT> </TT><I>AssignmentOperator</I><TT> </TT><I>Expression
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ConditionalExpression<tt> </tt><i>AssignmentOperator</i><tt> </tt><i>Expression
 
-AssignmentOperator:</I> <I>one</I> <I>of
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <TT>= *= /= %= += -= &lt;&lt;= >>= >>>= &amp;= ^= |=
+AssignmentOperator:</i> <i>one</i> <i>of
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <tt>= *= /= %= += -= &lt;&lt;= >>= >>>= &amp;= ^= |=
 
-</TT><I>Expression:
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>ConditionalExpression
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>Assignment</I></PRE>
+</tt><i>Expression:
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>ConditionalExpression
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>Assignment</i></pre>
 
-<PRE><I>VariableInitializer:
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>Expression
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>ArrayInitializer</I></PRE>
-<TT><I>ArrayInitializer:<BR>
-</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; { [ <I>VariableInitializer
-( , VariableInitializer )*] </I>,<I><SUB>opt</SUB></I> }</TT><BR>
-<BR>
+<pre><i>VariableInitializer:
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>Expression
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>ArrayInitializer</i></pre>
+<tt><i>ArrayInitializer:<br>
+</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; { [ <i>VariableInitializer
+( , VariableInitializer )*] </i>,<i><sub>opt</sub></i> }</tt><br>
+<br>
 
-<HR WIDTH="100%"></UL>
+<hr width="100%"></ul>
 
-</BODY>
-</HTML>
+</body>
+</html>
