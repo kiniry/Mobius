@@ -10,16 +10,17 @@ import org.apache.bcel.generic.IDIV;
 import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.LDIV;
 
-import specification.ExceptionalPostcondition;
 import formula.Connector;
 import formula.Formula;
 import formula.atomic.Predicate2Ar;
 import formula.atomic.PredicateSymbol;
 
+import bcclass.attributes.ExsuresTable;
 import bcexpression.ArithmeticExpression;
 import bcexpression.Expression;
 import bcexpression.ExpressionConstants;
 import bcexpression.NumberLiteral;
+import bcexpression.javatype.JavaObjectType;
 import bcexpression.javatype.JavaType;
 import bcexpression.vm.Stack;
 import bytecode.BCConstants;
@@ -39,14 +40,14 @@ public class BCTypeDIV extends BCArithmeticInstructionWithException {
 	 */
 	public BCTypeDIV(InstructionHandle _instruction, JavaType _type) {
 		super(_instruction, _type);
-		if (_instruction.getInstruction() instanceof IDIV ) {
+		if (_instruction.getInstruction() instanceof IDIV) {
 			setArithmeticOperation(BCConstants.DIV_INT);
 			setInstructionCode(BCInstructionCodes.IDIV);
-		} else if (_instruction.getInstruction() instanceof LDIV ) {
+		} else if (_instruction.getInstruction() instanceof LDIV) {
 			setArithmeticOperation(BCConstants.DIV_LONG);
 			setInstructionCode(BCInstructionCodes.LDIV);
-		} 
-		
+		}
+
 	}
 
 	/* (non-Javadoc)
@@ -54,22 +55,25 @@ public class BCTypeDIV extends BCArithmeticInstructionWithException {
 	 */
 	public Formula wp(
 		Formula _normal_Postcondition,
-		ExceptionalPostcondition _exc_Postcondition) {
-			
+		ExsuresTable _exc_Postcondition) {
+
 		Formula wp = null;
-		Stack stackTop = new Stack(Expression.getCounter());
-		Stack stackTop_minus_1 = new Stack(Expression.getCounter_minus_1());
+		Stack stackTop = new Stack(Expression.COUNTER);
+		Stack stackTop_minus_1 = new Stack(Expression.COUNTER_MINUS_1);
 		// stack(top ) != null 
 		Formula divisorNonZero =
-			new Predicate2Ar(stackTop, new NumberLiteral("0", 10, JavaType.JavaINT), PredicateSymbol.NOTEQ);
+			new Predicate2Ar(
+				stackTop,
+				new NumberLiteral(0),
+				PredicateSymbol.NOTEQ);
 		ArithmeticExpression divResult =
-			new ArithmeticExpression(
+			ArithmeticExpression.getArithmeticExpression(
 				stackTop,
 				stackTop_minus_1,
 				ExpressionConstants.DIV);
 		_normal_Postcondition.substitute(
-			Expression.getCounter(),
-			Expression.getCounter_minus_1());
+			Expression.COUNTER,
+			Expression.COUNTER_MINUS_1);
 		_normal_Postcondition.substitute(stackTop_minus_1, divResult);
 
 		Formula wpNormalExecution =
@@ -79,20 +83,25 @@ public class BCTypeDIV extends BCArithmeticInstructionWithException {
 				Connector.IMPLIES);
 		//stack(top ) == null 
 		Formula divisorIsZero =
-			new Predicate2Ar(stackTop, new NumberLiteral("0", 10, JavaType.JavaINT), PredicateSymbol.EQ);
+			new Predicate2Ar(
+				stackTop,
+				new NumberLiteral(0),
+				PredicateSymbol.EQ);
 
 		//_excPost = if exists exceptionHandler for NullPointerException then  wp(exceptionHandler,  normalPost) else 
 		//                  else ExcPostcondition 
 		Formula _excPost =
 			getWpForException(
-				JavaType.getJavaRefType("java.lang.ArithmeticException"),
+				(JavaObjectType) JavaType.getJavaRefType(
+					"Ljava/lang/ArithmeticException;"),
 				_exc_Postcondition);
 		Formula wpExceptionExecution =
 			new Formula(divisorIsZero, _excPost, Connector.IMPLIES);
 		// stack(top)  != null ==> _normal_Postcondition[t <-- t-1][S(t-1) <-- S(t-1) / S(t)] 
 		// &&
 		// stack(top)  == null ==> excPost
-		wp = new Formula(wpNormalExecution, wpExceptionExecution, Connector.AND);
+		wp =
+			new Formula(wpNormalExecution, wpExceptionExecution, Connector.AND);
 		return wp;
 	}
 

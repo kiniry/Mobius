@@ -8,8 +8,8 @@ import org.apache.bcel.generic.LADD;
 
 import formula.Formula;
 
-import specification.ExceptionalPostcondition;
 
+import bcclass.attributes.ExsuresTable;
 import bcexpression.ArithmeticExpression;
 import bcexpression.Expression;
 import bcexpression.ExpressionConstants;
@@ -49,17 +49,17 @@ public class BCTypeADD extends BCArithmeticInstruction {
 	 */
 	public Formula wp(
 		Formula _normal_Postcondition,
-		ExceptionalPostcondition _exc_Postcondition) {
+		ExsuresTable _exc_Postcondition) {
 		
 		Formula wp = null;
-		Stack stackTop = new Stack(Expression.getCounter());
-		Stack stackTop_minus_1 = new Stack(Expression.getCounter_minus_1());
+		Stack stackTop = new Stack(Expression.COUNTER);
+		Stack stackTop_minus_1 = new Stack(Expression.COUNTER_MINUS_1);
 		ArithmeticExpression sum =
-			new ArithmeticExpression(
+			ArithmeticExpression.getArithmeticExpression(
 				stackTop,
 				stackTop_minus_1,
 				ExpressionConstants.ADD);
-		_normal_Postcondition.substitute(Expression.getCounter(), Expression.getCounter_minus_1());
+		_normal_Postcondition.substitute(Expression.COUNTER, Expression.COUNTER_MINUS_1);
 		_normal_Postcondition.substitute(stackTop_minus_1, sum);
 		wp = _normal_Postcondition;
 		return wp;

@@ -1,19 +1,12 @@
 /*
  * Created on Apr 20, 2004
  *
- * To change the template for this generated file go to
- * Window>Preferences>Java>Code Generation>Code and Comments
  */
 package bytecode.loadstoreinstruction;
 
 import org.apache.bcel.generic.InstructionHandle;
 
-import specification.ExceptionalPostcondition;
-import formula.Formula;
-
-import bcexpression.Expression;
 import bcexpression.javatype.JavaType;
-import bcexpression.vm.Stack;
 
 /**
  * @author mpavlova

@@ -5,39 +5,48 @@
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 package constants;
-
-import org.apache.bcel.classfile.ConstantClass;
-import org.apache.bcel.classfile.ConstantFieldref;
-import org.apache.bcel.generic.ConstantPoolGen;
-
 import bcexpression.javatype.JavaType;
-
 /**
  * @author mpavlova
- *
- * To change the template for this generated type comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
+ * 
+ * class represents CONSTANT_fieldref_info structure
+ * 
+ * CONSTANT_Fieldref_info { 
+ * 						   u1 tag; 
+ * 						   u2 class_index; 
+ * 						   u2 name_and_type_index; 
+ * 						  }
  */
-public class BCConstantFieldRef extends BCConstantRef  {
-	
+public class BCConstantFieldRef extends BCConstantRef {
+	/**
+	 * the type of the field
+	 */
 	private JavaType type;
-	//private JavaType class_where_declared;
 	
-	public BCConstantFieldRef(ConstantFieldref ref , int _cpIndex) {
-		super(ref.getClassIndex(), ref.getNameAndTypeIndex(), _cpIndex);
-		
+	public BCConstantFieldRef() {
+	
 	}
 	
-	public BCConstantFieldRef(int _classIndex, int _nameAndTypeIndex , int _cpIndex, ConstantPoolGen _cpg) {
-		super(_classIndex, _nameAndTypeIndex, _cpIndex );
-		//class_where_declared = ((ConstantClass)_cpg.getConstant(_classIndex)).getBytes();
-	}
 	
-	private void setType() {
-		//acccess to the constant pool
+	/**
+	 * @param _type -
+	 *            the type of the field (the static one)
+	 * @param _cpIndex -
+	 *            the index into the constant pool under which this data
+	 *            structure appears into the constant pool
+	 * @param _CONSTANT_classref_index -
+	 *            the index into the constant pool under which the class in
+	 *            which the field is declared appears
+	 */
+	public BCConstantFieldRef(int _cpIndex,
+			int _CONSTANT_classref_index, String _name,  JavaType _type) {
+		super(_cpIndex, _CONSTANT_classref_index, _name);
+		type = _type;
 	}
-	
 	public JavaType getType() {
 		return type;
+	}
+	public String getName() {
+		return null;
 	}
 }

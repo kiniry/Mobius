@@ -11,8 +11,8 @@ import bcexpression.Expression;
  */
 public class TYPEOF extends JMLExpression {
 
-	public TYPEOF(Expression _left) {
-		setLeft(_left );
+	public TYPEOF(Expression _expr) {
+		super(_expr );
 	}
 
 	/* (non-Javadoc)
@@ -28,6 +28,18 @@ public class TYPEOF extends JMLExpression {
 	public BCType getType() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see bcexpression.Expression#substitute(bcexpression.Expression, bcexpression.Expression)
+	 */
+	public Expression substitute(Expression _e1, Expression _e2) {
+		if (equals(_e1)) {
+			return _e2;
+		}
+		Expression[] subExpr = getSubExpressions();
+		subExpr[0] = subExpr[0].substitute( _e1, _e2);
+		return this;
 	}
 	
 }

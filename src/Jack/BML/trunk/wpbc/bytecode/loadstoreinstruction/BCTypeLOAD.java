@@ -10,11 +10,11 @@ package bytecode.loadstoreinstruction;
 import org.apache.bcel.generic.InstructionHandle;
 
 import bcclass.BCLocalVariable;
+import bcclass.attributes.ExsuresTable;
 import bcexpression.Expression;
 import bcexpression.LocalVariableAccess;
 import bcexpression.vm.Stack;
 
-import specification.ExceptionalPostcondition;
 import formula.Formula;
 
 /**
@@ -47,10 +47,10 @@ public  class BCTypeLOAD  extends  BCLocalVariableInstruction{
 	/* (non-Javadoc)
 	 * @see bytecode.ByteCode#wp(formula.Formula, specification.ExceptionalPostcondition)
 	 */
-	public Formula wp(Formula _normal_Postcondition, ExceptionalPostcondition _exc_Postcondition) {
+	public Formula wp(Formula _normal_Postcondition, ExsuresTable _exc_Postcondition) {
 		Formula wp;
-		wp = _normal_Postcondition.substitute(Expression.getCounter(), Expression.getCounter_plus_1());
-		Stack topStack= new Stack( Expression.getCounter_plus_1());
+		wp = _normal_Postcondition.substitute(Expression.COUNTER, Expression.COUNTER_PLUS_1);
+		Stack topStack= new Stack( Expression.COUNTER_PLUS_1);
 		wp = wp.substitute(topStack, new LocalVariableAccess(getIndex()));
 		return wp;
 	}

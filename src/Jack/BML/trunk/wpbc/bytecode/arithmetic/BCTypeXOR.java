@@ -10,9 +10,9 @@ import org.apache.bcel.generic.IXOR;
 import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.LXOR;
 
-import specification.ExceptionalPostcondition;
 import formula.Formula;
 
+import bcclass.attributes.ExsuresTable;
 import bcexpression.BitExpression;
 import bcexpression.Expression;
 import bcexpression.ExpressionConstants;
@@ -46,10 +46,10 @@ public class BCTypeXOR extends BCArithmeticInstruction {
 	 */
 	public Formula wp(
 		Formula _normal_Postcondition,
-		ExceptionalPostcondition _exc_Postcondition) {
+		ExsuresTable _exc_Postcondition) {
 		Formula wp;
-		Stack stackTop = new Stack(Expression.getCounter());
-		Stack stackTop_minus_1 = new Stack(Expression.getCounter_minus_1());
+		Stack stackTop = new Stack(Expression.COUNTER);
+		Stack stackTop_minus_1 = new Stack(Expression.COUNTER_MINUS_1);
 		BitExpression xor =
 			new BitExpression(
 				stackTop,
@@ -57,8 +57,8 @@ public class BCTypeXOR extends BCArithmeticInstruction {
 				ExpressionConstants.BITWISEXOR);
 
 		_normal_Postcondition.substitute(
-			Expression.getCounter(),
-			Expression.getCounter_minus_1());
+			Expression.COUNTER,
+			Expression.COUNTER_MINUS_1);
 		_normal_Postcondition.substitute(stackTop_minus_1, xor);
 		wp = _normal_Postcondition;
 		return wp;

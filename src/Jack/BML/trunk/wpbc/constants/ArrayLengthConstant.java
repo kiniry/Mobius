@@ -12,7 +12,7 @@ package constants;
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class ArrayLengthConstant  extends BCConstantRef {
+public class ArrayLengthConstant  extends BCConstantFieldRef {
 
 	
 	

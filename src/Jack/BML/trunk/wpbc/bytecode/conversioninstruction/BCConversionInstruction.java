@@ -10,8 +10,6 @@ import org.apache.bcel.generic.InstructionHandle;
 import bcexpression.javatype.JavaType;
 import bytecode.BCInstruction;
 import bytecode.BCTypedInstruction;
-import specification.ExceptionalPostcondition;
-import formula.Formula;
 
 /**
  * @author mpavlova

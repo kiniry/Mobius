@@ -6,44 +6,34 @@
  */
 package constants;
 
-import org.apache.bcel.classfile.ConstantCP;
-import org.apache.bcel.classfile.ConstantNameAndType;
-import org.apache.bcel.classfile.ConstantPool;
-import org.apache.bcel.generic.ConstantPoolGen;
-import org.apache.bcel.generic.Type;
 
 /**
- * @author io
+ * @author mpavlova
  *
- * To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Generation - Code and Comments
+ * the class represents a constant pool constant : either 
+ * CONSTANT_Fieldref_info, CONSTANT_MethodRef_info, CONSTANT_Class_info 
  */
 public class BCConstantRef extends BCConstant {
 	private int classIndex;
-	private int nameAndTypeIndex;
 	
-	public BCConstantRef() {
+	private int CONSTANT_class_Index;
+	
+	private String name;
+
+	public BCConstantRef( ) {
 	}
 	
-	public BCConstantRef(ConstantCP _cp, int _cpIndex){
-		this(_cp.getClassIndex(), _cp.getNameAndTypeIndex(),  _cpIndex);
-	}
-	
-	public BCConstantRef(int _classIndex, int _nameAndTypeIndex ,int _cpIndex ) {
-		super(_cpIndex);
-		classIndex = _classIndex;
-		nameAndTypeIndex = _nameAndTypeIndex;
-	}
-	
-	public int getNameAndTypeIndex() {
-		return nameAndTypeIndex;
+	public BCConstantRef( int CONSTANT_X_info_index, int _CONSTANT_class_Index , String _name) {
+		super(CONSTANT_X_info_index);
+		CONSTANT_class_Index = _CONSTANT_class_Index;
+		name = _name;
 	}
 	
 	public int getClassIndex() {
-		return classIndex;
-	}
+		return CONSTANT_class_Index;
+	}	
 	
-	public String getSignature(ConstantPool _cp) {
-		return ((ConstantNameAndType)_cp.getConstant(nameAndTypeIndex)).getSignature(_cp);
+	public String getName() {
+		return name;
 	}
 }

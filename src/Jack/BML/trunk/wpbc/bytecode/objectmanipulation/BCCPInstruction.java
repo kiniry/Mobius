@@ -6,6 +6,7 @@
  */
 package bytecode.objectmanipulation;
 
+
 import bytecode.BCIndexedInstruction;
 
 /**
@@ -15,5 +16,5 @@ import bytecode.BCIndexedInstruction;
  * the same as CPInstruction  in the bcel library
  */
 public  interface BCCPInstruction  extends BCIndexedInstruction {
-	
+//	public BCConstantPool getConstantPool() ;
 }

@@ -10,13 +10,12 @@ import org.apache.bcel.generic.InstructionHandle;
 
 import constants.ArrayLengthConstant;
 
-import specification.ExceptionalPostcondition;
 
-import bcexpression.ArithmeticExpression;
-import bcexpression.ExpressionConstants;
-import bcexpression.NumberLiteral;
+
+import bcclass.attributes.ExsuresTable;
+import bcexpression.javatype.JavaObjectType;
 import bcexpression.javatype.JavaType;
-import bcexpression.vm.Counter;
+
 import bcexpression.vm.Stack;
 import bcexpression.ArrayAccessExpression;
 import bcexpression.Expression;
@@ -64,14 +63,14 @@ public class BCTypeALOAD  extends BCExceptionThrower implements  BCTypedInstruct
 		type = _type;
 	}
 	
-	public Formula wp(Formula _n_Postcondition, ExceptionalPostcondition _e_Postcondition) {
+	public Formula wp(Formula _n_Postcondition, ExsuresTable _e_Postcondition) {
 		 Formula wp = null ; 
 		  //normal execution 
-		  Stack _stackTop = new Stack(Expression.getCounter());
-		  Stack _stackTop_minus_1 =  new Stack(Expression.getCounter_minus_1());
+		  Stack _stackTop = new Stack(Expression.COUNTER);
+		  Stack _stackTop_minus_1 =  new Stack(Expression.COUNTER_MINUS_1);
 		 
 		  //t <------ t -1
-		  _n_Postcondition.substitute(Expression.getCounter(), Expression.getCounter_minus_1());
+		  _n_Postcondition.substitute(Expression.COUNTER, Expression.COUNTER_MINUS_1);
 		// n_post[ S(t) <----- S(t-1)[S(t)]]
 		_n_Postcondition = _n_Postcondition.substitute( _stackTop,  new ArrayAccessExpression( _stackTop_minus_1, _stackTop));			
 			
@@ -89,7 +88,7 @@ public class BCTypeALOAD  extends BCExceptionThrower implements  BCTypedInstruct
 		  //  execution terminating with java.lang.IndexOutOfBoundsException
 		  //S(t-1).length <= S(t) ==> excPost(IndexOutOfBoundsException)
 		  Formula _index_out_of_bounds = new Predicate2Ar( _arrlength,   _stackTop,  PredicateSymbol.LESSEQ); 
-		  Formula _wp_arr_out_of_bounds = getWpForException(JavaType.getJavaRefType("java.lang.IndexOutOfBoundsException"), _e_Postcondition);
+		  Formula _wp_arr_out_of_bounds = getWpForException((JavaObjectType)JavaType.getJavaRefType("Ljava/lang/IndexOutOfBoundsException;"), _e_Postcondition);
 		  Formula _out_of_bound_termination = new Formula(_index_out_of_bounds, 
 																							_wp_arr_out_of_bounds , 
 																							Connector.IMPLIES);
@@ -97,7 +96,7 @@ public class BCTypeALOAD  extends BCExceptionThrower implements  BCTypedInstruct
 		  // execution terminating with  NullPointerException
 		  //S(t-1) == null ==> excPost(NullPointerException) 
 		  Formula _arr_null = new Predicate2Ar(_stackTop_minus_1, Expression.NULL,  PredicateSymbol.EQ );
-		  Formula _wp_null_pointer =  getWpForException(JavaType.getJavaRefType("java.lang.NullPointerException"), _e_Postcondition);;
+		  Formula _wp_null_pointer =  getWpForException((JavaObjectType)JavaType.getJavaRefType("java.lang.NullPointerException"), _e_Postcondition);;
 		  Formula _null_pointer_termination = new Formula(_arr_null, 
 														  _wp_null_pointer,
 														  Connector.IMPLIES);

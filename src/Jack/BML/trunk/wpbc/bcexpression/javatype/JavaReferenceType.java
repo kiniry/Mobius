@@ -20,20 +20,19 @@ import constants.BCConstantClass;
  */
 public class JavaReferenceType extends JavaType {
 	private BCConstantClass bcc;
+		
 	/**
 	 * @param _type
 	 */
-	public JavaReferenceType(ReferenceType _type, BCConstantClass _cc) {
+	protected JavaReferenceType(ReferenceType _type, BCConstantClass _cc) {
 		super(_type, _cc, JavaType.COMPUTATIONAL_TYPE_1);
-		
 	}
 	
 	/**
 	 * @param _type
 	 */
-	public JavaReferenceType(Class _class, BCConstantClass _cc) {
+	protected JavaReferenceType(Class _class, BCConstantClass _cc) {
 		this((ReferenceType)Type.getType(_class), _cc);
-	
 	}
 	
 	
@@ -45,7 +44,7 @@ public class JavaReferenceType extends JavaType {
 	 * constructor used for default types, that do not have data structure representing them in the constant pool
 	 * that is do not have a corresponding ConstantClass object
 	 */
-	public JavaReferenceType(ReferenceType _type ) {
+	protected JavaReferenceType(ReferenceType _type ) {
 		super(_type, JavaType.COMPUTATIONAL_TYPE_1);
 	}
 
@@ -54,7 +53,7 @@ public class JavaReferenceType extends JavaType {
 	 * constructor used for default types, that do not have data structure representing them in the constant pool
 	 * that is do not have a corresponding ConstantClass object
 	 */
-	public JavaReferenceType(Class _class) {
+	protected JavaReferenceType(Class _class) {
 		this((ReferenceType)Type.getType(_class));
 
 	}

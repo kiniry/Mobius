@@ -8,11 +8,13 @@ package bytecode.loadstoreinstruction;
 
 import org.apache.bcel.generic.InstructionHandle;
 
+import bcclass.attributes.ExsuresTable;
 import bcexpression.Expression;
 import bcexpression.javatype.JavaType;
 import bcexpression.vm.Stack;
+import bytecode.BCInstruction;
+import bytecode.BCTypedInstruction;
 
-import specification.ExceptionalPostcondition;
 import formula.Formula;
 
 /**
@@ -21,8 +23,9 @@ import formula.Formula;
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class BCACONST_NULL extends BCConstantPUSHInstruction {
-
+public class BCACONST_NULL extends BCInstruction implements
+BCTypedInstruction {
+	
 	/**
 	 * @param _instruction
 	 */
@@ -36,15 +39,30 @@ public class BCACONST_NULL extends BCConstantPUSHInstruction {
 	 */
 	public Formula wp(
 		Formula _normal_Postcondition,
-		ExceptionalPostcondition _exc_Postcondition) {
+		ExsuresTable _exc_Postcondition) {
 		Formula wp;
 		wp =
 			_normal_Postcondition.substitute(
-				Expression.getCounter(),
-				Expression.getCounter_plus_1());
-		Stack topStack_plus_1 = new Stack(Expression.getCounter_plus_1());
+				Expression.COUNTER,
+				Expression.COUNTER_PLUS_1);
+		Stack topStack_plus_1 = new Stack(Expression.COUNTER_PLUS_1);
 		wp = wp.substitute(topStack_plus_1 ,Expression.NULL);
 		return wp;
+	}
+
+	/* (non-Javadoc)
+	 * @see bytecode.BCTypedInstruction#getType()
+	 */
+	public JavaType getType() {
+		return JavaType.JavaNULL;
+	}
+
+	/* (non-Javadoc)
+	 * @see bytecode.BCTypedInstruction#setType(bcexpression.javatype.JavaType)
+	 */
+	public void setType(JavaType _type) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

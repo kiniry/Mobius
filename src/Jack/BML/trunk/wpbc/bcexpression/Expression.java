@@ -5,141 +5,109 @@
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
 package bcexpression;
-
-
-import bcexpression.javatype.*;
 import bcexpression.vm.Counter;
 import type.BCType;
-
 /**
  * @author io
- *
- * To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Generation - Code and Comments
+ * 
+ * To change the template for this generated type comment go to Window -
+ * Preferences - Java - Code Generation - Code and Comments
  */
-public   abstract class  Expression {
-	private Expression left;
-	private Expression right;
-	private BCType type;
-	
-	private static final Counter COUNTER  = Counter.getCounter();
-	
-	private static final ArithmeticExpression COUNTER_PLUS_1  = new ArithmeticExpression(
-															COUNTER,
-															new NumberLiteral("1", 10, JavaType.JavaINT),
-															ExpressionConstants.ADD);
-	
-	private static final ArithmeticExpression COUNTER_MINUS_1  = new ArithmeticExpression(
-															COUNTER,
-															new NumberLiteral("1", 10, JavaType.JavaINT),
-															ExpressionConstants.SUB);
-	
-	private static final ArithmeticExpression COUNTER_MINUS_2  = new ArithmeticExpression(
-																COUNTER,
-																new NumberLiteral("2", 10, JavaType.JavaINT),
-																ExpressionConstants.SUB);
-																
-	private static final ArithmeticExpression COUNTER_MINUS_3  = new ArithmeticExpression(
-																COUNTER,
-																new NumberLiteral("3", 10, JavaType.JavaINT),
-																ExpressionConstants.SUB);			
-	private static final ArithmeticExpression COUNTER_MINUS_4  = new ArithmeticExpression(
-																	COUNTER,
-																	new NumberLiteral("4", 10, JavaType.JavaINT),
-																	ExpressionConstants.SUB);						
-																									
+public abstract class Expression implements Cloneable {
+	private Expression[] subExpressions;
+	public static final Counter COUNTER = Counter.getCounter();
+	public static final ArithmeticExpression COUNTER_PLUS_2 = ArithmeticExpression.getArithmeticExpression(
+			COUNTER, new NumberLiteral(2), ExpressionConstants.ADD);
+	public static final ArithmeticExpression COUNTER_PLUS_1 = ArithmeticExpression.getArithmeticExpression(
+			COUNTER, new NumberLiteral(1), ExpressionConstants.ADD);
+	public static final ArithmeticExpression COUNTER_MINUS_1 = ArithmeticExpression.getArithmeticExpression(
+			COUNTER, new NumberLiteral(1), ExpressionConstants.SUB);
+	public static final ArithmeticExpression COUNTER_MINUS_2 = ArithmeticExpression.getArithmeticExpression(
+			COUNTER, new NumberLiteral(2), ExpressionConstants.SUB);
+	public static final ArithmeticExpression COUNTER_MINUS_3 = ArithmeticExpression.getArithmeticExpression(
+			COUNTER, new NumberLiteral(3), ExpressionConstants.SUB);
+	public static final ArithmeticExpression COUNTER_MINUS_4 = ArithmeticExpression.getArithmeticExpression(
+			COUNTER, new NumberLiteral(4), ExpressionConstants.SUB);
 	public static final NULL NULL = new NULL();
-	
 	protected Expression() {
 	}
-	
-	public Expression( Expression _left, Expression _right)  {;
-		setLeft(_left);
-		setRight(_right);		
+	public Expression(Expression _subExpr) {
+		subExpressions = new Expression[1];
+		subExpressions[0] = _subExpr;
 	}
-	
-	public static Counter getCounter() {
-		return COUNTER;
+	public Expression(Expression _subExpr1, Expression _subExpr2) {
+		subExpressions = new Expression[2];
+		subExpressions[0] = _subExpr1;
+		subExpressions[1] = _subExpr2;
 	}
-	
-	public static ArithmeticExpression getCounter_plus_1() {
-		return COUNTER_PLUS_1 ;
-	}
-	
-	public static ArithmeticExpression getCounter_minus_1() {
-		return COUNTER_MINUS_1 ;
-	}
-	
-	public static ArithmeticExpression getCounter_minus_2() {
-		return COUNTER_MINUS_2;
-	}
-	
-	public static ArithmeticExpression getCounter_minus_3() {
-		return COUNTER_MINUS_3;
-	}
-	public static ArithmeticExpression getCounter_minus_4() {
-		return COUNTER_MINUS_4;
-	}
-	/**
-	 * @param right2
-	 */
-	public void setRight(Expression right2) {
-		right = right2;
-		
-	}
-	
-	/**
-	 * @param left2
-	 */
-	public void setLeft(Expression left2) {
-		left = left2;
-	}
-	
-//	/**
-//	 * @param 
-//	 */
-//	public abstract void setType( );
-//
-
-	
-	
-	/*public byte getExpressionType() {
-		return type;
-	}*/
-	public   Expression getLeft() {
-		return left; 
-	}
-	
-	public  Expression getRight() {
-		return right;
-	}
-	
-	public Expression substitute(Expression _e1 , Expression _e2) {
-//		if (_e1 instanceof FieldAccessExpression) {
-//			return this;	
-//		}
-		
-		if (this.equals(_e1 ) ) {
-			this.setLeft(_e2.getLeft()) ;
-			this.setRight(_e2.getRight()) ;
-			return this;	
+	public Expression(Expression[] _subExprs) {
+		if (_subExprs != null) {
+			subExpressions = _subExprs;
 		}
-		setLeft( left.substitute(_e1, _e2 ));
-		setRight(right.substitute(_e1, _e2 ));
-		return this;
 	}
-		
-	public abstract  BCType getType() ;
-
+	
+	/**
+	 * @return Returns the subExpressions.
+	 */
+	public Expression[] getSubExpressions() {
+		return subExpressions;
+	}
+	/**
+	 * @param subExpressions
+	 *            The subExpressions to set.
+	 */
+	protected void setSubExpressions(Expression[] subExpressions) {
+		this.subExpressions = subExpressions;
+	}
+	/**
+	 * substitute the subexpression (if there are ) equal to _e1 with _e2
+	 * 
+	 * @param _e1
+	 * @param _e2
+	 * @return - this object with the substitutions made
+	 */
+	public abstract Expression substitute(Expression _e1, Expression _e2);
+	public abstract BCType getType();
+	
 	public String toString() {
 		return null;
 	}
-	
-	
+	/**
+	 * two expressions are equals if they are from the same type and if they
+	 * have the same number of subexpressions and they are equals.
+	 * 
+	 * @param _expr
+	 * @return
+	 */
 	public boolean equals(Expression _expr) {
-		
-		
-		return false;
-		
+		if (_expr == null) {
+		}
+		if (_expr.getClass() != this.getClass()) {
+			return false;
+		}
+		//		test if the subexpressions are equal
+		Expression[] subEofThis = getSubExpressions();
+		Expression[] subEofExpr = _expr.getSubExpressions();
+		if (((subEofExpr == null) && (subEofThis != null))
+				|| ((subEofExpr != null) && (subEofThis == null))) {
+			return false;
+		}
+		//both expressions don't have subexpressions
+		if ((subEofExpr == null) && (subEofThis == null)) {
+			return true;
+		}
+		boolean subExprEquals = true;
+		if ((subEofExpr != null) && (subEofThis != null)) {
+			for (int i = 0; i < subEofThis.length; i++) {
+				subExprEquals = subExprEquals
+						&& subEofThis[i].equals(subEofExpr[i]);
+			}
+		}
+		return subExprEquals;
 	}
+	public Expression copy() {
+		Expression copy = null;
+		return copy;
+	}
+	
 }

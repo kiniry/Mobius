@@ -5,9 +5,9 @@ import org.apache.bcel.generic.InstructionHandle;
 
 import org.apache.bcel.generic.LNEG;
 
+import bcclass.attributes.ExsuresTable;
 import bcexpression.javatype.JavaType;
 
-import specification.ExceptionalPostcondition;
 
 import formula.Formula;
 
@@ -43,12 +43,12 @@ public class BCTypeNEG extends BCArithmeticInstruction {
 	/**
 	 * @see bytecode.BCInstruction#wp(formula.Formula, specification.ExceptionalPostcondition)
 	 */
-	public Formula wp(Formula _normal_Postcondition, ExceptionalPostcondition _exc_Postcondition) {
+	public Formula wp(Formula _normal_Postcondition, ExsuresTable _exc_Postcondition) {
 		// TODO Auto-generated method stub
 		Formula wp;
 
-		Stack stackTop = new Stack(Expression.getCounter());
-		ArithmeticExpression neg = new ArithmeticExpression(stackTop, ExpressionConstants.NEG);
+		Stack stackTop = new Stack(Expression.COUNTER);
+		ArithmeticExpression neg = ArithmeticExpression.getArithmeticExpression(stackTop, ExpressionConstants.NEG);
 		_normal_Postcondition.substitute(stackTop, neg);
 		wp = _normal_Postcondition;
 		return wp; 

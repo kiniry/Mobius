@@ -6,6 +6,7 @@
  */
 package bcexpression.jml;
 
+import bcexpression.Expression;
 import type.BCType;
 
 /**
@@ -32,5 +33,9 @@ public class JML_CONST_TYPE extends JMLExpression implements BCType  {
 	 */
 	public BCType getType() {
 		return this; //?may be this is a problem
+	}
+	
+	public Expression substitute(Expression _e1 , Expression _e2) { 
+		return this;
 	}
 }

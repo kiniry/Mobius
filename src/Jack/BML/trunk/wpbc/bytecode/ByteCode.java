@@ -6,7 +6,7 @@
  */
 package bytecode;
 
-import specification.ExceptionalPostcondition;
+import bcclass.attributes.ExsuresTable;
 import formula.Formula;
 
 /**
@@ -20,6 +20,6 @@ public interface ByteCode  {
 	/**
 	 * @return the wp for this bytecode
 	 */
-	public Formula wp(Formula _normal_Postcondition,   ExceptionalPostcondition _exc_Postcondition );
+	public Formula wp(Formula _normal_Postcondition,   ExsuresTable _exc_Postcondition );
 	
 }

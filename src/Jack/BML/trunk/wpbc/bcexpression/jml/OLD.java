@@ -22,14 +22,14 @@ public class OLD extends JMLExpression  {
 	private JavaType type ;
 	
 	public OLD(Expression _left) {
-		setLeft(_left);
+		super(_left);
 	}
 
 	/* (non-Javadoc)
 	 * @see bcexpression.Expression#setType()
 	 */
 	public void setType() {
-		type = (JavaType) ((Expression)getLeft()).getType();
+		type = (JavaType) ((Expression)getSubExpressions()[0]).getType();
 	}
 
 	/* (non-Javadoc)
@@ -41,4 +41,20 @@ public class OLD extends JMLExpression  {
 		}
 		return type;
 	}
+
+
+
+	/* (non-Javadoc)
+	 * @see bcexpression.Expression#substitute(bcexpression.Expression, bcexpression.Expression)
+	 */
+	public Expression substitute(Expression _e1, Expression _e2) {
+		if (equals(_e1)) {
+			return _e2;
+		}
+		Expression[] subExpr = getSubExpressions();
+		subExpr[0] = subExpr[0].substitute( _e1, _e2);
+		return this;
+	}
+	
+	
 }

@@ -8,10 +8,10 @@ package bytecode.loadstoreinstruction;
 
 import org.apache.bcel.generic.InstructionHandle;
 
-import specification.ExceptionalPostcondition;
 import formula.Formula;
 
 import bcclass.BCLocalVariable;
+import bcclass.attributes.ExsuresTable;
 import bcexpression.Expression;
 import bcexpression.LocalVariableAccess;
 import bcexpression.vm.Stack;
@@ -44,10 +44,10 @@ public class BCTypeSTORE extends BCLocalVariableInstruction {
 		 */
 	public Formula wp(
 		Formula _normal_Postcondition,
-		ExceptionalPostcondition _exc_Postcondition) {
+		ExsuresTable _exc_Postcondition) {
 		Formula wp;
-		wp = _normal_Postcondition.substitute(Expression.getCounter(), Expression.getCounter_minus_1());
-		Stack stackTop = new Stack(Expression.getCounter());
+		wp = _normal_Postcondition.substitute(Expression.COUNTER, Expression.COUNTER_MINUS_1);
+		Stack stackTop = new Stack(Expression.COUNTER);
 		wp = wp.substitute(new LocalVariableAccess(getIndex()), stackTop  );
 		return wp;
 	}

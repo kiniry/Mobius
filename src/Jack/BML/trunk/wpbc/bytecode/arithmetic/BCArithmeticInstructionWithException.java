@@ -7,7 +7,8 @@
 package bytecode.arithmetic;
 
 import org.apache.bcel.generic.InstructionHandle;
-import specification.ExceptionalPostcondition;
+
+import bcclass.attributes.ExsuresTable;
 import bcexpression.javatype.JavaType;
 import bytecode.BCExceptionThrower;
 import bytecode.BCTypedInstruction;

@@ -9,28 +9,62 @@ package bytecode.objectmanipulation;
 import org.apache.bcel.generic.CPInstruction;
 import org.apache.bcel.generic.InstructionHandle;
 
-import specification.ExceptionalPostcondition;
+import bcclass.attributes.ExsuresTable;
+import bcexpression.Expression;
+import bcexpression.NumberLiteral;
+import bcexpression.javatype.JavaReferenceType;
 import bcexpression.javatype.JavaType;
+import bcexpression.vm.Stack;
 import bytecode.BCExceptionThrower;
-import bytecode.objectmanipulation.*;
+import formula.Connector;
 import formula.Formula;
+import formula.atomic.Predicate2Ar;
+import formula.atomic.PredicateSymbol;
 
 /**
  * @author mpavlova
+ * 
+ * instanceof
+ * 
+ * Operation: Determine if object is of given type
+ * 
+ * Format : instanceof 	 indexbyte1 	indexbyte2
+ * 
+ * Operand Stack:  ..., objectref ==> ..., result
+ * 
+ * Description:The objectref, which must be of type reference, is popped from the operand stack. 
+ * The unsigned indexbyte1 and indexbyte2 are used to construct an index into the runtime constant pool of 
+ * the current class, where the value of the index is (indexbyte1 << 8) | indexbyte2. The runtime constant pool item 
+ * at the index must be a symbolic reference to a class, array, or interface type. The named class, array, or interface type 
+ * is resolved .If objectref is not null and is an instance of the resolved class or array or 
+ * implements the resolved interface, the instanceof instruction pushes an int result of 1 as an int on the operand stack. 
+ * Otherwise, it pushes an int result of 0. 	
+ * 
+ * Linking Exceptions:  During resolution of symbolic reference to the class, array, or interface type, any of the exceptions 
+ * documented in the JVM (Section 5.4.3.1) can be thrown.
  *
- * To change the template for this generated type comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
+ * Notes : The instanceof instruction is very similar to the checkcast instruction. It differs in 
+ * its treatment of null, 
+ * its behavior when its test fails (checkcast throws an exception, instanceof pushes a result code), and its effect on the operand stack.
+ * 
+ * 
+ * 
+ *  wp	=( !( S(t) <: Type)  || S(t) == null) ==> psi^n[S(t) <-- 0 ] 
+ * 			&&
+ * 		  (S(t) <: Type)  && S(t) != null )==> psi^n[S(t) <-- 1 ] 
  */
-public class BCINSTANCEOF  extends  BCExceptionThrower implements BCCPInstruction {
+public class BCINSTANCEOF
+	extends BCExceptionThrower
+	implements BCCPInstruction {
 	private JavaType type;
 	private int index;
-	
+
 	/**
 	 * @param _instruction
 	 */
 	public BCINSTANCEOF(InstructionHandle _instruction, JavaType _type) {
 		super(_instruction);
-		setIndex( ( (CPInstruction)_instruction.getInstruction()).getIndex());
+		setIndex(((CPInstruction) _instruction.getInstruction()).getIndex());
 		setType(_type);
 	}
 
@@ -59,16 +93,70 @@ public class BCINSTANCEOF  extends  BCExceptionThrower implements BCCPInstructio
 	 * @see bytecode.BCTypedInstruction#setType(bcexpression.javatype.JavaType)
 	 */
 	public void setType(JavaType _type) {
-		type =_type;
+		type = _type;
 	}
 
 	/* (non-Javadoc)
 	 * @see bytecode.ByteCode#wp(formula.Formula, specification.ExceptionalPostcondition)
 	 */
-	public Formula wp(Formula _normal_Postcondition, ExceptionalPostcondition _exc_Postcondition) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	public Formula wp(
+		Formula _normal_Postcondition,
+		ExsuresTable _exc_Postcondition) {
+		Formula wp;
+
+		Stack topStack = new Stack(Expression.COUNTER);
+
+		//S(t) <: Type
+		Formula topStackSubType =
+			new Predicate2Ar(
+				(JavaReferenceType) topStack.getType(),
+				getType(),
+				PredicateSymbol.SUBTYPE);
+
+		//S(t) != null
+		Formula topStackNotNull =
+			new Predicate2Ar(topStack, Expression.NULL, PredicateSymbol.NOTEQ);
+
+		//S(t) <: Type && S(t) != null
+		Formula condition0 =
+			new Formula(topStackSubType, topStackNotNull, Connector.AND);
+		Formula condition0Implies = _normal_Postcondition.copy();
+
+		//psi^n[S(t) <-- 1] 
+		condition0Implies =
+			condition0Implies.substitute(topStack, new NumberLiteral(1));
+
+		// 	S(t) <: Type && S(t) != null  ==> psi^n[S(t) <-- 1] 
+		Formula wpTopStackisOfSubtype =
+			new Formula(condition0, condition0Implies, Connector.IMPLIES);
+
+	//////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////
 	
+		// !( S(t) <: Type)
+		Formula topStackNotSubType =
+			new Formula(topStackSubType, Connector.NOT);
+
+		//S(t) == null
+		Formula topStackNull =
+			new Predicate2Ar(topStack, Expression.NULL, PredicateSymbol.EQ);
+	
+		//	!( S(t) <: Type)  || S(t) == null
+		Formula condition1 = new Formula(topStackNotSubType, topStackNull, Connector.OR);
+		Formula condition1implies =  _normal_Postcondition.copy();
+		
+		//psi^n[S(t) <-- 0 ]
+		condition1implies = condition1implies.substitute(topStack, new NumberLiteral(0) );
+		
+		//	!( S(t) <: Type)  || S(t) == null ==> psi^n[S(t) <-- 0 ]
+		Formula wpTopStackisOfNotSubtype = new Formula (condition1, condition1implies, Connector.IMPLIES);
+		
+//		wp	=( !( S(t) <: Type)  || S(t) == null) ==> psi^n[S(t) <-- 0 ] 
+//		 			&&
+//		 		  (S(t) <: Type)  && S(t) != null )==> psi^n[S(t) <-- 1 ] 
+		wp = new Formula(wpTopStackisOfNotSubtype, wpTopStackisOfSubtype, Connector.AND);
+		return wp;
+	}
 
 }

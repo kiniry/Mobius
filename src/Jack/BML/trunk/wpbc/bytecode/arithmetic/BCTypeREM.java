@@ -1,24 +1,23 @@
 package bytecode.arithmetic;
 
-import org.apache.bcel.generic.DREM;
-import org.apache.bcel.generic.FREM;
 import org.apache.bcel.generic.IREM;
 import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.LREM;
-import specification.ExceptionalPostcondition;
 
 import formula.Connector;
 import formula.Formula;
 import formula.atomic.Predicate2Ar;
 import formula.atomic.PredicateSymbol;
 
+import bcclass.attributes.ExsuresTable;
 import bcexpression.ArithmeticExpression;
 import bcexpression.Expression;
 import bcexpression.ExpressionConstants;
 import bcexpression.NumberLiteral;
-import bcexpression.javatype.JavaReferenceType;
+
+import bcexpression.javatype.JavaObjectType;
 import bcexpression.javatype.JavaType;
-import bcexpression.vm.Counter;
+
 import bcexpression.vm.Stack;
 import bytecode.BCConstants;
 import bytecode.BCInstructionCodes;
@@ -51,57 +50,54 @@ public class BCTypeREM extends BCArithmeticInstructionWithException {
 	 */
 	public Formula wp(
 		Formula _normal_Postcondition,
-		ExceptionalPostcondition _exc_Postcondition) {
-	
+		ExsuresTable _exc_Postcondition) {
 
-			Formula wp = null;
-			Stack stackTop = new Stack(Expression.getCounter());
-			Stack stackTop_minus_1 = new Stack(Expression.getCounter_minus_1());
-			// stack(top ) != null 
-			Formula divisorNonZero =
-				new Predicate2Ar(
-					stackTop,
-					new NumberLiteral("0",10, JavaType.JavaINT),
-					PredicateSymbol.NOTEQ);
-			ArithmeticExpression remResult =
-				new ArithmeticExpression(
-					stackTop,
-					stackTop_minus_1,
-					ExpressionConstants.REM);
-			_normal_Postcondition.substitute(
-				Expression.getCounter(),
-				Expression.getCounter_minus_1());
-			_normal_Postcondition.substitute(stackTop_minus_1, remResult);
+		Formula wp = null;
+		Stack stackTop = new Stack(Expression.COUNTER);
+		Stack stackTop_minus_1 = new Stack(Expression.COUNTER_MINUS_1);
+		// stack(top ) != null 
+		Formula divisorNonZero =
+			new Predicate2Ar(
+				stackTop,
+				new NumberLiteral(0),
+				PredicateSymbol.NOTEQ);
+		ArithmeticExpression remResult =
+			ArithmeticExpression.getArithmeticExpression(
+				stackTop,
+				stackTop_minus_1,
+				ExpressionConstants.REM);
+		_normal_Postcondition.substitute(
+			Expression.COUNTER,
+			Expression.COUNTER_MINUS_1);
+		_normal_Postcondition.substitute(stackTop_minus_1, remResult);
 
-			Formula wpNormalExecution =
-				new Formula(
-					divisorNonZero,
-					_normal_Postcondition,
-					Connector.IMPLIES);
-			//stack(top ) == null 
-			Formula divisorIsZero =
-				new Predicate2Ar(
-					stackTop,
-					new NumberLiteral("0",10, JavaType.JavaINT),
-					PredicateSymbol.EQ);
+		Formula wpNormalExecution =
+			new Formula(
+				divisorNonZero,
+				_normal_Postcondition,
+				Connector.IMPLIES);
+		//stack(top ) == null 
+		Formula divisorIsZero =
+			new Predicate2Ar(
+				stackTop,
+				new NumberLiteral(0),
+				PredicateSymbol.EQ);
 
-			//_excPost = if exists exceptionHandler for NullPointerException then  wp(exceptionHandler,  normalPost) else 
-			//                  else ExcPostcondition 
-			Formula _excPost =
-				getWpForException(
-					JavaType.getJavaRefType("java.lang.ArithmeticException"),
-					_exc_Postcondition);
-			Formula wpExceptionExecution =
-				new Formula(divisorIsZero, _excPost, Connector.IMPLIES);
-			// stack(top)  != null ==>_normal_Postcondition[t <-- t-1][S(t-1) <-- S(t-1) rem S(t)] 
-			// &&
-			// stack(top)  == null ==> excPost
-			wp =
-				new Formula(
-					wpNormalExecution,
-					wpExceptionExecution,
-					Connector.AND);
-			return wp;
-		}
-
+		//_excPost = if exists exceptionHandler for NullPointerException then  wp(exceptionHandler,  normalPost) else 
+		//                  else ExcPostcondition 
+		Formula _excPost =
+			getWpForException(
+				(JavaObjectType) JavaType.getJavaRefType(
+					"Ljava/lang/ArithmeticException;"),
+				_exc_Postcondition);
+		Formula wpExceptionExecution =
+			new Formula(divisorIsZero, _excPost, Connector.IMPLIES);
+		// stack(top)  != null ==>_normal_Postcondition[t <-- t-1][S(t-1) <-- S(t-1) rem S(t)] 
+		// &&
+		// stack(top)  == null ==> excPost
+		wp =
+			new Formula(wpNormalExecution, wpExceptionExecution, Connector.AND);
+		return wp;
 	}
+
+}

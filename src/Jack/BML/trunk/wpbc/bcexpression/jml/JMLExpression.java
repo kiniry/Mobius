@@ -22,12 +22,10 @@ public abstract class JMLExpression extends Expression {
 	private JavaType type;
 
 	protected JMLExpression() {
-		
 	}
-//	
-//	public JMLExpression(Expression _e) {	
-//		setLeft(_e);
-//		
-//	}
+	
+	public JMLExpression(Expression _e) {	
+		super(_e);		
+	}
 		
 }

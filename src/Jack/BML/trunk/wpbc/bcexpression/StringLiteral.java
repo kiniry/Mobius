@@ -34,4 +34,27 @@ public class StringLiteral extends Expression {
 	public BCType getType() {
 		return JavaType.JavaSTRING;
 	}
+	/**
+	 * @return Returns the literal.
+	 */
+	public String getLiteral() {
+		return literal;
+	}
+	
+	public boolean equals(Expression _expr) { 
+		boolean equals = super.equals( _expr);
+		if (equals == false ) {
+			return false;
+		}
+		StringLiteral sl = (StringLiteral ) _expr;
+		if ( getLiteral() != sl.getLiteral() ) {
+			return false;
+		}
+		return true;
+	}
+	
+	public Expression substitute(Expression _e1 , Expression _e2) { 
+		return this;
+	}
+	
 }

@@ -9,7 +9,7 @@ package bcexpression.vm;
 
 import type.BCType;
 import bcexpression.Expression;
-import bcexpression.Variable;
+
 
 
 
@@ -50,5 +50,19 @@ public final class Stack extends Expression  {
 		// TODO Auto-generated method stub
 		return null;
 	} 
+	
+	/**
+	 * the substitution can be realised in 3 ways :
+	 * if _e1 equals this object and this[_e1<-- _e2 ] = _e2
+	 * else recursively do the substitution in the subexpression counter 
+	 * 		and replace the old counter by the new one counter = counter[_e1<-- _e2 ]
+	 */
+	public  Expression substitute(Expression _e1, Expression _e2){
+		if (this.equals(_e1) ) {
+			return _e2;
+		}
+		counter = counter.substitute( _e1, _e2);
+		return this;
+	}
 		
 }

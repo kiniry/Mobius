@@ -10,9 +10,9 @@ import org.apache.bcel.generic.IUSHR;
 import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.LUSHR;
 
-import specification.ExceptionalPostcondition;
 import formula.Formula;
 
+import bcclass.attributes.ExsuresTable;
 import bcexpression.javatype.JavaType;
 import bytecode.BCConstants;
 import bytecode.BCInstructionCodes;
@@ -43,7 +43,7 @@ public class BCTypeUSHR extends BCArithmeticInstruction {
 	/* (non-Javadoc)
 	 * @see bytecode.ByteCode#wp(formula.Formula, specification.ExceptionalPostcondition)
 	 */
-	public Formula wp(Formula _normal_Postcondition, ExceptionalPostcondition _exc_Postcondition) {
+	public Formula wp(Formula _normal_Postcondition, ExsuresTable _exc_Postcondition) {
 		// TODO Auto-generated method stub
 		return null;
 	}

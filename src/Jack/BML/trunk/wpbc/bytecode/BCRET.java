@@ -10,9 +10,11 @@ import java.util.Vector;
 
 import org.apache.bcel.generic.InstructionHandle;
 
+import bcclass.attributes.ExsuresTable;
+import bytecode.block.*;
+
 import formula.Formula;
 
-import specification.ExceptionalPostcondition;
 import utils.Util;
 
 /**
@@ -21,7 +23,7 @@ import utils.Util;
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class BCRET extends BCInstruction implements EndBlock {
+public class BCRET extends BCInstruction implements EndBlockInstruction {
 	private BCInstruction retToInstruction;
 	
 	private Vector retToBlocks;
@@ -35,7 +37,7 @@ public class BCRET extends BCInstruction implements EndBlock {
 	/* (non-Javadoc)
 	 * @see bytecode.ByteCode#wp(formula.Formula, specification.ExceptionalPostcondition)
 	 */
-	public Formula wp(Formula _normal_Postcondition, ExceptionalPostcondition _exc_Postcondition) {
+	public Formula wp(Formula _normal_Postcondition, ExsuresTable _exc_Postcondition) {
 		return _normal_Postcondition;
 	}
 	

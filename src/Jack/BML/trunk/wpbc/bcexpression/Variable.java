@@ -6,19 +6,27 @@
  */
 package bcexpression;
 
+import java.util.Vector;
+
 import type.BCType;
+import bcexpression.javatype.JavaReferenceType;
 import bcexpression.javatype.JavaType;
 
 /**
- * @author io
+ * @author mpavlova
  *
- * To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Generation - Code and Comments
+ * This class represents a variable  (used for quantified and unbound variables)
  */
 public class Variable extends Expression  {
 	private int id;
 	private JavaType type;
 	
+	private Vector with;
+	
+	/**
+	 * constructor that considers that the default type of the variable is int 
+	 * @param _id
+	 */
 	public Variable(int _id) {
 		id  = _id;
 	}
@@ -41,11 +49,20 @@ public class Variable extends Expression  {
 		return type;
 	}
 	
-	public Expression substitute(Expression _e,  Expression _v) {
-		if (equals( _e)) {
-			return _v;
+	public Expression substitute(Expression _e1,  Expression _e2) {
+		if (this.equals( _e1)) {
+			return _e2;
 		}
-		return null;
+		if (    (this.getType() instanceof JavaReferenceType) &&
+				(  _e1.getType() instanceof JavaReferenceType ) && 
+				(JavaType.subType((JavaReferenceType)getType(), (JavaReferenceType)_e1.getType() ) ) ) {
+			if(with == null) {
+				with = new Vector();
+			}
+			with.add(new WITH( _e1, _e2 )); 
+			
+		}
+		return this;
 	}
 	
 }

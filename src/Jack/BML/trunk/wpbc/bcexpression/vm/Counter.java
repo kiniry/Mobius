@@ -9,9 +9,9 @@ package bcexpression.vm;
 
 
 import type.BCType;
-import bcexpression.ArithmeticExpression;
+
 import bcexpression.Expression;
-import bcexpression.Variable;
+
 import bcexpression.javatype.JavaBasicType;
 import bcexpression.javatype.JavaType;
 
@@ -55,6 +55,16 @@ public class Counter  extends Expression {
 		return JavaType.JavaINT;
 	}
 	
+	public String toString() {
+		return "counter";
+	}
+	
+	public   boolean equals(Expression _expr) {
+		if (_expr == this) {
+			return true;
+		}
+		return false;
+	}
 	/**
 	 * method overriden from superclass Expression
 	 */

@@ -2,25 +2,41 @@ package bytecode.objectmanipulation;
 
 import org.apache.bcel.generic.CPInstruction;
 import org.apache.bcel.generic.InstructionHandle;
-import specification.ExceptionalPostcondition;
+import utils.FreshIntGenerator;
 
 import formula.Formula;
 
+import bcclass.attributes.ExsuresTable;
+import bcexpression.Expression;
 import bcexpression.javatype.JavaType;
+import bcexpression.ref.Reference;
+import bcexpression.vm.Stack;
 import bytecode.BCAllocationInstruction;
-import bytecode.objectmanipulation.*;
 
 /**
- * @author Mariela
+ * @author mpavlova
  *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * Operation: Create new object
+ * 
+ * Format : new 	indexbyte1 	indexbyte2
+ * 
+ * Operand Stack: ... ==> ..., objectref
+ * 
+ * Description:  The unsigned indexbyte1 and indexbyte2 are used to construct an index into the runtime constant pool of the current 
+ * class , where the value of the index is (indexbyte1 << 8) | indexbyte2. 
+ * The runtime constant pool item at the index must be a symbolic reference to a class, array, or interface type. 
+ * The named class, array, or interface type is resolved  and should result in a class type 
+ * (it should not result in an array or interface type). Memory for a new instance of that class is allocated from the garbage-collected heap, and the instance variables of the new object are initialized to their default initial values (?2.5.1). 
+ * The objectref, a reference to the instance, is pushed onto the operand stack.
+ * 
  */
 public class BCNEW extends BCAllocationInstruction implements BCCPInstruction  {
-	
+	/**
+	 * the index into the constant pool that contains the  CONSTANT_Class_info
+	 * structure that describes the class from which a new instance will be created	 
+	 * */
 	private int index;
+	
 	private JavaType type;
 	
 	public BCNEW(InstructionHandle _instruction, JavaType _type) {
@@ -57,11 +73,17 @@ public class BCNEW extends BCAllocationInstruction implements BCCPInstruction  {
 		type = _type;
 	}
 	
-	/* (non-Javadoc)
-	 * @see bytecode.ByteCode#wp(formula.Formula, specification.ExceptionalPostcondition)
+	/**
+	 * should also have an exceptional termination ?
 	 */
-	public Formula wp(Formula _normal_Postcondition, ExceptionalPostcondition _exc_Postcondition) {
-		// TODO Auto-generated method stub
-		return null;
+	public Formula wp(Formula _normal_Postcondition, ExsuresTable _exc_Postcondition) {
+		Formula wp;
+		wp =   _normal_Postcondition.substitute(Expression.COUNTER, Expression.COUNTER_PLUS_1);
+		Stack topStack_plus1 = new Stack(Expression.COUNTER_PLUS_1);
+		Reference  new_ref= new Reference(FreshIntGenerator.getInt(), getType() );
+		
+		wp = wp.substitute(topStack_plus1,  new_ref );
+		
+		return wp;
 	}
 }

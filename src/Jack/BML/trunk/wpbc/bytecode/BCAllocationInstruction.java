@@ -19,23 +19,10 @@ import bcexpression.javatype.JavaType;
 public abstract class BCAllocationInstruction extends BCExceptionThrower {
 	//    ANEWARRAY, MULTIANEWARRAY, NEW, NEWARRAY
 	
-	
 	/**
 	 * @param _instruction
 	 */
 	public BCAllocationInstruction(InstructionHandle _instruction, JavaType _type) {
 		super(_instruction);
 	}
-
-	
-
-//	/* (non-Javadoc)
-//	 * @see bytecode.ByteCode#wp(formula.Formula, specification.ExceptionalPostcondition)
-//	 */
-//	public Formula wp(Formula _normal_Postcondition, ExceptionalPostcondition _exc_Postcondition) {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
-	
-
 }

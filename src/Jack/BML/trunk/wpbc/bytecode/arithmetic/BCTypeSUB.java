@@ -10,6 +10,7 @@ import org.apache.bcel.generic.ISUB;
 import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.LSUB;
 
+import bcclass.attributes.ExsuresTable;
 import bcexpression.ArithmeticExpression;
 import bcexpression.Expression;
 import bcexpression.ExpressionConstants;
@@ -17,7 +18,6 @@ import bcexpression.javatype.JavaType;
 import bcexpression.vm.Stack;
 import bytecode.BCConstants;
 import bytecode.BCInstructionCodes;
-import specification.ExceptionalPostcondition;
 import formula.Formula;
 
 /**
@@ -46,16 +46,16 @@ public class BCTypeSUB extends BCArithmeticInstruction {
 	/* (non-Javadoc)
 	 * @see bytecode.ByteCode#wp(formula.Formula, specification.ExceptionalPostcondition)
 	 */
-	public Formula wp(Formula _normal_Postcondition, ExceptionalPostcondition _exc_Postcondition) {
+	public Formula wp(Formula _normal_Postcondition, ExsuresTable _exc_Postcondition) {
 		Formula wp = null;
-			Stack stackTop = new Stack(Expression.getCounter());
-			Stack stackTop_minus_1 = new Stack(Expression.getCounter_minus_1());
+			Stack stackTop = new Stack(Expression.COUNTER);
+			Stack stackTop_minus_1 = new Stack(Expression.COUNTER_MINUS_1);
 			ArithmeticExpression sub =
-				new ArithmeticExpression(
+				ArithmeticExpression.getArithmeticExpression(
 					stackTop,
 					stackTop_minus_1,
 					ExpressionConstants.SUB);
-			_normal_Postcondition.substitute(Expression.getCounter(), Expression.getCounter_minus_1());
+			_normal_Postcondition.substitute(Expression.COUNTER, Expression.COUNTER_MINUS_1);
 			_normal_Postcondition.substitute(stackTop_minus_1, sub);
 			wp = _normal_Postcondition;
 			return wp;

@@ -31,6 +31,18 @@ public class NULL extends Expression {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	public boolean equals(Expression _expr){ 
+		if (_expr == this) {
+			return true;
+		}
+		return false;
+	}
+	
+	
+	
+	public Expression substitute(Expression _e1 , Expression _e2) { 
+		return this;
+	}
 	
 	
 }

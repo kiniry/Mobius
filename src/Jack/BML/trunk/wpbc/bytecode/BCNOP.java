@@ -2,17 +2,16 @@ package bytecode;
 
 import org.apache.bcel.generic.InstructionHandle;
 
-import specification.ExceptionalPostcondition;
+import bcclass.attributes.ExsuresTable;
+
 
 import formula.Formula;
 
 /**
  * @author Mariela
+ *	nop
  *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * do nothing
  */
 public class BCNOP extends BCInstruction {
 	
@@ -22,10 +21,10 @@ public class BCNOP extends BCInstruction {
 	/**
 	 * @see bytecode.BCInstruction#wp(formula.Formula, specification.ExceptionalPostcondition)
 	 */
-	public Formula wp(Formula arg0, ExceptionalPostcondition arg1) {
-		return null;
+	public Formula wp(Formula _normal_Postcondition, ExsuresTable _exc_Postcondition) {
+		return  _normal_Postcondition ;
 	}
-	//NOP
+
 	
 
 }

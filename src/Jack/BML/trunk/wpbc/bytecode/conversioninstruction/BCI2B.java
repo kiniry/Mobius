@@ -8,7 +8,7 @@ package bytecode.conversioninstruction;
 
 import org.apache.bcel.generic.InstructionHandle;
 
-import specification.ExceptionalPostcondition;
+import bcclass.attributes.ExsuresTable;
 import bcexpression.BitExpression;
 import bcexpression.Expression;
 import bcexpression.ExpressionConstants;
@@ -32,7 +32,7 @@ import formula.atomic.PredicateSymbol;
  * It is popped from the operand stack, truncated to a byte, then sign-extended to an int result. 
  * That result is pushed onto the operand stack.
  * 
- * S(t) >= 0 => psi^n[S(t) <-- (S(t) &0xFF)] 
+ * S(t) >= 0 => psi^n[S(t) <-- (S(t) &0xFF) | 0x00000000] 
  * &&
  * S(t) >= 0 => psi^n[S(t) <-- (S(t) &0xFF) | 0x11111100] 
  * 
@@ -63,19 +63,19 @@ public class BCI2B extends BCConversionInstruction  {
 	/* (non-Javadoc)
 	 * @see bytecode.ByteCode#wp(formula.Formula, specification.ExceptionalPostcondition)
 	 */
-	public Formula wp(Formula _normal_Postcondition, ExceptionalPostcondition _exc_Postcondition) {
+	public Formula wp(Formula _normal_Postcondition, ExsuresTable _exc_Postcondition) {
 		Formula wp;
-		Stack stackTop = new Stack(Expression.getCounter());
+		Stack stackTop = new Stack(Expression.COUNTER);
 		
-		Formula  positive = new Predicate2Ar(stackTop, new NumberLiteral("0",10, JavaType.JavaINT), PredicateSymbol.GRTEQ);
-		BitExpression pMask = new BitExpression(stackTop, new NumberLiteral("FF", 16, JavaType.JavaINT), ExpressionConstants.BITWISEAND);
+		Formula  positive = new Predicate2Ar(stackTop, new NumberLiteral(0), PredicateSymbol.GRTEQ);
+		BitExpression pMask = new BitExpression(stackTop, new NumberLiteral(0xFF), ExpressionConstants.BITWISEAND);
 		Formula pCopy = _normal_Postcondition.copy();
 		pCopy.substitute(stackTop, pMask);
 		Formula wpPositive = new Formula(positive, pCopy, Connector.IMPLIES);
 		
-		Formula  neg = new Predicate2Ar(stackTop, new NumberLiteral("0",10, JavaType.JavaINT), PredicateSymbol.LESS);
-		BitExpression nMask = new BitExpression(stackTop, new NumberLiteral("FF", 16, JavaType.JavaINT), ExpressionConstants.BITWISEAND);
-		BitExpression nExtend = new BitExpression(nMask, new NumberLiteral("FFFFFF00", 16, JavaType.JavaINT), ExpressionConstants.BITWISEOR);
+		Formula  neg = new Predicate2Ar(stackTop, new NumberLiteral(0), PredicateSymbol.LESS);
+		BitExpression nMask = new BitExpression(stackTop, new NumberLiteral(0xFF), ExpressionConstants.BITWISEAND);
+		BitExpression nExtend = new BitExpression(nMask, new NumberLiteral(0xFFFFFF00), ExpressionConstants.BITWISEOR);
 		Formula nCopy = _normal_Postcondition.copy();
 		pCopy.substitute(stackTop, nExtend);
 		Formula wpNeg = new Formula(positive, pCopy, Connector.IMPLIES);

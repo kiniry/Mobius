@@ -35,15 +35,23 @@ import org.apache.bcel.classfile.ConstantClass;
 
  */
 public class BCConstantClass extends  BCConstant {
+	
+	//may be it is not needed 
 	private int nameIndex;
 	
-	public  BCConstantClass( ConstantClass _constantClass, int _cpIndex){
+	private String name;
+	
+	public  BCConstantClass(int _cpIndex,  int _nameIndex, String _name){
 		super(_cpIndex);
-		nameIndex  =_constantClass.getNameIndex();	
+		nameIndex  = _nameIndex;
+		name = _name;
 	}
 	
 	public int getNameIndex() {
 		return  nameIndex;
 	}
 	
+	public String getName() {
+		return name;
+	}
 }

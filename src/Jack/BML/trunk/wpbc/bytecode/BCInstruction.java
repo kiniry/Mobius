@@ -67,13 +67,13 @@ public abstract  class BCInstruction  implements ByteCode{
 	}
 	
 	
-	public void setWp(Formula _f) {
-		wp = _f;
-	}
-	
-	public Formula getWp() {
-		return wp;
-	}
+//	public void setWp(Formula _f) {
+//		wp = _f;
+//	}
+//	
+//	public Formula getWp() {
+//		return wp;
+//	}
 	
 	public void setNext(BCInstruction _next)  {
 		next = _next;
@@ -99,6 +99,11 @@ public abstract  class BCInstruction  implements ByteCode{
 		index = i;
 	}
 	
+	/**
+	 *  @return
+	 *  the index at which 
+	 *  this command appears in the bytecode array of instruction 
+	 */
 	public int getBCIndex() {
 		return index;
 	}

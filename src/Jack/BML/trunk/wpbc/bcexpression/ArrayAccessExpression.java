@@ -24,8 +24,7 @@ public class ArrayAccessExpression extends Expression {
 	 * @param _arrIndex
 	 */
 	public ArrayAccessExpression(Expression  _array, Expression _arrIndex  ) {
-		setLeft(_array);
-		setRight(_arrIndex);
+		super(new Expression[]{_array, _arrIndex});
 	}
 
 
@@ -37,6 +36,30 @@ public class ArrayAccessExpression extends Expression {
 	 * @see bcexpression.Expression#setType()
 	 */
 	public void setType() {
-		type = ((JavaArrType)getLeft().getType()).getElementType();		
+		type = ((JavaArrType)getSubExpressions()[0].getType()).getElementType();		
+	}
+
+
+/*	 (non-Javadoc)
+	 * @see bcexpression.Expression#equals(bcexpression.Expression)
+	 
+	public boolean equals(Expression _expr) {
+		return super.equals(_expr);
+	}*/
+
+
+	/* (non-Javadoc)
+	 * @see bcexpression.Expression#substitute(bcexpression.Expression, bcexpression.Expression)
+	 */
+	public Expression substitute(Expression _e1, Expression _e2) {
+		if ( equals(_e1)) {
+			return _e2;
+		}
+		Expression[] subExpr = getSubExpressions();
+		
+		for (int i = 0; i< subExpr.length; i++) {
+			subExpr[i] = subExpr[i].substitute( _e1, _e2);
+		}
+		return this;
 	}
 }

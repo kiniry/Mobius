@@ -5,39 +5,85 @@
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 package bcexpression;
-
-
 import type.BCType;
-import constants.BCConstantMethodReference;
-
+import constants.BCConstantMethodRef;
 /**
  * @author mpavlova
- *
+ * 
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class MethodCallExpression extends  DOTExpression {
-	private Expression[] args;
-	
-	public MethodCallExpression(BCConstantMethodReference _left, Expression _right , Expression[] _args ) {
-		super(_left, _right);
-		args = _args;
-	} 
-	public MethodCallExpression(Expression _left, Expression _right , Expression[] _args ) {
-		super(_left, _right);
-		args = _args;
-	} 
-	
-	public Expression[] getArgs() {
-		return args;
+public class MethodCallExpression extends Expression {
+	private BCConstantMethodRef constantMethodReference;
+	private Expression objectReference;
+	public MethodCallExpression(BCConstantMethodRef _constantMethodReference,
+			Expression _objectReference, Expression[] _args) {
+		super(_args);
+		constantMethodReference = _constantMethodReference;
+		objectReference = _objectReference;
 	}
-	/* (non-Javadoc)
+	public Expression[] getArgs() {
+		return getSubExpressions();
+	}
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see bcexpression.Expression#getType()
 	 */
 	public BCType getType() {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	
+	/**
+	 * @return
+	 */
+	public BCConstantMethodRef getConstantMethodReference() {
+		return constantMethodReference;
+	}
+	/**
+	 * @return
+	 */
+	public Expression getObjectReference() {
+		return objectReference;
+	}
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see bcexpression.Expression#equals(bcexpression.Expression)
+	 */
+	/**
+	 * the method in the super class Expression checks if the subexpressions
+	 * are equal. The subexpressions for a method call are the arguments passed
+	 * to the method
+	 */
+	public boolean equals(Expression _expr) {
+		boolean equals = super.equals(_expr);
+		//the arguments are not the same
+		if (equals == false) {
+			return false;
+		}
+		MethodCallExpression mCall = (MethodCallExpression) _expr;
+		Expression objRefOfMcall = mCall.getObjectReference();
+		//the reference are not the same
+		if (!objectReference.equals(objRefOfMcall)) {
+			return false;
+		}
+		BCConstantMethodRef _constantMethodRef = mCall
+				.getConstantMethodReference();
+		equals = equals
+				&& (_constantMethodRef == constantMethodReference
+						? true
+						: false);
+		return equals;
+	}
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see bcexpression.Expression#substitute(bcexpression.Expression,
+	 *      bcexpression.Expression)
+	 */
+	public Expression substitute(Expression _e1, Expression _e2) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

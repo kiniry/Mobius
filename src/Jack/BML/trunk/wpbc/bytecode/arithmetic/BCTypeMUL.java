@@ -5,9 +5,9 @@ import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.LMUL;
 
 
+import bcclass.attributes.ExsuresTable;
 import bcexpression.javatype.JavaType;
 
-import specification.ExceptionalPostcondition;
 
 import formula.Formula;
 
@@ -48,12 +48,12 @@ public class BCTypeMUL extends BCArithmeticInstruction {
 	/**
 	 * @see bytecode.BCInstruction#wp(formula.Formula, specification.ExceptionalPostcondition)
 	 */
-	public Formula wp(Formula _normal_Postcondition, ExceptionalPostcondition _exc_Postcondition) {
+	public Formula wp(Formula _normal_Postcondition, ExsuresTable _exc_Postcondition) {
 		Formula wp;
-		Stack stackTop = new Stack(Expression.getCounter());
-		Stack stackTop_minus_1 = new Stack(Expression.getCounter_minus_1());
-		ArithmeticExpression mult = new ArithmeticExpression(stackTop, stackTop_minus_1, ExpressionConstants.MULT);
-		_normal_Postcondition.substitute(Expression.getCounter(), Expression.getCounter_minus_1());
+		Stack stackTop = new Stack(Expression.COUNTER);
+		Stack stackTop_minus_1 = new Stack(Expression.COUNTER_MINUS_1);
+		ArithmeticExpression mult = ArithmeticExpression.getArithmeticExpression(stackTop, stackTop_minus_1, ExpressionConstants.MULT);
+		_normal_Postcondition.substitute(Expression.COUNTER, Expression.COUNTER_MINUS_1);
 		_normal_Postcondition.substitute(stackTop_minus_1, mult);
 		wp = _normal_Postcondition;
 		return wp; 

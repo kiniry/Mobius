@@ -8,7 +8,7 @@ package bytecode.conversioninstruction;
 
 import org.apache.bcel.generic.InstructionHandle;
 
-import specification.ExceptionalPostcondition;
+import bcclass.attributes.ExsuresTable;
 import bcexpression.BitExpression;
 import bcexpression.Expression;
 import bcexpression.ExpressionConstants;
@@ -54,10 +54,10 @@ public class BCI2C extends BCConversionInstruction {
 	/* (non-Javadoc)
 	 * @see bytecode.ByteCode#wp(formula.Formula, specification.ExceptionalPostcondition)
 	 */
-	public Formula wp(Formula _normal_Postcondition, ExceptionalPostcondition _exc_Postcondition) {
+	public Formula wp(Formula _normal_Postcondition, ExsuresTable _exc_Postcondition) {
 		Formula wp;
-		Stack stackTop = new Stack(Expression.getCounter() );
-		BitExpression mask = new BitExpression(stackTop, new NumberLiteral("0000FFFF", 16, JavaType.JavaINT), ExpressionConstants.BITWISEAND );
+		Stack stackTop = new Stack(Expression.COUNTER );
+		BitExpression mask = new BitExpression(stackTop, new NumberLiteral(0x0000FFFF), ExpressionConstants.BITWISEAND );
 		wp = _normal_Postcondition.substitute(stackTop, mask);
 		return wp;
 	}

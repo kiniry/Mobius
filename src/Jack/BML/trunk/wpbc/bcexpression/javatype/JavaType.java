@@ -16,8 +16,10 @@ import org.apache.bcel.generic.Type;
 import constants.BCConstantClass;
 
 import bcexpression.Expression;
+import bcexpression.NumberLiteral;
 import bcexpression.jml.JML_CONST_TYPE;
 import type.BCType;
+import utils.Util;
 
 /**
  * @author io
@@ -26,20 +28,20 @@ import type.BCType;
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
 public class JavaType extends Expression implements BCType {
-	protected Type bcelType; //stil reference to the bcel type object
+	protected Type bcelType; //still keeping reference to the bcel type object
 
 	/**
 	 * this is a static variable that representing the type of all types 
 	 */
-	private static final JML_CONST_TYPE type = new JML_CONST_TYPE();
+	private static final JML_CONST_TYPE  JML_CONST_TYPE = new JML_CONST_TYPE();
 	private BCConstantClass constantClassCp;
-	private byte computationalType;
+	private NumberLiteral computationalType;
 
 	//	(computational type1 : boolean, byte, char, short, int, float(not considered in this application) , reference, returnAddress)
-	public static final byte COMPUTATIONAL_TYPE_1 = 0;
+	public static final NumberLiteral COMPUTATIONAL_TYPE_1 = new NumberLiteral(0);
 
 	//	(computational type2: long, double (not considered in this application) )
-	public static final byte COMPUTATIONAL_TYPE_2 = 1;
+	public static final NumberLiteral COMPUTATIONAL_TYPE_2 = new NumberLiteral(1);
 
 	public static final JavaBasicType JavaBYTE =
 		new JavaBasicType(Type.BYTE, COMPUTATIONAL_TYPE_1);
@@ -64,14 +66,14 @@ public class JavaType extends Expression implements BCType {
 
 	private static HashMap loadedTypes;
 
-	public JavaType(Type _type, BCConstantClass _cc, byte _compType) {
+	protected JavaType(Type _type, BCConstantClass _cc, NumberLiteral _compType) {
 		bcelType = _type;
 		constantClassCp = _cc;
 		computationalType = _compType;
 		setType();
 	}
 
-	public JavaType(Type _type, byte _compType) {
+	protected JavaType(Type _type, NumberLiteral _compType) {
 		bcelType = _type;
 		computationalType = _compType;
 		setType();
@@ -95,9 +97,17 @@ public class JavaType extends Expression implements BCType {
 	 * return  JML_CONST_TYPE;
 	 */
 	public BCType getType() {
-		return type;
+		return JML_CONST_TYPE;
 	}
 
+	public static JavaType getJavaType(String typeName) {
+		JavaType _jt = getJavaBasicType(typeName);
+		if (_jt != null) {
+			return _jt;
+		}
+		return getJavaRefType(typeName);
+	}
+	
 	public static JavaType getJavaType(Type _type) {
 		JavaType _jt = getJavaBasicType(_type);
 		if (_jt != null) {
@@ -132,12 +142,12 @@ public class JavaType extends Expression implements BCType {
 		return null;
 	}
 
-	public static JavaBasicType getJavaBasicType(int _baseType) {
-		if (_baseType == BaseTypeCharacters.Z) {
+	public static JavaBasicType getJavaBasicType(String _baseType) {
+		if (_baseType.equals("Z")) {
 			return JavaBOOLEAN;
-		} else if (_baseType == BaseTypeCharacters.B) {
+		} else if (_baseType.equals("B")) {
 			return JavaBYTE;
-		} else if (_baseType == BaseTypeCharacters.C) {
+		} else if (_baseType.equals("C")) {
 			return JavaCHAR;
 		} else
 			//		if (_baseType == BaseTypeCharacters.D) {
@@ -146,13 +156,13 @@ public class JavaType extends Expression implements BCType {
 			//		if (_baseType == BaseTypeCharacters.F) {
 			//			return JavaFLOAT;
 			//		} else
-			if (_baseType == BaseTypeCharacters.I) {
+			if (_baseType.equals("I")) {
 				return JavaINT;
-			} else if (_baseType == BaseTypeCharacters.L) {
+			} else if (_baseType.equals("L")) {
 				return JavaLONG;
-			} else if (_baseType == BaseTypeCharacters.S) {
+			} else if (_baseType.equals("S")) {
 				return JavaSHORT;
-			} else if (_baseType == BaseTypeCharacters.V) {
+			} else if (_baseType.equals("V")) {
 				return JavaVOID;
 			}
 		return null;
@@ -161,19 +171,34 @@ public class JavaType extends Expression implements BCType {
 	public static JavaReferenceType getJavaRefType(Type _type) {
 		return getJavaRefType(_type.getSignature());
 	}
+	
+
+	/**
+	 * 
+	 * @param _signature - must be of the form for example Ljava/lang/String;
+	 * 	or [[[Ljava/lang/String;
+	 * @return an object representing this type 
+	 */
 	public static JavaReferenceType getJavaRefType(String _signature) {
-		if (_signature.equals("java.lang.String")) {
+		_signature = _signature.replace('.', '/');
+		if (!_signature.startsWith("L")) {
+			_signature =  "L".concat(_signature);
+		}
+		if (!_signature.endsWith(";")) {
+			_signature =  _signature.concat(";");
+		}
+		if (_signature.equals("Ljava/lang/String;")) {
 			return JavaSTRING;
 		}
-		String signature = "L" + _signature.replace('.', '/') + ";";
+		//
 		if (loadedTypes == null) {
 			loadedTypes = new HashMap();
 		}
 		JavaReferenceType _jt = null;
-		if ((_jt = (JavaReferenceType) loadedTypes.get(signature)) != null) {
+		if ((_jt = (JavaReferenceType) loadedTypes.get(_signature)) != null) {
 			return _jt;
 		}
-		Type _t = Type.getType(signature);
+		Type _t = Type.getType(_signature);
 		if (_t instanceof ObjectType) {
 			_jt = new JavaObjectType((ObjectType) _t);
 		} else if (_t instanceof ArrayType) {
@@ -183,26 +208,50 @@ public class JavaType extends Expression implements BCType {
 		return _jt;
 	}
 
-	/**
-	 * 
-	 * @param _class_name String that represents a valid java class name , i.e. java.lang.String. Only classes are stored here
-		 * @return
-	 */
-	public static JavaReferenceType getJavaRefType(
-		Integer _cpIndex,
-		ConstantPoolGen _cpg) {
-		JavaReferenceType _jt = null;
-		ConstantClass _cc =
-			(ConstantClass) _cpg.getConstant(_cpIndex.intValue());
-		//		BCConstantClass bcc = new BCConstantClass(_cc , _cpIndex.intValue());
-		//		Type _bcelt = Type.getType(_cc.getBytes(_cpg.getConstantPool()));
-		_jt = getJavaRefType(_cc.getBytes(_cpg.getConstantPool()));
-		//_jt.setBCConstantClass(bcc);
-		return _jt;
-	}
+//	/**
+//	 * 
+//	 * @param _class_name String that represents a valid java class name , i.e. java.lang.String. Only classes are stored here
+//	 * @return
+//	 */
+//	public static JavaReferenceType getJavaRefType(
+//		Integer _cpIndex,
+//		ConstantPoolGen _cpg) {
+//		JavaReferenceType _jt = null;
+//		ConstantClass _cc =
+//			(ConstantClass) _cpg.getConstant(_cpIndex.intValue());
+//		//		BCConstantClass bcc = new BCConstantClass(_cc , _cpIndex.intValue());
+//		//		Type _bcelt = Type.getType(_cc.getBytes(_cpg.getConstantPool()));
+//		_jt = getJavaRefType(_cc.getBytes(_cpg.getConstantPool()));
+//		//_jt.setBCConstantClass(bcc);
+//		return _jt;
+//	}
 
-	public byte getComputationalType() {
+	public NumberLiteral getComputationalType() {
 		return computationalType;
 	}
-
+	
+	/**
+	 * checks if _type1 is a subtype of _type2
+	 * @param _type1
+	 * @param _type2
+	 * @return
+	 */
+	public static boolean subType(JavaType _type1 , JavaType _type2 ) {
+		if ((_type1 instanceof JavaBasicType) && (_type2 instanceof JavaBasicType)) {
+			return JavaBasicType.subType((JavaBasicType)_type1, (JavaBasicType)_type2);
+		}
+		if ((_type1 instanceof JavaObjectType) && (_type2 instanceof JavaObjectType)) {
+			return JavaArrType.subType((JavaObjectType)_type1, (JavaObjectType)_type2);
+		}
+		if ((_type1 instanceof JavaArrType) && (_type2 instanceof JavaArrType)) {
+			return JavaArrType.subType((JavaArrType)_type1, (JavaArrType)_type2);
+		}
+		return false;
+	}
+	
+	public Expression substitute(Expression _e1 , Expression _e2) { 
+		return this;
+	}
+	
+	
 }

@@ -8,7 +8,7 @@ package bcexpression.jml;
 
 import type.BCType;
 import bcexpression.Expression;
-import constants.BCConstantFieldRef;
+
 
 /**
  * @author io
@@ -21,7 +21,7 @@ public class ELEMTYPE extends JMLExpression {
 	private JML_CONST_TYPE type;
 	
 	public ELEMTYPE(Expression _left) {
-		setLeft(_left);
+		super(_left);
 		setType();
 	}
 
@@ -37,4 +37,8 @@ public class ELEMTYPE extends JMLExpression {
 		return type;
 	}
 	
+	public Expression substitute(Expression _e1 , Expression _e2) { 
+		
+		return this;
+	}
 }

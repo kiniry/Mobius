@@ -23,7 +23,7 @@ public class ArrayElemFromTo extends JMLExpression {
 	private int end;
 	
 	public ArrayElemFromTo( Expression _left, int _start, int _end) {
-		setLeft(_left);
+		super(_left);
 		setStart(_start);
 		setEnd(_end);
 		
@@ -71,6 +71,14 @@ public class ArrayElemFromTo extends JMLExpression {
 	 * @see bcexpression.Expression#getType()
 	 */
 	public BCType getType() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see bcexpression.Expression#substitute(bcexpression.Expression, bcexpression.Expression)
+	 */
+	public Expression substitute(Expression _e1, Expression _e2) {
 		// TODO Auto-generated method stub
 		return null;
 	}

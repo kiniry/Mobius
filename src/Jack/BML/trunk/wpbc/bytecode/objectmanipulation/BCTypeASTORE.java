@@ -9,12 +9,13 @@ package bytecode.objectmanipulation;
 import org.apache.bcel.generic.InstructionHandle;
 
 import constants.ArrayLengthConstant;
-import specification.ExceptionalPostcondition;
 
+import bcclass.attributes.ExsuresTable;
 import bcexpression.ArrayAccessExpression;
 import bcexpression.Expression;
 
 import bcexpression.FieldAccessExpression;
+import bcexpression.javatype.JavaObjectType;
 import bcexpression.javatype.JavaType;
 
 import bcexpression.vm.Stack;
@@ -62,17 +63,17 @@ public class BCTypeASTORE
 	 */
 	public Formula wp(
 		Formula _n_Postcondition,
-		ExceptionalPostcondition _exc_Postcondition) {
+		ExsuresTable _exc_Postcondition) {
 		
 		Formula wp;
 		Formula[] wps = new Formula[3];
 		//		normal execution 
-		Stack stackTop = new Stack(Expression.getCounter());
-		Stack stackTop_minus_1 = new Stack(Expression.getCounter_minus_1());
-		Stack stackTop_minus_2 = new Stack(Expression.getCounter_minus_2());
+		Stack stackTop = new Stack(Expression.COUNTER);
+		Stack stackTop_minus_1 = new Stack(Expression.COUNTER_MINUS_1);
+		Stack stackTop_minus_2 = new Stack(Expression.COUNTER_MINUS_2);
 
-		//t <------ t -1
-		_n_Postcondition.substitute(Expression.getCounter(), Expression.getCounter_minus_3());
+		//t <------ t - 3
+		_n_Postcondition.substitute(Expression.COUNTER, Expression.COUNTER_MINUS_3);
 
 		//S(t-2 ) != null
 		Formula array_not_null =
@@ -103,7 +104,7 @@ public class BCTypeASTORE
 				stackTop_minus_2,
 				Expression.NULL,
 				PredicateSymbol.EQ);
-		Formula nullPointer = getWpForException(JavaType.getJavaRefType("java.lang.NullPointerException"), _exc_Postcondition);
+		Formula nullPointer = getWpForException((JavaObjectType)JavaType.getJavaRefType("Ljava/lang/NullPointerException;"), _exc_Postcondition);
 		wps[1] = new Formula(array_null, nullPointer, Connector.IMPLIES );	
 		
 		  //S(t-1) > S(t-2).length ==> _exc_Postcondition(java.lang. ArrayIndexOutOfBoundsException)
@@ -114,7 +115,7 @@ public class BCTypeASTORE
 					  new ArrayLengthConstant(),
 					  stackTop_minus_2),
 				  PredicateSymbol.GRTEQ);
-		Formula outOfBounds = getWpForException(JavaType.getJavaRefType("java.lang. ArrayIndexOutOfBoundsException"), _exc_Postcondition);
+		Formula outOfBounds = getWpForException((JavaObjectType)JavaType.getJavaRefType("Ljava/lang/ArrayIndexOutOfBoundsException;"), _exc_Postcondition);
 		wps[2] = new Formula(arr_index_not_correct, outOfBounds, Connector.IMPLIES);
 	 	wp = new Formula(wps, Connector.AND);
 		return wp;		

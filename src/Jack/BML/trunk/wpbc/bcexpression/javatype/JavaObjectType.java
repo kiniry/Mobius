@@ -25,26 +25,26 @@ public class JavaObjectType extends JavaReferenceType {
 	 * @param _type
 	 * this constructor is for default reference types as the String class 
 	 * */
-	public JavaObjectType(ObjectType _type) {
+	protected JavaObjectType(ObjectType _type) {
 		super(_type);
 	}
 	
 	/**
 	 * @param _type
 	 */
-	public JavaObjectType(ObjectType _type, BCConstantClass _cc) {
+	protected JavaObjectType(ObjectType _type, BCConstantClass _cc) {
 		super(_type, _cc);
 	}
 	
 	/**
 	 * @param _type
 	 */
-	public JavaObjectType(Class _class, BCConstantClass _cc) {
+	protected JavaObjectType(Class _class, BCConstantClass _cc) {
 		this((ObjectType)Type.getType(_class), _cc);
 	}
 	
-	public boolean subclassOf(JavaObjectType  _ot) {
-	   return ((ObjectType)bcelType).subclassOf((ObjectType)_ot.bcelType);
+	public static boolean subType(JavaObjectType  _type1, JavaObjectType  _type2) {
+	   return ((ObjectType)_type1.bcelType).subclassOf((ObjectType)_type2.bcelType);
    }
 
 }

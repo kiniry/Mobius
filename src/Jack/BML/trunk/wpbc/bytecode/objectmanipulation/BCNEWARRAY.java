@@ -1,33 +1,60 @@
 package bytecode.objectmanipulation;
 
-import org.apache.bcel.generic.CPInstruction;
 import org.apache.bcel.generic.InstructionHandle;
 
+import constants.ArrayLengthConstant;
+
+import formula.Connector;
 import formula.Formula;
+import formula.atomic.Predicate2Ar;
+import formula.atomic.PredicateSymbol;
 
-import specification.ExceptionalPostcondition;
+import utils.FreshIntGenerator;
 
+import bcclass.attributes.ExsuresTable;
+import bcexpression.Expression;
+import bcexpression.FieldAccessExpression;
+import bcexpression.NumberLiteral;
+import bcexpression.WITH;
+import bcexpression.javatype.JavaObjectType;
 import bcexpression.javatype.JavaType;
+import bcexpression.ref.ArrayReference;
+import bcexpression.vm.Stack;
 import bytecode.BCAllocationInstruction;
 
 /**
- * @author Mariela
+ * @author mpavlova
  *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * newarray
+ * 
+ * Operation:  Create new array
+ *  
+ * Operand Stack:  ..., count ==> ..., arrayref
+ * 
+ * Format: newarray atype
+ * 
+ * Description:   The count must be of type int. It is popped off the operand stack. 
+ * The count represents the number of elements in the array to be created.  	atype is a type among : 
+ *  byte, long, int, short, float, double, boolean (NB: in this application long type is discarded) 
+ * 
+ * A new array whose components are of type atype and of length count is allocated from the garbage-collected heap. 
+ * A reference arrayref to this new array object is pushed into the operand stack. 
+ * Each of the elements of the new array is initialized to the default initial value for the type of the array
+ * 
+ * Runtime Exception: If count is less than zero, newarray throws a NegativeArraySizeException. 
+ * 
+ * wp = S(t) >= 0 ==> psi^n_psi^n[length( with o == new ArrayObject(type, S(t)) <-- S(t)][S(t) <-- new ArrayObject(type, S(t))]
+ * 		&&
+ * 		S(t) < 0 ==> psi^e
  */
-public class BCNEWARRAY extends BCAllocationInstruction  {
+public class BCNEWARRAY extends BCAllocationInstruction {
 
 	private JavaType type;
-	
+
 	public BCNEWARRAY(InstructionHandle _instruction, JavaType _type) {
 		super(_instruction, _type);
 		setType(_type);
 	}
-
-	
 
 	/* (non-Javadoc)
 	 * @see bytecode.BCTypedInstruction#getType()
@@ -42,12 +69,63 @@ public class BCNEWARRAY extends BCAllocationInstruction  {
 	public void setType(JavaType _type) {
 		type = _type;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see bytecode.ByteCode#wp(formula.Formula, specification.ExceptionalPostcondition)
 	 */
-	public Formula wp(Formula _normal_Postcondition, ExceptionalPostcondition _exc_Postcondition) {
-		// TODO Auto-generated method stub
-		return null;
+	public Formula wp(
+		Formula _normal_Postcondition,
+		ExsuresTable _exc_Postcondition) {
+		Formula wp;
+
+		//in case of normal termination
+		Stack stackTop = new Stack(Expression.COUNTER);
+		Formula topStack_grt_0 =
+			new Predicate2Ar(
+				stackTop,
+				new NumberLiteral(0),
+				PredicateSymbol.GRTEQ);
+		ArrayReference new_arr_ref =
+			new ArrayReference(FreshIntGenerator.getInt(), getType(), stackTop);
+
+		//length( new ArrayObject(type, S(t) ) ) 
+		//WITH length_with_new_arr_ref = new WITH(new_arr_ref);
+		FieldAccessExpression arr_length_access =
+			new FieldAccessExpression(
+				new ArrayLengthConstant(),
+				new_arr_ref);
+
+		//_psi^n[length( with o == new ArrayObject(type, S(t)) <-- S(t)]
+		Formula topStack_grt_0_implies =
+			_normal_Postcondition.substitute(arr_length_access, stackTop);
+
+		//_psi^n[S(t) <-- new Ref[index] (S(t) )]
+		topStack_grt_0_implies =
+			topStack_grt_0_implies.substitute(stackTop, new_arr_ref);
+
+		Formula nWpTermination =
+			new Formula(
+				topStack_grt_0,
+				topStack_grt_0_implies,
+				Connector.IMPLIES);
+
+		//in case of exc termination
+		Formula topStack_lesseq_0 =
+			new Predicate2Ar(
+				stackTop,
+				new NumberLiteral(0),
+				PredicateSymbol.LESS);
+		Formula topStack_lesseq_0_implies =
+			getWpForException(
+				(JavaObjectType) JavaType.getJavaRefType(
+					"Ljava/lang/NegativeArraySizeException;"),
+				_exc_Postcondition);
+		Formula excWpTermination =
+			new Formula(
+				topStack_grt_0,
+				topStack_grt_0_implies,
+				Connector.IMPLIES);
+		wp = new Formula(nWpTermination, excWpTermination, Connector.AND);
+		return wp;
 	}
 }

@@ -6,8 +6,11 @@
  */
 package bcexpression;
 
+import java.util.Vector;
+
 import type.BCType;
-import bcclass.BCLocalVariable;
+
+import bcexpression.javatype.JavaType;
 
 /**
  * @author io
@@ -18,6 +21,8 @@ import bcclass.BCLocalVariable;
 public class LocalVariableAccess extends Expression  {
 	private int index_of_localVariable;
 	//private int local_index;
+	
+	private Vector with;
 	
 
 	public LocalVariableAccess(int _index_of_localVariable) {
@@ -39,5 +44,34 @@ public class LocalVariableAccess extends Expression  {
 	public BCType getType() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	public boolean equals(Expression _expr) { 
+		boolean equals = super.equals( _expr);
+		if (equals == true) {
+			LocalVariableAccess lva = (LocalVariableAccess)_expr;
+			equals = equals && (lva.getIndex() == getIndex() ? true : false); 
+		}
+		return equals;
+	}
+	
+	/**
+	 * if this == _e1 ==> this[ this<-- _e2] 
+	 *    else this
+	 */ 
+	public Expression substitute(Expression _e1 , Expression _e2) {
+		if (this.equals( _e1)) {
+			return _e2;
+		}
+		if ( JavaType.subType((JavaType) _e1.getType(),(JavaType)getType() )) {
+			WITH with = new WITH( _e1, _e2);
+		}
+		return this;
+	}
+	/**
+	 * @return Returns the index_of_localVariable.
+	 */
+	public int getIndex() {
+		return index_of_localVariable;
 	}
 }

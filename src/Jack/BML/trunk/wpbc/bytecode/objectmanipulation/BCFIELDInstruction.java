@@ -6,16 +6,11 @@
  */
 package bytecode.objectmanipulation;
 
-import org.apache.bcel.generic.CPInstruction;
 import org.apache.bcel.generic.InstructionHandle;
-
+import bcclass.BCConstantPool;
 import bcexpression.javatype.JavaType;
-import bytecode.BCExceptionThrower;
-import bytecode.BCTypedInstruction;
-import bytecode.objectmanipulation.*;
 
-import specification.ExceptionalPostcondition;
-import formula.Formula;
+
 
 /**
  * @author mpavlova
@@ -23,53 +18,15 @@ import formula.Formula;
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class BCFIELDInstruction extends BCExceptionThrower implements BCCPInstruction, BCTypedInstruction {
-	private int index;
-	private JavaType type;
-	
-	/**
-	 * @param _instruction
+public abstract class BCFIELDInstruction extends BCFieldOrMethod {
+		/**
+	 * @param _instruction - the object form the bcel library representing the instruction 
+	 * @param _type - the type of the instruction (of the object that is treated by the instruction)
+	 * @param _classType - the class where the field is declared
 	 */
-	public BCFIELDInstruction(InstructionHandle _instruction, JavaType _type) {
-		super(_instruction);
-		setIndex( ( (CPInstruction)_instruction.getInstruction()).getIndex());
-	    setType(_type);
-	}
-
-	/* (non-Javadoc)
-	 * @see bytecode.BCIndexedInstruction#setIndex(int)
-	 */
-	public void setIndex(int _index) {
-		index = _index;
-	}
-
-	/* (non-Javadoc)
-	 * @see bytecode.BCIndexedInstruction#getIndex()
-	 */
-	public int getIndex() {
-		return index;
-	}
-
-
-	/* (non-Javadoc)
-	 * @see bytecode.BCTypedInstruction#getType()
-	 */
-	public JavaType getType() {
-		return type;
-	}
-
-	/* (non-Javadoc)
-	 * @see bytecode.BCTypedInstruction#setType(bcexpression.javatype.JavaType)
-	 */
-	public void setType(JavaType _type) {
-		type = _type;
-	}
-
-	/* (non-Javadoc)
-	 * @see bytecode.ByteCode#wp(formula.Formula, specification.ExceptionalPostcondition)
-	 */
-	public Formula wp(Formula _normal_Postcondition, ExceptionalPostcondition _exc_Postcondition) {
-		// TODO Auto-generated method stub
-		return null;
+	public BCFIELDInstruction(InstructionHandle _instruction, JavaType _type, JavaType _classType, BCConstantPool _cp) {
+		super(_instruction , _type, _classType, _cp);
+		
+		
 	}
 }

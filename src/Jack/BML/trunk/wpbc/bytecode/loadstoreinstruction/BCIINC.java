@@ -3,11 +3,13 @@ package bytecode.loadstoreinstruction;
 import org.apache.bcel.generic.IINC;
 import org.apache.bcel.generic.InstructionHandle;
 
-import specification.ExceptionalPostcondition;
 
 import formula.Formula;
 
 import bcclass.BCLocalVariable;
+import bcclass.attributes.ExsuresTable;
+import bcexpression.ArithmeticExpression;
+import bcexpression.ExpressionConstants;
 import bcexpression.LocalVariableAccess;
 import bcexpression.NumberLiteral;
 import bcexpression.javatype.JavaType;
@@ -62,11 +64,12 @@ public class BCIINC extends BCLocalVariableInstruction {
 		 */
 	public Formula wp(
 		Formula _normal_Postcondition,
-		ExceptionalPostcondition _exc_Postcondition) {
+		ExsuresTable _exc_Postcondition) {
 		Formula wp;
 		LocalVariableAccess lva = new LocalVariableAccess(getIndex());
-		wp = _normal_Postcondition.substitute(lva, constant);
-		return wp;
+		ArithmeticExpression inc = ArithmeticExpression.getArithmeticExpression(constant, lva, ExpressionConstants.ADD ) ;
+		wp = _normal_Postcondition.substitute(lva, inc);
+		return wp; 
 	}
 
 }

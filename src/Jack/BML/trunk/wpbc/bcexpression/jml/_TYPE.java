@@ -6,6 +6,7 @@
  */
 package bcexpression.jml;
 
+import bcexpression.Expression;
 import bcexpression.javatype.JavaType;
 import type.BCType;
 
@@ -13,14 +14,14 @@ import type.BCType;
 /**
  * @author io
  *
- * this class represents the JML constant type : expression ---> 
+ * this class represents the JML constant type : 
  */
 public class _TYPE extends JMLExpression  {
 	private JML_CONST_TYPE type;
 	
 	//jml expression : type( expression) where expression is a java type 
 	public _TYPE(JavaType _type) {
-		setLeft(_type );
+		super(_type);
 		setType();
 	}
 
@@ -40,4 +41,15 @@ public class _TYPE extends JMLExpression  {
 		}
 		return type;
 	} 
+	
+	public   boolean equals(Expression _expr){ 
+		if ( _expr == this) {
+			return true;
+		}
+		return false;
+		
+	}
+	public Expression substitute(Expression _e1 , Expression _e2) { 
+		return this;
+	}
 }

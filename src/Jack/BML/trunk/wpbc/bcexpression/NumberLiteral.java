@@ -16,10 +16,10 @@ import type.BCType;
  * To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
-public class NumberLiteral extends Expression {
-//	private Number literal;
-	private int radix;
-	private String literal;
+public class NumberLiteral extends ArithmeticExpression {
+
+	private int literal;
+
 	private JavaBasicType type;
 	
 	/**
@@ -27,27 +27,18 @@ public class NumberLiteral extends Expression {
 	 * @param _literal - a string representation of integer
 	 * e.g. new  NumberLiteral("12")
 	 */
-	public NumberLiteral(String _literal) {
-		this(_literal, 10, JavaType.JavaINT);
+	public NumberLiteral( int _literal)  {
+		this(_literal, JavaType.JavaINT);
 	}
 
-	/**
-	 * this constructor expects that _literal must be a correct representation of an integer litreral.
-	 * @param _literal - a string representation of integer
-	 * e.g. new  NumberLiteral("12")
-	 */
-	public NumberLiteral(int _literal) {
-		this(Integer.toString(_literal), 10,JavaType.JavaINT);
-	}
-	
+
 	/**
 	 * 
 	 * @param value - a correct value
 	 * @param radix - the radix in which the value is interpreted
 	 */
-	public NumberLiteral(String _literal, int _radix, JavaBasicType _type) {
-		literal = _literal;
-		radix = _radix;
+	public NumberLiteral(int _literal,  JavaBasicType _type) {
+		literal = _literal;	
 		type = _type;
 	}
 	
@@ -64,4 +55,36 @@ public class NumberLiteral extends Expression {
 	public BCType getType()  {
 		return type;
 	}
+	
+	/**
+	 * @return Returns the value.
+	 */
+	public int getLiteral() {
+		return literal;
+	}
+	
+	public String toString() {
+		return ""+literal;
+	}
+	
+	public boolean equals(Expression _expr) { 
+		boolean equals = super.equals( _expr);
+		
+		if (equals == false) {
+			return false;
+		}
+		NumberLiteral nl = ( NumberLiteral ) _expr;
+		if ( getType() != nl.getType()) {
+			return false;
+		}
+		if ( getLiteral() !=  nl.getLiteral()) {
+			return false;
+		}
+		return true;
+	}
+	
+	public Expression substitute(Expression _e1 , Expression _e2) { 
+		return this;
+	}
+	
 }
