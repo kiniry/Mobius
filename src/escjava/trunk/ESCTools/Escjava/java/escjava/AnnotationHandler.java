@@ -208,8 +208,18 @@ public class AnnotationHandler {
 		    currentBehavior.ensures.add(Behavior.EnsuresFalse);
 		    break;
 
-		case TagConstants.REQUIRES:
+                // All redundant tokens should not exist in the AST
+                // anymore; they are represented with redundant fields in
+                // the AST nodes.
+		case TagConstants.JML_DIVERGES_REDUNDANTLY:
+		case TagConstants.JML_ENSURES_REDUNDANTLY:
+		case TagConstants.JML_EXSURES_REDUNDANTLY:
 		case TagConstants.JML_REQUIRES_REDUNDANTLY:
+		case TagConstants.JML_SIGNALS_REDUNDANTLY:
+                    assert false : "Redundant keywords should not be in AST!";
+                    break;
+
+		case TagConstants.REQUIRES:
 		case TagConstants.ALSO_REQUIRES:
 		case TagConstants.PRE: {
 		    ExprModifierPragma e = (ExprModifierPragma)m;
@@ -219,7 +229,6 @@ public class AnnotationHandler {
 		}
 		    
 		case TagConstants.ENSURES:
-		case TagConstants.JML_ENSURES_REDUNDANTLY:
 		case TagConstants.ALSO_ENSURES:
 		case TagConstants.JML_POST: {
 		    if (currentBehavior.isExceptional) {
@@ -232,16 +241,13 @@ public class AnnotationHandler {
 		 }
 
 		case TagConstants.JML_DIVERGES:
-		case TagConstants.JML_DIVERGES_REDUNDANTLY:
 		    ExprModifierPragma e = (ExprModifierPragma)m;
 		    currentBehavior.diverges.add(e);
 		    break;
 
 		case TagConstants.EXSURES:
-		case TagConstants.JML_EXSURES_REDUNDANTLY:
 		case TagConstants.ALSO_EXSURES:
 		case TagConstants.JML_SIGNALS:
-		case TagConstants.JML_SIGNALS_REDUNDANTLY:
 		    if (currentBehavior.isNormal) {
 			ErrorSet.error(m.getStartLoc(),
 			   "This type of annotation is not permitted in an normal_behavior clause");
