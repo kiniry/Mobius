@@ -909,10 +909,17 @@ public class PrepTypeDeclaration {
     public void checkSuperTypeAccessible(/*@non_null*/ TypeSig currentSig,
 					 /*@non_null*/ TypeSig supertype,
 					 int loc) {
+/* FIXME - this error is commented out because it incorrectly disallows
+ using a protected nested class of a public supertype that is not in 
+the same package.
+ There are presumably situations this should check, but that will take
+ some research, and in any case, we could just leave them to java.
+
 	// fix for 1.1: !!!!
 	if (! Modifiers.isPublic(supertype.getTypeDecl().modifiers)
 	    && ! currentSig.inSamePackageAs(supertype))
 	    ErrorSet.error(loc, "Supertype is not accessible.");
+*/
     }
 
 
