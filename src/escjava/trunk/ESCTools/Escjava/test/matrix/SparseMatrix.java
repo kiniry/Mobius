@@ -19,10 +19,10 @@ class SparseMatrix
     //@ invariant col_anchors.length == cols;
     //@ invariant row_count.length == rows;
     //@ invariant col_count.length == cols;
-    //@ invariant (forall int i; i >= 0 && i < rows ==> row_anchors[i] != null);
-    //@ invariant (forall int i; i >= 0 && i < cols ==> col_anchors[i] != null);
-    //@ invariant (forall int i; i >= 0 && i < rows ==> row_anchors[i].row == i && row_anchors[i].col == -1);
-    //@ invariant (forall int i; i >= 0 && i < cols ==> col_anchors[i].col == i && col_anchors[i].row == -1);
+    //@ invariant (\forall int i; i >= 0 && i < rows ==> row_anchors[i] != null);
+    //@ invariant (\forall int i; i >= 0 && i < cols ==> col_anchors[i] != null);
+    //@ invariant (\forall int i; i >= 0 && i < rows ==> row_anchors[i].row == i && row_anchors[i].col == -1);
+    //@ invariant (\forall int i; i >= 0 && i < cols ==> col_anchors[i].col == i && col_anchors[i].row == -1);
     
     // Create all-zero matrix with <m> rows and <n> columns.
     //@ requires m >= 0;

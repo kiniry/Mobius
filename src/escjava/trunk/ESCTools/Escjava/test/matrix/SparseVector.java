@@ -14,8 +14,8 @@ class SparseVector
     //@ invariant length >= 0;
     //@ invariant n >= 0;
     //@ invariant n <= length;
-    //@ invariant (forall int i; i >= 0 && i < n ==> entries[i] != Rational.zero);
-    //@ invariant (forall int i; i >= 0 && i < n ==> rows[i] < length);
+    //@ invariant (\forall int i; i >= 0 && i < n ==> entries[i] != Rational.zero);
+    //@ invariant (\forall int i; i >= 0 && i < n ==> rows[i] < length);
     
     /** <len> is the length of the equivalent dense vector.  Vector
 	returned is initialized to all zero. */
@@ -56,7 +56,7 @@ class SparseVector
     //@ requires bi >= 0;
     //@ requires ai+len <= a.length;
     //@ requires bi+len <= b.length;
-    //@ ensures (forall int i; 0 <= i && i < len ==> b[bi+i] == a[ai+i]);
+    //@ ensures (\forall int i; 0 <= i && i < len ==> b[bi+i] == a[ai+i]);
     static void my_arraycopy(int[] a, int ai, int[] b, int bi, int len)
     {
 	for(int i = 0; i < len; i++)
@@ -69,7 +69,7 @@ class SparseVector
     //@ requires bi >= 0;
     //@ requires ai+len <= a.length;
     //@ requires bi+len <= b.length;
-    //@ ensures (forall int i; 0 <= i && i < len ==> b[bi+i] == a[ai+i]);
+    //@ ensures (\forall int i; 0 <= i && i < len ==> b[bi+i] == a[ai+i]);
     static void my_arraycopy(long[] a, int ai, long[] b, int bi, int len)
     {
 	for(int i = 0; i < len; i++)
@@ -107,7 +107,7 @@ class SparseVector
     // Returns entry <row> of vector, and sets that entry to <val>.
     // entry <row> must be nonzero to start, and <val> must be nonzero.
     //@ requires val != Rational.zero;
-    //@ requires (exists int i; i >=0 && i < n && rows[i] == row);
+    //@ requires (\exists int i; i >=0 && i < n && rows[i] == row);
     //@ ensures RES != Rational.zero;
     long swap_entry(int row, long val)
     {
