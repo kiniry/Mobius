@@ -59,8 +59,8 @@
 \crdata{TODO}  % Allows default copyright data (X-XXXXX-XX-X/XX/XX) to be over-ridden.
 % --- End of Author Metadata ---
 
-\title{Uniting ESC/Java and JML: Progress in building and using ESC/Java2}
-% \subtitle{???TODO}
+\title{Uniting ESC/Java and JML}
+\subtitle{Progress in building and using ESC/Java2}
 %
 % You need the command \numberofauthors to handle the "boxing"
 % and alignment of the authors under the title, and to add
@@ -117,11 +117,21 @@
 
 \maketitle
 \begin{abstract}
-The ESC/Java tool was a useful advance in effective static checking of realistic Java programs,
-but has become somewhat out of date with respect to Java and the Java Modeling Language (JML).
-The ESC/Java2 project, whose progress is described in this paper, builds on ESC/Java to parse
-all of JML, to increase the amount of static checking performed, and to enalrge the tool's
-availability.  It is intended that ESC/Java2 be used for further research in annotation and verification, for larger-scale case studies of annotation and verification, and for studies in programmer productivity that may result from integration with other tools that work with JML.
+  The ESC/Java tool was a lauded advance in effective static checking
+  of realistic Java programs, but has become out-of-date with respect
+  to Java and the Java Modeling Language (JML).  The ESC/Java2
+  project, whose progress is described in this paper, builds on the
+  final release of ESC/Java from DEC/SRC in several ways.  It parses
+  all of JML, thus can be used with the growing body of JML-annotated
+  Java code; it has improved static checking capabilities, thus is
+  becoming more complete and less unsound with each new release; and
+  it has been designed, constructed, and documented in such a way as
+  to improve the tool's availability to both users and researchers.
+  It is intended that ESC/Java2 be used for further research in
+  annotation and verification, for larger-scale case studies of
+  annotation and verification, and for studies in programmer
+  productivity that may result from integration with other tools that
+  work with JML and Java.
 \end{abstract}
 
 \category{D.2.4}{Software Engineering}
@@ -150,16 +160,17 @@ only program annotations against which to check the program's source
 code.  The annotations needed were easily read, written and understood
 by those familiar with Java and were mostly consistent with the syntax
 and semantics of the separate Java Modeling Language (JML)
-project~\cite{Leavens-etal00,jmlpapers}.  Consequently, ESC/Java was a
-research success and was also successfully used by other groups for a
-variety of case studies (e.g.,~\cite{Hub03,HOP04}).
+project~\cite{Leavens-etal00,jmlpapers}.  Consequently, the original
+ESC/Java (hereafter called DEC/SRC ESC/Java) was a research success
+and was also successfully used by other groups for a variety of case
+studies (e.g.,~\cite{Hub03,HOP04}).
 
 Its long-term utility, however, was lessened by a number of factors.
 First, the match to JML was not complete and JML continued to evolve
 as research on the needs of annotations for program checking advanced.
 Second, some of the deficiencies of the annotation language used by
-ESC/Java, while appropriate in a research mode, reduced the overall
-usability of the tool.  For example, frame conditions were not
+DEC/SRC ESC/Java, while appropriate in a research mode, reduced the
+overall usability of the tool.  For example, frame conditions were not
 checked, but errors in frame conditions could cause the prover to
 reach incorrect conclusions.  Also, the annotation language lacked the
 ability to use methods in annotations, limiting the annotations to
@@ -172,50 +183,49 @@ amount of continuing support.
 However, the initial positive experience prompted a vision for a
 reasonably industrial-strength tool that would also be useful for
 ongoing research in annotation and verification.  Thus, when the
-source code for the ESC/Java tool was made available for further
-research and experimentation, the authors of this paper began the
-ESC/Java2 project to evolve the ESC/Java tool.  That effort has the
-following goals:
+source code for the DEC/SRC ESC/Java tool was made available for
+further research and experimentation, the authors of this paper began
+the ESC/Java2 project to evolve the DEC/SRC ESC/Java tool.  That
+effort has the following goals:
 (1) to make the source consistent with the current version of Java;
 (2) to package the tool in a way that enables easy application in a
-  variety of environments, consistent with the licensing provisions of
-  the source code release;
+variety of environments, consistent with the licensing provisions of
+the source code release;
 (3) to fully parse the current version of JML;
 (4) to check as much of the JML annotation language as feasible,
-  consistent with the original engineering goals of ESC/Java
-  (usability at the expense of full completeness and soundness);
-and (5) as a long-term goal and if appropriate, to update the related
-  tools that use the same code base (Calvin, Houdini, RCC) and to
- integrate with other JML-based tools.
-Success in the above will enable us to
- test the utility of the tool to improve programmer productivity
- on a broader range of significant
-  bodies of Java source, and
-to use the tool as a basis for research in unexplored aspects of
-  annotation and static program analysis.
-
-We currently have an alpha version of ESC/Java2 available on the
-web\footnote{At \myhref{http://www.niii.kun.nl/ita/sos/projects/escframe.html}
-{http://www.niii.kun.nl/ita/sos/projects/escframe.html}}
-and encourage experimentation and feedback.  The source code itself is
-available (and additional contributors are welcome) subject to fairly
-open licensing provisions.  We fully acknowledge that the on-going
-work described here builds on the very substantial and innovative work
-to produce ESC/Java and the Simplify prover in the first place and on
-the effort to define the Java Modeling Language.
+consistent with the original engineering goals of DEC/SRC ESC/Java
+(usability at the expense of full completeness and soundness); and
+(5) as a long-term goal and if appropriate, to update the related
+tools that use the same code base (Calvin, Houdini, RCC) and to
+integrate with other JML-based tools.  Success in the above will
+enable us to test the utility of the tool to improve programmer
+productivity on a broader range of significant bodies of Java source,
+and to use the tool as a basis for research in unexplored aspects of
+annotation and static program analysis.
+  
+We currently have an alpha version of ESC/Java2
+\myhref{http://www.niii.kun.nl/ita/sos/projects/escframe.html}{available
+  on the web} and encourage experimentation and feedback.  The source
+code itself is available (and additional contributors are welcome)
+subject to fairly open licensing provisions.  We fully acknowledge
+that the on-going work described here builds on the very substantial
+and innovative work to produce ESC/Java and the Simplify prover in the
+first place and on the effort to define the Java Modeling Language.
 
 \section{Changes to ESC/Java}
 
-The work on ESC/Java2 required embellishments of the original ESC/Java
-in a number of areas.  Here we present the most significant of these.
+The work on ESC/Java2 required embellishments of the original DEC/SRC
+ESC/Java in a number of areas.  Here we present the most significant
+of these.
 \subsection{Java 1.4}
-The original work was performed in 1998--2000, and Java has evolved
-since then\footnote{Java 1.5 went beta recently.  No work has begun on
-  parsing or statically checking Java 1.5 code.  Interested parties
-  are welcome to contact the authors with regards to this work.}.  The
-principal addition required by Java 1.4 is support for the Java {\tt
-  assert} statement.  This is complicated slightly by the presence of
-a similar \texttt{assert} statement in JML.
+The original work was performed between 1998 and 2000, and Java has
+evolved since then\footnote{In fact, Java 1.5 went beta recently.  No
+  work has begun on parsing or statically checking Java 1.5 code.
+  Interested parties are welcome to contact the authors with regards
+  to this work.}.  The principal addition required by Java 1.4 is
+support for the Java {\tt assert} statement.  This is complicated
+slightly by the presence of a similar \texttt{assert} statement in
+JML.
 
 \subsection{Current JML}
 The Java Modeling Language is a research project in itself; hence the
@@ -234,7 +244,7 @@ additions that have been implemented:
   modifiers, and
 \item model fields, routines, and types.
 \end{itemize}
-In addition, the differences between ESC/Java and JML noted in the JML
+In addition, the differences between DEC/SRC ESC/Java and JML noted in the JML
 Reference Manual have been resolved.
 % I don't think that there was ever a paper published summarizing 
 % these differences. -JRK
@@ -242,7 +252,7 @@ Reference Manual have been resolved.
 \subsection{New verification checks}
 Though all of JML is parsed, not all of it is currently checked.
 Static checking of the following features has been added to that performed by
-ESC/Java: 
+DEC/SRC ESC/Java: 
 \setlength{\partopsep}{0in}\setlength{\parskip}{0in}\setlength{\itemsep}{0in}\setlength{\topsep}{0in}
 \begin{itemize}
 \setlength{\partopsep}{0in}\setlength{\parskip}{0in}\setlength{\itemsep}{0in}\setlength{\topsep}{0in}
@@ -253,28 +263,29 @@ ESC/Java:
 \end{itemize}
 
 \subsection{Backwards incompatibilities}
-The ESC/Java specification language and JML arose separately.  There
+The DEC/SRC ESC/Java specification language and JML arose separately.  There
 was some initial but uncompleted work to unify the two.  The ESC/Java2
 project intends to have the tool reflect JML as precisely as possible.
 In some cases, discussion about differences resulted in changes to JML.  In
-a few cases, some backwards incompatibilities in ESC/Java were
+a few cases, some backwards incompatibilities in DEC/SRC ESC/Java were
 introduced.  The principal such incompatibilities are these:
 \setlength{\partopsep}{0in}\setlength{\parskip}{0in}\setlength{\itemsep}{0in}\setlength{\topsep}{0in}
 \begin{itemize}
 \setlength{\partopsep}{0in}\setlength{\parskip}{0in}\setlength{\itemsep}{0in}\setlength{\topsep}{0in}
 \item The semantics of inheritance of specification clauses and of
-  \texttt{non\_null} modifiers was modified to match that defined by JML, since
-  the work on JML resulted in an interpretation consistent with
-  behavioral subtyping.  This also changed the usage and semantics of \texttt{also}.
-\item \texttt{modifies \char'134 everything;} is now the default modifies clause.
+  \texttt{non\_null} modifiers was modified to match that defined by
+  JML, since the work on JML resulted in an interpretation consistent
+  with behavioral subtyping.  This also changed the usage and
+  semantics of \texttt{also}.
+\item \texttt{modifies \char'134 everything;} is now the default
+  modifies clause.
 \item The syntax and semantics of \texttt{initially}, {\tt
     monitored\_by}, and \texttt{readable\_if} have changed.
-\item ESC/Java2 
-  forbids bodies of (non-model) routines to be present in non-Java
-  specification files.
+\item ESC/Java2 forbids bodies of (non-model) routines to be present
+  in non-Java specification files.
 \end{itemize}
 
-\section{Aspects of JML not yet implemented}
+\section{Unimplemented Aspects of JML}
 
 Though the core is well-supported, there are several features of JML
 which are parsed and ignored, some of them experimental or not yet
@@ -285,13 +296,14 @@ endowed with a clear semantics.  The features that are currently ignored are:
 \item checking of access modifiers,
 \item the \texttt{weakly}, \texttt{strictfp}, \texttt{volatile}, and
   \texttt{transient} modifiers,
-\item the \texttt{diverges}, \texttt{hence\_by}, \texttt{code\_contract}\texttt{when}, and
- \texttt{measured\_by} clauses,
+\item the \texttt{diverges}, \texttt{hence\_by},
+  \texttt{code\_contract}, \texttt{when}, and \texttt{measured\_by}
+  clauses,
 \item annotations within \texttt{implies\_that} and {\tt
-    for\_example} sections),
+    for\_example} sections,
 \item some of the semantics associated with initialization (prior to
   construction),
-\item multi-threading support beyond that in ESC/Java,
+\item multi-threading support beyond that in DEC/SRC ESC/\-Java,
 \item serialization,
 \item annotations regarding space and time consumption,
 \item full support of recursive \texttt{maps} declarations,
@@ -299,8 +311,8 @@ endowed with a clear semantics.  The features that are currently ignored are:
 \item verification of anonymous and block-level classes,
 \item verification of set comprehension and some forms of quantified
   expressions, and
-\item implementation of \texttt{modifies \char'134 everything;} within the body
-  of routines.
+\item implementation of \texttt{modifies \char'134 everything;} within
+  the body of routines.
 \end{itemize}
 
 
@@ -325,11 +337,33 @@ are the subject of ongoing research:
 \item use of \texttt{measured\_by} clauses to assist in checking
   termination;
 \item meaning of \texttt{code\_contract} clauses;
-\item axioms and reasoning procedures to handle safe
+\item axioms and reasoning procedures to handle safe and unbounded
   arithmetic~\cite{Chalin03}.
 \end{itemize}
 
 \section{Usage experience to date}
+The SoS group at the University of Nijmegen, along with other members
+of the \myhref{http://www.verificard.org/}{European VerifiCard
+  Project}, has used DEC/SRC ESC/Java for several projects.  For
+example, Hubbers, Oostdijk, and Poll have performed verifications of
+Smart Card applets using several tools, including DEC/SRC
+ESC/Java~\cite{HOP04}.  Hubbers has also taken initial steps
+integrating several JML-based tools~\cite{Hub03}.
+
+These and other VerifiCard projects relied upon the specifications of
+the Java Card 2.1 API written and verified by Erik Poll and Hans
+Meijer~\cite{MeijerPoll01}.  This specification originally came in two
+forms: one ``complete'' specification that used JML models,
+heavyweight specifications, and refinements that was used with the
+core JML tools, and another ``lightweight'' specification that was
+meant to be used with DEC/SRC ESC/Java and other verification tools
+like Jack, Krakatoa, and the Loop tool~\cite{a,b,c}.
+
+
+
+--general opinion of work--
+--transition of pov--
+
 [I will add a one paragraph discussion here of our experiences in
 the SoS group with using ESC/Java for verification of core JDK classes
 and Smart Card applets. -JRK]
@@ -338,86 +372,102 @@ and Smart Card applets. -JRK]
 The work on ESC/Java2 to date has resulted in a number of software
 alpha releases and the work is continuing on a number of fronts.
 
-1. Two obvious and related ongoing tasks are the completion of 
- additional features of JM, accompanied in some 
- cases by additional research to clarify the semantics and usability of
-  outstanding features of JML.  Usage of JML is now broad enough that
-  accompanying formal reference documentation would be valuable.  As tools
- such as ESC/Java2 become more widely used,
- users will also appreciate attention to performance, to
-  the clarity of errors and warnings, and to the overall user experience such
- tools provide.
+\paragraph*{Language Issues.} Two obvious and related ongoing tasks are
+the completion of additional features of JML, accompanied in some
+cases by additional research to clarify the semantics and usability of
+outstanding features of JML.  Usage of JML is now broad enough that
+accompanying formal reference documentation would be valuable.  As
+tools such as ESC/Java2 become more widely used, users will also
+appreciate attention to performance, to the clarity of errors and
+warnings, and to the overall user experience such tools provide.
 
-2. The current implementation supports the static checking of a
-  stable core of JML.  With this initial implementation of frame
-  condition checking and of model fields, represents clauses and use
-  of routine calls in annotations, ESC/Java2 can now be used on
-  complex and abstract specifications of larger bodies of software.
-  Consequently, there is a considerable need for good experimental
-  usage studies that confirm that this core of JML is useful in
-  annotations and that the operation of ESC/Java2 (and Simplify) on
-  that core is correct and valuable.
+\paragraph*{Case Studies.} The current implementation supports the
+static checking of a stable core of JML.  With this initial
+implementation of frame condition checking and of model fields,
+represents clauses and use of routine calls in annotations, ESC/Java2
+can now be used on complex and abstract specifications of larger
+bodies of software.  Consequently, there is a considerable need for
+good experimental usage studies that confirm that this core of JML is
+useful in annotations and that the operation of ESC/Java2 (and
+Simplify) on that core is correct and valuable.
 
-3. The logic into which Java and JML are embedded in ESC/Java is,
-  by design and admission of the original authors, neither complete or
-  fully sound.  This was the result of an engineering judgement in
-  favor of performance and usability.  Research that studies expanded
-  and larger use cases may show whether this design decision is
-  generally useful in practical static checking or whether a fuller
-  and more complicated state-based logic is required for useful
-  results to be obtained.
+\paragraph*{Verification Logic.} The logic into which Java and JML are
+embedded in ESC/Java is, by design and admission of the original
+authors, neither complete or fully sound.  This was the result of an
+engineering judgement in favor of performance and usability.  Research
+that studies expanded and larger use cases may show whether this
+design decision is generally useful in practical static checking or
+whether a fuller and more complicated state-based logic is required
+for useful results to be obtained.
 
-4. The purpose of  using theorem provers for static analysis, runtime
- assertion checking or model checking is to find errors and thereby 
- improve the correctness of the resulting software.  Thus the orientation
- of a tool must be towards effectively finding {\em and interpreting} examples
- of incorrect behavior.   A common complaint in using any of these tools
- is that it is difficult to determine a root cause from the counterexample information
- provided by the tool whether it is a failed proof or an invalid test or execution history.
- The ESC/Java project reported some work towards appropriately pruning
- and interpreting counterexample information, but there remains room for
- improvement.
+\paragraph*{User Feedback.} The purpose of using theorem provers for
+static analysis, runtime assertion checking, or model checking is to
+find errors and thereby improve the correctness of the resulting
+software.  Thus the orientation of a tool must be towards effectively
+finding {\em and interpreting} examples of incorrect behavior.  A
+common complaint in using any of these tools is that it is difficult
+to determine a root cause from the counterexample information provided
+by the tool whether it is a failed proof or an invalid test or
+execution history.  The ESC/Java project reported some work towards
+appropriately pruning and interpreting counterexample information, but
+there remains room for improvement.
 
+\paragraph*{Tool Integration.} Finally, though not part of this
+project, there is another set of beneficial integration work to be
+done.
 
-
-Finally, though not part of this project, there is another set of beneficial
-work to be done.  There are now a number of tools~\cite{Burdy-etal03},
-generated by different research groups, that interact with JML.  Among
-them, the jmlc~\cite{Cheon-Leavens02b} tool dynamically checks
+There are now a number of tools, generated by different research
+groups, that interact with JML~\cite{Burdy-etal03}.  Among them, the
+JML compiler jmlc~\cite{Cheon-Leavens02b} dynamically checks
 specifications; the ESC/Java2 tool statically checks specifications;
 Daikon generates specifications from execution histories (and was
 integrated with the DEC/SRC version of ESC/Java~\cite{NimmerErnst01});
-jmlunit~\cite{Cheon-Leavens02} generates test cases from
-specifications.  A productive prgrammer's working environment for a
-large-scale project that uses these tools would need the tools to be integrated
-in a way that their outputs and inputs seamlessly inter-communicate.
-A programmer using the tools would naturally move among the 
-various tasks of designing, possibly using abstract specifications, 
-writing, testing, annotating, verifying and debugging.  Thus the tools
-would need to be integrated in a way that allows efficient, incremental
-behavior.  For example, once specifications generated by a Daikon-like
-tool are generalized and incorporated into a method's annotations,
-repeated running of Daikon will only produce results already implied by
-the existing specifications.  That m,ay be cause to ignore those
-subsumed results until changes elsewhere in the program or new test
-data show that the annotations are incorrect.  On the other hand, if the
-specifications generated by analyzing the execution history are 
-implied by but narrower than the written specifications, one might conclude
-that either the test data is too limited or the written specifications (at least
-in this usage) are overly broad.
+the JML Unit Test tool jmlunit~\cite{Cheon-Leavens02} generates test
+cases from specifications.
+ 
+A productive programmer's working environment for a large-scale
+project that uses these tools would need the tools to be integrated in
+a way that their outputs and inputs seamlessly inter-communicate.  A
+programmer using the tools would naturally move among the various
+tasks of designing, possibly using abstract specifications, writing,
+testing, annotating, verifying and debugging.  Thus the tools would
+need to be integrated in a way that allows efficient, incremental
+behavior.
+
+For example, once specifications generated by a Daikon-like tool are
+generalized and incorporated into a method's annotations, repeated
+running of Daikon will only produce results already implied by the
+existing specifications.  That may be cause to ignore those subsumed
+results until changes elsewhere in the program or new test data show
+that the annotations are incorrect.  On the other hand, if the
+specifications generated by analyzing the execution history are
+implied by but narrower than the written specifications, one might
+conclude that either the test data is too limited or the written
+specifications (at least in this usage) are overly broad.
+
+%% I am personally not a fan of conclusions that do not say anything 
+%% additional (i.e., real implications of the paper).  Also, for a 
+%% paper this short, a conclusion might just be wasted space.  If we 
+%% can find something to say here that is, in fact, implicatory, they 
+%% I'd be fore it. -JRK
 
 \section{Conclusion}
-TODO ???
+
+\large\textbf{TODO:}\normalsize Perhaps discuss the fact that a
+verifying compiler might be closer than some notable computer
+scientists think~\cite{Hoare03}?  Discuss how far we think that we can
+take this application of basic logics, first-order provers, and
+related technologies.  Also reinforce the changing balance between
+automated and interactive proving, discussed in the usage experience
+section above. -JRK
 
 %ACKNOWLEDGMENTS are optional
 \section{Acknowledgments}
 The authors would like to acknowledge both the work of the team that
 generated ESC/Java as well as Gary Leavens and collaborators at Iowa
 State University who generated JML.  In addition, Leavens and students
-engaged in
-and helped resolve syntactic and semantic issues in JML raised by 
-the work on ESC/Java2.
-These teams provided the twin
+engaged in and helped resolve syntactic and semantic issues in JML
+raised by the work on ESC/Java2.  These teams provided the twin
 foundations on which the current work is built.  In addition, the many
 other research groups that use and critique both JML and ESC/Java2
 have provided a research environment in which the work described here
