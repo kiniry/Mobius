@@ -262,7 +262,8 @@ public class Substitute {
 			me.locOpenParen, args);
 	} else {
 
-	    Assert.fail("Bad expr in Substitute.doSubst: "+e);
+	    Assert.fail("Bad expr in Substitute.doSubst: "+e+ " " 
+				+ Location.toString(e.getStartLoc()));
 	    return null; // dummy return
         }
       }

@@ -10,6 +10,7 @@ import escjava.tc.Types;
 
 import javafe.util.Assert;
 import javafe.util.Info;
+import javafe.util.Location;
 
 
 public abstract class Purity {
@@ -130,7 +131,8 @@ public abstract class Purity {
 
     default:
       //@ unreachable;
-      Assert.fail("UnknownTag<" + tag + ">");
+      Assert.fail("Tag " + TagConstants.toString(tag) + " " +
+		Location.toString(expr.getStartLoc()) + " " + expr);
     }
   }
 }

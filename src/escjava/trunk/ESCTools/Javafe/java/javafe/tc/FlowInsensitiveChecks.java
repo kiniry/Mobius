@@ -1421,7 +1421,8 @@ public class FlowInsensitiveChecks {
             }
 
             default:
-                Assert.fail("Switch fall-through (" + x.getTag() + ")");
+System.out.println("FAIL " + x);
+                Assert.fail("Switch fall-through (" + TagConstants.toString(x.getTag()) + ")");
                 return null;		// Dummy
         }
     }
