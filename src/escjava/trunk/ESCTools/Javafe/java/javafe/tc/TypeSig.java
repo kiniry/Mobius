@@ -706,7 +706,7 @@ public class TypeSig extends Type
      * Return an environment for use in checking code inside us. <p>
      *
      * Our instance members are considered accessible iff
-     * staticContext is true.
+     * staticContext is false.
      */
     //@ ensures \result != null;
     public EnvForTypeSig getEnv(boolean staticContext) {
