@@ -1602,6 +1602,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
     private String eatThroughSemiColon() {
         StringBuffer sb = new StringBuffer();
         while (scanner.ttype != TagConstants.SEMICOLON) {
+	    if (scanner.ttype == TagConstants.EOF) return sb.toString();
             sb.append(TagConstants.toString(scanner.ttype));
             Info.out("eating " + TagConstants.toString(scanner.ttype));
             sb.append(" ");
