@@ -214,6 +214,14 @@ class CheckInvariants {
     case TagConstants.SKIPSTMT:
       return;
 
+    case TagConstants.ASSERTSTMT:
+      {
+	AssertStmt a = (AssertStmt)s;
+	checkExpr(sig,a.pred);
+	if (a.label != null) checkExpr(sig,a.label);
+      }
+      return;
+
     case TagConstants.SWITCHLABEL:
       {
 	SwitchLabel sl = (SwitchLabel) s;
