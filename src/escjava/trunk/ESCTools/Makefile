@@ -310,6 +310,7 @@ srcjar:
 	cp -r ${ESCTOOLS_ROOT}/Javafe/java/* ${RELTEMP}/sub
 	cp -r ${ESCTOOLS_ROOT}/Escjava/java/* ${RELTEMP}/sub
 	cp -r ${ESCTOOLS_ROOT}/specs ${RELTEMP}/sub/specs
+	cp -r ${ESCTOOLS_ROOT}/original-specs ${RELTEMP}/sub/original-specs
 	mkdir -p ${RELTEMP}/sub/junitutils
 	(cd ${ESCTOOLS_ROOT}/Utils/junitutils; cp `find . -name '*.java'` ${RELTEMP}/sub/junitutils)
 	( cd ${RELTEMP}/sub; rm -rf `find . -name CVS`; )
@@ -319,7 +320,7 @@ srcjar:
 
 
 .PHONY: binary-release
-binary-release: build docs ## FIXME javadoc
+binary-release: build ##docs ## FIXME javadoc
 	@echo "Creating binary release .........."
 	## RELDIR is the staging area for all files
 	## First copy all .class files to sub and build a jar file
@@ -334,7 +335,7 @@ binary-release: build docs ## FIXME javadoc
 	## Copy papers and slides and other documentation
 	# cp papers/*.pdf ${RELTEMP}
 	# cp slides/*.pdf ${RELTEMP}
-	cp docs/Escjava2-ImplementationNotes/*.pdf ${RELTEMP}
+	-cp docs/Escjava2-ImplementationNotes/*.pdf ${RELTEMP}
 	cp docs/ESCJAVA-UsersManual.html ${RELTEMP}
 	cp -r Escjava/release/master/examples ${RELTEMP}
 	-find ${RELTEMP}/examples -name "CVS" -exec rm -rf {} \; > /dev/null 2>&1
@@ -430,13 +431,16 @@ generate-patches: clean
 generate-archives: generate-toplevel-archive generate-specs-archive
 
 .PHONY: generate-specs-archive
-generate-specs-archive:
+generate-specs-archive:   ## Contains both specs and original-specs for the patch release
 	mkdir -p ${RELTEMP}
 	rm -rf ${RELTEMP}/specs
+	rm -rf ${RELTEMP}/original-specs
 	cp -r ${ESCTOOLS_ROOT}/specs ${RELTEMP}
+	cp -r ${ESCTOOLS_ROOT}/original-specs ${RELTEMP}
 	-find ${RELTEMP}/specs -name "CVS" -exec rm -rf {} \;  > /dev/null 2>&1
-	(cd ${RELTEMP}; tar cjf ${PATCH_DIR}/${SPECS_TAR} specs;) 
-	rm -rf ${RELTEMP}/specs
+	-find ${RELTEMP}/original-specs -name "CVS" -exec rm -rf {} \;  > /dev/null 2>&1
+	(cd ${RELTEMP}; tar cjf ${PATCH_DIR}/${SPECS_TAR} specs original-specs;) 
+	rm -rf ${RELTEMP}/specs ${RELTEMP}/original-specs
 
 .PHONY: generate-toplevel-archive
 generate-toplevel-archive: clean
