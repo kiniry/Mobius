@@ -222,7 +222,7 @@ jar:
 	mkdir -p ${RELTEMP}/sub/junitutils
 	(cd ${ESCTOOLS_ROOT}/Utils/junitutils; cp `find . -name '*.class'` ${RELTEMP}/sub/junitutils)
 	( cd ${RELTEMP}/sub; jar xf ../../jmlspecs.jar )
-	( cd ${RELTEMP}/sub; jar cvmf ../../manifest.txt ../${RELJAR} *; )
+	( cd ${RELTEMP}/sub; jar cmf ../../manifest.txt ../${RELJAR} *; )
 	##jar umf manifest.txt ${RELTEMP}/${RELJAR}
 	rm -rf ${RELTEMP}/sub
 	cp ${RELTEMP}/${RELJAR} ${ESCTOOLS_ROOT}
