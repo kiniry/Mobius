@@ -1046,6 +1046,7 @@ public class Main extends javafe.SrcTool
         }
 
 
+	TrAnExpr.translate = gctranslator;
         Spec spec = GetSpec.getSpecForBody(r, scope, synTargs,
                                            initState.getPreMap());
         GetSpec.addAxioms(Translate.axsToAdd,spec.preAssumptions);

@@ -348,7 +348,8 @@ the same effect as for other windows on that platform.
 <B>New Project</B>: This action will delete the current project
 (but not the project file or any other file associated with the project)
 from the tool and initialize to a default, empty project.  There is no
-confirmation dialog that you want to forget that current project.
+confirmation dialog that you want to forget that current project.  It does 
+not reset any GUI or ESC options.
 <BR>
 Question: TBD - should it ask to save the current project?
 
@@ -357,7 +358,9 @@ Question: TBD - should it ask to save the current project?
 the user to choose a new project file to load.  There is no
 confirmation dialog that you want to forget the current project.  The file
 browser begins in the current working directory, but subsequent uses of the
-file browser begin in the directory where it was last left.
+file browser begin in the directory where it was last left.  Loading a new
+project will change the ESC Options as well as the classpaths and input list
+to the values recorded in the project file.
 
 <P>
 <B>Save Project</B>:  This action will save the current project

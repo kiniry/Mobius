@@ -561,7 +561,7 @@ ModChecksMethod.java:336: Error: There is no assignable clause allowing this met
                                    ^
 ModChecksMethod.java:339: Associated declaration: 
         //@ modifies ModChecksMethod.si;
-                     ^
+                                    ^
 ModChecksMethod.java:334: Associated declaration: 
         //@ modifies \nothing;
             ^

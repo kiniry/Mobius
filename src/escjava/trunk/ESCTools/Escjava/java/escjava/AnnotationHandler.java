@@ -1424,7 +1424,11 @@ javafe.util.ErrorSet.dump("OUCH");
 	    if (!(tde instanceof TypeDeclElemPragma)) continue;
 	    if (tde.getTag() != TagConstants.REPRESENTS) continue;
 	    Expr target = ((NamedExprDeclPragma)tde).target;
-	    if (!(target instanceof FieldAccess)) continue; // ERROR - FIXME
+	    if (!(target instanceof FieldAccess)) {
+		ErrorSet.error(tde.getStartLoc(),
+		    "INTERNAL ERROR: Expected FieldAccess here");
+		continue;
+	    }
 	    FieldDecl fdd = ((FieldAccess)target).decl;
 	    if (fd != fdd) continue;
 	    results.add( ((NamedExprDeclPragma)tde).expr );

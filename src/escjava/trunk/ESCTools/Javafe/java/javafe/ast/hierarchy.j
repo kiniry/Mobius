@@ -1804,6 +1804,7 @@ public abstract class ObjectDesignator extends ASTNode
   //# int locDot NotNullLoc
 
     public int getEndLoc() { return locDot; }
+    abstract public Type type();
 }
 
 /**
@@ -1817,6 +1818,8 @@ public class ExprObjectDesignator extends ObjectDesignator
 {
   //# Expr expr
   public int getStartLoc() { return expr.getStartLoc(); }
+  public Type type;
+  public Type type() { return type; }
 }
 
 /**
@@ -1848,6 +1851,8 @@ public class TypeObjectDesignator extends ObjectDesignator
 	return locDot;
     }
 
+  public Type type() { return type; }
+
   //# NoMaker
   //* Manual maker to ensure invariant on type satisfied
   //@ requires type instanceof TypeName || type instanceof javafe.tc.TypeSig;
@@ -1873,6 +1878,8 @@ public class SuperObjectDesignator extends ObjectDesignator
 {
   //# int locSuper NotNullLoc
   public int getStartLoc() { return locSuper; }
+  public Type type;
+  public Type type() { return type; }
 }
 
 /* ---------------------------------------------------------------------- */

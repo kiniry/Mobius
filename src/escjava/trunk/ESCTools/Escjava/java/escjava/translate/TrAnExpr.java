@@ -33,6 +33,9 @@ public class TrAnExpr {
 
     private static Set issuedPRECautions = new Set();  
 
+
+    public static Translate translate = null;
+
     /** This is the abbreviated form of function <code>TrSpecExpr</code>
      * described in ESCJ 16.  It is a shorthand for the full form in which
      * <code>sp</code> and <code>st</code> are passed in as empty maps.
@@ -179,7 +182,23 @@ public class TrAnExpr {
 		// Treat a model variable like a field if (a) it has no
 		// represents clauses and (b) it is not modified.
 
-		//if (va.decl.id.toString().equals("isOpen")) treatLikeAField = true;
+		ObjectDesignator od = fa.od;
+		TypeSig ts = null;
+		if (od == null) {
+			System.out.println("OD NULL"); // FIXME
+		    // SHould use the TypeSIg of the class being translated
+		} else {
+		    ts = (TypeSig)od.type();
+		}
+		TypeDeclElemVec reps = GetSpec.getRepresentsClauses(
+			ts.getTypeDecl(), fa.decl);
+		if (reps == null || reps.size() == 0) {
+		    boolean b = translate.isDefinitelyNotAssignable(
+			(od instanceof ExprObjectDesignator) ?
+			   ((ExprObjectDesignator)od).expr : null ,fa.decl);
+		   treatLikeAField = b;
+		}
+//System.out.println("TREATLIKEAFIELD " + treatLikeAField + " " + doRewrites() + " " + fa + " " + Location.toString(fa.getStartLoc()) );
 //System.out.println("MODEL VAR " + fa.decl.id + " " + Location.toString(fa.locId));
                 if (!treatLikeAField && doRewrites()) {
 		    trSpecAuxAxiomsNeeded.add(new RepHelper(fa));

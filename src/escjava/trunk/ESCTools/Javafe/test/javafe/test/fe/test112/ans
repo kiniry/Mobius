@@ -25,7 +25,7 @@ This.java:76: Error: An instance field may be accessed only via an object and/or
 This.java:80: Error: An instance field may be accessed only via an object and/or from a non-static context or an inner class enclosed by a type possessing that field.
         Outer3.x = 0;       // error
                ^
-This.java:91: Error: An instance field may be accessed only via an object and/or from a non-static context or an inner class enclosed by a type possessing that field.
+This.java:91: Error: The instance fields of type Outer3 may not be accessed from type Outer3$Inner
             Outer3.x = 0;   // error
                    ^
 This.java:104: Error: An instance method may be invoked only via an object and/or from a non-static context or an inner class enclosed by a type possessing that method.

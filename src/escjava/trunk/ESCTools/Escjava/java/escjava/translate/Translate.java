@@ -71,6 +71,7 @@ public final class Translate
                              Translate inlineParent,
                              boolean issueCautions) {
 
+	TrAnExpr.translate = this;
 	this.typeDecl = rd.parent;
 	this.premap = premap;
 	axsToAdd = new java.util.HashSet();
@@ -189,6 +190,7 @@ public final class Translate
             }
             res = popDeclBlock();
         }
+	TrAnExpr.translate = null;
         return res;
     }
 
@@ -3572,15 +3574,21 @@ public final class Translate
 		System.out.println("LHS " + lhs.getClass());
 		return;
 	}
-	modifiesCheckFieldHelper(eod,callLoc,fd,Location.NULL,null,null);
+	modifiesCheckFieldHelper(eod,callLoc,fd,Location.NULL,null,null,true);
     }
 
     static private Identifier thisId = Identifier.intern("this");
 
-    private void modifiesCheckFieldHelper(Expr eod, int callLoc,
-		    FieldDecl fd, int calleeLoc, Expr callee_tpred, Expr callee_tprecondition) {
+    public boolean isDefinitelyNotAssignable(Expr eod, FieldDecl fd) {
+	return modifiesCheckFieldHelper(eod, Location.NULL, fd,
+		Location.NULL, null, null, false);
+    }
 
-	if (!issueCautions) return;
+    private boolean modifiesCheckFieldHelper(Expr eod, int callLoc,
+		    FieldDecl fd, int calleeLoc, Expr callee_tpred, Expr callee_tprecondition, boolean addConds) {
+	boolean notMod = true;
+
+	if (!issueCautions && addConds) return false;
 	// We need to create a translated predicate expression that is true
 	// if the lhs is allowed to be modified and false if it is not
 	// allowed to be modified.  This will be an OR across each of the
@@ -3599,8 +3607,10 @@ public final class Translate
 	ModifiesGroupPragma mge = mg.elementAt(kk);
 	int callerLoc = mge.clauseLoc;
 	ExprVec ev = ExprVec.make(10);
-	if (!Modifiers.isStatic(fd.modifiers)) addAllocExpression(ev,eod);
-	if (callee_tpred != null) ev.addElement(GC.not(callee_tpred));
+	if (addConds) {
+	    if (!Modifiers.isStatic(fd.modifiers)) addAllocExpression(ev,eod);
+	    if (callee_tpred != null) ev.addElement(GC.not(callee_tpred));
+	}
 	ModifiesIterator caller_iterator = new ModifiesIterator(mg.elementAt(kk).items,true);
 	THISGROUP: while (caller_iterator.hasNext()) {
 	    Object ex = caller_iterator.next();
@@ -3686,11 +3696,20 @@ public final class Translate
 	// if the method has been called on a method call, we have a
 	//	calleeLoc and a callerLoc and we want the calleeLoc to be
 	//	the first associated location
-	if (ev != null) modChecksComplete(mge.precondition,
+	if (ev != null) {
+	    notMod = modChecksComplete(mge.precondition,
 		callee_tprecondition,ev,callLoc,
 		calleeLoc==Location.NULL ? callerLoc : calleeLoc,
-		calleeLoc==Location.NULL ? Location.NULL: callerLoc);
+		calleeLoc==Location.NULL ? Location.NULL: callerLoc, addConds)
+			&& notMod;
+//if (!addConds) System.out.println("NOTMOD NOW " + notMod + " " + ev.size());
+	} else {
+	    // definitely modifiable
+//System.out.println("EV IS NULL");
+	    notMod = false;
 	}
+	}
+	return notMod;
     }
 
     private void modifiesCheckArray(Expr array, Expr arrayIndex, int callLoc) {
@@ -3776,21 +3795,28 @@ public final class Translate
 	if (ev != null) modChecksComplete(mge.precondition,
 		callee_tprecondition,ev,callLoc,
 		calleeLoc==Location.NULL ? callerLoc : calleeLoc,
-		calleeLoc==Location.NULL ? Location.NULL: callerLoc);
+		calleeLoc==Location.NULL ? Location.NULL: callerLoc, true);
 	}
     }
 
     private String kindOfModCheck = "assignment";
 
-    private void modChecksComplete(Expr precondition, ExprVec ev, int callLoc, int aloc) {
-	modChecksComplete(precondition,null,ev,callLoc,aloc,Location.NULL);
+    private boolean modChecksComplete(Expr precondition, ExprVec ev, int callLoc, int aloc, boolean doCheck) {
+	return modChecksComplete(precondition,null,ev,callLoc,aloc,Location.NULL,doCheck);
     }
-    private void modChecksComplete(Expr precondition, Expr tprecond2, ExprVec ev, int callLoc, int aloc, int aloc2) {
+	// Returns true if definitely not modified
+	// Returns false if possibly or definitely modified
+    private boolean modChecksComplete(Expr precondition, Expr tprecond2, ExprVec ev, int callLoc, int aloc, int aloc2, boolean doCheck) {
 		// FIXME - need to let aloc2 shut of warnings as well
+	if (!doCheck) {
+	    //TrAnExpr.closeForClause();
+	    if (ev.size() == 0) return true;
+	    return false;
+	}
 	if (NoWarn.getChkStatus(TagConstants.CHKMODIFIES,callLoc,aloc==Location.NULL?callLoc:aloc)
 				!= TagConstants.CHK_AS_ASSERT) {
 	    TrAnExpr.closeForClause();
-	    return;
+	    return false;
         }
 	Expr tprecondition = modTranslate(precondition,true,null);
 	if (tprecond2 != null) {
@@ -3804,6 +3830,8 @@ public final class Translate
 		    "There is no assignable clause allowing this "
 			+ kindOfModCheck,aloc);
 		if (aloc2 != Location.NULL) ErrorSet.assocLoc(aloc2);
+	} else if (!doCheck) {
+	    // skip
 	} else if (aloc == Location.NULL) {
 	    //System.out.println("Generating a modifies check " + ev.size());    
 	    addNewAssumptionsNow();
@@ -3816,6 +3844,7 @@ public final class Translate
 		// FIXME - could also include a list of locations from the caller modifies group
 	}
 	TrAnExpr.closeForClause();
+	return false;
     }
 
     private boolean isTrueLiteral(Expr p) {
@@ -3935,14 +3964,14 @@ if (mg.precondition == null) {
 			if (addImplication(ev,callee_tpred,caller_pred)) continue OUTER;
 		    }
 		}
-		modChecksComplete(mge.precondition,callee_tprecondition,ev,loccall,calleeLoc,callerLoc);
+		modChecksComplete(mge.precondition,callee_tprecondition,ev,loccall,calleeLoc,callerLoc,true);
 	    } else if (ex instanceof NothingExpr) {
 		// skip
 	    } else if (ex instanceof FieldAccess) {
 		FieldAccess fa = (FieldAccess)ex;
 		Expr eeod = (((FieldAccess)ex).od instanceof ExprObjectDesignator) ? ((ExprObjectDesignator)((FieldAccess)ex).od).expr : null;
 		Expr lval = eeod == null ? null : modTranslate(eeod, false,  eod, args);
-		modifiesCheckFieldHelper(lval,loccall, fa.decl, calleeLoc, callee_tpred, callee_tprecondition);
+		modifiesCheckFieldHelper(lval,loccall, fa.decl, calleeLoc, callee_tpred, callee_tprecondition,true);
 		// A bit of a hack - the FieldHelper routine iterates over
 		// all of the caller frame conditions, so we short-circuit
 		// that here
@@ -3987,7 +4016,7 @@ if (mg.precondition == null) {
 			}
 		    }
 		}
-		modChecksComplete(mge.precondition,callee_tprecondition,ev,loccall,calleeLoc,callerLoc);
+		modChecksComplete(mge.precondition,callee_tprecondition,ev,loccall,calleeLoc,callerLoc,true);
 	    } else if (ex instanceof ArrayRangeRefExpr) {
 		ArrayRangeRefExpr aexpr = (ArrayRangeRefExpr)ex;
 		Expr array = aexpr.array;
@@ -4041,7 +4070,7 @@ if (mg.precondition == null) {
 			addImplication(ev,aao,callee_tpred,caller_pred);
 		    }
 		}
-		modChecksComplete(mge.precondition,callee_tprecondition,ev,loccall,calleeLoc,callerLoc);
+		modChecksComplete(mge.precondition,callee_tprecondition,ev,loccall,calleeLoc,callerLoc,true);
 	    } else {
 		System.out.println("Modifies Check not implemented for " + ex.getClass());
 		caller_iterator.reset();
@@ -4052,7 +4081,7 @@ if (mg.precondition == null) {
 			if (addImplication(ev,callee_tpred,caller_pred)) continue OUTER;
 		    }
 		}
-		modChecksComplete(mge.precondition,callee_tprecondition,ev,loccall,calleeLoc,callerLoc);
+		modChecksComplete(mge.precondition,callee_tprecondition,ev,loccall,calleeLoc,callerLoc,true);
 	    }
 	}
 	}

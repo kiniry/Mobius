@@ -80,6 +80,7 @@ public class Substitute {
 	    ExprObjectDesignator eod = (ExprObjectDesignator)newOd;
 	    newOd = ExprObjectDesignator.make(eod.locDot,
 					      doSubst(subst, eod.expr,rhsVars));
+	    ((ExprObjectDesignator)newOd).type = eod.type;
 	}
 
 	result = WildRefExpr.make(
@@ -137,6 +138,7 @@ public class Substitute {
 	    ExprObjectDesignator eod = (ExprObjectDesignator)newOd;
 	    newOd = ExprObjectDesignator.make(eod.locDot,
 					      doSubst(subst, eod.expr,rhsVars));
+	    ((ExprObjectDesignator)newOd).type = eod.type;
 	}
 
 	FieldAccess newFa = FieldAccess.make(newOd, fa.id, fa.locId);

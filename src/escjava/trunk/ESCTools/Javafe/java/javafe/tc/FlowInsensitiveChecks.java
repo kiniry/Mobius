@@ -1544,7 +1544,8 @@ public class FlowInsensitiveChecks
             case TagConstants.EXPROBJECTDESIGNATOR: {
                 ExprObjectDesignator eod = (ExprObjectDesignator)od;
                 eod.expr = checkExpr(env, eod.expr);
-                return getType(eod.expr);
+                eod.type = getType(eod.expr);
+		return eod.type;
             }
 
             case TagConstants.TYPEOBJECTDESIGNATOR: {
@@ -1552,8 +1553,10 @@ public class FlowInsensitiveChecks
                 // Type has been created by disambiguation code, so it is ok.
 
                 Type t = tod.type;
-                if(t instanceof TypeName)
+                if(t instanceof TypeName) {
                     t = TypeSig.getSig((TypeName)t);
+		    tod.type = t;
+		}
                 Assert.notFalse(t instanceof TypeSig);
                 checkTypeModifiers(env, t);  
                 return (TypeSig)t;
@@ -1577,7 +1580,9 @@ public class FlowInsensitiveChecks
                             return null;
                         }
 
-                        return TypeSig.getSig(superClass);
+                        TypeSig ts = TypeSig.getSig(superClass);
+			sod.type = ts;
+			return ts;
                     } else {
                         ErrorSet.error(sod.locDot, 
                                         "Can't use keyword super in an interface");
