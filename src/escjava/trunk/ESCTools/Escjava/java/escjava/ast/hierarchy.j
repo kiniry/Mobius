@@ -567,6 +567,7 @@ public class ExprStmtPragma extends StmtPragma
       (tag == TagConstants.ASSUME 
        || tag == TagConstants.ASSERT
        || tag == TagConstants.LOOP_INVARIANT 
+       || tag == TagConstants.LOOP_PREDICATE
        || tag == TagConstants.JML_MAINTAINING 
        || tag == TagConstants.DECREASES
        || tag == TagConstants.JML_DECREASING);
