@@ -437,12 +437,6 @@ public class EscPragmaParser extends Parse implements PragmaParser
         if (pendingJavadocComment == null) {
             return false;
         }
-/*
-        final String startEnclosedPragma = "<esc>";
-        final String endEnclosedPragma = "</esc>";
-
-	int startLoc = scanFor(pendingJavadocComment, startEnclosedPragma);
-*/
 	int startLoc = scanForOpeningTag(pendingJavadocComment);
         if (startLoc == Location.NULL) {
             pendingJavadocComment = null;
@@ -704,22 +698,26 @@ public class EscPragmaParser extends Parse implements PragmaParser
      * @see Lex
      */
     public boolean getNextPragma(/*@ non_null @*/ Token dst) {
+try{
 	if (getPragma(dst)) return true;
 	boolean b;
 	b = getNextPragmaHelper(dst);
 	if (!b) return b;
-	if (dst.auxVal == null) return getPragma(dst);
+	if (dst.ttype == TagConstants.NULL) return getPragma(dst);
 	return true;
+} finally {
+//System.out.println("GNP " + TagConstants.toString(dst.ttype) + " " + dst.auxVal);
+}
     }
 
     public boolean getNextPragmaHelper(/*@ non_null @*/ Token dst) {
+//	System.out.println("CALLING HELPER " + TagConstants.toString(dst.ttype));
         try {
             if (inProcessTag == NOTHING_ELSE_TO_PROCESS) {
                 if (DEBUG)
                     Info.out("getNextPragma: Nothing else to process.");
                 return false;
             }
-	    dst.auxVal = null;
 
             // See if we need to continue a previous pragma, for example
             // "monitored_by", which can take multiple SpecExprs
@@ -747,18 +745,22 @@ public class EscPragmaParser extends Parse implements PragmaParser
 
                 if (pendingJavadocComment != null) {
                     scanner.close();
-                    if (processJavadocComment()) {
-                        if (DEBUG)
-                            Info.out("getNextPragma: processed javadoc comment at EOF.");
-                        return true;
-                    }
-                }
-                close();
-                if (DEBUG)
-                    Info.out("getNextPragma: hit EOF, so finishing pragma parsing.");
-                return false;
+                    if (!processJavadocComment()) {
+			close();
+			return false;
+		    }
+		    if (DEBUG)
+			Info.out("getNextPragma: processed javadoc comment at EOF.");
+                } else {
+		    close();
+		    if (DEBUG)
+			Info.out("getNextPragma: hit EOF, so finishing pragma parsing.");
+		    return false;
+		}
             }
             //@ assume scanner.m_in != null;  // TBW: is this right??  --KRML
+	    dst.ttype = TagConstants.NULL;
+	    dst.auxVal = null;
 
 	    // FIXME - not everything allows modifiers
 	    // These are Java modifiers that are 
@@ -790,6 +792,10 @@ public class EscPragmaParser extends Parse implements PragmaParser
 		// may or may not be a keyword, but is the beginning
 		// of the type
 		if (tag != TagConstants.NULL) scanner.getNextToken();
+		// For an IDENT that is not a JML keyword, the tag is
+		// NULL and the switch statment below falls into the default
+		// case - all pragmas begin with a keyword, so this must be
+		// the start of a declaration of some sort.
 	    } else if (tag == TagConstants.MODIFIERPRAGMA) {
 		// This can happen if there is an embedded annotation within
 		// an annotation, such as 
@@ -808,7 +814,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
             boolean semicolonExpected = false;
 
             if (DEBUG)
-                Info.out("next tag is: " + tag);
+                Info.out("next tag is: " + TagConstants.toString(tag));
 
             switch (tag) {
 		case TagConstants.CODE_CONTRACT:
@@ -941,7 +947,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
 				loc, TagConstants.MODIFIERPRAGMA,
 				ExprModifierPragma.make(tag, e, loc));
 			}
-			dst.auxVal = null;
+			dst.ttype = TagConstants.NULL;
 		    }
 		    break;
 		}
@@ -1008,7 +1014,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
 				IdExprDeclPragma.make(tag,target, e, 
 					loc, locId));
 			}
-			dst.auxVal = null;
+			dst.ttype = TagConstants.NULL;
 			semicolonExpected = true;
 		    }
 		    break;
@@ -1307,7 +1313,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
 			scanner.getNextToken(); // eat comma
 		      }
 		      //if (!getPragma(dst)) return getNextPragmaHelper(dst);
-		      dst.auxVal = null;
+		      dst.ttype = TagConstants.NULL;
 		      semicolonExpected = true;
 		    }
 		    break;
@@ -1369,7 +1375,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
 			return getNextPragmaHelper(dst);
 		    }
 */
-		    dst.auxVal = null;
+		    dst.ttype = TagConstants.NULL;
 		    break;
 		  }
 
@@ -1772,7 +1778,9 @@ public class EscPragmaParser extends Parse implements PragmaParser
 	    modifiers = Modifiers.NONE;
 	    savedGhostModelPragma = null;
             return false; 
-        }
+        } finally {
+		//System.out.println("HELPER " + TagConstants.toString(dst.ttype) + " " + dst.auxVal);
+	}
     }
 
     /** Issues an error if any Java modifiers have accumulated, and resets the
@@ -2980,6 +2988,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
 	} else if (tag == TagConstants.MODEL) {
 	    pragma = ModelDeclPragma.make(decl, loc);
 	}
+	dst.ttype = TagConstants.NULL;
 	savePragma( loc, TagConstants.TYPEDECLELEMPRAGMA,
 			pragma);
 
