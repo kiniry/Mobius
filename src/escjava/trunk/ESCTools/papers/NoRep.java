@@ -4,7 +4,6 @@ public interface NoRep {
 
     /*@ assignable outputText;
         ensures outputText.equals(
-                    \old(outputText) + s);
-     */
+                    \old(outputText) + s); */
     public void print(String s);
 }
