@@ -21,6 +21,7 @@ include ${TOP}/Makefile.defs
 ESCJAVA_SOURCE_DIR = ${ESCJAVA_ROOT}/java
 JAVAFE_SOURCE_DIR ?= ${JAVAFE_ROOT}/java
 JAVASOURCEFILES = \
+	${ESCJAVA_SOURCE_DIR}/escjava/ant/*.java \
 	${ESCJAVA_SOURCE_DIR}/escjava/ast/*.java \
 	${ESCJAVA_SOURCE_DIR}/escjava/backpred/*.java \
 	${ESCJAVA_SOURCE_DIR}/escjava/gui/*.java \
@@ -30,8 +31,9 @@ JAVASOURCEFILES = \
 	${ESCJAVA_SOURCE_DIR}/escjava/sp/*.java \
 	${ESCJAVA_SOURCE_DIR}/escjava/tc/*.java \
 	${ESCJAVA_SOURCE_DIR}/escjava/translate/*.java \
-	${ESCJAVA_SOURCE_DIR}/escjava/*.java \
-	${ESCJAVA_SOURCE_DIR}/escjava/Version.java
+	${ESCJAVA_SOURCE_DIR}/escjava/*.java
+
+#	${ESCJAVA_SOURCE_DIR}/escjava/Version.java
 
 OTHERSOURCEFILES = ${JAVAFE_SOURCE_DIR}/javafe/*.java \
 		${JAVAFE_SOURCE_DIR}/javafe/ast/*.java \
@@ -44,7 +46,9 @@ OTHERSOURCEFILES = ${JAVAFE_SOURCE_DIR}/javafe/*.java \
 		${ESCTOOLS_ROOT}/Utils/junitutils/*.java 
 
 ## FIXME - Version.java is listed above because it might not exist when *.java
-## is expanded, but isn't that true for ast/*.java as well???
+## is expanded, but isn't that true for ast/*.java as well??? -David
+## I believe that these globbed terms are expanded during *use*, not during
+## definition. -Joe
 
 # The executable to run escjava
 export ESCJ = ${ESCJAVA_ROOT}/escj
@@ -55,7 +59,7 @@ export SOURCEDIRECTORY=${ESCJAVA_SOURCE_DIR}
 export TESTSOURCEDIRECTORY=${ESCJAVA_ROOT}/test
 
 ## This is the path for classfiles (not sources) needed to build Escjava
-export ESCJAVA_BUILD_CLASSPATH = $(call canonicalize,${JAVAFE_CLASSFILES}:${ESCJAVA_CLASSFILES}:${MOCHA_LIB}:${ESCTOOLS_ROOT}/Utils)
+export ESCJAVA_BUILD_CLASSPATH = $(call canonicalize,${JAVAFE_CLASSFILES}:${ESCJAVA_CLASSFILES}:${MOCHA_LIB}:${ANT_LIB}:${JUNIT_LIB}:${ESCTOOLS_ROOT}/Utils)
 
 ###########################################################################
 .PHONY: all
@@ -73,30 +77,33 @@ test: test_escjava
 .PHONY: alltests
 alltests: test_escjava 
 	-$(MAKE) typecheckEscjava
-	##-$(MAKE) self_test     ## FIXME
+	-$(MAKE) self_test
 
 ###########################################################################
 # Documentation targets.
 
 # mtex2man and mtex2html are not generally available so we turn this
-# off for now - FIXME
+# off for now - FIXME David
+# mtex2man is a Modula-III tool, thus if one is building Simplify, one
+# should have it as well.  We'll just conditionalize this rule on the
+# existence of the binary. -Joe
 .PHONY: docs
-#docs: docs_escjava
-docs:
-	@true
+docs: docs_escjava
 
 ESCJAVA_CORE_DOC = ${ESCJAVA_SOURCE_DIR}/escjava/escjava.mtex
 
 .PHONY: docs_escjava
 docs_escjava:	${ESCJAVA_CORE_DOC}
-	cc -C -E ${ESCJAVA_CORE_DOC} | grep -v "^#" | mtex2man \
-		> ${ESCJAVA_ROOT}/doc/man1/escjava.1
-	cc -C -E ${ESCJAVA_CORE_DOC} | grep -v "^#" | mtex2html \
-		> ${ESCJAVA_ROOT}/doc/escjava.html
-	cc -C -E -DPUBLIC ${ESCJAVA_CORE_DOC} | grep -v "^#" | mtex2man \
-		> ${ESCJAVA_ROOT}/doc/man1/escjava-public.1
-	cc -C -E -DPUBLIC ${ESCJAVA_CORE_DOC} | grep -v "^#" | mtex2html \
-		> ${ESCJAVA_ROOT}/doc/escjava-public.html
+	if type -type mtex2man > /dev/null && type -type mtex2html > /dev/null; then \
+		cc -C -E ${ESCJAVA_CORE_DOC} | grep -v "^#" | mtex2man \
+			> ${ESCJAVA_ROOT}/doc/man1/escjava.1; \
+		cc -C -E ${ESCJAVA_CORE_DOC} | grep -v "^#" | mtex2html \
+			> ${ESCJAVA_ROOT}/doc/escjava.html; \
+		cc -C -E -DPUBLIC ${ESCJAVA_CORE_DOC} | grep -v "^#" | mtex2man \
+			> ${ESCJAVA_ROOT}/doc/man1/escjava-public.1; \
+		cc -C -E -DPUBLIC ${ESCJAVA_CORE_DOC} | grep -v "^#" | mtex2html \
+			> ${ESCJAVA_ROOT}/doc/escjava-public.html; \
+	fi
 
 
 ###########################################################################
@@ -237,13 +244,15 @@ ${AST_DIR}/%Vec.java: ${VECTEMPLATE}
 # This also generates all the .java files implied by "hierarchy.j".
 ${AST_DIR}/GeneratedTags.java: ${ASTGEN} ${AST_DIR}/hierarchy.j
 	@(cd ${AST_DIR}; ${ASTGEN} < hierarchy.j; \
-	grep -v "//@" AnOverview.java > AnOverview.tmp; \
-	mv AnOverview.tmp AnOverview.java; \
-	grep -v "//@" GCExpr.java > GCExpr.tmp; \
-	mv GCExpr.tmp GCExpr.java; \
-	grep -v "//@" GuardedCmd.java > GuardedCmd.tmp; \
-	mv GuardedCmd.tmp GuardedCmd.java)
-## The above grep's etc. are a kludge and ought to be fixed. - FIXME
+		grep -v "//@" AnOverview.java > AnOverview.tmp; \
+		mv AnOverview.tmp AnOverview.java; \
+		grep -v "//@" GCExpr.java > GCExpr.tmp; \
+		mv GCExpr.tmp GCExpr.java; \
+		grep -v "//@" GuardedCmd.java > GuardedCmd.tmp; \
+		mv GuardedCmd.tmp GuardedCmd.java)
+## The above grep's etc. are a kludge and ought to be fixed. - FIXME David
+## These three classes are the three root abstract classes of 
+## escjava.ast.  Why do we need to strip out their specs? -Joe
 
 .PHONY: clean_escjava_ast
 clean_escjava_ast: ${ASTFILELIST}
@@ -282,7 +291,7 @@ clean_escjava_backpred:
 ## FIXME - Check all these
 
 .PHONY: clean clean_escjava clean_tests clean_classfiles \
-	clean_docs clean_misc cleanarchives
+	clean_docs clean_misc
 
 clean: clean_classfiles clean_docs clean_escjava clean_tests \
 	clean_misc clean_archives \
@@ -324,7 +333,6 @@ archives: archive_esctools
 
 TOP_ESCJAVA_TEST_DIR = ${TESTSOURCEDIRECTORY}/escjava/test
 
-
 .PHONY: test_escjava
 test_escjava: build build_javafe_test 
 	$(MAKE) tests
@@ -344,6 +352,10 @@ build_javafe_test:
 .PHONY: junittests
 junittests:
 	$(MAKE) -C test/junittests runtests
+
+.PHONY: javaspecs
+javaspecs:
+	$(MAKE) -C test/javaspecs runtests
 
 .PHONY: test_escjava_parser
 test_escjava_parser:
@@ -366,13 +378,16 @@ typecheckEscjava:
 
 .PHONY: test_matrix
 test_matrix:
-	(cd ${TESTSOURCEDIRECTORY}/matrix; \
-	${ESCJ} *.java;)
+	${ESCJ} -source 1.4 -sourcepath ${TESTSOURCEDIRECTORY} \
+		-classpath "${call canonicalize,${TESTSOURCEDIRECTORY}:${ESCTOOLS_ROOT}/Javafe/java:${ESCTOOLS_ROOT}/Escjava/java:${ESCTOOLS_ROOT}/Utils}" \
+		-specs "${call canonicalize,${ESCTOOLS_ROOT}/specs-kiniry:${ESCTOOLS_ROOT}/jmlspecs.jar}" \
+		${TESTSOURCEDIRECTORY}/matrix/*.java
 
 .PHONY: self_test
 self_test: build
 	${ESCJ} -classpath "${call canonicalize,${ESCTOOLS_ROOT}/Javafe/java:${ESCTOOLS_ROOT}/Escjava/java:${ESCTOOLS_ROOT}/Utils:${JUNIT_LIB}}" \
-		-nocheck -source 1.4 -quiet -noSemicolonWarnings \
+		-vclimit 1000000 \
+		-nocheck -source 1.4 -quiet -nosemicolonwarnings \
 		${foreach file,${OTHERSOURCEFILES} ${JAVASOURCEFILES},$(call canonicalize,$(file))}
 
 .PHONY: self_testp
@@ -398,8 +413,18 @@ test-release:
 		ESCJ_SIMPLIFY_DIR=${RELTEMP} \
 		tests
 
-
 ###########################################################################
 
+#		-sds -nocheck \
+.PHONY: string
+string:
+	${ESCJ} \
+		-classpath "${call canonicalize,${ESCTOOLS_ROOT}/Javafe/java:${ESCTOOLS_ROOT}/Escjava/java:${ESCTOOLS_ROOT}/Utils}" \
+		-specs "${call canonicalize,${ESCTOOLS_ROOT}/specs-kiniry:${ESCTOOLS_ROOT}/jmlspecs.jar}" \
+		-nowarn Deadlock -nowarn Post -nowarn Invariant \
+		-source 1.4 -quiet -noSemicolonWarnings \
+		../specs-kiniry/java/lang/String.java \
+		-routine String
 
-
+.PHONY: check-core-jdk-specs
+check-core-jdk-specs: string
