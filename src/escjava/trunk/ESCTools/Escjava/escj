@@ -27,8 +27,6 @@
 ## ESCTOOLS_RELEASE is defined) or otherwise on the structure of the CVS files
 ##      ESCJ_SIMPLIFY_DIR  (The directory containing the Simplify executable,
 ##                          as named by the SIMPLIFY variable)
-##      ESCJ_SIMPLIFY_SCRIPT (The full path to the script that sets settings
-##                            and invokes SIMPLIFY)
 ##	ESC_CLASSPATH      (The class path needed to invoke escjava)
 ##                     
 
@@ -200,7 +198,7 @@ if ( $?ESCJ_VERBOSE ) then
     echo "=================================================================="
     echo "Executing:";
     echo "${JAVA} ${JAVA_VM_FLAGS}";
-    echo "  -Dsimplify=${ESCJ_SIMPLIFY_SCRIPT}";
+    echo "  -Dsimplify=${ESCJ_SIMPLIFY}";
     echo "  -classpath ${ESC_CLASSPATH}";
     echo "  escjava.Main";
     echo "  " ${JBIN} ;
