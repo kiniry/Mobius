@@ -6,8 +6,7 @@
   N\'estor Cata\~no and Marieke Huisman  \\
   \institute{
        \inria~Sophia-Antipolis, France \\
-       \lemme~Project \\
-       2004, route des Lucioles, BP 93 
+       \lemme~Project
   } 
   \email{\{Nestor.Catano, Marieke.Huisman\}@sophia.inria.fr}
 }
@@ -43,6 +42,7 @@
 \begin{document}
 \fussy
 \maketitle
+\pagestyle{plain}
 
 \begin{abstract}
 not yet
@@ -70,7 +70,7 @@ not yet
 %without \textit{aliasing}. For this specification we have made
 %an implementation, which extends the functionality of the
 %\jml~parser. Our approach presents some advantages over the
-%\loopp~project approach, namely$:$ $(i)$ it is faster, and $(ii)$ the
+%\loopp~project approach, namely$:$ $(i)$~it is faster, and $(ii)$~the
 %verification carried out is closer to the specification
 %language. Additionally, an electronic banking case study has been used
 %to demonstrate the usability of our approach~\cite{CH02}.
@@ -80,48 +80,50 @@ not yet
 \label{sec-intro}
 
 \paragraph{\bf Background.}
-For decades \emph{formal methods} were considered as a merely
+Some decades ago, the \emph{formal methods} were considered as a merely
 theoretical issue in computer science, not suitable for real
-problems$:$ \emph{complicated} notations brought from the logic and
+problems$:$ \emph{complicated} notations taken from the logic and
 the lack of tools supporting formal methods could not compete with the
 tools and methods used in industry for software development. Recently, 
 this has been changing. There are several reasons for this
 change. Firstly, the specification languages are now closer to
 programming languages than ever before and the techniques used are
-more according to the actual programming paradigms (object oriented
+more suitable to the actual programming paradigms (object oriented
 and distributed programming). Secondly, industry has started to feel
-the need for certified software. An example$:$ during $1995$,
+the need for certified software. An example$:$ during
+$1995$\cite{Borger99programmer},
 \textsc{Intel} found a problem with its microprocessors
 \textsc{Pentium}. This company was forced to replace around two
-million processors. It realized that the costs of formal
-verification would have been much cheaper than the costs required to
+million processors. Thus, it realized that the costs of formal
+verification would have been much lower than the costs required to
 fix this bug.
 
-There are three approaches for verification of software systems$:$
-\textit{testing}, \textit{model-checking} and
-\textit{theorem proving}. Testing checks whether a program produces
-correct output on certain input. This technique is important for
-checking some properties before applying a formal technique. A
-disadvantage of this approach is that one spends a lot of time in the
-process of constructing all possible testing cases. Moreover,
-sometimes it is not possible to check all possible
-input. Model-checking is based on constructing a finite model of a
+There are two approaches for verification of software systems$:$
+\textit{model-checking} and\textit{theorem proving}.
+Model-checking is based on constructing a finite model of a
 problem and exhaustively checking the satisfaction of certain
 properties. Model-checking is
-a strong technique, it is \emph{decidable} for a specific
-model, but it presents some limitations$:$ $(i)$ it can validate a
-model of a certain system but not the system itself, and $(ii)$
-verification (even for simple systems) might need huge amounts of
-space and time. 
+a strong technique, as it is \emph{decidable}, but it presents some
+limitations$:$ $(i)$~it can validate a
+model of a certain system but not the system itself, and
+$(ii)$~verification even for simple systems might need huge amounts
+of space and time. 
 
-Theoretically, theorem proving techniques are able to
+Theoretically, interactive theorem proving techniques are able to
 solve any problem proposed in practice, but it presents some
-disadvantages$:$ $(i)$ it is \emph{undecidable}, $(ii)$ the tools are
+disadvantages$:$ $(i)$~it is \emph{undecidable}, $(ii)$~the tools are
 only capable of assisting an engineer in the process of constructing a
-proof, and $(iii)$ it requires expressing the semantics underlying the
+proof, and $(iii)$~it requires expressing and understanding the
+semantics underlying the
 programming language in the logic of the theorem prover, in order to
 do program verification. 
-
+ %Testing checks whether a program produces
+%correct output on certain input. This technique is important for
+%checking some properties before applying a formal technique. A
+%disadvantage of this approach is that one spends too much of time in the
+%process of constructing all possible testing cases. Moreover,
+%sometimes it is not possible to check all possible
+%inputs. 
 Recently, several approaches have been
 proposed to overcome these kind of problems and although they can not
 actually replace formal verification techniques, they constitute
@@ -130,29 +132,56 @@ systems. \emph{Run-time
 checking} is a kind of extended checking where, in addition to checking
 the input-output behavior, it is checked whether certain specific
 conditions are
-satisfied at certain points of the program. For checking these
-specific conditions, the original program is converted into another
+satisfied at particular points in the program. For checking these
+conditions, the original program is converted into another
 one,
-which is then executed. If this execution raises an exception,
-this will indicate that the original program does not fulfill the
+which can be then executed. If this execution raises an exception,
+this indicates that the original program does not fulfill the
 expected conditions.
 
 The \emph{static checking} techniques check the behavior of programs
-from its source code. Usually, the tools implementing these
-techniques are improved with a dedicated theorem proving, which
-automatically checks some specific problems. Typically, this checking
-does not take a lot of time.
+from its source code. This technique can be complemented with
+complemented with a automatic theorem prover which automatically can
+some specific problems. It is expected this checking is efficient in
+time.
 
-For expressing these conditions, some specification languages are
-commonly used and they are typically \emph{asserted} as comments in
-the
-program source code. The annotation language for \eiff~is the first
-example of such a specification language, following the \emph{design
-by contract} approach~\cite{Meyer97}. Currently, several specific
-specification languages have been proposed for \java~such as
+When using static and run-time checking techniques is expected to
+state some specifications in which we are interested to check. These
+specifications allow to state the functional behavior of methods as
+pre- and postcondtions, besides class invariants. These specifications
+can be provided to the checking tools as part of the source and
+written and some specific language. 
+
+Currently, several specific specification languages have been proposed
+for \java. \jml is a language developed at the Iowa University and
+doing run-time checking. For constructing predicates, in addition to
+the java boolean operators, 
+\jml~ counts on several logical operators. Additionally in \jml is
+possible to use methods invocation as part of the predicates as long
+as those do not have \emph{side effects}.
+
+It relies on several specific constructs whifor
+expressing the \emph{normal behavior} of methods (when no exception is 
+thrown) an 
+
+~such as
 \jml~\cite{LeavensBR00}, \jcontract~\cite{JContractUrl},
 \jass~\cite{JassUrl} and \escj~\cite{LeinoNS00} (a subset of
-\jml~\cite{EscJmlDiff}). Usually, these specifications serve to state
+\jml~\cite{EscJmlDiff})
+
+
+
+%For expressing these conditions, some specification languages are
+%commonly used and they are typically \emph{asserted} as comments in
+%the
+program source code. 
+
+%The annotation language for \eiff~is the first
+%example of such a specification language, following the \emph{design
+%by contract} approach~\cite{Meyer97}. 
+
+
+. Usually, these specifications serve to state
 the functional behavior of the methods (typically as preconditions and
 postconditions) and also class invariants. However, the
 functional behavior of the methods is often not enough to reason about
@@ -508,27 +537,21 @@ in~\cite{CatanoMasterThesis01}.
 general rule corresponding to a method declaration
 \texttt{m(}$\overrightarrow{\texttt{o}}$\texttt{)}, which has
 specified it may modify the set of expressions \textsc{Y}.
-\begin{table}[hbt]%%%%%
-\rule{\linewidth}{0.25mm}
-\\[0.5ex]
+%%%%%
+\[
 \begin{tabular}{ll}
-METH-DEC\,\,\, & 
-\begin{prooftree}
+\textsf{(METH-DEC)}\,\,\,&
+\begin{prooftree} 
 \texttt{m(}\overrightarrow{\texttt{o}}\texttt{).body}\
-\overrightarrow{\textit{mod}}\
-\textsc{Y}\cup \{\overrightarrow{\texttt{o}}\}\cup \{
+\overrightarrow{\textsf{mod}}\ 
+Y\cup \{\overrightarrow{\texttt{o}}\}\cup \{
 \texttt{m(}\overrightarrow{\texttt{o}}\texttt{).locvars}\} 
 \justifies
-\texttt{m(}\overrightarrow{\texttt{o}}\texttt{)}\ \textit{mod}\ \textsc{Y}
+\texttt{m(}\overrightarrow{\texttt{o}}\texttt{)}\ \textsf{mod}\ Y
 \end{prooftree}
 \end{tabular}
-\\[0.5ex]
-\rule{\linewidth}{0.25mm}
-\end{table} %%%%%
-
-
-
-
+\]
+%%%%%
 This rule states that for this
 method declaration, it is enough to
 check every instruction in its method body
@@ -558,28 +581,22 @@ $\overrightarrow{\texttt{o}}$ by the real parameters
 $\overrightarrow{\texttt{q}}$. Additionally, if \emph{this} appears in 
 the formal parameters $\overrightarrow{\texttt{o}}$, it must be
 changed by the path \textup{e}.
-
-\begin{table}[hbt]%%%%%
-\rule{\linewidth}{0.25mm}
-\\[0.5ex]
+%%%%%%
+\[
 \begin{tabular}{ll}
-METH-INV\,\,\, &
+\textsf{(METH-INV)}\,\, &
 \begin{prooftree}
-\rule[1ex]{0em}{1.5ex}
-\sem{\textup{e}\texttt{.m(}\overrightarrow{\texttt{o}})\texttt{.modifies}}
+\sem{e\texttt{.m(}\overrightarrow{\texttt{o}})\texttt{.modifies}}
 [\overrightarrow{\texttt{o}}\backslash \overrightarrow{\texttt{q}},
-\texttt{this}\backslash \textup{e}]\sqsubseteq \textsc{Y},\
-\textup{e}\ \textit{modPE}\ \textsc{Y},\
-\overrightarrow{\texttt{q}}\ \overrightarrow{\textit{modEXP}}\
-\textsc{Y}
+\texttt{this}\backslash e]\sqsubseteq Y,\
+e\ \textsf{modPE}\ Y,\
+\overrightarrow{\texttt{q}}\ \overrightarrow{\textsf{modEXP}}\ Y
 \justifies
-\textup{e}\texttt{.m(}\overrightarrow{\texttt{q}}\texttt{)}\ \textit{modPE}\ \textsc{Y}
+e\texttt{.m(}\overrightarrow{\texttt{q}}\texttt{)}\ \textsf{modPE}\ Y
 \end{prooftree}
 \end{tabular}
-\\[0.5ex]
-\rule{\linewidth}{0.25mm}
-\end{table} %%%%%%
-
+\]
+ %%%%%%
 This fact is shown by the rule
 \textup{METH-INV}.  One must also check the formal parameters
 of the method by using \emph{modEXP} rules
@@ -595,66 +612,55 @@ target of an assignment. Additionally, and according to the
 \java~syntax, we must check \textup{e}$_1$ and \textup{e}$_2$ by
 using the \textit{modPE} and \textit{modEXP} rules respectively. This
 fact is showed by the rule \textup{ASSG}.
-\begin{table}[hbt] %%%%%%%%%
-\rule{\linewidth}{0.25mm}
-\\[0.5ex]
+%%%%%%%%%
+\[
 \begin{tabular}{ll}
-ASSG\,\,\, & 
+\textsf{(ASSG)}\,\,\, & 
 \begin{prooftree}
-\textup{e}_1\underline{\in}\ \textsc{Y},\ \ \textup{e}_1\
-\textit{modPE}\ \textsc{Y},\ \ \textup{e}_2\ \textit{modEXP}\
-\textsc{Y}
+e_1\underline{\in}Y,\ \ e_1\
+\textsf{modPE}\ Y,\ \ e_2\ \textsf{modEXP}\ Y
 \justifies
-\textup{e}_1\ \oplus\ \textup{e}_2\ \textit{modEXP}\ \textsc{Y}
+e_1\oplus \textup{e}_2\ \textsf{modEXP}\ Y
 \using
-\oplus \in \{ \texttt{=,+=,-=,*=,/=} \}
+\oplus \in \{\texttt{=,+=,-=,*=,/=}\}
 \end{prooftree}
 \end{tabular}
-\\[0.5ex]
-\rule{\linewidth}{0.25mm}
-\end{table} %%%%%
-
+\]
+%%%%%%%%
 An instruction in a method body can be represented by a local
 declaration. In this way, if some variable \texttt{x} is declared and is
 provided an initial value, that variable must belong to the
 set \textsc{Y} of expressions modifiable by the method. Rule
 \textup{VAR-DECL-ASSG} states this fact. Additionally, one must
 keep checking \textup{e} by using expressions rules.
-\begin{table}[hbt] %%%%%%%%%
-\rule{\linewidth}{0.25mm}
-\\[0.5ex]
+%%%%%%%%%
+\[
 \begin{tabular}{ll}
-VAR-DECL-ASSG\,\,\, & 
+\textsf{(VAR-DECL-ASSG)}\,\, & 
 \begin{prooftree}
 \rule[1ex]{0em}{1.5ex}
-\texttt{x}\underline{\in}\ \textsc{Y},\ \ \textup{e}\ \textit{modEXP}\ \textsc{Y}
+\texttt{x}\underline{\in}Y,\ \ e\ \textsf{modEXP}\ Y
 \justifies
-\texttt{T x =}\ \textup{e}\ \textit{modEXP}\ \textsc{Y}
+\texttt{T x =}\ e\ \textsf{modEXP}\ Y
 \end{prooftree}
 \end{tabular}
-\\[0.5ex]
-\rule{\linewidth}{0.25mm}
-\end{table} %%%%% 
-
+\]
+%%%%%%%
 Contrary to that, if the variable is not
 assigned while is declared, we do not have to do any
 membership checking. This fact is presented by the rule
 \textup{VAR-DECL}.
-\begin{table}[hbt] %%%%%%%%%
-\rule{\linewidth}{0.25mm}
-\\[0.5ex]
+%%%%%
+\[
 \begin{tabular}{ll}
-VAR-DECL\,\,\, & 
+\textsf{(VAR-DECL)}\,\,\, & 
 \begin{prooftree}
 \justifies
-\texttt{T x}\ \textit{modEXP}\ \textsc{Y}
-\using
+\texttt{T x}\ \textsf{modEXP}\ Y
 \end{prooftree}
 \end{tabular}
-\\[0.5ex]
-\rule{\linewidth}{0.25mm}
-\end{table} %%%%% 
-
+\]
+%%%%%%
 \java~instructions can also be represented by pre and post
 expressions. These can be seen as \emph{in place} allocations. Rule
 \textup{POST-PLUS} presents the case for post-increment expressions.
@@ -662,21 +668,18 @@ That rule states that the expression \textup{e}, which is the target
 of an assignment, has to belong to set of expressions \textup{Y}
 modifiable by the method. Additionally, \textup{e} must be checked using
 expression rules.
-\begin{table}[hbt] %%%%%%%%%
-\rule{\linewidth}{0.25mm}
-\\[0.5ex]
+%%%%%%
+\[
 \begin{tabular}{ll}
-POST-PLUS\,\,\, &
+\textsf{(POST-PLUS)}\,\, &
 \begin{prooftree}
-\textup{e}\underline{\in}\ \textsc{Y},\ \ \textup{e}\ \textit{modPE}\ \textsc{Y}
+e\underline{\in}Y,\ \ e\ \textsf{modPE}\ Y
 \justifies
-\textup{e}\ \texttt{++}\ \textit{modEXP}\ \textsc{Y}
+e\texttt{++}\ \textsf{modEXP}\ Y
 \end{prooftree}
 \end{tabular}
-\\[0.5ex]
-\rule{\linewidth}{0.25mm}
-\end{table} %%%%%
-
+\]
+%%%%%%%%
 The \textup{BINARY} rule is applicable
 to arithmetic, relational and logic operators. This rule
 does not take into account any consideration about membership of
@@ -687,65 +690,56 @@ variable. This analysis also works for \java~operators as \texttt{unary},
 \texttt{instanceof}, \texttt{()} (\emph{casting}) and $?$, as
 presented by rules \textup{UNARY}, \textup{INSTANCE}, \textup{CAST}
 and \textup{CONDITIONAL}.
-\begin{table}[hbt] %%%%%%%%%
-\rule{\linewidth}{0.25mm}
-\\[0.5ex]
+%%%%%%%%%
+\[
 \begin{tabular}{ll}
-BINARY & 
+\textsf{(BINARY)} & 
 \begin{prooftree} 
-\textup{e}_1\ \textit{modPE}\ \textsc{Y},\ \ \textup{e}_2\
-\textit{modEXP}\ \textsc{Y}
+e_1\ \textsf{modPE}\ Y,\ \ e_2\ \textsf{modEXP}\ Y
 \justifies
-\textup{e}_1 \oplus \ \textup{e}_2\ \textit{modEXP}\ \textsc{Y}
+e_1\oplus e_2\ \textsf{modEXP}\ Y
 \using
 \oplus \in \{
 	\begin{array}{l}
-		\texttt{<,<=,>,>=,==}	\\
-		\texttt{!=,||,\&\&,+,-}	\\
-		\texttt{*,/,\,\&,\^\ ,|}
+		\texttt{<,<=,>,>=,==,!=,||}	\\
+		\texttt{\&\&,+,-,*,/,\,\&,\^\ ,|}
 	\end{array}
 	\}
 \end{prooftree}
-\\[0.3ex]
-UNARY & 
+\\[3.5ex]
+\textsf{(UNARY)} & 
 \begin{prooftree} 
-\rule[1ex]{0em}{1.5ex}
-\textup{e}\ \textit{modEXP}\ \textsc{Y}
+e\ \textsf{modEXP}\ Y
 \justifies
-\oplus \ \textup{e}\ \textit{modEXP}\ \textsc{Y}
+\oplus \ e\ \textsf{modEXP}\ Y
 \using
-\oplus \in \{ \texttt{+,-,$\sim$,!}\}
+\oplus \in \{\texttt{+,-,$\sim$,!}\}
 \end{prooftree}
-\\[3.0ex]
-INSTANCE & 
+\\[3.5ex]
+\textsf{(INSTANCE)} & 
 \begin{prooftree} 
-\rule[1ex]{0em}{1.5ex}
-\textup{e}\ \textit{modEXP}\ \textsc{Y}
+e\ \textsf{modEXP}\ Y
 \justifies
-\textup{e}\ \texttt{instanceof C}\ \textit{modEXP}\ \textsc{Y}
+e\ \texttt{instanceof C}\ \textsf{modEXP}\ Y
 \end{prooftree}
-\\[3.0ex]
-CAST & 
-\begin{prooftree} 
-\rule[1ex]{0em}{1.5ex}
-\textup{e}\ \textit{modEXP}\ \textsc{Y}
+\\[3.5ex]
+\textsf{(CAST)} & 
+\begin{prooftree}
+e\ \textsf{modEXP}\ Y
 \justifies
-\texttt{(T)}\textup{e}\ \textit{modEXP}\ \textsc{Y}
+\texttt{(T)}e\ \textsf{modEXP}\ Y
 \end{prooftree}
-\\[3.0ex]
-CONDITIONAL\,\,\, & 
+\\[3.5ex]
+\textsf{(CONDITIONAL)}\,\, & 
 \begin{prooftree} 
-\rule[1ex]{0em}{1.5ex}
-\textup{e}_1\ \textit{modEXP}\ \textsc{Y},\ \ \textup{e}_2\
-\textit{modEXP}\ \textsc{Y},\ \ \textup{e}3\ \textit{modEXP}\
-\textsc{Y}
+e_1\ \textsf{modEXP}\ Y,\ \ e_2\ \textsf{modEXP}\ Y,\ \ e_3\
+\textsf{modEXP}\ Y
 \justifies
-\textup{e}_1?\textup{e}_2:\textup{e}3\ \textit{modEXP}\ \textsc{Y}
+e_1\texttt{?}e_2\texttt{:}e_3\ \textsf{modEXP}\ Y
 \end{prooftree}
 \end{tabular}
-\\[0.5ex]
-\rule{\linewidth}{0.25mm}
-\end{table} %%%%%%%%%%
+\]
+%%%%%%%%%%
 
 So far, the rules defined here enable us to detect the kind of problems
 presented in Section~\ref{sec-sem-mod-cla} (see
@@ -758,7 +752,8 @@ deduce $myArr\underline\in\ \phi$. That is not possible. Hence, the
 checking of the method \texttt{n()} will
 fail. Figure~\ref{fig-der-cor-fig-esc} presents the whole derivation
 corresponding to this problem.
-\begin{figure}[tbh]%%%%%%%%
+%%%%%%%
+\begin{figure}[tbh]
 \rule{\linewidth}{0.25mm}
 \\[0.5ex]
 \begin{prooftree}
@@ -769,12 +764,12 @@ corresponding to this problem.
          \justifies 
          \texttt{myArr}\ \in\ \phi
 	 \using
-         \textsc{AX}
+         \textsf{(AX)}
        \]
        \justifies 
        \texttt{myArr}\ \underline\in\ \phi
        \using
-       \textsc{IN-SIMP}
+       \textsf{(IN-SIMP)}
      \]
      \[
        \[
@@ -783,7 +778,7 @@ corresponding to this problem.
          \leadsto 
        \]
        \justifies 
-       \texttt{myArr}\ \textit{modPE}\ \phi
+       \texttt{myArr}\ \textsf{modPE}\ \phi
      \]
      \[
        \[
@@ -792,17 +787,17 @@ corresponding to this problem.
          \leadsto 
        \]
        \justifies 
-       \texttt{new int[3]}\ \textit{modEXP}\ \phi
+       \texttt{new int[3]}\ \textsf{modEXP}\ \phi
      \]
      \justifies
-     \texttt{myArr = new int[3]}\ \textit{mod}\ \phi
+     \texttt{myArr = new int[3]}\ \textsf{mod}\ \phi
      \using
-     \textsc{ASSG}
+     \textsf{(ASSG)}
    \]
    \justifies
-   \texttt{m}\ \textit{mod}\ \phi
+   \texttt{m}\ \textsf{mod}\ \phi
    \using
-   \textsc{METH-DEC}
+   \textsf{(METH-DEC)}
 \end{prooftree}
 \caption{Detecting not modifiable definitions}
 \label{fig-der-cor-fig-esc}
@@ -815,94 +810,77 @@ represented by primary and suffix expressions. Primary rules
 \textup{CONST} do not take into account any consideration of
 membership of expressions \textup{e}$_i$ to some set, since they do
 not change any expression.
-\begin{table}[hbt] %%%%%%%%%
-\rule{\linewidth}{0.25mm}
-\\[0.5ex]
+%%%%%%%%%
+\[
 \begin{tabular}{ll}
-ID-FLD\,\,\, &
+\textsf{(ID-FLD)}\,\, &
 \begin{prooftree}
-\rule[1ex]{0em}{1.5ex}
 \justifies
-\texttt{x}\ \textit{modPRM}\ \textsc{Y}
+\texttt{x}\ \textsf{modPRM}\ Y
 \end{prooftree}
 \\[3.0ex]
-SUPER\,\,\, & 
+\textsf{(SUPER)}\,\, & 
 \begin{prooftree}
-\rule[1ex]{0em}{1.5ex}
 \justifies
-\texttt{super}\ \textit{modPRM}\ \textsc{Y}
+\texttt{super}\ \textsf{modPRM}\ Y
 \end{prooftree}
 \\[3.0ex]
-THIS\,\,\, & 
+\textsf{(THIS)}\,\, & 
 \begin{prooftree}
-\rule[1ex]{0em}{1.5ex}
 \justifies
-\texttt{this}\ \textit{modPRM}\ \textsc{Y}
+\texttt{this}\ \textsf{modPRM}\ Y
 \end{prooftree}
 \\[3.0ex]
-STATIC\,\,\, & 
+\textsf{(STATIC)}\,\, &
 \begin{prooftree}
-\rule[1ex]{0em}{1.5ex}
 \justifies
-\texttt{A}\ \textit{modPRM}\ \textsc{Y}
+\texttt{A}\ \textsf{modPRM}\ Y
 \end{prooftree}
 \\[3.0ex]
-CONST\,\,\, & 
+\textsf{(CONST)}\,\, &
 \begin{prooftree}
-\rule[1ex]{0em}{1.5ex}
 \justifies
-\texttt{b}\ \textit{modPRM}\ \textsc{Y}
-\using 
-\texttt{b}\in \textsf{Constant} 
+\texttt{b}\ \textsf{modPRM}\ Y
+\using
+\texttt{b}\in Constant
 \end{prooftree}
 \end{tabular}
-\\[0.5ex]
-\rule{\linewidth}{0.25mm}
-\end{table} %%%%%%%%%%%%%
+\]
+%%%%%%%%%%%%%
 
 Rule \textup{ARR-FLD} shows that for array primary expressions one
 must check the corresponding parameter expression \textup{e} using
 \textit{modEXP} rules.
-\begin{table}[hbt] %%%%%%%%%
-\rule{\linewidth}{0.25mm}
-\\[0.5ex]
+%%%%%%%%%
+\[
 \begin{tabular}{ll}
-ARR-FLD\,\,\, &
+\textsf{(ARR-FLD)}\,\, &
 \begin{prooftree}
-\rule[1ex]{0em}{1.5ex}
-\textup{e}\ \textit{modEXP}\ \textsc{Y}
+e\ \textsf{modEXP}\ Y
 \justifies
-\texttt{a[}\textup{e}\texttt{]}\ \textit{modPRM}\ \textsc{Y}
+\texttt{a[}e\texttt{]}\ \textsf{modPRM}\ Y
 \end{prooftree}
 \end{tabular}
-\\[0.5ex]
-\rule{\linewidth}{0.25mm}
-\end{table} %%%%%%%%%%%%%
-
+\]
+%%%%%%%%%%%%%
 The rule \textup{METH} expresses the fact that a primary expression
 can be represented by a method invocation. This rule is similar to
 \textup{METH-INV} presented above. 
-\begin{table}[hbt] %%%%%%%%%
-\rule{\linewidth}{0.25mm}
-\\[0.5ex]
+%%%%%%%
+\[
 \begin{tabular}{ll}
-METH\,\,\, &
+\textsf{(METH)}\,\, &
 \begin{prooftree}
-\rule[1ex]{0em}{1.5ex}
-\sem{\texttt{this.m(}\overrightarrow{\texttt{o}}\texttt{).modifies}}[\overrightarrow{\texttt{o}}\
-\backslash
-\overrightarrow{\texttt{q}}]\sqsubseteq \textsc{Y},\ \
-\overrightarrow{\texttt{q}}\ \overrightarrow{\textit{modEXP}}\
+\sem{\texttt{this.m(}\overrightarrow{\texttt{o}}\texttt{).modifies}}[\overrightarrow{\texttt{o}} 
+\backslash \overrightarrow{\texttt{q}}]\sqsubseteq Y,\ \
+\overrightarrow{\texttt{q}}\ \overrightarrow{\textsf{modEXP}}\
 \textsc{Y}
 \justifies
-\texttt{m(}\overrightarrow{\texttt{q}}\texttt{)}\ \textit{modPRM}\ \textsc{Y}
+\texttt{m(}\overrightarrow{\texttt{q}}\texttt{)}\ \textsf{modPRM}\ \textsc{Y}
 \end{prooftree}
 \end{tabular}
-\\[0.5ex]
-\rule{\linewidth}{0.25mm}
-\end{table} %%%%%%%%%%%%%
-
-
+\]
+%%%%%%%%
 Rules \textup{NEW-EXP} and \textup{NEW-ARR} show the cases when
 primary expressions are represented by \java~\emph{new}
 expressions. Both rules express that the expressions passed as
@@ -910,30 +888,25 @@ parameters must be checked by using \textit{modEXP} rules. To suffix
 expressions, we have rules \textup{ID-FLD}, \textup{ARR-FLD},
 \textup{THIS} and \textup{SUPER} similar to those presented for primary
 expressions.
-\begin{table}[hbt] %%%%%%%%%
-\rule{\linewidth}{0.25mm}
-\\[0.5ex]
+%%%%%%%%
+\[
 \begin{tabular}{ll}
-NEW-EXP\,\,\, & 
+\textsf{(NEW-EXP)}\,\, & 
 \begin{prooftree}
-\rule[1ex]{0em}{1.5ex}
-\overrightarrow{\textup{e}}\ \overrightarrow{\textit{modEXP}}\ \textsc{Y}
+\overrightarrow{e}\ \overrightarrow{\textsf{modEXP}}\ Y
 \justifies
-\texttt{new T(}\overrightarrow{\textup{e}}\texttt{)}\ \textit{modPRM}\ \textsc{Y}
+\texttt{new T(}\overrightarrow{e}\texttt{)}\ \textsf{modPRM}\ Y
 \end{prooftree}
-\\[3.0ex]
-NEW-ARR\,\,\, & 
+\\[3.5ex]
+\textsf{(NEW-ARR)}\,\, & 
 \begin{prooftree}
-\rule[1ex]{0em}{1.5ex}
-\textup{e}\ \textit{modEXP}\ \textsc{Y}
+e\ \textsf{modEXP}\ Y
 \justifies
-\texttt{new T[}{\textup{e}}\texttt{]}\ \textit{modPRM}\ \textsc{Y}
+\texttt{new T[}{e}\texttt{]}\ \textsf{modPRM}\ Y
 \end{prooftree}
 \end{tabular}
-\\[0.5ex]
-\rule{\linewidth}{0.25mm}
-\end{table} %%%%%%%%%%%%%
-
+\]
+%%%%%%%%%%
 \java~instructions can be also represented by statements. In case
 of \texttt{if...then...} statements, rule
 \textup{IF-THEN} states that its guard must be checked using
@@ -943,94 +916,81 @@ a set of
 statements (an expression can be seen as a statement), thus it must be
 checked by using rules for statements. A similar analysis can be
 formulated for \texttt{if...then...else...} and \texttt{while} constructs.
-\begin{table}[hbt] %%%%%%%%%%%%
-\rule{\linewidth}{0.25mm}
+%%%%%%
+\[
 \begin{tabular}{ll}
-IF-THEN\,\,\, & 
+\textsf{(IF-THEN)}\,\, & 
 \begin{prooftree}
-\rule[1ex]{0em}{1.5ex}
-\textsc{C}\ \textit{modEXP}\ \textsc{Y},\ \ \textsc{S}\ \textit{modSTM}\ \textsc{Y}
+c\ \textsf{modEXP}\ Y,\ \ s\ \textsf{modSTM}\ Y
 \justifies
-\texttt{if(}\textsc{C}\texttt{)}\texttt{\{}\textsc{S}\texttt{\}}
-\textit{modSTM}\ \textsc{Y}
+\texttt{if(}c\texttt{)\{}s\ \texttt{\}}\ 
+\textsf{modSTM}\ Y
 \end{prooftree}
-\\[3.0ex]
-IF-THEN-ELSE\,\,\, & 
+\\[3.5ex]
+\textsf{(IF-THEN-ELSE)}\,\, & 
 \begin{prooftree}
-\rule[1ex]{0em}{1.5ex}
-\textsc{C}\ \textit{modEXP}\ \textsc{Y},\ \ \textsc{S}\
-\textit{modSTM}\ \textsc{Y},\ \ \textsc{T}\ \textit{modSTM}\
-\textsc{Y}
+c\ \textsf{modEXP}\ Y,\ \ s\ \textsf{modSTM}\ Y,\ \ \textsf{t}\
+\textsf{modSTM}\ Y
 \justifies
-\texttt{if(}\textsc{C}\texttt{)\{}\textsc{S}\texttt{\}}
-\texttt{else\{}\textsc{T}\texttt{\}}\ \textit{modSTM}\ Y
+\texttt{if(}c\texttt{)\{}s\texttt{\}else\{}t\texttt{\}}\
+\textsf{modSTM}\ Y
 \end{prooftree}
-\\[3.0ex]
-WHILE\,\,\, & 
+\\[3.5ex]
+\textsf{(WHILE)}\,\,\, & 
 \begin{prooftree}
-\rule[1ex]{0em}{1.5ex}
-\textsc{C}\ \textit{modEXP}\ \textsc{Y},\ \ \textsc{B}\ \textit{modSTM}\ \textsc{Y}
+c\ \textsf{modEXP}\ Y,\ \ b\ \textsf{modSTM}\ Y
 \justifies
-\texttt{while(}\textsc{C}\texttt{)}{\tt \{}\textsc{B}{\tt \}}
+\texttt{while(}c\texttt{)\{}b\texttt{\}}
 \end{prooftree}
 \end{tabular}
-\\[0.5ex]
-\rule{\linewidth}{0.25mm}
-\end{table} %%%%%%%%%%%%%
+\]
+%%%%%%%%%%%
 
 Rules \textup{SKIP}, \textup{BREAK}, \textup{BREAK-LBL},
 \textup{CONTINUE} and \textup{CONTINUE-LBL}
 present the analysis for the \texttt{skip},
 \texttt{break}, \texttt{break} \emph{lbl}, \texttt{continue} and
 \texttt{continue} \emph{lbl} \java~statements. 
-\begin{table}[htb] %%%%%%%%%%%%
-\rule{\linewidth}{0.25mm}
+%%%%%%%%%%%%
+\[
 \begin{tabular}{ll}
-SKIP &  
+\textsf{(SKIP)} &  
 \begin{prooftree}
-\rule[1ex]{0em}{1.5ex}
 \justifies
-\texttt{skip}\ \textit{modSTM}\ \textsc{Y}
+\texttt{skip}\ \textsf{modSTM}\ Y
 \end{prooftree}
 \\[3.0ex]
-BREAK & 
+\textsf{(BREAK)} & 
 \begin{prooftree}
-\rule[1ex]{0em}{1.5ex}
 \justifies
-\texttt{break}\ \textit{modSTM}\ \textsc{Y}
+\texttt{break}\ \textsf{modSTM}\ Y
 \end{prooftree}
 \\[3.0ex]
-BREAK-LBL &
+\textsf{(BREAK-LBL)} &
 \begin{prooftree}
-\rule[1ex]{0em}{1.5ex} 
 \justifies
-\texttt{break}\ \textup{label}\ \textit{modSTM}\ \textsc{Y}
+\texttt{break\! lbl}\ \textsf{modSTM}\ Y
 \end{prooftree}
 \\[3.0ex]
-CONTINUE & 
+\textsf{(CONTINUE)} & 
 \begin{prooftree} 
-\rule[1ex]{0em}{1.5ex}
 \justifies
-\texttt{continue}\ \textit{modSTM}\ \textsc{Y}
+\texttt{continue}\ \textsf{modSTM}\ Y
 \end{prooftree}
 \\[3.0ex]
-CONTINUE-LBL\,\,\, & 
+\textsf{(CONTINUE-LBL)}\,\, & 
 \begin{prooftree} 
-\rule[1ex]{0em}{1.5ex}
 \justifies
-\texttt{continue}\ \textup{label}\ \textit{modSTM}\ \textsc{Y}
+\texttt{continue\! lbl}\ \textsf{modSTM}\ Y
 \end{prooftree}
-\\[0.3ex]
-RETURN & 
-\begin{prooftree} 
-\rule[1ex]{0em}{1.5ex}
-\justifies
-\texttt{return}\ \textit{modSTM}\ \textsc{Y}
+\\[3.0ex]
+\textsf{(RETURN)} & 
+\begin{prooftree} \justifies
+\texttt{return}\ \textsf{modSTM}\ Y
 \end{prooftree}
 \end{tabular}
-\\[0.5ex]
-\rule{\linewidth}{0.25mm}
-\end{table} %%%%%%%%%%%%%
+\]
+%%%%%%%%%%%%%
 
 Rule \textup{SEQ} presents the analysis for the composition of
 \java~instructions. This rule
@@ -1039,32 +999,31 @@ may modify \textsc{Y} if \textup{S} may modify \textsc{Y} and
 \textup{T} may modify \textsc{Y}. This rule enables us to express
 modifiable conditions for different \java~instructions as the
 sequentialization of their respective conditions.
-\begin{table}[hbt] %%%%%%%
-\rule{\linewidth}{0.25mm}
+%%%%%%%%%%%%%
+\[
 \begin{tabular}{ll}
-SEQ\,\,\, & 
+\textsf{(SEQ)}\,\, & 
 \begin{prooftree}
-\rule[1ex]{0em}{1.5ex}
-\textsc{S}\ \textit{modSTM}\ \textsc{Y},\ \ \textsc{T}\
-\textit{modSTM}\ \textsc{Y}
+s\ \textsf{modSTM}\ Y,\ \ t\
+\textsf{modSTM}\ Y
 \justifies
-\textsc{S}\texttt{;}\textsc{T}\ \textit{modSTM}\ \textsc{Y}
+s\texttt{;}t\ \textsf{modSTM}\ Y
 \end{prooftree} 
 \end{tabular}
-\\[0.5ex]
-\rule{\linewidth}{0.25mm}
-\end{table} %%%%%%%%%%%%%
-
-
-%-------------------------------------------------------------
-%RETURN-EXP & 
+\]
+%%%%%%%%%%%%%
+%%%%%%%%%%%%%
+%\[
+%\begin{tabular}{ll}
+%\textsf{RETURN-EXP}\,\, & 
 %\begin{prooftree} 
-%\rule[1ex]{0em}{1.5ex}
-%\textup{e}\ \textit{modEXP}\ \textsc{Y}
+%e\ \textsf{modEXP}\ Y
 %\justifies
-%\texttt{return}\ \textup{e}\ \textit{modSTM}\ \textsc{Y}
+%\texttt{return}\ e\ \textsf{modSTM}\ Y
 %\end{prooftree}
-
+%\end{tabular}
+%\]
+%%%%%%%%%%%%%
 Finally, another aspect that must be analyzed is
 the different constructs that can appear in modifiable
 specifications. According to \jml~specifications, 
@@ -1079,45 +1038,39 @@ Typically, if none of these pragmas occur in the modifiable
 clause we fall on the standard definition of membership (see rules
 rules \textup{IN-SIMP}, \textup{IN-ARR}, \textup{IN-EXP},
 \textup{IN-EXP-ARR}).
-\begin{table}[hbt]
-\rule{\linewidth}{0.25mm}
-\\[0.5ex]
+%%%%%%%
+\[
 \begin{tabular}{ll}
-IN-SIMP &
+\textsf{(IN-SIMP)} &
 \begin{prooftree}
-\rule[1ex]{0em}{1.5ex}
-\texttt{this.x}\in \textsc{Y}\vee \texttt{x}\in \textsc{Y}
+\texttt{x}\in \textsc{Y}
 \justifies
-\texttt{this.x}\underline{\in} \textsc{Y}
+\texttt{x}\underline{\in}Y
 \end{prooftree}
-\\[3.0ex]
-IN-ARR &
+\\[3.5ex]
+\textsf{(IN-ARR)} &
 \begin{prooftree}
-\rule[1ex]{0em}{1.5ex}
-\texttt{this.a[}\textup{e}\texttt{]}\in Y\vee \texttt{a[}\textup{e}\texttt{]}\in \textsc{Y}
+\texttt{a[}e\texttt{]}\in Y
 \justifies
-\texttt{this.a[}\textup{e}\texttt{]}\underline{\in} \textsc{Y}
+\texttt{a[}e\texttt{]}\underline{\in}Y
 \end{prooftree}
-\\[3.0ex]
-IN-EXP &
+\\[3.5ex]
+\textsf{(IN-EXP)} &
 \begin{prooftree}
-\rule[1ex]{0em}{1.5ex}
-\textup{e}\texttt{.x}\in \textsc{Y}
+e\texttt{.x}\in Y
 \justifies
-\textup{e}\texttt{.x}\underline{\in} \textsc{Y}
+e\texttt{.x}\underline{\in} Y
 \end{prooftree}
-\\[3.0ex]
-IN-EXP-ARR\,\,\, &
+\\[3.5ex]
+\textsf{(IN-EXP-ARR)}\,\, &
 \begin{prooftree}
-\rule[1ex]{0em}{1.5ex}
-\textup{e}_2\texttt{.a[}\textup{e}_1\texttt{]}\in \textsc{Y}
+e_2\texttt{.a[}e_1\texttt{]}\in Y
 \justifies
-\textup{e}_2\texttt{.a[}\textup{e}_1\texttt{]}\underline{\in} \textsc{Y}
+e_2\texttt{.a[}e_1\texttt{]}\underline{\in} Y
 \end{prooftree}
 \end{tabular}
-\\[0.5ex]
-\rule{\linewidth}{0.25mm}
-\end{table} %%%%%%%%%%%%%
+\]
+%%%%%%%%%%
 
 Moreover, if we are checking simple array membership conditions as
 \texttt{a[}\textup{e}\texttt{]}$\underline{\in}$ \textsc{Y}, it will
@@ -1125,31 +1078,25 @@ be enough to find a \jml~construct in \textsc{Y} specifying that the
 corresponding method may modify any element of \texttt{a} (rule
 \textup{TIMES-ARR}) or certain intervale where the value
 of \textup{e} is found (rule INTERV-ARR).
-\begin{table}[hbt]%%%%%%%%%%
-\rule{\linewidth}{0.25mm}
-\\[0.5ex]
+%%%%%%%%%%
+\[
 \begin{tabular}{ll}
-INTERV-ARR\,\,\, & 
+\textsf{(INTERV-ARR)}\,\, & 
 \begin{prooftree}
-\rule[1ex]{0em}{1.5ex}
-\texttt{a[}i..j\texttt{]}\in \textsc{Y},\ i\leq \textup{e}\leq j
+\texttt{a[}i..j\texttt{]}\in Y,\ i\leq e\leq j
 \justifies
-\texttt{a[}\textup{e}\texttt{]}\underline{\in} \textsc{Y}
+\texttt{a[}e\texttt{]}\underline{\in} Y
 \end{prooftree}
 \\[3.0ex]
-TIMES-ARR\,\,\, &
+\textsf{(TIMES-ARR)}\,\, &
 \begin{prooftree}
-\rule[1ex]{0em}{1.5ex}
-\texttt{a[*]}\in \textsc{Y}
+\texttt{a[}*\texttt{]}\in Y
 \justifies
-\texttt{a[}\textup{e}\texttt{]}\underline{\in} \textsc{Y}
+\texttt{a[}e\texttt{]}\underline{\in} Y
 \end{prooftree}
 \end{tabular}
-\\[0.5ex]
-          \rule{\linewidth}{0.25mm}
-\end{table}%%%%%%%%%
-
-
+\]
+%%%%%%%%%%%
 When establishing membership conditions
 \textup{e}$_1$\texttt{.}\textup{e}$_2$$\underline\in$ \textsc{Y}, we
 have to consider some cases according to the shape of \textup{e}$_2$. If
@@ -1162,52 +1109,45 @@ in \textsc{Y} to establish the original condition of membership
 \texttt{$\backslash$fields$\_$of(}\textup{e}$_1$\texttt{.a}\texttt{)}
 occurring in \textsc{Y} (see rules \textup{IN-ARR-FLD} and
 \textup{IN-EXP-ARR-FLD}).
-\begin{table}[hbt]
-\rule{\linewidth}{0.25mm}
-\\[0.5ex]
+%%%%%%
+\[
 \begin{tabular}{ll}
-IN-THIS &
+\textsf{(IN-THIS)} &
 \begin{prooftree}
-\rule[1ex]{0em}{1.5ex}
-\backslash \texttt{fields}$\_$\texttt{of(}\texttt{this}\textsc{)}\in \textsc{Y}
+\backslash \texttt{fields\_of(this)}\in Y
 \justifies
-\texttt{this.x}\underline{\in} \textsc{Y}
+\texttt{this.x}\underline{\in} Y
 \end{prooftree}
 \\[3.0ex]
-IN-EXP-FLD\,\,\, &
+\textsf{(IN-EXP-FLD)}\,\, &
 \begin{prooftree}
-\rule[1ex]{0em}{1.5ex}
-\backslash \texttt{fields}\_\texttt{of(}\textup{e}\texttt{)}\in \textsc{Y}
+\backslash \texttt{fields\_of(}e\texttt{)}\in Y
 \justifies
-\textup{e}\texttt{.x}\underline{\in} \textsc{Y}
+e\texttt{.x}\underline{\in} Y
 \end{prooftree}
 \end{tabular}
-\\[0.5ex]
-\rule{\linewidth}{0.25mm}
-\end{table} %%%%%%%%%%%%%
-\begin{table}[hbt] %%%%%%%%%%%%%
-\rule{\linewidth}{0.25mm}
-\\[0.5ex]
+\]
+%%%%%%%%%%%
+
+%%%%%%%%%%%
+\[
 \begin{tabular}{ll}
-IN-ARR-FLD\,\,\, &
+\textsf{(IN-ARR-FLD)}\,\, &
 \begin{prooftree}
-\rule[1ex]{0em}{1.5ex}
-\backslash \texttt{fields}\_\texttt{of(a)}\in \textsc{Y}
+\backslash \texttt{fields\_of(a)}\in Y
 \justifies
-\texttt{this.a[}\textup{e}_3\texttt{]}\underline{\in} \textsc{Y}
+\texttt{this.a[}e_3\texttt{]}\underline{\in} Y
 \end{prooftree}
 \\[3.0ex]
-IN-EXP-ARR-FLD\,\,\, &
+\textsf{(IN-EXP-ARR-FLD)}\,\, &
 \begin{prooftree}
-\rule[1ex]{0em}{1.5ex}
-\backslash \texttt{fields}\_\texttt{of(}\textup{e}_1\texttt{.a)}\in \textsc{Y}
+\backslash \texttt{fields\_of(}e_1\texttt{.a)}\in Y
 \justifies
-\textup{e}_1\texttt{.a[}\textup{e}_3\texttt{]}\underline{\in} \textsc{Y}
+e_1\texttt{.a[}e_3\texttt{]}\underline{\in} Y
 \end{prooftree}
 \end{tabular}
-\\[0.5ex]
-\rule{\linewidth}{0.25mm}
-\end{table} %%%%%%%%%%%%%
+\]
+%%%%%%%%%%%
 
 Similarly, \texttt{$\backslash$reach}
 expressions can occur in \modif~clauses\footnote{According to the
@@ -1223,56 +1163,47 @@ have \textup{e}\texttt{.x} belonging to set expressions reachable from
 array expression. This
 is presented by rules \textup{IN-REACH}, \textup{IN-ARR-REACH} and
 \textup{IN-EXP-ARR-REACH}.
-\begin{table}[hbt]%%%%%%%%%%
-\rule{\linewidth}{0.25mm}
-\\[0.5ex]
+%%%%%%%%%
+\[
 \begin{tabular}{ll}
-IN-EXP-REACH &
+\textsf{(IN-EXP-REACH)} &
 \begin{prooftree}
-\rule[1ex]{0em}{1.5ex}
-\backslash \texttt{fields}\_\texttt{of(}\backslash
-\texttt{reach(}\textup{e}_1\textsc{))}\in Y,\ \
-\textup{e}\texttt{.x}\in \backslash
-\texttt{reach(}\textup{e}_1\texttt{)}
+\backslash \texttt{fields\_of(}\backslash
+\texttt{reach(}e_1\texttt{))}\in Y,\ \ e\texttt{.x}\in \backslash
+\texttt{reach(}e_1\texttt{)}
 \justifies
-\textup{e}\texttt{.x}\underline{\in} \textsc{Y}
+e\texttt{.x}\underline{\in} Y
 \end{prooftree}
-\\[3.0ex]
-IN-REACH &
+\\[3.5ex]
+\textsf{(IN-REACH)} &
 \begin{prooftree}
-\rule[1ex]{0em}{1.5ex}
 \backslash
-\texttt{fields}$\_$\texttt{of(}\backslash\texttt{reach(}\textup{e}\texttt{))}\in
-\textsc{Y},\ \ \texttt{this}\in \backslash
-\texttt{reach(}\textup{e}\texttt{)}
+\texttt{fields\_of(}\backslash\texttt{reach(}e\texttt{))}\in Y,\ \
+\texttt{this}\in \backslash \texttt{reach(}e\texttt{)} 
 \justifies
-\texttt{this.x}\underline{\in} \textsc{Y}
+\texttt{this.x}\underline{\in} Y
 \end{prooftree}
 \\[3.0ex]
-IN-ARR-REACH &
+\textsf{(IN-ARR-REACH)} &
 \begin{prooftree}
-\rule[1ex]{0em}{1.5ex}
 \backslash \texttt{fields}\_\texttt{of(}\backslash
-\texttt{reach(}\textup{e}_1\texttt{))}\in \textsc{Y},\ \
-\texttt{this.a}\in \backslash \texttt{reach(}\textup{e}\texttt{)}
+\texttt{reach(}e_1\texttt{))}\in Y,\ \ \texttt{this.a}\in \backslash
+\texttt{reach(}e\texttt{)} 
 \justifies
-\texttt{this.a[}\textup{e}\texttt{]}\underline{\in} Y
+\texttt{this.a[}e\texttt{]}\underline{\in} Y
 \end{prooftree}
 \\[3.0ex]
-IN-EXP-ARR-REACH\,\,\, &
+\textsf{(IN-EXP-ARR-REACH)}\,\, &
 \begin{prooftree}
-\rule[1ex]{0em}{1.5ex}
-\backslash \texttt{fields}\_\texttt{of(}\backslash
-\texttt{reach(}\textup{e}\texttt{))}\in \textsc{Y},\ \
-\textup{e}_2\texttt{.a}\in \backslash
-\texttt{reach(}\textup{e}\texttt{)}
+\backslash \texttt{fields\_of(}\backslash
+\texttt{reach(}e\texttt{))}\in Y,\ \ e_2\texttt{.a}\in \backslash
+\texttt{reach(}e\texttt{)}
 \justifies
-\textup{e}_2\texttt{.a[}\textup{e}_1\texttt{]}\underline{\in} \textsc{Y}
+e_2\texttt{.a[}e_1\texttt{]}\underline{\in} Y
 \end{prooftree}
 \end{tabular}
-\\[0.5ex]
-\rule{\linewidth}{0.25mm}
-\end{table}%%%%%%%%%
+\]
+%%%%%%%%%%%
 
 %Appendix ~\ref{ane-der-exa} shows some derivation examples of checking
 %\java~asserted programs using the rules we present below. These examples
@@ -1378,20 +1309,18 @@ and thus check its modifiable declarations. Figure~\ref{fig-cal-whi-rul}
 shows the case for the rule corresponding a \texttt{while}
 construct. Its
 respective rule \textup{WHILE} is presented below.
-\begin{table}[hbt] %%%%%%%%%%%%
-\rule{\linewidth}{0.25mm}
+%%%%%%%%%%
+\[
 \begin{tabular}{ll}
-WHILE\,\,\, & 
+WHILE\,\, & 
 \begin{prooftree}
-\rule[1ex]{0em}{1.5ex}
-\textsc{C}\ \textit{modEXP}\ \textsc{Y},\ \ \textsc{B}\ \textit{modSTM}\ \textsc{Y}
+c\ \textsf{modEXP}\ Y,\ \ b\ \textsf{modSTM}\ Y
 \justifies
-\texttt{while(}\textsc{C}\texttt{)}{\tt \{}\textsc{B}{\tt \}}
+\texttt{while(}c\texttt{)\{}b\texttt{\}}
 \end{prooftree}
 \end{tabular}
-\\[0.5ex]
-\rule{\linewidth}{0.25mm}
-\end{table} %%%%%%%%%%%%%
+\]
+%%%%%%%%%
 
 As can be seen, as far as the method \texttt{statement} parses the
 different parts of a \texttt{while} statement, we store the guard
