@@ -172,3 +172,7 @@
 //@ working_space \not_specified;
 //@ working_space spec_expression_of_type_int;
 //@ working_space spec_expression_of_type_int if predicate;
+
+/*@ \peer */
+/*@ \readonly */
+/*@ \rep */

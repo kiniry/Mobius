@@ -86,3 +86,6 @@ GoodJmlPragmas.j:170: /*@ duration spec_expression if predicate; */
 GoodJmlPragmas.j:172: /*@ working_space \not_specified; */
 GoodJmlPragmas.j:173: /*@ working_space spec_expression_of_type_int; */
 GoodJmlPragmas.j:174: /*@ working_space spec_expression_of_type_int if predicate; */
+GoodJmlPragmas.j:176: /*@ \peer */
+GoodJmlPragmas.j:177: /*@ \readonly */
+GoodJmlPragmas.j:178: /*@ \rep */
