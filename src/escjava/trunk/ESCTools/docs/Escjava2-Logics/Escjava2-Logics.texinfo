@@ -76,10 +76,10 @@ Equipment Corporation.
 Copyright @copyright{} 1999 K. Rustan Leino and Digital Equipment
 Corporation.
 
-Copyright @copyright{} 2004 Joseph R. Kiniry and the University of
+Copyright @copyright{} 2004 Joseph R. Kiniry and Radboud University
 Nijmegen.
 
-Copyright @copyright{} 2004 Joseph R. Kiniry and University College
+Copyright @copyright{} 2004,2005 Joseph R. Kiniry and University College
 Dublin.
 
 @quotation
@@ -135,9 +135,9 @@ See @uref{http://creativecommons.org/licenses/by-nc-sa/2.0/legalcode}
 @vskip 0pt plus 1filll
 @insertcopying
 
-@c To be published by the Nijmegen Institute for Computing and Information
-@c Science at the University of Nijmegen as technical report NIII-R04XX.
-@c See @uref{http://www.cs.kun.nl/research/reports/}
+@c To be published by the KindSoftware Research Group, Department of
+@c Computer Science, University College Dublin as technical report TBD
+@c See @uref{http://secure.ucd.ie/}
 @end titlepage
 
 @c metadata used in HTML

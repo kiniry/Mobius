@@ -469,10 +469,13 @@ semantics and the current and future state of JML.  K. Rustan M. Leino
 has provided advice with respect to the original ESC/Java.
 
 The website for the project through version 2.0a8 was hosted by the
-Security of Systems group at the Katholieke Universiteit Nijmegen in
-Nijmegen, Netherlands.  (@url{www.niii.kun.nl/sos/research/escjava}).
-The project will be hosted at the Department of Computer Science at
-University College Dublin from version 2.0a8 onward.
+Security of Systems group at the Radboud University Nijmegen (what used
+to be known as Katholieke Universiteit Nijmegen or the University of
+Nijmegen) in Nijmegen, Netherlands.
+(@url{www.niii.kun.nl/sos/research/escjava}).  The project is now hosted
+by the KindSoftware Research Group in the Department of Computer Science
+at University College Dublin from version 2.0a8
+onward. (@url{secure.ucd.ie})
 
 The work of producing ESC/Java2 stands on the very much more
 considerable effort of the ESC/Java team in conceiving of and

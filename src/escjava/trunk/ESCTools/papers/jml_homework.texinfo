@@ -785,16 +785,16 @@ this point in time.
 Every field implicitely defines a data group of the same name.  For
 example, the Java field declarations
 @example
-class C {
+class C @{
   byte b;
   int i;
   Object o;
   ...
-}
+@}
 @end example
 is equivalent to the following
 @example
-class C {
+class C @{
   //@ JMLDataGroup b;
   byte b; //@ in b;
   //@ JMLDataGroup i;
@@ -802,7 +802,7 @@ class C {
   //@ JMLDataGroup o;
   Object o; //@ in o;
   ...
-}
+@}
 @end example
 
 The data group most frequently used in JML specifications is an
