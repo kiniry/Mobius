@@ -25,7 +25,7 @@ clean:
 	cd parser; ${MAKE} clean
 	cd prover; ${MAKE} clean
 	cd tc; ${MAKE} clean
-	cd test; ${MAKE} clean
+	cd ../../test/escjava/test; ${MAKE} clean
 	cd translate; ${MAKE} clean
 	rm -f *~
 	rm -rf *.class ${CLASSDIRECTORY}/escjava/*.class
@@ -35,7 +35,7 @@ runtest:
 	cd backpred; ${MAKE} runtest
 	cd parser; ${MAKE} runtest
 	cd prover; ${MAKE} runtest
-	cd test; ${MAKE} runtest
+	cd ../../test/escjava/test; ${MAKE} runtest
 	cd tc; ${MAKE} runtest
 	cd translate; ${MAKE} runtest
 

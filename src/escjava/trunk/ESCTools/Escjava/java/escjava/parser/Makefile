@@ -13,4 +13,4 @@ clean:
 	rm -rf *.class ${CLASSDIRECTORY}/escjava/parser/*.class
 
 runtest:
-	cd test; ${MAKE} runtest
+	cd ../../../test/escjava/parser/test; ${MAKE} runtest
