@@ -44,59 +44,50 @@ public final /*@ pure @*/ class Boolean implements java.io.Serializable {
       @*/
     public Boolean(boolean value);
 
-    /* FIXME @ public normal_behavior
+    /*@ public normal_behavior
       @   {|
-      @     requires s != null
-      @         && (new JMLString(s)).equalsIgnoreCase(new JMLString("true"));
+      @     requires s != null && s.equalsIgnoreCase("true");
       @     ensures theBoolean;
       @   also
-      @     requires s == null
-      @         || !(new JMLString(s)).equalsIgnoreCase(new JMLString("true"));
+      @     requires s == null || !(s.equalsIgnoreCase("true"));
       @     ensures !theBoolean;
       @   |}
       @*/
-    public Boolean(String s);
+    public /*@ pure @*/ Boolean(String s);
     
     /*@ public normal_behavior
-      @   assignable \nothing;
       @   ensures \result == theBoolean;
       @*/
-    public boolean booleanValue();
+    public /*@ pure @*/ boolean booleanValue();
 
     /*@ public normal_behavior
-      @   assignable \nothing;
       @   ensures \result != null && \result.equals(new Boolean(b));
       @   ensures_redundantly \result != null && \result.booleanValue() == b;
       @*/
     public static /*@ pure @*/ Boolean valueOf(boolean b);
 
-    /* FIXME @ public normal_behavior
+
+    /*@ public normal_behavior
       @   {|
-      @     requires s != null
-      @         && (new JMLString(s)).equalsIgnoreCase(new JMLString("true"));
-      @     assignable \nothing;
+      @     requires s != null && s.equalsIgnoreCase("true");
       @     ensures \fresh(\result) && \result.booleanValue();
       @   also
-      @     requires s == null
-      @         || !(new JMLString(s)).equalsIgnoreCase(new JMLString("true"));
-      @     assignable \nothing;
+      @     requires s == null || !(s.equalsIgnoreCase("true"));
       @     ensures \fresh(\result) && !\result.booleanValue();
       @   |}
       @*/
     public static /*@ pure @*/ Boolean valueOf(String s);
 
     /*@ public normal_behavior
-      @   assignable \nothing;
       @   ensures valueOf(\result).booleanValue() == b;
       @*/
     public static /*@ pure @*/ String toString(boolean b);
 
     /*@ also
       @ public normal_behavior
-      @   assignable \nothing;
       @   ensures valueOf(\result).booleanValue() == theBoolean;
       @*/
-    public String toString();
+    public /*@ pure @*/ String toString();
 
     public int hashCode();
 
@@ -104,11 +95,9 @@ public final /*@ pure @*/ class Boolean implements java.io.Serializable {
       @ public normal_behavior
       @ {|
       @   requires obj != null && (obj instanceof Boolean);
-      @   assignable \nothing;
       @   ensures \result == (theBoolean == ((Boolean) obj).booleanValue());
       @ also
       @   requires obj == null || !(obj instanceof Boolean);
-      @   assignable \nothing;
       @   ensures !\result;
       @ |}
       @*/
@@ -117,7 +106,6 @@ public final /*@ pure @*/ class Boolean implements java.io.Serializable {
     /*@ public normal_behavior
       @   requires name != null && !name.equals("")
       @         && System.getProperty(name) != null;
-      @   assignable \nothing;
       @   ensures \result == valueOf(System.getProperty(name)).booleanValue();
       @*/
     public static /*@ pure @*/ boolean getBoolean(String name);
