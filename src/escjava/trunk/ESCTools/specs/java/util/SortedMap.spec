@@ -40,8 +40,8 @@ public interface SortedMap extends Map {
 
     /*@ public behavior
       @    ensures \result != null;
-      @    ensures (\result.firstKey.equals(fromKey));
-      @    ensures \result.lastKey.equals(toKey));
+      @    ensures \result.firstKey.equals(fromKey);
+      @    ensures \result.lastKey.equals(toKey);
       @    ensures (\forall Entry e; (containsEntry(e) &&
                        comparator().compare(fromKey,e) <= 0 && 
                        comparator().compare(e,toKey) < 0)
@@ -62,13 +62,13 @@ public interface SortedMap extends Map {
             
     /*@ public behavior
       @    ensures \result != null;
-      @    ensures (\result.firstKey.equals(fromKey));
-      @    ensures \result.lastKey.equals(toKey));
+      @    ensures \result.firstKey.equals(fromKey);
+      @    ensures \result.lastKey.equals(toKey);
       @    ensures (\forall Entry e; (containsEntry(e) &&
                        comparator().compare(e,toKey) < 0)
                        <==> \result.containsEntry(e));
 
-           // FIXME - fix these exception contditions
+           // FIXME - fix these exception conditions
       @    signals (ClassCastException)
       @            (* \typeof(toKey) is incompatible with
       @             with this map's comparator *); 
@@ -82,13 +82,13 @@ public interface SortedMap extends Map {
 
     /*@ public behavior
       @    ensures \result != null;
-      @    ensures (\result.firstKey.equals(fromKey));
-      @    ensures \result.lastKey.equals(toKey));
+      @    ensures \result.firstKey.equals(fromKey);
+      @    ensures \result.lastKey.equals(toKey);
       @    ensures (\forall Entry e; (containsEntry(e) &&
                        comparator().compare(fromKey,e) <= 0 )
                        <==> \result.containsEntry(e));
 
-           // FIXME - fix these exception contditions
+           // FIXME - fix these exception conditions
       @    signals (ClassCastException)
       @            (* \typeof(fromKey) is incompatible with this
       @             map's comparator *); 
