@@ -2,6 +2,7 @@
 Makefile.local
 OOBR
 docs
+docs_log
 esctools2.jar
 esctools2src.jar
 jars
