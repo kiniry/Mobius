@@ -3,6 +3,7 @@ Makefile.local
 OOBR
 docs
 esctools2.jar
+esctools2src.jar
 jars
 javadoc
 jmlc
