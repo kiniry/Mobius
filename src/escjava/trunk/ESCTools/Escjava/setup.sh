@@ -8,6 +8,10 @@
 
 ############################## roots ##############################
 
+# Javafe dependencies
+export JAVAFE_ROOT=`pwd`/../Javafe
+export JAVAFE_CLASSFILES=${JAVAFE_ROOT}/classfiles
+
 export ESCTOOLS_ROOT=`pwd`/..
 export ESCTOOLS_JARS=${ESCTOOLS_ROOT}/jars
 
@@ -57,6 +61,7 @@ export PATH=$JAVA_HOME/bin:$PATH
 
 export CLASSDIRECTORY=${ESCJAVA_ROOT}/classfiles
 export SOURCEDIRECTORY=${ESCJAVA_ROOT}/java
+export TESTSOURCEDIRECTORY=${ESCJAVA_ROOT}/test
 export JAVADOCDIRECTORY=${ESCJAVA_ROOT}/doc/javadoc
 
 export SRCDIRECTORY=${JAVAFE_ROOT}/decsrclib
