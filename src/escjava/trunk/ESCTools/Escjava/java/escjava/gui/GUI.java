@@ -61,7 +61,7 @@ import junitutils.Utils;
 
 public class GUI extends escjava.Main {
 
-    static public String jarlocation = null;
+    static public final String jarlocation;
 
 static {
 	    String myClassName = "escjava/gui/GUI.class";
@@ -71,6 +71,7 @@ static {
 	    int from = "jar:file:".length();
 	    int to = urlStr.indexOf("!/");
 	    if (to != -1) jarlocation = urlStr.substring(from, to);
+	    else jarlocation = null;
 }
 
     static public class Stop extends RuntimeException {}
@@ -124,7 +125,7 @@ static {
     /** Extends escjava.Options just to set some defaults to more
 	appropriate values for the GUI.
      */
-    public class Options extends escjava.Options {
+    static public class Options extends escjava.Options {
 	public Options() {
 	    quiet = true;
 
@@ -649,13 +650,13 @@ static {
 	    ArrayList a = ((escjava.RefinementSequence)cu).refinements();
 	    if (a.size() <= 1) return toString();
 	    Iterator i = a.iterator();
-	    String s = ((CompilationUnit)i.next()).sourceFile().getHumanName();
+	    StringBuffer s = new StringBuffer(((CompilationUnit)i.next()).sourceFile().getHumanName());
 	    while (i.hasNext()) {
 		String ss = ((CompilationUnit)i.next()).sourceFile().getHumanName();
 		int n = ss.lastIndexOf('.');
-		s = s + "," + ss.substring(n);
+		s.append("," + ss.substring(n));
 	    }
-	    return s; 
+	    return s.toString(); 
 	}
 	public String getFilename() { return gf.getHumanName(); }
 	public int getLine() { return 1; }

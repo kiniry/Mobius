@@ -260,9 +260,9 @@ public class Options extends javafe.SrcToolOptions
         s += "  -routine <routineId> -routine <fullyQualifiedRoutineSignature>"+eol;
         s += "  -routineIndirect <routineFile> -start <line#> -suggest" + eol;
         s += "  -vclimit <n> -warn <category>" + eol;
-        if (all) {
+        //if (all) {
             // FIXME - add in the experimental options
-        }
+        //}
         return s;
     }
 
@@ -535,8 +535,9 @@ public class Options extends javafe.SrcToolOptions
 		routinesToCheck = new Set();
 	    }
 	    String routineIndirectionFilename = args[offset];
+	    BufferedReader in = null;
 	    try {
-		BufferedReader in = new BufferedReader(
+		in = new BufferedReader(
 				   new FileReader(routineIndirectionFilename));
 		while (true) {
 		    String routine = in.readLine();
@@ -550,6 +551,15 @@ public class Options extends javafe.SrcToolOptions
 		throw new UsageError("error reading routine indirection file '" +
 			       routineIndirectionFilename + "': " +
 			       e.toString());
+	    } finally {
+		try {
+		    if (in != null) in.close();
+		} catch (IOException e) {
+		    throw new UsageError(
+			"error closing routine indirection file '" +
+			   routineIndirectionFilename + "': " +
+			   e.toString());
+		}
 	    }
 	    return offset+1;
         } else if (option.equals("-loopSafe")) {
@@ -808,8 +818,9 @@ public class Options extends javafe.SrcToolOptions
     private Vector readFile(String filename) {
         Vector r = new Vector();
         StringBuffer s = new StringBuffer();
+	Reader R = null;
         try {
-            Reader R = new BufferedReader(new InputStreamReader(new FileInputStream(filename)));
+            R = new BufferedReader(new InputStreamReader(new FileInputStream(filename)));
             int c;
             do {
                 while( (c=R.read())!= -1 && c != '\n' ) {
@@ -827,7 +838,14 @@ public class Options extends javafe.SrcToolOptions
             return r;
         } catch(IOException e) {
             throw new RuntimeException("IOException: " + e);
-        }
+        } finally {
+	    try {
+		if (R != null) R.close();
+	    } catch (IOException e) {
+		throw new RuntimeException(
+		    "IOException: " + e);
+	    }
+	}
     }
 
     public String nowarnOptionString() {

@@ -223,7 +223,7 @@ public final class GetSpec
 			    } else if (t == TagConstants.NOTSPECIFIEDEXPR) {
 				dmd.modifiesEverything = true;
 			    	emp.expr = EverythingExpr.make(emp.expr.getStartLoc());
-			    } else if (t == TagConstants.NOTHINGEXPR ) {
+			    //} else if (t == TagConstants.NOTHINGEXPR ) {
 				// no action
 			    }
 			    emp = doSubst(subst, emp);

@@ -472,10 +472,10 @@ public final class GC {
     LiteralExpr.make(TagConstants.INTLIT, new Integer(1), Location.NULL);
 
   public static final Expr truelit =
-    LiteralExpr.make(TagConstants.BOOLEANLIT,new Boolean(true),Location.NULL);
+    LiteralExpr.make(TagConstants.BOOLEANLIT,Boolean.TRUE,Location.NULL);
 
   public static final Expr falselit =
-    LiteralExpr.make(TagConstants.BOOLEANLIT,new Boolean(false),Location.NULL);
+    LiteralExpr.make(TagConstants.BOOLEANLIT,Boolean.FALSE,Location.NULL);
 
   public static final Expr dzerolit =
     LiteralExpr.make(TagConstants.DOUBLELIT, new Double(0.0), Location.NULL);

@@ -50,7 +50,7 @@ public class EscHtml extends JFrame {
 	FrameShower.show(this);
     }
 
-    class Hyperactive implements HyperlinkListener {
+    static class Hyperactive implements HyperlinkListener {
 
 	public void hyperlinkUpdate(HyperlinkEvent e) {
 	    if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {

@@ -231,9 +231,9 @@ public class Main extends javafe.SrcTool
             InlineConstructor.inlineConstructorsEverywhere(loaded);
             
             
-        if (6 <= stages || options().predAbstract) {
+        //if (6 <= stages || options().predAbstract) {
 	    //ProverManager.start();
-        }
+        //}
         
     }
 
