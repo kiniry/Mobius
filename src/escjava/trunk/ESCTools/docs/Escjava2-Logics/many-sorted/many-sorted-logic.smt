@@ -329,7 +329,7 @@
                   (forall ?x Boolean
                     (or (= ?i ?j)
                         (= (getBoolean (setBoolean ?a ?i ?x) ?j)
-                           (getBoolean ?a ?j))))))
+                           (getBoolean ?a ?j)))))))
 
             (forall ?a object
               (for all ?i Number 
@@ -383,7 +383,7 @@
                       (implies (and (< (fClosedTime ?f) ?t)
                                     (isAllocated ?r ?t))
                                (isAllocated (referenceSelect ?f
-                                               (memGet ?h ?r)) ?t)))))
+                                               (memGet ?h ?r)) ?t))))))
             # and the same axiom applies to arrays and their values
             (forall ?h Memory
               (forall ?r Reference
@@ -392,7 +392,7 @@
                       (implies (and (< (eClosedTime ?h) ?t)
                                     (isAllocated ?r ?t))
                                (isAllocated (getObject
-                                               (memGet ?h ?r) ?i) ?t)))))
+                                               (memGet ?h ?r) ?i) ?t))))))
 
             # length of arrays
             (forall ?r Reference
