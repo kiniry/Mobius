@@ -13,8 +13,8 @@ flags="$*"
 unset CLASSPATH
 export CLASSPATH
 
-#run -quiet -plainwarning -notrace ${flags} > out 2>&1
-./run -plainwarning -notrace ${flags} > out 2>&1
+./run -quiet -plainwarning -notrace ${flags} > out 2>&1
+#./run -plainwarning -notrace ${flags} > out 2>&1
 
 if ! diff out ans > diff; then
   echo Failed;
