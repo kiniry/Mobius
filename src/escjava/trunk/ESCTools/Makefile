@@ -137,6 +137,6 @@ make-release:
 
 .PHONY: test-release
 test-release:
-	ESCTOOLS_RELEASE=${RELDIR} ;\
+	export ESCTOOLS_RELEASE=${RELDIR} ;\
 	${MAKE} -C Javafe  test-release ;\
-	${MAKE} -C Escjava test-release
+	${MAKE} -C Escjava test-release 

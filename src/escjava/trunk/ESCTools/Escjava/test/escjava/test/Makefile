@@ -31,6 +31,7 @@ test_and_clean: test clean
 
 test_escjava: CLASSPATH = .:${ESCJAVA_CLASSPATH}
 test_escjava:
+	env ESCTOOLS_RELEASE=$(ESCTOOLS_RELEASE) \
 	./rtestall
 
 %-run:

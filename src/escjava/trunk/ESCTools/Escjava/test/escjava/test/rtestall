@@ -3,6 +3,12 @@
 # use: rtestall FLAGS
 
 echo Executing rtestall in `pwd` using
+if ( $?ESCTOOLS_ROOT ) then
+	echo "    ESCTOOLS_ROOT: " $ESCTOOLS_ROOT
+endif
+if ( $?ESCTOOLS_RELEASE ) then
+	echo "    ESCTOOLS_RELEASE: " $ESCTOOLS_RELEASE
+endif
 echo "    ESCJ: $ESCJ"
 echo "    ESC_CLASSPATH: $ESC_CLASSPATH"
 if ( $?CLASSPATH ) then
