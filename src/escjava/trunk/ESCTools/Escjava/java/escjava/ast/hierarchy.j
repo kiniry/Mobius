@@ -66,8 +66,9 @@ import escjava.ParsedRoutineSpecs;
  *    - TypeDeclElem ()
  *       - TypeDeclElemPragma ()
  *         + ExprDeclPragma (Expr expr) // Axiom, ObjectInvariant
- *	    + GhostDeclPragma (GhostFieldDecl decl)
- *	    + ModelDeclPragma (ModelFieldDecl decl)
+ *	   + GhostDeclPragma (GhostFieldDecl decl)
+ *	   + ModelDeclPragma (ModelFieldDecl decl)
+ *         + NamedExprDeclPragma (Expr target, Expr expr)
  *         + ModelMethodDeclPragma (MethodDecl decl)
  *         + ModelConstructorPragma (ConstructorDecl decl)
  *         + StillDeferredDeclPragma (Identifier var)
@@ -528,8 +529,30 @@ public class ExprDeclPragma extends TypeDeclElemPragma
   private void postCheck() {
     boolean goodtag =
       (tag == TagConstants.AXIOM || 
-       tag == TagConstants.INVARIANT || 
-       tag == TagConstants.REPRESENTS);
+       tag == TagConstants.INVARIANT );
+    Assert.notFalse(goodtag);
+  }
+
+  public int getStartLoc() { return loc; }
+  public int getEndLoc() { return expr.getEndLoc(); }
+  public boolean isRedundant() { return redundant; }
+  public void setRedundant(boolean v) { redundant = v; }
+}
+
+public class NamedExprDeclPragma extends TypeDeclElemPragma 
+{
+  //# int tag
+  //# Expr expr
+  //# Expr target
+  //# int loc
+
+  //# ManualTag
+  public final int getTag() { return tag; }
+
+  //# PostCheckCall
+  private void postCheck() {
+    boolean goodtag =
+      ( tag == TagConstants.REPRESENTS);
     Assert.notFalse(goodtag);
   }
 

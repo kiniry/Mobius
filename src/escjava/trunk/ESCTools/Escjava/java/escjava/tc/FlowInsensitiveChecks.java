@@ -482,7 +482,9 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                     try {
                         fa.decl = escjava.tc.Types.lookupField( t, fa.id, sig );
                     } catch( LookupException ex) {
-                        reportLookupException(ex, "field", Types.printName(t), fa.locId);
+			if (!Types.isErrorType(t))
+			    reportLookupException(ex, "field", 
+					Types.printName(t), fa.locId);
                         return fa;
                     }
                     setType( fa, fa.decl.type );
@@ -1076,17 +1078,19 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                         setType( r, ((ArrayType)arrType).elemType );
                         Type ndxType = 
                             Types.isNumericType( t ) ? Types.unaryPromote( t ) : t;
-                        if( !Types.isSameType( ndxType, Types.intType ) ) 
+                        if( !Types.isSameType( ndxType, Types.intType ) &&
+			    !Types.isErrorType(ndxType) ) 
                             ErrorSet.error(r.locOpenBracket, "Array index is not an integer");
 
                     } else if( arrType.getTag() == TagConstants.LOCKSET ) {
                         setType( r, Types.booleanType );
-                        if( !Types.isReferenceOrNullType( t ) )
+                        if( !Types.isReferenceOrNullType( t ) &&
+			    !Types.isErrorType(t) )
                             ErrorSet.error(r.locOpenBracket, 
                                            "Can only index \\lockset with a reference type");
                     } else {
                         setType( r, Types.errorType );
-			if (!Types.isErrorType(arrType))
+			if (!Types.isErrorType(arrType) )
 			    ErrorSet.error( r.locOpenBracket, 
                                         "Attempt to index a non-array value");
                     }
@@ -1097,9 +1101,10 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
             case TagConstants.RESEXPR:
                 {
                     if (!isRESContext || returnType == null) {
-                        ErrorSet.error(e.getStartLoc(), 
-                                       "Keyword \\result is not allowed in this context");
-                        setType( e, Types.intType );
+			if (!Types.isErrorType(returnType))
+			    ErrorSet.error(e.getStartLoc(), 
+			       "Keyword \\result is not allowed in this context");
+                        setType( e, Types.errorType );
                     }
                     else
                         setType( e, returnType );
@@ -1235,7 +1240,6 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 	    case TagConstants.INITIALLY:
             case TagConstants.INVARIANT:
 	    case TagConstants.CONSTRAINT: // FIXME - do we need to change the logic below to handle constraints?
-	    case TagConstants.REPRESENTS:
                 {
                     ExprDeclPragma ep = (ExprDeclPragma)e;
                     Env rootEnv = (tag == TagConstants.AXIOM) ? rootSEnv : rootIEnv;
@@ -1277,7 +1281,31 @@ FIXME - see uses of countFreeVarsAccess
                     isTwoStateContext = false;
                     break;
                 }
+	    case TagConstants.REPRESENTS:
+		{
+                    NamedExprDeclPragma ep = (NamedExprDeclPragma)e;
 
+			// What about static model vars?
+			// Can the represents clause be static ? FIXME
+                    Env rootEnv = rootIEnv;
+		    ep.target = checkExpr(rootEnv, ep.target);
+
+                    invariantContext = false;
+		    isTwoStateContext = false;
+                    boolean oldIsLocksetContext = isLocksetContext;
+                    isLocksetContext = false;
+                    if (invariantContext){
+ // FIXME                       Assert.notFalse(countFreeVarsAccesses == 0);
+                        countFreeVarsAccesses = 0;
+                    }
+	
+                    ep.expr = checkPredicate(rootEnv, ep.expr);
+			// FIXME - check that this is a field access
+			// check that it is a modelfield
+                    isLocksetContext = oldIsLocksetContext;
+
+                    break;
+                }
 	    case TagConstants.DEPENDS:
 		{
                     DependsPragma ep = (DependsPragma)e;
@@ -2051,8 +2079,9 @@ FIXME - see uses of countFreeVarsAccess
 				 informalPredicateDecoration.get(emp.expr)==null) {
 					// The expression is not a designator
 					// but we allow an informal predicate
-                                ErrorSet.error(emp.expr.getStartLoc(),
-                                               "Not a specification designator expression");
+				if (!Types.isErrorType(getType(emp.expr)))
+				    ErrorSet.error(emp.expr.getStartLoc(),
+				       "Not a specification designator expression");
 			    } else {
 			       emp.expr = null;
 			    }

@@ -119,6 +119,7 @@ public class InlineConstructor {
 	MethodInvocation invocation =
 	    MethodInvocation.make(od, md.id, md.tmodifiers, md.locId,
 				  md.locId, evec);
+	invocation.decl = md;
 	//inline the call, assuming the preconditions and checking the body
 	Translate.inlineDecoration.set(invocation,
 				       new InlineSettings(true, false, false));

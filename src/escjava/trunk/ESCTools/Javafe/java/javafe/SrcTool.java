@@ -241,7 +241,7 @@ public abstract class SrcTool extends FrontEndTool implements Listener
 		TypeDeclVec elems = cu.elems;
 		for (int i=0; i<elems.size(); i++) {
 		    TypeDecl d = elems.elementAt(i);
-	
+
 		    handleTD(d);
 		}
     }

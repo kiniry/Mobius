@@ -29,8 +29,22 @@ ForallOld.java:28: Caution: Unable to use quantification because no trigger foun
                        ^
     [TIME]  passed
 
+ForallOld: m9() ...
+------------------------------------------------------------------------
+ForallOld.java:36: Warning: Postcondition possibly not established (Post)
+        public void m9() {}
+                          ^
+Associated declaration is "ForallOld.java", line 35, col 5:
+        //@ ensures x+y+z == a+b+c;
+            ^
+Execution trace information:
+    Executed implicit return in "ForallOld.java", line 36, col 19.
+
+------------------------------------------------------------------------
+    [TIME]  failed
+
 ForallOld: ForallOld() ...
     [TIME]  passed
   [TIME total]
 1 caution
-1 warning
+2 warnings

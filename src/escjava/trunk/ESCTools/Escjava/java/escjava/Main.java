@@ -303,8 +303,16 @@ public class Main extends javafe.SrcTool
      */
     public void handleTD(TypeDecl td) {
         TypeSig sig = TypeCheck.inst.getSig(td);
-        if (sig.getTypeDecl().specOnly)    // do not process specs
+	/* If something is on the command-line, presume we want to check it
+	   as thoroughly as possible.
+        if (sig.getTypeDecl().specOnly &&
+		!options().checkSpecs) {    // do not process specs
+	    // No bodies to process
+	    if (!options().quiet) System.out.println("Skipping " + 
+				sig.toString() + " - specification only");
             return;
+	}
+	*/
 
         if (Location.toLineNumber(td.getEndLoc()) < options().startLine)
             return;
@@ -508,6 +516,7 @@ public class Main extends javafe.SrcTool
                       /*@ non_null */ InitialState initState) {
 
         if (r.body == null) return "passed immediately";
+	if (r.parent.specOnly) return "passed immediately";
         if ( Location.toLineNumber(r.getEndLoc()) < options().startLine )
                 return "skipped";
         String simpleName = TypeCheck.inst.getRoutineName(r).intern();

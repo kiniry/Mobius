@@ -5,6 +5,7 @@ package escjava.backpred;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
+import java.util.LinkedList;
 
 import javafe.ast.*;
 import escjava.ast.*;
@@ -244,7 +245,7 @@ public class FindContributors
 	if (!sig.isTopLevelType()) {
 	    FieldDecl thisptr = Inner.getEnclosingInstanceField(sig);
 
-	    backedgeToGenericVarDecl(thisptr, null, true);
+	    backedgeToGenericVarDecl(thisptr, null, true, new LinkedList());
 	}
     }
 
@@ -347,7 +348,7 @@ public class FindContributors
      * varables.
      */
     private void walk(ASTNode N) {
-	walk(N, null, true);
+	walk(N, null, true, new LinkedList());
     }
 
 
@@ -360,7 +361,7 @@ public class FindContributors
 	// We may cache this function later...
 
 	FieldDeclVec result = FieldDeclVec.make();
-	walk(J, result, false);
+	walk(J, result, false, new LinkedList());
 	return result;
     }
 
@@ -376,7 +377,8 @@ public class FindContributors
      *
      * Precondition: N has been typechecked.
      */
-    private void walk(ASTNode N, FieldDeclVec fields, boolean addTypes) {
+    private void walk(ASTNode N, FieldDeclVec fields, boolean addTypes,
+				LinkedList visited) {
 	/*
 	 * Leaf nodes:
 	 */
@@ -400,35 +402,35 @@ public class FindContributors
 	 */
 	if (N instanceof VariableAccess) {
 	    backedgeToGenericVarDecl(((VariableAccess)N).decl,
-				     fields, addTypes);
+				     fields, addTypes, visited);
 	}
 	if (N instanceof FieldAccess) {
 	    if (preFieldMode > 0) {
 		preFields.add(N);
 	    }
 	    backedgeToGenericVarDecl(((FieldAccess)N).decl,
-				     fields, addTypes);
+				     fields, addTypes, visited);
 	}
 
 	if (N instanceof ConstructorInvocation) {
 	    ConstructorInvocation ci = (ConstructorInvocation) N;
+	    visited.addFirst(ci.decl);
 	    int inline = Translate.inlineDecoration.get(ci) != null ? 2 :
                          isNonRecursiveHelperInvocation(ci.decl) ? 1 : 0;
-	    backedgeToRoutineDecl(ci.decl, fields, addTypes, inline);
+	    backedgeToRoutineDecl(ci.decl, fields, addTypes, inline, visited);
 	}
 	if (N instanceof NewInstanceExpr) {
 	    NewInstanceExpr ni = (NewInstanceExpr) N;
 	    int inline = Translate.inlineDecoration.get(ni) != null ? 2 :
                          isNonRecursiveHelperInvocation(ni.decl) ? 1 : 0;
-	    backedgeToRoutineDecl(ni.decl,fields, addTypes, inline);
+	    backedgeToRoutineDecl(ni.decl,fields, addTypes, inline, visited);
 	}
 	if (N instanceof MethodInvocation) {
 	    MethodInvocation mi = (MethodInvocation) N;
 	    int inline = Translate.inlineDecoration.get(mi) != null ? 2 :
                          isNonRecursiveHelperInvocation(mi.decl) ? 1 : 0;
 
-// FIXME - what is happening with the decl is null
-	    if (mi.decl != null) backedgeToRoutineDecl(mi.decl, fields, addTypes, inline);
+	    backedgeToRoutineDecl(mi.decl, fields, addTypes, inline, visited);
 	}
 // FIXME - add the type from quantified expression? set comprehension expr? new array expr?
 	/*
@@ -436,12 +438,12 @@ public class FindContributors
 	 */
 	if (N instanceof RoutineDecl) {
 	    // Get references in our derived spec:
-	    backedgeToRoutineDecl((RoutineDecl)N, fields, addTypes, 0);
+	    backedgeToRoutineDecl((RoutineDecl)N, fields, addTypes, 0, visited);
 
 	    // Add implicit references if N is a ConstructorDecl:
 	    if (N instanceof ConstructorDecl)
 		addImplicitConstructorRefs((ConstructorDecl)N,
-					   fields, addTypes);
+					   fields, addTypes, visited);
 	}
 
 	if (N.getTag() == TagConstants.PRE) {
@@ -460,7 +462,7 @@ public class FindContributors
 	    for (int i=0; i<size; i++) {
 		Object child = N.childAt(i);
 		if (child instanceof ASTNode && !(child instanceof TypeDecl))
-		    walk((ASTNode)child, fields, addTypes);
+		    walk((ASTNode)child, fields, addTypes, visited);
 	    }
 	} finally {
 	    if (N.getTag() == TagConstants.PRE) {
@@ -486,13 +488,14 @@ public class FindContributors
      */
     private void addImplicitConstructorRefs(ConstructorDecl cd,
 					    FieldDeclVec fields,
-					    boolean addTypes) {
+					    boolean addTypes,
+					    LinkedList visited) {
 	/*
 	 * Walk the initialization code derived from the same class as
 	 * the constructor:
 	 */
 	TypeDecl td = cd.parent;
-	walkInstanceInitialier(td, fields, addTypes);
+	walkInstanceInitialier(td, fields, addTypes, visited);
 
 	/*
 	 * For all superinterfaces that the constructor's type
@@ -503,7 +506,7 @@ public class FindContributors
 	Enumeration FII = GetSpec.getFirstInheritedInterfaces((ClassDecl)td);
 	while (FII.hasMoreElements()) {
 	    walkInstanceInitialier((TypeDecl)FII.nextElement(), fields,
-				   addTypes);
+				   addTypes, visited);
 	}
     }
 
@@ -534,7 +537,8 @@ public class FindContributors
      */
     private void walkInstanceInitialier(TypeDecl td,
 					FieldDeclVec fields,
-					boolean addTypes) {
+					boolean addTypes,
+					LinkedList visited) {
 	for (int i = 0; i < td.elems.size(); i++) {
 	    TypeDeclElem tde = td.elems.elementAt(i);
 
@@ -550,13 +554,13 @@ public class FindContributors
 		FieldDecl fd = (FieldDecl)tde;
 
 		// walk "fd := (fd.init==null ? <zero-equivalent> : fd.init)":
-		backedgeToGenericVarDecl(fd, fields, addTypes);
-		walk(fd.init, fields, addTypes);
+		backedgeToGenericVarDecl(fd, fields, addTypes, visited);
+		walk(fd.init, fields, addTypes, visited);
 
 	    } else if (tde.getTag() == TagConstants.INITBLOCK
 		  && !Modifiers.isStatic(((InitBlock)tde).modifiers)) {
 		// walk any instance initializer blocks found:
-		walk((InitBlock)tde, fields, addTypes);
+		walk((InitBlock)tde, fields, addTypes, visited);
 
 	    }
 	}
@@ -569,7 +573,8 @@ public class FindContributors
      */
     private void backedgeToGenericVarDecl(GenericVarDecl decl,
 				          FieldDeclVec fields,
-				          boolean addTypes) {
+				          boolean addTypes,
+					  LinkedList visited) {
 	// The length field of arraytypes is never considered "mentioned":
 	if (decl==javafe.tc.Types.lengthFieldDecl)
 	    return;
@@ -608,7 +613,7 @@ public class FindContributors
 	     */
 	    if (fd.pmodifiers!=null) {
 		for (int i=0; i<fd.pmodifiers.size(); i++)
-		    walk(fd.pmodifiers.elementAt(i), fields, addTypes);
+		    walk(fd.pmodifiers.elementAt(i), fields, addTypes, visited);
 	    }
 	}
 
@@ -633,8 +638,10 @@ public class FindContributors
     private void backedgeToRoutineDecl(RoutineDecl rd,
 				       FieldDeclVec fields,
 				       boolean addTypes, 
-				       int inlined) {
+				       int inlined, LinkedList visited) {
 	if (rd == null) return; // FIXME - this happens with some NewInstanceExpr
+	if (visited.contains(rd)) return;
+	visited.addFirst(rd);
         Assert.notFalse(inlined != 1 || !visitedRoutines.contains(rd));
         visitedRoutines.add(rd);
 
@@ -671,22 +678,23 @@ public class FindContributors
 
 	// We also need to walk the routine's spec:
 	for (int i=0; i<dmd.requires.size(); i++)
-	    walk(dmd.requires.elementAt(i), fields, addTypes);
+	    walk(dmd.requires.elementAt(i), fields, addTypes, visited);
 	if (inlined == 0) {
 	  // Add modifies here mostly for safely reasons
 	  for (int i=0; i<dmd.modifies.size(); i++)
-	    walk(dmd.modifies.elementAt(i), fields, addTypes);
+	    walk(dmd.modifies.elementAt(i), fields, addTypes, visited);
 	}
 	for (int i=0; i<dmd.ensures.size(); i++)
-	    walk(dmd.ensures.elementAt(i), fields, addTypes);
+	    walk(dmd.ensures.elementAt(i), fields, addTypes, visited);
 	for (int i=0; i<dmd.exsures.size(); i++)
-	    walk(dmd.exsures.elementAt(i), fields, addTypes);
+	    walk(dmd.exsures.elementAt(i), fields, addTypes, visited);
 	
 	if (inlined != 0) {
-	    walk(rd.body, fields, addTypes);
+	    walk(rd.body, fields, addTypes, visited);
 	}
 
 	GC.thisvar.decl.type = savedType;
+	visited.removeFirst();
     }
 
 

@@ -1,4 +1,5 @@
 ESC/Java version VERSION
+SourcePath2.java: Caution: Using given file as the .java file, even though it is not the java file for SourcePath2 on the classpath
 SourcePath2.java:3: Error: Could not find file referenced in refine annotation: SourcePath2.spec
 //@ refine "SourcePath2.spec";
     ^
@@ -12,4 +13,5 @@ SourcePath2: m() ...
 SourcePath2: SourcePath2() ...
     [TIME]  passed
   [TIME total]
+1 caution
 1 error

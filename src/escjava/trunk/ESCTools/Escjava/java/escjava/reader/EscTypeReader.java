@@ -35,6 +35,7 @@ import javafe.tc.OutsideEnv;
 
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.Iterator;
 
 /**
  * An <code>EscTypeReader</code> is a <code>StandardTypeReader</code>
@@ -111,7 +112,7 @@ public class EscTypeReader extends StandardTypeReader
 	}
 
 	public CompilationUnit read(GenericFile target, boolean avoidSpec) {
-	    javafe.util.Info.out("Reading " + target);
+	    javafe.util.Info.out("Reading " + target + " avoidSpec=" + avoidSpec);
 	    //System.out.println("Reading " + target);
 	    boolean refining = this.refining;
 	    this.refining = false;
@@ -144,6 +145,12 @@ public class EscTypeReader extends StandardTypeReader
 		}
 	    }
 
+	    if (type == null) {
+		String s = cu.sourceFile().getLocalName();
+		int p = s.indexOf('.');
+		type = Identifier.intern(s.substring(0,p));
+	    }
+
 	    // Check one of the ids to see if the type is already loaded.
 	    if (types.size() != 0) {
 		String typeToCheck;
@@ -155,7 +162,7 @@ public class EscTypeReader extends StandardTypeReader
 		    ErrorSet.caution("Type " + pkg + 
 			(pkgName==null?"":".") + typeToCheck + 
 			" in " + cu.sourceFile().getHumanName() + 
-			" is alrady loaded from " + 
+			" is already loaded from " + 
 			pcu.sourceFile().getHumanName());
 		    return null;
 		}
@@ -177,6 +184,12 @@ public class EscTypeReader extends StandardTypeReader
 	    } else {
 	    	javafile = ((EscTypeReader)OutsideEnv.reader).
 			findSrcFile(pkgStrings,type.toString()+".java");
+		if (javafile == null &&
+			cu.sourceFile().getLocalName().endsWith(".java")) {
+		    javafile = cu.sourceFile();
+		    ErrorSet.caution(Location.createWholeFileLoc(javafile),
+			"Using given file as the .java file, even though it is not the java file for " + pkg + (pkgName==null?"":".") + type + " on the classpath");
+		}
 
 	    }
 
@@ -191,15 +204,15 @@ public class EscTypeReader extends StandardTypeReader
 		// want to add a new compilation unit to the environment
 	    if (refinements == null) return null;
 
-if (false) {
-java.util.Iterator i = refinements.iterator();
-System.out.print("Refinement Sequence: [");
-while (i.hasNext()) {
-	System.out.print(" "+ ((CompilationUnit)i.next()).sourceFile().getHumanName());
-}
-System.out.println(" ]");
-}
-		// FIXME - Probably does not work for nested classes.
+	    if (javafe.util.Info.on) {
+		java.util.Iterator i = refinements.iterator();
+		System.out.print("Refinement Sequence: [");
+		while (i.hasNext()) {
+			System.out.print(" "+ ((CompilationUnit)i.next()).
+					sourceFile().getHumanName());
+		}
+		System.out.println(" ]");
+	    }
 
 	    // Now find the compilation unit for the java file.  If it is
 	    // already in the RS or is the same as cu, we don't read it again.  
@@ -229,17 +242,8 @@ System.out.println(" ]");
 		    javacu = super.read(javafile, false);
 			// The false above means only read a signature and not
 			// the implementation or the annotations.
-		} else if (type != null) {
-		    // If we have a type name by which to get a binary file,
-		    // then do so.
-	    	    javafile = ((EscTypeReader)OutsideEnv.reader).
-			findBinFile(pkgStrings,type.toString()+".class");
-		    if (javafile != null) {
-			javafe.util.Info.out("Reading class file "
-			    + javafile.getHumanName());
-			javacu = ((EscTypeReader)OutsideEnv.reader).
-				binaryReader.read(javafile, false); 
-		    }
+		} else {
+		    javacu = getCombinedBinaries(pkgName,pkgStrings,refinements);
 		}
 	    }
 
@@ -249,11 +253,74 @@ System.out.println(" ]");
      
 	    CompilationUnit newcu = new RefinementSequence(refinements,
 						javacu,annotationHandler);
+
+	    // If there is no java file we set all types to spec-only
+	    // (don't try to check the implementations of routines because
+	    // there should not be any).
+
+	    if (javafile == null) {
+		for(int kk=0; kk<newcu.elems.size(); ++kk) {
+		    newcu.elems.elementAt(kk).specOnly = true;
+		}
+	    }
 	    
 	    javafe.util.Info.out("Constructed refinement sequence");
 	    return newcu;
 	}
      
+	CompilationUnit getCombinedBinaries(Name pkgName, String[] pkg, ArrayList rs) {
+	    CompilationUnit combination = null;
+	    java.util.List failures = new java.util.LinkedList();
+	    Iterator i = rs.iterator();
+	    while (i.hasNext()) {
+		CompilationUnit cu = (CompilationUnit)i.next();
+		TypeDeclVec tdv = cu.elems;
+		for (int j=0; j<tdv.size(); ++j) {
+		    TypeDecl td = tdv.elementAt(j);
+		    Identifier id = td.id;
+		    boolean found = false;
+		    if (combination != null) {
+			for (int k = combination.elems.size()-1; k>=0; --k) {
+			    if (combination.elems.elementAt(k).id == id) {
+				found = true;
+				break;
+			    }
+			}
+		    }
+		    if (!found) {
+			GenericFile javafile = ((EscTypeReader)OutsideEnv.reader).
+			    findBinFile(pkg,id.toString()+".class");
+			if (javafile != null) {
+			    javafe.util.Info.out("Reading class file "
+				+ javafile.getHumanName());
+			    CompilationUnit
+				javacu = ((EscTypeReader)OutsideEnv.reader).
+				    binaryReader.read(javafile, false); 
+			    if (combination == null)
+				combination = javacu;
+			    else {
+				TypeDeclVec ntdv = javacu.elems;
+				for (int n=0; n<ntdv.size(); ++n) {
+				    combination.elems.addElement(ntdv.elementAt(n));
+				}
+			    }
+			} else {
+				failures.add(
+					(pkgName==null? id.toString() :
+					    pkgName.printName() + "." + id));
+			}
+		    }
+	        }
+	    }
+	    if (combination != null && failures.size() != 0) {
+		// FIXME - should marak the source location for these
+		String s = "Failed to find some but not all binary files: ";
+		Iterator ii = failures.iterator();
+		while (ii.hasNext()) s += ii.next();
+		ErrorSet.error(s);
+	    }
+	    return combination;
+	}
 
         boolean refining = false;
 
@@ -262,16 +329,16 @@ System.out.println(" ]");
 	ArrayList getRefinementSequence(String[] pkgStrings, Identifier type, 
 				CompilationUnit cu) {
 	    ArrayList refinements = new ArrayList();
-	    if (type == null) {
-		annotationHandler.parseAllRoutineSpecs(cu);
-		refinements.add(cu);
-		return refinements;
-	    }
+	    GenericFile mrcufile;
 	    GenericFile gf = cu.sourceFile();
 	    String gfid = gf.getCanonicalID();
-	    GenericFile mrcufile =
-		((EscTypeReader)OutsideEnv.reader).findFirst(
-			pkgStrings,type.toString());
+	    if (type == null) {
+		mrcufile = gf;
+	    } else {
+		mrcufile =
+		    ((EscTypeReader)OutsideEnv.reader).findFirst(
+			    pkgStrings,type.toString());
+	    }
 	    javafe.util.Info.out( mrcufile==null ? "No MRCU found" :
 			"Found MRCU " + mrcufile);
 	    // If no MRCU is found in the sourcepath, then we presume that

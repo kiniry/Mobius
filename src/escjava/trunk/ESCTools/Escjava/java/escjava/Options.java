@@ -146,6 +146,7 @@ public class Options extends javafe.SrcToolOptions
     public int startLine = -1;    // starting line # for processing
     public int vclimit = 500000;
 
+    public boolean checkSpecs = false;
     public boolean noOutCalls = false;
 
     // flags primarily used by Houdini
@@ -395,6 +396,9 @@ public class Options extends javafe.SrcToolOptions
         } else if (option.equals("-stats")) {
             stats = true;
             return offset;
+        } else if (option.equals("-checkSpecs")) {
+	    checkSpecs = true;
+	    return offset;
         } else if (option.equals("-pjt")) {
             pjt = true;
             return offset;

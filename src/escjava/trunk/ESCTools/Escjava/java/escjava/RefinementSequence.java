@@ -167,8 +167,7 @@ public class RefinementSequence extends CompilationUnit {
 		if (!foundMatch) {
 		    if (!hasJavaDef) {
 			types.addElement(td);
-		    } else if (!javaIsBinary) {
-// FIXME - need to find the right class file for each type
+		    } else {
 			ErrorSet.error(td.getStartLoc(),
 			    "Type declaration is not in the java file");
 		    }

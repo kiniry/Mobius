@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Enumeration;
 import java.util.LinkedList;
+import java.util.List;
 
 /** This class handles the desugaring of annotations.
 
@@ -135,12 +136,17 @@ public class AnnotationHandler {
 	    case TagConstants.INVARIANT:
 	    case TagConstants.INVARIANT_REDUNDANTLY:
 	    case TagConstants.CONSTRAINT:
-	    case TagConstants.REPRESENTS:
-	    case TagConstants.AXIOM:
-	    case TagConstants.DEPENDS:
-		(new CheckPurity()).visitNode((ASTNode)tde);
+		Context c = new Context();
+		c.expr = null; // ((TypeDeclElemPragma)tde).expr;
+		(new CheckPurity()).visitNode((ASTNode)tde,c);
 		break;
 
+	    case TagConstants.REPRESENTS:
+	    case TagConstants.AXIOM:
+		(new CheckPurity()).visitNode((ASTNode)tde,null);
+		break;
+
+	    case TagConstants.DEPENDS:
 	    default:
 		//System.out.println("TAG " + tag + " " + TagConstants.toString(tag) + " " + tde.getClass() );
 	}
@@ -153,7 +159,7 @@ public class AnnotationHandler {
 	if (pmodifiers != null) {
 	    for (int i = 0; i<pmodifiers.size(); ++i) {
 		ModifierPragma mp = pmodifiers.elementAt(i);
-		(new CheckPurity()).visitNode((ASTNode)mp);
+		(new CheckPurity()).visitNode((ASTNode)mp,null);
 	    }
 	}
     }
@@ -1154,10 +1160,17 @@ added, it doesn't change whether a routine appears to have a spec or not.
 	    TagConstants.BOOLEANLIT, Boolean.FALSE, Location.NULL),
 	    Types.booleanType);
 
+    static public class Context {
+	public Expr expr;
+	
+
+    }
+
     static public class CheckPurity {
 
-	public void visitNode(ASTNode x) {
+	public void visitNode(ASTNode x, Context cc) {
 	    if (x == null) return;
+//System.out.println("CP TAG " + TagConstants.toString(x.getTag()));
 	    switch (x.getTag()) {
 		case TagConstants.METHODINVOCATION:
 		    MethodInvocation m = (MethodInvocation)x;
@@ -1185,12 +1198,29 @@ added, it doesn't change whether a routine appears to have a spec or not.
 		    // The argument of these built-in functions is not
 		    // evaluated, so it need not be pure.
 		    return;
+
+		case TagConstants.ENSURES:
+		case TagConstants.POSTCONDITION:
+		case TagConstants.REQUIRES:
+		case TagConstants.PRECONDITION:
+		{
+		    Context cn = new Context();
+		    cn.expr = ((ExprModifierPragma)x).expr;
+		    visitNode(cn.expr,cn);
+		    ((ExprModifierPragma)x).expr = cn.expr;
+		    return;
+		}
+	
+		case TagConstants.SIGNALS:
+		case TagConstants.EXSURES:
+
+		    break;
 	    }
 	    {
 		    int n = x.childCount();
 		    for (int i = 0; i < n; ++i) {
 			if (x.childAt(i) instanceof ASTNode)
-				visitNode((ASTNode)x.childAt(i));
+				visitNode((ASTNode)x.childAt(i),cc);
 		    }
 	    }
 	}
@@ -1560,6 +1590,23 @@ static public class NestedPragmaParser {
         }
     }
 }
+
+    public static List findRepresents(FieldDecl fd) {
+	List results = new LinkedList();
+	TypeDecl td = fd.parent;
+	TypeDeclElemVec tdepv = td.elems;
+	for (int i=0; i<tdepv.size(); ++i) {
+	    TypeDeclElem tde = tdepv.elementAt(i);
+	    if (!(tde instanceof TypeDeclElemPragma)) continue;
+	    if (tde.getTag() != TagConstants.REPRESENTS) continue;
+	    Expr target = ((NamedExprDeclPragma)tde).target;
+	    if (!(target instanceof FieldAccess)) continue; // ERROR - FIXME
+	    FieldDecl fdd = ((FieldAccess)target).decl;
+	    if (fd != fdd) continue;
+	    results.add( ((NamedExprDeclPragma)tde).expr );
+	}	
+	return results;
+    }
 }
 // FIXME - things not checked
 //	There should be no clauses after a |} (only |} only also or END or simple mods)

@@ -711,7 +711,15 @@ premap generated from the uses of \old in the body of the method + the spec of t
             for (int i = 0; i < dmd.ensures.size(); i++) {
 	      try {
                 ExprModifierPragma prag = dmd.ensures.elementAt(i);
+		TrAnExpr.trSpecExprAuxConditions = ExprVec.make();
                 Expr pred = TrAnExpr.trSpecExpr(prag.expr, map, wt);
+		if (TrAnExpr.trSpecExprAuxConditions.size() != 0) {
+		    Expr g = GC.nary(Location.NULL, Location.NULL,
+			    TagConstants.BOOLAND, 
+			    TrAnExpr.trSpecExprAuxConditions);
+		    pred = GC.implies(g,pred);
+		}
+		TrAnExpr.trSpecExprAuxConditions = null;
                 pred = GC.implies(ante, pred);
 		int tag = prag.errorTag == 0 ? TagConstants.CHKPOSTCONDITION : prag.errorTag;
                 Condition cond = GC.condition(tag, pred, prag.getStartLoc());
@@ -1238,7 +1246,7 @@ while (ee.hasMoreElements()) {
 
             for (int i = 0; i < td.elems.size(); i++) {
                 TypeDeclElem tde = td.elems.elementAt(i);
-                if (tde.getTag() == TagConstants.AXIOM || tde.getTag() == TagConstants.REPRESENTS) {
+                if (tde.getTag() == TagConstants.AXIOM) {
                     ExprDeclPragma axiom = (ExprDeclPragma)tde;
                     if (!Main.options().filterInvariants ||
                         exprIsVisible(scope.originType, axiom.expr)) {

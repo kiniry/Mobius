@@ -4,6 +4,7 @@ package escjava.translate;
 
 import java.util.Hashtable;
 import java.util.Enumeration;
+import java.util.LinkedList;
 
 import javafe.ast.*;
 import javafe.tc.*;
@@ -39,6 +40,10 @@ public final class TrAnExpr {
     public static Expr trSpecExpr(Expr e) {
         return trSpecExpr(e, null, null);
     }
+
+    public static ExprVec trSpecExprAuxConditions = null;
+    public static int tempn = 100;
+    public static LinkedList declStack = new LinkedList();
 
     /** This is the full form of function <code>TrSpecExpr</code>
      * described in ESCJ 16.  Each of the parameters <code>sp</code>
@@ -95,6 +100,33 @@ public final class TrAnExpr {
             FieldAccess fa = (FieldAccess)e;
             VariableAccess va = makeVarAccess(fa.decl, fa.locId);
             // va accesses the field
+
+	    if (GetSpec.findModifierPragma(va.decl.pmodifiers,TagConstants.MODEL) != null) {
+		java.util.List reps = escjava.AnnotationHandler.findRepresents(fa.decl);
+		java.util.Iterator it = reps.iterator();
+		while (it.hasNext()) {
+		    Expr ex = (Expr)it.next();
+	
+		    if (trSpecExprAuxConditions != null && !declStack.contains(fa.decl)) {
+			declStack.addFirst(fa.decl);
+
+			Hashtable h = new Hashtable();
+			if (fa.od instanceof ExprObjectDesignator) {
+			    if (!(((ExprObjectDesignator)fa.od).expr instanceof ThisExpr)) {
+				h.put(Substitute.thisexpr, ((ExprObjectDesignator)fa.od).expr);
+			    }
+			} else if (fa.od instanceof SuperObjectDesignator) {
+				// FIXME
+			    System.out.println("NOT SUPPORTED " + fa.od.getClass());
+			} // fall-through for TypeObjectDesignator
+			    
+			ex = Substitute.doSubst(h,ex);
+			Expr ee = trSpecExpr(ex,sp,st);
+			trSpecExprAuxConditions.addElement(ee);
+			declStack.removeFirst();
+		    }
+		}
+	    }
 
             if (Modifiers.isStatic(fa.decl.modifiers)) {
 		VariableAccess nva = apply(sp, va);
@@ -256,9 +288,9 @@ public final class TrAnExpr {
       }
 
       case TagConstants.METHODINVOCATION: {
-	//ErrorSet.notImplemented(!Main.options().noNotCheckedWarnings,
-		//e.getStartLoc(),"Not checking predicates containing method call expressions");
+	
 	MethodInvocation me = (MethodInvocation)e;
+
 	ExprVec ev = ExprVec.make(me.args.size());
 		// FIXME - 'this' argument???
 	for (int i=0; i<me.args.size(); ++i) {
@@ -268,7 +300,26 @@ public final class TrAnExpr {
 			TagConstants.METHODCALL,ev);
 	((NaryExpr)ne).methodName = 
 		Identifier.intern(me.id.toString() + "." + me.args.size()); // FIXME -- full name ??? with type signature as well
+	if (trSpecExprAuxConditions != null && !declStack.contains(me.decl)) {
+	    Identifier n = Identifier.intern("tempMethodReturn"+(++tempn));
+	    VariableAccess v =  VariableAccess.make(n, e.getStartLoc(), 
+			    LocalVarDecl.make(Modifiers.NONE, null,n,
+				    TypeCheck.inst.getType(me),
+				    UniqName.temporaryVariable,
+				    null, Location.NULL));
+	    Expr ee = GC.nary(TagConstants.ANYEQ, v, ne);
+	    // FIXME - should add the following mapping of the temp variable
+	    // to the method only if the method is a function call - pure
+	    // method of immutable objects, and either static or has the
+	    // this object inserted as an argument.
+	    trSpecExprAuxConditions.addElement(ee);
+	    declStack.addFirst(me.decl);
+	    getCalledSpecs(me,me.args,v,sp,st); // adds to trSpecExprAuxConditions
+	    declStack.removeFirst();
+	    return v;
+	}
 	return ne;
+
       }
 
       case TagConstants.NEWARRAYEXPR: {
@@ -1014,4 +1065,42 @@ wrap those variables being modified and not everything.
     return TypeExpr.make(type.getStartLoc(), type.getEndLoc(), type);
   }
   
+  public static void getCalledSpecs(MethodInvocation me, ExprVec ev, 
+			VariableAccess resultVar,
+			Hashtable sp, Hashtable st) {
+//System.out.println("MI " + me.od);
+    ModifierPragmaVec md = me.decl.pmodifiers;
+    for (int i=0; i<md.size(); ++i) {
+	ModifierPragma m = md.elementAt(i);
+	switch (m.getTag()) {
+	    case TagConstants.ENSURES:
+	    case TagConstants.POSTCONDITION:
+	     {
+		Expr e = ((ExprModifierPragma)m).expr;
+//System.out.println("ENSURES " + e);
+		Hashtable h = new Hashtable();
+		h.put(Substitute.resexpr,resultVar);
+		if (me.od instanceof ExprObjectDesignator) {
+		    if (!(((ExprObjectDesignator)me.od).expr instanceof ThisExpr)) {
+			h.put(Substitute.thisexpr, ((ExprObjectDesignator)me.od).expr);
+		    }
+		} else if (me.od instanceof SuperObjectDesignator) {
+			// FIXME
+		    System.out.println("NOT SUPPORTED " + me.od.getClass());
+		} // fall-through for TypeObjectDesignator
+		    
+		FormalParaDeclVec args = me.decl.args;
+		for (int j=0; j<args.size(); ++j) {
+		    h.put(args.elementAt(j), ev.elementAt(j));
+		}
+		e = Substitute.doSubst(h,e);
+		e = trSpecExpr(e,sp,st);
+		trSpecExprAuxConditions.addElement(e);
+	     }
+
+	    default:
+		break;
+	}
+    }
+  }
 }

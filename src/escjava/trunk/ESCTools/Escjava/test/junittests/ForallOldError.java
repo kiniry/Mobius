@@ -7,5 +7,10 @@ public class ForallOldError {
 	//@ old Object x;   // ERROR
 	public void z() {}
 
+	//@ forall int x,y=4,z; // ERROR
+	//@ old int a=1,b,c=3;  // ERROR
+	//@ requires x+z == a+c;
+	//@ requires b==y;  // ERROR
+	public void zz() {}
 
 }

@@ -30,4 +30,8 @@ public class ForallOld {
 	public void m() {
 	}
 
+	//@ forall int x,y,z;
+	//@ old int a=1, b=2, c=3;
+	//@ ensures x+y+z == a+b+c;
+	public void m9() {}
 }

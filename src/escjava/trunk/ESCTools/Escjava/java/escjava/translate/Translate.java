@@ -1832,7 +1832,6 @@ public final class Translate
                     ErrorSet.caution(stmt.getStartLoc(),
                                      "Not checking block-level types");
                 }	  
-                //Assert.notImplemented("block-level types");
                 return;
 
             case TagConstants.ASSERTSTMT: {
@@ -2893,6 +2892,7 @@ public final class Translate
     private Expr trMethodInvocation(boolean protect, 
                                     /*@ non_null */ MethodInvocation mi) {
         boolean isStatic = Modifiers.isStatic(mi.decl.modifiers);
+
         // for holding the translated arguments
         ExprVec args = ExprVec.make(mi.args.size() + 1);
         ExprVec argsRaw = ExprVec.make(mi.args.size() + 1);

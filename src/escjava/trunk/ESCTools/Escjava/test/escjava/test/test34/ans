@@ -760,13 +760,7 @@ BogusSpec.java:12: Error: Not a specification designator expression
 BogusSpec.java:18: Error: Keyword \result is not allowed in this context
   //@ requires \result;
                ^
-BogusSpec.java:18: Error: Cannot convert int to boolean
-  //@ requires \result;
-               ^
 BogusSpec.java:19: Error: Keyword \result is not allowed in this context
-  //@ modifies \result
-               ^
-BogusSpec.java:19: Error: Not a specification designator expression
   //@ modifies \result
                ^
 BogusSpec.java:32: Error: Not a specification designator expression
@@ -784,13 +778,7 @@ BogusSpec.java:40: Error: Unqualified this cannot be used in static contexts
 BogusSpec.java:41: Error: Keyword \result is not allowed in this context
   //@ modifies \result.x;
                ^
-BogusSpec.java:41: Error: No such field in type int
-  //@ modifies \result.x;
-                       ^
 BogusSpec.java:42: Error: Keyword \result is not allowed in this context
-  //@ modifies \result, x;
-               ^
-BogusSpec.java:42: Error: Not a specification designator expression
   //@ modifies \result, x;
                ^
 BogusSpec.java:42: Error: An instance field may be accessed only via an object and/or from a non-static context or an inner class enclosed by a type possessing that field.
@@ -838,30 +826,18 @@ BogusSpec.java:70: Error: The function \fresh cannot be used inside a \old expre
 BogusSpec.java:76: Error: Keyword \result is not allowed in this context
   //@ requires \result != null;
                ^
-BogusSpec.java:76: Error: Invalid types (int and null) in equality comparison
-  //@ requires \result != null;
-                       ^
 BogusSpec.java:77: Error: Invalid types (void and null) in equality comparison
   //@ ensures \result != null;
                       ^
 BogusSpec.java:79: Error: Keyword \result is not allowed in this context
   //@ modifies \result.x
                ^
-BogusSpec.java:79: Error: No such field in type int
-  //@ modifies \result.x
-                       ^
 BogusSpec.java:85: Error: Keyword \result is not allowed in this context
   //@ exsures (Throwable t) \result == null
                             ^
-BogusSpec.java:85: Error: Invalid types (int and null) in equality comparison
-  //@ exsures (Throwable t) \result == null
-                                    ^
 BogusSpec.java:87: Error: Keyword \result is not allowed in this context
   //@ exsures (SomeException se) se == \result
                                        ^
-BogusSpec.java:87: Error: Invalid types (SomeException and int) in equality comparison
-  //@ exsures (SomeException se) se == \result
-                                    ^
 BogusSpec.java:88: Error: Invalid types (SomeException and BogusSpec) in equality comparison
   //@ exsures (SomeException se) se == x && se == this;
                                                ^
@@ -904,9 +880,6 @@ BogusSpec.java:114: Error: An instance field may be accessed only via an object 
 BogusSpec.java:121: Error: Keyword \result is not allowed in this context
   //@ exsures (SomeException se) se == \result && se == this && se ==  ...
                                        ^
-BogusSpec.java:121: Error: Invalid types (SomeException and int) in equality comparison
-  //@ exsures (SomeException se) se == \result && se == this && se ==  ...
-                                    ^
 BogusSpec.java:121: Error: Invalid types (SomeException and BogusSpec) in equality comparison
   //@ exsures (SomeException se) se == \result && se == this && se ==  ...
                                                      ^
@@ -916,9 +889,6 @@ BogusSpec.java:122: Error: Undefined variable 'se'
 BogusSpec.java:130: Error: Keyword \result is not allowed in this context
   //@ exsures (SomeException se) se == \result && se == this && se ==  ...
                                        ^
-BogusSpec.java:130: Error: Invalid types (SomeException and int) in equality comparison
-  //@ exsures (SomeException se) se == \result && se == this && se ==  ...
-                                    ^
 BogusSpec.java:130: Error: Invalid types (SomeException and BogusSpec) in equality comparison
   //@ exsures (SomeException se) se == \result && se == this && se ==  ...
                                                      ^
@@ -1044,7 +1014,7 @@ BogusSpec.java:228: Caution: No initial also expected since there are no overrid
   //@ also modifies this.xx;
       ^
 24 cautions
-94 errors
+84 errors
 BogusVisibility.java:150: Error: Original ESC/Java keywords beginning with also_ are obsolete; they have been replaced with the corresponding JML keywords and the use of 'also' - note that the semantics has also changed.
   //@ also_ensures privSub == pack && prot == publ;
       ^

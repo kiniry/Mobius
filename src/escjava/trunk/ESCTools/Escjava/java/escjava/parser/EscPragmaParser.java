@@ -1035,26 +1035,29 @@ System.out.println("ADVANCING AT " + TagConstants.toString(tag));
 			Identifier id = parseIdentifier(scanner);
                         Expr target = AmbiguousVariableAccess.make(
 					SimpleName.make(id,locId));
-			ExprDeclPragma e;
+			NamedExprDeclPragma e;
                         int locOp = scanner.startingLoc;
                         if (scanner.ttype == TagConstants.LEFTARROW ||
 			    scanner.ttype == TagConstants.ASSIGN) {
 			    scanner.getNextToken();
                             Expr value = parseExpression(scanner);
-                            e = ExprDeclPragma.make(
+			    Expr target2 = AmbiguousVariableAccess.make(
+					SimpleName.make(id,locId));
+                            e = NamedExprDeclPragma.make(
 				     TagConstants.unRedundant(tag), 
 				     BinaryExpr.make(
 				       TagConstants.EQ, target, value, locOp), 
+				     target2,
 				     loc);
                         } else if (scanner.ttype == TagConstants.SUCH_THAT) {
                             expect(scanner, TagConstants.SUCH_THAT);
                             Expr value = parseExpression(scanner);
-                            e = ExprDeclPragma.make(
-				    TagConstants.unRedundant(tag), value, loc);
+                            e = NamedExprDeclPragma.make(
+				    TagConstants.unRedundant(tag), value, 
+				    target, loc);
                         } else {
 			    ErrorSet.error(locOp,
-				"Invalid syntax for a represents" +
-				" clause.");
+				"Invalid syntax for a represents clause.");
 			    // Skip this invalid clause
 			    eatThroughSemiColon();
 			    return getNextPragma(dst);
@@ -1198,57 +1201,52 @@ System.out.println("ADVANCING AT " + TagConstants.toString(tag));
                     // this is 'forall', *NOT* '\forall'
 		  {
 		    Type type = parseType(scanner);
-		    int locId = scanner.startingLoc;
-		    Identifier id = parseIdentifier(scanner);
-		    Type vartype = parseBracketPairs(scanner, type);
-		    if (scanner.ttype == TagConstants.ASSIGN) {
-			ErrorSet.error(scanner.startingLoc,
-			    "forall annotations may not have initializers");
-			eatThroughSemiColon();
-			semicolonExpected = false;
-		    } else {
-			semicolonExpected = true;
-			while (scanner.ttype == TagConstants.COMMA) {
-			    scanner.getNextToken();
-			    int locId2 = scanner.startingLoc;
-			    Identifier id2 = parseIdentifier(scanner);
-			    Type vartype2 = parseBracketPairs(scanner,type);
-			    if (scanner.ttype == TagConstants.ASSIGN) {
-				ErrorSet.error(scanner.startingLoc,
-				    "forall annotations may not have initializers");
-				eatThroughSemiColon();
-				semicolonExpected = false;
-				break;
-			    }
-			    LocalVarDecl decl2 = LocalVarDecl.make(Modifiers.NONE,
-				null, id2, vartype2, locId2, null, Location.NULL);
-			    savePragma(locId2, TagConstants.MODIFIERPRAGMA, 
-					VarDeclModifierPragma.make(tag,decl2,loc,locId2));
-			}
+		    while (true) {
+			int locId = scanner.startingLoc;
+			Identifier id = parseIdentifier(scanner);
+			Type vartype = parseBracketPairs(scanner, type);
+			if (scanner.ttype == TagConstants.ASSIGN) {
+			    ErrorSet.error(scanner.startingLoc,
+				"forall annotations may not have initializers");
+			    eatUpToCommaOrSemiColon();
+			} 
+			LocalVarDecl decl = LocalVarDecl.make(Modifiers.NONE,
+			    null, id, vartype, locId, null, Location.NULL);
+			dst.ttype = TagConstants.MODIFIERPRAGMA;
+			dst.auxVal = VarDeclModifierPragma.make(tag,decl,loc,locId);
+			savePragma(locId, TagConstants.MODIFIERPRAGMA, 
+				    dst.auxVal);
+			if (scanner.ttype != TagConstants.COMMA) break;
+			scanner.getNextToken(); // eat comma
+		      }
+		      if (!getPragma(dst)) return getNextPragma(dst);
+		      semicolonExpected = true;
 		    }
-		    LocalVarDecl decl = LocalVarDecl.make(Modifiers.NONE,
-			null, id, vartype, locId, null, Location.NULL);
-		    dst.ttype = TagConstants.MODIFIERPRAGMA;
-		    dst.auxVal = VarDeclModifierPragma.make(tag,decl,loc,locId);
 		    break;
-		  }
                 case TagConstants.OLD:
 		  {
 		    Type type = parseType(scanner);
-		    int locId = scanner.startingLoc;
 		    if (scanner.ttype == TagConstants.ASSIGN) {
-			ErrorSet.error(locId, "Missing type or id");
+			ErrorSet.error(scanner.startingLoc, 
+				"Missing type or id");
 			eatThroughSemiColon();
 			semicolonExpected = false;
 			return getNextPragma(dst);
 		    }
+		    semicolonExpected = true;
+		    while(true) {
+
+		    int locId = scanner.startingLoc;
 		    Identifier id = parseIdentifier(scanner);
 		    Type vartype = parseBracketPairs(scanner, type);
 		    if (scanner.ttype != TagConstants.ASSIGN) {
 			ErrorSet.error(locId,"old annotations must be initialized");
+			if (scanner.ttype == TagConstants.COMMA) {
+			    scanner.getNextToken();
+			    continue;
+			}
 			eatThroughSemiColon();
-			semicolonExpected = false;
-			return getNextPragma(dst);
+			break;
 		    } else {
 			int locAssignOp = scanner.startingLoc;
 			scanner.getNextToken();
@@ -1258,8 +1256,13 @@ System.out.println("ADVANCING AT " + TagConstants.toString(tag));
 			    args.addElement((Expr)init);
 			    init = NaryExpr.make(loc, locAssignOp, TagConstants.PRE, null, args);
 			} else {
-				ErrorSet.error(locAssignOp,
-				"Array initializers in old statements are not implemented");
+			    ErrorSet.error(locAssignOp,
+			    "Array initializers in old statements are not implemented");
+			    if (scanner.ttype == TagConstants.COMMA) {
+				scanner.getNextToken();
+				continue;
+			    }
+			    break;
 			}
 			OldVarDecl decl = OldVarDecl.make(
 			    id, vartype, locId, init, locAssignOp);
@@ -1267,7 +1270,16 @@ System.out.println("ADVANCING AT " + TagConstants.toString(tag));
 			dst.ttype = TagConstants.MODIFIERPRAGMA;
 			dst.auxVal =
 			    VarDeclModifierPragma.make(tag,decl,loc,locId);
-			semicolonExpected = true;
+			savePragma( loc, TagConstants.MODIFIERPRAGMA,
+				    dst.auxVal);
+
+			if (scanner.ttype != TagConstants.COMMA) break;
+			scanner.getNextToken(); // eats comma
+		    }
+
+		    }
+		    if (!getPragma(dst)) {
+			return getNextPragma(dst);
 		    }
 		    break;
 		  }
@@ -1716,6 +1728,14 @@ System.out.println("ADVANCING AT " + TagConstants.toString(tag));
         }
         // throw away final semi-colon
         scanner.getNextToken();
+    }
+
+    private void eatUpToCommaOrSemiColon() {
+        while (scanner.ttype != TagConstants.SEMICOLON &&
+		scanner.ttype != TagConstants.COMMA) {
+	    if (scanner.ttype == TagConstants.EOF) return;
+            scanner.getNextToken();
+        }
     }
 
     /**

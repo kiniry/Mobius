@@ -282,11 +282,21 @@ public class Substitute {
 	break;
       }
 	  
+    case TagConstants.RESEXPR:
+      {
+	Expr to = (Expr)subst.get( resexpr );
+	result = (to==null ? e : to);
+	break;
+      }
+    case TagConstants.THISEXPR:
+      {
+	Expr to = (Expr)subst.get( thisexpr );
+	result = (to==null ? e : to);
+	break;
+      }
     case TagConstants.TYPEEXPR:
     case TagConstants.LOCKSETEXPR:
-    case TagConstants.RESEXPR:
     case TagConstants.WILDREFEXPR:
-    case TagConstants.THISEXPR:
     case TagConstants.CLASSLITERAL:
 
     case TagConstants.BOOLEANLIT: 
@@ -312,8 +322,12 @@ public class Substitute {
 	  // System.out.println("Doing subst on "+va.decl.id);
 	  result =  to;
 	} else {
-	  // System.out.println("Not doing subst on "+va.decl.id);
+	  // System.out.println("Not doing subst on "+va.decl.id + " " + va.decl);
 	  result = e;
+	  if (va.id == Identifier.intern("RES")) {
+		to = (Expr)subst.get(resexpr);
+		if (to != null) result = to;
+	  }
 	}
 	break;
       }
@@ -344,8 +358,10 @@ public class Substitute {
 		Expr ee = me.args.elementAt(i);
 		args.addElement( doSubst(subst, ee, rhsVars));
 	  }
-	  result = MethodInvocation.make(me.od, me.id, me.tmodifiers, me.locId, 
+	  MethodInvocation r = MethodInvocation.make(me.od, me.id, me.tmodifiers, me.locId, 
 			me.locOpenParen, args);
+	  r.decl = me.decl;
+	  result = r;
 	} else if (e instanceof NewArrayExpr) {
 	  NewArrayExpr me = (NewArrayExpr)e;
 	  ArrayInit init = me.init;
@@ -378,7 +394,8 @@ public class Substitute {
     return result;
   }
 
-
+  final static public Expr resexpr = ResExpr.make(Location.NULL);
+  final static public Expr thisexpr = ThisExpr.make(null,Location.NULL);
 
   /**
    ** Calculate the free variables of an expression or a GuardedCmd. <p>

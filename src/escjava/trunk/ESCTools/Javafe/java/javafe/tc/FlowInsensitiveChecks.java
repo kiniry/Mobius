@@ -1054,7 +1054,8 @@ public class FlowInsensitiveChecks
                 r.index = checkExpr(env, r.index);
                 Type t = getType(r.index);
                 Type ndxType = Types.isNumericType(t) ? Types.unaryPromote(t) : t;
-                if(!Types.isSameType(ndxType, Types.intType)) 
+                if(!Types.isSameType(ndxType, Types.intType) &&
+		   !Types.isErrorType(ndxType)) 
                     ErrorSet.error(r.locOpenBracket, "Array index is not an integer");
 
                 return r;
@@ -1440,7 +1441,7 @@ public class FlowInsensitiveChecks
 			if (!Types.isErrorType(t))
 			    reportLookupException(ex, "field", 
 				Types.printName(t), fa.locId);
-			    setType(fa, Types.errorType);
+			setType(fa, Types.errorType);
                     }
                 }
                 return fa;
@@ -1496,7 +1497,7 @@ public class FlowInsensitiveChecks
                                               "method "+mi.id
                                               +Types.printName(argTypes), 
                                               Types.printName(t), mi.locId);
-			    setType(mi, Types.errorType);
+			setType(mi, Types.errorType);
                     }
                 }
                 return mi;

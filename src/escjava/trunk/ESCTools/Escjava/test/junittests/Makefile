@@ -21,6 +21,9 @@ export ESC_SPECS = :
 .PHONY: buildtests
 buildtests:
 	$(JAVAC) -classpath .:${JUNIT_UTILS_PATH}:${ESCJAVA_CLASSPATH} TestSuite.java
+	cp Binary.javax Binary.java
+	javac Binary.java
+	rm Binary.java
 
 test runtests: buildtests
 	$(MAKE) skips
@@ -40,7 +43,7 @@ swtests: lists
 ALWAYSFLAGS = -nowarn Deadlock -verboseTrace -testMode -classpath .
 DEFAULTFLAGS = " "
 
-OTHERTESTS = RefineT.t SpecFile.jml RefineNoJava.refines-java
+OTHERTESTS = RefineT.t SpecFile.jml RefineNoJava.refines-java Binary.refines-spec NoPublic.refines-spec
 
 .PHONY: lists
 lists:
