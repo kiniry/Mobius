@@ -418,11 +418,6 @@ public class Main extends javafe.SrcTool
             return true;
         }
 
-        //====== Stage 2.5 
-	// Desugaring of annotation is already performed.  This does some
-	// additional checks - e.g. purity checking.
-
-        //annotationHandler.process(td);
 	if (options().testRef) makePrettyPrint().print(System.out,0,td);
 
         // ==== Start stage 3 ====
