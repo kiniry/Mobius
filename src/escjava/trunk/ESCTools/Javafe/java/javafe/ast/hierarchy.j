@@ -401,6 +401,9 @@ public abstract class RoutineDecl extends ASTNode implements TypeDeclElem
   //@ invariant hasParent ==> parent != null;
   public TypeDecl parent;
 
+  public boolean binaryArgNames = false; // true if the ids of formal
+	// arguments are binary manufactured names instead of source code names
+
   public boolean implicit = false;
   //# int modifiers
   //# ModifierPragma* pmodifiers NullOK
@@ -451,6 +454,7 @@ public abstract class RoutineDecl extends ASTNode implements TypeDeclElem
 public class ConstructorDecl extends RoutineDecl
 {
   //# MakerSpec requires body != null ==> locOpenBrace != Location.NULL;
+
 }
 
 public class MethodDecl extends RoutineDecl

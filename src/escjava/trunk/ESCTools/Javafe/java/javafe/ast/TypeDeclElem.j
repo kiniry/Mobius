@@ -41,5 +41,6 @@ public interface TypeDeclElem {
     public int getModifiers();
     public void setModifiers(int m);
 	
+    public int getStartLoc();
 }
 
