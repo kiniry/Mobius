@@ -2177,6 +2177,15 @@ public class EscPragmaParser extends Parse
         l.getNextToken();
         boolean regularParenExpr = true;
 
+
+        while (l.ttype == TagConstants.IDENT) {
+          Identifier kw = l.identifierVal;
+          int tag = TagConstants.fromIdentifier(kw);
+          if (tag != TagConstants.PEER) break;
+             // skip these for now - FIXME
+          l.getNextToken();
+        }
+
         // First see if we have a (LBLxxx ...) or (quantifier ...)
         if (l.ttype == TagConstants.IDENT) {
           Identifier kw = l.identifierVal;

@@ -2490,6 +2490,12 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
           break;
         }
 
+        case TagConstants.READONLY:
+        case TagConstants.PEER:
+        case TagConstants.REP:
+          // FIXME - need to support these
+          break;
+
         default:
           ErrorSet.error(p.getStartLoc(),
                          "Ignored unexpected " +  
