@@ -3,7 +3,7 @@
 <plugin
    id="escjava.plugin"
    name="Escjava2 UI"
-   version="1.0.4"
+   version="1.0.5"
    provider-name="David R. Cok"
    class="escjava.plugin.EscjavaPlugin">
 

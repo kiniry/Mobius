@@ -2,7 +2,7 @@
 <feature
       id="EscJava2"
       label="EscJava2"
-      version="1.0.4"
+      version="1.0.5"
       provider-name="David R. Cok">
 
    <install-handler/>
@@ -45,12 +45,12 @@ http://sort.ucd.ie/projects/escjava-eclipse
          id="escjava.esctools"
          download-size="0"
          install-size="0"
-         version="1.0.4"/>
+         version="1.0.5"/>
 
    <plugin
          id="escjava.plugin"
          download-size="0"
          install-size="0"
-         version="1.0.4"/>
+         version="1.0.5"/>
 
 </feature>
