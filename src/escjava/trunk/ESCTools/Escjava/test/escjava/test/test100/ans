@@ -20,7 +20,7 @@ C1.java:32: Warning: Postcondition possibly not established (Post)
     } // warning expected 
     ^
 Associated declaration is "C1.java", line 27, col 8:
-    /*@ ensures (\forall int i; 0 <= i && i < a.length ==> a[i] == 0)  ...
+    /*@ ensures (\forall int i; 0 <= i && i < a.length ==> a[i] == 0); ...
         ^
 C2.java:28: Warning: Possible negative array index (IndexNegative)
             a[i] = 0;   // warning expected 
@@ -29,7 +29,7 @@ C2.java:30: Warning: Postcondition possibly not established (Post)
     } // warning expected 
     ^
 Associated declaration is "C2.java", line 25, col 8:
-    /*@ ensures (\forall int i; 0 <= i && i < a.length ==> a[i] == 0)  ...
+    /*@ ensures (\forall int i; 0 <= i && i < a.length ==> a[i] == 0); ...
         ^
 C2.java:36: Warning: Array index possibly too large (IndexTooBig)
             a[i] = b[i];        
