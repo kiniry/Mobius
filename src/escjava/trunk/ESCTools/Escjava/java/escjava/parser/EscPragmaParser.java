@@ -84,6 +84,30 @@ import javafe.util.Location;
  ModifierPragma ::= 'modifies' | 'modifies_redundantly' | 'also_modifies' 
  | 'modifiable' | 'modifiable_redundantly'
  | 'assignable' | 'assignable_redundantly'
+
+
+ DurationClause ::= DurationKeyword '\not_specified' [';']
+ | DurationKeyword DurSpecExpr [ 'if' predicate ] [';']
+
+ DurSpecExpr ::= SpecExpr (of type int) OpWithIntResult DurSpecExpr
+ | '\duration' '(' MethodInvOrConstructor ')' IntOp DurSpecExpr
+
+ SpaceExpr ::= '\space' '(' MethodInvOrConstructor ')'
+
+ WorkingSpaceClause ::= WorkingSpaceKeyword '\not_specified' [';']
+ | WorkingSpaceKeyword WorkingSpaceSpecExpr [ 'if' predicate ] [';']
+
+ WorkingSpaceSpecExpr ::= SpecExpr (of type int) OpWithIntResult WorkingSpaceSpecExpr
+ | '\working_space' '(' MethodInvOrConstructor ')' IntOp WorkingSpaceSpecExpr
+
+ MethodInvOrConstructor ::= MethodInvocation | ConstructorInvocation
+
+ OpWithIntResult ::= STAR | '/' | '%' | PLUS | '-' | '&' | BITOR | '^'
+
+ WorkingSpaceKeyword ::= 'working_space' | 'working_space_redundantly'
+
+ DurationKeyword ::= 'duration' | 'duration_redundantly'
+
  </pre>
 
  The grammar of SpecExpr is:
@@ -144,6 +168,9 @@ import javafe.util.Location;
  *
  * @todo kiniry 24 Jan 2003 - Permit splitting syntactic constructs
  * across multiple @code{//@@} comments.
+ *
+ * @todo kiniry 29 Apr 2003 - Why are the types of all duration/space
+ * expressions int instead of long?
  *
  * @see escjava.Main.checkRedundantSpecs
  */
@@ -773,6 +800,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
                 case TagConstants.JML_INSTANCE:
                 case TagConstants.JML_PURE:
                 case TagConstants.SPEC_PUBLIC:
+                case TagConstants.JML_SPEC_PROTECTED: // SC HPT AAST 3
                 case TagConstants.WRITABLE_DEFERRED:
                 case TagConstants.HELPER:
                     dst.ttype = TagConstants.MODIFIERPRAGMA;
@@ -872,100 +900,122 @@ public class EscPragmaParser extends Parse implements PragmaParser
                     semiNotOptional = true;
                     break;
 
+                case TagConstants.JML_WACK_DURATION:        // SC HPT 2
+                case TagConstants.JML_SPACE:                // SC HPT 2
+                case TagConstants.JML_WACK_WORKING_SPACE:   // SC HPT 2
+                    ErrorSet.fatal(loc, "Unsupported pragma: " + 
+                                   TagConstants.toString(tag) +
+                                   "; kiniry@users.sf.net is working on it.");
+                    break;
+
+                case TagConstants.JML_DURATION_REDUNDANTLY:   // SC HPT 2
+                case TagConstants.JML_DURATION:               // SC HPT 2
+                case TagConstants.JML_WORKING_SPACE_REDUNDANTLY:// SC HPT 2
+                case TagConstants.JML_WORKING_SPACE:            // SC HPT 2
+                    ErrorSet.fatal(loc, "Unsupported pragma: " + 
+                                   TagConstants.toString(tag) +
+                                   "; kiniry@users.sf.net is working on it.");
+                    break;
+
+                case TagConstants.JML_MIN:                  // SC HPT AAST 3
+                case TagConstants.JML_PRODUCT:              // SC HPT AAST 3
+                case TagConstants.JML_SUM:                  // SC HPT AAST 3
+                case TagConstants.JML_NUM_OF:               // SC AAST 3
+                    ErrorSet.fatal(loc, "Unsupported pragma: " + 
+                                   TagConstants.toString(tag) +
+                                   "; kiniry@users.sf.net is working on it.");
+                    break;
+
+                // 'SC' == Statically Checkable or otherwise useful
+                // 'HPT' == Handle at Parse-time 'AAST' == 'Augments
+                // Abstract Symbol Tree' Final 0-5 indicates
+                // difficulty of implementation; 0 being easiest.  All
+                // estimates and implementation/design guesses were
+                // made by Joe Kiniry on 29 April 2003.
+
                 // Unsupported JML keywords beginning with '\' (wack)
-                case TagConstants.JML_WACK_DURATION:
-                case TagConstants.JML_FIELDS_OF:
-                case TagConstants.JML_INVARIANT_FOR:
-                case TagConstants.JML_IS_INITIALIZED:
-                case TagConstants.JML_MIN:
-                case TagConstants.JML_NOT_MODIFIED:
-                case TagConstants.JML_NOT_SPECIFIED:
-                case TagConstants.JML_NUM_OF:
-                case TagConstants.JML_OTHER:
-                case TagConstants.JML_PRIVATE_DATA:
-                case TagConstants.JML_PRODUCT:
-                case TagConstants.JML_REACH:
-                case TagConstants.JML_SUCH_THAT:
-                case TagConstants.JML_SUM:
-                case TagConstants.JML_WACK_WORKING_SPACE:
+                case TagConstants.JML_FIELDS_OF:            // SC AAST 4
+                    // unknown exact semantics
+                case TagConstants.JML_INVARIANT_FOR:        // SC AAST 4
+                case TagConstants.JML_IS_INITIALIZED:       // SC AAST 3
+                case TagConstants.JML_NOT_MODIFIED:         // SC AAST 4
+                case TagConstants.JML_NOT_SPECIFIED:        // HPT? 2
+                case TagConstants.JML_OTHER:                // unclean semantics
+                case TagConstants.JML_PRIVATE_DATA:         // unclear semantics
+                case TagConstants.JML_REACH:                // SC HPT AAST 5
                     
-                // Unsupported JML keywords.
-                case TagConstants.JML_ABRUPT_BEHAVIOR:
-                case TagConstants.JML_ACCESSIBLE_REDUNDANTLY:
-                case TagConstants.JML_ACCESSIBLE:
+                // Unsupported JML keywords no beginning with '\' (wack).
+                case TagConstants.JML_ABRUPT_BEHAVIOR:        // unclear semantics
+                case TagConstants.JML_ACCESSIBLE_REDUNDANTLY: // SC HPT AAST 2
+                case TagConstants.JML_ACCESSIBLE:             // SC HPT AAST 2
                 // case TagConstants.JML_ALSO: support complete (kiniry)
                 // case TagConstants.JML_ASSERT_REDUNDANTLY: support complete (kiniry)
                 // case TagConstants.JML_ASSIGNABLE_REDUNDANTLY: support complete (kiniry)
                 // case TagConstants.JML_ASSIGNABLE: support complete (kiniry)
                 // case TagConstants.JML_ASSUME_REDUNDANTLY: support complete (kiniry)
                 // case TagConstants.JML_BEHAVIOR: support complete (kiniry)
-                case TagConstants.JML_BREAKS_REDUNDANTLY:
-                case TagConstants.JML_BREAKS:
-                case TagConstants.JML_CALLABLE_REDUNDANTLY:
-                case TagConstants.JML_CALLABLE:
-                case TagConstants.JML_CHOOSE_IF:
-                case TagConstants.JML_CHOOSE:
-                case TagConstants.JML_CONSTRAINT_REDUNDANTLY:
-                case TagConstants.JML_CONSTRAINT:
-                case TagConstants.JML_CONTINUES_REDUNDANTLY:
-                case TagConstants.JML_CONTINUES:
+                case TagConstants.JML_BREAKS_REDUNDANTLY:     // unclear semantics
+                case TagConstants.JML_BREAKS:                 // unclear semantics
+                case TagConstants.JML_CALLABLE_REDUNDANTLY:   // unclear semantics
+                case TagConstants.JML_CALLABLE:               // unclear semantics
+                case TagConstants.JML_CHOOSE_IF:              // unclear semantics
+                case TagConstants.JML_CHOOSE:                 // unclear semantics
+                case TagConstants.JML_CONSTRAINT_REDUNDANTLY: // SC AAST 4
+                case TagConstants.JML_CONSTRAINT:             // SC AAST 4
+                case TagConstants.JML_CONTINUES_REDUNDANTLY:  // unclear semantics
+                case TagConstants.JML_CONTINUES:              // unclear semantics
                 // case TagConstants.JML_DECREASES_REDUNDANTLY: support complete (kiniry)
                 // case TagConstants.JML_DECREASING_REDUNDANTLY: support complete (kiniry)
                 // case TagConstants.JML_DECREASING: support complete (kiniry)
-                case TagConstants.JML_DEPENDS_REDUNDANTLY:
-                case TagConstants.JML_DEPENDS:
-                case TagConstants.JML_DIVERGES_REDUNDANTLY:
-                case TagConstants.JML_DIVERGES:
-                case TagConstants.JML_DURATION_REDUNDANTLY:
-                case TagConstants.JML_DURATION:
+                case TagConstants.JML_DEPENDS_REDUNDANTLY:    // SC AAST 4
+                case TagConstants.JML_DEPENDS:                // SC AAST 4
+                case TagConstants.JML_DIVERGES_REDUNDANTLY:   // NOT SC but useful 2
+                case TagConstants.JML_DIVERGES:               // NOT SC but useful 2
                 // case TagConstants.JML_ENSURES_REDUNDANTLY: support complete (kiniry)
-                case TagConstants.JML_EXAMPLE:
+                case TagConstants.JML_EXAMPLE:                // NOT SC
                 // case TagConstants.JML_EXCEPTIONAL_BEHAVIOR: support complete (kiniry)
-                case TagConstants.JML_EXCEPTIONAL_EXAMPLE:
+                case TagConstants.JML_EXCEPTIONAL_EXAMPLE:    // NOT SC
                 // case TagConstants.JML_EXSURES_REDUNDANTLY: support complete (kiniry)
-                case TagConstants.JML_FORALL:
-                case TagConstants.JML_FOR_EXAMPLE:
-                case TagConstants.JML_IMPLIES_THAT:
-                case TagConstants.JML_HENCE_BY_REDUNDANTLY:
-                case TagConstants.JML_HENCE_BY:
-                case TagConstants.JML_INITIALIZER:
-                case TagConstants.JML_INITIALLY:
-                // case TagConstants.JML_INSTANCE: parses but no semantics (cok)
+                case TagConstants.JML_FORALL:                 // unclear semantics
+                case TagConstants.JML_FOR_EXAMPLE:            // NOT SC
+                case TagConstants.JML_IMPLIES_THAT:           // NOT SC
+                case TagConstants.JML_HENCE_BY_REDUNDANTLY:   // unclear semantics
+                case TagConstants.JML_HENCE_BY:               // unclear semantics
+                case TagConstants.JML_INITIALIZER:            // SC AAST 4
+                case TagConstants.JML_INITIALLY:              // SC AAST 4
+                // case TagConstants.JML_INSTANCE: parses but no semantics (cok) SC AAST 3
                 // case TagConstants.JML_INVARIANT_REDUNDANTLY: support complete (kiniry)
                 // case TagConstants.JML_LOOP_INVARIANT_REDUNDANTLY: support complete (kiniry)
                 // case TagConstants.JML_MAINTAINING_REDUNDANTLY: support complete (kiniry)
                 // case TagConstants.JML_MAINTAINING: support complete (kiniry)
-                case TagConstants.JML_MEASURED_BY_REDUNDANTLY:
-                case TagConstants.JML_MEASURED_BY:
-                case TagConstants.JML_MODEL_PROGRAM:
+                case TagConstants.JML_MEASURED_BY_REDUNDANTLY:// unclear semantics
+                case TagConstants.JML_MEASURED_BY:            // unclear semantics
+                case TagConstants.JML_MODEL_PROGRAM:          // unclear semantics
                 // case TagConstants.JML_MODIFIABLE_REDUNDANTLY: support complete (kiniry)
                 // case TagConstants.JML_MODIFIABLE: support complete (kiniry)
                 // case TagConstants.JML_MODIFIES_REDUNDANTLY: support complete (kiniry)
                 // case TagConstants.JML_NORMAL_BEHAVIOR: support complete (kiniry)
-                case TagConstants.JML_NORMAL_EXAMPLE:
-                case TagConstants.JML_OLD:
-                case TagConstants.JML_OR:
+                case TagConstants.JML_NORMAL_EXAMPLE:         // NOT SC
+                case TagConstants.JML_OLD:                    // unclear semantics
+                case TagConstants.JML_OR:                     // unclear semantics
                 // case TagConstants.JML_POST_REDUNDANTLY: support complete (kiniry)
                 // case TagConstants.JML_POST: support complete (kiniry)
                 // case TagConstants.JML_PRE_REDUNDANTLY: support complete (kiniry)
                 // case TagConstants.JML_PRE: support complete (kiniry)
-                // case TagConstants.JML_PURE: parses but no semantics (cok)
-                case TagConstants.JML_REFINE:
-                case TagConstants.JML_REPRESENTS_REDUNDANTLY:
-                case TagConstants.JML_REPRESENTS:
+                // case TagConstants.JML_PURE: parses but no semantics (cok) SC AAST 3
+                case TagConstants.JML_REFINE:                 // SC HPT AAST 3
+                case TagConstants.JML_REPRESENTS_REDUNDANTLY: // SC HPT AAST 4
+                case TagConstants.JML_REPRESENTS:             // SC HPT AAST 4
                 // case TagConstants.JML_REQUIRES_REDUNDANTLY: support complete (kiniry)
-                case TagConstants.JML_RETURNS_REDUNDANTLY:
-                case TagConstants.JML_RETURNS:
+                case TagConstants.JML_RETURNS_REDUNDANTLY:    // unclear semantics
+                case TagConstants.JML_RETURNS:                // unclear semantics
                 // case TagConstants.JML_SIGNALS_REDUNDANTLY: support complete (kiniry)
                 // case TagConstants.JML_SIGNALS: support complete (kiniry)
-                case TagConstants.JML_SPEC_PROTECTED:
-                case TagConstants.JML_STATIC_INITIALIZER:
-                case TagConstants.JML_SUBCLASSING_CONTRACT:
-                case TagConstants.JML_WEAKLY:
-                case TagConstants.JML_WHEN_REDUNDANTLY:
-                case TagConstants.JML_WHEN:
-                case TagConstants.JML_WORKING_SPACE_REDUNDANTLY:
-                case TagConstants.JML_WORKING_SPACE:
+                case TagConstants.JML_STATIC_INITIALIZER:     // SC AAST 4
+                case TagConstants.JML_SUBCLASSING_CONTRACT:   // NOT SC
+                case TagConstants.JML_WEAKLY:                 // unclear semantics
+                case TagConstants.JML_WHEN_REDUNDANTLY:       // NOT SC concurrent only
+                case TagConstants.JML_WHEN:                   // NOT SC concurrent only
                     ErrorSet.fatal(loc, "Unsupported pragma: " + 
                                    TagConstants.toString(tag));
                     break;
@@ -1151,23 +1201,21 @@ public class EscPragmaParser extends Parse implements PragmaParser
                             //fail(loc, "Annotations may not contain method calls");
 			} else {
                         switch (tag) {
-                            case TagConstants.TYPE:
-                                {
-                                    Type subexpr = parseType(l);
-                                    primary = TypeExpr.make(loc, l.startingLoc, subexpr);
-                                    expect(l, TagConstants.RPAREN);
-                                    break;
-                                }
+                            case TagConstants.TYPE: {
+                                Type subexpr = parseType(l);
+                                primary = TypeExpr.make(loc, l.startingLoc, subexpr);
+                                expect(l, TagConstants.RPAREN);
+                                break;
+                            }
 	    
-                            case TagConstants.DTTFSA:
-                                {
-                                    Type t = parseType(l);
-                                    TypeExpr te = TypeExpr.make(loc, l.startingLoc, t);
-                                    expect(l, TagConstants.COMMA);
-                                    ExprVec args = parseExpressionList(l, TagConstants.RPAREN);
-                                    args.insertElementAt(te, 0);
-                                    primary = NaryExpr.make(loc, l.startingLoc, tag, args);
-                                    break;
+                            case TagConstants.DTTFSA: {
+                                Type t = parseType(l);
+                                TypeExpr te = TypeExpr.make(loc, l.startingLoc, t);
+                                expect(l, TagConstants.COMMA);
+                                ExprVec args = parseExpressionList(l, TagConstants.RPAREN);
+                                args.insertElementAt(te, 0);
+                                primary = NaryExpr.make(loc, l.startingLoc, tag, args);
+                                break;
                                 }
 	    
                             case TagConstants.FRESH: 
@@ -1175,12 +1223,11 @@ public class EscPragmaParser extends Parse implements PragmaParser
                             case TagConstants.ELEMTYPE:
                             case TagConstants.MAX: 
                             case TagConstants.PRE:
-                            case TagConstants.TYPEOF:
-                                {
-                                    ExprVec args = parseExpressionList(l, TagConstants.RPAREN);
-                                    primary = NaryExpr.make(loc, l.startingLoc, tag, args);
-                                    break;
-                                }
+                            case TagConstants.TYPEOF: {
+                                ExprVec args = parseExpressionList(l, TagConstants.RPAREN);
+                                primary = NaryExpr.make(loc, l.startingLoc, tag, args);
+                                break;
+                            }
 	    
                             default:
 			        ExprVec args = parseArgumentList(l);
