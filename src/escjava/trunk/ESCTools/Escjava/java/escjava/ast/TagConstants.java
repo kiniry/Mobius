@@ -196,7 +196,8 @@ public class TagConstants extends GeneratedTags
     public static final int FUNCTION = FORALL + 1;
     public static final int GHOST = FUNCTION + 1;
     public static final int HELPER = GHOST + 1;
-    public static final int IN = HELPER + 1;
+    public static final int IMMUTABLE = HELPER + 1;
+    public static final int IN = IMMUTABLE + 1;
     public static final int IN_REDUNDANTLY = IN + 1;
     public static final int INTO = IN_REDUNDANTLY + 1;
     public static final int INVARIANT = INTO + 1;
@@ -809,6 +810,7 @@ public class TagConstants extends GeneratedTags
 	Identifier.intern("function"),
         Identifier.intern("ghost"),
         Identifier.intern("helper"),
+        Identifier.intern("immutable"),
         Identifier.intern("in"),
         Identifier.intern("in_redundantly"),
         Identifier.intern("\\into"),
