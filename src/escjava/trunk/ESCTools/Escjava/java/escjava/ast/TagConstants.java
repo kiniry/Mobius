@@ -62,13 +62,16 @@ public class TagConstants extends javafe.tc.TagConstants
     public static final int FORALL = FRESH + 1;
     public static final int GHOST = FORALL + 1;
     public static final int HELPER = GHOST + 1;
-    public static final int INVARIANT = HELPER + 1;
+    public static final int IN = HELPER + 1;
+    public static final int INTO = IN + 1;
+    public static final int INVARIANT = INTO + 1;
     public static final int LBLPOS = INVARIANT + 1;
     public static final int LBLNEG = LBLPOS + 1;
     public static final int LOOP_INVARIANT = LBLNEG + 1;
     public static final int LOOP_PREDICATE = LOOP_INVARIANT + 1;
     public static final int LS = LOOP_PREDICATE + 1;
-    public static final int MAX = LS + 1; // Function
+    public static final int MAPS = LS + 1; 
+    public static final int MAX = MAPS + 1; // Function
     public static final int MODIFIES = MAX + 1;
     public static final int MONITORED = MODIFIES + 1;
     public static final int MONITORED_BY = MONITORED + 1;
@@ -86,7 +89,8 @@ public class TagConstants extends javafe.tc.TagConstants
     public static final int TYPEOF = TYPETYPE + 1; // Function
     public static final int UNINITIALIZED = TYPEOF + 1;
     public static final int UNREACHABLE = UNINITIALIZED + 1;
-    public static final int WRITABLE_DEFERRED = UNREACHABLE + 1;
+    public static final int WHERE = UNREACHABLE + 1;
+    public static final int WRITABLE_DEFERRED = WHERE + 1;
     public static final int WRITABLE_IF = WRITABLE_DEFERRED+ 1;
     public static final int SKOLEM_CONSTANT = WRITABLE_IF + 1;
     public static final int LASTESCKEYWORDTAG = SKOLEM_CONSTANT;
@@ -637,12 +641,15 @@ public class TagConstants extends javafe.tc.TagConstants
         Identifier.intern("\\forall"),
         Identifier.intern("ghost"),
         Identifier.intern("helper"),
+        Identifier.intern("in"),
+        Identifier.intern("\\into"),
         Identifier.intern("invariant"),
         Identifier.intern("\\lblpos"),
         Identifier.intern("\\lblneg"),
         Identifier.intern("loop_invariant"),
         Identifier.intern("loop_predicate"),
         Identifier.intern("\\lockset"),
+	Identifier.intern("maps"),
         Identifier.intern("\\max"),
         Identifier.intern("modifies"),
         Identifier.intern("monitored"),
@@ -661,6 +668,7 @@ public class TagConstants extends javafe.tc.TagConstants
         Identifier.intern("\\typeof"),
         Identifier.intern("uninitialized"),
         Identifier.intern("unreachable"),
+        Identifier.intern("where"),
         Identifier.intern("writable_deferred"),
         Identifier.intern("writable_if"),
         Identifier.intern("skolem_constant")
