@@ -20,16 +20,7 @@ EmbeddedA.java
 PureCheck2.java
 ParsePure.java
 ModifiesPure.java
-# Delete
-Subclassing.java
-ParseDependsBad.java
-Methods.java
-WarnOp.java
-WarnOpA.java
-Test.java
-Test2.java
 ## A bug / tests to be fixed
-EX.java
 GhostFieldOverride.java
 SetComprehension.java
 ## Modify everything tests
