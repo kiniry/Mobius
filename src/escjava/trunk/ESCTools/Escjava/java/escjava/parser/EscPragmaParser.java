@@ -2283,15 +2283,17 @@ try{
                 int locOpen = l.startingLoc;
                 l.getNextToken();
 		Expr e1 = parseExpression(l);
-		if (l.ttype == TagConstants.DOTDOT) {
-		    l.getNextToken();
-		    Expr e2 = parseExpression(l);
-		    expect(l, TagConstants.RSQBRACKET);
-		    primary = ArrayRangeRefExpr.make(locOpen, primary, e1, e2);
-		} else if (l.ttype == TagConstants.RSQBRACKET) {
+		if (l.ttype == TagConstants.RSQBRACKET) {
 		    int locClose = l.startingLoc;
-		    l.getNextToken();
-		    primary = ArrayRefExpr.make(primary, e1, locOpen, locClose);
+		    expect(l, TagConstants.RSQBRACKET);
+		    if (e1 instanceof BinaryExpr &&
+			((BinaryExpr)e1).op == TagConstants.DOTDOT) {
+
+			primary = ArrayRangeRefExpr.make(locOpen, primary, 
+				((BinaryExpr)e1).left, ((BinaryExpr)e1).right);
+		    } else {
+			primary = ArrayRefExpr.make(primary, e1, locOpen, locClose);
+		    }
 		} else {
 			// PROBLEM
 		    ErrorSet.error(l.startingLoc, 

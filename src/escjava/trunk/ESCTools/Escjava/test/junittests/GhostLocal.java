@@ -8,10 +8,10 @@ public class GhostLocal {
 	//@ requires i == 0;
 	public void m() {
 
-		//@ set i = 1;
+		//@ set i = 1;			//@ nowarn Modifies;
 		int j = 10;
 		//@ ghost int k = i+j;
-		//@ set i = 3;
+		//@ set i = 3;			//@ nowarn Modifies;
 		//@ assert k == 11;
 		//@ assert k == i+j-2;
 		//@ ghost int kk = ii;
@@ -38,10 +38,10 @@ class GhostLocalA extends GhostLocalS implements GhostLocalI {
 
 	//@ requires a != null && b != null && a != b;
 	public void m() {
-		//@ set a.i = 1;
-		//@ set a.j = 2;
-		//@ set b.i = 3;
-		//@ set b.j = 4;
+		//@ set a.i = 1;			//@ nowarn Modifies;
+		//@ set a.j = 2;			//@ nowarn Modifies;
+		//@ set b.i = 3;			//@ nowarn Modifies;
+		//@ set b.j = 4;			//@ nowarn Modifies;
 		//@ assert a.i == 1; // OK if no aliasing!
 		//@ assert a.j == 4;
 		//@ assert a.i == 3; // ERROR

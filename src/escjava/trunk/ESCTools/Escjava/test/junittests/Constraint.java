@@ -110,11 +110,11 @@ interface ConstraintI {
 
 
 class ConstraintX extends ConstraintR implements ConstraintI {
-
+	//@ modifies k;
 	public void m() {
 		k += 3;
 	} // ERROR - fails ConstraintI
-
+	//@ modifies k;
 	public void mm() {
 		k += 4;
 	} // ERROR - fails ConstraintR

@@ -17,7 +17,7 @@ public class Mod {
 	//@ ensures \result == \old(i) + 1;
 	//@ ensures \old(j + i + ar[i] + fr[i] + a.jj + ModA.ii) * 0 == 0;
 	public int mm() {
-		i = i + 1;
+		i = i + 1; //@ nowarn Modifies;
 		return i;
 	}
 

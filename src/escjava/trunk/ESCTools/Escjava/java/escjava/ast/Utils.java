@@ -87,7 +87,7 @@ public final class Utils {
 	    if (va.decl instanceof FieldDecl) {
 		return isModel( (FieldDecl)va.decl );
 	    }
-	    System.out.println("ISMODEL-VA " + va.decl.getClass());
+	    //System.out.println("ISMODEL-VA " + va.decl.getClass());
         } else if (e instanceof FieldAccess) {
 	    return isModel( ((FieldAccess)e).decl );
 	} else if (e instanceof NothingExpr) {
@@ -96,8 +96,18 @@ public final class Utils {
 	    return false;
 	} else if (e instanceof ArrayRefExpr) {
 	    return isModel( ((ArrayRefExpr)e).array );
+	} else if (e instanceof ArrayRangeRefExpr) {
+	    return isModel( ((ArrayRangeRefExpr)e).array );
+	} else if (e instanceof WildRefExpr) {
+	    return false;
+	} else if (e instanceof NaryExpr) {
+		// This can occur if \dttfsa is used in a modifies clause
+	    return false;
+	} else {
+		//System.out.println(EscPrettyPrint.inst.toString(e));
+		//System.out.println("ISMODEL " + e.getClass());
+		//ErrorSet.dump(null);
 	}
-	else System.out.println("ISMODEL " + e.getClass());
 	return false; // default
     }
 

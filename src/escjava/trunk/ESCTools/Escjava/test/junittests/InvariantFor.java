@@ -5,7 +5,7 @@ public class InvariantFor {
 	InvariantForA a;
 	//@ ensures \invariant_for(a);
 	void m() {
-		a.i=0;
+		a.i=0; //@ nowarn Modifies;
 	}
 
 

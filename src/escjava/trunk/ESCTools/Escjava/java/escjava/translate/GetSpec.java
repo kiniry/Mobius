@@ -223,10 +223,14 @@ public final class GetSpec {
 			if (emp.expr == null) break; // ignore - informal
 			int t = emp.expr.getTag();
 			// FIXME - no contribution to spec for these keywords
-			if (t == TagConstants.EVERYTHINGEXPR ||
-			    t == TagConstants.NOTSPECIFIEDEXPR) {
-				dmd.modifiesEverything = true;
-				break;
+			if (t == TagConstants.EVERYTHINGEXPR) {
+			    dmd.modifiesEverything = true;
+			    emp = doSubst(subst, emp);
+			} else if (t == TagConstants.NOTSPECIFIEDEXPR) {
+			    dmd.modifiesEverything = true;
+			    //emp = doSubst(subst, 
+			//	EverythingExpr.make(emp.getStartLoc()) );
+				break; // FIXME
 			} else if (t == TagConstants.NOTHINGEXPR ) {
 			    // no action
 			} else {
@@ -444,7 +448,8 @@ public final class GetSpec {
             Expr designator = dmd.modifies.elementAt(i).expr;
 	    if (Utils.isModel(designator)) continue;
             Expr gcDesignator = TrAnExpr.trSpecExpr(designator);
-		// Returns null for modifies \nothing
+		// Returns null for modifies \nothing, \everything  FIXME?
+		// array-range, wild-ref expressions  FIXME!!
             if (gcDesignator != null) targets.addElement(gcDesignator);
         }
 

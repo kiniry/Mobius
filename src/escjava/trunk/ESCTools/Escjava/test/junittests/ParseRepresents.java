@@ -11,11 +11,11 @@ public class ParseRepresents {
 
 	//@ ensures size > 1;
 	public void m() {
-		length = 1;
+		length = 1;  //@ nowarn Modifies;
 	}
 
 	//@ ensures size > 1;
 	public void p() {
-		length = 0;
+		length = 0; //@ nowarn Modifies;
 	}
 }

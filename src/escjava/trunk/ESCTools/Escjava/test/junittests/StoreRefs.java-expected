@@ -3,12 +3,6 @@ ESC/Java version VERSION
     [TIME]
 
 StoreRefs ...
-StoreRefs.java:25: Not implemented: Wild-ref expression not yet implemented
-        //@ modifies StoreRefs.*;
-                     ^
-StoreRefs.java:26: Not implemented: Wild-ref expression not yet implemented
-        //@ modifies java.lang.Object.*;
-                     ^
     [TIME]
 
 StoreRefs: m() ...

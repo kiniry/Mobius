@@ -5,7 +5,7 @@ public class IsInitialized {
 	//@ ensures \is_initialized(java.util.Vector);
 	//@ ensures \is_initialized(IsInitializedA);
 	void m() {
-		a.i=0;
+		a.i=0;  //@ nowarn Modifies;
 	}
 
 

@@ -32,46 +32,46 @@ public class Monitored {
 	//@ monitors_for i = this,o;
 	//@ monitors_for jjj = Monitored.class;
 	//@ monitors_for z <- o;
-
+	//@ modifies i;
 	void m() {
 		i = 0;  // ERROR - needs this, o
 	}
-
+	//@ modifies i;
 	synchronized void mm() {
 		i=0;    // ERROR - needs o
 	}
-
+	//@ modifies i;
 	void m4() {
 		synchronized(o) { i=0; }  // ERROR - needs this
 	}
-
+	//@ modifies i;
 	synchronized void mmm() {
 		synchronized(o) { i=0; } // OK
 	}
-
+	//@ modifies ii;
 	synchronized void mmii() {
 		ii=0; // ERROR - needs o
 	}
-
+	//@ modifies ii;
 	synchronized void mmiiok() {
 		synchronized(o) { ii=0; }  // OK
 	}
 
-
+	//@ modifies k;
 	void m5() {
 		k = 0; // ERROR -- needs o
 	}
-
+	//@ modifies z;
 	void mz() {
 		z = 0; // ERROR -- needs o
 	}
 
-	static void mj() { j = 0; }  // ERROR - needs class
-	static void mjj() { jj = 0; }  // ERROR - needs class
-	static void mjjj() { jjj = 0; }  // ERROR - needs class
-	static synchronized void smj() { j = 0; } // OK
-	static synchronized void smjj() { jj = 0; } // OK
-	static synchronized void smjjj() { jjj = 0; } // OK
+	static void mj() { j = 0; } //@ nowarn Modifies;  // ERROR - needs class
+	static void mjj() { jj = 0; } //@ nowarn Modifies;  // ERROR - needs class
+	static void mjjj() { jjj = 0; } //@ nowarn Modifies;  // ERROR - needs class
+	static synchronized void smj() { j = 0; } //@ nowarn Modifies; // OK
+	static synchronized void smjj() { jj = 0; } //@ nowarn Modifies; // OK
+	static synchronized void smjjj() { jjj = 0; } //@ nowarn Modifies; // OK
 
 	// read accesses
 

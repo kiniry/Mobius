@@ -71,14 +71,31 @@ public class Substitute {
      * Cases needed only for SpecExprs:
      */
 
-    case TagConstants.WILDREFEXPR:
-	ErrorSet.notImplemented(!escjava.Main.options().noNotCheckedWarnings,
-		e.getStartLoc(),"Wild-ref expression not yet implemented");
+    case TagConstants.WILDREFEXPR: {
+	WildRefExpr w = (WildRefExpr)e;
+	ObjectDesignator newOd = w.od;
+	if (newOd != null &&
+	    newOd.getTag() == TagConstants.EXPROBJECTDESIGNATOR) {
+	    ExprObjectDesignator eod = (ExprObjectDesignator)newOd;
+	    newOd = ExprObjectDesignator.make(eod.locDot,
+					      doSubst(subst, eod.expr,rhsVars));
+	}
+
+	result = WildRefExpr.make(
+			w.var == null ? null : doSubst(subst,w.var,rhsVars),
+			newOd);
 	break;
-    case TagConstants.ARRAYRANGEREFEXPR:
-	ErrorSet.notImplemented(!escjava.Main.options().noNotCheckedWarnings,
-		e.getStartLoc(),"Array-range expression not yet implemented");
+    }
+
+    case TagConstants.ARRAYRANGEREFEXPR: {
+	ArrayRangeRefExpr ar = (ArrayRangeRefExpr)e;
+	result = ArrayRangeRefExpr.make(
+		ar.locOpenBracket,
+		doSubst(subst,ar.array,rhsVars),
+		ar.lowIndex == null ? null : doSubst(subst,ar.lowIndex,rhsVars),
+		ar.highIndex == null ? null : doSubst(subst,ar.highIndex,rhsVars));
 	break;
+    }
 
     case TagConstants.ARRAYREFEXPR:
       {
@@ -331,6 +348,8 @@ if (newNopats != null && qe.pats != null) System.out.println("CANT HAVE BOTH PAT
     case TagConstants.NULLLIT:
     case TagConstants.STRINGLIT:
     case TagConstants.SYMBOLLIT:
+    case TagConstants.EVERYTHINGEXPR:
+    case TagConstants.NOTHINGEXPR:
       {
 	result = e;
 	break;

@@ -1,0 +1,37 @@
+ModChecks.java:43: Warning: Possible violation of modifies clause (Modifies)
+                this.i = 9;  // WARNING
+                ^
+ModChecks.java:48: Warning: Possible violation of modifies clause (Modifies)
+                o.k = 9;     // WARNING
+                ^
+ModChecks.java:83: Warning: Possible violation of modifies clause (Modifies)
+                if (i != 0) j = 1; // WARNING
+                            ^
+Execution trace information:
+    Executed then branch in "ModChecks.java", line 83, col 14.
+
+ModChecks.java:84: Warning: Possible violation of modifies clause (Modifies)
+                else k = 9;        // WARNING
+                     ^
+Execution trace information:
+    Executed else branch in "ModChecks.java", line 84, col 7.
+
+ModChecks.java:90: Warning: Possible violation of modifies clause (Modifies)
+                a[1] = 9; // WARNING
+                ^
+ModChecks.java:95: Warning: Possible violation of modifies clause (Modifies)
+                b[0] = 0; // WARNING
+                ^
+ModChecks.java:108: Warning: Possible violation of modifies clause (Modifies)
+                b[0] = 0; // WARNING
+                ^
+ModChecks.java:112: Warning: Possible violation of modifies clause (Modifies)
+                a[1] = 9; // WARNING
+                ^
+ModChecks.java:124: Warning: Possible violation of modifies clause (Modifies)
+                a[5] = 9; // WARNING
+                ^
+ModChecks.java:172: Warning: Possible violation of modifies clause (Modifies)
+                o.i = 0;  // WARNING
+                ^
+10 warnings

@@ -241,21 +241,9 @@ public final class TrAnExpr {
             }
         }
 
-        case TagConstants.WILDREFEXPR: {
-	    // SHould never get here.
-	    ErrorSet.notImplemented(true,
-		e.getStartLoc(),
-		"Did not expect a wild-reference designator in an expression");
-/*
-            WildRefExpr r = (WildRefExpr)e;
-
-            VariableAccess elems = apply(sp, makeVarAccess(GC.elemsvar.decl,
-                                                           e.getStartLoc()));
-	Expr arr = trSpecExpr(r.expr, sp, st);
-	return GC.nary(e.getStartLoc(), r.locCloseBracket,
-		       TagConstants.SELECT, elems, arr);
-*/
-      }
+      case TagConstants.ARRAYRANGEREFEXPR:
+      case TagConstants.WILDREFEXPR:
+	    return null;
 
       case TagConstants.PARENEXPR: {
 	// drop parens
@@ -924,6 +912,7 @@ wrap those variables being modified and not everything.
       }
 
       case TagConstants.NOTHINGEXPR:
+      case TagConstants.EVERYTHINGEXPR:
 	return null;
 
       case TagConstants.NOTMODIFIEDEXPR: {

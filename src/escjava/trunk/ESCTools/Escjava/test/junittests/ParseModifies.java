@@ -23,6 +23,6 @@ public class ParseModifies {
 	public int i,j;
 	//@ ensures j == i;
 	public void z() {
-		i = i+1;
+		i = i+1;  //@ nowarn Modifies;
 	}
 }

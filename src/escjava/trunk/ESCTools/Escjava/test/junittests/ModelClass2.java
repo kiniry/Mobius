@@ -28,14 +28,14 @@ public class ModelClass2 {
 
 	requires true;
 	public void p(int i) {
-		set j = 0;
+		set j = 0; //@ nowarn Modifies;
 		int k = i+1;
 		assert k == 1;
 		assume k == 1;
 		ghost int kk = 0;
 	}
 
-	public M() { i = 1; }
+	public M() { i = 1; } //@ nowarn Modifies;
     }
 */
 
@@ -45,7 +45,7 @@ public class ModelClass2 {
 
 	/*@ model void z(int i) {
 
-		set j = 0;
+		set j = 0; //@ nowarn Modifies;
 		int k = i+1;
 		assert k == 1;
 		assume k == 1;

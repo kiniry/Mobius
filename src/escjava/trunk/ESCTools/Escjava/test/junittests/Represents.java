@@ -16,7 +16,7 @@ public class Represents {
 
 	//@ ensures bb;
 	public Represents() {
-		//@ set bb = true;
+		//@ set bb = true;  //@ nowarn Modifies;
 	}
 
 	//@ public model int size;

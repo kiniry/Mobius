@@ -3,7 +3,7 @@
 public class Instance2 implements INSTI {
 
 	public int in;
-
+	//@ modifies g;
 	static void m() {
 		int i = N;
 		// N = 7;
@@ -14,7 +14,7 @@ public class Instance2 implements INSTI {
 		set ii = mmm;
 */
 	}
-
+	//@ modifies gi;
 	void mm() {
 
 		//@ ghost int ii;

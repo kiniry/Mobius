@@ -38,14 +38,14 @@ class InitiallyB {
 	InitiallyB();
 
 	void m() {
-		a = new InitiallyA();
+		a = new InitiallyA();			//@ nowarn Modifies;
 		//@ assert a.j == 4; // OK
-		a.p();
+		a.p();			//@ nowarn Modifies;
 		//@ assert a.j != 14;
 	}
 
 	void mm() {
-		a = new InitiallyA();
+		a = new InitiallyA();			//@ nowarn Modifies;
 		//@ assert a.j != 4;  // ERROR
 	}
 
@@ -66,12 +66,12 @@ class InitiallyD {
 	InitiallyD();
 
 	void m() {
-		a = new InitiallyC();
+		a = new InitiallyC();			//@ nowarn Modifies;
 		//@ assert a.j == 4; // OK
 	}
 
 	void mm() {
-		a = new InitiallyC();
+		a = new InitiallyC();			//@ nowarn Modifies;
 		//@ assert a.j != 4;  // ERROR
 	}
 
@@ -96,25 +96,25 @@ class InitiallyF extends InitiallyE {
 	public InitiallyF() {
 		// implied super();
 		//@ assert i == 19;
-		i = 18;
+		i = 18;			//@ nowarn Modifies;
 	}
 
 	public InitiallyF(float f) {
 		// implied super();
 		//@ assert i == 20; // ERROR
-		i = 18;
+		i = 18;			//@ nowarn Modifies;
 	}
 
 	public InitiallyF(int j) {
 		super(j);
 		//@ assert i == 19;
-		i = 18;
+		i = 18;			//@ nowarn Modifies;
 	}
 
 	public InitiallyF(int j, int k) {
 		super(j);
 		//@ assert i == 20; // ERROR
-		i = 18;
+		i = 18;			//@ nowarn Modifies;
 	}
 
 	public int j;
@@ -122,12 +122,12 @@ class InitiallyF extends InitiallyE {
 	//@ ensures j == 30;
 	//@ helper
 	public InitiallyF(int k, int z, int m) {
-		j = 30; 
+		j = 30; 			//@ nowarn Modifies;
 	} // would be error if the constructor were not a helper
 
 	public InitiallyF(Object o) {
 		this(0,0,0);
 		//@ assert i == 18; // ERROR -- constructor called is helper
-		i = 18;
+		i = 18;			//@ nowarn Modifies;
 	}
 }

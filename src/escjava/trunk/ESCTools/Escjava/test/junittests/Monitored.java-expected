@@ -87,7 +87,7 @@ Associated declaration is "Monitored.java", line 34, col 23:
 Monitored: mj() ...
 ------------------------------------------------------------------------
 Monitored.java:69: Warning: Possible race condition (Race)
-        static void mj() { j = 0; }  // ERROR - needs class
+        static void mj() { j = 0; } //@ nowarn Modifies;  // ERROR - n ...
                              ^
 Associated declaration is "Monitored.java", line 18, col 6:
         //-@ monitored
@@ -98,7 +98,7 @@ Associated declaration is "Monitored.java", line 18, col 6:
 Monitored: mjj() ...
 ------------------------------------------------------------------------
 Monitored.java:70: Warning: Possible race condition (Race)
-        static void mjj() { jj = 0; }  // ERROR - needs class
+        static void mjj() { jj = 0; } //@ nowarn Modifies;  // ERROR - ...
                                ^
 Associated declaration is "Monitored.java", line 21, col 19:
         //-@ monitored_by Monitored.class;
@@ -109,7 +109,7 @@ Associated declaration is "Monitored.java", line 21, col 19:
 Monitored: mjjj() ...
 ------------------------------------------------------------------------
 Monitored.java:71: Warning: Possible race condition (Race)
-        static void mjjj() { jjj = 0; }  // ERROR - needs class
+        static void mjjj() { jjj = 0; } //@ nowarn Modifies;  // ERROR ...
                                  ^
 Associated declaration is "Monitored.java", line 33, col 24:
         //@ monitors_for jjj = Monitored.class;

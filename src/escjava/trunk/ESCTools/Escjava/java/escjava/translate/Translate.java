@@ -40,6 +40,8 @@ public final class Translate
 	// for verifying the body.
     public static java.util.Set axsToAdd = new java.util.HashSet();
 
+    private Hashtable premap;
+
     /**
      * Translates the body of a method or constructor, as described in ESCJ 16,
      * section 8.
@@ -62,6 +64,7 @@ public final class Translate
                              Translate inlineParent,
                              boolean issueCautions) {
 
+	this.premap = premap;
 	axsToAdd = new java.util.HashSet();
 
         // Reset the state of the AuxInfo module if this is top-level call to trBody
@@ -1727,7 +1730,7 @@ public final class Translate
 		    Expr rval = TrAnExpr.trSpecExpr(s.value);
 		    if (TrAnExpr.extraSpecs) addNewAssumptions();
 		    writeCheck(lhs, s.value, rval, s.locOp, false);
-		    // modifiesCheck(fa);
+		    modifiesCheckField(lhs,true,fa.getStartLoc(),fa.decl);
 		    String name;
 		    if (lhs.getTag() == TagConstants.VARIABLEACCESS) {
 			VariableAccess valhs = (VariableAccess)lhs;
@@ -1781,6 +1784,7 @@ public final class Translate
 		    if (TrAnExpr.extraSpecs) addNewAssumptions();
 
 		    arrayAccessCheck(lhs.array, array, lhs.index, index, lhs.locOpenBracket);
+		    modifiesCheckArray(array,index,true,lhs.getStartLoc());
 		    if (! isFinal(TypeCheck.inst.getType(lhs.array))) {
 			 addCheck(s.loc,
 			     TagConstants.CHKARRAYSTORE,
@@ -2492,6 +2496,8 @@ public final class Translate
                         Expr rval= trExpr(false, right);
                         String name;
                         writeCheck(lhs, right, rval, x.locOp, false);
+			modifiesCheckField(lhs,false,lhs.getStartLoc(),
+						((FieldAccess)left).decl);
                         if (lhs.getTag() == TagConstants.VARIABLEACCESS) {
                             VariableAccess vaLhs = (VariableAccess)lhs;
                             name = vaLhs.decl.id.toString();
@@ -2513,6 +2519,7 @@ public final class Translate
                         Expr rval= trExpr(false, right);
 
                         arrayAccessCheck(lhs.array, array, lhs.index, index, lhs.locOpenBracket);
+			modifiesCheckArray(array,index,false,lhs.getStartLoc());
                         if (! isFinal(TypeCheck.inst.getType(lhs.array))) {
                             addCheck(x.locOp,
                                      TagConstants.CHKARRAYSTORE,
@@ -2596,6 +2603,8 @@ public final class Translate
                         FieldAccess lhs = (FieldAccess)left;
                         Expr lval= trFieldAccess(true, lhs);
                         readCheck(lval, lhs.locId);
+			modifiesCheckField(lval,false,lhs.getStartLoc(),
+						((FieldAccess)left).decl);
 
                         String name = lhs.decl.id.toString();
                         Expr oldLval = protect(Purity.impure(right) || returnold, lval,
@@ -2634,6 +2643,7 @@ public final class Translate
                         Expr array= trExpr(true, lhs.array);
                         Expr index= trExpr(true, lhs.index);
                         arrayAccessCheck(lhs.array, array, lhs.index, index, lhs.locOpenBracket);
+			modifiesCheckArray(array,index,false,lhs.getStartLoc());
                         Expr oldLval = protect(Purity.impure(right) || returnold,
                                                GC.select(GC.select(GC.elemsvar, array),
                                                          index),
@@ -3378,21 +3388,242 @@ public final class Translate
         locList.clear(); // Help the garbage collector...
     }
 
-    private void modifiesCheck(Expr lhs) {
-	if (lhs instanceof FieldAccess) {
-		System.out.println("MCHECK " + ((FieldAccess)lhs).decl.id);
+// FIXME - only meed this for trSpecExpr ???
+    private Expr modTranslate(Expr e, boolean old, boolean inAnnotation) {
+	if (old) return TrAnExpr.trSpecExpr(e,premap,premap);
+	else if (inAnnotation) return TrAnExpr.trSpecExpr(e);
+	else return trExpr(true,e);
+    }
+
+// FIXME - comment
+    private void modifiesCheckField(Expr lhs, boolean inAnnotation,int loc,
+					FieldDecl fd) {
+	// FIXME - I don't think this handles this and super that are not the
+	// prefix.
+	if (!issueCautions) return;
+	Expr eod = null;
+	if (lhs instanceof NaryExpr) {
+	    eod = (Expr)((NaryExpr)lhs).childAt(2);
+	} else if (lhs instanceof VariableAccess) {
+		// static
+	    // eod stays null
 	} else {
-		System.out.println("MC " + lhs.getClass());
+		System.out.println("LHS " + lhs.getClass());
+		return;
 	}
 	DerivedMethodDecl dmd = GetSpec.getCombinedMethodDecl(rdCurrent);
 	CondExprModifierPragmaVec mods = dmd.modifies;
+	// We need to create a translated predicate expression that is true
+	// if the lhs is allowed to be modified and false if it is not
+	// allowed to be modified.  This will be an OR across each of the
+	// modify pragmas.  Each pragma will contribute
+	//   - obviously false if it is not the same declaration or same type
+	//   - obviously true if is is the same declaration and both have 'this'
+	//	as the od and the condition is true
+	//   - obviously true (and then no check) if it is modifies everything
+	//	with a true condition
+	//   - some expression which is the AND of the condition and that
+	//	the lhs matches the modifies expression:
+	//		fields must have the same object designator
+	//		arrays must have the same array expression and same index
 	int sz = mods.size();
+	ExprVec ev = ExprVec.make(sz);
+	Expr disjunct;
 	for (int i=0; i<sz; ++i) {
 	    CondExprModifierPragma mp = mods.elementAt(i);
 	    Expr ex = mp.expr;
 	    Expr pred = mp.cond;
-	    System.out.println("COMPARE TO " + ex.getClass());
+	    Expr tpred = null;
+	    if (!isTrueLiteral(pred)) tpred = 
+			modTranslate(pred,true,inAnnotation);
+	    if (ex instanceof FieldAccess) {
+		FieldDecl fdd = ((FieldAccess)ex).decl;
+		if (fd != fdd) continue;
+		if (Modifiers.isStatic(fd.modifiers) != Modifiers.isStatic(fdd.modifiers)) continue;
+		ObjectDesignator odd = ((FieldAccess)ex).od;
+		if (Modifiers.isStatic(fd.modifiers)) {
+		   // Both are static and we already know that they point
+		   // to the same declaration.  So they match.
+		   if (tpred == null) return;
+		   disjunct = tpred;
+		} else {
+		    Expr e1 = eod;
+		    Expr e2 = odd instanceof ExprObjectDesignator ?
+				((ExprObjectDesignator)odd).expr:
+				ThisExpr.make(null,Location.NULL);
+		    if (e1 instanceof ThisExpr && e2 instanceof ThisExpr && 
+			tpred == null) {
+			//System.out.println("TRIVIAL PERMISSION - THIS FIELDS" );
+			return;
+		    } 
+	    	    //System.out.println("FF " + e1.getClass() + " " + e2.getClass());
+		    ExprVec evv = ExprVec.make(1);
+		    evv.addElement(e2);
+		    e1 = eod;
+		    e2 = modTranslate(e2,true,inAnnotation);
+		    Expr e = GC.nary(TagConstants.REFEQ,e1,e2);
+		    if (tpred != null) {
+			e = GC.and(e, tpred);
+		    }
+		    disjunct = e;
+		}
+	    } else if (ex instanceof ArrayRefExpr) {
+		continue;
+	    } else if (ex instanceof NothingExpr) {
+		//System.out.println("MATCHING AGAINST NOTHING " );
+		continue;
+	    } else if (ex instanceof EverythingExpr) {
+		if (tpred == null) {
+		    //System.out.println("TRIVIAL PERMISSION - EVERYTHING");
+		    return;
+		}
+		//System.out.println("MATCHING AGAINST EVERYTHING " );
+		disjunct = tpred;
+		
+	    } else if (ex instanceof ArrayRangeRefExpr) {
+		continue;
+	    } else if (ex instanceof WildRefExpr) {
+		ObjectDesignator odd = ((WildRefExpr)ex).od;
+		if (odd instanceof TypeObjectDesignator) {
+		    if (!Modifiers.isStatic(fd.modifiers)) continue;
+		    Type t = TypeCheck.inst.getSig(fd.parent);
+		    Type tt = ((TypeObjectDesignator)odd).type;
+		    if (t != tt) continue;
+		    if (tpred == null) return;
+		    disjunct = tpred;
+		} else if (odd instanceof ExprObjectDesignator) {
+		    if (Modifiers.isStatic(fd.modifiers)) continue;
+		    Expr e1 = eod;
+		    Expr e2 = modTranslate(((ExprObjectDesignator)odd).expr,
+					true,inAnnotation);
+		    e1 = GC.nary(TagConstants.REFEQ,e1,e2);
+		    if (tpred != null) e1 = GC.and(e1,tpred);
+		    disjunct = e1;
+		} else {
+		    System.out.println("COMPARE TO " + odd.getClass());
+		    continue;
+		}
+	    } else {
+		System.out.println("COMPARE TO " + ex.getClass());
+		continue;
+	    }
+	    // System.out.println(EscPrettyPrint.inst.toString(disjunct));
+	    ev.addElement(disjunct);
 	}
+	if (ev.size() == 0) {
+	    if (NoWarn.getChkStatus(TagConstants.CHKMODIFIES,loc,loc)
+				== TagConstants.CHK_AS_ASSERT)
+		ErrorSet.error(loc, 
+		    "There is no assignable clause allowing this assignment");
+	} else {
+	    //System.out.println("Generating a modifies check " + ev.size());    
+	    addCheck(loc,TagConstants.CHKMODIFIES, GC.or(ev));
+	}
+    }
+
+    private void modifiesCheckArray(Expr array, Expr arrayIndex,
+					boolean inAnnotation, int loc) {
+	// FIXME - I don't think this handles this and super that are not the
+	// prefix.
+	if (!issueCautions) return;
+	DerivedMethodDecl dmd = GetSpec.getCombinedMethodDecl(rdCurrent);
+	CondExprModifierPragmaVec mods = dmd.modifies;
+	// We need to create a translated predicate expression that is true
+	// if the lhs is allowed to be modified and false if it is not
+	// allowed to be modified.  This will be an OR across each of the
+	// modify pragmas.  Each pragma will contribute
+	//   - obviously false if it is not the same declaration or same type
+	//   - obviously true if is is the same declaration and both have 'this'
+	//	as the od and the condition is true
+	//   - obviously true (and then no check) if it is modifies everything
+	//	with a true condition
+	//   - some expression which is the AND of the condition and that
+	//	the lhs matches the modifies expression:
+	//		fields must have the same object designator
+	//		arrays must have the same array expression and same index
+	int sz = mods.size();
+	ExprVec ev = ExprVec.make(sz);
+	Expr disjunct;
+	for (int i=0; i<sz; ++i) {
+	    CondExprModifierPragma mp = mods.elementAt(i);
+	    Expr ex = mp.expr;
+	    Expr pred = mp.cond;
+	    Expr tpred = null;
+	    if (!isTrueLiteral(pred)) tpred = 
+			modTranslate(pred,true,inAnnotation);
+	    if (ex instanceof FieldAccess) {
+		continue;
+	    } else if (ex instanceof ArrayRefExpr) {
+		if (array == null) continue;
+		//System.out.println("MATCHING AGAINST ARRAY " );
+		Expr ao = ((ArrayRefExpr)ex).array;
+		Expr ai = ((ArrayRefExpr)ex).index;
+		ao = modTranslate(ao,true,inAnnotation);
+		ai = modTranslate(ai,true,inAnnotation); 
+		ao = GC.nary(TagConstants.REFEQ,array,ao);
+		ai = GC.nary(TagConstants.INTEGRALEQ,arrayIndex,ai);
+		ao = GC.and(ao,ai);
+		if (tpred != null) {
+		    ao = GC.and(ao, tpred);
+		}
+		disjunct = ao;
+	    } else if (ex instanceof NothingExpr) {
+		//System.out.println("MATCHING AGAINST NOTHING " );
+		continue;
+	    } else if (ex instanceof EverythingExpr) {
+		if (tpred == null) {
+		    //System.out.println("TRIVIAL PERMISSION - EVERYTHING");
+		    return;
+		}
+		//System.out.println("MATCHING AGAINST EVERYTHING " );
+		disjunct = tpred;
+		
+	    } else if (ex instanceof ArrayRangeRefExpr) {
+		if (array == null) continue;
+		//System.out.println("MATCHING AGAINST ARRAY RANGE " );
+		ArrayRangeRefExpr a = (ArrayRangeRefExpr)ex;
+		Expr ao = modTranslate(a.array,true,inAnnotation);
+		Expr al = a.lowIndex == null ? null :
+			modTranslate(a.lowIndex,true,inAnnotation); 
+		Expr ah = a.highIndex == null ? null :
+			modTranslate(a.highIndex,true,inAnnotation); 
+		ao = GC.nary(TagConstants.REFEQ,array,ao);
+		al = al == null ? null :
+			GC.nary(TagConstants.INTEGRALLE,al,arrayIndex);
+		ah = ah == null ? null :
+			GC.nary(TagConstants.INTEGRALLE,arrayIndex,ah);
+		al = al == null ? ah : ah == null ? al :
+			GC.and(al,ah);
+		ao = al == null ? ao : GC.and(ao,al);
+		if (tpred != null) ao = GC.and(ao,tpred);
+		disjunct = ao;
+	    } else if (ex instanceof WildRefExpr) {
+		continue;
+	    } else {
+		System.out.println("COMPARE TO " + ex.getClass());
+		continue;
+	    }
+	    // System.out.println(EscPrettyPrint.inst.toString(disjunct));
+	    ev.addElement(disjunct);
+	}
+	if (ev.size() == 0) {
+	    if (NoWarn.getChkStatus(TagConstants.CHKMODIFIES,loc,loc)
+				== TagConstants.CHK_AS_ASSERT)
+		ErrorSet.error(loc, 
+		    "There is no assignable clause allowing this assignment");
+	} else {
+	    //System.out.println("Generating a modifies check " + ev.size());    
+	    addCheck(loc,TagConstants.CHKMODIFIES, GC.or(ev));
+	}
+    }
+
+    private boolean isTrueLiteral(Expr p) {
+	if (p == null) return true;
+	if (!(p instanceof LiteralExpr)) return false;
+	LiteralExpr lit = (LiteralExpr)p;
+	if (lit.getTag() != TagConstants.BOOLEANLIT) return false;
+	Object value = lit.value;
+	return ((Boolean)value).booleanValue() ;
     }
 
     /**

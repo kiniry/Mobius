@@ -1053,6 +1053,8 @@ consistent with JML
       
             case TagConstants.WILDREFEXPR:
                 {
+// FIXME - WildRefExpr needs cleanup .  In current usage r.od is always null
+// on input.
                     WildRefExpr r = (WildRefExpr)e;
                     if (!isCurrentlySpecDesignatorContext) {
                         setType(r, Types.errorType);
@@ -1069,10 +1071,19 @@ consistent with JML
 				    r.od = TypeObjectDesignator.make(r.var.getStartLoc(),
 								(TypeSig)o );
 				} else {
-				    r.var = (Expr)o;
+				    r.var = checkExpr(env,r.var);
+				    // FIXME - really need locDot here
+				    r.od = ExprObjectDesignator.make(
+							r.var.getEndLoc(),
+							r.var);
 				}
+				r.var = null;
 			    } else {
 				r.var = checkExpr(env,r.var);
+				    // FIXME - really need locDot here
+				    r.od = ExprObjectDesignator.make(
+							r.var.getEndLoc(),
+							r.var);
 			    }
 			} else {
 			    Type t = checkObjectDesignator(env,r.od);

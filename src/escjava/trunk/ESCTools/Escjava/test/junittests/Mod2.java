@@ -11,11 +11,11 @@ public class Mod2 {
 	//@ ensures jj == 3+a;
 	//@ ensures k == 4+\old(a);
 	public void m() {
-		j = 0;
-		k = 0;
+		j = 0;		//@ nowarn Modifies;
+		k = 0;		//@ nowarn Modifies;
 		mm(10);
-		a = a + 3;
-		b = a+a;
+		a = a + 3;		//@ nowarn Modifies;
+		b = a+a;		//@ nowarn Modifies;
 	}
 
 	//@ modifies i,j,ii,jj;
@@ -26,9 +26,9 @@ public class Mod2 {
 		ii = 2+q;
 		j = 3+a;
 		jj = 3+a;
-		a = a + 1;
-		kk = 4+a;
-		k = 4+q;
+		a = a + 1;		//@ nowarn Modifies;
+		kk = 4+a;		//@ nowarn Modifies;
+		k = 4+q;		//@ nowarn Modifies;
 	}
 
 	public Mod2();

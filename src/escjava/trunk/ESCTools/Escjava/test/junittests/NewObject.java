@@ -13,7 +13,7 @@ public class NewObject {
 	//@ ensures (new NewObjectA()) != o;
 	//@ ensures (new NewObjectA()) != (new NewObjectA());
 	public NewObjectA mm() {
-		o = new NewObjectA();
+		o = new NewObjectA(); //@ nowarn Modifies;
 		return new NewObjectA();
 	}
 
