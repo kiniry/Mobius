@@ -1,0 +1,14 @@
+ESC/Java version VERSION
+  Prover started:TIME
+
+MultipleAt ...
+
+MultipleAt: m() ...
+    [TIME]  passed
+
+MultipleAt: q() ...
+    [TIME]  passed
+
+MultipleAt: MultipleAt() ...
+    [TIME]  passed
+  [TIME total]

@@ -1,0 +1,26 @@
+ESC/Java version VERSION
+  Prover started:TIME
+
+EmbeddedA ...
+
+EmbeddedA: m() ...
+    [TIME]  passed immediately
+
+EmbeddedA: n() ...
+    [TIME]  passed immediately
+
+EmbeddedA: n1() ...
+    [TIME]  passed immediately
+
+EmbeddedA: n2() ...
+    [TIME]  passed immediately
+
+EmbeddedA: p() ...
+    [TIME]  passed
+
+EmbeddedA: p2() ...
+    [TIME]  passed
+
+EmbeddedA: EmbeddedA() ...
+    [TIME]  passed
+  [TIME total]
