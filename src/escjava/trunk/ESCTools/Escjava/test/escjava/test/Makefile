@@ -8,20 +8,15 @@ TESTSOURCEDIRECTORY ?= ${ESCJAVA_ROOT}/test
 PARSER_TEST_PACKAGE = escjava.parser.test
 PARSER_TEST_DIR = ${TESTSOURCEDIRECTORY}/escjava/parser/test
 
-## ESC_CLASSPATH is the classpath needed to run escj
-export ESC_CLASSPATH ?= $(call canonicalize,${ESCJAVA_ROOT}/classfiles:${ESCJAVA_ROOT}/../Javafe/classfiles)
-export ESCJ ?= ${ESCJAVA_ROOT}/escj
-
-## Some tests need a few system spec files.  We include the ones that are part
-## of the build so that they are consistent across platforms and users for tests
-##export SYSTEM_SPECS = ${ESCTOOLS_ROOT}/Escjava/release/master/specs
-export SYSTEM_SPECS = ${ESCTOOLS_ROOT}/specs
+## For these tests inherited from the original ESC release we use the
+## specification files that came with the original release.
+ESC_SPECS = ${ESCTOOLS_ROOT}/specs
 
 ###########################################################################
 
 compile_escjava_parser_test_programs:
 	${JAVAC} ${JAVAC_FLAGS} \
-		-classpath $(call canonicalize,${ESCJAVA_CLASSPATH}) \
+		-classpath $(call canonicalize,${ESC_CLASSPATH}) \
 		-d $(call canonicalize,${CLASSDIRECTORY}) \
 		$(call canonicalize,${PARSER_TEST_DIR}/TestLex.java) \
 		$(call canonicalize,${PARSER_TEST_DIR}/TestEscPragmaParser.java)
@@ -35,30 +30,15 @@ test:	compile_escjava_parser_test_programs \
 
 test_and_clean: test clean
 
-test_escjava: CLASSPATH = $(call canonicalize,.:${ESCJAVA_CLASSPATH}:${SYSTEM_SPECS})
 test_escjava:
 	@echo "TESTING Escjava: test_escjava"
-ifdef ESCTOOLS_RELEASE
-	env ESCTOOLS_RELEASE=$(ESCTOOLS_RELEASE) \
-	env ESC_CLASSPATH=$(call canonicalize,${ESCJAVA_ROOT}/classfiles:${ESCJAVA_ROOT}/../Javafe/classfiles) \
 	./rtestall
-else
-	env ESC_CLASSPATH=$(call canonicalize,${ESCJAVA_ROOT}/classfiles:${ESCJAVA_ROOT}/../Javafe/classfiles) \
-	./rtestall
-endif
 
 %-run:
-	env $(call canonicalize,CLASSPATH=.:${ESCJAVA_CLASSPATH}:${SYSTEM_SPECS}) \
-	env ESC_CLASSPATH=$(call canonicalize,${ESCJAVA_ROOT}/classfiles:${ESCJAVA_ROOT}/../Javafe/classfiles) \
 	./rtest $* || ${DIFF} $*/out $*/ans
 
-temp:
-	cd test32; \
-	env $(call canonicalize,CLASSPATH=.:${ESCJAVA_CLASSPATH}:${SYSTEM_SPECS}) \
-	env ESC_CLASSPATH=$(call canonicalize,${ESCJAVA_ROOT}/classfiles:${ESCJAVA_ROOT}/../Javafe/classfiles) \
-	escjava -v -plainwarning -notrace -warn Deadlock SynchHotspot.java
 
-CD_AND_JAVA = cd $(PARSER_TEST_DIR); $(JAVA) -classpath $(call canonicalize,$(ESCJAVA_CLASSPATH)) $(PARSER_TEST_PACKAGE)
+CD_AND_JAVA = cd $(PARSER_TEST_DIR); $(JAVA) -classpath $(call canonicalize,$(ESC_CLASSPATH)) $(PARSER_TEST_PACKAGE)
 
 test_lexer: compile_escjava_parser_test_programs
 	@echo "TESTING Escjava: test_lexer"

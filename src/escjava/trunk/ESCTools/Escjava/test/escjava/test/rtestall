@@ -15,6 +15,7 @@ if ( $?CLASSPATH ) then
 echo "    CLASSPATH: $CLASSPATH"
 endif
 echo "    ESCJ_SIMPLIFY: $ESCJ_SIMPLIFY"
+echo "    ESC_SPECS: $ESC_SPECS"
 
 echo TESTS OMITTED: `grep Omit alltests | awk '{print $1; }'`
 echo TESTS DROPPED: `grep Drop alltests | awk '{print $1; }'`

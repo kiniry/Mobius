@@ -8,7 +8,7 @@ postconditions.java:16: Warning: Postcondition possibly not established (Post)
     }
     ^
 Associated declaration is "postconditions.java", line 11, col 8:
-    //@ ensures \result == 4
+    //@ ensures \result == 4;
         ^
 Execution trace information:
     Executed call in "postconditions.java", line 19, col 16.

@@ -14,6 +14,7 @@
 ##                        spec files that escjava is acting on)
 
 ## Optional variables:
+##      ESC_SPECS	 (path for system specification files)
 ##	ESCJ_VERBOSE     (turns on some debugging)
 ##	BOOTCLASSPATH    (rarely needed - changes the system files being used)
 ##	ESCJ_STDARGS     (the set of always used arguments to escjava)

@@ -247,6 +247,7 @@ test-binary-release-before-tar:
 	cd ${ESCTOOLS_ROOT} ;\
 	    unset JUNIT_LIB; \
 	    unset ESC_SPECS; \
+	    unset ESC_CLASSPATH; \
 	    unset ESCJ_SIMPLIFY_DIR; \
 	    export RELDIR=${RELTEMP}; \
 	    export RELCLASSPATH=$(call canonicalize,${RELTEMP}/${RELJAR}) ;\
@@ -269,8 +270,8 @@ test-patch-release:
 		unset RELDIR ;\
 		unset RELTEMP ;\
 		unset RELTEST ;\
-		unset ESC_SPECS ;\
-		unset ESCJ_SIMPLIFY_DIR ;\
+		unset ESCJ_SIMPLIFY_DIR; \
+		unset ESC_CLASSPATH ;\
 		./install.sh  ${ORIGINAL_TAR_DIR}
 
 

@@ -146,16 +146,11 @@ export ESCJAVA_CLASSFILES = ${ESCJAVA_ROOT}/classfiles
 export MOCHA_LIB = ${ESCTOOLS_ROOT}/jars/mochalib.jar
 
 ## This is the path needed to *run* Escjava.
-export ESCJAVA_CLASSPATH = ${JAVAFE_CLASSFILES}:${ESCJAVA_CLASSFILES}:${MOCHA_LIB}
+export ESC_CLASSPATH = $(call canonicalize,${JAVAFE_CLASSFILES}:${ESCJAVA_CLASSFILES}:${MOCHA_LIB})
 
 ## The front-end for Escjava that should be used for testing.
 export ESCJ = ${ESCJAVA_ROOT}/escj
 
-# This is the location of any specification files for the JDK.
-# Here we set a default value as the location of spec
-# files supplied with the ESC release.
-export JDKSPEC_ROOT ?= ${ESCJAVA_ROOT}/release/master/specs
- 
 ############################### Release
 ## Pertinent locations for building a release
 

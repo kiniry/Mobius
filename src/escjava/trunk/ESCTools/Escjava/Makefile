@@ -7,7 +7,7 @@ export TOP = ..
 include ${TOP}/Makefile.defs
 # Makefile.defs and the parent Makefile provide definitions of the 
 # following variables needed here:
-# JAVAC, JAVAC_FLAGS, ESCJAVA_ROOT, ESCJAVA_CLASSPATH, ESCJAVA_CLASSFILES, 
+# JAVAC, JAVAC_FLAGS, ESCJAVA_ROOT, ESC_CLASSPATH, ESCJAVA_CLASSFILES, 
 # JAVAFE_ROOT, JAVAFE_SOURCE_DIR
 # (Building Escjava relies on the AST building tools in ${JAVAFE_ROOT}/astgen)
 
@@ -351,6 +351,7 @@ self_test: compile
 		-source 1.4 -nocheck -quiet -noSemicolonWarnings \
 		${OTHERSOURCEFILES} ${JAVASOURCEFILES}
 
+## FIXME - is this used? should it be?
 ## This tests a binary release that is present in the RELTEMP directory,
 ## with RELCLASSPATH pointing to the relevant esctools2.jar file.
 .PHONY: test-release
@@ -359,11 +360,10 @@ test-release:
 	$(MAKE) JAVAFE_CLASSPATH=$(call canonicalize,${RELCLASSPATH}:${RELTEMP}) \
 		CLASSDIRECTORY=${RELTEMP} \
 		build_javafe_test
-	$(MAKE) ESCJAVA_CLASSPATH=$(call canonicalize,${RELCLASSPATH}:${RELTEMP}) \
+	$(MAKE) ESC_CLASSPATH=$(call canonicalize,${RELCLASSPATH}:${RELTEMP}) \
 		CLASSDIRECTORY=${RELTEMP} \
 		ALLTESTS=1 \
 		ESCJ=${RELTEMP}/escj \
-		ESC_CLASSPATH=${RELCLASSPATH} \
 		ESCJ_SIMPLIFY_DIR=${RELTEMP} \
 		tests
 

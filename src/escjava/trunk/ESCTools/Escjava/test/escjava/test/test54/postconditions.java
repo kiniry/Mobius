@@ -9,7 +9,7 @@ class C {
     }
     //@ modifies i,j;
     //@ ensures \result == 4;
-    /*  helper */ private int init(int k) {
+    /*@ helper */ private int init(int k) {
 	i = new Integer(13);
 	j = new Integer (55);
 	return k;
