@@ -11,6 +11,7 @@ DefPred.java
 DefPredApplExpr.java
 DefPredLetExpr.java
 DefPredVec.java
+DependsPragma.java
 DynInstCmd.java
 EverythingExpr.java
 EverythingExpr.java
@@ -30,6 +31,7 @@ GhostDeclPragma.java
 GuardExpr.java
 GuardedCmd.java
 GuardedCmdVec.java
+ImportPragma.java
 LabelExpr.java
 LocalVarDeclVec.java
 LockSetExpr.java
