@@ -123,6 +123,8 @@ JAVADOC_SOURCEPATH = $(subst : ,:,$(addsuffix /java:,$(addprefix $(ESCTOOLS_ROOT
 ## are generated in the course of the build (e.g. the AST classes).
 .PHONY: javadoc
 javadoc:  build
+	rm -rf $(JAVADOC_GEN_DIR)
+	mkdir -p $(JAVADOC_GEN_DIR)
 	mkdir -p $(JAVADOC_GEN_DIR)/images
 	cp $(JAVAFE_ROOT)/doc/javadoc/images/*.gif $(JAVADOC_GEN_DIR)/images
 	$(JAVADOC) -sourcepath $(JAVADOC_SOURCEPATH):$(JUNIT_SOURCEPATH) \
