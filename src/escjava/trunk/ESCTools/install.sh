@@ -33,15 +33,17 @@ tar xf $TARDIR${PSEP}simplify.tar
 cd ..
 
 # Apply each patch.
-for p in ${PATCH_DIR}${PSEP}/*.patch.bz ; do
+for p in ${PATCH_DIR}${PSEP}*-patch.bz ; do
     echo Patching with $p
     bzcat $p | patch -sNp1
 done
 
 # Unpack the toplevel 
 echo Applying archives
-tar xjf ${PATCH_DIR}${PSEP}*-TopLevel.tbz
-tar xjf ${PATCH_DIR}${PSEP}*-ZeroLengthFiles.tbz
+for q in specs TopLevel ZeroLengthFiles ; do
+    echo .... Untarring ${PATCH_DIR}${PSEP}*-${q}.tbz
+    tar xjf ${PATCH_DIR}${PSEP}*-${q}.tbz
+done
 
 
 echo Removing empty files
@@ -62,3 +64,5 @@ echo Building and testing the patched release in ${ESCTOOLS_ROOT}
 
 # Clean, build, and test the release.
 make -s clean build test
+
+echo Completed installation and test script

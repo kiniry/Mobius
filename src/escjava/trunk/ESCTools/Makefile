@@ -165,7 +165,7 @@ patch-release: clean
 	@echo "Creating patch release .........."
 	rm -rf ${PATCH_DIR}
 	mkdir -p ${PATCH_DIR}
-	${MAKE} generate-patches generate-toplevel-archive zero-length-files
+	${MAKE} generate-patches generate-archives zero-length-files
 	cp ${ESCTOOLS_ROOT}/install.sh ${PATCH_DIR}
 	mkdir -p ${RELDIR}
 	cd ${PATCH_DIR}; tar cvjf ${RELDIR}/${PATCH_NAME}-patch.tbz .
@@ -174,6 +174,8 @@ patch-release: clean
 .PHONY: binary-release
 binary-release: build docs
 	@echo "Creating binary release .........."
+	## RELDIR is the staging area for all files
+	## First copy all .class files to sub and build a jar file
 	mkdir -p ${RELDIR}
 	rm -rf ${RELTEMP}
 	mkdir -p ${RELTEMP}
@@ -182,16 +184,20 @@ binary-release: build docs
 	cp -r ${ESCJAVA_CLASSFILES}/* ${RELTEMP}/sub
 	cd ${RELTEMP}/sub; jar cf ../${RELJAR} *
 	rm -rf ${RELTEMP}/sub
+	## Now copy in all specs
+	rm -rf ${RELTEMP}/specs
+	cp -r ${ESCTOOLS_ROOT}/specs ${RELTEMP}
+	-find ${RELTEMP}/specs -name "CVS" -exec rm -rf {} \;  >& /dev/null 
+	## Copy other miscellaneous files
 	cp docs/Escjava2-ImplementationNotes/*.pdf ${RELTEMP}
 	${MAKE} clean-norel-noreltemp
 	${MAKE} -C Utils/junitutils build
-	mkdir -p ${RELTEMP}
-	cp ${ESCJAVA_ROOT}/escj ${RELDIR}
-	cp ${ESCJ_SIMPLIFY_DIR}/Simplify-1.5.4* ${RELDIR}
-	cp ${ESCJAVA_ROOT}/simplify ${RELDIR}/simplify-script
-	cp README.first README.txt ${RELDIR}
-	cd release-files; cp `ls | grep -v CVS` ${RELDIR}
-	cd ${RELDIR}; tar cjvf ${RELTAR} *
+	cp ${ESCJAVA_ROOT}/escj ${RELTEMP}
+	cp ${ESCJ_SIMPLIFY_DIR}/Simplify-1.5.4* ${RELTEMP}
+	cp ${ESCJAVA_ROOT}/simplify ${RELTEMP}/simplify-script
+	cp README.first README.txt ${RELTEMP}
+	cd release-files; cp `ls | grep -v CVS` ${RELTEMP}
+	cd ${RELTEMP}; tar cjvf ${RELDIR}/${RELTAR} *
 
 ## FIXME - simplify script, simplify binary; alter escj to use alternate simplify script
 ## FIXME - also zip up the source and ship it as well.
@@ -204,7 +210,7 @@ test-binary-release:
 	@echo "Testing binary release ............"
 	rm -rf ${RELTEST}
 	mkdir -p ${RELTEST}
-	cp ${RELDIR}/esctools2*binary.tbz ${RELTEST}
+	cp ${RELDIR}/ESCTools*-binary.tbz ${RELTEST}
 	cd ${RELTEST} ;\
 	    tar xjf ${RELTEST}/*binary.tbz ;\
 	    ${RELTEST}/quicktest
@@ -232,6 +238,10 @@ test-patch-release:
 		tar xvjf ${RELDIR}/*patch.tbz ;\
 		unset ESCTOOLS_ROOT ;\
 		unset JUNIT_LIB ;\
+		unset PATCH_DIR ;\
+		unset RELDIR ;\
+		unset RELTEMP ;\
+		unset ESC_SPECS ;\
 		unset ESCJ_SIMPLIFY_DIR ;\
 		./install.sh  ${ORIGINAL_TAR_DIR}
 
@@ -241,14 +251,16 @@ test-patch-release:
 ## Simplify package must be unpacked into the directory
 ## "${ESCTOOLS_ORIGINAL}/Simplify".  
 
-.PHONY: generate-patch-based-release
-generate-patch-based-release: generate-patches generate-toplevel-archive zero-length-files
-	(cd ${ESCTOOLS_ROOT}/..; \
-	tar cjvf ${RELPATCHTAR} \
-		${CALVIN_PATCHES} ${ESCJAVA_PATCHES} ${HOUDINI_PATCHES} \
-		${JAVAFE_PATCHES} ${RCC_PATCHES} ${SIMPLIFY_PATCHES} \
-		${TOPLEVEL_TAR} ${ZERO_LENGTH_TAR}; \
-	)
+## Use make patch-release instead of this; 
+##    then use make-test-patch-release to test it
+##.PHONY: generate-patch-based-release
+##generate-patch-based-release: generate-patches generate-archives zero-length-files
+##	(cd ${ESCTOOLS_ROOT}/..; \
+##	tar cjvf ${RELPATCHTAR} \
+##		${CALVIN_PATCHES} ${ESCJAVA_PATCHES} ${HOUDINI_PATCHES} \
+##		${JAVAFE_PATCHES} ${RCC_PATCHES} ${SIMPLIFY_PATCHES} \
+##		${SPECS_TAR} ${TOPLEVEL_TAR} ${ZERO_LENGTH_TAR}; \
+##	)
 
 ## These patches are used by unpacking the original
 ## Compaq/H.P. ESCTools sources as appropriate, cd-ing to the
@@ -263,29 +275,41 @@ generate-patches: clean
 	mkdir -p ${PATCH_DIR}; \
 	LC_ALL=C TZ=UTC0 diff -Naur --exclude=*.class --exclude=.#* --exclude=CVS \
 		--exclude=Simplify-1* ${ESCTOOLS_ORIGINAL}/Calvin ESCTools/Calvin \
-		| bzip2 -9 > ${CALVIN_PATCHES}; \
+		| bzip2 -9 > ${PATCH_DIR}/${CALVIN_PATCHES}; \
 	LC_ALL=C TZ=UTC0 diff -Naur --exclude=*.class --exclude=.#* --exclude=CVS \
 		--exclude=Simplify-1* --exclude=javadoc \
 		${ESCTOOLS_ORIGINAL}/Escjava ESCTools/Escjava \
-		| bzip2 -9 > ${ESCJAVA_PATCHES}; \
+		| bzip2 -9 > ${PATCH_DIR}/${ESCJAVA_PATCHES}; \
 	LC_ALL=C TZ=UTC0 diff -Naur --exclude=*.class --exclude=.#* --exclude=CVS \
 		${ESCTOOLS_ORIGINAL}/Houdini ESCTools/Houdini \
-		| bzip2 -9 > ${HOUDINI_PATCHES}; \
+		| bzip2 -9 > ${PATCH_DIR}/${HOUDINI_PATCHES}; \
 	LC_ALL=C TZ=UTC0 diff -Naur --exclude=*.class --exclude=.#* --exclude=CVS \
 		${ESCTOOLS_ORIGINAL}/Javafe ESCTools/Javafe \
-		| bzip2 -9 > ${JAVAFE_PATCHES}; \
+		| bzip2 -9 > ${PATCH_DIR}/${JAVAFE_PATCHES}; \
 	LC_ALL=C TZ=UTC0 diff -Naur --exclude=*.class --exclude=.#* --exclude=CVS \
 		${ESCTOOLS_ORIGINAL}/Rcc ESCTools/Rcc \
-		| bzip2 -9 > ${RCC_PATCHES}; \
+		| bzip2 -9 > ${PATCH_DIR}/${RCC_PATCHES}; \
 	LC_ALL=C TZ=UTC0 diff -Naur --exclude=PPC_DARWIN --exclude=.#* --exclude=CVS \
 		--exclude=*.dylib --exclude=*.a --exclude=*.io --exclude=*.mo \
 		${ESCTOOLS_ORIGINAL}/Simplify ESCTools/Simplify \
-		| bzip2 -9 > ${SIMPLIFY_PATCHES}; \
+		| bzip2 -9 > ${PATCH_DIR}/${SIMPLIFY_PATCHES}; \
 	)
+
+.PHONY: generate-archives
+generate-archives: generate-toplevel-archive generate-specs-archive
+
+.PHONY: generate-specs-archive
+generate-specs-archive:
+	mkdir -p ${RELTEMP}
+	rm -rf ${RELTEMP}/specs
+	cp -r ${ESCTOOLS_ROOT}/specs ${RELTEMP}
+	-find ${RELTEMP}/specs -name "CVS" -exec rm -rf {} \;  >& /dev/null 
+	(cd ${RELTEMP}; tar cjf ${PATCH_DIR}/${SPECS_TAR} specs;) 
+	rm -rf ${RELTEMP}/specs
 
 .PHONY: generate-toplevel-archive
 generate-toplevel-archive: clean
-	rm -rf ${RELTEMP}
+	rm -rf ${RELTEMP}/ESCTools
 	mkdir -p ${RELTEMP}/ESCTools
 	cp ${ESCTOOLS_ROOT}/ChangeLog ${ESCTOOLS_ROOT}/Makefile \
 		${ESCTOOLS_ROOT}/Makefile.defs \
@@ -299,11 +323,8 @@ generate-toplevel-archive: clean
 	mkdir -p ${RELTEMP}/ESCTools/Escjava/release/master/bin
 	cp ${ESCTOOLS_ROOT}/Escjava/release/master/bin/Simplify-1.5.4.macosx \
 		${RELTEMP}/ESCTools/Escjava/release/master/bin
-	-find ${RELTEMP} -name "CVS" -exec rm -rf {} \;  >& /dev/null 
-	(cd ${RELTEMP}/ESCTools; \
-	    tar cjf ${PATCH_PREFIX}-TopLevel.tbz \
-	    . \
-	    ;) 
+	-find ${RELTEMP}/ESCTools -name "CVS" -exec rm -rf {} \;  >& /dev/null 
+	(cd ${RELTEMP}/ESCTools; tar cjf ${PATCH_DIR}/${TOPLEVEL_TAR} . ;) 
 	rm -rf ${RELTEMP}/ESCTools
 
 ## Until we can figure out how to have diff/patch detect and generate

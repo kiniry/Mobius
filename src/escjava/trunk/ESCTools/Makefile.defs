@@ -63,6 +63,8 @@ export ESCJ_SIMPLIFY = ${ESCJ_SIMPLIFY_DIR}/${SIMPLIFY}
 
 export ESCJ_SIMPLIFY_SCRIPT = ${ESCJAVA_ROOT}/simplify
 
+export ESC_SPECS ?= ${ESCTOOLS_ROOT}/specs
+
 ##########################################################################
 ## Definitions of Java tools.
 ## Override these by defining them in Makefile.local or as environment
@@ -128,26 +130,30 @@ export JDKSPEC_ROOT ?= ${ESCJAVA_ROOT}/release/master/specs
 
 # Do something like this when you build a release:
 #   ESC_VERSION=2.0a0 ESC_RELEASE_DATE=`date "+%d-%m-%y"` make releases
+export ESC_RELEASE_DATE ?= `date "+%d-%m-%y"`
 
-# Temp directory for constructing a binary rrelease
+# Temp directory for constructing releases
 export RELTEMP ?= ${ESCTOOLS_ROOT}/release-temp
 
-# Final directory in which to put binary and patch tar files
+# Directory in which to put final binary and patch tar files (but nothing else)
 export RELDIR  ?= ${ESCTOOLS_ROOT}/release
+
+# Variables relevant to names of release files
 export RELNAME ?= ${ESC_PROJECT}-${ESC_VERSION}
-export RELNAME-DATE ?= ${ESC_PROJECT}-${ESC_VERSION}-${ESC_RELEASE_DATE}
+export RELNAME-DATE ?= ${RELNAME}-${ESC_RELEASE_DATE}
 export RELJAR  ?= esctools2.jar
-export RELTAR  ?= ${RELNAME}.tbz
+export RELTAR  ?= ${RELNAME}-binary.tbz
 export RELPATCHTAR  ?= ${RELNAME}-patches.tbz
-export RELCLASSPATH ?= ${RELDIR}/${RELJAR}
+export RELCLASSPATH = ${RELDIR}/${RELJAR}
 
-export CALVIN_PATCHES   = ${RELNAME-DATE}-Calvin.patch.bz
-export ESCJAVA_PATCHES  = ${RELNAME-DATE}-Escjava.patch.bz
-export HOUDINI_PATCHES  = ${RELNAME-DATE}-Houdini.patch.bz
-export JAVAFE_PATCHES   = ${RELNAME-DATE}-Javafe.patch.bz
-export RCC_PATCHES      = ${RELNAME-DATE}-Rcc.patch.bz
-export SIMPLIFY_PATCHES = ${RELNAME-DATE}-Simplify.patch.bz
+export CALVIN_PATCHES   = ${RELNAME-DATE}-Calvin-patch.bz
+export ESCJAVA_PATCHES  = ${RELNAME-DATE}-Escjava-patch.bz
+export HOUDINI_PATCHES  = ${RELNAME-DATE}-Houdini-patch.bz
+export JAVAFE_PATCHES   = ${RELNAME-DATE}-Javafe-patch.bz
+export RCC_PATCHES      = ${RELNAME-DATE}-Rcc-patch.bz
+export SIMPLIFY_PATCHES = ${RELNAME-DATE}-Simplify-patch.bz
 
+export SPECS_TAR        = ${RELNAME-DATE}-specs.tbz
 export TOPLEVEL_TAR     = ${RELNAME-DATE}-TopLevel.tbz
 export ZERO_LENGTH_TAR  = ${RELNAME-DATE}-ZeroLengthFiles.tbz
 
@@ -155,7 +161,7 @@ export ZERO_LENGTH_TAR  = ${RELNAME-DATE}-ZeroLengthFiles.tbz
 export PATCH_DIR ?= ${ESCTOOLS_ROOT}/patches
 
 # The prefix of the name of the patch release tar file
-export PATCH_NAME ?= ${ESC_PROJECT}-${ESC_VERSION}
+export PATCH_NAME ?= ${RELNAME-DATE}
 
 ############################### Original ESCTools material
 
