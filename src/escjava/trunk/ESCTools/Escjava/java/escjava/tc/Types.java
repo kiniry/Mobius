@@ -49,6 +49,15 @@ public class Types extends javafe.tc.Types
     public static PrimitiveType
 	    rangeType = PrimitiveType.make(TagConstants.DOTDOT, Location.NULL);
 
+    //@ invariant bigintType != null;
+    public static PrimitiveType 
+            bigintType = PrimitiveType.make( TagConstants.BIGINTTYPE, Location.NULL );
+
+    //@ invariant realType != null;
+    public static PrimitiveType 
+            realType = PrimitiveType.make( TagConstants.REALTYPE, Location.NULL );
+
+
     public static boolean isTypeType(Type t) {
 	//return t.getTag() == TagConstants.TYPECODE;
 	return t.getTag() == TagConstants.TYPECODE || t.equals(javaLangClass());
@@ -63,12 +72,82 @@ public class Types extends javafe.tc.Types
     public boolean isCastableInstance(Type t, Type tt) {
 	boolean b = super.isCastableInstance(t,tt);
 	if (b) return b;
+	if (t.getTag() == TagConstants.BYTETYPE &&
+	        tt.getTag() == TagConstants.BIGINTTYPE) return true;
+	if (t.getTag() == TagConstants.SHORTTYPE &&
+	        tt.getTag() == TagConstants.BIGINTTYPE) return true;
+	if (t.getTag() == TagConstants.INTTYPE &&
+	        tt.getTag() == TagConstants.BIGINTTYPE) return true;
+	if (t.getTag() == TagConstants.LONGTYPE &&
+	        tt.getTag() == TagConstants.BIGINTTYPE) return true;
 	if (t.getTag() == TagConstants.TYPECODE)
 		return super.isCastableInstance(javaLangClass(),tt);
 	if (tt.getTag() == TagConstants.TYPECODE)
 		return super.isCastableInstance(t,javaLangClass());
 	return b;
     }
+
+    public boolean isIntegralTypeInstance(Type t){
+        if ((t instanceof PrimitiveType) &&
+        	((PrimitiveType)t).getTag() == TagConstants.BIGINTTYPE) return true;
+        return super.isIntegralTypeInstance(t);
+    }
+
+    public boolean isNumericTypeInstance(Type t){
+        if( t instanceof PrimitiveType ) {
+            PrimitiveType p = (PrimitiveType)t;
+            if (p.getTag() == TagConstants.BIGINTTYPE) return true;
+            if (p.getTag() == TagConstants.REALTYPE) return true;
+        }
+        return super.isNumericTypeInstance(t);
+    }
+    
+    public boolean isFloatingPointTypeInstance(Type t){
+        if( t instanceof PrimitiveType ) {
+            if (((PrimitiveType)t).tag == TagConstants.REALTYPE) return true;
+        }
+        return super.isFloatingPointTypeInstance(t);
+    }
+    
+    protected boolean isWideningPrimitiveConvertableInstance( Type x, Type y ) {
+        
+        switch( x.getTag() ) {
+        case TagConstants.BYTETYPE:
+        case TagConstants.SHORTTYPE:
+        case TagConstants.INTTYPE:
+        case TagConstants.LONGTYPE:
+            switch( y.getTag() ) {
+            case TagConstants.BIGINTTYPE: 
+            case TagConstants.REALTYPE:
+                return true;
+            default:
+                break;
+            }
+        
+        case TagConstants.BIGINTTYPE:
+            switch( y.getTag() ) {
+            case TagConstants.REALTYPE:
+                return true;
+            default:
+                break;
+            }  
+        
+        case TagConstants.FLOATTYPE:
+        case TagConstants.DOUBLETYPE:
+            switch( y.getTag() ) {
+            case TagConstants.REALTYPE:
+                return true;
+            default:
+                break;
+            }
+        default:
+            break;
+        }
+    
+    return super.isWideningPrimitiveConvertableInstance(x,y);
+}
+
+
 
     /**
      * This routine overrides {@link javafe.tc.Types#lookupField}.  Unlike that

@@ -1102,6 +1102,14 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
       write(o, TagConstants.toString(t.getTag()) );
       break;
 
+    case TagConstants.BIGINTTYPE:
+        write(o, "bigint");
+    	break;
+    	
+    case TagConstants.REALTYPE:
+    	write(o, "real");
+    	break;
+    	
     default:
       super.print( o, t );
     }

@@ -350,6 +350,9 @@ public class Types
     }
   
     public static boolean isNumericType(Type t){
+        return inst.isNumericTypeInstance(t);
+    }
+    public boolean isNumericTypeInstance(Type t){
         if( t instanceof PrimitiveType ) {
             switch( ((PrimitiveType)t).tag ) {
                 case TagConstants.BYTETYPE: 
@@ -367,8 +370,12 @@ public class Types
             return false;
     }
 
-    //@ ensures \result ==> t instanceof PrimitiveType
     public static boolean isIntegralType(Type t){
+        return inst.isIntegralTypeInstance(t);
+    }
+    
+    //@ ensures \result ==> t instanceof PrimitiveType
+    public boolean isIntegralTypeInstance(Type t){
         if( t instanceof PrimitiveType ) {
             switch( ((PrimitiveType)t).tag ) {
                 case TagConstants.BYTETYPE: 
@@ -385,6 +392,10 @@ public class Types
     }
 
     public static boolean isFloatingPointType(Type t){
+        return inst.isFloatingPointTypeInstance(t);
+    }
+    
+    public boolean isFloatingPointTypeInstance(Type t){
         if( t instanceof PrimitiveType ) {
             switch( ((PrimitiveType)t).tag ) {
 
@@ -636,6 +647,11 @@ public class Types
 
     //@ requires x != null && y != null;
     protected static boolean isWideningPrimitiveConvertable( Type x, Type y ) {
+        return inst.isWideningPrimitiveConvertableInstance(x,y);
+    }
+        
+    //@ requires x != null && y != null;
+    protected boolean isWideningPrimitiveConvertableInstance( Type x, Type y ) {
 
         switch( x.getTag() ) {
             case TagConstants.BYTETYPE:

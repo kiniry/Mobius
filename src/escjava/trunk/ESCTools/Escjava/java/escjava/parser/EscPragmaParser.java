@@ -2412,8 +2412,8 @@ try{
 
         switch (l.ttype) {
             case TagConstants.TYPETYPE: tag = TagConstants.TYPECODE; break;
-            case TagConstants.REAL: tag = TagConstants.DOUBLETYPE; break;
-            case TagConstants.BIGINT: tag = TagConstants.LONGTYPE; break;
+            case TagConstants.REAL: tag = TagConstants.REALTYPE; break;
+            case TagConstants.BIGINT: tag = TagConstants.BIGINTTYPE; break;
 
             default: return super.parsePrimitiveType(l);
         }
@@ -2522,8 +2522,8 @@ try{
 	int tag;
 	switch(l.ttype) {
             case TagConstants.TYPETYPE:tag = TagConstants.TYPECODE;    break;
-            case TagConstants.REAL:    tag = TagConstants.DOUBLETYPE;  break;
-            case TagConstants.BIGINT:  tag = TagConstants.LONGTYPE;    break;
+            case TagConstants.REAL:    tag = TagConstants.REALTYPE;    break;
+            case TagConstants.BIGINT:  tag = TagConstants.BIGINTTYPE;  break;
             case TagConstants.BOOLEAN: tag = TagConstants.BOOLEANTYPE; break;
             case TagConstants.BYTE:    tag = TagConstants.BYTETYPE;    break;
             case TagConstants.SHORT:   tag = TagConstants.SHORTTYPE;   break;

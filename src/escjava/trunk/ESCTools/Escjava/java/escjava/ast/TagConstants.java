@@ -31,7 +31,9 @@ public class TagConstants extends GeneratedTags
     //// Tags for new primitive types
     public static final int ANY = SYMBOLLIT + 1;
     public static final int TYPECODE = ANY + 1;
-    public static final int LOCKSET = TYPECODE + 1;
+    public static final int BIGINTTYPE = TYPECODE + 1;
+    public static final int REALTYPE = BIGINTTYPE + 1;
+    public static final int LOCKSET = REALTYPE + 1;
     
     //// Tags for guarded commands
     public static final int ASSERTCMD = LOCKSET + 1;
