@@ -18,12 +18,10 @@ class JmlAssertions extends Predicates
     //@ assert O(p);
     if (p.equals(t))
       return;
-    else {
-      i |= 0x100;
-      j |= 0xEFF;
-      //@ assert J(i, j);
-      t += "bar";
-    }
+    i |= 0x100;
+    j |= 0xEFF;
+    //@ assert J(i, j);
+    t += "bar";
   }
 
   static Object o(int i, Object o, String s) {
@@ -31,12 +29,10 @@ class JmlAssertions extends Predicates
     //@ assert S(s);
     if (s.equals(o))
       return new Integer(i);
-    else {
-      i ^= 0xFF;
-      //@ assert I(i);
-      JmlAssertions.s += "piggie";
-      return s;
-    }
+    i ^= 0xFF;
+    //@ assert I(i);
+    JmlAssertions.s += "piggie";
+    return s;
   }
 
   static Object p(int i, Object o, String s) {

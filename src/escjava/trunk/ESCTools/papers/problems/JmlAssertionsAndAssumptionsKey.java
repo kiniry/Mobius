@@ -21,14 +21,12 @@ class JmlAssertionsAndAssumptionsKey extends Predicates
     //@ assert p != null;
     if (p.equals(t))
       return;
-    else {
-      //@ assume i == 1;
-      //@ assume j == 1;
-      i |= 0x100;
-      j |= 0xEFF;
-      //@ assert (i & j) == 1;
-      t += "bar";
-    }
+    //@ assume i == 1;
+    //@ assume j == 1;
+    i |= 0x100;
+    j |= 0xEFF;
+    //@ assert (i & j) == 1;
+    t += "bar";
   }
 
   //@ modifies JmlAssertionsAndAssumptionsKey.s;
@@ -41,13 +39,11 @@ class JmlAssertionsAndAssumptionsKey extends Predicates
     //@ assert s != null;
     if (s.equals(o))
       return new Integer(i);
-    else {
-      //@ assume i == 257;
-      i ^= 0xFF;
-      //@ assert i == 510;
-      JmlAssertionsAndAssumptionsKey.s += "piggie";
-      return s;
-    }
+    //@ assume i == 257;
+    i ^= 0xFF;
+    //@ assert i == 510;
+    JmlAssertionsAndAssumptionsKey.s += "piggie";
+    return s;
   }
 
   static Object p(int i, Object o, String s) {

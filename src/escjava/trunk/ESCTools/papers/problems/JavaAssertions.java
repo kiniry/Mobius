@@ -1,7 +1,5 @@
 package problems;
 
-import problems.Predicates;
-
 class JavaAssertions extends Predicates
 {
   static int i;
@@ -18,25 +16,21 @@ class JavaAssertions extends Predicates
     assert O(p);
     if (p.equals(t))
       return;
-    else {
-      i |= 0x100;
-      j |= 0xEFF;
-      assert J(i, j);
-      t += "bar";
-    }
+    i |= 0x100;
+    j |= 0xEFF;
+    assert J(i, j);
+    t += "bar";
   }
 
   static Object o(int i, Object o, String s) {
     assert O(o);
     assert S(s);
     if (s.equals(o))
-      return new Integer(i);
-    else {
-      i ^= 0xFF;
-      assert I(i);
-      JavaAssertions.s += "piggie";
-      return s;
-    }
+        return new Integer(i);
+    i ^= 0xFF;
+    assert I(i);
+    JavaAssertions.s += "piggie";
+    return s;
   }
 
   static Object p(int i, Object o, String s) {

@@ -1,3 +1,5 @@
+package problems;
+
 /**
  * A set of objects.  This class uses exceptions to indicate
  * what kinds of objects are permissible and thus makes

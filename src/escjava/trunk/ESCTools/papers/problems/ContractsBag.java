@@ -1,3 +1,5 @@
+package problems;
+
 /**
  * A bag of objects.  Bags can contain multiple incidences of the same
  * object.

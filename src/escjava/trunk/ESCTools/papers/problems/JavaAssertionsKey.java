@@ -18,12 +18,10 @@ class JavaAssertionsKey extends Predicates
     assert p != null;
     if (p.equals(t))
       return;
-    else {
-      i |= 0x100;
-      j |= 0xEFF;
-      assert (i & j) == 1;
-      t += "bar";
-    }
+    i |= 0x100;
+    j |= 0xEFF;
+    assert (i & j) == 1;
+    t += "bar";
   }
 
   static Object o(int i, Object o, String s) {
@@ -31,12 +29,10 @@ class JavaAssertionsKey extends Predicates
     assert s != null;
     if (s.equals(o))
       return new Integer(i);
-    else {
-      i ^= 0xFF;
-      assert i == 510;
-      JavaAssertionsKey.s += "piggie";
-      return s;
-    }
+    i ^= 0xFF;
+    assert i == 510;
+    JavaAssertionsKey.s += "piggie";
+    return s;
   }
 
   static Object p(int i, Object o, String s) {
