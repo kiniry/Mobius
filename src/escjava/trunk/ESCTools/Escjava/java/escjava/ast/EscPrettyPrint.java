@@ -49,6 +49,7 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
         switch (tag) {
             case TagConstants.AXIOM:
             case TagConstants.INVARIANT:
+	    case TagConstants.REPRESENTS:
 	    case TagConstants.CONSTRAINT: {
                 Expr e = ((ExprDeclPragma)tp).expr;
                 write(o, "/*@ "); 
@@ -60,6 +61,7 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
                 write(o, "; */");
                 break;
             }
+
             case TagConstants.MODELDECLPRAGMA: {
                 FieldDecl d = ((ModelDeclPragma)tp).decl;
                 /*
@@ -183,6 +185,7 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
             case TagConstants.MODIFIES_REDUNDANTLY:
             case TagConstants.POSTCONDITION_REDUNDANTLY:
             case TagConstants.PRECONDITION_REDUNDANTLY:
+            case TagConstants.REPRESENTS_REDUNDANTLY:
             case TagConstants.REQUIRES_REDUNDANTLY:
             case TagConstants.SIGNALS_REDUNDANTLY:
             case TagConstants.WHEN_REDUNDANTLY:
