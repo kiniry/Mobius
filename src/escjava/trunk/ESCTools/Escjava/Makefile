@@ -317,7 +317,7 @@ junittests:
 test_parser: build test_escjava_parser test_matrix self_test
 
 test_escjava_parser:
-	$(MAKE) -C ${TOP_ESCJAVA_TEST_DIR} test_and_clean
+	$(MAKE) -C ${TOP_ESCJAVA_TEST_DIR} test
 
 test_matrix:
 	(cd ${TESTSOURCEDIRECTORY}/matrix; \

@@ -61,6 +61,6 @@ clean_escjava_parser_test:
 	rm -f ${CLASSDIRECTORY}/javafe/parser/test/*.class
 
 clean_out_and_diff:
-	rm -f test*/out test*/diffs
+	rm -f test*/out test*/diffs out diffs
 
 # End of file

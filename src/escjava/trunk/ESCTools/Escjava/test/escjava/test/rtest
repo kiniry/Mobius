@@ -20,6 +20,8 @@ if ! diff out ans > diffs; then
   echo Failed;
   cd ..
   exit 1;
+else
+  rm -f out diffs
 fi
 
 cd ..
