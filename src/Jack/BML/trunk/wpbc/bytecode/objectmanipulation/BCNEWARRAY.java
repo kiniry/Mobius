@@ -90,15 +90,16 @@ public class BCNEWARRAY extends BCAllocationInstruction {
 				new Stack(Expression.COUNTER),
 				new NumberLiteral(0),
 				PredicateSymbol.GRTEQ);
+		
 		ArrayReference new_arr_ref =
 			new ArrayReference(
 				FreshIntGenerator.getInt(),
 				getType(),
 				new Stack(Expression.COUNTER));
-
+        
 		//_psi^n[S(t) <-- new Ref[index] (S(t) )]
 		Formula topStack_grt_0_implies =
-			 _normal_Postcondition.substitute(
+		(Formula)_normal_Postcondition.substitute(
 				new Stack(Expression.COUNTER),
 				new_arr_ref);
 
@@ -109,7 +110,7 @@ public class BCNEWARRAY extends BCAllocationInstruction {
 		// substitute the access to the length field of the created array by stack top
 		//_psi^n[length( new ArrayObject(type, S(t)) <-- S(t)]
 		topStack_grt_0_implies =
-		topStack_grt_0_implies.substitute(
+		(Formula)topStack_grt_0_implies.substitute(
 				arr_length_access,
 				new Stack(Expression.COUNTER));
 

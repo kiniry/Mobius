@@ -68,7 +68,7 @@ public class BCClass {
 			if (_attributes[i] instanceof Unknown) {
 				privateAttr = (Unknown) _attributes[i];
 				BCAttribute bcAttribute =
-					AttributeReader.readAttribute(privateAttr, constantPool);
+					AttributeReader.readAttribute(privateAttr, constantPool, null);
 				if (bcAttribute instanceof ClassInvariant) {
 					classInvariant = (ClassInvariant) bcAttribute;
 				} else if (bcAttribute instanceof HistoryConstraints) {
@@ -115,14 +115,14 @@ public class BCClass {
 	 * @param signature
 	 * @return
 	 */
-	public BCMethod lookupMethod(String signature) {
+	public BCMethod lookupMethod(String signature) throws ReadAttributeException {
 		BCMethod m = null;
-		Util.dump("search for method " + signature + "in class "  + className );
+		Util.dump("search for method " + signature + "   in class "  + className );
 		m = (BCMethod) methods.get(signature);
 		if (m != null) {
 			return m;
 		}
-		Util.dump("search for method " + signature + "in superclass "  + superClassName );
+		Util.dump("search for method " + signature + "            in superclass "  + superClassName );
 		BCClass superClass = getSuperClass();
 		m = superClass.lookupMethod(signature);
 		if (m != null) {
@@ -136,6 +136,7 @@ public class BCClass {
 				return m;
 			}
 		}
+		m.initMethod();
 		return m;
 	}
 
@@ -147,27 +148,26 @@ public class BCClass {
 		throws ReadAttributeException {
 		methods = new HashMap();
 		//	for (int i = 0; i < _methods.length; i++)  {
-		for (int i = 1; i < _methods.length ;i++) {
+		for (int i = 0; i < _methods.length ;i++) {
 			MethodGen mg = new MethodGen(_methods[i], className, cp);
-			
-			BCMethod bcm = new BCMethod(mg, cp, constantPool);
-			bcm.initTrace();
-			bcm.setAsserts();
-			bcm.setLoopInvariants();
+//			BCMethod bcm = new BCMethod(mg, cp, constantPool);
+			BCMethod bcm = new BCMethod(mg,  constantPool);
+			String key = MethodSignature.getSignature(mg.getName(), mg.getSignature());
 			methods.put(
-				MethodSignature.getSignature(mg.getName(), mg.getSignature()),
-				bcm);
+							key,
+							bcm);
 		}
 	}
-
+	
 	public String getName() {
 		return className;
 	}
 
-	public void wp() {
+	public void wp() throws ReadAttributeException {
 		Iterator miter = methods.values().iterator();
 		while (miter.hasNext()) {
 			BCMethod m = (BCMethod) miter.next();
+			m.initMethod();
 			m.wp();
 		}
 	}

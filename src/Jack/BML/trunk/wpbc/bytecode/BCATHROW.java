@@ -12,8 +12,12 @@ import org.apache.bcel.generic.InstructionHandle;
 import formula.Formula;
 
 import bcclass.attributes.ExsuresTable;
+import bcexpression.Expression;
 import bcexpression.javatype.JavaObjectType;
 import bcexpression.javatype.JavaType;
+import bcexpression.jml.TYPEOF;
+import bcexpression.substitution.FormulaWITH;
+import bcexpression.vm.Stack;
 //import bytecode.block.*;
 
 /**
@@ -74,14 +78,13 @@ public class BCATHROW
 		Formula _normal_Postcondition,
 		ExsuresTable _exc_Postcondition) {
 
-		//wp for athrow by definition : 
-		//if there is a handle that can handle the exception thrown by this instruction then the 
-		//wp for the exception handle is returned, else 
-		// the exceptional postcondition specified in the specification for this exception is returned. 
-		// this is done by the method getWpForException in BCExceptionThrower abstract class
-		JavaObjectType excThrown = getExceptionThrown();
-		Formula wp =
-			getWpForException(excThrown, _exc_Postcondition);
+	
+		Stack topStack = new Stack(Expression.COUNTER);
+		Expression typeOfTopStack = new TYPEOF(topStack); 
+		FormulaWITH wp = new FormulaWITH( getTrace(), typeOfTopStack, this);
+//		JavaObjectType excThrown = getExceptionThrown();
+//		Formula wp =
+//			getWpForException(excThrown, _exc_Postcondition);
 		return wp;
 	}
 

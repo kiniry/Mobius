@@ -47,7 +47,6 @@ public class Reference extends Expression {
 	 * @return this object without changing it
 	 */
 	public Expression substitute(Expression _e1, Expression _e2) {
-		
 		return this;
 	}
 

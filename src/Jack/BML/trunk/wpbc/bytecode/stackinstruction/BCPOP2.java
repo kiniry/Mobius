@@ -49,7 +49,7 @@ public class BCPOP2  extends BCInstruction implements BCStackInstruction{
 	 */
 	public Formula wp(Formula _normal_Postcondition, ExsuresTable _exc_Postcondition) {
 		Formula wp;
-		wp = _normal_Postcondition.substitute(Expression.COUNTER, Expression.getCOUNTER_MINUS_2());
+		wp = (Formula)_normal_Postcondition.substitute(Expression.COUNTER, Expression.getCOUNTER_MINUS_2());
 		return wp;
 	}
 

@@ -70,10 +70,10 @@ public class BCConstantPUSHInstruction extends BCInstruction
 			ExsuresTable _exc_Postcondition) {
 		Formula wp;
 //		Util.dump("in wp i_constant" );
-		wp = _normal_Postcondition.substitute(Expression.COUNTER,
+		wp = (Formula)_normal_Postcondition.substitute(Expression.COUNTER,
 				Expression.getCOUNTER_PLUS_1());
 //		Util.dump("iconst wp[counter <-- counter +1]    " + wp);	
-		wp = wp.substitute(new Stack(Expression.getCOUNTER_PLUS_1()), getValue());
+		wp = (Formula)wp.substitute(new Stack(Expression.getCOUNTER_PLUS_1()), getValue());
 //		Util.dump("iconst " + wp);
 		return wp;
 	}

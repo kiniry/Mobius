@@ -47,7 +47,7 @@ public class BCIFNE extends BCConditionalBranch {
 				new NumberLiteral(0),
 				PredicateSymbol.EQ);
 		Formula not_eq_branch =
-			_normal_Postcondition.substitute(
+		(Formula)_normal_Postcondition.substitute(
 				Expression.COUNTER,
 				Expression.getCOUNTER_MINUS_1());
 		wp =
@@ -73,7 +73,7 @@ public class BCIFNE extends BCConditionalBranch {
 				new NumberLiteral(0),
 				PredicateSymbol.NOTEQ);
 		Formula eq_branch  =
-			_normal_Postcondition.substitute(
+		(Formula)_normal_Postcondition.substitute(
 				Expression.COUNTER,
 				Expression.getCOUNTER_MINUS_1());
 		wp =

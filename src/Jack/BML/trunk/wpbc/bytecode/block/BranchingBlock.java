@@ -80,7 +80,7 @@ public class BranchingBlock extends Block {
 	public Formula calculateBranchRecursively(
 		Formula _normal_Postcondition,
 		ExsuresTable _exc_postcondition) {
-		Formula wp = _normal_Postcondition.copy();
+		Formula wp = (Formula)_normal_Postcondition.copy();
 		if (getLast() instanceof BCLoopEnd) {
 			BCLoopEnd loopEnd = (BCLoopEnd ) getLast();
 			wp = loopEnd.wpBranch(wp, _exc_postcondition);	

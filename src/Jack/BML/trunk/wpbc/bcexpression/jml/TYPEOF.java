@@ -2,6 +2,13 @@ package bcexpression.jml;
 
 import type.BCType;
 import bcexpression.Expression;
+import bcexpression.javatype.JavaBasicType;
+import bcexpression.javatype.JavaReferenceType;
+import bcexpression.javatype.JavaType;
+import bcexpression.ref.Reference;
+import bcexpression.substitution.FunctionApplication;
+import bcexpression.substitution.SubstitutionTree;
+import bcexpression.substitution.SubstitutionUnit;
 
 /**
  * @author mpavlova
@@ -32,9 +39,24 @@ public class TYPEOF extends JMLExpression {
 		if (equals(_e1)) {
 			return _e2;
 		}
+ 
 		Expression[] subExpr = getSubExpressions();
 		subExpr[0] = subExpr[0].substitute( _e1, _e2);
+		BCType type = subExpr[0].getType();
+//		if ( (_e1.getType() instanceof JavaReferenceType) && ( type instanceof JavaReferenceType) ) {
+		if(_e2 instanceof Reference ) { 
+			JavaReferenceType refType = (JavaReferenceType)_e2.getType();
+			FunctionApplication fApp  = new FunctionApplication( this, _e2, refType);
+			return fApp;
+		}
 		return this;
+//		}
+//		if ((_e1.getType() instanceof JavaBasicType) && ( type instanceof JavaBasicType)  ) {
+//			JavaBasicType basicType = (JavaBasicType)_e2.getType();
+//			FunctionApplication fApp  = new FunctionApplication(this , _e2, basicType);
+//			return fApp;
+//		}
+//		return this;
 	}
 	
 	/* (non-Javadoc)

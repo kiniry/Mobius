@@ -54,9 +54,10 @@ public class BCINVOKESPECIAL extends BCInvoke {
 //			if (classInvariant == null) {
 //						return wp;
 //					}
-		Formula normalPost =  Formula.getFormula( _normal_Postcondition, classInvariant, Connector.AND);
+//		Formula normalPost =  Formula.getFormula( _normal_Postcondition, classInvariant, Connector.AND);
 		// the class invariant must hold in the state after the exec of a constructor
-		Formula wp = super.wp(normalPost, _exc_Postcondition);
+//		Formula wp = super.wp(normalPost, _exc_Postcondition);
+		Formula wp = super.wp(_normal_Postcondition, _exc_Postcondition);
 		return wp;
 	}
 

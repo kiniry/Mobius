@@ -45,7 +45,7 @@ public class BCIF_ICMPGT extends BCConditionalBranch {
 
 		//psi^n[t <-- t-2]
 		Formula not_grt_branch =
-			_normal_Postcondition.substitute(
+		(Formula)_normal_Postcondition.substitute(
 				Expression.COUNTER,
 				Expression.getCOUNTER_MINUS_2());
 
@@ -73,7 +73,7 @@ public class BCIF_ICMPGT extends BCConditionalBranch {
 
 		//getWPBranch[t<-- t-2]
 		Formula grt_branch =
-			_normal_Postcondition.substitute(
+		(Formula)_normal_Postcondition.substitute(
 				Expression.COUNTER,
 				Expression.getCOUNTER_MINUS_2());
 		

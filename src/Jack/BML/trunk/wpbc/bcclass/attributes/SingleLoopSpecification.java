@@ -20,9 +20,9 @@ public class SingleLoopSpecification {
 	private int cpIndex;
 	private Formula invariant;
 	private Expression[] modifies;
-	private Formula decreases;
+	private Expression decreases;
 	
-	public SingleLoopSpecification(int _cpIndex, Expression[] _modifies, Formula _invariant, Formula _decreases) {
+	public SingleLoopSpecification(int _cpIndex, Expression[] _modifies, Formula _invariant, Expression _decreases) {
 		cpIndex  = _cpIndex;
 		invariant = _invariant;
 		decreases = _decreases;
@@ -32,7 +32,7 @@ public class SingleLoopSpecification {
 	/**
 	 * @return
 	 */
-	public Formula getDecreases() {
+	public Expression getDecreases() {
 		return decreases;
 	}
 
@@ -50,12 +50,7 @@ public class SingleLoopSpecification {
 		return modifies;
 	}
 
-	/**
-	 * @param formula
-	 */
-	public void setDecreases(Formula formula) {
-		decreases = formula;
-	}
+
 
 	/**
 	 * @param formula
@@ -65,24 +60,10 @@ public class SingleLoopSpecification {
 	}
 
 	/**
-	 * @param expressions
-	 */
-	public void setModifies(Expression[] expressions) {
-		modifies = expressions;
-	}
-
-	/**
 	 * @return the index in the bytecode at which the loop that is 
 	 *  specified with this invariant starts
 	 */
 	public int getCpIndex() {
 		return cpIndex;
-	}
-
-	/**
-	 * @param i
-	 */
-	public void setCpIndex(int i) {
-		cpIndex = i;
 	}
 }

@@ -48,7 +48,7 @@ public class BCIFLE extends BCConditionalBranch {
 				new NumberLiteral(0),
 				PredicateSymbol.GRT);
 		Formula not_lesseq_branch =
-			_normal_Postcondition.substitute(
+		(Formula)_normal_Postcondition.substitute(
 				Expression.COUNTER,
 				Expression.getCOUNTER_MINUS_1());
 		wp =
@@ -74,7 +74,7 @@ public class BCIFLE extends BCConditionalBranch {
 				new NumberLiteral(0),
 				PredicateSymbol.LESSEQ);
 		Formula lesseq_branch =
-			_normal_Postcondition.substitute(
+		(Formula)_normal_Postcondition.substitute(
 				Expression.COUNTER,
 				Expression.getCOUNTER_MINUS_1());
 		wp =

@@ -42,11 +42,11 @@ BCTypedInstruction {
 		ExsuresTable _exc_Postcondition) {
 		Formula wp;
 		wp =
-			_normal_Postcondition.substitute(
+		(Formula)_normal_Postcondition.substitute(
 				Expression.COUNTER,
 				Expression.getCOUNTER_PLUS_1());
 		//Stack topStack_plus_1 = new Stack(Expression.COUNTER_PLUS_1);
-		wp = wp.substitute(new Stack(Expression.getCOUNTER_PLUS_1()) ,Expression._NULL);
+		wp = (Formula)wp.substitute(new Stack(Expression.getCOUNTER_PLUS_1()) ,Expression._NULL);
 		return wp;
 	}
 

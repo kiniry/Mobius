@@ -49,7 +49,7 @@ public class BCIF_ICMPLT extends BCConditionalBranch {
 
 		//psi^n[t <-- t-2]
 		Formula not_less_branch =
-			_normal_Postcondition.substitute(
+		(Formula)_normal_Postcondition.substitute(
 				Expression.COUNTER,
 				Expression.getCOUNTER_MINUS_2());
 
@@ -80,7 +80,7 @@ public class BCIF_ICMPLT extends BCConditionalBranch {
 
 		//getWPBranch[t<-- t-2]
 		Formula  less_branch =
-			_normal_Postcondition.substitute(
+		(Formula)_normal_Postcondition.substitute(
 				Expression.COUNTER,
 				Expression.getCOUNTER_MINUS_2());
 		//S(t-1) > S(t) == >  getWPBranch[t<-- t-2]

@@ -46,7 +46,7 @@ public class BCIFLT extends BCConditionalBranch {
 				new NumberLiteral(0),
 				PredicateSymbol.GRTEQ);
 		Formula not_less_branch =
-			_normal_Postcondition.substitute(
+		(Formula)_normal_Postcondition.substitute(
 				Expression.COUNTER,
 				Expression.getCOUNTER_MINUS_1());
 		wp =
@@ -72,7 +72,7 @@ public class BCIFLT extends BCConditionalBranch {
 				new NumberLiteral(0),
 				PredicateSymbol.LESS);
 		Formula less_branch =
-			_normal_Postcondition.substitute(
+		(Formula)_normal_Postcondition.substitute(
 				Expression.COUNTER,
 				Expression.getCOUNTER_MINUS_1());
 		wp =

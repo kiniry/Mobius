@@ -76,9 +76,9 @@ public class Block implements ByteCode {
 	}
 
 	public BCInstruction getFirst() {
-		BCInstruction lastInstr =
+		BCInstruction firstInstr =
 			Util.getBCInstructionAtPosition(bytecode, first);
-		return lastInstr;
+		return firstInstr;
 	}
 
 	public BCInstruction getLast() {
@@ -106,7 +106,8 @@ public class Block implements ByteCode {
 				_np = Formula.getFormula(_np, assert, Connector.AND);
 			}
 			Util.dump(" wp instr :  " + _instr + "  = " + _np);
-			if (_instr.equals(getFirst())) {
+			BCInstruction first = getFirst();
+			if (_instr.equals(first)) {
 				break;
 			}
 			_instr = _instr.getPrev();
@@ -127,7 +128,7 @@ public class Block implements ByteCode {
 		Formula _normalPostcondition,
 		ExsuresTable _exc_postcondition) {
 		BCInstruction last = getLast();
-		Formula _np = _normalPostcondition.copy();
+		Formula _np = (Formula)_normalPostcondition.copy();
 		Formula wp = last.wp(_np, _exc_postcondition);
 		
 		Util.dump(
@@ -153,7 +154,7 @@ public class Block implements ByteCode {
 			return;
 		}
 		for (int k = 0; k < targeterBlocks.size(); k++) {
-			Formula wpCopy = _normal_postcondition.copy();
+			Formula wpCopy = (Formula)_normal_postcondition.copy();
 			if (targeterBlocks.elementAt(k) instanceof BranchingBlock) {
 				BranchingBlock branchingBlock =
 					(BranchingBlock) targeterBlocks.elementAt(k);

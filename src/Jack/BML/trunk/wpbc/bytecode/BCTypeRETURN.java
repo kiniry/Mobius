@@ -35,7 +35,7 @@ public class BCTypeRETURN
 		ExsuresTable _exs_postcondition) {
 		Formula wp;
 		Stack stackTop = new Stack(Expression.COUNTER);
-		wp = _normal_postcondition.substitute(Expression._RESULT, stackTop);
+		wp = (Formula)_normal_postcondition.substitute(Expression._RESULT, stackTop);
 //		Util.dump("wp return " + wp.toString());
 		return wp;
 	}

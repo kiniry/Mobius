@@ -146,7 +146,7 @@ public class BCMULTIANEWARRAY
 
 		//psi^n[t <-- t -dimensions ]
 		Formula _normalT =
-			_normal_Postcondition.substitute(
+		(Formula)_normal_Postcondition.substitute(
 				Expression.COUNTER,
 				counterMinusArrayDim_minus_1);
 		Stack topStack_minusArrDim_minus_1 =
@@ -179,7 +179,7 @@ public class BCMULTIANEWARRAY
 					ref);
 		}
 		//psi^n[t <-- t -dimensions ][S( t - dims + 1) < -- new multiarr]
-		_normalT = _normalT.substitute(topStack_minusArrDim_minus_1, ref);
+		_normalT = (Formula)_normalT.substitute(topStack_minusArrDim_minus_1, ref);
 		Formula wpNormalTernination =
 		Formula.getFormula(
 				conditionForNormalTermination,

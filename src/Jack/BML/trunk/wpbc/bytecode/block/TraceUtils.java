@@ -321,8 +321,9 @@ public class TraceUtils {
 	/**
 	 * 
 	 * An entry pint instuction is an instruction that doesnot have any targeter. 
-	 * initialises the entry points. There is only one entry point for the graph representing the normal execution of the program. ANyways the points where the exc handlers
-	 * are considered to be also entry points for the graphs that represnt an exception handler
+	 * initialises the entry points. There is only one entry point for the graph representing the normal execution of the program. 
+	 * Anyways the points where the exc handlers code start 
+	 * are considered to be also entry points for the graphs that represent an exception handler
 	 * 
 	 * @param method - the method whose bytecode entrypoints are  set
 	 */
@@ -342,7 +343,7 @@ public class TraceUtils {
 			BCInstruction instr =
 				Util.getBCInstructionAtPosition(method.getBytecode(), pos);
 			BCInstruction excHandlerEntryPoint = new EntryPoint(instr);
-			Util.update(method.getBytecode(), instruction);
+			Util.update(method.getBytecode(), excHandlerEntryPoint);
 		}
 	}
 

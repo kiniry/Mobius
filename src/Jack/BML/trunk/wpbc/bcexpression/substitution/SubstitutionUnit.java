@@ -41,8 +41,9 @@ public class SubstitutionUnit  implements Tree {
 	 * @see bcexpression.objectsubstitution.Tree#substitute(bcexpression.Expression, bcexpression.Expression)
 	 */
 	public Tree substitute(Expression e1, Expression e2)  {
-//		Util.dump("SubstitutionUnit.substitute ****************** " + toString() + "[" +e1 + "<--"+ e2 + "]");
-//		Util.dump("SubstitutionUnit  object before " + object.toString() );
+//		if (e1.equals( object )) {
+//			return value;
+//		}		
 		object = object.substitute(e1, e2.copy());
 //		Util.dump("SubstitutionUnit  object after " + object.toString() );
 //		Util.dump("SubstitutionUnit  value before " + value.toString() );

@@ -8,6 +8,10 @@ package bcexpression.jml;
 
 import type.BCType;
 import bcexpression.Expression;
+import bcexpression.javatype.JavaArrType;
+import bcexpression.javatype.JavaReferenceType;
+import bcexpression.ref.ArrayReference;
+import bcexpression.substitution.FunctionApplication;
 
 
 /**
@@ -40,6 +44,10 @@ public class ELEMTYPE extends JMLExpression {
 	public Expression substitute(Expression _e1 , Expression _e2) { 
 		Expression subExpr = getSubExpressions()[0];
 		subExpr = subExpr.substitute( _e1, _e2);
+		if (_e2 instanceof ArrayReference) {
+			FunctionApplication fApp  = new FunctionApplication(this, _e2,  (JavaArrType)_e2.getType());
+			return fApp;
+		}
 		//setSubExpressions( new Expression[]{subExpr});
 		return this;
 	}

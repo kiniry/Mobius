@@ -70,9 +70,9 @@ public class BCDUP2_X2 extends BCInstruction implements BCStackInstruction {
 		Stack topStack_minus1 = new Stack(Expression.getCOUNTER_MINUS_1());
 		Stack topStack_minus2 = new Stack(Expression.getCOUNTER_MINUS_2());
 		
-		wp = _normal_Postcondition.substitute(Expression.COUNTER, Expression.getCOUNTER_PLUS_2() );
-		wp = wp.substitute(new Stack(Expression.getCOUNTER_PLUS_2()) , topStack );
-		wp = wp.substitute(new Stack(Expression.getCOUNTER_PLUS_1()) , topStack_minus1 );
+		wp =(Formula)_normal_Postcondition.substitute(Expression.COUNTER, Expression.getCOUNTER_PLUS_2() );
+		wp = (Formula)wp.substitute(new Stack(Expression.getCOUNTER_PLUS_2()) , topStack );
+		wp = (Formula)wp.substitute(new Stack(Expression.getCOUNTER_PLUS_1()) , topStack_minus1 );
 		
 		return wp;
 	}

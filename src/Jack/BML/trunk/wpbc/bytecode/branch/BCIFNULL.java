@@ -46,7 +46,7 @@ public class BCIFNULL extends BCConditionalBranch {
 				Expression._NULL,
 				PredicateSymbol.NOTEQ);
 		Formula noteq_branch =
-			_normal_Postcondition.substitute(
+		(Formula)_normal_Postcondition.substitute(
 				Expression.COUNTER,
 				Expression.getCOUNTER_MINUS_1());
 		wp =
@@ -74,7 +74,7 @@ public class BCIFNULL extends BCConditionalBranch {
 				PredicateSymbol.EQ);
 				
 		Formula eq_branch =
-			_normal_Postcondition.substitute(
+		(Formula)_normal_Postcondition.substitute(
 				Expression.COUNTER,
 				Expression.getCOUNTER_MINUS_1());
 		

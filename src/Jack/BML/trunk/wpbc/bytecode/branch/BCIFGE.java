@@ -41,7 +41,7 @@ public class BCIFGE extends BCConditionalBranch {
 		
 			// in case of executing next instruction - S(t) < 0
 			Formula stackTop_not_geq_0 = new Predicate2Ar(new Stack(Expression.COUNTER), new NumberLiteral(0), PredicateSymbol.LESS);
-			Formula not_geq_branch = _normal_Postcondition.substitute(Expression.COUNTER, Expression.getCOUNTER_MINUS_1());
+			Formula not_geq_branch = (Formula)_normal_Postcondition.substitute(Expression.COUNTER, Expression.getCOUNTER_MINUS_1());
 			wp = Formula.getFormula( stackTop_not_geq_0, not_geq_branch, Connector.IMPLIES);
 		
 			return wp;
@@ -53,7 +53,7 @@ public class BCIFGE extends BCConditionalBranch {
 			Formula wp;
 			//in case of jump - S(t) >= 0
 			Formula stackTop_geq_0 = new Predicate2Ar(new Stack(Expression.COUNTER), new NumberLiteral(0), PredicateSymbol.GRTEQ);
-			Formula geq_branch  = _normal_Postcondition.substitute(Expression.COUNTER, Expression.getCOUNTER_MINUS_1());
+			Formula geq_branch  = (Formula)_normal_Postcondition.substitute(Expression.COUNTER, Expression.getCOUNTER_MINUS_1());
 			wp = Formula.getFormula( stackTop_geq_0, geq_branch, Connector.IMPLIES);
 			return wp;
 		}

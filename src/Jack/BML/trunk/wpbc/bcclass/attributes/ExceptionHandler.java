@@ -69,22 +69,4 @@ public class ExceptionHandler {
 				+ handler_pc;
 		return str;
 	}
-
-//	/**
-//	 * Returns the wp. calculated only once and stored in the object
-//	 * @return Formula
-//	 */
-//	public Formula getWp() {
-//		return wp;
-//	}
-//
-//	private void addWP(Formula conjunct) {
-//		if (wp == null) {
-//			wp = conjunct;
-//			return;
-//		}
-//	
-//	}
-
-
 }

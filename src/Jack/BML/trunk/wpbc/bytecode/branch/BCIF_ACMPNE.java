@@ -47,7 +47,7 @@ public class BCIF_ACMPNE extends BCConditionalBranch {
 				new Stack(Expression.getCOUNTER_MINUS_1()),
 				PredicateSymbol.EQ);
 		Formula eq_branch =
-			_normal_Postcondition.substitute(
+		(Formula)_normal_Postcondition.substitute(
 				Expression.COUNTER,
 				Expression.getCOUNTER_MINUS_2());
 		wp =
@@ -74,7 +74,7 @@ public class BCIF_ACMPNE extends BCConditionalBranch {
 				PredicateSymbol.NOTEQ);
 
 		Formula not_eq_branch =
-			_normal_Postcondition.substitute(
+		(Formula)_normal_Postcondition.substitute(
 				Expression.COUNTER,
 				Expression.getCOUNTER_MINUS_2());
 		wp =

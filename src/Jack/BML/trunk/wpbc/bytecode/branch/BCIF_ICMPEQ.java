@@ -47,7 +47,7 @@ public class BCIF_ICMPEQ extends BCConditionalBranch {
 
 		//psi^n[t <-- t-2]
 		Formula not_eq_branch =
-			_normal_Postcondition.substitute(
+		(Formula)_normal_Postcondition.substitute(
 				Expression.COUNTER,
 				Expression.getCOUNTER_MINUS_2());
 
@@ -75,7 +75,7 @@ public class BCIF_ICMPEQ extends BCConditionalBranch {
 	
 		//psi^n[t<-- t-2]
 		Formula eq_branch =
-			_normal_Postcondition.substitute(
+		(Formula)_normal_Postcondition.substitute(
 				Expression.COUNTER,
 				Expression.getCOUNTER_MINUS_2());
 				

@@ -69,14 +69,14 @@ public class BCI2B extends BCConversionInstruction  {
 		
 		Formula  positive = new Predicate2Ar(new Stack(Expression.COUNTER), new NumberLiteral(0), PredicateSymbol.GRTEQ);
 		BitExpression pMask = new BitExpression(new Stack(Expression.COUNTER), new NumberLiteral(0xFF), ExpressionConstants.BITWISEAND);
-		Formula pCopy = _normal_Postcondition.copy();
+		Formula pCopy = (Formula)_normal_Postcondition.copy();
 		pCopy.substitute(new Stack(Expression.COUNTER), pMask);
 		Formula wpPositive = Formula.getFormula(positive, pCopy, Connector.IMPLIES);
 		
 		Formula  neg = new Predicate2Ar(new Stack(Expression.COUNTER), new NumberLiteral(0), PredicateSymbol.LESS);
 		BitExpression nMask = new BitExpression(new Stack(Expression.COUNTER), new NumberLiteral(0xFF), ExpressionConstants.BITWISEAND);
 		BitExpression nExtend = new BitExpression(nMask, new NumberLiteral(0xFFFFFF00), ExpressionConstants.BITWISEOR);
-		Formula nCopy = _normal_Postcondition.copy();
+		Formula nCopy = (Formula)_normal_Postcondition.copy();
 		pCopy.substitute(new Stack(Expression.COUNTER), nExtend);
 		Formula wpNeg = Formula.getFormula(neg, pCopy, Connector.IMPLIES);
 		

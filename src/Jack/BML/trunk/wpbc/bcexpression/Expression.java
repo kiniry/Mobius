@@ -121,6 +121,7 @@ public abstract class Expression {
 		if (_expr == null) {
 			return false;
 		}
+		//if this object and _expr do not have the same type then they are not equal
 		if (_expr.getClass() != this.getClass()) {
 			return false;
 		}

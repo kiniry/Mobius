@@ -6,6 +6,8 @@
  */
 package bcclass.attributes;
 
+import formula.Formula;
+
 /**
  * @author mpavlova
  *
@@ -14,26 +16,15 @@ package bcclass.attributes;
  */
 public class MethodSpecification implements BCAttribute {
 	
+	private Formula precondition;
 	private SpecificationCase[] specificationCases;
 	
-	public MethodSpecification(SpecificationCase[] specificationCases) {
+	public MethodSpecification(Formula precondition, SpecificationCase[] specificationCases) {
+		this.precondition = precondition;
 		this.specificationCases = specificationCases;
 	}
 	
 
-//	/**
-//	 * @return
-//	 */
-//	public Precondition getPrecondition() {
-//		return precondition;
-//	}
-//
-//	/**
-//	 * @param precondition
-//	 */
-//	public void setPrecondition(Precondition precondition) {
-//		this.precondition = precondition;
-//	}
 
 	/**
 	 * @return
@@ -43,4 +34,12 @@ public class MethodSpecification implements BCAttribute {
 	}
 
 	
+	/**
+	 * @return
+	 */
+	public Formula getPrecondition() {
+		return precondition;
+	}
+
+
 }

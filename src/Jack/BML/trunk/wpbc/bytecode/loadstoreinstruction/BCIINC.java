@@ -67,7 +67,7 @@ public class BCIINC extends BCLocalVariableInstruction {
 		Formula wp;
 		LocalVariableAccess lva = new LocalVariableAccess(getIndex());
 		ArithmeticExpression inc = (ArithmeticExpression)ArithmeticExpression.getArithmeticExpression(constant, lva, ExpressionConstants.ADD ) ;
-		wp = _normal_Postcondition.substitute(lva, inc);
+		wp = (Formula)_normal_Postcondition.substitute(lva, inc);
 		return wp; 
 	}
 

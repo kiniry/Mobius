@@ -10,9 +10,9 @@ import org.apache.bcel.classfile.Unknown;
 
 import constants.ArrayLengthConstant;
 import constants.BCConstant;
-import constants.BCConstantClass;
 import constants.BCConstantFieldRef;
 import constants.BCConstantMethodRef;
+import constants.BCConstantUtf8;
 
 import formula.Connector;
 import formula.Formula;
@@ -24,6 +24,7 @@ import bcclass.BCConstantPool;
 import bcclass.attributes.Assert;
 import bcclass.attributes.AssertTable;
 import bcclass.attributes.BCAttribute;
+import bcclass.attributes.BCLineNumber;
 import bcclass.attributes.BlockSpecification;
 import bcclass.attributes.ClassInvariant;
 import bcclass.attributes.Exsures;
@@ -49,6 +50,7 @@ import bcexpression.javatype.JavaObjectType;
 import bcexpression.javatype.JavaType;
 import bcexpression.jml.AllArrayElem;
 import bcexpression.jml.ELEMTYPE;
+import bcexpression.jml.Everything;
 import bcexpression.jml.JML_CONST_TYPE;
 import bcexpression.jml.OLD;
 import bcexpression.jml.RESULT;
@@ -64,12 +66,15 @@ import bcexpression.jml._TYPE;
 public class AttributeReader {
 	private static int pos;
 	private static BCConstantPool constantPool;
+	private static BCLineNumber[] lineNumberTable;
 
 	public static BCAttribute readAttribute(
 		Unknown privateAttr,
-		BCConstantPool _constantPool)
+		BCConstantPool _constantPool,
+		BCLineNumber[] _lineNumberTable)
 		throws ReadAttributeException {
 		constantPool = _constantPool;
+		lineNumberTable = _lineNumberTable; 
 		String name = privateAttr.getName();
 		if (name.equals(BCAttribute.ASSERT)) {
 			return readAssertTable(privateAttr.getBytes());
@@ -93,41 +98,43 @@ public class AttributeReader {
 		}
 		return null;
 	}
-	
-	  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	  //////////////////////////////////////Class Specification/////////////////////////////////////////////
-	  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	private static HistoryConstraints readHistoryConstraints(byte[] bytes) throws ReadAttributeException {
+
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////Class Specification/////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	private static HistoryConstraints readHistoryConstraints(byte[] bytes)
+		throws ReadAttributeException {
 		//here the length of the attribute not needed
-		pos = 6;
+		pos = 0;
 		Formula predicate = readFormula(bytes);
-		HistoryConstraints historyConstraints = new HistoryConstraints(predicate);
+		HistoryConstraints historyConstraints =
+			new HistoryConstraints(predicate);
 		return historyConstraints;
 	}
-	
-	
-	private static ClassInvariant readClassInvariant(byte[] bytes) throws ReadAttributeException {
-//		here the length of the attribute not needed
-		pos = 6;
+
+	private static ClassInvariant readClassInvariant(byte[] bytes)
+		throws ReadAttributeException {
+		//		here the length of the attribute not needed
+		pos = 0;
 		Formula predicate = readFormula(bytes);
 		ClassInvariant classInvariant = new ClassInvariant(predicate);
 		return classInvariant;
 	}
-	
+
 	//////////////////////////////////////////end Class specification//////////////////////////////////////
-	
+
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////Method Specification/////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	
+
 	////////////////////// start : block specification /////////////////////////////////////////////////
 	private static BlockSpecification readBlockSpecification(byte[] bytes)
 		throws ReadAttributeException {
-		pos = 2;
-		int attribute_length = readAttributeLength(bytes);
+		pos = 0;
+		int attribute_length = bytes.length;
 		int attributes_count = readAttributeCount(bytes);
-		if (attribute_length <= 0) {
+		if (attribute_length == 2) {
 			return null;
 		}
 		if (attributes_count <= 0) {
@@ -180,10 +187,11 @@ public class AttributeReader {
 
 	private static LoopSpecification readLoopSpecification(byte[] bytes)
 		throws ReadAttributeException {
-		pos = 2;
-		int attribute_length = readAttributeLength(bytes);
+	
+		pos = 0;
+		int attribute_length = bytes.length;
 		int attributes_count = readAttributeCount(bytes);
-		if (attribute_length <= 0) {
+		if (attribute_length == 2) {
 			return null;
 		}
 		if (attributes_count <= 0) {
@@ -196,13 +204,14 @@ public class AttributeReader {
 		SingleLoopSpecification[] loopSpecs =
 			new SingleLoopSpecification[attributes_count];
 		for (int i = 0; i < attributes_count; i++) {
-			if ((pos - 6) >= attribute_length) {
+			if (pos >= attribute_length) {
 				throw new ReadAttributeException(
 					"uncorrect LoopSpecification  attribute attribute_length "
 						+ attribute_length
 						+ " <  actual length of attribute ");
 			}
 			loopSpecs[i] = readSingleLoopSpecification(bytes);
+//			Util.dump(" readSingleLoopSpecification  pos = " +pos) ;
 		}
 		LoopSpecification loopSpe = new LoopSpecification(loopSpecs);
 		return loopSpe;
@@ -210,17 +219,17 @@ public class AttributeReader {
 
 	private static SingleLoopSpecification readSingleLoopSpecification(byte[] bytes)
 		throws ReadAttributeException {
-		int loopStartPcInd = readShort(bytes);
-		int modifiesCount = readShort(bytes);
-		Expression[] modifies = null;
-		if (modifiesCount > 0) {
-			modifies = new Expression[modifiesCount];
-			for (int i = 0; i < modifiesCount; i++) {
-				modifies[i] = readExpression(bytes);
-			}
-		}
+//		Util.dump(" 888888888888888888888888888888888888888888888888 " ) ;
+		
+		int lineNumber = readShort(bytes);
+//		int loopStartPcInd  = lineNumberTable.getLineNumberTable()[ lineNumber].getStartPC();
+		int loopStartPcInd  = lineNumberTable[ lineNumber].getStartPC();
+//		Util.dump(" loopStartPC  pos = " +pos) ;
+//		int modifiesCount = readShort(bytes);
+		Expression[] modifies = readModifies(bytes);
+//		Util.dump("readModifies pos = " + pos );
 		Formula invariant = readFormula(bytes);
-		Formula decreases = readFormula(bytes);
+		Expression decreases = readExpression(bytes);
 		SingleLoopSpecification loopSpec =
 			new SingleLoopSpecification(
 				loopStartPcInd,
@@ -235,22 +244,18 @@ public class AttributeReader {
 	////////////////////// start : assert table /////////////////////////////////////////////////
 	private static AssertTable readAssertTable(byte[] bytes)
 		throws ReadAttributeException {
-		pos = 2;
-		int attribute_length = readAttributeLength(bytes);
+		pos = 0;
+		int attribute_length = bytes.length;
 		int attributes_count = readAttributeCount(bytes);
 		if (attribute_length <= 0) {
 			return null;
 		}
-		if (attributes_count <= 0) {
-			throw new ReadAttributeException(
-				"a wrong AssertTable  attribute : attribute count  = "
-					+ attributes_count
-					+ " and attribute length  = "
-					+ attribute_length);
+		if (attributes_count == 0) {
+			return null;
 		}
 		Assert[] asserts = new Assert[attributes_count];
 		for (int i = 0; i < attributes_count; i++) {
-			if ((pos - 6) >= attribute_length) {
+			if (pos >= attribute_length) {
 				throw new ReadAttributeException(
 					"uncorrect Assert  attribute attribute_length "
 						+ attribute_length
@@ -280,8 +285,9 @@ public class AttributeReader {
 
 	private static MethodSpecification readMethodSpecification(byte[] bytes)
 		throws ReadAttributeException {
-		pos = 2;
-		int attribute_length = readAttributeLength(bytes);
+		pos = 0;
+		int attribute_length = bytes.length;
+		Formula precondition = readFormula(bytes);
 		int attributes_count = readAttributeCount(bytes);
 		if (attribute_length <= 0) {
 			return null;
@@ -290,8 +296,9 @@ public class AttributeReader {
 			throw new ReadAttributeException(
 				"a wrong MethodSpecification  attribute : attribute count  = "
 					+ attributes_count
-					+ " and attribute length  = "
-					+ attribute_length);
+					+ " and attribute length  =  "
+					+ attribute_length
+					+ "  ");
 		}
 		SpecificationCase[] specCases = new SpecificationCase[attributes_count];
 		for (int i = 0; i < attributes_count; i++) {
@@ -303,21 +310,16 @@ public class AttributeReader {
 			}
 			specCases[i] = readSpecificationCase(bytes);
 		}
-		MethodSpecification methodSpec = new MethodSpecification(specCases);
+		MethodSpecification methodSpec =
+			new MethodSpecification(precondition, specCases);
 		return methodSpec;
 	}
 
 	private static SpecificationCase readSpecificationCase(byte[] bytes)
 		throws ReadAttributeException {
 		Formula precondition = readFormula(bytes);
-		int modifiesCount = readAttributeCount(bytes);
-		Expression[] modifies = null;
-		if (modifiesCount > 0) {
-			modifies = new Expression[modifiesCount];
-			for (int i = 0; i < modifiesCount; i++) {
-				modifies[i] = readExpression(bytes);
-			}
-		}
+		Expression[] modifies = readModifies(bytes);
+
 		Formula postcondition = readFormula(bytes);
 		ExsuresTable exsures = readExsuresTable(bytes);
 		SpecificationCase specCase =
@@ -327,6 +329,72 @@ public class AttributeReader {
 				modifies,
 				exsures);
 		return specCase;
+	}
+
+	/**
+	 * @param bytes
+	 * @return
+	 */
+	private static Expression[] readModifies(byte[] bytes)
+		throws ReadAttributeException {
+//		Util.dump("8888888888888888888888888888888888888888");
+//		Util.dump("readModifies pos = " + pos );
+		int modifiesCount = readAttributeCount(bytes);
+//		Util.dump("modifies count  = " + modifiesCount );
+//		Util.dump("readAttributeCount pos = " + pos );
+		Expression[] modifies = null;
+		int _byte;
+
+		if (modifiesCount > 0) {
+			modifies = new Expression[modifiesCount];
+			modifies[0] = readModifiesExpression(bytes);
+			if(modifies[0] == null) {
+				return modifies;
+			}
+			if(modifies[0] instanceof Everything ) {
+				return modifies;
+			}
+			for (int i = 1; i < modifiesCount; i++) {	
+				modifies[i] = readModifiesExpression(bytes);
+			}
+		}
+		return modifies;
+	}
+	
+	private static Expression readModifiesExpression(byte[] bytes) throws ReadAttributeException {
+		int _byte = readByte(bytes);
+		if (_byte == Code.MODIFIES_NOTHING) {
+			return null;
+		}
+		if (_byte == Code.MODIFIES_EVERYTHING) {
+			return Everything.EVERYTHING;
+		}
+		if (_byte == Code.MODIFIES_IDENT) {
+			Expression expr = readModifiesExpression(bytes);
+			return expr;
+		}
+		if (_byte == Code.MODIFIES_DOT) {
+			BCConstantFieldRef constant = (BCConstantFieldRef)readConstant(bytes);
+			Expression expr = readExpression(bytes);
+			Expression fieldAccessExpr =
+				new FieldAccessExpression(constant, expr);
+		}
+		if (_byte == Code.MODIFIES_SINGLE_INDICE) {
+			
+			
+		}
+		if (_byte == Code.MODIFIES_INTERVAL) {
+			Expression start = readExpression(bytes);
+			Expression end = readExpression(bytes);
+			Expression array = readExpression(bytes);
+			
+		}
+		if (_byte == Code.MODIFIES_STAR) {
+			
+			
+		}
+		return null;
+		
 	}
 
 	/**
@@ -350,13 +418,12 @@ public class AttributeReader {
 
 	private static Exsures readExsures(byte[] bytes)
 		throws ReadAttributeException {
-		JavaObjectType excType = (JavaObjectType)readJavaType(bytes);
+		JavaObjectType excType = (JavaObjectType) readJavaType(bytes);
 		Formula exsFormula = readFormula(bytes);
 		Exsures exsures = new Exsures(exsFormula, excType);
 		return exsures;
 	}
 	////////////////////  end : method specification  /////////////////////////////////////////////////
-
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////Attribute ///////////////////////////////////////////////////////////////
@@ -394,6 +461,7 @@ public class AttributeReader {
 	}
 
 	private static int readByte(byte[] bytes) {
+//		Util.dump("pos = " + pos );
 		int _byte = bytes[pos] & 0xff;
 		pos = pos + 1;
 		return _byte;
@@ -401,7 +469,7 @@ public class AttributeReader {
 
 	private static Formula readFormula(byte[] bytes)
 		throws ReadAttributeException {
-		int _byte = readShort(bytes);
+		int _byte = readByte(bytes);
 		if (_byte == Code.TRUE) {
 			return Predicate.TRUE;
 		}
@@ -481,7 +549,7 @@ public class AttributeReader {
 			return predicate;
 		}
 		if (_byte == Code.EXISTS) {
-			
+
 		}
 
 		if (_byte == Code.FORALL) {
@@ -492,7 +560,7 @@ public class AttributeReader {
 
 	private static Expression readExpression(byte[] bytes)
 		throws ReadAttributeException {
-		int _byte = readShort(bytes);
+		int _byte = readByte(bytes);
 		if (_byte == Code.PLUS) { // ARithmetic 
 			Expression e1 = readExpression(bytes);
 			Expression e2 = readExpression(bytes);
@@ -607,10 +675,12 @@ public class AttributeReader {
 		} else if (_byte == Code.RESULT) {
 			Expression e = RESULT._RESULT;
 			return e;
-		} else if (_byte == Code.ALL_ARRAY_ELEM) {
-			Expression e = AllArrayElem.ALLARRAYELEM;
-			return e;
-		} else if (_byte == Code._type) {
+		} 
+//		else if (_byte == Code.ALL_ARRAY_ELEM) {
+//			Expression e = AllArrayElem.ALLARRAYELEM;
+//			return e;
+//		} 
+		else if (_byte == Code._type) {
 			JavaType javaType = readJavaType(bytes);
 			Expression _type = new _TYPE(javaType);
 			return _type;
@@ -629,7 +699,7 @@ public class AttributeReader {
 			Expression ref = readExpression(bytes);
 			int numberArgs = readShort(bytes);
 			Expression[] args = new Expression[numberArgs];
-			for (int i = 0; i< numberArgs; i++) {
+			for (int i = 0; i < numberArgs; i++) {
 				args[i] = readExpression(bytes);
 			}
 			return null;
@@ -654,7 +724,8 @@ public class AttributeReader {
 			Formula condition = readFormula(bytes);
 			Expression expr1 = readExpression(bytes);
 			Expression expr2 = readExpression(bytes);
-			ConditionalExpression conditionExpr = new ConditionalExpression(condition, expr1, expr2);
+			ConditionalExpression conditionExpr =
+				new ConditionalExpression(condition, expr1, expr2);
 			return conditionExpr;
 		} else if (_byte == Code.THIS) { // this expression 
 			Expression _this = new LocalVariableAccess(0);
@@ -667,22 +738,21 @@ public class AttributeReader {
 			(_byte == Code.OLD_FIELD_REF)
 				|| (_byte == Code.OLD_JML_MODEL_FIELD)) {
 			// see in the file remarks
-			Expression fieldAccessExpression =  readExpression(bytes);
-			OLD oldFieldRef  = new OLD(fieldAccessExpression);
+			Expression fieldAccessExpression = readExpression(bytes);
+			OLD oldFieldRef = new OLD(fieldAccessExpression);
 			return oldFieldRef;
 		} else if (_byte == Code.LOCAL_VARIABLE) {
-			// the index of the local variable
-			int ind = readInt(bytes);
+			// the index of the local variable 
+			int ind = readShort(bytes);
 			Expression lVarAccess = new LocalVariableAccess(ind);
 			return lVarAccess;
 		} else if (_byte == Code.OLD_LOCAL_VARIABLE) {
 			// the index of the local variable
-			int ind = readInt(bytes);
+			int ind = readShort(bytes);
 			Expression lVarAccess = new LocalVariableAccess(ind);
 			Expression oldValue = new OLD(lVarAccess);
 			return oldValue;
 		}
-
 		return null;
 	}
 
@@ -693,12 +763,13 @@ public class AttributeReader {
 	 */
 	private static final BCConstant readConstant(byte[] bytes)
 		throws ReadAttributeException {
-		int _byte = readShort(bytes);
+		int _byte = readByte(bytes);
 		if (_byte == Code.ARRAYLENGTH) {
 			ArrayLengthConstant length = new ArrayLengthConstant();
 			return length;
 		} else if (_byte == Code.FIELD_REF) {
 			// read the index of the field_ref in the constant pool
+//			int cpIndex = readShort(bytes);
 			int cpIndex = readShort(bytes);
 			// find the object in the constant field
 			BCConstant constantField = constantPool.getConstant(cpIndex);
@@ -709,6 +780,7 @@ public class AttributeReader {
 			}
 			return constantField;
 		} else if (_byte == Code.JML_MODEL_FIELD) {
+//			int cpIndex = readShort(bytes);
 			int cpIndex = readShort(bytes);
 			BCConstant constantField = constantPool.getConstant(cpIndex);
 			if (!(constantField instanceof BCConstantFieldRef)) {
@@ -720,22 +792,22 @@ public class AttributeReader {
 		} else if (_byte == Code.METHOD_REF) {
 			int cpIndex = readShort(bytes);
 			BCConstant consantMethodRef = constantPool.getConstant(cpIndex);
-			if (! (consantMethodRef instanceof BCConstantMethodRef)) {
-				throw new  ReadAttributeException(
-				"Error reading in the Constant Pool :  reason: CONSTANT_Methodref  expected  at index "
-					+ cpIndex);
+			if (!(consantMethodRef instanceof BCConstantMethodRef)) {
+				throw new ReadAttributeException(
+					"Error reading in the Constant Pool :  reason: CONSTANT_Methodref  expected  at index "
+						+ cpIndex);
 			}
 			return consantMethodRef;
 		} else if (_byte == Code.JAVA_TYPE) {
 			int cpIndex = readShort(bytes);
-			BCConstant constantClass = constantPool.getConstant(cpIndex);
-			if (! (constantClass instanceof BCConstantClass)) {
-				throw new  ReadAttributeException(
-				"Error reading in the Constant Pool : reason:   CONSTANT_Class expected  at index "
-					+ cpIndex);
+			BCConstant constantUtf8 = constantPool.getConstant(cpIndex);
+			if (!(constantUtf8 instanceof BCConstantUtf8)) {
+				throw new ReadAttributeException(
+					"Error reading in the Constant Pool : reason:   CONSTANT_Utf8  expected  at index "
+						+ cpIndex);
 			}
-			return constantClass;
-		} 
+			return constantUtf8;
+		}
 		// may be there should be translation for strings
 		return null;
 	}
@@ -751,11 +823,13 @@ public class AttributeReader {
 	private static JavaType readJavaType(byte[] bytes)
 		throws ReadAttributeException {
 		BCConstant constant = readConstant(bytes);
-		if ( !(constant instanceof BCConstantClass )) {
-			throw new ReadAttributeException("Error reading a JavaType : reason : expected Constant ClassInfo structure in the constant pool "); 
+		if (!(constant instanceof BCConstantUtf8)) {
+			throw new ReadAttributeException(
+				" Error reading a JavaType : reason : expected Constant Utf8 Info structure in the constant pool  at index "
+					+ constant.getCPIndex());
 		}
-		BCConstantClass CONSTANT_Class = (BCConstantClass)constant;
-		String name = CONSTANT_Class.getName();
+		BCConstantUtf8 CONSTANT_Class = (BCConstantUtf8) constant;
+		String name = CONSTANT_Class.getLiteral().toString();
 		JavaType type = JavaType.getJavaType(name);
 		return type;
 	}

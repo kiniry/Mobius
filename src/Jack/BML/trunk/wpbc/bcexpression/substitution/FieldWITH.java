@@ -18,6 +18,7 @@ import constants.BCConstantFieldRef;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class FieldWITH extends Expression {
+	// 
 	private BCConstantFieldRef constantFieldRef;
 	private Expression object;
 	private SubstitutionTree with;

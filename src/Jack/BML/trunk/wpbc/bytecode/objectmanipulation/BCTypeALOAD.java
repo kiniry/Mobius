@@ -92,7 +92,7 @@ public class BCTypeALOAD
 			Expression.getCOUNTER_MINUS_1());
 		// n_post[ S(t) <----- S(t-1)[S(t)]]
 		_n_Postcondition =
-			_n_Postcondition.substitute(
+		(Formula)_n_Postcondition.substitute(
 			new Stack(Expression.COUNTER),
 				new ArrayAccessExpression(new Stack(Expression.getCOUNTER_MINUS_1()), new Stack(Expression.COUNTER)));
 

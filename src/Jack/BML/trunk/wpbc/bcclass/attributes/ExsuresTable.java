@@ -1,5 +1,9 @@
 package bcclass.attributes;
+import java.util.Collection;
 import java.util.HashMap;
+
+import bcexpression.javatype.JavaObjectType;
+import bcexpression.javatype.JavaType;
 
 import formula.Formula;
 import formula.atomic.Predicate;
@@ -11,27 +15,37 @@ import formula.atomic.Predicate;
  * type comments go to Window>Preferences>Java>Code Generation.
  */
 public class ExsuresTable implements BCAttribute {
-	private HashMap excPostcondition;
+	private Exsures[] excPostcondition;
 	/**
 	 * @param exsures -a
 	 *            n array of exsuers objects with which the internal hashmap is
 	 *            initialised
 	 */
 	public ExsuresTable(Exsures[] exsures) {
-		excPostcondition = new HashMap();
-		for (int i = 0; i < exsures.length; i++) {
-			excPostcondition.put(exsures[i].getExcType().getSignature(),
-					exsures[i]);
-		}
+		excPostcondition = exsures;
 	}
 	
 	public Formula getExcPostconditionFor(String exc_class_name) {
 		Exsures exs;
-		//if for this exception thrown no postcondition is specified, the default one is returned - TRUE
-		if( ( exs = (Exsures)excPostcondition.get(exc_class_name)) == null) {
-			return Predicate.TRUE;
+
+		JavaObjectType exception = (JavaObjectType)JavaType.getJavaRefType(exc_class_name);
+		Exsures exsures = null;
+		for (int i = 0; i < excPostcondition.length; i++)  {
+			JavaObjectType _type = excPostcondition[i].getExcType();
+			if ( (exsures == null) && (JavaObjectType.subType(exception, _type ))) {
+				exsures = excPostcondition[i];
+				continue;
+			}
+			// if the next exsures has  more specific type then is should be the one to  determine the exc postcondition
+			if (JavaObjectType.subType( exception , excPostcondition[i].getExcType() )  && JavaObjectType.subType( excPostcondition[i].getExcType(), exsures.getExcType() )) {
+				exsures = excPostcondition[i];
+			}
 		}
-		return exs.getPredicate();
-		
+		// if no exc postcondition specificied for  this exception, then return false by default
+		if (exsures == null) {
+			return Predicate.FALSE;
+		}
+		return exsures.getPredicate();
 	}
+
 }

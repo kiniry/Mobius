@@ -121,9 +121,9 @@ public class BCANEWARRAY
 				new_arr_ref);
 		//_psi^n[length( with o == new ArrayObject(type, S(t)) <-- S(t)]
 		Formula topStack_grt_0_implies =
-			_normal_Postcondition.substitute(arr_length_access, new Stack(Expression.COUNTER));
+		(Formula)_normal_Postcondition.substitute(arr_length_access, new Stack(Expression.COUNTER));
 		topStack_grt_0_implies =
-			topStack_grt_0_implies.substitute(new Stack(Expression.COUNTER), new_arr_ref);
+		(Formula)topStack_grt_0_implies.substitute(new Stack(Expression.COUNTER), new_arr_ref);
 
 		Formula nWpTermination =
 		Formula.getFormula(

@@ -88,7 +88,7 @@ public class BCLoopStart extends BCInstruction {
 
 		// Invariant ==> wp
 		Formula invariant_implies_wp =
-			Formula.getFormula(invariant.copy(), wpInstr, Connector.IMPLIES);
+			Formula.getFormula((Formula)invariant.copy(), wpInstr, Connector.IMPLIES);
 
 		//if the set of modified expressions for the bytecode that loop is part of is not empty then copy them
 		Expression[] modifies1 = null;
@@ -121,7 +121,7 @@ public class BCLoopStart extends BCInstruction {
 		Formula wp = null;
 		wp =
 			Formula.getFormula(
-				invariant.copy(),
+			(Formula)invariant.copy(),
 				forall_modified_expressions_invariant_implies_wp,
 				Connector.AND);
 		return wp;

@@ -103,7 +103,7 @@ public class BCPUTFIELD extends BCFieldOrMethodInstruction {
 
 		//psi^n[t <-- t-2 ]
 		Formula wpObjNotNullImpl =
-			_normal_Postcondition.substitute(
+		(Formula)_normal_Postcondition.substitute(
 				Expression.COUNTER,
 				ArithmeticExpression.getArithmeticExpression(
 					Expression.COUNTER,
@@ -127,7 +127,7 @@ public class BCPUTFIELD extends BCFieldOrMethodInstruction {
 
 		//			psi^n[t <-- t-2 ][ index(  S(t-1)  ) <-- S(t)]
 		wpObjNotNullImpl =
-			wpObjNotNullImpl.substitute(
+		(Formula)wpObjNotNullImpl.substitute(
 				fieldAccess,
 				new Stack(Expression.COUNTER));
 

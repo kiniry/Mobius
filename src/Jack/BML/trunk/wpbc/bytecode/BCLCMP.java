@@ -69,14 +69,14 @@ public class BCLCMP extends BCInstruction implements BCTypedInstruction{
 		
 		// v1 == v2 => S(t)[t<--- t-1][S(t-1) <-- 0]
 		Formula v1Equalsv2 = new Predicate2Ar(new Stack(Expression.COUNTER), new Stack(Expression.getCOUNTER_MINUS_1()), PredicateSymbol.EQ );
-		Formula resultZero = _normal_Postcondition.copy();
+		Formula resultZero = (Formula)_normal_Postcondition.copy();
 		resultZero.substitute(Expression.COUNTER, Expression.getCOUNTER_MINUS_1());
 		resultZero.substitute(new Stack(Expression.getCOUNTER_MINUS_1()), new NumberLiteral(0));
 		wps[0] = Formula.getFormula(v1Equalsv2, resultZero, Connector.IMPLIES);
 		
 		 //	v1 >  v2 => S(t)[t<--- t-1][S(t-1) <-- 1]
 		 Formula v1Grt2 = new Predicate2Ar( new Stack(Expression.getCOUNTER_MINUS_1()), new Stack(Expression.COUNTER), PredicateSymbol.GRT);
-		 Formula resultOne = _normal_Postcondition.copy();
+		 Formula resultOne = (Formula)_normal_Postcondition.copy();
 		 resultOne.substitute(Expression.COUNTER, Expression.getCOUNTER_MINUS_1());
 		 resultZero.substitute(new Stack(Expression.getCOUNTER_MINUS_1()), new NumberLiteral(1));
 		 wps[1] = Formula.getFormula(v1Grt2 , resultOne, Connector.IMPLIES);
@@ -84,7 +84,7 @@ public class BCLCMP extends BCInstruction implements BCTypedInstruction{
 		 
 		//	v1 < v2 => S(t)[t<--- t-1][S(t-1) <-- 0]
 		Formula v1Less2 = new Predicate2Ar( new Stack(Expression.getCOUNTER_MINUS_1()), new Stack(Expression.COUNTER), PredicateSymbol.LESS);
-		Formula resultMinusOne = _normal_Postcondition.copy();
+		Formula resultMinusOne = (Formula)_normal_Postcondition.copy();
 		resultOne.substitute(Expression.COUNTER, Expression.getCOUNTER_MINUS_1());
 		resultZero.substitute(new Stack(Expression.getCOUNTER_MINUS_1()), new NumberLiteral(-1));
 		wps[2] = Formula.getFormula(v1Less2 , resultMinusOne, Connector.IMPLIES);

@@ -42,7 +42,7 @@ public class ConditionalExpression extends Expression {
 		if ( equals( _e1)) {
 			return _e2;
 		}
-		condition =  condition.substitute(_e1, _e2);
+		condition =  (Formula)condition.substitute(_e1, _e2);
 		Expression[] sExprs = getSubExpressions();
 		sExprs[0] = sExprs[0].substitute(_e1, _e2);
 		sExprs[1] = sExprs[1].substitute(_e1, _e2);
@@ -69,7 +69,7 @@ public class ConditionalExpression extends Expression {
 	 * @see bcexpression.Expression#copy()
 	 */
 	public Expression copy() {
-		Formula conditionCopy = condition.copy();
+		Formula conditionCopy = (Formula)condition.copy();
 		Expression expr0Copy = getSubExpressions()[0].copy();
 		Expression expr1Copy = getSubExpressions()[1].copy();
 		ConditionalExpression copy = new ConditionalExpression(conditionCopy, expr0Copy, expr1Copy);

@@ -165,7 +165,7 @@ public class Trace {
 		ExceptionHandler excH = null;
 
 		ExceptionHandler[] excHandlers = method.getExceptionHandlers();
-		// find a handler for the exception excThrownType
+		// find the first top -bottom  handler for the exception excThrownType
 		for (int i = 0; i < excHandlers.length; i++) {
 			//if the handle i doesnot handle the exception k
 			if (!JavaObjectType
@@ -202,49 +202,18 @@ public class Trace {
 		// if there is no then
 		// take the exceptional postcondition from the exsures table
 		if (excH == null) {
-			ExsuresTable exsuresTable = method.getExsures();
-			if (exsuresTable == null) {
-				return Predicate.TRUE;
-			}
-			wp =
-				exsuresTable.getExcPostconditionFor(
-					excThrownType.getSignature());
+			wp = method.getExsuresForException(excThrownType);
 			return wp;
 		}
 		int handlerStart = excH.getHandlerPC();
+		// get the component that represents the exception handle
 		HashMap excHandlerBlocks = (HashMap)excHandlerComponents.get( new Integer(handlerStart));
 		//this implementation is very bad , must be  a class which wraps the entry points and access the wp for an exception handler like this
-		wp(method.getPostcondition().copy(),method.getExsures(), excHandlerBlocks );
+		wp((Formula)method.getPostcondition().copy(),method.getExsures(), excHandlerBlocks );
 		EntryPoint excHandlerEntryPoint = (EntryPoint)Util.getBCInstructionAtPosition(method.getBytecode(), handlerStart); 
 		wp = excHandlerEntryPoint.getWp();
 		return wp;
 	}
-
-//	/**
-//	 * looks if at position i in the bytecode starts an exception handler 
-//	 * Method isStartOfExcHandlerBlock.
-//	 * @param i
-//	 * @return boolean
-//	 */
-//	private boolean isStartOfExcHandlerBlock(int pos) {
-//		ExceptionHandler[] excHandlers = method.getExceptionHandlers();
-//		if (excHandlers == null) {
-//			return false;
-//		}
-//		if (excHandlers.length == 0) {
-//			return false;
-//		}
-//		int startExcHandlerPos;
-//		for (int i = 0; i < excHandlers.length; i++) {
-//			startExcHandlerPos = excHandlers[i].getHandlerPC();
-//
-//			if (startExcHandlerPos == pos) {
-//				Util.dump("exc Handler START " + pos);
-//				return true;
-//			}
-//		}
-//		return false;
-//	}
 
 	/**
 	 * @param bytecode
@@ -426,19 +395,28 @@ public class Trace {
 		}
 		// initialises the wp for the instructions that are in the 
 		//commented 30-07
-		//		initWpExcHandlers(postcondition, exsures);
+//		initWpExcHandlers(postcondition, exsures);
 		Formula wp;
 		Iterator iter = component.values().iterator();
 		while (iter.hasNext()) {
 			Block b = (Block) (iter.next());
 			if (b.getLast() instanceof BCTypeRETURN) {
 				//				EndBlockInstruction endBlock = (BCTypeRETURN) b.getLast();
-				b.calculateRecursively(postcondition.copy(), exsures);
+				b.calculateRecursively((Formula)postcondition.copy(), exsures);
 			} else if (b.getLast() instanceof BCLoopEnd) {
 				BCLoopEnd loopEnd = (BCLoopEnd) b.getLast();
-				Formula loopInvariant = loopEnd.getInvariant().copy();
+				Formula loopInvariant = (Formula)loopEnd.getInvariant().copy();
 				b.calculateRecursively(loopInvariant, exsures);
+			} else if (b.getLast() instanceof BCATHROW ) {
+				b.calculateRecursively((Formula)postcondition.copy(), exsures);
 			}
 		}
 	}
+	/**
+	 * @return
+	 */
+	public BCMethod getMethod() {
+		return method;
+	}
+
 }

@@ -41,6 +41,10 @@ public class OLD extends JMLExpression {
 		return type;
 	}
 
+	public Expression rename(Expression expr1,  Expression expr2 ) {
+		return this;
+	}
+	
 	/* (non-Javadoc)
 	 * @see bcexpression.Expression#substitute(bcexpression.Expression, bcexpression.Expression)
 	 */

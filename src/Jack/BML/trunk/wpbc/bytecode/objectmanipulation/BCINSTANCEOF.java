@@ -121,11 +121,11 @@ public class BCINSTANCEOF
 		//S(t) <: Type && S(t) != null
 		Formula condition0 =
 		Formula.getFormula(topStackSubType, topStackNotNull, Connector.AND);
-		Formula condition0Implies = _normal_Postcondition.copy();
+		Formula condition0Implies = (Formula)_normal_Postcondition.copy();
 
 		//psi^n[S(t) <-- 1] 
 		condition0Implies =
-			condition0Implies.substitute(new Stack(Expression.COUNTER), new NumberLiteral(1));
+		(Formula)condition0Implies.substitute(new Stack(Expression.COUNTER), new NumberLiteral(1));
 
 		// 	S(t) <: Type && S(t) != null  ==> psi^n[S(t) <-- 1] 
 		Formula wpTopStackisOfSubtype =
@@ -145,10 +145,10 @@ public class BCINSTANCEOF
 	
 		//	!( S(t) <: Type)  || S(t) == null
 		Formula condition1 = Formula.getFormula(topStackNotSubType, topStackNull, Connector.OR);
-		Formula condition1implies =  _normal_Postcondition.copy();
+		Formula condition1implies =  (Formula)_normal_Postcondition.copy();
 		
 		//psi^n[S(t) <-- 0 ]
-		condition1implies = condition1implies.substitute(new Stack(Expression.COUNTER), new NumberLiteral(0) );
+		condition1implies = (Formula)condition1implies.substitute(new Stack(Expression.COUNTER), new NumberLiteral(0) );
 		
 		//	!( S(t) <: Type)  || S(t) == null ==> psi^n[S(t) <-- 0 ]
 		Formula wpTopStackisOfNotSubtype = Formula.getFormula (condition1, condition1implies, Connector.IMPLIES);

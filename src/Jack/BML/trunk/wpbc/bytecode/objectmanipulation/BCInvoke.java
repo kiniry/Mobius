@@ -8,6 +8,7 @@ package bytecode.objectmanipulation;
 
 import org.apache.bcel.generic.InstructionHandle;
 
+import bc.io.ReadAttributeException;
 import bcclass.BCConstantPool;
 import bcclass.attributes.ExsuresTable;
 import bcexpression.javatype.JavaObjectType;
@@ -78,14 +79,18 @@ public class BCInvoke extends BCFieldOrMethodInstruction {
 		//find the class where the called method is declared 
 		BCClass clazz = JavaApplication.Application.getClass(clazz_name);
 		// get the method instance
-		BCMethod method =
-			clazz.lookupMethod(
-				MethodSignature.getSignature(
-					method_constant.getName(),
-					method_constant.getSignature()));
-
+		BCMethod method = null;
+		try {
+			method =
+				clazz.lookupMethod(
+					MethodSignature.getSignature(
+						method_constant.getName(),
+						method_constant.getSignature()));
+		} catch (ReadAttributeException e) {
+			e.printStackTrace();
+		}
 		//take the method pre and postconditons
-		Formula precondition = method.getPrecondition().copy();
+		Formula precondition = (Formula) method.getPrecondition().copy();
 		int number_args = method.getNumberArguments();
 		ArithmeticExpression counter_minus_arg_num =
 			(
@@ -96,12 +101,12 @@ public class BCInvoke extends BCFieldOrMethodInstruction {
 				ExpressionConstants.SUB);
 
 		//S( t - arg_num(method(index) ))
-		Stack stack_minus_arg_number = new Stack(counter_minus_arg_num);
+		//		Stack stack_minus_arg_number = new Stack(counter_minus_arg_num);
 
 		///////////////////////////////////////
 		////////////////////////////////////////////////////////////
 		/////////////////////////////////////////////////////////////////////
-		Formula postcondition = method.getPostcondition().copy();
+		Formula postcondition = (Formula) method.getPostcondition().copy();
 
 		Variable fresh_result = null;
 		// quantify over the result of the invoked method
@@ -116,7 +121,8 @@ public class BCInvoke extends BCFieldOrMethodInstruction {
 				new Variable(
 					FreshIntGenerator.getInt(),
 					method.getReturnType());
-			postcondition = postcondition.substitute(result, fresh_result);
+			postcondition =
+				(Formula) postcondition.substitute(result, fresh_result);
 
 			quantifyOnResult =
 				new Quantificator(Quantificator.FORALL, fresh_result);
@@ -151,13 +157,13 @@ public class BCInvoke extends BCFieldOrMethodInstruction {
 
 			//pre(method(index) )[ o with local(i) <-- S( t - arg_num(method(index) ) + i )]
 			precondition =
-				precondition.substitute(
+				(Formula) precondition.substitute(
 					local_i,
 					stack_at_counter_minus_arg_num_plus_i);
 
 			//post(method(index) )[o with result <-- fresh ] [ o with local(i) <-- S(t - arg_num(method(index)) + i)]
 			postcondition =
-				postcondition.substitute(
+				(Formula) postcondition.substitute(
 					local_i,
 					stack_at_counter_minus_arg_num_plus_i);
 			if (modifiesSubst != null) {
@@ -173,22 +179,28 @@ public class BCInvoke extends BCFieldOrMethodInstruction {
 		//		//psi^n[ S(t ) <-- fresh]
 		if (fresh_result != null) {
 			_normal_Postcondition =
-				_normal_Postcondition.substitute(
+				(Formula) _normal_Postcondition.substitute(
 					new Stack(Expression.COUNTER),
 					fresh_result);
 		}
 
-		//psi^n[t <-- t - arg_n ]
+		//psi^n[t <-- t - arg_n_plus_1 ]
+		int top_minus_number_args_minus_obj_plus_res = 0; 
+		if (method.getReturnType() == JavaType.JavaVOID) {
+			top_minus_number_args_minus_obj_plus_res = number_args + 1;
+		} else {
+			top_minus_number_args_minus_obj_plus_res = number_args;
+		}
+
 		ArithmeticExpression counter_minus_arg_num_plus_1 =
 			(
 				ArithmeticExpression) ArithmeticExpression
 					.getArithmeticExpression(
 				Expression.COUNTER,
-				new NumberLiteral(number_args),
+				new NumberLiteral(top_minus_number_args_minus_obj_plus_res),
 				ExpressionConstants.SUB);
-
 		_normal_Postcondition =
-			_normal_Postcondition.substitute(
+			(Formula) _normal_Postcondition.substitute(
 				Expression.COUNTER,
 				counter_minus_arg_num_plus_1);
 
@@ -215,11 +227,15 @@ public class BCInvoke extends BCFieldOrMethodInstruction {
 
 			//create fresh variables for every modified expression
 			for (int i = 0; i < modifiesSubst.length; i++) {
-				modifies1[i] = new Variable(FreshIntGenerator.getInt(), (JavaType)modifies[i].getType());
+				modifies1[i] =
+					new Variable(
+						FreshIntGenerator.getInt(),
+						(JavaType) modifies[i].getType());
 			}
 			for (int i = 0; i < modifies1.length; i++) {
 				//rename the modified expressions by variables
-				wpNormal = wpNormal.rename(modifiesSubst[i], modifies1[i]);
+				wpNormal =
+					(Formula) wpNormal.rename(modifiesSubst[i], modifies1[i]);
 			}
 			quantificators = new Quantificator[modifies1.length];
 
@@ -227,12 +243,11 @@ public class BCInvoke extends BCFieldOrMethodInstruction {
 			for (int i = 0; i < modifies1.length; i++) {
 				quantificators[i] =
 					new Quantificator(Quantificator.FORALL, modifies1[i]);
-
 			}
 			wpNormal = Formula.getFormula(wpNormal, quantificators);
 		}
 
-		// if there is a value returned by the invoked method then quantify ove
+		// if there is a value returned by the invoked method then quantify over it
 		if (quantifyOnResult != null) {
 			wpNormal = Formula.getFormula(wpNormal, quantifyOnResult);
 		}
@@ -243,7 +258,7 @@ public class BCInvoke extends BCFieldOrMethodInstruction {
 		////////////////////////Exceptional Termination/////////////////////////////////////////////
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
 		// if one must quantify  the exceptional behaviour 
-		// for all (modifies ) (excPost(index, exc) ==> psi^exc(exc)) , then quantifyover the same the expression 
+		// for all (modifies ) (excPost(index, exc) ==> psi^exc(exc)) , then quantify over the same the expression 
 		// as in the case of normal termination except for the fresh variable that represents the result
 
 		//////////exceptional termination for any exception that may be thrown
@@ -255,7 +270,9 @@ public class BCInvoke extends BCFieldOrMethodInstruction {
 			Formula excPostOfThisMethodForExc;
 			for (int s = 0; s < exceptionsThrown.length; s++) {
 				excPostOfCalledMethodForExc =
-					method.getExsuresForException(exceptionsThrown[s]).copy();
+					(Formula) method
+						.getExsuresForException(exceptionsThrown[s])
+						.copy();
 
 				// substitute the special ExceptionVariable by a variable of the same type in the exceptional
 				// postcondition
@@ -284,7 +301,7 @@ public class BCInvoke extends BCFieldOrMethodInstruction {
 
 					//excPost(method(index) )[ o with local(i) <-- S( t - arg_num(method(index) ) + i )]
 					excPostOfCalledMethodForExc =
-						excPostOfCalledMethodForExc.substitute(
+						(Formula) excPostOfCalledMethodForExc.substitute(
 							local_i,
 							stack_at_counter_minus_arg_num_plus_i);
 
@@ -303,7 +320,7 @@ public class BCInvoke extends BCFieldOrMethodInstruction {
 					for (int j = 0; j < modifies1.length; j++) {
 						//rename the modified expressions by variables
 						wpForExcTermination[s] =
-							wpForExcTermination[s].rename(
+							(Formula) wpForExcTermination[s].rename(
 								modifiesSubst[j],
 								modifies1[j]);
 					}

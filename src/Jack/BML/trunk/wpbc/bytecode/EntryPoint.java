@@ -6,7 +6,6 @@
  */
 package bytecode;
 
-import java.util.Vector;
 
 import bcclass.attributes.ExsuresTable;
 import bytecode.branch.BCConditionalBranch;
@@ -47,7 +46,7 @@ public class EntryPoint extends BCInstruction {
 	 * @see bytecode.ByteCode#wp(formula.Formula, bcclass.attributes.ExsuresTable)
 	 */
 	public Formula wp(Formula _normal_Postcondition, ExsuresTable _exc_Postcondition) {
-		Formula wp= instr.wp(_normal_Postcondition, _exc_Postcondition); 
+		wp= instr.wp(_normal_Postcondition, _exc_Postcondition); 
 		return wp;
 	}
 

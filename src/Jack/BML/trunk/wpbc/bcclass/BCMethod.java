@@ -9,6 +9,8 @@ package bcclass;
 import java.util.Vector;
 
 import org.apache.bcel.classfile.Attribute;
+import org.apache.bcel.classfile.LineNumber;
+import org.apache.bcel.classfile.LineNumberTable;
 import org.apache.bcel.classfile.Unknown;
 import org.apache.bcel.generic.AALOAD;
 import org.apache.bcel.generic.AASTORE;
@@ -134,6 +136,7 @@ import bcclass.attributes.Assert;
 import bcclass.attributes.AssertTable;
 import bcclass.attributes.BCAttribute;
 import bcclass.attributes.BCExceptionHandlerTable;
+import bcclass.attributes.BCLineNumber;
 import bcclass.attributes.BlockSpecification;
 import bcclass.attributes.ExceptionHandler;
 import bcclass.attributes.Exsures;
@@ -150,7 +153,6 @@ import bcexpression.ExpressionConstants;
 import bcexpression.FieldAccessExpression;
 import bcexpression.LocalVariableAccess;
 import bcexpression.NumberLiteral;
-
 import bcexpression.javatype.ClassNames;
 import bcexpression.javatype.JavaObjectType;
 
@@ -240,6 +242,7 @@ import bytecode.stackinstruction.BCPOP2;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class BCMethod {
+
 	private BCInstruction[] bytecode;
 	private Trace trace;
 	private String name;
@@ -252,6 +255,7 @@ public class BCMethod {
 
 	private Formula proofObligation;
 
+	private BCLineNumber[] lineNumberTable;
 	private BCLocalVariable[] localVariables;
 	private BCConstantPool constantPool;
 	//the constant pool added after to the class file ad an attribute
@@ -265,6 +269,10 @@ public class BCMethod {
 	private JavaObjectType[] exceptionsThrown;
 	private BCExceptionHandlerTable exceptionHandlerTable;
 
+	private boolean initialised = false;
+
+	private MethodGen bcelMethod;
+
 	/**
 	 * @param _mg
 	 * @param _bcel_cp -
@@ -273,40 +281,63 @@ public class BCMethod {
 	 *            structures
 	 * @param _constantPool
 	 */
-	public BCMethod(
-		MethodGen _mg,
-		ConstantPoolGen _bcel_cp,
-		BCConstantPool _constantPool)
+	public BCMethod(MethodGen _mg, BCConstantPool _constantPool)
 		throws ReadAttributeException {
 		setLocalVariables(_mg.getLocalVariables());
 		setExceptionsThrown(_mg.getExceptions());
 		constantPool = _constantPool;
 		name = _mg.getName();
 		signature = _mg.getSignature();
-
-		Util.dump(
-			"class where declared:  "
-				+ _mg.getClassName()
-				+ " | methodName:  "
-				+ _mg.getName()
-				+ "   ---");
-		Util.dump(" method signature " + signature);
-		bytecode =
-			BCMethod.wrapByteCode(
-				_mg.getInstructionList(),
-				_mg,
-				_bcel_cp,
-				constantPool,
-				localVariables);
-		exceptionHandlerTable =
-			new BCExceptionHandlerTable(_mg.getExceptionHandlers());
-		setAttributes(_mg.getAttributes());
 		setArgNames(_mg.getArgumentNames());
 		setArgumentTypes(_mg.getArgumentTypes());
 		setReturnType(_mg.getReturnType());
-		setSpecification();
+		bcelMethod = _mg;
+
+//		Util.dump(
+//			"init method  delcared in class:  "
+//				+ _mg.getClassName()
+//				+ " | methodName:  "
+//				+ _mg.getName()
+//				+ "   ---");
+//		Util.dump(" method signature " + signature);
+
 	}
 
+	// called from outside when the method should be initialised
+	public void initMethod() throws ReadAttributeException {
+		if (initialised) {
+			return;
+		}
+		bytecode =
+			BCMethod.wrapByteCode(bcelMethod, constantPool, localVariables);
+		exceptionHandlerTable =
+			new BCExceptionHandlerTable(bcelMethod.getExceptionHandlers());
+		setLineNumbers(
+			bcelMethod.getLineNumberTable(bcelMethod.getConstantPool()));
+		setAttributes(bcelMethod.getAttributes());
+		setSpecification();
+		initTrace();
+		setAsserts();
+		setLoopInvariants();
+		initialised = true;
+	}
+
+	private void setLineNumbers(LineNumberTable _lineNumberTable) {
+		LineNumber[] lineNumbers = _lineNumberTable.getLineNumberTable();
+		if (lineNumbers == null) {
+			return;
+		}
+		if (lineNumbers.length == 0) {
+			return;
+		}
+		this.lineNumberTable = new BCLineNumber[lineNumbers.length];
+		for (int i = 0; i < lineNumbers.length; i++) {
+			lineNumberTable[i] =
+				new BCLineNumber(
+					lineNumbers[i].getStartPC(),
+					lineNumbers[i].getLineNumber());
+		}
+	}
 	/**
 	 * called in BCClass.initMethods(Method[] _methods, ConstantPoolGen cp)
 	 * sets the assertions if there are any
@@ -349,7 +380,7 @@ public class BCMethod {
 			SingleLoopSpecification loop = loops[i];
 			int pos = loop.getCpIndex();
 			Formula loopInvariant = loop.getInvariant();
-			Formula decreases = loop.getDecreases();
+			Expression decreases = loop.getDecreases();
 			BCLoopStart loopStart =
 				(BCLoopStart) Util.getBCInstructionAtPosition(bytecode, pos);
 			loopStart.setInvariant(loopInvariant);
@@ -376,7 +407,10 @@ public class BCMethod {
 			if (_attributes[i] instanceof Unknown) {
 				privateAttr = (Unknown) _attributes[i];
 				BCAttribute bcAttribute =
-					AttributeReader.readAttribute(privateAttr, constantPool);
+					AttributeReader.readAttribute(
+						privateAttr,
+						constantPool,
+						lineNumberTable);
 				if (bcAttribute instanceof MethodSpecification) {
 					methodSpecification = (MethodSpecification) bcAttribute;
 				} else if (bcAttribute instanceof AssertTable) {
@@ -465,7 +499,7 @@ public class BCMethod {
 			Expression modif_loc1 = new LocalVariableAccess(1);
 			Expression modif_loc2 = new LocalVariableAccess(2);
 			Expression[] modifies = new Expression[] { modif_loc1, modif_loc2 };
-			
+
 			SpecificationCase specCase =
 				new SpecificationCase(
 					precondition,
@@ -474,8 +508,11 @@ public class BCMethod {
 					null);
 			//LOOP SPEC
 			// old(n) == n + a*2; 
-			methodSpecification = methodSpecification = new MethodSpecification(new SpecificationCase[] { specCase });
-			
+			methodSpecification =
+				new MethodSpecification(
+					Predicate.TRUE,
+					new SpecificationCase[] { specCase });
+
 			ArithmeticExpression loc1_mult_2 =
 				(
 					ArithmeticExpression) ArithmeticExpression
@@ -500,12 +537,12 @@ public class BCMethod {
 
 			Expression[] loopModif =
 				new Expression[] { modif_loc1, modif_loc2 };
-			
+
 			SingleLoopSpecification loopSpec =
-							new SingleLoopSpecification(11, loopModif, invariant, null);
-						SingleLoopSpecification[] loopSpecs =
-							new SingleLoopSpecification[] { loopSpec };
-						loopSpecification = new LoopSpecification(loopSpecs);
+				new SingleLoopSpecification(11, loopModif, invariant, null);
+			SingleLoopSpecification[] loopSpecs =
+				new SingleLoopSpecification[] { loopSpec };
+			loopSpecification = new LoopSpecification(loopSpecs);
 
 		}
 		if (name.equals("testMethodInvokation")) {
@@ -519,7 +556,9 @@ public class BCMethod {
 			SpecificationCase specCase =
 				new SpecificationCase(precondition, postcondition, null, null);
 			methodSpecification =
-				new MethodSpecification(new SpecificationCase[] { specCase });
+				new MethodSpecification(
+					Predicate.TRUE,
+					new SpecificationCase[] { specCase });
 		}
 
 		if (name.equals("testThisAccess")) {
@@ -539,7 +578,7 @@ public class BCMethod {
 				new FieldAccessExpression(
 					new ArrayLengthConstant(),
 					new FieldAccessExpression(
-						(BCConstantFieldRef) constantPool.getConstant(22),
+						(BCConstantFieldRef) constantPool.getConstant(15),
 						new LocalVariableAccess(0)));
 			Formula exsPost =
 				new Predicate2Ar(
@@ -560,7 +599,9 @@ public class BCMethod {
 					modifies,
 					exsTable);
 			methodSpecification =
-				new MethodSpecification(new SpecificationCase[] { specCase });
+				new MethodSpecification(
+					Predicate.TRUE,
+					new SpecificationCase[] { specCase });
 
 		}
 
@@ -591,7 +632,9 @@ public class BCMethod {
 					modifies,
 					null);
 			methodSpecification =
-				new MethodSpecification(new SpecificationCase[] { specCase });
+				new MethodSpecification(
+					Predicate.TRUE,
+					new SpecificationCase[] { specCase });
 
 			// LOOP SPEC
 			ArithmeticExpression loc_4_mult_loc_2 =
@@ -684,11 +727,14 @@ public class BCMethod {
 	 *         of the method
 	 */
 	public Formula getExsuresForException(JavaObjectType _exc_type) {
+		if (methodSpecification == null) {
+			return Predicate.FALSE;
+		}
 		SpecificationCase[] specCases =
 			methodSpecification.getSpecificationCases();
 		ExsuresTable exsures = specCases[0].getExsures();
 		if (exsures == null) {
-			return Predicate.TRUE;
+			return Predicate.FALSE;
 		}
 		Formula exsuresPredicate =
 			exsures.getExcPostconditionFor(_exc_type.getSignature());
@@ -699,6 +745,9 @@ public class BCMethod {
 	 *         of the method
 	 */
 	public Formula getPostcondition() {
+		if (methodSpecification == null) {
+			return Predicate.TRUE;
+		}
 		SpecificationCase[] specCases =
 			methodSpecification.getSpecificationCases();
 		return specCases[0].getPostcondition();
@@ -708,6 +757,9 @@ public class BCMethod {
 	 *         execution of the method
 	 */
 	public Formula getPrecondition() {
+		if (methodSpecification == null) {
+			return Predicate.TRUE;
+		}
 		SpecificationCase[] specCases =
 			methodSpecification.getSpecificationCases();
 		return specCases[0].getPrecondition();
@@ -738,12 +790,11 @@ public class BCMethod {
 	}
 
 	public static BCInstruction[] wrapByteCode(
-		InstructionList _il,
 		MethodGen _mg,
-		ConstantPoolGen _bcel_cp,
 		BCConstantPool constantPool,
 		BCLocalVariable[] _lv) {
-
+		ConstantPoolGen _bcel_cp = _mg.getConstantPool();
+		InstructionList _il = _mg.getInstructionList();
 		if (_il == null) {
 			return null;
 		}
@@ -999,14 +1050,14 @@ public class BCMethod {
 					}
 				}
 				_bc[i].setBCIndex(i);
-				Util.dump(_bc[i].toString());
+				//				Util.dump(_bc[i].toString());
 				//set the bytecode command at the previous position and at the
 				// next positition
 				if (i > 0) {
 					_bc[i].setPrev(_bc[i - 1]);
 					_bc[i - 1].setNext(_bc[i]);
-					Util.dump( " ::::: prev  : " + _bc[i - 1]);
-					
+					//					Util.dump(" ::::: prev  : " + _bc[i - 1]);
+
 				}
 			}
 			_bc = Util.setTargets(_bc);
@@ -1020,6 +1071,9 @@ public class BCMethod {
 	 * @return
 	 */
 	public Expression[] getModifies() {
+		if (methodSpecification == null) {
+			return null;
+		}
 		SpecificationCase[] specCases =
 			methodSpecification.getSpecificationCases();
 		return specCases[0].getModifies();
@@ -1120,4 +1174,7 @@ public class BCMethod {
 		return bytecode;
 	}
 
+	public String toString() {
+		return name +  "  " +  signature;
+	}
 }

@@ -8,7 +8,10 @@ package bytecode.stackinstruction;
 
 import org.apache.bcel.generic.InstructionHandle;
 
+import formula.Connector;
 import formula.Formula;
+import formula.atomic.Predicate2Ar;
+import formula.atomic.PredicateSymbol;
 import bcclass.attributes.ExsuresTable;
 import bcexpression.Expression;
 import bcexpression.vm.Stack;
@@ -41,10 +44,14 @@ public class BCDUP extends BCInstruction implements BCStackInstruction {
 	 */
 	public Formula wp(Formula _normal_Postcondition, ExsuresTable _exc_Postcondition) {
 		Formula wp;
-		wp = _normal_Postcondition.substitute(Expression.COUNTER, Expression.getCOUNTER_PLUS_1());
+		wp = (Formula)_normal_Postcondition.substitute(Expression.COUNTER, Expression.getCOUNTER_PLUS_1());
+
+//		Predicate2Ar top_stack_eq_top_stack_minus_1 = new Predicate2Ar(new Stack(Expression.COUNTER) , new Stack(Expression.getCOUNTER_PLUS_1()), PredicateSymbol.EQ );
+//		wp = Formula.getFormula( wp, top_stack_eq_top_stack_minus_1, Connector.AND);
+//		
 		Stack topStack = new Stack(Expression.COUNTER);
 		Stack topStack_plus_1 = new Stack(Expression.getCOUNTER_PLUS_1());
-		wp = wp.substitute(topStack, topStack_plus_1);
+		wp = (Formula)wp.substitute(topStack_plus_1, topStack);
 		return wp;
 	}
 	

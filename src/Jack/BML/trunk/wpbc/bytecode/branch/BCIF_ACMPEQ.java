@@ -62,7 +62,7 @@ public class BCIF_ACMPEQ extends BCConditionalBranch {
 		Formula stackTop_not_equals_stackTop_minus_1 = new Predicate2Ar(new Stack(Expression.COUNTER) , new Stack( Expression.getCOUNTER_MINUS_1()), PredicateSymbol.NOTEQ );
 
 		//psi^n[t <-- t-2]
-		Formula not_eq_branch = _normal_Postcondition.substitute(Expression.COUNTER, Expression.getCOUNTER_MINUS_2());
+		Formula not_eq_branch = (Formula)_normal_Postcondition.substitute(Expression.COUNTER, Expression.getCOUNTER_MINUS_2());
 	
 		//S(t)!= S(t-1) == > psi^n[t <-- t-2]
 		wp = Formula.getFormula(stackTop_not_equals_stackTop_minus_1, not_eq_branch , Connector.IMPLIES );		
@@ -80,7 +80,7 @@ public class BCIF_ACMPEQ extends BCConditionalBranch {
 		//S(t)== S(t-1)
 		Formula stackTop_equals_stackTop_minus_1 = new Predicate2Ar(new Stack(Expression.COUNTER) , new Stack( Expression.getCOUNTER_MINUS_1()), PredicateSymbol.EQ );
 		
-		Formula eq_branch = _normal_Postcondition.substitute( Expression.COUNTER, Expression.getCOUNTER_MINUS_2());
+		Formula eq_branch = (Formula)_normal_Postcondition.substitute( Expression.COUNTER, Expression.getCOUNTER_MINUS_2());
 		//S(t)== S(t-1) == >  getWPBranch[t<-- t-2]
 		wp = Formula.getFormula(stackTop_equals_stackTop_minus_1, eq_branch, Connector.IMPLIES );
 		return wp;

@@ -56,7 +56,7 @@ public interface  Code {
 	public static final int TYPE_OF = 0x50; // \typeof(expr) : \TYPE
 	public static final int ELEM_TYPE = 0x51; //  \elemtype(array_expr)
 	public static final int RESULT = 0x52; //  \result
-	public static final int ALL_ARRAY_ELEM =  0x53; // *
+//	public static final int ALL_ARRAY_ELEM =  0x53; // *
 	public static final int _type = 0x54; //  \type(javaType)  : \TYPE
 	public static final int  TYPE = 0x55 ; //  \TYPE
 	public static final int ARRAYLENGTH = 0x56;
@@ -86,9 +86,12 @@ public interface  Code {
 	
 	public static final int JAVA_TYPE  = 0xC0;
 
-	public static final int MODIFIES_IDENT  = 0xB0;
-	public static final int MODIFIES_DOT = 0xB1;
-	
-	
-	
+	public static final int MODIFIES_EVERYTHING  = 0xD0;
+	public static final int MODIFIES_NOTHING = 0xD1;
+	public static final int MODIFIES_IDENT  = 0xD2;
+	public static final int MODIFIES_DOT = 0xD3;
+	public static final int MODIFIES_ARRAY = 0xD4;
+	public static final int MODIFIES_SINGLE_INDICE = 0xD5;
+	public static final int MODIFIES_INTERVAL = 0xD6;
+	public static final int MODIFIES_STAR = 0xD7;		
 }

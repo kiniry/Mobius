@@ -7,6 +7,7 @@
 package bytecode;
 
 import bcclass.attributes.ExsuresTable;
+import bcexpression.Expression;
 import bytecode.branch.BCConditionalBranch;
 import formula.Connector;
 import formula.Formula;
@@ -24,7 +25,7 @@ public class BCLoopEnd extends BCInstruction {
 	private Formula invariant;
 	
 	// when a terminationmust be proven - and may be decreases is an expression rather  than formula ? 
-	private Formula decreases;
+	private Expression decreases;
 
 	
 	/**
@@ -83,15 +84,15 @@ public class BCLoopEnd extends BCInstruction {
 	/**
 	 * @return
 	 */
-	public Formula getDecreases() {
+	public Expression getDecreases() {
 		return decreases;
 	}
 
 	/**
 	 * @param formula
 	 */
-	public void setDecreases(Formula formula) {
-		decreases = formula;
+	public void setDecreases(Expression expression) {
+		decreases = expression;
 	}
 
 	/**

@@ -61,8 +61,8 @@ public abstract class BCExceptionThrower extends BCInstruction {
 		JavaObjectType _exc_type,
 		ExsuresTable _exc_post) {
 			Formula _exc_termination = trace.getWpForExcThrownAt(_exc_type, getPosition());
-			Formula _exc_termination_copy = _exc_termination.copy();
-			_exc_termination_copy = _exc_termination_copy.substitute(
+			Formula _exc_termination_copy = (Formula)_exc_termination.copy();
+			_exc_termination_copy = (Formula)_exc_termination_copy.substitute(
 				new EXCEPTIONVariable(FreshIntGenerator.getInt(), _exc_type),
 				new Reference(FreshIntGenerator.getInt(), _exc_type));
 			return _exc_termination_copy;
@@ -70,5 +70,9 @@ public abstract class BCExceptionThrower extends BCInstruction {
 
 	public void setTrace(Trace _trace) {
 		trace = _trace;
+	}
+	
+	public Trace  getTrace() {
+		return trace;
 	}
 }

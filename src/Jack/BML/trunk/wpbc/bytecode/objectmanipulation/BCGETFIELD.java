@@ -87,7 +87,7 @@ public class BCGETFIELD extends BCFieldOrMethodInstruction {
 			
 		Stack stackTop  = new Stack(Expression.COUNTER);
 		Formula stackTopNotNullImplies =
-			_normal_Postcondition.substitute(stackTop , fieldAccess);
+		(Formula)_normal_Postcondition.substitute(stackTop , fieldAccess);
 
 //		Util.dump("getField   stackTopNotNullImplies " + getInstructionHandle().getInstruction() +  "  " +stackTopNotNullImplies);
 

@@ -21,7 +21,6 @@ import constants.BCConstantFieldRef;
 public class FieldAccessExpression extends Expression {
 	private BCConstantFieldRef constantFieldRef;
 
-//	private Vector with;
 	/**
 	 * @param _right
 	 * @param _left
@@ -32,9 +31,9 @@ public class FieldAccessExpression extends Expression {
 		super(_obj_ref);
 		constantFieldRef = _constantFieldRef;
 	}
+	
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see bcexpression.Expression#getType()
 	 */
 	public BCType getType() {
@@ -47,7 +46,6 @@ public class FieldAccessExpression extends Expression {
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see bcexpression.Expression#equals(bcexpression.Expression)
 	 */
 	public boolean equals(Expression _expr) {
@@ -76,18 +74,18 @@ public class FieldAccessExpression extends Expression {
 	 */
 
 	/* (non-Javadoc)
-		 * @see bcexpression.Expression#substitute(bcexpression.Expression, bcexpression.Expression)
-		 */
+	 * @see bcexpression.Expression#substitute(bcexpression.Expression, bcexpression.Expression)
+	*/
 	public Expression substitute(Expression _e1, Expression _e2) {
 //		Util.dump("***************************************************");
-//		Util.dump("*****FieldAccessExpression.substitute : " + toString() + "[" + _e1.toString() + " <--- " + _e2.toString() + "]") ;
+//		Util.dump("*****FieldAccessExpression.substitute : " + toString() + "[" + _e1.toString() + " <--- " + _e2.toString() + "]");
 		if (this.equals(_e1)) {
 			return _e2;
 		}
-		// the object whose field is dereferenced by thisobject 
+		// the object whose field is dereferenced by this object 
 		Expression obj = getSubExpressions()[0];
 		// in case _e1 is not an object of type FieldAccessExpression
-		if ( ! (_e1 instanceof FieldAccessExpression))  {
+		if ( !( _e1 instanceof FieldAccessExpression ) )  {
 			obj = obj.substitute(_e1, _e2);
 			setSubExpressions(new Expression[]{obj});
 			return this;

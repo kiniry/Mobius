@@ -41,7 +41,7 @@ public class BCIFGT extends BCConditionalBranch {
 				Formula wp;	
 				// in case of executing next instruction - S( t ) <= 0
 				Formula stackTop_not_grt_0 =  new Predicate2Ar(new Stack(Expression.COUNTER), new NumberLiteral(0), PredicateSymbol.LESSEQ);
-				Formula not_grt_branch = _normal_Postcondition.substitute(Expression.COUNTER, Expression.getCOUNTER_MINUS_1());
+				Formula not_grt_branch = (Formula)_normal_Postcondition.substitute(Expression.COUNTER, Expression.getCOUNTER_MINUS_1());
 				wp = Formula.getFormula( stackTop_not_grt_0, not_grt_branch, Connector.IMPLIES);
 				return wp;
 			}
@@ -53,7 +53,7 @@ public class BCIFGT extends BCConditionalBranch {
 				Formula wp;
 				//in case of jump - S( t ) > 0
 				Formula stackTop_grt_0 = new Predicate2Ar(new Stack(Expression.COUNTER), new NumberLiteral(0), PredicateSymbol.GRT);
-				Formula grt_branch =  _normal_Postcondition.substitute(Expression.COUNTER, Expression.getCOUNTER_MINUS_1());
+				Formula grt_branch =  (Formula)_normal_Postcondition.substitute(Expression.COUNTER, Expression.getCOUNTER_MINUS_1());
 				wp = Formula.getFormula( stackTop_grt_0, grt_branch, Connector.IMPLIES);
 				return wp;
 			}

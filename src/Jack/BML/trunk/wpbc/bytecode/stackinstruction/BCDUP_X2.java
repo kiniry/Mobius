@@ -95,15 +95,15 @@ public class BCDUP_X2 extends BCInstruction implements BCStackInstruction {
 			Formula.getFormula(three_on_stack_top_of_comp_type_1, Connector.AND);
 
 		// psi^n[t <-- t+1][S(t+1) <-- S(t)][S(t)<-- S(t-1)][S(t-1) <-- S(t -2 )][S(t-2) <-- S(t )]
-		Formula f1 = _normal_Postcondition.copy();
+		Formula f1 = (Formula)_normal_Postcondition.copy();
 		f1 =
-			f1.substitute(
+		(Formula)f1.substitute(
 				Expression.COUNTER,
 				Expression.getCOUNTER_PLUS_1());
-		f1 = f1.substitute(new Stack(Expression.getCOUNTER_PLUS_1()), new Stack(Expression.COUNTER));
-		f1 = f1.substitute(new Stack(Expression.COUNTER), new Stack(Expression.getCOUNTER_MINUS_1()));
-		f1 = f1.substitute(new Stack(Expression.getCOUNTER_MINUS_1()), stackTop_minus_2);
-		f1 = f1.substitute(stackTop_minus_2, new Stack(Expression.COUNTER));
+		f1 = (Formula)f1.substitute(new Stack(Expression.getCOUNTER_PLUS_1()), new Stack(Expression.COUNTER));
+		f1 = (Formula)f1.substitute(new Stack(Expression.COUNTER), new Stack(Expression.getCOUNTER_MINUS_1()));
+		f1 = (Formula)f1.substitute(new Stack(Expression.getCOUNTER_MINUS_1()), stackTop_minus_2);
+		f1 = (Formula)f1.substitute(stackTop_minus_2, new Stack(Expression.COUNTER));
 
 		//		 (S(t-2), S(t - 1), S(t) instanceof  CompType1)  == > psi^n[t <-- t+1][S(t+1) <-- S(t)][S(t)<-- S(t-1)][S(t-1) <-- S(t -2 )][S(t-2) <-- S(t )]
 		Formula branch1 =
@@ -130,14 +130,14 @@ public class BCDUP_X2 extends BCInstruction implements BCStackInstruction {
 				stackTop_minus1_ofComp_type2,
 				Connector.AND);
 
-		Formula f2 = _normal_Postcondition.copy();
+		Formula f2 = (Formula)_normal_Postcondition.copy();
 		f2 =
-			f2.substitute(
+		(Formula)f2.substitute(
 				Expression.COUNTER,
 				Expression.getCOUNTER_PLUS_1());
-		f2 = f2.substitute(new Stack(Expression.getCOUNTER_PLUS_1()), new Stack(Expression.COUNTER));
-		f2 = f2.substitute(new Stack(Expression.COUNTER), new Stack(Expression.getCOUNTER_MINUS_1()));
-		f2 = f2.substitute(new Stack(Expression.getCOUNTER_MINUS_1()), new Stack(Expression.COUNTER));
+		f2 = (Formula)f2.substitute(new Stack(Expression.getCOUNTER_PLUS_1()), new Stack(Expression.COUNTER));
+		f2 = (Formula)f2.substitute(new Stack(Expression.COUNTER), new Stack(Expression.getCOUNTER_MINUS_1()));
+		f2 = (Formula)f2.substitute(new Stack(Expression.getCOUNTER_MINUS_1()), new Stack(Expression.COUNTER));
 
 		Formula branch2 = Formula.getFormula(condition, f2, Connector.IMPLIES);
 		wp = Formula.getFormula(branch1, branch2, Connector.AND);

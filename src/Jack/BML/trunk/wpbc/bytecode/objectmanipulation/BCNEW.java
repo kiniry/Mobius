@@ -78,11 +78,11 @@ public class BCNEW extends BCAllocationInstruction implements BCCPInstruction  {
 	 */
 	public Formula wp(Formula _normal_Postcondition, ExsuresTable _exc_Postcondition) {
 		Formula wp;
-		wp =   _normal_Postcondition.substitute(Expression.COUNTER, Expression.getCOUNTER_PLUS_1());
+		wp =   (Formula)_normal_Postcondition.substitute(Expression.COUNTER, Expression.getCOUNTER_PLUS_1());
 		Stack topStack_plus1 = new Stack(Expression.getCOUNTER_PLUS_1());
 		Reference  new_ref= new Reference(FreshIntGenerator.getInt(), getType() );
 		
-		wp = wp.substitute(topStack_plus1,  new_ref );
+		wp =  (Formula)wp.substitute(topStack_plus1,  new_ref );
 		
 		return wp;
 	}

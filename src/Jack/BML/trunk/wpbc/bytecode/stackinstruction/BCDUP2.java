@@ -60,11 +60,11 @@ public class BCDUP2 extends BCInstruction implements BCStackInstruction {
 		Stack stackTop_minus1 = new Stack(Expression.getCOUNTER_MINUS_1());
 
 		wp =
-			_normal_Postcondition.substitute(
+		(Formula)_normal_Postcondition.substitute(
 				Expression.COUNTER,
 				Expression.getCOUNTER_PLUS_2());
-		wp = wp.substitute(new Stack(Expression.getCOUNTER_PLUS_2()), new Stack(Expression.COUNTER));
-		wp = wp.substitute(new Stack(Expression.getCOUNTER_PLUS_1()), stackTop_minus1);
+		wp = (Formula) wp.substitute(new Stack(Expression.getCOUNTER_PLUS_2()), new Stack(Expression.COUNTER));
+		wp = (Formula)wp.substitute(new Stack(Expression.getCOUNTER_PLUS_1()), stackTop_minus1);
 		return wp;
 	}
 

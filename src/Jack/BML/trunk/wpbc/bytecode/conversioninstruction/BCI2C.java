@@ -60,7 +60,7 @@ public class BCI2C extends BCConversionInstruction {
 		// S(t) & 0xFFFF
 		BitExpression mask = new BitExpression(new Stack(Expression.COUNTER ), new NumberLiteral(0x0000FFFF), ExpressionConstants.BITWISEAND );
 		// psi^n[S(t)<--- S(t) & 0xFFFF]
-		wp = _normal_Postcondition.substitute(new Stack(Expression.COUNTER ), mask);
+		wp = (Formula)_normal_Postcondition.substitute(new Stack(Expression.COUNTER ), mask);
 		return wp;
 	}
 
