@@ -15,18 +15,7 @@ TypeConversion: p() ...
     [TIME]  passed
 
 TypeConversion: getC() ...
-------------------------------------------------------------------------
-TypeConversion.java:34: Warning: Postcondition possibly not established (Post)
-        public Class getC() { return getClass(); }
-                                                 ^
-Associated declaration is "TypeConversion.java", line 32, col 5:
-        //@ ensures \result == \typeof(this);
-            ^
-Execution trace information:
-    Executed return in "TypeConversion.java", line 34, col 23.
-
-------------------------------------------------------------------------
-    [TIME]  failed
+    [TIME]  passed
 
 TypeConversion: tt(TYPE) ...
     [TIME]  passed
@@ -46,4 +35,3 @@ TypeConversion: t() ...
 TypeConversion: TypeConversion() ...
     [TIME]  passed
   [TIME total]
-1 warning

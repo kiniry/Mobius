@@ -31,7 +31,7 @@ public class TypeConversion {
 
 	//@ ensures \result == \typeof(this);
 	//@ pure
-	public Class getC() { return getClass(); }
+	public Class getC() { return getClass(); } 
 
 	/*@ ensures \result;
 	    pure
