@@ -116,7 +116,7 @@ public class TeeOutputStream extends FilterOutputStream
      * method of its two underlying output streams. </p>
      *
      * @exception  IOException  if an I/O error occurs.
-     * @see        java.io.FilterOutputStream#out
+     * @see        java.io.FilterOutputStream#flush
      */
     public void flush() throws IOException {
 	out.flush();
@@ -134,7 +134,7 @@ public class TeeOutputStream extends FilterOutputStream
      *
      * @exception  IOException  if an I/O error occurs.
      * @see        java.io.FilterOutputStream#flush()
-     * @see        java.io.FilterOutputStream#out
+     * @see        java.io.FilterOutputStream#close
      */
     public void close() throws IOException {
 	try {

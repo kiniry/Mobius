@@ -149,7 +149,7 @@ public class PPOutputStream extends FilterOutputStream {
      * <p>
      *
      * @exception  IOException  if an I/O error occurs.
-     * @see        java.io.FilterOutputStream#out
+     * @see        java.io.FilterOutputStream#flush
      */
     public void flush() throws IOException {
 	super.flush();
@@ -162,7 +162,7 @@ public class PPOutputStream extends FilterOutputStream {
      *
      * @exception  IOException  if an I/O error occurs.
      * @see        java.io.FilterOutputStream#flush()
-     * @see        java.io.FilterOutputStream#out
+     * @see        java.io.FilterOutputStream#close
      */
     public void close() throws IOException {
 	try {
