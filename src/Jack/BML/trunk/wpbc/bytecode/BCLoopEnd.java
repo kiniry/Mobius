@@ -18,6 +18,8 @@ import bytecode.branch.BCConditionalBranch;
 import formula.Connector;
 import formula.Formula;
 import formula.atomic.Predicate;
+import formula.atomic.Predicate2Ar;
+import formula.atomic.PredicateSymbol;
 
 /**
  * @author mpavlova
@@ -123,6 +125,13 @@ public class BCLoopEnd extends BCInstruction {
 			}
 		}
 		
+		// termination
+		Expression decreasesCopy = decreases.copy();
+		Expression decreasesAtLoopStart = decreases.copy() ;
+		decreasesAtLoopStart = decreasesAtLoopStart.atState(loopStartPosition);
+		
+		Predicate2Ar terminationCondition = new Predicate2Ar( decreasesCopy, decreasesAtLoopStart,  PredicateSymbol.LESS);
+		
 //		 NB : with loop_end_state
 		Formula vectorStateAssumption = Formula.getFormula( localVarStateAssume, vectorOfFieldToAssume, Connector.AND);
 		
@@ -134,6 +143,9 @@ public class BCLoopEnd extends BCInstruction {
 		Formula varsNotChanged = method.getVectorAtStateToHold( loopStartPosition, modifies);
  		// wp for invariant and modifies correctness
 		wp = Formula.getFormula( wp , varsNotChanged, Connector.AND );
+		
+		// and alsoi terminatiopn cotrrectness
+		wp = Formula.getFormula( wp, terminationCondition, Connector.AND);
 		
 		// NB : with loop_end_state
 		wp = Formula.getFormula( vectorStateAssumption, wp, Connector.IMPLIES);
