@@ -1,0 +1,11 @@
+ESC/Java version VERSION
+  Prover started:TIME
+
+Nowarn ...
+
+Nowarn: m() ...
+    [TIME]  passed
+
+Nowarn: Nowarn() ...
+    [TIME]  passed
+  [TIME total]
