@@ -158,7 +158,7 @@ public class DSA {
 						       xpDecl );
 
 	  // Calculate the new value of "x'".
-	  Expr nuv;
+	  Expr nuv = null;
 	  switch( g.getTag() ) {
 	    case TagConstants.GETSCMD:
 	    case TagConstants.RESTOREFROMCMD:
@@ -170,6 +170,7 @@ public class DSA {
 	    case TagConstants.SUBGETSCMD:
 	      {
 		SubGetsCmd sgc = (SubGetsCmd)g;
+		if (sgc.rhs == null) break;
 		nuv = GC.nary(Location.NULL, Location.NULL,
 			      TagConstants.STORE, sgc.v, sgc.index, sgc.rhs);
 		break;
@@ -178,6 +179,7 @@ public class DSA {
 	    case TagConstants.SUBSUBGETSCMD:
 	      {
 		SubSubGetsCmd ssgc = (SubSubGetsCmd)g;
+		if (ssgc.rhs == null) break;
 		
 		Expr innermap = GC.nary(Location.NULL,
 					Location.NULL,
@@ -198,11 +200,15 @@ public class DSA {
 	  }
 
           out.x = VarMap.bottom();
-	  nuv = map.apply( nuv );
-	  if( GC.isSimple( nuv ) ) {
+	  if (nuv == null) {
+	    out.n = map.extend( gc.v.decl, xpRef);
+	    return GC.skip();
+	  } else if( GC.isSimple( nuv ) ) {
+	    nuv = map.apply( nuv );
 	    out.n = map.extend( gc.v.decl, nuv );
 	    return GC.skip();
 	  } else {
+	    nuv = map.apply( nuv );
 	    out.n = map.extend(gc.v.decl, xpRef);
 	    return GC.assume(GC.nary( gc.v.loc, gc.v.loc,
 				      TagConstants.ANYEQ, xpRef, nuv ));
@@ -389,7 +395,7 @@ public class DSA {
 	  AssignCmd gc = (AssignCmd)g;
 
 	  // Calculate the rhs of the assignment
-	  Expr nuv;
+	  Expr nuv = null;
 	  switch( g.getTag() ) {
 	    case TagConstants.GETSCMD:
 	    case TagConstants.RESTOREFROMCMD:
@@ -401,6 +407,7 @@ public class DSA {
 	    case TagConstants.SUBGETSCMD:
 	      {
 		SubGetsCmd sgc = (SubGetsCmd)g;
+		if (sgc.rhs == null) break;
 		nuv = GC.nary(Location.NULL, Location.NULL,
 			      TagConstants.STORE, sgc.v, sgc.index, sgc.rhs);
 		break;
@@ -409,6 +416,7 @@ public class DSA {
 	    case TagConstants.SUBSUBGETSCMD:
 	      {
 		SubSubGetsCmd ssgc = (SubSubGetsCmd)g;
+		if (ssgc.rhs == null) break;
 		
 		Expr innermap = GC.nary(Location.NULL,
 					Location.NULL,
@@ -428,11 +436,13 @@ public class DSA {
 	      nuv = null; // dummy assignment
 	  }
 
-	  RefInt pi = new RefInt(id);
-	  for (Enumeration e = Substitute.freeVars(nuv).elements();
-	       e.hasMoreElements(); ) {
-	    GenericVarDecl v = (GenericVarDecl)e.nextElement();
-	    lastVarUse.put(v, pi);
+	  if (nuv != null) {
+	      RefInt pi = new RefInt(id);
+	      for (Enumeration e = Substitute.freeVars(nuv).elements();
+		   e.hasMoreElements(); ) {
+		GenericVarDecl v = (GenericVarDecl)e.nextElement();
+		lastVarUse.put(v, pi);
+	      }
 	  }
 	  break;
 	}

@@ -424,7 +424,7 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
       else
 	write(o, escjava.translate.UniqName.variable(gc.v.decl));
       write(o, " = ");
-      print(o, ind, gc.rhs);
+      if (gc.rhs != null) print(o, ind, gc.rhs);
       return;
     }
 
@@ -437,7 +437,7 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
       write(o, "[");
       print(o, ind, sgc.index);
       write(o, "] = ");
-      print(o, ind, sgc.rhs);
+      if (sgc.rhs != null) print(o, ind, sgc.rhs);
       return;
     }
 
@@ -452,7 +452,7 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
       write(o, "][");
       print(o, ind, ssgc.index2);
       write(o, "] = ");
-      print(o, ind, ssgc.rhs);
+      if (ssgc.rhs != null) print(o, ind, ssgc.rhs);
       return;
     }
 
@@ -978,6 +978,7 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
     case TagConstants.ASFIELD:
     case TagConstants.ASLOCKSET:
     case TagConstants.BOOLAND:
+    case TagConstants.BOOLANDX:
     case TagConstants.BOOLEQ:
     case TagConstants.BOOLIMPLIES:
     case TagConstants.BOOLNE:

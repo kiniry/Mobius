@@ -106,7 +106,8 @@ public class TagConstants extends GeneratedTags
     public static final int ASFIELD = ASELEMS + 1;
     public static final int ASLOCKSET = ASFIELD + 1;
     public static final int BOOLAND = ASLOCKSET + 1;
-    public static final int BOOLEQ = BOOLAND + 1;
+    public static final int BOOLANDX = BOOLAND + 1;
+    public static final int BOOLEQ = BOOLANDX + 1;
     public static final int BOOLIMPLIES = BOOLEQ + 1;
     public static final int BOOLNE = BOOLIMPLIES + 1;
     public static final int BOOLNOT = BOOLNE + 1;
@@ -735,6 +736,7 @@ public class TagConstants extends GeneratedTags
         "asField",
         "asLockSet",
         "boolAnd",
+        "boolAndX",
         "boolEq",
         "boolImplies",
         "boolNE",

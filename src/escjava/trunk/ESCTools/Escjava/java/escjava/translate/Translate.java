@@ -1803,7 +1803,21 @@ public final class Translate
 
             case TagConstants.ASSERT: {
                 ExprStmtPragma x = (ExprStmtPragma)stmt;
+		TrAnExpr.initForClause();
                 Expr p = TrAnExpr.trSpecExpr(x.expr);
+		if (TrAnExpr.trSpecModelVarsUsed != null) {
+		  Iterator ii = TrAnExpr.trSpecModelVarsUsed.iterator();
+		  while (ii.hasNext()) {
+		    VariableAccess d = (VariableAccess)ii.next();
+		    code.addElement(GC.gets(d,null));
+		  }
+		}
+		if (TrAnExpr.trSpecExprAuxConditions != null) {
+		  for (int ii=0; ii<TrAnExpr.trSpecExprAuxConditions.size(); ++ii) {
+		    code.addElement(GC.assume( 
+			    TrAnExpr.trSpecExprAuxConditions.elementAt(ii)));
+		  } 
+		}
                 code.addElement(GC.check(x.getStartLoc(), TagConstants.CHKASSERT,
                                          p, Location.NULL));
                 return;
@@ -1855,7 +1869,7 @@ public final class Translate
 		} else if (Main.options().assertionMode ==
 				Options.JML_ASSERTIONS) {
 			// Treat a Java assert as a JML assert
-                    Expr predicate = TrAnExpr.trSpecExpr(assertStmt.pred);
+		    Expr predicate = TrAnExpr.trSpecExpr(assertStmt.pred);
                     code.addElement(GC.check(assertStmt.getStartLoc(), TagConstants.CHKASSERT,
                                              predicate, Location.NULL));
 		} else if (Main.options().assertionMode ==
@@ -3443,6 +3457,10 @@ public final class Translate
         code.addElement(GC.check(locUse, errorName, pred, prag.getStartLoc()));
     }
 
+    private void addAssumption(Expr pred) {
+	code.addElement(GC.assume(pred));
+    }
+
     /**
      * Return the <code>VariableAccesss</code> associated with <code>d</code> by a
      * call to <code>setInitVar</code>.  If none has been associated with
@@ -3599,6 +3617,9 @@ public final class Translate
             code.addElement(GC.gets(piLs[i], call.args.elementAt(i)));
         }
 
+	for (int i=0; i<spec.preAssumptions.size(); ++i) {
+	    addAssumption(spec.preAssumptions.elementAt(i));
+	}
         // check all preconditions
         for(int i=0; i<spec.pre.size(); i++) {
             Condition cond = spec.pre.elementAt(i);
@@ -3655,12 +3676,15 @@ public final class Translate
             body = substituteGC(pt, body);
             code.addElement(body);
 
+	    for (int i=0; i<spec.postAssumptions.size(); ++i) {
+		addAssumption(spec.postAssumptions.elementAt(i));
+	    }
             // check all postconditions
             for(int i=0; i<spec.post.size(); i++) {
                 Condition cond = spec.post.elementAt(i);
                 addCheck(rd.getEndLoc(),
                          cond.label,
-                         GC.subst( call.scall, call.ecall, pt, cond.pred ),
+                         GC.subst( call.scall, call.ecall, pt, cond.pred),
                          cond.locPragmaDecl);
             }
             if (Main.options().traceInfo > 1) {
@@ -3677,8 +3701,7 @@ public final class Translate
 	    // An assignment generated for each modified target
 	    // of the form   i:7.19 = after@16.2:20.19
             // modify IndexSubst[[ D*, pt ]]
-            for(int i=0; i<spec.targets.size(); i++)
-	    {
+            for(int i=0; i<spec.targets.size(); i++) {
 		Expr target = spec.targets.elementAt(i);
 		code.addElement(modify(target, pt, scall));
 	    }
@@ -3704,6 +3727,9 @@ public final class Translate
             code.addElement(modify(GC.resultvar, scall));
             code.addElement(modify(GC.xresultvar, scall));
 						 
+	    for (int i=0; i<spec.postAssumptions.size(); ++i) {
+		addAssumption(spec.postAssumptions.elementAt(i));
+	    }
             // assume postconditions
             for(int i=0; i<spec.post.size(); i++) {
                 Condition cond = spec.post.elementAt(i);
@@ -4140,6 +4166,7 @@ public final class Translate
 			le.expr);
 	    case TagConstants.BOOLOR:
 	    case TagConstants.BOOLAND:
+	    case TagConstants.BOOLANDX:
 		ExprVec ev = ExprVec.make();
 		NaryExpr ne = (NaryExpr)e;
 		ExprVec evo = ne.exprs;
@@ -4185,6 +4212,21 @@ public final class Translate
 		    Object o = i.next();
 		    ev.add((Expr)o);
 	    }
+	}
+    }
+
+    // Changes all BOOLANDX operations to BOOLIMPLIES, in place
+    static void setop(ASTNode e) {
+	if (e instanceof NaryExpr) {
+	    NaryExpr ne = (NaryExpr)e;
+	    if (ne.getTag() == TagConstants.BOOLANDX) {
+		ne.op = TagConstants.BOOLIMPLIES;
+	    }
+	}
+	int n = e.childCount();
+	for (int i = 0; i<n; ++i) {
+	    Object o = e.childAt(i);
+	    if (o != null && o instanceof ASTNode) setop((ASTNode)o);
 	}
     }
 } // end of class Translate

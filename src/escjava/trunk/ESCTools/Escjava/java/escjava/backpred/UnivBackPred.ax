@@ -373,6 +373,12 @@
 	 (EQ (integralMod (+ j i) j) 
 	     (integralMod i j))))
 
+(BG_PUSH 
+ (FORALL (i)
+	 (PATS (integralMod 0 i))
+	 (IMPLIES (NOT (EQ i 0))
+		  (EQ (integralMod 0 i) 0)
+ )))
 ; to prevent a matching loop
 (BG_PUSH
  (FORALL (x y)

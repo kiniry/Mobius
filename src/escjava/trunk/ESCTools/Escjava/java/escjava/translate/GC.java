@@ -639,10 +639,11 @@ public final class GC {
 
       switch( tag ) {
 	case TagConstants.BOOLAND:
+	case TagConstants.BOOLANDX:
 	  {
 	    ExprVec w = ExprVec.make( ev.size() );
 	    if( selectiveAdd( w, ev, truelit, falselit,
-			      TagConstants.BOOLAND ) )
+			      tag ) )
 	      {
 		return falselit;
 	      }
@@ -652,7 +653,7 @@ public final class GC {
 	    else if( w.size() == 1 )
 	      return w.elementAt(0);
 	    else
-	      return NaryExpr.make( sloc, eloc, TagConstants.BOOLAND, null, w);
+	      return NaryExpr.make( sloc, eloc, tag, null, w);
 	  }
 
 	case TagConstants.BOOLOR:
@@ -721,6 +722,7 @@ public final class GC {
 	      switch( c0.getTag() ) {
 	      case TagConstants.BOOLOR:
 	      case TagConstants.BOOLAND:
+	      case TagConstants.BOOLANDX:
 		{
 		  ExprVec w = ((NaryExpr)c0).exprs;
 		  ExprVec r = ExprVec.make();
@@ -784,6 +786,13 @@ public final class GC {
 
   public static Expr and(Expr c1, Expr c2) {
     return and(Location.NULL, Location.NULL, c1, c2);
+  }
+
+  public static Expr andx(Expr c1, Expr c2) {
+    ExprVec es = ExprVec.make(2);
+    es.addElement(c1);
+    es.addElement(c2);
+    return nary(Location.NULL, Location.NULL, TagConstants.BOOLANDX, es);
   }
 
   public static Expr and(int sloc, int eloc, Expr c1, Expr c2) {

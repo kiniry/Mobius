@@ -191,7 +191,7 @@ public class SPVC
     public static boolean isSimpleConjunction(Expr e) {
         if (e instanceof NaryExpr) {
             NaryExpr ne = (NaryExpr)e;
-            if (ne.op == TagConstants.BOOLAND) {
+            if (ne.op == TagConstants.BOOLAND || ne.op == TagConstants.BOOLANDX) {
                 for (int i = 0; i < ne.exprs.size(); i++) {
                     if (! isSimpleExpr(ne.exprs.elementAt(i))) {
                         return false;
@@ -243,6 +243,7 @@ public class SPVC
                 return true;
 
             case TagConstants.BOOLAND:
+            case TagConstants.BOOLANDX:
             case TagConstants.BOOLOR:
             case TagConstants.DTTFSA:
                 return false;

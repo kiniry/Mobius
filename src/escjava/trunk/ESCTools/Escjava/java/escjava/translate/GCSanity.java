@@ -84,7 +84,7 @@ public class GCSanity {
       {
 	AssignCmd ac = (AssignCmd)g;
 	checkUses(ac.v, cdni, euei, uuei);
-	checkUses(ac.rhs, cdni, euei, uuei);
+	if (ac.rhs != null) checkUses(ac.rhs, cdni, euei, uuei);
 	break;
       }
 
@@ -93,7 +93,7 @@ public class GCSanity {
 	SubGetsCmd ac = (SubGetsCmd)g;
 	checkUses(ac.v, cdni, euei, uuei);
 	checkUses(ac.index, cdni, euei, uuei);
-	checkUses(ac.rhs, cdni, euei, uuei);
+	if (ac.rhs != null) checkUses(ac.rhs, cdni, euei, uuei);
 	break;
       }
 
@@ -103,7 +103,7 @@ public class GCSanity {
 	checkUses(ac.v, cdni, euei, uuei);
 	checkUses(ac.index1, cdni, euei, uuei);
 	checkUses(ac.index2, cdni, euei, uuei);
-	checkUses(ac.rhs, cdni, euei, uuei);
+	if (ac.rhs != null) checkUses(ac.rhs, cdni, euei, uuei);
 	break;
       }
 

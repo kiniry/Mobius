@@ -430,7 +430,8 @@ public final class GetSpec {
         // (we restore GC.thisvar.decl.type just before returning)
 
 
-        ConditionVec pre = trMethodDeclPreconditions(dmd);
+	ExprVec preAssumptions = ExprVec.make();
+        ConditionVec pre = trMethodDeclPreconditions(dmd,preAssumptions);
       
         ExprVec targets  = ExprVec.make();
 
@@ -477,7 +478,8 @@ premap generated from the uses of \old in the body of the method + the spec of t
 */
         // Now create the postconditions
 
-        ConditionVec post = trMethodDeclPostcondition(dmd, preVarMap);
+	ExprVec postAssumptions = ExprVec.make();
+        ConditionVec post = trMethodDeclPostcondition(dmd, preVarMap, postAssumptions);
 
 	java.util.Set postlocs = new java.util.HashSet();
 	int size = post.size();
@@ -485,7 +487,8 @@ premap generated from the uses of \old in the body of the method + the spec of t
 		collectFields(post.elementAt(ic).pred, postlocs);
 	}
 
-        Spec spec = Spec.make(dmd, targets, preVarMap, pre, post,
+        Spec spec = Spec.make(dmd, targets, preVarMap, 
+				preAssumptions, pre, postAssumptions, post,
 				false && dmd.modifiesEverything, postlocs); // FIXME - turning off modifies everything for now
 
         GC.thisvar.decl.type = savedType;
@@ -494,7 +497,7 @@ premap generated from the uses of \old in the body of the method + the spec of t
 
     /** Computes the preconditions, according to section 7.2.0 of ESCJ 16. */
   
-    private static ConditionVec trMethodDeclPreconditions(/*@ non_null */ DerivedMethodDecl dmd) {
+    private static ConditionVec trMethodDeclPreconditions(/*@ non_null */ DerivedMethodDecl dmd, ExprVec preAssumptions) {
         ConditionVec pre = ConditionVec.make();
       
         // Account for properties about parameters
@@ -544,42 +547,29 @@ premap generated from the uses of \old in the body of the method + the spec of t
 	    }
 	    TrAnExpr.initForClause();
 	    Expr pred = TrAnExpr.trSpecExpr(expr);
-		if (TrAnExpr.trSpecExprAuxConditions != null) {
-		    for (int j=0; j<TrAnExpr.trSpecExprAuxAssumptions.size(); ++j) {
-			Expr g = TrAnExpr.trSpecExprAuxAssumptions.elementAt(j);
-			pre.addElement(GC.assumeCondition(g,Location.NULL));
-		    }
-		    if (TrAnExpr.trSpecExprAuxConditions.size() != 0) {
-			Expr g = GC.nary(Location.NULL, Location.NULL,
-				TagConstants.BOOLAND, 
-				TrAnExpr.trSpecExprAuxConditions);
-			pred = GC.implies(pred.getStartLoc(),pred.getEndLoc(),g,pred);
-		    }
-		}
+	    if (TrAnExpr.extraSpecs) {
+		preAssumptions.append(TrAnExpr.trSpecExprAuxAssumptions);
+		preAssumptions.append(TrAnExpr.trSpecExprAuxConditions);
 		axsToAdd.addAll(TrAnExpr.trSpecAuxAxiomsNeeded);
-		TrAnExpr.trSpecExprAuxConditions = null;
-		Condition cond = GC.condition(TagConstants.CHKPRECONDITION, pred,
+		TrAnExpr.closeForClause();
+	    }
+	    Condition cond = GC.condition(TagConstants.CHKPRECONDITION, pred,
                                           loc);
 
             pre.addElement(cond);
 	}
-	    java.util.Set axsDone = new java.util.HashSet();
-	    while (! axsToAdd.isEmpty()) {
-		ASTNode o = (ASTNode)axsToAdd.iterator().next();
-		axsToAdd.remove(o);
-		if (!axsDone.add(o)) continue;
-		Expr e = TrAnExpr.getEquivalentAxioms(o);
-		pre.addElement(GC.assumeCondition(e,Location.NULL));
-		axsToAdd.addAll( TrAnExpr.getAxiomSet(o));
-	    }
-		
+
+	addAxioms(axsToAdd,preAssumptions);
+	    
         return pre;
     }
 
     /** Computes the postconditions, according to section 7.2.2 of ESCJ 16. */
   
-    private static ConditionVec trMethodDeclPostcondition(/*@ non_null */ DerivedMethodDecl dmd,
-                                                          /*@ non_null */ Hashtable wt) {
+    private static ConditionVec trMethodDeclPostcondition(
+			/*@ non_null */ DerivedMethodDecl dmd,
+                        /*@ non_null */ Hashtable wt,
+                        /*@ non_null */ ExprVec postAssumptions) {
         ConditionVec post = ConditionVec.make();
 
         // type correctness of targets (including "alloc", if "alloc" is a target)
@@ -735,39 +725,28 @@ premap generated from the uses of \old in the body of the method + the spec of t
             for (int i = 0; i < dmd.ensures.size(); i++) {
 	      try {
                 ExprModifierPragma prag = dmd.ensures.elementAt(i);
-//System.out.println("HANDLING PRAGMA " + Location.toString(prag.getStartLoc()));
 		TrAnExpr.initForClause();
                 Expr pred = TrAnExpr.trSpecExpr(prag.expr, map, wt);
-		if (TrAnExpr.trSpecExprAuxConditions != null) {
-		    for (int j=0; j<TrAnExpr.trSpecExprAuxAssumptions.size(); ++j) {
-			Expr g = TrAnExpr.trSpecExprAuxAssumptions.elementAt(j);
-			post.addElement(GC.assumeCondition(g,Location.NULL));
-		    }
-		    if (TrAnExpr.trSpecExprAuxConditions.size() != 0) {
-			Expr g = GC.nary(Location.NULL, Location.NULL,
-				TagConstants.BOOLAND, 
-				TrAnExpr.trSpecExprAuxConditions);
-			pred = GC.implies(g,pred);
-		    }
+		if (TrAnExpr.extraSpecs) {
+		    postAssumptions.append(TrAnExpr.trSpecExprAuxAssumptions);
+		    postAssumptions.append(TrAnExpr.trSpecExprAuxConditions);
+		    axsToAdd.addAll(TrAnExpr.trSpecAuxAxiomsNeeded);
+		    TrAnExpr.closeForClause();
 		}
-		axsToAdd.addAll(TrAnExpr.trSpecAuxAxiomsNeeded);
-		TrAnExpr.trSpecExprAuxConditions = null;
                 pred = GC.implies(ante, pred);
 		int tag = prag.errorTag == 0 ? TagConstants.CHKPOSTCONDITION : prag.errorTag;
                 Condition cond = GC.condition(tag, pred, prag.getStartLoc());
 		conds.add(cond);
-//System.out.println("HANDLING PRAGMA - END " + Location.toString(prag.getStartLoc()));
-	      } catch (NotImplementedException e) {}
+	      } catch (NotImplementedException e) {
+		    TrAnExpr.closeForClause();
+			// If something not implemented occurs, a message has already
+			// been issued (unless turned off by an option).  We catch it
+			// at this point and go on to the next ensures clause, only
+			// skipping the clause containing the construct that is not
+			// implemented.
+	      }
             }
-	    java.util.Set axsDone = new java.util.HashSet();
-	    while (! axsToAdd.isEmpty()) {
-		ASTNode o = (ASTNode)axsToAdd.iterator().next();
-		axsToAdd.remove(o);
-		if (!axsDone.add(o)) continue;
-		Expr e = TrAnExpr.getEquivalentAxioms(o);
-		post.addElement(GC.assumeCondition(e,Location.NULL));
-		axsToAdd.addAll( TrAnExpr.getAxiomSet(o));
-	    }
+	    addAxioms(axsToAdd,postAssumptions);
 	    Iterator jj = conds.iterator();
 	    while (jj.hasNext()) {
 		post.addElement( (Condition)jj.next() );
@@ -813,35 +792,21 @@ while (ee.hasMoreElements()) {
 		    pred = TrAnExpr.trSpecExpr(prag.expr, map, wt);
 		    pred = GC.implies(ante0, pred);
 		}
-		if (TrAnExpr.trSpecExprAuxConditions != null) {
-		    for (int j=0; j<TrAnExpr.trSpecExprAuxAssumptions.size(); ++j) {
-			Expr g = TrAnExpr.trSpecExprAuxAssumptions.elementAt(j);
-			post.addElement(GC.assumeCondition(g,Location.NULL));
-		    }
-		    if (TrAnExpr.trSpecExprAuxConditions.size() != 0) {
-			Expr g = GC.nary(Location.NULL, Location.NULL,
-				TagConstants.BOOLAND, 
-				TrAnExpr.trSpecExprAuxConditions);
-			pred = GC.implies(g,pred);
-		    }
+		if (TrAnExpr.extraSpecs) {
+		    postAssumptions.append(TrAnExpr.trSpecExprAuxAssumptions);
+		    postAssumptions.append(TrAnExpr.trSpecExprAuxConditions);
+		    axsToAdd.addAll(TrAnExpr.trSpecAuxAxiomsNeeded);
+		    TrAnExpr.closeForClause();
 		}
-		axsToAdd.addAll(TrAnExpr.trSpecAuxAxiomsNeeded);
-		TrAnExpr.trSpecExprAuxConditions = null;
 		//int tag = prag.errorTag == 0 ? TagConstants.CHKPOSTCONDITION : prag.errorTag;
 		int tag = TagConstants.CHKPOSTCONDITION;
                 Condition cond = GC.condition(tag, pred, prag.getStartLoc());
 		conds.add(cond);
-	      } catch (NotImplementedException e) {}
+	      } catch (NotImplementedException e) {
+		    TrAnExpr.closeForClause();
+	      }
             }
-	    java.util.Set axsDone = new java.util.HashSet();
-	    while (! axsToAdd.isEmpty()) {
-		ASTNode o = (ASTNode)axsToAdd.iterator().next();
-		axsToAdd.remove(o);
-		if (!axsDone.add(o)) continue;
-		Expr e = TrAnExpr.getEquivalentAxioms(o);
-		post.addElement(GC.assumeCondition(e,Location.NULL));
-		axsToAdd.addAll( TrAnExpr.getAxiomSet(o));
-	    }
+	    addAxioms(axsToAdd,postAssumptions);
 	    Iterator jj = conds.iterator();
 	    while (jj.hasNext()) {
 		post.addElement( (Condition)jj.next() );
@@ -857,6 +822,7 @@ while (ee.hasMoreElements()) {
 	    Hashtable map = new Hashtable();
 	    map.put(GC.thisvar.decl, GC.resultvar);
 	    TypeDeclElemVec pmods = dmd.getContainingClass().elems;
+	    java.util.Set axsToAdd = new java.util.HashSet();
 	    for (int i=0; i<pmods.size(); ++i) {
 		TypeDeclElem p = pmods.elementAt(i);
 		if (!(p instanceof TypeDeclElemPragma)) continue;
@@ -865,24 +831,20 @@ while (ee.hasMoreElements()) {
 		try {
 		    TrAnExpr.initForClause();
 		    Expr pred = TrAnExpr.trSpecExpr(prag.expr, map, wt);
-		    if (TrAnExpr.trSpecExprAuxConditions != null) {
-			for (int j=0; j<TrAnExpr.trSpecExprAuxAssumptions.size(); ++j) {
-			    Expr g = TrAnExpr.trSpecExprAuxAssumptions.elementAt(j);
-			    post.addElement(GC.assumeCondition(g,Location.NULL));
-			}
-			if (TrAnExpr.trSpecExprAuxConditions.size() != 0) {
-			Expr g = GC.nary(Location.NULL, Location.NULL,
-				TagConstants.BOOLAND, 
-				TrAnExpr.trSpecExprAuxConditions);
-			pred = GC.implies(g,pred);
-			}
+		    if (TrAnExpr.extraSpecs) {
+			postAssumptions.append(TrAnExpr.trSpecExprAuxAssumptions);
+			postAssumptions.append(TrAnExpr.trSpecExprAuxConditions);
+			axsToAdd.addAll(TrAnExpr.trSpecAuxAxiomsNeeded);
+			TrAnExpr.closeForClause();
 		    }
-		    TrAnExpr.trSpecExprAuxConditions = null;
 		    int tag = TagConstants.CHKINITIALLY;
 		    Condition cond = GC.condition(tag, pred, prag.getStartLoc());
 		    post.addElement(cond);
-		} catch (NotImplementedException e) {}
+		} catch (NotImplementedException e) {
+			TrAnExpr.closeForClause();
+	        }
 	    }
+	    addAxioms(axsToAdd,postAssumptions);
         }
 
 	if (dmd.isConstructor() || isHelper) return post;
@@ -894,7 +856,7 @@ while (ee.hasMoreElements()) {
 	else {
 	    ClassDecl cdecl = (ClassDecl)tdecl;
 	    while (true) {
-		post = addConstraintClauses(post,cdecl,wt);
+		post = addConstraintClauses(post,cdecl,wt,postAssumptions);
 		addSuperInterfaces(cdecl,s);
 		if (cdecl.superClass == null) break;
 		cdecl = (ClassDecl)TypeSig.getSig(cdecl.superClass).getTypeDecl();
@@ -903,15 +865,30 @@ while (ee.hasMoreElements()) {
 	Enumeration en = s.elements();
 	while (en.hasMoreElements()) {
 	    InterfaceDecl ifd = (InterfaceDecl)en.nextElement();
-	    post = addConstraintClauses(post,ifd,wt);
+	    post = addConstraintClauses(post,ifd,wt,postAssumptions);
 	}
 	return post;
     }
 
+
+    static private void addAxioms(java.util.Set axsToAdd, ExprVec assumptions) {
+	    java.util.Set axsDone = new java.util.HashSet();
+	    while (! axsToAdd.isEmpty()) {
+		ASTNode o = (ASTNode)axsToAdd.iterator().next();
+		axsToAdd.remove(o);
+		if (!axsDone.add(o)) continue;
+		Expr e = TrAnExpr.getEquivalentAxioms(o);
+		assumptions.addElement(e);
+		//post.addElement(GC.assumeCondition(e,Location.NULL));
+		axsToAdd.addAll( TrAnExpr.getAxiomSet(o));
+	    }
+    }
+
 // FIXME - need to include inherited constraint clauses
     static public ConditionVec addConstraintClauses(ConditionVec post, TypeDecl decl,
-		Hashtable wt) {
+		Hashtable wt, ExprVec postAssumptions) {
 	TypeDeclElemVec pmods = decl.elems;
+	java.util.Set axsToAdd = new java.util.HashSet();
 	for (int i=0; i<pmods.size(); ++i) {
 	    TypeDeclElem p = pmods.elementAt(i);
 	    if (!(p instanceof TypeDeclElemPragma)) continue;
@@ -920,25 +897,21 @@ while (ee.hasMoreElements()) {
 	    try {
 		TrAnExpr.initForClause();
 		Expr pred = TrAnExpr.trSpecExpr(prag.expr, null, wt);
-		if (TrAnExpr.trSpecExprAuxConditions != null) {
-		    for (int j=0; j<TrAnExpr.trSpecExprAuxAssumptions.size(); ++j) {
-			Expr g = TrAnExpr.trSpecExprAuxAssumptions.elementAt(j);
-			post.addElement(GC.assumeCondition(g,Location.NULL));
-		    }
-		    if (TrAnExpr.trSpecExprAuxConditions.size() != 0) {
-			Expr g = GC.nary(Location.NULL, Location.NULL,
-				TagConstants.BOOLAND, 
-				TrAnExpr.trSpecExprAuxConditions);
-			pred = GC.implies(g,pred);
-		    }
+		if (TrAnExpr.extraSpecs) {
+		    postAssumptions.append(TrAnExpr.trSpecExprAuxAssumptions);
+		    postAssumptions.append(TrAnExpr.trSpecExprAuxConditions);
+		    axsToAdd.addAll(TrAnExpr.trSpecAuxAxiomsNeeded);
+		    TrAnExpr.closeForClause();
 		}
-		TrAnExpr.trSpecExprAuxConditions = null;
 		int tag = TagConstants.CHKCONSTRAINT;
 		Condition cond = GC.condition(tag, pred, prag.getStartLoc());
 		post.addElement(cond);
-	    } catch (NotImplementedException e) {}
+	    } catch (NotImplementedException e) {
+		    TrAnExpr.closeForClause();
+	    }
 	}
 
+	addAxioms(axsToAdd,postAssumptions);
         return post;
     }
 
@@ -1498,8 +1471,12 @@ while (ee.hasMoreElements()) {
                 GC.thisvar.decl.type = TypeSig.getSig(ep.getParent());
 		invinfo.J = TrAnExpr.trSpecExpr(J, map, null);
 		if (TrAnExpr.trSpecExprAuxConditions.size() != 0) {
-		    invinfo.J = GC.implies( GC.nary(TagConstants.BOOLAND, TrAnExpr.trSpecExprAuxConditions),
-					invinfo.J);
+		    // Use andx here, because the op needs to be and in preconditions and 
+		    // implies in postconditions
+		    invinfo.J = GC.andx( GC.nary(TagConstants.BOOLAND, 
+					 TrAnExpr.trSpecExprAuxConditions),
+					 invinfo.J);
+		    TrAnExpr.trSpecExprAuxConditions = ExprVec.make();
 		}
                 GC.thisvar.decl.type = savedType;
 
@@ -1521,16 +1498,11 @@ while (ee.hasMoreElements()) {
 	  java.util.Set axsToAdd = new java.util.HashSet();
 	  axsToAdd.addAll(TrAnExpr.trSpecAuxAxiomsNeeded);
 	  java.util.Set axsDone = new java.util.HashSet();
-	    while (false && ! axsToAdd.isEmpty()) {
+	    while (false && ! axsToAdd.isEmpty()) {  // FIXME - keep this off ???
 		ASTNode o = (ASTNode)axsToAdd.iterator().next();
 		axsToAdd.remove(o);
 		if (!axsDone.add(o)) continue;
 		Expr e = TrAnExpr.getEquivalentAxioms(o);
-
-//System.out.println("CI-ADDING ");
-//EscPrettyPrint.inst.print(System.out,0,e);
-//System.out.println("");
-
 		axsToAdd.addAll( TrAnExpr.getAxiomSet(o));
                 // Add a new node at the end of "ii"
                 InvariantInfo invinfo = new InvariantInfo();
@@ -1542,7 +1514,7 @@ while (ee.hasMoreElements()) {
                 else
                     iiPrev.next = invinfo;
                 iiPrev = invinfo;
-                if (true ) { //|| cReplacementsBefore == TrAnExpr.getReplacementCount()) { // FIXME
+                if (true ) { //|| cReplacementsBefore == TrAnExpr.getReplacementCount())  // FIXME
                     // static invariant
                     invinfo.isStatic = true;
                     invinfo.sdecl = null;
@@ -1746,8 +1718,10 @@ while (ee.hasMoreElements()) {
         StackVector code = new StackVector();
         code.push();
 
+	addAssumptions(spec.preAssumptions, code);
         assumeConditions(spec.pre, code);
         code.addElement(body);
+	addAssumptions(spec.postAssumptions, code);
         checkConditions(spec.post, locEndCurlyBrace, code);
         checkModifiesConstraints(spec, scope, syntargets, premap,
                                  locEndCurlyBrace, code);
@@ -1758,6 +1732,13 @@ while (ee.hasMoreElements()) {
     /** Appends <code>code</code> with an <code>assume C</code> command
      * for every condition <code>C</code> in <code>cv</code>.
      **/
+
+    private static void addAssumptions(ExprVec ev, StackVector code) {
+        for (int i = 0; i < ev.size(); i++) {
+            Expr e = ev.elementAt(i);
+            code.addElement(GC.assume(e));
+        }
+    }
   
     private static void assumeConditions(ConditionVec cv, StackVector code) {
         for (int i = 0; i < cv.size(); i++) {
@@ -1773,6 +1754,7 @@ while (ee.hasMoreElements()) {
     private static void checkConditions(ConditionVec cv, int loc, StackVector code) {
         for (int i = 0; i < cv.size(); i++) {
             Condition cond = cv.elementAt(i);
+            Translate.setop(cond.pred);
             // if the condition is an object invariant, send its guarded command
             // translation as auxiliary info to GC.check
             if (cond.label == TagConstants.CHKOBJECTINVARIANT)

@@ -314,6 +314,7 @@ public class VcToString {
       //  Operators on formulas
     case TagConstants.BOOLIMPLIES:
     case TagConstants.BOOLAND:
+    case TagConstants.BOOLANDX:
     case TagConstants.BOOLOR:
     case TagConstants.BOOLNOT:
     case TagConstants.BOOLEQ:
@@ -325,6 +326,7 @@ public class VcToString {
 	case TagConstants.BOOLIMPLIES:
 	  op = "IMPLIES"; break;
 	case TagConstants.BOOLAND:
+	case TagConstants.BOOLANDX:
 	  op = "AND"; break;
 	case TagConstants.BOOLOR:
 	  op = "OR"; break;
@@ -608,6 +610,7 @@ public class VcToString {
       case TagConstants.ASFIELD:
       case TagConstants.ASLOCKSET:
       case TagConstants.BOOLAND:
+      case TagConstants.BOOLANDX:
       case TagConstants.BOOLEQ:
       case TagConstants.BOOLIMPLIES:
       case TagConstants.BOOLNE:

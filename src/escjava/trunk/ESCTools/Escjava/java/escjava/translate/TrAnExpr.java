@@ -43,13 +43,16 @@ public final class TrAnExpr {
     }
 
     public static void initForClause() {
+	extraSpecs = true;
 	trSpecExprAuxConditions = ExprVec.make();
 	trSpecExprAuxAssumptions = ExprVec.make();
 	trSpecAuxAxiomsNeeded = new java.util.HashSet();
+	trSpecModelVarsUsed = new java.util.HashSet();
 	boundStack.clear();
     }
 
     public static void closeForClause() {
+	extraSpecs = false;
 	trSpecExprAuxConditions = null;
 	boundStack.clear();
     }
@@ -69,8 +72,10 @@ public final class TrAnExpr {
 
     public static int level = 0;
     public static int maxLevel = 3; // FIXME if this is much bigger the JML specs file java.math.BigInteger.parse runs out of memory
+    public static boolean extraSpecs = false;
     public static ExprVec trSpecExprAuxConditions = null;
     public static ExprVec trSpecExprAuxAssumptions = null;
+    public static java.util.Set trSpecModelVarsUsed = null;
     public static java.util.Set trSpecAuxAxiomsNeeded = null;
     public static int tempn = 100;
     public static LinkedList declStack = new LinkedList();
@@ -137,7 +142,8 @@ public final class TrAnExpr {
             FieldAccess fa = (FieldAccess)e;
             VariableAccess va = makeVarAccess(fa.decl, fa.locId);
             // va accesses the field
-	    if (Utils.findModifierPragma(va.decl.pmodifiers,TagConstants.MODEL) != null) {
+	    if (Utils.isModel(va.decl.pmodifiers)) {
+		if (trSpecModelVarsUsed != null) trSpecModelVarsUsed.add(va);
 		java.util.List reps = escjava.AnnotationHandler.findRepresents(fa.decl);
 		java.util.Iterator it = reps.iterator();
 		while (it.hasNext()) {
@@ -566,7 +572,7 @@ System.out.println("");
 
 	    trSpecExprAuxConditions.addElement(GC.nary(TagConstants.ARRAYFRESH,ev));
 	    return v;
-		// FIXME for multiple dimensions
+		// FIXME for multiple dimensions, other types
 	} else {
 	    ErrorSet.notImplemented(!Main.options().noNotCheckedWarnings,
 		e.getStartLoc(),"Not checking predicates containing new array expressions");
@@ -686,7 +692,7 @@ System.out.println("");
 			trSpecExprAuxConditions.removeElementAt(sz+pos-i-1);
 		    }
 		}
-		body = GC.implies( GC.nary(TagConstants.BOOLAND,ev), body);
+		body = GC.andx( GC.nary(TagConstants.BOOLAND,ev), body);
           }
 	  if (doRewrites()) boundStack.removeLast();
 /*
@@ -720,6 +726,7 @@ System.out.println("");
 				   qe.getTag(),
 				   decl, body, null, null);
 	} else {
+// FIXME - need to handle AuxConditions in here
 	  int locStart = e.getStartLoc();
 	  int locEnd = e.getEndLoc();
 
@@ -1586,11 +1593,13 @@ System.out.println("");
 		ax = ee;
 	    } else {
 		//System.out.println("NOTHING FOR TYPE YET");
+		// FIXME are these already included by virtue of the FindContributors mechanism
 		ax = GC.truelit;
 	    }
 	    axiomDecoration.set(astn,ax);
 	    axiomSetDecoration.set(astn,trSpecAuxAxiomsNeeded);
 
+	    closeForClause();
 	}
 	return ax;
   }

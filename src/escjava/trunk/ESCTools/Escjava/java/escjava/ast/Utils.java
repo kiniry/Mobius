@@ -70,6 +70,15 @@ public final class Utils {
         }
     }
 
+    static public boolean isModel(javafe.ast.FieldDecl fd) {
+	return isModel(fd.pmodifiers);
+    }
+
+    static public boolean isModel(ModifierPragmaVec m) {
+	if (m == null) return false;
+	return findModifierPragma(m,TagConstants.MODEL) != null;
+    }
+
     static protected abstract class BooleanDecoration extends ASTDecoration {
 	private static final Object decFALSE = new Object();
 	private static final Object decTRUE = new Object();
