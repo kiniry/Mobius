@@ -364,6 +364,7 @@ javaspecs:
 
 .PHONY: test_escjava_parser
 test_escjava_parser:
+	$(MAKE) -C ${JAVAFE_SOURCE_DIR}/.. javafe_test
 	$(MAKE) -C ${TOP_ESCJAVA_TEST_DIR} test
 
 .PHONY: typecheckEscjava
