@@ -112,7 +112,7 @@ export JAVADOC ?= javadoc -J-mx200m -source 1.4 -breakiterator -quiet
 ## archives for distribution.  They are used to create the Version.java
 ## file, which is used by Main.java to provide a version string.
 
-export ESC_PROJECT ?= ESCTools
+export ESC_PROJECT ?= ESCJava
 export ESC_VERSION ?= CURRENT-CVS
 
 ##########################################################################
@@ -171,8 +171,8 @@ export RELDIR  ?= ${ESCTOOLS_ROOT}/release
 export RELNAME ?= ${ESC_PROJECT}-${ESC_VERSION}
 export RELNAME-DATE ?= ${RELNAME}-${ESC_RELEASE_DATE}
 export RELJAR  ?= esctools2.jar
-export RELTAR  ?= ${RELNAME}-binary.tbz
-export RELPATCHTAR  ?= ${RELNAME}-patch.tbz
+export RELTAR  ?= ${RELNAME-DATE}-binary.tbz
+export RELPATCHTAR  ?= ${RELNAME-DATE}-patch.tbz
 export RELCLASSPATH = ${RELDIR}/${RELJAR}
 
 export CALVIN_PATCHES   = ${RELNAME-DATE}-Calvin-patch.bz
