@@ -2,25 +2,32 @@
 ## author: David Cok - 1 May 2003
 ##
 ## This file contains variable definitions common to the Makefiles in
-## various subdirectories of the ESC tools.  These should not need to be
-## modified by the user (those variables are in Makefile.local).  Many of
-## these variables are initialized with ?= so that they can be preset by
-## environment variables, if customization is needed.  The definitions here
-## mostly reflect the directory organization of the ESC tools; changing them
-## will likely break something.
+## various subdirectories of the ESC tools.  These should not need to
+## be modified by the user (those variables are in Makefile.local).
+## Many of these variables are initialized with ?= so that they can be
+## preset by environment variables, if customization is needed.  The
+## definitions here mostly reflect the directory organization of the
+## ESC tools; changing them will likely break something.
 
-## This include file contains any user-customized definitions
+## This include file contains any user-customized definitions.
 export TOP ?= .
 include ${TOP}/Makefile.local
 
-## Variables that define the release (FIXME -- where used?)
+## Variables that define the release.  They will be used to build
+## archives for distribution.  They should corrolate with the
+## version flag in escjava.Main.
+
+## @todo kiniry 15 May 2003 - Make escjava.Main load the definition of
+## its "version" variable from these environment variable, and fall
+## back to a reasonable default value if they are unavailable.
+
 ## These are likely to change slowly as releases are issued.
 export ESC_PROJECT ?= ESCTools
 export ESC_VERSION ?= February-2003
 
-## The following definitions are used in various Makefiles and
-## should be common for all users and environments
-## (at least those that have '/' as the path separator
+## The following definitions are used in various Makefiles and should
+## be common for all users and environments.  (at least those that
+## have '/' as the path separator.
 
 export ESCTOOLS_JARS=${ESCTOOLS_ROOT}/jars
 
@@ -29,14 +36,15 @@ export JAVAFE_CLASSFILES=${JAVAFE_ROOT}/classfiles
  
 export ESCJAVA_ROOT=${ESCTOOLS_ROOT}/Escjava
 
-## Definitions of java tools
+## Definitions of Java tools.
 export JAVA ?= java
 export JAVAC ?= javac 
 export JAVAC_FLAGS ?= -g
 export JAVADOC ?= javadoc -J-mx200m
+
 # This is the location of any specification files for the JDK.
-# Makefile.local; here we set a default value as the location
-# of spec files supplied with the ESC release.
+# Makefile.local; here we set a default value as the location of spec
+# files supplied with the ESC release.
 export JDKSPEC_ROOT ?= ${ESCJAVA_ROOT}/release/master/specs
  
 ######################### locations #########################
@@ -53,22 +61,23 @@ export MOCHA_ROOT=${ESCJAVA_ROOT}/mochalib
 export MOCHA_PROOT=${HOME}/apps/mocha/j-mocha.2.0/mocha
 export MOCHA_CLASSES=${MOCHA_PROOT}/..
  
-# To get predicate abstraction to work with ESC/Java, you need to download
-# jMocha from UC Berkeley.  When you build jMocha, you'll get 3 shared
-# objects:  libjbdd.so, libglu.so, libcu.so.  These have to be put in an
-# appropriate directory, and LD_LIBRARY_PATH must be set to the name of
-# that directory.  For example, if you put the shared objects in
-# a directory called ${MOCHA_ROOT}/platform/alpha, then you would include
-# the following line here:
+# To get predicate abstraction to work with ESC/Java, you need to
+# download jMocha from UC Berkeley.  When you build jMocha, you'll get
+# 3 shared objects: libjbdd.so, libglu.so, libcu.so.  These have to be
+# put in an appropriate directory, and LD_LIBRARY_PATH must be set to
+# the name of that directory.  For example, if you put the shared
+# objects in a directory called ${MOCHA_ROOT}/platform/alpha, then you
+# would include the following line here:
 export LD_LIBRARY_PATH=${MOCHA_PROOT}/platform/linux
  
 ######################### classpaths #########################
  
-## FIXME -- check which of these are actually needed - they come from the setup file so some are for execution.
+## FIXME -- check which of these are actually needed - they come from
+## the setup file so some are for execution.
 
 #
-# The classpath for compiling Escjava; no sources outside the repository
-# should be on this list:
+# The classpath for compiling Escjava; no sources outside the
+# repository should be on this list:
 #
 export JARS=${ESCTOOLS_JARS}/decsrc.jar:${ESCTOOLS_JARS}/mochalib.jar:${ESCTOOLS_JARS}/javafe.jar:${ESCTOOLS_JARS}/escjava.jar:
  
@@ -84,17 +93,17 @@ export ESCJAVA_CLASSPATH=${ESC_CLASSPATH}
 export SOURCEPATH=${SOURCEDIRECTORY}:${TESTSOURCEDIRECTORY}:${JAVAFE_ROOT}/java
  
 #
-# The appropriate -bootclasspath for escjava:
+# The appropriate -bootclasspath for Escjava:
 #
-# Need to sources here because we can't read binary inner classes; need
-# the binaries because don't have source for sun.* classes...
+# Need to sources here because we can't read binary inner classes;
+# need the binaries because don't have source for sun.* classes...
 #
 export JDKSPEC=${JDKSPEC_ROOT}
 export BOOTCLASSPATH=${JDKSPEC}:${JDKBINARIES}
  
 #
-# The classpath for checking escjava itself (e.g., escself's classpath),
-# not counting -bootclasspath:
+# The classpath for checking escjava itself (e.g., escjava's
+# classpath), not counting -bootclasspath:
 #
 export ESCSPEC=${SOURCEDIRECTORY}:${JAVAFE_ROOT}/java:${DECSRCDIRECTORY}:${MOCHA_CLASSES}
  

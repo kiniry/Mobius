@@ -6,7 +6,7 @@
 export TOP = .
 include Makefile.defs
 
-## These are the standard targets.  They are executed in all the 
+## These are the standard targets.  They are executed in all the
 ## subdirectories that are listed in the SUBDIRS variable:
 ##	clean - removes all files created by a build
 ##	build - compiles out of date generated source and class files (default)
@@ -16,14 +16,15 @@ include Makefile.defs
 ##		make from this directory
 ##	all   - does all of the above
 ##
-## You can run each of these in a subdirectory and only apply it to the code
-## in that subdirectory, if you like.  Note though, that the subdirectories
-## other than Javafe presume that Javafe has been built.
+## You can run each of these in a subdirectory and only apply it to
+## the code in that subdirectory, if you like.  Note though, that the
+## subdirectories other than Javafe presume that Javafe has been
+## built.
 
 ## release -- What about this ??? FIXME
 
-# List subprojects in the order in which they should
-# be built.  Javafe must be first.
+# List subprojects in the order in which they should be built.  Javafe
+# must be first.
 SUBDIRS = Javafe Escjava
 
 default: build
@@ -35,16 +36,16 @@ build buildall test: check_env
 	    $(MAKE) -C $$d $@ ; \
 	done
 
-# To really clean, we need to clean Javafe last since some of its tools
-# are used in cleaning
+# To really clean, we need to clean Javafe last since some of its
+# tools are used in cleaning.
 clean: check_env
 	for d in $(SUBDIRS) ; do \
 		if [ ! $$d == Javafe ]; then $(MAKE) -C $$d $@ ; fi ; \
 	done
 	$(MAKE) -C Javafe clean
 
-## javadoc needs build since some of the .java files are generated in the
-## course of the build (e.g. the AST classes).
+## Javadoc depends on the build target since some of the .java files
+## are generated in the course of the build (e.g. the AST classes).
 docs: build javadoc
 	for d in $(SUBDIRS) ; do \
 	    $(MAKE) -C $$d $@ ; \
@@ -56,7 +57,6 @@ PACKAGE_LIST = escjava escjava.ast escjava.backpred escjava.parser \
           javafe javafe.ast javafe.parser  \
 	  javafe.reader javafe.genericfile javafe.filespace \
 	  javafe.tc javafe.util
-
 
 JAVADOC_SOURCEPATH = $(subst : ,:,$(addsuffix /java:,$(addprefix $(ESCTOOLS_ROOT)/,$(SUBDIRS))))
 
@@ -86,4 +86,3 @@ check_env:
 	    echo "Error: JDK spec root not found: ${JDKSPEC_ROOT}" ;\
 	    echo "Set the variable JDKSPEC_ROOT in your environment or in Makefile.local" ;\
 	fi
- 
