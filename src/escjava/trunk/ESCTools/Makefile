@@ -373,3 +373,23 @@ specs-test:
 make-test:
 	echo `cygpath -m $(ESCJ_SIMPLIFY_DIR)`
 	echo ${foo}
+
+## Experimental rule to generate a file that references every type
+## that currently has a spec and run escjava2 on it to try to detect problems
+## with package- and private-level types.
+check-specs:	jmlspecs.jar
+	jar tf jmlspecs.jar | sed -e s+\\.spec++ | \
+		sed -e s+\\.refines-spec++ | sed -e s+\\.refines++ | \
+		sed -e s+\\.jml++ | sed -e s+\\.java++ | sed -e s+-java++ | \
+		sed -e s+\\.refines-java++ | sed -e s+/+.+g | \
+		grep -v VERSION | grep -v META | sort > .specs
+	cat .specs | sed -e s+.*+import\ \&\;+ > SpecTest.java
+	echo "class SpecTest {" >> SpecTest.java
+	i=0; for f in `cat .specs`; do \
+		echo "$$f x$$i ;" >> SpecTest.java ; \
+		((i=i+1)); \
+	done
+	echo "}" >> SpecTest.java
+	CLASSPATH=$(call canonicalize,${CLASSPATH}:${JUNIT_LIB}); $(ESCJAVA) -v SpecTest.java
+	rm -f .specs SpecTest.java
+
