@@ -1,4 +1,7 @@
 ESC/Java version VERSION
+ParseDepends.java:9: Caution: The depends clause is obsolete; it has been replaced by the in and maps clauses
+        //@ depends b <- bb,bbb;
+            ^
   Prover started:TIME
 
 ParseDepends ...
@@ -9,3 +12,4 @@ ParseDepends: m() ...
 ParseDepends: ParseDepends() ...
     [TIME]  passed
   [TIME total]
+1 caution

@@ -191,7 +191,14 @@ public class EscTypeReader extends StandardTypeReader
 		// want to add a new compilation unit to the environment
 	    if (refinements == null) return null;
 
-
+if (false) {
+java.util.Iterator i = refinements.iterator();
+System.out.print("Refinement Sequence: [");
+while (i.hasNext()) {
+	System.out.print(" "+ ((CompilationUnit)i.next()).sourceFile().getHumanName());
+}
+System.out.println(" ]");
+}
 		// FIXME - Probably does not work for nested classes.
 
 	    // Now find the compilation unit for the java file.  If it is
@@ -201,7 +208,7 @@ public class EscTypeReader extends StandardTypeReader
 		if (javafile.getCanonicalID().equals(cu.sourceFile().getCanonicalID())) javacu = cu;
 		else for (int i=0; javacu == null && i<refinements.size(); ++i) {
 		    CompilationUnit rcu = (CompilationUnit)refinements.get(i);
-		    if (rcu.sourceFile().getCanonicalID().equals(javafile))
+		    if (rcu.sourceFile().getCanonicalID().equals(javafile.getCanonicalID()))
 			    javacu = rcu;
 		}
 	    }

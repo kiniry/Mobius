@@ -847,6 +847,10 @@ System.out.println("ADVANCING AT " + TagConstants.toString(tag));
                     break;
 
                 case TagConstants.ALSO_MODIFIES:
+		    tag = TagConstants.MODIFIES;
+		    ErrorSet.error(loc,
+			"Original ESC/Java keywords beginning with also_ are obsolete; they have been replaced with the corresponding JML keywords and the use of 'also' - note that the semantics has also changed.");
+		    // fall through
                 case TagConstants.ASSIGNABLE: // SUPPORT COMPLETE (kiniry)
                 case TagConstants.ASSIGNABLE_REDUNDANTLY: // SUPPORT COMPLETE (kiniry)
                 case TagConstants.MODIFIABLE: // SUPPORT COMPLETE (kiniry)
@@ -919,9 +923,9 @@ System.out.println("ADVANCING AT " + TagConstants.toString(tag));
 
                 case TagConstants.DEPENDS:
                 case TagConstants.DEPENDS_REDUNDANTLY: {
-                    // SC AAST 4 parsed (cok)
+		    ErrorSet.caution(loc,
+			"The depends clause is obsolete; it has been replaced by the in and maps clauses");
                     int tempTag = TagConstants.unRedundant(tag);
-                    inProcessLoc = loc;
                     dst.ttype = TagConstants.TYPEDECLELEMPRAGMA;
                     // FIXME - should this be a primary expression
                     // or maybe even a simple name?
@@ -935,14 +939,8 @@ System.out.println("ADVANCING AT " + TagConstants.toString(tag));
 			if (scanner.ttype != TagConstants.COMMA) break;
 			scanner.getNextToken();
 		    }
-                    DependsPragma pragma = 
-                        DependsPragma.make(tempTag, target,
-                                           ExprVec.make(list), loc);
-                    if (TagConstants.isRedundant(tag))
-                        pragma.setRedundant(true);
-                    dst.auxVal = pragma;
-		    semicolonExpected = true;
-                    break;
+		    eatThroughSemiColon();
+		    return getNextPragma(dst);
 		}
 
                 case TagConstants.UNREACHABLE:
@@ -1273,6 +1271,12 @@ System.out.println("ADVANCING AT " + TagConstants.toString(tag));
 
                 case TagConstants.ALSO_ENSURES:
                 case TagConstants.ALSO_REQUIRES:
+		    int oldtag = tag;
+		    if (tag == TagConstants.ALSO_ENSURES) tag = TagConstants.ENSURES;
+		    else if (tag == TagConstants.ALSO_REQUIRES) tag = TagConstants.REQUIRES;
+		    ErrorSet.error(loc,
+			"Original ESC/Java keywords beginning with also_ are obsolete; they have been replaced with the corresponding JML keywords and the use of 'also' - note that the semantics has also changed.");
+		    // fall through
                 case TagConstants.ENSURES:
 		case TagConstants.DIVERGES: // parsed (cok)
 		case TagConstants.DIVERGES_REDUNDANTLY: // parsed (cok)
@@ -1343,6 +1347,10 @@ System.out.println("ADVANCING AT " + TagConstants.toString(tag));
                 }
 
                 case TagConstants.ALSO_EXSURES:
+		    tag = TagConstants.EXSURES;
+		    ErrorSet.error(loc,
+			"Original ESC/Java keywords beginning with also_ are obsolete; they have been replaced with the corresponding JML keywords and the use of 'also' - note that the semantics has also changed.");
+		    // fall through
                 case TagConstants.EXSURES:
                 case TagConstants.EXSURES_REDUNDANTLY: // SUPPORT COMPLETE (kiniry)
                 case TagConstants.SIGNALS: // SUPPORT COMPLETE (kiniry)
@@ -2605,6 +2613,11 @@ System.out.println("ADVANCING AT " + TagConstants.toString(tag));
 	    locAssignOp = scanner.startingLoc;
 	    scanner.getNextToken();
 	    init = parseVariableInitializer(scanner, false);
+	    if (tag == TagConstants.MODEL) {
+		ErrorSet.error(locAssignOp,
+		    "Model fields may not be initialized");
+		init = null;
+	    }
 	}
 	ModifierPragmaVec modifierPragmas = ModifierPragmaVec.make();
 	if (scanner.ttype == TagConstants.MODIFIERPRAGMA) {

@@ -14,8 +14,11 @@ Quant.java
 Helper.java
 InheritNull.java
 PreconditionWarnings.java
+NonNullResult.java
 ## Junit order dependence
 DesugaringA.java
+InheritedSpecs.java
+NL.java
 ## Pure and embedded checks
 Embedded.java
 EmbeddedA.java

@@ -455,7 +455,8 @@ Info.out("Combining type " + newtd.id);
 			tdee.setModifiers(tdee.getModifiers() | tde.getModifiers()); // trim & check
 			    // FIXME - check types and modifiers
 			    // FIXME - what about initializer ???
-			// FIXME - what combining to do???
+			combineFields( ((GhostDeclPragma)tde).decl,
+					((GhostDeclPragma)tdee).decl);
 			found = true;
 		    }
 		}
@@ -464,7 +465,6 @@ Info.out("Combining type " + newtd.id);
 		    td.elems.addElement(tde);
 		    tde.setParent(td);
 		}
-		
 	    } else if (tde instanceof ModelDeclPragma) {
 		ModelDeclPragma g = (ModelDeclPragma)tde;
 		for (int k=0; !found && k<td.elems.size(); ++k) {
@@ -474,6 +474,8 @@ Info.out("Combining type " + newtd.id);
 			tdee.setModifiers(tdee.getModifiers() | tde.getModifiers()); // trim & check
 			    // FIXME - check types and modifiers
 			// FIXME - what combining to do???
+			combineFields( ((ModelDeclPragma)tde).decl,
+					((ModelDeclPragma)tdee).decl);
 			found = true;
 		    }
 		}
