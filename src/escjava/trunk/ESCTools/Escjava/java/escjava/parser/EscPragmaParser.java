@@ -1881,6 +1881,27 @@ public class EscPragmaParser extends Parse implements PragmaParser
                     break;
                 }
 
+	    case TagConstants.NEW:
+		{
+		    int locNew = l.startingLoc;
+		    l.getNextToken();
+
+		    Type type = parsePrimitiveTypeOrTypeName(l);
+		    if (l.ttype != TagConstants.LBRACE) {
+			// usual new expression
+			primary = parseNewExpressionTail(l,type,locNew);
+			break;
+		    }
+		    l.getNextToken();
+		    // set comprehension
+		    FormalParaDecl fp = parseFormalParaDecl(l);
+		    expect(l,TagConstants.BITOR);
+		    Expr e = parseExpression(l);
+		    expect(l,TagConstants.RBRACE);
+		    primary = SetCompExpr.make(type,fp,e);
+		    // No suffix
+		    return primary;
+		}
             default:
                 primary = super.parsePrimaryExpression(l);
         }

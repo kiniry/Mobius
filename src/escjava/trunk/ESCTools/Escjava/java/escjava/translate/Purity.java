@@ -63,6 +63,7 @@ public abstract class Purity {
     int tag = expr.getTag();
 
     switch (tag) {
+    case TagConstants.SETCOMPEXPR:
     case TagConstants.NEWINSTANCEEXPR:
     case TagConstants.ASSIGN:
     case TagConstants.ASGMUL:

@@ -995,6 +995,23 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                     return e;
                 }
 
+	    case TagConstants.SETCOMPEXPR:
+		{
+		    SetCompExpr s = (SetCompExpr)e;
+
+		    env.resolveType(s.type);
+		    env.resolveType(s.fp.type);
+		    Env subenv = new EnvForLocals(env,s.fp);
+		    boolean savedPredicateContext = isPredicateContext;
+		    isPredicateContext = true;
+		    s.expr = checkExpr(subenv, s.expr, Types.booleanType);
+		    isPredicateContext = savedPredicateContext;
+		    setType( e, s.type);
+// FIXME - CHeck that the type is only JMLObjectSet, JMLValueSet
+// Check that the predicate has the correct restricted form
+		    return e;
+		}
+
 	    case TagConstants.NOTSPECIFIEDEXPR:
 		{
 		    setType( e, Types.voidType);

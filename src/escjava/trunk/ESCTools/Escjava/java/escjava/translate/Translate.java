@@ -2080,6 +2080,9 @@ public final class Translate
                 return GC.thisvar;
             }
 
+	    case TagConstants.SETCOMPEXPR:
+		ErrorSet.fatal(expr.getStartLoc(), "Set comprehension is not supported");
+
                 // Literals
             case TagConstants.BOOLEANLIT: 
             case TagConstants.CHARLIT:

@@ -41,6 +41,7 @@ import javafe.util.Location;
  *         + NotSpecifiedExpr ()
  *         + NothingExpr ()
  *         + ResExpr ()
+ *	   + SetCompExpr(Type type, Type typeBound, Identifier id, Expr e)
  *         + WildRefExpr (Expr expr)
  *         + GuardExpr (Expr expr)
  *         + DefPredLetExpr (DefPred* preds, Expr body)
@@ -270,6 +271,14 @@ public class ResExpr extends Expr
   public int getStartLoc() { return loc; }
 }
 
+public class SetCompExpr extends Expr
+{
+  //# Type type
+  //# FormalParaDecl fp
+  //# Expr expr
+
+  public int getStartLoc() { return fp.getStartLoc(); }
+}
 public class LockSetExpr extends Expr
 {
   //# int loc
