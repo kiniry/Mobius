@@ -1,4 +1,13 @@
 -------------------------------------------------------------------
+version 2.0a6
+
+
+New features include:
+  o Implementation of reasoning with model variables
+  o Implementation of a GUI for running ESC/Java2
+  o Better specifications from JML
+
+-------------------------------------------------------------------
 version 2.0a5
 
 This release is the first to include the JML specifications from the
