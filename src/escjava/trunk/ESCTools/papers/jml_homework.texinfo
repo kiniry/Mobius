@@ -191,8 +191,8 @@ verification with ESC/Java2.
 The following sections discuss all of the core constructs of JML with
 examples and exercises.  It is suggested that each exercise be completed
 in sequence, as the exercises build upon each other in the order
-presented.  @i{I.e.}, Problem @ref{Problem-2,,two} builds on the
-knowledge that you gained in Problem @ref{Problem-1,,one}.
+presented.  @i{I.e.}, @ref{Problem-2,,Problem two} builds on the
+knowledge that you gained in @ref{Problem-1,,Problem one}.
 
 It is assumed that the reader has a basic understanding of the
 following notions: @emph{assertion}, @emph{invariant},
@@ -210,8 +210,6 @@ following notions: @emph{assertion}, @emph{invariant},
 * Aliasing::                    Reasoning in the face of aliasing adversity.
 * Models::                      Specifying and reasoning with models.
 @end menu
-
-@page
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @node Assertions, Assumptions, Core, Core
@@ -274,8 +272,6 @@ Thus, you are @strong{not} reasoning about another potential runtime
 exception, as all subtypes of @code{Error} are ignored by ESC/Java. (add
 xref)
 
-@page
-
 @strong{Problem 1.} @anchor{Problem-1} Annotate the following code
 with Java assertions as indicated.  The expression @code{P(a0,a1,...)}
 means ``replace this expression with a predicate that is true of the
@@ -300,8 +296,6 @@ your answers, then attempt to verify your answers using
 @example
 @include problems/JmlAssertions.java.texinfo
 @end example
-
-@page
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @node Assumptions, PrePost, Assertions, Core
@@ -332,7 +326,7 @@ might be overriding, and all invariants of the class
 (More details about method specifications and class invariants will be
 covered shortly.)
 
-Notice that, to reason about @code{n()}, @strong{nothing} needs to be
+Notice that, to reason about @code{n()}, @emph{nothing} needs to be
 known about the body of the @code{main()} method of
 @code{JmlAssertions}.  Thus, all of the assumptions you made by
 reading the body of @code{main()} are unknown to ESC/Java2.
@@ -351,13 +345,14 @@ In JML, an assume statement has the form
 The assume statement thus has the exact same structure of the assert
 statement, but means exactly the opposite.
 
-@strong{Problem 3.} @anchor{Problem-3} Annotate your code from Problem
-@ref{Problem-2,,two} with JML assumptions.  Try to write down the
-@emph{minimal} set of assumptions that ensure all of your assertions
-verify correctly with ESC/Java2.
+@strong{Problem 3.} @anchor{Problem-3} Annotate your code from
+@ref{Problem-2,,Problem two} with JML assumptions.  Try to write down
+the @emph{minimal} set of assumptions that ensure all of your
+assertions verify correctly with ESC/Java2.
 
 For the following discussion we will refer to the answer key found in
-the class @code{JmlAssertionsAndAssumptionsKey}.
+the class @code{JmlAssertionsAndAssumptionsKey}, duplicated here for
+reference.
 
 @example
 @include problems/JmlAssertionsAndAssumptionsKey.java.texinfo
@@ -372,18 +367,18 @@ weak as possible.
 
 For example, if one were to write
 @example
-  //@ assume p != null && t != null;
+  //@@ assume p != null && t != null;
 @end example
 to provide an assumption to fulfill the assertion
 @example
-  //@ assert p != null;
+  //@@ assert p != null;
 @end example
 the assertion would verify.  But the assumption is stronger than
 necessary, since the information about the variable @code{t} is
 superfluous.  The assumption can be made @emph{weaker} by simply
 removing the term @code{t != null} because @t{A && B ==> A}.  I.e.,
 @example
-  //@ assert p != null && t != null ==> p != null;
+  //@@ assert p != null && t != null ==> p != null;
 @end example
 is always a true assertion, regardless of the values of @code{p} and
 @code{t}.
@@ -399,7 +394,7 @@ discussed earlier.  (add xref)
 On the other hand, assumptions in the middle of a method can often be
 moved around with some latitude.  For example,  the statement
 @example
-  //@ assume i == 257;
+  //@@ assume i == 257;
 @end example
 in the method @code{o(int, Object, String)} could be moved earlier in
 the method.  In fact, because the variable @code{i} is not referenced
@@ -413,18 +408,38 @@ with the results of bitwise operations cannot be verified.
 
 Consider the following method:
 @example
-  static void nn(Object p, Object t) {
+  static void nn(Object p, Object t) @{
     int i = 1, j = 1;
     i = i | 0x100;
-    //@ assert i == 257;
-    //@ assert 0 <= i && i <= 1000;
-    //@ assert i == (1 | 0x100);
-  }
+    //@@ assert i == 257;
+    //@@ assert 0 <= i && i <= 1000;
+    //@@ assert i == (1 | 0x100);
+  @}
 @end example
 While all three assertions are true, only the third one (the most
 complicated one, in some respects!) can be verified by ESC/Java2.
-This weakness is being investigate at this time (see Bug #965748 at
-SourceForge for more information).
+This weakness is due to the fact that the theorem prover used by
+ESC/Java2 (called ``Simplify'') does not deal with bitwise operations
+(see Bug #965748 at SourceForge for more information).  Thus, one
+cannot reason about any variables involved in bitwise operations at
+this time.
+
+Assume statements are not to be used lightly.  In fact, as a general
+rule, one should use assumes only as an absolute last resort.  It is
+entirely too easy to introduce subtle inconsistencies to
+specifications with assume statements.  If such an inconsistency
+exists, then the related methods will verify immediately because they
+have a false premise.
+
+E.g., this method verifies:
+@example
+  void m() @{
+    //@@ assume i == 0 && i == 1;
+    //@@ assert true == false;
+  @}
+@end example
+
+@page
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @node PrePost, Modifies, Assumptions, Core
@@ -432,11 +447,42 @@ SourceForge for more information).
 
 @cindex Preconditions and Postconditions
 
-A @emph{specification} of the class or its methods which says that the
-manner in which the class is used here is actually @emph{correct}.
+A @emph{specification} of the class and its methods describes the
+manner in which the class is correctly used.  To write such a
+specification, one uses two primary concepts: @emph{method contracts}
+and @emph{class invariants}.  The problems of this section will focus
+on the former; invariants will be dealt with later. (add xref).
 
-To write such a specification, one uses two primary concepts:
-@emph{method contracts} and @emph{class invariants}.
+A @emph{method contract} consists of two basic assertions: a
+@emph{precondition} which states under which circumstances the method
+is guaranteed to behave correctly, and a @emph{postcondition} which
+states what is true when the method completes executing.
+
+The assume statements written for the preceding problems that were
+``pushed'' to the beginning of the method are preconditions; they
+state some of the conditions necessary for their method to terminate
+properly.
+
+The process of writing preconditions is a tricky business.
+Preconditions must be ensured by the @emph{caller} of the method,
+therefore everything stated in the precondition must be checkable by
+the caller, prior to making the call.  Thus, one can only
+(legitimately) express assertions in precoditions that are ``at least
+as visible'' as the method they are guarding.
+
+@strong{Problem 3.} @anchor{Problem-3} Annotate the following code
+with @emph{preconditions} only.  Consider what are the
+@emph{necessary} conditions for the method bodies to (a) not fail
+abnormally (e.g., throw NullPointerExceptions,
+ArrayIndexOutOfBoundExceptions, etc.), @emph{and} (b) perform their
+job correctly (e.g., not compute an incorrect value, given your
+intuition of the purpose of the method).
+
+@c Additionally, frequently in Java APIs various exceptions are thrown
+@c in response to particular 
+
+@c use of \old in postconditions
+
 
 @page
 
@@ -445,6 +491,24 @@ To write such a specification, one uses two primary concepts:
 @unnumberedsec Frame Axioms
 
 @cindex Frame Axioms
+
+@c class C {
+@c   static int i;
+
+@c   public void l() {
+@c     //@ assume i == 0;
+@c     m();
+@c     //@ assert true == false;
+@c   }
+
+@c   //@ behavior
+@c   //@ requires i == 0;
+@c   //@ modifies C.*;
+@c   //@ ensures i == 1;
+@c   public void m() {
+@c     i++;
+@c   }
+@c }
 
 @page
 

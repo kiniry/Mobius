@@ -8,12 +8,14 @@ class JmlAssertionsAndAssumptionsKey extends Predicates
   static Object o;
   static String s;
 
+  //@ modifies i, s, o;
   static void m() {
     i++;
     s = new String("foo");
     o = new Integer(1);
   }
 
+  //@ modifies i;
   static void n(int j, Object p, String t) {
     //@ assume p != null;
     //@ assert p != null;
@@ -29,6 +31,7 @@ class JmlAssertionsAndAssumptionsKey extends Predicates
     }
   }
 
+  //@ modifies JmlAssertionsAndAssumptionsKey.s;
   static Object o(int i, Object o, String s) {
     //@ assume o instanceof Integer;
     //@ assume ((Integer)o).intValue() == 1;
@@ -42,7 +45,7 @@ class JmlAssertionsAndAssumptionsKey extends Predicates
       //@ assume i == 257;
       i ^= 0xFF;
       //@ assert i == 510;
-      JavaAssertionsKey.s += "piggie";
+      JmlAssertionsAndAssumptionsKey.s += "piggie";
       return s;
     }
   }
@@ -78,10 +81,14 @@ class JmlAssertionsAndAssumptionsKey extends Predicates
   }
   
   public static void main(String[] args) {
-    //@ assert i == 0;
-    //@ assert s == null;
-    //@ assert o == null;
+    //@ assume i == 0;
+    // assume s == null;
+    // assume o == null;
+    // assert i == 0;
+    // assert s == null;
+    // assert o == null;
     m();
+    //@ assume i == 1;
     //@ assert i == 1;
     //@ assert s.equals("foo");
     //@ assert ((Integer)o).intValue() == 1;

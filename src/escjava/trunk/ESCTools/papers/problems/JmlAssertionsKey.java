@@ -34,7 +34,7 @@ class JmlAssertionsKey extends Predicates
     else {
       i ^= 0xFF;
       //@ assert i == 510;
-      JavaAssertionsKey.s += "piggie";
+      JmlAssertionsKey.s += "piggie";
       return s;
     }
   }
