@@ -423,7 +423,7 @@ public class Call extends GuardedCmd
   //# int scall
   //# int ecall
 
-    //# boolean inlined
+  //# boolean inlined
 
   // This is a backedge, so it can't be a child:
   //@ invariant rd != null
@@ -456,6 +456,8 @@ public class ExprDeclPragma extends TypeDeclElemPragma
 
   public int getStartLoc() { return loc; }
   public int getEndLoc() { return expr.getEndLoc(); }
+  public boolean isRedundant() { return redundant; }
+  public void setRedundant(boolean v) { redundant = v; }
 }
 
 public class ModelDeclPragma extends TypeDeclElemPragma
@@ -665,17 +667,15 @@ public class CondExprModifierPragma  extends ModifierPragma {
 
     //# PostCheckCall
     private void postCheck() {
-        boolean goodtag =
-             ( tag == TagConstants.MODIFIES
-             || tag == TagConstants.ALSO_MODIFIES);
+        boolean goodtag = (tag == TagConstants.ALSO_MODIFIES ||
+                           tag == TagConstants.MODIFIES);
         boolean isJMLExprModifier = isJMLExprModifier();
         Assert.notFalse(goodtag || isJMLExprModifier);
     }
 
     private boolean isJMLExprModifier() {
-        return ( 
-                 tag == TagConstants.JML_MODIFIABLE
-                || tag == TagConstants.JML_ASSIGNABLE);
+        return (tag == TagConstants.JML_ASSIGNABLE ||
+                tag == TagConstants.JML_MODIFIABLE);
     }
 
     public int getStartLoc() { return loc; }
