@@ -336,7 +336,26 @@ clean_escjava_parser_test:
 	rm -f $(PARSER_TEST_DIR)/*.out
 	rm -f $(CLASSDIRECTORY)/javafe/parser/test/*.class
 
+CD_AND_JAVA = echo "."; cd $(PARSER_TEST_DIR); $(JAVA) -classpath $(ESCJAVA_CLASSPATH) $(PARSER_TEST_PACKAGE)
+
 test_lexer: compile_escjava_parser_test_programs
+	@echo "text_lexer: "
+	@$(CD_AND_JAVA).TestLex GoodPragmas.j    | diff - GoodPragmas.ans
+	@$(CD_AND_JAVA).TestLex GoodSpecExpr.j   | diff - GoodSpecExpr.ans
+	@$(CD_AND_JAVA).TestLex GoodJmlPragmas.j | diff - GoodJmlPragmas.ans
+	@$(CD_AND_JAVA).TestLex lookahead GoodPragmas.j | diff - GoodPragmas.ans
+	@$(CD_AND_JAVA).TestLex lookahead GoodSpecExpr.j   | diff - GoodSpecExpr.ans
+	@$(CD_AND_JAVA).TestLex lookahead GoodJmlPragmas.j | diff - GoodJmlPragmas.ans
+
+test_parser: compile_escjava_parser_test_programs
+	@$(CD_AND_JAVA).TestEscPragmaParser print TypeDeclElemPragmas1.java | \
+		diff - TypeDeclElemPragmas1.ans
+
+test_parser_idempotence: compile_escjava_parser_test_programs
+	@$(CD_AND_JAVA).TestEscPragmaParser progress check idempotence \
+		*.java $(SOURCEDIRECTORY)/escjava/ast/*.java
+
+was_test_lexer: compile_escjava_parser_test_programs
 	(cd $(PARSER_TEST_DIR); \
 	$(JAVA) $(PARSER_TEST_PACKAGE).TestLex GoodPragmas.j | diff - GoodPragmas.ans; \
 	$(JAVA) $(PARSER_TEST_PACKAGE).TestLex GoodSpecExpr.j | diff - GoodSpecExpr.ans; \
@@ -345,13 +364,13 @@ test_lexer: compile_escjava_parser_test_programs
 	$(JAVA) $(PARSER_TEST_PACKAGE).TestLex lookahead GoodSpecExpr.j | diff - GoodSpecExpr.ans; \
 	$(JAVA) $(PARSER_TEST_PACKAGE).TestLex lookahead GoodJmlPragmas.j | diff - GoodJmlPragmas.ans)
 
-test_parser: compile_escjava_parser_test_programs
+was_test_parser: compile_escjava_parser_test_programs
 	(cd $(PARSER_TEST_DIR); \
-	$(JAVA) $(PARSER_TEST_PACKAGE).TestEscPragmaParser print \
+	$(JAVA)  -classpath $(ESCJAVA_CLASSPATH) $(PARSER_TEST_PACKAGE).TestEscPragmaParser print \
 		TypeDeclElemPragmas1.java | \
 		diff - TypeDeclElemPragmas1.ans)
 
-test_parser_idempotence: compile_escjava_parser_test_programs
+was_test_parser_idempotence: compile_escjava_parser_test_programs
 	(cd $(PARSER_TEST_DIR); \
 	$(JAVA) $(PARSER_TEST_PACKAGE).TestEscPragmaParser progress check idempotence \
 		*.java $(SOURCEDIRECTORY)/escjava/ast/*.java)
