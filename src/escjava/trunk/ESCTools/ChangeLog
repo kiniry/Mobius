@@ -1,33 +1,384 @@
-2003-06-05  cok  <cok@kind.cs.kun.nl>
+2003-07-04  David Cok  <cok@frontiernet.net>
+
+	* Simplify/libs/:
+	Adding Joe's libraries into the CVS repository.
+
+	* Escjava/escj:
+	* release-files/escjava2:
+	A few corrections to the release scripts.
+
+	* Javafe/test/javafe/test/fe/test1104/.cvsignore:
+	* Javafe/test/javafe/test/fe/test1104/ans:
+	* Javafe/test/javafe/test/fe/test1104/run:
+	Removing a test that is obsolete and has been superceded.
+
+	* Escjava/test/escjava/test/Makefile:
+	* Escjava/test/escjava/test/rtest:
+	* Escjava/test/escjava/test/rtestall:
+	* Escjava/test/junittests/Makefile:
+	* Javafe/test/javafe/test/fe/test1102/run:
+	* Escjava/Makefile:
+	* Escjava/escj:
+	* Escjava/escjava2.sample:
+	* Escjava/java/escjava/Main.java:
+	* Escjava/simplify:
+	* Javafe/test/javafe/test/PrintTest:
+	* Javafe/test/javafe/test/fe/Makefile:
+	* Javafe/test/javafe/test/fe/do:
+	* Javafe/test/javafe/test/fe/make_outputs:
+	* Javafe/test/javafe/test/fe/skipunlessall:
+	* Javafe/test/javafe/test/typecheckJDK:
+	* Javafe/test/javafe/test/typecheckJavafe:
+	* Makefile:
+	* Makefile.defs:
+	* Makefile.local.sample:
+	* README.first:
+	* README.txt:
+	* Utils/Makefile:
+	* Utils/README:
+	* release-files/README.release:
+	* release-files/RELEASE_NOTES.txt:
+	* release-files/escjava2:
+	* release-files/quicktest:
+	* Javafe/Makefile:
+	Committing a fair amount of editing in support of cleaned up
+	Makefiles, environment variables.  Generated the start of a README
+	and of procedures to generate binary releases.
+
+2003-07-02  David Cok  <cok@frontiernet.net>
+
+	* Javafe/test/javafe/test/CountFilesLoaded.java:
+	* Javafe/test/javafe/test/LocTool.java:
+	* Javafe/test/javafe/test/Print.java:
+	* Javafe/test/javafe/test/SuperlinksTest.java:
+	* Javafe/test/javafe/test/SupertypeTest.java:
+	* Escjava/java/escjava/Main.java:
+	* Escjava/java/escjava/Options.java:
+	* Escjava/java/escjava/ast/DerivedMethodDecl.java:
+	* Escjava/java/escjava/ast/EscPrettyPrint.java:
+	* Escjava/java/escjava/backpred/BackPred.java:
+	* Escjava/java/escjava/pa/PredicateAbstraction.java:
+	* Escjava/java/escjava/parser/EscPragmaParser.java:
+	* Escjava/java/escjava/parser/JmlCorrelatedReader.java:
+	* Escjava/java/escjava/prover/PPOutputStream.java:
+	* Escjava/java/escjava/prover/SubProcess.java:
+	* Escjava/java/escjava/sp/DSA.java:
+	* Escjava/java/escjava/sp/SPVC.java:
+	* Escjava/java/escjava/tc/FlowInsensitiveChecks.java:
+	* Escjava/java/escjava/translate/ErrorMsg.java:
+	* Escjava/java/escjava/translate/GC.java:
+	* Escjava/java/escjava/translate/GCSanity.java:
+	* Escjava/java/escjava/translate/GetSpec.java:
+	* Escjava/java/escjava/translate/LabelInfoToString.java:
+	* Escjava/java/escjava/translate/TrAnExpr.java:
+	* Escjava/java/escjava/translate/Translate.java:
+	* Escjava/java/escjava/translate/UniqName.java:
+	* Escjava/java/escjava/translate/VcToString.java:
+	* Escjava/test/escjava/parser/test/TestEscPragmaParser.java:
+	* Escjava/test/escjava/parser/test/TestLex.java:
+	* Escjava/test/junittests/AOption1.java:
+	* Escjava/test/junittests/AOption1.java-expected:
+	* Escjava/test/junittests/AOption2.java:
+	* Escjava/test/junittests/AOption2.java-expected:
+	* Escjava/test/junittests/BadOption.java:
+	* Escjava/test/junittests/BadOption.java-expected:
+	* Escjava/test/junittests/BadOptions2.java:
+	* Escjava/test/junittests/BadOptions2.java-expected:
+	* Escjava/test/junittests/Makefile:
+	* Escjava/test/junittests/SpecFile.jml-ckd:
+	* Escjava/test/junittests/TestSuite.java:
+	* Escjava/test/junittests/skip:
+	* Javafe/java/javafe/util/UsageError.java:
+	* Javafe/java/tohtml/DeclLinks.java:
+	* Javafe/java/javafe/CopyLoaded.java:
+	* Javafe/java/javafe/CountLines.java:
+	* Javafe/java/javafe/FrontEndTool.java:
+	* Javafe/java/javafe/Options.java:
+	* Javafe/java/javafe/PrintSpec.java:
+	* Javafe/java/javafe/SrcTool.java:
+	* Javafe/java/javafe/SrcToolOptions.java:
+	* Javafe/java/javafe/TestTool.java:
+	* Javafe/java/javafe/Tool.java:
+	* Javafe/java/javafe/util/ErrorSet.java:
+	Completed a moderate-size refactoring to separate storing and
+	handling of options from Main.  There are now various classes that
+	hold, parse, and print usage of options.  Also consolidated (many)
+	program exits into one place.  All of this is in support of JUnit
+	tests.  These require that we be able to reset the state of the
+	program to its initial state without having to restart the
+	program.  Now we can (mostly) just allocate a new Options object.
+
+	* Utils/junitutils/Utils.java: removing dead code.
+
+	* Utils/junitutils/Makefile: Repairing Makefile.
+
+2003-06-30  David Cok  <cok@frontiernet.net>
+
+	* Escjava/test/escjava/test/Makefile:
+	* Escjava/test/escjava/test/test58/.cvsignore:
+	* Escjava/test/escjava/test/test58/ans:
+	* Escjava/test/escjava/test/test58/out.raw:
+	* Escjava/test/escjava/test/test65/.cvsignore:
+	* Escjava/test/escjava/test/test65/ans:
+	* Escjava/test/escjava/test/test65/out.raw:
+	Cleaning up generated files.
+
+	* Escjava/Makefile:
+	* Escjava/test/escjava/test/Makefile:
+	* Escjava/test/escjava/test/rtest:
+	Changes to keep diffs files for later inspection.
+
+	* Escjava/test/junittests/skip: skipping a platform dependent test.
+
+	* Escjava/test/junittests/Makefile: Bug fix.
+
+	* Makefile.defs: Bug fix on a path.
+
+	* Escjava/test/escjava/test/Makefile:
+	Updating the Makefile to inherit the environment.
+
+	* Makefile.defs: Fixing the setting of ESCJ_SIMPLIFY.
+
+	* Simplify/simplify/PPC_DARWIN/Simplify: Removing a generated file.
+
+	* Escjava/release/master/bin/Simplify-1.5.4.macosx:
+	Readded this build of Simplify on MacOSX, using cm3 from fink, as
+	a binary file.
+
+	* Escjava/test/escjava/test/Makefile:
+	Changing name of output files from diff to diffs.
+
+	* .cvsignore: Ignoring Makefile.local.
+
+	* Escjava/release/master/bin/Simplify-1.5.4.macosx:
+	Converting to a binary file.
+
+	* Escjava/test/escjava/test/:
+	Adding diffs to .cvsignore files throughout.
+
+	* Makefile.local:
+	* Makefile.local.sample:
+	Changing Makefile.local to Makefile.local.sample so that
+	individuals can maintain their own Makefile.local file without
+	ocnflict with CVS.
+
+	* Utils/junit.jar: Readded for JUnit capability, as binary.
+
+	* Utils/junit.jar: Removing file to add it again as binary.
+
+	* Makefile, Makefile.defs: Adding JUnit test capabilities.
+
+	* Escjava/Makefile: Adding JUnit tests to Escjava.
+
+	* Escjava/test/junittests/.cvsignore:
+	* Escjava/test/junittests/Makefile:
+	* Escjava/test/junittests/MethodRefHelper.jml:
+	* Escjava/test/junittests/RS.refines-spec:
+	* Escjava/test/junittests/SpecFile.jml:
+	* Escjava/test/junittests/SpecFile.jml-ckd:
+	* Escjava/test/junittests/SpecFile.jml-expected:
+	* Escjava/test/junittests/SpecFile.refines-java:
+	* Escjava/test/junittests/SpecFile.spec:
+	Adding junittests to Escjava.
+
+	* Utils/Makefile:
+	* Utils/README:
+	* Utils/junit.jar:
+	* Utils/junitutils/.cvsignore:
+	* Utils/junitutils/Diff.java:
+	* Utils/junitutils/LineIterator.java:
+	* Utils/junitutils/Makefile:
+	* Utils/junitutils/README:
+	* Utils/junitutils/TestCase.java:
+	* Utils/junitutils/TestFilesTestSuite.java:
+	* Utils/junitutils/Utils.java:
+	Added utilities to support JUnit tests, including junit.jar.
+
+	* Escjava/test/junittests/AA.java:
+	* Escjava/test/junittests/AA.java-expected:
+	* Escjava/test/junittests/AString.java:
+	* Escjava/test/junittests/AString.java-expected:
+	* Escjava/test/junittests/AccessMods.java:
+	* Escjava/test/junittests/AccessMods.java-expected:
+	* Escjava/test/junittests/AlsoInherit.java:
+	* Escjava/test/junittests/AssignOnConstructor.java:
+	* Escjava/test/junittests/AssignOnConstructor.java-expected:
+	* Escjava/test/junittests/BadAccess.java:
+	* Escjava/test/junittests/BadAccess.java-expected:
+	* Escjava/test/junittests/Everything.java:
+	* Escjava/test/junittests/Everything.java-expected:
+	* Escjava/test/junittests/Everything2.java:
+	* Escjava/test/junittests/Everything2.java-expected:
+	* Escjava/test/junittests/FormalNonnullInheritance.java:
+	* Escjava/test/junittests/FormalNonnullInheritance.java-expected:
+	* Escjava/test/junittests/GhostMethod.java:
+	* Escjava/test/junittests/GhostMethod.java-expected:
+	* Escjava/test/junittests/Heavyweight.java:
+	* Escjava/test/junittests/Heavyweight.java-expected:
+	* Escjava/test/junittests/MethodInSpec.java:
+	* Escjava/test/junittests/MethodInSpec.java-expected:
+	* Escjava/test/junittests/MethodRef.java:
+	* Escjava/test/junittests/MethodRef.java-expected:
+	* Escjava/test/junittests/Methods.java:
+	* Escjava/test/junittests/ModelMethod.java:
+	* Escjava/test/junittests/ModelMethod.java-expected:
+	* Escjava/test/junittests/ModelMethods2.java:
+	* Escjava/test/junittests/ModelMethods2.java-expected:
+	* Escjava/test/junittests/Modifies.java:
+	* Escjava/test/junittests/Modifies.java-expected:
+	* Escjava/test/junittests/ModifiesPure.java:
+	* Escjava/test/junittests/ModifiesPure.java-expected:
+	* Escjava/test/junittests/NoBody.java:
+	* Escjava/test/junittests/NoBody.java-expected:
+	* Escjava/test/junittests/ParseDepends.java:
+	* Escjava/test/junittests/ParseDepends.java-expected:
+	* Escjava/test/junittests/ParseDependsBad.java:
+	* Escjava/test/junittests/ParseDependsBad.java-expected:
+	* Escjava/test/junittests/ParseDiverges.java:
+	* Escjava/test/junittests/ParseDiverges.java-expected:
+	* Escjava/test/junittests/ParseExample.java:
+	* Escjava/test/junittests/ParseExample.java-expected:
+	* Escjava/test/junittests/ParseImports.java:
+	* Escjava/test/junittests/ParseImports.java-expected:
+	* Escjava/test/junittests/ParseImports2.java:
+	* Escjava/test/junittests/ParseImports2.java-expected:
+	* Escjava/test/junittests/ParseImports3.java:
+	* Escjava/test/junittests/ParseImports3.java-expected:
+	* Escjava/test/junittests/ParseInitially.java:
+	* Escjava/test/junittests/ParseInitially.java-expected:
+	* Escjava/test/junittests/ParseModelMethod.java:
+	* Escjava/test/junittests/ParseModelMethod.java-expected:
+	* Escjava/test/junittests/ParseModifies.java:
+	* Escjava/test/junittests/ParseModifies.java-expected:
+	* Escjava/test/junittests/ParseOld.java:
+	* Escjava/test/junittests/ParseOld.java-expected:
+	* Escjava/test/junittests/ParsePlus.java:
+	* Escjava/test/junittests/ParsePlus.java-expected:
+	* Escjava/test/junittests/ParsePure.java:
+	* Escjava/test/junittests/ParsePure.java-expected:
+	* Escjava/test/junittests/ParseRange.java:
+	* Escjava/test/junittests/ParseRange.java-expected:
+	* Escjava/test/junittests/ParseRepresents.java:
+	* Escjava/test/junittests/ParseWhen.java:
+	* Escjava/test/junittests/ParseWhen.java-expected:
+	* Escjava/test/junittests/PureCheck.java:
+	* Escjava/test/junittests/PureCheck.java-expected:
+	* Escjava/test/junittests/PureCheck2.java:
+	* Escjava/test/junittests/PureCheck2.java-expected:
+	* Escjava/test/junittests/Represents.java:
+	* Escjava/test/junittests/SimpleFunction.java:
+	* Escjava/test/junittests/SimpleFunction.java-expected:
+	* Escjava/test/junittests/SpecFileRef.java:
+	* Escjava/test/junittests/SpecFileRef.java-expected:
+	* Escjava/test/junittests/SpecFileRef2.java:
+	* Escjava/test/junittests/SpecFileRef2.java-expected:
+	* Escjava/test/junittests/Test.java:
+	* Escjava/test/junittests/Test2.java:
+	* Escjava/test/junittests/TestSuite.java:
+	* Escjava/test/junittests/skip:
+	* Escjava/test/junittests/sub/ParseImportHelper.java:
+	Adding JUnit tests to Escjava.
+
+2003-06-29  David Cok  <cok@frontiernet.net>
+
+	* Simplify/simplify/PPC_DARWIN/Html.i3:
+	* Simplify/simplify/PPC_DARWIN/Html.io:
+	* Simplify/simplify/PPC_DARWIN/Html.m3:
+	* Simplify/simplify/PPC_DARWIN/Html.mo:
+	* Simplify/simplify/PPC_DARWIN/Simplify.1:
+	* Simplify/simplify/PPC_DARWIN/Simplify.1.html:
+	* Simplify/simplify/PPC_DARWIN/Simplify.mo:
+	* Simplify/simplify/PPC_DARWIN/Simplify.mx:
+	* Simplify/simplify/PPC_DARWIN/_m3main.mc:
+	* Simplify/simplify/PPC_DARWIN/_m3main.o:
+	Removing generated files from CVS.
+
+	* Simplify/prover/src/gens/m3makefile:
+	Just correcting a missing newline.
+
+	* Escjava/release/master/bin/Simplify-1.5.4.macosx:
+	A version of Simplify built from released sources (don't know if
+	these actually correspond to version 1.5.4) for MacOSX using the
+	CM3 compiler V5.2.4 from fink.
+
+2003-06-29  Joseph Kiniry  <kiniry@trystero.local.>
+
+	* Simplify/simplify/PPC_DARWIN/Html.i3:
+	* Simplify/simplify/PPC_DARWIN/Html.io:
+	* Simplify/simplify/PPC_DARWIN/Html.m3:
+	* Simplify/simplify/PPC_DARWIN/Html.mo:
+	* Simplify/simplify/PPC_DARWIN/Simplify:
+	* Simplify/simplify/PPC_DARWIN/Simplify.1:
+	* Simplify/simplify/PPC_DARWIN/Simplify.1.html:
+	* Simplify/simplify/PPC_DARWIN/Simplify.mo:
+	* Simplify/simplify/PPC_DARWIN/Simplify.mx:
+	* Simplify/simplify/PPC_DARWIN/_m3main.mc:
+	* Simplify/simplify/PPC_DARWIN/_m3main.o:
+	Simplify build for OS X.
+
+2003-06-28  David Cok  <cok@frontiernet.net>
+
+	* Escjava/test/escjava/test/rtest:
+	Avoiding confusion about the 'diff' file.
+
+	* Escjava/test/escjava/test/.cvsignore: Adding a .cvsignore file.
+
+	* Escjava/java/escjava/AnnotationHandler.java:
+	Adding an error if a pure method has assignable clauses.
+
+	* Escjava/java/escjava/Main.java:
+	Changes to help make Escjava reentrant, so that we can use JUnit
+	for tests.
+
+	* Escjava/test/escjava/test/test40/ans:
+	Updating test case to reflect that non_null is now allowed,
+	redundantly, on the formal parameters of overriding method
+	declarations.
+
+	* Escjava/java/escjava/tc/FlowInsensitiveChecks.java:
+	Change so that we don't produce an error about a method being
+	annotated pure if it is in a .class (binary) file.
+
+	* Javafe/java/javafe/tc/OutsideEnv.java:
+	* Javafe/java/javafe/util/ErrorSet.java:
+	* Javafe/java/javafe/CopyLoaded.java:
+	* Javafe/java/javafe/FrontEndTool.java:
+	* Javafe/java/javafe/PrintSpec.java:
+	* Javafe/java/javafe/TestTool.java:
+	* Javafe/java/javafe/Tool.java:
+	Changes to help make Escjava reentrant, so that we can use JUnit
+	for tests.
+
+2003-06-05  David Cok  <cok@frontiernet.net>
 
 	* Javafe/java/javafe/ast/TypeDeclElem.j:
 	* Javafe/java/javafe/ast/hierarchy.j:
-	Adding methods to get and set modifier bits
+	Adding methods to get and set modifier bits.
 
 	* Escjava/test/escjava/test/test38/ans:
 	* Escjava/test/escjava/test/test58/out.raw:
-	Corrected test results
+	Corrected test results.
 
 	* Javafe/java/javafe/parser/Lex.java:
 	Slight changes in lexing so that 0..x is not recognized as a
-	double followed by an (illegal) .
+	double followed by an (illegal).
 
 	* Escjava/java/escjava/AnnotationHandler.java:
 	Enabling checks of class purity and checking purity of new
-	instance expressions in annotations
+	instance expressions in annotations.
 
 	* Escjava/java/escjava/parser/EscPragmaParser.java:
-	Fixing a bug in handling of depends clauses
+	Fixing a bug in handling of depends clauses.
 
 	* Escjava/java/escjava/tc/FlowInsensitiveChecks.java:
 	Adding purity checks, conditional duration and working_space,
-	fixing other small bugs
+	fixing other small bugs.
 
 	* Escjava/java/escjava/translate/TrAnExpr.java:
-	Adding partial support for new array expressions in annotations
+	Adding partial support for new array expressions in annotations.
 
 	* Escjava/test/escjava/test/Makefile:
-	Slight changes to be able to capture actual output
+	Slight changes to be able to capture actual output.
 
 2003-05-27  David Cok  <cok@frontiernet.net>
 
@@ -66,24 +417,24 @@
 	formal parameters if it is present in overridden declarations.
 
 	* Escjava/test/escjava/test/rtest:
-	Putting -quiet, as expected, on the running of escj for the tests
+	Putting -quiet, as expected, on the running of escj for the tests.
 
 	* Javafe/java/javafe/tc/PrepTypeDeclaration.java:
-	COmmenting out an error no appropriate for java 1.4
+	Commenting out an error no appropriate for Java 1.4.
 
 	* Javafe/java/javafe/tc/FlowInsensitiveChecks.java:
 	* Escjava/java/escjava/translate/Substitute.java:
 	* Escjava/java/escjava/translate/Purity.java:
-	Embellishing the error message
+	Embellishing the error message.
 
 	* Escjava/java/escjava/tc/Types.java:
-	Added a range type for the .. operator; no use of it yet
+	Added a range type for the .. operator; no use of it yet.
 
 	* Escjava/java/escjava/parser/JmlCorrelatedReader.java:
-	Fixing a bug with -parsePlus support (ending a comment with @+*/)
+	Fixing a bug with -parsePlus support (ending a comment with @+*/).
 
 	* Escjava/java/escjava/backpred/FindContributors.java:
-	Fixing spelling error
+	Fixing spelling error.
 
 2003-05-23  Joseph R. Kiniry  <kiniry@acm.org>
 
@@ -196,7 +547,7 @@
 2003-05-22  David Cok  <cok@frontiernet.net>
 
 	* Escjava/java/escjava/parser/EscPragmaParser.java:
-	Fixing parsing of method calls in annotations
+	Fixing parsing of method calls in annotations.
 
 2003-05-22  Patrice Chalin  <chalin@cs.concordia.ca>
 
