@@ -1,0 +1,7 @@
+This directory (Utils) contains utility software that was not shipped 
+with the Esctools but is used in conjunction with it. -- DRCok
+
+junitutils - a set of classes that is used in junit tests of the Esctools
+	(package junitutils); needs junit.jar
+
+junit.jar - a copy of the JUnit library (version 3.8.1)
