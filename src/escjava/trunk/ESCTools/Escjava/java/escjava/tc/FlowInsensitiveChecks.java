@@ -991,6 +991,15 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                     break;
                 }
 
+	    case TagConstants.MODELMETHODDECLPRAGMA: {
+                MethodDecl decl = ((ModelMethodDeclPragma)e).decl;
+                Env rootEnv = Modifiers.isStatic(decl.modifiers)
+                    ? rootSEnv
+                    : rootIEnv;
+		// FIXME -- need to do some checks???
+		break;
+            }
+
 	    case TagConstants.MODELDECLPRAGMA: {
                 FieldDecl decl = ((ModelDeclPragma)e).decl;
                 Env rootEnv = Modifiers.isStatic(decl.modifiers)

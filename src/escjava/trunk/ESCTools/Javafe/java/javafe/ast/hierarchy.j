@@ -486,6 +486,7 @@ public abstract class TypeDeclElemPragma
 
   public TypeDecl getParent() { return parent; }
   public void setParent(TypeDecl p) { parent = p; }
+  public void decorate(ModifierPragmaVec modifierPragmas) {}
 }
 
 

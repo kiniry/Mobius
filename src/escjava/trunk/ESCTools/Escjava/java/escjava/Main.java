@@ -14,7 +14,7 @@ import escjava.ast.TagConstants;
 import escjava.ast.Modifiers;
 
 import escjava.backpred.FindContributors;
-//import escjava.translate.Annotation;
+import escjava.AnnotationHandler;
 
 import javafe.reader.StandardTypeReader;
 import escjava.reader.EscTypeReader;
@@ -210,6 +210,7 @@ public class Main extends javafe.SrcTool
     //* Which file to obtain the universal background predicate from.
     public static String univBackPredFile = null;
 
+    public AnnotationHandler annotationHandler = new AnnotationHandler();
 
     // Generating an options message
 
@@ -870,6 +871,7 @@ public class Main extends javafe.SrcTool
 	NoWarn.setStartLine(startLine, cu);
 
         UniqName.setDefaultSuffixFile(cu.getStartLoc());
+	annotationHandler.handleModelMethods(cu);
 	super.handleCU(cu);
 
 	startLine = -1;		// StartLine applies only to first CU
@@ -995,7 +997,7 @@ public class Main extends javafe.SrcTool
 	//====== Stage 2.5 - desugar the annotations, including desugaring model
 	//====== fields and use of methods in annotations
 
-	//(new Annotation()).process(td);
+	annotationHandler.process(td);
 
 	// ==== Start stage 3 ====
 	if (3 <= stages) {

@@ -66,6 +66,7 @@ import javafe.util.Location;
  *         + ExprDeclPragma (Expr expr) // Axiom, ObjectInvariant
  *	    + GhostDeclPragma (GhostFieldDecl decl)
  *	    + ModelDeclPragma (ModelFieldDecl decl)
+ *         + ModelMethodDeclPragma (MethodDecl decl)
  *         + StillDeferredDeclPragma (Identifier var)
  *    - Stmt ()
  *       - StmtPragma ()
@@ -469,6 +470,27 @@ public class ModelDeclPragma extends TypeDeclElemPragma
   public int getEndLoc() { return decl.getEndLoc(); }
 }
 
+public class ModelMethodDeclPragma extends TypeDeclElemPragma
+{
+  //# MethodDecl decl
+  //# int loc
+
+  public void setParent(TypeDecl p) {
+    super.setParent(p);
+    if (decl != null) 
+	decl.setParent(p);
+  }
+
+  public int getStartLoc() { return loc; }
+  public int getEndLoc() { return decl.getEndLoc(); }
+  public void decorate(ModifierPragmaVec modifierPragmas) {
+    if (decl.pmodifiers == null) {
+	decl.pmodifiers = modifierPragmas;
+    } else if (modifierPragmas != null) {
+	decl.pmodifiers.append(modifierPragmas); 
+    }
+  }
+}
 public class GhostDeclPragma extends TypeDeclElemPragma
 {
   //# FieldDecl decl

@@ -541,6 +541,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
             }
             //@ assume scanner.m_in != null;  // TBW: is this right??  --KRML
 
+	    // FIXME - not everything allows modifiers
 	    int prefixModifiers = parseModifiers(scanner);
 
             // Start a new pragma
@@ -550,8 +551,9 @@ public class EscPragmaParser extends Parse implements PragmaParser
 		scanner.lookahead(1) == TagConstants.EOF) {
 		return false;
 	    }
-	    if (scanner.ttype != TagConstants.IDENT)
-                ErrorSet.fatal(loc, "Pragma must start with an identifier");
+	    // Pragmas can start with modifiers
+	    //if (scanner.ttype != TagConstants.IDENT)
+            //    ErrorSet.fatal(loc, "Pragma must start with an identifier");
             Identifier kw = scanner.identifierVal;
             scanner.getNextToken();
 
@@ -742,29 +744,12 @@ public class EscPragmaParser extends Parse implements PragmaParser
                     break;
 
                 case TagConstants.JML_MODEL:
+		    prefixModifiers |= Modifiers.ACC_MODEL;
                 case TagConstants.GHOST:
                     {
                     dst.ttype = TagConstants.TYPEDECLELEMPRAGMA;
 	      
-		    while (true) {
-			int modifiers = parseModifiers(scanner);
-			if ((modifiers & prefixModifiers) != 0) {
-			    ErrorSet.warning(loc, TagConstants.toString(tag) +
-			       " annotation has a repeated access modifier");
-			}
-			prefixModifiers = modifiers | prefixModifiers;
-
-			if (scanner.ttype != TagConstants.IDENT) break; 
-			if (scanner.identifierVal.toString().equals("pure")) {
-			    modifiers |= Modifiers.ACC_PURE;
-		 	} else if (scanner.identifierVal.toString().equals("helper")) {
-			    modifiers |= Modifiers.ACC_HELPER;
-			} else {
-			    break;
-			}
-			scanner.getNextToken();
-		    }
-		    int modifiers = prefixModifiers;
+		    int modifiers = prefixModifiers | parseModifiers(scanner,true);
 			
                     ModifierPragmaVec modifierPragmas = this.modifierPragmas;
 	      
@@ -814,8 +799,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
 						raises, body, locOpenBrace,
 						loc, locId, locThrowsKeyword,
 						id, type,locType);
-			dst.auxVal = null;
-
+			dst.auxVal = ModelMethodDeclPragma.make(md,loc);
 		    } else {
 			if (scanner.ttype == TagConstants.ASSIGN) {
 			    locAssignOp = scanner.startingLoc;
@@ -1690,5 +1674,71 @@ public class EscPragmaParser extends Parse implements PragmaParser
     //@ ensures \result.syntax
     public TypeName parseExsuresTypeName(EscPragmaLex /*@ non_null @*/ l) {
 	return parseTypeName(l);	
+    }
+
+    //@ requires l.m_in != null
+    //@ modifies modifierPragmas
+    public int parseModifiers(/*@ non_null @*/ Lex l) {
+	return parseModifiers(l,false);
+    }
+
+    public int parseModifiers(/*@ non_null @*/ Lex l, boolean inModel) {
+        boolean seenPragma = false;
+        int modifiers = Modifiers.NONE;
+
+        getModifierLoop:
+        for(;;) {
+            if (l.ttype == TagConstants.MODIFIERPRAGMA) {
+		// This part does not seem to work, since the Pragmas are
+		// lexed as IDENTs
+                if (! seenPragma) { seqModifierPragma.push(); seenPragma = true; }
+                seqModifierPragma.addElement(l.auxVal);
+                l.getNextToken();
+                continue getModifierLoop;
+            } else {
+	      for( int i=0; i<modifierKeywords.length; i++ ) {
+                if( l.ttype == modifierKeywords[i] ) {
+                    // Token is modifier keyword 
+                    int modifierBit = 1<<i;
+                    if( (modifiers & modifierBit) != 0 ) {
+                        fail(l.startingLoc, "Duplicate occurrence of modifier '"
+                             +PrettyPrint.inst.toString(l.ttype)+"'");
+                    }
+                    if( (modifiers & Modifiers.ACCESS_MODIFIERS) != 0 &&
+                        (modifierBit & Modifiers.ACCESS_MODIFIERS) != 0 ) {
+                        fail(l.startingLoc, 
+                             "Cannot have more than one of the access modifiers "+
+                             "public, protected, private");
+                    }
+                    modifiers |= modifierBit;
+                    l.getNextToken();
+                    continue getModifierLoop;
+                }
+              }
+	      if (inModel) {
+		  int tag = l.ttype;
+		  if (tag == TagConstants.IDENT)
+			    tag = TagConstants.fromIdentifier(l.identifierVal);
+		  if (tag == TagConstants.JML_PURE) {
+			modifiers |= Modifiers.ACC_PURE;
+			l.getNextToken();
+			continue getModifierLoop;
+		  }		
+		  if (tag == TagConstants.HELPER) {
+			modifiers |= Modifiers.ACC_HELPER;
+			l.getNextToken();
+			continue getModifierLoop;
+		  }		
+	      }
+	    }
+            // Next token is not a modifier
+
+            if (! seenPragma)
+                modifierPragmas = null;
+            else
+                modifierPragmas
+                    = ModifierPragmaVec.popFromStackVector(seqModifierPragma);
+            return modifiers;
+        }
     }
 }

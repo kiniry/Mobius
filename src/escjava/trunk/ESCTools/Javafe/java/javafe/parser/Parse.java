@@ -258,8 +258,9 @@ public class Parse extends ParseStmt
     
     /* Build up Vec of TypeDeclElems in class or interface */
     seqTypeDeclElem.push();
-    while( l.ttype != TagConstants.RBRACE ) 
+    while( l.ttype != TagConstants.RBRACE ) {
       parseTypeDeclElemIntoSeqTDE( l, keyword, id, specOnly );
+    }
     TypeDeclElemVec elems =
 	TypeDeclElemVec.popFromStackVector( seqTypeDeclElem );
 
@@ -492,7 +493,8 @@ VariableDeclarator:
 //	fail(l.startingLoc, 
 //	     "Cannot have modifiers on a TypeDeclElem pragma");
       TypeDeclElemPragma pragma = (TypeDeclElemPragma)l.auxVal;
-      if (pragma != null) seqTypeDeclElem.addElement( pragma );
+      pragma.decorate(modifierPragmas);
+      seqTypeDeclElem.addElement( pragma );
       l.getNextToken();
     }
     else {
