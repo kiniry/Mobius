@@ -1,10 +1,7 @@
 \documentclass[a4paper]{llncs}
 
-% \usepackage{latexsym}
-%\usepackage{amsmath}
-% \usepackage{xspace}
+\usepackage{epsf}     %% om xfig gegenereerde pstexs te includen
 
-%\input prooftree
 
 % to be removed in final version
 \pagestyle{plain}
@@ -22,7 +19,9 @@
   \email{\{Nestor.Catano, Marieke.Huisman\}@sophia.inria.fr}
 }
 
-
+\newcommand{\noth}{\(\backslash\)\texttt{nothing}}
+\newcommand{\fieldsof}{\(\backslash\)\texttt{fields\_of}}
+\newcommand{\reach}{\(\backslash\)\texttt{reach}}
 \newcommand{\comment}[1]{\marginpar{\framebox{\begin{minipage}{\marginparwidth}{#1}\end{minipage}}}}
 
 \begin{document}
@@ -32,7 +31,22 @@
 
 
 \begin{abstract}
+This paper presents a case study in formal specification of smart card
+programs, using ESC/Java. It presents an electronic purse application,
+provided by Gemplus, that we have annotated with its functional
+specification (\emph{i.e.}~pre-post-conditions, modifies clauses and
+class invariants), that are as detailed as possible. The specification
+has been based on the informal documentation of the application. The
+implementation has been checked \emph{w.r.t.}~the specification, using
+ESC/Java.  This revealed several errors or possibilities for
+improvement in the code (\emph{e.g.}~removing unnecessary tests). 
 
+The main contribution of this paper is that it shows that relatively
+lightweight use of formal specification techniques already can have
+serious impact on the quality of a program, and its
+documentation. Further, we also present some ideas on how ESC/Java
+could be further improved, both
+\emph{w.r.t.}~specification and verification.
 \end{abstract}
 
 \section{Introduction}
@@ -40,105 +54,111 @@
 
 \paragraph{Background}
 When developing a large software application, a significant part of
-the work goes into writing clear and concise documentation for
-it. This documentation servers several purposes: it helps the
-developers of the application (to understand the implementation
-decisions taken by a colleague, but also to understand ones own
-decisions after a certain period of time), but it also is used if
-somebody else builds a new application, using features provided by the
-application at hand. 
+the work is spent on writing clear and concise documentation. This
+documentation serves several purposes: it helps the developers of the
+application (to understand the implementation decisions taken by a
+colleague, but also to understand ones own decisions after a certain
+period of time), and it also is of use when somebody else builds a new
+application, using features provided by the application at hand.
 
 However, such program documentation is only useful if it correctly
-describes the implementation. Preferablely, one would like to have
-some trust in the correctness of the specification. A way to achieve
-this is to write a formal specification and then prove the correctness
-of the implementation \emph{w.r.t.}~this specification, but this is
-difficult (as it requires a good understanding of the semantics
-underlying the specification and programming language), and
-labour-intensive (see \emph{e.g.}~\cite{HuismanJB00a} for an example of
-full program verification), thus although it is feasible to do this,
-the costs in general do not outweight the benefits.
+describes the implementation, thus one would like to have some trust
+in its appropriateness. A way to achieve this is to write a formal
+specification and then prove the correctness of the implementation
+\emph{w.r.t.}~this specification, but this is difficult (as it
+requires a good understanding of the semantics underlying the
+specification and programming language), and labour-intensive (see
+\emph{e.g.}~\cite{HuismanJB00a} for an example of full program
+verification). Thus, although it is feasible to do formal
+specification and verification, the costs in general do not outweigh
+the benefits.
 
 Recently, several suggestions have been made to overcome these
-problems. To encourage application developers to write formal
-specifications, specification languages have been developed which are
-close to programming languages. The annotation language for
-Eiffel~\cite{Meyer97} is first example of this, and recently several
-annotation language for Java have been proposed, following the same
-strategy, \emph{e.g.}~JML~\cite{LeavensBR99}, Esc/Java~\cite{ESCJavaUrl},
-and the Jass annotation language~\cite{JassUrl}. For JML and Esc/Java, some
+problems. First of all, to encourage application developers to write
+formal specifications, specification languages have been developed
+which are close to programming languages. The annotation language for
+Eiffel~\cite{Meyer97} is the first example of such a specification
+language, and recently several annotation languages for Java have been
+proposed, following the same strategy:
+JML~\cite{LeavensBR99}, Esc/Java~\cite{ESCJavaUrl}, and
+the Jass annotation language~\cite{JassUrl}. For JML and Esc/Java,
 effort has been put into making these specification languages
-converge~\cite{EscJmlDiff}. Typical for these languages is that
+converge~\cite{EscJmlDiff}, so that the respective tools can be used
+for both languages. Typical for these languages is that
 expressions are written as Java expressions, extended with some
-specification-specific constructs. 
+specification-specific constructs.
 
-Together with the Esc/Java language, a static checker has been
-developed~\cite{ESCJavaUrl}, which can be used to check simple, but useful
-properties. The static checker tries to check that the program
-satisfies the annotations, by using a dedicated, automated theorem
-prover. This automated theorem prover has been fine-tuned to find
-problems in a program like \texttt{NullpointerException}s, and
-\texttt{ArrayIndexOutOf\-BoundException}s, but it also can be used to
-try to check other annotations. If it cannot establish that a certain
-specification is satisfied, it issues a warning. However, this does
-not necessarily mean that the program is wrong, because the Esc/Java
+Secondly, together with the Esc/Java language, a static checker has
+been developed~\cite{ESCJavaUrl}, which can be used to check simple,
+but useful properties. This static checker tries to check that a
+program satisfies its annotations, by using a dedicated, automated
+theorem prover. This automated theorem prover has been fine-tuned to
+find common programming problems like
+\texttt{Null\-pointer\-Exception}s, and
+\texttt{Array\-Index\-Out\-Of\-Bound\-Exception}s, but it also can be
+used to check other annotations. If it cannot establish that a certain
+specification is satisfied, it issues a warning. Such a warning does
+not necessarily mean that the program is wrong, as the Esc/Java
 approach is neither sound, nor complete. When designing the system, a
 compromise has been made between soundness, completeness, and
 efficiency. The result is an efficient checker, that can increase the
 confidence in the correctness of programs, and that finds many common
 programming errors. However, if one wishes to establish formally the
 correctness of a complicated algorithm, other verification techniques
-have to be used, \emph{e.g.}~as advocated in the LOOP
-project~\cite{LOOPUrl} or the Jive project~\cite{MeyerP00}. But even in these 
-cases it can be useful to first Esc/Java, to find a first
-approximation of the errors in the algorithm and, or specification,
-before diving into the complete formal verification. 
+have to be used, as advocated \emph{e.g.}~in the LOOP
+project~\cite{LOOPUrl} or the Jive project~\cite{MeyerP00}. But even
+for such complex algorithms it pays to off to use Esc/Java first, in
+order to find a first approximation of the errors in the algorithm
+and/or specification, before diving into the complete formal
+verification.
 
 Annotating programs with Esc/Java specifications can thus be helpful
-to create -- reasonably quickly -- clear and concise documentation for
-a software application, which is accordingly to the implementation.
+to create -- reasonably quick -- clear and concise documentation for
+a software application, which is according to the implementation.
 
 \paragraph{This paper}
 To demonstrate the usefulness of this approach, this paper describes
 the Esc/Java annotation of a smart card application case study, which
-is describing the implementation of an electronic purse. The original
-source code comes from Gemplus~\cite{PurseUrl}, and in this paper we describe 
-the annotations for the source code, and several possibilities for
-improvement that we encountered.  
+is the implementation of an electronic purse. The original source code
+of this case study comes from Gemplus~\cite{PurseUrl}. In this
+paper we discuss the annotations of the source code, and several
+possibilities for improvement that we encountered.
 
 The result of this work does not give a fully verified specification,
 but it gives a reasonable description of the electronic purse
 implementation, which could serve as a basis for further formal
-verification, \emph{e.g.}~using the LOOP compiler.  The main
+verification, \emph{e.g.}~by using the LOOP compiler.  The main
 contribution of this paper is that it shows that by making light
-weigth use of formal verification techniques, it is feasible to
+weight use of formal verification techniques, it is feasible to
 \emph{(i)} write a formal specification of an application, and
-\emph{(ii)} have this specification checked so as to increase
-confidence in the specification. When specifying the purse we have
-found several (simple) properties which were informally
-documented, but which were not preserved by the implementation. It was 
-straightforward to formally specify these properties (typically as
-class invariants) and Esc/Java would immediately find the places where 
-these properties were not preserved in the implementation.
+\emph{(ii)} have the implementation checked \emph{w.r.t.}~the 
+specification so as to increase confidence in the correctness of the
+implementation. When specifying the purse we have
+found several (simple) properties which are informally documented, but
+are not preserved by the implementation. It is straightforward to
+formally specify these properties (typically as class invariants) and
+Esc/Java immediately finds the places where these properties are
+not preserved in the implementation.
 
 Furthermore, this case study has been one of the first larger case
 studies done by using Esc/Java\comment{Is this correct?}, and we found
 several points for improvement in the static checker and its
-specification language. This lead us to a wishlists on improvements in
+specification language. This lead us to a wish list on improvements in
 the specification language and to the development of a checker for
-so-called modifiable clauses. This checker will be fully described in
-a separate paper, but we used it here to get further confidence in the
-accurateness of the specification.
+so-called modifiable clauses. This checker will be described in a
+separate paper, but we use it in this case study to get further
+confidence in the accurateness of the specification.
 
 The remaining of this paper is organised as
 follows. Section~\ref{SectGenPurse} describes the general outline of
 the case study. Section~\ref{SectStatic} describes the tools that we
 used for the static checking of the specification: Esc/Java and our
 own modifiability checker. Section~\ref{SectSpecPurse} describes the
-annotations of the purse in more detail, in discusses several
-interesting aspects of the specification. Finally,
-Section~\ref{SectConcl} gives conclusions and focusses further on the
-value of this work.
+annotations of the purse in more detail, and discusses several
+interesting aspects of the specification. Section~\ref{SectESC}
+comments on the use of ESC/Java and gives suggestions for
+improvement. Finally, Section~\ref{SectConcl} gives conclusions and
+presents future work.
 
 
 
@@ -160,8 +180,8 @@ general outline of \textit{the electronic purse}.
 \rule{\linewidth}{0.3mm}
 \\[2.5ex]
 \centering
-%\epsfig{file=figures/javacard.eps, width=11cm, clip=}
-\caption{Outline of the purse}
+\mbox{\epsfxsize=5cm\epsffile{figures/javacard.eps}}
+\caption{General structure of usage of purse application}
 \label{fig-cas-pur}
 \rule{\linewidth}{0.3mm}
 \end{figure}
@@ -260,18 +280,130 @@ the code for the libraries is not available.
 
 
 \subsection{The general specification approach}
+ESC/Java forces one to start writing specifications for the classes
+that are `used' by many other classes, either because they are used as 
+components or because they are inherited from. In the electronic purse 
+case study most classes inherit directly from classes as
+\emph{e.g.}~\texttt{Object}, \texttt{Exception} or -- in the case of
+interfaces -- \texttt{Shareable}, so the inheritance structure is not
+very complex. Therefore, we started by specifying classes that
+provide basic (and general) features, \emph{e.g.}~those in the
+\texttt{utils} package,
+that are used by the more classes in the \texttt{purse} package. The
+specifications for these basic classes form the basis for the
+specification of the more application-specific classes, so it is
+important that they are sufficiently detailed.
+
+For every method, we specify the precondition (\texttt{requires} clause
+in ESC/Java), the postcondition (\texttt{ensures}), the modifies
+clause (\texttt{modifiable}), and the exceptional postcondition
+(\texttt{exsures}). ESC/Java does not have a keyword to specify that a
+method may not modify any variables, but this is implied by the
+absence of a modifies clause. To make our specifications explicit
+about this, in such a case we added a comment
+\texttt{modifiable \noth;} -- as in JML. Further, ESC/Java requires 
+that every exception that is mentioned in the exceptional
+postcondition, is also mentioned in the \texttt{throws} clause of the
+method. To avoid having to add \texttt{throws} clauses to all methods,
+in many cases we chose to have the assertion \texttt{exsures
+(Exception) false;} as a comment, without having it checked by
+ESC/Java. However, everywhere where there can be any doubt about the
+correctness of the \texttt{exsures} clause, we add the \texttt{throws}
+clauses and have it checked by ESC/Java.
+
+When writing method specifications, two different approaches can be
+taken: either a precondition is given which ensures that no exceptions
+will be thrown, or one specifies a light precondition
+(\emph{e.g.}~true), and an exceptional postcondition which describes
+under which conditions an exception will be thrown. For example, given
+the left specification, one has to show that \texttt{P} is satisfied
+before the method is called, and then it is guaranteed that the method
+cannot produce an exception, while the right hand specification makes
+no requirements on the method call, but specifies that if an exception
+occurs, this is because \texttt{P} did not hold.
+\begin{verbatim}
+/*@ modifiable M;                     /*@ modifiable M;
+    requires P;                           requires true;
+    ensures Q;                            ensures Q;
+    exsures (E) false;                    exsures (E) !P;
+*/                                    */
+void m() {                            void m () {
+..                                    ..
+}                                     }
+\end{verbatim}
+
+In our specifications, we usually follow the first appraoch, which
+is close to the \emph{design by contract} approach~\cite{Meyer97},
+unless the informal documentation clearly suggests that the second
+approach is intended.
+
+Further, we specify appropriate class invariants for each class,
+typically restricting the set of legal values for the instance
+variables. In some cases, the class invariant immediately follows from
+the informal documentation (\emph{e.g.}~the documentation in class
+\texttt{Decimal} states
+\texttt{the decimal part must be done in the interval [000,999]}), and
+in other cases the appropriate class invariant follows from closer
+inspection of the code, \emph{e.g.}~a variable is never \texttt{null}.
+Section~\ref{SectSpecDetails} discusses the specification of class
+invariants in more detail.
+
+Sometimes discrepancies between the informal documentation and the
+implementation occur. In general we try to follow the informal
+documentation, and we correct the implementation where necessary
+(and document these changes). 
+
+In the case study, several functions from the JavaCard
+API~\cite{?} are used. When we specify methods using API
+functionalities, we use the API specification as constructed by Erik
+Poll~\cite{?}. 
+In the classes \texttt{Purse} and \texttt{PurseApplet}, several
+classes are used that we do not have access to. To overcome this
+problem, we ... \comment{What do we do? Does the Houdini paper give a
+solution?} 
+
+Our aim is to give a functional specification of the behaviour of the
+purse. However, we did not study the algorithms to manage secret keys,
+and therefore we only give light weight specification
+(\emph{i.e.}~specifying the precondition and modifies clauses, but no
+postcondition) of the classes dealing with key generation and
+certification. This enables to write and check the specifications of
+the classes \texttt{Purse} and \texttt{PurseApplet}. How to specify
+and verify cryptographic algorithms is a topic of future research.
+
+We aim at giving specifications which produce a minimal amount of
+ESC/Java warnings, but not all warnings can be avoided. Typically, if
+a complex control structure occurs in a method (\emph{e.g.}~loops in
+which method calls are made) ESC/Java is no longer able to estabish
+complicated postconditions. If one wishes to certify these methods,
+other verification techniques, as advocated \emph{e.g.}~in the LOOP
+project~\cite{LOOPUrl}, should be used. However, in the case study at
+hand such complex control structures are not very frequent, and
+ESC/Java is able to check most of the specifications without any
+problems.
+
+At~\cite{CatanoH01Url} the full annotated version of the purse case
+study can be found. In the code it is documented which postconditions
+cannot be established by ESC/Java. It is also documented which changes 
+we have had to make to the code.
 
 
 
-
-
-
-\subsection{Interesting aspects of the specification}
-The following sections present some interesting problems found in the
-process of doing assertions for the purse application. These cases
-highlight some commun programming problems and they show how an
-verification tool can be used to find them. 
-
+\subsection{Interesting aspects of the specification}\label{SectSpecDetails}
+Below, several interesting aspects of the specification are discussed
+in more detail. First we will elaborate on some implementation errors
+that we found in the purse application.  Then we discuss the
+specification of implicit class invariants, and how this can help to
+simplify the code. Finally, we discuss some miscellaneous aspects of
+the case study, and present some possible improvements. The problems
+that we have found probably also would have been found by doing
+thorough testing, but using theorem proving techniques one is sure not
+to forget some cases. Also, writing the formal specifications forces
+one to think very precisely about the intended behaviour of programs,
+which helps in finding errors.
+\comment{I suggest to merge paragraph coding errors and the one about
+the final modifiers into one paragraph. I also move the implicit
+invariants and the unnecessary try-catches in one}
 
 
 \paragraph{Coding errors}
@@ -295,52 +427,52 @@ d.getDecPart()}. In this way, the condition asserted by the clause
 \texttt{ensures} will be satisfied.
 
 
-\begin{center}
-\begin{figure}[hbt]
-\rule{\linewidth}{0.3mm}
-\rule{0em}{0.1ex}
-\begin{tabbing}
-pub\=lic\=cla\=ssD\=ecimale\=xtendsObject\kill
-\emph{1.}\>$\mathtt{package com.gemplus.pacap.utils\ ;}$ \\
-\\
-\emph{2.}\>$\mathtt{public\ class\ {\bf Decimal}\ extends\ Object\{}$ \\
-\>\>\vdots     \\
-\emph{3.}\>\>{\it /*@ spec$\_$public */} $\mathtt{private\ short\ intPart\ =\
-(short) 0\ ;}$ \\
-\emph{4.}\>\>{\it /*@ spec$\_$public */} $\mathtt{private\ short\ decPart\ =\ (short)\ 0\ ;}$ \\
-\>\>\vdots \\ 
-\emph{5.}\>\>{\it /*@}  \\
-\emph{6.}\>\>\>{\it //modifies $\backslash$nothing} \\
-\emph{7.}\>\>\>{\it requires d $!=$ null;} \\
-\emph{8.}\>\>\>{\it ensures $\backslash$ result $==$ (intPart $>$ d.intPart
-$||$} \\
-\emph{9.}\>\>\>\>{\it (intPart $==$
-d.intPart $\&\&$ (decPart $==$ d.decPart $||$ decPart $>$ d.decPart))) ;} \\ 
-\emph{10.}\>\>{\it */} \\
-\emph{11.}\>\>$\mathtt{public\ boolean\ {\bf isGreaterEqualThan}(Decimal\ d)\{}$ \\
-\emph{12.}\>\>\>$\mathtt{boolean\ resu\ =\ false\ ;}$ \\
-\\
-\emph{13.}\>\>\>$\mathtt{if(intPart\ >\ d.getIntPart())}$ \\
-\emph{14.}\>\>\>\>$\mathtt{resu\ =\ true\ ;}$ \\
-\emph{15.}\>\>\>$\mathtt{else\ if\ (intPart\ <\ d.getIntPart())}$ \\
-\emph{16.}\>\>\>\>$\mathtt{resu\ =\ false\ ;}$ \\
-\emph{17.}\>\>\>$\mathtt{else\ if(intPart\ ==\ d.getIntPart())\{} $        \\
-\emph{18.}\>\>\>\>$\mathtt{if((decPart\ >\ d.getDecPart())\ ||\ (decPart\ >\
-d.getDecPart()))}$ \\
-\emph{19.}\>\>\>\>\>$\mathtt{resu\ =\ true\ ;}$ \\
-\emph{20.}\>\>\>\>$\mathtt{else\ if\ (decPart\ <\ d.getDecPart())}$\\
-\emph{21.}\>\>\>\>\>$\mathtt{resu = false;}$ \\
-\emph{22.}\>\>\>$\mathtt{\}}$ \\
-\emph{23.}\>\>\>$\mathtt{return\ resu\ ;}$ \\
-\emph{24.}\>\>$\mathtt{\}}$ \\
-\>\>\vdots \\
-\emph{25.}\>$\mathtt{\}}$ 
-\end{tabbing}
-\caption{Piece of {\tt Decimal} class}
-\label{fig-cla-dec}
-\rule{\linewidth}{0.3mm}
-\end{figure}
-\end{center}
+%\begin{center}
+%\begin{figure}[tbh]
+%\rule{\linewidth}{0.3mm}
+%\rule{0em}{0.1ex}
+%\begin{tabbing}
+%pub\=lic\=cla\=ssD\=ecimale\=xtendsObject\kill
+%\emph{1.}\>$\mathtt{package com.gemplus.pacap.utils\ ;}$ \\
+%\\
+%\emph{2.}\>$\mathtt{public\ class\ {\bf Decimal}\ extends\ Object\{}$ \\
+%\>\>\vdots     \\
+%\emph{3.}\>\>{\it /*@ spec$\_$public */} $\mathtt{private\ short\ intPart\ =\
+%(short) 0\ ;}$ \\
+%\emph{4.}\>\>{\it /*@ spec$\_$public */} $\mathtt{private\ short\ decPart\ =\ (short)\ 0\ ;}$ \\
+%\>\>\vdots \\ 
+%\emph{5.}\>\>{\it /*@}  \\
+%\emph{6.}\>\>\>{\it //modifies $\backslash$nothing} \\
+%\emph{7.}\>\>\>{\it requires d $!=$ null;} \\
+%\emph{8.}\>\>\>{\it ensures $\backslash$ result $==$ (intPart $>$ d.intPart
+%$||$} \\
+%\emph{9.}\>\>\>\>{\it (intPart $==$
+%d.intPart $\&\&$ (decPart $==$ d.decPart $||$ decPart $>$ d.decPart))) ;} \\ 
+%\emph{10.}\>\>{\it */} \\
+%\emph{11.}\>\>$\mathtt{public\ boolean\ {\bf isGreaterEqualThan}(Decimal\ d)\{}$ \\
+%\emph{12.}\>\>\>$\mathtt{boolean\ resu\ =\ false\ ;}$ \\
+%\\
+%\emph{13.}\>\>\>$\mathtt{if(intPart\ >\ d.getIntPart())}$ \\
+%\emph{14.}\>\>\>\>$\mathtt{resu\ =\ true\ ;}$ \\
+%\emph{15.}\>\>\>$\mathtt{else\ if\ (intPart\ <\ d.getIntPart())}$ \\
+%\emph{16.}\>\>\>\>$\mathtt{resu\ =\ false\ ;}$ \\
+%\emph{17.}\>\>\>$\mathtt{else\ if(intPart\ ==\ d.getIntPart())\{} $        \\
+%\emph{18.}\>\>\>\>$\mathtt{if((decPart\ >\ d.getDecPart())\ ||\ (decPart\ >\
+%d.getDecPart()))}$ \\
+%\emph{19.}\>\>\>\>\>$\mathtt{resu\ =\ true\ ;}$ \\
+%\emph{20.}\>\>\>\>$\mathtt{else\ if\ (decPart\ <\ d.getDecPart())}$\\
+%\emph{21.}\>\>\>\>\>$\mathtt{resu = false;}$ \\
+%\emph{22.}\>\>\>$\mathtt{\}}$ \\
+%\emph{23.}\>\>\>$\mathtt{return\ resu\ ;}$ \\
+%\emph{24.}\>\>$\mathtt{\}}$ \\
+%\>\>\vdots \\
+%\emph{25.}\>$\mathtt{\}}$ 
+%\end{tabbing}
+%\caption{Piece of {\tt Decimal} class}
+%\label{fig-cla-dec}
+%\rule{\linewidth}{0.3mm}
+%\end{figure}
+%\end{center}
 
 
 
@@ -394,218 +526,441 @@ application. This kind of control is carried out by
 \textsc{Esc/Java}. 
 
 
-\begin{center}
-\begin{figure}[htb]
-\rule{\linewidth}{0.3mm}
-\\[2.0ex]
-\begin{tabbing}
-pub\=lic\=cla\=ssD\=ate  \kill
-$\mathtt{package\ com.gemplus.pacap.utils\ ;}$ \\
- \\
-$\mathtt{public\ abstract\ class\ {\bf Annee}\ extends\ Object\ \{}$ \\
-\>{\it //@ invariant MIN $<=$ MAX} \\
- \\ 
-\>$\mathtt{public\ static\ byte\ MIN\ =\ (byte)99\ ;} $\\
-\>$\mathtt{public\ static\ byte\ MAX\ =\ (byte)127\ ;} $\\
-\\
-\\
-\>{\it /*@} \\
-\>\>{\it //modifies $\backslash$nothing ;} \\
-\>\>{\it requires true ;} \\
-\>\>{\it ensures $\backslash$result $==$ (j $>=$ MIN $\&\&$ j $<=$ MAX) ;} \\
-\>\>{\it //exsures (RuntimeException)false ;} \\
-\>*/ \\
-\>$\mathtt{public\ static\ boolean\ {\bf check}(byte\ j)\ \{} $ \\
-\>\>$\mathtt{return\ ((j\ >=\ Annee.MIN)\ \&\&\ (j\ <=\ Annee.MAX))\ ;}$  \\
-\>$\mathtt{\}} $ \\
-$\mathtt{\}} $ \\
-\end{tabbing}
-\caption{{\tt Annee} class}
-\label{fig-cla-ann}
-\rule{\linewidth}{0.3mm}
+%\begin{center}
+%\begin{figure}[tbh]
+%\rule{\linewidth}{0.3mm}
+%\\[2.0ex]
+%\begin{tabbing}
+%pub\=lic\=cla\=ssD\=ate  \kill
+%$\mathtt{package\ com.gemplus.pacap.utils\ ;}$ \\
+% \\
+%$\mathtt{public\ abstract\ class\ {\bf Annee}\ extends\ Object\ \{}$ \\
+%\>{\it //@ invariant MIN $<=$ MAX} \\
+% \\ 
+%\>$\mathtt{public\ static\ byte\ MIN\ =\ (byte)99\ ;} $\\
+%\>$\mathtt{public\ static\ byte\ MAX\ =\ (byte)127\ ;} $\\
+%\\
+%\\
+%\>{\it /*@} \\
+%\>\>{\it //modifies $\backslash$nothing ;} \\
+%\>\>{\it requires true ;} \\
+%\>\>{\it ensures $\backslash$result $==$ (j $>=$ MIN $\&\&$ j $<=$ MAX) ;} \\
+%\>\>{\it //exsures (RuntimeException)false ;} \\
+%\>*/ \\
+%\>$\mathtt{public\ static\ boolean\ {\bf check}(byte\ j)\ \{} $ \\
+%\>\>$\mathtt{return\ ((j\ >=\ Annee.MIN)\ \&\&\ (j\ <=\ Annee.MAX))\ ;}$  \\
+%\>$\mathtt{\}} $ \\
+%$\mathtt{\}} $ \\
+%\end{tabbing}
+%\caption{{\tt Annee} class}
+%\label{fig-cla-ann}
+%\rule{\linewidth}{0.3mm}
+%\end{figure}
+%\end{center}
+
+
+
+
+
+%\begin{center}
+%\begin{figure}[tbh]
+%\rule{\linewidth}{0.3mm}
+%\\[2.0ex]
+%\begin{tabbing}
+%pub\=lic\=cla\=ssD\=ate\=ext\=endsObject  \kill
+%$\mathtt{public\ class\ {\bf Date}\ extends\ Object\ \{}$ \\
+
+%\>{\it /*@} \\
+%\>\>{\it invariant jour $>=$ Jour.MIN $\&\&$ jour $<=$ Jour.MAX ;} \\	
+%\>\>{\it invariant mois $>=$ Mois.MIN $\&\&$ mois $<=$ Mois.MAX ;} \\
+%\>\>{\it invariant annee $>=$ Annee.MIN $\&\&$ annee $<=$ Annee.MAX ;} \\
+%\>{\it */}
+%\\
+%\\
+%\>{\it /*@ spec$\_$public */} $\mathtt{private\ byte\ jour\ =\ Jour.MIN\ ;}$ \\
+%\>{\it /*@ spec$\_$public */} $\mathtt{private\ byte\ mois\ =\ Mois.MIN\ ; }$ \\   
+%\>{\it /*@ spec$\_$public */} $\mathtt{private\ byte\ annee\ =\ Annee.MIN\ ;}$ \\
+%\\ 
+%\\
+%\emph{1. }\>{\it /*@} \\ 
+%\emph{2. }\>\>{\it modifies jour, mois, annee ;} \\
+%\emph{3. }\>\>{\it requires j $>=$ Jour.MIN  $\&\&$ j $<=$ Jour.MAX ;} \\
+%\emph{4. }\>\>{\it requires m $>=$ Mois.MIN  $\&\&$ m $<=$ Mois.MAX ;} \\
+%\emph{5. }\>\>{\it requires a $>=$ Annee.MIN $\&\&$ a $<=$ Annee.MAX ;} \\
+%\emph{6. }\>\>{\it ensures jour $==$ j $\&\&$ annee $==$ a $\&\&$ mois $==$ m ;} \\
+%\emph{7. }\>\>{\it exsures (DateException) false ;} \\
+%\emph{8. }\>{\it */} \\
+%\>$\mathtt{public\ void\ {\bf setDate}(byte\ j,\ byte\ m,\ byte\ a)\ throws\ DateException\{}$ \\
+%\>\>{\it // check the day } \\        
+%\>\>$\mathtt{if(!Jour.check(j)) \{}$ \\
+%\>\>\>$\mathtt{DateException.throwIt(DateException.ERREUR\_JOUR)\ ;}$ \\
+%\>\>$\mathtt{\}else\ \{}$ \\
+%\>\>\>{\it // check the month} \\
+%\>\>\>$\mathtt{if(!Mois.check(m))\ \{}$\\
+%\>\>\>\>$\mathtt{DateException.throwIt(DateException.ERREUR\_MOIS)\ ;}$ \\
+%\>\>\>$\mathtt{\}else\ \{}$ \\
+%\>\>\>\>{\it // check the year} \\
+%\>\>\>\>$\mathtt{if(!Annee.check(a)) \{}$ \\
+%\>\>\>\>\>$\mathtt{DateException.throwIt(DateException.ERREUR\_ANNEE)\ ;}$ \\
+%\>\>\>\>$\mathtt{\}else\ \{}$ \\
+%\>\>\>\>\>{\it $\slash \slash$ all is good} \\
+%\>\>\>\>\>$\mathtt{jour\ =\ j\ ;} $\\
+%\>\>\>\>\>$\mathtt{mois\ =\ m\ ;} $\\
+%\>\>\>\>\>$\mathtt{annee\ =\ a\ ;} $\\
+%\>\>\>\>$\mathtt{\}}$ \\
+%\>\>\>$\mathtt{\}} $\\
+%\>\>$\mathtt{\}} $\\
+%\>$\mathtt{\}} $\\
+%\>$\vdots$ \\
+%$\mathtt{\}}$ \\
+%\end{tabbing}
+%\caption{{\tt Date} class}
+%\label{fig-cla-dat}
+%\rule{\linewidth}{0.3mm}
+%\end{figure}
+%\end{center}
+
+
+
+
+
+
+\paragraph{Class invariants}
+Typically, invariants are used to restrict the state space of a class,
+\emph{i.e.}~the set of allowed values for its instance variables. The
+most common example is an invariant which states that a reference
+variable may never be a null pointer, \emph{e.g.}~the variable
+\texttt{Purse purse}, as declared in the class \texttt{PurseApplet}
+should never be null.
+\begin{verbatim}
+//@ invariant purse != null;
+\end{verbatim}
+Another common example of an invariant is to restrict the possible
+values of a numeric variable to a certain range. As remarked above, in
+the class \texttt{Decimal} it says that the value of the decimal
+fraction must be between 0 and 999. Inspection of the code teaches us
+that the integer part of the decimal number is supposed to be a
+positive short, and combining this gives the following class
+invariant\footnote{\texttt{MAX\_DECIMAL\_NUMBER} is equivalent to the
+maximal value of a short and the clause \texttt{intPart <=
+MAX\_DECIMAL\_NUMBER} of the invariant will thus be
+ensured by the type of the variable. We chose to state this explicitly
+for clearity of specification.}
+\begin{verbatim}
+/*@
+  invariant decPart >= 0 && decPart < PRECISION ;
+  invariant intPart >= 0 && intPart <= MAX_DECIMAL_NUMBER;
+*/
+\end{verbatim}
+
+In Java(Card) there are no enumeration types, and to simulate them
+typically several constants are defined with suggestive names, and a
+variable is silently assumed to contain always one of these
+values. This implicit assumption can be made explicit by specifying
+invariants. For example, the class \texttt{Transaction} contains the
+following declarations.
+\begin{verbatim}
+/* the transaction status*/
+public static final byte INDETERMINE		= (byte)0;
+
+/* the transaction status*/
+public static final byte TYPE_CREDIT		= (byte)50;
+/* the transaction status*/
+public static final byte TYPE_DEBIT		= (byte)51;
+    
+/* the transaction type: debit or credit*/
+/*@ spec_public*/ private byte type;
+\end{verbatim}
+
+This suggests that the variable \texttt{type} always should have a
+value \texttt{TYPE\_CREDIT} or \texttt{TYPE\_DEBIT}. However, in the
+code (in the method \texttt{reset()}), an assignment \texttt{type =
+INDETERMINE;} occurs, suggesting that this is also a correct value for 
+\texttt{type}. Having a specification which states the allowed values
+for this variable avoids all confusion\footnote{However, notice that it 
+does not prevent that other -- arbitrary -- variables can have one of
+these values, thus this does not completely simulate enumeration
+types.}.
+\begin{verbatim}
+/*@ invariant type == INDETERMINE ||
+              type == TYPE_CREDIT || 
+              type == TYPE_DEBIT;
+*/
+\end{verbatim}
+
+Invariants of this kind occur often in the specification of the
+electronic purse. It is easy to specify them, and useful as well, as
+there are examples in the electronic purse where such implicit
+invariants are violated.
+For example, the class \texttt{AccessCondition} declares constants to
+state the different access conditions for the actions in the
+purse. Following~\cite{?}, variables that denote access conditions
+should be restricted as follows.
+\begin{verbatim}
+/*@ invariant condition == FREE ||
+              condition == LOCKED ||
+              condition == SECRET_CODE ||
+              condition == SECURE_MESSAGING ||
+              condition == (SECRET_CODE | SECURE_MESSAGING);
+*/
+\end{verbatim}
+
+However, in the constructor of this class, the variable
+\texttt{condition} is set to 0, which breaks this
+invariant. Correcting this and maintaining the invariant also allows
+to improve other parts of the implementation in this class. For
+example, in the method \texttt{verify()}, the following statement
+occurs:
+\begin{verbatim}
+switch(condition) {
+  case FREE: ...
+  case SECRET_CODE: ...
+  case SECURE_MESSAGING: ...
+  case SECRET_CODE | SECURE_MESSAGING: ...
+  case LOCKED: ...
+  default: //@ assert false;
+           t = AccessConditionException.CONDITION_COURANTE_INVALIDE;
+           AccessConditionException.throwIt(t);
+  }
+\end{verbatim}
+Because of the invariant we know that the default case will never
+be reached (as assured by the \texttt{//@ assert false;} annotation,
+which states that false should hold, every time this program point is
+reached), and thus that the exception never will be thrown. Thus, the
+default case can be removed from the code.
+
+Similar cases occur frequently with \texttt{try-catch} statements. An
+operation is executed within a \texttt{try}, but as the class invariants
+assure that the operation never will throw an exception, the
+\texttt{catch} clause will never be executed. In the specification, we 
+have annotated these cases with \texttt{//@ assert false;}. We think
+that the removal of this ``dead code'' can improve the readability of
+the class, and -- which is important for smart cards -- can reduce the 
+size of the byte code.
+
+
+\paragraph{Miscellaneous aspects of the specification}
+There are many other aspects of the specification that are worth
+mentioning. Here we mention some.
+
+\begin{itemize}
+\item As explained above, in the class \texttt{Decimal}, two shorts
+are maintained denoting the integer and the decimal part
+(\texttt{intPart} and \texttt{decPart}, respectively) of a decimal
+number. The integer part ranges between 0 and
+\texttt{MAX\_DECIMAL\_NUMBER} (which is 32767, the maximal value for
+shorts). It is left unspecified whether numbers such as
+\texttt{MAX\_DECIMAL\_NUMBER}.999 are allowed. However, 
+a method \texttt{round()} is defined, which
+according to the documentation returns a decimal number with
+\texttt{decPart} set to 0 and \texttt{intPart} set to the closest
+integer value. An obvious specification of this method reads as
+follows:
+\begin{verbatim}
+/*@ 
+  modifies intPart, decPart;
+  ensures decPart == 0;
+  ensures intPart == (\old(decPart) >= (PRECISION/2) ?
+                          (short)(\old(intPart) + 1) :
+                             (short)(\old(intPart)))
+*/
+public Decimal round(){ ... }
+\end{verbatim}
+But, as pointed out by ESC/Java, an implementation of this
+specification breaks the class invariant \texttt{intPart >= 0}. The
+counterexample that is produced has
+\texttt{intPart} set to \texttt{MAX\_DECIMAL\_NUMBER} and
+\texttt{decPart} \emph{e.g.}~to 999. Possible solutions are to
+specify explicitly the outcome of \texttt{round()} in the case that
+\texttt{intPart == MAX\_DECIMAL\_NUMBER}, or to restrict the set of
+valid decimal numbers, by further strengthening of the class invariant
+through addition of the following clause:
+\begin{verbatim}
+//@ invariant intPart == MAX_DECIMAL_NUMBER ==> decPart == 0;
+\end{verbatim}
+We chose this last solution. 
+
+\item Among the developers of the electronic purse application there
+apparently have been different ideas about the implementation of the
+class \texttt{Decimal}. The implementation of several
+\texttt{setValue(...)} methods
+reveal that \texttt{intPart} is assumed to be greater or equal than
+0, but on the other hand there are methods
+\texttt{isNegatif()} and \texttt{isPositif()}, which test whether a
+decimal value is negative or positive, respectively. As we specify
+that \texttt{intPart} should be greater or equal than
+0\footnote{\emph{cf.} our email exchange with H. Martin, Gemplus.}
+these methods become obsolete. We can show this by specifying
+that their results can be predicted, \emph{e.g.}~\texttt{isNegatif()} we 
+specify as follows:
+\begin{verbatim}
+/*@ 
+  ensures \result == false;
+*/
+public boolean isNegatif(){ ... }
+\end{verbatim}
+
+
+\item Two classes, \texttt{TransactionRecord} and
+\texttt{ExchangeRecord} implement a cyclic table (of
+\texttt{Transaction}s and
+\texttt{ExchangeSession}s (representing currency changes),
+respectively).  These implementations are clearly copied from each
+other, but this is nowhere documented. Also the fact that a
+cyclic datastructure is implemented is not very well documented. Class
+\texttt{TransactionRecord} contains a single remark that it is
+implemented as a cyclic table, and for class
+\texttt{ExchangeRecord} this is only stated in the documentation of a
+private method. Also, no specification of the operations on the cyclic
+datastructure are given.
+
+As a result, in class \texttt{ExchangeRecord}, part of the code that
+is crucial for the cyclidity has been commented out by other
+developers of the electronic purse. Having a formal specification
+would probably have been helpful to explain the complexity of the
+implementation to the other developers, and the 'wrong correction'
+would have been signalled earlier\footnote{Of course, having a general 
+implementation of a cyclic table and instantiating this for the
+different kinds of data would have been even more elegant.}.
+
+Finally, when writing the formal specifications of the cyclic tables,
+we found an error in the implementation. When a delete operation is
+called for an element that is not in the range of the table, the
+operation nevertheless will be executed and as a side-effect it will
+corrupt the table by erroneously moving its first element outside the
+range of the table.
+\end{itemize}
+
+
+\section{On the use of ESC/Java}
+\label{SectESC}
+We find ESC/Java a useful tool, that is pleasant to work
+with, but nevertheless we have some suggestions for improvements. In
+particular, we feel that certain specification constructs that are
+available in JML~\cite{LeavensBR99}, should be provided in ESC/Java as 
+well. They could be implemented as syntactic sugar only, but would be
+very useful to give clear and concise specifications.
+First of all, we would like to be able to use method names in
+specifications, as is allowed in JML for so-called
+\emph{pure} methods, \emph{i.e.}~methods without
+side-effects. Further, we would like to have some extra specification
+constructs for modifies clauses, \emph{e.g.}~\fieldsof, to denote all
+the fields of an object, and \noth. Also we feel that having some
+extra quantifiers, such as \texttt{\(\backslash\)min},
+\texttt{\(\backslash\)max}, and \texttt{\(\backslash\)choose} would be 
+very useful.
+
+\begin{figure}[tbh]
+\begin{verbatim}
+    /*@
+      modifies \fields_of(this), \fields_of(date), \fields_of(heure),
+               id[*], terminalTC[*], terminalSN[*];
+      requires es != null ;
+      requires es.id != terminalTC & es.id != terminalSN &
+               es.terminalTC != terminalSN;
+      ensures this.equal(es);
+      exsures (TransactionException e) 
+                  e._reason == TransactionException.BUFFER_FULL 
+                  && JCSystem._transactionDepth == 1; 
+      exsures (NullPointerException) false;
+      exsures (ArrayIndexOutOfBoundsException) false;
+    */
+    void clone(ExchangeSession es) { ...
+    } 
+\end{verbatim}
+\caption{Specification of \texttt{clone} in \texttt{ExchangeSession}
+in ideal ESC/Java}
+\label{FigIdealESC}
 \end{figure}
-\end{center}
 
+Figure~\ref{FigIdealESC} shows as an example how we would like the
+specification of the method \texttt{clone()} in class
+\texttt{ExchangeSession} to be (see~\cite{CatanoH01Url} for the
+ESC/Java specification as it is). We only specify that the fields of
+the current class all may be modified, without explicitly mentioning
+them. As the fields of the component classes \texttt{date} and
+\texttt{heure} may be modified as well, we mention this
+explicitly. Similarly, we mention explicitly that the elements in the
+arrays \texttt{id}, \texttt{terminalTC} and \texttt{terminalSN} may be
+modified\footnote{In JML one can write this modifies clause also
+simply as \fieldsof(\reach), which would probably be useful in many
+cases as well, but has a more complex semantics.}. Further, instead of
+having postconditions stating that all the fields are ensured to be
+equal to the corresponding fields of \texttt{es}, this is denoted by
+writing \texttt{this.equal(es)}, where \texttt{equal} is overwritten
+appropriately in \texttt{ExchangeSession}.
 
+Further, we feel that it would be an improvement if ESC/Java would
+deal more precisely with arithmetic operations (also on bytes and
+shorts). For example, several times we needed that for \emph{e.g.}~a
+byte \texttt{b} with a value between 0 and 10, after the operation
+\texttt{b++} this variable still has a positive value. 
 
-
-
-\begin{center}
-\begin{figure}[hbt]
-\rule{\linewidth}{0.3mm}
-\\[2.0ex]
-\begin{tabbing}
-pub\=lic\=cla\=ssD\=ate\=ext\=endsObject  \kill
-$\mathtt{public\ class\ {\bf Date}\ extends\ Object\ \{}$ \\
-
-\>{\it /*@} \\
-\>\>{\it invariant jour $>=$ Jour.MIN $\&\&$ jour $<=$ Jour.MAX ;} \\	
-\>\>{\it invariant mois $>=$ Mois.MIN $\&\&$ mois $<=$ Mois.MAX ;} \\
-\>\>{\it invariant annee $>=$ Annee.MIN $\&\&$ annee $<=$ Annee.MAX ;} \\
-\>{\it */}
-\\
-\\
-\>{\it /*@ spec$\_$public */} $\mathtt{private\ byte\ jour\ =\ Jour.MIN\ ;}$ \\
-\>{\it /*@ spec$\_$public */} $\mathtt{private\ byte\ mois\ =\ Mois.MIN\ ; }$ \\   
-\>{\it /*@ spec$\_$public */} $\mathtt{private\ byte\ annee\ =\ Annee.MIN\ ;}$ \\
-\\ 
-\\
-\emph{1. }\>{\it /*@} \\ 
-\emph{2. }\>\>{\it modifies jour, mois, annee ;} \\
-\emph{3. }\>\>{\it requires j $>=$ Jour.MIN  $\&\&$ j $<=$ Jour.MAX ;} \\
-\emph{4. }\>\>{\it requires m $>=$ Mois.MIN  $\&\&$ m $<=$ Mois.MAX ;} \\
-\emph{5. }\>\>{\it requires a $>=$ Annee.MIN $\&\&$ a $<=$ Annee.MAX ;} \\
-\emph{6. }\>\>{\it ensures jour $==$ j $\&\&$ annee $==$ a $\&\&$ mois $==$ m ;} \\
-\emph{7. }\>\>{\it exsures (DateException) false ;} \\
-\emph{8. }\>{\it */} \\
-\>$\mathtt{public\ void\ {\bf setDate}(byte\ j,\ byte\ m,\ byte\ a)\ throws\ DateException\{}$ \\
-\>\>{\it // check the day } \\        
-\>\>$\mathtt{if(!Jour.check(j)) \{}$ \\
-\>\>\>$\mathtt{DateException.throwIt(DateException.ERREUR\_JOUR)\ ;}$ \\
-\>\>$\mathtt{\}else\ \{}$ \\
-\>\>\>{\it // check the month} \\
-\>\>\>$\mathtt{if(!Mois.check(m))\ \{}$\\
-\>\>\>\>$\mathtt{DateException.throwIt(DateException.ERREUR\_MOIS)\ ;}$ \\
-\>\>\>$\mathtt{\}else\ \{}$ \\
-\>\>\>\>{\it // check the year} \\
-\>\>\>\>$\mathtt{if(!Annee.check(a)) \{}$ \\
-\>\>\>\>\>$\mathtt{DateException.throwIt(DateException.ERREUR\_ANNEE)\ ;}$ \\
-\>\>\>\>$\mathtt{\}else\ \{}$ \\
-\>\>\>\>\>{\it $\slash \slash$ all is good} \\
-\>\>\>\>\>$\mathtt{jour\ =\ j\ ;} $\\
-\>\>\>\>\>$\mathtt{mois\ =\ m\ ;} $\\
-\>\>\>\>\>$\mathtt{annee\ =\ a\ ;} $\\
-\>\>\>\>$\mathtt{\}}$ \\
-\>\>\>$\mathtt{\}} $\\
-\>\>$\mathtt{\}} $\\
-\>$\mathtt{\}} $\\
-\>$\vdots$ \\
-$\mathtt{\}}$ \\
-\end{tabbing}
-\caption{{\tt Date} class}
-\label{fig-cla-dat}
-\rule{\linewidth}{0.3mm}
-\end{figure}
-\end{center}
-
-
-
-
-
-
-\paragraph{Implicit invariants}
-The figure~\ref{fig-cla-acc} shows the \texttt{AccessCondition}
-class. This class models the access conditions for the purse
-commands. These access conditions are represented by the variables
-\texttt{FREE}, \texttt{LOCKED}, \texttt{SECRET$\_$CODE} and
-\texttt{SECURE$\_$MESSAGING}. The internal variable \texttt{condition} 
-may take one of these values. According to the purse
-specification~\cite{BMGL00}, the \texttt{AccessCondition} class have
-to verify the following invariant$:$ 
-
-\begin{tabbing}
-//@ invariant \=condition == FREE || condition == LOCKED \kill
-{\it $\slash\slash$@ invariant condition $==$ FREE $||$} \\
-\>{\it condition $==$ LOCKED $||$} \\
-\>{\it condition $==$ SECRET$\_$CODE $||$} \\
-\>{\it condition $==$ SECURE$\_$MESSAGING $||$} \\
-\>{\it condition $==$ (SECURE$\_$MESSAGING $|$ SECRET$\_$CODE)} \\
-\end{tabbing}
-
-This invariant establishes that the variable \texttt{condition} only
-takes a value declared in this class. This invariant is rejected by
-the \textsc{Esc/Java} compiler. The problem is found on the line
-$15$. There, its constructor initialises the variable
-\texttt{condition} to a value which have not been considered by the
-class \texttt{AccessCondition}. Apart from that, strangely this
-variable have been initialised to $FREE$ on the line $7$ and to $0$
-in the class constructor.
-
-
-
-
-\begin{center}
-\begin{figure}[hbt]
-\rule{\linewidth}{0.3mm}
-\rule{0em}{0.1ex}
-\begin{tabbing} 
-pac\=kag\=eco\=m.gemplus.pacap.purse; \kill 
-\emph{1.}\>$\mathtt{package com.gemplus.pacap.purse;}$\\
-\\
-\emph{2.}\>$\mathtt{public\ class\ {\bf AccessCondition}\ extends\ Object\{}$\\
-
-\emph{3.}\>\>$\mathtt{public\ static\ final\ byte\ FREE\		=\ (byte)1\ ;}$\\
-\emph{4.}\>\>$\mathtt{public\ static\ final\ byte\ LOCKED\		=\ (byte)2\ ;}$\\
-\emph{5.}\>\>$\mathtt{public\ static\ final\ byte\ SECRET\_CODE\	=\ (byte)4\ ;}$\\
-\emph{6.}\>\>$\mathtt{public\ static\ final\ byte\ SECURE\_MESSAGING\	=\
-(byte)8\ ; }$\\
-\\
-\emph{7.}\>\>{\it /*@ spec$\_$public */} $\mathtt{private\ byte\ condition\ =\ FREE\ ;}$\\
-\\
-\emph{8.}\>\>{\it /*@ }\\
-\emph{9.}\>\>\>{\it requires true ;}\\
-\emph{10.}\>\>\>{\it ensures condition $==$ (byte)0 ;}\\
-\emph{11.}\>\>\>{\it ensures $\backslash$fresh(this) ;}\\
-\emph{12.}\>\>{\it */} \\
-\emph{13.}\>\>$\mathtt{public\ {\bf AccessCondition}(\ ) \{}$\\
-\emph{14.}\>\>\>$\mathtt{super()\ ;}$\\
-\emph{15.}\>\>\>$\mathtt{setCondition((byte)0)\ ;}$\\
-\emph{16.}\>\>$\mathtt{\}}$\\
-
-\>\>\vdots \\
-
-\emph{17.}\>\>{\it /*@ } \\
-\emph{18.}\>\>\>{\it modifies condition ;} \\
-\emph{19.}\>\>\>{\it requires true ;} \\
-\emph{20.}\>\>\>{\it ensures condition $==$ c ;} \\
-\emph{21.}\>\>{\it */} \\
-\emph{22.}\>\>$\mathtt{public\ void\ {\bf setCondition}\ (byte\ c)\{}$\\
-\emph{23.}\>\>\>$\mathtt{condition\ =\ c\ ;}$\\
-\emph{24.}\>\>$\mathtt{\}}$\\
-
-\>\>\vdots \\
-\emph{25.}\>$\mathtt{\}}$
-\end{tabbing}
-\caption{Piece of {\tt AccessCondition} class}
-\label{fig-cla-acc}
-\rule{\linewidth}{0.3mm}
-\end{figure}
-\end{center}
-
-
-
-
-\paragraph{Unnecessary try-catches}
-
-
-
-
-\paragraph{``Ugly'' modifications}
-
-
-
-
-\subsection{The corrected version of the Electronic Purse}
-
-
-
-
-
+Finally, it would be nice if one could specify runtime exceptions in
+\texttt{exsures} clauses, while they are not mentioned in the
+\texttt{throws} clause of the method.
 
 \section{Conclusions}
 \label{SectConcl}
+
+We have presented a case study in formal specification of smart card
+programs, using ESC/Java. We have taken an electronic purse
+application and annotated it with a functional specification,
+describing its behaviour, basing ourselves on the informal
+documentation of the application. We have checked the implementation
+\emph{w.r.t.}~the specification, using ESC/Java, thereby revealing
+several errors in the implementation. Using ESC/Java we were also able 
+to find that some parts of the program will never be reached, thus
+allowing reduction of the code size -- which is important for smart
+card applications. 
+
+The errors that we found in general are not very complex, they could
+have been found by careful code-inspection or testing. But, writing
+the formal specification forces one to do code-inspection, and having
+the theorem prover ensures that all possible cases will be
+considered, when checking the specification.
+
+The specifications that we have constructed for the electronic purse
+application are not very complex, but describe the functional
+behaviour of methods as precisely as possible. Nevertheless, we found
+errors in the code, and we would like to emphasise that even simple
+formal verification can help significantly to increase confidence in a
+program. In particular, explicitly specifying class invariants turns
+out to be very useful.
+
+\paragraph{Future work} We plan to work in the field of
+specification languages for Java: how to improve them, and how to
+develop appropriate verification techniques for them. In particular,
+we will focus on the following points.
 \begin{itemize}
-
-\item Difficult: when is specification complete
-
-\item Future work: develop application from scratch, with annotations. 
-Does this affect quality of specifications? Easyness of constructing specifications?
-
+\item We plan to develop a full smart card application from scratch, with
+annotations. We are interested whether this will affect the quality of 
+the specification and/or the program. Also we would like to know how
+easy it is to construct the specifications at the same time as
+developing the code. Is it useful, because one can get immediate
+feedback on an implementation, or is it a burden because more time
+is spend on keeping the the specification up-to-date, then on
+implementing the program.
+\item Future versions of JavaCard will probably allow
+multi-threading. Therefore we plan to study how to ESC/Java (and JML)
+can be used to specify (and check) concurrent programs.
+\item Related with this is that we will work on an extension of JML with
+temporal logic. Currently we are studying how to integrate temporal
+logic in the specification language, future work will be to study
+appropriate verification techniques.
+\item Most loop structures that are used in typical smart card
+programs are very restricted and it is relatively easy to show their
+termination. We plan to develop an automated verification technique for
+termination of loops in the tradition of ESC/Java, covering the most
+common cases.
+\item We skipped the cryptographic aspects of the application at
+hand. It is future work to see whether ESC/Java (or JML) is useful to
+specify such algorithms more precisely -- and to develop appropriate
+(automated) verification techniques.
 \end{itemize}
 
 \bibliographystyle{plain}
 \bibliography{../specification}
 
 \end{document}
-
 
