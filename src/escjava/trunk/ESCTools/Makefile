@@ -273,7 +273,7 @@ generate-patch-based-release: generate-patches generate-archives zero-length-fil
 PATCH_PREFIX = ${PATCH_DIR}/${PATCH_NAME}
 .PHONY: generate-patches
 generate-patches: clean
-	( mkdir -p ${PATCH_DIR}; \
+	( cd ${ESCTOOLS_ROOT}/.. ; mkdir -p ${PATCH_DIR}; \
 	LC_ALL=C TZ=UTC0 diff -Naur --exclude=*.class --exclude=.#* --exclude=CVS \
 		--exclude=Simplify-1* ${ESCTOOLS_ORIGINAL}/Calvin ESCTools/Calvin \
 		| bzip2 -9 > ${PATCH_DIR}/${CALVIN_PATCHES}; \
