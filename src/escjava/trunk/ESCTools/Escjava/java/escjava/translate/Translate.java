@@ -2428,6 +2428,25 @@ public final class Translate
                         }
                     }
                     int newtag= TrAnExpr.getGCTagForBinary(x);
+		    if (tag == TagConstants.GT || tag == TagConstants.GE ||
+			tag == TagConstants.LT || tag == TagConstants.LE) {
+			// Must be primitive types
+			int leftTag = ((PrimitiveType)TypeCheck.inst.getType(x.left)).getTag();
+			int rightTag = ((PrimitiveType)TypeCheck.inst.getType(x.right)).getTag();
+			if (leftTag == rightTag) 
+				; // do nothing
+			else if (leftTag == TagConstants.DOUBLETYPE && rightTag != TagConstants.DOUBLETYPE)
+			    right = GC.cast(right,Types.doubleType);
+			else if (leftTag != TagConstants.DOUBLETYPE && rightTag == TagConstants.DOUBLETYPE)
+			    left = GC.cast(left,Types.doubleType);
+			else if (leftTag == TagConstants.FLOATTYPE && rightTag != TagConstants.FLOATTYPE)
+			    right = GC.cast(right,Types.floatType);
+			else if (leftTag != TagConstants.FLOATTYPE && rightTag == TagConstants.FLOATTYPE)
+			    left = GC.cast(left,Types.floatType);
+			
+			// FIXME - other promotions ? Also in TrAnExpr.java
+
+		    }
                     return protect(protect, GC.nary(x.getStartLoc(), x.getEndLoc(),
                                                     newtag, left, right),
                                    x.locOp);
