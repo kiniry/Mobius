@@ -944,7 +944,7 @@ the same package.
      * java.lang.Object turned into abstract methods.<p>
      */
     //@ ensures \result!=null
-    static public TypeSig getRootInterface() {
+    public TypeSig getRootInterface() {
 	if (_rootCache!=null)
 	    return _rootCache;
 
@@ -999,7 +999,7 @@ the same package.
     }
 
 
-    static private TypeSig _rootCache = null;
+    private TypeSig _rootCache = null;
 
 
 

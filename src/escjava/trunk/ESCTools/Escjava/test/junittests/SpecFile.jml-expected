@@ -19,6 +19,6 @@ SpecFile: m() ...
     [TIME]  passed immediately
 
 SpecFile: SpecFile() ...
-    [TIME]  passed immediately
+    [TIME]  passed
   [TIME total]
 2 cautions

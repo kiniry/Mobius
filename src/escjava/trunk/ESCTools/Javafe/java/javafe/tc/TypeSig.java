@@ -1331,9 +1331,6 @@ public class TypeSig extends Type
 	    return true;
 	if (this == jlo)
 	    return false;
-	// Need to allow interfaces to be subtypes of the root interface
-	// (but not Object)
-	if (s2 == PrepTypeDeclaration.getRootInterface()) return true;
 
 	TypeDecl d = getTypeDecl();
 	if (d.getTag() == TagConstants.CLASSDECL &&
