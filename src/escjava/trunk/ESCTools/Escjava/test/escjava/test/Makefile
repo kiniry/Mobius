@@ -37,8 +37,10 @@ test_escjava:
 %-run:
 	env CLASSPATH=. ./rtest $* || ${DIFF} $*/out $*/ans
 
+DEBUGGER_FLAGS = -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=y
 
 CD_AND_JAVA = cd $(PARSER_TEST_DIR); $(JAVA) -classpath $(ESC_CLASSPATH) $(PARSER_TEST_PACKAGE)
+CD_AND_JAVA_DEBUG = cd $(PARSER_TEST_DIR); $(JAVA) $(DEBUGGER_FLAGS) -classpath $(ESC_CLASSPATH) $(PARSER_TEST_PACKAGE)
 
 test_lexer: compile_escjava_parser_test_programs
 	@echo "TESTING Escjava: test_lexer"
