@@ -102,7 +102,15 @@ public class RefinementCachedReader extends CachedReader
     public CompilationUnit read(GenericFile target, boolean avoidSpec) {
 	// Note - reading has the side effect of caching
 	if (isCached(target)) {
-	    ErrorSet.caution("Duplicate command-line file (or part of a refinement sequence): " +
+	    CompilationUnit cu = (CompilationUnit)get(target);
+	    if (cu != null) {
+		Name n = cu.pkgName;
+		if (n != null && escjava.Main.options().
+			packagesToProcess.contains(n.printName()))
+		    return null;
+	    }
+	    ErrorSet.caution("Duplicate command-line file " +
+				"(or part of a refinement sequence): " +
 				target.getHumanName());
 	    return null;
 	}
