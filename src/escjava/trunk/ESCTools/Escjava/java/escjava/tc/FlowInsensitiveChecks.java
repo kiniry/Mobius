@@ -1201,22 +1201,18 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                     ? rootSEnv
                     : rootIEnv;
 
-                /*
-                 * Check modifiers:
-                 */
-/* This is not the case ???
-                if (!Modifiers.isPublic(decl.modifiers)) {
-                    ErrorSet.error(decl.locId,
-                                   "Ghost fields must be declared public");
-                }
-                if ((decl.modifiers
-                     & ~(Modifiers.ACCESS_MODIFIERS|Modifiers.ACC_STATIC)) != 0) {
-                    ErrorSet.error(decl.locId,
-                                   "Ghost-field modifiers may only be public or static");
-                }
-*/
-
                 checkModifierPragmaVec( decl.pmodifiers, decl, rootEnv );
+
+/*
+		System.out.println("GHOST" + Location.toString(e.getStartLoc()));
+	        if (GetSpec.findModifierPragma(decl,TagConstants.INSTANCE) != null) {
+			System.out.println("GHOST HAS INSTANCE");
+		}
+		if (Modifiers.isStatic(decl.modifiers))
+			System.out.println("STATIC -A");
+		if (Modifiers.isStatic(e.getModifiers()))
+			System.out.println("STATIC -B");
+*/		
 
 
                 /*
@@ -1449,6 +1445,14 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                     }
                     break;
                 }
+
+	    case TagConstants.INSTANCE:
+	        {
+		    int ctag = ctxt.getTag();
+		    ErrorSet.error(p.getStartLoc(),
+			"An instance modifier may only be applied to ghost and model fields");
+		    break;
+		}
 
 	    case TagConstants.PURE:
 		{
@@ -1986,7 +1990,8 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 	    case TagConstants.NORMAL_EXAMPLE:
 	    case TagConstants.OPENPRAGMA:
 	    case TagConstants.SUBCLASSING_CONTRACT:
-		// Make these unexpected again after the desugaring is implemented
+		// Desugaring happens after type-checking,
+		// Just ignore these.
 		break;
 
             default:
