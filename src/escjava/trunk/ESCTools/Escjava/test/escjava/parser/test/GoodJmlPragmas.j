@@ -41,140 +41,89 @@
 //@ behavior
 //@ normal_behavior
 //@ exceptional_behavior
-
-// \not_specified
+//@ abrubt_behavior
 
 // redundant specifications
 
-// accessible_redundantly a;
-// accessible_redundantly a, b, c;
-// accessible_redundantly \nothing;
-// accessible_redundantly \everything;
-// accessible_redundantly \not_specified;
-// accessible_redundantly \private_data;
-// accessible_redundantly a
-// accessible_redundantly a, b, c
-// accessible_redundantly \nothing
-// accessible_redundantly \everything
-// accessible_redundantly \not_specified
-// accessible_redundantly \private_data
+//@ accessible_redundantly a;
+//@ accessible_redundantly a, b, c;
+//@ accessible_redundantly \nothing;
+//@ accessible_redundantly \everything;
+//@ accessible_redundantly \not_specified;
+//@ accessible_redundantly \private_data;
 
 // Optional keyword not yet supported.
 // see http://sourceforge.net/tracker/index.php?func=detail&aid=729466&group_id=65346&atid=545306
 //@ assert_redundantly predicate;
 // assert_redundantly predicate : expression;
-//@ assert_redundantly predicate
-// assert_redundantly predicate : expression
 
 //@ assignable_redundantly a;
 //@ assignable_redundantly a, b, c;
-// assignable_redundantly a if predicate;
-// assignable_redundantly a if pred1, b if pred2, c if pred3;
-//@ assignable_redundantly a
-//@ assignable_redundantly a, b, c
-// assignable_redundantly a if predicate
-// assignable_redundantly a if pred1, b if pred2, c if pred3
+//@ assignable_redundantly a if predicate;
+//@ assignable_redundantly a if pred1, b if pred2, c if pred3;
 // still need to add store_refs
 
 //@ assume_redundantly predicate;
 // assume_redundantly predicate : anExpression;
-//@ assume_redundantly predicate
-// assume_redundantly predicate : anExpression
 
-// breaks_redundantly;
-// breaks_redundantly target_label;
-// breaks_redundantly target_label predicate;
-// breaks_redundantly target_label \not_specified;
-// breaks_redundantly a == b;
-// breaks_redundantly \not_specified;
-// breaks_redundantly
-// breaks_redundantly target_label
-// breaks_redundantly target_label predicate
-// breaks_redundantly target_label \not_specified
-// breaks_redundantly a == b
-// breaks_redundantly \not_specified
+//@ breaks_redundantly;
+//@ breaks_redundantly target_label;
+//@ breaks_redundantly target_label predicate;
+//@ breaks_redundantly target_label \not_specified;
+//@ breaks_redundantly a == b;
+//@ breaks_redundantly \not_specified;
 
-// callable_redundantly m;
-// callable_redundantly m1, m2, m3;
-// callable_redundantly \nothing;
-// callable_redundantly \everything;
-// callable_redundantly \not_specified;
-// callable_redundantly \private_data;
-// callable_redundantly m
-// callable_redundantly m1, m2, m3
-// callable_redundantly \nothing
-// callable_redundantly \everything
-// callable_redundantly \not_specified
-// callable_redundantly \private_data
+//@ callable_redundantly m;
+//@ callable_redundantly m1, m2, m3;
+//@ callable_redundantly \nothing;
+//@ callable_redundantly \everything;
+//@ callable_redundantly \not_specified;
+//@ callable_redundantly \private_data;
 
-// constraint_redundantly predicate;
-// constraint_redundantly predicate for \everything;
-// constraint_redundantly predicate for m;
-// constraint_redundantly predicate for m1, m2, m3;
+//@ constraint_redundantly predicate;
+//@ constraint_redundantly predicate for \everything;
+//@ constraint_redundantly predicate for m;
+//@ constraint_redundantly predicate for m1, m2, m3;
 // need to add full support for param_disambig_list
 
-// continues_redundantly;
-// continues_redundantly target_label;
-// continues_redundantly target_label predicate;
-// continues_redundantly target_label \not_specified;
-// continues_redundantly a == b;
-// continues_redundantly \not_specified;
-// continues_redundantly
-// continues_redundantly target_label
-// continues_redundantly target_label predicate
-// continues_redundantly target_label \not_specified
-// continues_redundantly a == b
-// continues_redundantly \not_specified
+//@ continues_redundantly;
+//@ continues_redundantly target_label;
+//@ continues_redundantly target_label predicate;
+//@ continues_redundantly target_label \not_specified;
+//@ continues_redundantly a == b;
+//@ continues_redundantly \not_specified;
 
 //@ decreases_redundantly spec_expression;
-//@ decreases_redundantly spec_expression
 //@ decreasing_redundantly spec_expression;
-//@ decreasing_redundantly spec_expression
 
 // depends_redundantly store_ref_expression <- store_ref_list;
 
 //@ diverges_redundantly \not_specified;
 //@ diverges_redundantly predicate;
-//@ diverges_redundantly \not_specified
-//@ diverges_redundantly predicate
 
 //@ duration_redundantly \not_specified;
 //@ duration_redundantly spec_expression;
-// duration_redundantly spec_expression if predicate;
-//@ duration_redundantly \not_specified
-//@ duration_redundantly spec_expression
-// duration_redundantly spec_expression if predicate
+//@ duration_redundantly spec_expression if predicate;
 
 //@ ensures_redundantly \not_specified;
 //@ ensures_redundantly predicate;
-//@ ensures_redundantly \not_specified
-//@ ensures_redundantly predicate
 
 //@ exsures_redundantly (Exception e) \not_specified;
 //@ exsures_redundantly (Exception e) predicate;
-//@ exsures_redundantly (Exception e) \not_specified
-//@ exsures_redundantly (Exception e) predicate
 
-// hence_by_redundantly predicate;
-// hence_by_redundantly predicate
+//@ hence_by_redundantly predicate;
 
 //@ invariant_redundantly predicate;
-//@ invariant_redundantly predicate
 
 //@ loop_invariant_redundantly predicate;
-//@ loop_invariant_redundantly predicate
 
 //@ maintaining_redundantly predicate;
-//@ maintaining_redundantly predicate
 
 //@ measured_by_redundantly \not_specified;
 //@ measured_by_redundantly spec_expression;
-// measured_by_redundantly spec_expression if predicate;
-//@ measured_by_redundantly \not_specified
-//@ measured_by_redundantly spec_expression
-// measured_by_redundantly spec_expression if predicate
+//@ measured_by_redundantly spec_expression if predicate;
 
-// modifiable_redundantly \not_specified;
+//@ modifiable_redundantly \not_specified;
 //@ modifiable_redundantly a;
 //@ modifiable_redundantly a[*];
 //@ modifiable_redundantly a, b[*], c[1];
@@ -182,51 +131,32 @@
 //@ modifies_redundantly a;
 //@ modifies_redundantly a[*];
 //@ modifies_redundantly a, b[*], c[1];
-// modifies_redundantly a if predicate;
-// modifies_redundantly a if pred1, b if pred2, c if pred3;
-//@ modifies_redundantly a
-//@ modifies_redundantly a[*]
-//@ modifies_redundantly a, b[*], c[1]
-// modifies_redundantly a if predicate
-// modifies_redundantly a if pred1, b if pred2, c if pred3
+//@ modifies_redundantly a if predicate;
+//@ modifies_redundantly a if pred1, b if pred2, c if pred3;
 
 //@ post_redundantly predicate;
-//@ post_redundantly predicate
 
 //@ pre_redundantly predicate;
-//@ pre_redundantly predicate
 
-// represents_redundantly store_ref_expression <- spec_expression;
-// represents_redundantly store_ref_expression \such_that predicate;
+//@ represents_redundantly store_ref_expression <- spec_expression;
+//@ represents_redundantly store_ref_expression \such_that predicate;
 
 //@ requires_redundantly predicate;
-//@ requires_redundantly predicate
 
-// returns_redundantly \not_specified;
-// returns_redundantly predicate;
-// returns_redundantly \not_specified
-// returns_redundantly predicate
+//@ returns_redundantly \not_specified;
+//@ returns_redundantly predicate;
 
 //@ signals_redundantly (Exception) \not_specified;
 //@ signals_redundantly (Exception) predicate;
 //@ signals_redundantly (Exception e) \not_specified;
 //@ signals_redundantly (Exception e) predicate;
-//@ signals_redundantly (Exception) \not_specified
-//@ signals_redundantly (Exception) predicate
-//@ signals_redundantly (Exception e) \not_specified
-//@ signals_redundantly (Exception e) predicate
 
 //@ when_redundantly \not_specified;
 //@ when_redundantly predicate;
-//@ when_redundantly \not_specified
-//@ when_redundantly predicate
 
 //@ working_space_redundantly \not_specified;
 //@ working_space_redundantly spec_expression_of_type_int;
-// working_space_redundantly spec_expression_of_type_int if predicate;
-//@ working_space_redundantly \not_specified
-//@ working_space_redundantly spec_expression_of_type_int
-// working_space_redundantly spec_expression_of_type_int if predicate
+//@ working_space_redundantly spec_expression_of_type_int if predicate;
 
 //@ \duration(bar());
 //@ \duration(Foo.bar());
@@ -235,19 +165,11 @@
 //@ \duration(super().foo());
 //@ \space(Foo.bar());
 //@ \working_space(Foo.bar());
-//@ \space(Foo.bar())
-//@ \working_space(Foo.bar())
 
 //@ duration \not_specified;
 //@ duration spec_expression;
-// duration spec_expression if predicate;
-//@ duration \not_specified
-//@ duration spec_expression
-// duration spec_expression if predicate
+//@ duration spec_expression if predicate;
 
 //@ working_space \not_specified;
 //@ working_space spec_expression_of_type_int;
-// working_space spec_expression_of_type_int if predicate;
-//@ working_space \not_specified
-//@ working_space spec_expression_of_type_int
-// working_space spec_expression_of_type_int if predicate
+//@ working_space spec_expression_of_type_int if predicate;
