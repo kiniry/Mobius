@@ -37,7 +37,10 @@ SUBDIRS = Utils Javafe Escjava
 default: build
 
 .PHONY: all
-all: clean build alltests docs
+all: clean build jmlspecs-jar jar tests docs
+
+.PHONY: all+
+all: clean build jmlspecs-jar jar docs alltests
 
 ########################################### build, test
 
