@@ -40,7 +40,7 @@ public interface PragmaParser
 
     boolean checkTag(int tag);
 
-    javafe.ast.FieldDecl isPragmaDecl(Lex l);
+    javafe.ast.FieldDecl isPragmaDecl(Token l);
 
     /**
      * Restart a pragma parser on a new input stream.  If

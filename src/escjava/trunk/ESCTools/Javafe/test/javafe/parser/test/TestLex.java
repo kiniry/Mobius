@@ -164,7 +164,7 @@ public class TestLex implements PragmaParser {
     l.close();
   }
 
-  public javafe.ast.FieldDecl isPragmaDecl(javafe.parser.Lex l) {
+  public javafe.ast.FieldDecl isPragmaDecl(javafe.parser.Token l) {
 	return null;
   }
 
