@@ -244,14 +244,14 @@ public class AnnotationHandler {
 
 	ModifierPragmaVec newpm = ModifierPragmaVec.make();
 
-	boolean isPure = escjava.tc.FlowInsensitiveChecks.isPure(tde);
+	boolean isPure = FlowInsensitiveChecks.isPure(tde);
 	boolean isConstructor = tde instanceof ConstructorDecl;
 
 	// Get non_null specs
 	ModifierPragmaVec nonnullBehavior = getNonNull(tde);
 
 	javafe.util.Set overrideSet = null;
-	if (!isConstructor) overrideSet = escjava.tc.FlowInsensitiveChecks.getDirectOverrides((MethodDecl)tde);
+	if (!isConstructor) overrideSet = FlowInsensitiveChecks.getDirectOverrides((MethodDecl)tde);
 	boolean overrides = !isConstructor && !overrideSet.isEmpty();
 	
 
@@ -590,7 +590,7 @@ added, it doesn't change whether a routine appears to have a spec or not.
 				Expr req, RoutineDecl rd) {
 	boolean everythingIsDefault = false; // FIXME - eventually change to true
 	boolean nothing = !everythingIsDefault;
-	boolean isPure = escjava.tc.FlowInsensitiveChecks.isPure(rd);
+	boolean isPure = FlowInsensitiveChecks.isPure(rd);
 
 	if (isPure) nothing = true;
 	if (isPure && rd instanceof ConstructorDecl) nothing = true; // FIXME - this is wrong - should be this.*
@@ -606,8 +606,9 @@ added, it doesn't change whether a routine appears to have a spec or not.
     public ModifierPragma forallWrap(GenericVarDeclVec foralls, 
 					ModifierPragma mp) {
 	if (mp instanceof ExprModifierPragma) {
-		((ExprModifierPragma)mp).expr = 
-			forallWrap(foralls, ((ExprModifierPragma)mp).expr) ;
+		ExprModifierPragma emp = (ExprModifierPragma)mp;
+		emp.expr = forallWrap(foralls, emp.expr) ;
+		FlowInsensitiveChecks.setType(emp.expr,Types.booleanType);	
 	}
 	return mp;
     }
@@ -1175,7 +1176,7 @@ added, it doesn't change whether a routine appears to have a spec or not.
 		case TagConstants.METHODINVOCATION:
 		    MethodInvocation m = (MethodInvocation)x;
 		    if (Main.options().checkPurity &&
-		        !escjava.tc.FlowInsensitiveChecks.isPure(m.decl)) {
+		        !FlowInsensitiveChecks.isPure(m.decl)) {
 			ErrorSet.error(m.locId,
 			    "Method " + m.id + " is used in an annotation" +
 			    " but is not pure (" + 
@@ -1185,7 +1186,7 @@ added, it doesn't change whether a routine appears to have a spec or not.
 		case TagConstants.NEWINSTANCEEXPR:
 		    NewInstanceExpr c = (NewInstanceExpr)x;
 		    if (Main.options().checkPurity &&
-		        !escjava.tc.FlowInsensitiveChecks.isPure(c.decl)) {
+		        !FlowInsensitiveChecks.isPure(c.decl)) {
 			ErrorSet.error(c.loc,
 			    "Constructor is used in an annotation" +
 			    " but is not pure (" + 
