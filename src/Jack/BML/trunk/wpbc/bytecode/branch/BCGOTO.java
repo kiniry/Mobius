@@ -6,15 +6,11 @@
  */
 package bytecode.branch;
 
-import java.util.Enumeration;
-
-
 import org.apache.bcel.generic.InstructionHandle;
 
 import bcclass.attributes.ExsuresTable;
 import bytecode.EndBlockInstruction;
 import bytecode.block.*;
-import bytecode.branch.*;
 
 
 import formula.Formula;
@@ -26,7 +22,7 @@ import formula.Formula;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class BCGOTO extends BCUnconditionalBranch implements EndBlockInstruction{
-	
+	private Block blockEndingWithThis;
 	
 	/**
 	 * @param _branchInstruction
@@ -41,6 +37,23 @@ public class BCGOTO extends BCUnconditionalBranch implements EndBlockInstruction
 	 */
 	public Formula wp(Formula _normal_Postcondition, ExsuresTable _exc_Postcondition) {
 		return _normal_Postcondition;
+	}
+	
+
+	/* (non-Javadoc)
+	 * @see bytecode.EndBlockInstruction#calculateRecursively(formula.Formula, bcclass.attributes.ExsuresTable)
+	 */
+	public Formula calculateRecursively(Formula _normal_postcondition, ExsuresTable _exs_postcondition) {
+		Formula wp = blockEndingWithThis.calculateRecursively( _normal_postcondition, _exs_postcondition);
+		return wp;
+	}
+
+
+	/* (non-Javadoc)
+	 * @see bytecode.EndBlockInstruction#setBlock(bytecode.block.Block)
+	 */
+	public void setBlock(Block block) {
+		blockEndingWithThis = block;
 	}
 
 }

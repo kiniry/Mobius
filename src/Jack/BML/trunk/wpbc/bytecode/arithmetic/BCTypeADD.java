@@ -1,25 +1,21 @@
 package bytecode.arithmetic;
 
-import org.apache.bcel.generic.DADD;
-import org.apache.bcel.generic.FADD;
+
 import org.apache.bcel.generic.IADD;
 import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.LADD;
 
 import formula.Formula;
 
-
 import bcclass.attributes.ExsuresTable;
 import bcexpression.ArithmeticExpression;
 import bcexpression.Expression;
 import bcexpression.ExpressionConstants;
-import bcexpression.NumberLiteral;
 import bcexpression.javatype.JavaType;
-import bcexpression.vm.Counter;
 import bcexpression.vm.Stack;
 import bytecode.BCConstants;
 import bytecode.BCInstructionCodes;
-import bytecode.arithmetic.*;
+
 
 /**
  * @author Mariela
@@ -52,15 +48,15 @@ public class BCTypeADD extends BCArithmeticInstruction {
 		ExsuresTable _exc_Postcondition) {
 		
 		Formula wp = null;
-		Stack stackTop = new Stack(Expression.COUNTER);
-		Stack stackTop_minus_1 = new Stack(Expression.COUNTER_MINUS_1);
+//		Stack stackTop = new Stack(Expression.COUNTER);
+//		Stack stackTop_minus_1 = new Stack(Expression.COUNTER_MINUS_1);
 		ArithmeticExpression sum =
-			ArithmeticExpression.getArithmeticExpression(
-				stackTop,
-				stackTop_minus_1,
+			(ArithmeticExpression)ArithmeticExpression.getArithmeticExpression(
+				new Stack(Expression.COUNTER),
+				new Stack(Expression.COUNTER_MINUS_1),
 				ExpressionConstants.ADD);
 		_normal_Postcondition.substitute(Expression.COUNTER, Expression.COUNTER_MINUS_1);
-		_normal_Postcondition.substitute(stackTop_minus_1, sum);
+		_normal_Postcondition.substitute(new Stack(Expression.COUNTER_MINUS_1), sum);
 		wp = _normal_Postcondition;
 		return wp;
 	}

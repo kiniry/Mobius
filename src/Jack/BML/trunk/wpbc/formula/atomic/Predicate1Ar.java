@@ -32,5 +32,9 @@ public class Predicate1Ar extends Predicate {
 		term.substitute(_e, _v);
 		return this;
 	}
+	
+	
+	
+	
 
 }

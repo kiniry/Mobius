@@ -8,7 +8,6 @@ package bytecode.objectmanipulation;
 
 import org.apache.bcel.generic.InstructionHandle;
 
-
 import constants.BCConstantClass;
 import constants.BCConstantMethodRef;
 
@@ -25,6 +24,7 @@ import bcexpression.LocalVariableAccess;
 import bcexpression.NumberLiteral;
 import bcexpression.Variable;
 
+import bcexpression.javatype.ClassNames;
 import bcexpression.javatype.JavaObjectType;
 import bcexpression.javatype.JavaType;
 import bcexpression.jml.RESULT;
@@ -40,12 +40,19 @@ import formula.QuantifiedFormula;
 /**
  * @author mpavlova
  *
- * To change the template for this generated type comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
+ * Operation : Invoke instance method; dispatch based on class
+ *
+ * Format :  invokevirtual 	indexbyte1 	indexbyte2 	
+ * 
+ * invokevirtual = 182 (0xb6)
+ *
+ * Operand Stack :  ..., objectref, [arg1, [arg2 ...]]  == >...
+ *
+ * 
  */
-public class BCINVOKEVIRTUAL extends BCFieldOrMethod {
+public class BCINVOKEVIRTUAL extends BCFieldOrMethodInstruction {
 
-//	/private JavaType[] argTypes;
+	//	/private JavaType[] argTypes;
 
 	/**
 	 * @param _instruction - the corresponding bcel data structure
@@ -60,6 +67,7 @@ public class BCINVOKEVIRTUAL extends BCFieldOrMethod {
 		JavaType _classType,
 		BCConstantPool _cp) {
 		super(_instruction, _type, _classType, _cp);
+		setExceptionsThrown( new JavaObjectType[]{ (JavaObjectType)JavaObjectType.getJavaRefType( ClassNames.NULLPOINTERException) });		
 	}
 
 	/* (non-Javadoc)
@@ -73,19 +81,19 @@ public class BCINVOKEVIRTUAL extends BCFieldOrMethod {
 			(BCConstantMethodRef) (getConstantPool().getConstant(getIndex()));
 		String clazz_name =
 			((BCConstantClass) (getConstantPool()
-				.getConstant(method_constant.getClassIndex())) )
+				.getConstant(method_constant.getClassIndex())))
 				.getName();
 
 		//find the class where the called method is declared 
 		BCClass clazz = JavaApplication.getClass(clazz_name);
 		// get the method instance
-		BCMethod method = clazz.getMethod(method_constant.getName());
+		BCMethod method = clazz.lookupMethod(method_constant.getName());
 
 		//take the method pre and postconditons
 		Formula precondition = method.getPrecondition().copy();
 		int number_args = method.getNumberArguments();
 		ArithmeticExpression counter_minus_arg_num =
-			ArithmeticExpression.getArithmeticExpression(
+			(ArithmeticExpression)ArithmeticExpression.getArithmeticExpression(
 				Expression.COUNTER,
 				new NumberLiteral(number_args),
 				ExpressionConstants.SUB);
@@ -98,16 +106,16 @@ public class BCINVOKEVIRTUAL extends BCFieldOrMethod {
 		/////////////////////////////////////////////////////////////////////
 		Formula postcondition = method.getPostcondition().copy();
 		//WITH withResult = new WITH(new RESULT());
-		RESULT result = new RESULT();
+		RESULT result = Expression._RESULT;
 		Variable fresh_result =
 			new Variable(FreshIntGenerator.getInt(), method.getReturnType());
 
-		Expression[] modifies = method.getModified();
+		Expression[] modifies = method.getModifies();
 		Expression[] modifies1 = null;
 		// check if the called method modifies any expression
 		if ((modifies != null) && (modifies.length > 0)) {
 			modifies1 = new Expression[modifies.length];
-			//make a copy of evrey of the modified expressions 
+			//make a copy of every of the modified expressions 
 			for (int i = 0; i < modifies.length; i++) {
 				modifies1[i] = modifies[i].copy();
 			}
@@ -118,42 +126,40 @@ public class BCINVOKEVIRTUAL extends BCFieldOrMethod {
 			postcondition = postcondition.substitute(result, fresh_result);
 		}
 
-
 		// substitute all the local variables in the precondition, the postcondition
 		// and the  expressions in the modifies clause of the called method 
 		// with the values that are in the stack . 
-		// For example substite 
-		// local(0) with S( t - arg_num(method(index) )  + 0), 
-		// local(1) with S( t - arg_num(method(index) )  + 1),  
-		// local(i) with S( t - arg_num(method(index) )  + i)
+		// do these substitutions : 
+		// local(0) <-- S( t - arg_num(method(index) )  + 0), 
+		// local(1) <-- S( t - arg_num(method(index) )  + 1),  
+		// local(i) <-- S( t - arg_num(method(index) )  + i)
 		for (int i = 0; i < number_args; i++) {
 			ArithmeticExpression counter_minus_arg_num_plus_i =
-				ArithmeticExpression.getArithmeticExpression(
+				(ArithmeticExpression)ArithmeticExpression.getArithmeticExpression(
 					counter_minus_arg_num,
 					new NumberLiteral(i),
 					ExpressionConstants.SUB);
 			Stack stack_at_counter_minus_arg_num_plus_i =
 				new Stack(counter_minus_arg_num_plus_i);
 			LocalVariableAccess local_i = new LocalVariableAccess(i);
-			//with_local_i = new WITH(local_i);
-
+			
 			//pre(method(index) )[ o with local(i) <-- S( t - arg_num(method(index) ) + i )]
 			precondition =
 				precondition.substitute(
-						local_i,
+					local_i,
 					stack_at_counter_minus_arg_num_plus_i);
 
 			//post(method(index) )[o with result <-- fresh ] [ o with local(i) <-- S(t - arg_num(method(index)) + i)]
 			postcondition =
 				postcondition.substitute(
-						local_i,
+					local_i,
 					stack_at_counter_minus_arg_num_plus_i);
 
 			if ((modifies1 != null) && (modifies1.length > 0)) {
 				for (int k = 0; k < modifies1.length; k++) {
 					modifies1[k] =
 						modifies1[k].substitute(
-								local_i,
+							local_i,
 							stack_at_counter_minus_arg_num_plus_i);
 				}
 			}
@@ -176,7 +182,7 @@ public class BCINVOKEVIRTUAL extends BCFieldOrMethod {
 		// ==> 
 		// psi^n[ t < t -  arg_num(method(index)) ][ S(t -  arg_num(method(index)) ) <-- fresh]
 		Formula wpNormal =
-			new Formula(
+		Formula.getFormula(
 				postcondition,
 				_normal_Postcondition1,
 				Connector.IMPLIES);
@@ -184,19 +190,20 @@ public class BCINVOKEVIRTUAL extends BCFieldOrMethod {
 		// if the modifies clause of the called method is not empty then quantify 
 		Quantificator[] qunatificators = new Quantificator[modifies1.length];
 		if ((modifies1 != null) && (modifies1.length > 0)) {
-			
+
 			for (int i = 0; i < modifies1.length; i++) {
-				qunatificators[i] = new Quantificator(Quantificator.FORALL, modifies1[i]);
+				qunatificators[i] =
+					new Quantificator(Quantificator.FORALL, modifies1[i]);
 			}
 			wpNormal = new QuantifiedFormula(wpNormal, qunatificators);
 		}
-		wp = new Formula(wpNormal, precondition, Connector.AND);
+		wp = Formula.getFormula(wpNormal, precondition, Connector.AND);
 		////////////////////////////////////////////////////
 		//////////exceptional termination for any exception that may be thrown
 		Formula[] wpForExcTermination = null;
 		JavaObjectType[] exceptionsThrown = method.getExceptionsThrown();
 		if ((exceptionsThrown != null) && (exceptionsThrown.length > 0)) {
-			wpForExcTermination = new Formula[exceptionsThrown.length ];
+			wpForExcTermination = new Formula[exceptionsThrown.length];
 			Formula excPostOfCalledMethodForExc;
 			Formula excPostOfThisMethodForExc;
 			for (int i = 0; i < exceptionsThrown.length; i++) {
@@ -214,20 +221,25 @@ public class BCINVOKEVIRTUAL extends BCFieldOrMethod {
 
 				excPostOfThisMethodForExc =
 					getWpForException(exceptionsThrown[i], _exc_Postcondition);
-				
-				
-				wpForExcTermination[i] = new Formula(excPostOfCalledMethodForExc, excPostOfThisMethodForExc, Connector.IMPLIES);
-				if ( qunatificators != null) {
-					wpForExcTermination[i] = new QuantifiedFormula(wpForExcTermination[i], qunatificators );
+
+				wpForExcTermination[i] =
+				Formula.getFormula(
+						excPostOfCalledMethodForExc,
+						excPostOfThisMethodForExc,
+						Connector.IMPLIES);
+				if (qunatificators != null) {
+					wpForExcTermination[i] =
+						new QuantifiedFormula(
+							wpForExcTermination[i],
+							qunatificators);
 				}
 			}
 		}
-		if ( wpForExcTermination != null ) {
-			Formula wpExc = new Formula(wpForExcTermination, Connector.AND);
-			wp = new Formula(wp, wpExc, Connector.AND);
+		if (wpForExcTermination != null) {
+			Formula wpExc = Formula.getFormula(wpForExcTermination, Connector.AND);
+			wp = Formula.getFormula(wp, wpExc, Connector.AND);
 		}
 		// exceptional termination
 		return wp;
 	}
-
 }

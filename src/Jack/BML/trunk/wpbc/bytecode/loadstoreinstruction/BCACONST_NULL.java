@@ -45,8 +45,8 @@ BCTypedInstruction {
 			_normal_Postcondition.substitute(
 				Expression.COUNTER,
 				Expression.COUNTER_PLUS_1);
-		Stack topStack_plus_1 = new Stack(Expression.COUNTER_PLUS_1);
-		wp = wp.substitute(topStack_plus_1 ,Expression.NULL);
+		//Stack topStack_plus_1 = new Stack(Expression.COUNTER_PLUS_1);
+		wp = wp.substitute(new Stack(Expression.COUNTER_PLUS_1) ,Expression._NULL);
 		return wp;
 	}
 

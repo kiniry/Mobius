@@ -18,6 +18,7 @@ import bcexpression.Expression;
 import bcexpression.ExpressionConstants;
 import bcexpression.NumberLiteral;
 import bcexpression.Variable;
+import bcexpression.javatype.ClassNames;
 import bcexpression.javatype.JavaObjectType;
 import bcexpression.javatype.JavaType;
 import bcexpression.ref.ArrayReference;
@@ -33,38 +34,41 @@ import bytecode.BCAllocationInstruction;
  *  
  * Format : multianewarray 	indexbyte1 	indexbyte2 	 dimensions 	
  * 
+ * Runtime Exception : Otherwise, if any of the dimensions values on the operand stack are
+ * less than zero, the multianewarray instruction throws a NegativeArraySizeException.
+ * 
  * Operand Stack : ..., count1, [count2, ...] ==>  ..., arrayref
  */
 public class BCMULTIANEWARRAY
 	extends BCAllocationInstruction
 	implements BCCPInstruction {
 
-	private int index;
+	private int cpIndex;
 	private JavaType type;
 
 	private int dimensions;
 
-	public BCMULTIANEWARRAY(InstructionHandle _instruction, JavaType _type) {
+	public BCMULTIANEWARRAY(InstructionHandle _instruction, JavaType _type)  {
 		super(_instruction, _type);
 		dimensions =
 			((MULTIANEWARRAY) _instruction.getInstruction()).getDimensions();
 		setIndex(((MULTIANEWARRAY) _instruction.getInstruction()).getIndex());
 		setType(_type);
-
+		setExceptionsThrown( new JavaObjectType[]{ (JavaObjectType)JavaObjectType.getJavaRefType( ClassNames.NEGATIVEARRAYSIZEException) });
 	}
 
 	/* (non-Javadoc)
 	 * @see bytecode.BCIndexedInstruction#setIndex(int)
 	 */
 	public void setIndex(int _index) {
-		index = _index;
+		cpIndex = _index;
 	}
 
 	/* (non-Javadoc)
 	 * @see bytecode.BCIndexedInstruction#getIndex()
 	 */
 	public int getIndex() {
-		return index;
+		return cpIndex;
 	}
 
 	/* (non-Javadoc)
@@ -104,7 +108,7 @@ public class BCMULTIANEWARRAY
 
 		//  t - dims 
 		ArithmeticExpression counter_minus_dims =
-			ArithmeticExpression.getArithmeticExpression(
+			(ArithmeticExpression)ArithmeticExpression.getArithmeticExpression(
 				Expression.COUNTER,
 				new NumberLiteral(dimensions),
 				ExpressionConstants.SUB);
@@ -115,13 +119,13 @@ public class BCMULTIANEWARRAY
 
 		// i <= t and i >t  
 		Formula domain =
-			new Formula(i_less_counter, i_bigger_dims, Connector.AND);
+		Formula.getFormula(i_less_counter, i_bigger_dims, Connector.AND);
 
 		//forall i. (i > t - dims and i < t)
 		Quantificator quantificator =
 			new Quantificator(Quantificator.FORALL, boundVar, domain);
 
-		Stack _anyArrLength = new Stack(boundVar);
+	Stack _anyArrLength = new Stack(boundVar);
 		// S(i) >= 0  
 		Formula opened_formula =
 			new Predicate2Ar(
@@ -156,14 +160,14 @@ public class BCMULTIANEWARRAY
 					Expression.COUNTER,
 					new NumberLiteral(i),
 					ExpressionConstants.SUB);
-			lengthAtLevel = new Stack(counter);
+//			lengthAtLevel = new Stack(counter);
 			if (ref == null) {
 				//if we are at the dimension 0
 				ref =
 					new ArrayReference(
 						FreshIntGenerator.getInt(),
 						getType(),
-						lengthAtLevel);
+				new Stack(counter));
 				continue;
 			}
 			//otherwise give a reference that represents an element from the array 
@@ -171,13 +175,13 @@ public class BCMULTIANEWARRAY
 				new ArrayReference(
 					FreshIntGenerator.getInt(),
 					getType(),
-					lengthAtLevel,
+			new Stack(counter),
 					ref);
 		}
 		//psi^n[t <-- t -dimensions ][S( t - dims + 1) < -- new multiarr]
 		_normalT = _normalT.substitute(topStack_minusArrDim_minus_1, ref);
 		Formula wpNormalTernination =
-			new Formula(
+		Formula.getFormula(
 				conditionForNormalTermination,
 				_normalT,
 				Connector.IMPLIES);
@@ -198,7 +202,7 @@ public class BCMULTIANEWARRAY
 
 		//  t - dims 
 		ArithmeticExpression counter_minus_dims1 =
-			ArithmeticExpression.getArithmeticExpression(
+			(ArithmeticExpression)ArithmeticExpression.getArithmeticExpression(
 				Expression.COUNTER,
 				new NumberLiteral(dimensions),
 				ExpressionConstants.SUB);
@@ -212,7 +216,7 @@ public class BCMULTIANEWARRAY
 
 		// i <= t and i >t  
 		Formula domain1 =
-			new Formula(i_less_counter1, i_bigger_dims1, Connector.AND);
+		Formula.getFormula(i_less_counter1, i_bigger_dims1, Connector.AND);
 
 		// exista i. (i > t - dims and i < t)
 		Quantificator quantificator1 =
@@ -238,9 +242,9 @@ public class BCMULTIANEWARRAY
 					"Ljava/lang/NegativeArraySizeException;"),
 				_exc_Postcondition);
 		Formula wpExcTernination =
-			new Formula(conditionForExcTermination, excT, Connector.IMPLIES);
+		Formula.getFormula(conditionForExcTermination, excT, Connector.IMPLIES);
 
-		wp = new Formula(wpNormalTernination, wpExcTernination, Connector.AND);
+		wp = Formula.getFormula(wpNormalTernination, wpExcTernination, Connector.AND);
 
 		return wp;
 	}

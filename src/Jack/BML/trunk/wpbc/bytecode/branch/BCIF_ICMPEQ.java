@@ -38,14 +38,14 @@ public class BCIF_ICMPEQ extends BCConditionalBranch {
 		Formula _normal_Postcondition,
 		ExsuresTable _exc_Postcondition) {
 		Formula wp;
-		Stack stackTop = new Stack(Expression.COUNTER);
-		Stack stackTop_minus_1 = new Stack(Expression.COUNTER_MINUS_1);
+//		Stack stackTop = new Stack(Expression.COUNTER) ;
+//		Stack stackTop_minus_1 = new Stack(Expression.COUNTER_MINUS_1);
 
 		///////////////////////////////////////////	
 		// top two stack values are equal 
 		//S(t)== S(t-1)
 		Formula stackTop_equals_stackTop_minus_1 =
-			new Predicate2Ar(stackTop, stackTop_minus_1, PredicateSymbol.EQ);
+			new Predicate2Ar(new Stack(Expression.COUNTER) , new Stack(Expression.COUNTER_MINUS_1) , PredicateSymbol.EQ);
 		//getWPBranch
 		Formula eq_branch = getBranchWP();
 
@@ -56,7 +56,7 @@ public class BCIF_ICMPEQ extends BCConditionalBranch {
 				Expression.COUNTER_MINUS_2);
 		//S(t)== S(t-1) == >  getWPBranch[t<-- t-2]
 		Formula wp_eq_branch =
-			new Formula(
+		Formula.getFormula(
 				stackTop_equals_stackTop_minus_1,
 				eq_branch,
 				Connector.IMPLIES);
@@ -65,7 +65,7 @@ public class BCIF_ICMPEQ extends BCConditionalBranch {
 		//top two stack values are not equal
 		//S(t)!= S(t-1)
 		Formula stackTop_not_equals_stackTop_minus_1 =
-			new Formula(stackTop_equals_stackTop_minus_1, Connector.NOT);
+		new Predicate2Ar(new Stack(Expression.COUNTER) , new Stack(Expression.COUNTER_MINUS_1) , PredicateSymbol.NOTEQ);
 
 		//psi^n[t <-- t-2]
 		Formula not_eq_branch =
@@ -75,12 +75,12 @@ public class BCIF_ICMPEQ extends BCConditionalBranch {
 
 		//S(t)!= S(t-1) == > psi^n[t <-- t-2]
 		Formula wp_not_eq_branch =
-			new Formula(
+		Formula.getFormula(
 				stackTop_not_equals_stackTop_minus_1,
 				not_eq_branch,
 				Connector.IMPLIES);
 
-		wp = new Formula(wp_not_eq_branch, wp_eq_branch, Connector.AND);
+		wp = Formula.getFormula(wp_not_eq_branch, wp_eq_branch, Connector.AND);
 		return wp;
 	}
 

@@ -35,7 +35,7 @@ public class BCNEW extends BCAllocationInstruction implements BCCPInstruction  {
 	 * the index into the constant pool that contains the  CONSTANT_Class_info
 	 * structure that describes the class from which a new instance will be created	 
 	 * */
-	private int index;
+	private int cpIndex;
 	
 	private JavaType type;
 	
@@ -49,14 +49,14 @@ public class BCNEW extends BCAllocationInstruction implements BCCPInstruction  {
 	 * @see bytecode.BCIndexedInstruction#setIndex(int)
 	 */
 	public void setIndex(int _index) {
-		index = _index;
+		cpIndex = _index;
 	}
 
 	/* (non-Javadoc)
 	 * @see bytecode.BCIndexedInstruction#getIndex()
 	 */
 	public int getIndex() {
-		return index;
+		return cpIndex;
 	}
 
 	/* (non-Javadoc)

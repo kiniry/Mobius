@@ -1,6 +1,7 @@
 package bytecode.objectmanipulation;
 
 import org.apache.bcel.generic.InstructionHandle;
+import utils.Util;
 
 import constants.BCConstantFieldRef;
 
@@ -10,7 +11,9 @@ import bcclass.BCConstantPool;
 import bcclass.attributes.ExsuresTable;
 import bcexpression.Expression;
 import bcexpression.FieldAccessExpression;
-import bcexpression.WITH;
+
+import bcexpression.javatype.ClassNames;
+import bcexpression.javatype.JavaObjectType;
 import bcexpression.javatype.JavaType;
 import bcexpression.vm.Stack;
 
@@ -41,33 +44,58 @@ import bcexpression.vm.Stack;
  *  The value and objectref are popped from the operand stack. The objectref must be of type reference. 
  * The value undergoes value set conversion (?3.8.3), resulting in value', and the referenced field in objectref is set to value'.
  * 
+ * 
+ * Linking Exceptions : During resolution of the symbolic reference to the field, any of the exceptions pertaining to field resolution documented in Section 5.4.3.2 can be thrown.
+ * Otherwise, if the resolved field is a static field, putfield throws an IncompatibleClassChangeError.
+ * Otherwise, if the field is final, it must be declared in the current class. Otherwise, an IllegalAccessError is thrown.
+ *
+ * Runtime Exception :  Otherwise, if objectref is null, the putfield instruction throws a NullPointerException.
+ * 
+ * 
  *  wp = psi^n[t <-- t -2 ] [index with (o == S(t-1)) <-- S(t)]
  */
-public class BCPUTFIELD extends BCFIELDInstruction {
-	
+public class BCPUTFIELD extends BCFieldOrMethodInstruction {
+
 	/**
 	 * @param _instruction
 	 * @param _type
 	 * @param _classType
 	 *  @param _cp
 	 */
-	public BCPUTFIELD(InstructionHandle _instruction, JavaType _type, JavaType _classType, BCConstantPool _cp) {
+	public BCPUTFIELD(
+		InstructionHandle _instruction,
+		JavaType _type,
+		JavaType _classType,
+		BCConstantPool _cp) {
 		super(_instruction, _type, _classType, _cp);
+		setExceptionsThrown(
+				new JavaObjectType[] {
+					(JavaObjectType) JavaObjectType.getJavaRefType(
+						ClassNames.NULLPOINTERException)});	
 	}
 
 	/* (non-Javadoc)
 	 * @see bytecode.ByteCode#wp(formula.Formula, specification.ExceptionalPostcondition)
 	 */
-	public Formula wp(Formula _normal_Postcondition, ExsuresTable _exc_Postcondition) {
+	public Formula wp(
+		Formula _normal_Postcondition,
+		ExsuresTable _exc_Postcondition) {
 		Formula wp;
-		wp = _normal_Postcondition.substitute(Expression.COUNTER, Expression.COUNTER_MINUS_2);
-		Stack stack_minus_1 = new Stack(Expression.COUNTER_MINUS_1);
-		Stack stack = new Stack(Expression.COUNTER);
-		//WITH withExpr = new WITH(   stack_minus_1);
-		// index with (o == S(t-1))
-		FieldAccessExpression fieldAccess = new FieldAccessExpression( (BCConstantFieldRef)(getConstantPool().getConstant(getIndex())),  stack_minus_1);
-	
-		wp = wp.substitute(fieldAccess, stack);
+		wp =
+			_normal_Postcondition.substitute(
+				Expression.COUNTER,
+				Expression.COUNTER_MINUS_2);
+//		Stack stack_minus_1 = new Stack(Expression.COUNTER_MINUS_1);
+//		Stack stack = new Stack(Expression.COUNTER);
+		
+		FieldAccessExpression fieldAccess =
+			new FieldAccessExpression(
+				(BCConstantFieldRef) (getConstantPool()
+					.getConstant(getIndex())),
+				new Stack(Expression.COUNTER_MINUS_1));
+
+		wp = wp.substitute(fieldAccess, new Stack(Expression.COUNTER));
+		Util.dump("wp putfield " + wp.toString());
 		return wp;
 	}
 

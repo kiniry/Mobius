@@ -14,18 +14,17 @@ import formula.Formula;
 import bcclass.BCConstantPool;
 
 import bcclass.attributes.ExsuresTable;
+import bcexpression.javatype.ClassNames;
+import bcexpression.javatype.JavaObjectType;
 import bcexpression.javatype.JavaType;
 
 
 /**
- * @author io
- *
- * To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Generation - Code and Comments
+ * Operation : Invoke instance method; special handling for superclass, private, and instance initialization method invocations
  */
-public class BCINVOKESPECIAL extends BCFieldOrMethod {
+public class BCINVOKESPECIAL extends BCFieldOrMethodInstruction {
 
-//	/private JavaType[] argTypes;
+
 
 	/**
 	 * @param _instruction
@@ -40,6 +39,7 @@ public class BCINVOKESPECIAL extends BCFieldOrMethod {
 		JavaType _classType,
 		BCConstantPool _cp) {
 		super(_instruction, _type, _classType, _cp);
+		setExceptionsThrown( new JavaObjectType[]{ (JavaObjectType)JavaObjectType.getJavaRefType( ClassNames.NULLPOINTERException) });
 	//	argTypes = _argTypes;
 	}
 

@@ -36,14 +36,14 @@ public class BCIF_ICMPLE extends BCConditionalBranch {
 			Formula _normal_Postcondition,
 			ExsuresTable _exc_Postcondition) {
 			Formula wp;
-			Stack stackTop = new Stack(Expression.COUNTER);
-			Stack stackTop_minus_1 = new Stack(Expression.COUNTER_MINUS_1);
+//			Stack stackTop = new Stack(Expression.COUNTER);
+//			Stack stackTop_minus_1 = new Stack(Expression.COUNTER_MINUS_1);
 
 			///////////////////////////////////////////	
 			// top of the stack is greater than the stack at level top-1
-			//S(t-1) > S(t)
+			//S(t-1) <= S(t)
 			Formula stackTop_minus_1_leq_stackTop =
-				new Predicate2Ar(stackTop_minus_1, stackTop, PredicateSymbol.LESSEQ);
+				new Predicate2Ar(new Stack(Expression.COUNTER_MINUS_1), new Stack(Expression.COUNTER), PredicateSymbol.LESSEQ);
 			//getWPBranch
 			Formula leq_branch = getBranchWP();
 
@@ -52,18 +52,19 @@ public class BCIF_ICMPLE extends BCConditionalBranch {
 				leq_branch.substitute(
 					Expression.COUNTER,
 					Expression.COUNTER_MINUS_2);
-			//S(t-1) > S(t) == >  getWPBranch[t<-- t-2]
+			//S(t-1) <= S(t) == >  getWPBranch[t<-- t-2]
 			Formula wp_leq_branch =
-				new Formula(
+			Formula.getFormula(
 					stackTop_minus_1_leq_stackTop,
 					leq_branch,
 					Connector.IMPLIES);
 
 			/////////////////////////////////////////////	
 			//top of the stack is not greater than the stack at level top-1
-			//!( S(t-1) > S(t))
+			// S(t-1) > S(t)
 			Formula stackTop_minus_1_not_leq_stackTop =
-				new Formula(stackTop_minus_1_leq_stackTop, Connector.NOT);
+			new Predicate2Ar(new Stack(Expression.COUNTER_MINUS_1), new Stack(Expression.COUNTER), PredicateSymbol.GRT);
+
 
 			//psi^n[t <-- t-2]
 			Formula not_leq_branch =
@@ -73,12 +74,12 @@ public class BCIF_ICMPLE extends BCConditionalBranch {
 
 			//!( S(t-1) > S(t))== > psi^n[t <-- t-2]
 			Formula wp_not_leq_branch =
-				new Formula(
+			Formula.getFormula(
 					stackTop_minus_1_not_leq_stackTop,
 					not_leq_branch,
 					Connector.IMPLIES);
 
-			wp = new Formula(wp_not_leq_branch, wp_leq_branch, Connector.AND);
+			wp = Formula.getFormula(wp_not_leq_branch, wp_leq_branch, Connector.AND);
 			return wp;
 		}
 }

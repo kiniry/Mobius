@@ -34,6 +34,7 @@ import bytecode.BCInstructionCodes;
  */
 public class BCTypeDIV extends BCArithmeticInstructionWithException {
 
+	
 	/**
 	 * @param _instruction
 	 * @param _type
@@ -58,33 +59,33 @@ public class BCTypeDIV extends BCArithmeticInstructionWithException {
 		ExsuresTable _exc_Postcondition) {
 
 		Formula wp = null;
-		Stack stackTop = new Stack(Expression.COUNTER);
-		Stack stackTop_minus_1 = new Stack(Expression.COUNTER_MINUS_1);
+//		Stack stackTop = new Stack(Expression.COUNTER);
+//		Stack stackTop_minus_1 = new Stack(Expression.COUNTER_MINUS_1);
 		// stack(top ) != null 
 		Formula divisorNonZero =
 			new Predicate2Ar(
-				stackTop,
+				new Stack(Expression.COUNTER),
 				new NumberLiteral(0),
 				PredicateSymbol.NOTEQ);
 		ArithmeticExpression divResult =
-			ArithmeticExpression.getArithmeticExpression(
-				stackTop,
-				stackTop_minus_1,
+			(ArithmeticExpression)ArithmeticExpression.getArithmeticExpression(
+				new Stack(Expression.COUNTER),
+				new Stack(Expression.COUNTER_MINUS_1),
 				ExpressionConstants.DIV);
 		_normal_Postcondition.substitute(
 			Expression.COUNTER,
 			Expression.COUNTER_MINUS_1);
-		_normal_Postcondition.substitute(stackTop_minus_1, divResult);
+		_normal_Postcondition.substitute(new Stack(Expression.COUNTER_MINUS_1), divResult);
 
 		Formula wpNormalExecution =
-			new Formula(
+		Formula.getFormula(
 				divisorNonZero,
 				_normal_Postcondition,
 				Connector.IMPLIES);
 		//stack(top ) == null 
 		Formula divisorIsZero =
 			new Predicate2Ar(
-				stackTop,
+				new Stack(Expression.COUNTER),
 				new NumberLiteral(0),
 				PredicateSymbol.EQ);
 
@@ -96,13 +97,14 @@ public class BCTypeDIV extends BCArithmeticInstructionWithException {
 					"Ljava/lang/ArithmeticException;"),
 				_exc_Postcondition);
 		Formula wpExceptionExecution =
-			new Formula(divisorIsZero, _excPost, Connector.IMPLIES);
+		Formula.getFormula(divisorIsZero, _excPost, Connector.IMPLIES);
 		// stack(top)  != null ==> _normal_Postcondition[t <-- t-1][S(t-1) <-- S(t-1) / S(t)] 
 		// &&
 		// stack(top)  == null ==> excPost
 		wp =
-			new Formula(wpNormalExecution, wpExceptionExecution, Connector.AND);
+		Formula.getFormula(wpNormalExecution, wpExceptionExecution, Connector.AND);
 		return wp;
 	}
+
 
 }

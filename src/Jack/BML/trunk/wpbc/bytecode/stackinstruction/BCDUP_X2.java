@@ -14,7 +14,7 @@ import formula.atomic.Predicate2Ar;
 import formula.atomic.PredicateSymbol;
 import bcclass.attributes.ExsuresTable;
 import bcexpression.Expression;
-import bcexpression.NumberLiteral;
+
 import bcexpression.javatype.JavaType;
 import bcexpression.vm.Stack;
 import bytecode.BCInstruction;
@@ -64,9 +64,9 @@ public class BCDUP_X2 extends BCInstruction implements BCStackInstruction {
 		ExsuresTable _exc_Postcondition) {
 		Formula wp;
 
-		Stack stackTop_plus_1 = new Stack(Expression.COUNTER_PLUS_1);
-		Stack stackTop = new Stack(Expression.COUNTER);
-		Stack stackTop_minus_1 = new Stack(Expression.COUNTER_MINUS_1);
+//		Stack stackTop_plus_1 = new Stack(Expression.COUNTER_PLUS_1);
+//		Stack stackTop = new Stack(Expression.COUNTER);
+//		Stack stackTop_minus_1 = new Stack(Expression.COUNTER_MINUS_1);
 		Stack stackTop_minus_2 = new Stack(Expression.COUNTER_MINUS_2);
 		///////////////////////////////////////////
 		//////////////////first version of instruction execution
@@ -75,13 +75,13 @@ public class BCDUP_X2 extends BCInstruction implements BCStackInstruction {
 		// s (t-1) of comp type 1
 		three_on_stack_top_of_comp_type_1[0] =
 			new Predicate2Ar(
-				((JavaType) stackTop.getType()).getComputationalType(),
+				((JavaType) new Stack(Expression.COUNTER).getType()).getComputationalType(),
 				JavaType.COMPUTATIONAL_TYPE_1,
 				PredicateSymbol.EQ);
 		// s (t-1) of_comp_type_1
 		three_on_stack_top_of_comp_type_1[1] =
 			new Predicate2Ar(
-				((JavaType) stackTop_minus_1.getType()).getComputationalType(),
+				((JavaType) new Stack(Expression.COUNTER_MINUS_1).getType()).getComputationalType(),
 				JavaType.COMPUTATIONAL_TYPE_1,
 				PredicateSymbol.EQ);
 		//			s (t-2) of_comp_type_1
@@ -92,7 +92,7 @@ public class BCDUP_X2 extends BCInstruction implements BCStackInstruction {
 				PredicateSymbol.EQ);
 
 		Formula condition_comp_type1 =
-			new Formula(three_on_stack_top_of_comp_type_1, Connector.AND);
+			Formula.getFormula(three_on_stack_top_of_comp_type_1, Connector.AND);
 
 		// psi^n[t <-- t+1][S(t+1) <-- S(t)][S(t)<-- S(t-1)][S(t-1) <-- S(t -2 )][S(t-2) <-- S(t )]
 		Formula f1 = _normal_Postcondition.copy();
@@ -100,14 +100,14 @@ public class BCDUP_X2 extends BCInstruction implements BCStackInstruction {
 			f1.substitute(
 				Expression.COUNTER,
 				Expression.COUNTER_PLUS_1);
-		f1 = f1.substitute(stackTop_plus_1, stackTop);
-		f1 = f1.substitute(stackTop, stackTop_minus_1);
-		f1 = f1.substitute(stackTop_minus_1, stackTop_minus_2);
-		f1 = f1.substitute(stackTop_minus_2, stackTop);
+		f1 = f1.substitute(new Stack(Expression.COUNTER_PLUS_1), new Stack(Expression.COUNTER));
+		f1 = f1.substitute(new Stack(Expression.COUNTER), new Stack(Expression.COUNTER_MINUS_1));
+		f1 = f1.substitute(new Stack(Expression.COUNTER_MINUS_1), stackTop_minus_2);
+		f1 = f1.substitute(stackTop_minus_2, new Stack(Expression.COUNTER));
 
 		//		 (S(t-2), S(t - 1), S(t) instanceof  CompType1)  == > psi^n[t <-- t+1][S(t+1) <-- S(t)][S(t)<-- S(t-1)][S(t-1) <-- S(t -2 )][S(t-2) <-- S(t )]
 		Formula branch1 =
-			new Formula(condition_comp_type1, f1, Connector.IMPLIES);
+		Formula.getFormula(condition_comp_type1, f1, Connector.IMPLIES);
 
 		//			/////////////////////////////////////////
 		//			////////////////second version of instruction execution - dealing with long values
@@ -115,17 +115,17 @@ public class BCDUP_X2 extends BCInstruction implements BCStackInstruction {
 		//S(t) instanceof Comp_type1
 		Formula stackTop_ofComp_type1 =
 			new Predicate2Ar(
-				((JavaType) stackTop.getType()).getComputationalType(),
+				((JavaType) new Stack(Expression.COUNTER).getType()).getComputationalType(),
 				JavaType.COMPUTATIONAL_TYPE_1,
 				PredicateSymbol.EQ);
 		//			S(t - 1) instanceof Comp_type2
 		Formula stackTop_minus1_ofComp_type2 =
 			new Predicate2Ar(
-				((JavaType) stackTop_minus_1.getType()).getComputationalType(),
+				((JavaType) new Stack(Expression.COUNTER_MINUS_1).getType()).getComputationalType(),
 				JavaType.COMPUTATIONAL_TYPE_2,
 				PredicateSymbol.EQ);
 		Formula condition =
-			new Formula(
+		Formula.getFormula(
 				stackTop_ofComp_type1,
 				stackTop_minus1_ofComp_type2,
 				Connector.AND);
@@ -135,12 +135,12 @@ public class BCDUP_X2 extends BCInstruction implements BCStackInstruction {
 			f2.substitute(
 				Expression.COUNTER,
 				Expression.COUNTER_PLUS_1);
-		f2 = f2.substitute(stackTop_plus_1, stackTop);
-		f2 = f2.substitute(stackTop, stackTop_minus_1);
-		f2 = f2.substitute(stackTop_minus_1, stackTop);
+		f2 = f2.substitute(new Stack(Expression.COUNTER_PLUS_1), new Stack(Expression.COUNTER));
+		f2 = f2.substitute(new Stack(Expression.COUNTER), new Stack(Expression.COUNTER_MINUS_1));
+		f2 = f2.substitute(new Stack(Expression.COUNTER_MINUS_1), new Stack(Expression.COUNTER));
 
-		Formula branch2 = new Formula(condition, f2, Connector.IMPLIES);
-		wp = new Formula(branch1, branch2, Connector.AND);
+		Formula branch2 = Formula.getFormula(condition, f2, Connector.IMPLIES);
+		wp = Formula.getFormula(branch1, branch2, Connector.AND);
 		return wp;
 	}
 

@@ -56,9 +56,11 @@ public class BCI2C extends BCConversionInstruction {
 	 */
 	public Formula wp(Formula _normal_Postcondition, ExsuresTable _exc_Postcondition) {
 		Formula wp;
-		Stack stackTop = new Stack(Expression.COUNTER );
-		BitExpression mask = new BitExpression(stackTop, new NumberLiteral(0x0000FFFF), ExpressionConstants.BITWISEAND );
-		wp = _normal_Postcondition.substitute(stackTop, mask);
+//		Stack stackTop = new Stack(Expression.COUNTER );
+		// S(t) & 0xFFFF
+		BitExpression mask = new BitExpression(new Stack(Expression.COUNTER ), new NumberLiteral(0x0000FFFF), ExpressionConstants.BITWISEAND );
+		// psi^n[S(t)<--- S(t) & 0xFFFF]
+		wp = _normal_Postcondition.substitute(new Stack(Expression.COUNTER ), mask);
 		return wp;
 	}
 

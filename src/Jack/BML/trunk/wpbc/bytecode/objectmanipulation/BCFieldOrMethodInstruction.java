@@ -17,7 +17,7 @@ import bytecode.BCTypedInstruction;
 /**
  * @author mpavlova
  */
-public  abstract class BCFieldOrMethod
+public  abstract class BCFieldOrMethodInstruction
 	extends BCExceptionThrower
 	implements BCCPInstruction, BCTypedInstruction {
 		
@@ -25,7 +25,7 @@ public  abstract class BCFieldOrMethod
 	/**
 	 * index into the constant pool that represents a CONSTANT_fieldref_info  or CONSTANT_methodref_info  structure
 	 */	
-	private int index;
+	private int cpIndex;
 	
 	/**
 	 * index 	 into the constant pool that represents a  CONSTANT_class_info structure
@@ -40,14 +40,15 @@ public  abstract class BCFieldOrMethod
 	/**
 	 * @param _instruction
 	 */
-	public BCFieldOrMethod(
+	public BCFieldOrMethodInstruction(
 		InstructionHandle _instruction,
 		JavaType _type,
 		JavaType _classType,
 		BCConstantPool _cp) {
 			
 		super(_instruction);
-		setIndex(((CPInstruction) _instruction.getInstruction()).getIndex());
+		int index = ((CPInstruction) _instruction.getInstruction()).getIndex();
+		setIndex(index);
 		setType(_type);
 		classType = _classType;
 		cp  = _cp;
@@ -57,7 +58,7 @@ public  abstract class BCFieldOrMethod
 	 * @see bytecode.BCIndexedInstruction#getIndex()
 	 */
 	public int getIndex() {
-		return index;
+		return cpIndex;
 	}
 
 	/* (non-Javadoc)
@@ -85,7 +86,7 @@ public  abstract class BCFieldOrMethod
 	 * @see bytecode.BCIndexedInstruction#setIndex(int)
 	 */
 	public void setIndex(int index) {
-		// TODO Auto-generated method stub
+		cpIndex = index;
 		
 	}
 	

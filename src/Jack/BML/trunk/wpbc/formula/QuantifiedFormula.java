@@ -50,4 +50,13 @@ public class QuantifiedFormula extends Formula {
 		Formula _copy = new QuantifiedFormula(_subformula, q);
 		return _copy;
 	}
+	
+	public String toString() { 
+		String s = toString();
+		for (int i =0 ; i < quantificators.length; i++ ) {
+			s = s  + quantificators[i];
+		}
+		s = s + subformula;
+		return s;
+	}
 }

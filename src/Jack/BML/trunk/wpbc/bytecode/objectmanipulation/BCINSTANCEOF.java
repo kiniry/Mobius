@@ -14,8 +14,10 @@ import bcexpression.Expression;
 import bcexpression.NumberLiteral;
 import bcexpression.javatype.JavaReferenceType;
 import bcexpression.javatype.JavaType;
+import bcexpression.jml.TYPEOF;
 import bcexpression.vm.Stack;
-import bytecode.BCExceptionThrower;
+
+import bytecode.BCInstruction;
 import formula.Connector;
 import formula.Formula;
 import formula.atomic.Predicate2Ar;
@@ -54,10 +56,10 @@ import formula.atomic.PredicateSymbol;
  * 		  (S(t) <: Type)  && S(t) != null )==> psi^n[S(t) <-- 1 ] 
  */
 public class BCINSTANCEOF
-	extends BCExceptionThrower
+	extends BCInstruction
 	implements BCCPInstruction {
 	private JavaType type;
-	private int index;
+	private int cpIndex;
 
 	/**
 	 * @param _instruction
@@ -72,14 +74,14 @@ public class BCINSTANCEOF
 	 * @see bytecode.BCIndexedInstruction#setIndex(int)
 	 */
 	public void setIndex(int _index) {
-		index = _index;
+		cpIndex = _index;
 	}
 
 	/* (non-Javadoc)
 	 * @see bytecode.BCIndexedInstruction#getIndex()
 	 */
 	public int getIndex() {
-		return index;
+		return cpIndex;
 	}
 
 	/* (non-Javadoc)
@@ -104,31 +106,31 @@ public class BCINSTANCEOF
 		ExsuresTable _exc_Postcondition) {
 		Formula wp;
 
-		Stack topStack = new Stack(Expression.COUNTER);
+//		Stack topStack = new Stack(Expression.COUNTER);
 
 		//S(t) <: Type
 		Formula topStackSubType =
 			new Predicate2Ar(
-				(JavaReferenceType) topStack.getType(),
+				new TYPEOF(new Stack(Expression.COUNTER) ),
 				getType(),
 				PredicateSymbol.SUBTYPE);
 
 		//S(t) != null
 		Formula topStackNotNull =
-			new Predicate2Ar(topStack, Expression.NULL, PredicateSymbol.NOTEQ);
+			new Predicate2Ar(new Stack(Expression.COUNTER), Expression._NULL, PredicateSymbol.NOTEQ);
 
 		//S(t) <: Type && S(t) != null
 		Formula condition0 =
-			new Formula(topStackSubType, topStackNotNull, Connector.AND);
+		Formula.getFormula(topStackSubType, topStackNotNull, Connector.AND);
 		Formula condition0Implies = _normal_Postcondition.copy();
 
 		//psi^n[S(t) <-- 1] 
 		condition0Implies =
-			condition0Implies.substitute(topStack, new NumberLiteral(1));
+			condition0Implies.substitute(new Stack(Expression.COUNTER), new NumberLiteral(1));
 
 		// 	S(t) <: Type && S(t) != null  ==> psi^n[S(t) <-- 1] 
 		Formula wpTopStackisOfSubtype =
-			new Formula(condition0, condition0Implies, Connector.IMPLIES);
+		Formula.getFormula(condition0, condition0Implies, Connector.IMPLIES);
 
 	//////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////
@@ -136,26 +138,26 @@ public class BCINSTANCEOF
 	
 		// !( S(t) <: Type)
 		Formula topStackNotSubType =
-			new Formula(topStackSubType, Connector.NOT);
+			Formula.getFormula(topStackSubType, Connector.NOT);
 
 		//S(t) == null
 		Formula topStackNull =
-			new Predicate2Ar(topStack, Expression.NULL, PredicateSymbol.EQ);
+			new Predicate2Ar(new Stack(Expression.COUNTER), Expression._NULL, PredicateSymbol.EQ);
 	
 		//	!( S(t) <: Type)  || S(t) == null
-		Formula condition1 = new Formula(topStackNotSubType, topStackNull, Connector.OR);
+		Formula condition1 = Formula.getFormula(topStackNotSubType, topStackNull, Connector.OR);
 		Formula condition1implies =  _normal_Postcondition.copy();
 		
 		//psi^n[S(t) <-- 0 ]
-		condition1implies = condition1implies.substitute(topStack, new NumberLiteral(0) );
+		condition1implies = condition1implies.substitute(new Stack(Expression.COUNTER), new NumberLiteral(0) );
 		
 		//	!( S(t) <: Type)  || S(t) == null ==> psi^n[S(t) <-- 0 ]
-		Formula wpTopStackisOfNotSubtype = new Formula (condition1, condition1implies, Connector.IMPLIES);
+		Formula wpTopStackisOfNotSubtype = Formula.getFormula (condition1, condition1implies, Connector.IMPLIES);
 		
 //		wp	=( !( S(t) <: Type)  || S(t) == null) ==> psi^n[S(t) <-- 0 ] 
 //		 			&&
 //		 		  (S(t) <: Type)  && S(t) != null )==> psi^n[S(t) <-- 1 ] 
-		wp = new Formula(wpTopStackisOfNotSubtype, wpTopStackisOfSubtype, Connector.AND);
+		wp = Formula.getFormula(wpTopStackisOfNotSubtype, wpTopStackisOfSubtype, Connector.AND);
 		return wp;
 	}
 

@@ -53,7 +53,7 @@ import formula.Formula;
 
 //change - before the superclass BCExceptionThrower.java
 public class BCLDC extends BCInstruction implements BCCPInstruction {
-	private int index;
+	private int cpIndex;
 	private JavaType type;
 	
 	
@@ -72,14 +72,14 @@ public class BCLDC extends BCInstruction implements BCCPInstruction {
 	 * @see bytecode.BCIndexedInstruction#setIndex(int)
 	 */
 	public void setIndex(int _index) {
-		index = _index;
+		cpIndex = _index;
 	}
 
 	/* (non-Javadoc)
 	 * @see bytecode.BCIndexedInstruction#getIndex()
 	 */
 	public int getIndex() {
-		return index;
+		return cpIndex;
 	}
 
 	/* (non-Javadoc)

@@ -27,7 +27,6 @@ public abstract class BCUnconditionalBranch extends BCJumpInstruction {
 	 */
 	public BCUnconditionalBranch(InstructionHandle _branchInstruction) {
 		super(_branchInstruction);
-	
 	}
 	
 

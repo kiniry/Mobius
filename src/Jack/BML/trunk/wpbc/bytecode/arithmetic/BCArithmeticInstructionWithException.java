@@ -8,11 +8,12 @@ package bytecode.arithmetic;
 
 import org.apache.bcel.generic.InstructionHandle;
 
-import bcclass.attributes.ExsuresTable;
+import bcexpression.javatype.ClassNames;
+import bcexpression.javatype.JavaObjectType;
 import bcexpression.javatype.JavaType;
 import bytecode.BCExceptionThrower;
 import bytecode.BCTypedInstruction;
-import formula.Formula;
+
 
 
 
@@ -28,6 +29,9 @@ public abstract class BCArithmeticInstructionWithException extends BCExceptionTh
 	private JavaType type;
 	
 	private byte arithmOperation;
+	
+
+	
 	/**
 	 * @param _instruction
 	 * @param _type
@@ -35,6 +39,7 @@ public abstract class BCArithmeticInstructionWithException extends BCExceptionTh
 	public BCArithmeticInstructionWithException(InstructionHandle _instruction, JavaType _type) {
 		super(_instruction);
 		setType(_type);
+		setExceptionsThrown( new JavaObjectType[]{ (JavaObjectType)JavaObjectType.getJavaRefType( ClassNames.ARITHMETICException) });
 	}
 
 	public  void setArithmeticOperation(byte _op) {
@@ -59,6 +64,10 @@ public abstract class BCArithmeticInstructionWithException extends BCExceptionTh
 		type = _type;
 	}
 
+
+
+
+	
 	
 
 }

@@ -19,7 +19,7 @@ public abstract class  BCLocalVariableInstruction extends BCInstruction implemen
 	/**
 	 * index in the local variable table that contains the local variable incremented by this instruction 
 	 */
-	private int index;
+	private int localVariableIndex;
 	
 	/**
 	 * the type of  the local variable is returned
@@ -36,7 +36,7 @@ public abstract class  BCLocalVariableInstruction extends BCInstruction implemen
 	 * @see bytecode.BCLocalVariableInstruction#setIndex(int)
 	 */
 	public void setIndex(int _index) {
-		index = _index;
+		localVariableIndex = _index;
 	}
 	
 	/**
@@ -44,7 +44,7 @@ public abstract class  BCLocalVariableInstruction extends BCInstruction implemen
 	 * @return int
 	 */
 	public int getIndex()  {
-		return index;
+		return localVariableIndex;
 	}
 	
 	/* (non-Javadoc)

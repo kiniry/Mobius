@@ -17,6 +17,11 @@ import formula.Formula;
 public class Predicate extends Formula {
 	private byte predicateSymbol;
 	
+	
+	public static final TRUE  _TRUE = TRUE.getTRUE();
+	public static final FALSE  _FALSE = FALSE.getFALSE();
+	
+	
 	protected void setPredicateSymbol(byte _predicateSymbol) {
 		predicateSymbol =  _predicateSymbol;
 	}

@@ -39,20 +39,20 @@ public class BCIFGE extends BCConditionalBranch {
 		 */
 		public Formula wp(Formula _normal_Postcondition, ExsuresTable _exc_Postcondition) {
 			Formula wp;
-			Stack stackTop = new Stack(Expression.COUNTER);
+//			Stack stackTop = new Stack(Expression.COUNTER);
 		
-			//in case of jump
-			Formula stackTop_geq_0 = new Predicate2Ar(stackTop, new NumberLiteral(0), PredicateSymbol.GRTEQ);
+			//in case of jump - S(t) >= 0
+			Formula stackTop_geq_0 = new Predicate2Ar(new Stack(Expression.COUNTER), new NumberLiteral(0), PredicateSymbol.GRTEQ);
 			Formula geq_branch = getBranchWP();
 			geq_branch = geq_branch.substitute(Expression.COUNTER, Expression.COUNTER_MINUS_1);
-			Formula wp_stackTop_geq_0 = new Formula( stackTop_geq_0, geq_branch, Connector.IMPLIES);
+			Formula wp_stackTop_geq_0 = Formula.getFormula( stackTop_geq_0, geq_branch, Connector.IMPLIES);
 		
-			// in case of executing next instruction
-			Formula stackTop_not_geq_0 = new Formula( stackTop_geq_0, Connector.NOT);
+			// in case of executing next instruction - S(t) < 0
+			Formula stackTop_not_geq_0 = new Predicate2Ar(new Stack(Expression.COUNTER), new NumberLiteral(0), PredicateSymbol.LESS);
 			Formula not_geq_branch = _normal_Postcondition.substitute(Expression.COUNTER, Expression.COUNTER_MINUS_1);
-			Formula wp_stackTop_not_geq_0 = new Formula( stackTop_not_geq_0, not_geq_branch, Connector.IMPLIES);
+			Formula wp_stackTop_not_geq_0 = Formula.getFormula( stackTop_not_geq_0, not_geq_branch, Connector.IMPLIES);
 		
-			wp = new Formula(wp_stackTop_geq_0, wp_stackTop_not_geq_0, Connector.AND);
+			wp = Formula.getFormula(wp_stackTop_geq_0, wp_stackTop_not_geq_0, Connector.AND);
 			return wp;
 		}
 

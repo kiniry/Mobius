@@ -6,13 +6,10 @@
  */
 package bytecode.objectmanipulation;
 
-
 import org.apache.bcel.generic.InstructionHandle;
 
 import formula.Formula;
 
-import application.JavaApplication;
-import bcclass.BCClass;
 import bcclass.BCConstantPool;
 
 import bcclass.attributes.ExsuresTable;
@@ -25,7 +22,7 @@ import bcexpression.javatype.JavaType;
  * To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
-public class BCINVOKESTATIC extends BCFieldOrMethod {
+public class BCINVOKESTATIC extends BCFieldOrMethodInstruction {
 
 //	/private JavaType[] argTypes;
 

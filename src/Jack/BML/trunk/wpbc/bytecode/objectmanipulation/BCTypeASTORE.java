@@ -15,6 +15,7 @@ import bcexpression.ArrayAccessExpression;
 import bcexpression.Expression;
 
 import bcexpression.FieldAccessExpression;
+import bcexpression.javatype.ClassNames;
 import bcexpression.javatype.JavaObjectType;
 import bcexpression.javatype.JavaType;
 
@@ -29,8 +30,22 @@ import formula.atomic.PredicateSymbol;
 /**
  * @author mpavlova
  *
- * To change the template for this generated type comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
+ * iastore
+ *
+ * Operation : Store into int array
+ *
+ * Format :  iastore 	
+ * 
+ * Operand Stack : ..., arrayref, index, value  ==> ...
+ *
+ * Description : The arrayref must be of type reference and must refer to an array whose 
+ * components are of type int. Both index and value must be of type int. The arrayref, index, and 
+ * value are popped from the operand stack. The int value is stored as the component of the array indexed by index. 
+ *
+ * Runtime Exceptions :
+ * If arrayref is null, iastore throws a NullPointerException. 
+ * Otherwise, if index is not within the bounds of the array referenced by arrayref, 
+ * the iastore instruction throws an ArrayIndexOutOfBoundsException
  */
 public class BCTypeASTORE
 	extends BCExceptionThrower
@@ -45,6 +60,12 @@ public class BCTypeASTORE
 	public BCTypeASTORE(InstructionHandle _instruction, JavaType _type) {
 		super(_instruction);
 		setType(_type);
+		setExceptionsThrown(
+			new JavaObjectType[] {
+				(JavaObjectType) JavaObjectType.getJavaRefType(
+					ClassNames.NULLPOINTERException),
+				(JavaObjectType) JavaObjectType.getJavaRefType(
+					ClassNames.ARRAYINDEXOUTOFBOUNDException)});
 	}
 	/* (non-Javadoc)
 	 * @see bytecode.BCTypedInstruction#getType()
@@ -64,60 +85,73 @@ public class BCTypeASTORE
 	public Formula wp(
 		Formula _n_Postcondition,
 		ExsuresTable _exc_Postcondition) {
-		
+
 		Formula wp;
 		Formula[] wps = new Formula[3];
 		//		normal execution 
 		Stack stackTop = new Stack(Expression.COUNTER);
-		Stack stackTop_minus_1 = new Stack(Expression.COUNTER_MINUS_1);
-		Stack stackTop_minus_2 = new Stack(Expression.COUNTER_MINUS_2);
+//		Stack stackTop_minus_1 = new Stack(Expression.COUNTER_MINUS_1);
+//		Stack stackTop_minus_2 = new Stack(Expression.COUNTER_MINUS_2);
 
 		//t <------ t - 3
-		_n_Postcondition.substitute(Expression.COUNTER, Expression.COUNTER_MINUS_3);
+		_n_Postcondition.substitute(
+			Expression.COUNTER,
+			Expression.COUNTER_MINUS_3);
 
 		//S(t-2 ) != null
 		Formula array_not_null =
 			new Predicate2Ar(
-				stackTop_minus_2,
-				Expression.NULL,
+			new Stack(Expression.COUNTER_MINUS_2),
+				Expression._NULL,
 				PredicateSymbol.NOTEQ);
 		//S(t-1) < S(t-2).length
 		Formula arr_index_correct =
 			new Predicate2Ar(
-				stackTop_minus_1,
+			new Stack(Expression.COUNTER_MINUS_1),
 				new FieldAccessExpression(
 					new ArrayLengthConstant(),
-					stackTop_minus_2),
+			new Stack(Expression.COUNTER_MINUS_2)),
 				PredicateSymbol.LESS);
-				
-		Formula condition = new Formula(array_not_null, arr_index_correct, Connector.AND);
-		Expression arrElementAtIndex = new ArrayAccessExpression(stackTop_minus_2, stackTop_minus_1 );
+
+		Formula condition =
+		Formula.getFormula(array_not_null, arr_index_correct, Connector.AND);
+		Expression arrElementAtIndex =
+			new ArrayAccessExpression(new Stack(Expression.COUNTER_MINUS_2), new Stack(Expression.COUNTER_MINUS_1));
 		//S(t-2)[S(t-1)] <--- S(t)
-		_n_Postcondition.substitute( arrElementAtIndex, stackTop);
-		
-		wps[0] = new Formula(condition, _n_Postcondition, Connector.IMPLIES);
-		
+		_n_Postcondition.substitute(arrElementAtIndex, stackTop);
+
+		wps[0] = Formula.getFormula(condition, _n_Postcondition, Connector.IMPLIES);
+
 		//exceptional termination
 		//S(t-2 ) == null ==> _exc_Postcondition(java.lang.NullPointerException)
 		Formula array_null =
 			new Predicate2Ar(
-				stackTop_minus_2,
-				Expression.NULL,
+			new Stack(Expression.COUNTER_MINUS_2),
+				Expression._NULL,
 				PredicateSymbol.EQ);
-		Formula nullPointer = getWpForException((JavaObjectType)JavaType.getJavaRefType("Ljava/lang/NullPointerException;"), _exc_Postcondition);
-		wps[1] = new Formula(array_null, nullPointer, Connector.IMPLIES );	
-		
-		  //S(t-1) > S(t-2).length ==> _exc_Postcondition(java.lang. ArrayIndexOutOfBoundsException)
-		  Formula arr_index_not_correct =
-			  new Predicate2Ar(
-				  stackTop_minus_1,
-				  new FieldAccessExpression(
-					  new ArrayLengthConstant(),
-					  stackTop_minus_2),
-				  PredicateSymbol.GRTEQ);
-		Formula outOfBounds = getWpForException((JavaObjectType)JavaType.getJavaRefType("Ljava/lang/ArrayIndexOutOfBoundsException;"), _exc_Postcondition);
-		wps[2] = new Formula(arr_index_not_correct, outOfBounds, Connector.IMPLIES);
-	 	wp = new Formula(wps, Connector.AND);
-		return wp;		
+		Formula nullPointer =
+			getWpForException(
+				(JavaObjectType) JavaType.getJavaRefType(
+					"Ljava/lang/NullPointerException;"),
+				_exc_Postcondition);
+		wps[1] = Formula.getFormula(array_null, nullPointer, Connector.IMPLIES);
+
+		//S(t-1) > S(t-2).length ==> _exc_Postcondition(java.lang. ArrayIndexOutOfBoundsException)
+		Formula arr_index_not_correct =
+			new Predicate2Ar(
+			new Stack(Expression.COUNTER_MINUS_1),
+				new FieldAccessExpression(
+					new ArrayLengthConstant(),
+			new Stack(Expression.COUNTER_MINUS_2)),
+				PredicateSymbol.GRTEQ);
+		Formula outOfBounds =
+			getWpForException(
+				(JavaObjectType) JavaType.getJavaRefType(
+					"Ljava/lang/ArrayIndexOutOfBoundsException;"),
+				_exc_Postcondition);
+		wps[2] =
+		Formula.getFormula(arr_index_not_correct, outOfBounds, Connector.IMPLIES);
+		wp = Formula.getFormula(wps, Connector.AND);
+		return wp;
 	}
 }

@@ -52,32 +52,33 @@ public class BCIF_ACMPEQ extends BCConditionalBranch {
 	 */
 	public Formula wp(Formula _normal_Postcondition, ExsuresTable _exc_Postcondition) {
 		Formula wp;
-		Stack stackTop = new Stack(Expression.COUNTER);
-		Stack stackTop_minus_1 = new Stack( Expression.COUNTER_MINUS_1);
+		//Stack stackTop = new Stack(Expression.COUNTER) ;
+	//	Stack stackTop_minus_1 = new Stack( Expression.COUNTER_MINUS_1);
 //		///////////////////////////////////////////	
 		// top two stack values are equal 
 		//S(t)== S(t-1)
-		Formula stackTop_equals_stackTop_minus_1 = new Predicate2Ar(stackTop, stackTop_minus_1, PredicateSymbol.EQ );
+		Formula stackTop_equals_stackTop_minus_1 = new Predicate2Ar(new Stack(Expression.COUNTER) , new Stack( Expression.COUNTER_MINUS_1), PredicateSymbol.EQ );
 		//getWPBranch
-		Formula eq_branch = 	getBranchWP();
+		Formula eq_branch = 	getBranchWP().copy();
 		
 		//getWPBranch[t<-- t-2]
 		eq_branch = eq_branch.substitute( Expression.COUNTER, Expression.COUNTER_MINUS_2);
 		//S(t)== S(t-1) == >  getWPBranch[t<-- t-2]
-		Formula wp_eq_branch = new Formula(stackTop_equals_stackTop_minus_1, eq_branch, Connector.IMPLIES );
+		Formula wp_eq_branch = Formula.getFormula(stackTop_equals_stackTop_minus_1, eq_branch, Connector.IMPLIES );
 		
 		/////////////////////////////////////////////	
 		//top two stack values are not equal
 		//S(t)!= S(t-1)
-		Formula stackTop_not_equals_stackTop_minus_1 = new Formula( stackTop_equals_stackTop_minus_1, Connector.NOT);
+		Formula stackTop_not_equals_stackTop_minus_1 = new Predicate2Ar(new Stack(Expression.COUNTER) , new Stack( Expression.COUNTER_MINUS_1), PredicateSymbol.NOTEQ );
+
 		
 		//psi^n[t <-- t-2]
 		Formula not_eq_branch = _normal_Postcondition.substitute(Expression.COUNTER, Expression.COUNTER_MINUS_2);
 	
 		//S(t)!= S(t-1) == > psi^n[t <-- t-2]
-		Formula wp_not_eq_branch = new Formula(stackTop_not_equals_stackTop_minus_1, not_eq_branch , Connector.IMPLIES );
+		Formula wp_not_eq_branch = Formula.getFormula(stackTop_not_equals_stackTop_minus_1, not_eq_branch , Connector.IMPLIES );
 		
-		wp = new Formula(wp_not_eq_branch, wp_eq_branch, Connector.AND);
+		wp = Formula.getFormula(wp_not_eq_branch, wp_eq_branch, Connector.AND);
 		return wp;
 	}
 

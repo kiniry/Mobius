@@ -10,9 +10,8 @@ import org.apache.bcel.generic.InstructionHandle;
 
 import constants.ArrayLengthConstant;
 
-
-
 import bcclass.attributes.ExsuresTable;
+import bcexpression.javatype.ClassNames;
 import bcexpression.javatype.JavaObjectType;
 import bcexpression.javatype.JavaType;
 
@@ -28,14 +27,25 @@ import formula.Connector;
 import formula.atomic.Predicate2Ar;
 import formula.atomic.PredicateSymbol;
 
-
 /**
  * @author mpavlova
+ * aload
  *
- * To change the template for this generated type comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
+ * Operation : Load int from array
+ *
+ *  Format : iaload 	
+ *
+ * 
+ * Operand Stack :  ..., arrayref, index  == > ..., value
+ *
+ * Description : The arrayref must be of type reference and must refer to an array whose components are of type int. The index must be of type int. Both arrayref and index are popped from the operand stack. The int value in the component of the array at index is retrieved and pushed onto the operand stack.
+ *
+ * Runtime Exceptions :  If arrayref is null, iaload throws a NullPointerException. Otherwise, if index is not 
+ * within the bounds of the array referenced by arrayref, the iaload instruction throws an ArrayIndexOutOfBoundsException.
  */
-public class BCTypeALOAD  extends BCExceptionThrower implements  BCTypedInstruction {
+public class BCTypeALOAD
+	extends BCExceptionThrower
+	implements BCTypedInstruction {
 	//    ..., arrayref, index  ==> ..., value
 
 	//AALOAD, BALOAD, LALOAD, CALOAD, IALOAD, DALOAD , FALOAD, SALOAD
@@ -43,16 +53,21 @@ public class BCTypeALOAD  extends BCExceptionThrower implements  BCTypedInstruct
 	/**
 	 * @param _instruction
 	 */
-	public BCTypeALOAD(InstructionHandle _instruction, JavaType _type ) {
+	public BCTypeALOAD(InstructionHandle _instruction, JavaType _type) {
 		super(_instruction);
-		setType(_type );
-		// TODO Auto-generated constructor stub
+		setType(_type);
+		setExceptionsThrown(
+			new JavaObjectType[] {
+				(JavaObjectType) JavaObjectType.getJavaRefType(
+					ClassNames.NULLPOINTERException),
+				(JavaObjectType) JavaObjectType.getJavaRefType(
+					ClassNames.ARRAYINDEXOUTOFBOUNDException)});
 	}
 
 	/* (non-Javadoc)
 	 * @see bytecode.BCTypedInstruction#getType()
 	 */
-	public JavaType getType()  {
+	public JavaType getType() {
 		return type;
 	}
 
@@ -62,51 +77,81 @@ public class BCTypeALOAD  extends BCExceptionThrower implements  BCTypedInstruct
 	public void setType(JavaType _type) {
 		type = _type;
 	}
-	
-	public Formula wp(Formula _n_Postcondition, ExsuresTable _e_Postcondition) {
-		 Formula wp = null ; 
-		  //normal execution 
-		  Stack _stackTop = new Stack(Expression.COUNTER);
-		  Stack _stackTop_minus_1 =  new Stack(Expression.COUNTER_MINUS_1);
-		 
-		  //t <------ t -1
-		  _n_Postcondition.substitute(Expression.COUNTER, Expression.COUNTER_MINUS_1);
-		// n_post[ S(t) <----- S(t-1)[S(t)]]
-		_n_Postcondition = _n_Postcondition.substitute( _stackTop,  new ArrayAccessExpression( _stackTop_minus_1, _stackTop));			
-			
-		  //S(t - 1) != null
-		  Formula _arr_not_null = new Predicate2Ar(_stackTop_minus_1, Expression.NULL,  PredicateSymbol.NOTEQ );
-	  
-	  
-		  //S(t-1).length > S( t )
-		  FieldAccessExpression _arrlength = new FieldAccessExpression( new ArrayLengthConstant(), _stackTop_minus_1 ) ;
-		  Formula  _arr_index_correct = new Predicate2Ar( _arrlength,   _stackTop,  PredicateSymbol.GRT);
-		  Formula _condition = new Formula(_arr_not_null, _arr_index_correct,  Connector.AND);
-		  Formula _normal_termination = new Formula(_condition, _n_Postcondition , Connector.IMPLIES );
-	  
-		
-		  //  execution terminating with java.lang.IndexOutOfBoundsException
-		  //S(t-1).length <= S(t) ==> excPost(IndexOutOfBoundsException)
-		  Formula _index_out_of_bounds = new Predicate2Ar( _arrlength,   _stackTop,  PredicateSymbol.LESSEQ); 
-		  Formula _wp_arr_out_of_bounds = getWpForException((JavaObjectType)JavaType.getJavaRefType("Ljava/lang/IndexOutOfBoundsException;"), _e_Postcondition);
-		  Formula _out_of_bound_termination = new Formula(_index_out_of_bounds, 
-																							_wp_arr_out_of_bounds , 
-																							Connector.IMPLIES);
 
-		  // execution terminating with  NullPointerException
-		  //S(t-1) == null ==> excPost(NullPointerException) 
-		  Formula _arr_null = new Predicate2Ar(_stackTop_minus_1, Expression.NULL,  PredicateSymbol.EQ );
-		  Formula _wp_null_pointer =  getWpForException((JavaObjectType)JavaType.getJavaRefType("java.lang.NullPointerException"), _e_Postcondition);;
-		  Formula _null_pointer_termination = new Formula(_arr_null, 
-														  _wp_null_pointer,
-														  Connector.IMPLIES);
-		  Formula[] _formulas = new Formula[3];
-		  _formulas[0] = _normal_termination;
-		  _formulas[1] = _null_pointer_termination;
-		  _formulas[2] = _out_of_bound_termination;
-		  wp = new Formula( _formulas, Connector.AND); 
-		  //wp.substitute(_counter, new ArithmeticExpression( _counter, new NumberLiteral(new Integer(1)) , ExpressionConstants.MINUS)) ;
-		  return wp;
-		 }
+	public Formula wp(
+		Formula _n_Postcondition,
+		ExsuresTable _e_Postcondition) {
+		Formula wp = null;
+		//normal execution 
+		//Stack _stackTop = new Stack(Expression.COUNTER);
+		//Stack _stackTop_minus_1 = new Stack(Expression.COUNTER_MINUS_1);
+
+		//t <------ t -1
+		_n_Postcondition.substitute(
+			Expression.COUNTER,
+			Expression.COUNTER_MINUS_1);
+		// n_post[ S(t) <----- S(t-1)[S(t)]]
+		_n_Postcondition =
+			_n_Postcondition.substitute(
+			new Stack(Expression.COUNTER),
+				new ArrayAccessExpression(new Stack(Expression.COUNTER_MINUS_1), new Stack(Expression.COUNTER)));
+
+		//S(t - 1) != null
+		Formula _arr_not_null =
+			new Predicate2Ar(
+			new Stack(Expression.COUNTER_MINUS_1),
+				Expression._NULL,
+				PredicateSymbol.NOTEQ);
+
+		//S(t-1).length > S( t )
+		FieldAccessExpression _arrlength =
+			new FieldAccessExpression(
+				new ArrayLengthConstant(),
+			new Stack(Expression.COUNTER_MINUS_1));
+		Formula _arr_index_correct =
+			new Predicate2Ar(_arrlength, new Stack(Expression.COUNTER), PredicateSymbol.GRT);
+		Formula _condition =
+		Formula.getFormula(_arr_not_null, _arr_index_correct, Connector.AND);
+		Formula _normal_termination =
+		Formula.getFormula(_condition, _n_Postcondition, Connector.IMPLIES);
+
+		//  execution terminating with java.lang.IndexOutOfBoundsException
+		//S(t-1).length <= S(t) ==> excPost(IndexOutOfBoundsException)
+		Formula _index_out_of_bounds =
+			new Predicate2Ar(_arrlength, new Stack(Expression.COUNTER), PredicateSymbol.LESSEQ);
+		Formula _wp_arr_out_of_bounds =
+			getWpForException(
+				(JavaObjectType) JavaType.getJavaRefType(
+					"Ljava/lang/IndexOutOfBoundsException;"),
+				_e_Postcondition);
+		Formula _out_of_bound_termination =
+		Formula.getFormula(
+				_index_out_of_bounds,
+				_wp_arr_out_of_bounds,
+				Connector.IMPLIES);
+
+		// execution terminating with  NullPointerException
+		//S(t-1) == null ==> excPost(NullPointerException) 
+		Formula _arr_null =
+			new Predicate2Ar(
+			new Stack(Expression.COUNTER_MINUS_1),
+				Expression._NULL,
+				PredicateSymbol.EQ);
+		Formula _wp_null_pointer =
+			getWpForException(
+				(JavaObjectType) JavaType.getJavaRefType(
+					"java.lang.NullPointerException"),
+				_e_Postcondition);
+		;
+		Formula _null_pointer_termination =
+		Formula.getFormula(_arr_null, _wp_null_pointer, Connector.IMPLIES);
+		Formula[] _formulas = new Formula[3];
+		_formulas[0] = _normal_termination;
+		_formulas[1] = _null_pointer_termination;
+		_formulas[2] = _out_of_bound_termination;
+		wp = Formula.getFormula(_formulas, Connector.AND);
+		//wp.substitute(_counter, new ArithmeticExpression( _counter, new NumberLiteral(new Integer(1)) , ExpressionConstants.MINUS)) ;
+		return wp;
+	}
 
 }

@@ -63,22 +63,22 @@ public class BCI2S extends BCConversionInstruction  {
 	 */
 	public Formula wp(Formula _normal_Postcondition, ExsuresTable _exc_Postcondition) {
 		Formula wp;
-		Stack stackTop = new Stack(Expression.COUNTER);
+//		Stack stackTop = new Stack(Expression.COUNTER);
 		
-		Formula  positive = new Predicate2Ar(stackTop, new NumberLiteral(0), PredicateSymbol.GRTEQ);
-		BitExpression pMask = new BitExpression(stackTop, new NumberLiteral(0xFFFF), ExpressionConstants.BITWISEAND);
+		Formula  positive = new Predicate2Ar(new Stack(Expression.COUNTER), new NumberLiteral(0), PredicateSymbol.GRTEQ);
+		BitExpression pMask = new BitExpression(new Stack(Expression.COUNTER), new NumberLiteral(0xFFFF), ExpressionConstants.BITWISEAND);
 		Formula pCopy = _normal_Postcondition.copy();
-		pCopy.substitute(stackTop, pMask);
-		Formula wpPositive = new Formula(positive, pCopy, Connector.IMPLIES);
+		pCopy.substitute(new Stack(Expression.COUNTER), pMask);
+		Formula wpPositive = Formula.getFormula(positive, pCopy, Connector.IMPLIES);
 		
-		Formula  neg = new Predicate2Ar(stackTop, new NumberLiteral(0), PredicateSymbol.LESS);
-		BitExpression nMask = new BitExpression(stackTop, new NumberLiteral(0xFFFF), ExpressionConstants.BITWISEAND);
+		Formula  neg = new Predicate2Ar(new Stack(Expression.COUNTER), new NumberLiteral(0), PredicateSymbol.LESS);
+		BitExpression nMask = new BitExpression(new Stack(Expression.COUNTER), new NumberLiteral(0xFFFF), ExpressionConstants.BITWISEAND);
 		BitExpression nExtend = new BitExpression(nMask, new NumberLiteral(0xFFFF0000), ExpressionConstants.BITWISEOR);
 		Formula nCopy = _normal_Postcondition.copy();
-		pCopy.substitute(stackTop, nExtend);
-		Formula wpNeg = new Formula(positive, pCopy, Connector.IMPLIES);
+		pCopy.substitute(new Stack(Expression.COUNTER), nExtend);
+		Formula wpNeg = Formula.getFormula(positive, pCopy, Connector.IMPLIES);
 		
-		wp = new Formula(wpPositive, wpNeg, Connector.AND);
+		wp = Formula.getFormula(wpPositive, wpNeg, Connector.AND);
 		return wp;
 	}
 

@@ -43,18 +43,18 @@ public class BCTypeAND extends BCArithmeticInstruction {
 		Formula _normal_Postcondition,
 		ExsuresTable _exc_Postcondition) {
 		Formula wp;
-		Stack stackTop = new Stack(Expression.COUNTER);
-		Stack stackTop_minus_1 = new Stack(Expression.COUNTER_MINUS_1);
+//		Stack stackTop = new Stack(Expression.COUNTER);
+//		Stack stackTop_minus_1 = new Stack(Expression.COUNTER_MINUS_1);
 		BitExpression and =
 			new BitExpression(
-				stackTop,
-				stackTop_minus_1,
+				new Stack(Expression.COUNTER),
+				new Stack(Expression.COUNTER_MINUS_1),
 				ExpressionConstants.BITWISEAND);
 
 		_normal_Postcondition.substitute(
 			Expression.COUNTER,
 			Expression.COUNTER_MINUS_1);
-		_normal_Postcondition.substitute(stackTop_minus_1, and);
+		_normal_Postcondition.substitute(new Stack(Expression.COUNTER_MINUS_1), and);
 		wp = _normal_Postcondition;
 		return wp;
 	}

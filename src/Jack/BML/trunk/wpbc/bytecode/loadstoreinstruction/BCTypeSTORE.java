@@ -47,8 +47,8 @@ public class BCTypeSTORE extends BCLocalVariableInstruction {
 		ExsuresTable _exc_Postcondition) {
 		Formula wp;
 		wp = _normal_Postcondition.substitute(Expression.COUNTER, Expression.COUNTER_MINUS_1);
-		Stack stackTop = new Stack(Expression.COUNTER);
-		wp = wp.substitute(new LocalVariableAccess(getIndex()), stackTop  );
+//		Stack stackTop = new Stack(Expression.COUNTER);
+		wp = wp.substitute(new LocalVariableAccess(getIndex()),  new Stack(Expression.COUNTER) );
 		return wp;
 	}
 }

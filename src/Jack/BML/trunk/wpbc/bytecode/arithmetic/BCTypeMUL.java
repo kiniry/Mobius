@@ -4,19 +4,14 @@ import org.apache.bcel.generic.IMUL;
 import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.LMUL;
 
-
 import bcclass.attributes.ExsuresTable;
 import bcexpression.javatype.JavaType;
 
-
 import formula.Formula;
-
 
 import bcexpression.ArithmeticExpression;
 import bcexpression.Expression;
 import bcexpression.ExpressionConstants;
-import bcexpression.NumberLiteral;
-import bcexpression.vm.Counter;
 import bcexpression.vm.Stack;
 import bytecode.BCConstants;
 import bytecode.BCInstructionCodes;
@@ -52,7 +47,7 @@ public class BCTypeMUL extends BCArithmeticInstruction {
 		Formula wp;
 		Stack stackTop = new Stack(Expression.COUNTER);
 		Stack stackTop_minus_1 = new Stack(Expression.COUNTER_MINUS_1);
-		ArithmeticExpression mult = ArithmeticExpression.getArithmeticExpression(stackTop, stackTop_minus_1, ExpressionConstants.MULT);
+		ArithmeticExpression mult = (ArithmeticExpression)ArithmeticExpression.getArithmeticExpression(stackTop, stackTop_minus_1, ExpressionConstants.MULT);
 		_normal_Postcondition.substitute(Expression.COUNTER, Expression.COUNTER_MINUS_1);
 		_normal_Postcondition.substitute(stackTop_minus_1, mult);
 		wp = _normal_Postcondition;

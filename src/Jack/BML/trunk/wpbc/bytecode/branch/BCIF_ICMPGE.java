@@ -40,14 +40,14 @@ public class BCIF_ICMPGE extends BCConditionalBranch {
 		Formula _normal_Postcondition,
 		ExsuresTable _exc_Postcondition) {
 		Formula wp;
-		Stack stackTop = new Stack(Expression.COUNTER);
-		Stack stackTop_minus_1 = new Stack(Expression.COUNTER_MINUS_1);
+//		Stack stackTop = new Stack(Expression.COUNTER) ;
+//		Stack stackTop_minus_1 = new Stack(Expression.COUNTER_MINUS_1) ;
 
 		///////////////////////////////////////////	
 		// top of the stack is greater than the stack at level top-1
-		//S(t-1) > S(t)
+		//S(t-1) >= S(t)
 		Formula stackTop_minus_1_grteq_stackTop =
-			new Predicate2Ar( stackTop_minus_1, stackTop,PredicateSymbol.GRTEQ);
+			new Predicate2Ar( new Stack(Expression.COUNTER_MINUS_1) , new Stack(Expression.COUNTER) ,PredicateSymbol.GRTEQ);
 		//getWPBranch
 		Formula grteq_branch = getBranchWP();
 
@@ -58,16 +58,16 @@ public class BCIF_ICMPGE extends BCConditionalBranch {
 				Expression.COUNTER_MINUS_2);
 		//S(t-1) > S(t) == >  getWPBranch[t<-- t-2]
 		Formula wp_grteq_branch =
-			new Formula(
+		Formula.getFormula(
 				stackTop_minus_1_grteq_stackTop,
 				grteq_branch,
 				Connector.IMPLIES);
 
 		/////////////////////////////////////////////	
 		//top of the stack is not greater than the stack at level top-1
-		//!( S(t-1) > S(t))
+		//!( S(t-1) < S(t))
 		Formula stackTop_minus_1_not_grteq_stackTop =
-			new Formula(stackTop_minus_1_grteq_stackTop, Connector.NOT);
+		new Predicate2Ar( new Stack(Expression.COUNTER_MINUS_1) , new Stack(Expression.COUNTER) ,PredicateSymbol.LESS);
 
 		//psi^n[t <-- t-2]
 		Formula not_grteq_branch =
@@ -77,12 +77,12 @@ public class BCIF_ICMPGE extends BCConditionalBranch {
 
 		//!( S(t-1) > S(t))== > psi^n[t <-- t-2]
 		Formula wp_not_grteq_branch =
-			new Formula(
+		Formula.getFormula(
 				stackTop_minus_1_not_grteq_stackTop,
 				not_grteq_branch,
 				Connector.IMPLIES);
 
-		wp = new Formula(wp_not_grteq_branch, wp_grteq_branch, Connector.AND);
+		wp = Formula.getFormula(wp_not_grteq_branch, wp_grteq_branch, Connector.AND);
 		return wp;
 	}
 

@@ -46,12 +46,17 @@ public class Quantificator {
 
 	}
 
-	public Quantificator substitute(Expression _e, Expression _o) {
+	public Quantificator copy() {
 		return null;
 	}
 	
-	public Quantificator copy( ) {
+	public Expression substitute( Expression _e, Expression _v ) {
 		return null;
+	}
+
+	
+	public String toString( ) {
+		return  "(" + quantifier + "  " + boundVar +  ": "+ domain.toString() + ")";
 	}
 
 }

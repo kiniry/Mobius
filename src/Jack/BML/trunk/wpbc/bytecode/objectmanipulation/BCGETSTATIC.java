@@ -54,7 +54,7 @@ import formula.Formula;
  *   getstatic may throw an Error
  *  
  */
-public class BCGETSTATIC extends BCFIELDInstruction {
+public class BCGETSTATIC extends BCFieldOrMethodInstruction {
 
 	/**
 	 * @param _instruction
@@ -84,7 +84,6 @@ public class BCGETSTATIC extends BCFIELDInstruction {
 		
 		//psi^n = psi^n[S(t+1) <--  static_ref]
 		wp = wp.substitute( stack_plus_1 , _staticFieldAccess);
-	
 		return wp;
 	}
 

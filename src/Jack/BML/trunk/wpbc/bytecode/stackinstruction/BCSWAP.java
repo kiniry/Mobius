@@ -9,6 +9,9 @@ import org.apache.bcel.generic.InstructionHandle;
 
 import formula.Formula;
 import bcclass.attributes.ExsuresTable;
+import bcexpression.Expression;
+import bcexpression.Variable;
+import bcexpression.vm.Stack;
 import bytecode.BCInstruction;
 
 /**
@@ -24,8 +27,8 @@ import bytecode.BCInstruction;
  *
  * Description:  Swap the top two values on the operand stack. The swap instruction must not be used unless value1 and value2 are both values of a category 1 computational type (?3.11.1).
  *
- * wp = psi^n[s(t) <-- x][s(t-1) < -- s(t)][x <-- s(t-1)  ]
- * */
+ * wp = psi^n[ s(t) <-- x][ s(t -1) <-- s(t) ][ x <-- S(t-1)  ]
+ * */ 
 public class BCSWAP  extends BCInstruction implements BCStackInstruction {
 
 	/**
@@ -41,7 +44,12 @@ public class BCSWAP  extends BCInstruction implements BCStackInstruction {
 	public Formula wp(Formula _normal_Postcondition, ExsuresTable _exc_Postcondition) {
 		Formula wp = null;
 		
-		return wp;
+		
+		
+		wp = _normal_Postcondition.substitute(new Stack(Expression.COUNTER ) , Variable.DummyVariable );
+		wp = wp.substitute(new Stack(Expression.COUNTER_MINUS_1), new Stack( Expression.COUNTER));
+		wp = wp.substitute( Variable.DummyVariable , new Stack( Expression.COUNTER_MINUS_1));
+		return wp; 
 	} 
 
 }

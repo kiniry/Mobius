@@ -7,6 +7,8 @@
 package bytecode.loadstoreinstruction;
 import org.apache.bcel.generic.ConstantPushInstruction;
 import org.apache.bcel.generic.InstructionHandle;
+import utils.Util;
+
 import formula.Formula;
 import bcclass.attributes.ExsuresTable;
 import bcexpression.Expression;
@@ -65,10 +67,12 @@ public class BCConstantPUSHInstruction extends BCInstruction
 	public Formula wp(Formula _normal_Postcondition,
 			ExsuresTable _exc_Postcondition) {
 		Formula wp;
+		Util.dump("in wp i_constant" );
 		wp = _normal_Postcondition.substitute(Expression.COUNTER,
 				Expression.COUNTER_PLUS_1);
-		Stack topStack = new Stack(Expression.COUNTER_PLUS_1);
-		wp = wp.substitute(topStack, getValue());
+		Util.dump("iconst wp[counter <-- counter +1]    " + wp);	
+		wp = wp.substitute(new Stack(Expression.COUNTER_PLUS_1), getValue());
+		Util.dump("iconst " + wp);
 		return wp;
 	}
 }

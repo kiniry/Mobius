@@ -1,25 +1,22 @@
 package bytecode;
 
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.Hashtable;
 
-import org.apache.bcel.generic.ExceptionThrower;
 import org.apache.bcel.generic.InstructionHandle;
 
 import formula.Formula;
+import formula.atomic.Predicate;
 
 import utils.FreshIntGenerator;
-import utils.Util;
 
+import bcclass.attributes.ExceptionHandler;
 import bcclass.attributes.ExsuresTable;
 import bcexpression.EXCEPTIONVariable;
 import bcexpression.ref.Reference;
+import bcexpression.javatype.ClassNames;
 import bcexpression.javatype.JavaObjectType;
-import bcexpression.javatype.JavaReferenceType;
-import bcexpression.javatype.JavaType;
 import bytecode.block.*;
-import bytecode.branch.*;
 
 /**
  * @author M. Pavlova
@@ -29,119 +26,105 @@ import bytecode.branch.*;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public  abstract class BCExceptionThrower extends BCInstruction {	
+public abstract class BCExceptionThrower extends BCInstruction {
+	private JavaObjectType[] exceptionsThrown;
 
-	/**
-	 * mapping between an exception and aninstruction where the handler for this exception starts
-	 */
-	private HashMap exception_targetBlock;
-	
-	
-	
+	private HashMap excHandleBlocks;
+	//	/**
+	//	 * mapping between an exception and aninstruction where the handler for this exception starts
+	//	 */
+	//	private HashMap exception_targetBlock;
+
 	/**
 	 * @param _instruction
 	 */
 	public BCExceptionThrower(InstructionHandle _instruction) {
 		super(_instruction);
-		//setThrownExceptions(_instruction);
-		// TODO Auto-generated constructor stub
+
 	}
-	
-/*	*//**
-	 * sets the exceptions that the instriuction may throw
-	 * @param _instruction
-	 *//*
-	private void setThrownExceptions(InstructionHandle  _instruction)  {	
-		Class[] _exceptions = ((ExceptionThrower)_instruction.getInstruction()).getExceptions();
-		
-		if (_exceptions == null || _exceptions.length == 0 ){
-			return;
-		}
-		exception_targetBlock = new HashMap();
-		
-		for (int i = 0; i < _exceptions.length; i++) {
-			
-			exception_targetBlock.put( JavaType.getJavaRefType(_exceptions[i].getName()), null );
-		}
-	}
-	*/
-	
-/*	public Block[] getExceptionHandlerBlocks() {
-		if (exception_targetBlock == null) {
-			return null;
-		}
-		Collection c = exception_targetBlock.values();
-		Block[] blocks = (Block[])c.toArray();
-		return blocks;
-	
-	}*/
+
 	/**
-	 * this method sets the block that represents the exception handler for the <code>_exc </code> given as parameter
-	 * starting at <code>_startExcHandler</code> instruction
-	 * The method is called from outside, once the trace of this method is initialised.
+	 * sets the blocks for any corresponding exception (if there exists one)
+	 * @param bytecode
+	 * @param _excHandlers
 	 * @param _trace
 	 */
-	public void setExceptionHandlerForException(Trace _trace, BCInstruction _startExcHandler, JavaReferenceType _exc )  {
-		BCInstruction _last = _startExcHandler;
-		Block _b = null;	
-		while (_last != null)  {
-			if ((_last instanceof BCConditionalBranch) || (_last instanceof EndBlockInstruction ) ) {
-				if ((_b = _trace.getBlockStartingAtEndingAt(_startExcHandler, _last)) == null ){
-					_b = Util.getBlock(_startExcHandler,  _last);
-					_trace.addBlock(_b);
-				} 
-				if (_b != null) {
-					_b.dump(""); 
-					exception_targetBlock.put(_exc, _b);
-					break;
-				}
-			}
-			_last = _last.getNext();		
-		}
-		if ((_b != null ) && (_b instanceof LoopBlock ) ) {
+	public void setExceptionTargetBlocks(
+		BCInstruction[] bytecode,
+		ExceptionHandler[] _excHandlers,
+		Trace _trace) {
+		if (_excHandlers == null) {
 			return;
 		}
-		while (_last != null)  {
-			if ( (_last instanceof BCJumpInstruction) && (_startExcHandler.equals(((BCJumpInstruction)_last).getTarget())) ){
-				if ((_b = _trace.getBlockStartingAtEndingAt(_startExcHandler, _last)) == null ){
-					_b = Util.getBlock(_startExcHandler,  (BCJumpInstruction)_last);
-					_trace.addBlock(_b);
-				} 
-				_b.dump("");
-				exception_targetBlock.put(_exc, _b);
-				return;	
+		if (_excHandlers.length == 0) {
+			return;
+		}
+
+		for (int k = 0; k < exceptionsThrown.length; k++) {
+			for (int i = 0; i < _excHandlers.length; i++) {
+				//if the handle i doesnot handle the exception k
+				if (!JavaObjectType
+					.subType(
+						exceptionsThrown[k],
+						_excHandlers[i].getCatchType())) {
+					continue;
+				}
+				//if the handle i  handles the exception k
+				BCInstruction startInstr =
+					bytecode[_excHandlers[i].getStartPC()];
+				BCInstruction endInstr = bytecode[_excHandlers[i].getEndPC()];
+				Block handleBlock = null;
+
+				//look for this handle block in the trace
+				//if it is not still in the trace create it and  add it to the trace 
+				if ((handleBlock =
+					_trace.getBlockStartingAtEndingAt(startInstr, endInstr))
+					== null) {
+					handleBlock = new Block(startInstr, endInstr);
+//					((EndBlockInstruction)endInstr).setBlock( handleBlock);
+					_trace.addBlock(handleBlock);
+				}
+				if (excHandleBlocks == null) {
+					excHandleBlocks = new HashMap();
+				}
+				excHandleBlocks.put(
+					exceptionsThrown[0].getSignature(),
+					handleBlock);
+				break;
 			}
-			_last = _last.getNext();
-		}	
+		}
 	}
-	
+
+	/**
+	 * initialises  the exceptions for this instruction.
+	 * Called in the constructor of instructions that are of  type that extend this abstract class 
+	 * @param _exceptionsThrown
+	 */
+	public void setExceptionsThrown(JavaObjectType[] _exceptionsThrown) {
+		exceptionsThrown = _exceptionsThrown;
+	}
+
+	/**
+	 * @return the array of exception types that this instruction may throw
+	 */
+	public JavaObjectType[] getExceptionsThrown() {
+		return exceptionsThrown;
+	}
 
 	/** 
 	 * @param _exc_type
-	 * @return the block that  represents the exception handle for the 
+	 * @return the block that  represents the exception handle for the . 
+	 *  Returns null if there is no exception handle for this exception
 	 */
 	public Block getExceptionHandleBlockForException(JavaObjectType _exc_type) {
-		if (exception_targetBlock == null){
+		if (excHandleBlocks == null) {
 			return null;
 		}
-		if (exception_targetBlock.size() <= 0){
+		if (excHandleBlocks.size() <= 0) {
 			return null;
 		}
-		Block _b = (Block)exception_targetBlock.get(_exc_type);  
+		Block _b = (Block) excHandleBlocks.get(_exc_type.getSignature());
 		return _b;
-	}
-		
-	public JavaObjectType[] getExceptions() {
-		if ( exception_targetBlock == null) {
-			return null;
-		}
-		Iterator _excSet = exception_targetBlock.keySet().iterator();
-		JavaObjectType[] _excArr = new JavaObjectType[exception_targetBlock.size()]; 
-		int i  =  0;
-		while (_excSet.hasNext() ) {
-			_excArr[i++] = (JavaObjectType)_excSet.next();  
-		}
-		return _excArr;
 	}
 
 	/* *
@@ -149,18 +132,30 @@ public  abstract class BCExceptionThrower extends BCInstruction {
 	 * after this instruction throws an exception of type _exc_type
 	 * @see bytecode.ByteCode#wp(formula.Formula, specification.ExceptionalPostcondition)
 	 */
-	public Formula getWpForException(JavaObjectType _exc_type, ExsuresTable _exc_post)  {
-		Block block = (Block)exception_targetBlock.get(_exc_type);
+	public Formula getWpForException(
+		JavaObjectType _exc_type,
+		ExsuresTable _exc_post) {
+		if ( excHandleBlocks == null) {
+			return Predicate._TRUE;
+//			return _exc_post.getExcPostconditionFor(_exc_type.getSignature());
+		}
+		Block block = (Block) excHandleBlocks.get(_exc_type);
 		Formula _exc_termination;
 		// in case there is no handler for this exception the specified exceptional posctondition must be taken into account
-		if ( block == null ) {
-			_exc_termination  =  _exc_post.getExcPostconditionFor(_exc_type.getSignature());
+		if (block == null) {
+			_exc_termination =
+				_exc_post.getExcPostconditionFor(_exc_type.getSignature());
+			// make a copy of the postexceptional termination
 			Formula _exc_termination_copy = _exc_termination.copy();
-			_exc_termination_copy.substitute(new EXCEPTIONVariable(FreshIntGenerator.getInt(), _exc_type), new Reference(FreshIntGenerator.getInt(), _exc_type) );
+			//substitute the object of type of the thrown exception in the formula (if there is a such an object in the exceptional
+			// postcondition) 
+			_exc_termination_copy.substitute(
+				new EXCEPTIONVariable(FreshIntGenerator.getInt(), _exc_type),
+				new Reference(FreshIntGenerator.getInt(), _exc_type));
 			return _exc_termination_copy;
 		}
 		//else if there is a handle then the wp of this handler must be taken
-		_exc_termination = block.getWp();
+		_exc_termination = block.getWp().copy();
 		return _exc_termination;
 	}
 }

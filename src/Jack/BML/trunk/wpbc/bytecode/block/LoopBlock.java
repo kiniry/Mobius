@@ -53,7 +53,7 @@ public class LoopBlock  extends Block {
 		if (wp != null) {
 			return wp;
 		}
-		Formula _np = new Formula( _normal_Postcondition,  getInvariant(), Connector.AND );	
+		Formula _np = Formula.getFormula( _normal_Postcondition,  getInvariant(), Connector.AND );	
 		wp = super.wp(_np,_exc_Postcondition);
 		return wp; 
 	}

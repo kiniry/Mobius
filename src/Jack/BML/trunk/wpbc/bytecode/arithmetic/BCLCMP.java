@@ -66,32 +66,32 @@ public class BCLCMP extends BCInstruction implements BCTypedInstruction{
 		Formula wp;
 		Formula[] wps = new Formula[3];
 				
-		Stack topStack = new Stack(Expression.COUNTER);
-		Stack topStack_minus_1 = new Stack(Expression.COUNTER_MINUS_1);
+		//Stack topStack = new Stack(Expression.COUNTER);
+//		Stack topStack_minus_1 = new Stack(Expression.COUNTER_MINUS_1);
 		
 		// v1 == v2 => S(t)[t<--- t-1][S(t-1) <-- 0]
-		Formula v1Equalsv2 = new Predicate2Ar(topStack, topStack_minus_1, PredicateSymbol.EQ );
+		Formula v1Equalsv2 = new Predicate2Ar(new Stack(Expression.COUNTER), new Stack(Expression.COUNTER_MINUS_1), PredicateSymbol.EQ );
 		Formula resultZero = _normal_Postcondition.copy();
 		resultZero.substitute(Expression.COUNTER, Expression.COUNTER_MINUS_1);
-		resultZero.substitute(topStack_minus_1, new NumberLiteral(0));
-		wps[0] = new Formula(v1Equalsv2, resultZero, Connector.IMPLIES);
+		resultZero.substitute(new Stack(Expression.COUNTER_MINUS_1), new NumberLiteral(0));
+		wps[0] = Formula.getFormula(v1Equalsv2, resultZero, Connector.IMPLIES);
 		
 		 //	v1 >  v2 => S(t)[t<--- t-1][S(t-1) <-- 1]
-		 Formula v1Grt2 = new Predicate2Ar( topStack_minus_1, topStack, PredicateSymbol.GRT);
+		 Formula v1Grt2 = new Predicate2Ar( new Stack(Expression.COUNTER_MINUS_1), new Stack(Expression.COUNTER), PredicateSymbol.GRT);
 		 Formula resultOne = _normal_Postcondition.copy();
 		 resultOne.substitute(Expression.COUNTER, Expression.COUNTER_MINUS_1);
-		 resultZero.substitute(topStack_minus_1, new NumberLiteral(1));
-		 wps[1] = new Formula(v1Grt2 , resultOne, Connector.IMPLIES);
+		 resultZero.substitute(new Stack(Expression.COUNTER_MINUS_1), new NumberLiteral(1));
+		 wps[1] = Formula.getFormula(v1Grt2 , resultOne, Connector.IMPLIES);
 		 
 		 
 		//	v1 < v2 => S(t)[t<--- t-1][S(t-1) <-- 0]
-		Formula v1Less2 = new Predicate2Ar( topStack_minus_1, topStack, PredicateSymbol.LESS);
+		Formula v1Less2 = new Predicate2Ar( new Stack(Expression.COUNTER_MINUS_1), new Stack(Expression.COUNTER), PredicateSymbol.LESS);
 		Formula resultMinusOne = _normal_Postcondition.copy();
 		resultOne.substitute(Expression.COUNTER, Expression.COUNTER_MINUS_1);
-		resultZero.substitute(topStack_minus_1, new NumberLiteral(-1));
-		wps[2] = new Formula(v1Less2 , resultMinusOne, Connector.IMPLIES);
+		resultZero.substitute(new Stack(Expression.COUNTER_MINUS_1), new NumberLiteral(-1));
+		wps[2] = Formula.getFormula(v1Less2 , resultMinusOne, Connector.IMPLIES);
 	 
-	 	wp = new Formula(wps, Connector.AND);
+	 	wp = Formula.getFormula(wps, Connector.AND);
 		return wp;
 	}
 

@@ -11,11 +11,13 @@ import formula.Formula;
 import formula.atomic.Predicate2Ar;
 import formula.atomic.PredicateSymbol;
 
+
 import bcclass.attributes.ExsuresTable;
 import bcexpression.Expression;
 import bcexpression.FieldAccessExpression;
 import bcexpression.NumberLiteral;
-import bcexpression.WITH;
+
+import bcexpression.javatype.ClassNames;
 import bcexpression.javatype.JavaObjectType;
 import bcexpression.javatype.JavaType;
 import bcexpression.ref.ArrayReference;
@@ -44,11 +46,9 @@ import bytecode.BCAllocationInstruction;
 
 Linking Exceptions
 
-    During resolution of the symbolic reference to the class, array, or interface type, any of the exceptions documented in can be thrown.
-
-Runtime Exception
-
-    Otherwise, if count is less than zero, the anewarray instruction throws a NegativeArraySizeException. 
+ *   During resolution of the symbolic reference to the class, array, or interface type, any of the exceptions documented in can be thrown.
+ *
+ *   Runtime Exception : Otherwise, if count is less than zero, the anewarray instruction throws a NegativeArraySizeException. 
  *
  *  NB: the same as newarray. Should be added the wp for linking exception
  */
@@ -56,27 +56,28 @@ public class BCANEWARRAY
 	extends BCAllocationInstruction
 	implements BCCPInstruction {
 		
-	private int index;
+	private int cpIndex;
 	private JavaType type;
 	
 	public BCANEWARRAY(InstructionHandle _instruction, JavaType _type) {
 		super(_instruction, _type);
 		setIndex(((CPInstruction) _instruction.getInstruction()).getIndex());
 		setType(_type);
+		setExceptionsThrown( new JavaObjectType[]{ (JavaObjectType)JavaObjectType.getJavaRefType( ClassNames.NEGATIVEARRAYSIZEException) });
 	}
 
 	/* (non-Javadoc)
 	* @see bytecode.BCIndexedInstruction#setIndex(int)
 	*/
 	public void setIndex(int _index) {
-		index = _index;
+		cpIndex = _index;
 	}
 
 	/* (non-Javadoc)
 	 * @see bytecode.BCIndexedInstruction#getIndex()
 	 */
 	public int getIndex() {
-		return index;
+		return cpIndex;
 	}
 
 	/* (non-Javadoc)
@@ -102,14 +103,14 @@ public class BCANEWARRAY
 		Formula wp;
 
 		//in case of normal termination
-		Stack stackTop = new Stack(Expression.COUNTER);
+//		Stack stackTop = new Stack(Expression.COUNTER);
 		Formula topStack_grt_0 =
 			new Predicate2Ar(
-				stackTop,
+			new Stack(Expression.COUNTER),
 				new NumberLiteral(0),
 				PredicateSymbol.GRTEQ);
 		ArrayReference new_arr_ref =
-			new ArrayReference(FreshIntGenerator.getInt(), getType(), stackTop);
+			new ArrayReference(FreshIntGenerator.getInt(), getType(), new Stack(Expression.COUNTER));
 
 		//			length( new ArrayObject(type, S(t) ) ) 
 		//WITH length_with_new_arr_ref = new WITH(new_arr_ref);
@@ -120,33 +121,38 @@ public class BCANEWARRAY
 				new_arr_ref);
 		//_psi^n[length( with o == new ArrayObject(type, S(t)) <-- S(t)]
 		Formula topStack_grt_0_implies =
-			_normal_Postcondition.substitute(arr_length_access, stackTop);
+			_normal_Postcondition.substitute(arr_length_access, new Stack(Expression.COUNTER));
 		topStack_grt_0_implies =
-			topStack_grt_0_implies.substitute(stackTop, new_arr_ref);
+			topStack_grt_0_implies.substitute(new Stack(Expression.COUNTER), new_arr_ref);
 
 		Formula nWpTermination =
-			new Formula(
+		Formula.getFormula(
 				topStack_grt_0,
 				topStack_grt_0_implies,
 				Connector.IMPLIES);
 
-		//in case of exc termination
+		//in case of exc termination//////////////////////////////////////////////////////
 		Formula topStack_lesseq_0 =
 			new Predicate2Ar(
-				stackTop,
+			new Stack(Expression.COUNTER),
 				new NumberLiteral(0),
 				PredicateSymbol.LESS);
+				
+				
+		//in the  case where the specified size is negative -  "Ljava/lang/NegativeArraySizeException;" is thrown
 		Formula topStack_lesseq_0_implies =
 			getWpForException(
-				(JavaObjectType) JavaType.getJavaRefType(
-					"Ljava/lang/NegativeArraySizeException;"),
+				getExceptionsThrown()[0],
 				_exc_Postcondition);
 		Formula excWpTermination =
-			new Formula(
+		Formula.getFormula(
 				topStack_grt_0,
 				topStack_grt_0_implies,
 				Connector.IMPLIES);
-		wp = new Formula(nWpTermination, excWpTermination, Connector.AND);
+		wp = Formula.getFormula(nWpTermination, excWpTermination, Connector.AND);
 		return wp;
 	}
+
+	
+	
 }

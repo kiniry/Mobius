@@ -11,8 +11,10 @@ import org.apache.bcel.generic.InstructionHandle;
 
 import bcclass.attributes.ExsuresTable;
 import bcexpression.Expression;
+import bcexpression.javatype.ClassNames;
 import bcexpression.javatype.JavaObjectType;
 import bcexpression.javatype.JavaType;
+import bcexpression.jml.TYPEOF;
 import bcexpression.vm.Stack;
 import bytecode.BCExceptionThrower;
 
@@ -77,7 +79,7 @@ public class BCCHECKCAST
 	 * the index into the constant pool that contains the  CONSTANT_Class_info
 	 * structure that describes the class which will must be super type of the type of the object pointed by the reference on the top of stack 
 	 * */
-	private int index;
+	private int cpIndex;
 	private JavaType type;
 	/**
 	 * @param _instruction
@@ -88,19 +90,20 @@ public class BCCHECKCAST
 		super(_instruction);
 		setIndex(((CPInstruction) _instruction.getInstruction()).getIndex());
 		setType(_type);
+		setExceptionsThrown( new JavaObjectType[]{ (JavaObjectType)JavaObjectType.getJavaRefType( ClassNames.CLASSCASTException) });
 	}
 
 	/* (non-Javadoc)
 	 * @see bytecode.BCIndexedInstruction#setIndex(int)
 	 */
 	public void setIndex(int _index) {
-		index = _index;
+		cpIndex = _index;
 	}
 	/* (non-Javadoc)
 	 * @see bytecode.BCIndexedInstruction#getIndex()
 	 */
 	public int getIndex() {
-		return index;
+		return cpIndex;
 	}
 	/* (non-Javadoc)
 	 * @see bytecode.BCTypedInstruction#getType()
@@ -121,28 +124,31 @@ public class BCCHECKCAST
 		Formula _normal_Postcondition,
 		ExsuresTable _exc_Postcondition) {
 		Formula wp = null;
-		Stack topStack = new Stack(Expression.COUNTER);
+//		Stack topStack = new Stack(Expression.COUNTER);
 		Formula objectCastableToType =
 			new Predicate2Ar(
-				(JavaType) topStack.getType(),
+				new TYPEOF(new Stack(Expression.COUNTER)) ,
 				getType(),
 				PredicateSymbol.SUBTYPE);
 		Formula nTermination =
-			new Formula(
+		Formula.getFormula(
 				objectCastableToType,
 				_normal_Postcondition,
 				Connector.IMPLIES);
 
 		Formula objectNotCastableToType =
-			new Formula(objectCastableToType, Connector.NOT);
+		Formula.getFormula ( new Predicate2Ar(
+			new TYPEOF(new Stack(Expression.COUNTER)) ,
+			getType(),
+			PredicateSymbol.SUBTYPE) , Connector.NOT );
+			// in case the object cannot be cast - Ljava/lang/ClassCastException; is thrown
 		Formula excWp =
 			getWpForException(
-				(JavaObjectType) JavaType.getJavaRefType(
-					"Ljava/lang/ClassCastException;"),
+				getExceptionsThrown()[0],
 				_exc_Postcondition);
 		Formula excTermination =
-			new Formula(objectNotCastableToType, excWp, Connector.IMPLIES);
-		wp = new Formula(nTermination, excTermination, Connector.AND);
+		Formula.getFormula(objectNotCastableToType, excWp, Connector.IMPLIES);
+		wp = Formula.getFormula(nTermination, excTermination, Connector.AND);
 		return wp;
 	}
 

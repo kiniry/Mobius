@@ -38,14 +38,14 @@ public class BCIF_ICMPLT extends BCConditionalBranch {
 			Formula _normal_Postcondition,
 			ExsuresTable _exc_Postcondition) {
 			Formula wp;
-			Stack stackTop = new Stack(Expression.COUNTER);
-			Stack stackTop_minus_1 = new Stack(Expression.COUNTER_MINUS_1);
+//			Stack stackTop = new Stack(Expression.COUNTER);
+//			Stack stackTop_minus_1 = new Stack(Expression.COUNTER_MINUS_1);
 
 			///////////////////////////////////////////	
 			// top of the stack is greater than the stack at level top-1
-			//S(t-1) > S(t)
+			//S(t-1) < S(t)
 			Formula stackTop_minus_1_less_stackTop =
-				new Predicate2Ar(stackTop_minus_1, stackTop, PredicateSymbol.LESS);
+				new Predicate2Ar(new Stack(Expression.COUNTER_MINUS_1),new Stack(Expression.COUNTER), PredicateSymbol.LESS);
 			//getWPBranch
 			Formula less_branch = getBranchWP();
 
@@ -56,16 +56,16 @@ public class BCIF_ICMPLT extends BCConditionalBranch {
 					Expression.COUNTER_MINUS_2);
 			//S(t-1) > S(t) == >  getWPBranch[t<-- t-2]
 			Formula wp_less_branch =
-				new Formula(
+			Formula.getFormula(
 					stackTop_minus_1_less_stackTop,
 					less_branch,
 					Connector.IMPLIES);
 
 			/////////////////////////////////////////////	
 			//top of the stack is not greater than the stack at level top-1
-			//!( S(t-1) > S(t))
+			// S(t-1) >= S(t)
 			Formula stackTop_minus_1_not_less_stackTop =
-				new Formula(stackTop_minus_1_less_stackTop, Connector.NOT);
+			new Predicate2Ar(new Stack(Expression.COUNTER_MINUS_1),new Stack(Expression.COUNTER), PredicateSymbol.GRTEQ);
 
 			//psi^n[t <-- t-2]
 			Formula not_less_branch =
@@ -75,12 +75,12 @@ public class BCIF_ICMPLT extends BCConditionalBranch {
 
 			//!( S(t-1) > S(t))== > psi^n[t <-- t-2]
 			Formula wp_not_less_branch =
-				new Formula(
+			Formula.getFormula(
 					stackTop_minus_1_not_less_stackTop,
 					not_less_branch,
 					Connector.IMPLIES);
 
-			wp = new Formula(wp_not_less_branch, wp_less_branch, Connector.AND);
+			wp = Formula.getFormula(wp_not_less_branch, wp_less_branch, Connector.AND);
 			return wp;
 		}
 }

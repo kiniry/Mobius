@@ -51,7 +51,7 @@ public class BCTypeSUB extends BCArithmeticInstruction {
 			Stack stackTop = new Stack(Expression.COUNTER);
 			Stack stackTop_minus_1 = new Stack(Expression.COUNTER_MINUS_1);
 			ArithmeticExpression sub =
-				ArithmeticExpression.getArithmeticExpression(
+				(ArithmeticExpression)ArithmeticExpression.getArithmeticExpression(
 					stackTop,
 					stackTop_minus_1,
 					ExpressionConstants.SUB);

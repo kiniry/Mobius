@@ -6,14 +6,13 @@
  */
 package bytecode.block;
 
-import java.util.HashMap;
 import java.util.Vector;
 
 import bcclass.attributes.ExsuresTable;
 import bytecode.BCInstruction;
 import bytecode.ByteCode;
-
-
+import bytecode.EndBlockInstruction;
+import bytecode.branch.BCConditionalBranch;
 
 import utils.Util;
 
@@ -34,8 +33,8 @@ public class Block  implements ByteCode {
 	private BCInstruction first;
 	private BCInstruction last;
 	
-	protected Vector next;
-	protected Vector prev;
+	//protected Vector next;
+	protected Vector entryBlocks;
 	
 	private Formula postcondition;
 	
@@ -44,22 +43,20 @@ public class Block  implements ByteCode {
 	 */
 	protected Formula wp;
 	
+	public  Block() {
+	}
+	
 	
 	public Block(BCInstruction _first, BCInstruction _last  ) {
-		setFirst(_first);
-		setLast(_last); 
+		first = _first; 
+		last  = _last;
+		if (last instanceof EndBlockInstruction)  {
+			((EndBlockInstruction)last).setBlock( this);
+		}
 	}
 	
 	public BCInstruction getFirst() {
 		return first;
-	}
-	
-	private void setFirst(BCInstruction _first) {
-		first = _first;
-	}
-	
-	private void setLast(BCInstruction _ji){
-		last  = _ji;
 	}
 	
 	public BCInstruction getLast() {
@@ -74,6 +71,27 @@ public class Block  implements ByteCode {
 		return postcondition;
 	}
 	
+//	/**
+//	 * 
+//	 * @author mpavlova
+//	 * deprecated
+//	 * To change the template for this generated type comment go to
+//	 * Window>Preferences>Java>Code Generation>Code and Comments
+//	 */
+//	public void setNext(Vector _next ) {
+//		next = _next;
+//	} 
+
+//	/** 
+//	 * @author mpavlova
+//	 * deprecated
+//	 * To change the template for this generated type comment go to
+//	 * Window>Preferences>Java>Code Generation>Code and Comments
+//	 */
+//	public Vector getNext() {
+//		return next;
+//	} 
+
 	/**
 	 * 
 	 * @author mpavlova
@@ -81,19 +99,11 @@ public class Block  implements ByteCode {
 	 * To change the template for this generated type comment go to
 	 * Window>Preferences>Java>Code Generation>Code and Comments
 	 */
-	public void setNext(Vector _next ) {
-		next = _next;
-	} 
-	
-	/**
-	 * 
-	 * @author mpavlova
-	 * deprecated
-	 * To change the template for this generated type comment go to
-	 * Window>Preferences>Java>Code Generation>Code and Comments
-	 */
-	public Vector getNext() {
-		return next;
+	public void addEntryBlocks(Block _prev) {
+		if (entryBlocks == null) {
+			entryBlocks = new Vector();
+		}
+		entryBlocks.add(_prev);
 	} 
 
 	/**
@@ -103,19 +113,8 @@ public class Block  implements ByteCode {
 	 * To change the template for this generated type comment go to
 	 * Window>Preferences>Java>Code Generation>Code and Comments
 	 */
-	public void setPrev(Vector _prev) {
-		prev = _prev;
-	} 
-
-	/**
-	 * 
-	 * @author mpavlova
-	 * deprecated
-	 * To change the template for this generated type comment go to
-	 * Window>Preferences>Java>Code Generation>Code and Comments
-	 */
-	public Vector getPrev() {
-		return prev;
+	public Vector getEntryBlocks() {
+		return entryBlocks;
 	} 
 	
 	/**
@@ -137,13 +136,38 @@ public class Block  implements ByteCode {
 		BCInstruction _instr = last;
 		Formula  _np = _normal_Postcondition; 
 		
-		while (! _instr.equals(first)) {
+		while (true) {
+			if (_instr.equals(first) ){
+				_np = _instr.wp(_np,  _exc_Postcondition);
+				break;
+			}
 			_np = _instr.wp(_np,  _exc_Postcondition);
 			_instr = _instr.getPrev();
 		}
 		wp = _np;
 		return  wp;
-		
+	}
+	
+	/* (non-Javadoc)
+	 * @see bytecode.EndBlockInstruction#calculateRecursively(formula.Formula, bcclass.attributes.ExsuresTable)
+	 */
+	public Formula calculateRecursively(Formula _normal_postcondition, ExsuresTable _exs_postcondition) {
+		Formula wp = wp( _normal_postcondition, _exs_postcondition);
+		Vector targeters  = first.getTargeters();
+		if (targeters == null) {
+			return wp;
+		}
+		for (int k = 0; k < targeters.size(); k++)  {
+			
+			// in case there is a previous block then calculate the wp upon the wp of this block
+			if ( targeters.elementAt(k) instanceof EndBlockInstruction) {
+				 ( (EndBlockInstruction) targeters.elementAt(k) ).calculateRecursively( _normal_postcondition, _exs_postcondition);
+			}  else if (targeters.elementAt(k) instanceof BCConditionalBranch ) {
+				// else if it is a block branch then give it to  the instruction that is branching on this block
+				( (BCConditionalBranch) targeters.elementAt(k) ).setBranchWP( wp);
+			} 
+		}
+		return wp;
 	}
 	
 	public void dump(String _offset) {
@@ -160,13 +184,10 @@ public class Block  implements ByteCode {
 		}
 	}
 
-
 	public boolean equals(Block _block) {
 		if ((first.equals(_block.getFirst())) && (last.equals(_block.getLast()))) { 
 			return true;
 		}
 		return false;
 	} 
-
-
 }

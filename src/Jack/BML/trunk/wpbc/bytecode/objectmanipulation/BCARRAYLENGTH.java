@@ -13,8 +13,9 @@ import constants.ArrayLengthConstant;
 import bcclass.attributes.ExsuresTable;
 import bcexpression.Expression;
 import bcexpression.FieldAccessExpression;
+import bcexpression.javatype.ClassNames;
 import bcexpression.javatype.JavaObjectType;
-import bcexpression.javatype.JavaType;
+
 import bcexpression.vm.Stack;
 import bytecode.BCExceptionThrower;
 
@@ -35,7 +36,8 @@ public class BCARRAYLENGTH extends BCExceptionThrower {
 	 */
 	public BCARRAYLENGTH(InstructionHandle _instruction) {
 		super(_instruction);
-		// TODO Auto-generated constructor stub
+		setExceptionsThrown( new JavaObjectType[]{ (JavaObjectType)JavaObjectType.getJavaRefType( ClassNames.NULLPOINTERException) });
+
 	}
 
 	/* (non-Javadoc)
@@ -45,30 +47,31 @@ public class BCARRAYLENGTH extends BCExceptionThrower {
 		Formula _normal_Postcondition,
 		ExsuresTable _exc_Postcondition) {
 		Formula wp;
-		Stack topStack = new Stack(Expression.COUNTER);
+//		Stack topStack = new Stack(Expression.COUNTER);
 
 		//wp in case of normal termination
 		Formula objNotNull =
-			new Predicate2Ar(topStack, Expression.NULL, PredicateSymbol.NOTEQ);
+			new Predicate2Ar( new Stack(Expression.COUNTER), Expression._NULL, PredicateSymbol.NOTEQ);
 		//S(t).length
 		FieldAccessExpression arrLength =
-			new FieldAccessExpression(new ArrayLengthConstant(), topStack);
-		Formula _nps = _normal_Postcondition.substitute(topStack, arrLength);
+			new FieldAccessExpression(new ArrayLengthConstant(),  new Stack(Expression.COUNTER));
+		Formula _nps = _normal_Postcondition.substitute( new Stack(Expression.COUNTER), arrLength);
 		Formula wpNormalTermination =
-			new Formula(objNotNull, _nps, Connector.IMPLIES);
+		Formula.getFormula(objNotNull, _nps, Connector.IMPLIES);
 
 		//wp in case of throwing exception
 		Formula objNull =
-			new Predicate2Ar(topStack, Expression.NULL, PredicateSymbol.EQ);
+			new Predicate2Ar( new Stack(Expression.COUNTER), Expression._NULL, PredicateSymbol.EQ);
+			
+			// in case the array object is null - Ljava/lang/NullPointerException; is thrown 
 		Formula excPrecondition =
 			getWpForException(
-				(JavaObjectType) JavaType.getJavaRefType(
-					"Ljava/lang/NullPointerException;"),
+				getExceptionsThrown()[0],
 				_exc_Postcondition);
 		Formula wpExceptionalTermination =
-			new Formula(objNull, excPrecondition, Connector.IMPLIES);
+		Formula.getFormula(objNull, excPrecondition, Connector.IMPLIES);
 		wp =
-			new Formula(
+		Formula.getFormula(
 				wpNormalTermination,
 				wpExceptionalTermination,
 				Connector.AND);

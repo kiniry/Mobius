@@ -1,6 +1,7 @@
 package bytecode.objectmanipulation;
 
 import org.apache.bcel.generic.InstructionHandle;
+import utils.Util;
 
 import constants.BCConstantFieldRef;
 
@@ -13,6 +14,7 @@ import bcclass.BCConstantPool;
 import bcclass.attributes.ExsuresTable;
 import bcexpression.Expression;
 import bcexpression.FieldAccessExpression;
+import bcexpression.javatype.ClassNames;
 import bcexpression.javatype.JavaObjectType;
 import bcexpression.javatype.JavaType;
 import bcexpression.vm.Stack;
@@ -45,17 +47,18 @@ import bcexpression.vm.Stack;
  * 
  * NB: linking exceptions not considered for the moment
  */
-public class BCGETFIELD extends BCFIELDInstruction {
+public class BCGETFIELD extends BCFieldOrMethodInstruction {
 
 	/**
 	 * @see bytecode.BCFIELDInstruction#BCFIELDInstruction(InstructionHandle, JavaType)
-		 */
+	 */
 	public BCGETFIELD(
 		InstructionHandle _instruction,
 		JavaType _type,
 		JavaType _classType,
 		BCConstantPool _cp) {
 		super(_instruction, _type, _classType, _cp);
+		setExceptionsThrown( new JavaObjectType[]{ (JavaObjectType)JavaObjectType.getJavaRefType( ClassNames.NULLPOINTERException) });
 	}
 
 	/* (non-Javadoc)
@@ -65,24 +68,24 @@ public class BCGETFIELD extends BCFIELDInstruction {
 		Formula _normal_Postcondition,
 		ExsuresTable _exc_Postcondition) {
 		Formula wp;
-		Stack topStack = new Stack(Expression.COUNTER);
-
 		//normal termination
 		//S(t) != null
 		Formula stackTopNotNull =
-			new Predicate2Ar(topStack, Expression.NULL, PredicateSymbol.NOTEQ);
+			new Predicate2Ar(new Stack(Expression.COUNTER), Expression._NULL, PredicateSymbol.NOTEQ);
+	
+
 		FieldAccessExpression fieldAccess =
 			new FieldAccessExpression(
 				(BCConstantFieldRef) getConstantPool().getConstant(getIndex()),
-				topStack);
+				new Stack(Expression.COUNTER));
 
 		//psi^n[S(t) <-- field(index)( S(t)) ]
 		Formula stackTopNotNullImplies =
-			_normal_Postcondition.substitute(topStack, fieldAccess);
+			_normal_Postcondition.substitute(new Stack(Expression.COUNTER), fieldAccess);
 
 		//S(t) != null ==> psi^n[S(t) <-- field(index)( S(t)) ]
 		Formula wpStackTopNotNull =
-			new Formula(
+		Formula.getFormula(
 				stackTopNotNull,
 				stackTopNotNullImplies,
 				Connector.IMPLIES);
@@ -90,21 +93,21 @@ public class BCGETFIELD extends BCFIELDInstruction {
 		//exceptional termination - null object access
 		//S(t) == null
 		Formula stackTopNull =
-			new Predicate2Ar(topStack, Expression.NULL, PredicateSymbol.EQ);
+			new Predicate2Ar(new Stack(Expression.COUNTER), Expression._NULL, PredicateSymbol.EQ);
 
 		//psi^e ("Ljava/lang/NullPointerException;")
+		// if there if the object is null throw a "Ljava/lang/NullPointerException;"
 		Formula stackTopNullImplies =
 			getWpForException(
-				(JavaObjectType) JavaType.getJavaRefType(
-					"Ljava/lang/NullPointerException;"),
+				getExceptionsThrown()[0],
 				_exc_Postcondition);
 
 		//S(t) == null ==> psi^e("Ljava/lang/NullPointerException;")
 		Formula wpStackTopNull =
-			new Formula(stackTopNull, stackTopNullImplies, Connector.IMPLIES);
+		Formula.getFormula(stackTopNull, stackTopNullImplies, Connector.IMPLIES);
 
-		wp = new Formula(wpStackTopNull, wpStackTopNotNull, Connector.AND);
-
+		wp = Formula.getFormula(wpStackTopNull, wpStackTopNotNull, Connector.AND);
+		Util.dump("wp getfield " + wp);
 		return wp;
 	}
 }

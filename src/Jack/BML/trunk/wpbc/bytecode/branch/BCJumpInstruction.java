@@ -22,7 +22,7 @@ import utils.Util;
 public abstract class BCJumpInstruction extends BCInstruction {
 	private BCInstruction target;
 	private int targetPosition;
-	/* private Vector targetBlocks; */
+	
 	protected Block targetBlock;
 	
 	public BCJumpInstruction(InstructionHandle _branchInstruction) {
@@ -44,44 +44,16 @@ public abstract class BCJumpInstruction extends BCInstruction {
 	public BCInstruction getTarget() {
 		return target;
 	}
-	/*	*//**
-			 * @param _block -
-			 *            adds _block to the vector of blocks to which targets
-			 *            this instruction
-			 */
-	/*
-	 * protected void addTargetBlock(Block _block) { if (targetBlocks == null) {
-	 * targetBlocks = new Vector(); } targetBlocks.add(_block);
-	 */
+
+	
+	 
 	/**
 	 * this method is called by exterior once the target instruction is set It
 	 * sets the target blocks for this jump instruction
 	 *  
 	 */
-	public void setTargetBlock(Trace _trace) {
-		Block _b = null;
-		if (getTargetPosition() <= getPosition()) {
-			if ((_b = _trace.getBlockStartingAtEndingAt(target, this)) == null) {
-				_b = new LoopBlock(target, this);
-				_trace.addBlock(_b);
-			}
-			if (_b != null) {
-				targetBlock = _b;
-				return;
-			}
-		}
-		BCInstruction _last = target;
-		while (_last != null) {
-			if (_last instanceof EndBlockInstruction) {
-				if ((_b = _trace.getBlockStartingAtEndingAt(target, _last)) == null) {
-					_b = new Block(target, _last);
-					_trace.addBlock(_b);
-				}
-				targetBlock = _b;
-				break;
-			}
-			_last = _last.getNext();
-		}
+	public void setTargetBlock(Block b) {
+		 targetBlock = b;
 	}
 	
 	
