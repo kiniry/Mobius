@@ -136,4 +136,12 @@ public final class EscPragmaLex extends Lex
             return TagConstants.NULL; // Dummy
         }
     }
-}
+} // end of class EscPragmaLex
+
+/*
+ * Local Variables:
+ * Mode: Java
+ * fill-column: 85
+ * End:
+ */
+

@@ -11,70 +11,61 @@ import javafe.util.Info;
 import javafe.tc.TagConstants;	// resolve ambiguity
 
 /**
- * <p> The <code>TypeCheck</code> class contains methods to
- * disambiguate, resolve, and check type declarations.  (Before
- * methods in this class can be called, the {@link TypeSig} class must
- * be initialized.)
+ * The <code>TypeCheck</code> class contains methods to disambiguate, resolve,
+ * and check type declarations.  (Before methods in this class can be called, the
+ * {@link TypeSig} class must be initialized.)
  * 
  * <h3> Overview of checking, resolution, and disambiguation </h3>
  * 
- * <p> <em>Checking</em> involves performing the static checks
- * specified by the Java language specification.
+ * <p> <em>Checking</em> involves performing the static checks specified by the Java
+ * language specification. </p>
  * 
- * <p> <em>Resolution</em> involves connecting symbolic references in
- * the parse tree to objects representing declarations of the
- * referred-to entities.  The parser generates a number of nodes --
- * instances of {@link IdnExpr}, {@link FieldAccess}, and {@link
- * MethodAccess} -- containing identifiers found in the input plus a
- * <code>decl</code> field which is initially <code>null</code>.
- * Resolution sets these <code>decl</code> fields to point to the
- * declaration referred to by the identifiers.  Similarly, {@link
- * TypeName} nodes have a <code>sig</code> field which is initially
- * <code>null</code> and which must be resolved to an instance of
- * {@link TypeSig}.  For example, the name
- * <code>java.lang.String</code> appearing in a type context would be
- * parsed to a {@link TypeName}; resolution of this node would point
- * its <code>sig</code> field to the {@link TypeSig} object
- * representing Java's standard {@link String} type.
+ * <p> <em>Resolution</em> involves connecting symbolic references in the parse tree
+ * to objects representing declarations of the referred-to entities.  The parser
+ * generates a number of nodes -- instances of {@link IdnExpr}, {@link FieldAccess},
+ * and {@link MethodAccess} -- containing identifiers found in the input plus a
+ * <code>decl</code> field which is initially <code>null</code>.  Resolution sets
+ * these <code>decl</code> fields to point to the declaration referred to by the
+ * identifiers.  Similarly, {@link TypeName} nodes have a <code>sig</code> field
+ * which is initially <code>null</code> and which must be resolved to an instance of
+ * {@link TypeSig}.  For example, the name <code>java.lang.String</code> appearing in
+ * a type context would be parsed to a {@link TypeName}; resolution of this node
+ * would point its <code>sig</code> field to the {@link TypeSig} object representing
+ * Java's standard {@link String} type. </p>
  * 
- * <p> <em>Disambiguation</em> deals with "ambiguous names" in Java
- * (see Section Six of the Java language specification, or <a
- * href="http://src-www.pa.dec.com/~stata/ESCJava/naming.html">this
- * document</a>).  These are qualified names of the form
- * <code>I1.I2...In</code> that appear in an expression context.  For
- * such a name, <code>I1</code> could be a local variable or a field
- * of <code>this</code>, or some prefix of the name could be the
- * fully-qualified name of a type, as in
- * <code>java.lang.String.concat</code>.
+ * <p> <em>Disambiguation</em> deals with "ambiguous names" in Java (see Section Six
+ * of the Java language specification, or <a
+ * href="http://src-www.pa.dec.com/~stata/ESCJava/naming.html">this document</a>).
+ * These are qualified names of the form <code>I1.I2...In</code> that appear in an
+ * expression context.  For such a name, <code>I1</code> could be a local variable or
+ * a field of <code>this</code>, or some prefix of the name could be the
+ * fully-qualified name of a type, as in <code>java.lang.String.concat</code>. </p>
  * 
- * <p> When it encounters an ambiguous name, the parser generates
- * either an {@link ExprName} or {@link MethodName} node depending on
- * the context.  These are leaf nodes.  In these cases, disambiguation
- * involves replacing these nodes with appropriate {@link FieldAccess}
- * or {@link MethodAccess} nodes; these are non-leaf nodes, and in
- * general the replacement might be fairly deep.
+ * <p> When it encounters an ambiguous name, the parser generates either an {@link
+ * ExprName} or {@link MethodName} node depending on the context.  These are leaf
+ * nodes.  In these cases, disambiguation involves replacing these nodes with
+ * appropriate {@link FieldAccess} or {@link MethodAccess} nodes; these are non-leaf
+ * nodes, and in general the replacement might be fairly deep. </p>
  * 
- * <p> As an example of disambiguation, assume the name <code>x.y</code>
- * is parsed as an {@link ExprName}.  Assume further that no local
- * named <code>x</code> is in scope, the current scope is in an instance
- * method for a class that has a field named <code>x</code>.  In this
- * case, disambiguation would replace this {@link ExprName} with:
+ * <p> As an example of disambiguation, assume the name <code>x.y</code> is parsed as
+ * an {@link ExprName}.  Assume further that no local named <code>x</code> is in
+ * scope, the current scope is in an instance method for a class that has a field
+ * named <code>x</code>.  In this case, disambiguation would replace this {@link
+ * ExprName} with:
  * 
  * <blockquote>
  * <code>(ExprFieldAccess (ExprFieldAccess this x) y)</code>
  * </blockquote>
  * 
- * that is, an instance of {@link ExprFieldAccess} whose
- * <code>id</code> field was <code>y</code> and whose
- * <code>expr</code> field was another {@link ExprFieldAccess} whose
- * <code>id</code> field was <code>x</code> and whose
- * <code>expr</code> field was an instance of {@link ThisExpr}.
+ * that is, an instance of {@link ExprFieldAccess} whose <code>id</code> field was
+ * <code>y</code> and whose <code>expr</code> field was another {@link
+ * ExprFieldAccess} whose <code>id</code> field was <code>x</code> and whose
+ * <code>expr</code> field was an instance of {@link ThisExpr}. </p>
  * 
- * <p> An alternative design for disambiguation and resolution was
- * considered.  In this design, the {@link Name} class, the three
- * subclasses of {@link FieldAccess}, and the three subclasses of
- * {@link MethodAccess} would be replaced with a new expression class
- * that looked something like:
+ * <p> An alternative design for disambiguation and resolution was considered.  In
+ * this design, the {@link Name} class, the three subclasses of {@link FieldAccess},
+ * and the three subclasses of {@link MethodAccess} would be replaced with a new
+ * expression class that looked something like:
  * 
  * <blockquote>
  * <pre>
@@ -85,70 +76,63 @@ import javafe.tc.TagConstants;	// resolve ambiguity
  * }
  * </pre>
  * </blockquote>
+ * </p>
  * 
- * When confronted with phrases of the form <code>I1.I2...In</code>,
- * the parser would generate trees of {@link DotExpr} nodes all with
- * the same tag, this tag indicating that the meaning of the dot was
- * ambiguous.  Disambiguation would involve replacing this ambiguous
- * tag with a tag whose meaning was clear (e.g., a tag that meant
- * "select a type from a package").  Resolution would involve using
- * our generic decoration mechanism to link certain of these nodes
- * with the declarations to which they refer.
+ * <p> When confronted with phrases of the form <code>I1.I2...In</code>, the parser
+ * would generate trees of {@link DotExpr} nodes all with the same tag, this tag
+ * indicating that the meaning of the dot was ambiguous.  Disambiguation would
+ * involve replacing this ambiguous tag with a tag whose meaning was clear (e.g., a
+ * tag that meant "select a type from a package").  Resolution would involve using
+ * our generic decoration mechanism to link certain of these nodes with the
+ * declarations to which they refer. </p>
  * 
- * <p> The advantages of this approach over the one we selected is that
- * it is more conventional (it's been used, for example, in compilers for
- * the Modula family of languages), it has a simpler class hierarchy, and
- * it does not involve mutating the structure of the parse tree.  The
- * primary advantage of our approach is that we capture many more
- * invariants in the type system, leaving less to go wrong at run-time.
- * It is mostly for this reason that we selected it.  In addition, our
- * approach takes less space to represent type names, avoids downcasting
- * (which can be costly time-wise), and is more friendly to the "visitor"
- * pattern.
+ * <p> The advantages of this approach over the one we selected is that it is more
+ * conventional (it's been used, for example, in compilers for the Modula family of
+ * languages), it has a simpler class hierarchy, and it does not involve mutating the
+ * structure of the parse tree.  The primary advantage of our approach is that we
+ * capture many more invariants in the type system, leaving less to go wrong at
+ * run-time.  It is mostly for this reason that we selected it.  In addition, our
+ * approach takes less space to represent type names, avoids downcasting (which can
+ * be costly time-wise), and is more friendly to the "visitor" pattern. </p>
  * 
  * 
  * <h3> Staging the processing of type declarations </h3>
  * 
- * <p> Resolving and checking a type declaration usually involves looking
- * at other declarations to which it refers.  Finding, reading, and
- * processing referred-to types makes resolution and checking fairly
- * complicated.  As a result, we have decomposed it up into smaller
- * steps.  Type declarations move through a number of states as the
- * resolution and checking process procedes.  In addition to making the
- * overall processing of type declarations conceptually more manageable,
- * this decomposition has two other benefits:
+ * <p> Resolving and checking a type declaration usually involves looking at other
+ * declarations to which it refers.  Finding, reading, and processing referred-to
+ * types makes resolution and checking fairly complicated.  As a result, we have
+ * decomposed it up into smaller steps.  Type declarations move through a number of
+ * states as the resolution and checking process procedes.  In addition to making the
+ * overall processing of type declarations conceptually more manageable, this
+ * decomposition has two other benefits: </p>
  * 
  * <ul>
  * 
- * <li> <em>Handling cycles.</em> As mentioned above, processing one
- * type may involve processing types to which it refers.  However, two
- * types may refer to each other, making it impossible to process any
- * one of them "first."  Decomposing the processing into stages helps
- * us handle such cycles.
+ * <li> <em>Handling cycles.</em> As mentioned above, processing one type may involve
+ * processing types to which it refers.  However, two types may refer to each other,
+ * making it impossible to process any one of them "first."  Decomposing the
+ * processing into stages helps us handle such cycles. </li>
  * 
- * <li> <em>Improving performance.</em> Processing one type
- * declaration does not always involve fully processing the
- * declarations to which it refers.  How much processing is required
- * of a referred-to type depends on the manner in which it is referred
- * (e.g., in a method signature versus as a superclass).  Decomposing
- * processing into stages allows us to be lazy in processing
- * referred-to types, that is, allowing us to process them only to the
- * extent that is necessary and no further.
+ * <li> <em>Improving performance.</em> Processing one type declaration does not
+ * always involve fully processing the declarations to which it refers.  How much
+ * processing is required of a referred-to type depends on the manner in which it is
+ * referred (e.g., in a method signature versus as a superclass).  Decomposing
+ * processing into stages allows us to be lazy in processing referred-to types, that
+ * is, allowing us to process them only to the extent that is necessary and no
+ * further. </li>
  * 
  * </ul>
  * 
- * <p> To support the lazy handling of type declarations, type
- * declarations are represented using two objects: {@link TypeDecl}s
- * and {@link TypeSig}s.  {@link TypeDecl} objects represents the
- * actual parse tree of a declaration.  {@link TypeSig} objects refer
- * to {@link TypeDecl} objects.  Rather than point directly to {@link
- * TypeDecl}, most references to type declarations point to {@link
- * TypeSig} objects instead.  This extra level of indirection allows
- * us to defer parsing of type declarations until the parse tree is
- * really needed.
+ * <p> To support the lazy handling of type declarations, type declarations are
+ * represented using two objects: {@link TypeDecl}s and {@link TypeSig}s.  {@link
+ * TypeDecl} objects represents the actual parse tree of a declaration.  {@link
+ * TypeSig} objects refer to {@link TypeDecl} objects.  Rather than point directly to
+ * {@link TypeDecl}, most references to type declarations point to {@link TypeSig}
+ * objects instead.  This extra level of indirection allows us to defer parsing of
+ * type declarations until the parse tree is really needed. </p>
  * 
- * <p> Details of the states of type declarations are found with
- * documentation of the {@link TypeSig} class.
+ * <p> Details of the states of type declarations are found with documentation of the
+ * {@link TypeSig} class. </p>
  * 
  * @see TypeSig
  * @see BaseEnv
@@ -470,4 +454,11 @@ public class TypeCheck
         return PrepTypeDeclaration.inst.getOverrides( md );
     }
 
-}
+} // end of class TypeCheck
+
+/*
+ * Local Variables:
+ * Mode: Java
+ * fill-column: 85
+ * End:
+ */

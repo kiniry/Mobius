@@ -48,4 +48,12 @@ public class ErrorPragmaParser implements PragmaParser
 
     /** No work to close us. */
     public void close() {}
-}
+
+} // end of class ErrorPragmaParser
+
+/*
+ * Local Variables:
+ * Mode: Java
+ * fill-column: 85
+ * End:
+ */

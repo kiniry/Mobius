@@ -199,4 +199,12 @@ public class JmlCorrelatedReader extends FilterCorrelatedReader
         lastUnreturnedChar = lastUnreturnedCharAtMark;
         super.reset();
     }
-}
+} // end of class JmlCorrelatedReader
+
+/*
+ * Local Variables:
+ * Mode: Java
+ * fill-column: 85
+ * End:
+ */
+

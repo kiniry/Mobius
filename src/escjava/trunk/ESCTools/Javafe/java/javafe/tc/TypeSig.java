@@ -7,13 +7,12 @@ import java.util.Hashtable;
 import javafe.ast.*;
 import javafe.util.*;
 
-
 /**
  *
  */
 
-public class TypeSig extends Type {
-
+public class TypeSig extends Type
+{
     /***************************************************
      *                                                 *
      * Basic TypeSig instance variables:	       *
@@ -149,7 +148,6 @@ public class TypeSig extends Type {
 	}
     }
 
-
     /***************************************************
      *                                                 *
      * Creation:                       		       *
@@ -265,8 +263,6 @@ public class TypeSig extends Type {
 	return t;
     }
     
-
-    
     /***************************************************
      *                                                 *
      * Interning by External Name for package-members: *
@@ -349,7 +345,6 @@ public class TypeSig extends Type {
 	map.put(key, result);
 	return result;
     }
-
 
     /***************************************************
      *                                                 *
@@ -454,7 +449,6 @@ public class TypeSig extends Type {
 		+ Location.toString(myTypeDecl.loc));
     }
 
-
     /***************************************************
      *                                                 *
      * Name accessor functions:			       *
@@ -531,7 +525,6 @@ public class TypeSig extends Type {
 	return getExternalName();
     }
 
-
     /***************************************************
      *                                                 *
      * ASTNode functions:			       *
@@ -577,7 +570,6 @@ public class TypeSig extends Type {
     public int getEndLoc() {
 	return getTypeDecl().getEndLoc();
     }
-
 
     /***************************************************
      *                                                 *
@@ -664,7 +656,6 @@ public class TypeSig extends Type {
 	return null;
     }
 
-
     /***************************************************
      *                                                 *
      * Environments:				       *
@@ -698,7 +689,6 @@ public class TypeSig extends Type {
     public EnvForTypeSig getEnv(boolean staticContext) {
 	return new EnvForTypeSig(getEnclosingEnv(), this, staticContext);
     }
-
 
     /***************************************************
      *                                                 *
@@ -749,7 +739,6 @@ public class TypeSig extends Type {
 
 	return enclosingType.isTopLevelType();
     }
-
 
     //************************************************************
     //************************************************************
@@ -856,196 +845,188 @@ public class TypeSig extends Type {
 	this.state = TypeSig.CHECKED;
     }
 
-
     /***************************************************
      *                                                 *
      * Looking up fields, methods, and constructors:   *
      *                                                 *
      **************************************************/
 
+    //// Fields and methods associated with preparation of a TypeSig
 
-  //// Fields and methods associated with preparation of a TypeSig
+    /** After preparation, this field contains all field members of
+    the <code>TypeDecl</code> associated with <code>this</code>,
+    including inherited ones. */
 
-  /** After preparation, this field contains all field members of the
-    <code>TypeDecl</code> associated with <code>this</code>, including
-    inherited ones. */
-
-  // "invariant" fields.<each element>.hasParent
-  //@ invariant state>=PREPPED ==> fields!=null
+    // "invariant" fields.<each element>.hasParent
+    //@ invariant state>=PREPPED ==> fields!=null
     protected FieldDeclVec fields;
 
-  /** After preparation, this field contains all method members of the
-    <code>TypeDecl</code> associated with <code>this</code>, including
-    inherited ones. */
+    /** After preparation, this field contains all method members of
+    the <code>TypeDecl</code> associated with <code>this</code>,
+    including inherited ones. */
 
-  // "invariant" methods.<each element>.hasParent
-  //@ invariant state>=PREPPED ==> methods!=null
-  protected MethodDeclVec methods;
+    // "invariant" methods.<each element>.hasParent
+    //@ invariant state>=PREPPED ==> methods!=null
+    protected MethodDeclVec methods;
 
-  /** Returns all fields of the type declaration associated with
+    /** Returns all fields of the type declaration associated with
     <code>this</code>, including inherited ones.  (If
     <code>this</code> has not been prepped yet, this method will prep
     it (possibly triggering parsing and/or processing of other
     types).) */
 
-  // "ensures" <result elements>.hasParent
-  //@ ensures \result!=null
-  public FieldDeclVec getFields() {
-    prep();
-    Assert.notNull( fields );
-    return fields;
-  }
-
-
-  /** Similar to <code>getFields</code>, except for methods. */
-
-  // "ensures" <result elements>.hasParent
-  //@ ensures \result!=null
-  public MethodDeclVec getMethods() {
-    prep();
-    Assert.notNull( methods );
-    return methods;
-  }
-
-
-  /** TBW */
-
-  //@ requires \nonnullelements(args) && caller!=null
-  //@ ensures \result!=null
-  public ConstructorDecl lookupConstructor(Type[] args, TypeSig caller) 
-    throws LookupException
-  {
-    prep();
-
-    // Holds the most specific, applicable, accessible constructor found so far
-    ConstructorDecl mostSpecific = null;
-    boolean somethingFound = false;
-    TypeDecl decl = getTypeDecl();
-
-  search:
-    for(int i = 0; i < decl.elems.size(); i++) {
-      TypeDeclElem elem = decl.elems.elementAt(i);
-      if (elem instanceof ConstructorDecl) {
-	ConstructorDecl md = (ConstructorDecl)elem;
-	if (md.args.size() == args.length
-	    && TypeCheck.inst.canAccess(caller, this, md.modifiers,
-					md.pmodifiers) ) {
-	  // accessible, same name and number of args
-
-	  somethingFound = true;
-	  for(int j = 0; j < args.length; j++)
-	    if (! Types.isInvocationConvertable(args[j], 
-						md.args.elementAt(j).type))
-	      continue search;
-	  // accessible and applicable
-	
-	  if (mostSpecific == null
-	      || Types.routineMoreSpecific(md, mostSpecific))
-	    mostSpecific = md;
-	  else if (! Types.routineMoreSpecific(mostSpecific, md))
-	    throw new LookupException( LookupException.AMBIGUOUS );
-	}
-      }
+    // "ensures" <result elements>.hasParent
+    //@ ensures \result!=null
+    public FieldDeclVec getFields() {
+        prep();
+        Assert.notNull( fields );
+        return fields;
     }
+    
+    /** Similar to <code>getFields</code>, except for methods. */
 
-    if (mostSpecific != null)  
-       return mostSpecific;
-    else if (somethingFound) 
-       throw new LookupException( LookupException.BADTYPECOMBO );
-    else 
-       throw new LookupException( LookupException.NOTFOUND );
-  }
-
-  /** TBW */
-
-  //@ ensures \result!=null
-  //@ ensures \result.id == id
-  public FieldDecl lookupField(Identifier id, /*@ non_null */ TypeSig caller) 
-    throws LookupException
-  {
-    FieldDeclVec fields = getFields();
-    FieldDecl r = null;
-    for(int i=0; i<fields.size(); i++ ) {
-      FieldDecl fd = fields.elementAt(i);
-      if (fd.id == id)
-	if (r == null) r = fd;
-	else throw new LookupException( LookupException.AMBIGUOUS );
+    // "ensures" <result elements>.hasParent
+    //@ ensures \result!=null
+    public MethodDeclVec getMethods() {
+        prep();
+        Assert.notNull( methods );
+        return methods;
     }
+    
+    
+    /** TBW */
+    
+    //@ requires \nonnullelements(args) && caller!=null
+    //@ ensures \result!=null
+    public ConstructorDecl lookupConstructor(Type[] args, TypeSig caller) 
+            throws LookupException
+    {
+        prep();
+        
+        // Holds the most specific, applicable, accessible constructor found so far
+        ConstructorDecl mostSpecific = null;
+        boolean somethingFound = false;
+        TypeDecl decl = getTypeDecl();
+        
+        search:
+        for(int i = 0; i < decl.elems.size(); i++) {
+            TypeDeclElem elem = decl.elems.elementAt(i);
+            if (elem instanceof ConstructorDecl) {
+                ConstructorDecl md = (ConstructorDecl)elem;
+                if (md.args.size() == args.length
+                    && TypeCheck.inst.canAccess(caller, this, md.modifiers,
+                                                md.pmodifiers) ) {
+                    // accessible, same name and number of args
+                    
+                    somethingFound = true;
+                    for(int j = 0; j < args.length; j++)
+                        if (! Types.isInvocationConvertable(args[j], 
+                                                            md.args.elementAt(j).type))
+                            continue search;
+                    // accessible and applicable
+                    
+                    if (mostSpecific == null
+                        || Types.routineMoreSpecific(md, mostSpecific))
+                        mostSpecific = md;
+                    else if (! Types.routineMoreSpecific(mostSpecific, md))
+                        throw new LookupException( LookupException.AMBIGUOUS );
+                }
+            }
+        }
+        
+        if (mostSpecific != null)  
+            return mostSpecific;
+        else if (somethingFound) 
+            throw new LookupException( LookupException.BADTYPECOMBO );
+        else 
+            throw new LookupException( LookupException.NOTFOUND );
+    }
+    
+    /** TBW */
+    
+    //@ ensures \result!=null
+    //@ ensures \result.id == id
+    public FieldDecl lookupField(Identifier id, /*@ non_null */ TypeSig caller) 
+            throws LookupException
+    {
+        FieldDeclVec fields = getFields();
+        FieldDecl r = null;
+        for(int i=0; i<fields.size(); i++ ) {
+            FieldDecl fd = fields.elementAt(i);
+            if (fd.id == id)
+                if (r == null) r = fd;
+                else throw new LookupException( LookupException.AMBIGUOUS );
+        }
+        
+        if (r == null) 
+            throw new LookupException( LookupException.NOTFOUND );
+        else if (! TypeCheck.inst.canAccess(caller, this, r.modifiers,
+                                            r.pmodifiers))
+            throw new LookupException( LookupException.NOTACCESSIBLE );
+        else return r;
+    }
+    
+    
+    /** TBW */
+    
+    public boolean hasField(Identifier id) {
+        FieldDeclVec fields = getFields();
+        for(int i=0; i<fields.size(); i++)
+            if (fields.elementAt(i).id == id) return true;
+        return false;
+    }
+    
+    /** TBW */
+    
+    //@ requires \nonnullelements(args) && caller!=null
+    //@ ensures \result!=null
+    //@ ensures \result.id == id
+    public MethodDecl lookupMethod(Identifier id, Type[] args, TypeSig caller) 
+            throws LookupException
+    {
+        MethodDeclVec methods = getMethods();
+        
+        // Holds the most specific, applicable, accessible method found so far
+        MethodDecl mostSpecific = null;
+        boolean somethingFound = false;
+        
+        search:
+        for(int i = 0; i < methods.size(); i++) {
+            MethodDecl md = methods.elementAt(i);
+            if (md.id == id 
+                && md.args.size() == args.length
+                && TypeCheck.inst.canAccess(caller, this, md.modifiers,
+                                            md.pmodifiers)) {
+                // accessible, same name and number of args
 
-    if (r == null) 
-      throw new LookupException( LookupException.NOTFOUND );
-    else if (! TypeCheck.inst.canAccess(caller, this, r.modifiers,
-					r.pmodifiers))
-      throw new LookupException( LookupException.NOTACCESSIBLE );
-    else return r;
-  }
-
-
-  /** TBW */
-
-  public boolean hasField(Identifier id) {
-    FieldDeclVec fields = getFields();
-    for(int i=0; i<fields.size(); i++)
-      if (fields.elementAt(i).id == id) return true;
-    return false;
-  }
-
-  /** TBW */
-
-  //@ requires \nonnullelements(args) && caller!=null
-  //@ ensures \result!=null
-  //@ ensures \result.id == id
-  public MethodDecl lookupMethod(Identifier id, Type[] args, TypeSig caller) 
-    throws LookupException
-  {
-    MethodDeclVec methods = getMethods();
-
-    // Holds the most specific, applicable, accessible method found so far
-    MethodDecl mostSpecific = null;
-    boolean somethingFound = false;
-
-  search:
-    for(int i = 0; i < methods.size(); i++) {
-      MethodDecl md = methods.elementAt(i);
-      if (md.id == id 
-	  && md.args.size() == args.length
-	  && TypeCheck.inst.canAccess(caller, this, md.modifiers,
-				      md.pmodifiers)) {
-	// accessible, same name and number of args
-
-	somethingFound = true;
-	for(int j=0; j<args.length; j++)
-	  if(! Types.isInvocationConvertable(args[j], 
-					     md.args.elementAt(j).type))
-	    continue search;
-	// accessible and applicable
+                somethingFound = true;
+                for(int j=0; j<args.length; j++)
+                    if(! Types.isInvocationConvertable(args[j], 
+                                                       md.args.elementAt(j).type))
+                        continue search;
+                // accessible and applicable
       
-	if (mostSpecific == null 
-	    || Types.routineMoreSpecific(md, mostSpecific))
-	  mostSpecific = md;
-	else if (! Types.routineMoreSpecific(mostSpecific, md))
-	  throw new LookupException( LookupException.AMBIGUOUS );
-      }
+                if (mostSpecific == null 
+                    || Types.routineMoreSpecific(md, mostSpecific))
+                    mostSpecific = md;
+                else if (! Types.routineMoreSpecific(mostSpecific, md))
+                    throw new LookupException( LookupException.AMBIGUOUS );
+            }
+        }
+
+        if (mostSpecific != null) 
+            return mostSpecific;
+        else if (somethingFound) 
+            throw new LookupException( LookupException.BADTYPECOMBO );
+        else 
+            throw new LookupException( LookupException.NOTFOUND );
     }
 
-    if (mostSpecific != null) 
-       return mostSpecific;
-    else if (somethingFound) 
-       throw new LookupException( LookupException.BADTYPECOMBO );
-    else 
-       throw new LookupException( LookupException.NOTFOUND );
-  }
-
-
-
-
     //************************************************************
     //************************************************************
     //************************************************************
     //************************************************************
     //************************************************************
-
-
 
 /**
 
@@ -1292,8 +1273,6 @@ public class TypeSig extends Type {
 
   */
 
-
-
     /**
      * Gets the TypeSig recorded by <code>setSig</code>, or null.
      */
@@ -1322,13 +1301,10 @@ public class TypeSig extends Type {
 	return r;
     }
 
-
-
     public static void setSig(/*@non_null*/ TypeName n,
 			      /*@non_null*/ TypeSig sig) {
 	sigDecoration.set(n, sig);
     }
-
 
     public final boolean isSubtypeOf(TypeSig s2) {
 	if (state < TypeSig.LINKSRESOLVED)
@@ -1362,45 +1338,51 @@ public class TypeSig extends Type {
 	return false;
     }
 
+    //// Helper functions
 
-  //// Helper functions
-
-  //@ requires s!=null
-  public final boolean inSamePackageAs(TypeSig s) {
-    String[] p1 = this.packageName;
-    String[] p2 = s.packageName;
-    if (p1.length != p2.length) return false;
-    for(int i = 0; i < p1.length; i++)
-      if (! p1[i].equals(p2[i])) return false;
-    return true;
-  }
-
-  /** Check invariants of a TypeSig, raising an exception if
-    they don't hold. */
-
-  public void check() {
-    Assert.notFalse(state!=RESOLVINGLINKS);		    //@ nowarn Pre
-
-    if (state >= CREATED) {
-      if (state == CREATED)
-	  Assert.notFalse(myTypeDecl == null);
+    //@ requires s!=null
+    public final boolean inSamePackageAs(TypeSig s) {
+        String[] p1 = this.packageName;
+        String[] p2 = s.packageName;
+        if (p1.length != p2.length) return false;
+        for(int i = 0; i < p1.length; i++)
+            if (! p1[i].equals(p2[i])) return false;
+        return true;
     }
 
-    if (state >= PARSED) {
-      Assert.notNull(myTypeDecl);
-      Assert.notFalse(this == getSig(myTypeDecl));	    //@ nowarn Pre
-    }
-  }
+    /** Check invariants of a TypeSig, raising an exception if
+     they don't hold. */
 
-  /** Check invariants of a TypeSig, raising an exception if
-    they don't hold. */
+    public void check() {
+        Assert.notFalse(state!=RESOLVINGLINKS);		    //@ nowarn Pre
 
-  public void deepCheck() {
-    Info.out("[checking deep invariants on " + this + "]");
-    check();
-    if (state >= PARSED) {
-      myTypeDecl.check();
-      CheckInvariants.checkTypeDeclOfSig(this);
+        if (state >= CREATED) {
+            if (state == CREATED)
+                Assert.notFalse(myTypeDecl == null);
+        }
+
+        if (state >= PARSED) {
+            Assert.notNull(myTypeDecl);
+            Assert.notFalse(this == getSig(myTypeDecl));	    //@ nowarn Pre
+        }
     }
-  }
-}
+
+    /** Check invariants of a TypeSig, raising an exception if
+     they don't hold. */
+
+    public void deepCheck() {
+        Info.out("[checking deep invariants on " + this + "]");
+        check();
+        if (state >= PARSED) {
+            myTypeDecl.check();
+            CheckInvariants.checkTypeDeclOfSig(this);
+        }
+    }
+} // end of class TypeSig
+
+/*
+ * Local Variables:
+ * Mode: Java
+ * fill-column: 85
+ * End:
+ */

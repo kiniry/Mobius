@@ -18,4 +18,11 @@ public class TagConstants extends javafe.parser.TagConstants
 		return javafe.parser.TagConstants.toString(tag);
 	}
     }
-}
+} // end of class TagConstants
+
+/*
+ * Local Variables:
+ * Mode: Java
+ * fill-column: 85
+ * End:
+ */

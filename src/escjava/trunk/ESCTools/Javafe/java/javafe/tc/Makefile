@@ -10,9 +10,7 @@ clean:
         sed s/_PKG_/javafe.tc/g               | \
         sed s/_COMPONENTPKG_/javafe.ast/g > $@
 
-
 TypeSigVec.java: ../util/_TYPE_Vec.j
 	@sed s/_TYPE_/TypeSig/g ../util/_TYPE_Vec.j | \
         sed s/_PKG_/javafe.tc/g               | \
         sed s/_COMPONENTPKG_/javafe.tc/g > $@
-
