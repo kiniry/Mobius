@@ -12,7 +12,7 @@ import javafe.util.Location;
 import escjava.ParsedRoutineSpecs;
 
 // Convention: unless otherwise noted, integer fields named "loc" refer
-// to the locaction of the first character of the syntactic unit
+// to the location of the first character of the syntactic unit
 
 //# TagBase javafe.tc.TagConstants.LAST_TAG + 1
 //# VisitorRoot javafe.ast.Visitor
