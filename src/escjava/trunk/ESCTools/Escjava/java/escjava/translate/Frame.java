@@ -526,7 +526,7 @@ public class Frame {
           ModifiesIterator caller_iterator = new ModifiesIterator(mge.items,true);
           while (caller_iterator.hasNext()) {
             Object callerStoreRef = caller_iterator.next();
-            //System.out.println("CALLER " + exx);
+            //System.out.println("CALLER " + callerStoreRef);
             if (callerStoreRef instanceof EverythingExpr) {
               ev = null;
               break;
