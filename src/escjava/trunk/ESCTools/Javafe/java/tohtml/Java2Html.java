@@ -73,6 +73,7 @@ public class Java2Html
 	/*@ assume \nonnullelements(file); */  // we assume srcdir denotes a dir.
         for(int i = 0; i < file.length; i++) {
             String f = file[i];
+		// FIXME -- will want to expand (or make extensible) this list of suffixes
             if (f.endsWith(".java") || f.endsWith(".spec") ) 
                 P.AddFile(f);
             else {
