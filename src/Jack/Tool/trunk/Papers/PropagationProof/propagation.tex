@@ -489,7 +489,7 @@ D \texttt{:= } D - 1 & \mbox{if } i = \texttt{begin}(m())\; \wedge\\
 
 % **********************************************************************
 
-\section{Implemeting Execution Monitors: Generation of Program Annotations from Security Automata}
+\section{Implemeting Execution Monitors: Generation of Program Annotations from Security Automata}\label{sec:annotation}
 
 Execution monitors specified by security automata, as defined in section \ref{sec:em}, can be implemented by encoding the automaton into the program being checked.
 This encoding is obtained by declaring a ghost variable for each state variable, and implementing the transition function and transition actions as a series of guard (assert and set) statements and as method annotations.
@@ -618,18 +618,45 @@ P'(v_1,\ldots,v_n) \Downarrow \genv::\qu,w
 
 
 
-\section{Static Checking and Propagation of Annotations}
+\section{Static Checking and Propagation of Annotations}\label{sec:propagation}
 
-Talk about static checking - define?
+The annotation function defined in section~\ref{sec:annotation} provides a systematic method for encoding high-level security properties - defined by security automata - as execution monitors.
+Execution monitors are implemented by extending the original language with guard statements, method annotations (a special case of guard statements), and special assigment statements for ghost variables, a set of external variables used for property-related annotations.
+
+Execution monitors are run-time/dynamic checkers. This means that a program is said to satisfy  the desired encoded property if it successfully terminates  i.e. all guard statements in the execution path were successful.
+
+We are interested in checking the program statically, that is, checking the desired property without actually executing the program. We denote static checking with the $\models$ symbol and write $P \models P$ when program $P$ is accepted by the static checker.
+Static checking is correct if it is safe:
+
+\begin{definition}[Static Checker Correctness]
+A static checker is correct if all programs accepted by the checker are correct: If $P \models P$ then $P \vdash P$.
+\end{definition}
+
+\subsection{Static Checking}
+
+We are concerned with a particular static checking technique, which we call based on Hoare-logic style program annotations.
+This technique is based on the following:
+\begin{itemize}
+\item A program is correct if all its methods satisfy their pre/post-conditions, that is, if we can prove that a method's post-condition (\texttt{ensures} annotation) is satisfied given that its pre-condition (\texttt{requires} annotation)  is true.
+\item Method calls are abstracted away. The overall effect of a method call is replaced by it s post-condition, provided its pre-condition is true. Otherwise, verification fails.
+\end{itemize}
 
 \begin{definition}[Static Checking]
-$\mathit{check}(P)$ ...
+We could make this more precise, perhaps using wp.
 \end{definition}
+
 
 Explain - with example - why a good program will fail static checking.
 
-In order to increase the number of correct programs that pass the static checker we must strengthen the annotations at method level. This is done by lifting the prove obligations - the ones that model the high-level security property - from the method's body to the method declaration. The pre- and post-conditions required by the prove obligations in the body are appended to the ensure and requires elements of the method declation.
+In order to increase the number of correct programs that pass the static checker we must strengthen the annotations at method level. This is done by propagating the prove obligations - the ones that model the high-level security property - from the method's body to the method declaration.
+Prove obligations associated are methods must consider, besides their initial annotation, the new annotations propagated from within their bodies.
+As a result, the initial annotations are propagated all the way up the call graph.
+
+Note: assert annotations can be removed as well.
+
+The pre- and post-conditions required by the prove obligations in the body are appended to the ensure and requires elements of the method declation.
 The propagation of annotations is performed  by the $\mathit{prop}$ function, defined below.
+
 
 
 \begin{definition}[Propagation of Annotations]
@@ -683,7 +710,7 @@ Completeness result for subset - no annoations inside while loops.
 \ppre(P,\texttt{skip},\Psi) & = & \Psi  \\
 \ppre(P,x \texttt{:=}\; e,\Psi) & = & \Psi[e/x] \\
 \ppre(P,\texttt{if }e_0\;s_1\;s_2,\Psi) & = & (e_0 \Rightarrow \ppre(P,s_1,\Psi)) \cup (\neg e_0 \Rightarrow \ppre(P,s_2,\Psi)) \\
-\ppre(P,\texttt{while }b\texttt{ do }s,\Psi) & = & \ppre(P,s,\Psi)\ldots\mbox{need invariant} \\
+\ppre(P,\texttt{while }b\texttt{ do }s,\Psi) & = & (\neg b \Rightarrow \Psi) \cup (b \Rightarrow \ppre(s,\ppre(P,\texttt{while }b\texttt{ do }s,\Psi))   \\
 \ppre(P,s_1; s_2,\Psi) & = & \ppre(P,s_1,\ppre(P,s_2,\Psi))  \\
 \ppre(P,m(e_1,\ldots,e_{|m|}),\Psi) & = & \ppre(P,m)  \\
 \ppre(P,\texttt{return},\Psi) & = & \emptyset  \\
@@ -694,7 +721,7 @@ Completeness result for subset - no annoations inside while loops.
 \ppost(P,\texttt{skip},\Psi) & = & \true  \\
 \ppost(P,x \texttt{:=}\; e,\Psi) & = & \true \\
 \ppost(P,\texttt{if }e_0\;s_1\;s_2,\Psi) & = & \ppost(P,s_1,\Psi) \vee \ppost(P,s_2,\Psi) \\
-\ppost(P,\texttt{while }b\texttt{ do }s,\Psi) & = & \ppost(P,s,\Psi)\ldots\mbox{need invariant}  \\
+\ppost(P,\texttt{while }b\texttt{ do }s,\Psi) & = & \ldots    \\
 \ppost(P,s_1; s_2,\Psi) & = & \ppost(P,s_2,\Psi) \wedge \ppost(P,s1,\Psi\cup\mod(s_2))  \\
 \ppost(P,m(e_1,\ldots,e_{|m|}),\Psi) & = & \{ q \mid q \in \ppost(P,m) \wedge \fv(q) \cap \Psi \neq \phi   \}\\
 \ppost(P,\texttt{return},\Psi) & = & \true \\
