@@ -711,9 +711,10 @@ premap generated from the uses of \old in the body of the method + the spec of t
             for (int i = 0; i < dmd.ensures.size(); i++) {
 	      try {
                 ExprModifierPragma prag = dmd.ensures.elementAt(i);
-		TrAnExpr.trSpecExprAuxConditions = ExprVec.make();
+		//TrAnExpr.trSpecExprAuxConditions = ExprVec.make();
                 Expr pred = TrAnExpr.trSpecExpr(prag.expr, map, wt);
-		if (TrAnExpr.trSpecExprAuxConditions.size() != 0) {
+		if (TrAnExpr.trSpecExprAuxConditions != null &&
+		    TrAnExpr.trSpecExprAuxConditions.size() != 0) {
 		    Expr g = GC.nary(Location.NULL, Location.NULL,
 			    TagConstants.BOOLAND, 
 			    TrAnExpr.trSpecExprAuxConditions);
