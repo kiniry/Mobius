@@ -1,7 +1,0 @@
-#!/bin/csh -f
-# usage: run FLAGS
-
-${ESCJ} $* switch.java try.java trycatch.java trycatch2.java unreachable.java
-
-${ESCJ} -warn Deadlock $* sync.java
-${ESCJ} $* SyncConstructor.java

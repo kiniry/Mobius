@@ -1,6 +1,0 @@
-#!/bin/csh -f
-
-## Test that we check that inner classes members may not be static  [1.1]
-
-${TOOL} TestStaticMembers.java
-${TOOL} TestStaticMembers2.java

@@ -1,6 +1,0 @@
-#!/bin/csh -f
-
-## Check that superclasses defined in the same package work
-
-${TOOL} LocalTest.java LocalTop.java
-${TOOL} Test.java Top.java

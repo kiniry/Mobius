@@ -1,5 +1,0 @@
-#!/bin/csh -f
-# usage: run FLAGS
-
-${ESCJ} $* -ptb -pgc -pvc -pjt *.java
-

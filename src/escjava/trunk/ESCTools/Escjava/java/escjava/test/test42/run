@@ -1,4 +1,0 @@
-#!/bin/csh -f
-# usage: run FLAGS
-
-${ESCJ} $* Cliteral.java

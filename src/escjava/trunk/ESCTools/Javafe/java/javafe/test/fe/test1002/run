@@ -1,9 +1,0 @@
-#!/bin/csh -f
-
-## Checks casts, conversions and constant expressions
-
-foreach f (*.java)
-   echo $f
-   ${TOOL} $f
-end
-

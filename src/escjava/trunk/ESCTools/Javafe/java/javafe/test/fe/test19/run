@@ -1,7 +1,0 @@
-#!/bin/csh -f
-
-## Make sure can't inherit from final class or interface
-
-${TOOL} FromFinal.java
-${TOOL} FromInterface.java
-${TOOL} ImplementsClass.java

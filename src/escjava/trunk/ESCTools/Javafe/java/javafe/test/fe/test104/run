@@ -1,5 +1,0 @@
-#!/bin/csh -f
-
-## Test type checking of initializer bodies (static & instance)     [1.1]
-
-${TOOL} Initializers.java

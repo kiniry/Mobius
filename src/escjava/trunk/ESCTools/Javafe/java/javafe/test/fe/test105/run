@@ -1,5 +1,0 @@
-#!/bin/csh -f
-
-## Test access control between nested classes         [1.1]
-
-${TOOL} Access.java

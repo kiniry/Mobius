@@ -1,6 +1,0 @@
-#!/bin/csh -f
-
-## Test misc. bugs uncovered by typechecking JDK 1.2
-
-${TOOL} Misc.java
-${TOOL} Misc2.java

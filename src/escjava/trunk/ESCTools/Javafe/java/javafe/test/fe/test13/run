@@ -1,6 +1,0 @@
-#!/bin/csh -f
-
-## Check use of duplicate import statements
-
-${TOOL} Single.java s/Multiple.java
-${TOOL} JavaLang1.java JavaLang2.java

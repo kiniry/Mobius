@@ -1,5 +1,0 @@
-#!/bin/csh -f
-
-## Check error messages for inheriting incompatible methods   [disabled]
-
-${TOOL} Incompatible.java

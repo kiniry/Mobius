@@ -1,6 +1,0 @@
-#!/bin/csh -f
-
-## A strange example from 7.5.4 (p. 123) of Java lang spec
-
-${TOOL} Mosquito.java Strange.java
-

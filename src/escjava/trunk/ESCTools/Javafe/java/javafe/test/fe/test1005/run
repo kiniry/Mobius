@@ -1,5 +1,0 @@
-#!/bin/csh -f
-
-## Checks that formal paras hide fields
-
-${TOOL} C.java
