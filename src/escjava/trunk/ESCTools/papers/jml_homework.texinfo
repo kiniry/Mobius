@@ -1,0 +1,296 @@
+\input texinfo   @c -*-texinfo-*-
+@c %**start of header
+
+@setfilename jml_homework.info
+@settitle JML and ESC/Java Homework Exercises $Revision$
+@c Other commands that globally affect the document formatting: 
+@c synindex, footnotestyle
+@afourwide
+
+@c %**end of header
+@c =============================================================================
+
+@c =============================================================================
+@c %**summary and copyright
+
+This document contains a set of homework exercises for those that wish
+to learn JML and ESC/Java.  It was begun by Joseph R. Kiniry
+<kiniry@@cs.kun.nl> in May 2004 for the tutorial ``Design by Contract
+and Automatic Verification for Java with JML and ESC/Java2'' presented
+at ECOOP 2004 in Oslo, Norway in June 2004.  This is edition $Revision$.
+
+@copying
+The JML and ESC/Java Homework Exercises are licensed under the Creative
+Commons Attribution-NonCommercial-ShareAlike 2.0 license.  See
+http://creativecommons.org/licenses/by-nc-sa/2.0/
+
+Copyright @copyright{} 2004 Joseph R. Kiniry
+
+@quotation
+You are free:
+@itemize
+@item
+to copy, distribute, display, and perform the work
+@item
+to make derivative works
+@end itemize
+
+Under the following conditions:
+@itemize
+@item
+Attribution. You must give the original author credit.
+@item
+Noncommercial. You may not use this work for commercial purposes.
+@item
+Share Alike. If you alter, transform, or build upon this work, you may
+distribute the resulting work only under a license identical to this
+one.
+@end itemize
+
+For any reuse or distribution, you must make clear to others the license
+terms of this work.
+
+Any of these conditions can be waived if you get permission from the
+author.
+
+Your fair use and other rights are in no way affected by the above.
+
+This is a human-readable summary of the Legal Code.  See
+http://creativecommons.org/licenses/by-nc-sa/2.0/legalcode
+@end quotation
+
+@end copying
+
+@c %**end of summary and copyright
+@c =============================================================================
+
+@c =============================================================================
+@c %**title, contents, and copyright
+
+@titlepage
+@title JML and ESC/Java Homework Exercises
+@subtitle Learning JML and ESC/Java Through Example
+@subtitle Edition $Revision$, May 2004
+@subtitle These exercises use JML version 5.0rc1 and ESC/Java2 version 2.0a6
+@author Joseph R. Kiniry <kiniry@@cs.kun.nl>
+
+@c The following two commands start the copyright page.
+@page
+@vskip 0pt plus 1filll
+@insertcopying
+
+Published by the Nijmegen Institute for Computing and Information
+Science at the University of Nijmegen as technical report NIII-R04XX.
+See http://www.cs.kun.nl/research/reports/
+@end titlepage
+
+@c metadata used in HTML
+@documentdescription
+Homework Exercises, Java Modeling Language, JML, ESC/Java, ESC/Java2,
+Extended Static Checking, Extended Static Checker, Design by Contract,
+Java, Verification, jUnit, Unit Testing, Model Checking, BISL,
+Behavioral Interface Specification Language, Kiniry
+@end documentdescription
+
+@c Output the table of contents at the beginning.
+@contents
+
+@c %**end of title, contents, and copyright
+@c =============================================================================
+
+@c =============================================================================
+@c %**top node and master menu
+
+@c We recommend including the copying permissions here as well as the
+@c segments above.
+@ifnottex
+@node Top, Introduction, (dir), (dir)
+@top JML and ESC/Java Homework Exercises
+
+@insertcopying
+@end ifnottex
+
+The Java Modeling Language (JML) is a behavioral interface specification
+language that can be used to specify the behavior of Java modules. It
+combines the ``Design by Contract'' approach of Eiffel and the
+model-based specification approach of the Larch family of interface
+specification languages with some elements of the refinement calculus.
+
+The JML tool suite comes with a typechecker (@t{jml}), a compiler
+(@t{jmlc}), a runtime assertion checker (@t{jmlrac}), a Javadoc-based
+documentation generator (@t{jmldoc}), a set of unit test tools
+(@t{jml-junit}, @t{jmlunit}, @t{jtest}), and a specification skeleton
+generator and specification comparison tool (@t{jmlspec}).
+
+The JML tool suite is primarily the development of the JML project at
+Iowa State University, led by Gary Leavens.  http://www.jmlspecs.org/
+
+Several other tools understand (often subsets of) JML:
+@itemize
+@item
+The Extended Static Checker for Java (ESC/Java version 1).
+http://research.compaq.com/SRC/esc/
+@item
+The Open Source Extended Static Checker for Java (ESC/Java version 2, or
+ESC/Java2 for short) from the SoS Group at the University of Nijmegen
+and David Cok.
+http://www.cs.kun.nl/sos/research/escjava/
+@item
+The LOOP compiler from the SoS Group at the University of Nijmegen.
+http://www.cs.kun.nl/sos/
+@item
+The Daikon invariant detector from the Program Analysis Group at MIT.
+http://pag.lcs.mit.edu/daikon/
+@item
+The ChAsE frame axiom checker from Lemme project at INRIA Sophia-Antipolis.
+http://www-sop.inria.fr/lemme/verificard/modifSpec/index.html
+@item
+The JACK tool from Gemplus.
+http://www.gemplus.com/smart/r_d/trends/jack.html
+@item
+The Bogor tool from the SpEx project at Kansas State University.
+http://spex.projects.cis.ksu.edu/
+@end itemize
+
+This set of homework problems focus on the use of JML in runtime
+assertion checking (with @t{jmlc} and @t{jmlrac}) and static
+verification with ESC/Java2.
+
+@menu
+* Introduction::                An introduction to these homework exercises.
+* Core::                        Understanding the core concepts of JML.
+* Using::                       Ways to use JML and ESC/Java2.
+* Copying::                     Your rights and freedoms.
+* Index::                       Complete index.
+
+@end menu
+
+@c %**end top node and master menu
+@c =============================================================================
+
+@c =============================================================================
+@c %**body
+
+@node Introduction, Core, Top, Top
+@chapter Introduction
+
+@cindex Introduction
+
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node Core, Using, Introduction, Top
+@chapter Core JML Constructs
+
+@cindex Core JML Constructs
+
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@menu
+* Assertions::                  Understanding basic assertions.
+* Loops::                       Reasoning about loops.
+* PrePost::                     Core concepts of method specifications.
+* Modifies::                    Reasoning about and with frame axioms.
+* Heavyweight Specifications::  Expressive and easy to understand specifications.
+* Invariants::                  Core concepts of class specifications.
+* Aliasing::                    Reasoning in the face of aliasing adversity.
+* Models::                      Specifying and reasoning with models.
+@end menu
+
+@node Assertions, Loops, Core, Core
+@section Assertions
+
+@cindex Assertions
+
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node Loops, PrePost, Assertions, Core
+@section Reasoning about Loops
+
+@cindex Reasoning about Loops
+
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node PrePost, Modifies, Loops, Core
+@section Preconditions and Postconditions
+
+@cindex Preconditions and Postconditions
+
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node  Modifies, Heavyweight Specifications, PrePost, Core
+@section Frame Axioms
+
+@cindex Frame Axioms
+
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node Heavyweight Specifications, Invariants, Modifies, Core
+@section Heavyweight Specifications
+
+@cindex Heavyweight Specifications
+
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node Invariants, Aliasing, Heavyweight Specifications, Core
+@section Invariants
+
+@cindex Invariants
+
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node Aliasing, Models, Invariants, Core
+@section Aliasing
+
+@cindex Aliasing
+
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node Models,  , Aliasing, Core
+@section Models
+
+@cindex Models
+
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node Using, Copying, Core, Top
+@chapter Using JML and ESC/Java2
+
+@cindex Using JML and ESC/Java2
+
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@menu
+* Annotating Code::             Annotating preexisting code.
+* Annotating APIs::             Annotating APIs.
+* Designing by Contract::       Design by Contract with JML for Java.
+@end menu
+
+@node Annotating Code, Annotating APIs, Using, Using
+@section Annotating Preexisting Java Code
+
+@cindex Annotating Existing Java Code
+@cindex Code Annotation
+
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node Annotating APIs, Designing by Contract, Annotating Code, Using
+@section Annotating Preexisting APIs
+
+@cindex Annotating Existing APIs
+@cindex API Annotation
+
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node Designing by Contract,  , Annotating APIs, Using
+@section Designing by Contract
+
+@cindex Designing by Contract
+@cindex Design by Contract
+
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node Copying, Index, Using, Top
+@chapter Copying
+
+@cindex Copying
+
+@insertcopying
+
+@c %**end of body
+@c =============================================================================
+
+@c =============================================================================
+@c %**end of document
+
+@node Index,  , Copying, Top
+@unnumbered Index
+
+@printindex cp
+
+@bye
