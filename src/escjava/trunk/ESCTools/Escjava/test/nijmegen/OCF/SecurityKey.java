@@ -4,8 +4,8 @@ class SecurityKey
 {
     public static final byte MAX_KEY_LENGTH = (byte)16;
 
-    private /*@ spec_public @*/ byte[] theKey;
-    private /*@ spec_public @*/ byte keyLen;
+    private /*@ spec_public @*/ byte[] theKey; 
+    private /*@ spec_public @*/ byte keyLen; 
 
     /*@
       @ invariant theKey != null &&
@@ -15,8 +15,8 @@ class SecurityKey
 
     /*@ normal_behavior
       @   requires true;
-      @ modifiable theKey, keyLen;
-      @    ensures true;
+      @   modifiable theKey, keyLen;
+      @   ensures \fresh(theKey);
       @*/
     public SecurityKey() {
         theKey = new byte[MAX_KEY_LENGTH]; 
@@ -25,8 +25,8 @@ class SecurityKey
 
     /*@ behavior
       @   requires bArray.length <= MAX_KEY_LENGTH;
-      @ modifiable keyLen, theKey[*];
-      @    ensures bArray != null && 
+      @   modifiable keyLen, theKey[*];
+      @   ensures bArray != null && 
       @            bArray.length <= MAX_KEY_LENGTH &&
       @            keyLen == bArray.length &&
       @            (\forall short i ; 0 <= i && i < keyLen
@@ -40,17 +40,17 @@ class SecurityKey
     } //@ nowarn Exception;
 
     /*@ behavior
-      @  requires src != null &&  srcOff >= 0 &&  
+      @     requires src != null &&  srcOff >= 0 &&  
       @              srcOff+length <= src.length &&
       @            dest != null && destOff >= 0 && 
       @              destOff+length <= dest.length &&
       @            length >= 0;
-      @  modifiable dest[destOff..destOff+length-1];
+      @     modifiable dest[destOff..destOff+length-1];
       @     ensures (\forall short i ; 0 <= i && i < length 
       @                   ==> dest[destOff+i] == \old(src[srcOff+i]));
       @ also
       @ behavior
-      @  modifiable dest[destOff..destOff+length-1];
+      @     modifiable dest[destOff..destOff+length-1];
       @     signals (NullPointerException) src == null || dest == null;
       @     signals (ArrayIndexOutOfBoundsException) 
       @                 (src != null &&

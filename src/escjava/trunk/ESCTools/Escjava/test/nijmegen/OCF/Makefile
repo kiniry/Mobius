@@ -1,7 +1,6 @@
 
 
-runtests:
-	@echo OCF tests - skipped because not yet debugged
+runtests:  check
 
 check:
 	escjava -quiet -classpath . *.java
