@@ -3824,7 +3824,6 @@ class files). This is different than the classpath needed to find the source and
 class files being checked; those classpaths are set with the -classpath and -sourcepath
 command-line options.
 @item @code{ESCJ_SIMPLIFY_DIR} - the directory in which to find the Simplify executable
-@item @code{ESCJ_SIMPLIFY_SCRIPT} - the full path to the simplify script
 @end itemize
 
 [[[ Predicate abstraction uses some undocumented java properties. ]]]
