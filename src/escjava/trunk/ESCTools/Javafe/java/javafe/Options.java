@@ -124,11 +124,6 @@ public class Options
    * Process tool options contained in <code>args</code>.
    *
    * @param args the command-line arguments that are being processed.
-   * @return The offset to any remaining command-line arguments
-   * should be returned.  (This allows the option to consume some or
-   * all of the following arguments.  E.g., this routine "consumes"
-   * <code>args[0]</code>, ...,
-   * <code>args[</code><i>returned_value</i><code>-1]</code>.)
    * @exception UsageError If the option is erroneous, throw an
    * {@link UsageError} exception with a string describing the
    * problem.

@@ -42,7 +42,7 @@ public abstract class FrontEndTool extends Tool {
      *
      * <p> This can be done only once.  The standard front-end-tool
      * option variables have no effect after this point.  May exit
-     * with an error (via {@link ErrorSet#fatal}). </p>
+     * with an error (via {@link ErrorSet#fatal(String)}). </p>
      *
      * <p> Ensures {@link OutsideEnv} has been properly initialized
      * (except if an error occurs). </p>
