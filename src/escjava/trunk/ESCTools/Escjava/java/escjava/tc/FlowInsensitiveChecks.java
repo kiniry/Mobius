@@ -1370,6 +1370,8 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                     break;
                 }
 
+	    case TagConstants.JML_DIVERGES:
+	    case TagConstants.JML_DIVERGES_REDUNDANTLY:
             case TagConstants.ENSURES:
             case TagConstants.ALSO_ENSURES:
             case TagConstants.JML_POST:
@@ -1415,6 +1417,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                     }
                     break;
                 }
+
 
             case TagConstants.EXSURES:
             case TagConstants.ALSO_EXSURES:

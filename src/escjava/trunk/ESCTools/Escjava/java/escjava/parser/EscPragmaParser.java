@@ -911,6 +911,8 @@ public class EscPragmaParser extends Parse implements PragmaParser
                 case TagConstants.JML_PRE_REDUNDANTLY:
                 case TagConstants.JML_POST:
                 case TagConstants.JML_POST_REDUNDANTLY:
+		case TagConstants.JML_DIVERGES:
+		case TagConstants.JML_DIVERGES_REDUNDANTLY:
                     // Check if also clauses are permitted on requires
                     // clauses.
                     if ((tag == TagConstants.ALSO_REQUIRES ||
@@ -940,6 +942,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
                     if (((tag == TagConstants.JML_REQUIRES_REDUNDANTLY) ||
                          (tag == TagConstants.JML_ENSURES_REDUNDANTLY) ||
                          (tag == TagConstants.JML_PRE_REDUNDANTLY) ||
+                         (tag == TagConstants.JML_DIVERGES_REDUNDANTLY) ||
                          (tag == TagConstants.JML_POST_REDUNDANTLY)) &&
                         (! Main.checkRedundantSpecs)) {
                         // eat non-optional semicolon and return the
@@ -1036,7 +1039,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
                 case TagConstants.JML_PRIVATE_DATA:         // unclear semantics
                 case TagConstants.JML_REACH:                // SC HPT AAST 5
                     
-                // Unsupported JML keywords no beginning with '\' (wack).
+                // Unsupported JML keywords not beginning with '\' (wack).
                 case TagConstants.JML_ABRUPT_BEHAVIOR:        // unclear semantics
                 case TagConstants.JML_ACCESSIBLE_REDUNDANTLY: // SC HPT AAST 2
                 case TagConstants.JML_ACCESSIBLE:             // SC HPT AAST 2
@@ -1061,8 +1064,8 @@ public class EscPragmaParser extends Parse implements PragmaParser
                 // case TagConstants.JML_DECREASING: support complete (kiniry)
                 case TagConstants.JML_DEPENDS_REDUNDANTLY:    // SC AAST 4
                 case TagConstants.JML_DEPENDS:                // SC AAST 4
-                case TagConstants.JML_DIVERGES_REDUNDANTLY:   // NOT SC but useful 2
-                case TagConstants.JML_DIVERGES:               // NOT SC but useful 2
+                //case TagConstants.JML_DIVERGES_REDUNDANTLY:   // Parsed (cok)
+                //case TagConstants.JML_DIVERGES:               // parsed (cok)
                 // case TagConstants.JML_ENSURES_REDUNDANTLY: support complete (kiniry)
                 case TagConstants.JML_EXAMPLE:                // NOT SC
                 // case TagConstants.JML_EXCEPTIONAL_BEHAVIOR: support complete (kiniry)
