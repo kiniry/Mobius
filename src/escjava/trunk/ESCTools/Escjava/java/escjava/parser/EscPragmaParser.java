@@ -1952,7 +1952,7 @@ try{
 
             case TagConstants.INFORMALPRED_TOKEN:
                 primary = LiteralExpr.make(TagConstants.BOOLEANLIT,
-                                           new Boolean(true), l.startingLoc);
+                                           Boolean.TRUE, l.startingLoc);
                 informalPredicateDecoration.set(primary, l.auxVal);
                 l.getNextToken();
                 break;
@@ -2725,7 +2725,7 @@ try{
 				TagConstants.NON_NULL,typeLoc));
 		}
 		int locId = l.startingLoc;
-		if (id == null) id = parseIdentifier(l);
+		id = parseIdentifier(l);
 		type = parseBracketPairs(l, type);
 		modifierPragmas = parseMoreModifierPragmas(l, modifierPragmas);
 		seqFormalParaDecl.addElement( FormalParaDecl.make(modifiers,

@@ -314,11 +314,13 @@ public final class ATarget {
     }
 
     public String toString() {
-	String s = ("[aTarget: x =" + x.id + "\n");
+	StringBuffer s = new StringBuffer("[aTarget: x =" + x.id + "\n");
 
 	for (int i = 0; i < indices.length; i++) {
-	    s = s + "     index[" + i + "] is " + indices[i]+"\n";
+	    s.append("     index[" + i + "] is " + indices[i]+"\n");
+		// FIXME - fix end of line character
 	}
-	return s + "]\n";
+	s.append("]\n"); // FIXME - fix end of line character
+	return s.toString();
     }
 }

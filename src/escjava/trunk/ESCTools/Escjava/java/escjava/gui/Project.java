@@ -39,8 +39,9 @@ public class Project {
 
 
     static public void read(File file) {
+	BufferedReader r = null;
 	try {
-	    BufferedReader r = new BufferedReader(new FileReader(file));
+	    r = new BufferedReader(new FileReader(file));
 	    String s = r.readLine();
 	    if (!s.equals(magic)) {
 		JOptionPane.showMessageDialog(GUI.gui.escframe,
@@ -57,6 +58,17 @@ public class Project {
 			", could not be successfully read: " + e);
 		init();
 		return;
+	} finally {
+	    try {
+		r.close();
+	    } catch (IOException e) {
+		JOptionPane.showMessageDialog(GUI.gui.escframe,
+			"The selected file, " + 
+			file.getAbsolutePath() + 
+			", could not be successfully closed: " + e);
+		init();
+		return;
+ 	    }
 	}
 	// FIXME need to capture messages about invalid material in the
 	// file.

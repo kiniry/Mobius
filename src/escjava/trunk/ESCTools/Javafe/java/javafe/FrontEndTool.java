@@ -37,12 +37,12 @@ public abstract class FrontEndTool extends Tool {
 
     /**
      * Setup: initialize the front end using the standard
-     * front-end-tool option variables ({@link #userPath}, {@link
-     * #sysPath}).
+     * front-end-tool option variables ({@link Options#userPath}, 
+     * {@link Options#sysPath}).
      *
      * <p> This can be done only once.  The standard front-end-tool
      * option variables have no effect after this point.  May exit
-     * with an error (via {@link ErrorSet#fatal()}). </p>
+     * with an error (via {@link ErrorSet#fatal}). </p>
      *
      * <p> Ensures {@link OutsideEnv} has been properly initialized
      * (except if an error occurs). </p>

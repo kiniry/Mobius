@@ -353,6 +353,7 @@ public final class GC {
 
   private static int assertContinueCounter = 0;
 
+/* Not called
   //@ requires locUse != Location.NULL;
   private static GuardedCmd assertPredicate(int locUse,
                                             int errorName, Expr pred,
@@ -361,6 +362,7 @@ public final class GC {
 	return assertPredicate(locUse, errorName, pred, locPragmaDecl,
 		Location.NULL, aux);
   }
+*/
   private static GuardedCmd assertPredicate(int locUse,
                                             int errorName, Expr pred,
                                             int locPragmaDecl,

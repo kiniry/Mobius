@@ -62,13 +62,12 @@ class MethodSignature
 
   /**
    * Append a parameter type to this method signature.
-   * @param type  the parameter type to append
+   * @param parameterType  the parameter type to append
    */
-  //@ requires parameter != null;
-  //@ requires parameter.syntax
-  void appendParameter(Type parameter)
+  //@ requires parameterType != null;
+  void appendParameter(Type parameterType)
   {
-    parameters.addElement(parameter);
+    parameters.addElement(parameterType);
   }
 
   /**

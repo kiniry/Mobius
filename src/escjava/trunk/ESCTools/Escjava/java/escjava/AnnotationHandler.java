@@ -640,21 +640,21 @@ System.out.println("END_MPV");
 		    break;
 	    }
 	}
+/* FIXME - don't need this for now, but need to be sure that when it is 
+added, it doesn't change whether a routine appears to have a spec or not.
 	if (!foundDiverges) {
 	    // lightweight default - req ==> true which is true
 	    // heavyweight default - req ==> false which is !req
 	    // The lightweight default need not be added since it does
 	    // not need any verification.
-/* FIXME - don't need this for now, but need to be sure that when it is 
-added, it doesn't change whether a routine appears to have a spec or not.
 	    resultList.addElement(ExprModifierPragma.make(
 		TagConstants.DIVERGES,implies(req,AnnotationHandler.F),
 			Location.NULL));
-*/
 // FIXME - Null location above and below needs to be fixed.
 // Also other use of defaultModifies
 // Diverges expression depends on lightweight or heavyweight
 	}
+*/
 	if (!foundModifies) {
 	    resultList.addElement(defaultModifies(tde.getStartLoc(),req,tde));
 	}

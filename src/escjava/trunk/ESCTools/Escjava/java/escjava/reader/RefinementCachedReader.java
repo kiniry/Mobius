@@ -409,20 +409,22 @@ Don't complain, but don't do it twice either. ???
 		    // classpath.
 		    refinements.add(cu);
 		} else {
-		    String err = "The command-line argument " 
+		    StringBuffer err = new StringBuffer(
+			"The command-line argument " 
 			+ cu.sourceFile().getHumanName() 
 			+ " was not in the refinement sequence for type " 
-			+ pkg + type.toString() + ":";
+			+ pkg + type.toString() + ":");
 		    for (int k = 0; k<refinements.size(); ++k) {
-			err += " " + ((CompilationUnit)refinements.get(k)).
-					sourceFile().getHumanName();
+			err.append(" ");
+			err.append(((CompilationUnit)refinements.get(k)).
+					sourceFile().getHumanName());
 		    }
 		    // If the command-line file is not in the refinement
 		    //	sequence, we use the refinement sequence, since,
 		    //	if the type was referenced from another class it
 		    //	is the refinement sequence that would be found.
 		    //
-		    ErrorSet.error(err);
+		    ErrorSet.error(err.toString());
 		}
 	    }
 	    javafe.util.Info.out("Found refinement sequence files");

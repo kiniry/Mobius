@@ -508,7 +508,7 @@ public class EscFrame extends JFrame {
 	try {
 	    UIManager.setLookAndFeel(
               UIManager.getSystemLookAndFeelClassName());
-	} catch (Exception eee) {}
+	} catch (Exception eee) {}  // FIXME
 	LookAndFeel current = UIManager.getLookAndFeel();
 	String name = current.getClass().toString().substring(6); // 6 is the length of "class "
 	ButtonGroup bg = new ButtonGroup();

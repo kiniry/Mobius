@@ -45,7 +45,7 @@ public class Simplify
      * <code>null</code> if there is no such CECEnum.
      *
      * <p> Simplify is available for use iff this is
-     * <code>null</code>.  Use {@link readySubProcess()} to make
+     * <code>null</code>.  Use {@link #readySubProcess()} to make
      * Simplify available. </p>
      */
     private CECEnum subProcessUser = null;
@@ -80,7 +80,7 @@ public class Simplify
      * Create a new invocation of Simplify as a sub-process.
      *
      * <p> The resulting invocation is initially open, but may be
-     * closed permanently with the {@link close()} method. </p>
+     * closed permanently with the {@link #close()} method. </p>
      *
      * <p> This constructor may result in a fatal error if any
      * problems occur. </p>

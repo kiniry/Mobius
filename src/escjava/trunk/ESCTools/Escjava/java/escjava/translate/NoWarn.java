@@ -203,9 +203,12 @@ public class NoWarn
      * Is a given line # in a given stream (id) between the lines that
      * contain the two given locations (inclusive)? <p>
      *
-     * @param loc if Location.NULL, then false is returned.
+     * @param startLoc
+     * @param endLoc
+     * @param lineNo
+     * @param streamId
      */
-    //@ requires (* the two locations must be from the same stream. *)
+    //@ requires (* the two locations must be from the same stream. *)/
     static boolean inRange(int startLoc, int endLoc, int lineNo,
 			   int streamId) {
 	if (startLoc==Location.NULL || endLoc==Location.NULL)

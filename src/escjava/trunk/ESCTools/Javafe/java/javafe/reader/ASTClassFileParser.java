@@ -71,7 +71,7 @@ class ASTClassFileParser extends ClassFileParser
      * stored in <code>typeDecl</code>; this will be a "spec only"
      * declaration.  Its package is stored in <code>classPackage</code>
      * and a location for it is stored in <code>classLocation</code>.
-     * @param stream  the stream to parse the class from 
+     * @param inputFile  the file to parse the class from 
      * @param includeBodies if true, bodies are included, if not, only a spec is produced */
     ASTClassFileParser(/*@ non_null */ GenericFile inputFile, boolean includeBodies)
 	throws IOException, ClassFormatError

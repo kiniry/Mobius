@@ -446,8 +446,8 @@ public abstract class ParseExpr extends ParseType
 
 
     /**
-     * Is tag the first token of a
-     * <TT>UnaryExpressionNotPlusMinus</TT>?
+     * Determines whether the tag is the first token of a
+     * <TT>UnaryExpressionNotPlusMinus</TT>.
      *
      * For the default Java grammar, this amounts to is tag one of:
      *
@@ -734,8 +734,8 @@ public abstract class ParseExpr extends ParseType
 
 
     /**
-     * parses . class, then produces a class literal expression using
-     * Type t
+     * parses '. class', then produces a class literal expression using
+     * Type t.
      */ 
     //@ requires l != null && t != null && l.m_in != null;
     //@ requires t.syntax

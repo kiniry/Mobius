@@ -44,6 +44,7 @@ public class EscEditor extends JFrame implements ActionListener {
 	final File f = istream != null ? null : new File(filename);
 	JEditorPane editor = null;
 	JScrollPane scroll = null;
+	Reader r = null;
 	try {
 	    editor = new JEditorPane();
 	    editor.setFont(new Font("Monospaced",Font.PLAIN,editor.getFont().getSize()));
@@ -120,7 +121,7 @@ public class EscEditor extends JFrame implements ActionListener {
 		// work
 		
 		char[] ca = new char[10000];
-	        Reader r = new InputStreamReader(
+	        r = new InputStreamReader(
 				new BufferedInputStream(istream));
 		StringBuffer sb = new StringBuffer(10000);
 		while (true) {  // FIXME - presuming ready() does not block
@@ -137,6 +138,12 @@ public class EscEditor extends JFrame implements ActionListener {
 	} catch (Exception e) {
 		editor.setText("An exception occurred while trying to set up an editor for file " + filename + ": " + e);
 		line = 0;
+	} finally {
+	    try {
+		if (r != null) r.close();
+	    } catch (IOException e) {
+		editor.setText("An exception occurred while trying to set up an editor for file " + filename + ": " + e);
+	    }
 	}
 	this.editor = editor;
 	this.scroll = scroll;

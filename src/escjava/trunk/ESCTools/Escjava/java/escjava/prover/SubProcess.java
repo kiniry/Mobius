@@ -23,7 +23,7 @@ import javafe.util.*;
  * <p> As a debugging aid, if {@link Info#on} is true, we save all the
  * characters read by clients from this subprocess since the last
  * {@link #resetInfo()} call.  In the event of a parsing error (see
- * {@link handleUnexpected(String)}), we use this information, if
+ * {@link #handleUnexpected(String)}), we use this information, if
  * available, to produce a more useful error message. </p>
  *
  * <p> Note that a Java application will not exit normally (i.e., when
@@ -89,15 +89,15 @@ public class SubProcess
      * Instantiate a subprocess.
      *
      * <p> The resulting invocation is initially open, but may be closed
-     * permanently with the {@link close()} method. </p>
+     * permanently with the {@link #close()} method. </p>
      *
      * <p> This constructor may result in a fatal error if any
      * problems occur. </p>
      *
      * @param name should be a unique short name for use in error
      * messages (E.g., "Simplify").
-     * @param path is the full pathname of the program to execute to
-     * obtain the subprocess.  E.g., "/usr/bin/emacs".
+     * @param pathAndArgs is an array containing the full pathname of the program to execute to
+     * obtain the subprocess (e.g., "/usr/bin/emacs") and any command-line arguments.
      */
     //@ public normal_behavior
     //@   modifies this.*;
@@ -320,9 +320,10 @@ public class SubProcess
 	    }
 	}
 
-	String errOut = "";
+	StringBuffer errOut = new StringBuffer();
 	if (P != null) {
             InputStream err = P.getErrorStream();
+		// FIXME - change this to read characters?
             byte[] buf = new byte[1024];
             try {
                 while (true) {
@@ -330,10 +331,12 @@ public class SubProcess
                     if (r == -1) {
                         break;
                     }
-                    errOut += new String(buf, 0, r);
+                    errOut.append(new String(buf, 0, r));
                 }
             } catch (IOException ioe) {
-                errOut += "<IOException: " + ioe.toString() + ">";
+                errOut.append("<IOException: ");
+		errOut.append(ioe.toString());
+		errOut.append(">");
             }
 	}
 

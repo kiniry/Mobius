@@ -52,11 +52,11 @@ public final class ErrorMsg
 	    }
 	    if (iErrorLabel == -1) {
 		//@ unreachable
-		String s = "Unknown cause!  Labels are";
+		StringBuffer s = new StringBuffer("Unknown cause!  Labels are");
 		for (int i = 0; i < cLabels; i++) {
-		     s = s + " " + labelList.at(i).getAtom().toString();
+		     s.append(" " + labelList.at(i).getAtom().toString());
 		}
-		ErrorSet.error(s);
+		ErrorSet.error(s.toString());
 	    }
 
 	    // print the execution trace info if requested

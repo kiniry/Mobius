@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.io.ByteArrayOutputStream;
 
 import javafe.ast.*;
@@ -3449,10 +3450,12 @@ public final class Translate
 	    return i < mp.size() || !others.isEmpty();
 	}
 
-	public Object next() {
+	public Object next() throws NoSuchElementException {
 	    Object ex;
 	    if (!others.isEmpty()) {
 		ex = others.remove(0);
+	    } else if (i >= mp.size()) {
+		throw new NoSuchElementException();
 	    } else {
 		condExpr = mp.elementAt(i).cond;
 		ex = mp.elementAt(i).expr;

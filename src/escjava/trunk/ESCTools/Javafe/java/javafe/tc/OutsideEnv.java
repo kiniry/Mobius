@@ -60,7 +60,7 @@ import java.io.File;
  * change to a non-null result. </p>
  *
  * <p> Only when the new <code>TypeSig</code>'s <code>TypeDecl</code>
- * is touched (via {@link #getTypeDecl()}) for the first time does
+ * is touched (via {@link TypeSig#getTypeDecl}) for the first time does
  * <code>OutsideEnv</code> load in the <code>CompilationUnit</code>
  * that should contain that type.  Errors may be reported via {@link
  * ErrorSet} at this time (e.g., I/O error, syntax error, file fails
@@ -130,7 +130,7 @@ import java.io.File;
  * <p> Whenever <code>OutsideEnv</code> successfully loads a
  * <code>CompilationUnit</code>, it notifies the current {@link
  * Listener}, if any.  Only one <code>Listener</code> at a time is
- * currently supported; {@link #setListener()} is used to set the
+ * currently supported; {@link #setListener} is used to set the
  * current <code>Listener</code>. </p>
  *
  * <p> Because this notification is "asynchronous" (it can occur in
@@ -252,7 +252,7 @@ public final class OutsideEnv
      * <code>null</code> answer may later change to a
      * non-<code>null</code> answer. </p>
      *
-     * @precondition an init method has already been called
+     * @requires an init method has already been called
      */
     //@ requires \nonnullelements(P);
     //@ requires initialized;
@@ -283,7 +283,7 @@ public final class OutsideEnv
      * required to be present by the language specification (e.g.,
      * {@link java.lang.Object}). </p>
      *
-     * @precondition an init method has already been called.
+     * @requires an init method has already been called.
      */
     //@ requires \nonnullelements(P);
     //@ requires T != null;
@@ -313,7 +313,7 @@ public final class OutsideEnv
      * <p> <code>null</code> may also be returned if a file is
      * repeated on the command line. </p>
      *
-     * @precondition no lookup has been done yet using this class.
+     * @requires no lookup has been done yet using this class.
      *
      * @note Calling <code>addSource</code> twice on the same file may
      * or may not produce a duplicate-type error.
@@ -373,7 +373,7 @@ public final class OutsideEnv
      * @note Calling <code>addSource</code> twice on the same file may
      * or may not produce a duplicate-type error.
      *
-     * @precondition no lookup has been done yet using this class.
+     * @requires no lookup has been done yet using this class.
      */
     //@ requires sourceName != null;
     public static CompilationUnit addSource(String sourceName) {
@@ -410,7 +410,7 @@ public final class OutsideEnv
      * that have been loaded with the TypeDecls that point to
      * them. </p>
      *
-     * @precondition <code>cu</code> must be non-null.
+     * @requires <code>cu</code> must be non-null.
      */
     //@ requires cu != null;
     private static void setSigs(CompilationUnit cu) {
@@ -445,7 +445,7 @@ public final class OutsideEnv
      * the error may be made non-fatal; in that case TypeSig.preload
      * will be responsible for substituting a wildcard TypeDecl. </p>
      *
-     * @precondition an init method has already been called.
+     * @requires an init method has already been called.
      */
     //@ requires initialized;
     //@ ensures sig.myTypeDecl != null;
@@ -524,7 +524,7 @@ public final class OutsideEnv
      * Send a CompilationUnit-loaded notification event to the current
      * Listener (if any).
      *
-     * @precondition justLoaded != null, justLoaded must already have
+     * @requires justLoaded != null, justLoaded must already have
      * the <code>sig</code> fields of its direct
      * <code>TypeDecl</code>s adjusted.
      */
@@ -564,9 +564,8 @@ public final class OutsideEnv
     /**
      * Call lookup on N then describe the results.
      *
-     * @precondition an init method has already been called.
      */
-    //@ requires initialized;
+    //@ requires initialized; // that is, an init method has alreaady been called
     private static void describeLookup(/*@ non_null @*/ String N) {
 	// Convert N to a list of its components:
 	String[] components = javafe.filespace.StringUtil.parseList(N, '.');

@@ -1302,12 +1302,12 @@ consistent with JML
             case TagConstants.NEWARRAYEXPR:
                 {
 		    countFreeVarsAccesses++;
-                    if (inAnnotation) {
 /* FIXME - Yes it can, but it must be pure!
+                    if (inAnnotation) {
                         ErrorSet.error(e.getStartLoc(),
 			   "new cannot be used in specification expressions");
-*/
                     }
+*/
                     return super.checkExpr(env, e);
                 }
       
@@ -1385,18 +1385,18 @@ consistent with JML
 			   "java.lang.Object and java.lang.Cloneable may not"
 			   + " contain invariants.");  // FIXME - Why?
                     }
+/*
+FIXME - see uses of countFreeVarsAccess
                     if (invariantContext && countFreeVarsAccesses == 0 &&
 			// Don't print an error if the entire invariant
 			// is an informal predicate
 			escjava.parser.EscPragmaParser.
 			     informalPredicateDecoration.get(ep.expr)==null) {
-/*
-FIXME - see uses of countFreeVarsAccess
                         ErrorSet.error(e.getStartLoc(),
 			   "Class invariants must mention program variables"
 			   + " or fields.");
-*/
                     }
+*/
 
                     if (invariantContext) {countFreeVarsAccesses = 0;}
                     invariantContext = false;
@@ -2151,19 +2151,19 @@ FIXME - see uses of countFreeVarsAccess
                                     break;
                                 }
                             }
+/* FIXME - what about Error exceptions, must they be mentioned?  */
+/* FIXME
                             if (!okay) {
 				if (!( (vemp.expr instanceof LiteralExpr) &&
 					((LiteralExpr)vemp.expr).value.equals(Boolean.FALSE))) {
-/* FIXME - what about Error exceptions, must they be mentioned?  */
-/* FIXME
                                 ErrorSet.error(vemp.arg.type.getStartLoc(),
 				   "The type of the " +
 				   TagConstants.toString(tag) +
 				   " argument must be comparable to some type"+
 				   " mentioned in the routine's throws set");
-*/
 				}
                             }
+*/
                         }
 
                         Env subenv = new EnvForLocals(env, vemp.arg);
