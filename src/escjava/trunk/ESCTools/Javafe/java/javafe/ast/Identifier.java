@@ -188,6 +188,10 @@ public final class Identifier
   public int hashCode() {
     return hash(chars, chars.length);
   }
+  
+  public boolean equals(Object o) {
+    return this == o;
+  }
 
   /** Return true if all invariants are satisfied. */
   public static void check() {
