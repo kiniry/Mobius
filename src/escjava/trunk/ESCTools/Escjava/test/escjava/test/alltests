@@ -1,7 +1,7 @@
 test0   Good    relative assignment to fields, side-effects in LHS, casts in LHS
 test1	Omit	Typechecking and resolution of pragmas
 test2	Omit	Typechecking and resolution of pragmas
-test3	Good	Simple assumes, asserts
+test3	FIX 	Simple assumes, asserts
 test4	Good	if
 test5	Good	Worst case for exp blowup under old assignment rule
 test6	Good	final class axiom and distinct types axiom

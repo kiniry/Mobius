@@ -1780,6 +1780,8 @@ System.out.println("");
 		    specialThisExpr = fcall;
 		}
 
+		ModifierPragmaVec v = rd.pmodifiers;
+		ExprVec conjuncts = ExprVec.make(v.size());
 		// FIXME - what about ensures clauses with \old in them
 		// Note - if there is an ensures clause with object fields, then it is
 		// not a great candidate for a function call
@@ -1787,8 +1789,6 @@ System.out.println("");
 		// FIXME - need to guard this with signals and diverges
 		// conditions as well
 		// find ensures pragmas and translate them into axioms
-		ModifierPragmaVec v = rd.pmodifiers;
-		ExprVec conjuncts = ExprVec.make(v.size());
 		for (int i=0; i<v.size(); ++i) {
 		    ModifierPragma p = v.elementAt(i);
 		    if (p.getTag() != TagConstants.ENSURES &&
@@ -1836,15 +1836,18 @@ System.out.println("");
 		    conjuncts.addElement(ee);
 		}
 
+
 		// create a composite AND and wrap it in a forall
 		Expr ee = GC.and(conjuncts);
+		Expr ee2 = ee;
 		ExprVec pats = ExprVec.make(1);
 		pats.addElement(fcall);
 		for (int k=bounds.size()-1; k>=0; --k) {
 		    GenericVarDecl oo = (GenericVarDecl)bounds.get(k);
-		    ee = GC.forallwithpats(oo,ee,pats);
+		    ee = GC.forall(oo,ee);
+		    ee2 = GC.forallwithpats(oo,ee2,pats);
 		}
-		ax = ee;
+		ax = GC.and(ee,ee2);
 	    } else if (astn instanceof FieldDecl) {
 		FieldDecl fd = (FieldDecl)astn;
 		Expr ee = GC.and(getModelVarAxioms(td,fd,sp));

@@ -1197,10 +1197,10 @@ while (ee.hasMoreElements()) {
 
         InvariantInfo ii = mergeInvariants(collectInvariants(scope,spec.preVarMap));
  		// FIXME - Possibly causing bloated VCs
-        //HashSet axsToAdd = collectInvariantsAxsToAdd;
-        //ExprVec assumptions = addNewAxs(axsToAdd,null);
-        //spec.preAssumptions.append(assumptions);
-        //spec.postAssumptions.append(assumptions);
+        HashSet axsToAdd = collectInvariantsAxsToAdd;
+        ExprVec assumptions = addNewAxs(axsToAdd,null);
+        spec.preAssumptions.append(assumptions);
+        spec.postAssumptions.append(assumptions);
         
         for (; ii != null; ii = ii.next) {
 	    int tag = ii.prag.getTag();
@@ -1591,8 +1591,8 @@ while (ee.hasMoreElements()) {
             }
           }
           // FIXME - Possibly causing bloated VCs
-          //collectInvariantsAxsToAdd = new java.util.HashSet();
-          //collectInvariantsAxsToAdd.addAll(TrAnExpr.trSpecAuxAxiomsNeeded);
+          collectInvariantsAxsToAdd = new java.util.HashSet();
+          collectInvariantsAxsToAdd.addAll(TrAnExpr.trSpecAuxAxiomsNeeded);
 	  java.util.Set axsToAdd = new java.util.HashSet();
 	  //axsToAdd.addAll(TrAnExpr.trSpecAuxAxiomsNeeded);
 	  java.util.Set axsDone = new java.util.HashSet();

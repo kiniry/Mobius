@@ -26,9 +26,6 @@ ForallOld: m4() ...
     [TIME]  passed
 
 ForallOld: m() ...
-ForallOld.java:28: Caution: Unable to use quantification because no trigger found: (FORALL (|x:28.16|) (NOT (>= 0 |x:28.16|)))
-        //@ forall int x;
-                       ^
     [TIME]  passed
 
 ForallOld: m9() ...
@@ -48,5 +45,4 @@ Execution trace information:
 ForallOld: ForallOld() ...
     [TIME]  passed
   [TIME total]
-1 caution
 2 warnings

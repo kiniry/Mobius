@@ -77,11 +77,6 @@ Min: pp() ...
     [TIME]  passed
 
 Min: pp2() ...
-------------------------------------------------------------------------
-Min.java:58: Warning: Possible assertion failure (Assert)
-            /*@ assert (\forall Object o,oo; c.contains(o) && c.contai ...
-                ^
-------------------------------------------------------------------------
-    [TIME]  failed
+    [TIME]  passed
   [TIME total]
-5 warnings
+4 warnings

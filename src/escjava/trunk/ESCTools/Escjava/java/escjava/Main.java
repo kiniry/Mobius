@@ -890,6 +890,9 @@ public class Main extends javafe.SrcTool
                 case SimplifyOutput.WARNING_TRIGGERLESS_QUANT: {
                     TriggerlessQuantWarning tqw = (TriggerlessQuantWarning)so;
                     int loc = tqw.getLocation();
+/* Turn off this warning for now.  FIXME
+   Some generated axioms require using the Simplify heuristic to work correctly,
+   while others generate this warning if there is no explict quantifier.
                     String msg = "Unable to use quantification because " +
                         "no trigger found: " + tqw.e1;
                     if (loc != Location.NULL) {
@@ -900,6 +903,7 @@ public class Main extends javafe.SrcTool
                     if (Info.on && tqw.getLabels() != null) {
                         Info.out("Current labels: " + tqw.getLabels());
                     }
+*/
                     break;
                 }
                 default:

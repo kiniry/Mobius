@@ -15,23 +15,23 @@ public class Min {
 	//@ normal_behavior ensures \result; private model boolean ex3(int i);
 
 	public void x() {
-	    //@ assert (\max int i; 1<=i && i<10 && ex1(i); f(i)) >= f(2);
+	    //@ assert (\max int i; 1<=i && i<10 && ex1(i); f(i)) >= f(2); // SHOULD FAIL
 	}
 	public void x2() {
-	    //@  assert (\max int i; 1<=i && i<10 && ex2(i); id(i)) >= id(2);
+	    //@  assert (\max int i; 1<=i && i<10 && ex2(i); id(i)) >= id(2); 
 	}
 	public void x3() {
 	    //@  assert (\max int i; 1<=i && i<10 && ex3(i); id(i)) == id(9);
 	}
 	public void x4() {
-	    //@  assert (\max int i; 1<=i && i<0 && ex2(i); id(i)) >= id(2);
+	    //@  assert (\max int i; 1<=i && i<0 && ex2(i); id(i)) >= id(2); // SHOULD FAIL
 	}
 	public void x5() {
-	    //@  assert (\max int i; 1<=i && i<10 && ex2(i); id(i)) == id(2);
+	    //@  assert (\max int i; 1<=i && i<10 && ex2(i); id(i)) == id(2); // SHOULD FAIL
 	}
 
 	public void m() {
-	    //@ assert (\min int i; 1<=i && i<10 && ex1(i); f(i)) <= f(2);
+	    //@ assert (\min int i; 1<=i && i<10 && ex1(i); f(i)) <= f(2); // SHOULD FAIL
 	}
 	public void m2() {
 	    //@  assert (\min int i; 1<=i && i<10 && ex2(i); id(i)) <= id(2);
@@ -40,10 +40,10 @@ public class Min {
 	    //@  assert (\min int i; 1<=i && i<10 && ex3(i); id(i)) == id(1);
 	}
 	public void m4() {
-	    //@  assert (\min int i; 1<=i && i<0 && ex2(i); id(i)) <= id(2);
+	    //@  assert (\min int i; 1<=i && i<0 && ex2(i); id(i)) <= id(2); // SHOULD FAIL
 	}
 	public void m5() {
-	    //@  assert (\min int i; 1<=i && i<10 && ex2(i); id(i)) == id(2);
+	    //@  assert (\min int i; 1<=i && i<10 && ex2(i); id(i)) == id(2); // SHOULD FAIL
 	}
 
 
