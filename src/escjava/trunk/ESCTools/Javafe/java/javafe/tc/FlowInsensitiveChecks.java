@@ -1545,7 +1545,7 @@ public class FlowInsensitiveChecks {
 
 
 	    /*
-	     * Otherwise, binary numeric promotion (§5.6.2) is applied
+	     * Otherwise, binary numeric promotion (5.6.2) is applied
 	     * to the operand types, and the type of the conditional
 	     * expression is the promoted type:
 	     */
@@ -1569,7 +1569,7 @@ public class FlowInsensitiveChecks {
 	 * If the second and third operands are of different reference
 	 * types, then it must be possible to convert one of the types
 	 * to the other type (call this latter type T) by assignment
-	 * conversion (§5.2); the type of the conditional expression
+	 * conversion (5.2); the type of the conditional expression
 	 * is T. It is a compile-time error if neither type is
 	 * assignment compatible with the other type.
 	 */
