@@ -48,7 +48,7 @@ import javafe.util.*;
 public class Main extends javafe.SrcTool
 {
     /** Our version number */
-    public final static String version = "(Nijmegen) 1.3, April 2003";
+    public final static String version = "(Nijmegen/Kodak) 1.3, 2003";
 
 
     // Global escjava flags
