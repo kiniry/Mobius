@@ -2,7 +2,7 @@
 @c %**start of header
 
 @setfilename Escjava2_Logic.info
-@settitle The Logic of ESC/Java2 $Revision$
+@settitle The Logics of ESC/Java2 $Revision$
 @c Other commands that globally affect the document formatting: 
 @c synindex, footnotestyle
 @afourwide
@@ -56,7 +56,7 @@ This document is a work in progress.  Suggestions and input are always
 welcome.
 
 @copying
-``The Logic of ESC/Java2'' is licensed under the Creative Commons
+``The Logics of ESC/Java2'' is licensed under the Creative Commons
 Attribution-NonCommercial-ShareAlike 2.0 license.  See
 @uref{http://creativecommons.org/licenses/by-nc-sa/2.0/}
 
@@ -114,9 +114,9 @@ See @uref{http://creativecommons.org/licenses/by-nc-sa/2.0/legalcode}
 @c %**title, contents, and copyright
 
 @titlepage
-@title The Logic of ESC/Java2
+@title The Logics of ESC/Java2
 @subtitle Edition $Revision$, May 2004
-@subtitle This document describes the logic of ESC/Java2 version 2.0a7.
+@subtitle This document describes the logics of ESC/Java2 version 2.0a7.
 @author Joseph R. Kiniry <kiniry@@cs.kun.nl>
 
 @c The following two commands start the copyright page.
@@ -124,7 +124,7 @@ See @uref{http://creativecommons.org/licenses/by-nc-sa/2.0/legalcode}
 @vskip 0pt plus 1filll
 @insertcopying
 
-Will be published by the Nijmegen Institute for Computing and Information
+To be published by the Nijmegen Institute for Computing and Information
 Science at the University of Nijmegen as technical report NIII-R04XX.
 See @uref{http://www.cs.kun.nl/research/reports/}
 @end titlepage
@@ -150,16 +150,15 @@ Specification Language, Kiniry
 @c segments above.
 @ifnottex
 @node Top, Introduction, (dir), (dir)
-@top The Logic of ESC/Java2
+@top The Logics of ESC/Java2
 
 @insertcopying
 @end ifnottex
 
-This document describes the logic of ESC/Java2. It describes axioms
-that are part of the logic (and thus are always included in the
-background predicate) and axioms that are introduced to the background
-predicate when the Java program being checked contains various
-constructs.
+This document describes the logics of ESC/Java2.  Each logic is described by:
+(a) a set of axioms that constitute the logic and are thus are always included in the
+background predicate), and (b) axioms that are introduced to the background
+predicate when the Java program being checked contains various constructs.
 
 @menu
 * Introduction::                An introduction to these homework exercises.
@@ -174,16 +173,21 @@ constructs.
 @c =============================================================================
 @c %**body
 
-@node Introduction, Preliminaries, Top, Top
+@node Introduction, Introduction, Top, Top
 @chapter Introduction
 
 @cindex Introduction
 
 When we introduce constants, predicates, and functions, we display an
-indented pseudo-declaration, which includes a signature.  These
+indented pseudo-declaration, which includes a signature.  
+
+When describing the untyped logic of SRC ESC/Java version 1, these
 signatures are just for our intuitive understanding, since the logic
-is untyped. @xref{PFC Index} summarizes all such pseudo-declarations
-in this document.
+of SRC ESC/Java is based upon the logic of Simplify, which is untyped.
+
+@xref{Untyped Construct Index} summarizes all such 
+pseudo-declarations in the untyped logic, as 
+documented in @ref{Untyped Logic}.
 
 We display axioms in itemized lists with a prefix like this:
 @itemize @bullet
@@ -215,8 +219,12 @@ which was in turn written under the heavy influence of Dave Detlefs's
 @emph{Logic of ESC/Modula-3}.
 
 @c =============================================================================
-@node Preliminaries, Types and Subtypes, Introduction, Top
-@chapter Preliminaries
+@node Untyped Logic, Untyped Construct Index, Introduction, Top
+@chapter An Untyped Logic
+
+@c =============================================================================
+@node Preliminaries, Types and Subtypes, Introduction, Introduction
+@section Preliminaries
 
 @cindex Preliminaries
 
@@ -234,7 +242,7 @@ and the motivation for some of our design decisions.
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @node Terms and predicates,  , Preliminaries, Preliminaries
-@section Terms and predicates
+@subsection Terms and predicates
 @cindex terms and predicates
 @cindex terms
 @cindex predicates
@@ -564,14 +572,14 @@ case splits suggested by it are given some priority over case splits suggested
 by ordinary axioms.
 
 @c =============================================================================
-@node Types and Subtypes, Types of Values, Preliminaries, Top
-@chapter Types and Subtypes
+@node Types and Subtypes, Types of Values, Preliminaries, Introduction
+@section Types and Subtypes
 
 @cindex Types and Subtypes
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @node Types, The subtype Predicate, Types and Subtypes, Types and Subtypes
-@section Types
+@subsection Types
 
 Java types are ordinary values in the logic of ESC/Java.  Although
 the logic is untyped, we informally think of these values as having type
@@ -632,7 +640,7 @@ This axiom is called the @emph{Distinct Types Axiom}.
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @node The subtype Predicate, incomparableClasses, Types, Types and Subtypes
-@section The subtype Predicate
+@subsection The subtype Predicate
 
 The logic includes a subtype predicate:
 @itemize
@@ -750,7 +758,7 @@ To see why this axiom is useful, see @ref{Final Type Axioms Example}.
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @node incomparableClasses, arrayTypes, The subtype Predicate, Types and Subtypes
-@section Disjointness of Incomparable
+@subsection Disjointness of Incomparable
 
 @emph{This section is not implemented.} It may be useful for examples such as 
 @ref{Try-Catch Example}@footnote{The axioms in this section are similar to some axioms
@@ -833,7 +841,7 @@ we introduce the axiom
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @node arrayTypes,  , incomparableClasses, Types and Subtypes
-@section Array Types
+@subsection Array Types
 
 Array types do not give rise to type constants.  Instead, the logic
 includes a function to produce an array type from an element type.
@@ -926,14 +934,14 @@ and @ref{Array Element Subtype Example}.
 @end itemize
 
 @c =============================================================================
-@node Types of Values, Allocation, Types and Subtypes, Top
-@chapter Types of Values
+@node Types of Values, Allocation, Types and Subtypes, Introduction
+@section Types of Values
 
 @cindex Types of Values
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @node isPredicate, casting, Types of Values, Types of Values
-@section The is Predicate
+@subsection The is Predicate
 
 To reason about the dynamic types of values, the logic includes the following
 predicate:
@@ -953,7 +961,7 @@ that modifies @code{v}.
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @node casting, Types of Primitive Values, isPredicate, Types of Values
-@section Casting
+@subsection Casting
 
 The logic contains a function that converts a value to a value of a specified
 type:
@@ -982,11 +990,11 @@ for them arises.
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @node Types of Primitive Values, typesOfObjects, casting, Types of Values
-@section Types of Primitive Values
+@subsection Types of Primitive Values
 
 @c -----------------------------------------------------------------------------
 @node booleanConstants, integerConstants, Types of Primitive Values, Types of Primitive Values
-@subsection Booleans
+@subsubsection Booleans
 
 For booleans, the logic contains two distinct constants:
 @itemize
@@ -1012,7 +1020,7 @@ we'll say more about our approach to handling booleans.
 
 @c -----------------------------------------------------------------------------
 @node integerConstants, Floating Point Values, booleanConstants, Types of Primitive Values
-@subsection Integers
+@subsubsection Integers
 
 To reason about the ranges of integer values, the logic includes the constants:
 @itemize
@@ -1171,7 +1179,7 @@ remains to be seen if practice calls for more axioms.}.
 
 @c -----------------------------------------------------------------------------
 @node Floating Point Values,  , integerConstants, Types of Primitive Values
-@subsection Floating Point Values
+@subsubsection Floating Point Values
 
 The ESC/Java logic is weak in its treatment of floating point values. The
 following are not implemented@footnote{What are the triggers?}.
@@ -1189,7 +1197,7 @@ according to the axioms about @var{array} in @ref{arrayTypes}.)
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @node typesOfObjects,  , Types of Primitive Values, Types of Values
-@section Types of Objects
+@subsection Types of Objects
 
 Every non-@code{null} object has a unique dynamic type, as determined
 by the @var{typeof} operator:
@@ -1218,7 +1226,7 @@ introduces the following stronger precondition:
 
 @c -----------------------------------------------------------------------------
 @node instantiableTypes, typesOfInstanceVariables, typesOfObjects, typesOfObjects
-@subsection Instantiable Types
+@subsubsection Instantiable Types
 
 The dynamic type of a non-@code{null} object must be an instantiable
 type.  The logic could includes a predicate
@@ -1253,7 +1261,7 @@ remainder of the logic.}:
 
 @c -----------------------------------------------------------------------------
 @node typesOfInstanceVariables, Types of Array Elements, instantiableTypes, typesOfObjects
-@subsection Types of Instance Variables
+@subsubsection Types of Instance Variables
 
 ESC/Java models instance variables (fields) as maps from objects to
 values.  Where in Java one writes the r-value @code{x.f}, the
@@ -1288,7 +1296,7 @@ logic, and may be beneficial to prover efficiency.
 
 @c -----------------------------------------------------------------------------
 @node Types of Array Elements,  , typesOfInstanceVariables, typesOfObjects
-@subsection Types of Array Elements
+@subsubsection Types of Array Elements
 
 ESC/Java models the state of all arrays using a single global variable
 called @var{elems}.  Where in Java one writes the r-value @code{a[i]},
@@ -1328,8 +1336,8 @@ believe that this treatment is harmless to the soundness of the logic,
 and may be beneficial to prover efficiency.
 
 @c =============================================================================
-@node Allocation, Locking, Types of Values, Top
-@chapter Allocation
+@node Allocation, Locking, Types of Values, Introduction
+@section Allocation
 
 @cindex Allocation
 
@@ -1341,7 +1349,7 @@ axioms are few and simple.
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @node Allocation Times of Objects, Closure of Allocatedness under Field Access, Allocation, Allocation
-@section Allocation Times of Objects
+@subsection Allocation Times of Objects
 
 Consider the following method:
 
@@ -1459,7 +1467,7 @@ the caller is concerned?}.
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @node Closure of Allocatedness under Field Access, Closure of Allocatedness under Array Access, Allocation Times of Objects, Allocation
-@section Closure of Allocatedness under Field Access
+@subsection Closure of Allocatedness under Field Access
 
 In Section 3.0, we introduced rules by which ESC/Java can verify that a
 newly allocated object is distinct from previous values of program variables. 
@@ -1558,7 +1566,7 @@ every with its definition.)
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @node Closure of Allocatedness under Array Access,  , Closure of Allocatedness under Field Access, Allocation
-@section Closure of Allocatedness under Array Access
+@subsection Closure of Allocatedness under Array Access
 
 The preceding subsection introduced machinery that formalizes the
 language invariant that @var{f}[@var{x}] is allocated whenever @var{x}
@@ -1586,8 +1594,8 @@ method call that modifies @var{elems}, and as an invariant of each
 loop that modifies @var{elems}.
 
 @c =============================================================================
-@node Locking, Domain-specific Axioms, Allocation, Top
-@chapter Locking
+@node Locking, Domain-specific Axioms, Allocation, Introduction
+@section Locking
 
 @cindex Locking
 
@@ -1726,8 +1734,8 @@ is used to check shared-variable accesses in @code{S}.  The function
 @var{store} is explained in @ref{Maps}.
 
 @c =============================================================================
-@node Domain-specific Axioms, PFC Index, Locking, Top
-@chapter Domain-specific Axioms
+@node Domain-specific Axioms,  , Locking, Introduction
+@section Domain-specific Axioms
 
 @cindex Domain-specific Axioms
 
@@ -1900,8 +1908,8 @@ chosen?}:
 @end itemize
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-@node Reflections of Predicates into Term Space,  , Domain-specific Axioms, Domain-specific Axioms
-@section Reflections of Predicates into Term Space
+@node Reflections of Predicates into Term Space, Other Domain-Specific Axioms, Domain-specific Axioms, Domain-specific Axioms
+@subsection Reflections of Predicates into Term Space
 
 The next set of axioms we discuss relates to an issue that arises in the
 translation. The guarded command language makes a strong distinction between
@@ -1930,18 +1938,24 @@ operators that produce booleans:
 @itemize
 @item
 @math{boolAnd :Predicate[value \times value]}
+@item
 @math{boolOr : Predicate[value \times value]}
+@item
 @math{boolNot : Predicate[value]}
+@item
 @math{boolEQ : Predicate[value \times value]}
+@item
 @math{floatingEQ : Predicate[value \times value]}
+@item
 @math{floatingLE : Predicate[value \times value]}
+@item
 @math{floatingLE : Predicate[value \times value]}
 @end itemize
 In this section, we discuss these functions and their axiomatizations.
 
 @c -----------------------------------------------------------------------------
 @node Reflected Boolean Connectives, Reflected Integer and Object Comparisons, Reflections of Predicates into Term Space, Reflections of Predicates into Term Space
-@subsection Reflected Boolean Connectives
+@subsubsection Reflected Boolean Connectives
 
 We start by describing a design decision related to the treatment of booleans. 
 Recall that in @ref{booleanConstants} we remarked
@@ -1979,17 +1993,18 @@ into term space, we use the functional form.)
 
 @c -----------------------------------------------------------------------------
 @node Reflected Integer and Object Comparisons, Reflected Floating-Point Comparisons, Reflected Boolean Connectives, Reflections of Predicates into Term Space
-@subsection Reflected Integer and Object Comparisons
+@subsubsection Reflected Integer and Object Comparisons
 
 To compare objects or integers for equality, the translator to
-Simplify generates the Simplify predicates EQ, < etc.  <BR>The Java
-operator @code{instanceof} is reflected by the user-defined predicate
+Simplify generates the Simplify predicates EQ, < etc.
+
+The Java operator @code{instanceof} is reflected by the user-defined predicate
 symbol @var{is}, which we have already described in 
 @ref{isPredicate}.
 
 @c -----------------------------------------------------------------------------
 @node Reflected Floating-Point Comparisons, Lifting Predicate Terms to Predicate Space, Reflected Integer and Object Comparisons, Reflections of Predicates into Term Space
-@subsection Reflected Floating-Point Comparisons
+@subsubsection Reflected Floating-Point Comparisons
 
 Comparing floating-point values is not the same as comparing integers,
 for two reasons.  For one thing, the Java expression @code{r} ==
@@ -2022,7 +2037,7 @@ ESC/Java and to add them only as the need becomes evident.
 
 @c -----------------------------------------------------------------------------
 @node Lifting Predicate Terms to Predicate Space, Reflecting the Conditional Operator, Reflected Floating-Point Comparisons, Reflections of Predicates into Term Space
-@subsection Lifting Predicate Terms to Predicate Space
+@subsubsection Lifting Predicate Terms to Predicate Space
 
 When a Java boolean variable @code{b} occurs in a context where a Java
 predicate is expected, as in the program fragment
@@ -2077,8 +2092,8 @@ at all.  However, see the discussion of the conditional operator in
 the next section.
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-@node Reflecting the Conditional Operator, Other Domain-Specific Axioms, Lifting Predicate Terms to Predicate Space, Reflections of Predicates into Term Space
-@subsection Reflecting the Conditional Operator
+@node Reflecting the Conditional Operator,  , Lifting Predicate Terms to Predicate Space, Reflections of Predicates into Term Space
+@subsubsection Reflecting the Conditional Operator
 
 Occurrences of the Java conditional operator @code{? : }in executable
 Java code pose no problems--the translation can handle these just as it
@@ -2116,8 +2131,8 @@ predicates into term space.  We therefore propose to restrict conditional
 expressions from containing such guards.
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-@node Other Domain-Specific Axioms,  , Reflecting the Conditional Operator, Reflections of Predicates into Term Space
-@section Other Domain-Specific Axioms
+@node Other Domain-Specific Axioms,  , Reflections of Predicates into Term Space, Domain-specific Axioms
+@subsection Other Domain-Specific Axioms
 
 There is a host of standard Java library classes, such as @code{String},
 @code{Thread}, and @code{Reflection}, whose specifications, one can
@@ -2137,10 +2152,11 @@ that says that all @code{String} lengths are non-negative.  We propose
 to add such functions and axioms only as the need becomes evident.
 
 @c =============================================================================
-@node PFC Index, Motivating Examples, Domain-specific Axioms, Top
-@appendix Index of Predicates, Functions, and Constants
+@node Untyped Construct Index, Motivating Examples, Introduction, Top
+@appendix Index of Constructs in Untyped Logic
 
 @cindex Index of Predicates, Functions, and Constants
+@cindex Index of Constructs in Untyped Logic
 
 @c Predicates (pindex) and constants (kindex) are mapped into the function
 @c index in the header.
@@ -2308,7 +2324,7 @@ From @ref{Reflecting the Conditional Operator}:
 @end itemize
 
 @c =============================================================================
-@node Motivating Examples, List of Possible Experiments, PFC Index, Top
+@node Motivating Examples, List of Possible Experiments, Untyped Construct Index, Top
 @appendix Motivating Examples, Functions, and Constants
 
 @cindex Motivating Examples
@@ -2472,9 +2488,9 @@ We give an example to motivate the final type axioms in
 @ref{The subtype Predicate}. Consider the method:
 
 @example
-void f(T[] a, T b) {
+void f(T[] a, T b) \{
   a[0] = b;
-}
+\}
 @end example
 
 Verifying this method requires ensuring that b is a subtype of the element
@@ -2517,9 +2533,9 @@ and then the second antecedent yields the desired consequent.
 Considering the following variant of example 1:
 
 @example
-void f(T[][] a, T[] b) {
+void f(T[][] a, T[] b) \{
   a[0] = b;
-}
+\}
 @end example
 
 Verifying this method requires ensuring that b is a subtype of the element
@@ -2571,21 +2587,21 @@ array axiom is to state that arrays of final classes are final.
 Considering the following example (from test8/trycatch2.java) 
 
 @example
-class Try2 {
-  void m1() throws Throwable {
+class Try2 \{
+  void m1() throws Throwable \{
     int x, y;
     Throwable t;
-    try {
+    try \{
       x = 0;
       //@ assume typeof(t) == type(Throwable);
       //@ assume t != null;
       throw t;
-    } catch (RuntimeException t3) {
+    \} catch (RuntimeException t3) \{
       x = 3;
-    }
+    \}
     //@ assert x == 0;
-  }
-}
+  \}
+\}
 @end example
 
 To verify this class, Esc/Java needs to prove that
