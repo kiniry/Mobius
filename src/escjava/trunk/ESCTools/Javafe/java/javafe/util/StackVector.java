@@ -158,6 +158,11 @@ public final class StackVector
 	return elements[currentStackBottom + i];
     }		//@ nowarn Post		// (thinks could be null)
 
+    public void setElementAt(Object o, int i)
+		/*throws ArrayIndexOutOfBoundsException*/ {
+	checkBounds(i);
+	elements[currentStackBottom + i] = o;
+    }	
 
     /**
      * Add x to the end of the top Vector. <p>
