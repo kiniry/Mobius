@@ -4,6 +4,7 @@ package javafe.parser;
 
 import javafe.ast.*;
 import javafe.util.StackVector;
+import javafe.Tool;
 
 /**
  * Parses java types.
@@ -36,12 +37,34 @@ public class ParseType extends ParseUtil
     //@ requires l.m_in != null
     //@ ensures \result != null
     public Identifier parseIdentifier(/*@non_null*/ Lex l) {
-	if( l.ttype != TagConstants.IDENT ) {
-            if ( l.ttype == TagConstants.UNKNOWN_KEYWORD)
+	if (l.ttype != TagConstants.IDENT) {
+            if (l.ttype == TagConstants.UNKNOWN_KEYWORD)
                 fail(l.startingLoc, 
                      "Expected an identifier; Unrecognized keyword");
-            else
-                fail(l.startingLoc, "Expected an identifier, found " + TagConstants.toString(l.ttype) );
+            else 
+                if (TagConstants.toString(l.ttype).equals("assert")) {
+                    // If the next identifier is "assert", we need to
+                    // handle it in a special fashion.  Tool.options
+                    // can be null if we are not running in a "real"
+                    // tool, as is the case during testing with
+                    // javafe.parser.test.TestParse.
+                    if ((Tool.options != null) && (Tool.options.assertIsKeyword)) {
+                        // if "assert" is a keyword, then it cannot be
+                        // used as an identifier.
+                        fail(l.startingLoc,
+                             "Expected an identifier, but found the \"assert\" keyword used as an identifier.");
+                    } else {
+                        // if "assert" is NOT a keyword, then it is ok
+                        // to use it as an identifier.
+                        Identifier r = l.identifierVal;
+                        l.getNextToken();
+                        return r;
+                    }
+                }
+            // Otherwise, we have seen something that is not an
+            // identifier and is not the twofaced "assert", so fail.
+            fail(l.startingLoc, "Expected an identifier, found " + 
+                 TagConstants.toString(l.ttype) );
 	}
 	Identifier r = l.identifierVal;
 	l.getNextToken();

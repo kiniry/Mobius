@@ -6,6 +6,7 @@ import javafe.ast.*;
 import javafe.util.StackVector;
 import javafe.util.Location;
 import javafe.util.Assert;
+import javafe.Tool;
 
 /**
  * <code>Parse</code> objects parse Java statements, creating AST
@@ -203,15 +204,22 @@ public abstract class ParseStmt extends ParseExpr
         int keywordloc = l.startingLoc;
         switch (ttype) {
             case TagConstants.ASSERT: { // 'assert' BoolExpr [ ':' NonVoidExpr ] ';'
+                // Only process if we are supposed to be parsing Java
+                // 1.4 or later.
+                if (!Tool.options.assertIsKeyword) {
+                    fail(l.startingLoc, "Java keyword \"assert\" is only supported if the" +
+                         "-source 1.4 option is provided.");
+                }
+                
                 l.getNextToken(); // Discard the keyword
-                Expr assertion = parseExpression(l);
+                Expr predicate = parseExpression(l);
                 Expr label = null;
                 if (l.ttype == TagConstants.COLON) {
                     l.getNextToken();
                     label = parseExpression(l);
                 }
                 expect(l, TagConstants.SEMICOLON);
-                seqStmt.addElement(AssertStmt.make(assertion, label, keywordloc));
+                seqStmt.addElement(AssertStmt.make(predicate, label, keywordloc));
                 return;
             }
       
