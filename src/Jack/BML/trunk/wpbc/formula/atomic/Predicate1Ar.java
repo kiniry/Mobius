@@ -1,0 +1,32 @@
+/*
+ * Created on Mar 1, 2004
+ *
+ * To change the template for this generated file go to
+ * Window>Preferences>Java>Code Generation>Code and Comments
+ */
+package formula.atomic;
+
+import bcexpression.Expression;
+import formula.Formula;
+
+/**
+ * @author mpavlova
+ *
+ * To change the template for this generated type comment go to
+ * Window>Preferences>Java>Code Generation>Code and Comments
+ */
+public class Predicate1Ar extends Predicate {
+	private Expression term;
+	private byte predicateSymbol;
+	
+	public Predicate1Ar(Expression _term, byte _predicateSymbol) {
+		setPredicateSymbol(_predicateSymbol);
+		term = _term;
+	} 
+	
+	public Expression getTerm() {
+		return  term;
+	}
+	
+	
+}
