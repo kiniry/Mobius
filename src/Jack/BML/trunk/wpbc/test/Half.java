@@ -13,15 +13,16 @@ package test;
  * Window - Preferences - Java - Code Style - Code Templates
  */
 public class Half {
+	
       //@ requires n >= 0;
 	  //@ ensures \result == \old(n)/2; 	 
 	public int half(int n) {
 		int a = 0;
 		int constant = n;
 		//@ loop_modifies n,a;
-		//@ loop_invariant constant==n+2*a;
+		//@ loop_invariant constant==n+2*a && n >= 0;
 		//@ decreases n;
-		while (n != 0) {
+		while (n > 1) {
 			a = a + 1;
 			n = n - 2;
 		}

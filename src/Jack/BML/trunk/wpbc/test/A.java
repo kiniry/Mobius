@@ -1,4 +1,7 @@
 package test;
+
+import org.apache.bcel.classfile.JavaClass;
+
 public class A {
 	public A b;
 	public A arr[] = new A[5];
@@ -34,6 +37,9 @@ public class A {
 /*			arr = new A[2];*/
 /*			arr = new A[3];*/
 			a1 = new A();
+			a2 = new A();
+			B b = new B(2, 3); // allocates 2
+			b.m2();
 			return a1.b.b;
 			
 		/*} catch (ArrayIndexOutOfBoundsException e) {
@@ -42,8 +48,36 @@ public class A {
 		}*/
 		/*throw new ArrayIndexOutOfBoundsException();*/
 		/*return a1.b.b;*/
-	} 
-	
+	}
+
+
+	/**
+	 * @return
+	 */
+	public boolean empty() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+	/**
+	 * @return
+	 */
+	public JavaClass dequeue() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	/**
+	 * @param a
+	 */
+	public void enqueue(A a) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
 
 	
 

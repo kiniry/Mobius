@@ -19,13 +19,15 @@ public class Modulo {
 	 */
 		//@ requires true;
 		//@ ensures \result == \old(i) % k;
-		public int mod(int i, int k) {
+		public static int mod(int i, int k) {
 			int constant = i;
 			
 			//@  loop_modifies i, s;
 			//@  loop_invariant constant == s * k + i ;
 			//@  decreases i;
-			for (int s = 0; true; s++) {
+			for (int s = 0;
+			true; 
+			s++) {
 				if (i <= k) {
 					break;
 				}
@@ -37,6 +39,9 @@ public class Modulo {
 			return i;
 		}
 		
+		public static void main(String[] args) {
+			mod(7,3);
+		} 
 		
 	/*	
 		 * this = loc(0) i = loc(1) k = loc(2) constant = loc(3) s = loc( 4 )

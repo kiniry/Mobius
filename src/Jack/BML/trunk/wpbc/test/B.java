@@ -19,10 +19,11 @@ public class B {
 	public int i;
 	public int[] array;
 	
-	public B(int length , int j) {
+	public B(int length , int j) { // allocates 1
 		array = new int[length];
 		array[j] = j ;
 		i = j;
+		A a = new A();//1
 	}
 	
 	public B(int[] _array , int j) {
@@ -35,7 +36,7 @@ public class B {
 	 //@ ensures \result.array == this.array;
 	 
 	public B m2() {
-		b = new B(array, i);
+		b = new B(array, i); // 1 unit 
 		return b;
 	}
 	

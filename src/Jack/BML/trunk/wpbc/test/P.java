@@ -14,7 +14,7 @@ package test;
  */
 public class P {
 	public P a;
-	public int b ;
+	public int b;
 	
 	//@requires p.b == 3;
 	//@ ensures p.a.a.a.b == 3;

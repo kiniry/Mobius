@@ -1,0 +1,15 @@
+( ( (5 >= 0) ==> ( ( ([ typeof ( ([I <- ref(18)) ) ref(18) ] <: [I) ==> 
+		( ( ( ( (ref(18) != null) && (0 < 5) ) ==> 
+					( ( ([ typeof ( ([I <- ref(18)) ) ref(18) ] <: [I) ==> 
+							( ( ( ( (ref(18) != null) && ( (5 > -2) && (-2 >= 0) ) ) ==> 
+										( ( ([ typeof ( ([I <- ref(18)) ) ref(18) ] <: [I) ==> 
+												( ( ( ( (ref(18) != null) && ( (5 > 0) && (0 >= 0) ) ) ==>
+													 ( ([ arrayAccess (  (1 <- ref(18)[0])  ) (arr: local(2) , ind: 0) != [ arrayAccess (  (1 <- ref(18)[0])  ) (arr: local(0) , ind: -2)) ==> (2 == 0) ) ) &&
+													 ( (ref(18) == null) ==> FALSE ) ) && ( ( (5 <= 0) || (0 < 0) ) ==> FALSE ) ) )
+													  && 
+( ( ! ([ typeof ( ([I <- ref(18)) ) ref(18) ] <: [I)) ==> FALSE ) ) ) && 
+( (ref(18) == null) ==> FALSE ) ) && ( ( (5 <= -2) || (-2 < 0) ) ==> FALSE ) ) ) && 
+( ( ! ([ typeof ( ([I <- ref(18)) ) ref(18) ] <: [I)) ==> FALSE ) ) ) && 
+( (ref(18) == null) ==> FALSE ) ) && ( (0 >= 5) ==> FALSE ) ) ) && 
+( ( ! ([ typeof ( ([I <- ref(18)) ) ref(18) ] <: [I)) ==> FALSE ) ) ) && 
+( (5 < 0) ==> FALSE ) )
