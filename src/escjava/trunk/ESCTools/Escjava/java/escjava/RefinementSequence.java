@@ -219,9 +219,12 @@ public class RefinementSequence extends CompilationUnit {
     }
  
     void combineFields(FieldDecl newfd, FieldDecl fd) {
-	// Check modifiers, pragmas -- FIXME
+	if (newfd.modifiers != fd.modifiers) {
+	    ErrorSet.error(newfd.getStartLoc(),
+		"Field has been redeclared with different Java modifiers",
+		fd.getStartLoc());
+	}
 	// DOes it matter if we duplicate pragmas ? -- FIXME
-	fd.modifiers |= newfd.modifiers;
 	if (newfd.pmodifiers != null) {
 	    if (fd.pmodifiers == null)
 		fd.pmodifiers = newfd.pmodifiers.copy();
@@ -520,10 +523,9 @@ public class RefinementSequence extends CompilationUnit {
 		for (int k=0; !found && k<td.elems.size(); ++k) {
 		    TypeDeclElem tdee = td.elems.elementAt(k);
 		    if (!(tdee instanceof GhostDeclPragma)) continue;
-		    if ( ((GhostDeclPragma)tde).decl.id.equals( ((GhostDeclPragma)tdee).decl.id)) {
-			tdee.setModifiers(tdee.getModifiers() | tde.getModifiers()); // trim & check
-			    // FIXME - check types and modifiers
-			    // FIXME - what about initializer ???
+		    GhostDeclPragma gg = (GhostDeclPragma)tdee;
+		    if ( g.decl.id.equals(gg.decl.id)
+			&& g.decl.modifiers == gg.decl.modifiers) {
 			combineFields( ((GhostDeclPragma)tde).decl,
 					((GhostDeclPragma)tdee).decl);
 			found = true;
@@ -548,9 +550,6 @@ public class RefinementSequence extends CompilationUnit {
 		    TypeDeclElem tdee = td.elems.elementAt(k);
 		    if (!(tdee instanceof ModelDeclPragma)) continue;
 		    if ( ((ModelDeclPragma)tde).decl.id.equals( ((ModelDeclPragma)tdee).decl.id)) {
-			tdee.setModifiers(tdee.getModifiers() | tde.getModifiers()); // trim & check
-			    // FIXME - check types and modifiers
-			// FIXME - what combining to do???
 			combineFields( ((ModelDeclPragma)tde).decl,
 					((ModelDeclPragma)tdee).decl);
 			found = true;
