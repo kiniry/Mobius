@@ -18,9 +18,11 @@
 
 package java.util;
 
+
 /** JML's specification of java.util.LinkedList.
  * @author Katie Becker
  * @author Gary T. Leavens
+ * @author Erik Poll
  */
 
 public class LinkedList extends AbstractSequentialList
@@ -28,48 +30,23 @@ public class LinkedList extends AbstractSequentialList
 {
 	
     /*@ public normal_behavior
-      @   assignable _theCollection;
-      @   ensures _theList != null && isEmpty();
+      @   ensures isEmpty();
       @*/
-    public LinkedList();
+    /*@ pure @*/ public LinkedList();
           
-    /* FIXME +@   public normal_behavior
-      @     requires c != null;
-      @     assignable theCollection;
-      @     ensures theList != null; 
-      @     ensures JMLEqualsSequence.convertFrom(c).equals(theList);
-      @ also
-      @   public exceptional_behavior
-      @     requires c == null;
-      @     assignable theCollection;
-      @     signals (Exception e) e instanceof NullPointerException;
-      @*/
     /*@   public normal_behavior
       @     requires c != null;
-      @     assignable _theCollection;
-      @     ensures _theList != null; 
-      @     ensures _theCollection == _theList;
+      @     assignable objectState;
       @ also
       @   public exceptional_behavior
       @     requires c == null;
-      @     assignable _theCollection;
       @     signals (Exception e) e instanceof NullPointerException;
       @*/
-    public LinkedList(Collection c);
+    /*@ pure @*/ public LinkedList(Collection c);
     
-    /* FIXME +@  public normal_behavior
-      @    requires !theList.isEmpty();
-      @    ensures (\result == null) || \typeof(\result) <: elementType;
-      @    ensures \result.equals(theList.itemAt(0));
-      @ also
-      @  public exceptional_behavior
-      @    requires theList.isEmpty();
-      @    signals (Exception e) e instanceof NoSuchElementException;
-      @*/
     /*@  public normal_behavior
       @    requires !isEmpty();
       @    ensures (\result == null) || \typeof(\result) <: elementType;
-      @    ensures \result.equals(_theList[0]);
       @ also
       @  public exceptional_behavior
       @    requires isEmpty();
@@ -77,57 +54,47 @@ public class LinkedList extends AbstractSequentialList
       @*/
     public /*@ pure @*/ Object getFirst();
     
-    /* FIXME +@  public normal_behavior
-      @    requires !theList.isEmpty();
+    /*@  public normal_behavior
+      @    requires !isEmpty();
       @    ensures (\result == null) || \typeof(\result) <: elementType;
-      @    ensures \result.equals(theList.itemAt((int)(theList.int_size()-1)));
       @ also
       @  public exceptional_behavior
-      @    requires theList.isEmpty();
+      @    requires isEmpty();
       @    signals (Exception e) e instanceof NoSuchElementException; 
       @*/
     public /*@ pure @*/ Object getLast();
 
-    /* FIXME +@  public normal_behavior
-      @    requires !theList.isEmpty();
-      @    assignable _theCollection;
-      @    ensures \result.equals(\old(theList.itemAt(0)));
-      @    ensures theList.equals(\old(theList).removeItemAt(0));
+    /*@  public normal_behavior
+      @    requires !isEmpty();
+      @     assignable objectState;
       @    ensures ((\result == null) || \typeof(\result) <: elementType);
       @ also
       @  public exceptional_behavior
-      @    requires theList.isEmpty();
+      @    requires isEmpty();
       @    assignable \nothing;
       @    signals (Exception e) e instanceof NoSuchElementException;
       @*/    
     public Object removeFirst();
  
-    /* FIXME +@  public behavior
-      @    requires !theList.isEmpty();
-      @    assignable _theCollection;
-      @    ensures \result.equals(\old(theList.itemAt((int)(theList.int_size()-1))));
-      @    ensures theList
-      @           .equals(\old(theList.removeItemAt((int)(theList.int_size()-1))));
+    /*@  public behavior
+      @    requires !isEmpty();
+      @     assignable objectState;
       @    ensures ((\result == null) || \typeof(\result) <: elementType);
       @ also 
       @  public exceptional_behavior
-      @    requires theList.isEmpty();
+      @    requires isEmpty();
       @    assignable \nothing;
       @    signals (Exception e) e instanceof NoSuchElementException;
       @*/     
     public Object removeLast();
   
-    /* FIXME +@ public normal_behavior
-      @   assignable _theCollection;
-      @   ensures theList.equals(\old(theList.insertFront(o)));
-      @   ensures_redundantly theList.itemAt(0).equals(o);
+    /*@ public normal_behavior
+      @     assignable objectState;
       @*/    
     public void addFirst(Object o);
 
-    /* FIXME +@ public normal_behavior
-      @   assignable _theCollection;
-      @   ensures theList.equals(\old(theList.insertBack(o)));
-      @   ensures_redundantly theList.itemAt((int)(theList.int_size()-1)).equals(o);
+    /*@ public normal_behavior
+      @     assignable objectState;
       @*/     
     public void addLast(Object o);
     
@@ -166,7 +133,7 @@ public class LinkedList extends AbstractSequentialList
     //@ pure
     public ListIterator listIterator(int index);
     
-    /* FIXME +@ also
+    /*@ also
       @   public normal_behavior
       @       ensures \result instanceof LinkedList && \fresh(\result)
       @          && ((LinkedList)\result).equals(this);
