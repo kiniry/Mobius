@@ -2,7 +2,7 @@
 
 # Need to source setup before calling gnumake
 
-all: clean depend escjava doc runtest prot
+all: clean depend escjava doc runtest
 
 zip: 
 	rm -f ${CLASSDIRECTORY}/escjava.zip
@@ -28,9 +28,6 @@ clean: cleanclasses
 
 cleanclasses:
 	cd classes; find . -name \*.class -exec \rm -f {} \;
-
-prot:
-	chmod -fR a+rwX .
 
 doc:	javadoc
 	cd java/escjava; ${MAKE} doc
@@ -102,5 +99,7 @@ escjava: source		# depend
 
 
 compile: escjava
-	(cd classes; swift -O2  ${JAVAFE_ROOT}/classes/javafe.zip `sed 's/\.java/\.class/' ../sources`  -o ${CLASSDIRECTORY}/compiled.zip)
+	(cd classes; swift -O2  ${ESCTOOLS_JARS}/javafe.jar \
+		`sed 's/\.java/\.class/' ../sources` \
+		-o ${CLASSDIRECTORY}/compiled.zip)
 
