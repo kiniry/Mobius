@@ -1,3 +1,119 @@
+2003-01-14  Joseph R. Kiniry  <kiniry@kind.cs.kun.nl>
+
+	* build.xml:
+	Refined reference to decsrc classfiles so that they are not deleted
+	during a "ant clean" invocation.  Fixed a reference to
+	javafe_root_dir.  Refined escjava compile targets.
+
+	* Escjava/setup.sh: New bash-version of setup file.
+
+	* Escjava/escj:
+	Standardized reference to /bin/tcsh and cleaned up command-line.
+
+	* Escjava/escwiz, Escjava/wizardreset:
+	Standardized reference to /bin/tcsh.
+
+	* Escjava/Makefile:
+	Removed bogus proc target and cleaned up compile target rule.
+
+	* Escjava/java/escjava/ast/GeneratedTags.java:
+	* Escjava/java/escjava/ast/Visitor.java:
+	Removed bogus imports that were for work-arounds in 1.0 compiler.
+
+	* Escjava/java/escjava/Makefile, Escjava/java/escjava/parser/Makefile:
+	Corrected reference to new test hierarchy location.
+
+	* Javafe/test/javafe/parser/test/Makefile:
+	* Javafe/test/javafe/test/PrintTest:
+	* Javafe/test/javafe/test/fe/do:
+	* Javafe/test/javafe/test/fe/doj:
+	* Javafe/test/javafe/test/fe/make_javac:
+	* Javafe/test/javafe/test/fe/make_outputs:
+	* Javafe/test/javafe/test/fe/sources:
+	* Javafe/test/javafe/test/fe/test1007/run:
+	* Javafe/test/javafe/test/fe/test6/ans:
+	* Javafe/test/javafe/test/runPrepJDK:
+	* Javafe/test/javafe/test/typecheckJDK:
+	* Javafe/test/javafe/test/typecheckJavafe:
+	Cleaned up Makefiles and scripts to refer to new, cleaned up
+	environment build variables; made scripts more readable and updated
+	them for JDK >= 1.1.
+
+	* Javafe/java/javafe/util/LocationManagerCorrelatedReader.java:
+	Updated call to Vector.add -> Vector.addElement to conform to JDK >= 1.1.
+
+	* Javafe/java/javafe/tc/FlowInsensitiveChecks.java:
+	Reformatted code according to modern conventions, cleaned up uses of
+	braces in case blocks, and made sure that the class compiles in all
+	Java compilers.
+
+	* Javafe/java/javafe/ast/Makefile:
+	Fixed astgen location to pre-defined root env variables JAVAFE_ROOT.
+
+	* Javafe/setup.sh:
+	Added JAVA_HOME definition and automatic path extension (based upon
+	JAVA_HOME).  Refined definitions of JDK_BINARIES, JDK_SOURCES, and the
+	dependent CLASSPATH.
+
+	* Javafe/Makefile:
+	Removed prot rule that botched permissions indiscriminately.  Tweaked
+	a path for new location of test code hierarchy.
+
+	* build.xml:
+	Changed default compiler to be the "classic" (JDK 1.1 or 1.2) compiler
+	so that we emit bytecodes that the (ancient) decsrc.util classes can
+	parse.  Refined excludes on javafe compilation to make sure to compile
+	javafe.test classes.
+
+	* */classes/**/*.class:
+	Removing all shipped classfiles as they are not useful and should not
+	be in the repository.
+
+2003-01-13  Joseph R. Kiniry  <kiniry@kind.cs.kun.nl>
+
+	* build.xml: Added new properties to denote top-level envelope and test
+	directories.  Added supplied decsrclib classpath to the
+	javafe_classpath.  Added creation of javadoc target directories to
+	initialize target.  Compile target now only depends upon those
+	envelopes that we need and build correctly at this time.  Changed
+	javac rules to attempt to generate 1.1 bytecodes with jikes and denote
+	that the input source is certainly not 1.4 code.  Added more cleanup
+	rules to delete escjava, houdini, and javafe jars files.
+
+	* Javafe/Makefile: Tweaks to support new test hierarchy reorganization.
+
+	* Javafe/sources:
+	Regenerated sources list necessary because of new test hierarchy
+	reorganization.
+
+	* Javafe/setup.sh: First version of bash setup script.
+
+	* Javafe/test/javafe/test/lex/Makefile:
+	Added conditional JAVA env var definition.
+
+	* Javafe/test/javafe/test/fe/Makefile:
+	* Javafe/test/javafe/test/fe/do:
+	* Javafe/test/javafe/test/fe/make_outputs:
+	Tweaks to support modernized environment and move of test code
+	hierarchy.  Setup test parses of source all major JDK releases.
+
+	* Javafe/java/javafe/tc/FieldDeclVec.java:
+	* Javafe/java/javafe/tc/MethodDeclVec.java:
+	* Javafe/java/javafe/tc/TypeSigVec.java:
+	Makefile sed-generated files.
+
+	* Javafe/test/javafe/parser/test/Makefile:
+	* Javafe/test/javafe/parser/test/jdk-1.0.2-files:
+	* Javafe/test/javafe/parser/test/jdk-1.1.18-files:
+	* Javafe/test/javafe/parser/test/jdk-1.2.2-files:
+	* Javafe/test/javafe/parser/test/jdk-1.3.1-files:
+	* Javafe/test/javafe/parser/test/jdk-1.4.1-files:
+	* Javafe/test/javafe/parser/test/jdk-files:
+	* Javafe/test/javafe/parser/test/jdk-files-bad:
+	Updated parser tests.  Support new test hierarchy location, test
+	parsing the source available for all JDKs from 1.0 to 1.4.  Removed
+	old JDK files list.
+
 2003-01-13  Joseph R. Kiniry  <kiniry@kind.cs.kun.nl>
 
 	* build.xml: Added new properties to denote top-level envelope and test
