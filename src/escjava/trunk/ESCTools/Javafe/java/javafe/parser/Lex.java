@@ -392,7 +392,8 @@ public class Lex extends Token
                 t != TagConstants.EOL_COMMENT) {
                 return t;
             }
-            else scanComment(t);
+            else { scanComment(t);
+	    }
         }
     }
 
@@ -786,8 +787,18 @@ public class Lex extends Token
 
             // Handle floating point literals in another subtroutine
             if (nextchr == '.') {
-                this.append(nextchr);
-                return finishFloatingPointLiteral(m_in.read());
+		m_in.mark();
+		int nextnextchr = m_in.read();
+		if (nextnextchr == '.') {
+		    // Two . in a row - cannot be a double so
+		    // back up 
+		    m_in.reset();
+		    // fall through and let the text so far be handled as
+		    // a integer literal
+		} else {
+		    this.append(nextchr);
+		    return finishFloatingPointLiteral(nextnextchr);
+		}
             } else if (nextchr == 'e' || nextchr == 'E'
                        || nextchr == 'F' || nextchr == 'f'
                        || nextchr == 'd' || nextchr == 'D')
