@@ -69,5 +69,3 @@ clean: $(ASTFILELIST)
 
 runtest:
 	echo No tests to do
-
- 

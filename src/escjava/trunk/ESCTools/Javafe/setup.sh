@@ -49,9 +49,6 @@ export LCLASSPATH=.:${CLASSES}
 #
 # which version of java:
 #
-
-unset JAVAVERSION
-#setenv	 JAVAVERSION	1.0.2
 export JAVA=java
 
 #
