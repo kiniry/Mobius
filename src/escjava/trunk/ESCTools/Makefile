@@ -292,6 +292,7 @@ jar:
 	cp -r ${ESCJAVA_CLASSFILES}/* ${RELTEMP}/sub
 	mkdir -p ${RELTEMP}/sub/junitutils
 	(cd ${ESCTOOLS_ROOT}/Utils/junitutils; cp `find . -name '*.class'` ${RELTEMP}/sub/junitutils)
+	( cd ${RELTEMP}/sub; rm -rf `find . -name CVS`; )
 	( cd ${RELTEMP}/sub; jar xf ../../jmlspecs.jar )
 	( cd ${RELTEMP}/sub; jar cmf ../../manifest.txt ../${RELJAR} *; )
 	##${JARMUPDATE} manifest.txt ${RELTEMP}/${RELJAR}
