@@ -1404,6 +1404,27 @@ public class EscPragmaParser extends Parse implements PragmaParser
                     noteUnsupportedCheckableJmlPragma(loc, tag);
                     return getNextPragma(dst);
 
+                case TagConstants.MODEL_PROGRAM: {
+                    // unclear syntax and semantics (cok/kiniry)
+		    // SKIP the compound statement
+		    expect(scanner,TagConstants.LBRACE);
+		    int braceCount = 1;
+		    while(true) {
+			scanner.getNextToken();
+			if (scanner.ttype == TagConstants.LBRACE) {
+			    ++braceCount;
+			} else if (scanner.ttype == TagConstants.RBRACE) {
+			    --braceCount;
+			    if (braceCount == 0) {
+				scanner.getNextToken();
+				break;
+			    }
+			}
+		    }
+		    return getNextPragma(dst);
+	        }
+
+
                 // The following clauses have an unknown syntax, so if they are
                 // seen then the ESC/Java parser will fail.
                 case TagConstants.CHOOSE_IF:
@@ -1412,8 +1433,6 @@ public class EscPragmaParser extends Parse implements PragmaParser
                     // unclear semantics (kiniry)
                 case TagConstants.INITIALIZER:
                     // SC AAST 4 unclear syntax and semantics (kiniry)
-                case TagConstants.MODEL_PROGRAM:
-                    // unclear syntax and semantics (cok/kiniry)
                 case TagConstants.OR:
                     // unclear semantics (kiniry)
                 case TagConstants.STATIC_INITIALIZER:
