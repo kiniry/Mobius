@@ -1411,11 +1411,10 @@ public class FlowInsensitiveChecks {
 
 		if (thisMethod ||
 		    ((TypeObjectDesignator)mi.od).type instanceof TypeName)
-		    ErrorSet.error(mi.locId,
-				  "An instance method may be invoked only via "
-				  + "an object and/or from a non-static"
-				  + " context or an inner class enclosed"
-				  + " by a type possessing that method.");
+		    ErrorSet.error(mi.locId, "An instance method may be invoked" +
+                                   " only via an object and/or from a non-static" +
+                                   " context or an inner class enclosed by a type" +
+                                   " possessing that method.");
 		else
 		    ErrorSet.error(mi.locId,
 				  "The instance methods of type "
