@@ -1,32 +1,66 @@
 #!/bin/bash
 
-# Check that the ESCTools directory exists and is in a fresh state.
+# Set the separator between directories in a file path
+PSEP=/
 
-# cd to the proper location above ESCTools.
+# TARDIR is set to the directory containing the tar files of the original
+# release
 
-# Unpack the toplevel so we have a directory structure.
-tar xjf ESCTools-2.0a0-10-08-03-TopLevel.tbz
+if [ $# != 0 ]; then
+    TARDIR=$1
+fi
+if [ "$TARDIR" == "" ]; then
+    echo Please supply a command-line argument to the install script that gives the location of the tar files for the original ESCTools
+    exit
+fi
+echo Using original tar files from ${TARDIR}
 
-# cd into the ESCTools directory.
-cd ESCTools
+# Presume that we are in the directory where the ESCTools are to be built
+# And that the patches are in this directory
+PATCH_DIR=.
+
+# Create a fresh directory structure of the original tools
+for t in ${TARDIR}${PSEP}*.tar; do
+    if [ "$t" != "${TARDIR}${PSEP}simplify.tar" ]; then
+	echo Untarring original $t
+	tar xf $t
+    fi
+done
+mkdir Simplify
+cd Simplify
+echo Untarring original $TARDIR${PSEP}simplify.tar
+tar xf $TARDIR${PSEP}simplify.tar
+cd ..
 
 # Apply each patch.
-bzcat ~/ESCTools-2.0a0-09-08-03-Calvin.patch.bz | patch -Np1
-bzcat ~/ESCTools-2.0a0-09-08-03-Escjava.patch.bz | patch -Np1
-bzcat ~/ESCTools-2.0a0-09-08-03-Houdini.patch.bz | patch -Np1
-bzcat ~/ESCTools-2.0a0-09-08-03-Javafe.patch.bz | patch -Np1
-bzcat ~/ESCTools-2.0a0-09-08-03-Rcc.patch.bz | patch -Np1
-bzcat ~/ESCTools-2.0a0-09-08-03-Simplify.patch.bz | patch -Np1
+for p in ${PATCH_DIR}${PSEP}/*.patch.bz ; do
+    echo Patching with $p
+    bzcat $p | patch -sNp1
+done
 
-# Unpack the zero-length files.
-tar xjf ESCTools-2.0a0-09-08-03-ZeroLengthFiles.tbz
+# Unpack the toplevel 
+echo Applying archives
+tar xjf ${PATCH_DIR}${PSEP}*-TopLevel.tbz
+tar xjf ${PATCH_DIR}${PSEP}*-ZeroLengthFiles.tbz
 
-# Have the user create their own Makefile.local.
 
-# Wait for them to finish.
+echo Removing empty files
+rm -rf `cat ${PATCH_DIR}${PSEP}*emptyFilesThatDisappeared`
+
+# Fix permissions on test files
+echo Fixing permissions
+chmod +x `find . -name run`
+chmod +x `find . -name rtestall`
+chmod +x `find . -name rtest`
+
+###### Have the user create their own Makefile.local.
+###### Wait for them to finish.
+
+export ESCTOOLS_ROOT=`pwd`
+unset JUNIT_LIB
+unset ESCJ_SIMPLIFY_DIR
+
+echo Building and testing the patched release in ${ESCTOOLS_ROOT}
 
 # Clean, build, and test the release.
-make clean build test
-
-
-
+make -s clean build test

@@ -32,8 +32,7 @@ export ESCJ_SIMPLIFY_DIR ?= ${ESCTOOLS_ROOT}/Escjava/release/master/bin
 ######### Set ESCJ_SIMPLIFY as appropriate
 ## (Caution: don't use tabs here, just spaces)
 
-ifndef ESCJ_SIMPLIFY
-    ifndef SIMPLIFY
+ifndef SIMPLIFY
         os = $(shell uname -s)
         ifeq ("${os}","Linux")
             export SIMPLIFY =  Simplify-1.5.4.linux
@@ -43,12 +42,11 @@ ifndef ESCJ_SIMPLIFY
             export SIMPLIFY =  Simplify-1.5.4.macosx
             $(warning Guessing a value for SIMPLIFY: ${SIMPLIFY})
         endif
-    endif
-    ifndef SIMPLIFY
-	$(error You must have SIMPLIFY defined, either as an environment variable or in the file Makefile.local in the same directory as Makefile.defs.  It should be defined to be the name of, not the path to, an appropriate Simplify executable in $ESCTOOLS_ROOT/Escjava/release/master/bin: os = ${os})
-    endif
-    export ESCJ_SIMPLIFY = ${ESCJ_SIMPLIFY_DIR}/${SIMPLIFY}
 endif
+ifndef SIMPLIFY
+	$(error You must have SIMPLIFY defined, either as an environment variable or in the file Makefile.local in the same directory as Makefile.defs.  It should be defined to be the name of, not the path to, an appropriate Simplify executable in $ESCTOOLS_ROOT/Escjava/release/master/bin: os = ${os})
+endif
+export ESCJ_SIMPLIFY = ${ESCJ_SIMPLIFY_DIR}/${SIMPLIFY}
 
 export ESCJ_SIMPLIFY_SCRIPT = ${ESCJAVA_ROOT}/simplify
 
@@ -80,7 +78,7 @@ export ESC_VERSION ?= CURRENT-CVS
 ## packages because the tools are used by each other (e.g. all tools use
 ## Javafe).
 
-export JAVADOC_GEN_DIR ?= ${ESCTOOLS_ROOT}/docs/api
+export JAVADOC_GEN_DIR = ${ESCTOOLS_ROOT}/docs/api
 
 ## Pertinent definitions for Javafe
 export JAVAFE_ROOT = ${ESCTOOLS_ROOT}/Javafe
@@ -99,7 +97,7 @@ export ESCJAVA_SOURCE_DIR = ${ESCJAVA_ROOT}/java
 export ESCJAVA_CLASSFILES = ${ESCJAVA_ROOT}/classfiles
 
 ## Paths to Mocha components
-export MOCHA_LIB ?= ${ESCTOOLS_ROOT}/jars/mochalib.jar
+export MOCHA_LIB = ${ESCTOOLS_ROOT}/jars/mochalib.jar
 
 ## This is the path needed to *run* Escjava.
 export ESCJAVA_CLASSPATH = ${JAVAFE_CLASSFILES}:${ESCJAVA_CLASSFILES}:${MOCHA_LIB}
@@ -115,11 +113,32 @@ export JDKSPEC_ROOT ?= ${ESCJAVA_ROOT}/release/master/specs
 ############################### Release
 ## Pertinent locations for building a release
 
+# Temp directory for constructing a binary rrelease
 export RELTEMP = ${ESCTOOLS_ROOT}/release-temp
+
+# Final directory in which to put binary and patch tar files
 export RELDIR  = ${ESCTOOLS_ROOT}/release
+
+# Binary release - name of jar file, name of release tar file
 export RELJAR  = esctools2.jar
-export RELTAR  = esctools2-${ESC_VERSION}.tgz
+export RELTAR  = esctools2-${ESC_VERSION}-binary.tbz
 export RELCLASSPATH = ${RELDIR}/${RELJAR}
+
+# Patch release - temp directory for generating a patch release
+export PATCH_DIR = ${ESCTOOLS_ROOT}/patches
+
+# The prefix of the name of the patch release tar file
+export PATCH_NAME = ${ESC_PROJECT}-${ESC_VERSION}-`date "+%d-%m-%y"`
+
+############################### Original ESCTools material
+
+# Directory containing the (uncompressed) tar files of the original
+# ESCTools and Simplify release
+export ORIGINAL_TAR_DIR ?= ${ESCTOOLS_ROOT}/../ESCTools-original-tars
+
+# Directory containing the original files of the original 
+# ESCTools and Simplify releases, as obtained from the tar files
+export ESCTOOLS_ORIGINAL ?= ${ESCTOOLS_ROOT}/../ESCTools.orig
 
 ############################### JUnit
 ## The location of the JUnit library as obtained from the JUnit project

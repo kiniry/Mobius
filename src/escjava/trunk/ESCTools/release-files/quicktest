@@ -26,7 +26,7 @@ if ( ! $?ESCTOOLS_RELEASE ) then
 endif
 
 cd $TMP
-echo "## Running with a bad argument to get a usage message"
+echo "## Running with a help argument to get a usage message"
 
 $ESCTOOLS_RELEASE/escj -help
 
@@ -44,7 +44,7 @@ rm -f A.java
 
 echo
 echo "## Now testing the escjava2 script"
-echo "## Running with a bad argument to get a usage message"
+echo "## Running with a help argument to get a usage message"
 
 $ESCTOOLS_RELEASE/escjava2 -help
 

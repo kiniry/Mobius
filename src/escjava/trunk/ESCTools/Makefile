@@ -17,8 +17,10 @@ include Makefile.defs
 ##	docs  - creates all docs; to get javadocs you must execute the
 ##		make from this directory
 ##	all   - does all of the above
-##	release - creates a release package
-##	release-notests - creates a release package without running tests
+##	patch-release - makes the tar file constituting a patch release
+##	binary-release - makes the tar file constituting a binary release
+##	releases-notests - makes both releases without doing any tests
+##	releases	- makes both releases with tests before and after
 ##
 ## You can run each of these in a subdirectory and only apply it to
 ## the code in that subdirectory, if you like.  Note though, that the
@@ -75,15 +77,21 @@ fix-perms:
 
 # To really clean, we need to clean Javafe last since some of its
 # tools are used in cleaning.
-.PHONY: clean clean-norel clean-release
+.PHONY: clean
 clean: clean-norel clean-release
 
+.PHONY: clean-release
 clean-release:
 	rm -rf ${RELDIR}
 
 # Cleans everything except the release directory
-clean-norel:
+.PHONY: clean-norel
+clean-norel: clean-norel-noreltemp
 	rm -rf ${RELTEMP}
+
+.PHONY: clean-norel-noreltemp
+clean-norel-noreltemp:
+	rm -rf ${PATCH_DIR}
 	for d in $(SUBDIRS) ; do \
 		if [ ! $$d == Javafe ]; then \
 		    ( $(MAKE) -C $$d clean || exit 1) ; fi ; \
@@ -124,59 +132,99 @@ javadoc:  build
 ## FIXME: get mocha right
 
 .PHONY: release
-release: 
-	@echo Making release version ${ESC_PROJECT}-${ESC_VERSION}
+releases: 
+	@echo Making and testing release version ${ESC_PROJECT}-${ESC_VERSION}
 	${MAKE} clean
-	${MAKE} patch
 	${MAKE} build
 	${MAKE} test
-	${MAKE} make-release
-	${MAKE} test-release
+	${MAKE} releases-notests
+	${MAKE} test-binary-release
+	${MAKE} test-patch-release
 
-.PHONY: patch
-patch:
+.PHONY: releases-notests
+releases-notests:
+	@echo Making - without testing - release version ${ESC_PROJECT}-${ESC_VERSION}
+	${MAKE} patch-release  ## does a clean as well
+	${MAKE} binary-release
+
+.PHONY: patch-release
+patch-release: clean
+	rm -rf ${PATCH_DIR}
+	mkdir -p ${PATCH_DIR}
 	${MAKE} generate-patches generate-toplevel-archive zero-length-files
+	cp ${ESCTOOLS_ROOT}/install.sh ${PATCH_DIR}
+	mkdir -p ${RELDIR}
+	cd ${PATCH_DIR}; tar cvjf ${RELDIR}/${PATCH_NAME}.tbz .
+	rm -rf ${PATCH_DIR}
 
-.PHONY: release-notest
-release-notest:
-	${MAKE} clean
-	${MAKE} patch
-	${MAKE} build
-	${MAKE} make-release
-
-.PHONY: make-release
-make-release:
-	@ echo MAKING RELEASE
-	rm -rf ${RELTEMP} ${RELDIR}
-	mkdir -p ${RELTEMP} ${RELDIR}
-	cp -r ${JAVAFE_CLASSFILES}/* ${RELTEMP}
-	cp -r ${ESCJAVA_CLASSFILES}/* ${RELTEMP}
-	cd ${RELTEMP}; jar cf ${RELDIR}/${RELJAR} *
-	${MAKE} clean-norel
-	${MAKE} -C Utils/junitutils build
+.PHONY: binary-release
+binary-release: build
+	mkdir -p ${RELDIR}
+	rm -rf ${RELTEMP}
 	mkdir -p ${RELTEMP}
-	cp ${ESCJAVA_ROOT}/escj ${RELDIR}
-	cp ${ESCJ_SIMPLIFY_DIR}/Simplify-1.5.4* ${RELDIR}
-	cp ${ESCJAVA_ROOT}/simplify ${RELDIR}/simplify-script
-	cp README.first README.txt ${RELDIR}
-	cd release-files; cp `ls | grep -v CVS` ${RELDIR}
-	cd ${RELDIR}; tar czvf ${RELTAR} *
+	mkdir -p ${RELTEMP}/sub
+	cp -r ${JAVAFE_CLASSFILES}/* ${RELTEMP}/sub
+	cp -r ${ESCJAVA_CLASSFILES}/* ${RELTEMP}/sub
+	cd ${RELTEMP}/sub; jar cf ../${RELJAR} *
+	rm -rf ${RELTEMP}/sub
+	${MAKE} clean-norel-noreltemp
+	${MAKE} -C Utils/junitutils build
+	cp ${ESCJAVA_ROOT}/escj ${RELTEMP}
+	cp ${ESCJ_SIMPLIFY_DIR}/Simplify-1.5.4* ${RELTEMP}
+	cp ${ESCJAVA_ROOT}/simplify ${RELTEMP}/simplify-script
+	cp README.first README.txt ${RELTEMP}
+	cd release-files; cp `ls | grep -v CVS` ${RELTEMP}
+	cd ${RELTEMP}; tar cjvf ${RELDIR}/${RELTAR} *
+	##rm -rf ${RELTEMP}
 
 ## FIXME - simplify script, simplify binary; alter escj to use alternate simplify script
 ## FIXME - also zip up the source and ship it as well.
 ## FIXME - tar the result; do we need an install file?  DO need install instructions and a README
 
-.PHONY: test-release
-test-release:
-	export ESCTOOLS_RELEASE=${RELDIR} ;\
+RELTEST = ${ESCTOOLS_ROOT}/release-test
+
+.PHONY: test-binary-release
+test-binary-release:
+	@echo Testing binary release
+	rm -rf ${RELTEST}
+	mkdir -p ${RELTEST}
+	cp ${RELDIR}/esctools2*binary.tbz ${RELTEST}
+	cd ${RELTEST} ;\
+	    tar xjf ${RELTEST}/*binary.tbz ;\
+	    ${RELTEST}/quicktest
+
+zzz:
+	    unset JUNIT_LIB; \
+	    unset ESCTOOLS_ROOT ; \
+	    unset ESCJ_SIMPLIFY_DIR; \
+	    export ESCTOOLS_RELEASE=${RELTEST} ;\
 	${MAKE} -C Javafe  test-release ;\
 	${MAKE} -C Escjava test-release 
 
+
+.PHONY: test-patch-release
+test-patch-release:
+	@echo Testing patch release
+	@echo test-patch-release target not yet functional
+	rm -rf ${RELTEST}
+	mkdir -p ${RELTEST}
+	##cd ${RELTEST}; \
+		##tar xvjf ${RELDIR}/*.tbz ;\
+		##./install.sh  ${ORIGINAL_TAR_DIR}
+		
+install:
+	cd ${RELTEST}; \
+		./install.sh  ${ORIGINAL_TAR_DIR}
+		
+
+
+
+
 ## For this target to work, you must unpack the original ESCTools
 ## archives (e.g., Calvin.tar.Z, Escjava.tar.Z, etc.) into a directory
-## "ESCTools.orig" that is adjacent to your "ESCTools" sandbox.  The
+## "${ESCTOOLS_ORIGINAL}" that is adjacent to your "ESCTools" sandbox.  The
 ## Simplify package must be unpacked into the directory
-## "ESCTools.orig/Simplify".  Then, this rule is run from the
+## "${ESCTOOLS_ORIGINAL}/Simplify".  Then, this rule is run from the
 ## directory above the two ESCTools{.orig} directories.
 
 ## These patches are used by unpacking the original
@@ -184,53 +232,64 @@ test-release:
 ## top-level directory "ESCTools" and running
 ##   bzcat ~/ESCTools-<version>-<date>-<envelope>.patch.bz | patch -Np1
 ## the appropriate number of times.
+
+PATCH_PREFIX = ${PATCH_DIR}/${PATCH_NAME}
 .PHONY: generate-patches
 generate-patches: clean
+	mkdir -p ${PATCH_DIR}
 	(cd ..; \
 	LC_ALL=C TZ=UTC0 diff -Naur --exclude=*.class --exclude=.#* --exclude=CVS \
-		--exclude=Simplify-1* ESCTools.orig/Calvin ESCTools/Calvin \
-		| bzip2 -9 > ${ESC_PROJECT}-${ESC_VERSION}-`date "+%d-%m-%y"`-Calvin.patch.bz; \
+		--exclude=Simplify-1* ${ESCTOOLS_ORIGINAL}/Calvin ESCTools/Calvin \
+		| bzip2 -9 > ${PATCH_PREFIX}-Calvin.patch.bz; \
 	LC_ALL=C TZ=UTC0 diff -Naur --exclude=*.class --exclude=.#* --exclude=CVS \
 		--exclude=Simplify-1* --exclude=javadoc \
-		ESCTools.orig/Escjava ESCTools/Escjava \
-		| bzip2 -9 > ${ESC_PROJECT}-${ESC_VERSION}-`date "+%d-%m-%y"`-Escjava.patch.bz; \
+		${ESCTOOLS_ORIGINAL}/Escjava ESCTools/Escjava \
+		| bzip2 -9 > ${PATCH_PREFIX}-Escjava.patch.bz; \
 	LC_ALL=C TZ=UTC0 diff -Naur --exclude=*.class --exclude=.#* --exclude=CVS \
-		ESCTools.orig/Houdini ESCTools/Houdini \
-		| bzip2 -9 > ${ESC_PROJECT}-${ESC_VERSION}-`date "+%d-%m-%y"`-Houdini.patch.bz; \
+		${ESCTOOLS_ORIGINAL}/Houdini ESCTools/Houdini \
+		| bzip2 -9 > ${PATCH_PREFIX}-Houdini.patch.bz; \
 	LC_ALL=C TZ=UTC0 diff -Naur --exclude=*.class --exclude=.#* --exclude=CVS \
-		ESCTools.orig/Javafe ESCTools/Javafe \
-		| bzip2 -9 > ${ESC_PROJECT}-${ESC_VERSION}-`date "+%d-%m-%y"`-Javafe.patch.bz; \
+		${ESCTOOLS_ORIGINAL}/Javafe ESCTools/Javafe \
+		| bzip2 -9 > ${PATCH_PREFIX}-Javafe.patch.bz; \
 	LC_ALL=C TZ=UTC0 diff -Naur --exclude=*.class --exclude=.#* --exclude=CVS \
-		ESCTools.orig/Rcc ESCTools/Rcc \
-		| bzip2 -9 > ${ESC_PROJECT}-${ESC_VERSION}-`date "+%d-%m-%y"`-Rcc.patch.bz; \
+		${ESCTOOLS_ORIGINAL}/Rcc ESCTools/Rcc \
+		| bzip2 -9 > ${PATCH_PREFIX}-Rcc.patch.bz; \
 	LC_ALL=C TZ=UTC0 diff -Naur --exclude=PPC_DARWIN --exclude=.#* --exclude=CVS \
 		--exclude=*.dylib --exclude=*.a --exclude=*.io --exclude=*.mo \
-		ESCTools.orig/Simplify ESCTools/Simplify \
-		| bzip2 -9 > ${ESC_PROJECT}-${ESC_VERSION}-`date "+%d-%m-%y"`-Simplify.patch.bz; \
+		${ESCTOOLS_ORIGINAL}/Simplify ESCTools/Simplify \
+		| bzip2 -9 > ${PATCH_PREFIX}-Simplify.patch.bz; \
 	)
 
 .PHONY: generate-toplevel-archive
 generate-toplevel-archive: clean
+	rm -rf ${RELTEMP}
 	mkdir -p ${RELTEMP}/ESCTools
-	cp ${ESCTOOLS_ROOT}/ChangeLog ${ESCTOOLS_ROOT}/Makefile ${ESCTOOLS_ROOT}/Makefile.defs \
-		${ESCTOOLS_ROOT}/Makefile.local.sample ${ESCTOOLS_ROOT}/README.first ${ESCTOOLS_ROOT}/README.txt \
-		${ESCTOOLS_ROOT}/TODO.kotl ${ESCTOOLS_ROOT}/build.xml ${ESCTOOLS_ROOT}/clean_env.sh ${RELTEMP}/ESCTools
+	cp ${ESCTOOLS_ROOT}/ChangeLog ${ESCTOOLS_ROOT}/Makefile \
+		${ESCTOOLS_ROOT}/Makefile.defs \
+		${ESCTOOLS_ROOT}/Makefile.local.sample \
+		${ESCTOOLS_ROOT}/README.first ${ESCTOOLS_ROOT}/README.txt \
+		${ESCTOOLS_ROOT}/TODO.kotl ${ESCTOOLS_ROOT}/build.xml \
+		${ESCTOOLS_ROOT}/clean_env.sh ${RELTEMP}/ESCTools
 	cp -r ${ESCTOOLS_ROOT}/docs ${RELTEMP}/ESCTools
 	cp -r ${ESCTOOLS_ROOT}/Utils ${RELTEMP}/ESCTools
 	cp -r ${ESCTOOLS_ROOT}/jars ${RELTEMP}/ESCTools
 	mkdir -p ${RELTEMP}/ESCTools/Escjava/release/master/bin
-	cp ${ESCTOOLS_ROOT}/Escjava/release/master/bin/Simplify-1.5.4.macosx ${RELTEMP}/ESCTools/Escjava/release/master/bin
-	-find ${RELTEMP} -name "CVS" -exec rm -rf {} \;  >& /dev/null
+	cp ${ESCTOOLS_ROOT}/Escjava/release/master/bin/Simplify-1.5.4.macosx \
+		${RELTEMP}/ESCTools/Escjava/release/master/bin
+	-find ${RELTEMP} -name "CVS" -exec rm -rf {} \;  >& /dev/null 
 	(cd ${RELTEMP}/ESCTools; \
-		tar cjf ${ESCTOOLS_ROOT}/../${ESC_PROJECT}-${ESC_VERSION}-`date "+%d-%m-%y"`-TopLevel.tbz \
-		. ;)
+	    tar cjf ${PATCH_PREFIX}-TopLevel.tbz \
+	    . \
+	    ;) 
 	rm -rf ${RELTEMP}/ESCTools
 
 ## Until we can figure out how to have diff/patch detect and generate
 ## 0 length files, we have to archive them up all independently.
 .PHONY: zero-length-files
 zero-length-files:
+	mkdir -p ${PATCH_DIR}
 	cd ${ESCTOOLS_ROOT}; \
-	tar cjf ../${ESC_PROJECT}-${ESC_VERSION}-`date "+%d-%m-%y"`-ZeroLengthFiles.tbz \
-		`find . -size 0`
+	tar cjf ${PATCH_PREFIX}-ZeroLengthFiles.tbz \
+		`find . -empty -not -name .M3SHIP`
+	( cd ${ESCTOOLS_ROOT}; for f in `cd ${ESCTOOLS_ORIGINAL}; find . -empty`; do if [ ! -e $$f ]; then echo $$f; fi; done ) > ${PATCH_PREFIX}-emptyFilesThatDisappeared
 

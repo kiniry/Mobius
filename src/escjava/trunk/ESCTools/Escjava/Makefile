@@ -351,7 +351,7 @@ test-release:
 		ALLTESTS=1 \
 		ESCJ=${RELDIR}/escj \
 		ESC_CLASSPATH=${RELCLASSPATH} \
-		ESCJ_SIMPLIFY=${RELDIR}/${SIMPLIFY} \
+		ESCJ_SIMPLIFY_DIR=${RELDIR} \
 		ESCJ_SIMPLIFY_SCRIPT=${RELDIR}/simplify-script \
 		tests
 
