@@ -1,0 +1,68 @@
+ESC/Java version VERSION
+  Prover started:TIME
+
+ParsePure ...
+
+ParsePure: m() ...
+    [TIME]  passed
+
+ParsePure: m1() ...
+    [TIME]  passed
+
+ParsePure: m2() ...
+    [TIME]  passed
+
+ParsePure: m3() ...
+    [TIME]  passed
+
+ParsePure: n() ...
+    [TIME]  passed immediately
+
+ParsePure: n1() ...
+    [TIME]  passed immediately
+
+ParsePure: n2() ...
+    [TIME]  passed immediately
+
+ParsePure: n3() ...
+    [TIME]  passed immediately
+
+ParsePure: ParsePure() ...
+    [TIME]  passed
+
+ParsePure: p() ...
+    [TIME]  passed
+
+ParsePure: q() ...
+    [TIME]  passed immediately
+  [TIME total]
+
+A ...
+ParsePure.java:25: Error: Method must be declared pure since it implements a pure method ("ParsePure.java", line 43, col 1)
+        public void a() {}
+        ^
+ParsePure.java:26: Error: Method must be declared pure since it implements a method in an interface that is pure ("ParsePure.java", line 48, col 0)
+        public void b() {}
+        ^
+ParsePure.java:27: Error: Method must be declared pure since it overrides a pure method ("ParsePure.java", line 32, col 1)
+        public void c() {}
+        ^
+ParsePure.java:28: Error: Method must be declared pure since it overrides a method in a class that is pure ("ParsePure.java", line 36, col 0)
+        public void d() {}
+        ^
+Caution: Turning off extended static checking due to type error(s)
+  [TIME total] (aborted)
+
+B ...
+  [TIME total]
+
+D ...
+  [TIME total]
+
+C ...
+  [TIME total]
+
+E ...
+  [TIME total]
+1 caution
+4 errors

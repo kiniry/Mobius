@@ -1,0 +1,23 @@
+ESC/Java version VERSION
+  Prover started:TIME
+
+ParseOld ...
+
+ParseOld: m() ...
+------------------------------------------------------------------------
+ParseOld.java:11: Warning: Postcondition possibly not established (Post)
+        }
+        ^
+Associated declaration is "ParseOld.java", line 7, col 5:
+        //@ ensures j == \old(i);
+            ^
+Execution trace information:
+    Executed implicit return in "ParseOld.java", line 11, col 1.
+
+------------------------------------------------------------------------
+    [TIME]  failed
+
+ParseOld: ParseOld() ...
+    [TIME]  passed
+  [TIME total]
+1 warning
