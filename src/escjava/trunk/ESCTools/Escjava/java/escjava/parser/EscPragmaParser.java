@@ -963,6 +963,7 @@ try{
 		    break;
 		}
 
+		case TagConstants.WRITABLE:
 		case TagConstants.READABLE:{
 		    checkNoModifiers(tag,loc);
 		   do {
@@ -972,7 +973,8 @@ try{
 		    Expr cond = null;
 		    if (t != TagConstants.IF) {
 			ErrorSet.error(scanner.startingLoc,
-			    "A readable clause requires an if predicate");
+			    "A " + TagConstants.toString(tag) + 
+			    " clause requires an if predicate");
 			e = null;
 		    } else {
 			scanner.getNextToken();
@@ -990,12 +992,6 @@ try{
 		    if (scanner.ttype != TagConstants.COMMA) break;
 		    scanner.getNextToken(); // skip comma
 		   } while (true);
-/*
-		    if (!getPragma(dst)) {
-			expect(scanner,TagConstants.SEMICOLON);
-			return getNextPragmaHelper(dst);
-		    }
-*/
 		    semicolonExpected = true;
 		    break;
 		}

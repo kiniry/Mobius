@@ -51,7 +51,8 @@ public class TagConstants extends GeneratedTags
     public static final int CHKASSERT = CHKARRAYSTORE + 1;
     public static final int CHKCLASSCAST = CHKASSERT + 1;
     public static final int CHKCODEREACHABILITY = CHKCLASSCAST + 1;
-    public static final int CHKCONSTRAINT = CHKCODEREACHABILITY + 1;
+    public static final int CHKCONSISTENT = CHKCODEREACHABILITY + 1;
+    public static final int CHKCONSTRAINT = CHKCONSISTENT + 1;
     public static final int CHKCONSTRUCTORLEAK = CHKCONSTRAINT + 1;
     public static final int CHKDECREASES_BOUND = CHKCONSTRUCTORLEAK + 1;
     public static final int CHKDECREASES_DECR = CHKDECREASES_BOUND + 1;
@@ -233,7 +234,8 @@ public class TagConstants extends GeneratedTags
     public static final int UNREACHABLE = UNINITIALIZED + 1;
     public static final int WRITABLE_DEFERRED = UNREACHABLE + 1;
     public static final int WRITABLE_IF = WRITABLE_DEFERRED+ 1;
-    public static final int SKOLEM_CONSTANT = WRITABLE_IF + 1;
+    public static final int WRITABLE = WRITABLE_IF + 1;
+    public static final int SKOLEM_CONSTANT = WRITABLE + 1;
 
     public static final int BIGINT = SKOLEM_CONSTANT + 1;
     public static final int WACK_DURATION = BIGINT + 1;
@@ -690,6 +692,7 @@ public class TagConstants extends GeneratedTags
         "Assert",
         "Cast",
         "Reachable",
+	"Inconsistent",
 	"Constraint",
         "CLeak",
         "DecreasesBound",
@@ -852,6 +855,7 @@ public class TagConstants extends GeneratedTags
         Identifier.intern("unreachable"),
         Identifier.intern("writable_deferred"),
         Identifier.intern("writable_if"),
+        Identifier.intern("writable"),
         Identifier.intern("skolem_constant"),
         Identifier.intern("\\bigint"),
         Identifier.intern("\\duration"),

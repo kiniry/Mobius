@@ -1549,6 +1549,7 @@ FIXME - see uses of countFreeVarsAccess
 		break;
 	    }
 
+	    case TagConstants.WRITABLE:
 	    case TagConstants.READABLE: {
                 NamedExprDeclPragma emp = (NamedExprDeclPragma)e;
 	    
@@ -1556,22 +1557,28 @@ FIXME - see uses of countFreeVarsAccess
 		Env newenv = rootIEnv;
 		emp.target = checkDesignator(newenv, emp.target);
 		isSpecDesignatorContext = false;
+		emp.expr = checkPredicate(newenv, emp.expr);
 		switch (emp.target.getTag()) {
 		    case TagConstants.FIELDACCESS: {
 			FieldAccess fa = (FieldAccess)emp.target;
 			if (fa.decl != null &&
-			    Modifiers.isFinal(fa.decl.modifiers) &&
 			    // The array "length" field has already been checked
 			    // insuper.checkDesignator().
 			    fa.decl != Types.lengthFieldDecl) {
 
-			    // java.lang.System has fields in, out, err that are special
-			    // cases.  Somehow, Java allows them to be final and yet be
-			    // modified by public routines.  Instead of a general 
-			    // mechanism, we just do a special case here.
-			    if (fa.decl.parent != Types.javaLangSystem().getTypeDecl())
-				ErrorSet.caution(fa.locId, "a final field is not allowed as " +
-				       "the designator in a modifies clause");
+			    if (tag == TagConstants.WRITABLE &&
+				Modifiers.isFinal(fa.decl.modifiers)) {
+					// FIXME
+			    }
+			    fa.decl.pmodifiers.addElement(
+				ExprModifierPragma.make(
+				    emp.tag == TagConstants.READABLE ?
+					TagConstants.READABLE_IF:
+					TagConstants.WRITABLE_IF,
+				    emp.expr,
+				    emp.loc
+				)
+			    );
 			}
 			break;
 		    }
@@ -1582,6 +1589,7 @@ FIXME - see uses of countFreeVarsAccess
 		    case TagConstants.EVERYTHINGEXPR:
 		    case TagConstants.NOTHINGEXPR:
 		    case TagConstants.NOTSPECIFIEDEXPR:
+			// FIXME - not implemented
 			break;
 
 		    default:
@@ -1596,7 +1604,6 @@ FIXME - see uses of countFreeVarsAccess
 			   emp.target = null;
 			}
 		}
-		emp.expr = checkExpr(newenv, emp.expr);
 		break;
 	    } 
 
@@ -1913,6 +1920,7 @@ FIXME - see uses of countFreeVarsAccess
 		}
 		break;
 
+	    case TagConstants.WRITABLE_IF:
             case TagConstants.READABLE_IF:
                 {
                     ExprModifierPragma emp = (ExprModifierPragma)p;
@@ -1920,32 +1928,8 @@ FIXME - see uses of countFreeVarsAccess
                     if( ctxt.getTag() != TagConstants.FIELDDECL
                         && ctxt.getTag() != TagConstants.LOCALVARDECL ) {
                         ErrorSet.error(p.getStartLoc(),
-                                       "The readable_if annotation can occur only on "
-                                       +"field declarations and "
-                                       +"local variable declarations");
-                    }
-
-                    int oldAccessibilityLowerBound = accessibilityLowerBound;
-                    ASTNode oldAccessibilityContext = accessibilityContext;
-                    if (ctxt.getTag() == TagConstants.FIELDDECL) {
-                        FieldDecl fd = (FieldDecl)ctxt;
-                        accessibilityLowerBound = getAccessibility(fd.modifiers);
-                        accessibilityContext = fd;
-                    }
-                    emp.expr = checkPredicate(env, emp.expr);
-                    accessibilityLowerBound = oldAccessibilityLowerBound;
-                    accessibilityContext = oldAccessibilityContext;
-                    break;
-                }
-
-            case TagConstants.WRITABLE_IF:
-                {
-                    ExprModifierPragma emp = (ExprModifierPragma)p;
-
-                    if( ctxt.getTag() != TagConstants.FIELDDECL
-                        && ctxt.getTag() != TagConstants.LOCALVARDECL ) {
-                        ErrorSet.error(p.getStartLoc(),
-                                       "The writable_if annotation can occur only on "
+                                       "The " + TagConstants.toString(tag)
+				       +" annotation can occur only on "
                                        +"field declarations and "
                                        +"local variable declarations");
                     }
