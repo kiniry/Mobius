@@ -42,6 +42,15 @@ public abstract class Query {
     //@ requires \nonnullelements(P)
     public abstract GenericFile findFile(String[] P, String typename,
 					String extension);
+    public abstract GenericFile findFile(String[] P, String filename);
+
+    /** Locates a file with given package, typename, and one of the given
+      * extensions; the first directory on the search path containing a 
+      * candidate file is used - within that directory, extensions near the
+      * beginning of the extensions Vector take precedence.
+      */
+    public abstract GenericFile findFile(String[] P, String typename,
+					String[] extensions);
 
 
     /***************************************************

@@ -76,15 +76,34 @@ public class SlowQuery extends Query {
      */
     public GenericFile findFile(String[] P, String typename,
 					String extension) {
+	return findFile(P,typename+"."+extension);
+    }
+
+    public GenericFile findFile(String[] P, String filename) {
 	Tree Package = getPackage(P);
 	if (Package==null)
 	    return null;
 
-	Tree node = Package.getChild(typename+"."+extension);
+	Tree node = Package.getChild(filename);
 	if (node==null)
 	    return null;
 
 	return (GenericFile)node.data;		//@ nowarn Cast
+    }
+
+    public GenericFile findFile(String[] P, String typename,
+					String[] extensions) {
+// FIXME - only utilizes the first package
+	Tree Package = getPackage(P);
+	if (Package==null)
+	    return null;
+
+        for (int i=0; i<extensions.length; ++i) {
+	    String extension = extensions[i];
+	    Tree node = Package.getChild(typename+"."+extension);
+	    if (node!=null) return (GenericFile)node.data; //@ nowarn Cast
+	}
+	return null;
      }
 
 
