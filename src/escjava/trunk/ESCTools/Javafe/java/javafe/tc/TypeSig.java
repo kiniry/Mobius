@@ -296,6 +296,9 @@ public class TypeSig extends Type
     //@ invariant map.elementType == \type(TypeSig)
     private static final Hashtable map = new Hashtable(101);
 
+    public static final void clear() {
+	map.clear();
+    }
 
     /**
      * Compute the key for map for fully-qualified type P.T.
