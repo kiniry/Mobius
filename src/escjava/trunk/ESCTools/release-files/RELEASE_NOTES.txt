@@ -1,19 +1,49 @@
-version 2.0a7
+-------------------------------------------------------------------
+version 2.0a7 "ECOOP 2004 Release" (18 June 2004)
 
 New features include:
+  o The first few dozen pages of a book containing a set of homework
+    exercises for learning JML and ESC/Java2.
+  o New slides for learning JML and ESC/Java2 that can be used in
+    coursework and tutorials.
+  o Three new papers on ESC/Java2.
+  o An initial ESC/Java2 Ant task.
+  o Initial support of \min and \max quantifiers.
+  o Improvements to error messages.
+  o Initial support of readable and writable constructs.
+  o Improved organization of ESC/Java2 GUI.
 
 The following bugs are FIXED in this release:
-  [        ] summary
+  [ 970242 ] Incompleteness of checking frame axioms.
+  [ 955950 ] Modifies clause checking with multiple spec blocks.
+  [ 955779 ] NPE in escjava.translate.TrAnExpr.trSpecExprI
+  [ 924302 ] A type error due to Pattern
 
-
-The following bugs are known to STILL EXIST in this release:
-  [ 821466 ] Unexpected output from Simplify
-  [ 866268 ] Scripts should warn when specified paths do not exist
-  [ 868258 ] Unit test Desugaring.java OS-dependency
-  [ 876093 ] Supplying the same command-line switch multiple times
-  [ 879832 ] Implicit constructor postconditions
-  [ 879849 ] SecurityKey & KeySet example
+The following bugs are known to EXIST in this release:
+  [ 975253 ] Model variables lacking depends clauses
+  [ 970237 ] Exceptional termination checking with lightweight specs.
+  [ 970234 ] Incompleteness of integral type bound axioms?
+  [ 970216 ] Modular checking in the presense of modifies \everything
+  [ 970215 ] Add Java Card support.
+  [ 965748 ] Bitwise operations need to be reviewed.
+  [ 962110 ] Add switch to print out number of VC variables and/or terms
+  [ 961155 ] Binary release needs documentation removed
+  [ 959396 ] Verifying assertions in the presense of inheritance.
+  [ 958836 ] Use of maps clause with array member attributes.
+  [ 930747 ] behavior of + on Strings
+  [ 924986 ] Self-checking Javafe
+  [ 924856 ] Example escjava2 tcsh script fails on paths w whitespace
   [ 888368 ] remaining scope problem with java/jml fields
+  [ 879849 ] SecurityKey &amp; KeySet example.
+  [ 879832 ] Implicit constructor postconditions.
+  [ 876972 ] NullPointerException by ESC/Java-2.0a5
+  [ 876093 ] Supplying the same command-line switch multiple times.
+  [ 868258 ] Unit test Desugaring.java OS-dependency.
+  [ 866268 ] Scripts should warn when specified paths do not exist.
+  [ 821466 ] Unexpected output from Simplify
+  [ 785972 ] Constant field initialization and refinement.
+  [ 781465 ] Predicate abstraction should work in ESC/Java
+  [ 779747 ] Model imports change name resolution
 
 The following feature requests are still unfulfilled:
   [ 919162 ] model methods in interfaces
@@ -22,7 +52,7 @@ The bug tracking system is available via
   http://sourceforge.net/tracker/?func=browse&group_id=65346&atid=510629
 
 -------------------------------------------------------------------
-version 2.0a6
+version 2.0a6 (29 March 2004)
 
 New features include:
   o Improved implementation of reasoning with model variables.
@@ -31,12 +61,24 @@ New features include:
   o Corrected behavior of static on invariants, etc.
 
 The following bugs are FIXED in this release:
-  [ 781415 ] \TYPE and java.lang.Class should be the same
-  [ 919276 ] weird errors when throw new RuntimeException
-  [ 919359 ] Correct paths mentioned in README to User's Guide
   [ 924295 ] A type error in Object.jml
-  [ 924302 ] A type error due to Pattern
+  [ 919359 ] Correct paths mentioned in README to User's Guide
+  [ 919276 ] weird errors when throw new RuntimeException
+  [ 873857 ] Assertion failure in LocationManagerCorrelatedReader.
+  [ 870729 ] ESC/Java2 message about calls is confusing
+  [ 866572 ] Scripts should warn when specified paths do not exist.
+  [ 865004 ] Parsing a variable named 'assert' in pre-1.4 source.
   [ 852580 ] Error: Ambiguous field for type
+  [ 850487 ] Problem invoking simplify from script
+  [ 785950 ] JDK 1.4 source does not typecheck with Javafe
+  [ 785949 ] javafe.tc.ConstantExpr throws a NullPointerException
+  [ 785948 ] JDK 1.3 source does not typecheck with Javafe
+  [ 785946 ] JDK 1.2 source does not typecheck with Javafe
+  [ 785943 ] JDK 1.1 source does not typecheck with Javafe
+  [ 785942 ] JDK 1.0 source does not typecheck with Javafe
+  [ 781680 ] Implement assert in ESC/Java
+  [ 781468 ] Fix tests in ESC/Java
+  [ 781415 ] \TYPE and java.lang.Class should be the same
 
 The following bugs are known to STILL EXIST in this release:
   [ 821466 ] Unexpected output from Simplify

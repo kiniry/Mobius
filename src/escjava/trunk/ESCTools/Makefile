@@ -113,6 +113,8 @@ clean-norel-noreltemp:
 		    ( $(MAKE) -C $$d clean || exit 1) ; fi ; \
 	done
 	$(MAKE) -C docs clean
+	$(MAKE) -C papers clean
+	$(MAKE) -C slides clean
 	$(MAKE) -C Javafe clean
 	rm -f jars/*.jar		## FIXME is this used?
 	rm -f tags TAGS
@@ -131,14 +133,19 @@ endif
 
 ########################################### docs
 
-.PHONY: docs
-docs: 
-##textdocs
-##docs: textdocs javadoc  ## FIXME Turn off until the javadoc target is fixed
+.PHONY: docs textdocs docs slides papers
+docs: textdocs
 
-.PHONY: textdocs
-textdocs: 
+textdocs: docs slides papers
+
+docs:
 	${MAKE} -C docs build
+
+slides:
+	${MAKE} -C slides build
+
+papers:
+	${MAKE} -C papers build
 
 PACKAGE_LIST = escjava escjava.ast escjava.backpred escjava.parser \
 	  escjava.prover escjava.tc escjava.translate escjava.sp \
@@ -180,17 +187,20 @@ javadoc:  build
 releases: releases-notests 
 	${MAKE} test-releases
 
+
 .PHONY: test-releases
 test-releases:
 	@echo "Testing release versions .........."
 	${MAKE} test-binary-release
 	${MAKE} test-patch-release
 
+
 .PHONY: releases-notests
 releases-notests:
 	@echo "Making release versions ${ESC_PROJECT}-${ESC_VERSION} ........"
 	${MAKE} patch-release  ## does a clean as well
 	${MAKE} binary-release
+
 
 .PHONY: patch-release
 patch-release: clean
@@ -202,6 +212,7 @@ patch-release: clean
 	mkdir -p ${RELDIR}
 	cd ${PATCH_DIR}; tar cvjf ${RELDIR}/${RELPATCHTAR} .
 	rm -rf ${PATCH_DIR}
+
 
 .PHONY: jar
 jar:
@@ -216,8 +227,9 @@ jar:
 	rm -rf ${RELTEMP}/sub
 	cp ${RELTEMP}/${RELJAR} ${ESCTOOLS_ROOT}
 
+
 .PHONY: binary-release
-binary-release: build docs
+binary-release: build docs javadoc
 	@echo "Creating binary release .........."
 	## RELDIR is the staging area for all files
 	## First copy all .class files to sub and build a jar file
@@ -228,9 +240,13 @@ binary-release: build docs
 	## Now copy in all specs
 	rm -rf ${RELTEMP}/specs
 	cp -r ${ESCTOOLS_ROOT}/specs ${RELTEMP}
-	-find ${RELTEMP}/specs -name "CVS" -exec rm -rf {} \;  >& /dev/null 
-	## Copy other miscellaneous files
+	-find ${RELTEMP}/specs -name "CVS" -exec rm -rf {} \; >& /dev/null 
+	## Copy papers and slides
+	find docs -name "*.pdf" -exec cp {} ${RELTEMP} \; >& /dev/null
+	find papers -name "*.pdf" -exec cp {} ${RELTEMP} \; >& /dev/null
+	find slides -name "*.pdf" -exec cp {} ${RELTEMP} \; >& /dev/null
 	#cp docs/Escjava2-ImplementationNotes/*.pdf ${RELTEMP}
+	## Copy other miscellaneous files
 	cp docs/ESCJAVA-UsersManual.html ${RELTEMP}
 	${MAKE} clean-norel-noreltemp
 	${MAKE} -C Utils/junitutils build

@@ -17,7 +17,9 @@ psfiles =	$(foreach texfile,$(texfiles),\
 pdffiles =	$(foreach texfile,$(texfiles),\
 		$(subst .tex,.pdf,$(texfile)))
 
-all:	escjava_demo introjml
+all:	build
+
+build:	escjava_demo.pdf introjml.pdf
 
 # %.pdf: %.tex
 # 	pdflatex $< $@

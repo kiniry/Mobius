@@ -201,7 +201,7 @@ following notions: @emph{assertion}, @emph{invariant},
 It is also assumed that the reader has a good understanding of Java.
 If you want write a specification of a method written in Java,
 @emph{you have to understand what the method does @strong{and} what it
-is @strong{meant to do}.  You cannot expect to write specifications
+is @strong{meant to do}}.  You cannot expect to write specifications
 for programs written in a language you do not understand.
 
 When working on these problems, do not attempt to obtain full
@@ -221,8 +221,10 @@ document.
 @menu
 * Assertions::                  Understanding basic assertions.
 * Assumptions::                 Making basic assumptions explicit.
+* Ghost Variables::             
 * PrePost::                     Core concepts of method specifications.
 * Modifies::                    Reasoning about and with frame axioms.
+* Data Groups::                 
 * Heavyweight::                 Expressive and easy to understand specifications.
 * Invariants::                  Core concepts of class specifications.
 * Loops::                       Reasoning about loops.
@@ -321,7 +323,7 @@ your answers, then attempt to verify your answers using
 @end example
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-@node Assumptions, PrePost, Assertions, Core
+@node Assumptions, Ghost Variables, Assertions, Core
 @unnumberedsec Assumptions
 
 @cindex Assumptions
@@ -463,7 +465,7 @@ E.g., this method verifies:
 @end example
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-@node Ghost Variables
+@node Ghost Variables, PrePost, Assumptions, Core
 @unnumberedsec Ghost Variables
 
 @cindex Ghost Variables
@@ -471,7 +473,7 @@ E.g., this method verifies:
 @c TODO
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-@node PrePost, Modifies, Assumptions, Core
+@node PrePost, Modifies, Ghost Variables, Core
 @unnumberedsec Lightweight Contracts
 
 @cindex Lightweight Contracts
@@ -661,7 +663,7 @@ predicate.  Check your exceptional postconditions with ESC/Java2.
 @c comments on Key, particularly the method calls of main
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-@node  Modifies, Heavyweight, PrePost, Core
+@node  Modifies, Data Groups, PrePost, Core
 @unnumberedsec Frame Axioms
 
 @cindex Frame Axioms
@@ -749,7 +751,7 @@ more specifications are verified by ESC/Java2.
 @c comments on Key, particularly the method calls of main
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-@node Data Groups
+@node Data Groups, Heavyweight, Modifies, Core
 @unnumberedsec Data Groups
 
 @cindex Data Groups
@@ -787,7 +789,7 @@ has no special significance to and of the JML tools.
 
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-@node Heavyweight, Invariants, Modifies, Core
+@node Heavyweight, Invariants, Data Groups, Core
 @unnumberedsec Heavyweight Specifications
 
 @cindex Heavyweight Specifications
@@ -824,10 +826,10 @@ has no special significance to and of the JML tools.
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @menu
-* Abstract Classes and Interfaces:: Specifying abstract classes and interfaces.  
-* Annotating Code::                 Annotating preexisting code.
-* Annotating APIs::                 Annotating APIs.
-* Designing by Contract::           Design by Contract with JML for Java.
+* Abstract Classes and Interfaces::  Specifying abstract classes and interfaces.  
+* Annotating Code::             Annotating preexisting code.
+* Annotating APIs::             Annotating APIs.
+* Designing by Contract::       Design by Contract with JML for Java.
 @end menu
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -1,4 +1,133 @@
+2004-06-18  Joseph Kiniry  <kiniry@cs.kun.nl>
+
+	* papers/jml_homework.texinfo:
+	* papers/problems/BogusFrameConditions.java:
+	* papers/problems/ContractsAbstractList.java:
+	* papers/problems/ContractsArrayList.java:
+	* papers/problems/FrameConditionsKey.java:
+	* papers/problems/Makefile:
+	* papers/problems/PrePostConditionsKey.java:
+	Snapshot of homework book for ECOOP 2.0a7 release.
+
+	* docs/Escjava2-ImplementationNotes/Escjava2-ImplementationNotes.texinfo:
+	Typo fix.
+
+2004-06-17  Joseph Kiniry  <kiniry@cs.kun.nl>
+
+	* docs/ESCJAVA-UsersManual.html:
+	* papers/problems/ContractsAbstractListKey.java:
+	* papers/problems/ContractsArrayListKey.java:
+	* papers/problems/ContractsBagKey.java:
+	* papers/problems/ContractsContainerKey.java:
+	* papers/problems/ContractsDefensiveSetKey.java:
+	* papers/problems/ContractsSetKey.java:
+	* papers/problems/Makefile:
+	* release-files/RELEASE_NOTES.txt:
+	New examples for homework exercises.  Some release notes done for
+	2.0a7 (ECOOP) release, but need to finish them up today/tomorrow.
+
+2004-06-10  David Cok  <cok@frontiernet.net>
+
+	* jmlspecs.jar: An update of the jmlspecs.jar
+
+	* Escjava/test/junittests/M.java-expected: Fixed the test result
+
+2004-06-09  Joseph Kiniry  <kiniry@cs.kun.nl>
+
+	* papers/jml_homework.texinfo:
+	Added section (no content) on abstract classes and interfaces per
+	Michel's suggestion.
+
+2004-06-07  Joseph Kiniry  <kiniry@cs.kun.nl>
+
+	* papers/jml_homework.texinfo:
+	* papers/problems/BogusFrameConditions.java:
+	* papers/problems/FrameConditionsKey.java:
+	* papers/problems/Makefile:
+	Discussion of and Problems for frame conditions.
+
+	* papers/jml_homework.texinfo:
+	* papers/problems/Makefile:
+	* papers/problems/PrePostConditionsKey.java:
+	* papers/problems/Preconditions.java:
+	Revisions of PrePostConditionsKey to make best-effort pass on
+	ESC/Java.  Complementary text in homework started.
+
+	* papers/problems/ContractsAbstractList.java:
+	* papers/problems/ContractsArrayList.java:
+	* papers/problems/ContractsBag.java:
+	* papers/problems/ContractsContainer.java:
+	* papers/problems/ContractsDefensiveSet.java:
+	* papers/problems/ContractsSet.java:
+	* papers/problems/JavaAssertions.java:
+	* papers/problems/JavaAssertionsKey.java:
+	* papers/problems/JmlAssertions.java:
+	* papers/problems/JmlAssertionsAndAssumptionsKey.java:
+	* papers/problems/JmlAssertionsKey.java:
+	* papers/problems/PrePostConditions.java:
+	* papers/problems/PrePostConditionsKey.java:
+	New problems and solutions for lightweight contracts.
+
+	* papers/jml_homework.texinfo:
+	* papers/problems/.cvsignore:
+	* papers/problems/ContractsAbstractList.java:
+	* papers/problems/ContractsArrayList.java:
+	* papers/problems/ContractsBag.java:
+	* papers/problems/ContractsContainer.java:
+	* papers/problems/ContractsDefensiveSet.java:
+	* papers/problems/ContractsSet.java:
+	* papers/problems/JmlAssertionsAndAssumptionsKey.java:
+	* papers/problems/JmlAssertionsKey.java:
+	* papers/problems/Preconditions.java:
+	New section on contracts underway.
+
+2004-06-04  Joseph Kiniry  <kiniry@cs.kun.nl>
+
+	* docs/design-notes/escj16c.pdf:
+	Exported this important document to PDF for those that do not have
+	MSFT products installed.
+
+2004-06-03  Joseph Kiniry  <kiniry@cs.kun.nl>
+
+	* papers/jml_homework.texinfo:
+	* papers/problems/.cvsignore:
+	* papers/problems/Assertions.java:
+	* papers/problems/AssertionsKey.java:
+	* papers/problems/JavaAssertions.java:
+	* papers/problems/JavaAssertionsKey.java:
+	* papers/problems/JmlAssertions.java:
+	* papers/problems/JmlAssertionsAndAssumptionsKey.java:
+	* papers/problems/JmlAssertionsKey.java:
+	* papers/problems/Makefile:
+	* papers/problems/Predicates.java:
+	More work on sections on assertions and assumptions.  Will be doing
+	contracts next.
+
+2004-06-01  David Cok  <cok@frontiernet.net>
+
+	* Escjava/test/junittests/skip: Should have been committed a while ago.
+
+2004-06-01  Joseph Kiniry  <kiniry@cs.kun.nl>
+
+	* papers/jml_homework.texinfo:
+	* papers/problems/.cvsignore:
+	* papers/problems/Assertions.java:
+	* papers/problems/AssertionsKey.java:
+	* papers/problems/Makefile:
+	* papers/problems/Predicates.java:
+	Finish first problem set on Java assertions; will next transform
+	it into a problem set on JML assertions.  Added Makefile for
+	building and running the exercise problems; will add rule for
+	verifying next.
+
 2004-05-31  Joseph Kiniry  <kiniry@cs.kun.nl>
+
+	* papers/Makefile:
+	* papers/jml_homework.texinfo:
+	* papers/problems/Assertions.java:
+	Added preliminary text to first section and started outlining code
+	for first problems.  Added infrastructure to Makefile to support
+	generation of Texinfo files from Java and JML source.
 
 	* slides/Makefile: New rules in Makefile for Texinfo input.
 
@@ -193,7 +322,7 @@
 
 	* Escjava/java/escjava/translate/GC.java:
 	Improvements to error message printing - consistency checks and
-	auxiliary infornmation without location.
+	auxiliary information without location.
 
 	* Escjava/test/junittests/Readable.java:
 	* Escjava/test/junittests/Readable.java-expected:
@@ -208,7 +337,7 @@
 
 	* Escjava/java/escjava/translate/ErrorMsg.java:
 	Improvements to erro message printing - consistency checks and
-	auxiliary infornmation without location.
+	auxiliary information without location.
 
 	* Escjava/java/escjava/translate/GetSpec.java:
 	* Escjava/java/escjava/translate/Translate.java:
