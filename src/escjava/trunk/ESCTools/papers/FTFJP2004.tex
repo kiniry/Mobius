@@ -73,17 +73,17 @@ workshop at ECOOP 2004}
 %\author{David R. Cok\inst{1} \and Joseph Kiniry\inst{2}}
 
 %\institute{457 Hillside Avenue\\
-%       			Rochester, NY   14610\\
-%      			USA \\
-%       		{\tt cok@frontiernet.net} \\
-%	\and
-%		Security of Systems Group\\
- %     		Computing Science Department\\
- %      		University of Nijmegen\\
-%       		Toernooiveld 1\\
-%       		6525 ED Nijmegen\\
-%       		The Netherlands\\
-%       		{\tt kiniry@cs.kun.nl}
+%                               Rochester, NY   14610\\
+%                       USA \\
+%                       {\tt cok@frontiernet.net} \\
+%       \and
+%               Security of Systems Group\\
+ %              Computing Science Department\\
+ %                      University of Nijmegen\\
+%                       Toernooiveld 1\\
+%                       6525 ED Nijmegen\\
+%                       The Netherlands\\
+%                       {\tt kiniry@cs.kun.nl}
 %}
 
 %\authorrunning{Cok and Kiniry}
@@ -482,11 +482,12 @@ Then, even in the absence of an implementation of the method, a routine such as
 \texttt{isEmpty()} could use the model variable in the specification
 \begin{center} \texttt{ensures \char'134 result <==> theCollection.isEmpty();} \end{center}
 
-Model variables in JML may have a functional representation, a predicate representation, or 
-no representation at all.  Work on translation of model variables in JML for the LOOP tool 
-occurred concurrently with the work in this paper and is discussed in 
-\cite{BreunessePoll03}.  We came to
-a similar solution and offer some additional observations here.
+Model variables in JML may have a functional representation, a
+predicate representation, or no representation at all.  Work on
+translation of model variables in JML for the LOOP tool occurred
+concurrently with the work in this paper and is discussed
+in~\cite{BreunessePoll03}.  We came to a similar solution and offer
+some additional observations here.
 
 \subsubsection {Functional representations}
 
@@ -586,14 +587,17 @@ of the utility of immutable classes in program verification.
 
 \subsection{Exceptions}
 
-The evaluation of the expression in a model variable's represents clause might result in
-exceptional behavior (that is, in the throwing of a Java exception).  In an environment
-where the truth or falsity of assertions must be determined by the reasoning engine, a
-semantics for specifications with exceptional termination must be established.  For example,
-what should be the behavior of a verification system on encountering the program of 
-Fig.~\ref{fig:exc}?  Consider just the precondition of method \texttt{p}: should the program 
-checker issue a warning that there is a potential dereference of a null reference, or should it
-simply presume an implicit precondition that \texttt{o != null}?
+The evaluation of the expression in a model variable's represents
+clause might result in exceptional behavior (that is, in the throwing
+of a Java exception).  In an environment where the truth or falsity of
+assertions must be determined by the reasoning engine, a semantics for
+specifications with exceptional termination must be established.  For
+example, what should be the behavior of a verification system on
+encountering the program of Fig.~\ref{fig:exc}?  Consider just the
+precondition of method \texttt{p}: should the program checker issue a
+warning that there is a potential dereference of a null reference, or
+should it simply presume an implicit precondition that \texttt{o !=
+  null}?
 
 \begin{BFIGURE}
 \verbatiminput{Exc.java}
@@ -601,70 +605,91 @@ simply presume an implicit precondition that \texttt{o != null}?
 \label{fig:exc}
 \end{BFIGURE}
 
-Various approaches to handling exceptional expressions are described in previous 
-publications.
-In \cite{Cheon-Leavens02b}, Cheon takes a contextual approach appropriate to checking
-assertions at run-time.   In \cite{Leavens-Baker-Ruby02}, it is proposed that 
-an arbitrary, unknown value be substituted for an expression that terminates abruptly.
-This has the effect (perhaps surprising to the Java programmer) that
-\texttt{(o == null || o.a == 0)} and \texttt{(o.a == 0 || o == null)} have the same value.
-The LOOP project formalized exceptions differently \cite{BergPJ00a}, in the end recommending
-that operators such as \texttt{||} be interpreted precisely as in Java and that specifications be
-fully guarded so that no exceptional termination will occur.
+Various approaches to handling exceptional expressions are described
+in previous publications.  In~\cite{Cheon-Leavens02b}, Cheon takes a
+contextual approach appropriate to checking assertions at run-time.
+In~\cite{Leavens-Baker-Ruby02}, it is proposed that an arbitrary,
+unknown value be substituted for an expression that terminates
+abruptly.  This has the effect (perhaps surprising to the Java
+programmer) that \texttt{(o == null || o.a == 0)} and \texttt{(o.a ==
+  0 || o == null)} have the same value.  The LOOP project formalized
+exceptions differently~\cite{BergPJ00a}, in the end recommending that
+operators such as \texttt{||} be interpreted precisely as in Java and
+that specifications be fully guarded so that no exceptional
+termination will occur.
 
-The choice of semantics for exceptional expressions obviously affects the tools that would
-implement any static checking, but also affects the convenience of reading and 
-writing specifications and the success of achieving the goal of defining specifications (in JML, 
-at least) so that they are unsurprising to Java programmers. 
+The choice of semantics for exceptional expressions obviously affects
+the tools that would implement any static checking, but also affects
+the convenience of reading and writing specifications and the success
+of achieving the goal of defining specifications (in JML, at least) so
+that they are unsurprising to Java programmers.
 
 \section{Background: Related work}
 
-There are by now a number of research tools that translate Java into verification conditions
-appropriate to some logical reasoning engine.  There are numerous tools that insert
-assertion checking code into compiled Java programs, and others that do model checking,
-but
-we are aware only of the following tools that do static
-checking of assertions:
+There are by now a number of research tools that translate Java into
+verification conditions appropriate to some logical reasoning engine.
+There are numerous tools that insert assertion checking code into
+compiled Java programs, and others that do model checking, but we are
+aware only of the following tools that do static checking of
+assertions:
 \setlength{\partopsep}{0in}\setlength{\parskip}{0in}\setlength{\itemsep}{0in}\setlength{\topsep}{0in}
 \begin{itemize}
 \setlength{\partopsep}{0in}\setlength{\parskip}{0in}\setlength{\itemsep}{0in}\setlength{\topsep}{0in}
-\item Krakatoa \cite{krakatoa03a} uses the Coq prover and 
-translates all statements with reference to a current program state. 
-\item The LOOP tool \cite{Jacobs04,JacobsPoll01a}
- translates Java using weakest-preconditions in a Hoare logic,
-which are then proved using PVS \cite{OwreRRSS96}, interactively.  
-\item The ChAsE tool \cite{CH03} is an extension of ESC/Java that checks frame conditions.
-\item Jive \cite{MeyerMuellerPoetzsch-Heffter00} translates a subset of Java into proof
-obligations for PVS; it supplies an interactive tool for managing the proofs.
-\item JACK \cite{JACK} generates proof conditions directly for the Atelier B prover; 
-most, but not all, of
-the proof obligations can be handled automatically. 
-\item The KeY tool \cite{Key2003} targets the javaCard language but is integrated into CASE 
-tools for UML and OCL, with PVS as the prover.
+\item Krakatoa~\cite{krakatoa03a} uses the Why VC generator
+  tool~\cite{Why} and the Coq prover~\cite{Why} and translates all
+  statements with reference to a current program state.
+\item The LOOP tool~\cite{Jacobs04,JacobsPoll01a} translates
+  JML-annotated Java into PVS~\cite{OwreRRSS96} theories using a
+  denotational semantics for Java.  The resulting automatically
+  generated proof obilgations about the program are discharged
+  interactively and automatically using several different logics
+  including a weakest-precondition logic and a Hoare logic.
+\item The ChAsE tool~\cite{CH03} is an extension of ESC/Java that
+  checks frame conditions.
+\item Jive~\cite{MeyerMuellerPoetzsch-Heffter00} translates a subset
+  of Java into proof obligations for PVS; it supplies an interactive
+  tool for managing the proofs.
+\item JACK~\cite{JACK} generates proof conditions directly for several
+  provers including the Atelier B prover, Simplify, Coq, and PVS.
+  Most, but not all, of the proof obligations are handled
+  automatically.
+\item The KeY tool~\cite{Key2003} is integrated into a UML-based CASE
+  tool and uses OCL as its annotation language.  It uses its own prover
+  for dynamic logic and has little automation.
 \end{itemize}
 
-ESC/Java2, Krakatoa, KeY and ChAsE are publicly available.  Only ESC/Java2 targets a
-generic first-order prover and seeks to be completely automatic, supporting all of Java and JML.
-  On the other hand, ESC/Java
-did not intend to be sound or complete, but made some engineering compromises in order to
-be automatic and reasonably useful to programmers not familiar with proof techiques or
-interactive proof tools.  The approaches taken by the Krakatoa and LOOP tools in mapping
-Java into the underlying logic are the most well-documented.
+ESC/Java2, Krakatoa, KeY and ChAsE are publicly available.  Only
+ESC/Java2 targets a generic first-order prover and seeks to be
+completely automatic, supporting all of Java and JML.  On the other
+hand, the original designers of ESC/Java did not intend for it to be
+sound or complete, but made engineering compromises in order to be
+automatic and reasonably useful to programmers not familiar with proof
+techiques or interactive proof tools.
 
-ESC/Java2 does not utilize a full state-based logic, employing program states only where needed.
-Krakatoa uses a reference to the state of the heap throughout its translation; though this is an
-accurate model of Java semantics, it can be complex to use in actual proofs.  The separation of
-values in ESC/Java2 by using separate arrays for each field helps to automatically resolve some
-aliasing problems and simplifies reasoning.
+JACK is not publicly available and is highly automated, but currently
+covers a much smaller portion of Java and JML than ESC/Java2.
 
-The LOOP tool utilizes a special-purpose logic appropriate for translating imperative programming
-languages.  The representation of a program is then converted into PVS theories and proved
-using the PVS theorem prover, partially automatically.
+ESC/Java2 does not utilize a full state-based logic, employing program
+states only where needed.  Krakatoa uses a reference to the state of
+the heap throughout its translation; though this is an accurate model
+of Java semantics, it can be complex to use in actual proofs.  The
+separation of values in ESC/Java2 by using separate arrays for each
+field helps to automatically resolve some aliasing problems and
+simplifies reasoning.
 
-Though there are similar aspects among these approaches, the solution used by ESC/Java2
-for translating method calls demonstrates a straightforward translation in the context of 
-a general purpose logic and prover.  In doing so it maintains the design philosophy and usefulness
-of the original ESC/Java tool.
+The LOOP tool has a comprehensive representation of Java's memory
+model and the program translation and all work in PVS focus directly
+on this model.  The LOOP tool permits one to specify and reason about
+specifications that use pure methods. To do so, one either uses the
+specifications alone, in a manner similar to that which is described
+in this paper, or one uses the implementations of the methods and 
+symbolically executes them within PVS.
+
+Though there are similar aspects among these approaches, the solution
+used by ESC/Java2 for translating method calls demonstrates a
+straightforward translation in the context of a general purpose logic
+and prover.  In doing so it maintains the design philosophy and
+usefulness of the original ESC/Java tool.
 
 \section{Acknowledgments}
 
