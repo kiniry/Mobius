@@ -67,12 +67,12 @@ public class BCDUP2_X2 extends BCInstruction implements BCStackInstruction {
 //		Stack topStack_plus2 = new Stack(Expression.COUNTER_PLUS_2);
 //		Stack topStack_plus1 = new Stack(Expression.COUNTER_PLUS_1);
 		Stack topStack = new Stack(Expression.COUNTER);
-		Stack topStack_minus1 = new Stack(Expression.COUNTER_MINUS_1);
-		Stack topStack_minus2 = new Stack(Expression.COUNTER_MINUS_2);
+		Stack topStack_minus1 = new Stack(Expression.getCOUNTER_MINUS_1());
+		Stack topStack_minus2 = new Stack(Expression.getCOUNTER_MINUS_2());
 		
-		wp = _normal_Postcondition.substitute(Expression.COUNTER, Expression.COUNTER_PLUS_2 );
-		wp = wp.substitute(new Stack(Expression.COUNTER_PLUS_2) , topStack );
-		wp = wp.substitute(new Stack(Expression.COUNTER_PLUS_1) , topStack_minus1 );
+		wp = _normal_Postcondition.substitute(Expression.COUNTER, Expression.getCOUNTER_PLUS_2() );
+		wp = wp.substitute(new Stack(Expression.getCOUNTER_PLUS_2()) , topStack );
+		wp = wp.substitute(new Stack(Expression.getCOUNTER_PLUS_1()) , topStack_minus1 );
 		
 		return wp;
 	}

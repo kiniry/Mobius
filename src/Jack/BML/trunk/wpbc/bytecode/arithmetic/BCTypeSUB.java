@@ -49,13 +49,13 @@ public class BCTypeSUB extends BCArithmeticInstruction {
 	public Formula wp(Formula _normal_Postcondition, ExsuresTable _exc_Postcondition) {
 		Formula wp = null;
 			Stack stackTop = new Stack(Expression.COUNTER);
-			Stack stackTop_minus_1 = new Stack(Expression.COUNTER_MINUS_1);
+			Stack stackTop_minus_1 = new Stack(Expression.getCOUNTER_MINUS_1());
 			ArithmeticExpression sub =
 				(ArithmeticExpression)ArithmeticExpression.getArithmeticExpression(
 					stackTop,
 					stackTop_minus_1,
 					ExpressionConstants.SUB);
-			_normal_Postcondition.substitute(Expression.COUNTER, Expression.COUNTER_MINUS_1);
+			_normal_Postcondition.substitute(Expression.COUNTER, Expression.getCOUNTER_MINUS_1());
 			_normal_Postcondition.substitute(stackTop_minus_1, sub);
 			wp = _normal_Postcondition;
 			return wp;

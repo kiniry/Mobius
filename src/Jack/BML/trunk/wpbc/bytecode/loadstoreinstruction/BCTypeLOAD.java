@@ -8,7 +8,6 @@ package bytecode.loadstoreinstruction;
 
 
 import org.apache.bcel.generic.InstructionHandle;
-import utils.Util;
 
 import bcclass.BCLocalVariable;
 import bcclass.attributes.ExsuresTable;
@@ -50,11 +49,14 @@ public  class BCTypeLOAD  extends  BCLocalVariableInstruction{
 	 */
 	public Formula wp(Formula _normal_Postcondition, ExsuresTable _exc_Postcondition) {
 		Formula wp;
-		Util.dump("in aload.wp");
-		wp = _normal_Postcondition.substitute(Expression.COUNTER, Expression.COUNTER_PLUS_1);
-		Util.dump("wp aload psi[ t <--- t +1 ] " + wp.toString());
-		wp = wp.substitute(new Stack( Expression.COUNTER_PLUS_1), new LocalVariableAccess(getIndex()));
-		Util.dump("wp aload psi[ t <--- t +1 ][s(t+1) <-- index ]  " + wp.toString());
+//		Util.dump("in aload.wp");
+		wp = _normal_Postcondition.substitute(Expression.COUNTER, Expression.getCOUNTER_PLUS_1());
+//		Util.dump("wp aload psi[ t <--- t +1 ] " + wp.toString());
+		wp = wp.substitute(new Stack( Expression.getCOUNTER_PLUS_1()), new LocalVariableAccess(getIndex()));
+//		Util.dump("wp aload = psi[ t <--- t +1 ][s(t+1) <-- index ]  " + wp.toString());
+//		if (getPrev() == null) {
+//			Util.dump("wp aload " + wp.toString());
+//		}
 		return wp;
 	}
 

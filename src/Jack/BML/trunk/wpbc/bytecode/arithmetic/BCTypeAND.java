@@ -48,13 +48,13 @@ public class BCTypeAND extends BCArithmeticInstruction {
 		BitExpression and =
 			new BitExpression(
 				new Stack(Expression.COUNTER),
-				new Stack(Expression.COUNTER_MINUS_1),
+				new Stack(Expression.getCOUNTER_MINUS_1()),
 				ExpressionConstants.BITWISEAND);
 
 		_normal_Postcondition.substitute(
 			Expression.COUNTER,
-			Expression.COUNTER_MINUS_1);
-		_normal_Postcondition.substitute(new Stack(Expression.COUNTER_MINUS_1), and);
+			Expression.getCOUNTER_MINUS_1());
+		_normal_Postcondition.substitute(new Stack(Expression.getCOUNTER_MINUS_1()), and);
 		wp = _normal_Postcondition;
 		return wp;
 	}

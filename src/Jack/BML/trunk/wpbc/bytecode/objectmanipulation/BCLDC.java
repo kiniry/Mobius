@@ -16,7 +16,6 @@ import bcclass.attributes.ExsuresTable;
 import bcexpression.Expression;
 import bcexpression.javatype.JavaType;
 import bcexpression.vm.Stack;
-import bytecode.BCExceptionThrower;
 import bytecode.BCInstruction;
 
 import formula.Formula;
@@ -99,8 +98,8 @@ public class BCLDC extends BCInstruction implements BCCPInstruction {
 	public Formula wp(Formula _normal_Postcondition, ExsuresTable _exc_Postcondition) {
 		Formula wp;
 		
-		wp = _normal_Postcondition.substitute(Expression.COUNTER, Expression.COUNTER_PLUS_1);
-		Stack top_stack_plus_1 = new Stack(Expression.COUNTER_PLUS_1);
+		wp = _normal_Postcondition.substitute(Expression.COUNTER, Expression.getCOUNTER_PLUS_1());
+		Stack top_stack_plus_1 = new Stack(Expression.getCOUNTER_PLUS_1());
 		wp = wp.substitute(top_stack_plus_1, ((BCCONSTANT_LITERAL) getConstantPool().getConstant(getIndex())).getLiteral());
 		return wp;
 	}

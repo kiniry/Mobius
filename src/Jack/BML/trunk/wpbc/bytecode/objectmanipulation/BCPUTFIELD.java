@@ -5,12 +5,18 @@ import utils.Util;
 
 import constants.BCConstantFieldRef;
 
+import formula.Connector;
 import formula.Formula;
+import formula.atomic.Predicate2Ar;
+import formula.atomic.PredicateSymbol;
 
 import bcclass.BCConstantPool;
 import bcclass.attributes.ExsuresTable;
+import bcexpression.ArithmeticExpression;
 import bcexpression.Expression;
+import bcexpression.ExpressionConstants;
 import bcexpression.FieldAccessExpression;
+import bcexpression.NumberLiteral;
 
 import bcexpression.javatype.ClassNames;
 import bcexpression.javatype.JavaObjectType;
@@ -52,7 +58,8 @@ import bcexpression.vm.Stack;
  * Runtime Exception :  Otherwise, if objectref is null, the putfield instruction throws a NullPointerException.
  * 
  * 
- *  wp = psi^n[t <-- t -2 ] [index with (o == S(t-1)) <-- S(t)]
+ *  wp = S(t-1) != null ==> psi^n[t <-- t -2 ] [index with ( S(t-1)) <-- S(t)] &&
+ *           S(t-1) == null ==> psi^e(NullPointerException)   
  */
 public class BCPUTFIELD extends BCFieldOrMethodInstruction {
 
@@ -69,9 +76,9 @@ public class BCPUTFIELD extends BCFieldOrMethodInstruction {
 		BCConstantPool _cp) {
 		super(_instruction, _type, _classType, _cp);
 		setExceptionsThrown(
-				new JavaObjectType[] {
-					(JavaObjectType) JavaObjectType.getJavaRefType(
-						ClassNames.NULLPOINTERException)});	
+			new JavaObjectType[] {
+				(JavaObjectType) JavaObjectType.getJavaRefType(
+					ClassNames.NULLPOINTERException)});
 	}
 
 	/* (non-Javadoc)
@@ -81,21 +88,73 @@ public class BCPUTFIELD extends BCFieldOrMethodInstruction {
 		Formula _normal_Postcondition,
 		ExsuresTable _exc_Postcondition) {
 		Formula wp;
-		wp =
+
+		// the object whose field is assigned - S(t-1)
+		Stack obj =
+			new Stack(
+				ArithmeticExpression.getArithmeticExpression(
+					Expression.COUNTER,
+					new NumberLiteral(1),
+					ExpressionConstants.SUB));
+
+		// S(t-1 ) != null
+		Formula objNotNull =
+			new Predicate2Ar(obj, Expression._NULL, PredicateSymbol.NOTEQ);
+
+		//psi^n[t <-- t-2 ]
+		Formula wpObjNotNullImpl =
 			_normal_Postcondition.substitute(
 				Expression.COUNTER,
-				Expression.COUNTER_MINUS_2);
-//		Stack stack_minus_1 = new Stack(Expression.COUNTER_MINUS_1);
-//		Stack stack = new Stack(Expression.COUNTER);
-		
+				ArithmeticExpression.getArithmeticExpression(
+					Expression.COUNTER,
+					new NumberLiteral(2),
+					ExpressionConstants.SUB));
+		// index(  S(t-1)  )
 		FieldAccessExpression fieldAccess =
 			new FieldAccessExpression(
 				(BCConstantFieldRef) (getConstantPool()
 					.getConstant(getIndex())),
-				new Stack(Expression.COUNTER_MINUS_1));
+				new Stack(
+					(
+						ArithmeticExpression) ArithmeticExpression
+							.getArithmeticExpression(
+						Expression.COUNTER,
+						new NumberLiteral(1),
+						ExpressionConstants.SUB)));
 
-		wp = wp.substitute(fieldAccess, new Stack(Expression.COUNTER));
-		Util.dump("wp putfield " + wp.toString());
+		//			psi^n[t <-- t-2 ][ index(  S(t-1)  ) <-- S(t)]
+		wpObjNotNullImpl =
+			wpObjNotNullImpl.substitute(
+				fieldAccess,
+				new Stack(Expression.COUNTER));
+
+		Formula wpObjNotNull =
+			Formula.getFormula(objNotNull, wpObjNotNullImpl, Connector.IMPLIES);
+		//		///////////////////////////////////////////////////////////////////////////
+		//		///////////////////////////////////////////////////////////////////////////
+		/////////////////////////////////////////////////////////////////////////////
+		//exceptional termination - null object access
+		//S(t) == null
+		Formula objNull =
+			new Predicate2Ar(
+				new Stack(
+					ArithmeticExpression.getArithmeticExpression(
+						Expression.COUNTER,
+						new NumberLiteral(1),
+						ExpressionConstants.SUB)),
+				Expression._NULL,
+				PredicateSymbol.EQ);
+
+		//psi^e ("Ljava/lang/NullPointerException;")
+		// if there if the object is null throw a "Ljava/lang/NullPointerException;"
+		Formula objNullImplies =
+			getWpForException(getExceptionsThrown()[0], _exc_Postcondition);
+
+		//S(t) == null ==> psi^e("Ljava/lang/NullPointerException;")
+		Formula wpObjNull =
+			Formula.getFormula(objNull, objNullImplies, Connector.IMPLIES);
+
+		wp = Formula.getFormula(wpObjNotNull, wpObjNull, Connector.AND);
 		return wp;
 	}
 

@@ -43,7 +43,7 @@ public class BCTypeOR extends BCArithmeticInstruction {
 		ExsuresTable _exc_Postcondition) {
 		Formula wp;
 		Stack stackTop = new Stack(Expression.COUNTER );
-		Stack stackTop_minus_1 = new Stack(Expression.COUNTER_MINUS_1);
+		Stack stackTop_minus_1 = new Stack(Expression.getCOUNTER_MINUS_1());
 		BitExpression or =
 			new BitExpression(
 				stackTop,
@@ -52,7 +52,7 @@ public class BCTypeOR extends BCArithmeticInstruction {
 
 		_normal_Postcondition.substitute(
 			Expression.COUNTER,
-			Expression.COUNTER_MINUS_1);
+			Expression.getCOUNTER_MINUS_1());
 		_normal_Postcondition.substitute(stackTop_minus_1, or);
 		wp = _normal_Postcondition;
 		return wp;

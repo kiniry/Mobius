@@ -32,28 +32,55 @@ public class BCIFNE extends BCConditionalBranch {
 		super(_branchInstruction);
 		// TODO Auto-generated constructor stub
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see bytecode.ByteCode#wp(formula.Formula, specification.Exsures)
 	 */
-	public Formula wp(Formula _normal_Postcondition, ExsuresTable _exc_Postcondition) {
+	public Formula wp(
+		Formula _normal_Postcondition,
+		ExsuresTable _exc_Postcondition) {
 		Formula wp;
-//		Stack stackTop = new Stack(Expression.COUNTER);
-		
-		//in case of jump S(t) == 0
-		Formula stackTop_eq_0 = new Predicate2Ar(new Stack(Expression.COUNTER), new NumberLiteral(0), PredicateSymbol.EQ);
-		Formula eq_branch = getBranchWP();
-		eq_branch = eq_branch.substitute(Expression.COUNTER, Expression.COUNTER_MINUS_1);
-		Formula wp_stackTop_eq_0 = Formula.getFormula( stackTop_eq_0, eq_branch, Connector.IMPLIES);
-		
+
 		// in case of executing next instruction S(t) != 0
-		Formula stackTop_not_eq_0 =  new Predicate2Ar(new Stack(Expression.COUNTER), new NumberLiteral(0), PredicateSymbol.NOTEQ);
-		Formula not_eq_branch = _normal_Postcondition.substitute(Expression.COUNTER, Expression.COUNTER_MINUS_1);
-		Formula wp_stackTop_not_eq_0 = Formula.getFormula( stackTop_not_eq_0, not_eq_branch, Connector.IMPLIES);
-		
-		wp = Formula.getFormula(wp_stackTop_eq_0, wp_stackTop_not_eq_0, Connector.AND);
+		Formula stackTop_not_eq_0 =
+			new Predicate2Ar(
+				new Stack(Expression.COUNTER),
+				new NumberLiteral(0),
+				PredicateSymbol.NOTEQ);
+		Formula not_eq_branch =
+			_normal_Postcondition.substitute(
+				Expression.COUNTER,
+				Expression.getCOUNTER_MINUS_1());
+		wp =
+			Formula.getFormula(
+				stackTop_not_eq_0,
+				not_eq_branch,
+				Connector.IMPLIES);
+
 		return wp;
 	}
 
+	/* (non-Javadoc)
+	 * @see bytecode.branch.BCConditionalBranch#wpBranch(formula.Formula, bcclass.attributes.ExsuresTable)
+	 */
+	public Formula wpBranch(
+		Formula _normal_Postcondition,
+		ExsuresTable _exc_Postcondition) {
+		Formula wp;
+		//in case of jump S(t) == 0
+		Formula stackTop_eq_0 =
+			new Predicate2Ar(
+				new Stack(Expression.COUNTER),
+				new NumberLiteral(0),
+				PredicateSymbol.EQ);
+		Formula eq_branch  =
+			_normal_Postcondition.substitute(
+				Expression.COUNTER,
+				Expression.getCOUNTER_MINUS_1());
+		wp =
+			Formula.getFormula(stackTop_eq_0, eq_branch, Connector.IMPLIES);
+
+		return wp;
+	}
 
 }

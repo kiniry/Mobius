@@ -8,9 +8,15 @@ package bytecode.branch;
 
 import org.apache.bcel.generic.InstructionHandle;
 
+import utils.Util;
+
 import bcclass.attributes.ExsuresTable;
+import bcexpression.ArithmeticExpression;
 import bcexpression.Expression;
+import bcexpression.ExpressionConstants;
+import bcexpression.NumberLiteral;
 import bcexpression.vm.Stack;
+import bytecode.BCInstruction;
 
 import formula.Connector;
 import formula.Formula;
@@ -38,52 +44,73 @@ public class BCIF_ICMPNE extends BCConditionalBranch {
 	public Formula wp(
 		Formula _normal_Postcondition,
 		ExsuresTable _exc_Postcondition) {
-		Formula wp;
-//		Stack stackTop = new Stack(Expression.COUNTER);
-//		Stack stackTop_minus_1 = new Stack(Expression.COUNTER_MINUS_1) ;
-
-		///////////////////////////////////////////	
-		// top two stack values are not equal - do a jump
-		//S(t)== S(t-1)
-		Formula stackTop_not_eq_stackTop_minus_1 =
-			new Predicate2Ar(new Stack(Expression.COUNTER), new Stack(Expression.COUNTER_MINUS_1) , PredicateSymbol.NOTEQ);
-		//getWPBranch
-		Formula not_eq_branch = getBranchWP();
-
-		//getWPBranch[t<-- t-2]
-		not_eq_branch =
-			not_eq_branch.substitute(
-				Expression.COUNTER,
-				Expression.COUNTER_MINUS_2);
-		//S(t)== S(t-1) == >  getWPBranch[t<-- t-2]
-		Formula wp_not_eq_branch =
-		Formula.getFormula(
-				stackTop_not_eq_stackTop_minus_1,
-				not_eq_branch,
-				Connector.IMPLIES);
+		Formula wpNoBranch;
 
 		/////////////////////////////////////////////	
-		//top two stack values are  equal
+		//top two stack values are  equal - no jump
 		//S(t)== S(t-1)
 		Formula stackTop_eq_stackTop_minus_1 =
-			new Predicate2Ar(new Stack(Expression.COUNTER), new Stack(Expression.COUNTER_MINUS_1) , PredicateSymbol.EQ);
-
+			new Predicate2Ar(
+				new Stack(Expression.COUNTER),
+				new Stack(Expression.getCOUNTER_MINUS_1()),
+				PredicateSymbol.EQ);
+		Util.dump("wpNotBranch condition " + stackTop_eq_stackTop_minus_1);
 		//psi^n[t <-- t-2]
 		Formula eq_branch =
 			_normal_Postcondition.substitute(
 				Expression.COUNTER,
-				Expression.COUNTER_MINUS_2);
+				Expression.getCOUNTER_MINUS_2());
 
 		//S(t)== S(t-1) == > psi^n[t <-- t-2]
 		Formula wp_eq_branch =
-		Formula.getFormula(
+			Formula.getFormula(
 				stackTop_eq_stackTop_minus_1,
 				eq_branch,
 				Connector.IMPLIES);
 
-		wp = Formula.getFormula(wp_not_eq_branch, wp_eq_branch, Connector.AND);
-		return wp;
+		wpNoBranch = wp_eq_branch;
+		return wpNoBranch;
+	}
 
+	/* (non-Javadoc)
+	 * @see bytecode.branch.BCConditionalBranch#wpBranch(formula.Formula, bcclass.attributes.ExsuresTable)
+	 */
+	public Formula wpBranch(
+		Formula _normal_Branch_Postcondition,
+		ExsuresTable _exc_Postcondition) {
+		Formula wpBranch;
+		///////////////////////////////////////////	
+		// top two stack values are  not equal - comparison succeeds and do a jump
+		//S(t)!= S(t-1)
+
+		Formula stackTop_not_eq_stackTop_minus_1 =
+			new Predicate2Ar(
+				new Stack(Expression.COUNTER),
+				new Stack(Expression.getCOUNTER_MINUS_1()),
+				PredicateSymbol.NOTEQ);
+
+		Util.dump("wpBranch condition " + stackTop_not_eq_stackTop_minus_1);
+
+		//getWPBranch[t<-- t-2]
+		Formula not_eq_branch =
+			_normal_Branch_Postcondition.substitute(
+				Expression.COUNTER,
+				Expression.getCOUNTER_MINUS_2());
+		//S(t)== S(t-1) == >  getWPBranch[t<-- t-2]
+		wpBranch =
+			Formula.getFormula(
+				stackTop_not_eq_stackTop_minus_1,
+				not_eq_branch,
+				Connector.IMPLIES);
+		Util.dump("wpBranch for ifcmpne " + wpBranch);
+
+		BCInstruction prev = this;
+		Formula justTest = wpBranch;
+		while ((prev = prev.getPrev()) != null) {
+			justTest = prev.wp(justTest, _exc_Postcondition);
+		}
+		Util.dump("wpBranch " + justTest);
+		return justTest;
 	}
 
 }

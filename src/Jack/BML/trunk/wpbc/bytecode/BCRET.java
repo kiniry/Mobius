@@ -11,11 +11,8 @@ import java.util.Vector;
 import org.apache.bcel.generic.InstructionHandle;
 
 import bcclass.attributes.ExsuresTable;
-import bytecode.block.*;
-
+import bytecode.block.Block;
 import formula.Formula;
-
-import utils.Util;
 
 /**
  * @author mpavlova
@@ -25,8 +22,10 @@ import utils.Util;
  */
 public class BCRET extends BCInstruction implements EndBlockInstruction {
 	private BCInstruction retToInstruction;
-	
+
 	private Vector retToBlocks;
+
+	Block blockEndingWithThis;
 	/**
 	 * @param _instruction
 	 */
@@ -37,78 +36,26 @@ public class BCRET extends BCInstruction implements EndBlockInstruction {
 	/* (non-Javadoc)
 	 * @see bytecode.ByteCode#wp(formula.Formula, specification.ExceptionalPostcondition)
 	 */
-	public Formula wp(Formula _normal_Postcondition, ExsuresTable _exc_Postcondition) {
+	public Formula wp(
+		Formula _normal_Postcondition,
+		ExsuresTable _exc_Postcondition) {
 		return _normal_Postcondition;
 	}
-	
 	/**
-	 * @param _t - the instruction to which this jump instruction targets to
-	 *//*
-	public void setRetToInstrcution(BCInstruction _t) {
-		retToInstruction = _t;
+	 * sets the block that ends with this instruction
+	 */
+	public void setBlock(Block block) {
+		blockEndingWithThis = block;
 	}
-	
-	*//**
-	 * return BCInstruction -- the instruction to which this jump instruction targets to
-	 *//*
-	public BCInstruction getRetToInstruction() {
-		return retToInstruction;
+
+	/* (non-Javadoc)
+	 * @see bytecode.EndBlockInstruction#calculateRecursively(formula.Formula, bcclass.attributes.ExsuresTable)
+	 */
+	public Formula calculateRecursively(
+		Formula _normal_postcondition,
+		ExsuresTable _exs_postcondition) {
+		Formula wp = blockEndingWithThis.calculateRecursively(_normal_postcondition, _exs_postcondition);
+		return wp;
 	}
-	*//**
-	 * 
-	 * @param _block - adds _block to the vector of blocks to which
-	 *  targets this instruction 
-	 *//*
-	protected void addRetBlock(Block _block) {
-		if (retToBlocks == null) {
-			retToBlocks = new Vector();
-		}
-		retToBlocks.add(_block);
-	}
-	
-	*//**
-	 * this method is called by exterior once the target instruction is set
-	 * It sets the target blocks for this jump instruction
-	 * 
-	 *//*
-	public void setRetToBlocks() {
-		BCInstruction _i = retToInstruction;
-		Block _b = null;
-		while (_i != null)  {
-			if ( (_i instanceof  BCJumpInstruction)|| (_i instanceof BCReturnInstruction)) {
-				_b = Util.getBlock(retToInstruction,  _i);
-				if (_b != null) {
-					_b.dump(""); 
-					addRetBlock(_b) ;
-				}
-			}
-			if (_b instanceof LoopBlock) {
-				return;
-			}
-			if ( (_i instanceof BCUnconditionalBranch) || (_i instanceof BCReturnInstruction)) {
-				break;
-			}	
-			_i = _i.getNext();
-		}
-		
-		while (_i != null)  {
-			if ( (_i instanceof BCJumpInstruction) && (retToInstruction.equals(((BCJumpInstruction)_i).getTarget())) ){
-					_b = Util.getBlock(retToInstruction,  (BCJumpInstruction)_i); 
-					_b.dump("");
-					addRetBlock(_b) ;
-					return;	
-			}
-			_i = _i.getNext();
-		}
-	}
-	
-	public void setRetToBlocks(Vector v) {
-		retToBlocks = v;	
-	}
-	
-	public Vector getRetToBlocks() {
-		return retToBlocks;
-	}
-	
-*/
+
 }

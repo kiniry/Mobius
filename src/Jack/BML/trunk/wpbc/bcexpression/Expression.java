@@ -16,28 +16,64 @@ import type.BCType;
  */
 public abstract class Expression implements Cloneable {
 	private Expression[] subExpressions;
-	public static final Counter COUNTER = Counter.getCounter();
-	public static final ArithmeticExpression COUNTER_PLUS_2 = (ArithmeticExpression)ArithmeticExpression.getArithmeticExpression(
-			COUNTER, new NumberLiteral(2), ExpressionConstants.ADD);
-	public static final ArithmeticExpression COUNTER_PLUS_1 = (ArithmeticExpression)ArithmeticExpression.getArithmeticExpression(
-			COUNTER, new NumberLiteral(1), ExpressionConstants.ADD);
-	public static final ArithmeticExpression COUNTER_MINUS_1 = (ArithmeticExpression)ArithmeticExpression.getArithmeticExpression(
-			COUNTER, new NumberLiteral(1), ExpressionConstants.SUB);
-	public static final ArithmeticExpression COUNTER_MINUS_2 = (ArithmeticExpression)ArithmeticExpression.getArithmeticExpression(
-			COUNTER, new NumberLiteral(2), ExpressionConstants.SUB);
-	public static final ArithmeticExpression COUNTER_MINUS_3 = (ArithmeticExpression)ArithmeticExpression.getArithmeticExpression(
-			COUNTER, new NumberLiteral(3), ExpressionConstants.SUB);
-	public static final ArithmeticExpression COUNTER_MINUS_4 = (ArithmeticExpression)ArithmeticExpression.getArithmeticExpression(
-			COUNTER, new NumberLiteral(4), ExpressionConstants.SUB);
-	public static final NULL _NULL = NULL.getNULL();
 	
+	public static final Counter COUNTER = Counter.getCounter();
+
+	public static Expression getCOUNTER_PLUS_2() {
+		return ArithmeticExpression.getArithmeticExpression(
+			COUNTER,
+			new NumberLiteral(2),
+			ExpressionConstants.ADD);
+	}
+
+	public static Expression getCOUNTER_PLUS_1() {
+		return ArithmeticExpression.getArithmeticExpression(
+			COUNTER,
+			new NumberLiteral(1),
+			ExpressionConstants.ADD);
+	}
+
+	public static Expression getCOUNTER_MINUS_1() {
+		return ArithmeticExpression.getArithmeticExpression(
+			COUNTER,
+			new NumberLiteral(1),
+			ExpressionConstants.SUB);
+	}
+
+	public static Expression getCOUNTER_MINUS_2() {
+		return ArithmeticExpression.getArithmeticExpression(
+			COUNTER,
+			new NumberLiteral(2),
+			ExpressionConstants.SUB);
+	}
+	
+	
+	public static Expression getCOUNTER_MINUS_3() {
+		return ArithmeticExpression.getArithmeticExpression(
+			COUNTER,
+			new NumberLiteral(3),
+			ExpressionConstants.SUB);
+	}
+	
+	public static Expression  getCOUNTER_MINUS_4() {
+		return ArithmeticExpression.getArithmeticExpression(
+			COUNTER,
+			new NumberLiteral(4),
+			ExpressionConstants.SUB);
+	}
+	
+	public static final NULL _NULL = NULL.getNULL();
+
 	public static final RESULT _RESULT = RESULT.getResult();
+	
 	protected Expression() {
 	}
+	
 	public Expression(Expression _subExpr) {
 		subExpressions = new Expression[1];
 		subExpressions[0] = _subExpr;
 	}
+	
 	public Expression(Expression _subExpr1, Expression _subExpr2) {
 		subExpressions = new Expression[2];
 		subExpressions[0] = _subExpr1;
@@ -48,7 +84,7 @@ public abstract class Expression implements Cloneable {
 			subExpressions = _subExprs;
 		}
 	}
-	
+
 	/**
 	 * @return Returns the subExpressions.
 	 */
@@ -62,8 +98,7 @@ public abstract class Expression implements Cloneable {
 	protected void setSubExpressions(Expression[] subExpressions) {
 		this.subExpressions = subExpressions;
 	}
-	
-	
+
 	/**
 	 * substitute the subexpression (if there are ) equal to _e1 with _e2
 	 * 
@@ -74,8 +109,7 @@ public abstract class Expression implements Cloneable {
 	public abstract Expression substitute(Expression _e1, Expression _e2);
 	public abstract BCType getType();
 	public abstract String toString();
-	
-	
+
 	/**
 	 * two expressions are equals if they are from the same type and if they
 	 * have the same number of subexpressions and they are equals.
@@ -93,7 +127,7 @@ public abstract class Expression implements Cloneable {
 		Expression[] subEofThis = getSubExpressions();
 		Expression[] subEofExpr = _expr.getSubExpressions();
 		if (((subEofExpr == null) && (subEofThis != null))
-				|| ((subEofExpr != null) && (subEofThis == null))) {
+			|| ((subEofExpr != null) && (subEofThis == null))) {
 			return false;
 		}
 		//both expressions don't have subexpressions
@@ -103,13 +137,13 @@ public abstract class Expression implements Cloneable {
 		boolean subExprEquals = true;
 		if ((subEofExpr != null) && (subEofThis != null)) {
 			for (int i = 0; i < subEofThis.length; i++) {
-				subExprEquals = subExprEquals
-						&& subEofThis[i].equals(subEofExpr[i]);
+				subExprEquals =
+					subExprEquals && subEofThis[i].equals(subEofExpr[i]);
 			}
 		}
 		return subExprEquals;
 	}
-	
+
 	public Expression[] copySubExpressions() {
 		if (subExpressions == null) {
 			return null;
@@ -118,13 +152,12 @@ public abstract class Expression implements Cloneable {
 			return null;
 		}
 		Expression[] copySubExpr = new Expression[subExpressions.length];
-		for (int i = 0; i <  copySubExpr.length; i++){
+		for (int i = 0; i < copySubExpr.length; i++) {
 			copySubExpr[i] = subExpressions[i].copy();
-		}  
+		}
 		return copySubExpr;
 	}
-	
-	
-	public abstract Expression copy() ;
-	
+
+	public abstract Expression copy();
+
 }

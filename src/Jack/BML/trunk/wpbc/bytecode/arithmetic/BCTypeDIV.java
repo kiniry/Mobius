@@ -70,12 +70,12 @@ public class BCTypeDIV extends BCArithmeticInstructionWithException {
 		ArithmeticExpression divResult =
 			(ArithmeticExpression)ArithmeticExpression.getArithmeticExpression(
 				new Stack(Expression.COUNTER),
-				new Stack(Expression.COUNTER_MINUS_1),
+				new Stack(Expression.getCOUNTER_MINUS_1()),
 				ExpressionConstants.DIV);
 		_normal_Postcondition.substitute(
 			Expression.COUNTER,
-			Expression.COUNTER_MINUS_1);
-		_normal_Postcondition.substitute(new Stack(Expression.COUNTER_MINUS_1), divResult);
+			Expression.getCOUNTER_MINUS_1());
+		_normal_Postcondition.substitute(new Stack(Expression.getCOUNTER_MINUS_1()), divResult);
 
 		Formula wpNormalExecution =
 		Formula.getFormula(

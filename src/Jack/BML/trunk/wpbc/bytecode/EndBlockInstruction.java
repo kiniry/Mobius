@@ -6,6 +6,10 @@
  */
 package bytecode;
 
+import formula.Formula;
+import bcclass.attributes.ExsuresTable;
+import bytecode.block.Block;
+
 /**
  * @author io
  *
@@ -13,4 +17,13 @@ package bytecode;
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
 public interface EndBlockInstruction {
+	
+	
+	
+	/**
+	 * sets the block where the end is this instruction
+	 */
+	public void setBlock(Block block);
+	
+	public Formula calculateRecursively(Formula  _normal_postcondition, ExsuresTable _exs_postcondition);
 }

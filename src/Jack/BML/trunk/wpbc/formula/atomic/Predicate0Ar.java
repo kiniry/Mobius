@@ -6,6 +6,8 @@
  */
 package formula.atomic;
 
+import formula.Formula;
+
 /**
  * @author mpavlova
  *
@@ -14,6 +16,8 @@ package formula.atomic;
  */
 public class Predicate0Ar extends Predicate {
 	
-	
+	public Formula copy() {
+		return this;
+	}
 
 }

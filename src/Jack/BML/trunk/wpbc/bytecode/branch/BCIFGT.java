@@ -39,21 +39,23 @@ public class BCIFGT extends BCConditionalBranch {
 			 * @see bytecode.ByteCode#wp(formula.Formula, specification.Exsures)
 			 */
 			public Formula wp(Formula _normal_Postcondition, ExsuresTable _exc_Postcondition) {
-				Formula wp;
-//				Stack stackTop = new Stack(Expression.COUNTER);
-		
-				//in case of jump - S( t ) > 0
-				Formula stackTop_grt_0 = new Predicate2Ar(new Stack(Expression.COUNTER), new NumberLiteral(0), PredicateSymbol.GRT);
-				Formula grt_branch = getBranchWP();
-				grt_branch = grt_branch.substitute(Expression.COUNTER, Expression.COUNTER_MINUS_1);
-				Formula wp_stackTop_grt_0 = Formula.getFormula( stackTop_grt_0, grt_branch, Connector.IMPLIES);
-		
+				Formula wp;	
 				// in case of executing next instruction - S( t ) <= 0
 				Formula stackTop_not_grt_0 =  new Predicate2Ar(new Stack(Expression.COUNTER), new NumberLiteral(0), PredicateSymbol.LESSEQ);
-				Formula not_grt_branch = _normal_Postcondition.substitute(Expression.COUNTER, Expression.COUNTER_MINUS_1);
-				Formula wp_stackTop_not_grt_0 = Formula.getFormula( stackTop_not_grt_0, not_grt_branch, Connector.IMPLIES);
-		
-				wp = Formula.getFormula(wp_stackTop_grt_0, wp_stackTop_not_grt_0, Connector.AND);
+				Formula not_grt_branch = _normal_Postcondition.substitute(Expression.COUNTER, Expression.getCOUNTER_MINUS_1());
+				wp = Formula.getFormula( stackTop_not_grt_0, not_grt_branch, Connector.IMPLIES);
+				return wp;
+			}
+
+			/* (non-Javadoc)
+			 * @see bytecode.branch.BCConditionalBranch#wpBranch(formula.Formula, bcclass.attributes.ExsuresTable)
+			 */
+			public Formula wpBranch(Formula _normal_Postcondition, ExsuresTable _exc_Postcondition) {
+				Formula wp;
+				//in case of jump - S( t ) > 0
+				Formula stackTop_grt_0 = new Predicate2Ar(new Stack(Expression.COUNTER), new NumberLiteral(0), PredicateSymbol.GRT);
+				Formula grt_branch =  _normal_Postcondition.substitute(Expression.COUNTER, Expression.getCOUNTER_MINUS_1());
+				wp = Formula.getFormula( stackTop_grt_0, grt_branch, Connector.IMPLIES);
 				return wp;
 			}
 

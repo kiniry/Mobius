@@ -6,8 +6,6 @@
  */
 package bcexpression;
 
-import java.util.Vector;
-
 import type.BCType;
 
 import bcexpression.javatype.JavaType;

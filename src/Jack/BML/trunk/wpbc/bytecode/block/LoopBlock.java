@@ -50,11 +50,11 @@ public class LoopBlock  extends Block {
 	}
 	
 	public Formula wp(Formula _normal_Postcondition, ExsuresTable _exc_Postcondition ) {
-		if (wp != null) {
-			return wp;
-		}
+//		if (wp != null) {
+//			return wp;
+//		}
 		Formula _np = Formula.getFormula( _normal_Postcondition,  getInvariant(), Connector.AND );	
-		wp = super.wp(_np,_exc_Postcondition);
+		Formula wp = super.wp(_np,_exc_Postcondition);
 		return wp; 
 	}
 	

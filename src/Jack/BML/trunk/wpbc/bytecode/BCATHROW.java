@@ -11,7 +11,6 @@ import org.apache.bcel.generic.InstructionHandle;
 
 import formula.Formula;
 
-import bcclass.attributes.ExceptionHandler;
 import bcclass.attributes.ExsuresTable;
 import bcexpression.javatype.JavaObjectType;
 import bcexpression.javatype.JavaType;

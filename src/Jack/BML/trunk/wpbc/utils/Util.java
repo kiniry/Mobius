@@ -28,20 +28,11 @@ import bytecode.branch.BCJumpInstruction;
  */
 public class Util {
 	public static boolean DUMP = true;
-	public static BCInstruction[] setTargets(BCInstruction[] _bc, MethodGen _mg) {
-		//set possible next instructions for jump instructions -
-		for (int i = 0; i < _bc.length; i++) {
-			//			if ( _bc[i] instanceof BCExceptionThrower ) {
-			//				((BCExceptionThrower)_bc[i]).setExceptionTarget(
-			// getExceptionHandlerStarts((BCExceptionThrower)_bc[i], _mg, _bc)
-			// );
-			//			}
+	public static BCInstruction[] setTargets(BCInstruction[] _bc, MethodGen _mg)  {
+		for (int i = 0; i < _bc.length; i++) {		
 			if (_bc[i] instanceof BCJumpInstruction) {
 				BCInstruction _ih = null;
 				int offset;
-				//dumps the jump instruction
-				Util.dump(" setTargets for "
-						+ _bc[i].getInstructionHandle().toString());
 				offset = ((BCJumpInstruction) _bc[i]).getTargetPosition();
 				_ih = getBCInstructionAtPosition(_bc, offset);
 				((BCJumpInstruction) _bc[i]).setTarget(_ih);
@@ -50,17 +41,10 @@ public class Util {
 		}
 		return _bc;
 	}
+	
+	
 	/**
-	 * this method finds the instruction at which the exception handler for the
-	 * exception Thrower instruction given as parameter starts.
-	 * 
-	 * @param _instr-
-	 *            the instructiuon for which an exception handler is searched
-	 * @param _exc
-	 * @param mg
-	 *            @param_bc
-	 * @return the instruction which is the start for the block that represents
-	 *         the exception handler
+	 * this method does nothing!!! it is still here only for test purposes
 	 */
 	public static BCInstruction getExceptionHandlerStarts(
 			BCExceptionThrower _instr, JavaReferenceType _exc, ExceptionHandler[] _excHandles ,

@@ -107,7 +107,7 @@ public class BCGETFIELD extends BCFieldOrMethodInstruction {
 		Formula.getFormula(stackTopNull, stackTopNullImplies, Connector.IMPLIES);
 
 		wp = Formula.getFormula(wpStackTopNull, wpStackTopNotNull, Connector.AND);
-		Util.dump("wp getfield " + wp);
+//		Util.dump("wp getfield " + wp);
 		return wp;
 	}
 }

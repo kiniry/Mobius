@@ -47,8 +47,8 @@ public class BCSWAP  extends BCInstruction implements BCStackInstruction {
 		
 		
 		wp = _normal_Postcondition.substitute(new Stack(Expression.COUNTER ) , Variable.DummyVariable );
-		wp = wp.substitute(new Stack(Expression.COUNTER_MINUS_1), new Stack( Expression.COUNTER));
-		wp = wp.substitute( Variable.DummyVariable , new Stack( Expression.COUNTER_MINUS_1));
+		wp = wp.substitute(new Stack(Expression.getCOUNTER_MINUS_1() ), new Stack( Expression.COUNTER));
+		wp = wp.substitute( Variable.DummyVariable , new Stack( Expression.getCOUNTER_MINUS_1()));
 		return wp; 
 	} 
 

@@ -6,13 +6,7 @@
  */
 package bytecode.branch;
 
-import java.util.Vector;
-
 import org.apache.bcel.generic.InstructionHandle;
-
-import formula.Formula;
-
-
 
 /**
  * @author mpavlova

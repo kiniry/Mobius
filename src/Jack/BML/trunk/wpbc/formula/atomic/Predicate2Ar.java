@@ -147,5 +147,13 @@ public class Predicate2Ar extends Predicate {
 		return "(" + term1 + op + term2 + ")";
 
 	}
+	
+	
+	public Formula copy() {
+		Expression term1Copy = term1.copy();
+		Expression term2Copy = term2.copy();
+		Predicate2Ar copy = new Predicate2Ar(term1Copy, term2Copy, getPredicateSymbol());
+		return copy;
+	}	
 
 }

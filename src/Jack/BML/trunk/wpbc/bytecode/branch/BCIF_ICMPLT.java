@@ -8,7 +8,6 @@ package bytecode.branch;
 
 import org.apache.bcel.generic.InstructionHandle;
 
-
 import formula.Connector;
 import formula.Formula;
 import formula.atomic.Predicate2Ar;
@@ -35,52 +34,62 @@ public class BCIF_ICMPLT extends BCConditionalBranch {
 	}
 
 	public Formula wp(
-			Formula _normal_Postcondition,
-			ExsuresTable _exc_Postcondition) {
-			Formula wp;
-//			Stack stackTop = new Stack(Expression.COUNTER);
-//			Stack stackTop_minus_1 = new Stack(Expression.COUNTER_MINUS_1);
+		Formula _normal_Postcondition,
+		ExsuresTable _exc_Postcondition) {
+		Formula wp;
 
-			///////////////////////////////////////////	
-			// top of the stack is greater than the stack at level top-1
-			//S(t-1) < S(t)
-			Formula stackTop_minus_1_less_stackTop =
-				new Predicate2Ar(new Stack(Expression.COUNTER_MINUS_1),new Stack(Expression.COUNTER), PredicateSymbol.LESS);
-			//getWPBranch
-			Formula less_branch = getBranchWP();
+		/////////////////////////////////////////////	
+		//top of the stack is not greater than the stack at level top-1
+		// S(t-1) >= S(t)
+		Formula stackTop_minus_1_not_less_stackTop =
+			new Predicate2Ar(
+				new Stack(Expression.getCOUNTER_MINUS_1()),
+				new Stack(Expression.COUNTER),
+				PredicateSymbol.GRTEQ);
 
-			//getWPBranch[t<-- t-2]
-			less_branch =
-				less_branch.substitute(
-					Expression.COUNTER,
-					Expression.COUNTER_MINUS_2);
-			//S(t-1) > S(t) == >  getWPBranch[t<-- t-2]
-			Formula wp_less_branch =
+		//psi^n[t <-- t-2]
+		Formula not_less_branch =
+			_normal_Postcondition.substitute(
+				Expression.COUNTER,
+				Expression.getCOUNTER_MINUS_2());
+
+		//!( S(t-1) > S(t))== > psi^n[t <-- t-2]
+		wp =
 			Formula.getFormula(
-					stackTop_minus_1_less_stackTop,
-					less_branch,
-					Connector.IMPLIES);
+				stackTop_minus_1_not_less_stackTop,
+				not_less_branch,
+				Connector.IMPLIES);
 
-			/////////////////////////////////////////////	
-			//top of the stack is not greater than the stack at level top-1
-			// S(t-1) >= S(t)
-			Formula stackTop_minus_1_not_less_stackTop =
-			new Predicate2Ar(new Stack(Expression.COUNTER_MINUS_1),new Stack(Expression.COUNTER), PredicateSymbol.GRTEQ);
+		return wp;
+	}
 
-			//psi^n[t <-- t-2]
-			Formula not_less_branch =
-				_normal_Postcondition.substitute(
-					Expression.COUNTER,
-					Expression.COUNTER_MINUS_2);
+	/* (non-Javadoc)
+	 * @see bytecode.branch.BCConditionalBranch#wpBranch(formula.Formula, bcclass.attributes.ExsuresTable)
+	 */
+	public Formula wpBranch(
+		Formula _normal_Postcondition,
+		ExsuresTable _exc_Postcondition) {
+		Formula wp;
+		// top of the stack is greater than the stack at level top-1
+		//S(t-1) < S(t)
+		Formula stackTop_minus_1_less_stackTop =
+			new Predicate2Ar(
+				new Stack(Expression.getCOUNTER_MINUS_1()),
+				new Stack(Expression.COUNTER),
+				PredicateSymbol.LESS);
 
-			//!( S(t-1) > S(t))== > psi^n[t <-- t-2]
-			Formula wp_not_less_branch =
+		//getWPBranch[t<-- t-2]
+		Formula  less_branch =
+			_normal_Postcondition.substitute(
+				Expression.COUNTER,
+				Expression.getCOUNTER_MINUS_2());
+		//S(t-1) > S(t) == >  getWPBranch[t<-- t-2]
+		wp =
 			Formula.getFormula(
-					stackTop_minus_1_not_less_stackTop,
-					not_less_branch,
-					Connector.IMPLIES);
+				stackTop_minus_1_less_stackTop,
+				less_branch,
+				Connector.IMPLIES);
 
-			wp = Formula.getFormula(wp_not_less_branch, wp_less_branch, Connector.AND);
-			return wp;
-		}
+		return wp;
+	}
 }

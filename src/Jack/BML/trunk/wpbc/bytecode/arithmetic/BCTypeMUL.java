@@ -46,9 +46,9 @@ public class BCTypeMUL extends BCArithmeticInstruction {
 	public Formula wp(Formula _normal_Postcondition, ExsuresTable _exc_Postcondition) {
 		Formula wp;
 		Stack stackTop = new Stack(Expression.COUNTER);
-		Stack stackTop_minus_1 = new Stack(Expression.COUNTER_MINUS_1);
+		Stack stackTop_minus_1 = new Stack(Expression.getCOUNTER_MINUS_1());
 		ArithmeticExpression mult = (ArithmeticExpression)ArithmeticExpression.getArithmeticExpression(stackTop, stackTop_minus_1, ExpressionConstants.MULT);
-		_normal_Postcondition.substitute(Expression.COUNTER, Expression.COUNTER_MINUS_1);
+		_normal_Postcondition.substitute(Expression.COUNTER, Expression.getCOUNTER_MINUS_1());
 		_normal_Postcondition.substitute(stackTop_minus_1, mult);
 		wp = _normal_Postcondition;
 		return wp; 

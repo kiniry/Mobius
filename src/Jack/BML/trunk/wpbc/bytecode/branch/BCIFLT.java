@@ -8,12 +8,10 @@ package bytecode.branch;
 
 import org.apache.bcel.generic.InstructionHandle;
 
-
 import bcclass.attributes.ExsuresTable;
 import bcexpression.Expression;
 import bcexpression.NumberLiteral;
 import bcexpression.vm.Stack;
-
 
 import formula.Connector;
 import formula.Formula;
@@ -34,26 +32,53 @@ public class BCIFLT extends BCConditionalBranch {
 		super(_branchInstruction);
 		// TODO Auto-generated constructor stub
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see bytecode.ByteCode#wp(formula.Formula, specification.Exsures)
 	 */
-	public Formula wp(Formula _normal_Postcondition, ExsuresTable _exc_Postcondition) {
+	public Formula wp(
+		Formula _normal_Postcondition,
+		ExsuresTable _exc_Postcondition) {
 		Formula wp;
-//		Stack stackTop = new Stack(Expression.COUNTER);
-
-		//in case of jump - S(t) < 0
-		Formula stackTop_less_0 = new Predicate2Ar(new Stack(Expression.COUNTER), new NumberLiteral(0), PredicateSymbol.LESS);
-		Formula less_branch = getBranchWP();
-		less_branch = less_branch.substitute(Expression.COUNTER, Expression.COUNTER_MINUS_1);
-		Formula wp_stackTop_lesseq_0 = Formula.getFormula( stackTop_less_0, less_branch, Connector.IMPLIES);
-
 		// in case of executing next instruction S(t) >= 0
-		Formula stackTop_not_less_0 = new Predicate2Ar(new Stack(Expression.COUNTER), new NumberLiteral(0), PredicateSymbol.GRTEQ);
-		Formula not_less_branch = _normal_Postcondition.substitute(Expression.COUNTER, Expression.COUNTER_MINUS_1);
-		Formula wp_stackTop_not_less_0 = Formula.getFormula( stackTop_not_less_0, not_less_branch, Connector.IMPLIES);
+		Formula stackTop_not_less_0 =
+			new Predicate2Ar(
+				new Stack(Expression.COUNTER),
+				new NumberLiteral(0),
+				PredicateSymbol.GRTEQ);
+		Formula not_less_branch =
+			_normal_Postcondition.substitute(
+				Expression.COUNTER,
+				Expression.getCOUNTER_MINUS_1());
+		wp =
+			Formula.getFormula(
+				stackTop_not_less_0,
+				not_less_branch,
+				Connector.IMPLIES);
 
-		wp = Formula.getFormula(wp_stackTop_lesseq_0, wp_stackTop_not_less_0, Connector.AND);
+		return wp;
+	}
+
+	/* (non-Javadoc)
+	 * @see bytecode.branch.BCConditionalBranch#wpBranch(formula.Formula, bcclass.attributes.ExsuresTable)
+	 */
+	public Formula wpBranch(
+		Formula _normal_Postcondition,
+		ExsuresTable _exc_Postcondition) {
+		Formula wp;
+		//in case of jump - S(t) < 0
+		Formula stackTop_less_0 =
+			new Predicate2Ar(
+				new Stack(Expression.COUNTER),
+				new NumberLiteral(0),
+				PredicateSymbol.LESS);
+		Formula less_branch =
+			_normal_Postcondition.substitute(
+				Expression.COUNTER,
+				Expression.getCOUNTER_MINUS_1());
+		wp =
+			Formula.getFormula(stackTop_less_0, less_branch, Connector.IMPLIES);
+
 		return wp;
 	}
 

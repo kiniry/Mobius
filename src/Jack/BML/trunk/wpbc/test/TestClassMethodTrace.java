@@ -15,9 +15,9 @@ import application.JavaApplication;
  * To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
-public class TestClassMethodTrace {
-
+public class TestClassMethodTrace  {
 	public static void main(String[] args) {
-		BCClass clazz = JavaApplication.getClass("utils.Util");
+		BCClass clazz = JavaApplication.getClass("test.A");
+		clazz.wp();
 	}
 }

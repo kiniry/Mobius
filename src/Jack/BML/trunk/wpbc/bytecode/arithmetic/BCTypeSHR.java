@@ -51,7 +51,7 @@ public class BCTypeSHR extends BCArithmeticInstruction {
 		ExsuresTable _exc_Postcondition) {
 		Formula wp;
 		Stack topStack = new Stack(Expression.COUNTER);
-		Stack topStack_minus_1 = new Stack(Expression.COUNTER_MINUS_1);
+		Stack topStack_minus_1 = new Stack(Expression.getCOUNTER_MINUS_1());
 		//S(t) && 0x1F
 		BitExpression low5bitsofTopStack =
 			new BitExpression(
@@ -65,7 +65,7 @@ public class BCTypeSHR extends BCArithmeticInstruction {
 				ExpressionConstants.SHR);
 		_normal_Postcondition.substitute(
 			Expression.COUNTER,
-			Expression.COUNTER_MINUS_1);
+			Expression.getCOUNTER_MINUS_1());
 		_normal_Postcondition.substitute(topStack_minus_1, shift);
 		wp = _normal_Postcondition;
 		return wp;

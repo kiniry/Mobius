@@ -9,11 +9,8 @@ package bytecode.branch;
 import org.apache.bcel.generic.InstructionHandle;
 
 import bcclass.attributes.ExsuresTable;
-import bytecode.BCInstruction;
-import bytecode.BCRET;
+
 import bytecode.block.Block;
-import bytecode.block.Trace;
-import bytecode.exception.IllBlockException;
 
 import formula.Formula;
 
@@ -32,28 +29,6 @@ public class BCJSR extends  BCUnconditionalBranch {
 		super(_branchInstruction);
 	}
 	
-//	public void setTargetBlock(Trace _trace)  {
-//		Block _b = null;
-//		BCInstruction last = getTarget();
-//		while (last != null ) {
-//			if (last instanceof  BCRET) {
-//				break;
-//			}
-//			last = last.getNext();
-//		}
-//		
-///*		if ( last == null) {
-//			throw new  IllBlockException("jsr " + getPosition() + "jumps to subroutine without ret in the end ");
-//		}*/
-//		_b = _trace.getBlockStartingAtEndingAt(getTarget(), last );
-//		if ( _b == null) {
-//			_b = new Block( getTarget(), last);
-//			_trace.addBlock(_b);
-//		}
-//		targetBlock = _b;
-//		
-//	}
-
 	/* (non-Javadoc)
 	 * @see bytecode.ByteCode#wp(formula.Formula, specification.ExceptionalPostcondition)
 	 */

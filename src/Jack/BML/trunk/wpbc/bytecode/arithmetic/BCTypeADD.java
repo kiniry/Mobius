@@ -53,10 +53,10 @@ public class BCTypeADD extends BCArithmeticInstruction {
 		ArithmeticExpression sum =
 			(ArithmeticExpression)ArithmeticExpression.getArithmeticExpression(
 				new Stack(Expression.COUNTER),
-				new Stack(Expression.COUNTER_MINUS_1),
+				new Stack(Expression.getCOUNTER_MINUS_1()),
 				ExpressionConstants.ADD);
-		_normal_Postcondition.substitute(Expression.COUNTER, Expression.COUNTER_MINUS_1);
-		_normal_Postcondition.substitute(new Stack(Expression.COUNTER_MINUS_1), sum);
+		_normal_Postcondition.substitute(Expression.COUNTER, Expression.getCOUNTER_MINUS_1());
+		_normal_Postcondition.substitute(new Stack(Expression.getCOUNTER_MINUS_1()), sum);
 		wp = _normal_Postcondition;
 		return wp;
 	}

@@ -40,14 +40,14 @@ public class BCTypeSTORE extends BCLocalVariableInstruction {
 	}
 
 	/* (non-Javadoc)
-		 * @see bytecode.ByteCode#wp(formula.Formula, specification.ExceptionalPostcondition)
-		 */
+	 * @see bytecode.ByteCode#wp(formula.Formula, specification.ExceptionalPostcondition)
+	 */
 	public Formula wp(
 		Formula _normal_Postcondition,
 		ExsuresTable _exc_Postcondition) {
 		Formula wp;
-		wp = _normal_Postcondition.substitute(Expression.COUNTER, Expression.COUNTER_MINUS_1);
-//		Stack stackTop = new Stack(Expression.COUNTER);
+		
+		wp = _normal_Postcondition.substitute(Expression.COUNTER, Expression.getCOUNTER_MINUS_1());
 		wp = wp.substitute(new LocalVariableAccess(getIndex()),  new Stack(Expression.COUNTER) );
 		return wp;
 	}

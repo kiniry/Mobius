@@ -38,49 +38,52 @@ public class BCIF_ICMPGT extends BCConditionalBranch {
 		Formula _normal_Postcondition,
 		ExsuresTable _exc_Postcondition) {
 		Formula wp;
-//		Stack stackTop = new Stack(Expression.COUNTER);
-//		Stack stackTop_minus_1 = new Stack(Expression.COUNTER_MINUS_1);
-
-		///////////////////////////////////////////	
-		// top of the stack is greater than the stack at level top-1
-		//S(t-1) > S(t)
-		Formula stackTop_minus_1_grt_stackTop =
-			new Predicate2Ar(new Stack(Expression.COUNTER_MINUS_1), new Stack(Expression.COUNTER) , PredicateSymbol.GRT);
-		//getWPBranch
-		Formula grt_branch = getBranchWP();
-
-		//getWPBranch[t<-- t-2]
-		grt_branch =
-			grt_branch.substitute(
-				Expression.COUNTER,
-				Expression.COUNTER_MINUS_2);
-		//S(t-1) > S(t) == >  getWPBranch[t<-- t-2]
-		Formula wp_grt_branch =
-		Formula.getFormula(
-				stackTop_minus_1_grt_stackTop,
-				grt_branch,
-				Connector.IMPLIES);
-
 		/////////////////////////////////////////////	
 		//top of the stack is not greater than the stack at level top-1
 		// S(t-1) <= S(t)
 		Formula stackTop_minus_1_not_grt_stackTop =
-		new Predicate2Ar(new Stack(Expression.COUNTER_MINUS_1), new Stack(Expression.COUNTER) , PredicateSymbol.LESSEQ);
+		new Predicate2Ar(new Stack(Expression.getCOUNTER_MINUS_1()), new Stack(Expression.COUNTER) , PredicateSymbol.LESSEQ);
 
 		//psi^n[t <-- t-2]
 		Formula not_grt_branch =
 			_normal_Postcondition.substitute(
 				Expression.COUNTER,
-				Expression.COUNTER_MINUS_2);
+				Expression.getCOUNTER_MINUS_2());
 
 		//!( S(t-1) > S(t))== > psi^n[t <-- t-2]
-		Formula wp_not_grt_branch =
+		wp =
 		Formula.getFormula(
 				stackTop_minus_1_not_grt_stackTop,
 				not_grt_branch,
 				Connector.IMPLIES);
 
-		wp = Formula.getFormula(wp_not_grt_branch, wp_grt_branch, Connector.AND);
+		return wp;
+	}
+
+
+	/* (non-Javadoc)
+	 * @see bytecode.branch.BCConditionalBranch#wpBranch(formula.Formula, bcclass.attributes.ExsuresTable)
+	 */
+	public Formula wpBranch(Formula _normal_Postcondition, ExsuresTable _exc_Postcondition)  {
+		Formula wp;
+		// top of the stack is greater than the stack at level top-1
+		//S(t-1) > S(t)
+		Formula stackTop_minus_1_grt_stackTop =
+			new Predicate2Ar(new Stack(Expression.getCOUNTER_MINUS_1()), new Stack(Expression.COUNTER) , PredicateSymbol.GRT);
+		
+
+		//getWPBranch[t<-- t-2]
+		Formula grt_branch =
+			_normal_Postcondition.substitute(
+				Expression.COUNTER,
+				Expression.getCOUNTER_MINUS_2());
+		
+		//S(t-1) > S(t) == >  getWPBranch[t<-- t-2]
+		wp =
+		Formula.getFormula(
+				stackTop_minus_1_grt_stackTop,
+				grt_branch,
+				Connector.IMPLIES);
 		return wp;
 	}
 }

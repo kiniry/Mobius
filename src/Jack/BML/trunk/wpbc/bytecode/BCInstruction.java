@@ -9,7 +9,6 @@ package bytecode;
 
 import java.util.Vector;
 
-import org.apache.bcel.generic.ExceptionThrower;
 import org.apache.bcel.generic.InstructionHandle;
 
 import bcexpression.javatype.JavaType;
@@ -33,7 +32,15 @@ public abstract  class BCInstruction  implements ByteCode{
 	 * this field should disappear in the end. Only the needed information extracted from the object should reamain.
 	 */
 	private InstructionHandle instructionHandle;	
+	
+	/**
+	 * the preceding instruction in the bytecode
+	 */
 	private BCInstruction prev;
+	
+	/**
+	 * the next instruction in the bytecode
+	 */	
 	private BCInstruction next;
 	
 	/**
@@ -43,14 +50,10 @@ public abstract  class BCInstruction  implements ByteCode{
 	
 	//the index at which this instruction  is in the bytecode
 	private int position;
-
-	private int index;
-	private int offset;
-	
+	private int bcIndex;
+	private int offset;	
 	private byte instructionCode;
-	
-	
-	
+
 	
 	/**
 	 * exceptions that this throw instruction may cause
@@ -65,15 +68,6 @@ public abstract  class BCInstruction  implements ByteCode{
 	public InstructionHandle getInstructionHandle() {
 		return instructionHandle;
 	}
-	
-	
-//	public void setWp(Formula _f) {
-//		wp = _f;
-//	}
-//	
-//	public Formula getWp() {
-//		return wp;
-//	}
 	
 	public void setNext(BCInstruction _next)  {
 		next = _next;
@@ -96,7 +90,7 @@ public abstract  class BCInstruction  implements ByteCode{
 	 * this command appears in the bytecode array of instruction 
 	 */
 	public void setBCIndex(int i) {
-		index = i;
+		bcIndex = i;
 	}
 	
 	/**
@@ -105,7 +99,7 @@ public abstract  class BCInstruction  implements ByteCode{
 	 *  this command appears in the bytecode array of instruction 
 	 */
 	public int getBCIndex() {
-		return index;
+		return bcIndex;
 	}
 	
 	/*
@@ -133,6 +127,10 @@ public abstract  class BCInstruction  implements ByteCode{
 		targeters = vector;
 	}
 	
+	/**
+	 * adds an instruction that is targets to this one
+	 * @param _t
+	 */
 	public void addTargeter(BCInstruction _t){
 		if  (targeters == null) {
 			targeters = new Vector();
@@ -140,86 +138,6 @@ public abstract  class BCInstruction  implements ByteCode{
 		targeters.add(_t);
 	} 
 	
-	
-	
-	/* (non-Javadoc)
-	 * @see bytecode.ByteCode#wp(formula.Formula)
-	 */
-//	public Formula wp(Formula _n_Postcondition, ExceptionalPostcondition _e_Postcondition );
-//	 {
-//		if (wp != null) {
-//			return wp;
-//		}
-//		Instruction _instruction = instructionHandle.getInstruction();
-//		Vector _subexpr ;
-//		
-//		if ((_instruction instanceof  ArrayInstruction) && (_instruction instanceof StackProducer)) {
-//			wp = wpType_aload(_n_Postcondition, _e_Postcondition);
-//			return wp;
-//		} else if( (_instruction instanceof  ArrayInstruction) && (_instruction instanceof StackConsumer)) {
-//			//TYPE_STORE		
-//		
-//			return wp;
-//		} else if ( _instruction instanceof ACONST_NULL) {
-//			return wp;
-//		} else if (_instruction instanceof LoadInstruction ) {
-//			return wp;
-//		}
-//		/*else if (_instruction instanceof  ALOAD_N) {
-//			
-//		}*/
-//		else if (_instruction instanceof ANEWARRAY ) {
-//			//..., count ==> ..., arrayref
-//		 	return wp;
-//		} else if(_instruction instanceof ARETURN ) {
-//		  	return wp;
-//		} else if(_instruction instanceof  ARRAYLENGTH ) {
-//		} else if(_instruction instanceof ASTORE ) {
-//		  	//..., objectref  ==> ...
-//		 	return wp;
-//		} 
-//		 /*else if(_instruction instanceof ASTORE_N ) {
-//		 	return wp;
-//		 }*/ 
-//		else if( _instruction instanceof ATHROW ) {
-////			//..., objectref ==> objectref
-////		 	if (((BCAthrowInstruction)this).getHandler() != null) {
-////		 		return ((BCAthrowInstruction)this).getBranchPostconditionCondition();
-////		 	} else {
-////		 		
-////		 		//Formula _ep = _e_Postcondition.substitute(new EXCEPTIONVariable(getExceptions()[0], FreshIntGenerator.getInt()) , exc_obj );
-////		 		return _ep;
-////		 	}
-//		} else if ( _instruction instanceof BIPUSH  ) {
-//			//... ==> ..., value
-//			//stack.push(((BIPUSH)_instruction).getValue());
-//			return wp;
-//		} else if(_instruction instanceof  CHECKCAST ) {
-//			//TODO
-//		 	return wp;
-//		}
-//		/* else if( ) {
-//		 	return wp;
-//		 } else if( ) {
-//		 	return wp;
-//		 } else if( ) {
-//		 	return wp;
-//		 } else if( ) {
-//		 	return wp;
-//		 } else if( ) {
-//		 	return wp;
-//		 } else if( ) {
-//		 	return wp;
-//		 } else if( ) {
-//		 	return wp;
-//		 } */
-//		 
-//		return wp ;
-//	}
-	
-	
-	
-
 	/**
 	 * sets the postcondition 
 	 */

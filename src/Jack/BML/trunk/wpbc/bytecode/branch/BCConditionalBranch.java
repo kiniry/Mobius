@@ -8,6 +8,8 @@ package bytecode.branch;
 
 import org.apache.bcel.generic.InstructionHandle;
 
+import bcclass.attributes.ExsuresTable;
+
 import formula.Formula;
 
 /**
@@ -25,21 +27,14 @@ public abstract  class BCConditionalBranch extends BCJumpInstruction {
 	 */
 	public BCConditionalBranch(InstructionHandle _branchInstruction) {
 		super(_branchInstruction);
+	}
 		
-	}
-	
 	/**
-	 * @return Returns the branchPostconditionCondition.
+	 * this method is called by  objects that represent instructions that are exectuted after this one
+	 * in case the condition is true and 
+	 * the jump is done
 	 */
-	public Formula getBranchWP() {
-		return branchWP;
-	}
-
-	/**
-	 * sets the posctcondition for the branch byte code 
-	 * @param branchPostconditionCondition The branchPostconditionCondition to set.
-	 */
-	public void setBranchWP( Formula _branchWP) {
-		branchWP = _branchWP;
-	}
+	public abstract Formula wpBranch(
+	Formula _normal_Postcondition,
+	ExsuresTable _exc_Postcondition);
 }

@@ -326,16 +326,45 @@ public class BCMethod {
 	
 	private void setPostcondition( ) {
 //		postcondition = new Postcondition( new Predicate2Ar( Expression._RESULT, new NumberLiteral(2), PredicateSymbol.EQ));	
-		BCConstantFieldRef fieldRef =  (BCConstantFieldRef)constantPool.getConstant(41);
-//		*********************************** test for the method ***********************************
-//		/*
-//		   * @ensures result == j;
-//		   */ 
-//		public int TestReferenceSubstitution(A a) {
-//			a.j = 2;
-//			return a.j; 
-//		}
-		postcondition = new Postcondition( new Predicate2Ar( Expression._RESULT, new FieldAccessExpression(fieldRef,  new  LocalVariableAccess( 0) ), PredicateSymbol.EQ));	
+
+
+//		BCConstantFieldRef fieldRef =  (BCConstantFieldRef)constantPool.getConstant(41);
+////		*********************************** test for the method ***********************************
+////		/*
+////		   * @ensures result == j;
+////		   */ 
+////		public int TestReferenceSubstitution(A a) {
+////			a.j = 2;
+////			return a.j; 
+////		}
+//		postcondition = new Postcondition( new Predicate2Ar( Expression._RESULT, new FieldAccessExpression(fieldRef,  new  LocalVariableAccess( 0) ), PredicateSymbol.EQ));	
+//	
+		
+		
+//	BCConstantFieldRef fieldRef =  (BCConstantFieldRef)constantPool.getConstant(39);
+////		*********************************** test for the method ***********************************
+////		/*
+////		   * @ensures result == b;
+////		   */ 
+////		public int TestReferenceSubstitution(A a) {
+////			a.j = 2;
+////			return a.j; 
+////		}
+//		postcondition = new Postcondition( new Predicate2Ar( Expression._RESULT, new FieldAccessExpression(fieldRef,  new  LocalVariableAccess( 0) ), PredicateSymbol.EQ));	
+//	
+
+
+
+//			*********************************** test for the method ***********************************
+		   /*
+			* @ensures result == this;
+			*/
+//			public A TestThisAccess(A a1) {
+//				a1 = this;
+//				b= a1;
+//				return b;
+//			}
+			postcondition = new Postcondition( new Predicate2Ar( Expression._RESULT, new  LocalVariableAccess( 0) , PredicateSymbol.EQ));	
 	}
 	
 	private void setPrecondition( ) {
@@ -444,7 +473,7 @@ public class BCMethod {
 //		Util.dump( " ****************** wrapByteCode ************* " );
 		for (int i = 0; i < _iharr.length; i++) {
 			instr = _iharr[i].getInstruction();
-			Util.dump(instr.toString() );
+//			Util.dump(instr.toString() );
 			if (instr instanceof ReturnInstruction) {
 				_bc[i] = new BCTypeRETURN(_iharr[i]);
 			} else if (instr instanceof RET) {
@@ -691,10 +720,10 @@ public class BCMethod {
 			return ;
 		}
 		//commented for test purposes
-		Formula  f = trace.wp(postcondition.getPredicate(), exsures); 
-		Util.dump(f.toString());
+		trace.wp(postcondition.getPredicate(), exsures); 
+//		Util.dump(f.toString());
 		
-		f = Formula.getFormula( precondition.getPredicate(), f, Connector.IMPLIES) ;
+//		f = Formula.getFormula( precondition.getPredicate(), f, Connector.IMPLIES) ;
 	}
 
 	

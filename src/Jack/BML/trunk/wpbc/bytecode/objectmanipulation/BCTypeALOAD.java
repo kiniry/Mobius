@@ -89,17 +89,17 @@ public class BCTypeALOAD
 		//t <------ t -1
 		_n_Postcondition.substitute(
 			Expression.COUNTER,
-			Expression.COUNTER_MINUS_1);
+			Expression.getCOUNTER_MINUS_1());
 		// n_post[ S(t) <----- S(t-1)[S(t)]]
 		_n_Postcondition =
 			_n_Postcondition.substitute(
 			new Stack(Expression.COUNTER),
-				new ArrayAccessExpression(new Stack(Expression.COUNTER_MINUS_1), new Stack(Expression.COUNTER)));
+				new ArrayAccessExpression(new Stack(Expression.getCOUNTER_MINUS_1()), new Stack(Expression.COUNTER)));
 
 		//S(t - 1) != null
 		Formula _arr_not_null =
 			new Predicate2Ar(
-			new Stack(Expression.COUNTER_MINUS_1),
+			new Stack(Expression.getCOUNTER_MINUS_1()),
 				Expression._NULL,
 				PredicateSymbol.NOTEQ);
 
@@ -107,7 +107,7 @@ public class BCTypeALOAD
 		FieldAccessExpression _arrlength =
 			new FieldAccessExpression(
 				new ArrayLengthConstant(),
-			new Stack(Expression.COUNTER_MINUS_1));
+			new Stack(Expression.getCOUNTER_MINUS_1()));
 		Formula _arr_index_correct =
 			new Predicate2Ar(_arrlength, new Stack(Expression.COUNTER), PredicateSymbol.GRT);
 		Formula _condition =
@@ -134,7 +134,7 @@ public class BCTypeALOAD
 		//S(t-1) == null ==> excPost(NullPointerException) 
 		Formula _arr_null =
 			new Predicate2Ar(
-			new Stack(Expression.COUNTER_MINUS_1),
+			new Stack(Expression.getCOUNTER_MINUS_1()),
 				Expression._NULL,
 				PredicateSymbol.EQ);
 		Formula _wp_null_pointer =

@@ -71,7 +71,7 @@ public class BCGETSTATIC extends BCFieldOrMethodInstruction {
 	public Formula wp(Formula _normal_Postcondition, ExsuresTable _exc_Postcondition) {
 		Formula wp;
 		//psi^n = psi^n[t <-- t +1]
-		wp = _normal_Postcondition.substitute(Expression.COUNTER,  Expression.COUNTER_PLUS_1 );
+		wp = _normal_Postcondition.substitute(Expression.COUNTER,  Expression.getCOUNTER_PLUS_1() );
 		
 		//create the object representing access to the static field reference
 		BCConstantFieldRef _constantFieldref  = (BCConstantFieldRef)getConstantPool().getConstant(getIndex());
@@ -80,7 +80,7 @@ public class BCGETSTATIC extends BCFieldOrMethodInstruction {
 		//static_ref
 		StaticFieldAccess _staticFieldAccess= new StaticFieldAccess(_constantFieldref  ,  _constantClass);
 				 
-		Stack stack_plus_1 = new Stack(Expression.COUNTER_PLUS_1);
+		Stack stack_plus_1 = new Stack(Expression.getCOUNTER_PLUS_1());
 		
 		//psi^n = psi^n[S(t+1) <--  static_ref]
 		wp = wp.substitute( stack_plus_1 , _staticFieldAccess);

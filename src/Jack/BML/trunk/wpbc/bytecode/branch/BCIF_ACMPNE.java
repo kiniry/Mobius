@@ -35,28 +35,55 @@ public class BCIF_ACMPNE extends BCConditionalBranch {
 	/* (non-Javadoc)
 	 * @see bytecode.ByteCode#wp(formula.Formula, specification.Exsures)
 	 */
-	public Formula wp(Formula _normal_Postcondition, ExsuresTable _exc_Postcondition) {
+	public Formula wp(
+		Formula _normal_Postcondition,
+		ExsuresTable _exc_Postcondition) {
 		Formula wp;
-//		Stack stackTop = new Stack(Expression.COUNTER);
-//		Stack stackTop_minus_1 = new Stack( Expression.COUNTER_MINUS_1);
-		
+
 		////////////////////////////////////////////////////////
 		// top two stack values are equal 
-		Formula stackTop_equals_stackTop_minus_1 = new Predicate2Ar(new Stack(Expression.COUNTER), new Stack( Expression.COUNTER_MINUS_1), PredicateSymbol.EQ );
-		Formula eq_branch = 	_normal_Postcondition.substitute(Expression.COUNTER, Expression.COUNTER_MINUS_2);
-		Formula wp_eq_branch = Formula.getFormula(stackTop_equals_stackTop_minus_1, eq_branch, Connector.IMPLIES );
-	
-	
-		////////////////////////////////////////////////////
-		//top two stack values are not equal
-		Formula stackTop_not_equals_stackTop_minus_1 = new Predicate2Ar(new Stack(Expression.COUNTER), new Stack( Expression.COUNTER_MINUS_1), PredicateSymbol.NOTEQ );
-		Formula not_eq_branch = getBranchWP();
-		not_eq_branch = not_eq_branch.substitute(Expression.COUNTER, Expression.COUNTER_MINUS_2);
-		Formula wp_not_eq_branch = Formula.getFormula(stackTop_not_equals_stackTop_minus_1, not_eq_branch , Connector.IMPLIES );
-		
-		wp = Formula.getFormula(wp_not_eq_branch, wp_eq_branch, Connector.AND);
+		Formula stackTop_equals_stackTop_minus_1 =
+			new Predicate2Ar(
+				new Stack(Expression.COUNTER),
+				new Stack(Expression.getCOUNTER_MINUS_1()),
+				PredicateSymbol.EQ);
+		Formula eq_branch =
+			_normal_Postcondition.substitute(
+				Expression.COUNTER,
+				Expression.getCOUNTER_MINUS_2());
+		wp =
+			Formula.getFormula(
+				stackTop_equals_stackTop_minus_1,
+				eq_branch,
+				Connector.IMPLIES);
 		return wp;
 	}
 
+	/* (non-Javadoc)
+	 * @see bytecode.branch.BCConditionalBranch#wpBranch(formula.Formula, bcclass.attributes.ExsuresTable)
+	 */
+	public Formula wpBranch(
+		Formula _normal_Postcondition,
+		ExsuresTable _exc_Postcondition) {
+
+		Formula wp;
+		//top two stack values are not equal
+		Formula stackTop_not_equals_stackTop_minus_1 =
+			new Predicate2Ar(
+				new Stack(Expression.COUNTER),
+				new Stack(Expression.getCOUNTER_MINUS_1()),
+				PredicateSymbol.NOTEQ);
+
+		Formula not_eq_branch =
+			_normal_Postcondition.substitute(
+				Expression.COUNTER,
+				Expression.getCOUNTER_MINUS_2());
+		wp =
+			Formula.getFormula(
+				stackTop_not_equals_stackTop_minus_1,
+				not_eq_branch,
+				Connector.IMPLIES);
+		return wp;
+	}
 
 }

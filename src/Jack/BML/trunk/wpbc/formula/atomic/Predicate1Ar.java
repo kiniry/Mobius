@@ -34,7 +34,10 @@ public class Predicate1Ar extends Predicate {
 	}
 	
 	
-	
-	
+	public Formula copy() {
+		 Expression termCopy =	term.copy();
+		 Predicate1Ar copy = new Predicate1Ar(termCopy, predicateSymbol);
+		 return copy;
+	}
 
 }

@@ -214,19 +214,19 @@ public class Trace {
 		}
 	}
 
-	public Formula wp(Formula postcondition, ExsuresTable exsures) {
+	public void wp(Formula postcondition, ExsuresTable exsures) {
 		if ((blocks == null) || (blocks.size() == 0)) {
-			return Predicate._TRUE;
+			return ;//Predicate._TRUE;
 		}
 		Formula wp;
 		for (int i = 0; i < blocks.size(); i++) {
 			Block b = (Block) (blocks.elementAt(i));
 			if (b.getLast() instanceof BCTypeRETURN) {
 				EndBlockInstruction endBlock = (BCTypeRETURN) b.getLast();
-				endBlock.calculateRecursively(postcondition, exsures);
+				endBlock.calculateRecursively(postcondition.copy(), exsures);
 			}
 		}
-		return entryBlock.getWp();
+		//return entryBlock.getWp();
 	}
 
 }

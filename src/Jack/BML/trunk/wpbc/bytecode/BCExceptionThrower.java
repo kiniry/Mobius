@@ -1,7 +1,6 @@
 package bytecode;
 
 import java.util.HashMap;
-import java.util.Hashtable;
 
 import org.apache.bcel.generic.InstructionHandle;
 
@@ -14,7 +13,7 @@ import bcclass.attributes.ExceptionHandler;
 import bcclass.attributes.ExsuresTable;
 import bcexpression.EXCEPTIONVariable;
 import bcexpression.ref.Reference;
-import bcexpression.javatype.ClassNames;
+
 import bcexpression.javatype.JavaObjectType;
 import bytecode.block.*;
 
@@ -28,19 +27,13 @@ import bytecode.block.*;
  */
 public abstract class BCExceptionThrower extends BCInstruction {
 	private JavaObjectType[] exceptionsThrown;
-
 	private HashMap excHandleBlocks;
-	//	/**
-	//	 * mapping between an exception and aninstruction where the handler for this exception starts
-	//	 */
-	//	private HashMap exception_targetBlock;
 
 	/**
 	 * @param _instruction
 	 */
 	public BCExceptionThrower(InstructionHandle _instruction) {
 		super(_instruction);
-
 	}
 
 	/**
@@ -155,7 +148,8 @@ public abstract class BCExceptionThrower extends BCInstruction {
 			return _exc_termination_copy;
 		}
 		//else if there is a handle then the wp of this handler must be taken
-		_exc_termination = block.getWp().copy();
+		_exc_termination = Predicate._TRUE;//   block.getWp().copy();
 		return _exc_termination;
 	}
+	
 }

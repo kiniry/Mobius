@@ -57,14 +57,14 @@ public class BCDUP2 extends BCInstruction implements BCStackInstruction {
 		ExsuresTable _exc_Postcondition) {
 		Formula wp;
 		//		psi^n[t <-- t +2][S(t+1) <-- S(t-1)][S(t+2) <-- S(t)]
-		Stack stackTop_minus1 = new Stack(Expression.COUNTER_MINUS_1);
+		Stack stackTop_minus1 = new Stack(Expression.getCOUNTER_MINUS_1());
 
 		wp =
 			_normal_Postcondition.substitute(
 				Expression.COUNTER,
-				Expression.COUNTER_PLUS_2);
-		wp = wp.substitute(new Stack(Expression.COUNTER_PLUS_2), new Stack(Expression.COUNTER));
-		wp = wp.substitute(new Stack(Expression.COUNTER_PLUS_1), stackTop_minus1);
+				Expression.getCOUNTER_PLUS_2());
+		wp = wp.substitute(new Stack(Expression.getCOUNTER_PLUS_2()), new Stack(Expression.COUNTER));
+		wp = wp.substitute(new Stack(Expression.getCOUNTER_PLUS_1()), stackTop_minus1);
 		return wp;
 	}
 

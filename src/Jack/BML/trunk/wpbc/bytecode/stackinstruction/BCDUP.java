@@ -41,9 +41,9 @@ public class BCDUP extends BCInstruction implements BCStackInstruction {
 	 */
 	public Formula wp(Formula _normal_Postcondition, ExsuresTable _exc_Postcondition) {
 		Formula wp;
-		wp = _normal_Postcondition.substitute(Expression.COUNTER, Expression.COUNTER_PLUS_1);
+		wp = _normal_Postcondition.substitute(Expression.COUNTER, Expression.getCOUNTER_PLUS_1());
 		Stack topStack = new Stack(Expression.COUNTER);
-		Stack topStack_plus_1 = new Stack(Expression.COUNTER_PLUS_1);
+		Stack topStack_plus_1 = new Stack(Expression.getCOUNTER_PLUS_1());
 		wp = wp.substitute(topStack, topStack_plus_1);
 		return wp;
 	}

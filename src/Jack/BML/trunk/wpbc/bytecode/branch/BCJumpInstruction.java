@@ -5,12 +5,10 @@
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 package bytecode.branch;
-import java.util.Enumeration;
-import java.util.Vector;
 import org.apache.bcel.generic.BranchInstruction;
 import org.apache.bcel.generic.InstructionHandle;
 import bytecode.BCInstruction;
-import bytecode.EndBlockInstruction;
+
 import bytecode.block.*;
 import utils.Util;
 /**

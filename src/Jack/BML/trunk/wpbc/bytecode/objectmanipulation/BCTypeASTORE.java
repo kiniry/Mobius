@@ -96,27 +96,27 @@ public class BCTypeASTORE
 		//t <------ t - 3
 		_n_Postcondition.substitute(
 			Expression.COUNTER,
-			Expression.COUNTER_MINUS_3);
+			Expression.getCOUNTER_MINUS_3());
 
 		//S(t-2 ) != null
 		Formula array_not_null =
 			new Predicate2Ar(
-			new Stack(Expression.COUNTER_MINUS_2),
+			new Stack(Expression.getCOUNTER_MINUS_2()),
 				Expression._NULL,
 				PredicateSymbol.NOTEQ);
 		//S(t-1) < S(t-2).length
 		Formula arr_index_correct =
 			new Predicate2Ar(
-			new Stack(Expression.COUNTER_MINUS_1),
+			new Stack(Expression.getCOUNTER_MINUS_1()),
 				new FieldAccessExpression(
 					new ArrayLengthConstant(),
-			new Stack(Expression.COUNTER_MINUS_2)),
+			new Stack(Expression.getCOUNTER_MINUS_2())),
 				PredicateSymbol.LESS);
 
 		Formula condition =
 		Formula.getFormula(array_not_null, arr_index_correct, Connector.AND);
 		Expression arrElementAtIndex =
-			new ArrayAccessExpression(new Stack(Expression.COUNTER_MINUS_2), new Stack(Expression.COUNTER_MINUS_1));
+			new ArrayAccessExpression(new Stack(Expression.getCOUNTER_MINUS_2()), new Stack(Expression.getCOUNTER_MINUS_1()));
 		//S(t-2)[S(t-1)] <--- S(t)
 		_n_Postcondition.substitute(arrElementAtIndex, stackTop);
 
@@ -126,7 +126,7 @@ public class BCTypeASTORE
 		//S(t-2 ) == null ==> _exc_Postcondition(java.lang.NullPointerException)
 		Formula array_null =
 			new Predicate2Ar(
-			new Stack(Expression.COUNTER_MINUS_2),
+			new Stack(Expression.getCOUNTER_MINUS_2()),
 				Expression._NULL,
 				PredicateSymbol.EQ);
 		Formula nullPointer =
@@ -139,10 +139,10 @@ public class BCTypeASTORE
 		//S(t-1) > S(t-2).length ==> _exc_Postcondition(java.lang. ArrayIndexOutOfBoundsException)
 		Formula arr_index_not_correct =
 			new Predicate2Ar(
-			new Stack(Expression.COUNTER_MINUS_1),
+			new Stack(Expression.getCOUNTER_MINUS_1()),
 				new FieldAccessExpression(
 					new ArrayLengthConstant(),
-			new Stack(Expression.COUNTER_MINUS_2)),
+			new Stack(Expression.getCOUNTER_MINUS_2())),
 				PredicateSymbol.GRTEQ);
 		Formula outOfBounds =
 			getWpForException(
