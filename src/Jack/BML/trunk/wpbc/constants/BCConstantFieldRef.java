@@ -84,7 +84,11 @@ public class BCConstantFieldRef extends BCConstantRef implements RefFunction {
 		ValueOfConstantAtState valueOfFieldAtState = new ValueOfConstantAtState(this , instrIndex);
 		return valueOfFieldAtState;
 	}
-	
+	/**
+	 * two constant pool field references ( not oblkigatory from the same constant pool ) are equal
+	 * if they are references to the same field, i.e. the class in which the field is declared is the
+	 * same and the field names are the same
+ 	 */
 	public boolean equals(Expression expr ) {
 		if ( !(expr instanceof BCConstantFieldRef)) {
 			return false;
