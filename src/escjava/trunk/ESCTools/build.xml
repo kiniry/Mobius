@@ -476,8 +476,19 @@
 
   <!-- Compile targets. -->
 
+  <target name="generate_javafe_ast">
+    <description>
+      Generate Javafe AST using the astgen tool.
+    </description>
+    <exec dir="${javafe_source_dir}/javafe/ast" 
+          executable="make">
+      <arg value="source"/>
+    </exec>
+  </target>
+
   <target name="compile_javafe" depends="clean_javafe,
-                                         initialize">
+                                         initialize,
+                                         generate_javafe_ast">
     <description>
       Compile all Javafe source code.
     </description>
@@ -527,10 +538,32 @@
           executable="make"/>
   </target>
 
+  <target name="generate_escjava_ast">
+    <description>
+      Generate Escjava AST using the astgen tool.
+    </description>
+    <exec dir="${escjava_source_dir}/escjava/ast" 
+          executable="make">
+      <arg value="source"/>
+    </exec>
+  </target>
+
+  <target name="generate_default_backpred">
+    <description>
+      Generate the default universal background predicate.
+    </description>
+    <exec dir="${escjava_source_dir}/escjava/backpred" 
+          executable="make">
+      <arg value="source"/>
+    </exec>
+  </target>
+
   <target name="compile_escjava" depends="compile_javafe,
                                           compile_mochalib,
                                           clean_escjava,
-                                          initialize">
+                                          initialize,
+                                          generate_escjava_ast,
+                                          generate_default_backpred">
                                           <!-- compile_simplify, -->
     <description>
       Compile all ESC/Java source code.
@@ -679,7 +712,9 @@
   <!-- create_rcc_jar create_calvin_jar -->
 
   <target name="create_jars" depends="create_javafe_jar,
-                                      create_escjava_jar">
+                                      create_decsrc_jar,
+                                      create_escjava_jar,
+                                      create_mochalib_jar">
     <description>
       Generate jar files of various builds.
     </description>
@@ -692,6 +727,15 @@
     <jar destfile="${final_jars_dir}/javafe.jar"
          basedir="${javafe_classes_dir}"
          includes="javafe/**,tohtml/**"/>
+  </target>
+
+  <target name="create_decsrc_jar">
+    <description>
+      Generate jar file of the decsrc library.
+    </description>
+    <jar destfile="${final_jars_dir}/decsrc.jar"
+         basedir="${javafe_root_dir}/decsrclib"
+         includes="decsrc/util/*.class,decsrc/util/*.spec"/>
   </target>
 
   <target name="create_rcc_jar" depends="compile_rcc">
@@ -710,10 +754,15 @@
     <jar destfile="${final_jars_dir}/escjava.jar"
          basedir="${escjava_classes_dir}"
          includes="escjava/**"/>
-    <jar destfile="${final_jars_dir}/escjava.jar"
-         update="yes"
+  </target>
+
+  <target name="create_mochalib_jar" depends="compile_mochalib">
+    <description>
+      Generate jar file of Mocha library interface.
+    </description>
+    <jar destfile="${final_jars_dir}/mochalib.jar"
          basedir="${mochalib_classes_dir}"
-         includes="mocha/**"/>
+         includes="mocha/**/*.class"/>
   </target>
 
   <target name="create_calvin_jar" depends="compile_calvin">
@@ -721,6 +770,7 @@
       Generate jar file of Calvin build results.
     </description>
     <jar destfile="${final_jars_dir}/calvin.jar"
+         update="yes"
          basedir="${calvin_classes_dir}"
          includes="escjava/**"/>
   </target>
@@ -730,6 +780,7 @@
       Generate jar file of Houdini build results.
     </description>
     <jar destfile="${final_jars_dir}/houdini.jar"
+         update="yes"
          basedir="${houdini_classes_dir}"
          includes="houdini/**"/>
   </target>
@@ -739,6 +790,7 @@
       Generate jar files of annotated (jmlc) build results.
     </description>
     <jar destfile="${final_jars_dir}/Escjava-annotated.jar"
+         update="yes"
          basedir="${jmlc_dir}"/>
   </target>
 
@@ -951,6 +1003,10 @@
           executable="make">
       <arg line="clean"/>
     </exec>
+    <exec dir="${javafe_source_dir}/javafe/ast" 
+          executable="make">
+      <arg value="clean"/>
+    </exec>
   </target>
 
   <target name="clean_rcc" if="clean_build_every_time">
@@ -965,6 +1021,14 @@
       Deletes all classfiles in the Escjava envelope.
     </description>
     <delete dir="${escjava_classes_dir}"/>
+    <exec dir="${escjava_source_dir}/escjava/ast" 
+          executable="make">
+      <arg value="clean"/>
+    </exec>
+    <exec dir="${escjava_source_dir}/escjava/ast" 
+          executable="make">
+      <arg value="clean"/>
+    </exec>
   </target>
 
   <target name="clean_mochalib" if="clean_build_every_time">
