@@ -65,16 +65,19 @@ class ASTClassFileParser extends ClassFileParser
      */
     private boolean syntheticClass = false;
 
+    protected boolean includeBodies;
     /**
      * Parse a class into a new class parser.  Resulting class file is
      * stored in <code>typeDecl</code>; this will be a "spec only"
      * declaration.  Its package is stored in <code>classPackage</code>
      * and a location for it is stored in <code>classLocation</code>.
-     * @param stream  the stream to parse the class from */
-    ASTClassFileParser(/*@ non_null */ GenericFile inputFile)
+     * @param stream  the stream to parse the class from 
+     * @param includeBodies if true, bodies are included, if not, only a spec is produced */
+    ASTClassFileParser(/*@ non_null */ GenericFile inputFile, boolean includeBodies)
 	throws IOException, ClassFormatError
     {
 	super();
+	this.includeBodies = includeBodies;
 	DataInputStream stream = null;
 	try {
 	    this.inputFile = inputFile;
@@ -228,7 +231,7 @@ class ASTClassFileParser extends ClassFileParser
 		    if (icf == null) {
 			throw new IOException(icfn + ": inner class not found");
 		    }
-		    ASTClassFileParser parser = new ASTClassFileParser(icf);
+		    ASTClassFileParser parser = new ASTClassFileParser(icf,true);
 		    parser.typeDecl.modifiers |=
 			(flags & ~ACC_SYNCHRONIZED & ~ACC_INTERFACE);
       
@@ -427,6 +430,7 @@ class ASTClassFileParser extends ClassFileParser
 	throws ClassFormatError
     {
 	// put in a dummy body
+	if (!includeBodies) return;
 	routines[i].body =	//@ nowarn Null, IndexTooBig
 	    BlockStmt.make(StmtVec.make(), classLocation, classLocation);
 	routines[i].locOpenBrace = classLocation;
