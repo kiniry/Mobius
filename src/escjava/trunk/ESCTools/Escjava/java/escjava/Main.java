@@ -5,6 +5,7 @@ package escjava;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
+import java.util.ArrayList;
 import java.io.*;
 
 import javafe.ast.*;
@@ -20,6 +21,8 @@ import javafe.reader.StandardTypeReader;
 import escjava.reader.EscTypeReader;
 
 import javafe.parser.PragmaParser;
+import javafe.tc.OutsideEnv;
+import javafe.genericfile.GenericFile;
 
 import escjava.sp.*;
 
@@ -48,7 +51,8 @@ import javafe.util.*;
 public class Main extends javafe.SrcTool
 {
     /** Our version number */
-    public final static String version = "(Nijmegen/Kodak) 1.3, 2003";
+    //public final static String version = "(Nijmegen/Kodak) 1.3, 2003";
+    public final static String version = Version.VERSION;
 
 
     public AnnotationHandler annotationHandler = new AnnotationHandler();
@@ -269,6 +273,8 @@ public class Main extends javafe.SrcTool
      * superclass implementation is called.
      */
     public void handleCU(CompilationUnit cu) {
+	if (options().testRef) makePrettyPrint().print(System.out,cu);
+
         NoWarn.setStartLine(options().startLine, cu);
 
         UniqName.setDefaultSuffixFile(cu.getStartLoc());
@@ -485,7 +491,6 @@ public class Main extends javafe.SrcTool
     private String processRoutineDecl(/*@ non_null */ RoutineDecl r,
                       /*@ non_null */ TypeSig sig,
                       /*@ non_null */ InitialState initState) {
-
 
         if (r.body == null) return "passed immediately";
         if ( Location.toLineNumber(r.getEndLoc()) < options().startLine )
