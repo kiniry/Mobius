@@ -446,7 +446,7 @@ both available from the JML website.
 most of which still applies, is provided in "ESC/Java User's Manual", 
 SRC Technical note 2000-002 (Leino, Nelson, Saxe), 
 available at 
-@*@center{@uref{gatekeeper.dec.com/pub/DEC/SRC/technical-notes/SRC-2000-002.html}}.
+@*@center @uref{gatekeeper.dec.com/pub/DEC/SRC/technical-notes/SRC-2000-002.html}
 @end itemize
 
 @c ------ section Acknowledgements --------
@@ -456,10 +456,9 @@ available at
 
 
 To date, the work on ESC/Java2 has been carried out primarily by David
-Cok and Joe Kiniry (@uref{www.kindsoftware.com}).  Gary Leavens has
-provided guidance on the semantics and the current and future state of
-JML.  K. Rustan M. Leino has provided advice with respect to the
-original ESC/Java.
+Cok and Joe Kiniry.  Gary Leavens has provided guidance on the
+semantics and the current and future state of JML.  K. Rustan M. Leino
+has provided advice with respect to the original ESC/Java.
 
 The website for the project is hosted by the Security of Systems group
 at the Katholieke Universiteit Nijmegen in Nijmegen, Netherlands.
@@ -485,11 +484,12 @@ separately available and may have their own license restrictions.
 @cindex ESC/Java
 @cindex Simplify
 @item The original source for ESC/Java, Simplify and related tools, available 
-at @*@center{@uref{www.research.compaq.com/downloads.html}}.
+at
+@*@center @uref{www.research.compaq.com/downloads.html}
 
 @cindex Mocha
 @item Part of the Mocha tool from UCBerkeley (optional), available at
-@*@center{@uref{www-cad.eecs.berkeley.edu/~mocha/download/j-mocha}}.
+@*@center @uref{www-cad.eecs.berkeley.edu/~mocha/download/j-mocha}
 
 @cindex Simplify
 @cindex CM3
@@ -522,11 +522,11 @@ Further information about JML and ESC/Java2 can be obtained from these sources.
 @item The JML web site:  @uref{www.jmlspecs.org}
 @item The JML project on sourceforge: @uref{sourceforge.net/projects/jmlspecs}
 @item The JML interest mailing list on sourceforge: 
-        @*@center{@email{jmlspecs-interest@@lists.sourceforge.net}}
+        @*@center @email{jmlspecs-interest@@lists.sourceforge.net}
 @item The JML development mailing list on sourceforge: 
-        @*@center{@email{jmlspecs-developers@@lists.sourceforge.net}}
+        @*@center @email{jmlspecs-developers@@lists.sourceforge.net}
 @item The ESC/Java2 mailing list on sourceforge: 
-        @*@center{@email{jmlspecs-escjava@@lists.sourceforge.net}}
+        @*@center @email{jmlspecs-escjava@@lists.sourceforge.net}
 @end itemize
 
 JML utilizes (the Java subset of) the multijava compiler.
@@ -1075,7 +1075,7 @@ those contained in the referenced file.  If present, it must be
 located after any Java package statement and before any Java or model
 import statements.  There may be only one refine statement in a
 compilation unit.  It has the form 
-@*@center{@code{//@@ refine "}@emph{filename}@code{";}} 
+@*@center @code{//@@ refine "}@emph{filename}@code{";}
 @*The refine statements define a
 @emph{refinement sequence} as described in @ref{File finding}.  Here
 we focus on the combining of the compilation units in a refinement
@@ -1171,9 +1171,9 @@ compilation units it is refining.
 @itemize @bullet
 @item @strong{Description:}
 A model import statement has the form 
-@*@center{@code{//@@ model }@emph{java-import-statement}@code{;}} 
+@*@center @code{//@@ model }@emph{java-import-statement}@code{;}
 @*Note that simply writing
-@*@center{@code{//@@ }@emph{java-import-statement}@code{;}} 
+@*@center @code{//@@ }@emph{java-import-statement}@code{;}
 @*is not
 legal JML.  A model import statement may occur wherever a Java import
 statement may be placed.  A model import statement introduces types
@@ -1212,7 +1212,7 @@ unresolved bugs.
 
 @item @strong{Comment:} Though legal, there is no point to a 
 statement of the form
-@*@center{@code{/*@@ model @@*/ import }@emph{typename}@code{;}}
+@*@center @code{/*@@ model @@*/ import }@emph{typename}@code{;}
 @* This is equivalent to simply using a Java import statement.
 @end itemize
 
@@ -1996,7 +1996,7 @@ precondition predicate is formed by taking the conjunction of the
 predicates in each of the @code{requires} clauses in that
 specification case, and making that conjunction the argument of an
 @code{\old} function: 
-@center{@emph{pre-predicate} = @code{\old(}@emph{p1} @code{&&} @emph{p2} ... @code{)} }.  
+@center @emph{pre-predicate} = @code{\old(}@emph{p1} @code{&&} @emph{p2} ... @code{)}
 @*Each clause within the specification case is altered by constraining
 its action using that conjunction.  Calling that combined predicate
 @emph{pre-predicate}, we transform each clause as follows:
@@ -2592,7 +2592,7 @@ only fields that may be modified are, at most, the fields of the
 object itself, which are initialized as a result of the action of the
 constructor.  In this case the @code{pure} modifier is equivalent to
 specifications of the form 
-@*@center{@code{modifies this.*;}}
+@*@center @code{modifies this.*;}
 @*However, a constructor may have modifies clauses that are more
 restrictive than @code{modifies this.*;}.  Note that if a method is
 declared pure, then all overriding methods are also pure, whether or
@@ -2614,7 +2614,7 @@ pure constructor may not modify static fields.
 as return values (and not for constructors).  The modifier specifies
 that the return value is never null.  It is equivalent to a
 specification of 
-@*@center{@code{ensures \result != null; }} 
+@*@center @code{ensures \result != null; }
 @*added
 to each specification case of the method's specification in all of the
 files of the refinement sequence (but not of a superclass's
@@ -2822,7 +2822,7 @@ field declarations.
 indicates that the field in question never has a null value, after the
 object is constructed.  It is equivalent to a class invariant of the
 form 
-@*@center{@code{invariant @emph{field} != null;}} 
+@*@center @code{invariant @emph{field} != null;}
 @*with the same
 access modifiers as the field itself.
 
@@ -2848,9 +2848,9 @@ held by the thread executing the read.
 Modifying a field @code{x} in class @code{C}
 with @code{monitored} is equivalent to the
 declaration
-@*@center{@code{ monitored_by x = C.class; }}
+@*@center @code{ monitored_by x = C.class; }
 @*if @code{x} is static, or to
-@*@center{@code{ monitored_by x = this; }}
+@*@center @code{ monitored_by x = this; }
 @*if @code{x} is not static.
 
 @item @strong{Status:} Implemented.  The implementation improves on that in
@@ -3447,7 +3447,7 @@ implemented.
 @cindex @code{\lblpos}
 @item @code{\lblneg}, @code{\lblpos} : 
 These syntactic constructs have the unusual form
-@*@center{@code{(\lblpos Identifier Expression)}}
+@*@center @code{(\lblpos Identifier Expression)}
 @*The enclosing parentheses are required; the middle item is an unquoted 
 identifier that has no relationship to any other identifiers elsewhere in the
 program.  The result of the expression is the value of the expression that is
@@ -3560,11 +3560,11 @@ type of the JML token @code{\lockset}, as the type of the argument of
 @subsection quantified expressions - \forall, \exists, \num_of, \max, \min, \sum, \product
 
 As described in the JML documentation, quantified expressions take the form
-@*@center{@code{( @emph{quantifier-keyword} @emph{type} @emph{idlist} ; @emph{range-expr} ; @emph{expr} )}}
+@*@center @code{( @emph{quantifier-keyword} @emph{type} @emph{idlist} ; @emph{range-expr} ; @emph{expr} )}
 @*or
-@*@center{@code{( @emph{quantifier-keyword} @emph{type} @emph{idlist} ; ; @emph{expr} )}}
+@*@center @code{( @emph{quantifier-keyword} @emph{type} @emph{idlist} ; ; @emph{expr} )}
 @*or
-@*@center{@code{( @emph{quantifier-keyword} @emph{type} @emph{idlist} ; @emph{expr} )}}
+@*@center @code{( @emph{quantifier-keyword} @emph{type} @emph{idlist} ; @emph{expr} )}
 @*The @emph{range-expr} is a boolean expression; its default value is @strong{true}.
 The @emph{idlist} is a comma-separated list of identifiers; these are
 the bound variables of the quantification.  No side-effects are
@@ -3586,7 +3586,7 @@ a function.  The parser is able to distinguish the two usages.
 @subsection Set comprehension
 
 JML has a syntax for expressions whose value is a set.  An example is
-@*@center{@code{new JMLObjectSet @{ Integer i | o.has(i) && i.intValue() > 0 @}}}
+@*@center @code{new JMLObjectSet @{ Integer i | o.has(i) && i.intValue() > 0 @}}
 
 @noindent
 No side-effects are permitted in the predicate.
@@ -3775,13 +3775,13 @@ and warnings}.  JML parses but ignores these annotations.
 @subsection Java and JML assert statements
 
 JML has an assert statement of the form
-@*@center{@code{//@@ assert }@emph{predicate}@code{;}}
+@*@center @code{//@@ assert }@emph{predicate}@code{;}
 @*The static checker will evaluate the predicate in the appropriate
 context.  If it cannot establish that the predicate is always true, an
 ESC/Java warning will be issued.
 
 Java 1.4 also has an assert statement with the syntax
-@*@center{@code{assert }@emph{predicate}@code{: }@emph{value}@code{;}}
+@*@center @code{assert }@emph{predicate}@code{: }@emph{value}@code{;}
 @*If the predicate is not true, then a @code{java.lang.AssertionError}
 is created, with the given @emph{value} as its argument, and the
 exception is thrown.
@@ -3810,9 +3810,9 @@ behaviors.
 @enumerate A
 @item Parse but ignore them.
 @item Treat them as Java does, namely, as equivalent to 
-@*@center{@code{if ( ! }@emph{predicate}@code{) throw new java.lang.AssertionError(}@emph{value}@code{);}}
+@*@center @code{if ( ! }@emph{predicate}@code{) throw new java.lang.AssertionError(}@emph{value}@code{);}
 @item Treat them as a JML assert statement, namely, as equivalent to
-@*@center{@code{//@@ assert }@emph{predicate}@code{;}}
+@*@center @code{//@@ assert }@emph{predicate}@code{;}
 @end enumerate
 @noindent
 The command line options for these three cases are
@@ -3968,7 +3968,7 @@ class is a subclass and not the same class as its super class.
 of the methods of an anonymous class.
 
 @c ----------------------------------------------------------------------------
-@node block-level class declarations, @code{field}, anonymous classes, Other issues
+@node block-level class declarations, field-method-constructor keywords, anonymous classes, Other issues
 @subsection block-level class declarations
 
 Java allows classes to be declared as local classes within a 
@@ -3983,19 +3983,14 @@ specifications are used when the methods of the class are called.
 [[[ what about model classes ??? ]]]
 
 @c ----------------------------------------------------------------------------
-<<<<<<< Escjava2-ImplementationNotes.texinfo
-@node @code{field}, field-method-constructor keywords, block-level class declarations, Other issues
-@subsection @code{field}, @code{method} and @code{constructor} keywords
-=======
-@node field-method-constructor keywords, TYPE Equivalence, @code{field}, Other issues
+@node field-method-constructor keywords, TYPE Equivalence, block-level class declarations, Other issues
 @subsection  @code{field}, @code{method} and @code{constructor} keywords
->>>>>>> 1.27
 
 JML is designed to work with any Java code.  In particular that code may use
 JML keywords as variables and type names.  This can create a problem in parsing
 annotations.  For example, if @code{helper} has been declared a class, then an
  annotation that begins with
-@center{@code{//@@ helper model ...}}
+@center @code{//@@ helper model ...}
 @noindent
 @*could be interpreted as the beginning of a declaration with type
 @code{helper} and identifier @code{model} or as the beginning of a
@@ -4010,7 +4005,7 @@ They have the effect that any identifiers appearing after these
 keywords in a JML annotation are not interpreted as JML keywords
 (except for non_null in formal parameters as described below).  For
 example, in 
-@center{@code{//@@ public model non_null helper method requires ensures() @{@};}}
+@center @code{//@@ public model non_null helper method requires ensures() @{@};}
 @noindent
 @*@code{model}, @code{non_null}, @code{helper}, and @code{method}
  are JML keywords, but @code{requires} is 
@@ -4020,7 +4015,7 @@ as an identifier, the name of the method being declared.
 The one exception to this rule is that @code{non_null} is needed as a
 JML modifier within the formal parameter declarations.  A parser is
 capable of distinguishing these cases, however.  Thus in
-@*@center{@code{//@@ public model requires ensures(non_null Object o, non_null oo);}}
+@*@center @code{//@@ public model requires ensures(non_null Object o, non_null oo);}
 @noindent
 @*the first occurrence of @code{non_null} is a JML modifier, but the
 second is expected to be a Java type name.  [[[ ESC/Java treats
@@ -4628,9 +4623,9 @@ command-line options (@code{-noCautions}, @code{-nowarn},
 @itemize @bullet
 @item @strong{Description:} 
 A nowarn annotation has the form 
-@*@center{@code{//@@ nowarn @emph{comma-separated-list-of-warning-types};}} 
+@*@center @code{//@@ nowarn @emph{comma-separated-list-of-warning-types};}
 @*or simply
-@*@center{@code{//@@ nowarn ;}} 
+@*@center @code{//@@ nowarn ;}
 @*The annotation is associated with the line in the source file on
 which it is located, rather than with a grammatical construct.  It is
 used to suppress warnings from the static checker associated with a
@@ -4950,7 +4945,7 @@ and classpath for a type, then always use the java file
 @item @code{-quiet} : turns off any informational messages, 
 leaving only reports of errors, warnings and cautions.
 
-@cindex{-simplify} 
+@cindex -simplify
 @item @code{-simplify} @emph{filename} : used to specify the 
 Simplify executable that should be used by ESC/Java2.  The executable
 chosen must be the appropriate one for the platform on which you are
