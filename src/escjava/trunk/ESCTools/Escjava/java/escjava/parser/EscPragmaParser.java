@@ -2,22 +2,23 @@
 
 package escjava.parser;
 
-import javafe.ast.*;
+import escjava.Main;
 import escjava.ast.*;
+// This import is necessary to override javafe.ast.TagConstants.
 import escjava.ast.TagConstants;
 
+import java.io.IOException;
+
+import javafe.ast.*;
 import javafe.parser.Lex;
+import javafe.parser.Parse;
 import javafe.parser.PragmaParser;
 import javafe.parser.Token;
-import javafe.parser.Parse;
-import javafe.util.Location;
+import javafe.util.Assert;
 import javafe.util.CorrelatedReader;
 import javafe.util.ErrorSet;
-import javafe.util.Assert;
-
-import escjava.Main;
-
-import java.io.IOException;
+import javafe.util.Info;
+import javafe.util.Location;
 
 /**
  Grammar:
@@ -137,6 +138,8 @@ import java.io.IOException;
 
 public class EscPragmaParser extends Parse implements PragmaParser
 {
+    private static final boolean DEBUG = false;
+    
     /** 
      * The informal-predicate decoration is associated with a
      * true-valued boolean literal expression, if the concrete syntax
@@ -153,25 +156,30 @@ public class EscPragmaParser extends Parse implements PragmaParser
      */
     private /*@ non_null @*/ EscPragmaLex scanner;
 
+    public int NOTHING_ELSE_TO_PROCESS = -2;
+    public int NEXT_TOKEN_STARTS_NEW_PRAGMA = -1;
+
     /** 
-     * The value -2 means there is nothing else to process.  The value
-     * -1 means there is something to process and the next thing to
-     * read begins a new pragma (or ends the pragma-containing
-     * comment).  The other values indicate that the pragma parser is
-     * in the middle of parsing some pragma, and is expected to
-     * continue this parsing next time it gets control.
+     * The value NOTHING_ELSE_TO_PROCESS means there is nothing else
+     * to process.  The value NEXT_TOKEN_STARTS_NEW_PRAGMA means there
+     * is something to process and the next thing to read begins a new
+     * pragma (or ends the pragma-containing comment).  The other
+     * values indicate that the pragma parser is in the middle of
+     * parsing some pragma, and is expected to continue this parsing
+     * next time it gets control.
      */
     private int inProcessTag;
-    /*@ invariant inProcessTag == -2 || inProcessTag == -1 ||
-      @           inProcessTag==TagConstants.STILL_DEFERRED ||
-      @           inProcessTag==TagConstants.MONITORED_BY ||
-      @           inProcessTag==TagConstants.MODIFIES ||
-      @           inProcessTag==TagConstants.ALSO_MODIFIES ||
-      @           inProcessTag==TagConstants.JML_MODIFIABLE ||
-      @           inProcessTag==TagConstants.JML_ASSIGNABLE ||
-      @           inProcessTag==TagConstants.LOOP_PREDICATE ||
-      @           inProcessTag==TagConstants.JML_ALSO; 
-      @*/
+    /*@ invariant inProcessTag == NOTHING_ELSE_TO_PROCESS || 
+     @           inProcessTag == NEXT_TOKEN_STARTS_NEW_PRAGMA ||
+     @           inProcessTag == TagConstants.STILL_DEFERRED ||
+     @           inProcessTag == TagConstants.MONITORED_BY ||
+     @           inProcessTag == TagConstants.MODIFIES ||
+     @           inProcessTag == TagConstants.ALSO_MODIFIES ||
+     @           inProcessTag == TagConstants.JML_MODIFIABLE ||
+     @           inProcessTag == TagConstants.JML_ASSIGNABLE ||
+     @           inProcessTag == TagConstants.LOOP_PREDICATE ||
+     @           inProcessTag == TagConstants.JML_ALSO; 
+     @*/
 
     private int inProcessLoc;
     private CorrelatedReader pendingJavadocComment;
@@ -231,7 +239,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
 	scanner.addKeyword("\\result", TagConstants.RES);
 	scanner.addKeyword("\\lockset", TagConstants.LS);
 	scanner.addKeyword("\\TYPE", TagConstants.TYPETYPE);
-	inProcessTag = -2;
+	inProcessTag = NOTHING_ELSE_TO_PROCESS;
         inAlsoClause = false;
     }
 
@@ -259,41 +267,41 @@ public class EscPragmaParser extends Parse implements PragmaParser
             // System.out.println("restart: c = '"+(char)c+"'");
 
             switch (c) {
-            case '@':
-                /* Normal escjava annotation: */
+                case '@':
+                    /* Normal escjava annotation: */
 
-                eatWizardComment(in);
-                in = new JmlCorrelatedReader(in,
-                                             eolComment ?
-                                             JmlCorrelatedReader.EOL_COMMENT :
-                                             JmlCorrelatedReader.C_COMMENT);
-                /*
-                 * At this point, <code>in</code> has been
-                 * trimmed/replaced as needed to represent the
-                 * annotation part of the comment (if any -- it may be
-                 * empty).
-                 */
-                scanner.restart(in);
-                inProcessTag = -1;
-                break;
+                    eatWizardComment(in);
+                    in = new JmlCorrelatedReader(in,
+                                                 eolComment ?
+                                                 JmlCorrelatedReader.EOL_COMMENT :
+                                                 JmlCorrelatedReader.C_COMMENT);
+                    /*
+                     * At this point, <code>in</code> has been
+                     * trimmed/replaced as needed to represent the
+                     * annotation part of the comment (if any -- it may be
+                     * empty).
+                     */
+                    scanner.restart(in);
+                    inProcessTag = NEXT_TOKEN_STARTS_NEW_PRAGMA;
+                    break;
 
-            case '*':
-                if (eolComment) {
-                    // This is not a Javadoc comment, so ignore
-                    inProcessTag = -2;
-                } else {
-                    // Javadoc comment -- look for <esc> ... </esc> inside
+                case '*':
+                    if (eolComment) {
+                        // This is not a Javadoc comment, so ignore
+                        inProcessTag = NOTHING_ELSE_TO_PROCESS;
+                    } else {
+                        // Javadoc comment -- look for <esc> ... </esc> inside
 
-                    if (pendingJavadocComment != null) {
-                        pendingJavadocComment.close();
+                        if (pendingJavadocComment != null) {
+                            pendingJavadocComment.close();
+                        }
+                        pendingJavadocComment = in;
+                        processJavadocComment();
                     }
-                    pendingJavadocComment = in;
-                    processJavadocComment();
-                }
-                break;
+                    break;
 
-            default:
-                Assert.fail("Bad starting character on comment:"+ c + " " + (char)c);
+                default:
+                    Assert.fail("Bad starting character on comment:"+ c + " " + (char)c);
             }
         } catch (IOException e) {
             ErrorSet.fatal(in.getLocation(), e.toString());
@@ -317,7 +325,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
         int startLoc = scanFor(pendingJavadocComment, startEnclosedPragma);
         if (startLoc == Location.NULL) {
             pendingJavadocComment = null;
-            inProcessTag = -2;
+            inProcessTag = NOTHING_ELSE_TO_PROCESS;
             return false;
         }
 
@@ -331,14 +339,14 @@ public class EscPragmaParser extends Parse implements PragmaParser
                 pendingJavadocComment.createReaderFromMark(endEnclosedPragma.length());
             nu = new JmlCorrelatedReader(nu, JmlCorrelatedReader.JAVADOC_COMMENT);
             scanner.restart(nu);
-            inProcessTag = -1;
+            inProcessTag = NEXT_TOKEN_STARTS_NEW_PRAGMA;
             return true;
         } else {
             ErrorSet.error(startLoc,
                            "Pragma in javadoc comment is not correctly " +
                            "terminated (missing " + endEnclosedPragma + ")");
             pendingJavadocComment = null;
-            inProcessTag = -2;
+            inProcessTag = NOTHING_ELSE_TO_PROCESS;
             return false;
         }
     } //@ nowarn Exception // IndexOutOfBoundsException
@@ -392,7 +400,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
      */
     private int scanFor(CorrelatedReader /*@ non_null @*/ in,
 			String /*@ non_null @*/ match)
-        throws IOException
+            throws IOException
     {
 
 	int start = match.charAt(0);
@@ -444,29 +452,43 @@ public class EscPragmaParser extends Parse implements PragmaParser
      */
     public boolean getNextPragma(Token /*@ non_null @*/ dst) {
         try {
-            if (inProcessTag == -2) {
+            if (inProcessTag == NOTHING_ELSE_TO_PROCESS) {
+                if (DEBUG)
+                    Info.out("getNextPragma: Nothing else to process.");
                 return false;
             }
 
             // See if we need to continue a previous pragma, for example
             // "monitored_by", which can take multiple SpecExprs
-            if (inProcessTag != -1) { continuePragma(dst); return true; }
+            if ((inProcessTag != NEXT_TOKEN_STARTS_NEW_PRAGMA) &&
+                (inProcessTag != TagConstants.JML_ALSO)) { 
+                continuePragma(dst);
+                return true; 
+            }
 
             if (scanner.ttype == TagConstants.EOF) { 
                 LexicalPragma PP = scanner.popLexicalPragma();
-                if (PP!=null) {
+                if (PP != null) {
                     dst.ttype = TagConstants.LEXICALPRAGMA;
                     dst.auxVal = PP;
+                    if (DEBUG)
+                        Info.out("getNextPragma: parsed final lexical pragma " + PP +
+                                 " at EOF.");
                     return true;
                 }
 
                 if (pendingJavadocComment != null) {
                     scanner.close();
                     if (processJavadocComment()) {
+                        if (DEBUG)
+                            Info.out("getNextPragma: processed javadoc comment at EOF.");
                         return true;
                     }
                 }
                 close();
+                inAlsoClause = false;
+                if (DEBUG)
+                    Info.out("getNextPragma: hit EOF, so finishing pragma parsing.");
                 return false;
             }
             //@ assume scanner.m_in != null;  // TBW: is this right??  --KRML
@@ -487,22 +509,25 @@ public class EscPragmaParser extends Parse implements PragmaParser
             int tag = TagConstants.fromIdentifier(kw);
             boolean semiNotOptional = false;
 
+            if (DEBUG)
+                Info.out("next tag is: " + tag);
+
             switch (tag) {
                 
-            case TagConstants.NOWARN:
-                dst.ttype = TagConstants.LEXICALPRAGMA;
-                seqIdentifier.push();
-                if (scanner.ttype == TagConstants.IDENT)
-                    for (;;) {
-                        seqIdentifier.addElement(parseIdentifier(scanner));
-                        if (scanner.ttype != TagConstants.COMMA) break;
-                        scanner.getNextToken(); // Discard COMMA
-                    }
-                IdentifierVec checks = IdentifierVec.popFromStackVector(seqIdentifier);
-                dst.auxVal = NowarnPragma.make(checks, loc);
-                if (scanner.ttype == TagConstants.SEMICOLON) scanner.getNextToken();
-                if (scanner.ttype != TagConstants.EOF)
-                    ErrorSet.fatal(loc, "Syntax error in nowarn pragma");
+                case TagConstants.NOWARN:
+                    dst.ttype = TagConstants.LEXICALPRAGMA;
+                    seqIdentifier.push();
+                    if (scanner.ttype == TagConstants.IDENT)
+                        for (;;) {
+                            seqIdentifier.addElement(parseIdentifier(scanner));
+                            if (scanner.ttype != TagConstants.COMMA) break;
+                            scanner.getNextToken(); // Discard COMMA
+                        }
+                    IdentifierVec checks = IdentifierVec.popFromStackVector(seqIdentifier);
+                    dst.auxVal = NowarnPragma.make(checks, loc);
+                    if (scanner.ttype == TagConstants.SEMICOLON) scanner.getNextToken();
+                    if (scanner.ttype != TagConstants.EOF)
+                        ErrorSet.fatal(loc, "Syntax error in nowarn pragma");
                     break;
 
                 case TagConstants.STILL_DEFERRED:
@@ -511,8 +536,8 @@ public class EscPragmaParser extends Parse implements PragmaParser
                 case TagConstants.ALSO_MODIFIES:
                 case TagConstants.JML_MODIFIABLE:
                 case TagConstants.JML_ASSIGNABLE:
-                    if (tag == TagConstants.JML_MODIFIABLE 
-                        || tag == TagConstants.JML_ASSIGNABLE) {
+                    if (tag == TagConstants.JML_MODIFIABLE ||
+                        tag == TagConstants.JML_ASSIGNABLE) {
                         ErrorSet.caution(loc, "ESC/Java keyword 'modifies' " +
                                          "is preferred to JML keywords " + 
                                          "'modifiable' and 'assignable'.");
@@ -520,6 +545,9 @@ public class EscPragmaParser extends Parse implements PragmaParser
                     inProcessTag = tag;
                     inProcessLoc = loc;
                     continuePragma(dst);
+                    if (DEBUG)
+                        Info.out("getNextPragma: parsed a 'modifiable': " + 
+                                 dst.ztoString());
                     return true;
 
                 case TagConstants.UNREACHABLE:
@@ -550,6 +578,9 @@ public class EscPragmaParser extends Parse implements PragmaParser
                     inProcessLoc = loc;
                     continuePragma(dst);
                     semiNotOptional = true;
+                    if (DEBUG)
+                        Info.out("getNextPragma: parsed a loop predicate: " + 
+                                 dst.ztoString());
                     return true;	  
 
                 case TagConstants.SET:
@@ -664,7 +695,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
                     dst.auxVal = SimpleModifierPragma.make(tag, loc);
                     break;
 
-                case TagConstants.DEFINED_IF:
+                case TagConstants.READABLE_IF:
                 case TagConstants.WRITABLE_IF:
                 case TagConstants.REQUIRES:
                 case TagConstants.ALSO_REQUIRES:
@@ -672,18 +703,36 @@ public class EscPragmaParser extends Parse implements PragmaParser
                 case TagConstants.ALSO_ENSURES:
                 case TagConstants.JML_PRE:
                 case TagConstants.JML_POST:
+                    // Check if also clauses are permitted on
+                    // requires clauses.
                     if ((tag == TagConstants.ALSO_REQUIRES ||
-                        (tag == TagConstants.REQUIRES && inAlsoClause))
+                         (tag == TagConstants.REQUIRES && inAlsoClause))
                         && !Main.allowAlsoRequires)
                         ErrorSet.fatal(loc, TagConstants.toString(tag) +
                                        " is not allowed pragma");
+                    // Make suggestions about choice of keywords.
                     if (tag == TagConstants.JML_POST || tag == TagConstants.JML_PRE)
                         ErrorSet.caution(loc, "ESC/Java keywords 'require' and 'ensures' " +
                                          "are preferred to JML keywords " + 
                                          "'pre' and 'post'.");
                     dst.ttype = TagConstants.MODIFIERPRAGMA;
-                    dst.auxVal
-                        = ExprModifierPragma.make(tag, parseExpression(scanner), loc);
+                    // Convert normal requires and pre clauses and
+                    // ensures and post clauses inside of also blocks
+                    // to also_requires and also_ensures, respectively.
+                    if ((inAlsoClause && tag == TagConstants.REQUIRES) ||
+                        (inAlsoClause && tag == TagConstants.JML_PRE)) {
+                        dst.auxVal
+                            = ExprModifierPragma.make(TagConstants.ALSO_REQUIRES, 
+                                                      parseExpression(scanner), loc);
+                    } else if ((inAlsoClause && tag == TagConstants.ENSURES) ||
+                               (inAlsoClause && tag == TagConstants.JML_POST)) {
+                        dst.auxVal
+                            = ExprModifierPragma.make(TagConstants.ALSO_ENSURES, 
+                                                      parseExpression(scanner), loc);
+                    } else {
+                        dst.auxVal
+                            = ExprModifierPragma.make(tag, parseExpression(scanner), loc);
+                    }
                     semiNotOptional = true;
                     break;
 
@@ -692,9 +741,10 @@ public class EscPragmaParser extends Parse implements PragmaParser
                         ErrorSet.warning(loc, "Already in an 'also' specification; " + 
                                          "duplicate 'also' ignored.");
                     inAlsoClause = true;
-                    dst.ttype = TagConstants.MODIFIERPRAGMA;
-                    semiNotOptional = true;
-                    return true;
+                    inProcessTag = TagConstants.JML_ALSO;
+                    if (DEBUG)
+                        Info.out("getNextPragma: parsed an 'also': " + dst.ztoString());
+                    return getNextPragma(dst);
 
                 case TagConstants.EXSURES:
                 case TagConstants.ALSO_EXSURES:
@@ -710,8 +760,17 @@ public class EscPragmaParser extends Parse implements PragmaParser
                     FormalParaDecl arg = parseExsuresFormalParaDecl(scanner);
                     expect(scanner, TagConstants.RPAREN);
                     Expr expr = parseExpression(scanner);
-                    dst.auxVal
-                        = VarExprModifierPragma.make(tag, arg, expr, loc);
+                    // Convert normal exsures and signals clauses
+                    // inside of also blocks to also_exsures.
+                    if ((inAlsoClause && tag == TagConstants.EXSURES) ||
+                        (inAlsoClause && tag == TagConstants.JML_SIGNALS)) {
+                        dst.auxVal
+                            = VarExprModifierPragma.make(TagConstants.ALSO_EXSURES, 
+                                                         arg, expr, loc);
+                    } else {
+                        dst.auxVal
+                            = VarExprModifierPragma.make(tag, arg, expr, loc);
+                    }
                     semiNotOptional = true;
                     break;
                 }
@@ -726,18 +785,22 @@ public class EscPragmaParser extends Parse implements PragmaParser
                     ErrorSet.fatal(scanner.startingLoc, 
                                    ("Semicolon required when a " + kw.toString()
                                     + " pragma is followed by another pragma."));
-
+            if (DEBUG)
+                Info.out("getNextPragma: parsed : " + dst.ztoString());
             return true;
-        } catch (IOException e) { return false; }
+        } catch (IOException e) { 
+            return false; 
+        }
     }
 
-    /*@ requires inProcessTag==TagConstants.STILL_DEFERRED ||
-      @          inProcessTag==TagConstants.MONITORED_BY ||
-      @          inProcessTag==TagConstants.MODIFIES ||
-      @          inProcessTag==TagConstants.ALSO_MODIFIES ||
-      @          inProcessTag==TagConstants.JML_MODIFIABLE ||
-      @          inProcessTag==TagConstants.JML_ASSIGNABLE ||
-      @          inProcessTag==TagConstants.LOOP_PREDICATE */
+    /*@ requires inProcessTag == TagConstants.STILL_DEFERRED ||
+      @          inProcessTag == TagConstants.MONITORED_BY ||
+      @          inProcessTag == TagConstants.MODIFIES ||
+      @          inProcessTag == TagConstants.ALSO_MODIFIES ||
+      @          inProcessTag == TagConstants.JML_MODIFIABLE ||
+      @          inProcessTag == TagConstants.JML_ASSIGNABLE ||
+      @          inProcessTag == TagConstants.LOOP_PREDICATE;
+      @*/
     //@ requires scanner.startingLoc != Location.NULL;
     //@ requires scanner.m_in != null;
     private void continuePragma(Token /*@ non_null @*/ dst) throws IOException {
@@ -746,14 +809,19 @@ public class EscPragmaParser extends Parse implements PragmaParser
             Identifier idn = parseIdentifier(scanner);
             dst.ttype = TagConstants.TYPEDECLELEMPRAGMA;
             dst.auxVal = StillDeferredDeclPragma.make(idn, inProcessLoc, locId);
-        } else if (inProcessTag == TagConstants.MONITORED_BY
-                   || inProcessTag == TagConstants.MODIFIES
-                   || inProcessTag == TagConstants.ALSO_MODIFIES
-                   || inProcessTag == TagConstants.JML_MODIFIABLE
-                   || inProcessTag == TagConstants.JML_ASSIGNABLE) {
+        } else if (inProcessTag == TagConstants.MONITORED_BY ||
+                   inProcessTag == TagConstants.MODIFIES ||
+                   inProcessTag == TagConstants.ALSO_MODIFIES ||
+                   inProcessTag == TagConstants.JML_MODIFIABLE ||
+                   inProcessTag == TagConstants.JML_ASSIGNABLE) {
             dst.startingLoc = inProcessLoc;
             Expr e = parseExpression(scanner);
-            dst.auxVal = ExprModifierPragma.make(inProcessTag, e, inProcessLoc);
+            if (inAlsoClause && inProcessTag == TagConstants.MODIFIES) {
+                dst.auxVal = ExprModifierPragma.make(TagConstants.ALSO_MODIFIES, 
+                                                     e, inProcessLoc);
+            } else {
+                dst.auxVal = ExprModifierPragma.make(inProcessTag, e, inProcessLoc);
+            }
             dst.ttype = TagConstants.MODIFIERPRAGMA;
         } else if (inProcessTag == TagConstants.LOOP_PREDICATE) {
             dst.startingLoc = inProcessLoc;
@@ -766,7 +834,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
             case TagConstants.SEMICOLON:
                 scanner.getNextToken();
             case TagConstants.EOF:
-                inProcessTag = -1;
+                inProcessTag = NEXT_TOKEN_STARTS_NEW_PRAGMA;
                 break;
 
             case TagConstants.COMMA:
@@ -854,7 +922,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
                         Identifier kw = n.identifierAt(0);
                         int tag = TagConstants.fromIdentifier(kw);
 
-                        if (n.size()!=1)
+                        if (n.size() != 1)
                             fail(loc, "Annotations may not contain method calls");
                         switch (tag) {
                             case TagConstants.TYPE:
