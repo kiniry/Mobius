@@ -8,7 +8,7 @@ import javafe.util.Location;
 import javafe.util.ErrorSet;
 
 /**
- * Base class for Java parser.
+ * Base class for Java parser; provides some basic parsing utilities.
  *
  * @see javafe.ast.ASTNode
  * @see javafe.parser.ParseType
@@ -30,6 +30,8 @@ public class ParseUtil
     //@ ensures false
     private static void fail(String m) { ErrorSet.fatal(m); }
 
+    /** Raises a <TT>RuntimeException</TT> with the argument string
+        including a textual representation of the given source location. */
     //@ requires loc != Location.NULL
     //@ ensures false
     public static void fail(int loc, String m) { ErrorSet.fatal(loc, m); }
@@ -73,12 +75,17 @@ public class ParseUtil
      * Keyword at index i in this array corresponds to bit i in
      * modifier bitset.  Thus PRIVATE is at index 1, ACC_PRIVATE =
      * 1<<1.
+     * These are in the same bit order as the values in 
+     * java.lang.reflect.Modifier, and should remain that way, though
+     * I don't know if any code uses that fact (it might come in handy
+     * in reading class files, for example).
      */
     public static final int modifierKeywords[] = {
 	TagConstants.PUBLIC, TagConstants.PRIVATE, TagConstants.PROTECTED, 
 	TagConstants.STATIC, TagConstants.FINAL, 
 	TagConstants.SYNCHRONIZED, TagConstants.VOLATILE,
-	TagConstants.TRANSIENT, TagConstants.NATIVE, TagConstants.NATIVE,
+	TagConstants.TRANSIENT, TagConstants.NATIVE, 
+	-1, // Don't consider 'interface' to be a modifier
 	TagConstants.ABSTRACT, TagConstants.STRICT
     };
 
@@ -89,7 +96,7 @@ public class ParseUtil
      * reads <code>l</code> until there are no more modifier pragmas and
      * returns the resulting list.
      */
-    //@ requires l.m_in != null
+    //@ requires l.m_in != null;
     public ModifierPragmaVec parseModifierPragmas(/*@non_null*/ Lex l) {
 	if (l.ttype != TagConstants.MODIFIERPRAGMA)
 	    return null;
@@ -110,7 +117,7 @@ public class ParseUtil
      * to a modifier pragma), or returns a new
      * <code>ModifierPragmaVec</code>.
      */
-    //@ requires l.m_in != null
+    //@ requires l.m_in != null;
     public ModifierPragmaVec parseMoreModifierPragmas(/*@non_null*/ Lex l, 
 						      ModifierPragmaVec orig)
     {
@@ -135,15 +142,17 @@ public class ParseUtil
      * and only one of the access modifiers public, protected,
      * private.  Return integer encoding the Java modifiers.
      *
-     * <p> In addition to parsing Java modifiers, also handles pragma
-     * parsers.  If no pragma parsers are seen, sets
+     * <p> In addition to parsing Java modifiers, also handles modifier
+     * pragmas (anything with a ttype of TagConstants.MODIFIERPRAGMA).
+     * If no modifier pragmas are seen, sets
      * <c>modifierPragmas</c> to <c>null</c>.  Otherwise, sets it to
-     * be the list of modifier pragmas seen.
+     * be the list of modifier pragmas seen in the course of parsing any
+     * Java modifiers.
      *
      * @see javafe.ast.ModifierConstants
      */
-    //@ requires l.m_in != null
-    //@ modifies modifierPragmas
+    //@ requires l.m_in != null;
+    //@ modifies modifierPragmas;
     public int parseModifiers(/*@ non_null @*/ Lex l) {
         boolean seenPragma = false;
         int modifiers = Modifiers.NONE;
@@ -151,7 +160,10 @@ public class ParseUtil
         getModifierLoop:
         for(;;) {
             if (l.ttype == TagConstants.MODIFIERPRAGMA) {
-                if (! seenPragma) { seqModifierPragma.push(); seenPragma = true; }
+                if (! seenPragma) { 
+			seqModifierPragma.push(); 
+			seenPragma = true; 
+		}
                 seqModifierPragma.addElement(l.auxVal);
                 l.getNextToken();
                 continue getModifierLoop;
