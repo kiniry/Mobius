@@ -32,10 +32,6 @@ public class Options extends javafe.SrcToolOptions
         { "-specs <dirpath>", "The jar file or directory path of the set of system specs to use; these are appended to the sourcepath, if specified, or else the classpath." },
         { "-sxLog <log>", "Print the commands sent to Simplify in the file named <log>"},
 	{ "-typecheck", "Do only parsing and typechecking, no generation or proving of verification conditions" },
-	{"-useFcns","Use functions for reasoning about model variables, method calls, and object allocations in annotations"},
-	{"-useVars","Use skolem variables for reasoning about model variables, method calls, and object allocations in annotations"},
-	{"-useFcnsForModelVars","Use functions for reasoning about model variables in annotations"},
-	{"-useVarsForModelVars","Use skolem variables for reasoning about model variables in annotations"},
     };
 
     // Global escjava flags
