@@ -332,6 +332,7 @@ generate-toplevel-archive: clean
 	cp -r ${ESCTOOLS_ROOT}/docs ${RELTEMP}/ESCTools
 	cp -r ${ESCTOOLS_ROOT}/Utils ${RELTEMP}/ESCTools
 	cp -r ${ESCTOOLS_ROOT}/jars ${RELTEMP}/ESCTools
+	cp ${ESCTOOLS_ROOT}/jmlspecs.jar ${RELTEMP}/ESCTools
 	mkdir -p ${RELTEMP}/ESCTools/Escjava/release/master/bin
 	cp ${ESCTOOLS_ROOT}/Escjava/release/master/bin/Simplify-1.5.4.macosx \
 		${RELTEMP}/ESCTools/Escjava/release/master/bin
