@@ -93,4 +93,7 @@ public class Variable extends Expression  {
 		return copy;
 	}
 		
+	public int getId() {
+		return id;
+	}
 }
