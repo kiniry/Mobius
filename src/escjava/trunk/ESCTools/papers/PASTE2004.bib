@@ -1,7 +1,14 @@
 @string{ACM = "ACM"}
-@string{LNCS = "LNCS"}
+@string{jacm = "Journal of the ACM"}
+@string{LNCS = "Lecture Notes in Computer Science"}
+@string(MITLCS="Massachusetts Institute of Technology, Laboratory for Computer Science")
+@string{NY = "New York, NY"}
+@string{POPL = "Annual ACM Symposium on Principles of Programming Languages"}
+@string{SIGPLAN = "ACM SIGPLAN Notices"}
+%       TOPLAS="ACM Transactions on Programming Languages and Systems"
+
 @InProceedings{Burdy-etal03,
-author =       {Lilian Burdy and Yoonsik Cheon and David Cok and 
+author =       {Lilian Burdy and Yoonsik Cheon and David R. Cok and 
                  Michael Ernst and Joe Kiniry and Gary T. Leavens and 
                  K. Rustan M. Leino and Erik Poll},
 title =        {An overview of {JML} tools and applications},
@@ -12,7 +19,7 @@ year =    	 {2003},
 editor = 	 {Thomas Arts and Wan Fokkink},
 volume = 	 {80},
 series = 	 {Electronic Notes in Theoretical Computer Science (ENTCS)},
-month = 	 {June},
+month = 	 Jun,
 publisher =    {Elsevier},
 annote =       {42 references.},
 URL =          {http://www.elsevier.nl/locate/entcs}
@@ -27,7 +34,7 @@ URL =          {http://www.elsevier.nl/locate/entcs}
   year =	 2002,
   editor =	 {Boris Magnusson},
   volume =	 2374,
-  series =	 LNCS,
+  series =	 {LNCS},
   address =	 {Berlin},
   month =	 Jun,
   publisher =	 {Springer-Verlag},
@@ -69,7 +76,7 @@ URL =          {http://www.elsevier.nl/locate/entcs}
   Key = 	{Leavens \& Poll \& Clifton \& Cheon \& Ruby},
   Author = 	{Gary T. Leavens and Erik Poll and Curtis Clifton
                  and Yoonsik Cheon and Clyde Ruby and David R. Cok and Joseph Kiniry},
-  Title = 	{JML Reference Manual},
+  Title = 	{{JML} Reference Manual},
   Month = 	Apr,
   Year  =       2003,
   Note  =       {Department of Computer Science,
@@ -238,7 +245,7 @@ URL =          {http://www.elsevier.nl/locate/entcs}
 @InProceedings{NimmerErnst01,
   author =    { Jeremy W. Nimmer and Michael D. Ernst },
   title =     " Static Verification of Dynamically Detected Program
-               Invariants: Integrating Daikon And {ESC/Java} ",
+               Invariants: Integrating {Daikon} And {ESC/Java} ",
   booktitle = { Proceedings, First Workshop on Runtime Verification
                (RV'01) },
   year =      2001,
@@ -294,7 +301,7 @@ TITLE        = "Specifying and Verifying a Decimal Representation in Java for Sm
 BOOKTITLE    = "Algebraic Methodology and Software Technology",
 EDITOR       = "H. Kirchner, C. Ringeissen",
 PUBLISHER    = "Springer, Berlin",
-SERIES       = LNCS,
+SERIES       = {LNCS},
 volume       = "2422",
 PAGES        = "304--318",
 YEAR         = 2002}
@@ -312,5 +319,63 @@ YEAR         = 2002}
   publisher = "Springer--Verlag"
 }
 
+
+@InProceedings{Ruby-Leavens00,
+  Key = 	"Ruby \& Leavens",
+  Author = 	"Clyde Ruby and Gary T. Leavens",
+  Title = 	"Safely Creating Correct Subclasses without Seeing Superclass Code",
+
+  BookTitle =	 "OOPSLA 2000 Conference on Object-Oriented Programming,
+                  Systems, Languages, and Applications, Minneapolis, Minnesota",
+  Series =       SIGPLAN,
+  Volume =       "35(10)",
+  Month =        Oct,
+  Year =         2000,
+  Pages =        "208-228",
+  URL =          "ftp://ftp.cs.iastate.edu/pub/techreports/TR00-05/TR.ps.gz",
+  Annote =       "39 references."
+}
+
+@TechReport{Cheon-etal03,
+  Key = 	"Cheon \& Leavens \& Sitaraman \& Edwards",
+  Author = 	"Yoonsik Cheon and Gary T. Leavens and
+                 Murali Sitaraman and  Stephen Edwards",
+  Title = 	"Model Variables: Cleanly Supporting Abstraction 
+                 in Design By Contract",
+  Institution = "Department of Computer Science, Iowa State University",
+  Month =	Sep,
+  Year = 	2003,
+  Number =	"03-10a",
+  Note = 	"Available from \url{archives.cs.iastate.edu}.",
+  Annote =	"39 references."
+}
+
+@TechReport{Bogor03,
+ Key = { Robby \& Rodriguez \& Dwyer \& Hatcliff },
+ Author = { Robby and Edwin Rodr’guez and Matthew B. Dwyer and John Hatcliff},
+ Title = { Checking Strong Specifications Using An Extensible Software Model Checking Framework },
+ Institution = { Department of Computer Science, Kansas State University },
+Month = Oct,
+ Year = 2003,
+ Number = {{SAnToS-TR2003-10}},
+ Note = "Available from \url{http://projects.cis.ksu.edu/docman/view.php/18/66/bogorspex.pdf}"
+}
+
+@InProceedings{GroceVisser03,
+  Key = 	"Groce \& Visser",
+  Author = 	"A. Groce and W. Visser",
+  Title = 	"What Went Wrong: Explaining Counterexamples",
+
+  BookTitle =	 "Proceedings of SPIN 2003, Portland, Oregon",
+  Series =       {LNCS},
+  Volume =       "2648",
+  Month =        May,
+  Year =         2003,
+  Pages =        "121-135",
+  URL =          "http://ase.arc.nasa.gov/visser/spin03Explain.ps",
+  editor =	 {T. Ball and S.K. Rajamani},
+  address =	 {Berlin},
+  publisher =	 {Springer-Verlag},
+}
 
 % Todo: JavaCard papers
