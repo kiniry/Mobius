@@ -40,7 +40,6 @@ public class Throwable extends Object
     //+@ public represents _cause <- getCause();
 
     //@ public model boolean causeKnown;  in objectState;
-    // FIXME @ public invariant !causeKnown ==> _cause == null;
 
     // Note: cause is known if it was set in a constructor, even if it was
     // set to null
@@ -52,15 +51,23 @@ public class Throwable extends Object
 
     /*@
       @ public normal_behavior
-      @   ensures \result == (_message == s && !causeKnown && _cause == null);
+      @   ensures \result <==> (_message == s && !causeKnown && _cause == null
+                     && theString.equals(getClass().theString + 
+                                      (_message != null ? ": " + _message 
+                                      : "")));
       @
         public pure model boolean standardThrowable(String s);
 
       @ public normal_behavior
-      @   ensures \result == ((s != null ==> _message == s)
+      @   ensures \result <==> 
+      @                ((s != null ==> _message == s)
       @              && ((s==null && c == null) ==> _message==null)
-      @              && ((s==null && c != null) ==> _message.equals(c.getClass().theString))
-      @              && causeKnown && _cause == c);
+      @              && ((s==null && c != null) ==> (_message != null
+                              && _message.equals(c.getClass().theString)))
+      @              && causeKnown && _cause == c
+                     && theString.equals(getClass().theString + 
+                                      (_message != null ? ": " + _message 
+                                      : "")));
       @
         public pure model boolean standardThrowable(String s, Throwable c);
       @*/
@@ -107,11 +114,14 @@ public class Throwable extends Object
 
     /*@ public normal_behavior
       @   requires !causeKnown && cause != this;
-      @   assignable _cause, causeKnown;
+      @   assignable _cause, causeKnown, theString, theHashCode;
       @   ensures \not_modified(_message);
       @   ensures getCause() == cause;
-      @   ensures \result != null;
+      @   ensures \result == this;
       @   ensures causeKnown;
+          ensures theString.equals(getClass().theString + 
+                                      (_message != null ? ": " + _message 
+                                      : ""));
       @ also
       @ public exceptional_behavior
       @   requires causeKnown;
@@ -127,10 +137,7 @@ public class Throwable extends Object
       @*/
     public synchronized Throwable initCause(Throwable cause);
 
-    /*@ also
-      @ public behavior
-      @   requires true;
-      @   ensures \result != null;
+    /*@ 
       @ also public normal_behavior
       @   requires \typeof(this) == \type(Throwable);
       @   ensures _message == null ==> \result.equals(this.getClass().theString);

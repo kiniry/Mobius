@@ -27,29 +27,16 @@ package java.util;
  */
 public class Arrays {
 
-    /*@
-      @ public normal_behavior
-      @   ensures \result == ( o == oo ||
-                 ( o != null && oo != null && o.length == oo.length &&
-                   (\forall int i; 0<=i && i < o.length; o[i] == oo[i])));
-      @
-      @ public static pure model boolean equalElements(Object[] o, Object[] oo) {
-          if (o == oo) return true;
-          if (o == null || oo == null) return false;
-          if (o.length != oo.length) return false;
-          for (int i=0; i<o.length; ++i) {
-            if (o[i] != oo[i]) return false;
-          }
-          return true;
-        }
-      @*/
+
+    //-----------------------------------------------------------------------
+// FIXME - the quantifiers in the following specs do not get triggered because
+// they do not have any functions in them (<= does not trigger expansion)
 
     /*@  public normal_behavior
       @   requires a != null;
       @   assignable a[*];
-      @   ensures_redundantly a.length == \old(a.length) && a != null;
-      @   ensures (\forall int i;
-      @           0 < i && i < a.length; a[i-1] <= a[i]);
+      @   ensures (\forall int i,j;
+      @           0 <= i && i < j && j < a.length; a[i] <= a[j]);
       @   ensures (\forall int i; 0 <= i && i < a.length;
       @           (\num_of int j; 0 <= j && j < a.length;
       @            a[j] == a[i]) == 
@@ -59,7 +46,7 @@ public class Arrays {
       @  public exceptional_behavior
       @   requires a == null; 
       @   assignable \nothing;
-      @   signals (NullPointerException) a == null;
+      @   signals_only NullPointerException;
       @*/
     public static void sort(long[] a);
 
@@ -95,9 +82,8 @@ public class Arrays {
     /*@  public normal_behavior
       @   requires a != null;
       @   assignable a[*];
-      @   ensures_redundantly a.length == \old(a.length) && a != null;
-      @   ensures (\forall int i; 0 < i && i < a.length;
-      @             a[i-1] <= a[i]);
+      @   ensures (\forall int i,j;
+      @           0 <= i && i < j && j < a.length; a[i] <= a[j]);
       @   ensures (\forall int i; 0 <= i && i < a.length;
       @           (\num_of int j; 0 <= j && j < a.length; 
 
@@ -109,9 +95,9 @@ public class Arrays {
       @  public exceptional_behavior
       @   requires a == null;
       @   assignable \nothing;
-      @   signals (NullPointerException) a == null;
+      @   signals_only NullPointerException;
       @*/
-    public static void sort(int[] a);
+    public static void sort(int[] a) throws NullPointerException;
 
     /*@  public normal_behavior
       @   requires a != null;
@@ -146,9 +132,8 @@ public class Arrays {
       @   requires a != null;
       @   assignable a[*];
       @   ensures_redundantly a.length == \old(a.length) && a != null;
-      @   ensures (\forall int i;
-      @            0 < i && i < a.length;
-      @            a[i-1] <= a[i]);
+      @   ensures (\forall int i,j;
+      @           0 <= i && i < j && j < a.length; a[i] <= a[j]);
       @   ensures (\forall int i;
       @            0 <= i && i < a.length;
       @            (\num_of int j; 0 <= j && j < a.length; 
@@ -160,7 +145,7 @@ public class Arrays {
       @  public exceptional_behavior
       @   requires a == null; 
       @   assignable \nothing;
-      @   signals (NullPointerException) a == null;
+      @   signals_only NullPointerException;
       @*/
     public static void sort(short[] a);
 
@@ -197,10 +182,8 @@ public class Arrays {
     /*@  public normal_behavior
       @   requires a != null;
       @   assignable a[*];
-      @   ensures_redundantly a.length == \old(a.length) && a != null;
-      @   ensures (\forall int i;
-      @            0 < i && i < a.length;
-      @            a[i-1] <= a[i]);
+      @   ensures (\forall int i,j;
+      @           0 <= i && i < j && j < a.length; a[i] <= a[j]);
       @   ensures (\forall int i;
       @            0 <= i && i < a.length;
       @            (\num_of int j; 0 <= j && j < a.length; 
@@ -212,7 +195,7 @@ public class Arrays {
       @  public exceptional_behavior
       @   requires a == null; 
       @   assignable \nothing;
-      @   signals (NullPointerException) a == null;
+      @   signals_only NullPointerException;
       @*/
     public static void sort(char[] a);
 
@@ -249,10 +232,8 @@ public class Arrays {
     /*@  public normal_behavior
       @   requires a != null;
       @   assignable a[*];
-      @   ensures_redundantly a.length == \old(a.length) && a != null;
-      @   ensures (\forall int i;
-      @            0 < i && i < a.length;
-      @            a[i-1] <= a[i]);
+      @   ensures (\forall int i,j;
+      @           0 <= i && i < j && j < a.length; a[i] <= a[j]);
       @   ensures (\forall int i;
       @            0 <= i && i < a.length;
       @            (\num_of int j; 0 <= j && j < a.length; 
@@ -264,7 +245,7 @@ public class Arrays {
       @  public exceptional_behavior
       @   requires a == null; 
       @   assignable \nothing;
-      @   signals (NullPointerException) a == null;
+      @   signals_only NullPointerException;
       @*/
     public static void sort(byte[] a);
 
@@ -298,13 +279,13 @@ public class Arrays {
       @*/
     public static void sort(byte[] a, int fromIndex, int toIndex);
 
+// FIXME - imporve the comparison
     /*@  public normal_behavior
       @   requires a != null;
       @   assignable a[*];
-      @   ensures_redundantly a.length == \old(a.length) && a != null;
-      @   ensures (\forall int i;
-      @            0 < i && i < a.length;
-      @            new Double(a[i-1]).compareTo(new Double(a[i])) <= 0);
+      @   ensures (\forall int i,j;
+      @            0 <= i && i < j && j < a.length;
+      @            new Double(a[i]).compareTo(new Double(a[j])) <= 0);
       @   ensures (\forall int i;
       @            0 <= i && i < a.length;
       @            (\num_of int j; 0 <= j && j < a.length; 
@@ -317,7 +298,7 @@ public class Arrays {
       @  public exceptional_behavior
       @   requires a == null ;
       @   assignable \nothing;
-      @   signals (NullPointerException) a == null;
+      @   signals_only NullPointerException;
       @*/
     public static void sort(double[] a);
 
@@ -355,10 +336,9 @@ public class Arrays {
     /*@  public normal_behavior
       @   requires a != null;
       @   assignable a[*];
-      @   ensures_redundantly a.length == \old(a.length) && a != null;
-      @   ensures (\forall int i;
-      @            0 < i && i < a.length;
-      @            new Double(a[i-1]).compareTo(new Double(a[i])) <= 0);
+      @   ensures (\forall int i,j;
+      @            0 <= i && i < j && j < a.length;
+      @            new Double(a[i]).compareTo(new Double(a[j])) <= 0);
       @   ensures (\forall int i;
       @            0 <= i && i < a.length;
       @            (\num_of int j; 0 <= j && j < a.length; 
@@ -371,7 +351,7 @@ public class Arrays {
       @  public exceptional_behavior
       @   requires a == null ;
       @   assignable \nothing;
-      @   signals (NullPointerException) a == null;
+      @   signals_only NullPointerException;
       @*/
     public static void sort(float[] a);
 
@@ -564,6 +544,8 @@ public class Arrays {
       @*/
     public static void sort(Object[] a, int fromIndex, int toIndex, Comparator c);
 
+    //------------------------------------------------------------------------
+
     /*@  public normal_behavior
       @   requires a != null &&
       @            (\forall int i; 
@@ -594,7 +576,7 @@ public class Arrays {
       @  public exceptional_behavior
       @   requires a == null ;
       @   assignable \nothing;
-      @   signals (NullPointerException) a == null;
+      @   signals_only NullPointerException;
       @*/
     public static int binarySearch(long[] a, long key);
 
@@ -604,33 +586,22 @@ public class Arrays {
       @             0 < i && i < a.length;
       @             a[i-1] <= a[i]); 
       @  {| 
-      @     requires (\exists int j; 0 <= j && j < a.length; 
-      @               a[j] == key);
-      @     assignable \nothing;
+      @     requires Arrays.contains(a,key);
       @     ensures 0 <= \result && \result < a.length 
       @           && a[\result] == key;
       @    also
-      @     requires !(\exists int j; 0 <= j && j < a.length; 
-      @                a[j] == key);
-      @     assignable \nothing;
-      @     ensures \result < 0;
-      @     ensures (\exists int j; 0 <= j && j < a.length; 
-      @              a[j] < key)
-      @             ==> a[(\result*-1) - 2] < key;
-      @     ensures ((\result*-1)-1 < a.length && 
-      @              a[(\result*-1)-1] > key) 
-      @              || (\result*-1)-1 == a.length; 
-      @     ensures_redundantly (\exists int j; 0 <= j && j < a.length;
-      @                          a[j] > key)
-      @              ==> a[(\result*-1)-1] > key;
+      @     requires !Arrays.contains(a,key);
+      @     ensures \result < 0 && (-a.length-1) <= \result;
+      @     ensures (\forall int j; 0<=j && j < (-1-\result); a[j] < key);
+      @     ensures (\forall int j; (-1-\result) <= j && j < a.length; key < a[j]);
       @   |}
       @ also
       @  public exceptional_behavior
       @   requires a == null ;
-      @   assignable \nothing;
-      @   signals (NullPointerException) a == null;
+      @   signals_only NullPointerException;
       @*/
-    public static int binarySearch(int[] a, int key);
+    //@ pure
+    public static int binarySearch(int[] a, int key) throws NullPointerException;
 
     /*@  public normal_behavior
       @   requires a != null &&
@@ -662,7 +633,6 @@ public class Arrays {
       @  public exceptional_behavior
       @   requires a == null ;
       @   assignable \nothing;
-      @   signals (NullPointerException) a == null;
       @*/
     public static int binarySearch(short[] a, short key);
 
@@ -696,7 +666,7 @@ public class Arrays {
       @  public exceptional_behavior
       @   requires a == null ;
       @   assignable \nothing;
-      @   signals (NullPointerException) a == null;
+      @   signals_only NullPointerException;
       @*/
     public static int binarySearch(char[] a, char key);
 
@@ -730,7 +700,7 @@ public class Arrays {
       @  public exceptional_behavior
       @   requires a == null ;
       @   assignable \nothing;
-      @   signals (NullPointerException) a == null;
+      @   signals_only NullPointerException;
       @*/
     public static int binarySearch(byte[] a, byte key);
 
@@ -768,7 +738,7 @@ public class Arrays {
       @  public exceptional_behavior
       @   requires a == null ;
       @   assignable \nothing;
-      @   signals (NullPointerException) a == null;
+      @   signals_only NullPointerException;
       @*/
     public static int binarySearch(double[] a, double key);
 
@@ -806,7 +776,7 @@ public class Arrays {
       @  public exceptional_behavior
       @   requires a == null ;
       @   assignable \nothing;
-      @   signals (NullPointerException) a == null;
+      @   signals_only NullPointerException;
       @*/
     public static int binarySearch(float[] a, float key);
 
@@ -982,6 +952,7 @@ public class Arrays {
       @*/
     public static /*@pure@*/ boolean equals(boolean[] a, boolean[] a2);
 
+// FIXME - better comparison
     /*@  public normal_behavior
       @   requires a == null || a2 == null;
       @   ensures \result <==> a == a2;
@@ -994,6 +965,7 @@ public class Arrays {
       @*/
     public static /*@pure@*/ boolean equals(double[] a, double[] a2);
 
+// FIXME - better comparison
     /*@  public normal_behavior
       @   requires a == null || a2 == null;
       @   ensures \result <==> a == a2;
@@ -1006,6 +978,7 @@ public class Arrays {
       @*/
     public static /*@pure@*/ boolean equals(float[] a, float[] a2);
 
+// FIXME - Object comparions as well as equals comparison?
     /*@  public normal_behavior
       @   requires a == null || a2 == null;
       @   ensures \result <==> a == a2;
@@ -1018,20 +991,39 @@ public class Arrays {
       @*/
     public static /*@pure@*/ boolean equals(Object[] a, Object[] a2);
 
+    /*@
+      @ public normal_behavior
+      @   ensures \result == ( o == oo ||
+                 ( o != null && oo != null && o.length == oo.length &&
+                   (\forall int i; 0<=i && i < o.length; o[i] == oo[i])));
+      @
+      @ public static pure model boolean equalElements(Object[] o, Object[] oo) {
+          if (o == oo) return true;
+          if (o == null || oo == null) return false;
+          if (o.length != oo.length) return false;
+          for (int i=0; i<o.length; ++i) {
+            if (o[i] != oo[i]) return false;
+          }
+          return true;
+        }
+      @*/
+
+    //-----------------------------------------------------------------------
+
     /*@  public normal_behavior
       @   requires a != null;
       @   assignable a[*];
-      @   ensures_redundantly a.length == \old(a.length) && a != null;
       @   ensures (\forall int i; 0 <= i && i < a.length; 
       @            a[i] == val);
       @ also
       @  public exceptional_behavior
       @   requires a == null;
       @   assignable \nothing;
-      @   signals (NullPointerException) a == null;
+      @   signals_only NullPointerException;
       @*/
-    public static void fill(long[] a, long val);
+    public static void fill(long[] a, long val) throws NullPointerException;
 
+// FIXME - check this
     /*@  public normal_behavior
       @   requires a != null && fromIndex < toIndex;
       @   assignable a[fromIndex..toIndex-1];
@@ -1069,17 +1061,17 @@ public class Arrays {
     /*@  public normal_behavior
       @   requires a != null;
       @   assignable a[*];
-      @   ensures_redundantly a.length == \old(a.length) && a != null;
       @   ensures (\forall int i; 0 <= i && i < a.length; 
       @            a[i] == val);
       @ also
       @  public exceptional_behavior
       @   requires a == null;
       @   assignable \nothing;
-      @   signals (NullPointerException) a == null;
+      @   signals_only NullPointerException;
       @*/
-    public static void fill(int[] a, int val);
+    public static void fill(int[] a, int val) throws NullPointerException;
 
+// CHECK THIS - FIXME
     /*@  public normal_behavior
       @   requires a != null && fromIndex < toIndex;
       @   assignable a[fromIndex..toIndex-1];
@@ -1117,17 +1109,17 @@ public class Arrays {
     /*@  public normal_behavior
       @   requires a != null;
       @   assignable a[*];
-      @   ensures_redundantly a.length == \old(a.length) && a != null;
       @   ensures (\forall int i; 0 <= i && i < a.length; 
       @            a[i] == val);
       @ also
       @  public exceptional_behavior
       @   requires a == null;
       @   assignable \nothing;
-      @   signals (NullPointerException) a == null;
+      @   signals_only NullPointerException;
       @*/
-    public static void fill(short[] a, short val);
+    public static void fill(short[] a, short val) throws NullPointerException;
 
+// FIXME - checkthis
     /*@  public normal_behavior
       @   requires a != null && fromIndex < toIndex;
       @   assignable a[fromIndex..toIndex-1];
@@ -1165,17 +1157,17 @@ public class Arrays {
     /*@  public normal_behavior
       @   requires a != null;
       @   assignable a[*];
-      @   ensures_redundantly a.length == \old(a.length) && a != null;
       @   ensures (\forall int i; 0 <= i && i < a.length; 
       @            a[i] == val);
       @ also
       @  public exceptional_behavior
       @   requires a == null;
       @   assignable \nothing;
-      @   signals (NullPointerException) a == null;
+      @   signals_only NullPointerException;
       @*/
-    public static void fill(char[] a, char val);
+    public static void fill(char[] a, char val) throws NullPointerException;
 
+// FIXME - check this
     /*@  public normal_behavior
       @   requires a != null && fromIndex < toIndex;
       @   assignable a[fromIndex..toIndex-1];
@@ -1213,17 +1205,17 @@ public class Arrays {
     /*@  public normal_behavior
       @   requires a != null;
       @   assignable a[*];
-      @   ensures_redundantly a.length == \old(a.length) && a != null;
       @   ensures (\forall int i; 0 <= i && i < a.length; 
       @            a[i] == val);
       @ also
       @  public exceptional_behavior
       @   requires a == null;
       @   assignable \nothing;
-      @   signals (NullPointerException) a == null;
+      @   signals_only NullPointerException;
       @*/
     public static void fill(byte[] a, byte val);
 
+// FIXME - check this
     /*@  public normal_behavior
       @   requires a != null && fromIndex < toIndex;
       @   assignable a[fromIndex..toIndex-1];
@@ -1261,17 +1253,17 @@ public class Arrays {
     /*@  public normal_behavior
       @   requires a != null;
       @   assignable a[*];
-      @   ensures_redundantly a.length == \old(a.length) && a != null;
       @   ensures (\forall int i; 0 <= i && i < a.length; 
       @            a[i] == val);
       @ also
       @  public exceptional_behavior
       @   requires a == null;
       @   assignable \nothing;
-      @   signals (NullPointerException) a == null;
+      @   signals_only NullPointerException;
       @*/
-    public static void fill(boolean[] a, boolean val);
+    public static void fill(boolean[] a, boolean val) throws NullPointerException;
 
+// CHECK THIS = FIXME
     /*@  public normal_behavior
       @   requires a != null && fromIndex < toIndex;
       @   assignable a[fromIndex..toIndex-1];
@@ -1306,20 +1298,21 @@ public class Arrays {
       @*/
     public static void fill(boolean[] a, int fromIndex, int toIndex, boolean val);
 
+// FIXME - better comparison
     /*@  public normal_behavior
       @   requires a != null;
       @   assignable a[*];
-      @   ensures_redundantly a.length == \old(a.length) && a != null;
       @   ensures (\forall int i; 0 <= i && i < a.length; 
       @            new Double(a[i]).compareTo(new Double(val)) == 0);
       @ also
       @  public exceptional_behavior
       @   requires a == null;
       @   assignable \nothing;
-      @   signals (NullPointerException) a == null;
+      @   signals_only NullPointerException;
       @*/
-    public static void fill(double[] a, double val);
+    public static void fill(double[] a, double val) throws NullPointerException;
 
+// FIXME - check this
     /*@  public normal_behavior
       @   requires a != null && fromIndex < toIndex;
       @   assignable a[*];
@@ -1364,20 +1357,21 @@ public class Arrays {
       @*/
     public static void fill(double[] a, int fromIndex, int toIndex, double val);
 
+// FIXME - better comparison
     /*@  public normal_behavior
       @   requires a != null;
       @   assignable a[*];
-      @   ensures_redundantly a.length == \old(a.length) && a != null;
       @   ensures (\forall int i; 0 <= i && i < a.length; 
       @            new Float(a[i]).compareTo(new Float(val)) == 0);
       @ also
       @  public exceptional_behavior
       @   requires a == null;
       @   assignable \nothing;
-      @   signals (NullPointerException) a == null;
+      @   signals_only NullPointerException;
       @*/
-    public static void fill(float[] a, float val);
+    public static void fill(float[] a, float val) throws NullPointerException;
 
+// FIXME - check this
     /*@  public normal_behavior
       @   requires a != null && fromIndex < toIndex;
       @   assignable a[*];
@@ -1424,20 +1418,28 @@ public class Arrays {
 
     /*@  public normal_behavior
       @   requires a != null;
+      @   requires val == null || ( \typeof(val) <: \elemtype(\typeof(a)) );
       @   assignable a[*];
-      @   ensures_redundantly a.length == \old(a.length) && a != null;
       @   ensures (\forall int i; 0 <= i && i < a.length; 
       @            a[i] == val);
+      @ also public exceptional_behavior
+      @   requires a != null;
+      @   requires val != null && !( \typeof(val) <: \elemtype(\typeof(a)) );
+      @   assignable \nothing;
+      @   signals_only ArrayStoreException;
       @ also
       @  public exceptional_behavior
       @   requires a == null;
       @   assignable \nothing;
-      @   signals (NullPointerException) a == null;
+      @   signals_only NullPointerException;
       @*/
-    public static void fill(Object[] a, Object val);
+    public static void fill(Object[] a, Object val) 
+                         throws NullPointerException, ArrayStoreException;
 
+// FIXME - check this
     /*@  public normal_behavior
       @   requires a != null && fromIndex < toIndex;
+      @   requires ( \typeof(val) <: \elemtype(\typeof(a)) );
       @   assignable a[*];
       @   ensures_redundantly a.length == \old(a.length) && a != null;
       @   ensures (\forall int i; fromIndex <= i && i < toIndex; 
@@ -1468,6 +1470,11 @@ public class Arrays {
       @            == 
       @            (\num_of int k; 0 <= k && k < \old(a.length);
       @             \old(a[k]) == a[i]));
+      @ also public exceptional_behavior
+      @   requires a != null;
+      @   requires !( \typeof(val) <: \elemtype(\typeof(a)) );
+      @   assignable \nothing;
+      @   signals_only ArrayStoreException;
       @ also
       @  public exceptional_behavior
       @   requires a == null || fromIndex > toIndex ||
@@ -1480,10 +1487,98 @@ public class Arrays {
       @*/
     public static void fill(Object[] a, int fromIndex, int toIndex, Object val);
 
+    //-----------------------------------------------------------------------
+
     /*@  public normal_behavior
       @   requires a != null;
-      @   assignable \nothing;
-      @   ensures \result != null ; // FIXME - needs content of \result
+      @   ensures \result != null ; 
+      @   ensures \result.content.theSize == a.length;
+      @   ensures (\forall int i; 0<=i && i<a.length;
+                                  List.get(\result.content,i) == a[i]);
+      @ also public exceptional_behavior
+      @   requires a == null;
+      @   signals_only NullPointerException;
       @*/
-    public static List asList(Object[] a);
+    //@ pure
+    public static List asList(Object[] a) throws NullPointerException;
+
+    //-----------------------------------------------------------------------
+
+    /*@
+        public normal_behavior
+          requires array != null;
+          ensures \result <==> (\exists int i; 0<=i && i<array.length; 
+                                                        array[i] == o);
+        //-@ function
+        static pure public model boolean contains(Object[] array, Object o);
+
+        public normal_behavior
+          requires array != null;
+          requires len <= array.length;
+          ensures \result <==> (\exists int i; 0<=i && i<len; array[i] == o);
+        //-@ function
+        static pure public model boolean contains(Object[] array, \bigint len, 
+                                                                   Object o);
+
+        public normal_behavior
+          requires array != null;
+          ensures (\exists int i; 0<=i && i<array.length; array[i] == o);
+        //-@ function
+        static pure public model boolean contains(int[] array, int o);
+
+        public normal_behavior
+          requires array != null;
+          ensures (\exists int i; 0<=i && i<array.length; array[i] == o);
+        //-@ function
+        static pure public model boolean contains(boolean[] array, boolean o);
+
+        public normal_behavior
+          requires array != null;
+          ensures (\exists int i; 0<=i && i<array.length; array[i] == o);
+        //-@ function
+        static pure public model boolean contains(char[] array, char o);
+
+        public normal_behavior
+          requires array != null;
+          ensures (\exists int i; 0<=i && i<array.length; array[i] == o);
+        //-@ function
+        static pure public model boolean contains(byte[] array, byte o);
+
+        public normal_behavior
+          requires array != null;
+          ensures (\exists int i; 0<=i && i<array.length; array[i] == o);
+        //-@ function
+        static pure public model boolean contains(short[] array, short o);
+
+        public normal_behavior
+          requires array != null;
+          ensures (\exists int i; 0<=i && i<array.length; array[i] == o);
+        //-@ function
+        static pure public model boolean contains(long[] array, long o);
+
+        public normal_behavior
+          requires array != null;
+          ensures (\exists int i; 0<=i && i<array.length; array[i] == o);
+        //-@ function
+        static pure public model boolean contains(float[] array, float o);
+
+        public normal_behavior
+          requires array != null;
+          ensures (\exists int i; 0<=i && i<array.length; array[i] == o);
+        //-@ function
+        static pure public model boolean contains(double[] array, double o);
+
+        public normal_behavior
+          requires array != null;
+          ensures (\exists int i; 0<=i && i<array.length; array[i] == o);
+        //-@ function
+        static pure public model boolean contains(\bigint[] array, \bigint o);
+
+        public normal_behavior
+          requires array != null;
+          ensures (\exists int i; 0<=i && i<array.length; array[i] == o);
+        //-@ function
+        static pure public model boolean contains(\real[] array, \real o);
+     */
 }
+

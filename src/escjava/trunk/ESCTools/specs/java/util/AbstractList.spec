@@ -28,6 +28,14 @@ package java.util;
  */
 public abstract class AbstractList extends AbstractCollection implements List {
 
+    /*@ public normal_behavior
+      @   ensures \result <==> ( initialAbstractCollection() && initialList());
+      @ public pure model boolean initialAbstractList();
+      @*/
+
+    /*@ public normal_behavior
+          ensures initialAbstractList();
+      @*/
     /*@ pure @*/ protected AbstractList();
 
     // specification inherited from List
@@ -83,22 +91,26 @@ public abstract class AbstractList extends AbstractCollection implements List {
     public /*@ pure @*/ int hashCode();
 
     /*@ protected normal_behavior
-      @  requires 0 <= fromIndex && fromIndex <= toIndex
-      @              && toIndex <= size();
+      @  requires 0 <= fromIndex && fromIndex < size();
       @  {|
-      @     requires fromIndex == toIndex;
+      @     requires fromIndex >= toIndex;
       @     assignable \nothing;
       @   also
-      @     requires fromIndex < toIndex && toIndex < size();
+      @     old int mn = toIndex < size() ? toIndex : size();
+      @     requires fromIndex < toIndex;
+      @     ensures \not_modified(containsNull,elementType);
       @     assignable objectState;
-      @     ensures size() == \old(size()) - (toIndex-fromIndex);
+      @     ensures size() == \old(size()) - (mn-fromIndex);
       @     ensures (\forall int i; 0<=i && i < fromIndex;
                                get(i) == \old(get(i)));
-      @     ensures (\forall int i; toIndex<=i && i < \old(size());
-                               get(i-toIndex+fromIndex) == \old(get(i)));
+      @     ensures (\forall int i; mn<=i && i < \old(size());
+                               get(i-mn+fromIndex) == \old(get(i)));
       @  |}
+      @ also protected exceptional_behavior
+      @  requires fromIndex < 0 || fromIndex >= size();
+      @  assignable \nothing;
+      @  signals_only IndexOutOfBoundsException;
       @*/
-     // FIXME - exception for bad arguments?
     protected void removeRange(int fromIndex, int toIndex);
 
     transient protected int modCount; //@ in objectState;

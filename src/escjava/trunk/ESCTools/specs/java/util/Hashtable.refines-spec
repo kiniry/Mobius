@@ -26,6 +26,7 @@ package java.util;
 public class Hashtable extends Dictionary
     implements Map, Cloneable, java.io.Serializable
 {
+    // NOTE: A Hashtable does not allow null elements
  
     //@ public model int initialCapacity;    
     //@ public model float mLoadFactor;
@@ -34,38 +35,46 @@ public class Hashtable extends Dictionary
     //@ public invariant initialCapacity >= 0;  
     //@ public invariant mLoadFactor > 0;
       
-    /* FIXME @ public normal_behavior
+    /*@
+      @ public normal_behavior
+      @   ensures \result <==> ( initialMap() &&
+      @                          mLoadFactor == f &&
+      @                          initialCapacity == i);
+      @ public pure model boolean initialHashtable(double f, int i);
+      @
+      @ public normal_behavior
+      @   ensures initialHashtable(.75,11);
+      @ public pure model boolean initialHashtable();
+      @*/
+
+    /*@ public normal_behavior
       @   requires initialCapacity >= 0;
-      @   assignable theMap, this.initialCapacity, this.mLoadFactor;
-      @     ensures theMap != null && theMap.isEmpty();
-      @     ensures this.initialCapacity == initialCapacity
-      @          && this.mLoadFactor == mLoadFactor;
+      @   ensures initialHashtable(mLoadFactor, initialCapacity);
       @*/           
     //@ pure
     public Hashtable(int initialCapacity, float mLoadFactor); 
             
-    /* FIXME @ public normal_behavior
-      @   assignable theMap, this.initialCapacity, this.mLoadFactor;
-      @     ensures theMap != null && theMap.isEmpty();
-      @     ensures this.initialCapacity == initialCapacity
-      @          && this.mLoadFactor == 0.75;
+    /*@ public normal_behavior
+      @     ensures initialHashtable(0.75,initialCapacity);
       @*/
     //@ pure
     public Hashtable(int initialCapacity); 
 
-    /* FIXME @ public normal_behavior
-      @   assignable theMap, initialCapacity, mLoadFactor;
-      @     ensures theMap != null && theMap.isEmpty();
-      @     ensures mLoadFactor == 0.75;
+    /*@ public normal_behavior
+      @     ensures initialHashtable(0.75,11);
       @*/
     //@ pure
     public Hashtable(); 
 
-    /* FIXME @ public normal_behavior
+    /*@ public normal_behavior
       @   requires t != null;
-      @     assignable theMap, initialCapacity, mLoadFactor;
-      @     ensures initialCapacity==2*(t.theMap.int_size());
-      @     ensures mLoadFactor == 0.75 && theMap.equals(t.theMap);
+      @     ensures mLoadFactor == 0.75;
+      @     ensures equals(t);
+      @     ensures initialCapacity >= t.size();
+      @ also public exceptional_behavior
+      @   requires t == null;
+      @   signals_only NullPointerException;
+// FIXME - what if argument has a null key or value?
       @*/     
     //@ pure
     public Hashtable(Map t);
@@ -76,6 +85,28 @@ public class Hashtable extends Dictionary
     // specification inherited
     public synchronized boolean isEmpty();
 
+    // specification inherited
+    //@ public normal_behavior
+    //@   requires value != null;
+    //@   ensures \result == containsValue(value);
+    //@ also public exceptional_behavior
+    //@   requires value == null;
+    //@   signals_only NullPointerException;
+    public /*@ pure @*/ synchronized boolean contains(Object value); 
+
+    // specification inherited
+    //@ also public exceptional_behavior
+    //@   requires key == null;
+    //@   signals_only NullPointerException;
+    public synchronized boolean containsKey(Object key) throws RuntimeException;
+
+    // specification inherited
+    //@ also public exceptional_behavior
+    //@   requires key == null;
+    //@   signals_only NullPointerException;
+    public synchronized Object get(Object key);
+
+    // FIXME - need specs for these enumerators
     /*@ also
       @   normal_behavior
       @     ensures \fresh(\result); 
@@ -88,15 +119,6 @@ public class Hashtable extends Dictionary
       @*/
     public /*@ pure @*/ synchronized Enumeration elements(); 
 
-    /* FIXME @ public normal_behavior
-      @    requires value != null;
-      @    ensures \result <==>
-      @      (\exists Map.Entry e; theMap.has(e) && e != null; 
-      @                            e.abstractValue.equals(value));
-      @    ensures_redundantly \result==containsValue(value);
-      @*/
-    public /*@ pure @*/ synchronized boolean contains(Object value); 
-
     /*@ also
       @   public behavior
       @     ensures value != null;
@@ -104,22 +126,22 @@ public class Hashtable extends Dictionary
       @*/
     public boolean containsValue(Object value);
 
-    // specification inherited
-    public synchronized boolean containsKey(Object key);
-
-    // specification inherited
-    public synchronized Object get(Object key);
-
-    /* FIXME @ protected normal_behavior
-      @    assignable theMap; 
-      @    ensures theMap.equals(\old(theMap));
+    /*@ protected normal_behavior
+      @    assignable objectState; 
+      @    ensures true; // FIXME - should ensure the map and some setting do  not change
       @*/
     protected void rehash();
 
     // specification inherited
+    //@ also public exceptional_behavior
+    //@   requires key == null || value == null;
+    //@   signals_only NullPointerException;
     public synchronized Object put(Object key, Object value);
 
     // specification inherited
+    //@ also public exceptional_behavior
+    //@   requires key == null;
+    //@   signals_only NullPointerException;
     public synchronized Object remove(Object key);
 
     // specification inherited
@@ -135,9 +157,10 @@ public class Hashtable extends Dictionary
       @          && ((Map)\result).equals(this);
       @       ensures_redundantly \result != this;
       @*/
+    // FIXME - what about loadFactor, initialCapacity?
     public /*@ pure @*/ synchronized Object clone(); 
 
-    // specification inherited
+    // FIXME - needs a more specific spec
     public synchronized String toString();
 
     // specification inherited
@@ -149,17 +172,11 @@ public class Hashtable extends Dictionary
    // specification inherited
     public Collection values();
 
-    /* FIXME @ also 
-      @  public normal_behavior
-      @    requires o instanceof Hashtable;
-      @    ensures \result <==> theMap.equals(((Hashtable)o).theMap);
-      @ also
-      @  public normal_behavior
-      @    requires !(o instanceof Hashtable);
-      @    ensures \result == false;
-      @*/
+    // specification inherited
     public synchronized boolean equals(Object o);
 
    // specification inherited
     public synchronized int hashCode();
+
+
 }

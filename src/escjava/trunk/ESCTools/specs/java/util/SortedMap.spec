@@ -26,6 +26,10 @@ import java.io.*;
  */
 public interface SortedMap extends Map {
 
+    // FIXME - what about null keys?
+    // FIXME - note the restrictions on what elements can be added to a submap
+    // FIXME - note the restrictions on creating submaps of submaps
+
     //@ public model instance Object firstKey;    // FIXME - in ?
     //@ public model instance Object lastKey;
     
@@ -35,9 +39,15 @@ public interface SortedMap extends Map {
     /*@ pure @*/ Comparator comparator(); 
 
     /*@ public behavior
-      @    assignable \nothing;
-      @    ensures (\result.firstKey.equals(firstKey));
       @    ensures \result != null;
+      @    ensures (\result.firstKey.equals(fromKey));
+      @    ensures \result.lastKey.equals(toKey));
+      @    ensures (\forall Entry e; (containsEntry(e) &&
+                       comparator().compare(fromKey,e) <= 0 && 
+                       comparator().compare(e,toKey) < 0)
+                       <==> \result.containsEntry(e));
+      @
+           // FIXME - fix these exception conditions
       @    signals (ClassCastException)
       @            (* \typeof(fromKey) or \typeof(toKey)
       @             is incompatible with this map's comparator *); 
@@ -51,9 +61,14 @@ public interface SortedMap extends Map {
   
             
     /*@ public behavior
-      @    assignable \nothing;
-      @    ensures (\result.firstKey.equals(firstKey));
       @    ensures \result != null;
+      @    ensures (\result.firstKey.equals(fromKey));
+      @    ensures \result.lastKey.equals(toKey));
+      @    ensures (\forall Entry e; (containsEntry(e) &&
+                       comparator().compare(e,toKey) < 0)
+                       <==> \result.containsEntry(e));
+
+           // FIXME - fix these exception contditions
       @    signals (ClassCastException)
       @            (* \typeof(toKey) is incompatible with
       @             with this map's comparator *); 
@@ -66,8 +81,14 @@ public interface SortedMap extends Map {
     /*@ pure @*/ SortedMap headMap(Object toKey); 
 
     /*@ public behavior
-      @    assignable \nothing;
       @    ensures \result != null;
+      @    ensures (\result.firstKey.equals(fromKey));
+      @    ensures \result.lastKey.equals(toKey));
+      @    ensures (\forall Entry e; (containsEntry(e) &&
+                       comparator().compare(fromKey,e) <= 0 )
+                       <==> \result.containsEntry(e));
+
+           // FIXME - fix these exception contditions
       @    signals (ClassCastException)
       @            (* \typeof(fromKey) is incompatible with this
       @             map's comparator *); 
@@ -82,6 +103,7 @@ public interface SortedMap extends Map {
     /*@ public behavior
       @    assignable \nothing;
       @    ensures \result.equals(firstKey);
+      @    signals_only NoSuchElementException;
       @    signals (NoSuchElementException) isEmpty();
       @*/
     /*@ pure @*/ Object firstKey(); 
@@ -89,6 +111,7 @@ public interface SortedMap extends Map {
     /*@ public behavior
       @    assignable \nothing;
       @    ensures \result.equals(lastKey);
+      @    signals_only NoSuchElementException;
       @    signals (NoSuchElementException) isEmpty();
       @*/
     /*@ pure @*/ Object lastKey(); 

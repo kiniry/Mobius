@@ -41,9 +41,5 @@ public class Error extends Throwable {
     //@   ensures standardThrowable(null,cause);
     public /*@ pure @*/ Error(Throwable cause);
 
-    // FIELDS
-
-    static final long serialVersionUID;
-        /*@ initially serialVersionUID == 4980196508277280342L; @*/
 }
 

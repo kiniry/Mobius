@@ -3,6 +3,8 @@
 package java.lang;
 
 public interface Cloneable {
-
-    // FIXME - does this say something about the result of calling clone?
+   // A marker interface - used internally to decide whether something is
+   // cloneable.  That is, a class must either implement this interface,
+   // along with providing an implementation of clone(), or it must throw
+   // CloneNotSupportedException
 }

@@ -27,57 +27,57 @@ import java.io.*;
 public class HashMap extends AbstractMap
     implements Map, Cloneable, Serializable
 {
+    /*@ public normal_behavior
+      @   ensures \result <==> ( initialAbstractMap() &&
+                                 initialCapacity >= i &&
+                                 loadFactor == f);
+      @ public pure model boolean initialHashMap(int i, double f);
+      @
+      @ public normal_behavior
+      @   ensures \result <==> initialHashMap(16,0.75);
+      @ public pure model boolean initialHashMap();
+      @*/
 
     //@ public model int initialCapacity;    
-    // loadFactor is spec_public below
+    final /*@ spec_public @*/ float loadFactor;
     
     //@ public invariant initialCapacity >= 0;  
     //@ public invariant loadFactor > 0;
     
-     /*FIXME @ public normal_behavior
+     /*@ public normal_behavior
        @    requires initialCapacity >= 0;
-       @    assignable theMap, this.initialCapacity, this.loadFactor;
-       @    ensures theMap != null && theMap.isEmpty();
-       @    ensures this.initialCapacity == initialCapacity
-       @         && this.loadFactor == loadFactor;
+       @    ensures initialHashMap(initialCapacity,loadFactor);
        @*/ 
+    //@ pure
     public HashMap(int initialCapacity, float loadFactor);
 
-    /*FIXME @ public normal_behavior
-       @    assignable theMap, this.initialCapacity, this.loadFactor;
-       @    ensures theMap != null && theMap.isEmpty();
-       @    ensures this.initialCapacity == initialCapacity
-       @         && this.loadFactor == 0.75;
+    /*@ public normal_behavior
+       @    requires initialCapacity >= 0;
+       @    ensures initialHashMap(initialCapacity,0.75);
        @*/
+    //@ pure
     public HashMap(int initialCapacity);
 
-    /*FIXME @ public normal_behavior
-       @   assignable theMap, initialCapacity, loadFactor;
-       @   ensures theMap != null && theMap.isEmpty();
-       @   ensures loadFactor == 0.75;
-       @   ensures initialCapacity == 16;
+    /*@ public normal_behavior
+       @   ensures initialHashMap();
        @*/
+    //@ pure
     public HashMap();
 
-     /*FIXME @ public normal_behavior
+     /*@ public behavior
        @    requires m != null;
-       @    assignable theMap, initialCapacity, loadFactor;
+       @    ensures initialAbstractMap();
        @    ensures loadFactor == 0.75 
-       @         && theMap.equals(m.theMap);
+       @         && equals(m);
+       @    ensures initialCapacity >= m.size();
+            // FIXME - exceptions might get thrown if entries cannot be added
+       @ also public exceptional_behavior
+       @    requires m == null;
+       @    assignable \nothing;
+       @    signals_only NullPointerException;
        @*/
+    //@ pure
     public HashMap(Map m);
-
-    void init();
-
-    static Object maskNull(Object key);
-
-    static Object unmaskNull(Object key);
-
-    static int hash(Object x);
-
-    static boolean eq(Object x, Object y);
-
-    static int indexFor(int h, int length);
 
     // specified by Map
     public int size();
@@ -91,26 +91,14 @@ public class HashMap extends AbstractMap
     // specified by Map
     public boolean containsKey(Object key); 
 
-    Entry getEntry(Object key);
-
     // specified by Map     
     public Object put(Object key, Object value); 
-
-    void putAllForCreate(Map m);
-
-    void resize(int newCapacity);
-
-    void transfer(Entry[] newTable);
 
     // specified by Map     
     public void putAll(Map t); 
 
     // specified by Map     
     public Object remove(Object key);
-
-    Entry removeEntryForKey(Object key);
-
-    Entry removeMapping(Object o);
 
     // specified by Map
     public void clear();
@@ -127,16 +115,6 @@ public class HashMap extends AbstractMap
        @*/    
     public Object clone();
 
-    void addEntry(int hash, Object key, Object value, int bucketIndex);
-
-    void createEntry(int hash, Object key, Object value, int bucketIndex);
-
-    Iterator newKeyIterator();
-
-    Iterator newValueIterator();
-
-    Iterator newEntryIterator();
-
     // specified by Map      
     public Set keySet(); 
 
@@ -146,51 +124,4 @@ public class HashMap extends AbstractMap
     // specified by Map
     public Set entrySet(); 
 
-    int capacity();
-
-    float loadFactor();
-
-    // INNER CLASSES
-
-    static class Entry implements Map.Entry {
-
-        //@ assignable abstractKey, abstractValue;
-        //@ ensures abstractKey == k && abstractValue == v;
-        Entry(int h, Object k, Object v, Entry n);
-
-        public Object getKey();
-
-        public Object getValue();
-
-        public Object setValue(Object newValue);
-
-        public boolean equals(Object o);
-
-        public int hashCode();
-
-        public String toString();
-
-        void recordAccess(HashMap m);
-
-        void recordRemoval(HashMap m);
-
-        final Object key; //@ in abstractKey;
-        Object value; //@ in abstractValue;
-
-        //@ represents abstractKey <- key;
-        //@ represents abstractValue <- value;
-
-        final int hash;
-        Entry next;
-    }
-
-    static final int DEFAULT_INITIAL_CAPACITY;
-    static final int MAXIMUM_CAPACITY;
-    static final float DEFAULT_LOAD_FACTOR;
-    transient Entry[] table;
-    transient int size;
-    int threshold;
-    final /*@ spec_public @*/ float loadFactor;
-    transient volatile int modCount;
-    static final Object NULL_KEY;
 }

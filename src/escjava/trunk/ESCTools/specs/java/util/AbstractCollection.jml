@@ -22,8 +22,13 @@ package java.util;
 
 public abstract class AbstractCollection implements Collection {
 
+    /*@ public normal_behavior
+      @   ensures \result <==> initialCollection();
+      @ public pure model boolean initialAbstractCollection();
+      @*/
+
     /*@ protected normal_behavior
-      @   ensures true;
+      @   ensures initialAbstractCollection();
       @*/
     //@ pure
     protected AbstractCollection();

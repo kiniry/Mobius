@@ -39,7 +39,7 @@ public class Package {
     //@ public model String implvendor;
     //@ public model URL sealbase;
 
-    /*@
+    /*+@
 	represents name <- getName();
 	represents spectitle <- getSpecificationTitle();
 	represents specversion <- getSpecificationVersion();
@@ -171,10 +171,5 @@ public class Package {
 	    String spectitle, String specversion, String specvendor,
 	    String impltitle, String implversion, String implvendor,
 	    URL sealbase);
-
-    static /*@ pure @*/
-        Package getSystemPackage(/*@ non_null @*/ String name);
-
-    static /*@ pure @*/ Package[] getSystemPackages();
 
 }

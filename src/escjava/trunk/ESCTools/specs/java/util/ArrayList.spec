@@ -39,6 +39,7 @@ public class ArrayList extends AbstractList
       @   requires 0 <= initialCapacity;
       @   ensures capacity == initialCapacity;
       @   ensures this.isEmpty();
+      @   ensures containsNull && elementType == \type(Object);
       @ also
       @  public exceptional_behavior
       @   requires initialCapacity < 0;
@@ -50,6 +51,7 @@ public class ArrayList extends AbstractList
     /*@  public normal_behavior
       @   ensures capacity == 10;
       @   ensures this.isEmpty();
+      @   ensures containsNull && elementType == \type(Object);
       @*/
     /*@ pure @*/ public ArrayList();
 
@@ -60,29 +62,29 @@ public class ArrayList extends AbstractList
       @   ensures (\forall int i; 0 <= i && i < c.size();
       @                     this.get(i) == (c.iterator().nthNextElement(i)));
       @   ensures capacity == c.size()*1.1;
+      @   ensures containsNull == c.containsNull;
+      @   ensures elementType == c.elementType;
       @ also
       @  public exceptional_behavior
       @   requires c == null;
       @   assignable \nothing;
-      @   signals (NullPointerException) c == null;
+      @   signals_only NullPointerException;
       @*/
     /*@ pure @*/ public ArrayList(Collection c);
 
     /*@  public normal_behavior
       @   assignable objectState;
-      @   ensures \not_modified(containsNull,elementType);
+      @   ensures \not_modified(containsNull,elementType,content.theSize,content,
+                                                   theString,theHashCode);
       @   ensures capacity == this.size();
-      @   ensures size() == \old(size());
-      @   ensures (\forall int i; 0<=i && i<size(); get(i) == \old(get(i)));
       @*/
     public void trimToSize();
 
     /*@  public normal_behavior
       @   assignable objectState;
       @   ensures capacity >= minCapacity;
-      @   ensures \not_modified(containsNull,elementType);
-      @   ensures size() == \old(size());
-      @   ensures (\forall int i; 0<=i && i<size(); get(i) == \old(get(i)));
+      @   ensures \not_modified(containsNull,elementType,content.theSize,content);
+      @   ensures \not_modified(theString,theHashCode);
       @*/
     public void ensureCapacity(int minCapacity);
 
@@ -105,14 +107,13 @@ public class ArrayList extends AbstractList
     /*@ also
       @  public normal_behavior
       @   ensures \result != this;
-      @   ensures \result.getClass() == this.getClass();
       @   ensures \result.equals(this);
-      @   ensures \result != null;
       @   ensures ((List)\result).containsNull == this.containsNull;
       @   ensures ((List)\result).elementType == this.elementType;
-      @   ensures ((ArrayList)\result).size() == this.size();
-      @   ensures (\forall int i; 0 <= i && i < this.size();
-      @             ((ArrayList)\result).get(i) == this.get(i));
+      @   ensures ((ArrayList)\result).content.theSize == this.content.theSize;
+      @   ensures List.equals(((List)\result).content,this.content);
+      @   ensures ((ArrayList)\result).theString == this.theString;
+      @   ensures ((ArrayList)\result).theHashCode == this.theHashCode;
       @*/
     public /*@ pure @*/ Object clone();
 
@@ -120,53 +121,22 @@ public class ArrayList extends AbstractList
     public /*@ pure @*/ Object[] toArray();
 
     // specification inherited from List
-    /*@ also
-      @  public exceptional_behavior
-          // FIXME - not quite - won't get an exception unless an actual
-          // element has the wrong type
-      @   requires elementType <: \elemtype(\typeof(a));
-      @   assignable \nothing;
-      @   signals (ArrayStoreException);
-      @*/
-    public Object[] toArray(Object[] a) throws ArrayStoreException;
+    public Object[] toArray(Object[] a);
 
     // specification inherited from List
-    /*@ also
-      @  public exceptional_behavior
-      @   requires index < 0 || index >= this.size();
-      @   signals (IndexOutOfBoundsException);
-      @*/
-    public /*@ pure @*/ Object get(int index) throws ArrayStoreException;
+    public /*@ pure @*/ Object get(int index);
 
     // specification inherited from List
-    /*@ also
-      @  public exceptional_behavior
-      @   requires index < 0 || index >= this.size();
-      @   assignable \nothing;
-      @   signals (IndexOutOfBoundsException);
-      @*/
-    public Object set(int index, Object element) throws IndexOutOfBoundsException;
+    public Object set(int index, Object element);
 
     // specification inherited from List
     public boolean add(Object o);
 
     // specification inherited from List
-    /*@ also
-      @  public exceptional_behavior
-      @   requires index < 0 || index >= this.size();
-      @   assignable \nothing;
-      @   signals (IndexOutOfBoundsException);
-      @*/
-    public void add(int index, Object element) throws IndexOutOfBoundsException;
+    public void add(int index, Object element);
 
     // specification inherited from List
-    /*@ also
-      @  public exceptional_behavior
-      @   requires index < 0 || index >= this.size();
-      @   assignable \nothing;
-      @   signals (IndexOutOfBoundsException);
-      @*/
-    public Object remove(int index) throws IndexOutOfBoundsException;
+    public Object remove(int index);
 
     // specification inherited from List
     public void clear();
@@ -175,15 +145,8 @@ public class ArrayList extends AbstractList
     public boolean addAll(Collection c);
 
     // specification inherited from List
-    /*@ also
-      @  public exceptional_behavior
-      @   requires index < 0 || index >= this.size() || c == null;
-      @   assignable \nothing;
-      @   signals (IndexOutOfBoundsException) index < 0 || index >= this.size();
-      @   signals (NullPointerException) c == null;
-      @*/
-    public boolean addAll(int index, Collection c) throws IndexOutOfBoundsException;
+    public boolean addAll(int index, Collection c);
 
     // specification inherited from AbstractList
-    protected void removeRange(int fromIndex, int toIndex) throws IndexOutOfBoundsException;
+    protected void removeRange(int fromIndex, int toIndex);
 } 

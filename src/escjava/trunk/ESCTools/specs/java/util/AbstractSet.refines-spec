@@ -25,10 +25,15 @@ public abstract class AbstractSet
   extends AbstractCollection
   implements Set
 {
-    /* FIXME @ protected normal_behavior
-      @   assignable theSet;
-      @     ensures theSet != null && theSet.isEmpty();
+    /*@ public normal_behavior
+      @   ensures \result <==> (initialCollection() && initialSet());
+      @ public pure model boolean initialAbstractSet();
       @*/
+
+    /*@ protected normal_behavior
+      @   ensures initialAbstractSet();
+      @*/
+    //@ pure
     protected AbstractSet();
 
     // specified by Set

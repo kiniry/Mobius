@@ -32,18 +32,18 @@ public class LinkedList extends AbstractSequentialList
     /*@ public normal_behavior
       @   ensures isEmpty();
       @   ensures containsNull;
-      @   ensures elementType == Object.class;
+      @   ensures elementType == \type(Object);
       @*/
     /*@ pure @*/ public LinkedList();
           
     /*@ public normal_behavior
       @   requires c != null;
-      @   ensures containsNull;
-      @   ensures elementType == Object.class;
+      @   ensures containsNull == c.containsNull;
+      @   ensures elementType == c.elementType;
       @ also
       @   public exceptional_behavior
       @     requires c == null;
-      @     signals (Exception e) e instanceof NullPointerException;
+      @     signals_only NullPointerException;
       @*/
     /*@ pure @*/ public LinkedList(Collection c);
     
@@ -55,7 +55,7 @@ public class LinkedList extends AbstractSequentialList
       @ also
       @  public exceptional_behavior
       @    requires isEmpty();
-      @    signals (Exception e) e instanceof NoSuchElementException;
+      @    signals_only NoSuchElementException;
       @*/
     public /*@ pure @*/ Object getFirst();
     
@@ -67,7 +67,7 @@ public class LinkedList extends AbstractSequentialList
       @ also
       @  public exceptional_behavior
       @    requires isEmpty();
-      @    signals (Exception e) e instanceof NoSuchElementException; 
+      @    signals_only NoSuchElementException; 
       @*/
     public /*@ pure @*/ Object getLast();
 
@@ -85,7 +85,7 @@ public class LinkedList extends AbstractSequentialList
       @  public exceptional_behavior
       @    requires isEmpty();
       @    assignable \nothing;
-      @    signals (Exception e) e instanceof NoSuchElementException;
+      @    signals_only NoSuchElementException;
       @*/    
     public Object removeFirst();
  
@@ -103,7 +103,7 @@ public class LinkedList extends AbstractSequentialList
       @  public exceptional_behavior
       @    requires isEmpty();
       @    assignable \nothing;
-      @    signals (Exception e) e instanceof NoSuchElementException;
+      @    signals_only NoSuchElementException;
       @*/     
     public Object removeLast();
   

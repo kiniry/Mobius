@@ -56,6 +56,7 @@ public class Vector extends AbstractList
     //@ public invariant 0 <= elementCount;
     //@ public invariant elementCount == size();
 
+
     // Public Constructors
 
     /*@  public normal_behavior
@@ -84,19 +85,22 @@ public class Vector extends AbstractList
       @    ensures containsNull;
       @    ensures maxCapacity > 0 && capacityIncrement == 0;
       @    ensures elementCount == 0;
-      @    ensures size() == 0;
+      @    ensures content.theSize == 0;
       @    ensures elementType == \type(Object);
       @    ensures isEmpty();
       @*/
     public /*@ pure @*/ Vector();
 
     /*@ public normal_behavior
-      @    requires c != null && c.size() < Integer.MAX_VALUE;
+      @    requires c != null && c.content.theSize < Integer.MAX_VALUE;
       @    assignable objectState;
       @    assignable maxCapacity, capacityIncrement, elementType, containsNull;
       @    ensures elementCount == c.size();
       @    ensures this.elementType == c.elementType;
       @    ensures this.containsNull == c.containsNull;
+      @    ensures this.content.theSize == c.content.theSize;
+      @    ensures (\forall Object o; c.contains(o) <==> this.contains(o));
+               // FIXME - what about duplicate entries?
       @*/
     public /*@ pure @*/ Vector(/*@non_null*/ Collection c);
 
@@ -104,11 +108,19 @@ public class Vector extends AbstractList
     /*@ public normal_behavior
       @    requires anArray != null;
       @    requires elementCount <= anArray.length;
+      @    requires elementType <: \elemtype(\typeof(anArray));
       @    assignable anArray[0 .. elementCount - 1];
       @    ensures (\forall int i; 0 <= i && i < elementCount;
       @                             get(i) == anArray[i]);
-      @    ensures (\forall int i; 0 <= i && i < elementCount;
-      @                          !containsNull ==> anArray[i] != null);
+      @    ensures !containsNull ==> !\nonnullelements(anArray);
+      @ also public exceptional_behavior
+      @    requires anArray == null;
+      @    signals_only NullPointerException;
+      @ also public exceptional_behavior
+           requires anArray != null;
+           requires (\exists int i; 0<=i && i<elementCount;
+                                 !(elementType <: \elemtype(\typeof(anArray))));
+           signals_only ArrayStoreException;
       @*/
     public synchronized void copyInto(Object[] anArray);
 
@@ -116,9 +128,9 @@ public class Vector extends AbstractList
       @    assignable objectState;
       @    ensures \not_modified(theString,theHashCode);
                // theHashCode is not changed because the result does not
-               // changes equals
+               // change equals
       @    ensures \not_modified(elementCount,containsNull,elementType);
-      @    ensures \not_modified(size());
+      @    ensures \not_modified(content.theSize);
       @    ensures (\forall int i; 0<=i && i<size(); get(i) == \old(get(i)));
       @    ensures maxCapacity == elementCount;
       @*/

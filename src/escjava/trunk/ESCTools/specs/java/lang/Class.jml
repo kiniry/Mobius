@@ -28,6 +28,7 @@ import java.io.InputStream;
  * @author Gary T. Leavens
  * @author Erik Poll
  */
+//@ pure immutable
 public final class Class implements java.io.Serializable {
 
     private Class();
@@ -36,18 +37,23 @@ public final class Class implements java.io.Serializable {
       @   ensures \result != null && !\result.equals("")
       @        && (* \result is the name of this class object *);
       @*/
-    public /*@ pure @*/ String toString();
+    //@ pure
+    public String toString();
+
+    /// *@ also public normal_behavior
+      // @   ensures \result <==> (this == o);
+      // @*/
+    // // @ pure function 
+    //public boolean equals(Object o);
 
     /*@   public normal_behavior
       @     requires className != null
       @         && (* a class named className has been or can be loaded
       @               by the defining loader of the current class *);
-      @     assignable \not_specified;
       @     ensures \result != null;
       @ also
       @   public behavior
       @     requires className != null;
-      @     assignable \not_specified;
       @     ensures true;
       @     signals (LinkageError) (* if linkage fails *);
       @     signals (ExceptionInInitializerError)
@@ -56,6 +62,7 @@ public final class Class implements java.io.Serializable {
       @     signals (ClassNotFoundException)
       @               (* if className can't be located *);
       @*/
+    //@ pure
     public static /*@ non_null @*/
         Class forName(/*@ non_null @*/ String className)
         throws ClassNotFoundException;
@@ -63,12 +70,10 @@ public final class Class implements java.io.Serializable {
     /*@   public normal_behavior
       @     requires name != null && loader != null
       @         && (* a class named name has been/can be loaded by loader *);
-      @     assignable \not_specified;
       @     ensures \result != null;
       @ also
       @   public behavior
       @     requires name != null && loader != null;
-      @     assignable \not_specified;
       @     ensures true;
       @     signals (LinkageError) (* if linkage fails *);
       @     signals (ExceptionInInitializerError)
@@ -86,6 +91,8 @@ public final class Class implements java.io.Serializable {
     public /*@ pure @*/ Object newInstance() 
         throws InstantiationException, IllegalAccessException;
 
+    //@ public normal_behavior
+    //@   ensures \result <==> (obj != null && (\typeof(obj) <: this));
     public /*@ pure @*/ native boolean isInstance(Object obj);
 
     public /*@ pure @*/ native boolean isAssignableFrom(Class cls);
@@ -121,10 +128,18 @@ public final class Class implements java.io.Serializable {
 	// FIXME - really need a better way to express this
     public /*@ pure @*/ native boolean isArray();
 
-    //@ public model boolean _isPrimitive; // cf. _isArray
-    //@        represents _isPrimitive = isPrimitive();
-
-    //@ ensures \result == _isPrimitive;
+    /*@ public normal_behavior
+      @ ensures \result <==> (
+                   this == int.class ||
+                   this == short.class ||
+                   this == long.class ||
+                   this == float.class ||
+                   this == double.class ||
+                   this == char.class ||
+                   this == boolean.class ||
+                   this == byte.class
+                  );
+      @*/
     public /*@ pure @*/ native boolean isPrimitive();
 
     //@ public model String _getName;
@@ -204,8 +219,6 @@ public final class Class implements java.io.Serializable {
     public /*@ pure @*/ java.security.ProtectionDomain getProtectionDomain();
 
     native void setProtectionDomain0(java.security.ProtectionDomain pd);
-
-    static /*@ pure @*/ native Class getPrimitiveClass(String name);
 
     public /*@ pure @*/ boolean desiredAssertionStatus();
 

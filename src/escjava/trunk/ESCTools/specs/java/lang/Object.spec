@@ -26,6 +26,7 @@ import java.lang.reflect.Array;
  * @version $Revision$
  * @author Gary T. Leavens
  * @author Specifications from Compaq SRC's ESC/Java
+ * @author David R. Cok
  */
 public class Object {
 
@@ -42,42 +43,37 @@ public class Object {
      */
     //@ ghost public Object owner;
         // NB It is inconvenient to include owner in objectState,
-        // because permission to modify objectState shouldn't give
-        // permission to change the owner.
+        // because generally we do not change the owner after initialization
+
 
     /*@ public normal_behavior
       @   assignable \nothing;
       @*/
     public /*@ pure @*/ Object();
 
-    /** The Class of this object.  Needed to specify that invoking
-      * getClass() on an object always produces the same result: no
-      * methods include this model field in their assignable clause,
-      * so no methods can alter the outcome of invoking getClass() on
-      * some object.  This property is important when using ESC/Java
-      * on specs that use getClass(), just knowing that getClass() is
-      * pure is not enough.
-      */
-    //@ public model non_null Class _getClass;
-    //@ public represents _getClass <- \typeof(this);
 
     /*@ public normal_behavior
-      @   ensures \result == _getClass;
-      @   ensures_redundantly \result != null;
+      @   ensures \result == \typeof(this);
       @*/
+    //-@ function // Not dependent on the state, just on the object identity
+    //@ non_null
     public /*@ pure @*/ final Class getClass();
 
     //@ public model int theHashCode; in objectState;
 
-    /*@  public behavior
+    /*@  public normal_behavior
       @     assignable privateState;
       @     ensures (* \result is a hash code for this object *);
       @     ensures \result == theHashCode;
+      @ also public normal_behavior
+      @     requires \typeof(this) == \type(Object);
+      @     assignable privateState;
+      @     ensures \result == System.identityHashCode(this);
       @*/
     public int hashCode();
 
     //  FIXME - how do we ensure the following
-    //     (\forall Object o,oo; oo.equals(o) ==> o.theHashCOde == oo.theHashCode);
+    //     (\forall Object o,oo; oo.equals(o) ==> o.theHashCode == oo.theHashCode);
 
     /*@  public normal_behavior
       @     requires obj != null;
@@ -90,11 +86,12 @@ public class Object {
       @   public normal_behavior
       @     requires obj != null && \typeof(this) == \type(Object);
       @     ensures \result <==> this == obj;
-      @ also
+      @ also public normal_behavior
       @    ensures obj == null ==> !\result;
-      @ also
-      @    requires obj != null;
-      @    ensures \result == obj.equals(this);
+        // FIXME - the following causes inconsistency when equals is used in annotations
+      @ //also public normal_behavior
+      @  //  requires obj != null;
+      @   // ensures \result == obj.equals(this);
       @*/
     public /*@ pure @*/ boolean equals(/*@ \readonly @*/ Object obj);
 
@@ -140,6 +137,7 @@ public class Object {
       @ also protected normal_behavior
       @   requires \elemtype(\typeof(this)) <: \type(Object);
       @   assignable \nothing;
+      @   ensures \result != this;
       @   ensures \elemtype(\typeof(\result)) == \elemtype(\typeof(this));
       @   ensures ((Object[])\result).length == ((Object[])this).length;
       @   ensures (\forall int i; 0<=i && i < ((Object[])this).length;
@@ -147,6 +145,7 @@ public class Object {
       @ also protected normal_behavior
       @   requires \elemtype(\typeof(this)) == \type(int);
       @   assignable \nothing;
+      @   ensures \result != this;
       @   ensures \elemtype(\typeof(\result)) == \elemtype(\typeof(this));
       @   ensures ((int[])\result).length == ((int[])this).length;
       @   ensures (\forall int i; 0<=i && i < ((int[])this).length;
@@ -154,6 +153,7 @@ public class Object {
       @ also protected normal_behavior
       @   requires \elemtype(\typeof(this)) == \type(byte);
       @   assignable \nothing;
+      @   ensures \result != this;
       @   ensures \elemtype(\typeof(\result)) == \elemtype(\typeof(this));
       @   ensures ((byte[])\result).length == ((byte[])this).length;
       @   ensures (\forall int i; 0<=i && i < ((byte[])this).length;
@@ -163,7 +163,7 @@ public class Object {
     protected Object clone() throws CloneNotSupportedException;
 
     /** Use theString as the (pure) model value of toString() */
-    //@ public model String theString; in objectState;
+    //@ public model non_null String theString; in objectState;
 
     /*@   public normal_behavior
       @     assignable privateState;
@@ -175,8 +175,8 @@ public class Object {
       @     requires \typeof(this) == \type(Object);
       @     assignable privateState;
       @     ensures \result != null;
-      @     // FIXME ensures \result.equals(getClass().getName() + "@" + 
-            //                         Integer.toHexString(thehashCode));
+      @     ensures \result.equals(getClass().getName() + "@" + 
+                                     Integer.toHexString(theHashCode));
       @*/
     public String toString();
 
@@ -205,15 +205,18 @@ public class Object {
 
     public final void wait() throws InterruptedException;
 
-    /*@ protected behavior
+    /*@ protected normal_behavior
       @   requires objectTimesFinalized == 0 ; // FIXME && \lockset.isEmpty();
       @   assignable objectTimesFinalized, objectState;
       @   ensures objectTimesFinalized == 1;
-      @   signals (Throwable) objectTimesFinalized == 1;
+      @ also protected exceptional_behavior
+      @   requires objectTimesFinalized == 1;
+      @   signals (Throwable) true; // FIXME - what exception?
       @*/
     protected void finalize() throws Throwable;
 
     /** The number of times this object has been finalized.
      */
     //@ protected ghost int objectTimesFinalized = 0; // not part of objectState
+
 }

@@ -29,6 +29,11 @@ package java.util;
  */
 public interface Set extends Collection {
 
+    /*@ public normal_behavior
+      @   ensures \result;
+      @ public pure model boolean initialSet();
+      @*/
+
     // specification inherited
     int size();
 
@@ -47,117 +52,44 @@ public interface Set extends Collection {
     // specification inherited
     Object[] toArray(Object[] a);
 
-    /* FIXME +@ also
-       @ public behavior
-       @   requires !theSet.has(o);
-       @   assignable theCollection;
-       @   ensures \result <==> !\old(theSet).has(o);
-       @   ensures theSet.equals(\old(theSet).insert(o));
-       @*/
     /*@ also
-       @ public normal_behavior
-       @   requires contains(o);
-       @   assignable \nothing;
-       @   ensures !\result;
-       @   ensures (\forall Object oo; contains(oo) <==> \old(contains(oo)));
-       @   ensures contains(null) <==> \old(contains(null));
-       @ also public normal_behavior
-       @   requires !contains(o);
-       @   assignable _theCollection;
-       @   ensures \result;
-       @   ensures contains(o);
-       @   ensures contains(null) <==> (\old(contains(null)) || o==null);
-       @   ensures (\forall Object oo; contains(oo) <==> 
-                                (\old(contains(oo)) || o == oo));
-       @   ensures size() == \old(size()) + 1;
-       @   // FIXME ensures equal(_theCollection,0,\old(_theCollection),0,
-           //                        \old(_theCollection.length));
-       @   ensures _theCollection[_theCollection.length-1] == o;
-       @*/
+      @  public normal_behavior
+      @    requires contains(o);
+      @    requires !containsNull ==> o != null;
+      @    requires  (o == null) || \typeof(o) <: elementType;
+      @    assignable \nothing;
+      @    ensures !\result;
+      @*/
     boolean add(Object o);
 
-    /* FIXME +@ also
-       @ implies_that
-       @ public behavior
-       @   assignable theCollection;
-       @   assignable_redundantly theSet;
-       @   ensures !theSet.has(o);
-       @   ensures_redundantly !theCollection.has(o);
-       @*/
     /*@ also
        @ public normal_behavior
-       @   requires !contains(o);
-       @   assignable \nothing;
-       @   ensures \result;
-       @   ensures (\forall Object oo; contains(oo) <==> \old(contains(oo)));
-       @   ensures contains(null) <==> \old(contains(null));
-       @ also public normal_behavior
        @   requires contains(o);
-       @   assignable _theCollection;
-       @   ensures !\result;
+       @   assignable objectState;
+       @   ensures \result;
        @   ensures !contains(o);
-       @   ensures \old(contains(null)) <==> (contains(null) || o==null);
-       @   ensures (\forall Object oo; \old(contains(oo)) <==> 
-                                (contains(oo) || o == oo));
-       @   ensures size() == \old(size()) - 1;
        @*/
     boolean remove(Object o);
 
     // Bulk Operations
 
-    /* FIXME +@ also
-       @ public behavior
-       @   requires c instanceof Set;
-       @   ensures \result ==> ((Set) c).theSet.isSubset(theSet);
-       @*/
+    // specs are inherited
     //@ pure
     boolean containsAll(Collection c);
 
-    /* FIXME +@ also
-       @ public behavior
-       @   assignable theCollection;
-       @   ensures 
-       @        theSet.equals(\old(theSet).union(JMLEqualsSet.convertFrom(c)))
-       @        && (\result ==> !theSet.equals(\old(theSet)));
-       @*/
-    /*@ also public normal_behavior
-       @   assignable _theCollection;
-       @   ensures contains(null) <==> (\old(contains(null)) || \old(c.contains(null)));
-       @   ensures (\forall Object o; contains(o) <==>
-                      (\old(contains(o)) || \old(c.contains(o))));
-       @   ensures size() >= \old(size());
-       @*/
+    // specs are inherited
     boolean addAll(Collection c);
 
-    /* FIXME +@ also
-       @ public behavior
-       @   assignable theCollection;
-       @   ensures theSet.equals(\old(theSet).intersection(
-       @                                  JMLEqualsSet.convertFrom(c)))
-       @        && (\result ==> !theSet.equals(\old(theSet)));
-       @*/
-    /*@ also public normal_behavior
-       @   assignable _theCollection;
-       @   ensures contains(null) <==> (\old(contains(null)) && \old(c.contains(null)));
-       @   ensures (\forall Object o; contains(o) <==>
-                      (\old(contains(o)) && \old(c.contains(o))));
-       @   ensures size() <= \old(size());
-       @*/
+    // specs are inherited
     boolean retainAll(Collection c);
 
-    /* FIXME +@ also
-       @ public behavior
-       @   assignable theCollection;
-       @   ensures theSet.equals(\old(theSet).difference(
-       @                                  JMLEqualsSet.convertFrom(c)))
-       @        && (\result ==> !theSet.equals(\old(theSet)));
-       @*/
     /*@ also public normal_behavior
-       @   assignable _theCollection;
-       @   ensures contains(null) <==> (\old(contains(null)) && !\old(c.contains(null)));
-       @   ensures (\forall Object o; contains(o) <==>
+       @   assignable objectState;
+       @   ensures \old(c.contains(null)) ==> !contains(null);
+       @   ensures (\forall Object o; c.contains(o) <==>
                       (\old(contains(o)) && !\old(c.contains(o))));
        @   ensures size() <= \old(size());
+       @   ensures \result <==> size() != \old(size());
        @*/
     boolean removeAll(Collection c);
 
@@ -166,17 +98,13 @@ public interface Set extends Collection {
 
     // Comparison and hashing
 
-    /* FIXME +@ also
-       @ public normal_behavior
-       @   requires o instanceof Set;
-       @   ensures \result ==> theSet.equals(((Set)o).theSet);
-       @*/
-    /* FIXME @ also public normal_behavior
+    /*@ also public normal_behavior
+       @   requires o != null;
        @   requires o instanceof Set;
        @   ensures \result <==>
                ((\forall Object oo; contains(oo) <==> ((Set)o).contains(oo))
              && contains(null) <==> ((Set)o).contains(null));
-       @   ensures_redundantly \result ==> (size == ((Set)o).size());
+       @   ensures \result ==> (content.theSize == ((Set)o).content.theSize);
        @*/
     /*@ pure @*/ boolean equals(Object o);
 

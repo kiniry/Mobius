@@ -25,10 +25,6 @@ package java.util;
 public class HashSet extends AbstractSet
     implements Set, Cloneable, java.io.Serializable
 {
-    //@ public represents addOperationSupported = true;
-    //@ public represents removeOperationSupported = true;
-    //@ public represents nullElementsSupported = true;
-
     //@ public model int initialCapacity;    
     //@ public model float loadFactor;
     
