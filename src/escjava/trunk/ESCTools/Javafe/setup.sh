@@ -18,15 +18,19 @@ unset ESCJ		# prevent confusion w/ escjava repository
 
 ######################### locations #########################
 
-export JAVA_HOME=/usr/java/jdk-1.1
+# @note kiniry 15 Jan 2003 - We must use JDK 1.2 as it (a) compiles to
+# bytecodes that the decsrc package can parse, and (b) contains some
+# classes (e.g., java.util.Arrays) on which ESC/Java depends.
+
+export JAVA_HOME=/usr/java/jdk-1.2
 export PATH=$JAVA_HOME/bin:$PATH
 
 export CLASSDIRECTORY=${JAVAFE_ROOT}/classfiles
 export SOURCEDIRECTORY=${JAVAFE_ROOT}/java
 export JAVADOCDIRECTORY=${JAVAFE_ROOT}/doc/javadoc
 
-export JDK_SOURCES=/usr/local/Java/src/jdk-1.18_03
-export JDK_BINARIES=${JAVA_HOME}/lib/classes.zip
+export JDK_SOURCES=/usr/local/Java/src/jdk-1.2.2_012
+export JDK_BINARIES=${JAVA_HOME}/jre/lib/rt.jar
 export JDKBINARIES=${JDK_BINARIES}
 
 ######################### classpaths #########################
@@ -55,7 +59,7 @@ export JAVA=java
 # Other java* commands:
 #
 export JAVAC=javac
-export OLD_JAVAC=/usr/java/jdk-1.1/bin/javac
+export OLD_JAVAC=/usr/java/jdk-1.2/bin/javac
 export JAVADOC=javadoc
 
 #

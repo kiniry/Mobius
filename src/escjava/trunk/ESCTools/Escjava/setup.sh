@@ -50,7 +50,7 @@ fi
 
 ######################### locations #########################
 
-export JAVA_HOME=/usr/java/jdk-1.1
+export JAVA_HOME=/usr/java/jdk-1.2
 export PATH=$JAVA_HOME/bin:$PATH
 
 export CLASSDIRECTORY=${ESCJAVA_ROOT}/classfiles
@@ -63,8 +63,13 @@ export SRCCLASSDIRECTORY=${JAVAFE_ROOT}/decsrclib
 #
 # Where to find binaries for the JDK libraries:
 #
-export JDK_SOURCES=/usr/local/Java/src/jdk-1.18_03
-export JDKBINARIES=${JAVA_HOME}/lib/classes.zip
+
+# @note kiniry 15 Jan 2003 - We must use JDK 1.2 as it (a) compiles to
+# bytecodes that the decsrc package can parse, and (b) contains some
+# classes (e.g., java.util.Arrays) on which ESC/Java depends.
+
+export JDK_SOURCES=/usr/local/Java/src/jdk-1.2.2_012
+export JDKBINARIES=${JAVA_HOME}/jre/lib/rt.jar
 export JDK_BINARIES=${JDKBINARIES}
 
 export MOCHA_ROOT=${ESCJAVA_ROOT}/mochalib
