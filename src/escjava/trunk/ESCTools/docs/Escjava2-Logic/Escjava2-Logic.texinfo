@@ -1,7 +1,7 @@
 \input texinfo   @c -*-texinfo-*-
 @c %**start of header
 
-@setfilename Escjava2_Logic.info
+@setfilename Escjava2-Logic.info
 @settitle The Logics of ESC/Java2 $Revision$
 @c Other commands that globally affect the document formatting: 
 @c synindex, footnotestyle
@@ -69,7 +69,8 @@ Equipment Corporation.
 Copyright @copyright{} 1999 K. Rustan Leino and Digital Equipment
 Corporation.
 
-Copyright @copyright{} 2004 Joseph R. Kiniry
+Copyright @copyright{} 2004 Joseph R. Kiniry and the University of
+Nijmegen.
 
 @quotation
 You are free:
@@ -161,7 +162,7 @@ background predicate), and (b) axioms that are introduced to the background
 predicate when the Java program being checked contains various constructs.
 
 @menu
-* Introduction::                An introduction to these homework exercises.
+* Introduction::                An introduction to this document.
 * Copying::                     Your rights and freedoms.
 * Index::                       Complete index.
 
