@@ -5146,13 +5146,76 @@ This is described in more detail in @ref{Inheritance and non_null}.
 
 @c ----------------------------------------------------------------------------
 @cindex assert
-@node Translation of the Java assert statement, TYPE and Class, nonnull, Changes to static checking
+@node Translation of the Java assert statement, Semantics of String, nonnull, Changes to static checking
 @section Translation of the Java 1.4 assert statement
 
 The handling of the Java 1.4 assert statement is discussed in
 @ref{Java and JML assert statements}.  The assert statement is
 translated into equivalent Java or JML constructs and the static
 checker is used without modification.
+
+@c ----------------------------------------------------------------------------
+@cindex String
+@node Semantics of String, TYPE and Class, Translation of the Java assert statement, Changes to static checking
+@section Semantics of String
+
+Although java.lang.String is a reference type in Java, it has a number of 
+built-in properties that were not modeled in Esc/Java, but have been added in
+Esc/Java2.  These properties are the following:
+@itemize @bullet
+@item The built-in + and += String concatentation operators
+@item Explicit String literals are interned
+@item The intern method of the String class
+@end itemize
+
+@subsection Concatentation operators
+
+Note that the += operator is equivalent to an expression using the + operator, namely
+x += y is equivalent to x = x + y.  
+
+The key semantic property of the String concatenation property is that it 
+produces a fresh (newly allocated) object.  This is important because within
+a pure method a fresh object may be modified, just as a newly constructed
+object may be modified.
+
+@subsection Explicit String literals
+
+The important semantic property of String literals in Java is that two 
+syntactically identical String literals also compare equal as objects.  
+Also, the concatenation of two String literals produces a String literal
+(at compile time).  Thus,
+@example
+	String a,b,c;
+	a = "sample";
+	b = "sample";
+	c = "sam" + "ple";
+	boolean t = (a==b);        // This is true
+	t = (a==c);                // This is also true
+	b = new String("sample");
+	t = (a==b);                // This is NOT true
+@end example
+
+The Simplify prover does not have any built-in knowledge of Strings.
+Consequently, Esc/Java2 makes a note of all of the String literals in a 
+module, replacing each one by a unique symbol, but using the same symbol
+for syntactically identical literals.  The concatenation of String literals
+is performed by the parser.
+
+@subsection The intern method
+
+The intern operation maps Strings that compare equal using the equals 
+method to the same Object.   String literals are automatically interned.
+Thus
+@example
+	boolean t;
+	String a,b,c;
+	a = "sample";
+	b = new String("sample");
+	c = b.intern();
+	t = (a==b);                // This is NOT true
+	t = (a==c);                // This IS true
+@end example
+Interning is not yet implemented in ESC/Java2.
 
 @c ----------------------------------------------------------------------------
 @node TYPE and Class, The initially clause, Translation of the Java assert statement, Changes to static checking
