@@ -1,4 +1,4 @@
-// This class is generated as part os the 2003 Revision of the ESC Tools
+// This class is generated as part of the 2003 Revision of the ESC Tools
 // Author: David Cok
 
 
@@ -181,7 +181,7 @@ public class AnnotationHandler {
 		tde instanceof MethodDecl ?
 			((MethodDecl)tde).id
 		: tde.getParent().id;
-	javafe.util.Info.out("Desugaring specifications for " + tde.parent.id + "." + id);
+	//javafe.util.Info.out("Desugaring specifications for " + tde.parent.id + "." + id);
 	try { // Just for safety's sake
 	    tde.pmodifiers = desugarAnnotations(pmodifiers,tde);
 	} catch (Exception e) {
