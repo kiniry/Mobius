@@ -3128,6 +3128,9 @@ public final class Translate
                         firstMonitoredPragma = prag;
                     break;
 
+		case TagConstants.INSTANCE:
+		case TagConstants.IN:
+		case TagConstants.MAPS:
 		case TagConstants.GHOST:
 		case TagConstants.MODEL:
 			// ignore
@@ -3220,6 +3223,8 @@ public final class Translate
             ModifierPragma prag= d.pmodifiers.elementAt(i);
             int tag= prag.getTag();
             switch (tag) {
+                case TagConstants.IN:
+                case TagConstants.MAPS:
                 case TagConstants.INSTANCE:
                 case TagConstants.UNINITIALIZED:
                 case TagConstants.READABLE_IF:
