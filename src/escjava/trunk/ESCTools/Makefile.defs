@@ -157,8 +157,7 @@ export ESCSPEC = ${SOURCEDIRECTORY}:${JAVAFE_ROOT}/java:${MOCHA_LIB}
  
 ######################### misc cmds #########################
  
-export ESCJ_SIMPLIFY = ${ESCTOOLS_ROOT}/escjava/bin/Simplify
-export ESCJ_SIMPLIFY = ${ESCJAVA_ROOT}/release/master/bin/Simplify-1.5.4.linux
+export ESCJ_SIMPLIFY ?= ${ESCJAVA_ROOT}/release/master/bin/Simplify-1.5.4.linux
 #export ESCJ_SIMPLIFY = ${HOME}/apps/escjava1.2.4/escjava/bin/Simplify
 
 #################################################################
