@@ -428,18 +428,22 @@ public class AnnotationHandler {
 	}
 
 	// Handle non_null on the result
-	ModifierPragma m = Utils.findModifierPragma(rd.pmodifiers,TagConstants.NON_NULL);
-	if (m != null) {
-	    int locNN = m.getStartLoc();
-	    Expr r = ResExpr.make(locNN);
-	    javafe.tc.FlowInsensitiveChecks.setType(r, ((MethodDecl)rd).returnType);
-	    Expr n = LiteralExpr.make(TagConstants.NULLLIT, null, locNN);
-	    javafe.tc.FlowInsensitiveChecks.setType(n, Types.nullType);
-	    Expr e = BinaryExpr.make(TagConstants.NE, r, n, locNN);
-	    javafe.tc.FlowInsensitiveChecks.setType(e, Types.booleanType);
-	    ExprModifierPragma emp = ExprModifierPragma.make(TagConstants.ENSURES, e, locNN);
-	    emp.errorTag = TagConstants.CHKNONNULLRESULT;
-	    result.addElement(emp);
+	// non_null is not allowed on constructors - an error should have
+	// been previously given
+        if (rd instanceof MethodDecl) {
+	    ModifierPragma m = Utils.findModifierPragma(rd.pmodifiers,TagConstants.NON_NULL);
+	    if (m != null) {
+		int locNN = m.getStartLoc();
+		Expr r = ResExpr.make(locNN);
+		javafe.tc.FlowInsensitiveChecks.setType(r, ((MethodDecl)rd).returnType);
+		Expr n = LiteralExpr.make(TagConstants.NULLLIT, null, locNN);
+		javafe.tc.FlowInsensitiveChecks.setType(n, Types.nullType);
+		Expr e = BinaryExpr.make(TagConstants.NE, r, n, locNN);
+		javafe.tc.FlowInsensitiveChecks.setType(e, Types.booleanType);
+		ExprModifierPragma emp = ExprModifierPragma.make(TagConstants.ENSURES, e, locNN);
+		emp.errorTag = TagConstants.CHKNONNULLRESULT;
+		result.addElement(emp);
+	    }
 	}
 	return result;
     }
