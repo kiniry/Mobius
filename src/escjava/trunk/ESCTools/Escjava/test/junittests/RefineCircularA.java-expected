@@ -1,5 +1,5 @@
 ESC/Java version VERSION
-Error: ./RefineCircularA.spec is circularly referenced in a refinement sequence
+Error: .|RefineCircularA.spec is circularly referenced in a refinement sequence
   Prover started:TIME
     [TIME]
 

@@ -2,7 +2,7 @@ Single.java:3: Error: No such type: p.NoSuchClass
 import p.NoSuchClass;                   // error
        ^
 1 error
-p/Full.java:3: Error: No such type: Foo
+p|Full.java:3: Error: No such type: Foo
 import Foo;             // erroneous because <unnamed>.Foo does not ex ...
        ^
 1 error

@@ -1,5 +1,5 @@
 ESC/Java version VERSION
-Caution: The refinement file ./BadPrefixx.spec in the sequence beginning with ./BadPrefix.java has a prefix that does not match the type name BadPrefix
+Caution: The refinement file .|BadPrefixx.spec in the sequence beginning with .|BadPrefix.java has a prefix that does not match the type name BadPrefix
   Prover started:TIME
     [TIME]
 

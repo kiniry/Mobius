@@ -29,8 +29,14 @@ public class Options
      */
     public boolean quiet = false;
 
-    /** When true, no variable output (e.g. execution time) is printed,
-     so that output can be compared to an oracle output file.
+    /**
+     * When true, no variable output (e.g., execution time) is
+     * printed, so that output can be compared to an oracle output
+     * file.  Also, emit all paths for warnings, errors, etc. in
+     * canonical, machine-independent form.  Such output is strictly
+     * used for unit testing.  The canonical form of a path replaces
+     * all use of the slash ('/') and wack ('\') characters with bar
+     * ('|').
      */
     public boolean testMode = false;
 
@@ -78,14 +84,14 @@ public class Options
     public boolean assertIsKeyword = false;
 
     /** 
-     *  Java allows assertions to be enabled and disabled.  Replicate those
-     *  options as well.
+     * Java allows assertions to be enabled and disabled.  Replicate
+     * those options as well.
      */
     public boolean assertionsEnabled = false;
 
     /**
-     *	Debugging flag used to turn on stack trace dumps when error messages
-     *	are issued. (cf. javafe.util.ErrorSet)
+     * Debugging flag used to turn on stack trace dumps when error
+     * messages are issued. (cf. javafe.util.ErrorSet)
      */
     public boolean showErrorLocation = false;
 
@@ -225,7 +231,7 @@ public class Options
 		   option.equals("-disableassertions")) {
 	    assertionsEnabled = false;
 	    return offset;
-        } else if (option.equals("-help")) {
+	} else if (option.equals("-help")) {
 	    issueUsage = true;
 	    return offset;
         } else if (option.equals("-testMode")) {
@@ -323,7 +329,7 @@ public class Options
     {"-package <packagename>",  "Loads all the files in the named package"},
     {"-source <release>",       "Provide source compatibility with specified release"},
     {"-sourcepath <classpath>", "Directory path for source files (default is classpath)"},
-    {"-testMode",               "Replaces execution time by a constant string so oracle files can be used in automated testing"},
+    {"-testMode",               "Replaces execution time by a constant string and path separators by `|' so oracle files can be used in automated testing"},
     };
     
     final public String eol = System.getProperty("line.separator");

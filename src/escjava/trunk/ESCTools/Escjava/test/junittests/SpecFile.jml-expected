@@ -3,16 +3,16 @@ ESC/Java version VERSION
     [TIME]
 
 SpecFile ...
-./SpecFile.spec:6: Caution: JML requires a specification to begin with 'also' when the declaration refines a previous declaration
+.|SpecFile.spec:6: Caution: JML requires a specification to begin with 'also' when the declaration refines a previous declaration
         public void m();
                     ^
 SpecFile.jml:5: Associated declaration: 
         public void m();
                     ^
-./SpecFile.refines-java:6: Caution: JML requires a specification to begin with 'also' when the declaration refines a previous declaration
+.|SpecFile.refines-java:6: Caution: JML requires a specification to begin with 'also' when the declaration refines a previous declaration
         public void m();
                     ^
-./SpecFile.spec:6: Associated declaration: 
+.|SpecFile.spec:6: Associated declaration: 
         public void m();
                     ^
     [TIME]

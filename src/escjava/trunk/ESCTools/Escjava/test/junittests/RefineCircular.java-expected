@@ -1,5 +1,5 @@
 ESC/Java version VERSION
-Error: ./RefineCircular.java is circularly referenced in a refinement sequence
+Error: .|RefineCircular.java is circularly referenced in a refinement sequence
   Prover started:TIME
     [TIME]
 

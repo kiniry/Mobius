@@ -6,7 +6,7 @@ Loop.java:3: Fatal error: Cycle in inheritance/enclosing hierarchy detected invo
 class Loop extends Loop1 {}
       ^
 1 error
-<TEST>/Loop.java:3: Fatal error: Cycle in inheritance/enclosing hierarchy detected involving type Loop
+<TEST>|Loop.java:3: Fatal error: Cycle in inheritance/enclosing hierarchy detected involving type Loop
 class Loop extends Loop1 {}
       ^
 1 error

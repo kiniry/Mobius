@@ -1,5 +1,5 @@
 ESC/Java version VERSION
-Error: The command-line argument RefineNoJava.java was not in the refinement sequence for type RefineNoJava: ./RefineNoJava.refines-java
+Error: The command-line argument RefineNoJava.java was not in the refinement sequence for type RefineNoJava: .|RefineNoJava.refines-java
   Prover started:TIME
     [TIME]
 

@@ -10,7 +10,7 @@ SourcePath: m() ...
 SourcePath.java:5: Warning: Postcondition possibly not established (Post)
         public void m() {}
                          ^
-Associated declaration is "./SourcePath.refines-java", line 5, col 5:
+Associated declaration is ".|SourcePath.refines-java", line 5, col 5:
         //@ ensures false;
             ^
 Execution trace information:

@@ -1,2 +1,2 @@
-p/TheFile.java: Fatal error: file does not contain the type p.TheFile as expected
+p|TheFile.java: Fatal error: file does not contain the type p.TheFile as expected
 1 error

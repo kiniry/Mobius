@@ -1,6 +1,6 @@
 ESC/Java version VERSION
 Error: Failed to find some but not all binary files: BinaryD
-./Binary.spec:5: Error: Type declaration is not in the java file
+.|Binary.spec:5: Error: Type declaration is not in the java file
 class BinaryD{}
 ^
   Prover started:TIME
