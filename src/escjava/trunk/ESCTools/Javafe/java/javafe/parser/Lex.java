@@ -319,7 +319,7 @@ public class Lex extends Token
      installed.  Note: The argument <code>in</code> is "captured" in
      the internal, private state of the resulting scanner and should
      not be used by other parts of the program. */
-    //@ modifies m_in
+    //@ modifies m_in;
     //@ ensures m_in != null;
     public int restart(/*@ non_null @*/ CorrelatedReader in) {
 	close();
@@ -342,7 +342,7 @@ public class Lex extends Token
      exception raised by closing the underlying input stream will be
      converted into a <code>javafe.util.FatalError</code> runtime
      exception.) */
-    //@ modifies m_in
+    //@ modifies m_in;
     //@ ensures m_in==null;
     public void close() {
         if (m_in != null) {
@@ -372,7 +372,7 @@ public class Lex extends Token
      <code>this</code> are not accurate for the end-of-file token. */
 
     //@ requires m_in != null;
-    //@ modifies ttype, auxVal, identifierVal
+    //@ modifies ttype, auxVal, identifierVal;
     public int getNextToken() {
         if (lookaheadq.notempty) {
             lookaheadq.dequeue(this);
@@ -405,7 +405,7 @@ public class Lex extends Token
      is the current token.  If <code>k</code> is past the end of the
      token stream, <code>TagConstants.EOF</code> is returned. */
 
-    //@ requires k>=0
+    //@ requires k>=0;
     //@ requires m_in != null;
     public int lookahead(int k) {
         if (k == 0) return ttype;
@@ -545,7 +545,7 @@ public class Lex extends Token
                          ttype != TagConstants.MODIFIERPRAGMA &&
                          ttype != TagConstants.STMTPRAGMA &&
                          ttype != TagConstants.TYPEDECLELEMPRAGMA &&
-                         ttype != TagConstants.TYPEMODIFIERPRAGMA  */
+                         ttype != TagConstants.TYPEMODIFIERPRAGMA;  */
                     } else if (javakeywords)
                         ttype = _SpecialParserInterface.getTokenType(identifierVal);
                     else ttype = TagConstants.IDENT;
@@ -575,7 +575,7 @@ public class Lex extends Token
                                                      new Integer(nextchr));
             ErrorSet.fatal(m_in.getLocation(), "Unexpected character " + s);
 
-            //@ unreachable
+            //@ unreachable;
             return ttype;
 
         } catch (IOException e) {
@@ -589,8 +589,8 @@ public class Lex extends Token
      "//" or "/*".  The mark is set at the last character read.  */
 
     //@ requires m_in != null;
-    //@ requires !inPragma
-    //@ modifies inPragma
+    //@ requires !inPragma;
+    //@ modifies inPragma;
     private void scanComment(int commentKind) {
 	try {
 	    m_in.mark();
@@ -652,7 +652,7 @@ public class Lex extends Token
 	    m_in.clearMark();
 	    ErrorSet.fatal(m_in.getLocation(), "IO error");
 	}
-    }	//@ nowarn Exception	// ignore Index... from createReaderFromMark
+    }	//@ nowarn Exception;	// ignore Index... from createReaderFromMark
 
 
     // Notes.  The routines below all assume that the input stream to be
@@ -777,12 +777,12 @@ public class Lex extends Token
      a legal literal is left in <code>text</code>. */
 
     //@ requires m_in != null;
-    //@ modifies ttype, auxVal
-    //@ ensures \result==ttype
+    //@ modifies ttype, auxVal;
+    //@ ensures \result==ttype;
     /*@ ensures \result==TagConstants.INTLIT || \result==TagConstants.LONGLIT ||
      \result==TagConstants.FLOATLIT || \result==TagConstants.DOUBLELIT ||
      \result==TagConstants.MAX_INT_PLUS_ONE ||
-     \result==TagConstants.MAX_LONG_PLUS_ONE */
+     \result==TagConstants.MAX_LONG_PLUS_ONE ; */
     private int scanNumber(int nextchr) {
         try {
             // Get the first chunk of digits
@@ -792,7 +792,7 @@ public class Lex extends Token
                 tentativeResult = 10*tentativeResult + (nextchr - '0');
                 nextchr = m_in.read();
             }
-            //@ assume textlen>0 // because know nextchar was initially a digit...
+            //@ assume textlen>0; // because know nextchar was initially a digit...
 
             // Handle floating point literals in another subtroutine
             if (nextchr == '.') {
@@ -926,10 +926,10 @@ public class Lex extends Token
      sent to <code>ErorrSet</code> and recovery is performed. */
 
     //@ requires m_in != null;
-    //@ requires textlen>0
-    //@ modifies ttype, auxVal
-    //@ ensures \result==ttype
-    //@ ensures \result==TagConstants.FLOATLIT || \result==TagConstants.DOUBLELIT
+    //@ requires textlen>0;
+    //@ modifies ttype, auxVal;
+    //@ ensures \result==ttype;
+    //@ ensures \result==TagConstants.FLOATLIT || \result==TagConstants.DOUBLELIT;
     private int finishFloatingPointLiteral(int nextchr) {
         try {
             boolean error = false;
@@ -1002,7 +1002,7 @@ public class Lex extends Token
             ErrorSet.fatal(m_in.getLocation(), e.toString());
             return TagConstants.NULL; // Dummy
         }
-    }   //@ nowarn Exception	// NumberFormatException won't be thrown
+    }   //@ nowarn Exception;	// NumberFormatException won't be thrown
 
     /** Scans a punctuation string <em>or</em> a floating-point
      number.  If input doesn't match either a floating-point number or
@@ -1029,7 +1029,7 @@ public class Lex extends Token
     //@ requires m_in != null;
     //@ modifies ttype, auxVal, m_nextchr;
     //@ modifies m_in.marked;
-    //@ ensures \result==ttype
+    //@ ensures \result==ttype;
     private int scanPunctuation(int nextchr) {
         try {
             boolean possibleFloatingPointNumber = (nextchr == '.');
@@ -1118,7 +1118,7 @@ public class Lex extends Token
     //@ requires textlen == 0;
     //@ modifies ttype, auxVal, m_nextchr;
     //@ modifies m_in.marked;
-    //@ ensures \result==ttype
+    //@ ensures \result==ttype;
     protected int scanJavaExtensions(int nextchr) {
         ttype = TagConstants.NULL;
         return ttype;
@@ -1130,15 +1130,15 @@ public class Lex extends Token
     // original input in text and the escape-converted input in stringLit
 
     //@ invariant stringLit != null;
-    //@ invariant stringLit.length>=64
+    //@ invariant stringLit.length>=64;
     private char[] stringLit = new char[64];
 
-    //@ invariant stringLitLen>=0
+    //@ invariant stringLitLen>=0;
     private int stringLitLen = 0;
 
     private void stringLitAppend(int c) {
         try {
-            stringLit[stringLitLen] = (char)c;    //@ nowarn IndexTooBig // caught
+            stringLit[stringLitLen] = (char)c;    //@ nowarn IndexTooBig; // caught
         } catch (ArrayIndexOutOfBoundsException e) {
             char[] newstringLit = new char[stringLitLen + 128];
             System.arraycopy(stringLit, 0, newstringLit, 0, stringLitLen);
@@ -1159,11 +1159,11 @@ public class Lex extends Token
      * require a non-null auxVal.  (cf. Token.auxVal).
      */
     /*@ invariant (keywords != null) ==> (keywords.keyType == \type(Identifier)
-     && keywords.elementType == \type(Integer)) */
+     && keywords.elementType == \type(Integer)); */
     protected Hashtable keywords = null;
 
     protected boolean javakeywords = false, onlyjavakeywords = false;
-    //@ invariant onlyjavakeywords == (javakeywords && keywords == null)
+    //@ invariant onlyjavakeywords == (javakeywords && keywords == null);
 
     static {
         // When class initializes, change the <CODE>tokenType</CODE> field
@@ -1202,24 +1202,24 @@ public class Lex extends Token
      *
      * Also requires that the keyword hasn't already been added.
      */
-    //@ requires code != TagConstants.NULL
-    //@ requires code != TagConstants.BOOLEANLIT
-    //@ requires code != TagConstants.INTLIT
-    //@ requires code != TagConstants.LONGLIT
-    //@ requires code != TagConstants.DOUBLELIT
-    //@ requires code != TagConstants.STRINGLIT
-    //@ requires code != TagConstants.CHARLIT
-    //@ requires code != TagConstants.LEXICALPRAGMA
-    //@ requires code != TagConstants.MODIFIERPRAGMA
-    //@ requires code != TagConstants.STMTPRAGMA
-    //@ requires code != TagConstants.TYPEDECLELEMPRAGMA
-    //@ requires code != TagConstants.TYPEMODIFIERPRAGMA
+    //@ requires code != TagConstants.NULL;
+    //@ requires code != TagConstants.BOOLEANLIT;
+    //@ requires code != TagConstants.INTLIT;
+    //@ requires code != TagConstants.LONGLIT;
+    //@ requires code != TagConstants.DOUBLELIT;
+    //@ requires code != TagConstants.STRINGLIT;
+    //@ requires code != TagConstants.CHARLIT;
+    //@ requires code != TagConstants.LEXICALPRAGMA;
+    //@ requires code != TagConstants.MODIFIERPRAGMA;
+    //@ requires code != TagConstants.STMTPRAGMA;
+    //@ requires code != TagConstants.TYPEDECLELEMPRAGMA;
+    //@ requires code != TagConstants.TYPEMODIFIERPRAGMA;
     public void addKeyword(/*@ non_null @*/ String newkeyword, int code) {
 	Assert.precondition(code != TagConstants.NULL);
 	if (keywords == null) {
 	    keywords = new Hashtable();
-	    //@ set keywords.keyType = \type(Identifier)
-	    //@ set keywords.elementType = \type(Integer)
+	    //@ set keywords.keyType = \type(Identifier);
+	    //@ set keywords.elementType = \type(Integer);
 	}
 	keywords.put(Identifier.intern(newkeyword), new Integer(code));
 	onlyjavakeywords = false;
@@ -1248,26 +1248,26 @@ public class Lex extends Token
      <code>TagConstants.NULL</code> and that the punctuation string
      hasn't already been added. */
     //@ requires punctuation != null;
-    //@ requires code != TagConstants.NULL
-    //@ requires code != TagConstants.IDENT
-    //@ requires code != TagConstants.BOOLEANLIT
-    //@ requires code != TagConstants.INTLIT
-    //@ requires code != TagConstants.LONGLIT
-    //@ requires code != TagConstants.FLOATLIT
-    //@ requires code != TagConstants.DOUBLELIT
-    //@ requires code != TagConstants.STRINGLIT
-    //@ requires code != TagConstants.CHARLIT
-    //@ requires code != TagConstants.LEXICALPRAGMA
-    //@ requires code != TagConstants.MODIFIERPRAGMA
-    //@ requires code != TagConstants.STMTPRAGMA
-    //@ requires code != TagConstants.TYPEDECLELEMPRAGMA
-    //@ requires code != TagConstants.TYPEMODIFIERPRAGMA
+    //@ requires code != TagConstants.NULL;
+    //@ requires code != TagConstants.IDENT;
+    //@ requires code != TagConstants.BOOLEANLIT;
+    //@ requires code != TagConstants.INTLIT;
+    //@ requires code != TagConstants.LONGLIT;
+    //@ requires code != TagConstants.FLOATLIT;
+    //@ requires code != TagConstants.DOUBLELIT;
+    //@ requires code != TagConstants.STRINGLIT;
+    //@ requires code != TagConstants.CHARLIT;
+    //@ requires code != TagConstants.LEXICALPRAGMA;
+    //@ requires code != TagConstants.MODIFIERPRAGMA;
+    //@ requires code != TagConstants.STMTPRAGMA;
+    //@ requires code != TagConstants.TYPEDECLELEMPRAGMA;
+    //@ requires code != TagConstants.TYPEMODIFIERPRAGMA;
     public void addPunctuation(String punctuation, int code) {
         Assert.precondition(code != TagConstants.NULL);
         PunctuationPrefixTree prefix = punctuationTable;
         for(int j = 0; j < punctuation.length(); j++) {
             int c = punctuation.charAt(j);
-            Assert.precondition(	//@ nowarn Pre
+            Assert.precondition(	//@ nowarn Pre;
                                 ('!' <= c && c <= '/') || (':' <= c && c <= '@')
                                 || ('[' <= c && c <= '`') || ('{' <= c && c <= '~'));
             int index = c - '!';
@@ -1310,12 +1310,12 @@ class PunctuationPrefixTree {
      code != TagConstants.MODIFIERPRAGMA &&
      code != TagConstants.STMTPRAGMA &&
      code != TagConstants.TYPEDECLELEMPRAGMA &&
-     code != TagConstants.TYPEMODIFIERPRAGMA */
+     code != TagConstants.TYPEMODIFIERPRAGMA; */
     public int code = TagConstants.NULL; // ! NULL ==> a punctuation string
 
     //@ invariant children != null;
-    //@ invariant children.length == CHILDLEN
-    //@ invariant \typeof(children) == \type(PunctuationPrefixTree[])
+    //@ invariant children.length == CHILDLEN;
+    //@ invariant \typeof(children) == \type(PunctuationPrefixTree[]);
     public PunctuationPrefixTree[] children
             = new PunctuationPrefixTree[CHILDLEN];
 }

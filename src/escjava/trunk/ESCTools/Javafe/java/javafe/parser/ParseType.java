@@ -159,10 +159,10 @@ public class ParseType extends ParseUtil
             if (stkPtr == nameIdLocs.length) {
                 // Extend it
                 int nuid[] = new int[2*nameIdLocs.length];
-                //@ set nuid.owner = this
+                //@ set nuid.owner = this;
                 System.arraycopy(nameIdLocs, 0, nuid, 0, nameIdLocs.length);
                 int nudot[] = new int[2*nameIdLocs.length];
-                //@ set nudot.owner = this
+                //@ set nudot.owner = this;
                 System.arraycopy(nameDotLocs, 0, nudot, 0, nameIdLocs.length-1);
                 nameDotLocs = nudot;
                 nameIdLocs = nuid;

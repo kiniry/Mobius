@@ -16,17 +16,17 @@ class TokenQueue
      * last element.
      */
 
-    //@ invariant \nonnullelements(toks)
+    //@ invariant \nonnullelements(toks);
     private Token[] toks;
 
-    //@ invariant 0 <= start && start < toks.length
+    //@ invariant 0 <= start && start < toks.length;
     private int start;
 
-    //@ invariant 0 <= end && end < toks.length
+    //@ invariant 0 <= end && end < toks.length;
     private int end;
 
 
-    //@ ensures !notempty
+    //@ ensures !notempty;
     public TokenQueue() {
         toks = new Token[4];
         for(int i = 0; i < toks.length; i++)
@@ -36,7 +36,7 @@ class TokenQueue
 
 
     /** Do not write.  True iff queue is not empty. */  //
-    //@ invariant notempty == (end != start )
+    //@ invariant notempty == (end != start );
     public boolean notempty = false;
 
     // Invariants (size == ((end + toks.length) - start) % toks.length):
@@ -46,8 +46,8 @@ class TokenQueue
 
     /** Returns number of items in token queue. */
 
-    //@ ensures \result>=0
-    //@ ensures \result>0 == notempty
+    //@ ensures \result>=0;
+    //@ ensures \result>0 == notempty;
     public int size() {
         int sa = (start <= end ? 0 : toks.length);
         return (end + sa) - start;
@@ -68,7 +68,7 @@ class TokenQueue
         int ndx = start + n;
         if (toks.length <= ndx) ndx -= toks.length;
         return toks[ndx];
-    }   //@ nowarn Exception
+    }   //@ nowarn Exception;
 
     public void setElementAt(int n,Token t) {
         int sa = (start <= end ? 0 : toks.length);
@@ -78,20 +78,20 @@ class TokenQueue
         int ndx = start + n;
         if (toks.length <= ndx) ndx -= toks.length;
         toks[ndx] = t;
-    }   //@ nowarn Exception
+    }   //@ nowarn Exception;
 
 
     /** Empties lookahead queue. */
 
-    //@ modifies notempty
-    //@ ensures !notempty
+    //@ modifies notempty;
+    //@ ensures !notempty;
     public void clear() {
         end = start = 0;
         notempty = false;
         for(int i = 0; i < toks.length; i++) {
             Token t = toks[i];
-            //@ assert 0 <= i && i < toks.length
-            //@ assert (\forall int j; 0 <= j && j < toks.length ==> toks[j] != null )
+            //@ assert 0 <= i && i < toks.length;
+            //@ assert (\forall int j; 0 <= j && j < toks.length ==> toks[j] != null );
             //@ assert toks[0] != null;
             //@ assert t != null;
             t.clear();
@@ -104,8 +104,8 @@ class TokenQueue
      </esc></pre>
      */
 
-    //@ requires notempty
-    //@ modifies notempty
+    //@ requires notempty;
+    //@ modifies notempty;
     public void dequeue(Token dst) {
         if (start != end) {
             toks[start].copyInto(dst);
@@ -166,7 +166,7 @@ class TokenQueue
                                      + stateToString() + " at: " + i));
             int ndx = (i + start) % len;
             if (i < size) toks[ndx].zzz();
-            else Assert.notFalse(toks[ndx].auxVal == null,   //@ nowarn Pre
+            else Assert.notFalse(toks[ndx].auxVal == null,   //@ nowarn Pre;
                                  prefix + "bad lookahead queue: "
                                  + stateToString() + " at: " + ndx);
         }

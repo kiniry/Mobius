@@ -57,14 +57,14 @@ public class Token
     }
 
     /** The location of the first character of the token. */
-    //@ invariant startingLoc != Location.NULL
+    //@ invariant startingLoc != Location.NULL;
     public int startingLoc;
 
     /**
      * The location of the last character of the token.  (This value
      * isn't "off-by-one" right now.)
      */
-    //@ invariant endingLoc != Location.NULL
+    //@ invariant endingLoc != Location.NULL;
     public int endingLoc;
 
 
@@ -72,7 +72,7 @@ public class Token
      * Identifier represented by the token.  Must be non-null if
      * <code>ttype</code> is <TT>TagConstants.IDENT</TT>.
      */
-    /*@ invariant (ttype==TagConstants.IDENT) ==> (identifierVal != null) */
+    /*@ invariant (ttype==TagConstants.IDENT) ==> (identifierVal != null); */
     public Identifier identifierVal;
 
     /**
@@ -119,7 +119,7 @@ public class Token
      TypeDeclElemPragma) &&
      (ttype==TagConstants.TYPEMODIFIERPRAGMA ==> auxVal instanceof
      TypeModifierPragma)
-     ) */
+     ); */
     public Object auxVal;
 
 
@@ -135,7 +135,7 @@ public class Token
      * NOTE: This is not a helper; we use invalid tokens in TokenQueue and
      *       Lex.savedState.
      */
-    public Token() {}	//@ nowarn Invariant  // produces invalid Token
+    public Token() {}	//@ nowarn Invariant;  // produces invalid Token
 
 
     /**

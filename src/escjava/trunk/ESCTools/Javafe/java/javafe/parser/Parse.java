@@ -38,48 +38,48 @@ import java.util.Iterator;
 public class Parse extends ParseStmt
 {
     public Parse() {
-	//@ set seqTypeName.elementType = \type(TypeName)
-	//@ set seqTypeName.owner = this
+	//@ set seqTypeName.elementType = \type(TypeName);
+	//@ set seqTypeName.owner = this;
 
-	//@ set seqFormalParaDecl.elementType = \type(FormalParaDecl)
-	//@ set seqFormalParaDecl.owner = this
+	//@ set seqFormalParaDecl.elementType = \type(FormalParaDecl);
+	//@ set seqFormalParaDecl.owner = this;
 
-	//@ set seqImportDecl.elementType = \type(ImportDecl)
-	//@ set seqImportDecl.owner = this
+	//@ set seqImportDecl.elementType = \type(ImportDecl);
+	//@ set seqImportDecl.owner = this;
 
-	//@ set seqTypeDecl.elementType = \type(TypeDecl)
-	//@ set seqTypeDecl.owner = this
+	//@ set seqTypeDecl.elementType = \type(TypeDecl);
+	//@ set seqTypeDecl.owner = this;
     }
 
     /**
      * Internal working storage for many Parse functions.
      */
-    //@ invariant seqTypeName.elementType == \type(TypeName)
-    //@ invariant seqTypeName.owner == this
+    //@ invariant seqTypeName.elementType == \type(TypeName);
+    //@ invariant seqTypeName.owner == this;
     protected final /*@ non_null @*/ StackVector seqTypeName
 	= new StackVector();
 
     /**
      * Internal working storage for many Parse functions.
      */
-    //@ invariant seqFormalParaDecl.elementType == \type(FormalParaDecl)
-    //@ invariant seqFormalParaDecl.owner == this
+    //@ invariant seqFormalParaDecl.elementType == \type(FormalParaDecl);
+    //@ invariant seqFormalParaDecl.owner == this;
     protected final /*@ non_null @*/ StackVector seqFormalParaDecl
 	= new StackVector();
 
     /**
      * Internal working storage for many Parse functions.
      */
-    //@ invariant seqImportDecl.elementType == \type(ImportDecl)
-    //@ invariant seqImportDecl.owner == this
+    //@ invariant seqImportDecl.elementType == \type(ImportDecl);
+    //@ invariant seqImportDecl.owner == this;
     protected final /*@ non_null @*/ StackVector seqImportDecl
 	= new StackVector();
 
     /**
      * Internal working storage for many Parse functions.
      */
-    //@ invariant seqTypeDecl.elementType == \type(TypeDecl)
-    //@ invariant seqTypeDecl.owner == this
+    //@ invariant seqTypeDecl.elementType == \type(TypeDecl);
+    //@ invariant seqTypeDecl.owner == this;
     protected final /*@ non_null @*/ StackVector seqTypeDecl
 	= new StackVector();
 

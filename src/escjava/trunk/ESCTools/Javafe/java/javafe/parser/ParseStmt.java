@@ -57,25 +57,25 @@ import javafe.Tool;
 public abstract class ParseStmt extends ParseExpr
 {
     public ParseStmt() {
-	//@ set seqStmt.elementType = \type(Stmt)
-	//@ set seqStmt.owner = this
+	//@ set seqStmt.elementType = \type(Stmt);
+	//@ set seqStmt.owner = this;
 
-	//@ set seqCatchClause.elementType = \type(CatchClause)
-	//@ set seqCatchClause.owner = this
+	//@ set seqCatchClause.elementType = \type(CatchClause);
+	//@ set seqCatchClause.owner = this;
     }
 
     /**
      * Internal working storage for many <code>ParseStmt</code>
      * functions.
      */
-    //@ invariant seqStmt.elementType == \type(Stmt)
-    //@ invariant seqStmt.owner == this
+    //@ invariant seqStmt.elementType == \type(Stmt);
+    //@ invariant seqStmt.owner == this;
     protected final /*@ non_null @*/ StackVector seqStmt
             = new StackVector();
 
     //* Internal working storage for parseCatches function.
-    //@ invariant seqCatchClause.elementType == \type(CatchClause)
-    //@ invariant seqCatchClause.owner == this
+    //@ invariant seqCatchClause.elementType == \type(CatchClause);
+    //@ invariant seqCatchClause.owner == this;
     protected final /*@ non_null @*/ StackVector seqCatchClause
             = new StackVector();
 
@@ -86,10 +86,10 @@ public abstract class ParseStmt extends ParseExpr
      * documentation) lives in Parse.java.
      */
     //@ requires l != null && l.m_in != null;
-    //@ requires loc != Location.NULL
-    //@ modifies l.ttype
+    //@ requires loc != Location.NULL;
+    //@ modifies l.ttype;
     //@ ensures \result != null;
-    //@ ensures \old(l.ttype)==TagConstants.CLASS ==> \result instanceof ClassDecl
+    //@ ensures \old(l.ttype)==TagConstants.CLASS ==> \result instanceof ClassDecl;
     abstract TypeDecl parseTypeDeclTail(Lex l, boolean specOnly, int loc, 
                                         int modifiers,
                                         ModifierPragmaVec modifierPragmas);
@@ -142,9 +142,9 @@ public abstract class ParseStmt extends ParseExpr
      * declarations that declare more than one variable.
      */
     //@ requires l != null && l.m_in != null;
-    //@ modifies seqStmt.elementCount, seqStmt.currentStackBottom
+    //@ modifies seqStmt.elementCount, seqStmt.currentStackBottom;
     /*@ ensures (seqStmt.elementCount - seqStmt.currentStackBottom) >
-     (\old(seqStmt.elementCount) - \old(seqStmt.currentStackBottom)) @*/
+     (\old(seqStmt.elementCount) - \old(seqStmt.currentStackBottom)); @*/
     protected void addStmt(Lex l) {
         int ttype = l.ttype;
 
@@ -577,7 +577,7 @@ public abstract class ParseStmt extends ParseExpr
      * just after the trailing <code>}</code> of the statement.
      */
     //@ requires l != null && l.m_in != null;
-    //@ requires keywordloc != Location.NULL
+    //@ requires keywordloc != Location.NULL;
     //@ ensures \result != null;
     private ForStmt parseForStmt(Lex l, int keywordloc) {
         int parenloc = l.startingLoc;
@@ -688,7 +688,7 @@ public abstract class ParseStmt extends ParseExpr
      * just after the trailing <code>}</code> of the statement.
      */
     //@ requires l != null && l.m_in != null;
-    //@ requires keywordloc != Location.NULL
+    //@ requires keywordloc != Location.NULL;
     //@ ensures \result != null;
     private SwitchStmt parseSwitchStmt(Lex l, int keywordloc) {
         // Read value to be tested
@@ -788,7 +788,7 @@ public abstract class ParseStmt extends ParseExpr
      * throwing an exception if a syntax error is found.
      */
     //@ requires l != null && basetype != null && l.m_in != null;
-    //@ requires basetype.syntax
+    //@ requires basetype.syntax;
     private void addVarDeclStmts(Lex l, int modifiers, 
                                  ModifierPragmaVec modifierPragmas,
                                  Type basetype)

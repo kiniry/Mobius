@@ -18,8 +18,8 @@ import javafe.util.Location;
 public class ParseUtil
 {
     public ParseUtil() {
-	//@ set seqModifierPragma.elementType = \type(ModifierPragma)
-	//@ set seqModifierPragma.owner = this
+	//@ set seqModifierPragma.elementType = \type(ModifierPragma);
+	//@ set seqModifierPragma.owner = this;
     }
 
 
@@ -27,16 +27,16 @@ public class ParseUtil
 
     /** Raises a <TT>RuntimeException</TT> with the argument string. */
 
-    //@ ensures false
+    // @ ensures false;
     // UNUSED private static void fail(String m) { ErrorSet.fatal(m); }
 
     /** Raises a <TT>RuntimeException</TT> with the argument string
         including a textual representation of the given source location. */
-    //@ requires loc != Location.NULL
-    //@ ensures false
+    //@ requires loc != Location.NULL;
+    //@ ensures false;
     public static void fail(int loc, String m) { ErrorSet.fatal(loc, m); }
 
-    //@ requires loc != Location.NULL
+    //@ requires loc != Location.NULL;
     public static void error(int loc, String m) { ErrorSet.error(loc, m); }
 
     /** 
@@ -44,8 +44,8 @@ public class ParseUtil
      calls <TT>fail</TT> on error.
      */
     //@ requires l != null && l.m_in != null;
-    //@ modifies l.ttype, l.auxVal, l.identifierVal
-    //@ ensures \old(l.ttype)==expected
+    //@ modifies l.ttype, l.auxVal, l.identifierVal;
+    //@ ensures \old(l.ttype)==expected;
     public void expect(Lex l, int expected) {
         if( l.ttype != expected ) 
             fail(l.startingLoc,
@@ -70,8 +70,8 @@ public class ParseUtil
     /*------------------------ Modifiers -------------------------------*/
 
     //* Internal working storage for parse*Modifier* functions
-    //@ invariant seqModifierPragma.elementType == \type(ModifierPragma)
-    //@ invariant seqModifierPragma.owner == this
+    //@ invariant seqModifierPragma.elementType == \type(ModifierPragma);
+    //@ invariant seqModifierPragma.owner == this;
     protected final StackVector seqModifierPragma = new StackVector();
 
     /**

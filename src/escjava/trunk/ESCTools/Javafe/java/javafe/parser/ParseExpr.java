@@ -26,25 +26,25 @@ public abstract class ParseExpr extends ParseType
 
     private int defaultStackSize = 12;
 
-    //@ invariant stackPtr >= -1
-    //@ invariant stackPtr < exprStack.length
+    //@ invariant stackPtr >= -1;
+    //@ invariant stackPtr < exprStack.length;
     private int stackPtr = -1;         // Always points to top element, if any
 
     //@ invariant exprStack != null;
-    //@ invariant exprStack.length > 0
-    //@ invariant \typeof(exprStack) == \type(Expr[])
+    //@ invariant exprStack.length > 0;
+    //@ invariant \typeof(exprStack) == \type(Expr[]);
     private Expr exprStack[]      = new Expr[defaultStackSize];
 
     //@ invariant opStack != null;
-    //@ invariant opStack.length == exprStack.length
+    //@ invariant opStack.length == exprStack.length;
     private int opStack[]         = new int[defaultStackSize];
 
     //@ invariant precedenceStack != null;
-    //@ invariant precedenceStack.length == exprStack.length
+    //@ invariant precedenceStack.length == exprStack.length;
     private int precedenceStack[] = new int[defaultStackSize];
 
     //@ invariant locStack != null;
-    //@ invariant locStack.length == exprStack.length
+    //@ invariant locStack.length == exprStack.length;
     private int locStack[]        = new int[defaultStackSize];
 
     // The operator precedence parser can be extended with additional
@@ -57,7 +57,7 @@ public abstract class ParseExpr extends ParseType
     private int[] precedenceTable    = new int[0];
 
     //@ invariant isLeftAssocTable != null;
-    //@ invariant isLeftAssocTable.length == precedenceTable.length
+    //@ invariant isLeftAssocTable.length == precedenceTable.length;
     private boolean[] isLeftAssocTable = new boolean[0];
 
     /** If no constructors are found in "elems", adds a default one to
@@ -65,7 +65,7 @@ public abstract class ParseExpr extends ParseType
      fields of the default constructor will be set to "loc".
      A declaration of this method is needed because class declarations
      can be in expressions.  However, the body lives in Parse.java */
-    //@ requires loc != Location.NULL
+    //@ requires loc != Location.NULL;
     //@ requires elems != null;
     abstract void addDefaultConstructor(TypeDeclElemVec elems, int loc, boolean specOnly);
 
@@ -215,7 +215,7 @@ public abstract class ParseExpr extends ParseType
                 // Combine the top stack expression, the top stack operator,
                 // and the expression e to produce a new expression e
         
-                //@ loop_invariant stackPtr < exprStack.length
+                //@ loop_invariant stackPtr < exprStack.length;
                 while( stackPtr > baseStackPtr 
                        &&
                        (( isLeftAssoc && precedenceStack[stackPtr] >= precedence )
@@ -738,7 +738,7 @@ public abstract class ParseExpr extends ParseType
      * Type t.
      */ 
     //@ requires l != null && t != null && l.m_in != null;
-    //@ requires t.syntax
+    //@ requires t.syntax;
     //@ ensures \result != null;
     protected Expr parseClassLiteralSuffix(Lex l, Type t) {
         int locDot = l.startingLoc;
@@ -846,7 +846,7 @@ public abstract class ParseExpr extends ParseType
      */
   
     //@ requires l != null && l.m_in != null;
-    //@ requires l.ttype == TagConstants.NEW
+    //@ requires l.ttype == TagConstants.NEW;
     //@ ensures \result != null;
     public Expr parseNewExpression(Lex l) {
         int locNew = l.startingLoc;
@@ -1042,7 +1042,7 @@ public abstract class ParseExpr extends ParseType
         }
     }
 
-    //@ requires l.ttype == TagConstants.LBRACE
+    //@ requires l.ttype == TagConstants.LBRACE;
     //@ requires l != null && l.m_in != null;
     //@ ensures \result != null;
     public ArrayInit parseArrayInitializer(Lex l) {
@@ -1080,14 +1080,14 @@ public abstract class ParseExpr extends ParseType
     // ----------------------------------------------------------------------
 
     public ParseExpr() {
-        //@ set seqExpr.elementType = \type(Expr)
-        //@ set seqExpr.owner = this
+        //@ set seqExpr.elementType = \type(Expr);
+        //@ set seqExpr.owner = this;
 
-        //@ set seqVarInit.elementType = \type(VarInit)
-        //@ set seqVarInit.owner = this
+        //@ set seqVarInit.elementType = \type(VarInit);
+        //@ set seqVarInit.owner = this;
 
-        //@ set seqTypeDeclElem.elementType = \type(TypeDeclElem)
-        //@ set seqTypeDeclElem.owner = this
+        //@ set seqTypeDeclElem.elementType = \type(TypeDeclElem);
+        //@ set seqTypeDeclElem.owner = this;
 
         // initialize the operator precedence table
 
@@ -1145,24 +1145,24 @@ public abstract class ParseExpr extends ParseType
      * Internal working storage for parseNewExpression,
      * parseExpressionList, and ParseStmt.parseForStmt functions.
      */
-    //@ invariant seqExpr.elementType == \type(Expr)
-    //@ invariant seqExpr.owner == this
+    //@ invariant seqExpr.elementType == \type(Expr);
+    //@ invariant seqExpr.owner == this;
     protected final /*@ non_null @*/ StackVector seqExpr
             = new StackVector();
 
     /**
      * Internal working storage for parseArrayInitializer function.
      */
-    //@ invariant seqVarInit.elementType == \type(VarInit)
-    //@ invariant seqVarInit.owner == this
+    //@ invariant seqVarInit.elementType == \type(VarInit);
+    //@ invariant seqVarInit.owner == this;
     protected final /*@ non_null @*/ StackVector seqVarInit
             = new StackVector();
 
     /**
      * Internal working storage for parseNewExpression function.
      */
-    //@ invariant seqTypeDeclElem.elementType == \type(TypeDeclElem)
-    //@ invariant seqTypeDeclElem.owner == this
+    //@ invariant seqTypeDeclElem.elementType == \type(TypeDeclElem);
+    //@ invariant seqTypeDeclElem.owner == this;
     protected final /*@ non_null @*/ StackVector seqTypeDeclElem
             = new StackVector();
 }
