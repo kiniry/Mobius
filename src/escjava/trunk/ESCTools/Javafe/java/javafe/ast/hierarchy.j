@@ -409,6 +409,8 @@ public abstract class RoutineDecl extends ASTNode implements TypeDeclElem
 	// arguments are binary manufactured names instead of source code names
 
   public boolean implicit = false;
+  public TypeNameVec originalRaises = null;
+
   //# int modifiers
   //# ModifierPragma* pmodifiers NullOK
   //# TypeModifierPragma* tmodifiers NullOK
@@ -938,6 +940,14 @@ public abstract class StmtPragma extends Stmt
 
   public boolean isRedundant() { return redundant; }
   public void setRedundant(boolean v) { redundant = v; }
+  // when there are various synonomus tag names, tag and getTag() will be
+  // a canonical value; originalTag will be the specific value.  Thus tag
+  // can be used in switch statements and originalTag for printing. 
+  private int originalTag;
+  public StmtPragma setOriginalTag(int t) { originalTag = t; return this; }
+  public int originalTag() {
+    return (originalTag == 0) ? getTag() : originalTag;
+  }
 }
 
 /**
@@ -2466,6 +2476,14 @@ public abstract class ModifierPragma extends ASTNode
 
   public boolean isRedundant() { return redundant; }
   public void setRedundant(boolean v) { redundant = v; }
+  // when there are various synonomus tag names, tag and getTag() will be
+  // a canonical value; originalTag will be the specific value.  Thus tag
+  // can be used in switch statements and originalTag for printing. 
+  private int originalTag;
+  public ModifierPragma setOriginalTag(int t) { originalTag = t; return this; }
+  public int originalTag() {
+    return (originalTag == 0) ? getTag() : originalTag;
+  }
 }
 
 public abstract class LexicalPragma extends ASTNode
