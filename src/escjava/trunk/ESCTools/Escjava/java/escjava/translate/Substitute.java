@@ -72,10 +72,12 @@ public class Substitute {
      */
 
     case TagConstants.WILDREFEXPR:
-	ErrorSet.notImplemented(true,e.getStartLoc(),"Wild-ref expression not yet implemented");
+	ErrorSet.notImplemented(!escjava.Main.options().noNotCheckedWarnings,
+		e.getStartLoc(),"Wild-ref expression not yet implemented");
 	break;
     case TagConstants.ARRAYRANGEREFEXPR:
-	ErrorSet.notImplemented(true,e.getStartLoc(),"Array-range expression not yet implemented");
+	ErrorSet.notImplemented(!escjava.Main.options().noNotCheckedWarnings,
+		e.getStartLoc(),"Array-range expression not yet implemented");
 	break;
 
     case TagConstants.ARRAYREFEXPR:

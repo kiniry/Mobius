@@ -924,6 +924,41 @@ public class EscPragmaParser extends Parse implements PragmaParser
 		    break;
 		}
 
+		case TagConstants.READABLE:{
+		    checkNoModifiers(tag,loc);
+		   do {
+		    Expr e = parseStoreRef(scanner);
+		    // deal with optional conditional ('if' <predicate>)
+		    int t = scanner.ttype;
+		    Expr cond = null;
+		    if (t != TagConstants.IF) {
+			ErrorSet.error(scanner.startingLoc,
+			    "A readable clause requires an if predicate");
+			e = null;
+		    } else {
+			scanner.getNextToken();
+			cond = parseExpression(scanner);
+		    }
+		    if (e != null) {
+			NamedExprDeclPragma pragma = 
+			    NamedExprDeclPragma.make(
+				    TagConstants.unRedundant(tag),
+						    cond, e, loc);
+			if (TagConstants.isRedundant(tag))
+			    pragma.setRedundant(true);
+			savePragma(loc,TagConstants.TYPEDECLELEMPRAGMA, pragma);
+		    }
+		    if (scanner.ttype != TagConstants.COMMA) break;
+		    scanner.getNextToken(); // skip comma
+		   } while (true);
+		    if (!getPragma(dst)) {
+			expect(scanner,TagConstants.SEMICOLON);
+			return getNextPragma(dst);
+		    }
+		    semicolonExpected = true;
+		    break;
+		}
+
 		case TagConstants.MONITORS_FOR:{
 		    checkNoModifiers(tag,loc);
 		    int locId = scanner.startingLoc;

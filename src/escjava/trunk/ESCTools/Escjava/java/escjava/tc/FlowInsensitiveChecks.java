@@ -1457,6 +1457,57 @@ FIXME - see uses of countFreeVarsAccess
 		break;
 	    }
 
+	    case TagConstants.READABLE: {
+                NamedExprDeclPragma emp = (NamedExprDeclPragma)e;
+	    
+		isSpecDesignatorContext = true;
+		Env newenv = rootIEnv;
+		emp.target = checkDesignator(newenv, emp.target);
+		isSpecDesignatorContext = false;
+		switch (emp.target.getTag()) {
+		    case TagConstants.FIELDACCESS: {
+			FieldAccess fa = (FieldAccess)emp.target;
+			if (fa.decl != null &&
+			    Modifiers.isFinal(fa.decl.modifiers) &&
+			    // The array "length" field has already been checked
+			    // insuper.checkDesignator().
+			    fa.decl != Types.lengthFieldDecl) {
+
+			    // java.lang.System has fields in, out, err that are special
+			    // cases.  Somehow, Java allows them to be final and yet be
+			    // modified by public routines.  Instead of a general 
+			    // mechanism, we just do a special case here.
+			    if (fa.decl.parent != Types.javaLangSystem().getTypeDecl())
+				ErrorSet.caution(fa.locId, "a final field is not allowed as " +
+				       "the designator in a modifies clause");
+			}
+			break;
+		    }
+      
+		    case TagConstants.ARRAYREFEXPR:
+		    case TagConstants.ARRAYRANGEREFEXPR:
+		    case TagConstants.WILDREFEXPR:
+		    case TagConstants.EVERYTHINGEXPR:
+		    case TagConstants.NOTHINGEXPR:
+		    case TagConstants.NOTSPECIFIEDEXPR:
+			break;
+
+		    default:
+			if (escjava.parser.EscPragmaParser.
+			     informalPredicateDecoration.get(emp.target)==null) {
+				    // The expression is not a designator
+				    // but we allow an informal predicate
+			    if (!Types.isErrorType(getType(emp.target)))
+				ErrorSet.error(emp.target.getStartLoc(),
+				   "Not a specification designator expression");
+			} else {
+			   emp.target = null;
+			}
+		}
+		emp.expr = checkExpr(newenv, emp.expr);
+		break;
+	    } 
+
 	    case TagConstants.MODELDECLPRAGMA: {
                 FieldDecl decl = ((ModelDeclPragma)e).decl;
                 Env rootEnv = Modifiers.isStatic(decl.modifiers)

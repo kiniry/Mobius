@@ -215,7 +215,8 @@ public class TagConstants extends GeneratedTags
     public static final int NON_NULL = MONITORS_FOR + 1;
     public static final int NOWARN = NON_NULL + 1;
     public static final int PRE = NOWARN + 1;
-    public static final int READABLE_IF = PRE + 1;
+    public static final int READABLE = PRE + 1;
+    public static final int READABLE_IF = READABLE + 1;
     public static final int RES = READABLE_IF + 1;
     public static final int REQUIRES = RES + 1;
     public static final int SET = REQUIRES + 1;
@@ -827,6 +828,7 @@ public class TagConstants extends GeneratedTags
         Identifier.intern("non_null"),
         Identifier.intern("nowarn"),
         Identifier.intern("\\old"),  // TagConstants.PRE
+        Identifier.intern("readable"),
         Identifier.intern("readable_if"),
         Identifier.intern("\\result"),
         Identifier.intern("requires"),
