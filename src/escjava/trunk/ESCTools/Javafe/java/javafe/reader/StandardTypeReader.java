@@ -39,6 +39,9 @@ public class StandardTypeReader extends TypeReader
     //@ invariant javaFileSpace!=null
     public Query javaFileSpace;
 
+    //@ invariant javaSrcFileSpace!=null
+    public Query javaSrcFileSpace;
+
     /**
      * Our (non-null) reader for use in reading in source files.
      */
@@ -57,9 +60,11 @@ public class StandardTypeReader extends TypeReader
      * reader, and a binary reader.  All arguments must be non-null.<p>
      */
     //@ requires engine!=null && srcReader!=null && binReader!=null
-    protected StandardTypeReader(Query engine, Reader srcReader,
+    protected StandardTypeReader(Query engine, Query srcEngine, 
+			      Reader srcReader,
 			      Reader binReader) {
 	javaFileSpace = engine;
+	javaSrcFileSpace = srcEngine;
 
 	// The sourceReader must be cached to meet TypeReader's spec:
 	sourceReader = new CachedReader(srcReader);
@@ -85,9 +90,10 @@ public class StandardTypeReader extends TypeReader
      */
     //@ requires engine!=null && srcReader!=null && binReader!=null
     //@ ensures \result!=null
-    public static StandardTypeReader make(Query engine, Reader srcReader,
+    public static StandardTypeReader make(Query engine, Query srcEngine,
+					  Reader srcReader,
 			                  Reader binReader) {
-	return new StandardTypeReader(engine, srcReader, binReader);
+	return new StandardTypeReader(engine, srcEngine, srcReader, binReader);
     }
 
 
@@ -98,11 +104,11 @@ public class StandardTypeReader extends TypeReader
      */
     //@ requires Q!=null
     //@ ensures \result!=null
-    public static StandardTypeReader make(Query Q,
+    public static StandardTypeReader make(Query Q, Query sourceQ,
 						PragmaParser pragmaP) {
 	Assert.precondition(Q!=null);
 
-	return make(Q, new SrcReader(pragmaP), new BinReader());
+	return make(Q, sourceQ, new SrcReader(pragmaP), new BinReader());
     }
 
 
@@ -137,12 +143,14 @@ public class StandardTypeReader extends TypeReader
      * I/O error occurs while initially scanning the filesystem.<p>
      */
     //@ ensures \result!=null
-    public static StandardTypeReader make(String path,
+    public static StandardTypeReader make(String path, String sourcePath,
 						PragmaParser pragmaP) {
 	if (path==null)
 	    path = javafe.filespace.ClassPath.current();
 	
-	return make(queryFromClasspath(path), pragmaP);
+	Query q = queryFromClasspath(path);
+	Query srcq = sourcePath == null ? q : queryFromClasspath(sourcePath);
+	return make(q, srcq, pragmaP);
     }
 
 
@@ -156,7 +164,7 @@ public class StandardTypeReader extends TypeReader
      */
     //@ ensures \result!=null
     public static StandardTypeReader make(PragmaParser pragmaP) {
-	return make((String)null, pragmaP);
+	return make((String)null, (String)null, pragmaP);
     }
 
 
@@ -186,7 +194,7 @@ public class StandardTypeReader extends TypeReader
      * and may in fact be defined as always true.<p>
      */
     public boolean accessable(String[] P) {
-	return javaFileSpace.accessable(P);
+	return javaSrcFileSpace.accessable(P) || javaFileSpace.accessable(P);
     }
 
 
@@ -194,7 +202,7 @@ public class StandardTypeReader extends TypeReader
      * Return true iff the fully-qualified outside type P.T exists.
      */
     public boolean exists(String[] P, String T) {
-	return (javaFileSpace.findFile(P, T, "java")!=null)
+	return (javaSrcFileSpace.findFile(P, T, "java")!=null)
 	    || (javaFileSpace.findFile(P, T, "class")!=null);
     }
 
@@ -247,7 +255,7 @@ public class StandardTypeReader extends TypeReader
     //@ requires \nonnullelements(P) && T!=null
     public GenericFile locateSource(String[] P, String T, boolean useSrcPtr) {
 	// First try the .java file with name T.java:
-	GenericFile file = javaFileSpace.findFile(P, T, "java");
+	GenericFile file = javaSrcFileSpace.findFile(P, T, "java");
 	if (file!=null || !useSrcPtr)
 	    return file;
 
@@ -264,14 +272,15 @@ public class StandardTypeReader extends TypeReader
 	// Try and locate that file if a valid srcPtr is present:
 	if (srcPtr==null || !srcPtr.endsWith(".java"))
 	    return null;
-	return javaFileSpace.findFile(P, srcPtr.substring(0,srcPtr.length()-5),
+	return javaSrcFileSpace.findFile(P, srcPtr.substring(0,srcPtr.length()-5),
 					"java");
     }
 
 
+	// Finds source files
     public ArrayList findFiles(String[] P) {
 	ArrayList a = new ArrayList();
-	Enumeration e = javaFileSpace.findFiles(P);
+	Enumeration e = javaSrcFileSpace.findFiles(P);
 	while (e.hasMoreElements()) {
 	    Tree t = (Tree)e.nextElement();
 	    if (t.getLabel().endsWith(".java")) { a.add(t.data); }

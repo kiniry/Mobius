@@ -50,9 +50,9 @@ public class EscTypeReader extends StandardTypeReader
      * non-null.
      */
     //@ requires engine != null && srcReader != null && binReader != null;
-    protected EscTypeReader(Query engine, Reader srcReader,
+    protected EscTypeReader(Query engine, Query srcEngine, Reader srcReader,
 			      Reader binReader) {
-	super(engine, srcReader, binReader);
+	super(engine, srcEngine, srcReader, binReader);
     }
 
 
@@ -65,9 +65,10 @@ public class EscTypeReader extends StandardTypeReader
      */
     //@ requires engine != null && srcReader != null && binReader != null;
     //@ ensures \result != null;
-    public static StandardTypeReader make(Query engine, Reader srcReader,
+    public static StandardTypeReader make(Query engine, 
+					Query srcEngine, Reader srcReader,
 					  Reader binReader) {
-	return new EscTypeReader(engine, srcReader, binReader);
+	return new EscTypeReader(engine, srcEngine, srcReader, binReader);
     }
 
     /**
@@ -76,11 +77,11 @@ public class EscTypeReader extends StandardTypeReader
      */
     //@ requires Q != null;
     //@ ensures \result != null;
-    public static StandardTypeReader make(Query Q,
+    public static StandardTypeReader make(Query Q, Query sourceQ,
 			PragmaParser pragmaP, AnnotationHandler ah) {
 	Assert.precondition(Q != null);
 
-	return make(Q, new EscSrcReader(pragmaP,ah), new BinReader());
+	return make(Q, sourceQ, new EscSrcReader(pragmaP,ah), new BinReader());
     }
 
     /* We have to make this subclass of SrcReader because: a file that
@@ -146,7 +147,7 @@ public class EscTypeReader extends StandardTypeReader
 
 
 		// FIXME - Probably does not work for nested classes.
-	    GenericFile javafile = ((EscTypeReader)OutsideEnv.reader).findFile(pkgStrings,type.toString()+".java");
+	    GenericFile javafile = ((EscTypeReader)OutsideEnv.reader).findSrcFile(pkgStrings,type.toString()+".java");
 	    CompilationUnit javacu = null;
 	    if (javafile != null) {
 		if (javafile.getCanonicalID().equals(cu.sourceFile().getCanonicalID())) javacu = cu;
@@ -162,7 +163,7 @@ public class EscTypeReader extends StandardTypeReader
 		    //System.out.println("READING SOURCE " + javafile.getHumanName());
 		    javacu = super.read(javafile, false);
 		} else {
-	    	    javafile = ((EscTypeReader)OutsideEnv.reader).findFile(pkgStrings,type.toString()+".class");
+	    	    javafile = ((EscTypeReader)OutsideEnv.reader).findBinFile(pkgStrings,type.toString()+".class");
 		    //System.out.println("READING BINARY " + javafile.getHumanName());
 		    if (javafile != null) javacu = ((EscTypeReader)OutsideEnv.reader).binaryReader.read(javafile, false); //read the binary??? FIXME
 		}
@@ -251,7 +252,8 @@ public class EscTypeReader extends StandardTypeReader
 		if (v.elementAt(i) instanceof RefinePragma) {
 		    RefinePragma rp = (RefinePragma)v.elementAt(i);
 		    String filename = rp.filename;
-		    GenericFile gf = ((EscTypeReader)OutsideEnv.reader).findFile(pkgStrings,filename);
+			// FIXME - what if we are refining a class file ???
+		    GenericFile gf = ((EscTypeReader)OutsideEnv.reader).findSrcFile(pkgStrings,filename);
 		    if (gf == null) ErrorSet.error(rp.loc,
 			"Could not find file referenced in refine annotation: " + filename);
 		    return gf;
@@ -274,12 +276,16 @@ public class EscTypeReader extends StandardTypeReader
      * an I/O error occurs while initially scanning the filesystem.
      */
     //@ ensures \result != null;
-    public static StandardTypeReader make(String path,
+    public static StandardTypeReader make(String path, String srcPath,
 			    PragmaParser pragmaP, AnnotationHandler ah) {
 	if (path==null)
 	    path = javafe.filespace.ClassPath.current();
+	Query q = StandardTypeReader.queryFromClasspath(path);
+
+	Query srcq = srcPath == null ? q : 
+			StandardTypeReader.queryFromClasspath(srcPath);
 	
-	return make(StandardTypeReader.queryFromClasspath(path), pragmaP, ah);
+	return make(q, srcq, pragmaP, ah);
     }
 
     /**
@@ -292,7 +298,7 @@ public class EscTypeReader extends StandardTypeReader
      */
     //@ ensures \result != null;
     public static StandardTypeReader make(PragmaParser pragmaP) {
-	return make((String)null, pragmaP);
+	return make((String)null, (String)null, pragmaP);
     }
 
     /**
@@ -317,7 +323,7 @@ public class EscTypeReader extends StandardTypeReader
     public boolean exists(String[] P, String T) {
 	if ( super.exists(P, T)) return true;
 	for (int i=0; i<nonJavaSuffixes.length; ++i) {
-	    if (javaFileSpace.findFile(P, T, nonJavaSuffixes[i]) != null) {
+	    if (javaSrcFileSpace.findFile(P, T, nonJavaSuffixes[i]) != null) {
 		return true;
 	    }
 	}
@@ -325,15 +331,20 @@ public class EscTypeReader extends StandardTypeReader
     }
 
     public GenericFile findFirst(String[] P, String T) {
-	return javaFileSpace.findFile(P,T,activeSuffixes);
+	return javaSrcFileSpace.findFile(P,T,activeSuffixes);
     }
 
-    public GenericFile findFile(String[] P, String filename) {
+    public GenericFile findSrcFile(String[] P, String filename) {
+	return javaSrcFileSpace.findFile(P,filename);
+    }
+
+    public GenericFile findBinFile(String[] P, String filename) {
 	return javaFileSpace.findFile(P,filename);
     }
 
+    // Finds source files
     public ArrayList findFiles(String[] P) {
-	Enumeration e = javaFileSpace.findFiles(P);
+	Enumeration e = javaSrcFileSpace.findFiles(P);
 	if (e == null) return null;
 	ArrayList a = new ArrayList();
 	while (e.hasMoreElements()) {
@@ -381,7 +392,7 @@ public class EscTypeReader extends StandardTypeReader
 
 	// If not, use spec file if available:
 	for (int i=0; i<nonJavaSuffixes.length; ++i) {
-	    GenericFile spec = javaFileSpace.findFile(P, T, nonJavaSuffixes[i]);
+	    GenericFile spec = javaSrcFileSpace.findFile(P, T, nonJavaSuffixes[i]);
 	    if (spec != null) {
 	        return read(spec, false);
 	    }

@@ -53,30 +53,34 @@ public abstract class FrontEndTool extends Tool {
      */
     public void setup() {
 
-		String classPath = options.userPath;
-		if (classPath==null)
-		    // The behavior of this code differs between 1.1 and 1.2:
-		    classPath = javafe.filespace.ClassPath.current();
-	
-		String sys = options.sysPath;
-		if (sys==null)
-		    // This works only on Sun implementations of Java...
-		    sys = System.getProperty("sun.boot.class.path", null);
-	
-		if (sys!=null && !sys.equals("")) {
-		    if (!classPath.equals("")) {
-			classPath += System.getProperty("path.separator", ":");
-		    }
-		    classPath += sys;
-		}
-	
-		Info.out("[Full classpath is " + classPath + "]");
-	
-		OutsideEnv.init(makeStandardTypeReader(classPath,
-						       makePragmaParser()));
-	
-		PrettyPrint.inst = makePrettyPrint();
-		TypeCheck.inst = makeTypeCheck();
+	String classPath = options.userPath;
+	if (classPath==null)
+	    // The behavior of this code differs between 1.1 and 1.2:
+	    classPath = javafe.filespace.ClassPath.current();
+
+	String sourcePath = options.userSourcePath;
+	if (sourcePath == null) sourcePath = classPath;
+
+	String sys = options.sysPath;
+	if (sys==null)
+	    // This works only on Sun implementations of Java...
+	    sys = System.getProperty("sun.boot.class.path", null);
+
+	if (sys!=null && !sys.equals("")) {
+	    if (!classPath.equals("")) {
+		classPath += System.getProperty("path.separator", ":");
+	    }
+	    classPath += sys;
+	}
+
+	Info.out("[Full classpath is " + classPath + "]");
+	Info.out("[Full sourcepath is " + sourcePath + "]");
+
+	OutsideEnv.init(makeStandardTypeReader(classPath, sourcePath,
+					       makePragmaParser()));
+
+	PrettyPrint.inst = makePrettyPrint();
+	TypeCheck.inst = makeTypeCheck();
     }
 
     /** Called to clear any static initializations, so that the parser can be
@@ -94,8 +98,9 @@ public abstract class FrontEndTool extends Tool {
      */
     //@ ensures \result!=null
     public StandardTypeReader makeStandardTypeReader(String path,
+						     String sourcePath,
 						     PragmaParser P) {
-        return StandardTypeReader.make(path, P);
+        return StandardTypeReader.make(path, sourcePath, P);
     }
 
     /**

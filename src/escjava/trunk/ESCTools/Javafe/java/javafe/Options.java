@@ -43,6 +43,11 @@ public class Options
     public String userPath = null;
     
     /**
+     * Option holding the user-specified sourcepath.
+     */
+    public String userSourcePath = null;
+    
+    /**
      * Option holding the user-specified boot classpath.
      */
     public String sysPath = null;
@@ -154,6 +159,13 @@ public class Options
 	} else if (option.equals("-noCautions")) {
 	    noCautions = true;
 	    return offset;
+	} else if (option.equals("-sourcepath")) {
+	    if (offset >= args.length) {
+		throw new UsageError("Option " + option + 
+                                     " requires one argument");
+	    }
+	    userSourcePath = args[offset];
+	    return offset+1;
 	} else if (option.equals("-classpath")) {
 	    if (offset >= args.length) {
 		throw new UsageError("Option " + option + 
@@ -251,10 +263,11 @@ public class Options
 
     final String[][] optionData = {
     {"-help", "Prints a usage message and terminates"},
-    {"-v", ""},
-    {"-quiet", ""},
+    {"-v", "verbose mode"},
+    {"-quiet", "quiet mode (no informational messages)"},
     {"-bootclasspath <classpath>", ""},
-    {"-classpath <classpath>", ""},
+    {"-classpath <classpath>", "Directory path for class files (default is value of CLASSPATH)"},
+    {"-sourcepath <classpath>", "Directory path for source files (default is classpath)"},
     {"-noCautions", ""},
     {"-package <packagename>", "Loads all the files in the named package"},
     {"-source <release>", "Provide source compatibility with specified release"},

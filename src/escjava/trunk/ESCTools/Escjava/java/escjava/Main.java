@@ -77,8 +77,9 @@ public class Main extends javafe.SrcTool
      * Returns the Esc StandardTypeReader, EscTypeReader.
      */
     public StandardTypeReader makeStandardTypeReader(String path,
+				String sourcePath,
                              PragmaParser P) {
-        return EscTypeReader.make(path, P, annotationHandler);
+        return EscTypeReader.make(path, sourcePath, P, annotationHandler);
     }
 
     /**
