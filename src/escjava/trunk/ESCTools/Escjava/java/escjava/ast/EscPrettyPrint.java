@@ -102,6 +102,8 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
             case TagConstants.SPEC_PUBLIC:
             case TagConstants.WRITABLE_DEFERRED:
             case TagConstants.HELPER:
+            case TagConstants.JML_ALSO: // @review kiniry 5 Feb 2003
+                                        // - Is this right?
                 write(o, "/*@ "); 
                 write(o, TagConstants.toString(tag)); 
                 write(o, " */");
@@ -117,7 +119,6 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
             case TagConstants.MODIFIES:
             case TagConstants.ALSO_MODIFIES:
                 // JML keywords
-            case TagConstants.JML_ALSO:
             case TagConstants.JML_PRE:
             case TagConstants.JML_POST: 
             case TagConstants.JML_MODIFIABLE:
