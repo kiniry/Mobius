@@ -78,6 +78,18 @@ public abstract class VisitorArgResult extends javafe.ast.VisitorArgResult {
 
   //@ requires x!=null
   //@ ensures \result!=null
+  public abstract Object visitEverythingExpr(EverythingExpr x, Object o);
+
+  //@ requires x!=null
+  //@ ensures \result!=null
+  public abstract Object visitNothingExpr(NothingExpr x, Object o);
+
+  //@ requires x!=null
+  //@ ensures \result!=null
+  public abstract Object visitNotSpecifiedExpr(NotSpecifiedExpr x, Object o);
+
+  //@ requires x!=null
+  //@ ensures \result!=null
   public abstract Object visitDefPredLetExpr(DefPredLetExpr x, Object o);
 
   //@ requires x!=null
