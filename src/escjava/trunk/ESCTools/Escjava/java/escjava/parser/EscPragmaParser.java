@@ -129,6 +129,9 @@ import java.io.IOException;
  @todo kiniry 24 Jan 2003 - Permit 'non_null' annotations on arguments
  in overrides of methods. Make such specifications redundant.
 
+ @todo kiniry 31 Jan 2003 - Check semantics of non_null in ESC/Java
+ vs. JML.
+
  @todo kiniry 24 Jan 2003 - Permit splitting syntactic constructs
  across multiple @code{//@@} comments.
 
@@ -159,14 +162,16 @@ public class EscPragmaParser extends Parse implements PragmaParser
      * in the middle of parsing some pragma, and is expected to
      * continue this parsing next time it gets control.
      */
-
     private int inProcessTag;
     /*@ invariant inProcessTag==-2 || inProcessTag==-1 ||
      inProcessTag==TagConstants.STILL_DEFERRED ||
      inProcessTag==TagConstants.MONITORED_BY ||
      inProcessTag==TagConstants.MODIFIES ||
      inProcessTag==TagConstants.ALSO_MODIFIES ||
+     inProcessTag==TagConstants.JML_MODIFIABLE ||
+     inProcessTag==TagConstants.JML_ASSIGNABLE ||
      inProcessTag==TagConstants.LOOP_PREDICATE; */
+
     private int inProcessLoc;
     private CorrelatedReader pendingJavadocComment;
     
@@ -667,6 +672,8 @@ public class EscPragmaParser extends Parse implements PragmaParser
      inProcessTag==TagConstants.MONITORED_BY ||
      inProcessTag==TagConstants.MODIFIES ||
      inProcessTag==TagConstants.ALSO_MODIFIES ||
+     inProcessTag==TagConstants.JML_MODIFIABLE ||
+     inProcessTag==TagConstants.JML_ASSIGNABLE ||
      inProcessTag==TagConstants.LOOP_PREDICATE */
     //@ requires dst!=null
     //@ requires scanner.startingLoc != Location.NULL;
@@ -706,7 +713,8 @@ public class EscPragmaParser extends Parse implements PragmaParser
 
             default:
                 ErrorSet.fatal(scanner.startingLoc,
-                               "Unexpected token '" +TagConstants.toString(scanner.ttype)
+                               "Unexpected token '" + 
+                               TagConstants.toString(scanner.ttype)
                                + "', expected ',', ';' or end-of-file");
         }
     }
