@@ -2311,8 +2311,19 @@ variables of the quantification.
 a function.  The parser is able to distinguish the two usages.
 
 @subsection set comprehension
-[[[ description, status, differences needed here ]]]
 
+JML has a syntax for expressions whose value is a set.  An example is
+@center{@code{new JMLObjectSet @{ Integer i | o.has(i) && i.intValue() > 0 @}}}
+
+@noindent
+@strong{Status: }ESC/Java2 parses and typechecks set comprehension expressions, with
+the following omissions:
+@itemize @bullet
+@item Expressions containing set comprehension are not used in static checking
+@item No restrictions on the type of the set are imposed
+@item The JML restrictions on the form of the predicate are not checked
+@item ESC/Java2 should check and forbid Java or JML modifiers in the bound variable declaration
+@end itemize
 
 @subsection \not_specified
 This may be used, within the guidelines of the JML grammar, as the predicate or
@@ -2572,7 +2583,39 @@ completed.  JML tools (except jmldoc) and ESC/Java require bodies to be present.
 
 @subsection  @code{field}, @code{method} and @code{constructor} keywords
 
-[[[ discussion needed ]]]
+JML is designed to work with any Java code.  In particular that code may use
+JML keywords as variables and type names.  This can create a problem in parsing
+annotations.  For example, if @code{helper} has been declared a class, then an
+ annotation that begins with
+@center{@code{//@@ helper model ...}}
+@noindent
+could be interpreted as the beginning of a declaration with type @code{helper} and
+identifier @code{model} or as the beginning of a model method declaration with JML
+modifier helper.  Though in some cases sufficient lookahead could distinguish these
+different uses, JML has defined the keywords @code{field}, @code{method}, and
+@code{constructor} to help disambiguate such situations.  These are used in ghost
+and model field, method, and constructor declarations.  They have the effect that
+any identifiers appearing after these keywords in a JML annotation are not
+interpreted as JML keywords (except for non_null in formal parameters as described
+below).  For example, in
+@*@center{@code{//@@ public model non_null helper method requires ensures() @{@};}}
+@noindent
+@code{non_null} and @code{helper} are JML keywords, but @code{requires} is 
+expected to be a Java type name and @code{ensures} is interpreted as an identifier,
+the name of the method being declared.
+
+The one exception to this rule is that @code{non_null} is needed as a JML modifier
+within the formal parameter declarations.  A parser is capable of distinguishing
+these cases, however.  Thus in 
+@example
+        /*@@ public model requires ensures(non_null Object o, non_null oo);
+@end example
+@noindent
+the first occurrence of @code{non_null} is a JML modifier, but the second is
+expected to be a Java type name.
+
+@noindent
+@code{Status: } Fully implemented.
 
 @subsection Equivalence of @code{\TYPE} and @code{java.lang.Class}
 
