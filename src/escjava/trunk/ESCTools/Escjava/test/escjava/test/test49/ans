@@ -34,7 +34,7 @@ Ghost.java:56: Warning: Possible race condition (Race)
 Associated declaration is "Ghost.java", line 52, col 47:
     //@ ghost public Object x //@ monitored_by mutex
                                                ^
-Ghost.java:56: Warning: Possible race condition (Race)
+Ghost.java:56: Warning: Possible that all monitors are null (RaceAllNull)
         //@ set x = foo         // error
                   ^
 Associated declaration is "Ghost.java", line 52, col 34:

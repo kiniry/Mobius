@@ -3652,6 +3652,11 @@ precondition of the routine does not hold.
 field while not holding the requisite lock(s).
 
 @item
+@strong{RaceAllNull} warns of a possible attempt to access a monitored
+field at a time when all of the objects designated as monitors for the
+field are null.
+
+@item
 @strong{Reachable} warns that control may reach an @code{unreachable}
 pragma.
 

@@ -131,7 +131,8 @@ public class TagConstants extends GeneratedTags
     public static final int CHKPOSTCONDITION = CHKOWNERNULL + 1;
     public static final int CHKPRECONDITION = CHKPOSTCONDITION + 1;
     public static final int CHKSHARING = CHKPRECONDITION + 1;
-    public static final int CHKUNENFORCEBLEOBJECTINVARIANT = CHKSHARING + 1;
+    public static final int CHKSHARINGALLNULL = CHKSHARING + 1;
+    public static final int CHKUNENFORCEBLEOBJECTINVARIANT = CHKSHARINGALLNULL + 1;
     public static final int CHKUNEXPECTEDEXCEPTION = CHKUNENFORCEBLEOBJECTINVARIANT + 1;
     public static final int CHKWRITABLEDEFERRED = CHKUNEXPECTEDEXCEPTION + 1;
     public static final int CHKWRITABLE = CHKWRITABLEDEFERRED + 1;
@@ -749,6 +750,7 @@ public class TagConstants extends GeneratedTags
         "Post",
         "Pre",
         "Race",
+	"RaceAllNull",
         "Unenforcable",
         "Exception",
         "Deferred",

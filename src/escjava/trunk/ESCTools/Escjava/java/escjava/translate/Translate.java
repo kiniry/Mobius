@@ -3334,7 +3334,7 @@ public final class Translate
                 p = GC.or(GC.nary(TagConstants.REFEQ, actualSelf, GC.thisvar), p);
 		addCheck(locAssignOp, TagConstants.CHKSHARING, p, firstMonitoredPragma);
             } else {
-		addCheck(locAssignOp, TagConstants.CHKSHARING, onenotnull, firstMonitoredPragma);
+		addCheck(locAssignOp, TagConstants.CHKSHARINGALLNULL, onenotnull, firstMonitoredPragma);
 	    }
         }
         mutexList.removeAllElements(); // Help the garbage collector...

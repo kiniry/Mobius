@@ -365,6 +365,10 @@ public final class ErrorMsg
 	    r = ("Possible race condition");
 	    Assert.notFalse(hasAssocDecl);
 	    break;
+	case TagConstants.CHKSHARINGALLNULL:
+	    r = ("Possible that all monitors are null");
+	    Assert.notFalse(hasAssocDecl);
+	    break;
 	case TagConstants.CHKWRITABLE:
 	    r = ("Write of variable when disallowed");
 	    Assert.notFalse(hasAssocDecl);
