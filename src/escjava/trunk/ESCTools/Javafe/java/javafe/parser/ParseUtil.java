@@ -197,4 +197,17 @@ public class ParseUtil
             return modifiers;
         }
     }
+
+    static public String arrayToString(Object[] a, String sep) {
+	if (a==null || a.length == 0) return "";
+	else {
+		StringBuffer sb = new StringBuffer();
+		sb.append(a[0].toString());
+		for (int i=1; i<a.length; ++i) {
+		    sb.append(sep);
+		    sb.append(a[i].toString());
+	        }
+		return sb.toString();
+	}
+    }
 }
