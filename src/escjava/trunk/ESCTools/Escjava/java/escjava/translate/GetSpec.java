@@ -675,14 +675,20 @@ public final class GetSpec {
                 VarExprModifierPragma prag = dmd.exsures.elementAt(i);
                 // TrSpecExpr[[ E, {v-->XRES}, wt ]]
                 Hashtable map = new Hashtable();
-                map.put(prag.arg, GC.xresultvar);
-                Expr pred = TrAnExpr.trSpecExpr(prag.expr, map, wt);
-                // typeof(XRES) <: T
-                Expr ante1 = GC.nary(TagConstants.TYPELE,
+		Expr pred;
+                if (prag.arg != null) {
+		    map.put(prag.arg, GC.xresultvar);
+		    pred = TrAnExpr.trSpecExpr(prag.expr, map, wt);
+		    // typeof(XRES) <: T
+		    Expr ante1 = GC.nary(TagConstants.TYPELE,
                                      typeofXRES, GC.typeExpr(prag.arg.type));
-                //     EC == ecThrow && typeof(XRES) <: T
-                // ==> TrSpecExpr[[ E, {v-->XRES}, wt ]]
-                pred = GC.implies(GC.and(ante0, ante1), pred);
+		    //     EC == ecThrow && typeof(XRES) <: T
+		    // ==> TrSpecExpr[[ E, {v-->XRES}, wt ]]
+		    pred = GC.implies(GC.and(ante0, ante1), pred);
+		} else {
+		    pred = TrAnExpr.trSpecExpr(prag.expr, map, wt);
+		    pred = GC.implies(ante0, pred);
+		}
                 Condition cond = GC.condition(TagConstants.CHKPOSTCONDITION,
                                               pred, prag.getStartLoc());
                 post.addElement(cond);
