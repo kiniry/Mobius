@@ -1,0 +1,345 @@
+% This used sigproc-sp.tex -FILE FOR V2.6SP OF ACM_PROC_ARTICLE-SP.CLS
+% OCTOBER 2002
+%
+% ----------------------------------------------------------------------------------------------------------------
+% This .tex file (and associated .cls V2.6SP) *DOES NOT* produce:
+%       1) The Permission Statement
+%       2) The Conference (location) Info information
+%       3) The Copyright Line with ACM data
+%       4) Page numbering
+%
+%  However, both the CopyrightYear (default to 2002) and the ACM Copyright Data
+% (default to X-XXXXX-XX-X/XX/XX) can still be over-ridden by whatever the author
+% inserts into the source .tex file.
+% e.g.
+% \CopyrightYear{2003} will cause 2003 to appear in the copyright line.
+% \crdata{0-12345-67-8/90/12} will cause 0-12345-67-8/90/12 to appear in the copyright line.
+%
+% ---------------------------------------------------------------------------------------------------------------
+% It is an example which *does* use the .bib file (from which the .bbl file
+% is produced).
+% REMEMBER HOWEVER: After having produced the .bbl file,
+% and prior to final submission,
+% you need to 'insert'  your .bbl file into your source .tex file so as to provide
+% ONE 'self-contained' source file.
+%
+% Questions regarding SIGS should be sent to
+% Adrienne Griscti ---> griscti@acm.org
+%
+% Questions/suggestions regarding the guidelines, .tex and .cls files, etc. to
+% Gerald Murray ---> murray@acm.org
+%
+% For tracking purposes - this is V2.6SP - OCTOBER 2002
+
+\documentclass{acm_proc_article-sp}
+
+\begin{document}
+%
+% --- Author Metadata here ---
+\conferenceinfo{PASTE}{2004 Washington, D.C. USA}
+%\setpagenumber{50}
+\CopyrightYear{2004} % Allows default copyright year (2002) to be over-ridden - IF NEED BE.
+\crdata{TODO}  % Allows default copyright data (X-XXXXX-XX-X/XX/XX) to be over-ridden.
+% --- End of Author Metadata ---
+
+\title{Uniting ESC/Java and JML ???TODO}
+\subtitle{???TODO}
+%
+% You need the command \numberofauthors to handle the "boxing"
+% and alignment of the authors under the title, and to add
+% a section for authors number 4 through n.
+%
+% Up to the first three authors are aligned under the title;
+% use the \alignauthor commands below to handle those names
+% and affiliations. Add names, affiliations, addresses for
+% additional authors as the argument to \additionalauthors;
+% these will be set for you without further effort on your
+% part as the last section in the body of your article BEFORE
+% References or any Appendices.
+
+\numberofauthors{2}
+%
+% You can go ahead and credit authors number 4+ here;
+% their names will appear in a section called
+% "Additional Authors" just before the Appendices
+% (if there are any) or Bibliography (if there
+% aren't)
+
+% Put no more than the first THREE authors in the \author command
+\author{
+%
+% The command \alignauthor (no curly braces needed) should
+% precede each author name, affiliation/snail-mail address and
+% e-mail address. Additionally, tag each line of
+% affiliation/address with \affaddr, and tag the
+%% e-mail address with \email.
+\alignauthor David R. Cok\\
+       \affaddr{457 Hillside Avenue}\\
+       \affaddr{Rochester, NY}\\
+       \affaddr{USA}\\
+       \email{cok@frontiernet.net}
+\alignauthor Joseph Kiniry\\
+       \affaddr{TODO}\\
+       \affaddr{TODO}\\
+       \affaddr{TODO}\\
+       \email{TODO@TODO.com}
+%\alignauthor Lars Th{\Large{\sf{\o}}}rv{$\ddot{\mbox{a}}$}ld\titlenote{This author is the
+%one who did all the really hard work.}\\
+%       \affaddr{The Th{\large{\sf{\o}}}rv{$\ddot{\mbox{a}}$}ld Group}\\
+%       \affaddr{1 Th{\large{\sf{\o}}}rv{$\ddot{\mbox{a}}$}ld Circle}\\
+%       \affaddr{Hekla, Iceland}\\
+%      \email{larst@affiliation.org}
+}
+%\additionalauthors{}
+\date{4 February 2004}
+\maketitle
+\begin{abstract}
+... abstract... ??? TODO
+\end{abstract}
+
+\category{D.2.4}{Software Engineering}{Software/Program Verification}[Formal methods, Programming by Contract]
+
+\category{F.3.1}{Logics and Meanings of Programs}{Specifying and Verifying and Reasoning about Programs}[assertions, invariants, logics of programs,
+                pre- and post-conditions, specification techniques]
+
+%% TODO \terms{Delphi theory}
+
+\keywords{JML, ESC/Java, TODO} % NOT required for Proceedings
+
+\section{Introduction}
+The ESC/Java tool developed at DEC/SRC [TODO-ref] was a pioneering tool
+in the application of static program analysis and verification technology
+to annotated Java programs.  The tool and its built-in prover operated 
+automatically with reasonable performance, needing only program annotations
+against which to check the program's source code.  The annotations needed were
+easily read, written and understood by those familiar with Java and were mostly
+consistent with the syntax and semantics of the separate Java Modeling Language 
+(JML) project [TODO - ref].  Consequently, ESC/Java was a
+research success and was also successfully used by other groups on a trial 
+basis.  [TODO do we need a ref here??]
+
+Its long-term utility, however, was lessened by a number of factors.  First, 
+the match to JML was not complete and JML continued to evolve as research on
+the needs of annotations for program checking advanced.  Second, some of the
+deficiencies of the annotation language used by ESC/Java, while appropriate 
+in a research mode, reduced the overall usability of the tool.  For example,
+frame conditions were not checked, but errors in frame conditions could cause
+the prover to reach incorrect conclusions; the annotation language lacked 
+the ability to use methods in annotations, limiting the annotations to statements
+only about low-level representations.  Finally,
+as companies
+were bought and sold and research groups disbanded, there was no continuing
+development of the original tool, making it difficult to use as the Java language
+itself evolved and continuing support minimal.
+
+However, the initial positive experience prompted a vision for a reasonably
+industrial-strength tool that would also be useful for ongoing research in annotation
+and verification.
+Thus, when the source code for the ESC/Java tool was made available for further 
+research and experimentation, the authors of this paper began the ESC/Java2 project
+to evolve the ESC/Java tool.  That effort has the following goals:
+\begin{enumerate}
+\item to make the source consistent with the current version of Java;
+\item to package the
+tool in a way that enabled easy application in a variety of environments, consistent
+with the licensing provisions of the source code release;
+\item to fully parse the current version of JML;
+\item to check as much of the JML annotation language as feasible, consistent with the
+original engineering goals of ESC/Java (usability at the expense of full completeness
+and soundness);
+\item as a long-term goal and if appropriate,
+to update the related tools that use the same code base, namely Calvin, Houdini, and RCC.
+\end{enumerate}
+Success in the above will enable us to
+\begin{itemize}
+\item test the utility of the tool on a broader range of significant bodies of Java source, and
+\item use the tool as a basis for research in unexplored aspects of annotation and static 
+program analysis.
+\end{itemize}
+
+We currently have alpha versions of ESC/Java2 available on the web [TODO-ref] and 
+encourage experimentation and feedback.  The source code itself is available (and 
+additional contributors are welcome) subject to fairly open licensing provisions.
+We fully acknowledge that the on-going work described here builds on the very
+substantial and innovative work to produce ESC/Java and the Simplify prover in the
+first place and on the effort to define the Java Modeling Language.
+
+\section{Changes to ESC/Java}
+
+The work on ESC/Java2 required embellishments of the original ESC/Java in a 
+number of areas.  Here we present the most significant of these.
+\subsection{Java 1.4}
+The original work was performed in about [TODO-date] and Java has evolved since then.
+The principal addition required by Java 1.4
+is support for the Java {\tt assert} statement.  This is 
+complicated slightly by the presence of a similar {\tt assert} statement in JML.
+
+\subsection{Current JML}
+The Java Modeling Language is a research project in itself; hence the JML syntax
+and semantics are evolving and are somewhat of a moving target (and there is as yet
+no complete reference manual).  However, the core
+language is reasonably stable.  The following are key additions that have been 
+implemented.
+\setlength{\partopsep}{0in}\setlength{\parskip}{0in}
+\begin{itemize}\setlength{\itemsep}{0in}
+\item parsing of all of current JML, even if the constructs are ignored
+\item support for refinement files
+\item heavyweight annotations
+\item slight adjustments in annotation format
+\item inheritance of annotations, particularly of {\tt non\_null} modifiers
+\item model fields, routines, and types
+\end{itemize}
+In addition, the differences between ESC/Java and JML noted in early work [TODO-ref]
+on JML have
+been resolved.
+
+\subsection{New verification checks}
+Though all of JML is parsed, not all of it is currently checked.  Checking of the
+following features has been added to that performed by ESC/Java.
+\setlength{\partopsep}{0in}\setlength{\parskip}{0in}
+\begin{itemize}\setlength{\itemsep}{0in}
+\item {\tt constraint} and {\tt initially} clauses
+\item frame conditions, including the {\tt in} and {\tt maps} clauses
+\item model fields and represents clauses
+\item annotations that include routine calls and dynamic allocations
+\end{itemize}
+
+\subsection{Backwards incompatibilities}
+The ESC/Java specification language and JML arose separately.  There was some initial 
+but uncompleted work to unify the two.
+The ESC/Java2 project intends to have the tool
+reflect JML as precisely as possible.  In some cases, discussion resulted in changes to
+JML, but more often (but as little as possible) some backwards incompatibilities were
+introduced.  The principal such incompatibilities are these:
+\setlength{\partopsep}{0in}\setlength{\parskip}{0in}
+\begin{itemize}\setlength{\itemsep}{0in}
+\item The semantics of inheritance of specification clauses and of {\tt non\_null}
+modifiers was modified to that of JML, since the work on JML resulted in an interpretation
+consistent with behavioral subtyping. [TODO check the words here]  This also changed
+the usage of {\tt also}.
+\item The default modifies clause is now {\tt modifies \\everything;}.
+\item The syntax and semantics of {\tt initially}, {\tt monitored\_by}, and {\tt readable\_if}
+have changed.
+\item ESC/Java2 requires semicolon termination of annotations; it also forbids bodies
+of (non-model) routines to be present in non-java specification files.
+\end{itemize}
+
+
+\section{Aspects of JML not yet implemented}
+Though the core is well-supported, there are several features of JML which are parsed and
+ignored, most of them experimental or not yet endowed with a clear semantics.  
+\setlength{\partopsep}{0in}\setlength{\parskip}{0in}
+\begin{itemize}\setlength{\itemsep}{0in}
+\item checking of access modifiers
+\item the weakly, strictfp, volatile, transient modifiers
+\item annotations labelled as redundant are handled just like other annotations, 
+or are ignored (e.g. {\tt implies\_that} and {\tt for\_example} sections)
+\item any semantics associated with initialization (prior to construction)
+\item multithreading issues beyond that supported by ESC/Java
+\item serialization
+\item annotations regarding space and time consumption
+\item full support of recursive {\tt maps} declarations
+\item model programs, {\tt diverges} clauses and {\tt hence\_by} clauses
+\item verification of anonymous and block-level classes
+\item verification of set comprehension and some forms of quantified expressions
+\item implementation of {\tt modifies \\everything;} within the body of routines
+\end{itemize}
+
+
+\section{Unresolved semantic issues}
+The work on ESC/Java2 has been useful in exposing and resolving semantic issues in JML.
+Since the ESC/Java2 is built on a different source code base than other JML tools, 
+differences of interpretation in both syntax and semantics arise on occasion.  These are
+generally resolved and documented via mailing list discussions by interested parties.
+There are, however, still unresolved issues, some of which are the subject of ongoing
+research.
+\setlength{\partopsep}{0in}\setlength{\parskip}{0in}
+\begin{itemize}\setlength{\itemsep}{0in}
+\item interpretation of the combination of purity and benevolent side-effects that is
+suitable for both static and run-time checking
+\item interpretation of exceptions in pure expressions
+\item the use of helper annotations on routines
+\item the interpretation of annotations for initialization code and constructors
+\item use of {\tt measured\_by} clauses to assist in checking termination
+\item meaning of {\tt code\_contract} clauses
+\item axioms and reasoning procedures to handle safe arithmetic [TODO -ref]
+\end{itemize}
+
+\section{Usage experience to date}
+TODO
+
+\section{Future work}
+The work on ESC/Java2 to date has resulted in a number of software alpha releases
+and the work is continuing on a number of fronts.
+\begin{itemize}
+\item As the previous sections show, there is a fair amount of additional software 
+implementation to complete.  As is usually the case, users would 
+also appreciate attention
+to performance and to the clarity of errors and warnings.
+\item Research is required to clarify the semantics and usability of
+outstanding features of JML.  Usage of JML is now broad enough that formal 
+reference documentation would also be valuable.
+\item The current implementation supports the static checking of
+a stable core of JML.  With this initial implementation of frame condition checking
+and of model fields, represents clauses and use of routine calls in 
+annotations, ESC/Java2 can now be used on complex and abstract specifications of
+larger bodies of software.
+Consequently, there is a considerable need for good experimental usage studies
+that confirm
+that this core of JML is useful in annotations
+and that the operation of ESC/Java2 (and Simplify) on that core is correct and valuable.
+\item The logic into which Java and JML are embedded in ESC/Java is, by design and
+admission of the original authors, neither complete or fully sound.  This was the 
+result of an
+engineering judgement in favor of performance and usablility.  Research that studies
+expanded and larger use cases may show whether this design decision 
+is generally useful in
+practical static checking or whether a fuller and more complicated state-based logic
+is required for useful results to be obtained.
+\end{itemize}
+
+Though not part of this project, there is another set of beneficial work to be done.
+There are now a number of tools \cite{Burdy-etal03}, generated by different research groups, 
+that interact
+with JML.  Among other tools, the jmlc\cite{Cheon-Leavens02b}
+tool dynamically checks specifications; the ESC/Java2 tool statically
+checks specifications; Daikon [TODO-ref] generates specifications from execution
+histories; jmlunit \cite{Cheon-Leavens02} generates test cases from specifications.
+To provide a productive working environment for large-scale projects that use these
+tools but are not focused on their improvement or analysis, the tools need to be
+better integrated.  To a fair extent that integration is present, but there are
+additional opportunities.  For example, a close integration of the annotations
+produced by Daikon with those used by other tools would be a worthy endeavor.   
+
+\section{Conclusion}
+TODO ???
+
+%ACKNOWLEDGMENTS are optional
+\section{Acknowledgments}
+The authors would like to acknowledge both the work of the team that generated
+ESC/Java as well as Gary Leavens and collaborators at Iowa State University who
+generated JML.  These teams provided the twin foundations on which the current
+ work is built.
+In addition, the many other research groups that use and critique both 
+JML and ESC/Java2 have
+provided a research environment in which the work described here is useful.
+Joseph Kiniry is supported by ... TODO ...
+
+%
+% The following two commands are all you need in the
+% initial runs of your .tex file to
+% produce the bibliography for the citations in your paper.
+\bibliographystyle{abbrv}
+\bibliography{PASTE2004}  
+% You must have a proper ".bib" file
+%  and remember to run:
+% latex bibtex latex latex
+% to resolve all references
+%
+% ACM needs 'a single self-contained file'!
+%
+%APPENDICES are optional
+\balancecolumns
+
+% That's all folks!
+\end{document}
