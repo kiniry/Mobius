@@ -108,20 +108,20 @@
 
 (BG_PUSH
   (FORALL (t)
-    (PATS (_array t))
-    (<: (_array t) |T_java.lang.Cloneable|)))
+    (PATS (|_array| t))
+    (<: (|_array| t) |T_java.lang.Cloneable|)))
     
 (BG_PUSH
   (FORALL (t)
-    (PATS (elemtype (_array t)))
-    (EQ (elemtype (_array t)) t)))
+    (PATS (elemtype (|_array| t)))
+    (EQ (elemtype (|_array| t)) t)))
 
 (BG_PUSH
   (FORALL (t0 t1) 
-    (PATS (<: t0 (_array t1)))
-    (IFF (<: t0 (_array t1))
+    (PATS (<: t0 (|_array| t1)))
+    (IFF (<: t0 (|_array| t1))
       (AND
-	(EQ t0 (_array (elemtype t0)))
+	(EQ t0 (|_array| (elemtype t0)))
 	(<: (elemtype t0) t1)))))
 
 ; === ESCJ 8: Section 2.1
@@ -373,8 +373,8 @@
 
 (BG_PUSH
    (FORALL (t)
-      (PATS (_array t))
-      (<: (_array t) arrayType)))
+      (PATS (|_array| t))
+      (<: (|_array| t) arrayType)))
 
 (BG_PUSH
   (FORALL (s)
