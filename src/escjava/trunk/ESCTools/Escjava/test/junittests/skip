@@ -23,6 +23,7 @@ ModifiesPure.java
 ## A bug / tests to be fixed
 GhostFieldOverride.java
 SetComprehension.java
+MethodInSpec.java
 ## Modify everything tests
 ModEverything.java
 ModE.java
