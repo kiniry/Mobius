@@ -145,7 +145,7 @@ class ASTClassFileParser extends ClassFileParser
     /**
      * Parse the file and set <code>typeDecl</code>.
      */
-    //@ also_ensures typeDecl != null
+    //@ also ensures typeDecl != null
     protected void parse_file(DataInput stream)
 	throws ClassFormatError, IOException
     {

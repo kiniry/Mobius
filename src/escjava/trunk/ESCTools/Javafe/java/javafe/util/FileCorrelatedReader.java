@@ -131,7 +131,7 @@ public class FileCorrelatedReader extends LocationManagerCorrelatedReader
      * Closes us.  No other I/O operations may be called on us after
      * we have been closed.
      */
-    //@ also_modifies stream;
+    //@ also modifies stream;
 
     public void close() {
         super.close();
