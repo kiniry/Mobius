@@ -18,7 +18,9 @@ import constants.BCConstantFieldRef;
 import formula.Connector;
 import formula.Formula;
 import formula.Quantificator;
+
 import formula.atomic.Predicate;
+import formula.atomic.Predicate0Ar;
 import formula.atomic.Predicate2Ar;
 import formula.atomic.PredicateSymbol;
 import application.JavaApplication;
@@ -120,10 +122,10 @@ public class ClassStateVector {
 		
 	
 	public Formula atState(int state, ModifiesSet modSet) {
-		Formula f = Predicate.TRUE;
+		Formula f = Predicate0Ar.TRUE;
 		
 		if (modSet.modifiesEverything()) {
-			return Predicate.TRUE;
+			return Predicate0Ar.TRUE;
 		}
 		//deprecated
 		/*Formula modifiesAtState = modSet.getPostcondition(state);*/
@@ -143,19 +145,9 @@ public class ClassStateVector {
 		return f;
 	}
 	
-/*	public Formula atState(int state) {
-		Formula f = Predicate.TRUE;
-		for (int i = 0 ; i < stateVector.size() ; i++) {
-			BCConstantFieldRef fieldRef = (BCConstantFieldRef) stateVector.elementAt(i);
-			Formula forAllfAtStateEqf = getFieldAtState( state, fieldRef);
-			f = Formula.getFormula(f, forAllfAtStateEqf, Connector.AND );
-		}
-		return f;
-	}*/
 	
 	private Formula getFieldAtState(int state, BCConstantFieldRef fieldRef ) {
 		Variable objDeref =  new Variable(FreshIntGenerator.getInt(), JavaReferenceType.ReferenceType );
-		
 		// typeof(o) <: typeof (fieldRef)
 		Predicate2Ar domainObjDeref = new Predicate2Ar(new TYPEOF(objDeref) , fieldRef.getType(), PredicateSymbol.SUBTYPE);
 		
@@ -166,7 +158,7 @@ public class ClassStateVector {
 		} else {
 			fAtStateEqf = new Predicate2Ar(  fAcc, fAcc.copy().atState(state) , PredicateSymbol.EQ);
 		}
-			Formula forAllfAtStateEqf = Formula.getFormula(fAtStateEqf,  new Quantificator(Quantificator.FORALL, objDeref,domainObjDeref ));
+		Formula forAllfAtStateEqf = Formula.getFormula(Formula.getFormula(domainObjDeref, fAtStateEqf  , Connector.IMPLIES ),  new Quantificator(Quantificator.FORALL, objDeref));
 		return forAllfAtStateEqf;
 		
 	}

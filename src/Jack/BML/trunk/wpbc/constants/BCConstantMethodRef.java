@@ -9,7 +9,7 @@ package constants;
 import bcclass.BCConstantPool;
 import bcclass.utils.MethodSignature;
 import bcexpression.javatype.JavaType;
-import bcexpression.substitution.RefFunction;
+import bcexpression.overload.RefFunction;
 
 /**
  * @author mpavlova

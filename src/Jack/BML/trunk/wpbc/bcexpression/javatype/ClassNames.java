@@ -13,6 +13,7 @@ package bcexpression.javatype;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class ClassNames {
+	public static final String Exception = "Ljava/lang/Exception;" ;
 	
 	public static final String ARITHMETICException = "Ljava/lang/ArithmeticException;" ;
 	

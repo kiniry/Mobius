@@ -19,10 +19,10 @@ public class NULL extends Expression {
 	private static final NULL NULL = new NULL();
 	private NULL() {}
 	
+
 	public static NULL getNULL() {
 		return NULL;
 	}
-	
 	
 	/* (non-Javadoc)
 	 * @see bcexpression.Expression#getType()
@@ -47,7 +47,7 @@ public class NULL extends Expression {
 	 * @see bcexpression.Expression#toString()
 	 */
 	public String toString() {
-		return "null";
+		return "NULL";
 	}
 
 	/* (non-Javadoc)

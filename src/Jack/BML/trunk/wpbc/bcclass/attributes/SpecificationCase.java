@@ -9,6 +9,7 @@ package bcclass.attributes;
 import formula.Connector;
 import formula.Formula;
 import formula.atomic.Predicate;
+import formula.atomic.Predicate0Ar;
 
 /**
  * @author mpavlova
@@ -59,7 +60,7 @@ public class SpecificationCase {
 	public Formula getPostcondition() {
 		
 		
-		if ( (invariant != null)&&(invariant != Predicate.TRUE) ) {
+		if ( (invariant != null)&&(invariant != Predicate0Ar.TRUE) ) {
 			postcondition = Formula.getFormula( invariant, postcondition, Connector.AND);
 		} 
 		return postcondition;

@@ -5,7 +5,9 @@
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 package constants;
-import org.apache.bcel.classfile.ConstantFieldref;
+
+
+import org.apache.bcel.generic.ARRAYLENGTH;
 
 import application.JavaApplication;
 import bcclass.BCClass;
@@ -14,7 +16,7 @@ import bcclass.BCField;
 import bcexpression.Expression;
 import bcexpression.ValueOfConstantAtState;
 import bcexpression.javatype.JavaType;
-import bcexpression.substitution.RefFunction;
+import bcexpression.overload.RefFunction;
 /**
  * @author mpavlova
  * 
@@ -85,11 +87,38 @@ public class BCConstantFieldRef extends BCConstantRef implements RefFunction {
 		return valueOfFieldAtState;
 	}
 	/**
-	 * two constant pool field references ( not oblkigatory from the same constant pool ) are equal
+	 * two constant pool field references ( not obligatory from the same constant pool ) are equal
 	 * if they are references to the same field, i.e. the class in which the field is declared is the
 	 * same and the field names are the same
  	 */
 	public boolean equals(Expression expr ) {
+		
+		// case for array lenght constants
+		if ( ( expr instanceof ArrayLengthConstant ) && ( this instanceof ArrayLengthConstant)) {
+			return true;
+		}
+		if ( ( expr instanceof ArrayLengthConstant ) && ( !(this instanceof ArrayLengthConstant)) ) {
+			return false;
+		}
+		
+		if ( ( this instanceof ArrayLengthConstant ) && ( !( expr  instanceof ArrayLengthConstant)) ) {
+			return false;
+		}
+		
+		
+		// the case for MemUsed constants
+		if ( ( expr instanceof MemUsedConstant ) && ( this instanceof MemUsedConstant)) {
+			return true;
+		}
+		if ( ( expr instanceof MemUsedConstant ) && ( !(this instanceof MemUsedConstant)) ) {
+			return false;
+		}
+		
+		if ( ( this instanceof MemUsedConstant ) && ( !( expr  instanceof MemUsedConstant)) ) {
+			return false;
+		}
+		
+		
 		if ( !(expr instanceof BCConstantFieldRef)) {
 			return false;
 		}

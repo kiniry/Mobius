@@ -6,6 +6,8 @@
  */
 package constants;
 
+import bcexpression.Expression;
+
 /**
  * @author mpavlova
  *
@@ -25,5 +27,16 @@ public class ArrayLengthConstant  extends BCConstantFieldRef {
 		return "_length" ;
 	}
 	
+	
+	public boolean equals(Expression expr ) {
+		if (expr == ARRAYLENGTHCONSTANT) {
+			return true;
+		}
+		return false;
+	}
+	
+	public BCConstantClass getConstantClass() {
+		return null;
+	}
 
 }

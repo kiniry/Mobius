@@ -6,6 +6,8 @@
  */
 package bc.io;
 
+import java.util.Vector;
+
 import modifexpression.AllArrayElem;
 import modifexpression.ArrayElemFromTo;
 import modifexpression.Everything;
@@ -48,6 +50,7 @@ import bcexpression.ExpressionConstants;
 import bcexpression.FieldAccess;
 import bcexpression.NULL;
 import bcexpression.NumberLiteral;
+import bcexpression.Variable;
 import bcexpression.javatype.JavaObjectType;
 import bcexpression.javatype.JavaType;
 import bcexpression.jml.ELEMTYPE;
@@ -56,6 +59,8 @@ import bcexpression.jml.OLD;
 import bcexpression.jml.RESULT;
 import bcexpression.jml.TYPEOF;
 import bcexpression.jml._TYPE;
+import bcexpression.vm.Counter;
+import bcexpression.vm.Stack;
 import constants.ArrayLengthConstant;
 import constants.BCConstant;
 import constants.BCConstantFieldRef;
@@ -63,7 +68,9 @@ import constants.BCConstantMethodRef;
 import constants.BCConstantUtf8;
 import formula.Connector;
 import formula.Formula;
+import formula.Quantificator;
 import formula.atomic.Predicate;
+import formula.atomic.Predicate0Ar;
 import formula.atomic.Predicate2Ar;
 import formula.atomic.PredicateSymbol;
 
@@ -492,15 +499,23 @@ public class AttributeReader {
 		pos = pos + 1;
 		return _byte;
 	}
+	
+	/**
+	 * this method serves to get the value in the next at position pos 
+	 */
+	private static int checkByteValue(byte[] bytes, int p) {
+		int _byte = bytes[p] & 0xff;
+		return _byte;
+	}
 
 	private static Formula readFormula(byte[] bytes)
 		throws ReadAttributeException {
 		int _byte = readByte(bytes);
 		if (_byte == Code.TRUE) {
-			return Predicate.TRUE;
+			return Predicate0Ar.TRUE;
 		}
 		if (_byte == Code.FALSE) {
-			return Predicate.FALSE;
+			return Predicate0Ar.FALSE;
 		}
 		if (_byte == Code.AND) {
 			Formula f1 = readFormula(bytes);
@@ -564,7 +579,7 @@ public class AttributeReader {
 			Expression expr1 = readExpression(bytes);
 			Expression expr2 = readExpression(bytes);
 			Formula predicate =
-				Predicate2Ar.getPredicate(expr1, expr2, PredicateSymbol.NOTEQ);
+				Formula.getFormula( Predicate2Ar.getPredicate(expr1, expr2, PredicateSymbol.EQ) , Connector.NOT);
 			return predicate;
 		}
 		if (_byte == Code.INSTANCEOF) {
@@ -583,15 +598,28 @@ public class AttributeReader {
 		}
 		if (_byte == Code.EXISTS) {
 
+			
 		}
-
 		if (_byte == Code.FORALL) {
-
+			int numBoundVars  = readByte(bytes);
+			Variable[] vars = new Variable[numBoundVars ];
+			for (int i = 0; i < numBoundVars ; i++) {
+				JavaType jType = readJavaType(bytes);
+				Variable var = new Variable(i, jType);
+				vars[i] = var;
+			}
+			Quantificator forall= new Quantificator(Quantificator.FORALL, vars ); 
+            Formula f = readFormula(bytes);
+            Formula forallFormula = Formula.getFormula( f, forall);
+            return forallFormula;
 		}
 		return null;
 	}
 
-	private static Expression readExpression(byte[] bytes)
+	
+
+	
+    private static Expression readExpression(byte[] bytes)
 		throws ReadAttributeException {
 		int _byte = readByte(bytes);
 		if (_byte == Code.PLUS) { // ARithmetic 
@@ -830,10 +858,24 @@ public class AttributeReader {
 						+ cpIndex);
 			}
 			return constantUtf8;
-		}
+		} else if ( _byte == Code.BOUND_VAR) {
+			int ind = readByte(bytes);
+			Variable var = new Variable(ind);  
+			return var;
+		} else if ( _byte == Code.STACK) {
+			ArithmeticExpression counter = (ArithmeticExpression)readExpression(bytes);
+			Stack stack = new Stack(counter);   
+			return stack;
+		} else if ( _byte == Code.STACK_COUNTER) {
+			Counter c = Counter.getCounter();
+			return c;
+		} 
 		// may be there should be translation for strings
 		return null;
 	}
+    
+    
+    
 
 /*	*//**
 	 * reads the encoding of a cp constant 

@@ -19,6 +19,7 @@ import bcexpression.Expression;
 import formula.Connector;
 import formula.Formula;
 import formula.atomic.Predicate;
+import formula.atomic.Predicate0Ar;
 
 
 /**
@@ -41,7 +42,7 @@ public class ModifiesSet implements BCAttribute {
 	}
 	 
 	public Formula getPostcondition( int state) {
-		Formula modPost = Predicate.TRUE;
+		Formula modPost = Predicate0Ar.TRUE;
 		if (modifiesExpression == null ) {
 			return modPost;
 		}

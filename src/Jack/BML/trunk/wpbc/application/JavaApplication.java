@@ -69,4 +69,10 @@ public class JavaApplication {
 		return bcClass;
 	}
 
+	/**
+	 * @return Returns the classes.
+	 */
+	public Enumeration getClasses() {
+		return classes.elements();
+	}
 }

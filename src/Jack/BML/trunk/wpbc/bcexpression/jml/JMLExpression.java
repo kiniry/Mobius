@@ -7,7 +7,9 @@
 package bcexpression.jml;
 
 import bcexpression.Expression;
+import bcexpression.NULL;
 import bcexpression.javatype.JavaType;
+import bcexpression.ref.Reference;
 
 
 
@@ -33,5 +35,15 @@ public  abstract class JMLExpression extends Expression {
 	public JMLExpression(Expression _e1, Expression _e2) {	
 		super(_e1, _e2);		
 	}
-		
+
+/*	public Expression getTypeOf( Expression expr) {
+		if (expr == NULL._NULL) {
+			return NULL._NULL.getType();
+		}
+		if (expr instanceof Reference ) {
+			return expr.getType();
+		}
+		Expression typeOfExpr = new TYPEOF(expr);
+		return typeOfExpr;
+	}*/
 }

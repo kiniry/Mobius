@@ -6,6 +6,7 @@
  */
 package bcexpression;
 
+import org.apache.bcel.classfile.LocalVariable;
 import org.apache.bcel.generic.LocalVariableGen;
 
 
@@ -26,19 +27,32 @@ public class BCLocalVariable extends Expression {
 	private  int start_pc;
 	private BCMethod method ;
 	
-	public BCLocalVariable(String _name, int _start_pc,  int _index,  JavaType _type , BCMethod _method) {
+	// when this a register that doesnot store any local variable
+	private static int UNDEF_LEN = -1;
+	public BCLocalVariable(String _name, int _start_pc, int _length,  int _index,  JavaType _type , BCMethod _method) {
 		name = _name;
 		start_pc = _start_pc;
+		length = _length;
 		index = _index;
 		type = _type;
 		method = _method;
 	}
 
-	public BCLocalVariable(LocalVariableGen lv, BCMethod _method) {
-		this(lv.getName(), lv.getStart().getPosition() ,  lv.getIndex(), JavaType.getJavaType( lv.getType()), _method);	
-		
+	public BCLocalVariable(LocalVariable lv, JavaType _type, BCMethod _method) {
+		this(lv.getName(), lv.getStartPC() , lv.getLength() ,  lv.getIndex(), _type , _method);	
 	}
 
+	/**
+	 * this constructor is for constructing a register object that doesnot represent
+	 * any local variable
+	 * 
+	 * @param index
+	 * @param _method
+	 */
+	public BCLocalVariable(int index ,  BCMethod _method) {
+		this(null, 0 ,UNDEF_LEN   , index , null , _method);	
+	}
+	
 	/**
 	 * @return
 	 */
@@ -122,7 +136,7 @@ public class BCLocalVariable extends Expression {
 	 * @see bcexpression.Expression#copy()
 	 */
 	public Expression copy() {
-		BCLocalVariable copy = new BCLocalVariable(name, start_pc, index, type, method);
+		BCLocalVariable copy = new BCLocalVariable(name, start_pc, length, index, type, method);
 		return copy;
 	}
 	

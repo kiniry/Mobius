@@ -7,8 +7,8 @@
 package bcexpression;
 
 import bcexpression.javatype.JavaArrType;
-import bcexpression.substitution.FunctionApplication;
-import bcexpression.substitution.RefFunction;
+import bcexpression.overload.FunctionApplication;
+import bcexpression.overload.RefFunction;
 import bcexpression.vm.Stack;
 
 

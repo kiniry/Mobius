@@ -27,14 +27,15 @@ public class StaticFieldAccess extends FieldAccess {
 		super( _constantFieldRef, _clazz);
 		
 	}
-	/*
+/*	
 	 * (non-Javadoc)
 	 * 
 	 * @see bcexpression.Expression#getType()
-	 */
+	 
 	public Expression getType() {
+
 		return new TYPEOF(this);
-	}
+	}*/
 	/**
 	 * @return
 	 */

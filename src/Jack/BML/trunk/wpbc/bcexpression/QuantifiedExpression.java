@@ -6,7 +6,7 @@
  */
 package bcexpression;
 
-import java.util.Vector;
+
 
 import formula.Formula;
 import formula.Quantificator;
@@ -20,17 +20,23 @@ import formula.Quantificator;
 public class QuantifiedExpression extends Expression {
 	
 	
-	
-	public QuantifiedExpression(Quantificator _q, Expression expr  ) {
+	private Expression domain;
+	public QuantifiedExpression(Quantificator _q, Formula domain , Expression expr  ) {
 		super(_q, expr);
+		this.domain = domain;
 	}
 	
 	public Expression substitute(Expression _e, Expression _v) {
-		//Util.dump(toString());
-		
+		//Util.dump(toString());	
 		Quantificator quantificator = (Quantificator)getSubExpressions()[0];
-		Expression boundExpr = quantificator.getBoundVar();
-		if (_e.equals(boundExpr)) {
+		Expression[] boundExpr = quantificator.getBoundVars();
+		int i = 0;
+		for (i = 0 ; i < boundExpr.length; i++) {
+			if (_e.equals(boundExpr)) {
+				break;
+			}
+		}
+		if ( i < boundExpr.length) {
 			return this;
 		}
 		Expression subst = getSubExpressions()[1];
@@ -53,7 +59,8 @@ public class QuantifiedExpression extends Expression {
 		Expression[] exp = new Expression[2];
 		exp[0] = getSubExpressions()[0].copy();
 		exp[1] = getSubExpressions()[1].copy();
-		QuantifiedExpression qExp = new QuantifiedExpression((Quantificator)exp[0], exp[1] );
+		Formula domainC = (Formula)domain.copy();
+		QuantifiedExpression qExp = new QuantifiedExpression((Quantificator)exp[0], domainC,  exp[1] );
 		return qExp;
 	}
 	
@@ -61,28 +68,30 @@ public class QuantifiedExpression extends Expression {
 	 * 
 	 * @return an array of copied elements of the array
 	 */
-	public Quantificator[] getQuantificator()  {
+	public Quantificator getQuantificator()  {
 		/*return (Quantificator)getSubExpressions()[0];*/
-		if (!(getSubExpressions()[1] instanceof QuantifiedExpression ) ) {
+		/*if (!(getSubExpressions()[1] instanceof QuantifiedExpression ) ) {
 			return  new Quantificator[]{(Quantificator)getSubExpressions()[0]};
-		}
+		}*/
 		
-		Quantificator[] _q = ((QuantifiedExpression)getSubExpressions()[1]).getQuantificator();
+		/*Quantificator[] _q = ((QuantifiedExpression)getSubExpressions()[1]).getQuantificator();
 		Quantificator[] q = new Quantificator[_q.length + 1];
 		
 		q[0] = (Quantificator)getSubExpressions()[0];
-		System.arraycopy(_q, 0, q , 1, _q.length );
+		System.arraycopy(_q, 0, q , 1, _q.length );*/
+		Quantificator q = (Quantificator)getSubExpressions()[0].copy();
+		
 		return q;
 	}
 	
 	
 	
-	public Expression getQuantifiedExpression()  {
+	public Expression getTheExpressionQuantified()  {
 		if ( !(getSubExpressions()[1] instanceof QuantifiedExpression )) {
 			return getSubExpressions()[1];
 		}
 		QuantifiedExpression quantifiedExpr = (QuantifiedExpression ) getSubExpressions()[1];;
-		Expression expr = quantifiedExpr.getQuantifiedExpression();
+		Expression expr = quantifiedExpr.getTheExpressionQuantified();
 		return expr;
 	}
 }

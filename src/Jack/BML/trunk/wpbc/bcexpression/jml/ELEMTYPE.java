@@ -9,9 +9,9 @@ package bcexpression.jml;
 import bcexpression.Expression;
 import bcexpression.javatype.JavaArrType;
 import bcexpression.javatype.JavaReferenceType;
+import bcexpression.overload.FunctionApplication;
+import bcexpression.overload.RefFunction;
 import bcexpression.ref.ArrayReference;
-import bcexpression.substitution.FunctionApplication;
-import bcexpression.substitution.RefFunction;
 
 
 /**

@@ -11,7 +11,7 @@ package constants;
 
 /**
  * @author io
- * basically this are the constant pool data structures that are pointing to Constant_Class_Info structures.
+ * basically these are the constant pool data structures that are pointing to Constant_Class_Info structures.
  * 
  *   CONSTANT_Fieldref_info {
     	u1 tag;

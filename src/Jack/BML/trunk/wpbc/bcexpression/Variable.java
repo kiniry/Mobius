@@ -6,15 +6,12 @@
  */
 package bcexpression;
 
-
-
-import bcexpression.javatype.JavaType;
 import bcexpression.jml.TYPEOF;
 
 /**
  * @author mpavlova
  *
- * This class represents a variable  (used for quantified and unbound variables)
+ * This class represents a bound variable  (used for quantified and unbound variables)
  */
 public class Variable extends Expression  {
 	private int id;

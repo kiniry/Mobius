@@ -8,6 +8,7 @@ import bcexpression.javatype.JavaType;
 import formula.Connector;
 import formula.Formula;
 import formula.atomic.Predicate;
+import formula.atomic.Predicate0Ar;
 /**
  * @author Mariela
  * 
@@ -53,7 +54,7 @@ public class ExsuresTable implements BCAttribute {
 		}
 		// if no exc postcondition specificied for  this exception, then return false by default
 		if (exsures == null) {
-			return Predicate.FALSE;
+			return Predicate0Ar.FALSE;
 		}
 		Formula exsFormula = (Formula)exsures.getPredicate().copy();
 		return exsFormula;

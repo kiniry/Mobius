@@ -20,6 +20,14 @@ public class JavaArrType extends JavaReferenceType {
 	private JavaType elementType;
 	private JavaType basicType;
 	
+	
+	public static final JavaArrType ARRTYPE = new JavaArrType();
+	
+	
+	private JavaArrType() {
+		
+	}
+	
 	protected JavaArrType(JavaType _type) {
 		if (_type instanceof JavaArrType) {
 			setElementType(((JavaArrType)_type).getElementType());
@@ -117,5 +125,14 @@ public class JavaArrType extends JavaReferenceType {
 			return false;
 		}
 		return true;
+	}
+	
+	public String getSignature() {
+		String signature = super.getSignature();
+		if ( signature.endsWith(";")) {
+			 signature= signature.substring(0, signature.length() - 1 );
+		} 
+		return signature;
+		
 	}
 }

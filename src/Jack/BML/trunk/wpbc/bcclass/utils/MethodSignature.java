@@ -24,10 +24,13 @@ public class MethodSignature {
 		String signature = getSignature(argTypes, returnType);
 		return name + "|" + signature;
 	}
+	
 	public static String getSignature(String name ,JavaType[] argTypes, JavaType returnType) {
 		String signature = getSignature(argTypes, returnType);
 		return name + "|" + signature;
 	}
+	
+	
 	public static String getSignature(Type[] argTypes, Type returnType) {
 		StringBuffer buf = new StringBuffer("(");
 		int length = (argTypes == null)? 0 : argTypes.length;

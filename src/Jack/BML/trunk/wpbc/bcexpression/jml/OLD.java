@@ -49,8 +49,6 @@ public class OLD extends JMLExpression {
 		if (equals(_e1)) {
 			return _e2;
 		}
-//		Expression[] subExpr = getSubExpressions();
-//		subExpr[0] = subExpr[0].substitute(_e1, _e2);
 		return this;
 	}
 

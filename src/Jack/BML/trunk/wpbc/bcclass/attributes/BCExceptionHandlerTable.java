@@ -6,6 +6,8 @@
  */
 package bcclass.attributes;
 import org.apache.bcel.generic.CodeExceptionGen;
+
+import bcexpression.javatype.ClassNames;
 import bcexpression.javatype.JavaObjectType;
 import bcexpression.javatype.JavaType;
 /**
@@ -20,12 +22,17 @@ public class BCExceptionHandlerTable implements BCAttribute {
 	public BCExceptionHandlerTable(CodeExceptionGen[] _excH) {
 		excHandlers = new ExceptionHandler[_excH.length];
 		for (int i = 0; i < _excH.length; i++) {
+			JavaObjectType caughtExcType;
+			if (_excH[i].getCatchType() == null) {
+				caughtExcType = (JavaObjectType)JavaType.getJavaRefType(ClassNames.Exception );
+			} else {
+				caughtExcType = (JavaObjectType)JavaType.getJavaRefType(_excH[i].getCatchType() );
+			}
 			excHandlers[i] = new ExceptionHandler(
 					_excH[i].getStartPC()
 							.getPosition(), 
 					_excH[i].getEndPC().getPosition(),
-					(JavaObjectType) JavaType.getJavaRefType(_excH[i]
-							.getCatchType()), 
+					caughtExcType, 
 					_excH[i].getHandlerPC()
 							.getPosition());
 		}

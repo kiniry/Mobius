@@ -246,6 +246,23 @@ public abstract class Expression {
 		return this;
 	}
 	
+	/** 
+	 * callled from a loop entry pointt in order to initialize the value of this variable
+	 * @param pos
+	 * @return
+	 */
+	public Expression removeOldLoop(int pos) {
+		Expression[] subExpr = getSubExpressions();
+		if (subExpr == null) {
+			return this;
+		}
+		Expression[] subExprAtState = new Expression[subExpr.length];
+		for ( int i = 0; i < subExpr.length; i++ ) {
+			subExprAtState[i] = subExpr[i].removeOldLoop( pos);
+		}	
+		setSubExpressions(subExprAtState);
+		return this;
+	}
 
 }
 

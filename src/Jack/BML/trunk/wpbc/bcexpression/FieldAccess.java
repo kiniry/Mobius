@@ -7,9 +7,13 @@
 package bcexpression;
 
 
+
+
+import com.sun.corba.se.internal.core.Constant;
+
 import bcexpression.javatype.JavaType;
 import bcexpression.jml.TYPEOF;
-import bcexpression.substitution.FieldWITH;
+import bcexpression.overload.FieldOverload;
 
 import utils.Util;
 import constants.BCConstantClass;
@@ -24,6 +28,7 @@ public class FieldAccess extends Expression {
 	/*private BCConstantFieldRef constantFieldRef;
 */
 	/**
+	 * access to instance fields
 	 * @param _right
 	 * @param _left
 	 */
@@ -31,6 +36,16 @@ public class FieldAccess extends Expression {
 		Expression _constantFieldRef,
 		Expression _obj_ref) {
 		super(_constantFieldRef, _obj_ref);
+	}
+	
+	/**
+	 * access to static fields 
+	 * @param _right
+	 * @param _left
+	 */
+	public FieldAccess(
+		Expression _constantFieldRef) {
+		super(_constantFieldRef);
 	}
 	
 	/*
@@ -101,6 +116,17 @@ public class FieldAccess extends Expression {
 			return _e2.copy();
 		}
 		Expression constantFieldRef =  getFieldConstRef();
+		// in the case this field is a static field
+		if (getSubExpressions().length == 1) {
+			if (!(_e1 instanceof BCConstantFieldRef)) {
+				return this;
+			}
+			BCConstantFieldRef const_e1 = (BCConstantFieldRef)_e1.getSubExpressions()[0];
+			if ( const_e1.equals(constantFieldRef )) {
+				return _e2;
+			}
+			return this;
+		}
 		Expression obj = getSubExpressions()[1];
 		// in case _e1 is not an object of type FieldAccessExpression
 		if ( !( _e1 instanceof FieldAccess ) )  {
@@ -119,7 +145,7 @@ public class FieldAccess extends Expression {
 		}
 		// in case _e1 is a reference to the same field
 		obj = obj.substitute( _e1, _e2);
-		FieldWITH with  = new FieldWITH(constantFieldRef,  obj, _e1.getSubExpressions()[1].copy(), _e2.copy()); 
+		FieldOverload with  = new FieldOverload(constantFieldRef,  obj, _e1.getSubExpressions()[1].copy(), _e2.copy()); 
 		return with;
 	}
 	
@@ -128,8 +154,14 @@ public class FieldAccess extends Expression {
 	 * @see bcexpression.Expression#toString()
 	 */
 	public String toString() {
-		String s =
-			getSubExpressions()[0] + "(" + getSubExpressions()[1] + ")";
+		String s = null;
+		if (getSubExpressions().length == 1) {
+			s =
+				getSubExpressions()[0]+ "";
+		} else {
+			s =
+				getSubExpressions()[0] + "(" + getSubExpressions()[1] + ")";
+		}
 		return s;
 	}
 	
@@ -137,8 +169,14 @@ public class FieldAccess extends Expression {
 	 * @see bcexpression.Expression#copy()
 	 */
 	public Expression copy() {
+		
 		Expression[] copySubExpr = copySubExpressions();
-		FieldAccess copy = new FieldAccess(copySubExpr[0] ,copySubExpr[1] );
+		FieldAccess copy  = null;
+		if (copySubExpr.length == 2) {
+			copy = new FieldAccess(copySubExpr[0] ,copySubExpr[1] );
+		} else {
+			copy = new FieldAccess(copySubExpr[0] ) ;
+		}
 		return copy;
 	}
 	

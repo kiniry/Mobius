@@ -8,14 +8,21 @@ package bcclass;
 
 import java.util.Vector;
 
+import memory.allocation.MethodAllocation;
 import modifexpression.Everything;
 import modifexpression.ModifiesExpression;
+import modifexpression.ModifiesIdent;
 
 import org.apache.bcel.classfile.Attribute;
 import org.apache.bcel.classfile.LineNumber;
 import org.apache.bcel.classfile.LineNumberTable;
+import org.apache.bcel.classfile.LocalVariable;
+import org.apache.bcel.classfile.LocalVariableTable;
 import org.apache.bcel.classfile.Unknown;
 import org.apache.bcel.generic.*;
+
+import constants.BCConstantFieldRef;
+import constants.MemUsedConstant;
 
 import utils.Util;
 import bc.io.AttributeReader;
@@ -33,11 +40,18 @@ import bcclass.attributes.MethodSpecification;
 import bcclass.attributes.ModifiesSet;
 import bcclass.attributes.SingleLoopSpecification;
 import bcclass.attributes.SpecificationCase;
+import bcclass.utils.MethodSignature;
+import bcexpression.ArithmeticExpression;
 import bcexpression.BCLocalVariable;
 import bcexpression.Expression;
+import bcexpression.ExpressionConstants;
+import bcexpression.FieldAccess;
+import bcexpression.NumberLiteral;
 import bcexpression.javatype.JavaArrType;
 import bcexpression.javatype.JavaObjectType;
 import bcexpression.javatype.JavaType;
+import bcexpression.jml.OLD;
+import bcexpression.jml.OLD_LOOP;
 import bytecode.BCATHROW;
 import bytecode.BCInstruction;
 import bytecode.BCLoopEnd;
@@ -57,6 +71,7 @@ import bytecode.arithmetic.BCTypeSHR;
 import bytecode.arithmetic.BCTypeSUB;
 import bytecode.arithmetic.BCTypeUSHR;
 import bytecode.arithmetic.BCTypeXOR;
+import bytecode.block.IllegalLoopException;
 import bytecode.block.Trace;
 import bytecode.branch.BCGOTO;
 import bytecode.branch.BCIFEQ;
@@ -115,6 +130,7 @@ import bytecode.stackinstruction.BCPOP2;
 import formula.Connector;
 import formula.Formula;
 import formula.atomic.Predicate;
+import formula.atomic.Predicate0Ar;
 import formula.atomic.Predicate2Ar;
 import formula.atomic.PredicateSymbol;
 /**
@@ -128,21 +144,17 @@ public class BCMethod {
 	private BCInstruction[] bytecode;
 	private Trace trace;
 	private String name;
-	
-	
+		
 	//specification
 	private AssertTable assertTable;
 	private LoopSpecification loopSpecification;
 	private BlockSpecification blockSpecification;
 	private MethodSpecification methodSpecification;
 
-	public BCLocalVariable[] getLocalVariables() {
-		return localVariables;
-	}
 	private Vector proofObligation;
 
 	private BCLineNumber[] lineNumberTable;
-	private BCLocalVariable[] localVariables;
+	private RegisterTable localVariables;
 
 	private String signature;
 	private String[] argNames;
@@ -153,6 +165,8 @@ public class BCMethod {
 	private BCExceptionHandlerTable exceptionHandlerTable;
 	
 	private BCClass  clazz;
+	
+	// a flag that indicates if the control flow graph is intialized or not
 	private boolean initialised = false;
 	
 	private MethodGen bcelMethod;
@@ -165,15 +179,12 @@ public class BCMethod {
 	 *            structures
 	 * @param _constantPool
 	 */
-	public BCMethod(MethodGen _mg, BCClass _class)
+	public BCMethod(MethodGen _mg, BCClass _class, ConstantPoolGen cpGen)
 		throws ReadAttributeException {
 		clazz = _class;
-		setLocalVariables(_mg.getLocalVariables());
+		setLocalVariables(_mg, cpGen);
 		setExceptionsThrown(_mg.getExceptions());
-/*		constantPool = _class.getConstantPool();
-		invariant = _class.getClassInvariant();*/
 		name = _mg.getName();
-		signature = _mg.getSignature();
 		setArgNames(_mg.getArgumentNames());
 		setArgumentTypes(_mg.getArgumentTypes());
 		setReturnType(_mg.getReturnType());
@@ -189,14 +200,20 @@ public class BCMethod {
 
 	}
 	
+	public BCLocalVariable[] getLocalVariables() {
+		return localVariables.getLocalVariables();
+	}
+	
 	
 	// called from outside when the method should be initialised
-	public void initMethod() throws ReadAttributeException {
+	public void initMethod() throws ReadAttributeException, IllegalLoopException {
 		if (initialised) {
 			return;
 		}
+		signature =  MethodSignature.getSignature(getArgTypes() , getReturnType() );
+//		Util.dump("initMethod  " +clazz.getName() + "."+  getName() + " " + getSignature() );
 		bytecode =
-			BCMethod.wrapByteCode(bcelMethod, clazz.getConstantPool(), localVariables);
+			BCMethod.wrapByteCode(bcelMethod, this, clazz.getConstantPool(), localVariables);
 		exceptionHandlerTable =
 			new BCExceptionHandlerTable(bcelMethod.getExceptionHandlers());
 		setLineNumbers(
@@ -252,6 +269,26 @@ public class BCMethod {
 	}
 	
 	
+	/**
+	 * called in BCClass.initMethods(Method[] _methods, ConstantPoolGen cp)
+	 * sets the assertions if there are any
+	 */
+	public void setAssignToModel() {
+		/*if (assertTable == null) {
+			return;
+		}
+		Assert[] asserts = assertTable.getAsserts();
+		if (asserts == null) {
+			return;
+		}
+		for (int i = 0; i < asserts.length; i++) {
+			int pos = asserts[i].getPosition();
+			Formula assertion = asserts[i].getPredicate();
+			BCInstruction instr =
+				Util.getBCInstructionAtPosition(bytecode, pos);
+			instr.setAssert(assertion);
+		}*/
+	}
 /*	public Formula getStateVectorAtInstr(int state) {
 			Formula fieldsAtInstr = (Formula)clazz.getVectorAtState(state);
 			Formula localVarsAtInstr = (Formula)getLocalVariableStateAtInstr(state);
@@ -275,32 +312,32 @@ public class BCMethod {
 	 * @return
 	 */
 	public Formula getLocalVariableAtStateToHold(int state, ModifiesSet modifies) {
-		Formula localVarsAtInstr = Predicate.TRUE;
+		Formula localVarsAtInstr = Predicate0Ar.TRUE;
 		if (localVariables == null) {
 			return localVarsAtInstr;
 		}
-		for (int i = 1; i < localVariables.length; i++) {
-			if (modifies.modifies(localVariables[i])) {
+		for (int i = 1; i < localVariables.getLength(); i++) {
+			if (modifies.modifies(localVariables.getLocalVariableAtIndex(i))) {
 				continue;
 			}
-			Expression localVarAtInstr = localVariables[i].atState(state);
-			Predicate localVarAtInstrEqLocVar = new Predicate2Ar(localVariables[i], localVarAtInstr, PredicateSymbol.EQ );
+			Expression localVarAtInstr = localVariables.getLocalVariableAtIndex(i).atState(state);
+			Predicate localVarAtInstrEqLocVar = new Predicate2Ar(localVariables.getLocalVariableAtIndex(i), localVarAtInstr, PredicateSymbol.EQ );
 			localVarsAtInstr = Formula.getFormula(localVarsAtInstr, localVarAtInstrEqLocVar, Connector.AND );
 		}		
 		return localVarsAtInstr;
 	}
 	
 	public Formula  getLocalVarAtStateToAssume(int state, ModifiesSet modifies) {
-		Formula localVarsAtInstr = Predicate.TRUE;
+		Formula localVarsAtInstr = Predicate0Ar.TRUE;
 		if (localVariables == null) {
 			return localVarsAtInstr;
 		}
-		for (int i = 1; i < localVariables.length; i++) {
-			if (!modifies.modifies(localVariables[i])) {
+		for (int i = 1; i < localVariables.getLength(); i++) {
+			if (!modifies.modifies(localVariables.getLocalVariableAtIndex(i))) {
 				continue;
 			}
-			Expression localVarAtInstr = localVariables[i].atState(state);
-			Predicate localVarAtInstrEqLocVar = new Predicate2Ar(localVariables[i], localVarAtInstr, PredicateSymbol.EQ );
+			Expression localVarAtInstr = localVariables.getLocalVariableAtIndex(i).atState(state);
+			Predicate localVarAtInstrEqLocVar = new Predicate2Ar(localVariables.getLocalVariableAtIndex(i), localVarAtInstr, PredicateSymbol.EQ );
 			localVarsAtInstr = Formula.getFormula(localVarsAtInstr, localVarAtInstrEqLocVar, Connector.AND );
 		}		
 		return localVarsAtInstr;
@@ -324,10 +361,10 @@ public class BCMethod {
 			return;
 		}
 		for (int i = 0; i < loops.length; i++) {
-			SingleLoopSpecification loop = loops[i];
-			int pos = loop.getCpIndex();
-			Formula loopInvariant = loop.getInvariant();
-			Expression decreases = loop.getDecreases();
+			SingleLoopSpecification loopSpec = loops[i];
+			int pos = loopSpec.getCpIndex();
+			Formula loopInvariant = loopSpec.getInvariant();
+			Expression decreases = loopSpec.getDecreases();
 			BCLoopStart loopStart =
 				(BCLoopStart) Util.getBCInstructionAtPosition(bytecode, pos +3 );
 			loopStart.setInvariant(loopInvariant);
@@ -335,7 +372,7 @@ public class BCMethod {
 			loopStart.setMethod(this);
 			/* in the loop start no need to know the decreases formula .Needed only in the end of the loop */
 			//			loopStart.setDecreases(decreases);
-			loopStart.setModifies(loop.getModifies());
+			loopStart.setModifies(loopSpec.getModifies());
 			Vector loopEnds = loopStart.getLoopEndPositions();
 			for (int k = 0; k < loopEnds.size(); k++) {
 				int loopEndPos = ((Integer) loopEnds.elementAt(k)).intValue();
@@ -346,7 +383,7 @@ public class BCMethod {
 				loopEnd.setInvariant(loopInvariant);
 				loopEnd.setDecreases(decreases);
 				loopEnd.setMethod(this);
-				loopEnd.setModifies(loop.getModifies());
+				loopEnd.setModifies(loopSpec.getModifies());
 			}
 		}
 	}
@@ -363,7 +400,7 @@ public class BCMethod {
 						privateAttr,
 						clazz.getConstantPool(),
 						lineNumberTable, 
-						localVariables);
+						localVariables.getLocalVariables());
 				if (bcAttribute instanceof MethodSpecification) {
 					methodSpecification = (MethodSpecification) bcAttribute;
 					
@@ -418,20 +455,20 @@ public class BCMethod {
 		Util.dump("setSpecification for method  " + name);
 		if (name.equals("wrapByteCode")) {
 			SingleLoopSpecification loopSpec =
-				new SingleLoopSpecification(489, new ModifiesSet(new ModifiesExpression[]{null}, clazz.getConstantPool()), Predicate.TRUE, null);
+				new SingleLoopSpecification(489, new ModifiesSet(new ModifiesExpression[]{null}, clazz.getConstantPool()), Predicate0Ar.TRUE, null);
 			SingleLoopSpecification[] loopSpecs =
 				new SingleLoopSpecification[] { loopSpec };
 			loopSpecification = new LoopSpecification(loopSpecs);
 		}
 		SpecificationCase specCase =
 			new SpecificationCase(
-				Predicate.TRUE,
-				Predicate.TRUE,
+				Predicate0Ar.TRUE,
+				Predicate0Ar.TRUE,
 				new ModifiesSet(new ModifiesExpression[]{Everything.EVERYTHING}, clazz.getConstantPool()),
 				null);
 		methodSpecification =
 			new MethodSpecification(
-				Predicate.TRUE,
+				Predicate0Ar.TRUE,
 				new SpecificationCase[] { specCase });
 		/*BCConstantPool constantPool = clazz.getConstantPool();
 		if (name.equals("half")) {
@@ -645,16 +682,22 @@ public class BCMethod {
 	/**
 	 * @param gens
 	 */
-	private void setLocalVariables(LocalVariableGen[] gens) {
-		if (gens == null) {
+	private void setLocalVariables(MethodGen m , ConstantPoolGen cpGen) {
+		LocalVariableGen[] locVarTable = m.getLocalVariables();
+		if (locVarTable == null) {
 			return;
 		}
-		if (gens.length <= 0) {
+		
+		if (locVarTable.length <= 0) {
 			return;
 		}
-		localVariables = new BCLocalVariable[gens.length];
-		for (int i = 0; i < localVariables.length; i++) {
-			localVariables[i] = new BCLocalVariable(gens[i], this);
+		
+		localVariables = new RegisterTable();
+		
+		for (int i = 0; i < locVarTable.length ; i++) {
+			JavaType type = JavaType.getJavaType( locVarTable[i].getType());
+			BCLocalVariable lv = new BCLocalVariable(locVarTable[i].getLocalVariable(cpGen), type, this);
+			localVariables.addRegister( lv);
 		}
 	}
 	/**
@@ -677,7 +720,8 @@ public class BCMethod {
 		//				bcelIndex = bcelIndex - 1;
 		//			}
 		//		}
-		return localVariables[i];
+		
+		return localVariables.getLocalVariableAtIndex(i);
 	}
 	/**
 	 * @return
@@ -692,13 +736,13 @@ public class BCMethod {
 	 */
 	public Formula getExsuresForException(JavaObjectType _exc_type) {
 		if (methodSpecification == null) {
-			return Predicate.FALSE;
+			return Predicate0Ar.FALSE;
 		}
 		SpecificationCase[] specCases =
 			methodSpecification.getSpecificationCases();
 		ExsuresTable exsures = specCases[0].getExsures();
 		if (exsures == null) {
-			return Predicate.FALSE;
+			return Predicate0Ar.FALSE;
 		}
 		Formula exsuresPredicate =
 			exsures.getExcPostconditionFor(_exc_type.getSignature());
@@ -746,8 +790,9 @@ public class BCMethod {
 	 * called by outside ? once the Method object is initialised
 	 * 
 	 * @param _mg
+	 * @throws IllegalLoopException
 	 */
-	protected void initTrace() {
+	protected void initTrace() throws IllegalLoopException {
 		if (trace != null) {
 			return;
 		}
@@ -756,8 +801,9 @@ public class BCMethod {
 
 	public static BCInstruction[] wrapByteCode(
 		MethodGen _mg,
+		BCMethod meth,
 		BCConstantPool constantPool,
-		BCLocalVariable[] _lv) {
+		RegisterTable _lv) {
 		ConstantPoolGen _bcel_cp = _mg.getConstantPool();
 		InstructionList _il = _mg.getInstructionList();
 		if (_il == null) {
@@ -997,12 +1043,19 @@ public class BCMethod {
 				} else if (instr instanceof LocalVariableInstruction) {
 					int localVarIndex =
 						((LocalVariableInstruction) instr).getIndex();
+					BCLocalVariable locVar = null;
+					if ( _lv != null) {
+						locVar = _lv.getLocalVariableAtIndex(localVarIndex);
+					}
+					if (locVar == null) {
+						locVar = new BCLocalVariable(localVarIndex, meth);
+					}
 					if (instr instanceof LoadInstruction) {
-						_bc[i] = new BCTypeLOAD(_iharr[i], _lv[localVarIndex]);
+						_bc[i] = new BCTypeLOAD(_iharr[i], locVar);
 					} else if (instr instanceof StoreInstruction) {
-						_bc[i] = new BCTypeSTORE(_iharr[i], _lv[localVarIndex]);
+						_bc[i] = new BCTypeSTORE(_iharr[i], locVar);
 					} else if (instr instanceof IINC) {
-						_bc[i] = new BCIINC(_iharr[i], _lv[localVarIndex]);
+						_bc[i] = new BCIINC(_iharr[i], locVar);
 					}
 				} else if (instr instanceof PushInstruction) {
 					if (instr instanceof ACONST_NULL) {
@@ -1014,6 +1067,9 @@ public class BCMethod {
 					} else if (instr instanceof SIPUSH) {
 						_bc[i] = new BCSIPUSH(_iharr[i]);
 					}
+				}
+				if (_bc[i] == null) {
+					return null;
 				}
 				_bc[i].setBytecode(_bc);
 				_bc[i].setBCIndex(i);
@@ -1066,9 +1122,9 @@ public class BCMethod {
 			return;
 		}
 		//commented for test purposes
-		Util.dump("wp for " + name);
+		/*Util.dump("wp for " + name);*/
 		if (methodSpecification == null) {
-			trace.wp(Predicate.TRUE, null);
+			trace.wp(Predicate0Ar.TRUE, null);
 			return;
 		}
 		SpecificationCase[] specCases =
@@ -1076,7 +1132,7 @@ public class BCMethod {
 		Formula invariant = clazz.getClassInvariant();
 		Formula historyConstraints = clazz.getHistoryConstraints();
 		if (specCases == null) {
-			Formula post = Predicate.TRUE;
+			Formula post = Predicate0Ar.TRUE;
 			if ( invariant != null ) {
 				post = invariant;
 			}
@@ -1122,7 +1178,7 @@ public class BCMethod {
 	 * generates the proof obligations for one specification case
 	 * @param precondition
 	 */
-	public void setWP(Formula precondition ) {
+	private void setWP(Formula precondition ) {
 		Vector v = trace.getWP();
 		if (proofObligation == null) {
 			proofObligation = new Vector();
@@ -1141,7 +1197,6 @@ public class BCMethod {
 		}
 		
 	} 
-	
 	
 	public ExceptionHandler[] getExceptionHandlers() {
 		return exceptionHandlerTable.getExcHandlers();
@@ -1167,9 +1222,11 @@ public class BCMethod {
 	 * @return String
 	 */
 	public String getSignature() {
+//		signature =  MethodSignature.getSignature(getArgTypes() , getReturnType() );
 		return signature;
 	}
 
+	
 
 
 	/**
@@ -1197,7 +1254,7 @@ public class BCMethod {
 	}
 
 	public String toString() {
-		return name +  "  " +  signature;
+		return clazz.getName() + "." + name +  "" +  signature;
 	}
 	/**
 	 * @return Returns the methodSpecification.
@@ -1210,5 +1267,82 @@ public class BCMethod {
 	 */
 	public Vector getProofObligation() {
 		return proofObligation;
+	}
+	/**
+	 * @return Returns the argTypes.
+	 */
+	public JavaType[] getArgTypes() {
+		return argTypes;
+	}
+	
+	
+	///////////////////////////////////////////
+	///////////////////////////////////////////
+	/////Memory ALlocation//////////////////
+	////////////////////////////////////////
+	///////////////////////////////////////
+	private boolean checked = false ;
+	public void setChecked(boolean _checked) {
+		checked = _checked;
+	}
+	
+	public boolean isChecked() {
+
+		return checked;
+	}
+	
+	
+	private int allocations;
+	
+	
+	/**
+	 * @return Returns the allocations.
+	 */
+	public int getAllocations() {
+		return allocations;
+	}
+	/**
+	 * @param allocations The allocations to set.
+	 */
+	public void setAllocations(int _allocations) {
+		this.allocations = _allocations;
+	}
+	/**
+	 * @return Returns the clazz 
+	 */
+	public BCClass getClazz() {
+		return clazz;
+	}
+	
+	//////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////
+	////////////////Memory constraint consumption specification/////
+	////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////
+	public void initMethodSpecForMemoryConsumption() {
+		// requires MemUsed + alloc <= Max
+		FieldAccess memUsed =  new FieldAccess( MemUsedConstant.MemUsedCONSTANT);
+		Expression upperBoundForConsum  = new NumberLiteral(allocations);
+		Expression memUsed_pluc_upperBound = ArithmeticExpression.getArithmeticExpression(memUsed, upperBoundForConsum, ExpressionConstants.ADD );	
+		Formula requiresFormula =  
+				new Predicate2Ar(memUsed_pluc_upperBound , MethodAllocation.MAX , PredicateSymbol.LESSEQ);
+
+		// ensures MemUsed <= old(MemUsed) + alloc
+		Expression oldMemUsed_plus_upperBound = ArithmeticExpression.getArithmeticExpression(new OLD(memUsed), upperBoundForConsum,ExpressionConstants.ADD );		
+		Formula ensuresFormula = new Predicate2Ar(memUsed.copy(), oldMemUsed_plus_upperBound, PredicateSymbol.LESSEQ );
+		
+		// modifies MemUsed 
+		ModifiesSet modifies = null;		
+		ModifiesExpression modExpr = new ModifiesIdent(new FieldAccess( MemUsedConstant.MemUsedCONSTANT),clazz.getConstantPool() );
+		ModifiesSet modifSet = new ModifiesSet(new ModifiesExpression[]{modExpr} , clazz.getConstantPool() );
+
+		
+		// set the specification generated for every method
+		SpecificationCase specCase = new SpecificationCase(
+				requiresFormula,
+				ensuresFormula,				
+				modifSet,
+				null);		
+		methodSpecification = new MethodSpecification(Predicate0Ar.TRUE, new SpecificationCase[]{specCase});	
 	}
 }

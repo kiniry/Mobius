@@ -9,6 +9,7 @@ package bcclass.attributes;
 import formula.Connector;
 import formula.Formula;
 import formula.atomic.Predicate;
+import formula.atomic.Predicate0Ar;
 import bcexpression.javatype.JavaObjectType;
 
 /**
@@ -52,7 +53,7 @@ public class Exsures {
 		if (modifiesPostcondition == null) {
 			return;
 		}
-		if (modifiesPostcondition == Predicate.TRUE) {
+		if (modifiesPostcondition == Predicate0Ar.TRUE) {
 			return;
 		}
 		exsuresFormula  = Formula.getFormula( exsuresFormula, modifiesPostcondition, Connector.AND );

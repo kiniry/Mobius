@@ -317,24 +317,33 @@ public class ArithmeticExpression extends Expression {
 			&& (expr2 instanceof NumberLiteral)) {
 			return simplify((NumberLiteral) expr1, (NumberLiteral) expr2, op);
 		}
-		if ((expr1 instanceof ArithmeticExpression)
-			&& (expr2 instanceof NumberLiteral)
-			&& (op == ExpressionConstants.MULT
+		if ((op == ExpressionConstants.MULT
 				|| op == ExpressionConstants.DIV
-				|| op == ExpressionConstants.REM)) {
-			return _simplifyMultiplicative(
-				(ArithmeticExpression) expr1,
-				(NumberLiteral) expr2,
-				op);
+				|| op == ExpressionConstants.REM) ) {
+			if ((expr1 instanceof ArithmeticExpression)
+				&& (expr2 instanceof NumberLiteral)
+			) {
+				return _simplifyMultiplicative(
+					(ArithmeticExpression) expr1,
+					(NumberLiteral) expr2,
+					op);
+			}
 		}
-
-		if ((expr1 instanceof ArithmeticExpression)
-			&& (expr2 instanceof NumberLiteral)
-			&& (op == ExpressionConstants.ADD || op == ExpressionConstants.SUB)) {
-			return _simplifyAdditive(
-				(ArithmeticExpression) expr1,
-				(NumberLiteral) expr2,
-				op);
+		if ((op == ExpressionConstants.ADD || op == ExpressionConstants.SUB) ) {
+			if ((expr1 instanceof ArithmeticExpression)
+				&& (expr2 instanceof NumberLiteral)
+		        ) {
+				return _simplifyAdditive(
+					(ArithmeticExpression) expr1,
+					(NumberLiteral) expr2,
+					op);
+			}
+			if ( expr2 instanceof NumberLiteral ) {
+				int val2 = ((NumberLiteral)expr2 ).getLiteral();
+				if (val2 == 0) {
+					return expr1;
+				}
+			}
 		}
 		return null;
 	}

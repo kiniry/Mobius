@@ -22,6 +22,7 @@ import org.apache.bcel.generic.Type;
 
 import formula.Formula;
 import formula.atomic.Predicate;
+import formula.atomic.Predicate0Ar;
 
 import bc.io.AttributeReader;
 import bc.io.ReadAttributeException;
@@ -30,6 +31,7 @@ import bcclass.attributes.ClassInvariant;
 import bcclass.attributes.HistoryConstraints;
 import bcclass.attributes.ModifiesSet;
 import bcclass.utils.MethodSignature;
+import bytecode.block.IllegalLoopException;
 import utils.Util;
 import application.JavaApplication;
 
@@ -87,7 +89,7 @@ public class BCClass {
 		}
 		Formula f = stateVector.atState(state, modifSet);
 		if (f == null) {
-			return Predicate.TRUE;
+			return Predicate0Ar.TRUE;
 		}
 		return f;
 	}
@@ -169,8 +171,10 @@ public class BCClass {
 	 * NB :  if a method with this signature is not found then may be an exception must be thrown 
 	 * @param signature
 	 * @return
+	 * @throws ReadAttributeException
+	 * @throws IllegalLoopException
 	 */
-	public BCMethod lookupMethod(String signature) throws ReadAttributeException {
+	public BCMethod lookupMethod(String signature) throws ReadAttributeException, IllegalLoopException {
 		BCMethod m = null;
 		/*Util.dump("search for method " + signature + "   in class "  + className );
 		Util.dumpMethods(this);*/
@@ -208,9 +212,9 @@ public class BCClass {
 		//	for (int i = 0; i < _methods.length; i++)  {
 		for (int i = 0; i < _methods.length ;i++) {
 			MethodGen mg = new MethodGen(_methods[i], className, cp);
-			BCMethod bcm = new BCMethod(mg,  this);
+			BCMethod bcm = new BCMethod(mg,  this, cp);
 			String signature = mg.getSignature();	
-			String key = MethodSignature.getSignature(mg.getName(), mg.getArgumentTypes(), mg.getReturnType());
+			String key = MethodSignature.getSignature(bcm.getName(), bcm.getArgTypes(), bcm.getReturnType());
 			/*Util.dump(" add method " + key + " in class " + getName() );*/
 			methods.put(key,bcm);
 		}
@@ -220,7 +224,7 @@ public class BCClass {
 		return className;
 	}
 
-	public void wp() throws ReadAttributeException {
+	public void wp() throws ReadAttributeException, IllegalLoopException {
 		Iterator miter = methods.values().iterator();
 		while (miter.hasNext()) {
 			BCMethod m = (BCMethod) miter.next();
@@ -244,7 +248,7 @@ public class BCClass {
 	 */
 	public Formula getClassInvariant() {
 		if (classInvariant == null) {
-			return Predicate.TRUE;
+			return Predicate0Ar.TRUE;
 		}
 		return classInvariant.getClassInvariant();
 	}
@@ -253,7 +257,7 @@ public class BCClass {
 	 */
 	public Formula getHistoryConstraints() {
 		if (historyConstraints == null) {
-			return Predicate.TRUE;
+			return Predicate0Ar.TRUE;
 		}
 		return historyConstraints.getPredicate();
 	}
@@ -267,4 +271,6 @@ public class BCClass {
 	public String toString() {
 		return getName();
 	}
+	
+	
 }

@@ -58,7 +58,7 @@ public class ValueOfConstantAtState extends Expression {
 	 */
 	public String toString() {
 		Expression constant = getConstant();
-		String s = "(" + constant + " at instruction "  + atInstruction + ")";
+		String s = "(" + constant + "_at_instruction_"  + atInstruction +")";
 		return s;
 	}
 

@@ -95,4 +95,12 @@ public interface  Code {
 	public static final int MODIFIES_SINGLE_INDICE = 0xD5;
 	public static final int MODIFIES_INTERVAL = 0xD6;
 	public static final int MODIFIES_STAR = 0xD7;		
+	
+	public static final int BOUND_VAR = 0xE0;		
+	
+	
+	// virtual machine instructions
+	public static final int STACK = 0xF0;
+	public static final int STACK_COUNTER = 0xF1;
+	
 }
