@@ -54,6 +54,12 @@ public class GhostEnv extends EnvForTypeSig
 			   + (staticContext ? "static" : "complete")
 			   + " bindings of type "
 	    + peer.getExternalName() + " ]]");
+	java.util.Iterator i = collectGhostFields().keySet().iterator();
+	while (i.hasNext()) {
+		Object o = i.next();
+		System.out.println("    " + ((FieldDecl)o).id);
+	}
+	
     }
 
     // Code to locate our ghost fields by name
@@ -93,28 +99,33 @@ public class GhostEnv extends EnvForTypeSig
      * needed).
      */
 // FIXME - this gets called a great many times
-    private void collectGhostFields(TypeSig s) {
+    private void collectGhostFields(TypeSig s, boolean superclass) {
 	// Iterate over all TypeDeclElems in s:
 	TypeDecl d = s.getTypeDecl();
 	TypeDeclElemVec elems = d.elems;
 	for (int i = 0; i < elems.size(); i++) {
 	    TypeDeclElem elem = elems.elementAt(i);
+	    FieldDecl fd;
 	    if (elem instanceof GhostDeclPragma) {
-		FieldDecl ghost = ((GhostDeclPragma)elem).decl;
-		boolean isStatic = isStatic(ghost);
-		if ((isStatic || !staticContext) &&
-				!fields.containsKey(ghost)) {
-		    s.getEnclosingEnv().resolveType(ghost.type);
-		    fields.put(ghost, ghost);
-		}
+		fd = ((GhostDeclPragma)elem).decl;
 	    } else if (elem instanceof ModelDeclPragma) {
-		FieldDecl ghost = ((ModelDeclPragma)elem).decl;
-		boolean isStatic = isStatic(ghost);
-		if ((isStatic || !staticContext) &&
-				!fields.containsKey(ghost)) {
-		    s.getEnclosingEnv().resolveType(ghost.type);
-		    fields.put(ghost, ghost);
+		fd = ((ModelDeclPragma)elem).decl;
+	    } else if (superclass && (elem instanceof FieldDecl)) {
+		fd = (FieldDecl)elem;
+		if (Modifiers.isPrivate(fd.modifiers) ||
+		    Modifiers.isPackage(fd.modifiers)) {
+			if (!(GetSpec.findModifierPragma(fd.pmodifiers,
+				TagConstants.SPEC_PUBLIC) != null ||
+			    GetSpec.findModifierPragma(fd.pmodifiers,
+				TagConstants.SPEC_PROTECTED) != null)) continue;
 		}
+	    } else continue;
+
+	    boolean isStatic = isStatic(fd);
+	    if ((isStatic || !staticContext) &&
+			    !fields.containsKey(fd)) {
+		s.getEnclosingEnv().resolveType(fd.type);
+		fields.put(fd, fd);
 	    }
 	}
 
@@ -122,13 +133,13 @@ public class GhostEnv extends EnvForTypeSig
 	if (d instanceof ClassDecl) {
 	    TypeName superClass = ((ClassDecl)d).superClass;
 	    if (superClass != null)
-		collectGhostFields(TypeSig.getSig(superClass));
+		collectGhostFields(TypeSig.getSig(superClass),true);
 	} else if (d instanceof InterfaceDecl)
-	    collectGhostFields(Types.javaLangObject());
+	    collectGhostFields(Types.javaLangObject(),true);
 
 	for (int i = 0; i < d.superInterfaces.size(); i++)
 	    collectGhostFields(TypeSig.getSig(
-		d.superInterfaces.elementAt(i)));
+		d.superInterfaces.elementAt(i)),true);
     }
 
     static public boolean isStatic(FieldDecl d) {
@@ -148,7 +159,7 @@ public class GhostEnv extends EnvForTypeSig
 	    return fields;
 
 	fields = new Hashtable(5);
-	collectGhostFields(peer);
+	collectGhostFields(peer,false);
 	return fields;
     }
 
