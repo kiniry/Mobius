@@ -18,7 +18,7 @@ include Makefile.defs
 ##		make from this directory
 ##	all   - does all of the above
 ##	release - creates a release package
-##	release-notests - creates a releast package without running tests
+##	release-notests - creates a release package without running tests
 ##
 ## You can run each of these in a subdirectory and only apply it to
 ## the code in that subdirectory, if you like.  Note though, that the
@@ -88,6 +88,7 @@ clean-norel:
 		if [ ! $$d == Javafe ]; then \
 		    ( $(MAKE) -C $$d clean || exit 1) ; fi ; \
 	done
+	$(MAKE) -C docs clean
 	$(MAKE) -C Javafe clean
 
 ########################################### docs
@@ -126,16 +127,20 @@ javadoc:  build
 release: 
 	@echo Making release version ${ESC_PROJECT}-${ESC_VERSION}
 	${MAKE} clean
-	${MAKE} -k generate-patches generate-toplevel-archive
+	${MAKE} patch
 	${MAKE} build
 	${MAKE} test
 	${MAKE} make-release
 	${MAKE} test-release
 
+.PHONY: patch
+patch:
+	${MAKE} generate-patches generate-toplevel-archive zero-length-files
+
 .PHONY: release-notest
 release-notest:
 	${MAKE} clean
-	${MAKE} -k generate-patches generate-toplevel-archive
+	${MAKE} patch
 	${MAKE} build
 	${MAKE} make-release
 
@@ -206,19 +211,19 @@ generate-patches: clean
 
 .PHONY: generate-toplevel-archive
 generate-toplevel-archive: clean
-	mkdir -p ${RELTEMP}/ESCTools; \
+	mkdir -p ${RELTEMP}/ESCTools
 	cp ${ESCTOOLS_ROOT}/ChangeLog ${ESCTOOLS_ROOT}/Makefile ${ESCTOOLS_ROOT}/Makefile.defs \
 		${ESCTOOLS_ROOT}/Makefile.local.sample ${ESCTOOLS_ROOT}/README.first ${ESCTOOLS_ROOT}/README.txt \
-		${ESCTOOLS_ROOT}/TODO.kotl ${ESCTOOLS_ROOT}/build.xml ${ESCTOOLS_ROOT}/clean_env.sh ${RELTEMP}/ESCTools; \
-	cp -r ${ESCTOOLS_ROOT}/docs ${RELTEMP}/ESCTools; \
-	cp -r ${ESCTOOLS_ROOT}/Utils ${RELTEMP}/ESCTools; \
-	cp -r ${ESCTOOLS_ROOT}/jars ${RELTEMP}/ESCTools; \
-	mkdir -p ${RELTEMP}/ESCTools/Escjava/release/master/bin; \
-	cp ${ESCTOOLS_ROOT}/Escjava/release/master/bin/Simplify-1.5.4.macosx ${RELTEMP}/ESCTools/Escjava/release/master/bin; \
-	find ${RELTEMP} -name "CVS" -exec rm -rf {} \; ; \
-	(cd ${RELTEMP}; \
+		${ESCTOOLS_ROOT}/TODO.kotl ${ESCTOOLS_ROOT}/build.xml ${ESCTOOLS_ROOT}/clean_env.sh ${RELTEMP}/ESCTools
+	cp -r ${ESCTOOLS_ROOT}/docs ${RELTEMP}/ESCTools
+	cp -r ${ESCTOOLS_ROOT}/Utils ${RELTEMP}/ESCTools
+	cp -r ${ESCTOOLS_ROOT}/jars ${RELTEMP}/ESCTools
+	mkdir -p ${RELTEMP}/ESCTools/Escjava/release/master/bin
+	cp ${ESCTOOLS_ROOT}/Escjava/release/master/bin/Simplify-1.5.4.macosx ${RELTEMP}/ESCTools/Escjava/release/master/bin
+	-find ${RELTEMP} -name "CVS" -exec rm -rf {} \;  >& /dev/null
+	(cd ${RELTEMP}/ESCTools; \
 		tar cjf ${ESCTOOLS_ROOT}/../${ESC_PROJECT}-${ESC_VERSION}-`date "+%d-%m-%y"`-TopLevel.tbz \
-		ESCTools;); \
+		. ;)
 	rm -rf ${RELTEMP}/ESCTools
 
 ## Until we can figure out how to have diff/patch detect and generate
