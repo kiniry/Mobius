@@ -1,5 +1,8 @@
 *.aux
-*.log
-*.blg
 *.bbl
+*.blg
+*.log
 *.pdf
+.auto
+PASTE2004.dvi
+PASTE2004.out
