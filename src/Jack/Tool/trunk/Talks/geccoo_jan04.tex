@@ -31,13 +31,18 @@
 
 \maketitle
 
+\overlays{2}{
 \begin{slide}{Challenges within GECCOO}
 \begin{itemize}
-\item Specifying (and verifying) a large class of properties
-\item Keeping annotation-costs low
-\item Ensure specifications express what we want
+\item Formally specifying high-level security properties
+\item Semantics of specifications
+\item Composing specifications
 \end{itemize}
+
+\FromSlide{2}
+\Blue{This talk: focus on first point}
 \end{slide}
+}
 
 \begin{slide}{Contents}
 \begin{itemize}
@@ -71,14 +76,17 @@
 %\end{itemize}
 %\end{slide}
 
+\overlays{2}{
 \begin{slide}{Design goals JML}
 \begin{itemize}
 \item Readable specifications
 \item Provides unambiguous documentation
 \item Usable for any Java application
-\item Rigorous, formal semantics~-~amenable to tool support
+\item Rigorous, formal semantics~-~amenable to tool support 
+\fromSlide{2}{\Red{jmlc, ESC/Java(2), LOOP, Krakatoa, JACK}}
 \end{itemize}
 \end{slide}
+}
 
 %\begin{slide}{Method Specifications}
 %\begin{itemize}
@@ -250,25 +258,26 @@
 %\end{slide}
 %}
 
-\overlays{2}{
-\begin{slide}{Reminder: Jack}
-\begin{itemize}
-\item Design goals:
-  \begin{itemize}
-     \item High correctness assurance
-     \item Accessible user interface 
-     \item Prover independence
-     \item High degree of automation
-  \end{itemize}
-\FromSlide{2}
-\item Consequences:
-  \begin{itemize}
-     \item Developed as plug-in IDE Eclipse
-     \item Connections with automatic provers (B prover, Simplify)
-  \end{itemize}
-\end{itemize}
-\end{slide}
-}
+%\overlays{2}{
+%\begin{slide}{Jack: a tool for engineers}
+%\begin{itemize}
+%\item Design goals:
+%  \begin{itemize}
+%     \item High correctness assurance
+%     \item Accessible user interface 
+%     \item Prover independence
+%     \item High degree of automation
+%  \end{itemize}
+%\FromSlide{2}
+%\item Consequences:
+%  \begin{itemize}
+%     \item Developed as plug-in IDE Eclipse
+%     \item Connections with automatic provers (B prover, Simplify, HarVey, 
+%           \ldots) 
+%  \end{itemize}
+%\end{itemize}
+%\end{slide}
+%}
 
 \overlays{2}{
 \begin{slide}{Limitations of JML}
@@ -292,6 +301,18 @@ obeyed
 \item Need for tools to help security audit
 \end{itemize}
 \end{slide}
+
+\overlays{3}{
+\begin{slide}{Questions to be addressed}
+\begin{itemize}
+\item Relation between security notions and rules
+\onlySlide{1}{\item Guaranteeing rules are obeyed}\vspace*{-1.5em} 
+\FromSlide{2}\item \Red{Guaranteeing rules are obeyed}
+\FromSlide{3}\item Extension towards security automata: \emph{bridging} the gap
+between security notions and rules
+\end{itemize}
+\end{slide}
+}
 
 \overlays{5}{
 \begin{slide}{High-level security rules}
@@ -385,6 +406,25 @@ Similar annotations for \textttbf{commitTransaction},
 \end{alltt}
 \end{slide}
 
+\begin{slide}{Preconditions for methods}
+\begin{alltt}
+\textbf{public void m() \{
+   ...
+   \Blue{// will require TRANS == 0}
+   JCSystem.beginTransaction();
+   \Blue{// TRANS modified, ensures TRANS == 1}
+   ...
+   \Blue{// will require TRANS == 1}
+   JSSystem.commitTransaction();
+   \Blue{// TRANS modified, ensures TRANS == 0}
+   ...
+   \}}
+\end{alltt}
+\ \smallskip\\
+\Blue{Thus: precondition for \texttt{m()}: \texttt{TRANS
+== 0}}
+\end{slide}
+
 \begin{slide}{Some assumptions we make}
 \begin{itemize}
   \item Only variables in annotations are static and ghost of primitive type
@@ -430,47 +470,6 @@ V)  =
 
 
 
-\begin{slide}{Theoretical foundations: abstract weakest precondition}
-Abstract wp-calculus \PineGreen{\(\mathsf{wp}^\#\)}: considers only static 
-ghost variables\\
-Example rules:
-\[
-\begin{array}{l}
-\mathsf{\PineGreen{wp}}^{\PineGreen{\#}}(\mathtt{if
-(}c\mathtt{)}s_1\mathtt{\:else\:}s_2,Q) =\\
-\qquad
-\mathsf{\PineGreen{wp}}^{\PineGreen{\#}}(c, \mathsf{\PineGreen{wp}}^{\PineGreen{\#}}(s_1, Q)) \wedge
-\mathsf{\PineGreen{wp}}^{\PineGreen{\#}}(c,
-\mathsf{\PineGreen{wp}}^{\PineGreen{\#}}(s_2, Q))
-\end{array}
-\]
-
-\[
-\mathsf{\PineGreen{wp}}^{\PineGreen{\#}}(\mathsf{\Blue{call}}(m), Q) =
-  \mathsf{\Blue{requires}}(m) \wedge 
-  \forall \mathsf{\Red{mod}}(m). (\mathsf{\Blue{ensures}}(m) \Rightarrow Q)
-\]
-\end{slide}
-
-\begin{slide}{Results}
-\begin{itemize}
-\item Any proof in abstract wp-calculus, is proof in standard
-wp-calculus
-\[
-\forall P, Q\colon\mathsf{Pred}, s\colon\mathsf{Stmt}. 
-(P \Rightarrow \mathsf{\PineGreen{wp}}^{\PineGreen{\#}}(s, Q)) \Rightarrow
-               (P \Rightarrow \mathsf{\PineGreen{wp}}(s, Q))
-\]
-\item Precondition generation computes the \emph{free} part of the
-abstract weakest precondition
-\[
-\exists F\colon\mathsf{Pred}.  
-             \mathsf{\PineGreen{wp}}^{\PineGreen{\#}}(s, \lambda x. \mathsf{true}) = 
-             (\mathsf{\PineGreen{pre}}(s, \emptyset) \wedge \forall
-              \mathsf{\Red{mod}}(s). F) 
-\]
-\end{itemize}
-\end{slide}
 
 \begin{slide}{Experiments: checking atomicity properties}
 
@@ -525,34 +524,95 @@ transactions
 \end{slide}
 
 
-\begin{slide}{Extensions: security automata}
+\begin{slide}{Towards more generality:\\ Security automata}
 \begin{itemize}
-\item \Blue{Security automaton}: 
-\item Use security automaton to express properties
+\item \Blue{Security automaton}: monitors program behaviour,
+blocking/error upon unwanted behaviour 
+\item Use security automata to express security properties
 \item Automatic generation of core-annotations
 \item Use any JML tool to check whether program respects the property
 \end{itemize}
 \end{slide}
 
+\overlays{2}{
 \begin{slide}{Correctness}
 \begin{center}
 \Blue{If program satisfies annotations \\
       then it respects the security property}
 \end{center}
 \ \smallskip\\
+\FromSlide{2}
+Igor Siveroni (post doc) works on this\\
+First proof for simple while-language on the way
+\end{slide}
+}
+
+\overlays{3}{
+\begin{slide}{If program satisfies annotations \\
+      then it respects the security property}
 Approach:
 \begin{itemize}
-\item \
+\item If program satisfies annotations, run-time monitoring (with
+\texttt{jmlc}) will never block  \Blue{(known result)}
+\FromSlide{2}\item If run-time monitoring (with \texttt{jmlc}) of annotated program
+never blocks, security automaton never blocks\\
+\Blue{true for core-annotations, preserved by each propagation step}
+\FromSlide{3}\item If security automaton does not block, program respects the
+security property \Blue{(known result)}
 \end{itemize}
 \end{slide}
+}
 
 
 \begin{slide}{Future issues}
 \begin{itemize}
-\item Other formalisms to express security properties
-\item Translations into JML
+\item Other formalisms to express security properties (with
+translation into JML)?
 \item Translations into other formalisms
 \item Do we need liveness?
 \end{itemize}
 \end{slide}
+
+\begin{slide}{Theoretical foundations: abstract weakest precondition}
+Abstract wp-calculus \PineGreen{\(\mathsf{wp}^\#\)}: considers only static 
+ghost variables\\
+Example rules:
+\[
+\begin{array}{l}
+\mathsf{\PineGreen{wp}}^{\PineGreen{\#}}(\mathtt{if
+(}c\mathtt{)}s_1\mathtt{\:else\:}s_2,Q) =\\
+\qquad
+\mathsf{\PineGreen{wp}}^{\PineGreen{\#}}(c, \mathsf{\PineGreen{wp}}^{\PineGreen{\#}}(s_1, Q)) \wedge
+\mathsf{\PineGreen{wp}}^{\PineGreen{\#}}(c,
+\mathsf{\PineGreen{wp}}^{\PineGreen{\#}}(s_2, Q))
+\end{array}
+\]
+
+\[
+\mathsf{\PineGreen{wp}}^{\PineGreen{\#}}(\mathsf{\Blue{call}}(m), Q) =
+  \mathsf{\Blue{requires}}(m) \wedge 
+  \forall \mathsf{\Red{mod}}(m). (\mathsf{\Blue{ensures}}(m) \Rightarrow Q)
+\]
+\end{slide}
+
+\begin{slide}{Results}
+\begin{itemize}
+\item Any proof in abstract wp-calculus, is proof in standard
+wp-calculus
+\[
+\forall P, Q\colon\mathsf{Pred}, s\colon\mathsf{Stmt}. 
+(P \Rightarrow \mathsf{\PineGreen{wp}}^{\PineGreen{\#}}(s, Q)) \Rightarrow
+               (P \Rightarrow \mathsf{\PineGreen{wp}}(s, Q))
+\]
+\item Precondition generation computes the \emph{free} part of the
+abstract weakest precondition
+\[
+\exists F\colon\mathsf{Pred}.  
+             \mathsf{\PineGreen{wp}}^{\PineGreen{\#}}(s, \lambda x. \mathsf{true}) = 
+             (\mathsf{\PineGreen{pre}}(s, \emptyset) \wedge \forall
+              \mathsf{\Red{mod}}(s). F) 
+\]
+\end{itemize}
+\end{slide}
+
 \end{document}
