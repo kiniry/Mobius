@@ -1,0 +1,10 @@
+#!/bin/csh -f
+
+## Test loading "spec only" type decl's from nested class files
+
+(rm -f *.class) >& /dev/null
+cp A-java A.java
+javac A.java
+rm A.java
+
+${TOOL} Test.java

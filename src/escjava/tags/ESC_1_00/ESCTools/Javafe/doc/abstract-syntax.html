@@ -1,0 +1,305 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+
+<HTML>
+<HEAD>
+   <TITLE>Java Abstract Syntax</TITLE>
+</HEAD>
+<BODY>
+
+<H1>Java Abstract Syntax</H1>
+
+<H2>Goals</H2>
+
+The Java spec gives a concrete syntax for Java, but it does not give
+an abstract syntax.  As a result, there is no convenient place to go
+to get a high-level overview of the syntax of the language.  This
+document presents such an overview.
+
+<P> The syntax in this document is <EM>not</EM> meant to imply
+particular set of data structures for representing a Java AST.  Such
+data structures would reflect a slightly different syntax we call the
+<I>traversal syntax</I> (because it's the syntax traversed by our
+code).  The following example illustrate how the traversal syntax
+might differ from the abstract syntax:
+
+<UL>
+
+<LI> To make scoping and control-flow analysis more convenient, the
+traversal grammar might collapse the cases of a <B>switch</B>
+statement into a single sequence of statements and have a separate
+table of pointers indicating where each <B>case</B> starts in this
+sequence.  (The abstract syntax makes the code between each
+<B>case</B> label its own syntactical phrase.)
+
+<P> <LI> To simplify downstream processing, the traversal syntax may
+omit <TT>Import</TT> phrases, with the parser instead using such
+phrases to build "environment" data structures that are passed
+downstream along with the parse tree.
+
+<P> <LI> To regularize and simplify the cases in the syntax, the
+traversal syntax might allow array initialization statements in
+arbitrary expression contexts.  (The abstract syntax only allows them
+in variable-initialization contexts.)
+
+</UL>
+
+We're not necessarily advocating the above ideas; they are meant here
+just to illustrate the difference between the abstract and traversal
+syntaxes.
+
+<P> The design of our traversal syntax is important.  The abstract
+syntax is meant as a better starting point than the concrete syntax
+would be for thinking about and discussing alternative designs for the
+traversal syntax.
+
+<P> To our knowledge, with one exception, the abstract syntax proposed
+here correctly reflects the concrete syntax in that, for every
+abstract tree one, can produce a corresponding concrete tree (and, of
+course, vice versa).  The one exception is <TT>forinit</TT> phrases:
+our grammar allows declarations of multiple variables each with its
+own type, where the spec only allows declarations of multiple
+variables when each has the same type.  Let us know if you find other
+discrepancies.
+
+
+
+<H2>Notation</H2>
+
+<P> The abstract grammar is a tree-grammar that generates trees.
+
+<P> Non-terminals in this grammar are identifiers starting with an
+uppercase letter, such as 'Expression' and 'Statement'.
+
+<P> The non-terminal 'Identifier' is a simple identifier such as 'x'
+and 'java'.  PackageName, TypeName, MethodName, and ExpressionName are
+described in a separate document on <A
+HREF="http://src-www.pa.dec.com/~stata/ESCJava/naming.html">naming</A>.
+
+<P> Terminals include things like '+' and names starting with
+lower-case letters, such as 'boolean' and 'this'.
+
+<P> An example production in this grammar is:
+
+<PRE>
+  Statement ::=
+    (:if Expression Statement Statement)
+</PRE>
+
+<P> This production says that non-terminal Statement can derive an AST
+node with the label &quot;:if&quot; and three tree-children, one
+derived by Expression and the other two by Statement.
+
+<P> Sometimes we include subtree productions within a poduction, as in:
+
+<PRE>
+  Field ::=
+    (:field (:modifiers Modifier*) Identifier Type [Expression])
+</PRE>
+
+<P> Within productions, we use the meta-operator NonTerminal* in a
+production to indicate that nodes derived from the production can have
+zero-or-more children derived by NonTerminal, and the meta-operator
+[NonTerminal] for zero-or-one children.  We use the meta-operator | to
+separate productions.
+
+
+<H2>Grammar</H2>
+
+<P> Note: This grammar does not cover features from Java 1.1, such as
+inner classes.
+
+<PRE>
+  CompilationUnit ::= ([PackageName] Import* TypeDef*)
+
+  Import ::= (:type TypeName) | (:package PackageName)
+
+  TypeDef ::= (:classdef Identifier
+                (:modifiers Modifier*)
+                (:extends TypeName)
+                (:implements TypeName*)
+                (:elements TypeDefElement*))
+
+  TypeDef ::= (:interfacedef Identifier
+                (:modifiers Modifier*)
+                (:extends TypeName*)
+                (:elements TypeDefElement*))
+
+  TypeDefElement ::= Field | Constructor | Method | Statement
+
+  Field ::= VarDecl
+
+  VarDecl ::= (:var (:modifiers Modifier*) Identifier Type [InitExpression])
+
+  Constructor ::= (:constructor
+                    (:modifiers Modifier*)
+                    (:takes (Type Identifier)*)
+                    (:throws TypeName*)
+                    ConstructorBody)
+
+  Method ::= (:method Identifier
+               (:modifiers Modifier*)
+               (:takes (Type Identifier)*)
+               [(:returns Type)]
+               (:throws TypeName*)
+               [Statement])
+
+
+  ConstructorBody ::=
+      (:this-constructor Expression*) Statement
+  | (:super-constructor Expression*) Statement
+
+  BlockStatement ::=
+      VarDecl
+    | Statement
+
+  Statement ::=
+      (:block BlockStatement*)
+    | (:label Identifier Statement)
+    | (:eval StatementExpression)
+    | (:if Expression Statement Statement)
+    | (:while Expression Statement)
+    | (:for ForInit
+            Expression
+            (:forupdate StatementExpression*)
+        Statement)
+    | (:switch Expression (:case SwitchLabel+ BlockStatement*)*)
+    | (:break [Identifier])
+    | (:continue [Identifier])
+    | (:return [Expression])
+    | (:throw Expression)
+    | (:do Statement Expression)
+    | (:synchronize Expression Statement)
+    | (:try-finally Statement Statement)
+    | (:try-catch Statement (:catch Identifier Type Statement)*)
+    | (:skip)
+
+  SwitchLabel ::=
+      Expression
+    | default
+
+  ForInit ::=
+      (:forinit StatementExpression*)
+    | (:forinit VarDecl*)
+
+  Expression ::=
+      this
+    | Literal
+    | Location
+    | StatementExpression
+    | (:newarray Type Expression*)
+    | (? Expression Expression Expression)
+    | (:instanceof Expression Type)
+    | (:cast Type Expression)
+    | (:unary UnaryOp Expression)
+    | (:binary BinaryOp Expression Expression)
+    | (:shortcircuit ShortCircuitOp Expression Expression)
+
+  InitExpression ::=
+      Expression
+    | ArrayInitializer
+
+  ArrayInitializer ::=
+      (:array-val ArrayInitializer*)
+    | Expression
+
+  StatementExpression ::=
+      (:= Location Expression)
+    | (:=op Location UpdateOp Expression)
+    | (:step StepOp Location)
+    | (:new TypeName Expression*)
+    | (:invoke MethodDesignator Expression*) 
+
+  Location ::=
+      ExpressionName
+    | Expression . ExpressionName
+    | super . ExpressionName
+    | (:array-ref Expression Expression)
+
+  MethodDesignator ::=
+      MethodName
+    | super . ExpressionName
+
+  Type ::=
+      PrimitiveType
+    | TypeName
+    | (:array-of Type)
+
+
+  Modifier ::= public | protected | private
+             | final | static | transient | volitile
+             | synchronized | native | abstract 
+
+  PrimitiveType ::= long | int | short | byte | char
+                  | float | double
+                  | boolean
+
+  UnaryOp ::= one of + - ! ~
+
+  BinaryOp ::= UpdateOp | RelationalOp
+
+  UpdateOp ::= one of * / % + - &lt;&lt; &gt;&gt; &gt;&gt;&gt; | ^
+
+  RelationalOp ::= one of &lt; &gt; &lt;= &gt;= == != &amp;
+
+  StepOp ::= pre+ | post+ | pre- | post-
+
+  ShortCircuitOp ::= one of &amp;&amp; ||
+
+  Literal ::= &lt;see spec&gt;
+</PRE>
+
+<H2>Changes</H2>
+
+<H3>Sep 9</H3>
+
+Overall, moved closer to actual grammar, moving away from some
+rewriting implied by our previous attempt (mdl pointed out that that
+rewriting implied doing re-naming of local variables).
+
+<UL>
+
+<LI> Added statement of goals at the top.
+
+<P> <LI> Changed HTML formatting to not use <TT>&lt;PRE&gt;</TT>
+everywhere.
+
+<P> <LI> Added VarDecl and InitExpression, changing FieldDecl to be a
+VarDecl.  Moved array initialization to InitExpression (from
+Expression).
+
+<P> <LI> Added BlockStatement, changed :block production of Statement
+appropriately.
+
+<P> <LI> Changed blocks to no longer have explicit declarations
+
+<P> <LI> Changed switch statements to no longer have explicit
+declarations, changing switch handlers to contain a list of
+BlockStatements rather than a single Statement
+
+<P> <LI> Added ForInit, changed :for appropriately
+
+<P> <LI> Fooled around with <TT>BinaryOp</TT> and related productions
+to more accurately reflect the language's syntax.
+
+</UL>
+
+
+<!--SRC FOOTER start-->
+<HR>
+
+<I>Last modified: Tue Sep  9 08:39:01 PDT 1997</I> <BR>
+<A HREF="/">
+[Home]</A> --
+<A HREF="/SRC/cgi-bin/generic-comments.tcl?dir=/SRC/esc/abstract-syntax.html">
+[Submit comments]</A> --
+<A HREF="/SRC/includes/street-address.html">
+[SRC address and phone]</A>
+
+<HR>
+<strong>Digital Systems Research Center</strong>
+<!--SRC FOOTER end-->
+
+
+</BODY>
+</HTML>
+

@@ -1,0 +1,10 @@
+import(prover)
+
+implementation(FPTest)
+
+% On systems that do not support shared libriaries the following
+% line (or, on some systems, the one after it) is necessary:
+ option("standalone", "T")
+% "build_standalone()
+
+Program("FPTest")
