@@ -90,7 +90,7 @@ public class GhostEnv extends EnvForTypeSig
 
     // Code to collect all our ghost fields
 
-    private Hashtable fields;	// used like a set
+//    private Hashtable fields;	// used like a set
 
     /**
      * Add all new ghost fields found in <code>s</code> (including its supertypes) to

@@ -230,6 +230,7 @@ public class EnumNFindK implements Abstractor {
 	}
     }
 
+/* UNUSED
     // return size of a disjunction
     static private int size(jbdd b) {
 	int s=0;
@@ -245,6 +246,7 @@ public class EnumNFindK implements Abstractor {
 	}
 	return s;
     }
+*/
 
     // return size of a disjunction
     private int size(Disjunction d) {

@@ -4,9 +4,7 @@ package escjava.ast;
 
 import java.io.OutputStream;
 import java.util.Enumeration;
-import java.util.Hashtable;
 import javafe.ast.*;
-import javafe.util.Location;
 import javafe.util.Assert;
 import escjava.parser.EscPragmaParser;
 import escjava.ast.TagConstants;

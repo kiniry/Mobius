@@ -15,7 +15,6 @@ import javafe.util.Assert;
 import javafe.util.ErrorSet;
 import javafe.util.CorrelatedReader;
 import javafe.util.Location;
-import javafe.util.StackVector;
 
 /**
 

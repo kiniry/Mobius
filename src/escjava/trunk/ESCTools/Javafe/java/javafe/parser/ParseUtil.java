@@ -4,7 +4,6 @@ package javafe.parser;
 
 import javafe.ast.*;
 import javafe.util.StackVector;
-import javafe.util.Location;
 import javafe.util.ErrorSet;
 
 /**
@@ -28,7 +27,7 @@ public class ParseUtil
     /** Raises a <TT>RuntimeException</TT> with the argument string. */
 
     //@ ensures false
-    private static void fail(String m) { ErrorSet.fatal(m); }
+    // UNUSED private static void fail(String m) { ErrorSet.fatal(m); }
 
     /** Raises a <TT>RuntimeException</TT> with the argument string
         including a textual representation of the given source location. */

@@ -3,10 +3,8 @@
 package javafe.util;
 
 import java.io.*; 
-import java.util.Vector;
 
 import javafe.genericfile.GenericFile;
-import javafe.util.Assert;
 
 /** 
  * A reader (aka input stream) that provides an associated

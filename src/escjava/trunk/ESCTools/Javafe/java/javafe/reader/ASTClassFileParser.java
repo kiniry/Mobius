@@ -688,8 +688,10 @@ class ASTClassFileParser extends ClassFileParser
     /**
      * A null identifier.
      */
+/* UNUSED
     //@ invariant nullIdentifier != null;
     private static final Identifier nullIdentifier = Identifier.intern("");
+*/
 
 }
 

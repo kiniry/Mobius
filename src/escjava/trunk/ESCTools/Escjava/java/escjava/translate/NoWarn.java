@@ -284,26 +284,6 @@ public class NoWarn
 
         return chkStatus[ tag - TagConstants.FIRSTESCCHECKTAG ];
     }
-
-    /**
-     * Routine to display ranges of checks for debugging use:
-     */
-    private static void displayWarningRange(int tag, int locUse,
-                                            int locPragmaDecl) {
-	if (!Info.on)
-	    return;
-
-	Info.out("[Will check a possible error of type "
-                 + TagConstants.toString(tag) + ":");
-	
-	ErrorSet.caution(locUse, "Use location:");
-	
-	if (locPragmaDecl != Location.NULL) {
-            ErrorSet.caution(locPragmaDecl, "Declaration location:");
-	}
-	
-	Info.out("]");
-    }
 } // end of class NoWarn
 
 /*

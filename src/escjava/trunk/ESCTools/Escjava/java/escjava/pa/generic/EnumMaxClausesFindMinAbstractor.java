@@ -131,6 +131,7 @@ public class EnumMaxClausesFindMinAbstractor implements Abstractor {
 	}
     }	
 
+/* UNUSED
     private jbdd invertLiterals(jbdd t) {
 	if( t.jbdd_is_tautology( true ) || t.jbdd_is_tautology( false ) ) {
 	    return t;
@@ -141,6 +142,7 @@ public class EnumMaxClausesFindMinAbstractor implements Abstractor {
 				  true, true, true );
 	}
     }
+*/
 
     private void say(String s) {
 	if( noisy ) {

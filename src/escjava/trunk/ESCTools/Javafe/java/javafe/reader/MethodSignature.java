@@ -6,11 +6,9 @@
 
 package javafe.reader;
 
-import java.io.*;
 import java.util.*;
 
 import javafe.ast.*;
-import javafe.util.*;
 
 /* -------------------------------------------------------------------------
  * MethodSignature

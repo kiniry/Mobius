@@ -3,7 +3,6 @@
 package javafe;
 
 import java.util.Vector;
-import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.ArrayList;
 

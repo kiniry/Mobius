@@ -3,10 +3,8 @@
 package javafe.tc;
 
 import javafe.ast.*;
-import javafe.parser.*;
 import javafe.util.*;
 import java.util.Hashtable;
-import java.util.Vector;
 import java.util.Enumeration;
 
 

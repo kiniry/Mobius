@@ -2,15 +2,10 @@
 
 package javafe;
 
-
-import java.util.Vector;
-
 import javafe.ast.*;
 import javafe.tc.*;
 import javafe.util.*;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.*;
 
 import java.util.StringTokenizer;

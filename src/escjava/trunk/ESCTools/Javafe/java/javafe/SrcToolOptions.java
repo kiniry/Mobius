@@ -1,6 +1,5 @@
 package javafe;
 
-import java.util.ArrayList;
 import javafe.util.UsageError;
 
 /**

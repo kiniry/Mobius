@@ -5,7 +5,6 @@ package javafe.parser;
 import javafe.ast.*;
 import javafe.util.StackVector;
 import javafe.util.Location;
-import javafe.util.Assert;
 import javafe.util.ErrorSet;
 import javafe.Tool;
 

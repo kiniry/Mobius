@@ -2,8 +2,6 @@ package javafe;
 
 import java.util.ArrayList;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Iterator;
 
 import javafe.util.ErrorSet;
 import javafe.util.UsageError;
@@ -24,22 +22,27 @@ import junitutils.Utils;
  * <li> {@link #showOptions(boolean)}
  * </ul>
  */
-  
-public class Options
-{
+
+public class Options {
     //************************************************************************
     //     Options
     //************************************************************************   
     /**
      * Holds all the non-option arguments.
      */
-    public ArrayList inputEntries;  // elements are InputEntry
+    public ArrayList inputEntries; // elements are InputEntry
 
     /**
      * Option to restrict output to error/caution/warning messages
      * only - no progress or informational output.
      */
     public boolean quiet = false;
+    
+    /** 
+     * Option to generate lots of output indicating what is
+     * happening during execution.
+     */
+    public boolean v = false;
 
     /**
      * When true, no variable output (e.g., execution time) is
@@ -58,7 +61,7 @@ public class Options
      * are looking only at warnings.
      */
     public boolean noCautions = false;
-    
+
     /** Option holding the current working directory.
      */
     public String currentdir = System.getProperty("user.dir");
@@ -67,22 +70,22 @@ public class Options
      * Option holding the user-specified classpath.
      */
     public String userPath = null;
-    
+
     /**
      * Option holding the user-specified sourcepath.
      */
     public String userSourcePath = null;
-    
+
     /**
      * Option holding the user-specified boot classpath.
      */
     public String sysPath = null;
-    
+
     /** True if we should simply issue a usage message and abort. */
     public boolean issueUsage = false;
 
     // Note - the "-v" option is directly set in javafe.util.Info.on
-    
+
     /**
      * Are we parsing Java 1.4 source code (i.e., we must parse the
      * new "assert" Java keyword).
@@ -123,7 +126,6 @@ public class Options
         javafe.util.Info.on = false;
     }
 
- 
     //************************************************************************
     //     Routines to process the command-line
     //************************************************************************   
@@ -142,27 +144,27 @@ public class Options
      * problem.
      */
     //@ requires \nonnullelements(args);
-    // ensures 0 <= \result && \result <= args.length;
+    //@ ensures inputEntries != null;
     public final void processOptions(String[] args) throws UsageError {
-	inputEntries = new ArrayList(args.length);
-	processOptionsLoop(args);
+        inputEntries = new ArrayList(args.length);
+        processOptionsLoop(args);
     }
 
     //@ requires \nonnullelements(args);
-    //  ensures 0 <= \result && \result <= args.length;
+    //@ requires inputEntries != null;
     protected final void processOptionsLoop(String[] args) throws UsageError {
-	int offset = 0;
+        int offset = 0;
 
-	while (offset < args.length) {
-	    String s = args[offset++];
-	    if (s.length() == 0) {
-		// skip
-	    } else if (s.charAt(0) == '-') {
-		offset = processOption(s, args, offset);
-	    } else {
-		inputEntries.add(new InputEntry.Unknown(s));
-	    }
-	}
+        while (offset < args.length) {
+            String s = args[offset++];
+            if (s.length() == 0) {
+                // skip
+            } else if (s.charAt(0) == '-') {
+                offset = processOption(s, args, offset);
+            } else {
+                inputEntries.add(new InputEntry.Unknown(s));
+            }
+        }
     }
 
     /**
@@ -190,186 +192,175 @@ public class Options
      * {@link UsageError} exception with a string describing the
      * problem.
      */
-    //@ requires option != null && \nonnullelements(args);
+    //@ requires option != null;
+    //@ requires \nonnullelements(args);
     //@ requires 0 <= offset && offset <= args.length;
-    //@ requires option.charAt(0) == '-';
     //@ ensures 0 <= \result && \result <= args.length;
-    public int processOption(String option, String[] args, int offset) 
+    public int processOption(String option, String[] args, int offset)
         throws UsageError {
-	if (option.equals("-v")) {
-	    javafe.util.Info.on = true;
-	    return offset;
-	} else if (option.equals("-quiet")) {
-	    quiet = true;
-	    return offset;
-	} else if (option.equals("-noCautions")) {
-	    noCautions = true;
-	    return offset;
-	} else if (option.equals("-sourcepath")) {
-	    if (offset >= args.length) {
-		throw new UsageError("Option " + option + 
-                                     " requires one argument");
-	    }
-	    userSourcePath = args[offset];
-	    return offset+1;
-	} else if (option.equals("-classpath")) {
-	    if (offset >= args.length) {
-		throw new UsageError("Option " + option + 
-                                     " requires one argument");
-	    }
-	    userPath = args[offset];
-	    return offset+1;
-	} else if (option.equals("-bootclasspath")) {
-	    if (offset>=args.length) {
-		throw new UsageError("Option " + option + 
-                                     " requires one argument");
-	    }
-	    sysPath = args[offset];
-	    return offset+1;
-	} else if (option.equals("-currentdir")) {
-	    if (offset >= args.length) {
-		throw new UsageError("Option " + option + 
-                                     " requires one argument");
-	    }
-	    currentdir = args[offset];
-	    return offset+1;
-	} else if (option.equals("-package")) {
-	    if (offset>=args.length) {
-		throw new UsageError("Option " + option + 
-                                     " requires one argument");
-	    }
-	    inputEntries.add(new InputEntry.Package(args[offset]));
-	    return offset+1;
-	} else if (option.equals("-class")) {
-	    if (offset>=args.length) {
-		throw new UsageError("Option " + option + 
-                                     " requires one argument");
-	    }
-	    inputEntries.add(new InputEntry.Class(args[offset]));
-	    return offset+1;
-	} else if (option.equals("-dir")) {
-	    if (offset>=args.length) {
-		throw new UsageError("Option " + option + 
-                                     " requires one argument");
-	    }
-	    inputEntries.add(new InputEntry.Dir(args[offset]));
-	    return offset+1;
-	} else if (option.equals("-file")) {
-	    if (offset>=args.length) {
-		throw new UsageError("Option " + option + 
-                                     " requires one argument");
-	    }
-	    inputEntries.add(new InputEntry.File(args[offset]));
-	    return offset+1;
-	} else if (option.equals("-list")) {
-	    if (offset>=args.length) {
-		throw new UsageError("Option " + option + 
-                                     " requires one argument");
-	    }
-	    inputEntries.add(new InputEntry.List(args[offset]));
-	    return offset+1;
-	} else if (option.equals("-f")) {
-	    if (offset>=args.length) {
-		throw new UsageError("Option " + option + 
-                                     " requires one argument");
-	    }
-	    processFileOfArgs(args[offset]);
-	    return offset+1;
-	} else if (option.equals("-source")) {
-            if ((offset >= args.length) ||
-                (args[offset].charAt(0) == '-')) {
-                throw new UsageError("Option " + option +
-                                     " requires one argument indicating Java source version\n" +
-                                     "(e.g., \"-source 1.4\")");
+        if (option.equals("-v")) {
+            javafe.util.Info.on = true;
+            return offset;
+        } else if (option.equals("-quiet")) {
+            quiet = true;
+            return offset;
+        } else if (option.equals("-noCautions")) {
+            noCautions = true;
+            return offset;
+        } else if (option.equals("-sourcepath")) {
+            checkMoreArguments(option, args, offset);
+            userSourcePath = args[offset];
+            return offset + 1;
+        } else if (option.equals("-classpath")) {
+            checkMoreArguments(option, args, offset);
+            userPath = args[offset];
+            return offset + 1;
+        } else if (option.equals("-bootclasspath")) {
+            checkMoreArguments(option, args, offset);
+            sysPath = args[offset];
+            return offset + 1;
+        } else if (option.equals("-currentdir")) {
+            checkMoreArguments(option, args, offset);
+            currentdir = args[offset];
+            return offset + 1;
+        } else if (option.equals("-package")) {
+            checkMoreArguments(option, args, offset);
+            inputEntries.add(new InputEntry.Package(args[offset]));
+            return offset + 1;
+        } else if (option.equals("-class")) {
+            checkMoreArguments(option, args, offset);
+            inputEntries.add(new InputEntry.Class(args[offset]));
+            return offset + 1;
+        } else if (option.equals("-dir")) {
+            checkMoreArguments(option, args, offset);
+            inputEntries.add(new InputEntry.Dir(args[offset]));
+            return offset + 1;
+        } else if (option.equals("-file")) {
+            checkMoreArguments(option, args, offset);
+            inputEntries.add(new InputEntry.File(args[offset]));
+            return offset + 1;
+        } else if (option.equals("-list")) {
+            checkMoreArguments(option, args, offset);
+            inputEntries.add(new InputEntry.List(args[offset]));
+            return offset + 1;
+        } else if (option.equals("-f")) {
+            checkMoreArguments(option, args, offset);
+            processFileOfArgs(args[offset]);
+            return offset + 1;
+        } else if (option.equals("-source")) {
+            if ((offset >= args.length) || (args[offset].charAt(0) == '-')) {
+                throw new UsageError(
+                    "Option "
+                        + option
+                        + " requires one argument indicating Java source version\n"
+                        + "(e.g., \"-source 1.4\")");
             }
             if (args[offset].equals("1.4"))
                 assertIsKeyword = true;
-            return offset+1;
-        } else if (option.equals("-ea") ||
-                   option.equals("-enableassertions")) {
-	    assertionsEnabled = true;
-	    return offset;
-        } else if (option.equals("-da") ||
-		   option.equals("-disableassertions")) {
-	    assertionsEnabled = false;
-	    return offset;
-	} else if (option.equals("-help")) {
-	    issueUsage = true;
-	    return offset;
+            return offset + 1;
+        } else if (
+            option.equals("-ea") || option.equals("-enableassertions")) {
+            assertionsEnabled = true;
+            return offset;
+        } else if (
+            option.equals("-da") || option.equals("-disableassertions")) {
+            assertionsEnabled = false;
+            return offset;
+        } else if (option.equals("-help")) {
+            issueUsage = true;
+            return offset;
         } else if (option.equals("-testMode")) {
             testMode = true;
             return offset;
-	} else if (option.equals("-showErrorLocation")) {
-	    showErrorLocation = true;
+        } else if (option.equals("-showErrorLocation")) {
+            showErrorLocation = true;
             return offset;
-	} else if (option.equals("-preferSource")) {
-	    fileOrigin = PREFER_SOURCE;
-	    return offset;
-	} else if (option.equals("-preferBinary")) {
-	    fileOrigin = PREFER_BINARY;
-	    return offset;
-	} else if (option.equals("-preferRecent")) {
-	    fileOrigin = PREFER_RECENT;
-	    return offset;
-	} else if (option.equals("-neverBinary")) {
-	    fileOrigin = NEVER_BINARY;
-	    return offset;
-	} else if (option.equals("-neverSource")) {
-	    fileOrigin = NEVER_SOURCE;
-	    return offset;
-	} else if (option.equals("--")) {
-	    while (offset < args.length) {
-		inputEntries.add(new InputEntry.Unknown(args[offset++]));
-	    }
-	    return offset;
+        } else if (option.equals("-preferSource")) {
+            fileOrigin = PREFER_SOURCE;
+            return offset;
+        } else if (option.equals("-preferBinary")) {
+            fileOrigin = PREFER_BINARY;
+            return offset;
+        } else if (option.equals("-preferRecent")) {
+            fileOrigin = PREFER_RECENT;
+            return offset;
+        } else if (option.equals("-neverBinary")) {
+            fileOrigin = NEVER_BINARY;
+            return offset;
+        } else if (option.equals("-neverSource")) {
+            fileOrigin = NEVER_SOURCE;
+            return offset;
+        } else if (option.equals("--")) {
+            while (offset < args.length) {
+                inputEntries.add(new InputEntry.Unknown(args[offset++]));
+            }
+            return offset;
         }
 
-	// Pass on unrecognized options:
-	
-	// Derived classes will call:
-	// return super.processOption(option, args, offset);
+        // Pass on unrecognized options:
 
-	// Here we inline the error processing	
+        // Derived classes will call:
+        // return super.processOption(option, args, offset);
+
+        // Here we inline the error processing	
         throw new UsageError("Unknown option: " + option);
     }
 
-    public void processFileOfArgs(String filename) throws UsageError {
-	try {
-	    String[] sa = new String[20]; // more than most lines in the file will be, just for efficiency
-	    BufferedReader r = new BufferedReader(new FileReader(filename));
-	    String s;
-	    while ( (s=r.readLine()) != null) {
-		sa = Utils.parseLine(s);
-		processOptionsLoop(sa);
-	    }
-	} catch (IOException e) {
-	    ErrorSet.error("Failure while reading input arguments from file " +
-		filename + ": " + e);
-	}
+    //@   protected normal_behavior
+    //@   requires offset < args.length;
+    //@ also protected exceptional_behavior
+    //@   requires offset >= args.length;
+    //@   signals (Exception e) e instanceof UsageError;
+    //@ pure
+    protected void checkMoreArguments(String option, String[] args, int offset)
+        throws UsageError {
+        if (offset >= args.length) {
+            throw new UsageError("Option " + option + " requires one argument");
+        }
     }
-		
+
+    public void processFileOfArgs(String filename) throws UsageError {
+        try {
+            String[] sa = new String[20];
+            // more than most lines in the file will be, just for efficiency
+            BufferedReader r = new BufferedReader(new FileReader(filename));
+            String s;
+            while ((s = r.readLine()) != null) {
+                sa = Utils.parseLine(s);
+                processOptionsLoop(sa);
+            }
+        } catch (IOException e) {
+            ErrorSet.error(
+                "Failure while reading input arguments from file "
+                    + filename
+                    + ": "
+                    + e);
+        }
+    }
 
     //************************************************************************
     //     Routines to print options and usage
     //************************************************************************   
-    
+
     /**
      * Print our usage message to <code>System.err</code>.
      *
      * @param name the name of the tool whose options we are printing.
      */
     public void usage(String name) {
-	System.err.print(name + ": usage: " + name + " options* ");
-	System.err.print(showNonOptions());
-	System.err.println(" where options include:");
-	System.err.print(showOptions(false));
+        System.err.print(name + ": usage: " + name + " options* ");
+        System.err.print(showNonOptions());
+        System.err.println(" where options include:");
+        System.err.print(showOptions(false));
     }
-    
+
     /**
      * @return non-option usage information in a string.
      */
-    public String showNonOptions() { return ""; }
-    
+    public String showNonOptions() {
+        return "";
+    }
+
     /**
      * Return option information in a string where each line is
      * preceeded by two blank spaces and followed by a line separator.
@@ -384,36 +375,50 @@ public class Options
      * <code>super.showOptions()</code>.
      */
     public String showOptions(boolean all) {
-	return showOptionArray(optionData);
+        return showOptionArray(optionData);
     }
 
     public String showOptionArray(String[][] data) {
-    	StringBuffer sb = new StringBuffer();
-	for (int i = 0; i < data.length; ++i) {
-	    sb.append(format(data[i]));
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < data.length; ++i) {
+            sb.append(format(data[i]));
         }
-	return sb.toString();
+        return sb.toString();
     }
 
     public String format(String[] sa) {
-	return ("  " + sa[0] + " : " + sa[1] + eol);
+        return ("  " + sa[0] + " : " + sa[1] + eol);
     }
 
-    final String[][] optionData = {
-    {"-help",                   "Prints a usage message and terminates"},
-    {"-v",                      "verbose mode"},
-    {"-quiet",                  "quiet mode (no informational messages)"},
-    {"-bootclasspath <classpath>", "Directory path for specification and class files for the current JDK\n(default is the built-in classpath of your JDK); prepended to the\ncurrent classpath"},
-    {"-classpath <classpath>",  "Directory path for class files (default is value of CLASSPATH) and\noverrides all previous uses of -classpath."},
-    {"-da, -disableassertions", "Ignores all Java assert statements"},
-    {"-ea, -enableassertions",  "Processes all Java assert statements"},
-    {"-noCautions",             ""},
-    {"-package <packagename>",  "Loads all the files in the named package"},
-    {"-source <release>",       "Provide source compatibility with specified release"},
-    {"-sourcepath <classpath>", "Directory path for source files (default is classpath)"},
-    {"-testMode",               "Replaces execution time by a constant string and path separators by `|' so\noracle files can be used in automated testing"},
-    };
-    
+    final String[][] optionData =
+        { { "-help", "Prints a usage message and terminates" }, {
+            "-v", "verbose mode" }, {
+            "-quiet", "quiet mode (no informational messages)" }, {
+            "-bootclasspath <classpath>",
+                "Directory path for specification and class files for the current JDK\n(default is the built-in classpath of your JDK); prepended to the\ncurrent classpath" },
+                {
+            "-classpath <classpath>",
+                "Directory path for class files (default is value of CLASSPATH) and\noverrides all previous uses of -classpath." },
+                {
+            "-da, -disableassertions",
+                "Ignores all Java assert statements" },
+                {
+            "-ea, -enableassertions",
+                "Processes all Java assert statements" },
+                {
+            "-noCautions", "" }, {
+            "-package <packagename>",
+                "Loads all the files in the named package" },
+                {
+            "-source <release>",
+                "Provide source compatibility with specified release" },
+                {
+            "-sourcepath <classpath>",
+                "Directory path for source files (default is classpath)" },
+                {
+            "-testMode",
+                "Replaces execution time by a constant string and path separators by `|' so\noracle files can be used in automated testing" },
+                };
+
     final public String eol = System.getProperty("line.separator");
 }
-

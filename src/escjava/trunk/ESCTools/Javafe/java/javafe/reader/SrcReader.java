@@ -14,7 +14,6 @@ import javafe.parser.Parse;
 import javafe.parser.PragmaParser;
 
 import javafe.util.FileCorrelatedReader;
-import javafe.util.Location;
 
 /**
  * A SrcReader is a {@link Reader} that reads in a {@link

@@ -2,7 +2,6 @@
 
 package javafe;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import javafe.ast.*;
 import javafe.genericfile.*;

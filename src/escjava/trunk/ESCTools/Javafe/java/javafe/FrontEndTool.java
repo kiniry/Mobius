@@ -28,9 +28,7 @@ import java.util.ArrayList;
  * front-end-tool specific. </p>
  */
 
-public abstract class FrontEndTool
-    extends Tool
-{
+public abstract class FrontEndTool extends Tool {
     /***************************************************
      *                                                 *
      * Standard front-end setup:		       *
@@ -56,50 +54,56 @@ public abstract class FrontEndTool
     protected String compositeClassPath;
 
     public void setupPaths() {
-	String classPath = options.userPath;
-	if (classPath == null)
-	    // The behavior of this code differs between 1.1 and 1.2:
-	    classPath = javafe.filespace.ClassPath.current();
+        String classPath = options.userPath;
+        if (classPath == null)
+            // The behavior of this code differs between 1.1 and 1.2:
+            classPath = javafe.filespace.ClassPath.current();
 
-	String sourcePath = options.userSourcePath;
+        String sourcePath = options.userSourcePath;
 
-	String sys = options.sysPath;
-	if (sys == null) {
-	    // This works only on Sun implementations of Java...
-	    sys = System.getProperty("sun.boot.class.path", null);
-//System.out.println("SYS-SUN " + sys);
-	}
-	if (sys == null) {
-	    sys = System.getProperty("java.home") + 
-		java.io.File.separator + "lib" + 
-		java.io.File.separator + "rt.jar";
-//System.out.println("SYS-JH " + sys);
-	}
+        String sys = options.sysPath;
+        if (sys == null) {
+            // This works only on Sun implementations of Java...
+            sys = System.getProperty("sun.boot.class.path", null);
+            //System.out.println("SYS-SUN " + sys);
+        }
+        if (sys == null) {
+            sys =
+                System.getProperty("java.home")
+                    + java.io.File.separator
+                    + "lib"
+                    + java.io.File.separator
+                    + "rt.jar";
+            //System.out.println("SYS-JH " + sys);
+        }
 
-	if (sys != null && !sys.equals("")) {
-	    if (!classPath.equals("")) {
-		classPath += System.getProperty("path.separator", ":");
-	    }
-	    classPath += sys;
-	}
-	compositeSourcePath = sourcePath;
-	compositeClassPath = classPath;
+        if (sys != null && !sys.equals("")) {
+            if (!classPath.equals("")) {
+                classPath += System.getProperty("path.separator", ":");
+            }
+            classPath += sys;
+        }
+        compositeSourcePath = sourcePath;
+        compositeClassPath = classPath;
     }
 
     public void setup() {
-	setupPaths();
-	Info.out("[Full classpath is " + compositeClassPath + "]");
-	Info.out("[Full sourcepath is " + compositeSourcePath + "]");
+        javafe.util.Info.on = options.v;
+        setupPaths();
+        Info.out("[Full classpath is " + compositeClassPath + "]");
+        Info.out("[Full sourcepath is " + compositeSourcePath + "]");
 
-	// It is ok if sourcePath is null; it then shares a database
-	// of the contents of the directory path with classpath,
-	// rather than creating a separate, identical database.
-	OutsideEnv.init(makeStandardTypeReader(compositeClassPath, 
-					       compositeSourcePath,
-					       makePragmaParser()));
+        // It is ok if sourcePath is null; it then shares a database
+        // of the contents of the directory path with classpath,
+        // rather than creating a separate, identical database.
+        OutsideEnv.init(
+            makeStandardTypeReader(
+                compositeClassPath,
+                compositeSourcePath,
+                makePragmaParser()));
 
-	PrettyPrint.inst = makePrettyPrint();
-	TypeCheck.inst = makeTypeCheck();
+        PrettyPrint.inst = makePrettyPrint();
+        TypeCheck.inst = makeTypeCheck();
     }
 
     /**
@@ -109,7 +113,7 @@ public abstract class FrontEndTool
      */
     public void clear(boolean complete) {
         ErrorSet.clear();
-	// FIXME LocationManagerCorrelatedReader.clear();
+        // FIXME LocationManagerCorrelatedReader.clear();
         OutsideEnv.clear();
     }
 
@@ -118,9 +122,10 @@ public abstract class FrontEndTool
      * locating and reading in types.
      */
     //@ ensures \result != null;
-    public StandardTypeReader makeStandardTypeReader(String path,
-						     String sourcePath,
-						     PragmaParser P) {
+    public StandardTypeReader makeStandardTypeReader(
+        String path,
+        String sourcePath,
+        PragmaParser P) {
         return StandardTypeReader.make(path, sourcePath, P);
     }
 
@@ -132,15 +137,22 @@ public abstract class FrontEndTool
     public PragmaParser makePragmaParser() {
         return null;
     }
-    
+
     /**
      * Called to create a new {@link Options} object.
      */
     //@ ensures \result != null;
     public Options makeOptions() {
-     	return new Options();
+        return new Options();
     }
-    
+
+    /** Processes the options into the current Options instance as
+     *  contained in the options field.
+     * @param args The command-line arguments to process
+     * @throws UsageError if the sequence of command-line arguments 
+     * 			  is invalid
+     */
+    //@ requires args != null;   
     public void processOptions(String[] args) throws UsageError {
         options.processOptions(args);
     }
@@ -193,73 +205,89 @@ public abstract class FrontEndTool
 
     /**
      * Parses the options into a new instance of an {@link Options}
-     * subclass.  Returns <code>-1</code> if all is well and the
-     * program should continue with processing.  Otherwise, returns an
-     * exit code.
-     *
-     * <p> If the argument is null, the tool is initialized with the
-     * existing options. </p>
+     * subclass.  The new instance is assigned to the options field.
+     * If the argument is null, the tool is initialized with the
+     * existing options (the options field is unchanged).  The tool
+     * is then initialized (by calling setup) with the designated options.
+     * 
+     * @param args Either null or an array of arguments used to 
+     *             initialize the Options structure
+     * @return     Returns -1 if arguments were parsed satisfactorily,
+     * 		   otherwise returns the exit code with which to 
+     * 		   terminate the program
      */
+
+    //@ ensures args == null ==> \not_modified(options, options.* );
     public int handleOptions(String[] args) {
-	if (args != null) {
-	    try {
-		// Handle all tool options:
-		options = makeOptions();
-		processOptions(args);
-		if (options.issueUsage) {
-		    usage();
-		    return okExitCode;
-		}
-	    } catch (UsageError e) {
-		badOptionUsage(e);
-		ErrorSet.errors++; // Just so that the JUnit tests detect that
-				    // an error message was issued
-		return badUsageExitCode;
-	    } catch (FatalError e) {
-		Info.out("[" + name() + " exiting due to a fatal error]");
-	    }
-	}
-	// Setup the front end using the options:
-	setup();
-	return -1;
+        if (args != null) {
+            try {
+                // Handle all tool options:
+                options = makeOptions();
+                processOptions(args);
+                if (options.issueUsage) {
+                    usage();
+                    return okExitCode;
+                }
+            } catch (UsageError e) {
+                badOptionUsage(e);
+                ErrorSet.errors++; // Just so that the JUnit tests detect that
+                // an error message was issued
+                return badUsageExitCode;
+            } catch (FatalError e) {
+                Info.out("[" + name() + " exiting due to a fatal error]");
+            }
+        }
+        // Setup the front end using the options:
+        setup();
+        return -1;
     }
 
     /**
-     * A tool's main entry point; <code>args</code> are the
-     * command-line arguments we have been invoked with.
+     * A tool's main entry point, which should be overridden in derived classes
+     * to do the work of the tool.
+     * 
+     * @param args The command-line arguments the program was invoked with
+     * @return The exit code for the program, with 0 indicating success
+     * @see javafe.Tool#run(java.lang.String[])
      */
     /*@ public normal_behavior
       @  requires args != null;
       @  modifies \everything;
       @*/
     public final int run(String[] args) {
-	int r = handleOptions(args);
-	if (r != -1) return r;
-	
-	if (ErrorSet.errors == 0) try {
-	    // Do our front-end-tool-specific processing:
-	    frontEndToolProcessing(options.inputEntries);
-        } catch (FatalError e) {
-	    Info.out("[" + name() + " exiting due to a fatal error]");
-	}
-	
-	if (ErrorSet.cautions != 0)
-	    System.out.println(ErrorSet.cautions + " caution"
-		+ (ErrorSet.cautions>1 ? "s" : ""));
-	if (ErrorSet.warnings != 0)
-	    System.out.println(ErrorSet.warnings + " warning"
-		+ (ErrorSet.warnings>1 ? "s" : ""));
-	if (ErrorSet.errors != 0)
-	    System.out.println(ErrorSet.errors + " error"
-		+ (ErrorSet.errors>1 ? "s" : ""));
-	
-	// If we call exit here, we will break GUI-based clients.
-	// Return error status to caller:
-	if (ErrorSet.errors > 0)
-	    return errorExitCode;
-	else {
-	    return okExitCode;
-	}
+        int r = handleOptions(args);
+        if (r != -1)
+            return r;
+
+        if (ErrorSet.errors == 0)
+            try {
+                // Do our front-end-tool-specific processing:
+                frontEndToolProcessing(options.inputEntries);
+            } catch (FatalError e) {
+                Info.out("[" + name() + " exiting due to a fatal error]");
+            }
+
+        if (ErrorSet.cautions != 0)
+            System.out.println(
+                ErrorSet.cautions
+                    + " caution"
+                    + (ErrorSet.cautions > 1 ? "s" : ""));
+        if (ErrorSet.warnings != 0)
+            System.out.println(
+                ErrorSet.warnings
+                    + " warning"
+                    + (ErrorSet.warnings > 1 ? "s" : ""));
+        if (ErrorSet.errors != 0)
+            System.out.println(
+                ErrorSet.errors + " error" + (ErrorSet.errors > 1 ? "s" : ""));
+
+        // If we call exit here, we will break GUI-based clients.
+        // Return error status to caller:
+        if (ErrorSet.errors > 0)
+            return errorExitCode;
+        else {
+            return okExitCode;
+        }
     }
 
     /**

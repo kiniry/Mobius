@@ -7,12 +7,10 @@ import javafe.ast.LexicalPragma;
 import javafe.ast.ModifierPragma;
 import javafe.ast.StmtPragma;
 import javafe.ast.TypeDeclElemPragma;
-import javafe.ast.TypeModifierPragma;
 import javafe.ast.PrettyPrint;
 
 import javafe.util.Assert;
 import javafe.util.Location;
-import javafe.util.CorrelatedReader;
 
 /**
  * The <code>Token</code> class defines a set of fields that describe

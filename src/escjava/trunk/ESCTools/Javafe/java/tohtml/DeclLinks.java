@@ -9,13 +9,9 @@ package tohtml;
 */
 
 import java.util.Enumeration;
-import java.util.Hashtable;
 
 import javafe.ast.*;
 
-import javafe.reader.StandardTypeReader;
-
-import javafe.parser.PragmaParser;
 
 import javafe.tc.TypeSig;
 import javafe.tc.TypeCheck;

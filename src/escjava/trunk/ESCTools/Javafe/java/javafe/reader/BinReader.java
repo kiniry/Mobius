@@ -3,7 +3,6 @@
 package javafe.reader;
 
 import java.io.*;
-import java.util.*;
 
 import javafe.ast.CompilationUnit;
 import javafe.ast.TypeDecl;
@@ -12,7 +11,6 @@ import javafe.ast.ImportDeclVec;
 import javafe.ast.PrettyPrint;			// Debugging methods only
 
 import javafe.genericfile.*;
-import javafe.util.Location;
 
 /**
  * A BinReader is a Reader that reads in CompilationUnits from binary

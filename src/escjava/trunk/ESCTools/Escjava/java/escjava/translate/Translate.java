@@ -18,7 +18,6 @@ import javafe.util.Assert;
 import javafe.util.Set;
 import javafe.util.ErrorSet;
 import javafe.util.Info;
-import javafe.tc.ConstantExpr;
 import javafe.tc.TypeSig;
 import javafe.tc.EnvForTypeSig;
 import javafe.Tool;
@@ -104,7 +103,7 @@ public final class Translate
             }
             System.out.println(TypeCheck.inst.getSig(rd.parent).toString() + "." +
                                TypeCheck.inst.getRoutineName(rd) +
-                               TypeCheck.inst.getSignature(rd));
+                               TypeCheck.getSignature(rd));
             System.out.flush();
         }
 
@@ -3806,9 +3805,12 @@ public final class Translate
 
     private String kindOfModCheck = "assignment";
 
+/* UNUSED
     private boolean modChecksComplete(Expr precondition, ExprVec ev, int callLoc, int aloc, boolean doCheck) {
 	return modChecksComplete(precondition,null,ev,callLoc,aloc,Location.NULL,doCheck);
     }
+*/
+
 	// Returns true if definitely not modified
 	// Returns false if possibly or definitely modified
     private boolean modChecksComplete(Expr precondition, Expr tprecond2, 

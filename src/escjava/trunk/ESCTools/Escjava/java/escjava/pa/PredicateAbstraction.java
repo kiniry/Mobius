@@ -240,6 +240,7 @@ public class PredicateAbstraction
 	}
     }
 
+/* Unused.
     private void inferPredicatesOld(LoopCmd g, Set env, Set targets) {
 	Set t = new Set(targets.elements());
 	t.intersect(env);
@@ -275,7 +276,7 @@ public class PredicateAbstraction
 	    }
 	}
     }
-
+*/
 
     private void inferPredicates(LoopCmd g, Set env, Set targets) {
 

@@ -2,9 +2,6 @@
 
 package javafe.tc;
 
-
-import java.util.Hashtable;
-
 import javafe.ast.*;
 import javafe.util.*;
 

@@ -15,7 +15,6 @@ import javafe.util.ErrorSet;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.io.File;
-import java.io.FilenameFilter;
 
 /**
  * <code>OutsideEnv</code> implements the top-level environment

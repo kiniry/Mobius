@@ -251,18 +251,19 @@ public class TypeSig extends Type
     //@ requires (enclosingType != null) ==> (decl != null)
     //@ requires (decl==null) == (CU==null)
     //@ ensures \result != null;
-    private static TypeSig make(String[] packageName,
-				/*@ non_null @*/ String simpleName,
-				TypeSig enclosingType,
-				TypeDecl decl, 
-				CompilationUnit CU) {
-	TypeSig t = Types.makeTypeSig(packageName,
-				    simpleName,
-				    enclosingType,
-				    decl, 
-				    CU);
-	return t;
-    }
+// UNUSED
+//    private static TypeSig make(String[] packageName,
+//				/*@ non_null @*/ String simpleName,
+//				TypeSig enclosingType,
+//				TypeDecl decl, 
+//				CompilationUnit CU) {
+//	TypeSig t = Types.makeTypeSig(packageName,
+//				    simpleName,
+//				    enclosingType,
+//				    decl, 
+//				    CU);
+//	return t;
+//    }
     
     /***************************************************
      *                                                 *

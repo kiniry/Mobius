@@ -1772,11 +1772,13 @@ try{
      * tag at the specified location is underway by a particular
      * developer.
      */
+/* UNUSED
     private void notePragmaUnderway(int loc, int tag, String username) {
         ErrorSet.fatal(loc, "Unsupported pragma: " + 
                        TagConstants.toString(tag) +
                        "; " + username + "@users.sf.net is working on it.");
     }
+*/
     
     /**
      * Emit a caution to the user if verbosity is enabled that the

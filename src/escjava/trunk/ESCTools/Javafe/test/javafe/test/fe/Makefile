@@ -11,6 +11,8 @@ export JAVA ?= java
 ## be run via this Makefile directly.  The definition here must be the same as
 ## it is in ${JAVAFE_ROOT}
 export CLASSDIRECTORY ?= ${JAVAFE_ROOT}/classfiles
+export CAN_CLASSDIRECTORY ?= ${call canonicalize,${CLASSDIRECTORY}}
+
 ## Define, use CLASSPATH so it can be overridden during release testing
 export CLASSPATH ?= $(call canonicalize,${CLASSDIRECTORY})
 
@@ -23,7 +25,7 @@ else
   JBIN =
 endif
 
-export TOOLCMD = ${JAVA} -mx40m -classpath $(call canonicalize,${CLASSDIRECTORY}) javafe.test.Print ${JBIN}
+export TOOLCMD = ${JAVA} -mx40m -classpath ${CAN_CLASSDIRECTORY} javafe.test.Print ${JBIN}
 export TOOLARGS = -noprint -typecheck -quiet -testMode
 export TOOL = ${TOOLCMD} ${TOOLARGS}
 

@@ -3,9 +3,7 @@
 package escjava;
 
 import java.util.Enumeration;
-import java.util.Hashtable;
 import java.util.Vector;
-import java.util.ArrayList;
 import java.io.*;
 
 import javafe.ast.*;
@@ -21,8 +19,6 @@ import javafe.reader.StandardTypeReader;
 import escjava.reader.EscTypeReader;
 
 import javafe.parser.PragmaParser;
-import javafe.tc.OutsideEnv;
-import javafe.genericfile.GenericFile;
 
 import escjava.sp.*;
 
@@ -166,6 +162,21 @@ public class Main extends javafe.SrcTool
 
     }
 
+    /**
+     * An entry point for the tool useful for executing tests,
+     * since it returns the exit code.
+     * 
+     * @param args The command-line arguments the program was invoked with
+     * @return The exit code for the program, indicating either a successful 
+     * 		exit or an exit with errors or an exit because of an out of
+     * 		memory condition
+     * @see javafe.Tool#run(java.lang.String[])
+     */
+    //@ requires args != null;
+    /*@ ensures \result == okExitCode || \result == badUsageExitCode
+      @      || \result == errorExitCode || \result == outOfMemoryExitCode;
+     */
+ 
     public static int compile(String[] args) {
         try {
             Main t = new Main();

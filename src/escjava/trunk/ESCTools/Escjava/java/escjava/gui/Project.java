@@ -135,9 +135,7 @@ public class Project {
 		boolean b = f.getBoolean(options);
 		if (b) { sb.append(" -"); sb.append(opt[0]); }
 	    } catch (Exception e) {
-		// FIXME - does not save the state of -v
-		if (!opt[1].equals("v"))
-		    System.out.println("FAILED TO RECOGNIZE FIELD " + opt[1]);
+		System.out.println("FAILED TO RECOGNIZE FIELD " + opt[1]);
 	    }
 	}
 	return sb.toString() + " " + GUI.gui.options().nowarnOptionString();

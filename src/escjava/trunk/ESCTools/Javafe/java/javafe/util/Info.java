@@ -2,8 +2,6 @@
 
 package javafe.util;
 
-import java.io.*;
-
 /**
  * The <code>Info</code> class is responsible for displaying verbose
  * and debugging information to the user.

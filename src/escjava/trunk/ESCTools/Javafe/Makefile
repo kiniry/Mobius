@@ -17,6 +17,7 @@ include ${TOP}/Makefile.defs
 export CLASSDIRECTORY = ${JAVAFE_ROOT}/classfiles
 export SOURCEDIRECTORY = ${JAVAFE_ROOT}/java
 export TESTSOURCEDIRECTORY = ${JAVAFE_ROOT}/test
+export CAN_CLASSDIRECTORY = ${call canonicalize,${CLASSDIRECTORY}}
 
 ## This one is needed in submakes that don't define their own classpath
 export CLASSPATH = $(call canonicalize,${CLASSDIRECTORY}:${ESCTOOLS_ROOT}/Utils)

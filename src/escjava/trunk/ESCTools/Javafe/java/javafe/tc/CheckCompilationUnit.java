@@ -3,7 +3,6 @@
 package javafe.tc;
 
 import javafe.ast.*;
-import javafe.parser.*;
 import javafe.util.*;
 
 /**

@@ -4,11 +4,6 @@ package javafe.tc;
 
 import javafe.ast.*;
 
-import javafe.util.Location;
-import javafe.util.ErrorSet;
-import javafe.util.Assert;
-
-
 /**
  * EnvForTypeSigs are used to extend an existing Env with the
  * bindings of a TypeSig. <p>

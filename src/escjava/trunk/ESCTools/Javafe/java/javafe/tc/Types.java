@@ -5,7 +5,6 @@ package javafe.tc;
 import java.io.ByteArrayOutputStream;
 import javafe.ast.*;
 import javafe.tc.TagConstants;
-import javafe.util.ErrorSet;
 import javafe.util.Assert;
 import javafe.util.Location;
 

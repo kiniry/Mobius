@@ -8,7 +8,6 @@ package escjava.translate;
   */
 
 import java.io.*;
-import java.util.Vector;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Arrays;
