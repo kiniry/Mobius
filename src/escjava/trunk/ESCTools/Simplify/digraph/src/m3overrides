@@ -1,0 +1,8 @@
+% Last modified on Thu Apr  4 11:19:03 PST 2002 by saxe  
+%      modified on Mon Oct 14 09:58:08 PDT 1996 by heydon
+
+% On some systems, the following line may be unnecessary or may need to
+% be changed :
+WDROOT = "../.."
+
+% override ("libm3", WDROOT)

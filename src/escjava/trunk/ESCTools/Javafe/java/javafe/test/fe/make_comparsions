@@ -1,0 +1,14 @@
+#!/bin/csh -f
+
+rm -f comparsions
+touch comparsions
+
+foreach i (test? test?? test??? test???? test?????)
+   echo "****************************** $i ******************************" >> comparsions
+   cat $i/out >> comparsions
+   echo "------------------------------ vs. javac's: ------------------------------" >> comparsions
+   cat $i/outc >> comparsions
+
+  echo -n "."
+end
+echo ""

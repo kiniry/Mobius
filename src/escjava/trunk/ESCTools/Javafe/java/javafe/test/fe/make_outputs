@@ -1,0 +1,13 @@
+#!/bin/csh -f
+
+
+foreach i (test? test?? test??? test???? test?????)
+  echo "  Running $i..."
+
+  setenv TOOLCMD "${JAVA} -mx40m javafe.test.Print -classpath `pwd`/${i} -bootclasspath ${JDKBINARIES}"
+  setenv TOOLARGS "-noprint -typecheck"
+
+  setenv TOOL "${TOOLCMD} ${TOOLARGS}"
+
+  (cd $i; ./run |& sed "s|`pwd`|<TEST>|g" > out)
+end
