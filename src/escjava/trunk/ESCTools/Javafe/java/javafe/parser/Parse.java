@@ -505,6 +505,10 @@ VariableDeclarator:
       seqTypeDeclElem.addElement( pragma );
       l.getNextToken();
     }
+    else if (l.ttype == TagConstants.POSTMODIFIERPRAGMA) {
+	// FIXME - ignore for now
+      l.getNextToken();
+    }
     else {
       /* Is field or method declaration */
       int locType = l.startingLoc;
