@@ -701,15 +701,11 @@ your frame axioms with ESC/Java2.
 
 @cindex Heavyweight Specifications
 
-@page
-
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @node Invariants, Loops, Heavyweight, Core
 @unnumberedsec Invariants
 
 @cindex Invariants
-
-@page
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @node Loops, Aliasing, Invariants, Core
@@ -717,15 +713,11 @@ your frame axioms with ESC/Java2.
 
 @cindex Reasoning about Loops
 
-@page
-
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @node Aliasing, Models, Loops, Core
 @unnumberedsec Aliasing
 
 @cindex Aliasing
-
-@page
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @node Models,  , Aliasing, Core
@@ -741,20 +733,26 @@ your frame axioms with ESC/Java2.
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @menu
-* Annotating Code::             Annotating preexisting code.
-* Annotating APIs::             Annotating APIs.
-* Designing by Contract::       Design by Contract with JML for Java.
+* Abstract Classes and Interfaces:: Specifying abstract classes and interfaces.  
+* Annotating Code::                 Annotating preexisting code.
+* Annotating APIs::                 Annotating APIs.
+* Designing by Contract::           Design by Contract with JML for Java.
 @end menu
 
-@page
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node Abstract Classes and Interfaces, Annotating Code, Using, Using
+@unnumberedsec Specifying Abstract Classes and Interfaces
 
-@node Annotating Code, Annotating APIs, Using, Using
+@cindex Specifying Abstract Classes and Interfaces
+@cindex Abstract Classes, Specifying
+@cindex Interfaces, Specifying
+
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node Annotating Code, Annotating APIs, Abstract Classes and Interfaces, Using
 @unnumberedsec Annotating Preexisting Java Code
 
 @cindex Annotating Existing Java Code
 @cindex Code Annotation
-
-@page
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @node Annotating APIs, Designing by Contract, Annotating Code, Using
@@ -762,8 +760,6 @@ your frame axioms with ESC/Java2.
 
 @cindex Annotating Existing APIs
 @cindex API Annotation
-
-@page
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @node Designing by Contract,  , Annotating APIs, Using
