@@ -204,6 +204,7 @@ if ( ! $?ESC_CLASSPATH ) then
 	endif
     endif
 endif
+set ESC_CLASSPATHX = ${ESC_CLASSPATH}
 
 ## Simplify settings
 if ($?PROVER_KILL_TIME) then
@@ -233,7 +234,7 @@ if ( $?ESCJ_VERBOSE ) then
     echo "Executing:";
     echo "${JAVA} ${JAVA_VM_FLAGS}";
     echo "  -Dsimplify=${ESCJ_SIMPLIFY}";
-    echo "  -classpath ${ESC_CLASSPATH}";
+    echo "  -classpath ${ESC_CLASSPATHX}";
     echo "  " ${MAIN} ;
     echo "  " ${JBIN} ;
     echo "  -classpath ${CLASSPATH}";
@@ -244,5 +245,5 @@ if ( $?ESCJ_VERBOSE ) then
 endif
 
 ${JAVA} ${JAVA_VM_FLAGS} -Dsimplify=${ESCJ_SIMPLIFY} \
-    -classpath ${ESC_CLASSPATH} ${MAIN} \
+    -classpath ${ESC_CLASSPATHX} ${MAIN} \
     ${JBIN} -classpath ${CLASSPATH} -specs ${ESC_SPECS} ${ESCJ_STDARGS} $*
