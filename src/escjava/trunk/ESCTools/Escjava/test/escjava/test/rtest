@@ -16,7 +16,7 @@ export CLASSPATH
 ./run -quiet -plainwarning -notrace ${flags} > out 2>&1
 #./run -plainwarning -notrace ${flags} > out 2>&1
 
-if ! diff out ans > diff; then
+if ! diff out ans > diffs; then
   echo Failed;
   cd ..
   exit 1;
