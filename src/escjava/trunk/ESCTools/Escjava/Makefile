@@ -349,7 +349,7 @@ test_matrix:
 .PHONY: self_test
 self_test: compile
 	${ESCJ} -classpath ${ESCTOOLS_ROOT}/Javafe/java:${ESCTOOLS_ROOT}/Escjava/java:${ESCTOOLS_ROOT}/Utils \
-		-source 1.4 -nocheck -quiet -noSemicolonWarnings \
+		-nocheck -source 1.4 -quiet -noSemicolonWarnings \
 		${OTHERSOURCEFILES} ${JAVASOURCEFILES}
 
 ## FIXME - is this used? should it be?
