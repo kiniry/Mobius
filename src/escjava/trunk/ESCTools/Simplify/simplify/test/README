@@ -5,6 +5,10 @@ test.out, and update test.out to be the results of the current run
 indicates the instance of Simplify to use in the test, and should be
 edited as appropriate to the site and the build being tested.
 
+>> Changed to compare against a test.ans, saving the actual output in 
+>> test.out only if there were differences.  This to avoid blowing away
+>> the oracle output on each run during debugging.  DRCok
+
 Running the script runtests in the subdirectory perf will apply
 "time Simplify" to each 18 tests in the small performance test
 suite discussed in the Simplify research report [0].

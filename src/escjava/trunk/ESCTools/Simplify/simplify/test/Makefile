@@ -4,6 +4,8 @@
 # Simp=/proj/m3/pkg/simplify/AOSF/Simplify
 # Simp=/proj/m3/pkg/simplify/LINUXLIBC6/Simplify
 
+Simp = ../$(OUTPUTDIR)/Simplify
+
 test:
 	@echo "The following should be valid:" > /tmp/out
 	$(Simp) Examples.valid >> /tmp/out
@@ -28,9 +30,8 @@ test:
 	$(Simp) -ax esc OrdersTest.sx >> /tmp/out
 	@echo "" >> /tmp/out
 	@echo Following diffs may not be empty, if satisfying contexts changed
-	(diff /tmp/out test.out || exit 0)
+	(diff /tmp/out test.ans || exit 0)
 	@echo Following diffs should be empty.
-	(diff /tmp/out test.out | egrep "[:] Valid|[:] Invalid|[:] Unknown[.]" || exit 0)
-	mv test.out test.out.bak
+	(diff /tmp/out test.ans | egrep "[:] Valid|[:] Invalid|[:] Unknown[.]" || exit 0)
 	mv /tmp/out test.out
 
