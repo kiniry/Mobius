@@ -257,6 +257,7 @@ binary-release: build docs javadoc
 	cp README.first README.txt ${RELTEMP}
 	cd release-files; cp `ls | grep -v CVS` ${RELTEMP}
 	cp jmlspecs.jar ${RELTEMP}
+	-find ${RELTEMP} -name "*~" -exec rm -f {} \; >& /dev/null
 	cd ${RELTEMP}; tar cjvf ${RELDIR}/${RELTAR} *
 	rm -rf ${RELTEMP}
 
@@ -398,7 +399,7 @@ make-test:
 ## Experimental rule to generate a file that references every type
 ## that currently has a spec and run escjava2 on it to try to detect problems
 ## with package- and private-level types.
-check-specs:	jmlspecs.jar
+check-specs:	build jmlspecs.jar
 	jar tf jmlspecs.jar | sed -e s+\\.spec++ | \
 		sed -e s+\\.refines-spec++ | sed -e s+\\.refines++ | \
 		sed -e s+\\.jml++ | sed -e s+\\.java++ | sed -e s+-java++ | \
