@@ -49,11 +49,11 @@ public class DisjunctionProver {
 	bdd.jbdd_free();
 	
 	switch( r ) {
-	  case prover.VALID:
+	  case Prover.VALID:
 	    valid.add( new Disjunction(d) );
 	    return VALID;
 	    
-	  case prover.INVALID:
+	  case Prover.INVALID:
 	    invalid.add( new Disjunction(d) );
 	    return INVALID;
 	}
