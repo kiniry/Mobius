@@ -41,7 +41,7 @@
 //@ behavior
 //@ normal_behavior
 //@ exceptional_behavior
-//@ abrubt_behavior
+//@ abrupt_behavior
 
 // redundant specifications
 

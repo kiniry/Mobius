@@ -180,10 +180,15 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
             case TagConstants.JML_NOT_MODIFIED: // from EscPragmaParser.continuePragma(Token)
             case TagConstants.MODIFIES: { // from EscPragmaParser.continuePragma(Token)
                 Expr e = ((CondExprModifierPragma)mp).expr;
+                Expr p = ((CondExprModifierPragma)mp).cond;
                 write(o, "/*@ "); 
                 write(o, TagConstants.toString(tag)); 
                 write(o, ' ');
                 self.print(o, ind, e); 
+		if (p != null) {
+		    write(o, " if ");
+		    self.print(o, ind, p); 
+		}
                 write(o, "  */");
                 break;
             }

@@ -660,7 +660,7 @@ public class TagConstants extends javafe.tc.TagConstants
         Identifier.intern("\\such_that"),
         Identifier.intern("\\sum"),
         Identifier.intern("\\working_space"),
-        Identifier.intern("abrubt_behavior"),
+        Identifier.intern("abrupt_behavior"),
         Identifier.intern("accessible_redundantly"),
         Identifier.intern("accessible"),
         Identifier.intern("also"),
