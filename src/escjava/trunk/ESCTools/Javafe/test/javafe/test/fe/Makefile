@@ -71,6 +71,12 @@ compare: outputs javac
 summary: test*
 	./make_summary
 
+ifdef COMSPEC
+export SUFFIX=.windows
+else
+export SUFFIX=
+endif
+
 # This target executes and compares a given test, e.g. 'make dotest1'
 # executes and compares test1
 ## Must have variables JAVA and JAVAFE_ROOT set
@@ -79,7 +85,12 @@ do%: testclasses
 	   export TOOLCMD="${TOOLCMD}" ;\
 	   export TOOL="${TOOL} -classpath ." ; \
 	   ./run 2>&1 | sed "s|`pwd`|<TEST>|g" > out)
-	@diff $*/out $*/ans || echo Test $* failed
+	@if [ -e $*/ans${SUFFIX} ]; then \
+		diff $*/out $*/ans${SUFFIX} || echo Test $* failed ;\
+	else \
+		diff $*/out $*/ans || echo Test $* failed ;\
+	fi
+#endif
 
 ex%: testclasses
 	@( cd $*; \
