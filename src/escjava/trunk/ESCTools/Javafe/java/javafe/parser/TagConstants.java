@@ -115,7 +115,7 @@ public class TagConstants extends javafe.ast.TagConstants
         for(int i = 1 + LAST_KEYWORD - FIRST_KEYWORD; i < noTokens; i++)
             if (getCode(i) == code) return getString(i);
 
-        if (code<=javafe.ast.TagConstants.LAST_TAG)
+        if (code <= javafe.ast.TagConstants.LAST_TAG)
             return javafe.ast.TagConstants.toString(code);
 
         return "Tag unknown to javafe.parser.TagConstants <" + code 
