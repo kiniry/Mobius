@@ -766,9 +766,55 @@ public class FlowInsensitiveChecks
             }
 
 	    case TagConstants.ASSERTSTMT: {
-		AssertStmt a = (AssertStmt)s;
-		if (a.label != null) a.label = checkExpr(e,a.label);
-		a.expr = checkExpr(e,a.expr, Types.booleanType);
+		AssertStmt assertStmt = (AssertStmt)s;
+		if (assertStmt.label != null)
+                    assertStmt.label = checkExpr(e, assertStmt.label);
+		assertStmt.pred = checkExpr(e, assertStmt.pred, Types.booleanType);
+
+                // Turn a Java assert into a conditional throw and attach it to the
+                // AssertStmt.
+
+                // assert Predicate ;
+                // ==>
+                // if (! Predicate)
+                //   throw new java.lang.AssertionError();
+                // or
+                // assert Predicate : LabelExpr ;
+                // ==>
+                // if (! Predicate)
+                //   throw new java.lang.AssertionError(LabelExpr);
+                int startLoc = assertStmt.getStartLoc();
+                int endLoc = assertStmt.getEndLoc();
+                Assert.notFalse(startLoc != Location.NULL);
+                UnaryExpr negatedPredicate = 
+                    UnaryExpr.make(TagConstants.NOT, assertStmt.pred, startLoc);
+                ParenExpr parenthesizedNegatedPredicate =
+                    ParenExpr.make(negatedPredicate, startLoc, endLoc);
+                Name javaLangAssertionErrorName = 
+                    Name.make("java.lang.AssertionError", startLoc);
+                TypeName javaLangAssertionTypeName = TypeName.make(javaLangAssertionErrorName);
+                ExprVec constructorArgs = null;
+                if (assertStmt.label != null) {
+                    Expr [] constructorArgsAsArray = { assertStmt.label };
+                    constructorArgs = ExprVec.make(constructorArgsAsArray);
+                } else {
+                    constructorArgs = ExprVec.make();
+                }
+                NewInstanceExpr newAssertionError = 
+                    NewInstanceExpr.make(null, Location.NULL, javaLangAssertionTypeName,
+                                         constructorArgs, null, startLoc, endLoc);
+                ThrowStmt throwAssertionError = ThrowStmt.make(newAssertionError, 
+                                                               startLoc);
+                Stmt elseSkip = SkipStmt.make(startLoc);
+                IfStmt ifStmt = IfStmt.make(parenthesizedNegatedPredicate, throwAssertionError, 
+                                            elseSkip, startLoc);
+                // Now typecheck the generated IfStmt so that it is fully resolved.
+                ifStmt.expr = checkExpr(e, ifStmt.expr, Types.booleanType);
+                checkStmt(e, ifStmt.thn);
+                checkStmt(e, ifStmt.els);
+                // Reattach this translated form to the AST node.
+                assertStmt.ifStmt = ifStmt;
+
 		return e;
 	    }
 
