@@ -48,35 +48,10 @@ export JUNIT_JAR=${JUNIT_HOME}/junit.jar
 
 export CLASSES=${CLASSDIRECTORY}
 export DECSRCLIBRARY=${JAVAFE_ROOT}/decsrclib
-
-export CLASSPATH=${CLASSES}:${DECSRCLIBRARY}
-# javadepend needs a classpath where all the sources are in the current dir:
-export LCLASSPATH=.:${CLASSES}
-
+export CLASSPATH=${CLASSES}:${DECSRCLIBRARY}:.:
 
 ######################### java* cmds #########################
 
-#
-# which version of java:
-#
 export JAVA=java
-
-#
-# Other java* commands:
-#
 export JAVAC=javac
-export OLD_JAVAC=/usr/java/jdk-1.2/bin/javac
 export JAVADOC=javadoc
-
-#
-# Aliases to invoke javac with proper arguments for human use:
-#
-alias javacd='${JAVAC} -d ${CLASSDIRECTORY}'
-alias jall='javacd *.java'
-
-#
-# Fast incremental recompilation of selected classes:
-#
-alias jfast='(cd ${SOURCEDIRECTORY}; export CLASSPATH=${LCLASSPATH}; javadepend -d ${CLASSDIRECTORY} \!* | javamake -d ${CLASSDIRECTORY} - )'
-
-alias sprint='swiftrun ${CLASSDIRECTORY}/compiled.zip javafe.test.Print'

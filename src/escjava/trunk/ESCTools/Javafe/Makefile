@@ -28,25 +28,23 @@ zip: sourcecheck
 
 .PHONY: source
 source:
-	cd astgen;			${MAKE}
-	cd java/javafe/ast; 		${MAKE} source
-	cd java/javafe/tc; 		${MAKE} source
+	cd astgen; ${MAKE}
+	cd java/javafe/ast; ${MAKE} source
+	cd java/javafe/tc; ${MAKE} source
 
 .PHONY: clean
 clean: cleanclasses sourcecheck
-	rm -f ${CLASSDIRECTORY}/compiled.zip
 	cd doc/javadoc; rm -f *.html
-	cd java/javafe/ast;         	${MAKE} clean
-	cd test/javafe/parser/test; 	${MAKE} clean
-	cd java/javafe/tc;          	${MAKE} clean
-	cd test/javafe/test;        	${MAKE} clean
-	cd java/jtools; 	    	${MAKE} clean
-	cd astgen; 		    	${MAKE} clean
+	cd java/javafe/ast; ${MAKE} clean
+	cd test/javafe/parser/test; ${MAKE} clean
+	cd java/javafe/tc; ${MAKE} clean
+	cd test/javafe/test; ${MAKE} clean
+	cd java/jtools; ${MAKE} clean
+	cd astgen; ${MAKE} clean
 
 .PHONY: cleanclasses
 cleanclasses:
 	cd classfiles; find . -name \*.class | xargs rm -f
-	rm -f classfiles/.javamake
 
 .PHONY: jtools
 jtools:	javafe
@@ -121,7 +119,6 @@ javafe_test: javafe sourcecheck
 
 .PHONY: compile
 compile: javafe javafe_test zip sourcecheck
-#	swift -O2 ${CLASSDIRECTORY}/javafe.zip -o ${CLASSDIRECTORY}/compiled.zip
 
 .PHONY: esc
 esc: source
