@@ -69,7 +69,7 @@ test60	Omit	inheriting method specifications and non_null from interfaces - Omit
 test61	Good	elements left unchanged by arraycopy (based on ex from Bart Jacobs)
 test62	Good	order of testing assertions
 test63	Good	integer division
-test64	FIX	-inlineFromConstructors flag -- FIXME error messages vary in order they are output
+test64	Good	-inlineFromConstructors flag -- FIXME error messages vary in order they are output
 test65	Good	continued-line ellipses at the end of associated declarations
 test66	Good	-excuseNullInitializers flag
 test67	Good	comment parsing, including @-signs at beginning of lines

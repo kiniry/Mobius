@@ -1,19 +1,19 @@
 #!/bin/csh -f
 # usage: run FLAGS
 
-${ESCJ} $* -inlineConstructors bag.java
-${ESCJ} $* flags.java
-${ESCJ} $* -inlineCheckDepth 1 flags.java
-${ESCJ} $* -inlineCheckDepth 2 flags.java
-${ESCJ} $* -inlineCheckDepth 1 -inlineDepthPastCheck 1 flags.java
-${ESCJ} $* -inlineCheckDepth 1 helper.java
-${ESCJ} $* -inlineCheckDepth 2 helper.java
-${ESCJ} $* -inlineCheckDepth 1 -inlineDepthPastCheck 1 helper.java
-${ESCJ} $* -inlineDepthPastCheck 1 flags.java
-${ESCJ} $* -inlineDepthPastCheck 2 flags.java
-${ESCJ} $* -inlineConstructors nowarn.java
-${ESCJ} $* -inlineCheckDepth 1 postcondition.java
-${ESCJ} $* -inlineConstructors postcondition2.java
-${ESCJ} $* -inlineCheckDepth 1 skip.java
-${ESCJ} $* -inlineCheckDepth 1 this.java
+${ESCJ} $* -noNotCheckedWarnings -inlineConstructors bag.java
+${ESCJ} $* -noNotCheckedWarnings flags.java
+${ESCJ} $* -noNotCheckedWarnings -inlineCheckDepth 1 flags.java
+${ESCJ} $* -noNotCheckedWarnings -inlineCheckDepth 2 flags.java
+${ESCJ} $* -noNotCheckedWarnings -inlineCheckDepth 1 -inlineDepthPastCheck 1 flags.java
+${ESCJ} $* -noNotCheckedWarnings -inlineCheckDepth 1 helper.java
+${ESCJ} $* -noNotCheckedWarnings -inlineCheckDepth 2 helper.java
+${ESCJ} $* -noNotCheckedWarnings -inlineCheckDepth 1 -inlineDepthPastCheck 1 helper.java
+${ESCJ} $* -noNotCheckedWarnings -inlineDepthPastCheck 1 flags.java
+${ESCJ} $* -noNotCheckedWarnings -inlineDepthPastCheck 2 flags.java
+${ESCJ} $* -noNotCheckedWarnings -inlineConstructors nowarn.java
+${ESCJ} $* -noNotCheckedWarnings -inlineCheckDepth 1 postcondition.java
+${ESCJ} $* -noNotCheckedWarnings -inlineConstructors postcondition2.java
+${ESCJ} $* -noNotCheckedWarnings -inlineCheckDepth 1 skip.java
+${ESCJ} $* -noNotCheckedWarnings -inlineCheckDepth 1 this.java
 

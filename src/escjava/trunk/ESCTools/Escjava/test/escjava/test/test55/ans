@@ -1,30 +1,6 @@
-/home/cok/ESCTools/ESCTools/specs/java/lang/System.spec:34: Not implemented: Array-range expression not yet implemented
-    //@ modifies \dttfsa(Object[], "identity", dst)[*];
-                                                   ^
-/home/cok/ESCTools/ESCTools/specs/java/lang/System.spec:34: Not implemented: Array-range expression not yet implemented
-    //@ modifies \dttfsa(Object[], "identity", dst)[*];
-                                                   ^
-/home/cok/ESCTools/ESCTools/specs/java/lang/System.spec:34: Not implemented: Array-range expression not yet implemented
-    //@ modifies \dttfsa(Object[], "identity", dst)[*];
-                                                   ^
-/home/cok/ESCTools/ESCTools/specs/java/lang/System.spec:34: Not implemented: Array-range expression not yet implemented
-    //@ modifies \dttfsa(Object[], "identity", dst)[*];
-                                                   ^
-/home/cok/ESCTools/ESCTools/specs/java/lang/System.spec:34: Not implemented: Array-range expression not yet implemented
-    //@ modifies \dttfsa(Object[], "identity", dst)[*];
-                                                   ^
 bag.java:6: Warning: Possible null dereference (Null)
     n = input.length;
              ^
-/home/cok/ESCTools/ESCTools/specs/java/lang/System.spec:34: Not implemented: Array-range expression not yet implemented
-    //@ modifies \dttfsa(Object[], "identity", dst)[*];
-                                                   ^
-/home/cok/ESCTools/ESCTools/specs/java/lang/System.spec:34: Not implemented: Array-range expression not yet implemented
-    //@ modifies \dttfsa(Object[], "identity", dst)[*];
-                                                   ^
-/home/cok/ESCTools/ESCTools/specs/java/lang/System.spec:34: Not implemented: Array-range expression not yet implemented
-    //@ modifies \dttfsa(Object[], "identity", dst)[*];
-                                                   ^
 bag.java:15: Warning: Array index possibly too large (IndexTooBig)
       if (a[i] < m) {
            ^
