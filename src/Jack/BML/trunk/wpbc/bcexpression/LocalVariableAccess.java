@@ -15,14 +15,15 @@ import bcclass.BCLocalVariable;
  * To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
-public class ObjectAccess extends Expression implements ReferenceExpression {
-	private BCLocalVariable local;
-	private int local_index;
+public class LocalVariableAccess extends Expression  {
+	private int index_of_localVariable;
+	//private int local_index;
 	
-	public ObjectAccess(BCLocalVariable _local) {
-		local = _local;
-		//setExpressionType(ExpressionConstants.OBJECTACCESS);
+
+	public LocalVariableAccess(int _index_of_localVariable) {
+		index_of_localVariable = _index_of_localVariable;
 	}
+
 
 	/* (non-Javadoc)
 	 * @see bcexpression.Expression#setType()

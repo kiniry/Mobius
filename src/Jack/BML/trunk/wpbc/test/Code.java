@@ -14,6 +14,7 @@ import org.apache.bcel.classfile.ConstantClass;
 import org.apache.bcel.classfile.ConstantMethodref;
 import org.apache.bcel.classfile.ConstantPool;
 import org.apache.bcel.classfile.JavaClass;
+import org.apache.bcel.classfile.LocalVariable;
 import org.apache.bcel.classfile.Method;
 import org.apache.bcel.generic.BranchInstruction;
 import org.apache.bcel.generic.CodeExceptionGen;
@@ -53,12 +54,13 @@ public class Code {
 				 MethodGen mg       = new MethodGen(methods[6], clazz.getClassName(), cp);
 			    System.out.println("*** method name " + mg.getName() + "***");
 			    System.out.println("**********************************");
+				printLVTable( mg, cp);
 				
 //				testCpConstantClass(cp) ;
 				//testIndexedInstructions(mg, cp);
 			    
 			    //printExcTable( mg) ;
-       			printBlocks1(mg);
+//       			printBlocks1(mg);
        			//printLVTable(mg);  
 //				printBlocksOld(mg);
 
@@ -72,10 +74,14 @@ public class Code {
 		dump("getConstantValue" + (String)cc.getConstantValue(_cp));
 	}
 	
-	public static void printLVTable(MethodGen mg)  {
+	public static void printLVTable(MethodGen mg, ConstantPoolGen cp)  {
 		LocalVariableGen[] lvs = mg.getLocalVariables();
+		LocalVariable _lv;
 		for (int i = 0 ; i < lvs.length; i++) {
-			dump(lvs[i].getName() + " at index : " + lvs[i].getIndex() + " has type " + lvs[i].getType().toString());
+			_lv = lvs[i].getLocalVariable(cp);
+			dump(lvs[i].getName() + "  cp index : " + lvs[i].getIndex() + " | type " + lvs[i].getType().toString() + "| signature " + _lv.getSignature() );
+
+			
 		}
 	}
 	
@@ -93,16 +99,16 @@ public class Code {
 			
 	}
 	 	
-	
-	public static void printBlocks1(MethodGen mg) {
-			InstructionList   il    = mg.getInstructionList();
-			BCInstruction[] _bca = Util. wrapByteCode(il, mg );
-			Trace trace = new Trace( _bca);
-			if (trace.getEntryBlocks() != null) {
-				dump("Entry Block" + trace.getEntryBlocks().size()); 
-				//trace.dump();
-			} 
-	}
+//	
+//	public static void printBlocks1(MethodGen mg) {
+//			InstructionList   il    = mg.getInstructionList();
+//			BCInstruction[] _bca = Util. wrapByteCode(il, mg );
+//			Trace trace = new Trace( _bca);
+//			if (trace.getEntryBlocks() != null) {
+//				dump("Entry Block" + trace.getEntryBlocks().size()); 
+//				//trace.dump();
+//			} 
+//	}
 	
 	public static void testIndexedInstructions(MethodGen mg, ConstantPoolGen cp) {
 		InstructionList   il    = mg.getInstructionList();
@@ -155,23 +161,23 @@ public class Code {
 		}
 	}
 
-	//offset ok
-	private static void printBytecode( MethodGen mg  ) {
-		InstructionList   il    = mg.getInstructionList();
-		BCInstruction[] _bca = Util. wrapByteCode(il , mg);
-		BCInstruction _i = _bca[0];
-		while(_i != null ) {
-			System.out.println(_i.getPosition() + " " +_i.getInstructionHandle().toString());
-			if ((_i instanceof BCJumpInstruction) && (((BCJumpInstruction)_i).getTarget() != null)) {
-				Instruction ins = ( (BCJumpInstruction)_i).getTarget().getInstructionHandle().getInstruction();
-				int offset = ( (BCJumpInstruction)_i).getTarget().getPosition();
-				System.out.println("|");
-				System.out.println("| -> target " + offset +"   "+ ins.toString());
-			//System.out.println("| -> target " + ((BranchInstruction)( (BCJumpInstruction)_i).getInstructionHandle()).get );
-			}
-			_i = _i.getNext();
-		}
-	}
+//	//offset ok
+//	private static void printBytecode( MethodGen mg  ) {
+//		InstructionList   il    = mg.getInstructionList();
+//		BCInstruction[] _bca = Util. wrapByteCode(il , mg);
+//		BCInstruction _i = _bca[0];
+//		while(_i != null ) {
+//			System.out.println(_i.getPosition() + " " +_i.getInstructionHandle().toString());
+//			if ((_i instanceof BCJumpInstruction) && (((BCJumpInstruction)_i).getTarget() != null)) {
+//				Instruction ins = ( (BCJumpInstruction)_i).getTarget().getInstructionHandle().getInstruction();
+//				int offset = ( (BCJumpInstruction)_i).getTarget().getPosition();
+//				System.out.println("|");
+//				System.out.println("| -> target " + offset +"   "+ ins.toString());
+//			//System.out.println("| -> target " + ((BranchInstruction)( (BCJumpInstruction)_i).getInstructionHandle()).get );
+//			}
+//			_i = _i.getNext();
+//		}
+//	}
 
 	/**
 	 * @param mg

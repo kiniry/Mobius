@@ -6,6 +6,7 @@
  */
 package bcexpression;
 
+import bcexpression.javatype.JavaBasicType;
 import bcexpression.javatype.JavaType;
 import type.BCType;
 
@@ -16,12 +17,44 @@ import type.BCType;
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
 public class NumberLiteral extends Expression {
-	private Number literal;
+//	private Number literal;
+	private int radix;
+	private String literal;
+	private JavaBasicType type;
 	
-	public NumberLiteral(Number _literal) {
+	/**
+	 * this constructor expects that _literal must be a correct representation of an integer litreral.
+	 * @param _literal - a string representation of integer
+	 * e.g. new  NumberLiteral("12")
+	 */
+	public NumberLiteral(String _literal) {
 		literal = _literal;
+		radix =10;
+		type  = JavaType.JavaINT;
 	}
 
+	/**
+	 * this constructor expects that _literal must be a correct representation of an integer litreral.
+	 * @param _literal - a string representation of integer
+	 * e.g. new  NumberLiteral("12")
+	 */
+	public NumberLiteral(int _literal) {
+		literal = Integer.toString(_literal);
+		radix =10;
+		type  = JavaType.JavaINT;
+	}
+	
+	/**
+	 * 
+	 * @param value - a correct value
+	 * @param radix - the radix in which the value is interpreted
+	 */
+	public NumberLiteral(String _literal, int _radix, JavaBasicType _type) {
+		literal = _literal;
+		radix = _radix;
+		type = _type;
+	}
+	
 	/* (non-Javadoc)
 	 * @see bcexpression.Expression#setType()
 	 */
@@ -33,17 +66,6 @@ public class NumberLiteral extends Expression {
 	 * @see bcexpression.Expression#getType()
 	 */
 	public BCType getType()  {
-		if (literal instanceof Integer ) {
-			return JavaType.JavaINT;
-		} else if (literal instanceof Float) {
-			return JavaType.JavaFLOAT;
-		} else if ( literal instanceof Double) {
-			return JavaType.JavaDOUBLE;
-		} else if (literal instanceof Byte) {
-			return JavaType.JavaBYTE;
-		} else if (literal instanceof Long) {
-			return JavaType.JavaLONG;
-		}
-		return null;
+		return type;
 	}
 }

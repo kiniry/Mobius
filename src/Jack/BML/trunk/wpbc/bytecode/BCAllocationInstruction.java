@@ -6,12 +6,9 @@
  */
 package bytecode;
 
-import org.apache.bcel.generic.CPInstruction;
 import org.apache.bcel.generic.InstructionHandle;
 
-import specification.ExceptionalPostcondition;
 import bcexpression.javatype.JavaType;
-import formula.Formula;
 
 /**
  * @author mpavlova

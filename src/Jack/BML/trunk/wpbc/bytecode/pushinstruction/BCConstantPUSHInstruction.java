@@ -4,7 +4,7 @@
  * To change the template for this generated file go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-package bytecode;
+package bytecode.pushinstruction;
 
 import org.apache.bcel.generic.ConstantPushInstruction;
 import org.apache.bcel.generic.InstructionHandle;
@@ -12,6 +12,7 @@ import specification.ExceptionalPostcondition;
 import formula.Formula;
 import bcexpression.Expression;
 import bcexpression.NumberLiteral;
+import bytecode.BCInstruction;
 
 /**
  * @author mpavlova

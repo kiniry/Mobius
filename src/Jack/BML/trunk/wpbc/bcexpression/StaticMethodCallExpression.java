@@ -1,4 +1,4 @@
-/*
+ /*
  * Created on 15 mars 2004
  *
  * To change the template for this generated file go to

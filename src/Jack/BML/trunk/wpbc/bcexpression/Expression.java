@@ -24,19 +24,24 @@ public   abstract class  Expression {
 	
 	private static final Counter counter  = Counter.getCounter();
 	
+	private static final ArithmeticExpression counter_plus_1  = new ArithmeticExpression(
+															counter,
+															new NumberLiteral("1", 10, JavaType.JavaINT),
+															ExpressionConstants.ADD);
+	
 	private static final ArithmeticExpression counter_minus_1  = new ArithmeticExpression(
 															counter,
-															new NumberLiteral(new Integer(1)),
+															new NumberLiteral("1", 10, JavaType.JavaINT),
 															ExpressionConstants.SUB);
 	
 	private static final ArithmeticExpression counter_minus_2  = new ArithmeticExpression(
 																counter,
-																new NumberLiteral(new Integer(2)),
+																new NumberLiteral("2", 10, JavaType.JavaINT),
 																ExpressionConstants.SUB);
 																
 	private static final ArithmeticExpression counter_minus_3  = new ArithmeticExpression(
 																counter,
-																new NumberLiteral(new Integer(3)),
+																new NumberLiteral("3", 10, JavaType.JavaINT),
 																ExpressionConstants.SUB);						
 																									
 	public static final NULL NULL = new NULL();
@@ -51,6 +56,10 @@ public   abstract class  Expression {
 	
 	public static Counter getCounter() {
 		return counter;
+	}
+	
+	public static ArithmeticExpression getCounter_plus_1() {
+		return counter_plus_1 ;
 	}
 	
 	public static ArithmeticExpression getCounter_minus_1() {
@@ -80,11 +89,11 @@ public   abstract class  Expression {
 		left = left2;
 	}
 	
-	/**
-	 * @param 
-	 */
-	public abstract void setType( );
-
+//	/**
+//	 * @param 
+//	 */
+//	public abstract void setType( );
+//
 
 	
 	
@@ -100,10 +109,9 @@ public   abstract class  Expression {
 	}
 	
 	public Expression substitute(Expression _e1 , Expression _e2) {
-		if (_e1 instanceof ReferenceExpression) {
-		
-			return this;	
-		}
+//		if (_e1 instanceof FieldAccessExpression) {
+//			return this;	
+//		}
 		
 		if (this.equals(_e1 ) ) {
 			this.setLeft(_e2.getLeft()) ;

@@ -5,6 +5,8 @@ public class A {
         public static long i;
         
         public static Code a = new Code();
+        
+        public int arr[] = new int[5];
 		
 		/*
 		 * ignore @ requires i == 1;
@@ -23,6 +25,12 @@ public class A {
 		 */
 		public long n(){
 				return m();
+		}
+		
+		
+		//requires arr != null
+		public void arrayaccess() {
+			arr[0] = arr[1] + 1;
 		}
 		
 		

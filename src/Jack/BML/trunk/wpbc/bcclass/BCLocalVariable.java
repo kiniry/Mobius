@@ -7,7 +7,10 @@
 package bcclass;
 
 import org.apache.bcel.classfile.LocalVariable;
-import org.apache.bcel.generic.Type;
+import org.apache.bcel.generic.LocalVariableGen;
+
+
+import bcexpression.javatype.JavaType;
 
 /**
  * @author mpavlova
@@ -17,34 +20,27 @@ import org.apache.bcel.generic.Type;
  */
 public class BCLocalVariable {
 	private  int index;
-	private  int start_pc;
 	private  int length;
-	private  int  name_index;
-	private  int signature_index;
-	  
-	private Type type; 
+	private String name;
+	private JavaType type; 
+	private  int start_pc;
 	
+//	private  int  name_index;	
 	
-	public BCLocalVariable(int _index, Type _type) {
-		type = _type;
-		index = _index;
-	}
-	
-	public BCLocalVariable(int _start_pc, int _length, int _name_index, int _signature_index, int _index ) {
-		//this(_index);
-		index = _index;
+	public BCLocalVariable(String _name, int _start_pc,  int _index,  JavaType _type ) {
+		name = _name;
 		start_pc = _start_pc;
-		length =  _length;
-		name_index = _name_index;
-		signature_index = _signature_index;
+		index = _index;
+		type = _type;
+//		length =  _length;
+//		name_index = _name_index;
+//		signature_index = _signature_index;
+		
 	}
 
-	public BCLocalVariable(LocalVariable lv) {
-		//lv.get
-		this( lv.getStartPC(), lv.getLength(), lv.getNameIndex(), lv.getSignatureIndex(), lv.getIndex());	
+	public BCLocalVariable(LocalVariableGen lv) {
+		this(lv.getName(), lv.getStart().getPosition() ,  lv.getIndex(), JavaType.getJavaType( lv.getType()));	
 	}
-	
-	
 
 	/**
 	 * @return
@@ -63,22 +59,31 @@ public class BCLocalVariable {
 	/**
 	 * @return
 	 */
-	public int getName_index() {
-		return name_index;
-	}
-
-	/**
-	 * @return
-	 */
-	public int getSignature_index() {
-		return signature_index;
-	}
-
-	/**
-	 * @return
-	 */
 	public int getStart_pc() {
 		return start_pc;
+	}
+
+//	/**
+//	 * @return
+//	 */
+//	public int getName_index() {
+//		return name_index;
+//	}
+//
+//	/**
+//	 * @return
+//	 */
+//	public int getSignature_index() {
+//		return signature_index;
+//	}
+//
+	
+
+	/**
+	 * @return
+	 */
+	public JavaType getType() {
+		return type;
 	}
 
 }

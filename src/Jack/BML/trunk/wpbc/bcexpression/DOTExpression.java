@@ -14,7 +14,7 @@ import constants.BCConstant;
  * To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
-public abstract class DOTExpression extends Expression implements ReferenceExpression {
+public abstract class DOTExpression extends Expression  {
 	private BCConstant left;
 	private Expression right;
 	
