@@ -3,7 +3,10 @@
 rem To install ESC/Java2 on a new machine, change the following two
 rem lines appropriately:
 set ESCJAVA_ROOT=F:\ESCJava-2.0a5
-set JAVA=F:\jsdk\1.4.2\bin\Java.exe
+rem set JAVA=F:\jsdk\1.4.2\bin\Java.exe
+
+set ESCJAVA_ROOT=C:/cygwin/ESC/ESCTools
+
 
 
 rem Some arguments to Simplify, passed via environment variables
@@ -16,16 +19,17 @@ set PROVER_CC_LIMIT=10
 if "%ESCJ_STDARGS%"=="" set ESCJ_STDARGS=-nowarn Deadlock
 
 rem ESCJ_ARGS is a variable local to this batch file
-set ESCJ_ARGS=%1
-:getargs
-shift
-if "%1"=="" goto endGetargs
-set ESCJ_ARGS=%ESCJ_ARGS% %1
-goto getargs
-:endGetargs
+set ESCJ_ARGS=%*
+rem :getargs
+rem shift
+rem if "%1"=="" goto endGetargs
+rem set ESCJ_ARGS=%ESCJ_ARGS% %1
+rem goto getargs
+rem :endGetargs
 
 rem USERPATH is a variable local to this batch file
 if "%CLASSPATH%"=="" set USERPATH=.
 if not "%CLASSPATH%"=="" set USERPATH=%CLASSPATH%
 @echo on
-"%JAVA%"  -Dsimplify=%ESCJ_SIMPLIFY% -classpath "%ESCJAVA_ROOT%\esctools2.jar" escjava.Main -classpath   %ESCJAVA_ROOT%\jmlspecs.jar -classpath . %ESCJ_STDARGS% %ESCJ_ARGS%
+echo %ESCJ_ARGS%
+java  -Dsimplify=%ESCJ_SIMPLIFY% -classpath "%ESCJAVA_ROOT%\esctools2.jar" escjava.Main -classpath  "%ESCJAVA_ROOT%\jmlspecs.jar;." %ESCJ_STDARGS% %ESCJ_ARGS%
