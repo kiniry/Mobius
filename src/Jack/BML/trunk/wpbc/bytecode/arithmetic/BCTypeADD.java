@@ -1,0 +1,67 @@
+package bytecode.arithmetic;
+
+import org.apache.bcel.generic.DADD;
+import org.apache.bcel.generic.FADD;
+import org.apache.bcel.generic.IADD;
+import org.apache.bcel.generic.InstructionHandle;
+import org.apache.bcel.generic.LADD;
+
+import formula.Formula;
+
+import specification.ExceptionalPostcondition;
+
+import bcexpression.ArithmeticExpression;
+import bcexpression.Expression;
+import bcexpression.ExpressionConstants;
+import bcexpression.NumberLiteral;
+import bcexpression.javatype.JavaType;
+import bcexpression.vm.Counter;
+import bcexpression.vm.Stack;
+import bytecode.BCConstants;
+import bytecode.BCInstructionCodes;
+import bytecode.arithmetic.*;
+
+/**
+ * @author Mariela
+ *
+ * To change this generated comment edit the template variable "typecomment":
+ * Window>Preferences>Java>Templates.
+ * To enable and disable the creation of type comments go to
+ * Window>Preferences>Java>Code Generation.
+ */
+public class BCTypeADD extends BCArithmeticInstruction {
+	/**
+	 * @param _instruction
+	 */
+	public BCTypeADD(InstructionHandle _instruction, JavaType _type) {
+		super(_instruction, _type);
+		if (_instruction.getInstruction() instanceof IADD) {
+			setArithmeticOperation(BCConstants.ADD_INT);
+			setInstructionCode(BCInstructionCodes.IADD);
+		} else if (_instruction.getInstruction() instanceof LADD) {
+			setArithmeticOperation(BCConstants.ADD_LONG);
+			setInstructionCode(BCInstructionCodes.LADD);
+		} 
+	}
+
+	/* (non-Javadoc)
+	 * @see bytecode.ByteCode#wp(formula.Formula, specification.ExceptionalPostcondition)
+	 */
+	public Formula wp(
+		Formula _normal_Postcondition,
+		ExceptionalPostcondition _exc_Postcondition) {
+		
+		Formula wp = null;
+		Stack stackTop = new Stack(Expression.getCounter());
+		Stack stackTop_minus_1 = new Stack(Expression.getCounter_minus_1());
+		ArithmeticExpression sum =
+			new ArithmeticExpression(
+				stackTop,
+				stackTop_minus_1,
+				ExpressionConstants.ADD);
+		_normal_Postcondition.substitute(Expression.getCounter(), Expression.getCounter_minus_1());
+		_normal_Postcondition.substitute(stackTop_minus_1, sum);
+		wp = _normal_Postcondition;
+		return wp;
+	}
+}

@@ -23,10 +23,20 @@ public class ArithmeticExpression  extends Expression {
 		arithmetic_op = _arithmetic_op;
 	}
 	
+	public ArithmeticExpression(Expression _left, byte _arithmetic_op ) {
+		this(_left, null, _arithmetic_op);
+	}
 	
+	/**
+	 * @return the code of the operation of this expression
+	 * for example the code of plus, minus
+	 */
+	public byte getArithmeticOperation() {
+		return arithmetic_op;
+	}
 	
 	public BCType getType() {
-		return JavaType.JavaINT;
+		return null;
 	}
 
 

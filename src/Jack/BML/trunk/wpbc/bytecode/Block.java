@@ -130,7 +130,7 @@ public class Block  implements ByteCode {
 		Formula  _np = _normal_Postcondition; 
 		
 		while (! _instr.equals(first)) {
-			_np = _instr.wp(_normal_Postcondition, _exc_Postcondition);
+			_np = _instr.wp(_np,  _exc_Postcondition);
 			_instr = _instr.getPrev();
 		}
 		wp = _np;

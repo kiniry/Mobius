@@ -8,6 +8,7 @@ package bcexpression;
 
 
 import bcexpression.javatype.*;
+import bcexpression.vm.Counter;
 import type.BCType;
 
 /**
@@ -17,13 +18,27 @@ import type.BCType;
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
 public   abstract class  Expression {
-	
-	
 	private Expression left;
 	private Expression right;
 	private BCType type;
 	
+	private static final Counter counter  = Counter.getCounter();
 	
+	private static final ArithmeticExpression counter_minus_1  = new ArithmeticExpression(
+															counter,
+															new NumberLiteral(new Integer(1)),
+															ExpressionConstants.SUB);
+	
+	private static final ArithmeticExpression counter_minus_2  = new ArithmeticExpression(
+																counter,
+																new NumberLiteral(new Integer(2)),
+																ExpressionConstants.SUB);
+																
+	private static final ArithmeticExpression counter_minus_3  = new ArithmeticExpression(
+																counter,
+																new NumberLiteral(new Integer(3)),
+																ExpressionConstants.SUB);						
+																									
 	public static final NULL NULL = new NULL();
 	
 	protected Expression() {
@@ -34,6 +49,22 @@ public   abstract class  Expression {
 		setRight(_right);		
 	}
 	
+	public static Counter getCounter() {
+		return counter;
+	}
+	
+	public static ArithmeticExpression getCounter_minus_1() {
+		return counter_minus_1 ;
+	}
+	
+	public static ArithmeticExpression getCounter_minus_2() {
+		return counter_minus_2;
+	}
+	
+	public static ArithmeticExpression getCounter_minus_3() {
+		return counter_minus_3;
+	}
+
 	/**
 	 * @param right2
 	 */
@@ -70,8 +101,10 @@ public   abstract class  Expression {
 	
 	public Expression substitute(Expression _e1 , Expression _e2) {
 		if (_e1 instanceof ReferenceExpression) {
-			
+		
+			return this;	
 		}
+		
 		if (this.equals(_e1 ) ) {
 			this.setLeft(_e2.getLeft()) ;
 			this.setRight(_e2.getRight()) ;

@@ -20,7 +20,6 @@ public class FieldAccessExpression  extends  DOTExpression {
 	/**
 	 * @param _right
 	 * @param _left
-	 * @param _type
 	 */
 	public FieldAccessExpression(BCConstant _left, Expression _right) {
 		super( _left , _right);

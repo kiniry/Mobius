@@ -35,7 +35,7 @@ import formula.atomic.PredicateSymbol;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class BCTypeALOAD  extends BCExceptionThrower implements  BCTypedInstruction {
-	
+	//    ..., arrayref, index  ==> ..., value
 
 	//AALOAD, BALOAD, LALOAD, CALOAD, IALOAD, DALOAD , FALOAD, SALOAD
 	private JavaType type;
@@ -63,43 +63,37 @@ public class BCTypeALOAD  extends BCExceptionThrower implements  BCTypedInstruct
 	}
 	
 	public Formula wp(Formula _n_Postcondition, ExceptionalPostcondition _e_Postcondition) {
-		 Formula wp = getWp() ; 
-		 if (wp != null ) {
-		 	return getWp();
-		 }
+		 Formula wp = null ; 
 		  //normal execution 
-		  Counter _counter = new Counter(); 
-
-		  ArithmeticExpression _counter_minus_1 = new ArithmeticExpression( _counter, new NumberLiteral(new Integer(1)) , ExpressionConstants.MINUS );
+		  Stack _stackTop = new Stack(Expression.getCounter());
+		  Stack _stackTop_minus_1 =  new Stack(Expression.getCounter_minus_1());
+		 
 		  //t <------ t -1
-		  //_n_Postcondition.substitute(_counter, _counter_minus_1);
-		  Stack _stackTop = new Stack(_counter);
-		  Stack _stackTop_minus_1 =  new Stack(_counter_minus_1);
-		  // n_post[ S(t) <----- S(t-1)[S(t)]]
-		  Formula _f = _n_Postcondition.substitute( _stackTop,  new ArrayAccessExpression( _stackTop_minus_1, _stackTop));			
-
+		  _n_Postcondition.substitute(Expression.getCounter(), Expression.getCounter_minus_1());
+		// n_post[ S(t) <----- S(t-1)[S(t)]]
+		_n_Postcondition = _n_Postcondition.substitute( _stackTop,  new ArrayAccessExpression( _stackTop_minus_1, _stackTop));			
+			
 		  //S(t - 1) != null
 		  Formula _arr_not_null = new Predicate2Ar(_stackTop_minus_1, Expression.NULL,  PredicateSymbol.NOTEQ );
 	  
 	  
-		  //S(t).length > S( t + 1)
+		  //S(t-1).length > S( t )
 		  FieldAccessExpression _arrlength = new FieldAccessExpression( new ArrayLengthConstant(), _stackTop_minus_1 ) ;
 		  Formula  _arr_index_correct = new Predicate2Ar( _arrlength,   _stackTop,  PredicateSymbol.GRT);
 		  Formula _condition = new Formula(_arr_not_null, _arr_index_correct,  Connector.AND);
-		  Formula _normal_termination = new Formula(_condition, _f , Connector.IMPLIES );
+		  Formula _normal_termination = new Formula(_condition, _n_Postcondition , Connector.IMPLIES );
 	  
-		  // (S(t) != null and S(t).length > S(t+1) ==>  n_post[ S(t) <----- S(t)[t+1]] )[t <----- t - 1]
-		  //commented
-		  //_normal_termination.substitute(_counter, new ArithmeticExpression( _counter, new NumberLiteral(new Integer(1)) , ExpressionConstants.MINUS ));
-
+		
 		  //  execution terminating with java.lang.IndexOutOfBoundsException
+		  //S(t-1).length <= S(t) ==> excPost(IndexOutOfBoundsException)
 		  Formula _index_out_of_bounds = new Predicate2Ar( _arrlength,   _stackTop,  PredicateSymbol.LESSEQ); 
 		  Formula _wp_arr_out_of_bounds = getWpForException(JavaType.getJavaClass("java.lang.IndexOutOfBoundsException"), _e_Postcondition);
 		  Formula _out_of_bound_termination = new Formula(_index_out_of_bounds, 
 																							_wp_arr_out_of_bounds , 
 																							Connector.IMPLIES);
 
-		  // execution terminating with  NullPointerException 
+		  // execution terminating with  NullPointerException
+		  //S(t-1) == null ==> excPost(NullPointerException) 
 		  Formula _arr_null = new Predicate2Ar(_stackTop_minus_1, Expression.NULL,  PredicateSymbol.EQ );
 		  Formula _wp_null_pointer =  getWpForException(JavaType.getJavaClass("java.lang.NullPointerException"), _e_Postcondition);;
 		  Formula _null_pointer_termination = new Formula(_arr_null, 
@@ -110,7 +104,7 @@ public class BCTypeALOAD  extends BCExceptionThrower implements  BCTypedInstruct
 		  _formulas[1] = _null_pointer_termination;
 		  _formulas[2] = _out_of_bound_termination;
 		  wp = new Formula( _formulas, Connector.AND); 
-		  wp.substitute(_counter, new ArithmeticExpression( _counter, new NumberLiteral(new Integer(1)) , ExpressionConstants.MINUS)) ;
+		  //wp.substitute(_counter, new ArithmeticExpression( _counter, new NumberLiteral(new Integer(1)) , ExpressionConstants.MINUS)) ;
 		  return wp;
 		 }
 

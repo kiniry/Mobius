@@ -24,17 +24,20 @@ import bcexpression.javatype.JavaType;
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
 public class Counter  extends Expression {
-	
-	
-	public Counter() {
-		
-	}
-
-
-	
 
 	private final JavaBasicType type = JavaType.JavaINT ; 
-
+	private static Counter counter ;
+	
+	private  Counter() {
+	}
+	
+	public static Counter getCounter() {
+		if (counter == null) {
+			counter = new Counter();
+			return counter;
+		}
+		return counter;
+	}
 
 	/* *
 	 * the type of the stack counter is int by default, that's why this method inherited from the super abstarct class Expression 
@@ -49,8 +52,17 @@ public class Counter  extends Expression {
 	 * @see bcexpression.Expression#getType()
 	 */
 	public BCType getType() {
-		// TODO Auto-generated method stub
-		return null;
+		return JavaType.JavaINT;
+	}
+	
+	/**
+	 * method overriden from superclass Expression
+	 */
+	public Expression substitute(Expression _e1 , Expression _e2) {
+		if (this.equals(_e1 )) {
+			return _e2;
+		}
+		return this;
 	}
 	
 	

@@ -1,4 +1,4 @@
-package bytecode;
+package bytecode.cpinstruction;
 
 import org.apache.bcel.generic.InstructionHandle;
 

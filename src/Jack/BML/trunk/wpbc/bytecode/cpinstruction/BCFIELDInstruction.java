@@ -4,32 +4,36 @@
  * To change the template for this generated file go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-package bytecode;
+package bytecode.cpinstruction;
 
 import org.apache.bcel.generic.CPInstruction;
 import org.apache.bcel.generic.InstructionHandle;
 
-import specification.ExceptionalPostcondition;
 import bcexpression.javatype.JavaType;
+import bytecode.BCExceptionThrower;
+import bytecode.BCTypedInstruction;
+import bytecode.cpinstruction.*;
+
+import specification.ExceptionalPostcondition;
 import formula.Formula;
 
 /**
  * @author mpavlova
- *
+ * 
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class BCINSTANCEOF  extends  BCExceptionThrower implements BCCPInstruction {
-	private JavaType type;
+public class BCFIELDInstruction extends BCExceptionThrower implements BCCPInstruction, BCTypedInstruction {
 	private int index;
+	private JavaType type;
 	
 	/**
 	 * @param _instruction
 	 */
-	public BCINSTANCEOF(InstructionHandle _instruction, JavaType _type) {
+	public BCFIELDInstruction(InstructionHandle _instruction, JavaType _type) {
 		super(_instruction);
 		setIndex( ( (CPInstruction)_instruction.getInstruction()).getIndex());
-		setType(_type);
+	    setType(_type);
 	}
 
 	/* (non-Javadoc)
@@ -46,6 +50,7 @@ public class BCINSTANCEOF  extends  BCExceptionThrower implements BCCPInstructio
 		return index;
 	}
 
+
 	/* (non-Javadoc)
 	 * @see bytecode.BCTypedInstruction#getType()
 	 */
@@ -57,7 +62,7 @@ public class BCINSTANCEOF  extends  BCExceptionThrower implements BCCPInstructio
 	 * @see bytecode.BCTypedInstruction#setType(bcexpression.javatype.JavaType)
 	 */
 	public void setType(JavaType _type) {
-		type =_type;
+		type = _type;
 	}
 
 	/* (non-Javadoc)
@@ -67,6 +72,4 @@ public class BCINSTANCEOF  extends  BCExceptionThrower implements BCCPInstructio
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
-
 }

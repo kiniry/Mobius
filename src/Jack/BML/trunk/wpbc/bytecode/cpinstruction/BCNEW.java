@@ -1,38 +1,34 @@
-/*
- * Created on Apr 6, 2004
- *
- * To change the template for this generated file go to
- * Window>Preferences>Java>Code Generation>Code and Comments
- */
-package bytecode;
+package bytecode.cpinstruction;
 
 import org.apache.bcel.generic.CPInstruction;
 import org.apache.bcel.generic.InstructionHandle;
-
-import bcexpression.javatype.JavaType;
-
 import specification.ExceptionalPostcondition;
+
 import formula.Formula;
 
+import bcexpression.javatype.JavaType;
+import bytecode.BCAllocationInstruction;
+import bytecode.cpinstruction.*;
+
 /**
- * @author mpavlova
- * 
- * To change the template for this generated type comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
+ * @author Mariela
+ *
+ * To change this generated comment edit the template variable "typecomment":
+ * Window>Preferences>Java>Templates.
+ * To enable and disable the creation of type comments go to
+ * Window>Preferences>Java>Code Generation.
  */
-public class BCFIELDInstruction extends BCExceptionThrower implements BCCPInstruction, BCTypedInstruction {
+public class BCNEW extends BCAllocationInstruction implements BCCPInstruction  {
+	
 	private int index;
 	private JavaType type;
 	
-	/**
-	 * @param _instruction
-	 */
-	public BCFIELDInstruction(InstructionHandle _instruction, JavaType _type) {
-		super(_instruction);
+	public BCNEW(InstructionHandle _instruction, JavaType _type) {
+		super(_instruction, _type);
 		setIndex( ( (CPInstruction)_instruction.getInstruction()).getIndex());
-	    setType(_type);
+		setType(_type);
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see bytecode.BCIndexedInstruction#setIndex(int)
 	 */
@@ -47,7 +43,6 @@ public class BCFIELDInstruction extends BCExceptionThrower implements BCCPInstru
 		return index;
 	}
 
-
 	/* (non-Javadoc)
 	 * @see bytecode.BCTypedInstruction#getType()
 	 */
@@ -61,7 +56,7 @@ public class BCFIELDInstruction extends BCExceptionThrower implements BCCPInstru
 	public void setType(JavaType _type) {
 		type = _type;
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see bytecode.ByteCode#wp(formula.Formula, specification.ExceptionalPostcondition)
 	 */

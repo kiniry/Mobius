@@ -128,6 +128,8 @@ public  abstract class BCExceptionThrower extends BCUnconditionalBranch {
 	}
 
 	/* *
+	 * the method returns the postcondition that must  be valid 
+	 * after this instruction throws an exception of type _exc_type
 	 * @see bytecode.ByteCode#wp(formula.Formula, specification.ExceptionalPostcondition)
 	 */
 	public Formula getWpForException(JavaReferenceType _exc_type, ExceptionalPostcondition _exc_post)  {

@@ -1,4 +1,4 @@
-package bytecode;
+package bytecode.cpinstruction;
 
 import org.apache.bcel.generic.CPInstruction;
 import org.apache.bcel.generic.InstructionHandle;
@@ -7,6 +7,8 @@ import specification.ExceptionalPostcondition;
 import formula.Formula;
 
 import bcexpression.javatype.JavaType;
+import bytecode.BCAllocationInstruction;
+import bytecode.cpinstruction.*;
 
 /**
  * @author Mariela

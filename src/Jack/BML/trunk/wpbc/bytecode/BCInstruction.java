@@ -47,6 +47,11 @@ public abstract  class BCInstruction  implements ByteCode{
 	private int index;
 	private int offset;
 	
+	private byte instructionCode;
+	
+	
+	
+	
 	/**
 	 * exceptions that this throw instruction may cause
 	 */
@@ -223,6 +228,20 @@ public abstract  class BCInstruction  implements ByteCode{
 		if (true ) {
 			System.out.println(_s);
 		}
+	}
+
+	/**
+	 * @return
+	 */
+	public byte getInstructionCode() {
+		return instructionCode;
+	}
+
+	/**
+	 * @param b
+	 */
+	public void setInstructionCode(byte b) {
+		instructionCode = b;
 	}
 
 }

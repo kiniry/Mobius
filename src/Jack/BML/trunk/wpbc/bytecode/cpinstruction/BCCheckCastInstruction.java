@@ -4,13 +4,16 @@
  * To change the template for this generated file go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-package bytecode;
+package bytecode.cpinstruction;
 
 import org.apache.bcel.generic.CPInstruction;
 import org.apache.bcel.generic.InstructionHandle;
 
-import specification.ExceptionalPostcondition;
 import bcexpression.javatype.JavaType;
+import bytecode.BCExceptionThrower;
+import bytecode.cpinstruction.*;
+
+import specification.ExceptionalPostcondition;
 import formula.Formula;
 
 /**
@@ -19,14 +22,15 @@ import formula.Formula;
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class BCLDC2_W extends BCInstruction implements  BCCPInstruction {
+public class BCCheckCastInstruction extends BCExceptionThrower 
+															 implements BCCPInstruction {
+
 	private int index;
 	private JavaType type;
-	
 	/**
 	 * @param _instruction
 	 */
-	public BCLDC2_W(InstructionHandle _instruction, JavaType _type) {
+	public BCCheckCastInstruction(InstructionHandle _instruction, JavaType _type) {
 		super(_instruction);
 		setIndex( ( (CPInstruction)_instruction.getInstruction()).getIndex());
 		setType(_type);
@@ -38,28 +42,24 @@ public class BCLDC2_W extends BCInstruction implements  BCCPInstruction {
 	public void setIndex(int _index) {
 		index = _index;
 	}
-
 	/* (non-Javadoc)
 	 * @see bytecode.BCIndexedInstruction#getIndex()
 	 */
 	public int getIndex() {
 		return index;
 	}
-
 	/* (non-Javadoc)
 	 * @see bytecode.BCTypedInstruction#getType()
 	 */
 	public JavaType getType() {
 		return type;
 	}
-
 	/* (non-Javadoc)
 	 * @see bytecode.BCTypedInstruction#setType(bcexpression.javatype.JavaType)
 	 */
 	public void setType(JavaType _type) {
-		type =_type;
+		type = _type;
 	}
-
 	/* (non-Javadoc)
 	 * @see bytecode.ByteCode#wp(formula.Formula, specification.ExceptionalPostcondition)
 	 */

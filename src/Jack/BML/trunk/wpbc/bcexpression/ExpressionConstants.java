@@ -20,13 +20,16 @@ public interface ExpressionConstants {
 	public static final byte  FIELDACCESS = 3; 
 	public static final byte  OBJECTACCESS = 4; 
 	public static final byte  NULL = 5;
-	public static final byte  PLUS = 6;
-	public static final byte  MINUS = 7;
+	
+	//arithmetic operations
+	public static final byte  ADD = 6;
+	public static final byte  SUB = 7;
 	public static final byte  MULT = 8; 
 	public static final byte  DIV = 9;
 	public static final byte  REM  = 10;
-	public static final byte  SHL  = 11;
-	public static final byte  SHR  = 12;
+	public static final byte  NEG  = 39;
+	
+	
 	public static final byte  TYPEOF = 20;
 	public static final byte  ELEMTYPE = 21;
 	public static final byte  OLD = 22;
@@ -45,4 +48,12 @@ public interface ExpressionConstants {
 	
 	public static final byte STACK = 37;
 	public static final byte STACK_COUNTER = 38;
+
+	//bitwise expressions
+	public static final byte  SHL  = 11;
+	public static final byte  SHR  = 12;
+	public static final byte BITWISEOR = 40;
+	public static final byte BITWISEAND = 41;
+	public static final byte BITWISEXOR = 42;
+	
 }
