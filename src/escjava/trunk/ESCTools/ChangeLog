@@ -1,3 +1,36 @@
+2003-05-21  Joseph R. Kiniry  <kiniry@acm.org>
+
+	* Escjava/java/escjava/parser/EscPragmaParser.java:
+	Removed the cases for constraint keywords from the set that they
+	were in (axiom, invariant, etc.) because sets can use a "for"
+	pseudo-keyword.  Thus, constraints will have to be handled
+	separately.
+
+	Added a new method eatThroughSemiColon() which does just that: it
+	eats all tokens up to and including a semi-colon.  We can use this
+	to pseudo-parse expressions that we do not yet deal with and
+	notify the user of such.  All of the expressions that I had
+	partially parsed but I knew that we were not going to check in the
+	near future now use this little method.
+
+	I've updated the final set of all tags that no one has yet looked
+	at to use this method as well.  This means that, in general,
+	barring little bugs or intentionally incomplete code paths in
+	existing real parser code, this version of the parser should not
+	fail on any JML.
+
+	Only emit cautions about unsupported tags if we are running with
+	the verbose switch enabled.
+
+	Added parsing of \not_specified, \everything, and \nothing
+	expressions in primary expressions.
+
+	* Escjava/test/escjava/parser/test/GoodJmlPragmas.ans:
+	* Escjava/test/escjava/parser/test/GoodJmlPragmas.j:
+	Updated JML pragma tests to correspond to the current pragma
+	parser and the actual demands of JML pragma parsing (i.e.,
+	mandatory semi-colon termination).
+
 2003-05-20  Joseph R. Kiniry  <kiniry@acm.org>
 
 	* Escjava/java/escjava/parser/EscPragmaParser.java:

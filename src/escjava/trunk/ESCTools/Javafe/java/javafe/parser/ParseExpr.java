@@ -611,7 +611,7 @@ public abstract class ParseExpr extends ParseType
                     Name n = parseName(l);
                     TypeModifierPragmaVec tmodifiers = null;
                     /*
-                     // Look for type modiifiers on Name
+                     // Look for type modifiers on Name
                      if (l.ttype == TagConstants.TYPEMODIFIERPRAGMA)	{
                      tmodifiers = parseTypeModifierPragmas(l);
                      }
