@@ -34,7 +34,8 @@
 Original version (ESCJ 8) by K. Rustan Leino and Jim Saxe, 30 December
 1997.  Some additions by Cormac Flanagan, 24 April 1998.  Modified by
 K. Rustan Leino, 13 September 1999 (making ESCJ 8a from ESCJ 8).
-Modified by Joseph Kiniry, with assistance from Cesare Tinelli and
+
+Modified by Joseph Kiniry, with initial input from Cesare Tinelli and
 input from Silvio Ranise, beginning on 21 June 2004.
 
 Current editor Joseph Kiniry.
@@ -162,10 +163,15 @@ background predicate), and (b) axioms that are introduced to the background
 predicate when the Java program being checked contains various constructs.
 
 @menu
-* Introduction::                An introduction to this document.
-* Copying::                     Your rights and freedoms.
-* Index::                       Complete index.
-
+* Introduction::                  An introduction to this document.
+* Unsorted Logic::                The unsorted object logic.
+* Many-Sorted Logics::            Two many-sorted objects logics.
+* Unsorted Construct Index::      An index of all unsorted pseudo-declarations.
+* Motivating Examples::           A small set of motivating examples.
+* List of Possible Experiments::  Ideas for future work, experiementation, etc.
+* Logics::                        The raw source for all logics.
+* Copying::                       Your rights and freedoms.
+* Index::                         Complete index.
 @end menu
 
 @c %**end top node and master menu
@@ -174,7 +180,7 @@ predicate when the Java program being checked contains various constructs.
 @c =============================================================================
 @c %**body
 
-@node Introduction, Introduction, Top, Top
+@node Introduction, Unsorted Logic, Top, Top
 @chapter Introduction
 
 @cindex Introduction
@@ -186,9 +192,9 @@ When describing the untyped logic of SRC ESC/Java version 1, these
 signatures are just for our intuitive understanding, since the logic
 of SRC ESC/Java is based upon the logic of Simplify, which is untyped.
 
-@xref{Untyped Construct Index} summarizes all such 
+@xref{Unsorted Construct Index} summarizes all such 
 pseudo-declarations in the untyped logic, as 
-documented in @ref{Untyped Logic}.
+documented in @ref{Unsorted Logic}.
 
 We display axioms in itemized lists with a prefix like this:
 @itemize @bullet
@@ -220,11 +226,20 @@ which was in turn written under the heavy influence of Dave Detlefs's
 @emph{Logic of ESC/Modula-3}.
 
 @c =============================================================================
-@node Untyped Logic, Untyped Construct Index, Introduction, Top
-@chapter An Untyped Logic
+@node Unsorted Logic, Many-Sorted Logics, Introduction, Top
+@chapter An Unsorted Logic
 
 @c =============================================================================
-@node Preliminaries, Types and Subtypes, Introduction, Introduction
+@menu
+* Preliminaries::               Background material for the unsorted logic.
+* Types and Subtypes::          Axioms for reasoning about Java types.
+* Types of Values::             ... Java values.
+* Allocation::                  ... memory allocation.
+* Locking::                     ... synchronization.
+* Domain-specific Axioms::      ... specific sub-domains (arrays, arithmetic, etc.)
+@end menu
+
+@node Preliminaries, Types and Subtypes, Unsorted Logic, Unsorted Logic
 @section Preliminaries
 
 @cindex Preliminaries
@@ -242,7 +257,15 @@ reader needs to know about Simplify in order to understand the logic
 and the motivation for some of our design decisions.
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-@node Terms and predicates,  , Preliminaries, Preliminaries
+@menu
+* Terms and predicates::        Simplify's notions of terms and predicates.
+* Quantifiers and Triggering Patterns::  Rules and tricks for writing axioms.
+* Predicate Definitions::       Defining predicates in Simplify.
+* The as Trick::                Writing axioms for efficient reasoning.
+* Maps::                        Representing variables and their values.
+@end menu
+
+@node Terms and predicates, Quantifiers and Triggering Patterns, Preliminaries, Preliminaries
 @subsection Terms and predicates
 @cindex terms and predicates
 @cindex terms
@@ -296,15 +319,16 @@ to show that we intend to use the function symbol
 as a user-defined predicate symbol.
 
 @c -----------------------------------------------------------------------------
-@node Quantifiers and Triggering Patterns, Predicate Definitions, Terms and predicates, Terms and predicates
+@node Quantifiers and Triggering Patterns, Predicate Definitions, Terms and predicates, Preliminaries
 @subsection Quantifiers and Triggering Patterns
 
-We said above that Simplify has term constants and variables, but we weren't
-specific about what distinguishes them.  Constants include not only
-numeric literals such as 6, but also symbolic constants that the uninitiated
-reader might na&iuml;vely perceive as variables.  Symbol names are
-considered variables only when they are bound by a quantifier.  As
-an example, consider the following axioms for group theory:
+We said above that Simplify has term constants and variables, but we
+weren't specific about what distinguishes them.  Constants include not
+only numeric literals such as 6, but also symbolic constants that the
+uninitiated reader might na&iuml;vely perceive as variables.  Symbol
+names are considered variables only when they are bound by a
+quantifier.  As an example, consider the following axioms for group
+theory:
 @itemize @minus
 
 @item
@@ -337,54 +361,59 @@ is entirely different from
 @end itemize
 in which @var{s} is a variable.
 
-A @emph{ground term} is a term that contains no variables.  The
-heart of Simplify's proving machinery is a set of procedures for testing
-the satisfiability of collections of equalities, distinctions (!=), and
-arithemetic inequalities of ground terms.  To handle the boolean connectives,
-Simplify uses case analysis; to handle quantified expressions, Simplify
-uses Skolemization and matching as explained next.
+A @emph{ground term} is a term that contains no variables.  The heart
+of Simplify's proving machinery is a set of procedures for testing the
+satisfiability of collections of equalities, distinctions (!=), and
+arithemetic inequalities of ground terms.  To handle the boolean
+connectives, Simplify uses case analysis; to handle quantified
+expressions, Simplify uses Skolemization and matching as explained
+next.
 
-When a quantified predicate is postulated to have a definite truth value--either
-directly by the user or as a result of case analysis--one of two things
-happens.  If an existentially quantified predicate is postulated to
-be @code{TRUE}, Simplify introduces a Skolem constant for each of its
-variables, substitutes the Skolem constants for the variables in the body,
-and postulates the result.  If a universally quantified predicate
-is postulated to be @code{TRUE}, Simplify produces a @emph{matching rule}.
+When a quantified predicate is postulated to have a definite truth
+value--either directly by the user or as a result of case
+analysis--one of two things happens.  If an existentially quantified
+predicate is postulated to be @code{TRUE}, Simplify introduces a
+Skolem constant for each of its variables, substitutes the Skolem
+constants for the variables in the body, and postulates the result.
+If a universally quantified predicate is postulated to be @code{TRUE},
+Simplify produces a @emph{matching rule}.
 
-A matching rule represents a universally quantified predicate in a form
-that enables the prover to produce potentially relevant instantiations
-of its body in response to the detection of ground terms matching certain
-@emph{triggering patterns}.  For example, postulating the axiom
+A matching rule represents a universally quantified predicate in a
+form that enables the prover to produce potentially relevant
+instantiations of its body in response to the detection of ground
+terms matching certain @emph{triggering patterns}.  For example,
+postulating the axiom
 @itemize @minus
 @item
 @math{(\forall x :: times(e, x) == x)}
 @end itemize
-produces a matching rule with the triggering pattern @var{times}(@var{e},
-@var{x}).  Whenever the prover finds a ground term of the form @var{times}(@var{e},
-@var{T}), it will instantiate the body of the axiom with @var{x} := @var{T},
-that is, it will postulate @var{times}(@var{e}, @var{T}) == @var{T}.
+produces a matching rule with the triggering pattern
+@var{times}(@var{e}, @var{x}).  Whenever the prover finds a ground
+term of the form @var{times}(@var{e}, @var{T}), it will instantiate
+the body of the axiom with @var{x} := @var{T}, that is, it will
+postulate @var{times}(@var{e}, @var{T}) == @var{T}.
 
 The choice of triggering patterns for matching rules can impact both
 the completeness and the performance of the prover.  Simplify has
-heuristics for automatically choosing triggering patterns, but allows a
-user to override the heuristics and specify the triggering patterns explicitly. 
-In this document, we use underlining to indicate the triggering patterns
-of matching rules.  For example, we would write the group theory identity
-axiom as
+heuristics for automatically choosing triggering patterns, but allows
+a user to override the heuristics and specify the triggering patterns
+explicitly.  In this document, we use underlining to indicate the
+triggering patterns of matching rules.  For example, we would write
+the group theory identity axiom as
 @itemize @minus
 @item
 @math{(\forall x :: \underline{times(e, x)} == x)}
 @end itemize
-to indicate that @var{times}(@var{e}, @var{x}) is used as the triggering
-pattern of the resulting matching rule.  In order to improve performance,
-we have attempted to write axioms and choose triggers in such a way as
-to reduce the cost of pattern matching and to reduce the likelihood that
-the prover will produce instantiations that lead to useless case splits. 
-It might be tempting, in the quest for efficiency, to write axioms that
-are actually inconsistent and to depend on the choice of restrictive triggers
-to prevent the inconsistency from coming into play and causing bogus verifications
-to succeed; we have resisted this temptation.
+to indicate that @var{times}(@var{e}, @var{x}) is used as the
+triggering pattern of the resulting matching rule.  In order to
+improve performance, we have attempted to write axioms and choose
+triggers in such a way as to reduce the cost of pattern matching and
+to reduce the likelihood that the prover will produce instantiations
+that lead to useless case splits.  It might be tempting, in the quest
+for efficiency, to write axioms that are actually inconsistent and to
+depend on the choice of restrictive triggers to prevent the
+inconsistency from coming into play and causing bogus verifications to
+succeed; we have resisted this temptation.
 
 Sometimes we must use a set of terms as a triggering pattern instead
 of a single term.  For example, for a quantified predicate like
@@ -400,12 +429,12 @@ the quantified variables.  An appropriate trigger is the set of terms
 @math{(\forall s, t, x :: \underline{member(x, s)} \wedge \underline{subset(s, t)} \longrightarrow member(x,t))}
 @end itemize
 With this @emph{multi-trigger}, the body will be instantiated upon the
-detection of a pair of ground terms matching @var{member}(@var{x}, @var{s})
-and @var{subset}(@var{s}, @var{t}), with the same ground term matched
-to @var{s}.  Although sometimes needed, multi-trigger matching is
-generally more expensive than single-trigger matching.
+detection of a pair of ground terms matching @var{member}(@var{x},
+@var{s}) and @var{subset}(@var{s}, @var{t}), with the same ground term
+matched to @var{s}.  Although sometimes needed, multi-trigger matching
+is generally more expensive than single-trigger matching.
 
-Note that triggering patterns are sets of terms, not predicates. 
+Note that triggering patterns are sets of terms, not predicates.
 Thus, it is not possible to specify the following trigger:
 @itemize @minus
 @item
@@ -415,83 +444,87 @@ Neither is it possible to specify a trigger containing a built-in predicate
 symbol, such as < or ==.
 
 @c -----------------------------------------------------------------------------
-@node Predicate Definitions, The as Trick, Quantifiers and Triggering Patterns, Terms and predicates
+@node Predicate Definitions, The as Trick, Quantifiers and Triggering Patterns, Preliminaries
 @subsection Predicate Definitions
 
-Simplify provides a mechanism by which a defining expression may be provided
-as part of the declaration of a user-defined predicate symbol @var{P}. 
-Whenever an application of @var{P} is made equal to or distinct from @code{boolTrue},
-the defining expression is instantiated with appropriate substitutions
-for the arguments and the resulting predicate or its negation, respectively,
-is postulated.  By using this kind of definition, instead of separately
-introducing a universally quantified axiom, two sorts of efficiency improvements
-may result.  First, we avoid invoking Simplify's general purpose pattern
-matching.  Second, by instantiating the definition of a user-defined
-predicate only when an application's truth value becomes known, rather
-than when an application is introduced, we may avoid gratuitous case splitting. 
-(Of course, there is a danger that we will sometimes postpone useful case
-splitting.)
+Simplify provides a mechanism by which a defining expression may be
+provided as part of the declaration of a user-defined predicate symbol
+@var{P}.  Whenever an application of @var{P} is made equal to or
+distinct from @code{boolTrue}, the defining expression is instantiated
+with appropriate substitutions for the arguments and the resulting
+predicate or its negation, respectively, is postulated.  By using this
+kind of definition, instead of separately introducing a universally
+quantified axiom, two sorts of efficiency improvements may result.
+First, we avoid invoking Simplify's general purpose pattern matching.
+Second, by instantiating the definition of a user-defined predicate
+only when an application's truth value becomes known, rather than when
+an application is introduced, we may avoid gratuitous case splitting.
+(Of course, there is a danger that we will sometimes postpone useful
+case splitting.)
 
-When in this document we intend a given axiom @math{(\forall args :: P(args)
-== ...)} to be the defining expression for a user-defined predicate @var{P},
-we will use the notation
+When in this document we intend a given axiom @math{(\forall args ::
+P(args) == ...)} to be the defining expression for a user-defined
+predicate @var{P}, we will use the notation
 @itemize @bullet
 @item
 Definition: @math{(\forall args :: P(args) == ...)}
 @end itemize
 
 @c -----------------------------------------------------------------------------
-@node The as Trick, Maps, Predicate Definitions, Terms and predicates
+@node The as Trick, Maps, Predicate Definitions, Preliminaries
 @subsection The @var{as} Trick
 
-In this section, we describe a technique, used in several of the axioms
-below, that allows us to choose triggering patterns that Simplify can match
-efficiently but that will not lead to extraneous matches.
+In this section, we describe a technique, used in several of the
+axioms below, that allows us to choose triggering patterns that
+Simplify can match efficiently but that will not lead to extraneous
+matches.
 
 In a world with types, a typical axiom might look like
 @itemize @minus
 @item
 @math{(\forall x: X, y :: \underline{P(x, y)} \longrightarrow Q(x, y))}
 @end itemize
-where @var{x} is quantified over all values of type @var{X} and @var{y}
-is unconstrained.  Since Simplify is type-free, so is our logic. 
-The straightforward way of encoding the axiom above would be to introduce
-a predicate @var{isX} characterizing values of type @var{X}:
+where @var{x} is quantified over all values of type @var{X} and
+@var{y} is unconstrained.  Since Simplify is type-free, so is our
+logic.  The straightforward way of encoding the axiom above would be
+to introduce a predicate @var{isX} characterizing values of type
+@var{X}:
 @itemize @minus
 @item
 @math{(\forall x, y :: isX(x) \wedge P(x,y) \longrightarrow Q(x, y))}
 @end itemize
 But what should be the triggering pattern of this axiom?
 
-If we choose @var{P}(@var{x}, @var{y}) as the triggering pattern,
-then Simplify is likely to instantiate the axiom with substitutions @var{x},
-@var{y} := @var{t0}, @var{t1} even where @var{t0} is not known to satisfy
-@var{isX}.  The result may be to cause the prover to do a useless
-case split with the cases @math{\neg isX(t0)}, @math{\neg P(t0,t1)}, 
-and @math{Q(t0, t1)}.  Even if @math{P(t0,t1)} is known to hold, we 
-can get a two-way case split.
+If we choose @var{P}(@var{x}, @var{y}) as the triggering pattern, then
+Simplify is likely to instantiate the axiom with substitutions
+@var{x}, @var{y} := @var{t0}, @var{t1} even where @var{t0} is not
+known to satisfy @var{isX}.  The result may be to cause the prover to
+do a useless case split with the cases @math{\neg isX(t0)}, @math{\neg
+P(t0,t1)}, and @math{Q(t0, t1)}.  Even if @math{P(t0,t1)} is known to
+hold, we can get a two-way case split.
 
 Intuitively, we want to use the axiom only when @var{x} is already
-known to be of the correct type--this would be the common interpretation
-of the typed version of the axiom.  If we can arrange for other mechanisms
-to postulate @var{isX}(@var{x}) whenever we're possibly interested in
-instantiating the axiom, then we can use the terms @var{isX}(@var{x})
-and @var{P}(@var{x}, @var{y}) together as a @emph{multi-trigger}. 
-This reduces the likelihood of producing useless instantiations of the
-axiom, without loss of completeness.  If, further, we make sure that
-ground terms matching @var{isX}(@var{x}) are introduced only when they
-are also equated to @code{boolTrue}, then the untyped axiom will be instantiated
-only as often as the typed version would have been in a typed prover.
+known to be of the correct type--this would be the common
+interpretation of the typed version of the axiom.  If we can arrange
+for other mechanisms to postulate @var{isX}(@var{x}) whenever we're
+possibly interested in instantiating the axiom, then we can use the
+terms @var{isX}(@var{x}) and @var{P}(@var{x}, @var{y}) together as a
+@emph{multi-trigger}.  This reduces the likelihood of producing
+useless instantiations of the axiom, without loss of completeness.
+If, further, we make sure that ground terms matching
+@var{isX}(@var{x}) are introduced only when they are also equated to
+@code{boolTrue}, then the untyped axiom will be instantiated only as
+often as the typed version would have been in a typed prover.
 
-A disadvantage of the approach just described is that Simplify's matching
-process for multi-triggers is generally more expensive than for ordinary
-triggering patterns.
+A disadvantage of the approach just described is that Simplify's
+matching process for multi-triggers is generally more expensive than
+for ordinary triggering patterns.
 
-Instead of introducing the predicate @var{isX}, the approach we actually
-take is to introduce a function @var{asX}.  Intuitively, @var{asX}
-casts any value into a value of type @var{X}, and is the identity on values
-that are already of type @var{X}.  When introducing a term @var{t0}
-of type @var{X}, instead of assuming
+Instead of introducing the predicate @var{isX}, the approach we
+actually take is to introduce a function @var{asX}.  Intuitively,
+@var{asX} casts any value into a value of type @var{X}, and is the
+identity on values that are already of type @var{X}.  When introducing
+a term @var{t0} of type @var{X}, instead of assuming
 @itemize +
 @item
 @math{isX(t0)}
@@ -506,9 +539,10 @@ This allows us to write the axiom as
 @item
 @math{(\forall x, y :: \underline{P(asX(x), y)} \longrightarrow Q(asX(x), y))}
 @end itemize
-Here we have a single-term trigger, which should be efficient to match. 
-Also, since we introduce @var{asX} only with arguments that are known
-to be of type @var{X}, we avoid producing irrelevant instantiations.
+Here we have a single-term trigger, which should be efficient to
+match.  Also, since we introduce @var{asX} only with arguments that
+are known to be of type @var{X}, we avoid producing irrelevant
+instantiations.
 
 (We could introduce both @var{isX} and @var{asX}, in which case we
 could either define @var{isX}(@var{x}) by the axiom
@@ -527,9 +561,9 @@ or characterize @var{asX} by the axioms
 However, once we have @var{asX}, introducing @var{isX} seems redundant.)
 
 In the example above, we replaced a one-argument predicate @var{isX}
-with a one-argument function @var{asX}.  We can apply a similar technique
-for predicates with more than one argument.  For example, instead
-of writing an axiom of the form
+with a one-argument function @var{asX}.  We can apply a similar
+technique for predicates with more than one argument.  For example,
+instead of writing an axiom of the form
 @itemize @minus
 @item
 @math{(\forall x, y, z :: isXwrtZ(x, z) \wedge P(x, y, z) \longrightarrow Q(x,y,z))}
@@ -545,7 +579,7 @@ Multi-argument predicates like @var{isXwrtZ} are used to express more
 intricate properties than types can.
 
 @c -----------------------------------------------------------------------------
-@node Maps,  , The as Trick, Terms and predicates
+@node Maps,  , The as Trick, Preliminaries
 @subsection Maps
 
 ESC/Java uses @emph{maps} to represent instance variables, arrays, and
@@ -567,23 +601,30 @@ of [ ] and @var{store} are given by the following axioms:
 @item
 @math{(\forall m, i, j, x :: i \neq j \longrightarrow \underline{store(m, i, x)[j]} == m[j])}
 @end itemize
-ESC/Java uses Simplify's built-in @var{select} and @var{store} functions. 
-The second of these axioms is treated specially by Simplify in that the
-case splits suggested by it are given some priority over case splits suggested
-by ordinary axioms.
+ESC/Java uses Simplify's built-in @var{select} and @var{store}
+functions.  The second of these axioms is treated specially by
+Simplify in that the case splits suggested by it are given some
+priority over case splits suggested by ordinary axioms.
 
 @c =============================================================================
-@node Types and Subtypes, Types of Values, Preliminaries, Introduction
+@node Types and Subtypes, Types of Values, Preliminaries, Unsorted Logic
 @section Types and Subtypes
 
 @cindex Types and Subtypes
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@menu
+* Types::                       Representing Java's types.
+* The subtype Predicate::       Reasoning about subtyping.
+* Disjointness of Incomparable:: Reasoning about type inequalities.
+* Array Types::                  Reasoning about Java's array types.
+@end menu
+
 @node Types, The subtype Predicate, Types and Subtypes, Types and Subtypes
 @subsection Types
 
-Java types are ordinary values in the logic of ESC/Java.  Although
-the logic is untyped, we informally think of these values as having type
+Java types are ordinary values in the logic of ESC/Java.  Although the
+logic is untyped, we informally think of these values as having type
 ``type''.
 
 The built-in types in Java give rise to the following type constants:
@@ -605,8 +646,8 @@ The built-in types in Java give rise to the following type constants:
 @item
 @var{double} : type
 @end itemize
-In addition, declarations of classes and interfaces give rise to type constants. 
-Each class or interface declaration
+In addition, declarations of classes and interfaces give rise to type
+constants.  Each class or interface declaration
 
 @example
 class T ...
@@ -629,8 +670,8 @@ document, when we refer to declarations, we include both user-provided
 declarations and built-in declarations, like the classes @code{String}
 and @code{Object}, the interface @code{Cloneable}.
 
-@anchor{distinctTypesAxiom}All type constants appear together
-in an axiom that postulates them all to be different:
+@anchor{distinctTypesAxiom}All type constants appear together in an
+axiom that postulates them all to be different:
 @itemize
 @item
 DISTINCT(@var{Object}, @var{boolean}, @var{char}, @var{byte}, @var{short},
@@ -640,15 +681,15 @@ DISTINCT(@var{Object}, @var{boolean}, @var{char}, @var{byte}, @var{short},
 This axiom is called the @emph{Distinct Types Axiom}.
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-@node The subtype Predicate, incomparableClasses, Types, Types and Subtypes
+@node The subtype Predicate, Disjointness of Incomparable, Types, Types and Subtypes
 @subsection The subtype Predicate
 
 The logic includes a subtype predicate:
 @itemize
 <: : Predicate[type \times type]
 @end itemize
-The predicate @var{t0} <: @var{t1} means that @var{t0} is a subtype
-of @var{t1}.  The operator <: binds as tightly as arithmetic relations
+The predicate @var{t0} <: @var{t1} means that @var{t0} is a subtype of
+@var{t1}.  The operator <: binds as tightly as arithmetic relations
 such as <.
 
 The following axioms are sound and complete in the sense that for any
@@ -657,7 +698,6 @@ named class or interface types A and B,
      |= A <: B    if and only
 if   |- A <: B
 @end example
-
 where |- refers to provability based on these axioms, and |= refers
 to the model given by Java's semantics.
 
@@ -667,11 +707,11 @@ as
      |- not( A <: B )
 @end example
 
-To illustrate the need for proving such statements, see @ref{Try-Catch Example}. 
-Our current axiomatization of negative subtype statements is 
-quite incomplete -- we currently only include the antisymmetric axiom. We plan 
-to investigate this issue more thoroughly in the future. 
-The subtype relation is reflexive and transitive:
+To illustrate the need for proving such statements, see @ref{Try-Catch
+Example}.  Our current axiomatization of negative subtype statements
+is quite incomplete -- we currently only include the antisymmetric
+axiom. We plan to investigate this issue more thoroughly in the
+future.  The subtype relation is reflexive and transitive:
 @itemize @bullet
 @item
 @math{(\forall t :: \underline{t <: t})}
@@ -684,19 +724,17 @@ The subtype relation is also antisymmetric.
 @item
 @math{(\forall t0, t1 :: \underline{t0 <: t1} \wedge \underline{t1 <: t0} \longrightarrow t0 == t1)}
 @end itemize
-@footnote{An alternative would be to experiment with Simplify's built-in
-ordering theory, but we have concerns about its reliability and its impact
-on performance.}
+@footnote{An alternative would be to experiment with Simplify's
+built-in ordering theory, but we have concerns about its reliability
+and its impact on performance.}
 
 A class or interface declaration gives rise to axioms about where the
 type introduced fits into the subtype ordering.
 
 For each class declaration
-
 @example
 class C extends D implements J, K, ...
 @end example
-
 (where the absence of an @code{extends} clause is taken as sugar for
 @code{extends Object}), we add the following axioms to the background
 predicate:
@@ -725,7 +763,6 @@ For the built-in class @code{Object}, this would yield@footnote{Do we need this?
 
 @end itemize
 For each interface declaration
-
 @example
 interface I extends J, K, ...
 @end example
@@ -758,26 +795,27 @@ the following axiom, which says that T has no proper subtypes:
 To see why this axiom is useful, see @ref{Final Type Axioms Example}.
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-@node incomparableClasses, arrayTypes, The subtype Predicate, Types and Subtypes
+@node Disjointness of Incomparable, Array Types, The subtype Predicate, Types and Subtypes
 @subsection Disjointness of Incomparable
 
-@emph{This section is not implemented.} It may be useful for examples such as 
-@ref{Try-Catch Example}@footnote{The axioms in this section are similar to some axioms
-introduced in the logic of ESC/Modula-3 to address a problem that arose
-in a program verification.  It is not clear whether the problem has
-since been addressed by other mechanisms.  While we can contrive examples
-where these axioms would be necessary for ESC/Java verifications, we don't
-know if such examples will arise naturally.  We may choose not to
-exclude the material in this section without impact on the rest of the
-logic.  In particular, there are no uses the functions @var{classDown}
-and @var{asChild} other than those described in this section.}
+@emph{This section is not implemented.} It may be useful for examples
+such as @ref{Try-Catch Example}@footnote{The axioms in this section
+are similar to some axioms introduced in the logic of ESC/Modula-3 to
+address a problem that arose in a program verification.  It is not
+clear whether the problem has since been addressed by other
+mechanisms.  While we can contrive examples where these axioms would
+be necessary for ESC/Java verifications, we don't know if such
+examples will arise naturally.  We may choose not to exclude the
+material in this section without impact on the rest of the logic.  In
+particular, there are no uses the functions @var{classDown} and
+@var{asChild} other than those described in this section.}
 
-For any two classes, either one is a subtype of the other, or they have
-no subtypes in common.  The most obvious ways of axiomatizing this
-fact seem likely to lead to poor prover performance, for reasons that we
-will not describe further.  The ESC/Java logic includes weaker axioms
-implying that distinct explicitly declared subclasses of any class (including
-@code{Object}) have no subtypes in common.
+For any two classes, either one is a subtype of the other, or they
+have no subtypes in common.  The most obvious ways of axiomatizing
+this fact seem likely to lead to poor prover performance, for reasons
+that we will not describe further.  The ESC/Java logic includes weaker
+axioms implying that distinct explicitly declared subclasses of any
+class (including @code{Object}) have no subtypes in common.
 
 To this end, the logic includes two functions:
 @itemize
@@ -797,16 +835,16 @@ Simplify ever explores a case in which @var{BB} and @var{CC} are
 equal, it will infer by congruence closure that
 @var{classDown}(@var{A}, @var{BB}) and @var{classDown}(@var{A},
 @var{CC}) are equal, and thus that @var{B} and @var{C} are equal, in
-contradiction to the @ref{distinctTypesAxiom}.  Of course, if @code{BB} and @code{CC} were
-explicitly declared classes, we could infer their distinction directly
-from the Distinct Types Axiom.  However, @code{BB} and @code{CC} might
-be the unknown dynamic types of objects with declared types @code{B}
-and @code{C}, respectively.
+contradiction to the @ref{distinctTypesAxiom}.  Of course, if
+@code{BB} and @code{CC} were explicitly declared classes, we could
+infer their distinction directly from the Distinct Types Axiom.
+However, @code{BB} and @code{CC} might be the unknown dynamic types of
+objects with declared types @code{B} and @code{C}, respectively.
 
-We want to formalize the definition of @var{classDown}.  To do
-so, we must first formalize the notion of being a direct subclass. 
-We could introduce a predicate @var{isDirectSubclass}, characterize @var{classDown}
-by the axiom
+We want to formalize the definition of @var{classDown}.  To do so, we
+must first formalize the notion of being a direct subclass.  We could
+introduce a predicate @var{isDirectSubclass}, characterize
+@var{classDown} by the axiom
 @itemize @minus
 @item
 @math{(\forall t0, t1, t2 :: \underline{t0 <: t1} \wedge \underline{isDirectSubclass(t1, t2)} \longrightarrow classDown(t2,t0) == t1)}
@@ -841,7 +879,7 @@ we introduce the axiom
 @end itemize
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-@node arrayTypes,  , incomparableClasses, Types and Subtypes
+@node Array Types,  , Disjointness of Incomparable, Types and Subtypes
 @subsection Array Types
 
 Array types do not give rise to type constants.  Instead, the logic
@@ -917,35 +955,42 @@ with the axiom
 @math{(\forall t :: isArrayType(t) == (t == array(elemType(t))))}
 @end itemize
 Instead, we simply write @math{t == array(elemType(t))} wherever we
-would have written @math{isArrayType(t)}@footnote{While
-@code{Object} and @code{Cloneable} are not array types, they are
-supertypes of all array types.  The non-object primitive types
-@code{boolean}, @code{char}, etc. are not supertypes of any array
-types, but we have not given axioms to that effect, because we are not
-sure they are needed in practice.  The axioms we just gave, however,
-may be useful, as @ref{Array Type-Constant Axioms Example} show.}.
+would have written @math{isArrayType(t)}@footnote{While @code{Object}
+and @code{Cloneable} are not array types, they are supertypes of all
+array types.  The non-object primitive types @code{boolean},
+@code{char}, etc. are not supertypes of any array types, but we have
+not given axioms to that effect, because we are not sure they are
+needed in practice.  The axioms we just gave, however, may be useful,
+as @ref{Array Type-Constant Axioms Example} show.}.
 
 As stated in the following axiom, the subtypes of an array type
 @code{T[]} are the array types whose element types are subtypes of
-@code{T}. A use of this axiom is described in @ref{Final Type Axioms Example} 
-and @ref{Array Element Subtype Example}.
+@code{T}. A use of this axiom is described in @ref{Final Type Axioms
+Example} and @ref{Array Element Subtype Example}.
 @itemize @bullet
 @item
 @math{(\forall t0, t1 :: \underline{t0 <: array(t1)} == (t0 == array(elemType(t0)) \wedge elemType(t0) <: t1))}
 @end itemize
 
 @c =============================================================================
-@node Types of Values, Allocation, Types and Subtypes, Introduction
+@node Types of Values, Allocation, Types and Subtypes, Unsorted Logic
 @section Types of Values
 
 @cindex Types of Values
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-@node isPredicate, casting, Types of Values, Types of Values
+@menu
+* The is Predicate::                 
+* Casting::                     
+* Types of Primitive Values::   
+* Types of Objects::              
+@end menu
+
+@node The is Predicate, Casting, Types of Values, Types of Values
 @subsection The is Predicate
 
-To reason about the dynamic types of values, the logic includes the following
-predicate:
+To reason about the dynamic types of values, the logic includes the
+following predicate:
 @itemize
 @item
 @math{is : Predicate[value \times type]}
@@ -961,11 +1006,11 @@ method call that modifies @code{v}, and as an invariant of each loop
 that modifies @code{v}.
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-@node casting, Types of Primitive Values, isPredicate, Types of Values
+@node Casting, Types of Primitive Values, The is Predicate, Types of Values
 @subsection Casting
 
-The logic contains a function that converts a value to a value of a specified
-type:
+The logic contains a function that converts a value to a value of a
+specified type:
 @itemize
 @item
 @var{cast} : value \times type \mapsto value
@@ -975,13 +1020,15 @@ type:
 @item
 @math{(\forall x, t :: is(\underline{cast(x, t)},t))}
 @end itemize
-If the value is already of the specified type, then casting leaves it unchanged:
+If the value is already of the specified type, then casting leaves it
+unchanged:
 @itemize @bullet
 @item
 @math{(\forall x, t :: is(x, t) \longrightarrow \underline{cast(x,t)} == x)}
 @end itemize
-In cases where casting in Java can fail, the translation produces appropriate
-checks.  These checks will be described in another document.
+In cases where casting in Java can fail, the translation produces
+appropriate checks.  These checks will be described in another
+document.
 
 The axioms above do not completely capture the semantics of casting as
 specified by Java.  For example, Java specifies that casting an
@@ -990,10 +1037,16 @@ propose to omit such additional axioms about casting until the need
 for them arises.
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-@node Types of Primitive Values, typesOfObjects, casting, Types of Values
+@node Types of Primitive Values, Types of Objects, Casting, Types of Values
 @subsection Types of Primitive Values
 
 @c -----------------------------------------------------------------------------
+@menu
+* booleanConstants::            
+* integerConstants::            
+* Floating Point Values::       
+@end menu
+
 @node booleanConstants, integerConstants, Types of Primitive Values, Types of Primitive Values
 @subsubsection Booleans
 
@@ -1015,9 +1068,9 @@ fact with the axiom
 @item
 @math{(\forall x :: \underline{is(x, boolean)} == (x == boolFalse \vee x == boolTrue))}
 @end itemize
-Since this axiom has the potential to lead to useless case splits, we're
-reluctant to use it.  In @ref{Reflections of Predicates into Term Space},
-we'll say more about our approach to handling booleans.
+Since this axiom has the potential to lead to useless case splits,
+we're reluctant to use it.  In @ref{Reflections of Predicates into
+Term Space}, we'll say more about our approach to handling booleans.
 
 @c -----------------------------------------------------------------------------
 @node integerConstants, Floating Point Values, booleanConstants, Types of Primitive Values
@@ -1052,10 +1105,11 @@ and the following axioms:
 @math{(\forall x :: \underline{is(x, long)} == (longFirst \leq x \wedge x \leq longLast))}
 @end itemize
 The reason for giving @var{longFirst}, @var{intFirst}, @var{intLast},
-and @var{longLast} as symbolic constants instead of exact values is that
-we don't want to assume the underlying theorem prover to be capable of
-dealing properly with such large constants@footnote{Will the use of constants like 65535 and 127 cause performance
-problems because of Simplify's integer programming heuristic?}.
+and @var{longLast} as symbolic constants instead of exact values is
+that we don't want to assume the underlying theorem prover to be
+capable of dealing properly with such large constants@footnote{Will
+the use of constants like 65535 and 127 cause performance problems
+because of Simplify's integer programming heuristic?}.
 
 @anchor{isMathIntDigression}Digression.  The axioms above may seem
 unsound given that not all numbers between, say, -32768 and 32767 are
@@ -1074,21 +1128,21 @@ and writing the axioms above as:
 ...
 @end itemize
 
-We have rejected this approach on account of an infelicity
-in the implementation of Simplify:  Simplify's complete decision procedure
-for rational linear inequalities is extended by an incomplete heuristic
+We have rejected this approach on account of an infelicity in the
+implementation of Simplify: Simplify's complete decision procedure for
+rational linear inequalities is extended by an incomplete heuristic
 for integer inequalities.  Unfortunately, this heuristic is applied
 indiscriminately rather than only to terms that are somehow designated
 as integers.  For example, Simplify will find the conjunction 2 <
-@var{x} && @var{x} < 3 to be inconsistent, even if @var{x}
-corresponds to a Java @code{float}.  Consequently, translating Java's
+@var{x} && @var{x} < 3 to be inconsistent, even if @var{x} corresponds
+to a Java @code{float}.  Consequently, translating Java's
 floating-point < to Simplify's built-in < is untenable even with
 @var{isMathInt}.  We have chosen to give a quite weak axiomatization
-of Java's floating point operators (@pxref{Reflected Floating-Point Comparisons}),
-and in particular to use Simplify's built-in comparison operators
-only for integers.  Therefore, we see no need for @var{isMathInt}. 
-We could, of course, include @var{isMathInt} anyhow, for aesthetics, but
-we would then need to include such axioms as
+of Java's floating point operators (@pxref{Reflected Floating-Point
+Comparisons}), and in particular to use Simplify's built-in comparison
+operators only for integers.  Therefore, we see no need for
+@var{isMathInt}.  We could, of course, include @var{isMathInt} anyhow,
+for aesthetics, but we would then need to include such axioms as
 
 @itemize @minus
 @item
@@ -1098,15 +1152,15 @@ and to generate the assumption @var{isMathInt}(@var{c}) for every
 integer literal @var{c} occurring in the program.  (End of
 Digression.)
 
-Complications arise when the Java program being checked contains explicit
-integer constants of large magnitude.  Our plan for treating such
-constants is to replace all explicit constants whose magnitude exceeds
-some threshold (say, 1000000) with symbolic constants, and to add to the
-background predicate sufficient axioms to establish the ordering of those
-symbolic constants with respect to each other, the threshold and its negation,
-and the symbolic constants @var{longFirst}, @var{intFirst}, @var{intLast},
-and @var{longLast}.  For example, if the program contains the explicit
-constants
+Complications arise when the Java program being checked contains
+explicit integer constants of large magnitude.  Our plan for treating
+such constants is to replace all explicit constants whose magnitude
+exceeds some threshold (say, 1000000) with symbolic constants, and to
+add to the background predicate sufficient axioms to establish the
+ordering of those symbolic constants with respect to each other, the
+threshold and its negation, and the symbolic constants
+@var{longFirst}, @var{intFirst}, @var{intLast}, and @var{longLast}.
+For example, if the program contains the explicit constants
 @itemize
 @item
 @code{-12000000}
@@ -1182,8 +1236,9 @@ remains to be seen if practice calls for more axioms.}.
 @node Floating Point Values,  , integerConstants, Types of Primitive Values
 @subsubsection Floating Point Values
 
-The ESC/Java logic is weak in its treatment of floating point values. The
-following are not implemented@footnote{What are the triggers?}.
+The ESC/Java logic is weak in its treatment of floating point
+values. The following are not implemented@footnote{What are the
+triggers?}.
 @itemize @minus
 @item
 @math{(\forall x :: is(x, int) \longrightarrow is(x,double))}
@@ -1194,10 +1249,10 @@ following are not implemented@footnote{What are the triggers?}.
 Note that, despite these properties, @var{int} and @var{float} are not
 subtypes of @var{double}.  (If they were, @var{array}(@var{int})
 and @var{array}(@var{float}) would be subtypes of @var{array}(@var{double}),
-according to the axioms about @var{array} in @ref{arrayTypes}.)
+according to the axioms about @var{array} in @ref{Array Types}.)
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-@node typesOfObjects,  , Types of Primitive Values, Types of Values
+@node Types of Objects,  , Types of Primitive Values, Types of Values
 @subsection Types of Objects
 
 Every non-@code{null} object has a unique dynamic type, as determined
@@ -1215,18 +1270,24 @@ A value is of a reference type @code{T} if the value is
 @item
 @math{(\forall x, t :: \underline{t <: Object} \longrightarrow \underline{is(x,t)} == (x == null \vee typeof(x) <: t)))}
 @end itemize
-We said in @ref{isPredicate} that the translation
-will introduce a precondition assumption @var{is}(@var{v}, @var{T})
-for any parameter @code{v} of type @code{T}.  For the @code{this}
-parameter of an instance method of a class @code{C}, the translation
-introduces the following stronger precondition:
+We said in @ref{The is Predicate} that the translation will introduce
+a precondition assumption @var{is}(@var{v}, @var{T}) for any parameter
+@code{v} of type @code{T}.  For the @code{this} parameter of an
+instance method of a class @code{C}, the translation introduces the
+following stronger precondition:
 @itemize +
 @item
 @math{this \neq null \wedge typeof(this) <: C}
 @end itemize
 
 @c -----------------------------------------------------------------------------
-@node instantiableTypes, typesOfInstanceVariables, typesOfObjects, typesOfObjects
+@menu
+* Instantiable Types::           
+* Types of Instance Variables::    
+* Types of Array Elements::     
+@end menu
+
+@node Instantiable Types, Types of Instance Variables, Types of Objects, Types of Objects
 @subsubsection Instantiable Types
 
 The dynamic type of a non-@code{null} object must be an instantiable
@@ -1261,15 +1322,15 @@ remainder of the logic.}:
 @end itemize
 
 @c -----------------------------------------------------------------------------
-@node typesOfInstanceVariables, Types of Array Elements, instantiableTypes, typesOfObjects
+@node Types of Instance Variables, Types of Array Elements, Instantiable Types, Types of Objects
 @subsubsection Types of Instance Variables
 
 ESC/Java models instance variables (fields) as maps from objects to
 values.  Where in Java one writes the r-value @code{x.f}, the
 translation writes @var{f}[@var{x}].
 
-To reason about the dynamic types of values of fields, the logic includes
-the following function:
+To reason about the dynamic types of values of fields, the logic
+includes the following function:
 @itemize
 @item
 @var{asField} : map \times type \mapsto map
@@ -1296,7 +1357,7 @@ with their declared range types is harmless to the soundness of the
 logic, and may be beneficial to prover efficiency.
 
 @c -----------------------------------------------------------------------------
-@node Types of Array Elements,  , typesOfInstanceVariables, typesOfObjects
+@node Types of Array Elements,  , Types of Instance Variables, Types of Objects
 @subsubsection Types of Array Elements
 
 ESC/Java models the state of all arrays using a single global variable
@@ -1311,8 +1372,8 @@ separate variables may improve prover efficiency, but would complicate
 the translation into guarded commands (and the logic itself).  We
 propose to keep things simple for the initial version of ESC/Java.}.
 
-To reason about the dynamic types of array elements, the logic includes
-the following function:
+To reason about the dynamic types of array elements, the logic
+includes the following function:
 @itemize
 @item
 @var{asElems} : map \mapsto map
@@ -1337,18 +1398,24 @@ believe that this treatment is harmless to the soundness of the logic,
 and may be beneficial to prover efficiency.
 
 @c =============================================================================
-@node Allocation, Locking, Types of Values, Introduction
+@node Allocation, Locking, Types of Values, Unsorted Logic
 @section Allocation
 
 @cindex Allocation
 
-In this section, we introduce machinery for reasoning about the allocation
-of objects, and in particular for showing that a newly allocated object
-is distinct from any object reachable from program variables prior to its
-allocation.  Although our motivating discussions are long, the resulting
-axioms are few and simple.
+In this section, we introduce machinery for reasoning about the
+allocation of objects, and in particular for showing that a newly
+allocated object is distinct from any object reachable from program
+variables prior to its allocation.  Although our motivating
+discussions are long, the resulting axioms are few and simple.
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@menu
+* Allocation Times of Objects::  
+* Closure of Allocatedness under Field Access::  
+* Closure of Allocatedness under Array Access::  
+@end menu
+
 @node Allocation Times of Objects, Closure of Allocatedness under Field Access, Allocation, Allocation
 @subsection Allocation Times of Objects
 
@@ -1361,37 +1428,38 @@ void m(T x) {
 }
 @end example
 
-Intuitively, the reason that the assertion succeeds is that @var{x}
-is already allocated at the start of the method body, whereas the result
+Intuitively, the reason that the assertion succeeds is that @var{x} is
+already allocated at the start of the method body, whereas the result
 of the constructor call @code{new T()} is an object not yet allocated
 before the call.  To formalize this, we introduce a program variable
-@var{alloc}, which somehow models which objects have been allocated. 
-As we shall see below, we actually model @var{alloc} as a time. 
-We also introduce a predicate
+@var{alloc}, which somehow models which objects have been allocated.
+As we shall see below, we actually model @var{alloc} as a time.  We
+also introduce a predicate
 @itemize
 @item
 @math{isAllocated : Predicate[value \times time]}
 @end itemize
 where @var{isAllocated}(@var{x}, @var{aa}) means that object @var{x}
-has been allocated prior to time @var{aa}.  For each variable identifier
-(global variable, parameter, or result value) @code{v} of an object type,
-the translation assumes
+has been allocated prior to time @var{aa}.  For each variable
+identifier (global variable, parameter, or result value) @code{v} of
+an object type, the translation assumes
 @itemize +
 @item
 @math{isAllocated(v, alloc)}
 @end itemize
-as part of the precondition of the method being checked, after each method
-call that modifies @code{v}, and as an invariant of every loop that modifies
-@code{v}.  Finally, the translation includes the following postcondition
-as part of the specification of @code{new T()}:
+as part of the precondition of the method being checked, after each
+method call that modifies @code{v}, and as an invariant of every loop
+that modifies @code{v}.  Finally, the translation includes the
+following postcondition as part of the specification of @code{new
+T()}:
 @itemize
 @item
 @math{\neg isAllocated(result, alloc) \wedge isAllocated(result, alloc')}
 @end itemize
-where @var{alloc} and @var{alloc}' are the values of @var{alloc} before
-and after the call, respectively, and @var{result} is the value returned
-by the call.  The guarded command translation of the method @code{m}
-is thus something like:
+where @var{alloc} and @var{alloc}' are the values of @var{alloc}
+before and after the call, respectively, and @var{result} is the value
+returned by the call.  The guarded command translation of the method
+@code{m} is thus something like:
 @example
 @strong{assume} isAllocated(x, alloc) && ... ;
 @strong{var} y @strong{in}
@@ -1423,19 +1491,20 @@ void n(T x) {
   /*@ assert x != y; */
 }
 @end example
-where @code{p()} denotes a method call that modifies @var{alloc}. 
-In order to verify the assertion, we must be able to infer that @var{x}
+where @code{p()} denotes a method call that modifies @var{alloc}.  In
+order to verify the assertion, we must be able to infer that @var{x}
 is still allocated after the call to @code{p}.  One possible approach
 would be for the translation to explicitly assume
 @itemize +
 @item
 @math{isAllocated(x, alloc)}
 @end itemize
-after the call [oh, how we wish we had hollow square bullets...]. 
-We reject this approach, since it would require generating such an assumption
-for each variable in the program, instead of just those that are modified
-by the call.  Another approach would be for the translation add to
-the following as a postcondition of every method that modifies @var{alloc}:
+after the call [oh, how we wish we had hollow square bullets...].  We
+reject this approach, since it would require generating such an
+assumption for each variable in the program, instead of just those
+that are modified by the call.  Another approach would be for the
+translation add to the following as a postcondition of every method
+that modifies @var{alloc}:
 @itemize +
 @item
 @math{(\forall v :: \underline{isAllocated(v, alloc)} \longrightarrow isAllocated(v, alloc'))}
@@ -1448,8 +1517,8 @@ introduce a function from objects to their allocation times:
 @item
 @math{vAllocTime : value \mapsto time}
 @end itemize
-Third, we define @var{isAllocated} in terms of @var{vAllocTime} and Simplify's
-built-in < operator:
+Third, we define @var{isAllocated} in terms of @var{vAllocTime} and
+Simplify's built-in < operator:
 @itemize @bullet
 @item
 Definition:  @math{(\forall x, aa :: isAllocated(x,aa) == (vAllocTime(x) < aa))}
@@ -1470,11 +1539,11 @@ the caller is concerned?}.
 @node Closure of Allocatedness under Field Access, Closure of Allocatedness under Array Access, Allocation Times of Objects, Allocation
 @subsection Closure of Allocatedness under Field Access
 
-In Section 3.0, we introduced rules by which ESC/Java can verify that a
-newly allocated object is distinct from previous values of program variables. 
-We may also need to verify that newly allocated objects are distinct from
-all objects accessible prior to allocation, as in the following example:
-
+In @ref{Allocation Times of Objects}, we introduced rules by which
+ESC/Java can verify that a newly allocated object is distinct from
+previous values of program variables.  We may also need to verify that
+newly allocated objects are distinct from all objects accessible prior
+to allocation, as in the following example:
 @example
 void m(U u) {
   T y = new T();
@@ -1595,7 +1664,7 @@ method call that modifies @var{elems}, and as an invariant of each
 loop that modifies @var{elems}.
 
 @c =============================================================================
-@node Locking, Domain-specific Axioms, Allocation, Introduction
+@node Locking, Domain-specific Axioms, Allocation, Unsorted Logic
 @section Locking
 
 @cindex Locking
@@ -1735,7 +1804,7 @@ is used to check shared-variable accesses in @code{S}.  The function
 @var{store} is explained in @ref{Maps}.
 
 @c =============================================================================
-@node Domain-specific Axioms,  , Locking, Introduction
+@node Domain-specific Axioms,  , Locking, Unsorted Logic
 @section Domain-specific Axioms
 
 @cindex Domain-specific Axioms
@@ -1747,6 +1816,13 @@ at least in the initial version of ESC/Java.  This section explains
 those functions that are given a semantics.
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@menu
+* Properties of Arrays::        
+* Arithmetic Functions on Integers::  
+* Reflections of Predicates into Term Space::  
+* Other Domain-Specific Axioms::  
+@end menu
+
 @node Properties of Arrays, Arithmetic Functions on Integers, Domain-specific Axioms, Domain-specific Axioms
 @subsection Properties of Arrays
 
@@ -1861,7 +1937,7 @@ the contradiction @math{3 == 4} as just explained.  Finally, the translation
 and logic ensure that @math{typeof(elems[a][3]) == array(array(int))} and that
 @math{typeof(elems[emes[a][4]][7]) == array(int)}.  As discussed in 
 @ref{Array Type-Constant Axioms Example}, the axioms
-in @ref{arrayTypes} guarantee that the types
+in @ref{Array Types} guarantee that the types
 @math{array(array(int))} and @math{array(int)}
 are distinct, so when the prover considers the possibility that the
 third assertion fails, it will derive a contradiction@footnote{In 
@@ -1871,7 +1947,7 @@ possibility of splitting @var{elems} into multiple variables
 logic would complicate these axioms.}.
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-@node Arithmetic Functions on Integers,  , Properties of Arrays, Domain-specific Axioms
+@node Arithmetic Functions on Integers, Reflections of Predicates into Term Space, Properties of Arrays, Domain-specific Axioms
 @subsection Arithmetic Functions on Integers
 
 The Java @code{+}, @code{-}, @code{*}, @code{<}, @code{<=},
@@ -1909,7 +1985,7 @@ chosen?}:
 @end itemize
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-@node Reflections of Predicates into Term Space, Other Domain-Specific Axioms, Domain-specific Axioms, Domain-specific Axioms
+@node Reflections of Predicates into Term Space, Other Domain-Specific Axioms, Arithmetic Functions on Integers, Domain-specific Axioms
 @subsection Reflections of Predicates into Term Space
 
 The next set of axioms we discuss relates to an issue that arises in the
@@ -1955,6 +2031,14 @@ operators that produce booleans:
 In this section, we discuss these functions and their axiomatizations.
 
 @c -----------------------------------------------------------------------------
+@menu
+* Reflected Boolean Connectives::  
+* Reflected Integer and Object Comparisons::  
+* Reflected Floating-Point Comparisons::  
+* Lifting Predicate Terms to Predicate Space::  
+* Reflecting the Conditional Operator::  
+@end menu
+
 @node Reflected Boolean Connectives, Reflected Integer and Object Comparisons, Reflections of Predicates into Term Space, Reflections of Predicates into Term Space
 @subsubsection Reflected Boolean Connectives
 
@@ -2001,7 +2085,7 @@ Simplify generates the Simplify predicates EQ, < etc.
 
 The Java operator @code{instanceof} is reflected by the user-defined predicate
 symbol @var{is}, which we have already described in 
-@ref{isPredicate}.
+@ref{The is Predicate}.
 
 @c -----------------------------------------------------------------------------
 @node Reflected Floating-Point Comparisons, Lifting Predicate Terms to Predicate Space, Reflected Integer and Object Comparisons, Reflections of Predicates into Term Space
@@ -2153,11 +2237,17 @@ that says that all @code{String} lengths are non-negative.  We propose
 to add such functions and axioms only as the need becomes evident.
 
 @c =============================================================================
-@node Untyped Construct Index, Motivating Examples, Introduction, Top
-@appendix Index of Constructs in Untyped Logic
+@node Many-Sorted Logics, Unsorted Construct Index, Unsorted Logic, Top
+@chapter Many-Sorted Logics
+
+Discussion of new logics.
+
+@c =============================================================================
+@node Unsorted Construct Index, Motivating Examples, Many-Sorted Logics, Top
+@appendix Index of Constructs in Unsorted Logic
 
 @cindex Index of Predicates, Functions, and Constants
-@cindex Index of Constructs in Untyped Logic
+@cindex Index of Constructs in Unsorted Logic
 
 @c Predicates (pindex) and constants (kindex) are mapped into the function
 @c index in the header.
@@ -2194,26 +2284,26 @@ From @ref{The subtype Predicate}:
 @item
 @math{<: : Predicate[type \times type]}
 @end itemize
-From @ref{incomparableClasses}:
+From @ref{Disjointness of Incomparable}:
 @itemize
 @item
 @math{classDown : type \times type \mapsto type}
 @item
 @math{asChild : type \times type \mapsto type}
 @end itemize
-From @ref{arrayTypes}:
+From @ref{Array Types}:
 @itemize
 @item
 array : type \mapsto type
 @item
 elemType : type \mapsto type
 @end itemize
-From @ref{isPredicate}:
+From @ref{The is Predicate}:
 @itemize
 @item
 @math{is : Predicate[value \times type]}
 @end itemize
-From @ref{casting}:
+From @ref{Casting}:
 @itemize
 @item
 @math{cast : value \times type \mapsto value}
@@ -2236,14 +2326,14 @@ intLast : value
 @item
 longLast : value
 @end itemize
-From @ref{typesOfObjects}:
+From @ref{Types of Objects}:
 @itemize
 @item
 @math{typeof : value \mapsto type}
 @item
 instantiable : Predicate[type]
 @end itemize
-From @ref{typesOfInstanceVariables}:
+From @ref{Types of Instance Variables}:
 @itemize
 @item
 @math{asField : map \times type \mapsto map}
@@ -2325,20 +2415,20 @@ From @ref{Reflecting the Conditional Operator}:
 @end itemize
 
 @c =============================================================================
-@node Motivating Examples, List of Possible Experiments, Untyped Construct Index, Top
+@node Motivating Examples, List of Possible Experiments, Unsorted Construct Index, Top
 @appendix Motivating Examples, Functions, and Constants
 
 @cindex Motivating Examples
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-@node Array Type-Constant Axioms Example, Final Type Axioms Example, Motivating Examples, Motivating Examples
+@node Array Type-Constant Axioms Example
 @appendixsection Array Type-Constant Axioms Example
 
 @cindex Array type-constant axioms example
 
 @emph{This example is out-of-date, and may no longer be relevant.}
 
-We give an example to motivate the axioms in @ref{arrayTypes} 
+We give an example to motivate the axioms in @ref{Array Types} 
 that distinguish primitive types from array types, such as
 @itemize @bullet
 @item
@@ -2399,13 +2489,13 @@ We have that @math{typeof(elems[a][i]) == array(int)},
 whereas @math{typeof(a) == array(array(int))}. 
 Hence, it suffices to know that these two types are different.
 
-We end by showing how the axioms from Section
-1.3 can help.  Suppose that Simplify explores a potential satisfying
-assignment in which the two types are postulated to be equal:
+We end by showing how the axioms from @ref{Array Types} can help.
+Suppose that Simplify explores a potential satisfying assignment in
+which the two types are postulated to be equal:
 @itemize
 0.  @math{array(int) == array(array(int))}
 @end itemize
-By the Section 1.3 axiom
+By the @ref{Array Types} axiom
 @itemize @bullet
 @item
 1.  @math{(\forall t :: elemType(\underline{array(t)})== t)}
@@ -2445,7 +2535,7 @@ contradicting the axiom
 @item
 8.  int != array(elemType(int))
 @end itemize
-given in Section 1.3.
+given in @ref{Array Types}.
 
 Notice that to do the verification in this example,
 Simplify must consider and refute the case that @math{elems[a][i] \neq a}.
@@ -2619,6 +2709,117 @@ This motivates the need for the antisymmetry axiom.
 @cindex List of Possible Experiments
 
 To be filled in.
+
+@c =============================================================================
+@node Logics, Index, List of Possible Experiments, Top
+@appendix Logics
+
+@cindex Logics
+
+This appendix contains the raw source of every logic described in this
+document.
+
+@ref{Unsorted Logics} contains material relating to the original
+unsorted, Simplify-centric, object logic of SRC ESC/Java version 1.
+@ref{Original Logic} contains the original unsorted logic.
+@ref{Additional Axioms Introduced in Calvin and Houdini} contains all
+additional axioms that were added by various parties at SRC to the
+unsorted logics of the SRC tools Calvin and Houdini.  @ref{Additional
+Axioms Introduced in ESC/Java2} contains all additional axioms that
+have been added to ESC/Java2 by David Cok and Joe Kiniry.
+
+@ref{Many-Sorted Logics} contains a new many-sorted logics developed
+by Joe Kiniry and Cesare Tinelli.  These logics are being developed
+for use with SMT-LIB based provers.  They are not yet supported in
+ESC/Java2.  These logics are being realized in the Maude logical
+framework and the PVS higher-order theorem prover.
+
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@menu
+* Original Logic::              
+* Additional Axioms Introduced in Calvin and Houdini::  
+* Additional Axioms Introduced in ESC/Java2::  
+* SMT-LIB Many-Sorted Logic::   
+* Many-Sorted Logic with Subsorts::  
+* Maude Realization of Many-Sorted Logics::  
+* PVS Realization of Many-Sorted Logics::  
+@end menu
+
+@node Unsorted Logics
+@appendixsection Unsorted Logics
+
+@cindex Unsorted Logics
+
+@c -----------------------------------------------------------------------------
+@node Original Logic
+@appendixsubsec Original Logic
+
+@example
+@include unsorted/original-unsorted-logic.ax.texinfo
+@end example
+
+@c -----------------------------------------------------------------------------
+@node Additional Axioms Introduced in Calvin and Houdini
+@appendixsubsec Additional Axioms Introduced in Calvin and Houdini
+
+The following axioms were added to the object logic of Calvin.  They
+have not yet been evaluated for inclusion in ESC/Java2.
+
+@example
+@include unsorted/calvin-unsorted-axiom-additions.ax.texinfo
+@end example
+
+Houdini introduced no new axioms.
+
+@c -----------------------------------------------------------------------------
+@node Additional Axioms Introduced in ESC/Java2
+@appendixsubsec Additional Axioms Introduced in ESC/Java2
+
+The following axioms were introduced to the unsorted object logic to
+reason about new constructs introduced in ESC/Java2.
+
+@example
+@include unsorted/escjava2-unsorted-axiom-additions.ax.texinfo
+@end example
+
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node Many-Sorted Logics
+
+@appendixsection Many-Sorted Logics
+
+@cindex Many-Sorted Logics
+
+This appendix section contains several different many-sorted object
+logics.
+
+@c -----------------------------------------------------------------------------
+@node SMT-LIB Many-Sorted Logic
+@appendixsubsec SMT-LIB Many-Sorted Logic
+
+What follows is a many-sorted object logic for Java, written in
+SMT-LIB.
+
+@example
+@include many-sorted/many-sorted-logic.smt.texinfo
+@end example
+
+@c -----------------------------------------------------------------------------
+@node Many-Sorted Logic with Subsorts
+@appendixsubsec Many-Sorted Logic with Subsorts
+
+TBD
+
+@c -----------------------------------------------------------------------------
+@node Maude Realization of Many-Sorted Logics
+@appendixsubsec Maude Realization of Many-Sorted Logics
+
+TBD
+
+@c -----------------------------------------------------------------------------
+@node PVS Realization of Many-Sorted Logics
+@appendixsubsec PVS Realization of Many-Sorted Logics
+
+TBD
 
 @c =============================================================================
 @node Copying, Index, List of Possible Experiments, Top
