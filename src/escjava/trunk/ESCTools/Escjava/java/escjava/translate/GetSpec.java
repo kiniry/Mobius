@@ -625,7 +625,9 @@ public final class GetSpec {
       // Free: TypeCorrectAs[[ RES, T ]]
       addFreeTypeCorrectAs(GC.resultvar.decl, dmd.returnType, post);
       
-      if (Utils.isPure(dmd.original)) {
+      if (Utils.isPure(dmd.original) && (
+          dmd.original instanceof ConstructorDecl ||
+                              !Utils.isAllocates(dmd.original))) {
         Expr e = TrAnExpr.resultEqualsCall(GC.resultvar.decl, dmd.original, wt);
         Condition cond = GC.freeCondition(e, Location.NULL);
         post.addElement(cond);

@@ -239,6 +239,8 @@ public class Options extends javafe.SrcToolOptions
   public boolean stats          = false;
   public boolean plainWarning   = false;
 
+  public boolean useOldStringHandling = false; // Just for backwards compatibility for Esc/Java tests
+
   /** The dirpath or jar file of system specs to use. */
   public String specspath = null;
 
@@ -960,6 +962,9 @@ public class Options extends javafe.SrcToolOptions
     } else if (option.equals("-checkpurity")) {
       checkPurity = true;
       return offset;
+    } else if (option.equals("-nocheckpurity")) {
+      checkPurity = false;
+      return offset;
     } else if (option.equals("-ppvc") || 
                option.equals("-prettyprintvc")) {
       prettyPrintVC = true;
@@ -1027,6 +1032,9 @@ public class Options extends javafe.SrcToolOptions
                option.equals("-nne")) {
       nne = true;
       return offset+1;
+    } else if (option.equals("-useoldstringhandling")) {
+      useOldStringHandling = true;
+      return offset;
     }
     
     // Pass on unrecognized options:

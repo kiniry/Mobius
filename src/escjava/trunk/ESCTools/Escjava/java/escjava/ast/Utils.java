@@ -180,6 +180,122 @@ public final class Utils
     }
   };
 
+  private static final BooleanDecoration allocatesDecoration = new BooleanDecoration("allocates") {
+    public boolean calculate(ASTNode o) {
+      if (!(o instanceof MethodDecl)) {
+         //System.out.println("CALLING ALLOCATES ON NOT METHOD " + Location.toString(o.getStartLoc()));
+         return true;
+      }
+      MethodDecl rd = (MethodDecl)o;
+        javafe.util.Set ov = escjava.tc.FlowInsensitiveChecks.getDirectOverrides((MethodDecl)rd);
+        Enumeration k = ov.elements();
+        while (k.hasMoreElements()) {
+           if (isAllocates( (MethodDecl)k.nextElement() )) {
+//System.out.println("PARENT ALLOCATES " + rd.id() + " " + Location.toString(rd.getStartLoc()));
+               return true;
+           }
+        }
+        ModifierPragmaVec mpv = rd.pmodifiers;
+        for (int i=0; i<mpv.size(); ++i) {
+          ModifierPragma m = mpv.elementAt(i);
+          if (m instanceof ExprModifierPragma) {
+            if (checkForFresh( ((ExprModifierPragma)m).expr )) {
+//System.out.println("ENSURES ALLOCATES " + rd.id() + " " + Location.toString(m.getStartLoc()));
+              return true;
+            }
+          } else if (m instanceof VarExprModifierPragma) {
+            if (checkForFresh( ((VarExprModifierPragma)m).expr )) {
+//System.out.println("SIGNALS ALLOCATES " + rd.id() + " " + Location.toString(m.getStartLoc()));
+              return true;
+            }
+          }
+        }
+        return false;
+    }
+
+    private boolean checkForFresh(ExprVec ev) {
+        for (int i=0; i<ev.size(); ++i) {
+          if (checkForFresh(ev.elementAt(i))) return true;
+        }
+        return false;
+    }
+    private boolean checkForFresh(Expr e) {
+      if (e == null) return false;
+      else if (e instanceof BinaryExpr) {
+        BinaryExpr be = (BinaryExpr)e;
+        return checkForFresh(be.left) || checkForFresh(be.right);
+      } else if (e instanceof UnaryExpr) {
+        UnaryExpr ue = (UnaryExpr)e;
+        return checkForFresh(ue.expr);
+      } else if (e instanceof NaryExpr) {
+        NaryExpr ne = (NaryExpr)e;
+        if (ne.op == TagConstants.FRESH) return true;
+        return checkForFresh(ne.exprs);
+      } else if (e instanceof MethodInvocation) {
+        MethodInvocation mi = (MethodInvocation)e;
+        if (mi.od instanceof ExprObjectDesignator) {
+          if ( checkForFresh( ((ExprObjectDesignator)mi.od).expr )) return true;
+        }
+        return checkForFresh(mi.args);
+      } else if (e instanceof ArrayRefExpr) {
+        return checkForFresh( ((ArrayRefExpr)e).index) ||
+               checkForFresh( ((ArrayRefExpr)e).array) ;
+      } else if (e instanceof CondExpr) {
+        return checkForFresh( ((CondExpr)e).test ) ||
+               checkForFresh( ((CondExpr)e).thn  ) ||
+               checkForFresh( ((CondExpr)e).els  );
+      } else if (e instanceof CastExpr) {
+        return checkForFresh( ((CastExpr)e).expr );
+      } else if (e instanceof ParenExpr) {
+        return checkForFresh( ((ParenExpr)e).expr );
+      } else if (e instanceof LabelExpr) {
+        return checkForFresh( ((LabelExpr)e).expr );
+      } else if (e instanceof FieldAccess) {
+        FieldAccess fa = (FieldAccess)e;
+        if (fa.od instanceof ExprObjectDesignator) {
+          if ( checkForFresh( ((ExprObjectDesignator)fa.od).expr )) return true;
+        }
+        return false;
+      } else if (e instanceof NewArrayExpr) {
+        NewArrayExpr nae = (NewArrayExpr)e;
+        return checkForFresh( nae.dims );
+         // FIXME - what about array initializers?
+      } else if (e instanceof NewInstanceExpr) {
+        NewInstanceExpr nie = (NewInstanceExpr)e;
+        return checkForFresh( nie.args );
+      } else if (e instanceof SetCompExpr) {
+        return checkForFresh( ((SetCompExpr)e).expr );
+      } else if (e instanceof LiteralExpr) {
+        return false;
+      } else if (e instanceof VariableAccess) {
+        return false;
+      } else if (e instanceof ThisExpr) {
+        return false;
+      } else if (e instanceof ResExpr) {
+        return false;
+      } else if (e instanceof escjava.ast.TypeExpr) {
+        return false;
+      } else if (e instanceof LockSetExpr) {
+        return false;
+      } else if (e instanceof NotModifiedExpr) {
+        return false;
+      } else if (e instanceof InstanceOfExpr) {
+        return false;
+      } else if (e instanceof ClassLiteral) {
+        return false;
+      } else if (e instanceof QuantifiedExpr) {
+        return checkForFresh( ((QuantifiedExpr)e).expr) ||
+               checkForFresh( ((QuantifiedExpr)e).rangeExpr) ;
+      } else {
+        System.out.println("CLASS " + e.getClass());
+        return true;
+      }
+    }
+  };
+  public static boolean isAllocates(RoutineDecl rd) {
+    return allocatesDecoration.isTrue(rd);
+  }
+
   private static final BooleanDecoration functionDecoration = new BooleanDecoration("function") {
     public boolean calculate(ASTNode o) {
       RoutineDecl rd = (RoutineDecl)o;
@@ -187,9 +303,16 @@ public final class Utils
           != null) return true;
       if (!isPure(rd)) return false;
       // If non-static, the owning class must be immutable
+      // But it can't override non-function methods
       // Constructors don't depend on the owning class
       if (!Modifiers.isStatic(rd.modifiers) && (rd instanceof MethodDecl)) {
         if ( ! isImmutable(rd.parent) ) return false;
+        if (isAllocates(rd)) return false;
+        javafe.util.Set ov = escjava.tc.FlowInsensitiveChecks.getAllOverrides((MethodDecl)rd);
+        Enumeration i = ov.elements();
+        while (i.hasMoreElements()) {
+           if (!isFunction( (MethodDecl)i.nextElement() )) return false;
+        }
       }
       // All argument types must be primitive or immutable
       FormalParaDeclVec args = rd.args;
@@ -207,8 +330,6 @@ public final class Utils
     }
   };
 public static boolean isFunction(RoutineDecl rd) {
-  // FIXME - try all methods being true
-  //if (rd instanceof MethodDecl) return true;
   return functionDecoration.isTrue(rd);
 }
 

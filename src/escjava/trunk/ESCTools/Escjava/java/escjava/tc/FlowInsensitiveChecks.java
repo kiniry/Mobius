@@ -1111,6 +1111,48 @@ System.out.println("FOUND " + t);
           return super.checkExpr(env, e);
         }
 
+      case TagConstants.ADD:
+        {
+          Expr ee = super.checkExpr(env, e);
+          if (!Main.options().useOldStringHandling &&
+              Types.isSameType(getType(ee),Types.javaLangString())) {
+             boolean savedInAnnotation = inAnnotation;
+             inAnnotation = true;
+             BinaryExpr be = (BinaryExpr)ee;
+             Expr left = be.left;
+             Expr right = be.right;
+             if (!Types.isSameType(getType(left),Types.javaLangString())) {
+                Name nn = Name.make("java.lang.String.valueOf",left.getStartLoc());
+                ExprVec a = ExprVec.make();
+                a.addElement(left);
+	        AmbiguousMethodInvocation mi = AmbiguousMethodInvocation.make(
+                    nn,null,left.getStartLoc(),a);
+                MethodInvocation mm = env.disambiguateMethodName(mi);
+                left = checkExpr(env, mm);
+             }
+             if (!Types.isSameType(getType(right),Types.javaLangString())) {
+                Name nn = Name.make("java.lang.String.valueOf",right.getStartLoc());
+                ExprVec a = ExprVec.make();
+                a.addElement(right);
+	        AmbiguousMethodInvocation mi = AmbiguousMethodInvocation.make(
+                    nn,null,right.getStartLoc(),a);
+                MethodInvocation mm = env.disambiguateMethodName(mi);
+                right = checkExpr(env, mm);
+             }
+	     int loc = be.locOp;
+             Name n = Name.make(TagConstants.STRINGCATINFIX,loc);
+             ExprVec args = ExprVec.make();
+             args.addElement(left);
+             args.addElement(right);
+	     AmbiguousMethodInvocation ami = AmbiguousMethodInvocation.make(
+                    n,null,loc,args);
+             MethodInvocation m = env.disambiguateMethodName(ami);
+             ee = checkExpr(env, m);
+             inAnnotation = savedInAnnotation;
+          }
+          return ee;
+        }
+
       case TagConstants.OR:
       case TagConstants.AND:
       case TagConstants.EQ:

@@ -825,6 +825,9 @@ public class TagConstants extends GeneratedTags
         "vAllocTime"
     };
 
+    static public final String STRINGCATINFIX = "java.lang.String._infixConcat_";
+				     // Must match method name in String.spec
+
     private static Identifier[] jmlkeywords = {
         Identifier.intern("assume"),
         Identifier.intern("axiom"),
