@@ -1,4 +1,4 @@
-#!/proj/system/bin/tcsh -f
+#!/bin/tcsh -f
 # Copyright 2001, Compaq Computer Corporation
 #  Note:  In order to make escjava's -routine flag work with an argument
 #  that contains Java array brackets, like
@@ -38,4 +38,6 @@ endif
 #
 setenv	CLASSPATH	${CLASSES}
 
-${JAVA} -Dsimplify=${ESCJAVA_ROOT}/simplify -classpath ${ESC_CLASSPATH} escjava.Main -bootclasspath ${BOOTCLASSPATH} -classpath ${USERPATH} ${ESCJ_STDARGS} $*
+${JAVA} -Dsimplify=${ESCJAVA_ROOT}/simplify \
+    -classpath ${ESC_CLASSPATH} escjava.Main \
+    -bootclasspath ${BOOTCLASSPATH} -classpath ${USERPATH} ${ESCJ_STDARGS} $*
