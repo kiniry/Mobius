@@ -1,0 +1,11 @@
+ESC/Java version VERSION
+  Prover started:TIME
+
+ParseDepends ...
+
+ParseDepends: m() ...
+    [TIME]  passed immediately
+
+ParseDepends: ParseDepends() ...
+    [TIME]  passed
+  [TIME total]

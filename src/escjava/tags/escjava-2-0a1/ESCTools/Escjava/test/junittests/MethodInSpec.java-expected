@@ -1,0 +1,17 @@
+ESC/Java version VERSION
+  Prover started:TIME
+
+MethodInSpec ...
+
+MethodInSpec: m() ...
+    [TIME]  passed immediately
+
+MethodInSpec: m(int) ...
+    [TIME]  passed immediately
+
+MethodInSpec: n(int) ...
+    [TIME]  passed immediately
+
+MethodInSpec: MethodInSpec() ...
+    [TIME]  passed
+  [TIME total]

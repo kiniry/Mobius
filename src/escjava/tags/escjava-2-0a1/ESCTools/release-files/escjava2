@@ -1,0 +1,32 @@
+#! /bin/tcsh -f
+
+## This script presumes it is operating from a release.
+## It checks and sets various environment variables and then invokes the
+## escj script to run the escjava2 tool.
+
+## To save the work of guessing appropriate values for the environment 
+## variables, the user should set these:
+
+## setenv ESCTOOLS_RELEASE ??? ## The directory containing the release files
+## setenv SIMPLIFY ??? ## The name of a SImplify executable in $ESCTOOLS_RELEASE
+
+########## Check if ESCTOOLS_RELEASE is defined; try to guess it if it is not
+
+if ( ! $?ESCTOOLS_RELEASE ) then
+    set NAME=$PWD/$0
+    if ( -e $NAME ) then
+	setenv ESCTOOLS_RELEASE  $NAME:h
+        echo Guessing ESCTOOLS_RELEASE = $ESCTOOLS_RELEASE
+    else if ( -e $0 ) then
+        setenv ESCTOOLS_RELEASE  $0:h
+        echo Guessing ESCTOOLS_RELEASE = $ESCTOOLS_RELEASE
+    endif
+    if ( ! $?ESCTOOLS_RELEASE ) then
+        echo "Error: ESCTOOLS_RELEASE is not set and guessing was unsuccessful."
+        exit 2
+    endif
+endif
+
+######## Execute
+
+$ESCTOOLS_RELEASE/escj $*

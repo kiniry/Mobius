@@ -1,0 +1,5 @@
+#!/bin/csh -f
+
+## Test flow-sensitive checks   [disabled]
+
+${TOOL} Flow.java

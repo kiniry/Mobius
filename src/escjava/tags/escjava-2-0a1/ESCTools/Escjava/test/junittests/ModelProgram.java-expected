@@ -1,0 +1,11 @@
+ESC/Java version VERSION
+  Prover started:TIME
+
+ModelProgram ...
+
+ModelProgram: m() ...
+    [TIME]  passed
+
+ModelProgram: ModelProgram() ...
+    [TIME]  passed
+  [TIME total]

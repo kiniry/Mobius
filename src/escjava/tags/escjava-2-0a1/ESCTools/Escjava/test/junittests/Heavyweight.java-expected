@@ -1,0 +1,36 @@
+ESC/Java version VERSION
+  Prover started:TIME
+
+Heavyweight ...
+Heavyweight.java:38: Error: No closing |} for this {|
+        //@ {| ensures false;
+            ^
+Heavyweight.java:44: Error: Dangling also
+        //@ also
+            ^
+Heavyweight.java:51: Error: Encountered |} without a matching {|
+            |}
+            ^
+
+Heavyweight: m() ...
+    [TIME]  passed immediately
+
+Heavyweight: n() ...
+    [TIME]  passed immediately
+
+Heavyweight: q() ...
+    [TIME]  passed immediately
+
+Heavyweight: badEnd() ...
+    [TIME]  passed immediately
+
+Heavyweight: danglingAlso() ...
+    [TIME]  passed immediately
+
+Heavyweight: missingBegin() ...
+    [TIME]  passed immediately
+
+Heavyweight: Heavyweight() ...
+    [TIME]  passed
+  [TIME total]
+3 errors

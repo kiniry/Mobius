@@ -1,0 +1,29 @@
+ESC/Java version VERSION
+  Prover started:TIME
+
+SimpleFunction ...
+
+SimpleFunction: bump(int) ...
+    [TIME]  passed immediately
+
+SimpleFunction: m() ...
+    [TIME]  passed
+
+SimpleFunction: n() ...
+------------------------------------------------------------------------
+SimpleFunction.java:20: Warning: Postcondition possibly not established (Post)
+        public void n() {}
+                         ^
+Associated declaration is "SimpleFunction.java", line 19, col 5:
+        //@ ensures bump(f+j) < 10;
+            ^
+Execution trace information:
+    Executed implicit return in "SimpleFunction.java", line 20, col 18.
+
+------------------------------------------------------------------------
+    [TIME]  failed
+
+SimpleFunction: SimpleFunction() ...
+    [TIME]  passed
+  [TIME total]
+1 warning

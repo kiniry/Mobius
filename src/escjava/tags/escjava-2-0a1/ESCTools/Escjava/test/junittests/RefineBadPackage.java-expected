@@ -1,0 +1,12 @@
+ESC/Java version VERSION
+./RefineBadPackage.spec:1: Error: Package name does not match the package name in RefineBadPackage.java: junittests vs. 
+package junittests;
+^
+  Prover started:TIME
+
+RefineBadPackage ...
+
+RefineBadPackage: RefineBadPackage() ...
+    [TIME]  passed
+  [TIME total]
+1 error

@@ -1,0 +1,29 @@
+ESC/Java version VERSION
+  Prover started:TIME
+
+RefineNoRepeats ...
+
+RefineNoRepeats: RefineNoRepeats() ...
+    [TIME]  passed immediately
+
+RefineNoRepeats: RefineNoRepeats(int) ...
+    [TIME]  passed immediately
+
+RefineNoRepeats: m() ...
+    [TIME]  passed immediately
+
+RefineNoRepeats: m(int) ...
+    [TIME]  passed immediately
+
+RefineNoRepeats: n() ...
+    [TIME]  passed immediately
+  [TIME total]
+
+RefineNoRepeats$A ...
+
+RefineNoRepeats$A: A() ...
+    [TIME]  passed
+  [TIME total]
+
+RefineNoRepeats$B ...
+  [TIME total]

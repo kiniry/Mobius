@@ -1,0 +1,47 @@
+ESC/Java version VERSION
+Ghost.java:48: Error: Expected a declaration within the annotation following the ghost keyword
+        /*@ ghost */ int jjj; // ERROR
+            ^
+Ghost.java:46: Error: Cannot have modifiers outside of the annotation on a TypeDeclElem pragma
+        //@ ghost int iii; // ERROR
+        ^
+  Prover started:TIME
+
+Ghost ...
+Ghost.java:29: Error: Undefined variable 'i'
+                int q = i;  // ERROR
+                        ^
+Ghost.java:37: Error: Undefined variable 'superinst'
+                //@ set ii = superinst; // ERROR - in static method
+                             ^
+Ghost.java:39: Error: Undefined variable 'interkinst'
+                //@ set ii = interkinst; // ERROR - in static method
+                             ^
+Ghost.java:52: Error: Undefined variable 'interkinst'
+        //@ static ghost int temp = interkinst; // ERROR
+                                    ^
+Ghost.java:53: Error: An instance field may be accessed only via an object and/or from a non-static context or an inner class enclosed by a type possessing that field.
+        //@ static ghost int temp2 = ppp; // ERROR
+                                     ^
+Ghost.java:57: Error: Undefined variable 'superinst'
+        //@ static ghost int temp4 = superinst; // ERROR
+                                     ^
+Ghost.java:58: Error: Undefined variable 'superinst2'
+        //@ static ghost int temp5 = superinst2; // ERROR
+                                     ^
+Caution: Turning off extended static checking due to type error(s)
+  [TIME total] (aborted)
+
+GhostA ...
+Ghost.java:68: Error: May not specify both static and instance on a declaration
+        //@ static ghost instance int superiii; // ERROR
+                         ^
+  [TIME total] (aborted)
+
+GhostI ...
+Ghost.java:79: Error: May not specify both static and instance on a declaration
+        //@ ghost instance static int interkinst2; // ERROR
+                  ^
+  [TIME total] (aborted)
+1 caution
+11 errors

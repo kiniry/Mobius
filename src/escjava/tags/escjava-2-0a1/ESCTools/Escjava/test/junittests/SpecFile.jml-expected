@@ -1,0 +1,11 @@
+ESC/Java version VERSION
+  Prover started:TIME
+
+SpecFile ...
+
+SpecFile: m() ...
+    [TIME]  passed immediately
+
+SpecFile: SpecFile() ...
+    [TIME]  passed
+  [TIME total]
