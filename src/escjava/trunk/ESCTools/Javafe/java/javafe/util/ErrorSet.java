@@ -252,14 +252,8 @@ public class ErrorSet
 	if (! gag)
 	    System.out.println(type + ": " + msg);
 
-      /* Hack so we can see where error occurred, for debugging:
-	try {
-	    throw new Exception();
-	} catch(Exception e) {
-	    System.out.println("Stack trace:");
-	    e.printStackTrace();
-	}
-      */
+        // Hack so we can see where error occurred, for debugging:
+	//(new Throwable()).printStackTrace();
 	
     }
 
@@ -283,14 +277,8 @@ public class ErrorSet
 	if (gag)
 	    return;
 
-      /* Hack so we can see where error occurred, for debugging:
-	try {
-	    throw new Exception();
-	} catch(Exception e) {
-	    System.out.println("Stack trace:");
-	    e.printStackTrace();
-	}
-      */
+        // Hack so we can see where error occurred, for debugging:
+	//(new Throwable()).printStackTrace();
 
 	if (loc==Location.NULL)
 	    Assert.fail("NULL location erroneously passed to ErrorSet;"
