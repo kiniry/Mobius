@@ -1,3 +1,391 @@
+2003-11-16  David Cok  <cok@frontiernet.net>
+
+	* Escjava/test/junittests/Makefile:
+	* install.sh:
+	Slight fix on the patch release testing
+
+2003-11-15  David Cok  <cok@frontiernet.net>
+
+	* Simplify/README.first: Updated comments
+
+	* Simplify/simplify/src/m3overrides: Edited to be platform independent
+
+	* Simplify/simplify/src/m3makefile:
+	No options; building standalone for better poratbility
+
+	* Simplify/Makefile: New makefile
+
+	* Simplify/prover/src/m3makefile:
+	Commenting out options unavailable on Mac
+
+	* Simplify/simplify/test/.cvsignore:
+	* Simplify/simplify/test/Makefile:
+	* Simplify/simplify/test/README:
+	* Simplify/simplify/test/perf/runtests:
+	* Simplify/simplify/test/test.ans:
+	* Simplify/simplify/test/test.out:
+	making Simplify tests usable
+
+	* Escjava/java/escjava/parser/EscPragmaParser.java:
+	* Escjava/java/escjava/tc/FlowInsensitiveChecks.java:
+	* Escjava/test/junittests/Makefile:
+	* Escjava/test/junittests/NotSpecified.java:
+	* Escjava/java/escjava/AnnotationHandler.java:
+	* Escjava/java/escjava/ast/EscPrettyPrint.java:
+	* Escjava/java/escjava/ast/TagConstants.java:
+	Adding initial support for code_contract to ESC/Java
+
+	* Makefile:
+	* Escjava/escj:
+	* release-files/quicktest:
+	Minor bug fixes in release process and testing
+
+	* specs/java/lang/Object.spec:
+	* specs/java/lang/System.spec:
+	Repairs to ESC spec files
+
+	* Escjava/test/junittests/Makefile:
+	* release-files/README.release:
+	* Escjava/escj:
+	* Escjava/java/escjava/prover/Simplify.java:
+	* Escjava/java/escjava/prover/SubProcess.java:
+	* Escjava/simplify:
+	* Makefile:
+	* Makefile.defs:
+	Removing the simplify script, to help with portability
+
+	* Escjava/test/junittests/InterfaceModelMethod.java:
+	* Escjava/test/junittests/InterfaceModelMethod.java-expected:
+	* Escjava/test/junittests/skip:
+	Adding a test; skipping a broken test
+
+	* Escjava/java/escjava/AnnotationHandler.java:
+	* Escjava/java/escjava/ast/Utils.java:
+	* Escjava/java/escjava/ast/hierarchy.j:
+	* Escjava/java/escjava/pa/PredicateAbstraction.java:
+	* Escjava/java/escjava/parser/EscPragmaParser.java:
+	* Escjava/java/escjava/tc/FlowInsensitiveChecks.java:
+	* Escjava/java/escjava/translate/GC.java:
+	* Escjava/java/escjava/translate/GetSpec.java:
+	* Escjava/java/escjava/translate/Substitute.java:
+	* Escjava/java/escjava/translate/TrAnExpr.java:
+	* Escjava/java/escjava/translate/VcToString.java:
+	Adding PATS to VCs; making most method calls in annotations functions
+
+	* Escjava/java/escjava/translate/ErrorMsg.java:
+	Making output a bit more robust
+
+	* Escjava/java/escjava/tc/PrepTypeDeclaration.java:
+	Fixed problem with interface model methods that have bodies
+
+	* Escjava/java/escjava/ast/TagConstants.java: Added keyword immutable
+
+	* Escjava/java/escjava/RefinementSequence.java:
+	Fixed type comparison and location of combined files
+
+	* Escjava/java/escjava/Options.java: Added the -typecheck option
+
+2003-11-10  David Cok  <cok@frontiernet.net>
+
+	* Escjava/test/escjava/test/rtest:
+	* Escjava/test/junittests/Monitored.java:
+	* Escjava/test/junittests/Monitored.java-expected:
+	* Escjava/test/junittests/PureModifies.java:
+	* Escjava/java/escjava/parser/EscPragmaParser.java:
+	* Escjava/test/escjava/parser/test/TestEscPragmaParser.java:
+	* Escjava/java/escjava/Options.java:
+	Enabling error messages for missing semicolons; adding an option
+	to suppress the messages; appropriately adjusting tests
+
+2003-11-09  David Cok  <cok@frontiernet.net>
+
+	* Makefile: Comment added
+
+2003-11-08  David Cok  <cok@frontiernet.net>
+
+	* Escjava/java/escjava/backpred/FindContributors.java:
+	Performance improvement: avoiding redundant work
+
+	* Escjava/test/junittests/StoreRefs.java-expected: Test output repair
+
+	* Javafe/java/javafe/tc/TypeSig.java: Bug fix
+
+	* Escjava/java/escjava/Main.java: Adding some verbose output
+
+	* Escjava/java/escjava/AnnotationHandler.java:
+	Removing some verbose output
+
+	* Javafe/java/javafe/ast/hierarchy.j:
+	Adding a helper method to produce the id of a routine
+
+	* Javafe/java/javafe/tc/TypeSig.java:
+	Adding some verbose output:
+	* and guarding it against argumetn evaluation when quiet
+
+2003-11-07  David Cok  <cok@frontiernet.net>
+
+	* Javafe/java/javafe/Tool.java: Adding a utility to track space
+
+	* Escjava/java/escjava/translate/GetSpec.java:
+	Caching the result of getCombinedDmd for performance
+
+2003-11-05  David Cok  <cok@frontiernet.net>
+
+	* Escjava/java/escjava/ast/hierarchy.j: Fixing a null pointer error
+
+	* Escjava/java/escjava/Main.java: Slight adjustment to timing reporting
+
+2003-11-04  David Cok  <cok@frontiernet.net>
+
+	* Escjava/test/junittests/*.java-expected:
+	* Escjava/java/escjava/Options.java:
+	* Escjava/java/escjava/Main.java:
+	* Javafe/java/javafe/Options.java:
+	* Javafe/java/javafe/Tool.java:
+	* Javafe/test/javafe/test/fe/Makefile:
+	Additional adjustment of additional timing messages and
+	regeneration of test results as a consequence
+
+	* Javafe/java/javafe/SrcTool.java:
+	* Javafe/java/javafe/Tool.java:
+	* Escjava/java/escjava/Main.java:
+	Slight reorganization of timing methods and output
+
+2003-11-02  David Cok  <cok@frontiernet.net>
+
+	* Escjava/java/escjava/translate/GC.java:
+	* Escjava/java/escjava/translate/GetSpec.java:
+	* Escjava/java/escjava/translate/TrAnExpr.java:
+	* Escjava/java/escjava/ast/Modifiers.java:
+	* Escjava/java/escjava/tc/FlowInsensitiveChecks.java:
+	* Escjava/java/escjava/AnnotationHandler.java:
+	More work on implementing method/constructor calls in annotations;
+	moved/renamed some utility functions into ast/Utils
+
+	* Escjava/java/escjava/translate/UniqName.java: Opening up access
+
+	* Escjava/test/junittests/JavaScopeD.java:
+	* Escjava/test/junittests/JavaScopeD.java-expected:
+	Adding a test
+
+	* Escjava/java/escjava/Options.java:
+	Added options rewriteDepth and pxLog
+
+	* Javafe/java/javafe/tc/TypeSig.java: Fix to type lookup
+
+	* Escjava/java/escjava/ast/Utils.java:
+	Localizing some utility functions
+
+	* Escjava/java/escjava/reader/RefinementCachedReader.java:
+	Bug fix for duplicate files
+
+	* Escjava/java/escjava/Main.java: Removing obsolete code
+
+2003-11-01  David Cok  <cok@frontiernet.net>
+
+	* Escjava/test/junittests/sub/JavaScopeBB.java, Escjava/test/junittests/JavaScopeB.java:
+	Slight edits
+
+	* Javafe/java/javafe/tc/TypeSig.java: Fixing a type lookup problem
+
+2003-10-28  David Cok  <cok@frontiernet.net>
+
+	* Escjava/test/escjava/test/alltests, Escjava/test/escjava/test/test58/Body.java, Escjava/test/escjava/test/test58/InterfaceInherit.java, Escjava/test/escjava/test/test58/Test.java, Escjava/test/escjava/test/test58/ans.raw, Escjava/java/escjava/translate/GetSpec.java:
+	Fixing test58
+
+	* Escjava/test/junittests/Makefile, Escjava/test/junittests/skip:
+	Avoiding some platform dependencies
+
+2003-10-27  David Cok  <cok@frontiernet.net>
+
+	* Escjava/test/escjava/test/alltests: Removing a comment
+
+	* Escjava/test/escjava/test/test64/.cvsignore, Escjava/test/escjava/test/test64/ans, Escjava/test/escjava/test/test64/ans.raw, Escjava/test/escjava/test/test64/run, Escjava/test/escjava/test/test55/ans, Escjava/test/escjava/test/test55/run, Escjava/test/escjava/test/test61/ans, Escjava/test/escjava/test/test61/run, Escjava/test/escjava/test/alltests:
+	More platform dependencies removed
+
+2003-10-26  David Cok  <cok@frontiernet.net>
+
+	* Escjava/test/escjava/test/test19/ans, Escjava/test/escjava/test/test19/run, Escjava/java/escjava/tc/FlowInsensitiveChecks.java, Escjava/java/escjava/translate/Substitute.java, Escjava/java/escjava/translate/TrAnExpr.java, Escjava/java/escjava/parser/EscPragmaParser.java, Escjava/java/escjava/ast/TagConstants.java:
+	Fixing a platform dependency
+
+	* jars/decsrc.jar, jars/mochalib.jar: CLeaning up jar files
+
+	* docs/Escjava2-ImplementationNotes/Escjava2-ImplementationNotes.texinfo, Javafe/java/javafe/tc/Env.java, Javafe/java/javafe/tc/PrepTypeDeclaration.java, Javafe/test/javafe/test/fe/test106/ans:
+	Changes to Javafe to implement parsing of store-refs
+
+	* Escjava/test/junittests/sub/JSN.java, Escjava/test/junittests/sub/JavaScopeBB.java, Escjava/test/junittests/DupMM.java, Escjava/test/junittests/DupMM.java-expected, Escjava/test/junittests/DupMM.spec, Escjava/test/junittests/JavaScope.java, Escjava/test/junittests/JavaScope.java-expected, Escjava/test/junittests/JavaScopeB.java, Escjava/test/junittests/JavaScopeB.java-expected, Escjava/test/junittests/JavaScopeNested.java, Escjava/test/junittests/JavaScopeNested.java-expected, Escjava/test/junittests/StoreRefs.java, Escjava/test/junittests/StoreRefs.java-expected, Escjava/test/escjava/test/test34/ans, Escjava/test/escjava/test/test55/ans, Escjava/test/escjava/test/test61/ans, Escjava/java/escjava/translate/Substitute.java, Escjava/java/escjava/translate/TrAnExpr.java, Escjava/test/escjava/test/test19/ans, Escjava/java/escjava/sp/SPVC.java, Escjava/java/escjava/tc/FlowInsensitiveChecks.java, Escjava/java/escjava/ast/.cvsignore, Escjava/java/escjava/ast/EscPrettyPrint.java, Escjava/java/escjava/ast/hierarchy.j, Escjava/java/escjava/parser/EscPragmaParser.java, Escjava/java/escjava/AnnotationHandler.java, Escjava/java/escjava/RefinementSequence.java:
+	Fixed up the parsing of store-ref expressions as used in modifies clauses, although the parsing is quite liberal (not matching the JML grammar) with the restrictions being applied in typechecking.  This provides better error messages and more resilient parsing.
+
+2003-10-25  David Cok  <cok@frontiernet.net>
+
+	* Escjava/java/escjava/tc/FlowInsensitiveChecks.java, Escjava/java/escjava/tc/GhostEnv.java, Escjava/java/escjava/tc/PrepTypeDeclaration.java, Escjava/java/escjava/translate/GetSpec.java, Escjava/java/escjava/translate/TrAnExpr.java, Escjava/java/escjava/AnnotationHandler.java, Escjava/java/escjava/RefinementSequence.java, Escjava/java/escjava/ast/Utils.java, Escjava/java/escjava/parser/EscPragmaParser.java:
+	Moving findModifierPragma to a utility class
+
+	* Escjava/test/junittests/EX.java-expected, Escjava/test/junittests/Methods.java, Escjava/test/junittests/ParseDependsBad.java, Escjava/test/junittests/ParseDependsBad.java-expected, Escjava/test/junittests/Subclassing.java, Escjava/test/junittests/Subclassing.java-expected, Escjava/test/junittests/Test.java, Escjava/test/junittests/Test2.java, Escjava/test/junittests/WarnOp.java, Escjava/test/junittests/WarnOp.java-expected, Escjava/test/junittests/WarnOpA.java, Escjava/test/junittests/WarnOpA.java-expected, Escjava/test/junittests/skip:
+	removing obsolete tests, adding some that have been fixed
+
+	* Escjava/java/escjava/ast/TagConstants.java, Escjava/java/escjava/parser/EscPragmaLex.java:
+	Reorganizing the tags a bit, in preparation for using one primary array and improving lookup performance
+
+	* Escjava/test/escjava/test/alltests, Escjava/test/escjava/test/test65/ans.raw, Escjava/test/escjava/test/test65/run, Escjava/java/escjava/backpred/UnivBackPred.ax, Escjava/java/escjava/reader/EscTypeReader.java:
+	Cleanup of dead code; fixing a few outstanding bugs in tests
+
+	* Escjava/test/reasoningbugs/Arrays.java, Escjava/test/reasoningbugs/shift.txt:
+	Adding a directory to record bugs or explained phenonmena in the static checker's reasoning
+
+	* Escjava/test/escjava/test/test49/ans, docs/Escjava2-ImplementationNotes/Escjava2-ImplementationNotes.texinfo, Escjava/java/escjava/ast/TagConstants.java, Escjava/java/escjava/translate/ErrorMsg.java, Escjava/java/escjava/translate/Translate.java:
+	Implementing, documenting RaceAllNull condition
+
+2003-10-23  David Cok  <cok@frontiernet.net>
+
+	* Escjava/java/escjava/ast/.cvsignore: New files
+
+	* Escjava/test/junittests/DesugaringA.java-ckd, Escjava/test/junittests/Instance.java-expected, Escjava/test/junittests/Instance2.java, Escjava/test/junittests/Instance2.java-expected, Escjava/test/junittests/InvariantFor.java, Escjava/test/junittests/InvariantFor.java-expected, Escjava/test/junittests/LoopInvariantErrors.java, Escjava/test/junittests/LoopInvariantErrors.java-expected:
+	Some files missed in the last commit
+
+	* Javafe/test/javafe/test/fe/test106/ExprScoping.java, Javafe/test/javafe/test/fe/test106/LocalRedefinition.java, Javafe/test/javafe/test/fe/test106/ans, Javafe/test/javafe/test/typecheckJDK, Javafe/java/javafe/tc/PrepTypeDeclaration.java, Javafe/java/javafe/tc/SLResolution.java, Javafe/java/javafe/tc/TypeSig.java, Javafe/test/javafe/parser/test/Makefile, Javafe/test/javafe/parser/test/TestParse.java, Javafe/java/javafe/tc/CheckCompilationUnit.java, Javafe/java/javafe/tc/CheckInvariants.java, Javafe/java/javafe/tc/Env.java, Javafe/java/javafe/tc/EnvForCU.java, Javafe/java/javafe/tc/EnvForEnclosedScope.java, Javafe/java/javafe/tc/EnvForLocalType.java, Javafe/java/javafe/tc/EnvForLocals.java, Javafe/java/javafe/tc/EnvForTypeSig.java, Javafe/java/javafe/tc/FlowInsensitiveChecks.java, Javafe/java/javafe/tc/OutsideEnv.java, Javafe/java/javafe/parser/Parse.java, Javafe/java/javafe/reader/ASTClassFileParser.java, Javafe/java/javafe/reader/StandardTypeReader.java, Javafe/java/javafe/ast/StandardPrettyPrint.java, Javafe/astgen/astoutput.c, Javafe/java/javafe/Options.java, Javafe/java/javafe/ast/OperatorTags.java, Javafe/Makefile, Escjava/test/escjava/test/test8/ans, Escjava/test/junittests/AlsoInherit.java, Escjava/test/junittests/AlsoInherit.java-expected, Escjava/test/junittests/AnnotationPlacement.java, Escjava/test/junittests/AnnotationPlacement.java-expected, Escjava/test/junittests/Assume.java, Escjava/test/junittests/Assume.java-expected, Escjava/test/junittests/Constraint.java, Escjava/test/junittests/Constraint.java-expected, Escjava/test/junittests/Desugaring.java-expected, Escjava/test/junittests/DesugaringA.java-expected, Escjava/test/junittests/Duplicate.java, Escjava/test/junittests/Duplicate.java-expected, Escjava/test/junittests/Duration.java, Escjava/test/junittests/Duration.java-expected, Escjava/test/junittests/ElemType.java, Escjava/test/junittests/ElemType.java-expected, Escjava/test/junittests/Fresh.java, Escjava/test/junittests/Fresh.java-expected, Escjava/test/junittests/FreshErrors.java, Escjava/test/junittests/FreshErrors.java-expected, Escjava/test/junittests/GhostLocal.java, Escjava/test/junittests/GhostLocal.java-expected, Escjava/test/junittests/Heavyweight.java, Escjava/test/junittests/Heavyweight.java-expected, Escjava/test/junittests/HenceBy.java, Escjava/test/junittests/HenceBy.java-expected, Escjava/test/junittests/InheritedSpecs.java-expected, Escjava/test/junittests/Initially.java, Escjava/test/junittests/Initially.java-expected, Escjava/test/junittests/Instance.java, Escjava/test/junittests/InstanceError.java, Escjava/test/junittests/InstanceError.java-expected, Escjava/test/junittests/IsInitialized.java, Escjava/test/junittests/IsInitialized.java-expected, Escjava/test/junittests/Lbl.java, Escjava/test/junittests/Lbl.java-expected, Escjava/test/junittests/LoopInvariant.java, Escjava/test/junittests/LoopInvariant.java-expected, Escjava/test/junittests/Makefile, Escjava/test/junittests/MapsIn.java, Escjava/test/junittests/MapsIn.java-expected, Escjava/test/junittests/Mod.java-expected, Escjava/test/junittests/ModParsingErrors.java, Escjava/test/junittests/ModParsingErrors.java-expected, Escjava/test/junittests/ModelClass.java, Escjava/test/junittests/ModelClass.java-expected, Escjava/test/junittests/ModelConstructors.java, Escjava/test/junittests/ModelConstructors.java-ckd, Escjava/test/junittests/ModelConstructors.java-expected, Escjava/test/junittests/Monitored.java, Escjava/test/junittests/Monitored.java-expected, Escjava/test/junittests/MonitoredErrors.java, Escjava/test/junittests/MonitoredErrors.java-expected, Escjava/test/junittests/NonNullElements.java, Escjava/test/junittests/NonNullElements.java-expected, Escjava/test/junittests/NonNullElementsErrors.java, Escjava/test/junittests/NonNullElementsErrors.java-expected, Escjava/test/junittests/NotModified.java, Escjava/test/junittests/NotModified.java-expected, Escjava/test/junittests/ParseRepresents.java-expected, Escjava/test/junittests/Represents.java, Escjava/test/junittests/Represents.java-expected, Escjava/test/junittests/SimpleFunction.java, Escjava/test/junittests/SimpleFunction.java-expected, Escjava/test/junittests/Triple.java, Escjava/test/junittests/Triple.java-expected, Escjava/test/junittests/Triple.jml, Escjava/test/junittests/Triple.spec, Escjava/test/junittests/Type.java, Escjava/test/junittests/Type.java-expected, Escjava/test/junittests/TypeErrors.java, Escjava/test/junittests/TypeErrors.java-expected, Escjava/test/junittests/Unreachable.java, Escjava/test/junittests/Unreachable.java-expected, Escjava/test/junittests/W.java, Escjava/test/junittests/W.java-expected, Escjava/test/junittests/W.jml, Escjava/test/junittests/W.spec, Escjava/test/junittests/skip, Escjava/test/escjava/test/test34/ans, Escjava/test/escjava/test/test43/ans, Escjava/test/escjava/test/test49/ans, Escjava/test/escjava/test/alltests, Escjava/test/escjava/test/test32/ans, Escjava/test/escjava/test/Makefile, Escjava/test/escjava/parser/test/GoodJmlPragmas.ans, Escjava/java/escjava/translate/NoWarn.java, Escjava/java/escjava/translate/Purity.java, Escjava/java/escjava/translate/Substitute.java, Escjava/java/escjava/translate/TrAnExpr.java, Escjava/java/escjava/translate/Translate.java, Escjava/java/escjava/translate/ErrorMsg.java, Escjava/java/escjava/translate/GetSpec.java, Escjava/java/escjava/tc/EnvForGhostLocals.java, Escjava/java/escjava/tc/FlowInsensitiveChecks.java, Escjava/java/escjava/tc/GhostEnv.java, Escjava/java/escjava/tc/PrepTypeDeclaration.java, Escjava/java/escjava/tc/TypeCheck.java, Escjava/java/escjava/reader/RefinementCachedReader.java, Escjava/java/escjava/reader/EscTypeReader.java, Escjava/java/escjava/parser/EscPragmaParser.java, Escjava/java/escjava/backpred/UnivBackPred.ax, Escjava/java/escjava/ast/EscPrettyPrint.java, Escjava/java/escjava/ast/TagConstants.java, Escjava/java/escjava/ast/hierarchy.j, Escjava/java/escjava/RefinementSequence.java, Escjava/java/escjava/Main.java, Escjava/java/escjava/AnnotationHandler.java:
+	Many accumulated changes since I last could connect to CVS:  Javafe fix to reading of binary files with inner classes; refactoring (and new design) of refinement processing, including handling of duplicates on the command line; some correction of Javafe's type lookup mechanism (interacctions with accessibility) - now matches javac behavior but more needs doing and carefule checking; fix to make complaints about duplicate declarations match javac behavior; options added to control source/binary file reading; better printing of tags and pretty printing, including a revision of astgen; implementation of constraint, initially, model classes and interfaces, monitors_for (including improvements on ESC/Java's warning messages); typeof applied to primitive types (which required changes to Simplify's prelude)
+
+	* docs/Escjava2-ImplementationNotes/Escjava2-ImplementationNotes.texinfo:
+	More updates and editing
+
+2003-10-12  David Cok  <cok@frontiernet.net>
+
+	* Escjava/test/junittests/skip, Escjava/java/escjava/translate/TrAnExpr.java:
+	Fixing the SimpleFunction test
+
+	* Javafe/java/javafe/tc/PrepTypeDeclaration.java, Javafe/java/javafe/tc/TypeSig.java, Escjava/test/junittests/NoPublic.refines-spec-expected, Escjava/test/junittests/RefineT.t-expected, Escjava/test/junittests/SpecFile.jml-expected, Escjava/test/junittests/skip:
+	Bug fixes on linux
+
+	* Escjava/java/escjava/AnnotationHandler.java, Escjava/java/escjava/reader/EscTypeReader.java, Escjava/java/escjava/translate/Substitute.java, Escjava/java/escjava/translate/TrAnExpr.java, Escjava/test/junittests/skip, Javafe/java/javafe/ast/hierarchy.j, Javafe/java/javafe/tc/PrepTypeDeclaration.java, Javafe/java/javafe/tc/TypeSig.java:
+	Fixing the also issue in interfaces; fixing a problem in substitution when handling method calls in annotations
+
+2003-10-11  David Cok  <cok@frontiernet.net>
+
+	* Escjava/java/escjava/parser/EscPragmaParser.java, Escjava/java/escjava/tc/FlowInsensitiveChecks.java, Escjava/java/escjava/translate/GetSpec.java, Escjava/java/escjava/translate/TrAnExpr.java, Escjava/test/junittests/MethodInSpec.java-expected, Escjava/test/junittests/SimpleFunction.java, Escjava/test/junittests/SimpleFunction.java-expected, Escjava/java/escjava/ast/TagConstants.java, Escjava/java/escjava/AnnotationHandler.java:
+	More handling of pure functions and methods
+
+	* Escjava/test/junittests/MethodInSpec.java-expected, Escjava/test/junittests/NewObject.java, Escjava/test/junittests/NewObject.java-expected, Escjava/java/escjava/Main.java, Escjava/java/escjava/ast/EscPrettyPrint.java, Escjava/java/escjava/ast/TagConstants.java, Escjava/java/escjava/translate/GC.java, Escjava/java/escjava/translate/GetSpec.java, Escjava/java/escjava/translate/NoWarn.java, Escjava/java/escjava/translate/Substitute.java, Escjava/java/escjava/translate/TrAnExpr.java, Escjava/java/escjava/translate/Translate.java, Escjava/test/escjava/test/test34/ans, Escjava/test/junittests/MethodInSpec.java:
+	Further work on methods, constructor calls, new array calls within annotations
+
+2003-10-08  David Cok  <cok@frontiernet.net>
+
+	* Escjava/java/escjava/AnnotationHandler.java: Neatening code
+
+	* Escjava/java/escjava/translate/GetSpec.java:
+	Turning off experimental code
+
+	* specs/java/lang/CharSequence.spec: Eliminating out of place pragmas
+
+	* Escjava/test/junittests/Binary.javax, Escjava/test/junittests/Binary.refines-spec, Escjava/test/junittests/Binary.refines-spec-expected, Escjava/test/junittests/Binary.spec, Escjava/test/junittests/Desugaring.java-expected, Escjava/test/junittests/ForallOld.java, Escjava/test/junittests/ForallOld.java-expected, Escjava/test/junittests/ForallOldError.java, Escjava/test/junittests/ForallOldError.java-expected, Escjava/test/junittests/Makefile, Escjava/test/junittests/NoPublic.refines-spec, Escjava/test/junittests/NoPublic.refines-spec-expected, Escjava/test/junittests/NoPublic.spec, Escjava/test/junittests/RefineT.t-expected, Escjava/test/junittests/RefineZ.java-expected, Escjava/test/junittests/SourcePath2.java-expected, Escjava/test/junittests/SpecFile.jml-expected, Escjava/java/escjava/AnnotationHandler.java, Escjava/java/escjava/Main.java, Escjava/java/escjava/Options.java, Escjava/java/escjava/RefinementSequence.java, Escjava/java/escjava/ast/.cvsignore, Escjava/java/escjava/ast/hierarchy.j, Escjava/java/escjava/backpred/FindContributors.java, Escjava/java/escjava/parser/EscPragmaParser.java, Escjava/java/escjava/reader/EscTypeReader.java, Escjava/java/escjava/tc/FlowInsensitiveChecks.java, Escjava/java/escjava/translate/GetSpec.java, Escjava/java/escjava/translate/InlineConstructor.java, Escjava/java/escjava/translate/Substitute.java, Escjava/java/escjava/translate/TrAnExpr.java, Escjava/java/escjava/translate/Translate.java, Escjava/test/escjava/test/test34/ans, Javafe/java/javafe/SrcTool.java, Javafe/java/javafe/tc/FlowInsensitiveChecks.java:
+	Multiple variables in old and forall declarations; reduction in cascaded error messages; beginnings of handling method calls and model variables in annotations
+
+2003-10-07  David Cok  <cok@frontiernet.net>
+
+	* specs/java/util/Iterator.spec: New spec needed by the others
+
+2003-10-06  David Cok  <cok@frontiernet.net>
+
+	* specs/java/util/Collection.spec, specs/java/util/Dictionary.spec, specs/java/util/Enumeration.spec, specs/java/util/Hashtable.spec, specs/java/util/Map.spec, specs/java/util/Vector.spec:
+	Adding Houdini specs, appropriately edited
+
+	* Escjava/java/escjava/RefinementSequence.java:
+	Fixing the refinement-combination with binary files
+
+2003-10-05  David Cok  <cok@frontiernet.net>
+
+	* Javafe/java/javafe/tc/Types.java, Escjava/java/escjava/tc/FlowInsensitiveChecks.java:
+	Special case workaround for problems with specifying java.lang.System.in etc.
+
+	* Escjava/java/escjava/AnnotationHandler.java:
+	Catching an out of order implies-that section
+
+	* Escjava/java/escjava/Main.java:
+	Distinguishing errors from not-implemented constructs
+
+2003-10-04  David Cok  <cok@frontiernet.net>
+
+	* Escjava/java/escjava/parser/EscPragmaParser.java, Escjava/java/escjava/tc/FlowInsensitiveChecks.java, Escjava/java/escjava/translate/TrAnExpr.java:
+	Handling errors from unimplemented reach expressions
+
+	* Escjava/java/escjava/parser/EscPragmaParser.java:
+	Temp fix to accommodate this.*
+
+	* Escjava/java/escjava/backpred/FindContributors.java, Escjava/java/escjava/tc/FlowInsensitiveChecks.java, Escjava/java/escjava/translate/Substitute.java, Escjava/java/escjava/translate/TrAnExpr.java, Escjava/test/escjava/test/test34/ans:
+	Fixes to improve recovery from errors
+
+	* Escjava/java/escjava/parser/EscPragmaParser.java, Escjava/java/escjava/tc/FlowInsensitiveChecks.java, Escjava/java/escjava/translate/GetSpec.java, Escjava/java/escjava/translate/Substitute.java, Escjava/java/escjava/translate/TrAnExpr.java, Escjava/test/escjava/test/test34/WontEvenParse4.java, Escjava/test/escjava/test/test34/ans, Javafe/java/javafe/util/ErrorSet.java, Escjava/java/escjava/Main.java:
+	More cleanup of error messages and general flow
+
+	* Escjava/test/junittests/AnonClass.java, Escjava/test/junittests/AnonClass.java-expected, Escjava/test/junittests/Desugaring.java-expected, Escjava/test/junittests/LocalClass.java, Escjava/test/junittests/LocalClass.java-expected, Escjava/test/junittests/ModParsingErrors.java-expected, Escjava/test/junittests/PureModifies.java, Escjava/test/junittests/PureModifies.java-expected, Escjava/test/junittests/skip, Escjava/java/escjava/backpred/FindContributors.java, Escjava/java/escjava/parser/EscPragmaParser.java, Escjava/java/escjava/tc/FlowInsensitiveChecks.java, Escjava/java/escjava/AnnotationHandler.java, Escjava/java/escjava/Main.java, Escjava/java/escjava/RefinementSequence.java, Escjava/java/escjava/ast/.cvsignore, Escjava/java/escjava/ast/hierarchy.j:
+	Miscellaneous fixes to problems encountered while running escjava on JML code
+
+	* Javafe/java/javafe/parser/Parse.java:
+	Temporary fix for standalone in and maps claues
+
+	* Javafe/java/javafe/ast/hierarchy.j:
+	Added functionality to retrieve a vector of argument types
+
+	* docs/Escjava2-ImplementationNotes/Escjava2-ImplementationNotes.texinfo:
+	More edits
+
+	* Escjava/java/escjava/translate/Translate.java:
+	Some additional work in support of in and maps clauses
+
+	* Escjava/java/escjava/translate/TrAnExpr.java, Escjava/java/escjava/translate/Substitute.java:
+	Partial implementation of constructor invocation
+
+	* Escjava/java/escjava/tc/GhostEnv.java:
+	Corrections for inheriting spec_public/spec_protected private fields as ghost fields.
+
+	* Escjava/escj: Minor improvements
+
+	* Javafe/java/javafe/tc/FlowInsensitiveChecks.java:
+	Corrects a bug in processing the bodies of block-level class declarations
+
+2003-09-30  David Cok  <cok@frontiernet.net>
+
+	* Escjava/test/escjava/test/test34/ans, Escjava/java/escjava/tc/FlowInsensitiveChecks.java:
+	Cleaned up tests on linux
+
+2003-09-29  David Cok  <cok@frontiernet.net>
+
+	* Escjava/test/escjava/parser/test/GoodPragmas.ans, Escjava/test/escjava/parser/test/GoodPragmas.j:
+	Test updates
+
+	* Escjava/test/escjava/parser/test/Modifiers2.java: Test update
+
+	* Escjava/test/escjava/parser/test/GoodPragmas.ans:
+	Change in test results because of also_ messages
+
+	* Escjava/java/escjava/parser/EscPragmaParser.java, Escjava/java/escjava/reader/EscTypeReader.java, Escjava/test/junittests/ParseDepends.java-expected, Escjava/test/junittests/skip, Escjava/java/escjava/AnnotationHandler.java, Escjava/java/escjava/RefinementSequence.java:
+	Fixing some missing implementation of desugaring ghost and model fields; fixing a bug with recognizing java files in Refinement Sequences
+
+	* Escjava/test/escjava/test/test56/ans, Escjava/test/escjava/test/test49/ans:
+	Fixing some tests per the change in labeling
+
+	* Escjava/java/escjava/translate/GC.java, Escjava/java/escjava/translate/UniqName.java, Escjava/test/junittests/Desugaring.java-expected, Escjava/test/junittests/InheritedSpecs.java-expected, Escjava/test/junittests/NL.java-expected, Javafe/java/javafe/util/LocationManagerCorrelatedReader.java, Escjava/java/escjava/AnnotationHandler.java:
+	Fixing a problem in which locations were misinterpreted and pointed to the wrong file, because of label expressions attached to preconditions with a different default file set.
+
+2003-09-27  David Cok  <cok@frontiernet.net>
+
+	* Javafe/java/javafe/tc/TypeSig.java, Escjava/java/escjava/parser/EscPragmaParser.java, Escjava/java/escjava/tc/FlowInsensitiveChecks.java, Escjava/test/escjava/test/test50/ans, Escjava/test/junittests/MapsIn.java, Escjava/test/junittests/MapsIn.java-expected, Javafe/java/javafe/parser/Parse.java, Javafe/java/javafe/parser/TagConstants.java, Escjava/java/escjava/ast/TagConstants.java:
+	Implementation of the parsing of maps and in clauses and associating them with the right field declaration.  No retention of the data or typechecking is done as yet.
+
+	* release-files/README.release, release-files/escjava2, README.first:
+	Comments re ESC_SPECS
+
+	* Escjava/test/escjava/test/Makefile, Escjava/test/escjava/test/alltests, Escjava/test/escjava/test/test64/ans, Escjava/test/junittests/AA.java, Escjava/test/junittests/AAA.java, Escjava/test/junittests/AAA.java-expected, Escjava/test/junittests/Desugaring.java, Escjava/test/junittests/Desugaring.java-expected, Escjava/test/junittests/DesugaringA.java, Escjava/test/junittests/DesugaringA.java-ckd, Escjava/test/junittests/DesugaringA.java-expected, Escjava/test/junittests/Makefile, Escjava/test/junittests/ModParsingErrors.java, Escjava/test/junittests/ModParsingErrors.java-expected, Escjava/test/junittests/RefineNoJava.java-expected, Escjava/test/junittests/TestSuite.java, Escjava/test/junittests/skip, Escjava/escj, Escjava/java/escjava/AnnotationHandler.java, Escjava/java/escjava/reader/EscTypeReader.java:
+	Improvements to handling errors during refinement
+
+	* Utils/junitutils/TestFilesTestSuite.java: minor edit
+
+	* Javafe/java/javafe/FrontEndTool.java, Javafe/java/javafe/filespace/ClassPath.java, Javafe/java/javafe/reader/StandardTypeReader.java, Javafe/java/javafe/tc/OutsideEnv.java, Javafe/java/javafe/tc/TypeSig.java, Javafe/java/javafe/tc/Types.java, Javafe/java/javafe/util/LocationManagerCorrelatedReader.java:
+	Improvements to resetting state between JUnit tests
+
+	* Javafe/java/javafe/tc/FlowInsensitiveChecks.java:
+	Fix to final assignment errors
+
 2003-09-26  David Cok  <cok@frontiernet.net>
 
 	* Escjava/test/escjava/test/test59/Typecheck.java:
