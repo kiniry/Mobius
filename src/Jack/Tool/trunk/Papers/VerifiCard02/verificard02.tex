@@ -140,8 +140,8 @@ preserved by the implementation. It is straightforward to formally
 specify these properties and ESC/Java immediately finds the places
 where these properties are not preserved in the implementation.
 
-Furthermore, this case study has been one of the first larger case
-studies done by using ESC/Java\comment{Is this correct?}, and we found
+Furthermore, to the best of our knowledge this case study is one of
+the first larger case studies done by using ESC/Java, and we found
 several points for improvement in the static checker and its
 specification language. This lead us to a wish list on improvements in
 the specification language and to the development of a checker for
@@ -168,98 +168,110 @@ presents future work.
 \section{General outline of the Electronic Purse}
 \label{SectGenPurse}
 
-The electronic purse is a JavaCard application~\cite{SM99},
-published as an advanced smart card programming case study
-by GemPlus~\cite{PurseUrl}. A smart card
-is capable of running programs developed in an extension
-of a subset of the usual Java platform. This Java extension
-does not take into account concepts such as Dynamic
-class loading, Security Manager, Threads and
-Synchronization, Object cloning and Large primitive
-date types as float, double, long and char.
-JavaCard applications are called Applets.
-The Electronic Purse applet provides to
-the card holder the ability to execute bank operations. Typical
-operations are credit, debit, and currency change.
+The electronic purse is a JavaCard application~\cite{JavaCardURL}, published
+as an advanced smart card programming case study by
+GemPlus~\cite{PurseUrl}. A JavaCard smart card is capable of running
+programs developed in {JavaCard}, which is a dialect of
+standard Java. {JavaCard} does not provide concepts such as dynamic
+class loading, security management, multi-threading and
+synchronization, object cloning and large primitive date types (float,
+double, long and char).  JavaCard applications are called
+\emph{applets}.  The electronic purse applet provides  the ability to 
+perform banking operations to the card holder. Typical operations are
+credit, debit, and changing the currency.
 
-\paragraph{\bf The \textit{debit} operation.} During a debit
-operation, if severals transactions are carried out in the same
-session, it is possible that
-the card user presents once his pin code for amounts greater than
-\texttt{maxDebitWithOutPIN}. This variable
-represents the biggest quantity that certain client may credit without
-presenting his pin code. For
-security reasons, the card holder can do at most
-\texttt{maxTransactionWithoutPIN} transactions in a same session. 
+\paragraph{\bf The \textit{debit} operation.} 
+Debit operations that involve an amount greater than
+\texttt{maxDebitWOPIN} are protected by a pincode. During one session, 
+a user can do several of these transactions by presenting his pincode
+only once. To protect the card against attacks, the number of
+transactions that can be performed without presenting a pincode is
+limited to \texttt{maxTransactionWOPIN}.
 
-
-
-\paragraph{\bf The \textit{credit} operation.} Although
-the purse is empty, the
-card holder can execute a credit operation. In this case, the terminal
-sends the bank a request asking for any credit permission. If the card 
-holder has some permission, the bank will send to the terminal a
-certificate of this one.
+%During a debit
+%operation, if severals transactions are carried out in the same
+%session, it is possible that the card user presents once his pin code
+%for amounts greater than
+%\texttt{maxDebitWithOutPIN}. This variable
+%represents the biggest quantity that certain client may credit without
+%presenting his pin code. For
+%security reasons, the card holder can do at most
+%\texttt{maxTransactionWithoutPIN} transactions in a same session. 
 
 
 
-\paragraph{\bf The \textit{Currency} change operation.} The balance
+\paragraph{\bf The \textit{credit} operation.} 
+If the balance on the card is not sufficient to do a certain debit
+operation, the balance can be increased by doing a credit
+operation. To do this, the terminal asks the bank for credit
+permission. If the permission is obtained, the account is credited and 
+a confirmation is send to the bank.
+
+
+\paragraph{\bf The \textit{currency change} operation.} The balance
 of the purse is expressed in a certain currency. When the card holder
-travels, he can change the current currency. In this case, the
-terminal requests from to the bank a
-new exchange rate and a certificate. The purse verifies that the bank is 
-really the expected bank and validates the exchange rate. After
-changing the balance value, the purse must modify all variables related
-to the currency. \\
+travels, he can change the current currency. In order to do this, the
+terminal requests a new exchange rate and a certificate from the bank
+. The purse verifies that the bank is really the expected bank and
+validates the exchange rate. After changing the balance value, the
+purse must modify all variables related to the currency. \\
 
-The purse applet interacts with \textit{Loyalty} applets, which are
-present on the card. An Loyalty applet allows card holder to obtain points
-when he performs a credit operation. So, if the card holder does not
-have credit enough to make a purchase, the purse will see in its loyalties
-for points. The purse applet also communicates with the applets installed 
-on the point of sale terminal. These applets send and receive information 
-concerning on the card user operations. The \textit{purse} application 
-consists of three packages$:$ \texttt{utils},
-\texttt{Purse} and \texttt{pacapinterfaces}. The {\tt utils} package
-implements basic classes such 
-as \texttt{Annee} (year), \texttt{Jour} (day), \texttt{Mois}
-(month), \texttt{Decimal} (representation of floating point numbers).
-The \texttt{pacapinterfaces} package declares certain sharable interfaces
-which allows the purse applet communicates with the Loyalty applets.
-The purse package is the core of the purse application 
-and its
-applet is \texttt{PurseApplet}. This applet manages the
-operations related with its installation, selection and unselection,
-and management of operations produced by the point of sale terminal.
-Furthermore, it performs the communication with the Loyalty applets,
-using the interfaces described in the \texttt{pacapinterfaces} package. 
-The basic purse functionalities
-are implemented by an instance of \texttt{Purse} class. This class uses
-instance variables for implementing its functionalities. So, for instance,
-the different
-transactions carried out by the purse are stored in a variable of
-type \texttt{TransactionRecord}, where its individual components are
-of type \texttt{Transaction}. A similar situation occurs with the
-current currency and the different loyalties managed by the purse.
+The purse applet interacts with so-called \textit{loyalty applets}
+(implementing \emph{e.g.}~a frequent flyer program) that may be
+present on the card. Within the loyalty applet the card holder gets
+loyalty points when doing certain purchases, and these points can be
+used later to do other purchases. Further, a \textit{card issuer
+applet} should be available on the card, which can initialise the
+purse. And finally, the purse applet also communicates with the 
+point of sale terminal. 
+%These applets send and receive
+%information concerning on the card user operations. 
 
-The purse can execute certain operations according to its state.
-The \texttt{AccessCondition} class enable the modeling of access
-conditions, and the \texttt{AccessControl} one models access conditions
-per methods. So, when a card holder intends to perform a certain
-operation, the purse application will check that card holder
-permissions correspond to the
-operation which he intends to carry out. The class
-\texttt{AccessControlTable} permits to declare
-all of different access controls that purse uses. When the operation is
-about a currency exchange, the 
-\texttt{Purse} class uses an \texttt{ExchangeSession} class instance to 
-record the information corresponding to a session. The record of
-different currency exchanges is registered using a
-\texttt{ExchangeRecord} instance variable. The class
-\texttt{Currencies} serves to model the currency used by the Purse
-application. 
-The purse application contains some classes implementing cryptography
-concepts, namely, \texttt{PacapCertificate},
+The purse application consists of three packages$:$ \texttt{utils},
+\texttt{purse} and \texttt{pacap\-interfaces}. The {\tt utils} package
+implements basic classes such as \texttt{Annee} (year), 
+\texttt{Mois} (month) \texttt{Jour} (day), and \texttt{Decimal}
+(floating point numbers).  The \texttt{pacap\-interfaces} package
+declares sharable interfaces which enable the purse applet to
+communicate with the loyalty applets on the card.  The \texttt{purse}
+package is the core of the purse application.  It contains the class
+\texttt{PurseApplet}, which manages the operations related with 
+installation, selection and deselection, and which communicates with the
+point of sale terminal.  The basic purse functionalities are
+implemented in the class
+\texttt{Purse}. This class performs the communication
+with the loyalty applets, using the interfaces described in the
+\texttt{pacapinterfaces} package.  Also, this class keeps track of the 
+balance of the purse, the transactions done by the purse (stored as a
+\texttt{TransactionRecord}), the different currency changes that have
+taken place (in a \texttt{ExchangeRecord}), and the different
+loyalty programs that the card holder is subscribed to (in a
+\texttt{LoyaltiesTable}). 
+
+%This class uses instance variables for
+%implementing its functionalities. So, for instance, the different
+%transactions carried out by the purse are stored in a variable of type
+%\texttt{TransactionRecord}, where its individual components are of
+%type \texttt{Transaction}. A similar situation occurs with the current
+%currency and the different loyalties managed by the purse.
+
+Certain operations can only be performed by a restricted set of user,
+\emph{e.g.}~because a pincode is needed.
+The \texttt{AccessCondition} class defines the different access
+conditions, and the \texttt{AccessControl} binds the access conditions
+to the operations. So, when a card holder intends to perform a certain
+operation, the purse application will check that the card holder has
+the appropriate permissions.. %The class
+%\texttt{AccessControlTable} permits to declare
+%all of different access controls that purse uses. 
+%When the currency change takes place, the 
+%\texttt{Purse} class uses an \texttt{ExchangeSession} class instance to 
+%record the information corresponding to a session. The record of
+%different currency exchanges is registered using a
+%\texttt{ExchangeRecord} instance variable. 
+The class \texttt{Currencies} stores the different currencies used by
+the purse application.  Finally, the purse application contains several classes
+implementing cryptographic concepts, namely, \texttt{PacapCertificate},
 \texttt{PacapCipher}, \texttt{PacapKey}, \texttt{PacapRandom},
 \texttt{PacapSecureMessaging} and \texttt{PacapSignature}. These
 classes are not studied by us.
@@ -276,33 +288,28 @@ classes are not studied by us.
 %\subsection{\sc \bf ESC/Java}
 \label{SubSectEscJava}
 
-ESC/Java is a verification tool developed at
-Compaq SRC (Compaq Systems Research Center), which permits to find
-some common errors in Java programs. The basic idea consists of
-specifying conditions that class and methods have to
-provide, and after using the tool for checking them. Esc/Java contrasts the
-done specification against the source code and it issues a
-warning message. This warning message indicates a \emph{possible}
-incoherence in the implementation w.r.t the implementation (the specification
-is supposed being correct).
+ESC/Java is a verification tool developed at Compaq SRC, which permits
+to find common errors in Java programs. The basic idea is that a user
+specifies the desired behaviour of a class and its methods, and that
+the ESC/Java tool checks whether the implementation satisfies the
+specification. If it cannot establish this, it issues a warning.
+%specify conditions that class and methods have to provide, and
+%after using the tool for checking them. Esc/Java contrasts the done
+%specification against the source code and it issues a warning
+%message. This warning message indicates a \emph{possible} incoherence
+%in the implementation w.r.t the implementation (the specification is
+%supposed being correct).
 
-These conditions specified by the user can be expressed as
+The specifications are given as
 \textit{pre-conditions}, \textit{post-conditions} and \textit{class
-invariants}, and they can be represented by using Esc/Java constructs such as
-\texttt{requires}, \texttt{ensures}, \texttt{exsures} and
-\texttt{invariant}. These constructs are
-enriched with the different Java boolean operators and other ones
-concerning Esc/Java. Below, we present some
-Esc/Java constructs, together with an example of their
-use. Their full description can be found in~\cite{ESCJavaUrl}.
+invariants}. The properties are specified as Java expressions,
+enriched with several specification-specific constructs. Here, we
+present some Esc/Java constructs (called pragmas), together with an
+example of their use. Their full description can be found
+in~\cite{LeinoNS00}.
 
-
-
-
-
-
-\subsection{\bf ESC/Java pragmas}
-\paragraph{\bf Routine modifiers pragmas.}
+\subsection{ESC/Java pragmas}
+\subsubsection{Routine modifiers pragmas}
 \begin{itemize}
 \item{\texttt{requires P}.}
 This pragma specifies a precondition {\tt P}.
@@ -318,70 +325,44 @@ without throwing an exception.
 
 \item{\texttt{exsures (E) R}.}
 This pragma specifies a exceptional condition. This condition is
-supposed to hold if the method finishes abruptly. In this case,
-the exception \texttt{e} thrown will be a subclass of \texttt{E}.
+supposed to hold if the method finishes abruptly, if
+the exception \texttt{e} that is thrown is a subclass of \texttt{E}.
 
 \item{\texttt{modifies L}.}
-It specifies that the routine \emph{may} only modify any of
-the state components listed in \texttt{L}, the formal parameter of
-the method and the variables local of the method.
+This pragma specifies that the routine \emph{may} only modify any of
+the state components listed in \texttt{L}, the formal parameters of
+the method and the variables local to the method.
 \end{itemize}
 
 
 
-\paragraph{\bf Operators.}
+\subsubsection{Specification expressions}
 \begin{itemize}
-\item{\texttt{==>}.} It is the logical implication. So, \texttt{P
+\item{\texttt{==>}} is the logical implication. So, \texttt{P
 ==> Q} is true if and only if \texttt{P} is false or \texttt{Q} is
 true, where \texttt{P} and \texttt{Q} are specification expressions of 
 \texttt{boolean} type. Furthermore, \texttt{<==>} represents the
-equivalence relation and \texttt{<=!=>} the non-equivalence one.
+equivalence relation and \texttt{<=!=>} specifies non-equivalence.
 
 \item {($\backslash$\texttt{forall T V; E)} and
-($\backslash$\texttt{exists T V; E}).}
-They are specification expressions of \texttt{boolean} type. The first one
-denotes that \texttt{E} is true for all substitutions of values
-of type \texttt{T} by the bound variables \texttt{V}. The second one
-denotes that \texttt{E} is true for some substitution of values of
-type \texttt{T} by the bound variables \texttt{V}.
+($\backslash$\texttt{exists T V; E})} are quantifier expressions (of
+type \texttt{boolean}).  The first one denotes that \texttt{E} is true
+for all substitutions of values of type \texttt{T} for the bound
+variable \texttt{V}. The second one denotes that \texttt{E} is true
+for a substitution of a value of type \texttt{T} for the bound
+variable \texttt{V}.
 
 \item{\texttt{$\backslash$old($E$)}.} Within a post-condition, this denotes
 the value of \texttt{E} in the pre-state of the method invocation. 
 
-\item {\tt$\backslash$result.} Within a \texttt{ensures} clause
+\item {\tt$\backslash$result.} Within an \texttt{ensures} clause
 belonging to a non-void method, this represents the value returned by
 the method.
 
 \end{itemize}
 
 
-
-
-Figure~\ref{fig-add-cur} shows a typical annotation example using
-Esc/Java. This example was taken from the specification of electronic
-purse case study. The \texttt{addCurrency} method belongs to the
-\texttt{Currencies} class. This class models all
-currency supported by the purse application. The method
-\texttt{addCurrency} adds a new currency to the list of valid
-currencies. This list is represented by the
-\texttt{data} array. The \texttt{modifies} clause declared in the
-method's header specifies that
-this method may modify \texttt{nbData} and
-\texttt{data} in the position \texttt{nbData}. More precisely, it
-declares that it only may modify these instance variables and the local
-variables and formal parameters of the method. The method
-\texttt{addCurrency} establishes
-two post-conditions (by using \texttt{ensure} clauses). The first
-one indicates that if \texttt{nbData} has not reached yet the threshold
-value \texttt{MAX$\_$DATA}, then \texttt{nbData} will increase its
-value by one. The second one signals
-that the array variable \texttt{data} will take the value
-indicated by the formal parameter \texttt{cur} in the \texttt{nbData}
-position. Inside of the post-conditions, the expression
-\texttt{$\backslash$old(nbData)} refers to \texttt{nbData} value
-before the method invocation.
-
-\begin{figure}[hbt]
+\begin{figure}[tbh]
 \rule{\linewidth}{0.3mm}
 \begin{tabbing}
 ddd\=ddd\=ddd\=ddd\=ddd\=ddddddddddddddddddddddddddddd \kill
@@ -397,10 +378,36 @@ $\mathtt{void\ {\bf addCurrency}(byte\ cur)\ \{}$ \\
 \>$\mathtt{\}}$ \\
 $\mathtt{\}}$ 
 \end{tabbing}
-\caption{Asserting with ESC/Java}
+\caption{Example ESC/Java specification}
 \label{fig-add-cur}
 \rule{\linewidth}{0.3mm}
 \end{figure}
+
+
+
+Figure~\ref{fig-add-cur} shows a typical annotation example using
+Esc/Java. This example was taken from the specification of the
+electronic purse case study. The \texttt{addCurrency} method belongs
+to the class \texttt{Currencies}. This class stores all currencies
+supported by the purse application. The method
+\texttt{addCurrency} adds a new currency to the list of valid
+currencies. This list is represented by the
+\texttt{data} array. The \texttt{modifies} clause declared in the
+method's header specifies that
+this method may modify \texttt{nbData} and
+\texttt{data} in the position \texttt{nbData}\footnote{More precisely, it
+specifies that the method only may modify these instance variables and
+the local variables and formal parameters of the method.}. The method
+\texttt{addCurrency} has 
+two post-conditions (written as \texttt{ensure} clauses). The first
+one expresses that if \texttt{nbData} has not reached yet the
+threshold value \texttt{MAX$\_$DATA}, \texttt{nbData} will increase
+its value by one. The second one signals that the array variable
+\texttt{data} will take the value indicated by the formal parameter
+\texttt{cur} in the \texttt{nbData} position, if the table is not full
+yet. Inside the post-conditions, the expression
+\texttt{$\backslash$old(nbData)} refers to the value of \texttt{nbData} 
+before the method invocation.
 
 
 
@@ -490,9 +497,10 @@ API~\cite{JavaCardAPI} are used. When we specify methods using API
 functionalities, we use the API specification as constructed by Erik
 Poll and Hans Meijer (see~\emph{e.g.}\cite{MeijerP01}).  In the
 classes \texttt{Purse} and \texttt{PurseApplet}, several classes are
-used that we do not have access to. To overcome this problem, we have
-constructed fake classes declaring the methods and fields that we
-needed, but without an implementation.
+used that we do not have access to. To overcome this problem, we
+construct specification files, specifying optimistically
+(\emph{cf.}~\cite{FlanaganL01}) the methods and fields that we need,
+but without giving an implementation.
 
 Our aim is to give a functional specification of the behaviour of the
 purse. However, we did not study the algorithms to manage secret keys,
@@ -540,7 +548,7 @@ which helps in finding errors.
 
 
 
-\subsubsection{Implementation mistakes.}
+\subsubsection{Implementation mistakes}
 This section presents some examples of common programming
 errors. Usually, these errors are caused by an inappropriate informal
 specification of the application and although they could be found by
@@ -548,7 +556,7 @@ hand, using a tool like Esc/Java give us the certainty most of cases
 will be considered.
 
 
-\paragraph{The isGreaterEqualThan method.}
+\paragraph{The isGreaterEqualThan method}
 
 The \texttt{Decimal} class allows us to
 represent a floating point number as
@@ -613,7 +621,7 @@ d.getDecPart()))}$ $\mathtt{resu\ =\ true\ ;}$ \\
 
 
 
-\paragraph{Final modifiers.}
+\paragraph{Final modifiers}
 
 The \texttt{Annee} class allows to represent a \textit{year} for the
 purse. This class declares two 
@@ -900,7 +908,7 @@ range of the table.
 \label{SectESC}
 We find ESC/Java a useful tool, that is pleasant to work with, but
 nevertheless we have some suggestions for improvements, both for the
-specification language as for the verifier.
+specification language and for the verifier.
 
 Concerning the specification language, we feel that certain
 specification constructs that are available in JML~\cite{LeavensBR99},
@@ -1045,7 +1053,7 @@ feedback on an implementation, or is it a burden because more time
 is spend on keeping the the specification up-to-date, then on
 implementing the program.
 \item Future versions of JavaCard will probably allow
-multi-threading. Therefore we plan to study how to ESC/Java (and JML)
+multi-threading. Therefore we plan to study how ESC/Java (and JML)
 can be used to specify (and check) concurrent programs.
 \item Related with this is that we will work on an extension of JML with
 temporal logic. Currently we are studying how to integrate temporal
