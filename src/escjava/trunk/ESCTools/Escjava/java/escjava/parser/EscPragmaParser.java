@@ -1378,11 +1378,6 @@ try{
 		    }
 
 		    }
-/*
-		    if (!getPragma(dst)) {
-			return getNextPragmaHelper(dst);
-		    }
-*/
 		    dst.ttype = TagConstants.NULL;
 		    break;
 		  }
@@ -1787,7 +1782,7 @@ try{
 	    savedGhostModelPragma = null;
             return false; 
         } finally {
-		//System.out.println("HELPER " + TagConstants.toString(dst.ttype) + " " + dst.auxVal);
+		//System.out.println("HELPER " + TagConstants.toString(scanner.ttype) + " " + TagConstants.toString(dst.ttype) + " " + dst.auxVal);
 	}
     }
 
@@ -2853,7 +2848,9 @@ try{
       }
     }
 
+	// These do not nest properly - there may well be problems with a routine in a model class within a routine - FIXME - really need a complete overhaul of the parsing design to accommodate model methods and classes.
     boolean inModelType = false;
+    boolean inModelRoutine = false;
 
     public boolean parseTypeDeclTail(Token dst, int loc) {
 	inModelType = true;
@@ -2869,11 +2866,58 @@ try{
 	return false; // No semicolon after a type declaration
     }
 
+  protected void addStmt(Lex l) {
+	ModifierPragmaVec mpv = null;
+	if (inModelType || inModelRoutine) { // FIXME also in model routine?
+				// FIXME what about modifiers and pmodifiers (e.g. non_null) on ghost decls
+	    OUTER: while (true) {
+	    if (l.ttype == TagConstants.IDENT) {
+		int tag = TagConstants.fromIdentifier(l.identifierVal);
+		if (tag != TagConstants.NULL) {
+		    Token dst = new Token();
+		    if (getNextPragmaHelper(dst)) do {
+			if (dst.ttype != TagConstants.NULL) {
+			    if (dst.ttype == TagConstants.STMTPRAGMA) {
+				seqStmt.addElement( (Stmt)dst.auxVal);
+			    } else if (dst.ttype == TagConstants.TYPEDECLELEMPRAGMA) {
+				FieldDecl fd = isPragmaDecl(dst);
+				if (fd != null) {
+				    LocalVarDecl d = LocalVarDecl.make(fd.modifiers, fd.pmodifiers,
+					fd.id, fd.type, fd.locId, fd.init, fd.locAssignOp);
+				    seqStmt.addElement( VarDeclStmt.make(d) );
+				}
+			    } else if (dst.ttype == TagConstants.MODIFIERPRAGMA) {
+				if (mpv == null) mpv = ModifierPragmaVec.make(1);
+				mpv.addElement((ModifierPragma)dst.auxVal);
+				continue OUTER;
+			    } else {
+				System.out.println("UNKOWN PRAGMA TYPE"); // FIXME
+			    }
+			}
+		    } while (getPragma(dst));
+		    return;
+		}
+	    }
+	    break;
+	    }
+	}
+	super.addStmt(l);
+	if (mpv != null) {
+	    Object o = seqStmt.elementAt(seqStmt.size()-1);
+	    if (o instanceof VarDeclStmt) {
+		((VarDeclStmt)o).decl.pmodifiers = mpv; // FIXME ? append
+	    } else {
+		System.out.println("MPV " + o.getClass());
+	    }
+	}
+  }
+
   protected TypeDeclElem
   parseTypeDeclElemIntoSeqTDE(Lex l, int keyword, Identifier containerId,
                                    boolean specOnly) {
 
 	ModifierPragmaVec mpv = ModifierPragmaVec.make();
+	ModifierPragma ghostModel = null;
 	if (inModelType) {
 	    OUTER:
 	    while (true) {
@@ -2898,6 +2942,8 @@ try{
 			if (AnnotationHandler.NestedPragmaParser.isRoutineModifier(tag)) {
 			    tok.ttype = TagConstants.MODIFIERPRAGMA;
 			    tok.auxVal = SimpleModifierPragma.make(tag,tok.startingLoc); 
+			    if (tag == TagConstants.GHOST || tag == TagConstants.MODEL) 
+				ghostModel = (ModifierPragma)tok.auxVal;
 			    continue;
 			}
 		    }
@@ -2908,14 +2954,12 @@ try{
 		    Token dst = new Token();
 		    if (getNextPragmaHelper(dst)) do {
 		    if (dst.ttype == TagConstants.TYPEDECLELEMPRAGMA) {
-//System.out.println("ADDTDE " + TagConstants.toString(((TypeDeclElemPragma)dst.auxVal).getTag()));
 			seqTypeDeclElem.addElement(dst.auxVal);
 		    } else if (dst.ttype == TagConstants.MODIFIERPRAGMA) {
-//System.out.println("ADDMOD " + TagConstants.toString(((ModifierPragma)dst.auxVal).getTag()));
 			mpv.addElement((ModifierPragma)dst.auxVal);
 		    } else if (dst.ttype == TagConstants.LEXICALPRAGMA) {
 			l.lexicalPragmas.addElement((LexicalPragma)dst.auxVal);
-		    } else if (dst.ttype == TagConstants.EOF) {
+		    } else if (dst.ttype == TagConstants.EOF || dst.ttype == TagConstants.NULL) {
 			// skip
 		    } else {
 			System.out.println("UNEXPECTED PRAGMA " + TagConstants.toString(dst.ttype));
@@ -2941,6 +2985,24 @@ try{
 		System.out.println("MODS FOR " + result.getClass());
 	    }
 	}
+	if (ghostModel != null) {
+	    int p = seqTypeDeclElem.size();
+	    while (--p >= 0) {
+		Object o = seqTypeDeclElem.elementAt(p);
+		if (o instanceof FieldDecl) {
+		    FieldDecl f = (FieldDecl)o;
+		    if (Utils.findModifierPragma(f.pmodifiers,TagConstants.GHOST)!= null) {
+			seqTypeDeclElem.setElementAt( 
+				GhostDeclPragma.make(f,ghostModel.getStartLoc()),p);
+		    } else if (Utils.findModifierPragma(f.pmodifiers,TagConstants.MODEL) != null) {
+			seqTypeDeclElem.setElementAt(
+				ModelDeclPragma.make(f,ghostModel.getStartLoc()),p);
+		    } else {
+			break;
+		    }
+	    	} else break;
+	    }
+        }
 	return result;
   }
 
@@ -3067,6 +3129,9 @@ try{
     public boolean parseConstructorDeclTail(Token dst, int loc, Type type,
 						int locType, ModifierPragmaVec modifierPragmas) {
 	// Must be a model constructor
+	inModelRoutine = true;
+	savedGhostModelPragma = null;
+	try {
 	SimpleName id = null;
 	if (!(type instanceof TypeName)) {
 	    ErrorSet.error(type.getStartLoc(),"The type name in a constructor declaration may not be a primitive or array type");
@@ -3126,6 +3191,9 @@ try{
 		modifiers = Modifiers.NONE;
 		return getNextPragmaHelper(dst);
 	}
+	} finally {
+	inModelRoutine = false;
+	}
 	return false; // No semicolon, or it is already eaten
     }
 
@@ -3133,6 +3201,9 @@ try{
 			int locType, Identifier id, int locId, ModifierPragmaVec modifierPragmas){
  
 	// Must be a model method
+	inModelRoutine = true;
+	savedGhostModelPragma = null;
+	try {
 	FormalParaDeclVec args;
 	argListInAnnotation = true;
 	try {
@@ -3175,10 +3246,13 @@ try{
 			    loc, locId, locThrowsKeyword,
 			    id, type,locType);
 	dst.auxVal = ModelMethodDeclPragma.make(md,loc);
+	} finally {
+	inModelRoutine = false; 
+	}
 	return false; // No semicolon, or it is already eaten
     }
 
-    public FieldDecl isPragmaDecl(Lex l) {
+    public FieldDecl isPragmaDecl(Token l) {
 	if (l.auxVal == null) return null;
 	TypeDeclElemPragma smp = (TypeDeclElemPragma)l.auxVal;
 	int loc = smp.getStartLoc();
