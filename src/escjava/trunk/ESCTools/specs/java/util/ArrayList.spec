@@ -31,13 +31,13 @@ public class ArrayList extends AbstractList
     /** This represents the size of the array used to store the elements 
      *  in the ArrayList.
      **/
-    /*@ public model int capacity;
+    /*@ public model int capacity; in objectState;
       @*/
 
     // METHODS AND CONSTRUCTORS
-    /* FIXME @  public normal_behavior
+    /*@  public normal_behavior
       @   requires 0 <= initialCapacity;
-      @   assignable capacity, theCollection;
+      @   assignable objectState;
       @   ensures capacity == initialCapacity;
       @   ensures this.isEmpty();
       @ also
@@ -46,23 +46,22 @@ public class ArrayList extends AbstractList
       @   assignable \nothing;
       @   signals (IllegalArgumentException) initialCapacity < 0;
       @*/
-    public ArrayList(int initialCapacity);
+    /*@ pure @*/ public ArrayList(int initialCapacity);
 
-    /* FIXME @  public normal_behavior
-      @   assignable capacity, theCollection;
+    /*@  public normal_behavior
+      @   assignable objectState;
       @   ensures capacity == 10;
       @   ensures this.isEmpty();
       @*/
-    public ArrayList();
+    /*@ pure @*/ public ArrayList();
 
-    /* FIXME @  public normal_behavior
+    /*@  public normal_behavior
       @   requires c != null;
       @   requires c.size()*1.1 <= Integer.MAX_VALUE;
-      @   assignable capacity, theCollection;
+      @   assignable objectState;
       @   ensures this.size() == c.size();
       @   ensures (\forall int i; 0 <= i && i < c.size();
       @                     this.get(i).equals(c.iterator().nthNextElement(i)));
-      @   ensures_redundantly c.theCollection.equals(this.theCollection);
       @   ensures capacity == c.size()*1.1;
       @ also
       @  public exceptional_behavior
@@ -70,16 +69,16 @@ public class ArrayList extends AbstractList
       @   assignable \nothing;
       @   signals (NullPointerException) c == null;
       @*/
-    public ArrayList(Collection c);
+    /*@ pure @*/ public ArrayList(Collection c);
 
-    /* FIXME @  public normal_behavior
-      @   assignable capacity, theCollection;
+    /*@  public normal_behavior
+      @   assignable objectState;
       @   ensures capacity == this.size();
       @*/
     public void trimToSize();
 
-    /* FIXME @  public normal_behavior
-      @   assignable capacity, theCollection;
+    /*@  public normal_behavior
+      @   assignable objectState;
       @   ensures capacity >= minCapacity;
       @*/
     public void ensureCapacity(int minCapacity);
@@ -101,9 +100,7 @@ public class ArrayList extends AbstractList
 
     // specification inherited from Object
     /*@ also
-      @ implies_that
       @  public normal_behavior
-      @   assignable \nothing;
       @   ensures \result != this;
       @   ensures \result.getClass() == this.getClass();
       @   ensures \result.equals(this);
@@ -112,7 +109,7 @@ public class ArrayList extends AbstractList
       @   ensures (\forall int i; 0 <= i && i < this.size();
       @             ((ArrayList)\result).get(i) == this.get(i));
       @*/
-    public Object clone();
+    public /*@ pure @*/ Object clone();
 
     // specification inherited from List
     public /*@ pure @*/ Object[] toArray();
@@ -124,7 +121,15 @@ public class ArrayList extends AbstractList
       @   assignable \nothing;
       @   signals (ArrayStoreException);
       @*/
-    public Object[] toArray(Object[] a);
+    public Object[] toArray(Object[] a) throws ArrayStoreException;
+
+    // specification inherited from List
+    /*@ also
+      @  public exceptional_behavior
+      @   requires index < 0 || index >= this.size();
+      @   signals (IndexOutOfBoundsException);
+      @*/
+    public /*@ pure @*/ Object get(int index) throws ArrayStoreException;
 
     // specification inherited from List
     /*@ also
@@ -133,16 +138,7 @@ public class ArrayList extends AbstractList
       @   assignable \nothing;
       @   signals (IndexOutOfBoundsException);
       @*/
-    public /*@ pure @*/ Object get(int index);
-
-    // specification inherited from List
-    /*@ also
-      @  public exceptional_behavior
-      @   requires index < 0 || index >= this.size();
-      @   assignable \nothing;
-      @   signals (IndexOutOfBoundsException);
-      @*/
-    public Object set(int index, Object element);
+    public Object set(int index, Object element) throws IndexOutOfBoundsException;
 
     // specification inherited from List
     public boolean add(Object o);
@@ -154,7 +150,7 @@ public class ArrayList extends AbstractList
       @   assignable \nothing;
       @   signals (IndexOutOfBoundsException);
       @*/
-    public void add(int index, Object element);
+    public void add(int index, Object element) throws IndexOutOfBoundsException;
 
     // specification inherited from List
     /*@ also
@@ -163,7 +159,7 @@ public class ArrayList extends AbstractList
       @   assignable \nothing;
       @   signals (IndexOutOfBoundsException);
       @*/
-    public Object remove(int index);
+    public Object remove(int index) throws IndexOutOfBoundsException;
 
     // specification inherited from List
     public void clear();
@@ -179,8 +175,8 @@ public class ArrayList extends AbstractList
       @   signals (IndexOutOfBoundsException) index < 0 || index >= this.size();
       @   signals (NullPointerException) c == null;
       @*/
-    public boolean addAll(int index, Collection c);
+    public boolean addAll(int index, Collection c) throws IndexOutOfBoundsException;
 
     // specification inherited from AbstractList
-    protected void removeRange(int fromIndex, int toIndex);
+    protected void removeRange(int fromIndex, int toIndex) throws IndexOutOfBoundsException;
 } 
