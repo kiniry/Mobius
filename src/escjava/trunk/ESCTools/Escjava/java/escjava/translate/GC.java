@@ -605,7 +605,7 @@ public final class GC {
 	    else if( w.size() == 1 )
 	      return w.elementAt(0);
 	    else
-	      return NaryExpr.make( sloc, eloc, TagConstants.BOOLAND, w);
+	      return NaryExpr.make( sloc, eloc, TagConstants.BOOLAND, null, w);
 	  }
 
 	case TagConstants.BOOLOR:
@@ -622,7 +622,7 @@ public final class GC {
 	    else if( w.size() == 1 )
 	      return w.elementAt(0);
 	    else
-	      return NaryExpr.make( sloc, eloc, TagConstants.BOOLOR, w);
+	      return NaryExpr.make( sloc, eloc, TagConstants.BOOLOR, null, w);
 	  }
 
 	case TagConstants.BOOLIMPLIES:
@@ -717,7 +717,7 @@ public final class GC {
     }
 
     // No special case, so do default
-    return NaryExpr.make(sloc,eloc,tag, ev);
+    return NaryExpr.make(sloc,eloc,tag, null, ev);
   }
 
 

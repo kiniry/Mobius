@@ -4,6 +4,7 @@ package escjava.sp;
 
 import javafe.ast.*;
 import escjava.ast.*;
+import escjava.ast.Modifiers;
 import escjava.ast.TagConstants;
 import escjava.translate.GC;
 import escjava.translate.Substitute;

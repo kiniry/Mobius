@@ -245,12 +245,21 @@ public class Substitute {
 	  for( int i=0; i<ne.exprs.size(); i++ ) {
 	    nu.addElement( doSubst( subst, ne.exprs.elementAt(i), rhsVars ) );
 	  }
-	  result =  NaryExpr.make(ne.sloc, ne.eloc, ne.op, nu);
+	  result =  NaryExpr.make(ne.sloc, ne.eloc, ne.op, ne.methodName, nu);
 	} else if (e instanceof BinaryExpr) {
 
 	  BinaryExpr be = (BinaryExpr)e;
 	  result = BinaryExpr.make(be.op, doSubst(subst,be.left,rhsVars),
 				   doSubst(subst,be.right,rhsVars), be.locOp);
+	} else if (e instanceof MethodInvocation) {
+	  MethodInvocation me = (MethodInvocation)e;
+	  ExprVec args = ExprVec.make(me.args.size());
+	  for (int i = 0; i< me.args.size(); ++i) {
+		Expr ee = me.args.elementAt(i);
+		args.addElement( doSubst(subst, ee, rhsVars));
+	  }
+	  result = MethodInvocation.make(me.od, me.id, me.tmodifiers, me.locId, 
+			me.locOpenParen, args);
 	} else {
 
 	    Assert.fail("Bad expr in Substitute.doSubst: "+e);

@@ -11,6 +11,7 @@ import escjava.Main;
 import javafe.ast.*;
 import escjava.ast.*;
 import escjava.ast.TagConstants;
+import escjava.ast.Modifiers;
 
 import escjava.backpred.FindContributors;
 
@@ -1119,7 +1120,7 @@ public final class GetSpec {
 
             for (int i = 0; i < td.elems.size(); i++) {
                 TypeDeclElem tde = td.elems.elementAt(i);
-                if (tde.getTag() == TagConstants.AXIOM) {
+                if (tde.getTag() == TagConstants.AXIOM || tde.getTag() == TagConstants.JML_REPRESENTS) {
                     ExprDeclPragma axiom = (ExprDeclPragma)tde;
                     if (!Main.filterInvariants ||
                         exprIsVisible(scope.originType, axiom.expr)) {

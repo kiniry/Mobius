@@ -11,6 +11,7 @@ import javafe.util.Location;
 import javafe.ast.*;
 import escjava.ast.*;
 import escjava.ast.TagConstants;
+import escjava.ast.Modifiers;
 import escjava.tc.FlowInsensitiveChecks;
 import escjava.prover.*;
 

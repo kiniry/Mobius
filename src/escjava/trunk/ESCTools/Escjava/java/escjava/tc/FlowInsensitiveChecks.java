@@ -15,6 +15,7 @@ import javafe.tc.TypeSig;
 import javafe.util.*;
 
 import escjava.ast.*;
+import escjava.ast.Modifiers;
 import escjava.ast.TagConstants;
 import escjava.tc.Types;
 import escjava.translate.GetSpec;  // for "findModifierPragma" -- it would be
@@ -537,7 +538,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 
             case TagConstants.METHODINVOCATION:
                 {
-                    if (!inAnnotation)
+/*                    if (!inAnnotation)
                         return super.checkExpr(env, e);
 	
                     MethodInvocation mi = (MethodInvocation)e;
@@ -546,6 +547,8 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                                    "contain method invocations");
                     setType(e, Types.voidType);
                     return e;
+*/
+		    return super.checkExpr(env,e);
                 }
       
             case TagConstants.IMPLIES:
@@ -954,6 +957,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
         switch(tag) {
             case TagConstants.AXIOM:
             case TagConstants.INVARIANT:
+	    case TagConstants.JML_REPRESENTS:
                 {
                     ExprDeclPragma ep = (ExprDeclPragma)e;
                     Env rootEnv = (tag == TagConstants.AXIOM) ? rootSEnv : rootIEnv;
@@ -987,6 +991,35 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                     break;
                 }
 
+	    case TagConstants.MODELDECLPRAGMA: {
+                FieldDecl decl = ((ModelDeclPragma)e).decl;
+                Env rootEnv = Modifiers.isStatic(decl.modifiers)
+                    ? rootSEnv
+                    : rootIEnv;
+
+                checkModifierPragmaVec( decl.pmodifiers, decl, rootEnv );
+
+
+                /*
+                 * Check for other fields with the same name:
+                 */
+                if (sig.hasField(decl.id) ||
+                    (((GhostEnv)rootEnv).getGhostField(decl.id.toString(), decl)
+                     !=null)) {
+                    ErrorSet.error(decl.locId,
+                                   "Another field named '"+decl.id.toString()
+                                   +"' already exists in this type");
+                }
+// FIXME - CHeck for other model fields
+
+                /*
+                 * All that remains to be done is to prep the Type:
+                 */
+                rootEnv.resolveType( decl.type );
+
+                break;
+            }
+
             case TagConstants.GHOSTDECLPRAGMA: {
                 FieldDecl decl = ((GhostDeclPragma)e).decl;
                 Env rootEnv = Modifiers.isStatic(decl.modifiers)
@@ -996,6 +1029,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                 /*
                  * Check modifiers:
                  */
+/* This is not the case ???
                 if (!Modifiers.isPublic(decl.modifiers)) {
                     ErrorSet.error(decl.locId,
                                    "Ghost fields must be declared public");
@@ -1005,6 +1039,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                     ErrorSet.error(decl.locId,
                                    "Ghost-field modifiers may only be public or static");
                 }
+*/
 
                 checkModifierPragmaVec( decl.pmodifiers, decl, rootEnv );
 
@@ -1173,19 +1208,34 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                     if (ctxt.getTag() != TagConstants.FIELDDECL ||
                         Modifiers.isStatic(((FieldDecl)ctxt).modifiers)) {
                         ErrorSet.error(p.getStartLoc(),
-                                       "The writable_deferred annotation can occur only on "
-                                       +"instance field declarations");
+			   "The writable_deferred annotation can occur only on "
+			   +"instance field declarations");
                     }
                     break;
                 }
 
+	    case TagConstants.JML_PURE:
+		{
+		    if (ctxt instanceof ConstructorDecl) {
+			((ConstructorDecl)ctxt).modifiers |= Modifiers.ACC_PURE;
+		    } else if (ctxt instanceof MethodDecl) {
+			((MethodDecl)ctxt).modifiers |= Modifiers.ACC_PURE;
+		    } else {
+			ErrorSet.error(p.getStartLoc(),
+				"Expected pure to modify a constructor or method declaration");
+		    }
+		    break;
+		}
+
             case TagConstants.HELPER:
                 switch (ctxt.getTag()) {
                     case TagConstants.CONSTRUCTORDECL:
+			((ConstructorDecl)ctxt).modifiers |= Modifiers.ACC_HELPER;
                         break;
                     case TagConstants.METHODDECL:
                         {
                             MethodDecl md = (MethodDecl) ctxt;
+			    md.modifiers |= Modifiers.ACC_HELPER;
                             if (getOverrideStatus(md) != MSTATUS_NEW_ROUTINE) {
                                 ErrorSet.error(p.getStartLoc(),
                                                "The helper pragma cannot be " +
@@ -1497,14 +1547,14 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                                 || tag == TagConstants.JML_MODIFIABLE
                                 || tag == TagConstants.JML_ASSIGNABLE) {
                                 ErrorSet.error(p.getStartLoc(),
-                                               "modifies cannot be used on method " +
-                                               "overrides; use also_modifies instead");
+				   "modifies cannot be used on method " +
+				   "overrides; use also_modifies instead");
                             }
                         } else {
                             if (tag == TagConstants.ALSO_MODIFIES) {
                                 ErrorSet.error(p.getStartLoc(),
-                                               "also_modifies can be used only on method " +
-                                               "overrides; use modifies instead");
+				   "also_modifies can be used only on method " +
+				   "overrides; use modifies instead");
                             }
                         }
 

@@ -9,6 +9,7 @@ import java.util.Vector;
 import javafe.ast.*;
 import escjava.ast.*;
 import escjava.ast.TagConstants;
+import escjava.ast.Modifiers;
 import escjava.ast.FieldDeclVec;		// compiler bug workaround
 import escjava.ast.ExprDeclPragmaVec;		// compiler bug workaround
 
@@ -417,7 +418,9 @@ public class FindContributors
 	    MethodInvocation mi = (MethodInvocation) N;
 	    int inline = Translate.inlineDecoration.get(mi) != null ? 2 :
                          isNonRecursiveHelperInvocation(mi.decl) ? 1 : 0;
-	    backedgeToRoutineDecl(mi.decl, fields, addTypes, inline);
+
+// FIXME - what is happening with the decl is null
+	    if (mi.decl != null) backedgeToRoutineDecl(mi.decl, fields, addTypes, inline);
 	}
 
 	/*
@@ -519,6 +522,8 @@ public class FindContributors
 	    if (tde.getTag() == TagConstants.INVARIANT)
 		addInvariant((ExprDeclPragma)tde);
 
+	    if (tde instanceof ModelDeclPragma)
+		tde = ((ModelDeclPragma)tde).decl;
 	    if (tde instanceof GhostDeclPragma)
 		tde = ((GhostDeclPragma)tde).decl;
 	    if (tde.getTag() == TagConstants.FIELDDECL

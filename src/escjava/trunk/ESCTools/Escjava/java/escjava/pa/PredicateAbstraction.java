@@ -17,6 +17,7 @@ import javafe.tc.Types;
 import escjava.*;
 import escjava.ast.*;
 import escjava.ast.TagConstants;
+import escjava.ast.Modifiers;
 import escjava.translate.*;
 import escjava.sp.SPVC;
 import escjava.sp.*;
@@ -254,7 +255,7 @@ public class PredicateAbstraction
 								   new Integer(0),
 								   loc ));
 		    
-		    Expr pred = NaryExpr.make( loc, loc, TagConstants.INTEGRALGE, vec );
+		    Expr pred = NaryExpr.make( loc, loc, TagConstants.INTEGRALGE, null, vec );
 		    g.predicates.addElement( pred );
 		}
 
@@ -267,7 +268,7 @@ public class PredicateAbstraction
 								   null,
 								   loc ));
 		    
-		    Expr pred = NaryExpr.make( loc, loc, TagConstants.REFNE, vec );
+		    Expr pred = NaryExpr.make( loc, loc, TagConstants.REFNE, null, vec );
 		    g.predicates.addElement( pred );		    
 		}
 	    }

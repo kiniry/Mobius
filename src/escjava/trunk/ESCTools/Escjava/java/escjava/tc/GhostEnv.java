@@ -7,12 +7,13 @@ import java.util.Hashtable;
 
 import javafe.ast.*;
 import escjava.ast.GhostDeclPragma;
+import escjava.ast.ModelDeclPragma;
 
 import javafe.tc.*;
 
 /**
  * This class overrides <code>EnvForTypeSig</code> so that it "sees"
- * ghost fields if {@link
+ * ghost and model fields if {@link
  * escjava.tc.FlowInsensitiveChecks#inAnnotation} is <code>true</code>.
  */
 
@@ -93,6 +94,12 @@ public class GhostEnv extends EnvForTypeSig
 	    TypeDeclElem elem = elems.elementAt(i);
 	    if (elem instanceof GhostDeclPragma) {
 		FieldDecl ghost = ((GhostDeclPragma)elem).decl;
+		if (!fields.containsKey(ghost)) {
+		    s.getEnclosingEnv().resolveType(ghost.type);
+		    fields.put(ghost, ghost);
+		}
+	    } else if (elem instanceof ModelDeclPragma) {
+		FieldDecl ghost = ((ModelDeclPragma)elem).decl;
 		if (!fields.containsKey(ghost)) {
 		    s.getEnclosingEnv().resolveType(ghost.type);
 		    fields.put(ghost, ghost);

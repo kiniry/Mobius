@@ -22,6 +22,7 @@ import escjava.Main;
 
 import escjava.ast.*;
 import escjava.ast.TagConstants;
+import escjava.ast.Modifiers;
 import escjava.tc.FlowInsensitiveChecks;
 
 import escjava.backpred.FindContributors;
@@ -343,6 +344,7 @@ public final class Translate {
     // don't have initial values.)
     for (int i = 0; i < tdecl.elems.size(); i++) {
       TypeDeclElem tde = tdecl.elems.elementAt(i);
+      if (tde instanceof ModelDeclPragma) continue;
       if (tde instanceof GhostDeclPragma)
 	  tde = ((GhostDeclPragma)tde).decl;
 
@@ -373,6 +375,7 @@ public final class Translate {
   private void instanceInitializeZero(/*@ non_null */ TypeDecl tdecl) {
     for (int i = 0; i < tdecl.elems.size(); i++) {
       TypeDeclElem tde = tdecl.elems.elementAt(i);
+      if (tde instanceof ModelDeclPragma) continue;
       if (tde instanceof GhostDeclPragma)
 	  tde = ((GhostDeclPragma)tde).decl;
 

@@ -16,9 +16,11 @@ public class TagConstants extends javafe.tc.TagConstants
     public static final int IFF = EXPLIES + 1;  // equivalence (equality)
     public static final int NIFF = IFF + 1;     // discrepance (xor)
     public static final int SUBTYPE = NIFF + 1;
+    public static final int LEFTARROW = SUBTYPE + 1;
+    public static final int RIGHTARROW = LEFTARROW + 1;
 
     //// Tags for new literal expressions
-    public static final int SYMBOLLIT = SUBTYPE + 1;
+    public static final int SYMBOLLIT = RIGHTARROW + 1;
 
     //// Tags for new primitive types
     public static final int ANY = SYMBOLLIT + 1;
@@ -193,7 +195,8 @@ public class TagConstants extends javafe.tc.TagConstants
     // MAX -- an ESC keyword
     public static final int LOCKLE = ISNEWARRAY + 1;
     public static final int LOCKLT = LOCKLE + 1;
-    public static final int REFEQ = LOCKLT + 1;
+    public static final int METHODCALL = LOCKLT + 1;
+    public static final int REFEQ = METHODCALL + 1;
     public static final int REFNE = REFEQ + 1;
     public static final int SELECT = REFNE + 1;
     public static final int STORE = SELECT + 1;
@@ -408,6 +411,10 @@ public class TagConstants extends javafe.tc.TagConstants
                 return "<=!=>";
             case SUBTYPE:
                 return "<:";
+	    case LEFTARROW:
+		return "<-";
+	    case RIGHTARROW:
+		return "->";
             case ANY:
                 return "ANY";
             case TYPECODE:
@@ -611,6 +618,7 @@ public class TagConstants extends javafe.tc.TagConstants
         "isNewArray",
         "lockLE",
         "lockLT",
+	"methodCall",
         "refEQ",
         "refNE",
         "select",

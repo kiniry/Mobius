@@ -11,8 +11,10 @@ import javafe.ast.*;
 import escjava.ast.*;
 import escjava.ast.EscPrettyPrint;
 import escjava.ast.TagConstants;
+import escjava.ast.Modifiers;
 
 import escjava.backpred.FindContributors;
+//import escjava.translate.Annotation;
 
 import javafe.reader.StandardTypeReader;
 import escjava.reader.EscTypeReader;
@@ -80,6 +82,13 @@ public class Main extends javafe.SrcTool
 	so that output can be compared to an oracle output file.
     */
     public static boolean testMode = false;
+
+    /** When true, parses pragmas that begin with /*+@, which are normally
+	parsed only by JML; this allows test runs in which everything JML
+	parses is parsed by escjava, to see if we have full coverage of all
+	of JML.
+    */
+    public static boolean parsePlus = false;
 
     public static boolean spvc = true;
     public static boolean dsa = true;
@@ -632,6 +641,9 @@ public class Main extends javafe.SrcTool
 	    }
 	    NoWarn.setChkStatus(tag, TagConstants.CHK_AS_ASSERT);
 	    return offset+1;
+	} else if (option.equals("-parsePlus")) {
+	    parsePlus = true;
+	    return offset;
 	} else if (option.equals("-testMode")) {
 	    testMode = true;
 	    return offset;
@@ -771,7 +783,7 @@ public class Main extends javafe.SrcTool
 
     /**
      * Override setup so can issue version # as soon as possible (aka,
-     * just after decode options so know if -quiet issued or not).
+     * just after decode options so know if -quiet or -testMode issued or not).
      */
     public void setup() {
 	super.setup();
@@ -979,6 +991,11 @@ public class Main extends javafe.SrcTool
                              "due to type error(s)");
 	    return true;
 	}
+
+	//====== Stage 2.5 - desugar the annotations, including desugaring model
+	//====== fields and use of methods in annotations
+
+	//(new Annotation()).process(td);
 
 	// ==== Start stage 3 ====
 	if (3 <= stages) {

@@ -14,6 +14,7 @@ import javafe.util.Set;
 import javafe.util.ErrorSet;
 import escjava.ast.*;
 import escjava.ast.TagConstants;
+import escjava.ast.Modifiers;
 import escjava.Main;
 
 
@@ -221,6 +222,19 @@ public final class TrAnExpr {
 		       newtag,
 		       trSpecExpr(be.left, sp, st),
 		       trSpecExpr(be.right, sp, st));
+      }
+
+      case TagConstants.METHODINVOCATION: {
+	MethodInvocation me = (MethodInvocation)e;
+	ExprVec ev = ExprVec.make(me.args.size());
+		// FIXME - 'this' argument???
+	for (int i=0; i<me.args.size(); ++i) {
+	    ev.addElement( trSpecExpr( me.args.elementAt(i), sp, st));
+	}
+	Expr ne = GC.nary(me.getStartLoc(), me.getEndLoc(),
+			TagConstants.METHODCALL,ev);
+	((NaryExpr)ne).methodName = me.id; // FIXME -- full name ???
+	return ne;
       }
 
       case TagConstants.EXPLIES: {

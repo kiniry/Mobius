@@ -6,6 +6,7 @@ import escjava.Main;
 import escjava.ast.*;
 // This import is necessary to override javafe.ast.TagConstants.
 import escjava.ast.TagConstants;
+import escjava.ast.Modifiers;
 
 import java.io.IOException;
 
@@ -270,6 +271,8 @@ public class EscPragmaParser extends Parse implements PragmaParser
 	scanner.addPunctuation("<==>", TagConstants.IFF);
 	scanner.addPunctuation("<=!=>", TagConstants.NIFF);
 	scanner.addPunctuation("<:", TagConstants.SUBTYPE);
+	scanner.addPunctuation("<-", TagConstants.LEFTARROW);
+	scanner.addPunctuation("->", TagConstants.RIGHTARROW);
 	addOperator(TagConstants.IMPLIES, 76, false);
 	addOperator(TagConstants.EXPLIES, 76, true);
 	addOperator(TagConstants.IFF, 73, true);
@@ -278,6 +281,10 @@ public class EscPragmaParser extends Parse implements PragmaParser
 	scanner.addKeyword("\\result", TagConstants.RES);
 	scanner.addKeyword("\\lockset", TagConstants.LS);
 	scanner.addKeyword("\\TYPE", TagConstants.TYPETYPE);
+	scanner.addKeyword("\\everything",TagConstants.JML_EVERYTHING);
+	scanner.addKeyword("\\nothing",TagConstants.JML_NOTHING);
+	scanner.addKeyword("\\not_specified",TagConstants.JML_NOT_SPECIFIED);
+	scanner.addKeyword("\\such_that",TagConstants.JML_SUCH_THAT);
 	inProcessTag = NOTHING_ELSE_TO_PROCESS;
         inAlsoClause = false;
     }
@@ -287,7 +294,8 @@ public class EscPragmaParser extends Parse implements PragmaParser
      * @return true iff tag is an '@' or an '*' character.
      */
     public boolean checkTag(int tag) {
-        return tag == '@' || tag == '*';
+	if (Main.parsePlus && tag == '+') return true;
+        return tag == '@' || tag == '*' ;
     }
 
     /**
@@ -305,6 +313,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
             int c = in.read();
             // System.out.println("restart: c = '"+(char)c+"'");
 
+	    if (Main.parsePlus && c == '+') c = in.read();
             switch (c) {
                 case '@':
                     /* Normal escjava annotation: */
@@ -532,15 +541,16 @@ public class EscPragmaParser extends Parse implements PragmaParser
             }
             //@ assume scanner.m_in != null;  // TBW: is this right??  --KRML
 
-	    // Skip any access modifiers - DRC 4/20/2003
-	    if (scanner.ttype == TagConstants.PUBLIC ||
-		scanner.ttype == TagConstants.PROTECTED ||
-                scanner.ttype == TagConstants.PRIVATE)
-		scanner.getNextToken();
+	    int prefixModifiers = parseModifiers(scanner);
 
             // Start a new pragma
             int loc = scanner.startingLoc;
-            if (scanner.ttype != TagConstants.IDENT)
+            if (Main.parsePlus &&
+		scanner.ttype == TagConstants.ADD &&
+		scanner.lookahead(1) == TagConstants.EOF) {
+		return false;
+	    }
+	    if (scanner.ttype != TagConstants.IDENT)
                 ErrorSet.fatal(loc, "Pragma must start with an identifier");
             Identifier kw = scanner.identifierVal;
             scanner.getNextToken();
@@ -687,13 +697,33 @@ public class EscPragmaParser extends Parse implements PragmaParser
                     return true;	  
 
                 case TagConstants.SET:
-                    dst.ttype = TagConstants.STMTPRAGMA;
+                    {
+		    dst.ttype = TagConstants.STMTPRAGMA;
                     Expr target = parsePrimaryExpression(scanner);
                     int locOp = scanner.startingLoc;
                     expect(scanner, TagConstants.ASSIGN);
                     Expr value = parseExpression(scanner);
                     dst.auxVal = SetStmtPragma.make(target, locOp, value, loc);
                     semiNotOptional = true;
+		    }
+                    break;
+
+                case TagConstants.JML_REPRESENTS:             // SC HPT AAST 4
+		    {
+                    dst.ttype = TagConstants.TYPEDECLELEMPRAGMA;
+                    Expr target = parsePrimaryExpression(scanner);
+                    int locOp = scanner.startingLoc;
+		    if (scanner.ttype == TagConstants.LEFTARROW) {
+			expect(scanner, TagConstants.LEFTARROW);
+			Expr value = parseExpression(scanner);
+			dst.auxVal = ExprDeclPragma.make(tag, BinaryExpr.make(TagConstants.EQ, target, value, locOp) , loc);
+		    } else if (scanner.ttype == TagConstants.JML_SUCH_THAT) {
+			expect(scanner, TagConstants.JML_SUCH_THAT);
+			Expr value = parseExpression(scanner);
+			dst.auxVal = ExprDeclPragma.make(tag, value, loc);
+		    }
+                    semiNotOptional = true;
+		    }
                     break;
 
                 case TagConstants.AXIOM:
@@ -711,10 +741,31 @@ public class EscPragmaParser extends Parse implements PragmaParser
                     semiNotOptional = true;
                     break;
 
-                case TagConstants.GHOST: {
+                case TagConstants.JML_MODEL:
+                case TagConstants.GHOST:
+                    {
                     dst.ttype = TagConstants.TYPEDECLELEMPRAGMA;
 	      
-                    int modifiers = parseModifiers(scanner);
+		    while (true) {
+			int modifiers = parseModifiers(scanner);
+			if ((modifiers & prefixModifiers) != 0) {
+			    ErrorSet.warning(loc, TagConstants.toString(tag) +
+			       " annotation has a repeated access modifier");
+			}
+			prefixModifiers = modifiers | prefixModifiers;
+
+			if (scanner.ttype != TagConstants.IDENT) break; 
+			if (scanner.identifierVal.toString().equals("pure")) {
+			    modifiers |= Modifiers.ACC_PURE;
+		 	} else if (scanner.identifierVal.toString().equals("helper")) {
+			    modifiers |= Modifiers.ACC_HELPER;
+			} else {
+			    break;
+			}
+			scanner.getNextToken();
+		    }
+		    int modifiers = prefixModifiers;
+			
                     ModifierPragmaVec modifierPragmas = this.modifierPragmas;
 	      
                     int locType = scanner.startingLoc;
@@ -730,27 +781,68 @@ public class EscPragmaParser extends Parse implements PragmaParser
 	      
                     VarInit init = null;
                     int locAssignOp = Location.NULL;
-                    if (scanner.ttype == TagConstants.ASSIGN) {
-                        locAssignOp = scanner.startingLoc;
-                        scanner.getNextToken();
-                        init = parseVariableInitializer(scanner, false);
-                    }
-                    FieldDecl decl
-                        = FieldDecl.make(modifiers, modifierPragmas, 
-                                         id, vartype, locId, init, locAssignOp );
-	      
-                    if (scanner.ttype == TagConstants.MODIFIERPRAGMA
-                        || scanner.ttype == TagConstants.SEMICOLON ) {
-                        // if modifier pragma, retroactively add to modifierPragmas
-                        parseMoreModifierPragmas(scanner, modifierPragmas);
-                    }
-	      
-                    if (scanner.ttype == TagConstants.COMMA)
-                        fail(scanner.startingLoc,
-                             "Only one ghost field may be declared per ghost annotation.");
-	      
-                    dst.auxVal = GhostDeclPragma.make(decl, loc);
-                    semiNotOptional = true;
+		    if (scanner.ttype == TagConstants.LPAREN) {
+			if (tag == TagConstants.GHOST) {
+			    ErrorSet.error(loc,
+				"A method may not be declared ghost");
+			}
+			// Must be a model method
+			// FIXME - note - cannot have a ghost method
+			FormalParaDeclVec args = parseFormalParameterList(scanner);
+			int locThrowsKeyword;
+			if (scanner.ttype == TagConstants.THROWS) {
+			    locThrowsKeyword = scanner.startingLoc;
+			} else {
+			    locThrowsKeyword = Location.NULL;
+			}
+			TypeNameVec raises = parseTypeNames(scanner, TagConstants.THROWS);
+			int locOpenBrace = Location.NULL;
+			BlockStmt body = null;
+			if (scanner.ttype == TagConstants.SEMICOLON) {
+			    scanner.getNextToken(); // eats semicolon
+			} else if (scanner.ttype == TagConstants.LBRACE) {
+			    locOpenBrace = scanner.startingLoc;
+			    body = parseBlock(scanner, true);
+			// FIXME - the above parses with specOnly=true which will not provide the body
+			} else {
+			// FIXME -- error
+			}
+			// FIXME - need to add the method into the decl elements of the type
+			MethodDecl md = MethodDecl.make(
+						modifiers, modifierPragmas,
+						null, args,
+						raises, body, locOpenBrace,
+						loc, locId, locThrowsKeyword,
+						id, type,locType);
+			dst.auxVal = null;
+
+		    } else {
+			if (scanner.ttype == TagConstants.ASSIGN) {
+			    locAssignOp = scanner.startingLoc;
+			    scanner.getNextToken();
+			    init = parseVariableInitializer(scanner, false);
+			}
+			FieldDecl decl
+			    = FieldDecl.make(modifiers, modifierPragmas, 
+					     id, vartype, locId, init, locAssignOp );
+		  
+			if (scanner.ttype == TagConstants.MODIFIERPRAGMA
+			    || scanner.ttype == TagConstants.SEMICOLON ) {
+			    // if modifier pragma, retroactively add to modifierPragmas
+			    parseMoreModifierPragmas(scanner, modifierPragmas);
+			}
+		  
+			if (scanner.ttype == TagConstants.COMMA)
+			    fail(scanner.startingLoc,
+				 "Only one ghost field may be declared per ghost annotation.");
+		  
+			if (tag == TagConstants.GHOST) {
+			    dst.auxVal = GhostDeclPragma.make(decl, loc);
+			} else if (tag == TagConstants.JML_MODEL) {
+			    dst.auxVal = ModelDeclPragma.make(decl, loc);
+			}
+			semiNotOptional = true;
+		    }
                     break;
                 }
 
@@ -1002,10 +1094,9 @@ public class EscPragmaParser extends Parse implements PragmaParser
                 // case TagConstants.JML_POST: support complete (kiniry)
                 // case TagConstants.JML_PRE_REDUNDANTLY: support complete (kiniry)
                 // case TagConstants.JML_PRE: support complete (kiniry)
-                // case TagConstants.JML_PURE: parses but no semantics (cok) SC AAST 3
+                // case TagConstants.JML_PURE: support complete (cok)
                 case TagConstants.JML_REFINE:                 // SC HPT AAST 3
                 case TagConstants.JML_REPRESENTS_REDUNDANTLY: // SC HPT AAST 4
-                case TagConstants.JML_REPRESENTS:             // SC HPT AAST 4
                 // case TagConstants.JML_REQUIRES_REDUNDANTLY: support complete (kiniry)
                 case TagConstants.JML_RETURNS_REDUNDANTLY:    // unclear semantics
                 case TagConstants.JML_RETURNS:                // unclear semantics
@@ -1078,16 +1169,16 @@ public class EscPragmaParser extends Parse implements PragmaParser
 	    int t = scanner.lookahead(0);
 	    if (t == TagConstants.JML_NOTHING) {
 		scanner.getNextToken();
-	        dst.auxVal = ExprModifierPragma.make(tempInProcessTag, 
-			NothingExpr.make(scanner.startingLoc), inProcessLoc);
+		dst.auxVal = ExprModifierPragma.make(tempInProcessTag, 
+		    NothingExpr.make(scanner.startingLoc), inProcessLoc);
 	    } else if (t == TagConstants.JML_NOT_SPECIFIED) {
 		scanner.getNextToken();
-	        dst.auxVal = ExprModifierPragma.make(tempInProcessTag, 
-			NotSpecifiedExpr.make(scanner.startingLoc), inProcessLoc);
+		dst.auxVal = ExprModifierPragma.make(tempInProcessTag, 
+		    NotSpecifiedExpr.make(scanner.startingLoc), inProcessLoc);
 	    } else if (t == TagConstants.JML_EVERYTHING) {
 		scanner.getNextToken();
-	        dst.auxVal = ExprModifierPragma.make(tempInProcessTag, 
-			EverythingExpr.make(scanner.startingLoc), inProcessLoc);
+		dst.auxVal = ExprModifierPragma.make(tempInProcessTag, 
+		    EverythingExpr.make(scanner.startingLoc), inProcessLoc);
 	    } else {	
 	        Expr e = parseExpression(scanner);
                 dst.auxVal = ExprModifierPragma.make(tempInProcessTag, 
@@ -1188,7 +1279,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
                     // May be followed by ( ArgumentListopt ) :
                     if (l.ttype == TagConstants.LPAREN) {
                         int locOpenParen = l.startingLoc;
-                        l.getNextToken();
+                        //l.getNextToken();
 
                         Identifier kw = n.identifierAt(0);
                         int tag = TagConstants.fromIdentifier(kw);
@@ -1202,6 +1293,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
 			} else {
                         switch (tag) {
                             case TagConstants.TYPE: {
+                       		l.getNextToken();
                                 Type subexpr = parseType(l);
                                 primary = TypeExpr.make(loc, l.startingLoc, subexpr);
                                 expect(l, TagConstants.RPAREN);
@@ -1209,12 +1301,13 @@ public class EscPragmaParser extends Parse implements PragmaParser
                             }
 	    
                             case TagConstants.DTTFSA: {
+                      		l.getNextToken();
                                 Type t = parseType(l);
                                 TypeExpr te = TypeExpr.make(loc, l.startingLoc, t);
                                 expect(l, TagConstants.COMMA);
                                 ExprVec args = parseExpressionList(l, TagConstants.RPAREN);
                                 args.insertElementAt(te, 0);
-                                primary = NaryExpr.make(loc, l.startingLoc, tag, args);
+                                primary = NaryExpr.make(loc, l.startingLoc, tag, null,  args);
                                 break;
                                 }
 	    
@@ -1224,12 +1317,15 @@ public class EscPragmaParser extends Parse implements PragmaParser
                             case TagConstants.MAX: 
                             case TagConstants.PRE:
                             case TagConstants.TYPEOF: {
+                       		l.getNextToken();
                                 ExprVec args = parseExpressionList(l, TagConstants.RPAREN);
-                                primary = NaryExpr.make(loc, l.startingLoc, tag, args);
+                                primary = NaryExpr.make(loc, l.startingLoc, tag, null,  args);
                                 break;
                             }
 	    
                             default:
+				// parseArgumentList requires that the scanner (l) must
+				// be at the LPAREN, so we can't 'get' the LPAREN token
 			        ExprVec args = parseArgumentList(l);
 			        primary = AmbiguousMethodInvocation.make(n, 
 					null, locOpenParen, args);

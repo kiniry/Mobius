@@ -34,7 +34,7 @@ import javafe.util.Location;
  *       - Expr ()
  *         + GCExpr
  *           + LabelExpr (Identifier label, Expr expr)
- *           + NaryExpr (int op, Expr* exprs)
+ *           + NaryExpr (int op, Identifier methodName, Expr* exprs)
  *           + QuantifiedExpr (GenericVarDecl* vars, Expr expr)
  *           + SubstExpr (GenericVarDecl var, Expr val, Expr target)
  *           + TypeExpr (Type type)
@@ -67,7 +67,6 @@ import javafe.util.Location;
  *	    + GhostDeclPragma (GhostFieldDecl decl)
  *	    + ModelDeclPragma (ModelFieldDecl decl)
  *         + StillDeferredDeclPragma (Identifier var)
- *         + RepresentsPragma (Expr target, Expr value)
  *    - Stmt ()
  *       - StmtPragma ()
  *         + SimpleStmtPragma () // Unreachable
@@ -115,8 +114,9 @@ public abstract class GCExpr extends Expr
 public class NaryExpr extends GCExpr
 {
   //# int op
+  //# Identifier methodName
   //# Expr* exprs
- 
+
   //# ManualTag
   public final int getTag() { return op; }
 

@@ -803,6 +803,11 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
       self.print(o, ind, ((NaryExpr)e).exprs);
       break;
 
+    case TagConstants.METHODCALL:
+      write(o, ((NaryExpr)e).methodName.toString());
+      self.print(o, ind, ((NaryExpr)e).exprs);
+      break;
+
     default:
       Assert.notFalse(tag<=javafe.tc.TagConstants.LAST_TAG,
 	"illegal attempt to pass tag #" + tag + " (" +
