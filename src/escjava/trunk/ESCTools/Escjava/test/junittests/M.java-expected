@@ -1,0 +1,33 @@
+ESC/Java version VERSION
+    [TIME]
+
+M ...
+  Prover started:TIME
+    [TIME]
+
+M: M() ...
+    [TIME]  passed immediately
+
+M: P(java.lang.Object) ...
+    [TIME]  passed
+
+M: m(java.lang.Object) ...
+------------------------------------------------------------------------
+M.java:29: Warning: Possible violation of object invariant (Invariant)
+  }
+  ^
+Associated declaration is "/Users/cok/ESCTools/jmlspecs.jar:org/jmlspecs/lang/JMLDataGroup.java", line 33, col 15:
+    //@ public invariant owner == null;
+               ^
+Possibly relevant items from the counterexample context:  
+  brokenObj<1>%0 == o:23.36
+(brokenObj* refers to the object for which the invariant is broken.)
+
+Execution trace information:
+    Executed else branch in "M.java", line 24, col 4.
+    Executed return in "M.java", line 28, col 4.
+
+------------------------------------------------------------------------
+    [TIME]  failed
+  [TIME total]
+1 warning
