@@ -44,4 +44,10 @@ public class BCConstantRef extends BCConstant {
 	public BCConstantClass getConstantClass() {
 		return (BCConstantClass)cPool.getConstant(getClassIndex());
 	}
+	/**
+	 * @return Returns the cPool.
+	 *//*
+	protected BCConstantPool getConstantPool() {
+		return cPool;
+	}*/
 }

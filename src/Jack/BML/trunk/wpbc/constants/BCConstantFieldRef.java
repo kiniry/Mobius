@@ -56,6 +56,7 @@ public class BCConstantFieldRef extends BCConstantRef implements RefFunction {
 		BCConstantPool pool) {
 		super(_cpIndex, _CONSTANT_classref_index, _name, pool);
 		type = _type;
+	
 	}
 	
 	public BCField getBCField() {

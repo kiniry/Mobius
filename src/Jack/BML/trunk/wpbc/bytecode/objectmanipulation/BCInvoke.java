@@ -151,10 +151,10 @@ public class BCInvoke extends BCFieldOrMethodInstruction {
 			return wp ;
 		}
 		for (int n = 0; n < specCases.length; n++) {
-			Formula postcondition = specCases[n].getPostcondition();
+			Formula postcondition = (Formula)specCases[n].getPostcondition().copy();
 			/*Formula nonModifFields = specCases[n].getConditionForNonModifiedFields();*/
 			
-			Formula post = (Formula)specCases[n].getPostcondition().copy();
+			//Formula post = (Formula)specCases[n].getPostcondition().copy();
 			Formula precondition = specCases[n].getPrecondition();
 			Formula modPostCalled = Predicate.TRUE;
 			Quantificator quantifyOnResult = null;
@@ -222,7 +222,7 @@ public class BCInvoke extends BCFieldOrMethodInstruction {
 				if (modifiesSubst[i] == null) {
 					continue;
 				}
-				Formula f = (Formula)modifiesSubst[i].getPostCondition(getBCIndex());
+				Formula f = (Formula)modifiesSubst[i].getPostCondition(getPosition());
 				BCConstantFieldRef fieldRef =  (BCConstantFieldRef)modifiesSubst[i].getConstantFieldRef();
 				postcondition =  (Formula)postcondition.substitute( fieldRef, fieldRef.atState( getPosition()));
 				_normal_Postcondition = (Formula)_normal_Postcondition.substitute( fieldRef, fieldRef.atState( getPosition()));

@@ -189,6 +189,7 @@ public class BCMethod {
 
 	}
 	
+	
 	// called from outside when the method should be initialised
 	public void initMethod() throws ReadAttributeException {
 		if (initialised) {
@@ -330,6 +331,7 @@ public class BCMethod {
 			BCLoopStart loopStart =
 				(BCLoopStart) Util.getBCInstructionAtPosition(bytecode, pos +3 );
 			loopStart.setInvariant(loopInvariant);
+			loopStart.setDecreases( decreases);
 			loopStart.setMethod(this);
 			/* in the loop start no need to know the decreases formula .Needed only in the end of the loop */
 			//			loopStart.setDecreases(decreases);

@@ -121,7 +121,8 @@ public class BCTypeASTORE
 		_n_Postcondition = (Formula)_n_Postcondition.substitute(arrElementAtIndex, stackTop);
 		
 		wps[0] = Formula.getFormula(condition, _n_Postcondition, Connector.IMPLIES);
-	/*	Util.dump(" wps[0] " + wps[0]);*/
+	
+		/*	Util.dump(" wps[0] " + wps[0]);*/
 		//exceptional termination
 		//S(t-2 ) == null ==> _exc_Postcondition(java.lang.NullPointerException)
 		Formula array_null =
@@ -145,8 +146,8 @@ public class BCTypeASTORE
 						ArrayLengthConstant.ARRAYLENGTHCONSTANT,
 			new Stack(Expression.getCOUNTER_MINUS_2())),
 				PredicateSymbol.GRTEQ);
-/*		Util.dump(" arr_index_not_correct " + arr_index_not_correct);
-*/		
+		/*Util.dump(" arr_index_not_correct " + arr_index_not_correct);*/
+		
 		Formula outOfBounds =
 			getWpForException(
 				(JavaObjectType) JavaType.getJavaRefType(
@@ -158,7 +159,7 @@ public class BCTypeASTORE
 		Formula.getFormula(arr_index_not_correct, outOfBounds, Connector.IMPLIES);
 		/*Util.dump("wps[2] " + wps[2]);*/
 		wp = Formula.getFormula(wps, Connector.AND);
-/*		Util.dump("the typeASTORE instruction " + wp);*/
+		/*Util.dump("the typeASTORE instruction " + wp);*/
 		return wp;
 	}
 }

@@ -124,7 +124,7 @@ public class Trace {
 	 */
 	private void initNormalComponent() {
 		BCInstruction entryPoint = method.getBytecode()[0];
-		Block b = initBlock(entryPoint);;
+		Block b = initBlock(entryPoint);
 		initEntryBlock(b);
 		normalComponent = new HashMap();
 		addToComponent(b, normalComponent);

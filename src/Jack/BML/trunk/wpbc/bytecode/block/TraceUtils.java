@@ -298,10 +298,10 @@ public class TraceUtils {
 
 	/**
 	 * 
-	 * An entry pint instuction is an instruction that doesnot have any targeter. 
+	 * An entry point instuction is an instruction that doesnot have any targeter. 
 	 * initialises the entry points. There is only one entry point for the graph representing the normal execution of the program. 
 	 * Anyways the points where the exc handlers code start 
-	 * are considered to be also entry points for the graphs that represent an exception handler
+	 * are considered to be also entry points for the connex subgraphs that represent an exception handler
 	 * 
 	 * @param method - the method whose bytecode entrypoints are  set
 	 */

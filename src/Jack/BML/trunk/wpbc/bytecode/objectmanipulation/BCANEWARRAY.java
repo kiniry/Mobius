@@ -146,7 +146,7 @@ public class BCANEWARRAY
 				_exc_Postcondition);
 		Formula excWpTermination =
 		Formula.getFormula(
-				topStack_grt_0,
+				(Formula)topStack_grt_0.copy(),
 				topStack_grt_0_implies,
 				Connector.IMPLIES);
 		wp = Formula.getFormula(nWpTermination, excWpTermination, Connector.AND);

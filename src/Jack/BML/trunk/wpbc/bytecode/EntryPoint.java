@@ -46,7 +46,9 @@ public class EntryPoint extends BCInstruction {
 					prev.setNext(this);
 				}
 				BCInstruction next = _instr.getNext();
-				next.setPrev(this);
+				if (next != null) {
+					next.setPrev(this);
+				}
 	}
 
 	/* (non-Javadoc)

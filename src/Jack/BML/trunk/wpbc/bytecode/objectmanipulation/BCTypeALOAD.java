@@ -118,7 +118,7 @@ public class BCTypeALOAD
 		//  execution terminating with java.lang.IndexOutOfBoundsException
 		//S(t-1).length <= S(t) ==> excPost(IndexOutOfBoundsException)
 		Formula _index_out_of_bounds =
-			new Predicate2Ar(_arrlength, new Stack(Expression.COUNTER), PredicateSymbol.LESSEQ);
+			new Predicate2Ar(_arrlength.copy(), new Stack(Expression.COUNTER), PredicateSymbol.LESSEQ);
 		Formula _wp_arr_out_of_bounds =
 			getWpForException(
 				(JavaObjectType) JavaType.getJavaRefType(
@@ -152,6 +152,7 @@ public class BCTypeALOAD
 		wp = Formula.getFormula(_formulas, Connector.AND);
 		//wp.substitute(_counter, new ArithmeticExpression( _counter, new NumberLiteral(new Integer(1)) , ExpressionConstants.MINUS)) ;
 		return wp;
+		//return _normal_termination;
 	}
 
 }

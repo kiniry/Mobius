@@ -38,7 +38,7 @@ public final class Stack extends Expression  {
 
 
 	public String toString() {
-		return "StackTop(" + getSubExpressions()[0].toString() + ")"; 
+		return "Stack(" + getSubExpressions()[0].toString() + ")"; 
 	}
 
 	/* (non-Javadoc)

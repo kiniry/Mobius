@@ -14,11 +14,15 @@ import bcclass.BCMethod;
 import bcclass.attributes.ExsuresTable;
 import bcclass.attributes.ModifiesSet;
 import bcexpression.BCLocalVariable;
+import bcexpression.Expression;
+import bcexpression.NumberLiteral;
 import bytecode.branch.BCJumpInstruction;
 import constants.BCConstantFieldRef;
 import formula.Connector;
 import formula.Formula;
 import formula.atomic.Predicate;
+import formula.atomic.Predicate2Ar;
+import formula.atomic.PredicateSymbol;
 
 /**
  * @author mpavlova
@@ -35,7 +39,7 @@ public class BCLoopStart extends BCInstruction {
 	private Formula invariant;
 
 	// when a terminationmust be proven - and may be decreases is an expression rather  than formula ? 
-	private Formula decreases;
+	private Expression decreases;
 
 	private ModifiesSet modifies;
 	
@@ -93,8 +97,14 @@ public class BCLoopStart extends BCInstruction {
 		
 		
 		Formula  _invariant = (Formula)invariant.copy();
+		
+		// the decreasing term must be >= 0 at the beginning and at the end of the loop
+		Formula decreasesWF = new Predicate2Ar( decreases, new NumberLiteral(0), PredicateSymbol.GRTEQ);
+		
+		//
+		Formula invariant_decreseasesWF = Formula.getFormula( (Formula)invariant.copy() , (Formula)decreasesWF.copy() , Connector.AND);
 		Formula wp =
-			Formula.getFormula((Formula)invariant.copy(), wpInstr, Connector.IMPLIES);
+			Formula.getFormula(invariant_decreseasesWF, wpInstr, Connector.IMPLIES);
 		
 /*		Formula wp = Formula.getFormula( invariantHoldsAtState, invariant_implies_wp, Connector.AND); 
 */
@@ -118,7 +128,10 @@ public class BCLoopStart extends BCInstruction {
 		}
 		
 //		wp = Formula.getFormula( assumeStateOfVars, wp, Connector.IMPLIES);
-		wp = Formula.getFormula((Formula)invariant.copy(),wp,  Connector.AND);
+		
+		wp = Formula.getFormula( (Formula)invariant.copy(), wp,  Connector.AND);
+//		 dec >= 0 must be guaranteed by the code before the loop
+		wp = Formula.getFormula( (Formula)decreasesWF.copy(), wp, Connector.AND);
 		return wp;
 		
 		
@@ -157,15 +170,15 @@ public class BCLoopStart extends BCInstruction {
 	/**
 	 * @return
 	 */
-	public Formula getDecreases() {
+	public Expression getDecreases() {
 		return decreases;
 	}
 
 	/**
 	 * @param formula
 	 */
-	public void setDecreases(Formula formula) {
-		decreases = formula;
+	public void setDecreases(Expression  _decreases) {
+		decreases = _decreases;
 	}
 
 	public void addLoopEndPosition(int _loopEndPos) {

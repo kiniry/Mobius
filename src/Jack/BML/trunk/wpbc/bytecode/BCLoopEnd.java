@@ -131,8 +131,8 @@ public class BCLoopEnd extends BCInstruction {
 		Expression decreasesAtLoopStart = decreases.copy() ;
 		decreasesAtLoopStart = decreasesAtLoopStart.atState(loopStartPosition);
 		
-		Predicate2Ar terminationConditionDecreases = new Predicate2Ar( decreasesCopy, decreasesAtLoopStart,  PredicateSymbol.LESS);
-		Predicate2Ar terminationWF =  new Predicate2Ar(decreasesAtLoopStart, new NumberLiteral(0), PredicateSymbol.GRTEQ );
+		Predicate2Ar terminationConditionDecreases = new Predicate2Ar( decreasesCopy.copy(), decreasesAtLoopStart,  PredicateSymbol.LESS);
+		Predicate2Ar terminationWF =  new Predicate2Ar(decreasesCopy, new NumberLiteral(0), PredicateSymbol.GRTEQ );
 		Formula terminationCondition = Formula.getFormula( terminationConditionDecreases, terminationWF, Connector.AND);
 //		 NB : with loop_end_state
 		Formula vectorStateAssumption = Formula.getFormula( localVarStateAssume, vectorOfFieldToAssume, Connector.AND);

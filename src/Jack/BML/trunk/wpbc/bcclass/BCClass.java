@@ -176,12 +176,14 @@ public class BCClass {
 		Util.dumpMethods(this);*/
 		m = (BCMethod) methods.get(signature);
 		if (m != null) {
+			m.initMethod();
 			return m;
 		}
 	/*	Util.dump("search for method " + signature + "            in superclass "  + superClassName );
 */		BCClass superClass = getSuperClass();
 		m = superClass.lookupMethod(signature);
 		if (m != null) {
+			
 			return m;
 		}
 		BCClass interfaze;
