@@ -1705,6 +1705,10 @@ public class TrAnExpr {
         case TagConstants.ENSURES:
         case TagConstants.POSTCONDITION:
         {
+          if (Utils.ensuresDecoration.isTrue(m)) {
+            //System.out.println("SKIPPING-A");
+            continue;
+          }
           Expr e = ((ExprModifierPragma)m).expr;
           /*
            System.out.println("GCS-INSERTING FOR " + decl.parent.id + " " + (decl instanceof MethodDecl ? ((MethodDecl)decl).id.toString() : "") + " " + Location.toString(m.getStartLoc()) );
@@ -1775,21 +1779,31 @@ public class TrAnExpr {
       */
   }
   
-  // This creates a unique name for a function call for a routine, without
-  // having to append all of the signature.
+  // This creates a unique name for a function call
+  // The same name gets used for overriding methods
   static public Identifier fullName(RoutineDecl rd,boolean useSuper) {
-    int loc = rd.getStartLoc();
-    TypeSig sig = TypeSig.getSig(rd.parent);
-    if (useSuper) sig = sig.superClass();
-    String fullname = sig.getExternalName() + "." 
-    + rd.id().toString() + "." ;
-    int line = Location.toLineNumber(loc);
-    if (line == 1) {
-      // If the reference is to a binary file, there is no unique 
-      // declaration location, so we append a hash code
-      fullname = fullname + rd.hashCode();
+    String fullname;
+    if (Modifiers.isStatic(rd.getModifiers()) || rd instanceof ConstructorDecl) {
+      int loc = rd.getStartLoc();
+      TypeSig sig = TypeSig.getSig(rd.parent);
+      if (useSuper) sig = sig.superClass();
+      fullname = sig.getExternalName() + "." 
+      + rd.id().toString() + "." ;
+      int line = Location.toLineNumber(loc);
+      if (line == 1) {
+        // If the reference is to a binary file, there is no unique 
+        // declaration location, so we append a hash code
+        fullname = fullname + rd.hashCode();
+      } else {
+        fullname = fullname + line + "." + Location.toColumn(loc);
+      }
     } else {
-      fullname = fullname + line + "." + Location.toColumn(loc);
+      fullname = rd.id().toString() + "#";
+      if (!Utils.isFunction(rd)) fullname = fullname + "#state";
+      for (int i=0; i<rd.args.size(); ++i) {
+        Type t = rd.args.elementAt(i).type;
+        fullname = fullname + "#" + Types.printName(t);
+      }
     }
     return Identifier.intern(fullname); 
   }
@@ -1828,9 +1842,9 @@ public class TrAnExpr {
       }
       for (int k=0; k<rd.args.size(); ++k) {
         FormalParaDecl a = rd.args.elementAt(k);
-        LocalVarDecl n = UniqName.newBoundVariable(a.id.toString());
-        VariableAccess vn = makeVarAccess( n, Location.NULL);
-        bounds.add(n);
+        //LocalVarDecl n = UniqName.newBoundVariable(a.id.toString());
+        VariableAccess vn = makeVarAccess( a, Location.NULL);
+        bounds.add(a);
         h.put(a,vn);
       }
       
@@ -1863,6 +1877,10 @@ public class TrAnExpr {
         ModifierPragma p = v.elementAt(i);
         if (p.getTag() != TagConstants.ENSURES &&
             p.getTag() != TagConstants.POSTCONDITION) continue;
+        if (Utils.ensuresDecoration.isTrue(p)) {
+          //System.out.println("SKIPPING-B");
+          continue;
+        }
         Expr e = ((ExprModifierPragma)p).expr;
         e = trSpecExpr(e,h,null); // FIXME - no subst?
         conjuncts.addElement(e);
