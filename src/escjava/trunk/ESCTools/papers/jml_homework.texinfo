@@ -6,7 +6,8 @@
 @c Other commands that globally affect the document formatting: 
 @c synindex, footnotestyle
 @afourwide
-
+@paragraphindent 0
+@c firstparagraphindent 0
 @c %**end of header
 @c =============================================================================
 
@@ -55,8 +56,9 @@ author.
 
 Your fair use and other rights are in no way affected by the above.
 
-This is a human-readable summary of the Legal Code.  See
-http://creativecommons.org/licenses/by-nc-sa/2.0/legalcode
+This is a human-readable summary of the Legal Code.
+
+See http://creativecommons.org/licenses/by-nc-sa/2.0/legalcode
 @end quotation
 
 @end copying
@@ -110,6 +112,30 @@ Behavioral Interface Specification Language, Kiniry
 @insertcopying
 @end ifnottex
 
+This set of homework problems focus on the use of JML in runtime
+assertion checking (with @t{jmlc} and @t{jmlrac}) and static
+verification with ESC/Java2.
+
+@menu
+* Introduction::                An introduction to these homework exercises.
+* Core::                        Understanding the core concepts of JML.
+* Using::                       Ways to use JML and ESC/Java2.
+* Copying::                     Your rights and freedoms.
+* Index::                       Complete index.
+
+@end menu
+
+@c %**end top node and master menu
+@c =============================================================================
+
+@c =============================================================================
+@c %**body
+
+@node Introduction, Core, Top, Top
+@unnumbered Introduction
+
+@cindex Introduction
+
 The Java Modeling Language (JML) is a behavioral interface specification
 language that can be used to specify the behavior of Java modules. It
 combines the ``Design by Contract'' approach of Eiffel and the
@@ -156,31 +182,17 @@ This set of homework problems focus on the use of JML in runtime
 assertion checking (with @t{jmlc} and @t{jmlrac}) and static
 verification with ESC/Java2.
 
-@menu
-* Introduction::                An introduction to these homework exercises.
-* Core::                        Understanding the core concepts of JML.
-* Using::                       Ways to use JML and ESC/Java2.
-* Copying::                     Your rights and freedoms.
-* Index::                       Complete index.
-
-@end menu
-
-@c %**end top node and master menu
 @c =============================================================================
-
-@c =============================================================================
-@c %**body
-
-@node Introduction, Core, Top, Top
-@chapter Introduction
-
-@cindex Introduction
-
-@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @node Core, Using, Introduction, Top
-@chapter Core JML Constructs
+@unnumbered Core JML Constructs
 
 @cindex Core JML Constructs
+
+The following sections discuss all of the core constructs of JML with
+examples and exercises.  It is suggested that each exercise be completed
+in sequence, as the exercises build upon each other in the order
+presented.  @i{I.e.}, Problem @ref{Problem-2,,two} builds on the
+knowledge that you gained in Problem @ref{Problem-1,,one}.
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @menu
@@ -188,62 +200,150 @@ verification with ESC/Java2.
 * Loops::                       Reasoning about loops.
 * PrePost::                     Core concepts of method specifications.
 * Modifies::                    Reasoning about and with frame axioms.
-* Heavyweight Specifications::  Expressive and easy to understand specifications.
+* Heavyweight::                 Expressive and easy to understand specifications.
 * Invariants::                  Core concepts of class specifications.
 * Aliasing::                    Reasoning in the face of aliasing adversity.
 * Models::                      Specifying and reasoning with models.
 @end menu
 
+@page
+
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @node Assertions, Loops, Core, Core
-@section Assertions
+@unnumberedsec Assertions
 
 @cindex Assertions
 
+An assertion is a predicate that @emph{must always} be true.  Assertions
+are typically used for debugging and (localized) documentation purposes.
+
+In JML, an assertion expression has the form
+@display
+@var{assert-statement} ::= @code{assert} @var{expression} [ @code{:} @var{expression} ] @code{;}
+@end display
+
+The first expression is the predicate that must be true.  The second
+(optional) expression must be of type @code{String}.  The value of this
+expression is printed by some tools when the assertion fails.  (add
+xrefs)
+
+Beginning in Java 1.4, an @code{assert} keyword was introduced.  The
+syntax of the Java assert statement is the same as that of JML.  (add
+xref)
+
+Java's semantics does not restrict either subexpression in its assert
+statement, so you can write assert statements that have side-effects
+such as
+@example
+        int x;
+        x++;
+        assert (x++ == 2) : new String("This is a bad idea.");
+@end example
+
+This is a very bad idea, as it means that the behavior of your program
+changes whether you are testing your assertions or not.
+
+JML's assert statement does not permit side effects in either
+subexpression.
+
+Using runtime checking (with @t{jmlc} and @t{jmlrac}), JML and Java
+assert statements are tested at runtime.  Using ESC/Java, JML assert
+statements are proven at compile-time.  
+
+In ESC/Java2, Java assert statements are treated one of two ways.  They
+are either
+@itemize
+@item
+Treated as Java assert statements using the @code{-eajava} or
+@code{-javaAssertions} (synonymous) switches, or
+@item
+Treated as JML assert statements using the @code{-eajml} or
+@code{-jmlAssertions} (synonymous) switches.
+@end itemize
+In the former case, a failed assertion has the semantics of 
+@example
+        throw new AssertionError(second expression);
+@end example
+
+Thus, you are @strong{not} reasoning about another potential runtime
+exception, as all subtypes of @code{Error} are ignored by ESC/Java. (add
+xref)
+
+@page
+
+@strong{Problem 1.} @anchor{Problem-1} Annotate the following code block
+with Java assertions as indicated.
+
+@example
+@include problems/Assertions.java.texinfo
+@end example
+
+@strong{Problem 2.} @anchor{Problem-2} Annotate the following code block
+with JML assertions as indicated.
+
+@example
+@include problems/Assertions.java.texinfo
+@end example
+
+@page
+
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @node Loops, PrePost, Assertions, Core
-@section Reasoning about Loops
+@unnumberedsec Reasoning about Loops
 
 @cindex Reasoning about Loops
 
+@page
+
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @node PrePost, Modifies, Loops, Core
-@section Preconditions and Postconditions
+@unnumberedsec Preconditions and Postconditions
 
 @cindex Preconditions and Postconditions
 
+@page
+
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-@node  Modifies, Heavyweight Specifications, PrePost, Core
-@section Frame Axioms
+@node  Modifies, Heavyweight, PrePost, Core
+@unnumberedsec Frame Axioms
 
 @cindex Frame Axioms
 
+@page
+
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-@node Heavyweight Specifications, Invariants, Modifies, Core
-@section Heavyweight Specifications
+@node Heavyweight, Invariants, Modifies, Core
+@unnumberedsec Heavyweight Specifications
 
 @cindex Heavyweight Specifications
 
+@page
+
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-@node Invariants, Aliasing, Heavyweight Specifications, Core
-@section Invariants
+@node Invariants, Aliasing, Heavyweight, Core
+@unnumberedsec Invariants
 
 @cindex Invariants
 
+@page
+
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @node Aliasing, Models, Invariants, Core
-@section Aliasing
+@unnumberedsec Aliasing
 
 @cindex Aliasing
 
+@page
+
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @node Models,  , Aliasing, Core
-@section Models
+@unnumberedsec Models
 
 @cindex Models
 
-@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@c =============================================================================
 @node Using, Copying, Core, Top
-@chapter Using JML and ESC/Java2
+@unnumbered Using JML and ESC/Java2
 
 @cindex Using JML and ESC/Java2
 
@@ -254,29 +354,35 @@ verification with ESC/Java2.
 * Designing by Contract::       Design by Contract with JML for Java.
 @end menu
 
+@page
+
 @node Annotating Code, Annotating APIs, Using, Using
-@section Annotating Preexisting Java Code
+@unnumberedsec Annotating Preexisting Java Code
 
 @cindex Annotating Existing Java Code
 @cindex Code Annotation
 
+@page
+
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @node Annotating APIs, Designing by Contract, Annotating Code, Using
-@section Annotating Preexisting APIs
+@unnumberedsec Annotating Preexisting APIs
 
 @cindex Annotating Existing APIs
 @cindex API Annotation
 
+@page
+
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @node Designing by Contract,  , Annotating APIs, Using
-@section Designing by Contract
+@unnumberedsec Designing by Contract
 
 @cindex Designing by Contract
 @cindex Design by Contract
 
-@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@c =============================================================================
 @node Copying, Index, Using, Top
-@chapter Copying
+@unnumbered Copying
 
 @cindex Copying
 

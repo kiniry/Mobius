@@ -17,8 +17,15 @@ psfiles =	$(foreach texfile,$(texfiles),\
 pdffiles =	$(foreach texfile,$(texfiles),\
 		$(subst .tex,.pdf,$(texfile)))
 
-all:	CASSIS2004.pdf FTFJP2004.pdf PASTE2004.pdf NIII-R0413.pdf \
-	jml_homework.ps2pdf jml_homework.txt jml_homework.html
+javafiles =		$(wildcard problems/*.java)
+javatexinfofiles =	$(addsuffix .texinfo,$(javafiles))
+PROBLEMS =	problems
+
+PERL=perl
+CODE2TEXI=$(PERL) -e 'BEGIN: while (<>) { s/\r//g; s/@/@@/g; s/\{/@\{/g; s/\}/@\}/g; } continue { print; }'
+
+$(PROBLEMS)/%.java.texinfo : $(PROBLEMS)/%.java
+	@$(CODE2TEXI) $< > $@
 
 %.pdf: %.tex
 	pdflatex $< $@
@@ -62,6 +69,11 @@ all:	CASSIS2004.pdf FTFJP2004.pdf PASTE2004.pdf NIII-R0413.pdf \
 
 %.dvi:	%.texinfo
 	texi2dvi $<
+
+all:	CASSIS2004.pdf FTFJP2004.pdf PASTE2004.pdf NIII-R0413.pdf \
+	jml_homework.ps2pdf jml_homework.txt jml_homework.html
+
+jml_homework.dvi:	jml_homework.texinfo $(javatexinfofiles)
 
 koa_state_diagram.eps: koa_state_diagram.fig Makefile
 	fig2dev -L eps koa_state_diagram.fig koa_state_diagram.eps
