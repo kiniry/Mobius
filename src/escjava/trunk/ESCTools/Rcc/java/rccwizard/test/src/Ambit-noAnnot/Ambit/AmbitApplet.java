@@ -26,7 +26,7 @@ public class AmbitApplet extends Applet {
 		super.init();
 
 		// Take out this line if you don't use symantec.itools.net.RelativeURL
-        symantec.itools.lang.Context.setDocumentBase(getDocumentBase());
+                // symantec.itools.lang.Context.setDocumentBase(getDocumentBase());
 
 		//{{INIT_CONTROLS
 		setLayout(null);
