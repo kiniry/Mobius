@@ -9,6 +9,7 @@ package bytecode.loadstoreinstruction;
 
 import org.apache.bcel.generic.InstructionHandle;
 
+
 import bcclass.BCLocalVariable;
 import bcclass.attributes.ExsuresTable;
 import bcexpression.Expression;
@@ -39,7 +40,6 @@ public  class BCTypeLOAD  extends  BCLocalVariableInstruction{
 	public BCTypeLOAD(InstructionHandle _instruction, BCLocalVariable _lv) {
 		super(_instruction, _lv);
 		setType(_lv.getType());
-		// TODO Auto-generated constructor stub
 	}
 
 	
@@ -49,7 +49,7 @@ public  class BCTypeLOAD  extends  BCLocalVariableInstruction{
 	 */
 	public Formula wp(Formula _normal_Postcondition, ExsuresTable _exc_Postcondition) {
 		Formula wp;
-//		Util.dump("in aload.wp");
+//		Util.dump("wp aload psi " + _normal_Postcondition.toString());
 		wp = _normal_Postcondition.substitute(Expression.COUNTER, Expression.getCOUNTER_PLUS_1());
 //		Util.dump("wp aload psi[ t <--- t +1 ] " + wp.toString());
 		wp = wp.substitute(new Stack( Expression.getCOUNTER_PLUS_1()), new LocalVariableAccess(getIndex()));

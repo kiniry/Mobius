@@ -27,6 +27,10 @@ public interface PredicateSymbol {
 	public static byte EQ = 8; //"==";
 	public static byte NOTEQ = 9; //"!=";
 	public static byte SUBTYPE = 10;//"<:";
+	
+	
 	public static byte INSTANCEOF = 11; // "instanceof";
-		
+	public static byte EVEN = 12; // "is even ";
+	public static byte ODD = 13; // "is odd";
+			
 }

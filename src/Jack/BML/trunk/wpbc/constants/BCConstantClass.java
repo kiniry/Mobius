@@ -6,7 +6,7 @@
  */
 package constants;
 
-import org.apache.bcel.classfile.ConstantClass;
+
 
 
 /**
@@ -44,7 +44,7 @@ public class BCConstantClass extends  BCConstant {
 	public  BCConstantClass(int _cpIndex,  int _nameIndex, String _name){
 		super(_cpIndex);
 		nameIndex  = _nameIndex;
-		name = _name;
+		setName(_name);
 	}
 	
 	public int getNameIndex() {
@@ -54,4 +54,12 @@ public class BCConstantClass extends  BCConstant {
 	public String getName() {
 		return name;
 	}
+	
+	/**
+	 * @param string
+	 */
+	public void setName(String _name) {
+		name = _name.replace('/','.');
+	}
+
 }

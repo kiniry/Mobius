@@ -31,7 +31,6 @@ public class BCIFLE extends BCConditionalBranch {
 	 */
 	public BCIFLE(InstructionHandle _branchInstruction) {
 		super(_branchInstruction);
-		// TODO Auto-generated constructor stub
 	}
 
 	/* (non-Javadoc)

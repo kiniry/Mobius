@@ -15,7 +15,7 @@ import java.util.Random;
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
 public class FreshIntGenerator {
-	private static Random random = null;
+	private static Random random = new Random();
 	
 	public static int getInt() {
 		return random.nextInt();

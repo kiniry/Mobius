@@ -4,31 +4,26 @@ import type.BCType;
 import bcexpression.Expression;
 
 /**
- * @author io
+ * @author mpavlova
  *
- * To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Generation - Code and Comments
+ * the class represents the JML constant typeof : JavaType ---> JML_CONST_Type
  */
 public class TYPEOF extends JMLExpression {
-
+	private JML_CONST_TYPE type;
 	public TYPEOF(Expression _expr) {
 		super(_expr );
 	}
 
 	/* (non-Javadoc)
-	 * @see bcexpression.Expression#setType()
-	 */
-	public void setType() {
-		// TODO Auto-generated method stub
-	}
-
-	/* (non-Javadoc)
-	 * @see bcexpression.Expression#getType()
-	 */
-	public BCType getType() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+		 * @see bcexpression.Expression#setType()
+		 */
+		public void setType() {
+			type = JML_CONST_TYPE.JML_CONST_TYPE;
+		}
+	
+		public BCType getType() {
+			return type;
+		}
 
 	/* (non-Javadoc)
 	 * @see bcexpression.Expression#substitute(bcexpression.Expression, bcexpression.Expression)

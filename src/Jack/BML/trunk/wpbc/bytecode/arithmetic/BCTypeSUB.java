@@ -23,8 +23,15 @@ import formula.Formula;
 /**
  * @author mpavlova
  *
- * To change the template for this generated type comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
+ *  Operation : Subtract type
+ *
+ * Operand Stack : ..., value1, value2 ==> ..., result
+ *
+ * Description : Both value1 and value2 must be of type int. The values are popped from the operand stack. The int result is value1 - value2. 
+ * The result is pushed onto the operand stack.   For int subtraction, a - b produces the same result as a + (-b). For int values, subtraction from zero is the same as negation.
+ * The result is the 32 low-order bits of the true mathematical result in a sufficiently wide two's-complement format, represented as a value of type int. 
+ *  If overflow occurs, then the sign of the result may not be the same as the sign of the mathematical sum of the two values.
+ *  Despite the fact that overflow may occur, execution of an isub instruction never throws a runtime exception.
  */
 public class BCTypeSUB extends BCArithmeticInstruction {
 	
@@ -52,8 +59,8 @@ public class BCTypeSUB extends BCArithmeticInstruction {
 			Stack stackTop_minus_1 = new Stack(Expression.getCOUNTER_MINUS_1());
 			ArithmeticExpression sub =
 				(ArithmeticExpression)ArithmeticExpression.getArithmeticExpression(
-					stackTop,
 					stackTop_minus_1,
+					stackTop,
 					ExpressionConstants.SUB);
 			_normal_Postcondition.substitute(Expression.COUNTER, Expression.getCOUNTER_MINUS_1());
 			_normal_Postcondition.substitute(stackTop_minus_1, sub);

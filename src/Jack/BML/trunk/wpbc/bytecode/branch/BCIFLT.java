@@ -30,7 +30,6 @@ public class BCIFLT extends BCConditionalBranch {
 	 */
 	public BCIFLT(InstructionHandle _branchInstruction) {
 		super(_branchInstruction);
-		// TODO Auto-generated constructor stub
 	}
 
 	/* (non-Javadoc)

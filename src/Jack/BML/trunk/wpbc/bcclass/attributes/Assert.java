@@ -13,17 +13,17 @@ import formula.Formula;
  * 
  *   
  */
-public class Assert extends Specification {
+public class Assert {
 	
 
 	// the position in the bytecode where the predicate must hold
 	private int position;
 	
+	private Formula assertFormula;
 	public Assert(Formula _f, int _p) {
-			super(_f);
+			assertFormula = _f;
 			position = _p;
 	}	
-	
 	
 	/**
 	 * 
@@ -31,5 +31,12 @@ public class Assert extends Specification {
 	 */
 	public int getPosition() {
 		return position;
+	}
+	
+	/**
+	 * @return
+	 */
+	public Formula getPredicate() {
+		return assertFormula;
 	}
 }

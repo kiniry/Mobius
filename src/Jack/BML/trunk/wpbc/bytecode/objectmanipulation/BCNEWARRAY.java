@@ -87,27 +87,34 @@ public class BCNEWARRAY extends BCAllocationInstruction {
 		//Stack stackTop = new Stack(Expression.COUNTER);
 		Formula topStack_grt_0 =
 			new Predicate2Ar(
-			new Stack(Expression.COUNTER),
+				new Stack(Expression.COUNTER),
 				new NumberLiteral(0),
 				PredicateSymbol.GRTEQ);
 		ArrayReference new_arr_ref =
-			new ArrayReference(FreshIntGenerator.getInt(), getType(), new Stack(Expression.COUNTER));
-
-		//length( new ArrayObject(type, S(t) ) ) 
-		//WITH length_with_new_arr_ref = new WITH(new_arr_ref);
-		FieldAccessExpression arr_length_access =
-			new FieldAccessExpression(new ArrayLengthConstant(), new_arr_ref);
-
-		//_psi^n[length( with o == new ArrayObject(type, S(t)) <-- S(t)]
-		Formula topStack_grt_0_implies =
-			_normal_Postcondition.substitute(arr_length_access, new Stack(Expression.COUNTER));
+			new ArrayReference(
+				FreshIntGenerator.getInt(),
+				getType(),
+				new Stack(Expression.COUNTER));
 
 		//_psi^n[S(t) <-- new Ref[index] (S(t) )]
+		Formula topStack_grt_0_implies =
+			 _normal_Postcondition.substitute(
+				new Stack(Expression.COUNTER),
+				new_arr_ref);
+
+		//			length( new ArrayObject(type, S(t) ) ) 
+		FieldAccessExpression arr_length_access =
+			new FieldAccessExpression(new ArrayLengthConstant(), new_arr_ref);
+		
+		// substitute the access to the length field of the created array by stack top
+		//_psi^n[length( new ArrayObject(type, S(t)) <-- S(t)]
 		topStack_grt_0_implies =
-			topStack_grt_0_implies.substitute(new Stack(Expression.COUNTER), new_arr_ref);
+		topStack_grt_0_implies.substitute(
+				arr_length_access,
+				new Stack(Expression.COUNTER));
 
 		Formula nWpTermination =
-		Formula.getFormula(
+			Formula.getFormula(
 				topStack_grt_0,
 				topStack_grt_0_implies,
 				Connector.IMPLIES);
@@ -115,20 +122,24 @@ public class BCNEWARRAY extends BCAllocationInstruction {
 		//in case of exc termination
 		Formula topStack_lesseq_0 =
 			new Predicate2Ar(
-			new Stack(Expression.COUNTER),
+				new Stack(Expression.COUNTER),
 				new NumberLiteral(0),
 				PredicateSymbol.LESS);
+				
+		// condition for exceptional termination - the length is negative 		
 		Formula topStack_lesseq_0_implies =
 			getWpForException(
 				(JavaObjectType) JavaType.getJavaRefType(
-					"Ljava/lang/NegativeArraySizeException;"),
+					ClassNames.NEGATIVEARRAYSIZEException),
 				_exc_Postcondition);
+		
 		Formula excWpTermination =
-		Formula.getFormula(
-				topStack_grt_0,
-				topStack_grt_0_implies,
+			Formula.getFormula(
+				topStack_lesseq_0,
+				topStack_lesseq_0_implies,
 				Connector.IMPLIES);
-		wp = Formula.getFormula(nWpTermination, excWpTermination, Connector.AND);
+		wp =
+			Formula.getFormula(nWpTermination, excWpTermination, Connector.AND);
 		return wp;
 	}
 }

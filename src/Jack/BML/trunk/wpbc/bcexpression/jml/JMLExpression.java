@@ -18,14 +18,20 @@ import bcexpression.javatype.JavaType;
  * To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
-public abstract class JMLExpression extends Expression {
+public  abstract class JMLExpression extends Expression {
 	private JavaType type;
+	
+	
 
 	protected JMLExpression() {
 	}
 	
 	public JMLExpression(Expression _e) {	
 		super(_e);		
+	}
+	
+	public JMLExpression(Expression _e1, Expression _e2) {	
+		super(_e1, _e2);		
 	}
 		
 }

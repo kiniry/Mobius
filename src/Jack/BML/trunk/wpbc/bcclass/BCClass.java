@@ -6,18 +6,23 @@
  */
 package bcclass;
 
-
 import java.util.HashMap;
 import java.util.Iterator;
 
-import org.apache.bcel.classfile.Field;
+import org.apache.bcel.classfile.Attribute;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Method;
+import org.apache.bcel.classfile.Unknown;
 import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.MethodGen;
 
+import bc.io.AttributeReader;
+import bc.io.ReadAttributeException;
+import bcclass.attributes.BCAttribute;
+import bcclass.attributes.ClassInvariant;
+import bcclass.attributes.HistoryConstraints;
+import bcclass.utils.MethodSignature;
 import utils.Util;
-
 import application.JavaApplication;
 
 /**
@@ -29,38 +34,73 @@ import application.JavaApplication;
 public class BCClass {
 	private HashMap methods;
 	private HashMap fields;
-	
+
 	private String className;
-	
+
 	private String[] interfaceNames;
 	private String superClassName;
-	
+
 	private BCConstantPool constantPool;
-	private BCConstantPool secondConstantPool;;
-	
-	
+
 	private BCClass superClass;
-	
+
 	private HashMap interfaces;
-	
-	
-	public BCClass( JavaClass _clazz)  {
+
+	private HistoryConstraints historyConstraints;
+	private ClassInvariant classInvariant;
+
+	public BCClass(JavaClass _clazz) throws ReadAttributeException {
 		className = _clazz.getClassName();
+		superClassName = _clazz.getSuperclassName();
+		interfaceNames = _clazz.getInterfaceNames();
 		ConstantPoolGen cpg = new ConstantPoolGen(_clazz.getConstantPool());
 		constantPool = new BCConstantPool(cpg);
+		Attribute[] attributes = _clazz.getAttributes();
+		setAttributes(attributes);
 		Method[] methods = _clazz.getMethods();
 		initMethods(methods, cpg);
 	}
-	
-	
-	//sets the super class of this class
-	private void setSuperClass(  JavaClass _clazz ) {
-	
+
+	private void setAttributes(Attribute[] _attributes)
+		throws ReadAttributeException {
+		Unknown privateAttr = null;
+		for (int i = 0; i < _attributes.length; i++) {
+			if (_attributes[i] instanceof Unknown) {
+				privateAttr = (Unknown) _attributes[i];
+				BCAttribute bcAttribute =
+					AttributeReader.readAttribute(privateAttr, constantPool);
+				if (bcAttribute instanceof ClassInvariant) {
+					classInvariant = (ClassInvariant) bcAttribute;
+				} else if (bcAttribute instanceof HistoryConstraints) {
+					historyConstraints = (HistoryConstraints) bcAttribute;
+				}
+			}
+		}
 	}
-	
+
+	//sets the super class of this class
+	public BCClass getSuperClass() {
+		if (superClass != null) {
+			return superClass;
+		}
+		superClass = JavaApplication.Application.getClass(superClassName);
+		return superClass;
+	}
+
 	//sets the interfaces implemented by this class
-	private void setInterfaces(  JavaClass _clazz ) {
-	
+	private void setInterfaces() {
+		if (interfaceNames == null) {
+			return;
+		}
+		if (interfaces != null) {
+			return;
+		}
+		interfaces = new HashMap();
+		for (int i = 0; i < interfaceNames.length; i++) {
+			BCClass _interface =
+				JavaApplication.Application.getClass(interfaceNames[i]);
+			interfaces.put(interfaceNames[i], _interface);
+		}
 	}
 
 	/**
@@ -69,86 +109,67 @@ public class BCClass {
 	public BCConstantPool getConstantPool() {
 		return constantPool;
 	}
-	
+
 	/**
 	 * NB :  if a method with this signature is not found then may be an exception must be thrown 
 	 * @param signature
 	 * @return
 	 */
-	public BCMethod lookupMethod( String signature ) {
-		
+	public BCMethod lookupMethod(String signature) {
 		BCMethod m = null;
-		m = getMethod(signature);
-		if ( m != null) {
+		Util.dump("search for method " + signature + "in class "  + className );
+		m = (BCMethod) methods.get(signature);
+		if (m != null) {
 			return m;
 		}
-		
+		Util.dump("search for method " + signature + "in superclass "  + superClassName );
+		BCClass superClass = getSuperClass();
 		m = superClass.lookupMethod(signature);
-		if ( m != null) {
+		if (m != null) {
 			return m;
+		}
+		BCClass interfaze;
+		for (int i = 0; i < interfaceNames.length; i++) {
+			interfaze = JavaApplication.Application.getClass(interfaceNames[i]);
+			m = (BCMethod) interfaze.lookupMethod(signature);
+			if (m != null) {
+				return m;
+			}
 		}
 		return m;
 	}
 
 	/**
-	 * @return
-	 */
-	public BCMethod getMethod(String signature) {
-		BCMethod _m = (BCMethod) methods.get(signature);
-		if (_m != null) {
-			return _m;
-		}
-		BCClass superClass = JavaApplication.getClass(superClassName);
-		_m = (BCMethod)superClass.getMethod(signature);
-		if (_m != null) {
-			return _m;
-		}
-		BCClass interfaze;
-		for (int i = 0; i < interfaceNames.length; i++) {
-			interfaze =  JavaApplication.getClass(interfaceNames[i]);
-			_m = (BCMethod)interfaze.getMethod(signature);
-			if (_m != null) {
-				return _m;
-			}
-		}
-		//should ion fact throw exception if there is no such a method
-		return null;
-	}
-
-
-	/**
+	 * initialises the methods that are declared in this class
 	 * @param methods
 	 */
-	private void initMethods(Method[] _methods, ConstantPoolGen cp)  {
+	private void initMethods(Method[] _methods, ConstantPoolGen cp)
+		throws ReadAttributeException {
 		methods = new HashMap();
-	//	for (int i = 0; i < _methods.length; i++)  {
-			MethodGen mg = new MethodGen(_methods[2], className, cp);
-			Util.dump("methodName ---   "  + mg.getName() + "   ---");
-			BCMethod bcm = new BCMethod( mg, cp, constantPool) ;
+		//	for (int i = 0; i < _methods.length; i++)  {
+		for (int i = 1; i < _methods.length ;i++) {
+			MethodGen mg = new MethodGen(_methods[i], className, cp);
+			
+			BCMethod bcm = new BCMethod(mg, cp, constantPool);
 			bcm.initTrace();
-			methods.put(mg.getSignature(), bcm);
-		//}
-	}
-	
-	/**
-	 * @param methods
-	 */
-	private void initFields(Field[] _fields, ConstantPoolGen cp)  {
-		fields = new HashMap();
-		for (int i = 0; i < _fields.length; i++)  {
-					
-		//
+			bcm.setAsserts();
+			bcm.setLoopInvariants();
+			methods.put(
+				MethodSignature.getSignature(mg.getName(), mg.getSignature()),
+				bcm);
 		}
 	}
-	
-	
-	
-	public void  wp() {
-		Iterator  miter = methods.values().iterator() ;
-		while ( miter.hasNext()) {
-			BCMethod m = (BCMethod)miter.next(); 
+
+	public String getName() {
+		return className;
+	}
+
+	public void wp() {
+		Iterator miter = methods.values().iterator();
+		while (miter.hasNext()) {
+			BCMethod m = (BCMethod) miter.next();
 			m.wp();
 		}
 	}
- 
+
 }

@@ -14,6 +14,9 @@ import type.BCType;
  */
 public class BitExpression extends Expression {
 	private byte bitwise_op;
+
+	//bitwise expressions
+	public static final byte  SHL  = 31;
 	public BitExpression(Expression _left, Expression _right, byte _op) {
 		super(_left, _right);
 		bitwise_op = _op;

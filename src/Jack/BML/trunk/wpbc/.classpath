@@ -2,6 +2,6 @@
 <classpath>
     <classpathentry kind="src" path=""/>
     <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-    <classpathentry kind="lib" path="/auto/erg/u/erg/0/user/mpavlova/workspace/WPBC/jar/bcel-5.1.jar"/>
+    <classpathentry kind="lib" path="/auto/rem/u/rem/0/lemme/mpavlova/bcel-5.1/bcel-5.1.jar"/>
     <classpathentry kind="output" path="bin"/>
 </classpath>

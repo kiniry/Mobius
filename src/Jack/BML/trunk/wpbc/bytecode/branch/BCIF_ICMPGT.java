@@ -30,7 +30,6 @@ public class BCIF_ICMPGT extends BCConditionalBranch {
 	 */
 	public BCIF_ICMPGT(InstructionHandle _branchInstruction) {
 		super(_branchInstruction);
-		// TODO Auto-generated constructor stub
 	}
 
 

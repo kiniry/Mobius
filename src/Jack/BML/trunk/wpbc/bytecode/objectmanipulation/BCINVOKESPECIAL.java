@@ -9,6 +9,7 @@ package bytecode.objectmanipulation;
 
 import org.apache.bcel.generic.InstructionHandle;
 
+import formula.Connector;
 import formula.Formula;
 
 import bcclass.BCConstantPool;
@@ -19,12 +20,13 @@ import bcexpression.javatype.JavaObjectType;
 import bcexpression.javatype.JavaType;
 
 
+
 /**
  * Operation : Invoke instance method; special handling for superclass, private, and instance initialization method invocations
  */
-public class BCINVOKESPECIAL extends BCFieldOrMethodInstruction {
+public class BCINVOKESPECIAL extends BCInvoke {
 
-
+	private Formula classInvariant;
 
 	/**
 	 * @param _instruction
@@ -49,7 +51,14 @@ public class BCINVOKESPECIAL extends BCFieldOrMethodInstruction {
 	public Formula wp(
 		Formula _normal_Postcondition,
 		ExsuresTable _exc_Postcondition) {
-		Formula wp = null;
+//			if (classInvariant == null) {
+//						return wp;
+//					}
+		Formula normalPost =  Formula.getFormula( _normal_Postcondition, classInvariant, Connector.AND);
+		// the class invariant must hold in the state after the exec of a constructor
+		Formula wp = super.wp(normalPost, _exc_Postcondition);
 		return wp;
 	}
+
+
 }

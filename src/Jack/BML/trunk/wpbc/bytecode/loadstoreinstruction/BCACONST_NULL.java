@@ -61,8 +61,6 @@ BCTypedInstruction {
 	 * @see bytecode.BCTypedInstruction#setType(bcexpression.javatype.JavaType)
 	 */
 	public void setType(JavaType _type) {
-		// TODO Auto-generated method stub
-		
 	}
 
 }

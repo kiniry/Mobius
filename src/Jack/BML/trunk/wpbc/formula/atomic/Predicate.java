@@ -18,8 +18,8 @@ public class Predicate extends Formula {
 	private byte predicateSymbol;
 	
 	
-	public static final TRUE  _TRUE = TRUE.getTRUE();
-	public static final FALSE  _FALSE = FALSE.getFALSE();
+	public static final Predicate0Ar  TRUE = new Predicate0Ar();
+	public static final Predicate0Ar  FALSE = new Predicate0Ar();
 	
 	
 	protected void setPredicateSymbol(byte _predicateSymbol) {
@@ -28,4 +28,5 @@ public class Predicate extends Formula {
 	public byte getPredicateSymbol() {
 		return predicateSymbol;
 	}
+	
 }

@@ -26,7 +26,7 @@ public class FieldWITH extends Expression {
 	 * constructs a with expression where :
 	 * @param _constantFieldRef is the index in the constant pool of the field reference 
 	 * @param concreteObject  is the object that is dereferenced to obtain this object
-	 * @param objWith - is the object that in case concreteObject is equal to then constantFieldRef(concreteObject) expression must be substituted with
+	 * @param objWith - is the object that in case concreteObject is equal to the constantFieldRef(concreteObject) expression must be substituted with
 	 * substituteExpression
 	 * @param substituteWIth  - see the explanation for objWith
 	 */
@@ -66,8 +66,9 @@ public class FieldWITH extends Expression {
 		}
 		// else if it is  field access expression to the same field as this fieldWITH then 
 		// include it in the substitution tree
-		Expression withObj = ((FieldAccessExpression)_e1).getSubExpressions()[0].copy();
-		with = new SubstitutionTree(with, new SubstitutionUnit(withObj, _e2));
+		Expression withObj = (((FieldAccessExpression)_e1).getSubExpressions()[0]).copy();
+		Expression substituteWith =  _e2.copy();
+		with = new SubstitutionTree(with, new SubstitutionUnit(withObj, substituteWith));
 		return this;
 	}
 
@@ -84,12 +85,11 @@ public class FieldWITH extends Expression {
 	 */
 	public String toString() {
 		String s =
-			""
-				+ constantFieldRef.getCPIndex()
+			"["
+				+ constantFieldRef.toString()
 				+ " <+ "
-				+ "( "
 				+ with.toString()
-				+ " )" +" (" +  object.toString() + ")";
+				+" (" +  object.toString() + ")  ]";
 		return s;
 	}
 

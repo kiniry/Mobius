@@ -29,7 +29,6 @@ public class BCIF_ACMPNE extends BCConditionalBranch {
 	 */
 	public BCIF_ACMPNE(InstructionHandle _branchInstruction) {
 		super(_branchInstruction);
-		// TODO Auto-generated constructor stub
 	}
 
 	/* (non-Javadoc)

@@ -6,8 +6,6 @@
  */
 package constants;
 
-
-
 import bcexpression.javatype.JavaType;
 
 /**
@@ -43,5 +41,20 @@ public class BCConstantMethodRef  extends BCConstantRef {
 	 */
 	public JavaType[] getArgTypes() {
 		return argTypes;
+	}
+	
+	public String getSignature() {
+		String args = "(";
+		if ( (argTypes == null ) || (argTypes.length == 0)  ) {
+			args = args + ")";
+		} else {
+			for (int i = 0;  i < argTypes.length; i++) {
+				args = args + argTypes[i].toString(); 
+			}
+			args = args + ")";
+		}
+		String signature = args + returnType.toString();
+//		Util.dump(signature);
+		return signature; 
 	}
 }

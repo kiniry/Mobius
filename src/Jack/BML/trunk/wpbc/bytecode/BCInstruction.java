@@ -26,12 +26,12 @@ import formula.Formula;
  */
 public abstract  class BCInstruction  implements ByteCode{
 
-	private Formula wp;
+
 	
 	/**
 	 * this field should disappear in the end. Only the needed information extracted from the object should reamain.
 	 */
-	private InstructionHandle instructionHandle;	
+	public InstructionHandle instructionHandle;	
 	
 	/**
 	 * the preceding instruction in the bytecode
@@ -48,21 +48,32 @@ public abstract  class BCInstruction  implements ByteCode{
 	 */
 	private Vector targeters;
 	
+	
+	
 	//the index at which this instruction  is in the bytecode
 	private int position;
+	
+	/**
+	 * the index in the bytecode array at which this instruction appears
+	 */
 	private int bcIndex;
 	private int offset;	
 	private byte instructionCode;
 
+
+	private Formula assert;
 	
 	/**
 	 * exceptions that this throw instruction may cause
 	 */
 	private JavaType[] exceptions;
 	
+	public BCInstruction() {
+	}
+	
 	public BCInstruction(InstructionHandle  _instruction)  {
 		instructionHandle = _instruction; 
-		setPosition(instructionHandle);
+		setPosition(instructionHandle.getPosition());
 	}
 	
 	public InstructionHandle getInstructionHandle() {
@@ -86,7 +97,7 @@ public abstract  class BCInstruction  implements ByteCode{
 	}
 
 	/**
-	 * @param i - this the index at which 
+	 * @param i - the index at which 
 	 * this command appears in the bytecode array of instruction 
 	 */
 	public void setBCIndex(int i) {
@@ -110,8 +121,8 @@ public abstract  class BCInstruction  implements ByteCode{
 		return position;
 	}
 	
-	private void setPosition(InstructionHandle instructionHandle) {
-		position = instructionHandle.getPosition();
+	public void setPosition(int  _position) {
+		position = _position;
 	}
 	/**
 	 * @return
@@ -138,16 +149,20 @@ public abstract  class BCInstruction  implements ByteCode{
 		targeters.add(_t);
 	} 
 	
+	
+	
 	/**
-	 * sets the postcondition 
+	 * removes a targeter instruction from the vector of targeters instructions. Used when identifying loops
+	 * @param instr
 	 */
-	private void wpTargeters() {
-		
-		
+	public void removeTargeter(BCInstruction instr) {
+		if (targeters == null) {
+			return;
+		}
+		targeters.remove(instr);
 	}
 	
 	public void dump(String _s) {
-		
 		if (true ) {
 			System.out.println(_s);
 		}
@@ -165,6 +180,26 @@ public abstract  class BCInstruction  implements ByteCode{
 	 */
 	public void setInstructionCode(byte b) {
 		instructionCode = b;
+	}
+
+	/**
+	 * @return Formula - if there is an assertion specified,
+	 * otherwise returns null
+	 */
+	public Formula getAssert() {
+		return assert;
+	}
+
+	/**
+	 * Sets the invariant if there is one specified
+	 * @param invariant The invariant to set
+	 */
+	public void setAssert(Formula assert) {
+		this.assert = assert;
+	}
+
+	public String toString() {
+		return ""+  getPosition() + " :  "+ getInstructionHandle().getInstruction() ;
 	}
 
 }

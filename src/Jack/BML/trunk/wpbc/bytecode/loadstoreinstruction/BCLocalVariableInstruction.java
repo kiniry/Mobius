@@ -51,8 +51,8 @@ public abstract class  BCLocalVariableInstruction extends BCInstruction implemen
 	 * @see bytecode.BCTypedInstruction#getType()
 	 */
 	public JavaType getType() {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return type;
 	}
 
 

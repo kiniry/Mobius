@@ -8,7 +8,6 @@ package bcclass;
 
 import java.util.HashMap;
 
-import org.apache.bcel.classfile.Constant;
 import org.apache.bcel.classfile.ConstantClass;
 import org.apache.bcel.classfile.ConstantFieldref;
 import org.apache.bcel.classfile.ConstantInteger;
@@ -19,7 +18,6 @@ import org.apache.bcel.classfile.ConstantString;
 import org.apache.bcel.classfile.ConstantUtf8;
 import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.Type;
-import utils.Util;
 
 import bcexpression.javatype.JavaType;
 
@@ -70,9 +68,6 @@ public class BCConstantPool {
 				constants.put(new Integer(i), bcconstant);
 			} else if (_cpg.getConstant(i ) instanceof ConstantFieldref ) {
 				ConstantFieldref constant = (ConstantFieldref)_cpg.getConstant(i);
-				/*String typeName =  (String)((ConstantClass)_cpg.getConstant(constant.getClassIndex())).getConstantValue(_cpg.getConstantPool());
-				JavaType type = JavaType.getJavaRefType("L"+ typeName+";");
-			*/	
 				int classIndex = constant.getClassIndex();
 				ConstantNameAndType  nameAndType = (ConstantNameAndType )_cpg.getConstant(constant.getNameAndTypeIndex());
 				String fieldName = nameAndType.getName( _cpg.getConstantPool());

@@ -5,11 +5,16 @@
  */
 package application;
 
-import java.util.HashMap;
+import java.util.Enumeration;
+
+import java.util.Hashtable;
 
 import org.apache.bcel.Repository;
 import org.apache.bcel.classfile.JavaClass;
 
+import utils.Util;
+
+import bc.io.ReadAttributeException;
 import bcclass.BCClass;
 
 /**
@@ -19,28 +24,44 @@ import bcclass.BCClass;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class JavaApplication {
-	
+
 	// contains all the classes that are loaded already
 	// a class is loaded only once
-	private static HashMap classes;
-	
-	public static BCClass getClass(String _name ) {
+	Hashtable classes;
+
+	public static final JavaApplication Application = new JavaApplication();
+
+	private JavaApplication() {
+	}
+
+	public BCClass getClass(String _name)  {
 		BCClass _class = null;
-		if (classes == null) {
+		try {
+			if (classes == null) {
+				_class = addClass(_name);
+				return _class;
+			}
+			_class= (BCClass)classes.get(_name); 
+			if (_class != null) {
+				return _class;
+			}
 			_class = addClass(_name);
-			return _class;
+		} catch (ReadAttributeException exc) {
+			System.err.print(exc.getMessage());
 		}
-		if ( classes.get(_name) != null)  {
-			return (BCClass)classes.get(_name);
-		}	
-		_class = addClass(_name);
 		return _class;
 	}
-	
-	private static BCClass addClass(String _name)  {
+
+	private BCClass addClass(String _name) throws ReadAttributeException {
 		if (classes == null) {
-			classes = new HashMap();
+			classes = new Hashtable();
 		}
+		Enumeration enum = classes.keys();
+		while (enum.hasMoreElements()) {
+			String n = (String) enum.nextElement();
+			
+		}
+		Util.dump("ADD CLASS WITH NAME " + "----" + _name + "----");
 		JavaClass clazz = Repository.lookupClass(_name);
 		BCClass bcClass = new BCClass(clazz);
 		classes.put(_name, bcClass);

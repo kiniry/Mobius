@@ -29,7 +29,6 @@ public class BCIFNONNULL extends BCConditionalBranch {
 	 */
 	public BCIFNONNULL(InstructionHandle _branchInstruction) {
 		super(_branchInstruction);
-		// TODO Auto-generated constructor stub
 	}
 
 	/* (non-Javadoc)

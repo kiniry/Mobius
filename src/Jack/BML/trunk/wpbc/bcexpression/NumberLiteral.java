@@ -40,12 +40,6 @@ public class NumberLiteral extends ArithmeticExpression {
 		type = _type;
 	}
 	
-	/* (non-Javadoc)
-	 * @see bcexpression.Expression#setType()
-	 */
-	public void setType() {
-		// TODO Auto-generated method stub
-	}
 
 	/* (non-Javadoc)
 	 * @see bcexpression.Expression#getType()

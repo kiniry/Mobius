@@ -43,6 +43,13 @@ public class JavaObjectType extends JavaReferenceType {
 		this((ObjectType)Type.getType(_class), _cc);
 	}
 	
+	/**
+	 * _type1 <: _type2 ==> return  true
+	 *  else return false
+	 * @param _type1
+	 * @param _type2
+	 * @return
+	 */
 	public static boolean subType(JavaObjectType  _type1, JavaObjectType  _type2) {
 	   return ((ObjectType)_type1.bcelType).subclassOf((ObjectType)_type2.bcelType);
    }

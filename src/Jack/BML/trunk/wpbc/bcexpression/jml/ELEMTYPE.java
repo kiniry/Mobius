@@ -11,17 +11,17 @@ import bcexpression.Expression;
 
 
 /**
- * @author io
+ * @author mpavlova
  *
- * the class represents the JML constant elementype : array (JavaType) ---> JavaType 
+ * the class represents the JML constant elementype : array (JavaType) ---> JML_CONST_Type 
  */
 public class ELEMTYPE extends JMLExpression {
 
 	
 	private JML_CONST_TYPE type;
 	
-	public ELEMTYPE(Expression _left) {
-		super(_left);
+	public ELEMTYPE(Expression _subExpr) {
+		super(_subExpr);
 		setType();
 	}
 
@@ -30,7 +30,7 @@ public class ELEMTYPE extends JMLExpression {
 	 * @see bcexpression.Expression#setType()
 	 */
 	public void setType() {
-		type = new JML_CONST_TYPE();
+		type = JML_CONST_TYPE.JML_CONST_TYPE;
 	}
 	
 	public BCType getType() {

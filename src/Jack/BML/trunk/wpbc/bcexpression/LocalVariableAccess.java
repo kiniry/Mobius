@@ -56,7 +56,7 @@ public class LocalVariableAccess extends Expression  {
 	 */ 
 	public Expression substitute(Expression _e1 , Expression _e2) {
 			if (this.equals( _e1)) {
-				return _e2;
+				return _e2.copy();
 			}
 			return this;
 	}

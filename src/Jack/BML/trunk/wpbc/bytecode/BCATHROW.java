@@ -14,7 +14,7 @@ import formula.Formula;
 import bcclass.attributes.ExsuresTable;
 import bcexpression.javatype.JavaObjectType;
 import bcexpression.javatype.JavaType;
-import bytecode.block.*;
+//import bytecode.block.*;
 
 /**
  * @author mpavlova
@@ -24,9 +24,9 @@ import bytecode.block.*;
  */
 public class BCATHROW
 	extends BCExceptionThrower
-	implements EndBlockInstruction {
+ {
 
-	private Block blockEndingWithThis;
+//	private Block blockEndingWithThis;
 	/**
 	 * @param _branchInstruction
 	 */
@@ -37,12 +37,12 @@ public class BCATHROW
 		//dump(_branchInstruction.toString() + " throws "  + getExceptions().length);	
 	}
 
-	/* (non-Javadoc)
-		 * @see bytecode.EndBlockInstruction#setBlock(bytecode.block.Block)
-		 */
-	public void setBlock(Block block) {
-		blockEndingWithThis = block;
-	}
+//	/* (non-Javadoc)
+//		 * @see bytecode.EndBlockInstruction#setBlock(bytecode.block.Block)
+//		 */
+//	public void setBlock(Block block) {
+//		blockEndingWithThis = block;
+//	}
 
 	/**
 	 * sets the exception that this particular athrow instruction throws
@@ -65,14 +65,7 @@ public class BCATHROW
 		return getExceptionsThrown()[0];
 	}
 
-	/**
-	 * @return the block that  handles
-	 * 
-	 * that handles this exception; returns null if there is not any
-	 */
-	public Block getHandler() {
-		return getExceptionHandleBlockForException(getExceptionThrown());
-	}
+
 
 	/* (non-Javadoc)
 	 * @see bytecode.ByteCode#wp(formula.Formula, specification.ExceptionalPostcondition)
@@ -86,19 +79,20 @@ public class BCATHROW
 		//wp for the exception handle is returned, else 
 		// the exceptional postcondition specified in the specification for this exception is returned. 
 		// this is done by the method getWpForException in BCExceptionThrower abstract class
+		JavaObjectType excThrown = getExceptionThrown();
 		Formula wp =
-			getWpForException(getExceptionThrown(), _exc_Postcondition);
+			getWpForException(excThrown, _exc_Postcondition);
 		return wp;
 	}
 
-	/* (non-Javadoc)
-	 * @see bytecode.EndBlockInstruction#calculateRecursively(formula.Formula, bcclass.attributes.ExsuresTable)
-	 */
-	public Formula calculateRecursively(
-		Formula _normal_postcondition,
-		ExsuresTable _exs_postcondition) {
-		Formula  wp = blockEndingWithThis.calculateRecursively(_normal_postcondition, _exs_postcondition);
-		return wp;
-	}
+//	/* (non-Javadoc)
+//	 * @see bytecode.EndBlockInstruction#calculateRecursively(formula.Formula, bcclass.attributes.ExsuresTable)
+//	 */
+//	public Formula calculateRecursively(
+//		Formula _normal_postcondition,
+//		ExsuresTable _exs_postcondition) {
+//		Formula  wp = blockEndingWithThis.calculateRecursively(_normal_postcondition, _exs_postcondition);
+//		return wp;
+//	}
 
 }

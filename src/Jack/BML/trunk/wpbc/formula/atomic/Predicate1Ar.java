@@ -17,27 +17,58 @@ import formula.Formula;
  */
 public class Predicate1Ar extends Predicate {
 	private Expression term;
-	private byte predicateSymbol;
 	
 	public Predicate1Ar(Expression _term, byte _predicateSymbol) {
 		setPredicateSymbol(_predicateSymbol);
 		term = _term;
-	} 
-	
-	public Expression getTerm() {
-		return  term;
 	}
-	
-	public Formula substitute(Expression _e,  Expression _v) {
-		term.substitute(_e, _v);
+
+	public Expression getTerm() {
+		return term;
+	}
+
+	public Formula substitute(Expression _e, Expression _v) {
+		term = term.substitute(_e, _v);
 		return this;
 	}
-	
-	
+	/**
+	 * renames the terms which this predicate is verified for
+	 */
+	public Formula rename(Expression _e, Expression _v) {
+		term = term.rename(_e, _v);
+		return this;
+	}
+
 	public Formula copy() {
-		 Expression termCopy =	term.copy();
-		 Predicate1Ar copy = new Predicate1Ar(termCopy, predicateSymbol);
-		 return copy;
+		Expression termCopy = term.copy();
+		Predicate1Ar copy = new Predicate1Ar(termCopy, getPredicateSymbol());
+		return copy;
+	}
+
+	public boolean equals(Formula formula) {
+		boolean eq = super.equals(formula);
+		// if the super class equals returns false then return false
+		if (!eq) {
+			return false;
+		}
+		if (getPredicateSymbol()
+			!= ((Predicate1Ar) formula).getPredicateSymbol()) {
+			return false;
+		}
+		// else if the super class equals returns  true check if the terms in both predicates are equal 
+		Expression _term = ((Predicate1Ar) formula).getTerm();
+		boolean termsEq = term.equals(_term);
+		return termsEq;
+	}
+
+	public String toString() {
+		String s = "";
+		if (getPredicateSymbol() == PredicateSymbol.ODD) {
+			s = "odd( " + term.toString() + "  )";
+		} else if (getPredicateSymbol() == PredicateSymbol.EVEN) {
+			s = "even( " + term.toString() + "  )";
+		}
+		return s;
 	}
 
 }

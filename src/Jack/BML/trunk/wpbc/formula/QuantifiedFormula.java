@@ -6,6 +6,8 @@
  */
 package formula;
 
+import bcexpression.Expression;
+
 /**
  * @author io
  *
@@ -28,6 +30,28 @@ public class QuantifiedFormula extends Formula {
 	}
 
 	/**
+	 * quantifies the formula over the expression  _q 
+	 * @param _q
+	 * @return true and quantifies if the formula is not uop to now quantified 
+	 * false - if it is already quantified over the expression and  does the quantification 
+	 */
+	public boolean addQuantificator(Quantificator _q) {
+		// verify if it is not already quantified over the same variable
+		for (int i = 0; i < quantificators.length; i++) {
+			Quantificator q =  quantificators[i];
+			if (q.getBoundVar().equals( _q) ) {
+				return false;
+			}
+		} 	
+		Quantificator[] _quantificators = quantificators;
+		quantificators = new Quantificator[quantificators.length + 1];
+		for (int i = 0; i < _quantificators.length; i++) {
+			quantificators[i] =  _quantificators[i];
+		}
+		quantificators[quantificators.length - 1] = _q;
+		return true;
+	}
+	/**
 	 * @return Returns the quantificator.
 	 */
 	public Quantificator getQuantificator() {
@@ -37,8 +61,8 @@ public class QuantifiedFormula extends Formula {
 	/**
 	 * @return Returns the quantificator.
 	 */
-	public Quantificator getQuantificator(int i) {
-		return quantificators[i];
+	public Quantificator[] getQuantificators() {
+		return quantificators;
 	}
 
 	public Formula copy() {
@@ -50,13 +74,47 @@ public class QuantifiedFormula extends Formula {
 		Formula _copy = new QuantifiedFormula(_subformula, q);
 		return _copy;
 	}
-	
-	public String toString() { 
-		String s = toString();
-		for (int i =0 ; i < quantificators.length; i++ ) {
-			s = s  + quantificators[i];
+
+	public String toString() {
+		String s = "";
+		for (int i = 0; i < quantificators.length; i++) {
+			s = s + quantificators[i];
 		}
 		s = s + subformula;
 		return s;
+	}
+	/**
+	 * the renaming actually here is a special substition which affects also  variables under quantifiction 
+	 * rename expr1 by expr2
+	 * Renaming must be done in such a way that no capture of variables should be done , i.e. the expr2 must be a fresh variable 
+	 */
+	public Formula rename(Expression expr1, Expression expr2) {
+		for (int i = 0; i < quantificators.length; i++) {
+			Expression boundExpr = quantificators[i].getBoundVar();
+			if (expr1.equals(boundExpr)) {
+				boundExpr = boundExpr.rename(expr1, expr2);
+				quantificators[i].setBoundVar(boundExpr);
+			}
+		}
+		subformula = subformula.rename(expr1, expr2);
+		return this;
+	}
+	
+	/**
+	 * substition  is realised iff the expression that should be substituted  - _e
+	 * is not under quantification. If it is not the substitution continues recursively
+	 * 
+	 * @return the substituted formula
+	 */
+	public Formula substitute(Expression _e, Expression _v) {
+		//Util.dump(toString());
+		for (int i = 0; i < quantificators.length; i++) {
+			Expression boundExpr = quantificators[i].getBoundVar();
+			if (_e.equals(boundExpr)) {
+				return this;
+			}
+		}
+		subformula = subformula.substitute(_e,_v);
+		return this;
 	}
 }

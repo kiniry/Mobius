@@ -1,7 +1,7 @@
 package bytecode.objectmanipulation;
 
 import org.apache.bcel.generic.InstructionHandle;
-import utils.Util;
+
 
 import constants.BCConstantFieldRef;
 
@@ -79,9 +79,17 @@ public class BCGETFIELD extends BCFieldOrMethodInstruction {
 				(BCConstantFieldRef) getConstantPool().getConstant(getIndex()),
 				new Stack(Expression.COUNTER));
 
-		//psi^n[S(t) <-- field(index)( S(t)) ]
+//		Util.dump("getField  _normal_Postcondition " + getInstructionHandle().getInstruction() +  "  " +_normal_Postcondition);
+		//substitute the top stack by the field access object
+		//psi^n[S(t) <-- index( S(t)) ]
+		
+		
+			
+		Stack stackTop  = new Stack(Expression.COUNTER);
 		Formula stackTopNotNullImplies =
-			_normal_Postcondition.substitute(new Stack(Expression.COUNTER), fieldAccess);
+			_normal_Postcondition.substitute(stackTop , fieldAccess);
+
+//		Util.dump("getField   stackTopNotNullImplies " + getInstructionHandle().getInstruction() +  "  " +stackTopNotNullImplies);
 
 		//S(t) != null ==> psi^n[S(t) <-- field(index)( S(t)) ]
 		Formula wpStackTopNotNull =
@@ -89,6 +97,8 @@ public class BCGETFIELD extends BCFieldOrMethodInstruction {
 				stackTopNotNull,
 				stackTopNotNullImplies,
 				Connector.IMPLIES);
+				
+		
 
 		//exceptional termination - null object access
 		//S(t) == null

@@ -31,7 +31,7 @@ public class JavaType extends Expression implements BCType {
 	/**
 	 * this is a static variable that representing the type of all types 
 	 */
-	private static final JML_CONST_TYPE  JML_CONST_TYPE = new JML_CONST_TYPE();
+//	private static final JML_CONST_TYPE  JML_CONST_TYPE = new JML_CONST_TYPE();
 	private BCConstantClass constantClassCp;
 	private NumberLiteral computationalType;
 
@@ -95,7 +95,7 @@ public class JavaType extends Expression implements BCType {
 	 * return  JML_CONST_TYPE;
 	 */
 	public BCType getType() {
-		return JML_CONST_TYPE;
+		return JML_CONST_TYPE.JML_CONST_TYPE;
 	}
 
 	public static JavaType getJavaType(String typeName) {

@@ -30,7 +30,7 @@ public class BCIF_ICMPLT extends BCConditionalBranch {
 	 */
 	public BCIF_ICMPLT(InstructionHandle _branchInstruction) {
 		super(_branchInstruction);
-		// TODO Auto-generated constructor stub
+
 	}
 
 	public Formula wp(

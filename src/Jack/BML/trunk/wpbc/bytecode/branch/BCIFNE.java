@@ -30,7 +30,6 @@ public class BCIFNE extends BCConditionalBranch {
 	 */
 	public BCIFNE(InstructionHandle _branchInstruction) {
 		super(_branchInstruction);
-		// TODO Auto-generated constructor stub
 	}
 
 	/* (non-Javadoc)
@@ -46,7 +45,7 @@ public class BCIFNE extends BCConditionalBranch {
 			new Predicate2Ar(
 				new Stack(Expression.COUNTER),
 				new NumberLiteral(0),
-				PredicateSymbol.NOTEQ);
+				PredicateSymbol.EQ);
 		Formula not_eq_branch =
 			_normal_Postcondition.substitute(
 				Expression.COUNTER,
@@ -72,7 +71,7 @@ public class BCIFNE extends BCConditionalBranch {
 			new Predicate2Ar(
 				new Stack(Expression.COUNTER),
 				new NumberLiteral(0),
-				PredicateSymbol.EQ);
+				PredicateSymbol.NOTEQ);
 		Formula eq_branch  =
 			_normal_Postcondition.substitute(
 				Expression.COUNTER,

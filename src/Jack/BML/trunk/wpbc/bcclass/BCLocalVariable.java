@@ -6,7 +6,6 @@
  */
 package bcclass;
 
-import org.apache.bcel.classfile.LocalVariable;
 import org.apache.bcel.generic.LocalVariableGen;
 
 

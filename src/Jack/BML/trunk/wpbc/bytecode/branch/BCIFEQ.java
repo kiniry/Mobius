@@ -30,7 +30,6 @@ public class BCIFEQ extends BCConditionalBranch {
 	 */
 	public BCIFEQ(InstructionHandle _branchInstruction) {
 		super(_branchInstruction);
-		// TODO Auto-generated constructor stub
 	}
 
 	/* (non-Javadoc)

@@ -20,7 +20,7 @@ public class ClassNames {
 	
 	public static final String NEGATIVEARRAYSIZEException = "Ljava/lang/NegativeArraySizeException;";
 	
-	public static final String ARRAYINDEXOUTOFBOUNDException = "Ljava/lang/IndexOutOfBoundsException;";
+	public static final String ARRAYINDEXOUTOFBOUNDException = "Ljava/lang/ArrayIndexOutOfBoundsException;";
 	
 	public static final String CLASSCASTException = "Ljava/lang/ClassCastException;" ;
 	

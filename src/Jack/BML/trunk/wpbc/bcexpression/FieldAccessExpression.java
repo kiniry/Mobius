@@ -84,53 +84,26 @@ public class FieldAccessExpression extends Expression {
 		if (this.equals(_e1)) {
 			return _e2;
 		}
+		// the object whose field is dereferenced by thisobject 
 		Expression obj = getSubExpressions()[0];
-		if ( ! (_e1 instanceof FieldAccessExpression)) {
-//			Util.dump("in case _e1 is not  a  field access " + toString() + "the subexpr before the subst is " + getSubExpressions()[0]);
+		// in case _e1 is not an object of type FieldAccessExpression
+		if ( ! (_e1 instanceof FieldAccessExpression))  {
 			obj = obj.substitute(_e1, _e2);
 			setSubExpressions(new Expression[]{obj});
-//			Util.dump("in case _e1 is not  a  field access " + toString() + "the subexpr is now " + getSubExpressions()[0]);
-//			Util.dump("***************************************************");
 			return this;
 		}
 		FieldAccessExpression fieldAccess = (FieldAccessExpression)_e1;
+		// in case _e1 is of type FieldAccessExpression but is not dereferncing the same field as this object
 		if ( fieldAccess.getFieldConstRef().getCPIndex() != constantFieldRef.getCPIndex() ) {
 			obj = obj.substitute(_e1, _e2);
 			return this;
 		}
 		// in case _e1 is a reference to the same field
 		obj = obj.substitute( _e1, _e2);
-		FieldWITH with  = new FieldWITH(constantFieldRef,  obj, _e1.getSubExpressions()[0], _e2); 
+		FieldWITH with  = new FieldWITH(constantFieldRef,  obj, _e1.getSubExpressions()[0].copy(), _e2.copy()); 
 		return with;
 	}
-	//	public Expression substitute(Expression _e1, Expression _e2) {
-	//		if (this.equals(_e1)) {
-	//			return _e2;
-	//		}
-	//		Expression objRef = getSubExpressions()[0];
-	//		if (_e1 instanceof FieldAccessExpression) {
-	//			FieldAccessExpression fa = (FieldAccessExpression) _e1;
-	//			Expression objRefOf_e1 = fa.getSubExpressions()[0];
-	//			if ( fa.getFieldConstRef().equals(getFieldConstRef()) ) {
-	//				if (with == null) {
-	//					with = new Vector();
-	//				}
-	//				with.add(new EqualsObjects(objRefOf_e1, _e2));
-	//			}
-	//		}
-	//		//try to do the substitution in the objectref expression
-	//		//this substitution is valid basically for recursove data types
-	//		objRef = objRef.substitute(_e1, _e2);
-	//		if ((with == null ) || ( with.size() == 0) ) {
-	//			return this;
-	//		}
-	//		EqualsObjects o  = null;
-	//		for (int i = 0; i < with.size() ; i++  )  {
-	//			o = (EqualsObjects)(with.elementAt(i) );
-	//			o.substitute(_e1, _e2);
-	//		}
-	// 		return this;
-	//	}
+	
 
 	/* (non-Javadoc)
 	 * @see bcexpression.Expression#toString()
@@ -144,7 +117,7 @@ public class FieldAccessExpression extends Expression {
 			Util.dump("reference is null");
 		}
 		String s =
-			constantFieldRef.getCPIndex() + "(" + getSubExpressions()[0] + ")";
+			constantFieldRef.toString() + "(" + getSubExpressions()[0] + ")";
 		return s;
 	}
 	/* (non-Javadoc)

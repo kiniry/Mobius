@@ -29,7 +29,7 @@ public class _TYPE extends JMLExpression  {
 	 * @see bcexpression.Expression#setType()
 	 */
 	public void setType() {
-		type = new JML_CONST_TYPE();
+		type = JML_CONST_TYPE.JML_CONST_TYPE;
 	}
 
 	/* (non-Javadoc)
@@ -57,7 +57,7 @@ public class _TYPE extends JMLExpression  {
 	 * @see bcexpression.Expression#toString()
 	 */
 	public String toString() {
-		return "type(" + type + ")";
+		return "\type(" + type + ")";
 	}
 
 	/* (non-Javadoc)

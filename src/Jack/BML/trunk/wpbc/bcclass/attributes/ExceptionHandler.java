@@ -6,15 +6,27 @@
  */
 package bcclass.attributes;
 
+
+import formula.Formula;
+
 import bcexpression.javatype.JavaObjectType;
+
 
 public class ExceptionHandler {
 	int start_pc;
 	int end_pc;
 	JavaObjectType catchType;
 	int handler_pc;
-	ExceptionHandler(int _start_pc, int _end_pc, JavaObjectType _exc,
-			int _handler_pc) {
+
+	// calculated only ones - i.e. the algorithm rubs only once
+	//through the subgraph of the exception handler
+	private Formula wp;
+
+	ExceptionHandler(
+		int _start_pc,
+		int _end_pc,
+		JavaObjectType _exc,
+		int _handler_pc) {
 		start_pc = _start_pc;
 		end_pc = _end_pc;
 		catchType = _exc;
@@ -44,10 +56,35 @@ public class ExceptionHandler {
 	public int getStartPC() {
 		return start_pc;
 	}
-	
+
 	public String toString() {
-		String str = " startPC: " + start_pc + "; endPC: " + end_pc + 
-		"; catchType: " + catchType.getSignature() + "; handlerPc: " + handler_pc;
+		String str =
+			" startPC: "
+				+ start_pc
+				+ "; endPC: "
+				+ end_pc
+				+ "; catchType: "
+				+ catchType.getSignature()
+				+ "; handlerPc: "
+				+ handler_pc;
 		return str;
 	}
+
+//	/**
+//	 * Returns the wp. calculated only once and stored in the object
+//	 * @return Formula
+//	 */
+//	public Formula getWp() {
+//		return wp;
+//	}
+//
+//	private void addWP(Formula conjunct) {
+//		if (wp == null) {
+//			wp = conjunct;
+//			return;
+//		}
+//	
+//	}
+
+
 }

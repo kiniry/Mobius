@@ -59,7 +59,7 @@ public class BCLDC_W extends BCLDC {
 	//
 	//
 	//	public Formula wp(Formula _normal_Postcondition, Exsures _exc_Postcondition) {
-	//		// TODO Auto-generated method stub
+	//
 	//		return null;
 	//	}
 

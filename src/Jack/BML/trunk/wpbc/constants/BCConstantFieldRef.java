@@ -22,31 +22,33 @@ public class BCConstantFieldRef extends BCConstantRef {
 	 * the type of the field
 	 */
 	private JavaType type;
-	
+
 	public BCConstantFieldRef() {
-	
+
 	}
-	
-	
+
 	/**
-	 * @param _type -
-	 *            the type of the field (the static one)
 	 * @param _cpIndex -
 	 *            the index into the constant pool under which this data
 	 *            structure appears into the constant pool
 	 * @param _CONSTANT_classref_index -
 	 *            the index into the constant pool under which the class in
 	 *            which the field is declared appears
+	 * @param _name - the name under which the field appears in the source  code 
+	 * @param _type -
+	 *            the type of the field (the static one)
+	 * 
 	 */
-	public BCConstantFieldRef(int _cpIndex,
-			int _CONSTANT_classref_index, String _name,  JavaType _type) {
+	public BCConstantFieldRef(
+		int _cpIndex,
+		int _CONSTANT_classref_index,
+		String _name,
+		JavaType _type) {
 		super(_cpIndex, _CONSTANT_classref_index, _name);
 		type = _type;
 	}
 	public JavaType getType() {
 		return type;
 	}
-	public String getName() {
-		return null;
-	}
+
 }

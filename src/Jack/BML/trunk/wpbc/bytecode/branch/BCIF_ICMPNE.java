@@ -11,12 +11,9 @@ import org.apache.bcel.generic.InstructionHandle;
 import utils.Util;
 
 import bcclass.attributes.ExsuresTable;
-import bcexpression.ArithmeticExpression;
+
 import bcexpression.Expression;
-import bcexpression.ExpressionConstants;
-import bcexpression.NumberLiteral;
 import bcexpression.vm.Stack;
-import bytecode.BCInstruction;
 
 import formula.Connector;
 import formula.Formula;
@@ -35,7 +32,6 @@ public class BCIF_ICMPNE extends BCConditionalBranch {
 	 */
 	public BCIF_ICMPNE(InstructionHandle _branchInstruction) {
 		super(_branchInstruction);
-		// TODO Auto-generated constructor stub
 	}
 
 	/* (non-Javadoc)
@@ -45,7 +41,7 @@ public class BCIF_ICMPNE extends BCConditionalBranch {
 		Formula _normal_Postcondition,
 		ExsuresTable _exc_Postcondition) {
 		Formula wpNoBranch;
-
+		
 		/////////////////////////////////////////////	
 		//top two stack values are  equal - no jump
 		//S(t)== S(t-1)
@@ -54,7 +50,7 @@ public class BCIF_ICMPNE extends BCConditionalBranch {
 				new Stack(Expression.COUNTER),
 				new Stack(Expression.getCOUNTER_MINUS_1()),
 				PredicateSymbol.EQ);
-		Util.dump("wpNotBranch condition " + stackTop_eq_stackTop_minus_1);
+		//		Util.dump("wpNotBranch condition " + stackTop_eq_stackTop_minus_1);
 		//psi^n[t <-- t-2]
 		Formula eq_branch =
 			_normal_Postcondition.substitute(
@@ -79,6 +75,7 @@ public class BCIF_ICMPNE extends BCConditionalBranch {
 		Formula _normal_Branch_Postcondition,
 		ExsuresTable _exc_Postcondition) {
 		Formula wpBranch;
+		
 		///////////////////////////////////////////	
 		// top two stack values are  not equal - comparison succeeds and do a jump
 		//S(t)!= S(t-1)
@@ -89,7 +86,7 @@ public class BCIF_ICMPNE extends BCConditionalBranch {
 				new Stack(Expression.getCOUNTER_MINUS_1()),
 				PredicateSymbol.NOTEQ);
 
-		Util.dump("wpBranch condition " + stackTop_not_eq_stackTop_minus_1);
+		//		Util.dump("wpBranch condition " + stackTop_not_eq_stackTop_minus_1);
 
 		//getWPBranch[t<-- t-2]
 		Formula not_eq_branch =
@@ -102,15 +99,17 @@ public class BCIF_ICMPNE extends BCConditionalBranch {
 				stackTop_not_eq_stackTop_minus_1,
 				not_eq_branch,
 				Connector.IMPLIES);
-		Util.dump("wpBranch for ifcmpne " + wpBranch);
+		//		Util.dump("wpBranch for ifcmpne " + wpBranch);
 
-		BCInstruction prev = this;
-		Formula justTest = wpBranch;
-		while ((prev = prev.getPrev()) != null) {
-			justTest = prev.wp(justTest, _exc_Postcondition);
-		}
-		Util.dump("wpBranch " + justTest);
-		return justTest;
+		return wpBranch;
+
+		//		BCInstruction prev = this;
+		//		Formula justTest = wpBranch;
+		//		while ((prev = prev.getPrev()) != null) {
+		//			justTest = prev.wp(justTest, _exc_Postcondition);
+		//		}
+		//		Util.dump("wp for branch  instr " + justTest);
+		//		return justTest;
 	}
 
 }

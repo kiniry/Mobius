@@ -58,11 +58,12 @@ public class BCTypeSHL extends BCArithmeticInstruction {
 				topStack,
 				new NumberLiteral(0x1F),
 				ExpressionConstants.BITWISEAND);
+		//S(t-1) >> (S(t) && 0xF1)
 		BitExpression shift =
 			new BitExpression(
 				topStack_minus_1,
 				low5bitsofTopStack,
-				ExpressionConstants.SHL);
+				BitExpression.SHL);
 		_normal_Postcondition.substitute(
 			Expression.COUNTER,
 			Expression.getCOUNTER_MINUS_1());

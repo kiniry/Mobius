@@ -20,6 +20,15 @@ public class Predicate2Ar extends Predicate {
 	private Expression term1;
 	private Expression term2;
 
+	public Predicate2Ar(
+		Expression _term1,
+		Expression _term2,
+		byte _predicateSymbol) {
+		term1 = _term1;
+		term2 = _term2;
+		setPredicateSymbol(_predicateSymbol);
+	}
+
 	public static Predicate getPredicate(
 		Expression _term1,
 		Expression _term2,
@@ -33,8 +42,7 @@ public class Predicate2Ar extends Predicate {
 			|| (_predicateSymbol == PredicateSymbol.GRTEQ)
 			|| (_predicateSymbol == PredicateSymbol.LESS)
 			|| (_predicateSymbol == PredicateSymbol.LESSEQ)
-			|| (_predicateSymbol == PredicateSymbol.NOTEQ)
-			) {
+			|| (_predicateSymbol == PredicateSymbol.NOTEQ)) {
 			p = simplifyNUMBERRELATION(_term1, _term2, _predicateSymbol);
 		}
 		return null;
@@ -56,41 +64,41 @@ public class Predicate2Ar extends Predicate {
 
 		if (_predicateSymbol == PredicateSymbol.GRT) {
 			if (value1 > value2) {
-				p = Predicate._TRUE;
+				p = Predicate.TRUE;
 			} else {
-				p = Predicate._FALSE;
+				p = Predicate.FALSE;
 			}
 			//			p = ( value1 > value2)?Predicate._TRUE:Predicate._FALSE; 
 			return p;
 		} else if (_predicateSymbol == PredicateSymbol.GRTEQ) {
 			if (value1 >= value2) {
-				p = Predicate._TRUE;
+				p = Predicate.TRUE;
 			} else {
-				p = Predicate._FALSE;
+				p = Predicate.FALSE;
 			}
 			//		p = ( value1 > value2)?Predicate._TRUE:Predicate._FALSE; 
 			return p;
 		} else if (_predicateSymbol == PredicateSymbol.LESS) {
 			if (value1 < value2) {
-				p = Predicate._TRUE;
+				p = Predicate.TRUE;
 			} else {
-				p = Predicate._FALSE;
+				p = Predicate.FALSE;
 			}
 			//		p = ( value1 > value2)?Predicate._TRUE:Predicate._FALSE; 
 			return p;
 		} else if (_predicateSymbol == PredicateSymbol.LESSEQ) {
 			if (value1 <= value2) {
-				p = Predicate._TRUE;
+				p = Predicate.TRUE;
 			} else {
-				p = Predicate._FALSE;
+				p = Predicate.FALSE;
 			}
 			//		p = ( value1 > value2)?Predicate._TRUE:Predicate._FALSE; 
 			return p;
 		} else if (_predicateSymbol == PredicateSymbol.NOTEQ) {
 			if (value1 != value2) {
-				p = Predicate._TRUE;
+				p = Predicate.TRUE;
 			} else {
-				p = Predicate._FALSE;
+				p = Predicate.FALSE;
 			}
 			//		p = ( value1 > value2)?Predicate._TRUE:Predicate._FALSE; 
 			return p;
@@ -102,26 +110,31 @@ public class Predicate2Ar extends Predicate {
 		Expression _term1,
 		Expression _term2) {
 		if (_term1.equals(_term2)) {
-			return Predicate._TRUE;
+			return Predicate.TRUE;
 		}
 		Predicate2Ar p = new Predicate2Ar(_term1, _term2, PredicateSymbol.EQ);
 		return p;
 	}
 
-	public Predicate2Ar(
-		Expression _term1,
-		Expression _term2,
-		byte _predicateSymbol) {
-		term1 = _term1;
-		term2 = _term2;
-		setPredicateSymbol(_predicateSymbol);
-	}
-
 	public Formula substitute(Expression _e, Expression _v) {
-		term1 = term1.substitute(_e.copy(), _v.copy());
-		term2 = term2.substitute(_e.copy(), _v.copy());
+
+		//		Util.dump("substitute [" +_e  +"<- " +  _v + "] in"+  term1.toString());	
+		term1 = term1.substitute(_e, _v);
+
+		term2 = term2.substitute(_e, _v);
+		//		Util.dump("term2 substitute [" +_e  +"<- " +  _v + "] =  "+  term2.toString());
+		//		Util.dump("term1 substitute [" +_e  +"<- " +  _v + "]"+  term1.toString());
+		//		Util.dump("predicate substitute " +  toString());
 		return this;
 	}
+
+	
+	public Formula rename(Expression _expr1, Expression _expr2) {
+		term1 = term1.rename(_expr1, _expr2);
+		term2 = term2.rename(_expr1, _expr2);
+		return this;
+	}
+
 
 	public String toString() {
 		String op = "";
@@ -147,13 +160,35 @@ public class Predicate2Ar extends Predicate {
 		return "(" + term1 + op + term2 + ")";
 
 	}
-	
-	
+
 	public Formula copy() {
 		Expression term1Copy = term1.copy();
 		Expression term2Copy = term2.copy();
-		Predicate2Ar copy = new Predicate2Ar(term1Copy, term2Copy, getPredicateSymbol());
+		Predicate2Ar copy =
+			new Predicate2Ar(term1Copy, term2Copy, getPredicateSymbol());
 		return copy;
-	}	
+	}
 
+	public Expression getLeftExpression() {
+		return term1;
+	}
+	
+	public Expression getRightExpression() {
+		return term2;
+	}
+	public boolean equals(Formula formula) { 
+		boolean eq = super.equals(formula);
+		// if the super class equals returns false then return false
+		if (!eq ) {
+			return false;
+		}
+		if (getPredicateSymbol() != ((Predicate2Ar)formula).getPredicateSymbol()) {
+			return false;
+		}
+		Expression _term1 = ((Predicate2Ar)formula).getLeftExpression();
+		Expression _term2 = ((Predicate2Ar)formula).getRightExpression();
+		
+		boolean termsEq = term1.equals( _term1) &&  term2.equals(_term2);
+		return termsEq;
+	}
 }

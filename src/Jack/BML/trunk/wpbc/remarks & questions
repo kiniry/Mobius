@@ -1,0 +1,69 @@
+/////////Remarks and Questions //////////////////////////////////////////////////////////////////////////////////////////////
+Implementation remarks and questions  ***
+1. if in the preconditions and postconditions of the  methods there are :
+	1.1. cast expressions - should they be converted into formula ?
+	1.2. method calls- should they be substituted by their specification clauses ?
+
+2.on ne travaille pas de tout avec des strings ? car ils sont dans le cp, et quand on fait la conversion vers bc on doit les  traduire vers le N dans le cp
+	
+ 3. est -ce que finalement c'est possible d'avoir une expression de la  forme : old (field_num_in_cp)  , a mon avis non car  on fait des old sur des expressions et une constant du constant pool  n'est
+  pas une expression . En fait on  peut avoir des expressions du genre : 
+  old (field_num_in_cp(local(1))) 
+   ou aussi 
+   ( \-/ ref. old(field_num_in_cp(ref)) 
+ 
+ 4. pour la substitution dans l'expression \old(expr ), je crois on doit faire comme ca ?  
+par example : \old(expr ) [expr <- expr + 1] =  \old(expr ) 
+ 
+ 5. is there really a different encoding for jml and java variables or it is the same ? (as there is only one cp !). Or are they only declared in the class field_info attribute ? 
+ 
+ 6. types that are not in the constant pool, but that are in the specification need particular treatment ? (but what )
+ 
+ 7. est-ce que dans la specification de la boucle l'index c'est vraiment l'index de l'indtruction ou la boucle commence . En fait pour la meme ligne de source , il y a plusieurs lignes de bytecode que lui correspond  ***  
+ 
+ 
+ Specification remarks : **
+ 1. didn't see in the specification the encoding for the JML expression a[i1.. i2]
+ 2. I don't understand the codes for the modifies expressions . I understand the modifies expressions as a list of expressions and nothing else. 
+ So what I need in the specification is just the number of the modified expressions.  
+ 3. about quantified formulas : I think the encoding for this kind of formula is: ??? 
+ 4. about the method specification : how should I read the requires formula which is global for all tjhe specification cases?  
+ I need some delimiter for it , or at least it should be always there, i nthe cas eby default : TRUE . If it is no always THERE there will be difficult to read the rest of the method specification
+ 5. isn't the decrease statement actually an expression for which the values before and after the execution of the loop should forma a well founded set ?
+ 
+ Invariants :
+ 1. do we consider only class invariants or instance invariants (at least the specification injected for an invariant doesnot contain any access information - private, public , etc.)
+ 2. In the prestate and postate  of  a method (excluding constructors and destructors ) an invariant "ONLY OF THE OBJECT IT BELONGS TO" should be assumed , established ! 
+ This is in a contradiction with the JML reference manual , which states that a method m should assume/establish all the invariants of every object o, such that  the precondition/postcondition 
+ of m is a visible state of  o. (see in the JML ref manual the def for a visible state of an instance  and class )
+ 
+ 3. about the exceptional behaviour of a method. Sghiuld't it be quantified over the modfies expressions also ?  
+ 
+ 
+ 
+ /////////////NOT Done ////////////////////// ***
+ 
+ 1. ? : - expressions not done still - don't know if to translate them directly into formula -TODO
+ 2. what to do with cast expressions ? 
+ 2. the  case instruction - TODO 
+ 
+ ///////////////BCEL PROBLEMS /////////// ***
+ 1. if in the array of lcoal variables there is one that is coded with 2 indexes then the array of lcoal variables is cut by 1 element
+ 2. a throw instruction doesnot know the type of the objet that it throws 
+ 
+ 
+ 
+ ///////////////////////////////////////////////////////// ///////////////////////////////////////////////////////// ///////////////////////////////////////////////////////// ///////////////////////////////////////////////////////// ///////////////////////////////////////////////////////// /////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////// ///////////////////////////////////////////////////////// 2 -eme parties  ///////////////////////////////////////////////////////// ///////////////////////////////////////////////////////// ///////////////////////////////////////////////////////// ///////////////////////////////////////////////////////// /////////////////////////////////////////////////////////
+   ///////////////////////////////////////////////////////// ///////////////////////////////////////////////////////// ///////////////////////////////////////////////////////// ///////////////////////////////////////////////////////// ///////////////////////////////////////////////////////// /////////////////////////////////////////////////////////
+   
+ 1.est-ce que pour les creations des objets, et arrays on doit quantifier sur les nouvelles references ? Pour le moment ce n'est pas quantifie univeresellement
+ 2. pour l'instruction athrow je ne vois pas de tout une sortie.Peut etre on peux dire qqch dans la specification jml inseree dans le class file
+ 3. il y  a des bugs qui concernent les block squi terminent en loopendInstr
+ 
+ ////////////////////////////////
+ // 30/07 ///////////////////////v kashti
+ //////////////////////////////////
+ pour les points d'entrees d'une componente f.c. avoir un class qui va les designer 
+ (pour les entry points d'un programme et d'un exception handler). Taka shte mogat da
+ se sabirat nakraia rezultatite ot izchislenieto

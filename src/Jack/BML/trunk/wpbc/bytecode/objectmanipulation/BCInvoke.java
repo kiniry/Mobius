@@ -1,0 +1,325 @@
+/*
+ * Created on Jun 30, 2004
+ *
+ * To change the template for this generated file go to
+ * Window>Preferences>Java>Code Generation>Code and Comments
+ */
+package bytecode.objectmanipulation;
+
+import org.apache.bcel.generic.InstructionHandle;
+
+import bcclass.BCConstantPool;
+import bcclass.attributes.ExsuresTable;
+import bcexpression.javatype.JavaObjectType;
+import bcexpression.javatype.JavaType;
+import formula.Formula;
+
+import constants.BCConstantClass;
+import constants.BCConstantMethodRef;
+
+import application.JavaApplication;
+import bcclass.BCClass;
+
+import bcclass.BCMethod;
+
+import bcclass.utils.MethodSignature;
+import bcexpression.ArithmeticExpression;
+import bcexpression.EXCEPTIONVariable;
+import bcexpression.Expression;
+import bcexpression.ExpressionConstants;
+import bcexpression.LocalVariableAccess;
+import bcexpression.NumberLiteral;
+import bcexpression.Variable;
+import bcexpression.jml.RESULT;
+
+import bcexpression.vm.Stack;
+
+import utils.FreshIntGenerator;
+import utils.Util;
+
+import formula.Connector;
+import formula.Quantificator;
+/**
+ * @author mpavlova
+ *
+ * To change the template for this generated type comment go to
+ * Window>Preferences>Java>Code Generation>Code and Comments
+ */
+public class BCInvoke extends BCFieldOrMethodInstruction {
+
+	/**
+	 * @param _instruction
+	 * @param _type
+	 * @param _classType
+	 * @param _cp
+	 */
+	public BCInvoke(
+		InstructionHandle _instruction,
+		JavaType _type,
+		JavaType _classType,
+		BCConstantPool _cp) {
+		super(_instruction, _type, _classType, _cp);
+	}
+
+	/* (non-Javadoc)
+	* @see bytecode.ByteCode#wp(formula.Formula, specification.ExceptionalPostcondition)
+	*/
+	public Formula wp(
+		Formula _normal_Postcondition,
+		ExsuresTable _exc_Postcondition) {
+		Formula wp = null;
+		BCConstantMethodRef method_constant =
+			(BCConstantMethodRef) (getConstantPool().getConstant(getIndex()));
+		String clazz_name =
+			((BCConstantClass) (getConstantPool()
+				.getConstant(method_constant.getClassIndex())))
+				.getName();
+
+		//find the class where the called method is declared 
+		BCClass clazz = JavaApplication.Application.getClass(clazz_name);
+		// get the method instance
+		BCMethod method =
+			clazz.lookupMethod(
+				MethodSignature.getSignature(
+					method_constant.getName(),
+					method_constant.getSignature()));
+
+		//take the method pre and postconditons
+		Formula precondition = method.getPrecondition().copy();
+		int number_args = method.getNumberArguments();
+		ArithmeticExpression counter_minus_arg_num =
+			(
+				ArithmeticExpression) ArithmeticExpression
+					.getArithmeticExpression(
+				Expression.COUNTER,
+				new NumberLiteral(number_args),
+				ExpressionConstants.SUB);
+
+		//S( t - arg_num(method(index) ))
+		Stack stack_minus_arg_number = new Stack(counter_minus_arg_num);
+
+		///////////////////////////////////////
+		////////////////////////////////////////////////////////////
+		/////////////////////////////////////////////////////////////////////
+		Formula postcondition = method.getPostcondition().copy();
+
+		Variable fresh_result = null;
+		// quantify over the result of the invoked method
+		Quantificator[] quantificators = null;
+		//quantifiers for the exceptional  termination
+
+		Quantificator quantifyOnResult = null;
+		//post(method(index) )[o with result <-- fresh ] 
+		if (method.getReturnType() != JavaType.JavaVOID) {
+			RESULT result = Expression._RESULT;
+			fresh_result =
+				new Variable(
+					FreshIntGenerator.getInt(),
+					method.getReturnType());
+			postcondition = postcondition.substitute(result, fresh_result);
+
+			quantifyOnResult =
+				new Quantificator(Quantificator.FORALL, fresh_result);
+		}
+
+		// substitute all the local variables in the precondition, the postcondition
+		// and the  expressions in the modifies clause of the called method 
+		// with the values that are in the stack . 
+		// do these substitutions : 
+		// local(0) <-- S( t - arg_num(method(index) )  + 0), 
+		// local(1) <-- S( t - arg_num(method(index) )  + 1),  
+		// local(i) <-- S( t - arg_num(method(index) )  + i)
+		Expression[] modifies = method.getModifies();
+		Expression[] modifiesSubst = null;
+		if ((modifies != null) && (modifies.length > 0)) {
+			modifiesSubst = new Expression[modifies.length];
+			for (int i = 0; i < modifies.length; i++) {
+				modifiesSubst[i] = modifies[i].copy();
+			}
+		}
+		for (int i = 0; i < number_args; i++) {
+			ArithmeticExpression counter_minus_arg_num_plus_i =
+				(
+					ArithmeticExpression) ArithmeticExpression
+						.getArithmeticExpression(
+					counter_minus_arg_num,
+					new NumberLiteral(i),
+					ExpressionConstants.SUB);
+			Stack stack_at_counter_minus_arg_num_plus_i =
+				new Stack(counter_minus_arg_num_plus_i);
+			LocalVariableAccess local_i = new LocalVariableAccess(i);
+
+			//pre(method(index) )[ o with local(i) <-- S( t - arg_num(method(index) ) + i )]
+			precondition =
+				precondition.substitute(
+					local_i,
+					stack_at_counter_minus_arg_num_plus_i);
+
+			//post(method(index) )[o with result <-- fresh ] [ o with local(i) <-- S(t - arg_num(method(index)) + i)]
+			postcondition =
+				postcondition.substitute(
+					local_i,
+					stack_at_counter_minus_arg_num_plus_i);
+			if (modifiesSubst != null) {
+				for (int s = 0; s < modifiesSubst.length; s++) {
+					modifiesSubst[s] =
+						modifiesSubst[s].substitute(
+							local_i,
+							stack_at_counter_minus_arg_num_plus_i);
+				}
+			}
+		}
+
+		//		//psi^n[ S(t ) <-- fresh]
+		if (fresh_result != null) {
+			_normal_Postcondition =
+				_normal_Postcondition.substitute(
+					new Stack(Expression.COUNTER),
+					fresh_result);
+		}
+
+		//psi^n[t <-- t - arg_n ]
+		ArithmeticExpression counter_minus_arg_num_plus_1 =
+			(
+				ArithmeticExpression) ArithmeticExpression
+					.getArithmeticExpression(
+				Expression.COUNTER,
+				new NumberLiteral(number_args),
+				ExpressionConstants.SUB);
+
+		_normal_Postcondition =
+			_normal_Postcondition.substitute(
+				Expression.COUNTER,
+				counter_minus_arg_num_plus_1);
+
+		// in case of normal termination this formula must hold
+		// post(method(index) )[result <-- fresh ] [ local(i) <-- S(t - arg_num(method(index)) + i)] 
+		// ==> 
+		// psi^n[ S(t ) <-- fresh]
+		Formula wpNormal =
+			Formula.getFormula(
+				postcondition,
+				_normal_Postcondition,
+				Connector.IMPLIES);
+
+		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
+		// if the modifies clause of the called method is not empty then 
+		// substitute in the modifies clauses with the necessary substitutions - the local variables
+		// rename the s
+		// quantify 		
+
+		Expression[] modifies1 = null;
+
+		if ((modifiesSubst != null) && (modifiesSubst.length > 0)) {
+			modifies1 = new Expression[modifiesSubst.length];
+
+			//create fresh variables for every modified expression
+			for (int i = 0; i < modifiesSubst.length; i++) {
+				modifies1[i] = new Variable(FreshIntGenerator.getInt(), (JavaType)modifies[i].getType());
+			}
+			for (int i = 0; i < modifies1.length; i++) {
+				//rename the modified expressions by variables
+				wpNormal = wpNormal.rename(modifiesSubst[i], modifies1[i]);
+			}
+			quantificators = new Quantificator[modifies1.length];
+
+			// quantify over the renamed modifies expressions
+			for (int i = 0; i < modifies1.length; i++) {
+				quantificators[i] =
+					new Quantificator(Quantificator.FORALL, modifies1[i]);
+
+			}
+			wpNormal = Formula.getFormula(wpNormal, quantificators);
+		}
+
+		// if there is a value returned by the invoked method then quantify ove
+		if (quantifyOnResult != null) {
+			wpNormal = Formula.getFormula(wpNormal, quantifyOnResult);
+		}
+
+		wp = Formula.getFormula(wpNormal, precondition, Connector.AND);
+		Util.dump("normal wp " + wp);
+		/////////////////////////////////////////////////////////////////////////////////////////////////////////
+		////////////////////////Exceptional Termination/////////////////////////////////////////////
+		/////////////////////////////////////////////////////////////////////////////////////////////////////
+		// if one must quantify  the exceptional behaviour 
+		// for all (modifies ) (excPost(index, exc) ==> psi^exc(exc)) , then quantifyover the same the expression 
+		// as in the case of normal termination except for the fresh variable that represents the result
+
+		//////////exceptional termination for any exception that may be thrown
+		Formula[] wpForExcTermination = null;
+		JavaObjectType[] exceptionsThrown = method.getExceptionsThrown();
+		if ((exceptionsThrown != null) && (exceptionsThrown.length > 0)) {
+			wpForExcTermination = new Formula[exceptionsThrown.length];
+			Formula excPostOfCalledMethodForExc;
+			Formula excPostOfThisMethodForExc;
+			for (int s = 0; s < exceptionsThrown.length; s++) {
+				excPostOfCalledMethodForExc =
+					method.getExsuresForException(exceptionsThrown[s]).copy();
+
+				// substitute the special ExceptionVariable by a variable of the same type in the exceptional
+				// postcondition
+				Variable excVariable =
+					new Variable(
+						FreshIntGenerator.getInt(),
+						exceptionsThrown[s]);
+
+				excPostOfCalledMethodForExc.substitute(
+					new EXCEPTIONVariable(
+						FreshIntGenerator.getInt(),
+						exceptionsThrown[s]),
+					excVariable);
+
+				for (int i = 0; i < number_args; i++) {
+					ArithmeticExpression counter_minus_arg_num_plus_i =
+						(
+							ArithmeticExpression) ArithmeticExpression
+								.getArithmeticExpression(
+							counter_minus_arg_num,
+							new NumberLiteral(i),
+							ExpressionConstants.SUB);
+					Stack stack_at_counter_minus_arg_num_plus_i =
+						new Stack(counter_minus_arg_num_plus_i);
+					LocalVariableAccess local_i = new LocalVariableAccess(i);
+
+					//excPost(method(index) )[ o with local(i) <-- S( t - arg_num(method(index) ) + i )]
+					excPostOfCalledMethodForExc =
+						excPostOfCalledMethodForExc.substitute(
+							local_i,
+							stack_at_counter_minus_arg_num_plus_i);
+
+				}
+
+				excPostOfThisMethodForExc =
+					getWpForException(exceptionsThrown[s], _exc_Postcondition);
+
+				wpForExcTermination[s] =
+					Formula.getFormula(
+						excPostOfCalledMethodForExc,
+						excPostOfThisMethodForExc,
+						Connector.IMPLIES);
+
+				if ((modifiesSubst != null) && (modifies1.length > 0)) {
+					for (int j = 0; j < modifies1.length; j++) {
+						//rename the modified expressions by variables
+						wpForExcTermination[s] =
+							wpForExcTermination[s].rename(
+								modifiesSubst[j],
+								modifies1[j]);
+					}
+					wpForExcTermination[s] =
+						Formula.getFormula(
+							wpForExcTermination[s],
+							quantificators);
+				}
+			}
+		}
+		if (wpForExcTermination != null) {
+			Formula wpExc =
+				Formula.getFormula(wpForExcTermination, Connector.AND);
+			wp = Formula.getFormula(wp, wpExc, Connector.AND);
+		}
+		// exceptional termination
+		return wp;
+	}
+}

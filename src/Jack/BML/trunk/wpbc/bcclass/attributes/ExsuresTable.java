@@ -29,7 +29,7 @@ public class ExsuresTable implements BCAttribute {
 		Exsures exs;
 		//if for this exception thrown no postcondition is specified, the default one is returned - TRUE
 		if( ( exs = (Exsures)excPostcondition.get(exc_class_name)) == null) {
-			return Predicate._TRUE;
+			return Predicate.TRUE;
 		}
 		return exs.getPredicate();
 		

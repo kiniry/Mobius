@@ -24,7 +24,7 @@ public class Quantificator {
 
 	public Quantificator(String _quantifier, Expression _boundVar) {
 		quantifier = _quantifier;
-		boundVar = _boundVar;
+		setBoundVar(_boundVar);
 	}
 
 	public Quantificator(
@@ -47,16 +47,33 @@ public class Quantificator {
 	}
 
 	public Quantificator copy() {
-		return null;
+		return this;
 	}
 	
-	public Expression substitute( Expression _e, Expression _v ) {
-		return null;
-	}
+//	public Expression substitute( Expression _e, Expression _v ) {
+//		return null;
+//	}
 
 	
 	public String toString( ) {
+		if (domain == null) {
+			return  "(" + quantifier + "  " + boundVar + "  )";
+		}
 		return  "(" + quantifier + "  " + boundVar +  ": "+ domain.toString() + ")";
+	}
+
+	/**
+	 * @return
+	 */
+	public Expression getBoundVar() {
+		return boundVar;
+	}
+
+	/**
+	 * @param expression
+	 */
+	public void setBoundVar(Expression expression) {
+		boundVar = expression;
 	}
 
 }

@@ -6,14 +6,16 @@
  */
 package bytecode.block;
 
-import java.util.Enumeration;
-import java.util.Vector;
+import java.util.HashMap;
+import java.util.Iterator;
 
 import formula.Formula;
 import formula.atomic.Predicate;
 
+import bcclass.BCMethod;
 import bcclass.attributes.ExceptionHandler;
 import bcclass.attributes.ExsuresTable;
+import bcexpression.javatype.JavaObjectType;
 
 import bytecode.*;
 
@@ -28,37 +30,236 @@ import utils.Util;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class Trace {
-	//private BCInstruction[] bytecode;
 
-	private Vector blocks;
+	private HashMap blocks;
 
+	private HashMap normalComponent;
+	private HashMap excHandlerComponents;
+
+	private BCMethod method;
 	private Block entryBlock;
 
-	public Trace(BCInstruction[] _bytecode, ExceptionHandler[] _excHandlers) {
-		//bytecode = _bytecode;
-		initGraph(_bytecode);
-
-		//sets the blocks that are targets 
-		setTargetBlocks(_bytecode);
-
-		//sets the exception handlers for instructions that may throw exceptions
-		setExceptionHandleBlocks(_bytecode, _excHandlers);
-
+	public Trace(BCMethod _method) {
+		method = _method;
+		TraceUtils.initLoopInstructions(method.getBytecode()[0], method.getBytecode());
+		Util.dump("after LOOPS");
+		TraceUtils.initEntryPoints(method);
+		Util.dump("after ENTRYPOINTS");
+		initNormalComponent();
+		Util.dump("after INITNORMALCOMPONENT");
+		
+		initExceptionHandlerComponents();
+		setBlockRelation();
+	
 		dumpBlocks();
+		//		TraceUtils.initExceptionandlerStartInstructions(method);
+		initTraceForExcThrower();
 	}
+
+	private void setBlockRelation() {
+		// in case this is an interface method
+		if (blocks == null) {
+			return;
+		}
+		Iterator iter = blocks.values().iterator();
+		Block b = null;
+		while (iter.hasNext()) {
+			b = (Block) iter.next();
+			b.setTargetBlocks(blocks);
+			b.setTargeterBlocks(blocks, this);
+		}
+	}
+
+	private void initEntryBlock(Block b) {
+		entryBlock = b;
+	}
+
+	/**
+	 * initialises every strongly connected part of the 
+	 * exec graph that represents an exception handler.
+	 */
+	private void initExceptionHandlerComponents() {
+		ExceptionHandler[] excHandlers = method.getExceptionHandlers();
+		if (excHandlers == null) {
+			return;
+		}
+		excHandlerComponents = new HashMap();
+		for (int i = 0; i < excHandlers.length;i++) {
+			int excHandlerStart = excHandlers[i].getHandlerPC();
+			BCInstruction excHandlerStartInstr = Util.getBCInstructionAtPosition(method.getBytecode(), excHandlerStart);
+			Block b = addBlock(excHandlerStartInstr);
+			HashMap excHandlerComp = new HashMap();
+			addToComponent(b, excHandlerComp);
+			excHandlerComponents.put(new Integer( excHandlerStart), excHandlerComp);
+		}
+	}
+	
+	/**
+	 * initialises the strongly connected part of the 
+	 * exec graph that represents the normal execution of the program starting from the entry point
+	 */
+	private void initNormalComponent() {
+		BCInstruction entryPoint = method.getBytecode()[0];
+		Block b = addBlock(entryPoint);
+		initEntryBlock(b);
+		normalComponent = new HashMap();
+		addToComponent(b, normalComponent);
+	}
+
+	private void addToComponent(Block b, HashMap normalComponent) {
+		
+		normalComponent.put(new Integer(b.getFirst().getPosition()), b);
+		BCInstruction last = b.getLast();
+		Util.dump("ADD ToComponent : " +  last.toString());
+		if (last instanceof BCTypeRETURN) {
+			return;
+		}
+		if (last instanceof BCRET) {
+			return;
+		}
+		if (last instanceof BCATHROW) {
+			return;
+		}
+		if (last instanceof BCLoopEnd) {
+			BCInstruction next = last.getNext();
+			if (next == null) {
+				BCInstruction wrappedInstr =
+					((BCLoopEnd) last).getWrappedInstruction();
+				if (!(wrappedInstr instanceof BCJumpInstruction)) {
+					return;
+				}
+				BCJumpInstruction jumpInstr = (BCJumpInstruction) wrappedInstr;
+				if (jumpInstr.getTarget() == null) {
+					return;
+				}
+				Block _b = addBlock(jumpInstr.getTarget());
+				addToComponent(_b, normalComponent);
+				return;
+			}
+			Block _b = addBlock(next);
+			addToComponent(_b, normalComponent);
+			return;
+		}
+		if (last instanceof BCConditionalBranch) {
+			BCConditionalBranch cBranch = (BCConditionalBranch) last;
+			Block _b0 = addBlock(cBranch.getNext());
+			addToComponent(_b0, normalComponent);
+			Block _b1 = addBlock(cBranch.getTarget());
+			addToComponent(_b1, normalComponent);
+			return;
+		}
+		if (last instanceof BCUnconditionalBranch) {
+			BCUnconditionalBranch cBranch = (BCUnconditionalBranch) last;
+			Block _b = addBlock(cBranch.getTarget());
+			addToComponent(_b, normalComponent);
+			return;
+		}
+		BCInstruction next = last.getNext();
+		Block _b = addBlock(next);
+		addToComponent(_b, normalComponent);
+	}
+	
+	public ExceptionHandler getExceptionHandlerForExceptionThrownAt(
+		JavaObjectType excThrownType,
+		int excThrownAtPos) {
+		ExceptionHandler excH = null;
+
+		ExceptionHandler[] excHandlers = method.getExceptionHandlers();
+		// find a handler for the exception excThrownType
+		for (int i = 0; i < excHandlers.length; i++) {
+			//if the handle i doesnot handle the exception k
+			if (!JavaObjectType
+				.subType(excThrownType, excHandlers[i].getCatchType())) {
+				continue;
+			}
+			if ((excHandlers[i].getStartPC() > excThrownAtPos)
+				|| (excThrownAtPos > excHandlers[i].getEndPC())) {
+				continue;
+			}
+			excH = excHandlers[i];
+			break;
+		}
+		return excH;
+	}
+
+	/**
+	 * gets for the exception type excThrownType an exception handle
+	 * 
+	 * and finds the wp for
+	 * @param excThrownType
+	 * @param excThrownAtPos
+	 * @return Formula
+	 */
+	public Formula getWpForExcThrownAt(
+		JavaObjectType excThrownType,
+		int excThrownAtPos) {
+		Formula wp = null;
+		ExceptionHandler excH =
+			getExceptionHandlerForExceptionThrownAt(
+				excThrownType,
+				excThrownAtPos);
+
+		// if there is no then
+		// take the exceptional postcondition from the exsures table
+		if (excH == null) {
+			ExsuresTable exsuresTable = method.getExsures();
+			if (exsuresTable == null) {
+				return Predicate.TRUE;
+			}
+			wp =
+				exsuresTable.getExcPostconditionFor(
+					excThrownType.getSignature());
+			return wp;
+		}
+		int handlerStart = excH.getHandlerPC();
+		HashMap excHandlerBlocks = (HashMap)excHandlerComponents.get( new Integer(handlerStart));
+		//this implementation is very bad , must be  a class which wraps the entry points and access the wp for an exception handler like this
+		wp(method.getPostcondition().copy(),method.getExsures(), excHandlerBlocks );
+		EntryPoint excHandlerEntryPoint = (EntryPoint)Util.getBCInstructionAtPosition(method.getBytecode(), handlerStart); 
+		wp = excHandlerEntryPoint.getWp();
+		return wp;
+	}
+
+//	/**
+//	 * looks if at position i in the bytecode starts an exception handler 
+//	 * Method isStartOfExcHandlerBlock.
+//	 * @param i
+//	 * @return boolean
+//	 */
+//	private boolean isStartOfExcHandlerBlock(int pos) {
+//		ExceptionHandler[] excHandlers = method.getExceptionHandlers();
+//		if (excHandlers == null) {
+//			return false;
+//		}
+//		if (excHandlers.length == 0) {
+//			return false;
+//		}
+//		int startExcHandlerPos;
+//		for (int i = 0; i < excHandlers.length; i++) {
+//			startExcHandlerPos = excHandlers[i].getHandlerPC();
+//
+//			if (startExcHandlerPos == pos) {
+//				Util.dump("exc Handler START " + pos);
+//				return true;
+//			}
+//		}
+//		return false;
+//	}
 
 	/**
 	 * @param bytecode
 	 * @param _excHandlers
 	 */
-	private void setExceptionHandleBlocks(
-		BCInstruction[] bytecode,
-		ExceptionHandler[] _excHandlers) {
+	private void initTraceForExcThrower() {
+		BCInstruction[] bytecode = method.getBytecode();
+		if (bytecode == null) {
+			return;
+		}
 		for (int i = 0; i < bytecode.length; i++) {
 			BCInstruction instruction = bytecode[i];
 			if (instruction instanceof BCExceptionThrower) {
 				BCExceptionThrower excThro = (BCExceptionThrower) bytecode[i];
-				excThro.setExceptionTargetBlocks(bytecode, _excHandlers, this);
+				excThro.setTrace(this);
 			}
 		}
 	}
@@ -68,165 +269,176 @@ public class Trace {
 	 */
 	void dumpBlocks() {
 		if (blocks == null) {
-			Util.dump("not implemented");
+			Util.dump("abstract method");
 			return;
 		}
 		Util.dump(" **************** in dumpBlocks ************");
-		for (int i = 0; i < blocks.size(); i++) {
-			Block b = (Block) blocks.elementAt(i);
+		Iterator iter = blocks.values().iterator();
+
+		while (iter.hasNext()) {
+			Block b = (Block) iter.next();
+
 			b.dump("");
 		}
 	}
 
 	/**
-	 * set the entry blocks for this method 
-	 * (they may be several , for example  there may be 
-	 * a loop in the beginning of the method - (2 entry blocks - the loop one and the straight one )) 
-	 *
-	 */
-	public void initGraph(BCInstruction[] bytecode) {
-		BCInstruction _i = bytecode[0];
-		while (_i != null) {
-			if ((_i instanceof BCConditionalBranch)
-				|| (_i instanceof BCGOTO)) {
-				int targetPosition =
-					((BCJumpInstruction) _i).getTargetPosition();
-				if (targetPosition == bytecode[0].getPosition()) {
-					entryBlock =
-						new LoopBlock(bytecode[0], (BCJumpInstruction) _i);
-					addBlock(entryBlock);
-					return;
-				}
-			}
-
-			if (_i instanceof EndBlockInstruction) {
-				entryBlock = new Block(bytecode[0], _i);
-				addBlock(entryBlock);
-				/*Util.dump("entry block");
-				_b.dump("");*/
-				return;
-			}
-			_i = _i.getNext();
-		}
-	}
-
-	public void setTargetBlocks(BCInstruction[] code) {
-		for (int i = 0; i < code.length; i++) {
-			if (code[i] instanceof BCJumpInstruction) {
-				/*Util.dump( " targets for " +  code[i].getInstructionHandle().toString() );*/
-				setTargetBlock((BCJumpInstruction) code[i]);
-
-				//((BCJumpInstruction)code[i]).getTargetBlock().dump("");
-				/*Util.dump("===============================");*/
-			}
-		}
-	}
-
-	/**
-	 * gets the block starting at _first and ending at _last from the blocks that are already created
-	 * @param _first 
-	 * @param _last
+	 * searches in the map of basic blocks if there is a block ending with 
+	 * the _first instruction
+	 * @param _first
 	 * @return
 	 */
-	public Block getBlockStartingAtEndingAt(
-		BCInstruction _first,
-		BCInstruction _last) {
+	public Block getBlockAt(int _firstPos) {
 		if (blocks == null) {
 			return null;
 		}
 		if (blocks.size() == 0) {
 			return null;
 		}
-		Block _b = null;
-		for (int i = 0; i < blocks.size(); i++) {
-			_b = (Block) (blocks.elementAt(i));
+		Block b = (Block) blocks.get(new Integer(_firstPos));
+		return b;
+	}
 
-			BCInstruction first = _b.getFirst();
-			BCInstruction last = _b.getLast();
-			if ((first.equals(_first)) && (last.equals(_last))) {
-				return _b;
+	/**
+	 * searches in the map of basic blocks if there is a block ending with 
+	 * the _last instruction
+	 * @param _last
+	 * @return null if there is no such a block
+	 */
+	public Block getBlockEndAt(BCInstruction _last) {
+		if (blocks == null) {
+			return null;
+		}
+		if (blocks.size() == 0) {
+			return null;
+		}
+		Iterator iter = blocks.values().iterator();
+		Block b = null;
+		while (iter.hasNext()) {
+			b = (Block) iter.next();
+			if (b.getLast() == _last) {
+				return b;
 			}
 		}
 		return null;
 	}
 
-	public void addBlock(Block _b) {
+	public Block addBlock(BCInstruction start) {
 		if (blocks == null) {
-			blocks = new Vector();
+			blocks = new HashMap();
 		}
-		blocks.add(_b);
+		Block block = null;
+		if ((block = getBlockAt(start.getPosition())) != null) {
+			return block;
+		}
+		block = initBlock(start, method.getBytecode());
+		blocks.put(new Integer(start.getPosition()), block);
+		return block;
+	}
+
+	private Block initBlock(BCInstruction first, BCInstruction[] instrs) {
+		BCInstruction next = first;
+		while (true) {
+			BCInstruction nextOfNext = next.getNext();
+			if ((nextOfNext != null) && (nextOfNext.getTargeters() != null)) {
+				break;
+			}
+			if (next instanceof BCJSR) {
+				break;
+			}
+			if (next instanceof BCConditionalBranch) {
+				break;
+			}
+			if (next instanceof BCGOTO) {
+				break;
+			}
+			if (next instanceof BCTypeRETURN) {
+				break;
+			}
+			if (next instanceof BCRET) {
+				break;
+			}
+			if (next instanceof BCATHROW) {
+				break;
+			}
+			// inderted on 30/07
+			if (next instanceof BCLoopEnd) {
+				break;
+			}
+			next = next.getNext();
+		}
+		if ( (next instanceof BCLoopEnd)  && ( ((BCLoopEnd)next) ).getWrappedInstruction() instanceof BCConditionalBranch ) {
+			Block block =
+							new BranchingBlock(
+								first.getPosition(),
+								next.getPosition(),
+								instrs);
+						return block;
+		}
+		if (next instanceof BCConditionalBranch) {
+			Block block =
+				new BranchingBlock(
+					first.getPosition(),
+					((BCConditionalBranch) next).getPosition(),
+					instrs);
+			return block;
+		}
+		Block block =
+			new Block(first.getPosition(), next.getPosition(), instrs);
+		return block;
 	}
 
 	public void dump() {
-		Enumeration en = blocks.elements();
+		Iterator en = blocks.values().iterator();
 		Block b = null;
-		while (en.hasMoreElements()) {
-			b = (Block) (en.nextElement());
+		while (en.hasNext()) {
+			b = (Block) (en.next());
 			b.dump("");
 		}
 	}
 
-	public Vector getEntryBlocks() {
-		return blocks;
-	}
-
 	/**
-	 * this method is called by setTargetBlocks once the target instruction is set It
-	 * sets the target blocks for this jump instruction
-	 *  
+	 * initialises wp for the sub tree of every exception handler  
+	 * @param postcondition
+	 * @param exsures
 	 */
-	public void setTargetBlock(BCJumpInstruction bcjumpInstruction) {
-		Block _b = null;
-		if (bcjumpInstruction.getTargetPosition()
-			<= bcjumpInstruction.getPosition()) {
-			if ((_b =
-				getBlockStartingAtEndingAt(
-					bcjumpInstruction.getTarget(),
-					bcjumpInstruction))
-				== null) {
-				_b =
-					new LoopBlock(
-						bcjumpInstruction.getTarget(),
-						bcjumpInstruction);
-				addBlock(_b);
-			}
-			if (_b != null) {
-				bcjumpInstruction.setTargetBlock(_b);
-				return;
-			}
-		}
-		BCInstruction _last = bcjumpInstruction.getTarget();
-		while (_last != null) {
-			if (_last instanceof EndBlockInstruction) {
-				if ((_b =
-					getBlockStartingAtEndingAt(
-						bcjumpInstruction.getTarget(),
-						_last))
-					== null) {
-					_b = new Block(bcjumpInstruction.getTarget(), _last);
-					addBlock(_b);
-				}
-				bcjumpInstruction.setTargetBlock(_b);
-//				((EndBlockInstruction) _last).setBlock(_b);
-				break;
-			}
-			_last = _last.getNext();
+	private void initWpExcHandlers(
+		Formula postcondition,
+		ExsuresTable exsures) {
+		BCInstruction[] instrs = method.getBytecode();
+		for (int i = 0; i < instrs.length; i++) {
+			//			if (instrs[i] instanceof ExceptionHandlerStartInstruction) {
+			//				((ExceptionHandlerStartInstruction) instrs[i]).initExcWP(
+			//					this,
+			//					postcondition,
+			//					exsures);
+			//			}
 		}
 	}
-
+	
 	public void wp(Formula postcondition, ExsuresTable exsures) {
+		wp(postcondition, exsures, normalComponent);
+	}
+	
+	private void wp(Formula postcondition, ExsuresTable exsures, HashMap component) {
 		if ((blocks == null) || (blocks.size() == 0)) {
-			return ;//Predicate._TRUE;
+			return;
 		}
+		// initialises the wp for the instructions that are in the 
+		//commented 30-07
+		//		initWpExcHandlers(postcondition, exsures);
 		Formula wp;
-		for (int i = 0; i < blocks.size(); i++) {
-			Block b = (Block) (blocks.elementAt(i));
+		Iterator iter = component.values().iterator();
+		while (iter.hasNext()) {
+			Block b = (Block) (iter.next());
 			if (b.getLast() instanceof BCTypeRETURN) {
-				EndBlockInstruction endBlock = (BCTypeRETURN) b.getLast();
-				endBlock.calculateRecursively(postcondition.copy(), exsures);
+				//				EndBlockInstruction endBlock = (BCTypeRETURN) b.getLast();
+				b.calculateRecursively(postcondition.copy(), exsures);
+			} else if (b.getLast() instanceof BCLoopEnd) {
+				BCLoopEnd loopEnd = (BCLoopEnd) b.getLast();
+				Formula loopInvariant = loopEnd.getInvariant().copy();
+				b.calculateRecursively(loopInvariant, exsures);
 			}
 		}
-		//return entryBlock.getWp();
 	}
-
 }

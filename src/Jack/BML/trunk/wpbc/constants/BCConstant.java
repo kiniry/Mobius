@@ -41,4 +41,6 @@ public class BCConstant {
 		}
 		return false;
 	}
+	
+	
 }

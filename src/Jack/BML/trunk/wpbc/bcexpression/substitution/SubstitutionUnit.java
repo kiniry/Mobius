@@ -6,10 +6,6 @@
  */
 package bcexpression.substitution;
 
-import javax.swing.text.html.ObjectView;
-
-import utils.Util;
-
 import bcexpression.Expression;
 
 /**
@@ -22,6 +18,11 @@ public class SubstitutionUnit  implements Tree {
 	private  Expression  object;
 	private  Expression  value;
 	
+	/**
+	 * if the concrete object O in the field access is  equals to  _object then the field accessed has value  _value
+	 * @param _object
+	 * @param _value
+	 */
 	public SubstitutionUnit( Expression _object, Expression _value) {
 		object = _object;
 		value = _value;
@@ -42,16 +43,17 @@ public class SubstitutionUnit  implements Tree {
 	public Tree substitute(Expression e1, Expression e2)  {
 //		Util.dump("SubstitutionUnit.substitute ****************** " + toString() + "[" +e1 + "<--"+ e2 + "]");
 //		Util.dump("SubstitutionUnit  object before " + object.toString() );
-		object = object.substitute(e1, e2);
+		object = object.substitute(e1, e2.copy());
 //		Util.dump("SubstitutionUnit  object after " + object.toString() );
 //		Util.dump("SubstitutionUnit  value before " + value.toString() );
-		value = value.substitute( e1, e2);
+		value = value.substitute( e1, e2.copy());
 //		Util.dump("SubstitutionUnit  value after " + value.toString() );
 		return this;
 	}
 	
 	public String toString() {
-		String s = "( " + object.toString() + " <- " + value.toString() + " )";
+		// if the concrete object O in the field access is  equals to  "object" then the field accessed has value "value"
+		String s = " (" + value.toString() + " <- " + object.toString() + ") ";
 		return s;
 	}
 

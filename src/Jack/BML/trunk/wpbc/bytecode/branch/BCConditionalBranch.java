@@ -20,7 +20,6 @@ import formula.Formula;
  */
 public abstract  class BCConditionalBranch extends BCJumpInstruction {
 	
-	private Formula branchWP;
 	
 	/**
 	 * @param _branchInstruction
@@ -37,4 +36,6 @@ public abstract  class BCConditionalBranch extends BCJumpInstruction {
 	public abstract Formula wpBranch(
 	Formula _normal_Postcondition,
 	ExsuresTable _exc_Postcondition);
+
+
 }

@@ -44,12 +44,16 @@ public class OLD extends JMLExpression {
 	/* (non-Javadoc)
 	 * @see bcexpression.Expression#substitute(bcexpression.Expression, bcexpression.Expression)
 	 */
+	 /**
+	  * the substitution is realised iff the expression to be substituted - _e1 is equal to this expression 
+	  * otherwise the result of the substitution is the same expression. 
+ 	  */
 	public Expression substitute(Expression _e1, Expression _e2) {
 		if (equals(_e1)) {
 			return _e2;
 		}
-		Expression[] subExpr = getSubExpressions();
-		subExpr[0] = subExpr[0].substitute(_e1, _e2);
+//		Expression[] subExpr = getSubExpressions();
+//		subExpr[0] = subExpr[0].substitute(_e1, _e2);
 		return this;
 	}
 

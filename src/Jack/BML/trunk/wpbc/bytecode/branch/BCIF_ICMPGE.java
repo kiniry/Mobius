@@ -29,7 +29,6 @@ public class BCIF_ICMPGE extends BCConditionalBranch {
 	 */
 	public BCIF_ICMPGE(InstructionHandle _branchInstruction) {
 		super(_branchInstruction);
-		// TODO Auto-generated constructor stub
 	}
 
 	/* (non-Javadoc)

@@ -15,8 +15,10 @@ import type.BCType;
  * this class represents the JML constant TYPE that is the type of all Java types
  *  */
 public class JML_CONST_TYPE extends JMLExpression implements BCType  {
-
-	public JML_CONST_TYPE() {
+	
+	public static final  JML_CONST_TYPE JML_CONST_TYPE = new JML_CONST_TYPE();
+	
+	private JML_CONST_TYPE() {
 		//setExpressionType(ExpressionConstants.TYPE);
 	}
 

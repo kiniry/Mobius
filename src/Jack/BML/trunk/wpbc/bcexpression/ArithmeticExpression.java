@@ -180,7 +180,7 @@ public class ArithmeticExpression extends Expression {
 			}
 		}
 		// if the operation is not additive then return
-		if (expr1.getArithmeticOperation() != ExpressionConstants.ADD) {
+		if (expr1.getArithmeticOperation() != ExpressionConstants.ADD ) {
 			return null;
 		}
 		if (expr1 instanceof NumberLiteral) {
@@ -476,19 +476,19 @@ public class ArithmeticExpression extends Expression {
 //					+ "] = "
 //					+ toString());
 
-			return _e2;
+			return _e2.copy();
 		}
 		Expression[] subExpr = getSubExpressions();
 		Expression[] subExpr1 = new Expression[subExpr.length];
 		for (int i = 0; i < subExpr.length; i++) {
 //			Util.dump(subExpr[i].toString());
-			subExpr1[i] = subExpr[i].substitute(_e1, _e2.copy());
+			subExpr1[i] = subExpr[i].substitute(_e1, _e2);
 		}
 
 		setSubExpressions(subExpr1);
 		//if it can be evaluated then evaluate itS
 		Expression simplify =
-			simplify(
+			getArithmeticExpression(
 				getSubExpressions()[0],
 				getSubExpressions()[1],
 				arithmetic_op);
@@ -529,6 +529,10 @@ public class ArithmeticExpression extends Expression {
 		}
 	}
 
+	/**
+	 * for test purposes
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		//		(counter + 1)[counter<-(counter + 1)]
 		ArithmeticExpression count_plus_1 =
@@ -547,6 +551,7 @@ public class ArithmeticExpression extends Expression {
 		Util.dump("substitute " + subst.toString());
 	}
 
+	
 	public static void main1(String[] args) {
 		NumberLiteral _1 = new NumberLiteral(1);
 		NumberLiteral _2 = new NumberLiteral(2);

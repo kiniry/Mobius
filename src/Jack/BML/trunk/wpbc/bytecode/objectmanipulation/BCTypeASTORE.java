@@ -88,10 +88,8 @@ public class BCTypeASTORE
 
 		Formula wp;
 		Formula[] wps = new Formula[3];
-		//		normal execution 
+		//	normal execution 
 		Stack stackTop = new Stack(Expression.COUNTER);
-//		Stack stackTop_minus_1 = new Stack(Expression.COUNTER_MINUS_1);
-//		Stack stackTop_minus_2 = new Stack(Expression.COUNTER_MINUS_2);
 
 		//t <------ t - 3
 		_n_Postcondition.substitute(
@@ -132,7 +130,7 @@ public class BCTypeASTORE
 		Formula nullPointer =
 			getWpForException(
 				(JavaObjectType) JavaType.getJavaRefType(
-					"Ljava/lang/NullPointerException;"),
+					ClassNames.NULLPOINTERException),
 				_exc_Postcondition);
 		wps[1] = Formula.getFormula(array_null, nullPointer, Connector.IMPLIES);
 
@@ -147,7 +145,7 @@ public class BCTypeASTORE
 		Formula outOfBounds =
 			getWpForException(
 				(JavaObjectType) JavaType.getJavaRefType(
-					"Ljava/lang/ArrayIndexOutOfBoundsException;"),
+					ClassNames.ARRAYINDEXOUTOFBOUNDException),
 				_exc_Postcondition);
 		wps[2] =
 		Formula.getFormula(arr_index_not_correct, outOfBounds, Connector.IMPLIES);

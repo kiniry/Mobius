@@ -6,16 +6,26 @@
  */
 package bytecode.block;
 
+import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Vector;
 
 import bcclass.attributes.ExsuresTable;
+
+import bytecode.BCATHROW;
 import bytecode.BCInstruction;
+import bytecode.BCLoopEnd;
+import bytecode.BCRET;
+import bytecode.BCTypeRETURN;
 import bytecode.ByteCode;
-import bytecode.EndBlockInstruction;
-import bytecode.branch.BCConditionalBranch;
+
+import bytecode.branch.BCGOTO;
+import bytecode.branch.BCJSR;
+import bytecode.branch.BCJumpInstruction;
 
 import utils.Util;
 
+import formula.Connector;
 import formula.Formula;
 
 /**
@@ -30,180 +40,272 @@ import formula.Formula;
  * 2.2. it ends with an instruction that is either a goto, athrow, ret or return instruction
  */
 public class Block implements ByteCode {
-	private BCInstruction first;
-	private BCInstruction last;
 
-	//protected Vector next;
-	protected Vector entryBlocks;
+	private BCInstruction[] bytecode;
 
-	private Formula postcondition;
+	/**
+	 * position in the bytecode at which is the first instruction of the block
+	 */
+	private int first;
 
+	/**
+	 * position in the bytecode at which is the last instruction of the block
+	 */
+	private int last;
+
+	private Block targetSeqBlock;
+	private Vector targeterBlocks;
+
+	//not good
+	Vector wps;
 	public Block() {
 	}
 
-	public Block(BCInstruction _first, BCInstruction _last) {
-		first = _first;
+	public Block(int _first, int _last, BCInstruction[] _bytecode) {
+		setFirst(_first);
+		setLast(_last);
+		bytecode = _bytecode;
+	}
+
+	protected void setLast(int _last) {
 		last = _last;
-		if (last instanceof EndBlockInstruction) {
-			((EndBlockInstruction) last).setBlock(this);
-		}
+	}
+
+	protected void setFirst(int _first) {
+		first = _first;
 	}
 
 	public BCInstruction getFirst() {
-		return first;
+		BCInstruction lastInstr =
+			Util.getBCInstructionAtPosition(bytecode, first);
+		return lastInstr;
 	}
 
 	public BCInstruction getLast() {
-		return last;
+		BCInstruction lastInstr =
+			Util.getBCInstructionAtPosition(bytecode, last);
+		return lastInstr;
 	}
 
-	public void setPostcondition(Formula _postcondition) {
-		postcondition = _postcondition;
-	}
-
-	public Formula getPostcondition() {
-		return postcondition;
-	}
-
-	//	/**
-	//	 * 
-	//	 * @author mpavlova
-	//	 * deprecated
-	//	 * To change the template for this generated type comment go to
-	//	 * Window>Preferences>Java>Code Generation>Code and Comments
-	//	 */
-	//	public void setNext(Vector _next ) {
-	//		next = _next;
-	//	} 
-
-	/**
-	 * 
-	 * @author mpavlova
-	 * deprecated
-	 * To change the template for this generated type comment go to
-	 * Window>Preferences>Java>Code Generation>Code and Comments
-	 */
-	public void addEntryBlocks(Block _prev) {
-		if (entryBlocks == null) {
-			entryBlocks = new Vector();
-		}
-		entryBlocks.add(_prev);
-	}
-
-	/**
-	 * 
-	 * @author mpavlova
-	 * deprecated
-	 * To change the template for this generated type comment go to
-	 * Window>Preferences>Java>Code Generation>Code and Comments
-	 */
-	public Vector getEntryBlocks() {
-		return entryBlocks;
-	}
-
-	//	/**
-	//	 * returns the calculated wp for the block
-	//	 * @return <code>wp </code>
-	//	 */
-	//	public Formula getWp() {
-	//		return wp;
-	//	}
-
-	/* (non-Javadoc)
+	/* calculates the wp of the block starting at the penultimate instruction 
 	 * @see bytecode.ByteCode#wp(formula.Formula)
 	 */
-	public Formula wp(
-		Formula _normal_Postcondition,
-		ExsuresTable _exc_Postcondition) {
-
-		Util.dump(
-			"***********************************************************");
-		Util.dump("wp for ");
-		dump("");
-		//wps = new Vector();
-		BCInstruction _instr = last;
-		Formula _np = _normal_Postcondition;
+	public Formula wp(Formula _np, ExsuresTable _exc_Postcondition) {
+		if (getLast() == getFirst()) {
+			return _np;
+		}
+		BCInstruction _instr = getLast().getPrev();
 
 		while (true) {
-			
+			if (_instr == null) {
+				return _np;
+			}
 			_np = _instr.wp(_np, _exc_Postcondition);
-			Util.dump( " wp for instr " + _instr.getInstructionHandle().getInstruction() + "  = "  + _np) ;
-			if (_instr.equals(first)) {
+			Formula assert = _instr.getAssert();
+			if (assert != null) {
+				_np = Formula.getFormula(_np, assert, Connector.AND);
+			}
+			Util.dump(" wp instr :  " + _instr + "  = " + _np);
+			if (_instr.equals(getFirst())) {
 				break;
 			}
 			_instr = _instr.getPrev();
 		}
-
-		Util.dump(_np.toString());
-		Util.dump(
-			"***********************************************************");
+		if (getTargeterBlocks() == null ) {
+			if (wps == null) {
+				wps = new Vector( );
+			}
+			wps.add(_np);
+		}
 		return _np;
 	}
 
 	/* (non-Javadoc)
 	 * @see bytecode.EndBlockInstruction#calculateRecursively(formula.Formula, bcclass.attributes.ExsuresTable)
 	 */
-	public Formula calculateRecursively(
+	public void calculateRecursively(
+		Formula _normalPostcondition,
+		ExsuresTable _exc_postcondition) {
+		BCInstruction last = getLast();
+		Formula _np = _normalPostcondition.copy();
+		Formula wp = last.wp(_np, _exc_postcondition);
+		
+		Util.dump(
+			" wp instr : "
+				+ last
+				+ "  = "
+				+ wp);
+		Formula wpBlock = wp(wp, _exc_postcondition);
+//		Util.dump("***********************************************************");
+		_calculateRecursively(wpBlock, _exc_postcondition);
+	}
+
+	/**
+	 * invokes  calculateRecursively method of every block that is targeting to this block
+	 * @param _normal_postcondition
+	 * @param _exc_postcondition
+	 */
+	protected void _calculateRecursively(
 		Formula _normal_postcondition,
-		ExsuresTable _exs_postcondition) {
-		Formula wp = wp(_normal_postcondition, _exs_postcondition);
-		Vector targeters = first.getTargeters();
-		if (targeters == null) {
-
-			return wp;
+		ExsuresTable _exc_postcondition) {
+		if (targeterBlocks == null) {
+			Util.dump("------------- This path ended -------------------");
+			return;
 		}
-		for (int k = 0; k < targeters.size(); k++) {
-
-			// in case there is a previous block then calculate the wp upon the wp of this block
-			if (targeters.elementAt(k) instanceof EndBlockInstruction) {
-				(
-					(EndBlockInstruction) targeters.elementAt(
-						k)).calculateRecursively(
-					wp,
-					_exs_postcondition);
-			} else if (targeters.elementAt(k) instanceof BCConditionalBranch) {
-				// else if it is a block branch then give it to  the instruction that is branching on this block
-				//				( (BCConditionalBranch) targeters.elementAt(k) ).setBranchWP( wp);
-				((BCConditionalBranch) targeters.elementAt(k)).wpBranch(
-					wp,
-					_exs_postcondition);
+		for (int k = 0; k < targeterBlocks.size(); k++) {
+			Formula wpCopy = _normal_postcondition.copy();
+			if (targeterBlocks.elementAt(k) instanceof BranchingBlock) {
+				BranchingBlock branchingBlock =
+					(BranchingBlock) targeterBlocks.elementAt(k);
+				Block targetBlock = branchingBlock.getBranchTargetBlock();
+				if (this == targetBlock) {
+					//						Util.dump("************ wp for branch case");
+					branchingBlock.calculateBranchRecursively(
+						wpCopy,
+						_exc_postcondition);
+				} else {
+					//						Util.dump("************ wp for straight case");
+					branchingBlock.calculateRecursively(
+						wpCopy,
+						_exc_postcondition);
+				}
+				continue;
 			}
+			Block block = ((Block) targeterBlocks.elementAt(k));
+			block.calculateRecursively(wpCopy, _exc_postcondition);
 		}
-		return wp;
 	}
 
 	public void dump(String _offset) {
 		if (Util.DUMP) {
-
 			String offset = "     ";
 			System.out.println(_offset + "Block( ");
 			System.out.println(
-				_offset
-					+ offset
-					+ "fst: "
-					+ " "
-					+ first.getPosition()
-					+ " "
-					+ first.getInstructionHandle().getInstruction().toString());
+				_offset + offset + "fst: " + " " + getFirst().toString());
 
 			System.out.println(
-				_offset
-					+ offset
-					+ "end: "
-					+ last.getPosition()
-					+ " "
-					+ last.getInstructionHandle().getInstruction().toString());
+				_offset + offset + "end:  " + getLast().toString());
 			System.out.println(_offset + ")");
 
-			BCInstruction _i = first;
+			//			BCInstruction _i = first;
 		}
 	}
 
 	public boolean equals(Block _block) {
-		if ((first.equals(_block.getFirst()))
-			&& (last.equals(_block.getLast()))) {
+		if ((getFirst().equals(_block.getFirst()))
+			&& (getLast().equals(_block.getLast()))) {
 			return true;
 		}
 		return false;
 	}
+	/**
+	 * @return
+	 */
+	public Vector getTargeterBlocks() {
+		return targeterBlocks;
+	}
+
+	/**
+		 * called by Trace to set the blocks that are may be executed after this one
+		 * @param blocks
+		 */
+	public void setTargetBlocks(HashMap blocks) {
+		BCInstruction last = getLast();
+		if (last instanceof BCJSR) {
+			BCInstruction targetInstr = ((BCJSR) last).getTarget();
+			Block b =
+				(Block) blocks.get(new Integer(targetInstr.getPosition()));
+			setTargetSeqBlock(b);
+		} else if (last instanceof BCGOTO) {
+			BCInstruction targetInstr = ((BCGOTO) last).getTarget();
+			Block b =
+				(Block) blocks.get(new Integer(targetInstr.getPosition()));
+			setTargetSeqBlock(b);
+
+		} else if (last instanceof BCRET) {
+			return;
+		} else if (last instanceof BCTypeRETURN) {
+			return;
+		} else if (last instanceof BCATHROW) {
+			return;
+		} else if (last instanceof BCLoopEnd) {
+			return;
+		} else if (last.getNext().getTargeters() != null) {
+			Block b =
+				(Block) blocks.get(new Integer(last.getNext().getPosition()));
+			setTargetSeqBlock(b);
+		}
+	}
+
+	/**
+	 * called by Trace to set the blocks that may be executed before this one
+	 * @param blocks
+	 */
+	public void setTargeterBlocks(HashMap blocks, Trace trace) {
+		Block targeterBlock = null;
+		BCInstruction first = getFirst();
+		BCInstruction prev = first.getPrev();
+		// if there starts a block where the instruction before is not a jump, return , ret , jsr
+		if ((prev != null)
+			&& !(prev instanceof BCRET)
+			&& !(prev instanceof BCTypeRETURN)
+			&& !(prev instanceof BCJSR)
+			&& !(prev instanceof BCGOTO)
+			&& !(prev instanceof BCATHROW) 
+			&& !(prev instanceof BCLoopEnd)) {
+			//not good
+			if ((targeterBlock = trace.getBlockEndAt(prev)) != null) {
+				if (targeterBlocks == null) {
+					targeterBlocks = new Vector();
+				}
+				targeterBlocks.add(targeterBlock);
+			}
+		}
+
+		if (first.getTargeters() == null) {
+			return;
+		}
+		Enumeration targeters = first.getTargeters().elements();
+		BCInstruction targeter = null;
+
+		while (targeters.hasMoreElements()) {
+			targeter = (BCInstruction) targeters.nextElement();
+
+			if ((targeterBlock = trace.getBlockEndAt(targeter)) != null) {
+				if (targeterBlocks == null) {
+					targeterBlocks = new Vector();
+				}
+				targeterBlocks.add(targeterBlock);
+			}
+		}
+
+	}
+
+	/**
+	 * Returns the targetBlocks.
+	 * @return Vector
+	 */
+	public Block getTargetSeqBlock() {
+		return targetSeqBlock;
+	}
+
+	/**
+	 * Sets the targetBlock.
+	 * @param targetBlock The targetBlock to set
+	 */
+	public void setTargetSeqBlock(Block targetBlock) {
+		this.targetSeqBlock = targetBlock;
+	}
+
+//	/**
+//	 * @param block
+//	 * used only when if this is a loop end block
+//	 */
+//	public void removeTargeterBlock(Block block) {
+//		if (targeterBlocks == null) {
+//			return;
+//		}
+//		targeterBlocks.remove(block);
+//	}
+
 }

@@ -18,7 +18,6 @@ import bcexpression.javatype.JavaType;
 public class Variable extends Expression  {
 	private int id;
 	private JavaType type;
-//	private Vector with;
 	
 	public static final Variable DummyVariable = new Variable( 0);
 	
@@ -50,10 +49,10 @@ public class Variable extends Expression  {
 
 
 	public Expression substitute(Expression _e1,  Expression _e2) {
-			if (this.equals( _e1)) {
-				return _e2;
-			}
-			return null;
+//			if (this.equals( _e1)) {
+//				return _e2;
+//			}
+			return this;
 	}
 	
 	
@@ -86,7 +85,7 @@ public class Variable extends Expression  {
 	 * @see bcexpression.Expression#copy()
 	 */
 	public Expression copy() {
-		Variable copy = new Variable(id) ;
+		Variable copy = new Variable(id, type) ;
 		return copy;
 	}
 	

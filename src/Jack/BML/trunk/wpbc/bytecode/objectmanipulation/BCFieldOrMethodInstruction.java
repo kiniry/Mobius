@@ -21,7 +21,7 @@ public  abstract class BCFieldOrMethodInstruction
 	extends BCExceptionThrower
 	implements BCCPInstruction, BCTypedInstruction {
 		
-	private BCConstantPool cp;
+	private BCConstantPool constantPool;
 	/**
 	 * index into the constant pool that represents a CONSTANT_fieldref_info  or CONSTANT_methodref_info  structure
 	 */	
@@ -51,7 +51,7 @@ public  abstract class BCFieldOrMethodInstruction
 		setIndex(index);
 		setType(_type);
 		classType = _classType;
-		cp  = _cp;
+		constantPool  = _cp;
 	}
 
 	/* (non-Javadoc)
@@ -91,7 +91,7 @@ public  abstract class BCFieldOrMethodInstruction
 	}
 	
 	public BCConstantPool getConstantPool() {
-		return cp;
+		return constantPool;
 	}
 
 

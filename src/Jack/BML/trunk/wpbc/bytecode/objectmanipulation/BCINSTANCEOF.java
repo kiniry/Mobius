@@ -12,7 +12,6 @@ import org.apache.bcel.generic.InstructionHandle;
 import bcclass.attributes.ExsuresTable;
 import bcexpression.Expression;
 import bcexpression.NumberLiteral;
-import bcexpression.javatype.JavaReferenceType;
 import bcexpression.javatype.JavaType;
 import bcexpression.jml.TYPEOF;
 import bcexpression.vm.Stack;

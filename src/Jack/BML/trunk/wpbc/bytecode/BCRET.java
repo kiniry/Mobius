@@ -11,7 +11,7 @@ import java.util.Vector;
 import org.apache.bcel.generic.InstructionHandle;
 
 import bcclass.attributes.ExsuresTable;
-import bytecode.block.Block;
+
 import formula.Formula;
 
 /**
@@ -20,12 +20,12 @@ import formula.Formula;
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class BCRET extends BCInstruction implements EndBlockInstruction {
+public class BCRET extends BCInstruction {
 	private BCInstruction retToInstruction;
 
 	private Vector retToBlocks;
 
-	Block blockEndingWithThis;
+//	Block blockEndingWithThis;
 	/**
 	 * @param _instruction
 	 */
@@ -41,21 +41,21 @@ public class BCRET extends BCInstruction implements EndBlockInstruction {
 		ExsuresTable _exc_Postcondition) {
 		return _normal_Postcondition;
 	}
-	/**
-	 * sets the block that ends with this instruction
-	 */
-	public void setBlock(Block block) {
-		blockEndingWithThis = block;
-	}
+//	/**
+//	 * sets the block that ends with this instruction
+//	 */
+//	public void setBlock(Block block) {
+//		blockEndingWithThis = block;
+//	}
 
-	/* (non-Javadoc)
-	 * @see bytecode.EndBlockInstruction#calculateRecursively(formula.Formula, bcclass.attributes.ExsuresTable)
-	 */
-	public Formula calculateRecursively(
-		Formula _normal_postcondition,
-		ExsuresTable _exs_postcondition) {
-		Formula wp = blockEndingWithThis.calculateRecursively(_normal_postcondition, _exs_postcondition);
-		return wp;
-	}
+//	/* (non-Javadoc)
+//	 * @see bytecode.EndBlockInstruction#calculateRecursively(formula.Formula, bcclass.attributes.ExsuresTable)
+//	 */
+//	public Formula calculateRecursively(
+//		Formula _normal_postcondition,
+//		ExsuresTable _exs_postcondition) {
+//		Formula wp = blockEndingWithThis.calculateRecursively(_normal_postcondition, _exs_postcondition);
+//		return wp;
+//	}
 
 }

@@ -15,11 +15,13 @@ import bcexpression.javatype.JavaObjectType;
  * To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
-public class Exsures extends Specification {
+public class Exsures {
 	JavaObjectType excType;
 	
+	private Formula exsuresFormula;
+	
 	public Exsures(Formula f, JavaObjectType _exc) {
-		super(f);
+		exsuresFormula =	f;
 		excType = _exc;
 	}
 	
@@ -31,4 +33,11 @@ public class Exsures extends Specification {
 	public JavaObjectType getExcType() {
 		return excType;
 	}
+	/**
+	 * @return
+	 */
+	public Formula getPredicate() {
+		return exsuresFormula;
+	}
+
 }

@@ -24,7 +24,6 @@ public class BCConstantUtf8 extends BCCONSTANT_LITERAL{
 	public BCConstantUtf8(int _cp_index, StringLiteral _s) {
 		super(_cp_index);
 		constant_string = _s;
-		// TODO Auto-generated constructor stub
 	}
 
 	/* (non-Javadoc)

@@ -5,7 +5,7 @@ import org.apache.bcel.generic.InstructionHandle;
 import bcclass.attributes.ExsuresTable;
 import bcexpression.Expression;
 import bcexpression.vm.Stack;
-import bytecode.block.*;
+
 
 import formula.Formula;
 
@@ -16,9 +16,8 @@ import formula.Formula;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class BCTypeRETURN
-	extends BCInstruction
-	implements EndBlockInstruction {
-	private Block blockEndingWithThis;
+	extends BCInstruction {
+//	private Block blockEndingWithThis;
 
 	/**
 	 * @param _instruction
@@ -27,9 +26,9 @@ public class BCTypeRETURN
 		super(_instruction);
 	}
 
-	public void setBlock(Block block) {
-		blockEndingWithThis = block;
-	}
+//	public void setBlock(Block block) {
+//		blockEndingWithThis = block;
+//	}
 
 	public Formula wp(
 		Formula _normal_postcondition,
@@ -41,17 +40,17 @@ public class BCTypeRETURN
 		return wp;
 	}
 
-	/* (non-Javadoc)
-	 * @see bytecode.EndBlockInstruction#calculateRecursively()
-	 */
-	public Formula calculateRecursively(
-		Formula _normal_postcondition,
-		ExsuresTable _exs_postcondition) {
-		Formula wp =
-			blockEndingWithThis.calculateRecursively(
-				_normal_postcondition,
-				_exs_postcondition);
-		return wp;
-	}
+//	/* (non-Javadoc)
+//	 * @see bytecode.EndBlockInstruction#calculateRecursively()
+//	 */
+//	public Formula calculateRecursively(
+//		Formula _normal_postcondition,
+//		ExsuresTable _exs_postcondition) {
+//		Formula wp =
+//			blockEndingWithThis.calculateRecursively(
+//				_normal_postcondition,
+//				_exs_postcondition);
+//		return wp;
+//	}
 
 }

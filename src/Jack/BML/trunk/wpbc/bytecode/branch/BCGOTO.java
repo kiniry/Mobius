@@ -9,9 +9,6 @@ package bytecode.branch;
 import org.apache.bcel.generic.InstructionHandle;
 
 import bcclass.attributes.ExsuresTable;
-import bytecode.EndBlockInstruction;
-import bytecode.block.*;
-
 
 import formula.Formula;
 
@@ -21,8 +18,8 @@ import formula.Formula;
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class BCGOTO extends BCUnconditionalBranch implements EndBlockInstruction{
-	private Block blockEndingWithThis;
+public class BCGOTO extends BCUnconditionalBranch {
+//	private Block blockEndingWithThis;
 	
 	/**
 	 * @param _branchInstruction
@@ -40,20 +37,20 @@ public class BCGOTO extends BCUnconditionalBranch implements EndBlockInstruction
 	}
 	
 
-	/* (non-Javadoc)
-	 * @see bytecode.EndBlockInstruction#calculateRecursively(formula.Formula, bcclass.attributes.ExsuresTable)
-	 */
-	public Formula calculateRecursively(Formula _normal_postcondition, ExsuresTable _exs_postcondition) {
-		Formula wp = blockEndingWithThis.calculateRecursively( _normal_postcondition, _exs_postcondition);
-		return wp;
-	}
+//	/* (non-Javadoc)
+//	 * @see bytecode.EndBlockInstruction#calculateRecursively(formula.Formula, bcclass.attributes.ExsuresTable)
+//	 */
+//	public Formula calculateRecursively(Formula _normal_postcondition, ExsuresTable _exs_postcondition) {
+//		Formula wp = blockEndingWithThis.calculateRecursively( _normal_postcondition, _exs_postcondition);
+//		return wp;
+//	}
 
 
-	/* (non-Javadoc)
-	 * @see bytecode.EndBlockInstruction#setBlock(bytecode.block.Block)
-	 */
-	public void setBlock(Block block) {
-		blockEndingWithThis = block;
-	}
+//	/* (non-Javadoc)
+//	 * @see bytecode.EndBlockInstruction#setBlock(bytecode.block.Block)
+//	 */
+//	public void setBlock(Block block) {
+//		blockEndingWithThis = block;
+//	}
 
 }

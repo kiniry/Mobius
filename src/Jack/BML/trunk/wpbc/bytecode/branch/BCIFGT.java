@@ -32,7 +32,6 @@ public class BCIFGT extends BCConditionalBranch {
 	 */
 	public BCIFGT(InstructionHandle _branchInstruction) {
 		super(_branchInstruction);
-		// TODO Auto-generated constructor stub
 	}
 	
 	/* (non-Javadoc)

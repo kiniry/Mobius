@@ -133,7 +133,7 @@ public class BCMULTIANEWARRAY
 				new NumberLiteral(0),
 				PredicateSymbol.GRTEQ);
 
-		//forall  i. (i > t - dims and i < t). S(i) <= 0
+		//forall  i. (i > t - dims and i < t). S(i) >= 0
 		QuantifiedFormula conditionForNormalTermination =
 			new QuantifiedFormula(opened_formula, quantificator);
 

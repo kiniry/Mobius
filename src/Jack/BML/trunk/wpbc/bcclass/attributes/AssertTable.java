@@ -20,4 +20,12 @@ public class AssertTable implements BCAttribute {
 	} 
 	
 	
+	/**
+	 * @return
+	 */
+	public Assert[] getAsserts() {
+		return asserts;
+	}
+
+
 }

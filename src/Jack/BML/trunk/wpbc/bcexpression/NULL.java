@@ -6,6 +6,7 @@
  */
 package bcexpression;
 
+import bcexpression.javatype.JavaType;
 import type.BCType;
 
 /**
@@ -28,16 +29,13 @@ public class NULL extends Expression {
 	 * @see bcexpression.Expression#setType()
 	 */
 	public void setType() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	/* (non-Javadoc)
 	 * @see bcexpression.Expression#getType()
 	 */
 	public BCType getType() {
-		// TODO Auto-generated method stub
-		return null;
+		return JavaType.JavaNULL;
 	}
 	public boolean equals(Expression _expr){ 
 		if (_expr == this) {

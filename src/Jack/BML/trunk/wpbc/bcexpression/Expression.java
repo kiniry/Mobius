@@ -14,7 +14,7 @@ import type.BCType;
  * To change the template for this generated type comment go to Window -
  * Preferences - Java - Code Generation - Code and Comments
  */
-public abstract class Expression implements Cloneable {
+public abstract class Expression {
 	private Expression[] subExpressions;
 	
 	public static final Counter COUNTER = Counter.getCounter();
@@ -112,13 +112,14 @@ public abstract class Expression implements Cloneable {
 
 	/**
 	 * two expressions are equals if they are from the same type and if they
-	 * have the same number of subexpressions and they are equals.
+	 * have the same number of subexpressions and they are equal.
 	 * 
 	 * @param _expr
 	 * @return
 	 */
 	public boolean equals(Expression _expr) {
 		if (_expr == null) {
+			return false;
 		}
 		if (_expr.getClass() != this.getClass()) {
 			return false;
@@ -130,7 +131,7 @@ public abstract class Expression implements Cloneable {
 			|| ((subEofExpr != null) && (subEofThis == null))) {
 			return false;
 		}
-		//both expressions don't have subexpressions
+		//both expressions don't have subexpressions, return true
 		if ((subEofExpr == null) && (subEofThis == null)) {
 			return true;
 		}
@@ -156,6 +157,25 @@ public abstract class Expression implements Cloneable {
 			copySubExpr[i] = subExpressions[i].copy();
 		}
 		return copySubExpr;
+	}
+	/**
+	 * renames subexpression of this expression
+	 * Renaming must be done in such a way that no capture of variables should be done , i.e. the expr2 must be a fresh variable 
+	 * @param expr1
+	 * @param expr2
+	 * @return
+	 */
+	public Expression rename(Expression expr1,  Expression expr2 ) {
+		if (this.equals( expr1)) {
+			return expr2;
+		}
+		if (subExpressions == null) {
+			return this;
+		}
+		for (int i =0 ; i< subExpressions.length; i++) {
+			subExpressions[i] = subExpressions[i].rename(expr1, expr2);
+		}
+		return this;
 	}
 
 	public abstract Expression copy();

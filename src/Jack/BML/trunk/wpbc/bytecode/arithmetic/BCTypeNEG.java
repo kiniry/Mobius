@@ -44,7 +44,6 @@ public class BCTypeNEG extends BCArithmeticInstruction {
 	 * @see bytecode.BCInstruction#wp(formula.Formula, specification.ExceptionalPostcondition)
 	 */
 	public Formula wp(Formula _normal_Postcondition, ExsuresTable _exc_Postcondition) {
-		// TODO Auto-generated method stub
 		Formula wp;
 
 		Stack stackTop = new Stack(Expression.COUNTER);

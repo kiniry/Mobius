@@ -16,6 +16,9 @@ public class ArrayLengthConstant  extends BCConstantFieldRef {
 
 	
 	
+	public String toString() {
+		return "_length" ;
+	}
 	
 
 }

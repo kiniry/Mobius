@@ -44,6 +44,7 @@ public class JavaBasicType extends JavaType  {
 		if ((_type2 == JavaType.JavaINT )&&( _type1 == JavaType.JavaSHORT)) {
 			return true;
 		}
+		
 		return false;
 	}
 	

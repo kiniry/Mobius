@@ -44,7 +44,6 @@ public class BCIF_ACMPEQ extends BCConditionalBranch {
 	 */
 	public BCIF_ACMPEQ(InstructionHandle _branchInstruction) {
 		super(_branchInstruction);
-		// TODO Auto-generated constructor stub
 	}
 
 	/**

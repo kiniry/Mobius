@@ -109,7 +109,10 @@ public class BCPUTFIELD extends BCFieldOrMethodInstruction {
 					Expression.COUNTER,
 					new NumberLiteral(2),
 					ExpressionConstants.SUB));
-		// index(  S(t-1)  )
+		// field access in this form :
+		// index -the index of the field in the cp for the field that is accessed; 
+		// S(t-1) - the object whose field is dereferenced):   
+		// This results in :  index(  S(t-1)  )
 		FieldAccessExpression fieldAccess =
 			new FieldAccessExpression(
 				(BCConstantFieldRef) (getConstantPool()

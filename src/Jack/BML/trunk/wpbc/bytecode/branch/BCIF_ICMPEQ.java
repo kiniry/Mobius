@@ -29,7 +29,7 @@ public class BCIF_ICMPEQ extends BCConditionalBranch {
 	 */
 	public BCIF_ICMPEQ(InstructionHandle _branchInstruction) {
 		super(_branchInstruction);
-		// TODO Auto-generated constructor stub
+
 	}
 	/* (non-Javadoc)
 		 * @see bytecode.ByteCode#wp(formula.Formula, specification.Exsures)

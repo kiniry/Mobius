@@ -23,7 +23,6 @@ public abstract class BCConversionInstruction  extends BCInstruction implements 
 	 */
 	public BCConversionInstruction(InstructionHandle _instruction) {
 		super(_instruction);
-		// TODO Auto-generated constructor stub
 	}
 
 	

@@ -9,11 +9,8 @@ package bytecode.objectmanipulation;
 
 import org.apache.bcel.generic.InstructionHandle;
 
-import formula.Formula;
-
 import bcclass.BCConstantPool;
 
-import bcclass.attributes.ExsuresTable;
 import bcexpression.javatype.ClassNames;
 import bcexpression.javatype.JavaObjectType;
 import bcexpression.javatype.JavaType;
@@ -25,7 +22,7 @@ import bcexpression.javatype.JavaType;
  * To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
-public class BCINVOKEINTERFACE extends BCFieldOrMethodInstruction {
+public class BCINVOKEINTERFACE extends BCInvoke {
 
 //	/private JavaType[] argTypes;
 
@@ -46,13 +43,5 @@ public class BCINVOKEINTERFACE extends BCFieldOrMethodInstruction {
 	//	argTypes = _argTypes;
 	}
 
-	/* (non-Javadoc)
-	 * @see bytecode.ByteCode#wp(formula.Formula, specification.ExceptionalPostcondition)
-	 */
-	public Formula wp(
-		Formula _normal_Postcondition,
-		ExsuresTable _exc_Postcondition) {
-		Formula wp = null;
-		return wp;
-	}
+
 }

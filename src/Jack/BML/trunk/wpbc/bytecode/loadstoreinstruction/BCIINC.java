@@ -32,8 +32,7 @@ public class BCIINC extends BCLocalVariableInstruction {
 	 * the value by which the local variable will be incremented
 	 */
 	private NumberLiteral constant;
-	private JavaType type;
-
+	
 	public BCIINC(InstructionHandle _instruction, BCLocalVariable _lv) {
 		super(_instruction, _lv);
 		setType(JavaType.JavaINT);

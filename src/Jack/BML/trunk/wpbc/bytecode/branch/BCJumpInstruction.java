@@ -9,8 +9,8 @@ import org.apache.bcel.generic.BranchInstruction;
 import org.apache.bcel.generic.InstructionHandle;
 import bytecode.BCInstruction;
 
-import bytecode.block.*;
-import utils.Util;
+//import bytecode.block.*;
+//import utils.Util;
 /**
  * @author mpavlova
  * 
@@ -21,13 +21,14 @@ public abstract class BCJumpInstruction extends BCInstruction {
 	private BCInstruction target;
 	private int targetPosition;
 	
-	protected Block targetBlock;
+//	protected Block targetBlock;
 	
 	public BCJumpInstruction(InstructionHandle _branchInstruction) {
 		super(_branchInstruction);
 		targetPosition = ((BranchInstruction) _branchInstruction
 				.getInstruction()).getTarget().getPosition();
 	}
+	
 	/**
 	 * @param _t -
 	 *            the instruction to which this jump instruction targets to
@@ -45,34 +46,34 @@ public abstract class BCJumpInstruction extends BCInstruction {
 
 	
 	 
-	/**
-	 * this method is called by exterior once the target instruction is set It
-	 * sets the target blocks for this jump instruction
-	 *  
-	 */
-	public void setTargetBlock(Block b) {
-		 targetBlock = b;
-	}
-	
-	
-	/*
-	 * public void setTargetBlocks(Vector v) { targetBlocks = v;
-	 */
-	/* public Vector getTargetBlocks() { */
-	public Block getTargetBlock() {
-		return targetBlock;
-	}
-	public void dump() {
-		/*
-		 * Enumeration en = targetBlocks.elements();
-		 */
-		Util.dump("target blocks for " + getInstructionHandle().toString());
-		targetBlock.dump("");
-		/*
-		 * while (en.hasMoreElements()) { _b = (Block) en.nextElement();
-		 * _b.dump("");
-		 */
-	}
+//	/**
+//	 * this method is called by exterior once the target instruction is set It
+//	 * sets the target blocks for this jump instruction
+//	 *  
+//	 */
+//	public void setTargetBlock(Block b) {
+//		 targetBlock = b;
+//	}
+//	
+//	
+//	/*
+//	 * public void setTargetBlocks(Vector v) { targetBlocks = v;
+//	 */
+//	/* public Vector getTargetBlocks() { */
+//	public Block getTargetBlock() {
+//		return targetBlock;
+//	}
+//	public void dump() {
+//		/*
+//		 * Enumeration en = targetBlocks.elements();
+//		 */
+//		Util.dump("target blocks for " + getInstructionHandle().toString());
+//		targetBlock.dump("");
+//		/*
+//		 * while (en.hasMoreElements()) { _b = (Block) en.nextElement();
+//		 * _b.dump("");
+//		 */
+//	}
 	/**
 	 * @return
 	 */
