@@ -1,10 +1,12 @@
+.emacs.desktop
+Makefile.local
 OOBR
 docs
 jars
+javadoc
 jmlc
 libs
 optimized
-javadoc
-Makefile.local
+prj.el
 release
 release-temp
