@@ -106,10 +106,13 @@ sepjavatests:
 		$(MAKE) --no-print-directory $${f}-test; \
 	done
 
-%.test:
-	@echo Testing $*
+%.ex:
 	$(JAVAC) -classpath "${_CLASSPATH}" $*.java
 	-$(JUNIT) $*
+
+%.test:
+	@echo Testing $*
+	$(MAKE) $*.ex
 	(${ESCJAVA} ${ALWAYSFLAGS} -classpath "${_CLASSPATH}" -specs "${_SPECS}"\
 		`grep '//#FLAGS:' $*.java | \
 		sed -e "sx//#FLAGS:xx" -e "s@ESCTOOLS_ROOT@${ESCTOOLS_ROOT}@" ` \
