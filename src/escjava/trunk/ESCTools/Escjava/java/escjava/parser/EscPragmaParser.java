@@ -2482,6 +2482,15 @@ System.out.println("ADVANCING AT " + TagConstants.toString(tag));
      */
     //@ requires l.m_in != null
     public Expr parseStoreRefExpr(/*@ non_null @*/ EscPragmaLex l) {
+	if ((l.ttype == TagConstants.IDENT || l.ttype == TagConstants.THIS) &&
+		l.lookahead(1) == TagConstants.FIELD &&
+		l.lookahead(2) == TagConstants.STAR) {
+
+		l.getNextToken();
+		l.getNextToken();
+		l.getNextToken();
+		return null;
+	}
 	return parseExpression(l);
 /*
 	int loc = l.startingLoc;
