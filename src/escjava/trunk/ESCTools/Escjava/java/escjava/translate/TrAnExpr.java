@@ -16,6 +16,7 @@ import escjava.ast.*;
 import escjava.ast.TagConstants;
 import escjava.ast.Modifiers;
 import escjava.Main;
+import escjava.tc.Types;
 
 
 /** Translates Annotation Expressions to GCExpr. */
@@ -831,8 +832,8 @@ wrap those variables being modified and not everything.
     } else if (Types.isReferenceOrNullType( leftType ) 
 	       && Types.isReferenceOrNullType( rightType )) {
       naryTag = binary_table[i][5];
-    } else if (leftType.getTag() == TagConstants.TYPECODE
-	       && rightType.getTag() == TagConstants.TYPECODE) {
+    } else if (Types.isTypeType(leftType)
+	       && Types.isTypeType(rightType)) {
       naryTag = binary_table[i][6];
     } else {
       Assert.fail("Bad types on tag "+TagConstants.toString(tag) );

@@ -9,13 +9,21 @@ import javafe.tc.*;
 
 import javafe.util.*;
 
-public abstract class Types extends javafe.tc.Types
+public class Types extends javafe.tc.Types
 {
+/* TYPE-EQUIV and below
+    static {
+	inst = new Types();
+	//System.out.println("INST ESC");
+    }
+*/
+
     public static PrimitiveType
             anyType = PrimitiveType.make(TagConstants.ANY, Location.NULL);
 
     public static PrimitiveType
             typecodeType = PrimitiveType.make(TagConstants.TYPECODE, Location.NULL);
+	//public static TypeSig typecodeType = javaLangClass();
 
     public static PrimitiveType
             locksetType = PrimitiveType.make(TagConstants.LOCKSET, Location.NULL);
@@ -23,6 +31,29 @@ public abstract class Types extends javafe.tc.Types
     public static PrimitiveType
 	    rangeType = PrimitiveType.make(TagConstants.DOTDOT, Location.NULL);
 
+    static private Type javaLangClass = javaLangClass();
+
+    public static boolean isTypeType(Type t) {
+	return t.getTag() == TagConstants.TYPECODE;
+	//return t.getTag() == TagConstants.TYPECODE || t.equals(javaLangClass);
+    }
+
+/*
+    public boolean isSameTypeInstance(Type t, Type tt) {
+	if (isTypeType(t) && isTypeType(tt)) return true;
+	return super.isSameTypeInstance(t,tt);
+    }
+
+    public boolean isCastableInstance(Type t, Type tt) {
+	boolean b = super.isCastableInstance(t,tt);
+	if (b) return b;
+	if (isTypeType(t))
+		return super.isCastableInstance(javaLangClass,tt);
+	if (isTypeType(tt))
+		return super.isCastableInstance(t,javaLangClass);
+	return b;
+    }
+*/
     /**
      * This routine overrides {@link javafe.tc.Types#lookupField}.  Unlike that
      * routine, it knows about ghost fields and spec_public.

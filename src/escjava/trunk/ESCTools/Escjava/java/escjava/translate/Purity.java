@@ -93,6 +93,7 @@ public abstract class Purity {
     case TagConstants.NULLLIT:
     case TagConstants.VARIABLEACCESS:
     case TagConstants.CLASSLITERAL:
+    case TagConstants.TYPEEXPR:  // FIXME - TYPE-EQUIV
       return;
 
     case TagConstants.ARRAYINIT: 
