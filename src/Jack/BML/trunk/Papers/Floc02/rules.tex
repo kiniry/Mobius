@@ -35,7 +35,7 @@
 \rule{\linewidth}{0.25mm}
 \\[2.5ex]
 \begin{tabular}{ll}
-\textsf{(METH-DEC)}\,\,\,&
+\textsf{(Meth-Dec)}\,\,\,&
 \begin{prooftree} 
 \texttt{m(}\overrightarrow{\texttt{o}}\texttt{).body}\
 \overrightarrow{\textsf{mod}}\ 
@@ -57,7 +57,7 @@ Y\cup \{\overrightarrow{\texttt{o}}\}\cup \{
 \rule{\linewidth}{0.25mm}
 \\[2.5ex]
 \begin{tabular}{ll}
-\textsf{MOD-TO-EXP} & 
+\textsf{(Mod-To-Exp)} & 
 \begin{prooftree}
 e\ \textsf{modEXP}\ Y
 \justifies
@@ -80,7 +80,7 @@ e\in Expression
 \rule{\linewidth}{0.25mm}
 \\[2.5ex]
 \begin{tabular}{ll}
-\textsf{(ASSG)}\,\,\, & 
+\textsf{(Assg)}\,\,\, & 
 \begin{prooftree}
 e_1\underline{\in}Y,\ \ e_1\
 \textsf{modPE}\ Y,\ \ e_2\ \textsf{modEXP}\ Y
@@ -90,7 +90,7 @@ e_1\oplus \textup{e}_2\ \textsf{modEXP}\ Y
 \oplus \in \{\texttt{=,+=,-=,*=,/=}\}
 \end{prooftree}
 \\[3.0ex] 
-\textsf{(VAR-DECL-ASSG)}\,\, & 
+\textsf{(Var-Decl-Assg)}\,\, & 
 \begin{prooftree}
 \rule[1ex]{0em}{1.5ex}
 \texttt{x}\underline{\in}Y,\ \ e\ \textsf{modEXP}\ Y
@@ -98,41 +98,41 @@ e_1\oplus \textup{e}_2\ \textsf{modEXP}\ Y
 \texttt{T x =}\ e\ \textsf{modEXP}\ Y
 \end{prooftree}
 \\[3.0ex] 
-\textsf{(VAR-DECL)}\,\,\, & 
+\textsf{(Var-Decl)}\,\,\, & 
 \begin{prooftree}
 \justifies
 \texttt{T x}\ \textsf{modEXP}\ Y
 \end{prooftree}
 \\[3.0ex]
-\textsf{(PRE-PLUS)} &
+\textsf{(Pre-Plus)} &
 \begin{prooftree}
 e\underline{\in}\ Y,\ \ e\ \textsf{modPE}\ Y
 \justifies
 \texttt{++}e\ \textsf{modEXP}\ Y
 \end{prooftree}
 \\[3.0ex]
-\textsf{(PRE-MINUS)} &
+\textsf{(Pre-Minus)} &
 \begin{prooftree}
 e\underline{\in}\ Y,\ \ e\ \textsf{modPE}\ Y
 \justifies
 \texttt{-}\strut\texttt{-}\ e\ \textsf{modEXP}\ Y
 \end{prooftree}
 \\[3.0ex]
-\textsf{(POST-PLUS)}\,\, &
+\textsf{(Post-Plus)}\,\, &
 \begin{prooftree}
 e\underline{\in}Y,\ \ e\ \textsf{modPE}\ Y
 \justifies
 e\texttt{++}\ \textsf{modEXP}\ Y
 \end{prooftree}
 \\[3.0ex] 
-\textsf{POST-MINUS} &
+\textsf{(Post-Minus)} &
 \begin{prooftree}
 e\underline{\in}\ Y,\ \ e\ \textsf{modPE}\ Y
 \justifies
 e\ \texttt{-}\strut\texttt{-}\ \textsf{modEXP}\ Y
 \end{prooftree}
 \\[3.0ex]
-\textsf{(BINARY)} & 
+\textsf{(Binary)} & 
 \begin{prooftree} 
 e_1\ \textsf{modPE}\ Y,\ \ e_2\ \textsf{modEXP}\ Y
 \justifies
@@ -146,7 +146,7 @@ e_1\oplus e_2\ \textsf{modEXP}\ Y
 	\}
 \end{prooftree}
 \\[3.0ex]
-\textsf{(UNARY)} & 
+\textsf{(Unary)} & 
 \begin{prooftree} 
 e\ \textsf{modEXP}\ Y
 \justifies
@@ -155,21 +155,21 @@ e\ \textsf{modEXP}\ Y
 \oplus \in \{\texttt{+,-,$\sim$,!}\}
 \end{prooftree}
 \\[3.0ex] 
-\textsf{(INSTANCE)} & 
+\textsf{(Instance)} & 
 \begin{prooftree} 
 e\ \textsf{modEXP}\ Y
 \justifies
 e\ \texttt{instanceof C}\ \textsf{modEXP}\ Y
 \end{prooftree}
 \\[3.0ex] 
-\textsf{(CAST)} & 
+\textsf{(Cast)} & 
 \begin{prooftree}
 e\ \textsf{modEXP}\ Y
 \justifies
 \texttt{(T)}e\ \textsf{modEXP}\ Y
 \end{prooftree}
 \\[3.0ex] 
-\textsf{(CONDITIONAL)}\,\, & 
+\textsf{(Conditional)}\,\, & 
 \begin{prooftree} 
 e_1\ \textsf{modEXP}\ Y,\ \ e_2\ \textsf{modEXP}\ Y,\ \ e_3\
 \textsf{modEXP}\ Y
@@ -189,13 +189,13 @@ e_1\texttt{?}e_2\texttt{:}e_3\ \textsf{modEXP}\ Y
 \rule{\linewidth}{0.25mm}
 \\[2.5ex]
 \begin{tabular}{ll}
-\textsf{EXP-TO-PE} & 
+\textsf{(Exp-To-Pe)} & 
 \begin{prooftree}
 e\ \textsf{modPE}\ Y
 \justifies
 e\ \textsf{modEXP}\ Y
 \using
-e\in Post\!-\! expression
+e\in Post\!\!-\! expression
 \end{prooftree}
 \end{tabular}
 \\[2.5ex]
@@ -210,7 +210,7 @@ e\in Post\!-\! expression
 \rule{\linewidth}{0.25mm}
 \\[3.0ex]
 \begin{tabular}{ll}
-\textsf{EXP-PRM} &
+\textsf{(Pe-to-Prm)} &
 \begin{prooftree}
 e\ \textsf{modPRM}\ Y
 \justifies
@@ -219,7 +219,7 @@ e\ \textsf{modPE}\ Y
 e\in \ \textsf{Primary}
 \end{prooftree}
 \\[3.0ex]
-\textsf{(METH-INV)}\,\, &
+\textsf{(Meth-Inv)}\,\, &
 \begin{prooftree}
 \sem{e\texttt{.m(}\overrightarrow{\texttt{o}})\texttt{.modifies}}
 [\overrightarrow{\texttt{o}}\backslash \overrightarrow{\texttt{q}},
@@ -230,7 +230,7 @@ e\ \textsf{modPE}\ Y,\
 e\texttt{.m(}\overrightarrow{\texttt{q}}\texttt{)}\ \textsf{modPE}\ Y
 \end{prooftree}
 \\[3.0ex]
-\textsf{PE-TO-PE} &
+\textsf{(Pe-To-Ps)} &
 \begin{prooftree}
 e_1\ \textsf{modPE}\ Y,\ e_2\ \textsf{modPS}\ Y
 \justifies
@@ -250,31 +250,31 @@ e_1\ \texttt{.}\ e_2\ \textsf{modPE}\ Y
 \rule{\linewidth}{0.25mm}
 \\[3.0ex]
 \begin{tabular}{ll}
-\textsf{(ID-FLD)}\,\, &
+\textsf{(Id-Fld)}\,\, &
 \begin{prooftree}
 \justifies
 \texttt{x}\ \textsf{modPRM}\ Y
 \end{prooftree}
 \\[3.0ex]
-\textsf{(SUPER)}\,\, & 
+\textsf{(Super)}\,\, & 
 \begin{prooftree}
 \justifies
 \texttt{super}\ \textsf{modPRM}\ Y
 \end{prooftree}
 \\[3.0ex]
-\textsf{(THIS)}\,\, & 
+\textsf{(This)}\,\, & 
 \begin{prooftree}
 \justifies
 \texttt{this}\ \textsf{modPRM}\ Y
 \end{prooftree}
 \\[3.0ex]
-\textsf{(STATIC)}\,\, &
+\textsf{(Static)}\,\, &
 \begin{prooftree}
 \justifies
 \texttt{A}\ \textsf{modPRM}\ Y
 \end{prooftree}
 \\[3.0ex]
-\textsf{(CONST)}\,\, &
+\textsf{(Const)}\,\, &
 \begin{prooftree}
 \justifies
 \texttt{b}\ \textsf{modPRM}\ Y
@@ -282,14 +282,14 @@ e_1\ \texttt{.}\ e_2\ \textsf{modPE}\ Y
 \texttt{b}\in Constant
 \end{prooftree}
 \\[3.0ex]
-\textsf{(ARR-FLD)}\,\, &
+\textsf{(Arr-Fld)}\,\, &
 \begin{prooftree}
 e\ \textsf{modEXP}\ Y
 \justifies
 \texttt{a[}e\texttt{]}\ \textsf{modPRM}\ Y
 \end{prooftree}
 \\[3.0ex]
-\textsf{(METH)}\,\, &
+\textsf{(Meth)}\,\, &
 \begin{prooftree}
 \sem{\texttt{this.m(}\overrightarrow{\texttt{o}}\texttt{).modifies}}[\overrightarrow{\texttt{o}} 
 \backslash \overrightarrow{\texttt{q}}]\sqsubseteq Y,\ \
@@ -300,14 +300,14 @@ e\ \textsf{modEXP}\ Y
 \textsc{Y}
 \end{prooftree}
 \\[3.0ex]
-\textsf{(NEW-EXP)}\,\, & 
+\textsf{(New-Exp)}\,\, & 
 \begin{prooftree}
 \overrightarrow{e}\ \overrightarrow{\textsf{modEXP}}\ Y
 \justifies
 \texttt{new T(}\overrightarrow{e}\texttt{)}\ \textsf{modPRM}\ Y
 \end{prooftree}
 \\[3.0ex]
-\textsf{(NEW-ARR)}\,\, & 
+\textsf{(New-Arr)}\,\, & 
 \begin{prooftree}
 e\ \textsf{modEXP}\ Y
 \justifies
@@ -328,31 +328,31 @@ e\ \textsf{modEXP}\ Y
 \rule{\linewidth}{0.25mm}
 \\[3.0ex]
 \begin{tabular}{ll}
-\textsf{(ID-FLD)}\,\, &
+\textsf{(Id-Fld)}\,\, &
 \begin{prooftree}
 \justifies
 \texttt{x}\ \textsf{modPS}\ Y
 \end{prooftree}
 \\[3.0ex]
-\textsf{(SUPER)}\,\, & 
+\textsf{(Super)}\,\, & 
 \begin{prooftree}
 \justifies
 \texttt{super}\ \textsf{modPS}\ Y
 \end{prooftree}
 \\[3.0ex]
-\textsf{(THIS)}\,\, & 
+\textsf{(This)}\,\, & 
 \begin{prooftree}
 \justifies
 \texttt{this}\ \textsf{modPS}\ Y
 \end{prooftree}
 \\[3.0ex]
-\textsf{(STATIC)}\,\, &
+\textsf{(Static)}\,\, &
 \begin{prooftree}
 \justifies
 \texttt{A}\ \textsf{modPS}\ Y
 \end{prooftree}
 \\[3.0ex]
-\textsf{(ARR-FLD)}\,\, &
+\textsf{(Arr-Fld)}\,\, &
 \begin{prooftree}
 e\ \textsf{modEXP}\ Y
 \justifies
@@ -369,7 +369,7 @@ e\ \textsf{modEXP}\ Y
 \rule{\linewidth}{0.25mm}
 \\[3.0ex]
 \begin{tabular}{ll}
-\textsf{(MOD-TO-STATEMENT)} & 
+\textsf{(Mod-To-Statement)} & 
 \begin{prooftree}
 e\ \textsf{modSTM}\ Y
 \justifies
@@ -382,81 +382,79 @@ e\in Statement
 \rule{\linewidth}{0.25mm}
 \end{table}
 %%%%%%%%%%
-
+%\textsf{(Seq)}\,\, & 
+%\begin{prooftree}
+%s\ \textsf{modSTM}\ Y,\ \ t\
+%\textsf{modSTM}\ Y
+%\justifies
+%s\texttt{;}t\ \textsf{modSTM}\ Y
+%\end{prooftree}
+%\\[3.0ex] 
 
 %%%%%%%%%%%%
 \begin{table}
 \rule{\linewidth}{0.25mm}
 \\[3.0ex]
 \begin{tabular}{ll}
-\textsf{(SEQ)}\,\, & 
+\textsf{(If-Then)}\,\, & 
 \begin{prooftree}
-s\ \textsf{modSTM}\ Y,\ \ t\
-\textsf{modSTM}\ Y
+c\ \textsf{modEXP}\ Y,\ \ \overrightarrow{s}\ \overrightarrow{\textsf{mod}}\ Y
 \justifies
-s\texttt{;}t\ \textsf{modSTM}\ Y
-\end{prooftree}
-\\[3.0ex] 
-\textsf{(IF-THEN)}\,\, & 
-\begin{prooftree}
-c\ \textsf{modEXP}\ Y,\ \ s\ \textsf{modSTM}\ Y
-\justifies
-\texttt{if(}c\texttt{)\{}s\ \texttt{\}}\ 
+\texttt{if(}c\texttt{)\{}\overrightarrow{s}\ \texttt{\}}\ 
 \textsf{modSTM}\ Y
 \end{prooftree}
 \\[3.0ex]
-\textsf{(IF-THEN-ELSE)}\,\, & 
+\textsf{(If-Then-Else)}\,\, & 
 \begin{prooftree}
-c\ \textsf{modEXP}\ Y,\ \ s\ \textsf{modSTM}\ Y,\ \ \textsf{t}\
-\textsf{modSTM}\ Y
+c\ \textsf{modEXP}\ Y,\ \ \overrightarrow{s}\ \overrightarrow{\textsf{mod}}\ Y,\ \ \overrightarrow{t}\ \overrightarrow{\textsf{mod}}\ Y
 \justifies
-\texttt{if(}c\texttt{)\{}s\texttt{\}else\{}t\texttt{\}}\
+\texttt{if(}c\texttt{)\{}\overrightarrow{s}\texttt{\}else\{}\overrightarrow{t}\texttt{\}}\
 \textsf{modSTM}\ Y
 \end{prooftree}
 \\[3.0ex]
-\textsf{(WHILE)}\,\,\, & 
+\textsf{(While)}\,\,\, & 
 \begin{prooftree}
-c\ \textsf{modEXP}\ Y,\ \ b\ \textsf{modSTM}\ Y
+c\ \textsf{modEXP}\ Y,\ \ \overrightarrow{s}\ \overrightarrow{\textsf{mod}}\ Y
 \justifies
-\texttt{while(}c\texttt{)\{}b\texttt{\}}
+\texttt{while(}c\texttt{)\{}\overrightarrow{s}\texttt{\}}
 \end{prooftree}
 \\[3.0ex]
-\textsf{(SKIP)} &  
+\textsf{(Skip)} &  
 \begin{prooftree}
 \justifies
 \texttt{skip}\ \textsf{modSTM}\ Y
 \end{prooftree}
 \\[3.0ex]
-\textsf{(BREAK)} & 
+\textsf{(Break)} & 
 \begin{prooftree}
 \justifies
 \texttt{break}\ \textsf{modSTM}\ Y
 \end{prooftree}
 \\[3.0ex]
-\textsf{(BREAK-LBL)} &
+\textsf{(Break-Lbl)} &
 \begin{prooftree}
 \justifies
 \texttt{break\! lbl}\ \textsf{modSTM}\ Y
 \end{prooftree}
 \\[3.0ex]
-\textsf{(CONTINUE)} & 
+\textsf{(Continue)} & 
 \begin{prooftree} 
 \justifies
 \texttt{continue}\ \textsf{modSTM}\ Y
 \end{prooftree}
 \\[3.0ex]
-\textsf{(CONTINUE-LBL)}\,\, & 
+\textsf{(Continue-Lbl)}\,\, & 
 \begin{prooftree} 
 \justifies
 \texttt{continue\! lbl}\ \textsf{modSTM}\ Y
 \end{prooftree}
 \\[3.0ex]
-\textsf{(RETURN)} & 
+\textsf{(Return)} & 
 \begin{prooftree} \justifies
 \texttt{return}\ \textsf{modSTM}\ Y
 \end{prooftree}
 \\[3.0ex]
-\textsf{RETURN-EXP}\,\, & 
+\textsf{Return-Exp}\,\, & 
 \begin{prooftree} 
 e\ \textsf{modEXP}\ Y
 \justifies
@@ -476,77 +474,63 @@ e\ \textsf{modEXP}\ Y
 \rule{\linewidth}{0.25mm}
 \\[3.0ex]
 \begin{tabular}{ll}
-\textsf{(IN-VAR)} &
+\textsf{(In-Var)} &
 \begin{prooftree}
 \texttt{x}\in \textsc{Y}
 \justifies
 \texttt{x}\underline{\in}Y
 \end{prooftree}
 \\[3.0ex]
-\textsf{(IN-ARR)} &
+\textsf{(In-Arr)} &
 \begin{prooftree}
 \texttt{a[}e\texttt{]}\in Y
 \justifies
 \texttt{a[}e\texttt{]}\underline{\in}Y
 \end{prooftree}
 \\[3.0ex]
-\textsf{(IN-EXP)} &
+\textsf{(In-Exp)} &
 \begin{prooftree}
 e\texttt{.x}\in Y
 \justifies
 e\texttt{.x}\underline{\in} Y
 \end{prooftree}
 \\[3.0ex]
-\textsf{(IN-EXP-ARR)}\,\, &
+\textsf{(In-Exp-Arr)}\,\, &
 \begin{prooftree}
 e\texttt{.a[}e_1\texttt{]}\in Y
 \justifies
 e\texttt{.a[}e_1\texttt{]}\underline{\in} Y
 \end{prooftree}
 \\[3.0ex]
-\textsf{(INTERV-ARR)}\,\, & 
-\begin{prooftree}
-\texttt{a[}i..j\texttt{]}\in Y,\ i\leq e\leq j
-\justifies
-\texttt{a[}e\texttt{]}\underline{\in} Y
-\end{prooftree}
-\\[3.0ex]
-\textsf{(TIMES-ARR)}\,\, &
-\begin{prooftree}
-\texttt{a[}*\texttt{]}\in Y
-\justifies
-\texttt{a[}e_1\texttt{]}\underline{\in} Y
-\end{prooftree}
-\\[3.0ex]
-\textsf{(IN-FLD-VAR)} &
+\textsf{(In-Fld-Var)} &
 \begin{prooftree}
 \backslash \texttt{fields\_of(this)}\in Y
 \justifies
 \texttt{x}\underline{\in} Y
 \end{prooftree}
 \\[3.0ex]
-\textsf{(IN-FLD-EXP)}\,\, &
-\begin{prooftree}
-\backslash \texttt{fields\_of(}e\texttt{)}\in Y
-\justifies
-e\texttt{.x}\underline{\in} Y
-\end{prooftree}
-\\[3.0ex]
-\textsf{(IN-FLD-ARR)}\,\, &
+\textsf{(In-Fld-Arr)}\,\, &
 \begin{prooftree}
 \backslash \texttt{fields\_of(a)}\in Y
 \justifies
 \texttt{a[}e_1\texttt{]}\underline{\in} Y
 \end{prooftree}
 \\[3.0ex]
-\textsf{(IN-EXP-ARR-FLD)}\,\, &
+\textsf{(In-Fld-Exp-Var)}\,\, &
+\begin{prooftree}
+\backslash \texttt{fields\_of(}e\texttt{)}\in Y
+\justifies
+e\texttt{.x}\underline{\in} Y
+\end{prooftree}
+\\[3.0ex]
+\textsf{(In-Fld-Exp-Arr)}\,\, &
 \begin{prooftree}
 \backslash \texttt{fields\_of(}e\texttt{.a)}\in Y
 \justifies
 e\texttt{.a[}e_1\texttt{]}\underline{\in} Y
 \end{prooftree}
 \\[3.0ex]
-\textsf{(IN-REACH-VAR)} &
+\textsf{(In-Reach-Var)} &
 \begin{prooftree}
 \backslash
 \texttt{fields\_of(}\backslash\texttt{reach(}e\texttt{))}\in Y,\ \
@@ -555,7 +539,7 @@ e\texttt{.a[}e_1\texttt{]}\underline{\in} Y
 \texttt{x}\underline{\in} Y
 \end{prooftree}
 \\[3.0ex]
-\textsf{(IN-REACH-ARR)} &
+\textsf{(In-Reach-Arr)} &
 \begin{prooftree}
 \backslash \texttt{fields}\_\texttt{of(}\backslash
 \texttt{reach(}e_1\texttt{))}\in Y,\ \ \texttt{this.a}\in \backslash
@@ -564,7 +548,7 @@ e\texttt{.a[}e_1\texttt{]}\underline{\in} Y
 \texttt{a[}e\texttt{]}\underline{\in} Y
 \end{prooftree}
 \\[3.0ex]
-\textsf{(IN-REACH-EXP)} &
+\textsf{(In-Reach-Exp)} &
 \begin{prooftree}
 \backslash \texttt{fields\_of(}\backslash
 \texttt{reach(}e_1\texttt{))}\in Y,\ \ e\in \backslash
@@ -573,7 +557,7 @@ e\texttt{.a[}e_1\texttt{]}\underline{\in} Y
 e\texttt{.x}\underline{\in} Y
 \end{prooftree}
 \\[3.0ex]
-\textsf{(IN-REACH-EXP-ARR)}\,\, &
+\textsf{(In-Reach-Exp-Arr)}\,\, &
 \begin{prooftree}
 \backslash \texttt{fields\_of(}\backslash
 \texttt{reach(}e\texttt{))}\in Y,\ \ e_2\texttt{.a}\in \backslash
@@ -585,7 +569,7 @@ e_2\texttt{.a[}e_1\texttt{]}\underline{\in} Y
 \\[3.0ex]
 \rule{\linewidth}{0.25mm}
 \end{table}
-%%%%%%%%%%
+%%%%%%%%%
 
 
 
