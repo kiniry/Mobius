@@ -96,10 +96,8 @@ public class PkgTree extends PreloadedTree {
     /**
      * Decide what to do with a node of the underlying filespace, returning
      * one of the following codes: IGNORE, INCLUDE_NODE, or INCLUDE_TREE.
-     *
-     * <esc> requires node != null </esc>
      */
-    protected static int getStatus(Tree node) {
+    protected static int getStatus(/*@ non_null @*/ Tree node) {
 	String label = node.getSimpleName();
 	String extension = Extension.getExtension(label);
 
@@ -114,7 +112,7 @@ public class PkgTree extends PreloadedTree {
 	 * For now, potential packages are directories without
 	 * extensions:
 	 */
-	if (((GenericFile)node.data).isDirectory()	//@ nowarn Cast,Null
+	if (((GenericFile)node.data).isDirectory()	//@ nowarn Cast,Null;
 		&& extension.equals(""))
 	    return INCLUDE_TREE;
 
@@ -169,10 +167,8 @@ public class PkgTree extends PreloadedTree {
     /**
      * Is a node of a PkgTree (or a union of PkgTree's) a potential
      * Java package?
-     *
-     * <esc> requires node != null </esc>
      */
-    public static boolean isPackage(Tree node) {
+    public static boolean isPackage(/*@ non_null @*/ Tree node) {
 	return Extension.getExtension(node.getSimpleName()).equals("");
     }
 
@@ -185,10 +181,8 @@ public class PkgTree extends PreloadedTree {
      *
      * Note: the resulting name will only make sense if node is a
      * package.<p>
-     *
-     * <esc> requires node != null </esc>
      */
-    public static String getPackageName(Tree node) {
+    public static String getPackageName(/*@ non_null @*/ Tree node) {
 	if (node.getParent() == null)
 	    return rootPackageName;
 
@@ -207,11 +201,9 @@ public class PkgTree extends PreloadedTree {
      * PkgTree's) in depth-first pre-order using lexical ordering on
      * siblings (cf. TreeWalker).
      */
-    //@ requires node != null;
-    //@ ensures \result != null;
-    //@ ensures !\result.returnsNull
-    //@ ensures \result.elementType == \type(Tree)
-    public static Enumeration packages(Tree node) {
+    //@ ensures !\result.returnsNull;
+    //@ ensures \result.elementType == \type(Tree);
+    public static /*@ non_null @*/ Enumeration packages(/*@ non_null @*/ Tree node) {
 	Enumeration allNodes = new TreeWalker(node);
 
 	return new FilterEnum(allNodes, new PkgTree_PackagesOnly());
@@ -225,11 +217,10 @@ public class PkgTree extends PreloadedTree {
      * direct potential subpackages will be selected.  Otherwise, only
      * non-subpackages will be selected.<p>
      */
-    //@ requires P != null && E != null;
-    //@ ensures \result != null;
-    //@ ensures !\result.returnsNull
-    //@ ensures \result.elementType == \type(Tree)
-    public static Enumeration components(Tree P, String E) {
+    //@ ensures !\result.returnsNull;
+    //@ ensures \result.elementType == \type(Tree);
+    public static /*@ non_null @*/ Enumeration components(/*@ non_null @*/ Tree P, 
+                                                          /*@ non_null @*/ String E) {
 	Enumeration allComponents = TreeWalker.sortedChildren(P);
 
 	return new FilterEnum(allComponents,
@@ -251,10 +242,8 @@ public class PkgTree extends PreloadedTree {
     }
 
     /** A simple test driver */
-    //@ requires args != null;
-    /*@ requires (\forall int i; (0<=i && i<args.length)
-		==> args[i] != null) */
-    public static void main(String[] args) throws IOException {
+    //@ requires (\forall int i; (0 <= i && i < args.length) ==> args[i] != null);
+    public static void main(/*@ non_null @*/ String[] args) throws IOException {
 	if (args.length != 1 && args.length != 3) {
 	    System.out.println("PkgTree: usage <path component>"
 		+ " [<package name> <extension>]");
@@ -306,10 +295,10 @@ public class PkgTree extends PreloadedTree {
  * classes were available, it would be expressed as an anonymous class.
  */
 class PkgTree_PackagesOnly implements Filter {
-    //@ invariant acceptedType == \type(Tree)
+    //@ invariant acceptedType == \type(Tree);
 
     public PkgTree_PackagesOnly() {
-	//@ set acceptedType = \type(Tree)
+	//@ set acceptedType = \type(Tree);
     }
 
     public boolean accept(Object node) {
@@ -326,7 +315,7 @@ class PkgTree_PackagesOnly implements Filter {
  */
 class PkgTree_MatchesExtension implements Filter {
 
-    //@ invariant acceptedType == \type(Tree)
+    //@ invariant acceptedType == \type(Tree);
 
     //@ invariant targetExtension != null;
     String targetExtension;
@@ -334,7 +323,7 @@ class PkgTree_MatchesExtension implements Filter {
     //@ requires targetExtension != null;
     PkgTree_MatchesExtension(String targetExtension) {
 	this.targetExtension = targetExtension;
-	//@ set acceptedType = \type(Tree)
+	//@ set acceptedType = \type(Tree);
     }
 
     public boolean accept(Object node) {

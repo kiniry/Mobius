@@ -554,7 +554,7 @@ void outputEndOfAstFile(const char *text, int len,
 	if (previousTag == tagBase) free(previousTag);
     }
     if (makeClass) {
-	fprintf(constOutputFile,"\n\n    static public String toString(int tag) {\n");
+        fprintf(constOutputFile,"\n\n    static public /*@ non_null @*/ String toString(int tag) {\n");
 	fprintf(constOutputFile,"      switch (tag) {\n");
 	for(c = classes; c != NULL; c = c->next) {
 	    int manualtag = FALSE;

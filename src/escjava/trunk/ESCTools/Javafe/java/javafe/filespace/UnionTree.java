@@ -43,7 +43,7 @@ public class UnionTree extends PreloadedTree {
      *
      * Invariant: contains no nulls and is non-null.<p>
      */
-    //@ invariant \nonnullelements(roots)
+    //@ invariant \nonnullelements(roots);
     protected Tree[] roots;
 
     /**
@@ -52,7 +52,7 @@ public class UnionTree extends PreloadedTree {
      *
      * roots must be non-null and contain no nulls.<p>
      */
-    //@ requires \nonnullelements(roots)
+    //@ requires \nonnullelements(roots);
     public UnionTree(Tree[] roots) {
 	super(null);
 
@@ -66,7 +66,7 @@ public class UnionTree extends PreloadedTree {
      *
      * roots must be non-null and contain no nulls.<p>
      */
-    //@ requires \nonnullelements(roots)
+    //@ requires \nonnullelements(roots);
     //@ requires parent != null && label != null;
     protected UnionTree(Tree parent, String label, Tree[] roots) {
 	super(parent, label, null);
@@ -87,7 +87,7 @@ public class UnionTree extends PreloadedTree {
      * the underlying Trees in the same order as the original list of
      * Trees.  This ist is never null and never contains any nulls.
      */
-    //@ ensures \nonnullelements(\result)
+    //@ ensures \nonnullelements(\result);
     public Tree[] duplicates() {
 	return roots;
     }
@@ -116,7 +116,7 @@ public class UnionTree extends PreloadedTree {
 	for (int i=0; i<roots.length; i++)
 	    for (Enumeration C=roots[i].children(); C.hasMoreElements(); ) {
 		Tree next = (Tree)C.nextElement();
-		loadEdge(next.getLabel());		//@ nowarn Pre
+		loadEdge(next.getLabel());		//@ nowarn Pre;
 	    }
     }
 

@@ -9,17 +9,17 @@ package javafe.util;
 
 public class Assert
 {
-    //@ ensures false 
+    //@ ensures false;
     static public void fail(String msg) {
 	throw new AssertionFailureException(msg);
-    }	  //@ nowarn Exception
+    }	  //@ nowarn Exception;
 
-    //@ requires b
+    //@ requires b;
     static public void notFalse(boolean b) {
 	if (! b) throw new AssertionFailureException();
     }
 
-    //@ requires b
+    //@ requires b;
     static public void notFalse(boolean b, String msg) {
 	if (! b) throw new AssertionFailureException(msg);
     }
@@ -34,28 +34,28 @@ public class Assert
 	if (obj == null) throw new AssertionFailureException(msg);
     }
 
-    //@ ensures false
+    //@ ensures false;
     static public void precondition() {
 	throw new AssertionFailureException("Precondition violated!");
-    }	  //@ nowarn Exception
+    }	  //@ nowarn Exception;
 
-    //@ ensures false
+    //@ ensures false;
     static public void precondition(String msg) {
 	throw new AssertionFailureException("Precondition violated: "+msg);
-    }	//@ nowarn Exception
+    }	//@ nowarn Exception;
 
-    //@ requires b
+    //@ requires b;
     static public void precondition(boolean b) {
 	if (! b) throw new AssertionFailureException("Precondition violated!");
     }
 
-    //@ ensures false
+    //@ ensures false;
     static public void notImplemented() {
 	throw new NotImplementedException("Hit an unimplemented feature");
-    }	  //@ nowarn Exception
+    }	  //@ nowarn Exception;
 
-    //@ ensures false
+    //@ ensures false;
     static public void notImplemented(String s) {
 	throw new NotImplementedException("Not implemented: " + s);
-    }	  //@ nowarn Exception
+    }	  //@ nowarn Exception;
 }

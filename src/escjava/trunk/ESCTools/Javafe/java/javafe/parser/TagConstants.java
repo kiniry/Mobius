@@ -5,8 +5,8 @@ package javafe.parser;
 import javafe.util.Assert;
 
 /**
- * <tt>Tokens</tt> is a class defining the constants used to identify
- * different kinds of tokens.
+ * <code>TagConstants</tt> is a class defining the constants used to
+ * identify different kinds of tokens.
  */
 
 public class TagConstants extends javafe.ast.TagConstants
@@ -124,16 +124,14 @@ public class TagConstants extends javafe.ast.TagConstants
             + " (+" + (code - javafe.ast.TagConstants.LAST_TAG) + ") >";
     }
 
-
     /**
      * Alphabetical list of Java punctuation strings.  In addition to
      * being used in <code>Tokens</code>, this variable is used by
-     * <code>Lex</code> to implement
-     * <code>addJavaPunctuation</code>.
+     * <code>Lex</code> to implement <code>addJavaPunctuation</code>.
      */
 
     //@ invariant \nonnullelements(punctuationStrings);
-    static final String punctuationStrings[] = {
+    static final /*@ non_null @*/ String punctuationStrings[] = {
         "!", "!=", "%", "%=", "&", "&&", "&=", "(", ")", "*", "*=",
         "+", "++", "+=", ",", "-", "--", "-=", ".", "/", "/=", ":", ";",
         "<", "<<", "<<=", "<=", "=", "==", ">", ">=", ">>", ">>=", ">>>", ">>>=",
@@ -150,21 +148,19 @@ public class TagConstants extends javafe.ast.TagConstants
 
     //@ invariant punctuationCodes.length == punctuationStrings.length;
     /*@ invariant (\forall int i; 0 <= i && i <= punctuationCodes.length
-      @           ==> punctuationCodes[i] != TagConstants.NULL); */
-    /*@ invariant (\forall int i; 0 <= i && i <= punctuationCodes.length
-      @           ==>  punctuationCodes[i] != TagConstants.IDENT &&
-      @                punctuationCodes[i] != TagConstants.BOOLEANLIT &&
-      @                punctuationCodes[i] != TagConstants.INTLIT &&
-      @                punctuationCodes[i] != TagConstants.LONGLIT &&
-      @                punctuationCodes[i] != TagConstants.FLOATLIT &&
-      @                punctuationCodes[i] != TagConstants.DOUBLELIT &&
-      @                punctuationCodes[i] != TagConstants.STRINGLIT &&
-      @                punctuationCodes[i] != TagConstants.CHARLIT &&
-      @                punctuationCodes[i] != TagConstants.LEXICALPRAGMA &&
-      @                punctuationCodes[i] != TagConstants.MODIFIERPRAGMA &&
-      @                punctuationCodes[i] != TagConstants.STMTPRAGMA &&
-      @                punctuationCodes[i] != TagConstants.TYPEDECLELEMPRAGMA &&
-      @                punctuationCodes[i] != TagConstants.TYPEMODIFIERPRAGMA); */
+     @           ==>  punctuationCodes[i] != TagConstants.IDENT &&
+     @                punctuationCodes[i] != TagConstants.BOOLEANLIT &&
+     @                punctuationCodes[i] != TagConstants.INTLIT &&
+     @                punctuationCodes[i] != TagConstants.LONGLIT &&
+     @                punctuationCodes[i] != TagConstants.FLOATLIT &&
+     @                punctuationCodes[i] != TagConstants.DOUBLELIT &&
+     @                punctuationCodes[i] != TagConstants.STRINGLIT &&
+     @                punctuationCodes[i] != TagConstants.CHARLIT &&
+     @                punctuationCodes[i] != TagConstants.LEXICALPRAGMA &&
+     @                punctuationCodes[i] != TagConstants.MODIFIERPRAGMA &&
+     @                punctuationCodes[i] != TagConstants.STMTPRAGMA &&
+     @                punctuationCodes[i] != TagConstants.TYPEDECLELEMPRAGMA &&
+     @                punctuationCodes[i] != TagConstants.TYPEMODIFIERPRAGMA); */
     //@ invariant punctuationCodes.owner instanceof TagConstants;
     static final int punctuationCodes[] = {
         NOT, NE, MOD, ASGREM, BITAND, AND, ASGBITAND, LPAREN, RPAREN, STAR, ASGMUL,
@@ -175,7 +171,6 @@ public class TagConstants extends javafe.ast.TagConstants
         QUESTIONMARK, LSQBRACKET, RSQBRACKET, BITXOR, ASGBITXOR, LBRACE, BITOR,
         ASGBITOR, OR, RBRACE, BITNOT, C_COMMENT, EOL_COMMENT
     };
-
 
     /**
      * Alphabetical list of Java keywords.  The keyword codes are also
@@ -216,11 +211,9 @@ public class TagConstants extends javafe.ast.TagConstants
         TYPEMODIFIERPRAGMA, EOF
     };
 
-    /*@ invariant noTokens == keywordStrings.length + punctuationStrings.length
-                              + otherStrings.length */
+    //@ invariant noTokens == keywordStrings.length + punctuationStrings.length + otherStrings.length;
     private static final int noTokens =
         keywordStrings.length + punctuationStrings.length + otherStrings.length;
-
 
     //@ requires 0 <= index && index < noTokens;
     private static int getCode(int index) {

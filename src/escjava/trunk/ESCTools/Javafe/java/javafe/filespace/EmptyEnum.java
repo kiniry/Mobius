@@ -2,39 +2,41 @@
 
 package javafe.filespace;
 
-
 import java.util.*;
 
-
 /**
- * EmptyEnum: This class simply implements an enumeration with
- *	       no elements.
+ * This class simply implements an enumeration with no elements.
  */
 
-class EmptyEnum implements Enumeration {
-
-    //@ invariant !moreElements
-    //@ invariant !returnsNull
+class EmptyEnum implements Enumeration
+{
+    //@ invariant !moreElements;
+    //@ invariant !returnsNull;
 
     EmptyEnum() {
-	//@ set moreElements = false
-	//@ set returnsNull = false
-	//@ set elementType = \type(Object)
+	//@ set moreElements = false;
+	//@ set returnsNull = false;
+	//@ set elementType = \type(Object);
     }
 
-
-    /** Returns true iff any more elements exist in this enumeration. */
+    /**
+     * @return true iff any more elements exist in this enumeration.
+     */
+    //@ also
+    //@ public normal_behavior
+    //@   ensures \result == false;
     public boolean hasMoreElements() {
 	return false;
     }
 
     /**
-     * Returns the next element of the enumeration. Calls to this
-     * method will enumerate successive elements.  Throws
-     * NoSuchElementException if no more elements are left.
+     * Always throws a NoSuchElementException since there are no
+     * elements.
      */
-    public Object nextElement()
-	/*throws NoSuchElementException*/ {
+    //@ also
+    //@ public exceptional_behavior
+    //@   signals (NoSuchElementException);
+    public Object nextElement() {
 	throw new NoSuchElementException();
-    }
+    } //@ nowarn Exception;
 }

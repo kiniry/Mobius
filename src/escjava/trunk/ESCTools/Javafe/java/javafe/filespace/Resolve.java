@@ -31,10 +31,9 @@ public class Resolve {
      *
      * Currently true if a source or a binary for that type exists
      * (directly) in the given package.<p>
-     *
-     * <esc> requires P != null && typeName != null </esc>
      */
-    public static boolean typeExists(Tree P, String typeName) {
+    public static boolean typeExists(/*@ non_null @*/ Tree P, 
+                                     /*@ non_null @*/ String typeName) {
 	if (P.getChild(typeName+".java") != null)
 	    return true;
 	if (P.getChild(typeName+".class") != null)
@@ -90,13 +89,10 @@ public class Resolve {
      * Such package/type naming conflicts are illegal according to the
      * Java documentation.<p>
      */
-    //@ requires filespace != null;
-    //@ requires identifier != null;
-    /*@ requires (\forall int i; (0<=i && i<identifier.length)
-		==> identifier[i] != null) */
-    //@ ensures \result != null;
+    //@ requires (\forall int i; (0 <= i && i < identifier.length) ==> identifier[i] != null);
     //@ ensures \result.myPackage != null;
-    public static Resolve_Result lookup(Tree filespace, String[] identifier)
+    public static /*@ non_null @*/ Resolve_Result lookup(/*@ non_null @*/ Tree filespace, 
+                                                         /*@ non_null @*/ String[] identifier)
 		throws Resolve_AmbiguousName {
 	// Resulting package starts with the top package:
 	Tree P = filespace;

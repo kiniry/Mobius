@@ -57,8 +57,8 @@ public class JWhich {
     /**
      ** The set of extensions for extra files so far:
      **/
-    //@ invariant extraExtensions.elementType == \type(String)
-    //@ invariant !extraExtensions.containsNull
+    //@ invariant extraExtensions.elementType == \type(String);
+    //@ invariant !extraExtensions.containsNull;
     public /*@ non_null @*/ static Vector extraExtensions = new Vector();
 
 
@@ -112,7 +112,7 @@ public class JWhich {
      ** node.
      **/
     static void displayFile(/*@ non_null @*/ Tree node) {
-	System.out.println(((GenericFile)node.data).getHumanName()); //@ nowarn Cast, Null
+	System.out.println(((GenericFile)node.data).getHumanName()); //@ nowarn Cast, Null;
     }
 
 
@@ -211,14 +211,14 @@ public class JWhich {
     /**
      ** The list of our command line arguments
      **/
-    //@ invariant \nonnullelements(arguments)
+    //@ invariant \nonnullelements(arguments);
     static String[] arguments;
 
     /**
      ** An index into arguments, pointing to the next argument to be
      ** processed:
      **/
-    //@ invariant argIndex>=0
+    //@ invariant argIndex >= 0;
     static int argIndex = 0;
 
 
@@ -307,7 +307,7 @@ public class JWhich {
 
 
     /** The main procedure for the jwhich command **/
-    //@ requires \nonnullelements(args)
+    //@ requires \nonnullelements(args);
     public static void main(String[] args) {
 	// Setup processing of arguments:
 	arguments = args;

@@ -31,10 +31,9 @@ abstract class HashTree extends Tree {
      * Invariant: all elements of edges are Trees and all keys are
      * Strings.<p>
      */
-    //@ invariant edges != null;
-    //@ invariant edges.keyType == \type(String)
-    //@ invariant edges.elementType == \type(Tree)
-    protected Hashtable edges = new Hashtable(5);
+    //@ invariant edges.keyType == \type(String);
+    //@ invariant edges.elementType == \type(Tree);
+    protected /*@ non_null @*/ Hashtable edges = new Hashtable(5);
 
 
     /***************************************************
@@ -47,17 +46,18 @@ abstract class HashTree extends Tree {
     public HashTree(Object data) {
 	super(data);
 
-	//@ set edges.keyType = \type(String)
-	//@ set edges.elementType = \type(Tree)
+	//@ set edges.keyType = \type(String);
+	//@ set edges.elementType = \type(Tree);
     }
 
     /** Create a non-root node: */
-    //@ requires parent != null && label != null;
-    protected HashTree(Tree parent, String label, Object data) {
+    protected HashTree(/*@ non_null @*/ Tree parent, 
+                       /*@ non_null @*/ String label, 
+                       Object data) {
 	super(parent, label, data);
 
-	//@ set edges.keyType = \type(String)
-	//@ set edges.elementType = \type(Tree)
+	//@ set edges.keyType = \type(String);
+	//@ set edges.elementType = \type(Tree);
     }
 
 

@@ -1,42 +1,52 @@
 package decsrc.container;
 
-/** A set of integers that can hold integers in the range
-    <code>[0..N-1]</code> for any <code>N >= 0</code>.  Requires space
-    <i>O(N)</i>.
-    <p>
-    The <code>BitVec</code> class is thread safe, but instances of
-    <code>BitVec</code> are not.  That is, two different threads may
-    safely access two different instances of <code>BitVec</code>
-    concurrently, but they may not safely access the same instance of
-    <code>BitVec</code> without synchronization external to
-    <code>BitVec</code>.
+/**
+ * A set of integers that can hold integers in the range
+ * <code>[0..N-1]</code> for any <code>N >= 0</code>.  Requires space
+ * <i>O(N)</i>.
+ *
+ * <p> The <code>BitVec</code> class is thread safe, but instances of
+ * <code>BitVec</code> are not.  That is, two different threads may
+ * safely access two different instances of <code>BitVec</code>
+ * concurrently, but they may not safely access the same instance of
+ * <code>BitVec</code> without synchronization external to
+ * <code>BitVec</code>. </p>
+ *
+ * <p> The iteration provided by the <pre>next/get</pre> methods of
+ * BitVector has a stronger specification.  See the specification of
+ * <pre>next</pre> for more details. </p>
+ */
 
-    <p>
-    The iteration provided by the <pre>next/get</pre> methods of BitVector
-    has a stronger specification.  See the specification of <pre>next</pre>
-    for more details.
-*/
-final public class BitVec extends IntSet {
+final public class BitVec extends IntSet
+{
     private static final int BITS = 64;
     private static final int MASK = BITS - 1;
     private static final int LGBITS = 6;
     
     private long[] words;
+    //@ private invariant num >= 0;
     private int    num;
 
     // If num is not a multiple of 64, the extra bits in words are zero.
 
     // BitVec specific operations
 
-    /** Creates an empty bitvector of length "n".
-        Requires "n >= 0". */
+    /**
+     * Creates an empty bitvector of length "n".
+     */
+    //@ requires n >= 0;
+    //@ ensures num == n;
+    //@ ensures words != null;
+    //@ ensures words.length == (n + BITS - 1) >> LGBITS;
     public BitVec(int n) {
 	super();
 	num = n;
+        //@ assert ((n + BITS - 1) >> LGBITS) > 0;
 	words = new long[(n + BITS - 1) >> LGBITS];
     }
 
     /** post(this) = [0,this.length()) */
+    //@ requires words != null;
     public void set_all() {
 	long[] w = words;
 	int n = w.length;
@@ -50,8 +60,11 @@ final public class BitVec extends IntSet {
 	    w[n - 1] = -1;
     }
 
-    /** Ensures that bitvector length is at least "n".
-	Requires "n >= 0". */
+    /**
+     * Ensures that bitvector length is at least "n".
+     */
+    //@ requires n >= 0;
+    //@ ensures num >= n;
     public void ensure(int n) {
 	if (n > num) {
 	    int new_num = n * 2;
@@ -68,10 +81,14 @@ final public class BitVec extends IntSet {
 
     // Implementations of supercall operations
 
+    //@ also
+    //@ ensures \result == 0;
     public int min_allowed() {
 	return 0;
     }
 
+    //@ also
+    //@ ensures \result == num - 1;
     public int max_allowed() {
 	return num - 1;
     }

@@ -19,6 +19,8 @@ import javafe.util.CorrelatedReader;
  * <code>auxVal</code> field must be filled have a type according to
  * the table in <code>Token</code>.
  *
+ * @todo These methods need JML specifications.
+ *
  * @see javafe.parser.Token
  * @see javafe.parser.Lex
  */
@@ -37,23 +39,25 @@ public interface PragmaParser
      * <code>char</code> or <code>-1</code>; <code>-1</code> indicates
      * the empty comment.) 
      */
-
+    //@ requires -1 <= tag && tag <= 127;
     boolean checkTag(int tag);
 
-    javafe.ast.FieldDecl isPragmaDecl(Token l);
+    /**
+     * @todo Need to write documentation for this method.
+     */
+    javafe.ast.FieldDecl isPragmaDecl(/*@ non_null @*/ Token l);
 
     /**
      * Restart a pragma parser on a new input stream.  If
      * <code>this</code> already opened on another
-     * <code>CorrelatedReader</code>, closes the old reader.<p>
-     * <code>eolComment</code> is true to indicate that the correlated
-     * reader stream is reading from a Java comment that begins with
-     * "//" as opposed to a Java comment that begins with "/*".
+     * <code>CorrelatedReader</code>, closes the old reader.
+
+     * <p> <code>eolComment</code> is true to indicate that the
+     * correlated reader stream is reading from a Java comment that
+     * begins with "//" as opposed to a Java comment that begins with
+     * "/*". </p>
      */
-
-    //@ requires in != null;
-    void restart(/*@ non_null */ CorrelatedReader in, boolean eolComment);
-
+    void restart(/*@ non_null @*/ CorrelatedReader in, boolean eolComment);
 
     /**
      * Parse the next pragma.  If none are left, returns
@@ -69,10 +73,7 @@ public interface PragmaParser
      * has not returned false and <code>close</code> has not been
      * called. 
      */
-
-    //@ requires destination != null;
-    boolean getNextPragma(/*@ non_null */ Token destination);
-
+    boolean getNextPragma(/*@ non_null @*/ Token destination);
 
     /**
      * Stop parsing the current reader.  Sometimes a <code>Lex</code>
@@ -84,6 +85,5 @@ public interface PragmaParser
      * underlying <code>CorrelatedReader</code> and in other ways clean
      * up resources. 
      */
-
     void close();
 }

@@ -654,7 +654,7 @@ public class SwitchStmt extends GenericBlockStmt
 public class AssertStmt extends Stmt
 {
   //# Expr pred
-  //# Expr label NoCheck NullOk
+  //# Expr label NoCheck NullOK
   //# int loc NotNullLoc
   public IfStmt ifStmt;
   public int getStartLoc() { return loc; }

@@ -29,7 +29,7 @@ public abstract class Tree {
      * The label on the edge leading to us from our parent, or null if
      * we have no parent.
      */
-    //@ invariant (label==null) == (parent==null)
+    //@ invariant (label == null) == (parent == null);
     private String label = null;
 
     /*
@@ -95,11 +95,10 @@ public abstract class Tree {
      * Note: The Objects returned by the resulting enumeration's
      * nextElement method are guaranteed to be of type Tree,
      * non-null, and have non-null labels.<p>
-     *
-     * <esc> ensures \result != null </esc>
      */
-    //@ ensures !\result.returnsNull
-    //@ ensures \result.elementType == \type(Tree)
+    //@ ensures \result != null;
+    //@ ensures !\result.returnsNull;
+    //@ ensures \result.elementType == \type(Tree);
     public abstract Enumeration children();
 
 
@@ -133,7 +132,7 @@ public abstract class Tree {
 
 
     /** Return a count of how many direct children we have: */
-    //@ ensures \result>=0
+    //@ ensures \result >= 0;
     public int getChildrenCount() {
 	/*
 	 * Stupid & slow default implementation using children()

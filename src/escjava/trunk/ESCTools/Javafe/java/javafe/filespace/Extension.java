@@ -2,30 +2,29 @@
 
 package javafe.filespace;
 
-
 /**
  * This module contains functions for decomposing filenames (Strings)
  * into a basename and an extension.  I.e., "foo.java" -> "foo",
- * ".java" and "bar" -> "bar", "".<p>
+ * ".java" and "bar" -> "bar", "".
  *
- * Extensions include the '.' if present so that no extension can be
- * distinguished from a blank one (i.e., "foo.").<p>
+ * <p> Extensions include the '.' if present so that no extension can
+ * be distinguished from a blank one (i.e., "foo."). </p>
  *
- * This also has the property that concatenating a filename's basename
- * with its extension always gives the original filename.<p>
+ * <p> This also has the property that concatenating a filename's
+ * basename with its extension always gives the original
+ * filename. </p>
  */
 
-public class Extension {
-
+public class Extension
+{
     /**
-     * Return the extension of a filename (including the ".") or "" if it
-     * has none.  The extension is defined as the substring starting
-     *	with the last "." and ending at the end of the filename.<p>
-     *
-     * <esc> requires filename != null </esc>
+     * Return the extension of a filename (including the ".") or "" if
+     * it has none.  The extension is defined as the substring
+     * starting with the last "." and ending at the end of the
+     * filename.
      */
-    //@ ensures \result != null;
-    public static String getExtension(String filename) {
+    public static /*@ non_null @*/ String 
+            getExtension(/*@ non_null @*/ String filename) {
 	int lastDot = filename.lastIndexOf(".");
 
 	if (lastDot == -1)
@@ -35,13 +34,13 @@ public class Extension {
     }
 
     /**
-     * Return the basename of a filename -- the part of a filename that
-     * preceeds its extension (if any).  More precisely, the prefix of
-     *	the filename preceeding the last "." or the entire filename if
-     *	no "." is present.<p>
+     * Return the basename of a filename -- the part of a filename
+     * that preceeds its extension (if any).  More precisely, the
+     * prefix of the filename preceeding the last "." or the entire
+     * filename if no "." is present.
      */
-    //@ ensures \result != null;
-    public static String getBasename(/*@ non_null @*/ String filename) {
+    public static /*@ non_null @*/ String 
+            getBasename(/*@ non_null @*/ String filename) {
 	int lastDot = filename.lastIndexOf(".");
 
 	if (lastDot == -1)
@@ -55,10 +54,9 @@ public class Extension {
      *
      * It is faster to use endsWith for non-empty extensions; use this
      * function when extension may be empty ("").<p>
-     *
-     * <esc> requires filename != null && extension != null </esc>
      */
-    public static boolean hasExtension(String filename, String extension) {
+    public static boolean hasExtension(/*@ non_null @*/ String filename,
+                                       /*@ non_null @*/ String extension) {
 	if (!filename.endsWith(extension))
 	    return false;
 

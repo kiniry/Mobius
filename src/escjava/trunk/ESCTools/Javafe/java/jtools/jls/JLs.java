@@ -1,20 +1,18 @@
 package jtools.jls;
 
-
 import java.util.Enumeration;
 import java.util.Vector;
 
 import javafe.filespace.*;
 
-
 /**
- ** The master module for the jls program.<p>
- **
- ** See the man page for details of its functionality.<p>
- **/
+ * The master module for the jls program.
+ *
+ * <p> See the man page for details of its functionality. </p>
+ */
 
-public class JLs {
-
+public class JLs
+{
     /***************************************************
      *                                                 *
      * Handling jls for a series of package names:     *
@@ -31,8 +29,8 @@ public class JLs {
      **
      ** names must be non-null and start>=0<p>
      **/
-    //@ requires \nonnullelements(names)
-    //@ requires start>=0
+    //@ requires \nonnullelements(names);
+    //@ requires start >= 0;
     public static void handlePackageNames(String[] names, int start) {
 	int count = names.length - start;	// # of names to process
 
@@ -167,7 +165,7 @@ public class JLs {
 	 * and, thus, does not need to be displayed.  Its types do,
 	 * however, if we are displaying types.
 	 */
-	//@ assume E.moreElements
+	//@ assume E.moreElements;
 	E.nextElement();
 	listPackage(P, displayTypes, false);
 
@@ -258,16 +256,16 @@ public class JLs {
     /**
      ** The separator to use between columns in multi-column displays.
      **/
-    //@ invariant separator.count > 0 
+    //@ public invariant separator.length() > 0;
     public static final String separator = "  ";
 
     /**
      ** Compute the size of the longest String in a Vector of non-null
      ** Strings.
      **/
-    //@ requires list.elementType == \type(String)
-    //@ requires !list.containsNull
-    //@ ensures \result>=0
+    //@ requires list.elementType == \type(String);
+    //@ requires !list.containsNull;
+    //@ ensures \result >= 0;
     public static int maxItem(/*@ non_null @*/ Vector list) {
 	int maxSize = 0;
 
@@ -297,8 +295,8 @@ public class JLs {
      ** possible on System.out, so as to produce the shortest output
      ** possibile consistent with the variable outputLimit above.
      **/
-    //@ requires list.elementType == \type(String)
-    //@ requires !list.containsNull
+    //@ requires list.elementType == \type(String);
+    //@ requires !list.containsNull;
     public static void printList(/*@ non_null @*/ Vector list) {
 	int size = list.size();
 	if (size==0)
@@ -320,18 +318,19 @@ public class JLs {
 	 * Compute # of columns possible & how many lines of output
 	 * needed:
 	 */
-	/*@ assume (outputLimit-itemWidth)>=0 &&           // +/+ == +
-	           (itemWidth + separator.count) >=0 ==>
-		     ((outputLimit-itemWidth) /
-		     (itemWidth + separator.count)) >=0 */
+	/*@ assume (outputLimit-itemWidth) >= 0 &&
+          @        (itemWidth + separator.length()) >= 0 ==>
+          @          ((outputLimit-itemWidth) /
+          @           (itemWidth + separator.length())) >= 0;
+          @*/
 	int columns = 1 + ((outputLimit-itemWidth) /
-				(itemWidth + separator.length()));
+                           (itemWidth + separator.length()));
 	int offset = size / columns;	// rounds down...
 	while (columns*offset < size)	// correct for that
 	    offset++;
 
-//	System.out.println(itemWidth + " " + columns);
-//	System.out.println(list.size() + " " + offset);
+        //	System.out.println(itemWidth + " " + columns);
+        //	System.out.println(list.size() + " " + offset);
 
 
 	/*
@@ -398,14 +397,14 @@ public class JLs {
      ** useAbsolute and markEntries are taken into account.<p>
      **/
     //@ ensures \result != null;
-    //@ ensures \result.elementType == \type(String)
-    //@ ensures !\result.containsNull
+    //@ ensures \result.elementType == \type(String);
+    //@ ensures !\result.containsNull;
     public static Vector packageContents(/*@ non_null @*/ Tree P,
 					 boolean includeTypes,
 					 boolean includePackages) {
 	Vector R = new Vector(10);
-	//@ set R.elementType = \type(String)
-	//@ set R.containsNull = false
+	//@ set R.elementType = \type(String);
+	//@ set R.containsNull = false;
 	String namePrefix = useAbsolute ? P.getQualifiedName(".") : "";
 
 	Enumeration E = TreeWalker.sortedChildren(P);
@@ -425,7 +424,7 @@ public class JLs {
 
 	    // Type source case:
 	    if (includeTypes && displaySources &&
-		    extension.equals(".java")) {
+                extension.equals(".java")) {
 		if (P.getChild(relName+".class")==null)
 		    R.addElement(name);		// source, no binary
 		else {
@@ -436,7 +435,7 @@ public class JLs {
 
 	    // Type binary case:
 	    if (includeTypes && displayBinaries &&
-		    extension.equals(".class")) {
+                extension.equals(".class")) {
 		if (P.getChild(relName+".java")==null)
 		    // binary, no source
 		    R.addElement(name + (markEntries ? "*" : ""));
@@ -492,14 +491,14 @@ public class JLs {
     /**
      ** The list of our command line arguments
      **/
-    //@ invariant \nonnullelements(arguments)
+    //@ invariant \nonnullelements(arguments);
     static String[] arguments;
 
     /**
      ** An index into arguments, pointing to the next argument to be
      ** processed:
      **/
-    //@ invariant argIndex>=0
+    //@ invariant argIndex >= 0;
     static int argIndex = 0;
 
 
@@ -513,8 +512,8 @@ public class JLs {
     /** Print out our usage information on System.err **/
     public static void usage() {
 	System.err.println(
-	    "jls: usage: [-abcEFpRs1] [-C<width>] [-bootclasspath <classpath>]"
-	    + " [-classpath <classpath>] <package_name>...");
+                           "jls: usage: [-abcEFpRs1] [-C<width>] [-bootclasspath <classpath>]"
+                           + " [-classpath <classpath>] <package_name>...");
 	return;
     }
 
@@ -592,7 +591,7 @@ public class JLs {
 		outputLimit = (new Integer(arg.substring(2)).intValue());
 	    } catch (NumberFormatException n) {
 		System.err.println("Unparsable integer: " 
-		    + n.getMessage());
+                                   + n.getMessage());
 		System.exit(1);
 	    }
 
@@ -686,7 +685,7 @@ public class JLs {
     /**
      ** The main procedure for the jls command
      **/
-    //@ requires \nonnullelements(args)
+    //@ requires \nonnullelements(args);
     public static void main(String[] args) {
 	// Setup processing of arguments:
 	arguments = args;
@@ -695,7 +694,7 @@ public class JLs {
 	argIndex=0;
 	String arg;
 	while (argIndex<arguments.length && (arg=args[argIndex]).length()>0
-		&& arg.charAt(0)=='-') {
+               && arg.charAt(0)=='-') {
 	    argIndex++;
 	    handleOption(arg);
 	}
