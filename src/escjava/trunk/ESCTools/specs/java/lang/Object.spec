@@ -41,9 +41,10 @@ public class Object {
      * Used to specify (among other things) injectivity (see
      * the ESC/Java User's Manual).
      */
-    /*@ ghost public Object owner;
-                           in objectState;
-      @*/
+    //@ ghost public Object owner;
+        // NB It is inconvenient to include owner in objectState,
+        // because permission to modify objectState shouldn't give
+        // permission to change the owner.
 
     /*@ public normal_behavior
       @   assignable \nothing;
