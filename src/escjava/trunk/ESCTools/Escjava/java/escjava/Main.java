@@ -48,7 +48,7 @@ import javafe.util.*;
 public class Main extends javafe.SrcTool {
 
      /** Our version number **/
-     public final static String version = "1.2.4a, 2 October 2001";
+     public final static String version = "(Nijmegen) 1.3, December 2003";
 
 
     /***************************************************
@@ -810,7 +810,8 @@ public class Main extends javafe.SrcTool {
 	    long startTime = java.lang.System.currentTimeMillis();
 	    prover = new Simplify();
 
-	    // if (!quiet) System.out.println("  Prover started:" + timeUsed(startTime));
+	    if (!quiet)
+                System.out.println("  Prover started:" + timeUsed(startTime));
 	}
 
 	if (prover != null) {
