@@ -5,6 +5,7 @@ package javafe.reader;
 import javafe.ast.CompilationUnit;
 
 import javafe.genericfile.*;
+import java.util.ArrayList;
 
 /**
  * A TypeReader is an extended {@link Reader} that understands how to
@@ -117,4 +118,9 @@ abstract public class TypeReader extends Reader
     //@ requires \nonnullelements(P) && T!=null
     abstract public CompilationUnit read(String[] P, String T,
                                          boolean avoidSpec);
+
+    /** Returns an enumeration of the GenericFile objects in the given 
+	package P.
+    */
+    abstract public ArrayList findFiles(String[] P);
 }

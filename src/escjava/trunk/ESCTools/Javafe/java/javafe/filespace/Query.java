@@ -3,6 +3,7 @@
 package javafe.filespace;
 
 
+import java.util.Enumeration;
 import javafe.genericfile.*;
 
 
@@ -52,6 +53,12 @@ public abstract class Query {
     public abstract GenericFile findFile(String[] P, String typename,
 					String[] extensions);
 
+
+    /** Returns an Enumeration containing GenericFile objects representing
+	all the files in the given package P.
+    */
+    //@ requires P != null;
+    public abstract Enumeration findFiles(String[] P);
 
     /***************************************************
      *                                                 *

@@ -4,6 +4,7 @@ package javafe.filespace;
 
 
 import java.io.IOException;
+import java.util.Enumeration;
 
 import javafe.genericfile.*;
 
@@ -106,6 +107,14 @@ public class SlowQuery extends Query {
 	return null;
      }
 
+
+    public Enumeration findFiles(String[] P) {
+	Tree Package = getPackage(P);
+	if (Package==null)
+	    return null;
+
+	return Package.children();
+    }
 
     /*
      * Helper function: return the node corresponding to package P in

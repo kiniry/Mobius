@@ -57,7 +57,10 @@ public class BinReader extends Reader
     public CompilationUnit read(GenericFile target, boolean avoidSpec) {
 	javafe.util.Info.out("[loading " + target.getHumanName() + "]");
 	try {
-	    ASTClassFileParser parser = new ASTClassFileParser(target);
+	    ASTClassFileParser parser = new ASTClassFileParser(target,false);
+		// if the 2nd argument above is false, omit all bodies.
+		// For some reason, despite the comment above, bodies are
+		// sometimes included.
 	    TypeDeclVec types =
 		TypeDeclVec.make(new TypeDecl[] { parser.typeDecl });
 	    ImportDeclVec emptyImportDeclVec = ImportDeclVec.make();

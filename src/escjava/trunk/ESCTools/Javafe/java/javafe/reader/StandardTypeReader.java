@@ -10,9 +10,13 @@ import javafe.parser.PragmaParser;
 
 import javafe.filespace.Query;
 import javafe.filespace.SlowQuery;
+import javafe.filespace.Tree;
 
 import javafe.util.Assert;
 import javafe.util.ErrorSet;
+
+import java.util.Enumeration;
+import java.util.ArrayList;
 
 /**
  * A StandardTypeReader is a {@link TypeReader} that uses {@link
@@ -264,6 +268,16 @@ public class StandardTypeReader extends TypeReader
 					"java");
     }
 
+
+    public ArrayList findFiles(String[] P) {
+	ArrayList a = new ArrayList();
+	Enumeration e = javaFileSpace.findFiles(P);
+	while (e.hasMoreElements()) {
+	    Tree t = (Tree)e.nextElement();
+	    if (t.getLabel().endsWith(".java")) { a.add(t.data); }
+	}
+	return a;
+    }
 
     /***************************************************
      *                                                 *
