@@ -20,3 +20,6 @@
 /*@ also post q2; @*/
 //@ also pre x[0];
 //@ also modifies z;
+
+//@ writable_if x;
+//@ readable_if y > 0

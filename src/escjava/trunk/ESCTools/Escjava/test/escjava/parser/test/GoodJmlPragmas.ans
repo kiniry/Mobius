@@ -17,11 +17,9 @@ GoodJmlPragmas.j:13: /*@ signals (Throwable t) x < y  */
 GoodJmlPragmas.j:14: /*@ signals (TYPE tt) tt == \type(SomeException)  */
 GoodJmlPragmas.j:16: /*@ maintaining x  */
 GoodJmlPragmas.j:17: /*@ decreasing z - 1  */
-GoodJmlPragmas.j:19: /*@ decreasing z - 1  */
-GoodJmlPragmas.j:19: /*@ post q  */
-GoodJmlPragmas.j:20: /*@ post q  */
-GoodJmlPragmas.j:20: /*@ post q2  */
-GoodJmlPragmas.j:21: /*@ post q2  */
-GoodJmlPragmas.j:21: /*@ pre x[0]  */
-GoodJmlPragmas.j:22: /*@ pre x[0]  */
-GoodJmlPragmas.j:22: /*@ modifies z  */
+GoodJmlPragmas.j:19: /*@ also_ensures q  */
+GoodJmlPragmas.j:20: /*@ also_ensures q2  */
+GoodJmlPragmas.j:21: /*@ also_requires x[0]  */
+GoodJmlPragmas.j:22: /*@ also_modifies z  */
+GoodJmlPragmas.j:24: /*@ writable_if x  */
+GoodJmlPragmas.j:25: /*@ readable_if y > 0  */
