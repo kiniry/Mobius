@@ -97,7 +97,7 @@ public class ConstantExpr {
 	  } 
 	  else if( Types.isSameType( t, Types.javaLangString() ) ) {
 	    // convert to a string
-	    return new String( val.toString() );
+	    return val.toString();
 	  } 
 	  else if( Types.isIntegralType( t ) ) {
 	    if( Types.isSameType( t, Types.longType ) ) {
@@ -245,7 +245,7 @@ public class ConstantExpr {
  	  } else if( Types.isBooleanType( t ) ) {
 	    switch( e.getTag() ) {
 	    case TagConstants.NOT: 
-	      return new Boolean( ! getBooleanConstant(val) );
+	      return Boolean.valueOf( ! getBooleanConstant(val) );
 	    default:
 	      return null;
 	    }
@@ -307,12 +307,12 @@ public class ConstantExpr {
     case TagConstants.LSHIFT:  return new Integer(x<<y);   
     case TagConstants.RSHIFT:  return new Integer(x>>y);   
     case TagConstants.URSHIFT: return new Integer(x>>>y);  
-    case TagConstants.LT:      return new Boolean(x<y);  
-    case TagConstants.LE:      return new Boolean(x<=y); 
-    case TagConstants.GT:      return new Boolean(x>y);  
-    case TagConstants.GE:      return new Boolean(x>=y); 
-    case TagConstants.EQ:      return new Boolean(x==y); 
-    case TagConstants.NE:      return new Boolean(x != y); 
+    case TagConstants.LT:      return Boolean.valueOf(x<y);  
+    case TagConstants.LE:      return Boolean.valueOf(x<=y); 
+    case TagConstants.GT:      return Boolean.valueOf(x>y);  
+    case TagConstants.GE:      return Boolean.valueOf(x>=y); 
+    case TagConstants.EQ:      return Boolean.valueOf(x==y); 
+    case TagConstants.NE:      return Boolean.valueOf(x != y); 
     case TagConstants.BITAND:  return new Integer(x&y); 
     case TagConstants.BITOR:   return new Integer(x|y); 
     case TagConstants.BITXOR:  return new Integer(x^y); 
@@ -338,12 +338,12 @@ public class ConstantExpr {
     case TagConstants.LSHIFT:  return new Long(x<<y);   
     case TagConstants.RSHIFT:  return new Long(x>>y);   
     case TagConstants.URSHIFT: return new Long(x>>>y);  
-    case TagConstants.LT:      return new Boolean(x<y);  
-    case TagConstants.LE:      return new Boolean(x<=y); 
-    case TagConstants.GT:      return new Boolean(x>y);  
-    case TagConstants.GE:      return new Boolean(x>=y); 
-    case TagConstants.EQ:      return new Boolean(x==y); 
-    case TagConstants.NE:      return new Boolean(x != y); 
+    case TagConstants.LT:      return Boolean.valueOf(x<y);  
+    case TagConstants.LE:      return Boolean.valueOf(x<=y); 
+    case TagConstants.GT:      return Boolean.valueOf(x>y);  
+    case TagConstants.GE:      return Boolean.valueOf(x>=y); 
+    case TagConstants.EQ:      return Boolean.valueOf(x==y); 
+    case TagConstants.NE:      return Boolean.valueOf(x != y); 
     case TagConstants.BITAND:  return new Long(x&y); 
     case TagConstants.BITOR:   return new Long(x|y); 
     case TagConstants.BITXOR:  return new Long(x^y); 
@@ -368,13 +368,13 @@ public class ConstantExpr {
     switch( op ) {
     default:
       return null;
-    case TagConstants.EQ:      return new Boolean(x==y); 
-    case TagConstants.NE:      return new Boolean(x != y); 
-    case TagConstants.BITAND:  return new Boolean(x&y); 
-    case TagConstants.BITOR:   return new Boolean(x|y); 
-    case TagConstants.BITXOR:  return new Boolean(x^y); 
-    case TagConstants.AND:     return new Boolean(x&&y); 
-    case TagConstants.OR:      return new Boolean(x||y); 
+    case TagConstants.EQ:      return Boolean.valueOf(x==y); 
+    case TagConstants.NE:      return Boolean.valueOf(x != y); 
+    case TagConstants.BITAND:  return Boolean.valueOf(x&y); 
+    case TagConstants.BITOR:   return Boolean.valueOf(x|y); 
+    case TagConstants.BITXOR:  return Boolean.valueOf(x^y); 
+    case TagConstants.AND:     return Boolean.valueOf(x&&y); 
+    case TagConstants.OR:      return Boolean.valueOf(x||y); 
     }
   }
 	
@@ -392,12 +392,12 @@ public class ConstantExpr {
     case TagConstants.STAR:return new Float(x*y); 
     case TagConstants.DIV: return new Float(x/y); 
     case TagConstants.MOD: return new Float(x%y); 
-    case TagConstants.EQ:  return new Boolean(x==y); 
-    case TagConstants.NE:  return new Boolean(x != y); 
-    case TagConstants.LT:  return new Boolean(x<y);  
-    case TagConstants.LE:  return new Boolean(x<=y); 
-    case TagConstants.GT:  return new Boolean(x>y);  
-    case TagConstants.GE:  return new Boolean(x>=y); 
+    case TagConstants.EQ:  return Boolean.valueOf(x==y); 
+    case TagConstants.NE:  return Boolean.valueOf(x != y); 
+    case TagConstants.LT:  return Boolean.valueOf(x<y);  
+    case TagConstants.LE:  return Boolean.valueOf(x<=y); 
+    case TagConstants.GT:  return Boolean.valueOf(x>y);  
+    case TagConstants.GE:  return Boolean.valueOf(x>=y); 
     }
   }
 
@@ -415,12 +415,12 @@ public class ConstantExpr {
     case TagConstants.STAR:return new Double(x*y); 
     case TagConstants.DIV: return new Double(x/y); 
     case TagConstants.MOD: return new Double(x%y); 
-    case TagConstants.EQ:  return new Boolean(x==y); 
-    case TagConstants.NE:  return new Boolean(x != y); 
-    case TagConstants.LT:  return new Boolean(x<y);  
-    case TagConstants.LE:  return new Boolean(x<=y); 
-    case TagConstants.GT:  return new Boolean(x>y);  
-    case TagConstants.GE:  return new Boolean(x>=y); 
+    case TagConstants.EQ:  return Boolean.valueOf(x==y); 
+    case TagConstants.NE:  return Boolean.valueOf(x != y); 
+    case TagConstants.LT:  return Boolean.valueOf(x<y);  
+    case TagConstants.LE:  return Boolean.valueOf(x<=y); 
+    case TagConstants.GT:  return Boolean.valueOf(x>y);  
+    case TagConstants.GE:  return Boolean.valueOf(x>=y); 
     }
   }
 

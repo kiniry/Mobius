@@ -228,9 +228,13 @@ public class TestFilesTestSuite  extends TestSuite {
 	} else {
 	    // If the strings do not match, we save the actual string and
 	    // fail the test.
-	    FileWriter f = new FileWriter(fileToTest+SAVED_SUFFIX);
-	    f.write(output);
-	    f.close();
+	    FileWriter f = null;
+	    try {
+	        f = new FileWriter(fileToTest+SAVED_SUFFIX);
+	        f.write(output);
+	    } finally {
+	        if (f != null) f.close();
+	    }
 	    
 	    return (df.result());
 	}

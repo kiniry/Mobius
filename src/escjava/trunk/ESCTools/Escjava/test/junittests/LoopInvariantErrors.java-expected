@@ -5,7 +5,7 @@ LoopInvariantErrors ...
 LoopInvariantErrors.java:7: Error: Cannot convert int to boolean
                 //@ loop_invariant i;
                                    ^
-LoopInvariantErrors.java:8: Error: Cannot convert boolean to int
+LoopInvariantErrors.java:8: Error: Cannot convert boolean to bigint
                 //@ decreases i > 0;
                               ^
 LoopInvariantErrors.java:13: Error: 'loop_invariant' pragmas can occur only immediately prior to a loop statement.  Loop statement expected (and not found) here.

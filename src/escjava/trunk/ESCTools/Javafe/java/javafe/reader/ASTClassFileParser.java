@@ -375,7 +375,7 @@ class ASTClassFileParser extends ClassFileParser
 	    {
 	    case TagConstants.BOOLEANTYPE:
 		tag     = TagConstants.BOOLEANLIT;
-		literal = new Boolean(((Integer)value).intValue() != 0);	//@ nowarn Cast,Null
+		literal = Boolean.valueOf(((Integer)value).intValue() != 0);	//@ nowarn Cast,Null
 		break;
 
 	    case TagConstants.INTTYPE:

@@ -518,13 +518,13 @@ public class TypeSig extends Type
      * omitted if it is the unnamed package.
      */
     //@ ensures \result != null;
-    public String getExternalName() {
-	String P = getPackageName();
-	if (P==THE_UNNAMED_PACKAGE)
-	    return getTypeName();
-	else
-	    return P+"."+getTypeName();
-    }
+     public String getExternalName() {
+         String P = getPackageName();
+         if (P==THE_UNNAMED_PACKAGE)
+             return getTypeName();
+         else
+             return P+"."+getTypeName();
+     }
 
 
     /**

@@ -93,7 +93,7 @@ public class jbdd {
   }
   protected native void jbdd_finalize();
 
-  public void finalize () {
+  protected void finalize () {
 	jbdd_finalize();
   }
   static {

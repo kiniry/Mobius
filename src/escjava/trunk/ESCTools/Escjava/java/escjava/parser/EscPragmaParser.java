@@ -2843,8 +2843,10 @@ try{
 	if (inModelType || inModelRoutine) { // FIXME also in model routine?
 				// FIXME what about modifiers and pmodifiers (e.g. non_null) on ghost decls
 	    OUTER: while (true) {
-	    if (l.ttype == TagConstants.IDENT) {
-		int tag = TagConstants.fromIdentifier(l.identifierVal);
+	    if (l.ttype == TagConstants.IDENT || l.ttype == TagConstants.ASSERT) {
+		int tag = l.ttype == TagConstants.IDENT ?
+				TagConstants.fromIdentifier(l.identifierVal)
+			    :   l.ttype;
 		if (tag != TagConstants.NULL) {
 		    Token dst = new Token();
 		    if (getNextPragmaHelper(dst)) do {
@@ -3254,6 +3256,8 @@ try{
 				modifierPragmas);
 	int locOpenBrace = Location.NULL;
 	BlockStmt body = null;
+	int modifiers = this.modifiers;
+	this.modifiers = Modifiers.NONE;
 	if (scanner.ttype == TagConstants.SEMICOLON) {
 	    scanner.getNextToken(); // eats semicolon
 	} else if (scanner.ttype == TagConstants.LBRACE) {

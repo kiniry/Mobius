@@ -42,7 +42,7 @@ public class CheckCompilationUnit
 	// Check any given CompilationUnit at most once:
 	if (checkedField.get(cu) != null)
 	    return;
-	checkedField.set(cu, new Boolean(true));
+	checkedField.set(cu, Boolean.TRUE);
 
 	Info.out("[checkCompilationUnit: checking for "
 			+ Location.toFileName(cu.loc) + "]");

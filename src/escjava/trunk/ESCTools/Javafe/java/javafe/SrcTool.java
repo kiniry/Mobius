@@ -192,24 +192,29 @@ public abstract class SrcTool extends FrontEndTool implements Listener
     //@ requires argumentFileName != null;
     //@ ensures \result.elementType <: \type(GenericFile);
     public ArrayList resolveList(String argumentFileName) {
-	/* load in source files from supplied file name */
-	ArrayList list = new ArrayList();
-	try {
-	    BufferedReader in = new BufferedReader(
-				new FileReader(argumentFileName));
-	    String s;
-	    while ((s = in.readLine()) != null) {
-		// allow blank lines in files list
-		if (!s.equals("")) {
-		    ArrayList a = (resolveInputEntry(InputEntry.make(s)));
-		    if (a != null) list.addAll(a);
-		}
-	    }
-	} catch (IOException e) {
-	    ErrorSet.error("I/O failure while reading argument list file "
-		    + argumentFileName + ": " + e.getMessage());
-	}
-	return list;
+        /* load in source files from supplied file name */
+        ArrayList list = new ArrayList();
+        try {
+            BufferedReader in = null;
+            try {
+                in = new BufferedReader(
+                        new FileReader(argumentFileName));
+                String s;
+                while ((s = in.readLine()) != null) {
+                    // allow blank lines in files list
+                    if (!s.equals("")) {
+                        ArrayList a = (resolveInputEntry(InputEntry.make(s)));
+                        if (a != null) list.addAll(a);
+                    }
+                }
+            } finally {
+                if (in != null) in.close();
+            }
+        } catch (IOException e) {
+            ErrorSet.error("I/O failure while reading argument list file "
+                    + argumentFileName + ": " + e.getMessage());
+        }
+        return list;
     }
 
 /*

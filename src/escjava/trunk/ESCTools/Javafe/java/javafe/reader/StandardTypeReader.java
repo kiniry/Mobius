@@ -283,7 +283,7 @@ public class StandardTypeReader extends TypeReader
 	CompilationUnit binary = binaryReader.read(file, false);
 	if (binary==null)
 	    return null;
-	String srcPtr = "srcptr.java";	// !!!!
+	String srcPtr = "srcptr.java";	// !!!! FIXME
 
 	// Try and locate that file if a valid srcPtr is present:
 	if (srcPtr==null || !srcPtr.endsWith(".java"))

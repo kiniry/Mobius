@@ -230,22 +230,27 @@ public class Utils {
 	@param cb		A temporary byte array to speed reading
 
 	@return			The contents of the file
+    @throws java.io.IOException
     */
 // FIXME - can we check that the file is too long without losing the efficiency benefits?
     //@ requires filename != null;
     //@ requires cb != null;
     //@ ensures \result != null;
     static public String readFile(String filename, byte[] cb) 
-					throws java.io.IOException {
-	int i = 0;
-	int j = 0;
-	java.io.FileInputStream f = new java.io.FileInputStream(filename);
-	while (j != -1) {
-	    i = i + j;
-	    j = f.read(cb,i,cb.length-i);
-	}
-	f.close();
-	return new String(cb,0,i);
+    throws java.io.IOException {
+        int i = 0;
+        int j = 0;
+        java.io.FileInputStream f = null;
+        try {
+            f = new java.io.FileInputStream(filename);
+            while (j != -1) {
+                i = i + j;
+                j = f.read(cb,i,cb.length-i);
+            }
+        } finally {
+            if (f != null) f.close();
+        }
+        return new String(cb,0,i);
     }
     
     //@ requires filename != null;
@@ -262,73 +267,91 @@ public class Utils {
 FIXME
 
 	@param filename		The file to be read
-	@return 		The contents of the file
+	@return 				The contents of the file
+    @throws IOException
     */
     //@ requires filename != null;
     //@ ensures \result != null;
     static public String readFile(String filename) throws java.io.IOException {
-	StringBuffer sb = new StringBuffer(10000);
-	char[] cb = new char[10000];
-	int j = 0;
-	java.io.FileReader f = new java.io.FileReader(filename);
-	while (j != -1) {
-	    j = f.read(cb,0,cb.length);
-	    if (j != -1) sb.append(cb,0,j);
-	}
-	f.close();
-	return sb.toString();
+        StringBuffer sb = new StringBuffer(10000);
+        char[] cb = new char[10000];
+        int j = 0;
+        java.io.FileReader f = null;
+        try {
+            f = new java.io.FileReader(filename);
+            while (j != -1) {
+                j = f.read(cb,0,cb.length);
+                if (j != -1) sb.append(cb,0,j);
+            }
+        } finally {
+            if (f != null) f.close();
+        }
+        return sb.toString();
     }
     
+    /**
+     * Executes the static compile(String[]) method of the given class
+     * @param cls	The class whose 'compile' method is be invoked
+     * @param args   The String[] argument of the method
+     * @return The standard output and error output of the invocation
+     */
     //@ requires cls != null;
     //@ requires args != null;
     //@ requires !\nonnullelements(args);
     static public String executeCompile(Class cls, String[] args) {
-	return executeMethod(cls,"compile",args);
+        return executeMethod(cls,"compile",args);
     }
 
     /** Finds and executes the method with the given name in the given class;
 	the method must have a single argument of type String[].  The 'args'
 	parameter is supplied to it as its argument.
+     * @param cls		The class whose method is to be invoked
+     * @param methodname The method to be invoked
+     * @param args		The argument of the method
+     * @return  The standard output and error output of the invocation
     */
     //@ requires cls != null;
     //@ requires methodname != null;
     //@ requires args != null;
     //@ requires !\nonnullelements(args);
     static public String executeMethod(Class cls, String methodname, String[] args) {
-	try {
+        try {
             Method method = cls.getMethod(methodname, new Class[] { String[].class });
             return executeMethod(method,args);
         } catch (NoSuchMethodException e) {
-	    Utils.restoreStreams();
-	    System.out.println("No method compile in class " + cls);
-	    e.printStackTrace();
+            Utils.restoreStreams();
+            System.out.println("No method compile in class " + cls);
+            e.printStackTrace();
             throw new RuntimeException(e.toString());
         }
     }
 
     /** Calls the given method on the given String[] argument.  Any standard
-	output and error output is collected and returned as the String 
-	return value.
-    */
+     	output and error output is collected and returned as the String 
+     	return value.
+     * @param method	The method to be invoked
+     * @param args	The argument of the method
+     * @return		The standard output and error output of the method
+     */
     //@ requires method != null;
     //@ requires args != null;
     //@ requires !\nonnullelements(args);
     static public String executeMethod(Method method, String[] args) {
-	try {
-	    ByteArrayOutputStream ba = new ByteArrayOutputStream(10000);
-	    PrintStream ps = new PrintStream(ba);
-	    Utils.setStreams(ps);
-	    boolean b = ((Boolean)(method.invoke(null,new Object[]{args}))).booleanValue();
-	    ps.close(); 
-	    String s = ba.toString();
-	    return s;
-	} catch (Exception e) {
-	    Utils.restoreStreams();
-	    System.out.println(e.toString());
-	} finally {
-	    Utils.restoreStreams();
+        try {
+            ByteArrayOutputStream ba = new ByteArrayOutputStream(10000);
+            PrintStream ps = new PrintStream(ba);
+            Utils.setStreams(ps);
+            boolean b = ((Boolean)(method.invoke(null,new Object[]{args}))).booleanValue();
+            ps.close(); 
+            String s = ba.toString();
+            return s;
+        } catch (Exception e) {
+            Utils.restoreStreams();
+            System.out.println(e.toString());
+        } finally {
+            Utils.restoreStreams();
         }
-	return null;
+        return null;
     }
 
     static final String ORACLE_SUFFIX = "-expected";
@@ -340,24 +363,33 @@ FIXME
 	for later comparison if the string and file are different, and making
 	sure that the actual output file (the -ckd file) is deleted if the
 	string and file are the same.
-    */
+	 *  TODO
+     * @param s
+     * @param rootname
+     * @return
+     * @throws java.io.IOException
+     */
     static public Diff compareStringToFile(String s, String rootname) 
-			throws java.io.IOException {
-	String ss = Utils.readFile(rootname+ORACLE_SUFFIX);
-	Diff df = new Diff( "expected", ss, "actual", s );
-
-	if (!df.areDifferent()) {
-	    // If the two strings match, the test succeeds and we make sure
+    						throws java.io.IOException {
+        String ss = Utils.readFile(rootname+ORACLE_SUFFIX);
+        Diff df = new Diff( "expected", ss, "actual", s );
+        
+        if (!df.areDifferent()) {
+            // If the two strings match, the test succeeds and we make sure
             // that there is no -ckd file to confuse anyone.
-	    (new File(rootname+SAVED_SUFFIX)).delete();
-	} else {
-	    // If the strings do not match, we save the actual string and 
+            (new File(rootname+SAVED_SUFFIX)).delete();
+        } else {
+            // If the strings do not match, we save the actual string and 
             // fail the test.
-	    FileWriter f = new FileWriter(rootname+SAVED_SUFFIX);
-	    f.write(s);
-	    f.close();
-	}
-	return df;
+            FileWriter f = null;
+            try {
+                f = new FileWriter(rootname+SAVED_SUFFIX);
+	            f.write(s); 
+	        } finally {
+	            if (f != null) f.close(); 
+	        }
+        }
+        return df;
     }
 
     /** This deletes all files (in the current directory) whose

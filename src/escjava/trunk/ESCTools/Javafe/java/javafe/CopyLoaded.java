@@ -227,13 +227,17 @@ public class CopyLoaded extends FrontEndTool implements Listener {
         //@ assume libIndirectWriter != null;
         libIndirectWriter.println("./" + makeDirPath(P) + outFile);
     
-        FileOutputStream fos = null;
         try {
-            fos = new FileOutputStream(filename);
+            FileOutputStream fos = null;
+            try {
+                fos = new FileOutputStream(filename);
+                PrettyPrint.inst.print(fos, sig.getCompilationUnit());
+            } finally {
+                if (fos != null) fos.close();
+            }
         } catch (Exception e) {
             ErrorSet.fatal(e.getMessage());
         }
-        PrettyPrint.inst.print(fos, sig.getCompilationUnit());
     }
 
     public final void frontEndToolProcessing(ArrayList args) {
@@ -277,22 +281,27 @@ public class CopyLoaded extends FrontEndTool implements Listener {
          /* load in source files from supplied file name */
 	i = argumentFileNames.iterator();
 	while (i.hasNext()) {
-            String argumentFileName = (String)i.next();
-             try {
-                 BufferedReader in = new BufferedReader(
-                             new FileReader(argumentFileName));
-                 String s;
-                 while ((s = in.readLine()) != null) {
-                    // allow blank lines in files list
-                    if (!s.equals("")) {
-                    progIndirectFiles.addElement(s);
-                    OutsideEnv.addSource(s); 
-                    }
-                }
-             } catch (IOException e) {
-		ErrorSet.fatal(e.getMessage());
-             }
-         }
+	    String argumentFileName = (String)i.next();
+	    try {
+		    BufferedReader in = null;
+	        try {
+	            in = new BufferedReader(
+	                    new FileReader(argumentFileName));
+	            String s;
+	            while ((s = in.readLine()) != null) {
+	                // allow blank lines in files list
+	                if (!s.equals("")) {
+	                    progIndirectFiles.addElement(s);
+	                    OutsideEnv.addSource(s); 
+	                }
+	            }
+	        } finally {
+	            if (in != null) in.close();
+	        }
+	    } catch (IOException e) {
+	        ErrorSet.fatal(e.getMessage());
+	    }
+	}
     
 	i = loaded.iterator();
 	while (i.hasNext()) {
@@ -328,13 +337,22 @@ public class CopyLoaded extends FrontEndTool implements Listener {
             }
             
             File f = new File(newFileName);
-            BufferedReader reader = new BufferedReader(new FileReader(original));
-            PrintWriter writer = new PrintWriter(new FileWriter(f));
-            String s;
-            while ((s = reader.readLine()) != null) {
-                writer.println(s);
+            BufferedReader reader = null;
+            PrintWriter writer = null;
+            try {
+                reader = new BufferedReader(new FileReader(original));
+                try {
+                    writer = new PrintWriter(new FileWriter(f));
+                    String s;
+                    while ((s = reader.readLine()) != null) {
+                        writer.println(s);
+                    }
+                } finally {
+                    if (writer != null) writer.close();
+                }
+            } finally {
+                if (reader != null) reader.close();
             }
-            writer.close();
         } catch (IOException e) {
             ErrorSet.fatal(e.getMessage());
         }

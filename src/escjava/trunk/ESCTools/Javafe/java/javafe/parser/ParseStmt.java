@@ -642,7 +642,7 @@ public abstract class ParseStmt extends ParseExpr
         if (l.ttype != TagConstants.SEMICOLON)
             test = parseExpression(l);
         else test = LiteralExpr.make(TagConstants.BOOLEANLIT, 
-                                     new Boolean(true), 
+                                     Boolean.TRUE, 
                                      l.startingLoc );
         expect(l, TagConstants.SEMICOLON);
 

@@ -323,11 +323,16 @@ public class Options {
         try {
             String[] sa = new String[20];
             // more than most lines in the file will be, just for efficiency
-            BufferedReader r = new BufferedReader(new FileReader(filename));
-            String s;
-            while ((s = r.readLine()) != null) {
-                sa = Utils.parseLine(s);
-                processOptionsLoop(sa);
+            BufferedReader r = null;
+            try { 
+                r = new BufferedReader(new FileReader(filename));
+                String s;
+                while ((s = r.readLine()) != null) {
+                    sa = Utils.parseLine(s);
+                    processOptionsLoop(sa);
+                }
+            } finally {
+                if (r != null) r.close();
             }
         } catch (IOException e) {
             ErrorSet.error(

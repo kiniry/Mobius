@@ -587,12 +587,12 @@ public abstract class ParseExpr extends ParseType
                 break;
 
             case TagConstants.TRUE:
-                primary = LiteralExpr.make( TagConstants.BOOLEANLIT, new Boolean(true), l.startingLoc );
+                primary = LiteralExpr.make( TagConstants.BOOLEANLIT, Boolean.TRUE, l.startingLoc );
                 l.getNextToken();
                 break;
 
             case TagConstants.FALSE:
-                primary = LiteralExpr.make( TagConstants.BOOLEANLIT, new Boolean(false), l.startingLoc );
+                primary = LiteralExpr.make( TagConstants.BOOLEANLIT, Boolean.FALSE, l.startingLoc );
                 l.getNextToken();
                 break;
 

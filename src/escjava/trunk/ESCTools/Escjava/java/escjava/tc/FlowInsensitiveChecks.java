@@ -396,7 +396,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 		boolean savedInAnnotation = inAnnotation;
                 inAnnotation = true;
 		try {
-		    s.expr = checkExpr(env, s.expr, Types.intType);
+		    s.expr = checkExpr(env, s.expr, Types.bigintType);
 		} finally {
 		    inAnnotation = savedInAnnotation;
 		}
