@@ -497,10 +497,9 @@ VariableDeclarator:
     } 
     else if( l.ttype == TagConstants.TYPEDECLELEMPRAGMA ) {
       // TypeDeclElemPragma
-// Model methods have modifiers, so this cannot be forbidden
-//      if( modifiers != Modifiers.NONE || modifierPragmas != null )
-//	fail(l.startingLoc, 
-//	     "Cannot have modifiers on a TypeDeclElem pragma");
+      if( modifiers != Modifiers.NONE)
+	ErrorSet.error(l.startingLoc, 
+	     "Cannot have modifiers outside of the annotation on a TypeDeclElem pragma");
       TypeDeclElemPragma pragma = (TypeDeclElemPragma)l.auxVal;
       pragma.decorate(modifierPragmas);
       seqTypeDeclElem.addElement( pragma );
