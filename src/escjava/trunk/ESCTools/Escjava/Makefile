@@ -20,7 +20,8 @@ include ${TOP}/Makefile.defs
 
 ESCJAVA_SOURCE_DIR = ${ESCJAVA_ROOT}/java
 JAVAFE_SOURCE_DIR ?= ${JAVAFE_ROOT}/java
-JAVASOURCEFILES = ${ESCJAVA_SOURCE_DIR}/escjava/ast/*.java \
+JAVASOURCEFILES = \
+	${ESCJAVA_SOURCE_DIR}/escjava/ast/*.java \
 	${ESCJAVA_SOURCE_DIR}/escjava/backpred/*.java \
 	${ESCJAVA_SOURCE_DIR}/escjava/parser/*.java \
 	${ESCJAVA_SOURCE_DIR}/escjava/prover/*.java \
@@ -31,15 +32,21 @@ JAVASOURCEFILES = ${ESCJAVA_SOURCE_DIR}/escjava/ast/*.java \
 	${ESCJAVA_SOURCE_DIR}/escjava/*.java \
 	${ESCJAVA_SOURCE_DIR}/escjava/Version.java
 
+OTHERSOURCEFILES = ${JAVAFE_SOURCE_DIR}/javafe/*.java \
+		${JAVAFE_SOURCE_DIR}/javafe/ast/*.java \
+		${JAVAFE_SOURCE_DIR}/javafe/parser/*.java \
+		${JAVAFE_SOURCE_DIR}/javafe/reader/*.java \
+		${JAVAFE_SOURCE_DIR}/javafe/genericfile/*.java \
+		${JAVAFE_SOURCE_DIR}/javafe/filespace/*.java \
+		${JAVAFE_SOURCE_DIR}/javafe/tc/*.java \
+		${JAVAFE_SOURCE_DIR}/javafe/util/*.java \
+		${ESCTOOLS_ROOT}/Utils/junitutils/*.java 
+
 ## FIXME - Version.java is listed above because it might not exist when *.java
 ## is expanded, but isn't that true for ast/*.java as well???
 
-OTHERSOURCEFILES = /dev/null
-TESTHARNESSFILES = /dev/null
-
 # The executable to run escjava
 export ESCJ = ${ESCJAVA_ROOT}/escj
-export ESCJ_SOURCEPATH=${ESCTOOLS_ROOT}/Javafe/java:${ESCTOOLS_ROOT}/Escjava/java:${ESCTOOLS_ROOT}/specs
 
 ## These definitions are used in subsidiary makes, hence are exported
 export CLASSDIRECTORY=${ESCJAVA_CLASSFILES}
@@ -340,9 +347,9 @@ test_matrix:
 
 .PHONY: self_test
 self_test: compile
-	cd ${ESCJAVA_SOURCE_DIR}/escjava; \
-	${ESCJ} -classpath ${ESCJ_SOURCEPATH} \
-		-source 1.4 -nocheck -quiet -noSemicolonWarnings ${JAVASOURCEFILES}
+	${ESCJ} -classpath ${ESCTOOLS_ROOT}/Javafe/java:${ESCTOOLS_ROOT}/Escjava/java:${ESCTOOLS_ROOT}/Utils \
+		-source 1.4 -nocheck -quiet -noSemicolonWarnings \
+		${OTHERSOURCEFILES} ${JAVASOURCEFILES}
 
 ## This tests a binary release that is present in the RELTEMP directory,
 ## with RELCLASSPATH pointing to the relevant esctools2.jar file.
