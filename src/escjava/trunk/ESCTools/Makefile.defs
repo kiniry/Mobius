@@ -98,7 +98,7 @@ export PROVER_CC_LIMIT ?= 10
 ##              are rather complex specifications)
 ##   b) ${ESCTOOLS_ROOT}/escspecs.jar, which is a jar of (c)
 ##   c) ${ESCTOOLS_ROOT}/specs, which is a set of specs designed for Esc/java
-export ESC_SPECS ?:= ${TOP}/specs
+export ESC_SPECS := ${TOP}/specs
 
 ##########################################################################
 ## Definitions of Java tools.
