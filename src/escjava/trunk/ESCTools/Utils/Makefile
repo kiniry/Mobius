@@ -4,7 +4,7 @@ include ${TOP}/Makefile.defs
 
 .PHONY: clean test build
 clean test build:
-	@make -C junitutils $@
+	@${MAKE} -C junitutils $@
 
 build: checkjunitjar
 

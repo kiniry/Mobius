@@ -109,7 +109,7 @@ public class FileCorrelatedReader extends LocationManagerCorrelatedReader
              * (file may not be openable.)
              */
             FileCorrelatedReader R =
-                new FileCorrelatedReader(new StringBufferInputStream("dummy stream"), file);
+                new FileCorrelatedReader(new ByteArrayInputStream(new byte[10]), file);
 
             // Then read the first character so it has a valid location:
             R.read();
@@ -122,7 +122,7 @@ public class FileCorrelatedReader extends LocationManagerCorrelatedReader
             return R.getLocation();
 
         } catch (IOException e) {
-            Assert.fail("I/O error reading from a StringBufferInputStream");
+            Assert.fail("I/O error reading from a ByteArrayInputStream");
             return Location.NULL;   // dummy return...
         }
     }

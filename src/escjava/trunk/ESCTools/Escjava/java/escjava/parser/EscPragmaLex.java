@@ -59,7 +59,7 @@ public final class EscPragmaLex extends Lex
                     }
                     h = _SpecialParserInterface.HC * h + nextchr;
                     nextchr = m_in.read();
-                } while (Character.isJavaLetterOrDigit((char)nextchr));
+                } while (Character.isJavaIdentifierPart((char)nextchr));
                 m_nextchr = nextchr;
                 auxVal = null;
                 identifierVal = _SpecialParserInterface.intern(text, textlen, h);

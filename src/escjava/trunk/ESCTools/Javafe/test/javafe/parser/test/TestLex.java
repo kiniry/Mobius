@@ -78,9 +78,9 @@ public class TestLex implements PragmaParser {
     // Make sure that <code>Character.isXXX(-1)</code> returns false
     // as expected by by the lexer code.
     Assert.notFalse(! Character.isDigit((char)-1));	//@ nowarn Pre
-    Assert.notFalse(! Character.isSpace((char)-1));	//@ nowarn Pre
-    Assert.notFalse(! Character.isJavaLetter((char)-1));  //@ nowarn Pre
-    Assert.notFalse(! Character.isJavaLetterOrDigit((char)-1)); //@ nowarn Pre
+    Assert.notFalse(! Character.isWhitespace((char)-1));	//@ nowarn Pre
+    Assert.notFalse(! Character.isJavaIdentifierStart((char)-1));  //@ nowarn Pre
+    Assert.notFalse(! Character.isJavaIdentifierPart((char)-1)); //@ nowarn Pre
 
     System.exit(ErrorSet.errors);
   }

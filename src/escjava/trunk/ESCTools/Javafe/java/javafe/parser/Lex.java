@@ -498,14 +498,14 @@ public class Lex extends Token
             int nextchr = m_nextchr;
             textlen = 0;
 
-            while (Character.isSpace((char)nextchr)) {
+            while (Character.isWhitespace((char)nextchr)) {
                 m_in.mark();
                 nextchr = m_in.read();
             }
             startingLoc = m_in.getLocation();
 
             // Inline the identifier-handling code because it's the common case
-            if (Character.isJavaLetter((char)nextchr)) { 
+            if (Character.isJavaIdentifierStart((char)nextchr)) { 
                 int h = 0;
                 do {
                     try {
@@ -514,7 +514,7 @@ public class Lex extends Token
                     } catch (ArrayIndexOutOfBoundsException e) { this.append(nextchr);}
                     h = _SpecialParserInterface.HC*h + nextchr;
                     nextchr = m_in.read();
-                } while (Character.isJavaLetterOrDigit((char)nextchr));
+                } while (Character.isJavaIdentifierPart((char)nextchr));
                 m_nextchr = nextchr;
                 auxVal = null;
                 identifierVal = _SpecialParserInterface.intern(text, textlen, h);

@@ -9,7 +9,7 @@ import java.io.IOException;
 import javafe.util.Assert;
 import javafe.util.Location;
 
-
+// FIXME - should this write Strings instead of bytes?
 public abstract class PrettyPrint {
 
     /***************************************************
@@ -379,20 +379,11 @@ public abstract class PrettyPrint {
 
   //@ requires o!=null && s!=null
   public static void write(OutputStream o, String s) {
-    int len = s.length();
-    int start = 0, end = Math.min(len, outBuf.length);
-    do {
-      s.getBytes(start, end, outBuf, 0);
+      byte[] outBuf = s.getBytes();
       try {
-	o.write(outBuf, 0, end - start);
+	o.write(outBuf);
       } catch (IOException e) { Assert.fail("IO Exception"); }
-      start = end;
-      end = Math.min(len, start + outBuf.length);
-    } while (start < len);
   }
-
-  //@ invariant outBuf!=null
-  private static byte[] outBuf = new byte[100];
 
   //@ requires o!=null
   public static void spaces(OutputStream o, int number) {

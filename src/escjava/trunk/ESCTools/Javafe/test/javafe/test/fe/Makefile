@@ -72,11 +72,16 @@ summary: test*
 # This target executes and compares a given test, e.g. 'make dotest1'
 # executes and compares test1
 ## Must have variables JAVA and JAVAFE_ROOT set
-do%:
+do%: testclasses
 	@( cd $*; \
 	   export TOOL="${TOOL} -classpath `pwd`" ; \
 	   ./run 2>&1 | sed "s|`pwd`|<TEST>|g" > out)
 	@diff $*/out $*/ans || echo Test $* failed
+
+testclasses: ${CLASSDIRECTORY}/javafe/test/Print.class
+
+${CLASSDIRECTORY}/javafe/test/Print.class:
+	${MAKE} -C ${JAVAFE_ROOT} javafe_test
 
 ## This target simply executes a given test, e.g. 'make extest1' runs test1
 ## Must have variables JAVA and JAVAFE_ROOT set

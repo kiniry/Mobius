@@ -5,7 +5,6 @@ package javafe.util;
 import javafe.genericfile.GenericFile;
 
 import java.util.Vector;
-import java.io.StringBufferInputStream;
 import java.io.IOException;
 
 /**

@@ -287,7 +287,7 @@ public class SubProcess
                     if (r == -1) {
                         break;
                     }
-                    errOut += new String(buf, 0, 0, r);
+                    errOut += new String(buf, 0, r);
                 }
             } catch (IOException ioe) {
                 errOut += "<IOException: " + ioe.toString() + ">";
