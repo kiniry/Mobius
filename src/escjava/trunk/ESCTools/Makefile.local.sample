@@ -17,7 +17,7 @@
 
 ## This must be the directory containing the various ESC tools, 
 ## For example, it must contain this file (Makefile.local), 
-## the top-level Makefile, and the directories Javafe, EscJava
+## the top-level Makefile, and the directories Javafe, EscJava, (among others)
 export ESCTOOLS_ROOT ?= /home/cok/ESCTools/ESCTools
 
 ## This defines the version of Simplify to be used (the executables are
@@ -37,7 +37,9 @@ export JDK_SOURCE_DIR    = /usr/local/Java/src
 export JDK_PRE14_SOURCES = ${JDK_SOURCE_DIR}/jdk-1.0 ${JDK_SOURCE_DIR}/jdk-1.1 \
                            ${JDK_SOURCE_DIR}/jdk-1.2 ${JDK_SOURCE_DIR}/jdk-1.3
 export JDK_14_SOURCES    = ${JDK_SOURCE_DIR}/jdk-1.4
-export JDK_SOURCES ?= ${JDK_PRE14_SOURCES} ${JDK_14_SOURCES}
+
+# The current sources, if any
+export JDK_SOURCES       = ${JDK_SOURCE_DIR}/jdk-1.4  
 
 ## Define the location of the class files for the JDK.
 ## This can be a classpath of multiple locations (e.g. on MacOSX), but

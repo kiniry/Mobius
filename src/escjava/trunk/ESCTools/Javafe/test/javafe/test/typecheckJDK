@@ -1,7 +1,6 @@
 #!/bin/csh -f
 
-if (! $?JDK_SOURCES) ( echo typecheckJDK needs JDK_SOURCES and related variables; \
- echo See Makefile.local in ESCTools for details; exit 0 )
+echo "TESTING Javafe: typecheckJDK"
 
 if ( $?JDK_PRE14_SOURCES ) then
 
@@ -25,9 +24,9 @@ else
 	echo Not checking PRE14 sources - no JDK_PRE14_SOURCES defined
 endif
 
-if ( $?JDK14_SOURCES ) then 
+if ( $?JDK_14_SOURCES ) then 
 
-foreach jdk_version ( ${JDK14_SOURCES} )
+foreach jdk_version ( ${JDK_14_SOURCES} )
 
     echo ===== Typechecking version ${jdk_version} =====
 
@@ -46,5 +45,5 @@ foreach jdk_version ( ${JDK14_SOURCES} )
 end
 
 else
-	echo Not checking java 1.4 sources - no JDK14_SOURCES defined
+	echo Not checking java 1.4 sources - no JDK_14_SOURCES defined
 endif

@@ -1,4 +1,5 @@
 #!/bin/tcsh -f
+echo "TESTING Javafe: typecheckJavafe"
 
 if ( ! $?ESCTOOLS_ROOT ) ( echo Must define ESCTOOLS_ROOT ; exit 1 )
 

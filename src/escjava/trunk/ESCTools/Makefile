@@ -20,7 +20,7 @@ include Makefile.defs
 ##	patch-release - makes the tar file constituting a patch release
 ##	binary-release - makes the tar file constituting a binary release
 ##	releases-notests - makes both releases without doing any tests
-##	releases	- makes both releases with tests before and after
+##	releases	- makes both releases with tests after
 ##
 ## You can run each of these in a subdirectory and only apply it to
 ## the code in that subdirectory, if you like.  Note though, that the
@@ -96,6 +96,7 @@ clean-norel: clean-norel-noreltemp
 clean-release-test:
 	rm -rf ${RELTEST}
 
+# Cleans everything except the various release directories (test, temp, release)
 .PHONY: clean-norel-noreltemp
 clean-norel-noreltemp:
 	rm -rf ${PATCH_DIR}
@@ -105,7 +106,7 @@ clean-norel-noreltemp:
 	done
 	$(MAKE) -C docs clean
 	$(MAKE) -C Javafe clean
-	rm -f jars/*.jar
+	rm -f jars/*.jar		## FIXME is this used?
 	rm -f tags TAGS
 
 ########################################### docs
@@ -211,9 +212,6 @@ binary-release: build docs
 	cd ${RELTEMP}; tar cjvf ${RELDIR}/${RELTAR} *
 	rm -rf ${RELTEMP}
 
-## FIXME - simplify script, simplify binary; alter escj to use alternate simplify script
-## FIXME - also zip up the source and ship it as well.
-## FIXME - tar the result; do we need an install file?  DO need install instructions and a README
 
 .PHONY: test-binary-release
 test-binary-release:
@@ -225,6 +223,7 @@ test-binary-release:
 	    tar xjf ${RELTEST}/*binary.tbz ;\
 	    ${RELTEST}/quicktest
 
+## FIXME - used?
 .PHONY: test-binary-release-before-tar
 test-binary-release-before-tar:
 	@echo "Testing binary release - before tarring .........."
@@ -252,6 +251,7 @@ test-patch-release:
 		unset PATCH_DIR ;\
 		unset RELDIR ;\
 		unset RELTEMP ;\
+		unset RELTEST ;\
 		unset ESC_SPECS ;\
 		unset ESCJ_SIMPLIFY_DIR ;\
 		./install.sh  ${ORIGINAL_TAR_DIR}
@@ -335,6 +335,9 @@ zero-length-files:
 	      if [ ! -e $$f ]; then echo $$f; fi; \
 	  done ) > ${PATCH_PREFIX}-emptyFilesThatDisappeared
 
+############################################################################
+
+## This is simply a smoke test of the Makefile (particularly for Windows)
 .PHONY: make-test
 make-test:
 	echo `cygpath -m $(ESCJ_SIMPLIFY_DIR)`

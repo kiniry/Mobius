@@ -37,7 +37,7 @@ buildall: compileall
 
 .PHONY: test
 ifdef ALLTESTS
-test: runtest typecheckTests
+test: extensive_tests typecheckTests
 else
 test: runtest
 endif
@@ -50,17 +50,21 @@ SOURCEFILES := java/javafe/*.java java/javafe/*/*.java java/tohtml/*.java
 CLASSESSTAMP = classes.stamp
 
 
+## Compiles everything that is missing or out of date
 .PHONY: compile
 compile: ${CLASSDIRECTORY} source ${CLASSESSTAMP}
 
+## Compiles all out of date java files
 ${CLASSESSTAMP}: ${SOURCEFILES}
 	${JAVAC} ${JAVAC_FLAGS} -classpath $(call canonicalize,${CLASSDIRECTORY}:${SOURCEDIRECTORY}) \
 	  -d $(call canonicalize,${CLASSDIRECTORY}) $?
 	touch ${CLASSESSTAMP}
 
+## Full compile, including all java files, whether out of date or not
 .PHONY: compileall
 compileall: ${CLASSDIRECTORY} source javafeall
 
+## Compiles all java files, whether out of date or not
 .PHONY: javafeall
 javafeall:
 	( cd java; \
@@ -70,29 +74,21 @@ javafeall:
 	  `find tohtml -name "*.java"` )
 	touch ${CLASSESSTAMP}
 
+## Runs all targets that create java files using other tools
 .PHONY: source
 source: 
 	${MAKE} -C astgen
 	${MAKE} -C java/javafe/ast source
 	${MAKE} -C java/javafe/tc source
 
+## Creates the output directory (where class files go), if necessary
 ${CLASSDIRECTORY}:
 	mkdir -p ${CLASSDIRECTORY}
 
+## Builds other tools (FIXME - do we need this? - not part of the regular build)
 .PHONY: jtools
 jtools:	
 	${MAKE} -C java/jtools
-
-###########################################################################
-
-## FIXME - FIX THIS
-
-.PHONY: zip
-zip:
-	rm -f ${CLASSDIRECTORY}/javafe.zip
-	cd ${CLASSDIRECTORY}; jar -cf0 javafe.zip javafe tohtml
-	chmod a+r ${CLASSDIRECTORY}/javafe.zip
-
 
 ###########################################################################
 # clean targets
@@ -137,21 +133,24 @@ JAVAFETESTTARGETS = \
 		javafe/parser/test/TestParse.java
 
 
+## Runs basic tests on Javafe
 .PHONY: runtest
 runtest: javafe_test
 	${MAKE} -C test/javafe/parser/test runtest
 	${MAKE} -C java/javafe/util        runtest
 	${MAKE} -C test/javafe/test        runtest
 
-# This includes runtest and test_jdk_sources
+## Runs basic tests, plus some (but not all) that are long
 .PHONY: extensive_tests
-extensive_tests: javafe_test
-	${MAKE} -C test/javafe/parser/test big
+extensive_tests: javafe_test runtest
+	${MAKE} -C test/javafe/parser/test bigtests
 
+# This is included in extensive_tests above
 .PHONY: test_jdk_sources
 test_jdk_sources:
 	${MAKE} -C test/javafe/parser/test testparsejdkidempotence
 
+## Runs the Javafe tool on bodies of code
 .PHONY: typecheckTests
 typecheckTests: javafe_test
 	@test/javafe/test/typecheckJDK
@@ -181,22 +180,6 @@ javafe_test:
 
 ###########################################################################
 ## misc targets -- FIXME
-
-OTHERSOURCEFILES = astgen/ast*.c astgen/ast*.h astgen/ast*.l
-TESTHARNESSFILES = test/javafe/parser/test/Test*.java test/javafe/test/*.java
-
-.PHONY: wc
-wc:
-	# --- Non-java Source files ---
-	wc ${OTHERSOURCEFILES}
-	# --- Java Source files ---
-	wc ${SOURCEFILES}
-	${JAVA} javafe.CountLines ${JAVASOURCEFILES}
-	# jrun javafe.parser.test.TestParse print ${JAVASOURCEFILES} | wc
-	# --- Test harness files ---
-	wc ${TESTHARNESSFILES}
-	${JAVA} javafe.CountLines ${TESTHARNESSFILES}
-	# jrun javafe.parser.test.TestParse print ${TESTHARNESSFILES} | wc
 
 .PHONY: esc
 esc: source
