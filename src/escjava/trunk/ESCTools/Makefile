@@ -80,7 +80,7 @@ fix-perms:
 # To really clean, we need to clean Javafe last since some of its
 # tools are used in cleaning.
 .PHONY: clean
-clean: clean-norel clean-release
+clean: clean-norel clean-release clean-release-test
 
 .PHONY: clean-release
 clean-release:
@@ -91,6 +91,11 @@ clean-release:
 clean-norel: clean-norel-noreltemp
 	rm -rf ${RELTEMP}
 
+# Cleans release test directory
+.PHONY: clean-release-test
+clean-release-test:
+	rm -rf ${RELTEST}
+
 .PHONY: clean-norel-noreltemp
 clean-norel-noreltemp:
 	rm -rf ${PATCH_DIR}
@@ -100,6 +105,8 @@ clean-norel-noreltemp:
 	done
 	$(MAKE) -C docs clean
 	$(MAKE) -C Javafe clean
+	rm -f jars/*.jar
+	rm tags TAGS
 
 ########################################### docs
 
@@ -207,8 +214,6 @@ binary-release: build docs
 ## FIXME - simplify script, simplify binary; alter escj to use alternate simplify script
 ## FIXME - also zip up the source and ship it as well.
 ## FIXME - tar the result; do we need an install file?  DO need install instructions and a README
-
-RELTEST = ${ESCTOOLS_ROOT}/release-test
 
 .PHONY: test-binary-release
 test-binary-release:

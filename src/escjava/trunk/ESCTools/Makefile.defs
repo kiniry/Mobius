@@ -160,6 +160,9 @@ export ESC_RELEASE_DATE ?= `date "+%d-%m-%y"`
 # Temp directory for constructing releases
 export RELTEMP ?= ${ESCTOOLS_ROOT}/release-temp
 
+# Temp directory for testing releases
+export RELTEST ?= ${ESCTOOLS_ROOT}/release-test
+
 # Directory in which to put final binary and patch tar files (but nothing else)
 export RELDIR  ?= ${ESCTOOLS_ROOT}/release
 
