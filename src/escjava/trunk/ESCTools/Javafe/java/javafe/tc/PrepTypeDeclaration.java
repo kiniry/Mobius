@@ -663,7 +663,8 @@ public class PrepTypeDeclaration {
 	if( Types.isSameFormalParaDeclVec(x.args, cd.args ))
 	  ErrorSet.error( x.loc, 
 			 "Duplicate declaration of constructor "
-			 +"with same signature");
+			 +"with same signature",
+			cd.loc);
       }
     
     constructorSeq.addElement(x);
