@@ -1134,11 +1134,11 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
         int tag = p.getTag();
         switch(tag) 
         {
-	    case TagConstants.JML_EVERYTHING:
 	    case TagConstants.EVERYTHINGEXPR:
+	    case TagConstants.JML_EVERYTHING:
 	    case TagConstants.JML_NOTHING:
-	    case TagConstants.NOTHINGEXPR:
 	    case TagConstants.JML_NOT_SPECIFIED:
+	    case TagConstants.NOTHINGEXPR:
 	    case TagConstants.NOTSPECIFIEDEXPR:
 		// FIXME - check the context???
 		break;
@@ -1569,110 +1569,110 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                     break;
                 }
 
-            case TagConstants.MONITORED_BY:
-                {
-                    ExprModifierPragma emp = (ExprModifierPragma)p;
+            case TagConstants.MONITORED_BY: {
+                ExprModifierPragma emp = (ExprModifierPragma)p;
 
-                    if (ctxt.getTag() != TagConstants.FIELDDECL) {
-                        ErrorSet.error(p.getStartLoc(),
-                                       "The monitored_by annotation can occur only on "+
-                                       "field declarations");
-                    } else {
-                        FieldDecl fd = (FieldDecl)ctxt;
+                if (ctxt.getTag() != TagConstants.FIELDDECL) {
+                    ErrorSet.error(p.getStartLoc(),
+                                   "The monitored_by annotation can occur only on "+
+                                   "field declarations");
+                } else {
+                    FieldDecl fd = (FieldDecl)ctxt;
 
-                        int oldAccessibilityLowerBound = accessibilityLowerBound;
-                        ASTNode oldAccessibilityContext = accessibilityContext;
-                        accessibilityLowerBound = getAccessibility(fd.modifiers);
-                        accessibilityContext = fd;
-                        emp.expr = checkExpr(env, emp.expr, Types.javaLangObject());
-                        accessibilityLowerBound = oldAccessibilityLowerBound;
-                        accessibilityContext = oldAccessibilityContext;
-                    }
-                    break;
+                    int oldAccessibilityLowerBound = accessibilityLowerBound;
+                    ASTNode oldAccessibilityContext = accessibilityContext;
+                    accessibilityLowerBound = getAccessibility(fd.modifiers);
+                    accessibilityContext = fd;
+                    emp.expr = checkExpr(env, emp.expr, Types.javaLangObject());
+                    accessibilityLowerBound = oldAccessibilityLowerBound;
+                    accessibilityContext = oldAccessibilityContext;
                 }
+                break;
+            }
 
-            case TagConstants.MODIFIES:
             case TagConstants.ALSO_MODIFIES:
-            case TagConstants.JML_MODIFIABLE:
             case TagConstants.JML_ASSIGNABLE:
 	    case TagConstants.JML_MEASURED_BY:
-                {
-                    CondExprModifierPragma emp = (CondExprModifierPragma)p;
+            case TagConstants.JML_MODIFIABLE:
+            case TagConstants.MODIFIES:
+            case TagConstants.JML_NOT_MODIFIED:
+            case TagConstants.STILL_DEFERRED: {
+                CondExprModifierPragma emp = (CondExprModifierPragma)p;
 
-                    if (!(ctxt instanceof RoutineDecl ) ) {
-                        ErrorSet.error(p.getStartLoc(),
-                                       "A modifies/also_modifies annotation " +
-                                       "can occur only on " +
-                                       "method and constructor declarations");
-                    } else {
-                        RoutineDecl rd = (RoutineDecl)ctxt;
+                if (!(ctxt instanceof RoutineDecl ) ) {
+                    ErrorSet.error(p.getStartLoc(),
+                                   "A modifies/also_modifies annotation " +
+                                   "can occur only on " +
+                                   "method and constructor declarations");
+                } else {
+                    RoutineDecl rd = (RoutineDecl)ctxt;
 	    
-/*
-                        if (getOverrideStatus(rd) != MSTATUS_NEW_ROUTINE) {
-                            if (tag == TagConstants.MODIFIES
-                                || tag == TagConstants.JML_MODIFIABLE
-                                || tag == TagConstants.JML_ASSIGNABLE) {
-                                ErrorSet.error(p.getStartLoc(),
-				   "modifies cannot be used on method " +
-				   "overrides; use also_modifies instead");
-                            }
-                        } else {
-                            if (tag == TagConstants.ALSO_MODIFIES) {
-                                ErrorSet.error(p.getStartLoc(),
-				   "also_modifies can be used only on method " +
-				   "overrides; use modifies instead");
-                            }
-                        }
-*/
-                        Assert.notFalse(!isSpecDesignatorContext);
-                        isSpecDesignatorContext = true;
-                        if (rd instanceof ConstructorDecl) {
-                            // disallow "this" from constructor "modifies" clauses
-                            env = env.asStaticContext();
-                        }
-                        emp.expr = checkDesignator(env, emp.expr);
-                        switch (emp.expr.getTag()) {
-                            case TagConstants.FIELDACCESS: {
-                                FieldAccess fa = (FieldAccess)emp.expr;
-                                if (fa.decl != null &&
-                                    Modifiers.isFinal(fa.decl.modifiers) &&
-                                    // The array "length" field has already been checked
-                                    // insuper.checkDesignator().
-                                    fa.decl != Types.lengthFieldDecl) {
-                                    ErrorSet.error(fa.locId, "a final field is not allowed as " +
-                                                   "the designator in a modifies clause");
-                                }
-                                break;
-                            }
-	      
-                            case TagConstants.ARRAYREFEXPR:
-                            case TagConstants.WILDREFEXPR:
-                            case TagConstants.EVERYTHINGEXPR:
-                            case TagConstants.NOTHINGEXPR:
-                            case TagConstants.NOTSPECIFIEDEXPR:
-                                break;
-
-                            default:
-                                ErrorSet.error(emp.expr.getStartLoc(),
-                                               "Not a specification designator expression");
-                        }
-                        isSpecDesignatorContext = false;
-			if (emp.cond != null) emp.cond = checkExpr(env, emp.cond);
+                    /*
+                     if (getOverrideStatus(rd) != MSTATUS_NEW_ROUTINE) {
+                     if (tag == TagConstants.MODIFIES
+                     || tag == TagConstants.JML_MODIFIABLE
+                     || tag == TagConstants.JML_ASSIGNABLE) {
+                     ErrorSet.error(p.getStartLoc(),
+                     "modifies cannot be used on method " +
+                     "overrides; use also_modifies instead");
+                     }
+                     } else {
+                     if (tag == TagConstants.ALSO_MODIFIES) {
+                     ErrorSet.error(p.getStartLoc(),
+                     "also_modifies can be used only on method " +
+                     "overrides; use modifies instead");
+                     }
+                     }
+                     */
+                    Assert.notFalse(!isSpecDesignatorContext);
+                    isSpecDesignatorContext = true;
+                    if (rd instanceof ConstructorDecl) {
+                        // disallow "this" from constructor "modifies" clauses
+                        env = env.asStaticContext();
                     }
-                    break;
-                }
+                    emp.expr = checkDesignator(env, emp.expr);
+                    switch (emp.expr.getTag()) {
+                        case TagConstants.FIELDACCESS: {
+                            FieldAccess fa = (FieldAccess)emp.expr;
+                            if (fa.decl != null &&
+                                Modifiers.isFinal(fa.decl.modifiers) &&
+                                // The array "length" field has already been checked
+                                // insuper.checkDesignator().
+                                fa.decl != Types.lengthFieldDecl) {
+                                ErrorSet.error(fa.locId, "a final field is not allowed as " +
+                                               "the designator in a modifies clause");
+                            }
+                            break;
+                        }
+	      
+                        case TagConstants.ARRAYREFEXPR:
+                        case TagConstants.WILDREFEXPR:
+                        case TagConstants.EVERYTHINGEXPR:
+                        case TagConstants.NOTHINGEXPR:
+                        case TagConstants.NOTSPECIFIEDEXPR:
+                            break;
 
-	    case TagConstants.JML_OPENPRAGMA:
-	    case TagConstants.JML_CLOSEPRAGMA:
+                        default:
+                            ErrorSet.error(emp.expr.getStartLoc(),
+                                           "Not a specification designator expression");
+                    }
+                    isSpecDesignatorContext = false;
+                    if (emp.cond != null) emp.cond = checkExpr(env, emp.cond);
+                }
+                break;
+            }
+
 	    case TagConstants.JML_ALSO:
-	    case TagConstants.JML_IMPLIES_THAT:
-	    case TagConstants.JML_FOR_EXAMPLE:
-	    case TagConstants.JML_NORMAL_EXAMPLE:
-	    case TagConstants.JML_EXCEPTIONAL_EXAMPLE:
-	    case TagConstants.JML_EXAMPLE:
-	    case TagConstants.JML_NORMAL_BEHAVIOR:
-	    case TagConstants.JML_EXCEPTIONAL_BEHAVIOR:
 	    case TagConstants.JML_BEHAVIOR:
+	    case TagConstants.JML_CLOSEPRAGMA:
+	    case TagConstants.JML_EXAMPLE:
+	    case TagConstants.JML_EXCEPTIONAL_BEHAVIOR:
+	    case TagConstants.JML_EXCEPTIONAL_EXAMPLE:
+	    case TagConstants.JML_FOR_EXAMPLE:
+	    case TagConstants.JML_IMPLIES_THAT:
+	    case TagConstants.JML_NORMAL_BEHAVIOR:
+	    case TagConstants.JML_NORMAL_EXAMPLE:
+	    case TagConstants.JML_OPENPRAGMA:
 		// Make these unexpected again after the desugaring is implemented
 		break;
 
