@@ -148,6 +148,18 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 	return new GhostEnv(s.getEnclosingEnv(), s, staticContext);
     }
   
+    public static ASTDecoration envDecoration = 
+		new ASTDecoration("env");
+    public static ASTDecoration staticenvDecoration = 
+		new ASTDecoration("staticenv");
+
+    public void checkTypeDeclaration(/*@ non_null */ TypeSig s) {
+	super.checkTypeDeclaration(s);
+	TypeDecl td = s.getTypeDecl();
+	envDecoration.set(td,rootIEnv);
+	staticenvDecoration.set(td,rootSEnv);
+    }
+
     // Extensions to type declaration member checkers.
 
     protected void checkTypeDeclElem(TypeDeclElem e) {
@@ -1093,10 +1105,11 @@ consistent with JML
 			    } else {
 				r.var = checkExpr(env,r.var);
 				    // FIXME - really need locDot here
-				    r.od = ExprObjectDesignator.make(
+				r.od = ExprObjectDesignator.make(
 							r.var.getEndLoc(),
 							r.var);
 			    }
+			    checkObjectDesignator(env,r.od);
 			} else {
 			    Type t = checkObjectDesignator(env,r.od);
 System.out.println("TYPE " + t);

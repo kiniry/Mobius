@@ -65,6 +65,7 @@ public class Substitute {
   private static Expr doSubst(/*@ non_null */ Hashtable subst, Expr e,
 			      /*@ non_null */ SetRef rhsVars) {
     Expr result = null;
+    boolean newInstance = true;
     switch( e.getTag() ) {
 	
     /*************************************************************
@@ -335,12 +336,14 @@ public class Substitute {
 	  
     case TagConstants.RESEXPR:
       {
+	newInstance = false;
 	Expr to = (Expr)subst.get( resexpr );
 	result = (to==null ? e : to);
 	break;
       }
     case TagConstants.THISEXPR:
       {
+	newInstance = false;
 	Expr to = (Expr)subst.get( thisexpr );
 	result = (to==null ? e : to);
 	break;
@@ -361,6 +364,7 @@ public class Substitute {
     case TagConstants.EVERYTHINGEXPR:
     case TagConstants.NOTHINGEXPR:
       {
+	newInstance = false;
 	result = e;
 	break;
       }
@@ -375,6 +379,7 @@ public class Substitute {
 
     case TagConstants.VARIABLEACCESS:
       {
+	//newInstance = false;
 	VariableAccess va = (VariableAccess)e;
 	Expr to = (Expr)subst.get( va.decl );
 
@@ -452,7 +457,7 @@ public class Substitute {
       }
     }
 
-    escjava.tc.FlowInsensitiveChecks.copyType(e, result);
+    if (newInstance) escjava.tc.FlowInsensitiveChecks.copyType(e, result);
     return result;
   }
 

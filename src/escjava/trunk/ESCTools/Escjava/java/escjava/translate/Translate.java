@@ -20,6 +20,7 @@ import javafe.util.ErrorSet;
 import javafe.util.Info;
 import javafe.tc.ConstantExpr;
 import javafe.tc.TypeSig;
+import javafe.tc.EnvForTypeSig;
 import javafe.Tool;
 
 import escjava.Main;
@@ -3414,11 +3415,17 @@ public final class Translate
 	private List others = new LinkedList();
 	private int i = 0;
 	private List done = new LinkedList();
+	private boolean expand = false;
 
 	public ModifiesIterator(CondExprModifierPragmaVec mp) {
 	    this.mp = mp;
 	    i = 0;
 	}
+
+	public ModifiesIterator(CondExprModifierPragmaVec mp, boolean expand) {
+	    this(mp);
+	    this.expand = expand;
+        }
 
 	public ModifiesIterator(RoutineDecl md) {
 	    this(GetSpec.getCombinedMethodDecl(md).modifies);
@@ -3446,7 +3453,13 @@ public final class Translate
 	    }
 	    if (ex instanceof FieldAccess) {
 		add(((FieldAccess)ex).od,((FieldAccess)ex).decl);
+	    } else if (expand && (ex instanceof WildRefExpr)) {
+//System.out.println("EXPANDING " + Location.toString(((WildRefExpr)ex).getStartLoc()));
+		ObjectDesignator od = ((WildRefExpr)ex).od;
+		addFields(od);
 	    }
+
+//System.out.println("RETURNING " + ex);
 	    return ex;
 	}
 
@@ -3455,7 +3468,42 @@ public final class Translate
 	    return condExpr;
 	}
 
+
 	int limit = Main.options().mapsUnrollCount;
+
+	private void addFields(ObjectDesignator od) {
+	    Type type;
+	    boolean stat;
+	    if (od instanceof TypeObjectDesignator) {
+		type = ((TypeObjectDesignator)od).type;
+		stat = true;
+	    } else if (od instanceof ExprObjectDesignator) {
+		type = TypeCheck.inst.getType(((ExprObjectDesignator)od).expr);
+		stat = false;
+	    } else {
+		// FIXME ???
+		return;
+	    }
+	    if (type instanceof javafe.tc.TypeSig) {
+		TypeSig ts = (TypeSig)type;
+		EnvForTypeSig env;
+	        if (stat)
+		    env = (EnvForTypeSig)FlowInsensitiveChecks.staticenvDecoration.get(ts.getTypeDecl());
+		else
+		    env = (EnvForTypeSig)FlowInsensitiveChecks.envDecoration.get(ts.getTypeDecl());
+		if (env == null) env = ((TypeSig)type).getEnv(stat);
+		javafe.tc.FieldDeclVec fds = env.getFields();
+		for (int i=0; i<fds.size(); ++i) {
+		    FieldDecl fd = fds.elementAt(i);
+		    if (stat != Modifiers.isStatic(fd.modifiers)) continue;
+		    FieldAccess fa = FieldAccess.make(od,fd.id,Location.NULL);
+		    fa.decl = fd;
+		    fa = (FieldAccess)javafe.tc.FlowInsensitiveChecks.setType(fa,fd.type);
+		    others.add(fa);
+//System.out.println("ADDING " + fd.id + " " + fd.type);
+		}
+	    } // FIXME - what other types are there to consider?
+	}
 
 	private void add(ObjectDesignator od, FieldDecl d) {
 	    if (count(d) >= limit) return;

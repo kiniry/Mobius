@@ -204,6 +204,17 @@ public class GhostEnv extends EnvForTypeSig
 
 	return (getGhostField(id.toString(), null) != null);
     }
+
+    public FieldDeclVec getFields() {
+	FieldDeclVec fdv = FieldDeclVec.make();
+	fdv.append(super.getFields());
+	Enumeration e = collectGhostFields().elements();
+	while (e.hasMoreElements()) {
+	    fdv.addElement((FieldDecl)e.nextElement());
+	}
+        return fdv;
+    }
+
 } // end of class GhostEnv
 
 /*

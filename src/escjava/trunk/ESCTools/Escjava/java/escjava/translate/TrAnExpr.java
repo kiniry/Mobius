@@ -119,7 +119,9 @@ public final class TrAnExpr {
         int tag = e.getTag();
         switch (tag) {
         case TagConstants.THISEXPR: {
-	    if (specialThisExpr != null) return specialThisExpr;
+	    if (specialThisExpr != null) {
+		return specialThisExpr;
+	    }
             ThisExpr t = (ThisExpr)e;
             if (t.classPrefix != null)
                 return trSpecExpr(Inner.unfoldThis(t), sp, st);
@@ -229,18 +231,19 @@ public final class TrAnExpr {
                     lhs = null; // dummy assignment
                 }
 	    
-                if (fa.decl == Types.lengthFieldDecl)
+                if (fa.decl == Types.lengthFieldDecl) {
                     return GC.nary(fa.getStartLoc(), fa.getEndLoc(),
                                    TagConstants.ARRAYLENGTH, lhs);
-	        else if (Utils.isModel(va.decl.pmodifiers) && Main.options().useFcnsForModelVars && doRewrites()) {
+	        } else if (Utils.isModel(va.decl.pmodifiers) && Main.options().useFcnsForModelVars && doRewrites()) {
 		    Identifier id = representsMethodName(va);
 		    ExprVec arg = ExprVec.make(2);
 		    arg.addElement(stateVar(sp));
 		    arg.addElement(lhs);
 		    return GC.nary(id,arg);
-                } else
+                } else {
                     return GC.nary(fa.getStartLoc(), fa.getEndLoc(),
                                    TagConstants.SELECT, apply(sp, va), lhs);
+		}
             }
         }
 

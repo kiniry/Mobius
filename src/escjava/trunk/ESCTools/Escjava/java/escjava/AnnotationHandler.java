@@ -639,8 +639,10 @@ added, it doesn't change whether a routine appears to have a spec or not.
 	if (isPure) nothing = true;
 	Expr e;
 	if (isPure && rd instanceof ConstructorDecl) {
-	    e = WildRefExpr.make(null,
-		ExprObjectDesignator.make(loc,ThisExpr.make(null,loc)));
+	    ExprObjectDesignator eod = 
+		ExprObjectDesignator.make(loc,ThisExpr.make(null,loc));
+	    FlowInsensitiveChecks.setType(eod.expr,TypeSig.getSig(rd.parent));
+	    e = WildRefExpr.make(null,eod);
 	} else if (nothing) {
 	    e = NothingExpr.make(loc);
 	} else {
