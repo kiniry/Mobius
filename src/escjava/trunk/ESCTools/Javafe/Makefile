@@ -2,25 +2,32 @@
 
 # Need to source setup{.sh} before calling gnumake
 
-all: clean depend javafe javadoc runtest
+all: clean javafe javafe_test javadoc runtest
 
-install: clean depend javafe javadoc zip
+install: clean javafe javafe_test javadoc zip
 
 # Check that 'source setup' has been run in the Javafe directory:
 # if ESCJ is defined, then the following line will fail
+.PHONY: classdirCheck
 classdirCheck:
-	expandpath .${ESCJ}${ESCJ}${ESCJ}
+	@if [ ! ${JAVAFE_ROOT} ]; then \
+	  echo "You must source the 'setup[.sh]' script before running make."; \
+	  false; \
+	fi
 
+.PHONY: zip
 zip: classdirCheck
 	rm -f ${CLASSDIRECTORY}/javafe.zip
 	cd ${CLASSDIRECTORY}; jar -cf0 javafe.zip javafe tohtml
 	chmod a+r ${CLASSDIRECTORY}/javafe.zip
 
+.PHONY: source
 source:
 	cd astgen;			${MAKE}
 	cd java/javafe/ast; 		${MAKE} source
 	cd java/javafe/tc; 		${MAKE} source
 
+.PHONY: clean
 clean: cleanclasses classdirCheck
 	rm -f ${CLASSDIRECTORY}/compiled.zip
 	cd doc/javadoc; rm -f *.html
@@ -31,25 +38,32 @@ clean: cleanclasses classdirCheck
 	cd java/jtools; 	    	${MAKE} clean
 	cd astgen; 		    	${MAKE} clean
 
+.PHONY: cleanclasses
 cleanclasses:
 	cd classes; find . -name \*.class | xargs rm -f
 	rm -f classes/.javamake
 
+.PHONY: jtools
 jtools:	javafe
 	cd java/jtools; ${MAKE}
 
+.PHONY: doc
 doc:	javadoc
 
+.PHONY: javadoc
 javadoc: source 
 	cd java; \
-        ${JAVADOC} -d ${JAVADOCDIRECTORY} \
-                javafe javafe.ast javafe.parser  \
-		javafe.reader javafe.genericfile javafe.filespace \
-		javafe.tc javafe.util \
-		jtools.jwhich jtools.jls
-#		jtools.jcheck \
-#		jtools.jcheck.parseTypes
+        ${JAVADOC} -classpath ${CLASSPATH} \
+	  -sourcepath ${SOURCEDIRECTORY}:${TESTSOURCEDIRECTORY} \
+	  -d ${JAVADOCDIRECTORY} \
+          javafe javafe.ast javafe.parser  \
+	  javafe.reader javafe.genericfile javafe.filespace \
+	  javafe.tc javafe.util \
+	  jtools.jwhich jtools.jls
+#	  jtools.jcheck \
+#         jtools.jcheck.parseTypes
 
+.PHONY: runtest
 runtest:
 	cd test/javafe/parser/test; 	${MAKE} runtest
 	cd java/javafe/util; 		${MAKE} runtest
@@ -58,6 +72,7 @@ runtest:
 OTHERSOURCEFILES = astgen/ast*.c astgen/ast*.h astgen/ast*.l
 TESTHARNESSFILES = test/javafe/parser/test/Test*.java test/javafe/test/*.java
 
+.PHONY: wc
 wc:
 	# --- Non-java Source files ---
 	wc ${OTHERSOURCEFILES}
@@ -74,41 +89,38 @@ wc:
 # Code for fast incremental recompilation of javafe:
 #
 
-JAVAFETARGETS = javafe.ast.DefaultVisitor		\
-		javafe.filespace.Resolve		\
-		javafe.CountLines			\
-		javafe.TestTool				\
-		javafe.test.Print			\
-		javafe.test.SuperlinksTest		\
-		javafe.test.SupertypeTest		\
-		javafe.test.CountFilesLoaded		\
-		javafe.test.LocTool			\
-		javafe.test.lex.TestLex			\
-		javafe.parser.test.TestLex		\
-		javafe.parser.test.TestExpr		\
-		javafe.parser.test.TestParse		\
-		javafe.util.CorrelatedReaderTest	\
-		javafe.util.FilterCorrelatedReader	\
-		tohtml.DeclLinks			\
-		tohtml.Java2Html			\
-		javafe.ast.Util				\
-		javafe.PrintSpec			\
-		javafe.CopyLoaded
+JAVAFETESTTARGETS = \
+		javafe/test/Print.java			\
+		javafe/test/SuperlinksTest.java		\
+		javafe/test/SupertypeTest.java		\
+		javafe/test/CountFilesLoaded.java	\
+		javafe/test/LocTool.java		\
+		javafe/test/lex/TestLex.java		\
+		javafe/parser/test/TestLex.java		\
+		javafe/parser/test/TestExpr.java	\
+		javafe/parser/test/TestParse.java	\
 
-depend: source classdirCheck
-	cd java; CLASSPATH=${LCLASSPATH} \
-		javadepend -d ${CLASSDIRECTORY} ${JAVAFETARGETS} \
-		| egrep -v '^/' > ../sources
-
-javafe: source classdirCheck		# depend
+.PHONY: javafe
+javafe: source classdirCheck
 	cd java; \
-		javac -d ${CLASSDIRECTORY} `cat ../sources`
+	javac -classpath ${CLASSPATH}:${SOURCEDIRECTORY} \
+	  -d ${CLASSDIRECTORY} `find javafe -name "*.java"`; \
+	javac -classpath ${CLASSPATH}:${SOURCEDIRECTORY} \
+	  -d ${CLASSDIRECTORY} `find tohtml -name "*.java"`;
 
-compile: javafe zip classdirCheck
-	swift -O2 ${CLASSDIRECTORY}/javafe.zip -o ${CLASSDIRECTORY}/compiled.zip
+.PHONY: javafe_test
+javafe_test: javafe classdirCheck
+	cd test; \
+	javac -classpath ${CLASSPATH}:${SOURCEDIRECTORY}:${TESTSOURCEDIRECTORY} \
+	  -d ${CLASSDIRECTORY} ${JAVAFETESTTARGETS}
 
+.PHONY: compile
+compile: javafe javafe_test zip classdirCheck
+#	swift -O2 ${CLASSDIRECTORY}/javafe.zip -o ${CLASSDIRECTORY}/compiled.zip
+
+.PHONY: esc
 esc: source
 	cd java; \
 	date; \
-	escjava -classpath ${CLASSPATH} -f ../sources; \
+	escjava -classpath ${CLASSPATH} -f `find javafe -name "*.java"` \
 	date

@@ -4,8 +4,8 @@
 # Dependence on astgen programs:
 #
 
-ASTGEN = ${JAVAFE_ROOT}/astgen/astgen
-ASTFILELIST = ${JAVAFE_ROOT}/astgen/astfilelist
+ASTGEN = 	${JAVAFE_ROOT}/astgen/astgen
+ASTFILELIST = 	${JAVAFE_ROOT}/astgen/astfilelist
 
 $(ASTFILELIST) $(ASTGEN):
 	(cd ${JAVAFE_ROOT}/astgen; ${MAKE})
