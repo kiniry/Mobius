@@ -2,20 +2,22 @@ DUMP java.lang.Object
  Java fields
  Hidden Java fields
  Jml fields
-    objectState "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 40, col 30
-    owner "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 47, col 21
-    _getClass "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 64, col 30
-    objectTimesFinalized "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 167, col 24
+    objectState "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 38, col 30
+    owner "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 45, col 21
+    _getClass "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 62, col 30
+    theString "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 121, col 21
+    objectTimesFinalized "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 170, col 24
  Jml hidden fields
  DUMP-END
 DUMP java.lang.<the root interface>
  Java fields
  Hidden Java fields
  Jml fields
-    objectState "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 40, col 30
-    owner "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 47, col 21
-    _getClass "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 64, col 30
-    objectTimesFinalized "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 167, col 24
+    objectState "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 38, col 30
+    owner "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 45, col 21
+    _getClass "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 62, col 30
+    theString "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 121, col 21
+    objectTimesFinalized "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 170, col 24
  Jml hidden fields
  DUMP-END
 DUMP ScopeII
@@ -24,10 +26,11 @@ DUMP ScopeII
     jj "Scope.java", line 34, col 7
  Hidden Java fields
  Jml fields
-    objectState "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 40, col 30
-    owner "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 47, col 21
-    _getClass "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 64, col 30
-    objectTimesFinalized "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 167, col 24
+    objectState "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 38, col 30
+    owner "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 45, col 21
+    _getClass "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 62, col 30
+    theString "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 121, col 21
+    objectTimesFinalized "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 170, col 24
  Jml hidden fields
  DUMP-END
 DUMP ScopeS
@@ -45,10 +48,11 @@ DUMP ScopeS
     dup "Scope.java", line 46, col 17
     gpriv "Scope.java", line 47, col 18
     dupmm "Scope.java", line 48, col 17
-    objectState "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 40, col 30
-    owner "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 47, col 21
-    _getClass "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 64, col 30
-    objectTimesFinalized "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 167, col 24
+    objectState "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 38, col 30
+    owner "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 45, col 21
+    _getClass "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 62, col 30
+    theString "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 121, col 21
+    objectTimesFinalized "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 170, col 24
  Jml hidden fields
  DUMP-END
 DUMP ScopeI
@@ -61,10 +65,11 @@ DUMP ScopeI
  Jml fields
     dup "Scope.java", line 27, col 18
     dupm "Scope.java", line 28, col 18
-    objectState "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 40, col 30
-    owner "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 47, col 21
-    _getClass "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 64, col 30
-    objectTimesFinalized "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 167, col 24
+    objectState "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 38, col 30
+    owner "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 45, col 21
+    _getClass "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 62, col 30
+    theString "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 121, col 21
+    objectTimesFinalized "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 170, col 24
  Jml hidden fields
  DUMP-END
 DUMP Scope
@@ -97,10 +102,11 @@ DUMP Scope
     z5 "Scope.java", line 22, col 18
     dup "Scope.java", line 46, col 17
     dupmm "Scope.java", line 48, col 17
-    objectState "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 40, col 30
-    owner "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 47, col 21
-    _getClass "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 64, col 30
-    objectTimesFinalized "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 167, col 24
+    objectState "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 38, col 30
+    owner "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 45, col 21
+    _getClass "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 62, col 30
+    theString "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 121, col 21
+    objectTimesFinalized "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 170, col 24
     dup "Scope.java", line 27, col 18
  Jml hidden fields
     ggi "Scope.java", line 45, col 17
@@ -131,10 +137,11 @@ DUMP org.jmlspecs.lang.JMLDataGroup
     IT "/Users/cok/ESCTools/jmlspecs.jar:org/jmlspecs/lang/JMLDataGroup.java", line 48, col 41
  Hidden Java fields
  Jml fields
-    objectState "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 40, col 30
-    owner "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 47, col 21
-    _getClass "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 64, col 30
-    objectTimesFinalized "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 167, col 24
+    objectState "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 38, col 30
+    owner "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 45, col 21
+    _getClass "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 62, col 30
+    theString "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 121, col 21
+    objectTimesFinalized "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 170, col 24
  Jml hidden fields
  DUMP-END
 Scope.java:21: Error: Ambiguous field for type Scope
