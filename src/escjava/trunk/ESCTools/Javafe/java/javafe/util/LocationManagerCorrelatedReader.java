@@ -487,4 +487,9 @@ public abstract class LocationManagerCorrelatedReader
     return r.toString();
   }
 
+  static public void clear() {
+	freeLoc = STARTFREELOC;
+	totalLinesRead = 0;
+	allCorrStreams = new Vector();
+  }
 }

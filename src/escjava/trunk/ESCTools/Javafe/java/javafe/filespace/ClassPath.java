@@ -100,9 +100,10 @@ public class ClassPath {
 						  File.pathSeparatorChar);
 
 	Tree[] components = new Tree[pathnames.length];
-	for (int i=0; i<components.length; i++)
+	for (int i=0; i<components.length; i++) {
 	    components[i] = new PkgTree(PathComponent.open(pathnames[i],
 							   complain));
+	}
 
 	return new UnionTree(components);
     }

@@ -77,6 +77,10 @@ public class StandardTypeReader extends TypeReader
 	binaryReader = new CachedReader(binReader);
     }
 
+    public void clear() {
+	((CachedReader)sourceReader).flushAll();
+	((CachedReader)binaryReader).flushAll();
+    }
 
     /***************************************************
      *                                                 *

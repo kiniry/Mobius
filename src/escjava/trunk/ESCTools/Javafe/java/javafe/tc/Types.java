@@ -145,6 +145,28 @@ public class Types
     public static PrimitiveType
             shortType = makePrimitiveType( TagConstants.SHORTTYPE );
 
+    public static void remakeTypes() {
+            voidType = makePrimitiveType( TagConstants.VOIDTYPE );
+            booleanType = makePrimitiveType( TagConstants.BOOLEANTYPE );
+            intType = makePrimitiveType( TagConstants.INTTYPE );
+            doubleType = makePrimitiveType( TagConstants.DOUBLETYPE );
+            floatType = makePrimitiveType( TagConstants.FLOATTYPE );
+            longType = makePrimitiveType( TagConstants.LONGTYPE );
+            charType = makePrimitiveType( TagConstants.CHARTYPE );
+            nullType = makePrimitiveType( TagConstants.NULLTYPE );
+            byteType = makePrimitiveType( TagConstants.BYTETYPE );
+            shortType = makePrimitiveType( TagConstants.SHORTTYPE );
+
+	s_javaLangPackage = null;
+	s_javaLangObject = null;
+	s_javaLangError = null;
+	s_javaLangException = null;
+	s_javaLangThrowable = null;
+	s_javaLangString = null;
+	s_javaLangCloneable = null;
+	s_javaLangRuntimeException = null;
+	s_javaLangClass = null;
+    }
 
     /***************************************************
      *                                                 *

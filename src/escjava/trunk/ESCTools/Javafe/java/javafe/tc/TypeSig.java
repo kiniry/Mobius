@@ -323,7 +323,7 @@ public class TypeSig extends Type
      * This function should only be called by OutsideEnv. <p>
      */
     //@ requires \nonnullelements(P)
-    static /*package*/ TypeSig lookup(String[] P, /*@non_null*/ String T) {
+    static public TypeSig lookup(String[] P, /*@non_null*/ String T) {
 	return (TypeSig)map.get(getKey(P,T));
     }
 
@@ -418,7 +418,7 @@ public class TypeSig extends Type
      */
     //@ ensures !member ==> \result
     //@ ensures \result == (myTypeDecl!=null)
-    /*package*/ boolean isPreloaded() {
+    public boolean isPreloaded() {
 	return myTypeDecl!=null;
     }
 

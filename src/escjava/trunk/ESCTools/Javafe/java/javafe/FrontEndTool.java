@@ -91,6 +91,7 @@ public abstract class FrontEndTool extends Tool {
     */
     public void clear() {
         ErrorSet.clear();
+	// FIXME LocationManagerCorrelatedReader.clear();
         OutsideEnv.clear();
     }
 

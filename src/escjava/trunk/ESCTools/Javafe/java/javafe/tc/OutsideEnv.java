@@ -238,6 +238,10 @@ public final class OutsideEnv {
 	listener = null;
 	eagerRead = false;
 	avoidSpec = true;
+	javafe.tc.Types.remakeTypes();
+	if (reader instanceof javafe.reader.StandardTypeReader) 
+		((javafe.reader.StandardTypeReader)reader).clear();
+	TypeSig.clear();
     }
 
 
