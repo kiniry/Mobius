@@ -73,11 +73,11 @@ public class Options
      */
     public boolean assertIsKeyword = false;
 
-    /**
-     * Are assertions enabled?
+    /** 
+     *  Java allows assertions to be enabled and disabled.  Replicate those
+     *  options as well.
      */
-    public boolean enableAssertions = false;
-
+    public boolean assertionsEnabled = false;
 
     //************************************************************************
     //     Constructors
@@ -197,9 +197,14 @@ public class Options
             if (args[offset].equals("1.4"))
                 assertIsKeyword = true;
             return offset+1;
-        } else if (option.equals("-ea")) {
-            enableAssertions = true;
-            return offset;
+        } else if (option.equals("-ea") ||
+                   option.equals("-enableassertions")) {
+	    assertionsEnabled = true;
+	    return offset;
+        } else if (option.equals("-da") ||
+		   option.equals("-disableassertions")) {
+	    assertionsEnabled = false;
+	    return offset;
         } else if (option.equals("-help")) {
 	    issueUsage = true;
 	    return offset;
@@ -250,9 +255,13 @@ public class Options
      * <code>super.showOptions()</code>.
      */
     public String showOptions(boolean all) {
+	return showOptionArray(optionData);
+    }
+
+    public String showOptionArray(String[][] data) {
     	StringBuffer sb = new StringBuffer();
-	for (int i = 0; i < optionData.length; ++i) {
-	    sb.append(format(optionData[i]));
+	for (int i = 0; i < data.length; ++i) {
+	    sb.append(format(data[i]));
         }
 	return sb.toString();
     }
@@ -267,11 +276,12 @@ public class Options
     {"-quiet", "quiet mode (no informational messages)"},
     {"-bootclasspath <classpath>", ""},
     {"-classpath <classpath>", "Directory path for class files (default is value of CLASSPATH)"},
-    {"-sourcepath <classpath>", "Directory path for source files (default is classpath)"},
+    {"-da, -disableassertions", "Ignores all Java assert statements"},
+    {"-ea, -enableassertions", "Processes all Java assert statements"},
     {"-noCautions", ""},
     {"-package <packagename>", "Loads all the files in the named package"},
     {"-source <release>", "Provide source compatibility with specified release"},
-    {"-ea", "enable Java assertion checking"},
+    {"-sourcepath <classpath>", "Directory path for source files (default is classpath)"},
     };
     
     final public String eol = System.getProperty("line.separator");

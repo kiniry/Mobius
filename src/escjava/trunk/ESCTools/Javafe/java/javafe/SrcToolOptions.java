@@ -96,14 +96,18 @@ public class SrcToolOptions extends Options
      * <code>super.showOptions()</code>.
      */
     public String showOptions(boolean all) {
+	String[][] data1 = {{"-avoidSpec",""}};
+	String[][] data2 = {{"-depend",""}};
+	String[][] data3 = {{"-f <file containing source file names>",""}};
+
         StringBuffer sb = new StringBuffer(super.showOptions(all));
 	
-		if (allowAvoidSpec) sb.append("  -avoidSpec " +eol);
+	if (allowAvoidSpec) sb.append(showOptionArray(data1));
 	
-		if (allowDepend) sb.append("  -depend " +eol);
+	if (allowDepend) sb.append(showOptionArray(data2));
 		
-	 	sb.append("  -f <file containing source file names>"); sb.append(eol);
-	 	return sb.toString();
+	sb.append(showOptionArray(data3));
+	return sb.toString();
     }
 
 }
