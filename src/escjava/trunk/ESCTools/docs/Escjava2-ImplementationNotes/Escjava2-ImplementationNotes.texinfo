@@ -3968,7 +3968,7 @@ class is a subclass and not the same class as its super class.
 of the methods of an anonymous class.
 
 @c ----------------------------------------------------------------------------
-@node block-level class declarations, field-method-constructor keywords, anonymous classes, Other issues
+@node block-level class declarations, @code{field}, anonymous classes, Other issues
 @subsection block-level class declarations
 
 Java allows classes to be declared as local classes within a 
@@ -3983,8 +3983,13 @@ specifications are used when the methods of the class are called.
 [[[ what about model classes ??? ]]]
 
 @c ----------------------------------------------------------------------------
-@node field-method-constructor keywords, TYPE Equivalence, block-level class declarations, Other issues
+<<<<<<< Escjava2-ImplementationNotes.texinfo
+@node @code{field}, field-method-constructor keywords, block-level class declarations, Other issues
+@subsection @code{field}, @code{method} and @code{constructor} keywords
+=======
+@node field-method-constructor keywords, TYPE Equivalence, @code{field}, Other issues
 @subsection  @code{field}, @code{method} and @code{constructor} keywords
+>>>>>>> 1.27
 
 JML is designed to work with any Java code.  In particular that code may use
 JML keywords as variables and type names.  This can create a problem in parsing

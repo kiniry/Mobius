@@ -182,13 +182,14 @@ public class AnnotationHandler {
 		tde instanceof MethodDecl ?
 			((MethodDecl)tde).id
 		: tde.getParent().id;
-	//javafe.util.Info.out("Desugaring specifications for " + tde.parent.id + "." + id);
-/*
-	if (Main.options().desugaredSpecs) {
-	  System.out.println("Desugaring specifications for " + tde.parent.id + "." + id);
-	    printSpecs(tde);
-	}
-*/
+// 	javafe.util.Info.out("Desugaring specifications for " + tde.parent.id + "." + id);
+
+// 	if (Main.options().desugaredSpecs) {
+//             System.out.println("Desugaring specifications for " + tde.parent.id + "." + id);
+//             printSpecs(tde);
+//             System.out.println("\n");
+// 	}
+
 	try { // Just for safety's sake
 	    tde.pmodifiers = desugarAnnotations(pmodifiers,tde);
 	} catch (Exception e) {

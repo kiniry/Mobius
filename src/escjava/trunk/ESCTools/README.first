@@ -72,10 +72,7 @@ Finally, the "JML Reference Manual" is part of the Java Modeling
 Language (JML) distribution.  See http://www.jmlspecs.org/ for more
 information.
 
-We are working on obtaining design documentation on Simplify.  In
-July, 2003 we were notified at ECOOP that a detailed design document
-would soon be made available from HP.  Unfortunately, as of November
-2003, the document is still unavailable.
+We are working on obtaining design documentation on Simplify.
 
 ----------------------------------------------------------------------------
 
@@ -93,7 +90,7 @@ on further distribution of the source.
 OBTAINING CURRENT SOURCE FOR ESC/Java2
 
 A CVS repository of the current work is maintained by Joe Kiniry
-<kiniry@acm.org>.  Build and execution instructions are provided later
+<kiniry@cs.kun.nl>.  Build and execution instructions are provided later
 in this README file.
 
 To obtain access to the CVS distribution, you will need:
@@ -125,7 +122,7 @@ d) Execute a CVS checkout on the server (replacing the characters
    'username' in the command below with your username on Joe's
    server):
 
-   cvs -d :ext:username@kindsoftware.com/cvsroot checkout -P ESCTools 
+   cvs -d :ext:username@kind.cs.kun.nl/cvsroot checkout -P ESCTools 
 
 e) If you want to avoid using your password on every CVS transaction,
   you will need to generate a public key/private key pair and copy the
@@ -151,7 +148,7 @@ e) If you want to avoid using your password on every CVS transaction,
 
 SETTING UP YOUR ENVIRONMENT FOR BUILDING AND RUNNING ESC/Java2
 
-Development has taken place on Linux (Redhat 8), MacOSX (10.2 and
+Development has taken place on Linux (Redhat 8/9), MacOSX (10.2 and
 10.3), and Windows XP.  The build environment uses GNU make.
 Developers use both bash and tcsh as working shells.
 
@@ -215,6 +212,8 @@ SIMPLIFY - defined to be the *name* of (*not* the path to) an
 		Simplify-1.5.4.exe   (for Windows) 
 		Simplify-1.5.4.linux
 		Simplify-1.5.4.solaris (not tested on Solaris)
+		Simplify-1.5.4.tru64 (not tested on True64, 
+                                      aka Digital UNIX, aka OSF/1)
 
 	For example, with a bash shell:
            export SIMPLIFY=Simplify-1.5.4.linux
@@ -341,9 +340,8 @@ of ESC/Java itself.
 
 The test target takes some time to complete.  Here are some timing
 results for comparison (release 2.0a5):
- o Linux 2.6.0 on a 2.4GHz Pentium 4 with 1GB RAM:
+ o Linux 2.5.25 on a 2.4GHz Pentium 4 with 1GB RAM: about 10 1/2 minutes
  o Mac OS X 10.3 on a 1.25GHz PPC with 512MB RAM:  under 28 minutes
- o Mac OS X 10.2.8 on a 500MHz PPC with 512MB RAM: 
 
 A clean build, on the other hand, is actually fairly quick, even when
 using the JDK's javac, as we do:
