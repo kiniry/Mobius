@@ -5,7 +5,7 @@ public class ModelVarSet {
 
 	static private int slen;
 	//@ public static model int ssize;
-	//@ represents ssize = slen + 53;
+	//@ static represents ssize = slen + 53;
 
 	private int len;
 	//@ public model int size;

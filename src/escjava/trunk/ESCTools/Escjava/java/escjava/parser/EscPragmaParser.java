@@ -982,7 +982,7 @@ try{
 			NamedExprDeclPragma pragma = 
 			    NamedExprDeclPragma.make(
 				    TagConstants.unRedundant(tag),
-						    cond, e, loc);
+						    cond, e, modifiers, loc);
 			if (TagConstants.isRedundant(tag))
 			    pragma.setRedundant(true);
 			savePragma(loc,TagConstants.TYPEDECLELEMPRAGMA, pragma);
@@ -1001,7 +1001,7 @@ try{
 		}
 
 		case TagConstants.MONITORS_FOR:{
-		    checkNoModifiers(tag,loc);
+		    //checkNoModifiers(tag,loc);
 		    int locId = scanner.startingLoc;
 		    Identifier target = parseIdentifier(scanner);
 		    if (scanner.ttype != TagConstants.ASSIGN &&
@@ -1016,6 +1016,7 @@ try{
 			savePragma(
 			    loc, TagConstants.TYPEDECLELEMPRAGMA,
 			    IdExprDeclPragma.make(tag,target, e, 
+				    modifiers,
 				    loc, locId));
 			while (scanner.ttype == TagConstants.COMMA) {
 			    scanner.getNextToken(); // skip comma
@@ -1023,7 +1024,8 @@ try{
 			    savePragma(
 				loc, TagConstants.TYPEDECLELEMPRAGMA,
 				IdExprDeclPragma.make(tag,target, e, 
-					loc, locId));
+				    modifiers,
+				    loc, locId));
 			}
 			dst.ttype = TagConstants.NULL;
 			semicolonExpected = true;
@@ -1152,13 +1154,14 @@ try{
 				     BinaryExpr.make(
 				       TagConstants.EQ, target, value, locOp), 
 				     target2,
+				     modifiers,
 				     loc);
                         } else if (scanner.ttype == TagConstants.SUCH_THAT) {
                             expect(scanner, TagConstants.SUCH_THAT);
                             Expr value = parseExpression(scanner);
                             e = NamedExprDeclPragma.make(
 				    TagConstants.unRedundant(tag), value, 
-				    target, loc);
+				    target, modifiers, loc);
                         } else {
 			    ErrorSet.error(locOp,
 				"Invalid syntax for a represents clause.");
@@ -1178,7 +1181,7 @@ try{
 		    dst.ttype = TagConstants.TYPEDECLELEMPRAGMA;
                     ExprDeclPragma pragma = 
                         ExprDeclPragma.make(TagConstants.unRedundant(tag), 
-                                            parseExpression(scanner), loc);
+				parseExpression(scanner), modifiers, loc);
                     if (TagConstants.isRedundant(tag))
                         pragma.setRedundant(true);
                     dst.auxVal = pragma;
@@ -1201,7 +1204,8 @@ try{
 		    dst.ttype = TagConstants.TYPEDECLELEMPRAGMA;
                     ExprDeclPragma pragma = 
                         ExprDeclPragma.make(TagConstants.unRedundant(tag), 
-                                            parseExpression(scanner), loc);
+                                            parseExpression(scanner), 
+					    modifiers, loc);
                     if (TagConstants.isRedundant(tag))
                         pragma.setRedundant(true);
                     dst.auxVal = pragma;

@@ -1575,7 +1575,8 @@ while (ee.hasMoreElements()) {
                 // Add a new node at the end of "ii"
                 InvariantInfo invinfo = new InvariantInfo();
 		invinfo.J = e;
-                invinfo.prag = ExprDeclPragma.make(TagConstants.AXIOM, e, Location.NULL);
+                invinfo.prag = ExprDeclPragma.make(TagConstants.AXIOM, e, 
+					0, Location.NULL);
                 // FIXME invinfo.U = TypeSig.getSig(ep.parent);
                 if (iiPrev == null)
                     ii = invinfo;

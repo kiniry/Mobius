@@ -1362,7 +1362,8 @@ consistent with JML
 	    case TagConstants.CONSTRAINT: // FIXME - do we need to change the logic below to handle constraints?
                 {
                     ExprDeclPragma ep = (ExprDeclPragma)e;
-                    Env rootEnv = (tag == TagConstants.AXIOM) ? rootSEnv : rootIEnv;
+                    Env rootEnv = (tag == TagConstants.AXIOM ||
+			Modifiers.isStatic(ep.modifiers)) ? rootSEnv : rootIEnv;
 
                     invariantContext = (tag == TagConstants.INVARIANT) ||
 					tag == TagConstants.INITIALLY;
@@ -1405,10 +1406,11 @@ FIXME - see uses of countFreeVarsAccess
 	    case TagConstants.REPRESENTS:
 		{
                     NamedExprDeclPragma ep = (NamedExprDeclPragma)e;
+		    boolean stat = Modifiers.isStatic(ep.modifiers);
 
 			// What about static model vars?
 			// Can the represents clause be static ? FIXME
-                    Env rootEnv = rootIEnv;
+                    Env rootEnv = stat? rootSEnv : rootIEnv;
 		    ep.target = checkExpr(rootEnv, ep.target);
 
 		    if (ep.target instanceof FieldAccess) {
@@ -1429,6 +1431,14 @@ FIXME - see uses of countFreeVarsAccess
 			    ErrorSet.error(fa.getStartLoc(),
 				"A represents clause must name a model field",
 				fa.decl.locId);
+			}
+			if (stat && !Modifiers.isStatic(fa.decl.modifiers)) {
+			    ErrorSet.error(fa.getStartLoc(),
+			        "A static represents clause must name a static model field");
+			}
+			if (!stat && Modifiers.isStatic(fa.decl.modifiers)) {
+			    ErrorSet.error(fa.getStartLoc(),
+			        "A non-static represents clause must name a non-static model field");
 			}
 
 /* THis is done in type prepping
@@ -1521,6 +1531,7 @@ FIXME - see uses of countFreeVarsAccess
 		} else {
 		    isStatic = Modifiers.isStatic(fd.modifiers);
 		}
+		if (Modifiers.isStatic(emp.modifiers)) isStatic = true;
 		Env env = isStatic ? rootSEnv : rootIEnv;
 		int oldAccessibilityLowerBound = accessibilityLowerBound;
 		ASTNode oldAccessibilityContext = accessibilityContext;

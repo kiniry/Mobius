@@ -116,7 +116,7 @@ class ModelVarModPS {
 
 	//@ static public model int m;
 	//@ static public model int ms;
-	//@ represents ms = jj+1;
+	//@ static represents ms = jj+1;
 	static public int jj;
 }
 
@@ -137,7 +137,7 @@ class ModelVarModStatic {
 
 	//@ static public model int m;
 	//@ static public model int ms;
-	//@ represents ms = j+2;
+	//@ static represents ms = j+2;
 	static public int j; //@ in ms;
 	static public int kkk;
 

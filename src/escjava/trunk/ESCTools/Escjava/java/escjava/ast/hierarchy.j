@@ -536,10 +536,12 @@ public class ExprDeclPragma extends TypeDeclElemPragma
 {
   //# int tag
   //# Expr expr
+  //# int modifiers
   //# int loc
 
   //# ManualTag
   public final int getTag() { return tag; }
+  public int getModifiers() { return modifiers; }
 
   //# PostCheckCall
   private void postCheck() {
@@ -560,11 +562,13 @@ public class IdExprDeclPragma extends TypeDeclElemPragma
   //# int tag
   //# Identifier id      NoCheck
   //# Expr expr
+  //# int modifiers
   //# int loc
   //# int locId
 
   //# ManualTag
   public final int getTag() { return tag; }
+  public int getModifiers() { return modifiers; }
 
   public int getStartLoc() { return loc; }
   public int getEndLoc() { return expr.getEndLoc(); }
@@ -575,6 +579,7 @@ public class NamedExprDeclPragma extends TypeDeclElemPragma
   //# int tag
   //# Expr expr
   //# Expr target
+  //# int modifiers
   //# int loc
 
   //# ManualTag
@@ -589,6 +594,7 @@ public class NamedExprDeclPragma extends TypeDeclElemPragma
 
   public int getStartLoc() { return loc; }
   public int getEndLoc() { return expr.getEndLoc(); }
+  public int getModifiers() { return modifiers; }
   public boolean isRedundant() { return redundant; }
   public void setRedundant(boolean v) { redundant = v; }
 }

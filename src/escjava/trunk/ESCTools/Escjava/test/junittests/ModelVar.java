@@ -8,7 +8,7 @@ public class ModelVar {
 
 
 	//@ static public model int ssize;
-	//@ private represents ssize = slength+1;
+	//@ private static represents ssize = slength+1;
 	static int slength; //@ in ssize;
 
 	//@ requires ssize == 1;
