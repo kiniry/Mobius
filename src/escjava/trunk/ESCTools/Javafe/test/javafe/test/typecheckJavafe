@@ -2,5 +2,7 @@
 
 foreach f (ast parser tc util filespace reader)
    echo ===== Typechecking javafe/$f/\*.java =====
-   ${JAVA} -classpath ${ZIPFILE}:${CLASSPATH} javafe.tc.Print -classpath ${JDKSOURCES}:${CLASSPATH} -typecheck -noprint ${SOURCEDIRECTORY}/javafe/$f/*.java
+   ${JAVA} -classpath ${JDK_BINARIES}:${CLASSPATH} javafe.test.Print \
+        -classpath ${JDK_SOURCES}:${JDK_BINARIES}:${CLASSPATH} -typecheck -noprint \
+        ${SOURCEDIRECTORY}/javafe/$f/*.java
 end

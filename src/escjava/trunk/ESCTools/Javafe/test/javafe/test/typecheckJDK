@@ -1,12 +1,11 @@
 #!/bin/csh -f
 
-# class literals: java/java/beans
-# inner classes: java/java/text java/java/util sun/sun/applet
-
-foreach d (java/java/applet java/java/awt java/java/io java/java/lang java/java/math java/java/net java/java/rmi java/java/security java/java/sql sun/sun/audio sun/sun/awt sun/sun/io sun/sun/misc sun/sun/net)
+foreach d (java/applet java/awt java/beans java/io java/lang \
+           java/math java/net java/rmi java/security java/sql sun/tools)
 
    echo ===== Typechecking $d/\*.java =====
-   #ls ${JDKROOT}/share/$d/*.java
-   ${JAVA} -prof -classpath ${ZIPFILE}:${CLASSPATH} javafe.tc.Print -classpath ${JDKSOURCES}:${CLASSPATH} -typecheck -noprint ${JDKROOT}/share/$d/*.java
+   ${JAVA} -prof -classpath ${JDK_BINARIES}:${CLASSPATH} javafe.test.Print \
+        -classpath ${JDK_SOURCES}:${CLASSPATH}:${JDK_BINARIES} \
+        -typecheck -noprint ${JDK_SOURCES}/$d/*.java
 
 end

@@ -9,8 +9,10 @@ set TMPB = "/tmp/tpi2"
 
   rm -rf $TMPA
   rm -rf $TMPB
-  ${JAVA} javafe.test.Print -classpath ${JDKSOURCES}:${CLASSPATH} -src $argv[*] > $TMPA 
-  ${JAVA} javafe.test.Print -classpath ${JDKSOURCES}:${CLASSPATH} -src -typecheck $argv[*] > $TMPB
+  ${JAVA} javafe.test.Print -classpath ${JDK_SOURCES}:${CLASSPATH} \
+        $argv[*] > $TMPA 
+  ${JAVA} javafe.test.Print -classpath ${JDK_SOURCES}:${CLASSPATH} \
+        -typecheck $argv[*] > $TMPB
   diff -w $TMPA $TMPB 
 
 

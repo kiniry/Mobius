@@ -1,7 +1,6 @@
 # Copyright 2000, 2001, Compaq Computer Corporation
 
 JAVA ?= java
-JAVAFE_SRC_ROOT = ../../../..
 
 runtest: testlex testexpr testparseidempotence testpragmalexer testpragmaparser
 
@@ -39,8 +38,8 @@ testexpr:
 testparseidempotence:
 	${JAVA} javafe.parser.test.TestParse diff simpletoks simpletoks
 	${JAVA} javafe.parser.test.TestParse progress check idempotence \
-		compilation-unit.j *.java ${JAVAFE_SRC_ROOT}/java/javafe/parser/*.java \
-		${JAVAFE_SRC_ROOT}/java/javafe/ast/*.java
+		compilation-unit.j *.java ${JAVAFE_ROOT}/java/javafe/parser/*.java \
+		${JAVAFE_ROOT}/java/javafe/ast/*.java
 # The first line above tests the diff algorithm...
 
 
@@ -67,6 +66,6 @@ testparsejdkidempotence:
 testparse:
 	${JAVA} javafe.parser.test.TestParse progress check print verboseprogress\
 		compilation-unit.j *.java \
-		${JAVAFE_SRC_ROOT}/java/javafe/parser/*.java \
-		${JAVAFE_SRC_ROOT}/java/javafe/ast/*.java
+		${JAVAFE_ROOT}/java/javafe/parser/*.java \
+		${JAVAFE_ROOT}/java/javafe/ast/*.java
 

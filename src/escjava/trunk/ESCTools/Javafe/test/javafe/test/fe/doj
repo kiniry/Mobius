@@ -5,7 +5,7 @@ mkdir ../_tmp_classes
 
 setenv CLASSPATH `pwd`
 
-setenv TOOLCMD "${JAVAC} -d `pwd`/../_tmp_classes"
+setenv TOOLCMD "${OLD_JAVAC} -d `pwd`/../_tmp_classes"
 setenv TOOLARGS ""
 
 setenv TOOL "${TOOLCMD} ${TOOLARGS}"

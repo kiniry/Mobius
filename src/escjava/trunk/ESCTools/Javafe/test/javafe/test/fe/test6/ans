@@ -1,7 +1,7 @@
-Error: I/O error: NonExistantFile.java (No such file or directory)
+Error: I/O error: NonExistantFile.java
 1 error
-Error: I/O error: ErrorFile.java (Permission denied)
+Error: I/O error: ErrorFile.java
 1 error
-Error: I/O error: <TEST>/ErrorFile.java (Permission denied)
+Error: I/O error: <TEST>/ErrorFile.java
 Fatal error: unable to load type ErrorFile
 2 errors
