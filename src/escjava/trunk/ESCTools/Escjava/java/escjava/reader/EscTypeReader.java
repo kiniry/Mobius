@@ -110,6 +110,7 @@ public class EscTypeReader extends StandardTypeReader
 	}
 
 	public CompilationUnit read(GenericFile target, boolean avoidSpec) {
+	    javafe.util.Info.out("Reading " + target);
 	    boolean refining = this.refining;
 	    this.refining = false;
 	    CompilationUnit result = super.read(target,avoidSpec);
@@ -161,6 +162,7 @@ public class EscTypeReader extends StandardTypeReader
 	    if (javacu == null) {
 		if (javafile != null) {
 		    //System.out.println("READING SOURCE " + javafile.getHumanName());
+		    ErrorSet.caution("The file " + javafile + " is not in the refinement sequence that begins with " + cu.sourceFile() + "; it is used to generate a class signature, but no refinements within it are used.");
 		    javacu = super.read(javafile, false);
 		} else {
 	    	    javafile = ((EscTypeReader)OutsideEnv.reader).findBinFile(pkgStrings,type.toString()+".class");
@@ -186,18 +188,22 @@ public class EscTypeReader extends StandardTypeReader
 	    ArrayList refinements = new ArrayList();
 	    GenericFile gf = cu.sourceFile();
 	    String gfid = gf.getCanonicalID();
-	    GenericFile gfile =
+	    GenericFile mrcufile =
 		((EscTypeReader)OutsideEnv.reader).findFirst(
 			pkgStrings,type.toString());
+	    javafe.util.Info.out( mrcufile==null ? "No MRCU found" :
+			"Found MRCU " + mrcufile);
+	    // If no MRCU is found in the sourcepath, then we presume that
+	    // the file on the command line is that.
+	    GenericFile gfile = (mrcufile == null) ? gf : mrcufile ;
 	    EscTypeReader tr = (EscTypeReader)OutsideEnv.reader;
 	    CompilationUnit ccu;
-	    boolean found = false;
+	    boolean foundCommandLineFileInRS = false;
 	    while(gfile != null) {
-		//System.out.println("GFILE " + gfile);
 		if (gfile.getCanonicalID().equals(gfid)) {
 		    // Avoid parsing a file twice
 		    ccu = cu;
-		    found = true;
+		    foundCommandLineFileInRS = true;
                 } else {
 		    refining = true;
 		    ccu = tr.read(gfile,false);
@@ -205,7 +211,14 @@ public class EscTypeReader extends StandardTypeReader
 		}
 		refinements.add(ccu);
 		gfile = findRefined(pkgStrings,ccu);
-		if (gfile != null) for (int i=0; i<refinements.size(); ++i) {
+		if (gfile != null) {
+		  if (!gfile.getLocalName().startsWith(type.toString() + ".")){
+			ErrorSet.caution("The refinement file " + gfile +
+			    " in the sequence beginning with " + mrcufile +
+			    " has a prefix that does not match the type name "
+			    + type);
+		  }
+		  for (int i=0; i<refinements.size(); ++i) {
 		    if ( ((CompilationUnit)refinements.get(i)).sourceFile().
 			getCanonicalID().equals( gfile.getCanonicalID() )) {
 			ErrorSet.error(gfile.getHumanName() + 
@@ -213,25 +226,19 @@ public class EscTypeReader extends StandardTypeReader
 			gfile = null;
 			break;
 		    }
+		  }
 		}
 	    }
-	    if (!found) {
+	    if (!foundCommandLineFileInRS) {
 		String pkg = cu.pkgName == null ? "" : 
 				cu.pkgName.printName() + ".";
-		String err;
 		if (refinements.size() == 0) {
 		    // If no refinement sequence was found, we simply use the
 		    // file on the command line, even if it is not on the
 		    // classpath.
 		    refinements.add(cu);
-/*
-		    err = "The command-line argument " 
-			+ cu.sourceFile().getHumanName()
-			+ " was not on the classpath, and hence not in its "
-			+ "own refinement sequence";
-*/
 		} else {
-		    err = "The command-line argument " 
+		    String err = "The command-line argument " 
 			+ cu.sourceFile().getHumanName() 
 			+ " was not in the refinement sequence for type " 
 			+ pkg + type.toString() + ":";
