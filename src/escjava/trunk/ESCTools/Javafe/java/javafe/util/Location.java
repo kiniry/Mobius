@@ -222,7 +222,15 @@ public class Location
 	    return loc;
 
 	// Should be a regular location here:
-	Assert.notFalse(toLineNumber(loc) == toLineNumber(loc+n)); //@ nowarn Pre
+        // This assertion is commented out because when we translate
+        // Java's assert construct into a conditional throws clause,
+        // under some circumstances, the translated (fictional) IfStmt
+        // does not actually fit on the original line.  E.g.,
+        //   assert false;
+        // becomes
+        // if !false throw new java.lang.AssertionError();
+        // which obviously is longer than the original statement.
+	// Assert.notFalse(toLineNumber(loc) == toLineNumber(loc+n)); //@ nowarn pre
 	return loc+n;
     }                        //@ nowarn Post
 
