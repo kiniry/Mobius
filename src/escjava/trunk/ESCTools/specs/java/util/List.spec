@@ -104,7 +104,7 @@ public interface List extends Collection {
 
               // FIXME - spec the exceptions
       @*/
-    Object[] toArray(Object[] a);
+    Object[] toArray(Object[] a) throws NullPointerException;
 
     /*@ also public normal_behavior
       @   requires \typeof(o) <: elementType;
@@ -150,6 +150,8 @@ public interface List extends Collection {
       @     requires c.elementType <: elementType;
       @     requires !containsNull ==> !c.containsNull;
       @     assignable objectState;
+      @   signals_only UnsupportedOperationException, ClassCastException,
+                         IllegalArgumentException;
       @     signals (UnsupportedOperationException)
       @              (* if this operation is not supported *);
       @     signals (IllegalArgumentException)
@@ -171,11 +173,11 @@ public interface List extends Collection {
 
     // inherited spec
     // FIXME - retains order
-    boolean removeAll(Collection c);
+    boolean removeAll(Collection c) throws NullPointerException;
 
     // inherited spec
     // FIXME - retains order
-    boolean retainAll(Collection c);
+    boolean retainAll(Collection c) throws NullPointerException;
 
     // specification inherited
     void clear();
@@ -206,7 +208,7 @@ public interface List extends Collection {
       @
             // FIXME - other exceptions
       @*/
-    /*@ pure @*/ Object get(int index) throws IndexOutOfBoundsException;
+    /*@ pure @*/ Object get(int index);
 
     /*@
       @ public behavior
@@ -220,7 +222,8 @@ public interface List extends Collection {
       @   ensures get(index) == element;
       @   ensures (\forall \bigint i; 0<=i && i<content.theSize && i != index;
                              get(content,i) == \old(get(content,i)));
-            // FIXME - exceptions
+      @   signals_only UnsupportedOperationException, ClassCastException,
+                         NullPointerException, IllegalArgumentException;
       @   signals (UnsupportedOperationException)
       @           (* set method not supported by list *);
       @   signals (ClassCastException)
@@ -254,7 +257,8 @@ public interface List extends Collection {
       @                     get(i) == \old(get(i)));
       @     ensures (\forall int i; index <= i && i < \old(size());
       @                     \old(get(i)) == get(i+1));
-
+      @     signals_only UnsupportedOperationException, ClassCastException,
+                         NullPointerException, IllegalArgumentException;
       @     signals (UnsupportedOperationException)
       @             (* add method not supported by list *);
       @     signals (ClassCastException)
@@ -270,7 +274,7 @@ public interface List extends Collection {
       @   requires !(0 <= index && index <= size());
       @   assignable \nothing;
       @   ensures false;
-      @   signals (IndexOutOfBoundsException);
+      @   signals_only IndexOutOfBoundsException;
       @ |}
       @*/
     void add(int index, Object element);
@@ -287,6 +291,7 @@ public interface List extends Collection {
       @                get(i) == (\old(this.get(i))))
       @        && (\forall \bigint i; index <= i && i < content.theSize;
       @                 get((int)i) == (\old(this.get((int)(i+1)))));
+      @   signals_only UnsupportedOperationException;
       @   signals (UnsupportedOperationException)
       @            (* remove method not supported by list *);
           // FIXME - other exceptions?

@@ -12,6 +12,7 @@ public class Properties extends Hashtable{
       @ public pure model boolean initialProperties(Properties p);
       @*/
 
+    //@ spec_public
     protected Properties defaults;
 
     //@ public normal_behavior

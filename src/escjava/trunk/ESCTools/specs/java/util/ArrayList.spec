@@ -129,7 +129,7 @@ public class ArrayList extends AbstractList
     public Object[] toArray(Object[] a);
 
     // specification inherited from List
-    public /*@ pure @*/ Object get(int index) throws IndexOutOfBoundsException;
+    public /*@ pure @*/ Object get(int index);
 
     // specification inherited from List
     public Object set(int index, Object element);

@@ -50,8 +50,7 @@ public interface Map {
 
           public normal_behavior
             ensures true;
-          //-@ function pure
-          public boolean hasMapObject(Object key);
+          public function pure boolean hasMapObject(Object key);
 
           public normal_behavior
             ensures true;
@@ -60,10 +59,13 @@ public interface Map {
         }
       @*/
 
-    /* @ public invariant (\forall Object o; isEmpty() ==>
-                      (!content.hasMapObject(o) && !content.hasMap(o)));
-        public invariant isEmpty() ==> 
-                      (!content.hasMapObject(null) && !content.hasMap(null));
+    /*@
+        public invariant (\forall Object o; content.theSize == 0 ==> 
+                      !content.hasMapObject(o));
+        public invariant (\forall Object o; content.theSize == 0 ==>
+                      !content.hasMap(o));
+        public invariant content.theSize == 0 ==> !content.hasMapObject(null);
+        public invariant content.theSize == 0 ==> !content.hasMap(null);
       @*/
     /*@ axiom (\forall Content c; (\forall Object o;
                    c.hasMapObject(o) ==> c.hasMap(o)));
@@ -72,10 +74,6 @@ public interface Map {
                    c.hasMapObject(o) ==> c.mapsObject(o) == c.maps(o)));
         axiom (\forall Content c;
                    c.hasMapObject(null) ==> c.mapsObject(null) == c.maps(null));
-        axiom (\forall Content c; c.theSize == 0 ==> (\forall Object o;  
-                   (!c.hasMapObject(o) && !c.hasMap(o)) ));
-        axiom (\forall Content c; c.theSize == 0 ==> 
-                   (!c.hasMapObject(null) && !c.hasMap(null)) );
      */
           
     //@ public model instance non_null Content content; in objectState;
@@ -214,33 +212,34 @@ public interface Map {
     /*@ public behavior
       @    assignable objectState;
       @    ensures content.hasMap(key);
-      @    ensures (\forall Object k; k.equals(key) ==> content.hasMap(k));
-      @    ensures \old(!content.hasMapObject(key)) ==> content.hasMapObject(key);
-      @    ensures content.maps(key) == value;
-      @    ensures (\forall Object k; k.equals(key) ==> content.maps(k) == value);
-      @    ensures \old(!content.hasMap(key)) ==> content.hasMapObject(key);
-     
       @    ensures !isEmpty() && containsKey(key) && containsValue(value);
+      @    ensures content.mapsObject(key) == value;
+      @    ensures content.maps(key) == value;
+      @    ensures \result == \old(get(key));
+
+      @    ensures (\forall Object k; k != key ==> 
+                        (\old(content.hasMapObject(k)) 
+                                       == content.hasMapObject(k)));
+      @    ensures key != null ==> (\old(content.hasMapObject(null)) 
+                                       == content.hasMapObject(null));
 
       @
+      @    ensures (\forall Object k; k.equals(key) ==> content.hasMap(k));
       @    ensures (\forall Object k; \old(!k.equals(key)) ==> 
-                        \old(content.hasMap(k)) == content.hasMap(k));
-      @    ensures key != null ==> \old(content.hasMap(null)) 
-                                       == content.hasMap(null);
-      @    ensures (\forall Object k; k != key ==> 
-                        \old(content.hasMapObject(k)) 
-                                       == content.hasMapObject(k));
-      @    ensures key != null ==> \old(content.hasMapObject(null)) 
-                                       == content.hasMapObject(null);
+                        (\old(content.hasMap(k)) == content.hasMap(k)));
+      @    ensures key != null ==> (\old(content.hasMap(null)) 
+                                       == content.hasMap(null));
+      @
+      @    ensures (\forall Object k; k.equals(key) ==> content.maps(k) == value);
       @    ensures (\forall Object k; \old(!k.equals(key)) ==> 
                         \old(content.maps(k)) == content.maps(k));
       @    ensures key != null ==> 
                         \old(content.maps(null)) == content.maps(null);
+      @
       @    ensures (\forall Object k; \old(!k.equals(key)) ==> 
                         \old(content.mapsObject(k)) == content.mapsObject(k));
       @    ensures key != null ==> \old(content.mapsObject(null)) 
                                        == content.mapsObject(null);
-      @    ensures \result == \old(get(key));
       @*/
     /* FIXME @
       @    signals (NullPointerException) \not_modified(value)

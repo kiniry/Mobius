@@ -285,6 +285,8 @@ public interface Collection {
       @   ensures contains(null) <==> \old(c.contains(null) && contains(null));
       @   ensures content.theSize <= \old(content.theSize);
       @   ensures !\result <==> (content.theSize == \old(content.theSize));
+      @   ensures !\result ==> (\forall Object o; contains(o) <==> \old(contains(o)));
+      @   ensures !\result ==> (contains(null) <==> \old(contains(null)));
       @   ensures c == this ==> !\result;
           // See note in remove about exceptions
       @ also public exceptional_behavior

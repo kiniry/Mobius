@@ -50,7 +50,7 @@ public interface Set extends Collection {
     Object[] toArray();
 
     // specification inherited
-    Object[] toArray(Object[] a);
+    Object[] toArray(Object[] a) throws NullPointerException;
 
     /*@ also
       @  public normal_behavior
@@ -75,15 +75,16 @@ public interface Set extends Collection {
 
     // specs are inherited
     //@ pure
-    boolean containsAll(Collection c);
+    boolean containsAll(Collection c) throws NullPointerException;
 
     // specs are inherited
-    boolean addAll(Collection c);
+    boolean addAll(Collection c) throws NullPointerException;
 
     // specs are inherited
-    boolean retainAll(Collection c);
+    boolean retainAll(Collection c) throws NullPointerException;
 
     /*@ also public normal_behavior
+       @   requires c != null;
        @   assignable objectState;
        @   ensures \old(c.contains(null)) ==> !contains(null);
        @   ensures (\forall Object o; c.contains(o) <==>
@@ -91,7 +92,7 @@ public interface Set extends Collection {
        @   ensures size() <= \old(size());
        @   ensures \result <==> size() != \old(size());
        @*/
-    boolean removeAll(Collection c);
+    boolean removeAll(Collection c) throws NullPointerException;
 
     // specification inherited
     void clear();
