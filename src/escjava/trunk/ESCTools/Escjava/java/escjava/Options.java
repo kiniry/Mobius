@@ -21,6 +21,11 @@ import escjava.translate.NoWarn;
 
 public class Options extends javafe.SrcToolOptions
 {
+    final String[][] escOptionData = {
+	{ "-eajava, -javaAssertions", "Treat Java assert statements as Java exceptions"},
+	{ "-eajml, -jmlAssertions", "Treat Java assert statements like JML assert statements"}
+    };
+
     // Global escjava flags
 
     /*
@@ -92,6 +97,10 @@ public class Options extends javafe.SrcToolOptions
     public boolean peepOptGC=true;
     public boolean lazySubst = false;
     public boolean mergeInv=false;
+
+    public static final int JAVA_ASSERTIONS = 0;
+    public static final int JML_ASSERTIONS = 1;
+    public int assertionMode = JAVA_ASSERTIONS;
 
     public boolean useAllInvPostCall = false;
     public boolean useAllInvPostBody = false;
@@ -212,6 +221,7 @@ public class Options extends javafe.SrcToolOptions
      */
     public String showOptions(boolean all) {
         String s = super.showOptions(all);
+	s = s + showOptionArray(escOptionData);
         /* Note:  The following should list all of the "public" options, not
          * debugging options that are present only in experimental versions
          * at SRC.
@@ -677,6 +687,18 @@ public class Options extends javafe.SrcToolOptions
 	    return offset;
 	} else if (option.equals("-showDesugaredSpecs")) {
 	    desugaredSpecs = true;
+	    return offset;
+	} else if (option.equals("-javaAssertions") ||
+		   option.equals("-eajava")) {
+	    assertionMode = JAVA_ASSERTIONS;
+	    assertionsEnabled = true;
+	    assertIsKeyword = true;
+	    return offset;
+	} else if (option.equals("-jmlAssertions") ||
+		   option.equals("-eajml")) {
+	    assertionMode = JML_ASSERTIONS;
+	    assertIsKeyword = true;
+	    assertionsEnabled = true;
 	    return offset;
         }
     
