@@ -355,4 +355,19 @@ public final class StackVector
         return vec;
     }
 
+    public String toString() {
+	StringBuffer sb = new StringBuffer();
+	sb.append("StackVector[");
+	for (int i=0; i<elementCount; ++i) {
+		Object o = elements[i];
+		if (o==null) sb.append(" :: ");
+		else {
+			sb.append(o.toString());
+			sb.append(" ");
+		}
+	}
+	sb.append("]");
+	return sb.toString();
+    }
+
 }
