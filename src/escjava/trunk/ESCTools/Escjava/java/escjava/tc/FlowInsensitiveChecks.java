@@ -976,27 +976,30 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 
 	    case TagConstants.NOTSPECIFIEDEXPR:
 		{
-		    if (!isCurrentlySpecDesignatorContext) {
-			ErrorSet.error(e.getStartLoc(),
-				"Keyword \\not_specified is not allowed in this context");
-		    } 
 		    setType( e, Types.voidType);
+		    return e;
 		}
 	    case TagConstants.EVERYTHINGEXPR:
 		{
 		    if (!isCurrentlySpecDesignatorContext) {
 			ErrorSet.error(e.getStartLoc(),
 				"Keyword \\everything is not allowed in this context");
-		    } 
-		    setType( e, Types.voidType);
+			setType( e, Types.errorType);
+		    } else {
+			setType( e, Types.voidType);
+		    }
+		    return e;
 		}
 	    case TagConstants.NOTHINGEXPR:
 		{
 		    if (!isCurrentlySpecDesignatorContext) {
 			ErrorSet.error(e.getStartLoc(),
 				"Keyword \\nothing is not allowed in this context");
-		    } 
-		    setType( e, Types.voidType);
+			setType( e, Types.errorType);
+		    } else {
+			setType( e, Types.voidType);
+		    }
+		    return e;
 		}
             case TagConstants.LOCKSETEXPR:
                 {
@@ -1614,13 +1617,15 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                         ASTNode oldAccessibilityContext = accessibilityContext;
                         accessibilityLowerBound = getAccessibility(rd.modifiers);
                         accessibilityContext = rd;
-                        emp.expr = checkPredicate(env, emp.expr);
+			if (emp.expr.getTag() != TagConstants.NOTSPECIFIEDEXPR)
+			    emp.expr = checkPredicate(env, emp.expr);
                         accessibilityLowerBound = oldAccessibilityLowerBound;
                         accessibilityContext = oldAccessibilityContext;
                     }
                     break;
                 }
 
+	    case TagConstants.MEASURED_BY:
 	    case TagConstants.DURATION:
 	    case TagConstants.WORKING_SPACE:
 	        {
@@ -1643,7 +1648,11 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                         if (rd instanceof MethodDecl && isOverridable((MethodDecl)rd)) {
                             isPrivateFieldAccessAllowed = false;
                         }
-                        emp.expr = checkExpr(env, emp.expr, Types.longType);
+			if (tag == TagConstants.MEASURED_BY) {
+				// FIXME - what type to use?
+			    emp.expr = checkExpr(env, emp.expr);
+			} else if (emp.expr.getTag() != TagConstants.NOTSPECIFIEDEXPR)
+			    emp.expr = checkExpr(env, emp.expr, Types.longType);
                         if (emp.cond != null)
 			 emp.cond = checkExpr(env, emp.cond, Types.booleanType);
                         isRESContext = oldIsRESContext;
@@ -1693,7 +1702,8 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                         if (rd instanceof MethodDecl && isOverridable((MethodDecl)rd)) {
                             isPrivateFieldAccessAllowed = false;
                         }
-                        emp.expr = checkPredicate(env, emp.expr);
+			if (emp.expr.getTag() != TagConstants.NOTSPECIFIEDEXPR)
+			    emp.expr = checkPredicate(env, emp.expr);
                         isRESContext = oldIsRESContext;
                         isTwoStateContext = oldIsTwoStateContext;
                         isPrivateFieldAccessAllowed = oldIsPrivFieldAccessAllowed;
@@ -1793,7 +1803,8 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                         if (rd instanceof MethodDecl && isOverridable((MethodDecl)rd)) {
                             isPrivateFieldAccessAllowed = false;
                         }
-                        vemp.expr = checkPredicate(subenv, vemp.expr);
+			if (vemp.expr.getTag() != TagConstants.NOTSPECIFIEDEXPR)
+			    vemp.expr = checkPredicate(subenv, vemp.expr);
                         isTwoStateContext = oldIsTwoStateContext;
                         isPrivateFieldAccessAllowed = oldIsPrivFieldAccessAllowed;
                     }
@@ -1820,80 +1831,6 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                 }
                 break;
             }
-
-	    case TagConstants.MEASURED_BY:
-// FIXME - simplify this and make it specific for measured_by
-                {
-                    CondExprModifierPragma emp = (CondExprModifierPragma)p;
-
-                    if (!(ctxt instanceof RoutineDecl ) ) {
-                        ErrorSet.error(p.getStartLoc(),
-                                       "A modifies/also_modifies annotation " +
-                                       "can occur only on " +
-                                       "method and constructor declarations");
-                    } else {
-                        RoutineDecl rd = (RoutineDecl)ctxt;
-	    
-/*
-                        if (getOverrideStatus(rd) != MSTATUS_NEW_ROUTINE) {
-                            if (tag == TagConstants.MODIFIES
-                                || tag == TagConstants.MODIFIABLE
-                                || tag == TagConstants.ASSIGNABLE) {
-                                ErrorSet.error(p.getStartLoc(),
-				   "modifies cannot be used on method " +
-				   "overrides; use also_modifies instead");
-                            }
-                        } else {
-                            if (tag == TagConstants.ALSO_MODIFIES) {
-                                ErrorSet.error(p.getStartLoc(),
-				   "also_modifies can be used only on method " +
-				   "overrides; use modifies instead");
-                            }
-                        }
-*/
-                        Assert.notFalse(!isSpecDesignatorContext);
-                        isSpecDesignatorContext = true;
-                        if (rd instanceof ConstructorDecl) {
-                            // disallow "this" from constructor "modifies" clauses
-                            env = env.asStaticContext();
-                        }
-                        emp.expr = checkDesignator(env, emp.expr);
-                        switch (emp.expr.getTag()) {
-                            case TagConstants.FIELDACCESS: {
-                                FieldAccess fa = (FieldAccess)emp.expr;
-                                if (fa.decl != null &&
-                                    Modifiers.isFinal(fa.decl.modifiers) &&
-                                    // The array "length" field has already been checked
-                                    // insuper.checkDesignator().
-                                    fa.decl != Types.lengthFieldDecl) {
-                                    ErrorSet.error(fa.locId, "a final field is not allowed as " +
-                                                   "the designator in a modifies clause");
-                                }
-                                break;
-                            }
-	      
-                            case TagConstants.ARRAYREFEXPR:
-                            case TagConstants.WILDREFEXPR:
-                            case TagConstants.EVERYTHINGEXPR:
-                            case TagConstants.NOTHINGEXPR:
-                            case TagConstants.NOTSPECIFIEDEXPR:
-                                break;
-
-                            default:
-				if (escjava.parser.EscPragmaParser.
-				 informalPredicateDecoration.get(emp.expr)==null) {
-					// The expression is not a designator
-					// but we allow an informal predicate
-					break;
-				}
-                                ErrorSet.error(emp.expr.getStartLoc(),
-                                               "Not a specification designator expression");
-                        }
-                        isSpecDesignatorContext = false;
-			if (emp.cond != null) emp.cond = checkExpr(env, emp.cond);
-                    }
-                    break;
-                }
 
 	    case TagConstants.MODIFIES:
             case TagConstants.ALSO_MODIFIES:

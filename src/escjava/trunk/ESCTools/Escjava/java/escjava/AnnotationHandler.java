@@ -532,7 +532,8 @@ public class AnnotationHandler {
 			}
 		    }
 		    ExprModifierPragma e = (ExprModifierPragma)m;
-		    currentBehavior.requires.add(e);
+		    if (e.expr.getTag() != TagConstants.NOTSPECIFIEDEXPR)
+			currentBehavior.requires.add(e);
 		    break;
 		}
 		    
@@ -552,7 +553,8 @@ public class AnnotationHandler {
 			   "This type of annotation is not permitted in an excpetional_behavior clause");
 		    }
 		    ExprModifierPragma e = (ExprModifierPragma)m;
-		    currentBehavior.ensures.add(e);
+		    if (e.expr.getTag() != TagConstants.NOTSPECIFIEDEXPR)
+			currentBehavior.ensures.add(e);
 		    break;
 		 }
 
@@ -566,7 +568,8 @@ public class AnnotationHandler {
 			}
 		    }
 		    ExprModifierPragma e = (ExprModifierPragma)m;
-		    currentBehavior.diverges.add(e);
+		    if (e.expr.getTag() != TagConstants.NOTSPECIFIEDEXPR)
+			currentBehavior.diverges.add(e);
 		    break;
 
 		case TagConstants.EXSURES:
@@ -584,7 +587,8 @@ public class AnnotationHandler {
 			ErrorSet.error(m.getStartLoc(),
 			   "This type of annotation is not permitted in an normal_behavior clause");
 		    }
-		    currentBehavior.signals.add(m);
+		    if (((VarExprModifierPragma)m).expr.getTag() != TagConstants.NOTSPECIFIEDEXPR)
+			currentBehavior.signals.add(m);
 		    break;
 
 		case TagConstants.ASSIGNABLE:
@@ -599,7 +603,11 @@ public class AnnotationHandler {
 			    currentBehavior = ((Behavior)commonBehavior.getFirst()).copy();
 			}
 		    }
-		    currentBehavior.modifies.add(m);
+			// null value indicates an informal annotation
+		    if (((CondExprModifierPragma)m).expr == null ||
+		    	((CondExprModifierPragma)m).expr.getTag() != 
+				TagConstants.NOTSPECIFIEDEXPR)
+			currentBehavior.modifies.add(m);
 		    if (isPure && !isConstructor) {
 			CondExprModifierPragma cm = 
 				(CondExprModifierPragma)m;
@@ -623,7 +631,28 @@ public class AnnotationHandler {
 			    currentBehavior = ((Behavior)commonBehavior.getFirst()).copy();
 			}
 		    }
-		    currentBehavior.when.add(m);
+		    if (((ExprModifierPragma)m).expr.getTag() != 
+					TagConstants.NOTSPECIFIEDEXPR)
+			currentBehavior.when.add(m);
+		    break;
+
+		case TagConstants.DURATION:
+		case TagConstants.WORKING_SPACE:
+		    if (currentBehavior == null) {
+			ErrorSet.error(m.getStartLoc(),"Missing also");
+			if (commonBehavior.isEmpty()) {
+			    currentBehavior = cb.copy(); //new Behavior();
+			} else {
+			    currentBehavior = ((Behavior)commonBehavior.getFirst()).copy();
+			}
+		    }
+		    if (((CondExprModifierPragma)m).expr.getTag() != 
+					TagConstants.NOTSPECIFIEDEXPR) {
+			if (t == TagConstants.DURATION)
+			    currentBehavior.duration.add(m);
+			else
+			    currentBehavior.workingSpace.add(m);
+		    }
 		    break;
 
 		case TagConstants.OPENPRAGMA:
@@ -927,6 +956,8 @@ public class AnnotationHandler {
 			&& diverges.size() == 0 
 			&& modifies.size() == 0 
 			&& when.size() == 0 
+			&& duration.size() == 0 
+			&& workingSpace.size() == 0 
 			&& extras.size() == 0 
 			&& signals.size() == 0;
 	}
@@ -934,6 +965,8 @@ public class AnnotationHandler {
 	public ArrayList requires = new ArrayList(); // of ExprModifierPragma 
 	public ArrayList ensures = new ArrayList(); // of ExprModifierPragma
 	public ArrayList when = new ArrayList(); // of ExprModifierPragma
+	public ArrayList duration = new ArrayList(); // of CondExprModifierPragma
+	public ArrayList workingSpace = new ArrayList(); // of CondExprModifierPragma
 	public ArrayList diverges = new ArrayList(); // of ExprModifierPragma
 	public ArrayList signals = new ArrayList(); // of VarExprModifierPragma 
 	public ArrayList modifies = new ArrayList();//of CondExprModifierPragma 
@@ -967,6 +1000,8 @@ public class AnnotationHandler {
 		    b.ensures.add(mm);
 		}
 		b.when = new ArrayList(when);
+		b.duration = new ArrayList(duration);
+		b.workingSpace = new ArrayList(workingSpace);
 		b.diverges = new ArrayList(diverges);
 		b.signals = new ArrayList(signals);
 		b.modifies = new ArrayList(modifies);
@@ -1064,6 +1099,18 @@ public class AnnotationHandler {
 		if (!reqIsTrue) m.expr = implies(req,m.expr);
 		if (isFalse(m.expr)) { when.clear(); }
 		when.add(m);
+	    }
+	    i = b.duration.iterator();
+	    while (i.hasNext()) {
+		CondExprModifierPragma m = (CondExprModifierPragma)i.next();
+		m.cond = and(m.cond,req);
+		duration.add(m);
+	    }
+	    i = b.workingSpace.iterator();
+	    while (i.hasNext()) {
+		CondExprModifierPragma m = (CondExprModifierPragma)i.next();
+		m.cond = and(m.cond,req);
+		workingSpace.add(m);
 	    }
 	    i = b.diverges.iterator();
 	    while (i.hasNext()) {

@@ -220,12 +220,6 @@ import java.util.Vector;
  * @todo kiniry 24 Jan 2003 - Make semicolon at end of 'nowarn' lexical
  * pragma non-optional.  This requires updating spec files &c.
  *
- * @todo kiniry 24 Jan 2003 - Permit 'non_null' annotations on arguments
- * in overrides of methods. Make such specifications redundant.
- *
- * @todo kiniry 31 Jan 2003 - Check semantics of non_null in ESC/Java
- * vs. JML.
- *
  * @todo kiniry 24 Jan 2003 - Permit splitting syntactic constructs
  * across multiple @code{//@@} comments.
  *
@@ -809,8 +803,6 @@ public class EscPragmaParser extends Parse implements PragmaParser
                     dst.auxVal = NowarnPragma.make(checks, loc);
                     break;
 
-                case TagConstants.MEASURED_BY: // parsed, unclear semantics (cok)
-                case TagConstants.MEASURED_BY_REDUNDANTLY: // parsed, unclear semantics (cok)
                 case TagConstants.ALSO_MODIFIES:
                 case TagConstants.ASSIGNABLE: // SUPPORT COMPLETE (kiniry)
                 case TagConstants.ASSIGNABLE_REDUNDANTLY: // SUPPORT COMPLETE (kiniry)
@@ -1338,10 +1330,6 @@ public class EscPragmaParser extends Parse implements PragmaParser
                 case TagConstants.READABLE_IF:
                 case TagConstants.REQUIRES:
                 case TagConstants.WRITABLE_IF: {
-                    // Note which tages cannot be statically checked.
-                    if (tag == TagConstants.WHEN || 
-                        tag == TagConstants.WHEN_REDUNDANTLY)
-                        noteUnsupportedUncheckableJmlPragma(loc, tag);
                     dst.ttype = TagConstants.MODIFIERPRAGMA;
 		    ExprModifierPragma pragma;
 		    if (scanner.ttype == TagConstants.NOT_SPECIFIED) {
@@ -1362,6 +1350,8 @@ public class EscPragmaParser extends Parse implements PragmaParser
                     break;
                 }
 
+                case TagConstants.MEASURED_BY: // parsed, unclear semantics (cok)
+                case TagConstants.MEASURED_BY_REDUNDANTLY: // parsed, unclear semantics (cok)
                 case TagConstants.DURATION:                 // SC HPT 2
                 case TagConstants.DURATION_REDUNDANTLY:     // SC HPT 2
                 case TagConstants.WORKING_SPACE:            // SC HPT 2
@@ -1403,10 +1393,15 @@ public class EscPragmaParser extends Parse implements PragmaParser
                     FormalParaDecl arg = parseExsuresFormalParaDecl(scanner);
                     expect(scanner, TagConstants.RPAREN);
                     Expr expr = null;
+// FIXME - test the semicolon and the not specified alternatives
+// do we need a getNextToken()?
 		    if (scanner.ttype == TagConstants.SEMICOLON)
 			expr = LiteralExpr.make(TagConstants.BOOLEANLIT,
                                                 Boolean.TRUE,scanner.startingLoc);
-		    else
+		    else if (scanner.ttype == TagConstants.NOT_SPECIFIED) {
+			expr = NotSpecifiedExpr.make(scanner.startingLoc);
+			scanner.getNextToken();
+		    } else
 			expr = parseExpression(scanner);
                     VarExprModifierPragma pragma =
                         VarExprModifierPragma.make(TagConstants.unRedundant(tag), 
@@ -1553,6 +1548,9 @@ public class EscPragmaParser extends Parse implements PragmaParser
             if (DEBUG)
                 Info.out("getNextPragma: parsed : " + dst.ztoString());
             return true;
+	} catch (javafe.util.FatalError e) {
+	    eatThroughSemiColon();
+	    return false;
         } catch (IOException e) { 
             return false; 
         }
@@ -1743,7 +1741,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
 
         // First parse PrimaryCore into variable primary
         switch(l.ttype) {
-
+/*
             case TagConstants.NOT_SPECIFIED:
                 primary = NotSpecifiedExpr.make(l.startingLoc);
                 l.getNextToken();
@@ -1758,7 +1756,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
                 primary = NothingExpr.make(l.startingLoc);
                 l.getNextToken();
                 break;
-                
+ */               
             case TagConstants.RES: 
                 primary = ResExpr.make(l.startingLoc);
                 l.getNextToken();

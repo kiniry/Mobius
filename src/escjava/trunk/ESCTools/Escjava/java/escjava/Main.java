@@ -204,6 +204,10 @@ public class Main extends javafe.SrcTool
      * on each <code>CompilationUnit</code> to process them.
      */
     public void preprocess() {
+
+	if (ErrorSet.fatals > 0) {
+	    ErrorSet.fatal(null);
+        }
         
         // call our routines to run the constructor inlining experiment
         if (options().inlineConstructors)
