@@ -99,6 +99,7 @@ To obtain access to the CVS distribution, you will need:
   the CVS repository
 - Building it will require other UNIX tools: e.g. flex, cc, diff, bash, tcsh
 - Some tests use JUnit
+- To (optionally) build the SImplify tool you will need a Modula-3 compiler
 
 To obtain access to the CVS distribution, follow these steps:
 
@@ -115,7 +116,7 @@ c) cd to a place in your computer directories where you would like to
    place a working copy of the CVS repository in ESCTools.
 
 d) Execute a CVS checkout on the server (replacing the characters
-   'username' in the command below with your username on Joe's server:
+   'username' in the command below with your username on Joe's server):
 
    cvs -d :ext:username@kindsoftware.com/cvsroot checkout ESCTools 
 
@@ -181,9 +182,19 @@ ESCTOOLS_ROOT - defined to be the absolute path to the ESCTools
 SIMPLIFY - defined to be the *name* of (*not* path to) an appropriate
 	Simplify executable in
 	$ESCTOOLS_ROOT/Escjava/release/master/bin
-	(e.g. Simplify-1.5.4.linux) The Makefile makes a guess at an
+	(e.g. Simplify-1.5.4.linux). The Makefile makes a guess at an
 	appropriate value for some platforms, but defining it yourself
 	will avoid the warning messages.
+
+When a release is built, these two variables are used:
+
+ESC_PROJECT - the name of the project, e.g. 'ESCTools'
+ESC_VERSION - the version number
+
+The two values of the two variables are used to create a string
+that becomes part of the name of the created tar file and is
+part of the version information produced by the ESC/Java2 tool
+when it starts execution.
 
 There are other variables you may set to alter your working
 environment.  Those that are executables must be on your path:
@@ -261,7 +272,7 @@ The $ESCTOOLS_ROOT directory contains a number of major subsystems:
 The make targets above can be executed in each of the subsystem
 directories.  This avoids running make over all of the subsystems just
 to build an individual one.  Building all of the subsystems is fairly
-fast, but testing is time- consuming.
+fast, but testing is time-consuming.
 
 There are in addition Makefiles in various subdirectories of the major
 subsystems.  However, these have not been edited to be used
@@ -292,11 +303,14 @@ Commonly used options are:
 	-quiet                 Suppresses informational output
 	-nowarn <name>         Selectively suppresses warnings
 	-nocheck               Just parse and typecheck, no static checking
+	-package <packagename> Run the tool on all the files in the package
 
 After any command-line options, you should list any files you wish to
 be checked by escjava2.  Any relative paths are relative to the
 current directory.  Any classes referenced by the given files are
 found using the CLASSPATH (or the value of the -classpath option).
+If you use the -package option to run the tool on an entire package, the
+package is found on the CLASSPATH.
 
 These variables may also be used to modify the behavior of the
 executable:
@@ -333,8 +347,10 @@ affect the behavior of Simplify.  The most important are:
 		seconds.
 	PROVER_CC_LIMIT - the maximum number of counterexamples to
 		find.  The default is 10.
-	ESCJ_SIMPLIFY - as described above, the executable (and
-		arguments if you like) to use for Simplify.
+	ESCJ_SIMPLIFY_DIR - the directory in which to find the
+		executable named by $SIMPLIFY.  This is by default
+		automatically set to a directory in the release or
+		in the CVS distribution.
 	ESCJ_SIMPLIFY_ARGS - the default arguments to use when
 		invoking Simplify (default is '-noprune -noplunge').
 
@@ -358,7 +374,7 @@ We have not compared these patched versions with those available now
 that CM3 5.2.6 is available.  It may be the case that these modules
 now build properly on all platforms with more recent CM3 releases.
 
-Note that Simpify relies upon many modules.  You *must* install all of
+Note that Simplify relies upon many modules.  You *must* install all of
 these modules prior to building Simplify.  The full list of necessary
 modules is found in the file ESCTools/Simplify/README.
 
