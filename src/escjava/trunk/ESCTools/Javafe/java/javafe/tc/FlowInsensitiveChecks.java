@@ -325,6 +325,7 @@ public class FlowInsensitiveChecks
     //@ ensures !(\result instanceof EnvForCU);
     protected Env checkStmt(Env e, Stmt s) {
 
+
         switch (s.getTag()) {
   
             /*
@@ -350,10 +351,16 @@ public class FlowInsensitiveChecks
                 ClassDeclStmt cds = (ClassDeclStmt)s;
 
                 // Create and check TypeSig for declared type:
-                TypeSig T = Types.makeTypeSig(cds.decl.id.toString(), e, cds.decl);
+		// Note: this code was altered to pass the new environment including the
+		// new class into the TypeSig for the class.  Without that change, uses of
+		// the class name inside the class were not resolved.  I'm not sure that
+		// this is correct for all matters of scope and name visibility, but it
+		// solves this problem.  -- DRCok 10/2/2003
+		Env newenv = new EnvForLocalType(e, cds.decl);
+                TypeSig T = Types.makeTypeSig(cds.decl.id.toString(), newenv, cds.decl);
                 T.typecheck();
 
-                return new EnvForLocalType(e, cds.decl);
+                return newenv;
             }
 
 
@@ -1517,6 +1524,7 @@ public class FlowInsensitiveChecks
 
             default:
                 System.out.println("FAIL " + x);
+		System.out.println(" AT " + Location.toString(x.getStartLoc())); 
                 Assert.fail("Switch fall-through (" + 
                             TagConstants.toString(x.getTag()) + ")");
                 return null;		// Dummy
