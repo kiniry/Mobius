@@ -80,7 +80,6 @@ if ( ! $?ESCTOOLS_ROOT ) then
 	exit 2
     endif
 endif
-setenv ESCJAVA_ROOT ${ESCTOOLS_ROOT}/Escjava
 endif
 
 ## Check that if ESCTOOLS_ROOT is defined, it looks like a CVS hierarchy
@@ -98,13 +97,12 @@ if ( ! $?ESCJ_SIMPLIFY_DIR) then
     if ( $?ESCTOOLS_RELEASE ) then
         setenv ESCJ_SIMPLIFY_DIR ${ESCTOOLS_RELEASE}
     else
-	setenv ESCJ_SIMPLIFY_DIR ${ESCJAVA_ROOT}/release/master/bin
+	setenv ESCJ_SIMPLIFY_DIR ${ESCTOOLS_ROOT}/Escjava/release/master/bin
     endif
 endif
 
-############ Setting ESCJ_SIMPLIFY, if necessary
+############ Setting ESCJ_SIMPLIFY
 
-if ( ! $?ESCJ_SIMPLIFY ) then
     if ( ! $?SIMPLIFY ) then
 	if ( "$OSTYPE" == "linux" ) setenv SIMPLIFY Simplify-1.5.4.linux
 	if ( "$OSTYPE" == "darwin" ) setenv SIMPLIFY Simplify-1.5.4.macosx
@@ -119,7 +117,6 @@ if ( ! $?ESCJ_SIMPLIFY ) then
 	exit 1
     endif
     setenv ESCJ_SIMPLIFY ${ESCJ_SIMPLIFY_DIR}/${SIMPLIFY}
-endif
     
 ## (Optional) If the OS does not supply the class path for Java system files,
 ## or you want to override it, then supply a definition for BOOTCLASSPATH
@@ -160,7 +157,9 @@ if ( ! $?JAVA_VM_FLAGS ) setenv JAVA_VM_FLAGS ""
 
 ## (Optional) Define ESC_REMOTE_DEBUG to something non-empty to provide 
 ## the flags for debugging a run of escjava
-setenv JAVA_VM_DEBUG_FLAGS "-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=y"
+if ( ! $?JAVA_VM_DEBUG_FLAGS ) then
+    setenv JAVA_VM_DEBUG_FLAGS "-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=y"
+endif
 if ( $?ESC_REMOTE_DEBUG ) then
     setenv JAVA_VM_FLAGS "$JAVA_VM_DEBUG_FLAGS $JAVA_VM_FLAGS"
 endif
@@ -185,7 +184,7 @@ if ( ! $?ESCJ_SIMPLIFY_SCRIPT ) then
     if ( $?ESCTOOLS_RELEASE ) then
         setenv ESCJ_SIMPLIFY_SCRIPT $ESCTOOLS_RELEASE/simplify-script
     else
-        setenv ESCJ_SIMPLIFY_SCRIPT ${ESCJAVA_ROOT}/simplify
+        setenv ESCJ_SIMPLIFY_SCRIPT ${ESCTOOLS_ROOT}/Escjava/simplify
     endif
 endif
 
