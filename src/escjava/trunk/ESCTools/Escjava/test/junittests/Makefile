@@ -4,7 +4,7 @@ include ${TOP}/Makefile.defs
 ############################################################################
 # ESCJAVA is (only) used for standalone tests
 ## FIXME: escjava is not part of the CVS infrastructure
-export ESCJAVA = escjava -nowarn Deadlock -verboseTrace
+export ESCJAVA ?= escjava -nowarn Deadlock -verboseTrace
 
 # Used to invoke text-based JUnit tests
 export JUNIT = $(JAVA) -Xmx256M -classpath ${ESCJAVA_CLASSPATH}:${JUNIT_UTILS_PATH}:. -Djava.io.tmpdir=/tmp -Dsimplify=${ESCJ_SIMPLIFY} junit.textui.TestRunner

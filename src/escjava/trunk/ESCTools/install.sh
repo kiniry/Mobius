@@ -59,7 +59,7 @@ chmod +x `find . -name rtest`
 ###### Wait for them to finish.
 
 export ESCTOOLS_ROOT=`pwd`
-
+export ESCJAVA=${ESCTOOLS_ROOT}/Escjava/escj
 echo Building and testing the patched release in ${ESCTOOLS_ROOT}
 
 # Clean, build, and test the release.
