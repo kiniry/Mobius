@@ -691,7 +691,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
 
                 case TagConstants.JML_DEPENDS:                 // SC AAST 4
                 case TagConstants.JML_DEPENDS_REDUNDANTLY: {   // SC AAST 4
-                    inProcessTag = TagConstants.unRedundant(tag);
+                    int tempTag = TagConstants.unRedundant(tag);
                     inProcessLoc = loc;
                     dst.ttype = TagConstants.TYPEDECLELEMPRAGMA;
 			// FIXME - should this be a primary expression
@@ -707,7 +707,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
 			scanner.getNextToken();
 		    }
                     DependsPragma pragma = 
-                        DependsPragma.make(tag, target,
+                        DependsPragma.make(tempTag, target,
                                            ExprVec.make(list), loc);
                     if (TagConstants.isRedundant(tag))
                         pragma.setRedundant(true);
@@ -1267,8 +1267,10 @@ public class EscPragmaParser extends Parse implements PragmaParser
                                    TagConstants.toString(tag));
             }
 
-            if (semiNotOptional)
+            if (semiNotOptional) {
                 eatSemiColon(kw);
+                //inProcessTag = NEXT_TOKEN_STARTS_NEW_PRAGMA;
+	    }
             if (DEBUG)
                 Info.out("getNextPragma: parsed : " + dst.ztoString());
             return true;
