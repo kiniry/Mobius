@@ -319,7 +319,7 @@ srcjar:
 
 
 .PHONY: binary-release
-binary-release: build docs javadoc
+binary-release: build docs ## FIXME javadoc
 	@echo "Creating binary release .........."
 	## RELDIR is the staging area for all files
 	## First copy all .class files to sub and build a jar file
@@ -434,7 +434,7 @@ generate-specs-archive:
 	mkdir -p ${RELTEMP}
 	rm -rf ${RELTEMP}/specs
 	cp -r ${ESCTOOLS_ROOT}/specs ${RELTEMP}
-	-find ${RELTEMP}/specs -name "CVS" -exec rm -rf {} \;  >& /dev/null 
+	-find ${RELTEMP}/specs -name "CVS" -exec rm -rf {} \;  > /dev/null 2>&1
 	(cd ${RELTEMP}; tar cjf ${PATCH_DIR}/${SPECS_TAR} specs;) 
 	rm -rf ${RELTEMP}/specs
 
@@ -458,7 +458,7 @@ generate-toplevel-archive: clean
 	mkdir -p ${RELTEMP}/ESCTools/Escjava/release/master/bin
 	cp ${ESCTOOLS_ROOT}/Escjava/release/master/bin/Simplify-1.5.4.macosx \
 		${RELTEMP}/ESCTools/Escjava/release/master/bin
-	-find ${RELTEMP}/ESCTools -name "CVS" -exec rm -rf {} \;  >& /dev/null 
+	-find ${RELTEMP}/ESCTools -name "CVS" -exec rm -rf {} \;  > /dev/null  2>&1
 	(cd ${RELTEMP}/ESCTools; tar cjf ${PATCH_DIR}/${TOPLEVEL_TAR} . ;) 
 	rm -rf ${RELTEMP}/ESCTools
 
