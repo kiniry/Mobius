@@ -5,6 +5,8 @@ package escjava.translate;
 import java.util.Hashtable;
 import java.util.Enumeration;
 import java.util.Vector;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.io.ByteArrayOutputStream;
 
 import javafe.ast.*;
@@ -71,6 +73,8 @@ public final class Translate
                 rdCurrent.parent == inlineParent.rdCurrent.parent;
         }
         this.issueCautions = issueCautions;
+	this.modifyEverythingLocations = new ArrayList();
+	getPostconditionLocations(rd);
 
         if (Info.on) {
             System.out.print("trBody: ");
@@ -2757,7 +2761,16 @@ public final class Translate
      */
     private Expr trFieldAccess(boolean protectObject,
                                /*@ non_null */ FieldAccess fa) {
-        VariableAccess va= TrAnExpr.makeVarAccess(fa.decl, fa.locId);
+        VariableAccess va;
+	Iterator iter = modifyEverythingLocations.iterator();
+	if (iter.hasNext()) {
+	    va = TrAnExpr.makeVarAccess(fa.decl, fa.locId);
+	    EverythingLoc s = (EverythingLoc)iter.next();
+	    s.add(va);
+		
+	} else {
+	    va = TrAnExpr.makeVarAccess(fa.decl, fa.locId);
+	}
 
         int tag= fa.od.getTag();
         if (Modifiers.isStatic(fa.decl.modifiers)) {
@@ -3381,18 +3394,25 @@ public final class Translate
         String description;
         Spec spec;
         if (inline != null) {
-            if (inline.getSpecForInline)
+            if (inline.getSpecForInline) {
+		//System.out.println("GETTING SPEC FOR INLINE");
                 spec = GetSpec.getSpecForInline(call.rd, scope);
-            else {
+            } else {
                 Set synTargs = predictedSynTargs;
                 if (synTargs == null)
                     synTargs = new Set();
+		//System.out.println("GETTING SPEC FOR BODY");
                 spec = GetSpec.getSpecForBody(call.rd, scope, synTargs, null);
             }
             description = "inlined call";
         }
         else {
+	    //System.out.println("GETTING SPEC FOR CALL " + Location.toString(call.rd.loc) );
             spec = GetSpec.getSpecForCall( call.rd, scope, predictedSynTargs );
+	    if (spec.modifiesEverything) {
+		    ErrorSet.caution(scall,
+			    "A method that 'modifies everything' has been called; the verification of a body with such a call is not correct.");
+	    }
             description = "call";
         }
         call.spec = spec;
@@ -3410,6 +3430,9 @@ public final class Translate
         Vector ptDomain = new Vector();
         for(int i=0; i<spec.dmd.args.size(); i++)
             ptDomain.addElement( spec.dmd.args.elementAt(i) );
+
+	// spec.preVarMap gives the set of locations that are in modifies clauses for the
+	// called routine
         for(Enumeration e = spec.preVarMap.elements(); e.hasMoreElements(); )
             ptDomain.addElement( ((VariableAccess)e.nextElement()).decl );
         Hashtable pt = GetSpec.makeSubst( ptDomain.elements(),
@@ -3427,13 +3450,15 @@ public final class Translate
             GenericVarDecl pi = spec.dmd.args.elementAt(i);
             piLs[i] = (VariableAccess)pt.get( pi );
             temporaries.addElement( piLs[i].decl );
-            SimpleModifierPragma nonnull = null; // GetSpec.NonNullPragma(pi); // FIXME
+/* non_null pragmas are handled by desugaring now
+            SimpleModifierPragma nonnull = null; // GetSpec.NonNullPragma(pi); 
             if (nonnull != null && !pi.id.toString().equals("this$0arg")) {
                 Expr argRaw = argsRaw.elementAt(i);
                 nullCheck(argRaw, call.args.elementAt(i),
                           argRaw.getStartLoc(),
                           TagConstants.CHKNONNULL, nonnull.getStartLoc());
             }
+*/
             code.addElement(GC.gets(piLs[i], call.args.elementAt(i)));
         }
 
@@ -3477,6 +3502,8 @@ public final class Translate
 
 
         if (inline != null) {
+// FIXME - need to fix this for modifies behavior
+
             // insert the translated body, with appropriate substitutions of
             // formals for the new names provided above
             Translate trInline = new Translate();
@@ -3510,11 +3537,28 @@ public final class Translate
         }
 
         else {
+	    // An assignment generated for each modified target
+	    // of the form   i:7.19 = after@16.2:20.19
             // modify IndexSubst[[ D*, pt ]]
             for(int i=0; i<spec.targets.size(); i++)
 	    {
 		Expr target = spec.targets.elementAt(i);
 		code.addElement(modify(target, pt, scall));
+	    }
+	    if (spec.modifiesEverything) {
+		EverythingLoc el = new EverythingLoc(scall,pt);
+		modifyEverythingLocations.add(el);
+		el.completed.add(GC.ecvar);
+		el.completed.add(GC.resultvar);
+		el.completed.add(GC.xresultvar);
+		code.addElement(el.gcseq);
+		Iterator iter = spec.postconditionLocations.iterator();
+		while (iter.hasNext()) {
+		    Object o = iter.next();
+		    if (o instanceof Expr) el.add((Expr)o);
+		    else System.out.println("WHAT? " + o.getClass() + " " + o);
+		}
+		
 	    }
 
             // modify EC, RES, XRES
@@ -3971,6 +4015,42 @@ public final class Translate
 	    default:
 		return e;
         }
+    }
+
+    public ArrayList modifyEverythingLocations = new ArrayList();
+
+    public class EverythingLoc {
+	public int loc;
+	public Hashtable pt;
+	public SeqCmd gcseq = SeqCmd.make(GuardedCmdVec.make());
+	public Set completed = new Set();
+	public EverythingLoc(int loc, Hashtable pt) {
+	    this.loc = loc;
+	    this.pt = pt;
+	}
+	public void add(Expr e) {
+	    if (e instanceof VariableAccess) {
+		if (completed.contains( ((VariableAccess)e).decl )) return;
+		completed.add( ((VariableAccess)e).decl );
+	    }
+	    GuardedCmd gc = modify(e, pt, loc);
+	    gcseq.cmds.addElement(gc);
+	}
+    }
+
+    public void addMoreLocations(java.util.Set s) {
+	Iterator ii = modifyEverythingLocations.iterator();
+	while (ii.hasNext()) {
+	    EverythingLoc ev = (EverythingLoc)ii.next();
+	    Iterator i = s.iterator();
+	    while (i.hasNext()) {
+		    Object o = i.next();
+		    ev.add((Expr)o);
+	    }
+	}
+    }
+    public void getPostconditionLocations(RoutineDecl r) {
+	//System.out.println("GETTING POST " + r);
     }
 } // end of class Translate
 

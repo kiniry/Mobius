@@ -2250,7 +2250,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
      * declared non_null.  Otherwise returns the MethodDecl corresponding to the
      * overridden method with which the argument rd is in conflict.
      */
-    public MethodDecl getSuperNonNullStatus(RoutineDecl rd, int j) {
+    static public MethodDecl getSuperNonNullStatus(RoutineDecl rd, int j) {
         if (!(rd instanceof MethodDecl) || Modifiers.isStatic(rd.modifiers)) {
             return null;
         }
@@ -2260,8 +2260,11 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
         if (direct.size() == 0) {
             return null;
         }
+	return getSuperNonNullStatus(rd,j,direct);
+    }
 
-        Enumeration e = direct.elements();
+    static public MethodDecl getSuperNonNullStatus(RoutineDecl rd, int j, Set directOverrides) {
+        Enumeration e = directOverrides.elements();
         while (e.hasMoreElements()) {
             MethodDecl directMD = (MethodDecl)(e.nextElement());
 	    FormalParaDecl f = directMD.args.elementAt(j);
