@@ -30,23 +30,20 @@ package org.jmlspecs.lang;
  */
 public /*@ pure @*/ final class JMLDataGroup {
 
-    //@ public invariant owner == null;
-
     /*@ private normal_behavior
       @   assignable owner;
       @   ensures owner == null;
-      @   ensures this == IT;
       @*/
     private JMLDataGroup();
 
     /** The only object of this type.
      */
-    public static final /*@ non_null @*/ JMLDataGroup IT;
+    public static final /*@ non_null @*/ JMLDataGroup IT; 
 
     /** Return this object.
      */
     //@ also
-    //@ ensures \result == IT;
+    //@ ensures \result == this;
     //@ signals (Exception) false;
     public Object clone();
 
@@ -61,7 +58,7 @@ public /*@ pure @*/ final class JMLDataGroup {
     
     /** Return a hash code for this object.
      */
-    public int hashCode();
+    public /*@ pure @*/ int hashCode();
 
     /** Return a string representation of this object.
      */
@@ -69,10 +66,7 @@ public /*@ pure @*/ final class JMLDataGroup {
       @   public normal_behavior
       @     ensures \result != null
       @          && (* result is a string representation of this *);
-      @ also private normal_behavior
-      @     ensures \result == stringValue;
       @*/
     public String toString();
     
-    //@ ghost non_null final String stringValue;
 }

@@ -1,406 +1,273 @@
-/*
- * @(#)Map.java	1.27 98/09/30
- *
- * Copyright 1997, 1998 by Sun Microsystems, Inc.,
- * 901 San Antonio Road, Palo Alto, California, 94303, U.S.A.
- * All rights reserved.
- *
- * This software is the confidential and proprietary information
- * of Sun Microsystems, Inc. ("Confidential Information").  You
- * shall not disclose such Confidential Information and shall use
- * it only in accordance with the terms of the license agreement
- * you entered into with Sun.
- */
+// Copyright (C) 2002 Iowa State University
+
+// This file is part of JML
+
+// JML is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation; either version 2, or (at your option)
+// any later version.
+
+// JML is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with GNU Emacs; see the file COPYING.  If not, write to
+// the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 
 package java.util;
 
-/**
- * An object that maps keys to values.  A map cannot contain duplicate keys;
- * each key can map to at most one value.<p>
- *
- * This interface takes the place of the <tt>Dictionary</tt> class, which was
- * a totally abstract class rather than an interface.<p>
- *
- * The <tt>Map</tt> interface provides three <i>collection views</i>, which
- * allow a map's contents to be viewed as a set of keys, collection of values,
- * or set of key-value mappings.  The <i>order</i> of a map is defined as
- * the order in which the iterators on the map's collection views return their
- * elements.  Some map implementations, like the <tt>TreeMap</tt> class, make
- * specific guarantees as to their order; others, like the <tt>HashMap</tt>
- * class, do not.<p>
- *
- * Note: great care must be exercised if mutable objects are used as map keys.
- * The behavior of a map is not specified if the value of an object is changed
- * in a manner that affects equals comparisons while the object is a
- * key in the map.  A special case of this prohibition is that it is not
- * permissible for a map to contain itself as a key.  While it is permissible
- * for a map to contain itself as a value, extreme caution is advised: the
- * equals and hashCode methods are no longer well defined on a such a map.<p>
- *
- * All general-purpose map implementation classes should provide two
- * "standard" constructors: a void (no arguments) constructor which creates an
- * empty map, and a constructor with a single argument of type <tt>Map</tt>,
- * which creates a new map with the same key-value mappings as its argument.
- * In effect, the latter constructor allows the user to copy any map,
- * producing an equivalent map of the desired class.  There is no way to
- * enforce this recommendation (as interfaces cannot contain constructors) but
- * all of the general-purpose map implementations in the JDK comply.
- *
- * @author  Josh Bloch
- * @version 1.27 09/30/98
- * @see HashMap
- * @see TreeMap
- * @see Hashtable
- * @see SortedMap
- * @see Collection
- * @see Set
- * @since JDK1.2
+/** JML's specification of java.util.Map.
+ * @version $Revision$
+ * @author Katie Becker
+ * @author Gary T. Leavens
  */
-/* Note, the "extends EscjavaKeyValue" is a feature of this .spec file,
- * so that classes (like Hashtable) that inherit from both Map and
- * Dictionary can be given a suitable ESC/Java specification.  This
- * "extends" clause is not present in the corresponding .java file,
- */ // Removed this - no spec and not currently allowed by JML -- FIXME
-public interface Map { // extends EscjavaKeyValue {
+public interface Map {
+    // FIXME - does Map use equals or compareTo?
+    /*@ public normal_behavior
+      @   ensures \result == ( o == oo ||
+      @        ( o != null && oo != null && o.equals(oo)));
+      @ static public model pure boolean nullequals(Object o, Object oo);
+      @*/
 
-    //@ ghost public boolean permitsNullKey = true;
-    //@ ghost public boolean permitsNullValue = true;
+    public static interface Entry {
 
-    // Query Operations
+        //@ public model instance Object abstractKey;
+        //@ public model instance Object abstractValue;
+		
+        /**
+         * True iff we are allowed to contain null:
+         **/
+        //@ instance
+        //@   ghost public boolean containsNull;
+		
+        /*@  public normal_behavior
+          @     ensures \result == abstractKey;
+          @*/
+        /*@ pure @*/ Object getKey();
 
-    /**
-     * Returns the number of key-value mappings in this map.  If the
-     * map contains more than <tt>Integer.MAX_VALUE</tt> elements, returns
-     * <tt>Integer.MAX_VALUE</tt>.
-     *
-     * @return the number of key-value mappings in this map.
-     */
-    //@ ensures 0 <= \result;
-    int size();
+        /*@  public normal_behavior
+          @     ensures \result == abstractValue;
+          @*/
+        /*@ pure @*/ Object getValue();
+		
+        /* FIXME +@  public behavior
+          @     assignable this.abstractValue;
+          @     ensures JMLNullSafe.equals(\result, \old(this.abstractValue))
+          @          && JMLNullSafe.equals(value, this.abstractValue);
+          @*/
+        /*@ public behavior
+          @     assignable this.abstractValue;
+          @     ensures \result == \old(this.abstractValue);
+          @     ensures this.abstractValue == value;
+          @*/
+        /*@
+          @     signals (NullPointerException) \not_modified(this.abstractValue)
+          @             && (abstractValue == null) && !containsNull;
+          @     signals (UnsupportedOperationException)
+          @               \not_modified(this.abstractValue) 
+          @             && (* if the map's put operation is not supported  *);
+          @     signals (ClassCastException) \not_modified(this.abstractValue)
+          @             && (* \typeof(abstractValue) is incompatible
+          @                with the valueType of this map *);
+          @     signals (IllegalArgumentException) \not_modified(this.abstractValue)
+          @             && (* if some aspect of value is not 
+          @                allowed in the map *);
+          @*/
+        Object setValue(Object value);
 
-    /**
-     * Returns <tt>true</tt> if this map contains no key-value mappings.
-     *
-     * @return <tt>true</tt> if this map contains no key-value mappings.
-     */
-    boolean isEmpty();
+        /* FIXME +@  also
+          @   public normal_behavior
+          @     requires o instanceof Entry;
+          @     ensures \result == 
+          @      (    JMLNullSafe.equals(((Entry)o).abstractKey, abstractKey)
+          @        && JMLNullSafe.equals(((Entry)o).abstractValue,
+          @                              abstractValue) );
+          @  also
+          @   public normal_behavior
+          @     requires !(o instanceof Entry);
+          @     ensures \result == false;
+          @*/
+        /*@  also
+          @   public normal_behavior
+          @     requires o instanceof Entry;
+          @     ensures \result == 
+          @      (    nullequals(((Entry)o).abstractKey, abstractKey)
+          @        && nullequals(((Entry)o).abstractValue, abstractValue) );
+          @  also
+          @   public normal_behavior
+          @     requires !(o instanceof Entry);
+          @     ensures \result == false;
+          @*/
+        /*@ pure @*/ boolean equals(Object o);
 
-    /**
-     * Returns <tt>true</tt> if this map contains a mapping for the specified
-     * key.
-     *
-     * @param key key whose presence in this map is to be tested.
-     * @return <tt>true</tt> if this map contains a mapping for the specified
-     * key.
-     * 
-     * @throws ClassCastException if the key is of an inappropriate type for
-     * 		  this map.
-     * @throws NullPointerException if the key is <tt>null</tt> and this map
-     *            does not not permit <tt>null</tt> keys.
-     */
-    //@ requires permitsNullKey || key != null;
-    // @ requires key != null ==> \typeof(key) <: keyType;
-    boolean containsKey(Object key);
-
-    /**
-     * Returns <tt>true</tt> if this map maps one or more keys to the
-     * specified value.  More formally, returns <tt>true</tt> if and only if
-     * this map contains at least one mapping to a value <tt>v</tt> such that
-     * <tt>(value==null ? v==null : value.equals(v))</tt>.  This operation
-     * will probably require time linear in the map size for most
-     * implementations of the <tt>Map</tt> interface.
-     *
-     * @param value value whose presence in this map is to be tested.
-     * @return <tt>true</tt> if this map maps one or more keys to the
-     *         specified value.
-     */
-    /* Note, the following two preconditions are stricter than the
-     * documentation above says.  However, it seems that these make nice
-     * ESC/Java pragmas in that, when used in checking client code, the
-     * pragmas seem more likely to catch bugs than to produce spurious
-     * warnings. */
-    //@ requires permitsNullValue || value != null;
-    // @ requires value != null ==> \typeof(value) <: elementType;
-    boolean containsValue(Object value);
-
-    /**
-     * Returns the value to which this map maps the specified key.  Returns
-     * <tt>null</tt> if the map contains no mapping for this key.  A return
-     * value of <tt>null</tt> does not <i>necessarily</i> indicate that the
-     * map contains no mapping for the key; it's also possible that the map
-     * explicitly maps the key to <tt>null</tt>.  The <tt>containsKey</tt>
-     * operation may be used to distinguish these two cases.
-     *
-     * @param key key whose associated value is to be returned.
-     * @return the value to which this map maps the specified key, or
-     *	       <tt>null</tt> if the map contains no mapping for this key.
-     * 
-     * @throws ClassCastException if the key is of an inappropriate type for
-     * 		  this map.
-     * @throws NullPointerException key is <tt>null</tt> and this map does not
-     *		  not permit <tt>null</tt> keys.
-     * 
-     * @see #containsKey(Object)
-     */
-    //@ requires permitsNullKey || key != null;
-    // @ requires key != null ==> \typeof(key) <: keyType;
-    Object get(Object key);
-
-    // Modification Operations
-
-    /**
-     * Associates the specified value with the specified key in this map
-     * (optional operation).  If the map previously contained a mapping for
-     * this key, the old value is replaced.
-     *
-     * @param key key with which the specified value is to be associated.
-     * @param value value to be associated with the specified key.
-     * @return previous value associated with specified key, or <tt>null</tt>
-     *	       if there was no mapping for key.  A <tt>null</tt> return can
-     *	       also indicate that the map previously associated <tt>null</tt>
-     *	       with the specified key, if the implementation supports
-     *	       <tt>null</tt> values.
-     * 
-     * @throws UnsupportedOperationException if the <tt>put</tt> operation is
-     *	          not supported by this map.
-     * @throws ClassCastException if the class of the specified key or value
-     * 	          prevents it from being stored in this map.
-     * @throws IllegalArgumentException if some aspect of this key or value
-     *	          prevents it from being stored in this map.
-     * @throws NullPointerException this map does not permit <tt>null</tt>
-     *            keys or values, and the specified key or value is
-     *            <tt>null</tt>.
-     */
-    //@ requires permitsNullKey || key != null;
-    // @ requires key != null ==> \typeof(key) <: keyType;
-    //@ requires permitsNullValue || value != null;
-    // @ requires value != null ==> \typeof(value) <: elementType;
-    Object put(Object key, Object value);
-
-    /**
-     * Removes the mapping for this key from this map if present (optional
-     * operation).
-     *
-     * @param key key whose mapping is to be removed from the map.
-     * @return previous value associated with specified key, or <tt>null</tt>
-     *	       if there was no mapping for key.  A <tt>null</tt> return can
-     *	       also indicate that the map previously associated <tt>null</tt>
-     *	       with the specified key, if the implementation supports
-     *	       <tt>null</tt> values.
-     * @throws UnsupportedOperationException if the <tt>remove</tt> method is
-     *         not supported by this map.
-     */
-    /* Note, the following two preconditions are stricter than the
-     * documentation above says.  However, it seems that these make nice
-     * ESC/Java pragmas in that, when used in checking client code, the
-     * pragmas seem more likely to catch bugs than to produce spurious
-     * warnings. */
-    //@ requires permitsNullKey || key != null;
-    // @ requires key != null ==> \typeof(key) <: keyType;
-    Object remove(Object key);
-
-
-    // Bulk Operations
-
-    /**
-     * Copies all of the mappings from the specified map to this map
-     * (optional operation).  These mappings will replace any mappings that
-     * this map had for any of the keys currently in the specified map.
-     *
-     * @param t Mappings to be stored in this map.
-     * 
-     * @throws UnsupportedOperationException if the <tt>putAll</tt> method is
-     * 		  not supported by this map.
-     * 
-     * @throws ClassCastException if the class of a key or value in the
-     * 	          specified map prevents it from being stored in this map.
-     * 
-     * @throws IllegalArgumentException some aspect of a key or value in the
-     *	          specified map prevents it from being stored in this map.
-     * 
-     * @throws NullPointerException this map does not permit <tt>null</tt>
-     *            keys or values, and the specified key or value is
-     *            <tt>null</tt>.
-     */
-    void putAll(/*@ non_null */ Map t);
-
-    /**
-     * Removes all mappings from this map (optional operation).
-     *
-     * @throws UnsupportedOperationException clear is not supported by this
-     * 		  map.
-     */
-    void clear();
-
-
-    // Views
-
-    /**
-     * Returns a set view of the keys contained in this map.  The set is
-     * backed by the map, so changes to the map are reflected in the set, and
-     * vice-versa.  If the map is modified while an iteration over the set is
-     * in progress, the results of the iteration are undefined.  The set
-     * supports element removal, which removes the corresponding mapping from
-     * the map, via the <tt>Iterator.remove</tt>, <tt>Set.remove</tt>,
-     * <tt>removeAll</tt> <tt>retainAll</tt>, and <tt>clear</tt> operations.
-     * It does not support the add or <tt>addAll</tt> operations.
-     *
-     * @return a set view of the keys contained in this map.
-     */
-    //@ ensures \result != null;
-    public Set keySet();
-
-    /**
-     * Returns a collection view of the values contained in this map.  The
-     * collection is backed by the map, so changes to the map are reflected in
-     * the collection, and vice-versa.  If the map is modified while an
-     * iteration over the collection is in progress, the results of the
-     * iteration are undefined.  The collection supports element removal,
-     * which removes the corresponding mapping from the map, via the
-     * <tt>Iterator.remove</tt>, <tt>Collection.remove</tt>,
-     * <tt>removeAll</tt>, <tt>retainAll</tt> and <tt>clear</tt> operations.
-     * It does not support the add or <tt>addAll</tt> operations.
-     *
-     * @return a collection view of the values contained in this map.
-     */
-    //@ ensures \result != null;
-    public Collection values();
-
-    /**
-     * Returns a set view of the mappings contained in this map.  Each element
-     * in the returned set is a <tt>Map.Entry</tt>.  The set is backed by the
-     * map, so changes to the map are reflected in the set, and vice-versa.
-     * If the map is modified while an iteration over the set is in progress,
-     * the results of the iteration are undefined.  The set supports element
-     * removal, which removes the corresponding mapping from the map, via the
-     * <tt>Iterator.remove</tt>, <tt>Set.remove</tt>, <tt>removeAll</tt>,
-     * <tt>retainAll</tt> and <tt>clear</tt> operations.  It does not support
-     * the <tt>add</tt> or <tt>addAll</tt> operations.
-     *
-     * @return a set view of the mappings contained in this map.
-     */
-    //@ ensures \result != null;
-    public Set entrySet();
-
-    /**
-     * A map entry (key-value pair).  The <tt>Map.entrySet</tt> method returns
-     * a collection-view of the map, whose elements are of this class.  The
-     * <i>only</i> way to obtain a reference to a map entry is from the
-     * iterator of this collection-view.  These <tt>Map.Entry</tt> objects are
-     * valid <i>only</i> for the duration of the iteration; more formally,
-     * the behavior of a map entry is undefined if the backing map has been
-     * modified after the entry was returned by the iterator, except through
-     * the iterator's own <tt>remove</tt> operation, or through the
-     * <tt>setValue</tt> operation on a map entry returned by the iterator.
-     *
-     * @see Map#entrySet()
-     */
-    public interface Entry {
-    	/**
-	 * Returns the key corresponding to this entry.
-	 *
-	 * @return the key corresponding to this entry.
-	 */
-	Object getKey();
-
-    	/**
-	 * Returns the value corresponding to this entry.  If the mapping
-	 * has been removed from the backing map (by the iterator's
-	 * <tt>remove</tt> operation), the results of this call are undefined.
-	 *
-	 * @return the value corresponding to this entry.
-	 */
-	Object getValue();
-
-    	/**
-	 * Replaces the value corresponding to this entry with the specified
-	 * value (optional operation).  (Writes through to the map.)  The
-	 * behavior of this call is undefined if the mapping has already been
-	 * removed from the map (by the iterator's <tt>remove</tt> operation).
-	 *
-	 * @param value new value to be stored in this entry.
-	 * @return old value corresponding to the entry.
-         * 
-	 * @throws UnsupportedOperationException if the <tt>put</tt> operation
-	 *	      is not supported by the backing map.
-	 * @throws ClassCastException if the class of the specified value
-	 * 	      prevents it from being stored in the backing map.
-	 * @throws    IllegalArgumentException if some aspect of this value
-	 *	      prevents it from being stored in the backing map.
-	 * @throws NullPointerException the backing map does not permit
-	 *	      <tt>null</tt> values, and the specified value is
-	 *	      <tt>null</tt>.
-         */
-	Object setValue(Object value);
-
-	/**
-	 * Compares the specified object with this entry for equality.
-	 * Returns <tt>true</tt> if the given object is also a map entry and
-	 * the two entries represent the same mapping.  More formally, two
-	 * entries <tt>e1</tt> and <tt>e2</tt> represent the same mapping
-	 * if<pre>
-         *     (e1.getKey()==null ?
-         *      e2.getKey()==null : e1.getKey().equals(e2.getKey()))  &&
-         *     (e1.getValue()==null ?
-         *      e2.getValue()==null : e1.getValue().equals(e2.getValue()))
-         * </pre>
-	 * This ensures that the <tt>equals</tt> method works properly across
-	 * different implementations of the <tt>Map.Entry</tt> interface.
-	 *
-	 * @param o object to be compared for equality with this map entry.
-	 * @return <tt>true</tt> if the specified object is equal to this map
-	 *         entry.
-         */
-	boolean equals(Object o);
-
-	/**
-	 * Returns the hash code value for this map entry.  The hash code
-	 * of a map entry <tt>e</tt> is defined to be: <pre>
-	 *     (e.getKey()==null   ? 0 : e.getKey().hashCode()) ^
-	 *     (e.getValue()==null ? 0 : e.getValue().hashCode())
-         * </pre>
-	 * This ensures that <tt>e1.equals(e2)</tt> implies that
-	 * <tt>e1.hashCode()==e2.hashCode()</tt> for any two Entries
-	 * <tt>e1</tt> and <tt>e2</tt>, as required by the general
-	 * contract of <tt>Object.hashCode</tt>.
-	 *
-	 * @return the hash code value for this map entry.
-	 * @see Object#hashCode()
-	 * @see Object#equals(Object)
-	 * @see #equals(Object)
-	 */
-	int hashCode();
+        /*@ pure @*/ int hashCode();
     }
 
-    // Comparison and hashing
+    /*@
+      @ public normal_behavior
+      @    requires e != null;
+      @    ensures \result <==> contains(e.getKey(),e.getValue());
+      @ public pure model boolean contains(Entry e);
+      @
+      @
+      @ public pure model boolean contains(Object key, Object value);
+      @*/
 
+    /*@ axiom (\forall Map m; (\forall Object k,v,vv; 
+                    (m.contains(k,v) && m.contains(k,vv)) ==> v == vv));
+      @*/
+		
     /**
-     * Compares the specified object with this map for equality.  Returns
-     * <tt>true</tt> if the given object is also a map and the two Maps
-     * represent the same mappings.  More formally, two maps <tt>t1</tt> and
-     * <tt>t2</tt> represent the same mappings if
-     * <tt>t1.entrySet().equals(t2.entrySet())</tt>.  This ensures that the
-     * <tt>equals</tt> method works properly across different implementations
-     * of the <tt>Map</tt> interface.
-     *
-     * @param o object to be compared for equality with this map.
-     * @return <tt>true</tt> if the specified object is equal to this map.
-     */
-    boolean equals(Object o);
+     * True iff we are allowed to contain null: // FIXME values or keys or both?
+     **/
+    //@ instance ghost public boolean containsNull;	
 
-    /**
-     * Returns the hash code value for this map.  The hash code of a map
-     * is defined to be the sum of the hashCodes of each entry in the map's
-     * entrySet view.  This ensures that <tt>t1.equals(t2)</tt> implies
-     * that <tt>t1.hashCode()==t2.hashCode()</tt> for any two maps
-     * <tt>t1</tt> and <tt>t2</tt>, as required by the general
-     * contract of Object.hashCode.
-     *
-     * @return the hash code value for this map.
-     * @see Map.Entry#hashCode()
-     * @see Object#hashCode()
-     * @see Object#equals(Object)
-     * @see #equals(Object)
-     */
-    int hashCode();
+    /*@ pure @*/
+    int size();
+
+    /*@ public normal_behavior
+      @    ensures \result <==> (size() == 0); 
+      @*/
+    /*@ pure @*/ boolean isEmpty();
+	
+    /*@ public normal_behavior
+      @    requires key != null;
+      @    ensures \result <==>
+      @      (\exists Map.Entry e; contains(e); 
+      @                            nullequals(e.abstractKey, key));
+      @*/
+    /*@ pure @*/ boolean containsKey(Object key);
+
+    /*@ public behavior
+      @    ensures \result <==>
+      @      (\exists Map.Entry e; contains(e); 
+      @                            nullequals(e.abstractValue, value));
+      @    signals (ClassCastException)
+      @         (* if the value is not appropriate for this object *);
+      @    signals (NullPointerException) value == null
+      @         && (* this type doesn't permit null values *);
+      @*/
+    /*@ pure @*/ boolean containsValue(Object value);
+
+    /*@ public normal_behavior
+      @    requires !containsKey(key);
+      @    ensures \result == null;
+      @  also
+      @*/
+    /*@
+      @ public normal_behavior
+      @    requires containsKey(key);    
+      @    ensures (\exists Entry e; contains(e);
+      @               nullequals(e.abstractKey, key)
+      @            && \result == e.abstractValue);
+      @    ensures (\forall Entry e; \old(contains(e)) <==> contains(e));
+      @*/
+    /*@ pure @*/ Object get(Object key);
+
+    /*@ public behavior
+      @    assignable objectState;
+      @    ensures (\exists Entry e; contains(e);
+      @               nullequals(e.abstractKey, key)
+      @            && nullequals(e.abstractValue, value));
+      @    ensures (\forall Entry e; \old(contains(e)) ==> contains(e));
+      @    ensures (\forall Entry e; contains(e) ==>
+                          (\old(contains(e)) || (e.getKey() == key &&
+                                                e.getValue() == value)));
+      @    ensures \result == \old(get(key));
+      @*/
+    /* FIXME @
+      @    signals (NullPointerException) \not_modified(value)
+      @             && (key==null)||(value==null) && !containsNull;
+      @    signals (UnsupportedOperationException) \not_modified(theMap) 
+      @             && (* if the map's put operation is not supported  *);
+      @    signals (ClassCastException) \not_modified(theMap)
+      @             && (* \typeof(key) or \typeof(value) is incompatible
+      @                with the valueType or keyType of this map *);
+      @    signals (IllegalArgumentException) \not_modified(theMap)
+      @             && (* if some aspect of key or value is not 
+      @                allowed in the map *);
+      @*/
+    Object put(Object key, Object value);
+
+    /*@ public behavior
+      @    assignable objectState;
+      @    ensures (\forall Entry e; contains(e) ==> \old(contains(e)));
+      @    ensures (\forall Entry e; \old(contains(e)) ==>
+                          (contains(e) || e.getKey() == key));
+      @    ensures containsKey(key) ==> \result == \old(get(key));
+      @    ensures !containsKey(key) ==> \result == null;
+      @*/
+    /*@
+      @    signals (UnsupportedOperationException)
+      @              (* if this operation is not supported *);
+      @    signals (ClassCastException)
+      @              (* if the argument is not appropriate *);
+      @    signals (NullPointerException) key == null
+      @              && (* if this map doesn't support null keys *);
+      @*/
+    Object remove(Object key);
+
+    /*@ public behavior
+           assignable objectState;
+           ensures (\forall Entry e; \old(contains(e)) ==> contains(e));
+           ensures (\forall Entry e; \old(t.contains(e)) ==> contains(e));
+           ensures (\forall Entry e; contains(e) ==> 
+                      (\old(contains(e)) || \old(t.contains(e))));
+      @*/
+     /*  FIXME
+      @    signals (NullPointerException) \not_modified(theMap)
+      @             && (t == null) && !containsNull;
+      @    signals (UnsupportedOperationException) \not_modified(theMap) 
+      @             && (* if the map's put operation is not supported  *);
+      @    signals (ClassCastException) \not_modified(theMap)
+      @             && (* \typeof(t) or is incompatible
+      @                with this map *);
+      @    signals (IllegalArgumentException) \not_modified(theMap)
+      @             && (* if some aspect of a key or value is not 
+      @                allowed in the map *);
+      @*/
+    // FIXME for escjava
+    void putAll(Map t);
+
+    /*@ public normal_behavior
+      @    assignable objectState;
+      @    ensures isEmpty();
+      @*/
+    void clear();
+
+    /*@ public normal_behavior 
+      @    ensures \result != null;
+      @    ensures (\forall Object o; containsKey(o) <==> \result.contains(o));
+      @*/
+    /*@ pure @*/ Set keySet();
+
+    /*@ public normal_behavior 
+      @    ensures \result != null;
+      @    ensures (\forall Object o; containsValue(o) <==> \result.contains(o));
+      @*/
+    // FIXME - the above is not right - values can be repeated
+    /*@ pure @*/ Collection values();
+
+    /*@ public normal_behavior
+      @    ensures \result != null; // FIXME  && \result.theSet.equals(theMap);
+      @*/
+    /*@ pure @*/ Set entrySet();
+
+    /*@ also
+      @  public normal_behavior
+      @    requires o instanceof Map;
+      @    ensures \result <==> (\forall Entry e; contains(e) <==> ((Map)o).contains(e));
+	   // FIXME - the above is not right - need equals across Entries, not ==
+      @*/
+    /*@
+      @ also
+      @  public normal_behavior
+      @    requires !(o instanceof Map);
+      @    ensures \result == false;
+      @*/
+    /*@ pure @*/ boolean equals(Object o);
+	
+    /*@ pure @*/ int hashCode();
 }

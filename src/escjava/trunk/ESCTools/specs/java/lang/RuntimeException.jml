@@ -1,6 +1,6 @@
 // $Id$
 
-// Copyright (C) 2004 David Cok, Joe Kiniry
+// Copyright (C) 2004 Joe Kiniry
 
 // This file is part of JML
 
@@ -19,31 +19,33 @@
 // the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 
 /*
- * @author David Cok <cok@frontiernet.net>
  * @author Joe Kiniry <kiniry@cs.kun.nl>
+ * @author David Cok
  */
 
 package java.lang;
 
-public class Exception extends Throwable
+public class RuntimeException
+    extends Exception
 {
+
     /*@ public normal_behavior
       @   ensures standardThrowable(null);
       @*/
-    public /*@ pure @*/ Exception();
+    public /*@ pure @*/ RuntimeException();
 
     /*@ public normal_behavior
       @   ensures standardThrowable(message);
       @*/
-    public /*@ pure @*/ Exception(String message);
-
-    /*@ public normal_behavior
-      @   ensures standardThrowable(null,cause);
-      @*/
-    public /*@ pure @*/ Exception(Throwable cause);
+    public /*@ pure @*/ RuntimeException(String message);
 
     /*@ public normal_behavior
       @   ensures standardThrowable(message,cause);
       @*/
-    public /*@ pure @*/ Exception(String message, Throwable cause);
+    public /*@ pure @*/ RuntimeException(String message, Throwable cause);
+
+    /*@ public normal_behavior
+      @   ensures standardThrowable(null,cause);
+      @*/
+    public /*@ pure @*/ RuntimeException(Throwable cause);
 }

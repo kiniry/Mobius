@@ -1,92 +1,68 @@
-/*
- * @(#)Enumeration.java	1.16 98/06/29
- *
- * Copyright 1994-1998 by Sun Microsystems, Inc.,
- * 901 San Antonio Road, Palo Alto, California, 94303, U.S.A.
- * All rights reserved.
- *
- * This software is the confidential and proprietary information
- * of Sun Microsystems, Inc. ("Confidential Information").  You
- * shall not disclose such Confidential Information and shall use
- * it only in accordance with the terms of the license agreement
- * you entered into with Sun.
- */
+// @(#)$Id$
+
+// Adapted from Compaq SRC's ESC/Java
+
+// Copyright (C) 2002 Iowa State University
+
+// This file is part of JML
+
+// JML is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation; either version 2, or (at your option)
+// any later version.
+
+// JML is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with JML; see the file COPYING.  If not, write to
+// the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
+
 
 package java.util;
 
-/**
- * An object that implements the Enumeration interface generates a
- * series of elements, one at a time. Successive calls to the
- * <code>nextElement</code> method return successive elements of the
- * series.
- * <p>
- * For example, to print all elements of a vector <i>v</i>:
- * <blockquote><pre>
- *     for (Enumeration e = v.elements() ; e.hasMoreElements() ;) {
- *         System.out.println(e.nextElement());<br>
- *     }
- * </pre></blockquote>
- * <p>
- * Methods are provided to enumerate through the elements of a
- * vector, the keys of a hashtable, and the values in a hashtable.
- * Enumerations are also used to specify the input streams to a
- * <code>SequenceInputStream</code>.
- * <p>
- * NOTE: The functionality of this interface is duplicated by the Iterator
- * interface.  In addition, Iterator adds an optional remove operation, and
- * has shorter method names.  New implementations should consider using
- * Iterator in preference to Enumeration.
- *
- * @see     java.util.Iterator
- * @see     java.io.SequenceInputStream
- * @see     java.util.Enumeration#nextElement()
- * @see     java.util.Hashtable
- * @see     java.util.Hashtable#elements()
- * @see     java.util.Hashtable#keys()
- * @see     java.util.Vector
- * @see     java.util.Vector#elements()
- *
- * @author  Lee Boynton
- * @version 1.16, 06/29/98
- * @since   JDK1.0
+//@ model import org.jmlspecs.lang.JMLDataGroup;
+
+/** JML's specification of java.util.Enumeration.
+ * Some of this specification is taken from ESC/Java.
+ * @version $Revision$
+ * @author Gary T. Leavens
  */
 public interface Enumeration {
-    /**
-     ** Do we have more elements?
-     **/
-    //@ ghost public boolean moreElements;
 
-    /**
-     * Tests if this enumeration contains more elements.
-     *
-     * @return  <code>true</code> if and only if this enumeration object
-     *           contains at least one more element to provide;
-     *          <code>false</code> otherwise.
-     */
-    //@ ensures \result==moreElements;
+    /** Do we have more elements?
+     **/
+    /*@ public model instance boolean moreElements;
+      @                               in objectState;
+      @*/
+
+    /*@ public normal_behavior
+      @    assignable objectState;
+      @    ensures \result <==> moreElements;
+      @*/
     boolean hasMoreElements();
 
-
-    /**
-     ** The type of the elements we return.
+    /** The type of the elements we return.
      **/
-    //@ ghost public \TYPE elementType;
+    //@ instance ghost public \TYPE elementType;
 
-    /**
-     ** Do we ever return null as an element?
+    /** Do we ever return null as an element?
      **/
-    //@ ghost public boolean returnsNull;
+    //@ instance ghost public boolean returnsNull;
 
-    /**
-     * Returns the next element of this enumeration if this enumeration
-     * object has at least one more element to provide.
-     *
-     * @return     the next element of this enumeration.
-     * @exception  NoSuchElementException  if no more elements exist.
-     */
-    //@ requires moreElements;
-    //@ modifies moreElements;
-    //@ ensures \typeof(\result) <: elementType || \result==null;
-    //@ ensures (\result!=null);
+    /*@   public normal_behavior
+      @     requires moreElements;
+      @     assignable objectState;
+      @     assignable moreElements;
+      @     ensures (\result == null) || \typeof(\result) <: elementType;
+      @     ensures !returnsNull ==> (\result != null);
+      @ also
+      @   public exceptional_behavior
+      @     requires !moreElements;
+      @     assignable \nothing;
+      @     signals (NoSuchElementException);
+      @*/
     Object nextElement();
 }

@@ -1,387 +1,332 @@
-/*
- * @(#)Collection.java	1.25 98/09/30
- *
- * Copyright 1997, 1998 by Sun Microsystems, Inc.,
- * 901 San Antonio Road, Palo Alto, California, 94303, U.S.A.
- * All rights reserved.
- *
- * This software is the confidential and proprietary information
- * of Sun Microsystems, Inc. ("Confidential Information").  You
- * shall not disclose such Confidential Information and shall use
- * it only in accordance with the terms of the license agreement
- * you entered into with Sun.
- */
+// @(#)$Id$
+
+// Adapted in part from Compaq SRC's specification for ESC/Java
+
+// Copyright (C) 2000, 2002 Iowa State University
+
+// This file is part of JML
+
+// JML is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation; either version 2, or (at your option)
+// any later version.
+
+// JML is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with JML; see the file COPYING.  If not, write to
+// the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
+
 
 package java.util;
 
-/**
- * The root interface in the <i>collection hierarchy</i>.  A collection
- * represents a group of objects, known as its <i>elements</i>.  Some
- * collections allow duplicate elements and others do not.  Some are ordered
- * and others unordered.  The JDK does not provide any <i>direct</i>
- * implementations of this interface: it provides implementations of more
- * specific subinterfaces like <tt>Set</tt> and <tt>List</tt>.  This interface
- * is typically used to pass collections around and manipulate them where
- * maximum generality is desired.<p>
- *
- * <i>Bags</i> or <i>multisets</i> (unordered collections that may contain
- * duplicate elements) should implement this interface directly.<p>
- *
- * All general-purpose <tt>Collection</tt> implementation classes (which
- * typically implement <tt>Collection</tt> indirectly through one of its
- * subinterfaces) should provide two "standard" constructors: a void (no
- * arguments) constructor, which creates an empty collection, and a
- * constructor with a single argument of type <tt>Collection</tt>, which
- * creates a new collection with the same elements as its argument.  In
- * effect, the latter constructor allows the user to copy any collection,
- * producing an equivalent collection of the desired implementation type.
- * There is no way to enforce this convention (as interfaces cannot contain
- * constructors) but all of the general-purpose <tt>Collection</tt>
- * implementations in the JDK comply.<p>
- *
- * @author  Josh Bloch
- * @version 1.25 09/30/98
- * @see	    Set
- * @see	    List
- * @see	    Map
- * @see	    SortedSet
- * @see	    SortedMap
- * @see	    HashSet
- * @see	    TreeSet
- * @see	    ArrayList
- * @see	    LinkedList
- * @see	    Vector
- * @see     Collections
- * @see	    Arrays
- * @see	    AbstractCollection
- * @since   JDK1.2
+/** JML's specification of java.util.Collection.
+ * Part of this specification is adapted from ESC/Java.
+ * @version $Revision$
+ * @author Gary T. Leavens
+ * @author Brandon Shilling
  */
-
 public interface Collection {
-    /*
-     * The (more specific) static type of our elements:
-     */
-    //@ ghost public \TYPE elementType;
+    
+    //@ public model instance non_null Object[] _theCollection;
 
-    /*
-     * True iff we are allowed to contain null:
-     */
-    //@ ghost public boolean containsNull;
+    // Subclasses may not support some operations.  The following
+    // model variables should be given a representation that indicates
+    // whether or not the associated operation is supported. 
+    // Note that nullElementSupported is different than containsNull.
+    // If nullElementSupported is false, an exception is thrown by the
+    // implementation; if containsNull is false, that indicates that the
+    // user has stated that the collection  is not allowed to contain null
+    // (by the user's choice) even though the implementation supports it.
+    // Clearly !nullElementSupported ==> !containsNull;
 
-
-    // Query Operations
-
-    /**
-     * Returns the number of elements in this collection.  If this collection
-     * contains more than <tt>Integer.MAX_VALUE</tt> elements, returns
-     * <tt>Integer.MAX_VALUE</tt>.
-     * 
-     * @return the number of elements in this collection
-     */
-    //@ ensures \result>=0;
-    int size();
+    //@ public model instance boolean addOperationSupported;
+    //@ public model instance boolean removeOperationSupported;
+    //@ public model instance boolean nullElementsSupported;
 
     /**
-     * Returns <tt>true</tt> if this collection contains no elements.
-     *
-     * @returns <tt>true</tt> if this collection contains no elements
-     */
-    boolean isEmpty();
+     * The (more specific) type of our elements (set by the user of the
+     * object to state what is allowed to be added to the collection, and
+     * hence what is guaranteed to be retrieved from the collection).  It is
+     * not adjusted based on the content of the collection.
+     **/
+    //@ instance ghost public \TYPE elementType;
 
     /**
-     * Returns <tt>true</tt> if this collection contains the specified
-     * element.  More formally, returns <tt>true</tt> if and only if this
-     * collection contains at least one element <tt>e</tt> such that
-     * <tt>(o==null ? e==null : o.equals(e))</tt>.
-     *
-     * @param o element whose presence in this collection is to be tested.
-     * @return <tt>true</tt> if this collection contains the specified
-     *         element
-     */
-    //@ requires !containsNull ==> o!=null;
-    //@ requires \typeof(o) <: elementType || o==null;
-    boolean contains(Object o);
+     * True iff we are allowed to contain null (not whether we do in fact
+     * contain null).
+     **/
+    //@ instance ghost public boolean containsNull;
+    //@ public instance invariant !nullElementsSupported ==> !containsNull;
 
-    /**
-     * Returns an iterator over the elements in this collection.  There are no
-     * guarantees concerning the order in which the elements are returned
-     * (unless this collection is an instance of some class that provides a
-     * guarantee).
-     * 
-     * @returns an <tt>Iterator</tt> over the elements in this collection
-     */
-    //@ ensures \result!=null;
-    //@ ensures \result.elementType == elementType;
-    //@ ensures containsNull == \result.returnsNull;
-    Iterator iterator();
+    // Note: size() returns the smaller of Integer.MAX_VALUE and
+    // the number of elements in the Collection 
+    // FIXME - that condition is not in the javadoc specs.
+    // Need \bigint returned from theCollection.size()?
+    /*@ public normal_behavior
+          ensures \result == _theCollection.length;
+          ensures \result >= 0;
+      @*/
+    /*@ pure @*/ int size();
 
-    /**
-     * Returns an array containing all of the elements in this collection.  If
-     * the collection makes any guarantees as to what order its elements are
-     * returned by its iterator, this method must return the elements in the
-     * same order.<p>
-     *
-     * The returned array will be "safe" in that no references to it are
-     * maintained by this collection.  (In other words, this method must
-     * allocate a new array even if this collection is backed by an array).
-     * The caller is thus free to modify the returned array.<p>
-     *
-     * This method acts as bridge between array-based and collection-based
-     * APIs.
-     *
-     * @return an array containing all of the elements in this collection
-     */
-    //@ ensures \result!=null;
-    Object[] toArray();
+    /*@ public normal_behavior
+          ensures \result == (size()==0);
+      @*/
+    /*@ pure @*/ boolean isEmpty();
 
-    /**
-     * Returns an array containing all of the elements in this collection
-     * whose runtime type is that of the specified array.  If the collection
-     * fits in the specified array, it is returned therein.  Otherwise, a new
-     * array is allocated with the runtime type of the specified array and the
-     * size of this collection.<p>
-     *
-     * If this collection fits in the specified array with room to spare
-     * (i.e., the array has more elements than this collection), the element
-     * in the array immediately following the end of the collection is set to
-     * <tt>null</tt>.  This is useful in determining the length of this
-     * collection <i>only</i> if the caller knows that this collection does
-     * not contain any <tt>null</tt> elements.)<p>
-     *
-     * If this collection makes any guarantees as to what order its elements
-     * are returned by its iterator, this method must return the elements in
-     * the same order.<p>
-     *
-     * Like the <tt>toArray</tt> method, this method acts as bridge between
-     * array-based and collection-based APIs.  Further, this method allows
-     * precise control over the runtime type of the output array, and may,
-     * under certain circumstances, be used to save allocation costs<p>
-     *
-     * Suppose <tt>l</tt> is a <tt>List</tt> known to contain only strings.
-     * The following code can be used to dump the list into a newly allocated
-     * array of <tt>String</tt>:
-     *
-     * <pre>
-     *     String[] x = (String[]) v.toArray(new String[0]);
-     * </pre><p>
-     *
-     * Note that <tt>toArray(new Object[0])</tt> is identical in function to
-     * <tt>toArray()</tt>.
-     *
-     * @param the array into which the elements of this collection are to be
-     *        stored, if it is big enough; otherwise, a new array of the same
-     *        runtime type is allocated for this purpose.
-     * @return an array containing the elements of this collection
-     * 
-     * @throws ArrayStoreException the runtime type of the specified array is
-     *         not a supertype of the runtime type of every element in this
-     *         collection.
-     */
-    //@ ensures \result!=null;
-    Object[] toArray(/*@non_null*/ Object a[]);
+    /*@ public behavior
+      @   ensures !containsNull && o == null ==> !\result;
+      @   ensures (o == null) || \typeof(o) <: elementType || !\result;
+      @   ensures \result <==> (\exists int i; 0<=i && i<_theCollection.length;
+                                 _theCollection[i] == o);
+      @*/
+    /*@ pure @*/ public boolean contains(Object o);
 
-    // Modification Operations
+    /*@ public normal_behavior
+      @   assignable \nothing;
+      @   ensures \result != null;
+      @   ensures \result.elementType == elementType;
+      @   ensures containsNull == \result.returnsNull;
+      @*/
+    /* FIXME +@ also public normal_behavior
+      @   ensures (\forall int i; 0 <= i && i < size();
+      @                 theCollection.has(\result.nthNextElement(i)));
+      @   ensures (\forall Object o; theCollection.has(o) ==>
+      @              (\exists int i; 0 <= i && i < size(); 
+      @                 o == \result.nthNextElement(i)));
+      @   ensures size() > 0 ==> \result.hasNext((int)(size()-1));
+      @   ensures !\result.hasNext((int)(size()));
+      @   ensures_redundantly
+      @           (\forall int i; 0 <= i && i < size();
+      @                 this.contains(\result.nthNextElement(i)));
+      @   ensures_redundantly size() != 0 ==> \result.moreElements;
+      @*/
+    // FIXME - need specs for escjava case
+    /*@ non_null @*/ /*@ pure @*/ Iterator iterator();
 
-    /**
-     * Ensures that this collection contains the specified element (optional
-     * operation).  Returns <tt>true</tt> if this collection changed as a
-     * result of the call.  (Returns <tt>false</tt> if this collection does
-     * not permit duplicates and already contains the specified element.)<p>
-     *
-     * Collections that support this operation may place limitations on what
-     * elements may be added to this collection.  In particular, some
-     * collections will refuse to add <tt>null</tt> elements, and others will
-     * impose restrictions on the type of elements that may be added.
-     * Collection classes should clearly specify in their documentation any
-     * restrictions on what elements may be added.<p>
-     *
-     * If a collection refuses to add a particular element for any reason
-     * other than that it already contains the element, it <i>must</i> throw
-     * an exception (rather than returning <tt>false</tt>).  This preserves
-     * the invariant that a collection always contains the specified element
-     * after this call returns.
-     *
-     * @param o element whose presence in this collection is to be ensured.
-     * @return <tt>true</tt> if this collection changed as a result of the
-     *         call
-     * 
-     * @throws UnsupportedOperationException add is not supported by this
-     *         collection.
-     * @throws ClassCastException class of the specified element prevents it
-     *         from being added to this collection.
-     * @throws IllegalArgumentException some aspect of this element prevents
-     *          it from being added to this collection.
-     */
-    //@ requires !containsNull ==> o!=null;
-    //@ requires \typeof(o) <: elementType || o==null;
+    /*@ public normal_behavior
+      @   requires size() < Integer.MAX_VALUE;
+      @   assignable \nothing;
+      @   ensures \result != null;
+      @   ensures containsNull || \nonnullelements(\result);
+      @   ensures \result.length == size();
+      @*/
+    /* FIXME +@ also public normal_behavior
+      @   ensures (\forall int i; 0 <= i && i < size();
+      @                 theCollection.count(\result[i])
+      @                 == JMLArrayOps.valueEqualsCount(\result, \result[i]));
+      @*/
+    // FIXME - need specs for escjava case
+    /*@ pure @*/ Object[] toArray();
+       
+    /* FIXME +@ public normal_behavior
+      @   old int colSize = theCollection.int_size();
+      @   old int arrSize = a.length;
+      @   requires a!= null && colSize < Integer.MAX_VALUE;
+      @   requires elementType <: \elemtype(\typeof(a));
+      @   requires (\forall Object o; contains(o); \typeof(o) <: \elemtype(\typeof(a)));
+      @   {|
+      @     requires colSize <= arrSize;
+      @     assignable a[*];
+      @     ensures \result == a;
+      @     ensures (\forall int k; 0 <= k && k < colSize;
+      @                  theCollection.count(\result[k])
+      @                  == JMLArrayOps.valueEqualsCount(\result,
+      @                                                  \result[k], colSize));
+      @     ensures (\forall int i; colSize <= i && i < arrSize;
+      @                             \result[i] == null);
+      @     ensures_redundantly \typeof(\result) == \typeof(a);
+      @   also
+      @     requires colSize > arrSize;
+      @     assignable \nothing;
+      @     ensures \fresh(\result) && \result.length == colSize;
+      @     ensures (\forall int k; 0 <= k && k < colSize;
+      @        theCollection.count(\result[k])
+      @        == JMLArrayOps.valueEqualsCount(\result, \result[k], colSize));
+      @     ensures (\forall int k; 0 <= k && k < colSize;
+      @                \result[k] == null || 
+      @                \typeof(\result[k]) <: \elemtype(\typeof(\result)));
+      @     ensures \typeof(\result) == \typeof(a);
+      @   |}
+      @*/
+    /*@
+      @ public exceptional_behavior
+      @   requires a == null;
+      @   assignable \nothing;
+      @   signals (Exception e) (e instanceof NullPointerException) ;
+      @ also
+      @ public behavior
+      @   requires a != null;
+      @   requires !(\forall Object o; o != null && contains(o);
+      @                                \typeof(o) <: \elemtype(\typeof(a)));
+      @   assignable a[*];
+      @   signals (Exception e) (e instanceof ArrayStoreException) ;
+      @*/
+    // FIXME - need specs for escjava case
+    /*@ non_null @*/
+    Object[] toArray(Object[] a);
+
+    /*@ public behavior
+      @   requires !containsNull ==> o != null;
+      @   requires  (o == null) || \typeof(o) <: elementType;
+      @*/
+    //@  assignable _theCollection;
+    /* FIXME +@
+      @   assignable theCollection;
+      @   ensures \result
+      @         ==> theCollection.equals(\old(theCollection.insert(o)));
+      @   ensures \result && \old(size() < Integer.MAX_VALUE)
+      @           ==> size() == \old(size()+1);
+	// FIXME - The above limitation to MAX_VALUE is just because
+	// the arithmetic is not valid otherwise. Would \bigint 
+	// arithmetic fix this?
+      @   ensures !\result ==> size() == \old(size());
+      @   ensures contains(o);
+      @   signals (UnsupportedOperationException)
+      @             (* this does not support add *);
+      @   signals (NullPointerException)
+      @             (* not allowed to add null *);
+      @   signals (ClassCastException)
+      @             (* class of specified element prevents it 
+      @                from being added to this *);
+      @   signals (IllegalArgumentException)
+      @             (* some aspect of this element 
+      @                prevents it from being added to this *);
+      @   
+      @*/
+    // FIXME - need specs for escjava case
     boolean add(Object o);
 
-    /**
-     * Removes a single instance of the specified element from this
-     * collection, if it is present (optional operation).  More formally,
-     * removes an element <tt>e</tt> such that <tt>(o==null ?  e==null :
-     * o.equals(e))</tt>, if this collection contains one or more such
-     * elements.  Returns true if this collection contained the specified
-     * element (or equivalently, if this collection changed as a result of the
-     * call).
-     *
-     * @param o element to be removed from this collection, if present.
-     * @return <tt>true</tt> if this collection changed as a result of the
-     *         call
-     * 
-     * @throws UnsupportedOperationException remove is not supported by this
-     *         collection.
-     */
-    //@ requires !containsNull ==> o!=null;
-    //@ requires \typeof(o) <: elementType || o==null;
+    /*@ public behavior
+      @   requires !containsNull ==> o != null;
+      @   requires  (o == null) || \typeof(o) <: elementType;
+      @*/
+    //@  assignable _theCollection;
+    /* FIXME +@
+      @   assignable theCollection;
+      @   ensures \result
+      @         ==> theCollection.equals(\old(theCollection.remove(o)));
+      @   ensures \result && \old(size() <= Integer.MAX_VALUE)
+      @           ==> size() == \old(size()-1) && size() < Integer.MAX_VALUE
+      @               && size() >= 0;
+      @   ensures !\result || \old(size() == Integer.MAX_VALUE)
+      @           ==> size() == \old(size());
+      @   signals (UnsupportedOperationException)
+      @            (* this does not support remove *);
+      @   signals (ClassCastException)
+      @            (* the type of this element is not 
+      @               compatible with this *);
+      @*/
+    // FIXME - need specs for escjava case
     boolean remove(Object o);
 
+    /* FIXME +@ public behavior
+      @   requires c != null;
+      @   requires c.elementType <: elementType;
+      @   requires !containsNull ==> !c.containsNull;
+      @   assignable \nothing;
+          ensures \result <==> (\forall Object o; c.contains(o) ==> contains(o));
+      @*/
+    /* FIXME +@
+      @   ensures \result <==> theCollection.containsAll(c);
+      @   signals (ClassCastException)
+      @           (* class of specified element prevents it 
+      @              from being added to this *);
+      @   signals (NullPointerException)
+      @           (* argument contains null elements and this does not support 
+      @              null elements *);
+      @*/
+    /*@
+      @ public exceptional_behavior
+      @  requires c == null;
+      @  signals (NullPointerException);
+      @*/
+    /*@ pure @*/ boolean containsAll(Collection c);
 
-    // Bulk Operations
+    /* FIXME +@ public behavior
+      @   requires c != null;
+      @   requires c.elementType <: elementType;
+      @   requires !containsNull ==> !c.containsNull;
+      @   assignable theCollection;
+      @   ensures theCollection
+      @           .equals(\old(theCollection).union(c.theCollection));
+      @   signals (UnsupportedOperationException)
+      @           (* this does not support addAll *);
+      @   signals (ClassCastException)
+      @           (* class of specified element prevents it 
+      @              from being added to this *);
+      @   signals (IllegalArgumentException)
+      @           (* some aspect of this element 
+      @              prevents it from being added to this *);
+      @   signals (NullPointerException)
+      @           (* argument contains null elements and this does not support 
+      @              null elements *);
+      @ also public exceptional_behavior
+      @  requires c == null;
+      @  assignable \nothing;
+      @  signals (NullPointerException);
+      @*/
+    boolean addAll(Collection c);
 
-    /**
-     * Returns <tt>true</tt> if this collection contains all of the elements
-     * in the specified collection.
-     *
-     * @param c collection to be checked for containment in this collection.
-     * @return <tt>true</tt> if this collection contains all of the elements
-     *	       in the specified collection
-     * @see #contains(Object)
-     */
-    //@ requires c.elementType <: elementType;
-    //@ requires !containsNull ==> !c.containsNull ;
-    boolean containsAll(/*@non_null*/ Collection c);
+    /* FIXME +@ public behavior
+      @   requires c != null;
+      @   requires elementType <: c.elementType;
+      @   requires !c.containsNull ==> !containsNull;
+      @  assignable theCollection;
+      @   ensures theCollection
+      @           .equals(\old(theCollection).difference(c.theCollection));
+      @   signals (UnsupportedOperationException)
+      @               (* this does not support removeAll *);
+      @   signals (ClassCastException)
+      @             (* the type of one or more of the elements
+      @                in c is not supported by this *);
+      @   signals (NullPointerException)
+      @           (* argument contains null elements and this does not support 
+      @              null elements *);
+      @ also public exceptional_behavior
+      @  requires c == null;
+      @  assignable \nothing;
+      @  signals (NullPointerException);
+      @*/
+    boolean removeAll(Collection c);
 
-    /**
-     * Adds all of the elements in the specified collection to this collection
-     * (optional operation).  The behavior of this operation is undefined if
-     * the specified collection is modified while the operation is in progress.
-     * (This implies that the behavior of this call is undefined if the
-     * specified collection is this collection, and this collection is
-     * nonempty.)
-     *
-     * @param c elements to be inserted into this collection.
-     * @return <tt>true</tt> if this collection changed as a result of the
-     *         call
-     * 
-     * @throws UnsupportedOperationException if this collection does not
-     *         support the <tt>addAll</tt> method.
-     * @throws ClassCastException if the class of an element of the specified
-     * 	       collection prevents it from being added to this collection.
-     * @throws IllegalArgumentException some aspect of an element of the
-     *	       specified collection prevents it from being added to this
-     *	       collection.
-     * 
-     * @see #add(Object)
-     */
-    //@ requires c.elementType <: elementType;
-    //@ requires !containsNull ==> !c.containsNull;
-    boolean addAll(/*@non_null*/ Collection c);
+    /* FIXME +@ public behavior
+      @   requires c != null;
+      @   requires elementType <: c.elementType;
+      @   requires !c.containsNull ==> !containsNull;
+      @  assignable theCollection;
+      @   ensures theCollection
+      @           .equals(\old(theCollection).intersection(c.theCollection));
+      @   signals (UnsupportedOperationException)
+      @            (* this does not support retainAll *);
+      @   signals (ClassCastException)
+      @            (* the type of one or more of the elements
+      @               in c is not supported by this *);
+      @   signals (NullPointerException)
+      @           (* argument contains null elements and this does not support 
+      @              null elements *);
+      @ also public exceptional_behavior
+      @  requires c == null;
+      @  assignable \nothing;
+      @  signals (NullPointerException);
+      @*/
+    boolean retainAll(Collection c);
 
-    /**
-     * 
-     * Removes all this collection's elements that are also contained in the
-     * specified collection (optional operation).  After this call returns,
-     * this collection will contain no elements in common with the specified
-     * collection.
-     *
-     * @param c elements to be removed from this collection.
-     * @return <tt>true</tt> if this collection changed as a result of the
-     *         call
-     * 
-     * @throws UnsupportedOperationException if the <tt>removeAll</tt> method
-     * 	       is not supported by this collection.
-     * 
-     * @see #remove(Object)
-     * @see #contains(Object)
-     */
-    //@ requires elementType <: c.elementType;
-    //@ requires !c.containsNull ==> !containsNull;
-    boolean removeAll(/*@non_null*/ Collection c);
-
-    /**
-     * Retains only the elements in this collection that are contained in the
-     * specified collection (optional operation).  In other words, removes from
-     * this collection all of its elements that are not contained in the
-     * specified collection.
-     *
-     * @param c elements to be retained in this collection.
-     * @return <tt>true</tt> if this collection changed as a result of the
-     *         call
-     * 
-     * @throws UnsupportedOperationException if the <tt>retainAll</tt> method
-     * 	       is not supported by this Collection.
-     * 
-     * @see #remove(Object)
-     * @see #contains(Object)
-     */
-    //@ requires elementType <: c.elementType;
-    //@ requires !c.containsNull ==> !containsNull;
-    boolean retainAll(/*@non_null*/ Collection c);
-
-    /**
-     * Removes all of the elements from this collection (optional operation).
-     * This collection will be empty after this method returns unless it
-     * throws an exception.
-     *
-     * @throws UnsupportedOperationException if the <tt>clear</tt> method is
-     *         not supported by this collection.
-     */
+    /* FIXME +@ public behavior
+      @   assignable theCollection;
+      @   ensures theCollection.isEmpty();
+      @   ensures_redundantly size() == 0;
+      @   signals (UnsupportedOperationException)
+      @           (* clear is not supported by this *);
+      @*/
     void clear();
 
-
-    // Comparison and hashing
-
-    /**
-     * Compares the specified object with this collection for equality. <p>
-     *
-     * While the <tt>Collection</tt> interface adds no stipulations to the
-     * general contract for the <tt>Object.equals</tt>, programmers who
-     * implement the <tt>Collection</tt> interface "directly" (in other words,
-     * create a class that is a <tt>Collection</tt> but is not a <tt>Set</tt>
-     * or a <tt>List</tt>) must exercise care if they choose to override the
-     * <tt>Object.equals</tt>.  It is not necessary to do so, and the simplest
-     * course of action is to rely on <tt>Object</tt>'s implementation, but
-     * the implementer may wish to implement a "value comparison" in place of
-     * the default "reference comparison."  (The <tt>List</tt> and
-     * <tt>Set</tt> interfaces mandate such value comparisons.)<p>
-     *
-     * The general contract for the <tt>Object.equals</tt> method states that
-     * equals must be symmetric (in other words, <tt>a.equals(b)</tt> if and
-     * only if <tt>b.equals(a)</tt>).  The contracts for <tt>List.equals</tt>
-     * and <tt>Set.equals</tt> state that lists are only equal to other lists,
-     * and sets to other sets.  Thus, a custom <tt>equals</tt> method for a
-     * collection class that implements neither the <tt>List</tt> nor
-     * <tt>Set</tt> interface must return <tt>false</tt> when this collection
-     * is compared to any list or set.  (By the same logic, it is not possible
-     * to write a class that correctly implements both the <tt>Set</tt> and
-     * <tt>List</tt> interfaces.)
-     *
-     * @param o Object to be compared for equality with this collection.
-     * @return <tt>true</tt> if the specified object is equal to this
-     * collection
-     * 
-     * @see Object#equals(Object)
-     * @see Set#equals(Object)
-     * @see List#equals(Object)
-     */
     boolean equals(Object o);
 
-    /**
-     * 
-     * Returns the hash code value for this collection.  While the
-     * <tt>Collection</tt> interface adds no stipulations to the general
-     * contract for the <tt>Object.hashCode</tt> method, programmers should
-     * take note that any class that overrides the <tt>Object.equals</tt>
-     * method must also override the <tt>Object.hashCode</tt> method in order
-     * to satisfy the general contract for the <tt>Object.hashCode</tt>method.
-     * In particular, <tt>c1.equals(c2)</tt> implies that
-     * <tt>c1.hashCode()==c2.hashCode()</tt>.
-     *
-     * @return the hash code value for this collection
-     * 
-     * @see Object#hashCode()
-     * @see Object#equals(Object)
-     */
     int hashCode();
+
+    //@ public model int hashValue();
 }

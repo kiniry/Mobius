@@ -24,51 +24,81 @@ package java.lang;
  * @version $Revision$
  * @author Gary T. Leavens
  */
-public /*+@ pure @+*/ interface CharSequence {
+public interface CharSequence {
+    //@ public instance model char[] charArray;
+    //@ public invariant charArray != null;
+    //@ public invariant charArray.owner == this;
 
-    //+@ public normal_behavior
-    //@    ensures \result >= 0;
-    //@ pure
+    /*@ public normal_behavior
+        ensures \result == ( a == b || (a != null && b != null &&
+                      a.length == b.length && 
+                      (\forall int i; 0<=i && i<a.length; a[i] == b[i]))); 
+        public static pure model boolean equal(char[] a, char[] b);
+     */
+    /*@ public normal_behavior
+        requires a != null && b!= null && astart >= 0 && bstart >= 0 &&
+                 length >= 0 &&
+                 astart+length <= a.length && bstart + length <= b.length;
+        ensures \result == ((a==b && astart == bstart) ||
+                      (\forall int i; 0<=i && i<length; a[i+astart] == b[i+bstart])); 
+        public static pure model boolean equal(char[] a, int astart, char[] b, int bstart, int length);
+     */
+
+    //@ axiom (\forall char[] a;; equal(a,a));
+    //@ axiom (\forall char[] a,b;; equal(a,b) <==> equal(b,a));
+    //@ axiom (\forall char[] a,b,c;; (equal(a,b) && equal(b,c))==>equal(a,c)); 
+
+    //@ public normal_behavior
+    //@      modifies objectState;
+    //@      ensures \result >= 0;
+    //@      ensures \result == charArray.length;
     int length();
 
-    /*+@   public normal_behavior
-      @      requires 0 <= index && index < length();
-      @      ensures (* \result is the character at the given index *);
+    /*@   public normal_behavior
+      @      requires 0 <= index && index < charArray.length;
+      @      modifies objectState;
+      @      ensures  \result == charArray[index];
       @  also
       @    public exceptional_behavior
-      @      requires !(0 <= index && index < length());
+      @      requires !(0 <= index && index < charArray.length);
+      @      modifies objectState;
+      @      signals (Exception e) e instanceof IndexOutOfBoundsException;
       @      signals (IndexOutOfBoundsException);
-      @+*/
-    //+@ implies_that public normal_behavior
-    //@    requires 0 <= index;
+      @*/
     char charAt(int index) throws IndexOutOfBoundsException;
 
-    /*+@   public normal_behavior
-      @      requires 0 <= start && start <= end && end <= length();
-      @      ensures (* \result is the subsequence from start to end,
-      @               not including the character at index end, if any *);
+    /*@   public normal_behavior
+      @      requires 0 <= start && start <= end && end <= charArray.length;
+      @      modifies objectState;
+      @      ensures \result.charArray.length == end-start;
+      @      ensures equal(\result.charArray,0,charArray,start,end-start);
       @  also
       @    public exceptional_behavior
-      @      requires start < 0 || end < 0 || end > length() || start > end;
+      @      requires start < 0 || end < start || end > charArray.length;
+      @      modifies objectState;
+      @      signals (Exception e) e instanceof IndexOutOfBoundsException;
       @      signals (IndexOutOfBoundsException);
-      @+*/
+      @*/
     CharSequence subSequence(int start, int end)
         throws IndexOutOfBoundsException;
 
-    /*+@ also
+    /*@ also
       @    public normal_behavior
+      @      modifies objectState;
       @      ensures \result != null
-      @           && (* result is this sequence of characters *);
-      @+*/
+      @           && equal(\result.charArray,charArray);
+      @*/
     public String toString();
 
     /** According to the javadocs, the equals method should not be called. */
-    // +@ also
-    // +@    requires false;
-    //public boolean equals(Object obj);
+    //@ also
+    //@      requires false;
+    // @      modifies objectState;
+    public boolean equals(Object obj);
 
     /** According to the javadocs, the hashCode method should not be called. */
-    // +@ also
-    // +@    requires false;
-    //public int hashCode();
+    //@ also
+    //@    requires false;
+    //@      modifies objectState;
+    public int hashCode();
 }
