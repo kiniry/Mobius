@@ -52,6 +52,7 @@ public abstract class FrontEndTool extends Tool {
      * default front end values.
      */
     public void setup() {
+
 		String classPath = options.userPath;
 		if (classPath==null)
 		    // The behavior of this code differs between 1.1 and 1.2:
@@ -175,6 +176,10 @@ public abstract class FrontEndTool extends Tool {
 	    // Handle all tool options:
 	    options = makeOptions();
 	    int offset = processOptions(args);
+	    if (options.issueUsage) {
+		usage();
+		return okExitCode;
+	    }
 	
 	    // Setup the front end using them:
 	    setup();

@@ -47,6 +47,9 @@ public class Options
      */
     public String sysPath = null;
     
+    /** True if we should simply issue a usage message and abort. */
+    public boolean issueUsage = false;
+
     // Note - the "-v" option is directly set in javafe.util.Info.on
     
     /** 
@@ -185,7 +188,10 @@ public class Options
         } else if (option.equals("-ea")) {
             enableAssertions = true;
             return offset;
-        }
+        } else if (option.equals("-help")) {
+	    issueUsage = true;
+	    return offset;
+	}
 
 	// Pass on unrecognized options:
 	
@@ -244,6 +250,7 @@ public class Options
     }
 
     final String[][] optionData = {
+    {"-help", "Prints a usage message and terminates"},
     {"-v", ""},
     {"-quiet", ""},
     {"-bootclasspath <classpath>", ""},
