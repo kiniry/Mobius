@@ -69,10 +69,7 @@ public final class EscPragmaLex extends Lex
                         ttype = ((Integer)val).intValue();
                     } else {
                         int esckeytag = TagConstants.fromIdentifier(identifierVal);
-                        if (((TagConstants.FIRSTESCKEYWORDTAG <= esckeytag) &&
-                             (esckeytag <= TagConstants.LASTESCKEYWORDTAG)) ||
-                            ((TagConstants.FIRSTJMLKEYWORDTAG <= esckeytag) &&
-                             (esckeytag <= TagConstants.LASTJMLKEYWORDTAG))) {
+			if (TagConstants.isKeywordTag(esckeytag)) {
                             ttype = _SpecialParserInterface.getTokenType(identifierVal);
                         } else {
                             ErrorSet.fatal(startingLoc, "Unrecognized special keyword");

@@ -44,63 +44,8 @@ public class TagConstants extends GeneratedTags
     //// Tags for special tokens
     public static final int INFORMALPRED_TOKEN = TRYCMD + 1;
 
-    //// Tags for ESCJ keywords
-    public static final int FIRSTESCKEYWORDTAG = INFORMALPRED_TOKEN + 1;
-    public static final int ALSO_ENSURES = FIRSTESCKEYWORDTAG;
-    public static final int ALSO_EXSURES = ALSO_ENSURES + 1;
-    public static final int ALSO_MODIFIES = ALSO_EXSURES + 1;
-    public static final int ALSO_REQUIRES = ALSO_MODIFIES + 1;
-    public static final int ASSUME = ALSO_REQUIRES + 1;
-    public static final int AXIOM = ASSUME + 1;
-    public static final int DECREASES = AXIOM + 1;
-    public static final int DTTFSA = DECREASES + 1;
-    public static final int ENSURES = DTTFSA + 1;
-    public static final int ELEMSNONNULL = ENSURES + 1; // Function
-    public static final int ELEMTYPE = ELEMSNONNULL + 1; // Function
-    public static final int EXISTS = ELEMTYPE + 1;
-    public static final int EXSURES = EXISTS + 1;
-    public static final int FRESH = EXSURES + 1; // Non-GCE function
-    public static final int FORALL = FRESH + 1;
-    public static final int FUNCTION = FORALL + 1;
-    public static final int GHOST = FUNCTION + 1;
-    public static final int HELPER = GHOST + 1;
-    public static final int IN = HELPER + 1;
-    public static final int IN_REDUNDANTLY = IN + 1;
-    public static final int INTO = IN_REDUNDANTLY + 1;
-    public static final int INVARIANT = INTO + 1;
-    public static final int LBLPOS = INVARIANT + 1;
-    public static final int LBLNEG = LBLPOS + 1;
-    public static final int LOOP_INVARIANT = LBLNEG + 1;
-    public static final int LOOP_PREDICATE = LOOP_INVARIANT + 1;
-    public static final int LS = LOOP_PREDICATE + 1;
-    public static final int MAPS = LS + 1; 
-    public static final int MAPS_REDUNDANTLY = MAPS + 1; 
-    public static final int MAX = MAPS_REDUNDANTLY + 1; // Function
-    public static final int MODIFIES = MAX + 1;
-    public static final int MONITORED = MODIFIES + 1;
-    public static final int MONITORED_BY = MONITORED + 1;
-    public static final int MONITORS_FOR = MONITORED_BY + 1;
-    public static final int NON_NULL = MONITORS_FOR + 1;
-    public static final int NOWARN = NON_NULL + 1;
-    public static final int PRE = NOWARN + 1;
-    public static final int READABLE_IF = PRE + 1;
-    public static final int RES = READABLE_IF + 1;
-    public static final int REQUIRES = RES + 1;
-    public static final int SET = REQUIRES + 1;
-    public static final int SPEC_PUBLIC = SET + 1;
-    public static final int STILL_DEFERRED = SPEC_PUBLIC + 1;
-    public static final int TYPE = STILL_DEFERRED + 1;	// "type"
-    public static final int TYPETYPE = TYPE + 1;	  // "TYPE"; name for TYPECODE
-    public static final int TYPEOF = TYPETYPE + 1; // Function
-    public static final int UNINITIALIZED = TYPEOF + 1;
-    public static final int UNREACHABLE = UNINITIALIZED + 1;
-    public static final int WRITABLE_DEFERRED = UNREACHABLE + 1;
-    public static final int WRITABLE_IF = WRITABLE_DEFERRED+ 1;
-    public static final int SKOLEM_CONSTANT = WRITABLE_IF + 1;
-    public static final int LASTESCKEYWORDTAG = SKOLEM_CONSTANT;
-
     //// Tags for ESC/Java checks
-    public static final int FIRSTESCCHECKTAG = LASTESCKEYWORDTAG + 1;
+    public static final int FIRSTESCCHECKTAG = INFORMALPRED_TOKEN + 1;
     public static final int CHKARITHMETIC = FIRSTESCCHECKTAG;
     public static final int CHKARRAYSTORE = CHKARITHMETIC + 1;
     public static final int CHKASSERT = CHKARRAYSTORE + 1;
@@ -231,10 +176,61 @@ public class TagConstants extends GeneratedTags
     public static final int CHK_AS_ASSERT = CHK_AS_ASSUME + 1;
     public static final int CHK_AS_SKIP = CHK_AS_ASSERT + 1;
 
+// FIXME - these should be merged into one order so they are easy to find
+// Also keywords are looked up by a linear search - that could be improved
+// upon greatly
     //// JML keywords
     public static final int FIRSTJMLKEYWORDTAG = CHK_AS_SKIP + 1;
 
-    public static final int BIGINT = FIRSTJMLKEYWORDTAG;
+    public static final int ASSUME = FIRSTJMLKEYWORDTAG;
+    public static final int AXIOM = ASSUME + 1;
+    public static final int DECREASES = AXIOM + 1;
+    public static final int DTTFSA = DECREASES + 1;
+    public static final int ENSURES = DTTFSA + 1;
+    public static final int ELEMSNONNULL = ENSURES + 1; // Function
+    public static final int ELEMTYPE = ELEMSNONNULL + 1; // Function
+    public static final int EXISTS = ELEMTYPE + 1;
+    public static final int EXSURES = EXISTS + 1;
+    public static final int FRESH = EXSURES + 1; // Non-GCE function
+    public static final int FORALL = FRESH + 1;
+    public static final int FUNCTION = FORALL + 1;
+    public static final int GHOST = FUNCTION + 1;
+    public static final int HELPER = GHOST + 1;
+    public static final int IN = HELPER + 1;
+    public static final int IN_REDUNDANTLY = IN + 1;
+    public static final int INTO = IN_REDUNDANTLY + 1;
+    public static final int INVARIANT = INTO + 1;
+    public static final int LBLPOS = INVARIANT + 1;
+    public static final int LBLNEG = LBLPOS + 1;
+    public static final int LOOP_INVARIANT = LBLNEG + 1;
+    public static final int LOOP_PREDICATE = LOOP_INVARIANT + 1;
+    public static final int LS = LOOP_PREDICATE + 1;
+    public static final int MAPS = LS + 1; 
+    public static final int MAPS_REDUNDANTLY = MAPS + 1; 
+    public static final int MAX = MAPS_REDUNDANTLY + 1; // Function
+    public static final int MODIFIES = MAX + 1;
+    public static final int MONITORED = MODIFIES + 1;
+    public static final int MONITORED_BY = MONITORED + 1;
+    public static final int MONITORS_FOR = MONITORED_BY + 1;
+    public static final int NON_NULL = MONITORS_FOR + 1;
+    public static final int NOWARN = NON_NULL + 1;
+    public static final int PRE = NOWARN + 1;
+    public static final int READABLE_IF = PRE + 1;
+    public static final int RES = READABLE_IF + 1;
+    public static final int REQUIRES = RES + 1;
+    public static final int SET = REQUIRES + 1;
+    public static final int SPEC_PUBLIC = SET + 1;
+    public static final int STILL_DEFERRED = SPEC_PUBLIC + 1;
+    public static final int TYPE = STILL_DEFERRED + 1;	// "type"
+    public static final int TYPETYPE = TYPE + 1;	  // "TYPE"; name for TYPECODE
+    public static final int TYPEOF = TYPETYPE + 1; // Function
+    public static final int UNINITIALIZED = TYPEOF + 1;
+    public static final int UNREACHABLE = UNINITIALIZED + 1;
+    public static final int WRITABLE_DEFERRED = UNREACHABLE + 1;
+    public static final int WRITABLE_IF = WRITABLE_DEFERRED+ 1;
+    public static final int SKOLEM_CONSTANT = WRITABLE_IF + 1;
+
+    public static final int BIGINT = SKOLEM_CONSTANT + 1;
     public static final int WACK_DURATION = BIGINT + 1;
     // \elemtype -- an ESC keyword
     public static final int EVERYTHING = WACK_DURATION + 1;
@@ -381,7 +377,18 @@ public class TagConstants extends GeneratedTags
 
     public static final int LASTJMLKEYWORDTAG = WORKING_SPACE;
 
-    public static final int LAST_TAG = LASTJMLKEYWORDTAG;
+    //// Tags for ESCJ keywords
+    // These are keywords that are not in JML (either obsolete or
+    // extensions), or are tokens for internal use only
+    // Be sure to keep the esckeywords[] array in synch
+    public static final int FIRSTESCKEYWORDTAG = LASTJMLKEYWORDTAG + 1;
+    public static final int ALSO_ENSURES = FIRSTESCKEYWORDTAG;
+    public static final int ALSO_EXSURES = ALSO_ENSURES + 1;
+    public static final int ALSO_MODIFIES = ALSO_EXSURES + 1;
+    public static final int ALSO_REQUIRES = ALSO_MODIFIES + 1;
+    public static final int LASTESCKEYWORDTAG = ALSO_REQUIRES;
+
+    public static final int LAST_TAG = LASTESCKEYWORDTAG;
 
     public static final Identifier ExsuresIdnName = 
         Identifier.intern("Optional..Exsures..Id..Name");
@@ -493,11 +500,16 @@ public class TagConstants extends GeneratedTags
      * known to {@link TagConstants}.
      */
     public static int fromIdentifier(Identifier keyword) {
-        for(int i = 0; i < esckeywords.length; i++)
-            if (keyword == esckeywords[i]) return i + FIRSTESCKEYWORDTAG;
         for(int i = 0; i < jmlkeywords.length; i++)
             if (keyword == jmlkeywords[i]) return i + FIRSTJMLKEYWORDTAG;
+        for(int i = 0; i < esckeywords.length; i++)
+            if (keyword == esckeywords[i]) return i + FIRSTESCKEYWORDTAG;
         return NULL;
+    }
+
+    public static boolean isKeywordTag(int tag) {
+	return (FIRSTJMLKEYWORDTAG <= tag && tag <= LASTJMLKEYWORDTAG)
+	    || (FIRSTESCKEYWORDTAG <= tag && tag <= LASTESCKEYWORDTAG);
     }
 
     public static int checkFromString(String s) {
@@ -665,60 +677,6 @@ public class TagConstants extends GeneratedTags
             tag == TagConstants.DECREASING_REDUNDANTLY;
     }
 
-    private static Identifier[] esckeywords = {
-        Identifier.intern("also_ensures"),
-        Identifier.intern("also_exsures"),
-        Identifier.intern("also_modifies"),
-        Identifier.intern("also_requires"),
-        Identifier.intern("assume"),
-        Identifier.intern("axiom"),
-        Identifier.intern("decreases"),
-        Identifier.intern("\\dttfsa"),
-        Identifier.intern("ensures"),
-        Identifier.intern("\\nonnullelements"),
-        Identifier.intern("\\elemtype"),
-        Identifier.intern("\\exists"),
-        Identifier.intern("exsures"),
-        Identifier.intern("\\fresh"),
-        Identifier.intern("\\forall"),
-	Identifier.intern("function"),
-        Identifier.intern("ghost"),
-        Identifier.intern("helper"),
-        Identifier.intern("in"),
-        Identifier.intern("in_redundantly"),
-        Identifier.intern("\\into"),
-        Identifier.intern("invariant"),
-        Identifier.intern("\\lblpos"),
-        Identifier.intern("\\lblneg"),
-        Identifier.intern("loop_invariant"),
-        Identifier.intern("loop_predicate"),
-        Identifier.intern("\\lockset"),
-	Identifier.intern("maps"),
-	Identifier.intern("maps_redundantly"),
-        Identifier.intern("\\max"),
-        Identifier.intern("modifies"),
-        Identifier.intern("monitored"),
-        Identifier.intern("monitored_by"),
-        Identifier.intern("monitors_for"),
-        Identifier.intern("non_null"),
-        Identifier.intern("nowarn"),
-        Identifier.intern("\\old"),  // TagConstants.PRE
-        Identifier.intern("readable_if"),
-        Identifier.intern("\\result"),
-        Identifier.intern("requires"),
-        Identifier.intern("set"),
-        Identifier.intern("spec_public"),
-        Identifier.intern("still_deferred"),
-        Identifier.intern("\\type"),			// TYPE
-        Identifier.intern("\\TYPE"),			// TYPETYPE
-        Identifier.intern("\\typeof"),
-        Identifier.intern("uninitialized"),
-        Identifier.intern("unreachable"),
-        Identifier.intern("writable_deferred"),
-        Identifier.intern("writable_if"),
-        Identifier.intern("skolem_constant")
-    };
-
     private static String[] escchecks = {
         "ZeroDiv",
         "ArrayStore",
@@ -836,6 +794,53 @@ public class TagConstants extends GeneratedTags
     };
 
     private static Identifier[] jmlkeywords = {
+        Identifier.intern("assume"),
+        Identifier.intern("axiom"),
+        Identifier.intern("decreases"),
+        Identifier.intern("\\dttfsa"),
+        Identifier.intern("ensures"),
+        Identifier.intern("\\nonnullelements"),
+        Identifier.intern("\\elemtype"),
+        Identifier.intern("\\exists"),
+        Identifier.intern("exsures"),
+        Identifier.intern("\\fresh"),
+        Identifier.intern("\\forall"),
+	Identifier.intern("function"),
+        Identifier.intern("ghost"),
+        Identifier.intern("helper"),
+        Identifier.intern("in"),
+        Identifier.intern("in_redundantly"),
+        Identifier.intern("\\into"),
+        Identifier.intern("invariant"),
+        Identifier.intern("\\lblpos"),
+        Identifier.intern("\\lblneg"),
+        Identifier.intern("loop_invariant"),
+        Identifier.intern("loop_predicate"),
+        Identifier.intern("\\lockset"),
+	Identifier.intern("maps"),
+	Identifier.intern("maps_redundantly"),
+        Identifier.intern("\\max"),
+        Identifier.intern("modifies"),
+        Identifier.intern("monitored"),
+        Identifier.intern("monitored_by"),
+        Identifier.intern("monitors_for"),
+        Identifier.intern("non_null"),
+        Identifier.intern("nowarn"),
+        Identifier.intern("\\old"),  // TagConstants.PRE
+        Identifier.intern("readable_if"),
+        Identifier.intern("\\result"),
+        Identifier.intern("requires"),
+        Identifier.intern("set"),
+        Identifier.intern("spec_public"),
+        Identifier.intern("still_deferred"),
+        Identifier.intern("\\type"),			// TYPE
+        Identifier.intern("\\TYPE"),			// TYPETYPE
+        Identifier.intern("\\typeof"),
+        Identifier.intern("uninitialized"),
+        Identifier.intern("unreachable"),
+        Identifier.intern("writable_deferred"),
+        Identifier.intern("writable_if"),
+        Identifier.intern("skolem_constant"),
         Identifier.intern("\\bigint"),
         Identifier.intern("\\duration"),
         Identifier.intern("\\everything"),
@@ -947,8 +952,36 @@ public class TagConstants extends GeneratedTags
         Identifier.intern("working_space")
     };
 
+    private static Identifier[] esckeywords = {
+        Identifier.intern("also_ensures"),
+        Identifier.intern("also_exsures"),
+        Identifier.intern("also_modifies"),
+        Identifier.intern("also_requires"),
+    };
+
     public static void main(String[] args) {
         for(int i = FIRST_TAG; i <= LAST_TAG; i++ )
             System.out.println(i + " " + toString(i));
     }
+
+    // This initialization code is simply a quick check that the arrays
+    // are consistent in length.
+
+    static private void comp(int i, int j, String s) {
+	if (i != j)
+		System.out.println("Mismatched length ("
+			+ i + " vs. " + j + ") in " + s);
+    }
+
+    static {
+	comp(esckeywords.length,LASTESCKEYWORDTAG - FIRSTESCKEYWORDTAG + 1,
+		"esckeywords");
+	comp(jmlkeywords.length,LASTJMLKEYWORDTAG - FIRSTJMLKEYWORDTAG + 1,
+		"jmlkeywords");
+	comp(escfunctions.length,LASTFUNCTIONTAG - FIRSTFUNCTIONTAG + 1,
+		"escfunctions");
+	comp(escchecks.length,LASTESCCHECKTAG - FIRSTESCCHECKTAG + 1,
+		"escchecks");
+    }
+		
 }
