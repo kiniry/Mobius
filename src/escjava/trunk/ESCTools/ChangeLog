@@ -1,0 +1,42 @@
+2003-01-02  Joseph R. Kiniry  <kiniry@kind.cs.kun.nl>
+
+	* build.xml:
+	Extended excludes of compile_rcc target to include the rccwizard/test
+	directory and its subdirectories.
+
+	* Calvin/java/escjava/prover/SExp.java:
+	* Calvin/java/escjava/prover/SList.java:
+	Removed bogus empty expression ("};" again).
+
+	* Escjava/java/escjava/ast/TagConstants.java:
+	Removed bogus static intialization.
+
+	* Escjava/java/escjava/pa/generic/DisjunctionProver.java:
+	Changed reference to constants to use a static class reference rather
+	than an object reference to satisfy jikes complaints.
+
+	* Rcc/java/rccwizard/test/src/Ambit-noAnnot/Ambit/AmbitApplet.java:
+	* Rcc/java/rccwizard/test/src/Ambit-noAnnot/Ambit/Applet1.java:
+	Removed references to symantec.itools source which we do not have and
+	is unnecessary.
+
+	* Javafe/astgen/lex.yy.c:
+	Added include of unistd.h necessary for new Linux systems.
+
+	* Escjava/java/escjava/parser/ErrorPragmaParser.java:
+	Removed unnecessary semicolons (e.g., "};" at the end of a block).
+
+	* Houdini/java/houdini/WorkList.java, Houdini/java/houdini/WorkerState.java:
+	Removed unnecessary semicolons (e.g., "};" at the end of a block).
+	Removed Windoz EOLs.
+
+	* Escjava/java/escjava/parser/EscPragmaLex.java:
+	* Escjava/java/escjava/ast/AnOverview.java:
+	* Escjava/java/escjava/ast/GeneratedTags.java:
+	* Escjava/java/escjava/ast/Visitor.java:
+	Commented out bogus current-package imports.
+
+	* build.xml:
+	Initial build.xml file.  Full coverage of all build targets,
+	documentation generation, initial jmlc support, clean, archives,
+	etc. is included.
