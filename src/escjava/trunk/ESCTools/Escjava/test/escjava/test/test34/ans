@@ -28,33 +28,6 @@ WontEvenParse8.java:2: Fatal error: Unexpected token '[', expected ')'
   //@ exsures (Throwable a[]) true;
                           ^
 1 error
-BogusInput.java:4: Error: The uninitialized annotation can occur only on local variable declarations
-/*@ uninitialized */
-    ^
-BogusInput.java:5: Error: The non_null pragma can be applied only to variables, fields, parameters, and methods
-/*@ non_null */
-    ^
-BogusInput.java:6: Error: The readable_if annotation can occur only on field declarations and local variable declarations
-/*@ readable_if x == 5 */
-    ^
-BogusInput.java:6: Error: An instance field may be accessed only via an object and/or from a non-static context or an inner class enclosed by a type possessing that field.
-/*@ readable_if x == 5 */
-                ^
-BogusInput.java:7: Error: The writable_if annotation can occur only on field declarations and local variable declarations
-/*@ writable_if x == 5 */
-    ^
-BogusInput.java:7: Error: An instance field may be accessed only via an object and/or from a non-static context or an inner class enclosed by a type possessing that field.
-/*@ writable_if x == 5 */
-                ^
-BogusInput.java:8: Error: The monitored_by annotation can occur only on field declarations
-/*@ monitored_by null, true */
-    ^
-BogusInput.java:8: Error: The monitored_by annotation can occur only on field declarations
-/*@ monitored_by null, true */
-    ^
-BogusInput.java:9: Error: The monitored annotation can occur only on field declarations
-/*@ monitored */
-    ^
 BogusInput.java:11: Error: Unqualified this cannot be used in static contexts
   //@ axiom this != null
             ^
@@ -412,6 +385,33 @@ BogusInput.java:192: Error: Labeled predicates are not allowed in this context
 BogusInput.java:192: Error: Labeled predicates are not allowed in this context
     /*@ assert (\lblpos Hello 1 < 2) ? (\lblpos Hello 1 < 2) : (\lblpo ...
                                                                ^
+BogusInput.java:4: Error: The uninitialized annotation can occur only on local variable declarations
+/*@ uninitialized */
+    ^
+BogusInput.java:5: Error: The non_null pragma can be applied only to variables, fields, parameters, and methods
+/*@ non_null */
+    ^
+BogusInput.java:6: Error: The readable_if annotation can occur only on field declarations and local variable declarations
+/*@ readable_if x == 5 */
+    ^
+BogusInput.java:6: Error: An instance field may be accessed only via an object and/or from a non-static context or an inner class enclosed by a type possessing that field.
+/*@ readable_if x == 5 */
+                ^
+BogusInput.java:7: Error: The writable_if annotation can occur only on field declarations and local variable declarations
+/*@ writable_if x == 5 */
+    ^
+BogusInput.java:7: Error: An instance field may be accessed only via an object and/or from a non-static context or an inner class enclosed by a type possessing that field.
+/*@ writable_if x == 5 */
+                ^
+BogusInput.java:8: Error: The monitored_by annotation can occur only on field declarations
+/*@ monitored_by null, true */
+    ^
+BogusInput.java:8: Error: The monitored_by annotation can occur only on field declarations
+/*@ monitored_by null, true */
+    ^
+BogusInput.java:9: Error: The monitored annotation can occur only on field declarations
+/*@ monitored */
+    ^
 Caution: Turning off extended static checking due to type error(s)
 1 caution
 128 errors

@@ -3,7 +3,7 @@ import java.util.*;
 
 public class TestList extends LocalTestCase {
 
-    public void testList() {
+    public void testListt() {
         testList(new LinkedList());
         testListR(new LinkedList());
         testList2(new LinkedList());

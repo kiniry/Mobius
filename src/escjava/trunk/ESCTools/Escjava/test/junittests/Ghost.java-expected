@@ -8,6 +8,12 @@ Ghost.java:48: Error: Expected a declaration within the annotation following the
     [TIME]
 
 Ghost ...
+Ghost.java:68: Error: May not specify both static and instance on a declaration
+        //@ static ghost instance int superiii; // ERROR
+                         ^
+Ghost.java:79: Error: May not specify both static and instance on a declaration
+        //@ ghost instance static int interkinst2; // ERROR
+                  ^
 Ghost.java:29: Error: Undefined variable 'i'
                 int q = i;  // ERROR
                         ^
@@ -29,9 +35,6 @@ Ghost.java:57: Error: An instance field may be accessed only via an object and/o
 Ghost.java:58: Error: An instance field may be accessed only via an object and/or from a non-static context or an inner class enclosed by a type possessing that field.
         //@ static ghost int temp5 = superinst2; // ERROR
                                      ^
-Ghost.java:68: Error: May not specify both static and instance on a declaration
-        //@ static ghost instance int superiii; // ERROR
-                         ^
 Caution: Turning off extended static checking due to type error(s)
   [TIME total] (aborted)
 
@@ -39,9 +42,6 @@ GhostA ...
   [TIME total]
 
 GhostI ...
-Ghost.java:79: Error: May not specify both static and instance on a declaration
-        //@ ghost instance static int interkinst2; // ERROR
-                  ^
-  [TIME total] (aborted)
+  [TIME total]
 1 caution
 11 errors

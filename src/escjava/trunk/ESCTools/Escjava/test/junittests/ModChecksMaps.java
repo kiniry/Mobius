@@ -12,35 +12,35 @@ public class ModChecksMaps {
 		//@ assume list.next != list.next.next;
 		//@ assume list != list.next.next;
 		//@ assume list != list.next;
-		list.next.next.next = new MCMList();
-		list.next.next = new MCMList();
-		list.next = new MCMList();
+		list.next.next.next = new MCMList();  // OK - except beyond unrolling
+		list.next.next = new MCMList();       // OK
+		list.next = new MCMList();            // OK
 	}
 
 	//@ modifies list.values;
 	public void m() {
-		list.value = 0;
+		list.value = 0;                      // OK
 		//@ assume list.next != null;
-		list.next.value = 1;
+		list.next.value = 1;                 // OK
 		//@ assume list.next.next != null;
-		list.next.next.value = 2;
+		list.next.next.value = 2;            // OK -- beyond unrolling?
 	}
 
 	//@ modifies list.values;
 	public void ma() {
-		list.array[0] = 0;
+		list.array[0] = 0;                    // OK
 		//@ assume list.next != null;
-		list.next.array[0] = 0;
+		list.next.array[0] = 0;               // OK
 		//@ assume list.next.next != null;
-		list.next.next.array[0] = 0;
-		list.array[1] = 0;  // WARNING
+		list.next.next.array[0] = 0;          // OK - beyond unrolling
+		list.array[1] = 0;                    // WARNING
 	}
 
 	//@ modifies list.values;
 	public void mloop() {
 		MCMList it = list;
 		while (it != null) {
-			it.value ++;
+			it.value ++;                  // OK
 			it = it.next;
 		}
 	}

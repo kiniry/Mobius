@@ -8,7 +8,7 @@ ModChecksMaps ...
 ModChecksMaps: mm() ...
 ------------------------------------------------------------------------
 ModChecksMaps.java:15: Warning: Possible violation of modifies clause (Modifies)
-                list.next.next.next = new MCMList();
+                list.next.next.next = new MCMList();  // OK - except b ...
                 ^
 Associated declaration is "ModChecksMaps.java", line 8, col 5:
         //@ modifies list.links;
@@ -19,7 +19,7 @@ Associated declaration is "ModChecksMaps.java", line 8, col 5:
 ModChecksMaps: m() ...
 ------------------------------------------------------------------------
 ModChecksMaps.java:26: Warning: Possible violation of modifies clause (Modifies)
-                list.next.next.value = 2;
+                list.next.next.value = 2;            // OK -- beyond u ...
                 ^
 Associated declaration is "ModChecksMaps.java", line 20, col 5:
         //@ modifies list.values;
@@ -30,14 +30,14 @@ Associated declaration is "ModChecksMaps.java", line 20, col 5:
 ModChecksMaps: ma() ...
 ------------------------------------------------------------------------
 ModChecksMaps.java:35: Warning: Possible violation of modifies clause (Modifies)
-                list.next.next.array[0] = 0;
+                list.next.next.array[0] = 0;          // OK - beyond u ...
                 ^
 Associated declaration is "ModChecksMaps.java", line 29, col 5:
         //@ modifies list.values;
             ^
 ------------------------------------------------------------------------
 ModChecksMaps.java:36: Warning: Possible violation of modifies clause (Modifies)
-                list.array[1] = 0;  // WARNING
+                list.array[1] = 0;                    // WARNING
                 ^
 Associated declaration is "ModChecksMaps.java", line 29, col 5:
         //@ modifies list.values;
