@@ -6,7 +6,7 @@
   N\'estor Cata\~no and Marieke Huisman  \\
   \institute{
        \inria\ Sophia-Antipolis, France \\
-%       \lemme~Project
+       \lemme~Project
   } 
   \email{\{Nestor.Catano, Marieke.Huisman\}@sophia.inria.fr}
 }
@@ -1802,119 +1802,121 @@ significantly can help to improve the verification speed.
 
 \section{A checker for assignable clauses}
 \label{sec-che-for-ass-cla}
-Finally, we briefly discuss the implementation of the \modtool, which
-implements the method presented above.
-%We present some implementation issues concerning \modtool: a
-%modifiable checker implementing the approach and rules presented in
-%Section~\ref{sec-syn-met-che-ass-cla}.
-
-For the implementation we reuse the parser of \jml.
-%\jml\ comes with several classes for handling abstract
-%syntax trees. 
-The \jml\ parser returns an
-\emph{abstract syntax tree}, in instance of class \texttt{AST}.
-This class \texttt{AST} allow one to represent pieces of code as the
-sequence of a node and a \emph{sibling}, where a node is a tuple of an
-\texttt{int} and a \texttt{String}, and the sibling is another
-\texttt{AST}.
-Further, there is an utility class \texttt{ASTFactory} which
-provides operations to create and duplicate trees, and a class
-\texttt{ASTArray}, which maintains an array of abstract syntax trees.
-
-
-% for recovering the
-%structure of programs we are checking. 
-We use these classes to first $(i)$\ determine the \emph{assignable
-clause} of all method declarations and then $(ii)$\ to apply the rules
-presented above. In order to do this we have defined a class
-\texttt{ASTContext}, and a class \texttt{Assignable}. 
-%recovering the structure of the program for
-%applying our checking rules.
-The last one implements our deriviation rules as static methods
-parameterized by the assignable clause of an instruction.
-%context under which the respective instruction is
-%found.
-
-%Section~\ref{abo-jml-cla-use} gives a general overview of the class
-%for handling Abstract syntax trees coming with
-%\jml. Section~\ref{sub-sec-cla-ast-con} summarizes the implementation
-%of the class \texttt{ASTContext} which is in charge of figuring out
-%context of method declarations. Section~\ref{sub-sec-the-cla-ass}
-%presents the class \texttt{Assignable}, which implement our
-%syntactical rules. Finally, Section ~\ref{sub-sec-usi-the-too}
-%summarizes our experience using the tool \modtool.
-
-
-
-
-%\subsection{Representing Abstract syntax trees with \jml}
-%\label{abo-jml-cla-use}
-
-
-
-
-
-
-\subsection{The class \texttt{ASTContext}}
-\label{sub-sec-cla-ast-con}
-The class \texttt{ASTContext} represents the context of a method
-declaration. A method context consists of the representation of its
-assignable locations, its parameters and its local variables. This
-representation is based on the definition~\ref{def-mod}. Additionally
-we store the package, and the class in which the method
-occurs and for each class we store which class it extends.
-
-These contexts are passed as parameter to the methods of the class
-\texttt{Assignable}, which implements the rules presented in
-Section~\ref{sec-che-for-ass-cla}.
-
-
-
-
-\subsection{The class \texttt{Assignable}}
-\label{sub-sec-the-cla-ass}
-
-The class \texttt{Assignable} implements the assignable rules as
-static methods. To each static method one passes the expression
-\texttt{e} currently analyzed, the context \texttt{cxt} of the method
-where the expression \texttt{e} occurs and the contexts \texttt{cxts}
-of all known classes.
-
-For example, when the expression \texttt{e} is an assignment
-$e_1\:\texttt{=}\:e_2$, it has to be checked that $e_1$ belongs to set
-of assignable expressions of the method
-(\texttt{\_in\_PRIME($\cdots$)}) and that it obeys the
-\textsf{modFE} rules on $e_1$ (\texttt{\_modFE($\cdots$)}) and the
-\textsf{mod} rules on $e_2$ (\texttt{\_mod($\cdots$)}).
-\begin{alltt}
-public static boolean _mod(AST e, ASTContext cxt, Vector cxts)\verb!{!	
-  boolean tempRes;	
-  switch(e.getType())\verb!{!	
-    case JavaTokenTypes.ASSIGN:{\it // =}
-      tempRes = _in_PRIME(e.getFirstChild(),cxt,cxts) &&
-       _mod(e.getFirstChild(),currentCxt,cxts) &&
-       _mod(e.getFirstChild().getNextSibling(),cxt,cxts);
-      return tempRes;
-    \vdots 
-  \verb!}!
-\verb!}!
-\end{alltt}
-
-
-
-
-\subsection{Experiences using \modtool}
-\label{sub-sec-usi-the-too}
-To test the usability of our approach, we have applied \modtool\ to
-the specifications that we wrote earlier for an electronic purse case
-study~\cite{CatanoH02a}. This case study consists of .. classes,
-containing .. methods all together. The specifications are written in
-\escj, thus the assignable clauses are relatively simple and do not
-contain constructs as \fieldsof\ and \reach. When writing and
-improving the specificaitions, we found several times that we had
-forgotten to mention a variable in an assignable clause, but even
-after correcting this ....
-
+%%%---Finally, we briefly discuss the implementation of the \modtool, which
+%%%---implements the method presented above.
+%%%---%We present some implementation issues concerning \modtool: a
+%%%---%modifiable checker implementing the approach and rules presented in
+%%%---%Section~\ref{sec-syn-met-che-ass-cla}.
+%%%---
+%%%---For the implementation we reuse the parser of \jml.
+%%%---%\jml\ comes with several classes for handling abstract
+%%%---%syntax trees. 
+%%%---The \jml\ parser returns an
+%%%---\emph{abstract syntax tree}, in instance of class \texttt{AST}.
+%%%---This class \texttt{AST} allow one to represent pieces of code as the
+%%%---sequence of a node and a \emph{sibling}, where a node is a tuple of an
+%%%---\texttt{int} and a \texttt{String}, and the sibling is another
+%%%---\texttt{AST}.
+%%%---Further, there is an utility class \texttt{ASTFactory} which
+%%%---provides operations to create and duplicate trees, and a class
+%%%---\texttt{ASTArray}, which maintains an array of abstract syntax trees.
+%%%---
+%%%---
+%%%---% for recovering the
+%%%---%structure of programs we are checking. 
+%%%---We use these classes to first $(i)$\ determine the \emph{assignable
+%%%---clause} of all method declarations and then $(ii)$\ to apply the rules
+%%%---presented above. In order to do this we have defined a class
+%%%---\texttt{ASTContext}, and a class \texttt{Assignable}. 
+%%%---%recovering the structure of the program for
+%%%---%applying our checking rules.
+%%%---The last one implements our deriviation rules as static methods
+%%%---parameterized by the assignable clause of an instruction.
+%%%---%context under which the respective instruction is
+%%%---%found.
+%%%---
+%%%---%Section~\ref{abo-jml-cla-use} gives a general overview of the class
+%%%---%for handling Abstract syntax trees coming with
+%%%---%\jml. Section~\ref{sub-sec-cla-ast-con} summarizes the implementation
+%%%---%of the class \texttt{ASTContext} which is in charge of figuring out
+%%%---%context of method declarations. Section~\ref{sub-sec-the-cla-ass}
+%%%---%presents the class \texttt{Assignable}, which implement our
+%%%---%syntactical rules. Finally, Section ~\ref{sub-sec-usi-the-too}
+%%%---%summarizes our experience using the tool \modtool.
+%%%---
+%%%---
+%%%---
+%%%---
+%%%---%\subsection{Representing Abstract syntax trees with \jml}
+%%%---%\label{abo-jml-cla-use}
+%%%---
+%%%---
+%%%---
+%%%---
+%%%---
+%%%---
+%%%---\subsection{The class \texttt{ASTContext}}
+%%%---\label{sub-sec-cla-ast-con}
+%%%---The class \texttt{ASTContext} represents the context of a method
+%%%---declaration. A method context consists of the representation of its
+%%%---assignable locations, its parameters and its local variables. This
+%%%---representation is based on the definition~\ref{def-mod}. Additionally
+%%%---we store the package, and the class in which the method
+%%%---occurs and for each class we store which class it extends.
+%%%---
+%%%---These contexts are passed as parameter to the methods of the class
+%%%---\texttt{Assignable}, which implements the rules presented in
+%%%---Section~\ref{sec-che-for-ass-cla}.
+%%%---
+%%%---
+%%%---
+%%%---
+%%%---\subsection{The class \texttt{Assignable}}
+%%%---\label{sub-sec-the-cla-ass}
+%%%---
+%%%---The class \texttt{Assignable} implements the assignable rules as
+%%%---static methods. To each static method one passes the expression
+%%%---\texttt{e} currently analyzed, the context \texttt{cxt} of the method
+%%%---where the expression \texttt{e} occurs and the contexts \texttt{cxts}
+%%%---of all known classes.
+%%%---
+%%%---For example, when the expression \texttt{e} is an assignment
+%%%---$e_1\:\texttt{=}\:e_2$, it has to be checked that $e_1$ belongs to set
+%%%---of assignable expressions of the method
+%%%---(\texttt{\_in\_PRIME($\cdots$)}) and that it obeys the
+%%%---\textsf{modFE} rules on $e_1$ (\texttt{\_modFE($\cdots$)}) and the
+%%%---\textsf{mod} rules on $e_2$ (\texttt{\_mod($\cdots$)}).
+%%%---\begin{alltt}
+%%%---public static boolean _mod(AST e, ASTContext cxt, Vector cxts)\verb!{!	
+%%%---  boolean tempRes;	
+%%%---  switch(e.getType())\verb!{!	
+%%%---    case JavaTokenTypes.ASSIGN:{\it // =}
+%%%---      tempRes = _in_PRIME(e.getFirstChild(),cxt,cxts) &&
+%%%---       _mod(e.getFirstChild(),currentCxt,cxts) &&
+%%%---       _mod(e.getFirstChild().getNextSibling(),cxt,cxts);
+%%%---      return tempRes;
+%%%---    \vdots 
+%%%---  \verb!}!
+%%%---\verb!}!
+%%%---\end{alltt}
+%%%---
+%%%---
+%%%---
+%%%---
+%%%---\subsection{Experiences using \modtool}
+%%%---\label{sub-sec-usi-the-too}
+%%%---To test the usability of our approach, we have applied \modtool\ to
+%%%---the specifications that we wrote earlier for an electronic purse case
+%%%---study~\cite{CatanoH02a}. This case study consists of .. classes,
+%%%---containing .. methods all together. The specifications are written in
+%%%---\escj, thus the assignable clauses are relatively simple and do not
+%%%---contain constructs as \fieldsof\ and \reach. When writing and
+%%%---improving the specificaitions, we found several times that we had
+%%%---forgotten to mention a variable in an assignable clause, but even
+%%%---after correcting this ....
+Finally we present our experiences in the process of using \modtool
+for checking the specification of the case study Gemplus' electronic
+purse~\cite{CatanoH02a}. 
 
 
 
