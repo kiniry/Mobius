@@ -33,6 +33,11 @@ export JDK_SOURCES=/usr/local/Java/src/jdk-1.2.2_012
 export JDK_BINARIES=${JAVA_HOME}/jre/lib/rt.jar
 export JDKBINARIES=${JDK_BINARIES}
 
+export JML_HOME=/usr/local/Java/JML
+export JML_SPECS=${JML_HOME}/specs
+export JUNIT_HOME=/usr/local/Java/junit
+export JUNIT_JAR=${JUNIT_HOME}/junit.jar
+
 ######################### classpaths #########################
 
 #
