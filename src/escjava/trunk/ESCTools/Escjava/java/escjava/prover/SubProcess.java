@@ -112,7 +112,9 @@ public class SubProcess
 	if (escjava.Main.options().sxLog != null) {
             try {
                 OutputStream fos = new FileOutputStream(escjava.Main.options().sxLog);
-		//fos = new PPOutputStream(fos);
+		if (escjava.Main.options().prettyPrintVC)
+			fos = new PPOutputStream(fos);
+
                 out = new TeeOutputStream(fos, out);
             } catch (FileNotFoundException fnfe) {
                 javafe.util.ErrorSet.fatal("error opening sxLog file " +

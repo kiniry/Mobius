@@ -58,6 +58,9 @@ public class VcToString {
 			     /*@ non_null */ PrintStream to) {
     Hashtable oldNames = integralPrintNames;
     integralPrintNames = (Hashtable)oldNames.clone();
+
+    if (escjava.Main.options().prettyPrintVC)
+	to = new PrintStream(new escjava.prover.PPOutputStream(to));
     
     VcToString vts = new VcToString();
     vts.printDefpreds(to, vts.getDefpreds(e));
