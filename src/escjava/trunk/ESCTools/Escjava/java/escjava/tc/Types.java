@@ -11,12 +11,30 @@ import javafe.util.*;
 
 public class Types extends javafe.tc.Types
 {
-/* TYPE-EQUIV and below
     static {
 	inst = new Types();
-	//System.out.println("INST ESC");
     }
-*/
+
+    public static void init() {
+    }
+
+    protected javafe.tc.TypeSig makeTypeSigInstance(String simpleName,
+					/*@ non_null */ Env enclosingEnv,
+					/*@ non_null */ TypeDecl decl) {
+		return new escjava.tc.TypeSig(simpleName,
+						enclosingEnv,
+						decl);
+    }
+
+    protected javafe.tc.TypeSig makeTypeSigInstance(String[] packageName,
+				/*@ non_null */ String simpleName,
+				javafe.tc.TypeSig enclosingType,
+				TypeDecl decl,
+				CompilationUnit cu) {
+	return new escjava.tc.TypeSig(packageName, simpleName,
+				enclosingType, decl, cu);
+    }
+
 
     public static PrimitiveType
             anyType = PrimitiveType.make(TagConstants.ANY, Location.NULL);
@@ -61,19 +79,20 @@ public class Types extends javafe.tc.Types
      * <p> This routine assumes we are in an annotation so ghost fields are visible
      * and spec_public is equivalent to public. </a>
      */
+/*
     //@ requires t != null
-    public static FieldDecl lookupField(Type t, Identifier id, TypeSig caller) 
+    public FieldDecl lookupFieldInstance(Type t, Identifier id, javafe.tc.TypeSig caller) 
 	    throws LookupException {
 	Assert.notNull(t);
 	if (t instanceof TypeName)
 	    t = TypeSig.getSig((TypeName) t);
 	Assert.notNull(t);
 
-	/*
+	/ *
 	 * Looking up a field in an arraytype is equivalent to looking
 	 * up that field in java.lang.Object unless the field name is
 	 * "length":
-	 */
+	 * /
 	if (t instanceof ArrayType && id != javafe.tc.Types.lenId)
 	    t = javaLangObject();
 
@@ -84,7 +103,7 @@ public class Types extends javafe.tc.Types
 
 	//	/*
 	//	 * Extend caller to handle spec_public:
-	//	 */
+	//	 * /
 	//	caller = new ExtendedTypeSig(caller);
 
 	// Search for a normal field first; propogate any errors other
@@ -107,9 +126,11 @@ public class Types extends javafe.tc.Types
 	    throw new LookupException(LookupException.AMBIGUOUS);
 
 	// Ghost fields are always public, so no access checking required...
+	// FIXME - no longer true
 
 	return decl;
     }
+*/
 } // end of class Types
 
 /*

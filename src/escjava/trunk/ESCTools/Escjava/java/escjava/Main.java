@@ -50,6 +50,11 @@ import javafe.util.*;
 
 public class Main extends javafe.SrcTool
 {
+    {
+	// Makes sure that the escjava.tc.Types factory instance is loaded
+	escjava.tc.Types.init();
+    }
+
     /** Our version number */
     //public final static String version = "(Nijmegen/Kodak) 1.3, 2003";
     public final static String version = Version.VERSION;

@@ -246,7 +246,7 @@ public class BackPred
      * a formula.
      */
 
-    static void addContribution(/*@ non_null */ TypeDecl d,
+    static protected void addContribution(/*@ non_null */ TypeDecl d,
                                 /*@ non_null */ PrintStream proverStream) {
 
         TypeSig sig = TypeCheck.inst.getSig(d);
@@ -316,7 +316,7 @@ public class BackPred
      * around this expression and adds it to the background predicate.
      */
 
-    private static void bgi(/*@ non_null */ String s,
+    protected static void bgi(/*@ non_null */ String s,
                             /*@ non_null */ PrintStream proverStream) {
         proverStream.print("\n(FORALL (s) (IMPLIES (NEQ s null) ");
         proverStream.print(s);
@@ -328,7 +328,7 @@ public class BackPred
      * predicate. 
      */
 
-    private static void bg(/*@ non_null */ String s,
+    protected static void bg(/*@ non_null */ String s,
                            /*@ non_null */ PrintStream proverStream) {
         proverStream.print('\n');
         proverStream.print(s);
@@ -341,7 +341,7 @@ public class BackPred
      * Do we know statically that an expression always returns a
      * non-null value?
      */
-    private static boolean isStaticallyNonNull(VarInit e) {
+    protected static boolean isStaticallyNonNull(VarInit e) {
 	int tag = e.getTag();
 
 	// New expressions are always non-null:
@@ -385,8 +385,8 @@ public class BackPred
      * <p> If returns a non-null LiteralExpr, sets its loc to
      * <code>loc</code>.
      */
-    //@ requires e != null && loc!=Location.NULL
-    private static LiteralExpr eval(Expr e, int loc) {
+    //@ requires e!=null && loc!=Location.NULL;
+    protected static LiteralExpr eval(Expr e, int loc) {
 	Object val = ConstantExpr.eval(e);
 
 	if (val instanceof Boolean)
@@ -415,7 +415,7 @@ public class BackPred
      */
     //@ requires e1 != null && e2!=null && t!=null;
     //@ ensures \result != null;
-    private static Expr eq(Expr e1, Expr e2, Type t) {
+    protected static Expr eq(Expr e1, Expr e2, Type t) {
 	if (!(t instanceof PrimitiveType))
 	    return GC.nary(TagConstants.REFEQ, e1, e2);
 

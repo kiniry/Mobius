@@ -27,7 +27,7 @@ GhostLocalScope.java:35: Error: An instance field may be accessed only via an ob
 GhostLocalScope.java:36: Error: Undefined variable 'i'
                 kk = i;  // ERROR
                      ^
-GhostLocalScope.java:38: Error: Undefined variable 'i'
+GhostLocalScope.java:38: Error: An instance field may be accessed only via an object and/or from a non-static context or an inner class enclosed by a type possessing that field.
                 //@ set k = i; // ERROR
                             ^
 GhostLocalScope.java:39: Error: An instance field may be accessed only via an object and/or from a non-static context or an inner class enclosed by a type possessing that field.

@@ -674,13 +674,17 @@ premap generated from the uses of \old in the body of the method + the spec of t
 	
             FieldDecl owner = null; // make the compiler happy
             boolean found = true;
+	    boolean save = escjava.tc.FlowInsensitiveChecks.inAnnotation;
             try {
+		escjava.tc.FlowInsensitiveChecks.inAnnotation = true;
                 owner = Types.lookupField(obj, Identifier.intern("owner"),
                                           obj);
             }
             catch (javafe.tc.LookupException e) {
                 found = false;
-            }
+            } finally {
+		escjava.tc.FlowInsensitiveChecks.inAnnotation = save;
+	    }
             // if we couldn't find the owner ghost field, there's nothing to do
             if (found) {
                 VariableAccess ownerVA = 

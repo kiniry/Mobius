@@ -142,7 +142,8 @@ public class TypeSig extends Type
 		continue;
 
 	    TypeDecl subDecl = (TypeDecl)member;
-	    TypeSig subSig = TypeSig.make(packageName, subDecl.id.toString(),
+	    TypeSig subSig = Types.makeTypeSig(
+					packageName, subDecl.id.toString(),
 					 this, subDecl, CU);
 	    // (The TypeSig constructor will call subSig.setDecl(subDecl, CU))
 	}
@@ -347,7 +348,7 @@ public class TypeSig extends Type
 	if (result != null)
 	    return result;
        
-	result = TypeSig.make(P, T, (TypeSig)null, (TypeDecl)null,
+	result = Types.makeTypeSig(P, T, (TypeSig)null, (TypeDecl)null,
 				  (CompilationUnit)null);
 	map.put(key, result);
 	return result;
@@ -889,6 +890,11 @@ public class TypeSig extends Type
     //@ invariant state>=PREPPED ==> fields != null;
     protected FieldDeclVec fields;
 
+    // Note: 'fields' contains all visible fields
+    // 'hiddenfields' contains all the others (e.g. hidden or not accessible)
+    //@ invariant state>=PREPPED ==> hiddenfields != null;
+    protected FieldDeclVec hiddenfields;
+
     /** After preparation, this field contains all method members of
     the <code>TypeDecl</code> associated with <code>this</code>,
     including inherited ones. */
@@ -901,16 +907,25 @@ public class TypeSig extends Type
     <code>this</code>, including inherited ones.  (If
     <code>this</code> has not been prepped yet, this method will prep
     it (possibly triggering parsing and/or processing of other
-    types).) */
+    types).) If allFields is true, then all declared fields, including 
+    hidden and inaccessible fields, are returned; if allFields is false,
+    then only visible fields are returned.  */
 
     // "ensures" <result elements>.hasParent
     //@ ensures \result != null;
-    public FieldDeclVec getFields() {
+    public FieldDeclVec getFields(boolean allFields) {
         prep();
         Assert.notNull( fields );
-        return fields;
+	if (!allFields) return fields;
+	FieldDeclVec v = fields.copy();
+	v.append(hiddenfields);
+	return v;
     }
+
+    public FieldDeclVec getFieldsRaw() { return fields; }
     
+    public FieldDeclVec getHiddenFields() { return hiddenfields; }
+
     /** Similar to <code>getFields</code>, except for methods. */
 
     // "ensures" <result elements>.hasParent
@@ -977,7 +992,7 @@ public class TypeSig extends Type
     public FieldDecl lookupField(Identifier id, /*@ non_null */ TypeSig caller) 
             throws LookupException
     {
-        FieldDeclVec fields = getFields();
+        FieldDeclVec fields = getFields(false);
         FieldDecl r = null;
         for(int i=0; i<fields.size(); i++ ) {
             FieldDecl fd = fields.elementAt(i);
@@ -998,7 +1013,7 @@ public class TypeSig extends Type
     /** TBW */
     
     public boolean hasField(Identifier id) {
-        FieldDeclVec fields = getFields();
+        FieldDeclVec fields = getFields(false);
         for(int i=0; i<fields.size(); i++)
             if (fields.elementAt(i).id == id) return true;
         return false;

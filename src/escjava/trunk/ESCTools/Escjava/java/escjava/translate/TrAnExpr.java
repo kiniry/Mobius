@@ -23,7 +23,7 @@ import escjava.parser.OldVarDecl;
 
 /** Translates Annotation Expressions to GCExpr. */
 
-public final class TrAnExpr {
+public class TrAnExpr {
 
     /** This hashtable keeps track of cautions issued, with respect to
      * using variables in \old pragmas that were not mentioned in modifies
@@ -104,8 +104,10 @@ public final class TrAnExpr {
      * as the empty map.
      **/
 
-    private static Expr specialResultExpr = null;
-    private static Expr specialThisExpr = null;
+    protected static Expr specialResultExpr = null;
+    protected static Expr specialThisExpr = null;
+
+    protected static TrAnExpr inst = new TrAnExpr();
 
     public static Expr trSpecExpr(Expr e, Hashtable sp, Hashtable st, Expr thisExpr) {
 	try {
@@ -116,6 +118,10 @@ public final class TrAnExpr {
 	}
     }
     public static Expr trSpecExpr(Expr e, Hashtable sp, Hashtable st) {
+	return inst.trSpecExprI(e,sp,st);
+    }
+
+    public Expr trSpecExprI(Expr e, Hashtable sp, Hashtable st) {
         int tag = e.getTag();
         switch (tag) {
         case TagConstants.THISEXPR: {
@@ -985,7 +991,7 @@ wrap those variables being modified and not everything.
 	return v;
   }
 
-  static Hashtable union(Hashtable h0, Hashtable h1) {
+  static public Hashtable union(Hashtable h0, Hashtable h1) {
     if (h0 == null)
       return h1;
     if (h1 == null)
@@ -1288,7 +1294,7 @@ wrap those variables being modified and not everything.
       }
     }
 
-  static int getGCTagForBinary(BinaryExpr be) {
+  static public int getGCTagForBinary(BinaryExpr be) {
 
     int tag = be.getTag();
     
@@ -1399,7 +1405,7 @@ wrap those variables being modified and not everything.
   /** TBW.  Requires e.getTag() in { UNARYSUB, NOT, BITNOT, INC,
        POSTFIXINC, DEC, POSTFIXDEC } */
 
-  static int getGCTagForUnary(UnaryExpr e) {
+  static public int getGCTagForUnary(UnaryExpr e) {
     // find correct row in table
     int tag = e.getTag();
     int row;
@@ -1443,7 +1449,7 @@ wrap those variables being modified and not everything.
   
   private static int cSubstReplacements = 0;
 
-  private static VariableAccess apply(Hashtable map, VariableAccess va) {
+  protected static VariableAccess apply(Hashtable map, VariableAccess va) {
     if (map == null) {
       return va;
     }

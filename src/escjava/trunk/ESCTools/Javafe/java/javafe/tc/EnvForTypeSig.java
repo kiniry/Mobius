@@ -15,7 +15,7 @@ import javafe.util.Assert;
  *
  * Each TypeSig has two different internal environments, depending on
  * whether or not its instance members are considered to be
- * accessible.  (Such members are always visible.)  The creator
+ * accessible.  (Static members are always visible.)  The creator
  * specifies which of the two environments are desired.
  */
 
@@ -222,8 +222,8 @@ public class EnvForTypeSig extends Env {
 	return peer.hasField(id);
     }
 
-    public FieldDeclVec getFields() {
-	return peer.getFields();
+    public FieldDeclVec getFields(boolean allFields) {
+	return peer.getFields(allFields);
     }
 
     protected boolean hasMethod(Identifier id) {

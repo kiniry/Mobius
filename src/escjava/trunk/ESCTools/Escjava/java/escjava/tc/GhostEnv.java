@@ -12,6 +12,7 @@ import escjava.ast.TagConstants;
 import escjava.ast.Utils;
 
 import javafe.tc.*;
+import javafe.tc.TypeSig;
 
 /**
  * This class overrides {@link EnvForTypeSig} so that it "sees" ghost and model
@@ -54,10 +55,9 @@ public class GhostEnv extends EnvForTypeSig
 			   + (staticContext ? "static" : "complete")
 			   + " bindings of type "
 	    + peer.getExternalName() + " ]]");
-	java.util.Iterator i = collectGhostFields().keySet().iterator();
-	while (i.hasNext()) {
-		Object o = i.next();
-		System.out.println("    " + ((FieldDecl)o).id);
+	FieldDeclVec fdv = ((escjava.tc.TypeSig)peer).jmlFields;
+	for (int i=0; i<fdv.size(); ++i) {
+		System.out.println("    " + fdv.elementAt(i).id);
 	}
 	
     }
@@ -75,10 +75,9 @@ public class GhostEnv extends EnvForTypeSig
      * <code>null</code>.
      */
     public FieldDecl getGhostField(String n, FieldDecl excluded) {
-	Enumeration e = collectGhostFields().elements();
-
-	while (e.hasMoreElements()) {
-	    FieldDecl f = (FieldDecl)e.nextElement();
+	FieldDeclVec fdv = peer.getFields(false);
+	for (int i=0; i<fdv.size(); ++i) {
+	    FieldDecl f = fdv.elementAt(i);
 	    if (!f.id.toString().equals(n))
 		continue;
 
@@ -99,8 +98,9 @@ public class GhostEnv extends EnvForTypeSig
      * needed).
      */
 // FIXME - this gets called a great many times
-    private void collectGhostFields(TypeSig s, boolean superclass) {
+    //private void collectGhostFields(TypeSig s, boolean superclass) {
 	// Iterate over all TypeDeclElems in s:
+/*
 	TypeDecl d = s.getTypeDecl();
 	TypeDeclElemVec elems = d.elems;
 	for (int i = 0; i < elems.size(); i++) {
@@ -140,7 +140,8 @@ public class GhostEnv extends EnvForTypeSig
 	for (int i = 0; i < d.superInterfaces.size(); i++)
 	    collectGhostFields(TypeSig.getSig(
 		d.superInterfaces.elementAt(i)),true);
-    }
+*/
+    //}
 
     static public boolean isStatic(FieldDecl d) {
 	boolean isStatic = d.parent instanceof InterfaceDecl;
@@ -154,6 +155,7 @@ public class GhostEnv extends EnvForTypeSig
      * @return all our ghost fields (including our supertypes) as
      * "set" encoded in a hashtable.
      */
+/*
     private Hashtable collectGhostFields() {
 	if (fields != null)
 	    return fields;
@@ -162,6 +164,7 @@ public class GhostEnv extends EnvForTypeSig
 	collectGhostFields(peer,false);
 	return fields;
     }
+*/
 
     // Misc. routines
 
@@ -205,13 +208,15 @@ public class GhostEnv extends EnvForTypeSig
 	return (getGhostField(id.toString(), null) != null);
     }
 
-    public FieldDeclVec getFields() {
+    public FieldDeclVec getFields(boolean allFields) {
 	FieldDeclVec fdv = FieldDeclVec.make();
-	fdv.append(super.getFields());
-	Enumeration e = collectGhostFields().elements();
-	while (e.hasMoreElements()) {
-	    fdv.addElement((FieldDecl)e.nextElement());
-	}
+	fdv.append(super.getFields(allFields));
+	if (!(peer instanceof escjava.tc.TypeSig)) return fdv;
+	escjava.tc.TypeSig ts = (escjava.tc.TypeSig)peer;
+	fdv.append(ts.jmlFields);
+	if (!allFields) return fdv;
+	fdv.append(ts.jmlHiddenFields);
+	fdv.append(ts.jmlDupFields);
         return fdv;
     }
 

@@ -34,6 +34,9 @@ public class PrepTypeDeclaration {
     //@ set fieldSeq.elementType       = \type(FieldDecl)
     //@ set fieldSeq.owner = this
 
+    //@ set hiddenfieldSeq.elementType       = \type(FieldDecl)
+    //@ set hiddenfieldSeq.owner = this
+
     //@ set constructorSeq.elementType = \type(ConstructorDecl)
     //@ set constructorSeq.owner = this
   }
@@ -50,6 +53,12 @@ public class PrepTypeDeclaration {
     
     TypeDecl decl = sig.getTypeDecl();
 
+    prepStart(sig,decl);
+    prepDo(sig,decl);
+    prepEnd(sig,decl);
+  }
+
+  protected void prepStart(TypeSig sig, TypeDecl decl) {
     /*
      * Check for same simple name as an enclosing type:
      */
@@ -64,19 +73,28 @@ public class PrepTypeDeclaration {
 
 
     fieldSeq.push();
+    hiddenfieldSeq.push();
     methodSeq.push();
     constructorSeq.push();
+    numList.addFirst(new Integer(numFields));
+    numFields = -1;
+  }
 
+  protected void prepDo(TypeSig sig, TypeDecl decl) {
     //@ assert decl != null;
     //@ assume (decl instanceof ClassDecl) || (decl instanceof InterfaceDecl)
     if( decl instanceof ClassDecl ) 
       visitClassDecl( (ClassDecl)decl, sig );
     else
       visitInterfaceDecl( (InterfaceDecl)decl, sig );
+  }
 
+  protected void prepEnd(TypeSig sig, TypeDecl decl) {
     sig.fields = FieldDeclVec.popFromStackVector( fieldSeq );
+    sig.hiddenfields = FieldDeclVec.popFromStackVector( hiddenfieldSeq );
     sig.methods = MethodDeclVec.popFromStackVector( methodSeq );
     constructorSeq.pop();
+    numFields = ((Integer)numList.removeFirst()).intValue();
   }
 
   // ----------------------------------------------------------------------
@@ -160,6 +178,10 @@ public class PrepTypeDeclaration {
   //@ invariant fieldSeq.owner == this
   protected /*@ non_null @*/ StackVector fieldSeq = new StackVector();
 
+  //@ invariant hiddenfieldSeq.elementType == \type(FieldDecl)
+  //@ invariant hiddenfieldSeq.owner == this
+  protected /*@ non_null @*/ StackVector hiddenfieldSeq = new StackVector();
+
   // "invariant" <elements>.hasParent
   //@ invariant methodSeq.elementType == \type(MethodDecl)
   //@ invariant methodSeq.owner == this
@@ -169,6 +191,9 @@ public class PrepTypeDeclaration {
   //@ invariant constructorSeq.owner == this
   protected /*@ non_null @*/ StackVector constructorSeq = new StackVector();
   
+  private int numFields = -1;
+  private java.util.LinkedList numList = new java.util.LinkedList();
+
   // ----------------------------------------------------------------------
 
   /** Does signature-level checking and adds type members to fieldSeq
@@ -194,6 +219,12 @@ public class PrepTypeDeclaration {
 			  false );
     }
 
+    startSupers();
+
+    // Add members of direct super interfaces
+    
+    //checkSuperInterfaces( currentSig, decl.superInterfaces );
+    
     // Add members of direct superclass, if any
     // superclass may be null, or may name an interface
 
@@ -227,7 +258,7 @@ public class PrepTypeDeclaration {
     // Add members of direct super interfaces
     
     checkSuperInterfaces( currentSig, decl.superInterfaces );
-    
+
     // Check no two abstract methods with same method signature
     // and different return types
     
@@ -415,6 +446,10 @@ public class PrepTypeDeclaration {
   
   // ----------------------------------------------------------------------
   
+  protected void startSupers() {
+    numFields = fieldSeq.size();
+  }
+
   /** Check superinterfaces 
     and add their members to fieldSeq and methodSeq. 
       */
@@ -686,7 +721,7 @@ public class PrepTypeDeclaration {
 
     TypeDecl jLOTypeDecl = Types.javaLangObject().getTypeDecl();
     
-    FieldDeclVec superFields = superType.getFields();
+    FieldDeclVec superFields = superType.getFields(false);
     for( int i=0; i<superFields.size(); i++ ) {
 	FieldDecl superField = superFields.elementAt(i);
 	//@ assume superField.hasParent  // "ensures"
@@ -696,13 +731,23 @@ public class PrepTypeDeclaration {
 	// If multiple paths by which same field declaration 
 	// could be inherited, then it is inherited only once.
 	
-	if( superMemberAccessible( type, superType, superField.modifiers ) 
-	   && !declaresField( type, superField.id )
-	   && !fieldSeq.contains( superField ) )  {
+	if (fieldSeq.contains( superField )  ||
+	    hiddenfieldSeq.contains(superField) )  {
+		// field already included by inheritance through another
+		// interface
+	} else if( superMemberAccessible( type, superType, superField.modifiers,
+							superField.pmodifiers ) 
+	   && !declaresFieldJava( type, superField.id ) ) {
 	    fieldSeq.addElement( superField );
+	} else {
+	    hiddenfieldSeq.addElement( superField );
 	}
     }
-    
+    superFields = superType.getHiddenFields();
+    for( int i=0; i<superFields.size(); i++ ) {
+	hiddenfieldSeq.addElement(superFields.elementAt(i));
+    }
+
     MethodDeclVec superMethods = superType.getMethods();
     for( int i=0; i<superMethods.size(); i++ ) {
 	MethodDecl superMethod = superMethods.elementAt(i);
@@ -735,7 +780,8 @@ public class PrepTypeDeclaration {
 	// with same sig, then the abstract method is overridden
 	// by the non-abstract method
 	
-	if( superMemberAccessible( type, superType, superMethod.modifiers ) ) 
+	if( superMemberAccessible( type, superType, superMethod.modifiers,
+						superMethod.pmodifiers ) ) 
 	  {
 	    
 	    // Extract signature to check if overridden or hidden
@@ -831,9 +877,10 @@ public class PrepTypeDeclaration {
   /** Check if a member is accessible from a direct subclass. */
   
   //@ requires type != null && superType != null;
-  private boolean superMemberAccessible(TypeSig type, 
+  protected boolean superMemberAccessible(TypeSig type, 
 					TypeSig superType, 
-					int modifiers ) {
+					int modifiers,
+					ModifierPragmaVec pmodifiers ) {
       
       // if private then not inherited by subclass
       // Only protected and public members are inherited by subclasses
@@ -848,7 +895,7 @@ public class PrepTypeDeclaration {
   /** Check if a type declares a field. */
   
   //@ requires sig != null;
-  private boolean declaresField(TypeSig sig, Identifier id ) {
+  protected boolean declaresFieldJava(TypeSig sig, Identifier id ) {
 
     TypeDeclElemVec elems = sig.getTypeDecl().elems;    
     for( int i=0; i<elems.size(); i++ ) {

@@ -52,22 +52,22 @@ InstanceError.java:42: Error: May not specify both static and instance on a decl
 InstanceError.java:43: Error: May not specify both static and instance on a declaration
         //@ public ghost static instance boolean b6; // ERROR
                                 ^
-InstanceError.java:68: Error: Undefined variable 'gi'
+InstanceError.java:68: Error: An instance field may be accessed only via an object and/or from a non-static context or an inner class enclosed by a type possessing that field.
                 set ii = gi; // ERROR
                          ^
-InstanceError.java:71: Error: Undefined variable 'gmi'
+InstanceError.java:71: Error: An instance field may be accessed only via an object and/or from a non-static context or an inner class enclosed by a type possessing that field.
                 set ii = gmi; // ERROR
                          ^
-InstanceError.java:73: Error: Undefined variable 'cg'
+InstanceError.java:73: Error: An instance field may be accessed only via an object and/or from a non-static context or an inner class enclosed by a type possessing that field.
                 set ii = cg; // ERROR
                          ^
-InstanceError.java:74: Error: Undefined variable 'cgi'
+InstanceError.java:74: Error: An instance field may be accessed only via an object and/or from a non-static context or an inner class enclosed by a type possessing that field.
                 set ii = cgi; // ERROR
                          ^
-InstanceError.java:76: Error: Undefined variable 'cgm'
+InstanceError.java:76: Error: An instance field may be accessed only via an object and/or from a non-static context or an inner class enclosed by a type possessing that field.
                 set ii = cgm; // ERROR
                          ^
-InstanceError.java:77: Error: Undefined variable 'cgmi'
+InstanceError.java:77: Error: An instance field may be accessed only via an object and/or from a non-static context or an inner class enclosed by a type possessing that field.
                 set ii = cgmi; // ERROR
                          ^
 InstanceError.java:82: Error: An instance modifier may only be applied to ghost and model fields

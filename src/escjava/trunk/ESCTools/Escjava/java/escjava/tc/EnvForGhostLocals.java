@@ -8,6 +8,7 @@ import java.util.Hashtable;
 import javafe.ast.*;
 import javafe.util.*;
 import javafe.tc.*;
+import javafe.tc.TypeSig;
 
 
 /**

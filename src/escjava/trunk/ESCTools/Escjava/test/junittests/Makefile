@@ -73,7 +73,8 @@ OTHERTESTS = \
 ## These have output that depends on initialization (e.g. what has already 
 ## happened in the previous junittests), so the output is more stable when
 ## run separately
-NOTJUNITTESTS = Desugaring.java 
+NOTJUNITTESTS = 
+## Desugaring.java 
 ## FormalNonnullInheritance.java 
 ## DesugaringA.java
 ## InheritedSpecs.java NL.java

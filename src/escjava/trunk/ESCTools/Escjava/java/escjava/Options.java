@@ -220,6 +220,9 @@ public class Options extends javafe.SrcToolOptions
     // be part of the annotation language
     public boolean allowAlsoRequires = true;
 
+    // Debug flag that dumps the fields of each class
+    public boolean showFields = false;
+
     /**
      * Number of stages to run.  The stages currently in order are:
      *     1. loading, parsing, and type checking
@@ -790,7 +793,10 @@ public class Options extends javafe.SrcToolOptions
 	} else if (option.equals("-useVarsForMethods")) {
 	    useFcnsForMethods = false;
 	    return offset;
-	}
+	} else if (option.equals("-showFields")) {
+	    showFields = true;
+	    return offset;
+        }
     
         // Pass on unrecognized options:
         return super.processOption(option, args, offset);

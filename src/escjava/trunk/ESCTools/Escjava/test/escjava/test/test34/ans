@@ -620,7 +620,7 @@ BogusGhost.java:22: Associated declaration:
   static int p;
              ^
 Caution: Turning off extended static checking due to type error(s)
-BogusGhost.java:81: Error: Undefined variable 'y'
+BogusGhost.java:81: Error: An instance field may be accessed only via an object and/or from a non-static context or an inner class enclosed by a type possessing that field.
     /*@ set y = 0; */   // not legal
             ^
 BogusGhost.java:98: Error: May use set only with assignment targets that are declared ghost
