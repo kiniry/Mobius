@@ -24,7 +24,8 @@ public class TagConstants extends OperatorTags
 
   public static final int IDENT = javafe.ast.OperatorTags.LAST_TAG + 1;
 
-  public static final int BOOLEANTYPE = IDENT + 1;
+  public static final int ERRORTYPE = IDENT + 1;
+  public static final int BOOLEANTYPE = ERRORTYPE + 1;
   public static final int INTTYPE = BOOLEANTYPE + 1;
   public static final int LONGTYPE = INTTYPE + 1;
   public static final int CHARTYPE = LONGTYPE + 1;
@@ -46,7 +47,7 @@ public class TagConstants extends OperatorTags
 
   public static final int LAST_TAG = NULLLIT;
 
-  private static final String[] tags = { "IDENT",
+  private static final String[] tags = { "IDENT", "ERRORTYPE",
 	"BOOLEANTYPE", "INTTYPE", "LONGTYPE", "CHARTYPE",
 	"FLOATTYPE", "DOUBLETYPE", "VOIDTYPE", "NULLTYPE",
 	"BYTETYPE", "SHORTTYPE", 

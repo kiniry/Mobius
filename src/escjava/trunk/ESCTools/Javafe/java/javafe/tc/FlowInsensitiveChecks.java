@@ -522,10 +522,12 @@ public class FlowInsensitiveChecks
                         if(Types.isSameType(returnType, Types.voidType))
                             ErrorSet.error(rs.loc, 
                                            "This routine is not expected to return a value");
-                        else if(!assignmentConvertable(rs.expr, returnType)) 
-                            ErrorSet.error(rs.loc, 
+                        else if(!assignmentConvertable(rs.expr, returnType)) {
+                            if (!Types.isErrorType(res))
+				ErrorSet.error(rs.loc, 
                                             "Cannot convert "+Types.printName(res)
                                             +" to return type "+Types.printName(returnType));
+			}
                     } else {
                         if(!Types.isSameType(returnType, Types.voidType))
                             ErrorSet.error(rs.loc, "This routine must return a value");
@@ -1821,13 +1823,14 @@ public class FlowInsensitiveChecks
     //@ requires e != null
     static boolean checkIntegralType(Expr e) {
         Type t = getType(e);
-        if(!Types.isIntegralType(t)) {
-            ErrorSet.error(e.getStartLoc(), 
+        if(Types.isIntegralType(t)) {
+            return true;
+	} else {
+	    if (!Types.isErrorType(t))
+		ErrorSet.error(e.getStartLoc(), 
                             "Cannot convert "+Types.printName(t)
                             +" to an integral type");
             return false;
-        } else {
-            return true;
         }
     }
 
@@ -1835,7 +1838,8 @@ public class FlowInsensitiveChecks
     static boolean checkNumericType(Expr e) {
         Type t = getType(e);
         if(!Types.isNumericType(t)) {
-            ErrorSet.error(e.getStartLoc(), 
+	    if (!Types.isErrorType(t))
+		ErrorSet.error(e.getStartLoc(), 
                             "Cannot convert "+Types.printName(t)
                             +" to a numeric type ");
             return false;
@@ -1942,7 +1946,8 @@ public class FlowInsensitiveChecks
     //@ requires expr != null && t != null
     static void checkType(Expr expr, Type t) {
         if(!assignmentConvertable(expr, t)) {
-            ErrorSet.error(expr.getStartLoc(), 
+	    if (!Types.isErrorType(getType(expr)))
+		ErrorSet.error(expr.getStartLoc(), 
                             "Cannot convert "+Types.printName(getType(expr))
                             +" to "+Types.printName(t));
         }

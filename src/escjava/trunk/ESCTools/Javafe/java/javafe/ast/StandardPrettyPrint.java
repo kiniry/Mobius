@@ -679,6 +679,7 @@ public class StandardPrettyPrint extends PrettyPrint {
         switch (t.getTag()) {
             case TagConstants.BOOLEANTYPE: write(o, "boolean"); break;
             case TagConstants.BYTETYPE: write(o, "byte"); break;
+            case TagConstants.ERRORTYPE: write(o, "error"); break;
             case TagConstants.SHORTTYPE: write(o, "short"); break;
             case TagConstants.INTTYPE: write(o, "int"); break;
             case TagConstants.LONGTYPE: write(o, "long"); break;

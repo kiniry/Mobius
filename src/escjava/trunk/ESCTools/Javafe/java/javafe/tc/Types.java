@@ -97,6 +97,14 @@ public class Types
         return PrimitiveType.makeNonSyntax(tag);
     }
 
+	/** Used to indicate the type of an illegal operation, so that
+		error messages do not unnecessarily propagate;
+		should only be used if the error has already been reported.
+	*/
+    //@ invariant errorType != null;
+    public static PrimitiveType 
+            errorType = makePrimitiveType( TagConstants.ERRORTYPE );
+
     //@ invariant voidType != null
     public static PrimitiveType 
             voidType = makePrimitiveType( TagConstants.VOIDTYPE );
@@ -282,6 +290,10 @@ public class Types
 
     public static boolean isBooleanType(Type t) {
         return isPrimitiveType( t, TagConstants.BOOLEANTYPE );
+    }
+
+    public static boolean isErrorType(Type t) {
+        return isPrimitiveType( t, TagConstants.ERRORTYPE );
     }
 
     public static boolean isShortType(Type t){
