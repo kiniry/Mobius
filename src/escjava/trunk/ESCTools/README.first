@@ -120,7 +120,7 @@ found in $ESCTOOLS_ROOT/Escjava/escjava.sample .
 
 The two required variables are:
 ESCTOOLS_ROOT - defined to be the absolute path to the ESCTools directory
-SIMPLIFY - defined to be the name of (not path to) an appropriate Simplify
+SIMPLIFY - defined to be the *name* of (*not* path to) an appropriate Simplify
 	executable in $ESCTOOLS_ROOT/Escjava/release/master/bin
 	The Makefile makes a guess at an appropriate value for some 
 	platforms, but defining it yourself will avoid the warning messages.
