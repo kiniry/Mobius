@@ -1,43 +1,41 @@
-#!/bin/tcsh -f
+#!/bin/bash
 # Copyright 2001, Compaq Computer Corporation
-#  Note:  In order to make escjava's -routine flag work with an argument
-#  that contains Java array brackets, like
-#    -routine "Java2Html.main(java.lang.String[])"
-#  one must (apparently) use tcsh, not csh.  The reason appears to be that
-#  csh insists on trying to glob the occurrence of [], and despite the fact
-#  that escj might be called with double quotes around any argument that
-#  contains Java array brackets (as in the example above), csh globs these
-#  brackets when interpreting the script file. --Rustan and Cormac, 24 Nov 1999
+# Copyright 2003 University of Nijmegen
 
-
-if ($?ESCJ) then
-else
+# Make sure that setup.sh has been sourced.
+if [ -z "${ESCJ}" ]; then
     echo "Error: setup must be sourced first"
     exit 2
-endif
+fi
 
+# If no standard arguments are set, set some escjava defaults for now.
+if [ -z "${ESCJ_STDARGS}" ]; then
+    ESCJ_STDARGS="-nowarn Deadlock"
+fi
 
-#
-# Set escjava defaults for now:
-#
-if ($?ESCJ_STDARGS) then
+# If a CLASSPATH has been defined, set USERPATH to it, otherwise set
+# USERPATH to '.'.
+if [ -n "${CLASSPATH}" ]; then
+    USERPATH=${CLASSPATH}
 else
-    setenv	ESCJ_STDARGS	"-nowarn Deadlock"   # See above warning...
-endif
+    USERPATH="."
+fi
 
+JAVA_VM_DEBUG_FLAGS="-Xdebug -Xnoagent -Djava.compiler=NONE \
+-Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=y"
 
-if ($?CLASSPATH) then
-    setenv      USERPATH        ${CLASSPATH}
-else
-    setenv	USERPATH	"."
-endif
+echo "Executing:"
+echo "${JAVA} ${JAVA_VM_FLAGS}"
+echo "  -Dsimplify=${ESCJAVA_ROOT}/simplify"
+echo "  -classpath ${ESC_CLASSPATH}"
+echo "  escjava.Main"
+echo "  -bootclasspath ${BOOTCLASSPATH}"
+echo "  -classpath ${USERPATH}"
+echo "  ${ESCJ_STDARGS}"
+echo "  ${@}"
 
+JAVA_VM_FLAGS=${JAVA_VM_DEBUG_FLAGS}
 
-#
-# Where to get binaries for escjava:
-#
-setenv	CLASSPATH	${CLASSES}
-
-${JAVA} -Dsimplify=${ESCJAVA_ROOT}/simplify \
+${JAVA} ${JAVA_VM_FLAGS} -Dsimplify=${ESCJAVA_ROOT}/simplify \
     -classpath ${ESC_CLASSPATH} escjava.Main \
-    -bootclasspath ${BOOTCLASSPATH} -classpath ${USERPATH} ${ESCJ_STDARGS} $*
+    -bootclasspath ${BOOTCLASSPATH} -classpath ${USERPATH} ${ESCJ_STDARGS} ${@}
