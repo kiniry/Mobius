@@ -1,0 +1,12 @@
+To build ESC/Java, follow the sequence:
+
+ 0. make sure you are in a bash shell
+ 1. change to the Javafe directory
+ 2. "source setup.sh"
+ 3. make
+ 4. cd ..
+ 5. change to the Escjava directory
+ 6. "source setup.sh"
+ 7. make
+
+You are done.
