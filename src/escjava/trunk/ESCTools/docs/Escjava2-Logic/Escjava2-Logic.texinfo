@@ -35,7 +35,7 @@ Original version (ESCJ 8) by K. Rustan Leino and Jim Saxe, 30 December
 1997.  Some additions by Cormac Flanagan, 24 April 1998.  Modified by
 K. Rustan Leino, 13 September 1999 (making ESCJ 8a from ESCJ 8).
 Modified by Joseph Kiniry, with assistance from Cesare Tinelli and
-Silvio Ranise on 21 June 2004.
+input from Silvio Ranise, beginning on 21 June 2004.
 
 Current editor Joseph Kiniry.
 
@@ -56,7 +56,7 @@ This document is a work in progress.  Suggestions and input are always
 welcome.
 
 @copying
-The Logic of ESC/Java2 are licensed under the Creative Commons
+``The Logic of ESC/Java2'' is licensed under the Creative Commons
 Attribution-NonCommercial-ShareAlike 2.0 license.  See
 @uref{http://creativecommons.org/licenses/by-nc-sa/2.0/}
 
@@ -155,7 +155,7 @@ Specification Language, Kiniry
 @insertcopying
 @end ifnottex
 
-This document describes the logic of ESC/Java. It describes axioms
+This document describes the logic of ESC/Java2. It describes axioms
 that are part of the logic (and thus are always included in the
 background predicate) and axioms that are introduced to the background
 predicate when the Java program being checked contains various
@@ -206,13 +206,13 @@ assumption
 @item
 assertion
 @end itemize
-
-@samp{In this document, the use of this font indicates a discussion of
-open design issues.}
+In this document, the use of footnotes indicates a discussion of
+open design issues.
 
 This document was written under the heavy influence of Leino, Saxe,
-and Flanagan's @emph{The Logic of ESC/Java} and Dave Detlefs's @emph{Logic
-of ESC/Modula-3}.
+and Flanagan's @emph{The Logic of ESC/Java},
+which was in turn written under the heavy influence of Dave Detlefs's 
+@emph{Logic of ESC/Modula-3}.
 
 @c =============================================================================
 @node Preliminaries, Types and Subtypes, Introduction, Top
@@ -286,7 +286,7 @@ to show that we intend to use the function symbol
 @end itemize
 as a user-defined predicate symbol.
 
-@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@c -----------------------------------------------------------------------------
 @node Quantifiers and Triggering Patterns, Predicate Definitions, Terms and predicates, Terms and predicates
 @subsection Quantifiers and Triggering Patterns
 
@@ -365,7 +365,7 @@ of matching rules.  For example, we would write the group theory identity
 axiom as
 @itemize @minus
 @item
-@math{(\forall x :: @underline{times(e, x)} == x)}
+@math{(\forall x :: \underline{times(e, x)} == x)}
 @end itemize
 to indicate that @var{times}(@var{e}, @var{x}) is used as the triggering
 pattern of the resulting matching rule.  In order to improve performance,
@@ -388,7 +388,7 @@ the quantified variables.  An appropriate trigger is the set of terms
 {@var{member}(@var{x}, @var{s}), @var{subset}(@var{s}, @var{t})}:
 @itemize @minus
 @item
-@math{(\forall s, t, x :: @underline{member(x, s)} \wedge @underline{subset(s, t)} \longrightarrow member(x,t))}
+@math{(\forall s, t, x :: \underline{member(x, s)} \wedge \underline{subset(s, t)} \longrightarrow member(x,t))}
 @end itemize
 With this @emph{multi-trigger}, the body will be instantiated upon the
 detection of a pair of ground terms matching @var{member}(@var{x}, @var{s})
@@ -400,12 +400,12 @@ Note that triggering patterns are sets of terms, not predicates.
 Thus, it is not possible to specify the following trigger:
 @itemize @minus
 @item
-@math{(\forall s, t, x :: @underline{member(x, s) \wedge subset(s, t)} \longrightarrow member(x,t))}
+@math{(\forall s, t, x :: \underline{member(x, s) \wedge subset(s, t)} \longrightarrow member(x,t))}
 @end itemize
 Neither is it possible to specify a trigger containing a built-in predicate
 symbol, such as < or ==.
 
-@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@c -----------------------------------------------------------------------------
 @node Predicate Definitions, The as Trick, Quantifiers and Triggering Patterns, Terms and predicates
 @subsection Predicate Definitions
 
@@ -431,7 +431,7 @@ we will use the notation
 Definition: @math{(\forall args :: P(args) == ...)}
 @end itemize
 
-@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@c -----------------------------------------------------------------------------
 @node The as Trick, Maps, Predicate Definitions, Terms and predicates
 @subsection The @var{as} Trick
 
@@ -442,7 +442,7 @@ efficiently but that will not lead to extraneous matches.
 In a world with types, a typical axiom might look like
 @itemize @minus
 @item
-@math{(\forall x: X, y :: @underline{P(x, y)} \longrightarrow Q(x, y))}
+@math{(\forall x: X, y :: \underline{P(x, y)} \longrightarrow Q(x, y))}
 @end itemize
 where @var{x} is quantified over all values of type @var{X} and @var{y}
 is unconstrained.  Since Simplify is type-free, so is our logic. 
@@ -495,7 +495,7 @@ we assume
 This allows us to write the axiom as
 @itemize @minus
 @item
-@math{(\forall x, y :: @underline{P(asX(x), y)} \longrightarrow Q(asX(x), y))}
+@math{(\forall x, y :: \underline{P(asX(x), y)} \longrightarrow Q(asX(x), y))}
 @end itemize
 Here we have a single-term trigger, which should be efficient to match. 
 Also, since we introduce @var{asX} only with arguments that are known
@@ -535,7 +535,7 @@ and write the axiom as
 Multi-argument predicates like @var{isXwrtZ} are used to express more
 intricate properties than types can.
 
-@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@c -----------------------------------------------------------------------------
 @node Maps,  , The as Trick, Terms and predicates
 @subsection Maps
 
@@ -553,10 +553,10 @@ The [ ] function is sometimes called @var{select}.  The semantics
 of [ ] and @var{store} are given by the following axioms:
 @itemize @bullet
 @item
-@math{(\forall m, i, x :: @underline{store(m, i, x)[i]} == x)}
+@math{(\forall m, i, x :: \underline{store(m, i, x)[i]} == x)}
 
 @item
-@math{(\forall m, i, j, x :: i \neq j \longrightarrow @underline{store(m, i, x)[j]} == m[j])}
+@math{(\forall m, i, j, x :: i \neq j \longrightarrow \underline{store(m, i, x)[j]} == m[j])}
 @end itemize
 ESC/Java uses Simplify's built-in @var{select} and @var{store} functions. 
 The second of these axioms is treated specially by Simplify in that the
@@ -571,7 +571,7 @@ by ordinary axioms.
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @node Types, The subtype Predicate, Types and Subtypes, Types and Subtypes
-@subsection Types
+@section Types
 
 Java types are ordinary values in the logic of ESC/Java.  Although
 the logic is untyped, we informally think of these values as having type
@@ -632,7 +632,7 @@ This axiom is called the @emph{Distinct Types Axiom}.
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @node The subtype Predicate, incomparableClasses, Types, Types and Subtypes
-@subsection The subtype Predicate
+@section The subtype Predicate
 
 The logic includes a subtype predicate:
 @itemize
@@ -658,22 +658,22 @@ as
      |- not( A <: B )
 @end example
 
-To illustrate the need for proving such statements, see <A HREF="#Try-Catch Example">Appendix 
-  B example 3</A>. Our current axiomatization of negative subtype statements is 
-  quite incomplete -- we currently only include the antisymmetric axiom. We plan 
-  to investigate this issue more thoroughly in the future. 
+To illustrate the need for proving such statements, see @ref{Try-Catch Example}. 
+Our current axiomatization of negative subtype statements is 
+quite incomplete -- we currently only include the antisymmetric axiom. We plan 
+to investigate this issue more thoroughly in the future. 
 The subtype relation is reflexive and transitive:
 @itemize @bullet
 @item
-@math{(\forall t :: @underline{t <: t})}
+@math{(\forall t :: \underline{t <: t})}
 
 @item
-@math{(\forall t0, t1, t2 :: @underline{t0 <: t1} \wedge @underline{t1 <: t2} \longrightarrow t0 <: t2)}
+@math{(\forall t0, t1, t2 :: \underline{t0 <: t1} \wedge \underline{t1 <: t2} \longrightarrow t0 <: t2)}
 @end itemize
 The subtype relation is also antisymmetric.
 @itemize @bullet
 @item
-@math{(\forall t0, t1 :: @underline{t0 <: t1} \wedge @underline{t1 <: t0} \longrightarrow t0 == t1)}
+@math{(\forall t0, t1 :: \underline{t0 <: t1} \wedge \underline{t1 <: t0} \longrightarrow t0 == t1)}
 @end itemize
 @footnote{An alternative would be to experiment with Simplify's built-in
 ordering theory, but we have concerns about its reliability and its impact
@@ -707,12 +707,12 @@ predicate:
 We could include an axiom that describes the supertypes of @code{C}
 @itemize @minus
 @item
-@math{(\forall t :: @underline{C <: t} \longrightarrow t == C \vee D <: t \vee J <: t \vee K <: t \vee ...)}
+@math{(\forall t :: \underline{C <: t} \longrightarrow t == C \vee D <: t \vee J <: t \vee K <: t \vee ...)}
 @end itemize
 For the built-in class @code{Object}, this would yield@footnote{Do we need this?}
 @itemize @minus
 @item
-@math{(\forall t :: @underline{Object <: t} \longrightarrow t == Object)}
+@math{(\forall t :: \underline{Object <: t} \longrightarrow t == Object)}
 
 @end itemize
 For each interface declaration
@@ -744,18 +744,16 @@ types boolean, char, byte, short, int, long, float, or double), we add
 the following axiom, which says that T has no proper subtypes:
 @itemize @bullet
 @item
-@math{(\forall t :: @underline{t <: T} == (t == T))}
+@math{(\forall t :: \underline{t <: T} == (t == T))}
 @end itemize
-To see why this axiom is useful, see <A HREF="#Final Type Axioms Example">Appendix
-B example 1</A>.
+To see why this axiom is useful, see @ref{Final Type Axioms Example}.
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @node incomparableClasses, arrayTypes, The subtype Predicate, Types and Subtypes
-@subsection Disjointness of Incomparable
+@section Disjointness of Incomparable
 
 @emph{This section is not implemented.} It may be useful for examples such as 
-<A HREF="#Try-Catch Example">Appendix B example 3.</A> 
-@footnote{The axioms in this section are similar to some axioms
+@ref{Try-Catch Example}@footnote{The axioms in this section are similar to some axioms
 introduced in the logic of ESC/Modula-3 to address a problem that arose
 in a program verification.  It is not clear whether the problem has
 since been addressed by other mechanisms.  While we can contrive examples
@@ -790,8 +788,7 @@ Simplify ever explores a case in which @var{BB} and @var{CC} are
 equal, it will infer by congruence closure that
 @var{classDown}(@var{A}, @var{BB}) and @var{classDown}(@var{A},
 @var{CC}) are equal, and thus that @var{B} and @var{C} are equal, in
-contradiction to the <A HREF="#distinctTypesAxiom">Distinct Types
-Axiom</A> in Section 1.0.  Of course, if @code{BB} and @code{CC} were
+contradiction to the @ref{distinctTypesAxiom}.  Of course, if @code{BB} and @code{CC} were
 explicitly declared classes, we could infer their distinction directly
 from the Distinct Types Axiom.  However, @code{BB} and @code{CC} might
 be the unknown dynamic types of objects with declared types @code{B}
@@ -803,7 +800,7 @@ We could introduce a predicate @var{isDirectSubclass}, characterize @var{classDo
 by the axiom
 @itemize @minus
 @item
-@math{(\forall t0, t1, t2 :: @underline{t0 <: t1} \wedge @underline{isDirectSubclass(t1, t2)} \longrightarrow classDown(t2,t0) == t1)}
+@math{(\forall t0, t1, t2 :: \underline{t0 <: t1} \wedge \underline{isDirectSubclass(t1, t2)} \longrightarrow classDown(t2,t0) == t1)}
 @end itemize
 and let each class declaration
 
@@ -816,12 +813,11 @@ give rise to the axiom
 @item
 @var{isDirectSubclass}(@var{C}, @var{D})
 @end itemize
-Instead, we avoid use of a multi-trigger by employing <A
-HREF="#theAsTrick">the @var{as} trick</A> (Section 0.1): We
+Instead, we avoid use of a multi-trigger by employing @ref{The as Trick}: We
 characterize @var{classDown} by the axiom
 @itemize @bullet
 @item
-@math{(\forall t0, t1, t2 :: @underline{t0 <: asChild(t1,t2)} \longrightarrow classDown(t2, t0) == asChild(t1,t2))}
+@math{(\forall t0, t1, t2 :: \underline{t0 <: asChild(t1,t2)} \longrightarrow classDown(t2, t0) == asChild(t1,t2))}
 @end itemize
 and for each class declaration
 
@@ -837,7 +833,7 @@ we introduce the axiom
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @node arrayTypes,  , incomparableClasses, Types and Subtypes
-@subsection Array Types
+@section Array Types
 
 Array types do not give rise to type constants.  Instead, the logic
 includes a function to produce an array type from an element type.
@@ -856,7 +852,7 @@ fact not be represented by a type constant, but by an expression
 All array types are subtypes of @code{Cloneable}:
 @itemize @bullet
 @item
-@math{(\forall t :: @underline{array(t)} <: Cloneable)}
+@math{(\forall t :: \underline{array(t)} <: Cloneable)}
 @end itemize
 Note that since @code{Cloneable} is a subtype of @code{Object}, every
 array type is, by transitivity, also a subtype of @code{Object}.  
@@ -882,7 +878,7 @@ of @code{Object}, direct subinterfaces of @code{Cloneable}, and direct
 subinterfaces of @code{Object} other than @code{Cloneable}.}
 @itemize @minus
 @item
-@math{(\forall t :: @underline{\neg (array(t) <: T}))}
+@math{(\forall t :: \underline{\neg (array(t) <: T}))}
 @end itemize
 
 An alternative approach would be to generate the axiom
@@ -901,7 +897,7 @@ The function @var{array} has a left inverse:
 with axiom@footnote{Is this the right pattern?}
 @itemize @bullet
 @item
-@math{(\forall t :: @underline{elemType(array(t))} == t)}
+@math{(\forall t :: \underline{elemType(array(t))} == t)}
 
 @end itemize
 Intuitively, a type @var{t} is an array type if and only if @math{t ==
@@ -912,23 +908,21 @@ with the axiom
 @math{(\forall t :: isArrayType(t) == (t == array(elemType(t))))}
 @end itemize
 Instead, we simply write @math{t == array(elemType(t))} wherever we
-would have written <I>isArrayType</I>(<I>t</I>)@footnote{While
-<I>Object</I> and <I>Cloneable</I> are not array types, they are
+would have written @math{isArrayType(t)}@footnote{While
+@code{Object} and @code{Cloneable} are not array types, they are
 supertypes of all array types.  The non-object primitive types
-<I>boolean</I>, <I>char</I>, etc. are not supertypes of any array
+@code{boolean}, @code{char}, etc. are not supertypes of any array
 types, but we have not given axioms to that effect, because we are not
 sure they are needed in practice.  The axioms we just gave, however,
-may be useful, as <A HREF="#Array Type-Constant Axioms
-Example">Motivating Example 0</A> show.}.
+may be useful, as @ref{Array Type-Constant Axioms Example} show.}.
 
 As stated in the following axiom, the subtypes of an array type
 @code{T[]} are the array types whose element types are subtypes of
-@code{T}. A use of this axiom is described in <A HREF="#Final Type
-Axioms Example">Appendix B example 1</A> and <A HREF="#Array Element
-Subtype Example">2.</A>
+@code{T}. A use of this axiom is described in @ref{Final Type Axioms Example} 
+and @ref{Array Element Subtype Example}.
 @itemize @bullet
 @item
-@math{(\forall t0, t1 :: @underline{t0 <: array(t1)} == (t0 == array(elemType(t0)) \wedge elemType(t0) <: t1))}
+@math{(\forall t0, t1 :: \underline{t0 <: array(t1)} == (t0 == array(elemType(t0)) \wedge elemType(t0) <: t1))}
 @end itemize
 
 @c =============================================================================
@@ -939,7 +933,7 @@ Subtype Example">2.</A>
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @node isPredicate, casting, Types of Values, Types of Values
-@subsection The is Predicate
+@section The is Predicate
 
 To reason about the dynamic types of values, the logic includes the following
 predicate:
@@ -959,7 +953,7 @@ that modifies @code{v}.
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @node casting, Types of Primitive Values, isPredicate, Types of Values
-@subsection Casting
+@section Casting
 
 The logic contains a function that converts a value to a value of a specified
 type:
@@ -970,12 +964,12 @@ type:
 
 @itemize @bullet
 @item
-@math{(\forall x, t :: is(@underline{cast(x, t)},t))}
+@math{(\forall x, t :: is(\underline{cast(x, t)},t))}
 @end itemize
 If the value is already of the specified type, then casting leaves it unchanged:
 @itemize @bullet
 @item
-@math{(\forall x, t :: is(x, t) \longrightarrow @underline{cast(x,t)} == x)}
+@math{(\forall x, t :: is(x, t) \longrightarrow \underline{cast(x,t)} == x)}
 @end itemize
 In cases where casting in Java can fail, the translation produces appropriate
 checks.  These checks will be described in another document.
@@ -988,11 +982,11 @@ for them arises.
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @node Types of Primitive Values, typesOfObjects, casting, Types of Values
-@subsection Types of Primitive Values
+@section Types of Primitive Values
 
 @c -----------------------------------------------------------------------------
 @node booleanConstants, integerConstants, Types of Primitive Values, Types of Primitive Values
-@subsubsection Booleans
+@subsection Booleans
 
 For booleans, the logic contains two distinct constants:
 @itemize
@@ -1010,16 +1004,15 @@ In fact, these are the only boolean values.  We could express this
 fact with the axiom
 @itemize @minus
 @item
-@math{(\forall x :: @underline{is(x, boolean)} == (x == boolFalse \vee x == boolTrue))}
+@math{(\forall x :: \underline{is(x, boolean)} == (x == boolFalse \vee x == boolTrue))}
 @end itemize
 Since this axiom has the potential to lead to useless case splits, we're
-reluctant to use it.  In Section 5.2, <A HREF="#Reflections of Predicates into Term Space">Reflections
-of predicates into term space</A>, we'll say more about our approach to
-handling booleans.
+reluctant to use it.  In @ref{Reflections of Predicates into Term Space},
+we'll say more about our approach to handling booleans.
 
 @c -----------------------------------------------------------------------------
 @node integerConstants, Floating Point Values, booleanConstants, Types of Primitive Values
-@subsubsection Integers
+@subsection Integers
 
 To reason about the ranges of integer values, the logic includes the constants:
 @itemize
@@ -1035,19 +1028,19 @@ To reason about the ranges of integer values, the logic includes the constants:
 and the following axioms:
 @itemize @bullet
 @item
-@math{(\forall x :: @underline{is(x, char)} == (0 \leq x \wedge x \leq 65535))}
+@math{(\forall x :: \underline{is(x, char)} == (0 \leq x \wedge x \leq 65535))}
 
 @item
-@math{(\forall x :: @underline{is(x, byte)} == (-128 \leq x \wedge x \leq 127))}
+@math{(\forall x :: \underline{is(x, byte)} == (-128 \leq x \wedge x \leq 127))}
 
 @item
-@math{(\forall x :: @underline{is(x, short)} == (-32768 \leq x \wedge x \leq 32767))}
+@math{(\forall x :: \underline{is(x, short)} == (-32768 \leq x \wedge x \leq 32767))}
 
 @item
-@math{(\forall x :: @underline{is(x, int)} == (intFirst \leq x \wedge x \leq intLast))}
+@math{(\forall x :: \underline{is(x, int)} == (intFirst \leq x \wedge x \leq intLast))}
 
 @item
-@math{(\forall x :: @underline{is(x, long)} == (longFirst \leq x \wedge x \leq longLast))}
+@math{(\forall x :: \underline{is(x, long)} == (longFirst \leq x \wedge x \leq longLast))}
 @end itemize
 The reason for giving @var{longFirst}, @var{intFirst}, @var{intLast},
 and @var{longLast} as symbolic constants instead of exact values is that
@@ -1066,7 +1059,7 @@ predicate @var{isMathInt} to characterize the mathematical integers
 and writing the axioms above as:
 @itemize @minus
 @item
-@math{(\forall x :: @underline{is(x, char)} == (0 \leq x \wedge x \leq 65535 \wedge isMathInt(x)))}
+@math{(\forall x :: \underline{is(x, char)} == (0 \leq x \wedge x \leq 65535 \wedge isMathInt(x)))}
 
 @item
 ...
@@ -1082,15 +1075,15 @@ as integers.  For example, Simplify will find the conjunction 2 <
 corresponds to a Java @code{float}.  Consequently, translating Java's
 floating-point < to Simplify's built-in < is untenable even with
 @var{isMathInt}.  We have chosen to give a quite weak axiomatization
-of Java's floating point operators (see <A HREF="#Reflected Floating-Point Comparisons">Section
-5.2.2</A>), and in particular to use Simplify's built-in comparison operators
+of Java's floating point operators (@pxref{Reflected Floating-Point Comparisons}),
+and in particular to use Simplify's built-in comparison operators
 only for integers.  Therefore, we see no need for @var{isMathInt}. 
 We could, of course, include @var{isMathInt} anyhow, for aesthetics, but
 we would then need to include such axioms as
 
 @itemize @minus
 @item
-@math{(\forall x, y :: isMathInt(x) \wedge isMathInt(y) \longrightarrow isMathInt(@underline{x + y}))}
+@math{(\forall x, y :: isMathInt(x) \wedge isMathInt(y) \longrightarrow isMathInt(\underline{x + y}))}
 @end itemize
 and to generate the assumption @var{isMathInt}(@var{c}) for every
 integer literal @var{c} occurring in the program.  (End of
@@ -1178,7 +1171,7 @@ remains to be seen if practice calls for more axioms.}.
 
 @c -----------------------------------------------------------------------------
 @node Floating Point Values,  , integerConstants, Types of Primitive Values
-@subsubsection Floating Point Values
+@subsection Floating Point Values
 
 The ESC/Java logic is weak in its treatment of floating point values. The
 following are not implemented@footnote{What are the triggers?}.
@@ -1192,12 +1185,11 @@ following are not implemented@footnote{What are the triggers?}.
 Note that, despite these properties, @var{int} and @var{float} are not
 subtypes of @var{double}.  (If they were, @var{array}(@var{int})
 and @var{array}(@var{float}) would be subtypes of @var{array}(@var{double}),
-according to the axioms about @var{array} in <A HREF="#arrayTypes">Section
-1.3</A>.)
+according to the axioms about @var{array} in @ref{arrayTypes}.)
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-@node typesOfObjects, instantiableTypes, Types of Primitive Values, Types of Values
-@subsection Types of Objects
+@node typesOfObjects,  , Types of Primitive Values, Types of Values
+@section Types of Objects
 
 Every non-@code{null} object has a unique dynamic type, as determined
 by the @var{typeof} operator:
@@ -1212,9 +1204,9 @@ A value is of a reference type @code{T} if the value is
 
 @itemize @bullet
 @item
-@math{(\forall x, t :: @underline{t <: Object} \longrightarrow @underline{is(x,t)} == (x == null \vee typeof(x) <: t)))}
+@math{(\forall x, t :: \underline{t <: Object} \longrightarrow \underline{is(x,t)} == (x == null \vee typeof(x) <: t)))}
 @end itemize
-We said in <A HREF="#isPredicate">Section 2.0</A> that the translation
+We said in @ref{isPredicate} that the translation
 will introduce a precondition assumption @var{is}(@var{v}, @var{T})
 for any parameter @code{v} of type @code{T}.  For the @code{this}
 parameter of an instance method of a class @code{C}, the translation
@@ -1224,8 +1216,8 @@ introduces the following stronger precondition:
 @math{this \neq null \wedge typeof(this) <: C}
 @end itemize
 
-@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-@node instantiableTypes, typesOfInstanceVariables, typesOfObjects, Types of Values
+@c -----------------------------------------------------------------------------
+@node instantiableTypes, typesOfInstanceVariables, typesOfObjects, typesOfObjects
 @subsection Instantiable Types
 
 The dynamic type of a non-@code{null} object must be an instantiable
@@ -1237,7 +1229,7 @@ type.  The logic could includes a predicate
 and the axiom@footnote{Is this the right trigger?}
 @itemize @minus
 @item
-@math{(\forall x :: @underline{instantiable(typeof(x))})}
+@math{(\forall x :: \underline{instantiable(typeof(x))})}
 @end itemize
 For each interface declaration
 
@@ -1259,8 +1251,8 @@ remainder of the logic.}:
 !@var{instantiable}(@var{T})
 @end itemize
 
-@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-@node typesOfInstanceVariables, Types of Array Elements, instantiableTypes, Types of Values
+@c -----------------------------------------------------------------------------
+@node typesOfInstanceVariables, Types of Array Elements, instantiableTypes, typesOfObjects
 @subsection Types of Instance Variables
 
 ESC/Java models instance variables (fields) as maps from objects to
@@ -1282,11 +1274,11 @@ the translation introduces the assumption
 as part of the precondition of the method being checked, after each
 method call that modifies @code{f}, and as an invariant of each loop
 that modifies @code{f}.  This is another application of the
-aforementioned <A HREF="#theAsTrick">@var{as} trick</A>.  The logic
+aforementioned @ref{The as Trick}.  The logic
 includes the axiom
 @itemize @bullet
 @item
-@math{(\forall f, t, x :: is(@underline{asField(f,t)[x]}, t))}
+@math{(\forall f, t, x :: is(\underline{asField(f,t)[x]}, t))}
 @end itemize
 Notice that this axiom does not include an antecedent requiring that
 @var{x} be a non-@code{null} object of the class that declares
@@ -1294,8 +1286,8 @@ Notice that this axiom does not include an antecedent requiring that
 with their declared range types is harmless to the soundness of the
 logic, and may be beneficial to prover efficiency.
 
-@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-@node Types of Array Elements,  , typesOfInstanceVariables, Types of Values
+@c -----------------------------------------------------------------------------
+@node Types of Array Elements,  , typesOfInstanceVariables, typesOfObjects
 @subsection Types of Array Elements
 
 ESC/Java models the state of all arrays using a single global variable
@@ -1316,7 +1308,7 @@ the following function:
 @item
 @var{asElems} : map \mapsto map
 @end itemize
-Applying yet again the <A HREF="#theAsTrick">@var{as} trick</A>, the translation
+Applying yet again the @ref{The as Trick}, the translation
 introduces the assumption
 @itemize +
 @item
@@ -1328,7 +1320,7 @@ loop that modifies @var{elems}.  This assumption is used to supply a
 trigger for the following axiom:
 @itemize @bullet
 @item
-@math{(\forall e, a, i :: is(@underline{asElems(e)[a][i]}, elemType(typeof(a))))}
+@math{(\forall e, a, i :: is(\underline{asElems(e)[a][i]}, elemType(typeof(a))))}
 @end itemize
 Notice that this axiom does not include antecedents requiring that a
 be a non-@code{null} array object and that @var{i} be in bounds.  We
@@ -1347,9 +1339,9 @@ is distinct from any object reachable from program variables prior to its
 allocation.  Although our motivating discussions are long, the resulting
 axioms are few and simple.
 
-@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @node Allocation Times of Objects, Closure of Allocatedness under Field Access, Allocation, Allocation
-@subsection Allocation Times of Objects
+@section Allocation Times of Objects
 
 Consider the following method:
 
@@ -1437,7 +1429,7 @@ by the call.  Another approach would be for the translation add to
 the following as a postcondition of every method that modifies @var{alloc}:
 @itemize +
 @item
-@math{(\forall v :: @underline{isAllocated(v, alloc)} \longrightarrow isAllocated(v, alloc'))}
+@math{(\forall v :: \underline{isAllocated(v, alloc)} \longrightarrow isAllocated(v, alloc'))}
 @end itemize
 We actually use yet a different approach, which we hope will achieve
 better efficiency by making use of Simplify's built-in Simplex
@@ -1467,7 +1459,7 @@ the caller is concerned?}.
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @node Closure of Allocatedness under Field Access, Closure of Allocatedness under Array Access, Allocation Times of Objects, Allocation
-@subsection Closure of Allocatedness under Field Access
+@section Closure of Allocatedness under Field Access
 
 In Section 3.0, we introduced rules by which ESC/Java can verify that a
 newly allocated object is distinct from previous values of program variables. 
@@ -1537,7 +1529,7 @@ where @math{fClosedTime(f)} is a time beyond which all allocation
 times are closed under @var{f}:
 @itemize @bullet
 @item
-@math{(\forall x, f, aa :: fClosedTime(f) < aa \wedge isAllocated(x, aa) \longrightarrow @underline{isAllocated(f[x],aa)})}
+@math{(\forall x, f, aa :: fClosedTime(f) < aa \wedge isAllocated(x, aa) \longrightarrow \underline{isAllocated(f[x],aa)})}
 @end itemize
 Like the axioms about the types of fields and array elements, this axiom
 does not have an antecedent restricting the values at which maps are applied. 
@@ -1554,7 +1546,7 @@ Note that we could instead have introduced the predicate
 @var{isFieldClosed} mentioned above, but with the axiom:
 @itemize @minus
 @item
-@math{(\forall f, aa :: @underline{isFieldClosed(f, aa)} == fClosedTime(f) < aa)}
+@math{(\forall f, aa :: \underline{isFieldClosed(f, aa)} == fClosedTime(f) < aa)}
 @end itemize
 Then the solid-bulleted axiom and translation assumption above could
 have been written using @var{isFieldClosed}.  Since we see no need to
@@ -1566,7 +1558,7 @@ every with its definition.)
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @node Closure of Allocatedness under Array Access,  , Closure of Allocatedness under Field Access, Allocation
-@subsection Closure of Allocatedness under Array Access
+@section Closure of Allocatedness under Array Access
 
 The preceding subsection introduced machinery that formalizes the
 language invariant that @var{f}[@var{x}] is allocated whenever @var{x}
@@ -1582,7 +1574,7 @@ The logic includes the function
 and the axiom
 @itemize @bullet
 @item
-@math{(\forall a, e, i, aa :: eClosedTime(e) < aa \wedge isAllocated(a, aa) \longrightarrow @underline{isAllocated(e[a][i],aa)})}
+@math{(\forall a, e, i, aa :: eClosedTime(e) < aa \wedge isAllocated(a, aa) \longrightarrow \underline{isAllocated(e[a][i],aa)})}
 @end itemize
 The translation assumes
 @itemize +
@@ -1621,7 +1613,7 @@ relation lockLess (written as @code{<} in annotations) on locks:
 This @var{lockLess} relation is transitively closed:
 @itemize @bullet
 @item
-@math{(\forall x0,x1,x2 :: @underline{(lockLess x0 x1)} \wedge @underline{(lockLess x1 x2)} => (lockLess x0 x2))}
+@math{(\forall x0,x1,x2 :: \underline{(lockLess x0 x1)} \wedge \underline{(lockLess x1 x2)} => (lockLess x0 x2))}
 @end itemize
 Esc/Java verifies that locks are only acquired by any thread in ascending
 order. If the lockLess order is acyclic, then this guarantees absence of
@@ -1661,7 +1653,7 @@ a lock set:
 
 @itemize @bullet
 @item
-@math{(\forall S :: @underline{asLockSet(S)[lockSetMax(asLockSet(S))]} == boolTrue)}
+@math{(\forall S :: \underline{asLockSet(S)[lockSetMax(asLockSet(S))]} == boolTrue)}
 @end itemize
 The translation assumes as a precondition of the method being checked that
 every lock in the lock set is allocated@footnote{WHY???}:
@@ -1700,7 +1692,6 @@ if the method is non-static and
 if the method is a static method of class @code{T}.
 
 A synchronized block
-
 @example
 synchronized (mu) { S }
 @end example
@@ -1732,7 +1723,7 @@ is used to check calls and synchronized blocks within
 @math{@strong{assume} newLS == store(LS, mu, boolTrue)}
 @end itemize
 is used to check shared-variable accesses in @code{S}.  The function
-@var{store} is explained in <A HREF="#Maps">Section 0.4</A>.
+@var{store} is explained in @ref{Maps}.
 
 @c =============================================================================
 @node Domain-specific Axioms, PFC Index, Locking, Top
@@ -1759,7 +1750,7 @@ an application of the function @var{arrayLength}:
 Every array length is a non-negative @code{int}:
 @itemize @bullet
 @item
-@math{(\forall a :: 0 \leq @underline{arrayLength(a)} \wedge is(arrayLength(a), int))}
+@math{(\forall a :: 0 \leq \underline{arrayLength(a)} \wedge is(arrayLength(a), int))}
 @end itemize
 The rest of this subsection describes four functions and one predicate
 used to simplify the translation of Java's @code{new} operator on array
@@ -1800,19 +1791,18 @@ includes an assumption like
 @end itemize
 where @var{a} is the newly allocated array, @var{alloc} and @var{alloc'}
 are the allocation times just before and after the allocation of @var{a},
-@var{elems} is the global variable modeling the state of all arrays (see
-<A HREF="#Types of Array Elements">Section 2.5</A>), and @var{zero} is the
+@var{elems} is the global variable modeling the state of all arrays 
+(@pxref{Types of Array Elements}), and @var{zero} is the
 zero-equivalent value of type @code{T}.
 
-Informally, the predicate @var{arrayFresh}(<I>a</I>, <I>aa</I>,
-<I>bb</I>, <I>e</I>, <I>s</I>, <I>T</I>, <I>v</I>) states that
-<I>a</I> is a non-@code{null} array allocated between the allocation
-times <I>aa</I> and <I>bb</I>, of type <I>T</I> and shape <I>s</I>,
-whose leaf elements in <I>e</I> are <I>v</I>.  By ``leaf elements in
-<I>e</I>'', we mean values of the form <I>e</I>[<I>a</I>][<I>i</I>] in
-case <I>s</I> is a one-dimensional shape, values of the form
-<I>e</I>[<I>e</I>[<I>a</I>][<I>i</I>]][<I>j</I>] in case <I>s</I> is a
-two-dimensional shape, etc.  Formally, <I>arrayFresh</I> is defined by
+Informally, the predicate @code{arrayFresh(a, aa, bb, e, s, T, v)} states that
+@var{a} is a non-@code{null} array allocated between the allocation
+times @var{aa} and @var{bb}, of type @var{T} and shape @var{s},
+whose leaf elements in @var{e} are @var{v}.  By ``leaf elements in
+@var{e}'', we mean values of the form @math{e[a][i]} in
+case @var{s} is a one-dimensional shape, values of the form
+@math{e[e[a][i]][j]} in case @var{s} is a
+two-dimensional shape, etc.  Formally, @var{arrayFresh} is defined by
 the following axioms:
 @itemize
 @item
@@ -1821,15 +1811,15 @@ the following axioms:
        aa \leq vAllocTime(a) \wedge vAllocTime(a) < bb \wedge
        a != null \wedge typeof(a) == T \wedge arrayLength(a) == n \wedge
        (\forall i ::
-          arrayFresh(@underline{e[a][i]}, aa, bb,e, s, elemType(T), v) \wedge
+          arrayFresh(\underline{e[a][i]}, aa, bb,e, s, elemType(T), v) \wedge
           arrayParent(e[a][i]) == a \wedge
           arrayPosition(e[a][i]) == i))}
 @item
 @math{(\forall a, aa, bb, e, n, T, v::
-    @underline{arrayFresh(a, aa,bb, e, shapeOne(n), T, v)}==
+      \underline{arrayFresh(a, aa,bb, e, shapeOne(n), T, v)}==
        aa \leq vAllocTime(a) \wedge vAllocTime(a) < bb \wedge
        a != null \wedge typeof(a) == T \wedge arrayLength(a)== n \wedge
-       (\forall i :: @underline{e[a][i]}== v))}
+       (\forall i :: \underline{e[a][i]}== v))}
 @end itemize
 Note that these axioms contain nested quantifications, which themselves
 have triggering patterns.  Note also that the inner quantifications
@@ -1849,35 +1839,30 @@ int[][][] a = new int[10][10][10];
 @end example
 
 The translation and the logic together ensure, after the allocation,
-that <I>arrayPosition</I>(<I>elems</I>[<I>a</I>][3]) == 3 and that
-<I>arrayPosition</I>(<I>elems</I>[<I>a</I>][4]) == 4, so when the
+that @math{arrayPosition(elems[a][3]) == 3} and that
+@math{arrayPosition(elems[a][4]) == 4}, so when the
 prover considers the possibility that the first assertion fails (that
-is, that <I>elems</I>[<I>a</I>][3] == <I>elems</I>[<I>a</I>][4]), it
-will derive the contradiction 3 == 4.  The translation and logic also
-ensure that
-<I>arrayParent</I>(<I>elems</I>[<I>elems</I>[<I>a</I>][3]][7]) ==
-<I>elems</I>[<I>a</I>][3] and that
-<I>arrayParent</I>(<I>elems</I>[<I>elems</I>[<I>a</I>][4]][7]) ==
-<I>elems</I>[<I>a</I>][4], so when the prover considers the
+is, that @math{elems[a][3] == elems[a][4]}, it
+will derive the contradiction @math{3 == 4}.  The translation and logic also
+ensure that @math{arrayParent(elems[elems[a][3]][7]) == elems[a][3]}
+and that @math{arrayParent(elems[elems[a][4]][7]) == elems[a][4]}, so when the prover considers the
 possibility that second assertion fails, it will derive
-<I>elems</I>[<I>a</I>][3] == <I>elems</I>[<I>a</I>][4], which leads to
-the contradiction 3 == 4 as just explained.  Finally, the translation
-and logic ensure that <I>typeof</I>(<I>elems</I>[<I>a</I>][3]) ==
-<I>array</I>(<I>array</I>(<I>int</I>)) and that
-<I>typeof</I>(<I>elems</I>[<I>elems</I>[<I>a</I>][4]][7]) ==
-<I>array</I>(<I>int</I>).  As discussed in <A HREF="#Array
-Type-Constant Axioms Example">Example 0</A> of Appendix B, the axioms
-in <A HREF="#arrayTypes">Section 1.3</A> guarantee that the types
-<I>array</I>(<I>array</I>(<I>int</I>)) and <I>array</I>(<I>int</I>)
+@math{elems[a][3] == elems[a][4]}, which leads to
+the contradiction @math{3 == 4} as just explained.  Finally, the translation
+and logic ensure that @math{typeof(elems[a][3]) == array(array(int))} and that
+@math{typeof(elems[emes[a][4]][7]) == array(int)}.  As discussed in 
+@ref{Array Type-Constant Axioms Example}, the axioms
+in @ref{arrayTypes} guarantee that the types
+@math{array(array(int))} and @math{array(int)}
 are distinct, so when the prover considers the possibility that the
-third assertion fails, it will derive a contradiction@footnote{In <A
-HREF="#Types of Array Elements">Section 2.5</A>, we discussed the
-possibility of splitting <I>elems</I> into multiple variables
-(<I>objectElems</I>, <I>intElems</I>, etc.).  Such a change to the
+third assertion fails, it will derive a contradiction@footnote{In 
+@ref{Types of Array Elements}, we discussed the
+possibility of splitting @var{elems} into multiple variables
+(@var{objectElems}, @var{intElems}, etc.).  Such a change to the
 logic would complicate these axioms.}.
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-@node Arithmetic Functions on Integers, Reflections of Predicates into Term Space, Properties of Arrays, Domain-specific Axioms
+@node Arithmetic Functions on Integers,  , Properties of Arrays, Domain-specific Axioms
 @subsection Arithmetic Functions on Integers
 
 The Java @code{+}, @code{-}, @code{*}, @code{<}, @code{<=},
@@ -1899,24 +1884,24 @@ chosen?}:
 
 @itemize @bullet
 @item
-@math{(\forall i, j :: integralDiv(i, j) * j + @underline{integralMod(i, j)} == i)}
+@math{(\forall i, j :: integralDiv(i, j) * j + \underline{integralMod(i, j)} == i)}
 
 @item
-@math{(\forall i, j :: 0 < j \longrightarrow 0 \leq @underline{integralMod(i, j)} \wedge integralMod(i, j) < j)}
+@math{(\forall i, j :: 0 < j \longrightarrow 0 \leq \underline{integralMod(i, j)} \wedge integralMod(i, j) < j)}
 
 @item
-@math{(\forall i, j :: j < 0 \longrightarrow j < @underline{integralMod(i, j)} \wedge integralMod(i, j) \leq 0)}
+@math{(\forall i, j :: j < 0 \longrightarrow j < \underline{integralMod(i, j)} \wedge integralMod(i, j) \leq 0)}
 
 @item
-@math{(\forall i, j :: @underline{integralMod(i + j, j)} == integralMod(i, j))}
+@math{(\forall i, j :: \underline{integralMod(i + j, j)} == integralMod(i, j))}
 
 @item
-@math{(\forall i, j :: @underline{integralMod(j + i, j)} == integralMod(i, j))}
+@math{(\forall i, j :: \underline{integralMod(j + i, j)} == integralMod(i, j))}
 @end itemize
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-@node Reflections of Predicates into Term Space, Reflecting the Conditional Operator, Arithmetic Functions on Integers, Domain-specific Axioms
-@subsection Reflections of Predicates into Term Space
+@node Reflections of Predicates into Term Space,  , Domain-specific Axioms, Domain-specific Axioms
+@section Reflections of Predicates into Term Space
 
 The next set of axioms we discuss relates to an issue that arises in the
 translation. The guarded command language makes a strong distinction between
@@ -1956,14 +1941,14 @@ In this section, we discuss these functions and their axiomatizations.
 
 @c -----------------------------------------------------------------------------
 @node Reflected Boolean Connectives, Reflected Integer and Object Comparisons, Reflections of Predicates into Term Space, Reflections of Predicates into Term Space
-@subsubsection Reflected Boolean Connectives
+@subsection Reflected Boolean Connectives
 
 We start by describing a design decision related to the treatment of booleans. 
-Recall that in <A HREF="#booleanConstants">Section 2.2.0</A> we remarked
+Recall that in @ref{booleanConstants} we remarked
 that we hesitated to include the axiom
 @itemize @minus
 @item
-@math{(\forall x :: @underline{is(x, boolean)} == (x == boolFalse \vee x == boolTrue))}
+@math{(\forall x :: \underline{is(x, boolean)} == (x == boolFalse \vee x == boolTrue))}
 @end itemize
 for fear that it would lead to irrelevant case splits.  Therefore,
 we take a different approach.  Instead of assuming that there are
@@ -1994,17 +1979,17 @@ into term space, we use the functional form.)
 
 @c -----------------------------------------------------------------------------
 @node Reflected Integer and Object Comparisons, Reflected Floating-Point Comparisons, Reflected Boolean Connectives, Reflections of Predicates into Term Space
-@subsubsection Reflected Integer and Object Comparisons
+@subsection Reflected Integer and Object Comparisons
 
 To compare objects or integers for equality, the translator to
 Simplify generates the Simplify predicates EQ, < etc.  <BR>The Java
 operator @code{instanceof} is reflected by the user-defined predicate
-symbol @var{is}, which we have already described in <A
-HREF="#isPredicate">Section 2.0</A>. b
+symbol @var{is}, which we have already described in 
+@ref{isPredicate}.
 
 @c -----------------------------------------------------------------------------
 @node Reflected Floating-Point Comparisons, Lifting Predicate Terms to Predicate Space, Reflected Integer and Object Comparisons, Reflections of Predicates into Term Space
-@subsubsection Reflected Floating-Point Comparisons
+@subsection Reflected Floating-Point Comparisons
 
 Comparing floating-point values is not the same as comparing integers,
 for two reasons.  For one thing, the Java expression @code{r} ==
@@ -2012,7 +1997,7 @@ for two reasons.  For one thing, the Java expression @code{r} ==
 sometimes doesn't evaluate to @code{true}, since @code{r} may be NaN
 (Not-a-Number).  The other difference arises from an infelicitous
 feature in the implementation of Simplify, described in a digression in
-<A HREF="#isMathIntDigression">Section 2.2.1</A>.  Thus, it is untenable
+@ref{isMathIntDigression}.  Thus, it is untenable
 to axiomatize @var{floatingEQ}, @var{floatingLE}, and @var{floatingLE}
 in the obvious way:
 @itemize @minus
@@ -2036,8 +2021,8 @@ we propose to omit all such axioms from the initial version of
 ESC/Java and to add them only as the need becomes evident.
 
 @c -----------------------------------------------------------------------------
-@node Lifting Predicate Terms to Predicate Space,  , Reflected Floating-Point Comparisons, Reflections of Predicates into Term Space
-@subsubsection Lifting Predicate Terms to Predicate Space
+@node Lifting Predicate Terms to Predicate Space, Reflecting the Conditional Operator, Reflected Floating-Point Comparisons, Reflections of Predicates into Term Space
+@subsection Lifting Predicate Terms to Predicate Space
 
 When a Java boolean variable @code{b} occurs in a context where a Java
 predicate is expected, as in the program fragment
@@ -2092,7 +2077,7 @@ at all.  However, see the discussion of the conditional operator in
 the next section.
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-@node Reflecting the Conditional Operator, Other Domain-Specific Axioms, Reflections of Predicates into Term Space, Domain-specific Axioms
+@node Reflecting the Conditional Operator, Other Domain-Specific Axioms, Lifting Predicate Terms to Predicate Space, Reflections of Predicates into Term Space
 @subsection Reflecting the Conditional Operator
 
 Occurrences of the Java conditional operator @code{? : }in executable
@@ -2107,15 +2092,15 @@ will in general require a reflected operator.
 
 @itemize @bullet
 @item
-@math{(\forall x, y :: @underline{termConditional(boolTrue, x, y)} == x)}
+@math{(\forall x, y :: \underline{termConditional(boolTrue, x, y)} == x)}
 
 @item
-@math{(\forall b, x, y :: b \neq boolTrue \longrightarrow @underline{termConditional(b, x, y)} == y)}
+@math{(\forall b, x, y :: b \neq boolTrue \longrightarrow \underline{termConditional(b, x, y)} == y)}
 @end itemize
 An alternative would be to write the one axiom@footnote{Which is best?}
 @itemize @minus
 @item
-@math{(\forall b, x, y :: (b == boolTrue \wedge @underline{termConditional(b, x, y)} == x) \vee (b != boolTrue \wedge termConditional(b, x, y) == y))}
+@math{(\forall b, x, y :: (b == boolTrue \wedge \underline{termConditional(b, x, y)} == x) \vee (b != boolTrue \wedge termConditional(b, x, y) == y))}
 @end itemize
 
 Since we are introducing the function @var{termConditional} for use
@@ -2131,8 +2116,8 @@ predicates into term space.  We therefore propose to restrict conditional
 expressions from containing such guards.
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-@node Other Domain-Specific Axioms,  , Reflecting the Conditional Operator, Domain-specific Axioms
-@subsection Other Domain-Specific Axioms
+@node Other Domain-Specific Axioms,  , Reflecting the Conditional Operator, Reflections of Predicates into Term Space
+@section Other Domain-Specific Axioms
 
 There is a host of standard Java library classes, such as @code{String},
 @code{Thread}, and @code{Reflection}, whose specifications, one can
@@ -2161,14 +2146,14 @@ to add such functions and axioms only as the need becomes evident.
 @c index in the header.
 @findex
 
-From Section 0.4, <A HREF="#Maps">Maps</A>:
+From @ref{Maps}:
 @itemize
 @item
 @math{. [ . ] : map \times value \mapsto value}
 @item
 @math{store : map \times value \times value \mapsto map}
 @end itemize
-From Section 1.0, <A HREF="#types">Types</A>:
+From @ref{types}:
 @itemize
 @item
 boolean : type
@@ -2187,44 +2172,43 @@ float : type
 @item
 double :  type
 @end itemize
-From Section 1.1, <A HREF="#The subtype Predicate">The subtype predicate</A>:
+From @ref{The subtype Predicate}:
 @itemize
 @item
 @math{<: : Predicate[type \times type]}
 @end itemize
-From Section 1.2, <A HREF="#incomparableClasses">Disjointness of incomparable
-classes</A>:
+From @ref{incomparableClasses}:
 @itemize
 @item
 @math{classDown : type \times type \mapsto type}
 @item
 @math{asChild : type \times type \mapsto type}
 @end itemize
-From Section 1.3, <A HREF="#arrayTypes">Array types</A>:
+From @ref{arrayTypes}:
 @itemize
 @item
 array : type \mapsto type
 @item
 elemType : type \mapsto type
 @end itemize
-From Section 2.0, <A HREF="#isPredicate">The <I>is</I> predicate</A>:
+From @ref{isPredicate}:
 @itemize
 @item
 @math{is : Predicate[value \times type]}
 @end itemize
-From Section 2.1, <A HREF="#casting">Casting</A>:
+From @ref{casting}:
 @itemize
 @item
 @math{cast : value \times type \mapsto value}
 @end itemize
-From Section 2.2.0, <A HREF="#booleanConstants">Booleans</A>:
+From @ref{booleanConstants}:
 @itemize
 @item
 boolFalse : value
 @item
 boolTrue : value
 @end itemize
-From Section 2.2.1, <A HREF="#integerConstants">Integers</A>:
+From @ref{integerConstants}:
 @itemize
 @item
 longFirst : value
@@ -2235,45 +2219,41 @@ intLast : value
 @item
 longLast : value
 @end itemize
-From Section 2.3, <A HREF="#typesOfObjects">Types of objects</A>:
+From @ref{typesOfObjects}:
 @itemize
 @item
 @math{typeof : value \mapsto type}
 @item
 instantiable : Predicate[type]
 @end itemize
-From Section 2.4, <A HREF="#typesOfInstanceVariables">Types of instance
-variables</A>:
+From @ref{typesOfInstanceVariables}:
 @itemize
 @item
 @math{asField : map \times type \mapsto map}
 @end itemize
-From Section 2.5, <A HREF="#Types of Array Elements">Types of array elements</A>:
+From @ref{Types of Array Elements}:
 @itemize
 @item
 @math{asElems : map \mapsto map}
 @end itemize
-From Section 3.0, <A HREF="#Allocation Times of Objects">Allocation times
-of objects</A>:
+From @ref{Allocation Times of Objects}:
 @itemize
 @item
 @math{isAllocated : Predicate[value \times time]}
 @item
 @math{vAllocTime : value \mapsto time}
 @end itemize
-From Section 3.1, <A HREF="#Closure of Allocatedness under Field Access">Closure of allocatedness under
-field access</A>:
+From @ref{Closure of Allocatedness under Field Access}:
 @itemize
 @item
 @math{fClosedTime : map \mapsto time}
 @end itemize
-From Section 3.2, <A HREF="#Closure of Allocatedness under Array Access">Closure of allocatedness under
-array access</A>:
+From @ref{Closure of Allocatedness under Array Access}:
 @itemize
 @item
 @math{eClosedTime : map \mapsto time}
 @end itemize
-From Section 4, <A HREF="Locking">Locking</A>:
+From @ref{Locking}:
 @itemize
 @item
 @math{lockLess : Predicate[value \times value]}
@@ -2282,7 +2262,7 @@ From Section 4, <A HREF="Locking">Locking</A>:
 @item
 @math{lockSetMax : map \mapsto value}
 @end itemize
-From Section 5.0, <A HREF="Properties of Arrays">Properties of arrays</A>:
+From @ref{Properties of Arrays}:
 @itemize
 @item
 @math{arrayLength : value \mapsto value}
@@ -2297,16 +2277,14 @@ From Section 5.0, <A HREF="Properties of Arrays">Properties of arrays</A>:
 @item
 @math{arrayFresh : Predicate[value \times time \times time \times map \times shape \times type \times value]}
 @end itemize
-From Section 5.1, <A HREF="#Arithmetic Functions on Integers">Arithmetic functions
-on integers</A>:
+From @ref{Arithmetic Functions on Integers}:
 @itemize
 @item
 @math{integralDiv : value \times value \mapsto value}
 @item
 @math{integralMod : value \times value \mapsto value}
 @end itemize
-From Section 5.2, <A HREF="#Reflections of Predicates into Term Space">Reflections of predicates
-into term space</A>:
+From @ref{Reflections of Predicates into Term Space}:
 @itemize
 @item
 @math{boolAnd : Predicate[value \times value]}
@@ -2323,8 +2301,7 @@ into term space</A>:
 @item
 @math{floatingLE : Predicate[value \times value]}
 @end itemize
-From Section 5.3, <A HREF="#Reflecting the Conditional Operator">Reflecting the conditional
-operator</A>:
+From @ref{Reflecting the Conditional Operator}:
 @itemize
 @item
 @math{termConditional : value \times value \times value \mapsto value}
@@ -2337,15 +2314,15 @@ operator</A>:
 @cindex Motivating Examples
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-@node Array Type-Constant Axioms Example
+@node Array Type-Constant Axioms Example, Final Type Axioms Example, Motivating Examples, Motivating Examples
 @appendixsection Array Type-Constant Axioms Example
 
 @cindex Array type-constant axioms example
 
 @emph{This example is out-of-date, and may no longer be relevant.}
 
-We give an example to motivate the axioms in <A HREF="#arrayTypes">Section
-1.3</A> that distinguish primitive types from array types, such as
+We give an example to motivate the axioms in @ref{arrayTypes} 
+that distinguish primitive types from array types, such as
 @itemize @bullet
 @item
 @math{int \neq array(elemType(int))}
@@ -2367,23 +2344,13 @@ elems = store(elems, elems[a][i], store(elems[elems[a][i]], j, 6)) ;
 @end itemize
 (For simplicity, we have left out the bounds checks.) 
 The verification condition associated with this guarded command is:
-@itemize
-@item
+@example
 store(elems,
-<BR><I>        
-elems</I>[<I>a</I>][<I>i</I>],
-<BR><I>        
-store</I>(<I>elems</I>[<I>elems</I>[<I>a</I>][<I>i</I>]], <I>j</I>, 6))
-<BR>[ @underline{<I>store</I>(<I>elems</I>,}
-<BR><I>           
-@underline{elems}</I>@underline{[<I>a</I>][<I>i</I>],}
-<BR><I>           
-@underline{store}</I>@underline{(<I>elems</I>[<I>elems</I>[<I>a</I>][<I>i</I>]],
-<I>j</I>, 6))}
-<BR>  @underline{[<I>a</I>]}[<I>i</I>]
-<BR>]
-<BR>[<I>j</I>] == 6
-@end itemize
+      elems[a][i],
+      store(elems[elems[a][i]], j, 6))
+[store(elems,elems[a][i],store(elems[elems[a][i]],j, 6))[a][i]]
+[j] == 6
+@end example
 Suppose we know @math{elems[a][i] \neq a}.  Then, we can simplify the
 red underlined @var{select} expression to:
 @itemize
@@ -2392,12 +2359,7 @@ elems[a]
 @end itemize
 so that the entire verification condition becomes:
 @example
-@math{@underline{store(elems,}
-      @underline{elems}@underline{[a][i],}
-      @underline{store}@underline{(elems[elems[a][i]],j, 6))}
-      @underline{[ elems[a][i]}
-      @underline{]}
-      [j] == 6}
+@math{\underline{store(elems,elems[a][i],store(elems[elems[a][i]],j, 6))[elems[a][i]][j] == 6}}
 @end example
 Since @math{elems[a][i] == elems[a][i]}, we can now simplify another
 @var{select} of @var{store} expression, reducing the verification
@@ -2429,7 +2391,7 @@ assignment in which the two types are postulated to be equal:
 By the Section 1.3 axiom
 @itemize @bullet
 @item
-1.  @math{(\forall t :: elemType(@underline{array(t)})== t)}
+1.  @math{(\forall t :: elemType(\underline{array(t)})== t)}
 @end itemize
 we know that
 @itemize
@@ -2473,13 +2435,13 @@ Simplify must consider and refute the case that @math{elems[a][i] \neq a}.
 The @var{select} of @var{store} axiom
 @itemize @bullet
 @item
-@math{(\forall m, i, j, x :: i \neq j \longrightarrow @underline{store(m, i, x)[j]} == m[j])}
+@math{(\forall m, i, j, x :: i \neq j \longrightarrow \underline{store(m, i, x)[j]} == m[j])}
 @end itemize
 will suggest the relevant case split, and give that case split a
 relatively high priority.  However, we could avoid the case split
 altogether by changing the logic to split @var{elems} into multiple
-variables, as discussed in a remark in <A HREF="#Types of Array
-Elements">Section 2.5</A>.  If we did so, then the program fragment
+variables, as discussed in a remark in @ref{Types of Array Elements}.
+If we did so, then the program fragment
 considered in this example would be translated into the guarded
 command
 @example
@@ -2506,8 +2468,8 @@ a 3-dimensional array.
 
 @cindex Final type axioms example
 
-We give an example to motivate the final type axioms in <A HREF="#The
-subtype Predicate">Section 1.1.</A> Consider the method:
+We give an example to motivate the final type axioms in 
+@ref{The subtype Predicate}. Consider the method:
 
 @example
 void f(T[] a, T b) {
@@ -2635,13 +2597,15 @@ This motivates the need for the antisymmetry axiom.
 
 @c =============================================================================
 @node List of Possible Experiments, Copying, Motivating Examples, Top
-@appendix List of Possible Experiments, Functions, and Constants
+@appendix List of Possible Experiments
 
 @cindex List of Possible Experiments
 
+To be filled in.
+
 @c =============================================================================
 @node Copying, Index, List of Possible Experiments, Top
-@chapter Copying
+@appendix Copying
 
 @cindex Copying
 
