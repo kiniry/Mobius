@@ -170,23 +170,27 @@ public class TestFilesTestSuite  extends TestSuite {
 		returnedObject = dotest(fileToTest,args);
 		
 	    } catch (IllegalAccessException e) {
-		Utils.restoreStreams(true);
+		Utils.restoreStreams(); // FIXME - One might think that the
+					// argument to this and other calls
+					// should be true - but for some reason
+					// that makes the junittests take a long
+					// time to run and to abort prematurely
 		fail(e.toString());
 	    } catch (IllegalArgumentException e) {
-		Utils.restoreStreams(true);
+		Utils.restoreStreams();
 		fail(e.toString());
 	    } catch (java.lang.reflect.InvocationTargetException e) {
-		Utils.restoreStreams(true);
+		Utils.restoreStreams();
 		java.io.StringWriter sw = new StringWriter();
 		sw.write(e.toString());
 		e.printStackTrace(new PrintWriter(sw));
 		fail(sw.toString());
 	    } catch (Throwable e) {  // THIS JUST FOR DEBUG
-		Utils.restoreStreams(true); // Have to have this before the use of System.out on the next line
+		Utils.restoreStreams(); // Have to have this before the use of System.out on the next line
 		System.out.println(e);
 		e.printStackTrace();
 	    } finally {
-		Utils.restoreStreams(true);
+		Utils.restoreStreams();
 		if (ps != null) ps.close();
 	    }
 	    String err = doOutputCheck(fileToTest,ba.toString(),returnedObject);

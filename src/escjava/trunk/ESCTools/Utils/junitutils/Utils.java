@@ -385,11 +385,11 @@ public class Utils {
       String s = ba.toString();
       return s;
     } catch (Exception e) {
-      Utils.restoreStreams(true);
+      Utils.restoreStreams(); // FIXME - see comment in TestFilesTestSuite.java
       // Need the above restore before we try to print something
       System.out.println(e.toString());  // FIXME - need better error handling
     } finally {
-      Utils.restoreStreams(true);
+      Utils.restoreStreams();
     }
     return null;
   }
