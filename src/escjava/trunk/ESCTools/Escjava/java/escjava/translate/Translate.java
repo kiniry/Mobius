@@ -3417,23 +3417,21 @@ public final class Translate
 	private List others = new LinkedList();
 	private int i = 0;
 	private List done = new LinkedList();
-	private boolean expand = false;
+	private boolean expandDatagroups = true;
+	private boolean expandWild = false;
 
-	public ModifiesIterator(CondExprModifierPragmaVec mp) {
+	public ModifiesIterator(CondExprModifierPragmaVec mp, boolean expandDatagroups) {
 	    this.mp = mp;
+	    this.expandDatagroups = expandDatagroups;
 	    i = 0;
 	}
 
-	public ModifiesIterator(CondExprModifierPragmaVec mp, boolean expand) {
-	    this(mp);
-	    this.expand = expand;
+	public ModifiesIterator(CondExprModifierPragmaVec mp, 
+		boolean expandDatagroups, boolean expandWild) {
+	    this(mp,expandDatagroups);
+	    this.expandWild = expandWild;
         }
 
-/*
-	public ModifiesIterator(RoutineDecl md) {
-	    this(GetSpec.getCombinedMethodDecl(md).modifies);
-        }
-*/
 	public void reset() {
 	    i = 0;
 	    others.clear();
@@ -3455,14 +3453,14 @@ public final class Translate
 		done.clear();
 	    }
 	    if (ex instanceof FieldAccess) {
-		add(((FieldAccess)ex).od,((FieldAccess)ex).decl);
-	    } else if (expand && (ex instanceof WildRefExpr)) {
+		if (expandDatagroups) add(((FieldAccess)ex).od,((FieldAccess)ex).decl);
+	    } else if (expandWild && (ex instanceof WildRefExpr)) {
 //System.out.println("EXPANDING " + Location.toString(((WildRefExpr)ex).getStartLoc()));
 		ObjectDesignator od = ((WildRefExpr)ex).od;
 		addFields(od);
 	    }
 
-//System.out.println("RETURNING " + ex);
+//if (printreturn) { System.out.println("RETURNING " + ex); printreturn=false; }
 	    return ex;
 	}
 
@@ -3555,10 +3553,7 @@ public final class Translate
     }
 
 // FIXME - comment
-    private void modifiesCheckField(Expr lhs, int loc, FieldDecl fd) {
-	modifiesCheckField(lhs,loc,fd,Location.NULL);
-    }
-    private void modifiesCheckField(Expr lhs, int loc, FieldDecl fd, int locdecl) {
+    private void modifiesCheckField(Expr lhs, int callLoc, FieldDecl fd) {
 	kindOfModCheck = "assignment";
 	// FIXME - I don't think this handles this and super that are not the
 	// prefix.
@@ -3573,13 +3568,14 @@ public final class Translate
 		System.out.println("LHS " + lhs.getClass());
 		return;
 	}
-	modifiesCheckFieldHelper(eod,loc,fd,locdecl,null,null,Location.NULL);
+	modifiesCheckFieldHelper(eod,callLoc,fd,Location.NULL,null,null);
     }
 
     static private Identifier thisId = Identifier.intern("this");
 
-    private void modifiesCheckFieldHelper(Expr eod, int loc,
-		    FieldDecl fd, int locdecl, Expr callee_tpred, Expr callee_tprecondition, int aloc) {
+    private void modifiesCheckFieldHelper(Expr eod, int callLoc,
+		    FieldDecl fd, int calleeLoc, Expr callee_tpred, Expr callee_tprecondition) {
+
 	if (!issueCautions) return;
 	// We need to create a translated predicate expression that is true
 	// if the lhs is allowed to be modified and false if it is not
@@ -3597,10 +3593,11 @@ public final class Translate
 	ModifiesGroupPragmaVec mg = GetSpec.getCombinedMethodDecl(rdCurrent).modifies;
 	for (int kk=0; kk<mg.size(); ++kk) {
 	ModifiesGroupPragma mge = mg.elementAt(kk);
+	int callerLoc = mge.clauseLoc;
 	ExprVec ev = ExprVec.make(10);
 	if (!Modifiers.isStatic(fd.modifiers)) addAllocExpression(ev,eod);
 	if (callee_tpred != null) ev.addElement(GC.not(callee_tpred));
-	ModifiesIterator caller_iterator = new ModifiesIterator(mg.elementAt(kk).items);
+	ModifiesIterator caller_iterator = new ModifiesIterator(mg.elementAt(kk).items,true);
 	THISGROUP: while (caller_iterator.hasNext()) {
 	    Object ex = caller_iterator.next();
 	    Expr caller_pred = caller_iterator.cond();
@@ -3679,16 +3676,25 @@ public final class Translate
 		System.out.println("COMPARE TO " + ex.getClass());
 	    }
 	}
-	if (ev != null) modChecksComplete(mge.precondition,callee_tprecondition,ev,loc,locdecl==Location.NULL ? mge.clauseLoc : locdecl,aloc);
+	// Two conditions
+	// if this method has been called on an assignment, we just have
+	//	a callerLoc
+	// if the method has been called on a method call, we have a
+	//	calleeLoc and a callerLoc and we want the calleeLoc to be
+	//	the first associated location
+	if (ev != null) modChecksComplete(mge.precondition,
+		callee_tprecondition,ev,callLoc,
+		calleeLoc==Location.NULL ? callerLoc : calleeLoc,
+		calleeLoc==Location.NULL ? Location.NULL: callerLoc);
 	}
     }
 
-    private void modifiesCheckArray(Expr array, Expr arrayIndex, int loc) {
+    private void modifiesCheckArray(Expr array, Expr arrayIndex, int callLoc) {
 	kindOfModCheck = "assignment";
-	modifiesCheckArray(array,arrayIndex,loc,Location.NULL,null,null,Location.NULL);
+	modifiesCheckArray(array,arrayIndex,callLoc,Location.NULL,null,null);
     }
-    private void modifiesCheckArray(Expr array, Expr arrayIndex, int loc, int locdecl,
-		Expr callee_tpred, Expr callee_tprecondition, int aloc) {
+    private void modifiesCheckArray(Expr array, Expr arrayIndex, int callLoc, int calleeLoc,
+		Expr callee_tpred, Expr callee_tprecondition) {
 	// FIXME - I don't think this handles this and super that are not the
 	// prefix.
 	if (!issueCautions) return;
@@ -3708,10 +3714,11 @@ public final class Translate
 	ModifiesGroupPragmaVec mg = GetSpec.getCombinedMethodDecl(rdCurrent).modifies;
 	for (int kk=0; kk<mg.size(); ++kk) {
 	ModifiesGroupPragma mge = mg.elementAt(kk);
+	int callerLoc = mge.clauseLoc;
 	ExprVec ev = ExprVec.make(10);
 	addAllocExpression(ev,array); 
 	if (callee_tpred != null) ev.addElement(GC.not(callee_tpred));
-	ModifiesIterator caller_iterator = new ModifiesIterator(mge.items);
+	ModifiesIterator caller_iterator = new ModifiesIterator(mge.items,true);
 	THISGROUP: while (caller_iterator.hasNext()) {
 	    Object ex = caller_iterator.next();
 	    Expr caller_pred = caller_iterator.cond();
@@ -3762,17 +3769,21 @@ public final class Translate
 		System.out.println("COMPARE TO " + ex.getClass());
 	    }
 	}
-	if (ev != null) modChecksComplete(mge.precondition,callee_tprecondition,ev,loc,locdecl==Location.NULL ? mge.clauseLoc : locdecl, aloc);
+	if (ev != null) modChecksComplete(mge.precondition,
+		callee_tprecondition,ev,callLoc,
+		calleeLoc==Location.NULL ? callerLoc : calleeLoc,
+		calleeLoc==Location.NULL ? Location.NULL: callerLoc);
 	}
     }
 
     private String kindOfModCheck = "assignment";
 
-    private void modChecksComplete(Expr precondition, ExprVec ev, int loc, int aloc) {
-	modChecksComplete(precondition,null,ev,loc,aloc,Location.NULL);
+    private void modChecksComplete(Expr precondition, ExprVec ev, int callLoc, int aloc) {
+	modChecksComplete(precondition,null,ev,callLoc,aloc,Location.NULL);
     }
-    private void modChecksComplete(Expr precondition, Expr tprecond2, ExprVec ev, int loc, int aloc, int aloc2) {
-	if (NoWarn.getChkStatus(TagConstants.CHKMODIFIES,loc,aloc==Location.NULL?loc:aloc)
+    private void modChecksComplete(Expr precondition, Expr tprecond2, ExprVec ev, int callLoc, int aloc, int aloc2) {
+		// FIXME - need to let aloc2 shut of warnings as well
+	if (NoWarn.getChkStatus(TagConstants.CHKMODIFIES,callLoc,aloc==Location.NULL?callLoc:aloc)
 				!= TagConstants.CHK_AS_ASSERT) {
 	    TrAnExpr.closeForClause();
 	    return;
@@ -3782,21 +3793,21 @@ public final class Translate
 		tprecondition = GC.and(tprecondition, tprecond2);
 	}
 	if (ev.size() == 0 && isTrueLiteral(precondition)) {
-		if (aloc == TagConstants.NULL) ErrorSet.error(loc, 
+		if (aloc == TagConstants.NULL) ErrorSet.error(callLoc, 
 		    "There is no assignable clause allowing this " +
 			kindOfModCheck);
-		else ErrorSet.error(loc, 
+		else ErrorSet.error(callLoc, 
 		    "There is no assignable clause allowing this "
 			+ kindOfModCheck,aloc);
 		if (aloc2 != Location.NULL) ErrorSet.assocLoc(aloc2);
 	} else if (aloc == Location.NULL) {
 	    //System.out.println("Generating a modifies check " + ev.size());    
 	    addNewAssumptionsNow();
-	    addCheck(loc,TagConstants.CHKMODIFIES, GC.implies(tprecondition,GC.or(ev)));
+	    addCheck(callLoc,TagConstants.CHKMODIFIES, GC.implies(tprecondition,GC.or(ev)));
         } else {
 	    //System.out.println("Generating a modifies check " + ev.size());    
 	    addNewAssumptionsNow();
-	    addCheck(loc,TagConstants.CHKMODIFIES, GC.implies(tprecondition,GC.or(ev)),aloc);
+	    addCheck(callLoc,TagConstants.CHKMODIFIES, GC.implies(tprecondition,GC.or(ev)),aloc);
 		// FIXME - need to include aloc2 in the warning message as well
 		// FIXME - could also include a list of locations from the caller modifies group
 	}
@@ -3871,13 +3882,16 @@ public final class Translate
 	}
     }
 
-    private void modifiesCheckMethodI(ModifiesGroupPragmaVec mgv, Expr eod, int loccall, Hashtable args, boolean freshResult) {
-// FIXME !! What about precondition?
-	for (int i=0; i<mgv.size(); ++i) {
-	    Expr p = modTranslate(mgv.elementAt(i).precondition,false,eod,args);
-	    modifiesCheckMethod(eod, loccall, mgv.elementAt(i).items, args, freshResult,p);
+    private void modifiesCheckMethodI(ModifiesGroupPragmaVec calleeFrameConditions, Expr eod, int loccall, Hashtable args, boolean freshResult) {
+	for (int i=0; i<calleeFrameConditions.size(); ++i) {
+	    ModifiesGroupPragma mg = calleeFrameConditions.elementAt(i);
+	    Expr tp = modTranslate(mg.precondition,false,eod,args);
+	    modifiesCheckMethod(eod, loccall, mg.items, args, freshResult,tp);
 	}
     }
+
+//static boolean printreturn = false;
+
     private void modifiesCheckMethod(Expr eod, int loccall, CondExprModifierPragmaVec mp, Hashtable args, boolean freshResult, Expr callee_tprecondition) {
 	kindOfModCheck = "method call";
 	pFreshResult = freshResult;
@@ -3886,13 +3900,13 @@ public final class Translate
 	ModifiesGroupPragmaVec mg = GetSpec.getCombinedMethodDecl(rdCurrent).modifies;
 	for (int kk=0; kk<mg.size(); ++kk) {
 	ModifiesGroupPragma mge = mg.elementAt(kk);
-	int locdecl = mge.getStartLoc();
-	ModifiesIterator caller_iterator = new ModifiesIterator(mge.items);
-	ModifiesIterator callee_iterator = new ModifiesIterator(mp);
+	int callerLoc = mge.getStartLoc();
+	ModifiesIterator caller_iterator = new ModifiesIterator(mge.items,true);
+	ModifiesIterator callee_iterator = new ModifiesIterator(mp,false);
 	OUTER: while (callee_iterator.hasNext()) {
 	    ExprVec ev = ExprVec.make(10);
 	    Object ex = callee_iterator.next();
-	    int loc = ((ASTNode)ex).getStartLoc();
+	    int calleeLoc = ((ASTNode)ex).getStartLoc();
 	    Expr callee_pred = callee_iterator.cond();
 	    Expr callee_tpred = null;
 	    if (!isTrueLiteral(callee_pred)) callee_tpred = 
@@ -3909,18 +3923,26 @@ public final class Translate
 			if (addImplication(ev,callee_tpred,caller_pred)) continue OUTER;
 		    }
 		}
-		modChecksComplete(mge.precondition,callee_tprecondition,ev,loccall,loc,locdecl);
+		modChecksComplete(mge.precondition,callee_tprecondition,ev,loccall,calleeLoc,callerLoc);
 	    } else if (ex instanceof NothingExpr) {
 		// skip
 	    } else if (ex instanceof FieldAccess) {
 		FieldAccess fa = (FieldAccess)ex;
 		Expr eeod = (((FieldAccess)ex).od instanceof ExprObjectDesignator) ? ((ExprObjectDesignator)((FieldAccess)ex).od).expr : null;
 		Expr lval = eeod == null ? null : modTranslate(eeod, false,  eod, args);
-		modifiesCheckFieldHelper(lval,loccall, fa.decl, loc, callee_tpred, callee_tprecondition, locdecl);
+		modifiesCheckFieldHelper(lval,loccall, fa.decl, calleeLoc, callee_tpred, callee_tprecondition);
+		// A bit of a hack - the FieldHelper routine iterates over
+		// all of the caller frame conditions, so we short-circuit
+		// that here
+		kk = mg.size();
 	    } else if (ex instanceof ArrayRefExpr) {
 		Expr array= modTranslate(((ArrayRefExpr)ex).array, false,  eod, args );
 		Expr index= modTranslate(((ArrayRefExpr)ex).index, false,  eod, args );
-		modifiesCheckArray(array,index,loccall,loc,callee_tpred, callee_tprecondition,locdecl);
+		modifiesCheckArray(array,index,loccall,calleeLoc,callee_tpred, callee_tprecondition);
+		// A bit of a hack - the helper routine iterates over
+		// all of the caller frame conditions, so we short-circuit
+		// that here
+		kk = mg.size();
 	    } else if (ex instanceof WildRefExpr) {
 		ObjectDesignator odd = ((WildRefExpr)ex).od;
 		Expr e1 = null;
@@ -3953,7 +3975,7 @@ public final class Translate
 			}
 		    }
 		}
-		modChecksComplete(mge.precondition,callee_tprecondition,ev,loccall,loc,locdecl);
+		modChecksComplete(mge.precondition,callee_tprecondition,ev,loccall,calleeLoc,callerLoc);
 	    } else if (ex instanceof ArrayRangeRefExpr) {
 		ArrayRangeRefExpr aexpr = (ArrayRangeRefExpr)ex;
 		Expr array = aexpr.array;
@@ -4007,7 +4029,7 @@ public final class Translate
 			addImplication(ev,aao,callee_tpred,caller_pred);
 		    }
 		}
-		modChecksComplete(mge.precondition,callee_tprecondition,ev,loccall,loc,locdecl);
+		modChecksComplete(mge.precondition,callee_tprecondition,ev,loccall,calleeLoc,callerLoc);
 	    } else {
 		System.out.println("Modifies Check not implemented for " + ex.getClass());
 		caller_iterator.reset();
@@ -4018,7 +4040,7 @@ public final class Translate
 			if (addImplication(ev,callee_tpred,caller_pred)) continue OUTER;
 		    }
 		}
-		modChecksComplete(mge.precondition,callee_tprecondition,ev,loccall,loc,locdecl);
+		modChecksComplete(mge.precondition,callee_tprecondition,ev,loccall,calleeLoc,callerLoc);
 	    }
 	}
 	}

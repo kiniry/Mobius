@@ -276,7 +276,7 @@ public class FlowInsensitiveChecks
                 // Process ModifierPragmas
                 checkModifierPragmaVec(rd.pmodifiers, rd, env);
 	  
-                if (rd.body != null && !specOnly) {
+                if (rd.body != null) {
                     checkStmt(env, rd.body);
                 }
 

@@ -467,7 +467,7 @@ public final class GetSpec
         // translates modifies list
 
 	for (int k=0; k<dmd.modifies.size(); ++k) {
-	    Translate.ModifiesIterator ii = new Translate.ModifiesIterator(dmd.modifies.elementAt(k).items,true);
+	    Translate.ModifiesIterator ii = new Translate.ModifiesIterator(dmd.modifies.elementAt(k).items,true,true);
 	    while (ii.hasNext()) {
 		Expr designator = (Expr)ii.next();
 		if (Utils.isModel(designator)) continue;
