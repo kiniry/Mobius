@@ -10,8 +10,8 @@ build: checkjunitjar
 
 .PHONY: checkjunitjar
 checkjunitjar:
-	@if [ ! -e ${JUNITLIB} ]; then \
-		echo Error: ${JUNITLIB} should be a version of junit.jar, but it does not exist ;\
+	@if [ ! -e ${JUNIT_LIB} ]; then \
+		echo Error: ${JUNIT_LIB} should be a version of junit.jar, but it does not exist ;\
 		exit 1; \
 	fi
 

@@ -1,5 +1,7 @@
 # Copyright 2000, 2001, Compaq Computer Corporation
 
+.PHONY: source clean
+
 source: FieldDeclVec.java MethodDeclVec.java TypeSigVec.java
 
 clean: 
