@@ -78,18 +78,27 @@ public class BCLoopEnd extends BCInstruction {
 	 * forall fields (f ) f==f_at_loop_end ==> Invariant[f <- f_at_loop_end] /\ f == f_at_start_loop 
 	 */
 	public Formula wp(Formula _normal_Postcondition, ExsuresTable _exc_Postcondition) {
-			Formula wp = loopEndInstruction.wp( _normal_Postcondition, _exc_Postcondition);
-			wp =  _wp(wp, _exc_Postcondition);
+			Formula wp =  _wp(_normal_Postcondition, _exc_Postcondition);
+			wp = loopEndInstruction.wp( wp, _exc_Postcondition);
+			
 			return wp;			
 	}
 	
 	public Formula wpBranch(Formula _normal_Postcondition, ExsuresTable _exc_Postcondition) {
-//		Formula  normal_Post = Formula.getFormula(_normal_Postcondition, invariant, Connector.AND);
-		Formula wp = ((BCConditionalBranch)loopEndInstruction).wpBranch( _normal_Postcondition, _exc_Postcondition);
-		wp = _wp(wp, _exc_Postcondition);
+//		Formula  normal_Post = Formula.getFormula(invariant, _normal_Postcondition, Connector.IMPLIES);
+		Formula wp = _wp(_normal_Postcondition, _exc_Postcondition);
+		wp = ((BCConditionalBranch)loopEndInstruction).wpBranch( wp, _exc_Postcondition);
+		
 		return wp;
 	}
 	
+	/**
+	 * this methods verifies adds verification conditions for the 
+	 * modifies clause and quantifies over the variables 
+	 * @param wp
+	 * @param _exc_Postcondition
+	 * @return
+	 */
 	private Formula _wp(Formula wp, ExsuresTable _exc_Postcondition) {
 	/*	wp = (Formula)wp.atState(getPosition() );*/
 		//forall fields (f ) f==f_at_loop_end /\ forall i : locVar index.  loc(i) = loc_at_start_end

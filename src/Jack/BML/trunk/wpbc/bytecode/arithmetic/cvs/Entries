@@ -1,0 +1,15 @@
+/BCArithmeticInstruction.java/1.2/Mon Sep 20 09:21:16 2004//
+/BCArithmeticInstructionWithException.java/1.4/Mon Sep 20 09:21:16 2004//
+/BCLCMP.java/1.5/Mon Sep  6 13:57:31 2004//
+/BCTypeADD.java/1.4/Tue May 25 09:25:39 2004//
+/BCTypeAND.java/1.5/Mon Sep 20 09:21:16 2004//
+/BCTypeDIV.java/1.7/Mon Sep 20 09:21:16 2004//
+/BCTypeMUL.java/1.4/Tue May 25 09:25:39 2004//
+/BCTypeNEG.java/1.3/Mon Aug  2 10:36:38 2004//
+/BCTypeOR.java/1.4/Mon Sep 20 09:21:16 2004//
+/BCTypeREM.java/1.6/Tue May 25 09:25:39 2004//
+/BCTypeSHL.java/1.6/Mon Sep 20 09:21:16 2004//
+/BCTypeSHR.java/1.5/Mon Sep 20 09:21:16 2004//
+/BCTypeSUB.java/1.6/Mon Sep 20 09:21:17 2004//
+/BCTypeUSHR.java/1.3/Mon Sep 20 09:21:17 2004//
+/BCTypeXOR.java/1.4/Mon Sep 20 09:21:17 2004//

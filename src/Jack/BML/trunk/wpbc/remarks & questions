@@ -124,5 +124,14 @@ par example : \old(expr ) [expr <- expr + 1] =  \old(expr )
  	   WHAT is done ? 
  	   ModifiesArray.getConditionForInterval is corrected.
  	   
+ 	   ////////////////////////////////////////
+ 	   ///////////////30-09/////////////
+ 	   ///////////////////////////////
+ 	   ////////////bcel - BUGS///////////////////////
+ 	   1. test BCMethod - didnot succeed - bug in the relation btw blocks
+ 	   2 . the functions that surcharge (FieldWITh, etc ) must be done in this way that , for ex: 
+ 	   if (a (5 <- loc(0)  r) .substitute(locl) 
  	   
- 	   
+ 	   3. NB: if the specification mentions fields that are not dereferenced in the bytecode, this means taht
+ 	   there is not a number in the constant pool that mentions them and ==> one should add in the constant pool an
+ 	   index in the cp for this field 

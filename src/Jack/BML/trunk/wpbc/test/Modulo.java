@@ -18,7 +18,7 @@ public class Modulo {
 	 * this = loc(0) i = loc(1) k = loc(2) constant = loc(3) s = loc( 4 )
 	 */
 		//@ requires true;
-		//@ ensures \result == \old(i) % \old(k);
+		//@ ensures \result == \old(i) % k;
 		public int mod(int i, int k) {
 			int constant = i;
 			

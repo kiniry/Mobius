@@ -325,7 +325,7 @@ public class BCMethod {
 			Formula loopInvariant = loop.getInvariant();
 			Expression decreases = loop.getDecreases();
 			BCLoopStart loopStart =
-				(BCLoopStart) Util.getBCInstructionAtPosition(bytecode, pos);
+				(BCLoopStart) Util.getBCInstructionAtPosition(bytecode, pos +3 );
 			loopStart.setInvariant(loopInvariant);
 			loopStart.setMethod(this);
 			/* in the loop start no need to know the decreases formula .Needed only in the end of the loop */

@@ -27,8 +27,8 @@ public interface  Code {
 	public static final int EQ = 0x10;
 	public static final int GRT = 0x11;
 	public static final int LESS = 0x12;
-	public static final int GRTEQ = 0x13;
-	public static final int LESSEQ = 0x14;
+	public static final int LESSEQ = 0x13;
+	public static final int GRTEQ = 0x14;
 	public static final int INSTANCEOF = 0x15;
 	public static final int SUBTYPE = 0x16; //<:
 	public static final int NOTEQ = 0x17;

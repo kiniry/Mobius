@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import utils.Util;
 
+import formula.Connector;
 import formula.Formula;
 
 import bcclass.attributes.ExsuresTable;
@@ -76,14 +77,24 @@ public class BranchingBlock extends Block {
 		this.branchTargetBlock = branchTargetBlock;
 	}
 
-
+	/**
+	 * 
+	 * @param _normal_Postcondition
+	 * @param _exc_postcondition
+	 * @return
+	 * this method serves to call wpBranch in branching instructions.
+	 * When the branching instruction is a loop end instruction then we require that the invariant establishes the 
+	 * normal_Postcondition
+	 */
 	public Formula calculateBranchRecursively(
 		Formula _normal_Postcondition,
 		ExsuresTable _exc_postcondition) {
 		Formula wp = (Formula)_normal_Postcondition.copy();
 		if (getLast() instanceof BCLoopEnd) {
 			BCLoopEnd loopEnd = (BCLoopEnd ) getLast();
-			wp = loopEnd.wpBranch(wp, _exc_postcondition);	
+//			Formula invariant = (Formula)loopEnd.getInvariant().copy();
+//			Formula invImpliesWp = Formula.getFormula( invariant, wp, Connector.IMPLIES); 
+			wp = loopEnd.wpBranch(_normal_Postcondition, _exc_postcondition);	
 		}
 		BCConditionalBranch last = (BCConditionalBranch) getLast();
 		

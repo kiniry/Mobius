@@ -92,7 +92,7 @@ public class BCLoopStart extends BCInstruction {
 			loopStartInstruction.wp(_normal_Postcondition, _exc_Postcondition);
 		
 		
-		
+		Formula  _invariant = (Formula)invariant.copy();
 		Formula wp =
 			Formula.getFormula((Formula)invariant.copy(), wpInstr, Connector.IMPLIES);
 		
@@ -108,16 +108,16 @@ public class BCLoopStart extends BCInstruction {
 			if (modifExpr[i] instanceof ModifiesLocalVariable) {
 				BCLocalVariable lVar = ((ModifiesLocalVariable)modifExpr[i]).getLocalVariable();
 				wp =  (Formula)wp.substitute( lVar, lVar.atState( getPosition()));
-				assumeStateOfVars  = Formula.getFormula(assumeStateOfVars, f, Connector.AND);
+//				assumeStateOfVars  = Formula.getFormula(assumeStateOfVars, f, Connector.AND);
 				
 			} else {
 				BCConstantFieldRef fieldRef =  (BCConstantFieldRef)modifExpr[i].getConstantFieldRef();
 				wp =  (Formula)wp.substitute( fieldRef, fieldRef.atState( getPosition()));
-				assumeStateOfVars  = Formula.getFormula(assumeStateOfVars, f, Connector.AND);
+//				assumeStateOfVars  = Formula.getFormula(assumeStateOfVars, f, Connector.AND);
 			}
 		}
 		
-		wp = Formula.getFormula( assumeStateOfVars, wp, Connector.IMPLIES);
+//		wp = Formula.getFormula( assumeStateOfVars, wp, Connector.IMPLIES);
 		wp = Formula.getFormula((Formula)invariant.copy(),wp,  Connector.AND);
 		return wp;
 		
