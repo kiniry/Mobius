@@ -13,6 +13,7 @@ import escjava.ast.TagConstants;
 import escjava.ast.Modifiers;
 
 import escjava.backpred.FindContributors;
+import escjava.gui.GUI;
 import escjava.AnnotationHandler;
 
 import javafe.reader.StandardTypeReader;
@@ -46,6 +47,28 @@ import javafe.util.*;
 
 public class Main extends javafe.SrcTool
 {
+    static public final String jarlocation;
+    
+    static {
+	java.net.URL urlJar = GUI.class.getClassLoader().getResource(
+                "escjava/Main.class");
+        String urlStr = urlJar.toString();
+        int from = "jar:file:".length();
+        int to = urlStr.indexOf("!/");
+        if (to != -1) {
+            String j = urlStr.substring(from, to);
+            int k = j.lastIndexOf('/');
+            if (k != -1) j = j.substring(0,k);
+            jarlocation = j;
+        } else {
+            jarlocation = null;
+        }
+        // This does not produce a good guess for the distribution
+        // root when running within the CVS distribution - just
+        // when running from a jar file.
+        //System.out.println("LOCATION " + urlStr + " " + jarlocation);
+    }
+    
     {
 	// Makes sure that the escjava.tc.Types factory instance is loaded
 	escjava.tc.Types.init();
@@ -204,11 +227,47 @@ public class Main extends javafe.SrcTool
      */
     public void setup() {
         stages = options().stages;
+	if (options().simplify == null) setDefaultSimplify();
+	if (options().simplify != null) System.setProperty("simplify",options().simplify);
         super.setup();
         
         if (!options().quiet)
             System.out.println("ESC/Java version " + 
                 (options().testMode?"VERSION":version));
+    }
+
+    public void setDefaultSimplify() {
+	String os = System.getProperty("os.name");
+	String root = null;
+	String name = "Simplify-1.5.4.";
+	if (os.startsWith("Windows")) {
+	    root = name + "exe";
+	} else if (os.startsWith("Mac")) {
+	    root = name + "macosx";
+	} else if (os.startsWith("Linux")) {
+	    root = name + "linux";
+	} else if (os.startsWith("Solaris")) {
+	    root = name + "solaris";
+	} else {
+	    ErrorSet.warning("Unknown OS - could not find Simplify: " + os);
+	}
+	if (root == null) return;
+
+	
+	File f;
+	if (jarlocation == null) f = new File(root);
+	else f = new File(jarlocation,root);
+	
+	if (!f.exists()) {
+	    ErrorSet.warning("Could not find a default SIMPLIFY executable - specify the path to SIMPLIFY for this operating system using the -simplify option[ " + os + " " + root + "]");
+	    return;
+	}
+	try {
+	    options().simplify = f.getCanonicalPath();
+	} catch (IOException e) {
+	    ErrorSet.warning("Could not find a default SIMPLIFY executable - specify the path to SIMPLIFY for this operating system using the -simplify option[ " + os + " " + root + "]");
+	    return;
+	}
     }
 
     public void setupPaths() {

@@ -29,6 +29,7 @@ public class Options extends javafe.SrcToolOptions
 	{ "-pgc", "Print the guarded commands"},
 	{ "-ppvc", "Prettyprint the VCs generated with -v"},
         { "-pxLog <log>", "PrettyPrint the commands sent to Simplify in the file named <log>"},
+	{ "-simplify", "The path to the SIMPLIFY executable"},
         { "-specs <dirpath>", "The jar file or directory path of the set of system specs to use; these are appended to the sourcepath, if specified, or else the classpath." },
         { "-sxLog <log>", "Print the commands sent to Simplify in the file named <log>"},
 	{ "-typecheck", "Do only parsing and typechecking, no generation or proving of verification conditions" },
@@ -40,6 +41,8 @@ public class Options extends javafe.SrcToolOptions
      * These are set by the command-line switches of the same name.
      * They default to false (unset).
      */
+
+    public String simplify = System.getProperty("simplify");
 
     public boolean suggest = false;
 
@@ -803,7 +806,9 @@ public class Options extends javafe.SrcToolOptions
 	    showFields = true;
 	    return offset;
 	} else if (option.equals("-simplify")) {
-	    System.setProperty("simplify",args[offset]);
+		// FIXME - shcek for additional argument
+	    simplify = args[offset];
+	    //System.setProperty("simplify",args[offset]);
 	    return offset+1;
 	} else if (option.equals("-EscProjectFileV0")) {
 	    // Ignored, but also used to mark a project file.

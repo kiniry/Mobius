@@ -61,19 +61,6 @@ import junitutils.Utils;
 
 public class GUI extends escjava.Main {
 
-    static public final String jarlocation;
-
-static {
-	    String myClassName = "escjava/gui/GUI.class";
-	    java.net.URL urlJar =
-		  GUI.class.getClassLoader().getResource("escjava/gui/GUI.class");
-	    String urlStr = urlJar.toString();
-	    int from = "jar:file:".length();
-	    int to = urlStr.indexOf("!/");
-	    if (to != -1) jarlocation = urlStr.substring(from, to);
-	    else jarlocation = null;
-}
-
     static public class Stop extends RuntimeException {}
     static public final Stop STOP = new Stop();
 
@@ -129,41 +116,14 @@ static {
 	public Options() {
 	    quiet = true;
 
-	    String myClassName = "escjava/gui/GUI.class";
-	    java.net.URL urlJar =
-		  this.getClass().getClassLoader().getResource(myClassName);
-	    String urlStr = urlJar.toString();
-	    int from = "jar:file:".length();
-	    int to = urlStr.indexOf("!/");
-	    if (to != -1) {
-		specspath = urlStr.substring(from, to);
-		if (System.getProperty("simplify") == null) {
-		    int k = specspath.lastIndexOf('/');
-		    if (k == -1) k = specspath.lastIndexOf(java.io.File.separator);
-		    if (k >= 0) {
-			String simpath = specspath.substring(0,k+1)
-					+ "Simplify-1.5.4.";
-			String os = System.getProperty("os.name");
-			System.out.println("OS " + os);
-			if (os.startsWith("Mac")) {
-			    simpath += "macosx";
-			} else if (os.startsWith("Linux")) {
-			    simpath += "linux";
-			} else if (os.startsWith("Windows")) {
-			    simpath = simpath.substring(1);
-			    simpath += "exe";
-			}
-			if ((new java.io.File(simpath)).exists()) 
-				System.setProperty("simplify",simpath);
-		    }
-		}
-	    }
+            specspath = escjava.Main.jarlocation;
 
-	    try {
-	    processOption("-nowarn", new String[]{"Deadlock"}, 0);
-	    processOption("-source", new String[]{"1.4"}, 0);
-	    } catch (javafe.util.UsageError e) {} // FIXME
-	}
+            try {
+                processOption("-nowarn", new String[] { "Deadlock" }, 0);
+                processOption("-source", new String[] { "1.4" }, 0);
+            } catch (javafe.util.UsageError e) {
+            } // FIXME
+        }
     }
 
     /** This is overloaded because, instead of automatically running
