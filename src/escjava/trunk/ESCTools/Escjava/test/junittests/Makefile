@@ -24,7 +24,7 @@ DEFAULTFLAGS = " "
 
 .PHONY: lists
 lists:
-	@rm listtests
+	@rm -f listtests
 	@touch listtests
 	@for f in `ls *.java | grep -v -f skip`; do \
 		echo -n ${ALWAYSFLAGS} " " >> listtests ; \
