@@ -1,19 +1,18 @@
 # Copyright 2000, 2001, Compaq Computer Corporation
 # Copyright 2003 University of Nijmegen
 # Copyright 2003 David R. Cok
-# This file is extensively revised in the 2003 ESC revision
+# This file is extensively revised in the 2003 ESC revision.
 
 export TOP = ..
 include ${TOP}/Makefile.defs
 # Must define:	ESCJAVA_ROOT, JAVAFE_ROOT, JAVAC, JAVAC_FLAGS
 
-# Various conventional UNIX tools are used in the following, including cc in preprocess
-# only mode.
-# Also, the astgen and astfilelist programs in Javafe are used here.
+# Various conventional UNIX tools are used in the following, including
+# cc in preprocess only mode.  Also, the "astgen" and "astfilelist"
+# programs in Javafe are used here.
 
-#######################################################################################
-# Defining relevant directory locations
-# and other variables
+###########################################################################
+# Defining relevant directory locations and other variables.
 
 ESCJAVA_SOURCE_DIR = $(ESCJAVA_ROOT)/java
 JAVASOURCEFILES = $(ESCJAVA_SOURCE_DIR)/escjava/ast/*.java \
@@ -56,10 +55,11 @@ test: test_escjava
 
 
 
-#####################################################################################
+###########################################################################
 # Documentation targets.
 
-# mtex2man and mtex2html are not generally available so we turn this off for now - FIXME
+# mtex2man and mtex2html are not generally available so we turn this
+# off for now - FIXME
 .PHONY: docs
 #docs: docs_escjava
 docs:
@@ -83,12 +83,13 @@ docs_escjava:	$(ESCJAVA_CORE_DOC)
 
 STAMPFILE = classes.stamp
 
-## These targets must be in the given order
-## We use classes.stamp instead of allclasses here to enable incremental
-## builds.  This incremental compilation is not robust - removing individual
-## .class files will cause not everything to be built.  Also sometimes .java files
-## ought to be recompiled if dependencies change, even if the file has not been
-## modified.  If in doubt do a clean before a build - it doesn't take long.
+## These targets must be in the given order.  We use classes.stamp
+## instead of allclasses here to enable incremental builds.  This
+## incremental compilation is not robust - removing individual .class
+## files will cause not everything to be built.  Also sometimes .java
+## files ought to be recompiled if dependencies change, even if the
+## file has not been modified.  If in doubt do a clean before a build
+## - it doesn't take long.
 .PHONY: compile
 compile: $(CLASSDIRECTORY) generate_files $(STAMPFILE)
 
@@ -97,7 +98,7 @@ compileall: $(CLASSDIRECTORY) generate_files allclasses
 
 .PHONY: allclasses
 allclasses:
-	$(JAVAC) $(JAVAC_FLAGS) $(JAVASOURCEFILES)
+	@$(JAVAC) $(JAVAC_FLAGS) $(JAVASOURCEFILES)
 	touch $(STAMPFILE)
 
 $(STAMPFILE): $(JAVASOURCEFILES)
@@ -128,12 +129,12 @@ $(ASTFILELIST) $(ASTGEN):
 
 VECTEMPLATE = $(JAVAFE_ROOT)/java/javafe/util/_TYPE_Vec.j
 
-# The component type for these (e.g. FieldDecl.java) is in Javafe
+# The component type for these (e.g. FieldDecl.java) is in Javafe.
 JavafeTypeVec = \
 	$(AST_DIR)/FieldDeclVec.java $(AST_DIR)/LocalVarDeclVec.java \
 	$(AST_DIR)/GenericVarDeclVec.java
 
-# The component type for these (e.g. GuardedCmd.java) is in Escjava
+# The component type for these (e.g. GuardedCmd.java) is in Escjava.
 TypeVec = \
 	$(AST_DIR)/GuardedCmdVec.java  \
 	$(AST_DIR)/ConditionVec.java  \
@@ -148,7 +149,7 @@ TypeVec = \
 .PHONY: generate_escjava_ast_source
 generate_escjava_ast_source: $(AST_DIR)/GeneratedTags.java $(TypeVec) $(JavafeTypeVec)
 
-# FIXME - ought to make these depend on the component type
+# FIXME - ought to make these depend on the component type.
 $(AST_DIR)/%Vec.java: $(VECTEMPLATE)
 	@if [ -e $(ESCJAVA_ROOT)/java/escjava/ast/$*.java ]; then \
 		sed s/_TYPE_/$*/g $(VECTEMPLATE) | \
@@ -163,7 +164,7 @@ $(AST_DIR)/%Vec.java: $(VECTEMPLATE)
 	fi
 
 
-# This also generates all the .java files implied by hierarchy.j
+# This also generates all the .java files implied by "hierarchy.j".
 $(AST_DIR)/GeneratedTags.java: $(ASTGEN) $(AST_DIR)/hierarchy.j
 	@(cd $(AST_DIR); $(ASTGEN) < hierarchy.j; \
 	grep -v "//@" AnOverview.java > AnOverview.tmp; \
@@ -181,8 +182,8 @@ clean_escjava_ast: $(ASTFILELIST)
 	rm -f $(AST_DIR)/*.class $(CLASSDIRECTORY)/escjava/ast/*.class
 
 
-############################################################
-## Generating the source files in backpred
+###########################################################################
+## Generating the source files in backpred.
 
 BACKPRED_DIR = $(ESCJAVA_SOURCE_DIR)/escjava/backpred
 DEFAULT_UNIV_BACKPRED = $(BACKPRED_DIR)/DefaultUnivBackPred.java
@@ -236,7 +237,7 @@ clean_misc:
 	find . -name 'core.*' -exec rm -f {} \;
 
 clean_jars:
-	rm -f $(ESCTOOLS_JARS)/*.jar
+#	rm -f $(ESCTOOLS_JARS)/*.jar
 
 clean_archives:
 	rm -f $(CLASSDIRECTORY)/escjava.zip $(CLASSDIRECTORY)/javafe.zip
@@ -292,7 +293,7 @@ test_matrix:
 	escjava *.java;)
 
 
-######################################################################################
+###########################################################################
 ## parser test targets
 
 test_parser: test_escjava_parser test_matrix self_test

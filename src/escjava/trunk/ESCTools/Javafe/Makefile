@@ -1,5 +1,6 @@
 # Copyright 2000, 2001, Compaq Computer Corporation
-# Altered extensively by David R. Cok as part of the 2003 upgrade of the ESC tools
+# Altered extensively by David R. Cok as part of the 2003 upgrade of
+# the ESC tools.
 
 
 export TOP = ..
@@ -10,7 +11,7 @@ include ${TOP}/Makefile.defs
 # only mode.
 
 #####################################################################################
-## Variables needed in the Makefile
+## Variables needed in the Makefile.
 export CLASSDIRECTORY=${JAVAFE_ROOT}/classfiles
 export SOURCEDIRECTORY=${JAVAFE_ROOT}/java
 export TESTSOURCEDIRECTORY=${JAVAFE_ROOT}/test
@@ -40,7 +41,7 @@ test: javafe_test runtest
 .PHONY: install
 install: clean build javafe_test javadoc zip
 
-######################################################################################
+###########################################################################
 # build targets
 
 SOURCEFILES := java/javafe/*.java java/javafe/*/*.java java/tohtml/*.java
@@ -80,7 +81,7 @@ $(CLASSDIRECTORY):
 jtools:	
 	${MAKE} -C java/jtools
 
-#######################################################################################
+###########################################################################
 ## install targets
 
 ## FIXME - FIX THIS, and install in general
@@ -92,7 +93,7 @@ zip:
 	chmod a+r ${CLASSDIRECTORY}/javafe.zip
 
 
-######################################################################################
+###########################################################################
 # clean targets
 
 .PHONY: clean
@@ -110,7 +111,7 @@ cleanclasses:
 	rm -rf $(CLASSDIRECTORY)
 
 
-#######################################################################################
+###########################################################################
 ## docs targets
 
 .PHONY: docs
@@ -118,7 +119,7 @@ docs:
 
 ## javadocs are generated from the parent directory
 
-#######################################################################################
+###########################################################################
 ## test targets
 
 
@@ -146,7 +147,7 @@ javafe_test:
 	javac -classpath ${CLASSPATH}:${SOURCEDIRECTORY}:${TESTSOURCEDIRECTORY} \
 	  -d ${CLASSDIRECTORY} ${JAVAFETESTTARGETS} )
 
-#######################################################################################
+###########################################################################
 ## misc targets
 
 OTHERSOURCEFILES = astgen/ast*.c astgen/ast*.h astgen/ast*.l
