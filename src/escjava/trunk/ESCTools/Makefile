@@ -210,8 +210,8 @@ jar:
 	mkdir -p ${RELTEMP}/sub/junitutils
 	(cd ${ESCTOOLS_ROOT}/Utils/junitutils; cp `find . -name '*.class'` ${RELTEMP}/sub/junitutils)
 	( cd ${RELTEMP}/sub; jar xf ../../jmlspecs.jar )
-	( cd ${RELTEMP}/sub; jar cf ../${RELJAR} *; )
-	jar umf manifest.txt ${RELTEMP}/${RELJAR}
+	( cd ${RELTEMP}/sub; jar cvmf ../../manifest.txt ../${RELJAR} *; )
+	##jar umf manifest.txt ${RELTEMP}/${RELJAR}
 	rm -rf ${RELTEMP}/sub
 
 .PHONY: binary-release
@@ -249,8 +249,9 @@ test-binary-release:
 	mkdir -p ${RELTEST}
 	cp ${RELDIR}/${RELTAR} ${RELTEST}
 	cd ${RELTEST} ;\
-	    tar xjf ${RELTEST}/${RELTAR} ;\
-	    ${RELTEST}/quicktest
+	    unset ESC_CLASSPATH ; \
+	    tar xjf ${RELTAR} ;\
+	    ./quicktest
 
 
 ## Note - we need to unset lots of environmental variables here because we
