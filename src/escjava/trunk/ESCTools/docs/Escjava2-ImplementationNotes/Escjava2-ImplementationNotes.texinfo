@@ -1663,7 +1663,7 @@ have its own conditional predicate that further constrains when the associated
 memory locations may be assigned.  The list of locations in the modifies clause
 may also contain the special keywords @code{\nothing}, @code{\everything},
 @code{not_specified}, and the wild-card forms  @emph{expr}@code{.*} , 
-@emph{typename}@code.*} ,
+@emph{typename}@code{.*} ,
 @emph{array}@code{[*]}, and @emph{array}@code{[}@emph{expr} @code{..} @emph{expr}@code{]}.
 The conditional expression must have boolean type; any expressions in the clause are
 evaluated in the pre-state.
