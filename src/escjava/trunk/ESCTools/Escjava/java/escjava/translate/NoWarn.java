@@ -208,7 +208,7 @@ public class NoWarn
      * @param lineNo
      * @param streamId
      */
-    //@ requires (* the two locations must be from the same stream. *)/
+    //@ requires (* the two locations must be from the same stream. *);
     static boolean inRange(int startLoc, int endLoc, int lineNo,
 			   int streamId) {
 	if (startLoc==Location.NULL || endLoc==Location.NULL)

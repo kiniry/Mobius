@@ -217,7 +217,8 @@ public abstract class FrontEndTool extends Tool {
      * 		   terminate the program
      */
 
-    //@ ensures args == null ==> \not_modified(options, options.* );
+    //@ ensures args == null ==> \not_modified(options);
+    // FIXME //@ ensures args == null ==> \not_modified(options.* );
     public int handleOptions(String[] args) {
         if (args != null) {
             try {
@@ -250,7 +251,7 @@ public abstract class FrontEndTool extends Tool {
      * @return The exit code for the program, with 0 indicating success
      * @see javafe.Tool#run(java.lang.String[])
      */
-    /*@ public normal_behavior
+    /*@ also public normal_behavior
       @  requires args != null;
       @  modifies \everything;
       @*/

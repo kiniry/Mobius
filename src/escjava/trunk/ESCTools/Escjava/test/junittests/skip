@@ -7,6 +7,7 @@ InheritNull.java
 PreconditionWarnings.java
 NonNullResult.java
 InheritedSpecs.java
+StringFresh.java
 ## Varying output
 FormalNonnullInheritance.java
 ## A bug / tests to be fixed

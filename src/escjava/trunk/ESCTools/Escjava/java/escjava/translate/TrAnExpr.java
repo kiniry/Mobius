@@ -34,6 +34,7 @@ public class TrAnExpr {
 
     // NOT USED private static Set issuedPRECautions = new Set();  
 
+    private static int newStringCount = 0;
 
     public static Translate translate = null;
 
@@ -411,8 +412,18 @@ public class TrAnExpr {
 		System.out.println("TYPES " + TagConstants.toString(newtag) + " " + TagConstants.toString(leftType) + " " + TagConstants.toString(rightType));
 	}
 */
-	return GC.nary(be.getStartLoc(), be.getEndLoc(),
+	if (newtag == TagConstants.STRINGCAT) {
+	    ExprVec ev = ExprVec.make(3);
+	    ev.addElement(left);
+	    ev.addElement(right);
+	    ev.addElement(GC.nary(Identifier.intern("next"),
+	            GC.allocvar, LiteralExpr.make(TagConstants.INTLIT,new Integer(++newStringCount),Location.NULL)));
+	    return GC.nary(be.getStartLoc(), be.getEndLoc(),
+		       newtag, ev);
+	} else {
+	    return GC.nary(be.getStartLoc(), be.getEndLoc(),
 		       newtag, left, right);
+	}
       }
 
       case TagConstants.NEWINSTANCEEXPR: {

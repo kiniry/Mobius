@@ -169,7 +169,8 @@ public class TagConstants extends GeneratedTags
     public static final int SELECT = REFNE + 1;
     public static final int STORE = SELECT + 1;
     public static final int STRINGCAT = STORE + 1;
-    public static final int TYPEEQ = STRINGCAT + 1; 
+    public static final int STRINGCATP = STRINGCAT + 1;
+    public static final int TYPEEQ = STRINGCATP + 1; 
     public static final int TYPENE = TYPEEQ + 1; 
     public static final int TYPELE = TYPENE + 1; // a.k.a. "<:"
     // TYPEOF -- an ESC keyword
@@ -801,6 +802,7 @@ public class TagConstants extends GeneratedTags
         "select",
         "store",
         "stringCat",
+        "stringCatP",
         "typeEQ",
         "typeNE",
         "typeLE",

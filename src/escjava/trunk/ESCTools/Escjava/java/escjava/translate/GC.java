@@ -660,7 +660,14 @@ public final class GC {
 	ExprVec ev = ExprVec.make(1);
 	ev.addElement(e);
 	return nary(id,ev);
-  }
+}
+
+  public static Expr nary(Identifier id, Expr e1, Expr e2) {
+	ExprVec ev = ExprVec.make(2);
+	ev.addElement(e1);
+	ev.addElement(e2);
+	return nary(id,ev);
+}
 
   public static Expr nary(int sloc, int eloc, Identifier id, ExprVec ev) {
 	Expr e = nary(sloc, eloc, TagConstants.METHODCALL, ev);

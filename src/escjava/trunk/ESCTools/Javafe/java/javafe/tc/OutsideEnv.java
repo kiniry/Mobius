@@ -345,7 +345,7 @@ public final class OutsideEnv
 	return out;
     }
 
-    //@ ensures sources.elementType <: \type(GenericFile);
+    //@ ensures \result.elementType <: \type(GenericFile);
     public static ArrayList resolveSources(String[] pname) {
 	ArrayList a = reader.findFiles(pname);
 	if (a == null) {

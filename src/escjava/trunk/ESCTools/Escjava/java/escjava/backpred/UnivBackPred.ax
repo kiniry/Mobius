@@ -452,6 +452,62 @@
     (EQ a |@true|)
     (EQ b |@true|)))
 
+; Axioms related to Strings - DRCok
+
+(BG_PUSH
+  (FORALL (s)
+    (PATS (interned s))
+    (AND (NEQ (interned s) null)
+    	 (EQ (typeof (interned s)) |T_java.lang.String| )
+         (isAllocated (interned s) alloc))))
+
+(BG_PUSH
+  (FORALL (s ss)
+    (PATS (MPAT (interned s) (interned ss)))
+    (IMPLIES (EQ (interned s) (interned ss))  (EQ s ss)) ))
+        
+(BG_PUSH
+  (FORALL (x y a)
+    (PATS (stringCat x y a))
+    (AND (NEQ (stringCat x y a) null)
+    	 (NOT (isAllocated (stringCat x y a) a))
+         (EQ (typeof (stringCat x y a)) |T_java.lang.String|))))
+
+(BG_PUSH
+  (FORALL (x y a b)
+    (PATS (MPAT (stringCat x y a) (stringCat x y b)))
+    (IFF (EQ (stringCat x y a) (stringCat x y b)) (EQ a b))))
+
+(BG_PUSH
+  (FORALL (a b i j)
+    (PATS (MPAT (next a i) (next b j)))
+	(IFF (EQ (next a i)(next b j))
+		 (AND (EQ a b)(EQ i j)))))
+	
+(BG_PUSH
+  (FORALL (a i) 
+    (PATS (next a i))
+    (< a (next a i))))
+    	 
+(BG_PUSH
+  (FORALL (x y xx yy a b)
+     (PATS (MPAT (stringCat x y a) (stringCat xx yy b)))
+     (IMPLIES
+     	  (EQ (stringCat x y a) (stringCat xx yy b))
+     	  (EQ a b))))
+     	  
+(DEFPRED (stringCatP r x y a0 a1))
+
+(BG_PUSH
+  (FORALL (r x y a0 a1)
+    (PATS (stringCatP r x y a0 a1))
+    (IMPLIES (stringCatP r x y a0 a1)
+    		(AND (NEQ r null)
+    	 		(isAllocated r a1)
+    	 		(NOT (isAllocated r a0))
+    	 		(< a0 a1)
+         		(EQ (typeof r) |T_java.lang.String|)))))
+
 ; Not in ESCJ8, but should be
 
 (BG_PUSH
@@ -460,12 +516,6 @@
     (IFF
       (EQ (integralEQ x y) |@true|)
       (EQ x y))))
-
-(BG_PUSH
-  (FORALL (x y)
-    (PATS (stringCat x y))
-    (AND (NEQ (stringCat x y) null)
-         (<: (typeof (stringCat x y)) |T_java.lang.String|))))
 
 (BG_PUSH
   (FORALL (x y)
@@ -614,6 +664,7 @@
 
 ; === A few floating point axioms - DRCok
 ;; FIXME - floatingLT etc are predicates here, but are functions in ESC/java - is that a problem?
+;; FIXME - have to include NaN and infinity
 
 ;; Order axioms
 (BG_PUSH

@@ -2,8 +2,10 @@
 
 package escjava.translate;
 
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Enumeration;
+import java.util.Map;
 import java.util.Vector;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -2199,8 +2201,16 @@ public final class Translate
             case TagConstants.INTLIT:
             case TagConstants.LONGLIT:
             case TagConstants.NULLLIT:
-            case TagConstants.STRINGLIT:
                 return (Expr)expr;
+
+            case TagConstants.STRINGLIT:
+            {
+                Expr result = GC.nary(
+                	Identifier.intern("interned"),
+                	GC.symlit(Strings.interned(((LiteralExpr)expr).value.toString()).toString()));
+
+                return result;
+            }
 
             case TagConstants.ARRAYREFEXPR:
                 {
@@ -2480,6 +2490,10 @@ public final class Translate
 			int rightTag = ((PrimitiveType)TypeCheck.inst.getType(x.right)).getTag();
 			if (leftTag == rightTag) 
 				; // do nothing
+			else if (leftTag == TagConstants.REALTYPE && rightTag != TagConstants.REALTYPE)
+			    right = GC.cast(right,Types.realType);
+			else if (leftTag != TagConstants.REALTYPE && rightTag == TagConstants.REALTYPE)
+			    left = GC.cast(left,Types.realType);
 			else if (leftTag == TagConstants.DOUBLETYPE && rightTag != TagConstants.DOUBLETYPE)
 			    right = GC.cast(right,Types.doubleType);
 			else if (leftTag != TagConstants.DOUBLETYPE && rightTag == TagConstants.DOUBLETYPE)
@@ -2492,9 +2506,14 @@ public final class Translate
 			// FIXME - other promotions ? Also in TrAnExpr.java
 
 		    }
-                    return protect(protect, GC.nary(x.getStartLoc(), x.getEndLoc(),
-                                                    newtag, left, right),
-                                   x.locOp);
+		    if (newtag == TagConstants.STRINGCAT) {
+		        return addNewString(x,left,right);
+	        
+		    } else {
+		        return protect(protect, GC.nary(x.getStartLoc(), x.getEndLoc(),
+		                newtag, left, right),
+		                x.locOp);
+		    }
                 }
 
             case TagConstants.ASSIGN:
@@ -2616,9 +2635,14 @@ public final class Translate
                             }
                         }
 
-                        rval= GC.nary(expr.getStartLoc(), expr.getEndLoc(), op, oldLval, rval);
-                        rval= addRelAsgCast(rval, lType, rType);
-
+                        if (op == TagConstants.STRINGCAT) { 
+                            rval = addNewString(expr,left,rval);
+                
+                        } else {
+                            rval= GC.nary(expr.getStartLoc(), expr.getEndLoc(), op, oldLval, rval);
+                            rval= addRelAsgCast(rval, lType, rType);
+                        }
+                        
                         writeCheck(lhs, null, rval, locOp, false);
                         code.addElement(GC.gets(lhs, rval));
                         if (returnold) {
@@ -2646,10 +2670,15 @@ public final class Translate
                             }
                         }
 
-                        rval= GC.nary(expr.getStartLoc(), expr.getEndLoc(),
-                                      op, oldLval, rval);
-                        rval= addRelAsgCast(rval, lType, rType);
-
+                        if (op == TagConstants.STRINGCAT) { 
+                            rval = addNewString(expr,lval,rval);
+                            
+                        } else {
+                            rval= GC.nary(expr.getStartLoc(), expr.getEndLoc(),
+                                    op, oldLval, rval);
+                            rval= addRelAsgCast(rval, lType, rType);
+                        }
+                        
                         writeCheck(lval, null, rval, locOp, false);
                         if (lval.getTag() == TagConstants.VARIABLEACCESS) {
                             code.addElement(GC.gets((VariableAccess)lval, rval));
@@ -5016,6 +5045,40 @@ if (mg.precondition == null) {
 	    Object o = e.childAt(i);
 	    if (o != null && o instanceof ASTNode) setop((ASTNode)o);
 	}
+    }
+ 
+    public Expr addNewString(VarInit x, Expr left, Expr right) {
+        // Construct variables
+        VariableAccess result= fresh(x, x.getStartLoc(), "newString!");
+        VariableAccess newallocvar= adorn(GC.allocvar);
+        
+        ExprVec ev = ExprVec.make(5);
+        ev.addElement(result);
+        ev.addElement(left);
+        ev.addElement(right);
+        ev.addElement(GC.allocvar); 
+        ev.addElement(newallocvar);
+        
+        Expr newstring = GC.nary(x.getStartLoc(), x.getEndLoc(),
+                TagConstants.STRINGCATP, ev);
+        
+        // Emit the Assume and a Gets commands
+        code.addElement(GC.assume(newstring));
+        code.addElement(GC.gets(GC.allocvar, newallocvar));
+        
+        return result;  // FIXME - we are omitting the protect, which I don't understand
+    }
+    
+    public static class Strings {
+        static Map map = new HashMap();
+        static private int count = 0;
+        static Integer interned(String s) {
+            Object o = map.get(s);
+            if (o != null) return ((Integer)o);
+            Integer i = new Integer(++count);
+            map.put(s,i);
+            return i;
+        }
     }
 } // end of class Translate
 

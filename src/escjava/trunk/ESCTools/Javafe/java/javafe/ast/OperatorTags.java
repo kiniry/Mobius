@@ -86,7 +86,7 @@ public class OperatorTags extends GeneratedTags
 //    };
 
     //@ private invariant \nonnullelements(opStrings);
-    //@ private invariant opTags.length == opStrings.length;
+//    //@ private invariant opTags.length == opStrings.length;
     private static final /*@ non_null @*/ String[] opStrings = {
         "||", "&&", "|", "^", "&", "!=", "==", ">=", ">", "<=", "<",
         "<<", ">>", ">>>", "+", "-", "/", "%", "*",

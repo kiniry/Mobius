@@ -1058,6 +1058,7 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
     case TagConstants.SELECT:
     case TagConstants.STORE:
     case TagConstants.STRINGCAT:
+    case TagConstants.STRINGCATP:
     case TagConstants.TYPEEQ:
     case TagConstants.TYPENE:
     case TagConstants.TYPELE:

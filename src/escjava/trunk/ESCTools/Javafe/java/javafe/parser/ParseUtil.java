@@ -5,6 +5,7 @@ package javafe.parser;
 import javafe.ast.*;
 import javafe.util.StackVector;
 import javafe.util.ErrorSet;
+import javafe.util.Location;
 
 /**
  * Base class for Java parser; provides some basic parsing utilities.

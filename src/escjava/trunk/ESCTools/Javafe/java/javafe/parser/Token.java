@@ -5,6 +5,7 @@ package javafe.parser;
 import javafe.ast.Identifier;
 import javafe.ast.LexicalPragma;
 import javafe.ast.ModifierPragma;
+import javafe.ast.TypeModifierPragma;
 import javafe.ast.StmtPragma;
 import javafe.ast.TypeDeclElemPragma;
 import javafe.ast.PrettyPrint;
