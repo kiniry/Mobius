@@ -18,8 +18,13 @@ TypeVec = ImportDeclVec.java TypeDeclVec.java TypeNameVec.java \
           ModifierPragmaVec.java LexicalPragmaVec.java \
           TypeModifierPragmaVec.java  
 
-source: ASTNode.java $(TypeVec) $(ASTGEN)
+.PHONY: source
+source: ASTNode.java typevecs
 
+.PHONY: typevecs
+typevecs: $(TypeVec) 
+
+.PHONY: $(ASTFILELIST) $(ASTGEN)
 $(ASTFILELIST) $(ASTGEN):
 	(cd ${JAVAFE_ROOT}/astgen; ${MAKE})
 
@@ -53,6 +58,7 @@ IntegerVec.java: ../util/_TYPE_Vec.j
 
 #####
 
+.PHONY: clean
 clean: $(ASTFILELIST)
 	@$(ASTFILELIST) < hierarchy.j | xargs rm -f 
 	@rm -f *~ ${TypeVec} ASTGEN* zASTGEN* *Vec.spec
