@@ -9,7 +9,7 @@ class AID {
 
 
     public byte getBytes (byte[] dest, short offset)
-    /*@ requires dest != null &&
+    /*@ requires dest != null && dest != theAID &&
                  offset >= 0 &&
                  offset + theAID.length <= dest.length;
         modifies dest[offset .. offset+theAID.length-1];
@@ -23,7 +23,7 @@ class AID {
     }
 
     public byte getBytesA (byte[] dest, short offset)
-    /*@ requires dest != null &&
+    /*@ requires dest != null && dest != theAID &&
                  offset >= 0 &&
                  offset + theAID.length <= dest.length;
         modifies dest[*];

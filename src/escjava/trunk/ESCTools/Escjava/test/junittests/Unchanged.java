@@ -90,7 +90,7 @@ public class Unchanged extends Sup {
 	}
 
 	//@ requires ar != null && ar.length >= 10;
-	//@ modifies ar[1..2]; //, ar[4..ar.length-1];
+	//@ modifies ar[1..2], ar[4..ar.length-1];
 	public void mra();
 
 	//@ requires ar != null && ar.length >= 10;

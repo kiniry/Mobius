@@ -3943,7 +3943,6 @@ public final class Translate
 
     else {
       Type savedType = GC.thisvar.decl.type;
-      GC.thisvar.decl.type = TypeSig.getSig(calledSpecs.getContainingClass());
 
       // We need to evaluate all of the expressions in the
       // modifies clauses before we set the locations that are
@@ -3976,7 +3975,11 @@ public final class Translate
       LinkedList locations = new LinkedList();
       ModifiesGroupPragmaVec mgpv = calledSpecs.modifies;
       for (int i=0; i<mgpv.size(); ++i) {
+        GC.thisvar.decl.type = TypeSig.getSig(calledSpecs.getContainingClass());
         ModifiesGroupPragma mgp = mgpv.elementAt(i);
+        Expr precondition = mgp.precondition;
+        precondition = TrAnExpr.trSpecExpr(precondition,argsMap,argsMap,eod);
+        codevec = GuardedCmdVec.make();
         Frame.ModifiesIterator iter = new Frame.ModifiesIterator(mgp.items,true,true);
         while (iter.hasNext()) {
           Object o = iter.next();
@@ -4039,29 +4042,25 @@ public final class Translate
             System.out.println("UNSUPPORTED " + o.getClass());
           }
         }
-      }
-
-      GC.thisvar.decl.type = savedType; // FIXME - put in finally clause?
-
-      // An assignment generated for each modified target
-      // of the form   i:7.19 = after@16.2:20.19
-      
-      // Here we handle special variables like alloc and state
-      for(int i=0; i<spec.specialTargets.size(); i++) {
-        Expr target = spec.specialTargets.elementAt(i);
-        GuardedCmd gc = modify(target, pt, scall);
-
-        if (gc != null) code.addElement(gc); 
-      }
-      
-      // Here we set everything in the modifies clauses to
-      // unspecified values.  For instance, for simple variables
-      // we add the command: i:7.19 = after@16.2:20.19
-      // There is nothing specified about the after variables.
-      mgpv = calledSpecs.modifies;
-      for (int i=0; i<mgpv.size(); ++i) {
-        ModifiesGroupPragma mgp = mgpv.elementAt(i);
-        Frame.ModifiesIterator iter = new Frame.ModifiesIterator(mgp.items,true,true);
+        
+        GC.thisvar.decl.type = savedType; // FIXME - put in finally clause?
+        
+        // An assignment generated for each modified target
+        // of the form   i:7.19 = after@16.2:20.19
+        
+        // Here we handle special variables like alloc and state
+        for (int ii=0; ii<spec.specialTargets.size(); ii++) {
+          Expr target = spec.specialTargets.elementAt(ii);
+          GuardedCmd gc = modify(target, pt, scall);
+          
+          if (gc != null) codevec.addElement(gc); 
+        }
+        
+        // Here we set everything in the modifies clauses to
+        // unspecified values.  For instance, for simple variables
+        // we add the command: i:7.19 = after@16.2:20.19
+        // There is nothing specified about the after variables.
+        iter = new Frame.ModifiesIterator(mgp.items,true,true);
         while (iter.hasNext()) {
           Object o = iter.next();
           if (o instanceof FieldAccess) {
@@ -4076,7 +4075,7 @@ public final class Translate
                 GuardedCmd g = obj != null ?
                     GC.subgets(a, obj, newVal ) :
                     GC.gets(a, newVal);
-                code.addElement(g);
+                codevec.addElement(g);
               }
           } else if (o instanceof ArrayRefExpr) {
             Expr a = (Expr)translations.removeFirst();
@@ -4085,7 +4084,7 @@ public final class Translate
             VariableAccess newVal = temporary("after@" + UniqName.locToSuffix(scall),
                 loc, loc);
             GuardedCmd g = GC.subsubgets(GC.elemsvar, a, index, newVal);
-            code.addElement(g);
+            codevec.addElement(g);
           } else if (o instanceof ArrayRangeRefExpr){
             // This one is slightly different.  The array a is
             // replaced by a new array unset(a,low,hi).
@@ -4096,7 +4095,7 @@ public final class Translate
             Expr low = (Expr)translations.removeFirst();
             Expr hi = (Expr)translations.removeFirst();
             GuardedCmd g = GC.subgets(GC.elemsvar, a, GC.nary(TagConstants.UNSET, GC.select(GC.elemsvar,a), low, hi));
-            code.addElement(g);
+            codevec.addElement(g);
           } else if (o instanceof NothingExpr) {
             // skip
           } else if (o instanceof EverythingExpr) {
@@ -4109,6 +4108,9 @@ public final class Translate
             System.out.println("UNSUPPORTED " + o.getClass());
           }
         }
+        GuardedCmd seq = GC.seq(codevec);
+        GuardedCmd ifcmd = GC.ifcmd(precondition,seq,GC.skip());
+        code.addElement(ifcmd);
       }
 
       if (spec.modifiesEverything) {
@@ -4683,12 +4685,13 @@ public final class Translate
     }
   }
 
+  private GuardedCmdVec codevec;
   private Identifier cacheVar = Identifier.intern("modCache");
 
   public VariableAccess cacheValue(Expr e) {
-	VariableAccess va = GC.makeVar(cacheVar, e.getStartLoc());
-	code.addElement(GC.gets(va,e));
-        return va;
+    VariableAccess va = GC.makeVar(cacheVar, e.getStartLoc());
+    codevec.addElement(GC.gets(va, e));
+    return va;
   }
 } // end of class Translate
 

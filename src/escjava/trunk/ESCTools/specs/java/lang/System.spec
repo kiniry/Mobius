@@ -32,7 +32,7 @@ public final class System {
     //@ requires 0 <= dst_position;
     //@ requires src_position+length <= \dttfsa(Object[], "identity", src).length;
     //@ requires dst_position+length <= \dttfsa(Object[], "identity", dst).length;
-    //@ modifies \dttfsa(Object[], "identity", dst)[*];
+    //@ modifies \dttfsa(Object[], "identity", dst)[dst_position .. dst_position+length-1];
     /*@ ensures
         (\forall int i;
            0 <= i-dst_position && i-dst_position < length

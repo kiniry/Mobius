@@ -66,7 +66,7 @@ test58	Good	"invariant" and "non_null" inheritance from interfaces
 test59	Good	instance initializers 
 
 test60	Omit	inheriting method specifications and non_null from interfaces - Omitted because the also_ syntax and the inheritance semantics are now obsolete
-test61	FIX	elements left unchanged by arraycopy (based on ex from Bart Jacobs)
+test61	Good	elements left unchanged by arraycopy (based on ex from Bart Jacobs)
 test62	Good	order of testing assertions
 test63	Good	integer division
 test64	Good	-inlineFromConstructors flag
