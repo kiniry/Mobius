@@ -1,0 +1,7 @@
+Error: I/O error: NonExistantFile.java (No such file or directory)
+1 error
+Error: I/O error: ErrorFile.java (Permission denied)
+1 error
+Error: I/O error: <TEST>/ErrorFile.java (Permission denied)
+Fatal error: unable to load type ErrorFile
+2 errors
