@@ -47,7 +47,7 @@ public abstract class SExp {
      ***************************************************/
 
     // <code>SExp</code> may not be extended outside this package:
-    /*package*/ SExp() {};
+    /*package*/ SExp() {}
 
 
     /**

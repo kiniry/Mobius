@@ -73,7 +73,7 @@ public abstract class SList extends SExp {
      ***************************************************/
 
     // <code>SList</code> may not be extended outside this package:
-    /*package*/ SList() {};
+    /*package*/ SList() {}
 
 
     /**
