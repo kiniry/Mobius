@@ -144,7 +144,6 @@ public class TrAnExpr {
       
       // Literals (which are already GCExpr's
       case TagConstants.BOOLEANLIT: 
-      case TagConstants.STRINGLIT:
       case TagConstants.CHARLIT:
       case TagConstants.DOUBLELIT: 
       case TagConstants.FLOATLIT:
@@ -152,6 +151,12 @@ public class TrAnExpr {
       case TagConstants.LONGLIT:
       case TagConstants.NULLLIT:
         return e;
+
+      case TagConstants.STRINGLIT:
+        { Expr ee = GC.nary(Identifier.intern("interned"),
+                            GC.symlit(Translate.Strings.interned(((LiteralExpr)e).value.toString()).toString()));
+	  return ee;
+        }
       
       case TagConstants.RESEXPR:
         if (specialResultExpr != null) return specialResultExpr;
@@ -196,12 +201,12 @@ public class TrAnExpr {
           }
           TypeDeclElemVec reps = ts == null ? null : // FIXME
             GetSpec.getRepresentsClauses(
-              ts.getTypeDecl(), fa.decl);
+              null /*ts.getTypeDecl()*/, fa.decl);
           if (reps == null || reps.size() == 0) {
             boolean b = translate.frameHandler.isDefinitelyNotAssignable(
                 (od instanceof ExprObjectDesignator) ?
                     ((ExprObjectDesignator)od).expr : null ,fa.decl);
-            treatLikeAField = b;
+            treatLikeAField = true;
           }
           //System.out.println("TREATLIKEAFIELD " + treatLikeAField + " " + doRewrites() + " " + fa + " " + Location.toString(fa.getStartLoc()) );
           //System.out.println("MODEL VAR " + fa.decl.id + " " + Location.toString(fa.locId));
@@ -337,12 +342,24 @@ public class TrAnExpr {
       case TagConstants.TYPEOF:
       case TagConstants.ELEMTYPE:
       case TagConstants.MAX:
+      {
         Assert.notFalse(((NaryExpr)e).exprs.size() == 1);
-      // fall through
+        NaryExpr ne = (NaryExpr)e;
+        int n = ne.exprs.size();
+        ExprVec exprs = ExprVec.make(n);
+        for (int i = 0; i < n; i++) {
+          exprs.addElement(trSpecExpr(ne.exprs.elementAt(i), sp, st));
+        }
+        return GC.nary(ne.getStartLoc(), ne.getEndLoc(), ne.getTag(), exprs);
+      }
+
       case TagConstants.DTTFSA: {
         NaryExpr ne = (NaryExpr)e;
-        ExprVec exprs = ExprVec.make(ne.exprs.size());
-        for (int i = 0; i < ne.exprs.size(); i++) {
+        int n = ne.exprs.size();
+        ExprVec exprs = ExprVec.make(n);
+        if (n>0) exprs.addElement(trSpecExpr(ne.exprs.elementAt(0), sp, st));
+        if (n>1) exprs.addElement(ne.exprs.elementAt(1)); // This is a String - don't want to intern it
+        for (int i = 2; i < n; i++) {
           exprs.addElement(trSpecExpr(ne.exprs.elementAt(i), sp, st));
         }
         return GC.nary(ne.getStartLoc(), ne.getEndLoc(), ne.getTag(), exprs);
@@ -1923,8 +1940,8 @@ public class TrAnExpr {
   }
   
   public static ExprVec getModelVarAxioms(TypeDecl td, FieldDecl fd, Hashtable sp) {
-    //TypeDeclElemVec tv = (TypeDeclElemVec)Utils.representsDecoration.get(fd);
-    TypeDeclElemVec tv = GetSpec.getRepresentsClauses(td,fd);
+    //TypeDeclElemVec tv = GetSpec.getRepresentsClauses(td,fd);
+    TypeDeclElemVec tv = GetSpec.getRepresentsClauses(null,fd);
     
     ExprVec ev = ExprVec.make();
     if (tv != null) for (int i=0; i<tv.size(); ++i) {

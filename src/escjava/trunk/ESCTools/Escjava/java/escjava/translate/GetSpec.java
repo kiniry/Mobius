@@ -432,9 +432,11 @@ public final class GetSpec {
     ExprVec targets = ExprVec.make();
     ExprVec specialTargets = ExprVec.make();
     
-    targets.addElement(GC.statevar);
+    if (!Utils.isPure(dmd.original)) {
+      targets.addElement(GC.statevar);
+      specialTargets.addElement(GC.statevar);
+    }
     if (dmd.usesFresh) targets.addElement(GC.allocvar);
-    specialTargets.addElement(GC.statevar);
     if (dmd.usesFresh) specialTargets.addElement(GC.allocvar);
     
     // translates modifies list
@@ -1448,8 +1450,10 @@ public final class GetSpec {
   /**
    * Gets the represents clauses for a model field fd as seen from a type
    * declaration td; fd may be declared in td or in a supertype of td.
+   * If td is null, then all represents clauses are returned, in any loaded class.
    */
   static public TypeDeclElemVec getRepresentsClauses(TypeDecl td, FieldDecl fd) {
+    if (td == null) return (TypeDeclElemVec)Utils.representsDecoration.get(fd);
     TypeDeclElemVec mpv = (TypeDeclElemVec)Utils.representsDecoration.get(td);
     TypeDeclElemVec n = TypeDeclElemVec.make(mpv.size());
     for (int i = 0; i < mpv.size(); ++i) {
