@@ -31,9 +31,14 @@ public interface CharSequence {
     //@ public invariant charArray.owner == this;
 
     /*@ public normal_behavior
+      @   ensures \result <==> ( charArray != null && charArray.owner == this);
+      @ public pure model boolean initialCharSequence();
+      @*/
+
+    /*@ public normal_behavior
         ensures \result == ( a == b || (a != null && b != null &&
                       a.length == b.length && 
-                      (\forall int i; 0<=i && i<a.length; a[i] == b[i]))); 
+                      equal(a,0,b,0,a.length) ));
         public static pure model boolean equal(char[] a, char[] b);
      */
     /*@ public normal_behavior
@@ -68,8 +73,11 @@ public interface CharSequence {
 
     /*@   public normal_behavior
       @      requires 0 <= start && start <= end && end <= charArray.length;
+      @      ensures \result != null;
       @      ensures \result.charArray.length == end-start;
       @      ensures equal(\result.charArray,0,charArray,start,end-start);
+      @      ensures start==0 && end == length() ==>
+      @                          equal(\result.charArray, this.charArray);
       @  also
       @    public exceptional_behavior
       @      requires start < 0 || end < start || end > charArray.length;

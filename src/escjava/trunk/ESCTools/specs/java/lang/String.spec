@@ -47,17 +47,17 @@ public final class String
     //---------------------------------------------------------------------
 
     //@ initially !isInterned(this);
-    //@ public invariant charArray.owner == this;
 
     /*@  public normal_behavior
-      @      ensures charArray != null;
+      @      ensures initialCharSequence();
       @      ensures charArray.length == 0;
+      @      ensures String.equals(this,"");
       @*/
     public /*@ pure @*/ String();
 
     /*@  public normal_behavior
       @   requires original != null;
-      @   ensures charArray != null;
+      @   ensures initialCharSequence();
       @   ensures equals(this,original);
       @
       @ also public exceptional_behavior
@@ -69,7 +69,7 @@ public final class String
 
     /*@  public normal_behavior
       @   requires value != null;
-      @   ensures charArray != null;
+      @   ensures initialCharSequence();
       @   ensures equal(charArray,value);
       @
       @ also public exceptional_behavior
@@ -77,34 +77,33 @@ public final class String
       @   assignable \nothing;
       @   signals_only NullPointerException;
       @*/
-    public /*@ pure @*/ String(/*@ non_null @*/ char[] value);
+    public /*@ pure @*/ String(char[] value);
 
     /*@
       @  public exceptional_behavior
-      @   requires value != null
-      @             && (offset < 0
-      @                 || (offset + count) < value.length
+      @   requires value == null
+      @             || (offset < 0
+      @                 || (offset + count) > value.length
       @                 || count < 0);
-      @   signals_only StringIndexOutOfBoundsException;
-      @
-      @ also public exceptional_behavior
-      @   requires value == null;
       @   assignable \nothing;
-      @   signals_only NullPointerException;
+      @   signals_only StringIndexOutOfBoundsException, NullPointerException;
+      @   signals (NullPointerException) value == null;
+      @   signals (StringIndexOutOfBoundsException) offset < 0 || count < 0 ||
+			     (value != null && (offset+count)>value.length);
       @
       @ also
       @  public normal_behavior
       @   requires value != null
       @             && 0 <= offset 
-      @             && (offset + count) < value.length
+      @             && (offset + count) <= value.length
       @             && 0 <= count;
       @   ensures charArray != null;
       @   ensures equal(charArray,0,value,offset,count);
       @   ensures charArray.length == count;
+      @   ensures (offset == 0 && count == value.length) ==> equal(charArray,value);
       @*/
-    public /*@ pure @*/ String(/*@ non_null @*/ char[] value,
-                                 int offset, int count)
-        throws StringIndexOutOfBoundsException;
+    public /*@ pure @*/ String(char[] value, int offset, int count)
+        throws StringIndexOutOfBoundsException, NullPointerException;
 
     /*@  public normal_behavior
       @   ensures \result == (char) (((hibyte & 0xff) << 8) | (ascii & 0xff));
@@ -134,7 +133,7 @@ public final class String
       @   assignable \nothing;
       @   signals_only NullPointerException;
       @*/
-    public /*@ pure @*/ String(/*@ non_null @*/ byte[] ascii, int hibyte,
+    public /*@ pure @*/ String(byte[] ascii, int hibyte,
                   int offset, int count)
         throws StringIndexOutOfBoundsException;
   
@@ -151,15 +150,19 @@ public final class String
       @   assignable \nothing;
       @   signals_only NullPointerException;
       @*/
-    public /*@ pure @*/ String(/*@ non_null @*/ byte[] ascii, int hibyte);
+    public /*@ pure @*/ String(byte[] ascii, int hibyte);
+
+    // Define the following to be true (e.g. with an axiom) to declare
+    // a given encoding as supported.  FIXME - define this in terms of
+    // functionality in java.nio.charset.CharSet.
+    //@ public static pure model boolean supportedEncoding(String charsetName);
 
     /*@ public behavior
       @  requires bytes != null && charsetName != null
       @             && 0 <= offset 
-      @             && (offset + length) < bytes.length
+      @             && (offset + length) <= bytes.length
       @             && 0 <= length;
-      @  {|
-      @     requires (* charsetName is the name of a supporting encoding *);
+      @     requires supportedEncoding(charsetName);
       @     ensures charArray != null;
       @     ensures charArray.length <= length;
       @     ensures 
@@ -167,48 +170,50 @@ public final class String
       @                  (* charArray[i] == 
       @                     char at position i of the conversion of subarray
       @                     of bytes using the encoding charsetName *));
-      @   also
-      @     requires (* !(charsetName is the name of a supporting encoding) *);
-      @     ensures false;
-      @     signals_only UnsupportedEncodingException;
-      @  |}
       @
       @ also public exceptional_behavior
-      @   requires bytes == null;
+      @   requires bytes == null || charsetName == null ||
+                   !supportedEncoding(charsetName) ||
+                   (offset < 0 || length < 0 || offset+length>bytes.length);
       @   assignable \nothing;
-      @   signals_only NullPointerException;
+      @   signals_only NullPointerException, StringIndexOutOfBoundsException,
+                                  UnsupportedEncodingException;
+      @   signals (StringIndexOutOfBoundsException e) 
+                           offset<0 || length<0 || (offset+length)>bytes.length;
+      @   signals (NullPointerException) bytes==null || charsetName == null;
+      @   signals (UnsupportedEncodingException) charsetName != null &&
+					     !supportedEncoding(charsetName);
       @*/
-    public /*@ pure @*/ String(/*@ non_null @*/ byte[] bytes,
+    public /*@ pure @*/ String(byte[] bytes,
                                  int offset, int length,
-                                 /*@ non_null @*/ String charsetName)
+                                 String charsetName)
         throws UnsupportedEncodingException;
 
     /*@
       @  public exceptional_behavior
-      @   requires bytes != null && charsetName != null
-      @            && (* !(charsetName is the name of a supporting encoding) *);
-      @   signals_only UnsupportedEncodingException;
+      @   requires bytes == null || charsetName == null
+                   || !supportedEncoding(charsetName);
+      @   signals_only NullPointerException, UnsupportedEncodingException;
+      @   signals (NullPointerException) bytes==null || charsetName == null;
+      @   signals (UnsupportedEncodingException) charsetName != null &&
+      @                                     !supportedEncoding(charsetName);
       @
-      @ also public exceptional_behavior
-      @   requires bytes == null;
-      @   assignable \nothing;
-      @   signals_only NullPointerException;
       @
       @ also
       @ public behavior
       @   requires bytes != null && charsetName != null;
+      @   requires supportedEncoding(charsetName);
       @   ensures charArray != null;
       @   ensures charArray.length <= bytes.length;
       @   // ensures charArray is the translation of bytes
       @*/
-    public /*@ pure @*/ String(/*@ non_null @*/ byte[] bytes,
-                                 /*@ non_null @*/ String charsetName)
+    public /*@ pure @*/ String(byte[] bytes, String charsetName)
         throws UnsupportedEncodingException;
 
     /*@  public behavior
       @   requires bytes != null
       @             && 0 <= offset 
-      @             && (offset + length) < bytes.length
+      @             && (offset + length) <= bytes.length
       @             && 0 <= length;
       @   ensures charArray != null;
       @   ensures charArray.length <= length;
@@ -227,8 +232,7 @@ public final class String
       @   signals_only StringIndexOutOfBoundsException;
       @
       @*/
-    public /*@ pure @*/ String(/*@ non_null @*/ byte[] bytes,
-                                 int offset, int length);
+    public /*@ pure @*/ String(byte[] bytes, int offset, int length);
 
     /*@  public normal_behavior
       @   requires bytes != null;
@@ -242,7 +246,7 @@ public final class String
       @   assignable \nothing;
       @   signals_only NullPointerException;
       @*/
-    public /*@ pure @*/ String(/*@ non_null @*/ byte[] bytes);
+    public /*@ pure @*/ String(byte[] bytes);
 
     /*@ public normal_behavior
       @   requires buffer != null;
@@ -253,25 +257,26 @@ public final class String
       @   assignable \nothing;
       @   signals_only NullPointerException;
       @*/
-    public /*@ pure @*/ String (/*@ non_null @*/ StringBuffer buffer);
-
-    /*@ normal_behavior
-      @   requires value != null;
-      @   requires 0 <= offset && 0 <= count && offset + count <= value.length;
-      @   ensures charArray != null;
-      @   ensures charArray.length == count;
-      @   ensures CharSequence.equal(charArray,0,value,offset,count);
-      @*/
-    //@ pure
-    String(int offset, int count, char[] value);
+    public /*@ pure @*/ String (StringBuffer buffer);
 
 
     //---------------------------------------------------------------------
     // Methods
     //---------------------------------------------------------------------
 
+    /*@ public normal_behavior
+      @   ensures \result == s.charArray.length;
+      @ public static function model pure int length(String s);
+      @*/
+
     // inherits specs from CharSequence - \result == charArray.length
+    /*@ also public normal_behavior
+      @   ensures \result == length(this);
+      @*/
     public /*@ pure @*/ int length();
+
+    // This should be derivable, but the relevant formulae are not always triggered
+    //@ axiom (\forall String s,ss; s.equals(ss) ==>s.length() == ss.length());
 
     /*@ also public normal_behavior
       @   requires 0 <= index && index < charArray.length;
@@ -385,6 +390,8 @@ public final class String
       @ public static model boolean equals(String s1, String s2);
       @*/
 
+    //@ axiom (\forall String s,ss; equals(s,ss) ==> s.length() == ss.length());
+
     //@ axiom (\forall String s,ss; equals(s,ss) ==> equals(ss,s));
 
     //@ axiom (\forall String s1,s2,s3; equals(s1,s2) ==> (equals(s1,s3) <==> equals(s2,s3)));
@@ -404,9 +411,11 @@ public final class String
 
     /*@ public normal_behavior
       @   requires sb != null;
-      @   ensures \result <==> (length() == sb.length()
-      @        && (\forall int i; 0 <= i && i < length();
-      @               charAt(i) == sb.charAt(i)));
+      @   ensures \result <==> String.equals(this,sb.accumulatedString);
+      @
+      @ also public exceptional_behavior
+      @   requires sb == null;
+      @   signals_only NullPointerException;
       @*/
     public /*@ pure @*/ boolean contentEquals(StringBuffer sb);
 
@@ -749,12 +758,15 @@ public final class String
                         char[] target, int targetOffset, int targetCount,
                         int fromIndex);
 
+
     /*@  public normal_behavior
-      @   requires beginIndex < length();
-      @   ensures \result == substring(beginIndex, length());
+      @   requires 0 <= beginIndex;
+      @   requires beginIndex <= length();
+      @   ensures \result == substring(beginIndex, length())
+      @            && \fresh(\result);
       @ also
       @  public exceptional_behavior
-      @   requires beginIndex >= length();
+      @   requires beginIndex < 0 || beginIndex > length();
       @   signals_only StringIndexOutOfBoundsException;
       @*/
     public /*@ pure @*/ /*@ non_null @*/ String substring(int beginIndex)
@@ -769,6 +781,8 @@ public final class String
       @            && \result.length() == endIndex - beginIndex
       @            && equal(\result.charArray,0,charArray,beginIndex,
                                                     endIndex-beginIndex);
+      @   ensures beginIndex ==0 && endIndex == length() ==>
+                                        equals(this,\result);
       @ also
       @  public exceptional_behavior
       @   requires 0 > beginIndex
@@ -787,21 +801,58 @@ public final class String
       @   requires 0 > beginIndex
       @             || beginIndex > endIndex
       @             || (endIndex > length());
-      @   signals (StringIndexOutOfBoundsException);
+      @   signals_only StringIndexOutOfBoundsException;
       @*/
     public /*@ pure @*/ CharSequence subSequence(int beginIndex,
                                                    int endIndex);
 
-    /*@  public normal_behavior
+    /*@ public normal_behavior
+      @   requires s != null && ss != null;
+      @   ensures equal(\result.charArray,0,s.charArray,0,s.length());
+      @   ensures equal(\result.charArray,s.length(),ss.charArray,0,ss.length());
+      @ public static pure function model non_null
+      @                                 String _concat_(String s, String ss);
+      @
+      @
+      @ public normal_behavior
+      @   ensures \result == (s == null ? "null" : s) ;
+      @ model static public pure function non_null String nonnull(String s);
+      @
+      @
+      @ public normal_behavior
+      @   assignable \nothing;
+      @   ensures \result != null;
+      @   ensures \fresh(\result);
+      @   ensures !isInterned(\result);
+      @   ensures \result.equals( _concat_(nonnull(s),nonnull(ss)));
+      @
+      @ model static public non_null pure function String 
+      @                                  _infixConcat_(String s, String ss);
+      @*/
+ 
+
+    /*@ public normal_behavior
       @   requires str != null;
+      @   {|
+      @   requires str.length() != 0;
+      @   assignable \nothing;
       @   ensures \result != null
       @            && \fresh(\result)
-      @            && \result.length() == length() + str.length()
-      @            && equal(\result.charArray,0,charArray,0,length())
-      @      && equal(\result.charArray,length(),str.charArray,0,str.length());
+      @            && !isInterned(\result)
+      @            && \result.equals(_concat_(this,str));
+      @   also
+      @   requires str.length() == 0;
+      @   assignable \nothing;
+      @   ensures \result != null
+      @            && \result == this
+      @            && \result.length() == length();
+      @   |}
+      @ also public exceptional_behavior
+      @    requires str == null;
+      @   assignable \nothing;
+      @    signals_only NullPointerException;
       @*/
-    public /*@ pure @*/ /*@ non_null @*/
-        String concat(/*@ non_null @*/ String str);
+    public /*@ pure @*/ /*@ non_null @*/ String concat(String str);
 
     /*@  public normal_behavior
       @   ensures \result != null
@@ -908,7 +959,7 @@ public final class String
     public /*@ pure @*/ /*@ non_null @*/ String toString();
     
     /*@  public normal_behavior
-      @    ensures \result != null;
+      @    assignable \nothing;
       @    ensures \result.length == length();
       @    ensures \fresh(\result);
       @    ensures equal(\result,charArray);
@@ -935,10 +986,12 @@ public final class String
       @   ensures \result != null;
       @   ensures equal(\result.charArray,data);
       @   ensures \fresh(\result);
-      @   ensures equals(\result,new String(data));
+      @ also public exceptional_behavior
+      @   requires data == null;
+      @   signals_only NullPointerException;
       @*/
     public static /*@ pure @*/
-        /*@ non_null @*/ String valueOf(/*@ non_null @*/ char[] data);
+        /*@ non_null @*/ String valueOf(char[] data);
 
     /*@ public normal_behavior
       @   requires data != null && offset >= 0 && count >= 0
@@ -946,9 +999,10 @@ public final class String
       @   ensures \fresh(\result);
       @   ensures \result != null; 
       @   ensures equal(\result.charArray,0,data,offset,count);
+// FIXME - exceptions
       @*/
     public static /*@ pure @*/
-        /*@ non_null @*/ String valueOf(/*@ non_null @*/ char[] data,
+        /*@ non_null @*/ String valueOf(char[] data,
                                         int offset, int count);
 
     /*@ public normal_behavior
@@ -959,9 +1013,16 @@ public final class String
       @   ensures equal(\result.charArray,0,data,offset,count);
       @   ensures \result.charArray.length == count;
       @   ensures equal(\result.charArray,0,data,offset,count);
+      @ also public exceptional_behavior
+      @   requires data == null || offset < 0 || count < 0 ||
+      @                            (offset+count)>data.length;
+      @   signals_only NullPointerException, StringIndexOutOfBoundsException;
+      @   signals (NullPointerException) data == null;
+      @   signals (StringIndexOutOfBoundsException) offset<0 || count < 0
+                                  || (offset+count)> data.length;
       @*/
     public static /*@ pure @*/
-        /*@ non_null @*/ String copyValueOf(/*@ non_null @*/ char[] data,
+        /*@ non_null @*/ String copyValueOf(char[] data,
                                             int offset, int count);
 
     /*@ public normal_behavior
@@ -970,14 +1031,16 @@ public final class String
       @   ensures \fresh(\result);
       @   ensures \result.charArray.length == data.length;
       @   ensures equal(\result.charArray,data);
+      @ also public exceptional_behavior
+      @   requires data == null;
+      @   signals_only NullPointerException;
       @*/
     public static /*@ pure @*/
-        /*@ non_null @*/ String copyValueOf(/*@ non_null @*/ char[] data);
+        /*@ non_null @*/ String copyValueOf(char[] data);
         
     /*@  public normal_behavior
       @   ensures \result != null
-      @            && (b ==> equals(\result,"true"))
-      @            && (!b ==> equals(\result,"false"));
+      @            && equals(\result, Boolean.toString(b));
       @*/
     public static /*@ pure @*/ /*@ non_null @*/ String valueOf(boolean b);
 
@@ -1021,7 +1084,7 @@ public final class String
         //-@ function
       @ public pure static model boolean isInterned(String s);
       @
-      @ axiom (\forall int i,k; \dttfsa(java.lang.String,"|intern:|",i,k).length() == k);
+      @ axiom (\forall int i,k; length(\dttfsa(java.lang.String,"|intern:|",i,k)) == k);
       @*/
 
 }
