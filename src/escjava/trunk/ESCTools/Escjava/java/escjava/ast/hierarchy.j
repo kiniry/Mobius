@@ -555,6 +555,7 @@ public class ModelConstructorDeclPragma extends TypeDeclElemPragma
 {
   //# ConstructorDecl decl
   //# int loc
+  //# SimpleName id
 
   public void setParent(TypeDecl p) {
     super.setParent(p);
