@@ -1,3 +1,44 @@
+2004-03-29  Joseph Kiniry  <kiniry@cs.kun.nl>
+
+	* Escjava/java/escjava/AnnotationHandler.java:
+	* Makefile.defs:
+	* README.first:
+	* docs/Escjava2-ImplementationNotes/.cvsignore:
+	* docs/Escjava2-ImplementationNotes/Escjava2-ImplementationNotes.texinfo:
+	Final tweaks for 2.0a6 release while testing on Linux.
+
+2004-03-28  Joseph Kiniry  <kiniry@cs.kun.nl>
+
+	* Escjava/Makefile:
+	* Javafe/Makefile:
+	* Javafe/java/javafe/FrontEndTool.java:
+	* Javafe/java/javafe/Options.java:
+	* Javafe/java/javafe/tc/OutsideEnv.java:
+	* README.first:
+	* release-files/README.release:
+	* release-files/RELEASE_NOTES.txt:
+	Documentation updates and spec cleanup for 2.0a6 release.
+
+	Will tag and test on Linux tomorrow; OS X is done.
+
+2004-03-26  David Cok  <cok@frontiernet.net>
+
+	* jmlspecs.jar: Prep for release
+
+	* Escjava/test/junittests/AxiomAccess.java:
+	* Escjava/test/junittests/AxiomAccess.java-expected:
+	* Escjava/test/junittests/ModelVar.java:
+	* Escjava/test/junittests/ModelVarMod.java:
+	* Escjava/test/junittests/ModelVarSet.java:
+	* Escjava/test/junittests/Static.java:
+	* Escjava/test/junittests/Static.java-expected:
+	* Escjava/java/escjava/parser/EscPragmaParser.java:
+	* Escjava/java/escjava/tc/FlowInsensitiveChecks.java:
+	* Escjava/java/escjava/translate/GetSpec.java:
+	* Escjava/java/escjava/ast/hierarchy.j:
+	Corrected the handling of static on invariants: constraints,
+	represents, monitors_for, axiom clauses
+
 2004-03-25  Joseph Kiniry  <kiniry@cs.kun.nl>
 
 	* Escjava/java/escjava/Main.java:
