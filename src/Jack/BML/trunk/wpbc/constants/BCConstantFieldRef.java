@@ -7,7 +7,10 @@
 package constants;
 import org.apache.bcel.classfile.ConstantFieldref;
 
+import application.JavaApplication;
+import bcclass.BCClass;
 import bcclass.BCConstantPool;
+import bcclass.BCField;
 import bcexpression.Expression;
 import bcexpression.ValueOfConstantAtState;
 import bcexpression.javatype.JavaType;
@@ -53,6 +56,23 @@ public class BCConstantFieldRef extends BCConstantRef implements RefFunction {
 		BCConstantPool pool) {
 		super(_cpIndex, _CONSTANT_classref_index, _name, pool);
 		type = _type;
+	}
+	
+	public BCField getBCField() {
+		/*BCConstantPool cp = getConstantPool();*/
+		BCConstantClass _constClass = getConstantClass();
+		String _className = _constClass.getName();
+		BCClass _class = JavaApplication.Application.getClass( _className);
+		BCField[] fields = _class.getFields();
+		if (fields == null) {
+			return null;
+		}
+		for (int i = 0; i < fields.length; i++) {
+			if (fields[i].getName().equals( getName()))	{
+				return fields[i];
+			}
+		}
+		return null;	
 	}
 	
 	public Expression getType() {
