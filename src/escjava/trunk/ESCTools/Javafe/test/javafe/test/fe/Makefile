@@ -50,7 +50,8 @@ septests:
 ifndef ALLTESTS
 	@echo tests NOT INCLUDED - ALLTESTS not defined: ` grep -v '^#' skipunlessall`
 endif
-	@for t in ${FILELIST} ; do \
+	export JAVAFE_CLASSPATH_CAN="${call canonicalize,${JAVAFE_CLASSPATH}}";\
+	for t in ${FILELIST} ; do \
 		echo -n '.' ; \
 		${MAKE} --no-print-directory do$$t ; \
 	done

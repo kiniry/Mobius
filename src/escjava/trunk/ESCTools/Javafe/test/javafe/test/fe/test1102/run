@@ -5,5 +5,5 @@
 cd ${JAVAFE_SOURCE_DIR}/javafe
 
 foreach i (*.java */*.java)
-  ${TOOL} -classpath ${JAVAFE_CLASSPATH} $i
+  ${TOOL} -classpath ${JAVAFE_CLASSPATH_CAN} $i
 end
