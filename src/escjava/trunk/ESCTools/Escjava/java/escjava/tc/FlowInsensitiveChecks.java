@@ -28,61 +28,55 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
     // Setup for ghost variables
 
     /**
-     * Are we in the middle of processing an annotation?
-     *
-     * <p> (Used by GhostEnv) </p>
+     * Are we in the middle of processing an annotation? (Used by {@link GhostEnv}.)
      */
     public static boolean inAnnotation = false;
 
     /**
-     * Indicates whether <code>LS</code> is allowed in this context.
-     * The default is <code>true</code>.  For contexts where
-     * <code>LS</code> is not allowed, <code>isLocksetContext</code>
-     * should be set <code>false</code> only temporarily.
+     * Indicates whether <code>LS</code> is allowed in this context.  The default is
+     * <code>true</code>.  For contexts where <code>LS</code> is not allowed,
+     * <code>isLocksetContext</code> should be set <code>false</code> only
+     * temporarily.
      */
     protected boolean isLocksetContext = true;
 
     /**
-     * <code>\result</code> is allowed in this context when
-     * <code>isRESContext</code> is <code>true</code> and
-     * <code>returnType != null</code>.  The default value of
-     * <code>isRESContext</code> is <code>false</code>.  For contexts
-     * where <code>isRESContext</code> should be <code>true</code>,
-     * <code>isRESContext</code> should be set to <code>true</code>
-     * only temporarily.
+     * <code>\result</code> is allowed in this context when <code>isRESContext</code>
+     * is <code>true</code> and <code>returnType != null</code>.  The default value
+     * of <code>isRESContext</code> is <code>false</code>.  For contexts where
+     * <code>isRESContext</code> should be <code>true</code>,
+     * <code>isRESContext</code> should be set to <code>true</code> only temporarily.
      */
     protected boolean isRESContext = false;
 
     /**
-     * Indicates whether <code>\old</code> and <code>\fresh</code> are
-     * allowed in this context.  The default is <code>false</code>.
-     * For contexts where these functions are allowed,
-     * <code>isTwoStateContext</code> should be set <code>true</code>
-     * only temporarily.
+     * Indicates whether <code>\old</code> and <code>\fresh</code> are allowed in
+     * this context.  The default is <code>false</code>.  For contexts where these
+     * functions are allowed, <code>isTwoStateContext</code> should be set
+     * <code>true</code> only temporarily.
      */
     protected boolean isTwoStateContext = false;
 
     /**
-     * Indicates whether checking is currently being done inside a
-     * <code>PRE</code>.  This is used by the code that disallows
-     * nested <code>PRE</code> expressions.  Note: alternatively, one
-     * could use <code>isTwoStateContext</code> to implement this
-     * functionality, but by having a separate bit, a more precise
-     * error message can be produced.
+     * Indicates whether checking is currently being done inside a <code>PRE</code>.
+     * This is used by the code that disallows nested <code>PRE</code> expressions.
+     * Note: alternatively, one could use <code>isTwoStateContext</code> to implement
+     * this functionality, but by having a separate bit, a more precise error message
+     * can be produced.
      */
     protected boolean isInsidePRE = false;
 
     /**
-     * Indicates whether a quantification or labeled predicate is
-     * allowed in this context.  This boolean is used only between one
-     * call of <code>checkExpr</code> to a following recursive call.
+     * Indicates whether a quantification or labeled predicate is allowed in this
+     * context.  This boolean is used only between one call of <code>checkExpr</code>
+     * to a following recursive call.
      */
     protected boolean isPredicateContext = false;
 
     /**
-     * Indicates whether private field accesses are allowed in the
-     * current context.  Private field accesses are allowed
-     * everywhere, except in postconditions of overridable methods.
+     * Indicates whether private field accesses are allowed in the current context.
+     * Private field accesses are allowed everywhere, except in postconditions of
+     * overridable methods.
      */
     protected boolean isPrivateFieldAccessAllowed = true;
 
@@ -94,36 +88,35 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
     protected static final int ACC_LOW_BOUND_Public = 3;
 
     /**
-     * If <code>accessibilityLowerBound !=
-     * ACC_LOW_BOUND_Private</code>, then
-     * <code>accessibilityContext</code> is the field or routine whose
-     * modifier pragma is being type checked.
+     * If <code>accessibilityLowerBound != ACC_LOW_BOUND_Private</code>, then
+     * <code>accessibilityContext</code> is the field or routine whose modifier
+     * pragma is being type checked.
      */
     /*@ invariant accessibilityContext == null ||
-     accessibilityContext instanceof FieldDecl ||
-     accessibilityContext instanceof RoutineDecl; */
+      @           accessibilityContext instanceof FieldDecl ||
+      @           accessibilityContext instanceof RoutineDecl;
+     */
     //@ readable_if accessibilityLowerBound != ACC_LOW_BOUND_Private;
     protected ASTNode accessibilityContext;
 
     /**
-     * Acts as a parameter to <code>checkExpr</code>.  Its value is
-     * meaningful only on entry to <code>checkExpr</code>.  It
-     * indicates whether the expression to be checked is in a
-     * specification designator context.  In particular, this
-     * parameter is used to disallow array index wild cards in
-     * non-spec designator contexts.
+     * Acts as a parameter to <code>checkExpr</code>.  Its value is meaningful only
+     * on entry to <code>checkExpr</code>.  It indicates whether the expression to be
+     * checked is in a specification designator context.  In particular, this
+     * parameter is used to disallow array index wild cards in non-spec designator
+     * contexts.
      */
     protected boolean isSpecDesignatorContext = false;
   
     /**
-     * Contains the loop invariant statement pragmas seen so far and
-     * not yet processed.
+     * Contains the loop invariant statement pragmas seen so far and not yet
+     * processed.
      */
     protected ExprStmtPragmaVec loopInvariants = ExprStmtPragmaVec.make();
 
     /**
-     * Contains the loop decreases statement pragmas seen so far and
-     * not yet processed.
+     * Contains the loop decreases statement pragmas seen so far and not yet
+     * processed.
      */
     protected ExprStmtPragmaVec loopDecreases = ExprStmtPragmaVec.make();
 
@@ -137,22 +130,21 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
     protected boolean invariantContext = false;
 
     /**
-     * Counts the number of accesses of free variables and fields used
-     * for checking the appropriateness of invariants.
+     * Counts the number of accesses of free variables and fields used for checking
+     * the appropriateness of invariants.
      */
     //@ readable_if invariantContext;
-    protected int countFreeVarsAccesses =0 ;
+    protected int countFreeVarsAccesses = 0 ;
 
     /**
-     * Override so that we use GhostEnv instead of EnvForTypeSig.
+     * Override so that we use {@link GhostEnv} instead of {@link EnvForTypeSig}.
      */
     protected EnvForTypeSig makeEnvForTypeSig(TypeSig s,
 					      boolean staticContext) {
 	return new GhostEnv(s.getEnclosingEnv(), s, staticContext);
     }
   
-
-    // Extensions to type declaration member checkers
+    // Extensions to type declaration member checkers.
 
     protected void checkTypeDeclElem(TypeDeclElem e) {
         super.checkTypeDeclElem(e);
@@ -170,14 +162,13 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
         }
     }
 
-
-    // Extensions to Expr and Stmt checkers
+    // Extensions to Expr and Stmt checkers.
 
     protected Env checkStmt(Env env, Stmt s) {
         int tag = s.getTag();
 
-        // Check for any loop invariants, loop bounds, loop predicates, or
-        // skolem constants in the wrong place
+        // Check for any loop invariants, loop bounds, loop predicates, or skolem
+        // constants in the wrong place
         if (loopInvariants.size() != 0 || 
             loopDecreases.size() != 0 || 
             loopPredicates.size() != 0 || 
@@ -247,7 +238,8 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
             }
             case TagConstants.BLOCKSTMT: {
                 env = super.checkStmt(env, s);
-                // Check for any loop_invariant statement pragmas at the end of the body
+                // Check for any loop_invariant statement pragmas at the end of the
+                // body.
                 checkLoopInvariants(env, false);
                 checkLoopDecreases(env, false);
                 checkLoopPredicates(env, false);
@@ -347,8 +339,8 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
     }
 
     /**
-     * Not to be used as a recursive call from <code>checkExpr</code>,
-     * since <code>isPredicateContext</code> is set to <code>true</code>.
+     * Not to be used as a recursive call from <code>checkExpr</code>, since
+     * <code>isPredicateContext</code> is set to <code>true</code>.
      */
   
     protected Expr checkPredicate(Env env, Expr e) {
@@ -362,9 +354,9 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 
     //@ also_ensures !isPredicateContext
     protected Expr checkExpr(Env env, Expr e) {
-        // Anticipate that the next context is probably not one suitable
-        // for quantifications and labels.  "isPredicateContext" must
-        // revert to its old value before return from
+        // Anticipate that the next context is probably not one suitable for
+        // quantifications and labels.  "isPredicateContext" must revert to its old
+        // value before return.
         boolean isCurrentlyPredicateContext = isPredicateContext;
         isPredicateContext = false;
 
@@ -372,9 +364,9 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
             // already done
             return e;
 
-        // No recursive call to "checkExpr" is a specification designator
-        // context, so set "isSpecDesignatorContext" to "false", keeping
-        // the initial value in local variable "isCurrentlySpecDesignatorContext".
+        // No recursive call to "checkExpr" is a specification designator context, so
+        // set "isSpecDesignatorContext" to "false", keeping the initial value in
+        // local variable "isCurrentlySpecDesignatorContext".
         boolean isCurrentlySpecDesignatorContext = isSpecDesignatorContext;
         isSpecDesignatorContext = false;
     
@@ -387,11 +379,11 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                     if (!inAnnotation)
                         return super.checkExpr(env, e);
 	
-                    // a field access is considerded a free variable access in 
-                    // an invariant
+                    // a field access is considerded a free variable access in an
+                    // invariant.
                     if (invariantContext) countFreeVarsAccesses++;
 
-                    // set default result type to integer, in case there is an error
+                    // set default result type to integer, in case there is an error.
                     setType( e, Types.intType );
                     FieldAccess fa = (FieldAccess)e;
                     Type t = checkObjectDesignator(env, fa.od);
@@ -410,8 +402,8 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 
                     if (fa.od instanceof TypeObjectDesignator &&
                         !Modifiers.isStatic(fa.decl.modifiers)) {
-                        // Is fa.decl an instance field of the same class as
-                        // fa is part of?
+                        // Is fa.decl an instance field of the same class as fa is
+                        // part of?
                         boolean thisField = false;
                         if (fa.decl.parent != null)
                             thisField = (env.getEnclosingClass()
@@ -447,9 +439,10 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 			   "it is declared spec_public or spec_protected");
                     }
 
-                    // The following code checks that "fa" is at least as spec-accessible
-                    // as "accessibilityContext" is Java-accessible.
-                    // This is vaccuously true if "accessibilityLowerBound" is private.
+                    // The following code checks that "fa" is at least as
+                    // spec-accessible as "accessibilityContext" is Java-accessible.
+                    // This is vacuously true if "accessibilityLowerBound" is
+                    // private.
                     if (accessibilityLowerBound != ACC_LOW_BOUND_Private) {
                         boolean isAccessibleEnough;
                         if (Modifiers.isPublic(fa.decl.modifiers) ||
@@ -459,41 +452,45 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                             isAccessibleEnough = true;
 	    
                         } else if (Modifiers.isPrivate(fa.decl.modifiers)) {
-                            // Note:  if "fa" type-checked so far, then "fa.decl"
-                            // and "accessibilityContext" are declared in the same class.
-                            // It would be nice to assert this fact at run-time, but control
-                            // may reach this point even if "fa" does not type-check above.
+                            // Note: if "fa" type-checked so far, then "fa.decl" and
+                            // "accessibilityContext" are declared in the same class.
+                            // It would be nice to assert this fact at run-time, but
+                            // control may reach this point even if "fa" does not
+                            // type-check above.
 
-                            // "fa.decl" can be private only if "accessibilityContext" is
-                            // private, which was checked above
+                            // "fa.decl" can be private only if
+                            // "accessibilityContext" is private, which was checked
+                            // above
                             isAccessibleEnough = false;
 	    
                         } else if (Modifiers.isPackage(fa.decl.modifiers)) {
-                            // Note:  if "fa" type-checked so far, then "fa.decl" and
-                            // "accessibilityContext" are declared in the same package.
-                            // It would be nice to assert this fact at run-time, but control
-                            // may reach this point even if "fa" does not type-check above.
+                            // Note: if "fa" type-checked so far, then "fa.decl" and
+                            // "accessibilityContext" are declared in the same
+                            // package.  It would be nice to assert this fact at
+                            // run-time, but control may reach this point even if
+                            // "fa" does not type-check above.
 
                             // "fa.decl" can be package (default) accessible only if
-                            // "accessibilityContext" is private (which was checked above)
-                            // or package
+                            // "accessibilityContext" is private (which was checked
+                            // above) or package
                             isAccessibleEnough =
                                 (accessibilityLowerBound == ACC_LOW_BOUND_Package);
 	    
                         } else {
                             Assert.notFalse(Modifiers.isProtected(fa.decl.modifiers));
-                            // Note:  if "fa" type-checked so far, then either "fa.decl" and
-                            // "accessibilityContext" are declared in the same package or
-                            // the class declaring "accessibilityContext" is a subtype of
-                            // the class declaring "fa.decl".
-                            // It would be nice to assert this fact at run-time, but control
-                            // may reach this point even if "fa" does not type-check above.
+                            // Note: if "fa" type-checked so far, then either
+                            // "fa.decl" and "accessibilityContext" are declared in
+                            // the same package or the class declaring
+                            // "accessibilityContext" is a subtype of the class
+                            // declaring "fa.decl".  It would be nice to assert this
+                            // fact at run-time, but control may reach this point
+                            // even if "fa" does not type-check above.
 
-                            // "fa.decl" can be protected only if "accessibilityContext" is
-                            // private (which was checked above) or package, or if
-                            // "accessibilityContext" is protected and "fa.decl" is
-                            // declared in a superclass of the class that declares
-                            // "accessibilityContext".
+                            // "fa.decl" can be protected only if
+                            // "accessibilityContext" is private (which was checked
+                            // above) or package, or if "accessibilityContext" is
+                            // protected and "fa.decl" is declared in a superclass of
+                            // the class that declares "accessibilityContext".
                             isAccessibleEnough = false;
                             if (accessibilityLowerBound == ACC_LOW_BOUND_Package) {
                                 isAccessibleEnough = true;
@@ -542,8 +539,8 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
             case TagConstants.NIFF:
                 {
                     BinaryExpr be = (BinaryExpr)e;
-                    // each argument is allowed to contain quantifiers and labels
-                    // if this expression is
+                    // each argument is allowed to contain quantifiers and labels if
+                    // this expression is
                     isPredicateContext = isCurrentlyPredicateContext;
                     be.left = checkExpr(env, be.left, Types.booleanType);
                     isPredicateContext = isCurrentlyPredicateContext;
@@ -570,8 +567,8 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
             case TagConstants.DOTDOT:
 		{
                     BinaryExpr be = (BinaryExpr)e;
-                    // each argument is allowed to contain quantifiers and labels
-                    // if this expression is
+                    // each argument is allowed to contain quantifiers and labels if
+                    // this expression is
 		    isPredicateContext = false;
                     be.left = checkExpr(env, be.left, Types.intType);
                     be.right = checkExpr(env, be.right, Types.intType);
@@ -595,20 +592,21 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
             case TagConstants.FRESH:
                 {
                     NaryExpr ne = (NaryExpr)e;
-                    if( ne.exprs.size() != 1 ) {
-                        ErrorSet.error( ne.sloc, 
-                                        "The function fresh takes only one argument");
+                    if (ne.exprs.size() != 1) {
+                        ErrorSet.error(ne.sloc, 
+                                       "The function fresh takes only one argument");
                     } else if (!isTwoStateContext) {
-                        ErrorSet.error(ne.sloc, "The function \\fresh cannot be used in this context");
+                        ErrorSet.error(ne.sloc, 
+                                       "The function \\fresh cannot be used in this context");
                     } else if (isInsidePRE) {
                         ErrorSet.error(ne.sloc, "The function \\fresh cannot be used "+
                                        "inside a \\old expression");
                     } else {
                         Expr nu = 
                             checkExpr(env, ne.exprs.elementAt(0), Types.javaLangObject());
-                        ne.exprs.setElementAt( nu, 0 );			
+                        ne.exprs.setElementAt(nu, 0);			
                     }
-                    setType( e, Types.booleanType);
+                    setType(e, Types.booleanType);
                     return e;
                 }
 
@@ -642,8 +640,8 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                             Expr nu = checkExpr(env, ne.exprs.elementAt(i));
                             ne.exprs.setElementAt(nu, i);
                         }
-                        // the first argument should be a TypeExpr; retrieve the type it
-                        // denotes
+                        // the first argument should be a TypeExpr; retrieve the type
+                        // it denotes
                         resultType = ((TypeExpr)ne.exprs.elementAt(0)).type;
                         // the second argument should be a String literal
                         Expr arg1 = ne.exprs.elementAt(1);
@@ -671,8 +669,9 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                     NaryExpr ne = (NaryExpr)e;
 		    Expr nu;
                     if( ne.exprs.size() != 1 ) {
-                        ErrorSet.error( ne.sloc, 
-			    "The function " + TagConstants.toString(tag) + " takes only one argument");
+                        ErrorSet.error(ne.sloc, 
+                                       "The function " + TagConstants.toString(tag) + 
+                                       " takes only one argument");
 		    }
 		    if (ne.exprs.size() == 0) {
 			setType( e, Types.intType );
@@ -688,8 +687,8 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                 {
                     NaryExpr ne = (NaryExpr)e;
                     if( ne.exprs.size() != 1 ) 
-                        ErrorSet.error( ne.sloc, 
-                                        "The function \\elemtype takes only one argument");
+                        ErrorSet.error(ne.sloc, 
+                                       "The function \\elemtype takes only one argument");
                     else {
                         Expr nu = checkExpr(env, ne.exprs.elementAt(0));
                         ne.exprs.setElementAt( nu, 0 );			
@@ -704,8 +703,9 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 		{
                     NaryExpr ne = (NaryExpr)e;
                     if( ne.exprs.size() != 1 ) 
-                        ErrorSet.error( ne.sloc, 
-			    "The function " + TagConstants.toString(tag) + " takes only one argument");
+                        ErrorSet.error(ne.sloc, 
+                                       "The function " + TagConstants.toString(tag) + 
+                                       " takes only one argument");
                     else {
 			// Note: the arguments are not evaluated
                         Expr nu = checkExpr(env, ne.exprs.elementAt(0));
@@ -868,9 +868,9 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                     } else {
                         Env subenv = env;
 	
-                        for( int i=0; i<qe.vars.size(); i++) {
+                        for( int i = 0; i < qe.vars.size(); i++) {
                             GenericVarDecl decl = qe.vars.elementAt(i);
-                            env.resolveType( decl.type );
+                            env.resolveType(decl.type);
 	    
                             subenv = new EnvForLocals(subenv, decl);
                         }
@@ -884,8 +884,8 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
             case TagConstants.PARENEXPR:
             case TagConstants.NOT:
                 {
-                    // the sub-expression is allowed to contain quantifiers and labels
-                    // if this expression is
+                    // the sub-expression is allowed to contain quantifiers and
+                    // labels if this expression is
                     isPredicateContext = isCurrentlyPredicateContext;
                     return super.checkExpr(env, e);
                 }
@@ -896,8 +896,8 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
             case TagConstants.NE:
                 {
                     BinaryExpr be = (BinaryExpr)e;
-                    // each argument is allowed to contain quantifiers and labels
-                    // if this expression is
+                    // each argument is allowed to contain quantifiers and labels if
+                    // this expression is
                     isPredicateContext = isCurrentlyPredicateContext;
                     be.left = checkExpr(env, be.left);
                     isPredicateContext = isCurrentlyPredicateContext;
@@ -1067,7 +1067,6 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
         }
     }
 
-
     // Pragma checkers
 
     protected  void checkTypeDeclElemPragma(TypeDeclElemPragma e) {
@@ -1185,7 +1184,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                                    "Another field named '"+decl.id.toString()
                                    +"' already exists in this type");
                 }
-// FIXME - CHeck for other model fields
+// FIXME - Check for other model fields
 
                 /*
                  * All that remains to be done is to prep the Type:
@@ -1998,8 +1997,8 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
     }
 
     /**
-     * Returns whether or not <code>md</code> can be overridden in some
-     * possible subclass.
+     * @return whether or not <code>md</code> can be overridden in some possible
+     * subclass.
      */
 
     public static boolean isOverridable(/*@ non_null */ MethodDecl md) {
@@ -2010,7 +2009,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
     }
 
     /**
-     * Returns a value appropriate for assignment to
+     * @return a value appropriate for assignment to
      * <code>accessibilityLowerBound</code>, given member modifiers.
      */
 
@@ -2103,9 +2102,9 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
     // Utility routines
 
     /**
-     * Copy the Type associated with an expression by the typechecking
-     * pass to another Expr.  This is used by Substitute to ensure it
-     * returns an Expr of the same Type.
+     * Copy the Type associated with an expression by the typechecking pass to
+     * another Expr.  This is used by Substitute to ensure it returns an Expr of the
+     * same Type.
      */
     public static void copyType(VarInit from, VarInit to) {
 	Type t = getTypeOrNull(from);
@@ -2113,11 +2112,9 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 	    setType(to, t);
     }
 
-
     /**
-     * Return a set of *all* the methods a given method overrides. <p>
-     *
-     * This includes transitivity.<p>
+     * @return a set of *all* the methods a given method overrides. This includes
+     * transitivity.
      */
     //@ requires md != null
     //@ ensures \result != null
@@ -2136,12 +2133,11 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 	return result;
     }
 
-
     /**
-     * If <code>md</code> is a method that overrides a method in a
-     * superclass, the overridden method is returned.  Otherwise, if
-     * <code>md</code> overrides a method in an interface, such a
-     * method is returned.  Otherwise, <code>null</code> is returned.
+     * @return If <code>md</code> is a method that overrides a method in a
+     * superclass, the overridden method is returned.  Otherwise, if <code>md</code>
+     * overrides a method in an interface, such a method is returned.  Otherwise,
+     * <code>null</code> is returned.
      */
 
     public static MethodDecl getSuperClassOverride(MethodDecl md) {
@@ -2158,9 +2154,9 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                     Assert.fail("we think this can no longer happen!");
                     // This suggests that the method is inherited from TWO classes!
                     // This can actually happen, if the method is one that is
-                    // declared in Object, because every interface has the methods
-                    // of Object.  In this case, pick the method override that
-                    // does not reside in Object.
+                    // declared in Object, because every interface has the methods of
+                    // Object.  In this case, pick the method override that does not
+                    // reside in Object.
                     Type javaLangObject = Types.javaLangObject();
                     Type t0 = TypeSig.getSig(classOverride.parent);
                     Type t1 = TypeSig.getSig(directMD.parent);
@@ -2184,9 +2180,9 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
     }
 
     /**
-     * Returns whether or not <code>rd</code> is a method override
-     * declaration, that is, whether or not <code>rd</code> overrides
-     * a method declared in a superclass or superinterface.
+     * @return whether or not <code>rd</code> is a method override declaration, that
+     * is, whether or not <code>rd</code> overrides a method declared in a superclass
+     * or superinterface.
      */
 
     public static boolean isMethodOverride(RoutineDecl rd) {
@@ -2198,22 +2194,21 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
     static public final int MSTATUS_OVERRIDE = 2;
 
     /**
-     * Returns <code>MSTATUS_NEW_ROUTINE</code> if <code>rd</code> is
-     * a routine that doesn't override any other method.  This
-     * includes the case where <code>rd</code> is a constructor or a
-     * static method.
+     * @return <code>MSTATUS_NEW_ROUTINE</code> if <code>rd</code> is a routine that
+     * doesn't override any other method.  This includes the case where
+     * <code>rd</code> is a constructor or a static method.
      *
-     * Returns <code>MSTATUS_CLASS_NEW_METHOD</code> if
-     * <code>rd</code> is a method declared in a class, doesn't
-     * override any method in any superclass, but overrides a method
-     * in an interface.
+     * <p> Returns <code>MSTATUS_CLASS_NEW_METHOD</code> if <code>rd</code> is a
+     * method declared in a class, doesn't override any method in any superclass, but
+     * overrides a method in an interface.
      *
-     * Otherwise, returns <code>MSTATUS_OVERRIDE</code>.
+     * <p> Otherwise, returns <code>MSTATUS_OVERRIDE</code>.
      */
 
     /*@ ensures \result == MSTATUS_NEW_ROUTINE ||
-     \result == MSTATUS_CLASS_NEW_METHOD ||
-     \result == MSTATUS_OVERRIDE; */
+      @         \result == MSTATUS_CLASS_NEW_METHOD ||
+      @         \result == MSTATUS_OVERRIDE; 
+     */
     public static int getOverrideStatus(/*@ non_null */ RoutineDecl rd) {
         if (!(rd instanceof MethodDecl) || Modifiers.isStatic(rd.modifiers)) {
             return MSTATUS_NEW_ROUTINE;
@@ -2238,13 +2233,13 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
         return MSTATUS_CLASS_NEW_METHOD;
     }
 
-    /** Returns null if method md is allowed to declare its jth (counting
-	from 0) formal parameter as non_null.  That is the case if the 
-	method does not override anything, or if in everything that it does
-	override that parameter is declared non_null.  Otherwise returns the
-	MethodDecl corresponding to the overridden method with which the
-	argument rd is in conflict.
-    */
+    /**
+     * @return null if method md is allowed to declare its jth (counting from 0)
+     * formal parameter as non_null.  That is the case if the method does not
+     * override anything, or if in everything that it does override that parameter is
+     * declared non_null.  Otherwise returns the MethodDecl corresponding to the
+     * overridden method with which the argument rd is in conflict.
+     */
     public MethodDecl getSuperNonNullStatus(RoutineDecl rd, int j) {
         if (!(rd instanceof MethodDecl) || Modifiers.isStatic(rd.modifiers)) {
             return null;
@@ -2266,7 +2261,9 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
         return null;
     }
 
-    // Returns true if directly or indirectly pure
+    /**
+     * @return true if directly or indirectly pure.
+     */
     static public boolean isPure(RoutineDecl rd) {
 	if ((rd.modifiers & Modifiers.ACC_PURE_CLOSURE)!=0) return true;
 	if ((rd.modifiers & Modifiers.ACC_IMPURE_CLOSURE)!=0) return false;
@@ -2297,4 +2294,3 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
  * fill-column: 85
  * End:
  */
-

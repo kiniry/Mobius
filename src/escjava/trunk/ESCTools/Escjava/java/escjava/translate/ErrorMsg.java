@@ -18,17 +18,18 @@ import escjava.ast.TagConstants;
 
 
 /**
- ** Provides printing of error messages to the user.
- **/
+ * Provides printing of error messages to the user.
+ */
 
-public final class ErrorMsg {
-  
-    /** Prints an error message for proof obligation <code>name</code>,
-     * where <code>labelList</code> and <code>counterexampleContext</code>
-     * are labels and counterexample from Simplify.
-     * Error messages are printed to <code>out</code>.
-     **/
-  
+public final class ErrorMsg
+{
+    /**
+     * Prints an error message for proof obligation <code>name</code>,
+     * where <code>labelList</code> and
+     * <code>counterexampleContext</code> are labels and
+     * counterexample from Simplify.  Error messages are printed to
+     * <code>out</code>.
+     */
     public static void print(String name,
 			     SList labelList,
 			     SList counterexampleContext,
@@ -125,24 +126,27 @@ public final class ErrorMsg {
 	}
     }
 
-    /** Returns whether or not <code>s</code> is string that indicates
+    /**
+     * Returns whether or not <code>s</code> is string that indicates
      * which ESC/Java check the program violates.
      *
-     * Requires <code>s</code> to be a label output by an ESC/Java
-     * run of Simplify.
-     **/
+     * Requires <code>s</code> to be a label output by an ESC/Java run
+     * of Simplify.
+     */
 
     private static boolean isErrorLabel(String s) {
 	return s.indexOf('@') != -1;
     }
 
 
-    /** Returns whether or not <code>s</code> is string that indicates
-     * information about the execution trace in the counterexample context.
+    /**
+     * Returns whether or not <code>s</code> is string that indicates
+     * information about the execution trace in the counterexample
+     * context.
      *
      * Requires <code>s</code> to be a label output by an ESC/Java
      * run of Simplify.
-     **/
+     */
 
     static boolean isTraceLabel(/*@ non_null */ String s) {
 	return s.startsWith("trace.");
