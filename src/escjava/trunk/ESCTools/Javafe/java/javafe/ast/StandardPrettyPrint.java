@@ -706,6 +706,11 @@ public class StandardPrettyPrint extends PrettyPrint {
         else write(o, n.printName());
     }
   
+    static public void println(VarInit e) {
+	inst.print(System.out,0,e);
+	System.out.println("");
+    }
+
     public void print(OutputStream o, int ind, VarInit e) {
         if (e == null) {
             write(o, "<null expression>");
