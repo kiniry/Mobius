@@ -341,9 +341,17 @@ public final class OutsideEnv {
     //@ requires pname != null;
     public static void addSources(String[] pname) {
 	ArrayList a = reader.findFiles(pname);
-	Iterator i = a.iterator();
-	while (i.hasNext()) {
-	    addSource((GenericFile)i.next());
+	if (a == null) {
+	    ErrorSet.caution("Could not locate package: " +
+			javafe.parser.ParseUtil.arrayToString(pname,"."));
+	} else if (a.isEmpty()) {
+	    ErrorSet.caution("Package has no files: " +
+			javafe.parser.ParseUtil.arrayToString(pname,"."));
+	} else {
+	    Iterator i = a.iterator();
+	    while (i.hasNext()) {
+		addSource( (GenericFile)i.next() );
+	    }
 	}
     }
     /**
