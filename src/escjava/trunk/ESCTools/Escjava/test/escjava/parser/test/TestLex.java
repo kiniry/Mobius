@@ -25,7 +25,8 @@ import java.io.IOException;
 import java.io.FileInputStream;
 import java.util.Random;
 
-public class TestLex {
+public class TestLex
+{
   public static void main(String[] argv) throws IOException {
     EscPrettyPrint p = new EscPrettyPrint();
     p.del = new StandardPrettyPrint(p);
