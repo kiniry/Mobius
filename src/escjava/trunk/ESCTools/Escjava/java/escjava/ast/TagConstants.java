@@ -120,13 +120,7 @@ public class TagConstants extends javafe.tc.TagConstants
     public static final int CHKWRITABLEDEFERRED= CHKUNEXPECTEDEXCEPTION + 1;
     public static final int CHKWRITABLE = CHKWRITABLEDEFERRED + 1;
     public static final int CHKFREE= CHKWRITABLE + 1;
-
-    //// Tags for JML checks
-
-    public static final int CHK_MODIFIES_COHERENCE = CHKFREE + 1;
-    public static final int CHK_SYNONYM_WARNINGS = CHK_MODIFIES_COHERENCE + 1;
-
-    public static final int LASTESCCHECKTAG = CHK_SYNONYM_WARNINGS + 1;
+    public static final int LASTESCCHECKTAG = CHKFREE;
 
     //// Tags for Nary function symbols that are _not_ ESCJ keywords
     //
@@ -134,7 +128,7 @@ public class TagConstants extends javafe.tc.TagConstants
     // as well as as switch labels in escjava.ast.EscPrettyPrint and
     // escjava.translate.VcToString.
     //
-    public static final int FIRSTFUNCTIONTAG = LASTESCCHECKTAG;
+    public static final int FIRSTFUNCTIONTAG = LASTESCCHECKTAG + 1;
     public static final int ALLOCLT = FIRSTFUNCTIONTAG;
     public static final int ALLOCLE = ALLOCLT+1;
     public static final int ANYEQ = ALLOCLE+1;
@@ -228,7 +222,7 @@ public class TagConstants extends javafe.tc.TagConstants
     public static final int JML_DECREASING = JML_MAINTAINING + 1;
     public static final int LASTJMLKEYWORDTAG = JML_DECREASING;
 
-    public static final int LAST_TAG = LASTJMLKEYWORDTAG + 1;
+    public static final int LAST_TAG = LASTJMLKEYWORDTAG;
 
     public static final Identifier ExsuresIdnName = 
         Identifier.intern("Optional..Exsures..Id..Name");
@@ -280,13 +274,13 @@ public class TagConstants extends javafe.tc.TagConstants
             default:
                 if (FIRSTESCKEYWORDTAG <= tag && tag <= LASTESCKEYWORDTAG)
                     return esckeywords[tag - FIRSTESCKEYWORDTAG].toString();
-                else if (FIRSTESCCHECKTAG <= tag && tag < LASTESCCHECKTAG)
+                else if (FIRSTESCCHECKTAG <= tag && tag <= LASTESCCHECKTAG)
                     return escchecks[tag - FIRSTESCCHECKTAG];
                 else if (FIRSTFUNCTIONTAG <= tag && tag <= LASTFUNCTIONTAG)
                     return escfunctions[tag - FIRSTFUNCTIONTAG];
                 else if (FIRSTJMLKEYWORDTAG <= tag && tag <= LASTJMLKEYWORDTAG)
                     return jmlkeywords[tag - FIRSTJMLKEYWORDTAG].toString();
-                else if (tag < javafe.tc.TagConstants.LAST_TAG + 1)
+                else if (tag <= javafe.tc.TagConstants.LAST_TAG)
                     return javafe.tc.TagConstants.toString(tag);
                 else {
                     return "Unknown ESC tag <" + tag
@@ -494,7 +488,7 @@ public class TagConstants extends javafe.tc.TagConstants
     };
 
     public static void main(String[] args) {
-        for(int i = FIRST_TAG; i < LAST_TAG; i++ )
+        for(int i = FIRST_TAG; i <= LAST_TAG; i++ )
             System.out.println(i + " " + toString(i));
     }
 }
