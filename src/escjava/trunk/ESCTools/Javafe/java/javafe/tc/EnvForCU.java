@@ -22,13 +22,13 @@ public class EnvForCU extends Env {
     /**
      * Our CompilationUnit.
      */
-    protected /*@non_null*/ CompilationUnit CU;
+    protected /*@ non_null @*/ CompilationUnit CU;
 
 
     /**
      * Create an environment for a CompilationUnit.
      */
-    public EnvForCU(/*@non_null*/ CompilationUnit CU) {
+    public EnvForCU(/*@ non_null @*/ CompilationUnit CU) {
 	this.CU = CU;
     }
 
@@ -48,7 +48,7 @@ public class EnvForCU extends Env {
      * This is also refered to as "are we in a static context?".  The
      * legality of super also depends on this result. <p>
      *
-     * The legality of C.this, C!=<enclosing class> is different; see 
+     * The legality of C.this, C != <enclosing class> is different; see 
      * canAccessInstance(-).
      */
     public boolean isStaticContext() { return true; }
@@ -133,7 +133,7 @@ public class EnvForCU extends Env {
      * This routine does not check that the resulting type (if any)
      * is actually accessable. <p>
      *
-     * If id is ambiguous, then if loc!=Location.NULL then a fatal
+     * If id is ambiguous, then if loc != Location.NULL then a fatal
      * error is reported at that location via ErrorSet else one of
      * its possible meanings is returned.<p>
      */
@@ -175,7 +175,7 @@ public class EnvForCU extends Env {
 	 */
 	{
 	    String[] P = new String[0];
-	    if (CU.pkgName!=null)
+	    if (CU.pkgName != null)
 		P = CU.pkgName.toStrings();
 	    TypeSig r = lookupWithoutInheritence(caller, P, id.toString());
 	    if (r != null) return r;
@@ -198,7 +198,7 @@ public class EnvForCU extends Env {
 					   id.toString());
 		    if (r2 != null)
 			if (r != null && r != r2) {
-			    if (loc!=Location.NULL)
+			    if (loc != Location.NULL)
 				ErrorSet.fatal(loc, 
 					    "Ambiguous import-on-demand of \""
 					    + id.toString() + "\". Choices are: " + r.getExternalName() + " and " + r2.getExternalName());
@@ -224,7 +224,7 @@ public class EnvForCU extends Env {
      */
     //@ requires \nonnullelements(N)
     public static TypeSig lookupWithoutInheritence(TypeSig caller, String[] N,
-						   /*@non_null*/ String I) {
+						   /*@ non_null @*/ String I) {
 	TypeSig soFar = null;
 	int prefix = 0;
 
@@ -240,7 +240,7 @@ public class EnvForCU extends Env {
 	    String T = (prefix<=N.length) ? N[prefix-1] : I;
 
 	    soFar = OutsideEnv.lookup(P, T);
-	    if (soFar!=null)
+	    if (soFar != null)
 		break;
 	}
 	if (soFar==null)

@@ -32,12 +32,12 @@ public class Resolve {
      * Currently true if a source or a binary for that type exists
      * (directly) in the given package.<p>
      *
-     * <esc> requires P!=null && typeName!=null </esc>
+     * <esc> requires P != null && typeName != null </esc>
      */
     public static boolean typeExists(Tree P, String typeName) {
-	if (P.getChild(typeName+".java")!=null)
+	if (P.getChild(typeName+".java") != null)
 	    return true;
-	if (P.getChild(typeName+".class")!=null)
+	if (P.getChild(typeName+".class") != null)
 	    return true;
 
 	return false;
@@ -90,12 +90,12 @@ public class Resolve {
      * Such package/type naming conflicts are illegal according to the
      * Java documentation.<p>
      */
-    //@ requires filespace!=null
-    //@ requires identifier!=null
+    //@ requires filespace != null;
+    //@ requires identifier != null;
     /*@ requires (\forall int i; (0<=i && i<identifier.length)
-		==> identifier[i]!=null) */
-    //@ ensures \result!=null
-    //@ ensures \result.myPackage!=null
+		==> identifier[i] != null) */
+    //@ ensures \result != null;
+    //@ ensures \result.myPackage != null;
     public static Resolve_Result lookup(Tree filespace, String[] identifier)
 		throws Resolve_AmbiguousName {
 	// Resulting package starts with the top package:
@@ -118,7 +118,7 @@ public class Resolve {
         }
 	if (i<identifier.length && typeExists(P, identifier[i])) {
 	    Tree ambiguousPackage = P.getChild(identifier[i]);
-	    if (ambiguousPackage!=null) {
+	    if (ambiguousPackage != null) {
 		throw new Resolve_AmbiguousName("ambiguous name: "
 			     + PkgTree.getPackageName(ambiguousPackage)
 			     + " is both a class or interface type and"
@@ -159,9 +159,9 @@ public class Resolve {
     /**
      * Combine two names using a separator if both are non-empty. <p>
      *
-     * <esc> requires first!=null && second!=null </esc>
+     * <esc> requires first != null && second != null </esc>
      */
-    //@ ensures \result!=null
+    //@ ensures \result != null;
     public static String combineNames(String first, String second,
 					String separator) {
 	if (first.equals("") || second.equals(""))
@@ -178,9 +178,9 @@ public class Resolve {
      * Only uses '.' as a separator.  If you wish to allow '$' as well,
      * use tr first to map all the '$'s in the name into '.'s.<p>
      */
-    //@ requires id!=null
-    /*@ ensures \result!=null ==>
-	(\forall int i; (0<=i && i<\result.length) ==> \result[i]!=null) */   
+    //@ requires id != null;
+    /*@ ensures \result != null ==>
+	(\forall int i; (0<=i && i<\result.length) ==> \result[i] != null) */   
     public static String[] parseIdentifier(String id) {
 	String[] path = StringUtil.parseList(id, '.');
 
@@ -198,8 +198,8 @@ public class Resolve {
      * Complains to System.err then returns null if the name is badly
      * formed.  identifier and filespace must be non-null.<p>
      */
-    //@ requires filespace!=null && identifier!=null
-    //@ ensures \result!=null ==> \result.myPackage!=null
+    //@ requires filespace != null && identifier != null;
+    //@ ensures \result != null ==> \result.myPackage != null;
     public static Resolve_Result lookupName(Tree filespace, String identifier)
 				throws Resolve_AmbiguousName {
 	// Allow '$' as an additional separator:
@@ -226,7 +226,7 @@ public class Resolve {
      *
      * Starts out empty.<p>
      */ 
-    //@ invariant namespace!=null
+    //@ invariant namespace != null;
     public static Tree namespace = PathComponent.empty();
 
 
@@ -239,7 +239,7 @@ public class Resolve {
      * Iff complain is set, we complain if non-existent
      * or ill-formed path components are present in the classpath.<p>
      */
-    //@ requires classpath!=null
+    //@ requires classpath != null;
     public static void set(String classpath, boolean complain) {
 	try {
 	    namespace = ClassPath.open(classpath, complain);
@@ -265,8 +265,8 @@ public class Resolve {
     /**
      * Convenience function: do a lookupName using the current namespace
      */
-    //@ requires identifier!=null
-    //@ ensures \result!=null ==> \result.myPackage!=null
+    //@ requires identifier != null;
+    //@ ensures \result != null ==> \result.myPackage != null;
     public static Resolve_Result lookupName(String identifier) 
 				throws Resolve_AmbiguousName {
 	return lookupName(namespace, identifier);
@@ -291,8 +291,8 @@ public class Resolve {
      * Otherwise, returns its argument unchanged; the argument will
      * always have a remainder of length 0 in this case.<p>
      */
-    /*@ requires answer!=null ==> answer.myPackage!=null */
-    //@ ensures \result!=null ==> \result.myPackage!=null
+    /*@ requires answer != null ==> answer.myPackage != null */
+    //@ ensures \result != null ==> \result.myPackage != null;
     public static Resolve_Result ensureUnit(Resolve_Result answer) {
 	// Return if check succeeds or answer already null:
 	if (answer==null || answer.remainder.length==0)
@@ -330,9 +330,9 @@ public class Resolve {
      * have a non-null myTypeName and a remainder with length 0 in
      * this case.<p>
      */
-    //@ requires answer!=null ==> answer.myPackage!=null
-    //@ ensures \result!=null ==> \result.myTypeName!=null
-    //@ ensures \result!=null ==> \result.myPackage!=null
+    //@ requires answer != null ==> answer.myPackage != null;
+    //@ ensures \result != null ==> \result.myTypeName != null;
+    //@ ensures \result != null ==> \result.myPackage != null;
     public static Resolve_Result ensureType(Resolve_Result answer) {
 	// Handle the cases where we didn't find a type or a package:
 	answer = ensureUnit(answer);
@@ -360,7 +360,7 @@ public class Resolve {
      * Convert 1 character to another everywhere it appears in a given
      * string.
      *
-     * <esc> requires input!=null; ensures \result!=null </esc>
+     * <esc> requires input != null; ensures \result != null </esc>
      */
     public static String tr(String input, char from, char to) {
 	StringBuffer chars = new StringBuffer(input);
@@ -380,14 +380,14 @@ public class Resolve {
      **************************************************/
 
     /** A simple test driver */
-    //@ requires args!=null;
+    //@ requires args != null;
     /*@ requires (\forall int i; (0<=i && i<args.length)
-		==> args[i]!=null) */
+		==> args[i] != null) */
     public static void main(String[] args) throws IOException {
 	/*
 	 * Parse command arguments:
 	 */
-	if (args.length!=1) {
+	if (args.length != 1) {
 	    System.out.println("Resolve: usage <identifier>");
 	    return;
 	}

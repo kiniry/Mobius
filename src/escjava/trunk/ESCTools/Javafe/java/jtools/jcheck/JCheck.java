@@ -329,7 +329,7 @@ public class JCheck {
 
 	    // Check for a subpackage with the same name:
 	    Tree P = currentPackage.getChild(name);
-	    if (P!=null) {
+	    if (P != null) {
 		complain( name + ": is both a class/interface and a subpackage name:");
 		listLocation(P);
 		listLocation(S);
@@ -434,7 +434,7 @@ public class JCheck {
 	 * Is there a subpackage with the same name?
 	 */
 	Tree P = currentPackage.getChild(unitname);
-	if (P!=null) {
+	if (P != null) {
 	    complain(unitname +
 		  ": is both a class/interface and a subpackage name:");
 		listLocation(P);
@@ -485,7 +485,7 @@ public class JCheck {
 
 	    // Check for a subpackage with the same name:
 	    Tree P = currentPackage.getChild(name);
-	    if (P!=null) {
+	    if (P != null) {
 		error = true;
 		complain(name + ": is both a class/interface and a subpackage name:");
 		listLocation(P);

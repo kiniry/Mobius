@@ -17,7 +17,7 @@ public interface Filter {
 
 
     /** Should our client accept a given value? */
-    //@ requires value!=null
+    //@ requires value != null;
     //@ requires \typeof(value) <: acceptedType
     boolean accept(Object value);
 }

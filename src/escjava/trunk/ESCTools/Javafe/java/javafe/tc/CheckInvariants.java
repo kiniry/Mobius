@@ -9,7 +9,7 @@ import javafe.util.Assert;
 
 class CheckInvariants {
 
-  //@ requires sig!=null
+  //@ requires sig != null;
   public static void checkTypeDeclOfSig(TypeSig sig) {
     if (sig.state < TypeSig.PARSED) return;
 
@@ -92,7 +92,7 @@ class CheckInvariants {
   }
 
 
-  //@ requires t!=null
+  //@ requires t != null;
   public static void checkType(Type t, boolean resolved) {
     if (t.getTag() != TagConstants.TYPENAME)
 	return;
@@ -104,7 +104,7 @@ class CheckInvariants {
   }
 
 
-  //@ requires sig!=null && s!=null
+  //@ requires sig != null && s != null;
   public static void checkStmt(TypeSig sig, Stmt s) {
 
     // System.out.println("checkStmt: sig.state = "+sig.state);
@@ -249,7 +249,7 @@ class CheckInvariants {
     case TagConstants.CONSTRUCTORINVOCATION:
       {
 	ConstructorInvocation ci = (ConstructorInvocation) s;
-	if (ci.enclosingInstance!=null)
+	if (ci.enclosingInstance != null)
 	    checkExpr(sig, ci.enclosingInstance);
 	for(int i = 0; i < ci.args.size(); i++)
 	  checkExpr(sig, ci.args.elementAt(i));
@@ -266,7 +266,7 @@ class CheckInvariants {
   }
 
 
-  //@ requires sig!=null && expr!=null
+  //@ requires sig != null && expr != null;
   public static void checkExpr(TypeSig sig, VarInit expr) {
 
     // System.out.println("Checking inv on "+PrettyPrint.inst.toString(expr));
@@ -306,13 +306,13 @@ class CheckInvariants {
     case TagConstants.NEWINSTANCEEXPR:
       { 
         NewInstanceExpr ne = (NewInstanceExpr) expr;
-	if (ne.enclosingInstance!=null)
+	if (ne.enclosingInstance != null)
 	    checkExpr(sig, ne.enclosingInstance);
 	checkType(ne.type, sig.state >= TypeSig.CHECKED);
 	for(int i = 0; i < ne.args.size(); i++)
 	  checkExpr(sig, ne.args.elementAt(i));
 
-	if (ne.anonDecl!=null && sig.state>=TypeSig.CHECKED)
+	if (ne.anonDecl != null && sig.state>=TypeSig.CHECKED)
 	    checkTypeDeclOfSig(TypeSig.getSig(ne.anonDecl));
 
 //	if (sig.state < TypeSig.CHECKED) Assert.notFalse(ne.decl == null);
@@ -441,7 +441,7 @@ class CheckInvariants {
   }
 
 
-  //@ requires sig!=null && od!=null
+  //@ requires sig != null && od != null;
   public static void checkObjectDesignator(TypeSig sig, ObjectDesignator od) {
     switch (od.getTag()) {
 

@@ -1,5 +1,5 @@
 class Try2 {
-  //@ requires t!=null;
+  //@ requires t != null;
   void m1(Throwable t) throws Throwable {
     int x,y;
     try {

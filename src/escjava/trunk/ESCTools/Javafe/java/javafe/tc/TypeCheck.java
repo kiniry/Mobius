@@ -148,7 +148,7 @@ public class TypeCheck
 {
     /** A (possibly extended) instance of TypeCheck. */
 
-    //@ invariant inst!=null
+    //@ invariant inst != null;
     public static TypeCheck inst;
 
     /** Creates a instance of TypeCheck, and sets the <code>inst</code>
@@ -165,7 +165,7 @@ public class TypeCheck
      * and type checking.  By default, returns an instance of
      * {@link javafe.tc.FlowInsensitiveChecks}. */
 
-    //@ ensures \result!=null
+    //@ ensures \result != null;
     public FlowInsensitiveChecks makeFlowInsensitiveChecks() {
         return new FlowInsensitiveChecks();
     }
@@ -174,7 +174,7 @@ public class TypeCheck
      supertypes of <code>s</code> are not prepped, they are prepped
      first. */
 
-    //@ requires s!=null
+    //@ requires s != null;
     public void checkTypeSig(TypeSig s) {
         s.typecheck();
     }
@@ -183,7 +183,7 @@ public class TypeCheck
      supertypes of <code>s</code> are not prepped, they are prepped
      first. */
 
-    //@ requires td!=null
+    //@ requires td != null;
     public void checkTypeDecl(TypeDecl td) {
         TypeSig sig = TypeSig.getSig(td);
         checkTypeSig(sig);
@@ -194,7 +194,7 @@ public class TypeCheck
      * expression does not have an associated type, then
      * <code>Assert.fail</code> is called. */
 
-    //@ requires e!=null
+    //@ requires e != null;
     public Type getType(VarInit e) {
         return FlowInsensitiveChecks.getType( e );
     }
@@ -209,7 +209,7 @@ public class TypeCheck
      * an associated {@link Stmt} target, then <code>Assert.fail</code>
      * is called. */
 
-    //@ requires s!=null
+    //@ requires s != null;
     public Stmt getBranchLabel(BranchStmt s) {
         return FlowInsensitiveChecks.getBranchLabel( s );
     }
@@ -217,8 +217,8 @@ public class TypeCheck
     /** Retrieves the {@link TypeSig} associated with a particular
      * {@link TypeDecl}. */
 
-    //@ requires d!=null
-    //@ ensures \result!=null
+    //@ requires d != null;
+    //@ ensures \result != null;
     public TypeSig getSig(TypeDecl d) {
         return TypeSig.getSig( d );
     }
@@ -230,13 +230,13 @@ public class TypeCheck
      *
      * Precondition: n has been resolved.
      */
-    //@ ensures \result!=null
-    public TypeSig getSig(/*@non_null*/ TypeName n) {
+    //@ ensures \result != null;
+    public TypeSig getSig(/*@ non_null @*/ TypeName n) {
 	return TypeSig.getSig( n );
     }
 
     
-    public TypeSig getRawSig(/*@non_null*/ TypeName n) {
+    public TypeSig getRawSig(/*@ non_null @*/ TypeName n) {
 	return TypeSig.getRawSig( n );
     }
 
@@ -253,12 +253,12 @@ public class TypeCheck
      *
      * Precondition: PrettyPrint.inst, and r non-null.<p>
      */
-    //@ requires r!=null
+    //@ requires r != null;
     public static String getSignature(RoutineDecl r) {
 	StringBuffer s = new StringBuffer("(");
 
 	for (int i=0; i<r.args.size(); i++) {
-	    if (i!=0)
+	    if (i != 0)
 		s.append(", ");
 	    s.append(Types.printName(r.args.elementAt(i).type));
 	}
@@ -281,7 +281,7 @@ public class TypeCheck
      * Precondition: PrettyPrint.inst, and r non-null.<p>
      */
     //@ requires r.hasParent
-    public String getName(/*@non_null*/ RoutineDecl r) {
+    public String getName(/*@ non_null @*/ RoutineDecl r) {
 	String argumentTypes = getSignature(r);
 
 	switch (r.getTag()) {
@@ -307,7 +307,7 @@ public class TypeCheck
      * Precondition: r non-null.<p>
      */
     //@ requires r.hasParent
-    public String getRoutineName(/*@non_null*/ RoutineDecl r) {
+    public String getRoutineName(/*@ non_null @*/ RoutineDecl r) {
 	switch (r.getTag()) {
 	    case TagConstants.METHODDECL:
 		MethodDecl md = (MethodDecl)r;
@@ -331,8 +331,8 @@ public class TypeCheck
      *
      * Note: pmodifiers may be null. <p>
      */
-    public boolean canAccess(/*@non_null*/ TypeSig from, 
-			     /*@non_null*/ TypeSig target,
+    public boolean canAccess(/*@ non_null @*/ TypeSig from, 
+			     /*@ non_null @*/ TypeSig target,
 			     int modifiers,
 			     ModifierPragmaVec pmodifiers) {
         if (Modifiers.isPublic(modifiers))
@@ -345,9 +345,9 @@ public class TypeCheck
         /*
          * private case -- have same enclosing class? [1.1]:
          */
-        while (from.enclosingType!=null)
+        while (from.enclosingType != null)
             from = from.enclosingType;
-        while (target.enclosingType!=null)
+        while (target.enclosingType != null)
       	    target = target.enclosingType;
         return target==from;
     }
@@ -362,7 +362,7 @@ public class TypeCheck
      * pass. */
  
     //@ requires md.parent instanceof ClassDecl
-    public MethodDecl getOverrides(/*@non_null*/ MethodDecl md) {
+    public MethodDecl getOverrides(/*@ non_null @*/ MethodDecl md) {
  
         Set overrides = PrepTypeDeclaration.inst.getOverrides( md );
  
@@ -388,7 +388,7 @@ public class TypeCheck
      * class {@link MethodDecl} implements.  This information is
      * generated by the 'Prep' pass. */
  
-    //@ requires cd!=null && md!=null
+    //@ requires cd != null && md != null;
     //@ requires md.parent instanceof ClassDecl
     public Set getImplementsSet(ClassDecl cd, MethodDecl md) {
         Assert.notFalse( md.parent instanceof ClassDecl );
@@ -412,7 +412,7 @@ public class TypeCheck
      * class {@link MethodDecl} implements.  This information is
      * generated by the 'Prep' pass. */
  
-    //@ requires md!=null
+    //@ requires md != null;
     //@ requires md.parent instanceof ClassDecl
     public Set getAllImplementsSet(MethodDecl md) {
         Assert.notFalse( md.parent instanceof ClassDecl );
@@ -433,7 +433,7 @@ public class TypeCheck
      * given interface {@link MethodDecl} implements.  This
      * information is generated by the 'Prep' pass. */
  
-    //@ requires md!=null
+    //@ requires md != null;
     //@ requires md.parent instanceof InterfaceDecl
     public Set getImplementsSet(MethodDecl md) {
         Assert.notFalse( md.parent instanceof InterfaceDecl );
@@ -446,8 +446,8 @@ public class TypeCheck
      * {@link MethodDecl} overrides or hides.  This information is
      * generated by the 'Prep' pass. */
  
-    //@ requires md!=null;
-    //@ ensures \result!=null;
+    //@ requires md != null;
+    //@ ensures \result != null;
     //@ ensures \result.elementType == \type(MethodDecl);
     public Set getAllOverrides(MethodDecl md) {
         return PrepTypeDeclaration.inst.getOverrides( md );

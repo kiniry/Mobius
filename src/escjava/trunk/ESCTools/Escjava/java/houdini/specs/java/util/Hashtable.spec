@@ -550,7 +550,7 @@ public class Hashtable extends Dictionary implements Map, Cloneable,
      *
      * @since JDK1.2
      */
-    //@ also_ensures \result!=null
+    //@ also_ensures \result != null
     public Set keySet() {
 	if (keySet == null)
 	    keySet = Collections.synchronizedSet(new KeySet(), this);
@@ -586,7 +586,7 @@ public class Hashtable extends Dictionary implements Map, Cloneable,
      * @see   Map.Entry
      * @since JDK1.2
      */
-    //@ also_ensures \result!=null
+    //@ also_ensures \result != null
     public Set entrySet() {
 	if (entrySet==null)
 	    entrySet = Collections.synchronizedSet(new EntrySet(), this);
@@ -657,7 +657,7 @@ public class Hashtable extends Dictionary implements Map, Cloneable,
      *
      * @since JDK1.2
      */
-    //@ also_ensures \result!=null
+    //@ also_ensures \result != null
     public Collection values() {
 	if (values==null)
 	    values = Collections.synchronizedCollection(new ValueCollection(),

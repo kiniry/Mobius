@@ -14,7 +14,7 @@ class Cliteral {
     }
 
     void typingTest() {
-	//@ assert void.class!=null
+	//@ assert void.class != null
 	//@ assert \typeof(int.class) == \type(Class)
     }
 

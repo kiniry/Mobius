@@ -87,6 +87,6 @@ public interface Enumeration {
     //@ requires moreElements
     //@ modifies moreElements
     //@ ensures \typeof(\result) <: elementType || \result==null
-    //@ ensures (\result!=null)
+    //@ ensures (\result != null)
     Object nextElement();
 }

@@ -113,7 +113,7 @@ public class Print extends SrcTool {
 	if (options().printType) {
 	    TypePrint T = new TypePrint();	//@ nowarn Pre
 	    PrettyPrint.inst = new StandardPrettyPrint(T);
-	    T.del = PrettyPrint.inst;		// Establish del!=null
+	    T.del = PrettyPrint.inst;		// Establish del != null
 						// as required by TypePrint()
 	}
     }

@@ -30,7 +30,7 @@ class ExtTree extends HashTree {
     }
 
     /** Create a non-root node: */
-    //@ requires parent!=null && label!=null
+    //@ requires parent != null && label != null;
     protected ExtTree(Tree parent, String label, Object data) {
 	super(parent, label, data);
     }
@@ -51,7 +51,7 @@ class ExtTree extends HashTree {
      *
      * In either case, the (resulting) child with label label is returned.<p>
      */
-    //@ requires label!=null
+    //@ requires label != null;
     //@ ensures \result != null;
     public ExtTree addChild(String label, Object newData) {
 	/* Handle case where child already exists: */
@@ -73,9 +73,9 @@ class ExtTree extends HashTree {
      * necessary nodes along the way using addChild with null for
      * newData.  Path must be non-null.
      */
-    /*@ requires path!=null &&
-	(\forall int i; (0<=i && i<path.length) ==> path[i]!=null) */
-    //@ ensures \result!=null
+    /*@ requires path != null &&
+	(\forall int i; (0<=i && i<path.length) ==> path[i] != null) */
+    //@ ensures \result != null;
     public ExtTree addPath(String[] path) {
 	ExtTree currentNode = this;
 

@@ -44,7 +44,7 @@ abstract public class Reader
      *
      * Target must be non-null.<p>
      */
-    //@ requires target!=null
+    //@ requires target != null;
     abstract public CompilationUnit read(GenericFile target,
 				         boolean avoidSpec);
 }

@@ -53,22 +53,22 @@ public abstract class ClassFileParser implements ClassFileConstants {
     /** Set the number of constants in the constant pool.  The
 	constants will be numbered 1..cnum-1.  (The constant at entry
 	zero is missing.) */
-    //@ requires cnum>=0
+    //@ requires cnum >= 0;
     protected abstract void set_num_constants(int cnum)
 	throws ClassFormatError;
 
     /** Set number of interfaces implemented by this class. */
-    //@ requires n>=0
+    //@ requires n >= 0;
     protected abstract void set_num_interfaces(int n)
 	throws ClassFormatError;
 
     /** Set number of fields declared in this class. */
-    //@ requires n>=0
+    //@ requires n >= 0;
     protected abstract void set_num_fields(int n)
 	throws ClassFormatError;
 
     /** Set number of methods declared in this class. */
-    //@ requires n>=0
+    //@ requires n >= 0;
     protected abstract void set_num_methods(int n)
 	throws ClassFormatError;
 
@@ -76,7 +76,7 @@ public abstract class ClassFileParser implements ClassFileConstants {
 	contains the "CONSTANT_Class" entry corresponding to this
 	class.  This routine is called after "set_num_constants",
 	and after "set_const(cindex)". */
-    //@ requires 0<=cindex
+    //@ requires 0 <= cindex;
     protected abstract void set_this_class(int cindex)
 	throws ClassFormatError;
 
@@ -85,7 +85,7 @@ public abstract class ClassFileParser implements ClassFileConstants {
 	that contains the "CONSTANT_Class" entry corresponding to this
 	class.  This routine is called after "set_num_constants", and
 	if "cindex" is non-zero, after "set_const(cindex)". */
-    //@ requires 0<=cindex
+    //@ requires 0 <= cindex;
     protected abstract void set_super_class(int cindex)
 	throws ClassFormatError;
 
@@ -94,8 +94,8 @@ public abstract class ClassFileParser implements ClassFileConstants {
 	implemented by this class.  This routine is called after
 	"set_num_constants", after "set_num_interfaces", and after
 	"set_const(cindex)". */
-    //@ requires 0<=index
-    //@ requires 0<=cindex
+    //@ requires 0 <= index;
+    //@ requires 0 <= cindex;
     protected abstract void set_interface(int index, int cindex)
 	throws ClassFormatError;
 
@@ -114,9 +114,9 @@ public abstract class ClassFileParser implements ClassFileConstants {
     		Double		Double
 	</pre>
 	This routine is called after "set_num_constants". */
-    //@ requires (ctype==CONSTANT_Class) ==>  \typeof(value) <: \type(String)
-    //@ requires (ctype==CONSTANT_Class) ==>  value!=null
-    //@ requires 0<=i
+    //@ requires (ctype == CONSTANT_Class) ==> \typeof(value) <: \type(String);
+    //@ requires (ctype == CONSTANT_Class) ==> value != null;
+    //@ requires 0 <= i;
     protected abstract void set_const(int i, int ctype, Object value)
 	throws ClassFormatError;
 
@@ -147,16 +147,16 @@ public abstract class ClassFileParser implements ClassFileConstants {
     /** Set the "i"th field defined by this class.  This routine
 	is called exactly once for each field.  It is called after
 	"set_num_fields". */
-    //@ requires 0<=i
-    //@ requires type!=null
-    //@ requires fname!=null
+    //@ requires 0 <= i;
+    //@ requires type != null;
+    //@ requires fname != null;
     protected abstract void set_field(int i, String fname, String type,int mod)
 	throws ClassFormatError;
 
     /** Set the initializer for "i"th field defined by this class.
 	This routine is called at most once for each field.  It is
 	called after "set_field(i)". */
-    //@ requires 0<=i
+    //@ requires 0 <= i;
     protected abstract void set_field_initializer(int i,
 	                                          /*@non_null*/ Object value)
 	throws ClassFormatError;
@@ -177,8 +177,8 @@ public abstract class ClassFileParser implements ClassFileConstants {
     /** Set the "i"th field defined by this class.  This routine
 	is called exactly once for each method.  It is called after
 	"set_num_methods". */
-    //@ requires 0<=i
-    //@ requires sig!=null && mname!=null
+    //@ requires 0 <= i;
+    //@ requires sig != null && mname != null;
     protected abstract void set_method(int i, String mname, String sig,
 				       int mod)
 	throws ClassFormatError;
@@ -186,7 +186,7 @@ public abstract class ClassFileParser implements ClassFileConstants {
     /** Set the body for "i"th method defined by this class.
 	This routine is called at most once for each method.  It is
 	called after "set_method(i)". */
-    //@ requires 0<=i
+    //@ requires 0 <= i;
     protected abstract void set_method_body(int i,
 					    int max_stack,
 					    int max_local,
@@ -210,8 +210,8 @@ public abstract class ClassFileParser implements ClassFileConstants {
         data that define the attribute value.  If a subclass overrides
         this method, it must read exactly "n" bytes from the input
         stream.  This routine is called after "set_method(i)". */
-    //@ requires 0<=i
-    //@ requires aname!=null && stream!=null
+    //@ requires 0 <= i;
+    //@ requires aname != null && stream != null;
     protected void set_method_attribute(int i, String aname,
 					DataInput stream, int n)
 	throws IOException, ClassFormatError

@@ -15,7 +15,7 @@ class DirectTypeUser {
     }
 
 
-    //@ invariant ptr!=null;
+    //@ invariant ptr != null;
     DirectTypeSub2 ptr = new DirectTypeSub2();
 
     // similar, but instead get type from field range:

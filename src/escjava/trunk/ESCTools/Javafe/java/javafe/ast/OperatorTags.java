@@ -68,7 +68,7 @@ public class OperatorTags extends GeneratedTags
   /** Returns the text representation of <TT>code</TT> (e.g., "=" for
     <TT>ASSIGN</TT>). */
 
-  //@ ensures \result!=null
+  //@ ensures \result != null;
   public static String toString(int opTag) {
      if (FIRST_TAG <= opTag && opTag <= LAST_TAG)
        return opStrings[opTag-FIRST_TAG];
@@ -88,8 +88,8 @@ public class OperatorTags extends GeneratedTags
   };
 
   /*@ invariant (\forall int i; (0<=i && i<opStrings.length)
-	==> opStrings[i]!=null) */
-  //@ invariant opStrings!=null
+	==> opStrings[i] != null) */
+  //@ invariant opStrings != null;
   private static final String[] opStrings = {
       "||", "&&", "|", "^", "&", "!=", "==", ">=", ">", "<=", "<",
       "<<", ">>", ">>>", "+", "-", "/", "%", "*",

@@ -34,7 +34,7 @@ public class ClassPath {
      * disturbed.  (In particular, the automatic addition of the system
      * libraries is not disturbed.)
      */
-    //@ ensures \result!=null
+    //@ ensures \result != null;
     public static String current() {
 	String arg = System.getProperty("java.class.path.skip", "0");
 	int skip = 0;
@@ -58,7 +58,7 @@ public class ClassPath {
      * Set our current classpath by changing the property
      * <code>java.class.path</code>.<p>
      *
-     * <esc> requires newClassPath!=null </esc>
+     * <esc> requires newClassPath != null </esc>
      */
     public static void set(String newClassPath) {
 	Properties P = System.getProperties();
@@ -88,7 +88,7 @@ public class ClassPath {
      * non-existent or ill-formed path components are present in the
      * classpath.<p>
      *
-     * <esc> requires classpath!=null;  ensures \result!=null</esc>
+     * <esc> requires classpath != null;  ensures \result != null</esc>
      */
     public static Tree open(String classpath, boolean complain)
 				throws IOException {
@@ -117,7 +117,7 @@ public class ClassPath {
      * non-existent or ill-formed path components are present in the
      * classpath.<p>
      */
-    //@ ensures \result!=null
+    //@ ensures \result != null;
     public static Tree open(boolean complain) throws IOException {
 	return open(current(), complain);
     }
@@ -135,7 +135,7 @@ public class ClassPath {
      * @param P must be a filespace filtered via {@link PkgTree};
      * moreover <code>PkgTree.isPackage(P)</code> should be true.<p>
      */
-    //@ requires P!=null
+    //@ requires P != null;
     public static void displayPackage(Tree P) {
 	// Enumerate P's subpackages:
 	for (Enumeration E = PkgTree.packages(P); E.hasMoreElements();) {
@@ -160,9 +160,9 @@ public class ClassPath {
 
 
     /** A simple test driver */
-    //@ requires args!=null
+    //@ requires args != null;
     /*@ requires (\forall int i; (0<=i && i<args.length)
-		==> args[i]!=null) */
+		==> args[i] != null) */
     public static void main(String[] args) throws IOException {
 	/*
 	 * Parse command arguments:
@@ -203,7 +203,7 @@ public class ClassPath {
 	
 	// Dump the source in question to standard out:
 	GenericFile sourceFile = (GenericFile)source.data;	//@ nowarn Cast
-	//@ assume sourceFile!=null
+	//@ assume sourceFile != null;
 	InputStream I = sourceFile.getInputStream();
 	System.out.println(sourceFile.getHumanName() + ":");
 	System.out.println("------------------------------ " +

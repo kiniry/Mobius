@@ -115,7 +115,7 @@ public final class TrAnExpr {
         case TagConstants.THISEXPR: {
 	    if (specialThisExpr != null) return specialThisExpr;
             ThisExpr t = (ThisExpr)e;
-            if (t.classPrefix!=null)
+            if (t.classPrefix != null)
                 return trSpecExpr(Inner.unfoldThis(t), sp, st);
 
             return apply(sp, makeVarAccess(GC.thisvar.decl, e.getStartLoc()));

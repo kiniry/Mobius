@@ -21,7 +21,7 @@ import java.util.Enumeration;
 public class PrepTypeDeclaration {
 
     /** A (possibly extended) instance of PrepTypeDeclaration. */
-    public /*@non_null*/ static PrepTypeDeclaration inst;
+    public /*@ non_null @*/ static PrepTypeDeclaration inst;
 
   /** */
 
@@ -44,9 +44,9 @@ public class PrepTypeDeclaration {
     * Sets the "methods" and "fields" fields of the TypeSig appropriately.
     */
   
-  //@ ensures sig.fields!=null
-  //@ ensures sig.methods!=null
-  public void prepTypeSignature(/*@non_null*/ TypeSig sig) { 
+  //@ ensures sig.fields != null;
+  //@ ensures sig.methods != null;
+  public void prepTypeSignature(/*@ non_null @*/ TypeSig sig) { 
     
     TypeDecl decl = sig.getTypeDecl();
 
@@ -54,7 +54,7 @@ public class PrepTypeDeclaration {
      * Check for same simple name as an enclosing type:
      */
     for (TypeSig enclosing = sig.enclosingType;
-	 enclosing!=null;
+	 enclosing != null;
 	 enclosing = enclosing.enclosingType) {
 	if (decl.id.equals(enclosing.getTypeDecl().id))
 	    ErrorSet.error(decl.locId,
@@ -67,7 +67,7 @@ public class PrepTypeDeclaration {
     methodSeq.push();
     constructorSeq.push();
 
-    //@ assert decl!=null
+    //@ assert decl != null;
     //@ assume (decl instanceof ClassDecl) || (decl instanceof InterfaceDecl)
     if( decl instanceof ClassDecl ) 
       visitClassDecl( (ClassDecl)decl, sig );
@@ -84,7 +84,7 @@ public class PrepTypeDeclaration {
   /** Decorates MethodDecl of prepped TypeDecls with a Set of
    * methods that decl overrides or hides.  This is *NOT* transtitive! */
 
-  //@ requires md!=null && overrides!=null
+  //@ requires md != null && overrides != null;
   private void addOverride(MethodDecl md, MethodDecl overrides) {
     Set overridesSet = getOverrides( md );
     overridesSet.add( overrides );
@@ -103,8 +103,8 @@ public class PrepTypeDeclaration {
    * particular type <code>td</code>, use getOverrides(TypeDecl,
    * MethodDecl) instead!
    */
-  //@ requires md!=null
-  //@ ensures \result!=null
+  //@ requires md != null;
+  //@ ensures \result != null;
   //@ ensures \result.elementType == \type(MethodDecl)
   public Set getOverrides(MethodDecl md) {
     Set overrides = (Set)overridesDecoration.get( md );
@@ -125,9 +125,9 @@ public class PrepTypeDeclaration {
    *
    * This routine may result in <code>td</code> being prepped.
    */
-  //@ requires td!=null
-  //@ requires md!=null
-  //@ ensures \result!=null
+  //@ requires td != null;
+  //@ requires md != null;
+  //@ ensures \result != null;
   //@ ensures \result.elementType == \type(MethodDecl)
   public Set getOverrides(TypeDecl td, MethodDecl md) {
     TypeSig sig = TypeSig.getSig(td);
@@ -150,7 +150,7 @@ public class PrepTypeDeclaration {
   }
 
   //@ invariant overridesDecoration.decorationType == \type(Set)
-  private static /*@non_null*/ ASTDecoration overridesDecoration 
+  private static /*@ non_null @*/ ASTDecoration overridesDecoration 
     = new ASTDecoration("overridesDecoration");
   
   // ----------------------------------------------------------------------
@@ -158,23 +158,23 @@ public class PrepTypeDeclaration {
   // Stacks up the members of the type
   //@ invariant fieldSeq.elementType == \type(FieldDecl)
   //@ invariant fieldSeq.owner == this
-  protected /*@non_null*/ StackVector fieldSeq = new StackVector();
+  protected /*@ non_null @*/ StackVector fieldSeq = new StackVector();
 
   // "invariant" <elements>.hasParent
   //@ invariant methodSeq.elementType == \type(MethodDecl)
   //@ invariant methodSeq.owner == this
-  protected /*@non_null*/ StackVector methodSeq = new StackVector();
+  protected /*@ non_null @*/ StackVector methodSeq = new StackVector();
 
   //@ invariant constructorSeq.elementType == \type(ConstructorDecl)
   //@ invariant constructorSeq.owner == this
-  protected /*@non_null*/ StackVector constructorSeq = new StackVector();
+  protected /*@ non_null @*/ StackVector constructorSeq = new StackVector();
   
   // ----------------------------------------------------------------------
 
   /** Does signature-level checking and adds type members to fieldSeq
    *  and methodSeq.  */
 
-  //@ requires decl!=null && currentSig!=null
+  //@ requires decl != null && currentSig != null;
   protected void visitClassDecl(ClassDecl decl, TypeSig currentSig ) {
     
     // Check that the modifiers are ok
@@ -265,8 +265,8 @@ public class PrepTypeDeclaration {
      *
      * isClass should be true iff the TypeDecl is a ClassDecl.<p>
      */
-    public void checkTypeModifiers(/*@non_null*/ TypeDecl decl,
-				   /*@non_null*/ TypeSig currentSig,
+    public void checkTypeModifiers(/*@ non_null @*/ TypeDecl decl,
+				   /*@ non_null @*/ TypeSig currentSig,
 				   boolean isClass) {
 	/*
 	 * Check abstract modifier:
@@ -334,7 +334,7 @@ public class PrepTypeDeclaration {
 	 *    interfaces.
 	 */
 	if (currentSig.enclosingType==null) {
-	    if ((decl.modifiers&Modifiers.ACC_STATIC)!=0)
+	    if ((decl.modifiers&Modifiers.ACC_STATIC) != 0)
 		ErrorSet.error(decl.loc,
 		       "Package-member types cannot be declared static");
 	} else {
@@ -376,7 +376,7 @@ public class PrepTypeDeclaration {
     and adds type members to fieldSeq and methodSeq.
       */
   
-  //@ requires decl!=null && currentSig!=null
+  //@ requires decl != null && currentSig != null;
   protected void visitInterfaceDecl(InterfaceDecl decl,
 				  TypeSig currentSig ) {
     Info.out("[prepping enclosed interface " + decl.id + "]");
@@ -403,7 +403,7 @@ public class PrepTypeDeclaration {
      */
     if (decl.superInterfaces.size()==0) {
 	TypeSig root = getRootInterface();
-	if (root!=currentSig)
+	if (root != currentSig)
 	    addInheritedMembers(currentSig, root);
     }
 
@@ -420,7 +420,7 @@ public class PrepTypeDeclaration {
       */
   
   // Precondition: all the types in superinterfaces have been resolved
-  //@ requires sig!=null && superInterfaces!=null
+  //@ requires sig != null && superInterfaces != null;
   protected void checkSuperInterfaces(TypeSig sig, 
 				    TypeNameVec superInterfaces ) {
     
@@ -460,8 +460,8 @@ public class PrepTypeDeclaration {
       */
 
   //@ requires e.hasParent
-  protected void visitTypeDeclElem(/*@non_null*/ TypeDeclElem e,
-				 /*@non_null*/ TypeSig currentSig,
+  protected void visitTypeDeclElem(/*@ non_null @*/ TypeDeclElem e,
+				 /*@ non_null @*/ TypeSig currentSig,
 				 boolean abstractMethodsOK,
 				 boolean inFinalClass,
 				 boolean inInterface ) {
@@ -494,7 +494,7 @@ public class PrepTypeDeclaration {
 	    }
 	}
 
-	if (first!=decl)
+	if (first != decl)
 	    ErrorSet.error(decl.locId,
 			   "Duplicate nested-type declaration: the type "
 			   + TypeSig.getSig(decl)
@@ -517,7 +517,7 @@ public class PrepTypeDeclaration {
   
   /** Visit a FieldDecl, check it and add it to fieldSeq. */
   
-  //@ requires x!=null && currentSig!=null
+  //@ requires x != null && currentSig != null;
   protected void visitFieldDecl(FieldDecl x,
 			      TypeSig currentSig,
 			      boolean abstractMethodsOK,
@@ -568,7 +568,7 @@ public class PrepTypeDeclaration {
   
   /** Visit a MethodDecl, check it and add it to methodSeq. */
   
-  //@ requires x!=null && currentSig!=null
+  //@ requires x != null && currentSig != null;
   protected void visitMethodDecl(MethodDecl x,
 			       TypeSig currentSig,
 			       boolean abstractMethodsOK,
@@ -635,7 +635,7 @@ public class PrepTypeDeclaration {
   
   /** Visit ConstructorDecl, check it, and add it to constructorSeq. */
   
-  //@ requires x!=null && currentSig!=null
+  //@ requires x != null && currentSig != null;
   protected void visitConstructorDecl(ConstructorDecl x,
 				    TypeSig currentSig,
 				    boolean abstractMethodsOK,
@@ -681,7 +681,7 @@ public class PrepTypeDeclaration {
    * comment below marked by a <<>>
    */
   
-  //@ requires type!=null && superType!=null
+  //@ requires type != null && superType != null;
   protected void addInheritedMembers(TypeSig type, TypeSig superType ) {
 
     TypeDecl jLOTypeDecl = Types.javaLangObject().getTypeDecl();
@@ -830,7 +830,7 @@ public class PrepTypeDeclaration {
   
   /** Check if a member is accessible from a direct subclass. */
   
-  //@ requires type!=null && superType!=null
+  //@ requires type != null && superType != null;
   private boolean superMemberAccessible(TypeSig type, 
 					TypeSig superType, 
 					int modifiers ) {
@@ -847,7 +847,7 @@ public class PrepTypeDeclaration {
   
   /** Check if a type declares a field. */
   
-  //@ requires sig!=null
+  //@ requires sig != null;
   private boolean declaresField(TypeSig sig, Identifier id ) {
 
     TypeDeclElemVec elems = sig.getTypeDecl().elems;    
@@ -863,8 +863,8 @@ public class PrepTypeDeclaration {
   
   /** Check if a type declares a method. */
   
-  //@ requires sig!=null && \nonnullelements(argTypes)
-  //@ ensures \result!=null ==> \result.hasParent
+  //@ requires sig != null && \nonnullelements(argTypes)
+  //@ ensures \result != null ==> \result.hasParent
   private MethodDecl 
     declaresMethod( TypeSig sig, Identifier id, Type[] argTypes ) 
   {
@@ -894,7 +894,7 @@ public class PrepTypeDeclaration {
   
   // *********************************************************************
   
-  //@ requires loc!=Location.NULL
+  //@ requires loc != Location.NULL
   public void 
     checkModifiers(int modifiers, int allowed, int loc, String decl) {
 
@@ -915,9 +915,9 @@ public class PrepTypeDeclaration {
      * declared at loc.  E.g., loc is the location of the supertype
      * name in the extends or implements clause of currentSig.<p>
      */
-    //@ requires loc!=Location.NULL
-    public void checkSuperTypeAccessible(/*@non_null*/ TypeSig currentSig,
-					 /*@non_null*/ TypeSig supertype,
+    //@ requires loc != Location.NULL
+    public void checkSuperTypeAccessible(/*@ non_null @*/ TypeSig currentSig,
+					 /*@ non_null @*/ TypeSig supertype,
 					 int loc) {
 /* FIXME - this error is commented out because it incorrectly disallows
  using a protected nested class of a public supertype that is not in 
@@ -944,9 +944,9 @@ the same package.
      * The root interface is composed of all the public methods of
      * java.lang.Object turned into abstract methods.<p>
      */
-    //@ ensures \result!=null
+    //@ ensures \result != null;
     public TypeSig getRootInterface() {
-	if (_rootCache!=null)
+	if (_rootCache != null)
 	    return _rootCache;
 
 	TypeSig objSig = Types.javaLangObject();
@@ -1004,15 +1004,15 @@ the same package.
 
 
 
-    //@ ensures \result!=null
-    public javafe.tc.TypeSig processTypeNameAnnotations(/*@non_null*/ TypeName tn,
-							/*@non_null*/javafe.tc.TypeSig sig,
+    //@ ensures \result != null;
+    public javafe.tc.TypeSig processTypeNameAnnotations(/*@ non_null @*/ TypeName tn,
+							/*@ non_null @*/javafe.tc.TypeSig sig,
 							Env env) {
 	return sig;
     }
 
-    //@ ensures \result!=null
-    protected EnvForTypeSig getEnvForCurrentSig(/*@non_null*/ TypeSig sig,
+    //@ ensures \result != null;
+    protected EnvForTypeSig getEnvForCurrentSig(/*@ non_null @*/ TypeSig sig,
 						boolean isStatic) {
       return sig.getEnv(isStatic);
     }

@@ -131,7 +131,7 @@ public class ErrorSet
      * The message will be marked as a caution when it is displayed to
      * the user.  Increments <code>cautions</code> by one.<p>
      */
-    //@ requires loc!=Location.NULL
+    //@ requires loc != Location.NULL
     public static void caution(int loc, String msg) {
 	if (FrontEndTool.options.noCautions) {
 	    return;
@@ -171,7 +171,7 @@ public class ErrorSet
      * The message will be marked as a warning when it is displayed to
      * the user.  Increments <code>warnings</code> by one.<p>
      */
-    //@ requires loc!=Location.NULL
+    //@ requires loc != Location.NULL
     public static void warning(int loc, String msg) {
 	warnings++;
 	report(loc, WARNING, msg);
@@ -198,7 +198,7 @@ public class ErrorSet
      * The message will be marked as an error when it is displayed to
      * the user.  Increments <code>errors</code> by one. <p>
      */
-    //@ requires loc!=Location.NULL
+    //@ requires loc != Location.NULL
     public static void error(int loc, String msg) {
 	errors++;
 	report(loc, ERROR, msg);
@@ -247,7 +247,7 @@ public class ErrorSet
      * <code>FatalError</code>, so that it can do whatever cleanup is
      * required before exiting.<p>
      */
-    //@ requires loc!=Location.NULL
+    //@ requires loc != Location.NULL
     //@ ensures false
     public static void fatal(int loc, String msg) /*throws FatalError*/ {
 	fatals++;
@@ -302,7 +302,7 @@ public class ErrorSet
      *  Reports a general message, implemented here in order to
      *  have a single location through which error reporting happens.
      */
-    public static void report(/*@non_null*/ String msg) {
+    public static void report(/*@ non_null @*/ String msg) {
 	System.out.println(msg);
     }
 
@@ -363,7 +363,7 @@ public class ErrorSet
      *
      * No error is reported if an I/O error occurs.
      */
-    //@ requires loc!=Location.NULL
+    //@ requires loc != Location.NULL
     private static InputStream getFile(int loc) {
 	try {
 	    return Location.toFile(loc).getInputStream();
@@ -382,7 +382,7 @@ public class ErrorSet
      *
      * No error is reported if an I/O error occurs.
      */
-    //@ requires loc!=Location.NULL
+    //@ requires loc != Location.NULL
     private static String getLine(int loc) {
 	InputStream i = getFile(loc);
 	if (i==null)
@@ -400,7 +400,7 @@ public class ErrorSet
 	    }
 
 	    StringBuffer line = new StringBuffer(100);
-	    for (int c=i.read(); c!=10/*newline*/ && c!= -1/*EOF*/; c=i.read())
+	    for (int c=i.read(); c != 10/*newline*/ && c!= -1/*EOF*/; c=i.read())
 		line.append((char)c);
 
 	    i.close();
@@ -414,7 +414,7 @@ public class ErrorSet
     /** See documentation for two-argument version of <code>displayColumn</code>.
       * This version differs in that the default clip policy is applied.
       */
-    //@ requires loc!=Location.NULL
+    //@ requires loc != Location.NULL
     public static void displayColumn(int loc) {
       displayColumn(loc, null);
     }
@@ -436,7 +436,7 @@ public class ErrorSet
      * By using a non-null <code>policy</code> argument, a caller can fine-
      * tune the policy used for introducing ellipses in the printed line.
      */
-    //@ requires loc!=Location.NULL
+    //@ requires loc != Location.NULL
     public static void displayColumn(int loc, ClipPolicy policy) {
 	String line = getLine(loc);
 	int col = Location.toColumn(loc);	// zero-based
@@ -455,13 +455,13 @@ public class ErrorSet
 	int acol = col;
 	for (int i=0; i<line.length(); i++) {
 	    char c = line.charAt(i);
-	    if (c!='\t') {
+	    if (c != '\t') {
 		adjusted.append(c);
 		x++;
 	    } else {
 		adjusted.append(' ');		// Tab always non-zero skip
 		x++;
-		while (x%8!=0) {		// Skip to next tab stop
+		while (x%8 != 0) {		// Skip to next tab stop
 		    adjusted.append(' ');
 		    x++;
 

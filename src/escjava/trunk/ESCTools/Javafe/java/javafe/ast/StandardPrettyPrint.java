@@ -12,7 +12,7 @@ public class StandardPrettyPrint extends PrettyPrint {
 
     public StandardPrettyPrint() { }
 
-    //@ requires self != null
+    //@ requires self != null;
     public StandardPrettyPrint(PrettyPrint self) { super(self); }
 
     public void print(OutputStream o, CompilationUnit cu) {
@@ -88,7 +88,7 @@ public class StandardPrettyPrint extends PrettyPrint {
                 {
                     ClassDecl cd = (ClassDecl)d;
                     writeln(o, "class "+(id=cd.id));
-                    if (cd.superClass!=null) {
+                    if (cd.superClass != null) {
                         if (!toString(cd.superClass).equals("java.lang.Object")
                             || PrettyPrint.displayInferred) {
                             spaces(o, ind);
@@ -97,7 +97,7 @@ public class StandardPrettyPrint extends PrettyPrint {
                             writeln(o);
                         }
                     }
-                    if (cd.superInterfaces.size()!=0) {
+                    if (cd.superInterfaces.size() != 0) {
                         spaces(o, ind);
                         write(o, "implements ");
                         self.print(o, cd.superInterfaces);
@@ -567,7 +567,7 @@ public class StandardPrettyPrint extends PrettyPrint {
     }
 
 
-    //@ requires o != null
+    //@ requires o != null;
     void displayBody(OutputStream o, int ind, BlockStmt body,
 		     boolean showBody, boolean specOnly, String kind) {
 	if (!showBody || body==null) {
@@ -729,7 +729,7 @@ public class StandardPrettyPrint extends PrettyPrint {
                     VarInitVec v = ((ArrayInit)e).elems;
                     write(o, "{ ");
                     for(int i = 0; i < v.size(); i++) {
-                        if (i!=0 ) write(o, ", ");
+                        if (i != 0 ) write(o, ", ");
                         self.print(o, ind, v.elementAt(i));
                     }
                     write(o, " }");
@@ -738,7 +738,7 @@ public class StandardPrettyPrint extends PrettyPrint {
                     
             case TagConstants.THISEXPR: {
                 ThisExpr t = (ThisExpr)e;
-                if (t.classPrefix!=null) {
+                if (t.classPrefix != null) {
                     self.print(o, t.classPrefix);
                     write(o, ".");
                 }
@@ -1009,7 +1009,7 @@ public class StandardPrettyPrint extends PrettyPrint {
       @           ((tag==TagConstants.STRINGLIT) ==> (val instanceof String)) &&
       @           ((tag==TagConstants.CHARLIT) ==> (val instanceof Integer)));
       @*/
-    //@ ensures \result != null
+    //@ ensures \result != null;
     public static String toCanonicalString(int tag, Object val) {
         if (tag == TagConstants.BOOLEANLIT) return val.toString();
 
@@ -1109,7 +1109,7 @@ public class StandardPrettyPrint extends PrettyPrint {
         write(o, tp.toString());
     }
   
-    //@ requires o != null
+    //@ requires o != null;
     public void print(OutputStream o, int ind, TypeModifierPragmaVec t) {
         if (t != null) {
             for (int i = 0; i < t.size(); i++) {
@@ -1122,8 +1122,8 @@ public class StandardPrettyPrint extends PrettyPrint {
     /**
      * Generate text to describe a ASTNote with an unknown tag
      */
-    //@ requires n != null
-    //@ ensures \result != null
+    //@ requires n != null;
+    //@ ensures \result != null;
     public String unknownTag(ASTNode n) {
         return unknownTagMsg(n.getTag());
     }
@@ -1131,7 +1131,7 @@ public class StandardPrettyPrint extends PrettyPrint {
     /**
      * Generate text to describe a given unknown tag
      */
-    //@ ensures \result != null
+    //@ ensures \result != null;
     public String unknownTagMsg(int tag) {
         return "UnknownTag<" + tag + ":"
             + PrettyPrint.inst.toString(tag) + ">";

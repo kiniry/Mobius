@@ -41,7 +41,7 @@ public class ASTDecoration {
      **************************************************/
 
     /** The name of our decoration */
-    //@ invariant name!=null
+    //@ invariant name != null;
     private String name;
 
     /** Our decoration's actual "static" type */
@@ -60,7 +60,7 @@ public class ASTDecoration {
      *
      * The caller should set the decorationType field of the result.<p>
      */
-    //@ requires s!=null
+    //@ requires s != null;
     public ASTDecoration(String s) {
 	name = s;
 	my_slot = allocated;
@@ -78,7 +78,7 @@ public class ASTDecoration {
     * Return the decoration value of an <code>ASTNode</code>, or <code> null
     * if the <code>ASTNode</code> has no decoration.
     */
-    //@ requires n!=null
+    //@ requires n != null;
     //@ ensures \typeof(\result) <: decorationType
     public Object get(ASTNode n) {
 	Assert.notNull(n);
@@ -93,7 +93,7 @@ public class ASTDecoration {
     /**
      * Set the decoration value of an <code>ASTNode</code>.
      */
-    //@ requires n!=null
+    //@ requires n != null;
     //@ requires \typeof(val) <: decorationType
     public void set(ASTNode n, Object val) {
 	Object[] v = n.decorations;
@@ -119,7 +119,7 @@ public class ASTDecoration {
      * Return a string  containing the decoration's name, and the
      * decoration value for this <code>ASTNode</code>.
      */
-    //@ requires n!=null
+    //@ requires n != null;
     public String toString(ASTNode n) {
 	Object val = get(n);
 	return "[Decoration "+name+" "+ ( val==null? "" : val.toString() )

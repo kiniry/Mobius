@@ -43,7 +43,7 @@ public class ParseUtil
      Takes an expected token from the input stream, 
      calls <TT>fail</TT> on error.
      */
-    //@ requires l != null && l.m_in != null
+    //@ requires l != null && l.m_in != null;
     //@ modifies l.ttype, l.auxVal, l.identifierVal
     //@ ensures \old(l.ttype)==expected
     public void expect(Lex l, int expected) {
@@ -100,7 +100,7 @@ public class ParseUtil
      * returns the resulting list.
      */
     //@ requires l.m_in != null;
-    public ModifierPragmaVec parseModifierPragmas(/*@non_null*/ Lex l) {
+    public ModifierPragmaVec parseModifierPragmas(/*@ non_null @*/ Lex l) {
 	if (l.ttype != TagConstants.MODIFIERPRAGMA)
 	    return null;
 
@@ -121,7 +121,7 @@ public class ParseUtil
      * <code>ModifierPragmaVec</code>.
      */
     //@ requires l.m_in != null;
-    public ModifierPragmaVec parseMoreModifierPragmas(/*@non_null*/ Lex l, 
+    public ModifierPragmaVec parseMoreModifierPragmas(/*@ non_null @*/ Lex l, 
 						      ModifierPragmaVec orig)
     {
 	ModifierPragmaVec modifierPragmas = parseModifierPragmas( l );

@@ -30,15 +30,15 @@ class NonNull {
     //@ ghost public static /*@non_null*/ Object s
     //@ pure
     void foo(/*@non_null*/ Object x) {
-	//@ assert foo!=null
-	//@ set foo = x        // ok since x!=null
+	//@ assert foo != null
+	//@ set foo = x        // ok since x != null
 	//@ set foo = null     // error
 	//@ set foo = foo      // ok since foo is known to be non-null
     }
     //@ pure
     void foo2(/*@non_null*/ Object x) {
-	//@ assert s!=null
-	//@ set s = x        // ok since x!=null
+	//@ assert s != null
+	//@ set s = x        // ok since x != null
 	//@ set s = null     // error
 	//@ set s = s        // ok since s is known to be non-null
     }

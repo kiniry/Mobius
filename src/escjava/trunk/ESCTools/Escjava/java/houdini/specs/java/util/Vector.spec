@@ -70,10 +70,10 @@ public class Vector extends AbstractList implements List, Cloneable,
 	==> (\typeof(elementData[i]) <: elementType
 	     || elementData[i]==null)) */
     /*@ invariant (\forall int i; (0<=i && i<elementCount)
-	==> (!containsNull ==> elementData[i]!=null)) */
+	==> (!containsNull ==> elementData[i] != null)) */
 
     /*@ invariant (\forall Vector v; v==null || v==this
-		   || v.elementData!=elementData) */
+		   || v.elementData != elementData) */
 
     protected /*@non_null*/ Object elementData[];
 
@@ -201,7 +201,7 @@ public class Vector extends AbstractList implements List, Cloneable,
 	    Object oldData[] = elementData;
 	    elementData = new Object[elementCount];
 	    /*@ assume (\forall Vector v; v==null || v==this ||
-			v.elementData!=elementData) */
+			v.elementData != elementData) */
 	    System.arraycopy(oldData, 0, elementData, 0, elementCount);
 	}
     }
@@ -318,7 +318,7 @@ public class Vector extends AbstractList implements List, Cloneable,
      * @see     Iterator
      */
     //@ ensures \result != null
-    //@ ensures \result!=null
+    //@ ensures \result != null
     //@ ensures \result.elementType == elementType
     //@ ensures \result.returnsNull == containsNull
     public Enumeration elements() {
@@ -458,7 +458,7 @@ public class Vector extends AbstractList implements List, Cloneable,
     // //@ requires 0 <= index ;
     // //@ requires index < elementCount ;
     //@ ensures \typeof(\result) <: elementType || \result==null
-    //@ ensures !false ==> \result!=null
+    //@ ensures !false ==> \result != null
     public synchronized Object elementAt(int index) {
 	if (index >= elementCount) {
 	    throw new ArrayIndexOutOfBoundsException(index + " >= " + elementCount);
@@ -484,7 +484,7 @@ public class Vector extends AbstractList implements List, Cloneable,
      */
     // //@ requires elementCount > 0 ;
     //@ ensures \typeof(\result) <: elementType || \result==null
-    //@ ensures !false ==> \result!=null
+    //@ ensures !false ==> \result != null
     public synchronized Object firstElement() {
 	if (elementCount == 0) {
 	    throw new NoSuchElementException();
@@ -501,7 +501,7 @@ public class Vector extends AbstractList implements List, Cloneable,
      */
     // //@ requires elementCount > 0 ;
     //@ ensures \typeof(\result) <: elementType || \result==null
-    //@ ensures !false ==> \result!=null
+    //@ ensures !false ==> \result != null
     public synchronized Object lastElement() {
 	if (elementCount == 0) {
 	    throw new NoSuchElementException();
@@ -533,7 +533,7 @@ public class Vector extends AbstractList implements List, Cloneable,
     // //@ requires 0 <= index ;
     // //@ requires index < elementCount ;
     // //@ requires \typeof(obj) <: elementType
-    // //@ requires containsNull || obj!=null
+    // //@ requires containsNull || obj != null
     public synchronized void setElementAt(Object obj, int index) {
 	if (index >= elementCount) {
 	    throw new ArrayIndexOutOfBoundsException(index + " >= " + 
@@ -609,7 +609,7 @@ public class Vector extends AbstractList implements List, Cloneable,
     // //@ requires 0 <= index ;
     // //@ requires index <= elementCount ;
     // //@ requires \typeof(obj) <: elementType || obj==null
-    // //@ requires containsNull || obj!=null
+    // //@ requires containsNull || obj != null
     public synchronized void insertElementAt(Object obj, int index) {
 	modCount++;
 	if (index >= elementCount + 1) {
@@ -635,7 +635,7 @@ public class Vector extends AbstractList implements List, Cloneable,
      * @see	   List
      */
     // //@ requires \typeof(obj) <: elementType
-    // //@ requires containsNull || obj!=null
+    // //@ requires containsNull || obj != null
     //@ modifies elementCount
     //@ ensures  elementCount == \old(elementCount)+1
     public synchronized void addElement(Object obj) {

@@ -30,8 +30,8 @@ class DescriptorParser
    * @param s  the class name to parse
    * @return   the type name encoded by s
    */
-  //@ ensures \result!=null
-    static TypeName parseClass(/*@non_null*/ String s)
+  //@ ensures \result != null;
+    static TypeName parseClass(/*@ non_null @*/ String s)
     throws ClassFormatError
   {
     // tokenize the string into a sequence of identifiers delimited by slashes
@@ -49,7 +49,7 @@ class DescriptorParser
     for (int i = 0; tokenizer.hasMoreTokens(); i++)
     {
       identifiers[i] = Identifier.intern(tokenizer.nextToken());
-      //@ assert identifiers[i]!=null
+      //@ assert identifiers[i] != null;
       locations1[i]  = classLocation;
 
       if (i<count-1)
@@ -57,9 +57,9 @@ class DescriptorParser
     }
     //@ assume \nonnullelements(identifiers)
     /*@ assume (\forall int i; (0<=i && i<locations1.length)
-			==> locations1[i]!=Location.NULL) */
+			==> locations1[i] != Location.NULL) */
     /*@ assume (\forall int i; (0<=i && i<locations2.length)
-			==> locations2[i]!=Location.NULL) */
+			==> locations2[i] != Location.NULL) */
 
     return TypeName.make(Name.make(locations1, locations2,
 				   IdentifierVec.make(identifiers)));
@@ -70,8 +70,8 @@ class DescriptorParser
    * @param s  the field descriptor to parse
    * @return   the type encoded by s
    */
-  //@ requires s!=null
-  //@ ensures \result!=null
+  //@ requires s != null;
+  //@ ensures \result != null;
   //@ ensures \result.syntax
   static Type parseField(String s)
     throws ClassFormatError
@@ -92,8 +92,8 @@ class DescriptorParser
    * @param s  the method descriptor to parse
    * @return   the method signature encoded by s
    */
-  //@ requires s!=null
-  //@ ensures \result!=null
+  //@ requires s != null;
+  //@ ensures \result != null;
   static MethodSignature parseMethod(String s)
     throws ClassFormatError
   {
@@ -104,7 +104,7 @@ class DescriptorParser
     if (length<3)
       throw new ClassFormatError("incomplete method descriptor");
 
-    if (s.charAt(0)!='(')
+    if (s.charAt(0) != '(')
       throw new ClassFormatError("invalid method descriptor");
 
     StringScanner scanner = new StringScanner(s);
@@ -116,7 +116,7 @@ class DescriptorParser
 
     MethodSignature signature = new MethodSignature(classLocation);
 
-    while (s.charAt(scanner.index)!=')')
+    while (s.charAt(scanner.index) != ')')
     {
       signature.appendParameter(parseType(scanner));
       
@@ -143,7 +143,7 @@ class DescriptorParser
    * A dummy location representing the class being parsed.
    * Should be set externally.
    */
-  //@ invariant classLocation!=Location.NULL
+  //@ invariant classLocation != Location.NULL
   static int classLocation = Location.createFakeLoc("[unknown]");
 
   /* -- private class methods ---------------------------------------------- */
@@ -154,8 +154,8 @@ class DescriptorParser
    *                 the next character after the parsed type)
    * @return         the type encoded by scanner
    */
-  //@ requires scanner!=null
-  //@ ensures \result!=null
+  //@ requires scanner != null;
+  //@ ensures \result != null;
   //@ ensures \result.syntax
   private static Type parseType(StringScanner scanner)
     throws ClassFormatError
@@ -235,8 +235,8 @@ class DescriptorParser
    *                 the next character after the parsed type)
    * @return         the type encoded by scanner
    */
-  //@ requires scanner!=null
-  //@ ensures \result!=null
+  //@ requires scanner != null;
+  //@ ensures \result != null;
   //@ ensures \result.syntax
   private static Type parseReturn(StringScanner scanner)
     throws ClassFormatError
@@ -276,7 +276,7 @@ class StringScanner {
    * Construct a new string scanner from a given string.
    * @param s  the string
    */
-  //@ requires s!=null
+  //@ requires s != null;
   StringScanner(String s)
   {
     this.s = s;
@@ -288,7 +288,7 @@ class StringScanner {
    * The string to be scanned.
    * Initialized by constructor.
    */
-  //@ invariant s!=null
+  //@ invariant s != null;
   String s;
 
   /**

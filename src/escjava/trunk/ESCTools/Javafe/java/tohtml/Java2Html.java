@@ -234,7 +234,7 @@ class Package {
         files.addElement(new JFile(name, this));
     }
     
-    //@ ensures \result != null
+    //@ ensures \result != null;
     public String FullClassName(/*@ non_null */ JFile f) {
         if (name.equals(""))
             return f.name;
@@ -242,7 +242,7 @@ class Package {
             return name + "." + f.name;
     }
 
-    //@ ensures \result != null
+    //@ ensures \result != null;
     public String SourceFilename(/*@ non_null */ JFile f) {
         return sourcedir + File.separator + f.name;
     }
@@ -316,12 +316,12 @@ class JFile {
 	}
     }
     
-    //@ ensures \result != null
+    //@ ensures \result != null;
     public String SourceFilename() {
         return pack.SourceFilename(this);
     }
     
-    //@ ensures \result != null
+    //@ ensures \result != null;
     public String FullClassName() {
         return pack.FullClassName(this);
     }
@@ -367,7 +367,7 @@ class JFile {
     /*@ spec_public */ private Reader R;
     private int offset=0;
 
-    //@ requires R != null
+    //@ requires R != null;
     int read() throws java.io.IOException {
 	offset++;
 	return R.read();
@@ -530,7 +530,7 @@ class JFile {
 	return name;
     }
   
-    //@ requires R != null
+    //@ requires R != null;
     private String readUntilEndOfComment()
 	throws java.io.IOException {
 	StringBuffer sb = new StringBuffer();

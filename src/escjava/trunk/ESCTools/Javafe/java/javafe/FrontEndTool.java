@@ -67,7 +67,7 @@ public abstract class FrontEndTool extends Tool {
 	    // This works only on Sun implementations of Java...
 	    sys = System.getProperty("sun.boot.class.path", null);
 
-	if (sys!=null && !sys.equals("")) {
+	if (sys != null && !sys.equals("")) {
 	    if (!classPath.equals("")) {
 		classPath += System.getProperty("path.separator", ":");
 	    }
@@ -107,7 +107,7 @@ public abstract class FrontEndTool extends Tool {
      * Called to obtain the StandardTypeReader to be used for locating
      * and reading in types.
      */
-    //@ ensures \result!=null
+    //@ ensures \result != null;
     public StandardTypeReader makeStandardTypeReader(String path,
 						     String sourcePath,
 						     PragmaParser P) {
@@ -141,7 +141,7 @@ public abstract class FrontEndTool extends Tool {
      * <code>null</code>.  By default, returns
      * <code>javafe.ast.StandardPrettyPrint</code>.
      */
-    //@ ensures \result!=null
+    //@ ensures \result != null;
     public PrettyPrint makePrettyPrint() {
         return new StandardPrettyPrint();
     }
@@ -151,7 +151,7 @@ public abstract class FrontEndTool extends Tool {
      * (or a subclass thereof). May not return <code>null</code>.  By
      * default, returns <code>javafe.tc.TypeCheck</code>.
      */
-    //@ ensures \result!=null
+    //@ ensures \result != null;
     public TypeCheck makeTypeCheck() {
         return new TypeCheck();
     }
@@ -212,13 +212,13 @@ public abstract class FrontEndTool extends Tool {
 	    Info.out("[" + name() + " exiting due to a fatal error]");
 	}
 	
-	if (ErrorSet.cautions!=0)
+	if (ErrorSet.cautions != 0)
 	    System.out.println(ErrorSet.cautions + " caution"
 		+ (ErrorSet.cautions>1 ? "s" : ""));
-	if (ErrorSet.warnings!=0)
+	if (ErrorSet.warnings != 0)
 	    System.out.println(ErrorSet.warnings + " warning"
 		+ (ErrorSet.warnings>1 ? "s" : ""));
-	if (ErrorSet.errors!=0)
+	if (ErrorSet.errors != 0)
 	    System.out.println(ErrorSet.errors + " error"
 		+ (ErrorSet.errors>1 ? "s" : ""));
 	

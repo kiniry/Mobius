@@ -35,7 +35,7 @@ public class EnvForGhostLocals extends Env implements/*privately*/ Cloneable {
     /**
      * The new local binding.
      */
-    //@ invariant decl.id!=null
+    //@ invariant decl.id != null
     protected /*@non_null*/ GenericVarDecl decl;
 
 
@@ -46,7 +46,7 @@ public class EnvForGhostLocals extends Env implements/*privately*/ Cloneable {
      * We report an error to ErrorSet if the new local binding is a
      * redefinition of a local binding not hidden by a field.<p>
      */
-    //@ requires decl.id!=null
+    //@ requires decl.id != null
     //@ requires !(parent instanceof EnvForCU)
     public EnvForGhostLocals(/*@non_null*/ Env parent,
 			/*@non_null*/ GenericVarDecl decl) {
@@ -153,7 +153,7 @@ public class EnvForGhostLocals extends Env implements/*privately*/ Cloneable {
      * This routine does not check that the resulting type (if any)
      * is actually accessable, if caller is null. <p>
      *
-     * If id is ambiguous, then if loc!=Location.NULL then a fatal
+     * If id is ambiguous, then if loc != Location.NULL then a fatal
      * error is reported at that location via ErrorSet else one of
      * its possible meanings is returned.<p>
      */

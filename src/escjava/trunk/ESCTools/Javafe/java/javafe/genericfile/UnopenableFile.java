@@ -28,7 +28,7 @@ public class UnopenableFile implements GenericFile {
      **************************************************/
 
     //* Our human readable name:
-    /*@non_null*/ String humanName;
+    /*@ non_null @*/ String humanName;
 
     //* Are we a directory?
     boolean isDir;
@@ -47,7 +47,7 @@ public class UnopenableFile implements GenericFile {
      * The resulting file has no modification date available and a
      * local name of "".
      */
-    public UnopenableFile(/*@non_null*/ String name) {
+    public UnopenableFile(/*@ non_null @*/ String name) {
 	this(name, false);
     }
 
@@ -59,7 +59,7 @@ public class UnopenableFile implements GenericFile {
      * The resulting file has no modification date available and a
      * local name of "".
      */
-    public UnopenableFile(/*@non_null*/ String name, boolean isDir) {
+    public UnopenableFile(/*@ non_null @*/ String name, boolean isDir) {
 	humanName = name;
 	this.isDir = isDir;
     }

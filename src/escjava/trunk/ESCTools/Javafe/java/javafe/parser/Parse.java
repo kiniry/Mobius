@@ -56,7 +56,7 @@ public class Parse extends ParseStmt
      */
     //@ invariant seqTypeName.elementType == \type(TypeName)
     //@ invariant seqTypeName.owner == this
-    protected final /*@non_null*/ StackVector seqTypeName
+    protected final /*@ non_null @*/ StackVector seqTypeName
 	= new StackVector();
 
     /**
@@ -64,7 +64,7 @@ public class Parse extends ParseStmt
      */
     //@ invariant seqFormalParaDecl.elementType == \type(FormalParaDecl)
     //@ invariant seqFormalParaDecl.owner == this
-    protected final /*@non_null*/ StackVector seqFormalParaDecl
+    protected final /*@ non_null @*/ StackVector seqFormalParaDecl
 	= new StackVector();
 
     /**
@@ -72,7 +72,7 @@ public class Parse extends ParseStmt
      */
     //@ invariant seqImportDecl.elementType == \type(ImportDecl)
     //@ invariant seqImportDecl.owner == this
-    protected final /*@non_null*/ StackVector seqImportDecl
+    protected final /*@ non_null @*/ StackVector seqImportDecl
 	= new StackVector();
 
     /**
@@ -80,7 +80,7 @@ public class Parse extends ParseStmt
      */
     //@ invariant seqTypeDecl.elementType == \type(TypeDecl)
     //@ invariant seqTypeDecl.owner == this
-    protected final /*@non_null*/ StackVector seqTypeDecl
+    protected final /*@ non_null @*/ StackVector seqTypeDecl
 	= new StackVector();
 
 
@@ -96,7 +96,7 @@ public class Parse extends ParseStmt
     @see javafe.util.ErrorSet
     */
 
-  //@ requires in != null
+  //@ requires in != null;
   public CompilationUnit parseStream(CorrelatedReader in, boolean specOnly) {
     if (parseStreamLexer == null) parseStreamLexer = new Lex(null, true);
     parseStreamLexer.restart(in);
@@ -116,8 +116,8 @@ public class Parse extends ParseStmt
     */
   // specOnly means parse without keeping the bodies of methods/constructors/..
 
-  //@ requires l != null && l.m_in != null
-  //@ ensures \result != null
+  //@ requires l != null && l.m_in != null;
+  //@ ensures \result != null;
   public CompilationUnit parseCompilationUnit(Lex l, boolean specOnly) {
     Name pkgName = null;
     int loc = l.startingLoc;
@@ -177,8 +177,8 @@ public class Parse extends ParseStmt
     </PRE>
    */
         
-  //@ requires l != null && l.m_in != null
-  //@ ensures \result != null
+  //@ requires l != null && l.m_in != null;
+  //@ ensures \result != null;
   protected ImportDecl parseImportDeclaration(Lex l) {
     int loc = l.startingLoc;
     l.getNextToken();                // swallow import keyword
@@ -212,8 +212,8 @@ public class Parse extends ParseStmt
      </PRE>
    */
 
-  //@ requires l != null && l.m_in != null
-  //@ ensures \result != null
+  //@ requires l != null && l.m_in != null;
+  //@ ensures \result != null;
   protected TypeDecl parseTypeDeclaration(Lex l, boolean specOnly) {
     int locstart = l.startingLoc;
     int modifiers = parseModifiers(l);
@@ -306,7 +306,7 @@ public class Parse extends ParseStmt
       Use this to match the beginning of a constructor or method declration
       versus the beginning of a field declaration.
   */
-    //@ requires l != null && l.m_in != null
+    //@ requires l != null && l.m_in != null;
     private boolean atStartOfConstructorOrMethod(Lex l) {
 	int i = 1;
 	while ((l.lookahead(i) == TagConstants.TYPEMODIFIERPRAGMA)) {
@@ -360,8 +360,8 @@ public class Parse extends ParseStmt
       </PRE>
    */
 
-  //@ requires l != null && l.m_in != null
-  //@ ensures \result != null
+  //@ requires l != null && l.m_in != null;
+  //@ ensures \result != null;
   protected TypeNameVec parseTypeNames(Lex l, int keyword)
   {
     if( l.ttype != keyword ) 
@@ -651,8 +651,8 @@ VariableDeclarator:
     <PRE>       
    */
 
-  //@ requires l != null && l.m_in != null
-  //@ ensures \result != null
+  //@ requires l != null && l.m_in != null;
+  //@ ensures \result != null;
   public FormalParaDeclVec parseFormalParameterList(Lex l) 
   {
     /* Should be on LPAREN */

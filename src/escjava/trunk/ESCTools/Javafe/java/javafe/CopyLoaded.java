@@ -29,13 +29,13 @@ public class CopyLoaded extends FrontEndTool implements Listener {
      */
     public final Vector progIndirectFiles = new Vector();
     //@ invariant progIndirectFiles.elementType == \type(String);
-    //@ invariant progIndirectFiles.owner == this
+    //@ invariant progIndirectFiles.owner == this;
     //@ invariant !progIndirectFiles.containsNull;
 
     public final Vector argumentFileNames = new Vector();
     //@ invariant argumentFileNames.elementType == \type(String);
     //@ invariant !argumentFileNames.containsNull;
-    //@ invariant argumentFileNames.owner == this
+    //@ invariant argumentFileNames.owner == this;
 
 
 
@@ -46,10 +46,10 @@ public class CopyLoaded extends FrontEndTool implements Listener {
      **************************************************/
 
 
-    //@ invariant loaded!=null 
-    //@ invariant loaded.elementType == \type(CompilationUnit)
-    //@ invariant !loaded.containsNull
-    //@ invariant loaded.owner == this
+    //@ invariant loaded != null;
+    //@ invariant loaded.elementType == \type(CompilationUnit);
+    //@ invariant !loaded.containsNull;
+    //@ invariant loaded.owner == this;
     public Vector loaded = new Vector();
 
     //@ invariant loaded != argumentFileNames;
@@ -57,15 +57,15 @@ public class CopyLoaded extends FrontEndTool implements Listener {
     public CopyLoaded() {
         //@ set argumentFileNames.elementType = \type(String);
         //@ set argumentFileNames.containsNull = false;
-        //@ set argumentFileNames.owner = this
+        //@ set argumentFileNames.owner = this;
     
-        //@ set loaded.elementType = \type(CompilationUnit)
-        //@ set loaded.containsNull = false
-        //@ set loaded.owner = this
+        //@ set loaded.elementType = \type(CompilationUnit);
+        //@ set loaded.containsNull = false;
+        //@ set loaded.owner = this;
     
         //@ set progIndirectFiles.containsNull = false;
         //@ set progIndirectFiles.elementType = \type(String);
-        //@ set progIndirectFiles.owner = this
+        //@ set progIndirectFiles.owner = this;
     }
 
 
@@ -110,7 +110,7 @@ public class CopyLoaded extends FrontEndTool implements Listener {
 
 
 
-    //@ requires \nonnullelements(args)
+    //@ requires \nonnullelements(args);
     public static void main(String[] args) {
         Tool t = new CopyLoaded();
         int result = t.run(args);
@@ -127,21 +127,21 @@ public class CopyLoaded extends FrontEndTool implements Listener {
 
 
 
-    //@ ensures \nonnullelements(\result)
-    //@ ensures \result != null
+    //@ ensures \nonnullelements(\result);
+    //@ ensures \result != null;
     public String[] FQNpackage(/*@ non_null */ String s) {
         StringTokenizer st = new StringTokenizer(s, ".", false);
         int len = st.countTokens();
         return fillArray(st, len-1);
     } 
 
-    //@ ensures \result != null
+    //@ ensures \result != null;
     public String FQNname(/*@ non_null */ String s) {
          return s.substring(s.lastIndexOf(".") + 1);
     } 
  
-    //@ ensures \nonnullelements(\result)
-    //@ ensures \result != null
+    //@ ensures \nonnullelements(\result);
+    //@ ensures \result != null;
     public String[] fileNamePackage(/*@ non_null */ String file) {
         StringTokenizer st = new StringTokenizer(file, "/", false);
         int len = st.countTokens();
@@ -149,21 +149,21 @@ public class CopyLoaded extends FrontEndTool implements Listener {
     } 
 
 
-    //@ ensures \result != null
+    //@ ensures \result != null;
     public String fileNameName(/*@ non_null */ String s) {
          return s.substring(s.lastIndexOf("/") + 1);
     }    
 
-    //@ ensures \nonnullelements(\result)
-    //@ ensures \result != null
+    //@ ensures \nonnullelements(\result);
+    //@ ensures \result != null;
     public String[] directoryPackage(/*@ non_null */ String dir) {
         StringTokenizer st = new StringTokenizer(dir, "/", false);
         int len = st.countTokens();
         return fillArray(st, len);
     } 
 
-    //@ ensures \nonnullelements(\result)
-    //@ ensures \result != null
+    //@ ensures \nonnullelements(\result);
+    //@ ensures \result != null;
     private String[] fillArray(/*@ non_null */ StringTokenizer st, int len) {
         if (len < 0) {
             return new String[0];
@@ -177,7 +177,7 @@ public class CopyLoaded extends FrontEndTool implements Listener {
 
 
 
-    //@ requires \nonnullelements(P)
+    //@ requires \nonnullelements(P);
     private String makeDirTree(/*@ non_null */ String root, 
                    /*@ non_null */ String P[]) {
         String s = root;
@@ -196,8 +196,8 @@ public class CopyLoaded extends FrontEndTool implements Listener {
 
 
 
-    //@ requires \nonnullelements(P)
-    //@ ensures \result != null
+    //@ requires \nonnullelements(P);
+    //@ ensures \result != null;
     private String makeDirPath(/*@ non_null */ String P[]) {
         String s = "";
         for (int i = 0; i < P.length; i++) {
@@ -223,7 +223,7 @@ public class CopyLoaded extends FrontEndTool implements Listener {
         System.out.println("[generating spec file for " + s + 
                            " as " + filename + "]");
     
-        //@ assume libIndirectWriter != null
+        //@ assume libIndirectWriter != null;
         libIndirectWriter.println("./" + makeDirPath(P) + outFile);
     
         FileOutputStream fos = null;
@@ -317,8 +317,8 @@ public class CopyLoaded extends FrontEndTool implements Listener {
             System.out.println("[copying source file " + original + 
                        " to " + newFileName + "]");
     
-            //@ assume libIndirectWriter != null
-            //@ assume progIndirectWriter != null
+            //@ assume libIndirectWriter != null;
+            //@ assume progIndirectWriter != null;
             if (progIndirectFiles.contains(original)) {
                 progIndirectWriter.println("./" + newName);
             } else {

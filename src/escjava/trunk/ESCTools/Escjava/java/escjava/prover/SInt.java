@@ -46,7 +46,7 @@ final /*package*/ public class SInt extends SExp {
      ** Create a <code>SInt</code> representing a given
      ** <code>int</code>.
      **/
-    //@ ensures \result!=null;
+    //@ ensures \result != null;
     static SInt fromInt(int i) {
 	return new SInt(i);
     }

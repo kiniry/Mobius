@@ -356,7 +356,7 @@ public class BackPred
 	// String constants can be non-null:
 	if (tag==TagConstants.STRINGLIT) {
 	    LiteralExpr asLit = (LiteralExpr)e;
-	    if (asLit.value!=null)
+	    if (asLit.value != null)
 		return true;
 	}
 
@@ -385,7 +385,7 @@ public class BackPred
      * <p> If returns a non-null LiteralExpr, sets its loc to
      * <code>loc</code>.
      */
-    //@ requires e!=null && loc!=Location.NULL
+    //@ requires e != null && loc!=Location.NULL
     private static LiteralExpr eval(Expr e, int loc) {
 	Object val = ConstantExpr.eval(e);
 
@@ -413,7 +413,7 @@ public class BackPred
     /**
      * Generate the appropriate GC equality e1 == e2 based on type t.
      */
-    //@ requires e1!=null && e2!=null && t!=null;
+    //@ requires e1 != null && e2!=null && t!=null;
     //@ ensures \result != null;
     private static Expr eq(Expr e1, Expr e2, Type t) {
 	if (!(t instanceof PrimitiveType))

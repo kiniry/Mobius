@@ -18,7 +18,7 @@ public class Set implements Cloneable
      **************************************************/
 
     /** Our element type */
-    //@ ghost public \TYPE elementType
+    //@ ghost public \TYPE elementType;
 
 
     /**
@@ -26,10 +26,10 @@ public class Set implements Cloneable
      *
      * All mappings of ht are of the form e' -> e' for some e'.
      */
-    //@ invariant ht.keyType == elementType
-    //@ invariant ht.elementType == elementType
-    //@ invariant ht.owner == this
-    private /*@non_null*/ Hashtable ht;
+    //@ invariant ht.keyType == elementType;
+    //@ invariant ht.elementType == elementType;
+    //@ invariant ht.owner == this;
+    private /*@ non_null @*/ Hashtable ht;
 
 
     /***************************************************
@@ -44,23 +44,23 @@ public class Set implements Cloneable
     public Set() {
 	int initCapacity = 5;
 	ht = new Hashtable(initCapacity);
-	//@ set ht.keyType = elementType
-	//@ set ht.elementType = elementType
-	//@ set ht.owner = this
+	//@ set ht.keyType = elementType;
+	//@ set ht.elementType = elementType;
+	//@ set ht.owner = this;
     }
 
 
     /**
      * Create a set from the elements of an Enumeration
      */
-    //@ requires e!=null
-    //@ requires !e.returnsNull
-    //@ ensures elementType==e.elementType
+    //@ requires e != null;
+    //@ requires !e.returnsNull;
+    //@ ensures elementType == e.elementType;
     public Set(Enumeration e) {
 	this();
-	//@ set elementType = e.elementType
-	//@ set ht.keyType = e.elementType
-	//@ set ht.elementType = e.elementType
+	//@ set elementType = e.elementType;
+	//@ set ht.keyType = e.elementType;
+	//@ set ht.elementType = e.elementType;
 
 	while( e.hasMoreElements() ) {
 	    Object item = e.nextElement();
@@ -94,8 +94,8 @@ public class Set implements Cloneable
     /**
      * Do we contain a particular element?
      */
-    //@ requires o!=null
-    //@ requires \typeof(o) <: elementType
+    //@ requires o != null;
+    //@ requires \typeof(o) <: elementType;
     public boolean contains(Object o) {
 	return ht.containsKey( o );
     }
@@ -104,9 +104,9 @@ public class Set implements Cloneable
     /**
      * Return an enumeration of our elements
      */
-    //@ ensures \result!=null
-    //@ ensures !\result.returnsNull
-    //@ ensures \result.elementType == elementType
+    //@ ensures \result != null;
+    //@ ensures !\result.returnsNull;
+    //@ ensures \result.elementType == elementType;
     public Enumeration elements() {
 	return ht.keys();
     }
@@ -136,8 +136,8 @@ public class Set implements Cloneable
      *
      * Return 'true' iff the element was already in the set.
      */
-    //@ requires o!=null
-    //@ requires \typeof(o) <: elementType
+    //@ requires o != null;
+    //@ requires \typeof(o) <: elementType;
     public boolean add(Object o) {
 	return ht.put( o, o ) != null;
     }
@@ -145,9 +145,9 @@ public class Set implements Cloneable
     /**
      * Add all the elements of a given enumeration
      */
-    //@ requires e!=null
-    //@ requires !e.returnsNull
-    //@ requires e.elementType <: elementType
+    //@ requires e != null;
+    //@ requires !e.returnsNull;
+    //@ requires e.elementType <: elementType;
     public void addEnumeration(Enumeration e) {
 	while( e.hasMoreElements() ) {
 	    Object item = e.nextElement();
@@ -161,8 +161,8 @@ public class Set implements Cloneable
      * Remove a particular element if we contain it.  Return true
      * iff the element was previously in the set.
      */
-    //@ requires o!=null
-    //@ requires \typeof(o) <: elementType
+    //@ requires o != null;
+    //@ requires \typeof(o) <: elementType;
     public boolean remove(Object o) {
 	return ht.remove(o) != null;
     }
@@ -173,8 +173,8 @@ public class Set implements Cloneable
      * effect of setting us to the intersection of our original value
      * and the other set.
      */
-    //@ requires s!=null
-    //@ requires s.elementType == elementType
+    //@ requires s != null;
+    //@ requires s.elementType == elementType;
     public void intersect(Set s) {
 	Enumeration e = ht.keys();
 	while( e.hasMoreElements() ) {
@@ -190,8 +190,8 @@ public class Set implements Cloneable
      * effect of setting us to the union of our original value
      * and the other set. Return true if any values were added.
      */
-    //@ requires s!=null
-    //@ requires s.elementType == elementType
+    //@ requires s != null;
+    //@ requires s.elementType == elementType;
     public boolean union(Set s) {
 	boolean changed = false;
 	for(Enumeration e = s.elements(); e.hasMoreElements(); ) {
@@ -210,8 +210,8 @@ public class Set implements Cloneable
      * that is, if the sets are disjoint, then <code>false</code> is returned.
      * The operation leaves both sets unchanged.
      */
-    //@ requires s!=null
-    //@ requires s.elementType == elementType
+    //@ requires s != null;
+    //@ requires s.elementType == elementType;
     public boolean containsAny(Set s) {
       Enumeration e;
       if (size() < s.size()) {

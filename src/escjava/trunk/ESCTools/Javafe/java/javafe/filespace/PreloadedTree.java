@@ -51,7 +51,7 @@ abstract class PreloadedTree extends HashTree {
     }
 
     /** Create a non-root node: */
-    //@ requires parent!=null && label!=null
+    //@ requires parent != null && label != null;
     protected PreloadedTree(Tree parent, String label, Object data) {
 	super(parent, label, data);
     }

@@ -30,12 +30,12 @@ public class EnvForTypeSig extends Env {
     /**
      * Our parent environment
      */
-    protected /*@non_null*/ Env parent;
+    protected /*@ non_null @*/ Env parent;
 
     /**
      * The TypeSig providing new bindings
      */
-    protected /*@non_null*/ TypeSig peer;
+    protected /*@ non_null @*/ TypeSig peer;
 
     /**
      * Are peer's instance members accessible? <p>
@@ -53,8 +53,8 @@ public class EnvForTypeSig extends Env {
      * The instance members of the TypeSig are considered accessible
      * iff staticContext is true.
      */
-    public EnvForTypeSig(/*@non_null*/ Env parent,
-			 /*@non_null*/ TypeSig peer,
+    public EnvForTypeSig(/*@ non_null @*/ Env parent,
+			 /*@ non_null @*/ TypeSig peer,
 			 boolean staticContext) {
 	this.parent = parent;
 	this.peer = peer;
@@ -76,7 +76,7 @@ public class EnvForTypeSig extends Env {
      * This is also refered to as "are we in a static context?".  The
      * legality of super also depends on this result. <p>
      *
-     * The legality of C.this, C!=<enclosing class> is different; see 
+     * The legality of C.this, C != <enclosing class> is different; see 
      * canAccessInstance(-).
      */
     public boolean isStaticContext() {
@@ -146,14 +146,14 @@ public class EnvForTypeSig extends Env {
      * This routine does not check that the resulting type (if any)
      * is actually accessable. <p>
      *
-     * If id is ambiguous, then if loc!=Location.NULL then a fatal
+     * If id is ambiguous, then if loc != Location.NULL then a fatal
      * error is reported at that location via ErrorSet else one of
      * its possible meanings is returned.<p>
      */
     public TypeSig lookupSimpleTypeName(TypeSig caller, Identifier id, int loc) {
 	// Check for a definition in peer:
 	TypeSig result = peer.lookupType(caller, id, loc);
-	if (result!=null) return result;
+	if (result != null) return result;
 
 	// Otherwise, look to enclosing scopes...
 	return parent.lookupSimpleTypeName(caller, id, loc);

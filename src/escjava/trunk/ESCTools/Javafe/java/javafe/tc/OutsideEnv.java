@@ -177,7 +177,7 @@ public final class OutsideEnv {
     /**
      * The <code>TypeReader</code> for our underlying Java file space.
      */
-    //@ invariant reader!=null
+    //@ invariant reader != null;
     public static TypeReader reader = null;
 
     /**
@@ -224,9 +224,9 @@ public final class OutsideEnv {
      *		  no <code>init</code> method for this class has
      *		  previously been called
      */
-    //@ requires R!=null
+    //@ requires R != null;
     public static void init(TypeReader R) {
-	Assert.precondition(R!=null);
+	Assert.precondition(R != null);
 	Assert.precondition(reader == null);	//@ nowarn Pre
 
 	reader = R;
@@ -265,7 +265,7 @@ public final class OutsideEnv {
      * guaranteed to give back the same answer, except that a
      * null answer may later change to a non-null answer.<p>
      */
-    //@ requires \nonnullelements(P) && T!=null
+    //@ requires \nonnullelements(P) && T != null;
     public static TypeSig lookup(String[] P, String T) {
 	TypeSig result = TypeSig.lookup(P, T);
 	if (result==null && reader.exists(P, T))
@@ -297,8 +297,8 @@ public final class OutsideEnv {
      * <code>java.lang.Object</code>).<p>
      *
      */
-    //@ requires \nonnullelements(P) && T!=null
-    //@ ensures \result!=null
+    //@ requires \nonnullelements(P) && T != null;
+    //@ ensures \result != null;
     public static TypeSig lookupDeferred(String[] P, String T) {
 	TypeSig result = TypeSig.get(P, T);
 
@@ -329,11 +329,11 @@ public final class OutsideEnv {
      * Note: calling <code>addSource</code> twice on the same file may
      * or may not produce a duplicate-type error.<p>
      */
-    //@ requires source!=null
+    //@ requires source != null;
     public static CompilationUnit addSource(GenericFile source) {
         filesRead++;
 	CompilationUnit cu = reader.read(source, avoidSpec);
-	if (cu!=null) {
+	if (cu != null) {
 	    setSigs(cu);
 	    notify(cu);
 	}
@@ -373,7 +373,7 @@ public final class OutsideEnv {
      * Note: calling <code>addSource</code> twice on the same file may
      * or may not produce a duplicate-type error.<p>
      */
-    //@ requires sourceName!=null
+    //@ requires sourceName != null;
     public static CompilationUnit addSource(String sourceName) {
 	GenericFile source = new NormalGenericFile(sourceName);
 	return addSource(source);
@@ -390,11 +390,11 @@ public final class OutsideEnv {
      *
      * Precondition: <code>cu</code> must be non-null.<p>
      */
-    //@ requires cu!=null
+    //@ requires cu != null;
     private static void setSigs(CompilationUnit cu) {
 	// Get package name from cu (may be null):
 	String[] P = new String[0];
-	if (cu.pkgName!=null)
+	if (cu.pkgName != null)
 	    P = cu.pkgName.toStrings();
 
 	// Iterate over all the TypeDecls representing package-member
@@ -427,8 +427,8 @@ public final class OutsideEnv {
      * TypeSig.preload will be responsible for substituting a
      * wildcard TypeDecl.<p>
      */
-    //@ ensures sig.myTypeDecl!=null
-    /*package*/ static void load(/*@non_null*/ TypeSig sig) {
+    //@ ensures sig.myTypeDecl != null;
+    /*package*/ static void load(/*@ non_null @*/ TypeSig sig) {
 	// Do nothing if sig is already loaded:
 	if (sig.isPreloaded())
 	    return;
@@ -464,7 +464,7 @@ public final class OutsideEnv {
 	    // Get the location of the package declaration in cu if
 	    // present, otherwise get a location for the entire cu:
 	    int pkgDeclLoc 
-               = (cu.pkgName!=null) ? cu.pkgName.getStartLoc()
+               = (cu.pkgName != null) ? cu.pkgName.getStartLoc()
 		 :Location.createWholeFileLoc(Location.toFile(cu.loc));
 
 	    ErrorSet.error(pkgDeclLoc, "file declared to be in package "
@@ -507,13 +507,13 @@ public final class OutsideEnv {
      * Send a CompilationUnit-loaded notification event to the current
      * Listener (if any). <p>
      *
-     * Preconditions:  justLoaded!=null, justLoaded must
+     * Preconditions:  justLoaded != null, justLoaded must
      *			already have the <code>sig</code> fields of
      *			its direct <code>TypeDecl</code>s adjusted.<p>
      */
-    //@ requires justLoaded!=null
+    //@ requires justLoaded != null;
     private static void notify(CompilationUnit justLoaded) {
-	if (listener!=null)
+	if (listener != null)
 	    listener.notify(justLoaded);
     }
 
@@ -529,9 +529,9 @@ public final class OutsideEnv {
      * calling <code>lookup</code> on a series of package-member-type
      * names.
      */
-    //@ requires args!=null;
+    //@ requires args != null;
     /*@ requires (\forall int i; (0<=i && i<args.length)
-		==> args[i]!=null) */
+		==> args[i] != null) */
     public static void main(String[] args) {
 	// Check argument usage:
 	if (args.length==0) {
@@ -553,7 +553,7 @@ public final class OutsideEnv {
      *
      * Precondition: an init method has already been called.
      */
-    private static void describeLookup(/*@non_null*/ String N) {
+    private static void describeLookup(/*@ non_null @*/ String N) {
 	// Convert N to a list of its components:
 	String[] components = javafe.filespace.StringUtil.parseList(N, '.');
 	if (components.length==0) {

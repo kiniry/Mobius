@@ -87,7 +87,7 @@ public class LocTool extends SrcTool {
     }
 
 
-    //@ requires n!=null
+    //@ requires n != null;
     public void findNodes(ASTNode n) {
 		handleNode(n);
 		for (int i=0; i<n.childCount(); i++) {
@@ -106,7 +106,7 @@ public class LocTool extends SrcTool {
 		    PrettyPrint.inst.print(System.out, 0, e);
 		    int l = e.getStartLoc();
 		    System.out.println(">> @ " + Location.toString(l));
-		    if (l!=0) javafe.util.ErrorSet.displayColumn(l);
+		    if (l != 0) javafe.util.ErrorSet.displayColumn(l);
 		    System.out.println();
 		}
     }

@@ -20,10 +20,10 @@ import java.util.zip.ZipFile;
 
 public class ZipGenericFile implements GenericFile {
 
-    //@ invariant underlyingZipFile!=null
+    //@ invariant underlyingZipFile != null;
     public ZipFile  underlyingZipFile;
 
-    //@ invariant underlyingZipEntry!=null
+    //@ invariant underlyingZipEntry != null;
     public ZipEntry underlyingZipEntry;
 
 
@@ -34,7 +34,7 @@ public class ZipGenericFile implements GenericFile {
      **************************************************/
 
     /** Create a generic file representing a ZipEntry in a ZipFile: */
-    //@ requires file!=null && entry!=null
+    //@ requires file != null && entry != null;
     public ZipGenericFile(ZipFile file, ZipEntry entry) {
 	underlyingZipFile = file;
 	underlyingZipEntry = entry;

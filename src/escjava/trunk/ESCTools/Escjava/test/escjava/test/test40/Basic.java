@@ -5,7 +5,7 @@ class Basic {
     Basic() { }		// error: x not initialized to a non-null value
 
     void doit() {
-	//@ assert x!=null	// no error
+	//@ assert x != null	// no error
 
 	x = x;			// no error
 
@@ -19,6 +19,6 @@ class Basic {
     void call() {
 	changex();
 
-	//@ assert x!=null	// no error
+	//@ assert x != null	// no error
     }
 }

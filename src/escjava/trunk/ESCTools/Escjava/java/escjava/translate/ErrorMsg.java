@@ -684,7 +684,7 @@ public final class ErrorMsg
 	}
     
 	int tag = TagConstants.checkFromString(s);
-	String msg = "Warning: " + chkToMsg( tag, strLocDecl!=null );
+	String msg = "Warning: " + chkToMsg( tag, strLocDecl != null );
 	out.println(strLocDecl + " " + locUse + ": " + msg);
     }
 

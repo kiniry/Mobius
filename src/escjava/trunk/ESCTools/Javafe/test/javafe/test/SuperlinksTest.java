@@ -71,7 +71,7 @@ public class SuperlinksTest extends javafe.SrcTool {
      ** This vector collects all the <code>TypeDecls</code> we have
      ** processed so far. 
      **/
-    //@ invariant decls!=null
+    //@ invariant decls != null;
     //@ invariant decls.elementType == \type(TypeDecl);
     //@ invariant !decls.containsNull;
     //@ invariant decls.owner == this

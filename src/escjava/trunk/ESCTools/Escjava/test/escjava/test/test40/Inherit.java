@@ -7,7 +7,7 @@ class B extends A { }
 class C extends B {
 
     void put(String y) {
-	//@ assert y!=null
+	//@ assert y != null
 
 	y = null;				// error
     }

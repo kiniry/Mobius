@@ -51,7 +51,7 @@ public interface PragmaParser
      * "//" as opposed to a Java comment that begins with "/*".
      */
 
-    //@ requires in != null
+    //@ requires in != null;
     void restart(/*@ non_null */ CorrelatedReader in, boolean eolComment);
 
 
@@ -70,7 +70,7 @@ public interface PragmaParser
      * called. 
      */
 
-    //@ requires destination != null
+    //@ requires destination != null;
     boolean getNextPragma(/*@ non_null */ Token destination);
 
 

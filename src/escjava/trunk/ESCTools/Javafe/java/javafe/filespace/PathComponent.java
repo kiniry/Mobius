@@ -34,7 +34,7 @@ public class PathComponent {
     /**
      * Create an empty filespace, containing only a root directory
      */
-    //@ ensures \result!=null
+    //@ ensures \result != null;
     public static Tree empty() {
 	return new LeafTree(
 		     new UnopenableFile("<root of the empty filesystem>",
@@ -61,8 +61,8 @@ public class PathComponent {
      * Note: changes to the filesystem named by component may or may
      * not be reflected in the returned Tree.<p>
      */
-    //@ requires component!=null
-    //@ ensures \result!=null
+    //@ requires component != null;
+    //@ ensures \result != null;
     public static Tree open(String component, boolean complain)
 				 throws IOException {
 	// Make sure component refers to an existing file:
@@ -104,7 +104,7 @@ public class PathComponent {
     /**
      * Does a filename indicate that it is in zip format? <p>
      *
-     * <esc> requires name!=null </esc>
+     * <esc> requires name != null </esc>
      */
     protected static boolean isZipFilename(String name) {
 	return name.endsWith(".zip") || name.endsWith(".jar");
@@ -176,7 +176,7 @@ public class PathComponent {
 	while (E.hasMoreElements()) {
 	    Tree node = (Tree)E.nextElement();
 	    GenericFile file = (GenericFile)node.data;	//@ nowarn Cast
-	    //@ assume file!=null
+	    //@ assume file != null;
 
 	    System.out.print(file.getHumanName() + " ");
 	    if (file.lastModified()==0L)

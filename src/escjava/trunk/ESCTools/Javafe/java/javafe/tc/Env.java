@@ -35,7 +35,7 @@ public abstract class Env {
      * This is also refered to as "are we in a static context?".  The
      * legality of super also depends on this result. <p>
      *
-     * The legality of C.this, C!=<enclosing class> is different; see 
+     * The legality of C.this, C != <enclosing class> is different; see 
      * canAccessInstance(-).
      */
     abstract public boolean isStaticContext();
@@ -72,7 +72,7 @@ public abstract class Env {
      * avoided unless an unknown environment needs to be coerced in
      * this way. <p>
      */
-    //@ ensures \result!=null
+    //@ ensures \result != null;
     //@ ensures (this instanceof EnvForCU) == (\result instanceof EnvForCU)
     abstract public Env asStaticContext();
 
@@ -91,12 +91,12 @@ public abstract class Env {
      * This routine does not check that the resulting type (if any)
      * is actually accessible, if caller is null. <p>
      *
-     * If id is ambiguous, then if loc!=Location.NULL then a fatal
+     * If id is ambiguous, then if loc != Location.NULL then a fatal
      * error is reported at that location via ErrorSet else one of
      * its possible meanings is returned.<p>
      */
     abstract public TypeSig lookupSimpleTypeName(
-				TypeSig caller, /*@non_null*/ Identifier id,
+				TypeSig caller, /*@ non_null @*/ Identifier id,
 						 int loc);
 
 
@@ -130,8 +130,8 @@ public abstract class Env {
                 || (\result instanceof TypeSig) */
     /*@ ensures \result instanceof GenericVarDecl ==>
                        ((GenericVarDecl)\result).id == id */
-    //@ ensures (this instanceof EnvForCU) ==> \result==null
-    abstract public ASTNode locateFieldOrLocal(/*@non_null*/ Identifier id);
+    //@ ensures (this instanceof EnvForCU) ==> \result==null;
+    abstract public ASTNode locateFieldOrLocal(/*@ non_null @*/ Identifier id);
 
     public boolean isDuplicate(/*@ non_null */ Identifier id) {
 	return locateFieldOrLocal(id) instanceof GenericVarDecl;
@@ -151,8 +151,8 @@ public abstract class Env {
      * This routine does not check that a resulting method
      * is actually accessible. <p>
      */
-    //@ ensures (this instanceof EnvForCU) ==> \result==null
-    abstract public TypeSig locateMethod(/*@non_null*/ Identifier id);
+    //@ ensures (this instanceof EnvForCU) ==> \result==null;
+    abstract public TypeSig locateMethod(/*@ non_null @*/ Identifier id);
 
 
     /***************************************************
@@ -208,9 +208,9 @@ public abstract class Env {
      */
     //@ modifies prefixSize;
     //@ ensures \result==null ==> 0==prefixSize
-    //@ ensures \result!=null ==> 0<prefixSize && prefixSize <= n.length
+    //@ ensures \result != null ==> 0<prefixSize && prefixSize <= n.length
     public TypeSig findTypeNamePrefix(TypeSig caller,
-				      /*@non_null*/ Name n,
+				      /*@ non_null @*/ Name n,
 				      boolean ignoreFields) {
 	// Check for an unqualified name first:
 	TypeSig sig = lookupSimpleTypeName(caller,n.identifierAt(0),
@@ -222,7 +222,7 @@ public abstract class Env {
 		// Lookup n[0]..n[prefixSize-2] . n[prefixSize-1]:
 		sig = OutsideEnv.lookup(n.prefix(prefixSize-1).toStrings(),
 				n.identifierAt(prefixSize-1).toString());
-		if (sig!=null)
+		if (sig != null)
 		    break;      // Stop at smallest qualified name
 	    }
 	    if (prefixSize>n.size()) {
@@ -269,9 +269,9 @@ public abstract class Env {
      * This routine does not check that the resulting type (if any)
      * is actually accessible, unless caller is not null. <p>
      */
-    public TypeSig lookupTypeName(TypeSig caller, /*@non_null*/ Name n) {
+    public TypeSig lookupTypeName(TypeSig caller, /*@ non_null @*/ Name n) {
 	TypeSig sig = findTypeNamePrefix(caller, n, true);
-	if (prefixSize!=n.size())
+	if (prefixSize != n.size())
 	    return null;
 
 	return sig;
@@ -281,9 +281,9 @@ public abstract class Env {
     /**
      * This processes the annotations on a type name
      */
-    //@ ensures \result!=null
-    public TypeSig processTypeNameAnnotations(/*@non_null*/ TypeName n, 
-					      /*@non_null*/ TypeSig sig) {
+    //@ ensures \result != null;
+    public TypeSig processTypeNameAnnotations(/*@ non_null @*/ TypeName n, 
+					      /*@ non_null @*/ TypeSig sig) {
       	return PrepTypeDeclaration.inst.processTypeNameAnnotations(n,sig,this);
     }
     
@@ -300,12 +300,12 @@ public abstract class Env {
      * This routine does not check that the resulting type (if any)
      * is actually accessible, unless caller is not null. <p>
      */
-    //@ ensures \result!=null
-    public TypeSig resolveTypeName(TypeSig caller, /*@non_null*/ TypeName tn) {
+    //@ ensures \result != null;
+    public TypeSig resolveTypeName(TypeSig caller, /*@ non_null @*/ TypeName tn) {
 	Name n = tn.name;
 
 	TypeSig sig = TypeSig.getRawSig(tn);  // FIXME - use caller ?
-	if (sig!=null)
+	if (sig != null)
 	    return sig;
 
 	sig = lookupTypeName(caller, n);
@@ -323,7 +323,7 @@ public abstract class Env {
     /**
      * decoration holding the type environment in which a type is resolved.
      */
-    //@ invariant typeEnv!=null
+    //@ invariant typeEnv != null;
     //@ invariant typeEnv.decorationType == \type(Env)
     static public ASTDecoration typeEnv = 
 	new ASTDecoration("environment");
@@ -336,7 +336,7 @@ public abstract class Env {
      * This routine does not check that (immediate) types (if any)
      * are actually accessible, if caller is null. <p>
      */
-    public void resolveType(TypeSig caller, /*@non_null*/ Type t) {
+    public void resolveType(TypeSig caller, /*@ non_null @*/ Type t) {
       	typeEnv.set(t,this);
 	switch(t.getTag()) {
 	  case TagConstants.ARRAYTYPE:
@@ -379,7 +379,7 @@ public abstract class Env {
      * we don't know if it is an instance field or not.)
      */
     //@ ensures !(\result instanceof AmbiguousVariableAccess)
-    public Expr disambiguateExprName(/*@non_null*/ Name n) {
+    public Expr disambiguateExprName(/*@ non_null @*/ Name n) {
 	/*
 	 * Find the smallest prefix of n, n[0]..n[prefix-1], such that
 	 * it denotes an Expr, call it left:
@@ -512,7 +512,7 @@ public abstract class Env {
      * we don't know if it is an instance method or not.)
      */
     public MethodInvocation disambiguateMethodName(
-				/*@non_null*/ AmbiguousMethodInvocation inv) {
+				/*@ non_null @*/ AmbiguousMethodInvocation inv) {
 	ObjectDesignator where;     // Where the method comes from
 	
 	Name n = inv.name;
@@ -537,7 +537,7 @@ public abstract class Env {
 	     */
 	    Name butRight = n.prefix(size-1);
 	    Expr e = disambiguateExprName(butRight);
-	    if (e!=null)
+	    if (e != null)
 		where = ExprObjectDesignator.make(n.locDotAfter(size-2), e);
 	    else {
 		/*
@@ -593,13 +593,13 @@ public abstract class Env {
      * If C is getEnclosingClass(), then this is equivalent to
      * isStaticContext().
      */
-    public boolean canAccessInstance(/*@non_null*/ TypeSig C) {
+    public boolean canAccessInstance(/*@ non_null @*/ TypeSig C) {
 	/*
 	 * C's instance variables are accessible iff C is one of our
 	 * current or enclosing instances:
 	 */
 	for (TypeSig instance = getInnermostInstance();
-	     instance!=null;
+	     instance != null;
 	     instance = instance.getEnv(true).getEnclosingInstance()) {
 	    if (instance==C)
 		return true;
@@ -619,14 +619,14 @@ public abstract class Env {
      *
      * Note: The returned instance may have be of a subtype of T.<p>
      */
-    //@ requires loc!=Location.NULL
-    public Expr lookupEnclosingInstance(/*@non_null*/ TypeSig T,
+    //@ requires loc != Location.NULL
+    public Expr lookupEnclosingInstance(/*@ non_null @*/ TypeSig T,
 					int loc) {
 	TypeSig instance;
 
 	// Find innermost satisfactory instance if it exists:
 	for (instance = getInnermostInstance();
-	     instance!=null;
+	     instance != null;
 	     instance = instance.getEnv(true).getEnclosingInstance()) {
 	    if (instance.isSubtypeOf(T))
 		break;
@@ -663,8 +663,8 @@ public abstract class Env {
      * decl has been constructed.<p>
      */
     //@ requires (decl instanceof FieldDecl) ==> ((FieldDecl)decl).hasParent
-    //@ ensures \result!=null
-    public static TypeSig whereDeclared(/*@non_null*/ GenericVarDecl decl) {
+    //@ ensures \result != null;
+    public static TypeSig whereDeclared(/*@ non_null @*/ GenericVarDecl decl) {
 	TypeSig result;
 
 	if (decl instanceof FieldDecl) {
@@ -693,14 +693,12 @@ public abstract class Env {
      * The "C." part is omitted if C is the type of this (e.g.,
      * getEnclosingClass()).
      */
-    //@ requires loc!=Location.NULL
-    //@ ensures \result!=null
-    public final ThisExpr getInferredThisExpr(/*@non_null*/ TypeSig C,
+    //@ requires loc != Location.NULL
+    //@ ensures \result != null;
+    public final ThisExpr getInferredThisExpr(/*@ non_null @*/ TypeSig C,
 					      int loc) {
 	ThisExpr newThis = ThisExpr.make((C == getEnclosingClass())
-					    ? null
-					    : C,
-					 loc);
+                                         ? null : C, loc);
 	newThis.inferred = true;
 
 	return newThis;
@@ -720,9 +718,9 @@ public abstract class Env {
      *
      * loc is used as the location for the this. and C. parts.
      */
-    //@ requires loc!=Location.NULL
-    //@ ensures \result!=null
-    public final ObjectDesignator getObjectDesignator(/*@non_null*/ TypeSig C,
+    //@ requires loc != Location.NULL
+    //@ ensures \result != null;
+    public final ObjectDesignator getObjectDesignator(/*@ non_null @*/ TypeSig C,
 						      int loc) {
 	if (!canAccessInstance(C))
 	    return TypeObjectDesignator.make(loc, C);

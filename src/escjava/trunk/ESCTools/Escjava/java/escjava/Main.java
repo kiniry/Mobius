@@ -466,7 +466,7 @@ public class Main extends javafe.SrcTool
         }
 
         // ==== all done; clean up ====
-        if (prover!=null)
+        if (prover != null)
             prover.sendCommand("(BG_POP)");
         
         return false;
@@ -900,7 +900,7 @@ public class Main extends javafe.SrcTool
          * Verify predictedSynTargs if present that
          * synTargs is a subset of predictedSynTargs.
          */
-        if (predictedSynTargs!=null) {
+        if (predictedSynTargs != null) {
             Enumeration e = synTargs.elements();
             while (e.hasMoreElements()) {
                 GenericVarDecl target = (GenericVarDecl)(e.nextElement());

@@ -80,10 +80,10 @@ public class ParseType extends ParseUtil
      */
     //@ invariant nameIdLocs.length >= 10;
     //@ invariant nameIdLocs.owner == this;
-    private /*@non_null*/ int nameIdLocs[]  = new int[10];
+    private /*@ non_null @*/ int nameIdLocs[]  = new int[10];
     //@ invariant nameDotLocs.length == nameIdLocs.length;
     //@ invariant nameDotLocs.owner == this;
-    private /*@non_null*/ int nameDotLocs[] = new int[nameIdLocs.length];
+    private /*@ non_null @*/ int nameDotLocs[] = new int[nameIdLocs.length];
 
     /**
      * Parse a {@link Name}.

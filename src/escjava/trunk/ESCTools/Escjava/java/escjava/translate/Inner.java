@@ -43,7 +43,7 @@ public class Inner {
     public static FieldDecl getEnclosingInstanceField(TypeSig T) {
 	// Memorize our result:
 	FieldDecl result = (FieldDecl)enclosingInstanceDecoration.get(T);
-	if (result!=null)
+	if (result != null)
 	    return result;
 
 	Assert.notFalse(!T.isTopLevelType(), T.toString());
@@ -100,7 +100,7 @@ public class Inner {
 	// Memorize our result:
 	FormalParaDecl result =
 	    (FormalParaDecl)enclosingInstanceArgument.get(cd);
-	if (result!=null)
+	if (result != null)
 	    return result;
 
 	TypeSig T = TypeSig.getSig(cd.parent);
@@ -150,19 +150,19 @@ public class Inner {
      ** Exception: If firstThis0 is non-null, then it is used instead
      ** of this.this$0 at the start.<p>
      **/
-    //@ requires t.classPrefix!=null;
+    //@ requires t.classPrefix != null;
     static Expr unfoldThis(/*@non_null*/ ThisExpr t) {
 	TypeSig target = javafe.tc.Types.toClassTypeSig(t.classPrefix);
 
 	Expr result = ThisExpr.make(null, t.loc);
 	TypeSig thisType = (TypeSig)GC.thisvar.decl.type;
 
-	for (int level=0; thisType!=target; level++) {
+	for (int level=0; thisType != target; level++) {
 	    /*
 	     * add a .this$0 to result, using firstThis0 the first
 	     * time if non-null:
 	     */
-	    if (level==0 && firstThis0!=null)
+	    if (level==0 && firstThis0 != null)
 		result = TrAnExpr.makeVarAccess(firstThis0, t.loc);
 	    else {
 		FieldDecl thisDollar = getEnclosingInstanceField(thisType);

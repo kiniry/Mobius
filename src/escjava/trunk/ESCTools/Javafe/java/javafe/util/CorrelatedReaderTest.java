@@ -85,7 +85,7 @@ public class CorrelatedReaderTest
 	  int toRead = random.nextInt() & MASKSUBREADER;
 	  int read;
 	
-	  for(read=1; read<toRead && (c=cin.read())!=-1; read++) 
+	  for(read=1; read<toRead && (c=cin.read()) != -1; read++) 
 	    sb.append( (char)c );
 	
 

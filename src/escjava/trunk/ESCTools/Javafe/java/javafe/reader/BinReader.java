@@ -92,7 +92,7 @@ public class BinReader extends Reader
 
     //@ requires \nonnullelements(args)
     public static void main(String[] args) {
-	if (args.length!=1) {
+	if (args.length != 1) {
 	    System.err.println("BinReader: <source filename>");
 	    System.exit(1);
 	}
@@ -101,7 +101,7 @@ public class BinReader extends Reader
 	BinReader reader = new BinReader();
 
 	CompilationUnit cu = reader.read(target, false);
-	if (cu!=null)
+	if (cu != null)
 	    PrettyPrint.inst.print( System.out, cu );
     }
 }

@@ -179,7 +179,7 @@ public class VarMap
         // The following should be ok, but code currently crashes because this
         // precondition is not respected:
         //
-        //  Assert.notFalse(loc!=Location.NULL);	!!!!
+        //  Assert.notFalse(loc != Location.NULL);	!!!!
 
         Hashtable vars = new Hashtable();
         boolean nonBottom = false;

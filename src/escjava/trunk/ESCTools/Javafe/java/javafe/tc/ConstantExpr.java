@@ -11,7 +11,7 @@ public class ConstantExpr {
 
   // ----------------------------------------------------------------------
 
-  //@ requires t!=null
+  //@ requires t != null;
   public static boolean constantValueFitsIn( Object val, PrimitiveType t ) {
     if( val instanceof Integer || val instanceof Long ) {
       long l = getLongConstant( val );
@@ -57,7 +57,7 @@ public class ConstantExpr {
    * These will have been widened to int appropriately...
    */
 
-  //@ requires e!=null
+  //@ requires e != null;
   public static Object eval(Expr e) {
 
     Type t = FlowInsensitiveChecks.getType( e );
@@ -312,7 +312,7 @@ public class ConstantExpr {
     case TagConstants.GT:      return new Boolean(x>y);  
     case TagConstants.GE:      return new Boolean(x>=y); 
     case TagConstants.EQ:      return new Boolean(x==y); 
-    case TagConstants.NE:      return new Boolean(x!=y); 
+    case TagConstants.NE:      return new Boolean(x != y); 
     case TagConstants.BITAND:  return new Integer(x&y); 
     case TagConstants.BITOR:   return new Integer(x|y); 
     case TagConstants.BITXOR:  return new Integer(x^y); 
@@ -343,7 +343,7 @@ public class ConstantExpr {
     case TagConstants.GT:      return new Boolean(x>y);  
     case TagConstants.GE:      return new Boolean(x>=y); 
     case TagConstants.EQ:      return new Boolean(x==y); 
-    case TagConstants.NE:      return new Boolean(x!=y); 
+    case TagConstants.NE:      return new Boolean(x != y); 
     case TagConstants.BITAND:  return new Long(x&y); 
     case TagConstants.BITOR:   return new Long(x|y); 
     case TagConstants.BITXOR:  return new Long(x^y); 
@@ -369,7 +369,7 @@ public class ConstantExpr {
     default:
       return null;
     case TagConstants.EQ:      return new Boolean(x==y); 
-    case TagConstants.NE:      return new Boolean(x!=y); 
+    case TagConstants.NE:      return new Boolean(x != y); 
     case TagConstants.BITAND:  return new Boolean(x&y); 
     case TagConstants.BITOR:   return new Boolean(x|y); 
     case TagConstants.BITXOR:  return new Boolean(x^y); 
@@ -393,7 +393,7 @@ public class ConstantExpr {
     case TagConstants.DIV: return new Float(x/y); 
     case TagConstants.MOD: return new Float(x%y); 
     case TagConstants.EQ:  return new Boolean(x==y); 
-    case TagConstants.NE:  return new Boolean(x!=y); 
+    case TagConstants.NE:  return new Boolean(x != y); 
     case TagConstants.LT:  return new Boolean(x<y);  
     case TagConstants.LE:  return new Boolean(x<=y); 
     case TagConstants.GT:  return new Boolean(x>y);  
@@ -416,7 +416,7 @@ public class ConstantExpr {
     case TagConstants.DIV: return new Double(x/y); 
     case TagConstants.MOD: return new Double(x%y); 
     case TagConstants.EQ:  return new Boolean(x==y); 
-    case TagConstants.NE:  return new Boolean(x!=y); 
+    case TagConstants.NE:  return new Boolean(x != y); 
     case TagConstants.LT:  return new Boolean(x<y);  
     case TagConstants.LE:  return new Boolean(x<=y); 
     case TagConstants.GT:  return new Boolean(x>y);  

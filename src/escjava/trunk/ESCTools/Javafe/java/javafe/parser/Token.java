@@ -143,7 +143,7 @@ public class Token
      * Copy all the fields of <code>this</code> into
      * <code>dst</code>.  For convenience, returns <code>dst</code>.
      */
-    public final Token copyInto(/*@non_null*/ Token dst) {
+    public final Token copyInto(/*@ non_null @*/ Token dst) {
 	dst.ttype = ttype;
 	dst.startingLoc = startingLoc;
 	dst.endingLoc = endingLoc;

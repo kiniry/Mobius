@@ -232,7 +232,7 @@ public class Lex extends Token
      occasionally need to resize <TT>text</TT>, so the same array might
      not be used throughout the lifetime of the lexer.  */
 
-    //@ invariant text != null
+    //@ invariant text != null;
     //@ invariant text.length > 4
     protected char[] text = new char[64]; // Invariant: text.length > 4
     // 64 should be large enough that overflows won't happen for most inputs
@@ -268,7 +268,7 @@ public class Lex extends Token
 
     public /*@ non_null @*/ LexicalPragmaVec lexicalPragmas;
 
-    //@ invariant inPragma ==> pragmaParser != null
+    //@ invariant inPragma ==> pragmaParser != null;
     protected PragmaParser pragmaParser;
     protected boolean inPragma;
 
@@ -292,7 +292,7 @@ public class Lex extends Token
      * the <code>TagConstants</code> class. 
      */
 
-    //@ ensures m_in==null
+    //@ ensures m_in==null;
     public Lex(PragmaParser pragmaParser, boolean isJava) {
 	this.pragmaParser = pragmaParser;
 	lexicalPragmas = LexicalPragmaVec.make();
@@ -321,8 +321,8 @@ public class Lex extends Token
      the internal, private state of the resulting scanner and should
      not be used by other parts of the program. */
     //@ modifies m_in
-    //@ ensures m_in != null
-    public int restart(/*@non_null*/ CorrelatedReader in) {
+    //@ ensures m_in != null;
+    public int restart(/*@ non_null @*/ CorrelatedReader in) {
 	close();
 	try {
 	    m_in = in;
@@ -344,7 +344,7 @@ public class Lex extends Token
      converted into a <code>javafe.util.FatalError</code> runtime
      exception.) */
     //@ modifies m_in
-    //@ ensures m_in==null
+    //@ ensures m_in==null;
     public void close() {
         if (m_in != null) {
 	    m_in.close();
@@ -372,7 +372,7 @@ public class Lex extends Token
      <code>startingLoc</code> and <code>endingLoc</code> fields of
      <code>this</code> are not accurate for the end-of-file token. */
 
-    //@ requires m_in != null
+    //@ requires m_in != null;
     //@ modifies ttype, auxVal, identifierVal
     public int getNextToken() {
         if (lookaheadq.notempty) {
@@ -407,7 +407,7 @@ public class Lex extends Token
      token stream, <code>TagConstants.EOF</code> is returned. */
 
     //@ requires k>=0
-    //@ requires m_in != null
+    //@ requires m_in != null;
     public int lookahead(int k) {
         if (k == 0) return ttype;
         int lookahead_count = lookaheadq.size();
@@ -442,7 +442,7 @@ public class Lex extends Token
         }
         return lookaheadq.elementAt(k-1).ttype;
     }
-    //@ invariant savedState != null
+    //@ invariant savedState != null;
     protected Token savedState = new Token();
 
     public Token lookaheadToken(int k) {
@@ -456,7 +456,7 @@ public class Lex extends Token
      them.  (If this lexer has no <code>PragmaParser</code>, then an
      empty vector is returned.) */
 
-    //@ ensures \result != null
+    //@ ensures \result != null;
     public LexicalPragmaVec getLexicalPragmas() {
         return lexicalPragmas.copy();
     }
@@ -589,7 +589,7 @@ public class Lex extends Token
     /** Handle a comment.  m_in points to the character just after the
      "//" or "/*".  The mark is set at the last character read.  */
 
-    //@ requires m_in != null
+    //@ requires m_in != null;
     //@ requires !inPragma
     //@ modifies inPragma
     private void scanComment(int commentKind) {
@@ -671,7 +671,7 @@ public class Lex extends Token
 
     /** Scan a character or string constant. */
 
-    //@ requires m_in != null
+    //@ requires m_in != null;
     private int scanCharOrString(int nextchr) {
         try {
             int endquote = nextchr;
@@ -777,7 +777,7 @@ public class Lex extends Token
      advanced to what appears to be the end of the erroneous token, and
      a legal literal is left in <code>text</code>. */
 
-    //@ requires m_in != null
+    //@ requires m_in != null;
     //@ modifies ttype, auxVal
     //@ ensures \result==ttype
     /*@ ensures \result==TagConstants.INTLIT || \result==TagConstants.LONGLIT ||
@@ -926,7 +926,7 @@ public class Lex extends Token
      <code>Double</code>.  If an error is encountered, a message is
      sent to <code>ErorrSet</code> and recovery is performed. */
 
-    //@ requires m_in != null
+    //@ requires m_in != null;
     //@ requires textlen>0
     //@ modifies ttype, auxVal
     //@ ensures \result==ttype
@@ -1027,7 +1027,7 @@ public class Lex extends Token
      <code>m_in</code> is where it was on entry.
      */
 
-    //@ requires m_in != null
+    //@ requires m_in != null;
     //@ modifies ttype, auxVal, m_nextchr;
     //@ modifies m_in.marked;
     //@ ensures \result==ttype
@@ -1115,7 +1115,7 @@ public class Lex extends Token
      holding the character just after the token scanned and <code>m_in</code>
      pointing to the character after that.
      */
-    //@ requires m_in != null
+    //@ requires m_in != null;
     //@ requires textlen == 0;
     //@ modifies ttype, auxVal, m_nextchr;
     //@ modifies m_in.marked;
@@ -1130,7 +1130,7 @@ public class Lex extends Token
     // Having this separate from text allows us to accumulate both the
     // original input in text and the escape-converted input in stringLit
 
-    //@ invariant stringLit != null
+    //@ invariant stringLit != null;
     //@ invariant stringLit.length>=64
     private char[] stringLit = new char[64];
 
@@ -1152,7 +1152,7 @@ public class Lex extends Token
 
     //// The keyword and punctuation tables, plus methods for changing them
 
-    //@ invariant punctuationTable != null
+    //@ invariant punctuationTable != null;
     private PunctuationPrefixTree punctuationTable = new PunctuationPrefixTree();
 
     /**
@@ -1198,7 +1198,7 @@ public class Lex extends Token
      * Add a keyword to a <code>Lex</code> object with the given code.
      * Requires that <code>newkeyword</code> is a Java identifier and
      * that <code>code</code> is not <code>TagConstants.NULL</code> or
-     * a tokenType that requires auxVal to be non-null
+     * a tokenType that requires auxVal to be non-null;
      * (cf. Token.auxVal).
      *
      * Also requires that the keyword hasn't already been added.
@@ -1215,7 +1215,7 @@ public class Lex extends Token
     //@ requires code != TagConstants.STMTPRAGMA
     //@ requires code != TagConstants.TYPEDECLELEMPRAGMA
     //@ requires code != TagConstants.TYPEMODIFIERPRAGMA
-    public void addKeyword(/*@non_null*/ String newkeyword, int code) {
+    public void addKeyword(/*@ non_null @*/ String newkeyword, int code) {
 	Assert.precondition(code != TagConstants.NULL);
 	if (keywords == null) {
 	    keywords = new Hashtable();
@@ -1248,7 +1248,7 @@ public class Lex extends Token
      inclusive.  Also requires that the code is not
      <code>TagConstants.NULL</code> and that the punctuation string
      hasn't already been added. */
-    //@ requires punctuation != null
+    //@ requires punctuation != null;
     //@ requires code != TagConstants.NULL
     //@ requires code != TagConstants.IDENT
     //@ requires code != TagConstants.BOOLEANLIT
@@ -1314,7 +1314,7 @@ class PunctuationPrefixTree {
      code != TagConstants.TYPEMODIFIERPRAGMA */
     public int code = TagConstants.NULL; // ! NULL ==> a punctuation string
 
-    //@ invariant children != null
+    //@ invariant children != null;
     //@ invariant children.length == CHILDLEN
     //@ invariant \typeof(children) == \type(PunctuationPrefixTree[])
     public PunctuationPrefixTree[] children

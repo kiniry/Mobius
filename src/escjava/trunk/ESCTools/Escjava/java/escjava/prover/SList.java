@@ -79,7 +79,7 @@ public abstract class SList extends SExp {
     /**
      ** Return a S-expression representing the empty list.
      **/
-    //@ ensures \result!=null
+    //@ ensures \result != null
     public static SList make() {
 	return SNil.getNil();
     }
@@ -93,8 +93,8 @@ public abstract class SList extends SExp {
      ** <code>SExp.fancyMake</code>.<p>
      **
      **/
-    //@ requires a1!=null
-    //@ ensures \result!=null
+    //@ requires a1 != null
+    //@ ensures \result != null
     public static SList make(Object a1) {
 	return new SPair(SExp.fancyMake(a1), SNil.make());
     }
@@ -108,8 +108,8 @@ public abstract class SList extends SExp {
      ** <code>SExp.fancyMake</code>.<p>
      **
      **/
-    //@ requires a1!=null && a2!=null
-    //@ ensures \result!=null
+    //@ requires a1 != null && a2!=null
+    //@ ensures \result != null
     public static SList make(Object a1, Object a2) {
 	return new SPair(SExp.fancyMake(a1), make(a2));
     }
@@ -123,8 +123,8 @@ public abstract class SList extends SExp {
      ** <code>SExp.fancyMake</code>.<p>
      **
      **/
-    //@ requires a1!=null && a2!=null && a3!=null
-    //@ ensures \result!=null
+    //@ requires a1 != null && a2!=null && a3!=null
+    //@ ensures \result != null
     public static SList make(Object a1, Object a2, Object a3) {
 	return new SPair(SExp.fancyMake(a1), make(a2,a3));
     }
@@ -138,8 +138,8 @@ public abstract class SList extends SExp {
      ** <code>SExp.fancyMake</code>.<p>
      **
      **/
-    //@ requires a1!=null && a2!=null && a3!=null && a4!=null
-    //@ ensures \result!=null
+    //@ requires a1 != null && a2!=null && a3!=null && a4!=null
+    //@ ensures \result != null
     public static SList make(Object a1, Object a2, Object a3, Object a4) {
 	return new SPair(SExp.fancyMake(a1), make(a2,a3,a4));
     }
@@ -153,9 +153,9 @@ public abstract class SList extends SExp {
      ** <code>SExp.fancyMake</code>.<p>
      **
      **/
-    //@ requires a1!=null && a2!=null && a3!=null && a4!=null
-    //@ requires a5!=null
-    //@ ensures \result!=null
+    //@ requires a1 != null && a2!=null && a3!=null && a4!=null
+    //@ requires a5 != null
+    //@ ensures \result != null
     public static SList make(Object a1, Object a2, Object a3, Object a4,
 			     Object a5) {
 	return new SPair(SExp.fancyMake(a1), make(a2,a3,a4,a5));
@@ -170,9 +170,9 @@ public abstract class SList extends SExp {
      ** <code>SExp.fancyMake</code>.<p>
      **
      **/
-    //@ requires a1!=null && a2!=null && a3!=null && a4!=null
-    //@ requires a5!=null && a6!=null
-    //@ ensures \result!=null
+    //@ requires a1 != null && a2!=null && a3!=null && a4!=null
+    //@ requires a5 != null && a6!=null
+    //@ ensures \result != null
     public static SList make(Object a1, Object a2, Object a3, Object a4,
 			     Object a5, Object a6) {
 	return new SPair(SExp.fancyMake(a1), make(a2,a3,a4,a5,a6));
@@ -187,9 +187,9 @@ public abstract class SList extends SExp {
      ** <code>SExp.fancyMake</code>.<p>
      **
      **/
-    //@ requires a1!=null && a2!=null && a3!=null && a4!=null
-    //@ requires a5!=null && a6!=null && a7!=null
-    //@ ensures \result!=null
+    //@ requires a1 != null && a2!=null && a3!=null && a4!=null
+    //@ requires a5 != null && a6!=null && a7!=null
+    //@ ensures \result != null
     public static SList make(Object a1, Object a2, Object a3, Object a4,
 			     Object a5, Object a6, Object a7) {
 	return new SPair(SExp.fancyMake(a1), make(a2,a3,a4,a5,a6,a7));
@@ -204,9 +204,9 @@ public abstract class SList extends SExp {
      ** <code>SExp.fancyMake</code>.<p>
      **
      **/
-    //@ requires a1!=null && a2!=null && a3!=null && a4!=null
-    //@ requires a5!=null && a6!=null && a7!=null && a8!=null
-    //@ ensures \result!=null
+    //@ requires a1 != null && a2!=null && a3!=null && a4!=null
+    //@ requires a5 != null && a6!=null && a7!=null && a8!=null
+    //@ ensures \result != null
     public static SList make(Object a1, Object a2, Object a3, Object a4,
 			     Object a5, Object a6, Object a7, Object a8) {
 	return new SPair(SExp.fancyMake(a1), make(a2,a3,a4,a5,a6,a7,a8));
@@ -220,7 +220,7 @@ public abstract class SList extends SExp {
      ** Precondition: <code>a</code> and its elements are non-null.<p>
      **/
     //@ requires \nonnullelements(a)
-    //@ ensures \result!=null
+    //@ ensures \result != null
     public static SList fromArray(SExp[] a) {
 	SList l = make();
 
@@ -275,7 +275,7 @@ public abstract class SList extends SExp {
      ** If we represent a non-empty list, return it as a
      ** <code>SPair</code>; otherwise, throw <code>SExpTypeError</code>.
      **/
-    //@ ensures \result!=null
+    //@ ensures \result != null
     /*package*/ SPair getPair() throws SExpTypeError {
 	throw new SExpTypeError();
     }
@@ -289,7 +289,7 @@ public abstract class SList extends SExp {
      ** Precondition: <code>i</code> >= 0<p>
      **/
     //@ requires i>=0
-    //@ ensures \result!=null
+    //@ ensures \result != null
     public SExp at(int i) throws SExpTypeError {
 	SPair ptr = getPair();
 
@@ -325,8 +325,8 @@ public abstract class SList extends SExp {
      ** Return the functional result of appending another list to
      ** us. <p>
      **/
-    //@ requires x!=null
-    //@ ensures \result!=null
+    //@ requires x != null
+    //@ ensures \result != null
     public SList append(SList x) {
 	if (this instanceof SNil)
 	    return x;
@@ -358,8 +358,8 @@ public abstract class SList extends SExp {
      **
      ** Precondition: <code>x</code> is non-null.<p>
      **/
-    //@ requires x!=null
-    //@ ensures \result!=null
+    //@ requires x != null
+    //@ ensures \result != null
     public SList addFront(SExp x) {
 	return new SPair(x, this);
     }
@@ -372,8 +372,8 @@ public abstract class SList extends SExp {
      **
      ** This function is likely to be slower than <code>addFront</code>.<p>
      **/
-    //@ requires x!=null
-    //@ ensures \result!=null
+    //@ requires x != null
+    //@ ensures \result != null
     public SList addEnd(SExp x) {
 	return append(make(x));	
     }

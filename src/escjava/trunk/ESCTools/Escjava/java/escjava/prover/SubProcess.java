@@ -474,7 +474,7 @@ public class SubProcess
      * version.
      */
     //@ requires P != null;
-    //@ ensures \result!=null
+    //@ ensures \result != null
     public SExp readSExp() {
 	eatWhitespace();
 	if (peekChar() == '(')
@@ -548,7 +548,7 @@ public class SubProcess
      */
     //@ requires P != null;
     //@ requires stop != ' ' && stop != '\t' && stop != '\n';
-    //@ ensures \result!=null
+    //@ ensures \result != null
     public SList readSExps(char stop) {
 	SList l = SList.make();
 

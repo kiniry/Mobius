@@ -107,25 +107,25 @@ class DeclLinkVisitor extends DefaultVisitor {
 
   public void visitVariableAccess(VariableAccess x) {
       super.visitVariableAccess(x);
-      //@ assume x.decl != null
+      //@ assume x.decl != null;
       report(x.loc, x.decl.locId);
   }
 
   public void visitFieldAccess(FieldAccess x) {
       super.visitFieldAccess(x);
-      //@ assume x.decl != null
+      //@ assume x.decl != null;
       report(x.locId, x.decl.locId);
   }
 
   public void visitConstructorInvocation(ConstructorInvocation x) {
       super.visitConstructorInvocation(x);
-      //@ assume x.decl != null
+      //@ assume x.decl != null;
       report(x.locKeyword, x.decl.locId);
   }
 
   public void visitNewInstanceExpr(NewInstanceExpr x) {
       super.visitNewInstanceExpr(x);
-      //@ assume x.decl != null
+      //@ assume x.decl != null;
       report(x.loc, x.decl.locId);
   }
 
@@ -163,13 +163,13 @@ class DeclLinkVisitor extends DefaultVisitor {
 
   public void visitMethodInvocation(MethodInvocation x) {
       super.visitMethodInvocation(x);
-      //@ assume x.decl != null
+      //@ assume x.decl != null;
       report(x.locId, x.decl.locId);
   }
 
   public void visitTypeName(TypeName x) {
       super.visitTypeName(x);
-      //@ assume x.name != null
+      //@ assume x.name != null;
       report(x.name.locIdAt(x.name.size()-1),
 	     TypeSig.getSig(x).getTypeDecl().locId);
   }

@@ -60,7 +60,7 @@ public final class System {
 
     public static String getProperty(/*@non_null*/ String key);
 
-    //@ ensures def!=null ==> \result!=null;
+    //@ ensures def != null ==> \result!=null;
     public static String getProperty(/*@non_null*/ String key, String def);
     
     public static String setProperty(/*@non_null*/ String key,

@@ -28,7 +28,7 @@ class MethodSignature
    * Construct a new method signature with an empty sequence of parameter
    * types and a void return type.
    */
-  //@ requires classLocation!=Location.NULL
+  //@ requires classLocation != Location.NULL
   MethodSignature(int classLocation)
   {
     this.parameters = new Vector();
@@ -55,7 +55,7 @@ class MethodSignature
    * @return       the parameter type at index index
    */
   //@ requires 0<=index && index<parameters.elementCount
-  //@ ensures \result!=null
+  //@ ensures \result != null;
   //@ ensures \result.syntax
   Type parameterAt(int index)
   {
@@ -66,7 +66,7 @@ class MethodSignature
    * Append a parameter type to this method signature.
    * @param type  the parameter type to append
    */
-  //@ requires parameter!=null
+  //@ requires parameter != null;
   //@ requires parameter.syntax
   void appendParameter(Type parameter)
   {
@@ -77,7 +77,7 @@ class MethodSignature
    * Return the return type of this method signature.
    * @return  the return type
    */
-  //@ ensures \result!=null
+  //@ ensures \result != null;
   //@ ensures \result.syntax
   Type getReturn()
   {
@@ -88,7 +88,7 @@ class MethodSignature
    * Change the return type of this method signature.
    * @param return_  the new return type
    */
-  //@ requires return_!=null
+  //@ requires return_ != null;
   //@ requires return_.syntax
   void setReturn(Type return_)
   {
@@ -101,7 +101,7 @@ class MethodSignature
    * The parameter types of this method signature.
    * Initialized by constructor.
    */
-  //@ invariant parameters!=null
+  //@ invariant parameters != null;
   //@ invariant parameters.elementType == \type(Type)
   //@ invariant !parameters.containsNull
   // Unenforceable invariant: contents are syntax
@@ -111,7 +111,7 @@ class MethodSignature
    * The return type of this method signature.
    * Initialized by constructor.
    */
-  //@ invariant return_!=null
+  //@ invariant return_ != null;
   //@ invariant return_.syntax
   private Type return_;
 
@@ -120,7 +120,7 @@ class MethodSignature
   /**
    * The primitive void type.
    */
-  //@ invariant voidType!=null
+  //@ invariant voidType != null;
   private static final Type voidType =
     PrimitiveType.makeNonSyntax(TagConstants.VOIDTYPE);
 }

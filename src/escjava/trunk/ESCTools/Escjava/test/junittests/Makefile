@@ -99,7 +99,7 @@ septest:
 .PHONY: notjunittests
 notjunittests:
 	@touch skip
-	@for f in  ${NOTJUNITTESTS} ; do \
+	@for f in ${NOTJUNITTESTS} ; do \
 		$(MAKE) --no-print-directory $${f}-test; \
 	done
 

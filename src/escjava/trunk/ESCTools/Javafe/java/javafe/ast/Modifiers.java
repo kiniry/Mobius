@@ -35,7 +35,7 @@ public class Modifiers {
 
   // ----------------------------------------------------------------------
   
-  //@ ensures \result!=null
+  //@ ensures \result != null;
   public static String toString(int modifiers) {
     String s = "";
 

@@ -26,7 +26,7 @@ public class EnvForEnclosedScope extends Env implements/*privately*/ Cloneable {
      * Our parent environment
      */
     //@ invariant !(parent instanceof EnvForCU)
-    protected /*@non_null*/ Env parent;
+    protected /*@ non_null @*/ Env parent;
 
     /**
      * Create a environment from an existing one by adding a new
@@ -37,7 +37,7 @@ public class EnvForEnclosedScope extends Env implements/*privately*/ Cloneable {
      * member.<p>
      */
     //@ requires !(parent instanceof EnvForCU)
-    public EnvForEnclosedScope(/*@non_null*/ Env parent) {
+    public EnvForEnclosedScope(/*@ non_null @*/ Env parent) {
 	this.parent = parent;
     }
 
@@ -57,7 +57,7 @@ public class EnvForEnclosedScope extends Env implements/*privately*/ Cloneable {
      * This is also refered to as "are we in a static context?".  The
      * legality of super also depends on this result. <p>
      *
-     * The legality of C.this, C!=<enclosing class> is different; see 
+     * The legality of C.this, C != <enclosing class> is different; see 
      * canAccessInstance(-).
      */
     public boolean isStaticContext() { return parent.isStaticContext(); }
@@ -124,7 +124,7 @@ public class EnvForEnclosedScope extends Env implements/*privately*/ Cloneable {
      * This routine does not check that the resulting type (if any)
      * is actually accessable. <p>
      *
-     * If id is ambiguous, then if loc!=Location.NULL then a fatal
+     * If id is ambiguous, then if loc != Location.NULL then a fatal
      * error is reported at that location via ErrorSet else one of
      * its possible meanings is returned.<p>
      */

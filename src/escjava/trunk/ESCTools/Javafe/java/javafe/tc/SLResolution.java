@@ -77,7 +77,7 @@ public class SLResolution {
     //@ requires sig.state < TypeSig.LINKSRESOLVED
     //@ modifies sig.state
     //@ ensures sig.state==TypeSig.LINKSRESOLVED
-    /*package*/ public static void transition(/*@non_null*/ TypeSig sig) {
+    /*package*/ public static void transition(/*@ non_null @*/ TypeSig sig) {
 	/*
 	 * First, check to see if we've looped:
 	 */
@@ -121,7 +121,7 @@ public class SLResolution {
 
 	    // Handle java.lang.Object specially:
 	    if (sig==Types.javaLangObject()) {
-		if (superClass!=sig)
+		if (superClass != sig)
 		    ErrorSet.fatal(d.loc, "Only java.lang.Object may be "
 				   + "the superclass of java.lang.Object");
 
@@ -149,12 +149,12 @@ public class SLResolution {
      * transition its superclass.<p>
      */
     public static TypeSig handleSuperTypeName(
-			       /*@non_null*/ TypeSig sig,
-			       /*@non_null*/ TypeName superName) {
+			       /*@ non_null @*/ TypeSig sig,
+			       /*@ non_null @*/ TypeName superName) {
 	TypeSig supertype = sig.getEnclosingEnv().resolveTypeName(null,superName);
 
-	if (supertype.state<TypeSig.LINKSRESOLVED
-	    && sig!=Types.javaLangObject())
+	if (supertype.state < TypeSig.LINKSRESOLVED &&
+	    sig != Types.javaLangObject())
 	    transition(supertype);
 
 	return supertype;

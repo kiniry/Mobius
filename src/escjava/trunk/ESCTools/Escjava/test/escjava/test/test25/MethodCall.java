@@ -32,18 +32,18 @@ class MethodCallSubUser {
      */
 
     // Test ensures:
-    //@ requires MCS!=null;
+    //@ requires MCS != null;
     void foo(MethodCallSub MCS) {
 	int z = MCS.getx();
 	//@ assert z>=0;			// no error
     }
 
     // Test requires:
-    //@ requires MCS!=null;
+    //@ requires MCS != null;
     void bar(MethodCallSub MCS) {
 	MCS.lessx(-1);			// no error
     }
-    //@ requires MCS!=null;
+    //@ requires MCS != null;
     void bar2(MethodCallSub MCS) {
 	MCS.lessx(1);			// error!
     }

@@ -25,13 +25,13 @@ public class CachedReader extends Reader
     /**
      * The underlying Reader whose results we are caching.
      */
-    //@ invariant underlyingReader!=null
+    //@ invariant underlyingReader != null;
     protected Reader underlyingReader;
 
     /**
      * Creating a cached version of a Reader:
      */
-    //@ requires reader!=null
+    //@ requires reader != null;
     public CachedReader(Reader reader) {
 	underlyingReader = reader;
 
@@ -51,7 +51,7 @@ public class CachedReader extends Reader
      * GenericFile (see GenericFile.getCanonicalID) to either a
      * CompilationUnit or a CachedReader_Null.
      */
-    //@ invariant cache!=null
+    //@ invariant cache != null;
     //@ invariant cache.keyType == \type(String)
     //@ invariant cache.elementType == \type(Object)
     protected Hashtable cache = new Hashtable();
@@ -66,7 +66,7 @@ public class CachedReader extends Reader
     /**
      * Lookup a non-null GenericFile in the cache.
      */
-    //@ requires target!=null
+    //@ requires target != null;
     final protected Object get(GenericFile target) {
 	String canonicalID = target.getCanonicalID();
 	if (canonicalID==null)
@@ -80,13 +80,13 @@ public class CachedReader extends Reader
      * Store information about a non-null GenericFile in the cache;
      * this has no effect if the GenericFile has a null canonicalID.
      */
-    //@ requires target!=null
+    //@ requires target != null;
     final protected void put(GenericFile target, CompilationUnit value) {
 	String canonicalID = target.getCanonicalID();
 	if (canonicalID==null)
 	    return;
 
-	if (value!=null)
+	if (value != null)
 	    cache.put(canonicalID, value);
 	else
 	    cache.put(canonicalID, new CachedReader_Null());
@@ -98,7 +98,7 @@ public class CachedReader extends Reader
      *
      * Target must be non-null.<p> 
      */
-    //@ requires target!=null
+    //@ requires target != null;
     public boolean isCached(GenericFile target) {
 	String canonicalID = target.getCanonicalID();
 	if (canonicalID==null)
@@ -112,7 +112,7 @@ public class CachedReader extends Reader
      *
      * Target must be non-null.<p>
      */
-    //@ requires target!=null
+    //@ requires target != null;
     public void flushTarget(GenericFile target) {
 	String canonicalID = target.getCanonicalID();
 	if (canonicalID==null)
@@ -160,7 +160,7 @@ public class CachedReader extends Reader
      */
     public CompilationUnit read(GenericFile target, boolean avoidSpec) {
 	Object result = get(target);
-	if (result!=null) {
+	if (result != null) {
 	    if (result instanceof CompilationUnit)
 		return (CompilationUnit)result;
 	    else if (result instanceof CachedReader_Null)

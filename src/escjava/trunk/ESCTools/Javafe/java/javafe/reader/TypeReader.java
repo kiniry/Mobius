@@ -44,7 +44,7 @@ abstract public class TypeReader extends Reader
     /**
      * Return true iff the fully-qualified outside type P.T exists.
      */
-    //@ requires \nonnullelements(P) && T!=null
+    //@ requires \nonnullelements(P) && T != null;
     abstract public boolean exists(String[] P, String T);
 
 
@@ -115,7 +115,7 @@ abstract public class TypeReader extends Reader
      * This routine is responsible for such issues as out-of-date
      * binaries.<p>
      */
-    //@ requires \nonnullelements(P) && T!=null
+    //@ requires \nonnullelements(P) && T != null;
     abstract public CompilationUnit read(String[] P, String T,
                                          boolean avoidSpec);
 

@@ -123,7 +123,7 @@ public class JLs {
      ** proceeds it by a separator line and puts a ':' at the end of the
      ** package name.
      **/
-    public static void displayPackageName(/*@non_null*/ Tree P,
+    public static void displayPackageName(/*@ non_null @*/ Tree P,
 					  boolean isHeader) {
 	if (isHeader)
 	    printSeparator();
@@ -141,7 +141,7 @@ public class JLs {
      **
      ** packageName must be non-null<p>
      **/
-    public static void handlePackageName(/*@non_null*/ String packageName,
+    public static void handlePackageName(/*@ non_null @*/ String packageName,
 					 boolean alwaysDisplayHeader) {
 	// Look up the package name:
 	Tree P = lookupPackage(Resolve.namespace, packageName);
@@ -201,7 +201,7 @@ public class JLs {
      **      and a package) do not cause any problems.<p>
      **/
     public static Tree lookupPackage(Tree namespace,
-				     /*@non_null*/ String packageName) {
+				     /*@ non_null @*/ String packageName) {
 	Tree P = Resolve.namespace.getQualifiedChild(packageName, '.');
 	if (P==null) {
 	    System.err.println(packageName + ": no such package");
@@ -226,7 +226,7 @@ public class JLs {
      ** Uses the current program settings except for displayTypes and
      ** displayPackages, which are overridden by the arguments.<p>
      **/
-    public static void listPackage(/*@non_null*/ Tree P, boolean displayTypes,
+    public static void listPackage(/*@ non_null @*/ Tree P, boolean displayTypes,
 				   boolean displayPackages) {
 	if (!displayTypes && !displayPackages)
 	    return;
@@ -268,7 +268,7 @@ public class JLs {
     //@ requires list.elementType == \type(String)
     //@ requires !list.containsNull
     //@ ensures \result>=0
-    public static int maxItem(/*@non_null*/ Vector list) {
+    public static int maxItem(/*@ non_null @*/ Vector list) {
 	int maxSize = 0;
 
 	for (Enumeration E=list.elements(); E.hasMoreElements(); )
@@ -299,7 +299,7 @@ public class JLs {
      **/
     //@ requires list.elementType == \type(String)
     //@ requires !list.containsNull
-    public static void printList(/*@non_null*/ Vector list) {
+    public static void printList(/*@ non_null @*/ Vector list) {
 	int size = list.size();
 	if (size==0)
 	    return;		// No need to display the empty list
@@ -344,7 +344,7 @@ public class JLs {
 		    continue;
 
 		String element = (String)list.elementAt(i);
-		if (c!=0)
+		if (c != 0)
 		    print(separator);
 		print(element);
 		printSpaces(itemWidth - element.length());
@@ -397,10 +397,10 @@ public class JLs {
      **
      ** useAbsolute and markEntries are taken into account.<p>
      **/
-    //@ ensures \result!=null
+    //@ ensures \result != null;
     //@ ensures \result.elementType == \type(String)
     //@ ensures !\result.containsNull
-    public static Vector packageContents(/*@non_null*/ Tree P,
+    public static Vector packageContents(/*@ non_null @*/ Tree P,
 					 boolean includeTypes,
 					 boolean includePackages) {
 	Vector R = new Vector(10);
@@ -413,7 +413,7 @@ public class JLs {
 	    Tree component = (Tree)E.nextElement();
 
 	    String label = component.getLabel(); 
-	    //@ assume label!=null
+	    //@ assume label != null;
    	    String extension = Extension.getExtension(label);
    	    String relName = Extension.getBasename(label);
    	    String name = Resolve.combineNames(namePrefix, relName, ".");
@@ -464,7 +464,7 @@ public class JLs {
      ** I.e., does P contain any source or binary files or any
      ** subpackages?
      **/
-    public static boolean isEmpty(/*@non_null*/ Tree P) {
+    public static boolean isEmpty(/*@ non_null @*/ Tree P) {
 	if (PkgTree.components(P,".class").hasMoreElements())
 	    return false;
 
@@ -578,7 +578,7 @@ public class JLs {
      **
      ** May consume additional arguments by advancing argIndex.<p>
      **/
-    static void handleOption(/*@non_null*/ String arg) {
+    static void handleOption(/*@ non_null @*/ String arg) {
 	if (arg.equals("-bootclasspath")) {
 	    if (argIndex<arguments.length)
 		sysPath = arguments[argIndex++];
@@ -621,13 +621,13 @@ public class JLs {
      **  front of the user supplied arguments so we will do the right
      **  thing.)
      **/
-    //@ ensures \result!=null
-    static String getClassPath(/*@non_null*/ String defaultBootClassPath) {
+    //@ ensures \result != null;
+    static String getClassPath(/*@ non_null @*/ String defaultBootClassPath) {
 	String result = sysPath;
 	if (result==null)
 	    result = defaultBootClassPath;
 	
-	String user = userPath!=null ? userPath : ".";
+	String user = userPath != null ? userPath : ".";
 
 	if (!user.equals("")) {
 	    if (!result.equals(""))
@@ -673,7 +673,7 @@ public class JLs {
      ** default bootclasspath to use via a -bootclasspath argument to
      ** jls placed in front of any user arguments.
      **/
-    //@ ensures \result!=null
+    //@ ensures \result != null;
     static String getDefaultBootClassPath() {
 	String result = System.getProperty("sun.boot.class.path", null);
 	if (result==null)

@@ -27,9 +27,9 @@ public class JWhich {
      ** Resolve.ensureType to make sure that the name names an actual
      ** reference type.
      **/
-    //@ ensures \result!=null ==> \result.myTypeName!=null
-    //@ ensures \result!=null ==> \result.myPackage!=null
-    public static Resolve_Result findType(/*@non_null*/ String typeName) {
+    //@ ensures \result != null ==> \result.myTypeName != null;
+    //@ ensures \result != null ==> \result.myPackage != null;
+    public static Resolve_Result findType(/*@ non_null @*/ String typeName) {
 	try {
 	    return Resolve.ensureType(Resolve.lookupName(typeName));
 	} catch (Resolve_AmbiguousName name) {
@@ -59,7 +59,7 @@ public class JWhich {
      **/
     //@ invariant extraExtensions.elementType == \type(String)
     //@ invariant !extraExtensions.containsNull
-    public /*@non_null*/ static Vector extraExtensions = new Vector();
+    public /*@ non_null @*/ static Vector extraExtensions = new Vector();
 
 
     /**
@@ -67,7 +67,7 @@ public class JWhich {
      ** settings of listSources, listBinaries, and listXtras) of a
      ** particular reference type in a package P.
      **/
-    static void displayType(/*@non_null*/ Tree P, String typeName) {
+    static void displayType(/*@ non_null @*/ Tree P, String typeName) {
 	if (listSources) {
 	    Tree sources = P.getChild(typeName + ".java");
 	    displayFiles(sources);
@@ -111,7 +111,7 @@ public class JWhich {
      ** List the filename associated with a given filespace
      ** node.
      **/
-    static void displayFile(/*@non_null*/ Tree node) {
+    static void displayFile(/*@ non_null @*/ Tree node) {
 	System.out.println(((GenericFile)node.data).getHumanName()); //@ nowarn Cast, Null
     }
 
@@ -126,7 +126,7 @@ public class JWhich {
      ** Our default bootclasspath; set by main before calling any of
      ** the option handling code.
      **/
-    static /*@non_null*/ String defaultBootClassPath = "";
+    static /*@ non_null @*/ String defaultBootClassPath = "";
 
 
     /**
@@ -140,13 +140,13 @@ public class JWhich {
      **  front of the user supplied arguments so we will do the right
      **  thing.)
      **/
-    //@ ensures \result!=null
-    static String getClassPath(/*@non_null*/ String defaultBootClassPath) {
+    //@ ensures \result != null;
+    static String getClassPath(/*@ non_null @*/ String defaultBootClassPath) {
 	String result = sysPath;
 	if (result==null)
 	    result = defaultBootClassPath;
 	
-	String user = userPath!=null ? userPath : ".";
+	String user = userPath != null ? userPath : ".";
 
 	if (!user.equals("")) {
 	    if (!result.equals(""))
@@ -192,7 +192,7 @@ public class JWhich {
      ** default bootclasspath to use via a -bootclasspath argument to
      ** jls placed in front of any user arguments.
      **/
-    //@ ensures \result!=null
+    //@ ensures \result != null;
     static String getDefaultBootClassPath() {
 	String result = System.getProperty("sun.boot.class.path", null);
 	if (result==null)
@@ -279,7 +279,7 @@ public class JWhich {
      **
      ** May consume additional arguments by advancing argIndex.<p>
      **/
-    static void handleOption(/*@non_null*/ String arg) {
+    static void handleOption(/*@ non_null @*/ String arg) {
 	if (arg.equals("-bootclasspath")) {
 	    if (argIndex<arguments.length) {
 		sysPath = arguments[argIndex++];
@@ -338,7 +338,7 @@ public class JWhich {
     /**
      ** find: implement jwhich for 1 reference-type name.
      **/
-    public static void find(/*@non_null*/ String typeName) {
+    public static void find(/*@ non_null @*/ String typeName) {
 	Resolve_Result search = findType(typeName);
 	if (search != null)
 	    displayType(search.myPackage, search.myTypeName);

@@ -48,7 +48,7 @@ public class FileCorrelatedReader extends LocationManagerCorrelatedReader
      * The GenericFile for this CorrelatedReader.
      */
 
-    private /*@non_null*/ GenericFile file;
+    private /*@ non_null @*/ GenericFile file;
 
     // Creation
 
@@ -56,7 +56,7 @@ public class FileCorrelatedReader extends LocationManagerCorrelatedReader
      * Constructs a correlated input stream that reads its input from
      * the specified GenericFile.
      */
-    public FileCorrelatedReader(/*@non_null*/ GenericFile file)
+    public FileCorrelatedReader(/*@ non_null @*/ GenericFile file)
             throws java.io.IOException {
         this(file.getInputStream(), file);
     }
@@ -67,8 +67,8 @@ public class FileCorrelatedReader extends LocationManagerCorrelatedReader
      *
      * streamName is the human readable name of the stream.
      */
-    public FileCorrelatedReader(/*@non_null*/ InputStream in,
-                                /*@non_null*/ String streamName) {
+    public FileCorrelatedReader(/*@ non_null @*/ InputStream in,
+                                /*@ non_null @*/ String streamName) {
         this(in, new UnopenableFile(streamName));
     }
 
@@ -80,8 +80,8 @@ public class FileCorrelatedReader extends LocationManagerCorrelatedReader
      * the specified input stream
      */
 
-    private FileCorrelatedReader(/*@non_null*/ InputStream in,
-                                 /*@non_null*/ GenericFile file) {
+    private FileCorrelatedReader(/*@ non_null @*/ InputStream in,
+                                 /*@ non_null @*/ GenericFile file) {
         super();  // allocate location numbers, etc.
 
         this.stream = in;
@@ -98,7 +98,7 @@ public class FileCorrelatedReader extends LocationManagerCorrelatedReader
      */
     //@ ensures \result != Location.NULL;
 
-    static int createWholeFileLoc(/*@non_null*/ GenericFile file) {
+    static int createWholeFileLoc(/*@ non_null @*/ GenericFile file) {
         // TBW:  This implementation leaves something to be desired.  It would be
         // nice if whole-file correlated readers could be their own subclass of
         // LocationManagerCorrelatedReader.

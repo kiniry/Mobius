@@ -72,7 +72,7 @@ public abstract class Query {
      */
     //@ requires \nonnullelements(P)
     public boolean exists(String[] P, String T) {
-	return (findFile(P, T, "java")!=null)
-	    || (findFile(P, T, "class")!=null);
+	return (findFile(P, T, "java") != null)
+	    || (findFile(P, T, "class") != null);
     }
 }

@@ -82,7 +82,7 @@ public abstract class PrettyPrint {
   /** Print a compilation onto to a stream.  Works best when
     <code>o</code> is positioned at the start of a new line. */
 
-  //@ requires o!=null
+  //@ requires o != null;
   public abstract void print(OutputStream o, CompilationUnit cu);
 
 
@@ -91,7 +91,7 @@ public abstract class PrettyPrint {
      *
      * Ends with a newline.<p>
      */
-    //@ requires o!=null
+    //@ requires o != null;
     public void print(OutputStream o, int ind, TypeDecl d) {
 	printnoln(o, ind, d);
 	writeln(o);
@@ -101,7 +101,7 @@ public abstract class PrettyPrint {
      * Print a type declaration onto to a stream, without a final
      * newline. <p>
      */
-    //@ requires o!=null
+    //@ requires o != null;
     public abstract void printnoln(OutputStream o, int ind, TypeDecl d);
 
 
@@ -113,7 +113,7 @@ public abstract class PrettyPrint {
       example, because it has embedded statements), then these lines
       are indented by <code>ind</code> spaces. */
 
-  //@ requires o!=null
+  //@ requires o != null;
   public abstract void print(OutputStream o, int ind, Stmt s);
 
   /** Print a member or static initializer of a type declaration.
@@ -124,63 +124,63 @@ public abstract class PrettyPrint {
       <code>ind</code> spaces.  It should leave <code>o</code> at the
       start of a new-line. */
 
-  //@ requires o!=null && classId!=null
-  //@ requires d!=null ==> d.hasParent
+  //@ requires o != null && classId != null;
+  //@ requires d != null ==> d.hasParent
   public abstract void print(OutputStream o, int ind, TypeDeclElem d, 
 			     Identifier classId, boolean showBody);
 
-  //@ requires o!=null
+  //@ requires o != null;
   public abstract void print(OutputStream o, TypeNameVec tns);
 
-  //@ requires o!=null
+  //@ requires o != null;
   public abstract void print(OutputStream o, int ind, FormalParaDeclVec fps);
 
-  //@ requires o!=null
+  //@ requires o != null;
   public abstract void print(OutputStream o, int ind, ExprVec es);
 
-  //@ requires o!=null
+  //@ requires o != null;
   public abstract void print(OutputStream o, GenericVarDecl d);
   
-  //@ requires o!=null
+  //@ requires o != null;
   public abstract void print(OutputStream o, int ind, LocalVarDecl d,
 			     boolean showBody);
   
-  //@ requires o!=null
+  //@ requires o != null;
   public abstract void print(OutputStream o, int ind, FieldDecl d,
 			     boolean showBody);
   
-  //@ requires o!=null
+  //@ requires o != null;
   public abstract void print(OutputStream o, Type t);
   
-  //@ requires o!=null
+  //@ requires o != null;
   public abstract void print(OutputStream o, Name n);
   
-  //@ requires o!=null
+  //@ requires o != null;
   public abstract void print(OutputStream o, int ind, ObjectDesignator od);
 
-  //@ requires o!=null
+  //@ requires o != null;
   public abstract void print(OutputStream o, int ind, VarInit e);
 
   /** Print a lexical pragma.  Assumes <code>o</code> is at the start
     of the line; should leave <code>o</code> at the start of a new
     line. */
 
-  //@ requires o!=null && lp!=null
+  //@ requires o != null && lp != null;
   public abstract void print(OutputStream o, LexicalPragma lp);
 
-  //@ requires o!=null && tp!=null
+  //@ requires o != null && tp != null;
   public abstract void print(OutputStream o, int ind, TypeDeclElemPragma tp);
 
   /** Print a modifier pragma.  Should be printed in <code>/*</code>
     <code>*</code><code>/</code> comments on a single line. */
 
-  //@ requires o!=null && mp!=null
+  //@ requires o != null && mp != null;
   public abstract void print(OutputStream o, int ind, ModifierPragma mp);
 
-  //@ requires o!=null && sp!=null
+  //@ requires o != null && sp != null;
   public abstract void print(OutputStream o, int ind, StmtPragma sp);
 
-  //@ requires o!=null && tp!=null
+  //@ requires o != null && tp != null;
   public abstract void print(OutputStream o, int ind, TypeModifierPragma tp);
 
   //// toString methods
@@ -220,7 +220,7 @@ public abstract class PrettyPrint {
 	((tag==TagConstants.STRINGLIT) ==> (val instanceof String)) &&
 	((tag==TagConstants.CHARLIT) ==> (val instanceof Integer))
       ) */
-  //@ ensures \result!=null
+  //@ ensures \result != null;
   public static String toCanonicalString(int tag, Object val) {
     if (tag == TagConstants.BOOLEANLIT) return val.toString();
     if (tag == TagConstants.DOUBLELIT) return val.toString() + "D";
@@ -279,77 +279,77 @@ public abstract class PrettyPrint {
   }
 
 
-    //@ ensures \result!=null
+    //@ ensures \result != null;
     public String toString(int tag) {
 	// Best version available in the front end:
 	return javafe.tc.TagConstants.toString(tag);
     }
 
 
-  //@ ensures \result!=null
+  //@ ensures \result != null;
   public final String toString(TypeNameVec tns) {
     ByteArrayOutputStream result = new ByteArrayOutputStream(20);
     print(result, tns);
     return result.toString();
   }
 
-  //@ ensures \result!=null
+  //@ ensures \result != null;
   public final String toString(FormalParaDeclVec fps) {
     ByteArrayOutputStream result = new ByteArrayOutputStream(20);
     print(result, 0, fps);
     return result.toString();
   }
 
-  //@ ensures \result!=null
+  //@ ensures \result != null;
   public final String toString(ExprVec es) {
     ByteArrayOutputStream result = new ByteArrayOutputStream(20);
     print(result, 0, es);
     return result.toString();
   }
 
-  //@ ensures \result!=null
+  //@ ensures \result != null;
   public final String toString(GenericVarDecl d) {
     ByteArrayOutputStream result = new ByteArrayOutputStream(20);
     print(result, d);
     return result.toString();
   }
   
-  //@ ensures \result!=null
+  //@ ensures \result != null;
   public final String toString(LocalVarDecl d, boolean showBody) {
     ByteArrayOutputStream result = new ByteArrayOutputStream(20);
     print(result, 0, d, showBody);
     return result.toString();
   }
   
-  //@ ensures \result!=null
+  //@ ensures \result != null;
   public final String toString(FieldDecl d, boolean showBody) {
     ByteArrayOutputStream result = new ByteArrayOutputStream(20);
     print(result, 0, d, showBody);
     return result.toString();
   }
   
-  //@ ensures \result!=null
+  //@ ensures \result != null;
   public final String toString(Type t) {
     ByteArrayOutputStream result = new ByteArrayOutputStream(20);
     print(result, t);
     return result.toString();
   }
   
-  //@ ensures \result!=null
+  //@ ensures \result != null;
   public final String toString(Name n) {
     ByteArrayOutputStream result = new ByteArrayOutputStream(20);
     print(result, n);
     return result.toString();
   }
   
-  //@ ensures \result!=null
+  //@ ensures \result != null;
   public final String toString(VarInit e) {
     ByteArrayOutputStream result = new ByteArrayOutputStream(20);
     print(result, 0, e);
     return result.toString();
   }
 
-  //@ ensures \result!=null
+  //@ ensures \result != null;
   public final String toString(ObjectDesignator od) {
     ByteArrayOutputStream result = new ByteArrayOutputStream(20);
     print(result, 0, od);
@@ -359,25 +359,25 @@ public abstract class PrettyPrint {
 
   //// Helper methods
 
-  //@ requires o!=null
+  //@ requires o != null;
   public static void writeln(OutputStream o) {
     write(o, '\n');
   }
 
-  //@ requires o!=null && s!=null
+  //@ requires o != null && s != null;
   public static void writeln(OutputStream o, String s) {
     write(o, s);
     write(o, '\n');
   }
 
-  //@ requires o!=null
+  //@ requires o != null;
   public static void write(OutputStream o, char c) {
     try {
       o.write((byte)c);
     } catch (IOException e) { Assert.fail("IO exception"); }
   }
 
-  //@ requires o!=null && s!=null
+  //@ requires o != null && s != null;
   public static void write(OutputStream o, String s) {
       byte[] outBuf = s.getBytes();
       try {
@@ -385,7 +385,7 @@ public abstract class PrettyPrint {
       } catch (IOException e) { Assert.fail("IO Exception"); }
   }
 
-  //@ requires o!=null
+  //@ requires o != null;
   public static void spaces(OutputStream o, int number) {
     try {
       while (number > 0) {
@@ -396,7 +396,7 @@ public abstract class PrettyPrint {
     } catch (IOException e) { Assert.fail("IO Exception"); }
   }
 
-  //@ invariant _spaces!=null
+  //@ invariant _spaces != null;
     private static byte[] _spaces = {
 	(byte)' ', (byte)' ', (byte)' ', (byte)' ', (byte)' ',   /*5 spaces*/
 	(byte)' ', (byte)' ', (byte)' ', (byte)' ', (byte)' ',   /*5 spaces*/

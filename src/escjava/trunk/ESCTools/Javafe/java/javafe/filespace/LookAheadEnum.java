@@ -36,11 +36,11 @@ abstract class LookAheadEnum implements Enumeration {
      * series.<p>
      */
 
-    //@ invariant lookAheadValid ==> moreElements == (lookAhead!=null)
+    //@ invariant lookAheadValid ==> moreElements == (lookAhead != null)
 
     private boolean lookAheadValid = false;
 
-    //@ invariant \typeof(lookAhead) <: elementType || lookAhead==null
+    //@ invariant \typeof(lookAhead) <: elementType || lookAhead==null;
     private Object lookAhead = null;
 
 
@@ -57,7 +57,7 @@ abstract class LookAheadEnum implements Enumeration {
 	     * We assume that moreElements magically predicted
 	     * calcNextElement()'s output:
 	     */
-	    //@ assume moreElements == (lookAhead!=null)
+	    //@ assume moreElements == (lookAhead != null)
 	    lookAheadValid = true;
         }
     }
@@ -84,7 +84,7 @@ abstract class LookAheadEnum implements Enumeration {
      * Create a look-ahead enumerator that will return first followed
      * by the non-null results of calcNextElement().
      */
-    //@ requires first!=null
+    //@ requires first != null;
     //@ ensures moreElements
     //   So subclass can set elementType...:
     //@ ensures \typeof(lookAhead) <: \typeof(first)
@@ -141,7 +141,7 @@ abstract class LookAheadEnum implements Enumeration {
      *
      * This function will never be called again once it returns null.
      */
-    //@ ensures \typeof(\result) <: elementType || \result==null
+    //@ ensures \typeof(\result) <: elementType || \result==null;
     protected abstract Object calcNextElement();
 
 }

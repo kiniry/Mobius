@@ -29,8 +29,8 @@ public class FlowInsensitiveChecks
     /**
      * Factory method so subclasses can override.
      */
-    //@ requires s != null
-    //@ ensures \result != null
+    //@ requires s != null;
+    //@ ensures \result != null;
     protected EnvForTypeSig makeEnvForTypeSig(TypeSig s,
 					      boolean staticContext) {
 	return s.getEnv(staticContext);
@@ -44,7 +44,7 @@ public class FlowInsensitiveChecks
     //                                                                   //
     ///////////////////////////////////////////////////////////////////////
 
-    //@ invariant sig != null ==> rootIEnv != null && rootSEnv != null
+    //@ invariant sig != null ==> rootIEnv != null && rootSEnv != null;
     /*@ spec_public */ protected TypeSig sig;
 
     // Inv: rootIEnv.peer == sig; !rootIEnv.staticContext
@@ -73,10 +73,10 @@ public class FlowInsensitiveChecks
     // manner.                                                           //
     ///////////////////////////////////////////////////////////////////////
   
-    //@ invariant allowedExceptions != null
+    //@ invariant allowedExceptions != null;
     protected TypeSigVec allowedExceptions = TypeSigVec.make();
 
-    //@ invariant enclosingLabels != null
+    //@ invariant enclosingLabels != null;
     protected StmtVec enclosingLabels = StmtVec.make();
 
     // -------------------------------------------------------------
@@ -86,7 +86,7 @@ public class FlowInsensitiveChecks
      */
     //@ requires (* <code>s</code> is in prepped state.*);
     //@ requires s.state >= TypeSig.PREPPED
-    public void checkTypeDeclaration(/*@non_null*/ TypeSig s) {
+    public void checkTypeDeclaration(/*@ non_null @*/ TypeSig s) {
         Assert.precondition(s.state >= TypeSig.PREPPED);
 
         // Set up variables for entire traversal:
@@ -115,7 +115,7 @@ public class FlowInsensitiveChecks
      */
     //@ requires (* <code>fd</code> is in prepped state. *);
     //@ modifies sig
-    public void checkFieldDecl(/*@non_null*/ FieldDecl fd) {
+    public void checkFieldDecl(/*@ non_null @*/ FieldDecl fd) {
 	/*
 	 * Special case for free-floating fields like length.
 	 *
@@ -151,7 +151,7 @@ public class FlowInsensitiveChecks
     //------------------------------------------------------------
 
     // @note e must already have been prepped!
-    //@ requires e != null && sig != null
+    //@ requires e != null && sig != null;
     //@ requires sig.state >= TypeSig.PREPPED;
     protected void checkTypeDeclElem(TypeDeclElem e) {
 
@@ -228,7 +228,7 @@ public class FlowInsensitiveChecks
                     returnType = Types.voidType;
 
                     // Check if we need to add an implicit constructor invocation
-                    //@ assume !specOnly ==> cd.body != null
+                    //@ assume !specOnly ==> cd.body != null;
                     if(!dontAddImplicitConstructorInvocations && !specOnly &&
 			cd.body != null && // FIXME - we've broken the assumption above by allowing spec files - need to fix that uniformly
                         !(cd.body.stmts.size() > 0
@@ -318,9 +318,9 @@ public class FlowInsensitiveChecks
      *
      * </p>
      */
-    //@ requires e != null && s != null
+    //@ requires e != null && s != null;
     //@ requires !(e instanceof EnvForCU)
-    //@ requires sig != null
+    //@ requires sig != null;
     //@ ensures \result != null;
     //@ ensures !(\result instanceof EnvForCU);
     protected Env checkStmt(Env e, Stmt s) {
@@ -843,7 +843,7 @@ public class FlowInsensitiveChecks
     }
 
     //@ requires !(se instanceof EnvForCU)
-    //@ requires sig != null
+    //@ requires sig != null;
     protected void checkForLoopAfterInit(/*@ non_null */ Env se,
                                          /*@ non_null */ ForStmt f) {
         f.test = checkExpr(se, f.test);
@@ -856,10 +856,10 @@ public class FlowInsensitiveChecks
         enclosingLabels.pop();
     }
 
-    //@ requires env != null && v != null
+    //@ requires env != null && v != null;
     //@ requires !(env instanceof EnvForCU)
-    //@ requires sig != null
-    //@ ensures \result != null
+    //@ requires sig != null;
+    //@ ensures \result != null;
     //@ ensures !(\result instanceof EnvForCU)
     protected Env checkStmtVec(Env env, StmtVec v) {
 	for(int i = 0, sz = v.size(); i < sz; i++) {
@@ -874,7 +874,7 @@ public class FlowInsensitiveChecks
   
     //@ requires env != null && ev != null  
     //@ requires !(env instanceof EnvForCU)
-    //@ requires sig != null
+    //@ requires sig != null;
     //@ ensures \nonnullelements(\result)
     protected Type[] checkExprVec(Env env, ExprVec ev) {
 
@@ -891,10 +891,10 @@ public class FlowInsensitiveChecks
     }
 
 
-    //@ requires sig != null
+    //@ requires sig != null;
     //@ requires !(env instanceof EnvForCU)
-    //@ requires env != null && x != null && expectedResult != null
-    //@ ensures \result != null
+    //@ requires env != null && x != null && expectedResult != null;
+    //@ ensures \result != null;
     //@ ensures (x instanceof ArrayInit) ==> \result instanceof ArrayInit
     protected VarInit checkInit(Env env, VarInit x, Type expectedResult) {
         if (x instanceof ArrayInit) {
@@ -919,10 +919,10 @@ public class FlowInsensitiveChecks
         }
     }
 
-    //@ requires env != null && e != null
+    //@ requires env != null && e != null;
     //@ requires !(env instanceof EnvForCU)
-    //@ requires sig != null
-    //@ ensures \result != null
+    //@ requires sig != null;
+    //@ ensures \result != null;
     protected Expr checkDesignator(Env env, Expr e) {
         Expr result = checkExpr(env, e);
         if (result.getTag() == TagConstants.FIELDACCESS) {
@@ -940,10 +940,10 @@ public class FlowInsensitiveChecks
         return result;
     }
 
-    //@ requires env != null && expr != null && t != null
+    //@ requires env != null && expr != null && t != null;
     //@ requires !(env instanceof EnvForCU)
-    //@ requires sig != null
-    //@ ensures \result != null
+    //@ requires sig != null;
+    //@ ensures \result != null;
     protected Expr checkExpr(Env env, Expr expr, Type t) {
         Expr ne = checkExpr(env,expr);
         checkType(ne, t);
@@ -954,10 +954,10 @@ public class FlowInsensitiveChecks
      * This method should call <code>setType</code> on <code>x</code> before its
      * done.
      */
-    //@ requires env != null && x != null
+    //@ requires env != null && x != null;
     //@ requires !(env instanceof EnvForCU)
-    //@ requires sig != null
-    //@ ensures \result != null
+    //@ requires sig != null;
+    //@ ensures \result != null;
     protected Expr checkExpr(Env env, Expr x) {
 
         // System.out.println("Checking: "+Location.toString(x.getStartLoc()));
@@ -1092,7 +1092,7 @@ public class FlowInsensitiveChecks
                     }
 
                     // Check and "resolve" I:
-                    if (ne.type.name.size()!=1)
+                    if (ne.type.name.size() != 1)
                         ErrorSet.error(ne.type.getStartLoc(),
                                        "Only a simple name can be used after new"
                                        + " when an enclosing instance is supplied.");
@@ -1534,9 +1534,9 @@ public class FlowInsensitiveChecks
 
     // ======================================================================
 
-    //@ requires env != null && od != null
+    //@ requires env != null && od != null;
     //@ requires !(env instanceof EnvForCU)
-    //@ requires sig != null
+    //@ requires sig != null;
     protected Type checkObjectDesignator(Env env, ObjectDesignator od) {
 
         switch(od.getTag()) {
@@ -1600,7 +1600,7 @@ public class FlowInsensitiveChecks
      *
      * @return null if the given combination is illegal.
      */
-    //@ requires leftExpr != null && rightExpr != null
+    //@ requires leftExpr != null && rightExpr != null;
     private Type tryCondExprMatch(Expr leftExpr, Expr rightExpr) {
         Type leftType = getType(leftExpr);
 	Type rightType = getType(rightExpr);
@@ -1696,8 +1696,8 @@ public class FlowInsensitiveChecks
 
     // ======================================================================
 
-    //@ requires left != null && right != null
-    //@ requires loc!=Location.NULL
+    //@ requires left != null && right != null;
+    //@ requires loc != Location.NULL
     //@ ensures \result != null  
     protected Type checkBinaryExpr(int op, Expr left, Expr right, int loc) {
   
@@ -1896,7 +1896,7 @@ public class FlowInsensitiveChecks
 
     // *********************************************************************
 
-    //@ requires e != null
+    //@ requires e != null;
     static boolean checkIntegralType(Expr e) {
         Type t = getType(e);
         if(Types.isIntegralType(t)) {
@@ -1910,7 +1910,7 @@ public class FlowInsensitiveChecks
         }
     }
 
-    //@ requires e != null
+    //@ requires e != null;
     static boolean checkNumericType(Expr e) {
         Type t = getType(e);
         if(!Types.isNumericType(t)) {
@@ -1924,7 +1924,7 @@ public class FlowInsensitiveChecks
         }    
     }
 
-    //@ requires e != null
+    //@ requires e != null;
     static boolean isVariable(Expr e) {
         switch(e.getTag()) {
             case TagConstants.ARRAYREFEXPR:
@@ -1942,12 +1942,12 @@ public class FlowInsensitiveChecks
     /**
      * Decorates <code>VarInit</code> nodes to point to <code>Type</code> objects.
      */
-    //@ invariant typeDecoration != null
+    //@ invariant typeDecoration != null;
     //@ invariant typeDecoration.decorationType == \type(Type)
     private static ASTDecoration typeDecoration
         = new ASTDecoration("typeDecoration");
 
-    //@ requires i != null && t != null
+    //@ requires i != null && t != null;
     public static VarInit setType(VarInit i, Type t) {
         if (t instanceof TypeName)
             t = TypeSig.getSig((TypeName)t);
@@ -1960,7 +1960,7 @@ public class FlowInsensitiveChecks
      * associated with an expression by the typechecking pass. If the expression does
      * not have an associated type, then null is returned.
      */
-    //@ requires i != null
+    //@ requires i != null;
     protected static Type getTypeOrNull(VarInit i) {
         return (Type)typeDecoration.get(i);
     }
@@ -1970,8 +1970,8 @@ public class FlowInsensitiveChecks
      * associated with an expression by the typechecking pass. If the expression does
      * not have an associated type, then <code>Assert.fail</code> is called.
      */
-    //@ requires i != null
-    //@ ensures \result != null
+    //@ requires i != null;
+    //@ ensures \result != null;
     public static Type getType(VarInit i) {
         Type t = getTypeOrNull(i);
         if(t==null) 
@@ -1988,12 +1988,12 @@ public class FlowInsensitiveChecks
      * Decorates <code>BranchStmt</code> nodes to point to labelled <code>Stmt</code>
      * objects.
      */
-    //@ invariant branchDecoration != null
+    //@ invariant branchDecoration != null;
     //@ invariant branchDecoration.decorationType == \type(Stmt)
     private static ASTDecoration branchDecoration
         = new ASTDecoration("branchDecoration");
 
-    //@ requires s != null && l != null
+    //@ requires s != null && l != null;
     private static void setBranchLabel(BranchStmt s, Stmt l) {
         Assert.notFalse(branchDecoration.get(s) == null);	//@ nowarn Pre
         branchDecoration.set(s,l);
@@ -2009,7 +2009,7 @@ public class FlowInsensitiveChecks
      * <code>BranchStmt</code> does not have an associated <code>Stmt</code> target,
      * then <code>Assert.fail</code> is called.
      */
-    //@ requires s != null
+    //@ requires s != null;
     static Stmt getBranchLabel(BranchStmt s) {
         Stmt l = (Stmt)branchDecoration.get(s);
         if(l==null)
@@ -2019,7 +2019,7 @@ public class FlowInsensitiveChecks
 
     // ======================================================================
 
-    //@ requires expr != null && t != null
+    //@ requires expr != null && t != null;
     static void checkType(Expr expr, Type t) {
         if(!assignmentConvertable(expr, t)) {
 	    if (!Types.isErrorType(getType(expr)))
@@ -2030,8 +2030,8 @@ public class FlowInsensitiveChecks
     
     }
 
-    //@ requires e != null && s != null && t != null
-    //@ requires loc!=Location.NULL
+    //@ requires e != null && s != null && t != null;
+    //@ requires loc != Location.NULL
     protected static void reportLookupException(LookupException e, 
                                                 String s, 
                                                 String t, 
@@ -2058,7 +2058,7 @@ public class FlowInsensitiveChecks
      * Checks if Exp e can be assigned to Type t.  This method is here instead of in
      * {@link javafe.tc.Types}, because it needs to mess with constants.
      */ 
-    //@ requires e != null && t != null
+    //@ requires e != null && t != null;
     static boolean assignmentConvertable(Expr e, Type t) {
 
         Type te = getType(e);
@@ -2074,8 +2074,8 @@ public class FlowInsensitiveChecks
             case TagConstants.SHORTTYPE:
             case TagConstants.CHARTYPE:
                 Object val = ConstantExpr.eval(e);
-                if(val != null
-                    && ConstantExpr.constantValueFitsIn(val, (PrimitiveType)t))
+                if(val != null &&
+                   ConstantExpr.constantValueFitsIn(val, (PrimitiveType)t))
                     return true;
                 else return false;
             default:
@@ -2085,7 +2085,7 @@ public class FlowInsensitiveChecks
 
     // ======================================================================
 
-    //@ requires e != null
+    //@ requires e != null;
     protected void checkTypeDeclElemPragma(TypeDeclElemPragma e) {
         Assert.fail("Unexpected TypeDeclElemPragma");
     }
@@ -2095,7 +2095,7 @@ public class FlowInsensitiveChecks
      * <code>ASTNode</code> is the parent of the <code>ModifierPragma</code>, and
      * <code>env</code> is the current environment.
      */
-    //@ requires env != null
+    //@ requires env != null;
     protected Env checkModifierPragmaVec(ModifierPragmaVec v, 
                                           ASTNode ctxt, 
                                           Env env) {
@@ -2112,19 +2112,19 @@ public class FlowInsensitiveChecks
      * <code>env</code> is the current environment.
      * @return true if pragma should be deleted
      */
-    //@ requires p != null && env != null
+    //@ requires p != null && env != null;
     protected Env checkModifierPragma(ModifierPragma p, ASTNode ctxt, Env env) {
         // Assert.fail("Unexpected ModifierPragma");
 	return env;
     }
 
-    //@ requires e != null && s != null
+    //@ requires e != null && s != null;
     protected Env checkStmtPragma(Env e, StmtPragma s) {
         Assert.fail("Unexpected StmtPragma");
 	return e;
     }
 
-    //@ requires env != null
+    //@ requires env != null;
     protected Env checkTypeModifierPragmaVec(TypeModifierPragmaVec v, 
                                               ASTNode ctxt, 
                                               Env env) {
@@ -2134,7 +2134,7 @@ public class FlowInsensitiveChecks
 	return env;
     }
     
-    //@ requires p != null && env != null
+    //@ requires p != null && env != null;
     protected Env checkTypeModifierPragma(TypeModifierPragma p,
                                            ASTNode ctxt,
                                            Env env) {
@@ -2145,7 +2145,7 @@ public class FlowInsensitiveChecks
     /**
      * This may be called more than once on a Type t.
      */
-    //@ requires t != null
+    //@ requires t != null;
     protected Env checkTypeModifiers(Env env, Type t) {
         // don't know context for type, so pull it out of the type's decorations.
         if (env == null) {

@@ -50,7 +50,7 @@ public class InferThrows extends DefaultVisitor {
      ** Decorates <code>RoutineDecl</code>
      ** nodes to point to <code>Set</code> of TypeSigs for thrown exceptions.
      **/
-    //@ invariant throwsDecoration!=null
+    //@ invariant throwsDecoration != null
     //@ invariant throwsDecoration.decorationType == \type(Type)
     private static ASTDecoration throwsDecoration
 	= new ASTDecoration("throwsDecoration");

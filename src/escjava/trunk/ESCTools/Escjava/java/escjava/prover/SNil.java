@@ -45,9 +45,9 @@ final class SNil extends SList {
     /**
      ** Return the single SNil instance.
      **/
-    //@ ensures \result!=null;
+    //@ ensures \result != null;
     public static SNil getNil() {
-	if (single!=null) {
+	if (single != null) {
 	    return single;
 	} else {
 	    single = new SNil();

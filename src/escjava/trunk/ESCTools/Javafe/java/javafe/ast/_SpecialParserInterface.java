@@ -53,19 +53,19 @@ public abstract class _SpecialParserInterface {
      * The token code will be one that does not require a
      * non-null auxVal (cf. Token.auxVal).
      */
-    //@ ensures \result!=TagConstants.BOOLEANLIT
-    //@ ensures \result!=TagConstants.INTLIT
-    //@ ensures \result!=TagConstants.LONGLIT
-    //@ ensures \result!=TagConstants.FLOATLIT
-    //@ ensures \result!=TagConstants.DOUBLELIT
-    //@ ensures \result!=TagConstants.STRINGLIT
-    //@ ensures \result!=TagConstants.CHARLIT
-    //@ ensures \result!=TagConstants.LEXICALPRAGMA
-    //@ ensures \result!=TagConstants.MODIFIERPRAGMA
-    //@ ensures \result!=TagConstants.STMTPRAGMA
-    //@ ensures \result!=TagConstants.TYPEDECLELEMPRAGMA
-    //@ ensures \result!=TagConstants.TYPEMODIFIERPRAGMA
-    public static int getTokenType(/*@non_null*/ Identifier id) {
+    //@ ensures \result != TagConstants.BOOLEANLIT;
+    //@ ensures \result != TagConstants.INTLIT;
+    //@ ensures \result != TagConstants.LONGLIT;
+    //@ ensures \result != TagConstants.FLOATLIT;
+    //@ ensures \result != TagConstants.DOUBLELIT;
+    //@ ensures \result != TagConstants.STRINGLIT;
+    //@ ensures \result != TagConstants.CHARLIT;
+    //@ ensures \result != TagConstants.LEXICALPRAGMA;
+    //@ ensures \result != TagConstants.MODIFIERPRAGMA;
+    //@ ensures \result != TagConstants.STMTPRAGMA;
+    //@ ensures \result != TagConstants.TYPEDECLELEMPRAGMA;
+    //@ ensures \result != TagConstants.TYPEMODIFIERPRAGMA;
+    public static int getTokenType(/*@ non_null @*/ Identifier id) {
 	return id.tokenType;
     }
 
@@ -76,19 +76,19 @@ public abstract class _SpecialParserInterface {
      * The token code must be one that does not require a
      * non-null auxVal (cf. Token.auxVal).
      */
-    //@ requires tokenType!=TagConstants.BOOLEANLIT
-    //@ requires tokenType!=TagConstants.INTLIT
-    //@ requires tokenType!=TagConstants.LONGLIT
-    //@ requires tokenType!=TagConstants.FLOATLIT
-    //@ requires tokenType!=TagConstants.DOUBLELIT
-    //@ requires tokenType!=TagConstants.STRINGLIT
-    //@ requires tokenType!=TagConstants.CHARLIT
-    //@ requires tokenType!=TagConstants.LEXICALPRAGMA
-    //@ requires tokenType!=TagConstants.MODIFIERPRAGMA
-    //@ requires tokenType!=TagConstants.STMTPRAGMA
-    //@ requires tokenType!=TagConstants.TYPEDECLELEMPRAGMA
-    //@ requires tokenType!=TagConstants.TYPEMODIFIERPRAGMA
-    public static void setTokenType(/*@non_null*/ Identifier id,
+    //@ requires tokenType != TagConstants.BOOLEANLIT;
+    //@ requires tokenType != TagConstants.INTLIT;
+    //@ requires tokenType != TagConstants.LONGLIT;
+    //@ requires tokenType != TagConstants.FLOATLIT;
+    //@ requires tokenType != TagConstants.DOUBLELIT;
+    //@ requires tokenType != TagConstants.STRINGLIT;
+    //@ requires tokenType != TagConstants.CHARLIT;
+    //@ requires tokenType != TagConstants.LEXICALPRAGMA;
+    //@ requires tokenType != TagConstants.MODIFIERPRAGMA;
+    //@ requires tokenType != TagConstants.STMTPRAGMA;
+    //@ requires tokenType != TagConstants.TYPEDECLELEMPRAGMA;
+    //@ requires tokenType != TagConstants.TYPEMODIFIERPRAGMA;
+    public static void setTokenType(/*@ non_null @*/ Identifier id,
 				    int tokenType) {
 	id.tokenType = tokenType;
     }
@@ -102,9 +102,9 @@ public abstract class _SpecialParserInterface {
     associated with the symbol consisting of the first
     <CODE>textlen</CODE> characters of <CODE>text</CODE>. */
 
-  //@ requires text!=null
-  //@ requires 0<=textlen && textlen<=text.length
-  //@ ensures \result!=null
+  //@ requires text != null;
+  //@ requires 0 <= textlen && textlen <= text.length;
+  //@ ensures \result != null;
   public static Identifier intern(char[] text, int textlen, int hashcode) {
     return Identifier.intern(text, textlen, hashcode);
   }
@@ -119,8 +119,8 @@ public abstract class _SpecialParserInterface {
   /** Return the hash code used by <CODE>Identifier</CODE> for a given
     sequence of characters. */
 
-  //@ requires text!=null
-  //@ requires 0<=textlen && textlen<text.length
+  //@ requires text != null;
+  //@ requires 0 <= textlen && textlen < text.length;
   public static int hash(char[] text, int textlen)
   { return Identifier.hash(text, textlen); }
 }

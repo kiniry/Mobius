@@ -14,7 +14,7 @@ import java.util.Enumeration;
 class FilterEnum extends LookAheadEnum {
 
     /** The underlying Enumeration: */
-    //@ invariant underlyingEnum != null
+    //@ invariant underlyingEnum != null;
     //@ invariant !underlyingEnum.returnsNull
     //@ invariant underlyingEnum.owner == this
     protected Enumeration underlyingEnum;
@@ -24,7 +24,7 @@ class FilterEnum extends LookAheadEnum {
 
 
     /** The filter we are using: */
-    //@ invariant filter != null
+    //@ invariant filter != null;
     //@ invariant filter.acceptedType == elementType
     public Filter filter;
 
@@ -38,9 +38,9 @@ class FilterEnum extends LookAheadEnum {
     /**
      * Filter the Enumeration E using Filter F:
      */
-    //@ requires E!=null && F!=null
+    //@ requires E != null && F != null;
     //@ requires !E.returnsNull
-    //@ requires E.owner == null
+    //@ requires E.owner == null;
     //@ requires E.elementType == F.acceptedType
     //@ ensures elementType == E.elementType
     public FilterEnum(Enumeration E, Filter F) {

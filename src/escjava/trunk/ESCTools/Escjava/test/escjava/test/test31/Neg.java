@@ -6,7 +6,7 @@ class Neg {
 
 class Neg2 {
 
-    //@ invariant foos!=null;
+    //@ invariant foos != null;
     //@ invariant foos.length>1;
     String[] foos = new String[10];
 
@@ -15,8 +15,8 @@ class Neg2 {
 
 class NegUser {
 
-    //@ requires X!=null;
-    //@ requires Y!=null;
+    //@ requires X != null;
+    //@ requires Y != null;
     void foo(Neg X, Neg2 Y) {
 	Y.foos[0] = null;
     }

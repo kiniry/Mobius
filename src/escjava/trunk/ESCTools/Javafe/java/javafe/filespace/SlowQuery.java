@@ -33,7 +33,7 @@ public class SlowQuery extends Query {
      * Create an query engine that may be queried about packages and
      * classes in the classpath classpath.
      *
-     * <esc> requires classpath!=null </esc>
+     * <esc> requires classpath != null </esc>
      */
     public SlowQuery(String classpath) throws java.io.IOException {
 	javaFileSpace = ClassPath.open(classpath, false);
@@ -64,7 +64,7 @@ public class SlowQuery extends Query {
      * and may in fact be defined as always true.<p>
      */
     public boolean accessable(String[] P) {
-	return (getPackage(P)!=null);
+	return (getPackage(P) != null);
     }
 
 
@@ -102,7 +102,7 @@ public class SlowQuery extends Query {
         for (int i=0; i<extensions.length; ++i) {
 	    String extension = extensions[i];
 	    Tree node = Package.getChild(typename+"."+extension);
-	    if (node!=null) return (GenericFile)node.data; //@ nowarn Cast
+	    if (node != null) return (GenericFile)node.data; //@ nowarn Cast
 	}
 	return null;
      }
@@ -126,7 +126,7 @@ public class SlowQuery extends Query {
 	Tree Package = javaFileSpace;
 
 	for (int i=0; i<P.length; i++) {
-	    if (Package!=null)
+	    if (Package != null)
 		Package = Package.getChild(P[i]);
 	}
 
@@ -146,7 +146,7 @@ public class SlowQuery extends Query {
 	/*
 	 * Parse command arguments:
 	 */
-	if (args.length!=3) {
+	if (args.length != 3) {
 	    System.out.println(
 		"Query: usage <package name> <typename> <extension>");
 	    return;

@@ -30,20 +30,20 @@ public abstract class ParseExpr extends ParseType
     //@ invariant stackPtr < exprStack.length
     private int stackPtr = -1;         // Always points to top element, if any
 
-    //@ invariant exprStack != null
+    //@ invariant exprStack != null;
     //@ invariant exprStack.length > 0
     //@ invariant \typeof(exprStack) == \type(Expr[])
     private Expr exprStack[]      = new Expr[defaultStackSize];
 
-    //@ invariant opStack != null
+    //@ invariant opStack != null;
     //@ invariant opStack.length == exprStack.length
     private int opStack[]         = new int[defaultStackSize];
 
-    //@ invariant precedenceStack != null
+    //@ invariant precedenceStack != null;
     //@ invariant precedenceStack.length == exprStack.length
     private int precedenceStack[] = new int[defaultStackSize];
 
-    //@ invariant locStack != null
+    //@ invariant locStack != null;
     //@ invariant locStack.length == exprStack.length
     private int locStack[]        = new int[defaultStackSize];
 
@@ -53,10 +53,10 @@ public abstract class ParseExpr extends ParseType
     // in the following tables. The precedence is 0 for tokens that are
     // not operators. These tables are sized as necessary.
 
-    //@ invariant precedenceTable != null
+    //@ invariant precedenceTable != null;
     private int[] precedenceTable    = new int[0];
 
-    //@ invariant isLeftAssocTable != null
+    //@ invariant isLeftAssocTable != null;
     //@ invariant isLeftAssocTable.length == precedenceTable.length
     private boolean[] isLeftAssocTable = new boolean[0];
 
@@ -66,16 +66,16 @@ public abstract class ParseExpr extends ParseType
      A declaration of this method is needed because class declarations
      can be in expressions.  However, the body lives in Parse.java */
     //@ requires loc != Location.NULL
-    //@ requires elems != null
+    //@ requires elems != null;
     abstract void addDefaultConstructor(TypeDeclElemVec elems, int loc);
 
     /** Parse an element of a type declaration into "seq".
      "keyword" should be the kind of type decl, one of CLASS or INTERFACE.
      "containerId" should be the name of the containing type decl.
      Lives in Parse.java; more doc can be found there.  */
-    //@ requires l != null && l.m_in != null
+    //@ requires l != null && l.m_in != null;
     abstract TypeDeclElem parseTypeDeclElemIntoSeqTDE(Lex l, int keyword,
-                                              /*@non_null*/ Identifier
+                                              /*@ non_null @*/ Identifier
                                               containerId,
                                               boolean specOnly);
 
@@ -175,8 +175,8 @@ public abstract class ParseExpr extends ParseType
      * in chapter 19 of "The Java Language Specification".
      */
       
-    //@ requires l != null && l.m_in != null
-    //@ ensures \result != null
+    //@ requires l != null && l.m_in != null;
+    //@ ensures \result != null;
     public Expr parseExpression(Lex l) {
         // Save old stack pointer, so re-enterable
         int baseStackPtr = stackPtr;
@@ -327,8 +327,8 @@ public abstract class ParseExpr extends ParseType
 
      */
 
-    //@ requires l != null && l.m_in != null
-    //@ ensures \result != null
+    //@ requires l != null && l.m_in != null;
+    //@ ensures \result != null;
     public Expr parseUnaryExpression(Lex l) {
         Expr primary;
 
@@ -499,8 +499,8 @@ public abstract class ParseExpr extends ParseType
      */
 
 
-    //@ requires l != null && l.m_in != null
-    //@ ensures \result != null
+    //@ requires l != null && l.m_in != null;
+    //@ ensures \result != null;
     public Expr parseCastExpression(Lex l) {
         int locOpen = l.startingLoc;
         expect( l, TagConstants.LPAREN );
@@ -556,8 +556,8 @@ public abstract class ParseExpr extends ParseType
 
      */
 
-    //@ requires l != null && l.m_in != null
-    //@ ensures \result != null
+    //@ requires l != null && l.m_in != null;
+    //@ ensures \result != null;
     protected Expr parsePrimaryExpression(Lex l) {
         Expr primary;
 
@@ -737,9 +737,9 @@ public abstract class ParseExpr extends ParseType
      * parses . class, then produces a class literal expression using
      * Type t
      */ 
-    //@ requires l != null && t != null && l.m_in != null
+    //@ requires l != null && t != null && l.m_in != null;
     //@ requires t.syntax
-    //@ ensures \result != null
+    //@ ensures \result != null;
     protected Expr parseClassLiteralSuffix(Lex l, Type t) {
         int locDot = l.startingLoc;
         expect( l, TagConstants.FIELD );
@@ -749,8 +749,8 @@ public abstract class ParseExpr extends ParseType
     }
 
 
-    //@ requires l != null && primary != null && l.m_in != null
-    //@ ensures \result != null
+    //@ requires l != null && primary != null && l.m_in != null;
+    //@ ensures \result != null;
     protected Expr parsePrimarySuffix(Lex l, Expr primary) {
 
         for(;;) {
@@ -845,9 +845,9 @@ public abstract class ParseExpr extends ParseType
      </PRE>
      */
   
-    //@ requires l != null && l.m_in != null
+    //@ requires l != null && l.m_in != null;
     //@ requires l.ttype == TagConstants.NEW
-    //@ ensures \result != null
+    //@ ensures \result != null;
     public Expr parseNewExpression(Lex l) {
         int locNew = l.startingLoc;
         l.getNextToken();
@@ -962,8 +962,8 @@ public abstract class ParseExpr extends ParseType
      </PRE>
      */
   
-    //@ requires l != null && l.m_in != null
-    //@ ensures \result != null
+    //@ requires l != null && l.m_in != null;
+    //@ ensures \result != null;
     public ExprVec parseArgumentList(Lex l) {
         expect( l, TagConstants.LPAREN );
         return parseExpressionList(l, TagConstants.RPAREN);
@@ -992,8 +992,8 @@ public abstract class ParseExpr extends ParseType
      </PRE>
      */
   
-    //@ requires l != null && l.m_in != null
-    //@ ensures \result != null
+    //@ requires l != null && l.m_in != null;
+    //@ ensures \result != null;
     public ExprVec parseExpressionList(Lex l, int terminator) {
         if( l.ttype == terminator ) {
             l.getNextToken();
@@ -1014,7 +1014,7 @@ public abstract class ParseExpr extends ParseType
     /** Parse <TT>super</TT>.
      */
 
-    //@ requires l != null && l.m_in != null
+    //@ requires l != null && l.m_in != null;
     public Name parseSuper(Lex l) {
         expect( l, TagConstants.SUPER );
         return SimpleName.make(Identifier.intern("super"), l.startingLoc);
@@ -1031,8 +1031,8 @@ public abstract class ParseExpr extends ParseType
      </PRE>
      */
 
-    //@ requires l != null && l.m_in != null
-    //@ ensures \result != null
+    //@ requires l != null && l.m_in != null;
+    //@ ensures \result != null;
     public VarInit parseVariableInitializer(Lex l, boolean specOnly) {
         if( l.ttype == TagConstants.LBRACE ) {
             return parseArrayInitializer(l);
@@ -1043,8 +1043,8 @@ public abstract class ParseExpr extends ParseType
     }
 
     //@ requires l.ttype == TagConstants.LBRACE
-    //@ requires l != null && l.m_in != null
-    //@ ensures \result != null
+    //@ requires l != null && l.m_in != null;
+    //@ ensures \result != null;
     public ArrayInit parseArrayInitializer(Lex l) {
         int locOpenBrace = l.startingLoc;
         expect( l, TagConstants.LBRACE );
@@ -1147,7 +1147,7 @@ public abstract class ParseExpr extends ParseType
      */
     //@ invariant seqExpr.elementType == \type(Expr)
     //@ invariant seqExpr.owner == this
-    protected final /*@non_null*/ StackVector seqExpr
+    protected final /*@ non_null @*/ StackVector seqExpr
             = new StackVector();
 
     /**
@@ -1155,7 +1155,7 @@ public abstract class ParseExpr extends ParseType
      */
     //@ invariant seqVarInit.elementType == \type(VarInit)
     //@ invariant seqVarInit.owner == this
-    protected final /*@non_null*/ StackVector seqVarInit
+    protected final /*@ non_null @*/ StackVector seqVarInit
             = new StackVector();
 
     /**
@@ -1163,6 +1163,6 @@ public abstract class ParseExpr extends ParseType
      */
     //@ invariant seqTypeDeclElem.elementType == \type(TypeDeclElem)
     //@ invariant seqTypeDeclElem.owner == this
-    protected final /*@non_null*/ StackVector seqTypeDeclElem
+    protected final /*@ non_null @*/ StackVector seqTypeDeclElem
             = new StackVector();
 }

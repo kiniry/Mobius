@@ -67,7 +67,7 @@ public class UnionTree extends PreloadedTree {
      * roots must be non-null and contain no nulls.<p>
      */
     //@ requires \nonnullelements(roots)
-    //@ requires parent!=null && label!=null
+    //@ requires parent != null && label != null;
     protected UnionTree(Tree parent, String label, Tree[] roots) {
 	super(parent, label, null);
 
@@ -121,7 +121,7 @@ public class UnionTree extends PreloadedTree {
     }
 
     /* Load the direct edge labeled label if it is not already loaded */
-    //@ requires label!=null
+    //@ requires label != null;
     protected void loadEdge(String label) {
 	if (edges.containsKey(label))
 	    return;			// Edge already loaded...
@@ -166,9 +166,9 @@ public class UnionTree extends PreloadedTree {
     }
 
     /** A simple test driver */
-    //@ requires args!=null;
+    //@ requires args != null;
     /*@ requires (\forall int i; (0<=i && i<args.length)
-		==> args[i]!=null) */
+		==> args[i] != null) */
     public static void main(String[] args) {
 	/*
 	 * Create a list of FileTree's using the paths we're passed in:

@@ -22,9 +22,9 @@ public class Extension {
      * has none.  The extension is defined as the substring starting
      *	with the last "." and ending at the end of the filename.<p>
      *
-     * <esc> requires filename!=null </esc>
+     * <esc> requires filename != null </esc>
      */
-    //@ ensures \result!=null
+    //@ ensures \result != null;
     public static String getExtension(String filename) {
 	int lastDot = filename.lastIndexOf(".");
 
@@ -40,8 +40,8 @@ public class Extension {
      *	the filename preceeding the last "." or the entire filename if
      *	no "." is present.<p>
      */
-    //@ ensures \result!=null
-    public static String getBasename(/*@non_null*/ String filename) {
+    //@ ensures \result != null;
+    public static String getBasename(/*@ non_null @*/ String filename) {
 	int lastDot = filename.lastIndexOf(".");
 
 	if (lastDot == -1)
@@ -56,7 +56,7 @@ public class Extension {
      * It is faster to use endsWith for non-empty extensions; use this
      * function when extension may be empty ("").<p>
      *
-     * <esc> requires filename!=null && extension!=null </esc>
+     * <esc> requires filename != null && extension != null </esc>
      */
     public static boolean hasExtension(String filename, String extension) {
 	if (!filename.endsWith(extension))

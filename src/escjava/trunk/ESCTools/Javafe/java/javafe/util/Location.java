@@ -78,8 +78,8 @@ public class Location
    location.
    *********************************************************************/
 
-    //@ requires loc!=Location.NULL
-    //@ ensures \result!=null
+    //@ requires loc != Location.NULL
+    //@ ensures \result != null;
     public static GenericFile toFile(int loc) {
 	return LocationManagerCorrelatedReader.locToFile(loc);
     }
@@ -92,8 +92,8 @@ public class Location
    location.
    *********************************************************************/
 
-    //@ requires loc!=Location.NULL
-    //@ ensures \result!=null
+    //@ requires loc != Location.NULL
+    //@ ensures \result != null;
     public static String toFileName(int loc) {
 	return LocationManagerCorrelatedReader.locToFile(loc).getHumanName();
     }
@@ -107,7 +107,7 @@ public class Location
    * <p>Precondition: loc should be a regular location.
    *********************************************************************/
 
-    //@ requires loc!=Location.NULL
+    //@ requires loc != Location.NULL
     public static int toOffset(int loc) {
 	return LocationManagerCorrelatedReader.locToOffset(loc);
     }
@@ -120,7 +120,7 @@ public class Location
    * <p>Precondition: loc should be a regular location.
    *********************************************************************/
 
-    //@ requires loc!=Location.NULL
+    //@ requires loc != Location.NULL
     //@ ensures \result >= 1
     public static int toLineNumber(int loc) {
 	return LocationManagerCorrelatedReader.locToLineNumber(loc);
@@ -134,7 +134,7 @@ public class Location
    * <p>Precondition: loc should be a regular location.
    *********************************************************************/
 
-    //@ requires loc!=Location.NULL
+    //@ requires loc != Location.NULL
     //@ ensures \result >= 0
     public static int toColumn(int loc) {
 	return LocationManagerCorrelatedReader.locToColumn(loc);
@@ -175,8 +175,8 @@ public class Location
      * this file.
      *********************************************************************/
 
-    //@ ensures \result!=Location.NULL
-    public static int createWholeFileLoc(/*@non_null*/ GenericFile file) {
+    //@ ensures \result != Location.NULL
+    public static int createWholeFileLoc(/*@ non_null @*/ GenericFile file) {
 	return FileCorrelatedReader.createWholeFileLoc(file);
     }
 
@@ -190,8 +190,8 @@ public class Location
      * The resulting location is a whole-file location associated
      * with an unopenable file with human-name description.
      */
-    //@ ensures \result!=Location.NULL
-    public static int createFakeLoc(/*@non_null*/ String description) {
+    //@ ensures \result != Location.NULL
+    public static int createFakeLoc(/*@ non_null @*/ String description) {
 	return FileCorrelatedReader.createWholeFileLoc(
 		   new UnopenableFile(description));
     }
@@ -202,7 +202,7 @@ public class Location
     //@ requires streamId < LocationManagerCorrelatedReader.allCorrStreams.elementCount;
     //@ requires line > 0
     //@ requires col>=0
-    //@ ensures \result!=Location.NULL  
+    //@ ensures \result != Location.NULL  
     public static int make(int streamId, int line, int col) {
 	return LocationManagerCorrelatedReader.makeLocation(streamId, line, col);
     }
@@ -216,7 +216,7 @@ public class Location
      * (e.g., the line is too short.).
      */
     //@ requires n>=0
-    //@ ensures loc!=NULL ==> \result!=NULL
+    //@ ensures loc != NULL ==> \result != NULL
     public static int inc(int loc, int n) {
 	if (isWholeFileLoc(loc) || loc==NULL)
 	    return loc;
@@ -239,7 +239,7 @@ public class Location
     * Returns the internal stream ID used for the stream associated
     * with location <code>loc</code>.
     *
-    * <esc> requires loc!=Location.NULL </esc>
+    * <esc> requires loc != Location.NULL </esc>
     */
   public static int toStreamId(int loc) {
     return LocationManagerCorrelatedReader.locToStreamId(loc);

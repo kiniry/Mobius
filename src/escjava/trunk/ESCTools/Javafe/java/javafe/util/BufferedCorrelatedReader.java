@@ -54,7 +54,7 @@ public abstract class BufferedCorrelatedReader extends CorrelatedReader
 
   /**
    * The first unused entry in the buffer.  Aka,
-   * buf[0]...buf[endBufNdx-1] contains valid data (if buf!=null).
+   * buf[0]...buf[endBufNdx-1] contains valid data (if buf != null).
    */
   //@ invariant buf != null ==> endBufNdx <= buf.length;
 

@@ -98,7 +98,7 @@ public interface Collection {
      * @return <tt>true</tt> if this collection contains the specified
      *         element
      */
-    //@ requires !containsNull ==> o!=null
+    //@ requires !containsNull ==> o != null
     // //@ requires \typeof(o) <: elementType || o==null
     boolean contains(Object o);
 
@@ -110,7 +110,7 @@ public interface Collection {
      * 
      * @returns an <tt>Iterator</tt> over the elements in this collection
      */
-    //@ ensures \result!=null
+    //@ ensures \result != null
     //@ ensures \result.elementType == elementType
     //@ ensures containsNull == \result.returnsNull
     Iterator iterator();
@@ -131,7 +131,7 @@ public interface Collection {
      *
      * @return an array containing all of the elements in this collection
      */
-    //@ ensures \result!=null
+    //@ ensures \result != null
     Object[] toArray();
 
     /**
@@ -177,7 +177,7 @@ public interface Collection {
      *         not a supertype of the runtime type of every element in this
      *         collection.
      */
-    //@ ensures \result!=null
+    //@ ensures \result != null
     Object[] toArray(/*@non_null*/ Object a[]);
 
     // Modification Operations
@@ -212,7 +212,7 @@ public interface Collection {
      * @throws IllegalArgumentException some aspect of this element prevents
      *          it from being added to this collection.
      */
-    //@ requires !containsNull ==> o!=null
+    //@ requires !containsNull ==> o != null
     //@ requires \typeof(o) <: elementType || o==null
     boolean add(Object o);
 
@@ -232,7 +232,7 @@ public interface Collection {
      * @throws UnsupportedOperationException remove is not supported by this
      *         collection.
      */
-    //@ requires !containsNull ==> o!=null
+    //@ requires !containsNull ==> o != null
     //@ requires \typeof(o) <: elementType || o==null
     boolean remove(Object o);
 

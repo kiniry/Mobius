@@ -31,7 +31,7 @@ abstract class HashTree extends Tree {
      * Invariant: all elements of edges are Trees and all keys are
      * Strings.<p>
      */
-    //@ invariant edges!=null
+    //@ invariant edges != null;
     //@ invariant edges.keyType == \type(String)
     //@ invariant edges.elementType == \type(Tree)
     protected Hashtable edges = new Hashtable(5);
@@ -52,7 +52,7 @@ abstract class HashTree extends Tree {
     }
 
     /** Create a non-root node: */
-    //@ requires parent!=null && label!=null
+    //@ requires parent != null && label != null;
     protected HashTree(Tree parent, String label, Object data) {
 	super(parent, label, data);
 

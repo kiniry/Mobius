@@ -545,7 +545,7 @@ consistent with JML
                             // public and spec_public fields are always accessible
                             isAccessibleEnough = true;
 			} else if (Utils.findModifierPragma(fa.decl,
-					TagConstants.SPEC_PROTECTED)!=null) {
+					TagConstants.SPEC_PROTECTED) != null) {
 
 			    // Copied from the protected case down below.
                             isAccessibleEnough = false;

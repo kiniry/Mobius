@@ -35,15 +35,15 @@ class FileTree extends PreloadedTree {
      **************************************************/
 
     /** Create a root node: */
-    //@ requires dir!=null
+    //@ requires dir != null;
     public FileTree(File dir) {
 	super(new NormalGenericFile(dir));
 	this.dir = dir;
     }
 
     /** Create a non-root node: */
-    //@ requires dir!=null
-    //@ requires parent!=null && label!=null
+    //@ requires dir != null;
+    //@ requires parent != null && label != null;
     protected FileTree(Tree parent, String label, File dir) {
 	super(parent, label, new NormalGenericFile(dir));
 	this.dir = dir;

@@ -35,7 +35,7 @@ public interface GenericFile {
      * Warning: the result may not be a conventional filename or use
      * the system separators.
      */
-    //@ ensures \result!=null
+    //@ ensures \result != null;
     public abstract String getHumanName();
 
 
@@ -67,7 +67,7 @@ public interface GenericFile {
      * E.g., "/a/b/c" has local name "c", "/e/r/" has local name "r", and
      * "/" has local name "".  (assuming "/" is the separator char)
      */
-    //@ ensures \result!=null
+    //@ ensures \result != null;
     public abstract String getLocalName();
 
 
@@ -83,7 +83,7 @@ public interface GenericFile {
      * java.io.IOEXception may be thrown for many reasons, including no
      * such file and read permission denied.<p>
      */
-    //@ ensures \result!=null
+    //@ ensures \result != null;
     public abstract InputStream getInputStream() throws IOException;
 
 
@@ -111,5 +111,5 @@ public interface GenericFile {
      * In cases where the notion of "containing directory" makes no
      * sense (e.g., streams or root directories), null is returned.
      */
-    public abstract GenericFile getSibling(/*@non_null*/ String n);
+    public abstract GenericFile getSibling(/*@ non_null @*/ String n);
 }

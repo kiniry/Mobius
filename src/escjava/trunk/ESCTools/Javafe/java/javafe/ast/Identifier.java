@@ -53,7 +53,7 @@ public final class Identifier
 
   /** Sequence of characters represented by this Identifier (never
     <code>null</code>). */
-  //@ invariant chars!=null
+  //@ invariant chars != null;
   private char[] chars;
 
   /** Memoization of <code>String.valueOf(chars, 0,
@@ -76,22 +76,22 @@ public final class Identifier
      * This field defaults to <code>TagConstants.IDENT</code>, but
      * is set to other values by the scanner to indicate keywords.
      */
-    /*@ invariant tokenType!=TagConstants.BOOLEANLIT &&
-                  tokenType!=TagConstants.INTLIT &&
-                  tokenType!=TagConstants.LONGLIT &&
-                  tokenType!=TagConstants.FLOATLIT &&
-                  tokenType!=TagConstants.DOUBLELIT &&
-                  tokenType!=TagConstants.STRINGLIT &&
-                  tokenType!=TagConstants.CHARLIT &&
-                  tokenType!=TagConstants.LEXICALPRAGMA &&
-                  tokenType!=TagConstants.MODIFIERPRAGMA &&
-                  tokenType!=TagConstants.STMTPRAGMA &&
-                  tokenType!=TagConstants.TYPEDECLELEMPRAGMA &&
-                  tokenType!=TagConstants.TYPEMODIFIERPRAGMA */
+    /*@ invariant tokenType != TagConstants.BOOLEANLIT &&
+                  tokenType != TagConstants.INTLIT &&
+                  tokenType != TagConstants.LONGLIT &&
+                  tokenType != TagConstants.FLOATLIT &&
+                  tokenType != TagConstants.DOUBLELIT &&
+                  tokenType != TagConstants.STRINGLIT &&
+                  tokenType != TagConstants.CHARLIT &&
+                  tokenType != TagConstants.LEXICALPRAGMA &&
+                  tokenType != TagConstants.MODIFIERPRAGMA &&
+                  tokenType != TagConstants.STMTPRAGMA &&
+                  tokenType != TagConstants.TYPEDECLELEMPRAGMA &&
+                  tokenType != TagConstants.TYPEMODIFIERPRAGMA */
     int tokenType = TagConstants.IDENT;
 
 
-  //@ requires text!=null
+  //@ requires text != null;
   //@ requires 0<=textlen && textlen<=text.length
   private Identifier(char[] text, int textlen, int hashcode) {
     this.chars = new char[textlen];
@@ -101,8 +101,8 @@ public final class Identifier
 
   /** Returns the <code>Identifier</code> associated with
     <TT>s</TT>. */
-  //@ requires s!=null
-  //@ ensures \result!=null
+  //@ requires s != null;
+  //@ ensures \result != null;
   public static Identifier intern(String s) {
     // Expensive way of doing things, but at least we don't have
     // to rewrite the above code...
@@ -122,9 +122,9 @@ public final class Identifier
     associated with the symbol consisting of the first
     <code>textlen</code> characters of <code>text</code>. */
 
-  //@ requires text!=null
+  //@ requires text != null;
   //@ requires 0<=textlen && textlen<=text.length
-  //@ ensures \result!=null
+  //@ ensures \result != null;
   static Identifier intern(char[] text, int textlen, int hashcode) {
 
     int h = Math.abs(hashcode) % TABLE_SIZE;
@@ -157,7 +157,7 @@ public final class Identifier
     return (chain[index] = new Identifier(text, textlen, hashcode));
   }
 
- //@ requires s!=null
+ //@ requires s != null;
   static int hash(String s) {
     int len = s.length();
     int hashcode = 0;
@@ -166,7 +166,7 @@ public final class Identifier
     return hashcode;
   }
 
-  //@ requires text!=null
+  //@ requires text != null;
   //@ requires 0<=textlen && textlen<=text.length
   static int hash(char[] text, int textlen) {
     int hashcode = 0;
@@ -208,7 +208,7 @@ public final class Identifier
 	    if (! idn.equiv.equals(String.valueOf(idn.chars)))
 	      Assert.fail("Bad equiv field");
 	}
-	// Rest in chain must be null
+	// Rest in chain must be null;
 	for( ; i < chain.length; i++)
 	  if (chain[i] != null) Assert.fail("Bad chain");
       }
@@ -217,7 +217,7 @@ public final class Identifier
 
 
   /** Used by <code>check</code>; checks for duplicates. */
-  //@ requires s!=null
+  //@ requires s != null;
   private static Identifier slowFind(String s) {
     Identifier result = null;
     for(int h = 0; h < TABLE_SIZE; h++) {
@@ -234,9 +234,9 @@ public final class Identifier
     return result;
   }
 
-    //@ requires argv!=null;
+    //@ requires argv != null;
     /*@ requires (\forall int i; (0<=i && i<argv.length)
-		==> argv[i]!=null) */
+		==> argv[i] != null) */
   public static void main(String[] argv) {
     String stem = "gensym";
     int stemlen = stem.length();

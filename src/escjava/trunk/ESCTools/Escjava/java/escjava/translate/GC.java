@@ -427,7 +427,7 @@ public final class GC {
     }
   }
 
-  //@ requires var!=null && val!=null
+  //@ requires var != null && val!=null
   public static Expr subst(GenericVarDecl var, Expr val, Expr target) {
     return subst( Location.NULL, Location.NULL, var, val, target );
   }

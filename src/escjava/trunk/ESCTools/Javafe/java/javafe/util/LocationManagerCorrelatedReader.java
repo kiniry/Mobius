@@ -141,7 +141,7 @@ public abstract class LocationManagerCorrelatedReader
   //@ invariant !allCorrStreams.containsNull;
   //@ invariant allCorrStreams.elementType == \type(LocationManagerCorrelatedReader);
 
-  /*@spec_public*/ private static /*@non_null*/ Vector allCorrStreams = new Vector();
+  /*@spec_public*/ private static /*@ non_null @*/ Vector allCorrStreams = new Vector();
 
   /**
    * Creates and returns a vector that associates file numbers 
@@ -222,7 +222,7 @@ public abstract class LocationManagerCorrelatedReader
     }
 
     if ((line==s.curLineNo && col+1>s.curNdx) ||
-	(line!=s.curLineNo && col+1>(s.NLOA[line]-s.NLOA[line-1]))) {
+	(line != s.curLineNo && col+1>(s.NLOA[line]-s.NLOA[line-1]))) {
 	System.out.println("INTERNAL ERROR: invalid request to form a location (out of range column number): " + streamId + " " + line + " " + col + " " + streamIdToFile(streamId).getHumanName());
 	col = 0;
     }
@@ -235,7 +235,7 @@ public abstract class LocationManagerCorrelatedReader
     }
 
     // Verify we got the right location:
-    if (locToStreamId(loc)!=streamId ||
+    if (locToStreamId(loc) != streamId ||
 	locToColumn(loc) != col ||
 	locToLineNumber(loc) != line) {
       Assert.fail("bug found in makeLocation");

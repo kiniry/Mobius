@@ -32,7 +32,7 @@ public abstract class Tool {
      *
      * Used in usage and error messages.<p>
      */
-    //@ ensures \result!=null
+    //@ ensures \result != null;
     public abstract String name();
 
 

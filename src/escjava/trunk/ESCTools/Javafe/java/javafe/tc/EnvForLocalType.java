@@ -26,13 +26,13 @@ public class EnvForLocalType extends Env implements/*privately*/ Cloneable {
      * Our parent environment
      */
     //@ invariant !(parent instanceof EnvForCU)
-    protected /*@non_null*/ Env parent;
+    protected /*@ non_null @*/ Env parent;
 
     /**
      * The new local binding.
      */
-    //@ invariant decl.id!=null
-    protected /*@non_null*/ TypeDecl decl;
+    //@ invariant decl.id != null;
+    protected /*@ non_null @*/ TypeDecl decl;
 
 
     /**
@@ -43,10 +43,10 @@ public class EnvForLocalType extends Env implements/*privately*/ Cloneable {
      * is a redefinition of a local type binding not hidden by a type
      * member.<p>
      */
-    //@ requires decl.id!=null
+    //@ requires decl.id != null;
     //@ requires !(parent instanceof EnvForCU)
-    public EnvForLocalType(/*@non_null*/ Env parent,
-			   /*@non_null*/ TypeDecl decl) {
+    public EnvForLocalType(/*@ non_null @*/ Env parent,
+			   /*@ non_null @*/ TypeDecl decl) {
 	this.parent = parent;
 	this.decl = decl;
 
@@ -59,7 +59,7 @@ public class EnvForLocalType extends Env implements/*privately*/ Cloneable {
 	// Note: Location.NULL here prevents ambiguous typename errors
 	TypeSig previous = parent.lookupSimpleTypeName(null, decl.id,
 						       Location.NULL);
-	if (previous!=null && !previous.member)
+	if (previous != null && !previous.member)
 	    ErrorSet.error(decl.locId,
 			   "Local type definitions may not hide"
 			   + " already existing local type definitions.");
@@ -81,7 +81,7 @@ public class EnvForLocalType extends Env implements/*privately*/ Cloneable {
      * This is also refered to as "are we in a static context?".  The
      * legality of super also depends on this result. <p>
      *
-     * The legality of C.this, C!=<enclosing class> is different; see 
+     * The legality of C.this, C != <enclosing class> is different; see 
      * canAccessInstance(-).
      */
     public boolean isStaticContext() { return parent.isStaticContext(); }
@@ -148,7 +148,7 @@ public class EnvForLocalType extends Env implements/*privately*/ Cloneable {
      * This routine does not check that the resulting type (if any)
      * is actually accessable. <p>
      *
-     * If id is ambiguous, then if loc!=Location.NULL then a fatal
+     * If id is ambiguous, then if loc != Location.NULL then a fatal
      * error is reported at that location via ErrorSet else one of
      * its possible meanings is returned.<p>
      */

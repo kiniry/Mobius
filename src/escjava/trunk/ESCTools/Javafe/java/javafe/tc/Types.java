@@ -25,7 +25,7 @@ public class Types
      * Factory method for TypeSig structures
      */
     //@ requires !(enclosingEnv instanceof EnvForCU)
-    //@ ensures \result != null
+    //@ ensures \result != null;
     public static TypeSig makeTypeSig(String simpleName,
                                       /*@ non_null */ Env enclosingEnv,
                                       /*@ non_null */ TypeDecl decl) {
@@ -35,7 +35,7 @@ public class Types
     }
   
     //@ requires !(enclosingEnv instanceof EnvForCU)
-    //@ ensures \result != null
+    //@ ensures \result != null;
     protected TypeSig makeTypeSigInstance(String simpleName,
                                           /*@ non_null */ Env enclosingEnv,
                                           /*@ non_null */ TypeDecl decl) {
@@ -50,7 +50,7 @@ public class Types
     //@ requires \nonnullelements(packageName)
     //@ requires (enclosingType != null) ==> (decl != null)
     //@ requires (decl==null) == (CU==null)
-    //@ ensures \result != null
+    //@ ensures \result != null;
     protected static TypeSig makeTypeSig(String[] packageName,
                                          /*@ non_null */ String simpleName,
                                          TypeSig enclosingType,
@@ -66,7 +66,7 @@ public class Types
     //@ requires \nonnullelements(packageName)
     //@ requires (enclosingType != null) ==> (decl != null)
     //@ requires (decl==null) == (CU==null)
-    //@ ensures \result != null
+    //@ ensures \result != null;
     protected TypeSig makeTypeSigInstance(String[] packageName,
                                           /*@ non_null */ String simpleName,
                                           TypeSig enclosingType,
@@ -92,7 +92,7 @@ public class Types
      || tag == TagConstants.FLOATTYPE || tag == TagConstants.DOUBLETYPE
      || tag == TagConstants.VOIDTYPE || tag == TagConstants.NULLTYPE
      || tag == TagConstants.BYTETYPE || tag == TagConstants.SHORTTYPE) */
-    //@ ensures \result != null
+    //@ ensures \result != null;
     private static final PrimitiveType makePrimitiveType(int tag) {
         return PrimitiveType.makeNonSyntax(tag);
     }
@@ -105,43 +105,43 @@ public class Types
     public static PrimitiveType 
             errorType = makePrimitiveType( TagConstants.ERRORTYPE );
 
-    //@ invariant voidType != null
+    //@ invariant voidType != null;
     public static PrimitiveType 
             voidType = makePrimitiveType( TagConstants.VOIDTYPE );
 
-    //@ invariant booleanType != null
+    //@ invariant booleanType != null;
     public static PrimitiveType
             booleanType = makePrimitiveType( TagConstants.BOOLEANTYPE );
 
-    //@ invariant intType != null
+    //@ invariant intType != null;
     public static PrimitiveType
             intType = makePrimitiveType( TagConstants.INTTYPE );
 
-    //@ invariant doubleType != null
+    //@ invariant doubleType != null;
     public static PrimitiveType
             doubleType = makePrimitiveType( TagConstants.DOUBLETYPE );
 
-    //@ invariant floatType != null
+    //@ invariant floatType != null;
     public static PrimitiveType
             floatType = makePrimitiveType( TagConstants.FLOATTYPE );
 
-    //@ invariant longType != null
+    //@ invariant longType != null;
     public static PrimitiveType
             longType = makePrimitiveType( TagConstants.LONGTYPE );
 
-    //@ invariant charType != null
+    //@ invariant charType != null;
     public static PrimitiveType
             charType = makePrimitiveType( TagConstants.CHARTYPE );
 
-    //@ invariant nullType != null
+    //@ invariant nullType != null;
     public static PrimitiveType
             nullType = makePrimitiveType( TagConstants.NULLTYPE );
 
-    //@ invariant byteType != null
+    //@ invariant byteType != null;
     public static PrimitiveType
             byteType = makePrimitiveType( TagConstants.BYTETYPE );
 
-    //@ invariant shortType != null
+    //@ invariant shortType != null;
     public static PrimitiveType
             shortType = makePrimitiveType( TagConstants.SHORTTYPE );
 
@@ -202,8 +202,8 @@ public class Types
      *
      * Precondition: the TypeSig has been initialized.<p>
      */
-    //@ requires T != null
-    //@ ensures \result != null
+    //@ requires T != null;
+    //@ ensures \result != null;
     public static TypeSig getJavaLang(String T) {
 	return OutsideEnv.lookupDeferred(javaLangPackage(), T);
     }
@@ -215,7 +215,7 @@ public class Types
      */
 
     //* Returns the TypeSig for java.lang.Object.
-    //@ ensures \result != null
+    //@ ensures \result != null;
     public static TypeSig javaLangObject() {
         if (s_javaLangObject == null)
             s_javaLangObject = getJavaLang("Object");
@@ -224,7 +224,7 @@ public class Types
     private static TypeSig s_javaLangObject;
 
     //* Returns the TypeSig for java.lang.System.
-    //@ ensures \result != null
+    //@ ensures \result != null;
     public static TypeSig javaLangSystem() {
         if (s_javaLangSystem == null)
             s_javaLangSystem = getJavaLang("System");
@@ -233,7 +233,7 @@ public class Types
     private static TypeSig s_javaLangSystem;
 
     //* Returns the TypeSig for java.lang.Error.
-    //@ ensures \result != null
+    //@ ensures \result != null;
     public static TypeSig javaLangError() {
         if (s_javaLangError == null)
             s_javaLangError = getJavaLang("Error");
@@ -242,7 +242,7 @@ public class Types
     private static TypeSig s_javaLangError;
 
     //* Returns the TypeSig for java.lang.Exception.
-    //@ ensures \result != null
+    //@ ensures \result != null;
     public static TypeSig javaLangException() {
         if (s_javaLangException == null)
             s_javaLangException = getJavaLang("Exception");
@@ -251,7 +251,7 @@ public class Types
     private static TypeSig s_javaLangException;
 
     //* Returns the TypeSig for java.lang.Throwable.
-    //@ ensures \result != null
+    //@ ensures \result != null;
     public static TypeSig javaLangThrowable() {
         if (s_javaLangThrowable == null)
             s_javaLangThrowable = getJavaLang("Throwable");
@@ -260,7 +260,7 @@ public class Types
     private static TypeSig s_javaLangThrowable;
 
     //* Returns the TypeSig for java.lang.String.
-    //@ ensures \result != null
+    //@ ensures \result != null;
     public static TypeSig javaLangString() {
         if (s_javaLangString == null)
             s_javaLangString = getJavaLang("String");
@@ -269,7 +269,7 @@ public class Types
     private static TypeSig s_javaLangString;
 
     //* Returns the TypeSig for java.lang.RuntimeException.
-    //@ ensures \result != null
+    //@ ensures \result != null;
     public static TypeSig javaLangRuntimeException() {
         if (s_javaLangRuntimeException == null)
             s_javaLangRuntimeException =
@@ -279,7 +279,7 @@ public class Types
     private static TypeSig s_javaLangRuntimeException;
 
     //* Returns the TypeSig for java.lang.Cloneable.
-    //@ ensures \result != null
+    //@ ensures \result != null;
     public static TypeSig javaLangCloneable() {
         if (s_javaLangCloneable == null)
             s_javaLangCloneable = getJavaLang("Cloneable");
@@ -288,7 +288,7 @@ public class Types
     private static TypeSig s_javaLangCloneable;
 
     //* Returns the TypeSig for java.lang.Class
-    //@ ensures \result != null
+    //@ ensures \result != null;
     public static TypeSig javaLangClass() {
         if (s_javaLangClass == null)
             s_javaLangClass = getJavaLang("Class");
@@ -402,14 +402,14 @@ public class Types
     // ======================================================================
     // Conversions on Types
 
-    //@ requires x != null && y != null
+    //@ requires x != null && y != null;
     /*@ ensures \result ==>
      (x instanceof PrimitiveType) == (y instanceof PrimitiveType) */
     public static boolean isSameType( Type x, Type y ) {
         return inst.isSameTypeInstance(x, y);
     }
 
-    //@ requires x != null && y != null
+    //@ requires x != null && y != null;
     /*@ ensures \result ==>
      (x instanceof PrimitiveType) == (y instanceof PrimitiveType) */
     protected boolean isSameTypeInstance( Type x, Type y ) {
@@ -434,7 +434,7 @@ public class Types
      * superinterface of <code>y</code>.  (The occurrence of "class"
      * in the name of the method is rather unfortunate.)
      */
-    //@ requires x != null && y != null
+    //@ requires x != null && y != null;
     //@ ensures \result ==> (x instanceof TypeSig) || (x instanceof TypeName)
     public static boolean isSubclassOf( Type x, TypeSig y ) {
     
@@ -458,7 +458,7 @@ public class Types
      * subtype of <code>y</code>!  It does not consider short below
      * int.
      */
-    //@ requires x != null && y != null
+    //@ requires x != null && y != null;
     public static boolean isSubClassOrEq(/*non_null*/ Type x,
 					 /*non_null*/ Type y) {
 	if (x instanceof ArrayType && y instanceof ArrayType) {
@@ -482,12 +482,12 @@ public class Types
      See JLS, P.67.
      */
   
-    //@ requires s != null && t != null
+    //@ requires s != null && t != null;
     public static boolean isCastable( Type s, Type t ) {
         return inst.isCastableInstance(s, t);
     }
   
-    //@ requires s != null && t != null
+    //@ requires s != null && t != null;
     protected boolean isCastableInstance( Type s, Type t ) {
         Assert.notNull( s );
         Assert.notNull( t );
@@ -621,12 +621,12 @@ public class Types
         return false;
     }
 
-    //@ requires x != null && y != null
+    //@ requires x != null && y != null;
     public static boolean isInvocationConvertable( Type x, Type y ) {
         return inst.isInvocationConvertableInstance(x, y);
     }
   
-    //@ requires x != null && y != null
+    //@ requires x != null && y != null;
     protected boolean isInvocationConvertableInstance( Type x, Type y ) {
 
         if( isSameType(x,y) ) return true;
@@ -635,7 +635,7 @@ public class Types
         return false;
     }
 
-    //@ requires x != null && y != null
+    //@ requires x != null && y != null;
     protected static boolean isWideningPrimitiveConvertable( Type x, Type y ) {
 
         switch( x.getTag() ) {
@@ -692,12 +692,12 @@ public class Types
         return true;
     }
 
-    //@ requires s != null && t != null
+    //@ requires s != null && t != null;
     protected static boolean isWideningReferenceConvertable( Type s, Type t ) {
         return inst.isWideningReferenceConvertableInstance(s, t);
     }
 
-    //@ requires s != null && t != null
+    //@ requires s != null && t != null;
     protected boolean isWideningReferenceConvertableInstance( Type s, Type t ) {
 
         if( s instanceof TypeName ) s = TypeSig.getSig( (TypeName)s);
@@ -733,7 +733,7 @@ public class Types
     /** Returns the TypeSig for a Type x, if x denotes a class type,
      otherwise returns null. */
 
-    //@ requires x != null
+    //@ requires x != null;
     public static TypeSig toClassTypeSig( Type x ) {
 
         switch( x.getTag() ) {
@@ -764,8 +764,8 @@ public class Types
     // ----------------------------------------------------------------------
     // Numeric promotions
   
-    //@ requires t != null
-    //@ ensures \result != null
+    //@ requires t != null;
+    //@ ensures \result != null;
     public static Type unaryPromote(Type t) {
         if( isByteType(t) || isShortType(t) || isCharType(t) )
             return intType; 
@@ -777,7 +777,7 @@ public class Types
         }
     }
 
-    //@ ensures \result != null
+    //@ ensures \result != null;
     public static Type binaryNumericPromotion(Type x, Type y) {
         Assert.notFalse( isNumericType(x) && isNumericType(y) );	//@ nowarn Pre
     
@@ -823,13 +823,13 @@ public class Types
     // ----------------------------------------------------------------------
     // Miscilaneous operations
   
-    //@ requires x != null && y != null
+    //@ requires x != null && y != null;
     public static boolean isSameMethodSig(MethodDecl x, MethodDecl y) {
         if( x.id != y.id ) return false;
         return isSameFormalParaDeclVec( x.args, y.args );
     }
 
-    //@ requires x != null && y != null
+    //@ requires x != null && y != null;
     public static boolean 
             isSameFormalParaDeclVec(FormalParaDeclVec x, FormalParaDeclVec y) {
       
@@ -840,7 +840,7 @@ public class Types
         return true;
     }
 
-    //@ requires x != null && y != null
+    //@ requires x != null && y != null;
     //@ requires x.args.count == y.args.count
     public static boolean routineMoreSpecific( RoutineDecl x, RoutineDecl y ) {
 
@@ -877,7 +877,7 @@ public class Types
      *    (a) an unchecked exception
      *    (b) a subtype of some exception in the list <y>
      */
-    //@ requires x != null && y != null
+    //@ requires x != null && y != null;
     static boolean isCompatibleRaises( TypeNameVec x, TypeNameVec y) {
         nextx:
 	for (int i=0; i<x.size(); i++) {
@@ -911,7 +911,7 @@ public class Types
         return true;
     }
 
-    //@ requires args != null
+    //@ requires args != null;
     //@ ensures \nonnullelements(\result)
     public static Type[] getFormalParaTypes( FormalParaDeclVec args ) {
         Type[] r = new Type[ args.size() ];
@@ -936,12 +936,12 @@ public class Types
      *
      * Precondition: <code>PrettyPrint.inst</code> != null <p>
      */
-    //@ ensures \result != null
+    //@ ensures \result != null;
     public static String printName(Type t) {
         return inst.printNameInstance(t);
     }
 
-    //@ ensures \result != null
+    //@ ensures \result != null;
     protected String printNameInstance(Type t) {
 	if (t instanceof TypeName) {
 	    TypeSig sig = TypeSig.getRawSig((TypeName)t);
@@ -966,12 +966,12 @@ public class Types
      * Precondition: <code>PrettyPrint.inst</code> != null,
      *		      <code>ts</code> != null <p>
      */
-    //@ requires ts != null
+    //@ requires ts != null;
     public static String printName(Type[] ts) {
 	StringBuffer s = new StringBuffer("(");
 
 	for (int i=0; i<ts.length; i++ ) {
-	    if (i!=0)
+	    if (i != 0)
 		s.append(", ");
 	    s.append(printName(ts[i]));
 	}
@@ -998,7 +998,7 @@ public class Types
 
 
     //@ requires t != null && caller != null;
-    //@ ensures \result != null
+    //@ ensures \result != null;
     //@ ensures \result.id == id
     public static FieldDecl lookupField(Type t, Identifier id, TypeSig caller) 
             throws LookupException
@@ -1007,7 +1007,7 @@ public class Types
     }
 
     //@ requires t != null && caller != null;
-    //@ ensures \result != null
+    //@ ensures \result != null;
     //@ ensures \result.id == id
     protected FieldDecl lookupFieldInstance(Type t, Identifier id, TypeSig caller) 
             throws LookupException
@@ -1033,8 +1033,8 @@ public class Types
 	}
     }
   
-    //@ requires \nonnullelements(args) && caller != null
-    //@ ensures \result != null
+    //@ requires \nonnullelements(args) && caller != null;
+    //@ ensures \result != null;
     //@ ensures \result.id == id
     public static MethodDecl lookupMethod(Type t, Identifier id, 
                                           Type[] args, TypeSig caller ) 
@@ -1043,8 +1043,8 @@ public class Types
 	return inst.lookupMethodInstance(t, id, args, caller);
     }
 
-    //@ requires \nonnullelements(args) && caller != null
-    //@ ensures \result != null
+    //@ requires \nonnullelements(args) && caller != null;
+    //@ ensures \result != null;
     //@ ensures \result.id == id
     protected MethodDecl lookupMethodInstance(Type t, Identifier id, 
                                               Type[] args, TypeSig caller ) 

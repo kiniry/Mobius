@@ -193,7 +193,7 @@ public class NoWarn
 	if (loc==Location.NULL)
 	    return false;
 
-	if (Location.toStreamId(loc)!=streamId)
+	if (Location.toStreamId(loc) != streamId)
 	    return false;
 
 	return (Location.toLineNumber(loc) < lineNo);
@@ -212,7 +212,7 @@ public class NoWarn
 	    return false;
 
 	// Check startLoc...endLoc in streamId:
-	if (Location.toStreamId(startLoc)!=streamId)
+	if (Location.toStreamId(startLoc) != streamId)
 	    return false;
 	Assert.notFalse(Location.toStreamId(endLoc)==streamId);
 
@@ -298,7 +298,7 @@ public class NoWarn
 	
 	ErrorSet.caution(locUse, "Use location:");
 	
-	if (locPragmaDecl!=Location.NULL) {
+	if (locPragmaDecl != Location.NULL) {
             ErrorSet.caution(locPragmaDecl, "Declaration location:");
 	}
 	

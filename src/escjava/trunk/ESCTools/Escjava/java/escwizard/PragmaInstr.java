@@ -723,7 +723,7 @@ class PragmaInstr extends Instr {
 
   //@ ensures false;
   static void fileChanged(/*@ non_null */ String msg) {
-      if(msg!=null) throw new RuntimeException(msg);
+      if(msg != null) throw new RuntimeException(msg);
     AnnotationInserter.error(msg + "; perhaps file was changed during " +
 			     "run of Wizard?");
   }

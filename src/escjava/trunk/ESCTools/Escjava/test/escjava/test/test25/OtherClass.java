@@ -15,13 +15,13 @@ class OtherClassUser {
      * via a direct field reference:
      */
 
-    //@ requires O!=null;
+    //@ requires O != null;
     void foo(OtherClass O) {
 	O.x = 1;
     }				// error!
 
 
-    //@ invariant OP!=null;
+    //@ invariant OP != null;
     OtherClass OP = new OtherClass();
 
     void bar() {

@@ -59,7 +59,7 @@ class TokenQueue
      </esc></pre>    
      */
 
-    //@ ensures \result != null
+    //@ ensures \result != null;
     public Token elementAt(int n) {
         int sa = (start <= end ? 0 : toks.length);
         int size = (end + sa) - start;
@@ -92,15 +92,15 @@ class TokenQueue
             Token t = toks[i];
             //@ assert 0 <= i && i < toks.length
             //@ assert (\forall int j; 0 <= j && j < toks.length ==> toks[j] != null )
-            //@ assert toks[0] != null
-            //@ assert t != null
+            //@ assert toks[0] != null;
+            //@ assert t != null;
             t.clear();
         }
     }
 
     /** Removes head of token queue.  Requires: notempty
      <pre><esc>
-     requires dst != null
+     requires dst != null;
      </esc></pre>
      */
 
@@ -121,7 +121,7 @@ class TokenQueue
 
     /** Pushes a token onto the lookahead queue.
      <pre><esc>
-     requires td != null
+     requires td != null;
      </esc></pre>
      */
 
@@ -146,7 +146,7 @@ class TokenQueue
         notempty = true;
     }
 
-    //@ ensures \result != null
+    //@ ensures \result != null;
     private String stateToString() {
         return ("start: " + start
                 + " end: " + end

@@ -20,7 +20,7 @@ public class CheckCompilationUnit
      * A new field for CompilationUnits: iff it is non-null then we have already
      * checked that CompilationUnit.
      */
-    //@ invariant checkedField != null
+    //@ invariant checkedField != null;
     //@ invariant checkedField.decorationType == \type(Boolean)
     private static ASTDecoration checkedField =
 	new ASTDecoration("javafe.tc.CheckCompilationUnit.checked");
@@ -38,7 +38,7 @@ public class CheckCompilationUnit
      * <p> Any resulting errors or warnings are reported via
      * <code>ErrorSet</code>. </p>
      */
-    //@ requires cu != null
+    //@ requires cu != null;
     public static void checkCompilationUnit(CompilationUnit cu) {
 	// Check any given CompilationUnit at most once:
 	if (checkedField.get(cu) != null)
@@ -133,7 +133,7 @@ public class CheckCompilationUnit
      * in.  Violations result in warnings only.
      */
 
-    //@ requires cu != null
+    //@ requires cu != null;
     private static void checkPublic(CompilationUnit cu) {
 	// Get the basename of the file we loaded cu from:
 	String localname = Location.toFile(cu.loc).getLocalName();
@@ -173,7 +173,7 @@ public class CheckCompilationUnit
      * import statements and the types declared in the rest of the
      * CompilationUnit. </p>
      */
-    //@ requires cu != null
+    //@ requires cu != null;
     private static void checkImports(CompilationUnit cu) {
 	ImportDeclVec imports = cu.imports;
 
@@ -202,7 +202,7 @@ public class CheckCompilationUnit
 
 		    TypeSig r =
 			EnvForCU.lookupWithoutInheritence(P, T.toString());
-		    if (r!=null)
+		    if (r != null)
 			continue;
 		}
 		if (!OutsideEnv.reader.accessable(N.toStrings()))

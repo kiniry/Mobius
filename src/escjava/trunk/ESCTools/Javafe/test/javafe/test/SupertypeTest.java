@@ -86,7 +86,7 @@ public class SupertypeTest extends javafe.FrontEndTool {
 
 
     /** Handle a subtyping query **/
-    //@ requires left!=null && right!=null
+    //@ requires left != null && right != null;
     public void query(String left, String right) {
 		// Attempt to find the types:
 		TypeSig leftType = getType(left);
@@ -120,7 +120,7 @@ public class SupertypeTest extends javafe.FrontEndTool {
      **
      ** An error will be reported via ErrorSet in the later case.<p>
      **/
-    //@ requires N!=null
+    //@ requires N != null;
     public TypeSig getType(String N) {
 		TypeSig result;
 	

@@ -6,7 +6,7 @@ class Trans {
 
 class Trans2 {
 
-    //@ invariant ptr!=null;
+    //@ invariant ptr != null;
     Trans ptr = new Trans();
 
     //@ invariant y == ptr.x;
@@ -20,7 +20,7 @@ class Trans2User {
  * Ensure invariants are pulled in transitively when needed:
  */
 
-    //@ requires X!=null;
+    //@ requires X != null;
     //@ ensures \result>=0;			// no error
     int foo(Trans2 X) {
 	return X.y;

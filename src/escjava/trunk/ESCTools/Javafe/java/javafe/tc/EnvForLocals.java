@@ -29,13 +29,13 @@ public class EnvForLocals extends Env implements/*privately*/ Cloneable {
      * Our parent environment
      */
     //@ invariant !(parent instanceof EnvForCU)
-    protected /*@non_null*/ Env parent;
+    protected /*@ non_null @*/ Env parent;
 
     /**
      * The new local binding.
      */
-    //@ invariant decl.id!=null
-    protected /*@non_null*/ GenericVarDecl decl;
+    //@ invariant decl.id != null;
+    protected /*@ non_null @*/ GenericVarDecl decl;
 
 
     /**
@@ -45,17 +45,17 @@ public class EnvForLocals extends Env implements/*privately*/ Cloneable {
      * We report an error to ErrorSet if the new local binding is a
      * redefinition of a local binding not hidden by a field.<p>
      */
-    //@ requires decl.id!=null
+    //@ requires decl.id != null;
     //@ requires !(parent instanceof EnvForCU)
-    public EnvForLocals(/*@non_null*/ Env parent,
-			/*@non_null*/ GenericVarDecl decl) {
+    public EnvForLocals(/*@ non_null @*/ Env parent,
+			/*@ non_null @*/ GenericVarDecl decl) {
 	this(parent,decl,true);
     }
 
-    //@ requires decl.id!=null
+    //@ requires decl.id != null;
     //@ requires !(parent instanceof EnvForCU)
-    public EnvForLocals(/*@non_null*/ Env parent,
-			/*@non_null*/ GenericVarDecl decl,
+    public EnvForLocals(/*@ non_null @*/ Env parent,
+			/*@ non_null @*/ GenericVarDecl decl,
 			boolean warnAboutDuplication) {
 	this.parent = parent;
 	this.decl = decl;
@@ -107,7 +107,7 @@ public class EnvForLocals extends Env implements/*privately*/ Cloneable {
      * This is also refered to as "are we in a static context?".  The
      * legality of super also depends on this result. <p>
      *
-     * The legality of C.this, C!=<enclosing class> is different; see 
+     * The legality of C.this, C != <enclosing class> is different; see 
      * canAccessInstance(-).
      */
     public boolean isStaticContext() { return parent.isStaticContext(); }
@@ -174,7 +174,7 @@ public class EnvForLocals extends Env implements/*privately*/ Cloneable {
      * This routine does not check that the resulting type (if any)
      * is actually accessable. <p>
      *
-     * If id is ambiguous, then if loc!=Location.NULL then a fatal
+     * If id is ambiguous, then if loc != Location.NULL then a fatal
      * error is reported at that location via ErrorSet else one of
      * its possible meanings is returned.<p>
      */

@@ -8,7 +8,7 @@ package javafe.filespace;
 public final class StringUtil {
 
     /** Remove leading and trailing whitespace (just spaces for now): */
-    //@ requires s!=null
+    //@ requires s != null;
     public static String trim_whitespace(String s) {
 	while (s.length()>0 && s.charAt(0)==' ')
 	    s = s.substring(1,s.length());
@@ -21,7 +21,7 @@ public final class StringUtil {
 
 	
     /** Count the number of times a given character occurs in a String: */
-    //@ requires s!=null
+    //@ requires s != null;
     //@ ensures \result>=0
     public static int countChar(String s, char c) {
 	int count = 0;
@@ -38,7 +38,7 @@ public final class StringUtil {
      * Print an array of Strings on System.out, one string per
      * line.  Prints "<null>" if list is null.
      */
-    //@ requires list!=null
+    //@ requires list != null;
     public static void printList(String[] list) {
 	if (list == null) {
 	    System.out.println("<null>");
@@ -55,7 +55,7 @@ public final class StringUtil {
      *	Strings:
      */
     //@ ensures \nonnullelements(\result)
-    public static String[] parseList(/*@non_null*/ String s, char separator) {
+    public static String[] parseList(/*@ non_null @*/ String s, char separator) {
 	// Handle empty list case:
 	if (s.equals(""))
 	    return new String[0];
@@ -64,7 +64,7 @@ public final class StringUtil {
 	String[] list = new String[items];
 
 	int start = 0;
-	//@ loop_invariant (\forall int j; 0<=j && j<i ==> list[j]!=null);
+	//@ loop_invariant (\forall int j; 0<=j && j<i ==> list[j] != null);
 	for (int i = 0; i < items-1 ; i++) {
 
 	    int nextSep = s.indexOf(separator, start);

@@ -70,7 +70,7 @@ public class Simplify {
      ** Precondition: we are not closed.<p>
      **/
     private void readySubProcess() {
-	if (subProcessUser!=null) {
+	if (subProcessUser != null) {
 	    subProcessUser.finishUsingSimplify();
 	    eatPrompt();
 	    subProcessUser = null;
@@ -217,7 +217,7 @@ public class Simplify {
      ** Precondition: we are not closed, and <code>exp</code> is properly
      **		      formed according to Simplify's rules.<p> 
      **/
-    //@ ensures \result!=null
+    //@ ensures \result != null
     //@ ensures \result.elementType == \type(SimplifyOutput);
     //@ ensures !\result.returnsNull
     public Enumeration prove(/*@non_null*/ String exp) {
@@ -231,7 +231,7 @@ public class Simplify {
 	subProcessUser = new CECEnum(P);
     }
 
-    //@ ensures \result!=null
+    //@ ensures \result != null
     //@ ensures \result.elementType == \type(SimplifyOutput);
     //@ ensures !\result.returnsNull
     public Enumeration streamProve() {

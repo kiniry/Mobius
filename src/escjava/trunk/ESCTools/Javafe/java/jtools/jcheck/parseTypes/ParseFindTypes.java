@@ -41,7 +41,7 @@ public class ParseFindTypes implements ParseFindTypesConstants {
     // new:
     JCheck.declaredPackageName = "";
     for (int i=0; i<name.size(); i++) {
-	if (i!=0)
+	if (i != 0)
 	    JCheck.declaredPackageName += ".";
 	JCheck.declaredPackageName += (String)name.elementAt(i);
     }
@@ -60,13 +60,13 @@ public class ParseFindTypes implements ParseFindTypesConstants {
 
   public void GotClassDecl(int modifiers, String name) {
     // new:
-    JCheck.registerSourceUnit(name, false, (modifiers&PUBLIC_MODIFIER)!=0);
+    JCheck.registerSourceUnit(name, false, (modifiers&PUBLIC_MODIFIER) != 0);
 
   }
 
   public void GotInterfaceDecl(int modifiers, String name) {
     // new:
-    JCheck.registerSourceUnit(name, true, (modifiers&PUBLIC_MODIFIER)!=0);
+    JCheck.registerSourceUnit(name, true, (modifiers&PUBLIC_MODIFIER) != 0);
   }
 
 /*****************************************

@@ -51,7 +51,7 @@ class ZipTree extends ExtTree {
      **************************************************/
 
     /** The zipfile we are a snapshot of */
-    //@ invariant zip!=null
+    //@ invariant zip != null;
     protected ZipFile zip;
 
 
@@ -60,14 +60,14 @@ class ZipTree extends ExtTree {
      * represents the file that it would correspond to if the tree it
      * belongs to mirrored zip.<p>
      */
-    //@ requires node!=null && zip!=null
+    //@ requires node != null && zip != null;
     protected static void missingEntry(Tree node, ZipFile zip) {
 	String name = node.getLabel();
 	if (name==null)
 	    name = "./";
 
-	for (Tree ptr = node.getParent(); ptr!=null; ptr=ptr.getParent()) {
-	    if (ptr.getLabel()!=null)
+	for (Tree ptr = node.getParent(); ptr != null; ptr=ptr.getParent()) {
+	    if (ptr.getLabel() != null)
 		name = ptr.getLabel() + "/" + name;
 	}
 	
@@ -82,7 +82,7 @@ class ZipTree extends ExtTree {
      * ZipException (e.g., file is not a properly formatted
      * zipfile).<p>
      *
-     * <esc> requires zipfile!=null </esc>
+     * <esc> requires zipfile != null </esc>
      */
     public ZipTree(File zipfile) throws IOException, ZipException {
 	super(null);
@@ -109,7 +109,7 @@ class ZipTree extends ExtTree {
     }
 
     /** Add a ZipEntry to this tree according to its pathname: */
-    //@ requires z!=null
+    //@ requires z != null;
     private void addZipEntry(ZipEntry z) {
 	String pathname = z.getName();
 
@@ -135,7 +135,7 @@ class ZipTree extends ExtTree {
 	fileNode.data = new ZipGenericFile(zip, z);
 
 	// Initialize any new interior nodes as missing entries;
-	for (; fileNode!=null; fileNode = fileNode.getParent())
+	for (; fileNode != null; fileNode = fileNode.getParent())
 	    if (fileNode.data==null)
 		missingEntry(fileNode, zip);
     }
@@ -148,11 +148,11 @@ class ZipTree extends ExtTree {
      **************************************************/
 
     /** A simple test driver */
-    //@ requires args!=null;
+    //@ requires args != null;
     /*@ requires (\forall int i; (0<=i && i<=args.length)
-		==> args[i]!=null) */
+		==> args[i] != null) */
     public static void main(String[] args) {
-	if (args.length!=1) {
+	if (args.length != 1) {
 	    System.out.println("ZipTree: usage <zipfile>");
 	    return;
 	}

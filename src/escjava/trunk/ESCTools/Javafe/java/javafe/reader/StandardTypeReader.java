@@ -39,22 +39,22 @@ public class StandardTypeReader extends TypeReader
      * Our (non-null) Query engine for determining the GenericFile's
      * for files that belong to Java Packages.
      */
-    //@ invariant javaFileSpace!=null
+    //@ invariant javaFileSpace != null;
     public Query javaFileSpace;
 
-    //@ invariant javaSrcFileSpace!=null
+    //@ invariant javaSrcFileSpace != null;
     public Query javaSrcFileSpace;
 
     /**
      * Our (non-null) reader for use in reading in source files.
      */
-    //@ invariant sourceReader!=null
+    //@ invariant sourceReader != null;
     public Reader sourceReader;
 
     /**
      * Our (non-null) reader for use in reading in binary (.class) files.
      */
-    //@ invariant binaryReader!=null
+    //@ invariant binaryReader != null;
     public Reader binaryReader;
 
 
@@ -62,7 +62,7 @@ public class StandardTypeReader extends TypeReader
      * Create a StandardTypeReader from a query engine, a source
      * reader, and a binary reader.  All arguments must be non-null.<p>
      */
-    //@ requires engine!=null && srcReader!=null && binReader!=null
+    //@ requires engine != null && srcReader != null && binReader != null;
     protected StandardTypeReader(Query engine, Query srcEngine, 
 			      CachedReader srcReader,
 			      CachedReader binReader) {
@@ -95,8 +95,8 @@ public class StandardTypeReader extends TypeReader
      * Create a StandardTypeReader from a query engine, a source
      * reader, and a binary reader.  All arguments must be non-null.<p>
      */
-    //@ requires engine!=null && srcReader!=null && binReader!=null
-    //@ ensures \result!=null
+    //@ requires engine != null && srcReader != null && binReader != null;
+    //@ ensures \result != null;
     public static StandardTypeReader make(Query engine, Query srcEngine,
 					  Reader srcReader,
 			                  Reader binReader) {
@@ -111,11 +111,11 @@ public class StandardTypeReader extends TypeReader
      * Create a StandardTypeReader from a non-null query engine and a
      * pragma parser.  The pragma parser may be null.
      */
-    //@ requires Q!=null
-    //@ ensures \result!=null
+    //@ requires Q != null;
+    //@ ensures \result != null;
     public static StandardTypeReader make(Query Q, Query sourceQ,
 						PragmaParser pragmaP) {
-	Assert.precondition(Q!=null);
+	Assert.precondition(Q != null);
 
 	return make(Q, sourceQ, new SrcReader(pragmaP), new BinReader());
     }
@@ -128,8 +128,8 @@ public class StandardTypeReader extends TypeReader
      * A fatal error will be reported via <code>ErrorSet</code> if an
      * I/O error occurs while initially scanning the filesystem.<p>
      */
-    //@ requires path!=null
-    //@ ensures \result!=null
+    //@ requires path != null;
+    //@ ensures \result != null;
     public static Query queryFromClasspath(String path) {
 	try {
 	    return new SlowQuery(path);
@@ -151,7 +151,7 @@ public class StandardTypeReader extends TypeReader
      * A fatal error will be reported via <code>ErrorSet</code> if an
      * I/O error occurs while initially scanning the filesystem.<p>
      */
-    //@ ensures \result!=null
+    //@ ensures \result != null;
     public static StandardTypeReader make(String path, String sourcePath,
 						PragmaParser pragmaP) {
 	if (path==null)
@@ -171,7 +171,7 @@ public class StandardTypeReader extends TypeReader
      * A fatal error will be reported via <code>ErrorSet</code> if an
      * I/O error occurs while initially scanning the filesystem.<p>
      */
-    //@ ensures \result!=null
+    //@ ensures \result != null;
     public static StandardTypeReader make(PragmaParser pragmaP) {
 	return make((String)null, (String)null, pragmaP);
     }
@@ -184,7 +184,7 @@ public class StandardTypeReader extends TypeReader
      * A fatal error will be reported via <code>ErrorSet</code> if an
      * I/O error occurs while initially scanning the filesystem.<p>
      */
-    //@ ensures \result!=null
+    //@ ensures \result != null;
     public static StandardTypeReader make() {
 	return make((PragmaParser) null);
     }
@@ -211,8 +211,8 @@ public class StandardTypeReader extends TypeReader
      * Return true iff the fully-qualified outside type P.T exists.
      */
     public boolean exists(String[] P, String T) {
-	return (javaSrcFileSpace.findFile(P, T, "java")!=null)
-	    || (javaFileSpace.findFile(P, T, "class")!=null);
+	return (javaSrcFileSpace.findFile(P, T, "java") != null)
+	    || (javaFileSpace.findFile(P, T, "class") != null);
     }
 
 
@@ -238,7 +238,7 @@ public class StandardTypeReader extends TypeReader
 	String typename = "";
 
 	for (int i=0; i<N.length; i++) {
-	    if (i!=0)
+	    if (i != 0)
 		typename += "$";
 	    typename += N[i];
 	}
@@ -261,11 +261,11 @@ public class StandardTypeReader extends TypeReader
      * Note: iff useSrcPtr is set, then P.T's binary may be read in in
      * order to obtain it's source pointer.<p>
      */
-    //@ requires \nonnullelements(P) && T!=null
+    //@ requires \nonnullelements(P) && T != null;
     public GenericFile locateSource(String[] P, String T, boolean useSrcPtr) {
 	// First try the .java file with name T.java:
 	GenericFile file = javaSrcFileSpace.findFile(P, T, "java");
-	if (file!=null || !useSrcPtr)
+	if (file != null || !useSrcPtr)
 	    return file;
 
 	// Try and fetch the source pointer from T.class:
@@ -349,7 +349,7 @@ public class StandardTypeReader extends TypeReader
      *
      * (This is a convenience function.)<p>
      */
-    //@ requires \nonnullelements(P) && T!=null
+    //@ requires \nonnullelements(P) && T != null;
     public CompilationUnit readTypeSrc(String[] P, String T,
 				       boolean avoidSpec) {
 	GenericFile source = locateSource(P, T, true);
@@ -369,20 +369,20 @@ public class StandardTypeReader extends TypeReader
      *
      *    - no T.class file exists,<p>
      *    - the T.class file is known to predate the lastModified time
-     *      after, after!=0L, or<p>
+     *      after, after != 0L, or<p>
      *    - an error occurs.<p>
      *
      * Errors are reported via ErrorSet.  An incomplete set of binaries
      * (one or more inner classes missing or not up-to-date WRT after)
      * is considered an error.<p>
      */
-    //@ requires \nonnullelements(P) && T!=null
+    //@ requires \nonnullelements(P) && T != null;
     public CompilationUnit readTypeBinaries(String[] P, String T,
 					    long after) {
 	// Check for an up-to-date T.class file:
 	String[] N = { T };
 	GenericFile bin = locateBinary(P, N);
-	if (bin==null || (after!=0L && bin.lastModified()!=0L
+	if (bin==null || (after != 0L && bin.lastModified() != 0L
 				&& bin.lastModified()<after))
 	    return null;
 
@@ -437,11 +437,11 @@ public class StandardTypeReader extends TypeReader
 	if (fileOriginOption == Options.PREFER_BINARY) after = 0L;
 	if (fileOriginOption != Options.NEVER_BINARY) {
 	    CompilationUnit bin = readTypeBinaries(P, T, after);
-	    if (bin!=null) return bin;
+	    if (bin != null) return bin;
 	}
 
 	// Finally, fall back on source if it's available:
-	if (source!=null) return read(source, avoidSpec);
+	if (source != null) return read(source, avoidSpec);
 
 	return null;
     }
@@ -456,7 +456,7 @@ public class StandardTypeReader extends TypeReader
     //@ requires \nonnullelements(args)
     public static void main(String[] args)
 			throws java.io.IOException {
-	if (args.length!=2) {
+	if (args.length != 2) {
 	    System.err.println("StandardTypeReader: <package> <simple name>");
 	    System.exit(1);
 	}

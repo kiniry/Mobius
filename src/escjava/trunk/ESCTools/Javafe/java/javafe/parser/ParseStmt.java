@@ -71,13 +71,13 @@ public abstract class ParseStmt extends ParseExpr
      */
     //@ invariant seqStmt.elementType == \type(Stmt)
     //@ invariant seqStmt.owner == this
-    protected final /*@non_null*/ StackVector seqStmt
+    protected final /*@ non_null @*/ StackVector seqStmt
             = new StackVector();
 
     //* Internal working storage for parseCatches function.
     //@ invariant seqCatchClause.elementType == \type(CatchClause)
     //@ invariant seqCatchClause.owner == this
-    protected final /*@non_null*/ StackVector seqCatchClause
+    protected final /*@ non_null @*/ StackVector seqCatchClause
             = new StackVector();
 
     /**
@@ -86,10 +86,10 @@ public abstract class ParseStmt extends ParseExpr
      * declarations can be in statements.  However, the body (and more
      * documentation) lives in Parse.java.
      */
-    //@ requires l != null && l.m_in != null
+    //@ requires l != null && l.m_in != null;
     //@ requires loc != Location.NULL
     //@ modifies l.ttype
-    //@ ensures \result != null
+    //@ ensures \result != null;
     //@ ensures \old(l.ttype)==TagConstants.CLASS ==> \result instanceof ClassDecl
     abstract TypeDecl parseTypeDeclTail(Lex l, boolean specOnly, int loc, 
                                         int modifiers,
@@ -107,8 +107,8 @@ public abstract class ParseStmt extends ParseExpr
      * than one statement is added only in the case of variable
      * declarations that declare more than one variable.
      */
-    //@ requires l != null && l.m_in != null
-    //@ ensures \result != null
+    //@ requires l != null && l.m_in != null;
+    //@ ensures \result != null;
     public Stmt parseStatement(Lex l) {
         if (l.ttype == TagConstants.LBRACE) // As an optimization, handle specially
             return parseBlock(l, false);
@@ -142,7 +142,7 @@ public abstract class ParseStmt extends ParseExpr
      * one statement is added only in the case of variable
      * declarations that declare more than one variable.
      */
-    //@ requires l != null && l.m_in != null
+    //@ requires l != null && l.m_in != null;
     //@ modifies seqStmt.elementCount, seqStmt.currentStackBottom
     /*@ ensures (seqStmt.elementCount - seqStmt.currentStackBottom) >
      (\old(seqStmt.elementCount) - \old(seqStmt.currentStackBottom)) @*/
@@ -431,8 +431,8 @@ public abstract class ParseStmt extends ParseExpr
      * tree for the parsed input, leaving <code>l</code> at the token
      * just after the trailing <code>}</code> of the statement.
      */
-    //@ requires l != null && l.m_in != null
-    //@ ensures \result != null
+    //@ requires l != null && l.m_in != null;
+    //@ ensures \result != null;
     public BlockStmt parseConstructorBody(Lex l) {
         int openloc = l.startingLoc;
         expect(l, TagConstants.LBRACE);
@@ -532,8 +532,8 @@ public abstract class ParseStmt extends ParseExpr
      * tree for the parsed input, leaving <code>l</code> at the token
      * just after the trailing <code>}</code> of the statement.
      */
-    //@ requires l != null && l.m_in != null
-    //@ ensures \result != null
+    //@ requires l != null && l.m_in != null;
+    //@ ensures \result != null;
     public BlockStmt parseBlock(Lex l, boolean specOnly) {
         int openloc = l.startingLoc;
         expect(l, TagConstants.LBRACE);
@@ -577,9 +577,9 @@ public abstract class ParseStmt extends ParseExpr
      * tree for the parsed input, leaving <code>l</code> at the token
      * just after the trailing <code>}</code> of the statement.
      */
-    //@ requires l != null && l.m_in != null
+    //@ requires l != null && l.m_in != null;
     //@ requires keywordloc != Location.NULL
-    //@ ensures \result != null
+    //@ ensures \result != null;
     private ForStmt parseForStmt(Lex l, int keywordloc) {
         int parenloc = l.startingLoc;
         expect(l, TagConstants.LPAREN);
@@ -688,9 +688,9 @@ public abstract class ParseStmt extends ParseExpr
      * tree for the parsed input, leaving <code>l</code> at the token
      * just after the trailing <code>}</code> of the statement.
      */
-    //@ requires l != null && l.m_in != null
+    //@ requires l != null && l.m_in != null;
     //@ requires keywordloc != Location.NULL
-    //@ ensures \result != null
+    //@ ensures \result != null;
     private SwitchStmt parseSwitchStmt(Lex l, int keywordloc) {
         // Read value to be tested
         expect(l, TagConstants.LPAREN);
@@ -748,7 +748,7 @@ public abstract class ParseStmt extends ParseExpr
      * <code>catch</code>, then it tries to parse a catch clause,
      * throwing an exception if a syntax error is found.
      */
-    //@ requires l != null && l.m_in != null
+    //@ requires l != null && l.m_in != null;
     private CatchClauseVec parseCatches(Lex l) {
         if (l.ttype != TagConstants.CATCH) return null;
         seqCatchClause.push();
@@ -788,7 +788,7 @@ public abstract class ParseStmt extends ParseExpr
      * then it tries to parse the next <code>VarDeclRemainder</code>,
      * throwing an exception if a syntax error is found.
      */
-    //@ requires l != null && basetype != null && l.m_in != null
+    //@ requires l != null && basetype != null && l.m_in != null;
     //@ requires basetype.syntax
     private void addVarDeclStmts(Lex l, int modifiers, 
                                  ModifierPragmaVec modifierPragmas,
@@ -845,8 +845,8 @@ public abstract class ParseStmt extends ParseExpr
      * <code>l</code> pointing to the token just after the
      * <code>FormalParaDecl</code>.
      */
-    //@ requires l != null && l.m_in != null
-    //@ ensures \result != null
+    //@ requires l != null && l.m_in != null;
+    //@ ensures \result != null;
     public FormalParaDecl parseFormalParaDecl(Lex l) {
         int modifiers = parseModifiers(l);
         ModifierPragmaVec modifierPragmas = this.modifierPragmas;
@@ -867,7 +867,7 @@ public abstract class ParseStmt extends ParseExpr
      * <code>StatementExpression</code> as defined in the grammar
      * given in the language spec.
      */
-    //@ requires e != null
+    //@ requires e != null;
     public static boolean isStatementExpression(Expr e) {
         switch (e.getTag()) {
             case TagConstants.ASSIGN: 

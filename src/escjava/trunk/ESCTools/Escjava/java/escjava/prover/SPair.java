@@ -27,14 +27,14 @@ import java.io.*;
      ** The head of our list; this field should not be modified by
      ** clients and should be non-null.
      **/
-    //@ invariant head!=null
+    //@ invariant head != null
     public SExp head;
 
     /**
      ** The tail of our list; this field should not be modified by
      ** clients and should be non-null.
      **/
-    //@ invariant tail!=null
+    //@ invariant tail != null
     public SList tail;
 
 
@@ -49,7 +49,7 @@ import java.io.*;
      **
      ** Both must be non-null.<p>
      **/
-    //@ requires head!=null && tail!=null
+    //@ requires head != null && tail!=null
     public SPair(SExp head, SList tail) {
 	this.head = head;
 	this.tail = tail;

@@ -24,12 +24,12 @@ public class Assert
 	if (! b) throw new AssertionFailureException(msg);
     }
 
-    //@ requires obj!=null
+    //@ requires obj != null;
     static public void notNull(Object obj) {
 	if (obj == null) throw new AssertionFailureException();
     }
 
-    //@ requires obj!=null
+    //@ requires obj != null;
     static public void notNull(Object obj, String msg) {
 	if (obj == null) throw new AssertionFailureException(msg);
     }

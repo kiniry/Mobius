@@ -132,7 +132,7 @@ public class TestTool extends SrcTool {
 		   return;
 	
 		TypeSig current = TypeSig.getSig(td);
-		while (current!=null) {
+		while (current != null) {
 		    Info.out("  At " + current.getExternalName());
 	
 		    current = getSuperClass(current.getTypeDecl());

@@ -4,7 +4,7 @@ class Static {
 
 
     void doit() {
-	//@ assert s!=null
+	//@ assert s != null
 
 	s = null;			// error
     }

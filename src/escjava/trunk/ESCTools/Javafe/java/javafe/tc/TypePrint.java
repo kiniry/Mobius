@@ -11,7 +11,7 @@ public class TypePrint extends DelegatingPrettyPrint
   //@ requires false
   public TypePrint() { }
 
-  //@ requires self != null && del != null
+  //@ requires self != null && del != null;
   public TypePrint(PrettyPrint self, PrettyPrint del) {
     super(self, del);
   }

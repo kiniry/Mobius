@@ -25,7 +25,7 @@ void outputExpansion(FILE *o, Class *c, DirectiveListNode *d)
     }
     indent(o, d->indent);
     fprintf(o, "public %s%s%s %s;\n\n",
-	    (nonnull ? "/*@ non_null */ " : ""),
+	    (nonnull ? "/*@ non_null @*/ " : ""),
 	    d->i.f.type,
 	    (d->i.f.sequence ? VECTORSUFFIX : ""),
 	    d->i.f.name);
@@ -377,7 +377,7 @@ void outputEndClass(FILE *o, Class *class, const char *text, int len,
     FOREACHFIELD(c, d, classlist) {
       fprintf(o, "%s%s%s %s",
 	      ((d->i.f.notnull && !isJavaPrimitiveType(d->i.f.type))
-	       ? "/*@non_null*/ " : ""),
+	       ? "/*@ non_null @*/ " : ""),
 	      d->i.f.type,
 	      (d->i.f.sequence ? VECTORSUFFIX : ""),
 	      d->i.f.name);
@@ -510,7 +510,7 @@ void outputEndOfAstFile(const char *text, int len,
     fwrite(text, len, 1, constOutputFile); /* Generic header. */
     if (!makeClass)
 	fprintf(constOutputFile, "public interface " TAGSBASECLASS " {\n");
-    else if (strcmp(tagBase,"0")==0) {
+    else if (strcmp(tagBase,"0") == 0) {
 	fprintf(constOutputFile, "public class " TAGSBASECLASS " {\n");
     } else {
 	/* Should generalize this - the super class name is part of
@@ -574,7 +574,7 @@ void outputEndOfAstFile(const char *text, int len,
 		free(currentTag);
 	    }
 	}
-	if (strcmp(tagBase,"0")==0) 
+	if (strcmp(tagBase,"0") == 0)
 	    fprintf(constOutputFile,"        default: return \"Unknown javafe GeneratedTag \" + tag; \n      }\n    }\n");
 	else
 	    /* This needs generalization - when it needs it */

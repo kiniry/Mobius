@@ -11,15 +11,15 @@ import javafe.util.Location;
 
 public class DelegatingPrettyPrint extends PrettyPrint {
   
-  //@ invariant del!=null
+  //@ invariant del != null;
   public PrettyPrint del;
   
-  // Caller must establish del!=null!
+  // Caller must establish del != null!
   //@ requires false
   protected DelegatingPrettyPrint() { }
   
-  //@ requires del!=null
-  //@ requires self!=null
+  //@ requires del != null;
+  //@ requires self != null;
   protected DelegatingPrettyPrint(PrettyPrint self, PrettyPrint del) { 
     super(self); 
     this.del = del; 

@@ -49,7 +49,7 @@ class ASTClassFileParser extends ClassFileParser
      * A dummy location representing the class being parsed.
      * Initialized by constructor.
      */
-    //@ invariant classLocation!=Location.NULL
+    //@ invariant classLocation != Location.NULL
     public int classLocation;
 
 
@@ -145,7 +145,7 @@ class ASTClassFileParser extends ClassFileParser
     /**
      * Parse the file and set <code>typeDecl</code>.
      */
-    //@ also ensures typeDecl != null
+    //@ also ensures typeDecl != null;
     protected void parse_file(DataInput stream)
 	throws ClassFormatError, IOException
     {
@@ -163,7 +163,7 @@ class ASTClassFileParser extends ClassFileParser
 	this.addNonSyntheticDecls(elementVec, routines);
 	this.addNonSyntheticDecls(elementVec, fields);
       
-	//@ assume classIdentifier != null
+	//@ assume classIdentifier != null;
 	if ((modifiers & ACC_INTERFACE) != 0) {
 	    typeDecl= (TypeDecl)InterfaceDecl.make(modifiers&~ACC_INTERFACE,
 						   null, classIdentifier,
@@ -292,7 +292,7 @@ class ASTClassFileParser extends ClassFileParser
 	// record the class type and synthesize a location for the class binary
 
 	TypeName   typeName  = (TypeName)constants[cindex];	//@ nowarn Cast, IndexTooBig
-	//@ assume typeName!=null
+	//@ assume typeName != null;
 
 	Name       qualifier = getNameQualifier(typeName.name);
 	Identifier terminal  = getNameTerminal(typeName.name);
@@ -366,7 +366,7 @@ class ASTClassFileParser extends ClassFileParser
 	// construct a literal expression for the initializer
 
 	FieldDecl field = fields[i];		//@ nowarn IndexTooBig
-	//@ assume field!=null	
+	//@ assume field != null	
 
 	int       tag;
 	Object    literal;
@@ -375,7 +375,7 @@ class ASTClassFileParser extends ClassFileParser
 	    {
 	    case TagConstants.BOOLEANTYPE:
 		tag     = TagConstants.BOOLEANLIT;
-		literal = new Boolean(((Integer)value).intValue()!=0);	//@ nowarn Cast,Null
+		literal = new Boolean(((Integer)value).intValue() != 0);	//@ nowarn Cast,Null
 		break;
 
 	    case TagConstants.INTTYPE:
@@ -513,7 +513,7 @@ class ASTClassFileParser extends ClassFileParser
      * MethodRef           null
      * InterfaceMethodRef  null
      */
-    //@ invariant constants != null
+    //@ invariant constants != null;
     //@ invariant \typeof(constants) == \type(Object[])
     private Object[] constants;
 
@@ -523,7 +523,7 @@ class ASTClassFileParser extends ClassFileParser
      * parser (versus translated by DescriptorParser).  Initialized
      * by set_const and set_num_constants.
      */
-    //@ invariant rawConstants != null
+    //@ invariant rawConstants != null;
     //@ invariant \typeof(rawConstants) == \type(Object[])
     //@ invariant constants.length == rawConstants.length;
     private Object[] rawConstants;
@@ -557,7 +557,7 @@ class ASTClassFileParser extends ClassFileParser
      * Initialized by set_num_interfaces.
      * Elements initialized by set_interface.
      */
-    //@ invariant interfaces!=null
+    //@ invariant interfaces != null;
     //@ invariant \typeof(interfaces) == \type(TypeName[])
     private TypeName[] interfaces;
 
@@ -565,7 +565,7 @@ class ASTClassFileParser extends ClassFileParser
      * The class members of the class being parsed.
      * Intialized by set_field, set_method, and set_class_attributes.
      */
-    //@ invariant classMembers != null
+    //@ invariant classMembers != null;
     TypeDeclElemVec classMembers = TypeDeclElemVec.make(0);
 
     /**
@@ -573,7 +573,7 @@ class ASTClassFileParser extends ClassFileParser
      * Initialized by set_num_fields.
      * Elements initialized by set_field.
      */
-    //@ invariant fields!=null
+    //@ invariant fields != null;
     //@ invariant \typeof(fields) == \type(FieldDecl[])
     private FieldDecl[] fields;
 
@@ -582,7 +582,7 @@ class ASTClassFileParser extends ClassFileParser
      * Initialized by set_num_methods.
      * Elements initialized by set_method.
      */
-    //@ invariant routines!=null
+    //@ invariant routines != null;
     //@ invariant \typeof(routines) == \type(RoutineDecl[])
     private RoutineDecl[] routines;
 
@@ -600,7 +600,7 @@ class ASTClassFileParser extends ClassFileParser
      * @return                      an array of type names
      * @exception ClassFormatError  if the type names are not class constants
      */
-    //@ requires stream!=null
+    //@ requires stream != null;
     //@ ensures \nonnullelements(\result)
     //@ ensures \typeof(\result)==\type(TypeName[])
     private TypeName[] parseTypeNames(DataInputStream stream)
@@ -632,7 +632,7 @@ class ASTClassFileParser extends ClassFileParser
      * @param signature  the method signature to make the formal parameters from
      * @return           the formal parameters
      */
-    //@ requires signature!=null
+    //@ requires signature != null;
     //@ ensures \nonnullelements(\result)
     //@ ensures \typeof(\result) == \type(FormalParaDecl[])
     private FormalParaDecl[] makeFormals(MethodSignature signature)
@@ -657,7 +657,7 @@ class ASTClassFileParser extends ClassFileParser
      * @param name  the name to return the package qualifier of
      * @return      the package qualifier of name
      */
-    //@ requires name!=null
+    //@ requires name != null;
     private static Name getNameQualifier(Name name)
     {
 	int size = name.size(); 
@@ -671,7 +671,7 @@ class ASTClassFileParser extends ClassFileParser
      * @param name  the name to return the terminal identifier of
      * @return      the terminal identifier of name
      */
-    //@ requires name!=null
+    //@ requires name != null;
     private static Identifier getNameTerminal(Name name)
     {
 	return name.identifierAt(name.size()-1);
@@ -682,13 +682,13 @@ class ASTClassFileParser extends ClassFileParser
     /**
      * An empty type name vector.
      */
-    //@ invariant emptyTypeNameVec!=null
+    //@ invariant emptyTypeNameVec != null;
     private static final TypeNameVec emptyTypeNameVec = TypeNameVec.make();
 
     /**
      * A null identifier.
      */
-    //@ invariant nullIdentifier!=null
+    //@ invariant nullIdentifier != null;
     private static final Identifier nullIdentifier = Identifier.intern("");
 
 }

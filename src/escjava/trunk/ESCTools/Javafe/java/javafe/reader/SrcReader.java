@@ -32,10 +32,10 @@ public class SrcReader extends Reader
      *                                                 *
      **************************************************/
 
-    //@ invariant readLex!=null;
+    //@ invariant readLex != null;
     private Lex readLex;
 
-    //@ invariant readParser!=null
+    //@ invariant readParser != null;
     private Parse readParser;
 
     public SrcReader() {
@@ -95,7 +95,7 @@ public class SrcReader extends Reader
 
     //@ requires \nonnullelements(args)
     public static void main(String[] args) {
-	if (args.length!=1) {
+	if (args.length != 1) {
 	    System.err.println("SrcReader: <source filename>");
 	    System.exit(1);
 	}
@@ -104,7 +104,7 @@ public class SrcReader extends Reader
 	SrcReader reader = new SrcReader();
 
 	CompilationUnit cu = reader.read(target, true);
-	if (cu!=null)
+	if (cu != null)
 	    PrettyPrint.inst.print( System.out, cu );
     }
 }

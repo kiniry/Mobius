@@ -40,8 +40,8 @@ public class SubCorrelatedReader extends BufferedCorrelatedReader
      * in to this constructor.
      */
     //@ requires STARTFREELOC-1 <= beforeBufLoc;
-    public SubCorrelatedReader(/*@non_null*/ GenericFile file,
-			       /*@non_null*/ byte[] buf,
+    public SubCorrelatedReader(/*@ non_null @*/ GenericFile file,
+			       /*@ non_null @*/ byte[] buf,
 			       int beforeBufLoc) {
 
 	// Our locations are exactly [beforeBufLoc+1, beforeBufLoc+1+len):

@@ -56,7 +56,7 @@ public abstract class SExp {
      ** This is faster than using <code>fancyMake(new
      ** Integer(i))</code>.<p>
      **/
-    //@ ensures \result!=null
+    //@ ensures \result != null
     public static SExp make(int i) {
 	return SInt.fromInt(i);
     }
@@ -69,12 +69,12 @@ public abstract class SExp {
      **
      ** Preconditon: <code>o</code>'s type is a subtype of
      **		     <code>String</code>, <code>Integer</code>, or
-     **		     <code>SExp</code>; <code>o!=null</code>.<p> 
+     **		     <code>SExp</code>; <code>o != null</code>.<p> 
      **/
-    //@ requires o!=null
-    //@ ensures \result!=null
+    //@ requires o != null
+    //@ ensures \result != null
     public static SExp fancyMake(Object o) {
-	javafe.util.Assert.precondition(o!=null);
+	javafe.util.Assert.precondition(o != null);
 	if (o instanceof SExp)
 	    return (SExp)o;
 	else if (o instanceof String)
@@ -120,7 +120,7 @@ public abstract class SExp {
      ** If we represent an atom, return it as an <code>Atom</code>; otherwise,
      ** throw <code>SExpTypeError</code>.
      **/
-    //@ ensures \result!=null
+    //@ ensures \result != null
     public Atom getAtom() throws SExpTypeError {
 	throw new SExpTypeError();
     }
@@ -137,7 +137,7 @@ public abstract class SExp {
      ** If we represent a list, return it as an <code>SList</code>;
      ** otherwise, throw <code>SExpTypeError</code>.
      **/
-    //@ ensures \result!=null
+    //@ ensures \result != null
     public SList getList() throws SExpTypeError {
 	throw new SExpTypeError();
     }
@@ -155,7 +155,7 @@ public abstract class SExp {
      ** Note: This routine will take a <code>PrintWriter</code> instead
      ** when we switch to a more recent version of JDK.<p>
      **/
-    //@ requires out!=null
+    //@ requires out != null
     public abstract void print(PrintStream out);
 
 
@@ -249,7 +249,7 @@ public abstract class SExp {
      **
      ** This method is intended mainly for test use.<p>
      **/
-    //@ requires x!=null
+    //@ requires x != null
     public static void display(SExp x) throws SExpTypeError {
 	if (x.isAtom()) {
 	    System.out.print("[Atom]  "+x.getAtom().toString());

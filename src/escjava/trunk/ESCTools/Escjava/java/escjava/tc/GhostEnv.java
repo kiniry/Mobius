@@ -146,7 +146,7 @@ public class GhostEnv extends EnvForTypeSig
 	boolean isStatic = d.parent instanceof InterfaceDecl;
 	if (Modifiers.isStatic(d.modifiers)) isStatic = true;
 	if (Utils.findModifierPragma(d,
-		TagConstants.INSTANCE)!=null) isStatic = false;
+		TagConstants.INSTANCE) != null) isStatic = false;
 	return isStatic;
     }
 

@@ -188,12 +188,12 @@ public class FindContributors
      *
      * Precondition: T has been resolved.<p>
      */
-    //@ requires T!=null
+    //@ requires T != null
     private void addType(Type T) {
 	// TypeName case:
 	if (T instanceof TypeName) {
 	    T = TypeSig.getSig((TypeName)T);
-	    Assert.precondition(T!=null);
+	    Assert.precondition(T != null);
 	}
 
 	// ArrayType case:
@@ -254,7 +254,7 @@ public class FindContributors
      * Add a given field to contributorFields, maintaining all the
      * closure properties. <p>
      */
-    //@ requires fd!=null
+    //@ requires fd != null
     private void addField(FieldDecl fd) {
 	if (contributorFields.contains(fd))
 	    return;
@@ -300,7 +300,7 @@ public class FindContributors
      *
      * Precondition: J has been type checked.
      */
-    //@ requires J!=null
+    //@ requires J != null
     private void addPossibleInvariant(ExprDeclPragma J) {
 	FieldDeclVec fieldsMentioned = fieldsInvariantMentions(J);
 
@@ -324,7 +324,7 @@ public class FindContributors
      *
      * Precondition: J has been type checked.
      */
-    //@ requires J!=null
+    //@ requires J != null
     private void addInvariant(ExprDeclPragma J) {
 	if (contributorInvariants.contains(J))
 	    return;
@@ -586,7 +586,7 @@ public class FindContributors
 
 	    // The range and domain types of fd are "mentioned":
 	    addType(fd.type);
-	    if (fd.parent!=null)	// "length" field has no parent...
+	    if (fd.parent != null)	// "length" field has no parent...
 		addType(TypeSig.getSig(fd.parent));
 
 	    /*
@@ -602,7 +602,7 @@ public class FindContributors
 
 
 	    // The field fd is "mentioned":
-	    if (fields!=null)
+	    if (fields != null)
 		fields.addElement(fd);
 	    else
 		addField(fd);
@@ -611,7 +611,7 @@ public class FindContributors
 	     * We need to walk the "spec" part of fd as well to handle
 	     * readable_if and the like:
 	     */
-	    if (fd.pmodifiers!=null) {
+	    if (fd.pmodifiers != null) {
 		for (int i=0; i<fd.pmodifiers.size(); i++)
 		    walk(fd.pmodifiers.elementAt(i), fields, addTypes, visited);
 	    }

@@ -67,7 +67,7 @@ public class PrintSpec extends SrcTool {
 
 
     //@ ensures \nonnullelements(\result)
-    //@ ensures \result != null
+    //@ ensures \result != null;
     public String[] FQNpackage(/*@ non_null */ String s) {
         StringTokenizer st = new StringTokenizer(s, ".", false);
         int len = st.countTokens();
@@ -81,7 +81,7 @@ public class PrintSpec extends SrcTool {
         return array;
     } 
 
-    //@ ensures \result != null
+    //@ ensures \result != null;
     public String FQNname(/*@ non_null */ String s) {
 	 	return s.substring(s.lastIndexOf(".") + 1);
     } 

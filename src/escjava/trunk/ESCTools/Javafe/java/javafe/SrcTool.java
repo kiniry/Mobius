@@ -57,7 +57,7 @@ public abstract class SrcTool extends FrontEndTool implements Listener
      * <code>CompilationUnit</code>s are loaded using notification from
      * <code>OutsideEnv</code>.
      */
-    //@ invariant loaded!=null 
+    //@ invariant loaded != null 
     //@ invariant loaded.elementType == \type(CompilationUnit)
     //@ invariant !loaded.containsNull
     //@ invariant loaded.owner == this
@@ -239,7 +239,7 @@ public abstract class SrcTool extends FrontEndTool implements Listener
      * <code>handleTD</code> on each <code>TypeDecl</code> present in
      * cu.  It is intended that subclassers override this method.<p>
      */
-    //@ requires cu!=null
+    //@ requires cu != null;
     public void handleCU(CompilationUnit cu) {
 		// Iterate over all the TypeDecls representing outside types in cu:
 		TypeDeclVec elems = cu.elems;
@@ -255,7 +255,7 @@ public abstract class SrcTool extends FrontEndTool implements Listener
      * This method is called on the TypeDecl of each
      * outside type that SrcTool is to process. <p>
      */
-    //@ requires td!=null
+    //@ requires td != null;
     public void handleTD(TypeDecl td) {}
 
 }

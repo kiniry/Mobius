@@ -53,7 +53,7 @@ public abstract class Tree {
     }
 
     /** Create a non-root node: */
-    //@ requires parent!=null && label!=null
+    //@ requires parent != null && label != null;
     protected Tree(Tree parent, String label, Object data) {
 	this.parent = parent;
 	this.label = label;
@@ -96,7 +96,7 @@ public abstract class Tree {
      * nextElement method are guaranteed to be of type Tree,
      * non-null, and have non-null labels.<p>
      *
-     * <esc> ensures \result!=null </esc>
+     * <esc> ensures \result != null </esc>
      */
     //@ ensures !\result.returnsNull
     //@ ensures \result.elementType == \type(Tree)
@@ -107,7 +107,7 @@ public abstract class Tree {
      * Fetch our direct child along the edge labelled label.  Iff there
      * is no such child, return null.
      */
-    //@ requires label!=null
+    //@ requires label != null;
     public Tree getChild(String label) {
 	/*
 	 * Stupid & slow default implementation using children()
@@ -158,7 +158,7 @@ public abstract class Tree {
      * The same as getLabel, except that it returns "" instead of null
      * for the top node.
      */
-    //@ ensures \result!=null
+    //@ ensures \result != null;
     public final String getSimpleName() {
 	if (label == null)
 	    return "";
@@ -181,7 +181,7 @@ public abstract class Tree {
      * For the resulting name to be useful, labels should never contain
      * the separator or be the empty string.<p>
      */
-    //@ ensures \result!=null
+    //@ ensures \result != null;
     public final String getQualifiedName(String separator) {
 	if (parent == null)
 	     return "";
@@ -209,7 +209,7 @@ public abstract class Tree {
      * See getQualifiedName for more information on qualified names.
      * Name must be non-null.<p>
      */
-    //@ requires name!=null
+    //@ requires name != null;
     public final Tree getQualifiedChild(String name, char separator) {
 	String[] path = StringUtil.parseList(name, separator);
 

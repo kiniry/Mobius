@@ -228,7 +228,7 @@ public class DefaultVisitor extends Visitor {
   }
 
   public void visitThisExpr(ThisExpr x) {
-    if (x.classPrefix!=null)
+    if (x.classPrefix != null)
 	x.classPrefix.accept( this );
     visitExpr(x);
   }

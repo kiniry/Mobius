@@ -60,7 +60,7 @@ public final class StackVector
      * and so that preconditions can be written for pop(), etc.<p>
      */
 
-    //@ invariant elements!=null
+    //@ invariant elements != null;
     //@ invariant elements.length>0
     //@ invariant \typeof(elements) == \type(Object[])
 
@@ -152,7 +152,7 @@ public final class StackVector
      */
     //@ requires 0<=i && i+currentStackBottom<elementCount
     //@ ensures \typeof(\result) <: elementType
-    //@ ensures \result!=null
+    //@ ensures \result != null;
     public Object elementAt(int i) 
 		/*throws ArrayIndexOutOfBoundsException*/ {
 	checkBounds(i);
@@ -191,7 +191,7 @@ public final class StackVector
     /**
      * Add an element at the end of the top Vector. <p>
      *
-     * <esc> requires x!=null </esc>
+     * <esc> requires x != null </esc>
      */
     //@ requires \typeof(x) <: elementType
     //@ modifies elementCount
@@ -304,7 +304,7 @@ public final class StackVector
 	Assert.precondition(currentStackBottom>0);
 
 	int i = currentStackBottom - 1;
-	//@ assert elements[i]==null
+	//@ assert elements[i]==null;
 
 	elementCount = i;
 	for( ; i > 0; i--)
@@ -334,7 +334,7 @@ public final class StackVector
 	Assert.precondition(currentStackBottom>0);
 	
 	int i = currentStackBottom - 1;
-	//@ assert elements[i]==null
+	//@ assert elements[i]==null;
 
 	System.arraycopy(elements, i+1, elements, i, size());
 	for( ; i > 0; i--)

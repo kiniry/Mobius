@@ -25,7 +25,7 @@ class LeafTree extends Tree {
     }
 
     /** Create a non-root node: */
-    //@ requires parent!=null && label!=null
+    //@ requires parent != null && label != null;
     /* package */ LeafTree(Tree parent, String label, Object data) {
 	super(parent, label, data);
     }

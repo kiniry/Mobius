@@ -16,7 +16,7 @@ package houdini;
 *   16 Mar 2001  rustan             Added exsures-false for non-Exception exceptions
 *                                   and suppressed "exsures (Exception) false;" if no
 *                                   Exception appears in throws clause.  Added
-*                                   antecedent in: a!=null ==> \typeof(a)==\type(T[]).
+*                                   antecedent in: a != null ==> \typeof(a)==\type(T[]).
 */
 
 import java.io.ByteArrayOutputStream;
