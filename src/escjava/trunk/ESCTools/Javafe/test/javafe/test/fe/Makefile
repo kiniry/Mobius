@@ -93,9 +93,10 @@ clean:
 	rm -rf _tmp_classes
 	find . -name \*~ -exec rm {} \;
 
+.PHONY: prepjdk
 prepjdk:
-	cat ${SOURCEDIRECTORY}/test/javafe/parser/test/jdk-1.0.2-files | xargs ${JAVA} javafe.test.PrepTest -classpath ${CLASSPATH}:/usr/local/Java/src/jdk-1.0.2 -v
-	cat ${SOURCEDIRECTORY}/test/javafe/parser/test/jdk-1.1.18-files | xargs ${JAVA} javafe.test.PrepTest -classpath ${CLASSPATH}:/usr/local/Java/src/jdk-1.18_03 -v
-	cat ${SOURCEDIRECTORY}/test/javafe/parser/test/jdk-1.2.2-files | xargs ${JAVA} javafe.test.PrepTest -classpath ${CLASSPATH}:/usr/local/Java/src/jdk-1.2.2_012 -v
-	cat ${SOURCEDIRECTORY}/test/javafe/parser/test/jdk-1.3.1-files | xargs ${JAVA} javafe.test.PrepTest -classpath ${CLASSPATH}:/usr/local/Java/src/jdk-1.3.1_06 -v
-	cat ${SOURCEDIRECTORY}/test/javafe/parser/test/jdk-1.4.1-files | xargs ${JAVA} javafe.test.PrepTest -classpath ${CLASSPATH}:/usr/local/Java/src/jdk-1.4.1_01 -v
+	cat ${SOURCEDIRECTORY}/test/javafe/parser/test/jdk-1.0-files | xargs ${JAVA} javafe.test.PrepTest -classpath ${CLASSPATH}:/usr/local/Java/src/jdk-1.0 -v
+	cat ${SOURCEDIRECTORY}/test/javafe/parser/test/jdk-1.1-files | xargs ${JAVA} javafe.test.PrepTest -classpath ${CLASSPATH}:/usr/local/Java/src/jdk-1.1 -v
+	cat ${SOURCEDIRECTORY}/test/javafe/parser/test/jdk-1.2-files | xargs ${JAVA} javafe.test.PrepTest -classpath ${CLASSPATH}:/usr/local/Java/src/jdk-1.2 -v
+	cat ${SOURCEDIRECTORY}/test/javafe/parser/test/jdk-1.3-files | xargs ${JAVA} javafe.test.PrepTest -classpath ${CLASSPATH}:/usr/local/Java/src/jdk-1.3 -v
+	cat ${SOURCEDIRECTORY}/test/javafe/parser/test/jdk-1.4-files | xargs ${JAVA} javafe.test.PrepTest -source 1.4 -classpath ${CLASSPATH}:/usr/local/Java/src/jdk-1.4 -v
