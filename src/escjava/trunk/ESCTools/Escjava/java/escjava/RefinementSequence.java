@@ -267,7 +267,7 @@ public class RefinementSequence extends CompilationUnit {
 	even if there is only one item in the refinement sequence.
 	*/
     void combineRoutine(RoutineDecl newrd, RoutineDecl rd) {
-	//Info.out("Combining routine "+Location.toString(newrd.getStartLoc()));
+	//System.out.println("Combining routine "+Location.toString(newrd.getStartLoc()) + " " + rd.binaryArgNames);
 	// FIXME - check exceptions
 	for (int i=0; i<newrd.args.size(); ++i) {
 	    FormalParaDecl newarg = newrd.args.elementAt(i);
@@ -286,13 +286,18 @@ public class RefinementSequence extends CompilationUnit {
 	    else if (!arg.id.toString().equals(newarg.id.toString())) {
 		ErrorSet.error(newarg.locId,
 		    "Refinements may not change the names of formal parameters (" +
-		    Location.toString(arg.locId) + ")");
+		    newarg.id + " vs. " + arg.id + ")", arg.locId);
 	    }
 	}
 	rd.binaryArgNames = false;
-	// FIXME - check modifiers ???
-	// combine modifiers
-	rd.modifiers |= newrd.modifiers;
+	if (false && rd.modifiers != newrd.modifiers) {
+	    // FIXME - careful - some default modifiers get added in to a binary file
+	    // that may not yet be present in source files.
+	    ErrorSet.caution(newrd.getStartLoc(),
+		"The routine must have the same set of Java modifiers in each specification file: " +
+		Modifiers.toString(newrd.modifiers) + " vs. " + Modifiers.toString(rd.modifiers),
+		rd.getStartLoc());
+	}
 
 	// Body: 
 	//  Java routines:
@@ -303,16 +308,14 @@ public class RefinementSequence extends CompilationUnit {
 	//  JML routines:  Add the body if we do not have one already.
 	// (We don't check the case of no Java body but a spec body
 	//   for a Java routine.)
-	if (rd.body == null) rd.body = newrd.body;
-	else if (newrd.body != null) {
+	if (newrd.body != null) {
 	    // If the bodies are the same object then we are just adding
 	    // back the java method that was part of the starting CU.
 	    // If 'implicit' is true, then the method is added by the 
 	    // compiler, and is the same method (e.g. default constructor).
 	    if (newrd.body != rd.body && !newrd.implicit && !rd.implicit) {
 		ErrorSet.error(newrd.body.locOpenBrace,
-		    "Body is specified more than once (" +
-		    Location.toString(rd.body.locOpenBrace));
+		    "Routine body may not be specified in a specification file");
 	    }
 	}
 
@@ -635,7 +638,7 @@ Info.out("Combining type " + newtd.id);
 		d.modifiers,
 		null,
 		null,
-		cleancopy(d.args),
+		cleancopy(d.args,false),
 		d.raises,
 		javaIsBinary? null: d.body,
 		d.locOpenBrace,
@@ -648,11 +651,12 @@ Info.out("Combining type " + newtd.id);
 	    ((RoutineDecl)newtde).implicit = d.implicit;
 	} else if (tde instanceof ConstructorDecl) {
 	    ConstructorDecl d = (ConstructorDecl)tde;
+	    boolean enclosed = d.parent.parent != null && !Modifiers.isStatic(d.parent.modifiers) && javaIsBinary;
 	    newtde = ConstructorDecl.make(
 		d.modifiers,
 		null,
 		null,
-		cleancopy(d.args),
+		cleancopy(d.args,enclosed),
 		d.raises,
 		javaIsBinary? null: d.body,
 		d.locOpenBrace,
@@ -680,16 +684,17 @@ Info.out("Combining type " + newtd.id);
 	return newtde;
     }
 
-    public FormalParaDeclVec cleancopy(FormalParaDeclVec args) {
-	FormalParaDeclVec result = args.copy();
-	for (int i=0; i<result.size(); ++i) {
-	    FormalParaDecl a = result.elementAt(i);
+    public FormalParaDeclVec cleancopy(FormalParaDeclVec args,boolean omitFirst) {
+	int offset = omitFirst ? 1 : 0;
+	FormalParaDeclVec result = FormalParaDeclVec.make(args.size() - offset );
+	for (int i=offset; i<args.size(); ++i) {
+	    FormalParaDecl a = args.elementAt(i);
 	    a = FormalParaDecl.make(a.modifiers,
 			null, // clean out the pragmas
 			a.id,
 			a.type,
 			a.locId);
-	    result.setElementAt(a,i);
+	    result.addElement(a);
 	}
 	return result;
     }
