@@ -19,6 +19,7 @@ import bcexpression.vm.Stack;
 import bcexpression.ArrayAccessExpression;
 import bcexpression.Expression;
 import bcexpression.FieldAccess;
+import bcexpression.NumberLiteral;
 import bytecode.BCExceptionThrower;
 import bytecode.BCTypedInstruction;
 
@@ -93,7 +94,7 @@ public class BCTypeALOAD
 		// n_post[ S(t) <----- S(t-1)[S(t)]]
 		_n_Postcondition =
 		(Formula)_n_Postcondition.substitute(
-			new Stack(Expression.COUNTER),
+			new Stack(Expression.getCOUNTER_MINUS_1()),
 				new ArrayAccessExpression(new Stack(Expression.getCOUNTER_MINUS_1()), new Stack(Expression.COUNTER)));
 
 		//S(t - 1) != null
@@ -108,17 +109,23 @@ public class BCTypeALOAD
 			new FieldAccess(
 					ArrayLengthConstant.ARRAYLENGTHCONSTANT,
 			new Stack(Expression.getCOUNTER_MINUS_1()));
-		Formula _arr_index_correct =
+		Formula _index_less_len =
 			new Predicate2Ar(_arrlength, new Stack(Expression.COUNTER), PredicateSymbol.GRT);
+		Formula _index_grt_eq_0 = new Predicate2Ar(new Stack(Expression.COUNTER), new NumberLiteral(0) , PredicateSymbol.GRTEQ);
+		
+		Formula _arr_index_correct = Formula.getFormula(_index_less_len, _index_grt_eq_0, Connector.AND );
 		Formula _condition =
 		Formula.getFormula(_arr_not_null, _arr_index_correct, Connector.AND);
 		Formula _normal_termination =
 		Formula.getFormula(_condition, _n_Postcondition, Connector.IMPLIES);
 
 		//  execution terminating with java.lang.IndexOutOfBoundsException
-		//S(t-1).length <= S(t) ==> excPost(IndexOutOfBoundsException)
-		Formula _index_out_of_bounds =
+		//S(t-1).length <= S(t) || ==> excPost(IndexOutOfBoundsException)
+		Formula _index_grt_eq_len =
 			new Predicate2Ar(_arrlength.copy(), new Stack(Expression.COUNTER), PredicateSymbol.LESSEQ);
+		Formula _index_less_0 = new Predicate2Ar(new Stack(Expression.COUNTER), new NumberLiteral(0), PredicateSymbol.LESS);
+		Formula _index_out_of_bounds  = Formula.getFormula( _index_grt_eq_len, _index_less_0, Connector.OR);
+		
 		Formula _wp_arr_out_of_bounds =
 			getWpForException(
 				(JavaObjectType) JavaType.getJavaRefType(

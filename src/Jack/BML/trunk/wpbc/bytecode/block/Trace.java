@@ -137,6 +137,9 @@ public class Trace {
 		}
 		BCInstruction last = b.getLast();
 		/* Util.dump("ADD ToComponent : " + last.toString()); */
+		if (last instanceof EntryPoint) {
+			return;
+		}
 		if (last instanceof BCTypeRETURN) {
 			return;
 		}
@@ -365,12 +368,10 @@ public class Trace {
 	private Block initBlock(BCInstruction first) {
 		BCInstruction[] instrs = method.getBytecode();
 		BCInstruction next = first;
-		/*
-		 * if (first instanceof BCLoopEnd) { Util.dump("loopEnd : beginning " );
-		 * Util.dump(first);
-		 */
-		while (true) {
-			/* Util.dump("next " + next.toString()); */
+		if (next == null ) {
+			return null;
+		}
+		while (next.getNext() != null) {
 			BCInstruction nextOfNext = next.getNext();
 			if ((nextOfNext != null) && (nextOfNext.getTargeters() != null)) {
 				break;
@@ -398,6 +399,7 @@ public class Trace {
 				break;
 			}
 			next = next.getNext();
+			
 		}
 		if ((next instanceof BCLoopEnd)
 				&& (((BCLoopEnd) next)).getWrappedInstruction() instanceof BCConditionalBranch) {

@@ -216,7 +216,9 @@ public class Block implements ByteCode {
 			return;
 		} else if (last instanceof BCLoopEnd) {
 			return;
-		} else if (last.getNext().getTargeters() != null) {
+		} // in case that last is not a jump, ret, return then the block ending with last will
+		 // be 
+		else if ((last.getNext() != null ) && ( last.getNext().getTargeters() != null)) {
 			Block b =
 				(Block) blocks.get(new Integer(last.getNext().getPosition()));
 			setTargetSeqBlock(b);
