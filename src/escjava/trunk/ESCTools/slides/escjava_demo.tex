@@ -261,7 +261,7 @@ class Bag \{
 \begin{alltt}
 \texttt{\textbf{\footnotesize
 class Bag \{
-  int[] a; {\blue //@ a != null; }
+  int[] a; {\blue //@ invariant a != null; }
   int   n; {\blue //@ invariant 0 <= n && n <= a.length;}
   int{\green extractMin}() \{
    int m = Integer.MAX_VALUE;
@@ -282,7 +282,7 @@ class Bag \{
 \begin{alltt}
 \texttt{\textbf{\footnotesize
 class Bag \{
-  int[] a; {\blue //@ a != null; }
+  int[] a; {\blue //@ invariant a != null; }
   int   n; {\blue //@ invariant 0 <= n && n <= a.length;}
   int{\green extractMin}() \{
    int m = Integer.MAX_VALUE;
@@ -305,7 +305,7 @@ class Bag \{
 \begin{alltt}
 \texttt{\textbf{\footnotesize
 class Bag \{
-  int[] a; {\blue //@ a != null; }
+  int[] a; {\blue //@ invariant a != null; }
   int   n; {\blue //@ invariant 0 <= n && n <= a.length;}
  {\blue //@ requires n > 0;}
   int{\green extractMin}() \{
@@ -327,7 +327,7 @@ class Bag \{
 \begin{alltt}
 \texttt{\textbf{\footnotesize
 class Bag \{
-  int[] a; {\blue //@ a != null; }
+  int[] a; {\blue //@ invariant a != null; }
   int   n; {\blue //@ invariant 0 <= n && n <= a.length;}
  {\blue //@ requires n > 0;}
   int{\green extractMin}() \{
@@ -351,7 +351,7 @@ class Bag \{
 \begin{alltt}
 \texttt{\textbf{\footnotesize
 class Bag \{
-  int[] a; {\blue //@ a != null; }
+  int[] a; {\blue //@ invariant a != null; }
   int   n; {\blue //@ invariant 0 <= n && n <= a.length;}
  {\blue //@ requires n > 0;}
   int{\green extractMin}() \{
