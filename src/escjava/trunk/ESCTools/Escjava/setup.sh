@@ -1,4 +1,4 @@
-#!/bin/bash
+unset/bash
 # Copyright 2000, 2001, Compaq Computer Corporation
 #
 # This file must be sourced before running gnumake anywhere in this
