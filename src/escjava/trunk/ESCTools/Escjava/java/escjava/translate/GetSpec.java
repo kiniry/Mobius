@@ -1806,6 +1806,7 @@ while (ee.hasMoreElements()) {
         for (int i = 0; i < ev.size(); i++) {
             Expr e = ev.elementAt(i);
             code.addElement(GC.assume(e));
+	    //code.addElement(GC.check(e.getStartLoc(),TagConstants.CHKCONSISTENT,e,e.getStartLoc(),null));
         }
     }
   

@@ -4191,6 +4191,8 @@ if (mg.precondition == null) {
 
     private void addAssumption(Expr pred) {
 	code.addElement(GC.assume(pred));
+	//code.addElement(GC.check(pred.getStartLoc(),TagConstants.CHKCONSISTENT, pred,
+	//		Location.NULL, null));
     }
 
     private void addAssumptions(ExprVec ev) {
@@ -4212,7 +4214,7 @@ if (mg.precondition == null) {
 	ExprVec ev = ExprVec.make(10);
 	GetSpec.addAxioms(axsToAdd,ev);
 	for (int i=0; i<ev.size(); ++i) {
-	    code.addElement(GC.assume(ev.elementAt(i)));
+	    addAssumption(ev.elementAt(i));
 	}
 	TrAnExpr.closeForClause();
     }
