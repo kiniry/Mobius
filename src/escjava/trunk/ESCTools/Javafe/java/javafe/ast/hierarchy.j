@@ -435,6 +435,7 @@ public abstract class RoutineDecl extends ASTNode implements TypeDeclElem
   public int getModifiers() { return modifiers; }
   public void setModifiers(int m) { modifiers = m; }
   public int getStartLoc() { return loc; }
+  abstract public Identifier id();
 
     public int getEndLoc() { 
 	if (body == null)
@@ -464,6 +465,7 @@ public class ConstructorDecl extends RoutineDecl
 {
   //# MakerSpec requires body != null ==> locOpenBrace != Location.NULL;
 
+  public Identifier id() { return parent != null ? parent.id : Identifier.intern("<constructor>"); }
 }
 
 public class MethodDecl extends RoutineDecl
@@ -474,6 +476,7 @@ public class MethodDecl extends RoutineDecl
 
   //# MakerSpec requires body != null ==> locOpenBrace != Location.NULL;
 
+  public Identifier id() { return id; }
 }
 
 /** Represents an initializing block of code as a class member
