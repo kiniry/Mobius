@@ -2,7 +2,7 @@ package problems;
 
 import problems.Predicates;
 
-class Assertions extends Predicates
+class AssertionsKey extends Predicates
 {
   static int i;
   static Object o;
@@ -15,33 +15,33 @@ class Assertions extends Predicates
   }
 
   static void n(int j, Object p, String t) {
-    assert O(p);
+    assert p != null;
     if (p.equals(t))
       return;
     else {
       i |= 0x100;
       j |= 0xEFF;
-      assert J(i, j);
+      assert (i & j) == 1;
       t += "bar";
     }
   }
 
   static Object o(int i, Object o, String s) {
-    assert O(o);
-    assert S(s);
+    assert ((Integer)o).intValue() == 1;
+    assert s != null;
     if (s.equals(o))
       return new Integer(i);
     else {
       i ^= 0xFF;
-      assert I(i);
-      Assertions.s += "piggie";
+      assert i == 510;
+      AssertionsKey.s += "piggie";
       return s;
     }
   }
 
   static Object p(int i, Object o, String s) {
-    assert O(o);
-    assert S(s);
+    assert o instanceof Integer;
+    assert s != null;
     switch (i) {
       case -255:
         s = "duck";
@@ -67,23 +67,23 @@ class Assertions extends Predicates
   }
   
   public static void main(String[] args) {
-    assert I(i);
-    assert S(s);
-    assert O(o);
+    assert i == 0;
+    assert s == null;
+    assert o == null;
     m();
-    assert I(i);
-    assert S(s);
-    assert O(o);
+    assert i == 1;
+    assert s.equals("foo");
+    assert ((Integer)o).intValue() == 1;
     n(i, o, s);
-    assert I(i);
-    assert S(s);
-    assert O(o);
+    assert i == 256 + 1;
+    assert s.equals("foo");
+    assert new Integer(1).equals(o);
     Object p = p(-1 & i, o, (String)o(i, o, s));
-    assert O(p);
+    assert p.equals("1");
     Object q = p(-1, o, (String)p);
-    assert I(i);
-    assert S(s);
-    assert O(o);
-    assert O(q);
+    assert i == 257;
+    assert s.equals("foopiggie");
+    assert ((Integer)o).intValue() == 1;
+    assert ((Short)q).shortValue() == -1;
   }
 }

@@ -272,7 +272,11 @@ xref)
 @page
 
 @strong{Problem 1.} @anchor{Problem-1} Annotate the following code block
-with Java assertions as indicated.
+with Java assertions as indicated.  The expression @code{P(a0,a1,...)}
+means ``replace this expression with a predicate that is true of the
+variables @code{a0} and @code{a1} and @ldots''.  Write the strongest
+predicate possible, given the context of the assertion.  Execute the
+class to check your answers.
 
 @example
 @include problems/Assertions.java.texinfo
