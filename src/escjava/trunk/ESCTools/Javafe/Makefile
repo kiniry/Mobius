@@ -31,7 +31,7 @@ default: build
 all: clean build test docs
 
 .PHONY: build
-build: compile
+build: fixperms compile
 
 .PHONY: buildall
 buildall: compileall
@@ -50,6 +50,12 @@ SOURCEFILES := java/javafe/*.java java/javafe/*/*.java java/tohtml/*.java
 
 CLASSESSTAMP = classes.stamp
 
+SHELLSCRIPTS =	java/javafe/ast/make_tags \
+		java/javafe/ast/insert_ensures
+
+.PHONY: fixperms
+fixperms:
+	@chmod 755 $(SHELLSCRIPTS)
 
 ## Compiles everything that is missing or out of date
 .PHONY: compile
