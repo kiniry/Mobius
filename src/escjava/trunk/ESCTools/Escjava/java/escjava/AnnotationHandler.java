@@ -15,6 +15,7 @@ import javafe.tc.Types;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 
 /** This class handles the desugaring of annotations.
 
@@ -142,36 +143,22 @@ public class AnnotationHandler {
 	if (pmodifiers == null) return;
 	for (int i = 0; i<pmodifiers.size(); ++i) {
 	    ModifierPragma mp = pmodifiers.elementAt(i);
-
-/*
-	    System.out.print("   pmod " + escjava.ast.TagConstants.toString(mp.getTag()) + " "  );
-	    if (mp instanceof ExprModifierPragma) {
-		ExprModifierPragma mpe = (ExprModifierPragma)mp;
-		PrettyPrint.inst.print(System.out,0,mpe.expr);
-	    }
-	    System.out.println("");
-*/
-
 	    (new CheckPurity()).visitNode((ASTNode)mp);
-/*
-	    Object o;
-	    if (mp instanceof ExprModifierPragma)
-	      (new CheckPurity()).visitNode(((ExprModifierPragma)mp).expr);
-	    if (mp instanceof CondExprModifierPragma) {
-	      (new CheckPurity()).visitNode(((CondExprModifierPragma)mp).expr);
-	      (new CheckPurity()).visitNode(((CondExprModifierPragma)mp).cond);
-	    }
-*/
 	}
 	Identifier id =
 		tde instanceof MethodDecl ?
 			((MethodDecl)tde).id
 		: tde.getParent().id;
 	//System.out.println("Desugaring specifications for " + id);
-	tde.pmodifiers = desugarAnnotations(pmodifiers,tde);
-	//if (tde.pmodifiers != pmodifiers) return;
-
-
+	try { // Just for safety's sake
+	    //System.out.println("DESUGARING " + Location.toString(tde.getStartLoc()));
+	    tde.pmodifiers = desugarAnnotations(pmodifiers,tde);
+	} catch (Exception e) {
+	    tde.pmodifiers = ModifierPragmaVec.make();
+	    ErrorSet.error(tde.getStartLoc(),
+		"Internal error while desugaring annotations: " + e);
+	    e.printStackTrace();
+	}
 
 // FIXME - control this with an option
 	if (false) {
@@ -201,32 +188,34 @@ public class AnnotationHandler {
         }
     }
 
-// FIXME - this only handles one level of nesting
-
     protected ModifierPragmaVec desugarAnnotations(ModifierPragmaVec pm,
 						RoutineDecl tde) {
 	java.util.ArrayList newpm = new java.util.ArrayList();
 	int size = pm.size();
 	if (size == 0) return pm;
-	int n = 0;
+
+	// We add this (internal use only) END pragma so that we don't have
+	// to continually check the value of pos vs. the size of the array
+	pm.addElement(SimpleModifierPragma.make(TagConstants.END,
+			pm.elementAt(size-1).getStartLoc()));
+	++size;
+
+	int pos = 0;
 	// FIXME - check whether we should have an initial also or not ???
 	// check for an initial also
-	ModifierPragma m = pm.elementAt(n);
+	ModifierPragma m = pm.elementAt(pos);
 	if (m.getTag() == TagConstants.ALSO) {
 	    newpm.add(m);
-	    ++n;
+	    ++pos;
 	}
-	boolean isPure = Modifiers.isPure(tde.modifiers) || 
-		         Modifiers.isPure(tde.getParent().modifiers);
-	boolean isConstructor = 
-		tde instanceof ConstructorDecl;
+	boolean isPure = escjava.tc.FlowInsensitiveChecks.isPure(tde);
+	boolean isConstructor = tde instanceof ConstructorDecl;
+/*
 	// check whether this is lightweight or heavyweight
-	// it is heavyweight if there is an also, a behavior annotation
-	// or a OPENPRAGMA
-// FIXME ?? - does an initial also require a heavyweight annotation
-// DOes it matter whether it is refined or is inherited
+	// it is heavyweight if there is an also (besides an initial also),
+	// a behavior annotation or a OPENPRAGMA
 	boolean isHeavyweight = false;
-	for (int j=n; j<size; ++j) {
+	for (int j=pos; j<size; ++j) {
 	    m = pm.elementAt(j);
 	    int t = m.getTag();
 	    if (t == TagConstants.BEHAVIOR
@@ -239,29 +228,175 @@ public class AnnotationHandler {
 		break;
 	    }
 	}
-	if (!isHeavyweight) return pm;
-
-	java.util.Stack behaviors = new java.util.Stack();
+	if (!isHeavyweight) {
+	    if (size > 0 && pos == size)
+		ErrorSet.caution(tde.getStartLoc(),"Empty annotation");
+	    return pm;
+	}
+*/
 	Behavior accumulatedBehavior = new Behavior();
+
+	ArrayList results = new ArrayList();
+	do {
+
+	pos = deNest(false,pos,pm,results,new Behavior(),isPure,isConstructor);
+	if (pm.elementAt(pos).getTag() == TagConstants.SUBCLASSING_CONTRACT) {
+	    ++pos;
+	    pos = sc_section(pos,pm,accumulatedBehavior.subclassingContracts);
+	}
+	if (pm.elementAt(pos).getTag() == TagConstants.IMPLIES_THAT) {
+	    ++pos;
+	    pos = deNest(false,pos,pm,accumulatedBehavior.implications,new Behavior(),isPure,isConstructor);
+	}
+	if (pm.elementAt(pos).getTag() == TagConstants.FOR_EXAMPLE) {
+	    ++pos;
+	    pos = deNest(true,pos,pm,accumulatedBehavior.examples,new Behavior(),isPure,isConstructor);
+	}
+	if (pm.elementAt(pos).getTag() == TagConstants.ALSO_REFINE) {
+	    ++pos;
+	    continue;
+	}
+	while (pm.elementAt(pos).getTag() != TagConstants.END) {
+	    ErrorSet.error(pm.elementAt(pos).getStartLoc(),
+				"Out of place annotation");
+	    ++pos;
+	}
+	break;
+	} while(true);
+	
+	// Now have to further desugar the annotations that Escjava uses
+	// FIXME - adding model programs may require altering this loop
+	if (results.size() != 1) {
+	    ArrayList orList = new ArrayList(); // Set of groups to be
+				// ored together to form the final clause
+	    for (Iterator ii = results.iterator(); ii.hasNext();) {
+		Object o = ii.next();
+		Behavior b = (Behavior)o;
+		accumulatedBehavior.combine(b,orList);
+	    }
+	    if (orList.isEmpty()) {
+		// No non-false groups - there is no spec
+		accumulatedBehavior.requires = null;
+	    } else if (orList.size() == 1) {
+		// Just one non-false group, use it directly
+		accumulatedBehavior.requires = (ArrayList)orList.get(0);
+	    } else {
+		// Multiple groups - have to combine them
+		ArrayList newList = new ArrayList();
+		Iterator i = orList.iterator();
+		while (i.hasNext()) {
+		    ArrayList a = (ArrayList)i.next();
+		    ExprModifierPragma e = and(a);
+		    if (e != null) newList.add(e);
+		}
+		accumulatedBehavior.requires = new ArrayList();
+		accumulatedBehavior.requires.add(or(newList));
+	    }
+	} else { // results.size() == 1
+		Behavior b = (Behavior)results.get(0);
+		accumulatedBehavior.requires = b.requires;
+		accumulatedBehavior.ensures = b.ensures;
+		accumulatedBehavior.signals = b.signals;
+		accumulatedBehavior.when = b.when;
+		accumulatedBehavior.diverges = b.diverges;
+		accumulatedBehavior.modifies = b.modifies;
+		accumulatedBehavior.extras = b.extras;
+	}
+
+	// End
+
+	if (accumulatedBehavior.requires != null) 
+	    newpm.addAll(accumulatedBehavior.requires);
+
+	Iterator ii = accumulatedBehavior.modifies.iterator();
+	while (ii.hasNext()) {
+	    CondExprModifierPragma e = (CondExprModifierPragma)ii.next();
+	    newpm.add(e);
+	}
+	ii = accumulatedBehavior.ensures.iterator();
+	while (ii.hasNext()) {
+	    ExprModifierPragma e = (ExprModifierPragma)ii.next();
+	    if (e.expr != Behavior.T) newpm.add(e);
+	}
+	ii = accumulatedBehavior.when.iterator();
+	while (ii.hasNext()) {
+	    ExprModifierPragma e = (ExprModifierPragma)ii.next();
+	    if (e.expr != Behavior.T) newpm.add(e);
+	}
+	ii = accumulatedBehavior.diverges.iterator();
+	while (ii.hasNext()) {
+	    ExprModifierPragma e = (ExprModifierPragma)ii.next();
+	    if (e.expr != Behavior.T) newpm.add(e);
+	}
+	ii = accumulatedBehavior.signals.iterator();
+	while (ii.hasNext()) {
+	    VarExprModifierPragma e = (VarExprModifierPragma)ii.next();
+	    newpm.add(e);
+	}
+	ii = accumulatedBehavior.extras.iterator();
+	while (ii.hasNext()) {
+	    ModifierPragma e = (ModifierPragma)ii.next();
+	    newpm.add(e);
+	}
+
+
+	ModifierPragma[] out = new ModifierPragma[newpm.size()];
+	return ModifierPragmaVec.make((ModifierPragma[])(newpm.toArray(out)));
+    }
+
+    public int deNest(boolean exampleMode, int pos, ModifierPragmaVec pm, ArrayList results, Behavior cb, boolean isPure, boolean isConstructor) {
 	Behavior currentBehavior = new Behavior();
-	Behavior commonBehavior = null;
-	ModifierPragma openPragma = null;
-	whileloop:
-	while (n < size) {
-	    m = pm.elementAt(n++);
+	LinkedList commonBehavior = new LinkedList();
+	ModifierPragma m = null;
+	boolean terminate = false;
+	while (!terminate) {
+	    m = pm.elementAt(pos++);
 	    int t = m.getTag();
+	    //System.out.println("GOT TAG " + TagConstants.toString(t));
 	    switch (t) {
 		case TagConstants.BEHAVIOR:
+		    if (exampleMode)
+			ErrorSet.error("Behavior keyword should not be used in examples section - use example");
 		    currentBehavior = new Behavior();
 		    break;
+		case TagConstants.EXAMPLE:
+		    if (!exampleMode)
+			ErrorSet.error("Example keyword should not be used outside the examples section - use behavior");
+		    currentBehavior = new Behavior();
+		    break;
+
 		case TagConstants.NORMAL_BEHAVIOR:
+		    if (exampleMode)
+			ErrorSet.error("normal_behavior keyword should not be used in examples section - use normal_example");
 		    currentBehavior = new Behavior();
 		    currentBehavior.isNormal = true;
 		// set a false signals clause
 			// FIXME - we need to turn signals off
 		    //currentBehavior.signals.add(Behavior.DefaultSignalFalse);
 		    break;
+
+		case TagConstants.NORMAL_EXAMPLE:
+		    if (!exampleMode)
+			ErrorSet.error("normal_example keyword should not be used outside the examples section - use normal_behavior");
+		    currentBehavior = new Behavior();
+		    currentBehavior.isNormal = true;
+		// set a false signals clause
+			// FIXME - we need to turn signals off
+		    //currentBehavior.signals.add(Behavior.DefaultSignalFalse);
+		    break;
+
 		case TagConstants.EXCEPTIONAL_BEHAVIOR:
+		    if (exampleMode)
+			ErrorSet.error("exceptional_behavior keyword should not be used in examples section - use exceptional_example");
+		    currentBehavior = new Behavior();
+		    currentBehavior.isExceptional = true;
+		    // set a false ensures clause
+		    currentBehavior.ensures.add(Behavior.EnsuresFalse);
+		    break;
+
+		case TagConstants.EXCEPTIONAL_EXAMPLE:
+		    if (!exampleMode)
+			ErrorSet.error("exceptional_example keyword should not be used outside the examples section - use exceptional_behavior");
 		    currentBehavior = new Behavior();
 		    currentBehavior.isExceptional = true;
 		    // set a false ensures clause
@@ -282,15 +417,30 @@ public class AnnotationHandler {
 		case TagConstants.REQUIRES:
 		case TagConstants.ALSO_REQUIRES:
 		case TagConstants.PRECONDITION: {
+		    if (currentBehavior == null) {
+			ErrorSet.error(m.getStartLoc(),"Missing also");
+			if (commonBehavior.isEmpty()) {
+			    currentBehavior = new Behavior();
+			} else {
+			    currentBehavior = ((Behavior)commonBehavior.getFirst()).copy();
+			}
+		    }
 		    ExprModifierPragma e = (ExprModifierPragma)m;
-		    currentBehavior.requires =
-			and(currentBehavior.requires,e.expr);
+		    currentBehavior.requires.add(e);
 		    break;
 		}
 		    
 		case TagConstants.ENSURES:
 		case TagConstants.ALSO_ENSURES:
 		case TagConstants.POSTCONDITION: {
+		    if (currentBehavior == null) {
+			ErrorSet.error(m.getStartLoc(),"Missing also");
+			if (commonBehavior.isEmpty()) {
+			    currentBehavior = new Behavior();
+			} else {
+			    currentBehavior = ((Behavior)commonBehavior.getFirst()).copy();
+			}
+		    }
 		    if (currentBehavior.isExceptional) {
 			ErrorSet.error(m.getStartLoc(),
 			   "This type of annotation is not permitted in an excpetional_behavior clause");
@@ -301,6 +451,14 @@ public class AnnotationHandler {
 		 }
 
 		case TagConstants.DIVERGES:
+		    if (currentBehavior == null) {
+			ErrorSet.error(m.getStartLoc(),"Missing also");
+			if (commonBehavior.isEmpty()) {
+			    currentBehavior = new Behavior();
+			} else {
+			    currentBehavior = ((Behavior)commonBehavior.getFirst()).copy();
+			}
+		    }
 		    ExprModifierPragma e = (ExprModifierPragma)m;
 		    currentBehavior.diverges.add(e);
 		    break;
@@ -308,6 +466,14 @@ public class AnnotationHandler {
 		case TagConstants.EXSURES:
 		case TagConstants.ALSO_EXSURES:
 		case TagConstants.SIGNALS:
+		    if (currentBehavior == null) {
+			ErrorSet.error(m.getStartLoc(),"Missing also");
+			if (commonBehavior.isEmpty()) {
+			    currentBehavior = new Behavior();
+			} else {
+			    currentBehavior = ((Behavior)commonBehavior.getFirst()).copy();
+			}
+		    }
 		    if (currentBehavior.isNormal) {
 			ErrorSet.error(m.getStartLoc(),
 			   "This type of annotation is not permitted in an normal_behavior clause");
@@ -319,6 +485,14 @@ public class AnnotationHandler {
 		case TagConstants.MODIFIABLE:
 		case TagConstants.MODIFIES:
 		case TagConstants.ALSO_MODIFIES: {
+		    if (currentBehavior == null) {
+			ErrorSet.error(m.getStartLoc(),"Missing also");
+			if (commonBehavior.isEmpty()) {
+			    currentBehavior = new Behavior();
+			} else {
+			    currentBehavior = ((Behavior)commonBehavior.getFirst()).copy();
+			}
+		    }
 		    currentBehavior.modifies.add(m);
 		    if (isPure && !isConstructor) {
 			CondExprModifierPragma cm = 
@@ -335,149 +509,227 @@ public class AnnotationHandler {
 		}
 
 		case TagConstants.WHEN:
+		    if (currentBehavior == null) {
+			ErrorSet.error(m.getStartLoc(),"Missing also");
+			if (commonBehavior.isEmpty()) {
+			    currentBehavior = new Behavior();
+			} else {
+			    currentBehavior = ((Behavior)commonBehavior.getFirst()).copy();
+			}
+		    }
 		    currentBehavior.when.add(m);
 		    break;
 
-		case TagConstants.MEASURED_BY:
-		    currentBehavior.measuredby.add(m);
-		    break;
-
 		case TagConstants.OPENPRAGMA:
-		    commonBehavior = currentBehavior;
-		    currentBehavior = new Behavior();
-		    openPragma = m;
+		    if (currentBehavior == null) {
+			ErrorSet.error(m.getStartLoc(),"Missing also");
+			if (commonBehavior.isEmpty()) {
+			    currentBehavior = new Behavior();
+			} else {
+			    currentBehavior = ((Behavior)commonBehavior.getFirst()).copy();
+			}
+		    }
+		    currentBehavior.openPragma = m;
+		    commonBehavior.addFirst(currentBehavior.copy());
 		    break;
 
 		case TagConstants.ALSO:
-		    if (commonBehavior == null) {
-			accumulatedBehavior.combine(currentBehavior);
+		    if (currentBehavior != null) 
+			results.add(currentBehavior);
+		    if (commonBehavior.isEmpty()) {
 			currentBehavior = new Behavior();
 		    } else {
-			currentBehavior.merge(commonBehavior);
-			accumulatedBehavior.combine(currentBehavior);
-			currentBehavior = new Behavior();
+			currentBehavior = ((Behavior)commonBehavior.getFirst()).copy();
 		    }
 		    break;
 
 		case TagConstants.CLOSEPRAGMA:
-		    if (commonBehavior == null) {
+		    if (currentBehavior != null) 
+			results.add(currentBehavior);
+		    if (commonBehavior.isEmpty()) {
 			ErrorSet.error(m.getStartLoc(),
 			    "Encountered |} without a matching {|");
 		    } else {
-			currentBehavior.merge(commonBehavior);
-			accumulatedBehavior.combine(currentBehavior);
-			commonBehavior = null;
+			commonBehavior.removeFirst();
 			currentBehavior = null;
 		    }
 		    break;
 
+		case TagConstants.MODEL_PROGRAM:
+		    if (currentBehavior == null && !currentBehavior.isEmpty()) {
+			ErrorSet.error(m.getStartLoc(),"Missing also");
+			if (commonBehavior.isEmpty()) {
+			    currentBehavior = new Behavior();
+			} else {
+			    currentBehavior = ((Behavior)commonBehavior.getFirst()).copy();
+			}
+		    }
+		    if (!commonBehavior.isEmpty()) {
+			ErrorSet.error(m.getStartLoc(),
+			     "A model program may not be nested");
+		    }
+		    // FIXME - the model programs aren't saved anywhere
+		    currentBehavior = null;
+		    break;
+
+		case TagConstants.SUBCLASSING_CONTRACT:
+		    if (exampleMode)
+			ErrorSet.error(m.getStartLoc(),
+			      "Misplaced subclassing_contract clause");
+		    --pos;
+		    terminate = true;
+		    break; 
+
 		case TagConstants.IMPLIES_THAT:
-		case TagConstants.EXAMPLE:
-		case TagConstants.NORMAL_EXAMPLE:
-		case TagConstants.EXCEPTIONAL_EXAMPLE:
-			// FIXME _ for now count this as the end of annotations
-			currentBehavior = null;
-			break whileloop;
-
+		    if (exampleMode) 
+			ErrorSet.error("Did not expect implies_that after examples section");
+		    // fall through
 		case TagConstants.FOR_EXAMPLE:
-			// FIXME _ for now count this as the end of annotations
-			break whileloop;
+		case TagConstants.ALSO_REFINE:
+		case TagConstants.END:
+		    --pos;
+		    terminate = true;
+		    break; 
 
+		case TagConstants.SPEC_PUBLIC:
+		case TagConstants.SPEC_PROTECTED:
 		case TagConstants.PURE:
-			// ignore these
-			break;
+		case TagConstants.NON_NULL:
+		case TagConstants.HELPER:
+		    if (currentBehavior == null) 
+				currentBehavior = new Behavior();
+		    currentBehavior.extras.add(m);
+		    continue; 
 
 	        default:
-// FIXME
-/*
-		    ErrorSet.warning(m.getStartLoc(),
+
+		    ErrorSet.caution(m.getStartLoc(),
 			"Desugaring does not support "
 			+ TagConstants.toString(m.getTag()));
-*/
+
 		    currentBehavior.extras.add(m);
 		    break;
             }
-        }
-	// End
-	if (commonBehavior != null) {
+        } 
+	if (currentBehavior != null) {
+	    if (currentBehavior.isEmpty()) {
+/* This test is not correct or robust - maybe simply allow an empty also?
+		//@ if m is null, currentBehavior will not be null
+		 if (!results.isEmpty())
+			ErrorSet.error(m.getStartLoc(),"Dangling also");
+*/
+	    } else {
+		results.add(currentBehavior);
+	    }
+	}
+	if (!commonBehavior.isEmpty()) {
+	    ModifierPragma openPragma = ((Behavior)commonBehavior.getFirst()).openPragma;
 	    ErrorSet.error(openPragma.getStartLoc(),"No closing |} for this {|");
 	}
-	if (currentBehavior != null && currentBehavior.isEmpty()) {
-	    ErrorSet.error(m.getStartLoc(),"Dangling also");
-	}
+	return pos;
+    }
 
-	if (currentBehavior != null && !currentBehavior.isEmpty())
-		accumulatedBehavior.combine(currentBehavior);
+    public int sc_section(int pos, ModifierPragmaVec pm, ArrayList results) {
+	while (pos < pm.size()) {
+	    ModifierPragma m = pm.elementAt(pos++);
+	    switch (m.getTag()) {
+		case TagConstants.ACCESSIBLE:
+		case TagConstants.CALLABLE:
+		case TagConstants.MEASURED_BY:
+		    results.add(m);
+		    break;
 
-// FIXME - what to do about locations here ?
-	if (accumulatedBehavior.requires != null)
-	    newpm.add(ExprModifierPragma.make(TagConstants.REQUIRES,
-				accumulatedBehavior.requires,Location.NULL));
-	Iterator ii = accumulatedBehavior.ensures.iterator();
-	while (ii.hasNext()) {
-	    ExprModifierPragma e = (ExprModifierPragma)ii.next();
-	    if (e.expr != Behavior.T) newpm.add(e);
-	}
-	ii = accumulatedBehavior.when.iterator();
-	while (ii.hasNext()) {
-	    ExprModifierPragma e = (ExprModifierPragma)ii.next();
-	    if (e.expr != Behavior.T) newpm.add(e);
-	}
-	ii = accumulatedBehavior.diverges.iterator();
-	while (ii.hasNext()) {
-	    ExprModifierPragma e = (ExprModifierPragma)ii.next();
-	    if (e.expr != Behavior.T) newpm.add(e);
-	}
-	ii = accumulatedBehavior.signals.iterator();
-	while (ii.hasNext()) {
-	    VarExprModifierPragma e = (VarExprModifierPragma)ii.next();
-	    newpm.add(e);
-	}
-	ii = accumulatedBehavior.measuredby.iterator();
-	while (ii.hasNext()) {
-	    CondExprModifierPragma e = (CondExprModifierPragma)ii.next();
-	    newpm.add(e);
-	}
-	ii = accumulatedBehavior.modifies.iterator();
-	while (ii.hasNext()) {
-	    CondExprModifierPragma e = (CondExprModifierPragma)ii.next();
-	    newpm.add(e);
-	}
-	ii = accumulatedBehavior.extras.iterator();
-	while (ii.hasNext()) {
-	    ModifierPragma e = (ModifierPragma)ii.next();
-	    newpm.add(e);
-	}
+		case TagConstants.IMPLIES_THAT:
+		case TagConstants.FOR_EXAMPLE:
+		case TagConstants.PURE:
+		case TagConstants.NON_NULL:
+		    return pos-1;
 
-
-	ModifierPragma[] out = new ModifierPragma[newpm.size()];
-	return ModifierPragmaVec.make((ModifierPragma[])(newpm.toArray(out)));
+		default:
+		    ErrorSet.error("Did not expect this annotation in a subclassing_contract");
+	    }
+	}
+	return pos;
     }
 
     static public Expr and(Expr e1, Expr e2) {
 	if (e1 == null || isTrue(e1)) return e2;
 	if (e2 == null || isTrue(e2)) return e1;
-	if (isFalse(e1) || isFalse(e2)) return Behavior.F;
-	Expr e = BinaryExpr.make(TagConstants.AND,e1,e2,Location.NULL);
+	if (isFalse(e1)) return e1;
+	if (isFalse(e2)) return e2;
+	Expr e = BinaryExpr.make(TagConstants.AND,e1,e2,e1.getStartLoc());
 	javafe.tc.FlowInsensitiveChecks.setType(e,Types.booleanType);
 	return e;
+    }
+
+    static public ExprModifierPragma and(ExprModifierPragma e1, ExprModifierPragma e2) {
+	if (e1 == null || isTrue(e1.expr)) return e2;
+	if (e2 == null || isTrue(e2.expr)) return e1;
+	if (isFalse(e1.expr)) return e1;
+	if (isFalse(e2.expr)) return e2;
+	Expr e = BinaryExpr.make(TagConstants.AND,e1.expr,e2.expr,e1.getStartLoc());
+	javafe.tc.FlowInsensitiveChecks.setType(e,Types.booleanType);
+	return ExprModifierPragma.make(
+			e1.getTag(),e,e1.getStartLoc());
+    }
+
+    static public ExprModifierPragma and(ArrayList a) {
+	if (a.size() == 0) {
+	    return null;
+	} else if (a.size() == 1) {
+	    return (ExprModifierPragma)a.get(0);
+	} else {
+	    ExprModifierPragma e = null;
+	    Iterator i = a.iterator();
+	    while (i.hasNext()) {
+		e = and(e,(ExprModifierPragma)i.next());
+	    }
+	    return e;
+	}
     }
 
     static public Expr or(Expr e1, Expr e2) {
 	if (e1 == null || isFalse(e1)) return e2;
 	if (e2 == null || isFalse(e2)) return e1;
-	if (isTrue(e1) || isTrue(e2)) return Behavior.T;
-	Expr e = BinaryExpr.make(TagConstants.OR,e1,e2,Location.NULL);
+	if (isTrue(e1)) return e1;
+	if (isTrue(e2)) return e2;
+	Expr e = BinaryExpr.make(TagConstants.OR,e1,e2,e1.getStartLoc());
 	javafe.tc.FlowInsensitiveChecks.setType(e,Types.booleanType);
 	return e;
     }
 
+    static public ExprModifierPragma or(ExprModifierPragma e1, ExprModifierPragma e2) {
+	if (e1 == null || isFalse(e1.expr)) return e2;
+	if (e2 == null || isFalse(e2.expr)) return e1;
+	if (isTrue(e1.expr)) return e1;
+	if (isTrue(e2.expr)) return e2;
+	Expr e = BinaryExpr.make(TagConstants.OR,e1.expr,e2.expr,e1.getStartLoc());
+	javafe.tc.FlowInsensitiveChecks.setType(e,Types.booleanType);
+	return ExprModifierPragma.make(
+			e1.getTag(),e,e1.getStartLoc());
+    }
+
+    static public ExprModifierPragma or(ArrayList a) {
+	if (a.size() == 0) {
+	    return null;
+	} else if (a.size() == 1) {
+	    return (ExprModifierPragma)a.get(0);
+	} else {
+	    ExprModifierPragma e = null;
+	    Iterator i = a.iterator();
+	    while (i.hasNext()) {
+		e = or(e,(ExprModifierPragma)i.next());
+	    }
+	    return e;
+	}
+    }
+
     static public Expr implies(Expr e1, Expr e2) {
 	if (isTrue(e1)) return e2;
-	if (isTrue(e2)) return e2; // Yes, e2
+	if (isTrue(e2)) return e2; // Use e2 instead of T to keep location info 
 	if (isFalse(e1)) return Behavior.T;
-	if (isFalse(e2)) return Behavior.F;
-	Expr e = BinaryExpr.make(TagConstants.IMPLIES,e1,e2,Location.NULL);
+	if (isFalse(e2)) return e2;
+	Expr e = BinaryExpr.make(TagConstants.IMPLIES,e1,e2,e2.getStartLoc());
 	javafe.tc.FlowInsensitiveChecks.setType(e,Types.booleanType);
 	return e;
     }
@@ -532,42 +784,59 @@ public class AnnotationHandler {
 
 	public boolean isNormal = false;
 	public boolean isExceptional = false;
+	public ModifierPragma openPragma = null;
 
 	public boolean isEmpty() {
-		return requires ==  null
+		return requires.size() == 0
 			&& ensures.size() == 0
 			&& diverges.size() == 0 
+			&& modifies.size() == 0 
+			&& when.size() == 0 
+			&& extras.size() == 0 
 			&& signals.size() == 0;
 	}
-	public void merge(Behavior b) {
-		requires = b.requires;
-	}
 
-	public Expr requires = null;
+	public ArrayList requires = new ArrayList(); // of ExprModifierPragma 
 	public ArrayList ensures = new ArrayList(); // of ExprModifierPragma
 	public ArrayList when = new ArrayList(); // of ExprModifierPragma
 	public ArrayList diverges = new ArrayList(); // of ExprModifierPragma
 	public ArrayList signals = new ArrayList(); // of VarExprModifierPragma 
 	public ArrayList modifies = new ArrayList();//of CondExprModifierPragma 
-	public ArrayList measuredby = new ArrayList();//of CondExprModifierPragma 
+	public ArrayList modelPrograms = new ArrayList(); // of ModelProgramModifierPragmas
+	public ArrayList subclassingContracts = new ArrayList(); // of ModifierPragmas
+	public ArrayList implications = new ArrayList();
+	public ArrayList examples = new ArrayList();
+
 	public ArrayList extras = new ArrayList(); // of ModifierPragma 
 
-	public void combine(Behavior b) {
+	public Behavior copy() {
+		Behavior b = new Behavior();
+		b.isNormal = isNormal;
+		b.isExceptional = isExceptional;
+		b.openPragma = openPragma;
+		b.requires = new ArrayList(requires);
+		b.ensures = new ArrayList(ensures);
+		b.when = new ArrayList(when);
+		b.diverges = new ArrayList(diverges);
+		b.signals = new ArrayList(signals);
+		b.modifies = new ArrayList(modifies);
+		return b;
+	}
+	public void combine(Behavior b, ArrayList orlist) {
 	    if (b == null) return;
 
 	    // set defaults for anything that has not been set
-	    if (b.requires == null) b.requires = Behavior.T;
 
-	    if (ensures.size() == 0) 
-		ensures.add(ExprModifierPragma.make(
+	    if (b.ensures.size() == 0) 
+		b.ensures.add(ExprModifierPragma.make(
 				TagConstants.ENSURES,
 				Behavior.T,Location.NULL));
-	    if (when.size() == 0) 
-		when.add(ExprModifierPragma.make(
+	    if (b.when.size() == 0) 
+		b.when.add(ExprModifierPragma.make(
 				TagConstants.WHEN,
 				Behavior.T,Location.NULL));
-	    if (diverges.size() == 0)
-		diverges.add(ExprModifierPragma.make(
+	    if (b.diverges.size() == 0)
+		b.diverges.add(ExprModifierPragma.make(
 				TagConstants.DIVERGES,
 				Behavior.F,Location.NULL));
 	// FIXME - we need a default here
@@ -579,32 +848,77 @@ public class AnnotationHandler {
 		//modifies.add(Behavior.DefaultModifies);
 
 
+	    // The requires statements combine as an OR of the groups
+	    // of requires clauses; each group is an AND of its components.
+	    // However, if possible, we leave the components separate.
+	    // Note that an empty list of requires clauses is equivalent
+	    // to TRUE.
+
+	    // req = the composite requires for this group (in b) of annotations
+	    ExprModifierPragma reqclause = and(b.requires);
+	    boolean reqIsTrue = reqclause == null || isTrue(reqclause.expr);
+	    boolean reqIsFalse = reqclause != null && isFalse(reqclause.expr);
+	    Expr reqexpr = reqclause==null? null : reqclause.expr;
+
+	    // If the composite requires from the argument(b) are
+	    // literally false, then none of the subsequent clauses are
+	    // useful.  To save work, we omit them entirely.
+	    if (reqIsFalse) return;
+
+	    // Form the composite requires clause for all the groups
+	    // If there is only one non-false group, then we retain the
+	    // ArrayList of requires clauses from that group, so that the
+	    // location information about unsatisfied requirements is as
+	    // useful as possible to the user.  If there is more than one
+	    // non-false group, then the groups have to be combined into
+	    // a single requires annotation containing a disjunction of the
+	    // conjunctions resulting from each group.
+
+	    // b.requires is not null, but it might be empty; if it is empty
+	    // it effectively means a true precondition for that group,
+	    // which means that the result of the OR will be true
+	    orlist.add(b.requires); 
+				// orlist is an ArrayList of ArrayList of
+					// ExprModifierPragma objects
+
+	    Expr req = Behavior.T;
+	    if (!b.requires.isEmpty()) {
+		ExprModifierPragma mm = (ExprModifierPragma)b.requires.get(0);
+		ExprVec arg = ExprVec.make(new Expr[]{mm.expr});
+		req = NaryExpr.make(Location.NULL,
+				    reqexpr.getStartLoc(),TagConstants.PRE,
+				    Identifier.intern("\\old"),arg);
+		javafe.tc.FlowInsensitiveChecks.setType(req,
+			    javafe.tc.FlowInsensitiveChecks.getType(mm.expr));
+	    }
+
 	    // Add in all the annotations from the argument, taking care
 	    // to guard them with the precondition
-	    boolean reqIsTrue = isTrue(b.requires);
-	    ExprVec arg = ExprVec.make(new Expr[]{b.requires});
-	    Expr req = NaryExpr.make(Location.NULL,
-				b.requires.getStartLoc(),TagConstants.PRE,
-				Identifier.intern("\\old"),arg);
-	    javafe.tc.FlowInsensitiveChecks.setType(req,
-			javafe.tc.FlowInsensitiveChecks.getType(b.requires));
-		    // FIXME - should find an efficient way to avoid replicating the method name here
-	    Iterator i = b.ensures.iterator();
+	    Iterator i = b.modifies.iterator();
+	    while (i.hasNext()) {
+		CondExprModifierPragma m = (CondExprModifierPragma)i.next();
+		m.cond = and(m.cond,req);
+		modifies.add(m);
+	    }
+	    i = b.ensures.iterator();
 	    while (i.hasNext()) {
 		ExprModifierPragma m = (ExprModifierPragma)i.next();
 		if (!reqIsTrue) m.expr = implies(req,m.expr);
+		if (isFalse(m.expr)) { ensures.clear(); }
 		ensures.add(m);
 	    }
 	    i = b.when.iterator();
 	    while (i.hasNext()) {
 		ExprModifierPragma m = (ExprModifierPragma)i.next();
 		if (!reqIsTrue) m.expr = implies(req,m.expr);
+		if (isFalse(m.expr)) { when.clear(); }
 		when.add(m);
 	    }
 	    i = b.diverges.iterator();
 	    while (i.hasNext()) {
 		ExprModifierPragma m = (ExprModifierPragma)i.next();
-		m.expr = implies(b.requires,m.expr);
+		m.expr = implies(req,m.expr);
+		if (isFalse(m.expr)) { diverges.clear(); }
 		diverges.add(m);
 	    }
 	    i = b.signals.iterator();
@@ -613,20 +927,7 @@ public class AnnotationHandler {
 		if (!reqIsTrue) m.expr = implies(req,m.expr);
 		signals.add(m);
 	    }
-	    i = b.measuredby.iterator();
-	    while (i.hasNext()) {
-		CondExprModifierPragma m = (CondExprModifierPragma)i.next();
-		m.cond = and(b.requires,m.cond);
-		measuredby.add(m);
-	    }
-	    i = b.modifies.iterator();
-	    while (i.hasNext()) {
-		CondExprModifierPragma m = (CondExprModifierPragma)i.next();
-		m.cond = and(b.requires,m.cond);
-		modifies.add(m);
-	    }
 	    extras.addAll(b.extras);
-	    requires = or(requires,b.requires);
 	}
     }
     static public class CheckPurity {
@@ -636,21 +937,27 @@ public class AnnotationHandler {
 	    switch (x.getTag()) {
 		case TagConstants.METHODINVOCATION:
 		    MethodInvocation m = (MethodInvocation)x;
+// FIXME
+/*
 		    if (!escjava.tc.FlowInsensitiveChecks.isPure(m.decl)) {
 			ErrorSet.error(m.locId,
 			    "Method " + m.id + " is used in an annotation" +
 			    " but is not pure (" + 
 			    Location.toFileLineString(m.decl.loc) + ")");
 		    }
+*/
 		    break;
 		case TagConstants.NEWINSTANCEEXPR:
 		    NewInstanceExpr c = (NewInstanceExpr)x;
+// FIXME
+/*
 		    if (!escjava.tc.FlowInsensitiveChecks.isPure(c.decl)) {
 			ErrorSet.error(c.loc,
 			    "Constructor is used in an annotation" +
 			    " but is not pure (" + 
 			    Location.toFileLineString(c.decl.loc) + ")");
 		    }
+*/
 		    break;
 		case TagConstants.WACK_DURATION:
 		case TagConstants.WACK_WORKING_SPACE:

@@ -41,6 +41,7 @@ LoopCmd.java
 ModelDeclPragma.java
 ModelMethodDeclPragma.java
 ModelConstructorDeclPragma.java
+ModelProgamModifierPragma.java
 NaryExpr.java
 NotSpecifiedExpr.java
 NotSpecifiedExpr.java

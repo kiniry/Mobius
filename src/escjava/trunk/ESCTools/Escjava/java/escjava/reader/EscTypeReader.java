@@ -17,11 +17,13 @@ import escjava.ast.EscPrettyPrint;		// Debugging methods only
 import javafe.util.Location;
 import escjava.ast.RefinePragma;
 import escjava.ast.*;
+import escjava.ast.TagConstants; // Resolves ambiguity
+import escjava.RefinementSequence;
 
 import escjava.AnnotationHandler;
 import javafe.genericfile.*;
 import javafe.parser.PragmaParser;
-
+import javafe.filespace.Tree;
 import javafe.filespace.Query;
 
 import javafe.util.Assert;
@@ -31,6 +33,7 @@ import javafe.reader.*;
 import javafe.tc.OutsideEnv;
 
 import java.util.ArrayList;
+import java.util.Enumeration;
 
 /**
  * An <code>EscTypeReader</code> is a <code>StandardTypeReader</code>
@@ -141,268 +144,42 @@ public class EscTypeReader extends StandardTypeReader
 	    if (refinements == null) return null;
 	    if (refinements.size() == 0) return cu;
 
+
+		// FIXME - Probably does not work for nested classes.
 	    GenericFile javafile = ((EscTypeReader)OutsideEnv.reader).findFile(pkgStrings,type.toString()+".java");
 	    CompilationUnit javacu = null;
 	    if (javafile != null) {
 		if (javafile.getCanonicalID().equals(cu.sourceFile().getCanonicalID())) javacu = cu;
-		for (int i=0; javacu == null && i<refinements.size(); ++i) {
+		else for (int i=0; javacu == null && i<refinements.size(); ++i) {
 		    CompilationUnit rcu = (CompilationUnit)refinements.get(i);
 		    if (rcu.sourceFile().getCanonicalID().equals(javafile))
 			    javacu = rcu;
 		}
-		if (javacu == null) javacu = OutsideEnv.reader.read(javafile,false);
 	    }
+	    //System.out.println("HAVE " + cu.sourceFile().getHumanName());
+	    if (javacu == null) {
+		if (javafile != null) {
+		    //System.out.println("READING SOURCE " + javafile.getHumanName());
+		    javacu = super.read(javafile, false);
+		} else {
+	    	    javafile = ((EscTypeReader)OutsideEnv.reader).findFile(pkgStrings,type.toString()+".class");
+		    //System.out.println("READING BINARY " + javafile.getHumanName());
+		    if (javafile != null) javacu = ((EscTypeReader)OutsideEnv.reader).binaryReader.read(javafile, false); //read the binary??? FIXME
+		}
+	    }
+// FIXME - really want a routine that reads binary if up to date otherwise 
+// source, simply to get signature.  Read java with bodies if it is one of the
+// files to be checked.  The above should be able to be greatly improved!!!!
      
-	    CompilationUnit newcu = consolidateRefinements(refinements,javacu);
+	    CompilationUnit newcu = new RefinementSequence(refinements,javacu,annotationHandler);
+	    //newcu = consolidateRefinements(refinements,javacu);
 	    return newcu;
 	}
      
-	//@ requires refinements.size() > 0;
-	CompilationUnit consolidateRefinements(ArrayList refinements,
-		CompilationUnit javacu) {
-	    CompilationUnit lastcu = (CompilationUnit)refinements.get(refinements.size()-1);
-	    if (javacu != null && refinements.size() == 0) return javacu;
-	    if (javacu == null && refinements.size() == 1) return lastcu;
-	    CompilationUnit refcu = (javacu != null) ? javacu : lastcu;
-
-	    Name pkgName = refcu.pkgName;
-	    LexicalPragmaVec lexicalPragmaVec = LexicalPragmaVec.make();
-	    ImportDeclVec imports = ImportDeclVec.make();
-	    TypeDeclVec types = TypeDeclVec.make();
-	    int loc = refcu.loc;
-	    if (refinements.size() > 0)
-		loc = ((CompilationUnit)refinements.get(0)).loc;
-
-	    for (int k=refinements.size()-1; k>=0; --k) {
-		CompilationUnit cu = (CompilationUnit)refinements.get(k);
-		String p = pkgName==null ? "" : pkgName.printName();
-		String cp = cu.pkgName==null ? "" : cu.pkgName.printName();
-		if (!cp.equals(p)) {
-		    ErrorSet.error(cu.loc,"Package name does not match the package name in " + Location.toFile(loc).getHumanName() + ": " +
-			cp + " vs. " + p);
-		}
-		LexicalPragmaVec lexvec = cu.lexicalPragmas;
-		for (int i=0; i<lexvec.size(); ++i) {
-		    LexicalPragma lexp = lexvec.elementAt(i);
-		    if (!(lexp instanceof RefinePragma)) {
-			lexicalPragmaVec.addElement(lexp);
-		    }
-	        }
-		imports.append(cu.imports);
-		TypeDeclVec typevec = cu.elems;
-		for (int i=0; i<typevec.size(); ++i) {
-		    TypeDecl td = typevec.elementAt(i);
-		    boolean foundMatch = false;
-		    for (int j=0; j<types.size(); ++j) {
-			if (types.elementAt(j).id.equals(td.id)) {
-			    foundMatch = true;
-			    combine(td,types.elementAt(j));
-			}
-		    }
-		    if (!foundMatch) {
-			// FIXME _ should we make a copy ???
-			types.addElement(td);
-		    }
-		}
-	    }
-	    return CompilationUnit.make(pkgName,lexicalPragmaVec,imports,types,loc);
-	}
-     
-	void combineFields(FieldDecl newfd, FieldDecl fd) {
-		// FIXME - check, combine modifiers
-		fd.modifiers |= newfd.modifiers;
-	}
-
-	boolean match(RoutineDecl newrd, RoutineDecl rd) {
-	    if ((newrd instanceof MethodDecl) != 
-		(rd instanceof MethodDecl)) return false;
-	    if ((newrd instanceof ConstructorDecl) != 
-		(rd instanceof ConstructorDecl)) return false;
-	    if (newrd instanceof MethodDecl) {
-		MethodDecl newmd = (MethodDecl)newrd;
-		MethodDecl md = (MethodDecl)rd;
-		if ( !newmd.id.equals( md.id ) ) return false;
-		// FIXME - check reutrn type
-	    }
-	    if (newrd.args.size() != rd.args.size()) return false;
-	    for (int i=0; i<newrd.args.size(); ++i) {
-		FormalParaDecl newarg = newrd.args.elementAt(i);
-		FormalParaDecl arg = rd.args.elementAt(i);
-		// Mismatched id - an error or a non-match???
-		if (!(newarg.id.equals(arg.id))) return false;
-		// FIXME - check modifiers
-		// FIXME - check id
-		// FIXME - chech type
-	    }
-	    return true;
-	}
-
-	void combineRoutine(RoutineDecl newrd, RoutineDecl rd) {
-	    // FIXME - check exceptions
-	    for (int i=0; i<newrd.args.size(); ++i) {
-		FormalParaDecl newarg = newrd.args.elementAt(i);
-		FormalParaDecl arg = rd.args.elementAt(i);
-		// FIXME - combine modifiers
-	    }
-	    // FIXME - check modifiers ???
-	    // combine modifiers
-	    rd.modifiers |= newrd.modifiers;
-
-            // add body
-	    // FIXME -- body should only come from Java file
-            if (rd.body == null) rd.body = newrd.body;
-
-	    // combine pragmas
-	    if (rd.pmodifiers == null) {
-		rd.pmodifiers = ModifierPragmaVec.make();
-	    }
-	    if (newrd.pmodifiers != null) rd.pmodifiers.append(newrd.pmodifiers);
-	    if (rd.tmodifiers == null) {
-		rd.tmodifiers = TypeModifierPragmaVec.make();
-	    }
-	    if (newrd.tmodifiers != null) rd.tmodifiers.append(newrd.tmodifiers);
-
-	}
-
-	void combine(TypeDecl newtd, TypeDecl td) {
-	    // Compare modifiers -- FIXME
-	    td.modifiers |= newtd.modifiers;
-	    td.specOnly = td.specOnly && newtd.specOnly;
-
-	    // Add to the type's annotations
-	    if (td.pmodifiers == null) {
-		td.pmodifiers = ModifierPragmaVec.make();
-	    }
-	    if (newtd.pmodifiers != null) td.pmodifiers.append(newtd.pmodifiers);
-	    if (td.tmodifiers == null) {
-		td.tmodifiers = TypeModifierPragmaVec.make();
-	    }
-	    if (newtd.tmodifiers != null) td.tmodifiers.append(newtd.tmodifiers);
-
-	    // Verify that superInterfaces are identical -- FIXME
-	    // BVerify that superclass is identical -- FIXME
-
-	    // Check and combine the fields etc. of the type declarations
-	    for (int i=0; i<newtd.elems.size(); ++i) {
-		TypeDeclElem tde = newtd.elems.elementAt(i);
-		boolean found = false;
-		if (tde instanceof FieldDecl) {
-		    for (int k=0; k<td.elems.size(); ++k) {
-			TypeDeclElem tdee = td.elems.elementAt(k);
-			if (!(tdee instanceof FieldDecl)) continue;
-			if (!( ((FieldDecl)tde).id.equals( ((FieldDecl)tdee).id ))) continue;
-			combineFields( (FieldDecl)tde, (FieldDecl)tdee );
-			found = true;
-		    }
-		    if (!found) {
-			td.elems.addElement(tde);
-			tde.setParent(td);
-		    }
-		} else if (tde instanceof RoutineDecl) {
-		    for (int k=0; k<td.elems.size(); ++k) {
-			TypeDeclElem tdee = td.elems.elementAt(k);
-			if (!(tdee instanceof RoutineDecl)) continue;
-			if (!match( (RoutineDecl)tde, (RoutineDecl)tdee )) continue;
-			combineRoutine( (RoutineDecl)tde, (RoutineDecl)tdee );
-			found = true;
-		    }
-		    if (!found) {
-			td.elems.addElement(tde);
-			tde.setParent(td);
-		    }
-		} else if (tde instanceof TypeDecl) {
-		    for (int k=0; k<td.elems.size(); ++k) {
-			TypeDeclElem tdee = td.elems.elementAt(k);
-			if (!(tdee instanceof TypeDecl)) continue;
-			if ( ((TypeDecl)tde).id.equals( ((TypeDecl)tdee).id)) {
-			    combine( (TypeDecl)tde, (TypeDecl)tdee );
-			    found = true;
-			}
-		    }
-		    if (!found) {
-			td.elems.addElement(tde);
-			tde.setParent(td);
-		    }
-		} else if (tde instanceof InitBlock) {
-		    td.elems.addElement(tde);
-		    tde.setParent(td);
-		} else if (tde instanceof GhostDeclPragma) {
-		    GhostDeclPragma g = (GhostDeclPragma)tde;
-		    for (int k=0; k<td.elems.size(); ++k) {
-			TypeDeclElem tdee = td.elems.elementAt(k);
-			if (!(tdee instanceof GhostDeclPragma)) continue;
-			if ( ((GhostDeclPragma)tde).decl.id.equals( ((GhostDeclPragma)tdee).decl.id)) {
-				// FIXME - check types and modifiers
-				// FIXME - what about initializer ???
-			    // FIXME - what combining to do???
-			    found = true;
-			}
-		    }
-		    if (!found) {
-			td.elems.addElement(tde);
-			tde.setParent(td);
-		    }
-		    
-		} else if (tde instanceof ModelDeclPragma) {
-		    ModelDeclPragma g = (ModelDeclPragma)tde;
-		    for (int k=0; k<td.elems.size(); ++k) {
-			TypeDeclElem tdee = td.elems.elementAt(k);
-			if (!(tdee instanceof ModelDeclPragma)) continue;
-			if ( ((ModelDeclPragma)tde).decl.id.equals( ((ModelDeclPragma)tdee).decl.id)) {
-				// FIXME - check types and modifiers
-			    // FIXME - what combining to do???
-			    found = true;
-			}
-		    }
-		    if (!found) {
-			td.elems.addElement(tde);
-			tde.setParent(td);
-		    }
-		} else if (tde instanceof ModelMethodDeclPragma) {
-		    ModelMethodDeclPragma g = (ModelMethodDeclPragma)tde;
-		    for (int k=0; k<td.elems.size(); ++k) {
-			TypeDeclElem tdee = td.elems.elementAt(k);
-			if (!(tdee instanceof ModelMethodDeclPragma)) continue;
-			if (match( ((ModelMethodDeclPragma)tde).decl,
-				   ((ModelMethodDeclPragma)tdee).decl)) {
-				// FIXME - check types and modifiers
-			    // FIXME - what combining to do???
-			    found = true;
-			}
-		    }
-		    if (!found) {
-			td.elems.addElement(tde);
-			tde.setParent(td);
-		    }
-		    
-		} else if (tde instanceof ModelConstructorDeclPragma) {
-		    ModelConstructorDeclPragma g = (ModelConstructorDeclPragma)tde;
-		    for (int k=0; k<td.elems.size(); ++k) {
-			TypeDeclElem tdee = td.elems.elementAt(k);
-			if (!(tdee instanceof ModelConstructorDeclPragma)) continue;
-			if (match( ((ModelConstructorDeclPragma)tde).decl,
-				   ((ModelConstructorDeclPragma)tdee).decl)) {
-				// FIXME - check types and modifiers
-			    // FIXME - what combining to do???
-			    found = true;
-			}
-		    }
-		    if (!found) {
-			td.elems.addElement(tde);
-			tde.setParent(td);
-		    }
-		    
-		} else if (tde instanceof TypeDeclElemPragma) {
-		    td.elems.addElement(tde);
-		    tde.setParent(td);
-		} else {
-		    System.out.println("SKIPPED " + tde.getClass());
-		}
-	    }
-	}
 
         boolean refining = false;
 
+	// result is a list of CompilationUnits
 	ArrayList getRefinementSequence(String[] pkgStrings, Identifier type, 
 				CompilationUnit cu) {
 	    ArrayList refinements = new ArrayList();
@@ -442,10 +219,16 @@ public class EscTypeReader extends StandardTypeReader
 				cu.pkgName.printName() + ".";
 		String err;
 		if (refinements.size() == 0) {
+		    // If no refinement sequence was found, we simply use the
+		    // file on the command line, even if it is not on the
+		    // classpath.
+		    refinements.add(cu);
+/*
 		    err = "The command-line argument " 
 			+ cu.sourceFile().getHumanName()
 			+ " was not on the classpath, and hence not in its "
 			+ "own refinement sequence";
+*/
 		} else {
 		    err = "The command-line argument " 
 			+ cu.sourceFile().getHumanName() 
@@ -455,9 +238,9 @@ public class EscTypeReader extends StandardTypeReader
 			err += " " + ((CompilationUnit)refinements.get(k)).
 					sourceFile().getHumanName();
 		    }
+		    ErrorSet.error(err);
+		    return null;
 		}
-		ErrorSet.error(err);
-		return null;
 	    }
 	    return refinements;
 	}
@@ -547,6 +330,22 @@ public class EscTypeReader extends StandardTypeReader
 
     public GenericFile findFile(String[] P, String filename) {
 	return javaFileSpace.findFile(P,filename);
+    }
+
+    public ArrayList findFiles(String[] P) {
+	ArrayList a = new ArrayList();
+	Enumeration e = javaFileSpace.findFiles(P);
+	while (e.hasMoreElements()) {
+	    Tree t = (Tree)e.nextElement();
+	    String s = t.getLabel();
+	    for (int i=0; i<activeSuffixes.length; ++i) {
+		if (s.endsWith(activeSuffixes[i])) { 
+		    a.add(t.data); 
+		    break; 
+		}
+	    }
+        }
+	return a;
     }
 
     String[] activeSuffixes = { "refines-java", "refines-spec", "refines-jml",

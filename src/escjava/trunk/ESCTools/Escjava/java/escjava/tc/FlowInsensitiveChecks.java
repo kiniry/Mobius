@@ -1973,6 +1973,8 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
             }
 
 	    case TagConstants.ALSO:
+	    case TagConstants.ALSO_REFINE:
+	    case TagConstants.MODEL_PROGRAM:
 	    case TagConstants.BEHAVIOR:
 	    case TagConstants.CLOSEPRAGMA:
 	    case TagConstants.EXAMPLE:
@@ -1989,7 +1991,8 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 
             default:
                 Assert.fail("Unexpected tag " + tag + 
-				" " + TagConstants.toString(tag));
+				" " + TagConstants.toString(tag) +
+				" " + p.getClass());
         }
         inAnnotation = false;
     }

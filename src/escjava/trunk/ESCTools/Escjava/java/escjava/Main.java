@@ -404,6 +404,7 @@ public class Main extends javafe.SrcTool
         //====== fields and use of methods in annotations
 
         annotationHandler.process(td);
+	if (options().testRef) makePrettyPrint().print(System.out,0,td);
 
         // ==== Start stage 3 ====
         if (3 <= stages) {

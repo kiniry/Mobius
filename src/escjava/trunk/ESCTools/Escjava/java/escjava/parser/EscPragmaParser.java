@@ -1188,16 +1188,17 @@ public class EscPragmaParser extends Parse implements PragmaParser
 			    scanner.getNextToken();
 			    init = parseVariableInitializer(scanner, false);
 			}
-			FieldDecl decl
-			    = FieldDecl.make(modifiers, modifierPragmas, 
-					     id, vartype, locId, init, locAssignOp );
-		  
 			if (scanner.ttype == TagConstants.MODIFIERPRAGMA
 			    || scanner.ttype == TagConstants.SEMICOLON ) {
 			    // if modifier pragma, retroactively add to modifierPragmas
 			    // FIXME - is this still valid ???
 			    parseMoreModifierPragmas(scanner, modifierPragmas);
 			}
+
+			FieldDecl decl
+			    = FieldDecl.make(modifiers, modifierPragmas, 
+					     id, vartype, locId, init, locAssignOp );
+		  
 		  
 			if (tag == TagConstants.GHOST) {
 			    dst.auxVal = GhostDeclPragma.make(decl, loc);
@@ -1283,17 +1284,21 @@ public class EscPragmaParser extends Parse implements PragmaParser
                     break;
                 }
 
-                case TagConstants.HELPER:
-		case TagConstants.CLOSEPRAGMA: // parses but incomplete (cok)
-                case TagConstants.INSTANCE: // SC AAST 3 parses but no semantics (cok)
-		case TagConstants.OPENPRAGMA: // parses but incomplete (cok)
                 case TagConstants.PURE: // SC parsed and checked SUPPORT COMPLETE (cok)
+
+                case TagConstants.HELPER:
+
+		case TagConstants.OPENPRAGMA: // complete (ok)
+		case TagConstants.CLOSEPRAGMA: // complete (cok)
+
                 case TagConstants.SPEC_PROTECTED: // SC HPT AAST 3, SUPPORT COMPLETE (cok)
-                case TagConstants.MONITORED:
-                case TagConstants.NON_NULL:
-                case TagConstants.SPEC_PUBLIC:
-                case TagConstants.UNINITIALIZED:
-                case TagConstants.WRITABLE_DEFERRED:
+                case TagConstants.SPEC_PUBLIC: // incomplete
+
+                case TagConstants.INSTANCE: // SC AAST 3 parses but no semantics (cok)
+                case TagConstants.MONITORED: // incomplete
+                case TagConstants.NON_NULL: // incomplete
+                case TagConstants.UNINITIALIZED: // incomplete
+                case TagConstants.WRITABLE_DEFERRED: // incomplete
                     dst.ttype = TagConstants.MODIFIERPRAGMA;
                     dst.auxVal = SimpleModifierPragma.make(tag, loc);
                     break;
@@ -1475,7 +1480,6 @@ public class EscPragmaParser extends Parse implements PragmaParser
 		    expect(scanner,TagConstants.LBRACE);
 		    int braceCount = 1;
 		    while(true) {
-			scanner.getNextToken();
 			if (scanner.ttype == TagConstants.LBRACE) {
 			    ++braceCount;
 			} else if (scanner.ttype == TagConstants.RBRACE) {
@@ -1485,8 +1489,15 @@ public class EscPragmaParser extends Parse implements PragmaParser
 				break;
 			    }
 			}
+			scanner.getNextToken();
 		    }
-		    return getNextPragma(dst);
+			// FIXME - parse the compound statement and add it to
+			// the pragma
+                    dst.ttype = TagConstants.MODIFIERPRAGMA;
+		    dst.auxVal = ModelProgamModifierPragma.make(tag,loc);
+		    inProcessTag = NEXT_TOKEN_STARTS_NEW_PRAGMA;
+		    // NO SEMICOLON
+		    break;
 	        }
 
 
