@@ -25,7 +25,9 @@ public class Options extends javafe.SrcToolOptions
 	{ "-eajava, -javaAssertions", "Treat Java assert statements as Java exceptions"},
 	{ "-eajml, -jmlAssertions", "Treat Java assert statements like JML assert statements"},
 	{ "-pgc", "Print the guarded commands"},
-	{ "-ppvc", "Prettyprint the VCs generated with -v"}
+	{ "-ppvc", "Prettyprint the VCs generated with -v"},
+        { "-sxLog <log>", "Print the commands sent to Simplify in the file named <log>"},
+        { "-pxLog <log>", "PrettyPrint the commands sent to Simplify in the file named <log>"},
     };
 
     // Global escjava flags
@@ -86,6 +88,9 @@ public class Options extends javafe.SrcToolOptions
 
     /** When true, does not print any warnings about things not checked. */
     public boolean noNotCheckedWarnings = false;
+
+    //** The limit to the rewriting depth when handling non-functional method calls. */
+    public int rewriteDepth = 2;
 
     public boolean spvc = true;
     public boolean dsa = true;
@@ -645,6 +650,14 @@ public class Options extends javafe.SrcToolOptions
             }
             sxLog = args[offset];
             return offset+1;
+        } else if (option.equals("-pxLog")) {
+            if (offset>=args.length) {
+                throw new UsageError("Option " + option +
+                                     " requires one argument");
+            }
+            sxLog = args[offset];
+	    prettyPrintVC = true;
+            return offset+1;
         } else if (option.equals("-nowarn")) {
             if (offset>=args.length) {
                 throw new UsageError("Option " + option +
@@ -711,7 +724,14 @@ public class Options extends javafe.SrcToolOptions
 	    assertIsKeyword = true;
 	    assertionsEnabled = true;
 	    return offset;
-        }
+        } else if (option.equals("-rewriteDepth")) {
+            if (offset >= args.length) {
+                throw new UsageError("Option " + option +
+                                     " requires one integer argument");
+            }
+            rewriteDepth = new Integer(args[offset]).intValue();
+            return offset+1;
+	}
     
         // Pass on unrecognized options:
         return super.processOption(option, args, offset);
