@@ -1,4 +1,5 @@
 
+import java.io.File;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
@@ -23,9 +24,17 @@ public class AllTests {
   public static Test suite() {
     TestSuite suite = new TestSuite("Test for default package");
     //$JUnit-BEGIN$
-    suite.addTestSuite(TestSet.class);
-    suite.addTestSuite(TestThrowable.class);
-    suite.addTestSuite(TestException.class);
+    File[] ff = new File(".").listFiles();
+    for (int i=0; i< ff.length; ++i) {
+        String s = ff[i].getName();
+        if (!s.endsWith(".java") || !s.startsWith("Test")) continue;
+        s = s.substring(0,s.length()-5);
+        try {
+	    suite.addTestSuite(Class.forName(s));
+        } catch (Exception e) {
+            System.err.println("Failed on " + s);
+        }
+    }
     //$JUnit-END$
     return suite;
   }

@@ -1,0 +1,10 @@
+TestObject.java:115: Warning: Postcondition possibly not established (Post)
+    } // ERROR - must either be a Cloneable or throw a CloneNotSupport ...
+    ^
+Associated declaration is "c:\cygwin\ESC\ESCTools\specs\java\lang\Object.spec", line 132, col 23:
+      @ also protected exceptional_behavior ...
+                       ^
+Execution trace information:
+    Executed return in "TestObject.java", line 114, col 8.
+
+1 warning
