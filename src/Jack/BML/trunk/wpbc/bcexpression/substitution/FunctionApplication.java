@@ -96,10 +96,12 @@ public class FunctionApplication extends Expression {
 	
 	private Expression substituteArrayAtIndex(Expression _e1, Expression _e2) {
 		ArrayAccessExpression arrayAccess = (ArrayAccessExpression)function;
+
 		Expression array = arrayAccess.getArray();
 		array = array.substitute(_e1, _e2);
 		Expression index = arrayAccess.getIndex();
 		index = index.substitute(_e1, _e2);
+		arrayAccess.setSubExpressions(new Expression[]{array, index } );
 		map = (SubstitutionTree)map.substitute(_e1, _e2);
 		if (! (_e1 instanceof ArrayAccessExpression) ) {
 			return this;
