@@ -375,6 +375,23 @@ public class EscTypeReader extends StandardTypeReader
 			tde.setParent(td);
 		    }
 		    
+		} else if (tde instanceof ModelConstructorDeclPragma) {
+		    ModelConstructorDeclPragma g = (ModelConstructorDeclPragma)tde;
+		    for (int k=0; k<td.elems.size(); ++k) {
+			TypeDeclElem tdee = td.elems.elementAt(k);
+			if (!(tdee instanceof ModelConstructorDeclPragma)) continue;
+			if (match( ((ModelConstructorDeclPragma)tde).decl,
+				   ((ModelConstructorDeclPragma)tdee).decl)) {
+				// FIXME - check types and modifiers
+			    // FIXME - what combining to do???
+			    found = true;
+			}
+		    }
+		    if (!found) {
+			td.elems.addElement(tde);
+			tde.setParent(td);
+		    }
+		    
 		} else if (tde instanceof TypeDeclElemPragma) {
 		    td.elems.addElement(tde);
 		    tde.setParent(td);

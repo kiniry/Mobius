@@ -63,7 +63,8 @@ public class TagConstants extends javafe.tc.TagConstants
     public static final int GHOST = FORALL + 1;
     public static final int HELPER = GHOST + 1;
     public static final int IN = HELPER + 1;
-    public static final int INTO = IN + 1;
+    public static final int IN_REDUNDANTLY = IN + 1;
+    public static final int INTO = IN_REDUNDANTLY + 1;
     public static final int INVARIANT = INTO + 1;
     public static final int LBLPOS = INVARIANT + 1;
     public static final int LBLNEG = LBLPOS + 1;
@@ -89,8 +90,7 @@ public class TagConstants extends javafe.tc.TagConstants
     public static final int TYPEOF = TYPETYPE + 1; // Function
     public static final int UNINITIALIZED = TYPEOF + 1;
     public static final int UNREACHABLE = UNINITIALIZED + 1;
-    public static final int WHERE = UNREACHABLE + 1;
-    public static final int WRITABLE_DEFERRED = WHERE + 1;
+    public static final int WRITABLE_DEFERRED = UNREACHABLE + 1;
     public static final int WRITABLE_IF = WRITABLE_DEFERRED+ 1;
     public static final int SKOLEM_CONSTANT = WRITABLE_IF + 1;
     public static final int LASTESCKEYWORDTAG = SKOLEM_CONSTANT;
@@ -546,6 +546,8 @@ public class TagConstants extends javafe.tc.TagConstants
                 Result = TagConstants.DURATION_REDUNDANTLY; break;
             case TagConstants.WORKING_SPACE:
                 Result = TagConstants.WORKING_SPACE_REDUNDANTLY; break;
+            case TagConstants.IN:
+                Result = TagConstants.IN_REDUNDANTLY; break;
         }
         return Result;
     }
@@ -603,6 +605,8 @@ public class TagConstants extends javafe.tc.TagConstants
                 Result = TagConstants.DURATION; break;
             case TagConstants.WORKING_SPACE_REDUNDANTLY:
                 Result = TagConstants.WORKING_SPACE; break;
+            case TagConstants.IN_REDUNDANTLY:
+                Result = TagConstants.IN; break;
         }
         return Result;
     }
@@ -610,6 +614,9 @@ public class TagConstants extends javafe.tc.TagConstants
     public static boolean isRedundant(int tag) {
 	return (tag == TagConstants.REQUIRES_REDUNDANTLY) ||
             (tag == TagConstants.ENSURES_REDUNDANTLY) ||
+            tag == TagConstants.INVARIANT_REDUNDANTLY ||
+            tag == TagConstants.CONSTRAINT_REDUNDANTLY ||
+            tag == TagConstants.REPRESENTS_REDUNDANTLY ||
             (tag == TagConstants.PRECONDITION_REDUNDANTLY) ||
             (tag == TagConstants.DIVERGES_REDUNDANTLY) ||
             (tag == TagConstants.WHEN_REDUNDANTLY) ||
@@ -625,11 +632,9 @@ public class TagConstants extends javafe.tc.TagConstants
             tag == TagConstants.ASSERT_REDUNDANTLY ||
             tag == TagConstants.ASSUME_REDUNDANTLY ||
             tag == TagConstants.LOOP_INVARIANT_REDUNDANTLY ||
+            tag == TagConstants.IN_REDUNDANTLY ||
             tag == TagConstants.MAINTAINING_REDUNDANTLY ||
             tag == TagConstants.DECREASES_REDUNDANTLY ||
-            tag == TagConstants.INVARIANT_REDUNDANTLY ||
-            tag == TagConstants.CONSTRAINT_REDUNDANTLY ||
-            tag == TagConstants.REPRESENTS_REDUNDANTLY ||
             tag == TagConstants.DECREASING_REDUNDANTLY;
     }
 
@@ -652,6 +657,7 @@ public class TagConstants extends javafe.tc.TagConstants
         Identifier.intern("ghost"),
         Identifier.intern("helper"),
         Identifier.intern("in"),
+        Identifier.intern("in_redundantly"),
         Identifier.intern("\\into"),
         Identifier.intern("invariant"),
         Identifier.intern("\\lblpos"),
@@ -678,7 +684,6 @@ public class TagConstants extends javafe.tc.TagConstants
         Identifier.intern("\\typeof"),
         Identifier.intern("uninitialized"),
         Identifier.intern("unreachable"),
-        Identifier.intern("where"),
         Identifier.intern("writable_deferred"),
         Identifier.intern("writable_if"),
         Identifier.intern("skolem_constant")

@@ -71,6 +71,7 @@ import javafe.util.Location;
  *	    + GhostDeclPragma (GhostFieldDecl decl)
  *	    + ModelDeclPragma (ModelFieldDecl decl)
  *         + ModelMethodDeclPragma (MethodDecl decl)
+ *         + ModelConstructorPragma (ConstructorDecl decl)
  *         + StillDeferredDeclPragma (Identifier var)
  *         + DependsPragma (Expr* exprs) // Depends clause
  *    - Stmt ()
@@ -550,6 +551,28 @@ public class DependsPragma extends TypeDeclElemPragma
 
   public int getStartLoc() { return loc; }
   public int getEndLoc() { return exprs.elementAt(exprs.size()-1).getEndLoc(); }
+}
+
+public class ModelConstructorDeclPragma extends TypeDeclElemPragma
+{
+  //# ConstructorDecl decl
+  //# int loc
+
+  public void setParent(TypeDecl p) {
+    super.setParent(p);
+    if (decl != null) 
+	decl.setParent(p);
+  }
+
+  public int getStartLoc() { return loc; }
+  public int getEndLoc() { return decl.getEndLoc(); }
+  public void decorate(ModifierPragmaVec modifierPragmas) {
+    if (decl.pmodifiers == null) {
+	decl.pmodifiers = modifierPragmas;
+    } else if (modifierPragmas != null) {
+	decl.pmodifiers.append(modifierPragmas); 
+    }
+  }
 }
 
 public class ModelMethodDeclPragma extends TypeDeclElemPragma

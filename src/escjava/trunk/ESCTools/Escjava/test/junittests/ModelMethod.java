@@ -5,4 +5,6 @@ public class ModelMethod {
 	//@ model public int m(int i);
 
 	public void n();
+
+	//@ model public ModelMethod(int i) {}
 }

@@ -66,6 +66,11 @@ public class AnnotationHandler {
 		ModelMethodDeclPragma mmp = (ModelMethodDeclPragma)tde;
 		td.elems.setElementAt(((ModelMethodDeclPragma)tde).decl,j);
 	    }
+	    if (tde instanceof ModelConstructorDeclPragma) {
+		handlePragmas(tde);
+		ModelConstructorDeclPragma mmp = (ModelConstructorDeclPragma)tde;
+		td.elems.setElementAt(((ModelConstructorDeclPragma)tde).decl,j);
+	    }
 	    // handle PURE pragmas
 	    if (tde instanceof MethodDecl ||
 		tde instanceof ConstructorDecl) {

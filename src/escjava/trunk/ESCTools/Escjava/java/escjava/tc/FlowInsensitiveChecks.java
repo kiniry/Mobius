@@ -479,10 +479,13 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                     if (!isPrivateFieldAccessAllowed &&
                         Modifiers.isPrivate(fa.decl.modifiers) &&
                         GetSpec.findModifierPragma(fa.decl,
-                                                   TagConstants.SPEC_PUBLIC) == null) {
-                        ErrorSet.error(fa.locId, "A private field can be used in "+
-                                       "postconditions of overridable methods "+
-                                       "only if it is declared spec_public");
+			       TagConstants.SPEC_PUBLIC) == null &&
+                        GetSpec.findModifierPragma(fa.decl,
+			       TagConstants.SPEC_PROTECTED) == null) {
+                        ErrorSet.error(fa.locId, 
+			   "A private field can be used in "+
+			   "postconditions of overridable methods only if "+
+			   "it is declared spec_public or spec_protected");
                     }
 
                     // The following code checks that "fa" is at least as spec-accessible
@@ -1182,6 +1185,17 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 		//	check access ?
                     break;
                 }
+
+	    case TagConstants.MODELCONSTRUCTORDECLPRAGMA: {
+                ConstructorDecl decl = ((ModelConstructorDeclPragma)e).decl;
+                Env rootEnv = Modifiers.isStatic(decl.modifiers)
+                    ? rootSEnv
+                    : rootIEnv;
+                checkModifierPragmaVec( decl.pmodifiers, decl, rootEnv );
+		// FIXME -- need to do some checks???
+		break;
+            }
+
 
 	    case TagConstants.MODELMETHODDECLPRAGMA: {
                 MethodDecl decl = ((ModelMethodDeclPragma)e).decl;
@@ -2010,6 +2024,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 	    case TagConstants.NORMAL_BEHAVIOR:
 	    case TagConstants.NORMAL_EXAMPLE:
 	    case TagConstants.OPENPRAGMA:
+	    case TagConstants.SUBCLASSING_CONTRACT:
 		// Make these unexpected again after the desugaring is implemented
 		break;
 
