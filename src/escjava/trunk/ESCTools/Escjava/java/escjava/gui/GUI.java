@@ -138,6 +138,7 @@ static {
 		specspath = urlStr.substring(from, to);
 		if (System.getProperty("simplify") == null) {
 		    int k = specspath.lastIndexOf('/');
+		    if (k == -1) k = specspath.lastIndexOf(java.io.File.separator);
 		    if (k >= 0) {
 			String simpath = specspath.substring(0,k+1)
 					+ "Simplify-1.5.4.";
@@ -147,7 +148,8 @@ static {
 			    simpath += "macosx";
 			} else if (os.startsWith("Linux")) {
 			    simpath += "linux";
-			} else {
+			} else if (os.startsWith("Windows")) {
+			    simpath = simpath.substring(1);
 			    simpath += "exe";
 			}
 			if ((new java.io.File(simpath)).exists()) 
