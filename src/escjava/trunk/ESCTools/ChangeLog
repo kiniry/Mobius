@@ -1,4 +1,671 @@
-2005-02-28  Joseph Kiniry  <kiniry@Sirius-Black.local>
+2005-03-29  Joseph Kiniry <joseph.kiniry@ucd.ie>
+
+	* slides/ETAPSTutorial/.cvsignore:
+	Prep-work for release.
+
+2005-03-29  David Cok  <cok@frontiernet.net>
+
+	* Escjava/test/jdktests/TestString.java-expected: New tests
+
+	* specs/java/lang/CharSequence.spec:
+	* specs/java/lang/String.spec:
+	New specs
+
+	* Escjava/test/jdktests/TestString.java:
+	* Escjava/test/jdktests/TestString.java-expected:
+	* Escjava/test/junittests/After.java-expected:
+	* Escjava/test/junittests/skip:
+	New tests
+
+	* Escjava/test/jdktests/Makefile: New target for testing
+
+	* Escjava/test/escjava/test/test0/run:
+	* Escjava/test/escjava/test/test34/run:
+	* Escjava/test/escjava/test/test38/run:
+	* Escjava/test/escjava/test/test54/run:
+	* Escjava/test/escjava/test/test65/run:
+	Adjusted tests for new string concatenation handling
+
+	* Escjava/test/junittests/FinalRef.java:
+	New test that does not work yet
+
+	* Escjava/java/escjava/Options.java:
+	* Escjava/java/escjava/ast/TagConstants.java:
+	* Escjava/java/escjava/ast/Utils.java:
+	* Escjava/java/escjava/tc/FlowInsensitiveChecks.java:
+	* Escjava/java/escjava/translate/GetSpec.java:
+	Changing how string concatenation is handled so that we can give
+	specs to it
+
+	* Escjava/java/escjava/AnnotationHandler.java:
+	Slight change and addition of error messages regarding purity
+
+2005-03-26  David Cok  <cok@frontiernet.net>
+
+	* install.sh: Adjustment for building/testing release on cygwin
+
+	* Escjava/test/nijmegen/JCF/Makefile: Further fixes to using esc specs
+
+	* Makefile.defs: Correction
+
+	* specs/java/lang/CharSequence.spec:
+	* specs/java/util/ArrayList.spec:
+	* specs/java/util/Collection.spec:
+	* specs/java/util/List.spec:
+	* specs/java/util/Map.spec:
+	* specs/java/util/Properties.spec:
+	* specs/java/util/Set.spec:
+	More updates to specs
+
+	* Makefile: Temporarily making jmlspecs be escspecs
+
+	* Escjava/test/jdktests/Makefile:
+	* Escjava/test/nijmegen/JCF/Makefile:
+	* Escjava/test/nijmegen/OCF/Makefile:
+	* Makefile.defs:
+	Improving Makefiles
+
+	* Escjava/escj: Switching to use esc specs for release
+
+	* Makefile.defs: Tweaking of definitions
+
+	* Escjava/test/jdktests/Makefile:
+	* Escjava/test/junittests/Makefile:
+	Allowing testing to continue even if errors
+
+	* Makefile: Including original-specs in the patch release
+
+2005-03-25  David Cok  <cok@frontiernet.net>
+
+	* Escjava/java/escjava/translate/NoWarn.java:
+	* Escjava/java/escjava/translate/Translate.java:
+	* Escjava/java/escjava/AnnotationHandler.java:
+	* Escjava/java/escjava/Main.java:
+	* Escjava/java/escjava/Options.java:
+	* Escjava/java/escjava/RefinementSequence.java:
+	* Escjava/java/escjava/ast/EscPrettyPrint.java:
+	* Escjava/java/escjava/ast/TagConstants.java:
+	* Escjava/java/escjava/ast/Utils.java:
+	* Escjava/java/escjava/parser/EscPragmaParser.java:
+	* Escjava/java/escjava/tc/FlowInsensitiveChecks.java:
+	* Escjava/java/escjava/translate/ErrorMsg.java:
+	* Escjava/java/escjava/translate/GetSpec.java:
+	Improvements to handling of exceptions so as to remove some
+	possibilities for inconsistencies
+
+	* Escjava/test/junittests/UndeclaredException2.java-expected:
+	* Escjava/test/junittests/UndeclaredInheritedException.java:
+	* Escjava/test/junittests/UndeclaredInheritedException.java-expected:
+	* Escjava/test/junittests/UndeclaredInheritedException2.java:
+	* Escjava/test/junittests/UndeclaredInheritedException2.java-expected:
+	* Escjava/test/escjava/test/test37/ans:
+	* Escjava/test/escjava/test/test49/ans:
+	* Escjava/test/escjava/test/test56/ans:
+	* Escjava/test/jdktests/TestCollection.java:
+	* Escjava/test/jdktests/TestList.java:
+	* Escjava/test/jdktests/TestList.java-expected:
+	* Escjava/test/jdktests/TestMap.java:
+	* Escjava/test/jdktests/TestMap.java-expected:
+	* Escjava/test/jdktests/TestProperties.java:
+	* Escjava/test/jdktests/TestProperties.java-expected:
+	* Escjava/test/jdktests/TestSet.java:
+	* Escjava/test/jdktests/TestSet.java-expected:
+	* Escjava/test/junittests/DefCon.java:
+	* Escjava/test/junittests/DefCon.java-expected:
+	* Escjava/test/junittests/SignalsOnly.java:
+	* Escjava/test/junittests/SignalsOnly.java-expected:
+	* Escjava/test/junittests/SignalsOnlyBad.java:
+	* Escjava/test/junittests/SignalsOnlyBad.java-expected:
+	* Escjava/test/junittests/SignalsOnlyBad2.java:
+	* Escjava/test/junittests/SignalsOnlyBad2.java-expected:
+	* Escjava/test/junittests/UndeclaredException.java:
+	* Escjava/test/junittests/UndeclaredException.java-expected:
+	* Escjava/test/junittests/UndeclaredException2.java:
+	Improvements, corrections to tests
+
+	* Javafe/java/javafe/ast/hierarchy.j:
+	adding functionality to track original tag
+
+2005-03-23  Erik Poll  <erikpoll@cs.ru.nl>
+
+	* slides/ETAPSTutorial/5_more_jml.tex:
+	* slides/ETAPSTutorial/2_tool.tex:
+	* slides/ETAPSTutorial/3_warnings.tex:
+	* slides/ETAPSTutorial/4_tips.tex:
+	* slides/ETAPSTutorial/examples/Alias.java:
+	* slides/ETAPSTutorial/examples/AliasExample.java:
+	* slides/ETAPSTutorial/examples/ArrayStoreWarning.java:
+	* slides/ETAPSTutorial/examples/ArrayStoreWarningOK.java:
+	* slides/ETAPSTutorial/examples/ArrayTimer.java:
+	* slides/ETAPSTutorial/examples/ArrayTimerNested.java:
+	* slides/ETAPSTutorial/examples/AssertWarning.java:
+	* slides/ETAPSTutorial/examples/CastWarning.java:
+	* slides/ETAPSTutorial/examples/CastWarningOK.java:
+	* slides/ETAPSTutorial/examples/CastWarningOK2.java:
+	* slides/ETAPSTutorial/examples/DeadlockWarning.java:
+	* slides/ETAPSTutorial/examples/Ex.java:
+	* slides/ETAPSTutorial/examples/Inconsistent.java:
+	* slides/ETAPSTutorial/examples/Inconsistent2.java:
+	* slides/ETAPSTutorial/examples/Index.java:
+	* slides/ETAPSTutorial/examples/Initially.java:
+	* slides/ETAPSTutorial/examples/Invariant.java:
+	* slides/ETAPSTutorial/examples/LoopInvWarning.java:
+	* slides/ETAPSTutorial/examples/ModifiesWarning.java:
+	* slides/ETAPSTutorial/examples/NonNull.java:
+	* slides/ETAPSTutorial/examples/NonNullInit.java:
+	* slides/ETAPSTutorial/examples/NonNullOK.java:
+	* slides/ETAPSTutorial/examples/NonNullOK2.java:
+	* slides/ETAPSTutorial/examples/NonNullOK3.java:
+	* slides/ETAPSTutorial/examples/NullWarning.java:
+	* slides/ETAPSTutorial/examples/NullWarningOK.java:
+	* slides/ETAPSTutorial/examples/OwnerNullWarning.java:
+	* slides/ETAPSTutorial/examples/PrePost.java:
+	* slides/ETAPSTutorial/examples/RaceWarning.java:
+	* slides/ETAPSTutorial/examples/RaceWarning2.java:
+	* slides/ETAPSTutorial/examples/ReachableWarning.java:
+	* slides/ETAPSTutorial/examples/TestCheckedException.java:
+	* slides/ETAPSTutorial/examples/TestUncheckedException.java:
+	* slides/ETAPSTutorial/examples/Timer.java:
+	* slides/ETAPSTutorial/examples/Trace.java:
+	* slides/ETAPSTutorial/examples/UninitWarning.java:
+	* slides/ETAPSTutorial/examples/UnreadableWarning.java:
+	* slides/ETAPSTutorial/1_intro_jml.tex:
+	* slides/ETAPSTutorial/examples/Exposed.java:
+	Revisions for correct processing and layout.
+
+2005-03-23  David Cok  <cok@frontiernet.net>
+
+	* Escjava/test/jdktests/TestBoolean.java:
+	New and changed tests for recent changes
+
+	* specs/java/lang/Boolean.spec:
+	* specs/java/lang/Integer.jml:
+	* specs/java/lang/String.spec:
+	* specs/java/util/ArrayList.spec:
+	* specs/java/util/Comparator.refines-spec:
+	* specs/java/util/List.spec:
+	Corresponding changes in specs
+
+	* Escjava/test/escjava/test/test34/ans:
+	* Escjava/test/jdktests/TestArrayList2.java-expected:
+	* Escjava/test/jdktests/TestBoolean.java-expected:
+	* Escjava/test/jdktests/TestList.java:
+	* Escjava/test/junittests/Ghost.java-expected:
+	* Escjava/test/junittests/Intern.java:
+	* Escjava/test/junittests/Intern.java-expected:
+	* Escjava/test/junittests/Intern2.java:
+	* Escjava/test/junittests/Intern2.java-expected:
+	* Escjava/test/junittests/ModChecksMaps.java:
+	* Escjava/test/junittests/ModChecksMaps.java-expected:
+	* Escjava/test/junittests/NonNullBad.java-expected:
+	* Escjava/test/junittests/ParsePure.java-expected:
+	* Escjava/test/junittests/notjunittests:
+	* Escjava/test/junittests/skip:
+	New and changed tests for recent changes
+
+	* Escjava/java/escjava/translate/Translate.java:
+	* Escjava/java/escjava/translate/VcToString.java:
+	Improving support for interned Strings
+
+	* Escjava/java/escjava/translate/TrAnExpr.java:
+	Correction to handling of inherited specs - especially where the
+	formal parameter names are changed
+
+	* Escjava/java/escjava/translate/GetSpec.java:
+	* Escjava/java/escjava/translate/Frame.java:
+	* Escjava/java/escjava/tc/Datagroups.java:
+	* Escjava/java/escjava/AnnotationHandler.java:
+	* Escjava/java/escjava/ast/Utils.java:
+	* Escjava/java/escjava/tc/FlowInsensitiveChecks.java:
+	COrrrecting support for datagroups and pure methods used in annotations
+
+	* Escjava/java/escjava/backpred/UnivBackPred.ax:
+	* Escjava/java/escjava/ast/EscPrettyPrint.java:
+	* Escjava/java/escjava/ast/TagConstants.java:
+	Improving support for interned Strings
+
+	* Javafe/java/javafe/util/FileCorrelatedReader.java:
+	* Javafe/java/javafe/util/LocationManagerCorrelatedReader.java:
+	Just debug changes
+
+	* Javafe/java/javafe/tc/TypeSig.java:
+	A change to be sure that supertypes are typechecked before a type
+	is checked - various things in Esc/java depend on that fact.
+
+	* Javafe/java/javafe/tc/FlowInsensitiveChecks.java:
+	No significant change (but tests were changed to match so I'm not
+	changing it back) [ just order of error messages]
+
+	* Javafe/java/javafe/reader/ASTClassFileParser.java:
+	Omitting private fields from being inserted into the AST when
+	reading class files.  They are not used anywhere:, but contribute
+	a lot of unused variables when this.* or everything is assignable.
+
+2005-03-22  Erik Poll  <erikpoll@cs.ru.nl>
+
+	* slides/ETAPSTutorial/README:
+	* slides/ETAPSTutorial/1_intro_jml.tex:
+	* slides/ETAPSTutorial/2_tool.tex:
+	* slides/ETAPSTutorial/3_warnings.tex:
+	* slides/ETAPSTutorial/4_tips.tex:
+	* slides/ETAPSTutorial/5_more_jml.tex:
+	* slides/ETAPSTutorial/Makefile:
+	* slides/ETAPSTutorial/PPRcok.sty:
+	* slides/ETAPSTutorial/myprosper.cls:
+	* slides/ETAPSTutorial/pstricks.pro:
+	New slides for ETAPS tutorial, based upon previous slides from
+	ECOOP.
+
+2005-03-21  David Cok  <cok@frontiernet.net>
+
+	* specs/java/io/InputStream.refines-java:
+	* specs/java/lang/Class.jml:
+	* specs/java/lang/Cloneable.refines-spec:
+	* specs/java/lang/Error.jml:
+	* specs/java/lang/Integer.jml:
+	* specs/java/lang/Object.spec:
+	* specs/java/lang/Package.jml:
+	* specs/java/lang/String.spec:
+	* specs/java/lang/StringCoding.spec:
+	* specs/java/lang/System.spec:
+	* specs/java/lang/Throwable.jml:
+	* specs/java/util/AbstractCollection.jml:
+	* specs/java/util/AbstractList.spec:
+	* specs/java/util/AbstractMap.refines-spec:
+	* specs/java/util/AbstractSequentialList.refines-spec:
+	* specs/java/util/AbstractSet.refines-spec:
+	* specs/java/util/ArrayList.spec:
+	* specs/java/util/Arrays.refines-spec:
+	* specs/java/util/Collection.spec:
+	* specs/java/util/Dictionary.refines-spec:
+	* specs/java/util/HashMap.refines-spec:
+	* specs/java/util/HashSet.refines-spec:
+	* specs/java/util/Hashtable.refines-spec:
+	* specs/java/util/LinkedList.spec:
+	* specs/java/util/List.spec:
+	* specs/java/util/Map.spec:
+	* specs/java/util/Properties.spec:
+	* specs/java/util/Set.spec:
+	* specs/java/util/SortedMap.spec:
+	* specs/java/util/Vector.spec:
+	Revised specifications
+
+	* Escjava/test/escjava/test/test32/ans:
+	* Escjava/test/escjava/test/test49/ans:
+	* Escjava/test/escjava/test/test56/ans:
+	* Escjava/test/jdktests/.cvsignore:
+	* Escjava/test/jdktests/AllTests.java:
+	* Escjava/test/jdktests/LocalTestCase.java:
+	* Escjava/test/jdktests/Makefile:
+	* Escjava/test/jdktests/TestAbstractList.java:
+	* Escjava/test/jdktests/TestAbstractList.java-expected:
+	* Escjava/test/jdktests/TestArrayList2.java:
+	* Escjava/test/jdktests/TestArrayList2.java-expected:
+	* Escjava/test/jdktests/TestArrays.java:
+	* Escjava/test/jdktests/TestArrays.java-expected:
+	* Escjava/test/jdktests/TestClass.java:
+	* Escjava/test/jdktests/TestClass.java-expected:
+	* Escjava/test/jdktests/TestCollection.java:
+	* Escjava/test/jdktests/TestCollection.java-expected:
+	* Escjava/test/jdktests/TestException.java:
+	* Escjava/test/jdktests/TestList.java:
+	* Escjava/test/jdktests/TestList.java-expected:
+	* Escjava/test/jdktests/TestMap.java:
+	* Escjava/test/jdktests/TestMap.java-expected:
+	* Escjava/test/jdktests/TestObject.java:
+	* Escjava/test/jdktests/TestObject.java-expected:
+	* Escjava/test/jdktests/TestProperties.java:
+	* Escjava/test/jdktests/TestProperties.java-expected:
+	* Escjava/test/jdktests/TestSet.java:
+	* Escjava/test/jdktests/TestSet.java-expected:
+	* Escjava/test/jdktests/TestSet2.java:
+	* Escjava/test/jdktests/TestSet2.java-expected:
+	* Escjava/test/jdktests/TestSystem.java-ckd:
+	* Escjava/test/jdktests/TestSystem.java-expected:
+	* Escjava/test/jdktests/TestSystem1.java:
+	* Escjava/test/jdktests/TestSystem1.java-expected:
+	* Escjava/test/jdktests/TestSystem2.java:
+	* Escjava/test/jdktests/TestSystem2.java-expected:
+	* Escjava/test/jdktests/TestSystem3.java:
+	* Escjava/test/jdktests/TestThrowable.java:
+	* Escjava/test/jdktests/skip:
+	* Escjava/test/junittests/ClassEquiv.java:
+	* Escjava/test/junittests/EXC.java:
+	* Escjava/test/junittests/EXC.java-expected:
+	* Escjava/test/junittests/Inherit.java:
+	* Escjava/test/junittests/Intern.java:
+	* Escjava/test/junittests/MV.java:
+	* Escjava/test/junittests/MV.java-expected:
+	* Escjava/test/junittests/NonNull.java-expected:
+	* Escjava/test/junittests/skip:
+	New tests:
+	* fixed tests
+
+	* Javafe/java/javafe/ast/IdentifierNode.java: New node for special use
+
+	* Escjava/java/escjava/translate/TrAnExpr.java:
+	Omitting the ensures clause produced by an exceptional_behavior
+	spec-case when constructing the axioms for a method used in an
+	annotation
+
+	* Escjava/java/escjava/translate/Translate.java:
+	Adding support for bigint
+
+	* Escjava/java/escjava/translate/GetSpec.java:
+	Iterating over datagroups as well:
+	* when checkingmodifies statements
+
+	* Escjava/java/escjava/translate/GC.java:
+	Some optimizations to break up long conjunctions in the VC output
+
+	* Escjava/java/escjava/ast/Utils.java:
+	Added support for proper handling of ensures clauses and
+	preparation for better handling of inheritance
+
+	* Escjava/java/escjava/ast/EscPrettyPrint.java:
+	Additional convenience print method
+
+	* Escjava/java/escjava/RefinementSequence.java:
+	Allowing the addition of exceptions in specifications - should be
+	limited to RuntimeExceptions, but not yet
+
+	* Escjava/java/escjava/AnnotationHandler.java:
+	Various improvements in translation, as well as reformatting
+
+	* Javafe/java/javafe/ast/Identifier.java: Added an equals method
+
+2005-03-05  David Cok  <cok@frontiernet.net>
+
+	* specs/java/util/ArrayList.spec:
+	* specs/java/util/LinkedList.spec:
+	* specs/java/util/RandomAccess.spec:
+	* specs/java/util/Vector.spec:
+	More updates to specs
+
+2005-03-04  David Cok  <cok@frontiernet.net>
+
+	* Escjava/test/jdktests/Makefile: Minor fix to Makefile
+
+	* Escjava/java/escjava/backpred/BackPred.java:
+	Adding a background formula that says that if a type is a
+	supertype of T then it must be equal to T or a supertype of T's
+	superclass or one of T's interfaces; this is needed to be able to
+	prove that T is not an instance of an interface (such as
+	Cloneable); previously one could only prove that T was a subtype
+
+	* Makefile: Fixes to scripts
+
+	* specs/java/lang/Boolean.spec:
+	* specs/java/lang/CharSequence.spec:
+	* specs/java/lang/Object.spec:
+	* specs/java/lang/String.spec:
+	* specs/java/util/AbstractList.spec:
+	* specs/java/util/Collection.spec:
+	* specs/java/util/Dictionary.spec:
+	* specs/java/util/Hashtable.spec:
+	* specs/java/util/List.spec:
+	* specs/java/util/Vector.spec:
+	Integrating Erik's changes and David's changes
+
+	* Escjava/java/escjava/parser/EscPragmaParser.java:
+	* Escjava/java/escjava/tc/FlowInsensitiveChecks.java:
+	Some changes so that uses of \peer, \readonly, \rep are ignored
+
+	* Utils/junitutils/Diff.java: Fixing a bug when files are empty
+
+	* docs/Escjava2-ImplementationNotes/Escjava2-ImplementationNotes.texinfo:
+	Fixing some syntex errors
+
+	* Escjava/test/jdktests/TestObject.java:
+	* Escjava/test/junittests/Final.java:
+	* Escjava/test/junittests/Final.java-expected:
+	* Escjava/test/junittests/Makefile:
+	* Escjava/test/junittests/Min.java:
+	* Escjava/test/junittests/skip:
+	* Escjava/test/jdktests/.cvsignore:
+	* Escjava/test/jdktests/AllTests.java:
+	* Escjava/test/jdktests/Makefile:
+	* Escjava/test/jdktests/Suite.java:
+	* Escjava/test/jdktests/TestException.java-expected:
+	* Escjava/test/jdktests/TestObject.java-expected:
+	* Escjava/test/jdktests/TestSet.java-expected:
+	* Escjava/test/jdktests/TestThrowable.java-expected:
+	* Escjava/test/jdktests/skip:
+	More tests
+
+2005-03-02  David Cok  <cok@frontiernet.net>
+
+	* specs/java/lang/CharSequence.spec-old:
+	* specs/java/lang/Object.spec-old:
+	* specs/java/lang/String.spec-old:
+	* specs/java/lang/System.spec-old:
+	Removing obsolete files
+
+2005-03-01  Erik Poll  <erikpoll@cs.ru.nl>
+
+	* specs/java/lang/Boolean.jml:
+	* specs/java/lang/Boolean.spec:
+	renamed updated Boolean.jml to Boolean.spec
+
+	* specs/java/lang/Boolean.jml:
+	fixed
+
+	* specs/java/util/ListIterator.spec:
+	* specs/java/util/LinkedList.refines-spec:
+	* specs/java/util/LinkedList.spec:
+	replacing LinkedList.refines-spec with ESC/Java2-friendly  LinkedList.spec
+
+	* specs/java/util/ArrayList.refines-spec:
+	* specs/java/util/ArrayList.spec:
+	replacing ArrayList.refines-spec with ESC/java2-friendly ArrayList.spec
+
+	* specs/java/util/Vector.refines-spec:
+	* specs/java/util/Vector.spec:
+	replacing by Vector.refines-spec by ESC/Java2 friendly Vector.spec
+
+	* specs/java/util/AbstractList.refines-spec:
+	* specs/java/util/AbstractList.spec:
+	* specs/java/util/Collection.spec:
+	replacing AbstractList.refines-spec by ESC/Java2-friendly
+	AbstractList.spec
+
+	* specs/java/util/List.spec:
+	ESC/Java2 friendly version of JML spec
+
+	* specs/java/lang/String.spec:
+	ESC/Java2 friendly version of JML specs
+
+	* specs/java/lang/Object.spec:
+	owner should not be in objectState
+
+2005-03-01  David Cok  <cok@frontiernet.net>
+
+	* specs/java/util/Vector.spec: Removing old file
+
+	* Escjava/test/junittests/skip:
+	Skipping a platform dependent test - Scope.java
+
+	* .cvsignore, Escjava/test/jdktests/TestSet.java:
+	Reorganizing tests and specs
+
+	* Escjava/test/escjava/test/Makefile:
+	* Escjava/test/jdktests/AllTests.java:
+	* Escjava/test/jdktests/Makefile:
+	* Escjava/test/junittests/Min.java:
+	* Escjava/test/junittests/ModelVarMod.java:
+	* Escjava/test/junittests/ModelVarMod.java-expected:
+	* Escjava/test/junittests/skip:
+	* Utils/junitutils/Diff.java:
+	* original-specs/README.txt:
+	* original-specs/java/lang/AssertionError.spec:
+	* original-specs/java/lang/CharSequence.spec:
+	* original-specs/java/lang/Exception.spec:
+	* original-specs/java/lang/Object.spec:
+	* original-specs/java/lang/String.spec:
+	* original-specs/java/lang/System.spec:
+	* original-specs/java/util/Collection.spec:
+	* original-specs/java/util/Dictionary.spec:
+	* original-specs/java/util/Enumeration.spec:
+	* original-specs/java/util/Hashtable.spec:
+	* original-specs/java/util/Iterator.spec:
+	* original-specs/java/util/Map.spec:
+	* original-specs/java/util/Vector.spec:
+	* original-specs/org/jmlspecs/lang/JMLDataGroup.spec:
+	* Escjava/Makefile:
+	* Escjava/escj:
+	* Escjava/java/escjava/translate/GC.java:
+	* Escjava/java/escjava/translate/TrAnExpr.java:
+	* Makefile:
+	* Makefile.defs:
+	* jmlspecs.jar:
+	Reorganizing specs and tests
+
+	* specs/java/io/PrintWriter.refines-java:
+	* specs/java/io/Serializable.refines-spec:
+	* specs/java/io/UnsupportedEncodingException.refines-spec:
+	* specs/java/lang/ArithmeticException.jml:
+	* specs/java/lang/AssertionError.spec:
+	* specs/java/lang/Boolean.jml:
+	* specs/java/lang/Byte.jml:
+	* specs/java/lang/CharSequence.spec:
+	* specs/java/lang/CharSequence.spec-old:
+	* specs/java/lang/Character.jml:
+	* specs/java/lang/Class.jml:
+	* specs/java/lang/ClassCastException.jml:
+	* specs/java/lang/CloneNotSupportedException.refines-spec:
+	* specs/java/lang/Cloneable.refines-spec:
+	* specs/java/lang/Comparable.spec:
+	* specs/java/lang/Double.jml:
+	* specs/java/lang/Error.jml:
+	* specs/java/lang/Exception.spec:
+	* specs/java/lang/Float.jml:
+	* specs/java/lang/IllegalArgumentException.jml:
+	* specs/java/lang/IllegalStateException.jml:
+	* specs/java/lang/IndexOutOfBoundsException.refines-spec:
+	* specs/java/lang/Integer.jml:
+	* specs/java/lang/InternalError.jml:
+	* specs/java/lang/InterruptedException.refines-spec:
+	* specs/java/lang/Long.jml:
+	* specs/java/lang/Math.jml:
+	* specs/java/lang/NullPointerException.jml:
+	* specs/java/lang/Number.jml:
+	* specs/java/lang/Object.spec:
+	* specs/java/lang/Object.spec-old:
+	* specs/java/lang/Package.jml:
+	* specs/java/lang/Runnable.spec:
+	* specs/java/lang/RuntimeException.jml:
+	* specs/java/lang/SecurityManager.refines-spec:
+	* specs/java/lang/Short.jml:
+	* specs/java/lang/StackTraceElement.refines-spec:
+	* specs/java/lang/StrictMath.jml:
+	* specs/java/lang/String.spec:
+	* specs/java/lang/String.spec-old:
+	* specs/java/lang/StringBuffer.jml:
+	* specs/java/lang/StringIndexOutOfBoundsException.refines-spec:
+	* specs/java/lang/System.spec:
+	* specs/java/lang/System.spec-old:
+	* specs/java/lang/Throwable.jml:
+	* specs/java/lang/VirtualMachineError.jml:
+	* specs/java/lang/reflect/Array.refines-spec:
+	* specs/java/lang/reflect/Constructor.jml:
+	* specs/java/lang/reflect/Field.refines-spec:
+	* specs/java/lang/reflect/Method.jml:
+	* specs/java/math/BigInteger.refines-spec:
+	* specs/java/net/URI.refines-spec:
+	* specs/java/net/URL.refines-spec:
+	* specs/java/util/AbstractCollection.jml:
+	* specs/java/util/AbstractList.refines-spec:
+	* specs/java/util/AbstractMap.refines-spec:
+	* specs/java/util/AbstractSequentialList.refines-spec:
+	* specs/java/util/AbstractSet.refines-spec:
+	* specs/java/util/ArrayList.refines-spec:
+	* specs/java/util/Arrays.refines-spec:
+	* specs/java/util/Calendar.refines-spec:
+	* specs/java/util/Collection.spec:
+	* specs/java/util/Comparator.refines-spec:
+	* specs/java/util/Date.refines-spec:
+	* specs/java/util/Dictionary.refines-spec:
+	* specs/java/util/Enumeration.spec:
+	* specs/java/util/GregorianCalendar.refines-spec:
+	* specs/java/util/HashMap.refines-spec:
+	* specs/java/util/HashSet.refines-spec:
+	* specs/java/util/Hashtable.refines-spec:
+	* specs/java/util/Iterator.spec:
+	* specs/java/util/LinkedList.refines-spec:
+	* specs/java/util/List.spec:
+	* specs/java/util/Locale.jml:
+	* specs/java/util/Map.spec:
+	* specs/java/util/NoSuchElementException.jml:
+	* specs/java/util/Observable.refines-spec:
+	* specs/java/util/Observer.spec:
+	* specs/java/util/Set.spec:
+	* specs/java/util/SortedMap.spec:
+	* specs/java/util/Vector.refines-spec:
+	* specs/java/util/regex/Matcher.refines-spec:
+	* specs/java/util/regex/Pattern.refines-spec:
+	* specs/org/jmlspecs/lang/JMLDataGroup.refines-java:
+	* specs/org/jmlspecs/lang/JMLDataGroup.spec:
+	* specs/java/io/IOException.refines-spec:
+	* specs/java/io/InputStream.refines-java:
+	* specs/java/io/OutputStream.refines-java:
+	* specs/java/io/OutputStreamWriter.refines-java:
+	* specs/java/io/PrintStream.refines-java:
+	New versions of specs - with cleanup needed
+
+2005-02-28  Joseph Kiniry  <kiniry@category.ucd.ie>
+
+	* ChangeLog: Major update to ChangeLog for past few months of work.
+
+	* Javafe/java/javafe/Options.java:
+	Put back in verbose flag; everything seems to be working fine with
+	"escj -h" and "escj -v -h".
+
+	* Escjava/java/escjava/parser/EscPragmaParser.java:
+	Added Universe type system keywords '\peer', '\rep', and '\readonly'
+	to AST as SimpleModifierPragmas.
+
+	Also reformatted use of blocks in case statements for consistency
+	because the use of these constructs can introduce subtle bugs and if
+	they are syntactically uniform they are easier to see and understand.
+
+	* Escjava/java/escjava/ast/EscPrettyPrint.java:
+	* Escjava/java/escjava/ast/TagConstants.java:
+	* Escjava/java/escjava/ast/hierarchy.j:
+	Added Universe type system keywords '\peer', '\rep', and '\readonly'
+	to AST as SimpleModifierPragmas.
+
+	* Escjava/java/escjava/parser/EscPragmaLex.java:
+	* Javafe/java/javafe/FrontEndTool.java:
+	* Javafe/java/javafe/Tool.java:
+	Syntactic reformatting and some new comments.
+
+	* Escjava/test/escjava/test/Makefile:
+	Added a CD_AND_JAVA_DEBUG variable for running front-end tests with a
+	debugger.
+
+	* Escjava/test/escjava/parser/test/TestLex.java:
+	Trivial reformatting for better IDE class parsing; class starting '{'
+	in column 0 is optimized in Emacs, e.g..
+
+	* Escjava/test/escjava/parser/test/GoodJmlPragmas.ans:
+	* Escjava/test/escjava/parser/test/GoodJmlPragmas.j:
+	Added initial Universe type system keywords '\peer', '\rep', and
+	'readonly' to good JML pragmas test.
+
+	* Escjava/escj:
+	Quoted PWD use as suggested by user to make script more robust to
+	various shells and OSes.
+
+	* Escjava/Makefile:
+	Added new rule to test_escjava_parser rule to ensure Javafe parser
+	test classes are built.
+
+	* Makefile.defs:
+	Added switch to diff to ignore whitespace differences because some of
+	our tests have answers written with Windows EOLs and babysitting such
+	to keep UNIX EOLs is too much trouble.
+
+2005-02-28  Joseph Kiniry <joseph.kiniry@ucd.ie>
 
 	* Javafe/java/javafe/Options.java:
 	Put back in verbose flag; everything seems to be working fine with
@@ -488,7 +1155,7 @@
 	* Makefile:
 	Edits to fix javadocs
 
-2005-01-04  Joseph Kiniry  <kiniry@Sirius-Black.local>
+2005-01-04  Joseph Kiniry <joseph.kiniry@ucd.ie>
 
 	* ChangeLog: Updated for all recent commits.
 
