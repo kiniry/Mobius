@@ -868,6 +868,14 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                     return e;
                 }
 
+	    case TagConstants.EVERYTHINGEXPR:
+		{
+		    if (!isCurrentlySpecDesignatorContext) {
+			ErrorSet.error(e.getStartLoc(),
+				"Keyword \\everything is not allowed in this context");
+		    } 
+		    setType( e, Types.voidType);
+		}
             case TagConstants.LOCKSETEXPR:
                 {
                     if (! isLocksetContext) {
@@ -1052,6 +1060,15 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
         int tag = p.getTag();
         switch(tag) 
         {
+	    case TagConstants.EVERYTHING:
+	    case TagConstants.EVERYTHINGEXPR:
+	    case TagConstants.NOTHING:
+	    case TagConstants.NOTHINGEXPR:
+	    case TagConstants.JML_NOT_SPECIFIED:
+	    case TagConstants.NOTSPECIFIEDEXPR:
+		// FIXME - check the context???
+		break;
+
             case TagConstants.UNINITIALIZED:
                 if( ctxt.getTag() != TagConstants.LOCALVARDECL ) {
                     int loc;
@@ -1514,12 +1531,16 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 	      
                             case TagConstants.ARRAYREFEXPR:
                             case TagConstants.WILDREFEXPR:
+                            case TagConstants.EVERYTHINGEXPR:
+                            case TagConstants.NOTHINGEXPR:
+                            case TagConstants.NOTSPECIFIEDEXPR:
                                 break;
 
                             default:
                                 ErrorSet.error(emp.expr.getStartLoc(),
                                                "Not a specification designator expression");
                         }
+                        isSpecDesignatorContext = false;
                     }
                     break;
                 }
@@ -1769,4 +1790,12 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
         }
         return MSTATUS_CLASS_NEW_METHOD;
     }
+
+    protected Expr checkDesignator(Env env, Expr e) {
+	if (e instanceof AmbiguousVariableAccess) 
+		return super.checkDesignator(env,e);
+
+	return e;
+    }
+
 }

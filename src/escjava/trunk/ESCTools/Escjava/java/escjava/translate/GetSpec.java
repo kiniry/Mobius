@@ -208,6 +208,11 @@ public final class GetSpec {
                 case TagConstants.JML_ASSIGNABLE:
                     {
                         ExprModifierPragma emp = (ExprModifierPragma)mp;
+			int t = emp.expr.getTag();
+			// FIXME - no contribution to spec for these keywords
+			if (t == TagConstants.EVERYTHINGEXPR ||
+			    t == TagConstants.NOTHINGEXPR ||
+			    t == TagConstants.NOTSPECIFIEDEXPR) break;
                         emp = doSubst(subst, emp);
                         dmd.modifies.addElement(emp);
                         break;

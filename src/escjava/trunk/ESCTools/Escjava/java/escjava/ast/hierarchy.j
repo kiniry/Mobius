@@ -39,6 +39,9 @@ import javafe.util.Location;
  *           + SubstExpr (GenericVarDecl var, Expr val, Expr target)
  *           + TypeExpr (Type type)
  *         + LockSetExpr ()
+ *         + EverythingExpr ()
+ *         + NothingExpr ()
+ *         + NotSpecifiedExpr ()
  *         + ResExpr ()
  *         + WildRefExpr (Expr expr)
  *         + GuardExpr (Expr expr)
@@ -207,6 +210,27 @@ public class ResExpr extends Expr
 }
 
 public class LockSetExpr extends Expr
+{
+  //# int loc
+
+  public int getStartLoc() { return loc; }
+}
+
+public class EverythingExpr extends Expr
+{
+  //# int loc
+
+  public int getStartLoc() { return loc; }
+}
+
+public class NothingExpr extends Expr
+{
+  //# int loc
+
+  public int getStartLoc() { return loc; }
+}
+
+public class NotSpecifiedExpr extends Expr
 {
   //# int loc
 

@@ -880,21 +880,27 @@ public class EscPragmaParser extends Parse implements PragmaParser
                    inProcessTag == TagConstants.JML_MODIFIABLE ||
                    inProcessTag == TagConstants.JML_ASSIGNABLE) {
             dst.startingLoc = inProcessLoc;
-	    int t = scanner.lookahead(1);
+	    int tempInProcessTag = inProcessTag;
+	    if (inAlsoClause && inProcessTag != TagConstants.MONITORED_BY) {
+		tempInProcessTag = TagConstants.ALSO_MODIFIES;
+	    }
+	    int t = scanner.lookahead(0);
 	    if (t == TagConstants.NOTHING) {
 		scanner.getNextToken();
-	        dst.auxVal = ExprModifierPragma.make(inProcessTag, null, inProcessLoc);
+	        dst.auxVal = ExprModifierPragma.make(tempInProcessTag, 
+			NothingExpr.make(scanner.startingLoc), inProcessLoc);
+	    } else if (t == TagConstants.JML_NOT_SPECIFIED) {
+		scanner.getNextToken();
+	        dst.auxVal = ExprModifierPragma.make(tempInProcessTag, 
+			NotSpecifiedExpr.make(scanner.startingLoc), inProcessLoc);
 	    } else if (t == TagConstants.EVERYTHING) {
 		scanner.getNextToken();
-	        dst.auxVal = ExprModifierPragma.make(inProcessTag, null, inProcessLoc);
+	        dst.auxVal = ExprModifierPragma.make(tempInProcessTag, 
+			EverythingExpr.make(scanner.startingLoc), inProcessLoc);
 	    } else {	
 	        Expr e = parseExpression(scanner);
-		if (inAlsoClause && inProcessTag == TagConstants.MODIFIES) {
-                    dst.auxVal = ExprModifierPragma.make(TagConstants.ALSO_MODIFIES, 
-                                                     e, inProcessLoc);
-                } else {
-                    dst.auxVal = ExprModifierPragma.make(inProcessTag, e, inProcessLoc);
-                }
+                dst.auxVal = ExprModifierPragma.make(tempInProcessTag, 
+			e, inProcessLoc);
             }
             dst.ttype = TagConstants.MODIFIERPRAGMA;
         } else if (inProcessTag == TagConstants.LOOP_PREDICATE) {
