@@ -32,23 +32,24 @@ Compaq Systems Research Center.
 \begin{description}
 
 \item{\bf{-bootclasspath} \it{path}}
-Overrides \bf{escjava}'s built-in path for locating \tt{.spec} and
+Overrides \bf{escjava}'s built-in path for locating specification and
 \tt{.class} files for the system classes (\tt{java.lang.String}, etc.)
-with \it{path}.  This option is provided so that files may be checked
-against a different version of JDK than the one escjava comes with
-(currently a version of JDK 1.2 augmented with a limited number of
-spec files).  Note: if the \bf{-v} option is supplied, \bf{escjava} will
-print the complete classpath it is using when it starts up.
+with \it{path} and overrides all previous \bf{-bootclasspath} options.
+This option is provided so that files may be checked against a
+different version of the JDK than the one escjava comes with.  (e.g.,
+the Java Card API).  Note: if the \bf{-v} option is supplied,
+\bf{escjava} will print the complete classpath it is using when it
+starts up.
 
 \item{\bf{-classpath} \it{path}}
-Sets the path to be used to locate user classes not supplied on the
-command line to \it{path}.  Overrides all previous \bf{-classpath}
-options and the \bf{CLASSPATH} environment variable.  The actual
+Sets the path used to locate user classes not supplied on the command
+line to \it{path} and overrides all previous \bf{-classpath} options
+as well as the \bf{CLASSPATH} environment variable.  The actual
 classpath \bf{escjava} uses is the user path followed by the
 bootclasspath (see \bf{-bootclasspath}); this allows users to add new
-\tt{.spec} files for the system classes.  Note: if the \bf{-v} option
-is supplied, \bf{escjava} will print the complete classpath it is
-using when it starts up.
+specification files for the system classes.  Note: if the \bf{-v}
+option is supplied, \bf{escjava} will print the complete classpath it
+is using when it starts up.
 
 \item{\bf{-counterexample}}
 Causes a pretty printed version of the counterexample context to be

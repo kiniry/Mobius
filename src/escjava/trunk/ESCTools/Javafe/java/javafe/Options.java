@@ -403,15 +403,15 @@ public class Options
     {"-help",                   "Prints a usage message and terminates"},
     {"-v",                      "verbose mode"},
     {"-quiet",                  "quiet mode (no informational messages)"},
-    {"-bootclasspath <classpath>", ""},
-    {"-classpath <classpath>",  "Directory path for class files (default is value of CLASSPATH)"},
+    {"-bootclasspath <classpath>", "Directory path for specification and class files for the current JDK\n(default is the built-in classpath of your JDK); prepended to the\ncurrent classpath"},
+    {"-classpath <classpath>",  "Directory path for class files (default is value of CLASSPATH) and\noverrides all previous uses of -classpath."},
     {"-da, -disableassertions", "Ignores all Java assert statements"},
     {"-ea, -enableassertions",  "Processes all Java assert statements"},
     {"-noCautions",             ""},
     {"-package <packagename>",  "Loads all the files in the named package"},
     {"-source <release>",       "Provide source compatibility with specified release"},
     {"-sourcepath <classpath>", "Directory path for source files (default is classpath)"},
-    {"-testMode",               "Replaces execution time by a constant string and path separators by `|' so oracle files can be used in automated testing"},
+    {"-testMode",               "Replaces execution time by a constant string and path separators by `|' so\noracle files can be used in automated testing"},
     };
     
     final public String eol = System.getProperty("line.separator");
