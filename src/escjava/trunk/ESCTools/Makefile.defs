@@ -34,6 +34,7 @@ export ESCJ_SIMPLIFY_DIR ?= ${ESCTOOLS_ROOT}/Escjava/release/master/bin
 
 ifndef SIMPLIFY
         os = $(shell uname -s)
+        processor = $(shell uname -p)
         ifeq ("${os}","Linux")
             export SIMPLIFY =  Simplify-1.5.4.linux
             $(warning Guessing a value for SIMPLIFY: ${SIMPLIFY})
@@ -41,6 +42,18 @@ ifndef SIMPLIFY
         ifeq ("${os}","Darwin")
             export SIMPLIFY =  Simplify-1.5.4.macosx
             $(warning Guessing a value for SIMPLIFY: ${SIMPLIFY})
+        endif
+        ifeq ("${os}","CYGWIN_NT-5.1")
+            export SIMPLIFY =  Simplify-1.5.4.win
+            $(warning Guessing a value for SIMPLIFY: ${SIMPLIFY})
+        endif
+        ifeq ("${os}","SunOS")
+             ifeq ("${processor}","sparc")
+                  export SIMPLIFY =  Simplify-1.5.4.solaris
+                  $(warning Guessing a value for SIMPLIFY: ${SIMPLIFY})
+             else
+                  $(error No Simplify binary exists for SunOS on your processor architecture: ${processor}.  Consider building one for us.)
+             endif
         endif
 endif
 ifndef SIMPLIFY
@@ -113,21 +126,36 @@ export JDKSPEC_ROOT ?= ${ESCJAVA_ROOT}/release/master/specs
 ############################### Release
 ## Pertinent locations for building a release
 
+# Do something like this when you build a release:
+#   ESC_VERSION=2.0a0 ESC_RELEASE_DATE=`date "+%d-%m-%y"` make releases
+
 # Temp directory for constructing a binary rrelease
-export RELTEMP = ${ESCTOOLS_ROOT}/release-temp
+export RELTEMP ?= ${ESCTOOLS_ROOT}/release-temp
 
 # Final directory in which to put binary and patch tar files
-export RELDIR  = ${ESCTOOLS_ROOT}/release
+export RELDIR  ?= ${ESCTOOLS_ROOT}/release
+export RELNAME ?= ${ESC_PROJECT}-${ESC_VERSION}
+export RELNAME-DATE ?= ${ESC_PROJECT}-${ESC_VERSION}-${ESC_RELEASE_DATE}
+export RELJAR  ?= esctools2.jar
+export RELTAR  ?= ${RELNAME}.tbz
+export RELPATCHTAR  ?= ${RELNAME}-patches.tbz
+export RELCLASSPATH ?= ${RELDIR}/${RELJAR}
 
-# Binary release - name of jar file, name of release tar file
-export RELJAR  = esctools2.jar
-export RELTAR  = esctools2-${ESC_VERSION}-binary.tbz
+export CALVIN_PATCHES   = ${RELNAME-DATE}-Calvin.patch.bz
+export ESCJAVA_PATCHES  = ${RELNAME-DATE}-Escjava.patch.bz
+export HOUDINI_PATCHES  = ${RELNAME-DATE}-Houdini.patch.bz
+export JAVAFE_PATCHES   = ${RELNAME-DATE}-Javafe.patch.bz
+export RCC_PATCHES      = ${RELNAME-DATE}-Rcc.patch.bz
+export SIMPLIFY_PATCHES = ${RELNAME-DATE}-Simplify.patch.bz
+
+export TOPLEVEL_TAR     = ${RELNAME-DATE}-TopLevel.tbz
+export ZERO_LENGTH_TAR  = ${RELNAME-DATE}-ZeroLengthFiles.tbz
 
 # Patch release - temp directory for generating a patch release
-export PATCH_DIR = ${ESCTOOLS_ROOT}/patches
+export PATCH_DIR ?= ${ESCTOOLS_ROOT}/patches
 
 # The prefix of the name of the patch release tar file
-export PATCH_NAME = ${ESC_PROJECT}-${ESC_VERSION}-`date "+%d-%m-%y"`
+export PATCH_NAME ?= ${ESC_PROJECT}-${ESC_VERSION}
 
 ############################### Original ESCTools material
 
