@@ -16,9 +16,10 @@ public class TagConstants extends javafe.tc.TagConstants
     public static final int IFF = EXPLIES + 1;  // equivalence (equality)
     public static final int NIFF = IFF + 1;     // discrepance (xor)
     public static final int SUBTYPE = NIFF + 1;
+    public static final int DOTDOT = SUBTYPE + 1;
 
     //// Tags for pragma punctuation
-    public static final int JML_LEFTARROW = SUBTYPE + 1; // <-
+    public static final int JML_LEFTARROW = DOTDOT + 1; // <-
     public static final int JML_RIGHTARROW = JML_LEFTARROW + 1; // ->
     public static final int JML_OPENPRAGMA = JML_RIGHTARROW + 1; // {|
     public static final int JML_CLOSEPRAGMA = JML_OPENPRAGMA + 1; // |}
@@ -415,6 +416,8 @@ public class TagConstants extends javafe.tc.TagConstants
                 return "<=!=>";
             case SUBTYPE:
                 return "<:";
+	    case DOTDOT:
+		return "..";
 	    case JML_LEFTARROW:
 		return "<-";
 	    case JML_RIGHTARROW:

@@ -23,7 +23,21 @@ public class AnnotationHandler {
 
     protected TypeDecl td = null;
 
-    public void handleModelMethods(CompilationUnit cu) {
+    /** This must be called on a compilation unit to get the model imports
+	listed, so that type names used in annotations can be found, and to
+	get model methods put into the class's signature.
+	It is called as part of EscSrcReader, a subclass of SrcReader, 
+	defined in EscTypeReader.
+    */
+    public void handlePragmas(CompilationUnit cu) {
+	// move any model imports into the list of imports
+	for (int i = 0; i < cu.lexicalPragmas.size(); ++i) {
+		LexicalPragma p = cu.lexicalPragmas.elementAt(i);
+		if (p instanceof ImportPragma) 
+			cu.imports.addElement(((ImportPragma)p).decl);
+	}
+
+	// move any model methods into the list of methods
 	TypeDeclVec elems = cu.elems;
 	for (int i=0; i<elems.size(); ++i) {
 	    TypeDecl td = elems.elementAt(i);

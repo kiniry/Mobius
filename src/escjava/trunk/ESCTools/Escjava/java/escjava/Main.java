@@ -695,7 +695,7 @@ public class Main extends javafe.SrcTool
      */
     public StandardTypeReader makeStandardTypeReader(String path,
 						     PragmaParser P) {
-        return EscTypeReader.make(path, P);
+        return EscTypeReader.make(path, P, annotationHandler);
     }
 
     /**
@@ -871,7 +871,6 @@ public class Main extends javafe.SrcTool
 	NoWarn.setStartLine(startLine, cu);
 
         UniqName.setDefaultSuffixFile(cu.getStartLoc());
-	annotationHandler.handleModelMethods(cu);
 	super.handleCU(cu);
 
 	startLine = -1;		// StartLine applies only to first CU
@@ -1089,6 +1088,7 @@ public class Main extends javafe.SrcTool
 				      /*@ non_null */ InitialState initState) {
 
 
+	if (r.body == null) return "passed immediately";
 	if ( Location.toLineNumber(r.getEndLoc()) < startLine )
             return "skipped";
 	String simpleName = TypeCheck.inst.getRoutineName(r).intern();

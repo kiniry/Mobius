@@ -68,6 +68,7 @@ import javafe.util.Location;
  *	    + ModelDeclPragma (ModelFieldDecl decl)
  *         + ModelMethodDeclPragma (MethodDecl decl)
  *         + StillDeferredDeclPragma (Identifier var)
+ *         + DependsPragma (Expr* exprs) // Depends clause
  *    - Stmt ()
  *       - StmtPragma ()
  *         + SimpleStmtPragma () // Unreachable
@@ -76,13 +77,14 @@ import javafe.util.Location;
  *         + SkolemConstantPragma (LocalVarDecl* decl)
  *    - ModifierPragma ()
  *         + SimpleModifierPragma () // Uninitialized, Monitored, Nonnull, WritableDeferred, Helper
- *         + ExprModifierPragma (Expr expr) // DefinedIf, Writable, Requires, Ensures, AlsoEnsures, MonitoredBy
+ *         + ExprModifierPragma (Expr expr) // DefinedIf, Writable, Requires, Ensures, AlsoEnsures, MonitoredBy, Constraint
  *           // plus JML keywords: Also, Pre, Post (kiniry)
  *	   + CondExprModifierPragma (Expr expr, Expr cond) // Modifiers, AlsoModifiers, Assignable, Modifiable // (cok)
  *         + VarExprModifierPragma (GenericVarDecl arg, Expr expr) // Exsures, AlsoExsures
  *           // plus JML keywords: Signals
  *    - LexicalPragma ()
  *      + NowarnPragma (Identifier* checks)
+ *      + ImportPragma (ImportDecl decl)
  *    + Spec (MethodDecl md, Expr* targets, Hashtable preVarMap, Condition* pre, Condition* post)
  *    + Condition(int label, Expr pred)
  *    + DefPred (Identifier predId, GenericVarDecl* args, Expr body)
@@ -471,6 +473,20 @@ public class ModelDeclPragma extends TypeDeclElemPragma
   public int getEndLoc() { return decl.getEndLoc(); }
 }
 
+public class DependsPragma extends TypeDeclElemPragma
+{
+  //# int tag
+  //# Expr target
+  //# Expr* exprs
+  //# int loc
+
+  //# ManualTag
+  public final int getTag() { return tag; }
+
+  public int getStartLoc() { return loc; }
+  public int getEndLoc() { return exprs.elementAt(exprs.size()-1).getEndLoc(); }
+}
+
 public class ModelMethodDeclPragma extends TypeDeclElemPragma
 {
   //# MethodDecl decl
@@ -695,6 +711,14 @@ public class VarExprModifierPragma extends ModifierPragma
 public class NowarnPragma extends LexicalPragma
 {
   //# Identifier* checks NoCheck
+  //# int loc
+
+  public int getStartLoc() { return loc; }
+}
+
+public class ImportPragma extends LexicalPragma
+{
+  //# ImportDecl decl
   //# int loc
 
   public int getStartLoc() { return loc; }

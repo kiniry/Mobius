@@ -9,6 +9,7 @@ import javafe.ast.StandardPrettyPrint;		// Debugging methods only
 import javafe.ast.DelegatingPrettyPrint;	// Debugging methods only
 import escjava.ast.EscPrettyPrint;		// Debugging methods only
 
+import escjava.AnnotationHandler;
 import javafe.genericfile.*;
 import javafe.parser.PragmaParser;
 
@@ -50,7 +51,7 @@ public class EscTypeReader extends StandardTypeReader
     //@ requires engine != null && srcReader != null && binReader != null;
     //@ ensures \result != null;
     public static StandardTypeReader make(Query engine, Reader srcReader,
-			                  Reader binReader) {
+					  Reader binReader) {
 	return new EscTypeReader(engine, srcReader, binReader);
     }
 
@@ -61,12 +62,44 @@ public class EscTypeReader extends StandardTypeReader
     //@ requires Q != null;
     //@ ensures \result != null;
     public static StandardTypeReader make(Query Q,
-						PragmaParser pragmaP) {
+			PragmaParser pragmaP, AnnotationHandler ah) {
 	Assert.precondition(Q != null);
 
-	return make(Q, new SrcReader(pragmaP), new BinReader());
+	return make(Q, new EscSrcReader(pragmaP,ah), new BinReader());
     }
 
+    /* We have to make this subclass of SrcReader because: a file that
+	is listed on the command line is processed by the sequence of
+	code in SrcTool (and subclasses).  This calls OutsideEnv.addSource
+	(which calls SrcReader.read) to do the java file parsing, and then 
+	proceeds with other processing to do various typechecking.  
+	However, types that are referenced in a given file also need to be
+	loaded.  These are loaded by a different mechanism
+	and only SrcReader.read is called.  Now when import pragmas are
+	parsed by the pragmaParser, the compilation unit is not available
+	to add the imports into; hence we have to handle the import
+	pragmas after the compilation unit is completed.  But SrcReader.read
+	does not provide the opportunity to do so.  Hence we have to override
+	it here so that we can process the pragmas and get the right
+	declarations (imports and model methods) in scope.
+    */
+
+    public static class EscSrcReader extends javafe.reader.SrcReader {
+
+	protected AnnotationHandler annotationHandler;
+
+	public EscSrcReader(PragmaParser pragmaP, AnnotationHandler ah) {
+		super(pragmaP);
+		annotationHandler = ah;
+	}
+
+	public CompilationUnit read(GenericFile target, boolean avoidSpec) {
+		CompilationUnit result = super.read(target,avoidSpec);
+		annotationHandler.handlePragmas(result);
+		return result;
+	}
+    }
+		
     /**
      * Create a <code>EscTypeReader</code> using a given Java
      * classpath for our underlying Java file space and a given pragma
@@ -78,11 +111,11 @@ public class EscTypeReader extends StandardTypeReader
      */
     //@ ensures \result != null;
     public static StandardTypeReader make(String path,
-						PragmaParser pragmaP) {
+			    PragmaParser pragmaP, AnnotationHandler ah) {
 	if (path==null)
 	    path = javafe.filespace.ClassPath.current();
 	
-	return make(StandardTypeReader.queryFromClasspath(path), pragmaP);
+	return make(StandardTypeReader.queryFromClasspath(path), pragmaP, ah);
     }
 
     /**
@@ -151,7 +184,6 @@ public class EscTypeReader extends StandardTypeReader
 	for (int i=0; i<suffixes.length; ++i) {
 	    GenericFile spec = javaFileSpace.findFile(P, T, suffixes[i]);
 	    if (spec != null) {
-		//System.out.println("READ " + T + " " + suffixes[i]);
 	        return super.read(spec, false);
 	    }
 	}

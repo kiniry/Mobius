@@ -21,6 +21,8 @@ import javafe.util.ErrorSet;
 import javafe.util.Info;
 import javafe.util.Location;
 
+import java.util.ArrayList;
+import java.util.Vector;
 /**
  Grammar:
 
@@ -262,6 +264,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
 	scanner.addPunctuation("<==>", TagConstants.IFF);
 	scanner.addPunctuation("<=!=>", TagConstants.NIFF);
 	scanner.addPunctuation("<:", TagConstants.SUBTYPE);
+	scanner.addPunctuation("..", TagConstants.DOTDOT);
 	scanner.addPunctuation("<-", TagConstants.JML_LEFTARROW);
 	scanner.addPunctuation("->", TagConstants.JML_RIGHTARROW);
 	scanner.addPunctuation("{|", TagConstants.JML_OPENPRAGMA);
@@ -271,6 +274,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
 	addOperator(TagConstants.IFF, 73, true);
 	addOperator(TagConstants.NIFF, 73, true);
 	addOperator(TagConstants.SUBTYPE, 140, true);
+	addOperator(TagConstants.DOTDOT, 1, true);
 	scanner.addKeyword("\\result", TagConstants.RES);
 	scanner.addKeyword("\\lockset", TagConstants.LS);
 	scanner.addKeyword("\\TYPE", TagConstants.TYPETYPE);
@@ -554,7 +558,11 @@ public class EscPragmaParser extends Parse implements PragmaParser
 		kw = scanner.identifierVal;
             	tag = TagConstants.fromIdentifier(kw);
 	    }
-	    scanner.getNextToken();
+	    if (tag != TagConstants.IMPORT) {
+		// Just because the parent class routines expect
+		// to start on the IMPORT token
+		scanner.getNextToken();
+	    }
 
             boolean semiNotOptional = false;
 
@@ -613,6 +621,33 @@ public class EscPragmaParser extends Parse implements PragmaParser
                         return getNextPragma(dst);
                     }
                     return true;
+
+                case TagConstants.JML_DEPENDS_REDUNDANTLY:    // SC AAST 4
+                case TagConstants.JML_DEPENDS: {               // SC AAST 4
+                    inProcessTag = tag;
+                    inProcessLoc = loc;
+                    dst.ttype = TagConstants.TYPEDECLELEMPRAGMA;
+                    Expr target = parsePrimaryExpression(scanner);
+                    int locOp = scanner.startingLoc;
+		    expect(scanner, TagConstants.JML_LEFTARROW);
+		    Vector list = new Vector();
+		    while (true) {
+			Expr value = parseExpression(scanner);
+			list.add(value);
+			if (scanner.ttype != TagConstants.COMMA) break;
+			scanner.getNextToken();
+		    }
+		    dst.auxVal = DependsPragma.make(tag,target,
+			ExprVec.make(list), loc);
+		    if (tag == TagConstants.JML_DEPENDS_REDUNDANTLY &&
+                        (! Main.checkRedundantSpecs)) {
+                        // toss the results of this pragma parse and
+                        // return the next parsed pragma expression.
+                        return getNextPragma(dst);
+                    }
+		    semiNotOptional = true;
+                    break;
+		}
 
                 case TagConstants.UNREACHABLE:
                     dst.ttype = TagConstants.STMTPRAGMA;
@@ -687,9 +722,11 @@ public class EscPragmaParser extends Parse implements PragmaParser
                 case TagConstants.AXIOM:
                 case TagConstants.INVARIANT:
                 case TagConstants.JML_INVARIANT_REDUNDANTLY:
+		case TagConstants.JML_CONSTRAINT:
+		case TagConstants.JML_CONSTRAINT_REDUNDANTLY:
                     dst.ttype = TagConstants.TYPEDECLELEMPRAGMA;
                     dst.auxVal = ExprDeclPragma.make(tag, parseExpression(scanner), loc);
-                    if ((tag == TagConstants.JML_INVARIANT_REDUNDANTLY) &&
+                    if (isRedundant(tag) &&
                         (! Main.checkRedundantSpecs)) {
                         // eat non-optional semicolon and return the
                         // next parsed pragma expression.
@@ -699,7 +736,21 @@ public class EscPragmaParser extends Parse implements PragmaParser
                     semiNotOptional = true;
                     break;
 
+		case TagConstants.IMPORT:
+			scanner.lexicalPragmas.addElement( 
+			    ImportPragma.make(parseImportDeclaration(scanner),
+						 loc));
+			semiNotOptional = true;
+			return getNextPragma(dst);
+
                 case TagConstants.JML_MODEL:
+		    if (scanner.lookahead(0) == TagConstants.IMPORT) {
+			scanner.lexicalPragmas.addElement( 
+			    ImportPragma.make(parseImportDeclaration(scanner),
+						 loc));
+			semiNotOptional = true;
+			return getNextPragma(dst);
+		    }
 		    prefixModifiers |= Modifiers.ACC_MODEL;
                 case TagConstants.GHOST:
                     {
@@ -890,7 +941,12 @@ public class EscPragmaParser extends Parse implements PragmaParser
                     expect(scanner, TagConstants.LPAREN);
                     FormalParaDecl arg = parseExsuresFormalParaDecl(scanner);
                     expect(scanner, TagConstants.RPAREN);
-                    Expr expr = parseExpression(scanner);
+                    Expr expr = null;
+		    if (scanner.ttype == TagConstants.SEMICOLON)
+			expr = LiteralExpr.make(TagConstants.BOOLEANLIT,
+				new Boolean(true),scanner.startingLoc);
+		    else
+			expr = parseExpression(scanner);
 		    dst.auxVal
                             = VarExprModifierPragma.make(tag, arg, expr, loc);
                     if (((tag == TagConstants.JML_EXSURES_REDUNDANTLY) ||
@@ -964,15 +1020,15 @@ public class EscPragmaParser extends Parse implements PragmaParser
                 case TagConstants.JML_CALLABLE:               // unclear semantics
                 case TagConstants.JML_CHOOSE_IF:              // unclear semantics
                 case TagConstants.JML_CHOOSE:                 // unclear semantics
-                case TagConstants.JML_CONSTRAINT_REDUNDANTLY: // SC AAST 4
-                case TagConstants.JML_CONSTRAINT:             // SC AAST 4
+                // case TagConstants.JML_CONSTRAINT_REDUNDANTLY: // SC AAST 4 // parsed - cok
+                // case TagConstants.JML_CONSTRAINT:             // SC AAST 4 // parsed - cok
                 case TagConstants.JML_CONTINUES_REDUNDANTLY:  // unclear semantics
                 case TagConstants.JML_CONTINUES:              // unclear semantics
                 // case TagConstants.JML_DECREASES_REDUNDANTLY: support complete (kiniry)
                 // case TagConstants.JML_DECREASING_REDUNDANTLY: support complete (kiniry)
                 // case TagConstants.JML_DECREASING: support complete (kiniry)
-                case TagConstants.JML_DEPENDS_REDUNDANTLY:    // SC AAST 4
-                case TagConstants.JML_DEPENDS:                // SC AAST 4
+                //case TagConstants.JML_DEPENDS_REDUNDANTLY:    // SC AAST 4 // Parsed (cok)
+                //case TagConstants.JML_DEPENDS:                // SC AAST 4 // Parsed (cok)
                 //case TagConstants.JML_DIVERGES_REDUNDANTLY:   // Parsed (cok)
                 //case TagConstants.JML_DIVERGES:               // parsed (cok)
                 // case TagConstants.JML_ENSURES_REDUNDANTLY: support complete (kiniry)
@@ -1127,7 +1183,12 @@ public class EscPragmaParser extends Parse implements PragmaParser
             Expr e = parseExpression(scanner);
             dst.auxVal = ExprStmtPragma.make(inProcessTag, e, inProcessLoc);
             dst.ttype = TagConstants.STMTPRAGMA;
-        } else Assert.precondition(false);
+        } else if (inProcessTag == TagConstants.JML_DEPENDS) {
+		// FIXME - not sure why we end up here or what we are supposed to do
+        } else {
+		System.out.println("UNSUPPORTED TAG " + TagConstants.toString(inProcessTag));
+		Assert.precondition(false);
+	}
 
         switch (scanner.ttype) {
             case TagConstants.SEMICOLON:
@@ -1679,6 +1740,11 @@ public class EscPragmaParser extends Parse implements PragmaParser
 			l.getNextToken();
 			continue getModifierLoop;
 		  }		
+		  if (tag == TagConstants.NON_NULL) {
+			// FIXME _ What do we do with it?
+			l.getNextToken();
+			continue getModifierLoop;
+		  }
 	      }
 	    }
             // Next token is not a modifier
@@ -1711,6 +1777,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
                 tag == TagConstants.JML_MAINTAINING_REDUNDANTLY ||
                 tag == TagConstants.JML_DECREASES_REDUNDANTLY ||
                 tag == TagConstants.JML_INVARIANT_REDUNDANTLY ||
+                tag == TagConstants.JML_CONSTRAINT_REDUNDANTLY ||
                 tag == TagConstants.JML_DECREASING_REDUNDANTLY;
 
     }

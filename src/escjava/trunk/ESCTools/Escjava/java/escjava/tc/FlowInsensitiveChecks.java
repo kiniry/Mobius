@@ -555,6 +555,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
             case TagConstants.EXPLIES:
             case TagConstants.IFF:
             case TagConstants.NIFF:
+            case TagConstants.DOTDOT:
                 {
                     BinaryExpr be = (BinaryExpr)e;
                     // each argument is allowed to contain quantifiers and labels
@@ -957,6 +958,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
         switch(tag) {
             case TagConstants.AXIOM:
             case TagConstants.INVARIANT:
+	    case TagConstants.JML_CONSTRAINT: // FIXME - do we need to change the logic below to handle constraints?
 	    case TagConstants.JML_REPRESENTS:
                 {
                     ExprDeclPragma ep = (ExprDeclPragma)e;
@@ -988,6 +990,30 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 
                     if (invariantContext) {countFreeVarsAccesses = 0;}
                     invariantContext = false;
+                    break;
+                }
+
+	    case TagConstants.JML_DEPENDS:
+		{
+                    DependsPragma ep = (DependsPragma)e;
+			// FIXME - perhaps use rootSEnv if the variable
+			// being discussed is static ?
+                    Env rootEnv = rootIEnv;
+
+		    ep.target = checkExpr(rootEnv, ep.target);
+
+		    ExprVec ev = ep.exprs;
+		    for (int i=0; i<ev.size(); ++i) {
+			ev.setElementAt(
+				checkExpr(rootEnv, ev.elementAt(i)), i);
+		    }
+
+		// FIXME - Need to check that
+		//	LHS is a simple model variable, a field of 
+		//		this or a super class or an interface
+		//	RHS consists of store-refs, no computed expressions
+		//	RHS may have other model variables
+		//	check access ?
                     break;
                 }
 
@@ -1093,7 +1119,8 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
             }
 
             default:
-                Assert.fail("Unexpected tag " + tag);
+                Assert.fail("Unexpected tag " + tag + 
+				" " + TagConstants.toString(tag));
         }
         inAnnotation = false;
     }
