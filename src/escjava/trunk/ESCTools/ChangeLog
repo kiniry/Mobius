@@ -1,3 +1,78 @@
+2003-05-05  Joseph Kiniry  <kiniry@acm.org>
+
+	* Javafe/astgen/astgen.l:
+	* Javafe/astgen/astutil.c:
+	A bit of code and doc cleanup.  All of these tweaks are necessary to
+	get the ast tools to build cleanly on OS X.  I believe that none will
+	impact the build correctness on Linux, but I'll have to check that
+	next time I'm on a Linux box.
+
+	The issues are mainly with return values in functions; since there
+	were no returns at all previously, then the return value was likely
+	ignored entirely.  The function are now returning legitimate values
+	based upon context, though the values are still ignored of course.
+	All changes are annotated with a "jrk" comment.
+
+	* Javafe/java/javafe/ast/Makefile: Added some .PHONY declarations.
+
+	* Simplify/cgi-utils/src/HTMLUtils.m3:
+	* Simplify/simplify/src/Simplify.m3:
+	Removed use of TextF module which is no longer supported by cm3.
+	Replaced all uses of TextF procedures with Wr.PutChar and appropriate
+	Text and TextWr operations (GetChar, Sub, Length, etc.).  I believe
+	these changes will continue to work in pm3 but I'll have to check next
+	time I'm on a box with pm3 installed.  Given it looks like future m3
+	development is happening on the cm3 branch, this probably is a
+	non-issue.
+
+	* Simplify/prover/README:
+	* Simplify/simplify/test/Makefile:
+	* Simplify/simplify/test/perf/runtests:
+	Added note on building on OS X.  Added note that prover test does
+	not currently build.  Made Makefile a bit more generic.
+
+	* Simplify/cgi-utils/src/m3makefile:
+	* Simplify/digraph/src/m3makefile:
+	* Simplify/digraph/tests/DiGraphTest/src/m3makefile:
+	* Simplify/digraph/tests/TopSortTest/src/m3makefile:
+	* Simplify/prover/src/gens/m3makefile:
+	* Simplify/prover/src/m3makefile:
+	* Simplify/prover/test/src/m3makefile:
+	* Simplify/simplify/src/m3makefile:
+	Added note on building on OS X and made default options generic.
+
+2003-04-30  David Cok  <cok@frontiernet.net>
+
+	* Escjava/java/escjava/ast/.cvsignore:
+	* Escjava/java/escjava/ast/EscPrettyPrint.java:
+	* Escjava/java/escjava/ast/hierarchy.j:
+	Some changes to support model keyword
+
+	* Escjava/java/escjava/ast/TagConstants.java:
+	Adding model to the list of JML keywords
+
+	* Escjava/java/escjava/Main.java:
+	Added an option (-testMode) that turns on a mode in which escjava
+	does not print out elapsed times or version numbers; this is to
+	allow the output to be compared against oracle output for
+	regression testing
+
+	* Javafe/test/javafe/parser/test/.cvsignore:
+	Adding all .class files to .cvcsignore
+
+	* Javafe/java/tohtml/Java2Html.java: Adding a FIXME
+
+	* Javafe/astgen/.cvsignore:
+	Updating a .cvsignore file to include a generated file (lex.yy.c)
+
+	* Escjava/java/escjava/ast/VisitorArgResult.java:
+	* Javafe/astgen/lex.yy.c:
+	Removing some generated files from CVS
+
+	* Escjava/java/escjava/prover/SubProcess.java:
+	Fixing the bug that prevented Escjava from parsing the
+	Counterexample output of Simplify.
+
 2003-04-29  Joseph R. Kiniry  <kiniry@acm.org>
 
 	* Escjava/java/escjava/parser/EscPragmaParser.java:
