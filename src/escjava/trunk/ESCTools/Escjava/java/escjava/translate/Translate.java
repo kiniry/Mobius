@@ -1792,7 +1792,7 @@ public final class Translate {
 	  }
 
       case TagConstants.CLASSDECLSTMT: 
-	  if (this.issueCautions) {
+	  if (this.issueCautions && !escjava.Main.noNotCheckedWarnings) {
 	      ErrorSet.caution(stmt.getStartLoc(),
 			       "Not checking block-level types");
 	  }	  
@@ -1801,7 +1801,9 @@ public final class Translate {
 
       default:
 	//@ unreachable
-	Assert.notFalse(false);
+	Assert.notFalse(false,"Unexpected tag " + TagConstants.toString(tag)
+			+ " " + stmt + " " +
+			Location.toString(stmt.getStartLoc()));
 	return;
     }
   }
@@ -2078,7 +2080,7 @@ public final class Translate {
 	  ExprVec args = ExprVec.make(ni.args.size());
 
 	  if (ni.anonDecl!=null) {
-              if (this.issueCautions) {
+              if (this.issueCautions && ! Main.noNotCheckedWarnings) {
 		  ErrorSet.caution(ni.anonDecl.loc,
 				   "Not checking body of anonymous class" +
 				   " (subclass of " +
@@ -2990,6 +2992,7 @@ public final class Translate {
       switch (tag) {
 	case TagConstants.NON_NULL:
 	case TagConstants.SPEC_PUBLIC:
+	case TagConstants.JML_SPEC_PROTECTED:
 	case TagConstants.WRITABLE_IF:
 	  break;
 	  
@@ -3120,6 +3123,7 @@ public final class Translate {
 	case TagConstants.UNINITIALIZED:
 	case TagConstants.READABLE_IF:
 	case TagConstants.SPEC_PUBLIC:
+	case TagConstants.JML_SPEC_PROTECTED:
 	case TagConstants.NON_NULL:		// handled above
 	  break;
 

@@ -90,6 +90,9 @@ public class Main extends javafe.SrcTool
      */
     public static boolean parsePlus = false;
 
+    /** When true, does not print any warnings about things not checked. */
+    public static boolean noNotCheckedWarnings = false;
+
     public static boolean spvc = true;
     public static boolean dsa = true;
     //@ invariant spvc ==> dsa  // spvc requires dsa for soundness
@@ -644,6 +647,9 @@ public class Main extends javafe.SrcTool
 	    return offset+1;
 	} else if (option.equals("-parsePlus")) {
 	    parsePlus = true;
+	    return offset;
+	} else if (option.equals("-noNotCheckedWarnings")) {
+	    noNotCheckedWarnings = true;
 	    return offset;
 	} else if (option.equals("-testMode")) {
 	    testMode = true;

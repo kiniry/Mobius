@@ -1,0 +1,74 @@
+C.java:32: Warning: Postcondition possibly not established (Post)
+  }
+  ^
+Associated declaration is "C.java", line 29, col 11:
+  //@ also ensures \result < 10;
+           ^
+C.java:32: Warning: Postcondition possibly not established (Post)
+  }
+  ^
+Associated declaration is "C.java", line 14, col 6:
+  //@ ensures \result != x;
+      ^
+C.java:32: Warning: Postcondition possibly not established (Post)
+  }
+  ^
+Associated declaration is "C.java", line 2, col 6:
+  //@ ensures 0 <= \result;
+      ^
+C.java:44: Warning: Possible assertion failure (Assert)
+    //@ assert (x & 3) == 2;
+        ^
+4 warnings
+N.java:25: Warning: Possible assertion failure (Assert)
+    //@ assert y != null;
+        ^
+N.java:39: Warning: Possible assignment of null to variable declared non_null (NonNull)
+      case 0:  m0(x);  break;
+                  ^
+Associated declaration is "N.java", line 2, col 21:
+  public void m0(/*@ non_null */ int[] x) {
+                     ^
+N.java:40: Warning: Possible assignment of null to variable declared non_null (NonNull)
+      case 1:  m1(x, x);  break;
+                  ^
+Associated declaration is "N.java", line 14, col 21:
+  public void m1(/*@ non_null */ int[] x, int[] y);
+                     ^
+N.java:41: Warning: Possible assignment of null to variable declared non_null (NonNull)
+      case 2:  m2(x);  break;
+                  ^
+Associated declaration is "N.java", line 6, col 21:
+  public void m2(/*@ non_null */ int[] x) {
+                     ^
+N.java:42: Warning: Possible assignment of null to variable declared non_null (NonNull)
+      case 3:  m3(x);  break;
+                  ^
+Associated declaration is "N.java", line 8, col 21:
+  public void m3(/*@ non_null */ int[] x) {
+                     ^
+N.java:43: Warning: Possible assignment of null to variable declared non_null (NonNull)
+      case 4:  m4(x);  break;
+                  ^
+Associated declaration is "N.java", line 16, col 21:
+  public void m4(/*@ non_null */ int[] x);
+                     ^
+6 warnings
+Typecheck.java:57: Error: non_null cannot be applied to parameters of this method override; overridden method is declared at "Typecheck.java", line 39, col 2
+  public void m0(/*@ non_null */ int[] x) { // error: method is not ne ...
+                     ^
+Typecheck.java:59: Error: non_null cannot be applied to parameters of this method override; overridden method is declared at "Typecheck.java", line 22, col 2
+  public void m1(/*@ non_null */ int[] x) { // error: method is not ne ...
+                     ^
+Typecheck.java:61: Error: non_null cannot be applied to parameters of this method override; overridden method is declared at "Typecheck.java", line 24, col 2
+  public void m2(/*@ non_null */ int[] x) { // error: method is not ne ...
+                     ^
+Typecheck.java:65: Error: non_null cannot be applied to parameters of this method override; overridden method is declared at "Typecheck.java", line 42, col 2
+  public void m4(/*@ non_null */ int[] x) { // error:  method is class ...
+                     ^
+Caution: Turning off extended static checking due to type error(s)
+Typecheck.java:90: Error: non_null cannot be applied to parameters of this method override; overridden method is declared at "Typecheck.java", line 39, col 2
+  public void m0(/*@ non_null */ int[] x);  // error:  method is not n ...
+                     ^
+1 caution
+5 errors

@@ -209,6 +209,7 @@ public final class GetSpec {
                 case TagConstants.JML_ASSIGNABLE:
                     {
                         CondExprModifierPragma emp = (CondExprModifierPragma)mp;
+			if (emp.expr == null) break; // ignore - informal
 			int t = emp.expr.getTag();
 			// FIXME - no contribution to spec for these keywords
 			if (t == TagConstants.EVERYTHINGEXPR ||
@@ -1320,7 +1321,9 @@ public final class GetSpec {
                 return shave( ((NaryExpr)e).exprs.elementAt(0) );
 
             default:
-                Assert.fail("Unexpected case");
+                Assert.fail("Unexpected case: " + " " 
+			+ TagConstants.toString(e.getTag()) + " "
+			+ e + " " + Location.toString(e.getStartLoc()));
                 return null;
 	}
     }
@@ -1636,6 +1639,15 @@ public final class GetSpec {
 	// Else fall back on a direct search of local modifiers:
 	return (SimpleModifierPragma)
             findModifierPragma(v, TagConstants.NON_NULL);
+    }
+    /** Returns non-null if the formal parameter is declared non-null in
+	some overridden declaration of the method.
+    */
+    public static SimpleModifierPragma superNonNullPragma(GenericVarDecl v) {
+	// First check for a mark:
+	SimpleModifierPragma mark = (SimpleModifierPragma)
+            nonnullDecoration.get(v);
+	return mark;
     }
 }
 

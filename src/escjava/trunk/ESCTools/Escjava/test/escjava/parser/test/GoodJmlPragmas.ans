@@ -40,15 +40,22 @@ GoodJmlPragmas.j:63: /*@ assignable_redundantly a if pred1; */
 GoodJmlPragmas.j:63: /*@ assignable_redundantly b if pred2; */
 GoodJmlPragmas.j:63: /*@ assignable_redundantly c if pred3; */
 GoodJmlPragmas.j:66: /*@ assume_redundantly predicate; */
+GoodJmlPragmas.j:83: /*@ constraint_redundantly predicate; */
+GoodJmlPragmas.j:84: /*@ constraint_redundantly predicate; */
+GoodJmlPragmas.j:85: /*@ constraint_redundantly predicate; */
+GoodJmlPragmas.j:86: /*@ constraint_redundantly predicate; */
 GoodJmlPragmas.j:96: /*@ decreases_redundantly spec_expression; */
 GoodJmlPragmas.j:97: /*@ decreasing_redundantly spec_expression; */
 GoodJmlPragmas.j:101: /*@ diverges_redundantly \not_specified; */
 GoodJmlPragmas.j:102: /*@ diverges_redundantly predicate; */
+GoodJmlPragmas.j:104: /*@ duration_redundantly \not_specified; */
+GoodJmlPragmas.j:105: /*@ duration_redundantly spec_expression; */
+GoodJmlPragmas.j:106: /*@ duration_redundantly spec_expression if predicate; */
 GoodJmlPragmas.j:108: /*@ ensures_redundantly \not_specified; */
 GoodJmlPragmas.j:109: /*@ ensures_redundantly predicate; */
 GoodJmlPragmas.j:111: /*@ exsures_redundantly (Exception e) \not_specified; */
 GoodJmlPragmas.j:112: /*@ exsures_redundantly (Exception e) predicate; */
-GoodJmlPragmas.j:116: /*@ invariant predicate; */
+GoodJmlPragmas.j:116: /*@ invariant_redundantly predicate; */
 GoodJmlPragmas.j:118: /*@ loop_invariant_redundantly predicate; */
 GoodJmlPragmas.j:120: /*@ maintaining_redundantly predicate; */
 GoodJmlPragmas.j:122: /*@ measured_by_redundantly \not_specified; */
@@ -78,3 +85,12 @@ GoodJmlPragmas.j:151: /*@ signals_redundantly (Exception e) \not_specified; */
 GoodJmlPragmas.j:152: /*@ signals_redundantly (Exception e) predicate; */
 GoodJmlPragmas.j:154: /*@ when_redundantly \not_specified; */
 GoodJmlPragmas.j:155: /*@ when_redundantly predicate; */
+GoodJmlPragmas.j:157: /*@ working_space_redundantly \not_specified; */
+GoodJmlPragmas.j:158: /*@ working_space_redundantly spec_expression_of_type_int; */
+GoodJmlPragmas.j:159: /*@ working_space_redundantly spec_expression_of_type_int if predicate; */
+GoodJmlPragmas.j:169: /*@ duration \not_specified; */
+GoodJmlPragmas.j:170: /*@ duration spec_expression; */
+GoodJmlPragmas.j:171: /*@ duration spec_expression if predicate; */
+GoodJmlPragmas.j:173: /*@ working_space \not_specified; */
+GoodJmlPragmas.j:174: /*@ working_space spec_expression_of_type_int; */
+GoodJmlPragmas.j:175: /*@ working_space spec_expression_of_type_int if predicate; */

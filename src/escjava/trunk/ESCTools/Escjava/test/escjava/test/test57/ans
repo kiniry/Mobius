@@ -32,9 +32,6 @@ DttfsaTypecheck.java:6: Error: The function \dttfsa requires exactly 3 arguments
 DttfsaTypecheck.java:6: Error: Cannot convert int to boolean
   //@ invariant \dttfsa(int, "identity"); // fails (expecting 3 args)
                 ^
-DttfsaTypecheck.java:6: Error: Class invariants must mention program variables or fields.
-  //@ invariant \dttfsa(int, "identity"); // fails (expecting 3 args)
-      ^
 DttfsaTypecheck.java:7: Error: The function \dttfsa requires exactly 3 arguments when the second argument is "identity"
   //@ invariant \dttfsa(int, "identity", x, x); // fails (expecting 3  ...
                 ^
@@ -55,7 +52,7 @@ DttfsaTypecheck.java:18: Error: Undefined variable 'y'
                                          ^
 Caution: Turning off extended static checking due to type error(s)
 1 caution
-13 errors
+12 errors
 Dttfsa.java:5: Warning: Possible assertion failure (Assert)
     //@ assert (boolean)\dttfsa(boolean, "dude", x-1, x+1);
         ^

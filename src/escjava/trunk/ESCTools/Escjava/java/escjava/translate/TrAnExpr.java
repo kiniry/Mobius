@@ -415,9 +415,15 @@ wrap those variables being modified and not everything.
 	return GC.and(sloc, eloc, nonnull, newlyallocated);
       }
 
+      case TagConstants.DOTDOT:
+	BinaryExpr be = (BinaryExpr)e;
+// FIXME
+	return be.left;
+
       default:
 	Assert.fail("UnknownTag<"+e.getTag()+","+
-		    TagConstants.toString(e.getTag())+"> on "+e);
+		    TagConstants.toString(e.getTag())+"> on "+e+ " " +
+		    Location.toString(e.getStartLoc()));
 	return null; // dummy return
     }
   }

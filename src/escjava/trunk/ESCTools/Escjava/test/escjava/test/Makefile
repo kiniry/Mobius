@@ -2,7 +2,7 @@
 #
 
 export ESC_CLASSPATH ?= ${ESCJAVA_ROOT}/classfiles:${ESCJAVA_ROOT}/../Javafe/classfiles
-#export ESCJ ?= ${ESCJAVA_ROOT}/escj
+export ESCJ = ${ESCJAVA_ROOT}/escj -quiet
 #export BOOTCLASSPATH=${JDKSPEC_ROOT}:${JDK_BINARIES}
 
 ###########################################################################
@@ -24,6 +24,9 @@ test_and_clean: test clean
 
 test_escjava:
 	./rtestall
+
+%-run:
+	./rtest $*
 
 test_lexer_and_parser:	compile_escjava_parser_test_programs \
 	test_lexer test_parser test_parser_idempotence 

@@ -71,7 +71,7 @@ export JAVAC_FLAGS ?= -g -source 1.4
 export JAVADOC ?= javadoc -J-mx200m
 
 ## The front-end for Escjava that should be used for testing.
-export ESCJAVA = ${ESCJAVA_ROOT}/escj
+export ESCJ = ${ESCJAVA_ROOT}/escj
 
 # This is the location of any specification files for the JDK.
 # Makefile.local; here we set a default value as the location of spec

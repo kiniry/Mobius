@@ -8,8 +8,9 @@ if [ -z ${ESCJAVA_ROOT} ]; then
 fi
 
 if [ -z "${ESC_CLASSPATH}" ]; then
-    echo "Error: ESC_CLASSPATH is not set."
-    exit 2
+    ESC_CLASSPATH=${ESCJAVA_ROOT}/classfiles:${ESCJAVA_ROOT}/../Javafe/classfiles
+    ##echo "Error: ESC_CLASSPATH is not set."
+    ##exit 2
 fi
 
 if [ -z "${BOOTCLASSPATH}" ]; then

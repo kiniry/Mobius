@@ -1,3 +1,9 @@
+FinalFields.java:22: Error: Method getObject is used in an annotation but is not pure (FinalFields.java:182)
+  static final Object finalcast = (FinalClass)getObject();
+                                              ^
+FinalFields.java:95: Error: Method getObject is used in an annotation but is not pure (FinalFields.java:182)
+  final Object ifinalcast = (FinalClass)getObject();
+                                        ^
 FinalFields.java:71: Warning: Possible assertion failure (Assert)
     /*@ assert av10[1] == 2; */  // this must fail, since the initial  ...
         ^
@@ -43,6 +49,54 @@ Associated declaration is "NegByte.java", line 4, col 6:
 NegByte.java:15: Warning: Possible attempt to allocate array of negative length (NegSize)
   Object[] a1 = new Object[(byte)0xF3];  // neg array size!
                           ^
+NonFinalClasses.java:2: Error: Method getNotAFinalClassObject is used in an annotation but is not pure (NonFinalClasses.java:97)
+  static final Object x0 = getNotAFinalClassObject();
+                           ^
+NonFinalClasses.java:3: Error: Method getNotAFinalClassObject is used in an annotation but is not pure (NonFinalClasses.java:97)
+  static final NotFinalClass x1 = getNotAFinalClassObject();
+                                  ^
+NonFinalClasses.java:4: Error: Method getNotAFinalClassObject is used in an annotation but is not pure (NonFinalClasses.java:97)
+  static final /*@ non_null */ Object x2 = getNotAFinalClassObject();
+                                           ^
+NonFinalClasses.java:5: Error: Method getNotAFinalClassObject is used in an annotation but is not pure (NonFinalClasses.java:97)
+  static final /*@ non_null */ NotFinalClass x3 = getNotAFinalClassObj ...
+                                                  ^
+NonFinalClasses.java:6: Error: Method ma0 is used in an annotation but is not pure (NonFinalClasses.java:101)
+  static final Object a0 = ma0();
+                           ^
+NonFinalClasses.java:7: Error: Method ma1 is used in an annotation but is not pure (NonFinalClasses.java:105)
+  static final Object a1 = ma1();
+                           ^
+NonFinalClasses.java:8: Error: Method ma2 is used in an annotation but is not pure (NonFinalClasses.java:114)
+  static final Object a2 = ma2();
+                           ^
+NonFinalClasses.java:9: Error: Method ma3 is used in an annotation but is not pure (NonFinalClasses.java:118)
+  static final Object a3 = ma3();
+                           ^
+NonFinalClasses.java:32: Error: Method getNotAFinalClassObject is used in an annotation but is not pure (NonFinalClasses.java:97)
+  final Object ix0 = getNotAFinalClassObject();
+                     ^
+NonFinalClasses.java:33: Error: Method getNotAFinalClassObject is used in an annotation but is not pure (NonFinalClasses.java:97)
+  final NotFinalClass ix1 = getNotAFinalClassObject();
+                            ^
+NonFinalClasses.java:34: Error: Method getNotAFinalClassObject is used in an annotation but is not pure (NonFinalClasses.java:97)
+  final /*@ non_null */ Object ix2 = getNotAFinalClassObject(); // non ...
+                                     ^
+NonFinalClasses.java:35: Error: Method getNotAFinalClassObject is used in an annotation but is not pure (NonFinalClasses.java:97)
+  final /*@ non_null */ NotFinalClass ix3 = getNotAFinalClassObject(); ...
+                                            ^
+NonFinalClasses.java:36: Error: Method ma0 is used in an annotation but is not pure (NonFinalClasses.java:101)
+  final Object ia0 = ma0();
+                     ^
+NonFinalClasses.java:37: Error: Method ma1 is used in an annotation but is not pure (NonFinalClasses.java:105)
+  final Object ia1 = ma1();
+                     ^
+NonFinalClasses.java:38: Error: Method ma2 is used in an annotation but is not pure (NonFinalClasses.java:114)
+  final Object ia2 = ma2();
+                     ^
+NonFinalClasses.java:39: Error: Method ma3 is used in an annotation but is not pure (NonFinalClasses.java:118)
+  final Object ia3 = ma3();
+                     ^
 NonFinalClasses.java:13: Warning: Possible assertion failure (Assert)
     //@ assert x0 == null || \typeof(x0) == \type(NotFinalClass); // f ...
         ^
@@ -118,6 +172,9 @@ NonFinalClasses.java:93: Warning: Possible assertion failure (Assert)
 NonFinalClasses.java:94: Warning: Possible assertion failure (Assert)
     //@ assert \typeof(la3) == \type(NotFinalClass[][]);  // fail
         ^
+NonFinalClasses.java:131: Error: Method m is used in an annotation but is not pure (NonFinalClasses.java:132)
+  final static Object arr = m();
+                            ^
 TestConstants.java:40: Warning: Possible null dereference (Null)
     sr.equals("hello");         // error
       ^
@@ -125,3 +182,4 @@ TestConstants.java:44: Warning: Array index possibly too large (IndexTooBig)
     ss.equals(arg[3]);          // error
                  ^
 36 warnings
+19 errors

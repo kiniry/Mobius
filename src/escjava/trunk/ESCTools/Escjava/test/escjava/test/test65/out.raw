@@ -88,15 +88,15 @@ Associated declaration is "C.java", line 68, col 38:
 C.java:80: Warning: Possible violation of object invariant (Invariant)
   }
   ^
-Associated declaration is "C.java", line 82, col 28:
-  int tz = 20 /* *// 2; /*@ invariant ...
-                            ^
-C.java:80: Warning: Possible violation of object invariant (Invariant)
-  }
-  ^
 Associated declaration is "C.java", line 85, col 31:
   //@ invariant tz>=0 /* */*0; invariant tz==10||tz%3==0
                                ^
+C.java:80: Warning: Possible violation of object invariant (Invariant)
+  }
+  ^
+Associated declaration is "C.java", line 82, col 28:
+  int tz = 20 /* *// 2; /*@ invariant ...
+                            ^
 C.java:94: Warning: Postcondition possibly not established (Post)
   }
   ^

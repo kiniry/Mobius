@@ -49,10 +49,12 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
         switch (tag) {
             case TagConstants.AXIOM:
             case TagConstants.INVARIANT:
-            case TagConstants.JML_INVARIANT_REDUNDANTLY: {
+	    case TagConstants.JML_CONSTRAINT: {
                 Expr e = ((ExprDeclPragma)tp).expr;
                 write(o, "/*@ "); 
-                write(o, TagConstants.toString(tag)); 
+                write(o, TagConstants.toString(
+				tp.isRedundant() ? TagConstants.makeRedundant(tag)
+						 : tag)); 
                 write(o, ' ');
                 self.print(o, ind, e);
                 write(o, "; */");
@@ -166,11 +168,14 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
             case TagConstants.JML_ASSERT_REDUNDANTLY:
             case TagConstants.JML_ASSIGNABLE_REDUNDANTLY:
             case TagConstants.JML_ASSUME_REDUNDANTLY:
+            case TagConstants.JML_CONSTRAINT_REDUNDANTLY:
             case TagConstants.JML_DECREASES_REDUNDANTLY:
             case TagConstants.JML_DECREASING_REDUNDANTLY:
             case TagConstants.JML_DIVERGES_REDUNDANTLY:
+            case TagConstants.JML_DURATION_REDUNDANTLY:
             case TagConstants.JML_ENSURES_REDUNDANTLY:
             case TagConstants.JML_EXSURES_REDUNDANTLY:
+            case TagConstants.JML_INVARIANT_REDUNDANTLY: 
             case TagConstants.JML_LOOP_INVARIANT_REDUNDANTLY: 
             case TagConstants.JML_MAINTAINING_REDUNDANTLY:
             case TagConstants.JML_MEASURED_BY_REDUNDANTLY:
@@ -181,9 +186,13 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
             case TagConstants.JML_REQUIRES_REDUNDANTLY:
             case TagConstants.JML_SIGNALS_REDUNDANTLY:
             case TagConstants.JML_WHEN_REDUNDANTLY:
-                Assert.fail("Redundant keywords should not be in AST!");
+            case TagConstants.JML_WORKING_SPACE_REDUNDANTLY:
+                Assert.fail("Redundant keywords should not be in AST!: "
+				+ TagConstants.toString(tag));
                 break;
 
+	    case TagConstants.JML_DURATION:
+	    case TagConstants.JML_WORKING_SPACE:
             case TagConstants.ALSO_MODIFIES:
             case TagConstants.JML_ASSIGNABLE:
             case TagConstants.JML_MEASURED_BY:

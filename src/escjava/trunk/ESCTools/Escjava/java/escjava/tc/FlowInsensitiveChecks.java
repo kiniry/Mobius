@@ -168,13 +168,18 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                     // However, in this case the information needed is whether
                     // or not the formal parameter has been declared with a
                     // "non_null" pragma.
+		    // DRC: I find that the decorations that NonNullPragma
+		    // depends on are not reliably set at this point
                     ModifierPragma mp = GetSpec.findModifierPragma(formal,
-                                                                   TagConstants.NON_NULL);
+					       TagConstants.NON_NULL);
                     if (mp != null) {
-                        ErrorSet.error(mp.getStartLoc(),
-                                       TagConstants.toString(TagConstants.NON_NULL) +
-                                       " cannot be applied to parameters of a" +
-                                       " method override");
+			MethodDecl omd = getSuperNonNullStatus(md,j);
+                        if (omd != null) ErrorSet.error(mp.getStartLoc(),
+			       TagConstants.toString(TagConstants.NON_NULL) +
+			       " cannot be applied to parameters of " +
+			       "this method override; overridden method is " +
+			       "declared at " + 
+				Location.toString(omd.getStartLoc()));
                     }
                 }
             }
@@ -439,13 +444,16 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                                          .isSubtypeOf(TypeSig.getSig(fa.decl.parent)));
 	    
                         if (thisField ||
-                            ((TypeObjectDesignator)fa.od).type instanceof TypeName)
+                            ((TypeObjectDesignator)fa.od).type instanceof TypeName) {
+
+//FIXME - fix this error for modifiable clauses before construcctors
                             ErrorSet.error(fa.locId,
                                            "An instance field may be accessed only via "
                                            + "an object and/or from a non-static"
                                            + " context or an inner class enclosed"
                                            + " by a type possessing that field.");
-                        else
+
+                        } else
                             ErrorSet.error(fa.locId,
                                            "The instance fields of type "
                                            + ((TypeObjectDesignator)fa.od).type
@@ -555,7 +563,6 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
             case TagConstants.EXPLIES:
             case TagConstants.IFF:
             case TagConstants.NIFF:
-            case TagConstants.DOTDOT:
                 {
                     BinaryExpr be = (BinaryExpr)e;
                     // each argument is allowed to contain quantifiers and labels
@@ -580,6 +587,20 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                     }
 
                     setType(e, Types.booleanType);
+                    return e;
+                }
+
+            case TagConstants.DOTDOT:
+		{
+                    BinaryExpr be = (BinaryExpr)e;
+                    // each argument is allowed to contain quantifiers and labels
+                    // if this expression is
+		    isPredicateContext = false;
+                    be.left = checkExpr(env, be.left, Types.intType);
+                    be.right = checkExpr(env, be.right, Types.intType);
+
+// FIXME - this really needs to be a range type
+                    setType(e, Types.intType);
                     return e;
                 }
 
@@ -672,10 +693,25 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                         ErrorSet.error( ne.sloc, 
                                         "The function \\elemtype takes only one argument");
                     else {
-                        Expr nu = checkExpr(env, ne.exprs.elementAt(0), Types.typecodeType);
+                        Expr nu = checkExpr(env, ne.exprs.elementAt(0));
                         ne.exprs.setElementAt( nu, 0 );			
                     }
                     setType( e, Types.typecodeType );
+                    return e;
+                }
+
+            case TagConstants.JML_NOT_MODIFIED:
+                {
+                    NaryExpr ne = (NaryExpr)e;
+// FIXME - Is this a one argument function ?
+                    if( ne.exprs.size() != 1 ) 
+                        ErrorSet.error( ne.sloc, 
+                                        "The function \\not_modified takes only one argument");
+                    else {
+                        Expr nu = checkExpr(env, ne.exprs.elementAt(0));
+                        ne.exprs.setElementAt( nu, 0 );			
+                    }
+                    setType( e, Types.booleanType );
                     return e;
                 }
 
@@ -872,11 +908,27 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                     return e;
                 }
 
+	    case TagConstants.NOTSPECIFIEDEXPR:
+		{
+		    if (!isCurrentlySpecDesignatorContext) {
+			ErrorSet.error(e.getStartLoc(),
+				"Keyword \\not_specified is not allowed in this context");
+		    } 
+		    setType( e, Types.voidType);
+		}
 	    case TagConstants.EVERYTHINGEXPR:
 		{
 		    if (!isCurrentlySpecDesignatorContext) {
 			ErrorSet.error(e.getStartLoc(),
 				"Keyword \\everything is not allowed in this context");
+		    } 
+		    setType( e, Types.voidType);
+		}
+	    case TagConstants.NOTHINGEXPR:
+		{
+		    if (!isCurrentlySpecDesignatorContext) {
+			ErrorSet.error(e.getStartLoc(),
+				"Keyword \\nothing is not allowed in this context");
 		    } 
 		    setType( e, Types.voidType);
 		}
@@ -968,6 +1020,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                     Env rootEnv = (tag == TagConstants.AXIOM) ? rootSEnv : rootIEnv;
 
                     invariantContext = (tag == TagConstants.INVARIANT);
+		    isTwoStateContext = (tag == TagConstants.JML_CONSTRAINT);
                     boolean oldIsLocksetContext = isLocksetContext;
                     isLocksetContext = false;
                     if (invariantContext){
@@ -985,14 +1038,21 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 			   "java.lang.Object and java.lang.Cloneable may not"
 			   + " contain invariants.");
                     }
-                    if (invariantContext && countFreeVarsAccesses == 0){
+/* FIXME - should also allow model methods
+                    if (invariantContext && countFreeVarsAccesses == 0 &&
+			// Don't print an error if the entire invariant
+			// is an informal predicate
+			escjava.parser.EscPragmaParser.
+			     informalPredicateDecoration.get(ep.expr)==null) {
                         ErrorSet.error(e.getStartLoc(),
 			   "Class invariants must mention program variables"
 			   + " or fields.");
                     }
+*/
 
                     if (invariantContext) {countFreeVarsAccesses = 0;}
                     invariantContext = false;
+                    isTwoStateContext = false;
                     break;
                 }
 
@@ -1085,10 +1145,13 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                 /*
                  * Handle initializer:
                  */
-                if (decl.init != null) {
-                    ErrorSet.error(decl.init.getStartLoc(),
-                                   "Ghost fields may not have initializers");
-                }
+
+		if (decl.init != null) {
+			leftToRight = true;
+			allowedExceptions.removeAllElements();
+			Assert.notFalse( allowedExceptions.size() == 0);
+			decl.init = checkInit(rootEnv, decl.init, decl.type);
+		}
 
                 /*
                  * Check for other fields with the same name:
@@ -1222,25 +1285,80 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                 }
                 break;
       
+// FIXME - should have aspec_protected case as well ???
             case TagConstants.SPEC_PUBLIC:
                 {
-                    if( ctxt.getTag() != TagConstants.FIELDDECL ) {
-                        int loc;
-                        if (ctxt instanceof GenericVarDecl)
-                            loc = ((GenericVarDecl)ctxt).locId;
-                        else
-                            loc = p.getStartLoc();
-                        ErrorSet.error(loc,
-                                       "The spec_public annotation can occur only on "
-                                       +"field declarations");
-                    } else {
+		    int ctag = ctxt.getTag();
+                    if( ctag == TagConstants.FIELDDECL ) {
                         FieldDecl fd = (FieldDecl)ctxt;
                         if (Modifiers.isPublic(fd.modifiers)) {
                             ErrorSet.error(fd.locId,
-                                           "The spec_public annotation can occur only on "
-                                           +"non-public field declarations");
+			       "The spec_public annotation can occur only on "
+			       +"non-public declarations");
                         }
-                    }
+                    } else if ( ctag == TagConstants.METHODDECL ) {
+                        MethodDecl fd = (MethodDecl)ctxt;
+                        if (Modifiers.isPublic(fd.modifiers)) {
+                            ErrorSet.error(fd.locId,
+			       "The spec_public annotation can occur only on "
+			       +"non-public declarations");
+                        }
+                    } else if ( ctag == TagConstants.CONSTRUCTORDECL ) {
+                        RoutineDecl fd = (RoutineDecl)ctxt;
+                        if (Modifiers.isPublic(fd.modifiers)) {
+                            ErrorSet.error(fd.locId,
+			       "The spec_public annotation can occur only on "
+			       +"non-public declarations");
+                        }
+                    } else if ( ctag == TagConstants.CLASSDECL  ||
+			        ctag == TagConstants.INTERFACEDECL) {
+                        TypeDecl fd = (TypeDecl)ctxt;
+                        if (Modifiers.isPublic(fd.modifiers)) {
+                            ErrorSet.error(fd.locId,
+			       "The spec_public annotation can occur only on "
+			       +"non-public declarations");
+                        }
+		    }
+                    break;
+                }
+
+            case TagConstants.JML_SPEC_PROTECTED:
+		{
+		    int ctag = ctxt.getTag();
+                    if( ctag == TagConstants.FIELDDECL ) {
+                        FieldDecl fd = (FieldDecl)ctxt;
+                        if (Modifiers.isPublic(fd.modifiers) ||
+			    Modifiers.isProtected(fd.modifiers)) {
+                            ErrorSet.error(fd.locId,
+			       "The spec_protected annotation can occur only on "
+			       +"non-public, non-protected declarations");
+                        }
+                    } else if ( ctag == TagConstants.METHODDECL ) {
+                        MethodDecl fd = (MethodDecl)ctxt;
+                        if (Modifiers.isPublic(fd.modifiers) ||
+			    Modifiers.isProtected(fd.modifiers)) {
+                            ErrorSet.error(fd.locId,
+			       "The spec_protected annotation can occur only on "
+			       +"non-public, non-protected declarations");
+                        }
+                    } else if ( ctag == TagConstants.CONSTRUCTORDECL ) {
+                        RoutineDecl fd = (RoutineDecl)ctxt;
+                        if (Modifiers.isPublic(fd.modifiers) ||
+			    Modifiers.isProtected(fd.modifiers)) {
+                            ErrorSet.error(fd.locId,
+			       "The spec_protected annotation can occur only on "
+			       +"non-public, non-protected declarations");
+                        }
+                    } else if ( ctag == TagConstants.CLASSDECL  ||
+			        ctag == TagConstants.INTERFACEDECL) {
+                        TypeDecl fd = (TypeDecl)ctxt;
+                        if (Modifiers.isPublic(fd.modifiers) ||
+			    Modifiers.isProtected(fd.modifiers)) {
+                            ErrorSet.error(fd.locId,
+			       "The spec_protected annotation can occur only on "
+			       +"non-public, non-protected declarations");
+                        }
+		    }
                     break;
                 }
 	
@@ -1419,14 +1537,41 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                     break;
                 }
 
+	    case TagConstants.JML_DURATION:
+	    case TagConstants.JML_WORKING_SPACE:
+	        {
+                    ExprModifierPragma emp = (ExprModifierPragma)p;
+
+                    if( !(ctxt instanceof RoutineDecl ) ) {
+                        ErrorSet.error(p.getStartLoc(),
+                                       TagConstants.toString(tag)
+                                       +" annotations can occur only on "
+                                       +"method and constructor declarations");
+                    } else {
+                        RoutineDecl rd = (RoutineDecl)ctxt;
+                        boolean oldIsRESContext = isRESContext;
+                        boolean oldIsTwoStateContext = isTwoStateContext;
+                        boolean oldIsPrivFieldAccessAllowed = isPrivateFieldAccessAllowed;
+                        isRESContext = true;
+                        isTwoStateContext = true;
+                        // If "rd" is an overridable method, then every private field
+                        // mentioned in "emp.expr" must be spec_public.
+                        if (rd instanceof MethodDecl && isOverridable((MethodDecl)rd)) {
+                            isPrivateFieldAccessAllowed = false;
+                        }
+                        emp.expr = checkExpr(env, emp.expr, Types.intType);
+                        isRESContext = oldIsRESContext;
+                        isTwoStateContext = oldIsTwoStateContext;
+                        isPrivateFieldAccessAllowed = oldIsPrivFieldAccessAllowed;
+                    }
+                    break;
+                }
+
 	    case TagConstants.JML_DIVERGES:
-	    case TagConstants.JML_DIVERGES_REDUNDANTLY:
             case TagConstants.ENSURES:
-            case TagConstants.JML_ENSURES_REDUNDANTLY:
             case TagConstants.ALSO_ENSURES:
             case TagConstants.JML_POST:
 	    case TagConstants.JML_WHEN:
-	    case TagConstants.JML_WHEN_REDUNDANTLY:
                 {
                     ExprModifierPragma emp = (ExprModifierPragma)p;
 
@@ -1590,12 +1735,84 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                 break;
             }
 
+	    case TagConstants.JML_MEASURED_BY:
+// FIXME - simplify this and make it specific for measured_by
+                {
+                    CondExprModifierPragma emp = (CondExprModifierPragma)p;
+
+                    if (!(ctxt instanceof RoutineDecl ) ) {
+                        ErrorSet.error(p.getStartLoc(),
+                                       "A modifies/also_modifies annotation " +
+                                       "can occur only on " +
+                                       "method and constructor declarations");
+                    } else {
+                        RoutineDecl rd = (RoutineDecl)ctxt;
+	    
+/*
+                        if (getOverrideStatus(rd) != MSTATUS_NEW_ROUTINE) {
+                            if (tag == TagConstants.MODIFIES
+                                || tag == TagConstants.JML_MODIFIABLE
+                                || tag == TagConstants.JML_ASSIGNABLE) {
+                                ErrorSet.error(p.getStartLoc(),
+				   "modifies cannot be used on method " +
+				   "overrides; use also_modifies instead");
+                            }
+                        } else {
+                            if (tag == TagConstants.ALSO_MODIFIES) {
+                                ErrorSet.error(p.getStartLoc(),
+				   "also_modifies can be used only on method " +
+				   "overrides; use modifies instead");
+                            }
+                        }
+*/
+                        Assert.notFalse(!isSpecDesignatorContext);
+                        isSpecDesignatorContext = true;
+                        if (rd instanceof ConstructorDecl) {
+                            // disallow "this" from constructor "modifies" clauses
+                            env = env.asStaticContext();
+                        }
+                        emp.expr = checkDesignator(env, emp.expr);
+                        switch (emp.expr.getTag()) {
+                            case TagConstants.FIELDACCESS: {
+                                FieldAccess fa = (FieldAccess)emp.expr;
+                                if (fa.decl != null &&
+                                    Modifiers.isFinal(fa.decl.modifiers) &&
+                                    // The array "length" field has already been checked
+                                    // insuper.checkDesignator().
+                                    fa.decl != Types.lengthFieldDecl) {
+                                    ErrorSet.error(fa.locId, "a final field is not allowed as " +
+                                                   "the designator in a modifies clause");
+                                }
+                                break;
+                            }
+	      
+                            case TagConstants.ARRAYREFEXPR:
+                            case TagConstants.WILDREFEXPR:
+                            case TagConstants.EVERYTHINGEXPR:
+                            case TagConstants.NOTHINGEXPR:
+                            case TagConstants.NOTSPECIFIEDEXPR:
+                                break;
+
+                            default:
+				if (escjava.parser.EscPragmaParser.
+				 informalPredicateDecoration.get(emp.expr)==null) {
+					// The expression is not a designator
+					// but we allow an informal predicate
+					break;
+				}
+                                ErrorSet.error(emp.expr.getStartLoc(),
+                                               "Not a specification designator expression");
+                        }
+                        isSpecDesignatorContext = false;
+			if (emp.cond != null) emp.cond = checkExpr(env, emp.cond);
+                    }
+                    break;
+                }
+
+	    case TagConstants.MODIFIES:
             case TagConstants.ALSO_MODIFIES:
             case TagConstants.JML_ASSIGNABLE:
-	    case TagConstants.JML_MEASURED_BY:
             case TagConstants.JML_MODIFIABLE:
-            case TagConstants.MODIFIES:
-            case TagConstants.JML_NOT_MODIFIED:
             case TagConstants.STILL_DEFERRED: {
                 CondExprModifierPragma emp = (CondExprModifierPragma)p;
 
@@ -1626,10 +1843,14 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                      */
                     Assert.notFalse(!isSpecDesignatorContext);
                     isSpecDesignatorContext = true;
-                    if (rd instanceof ConstructorDecl) {
-                        // disallow "this" from constructor "modifies" clauses
-                        env = env.asStaticContext();
-                    }
+/*
+// But we do need to allow the fields of this in the modifies clause, which
+// using the static context does not permit.
+                        if (rd instanceof ConstructorDecl) {
+                            // disallow "this" from constructor "modifies" clauses
+                            env = env.asStaticContext();
+                        }
+*/
                     emp.expr = checkDesignator(env, emp.expr);
                     switch (emp.expr.getTag()) {
                         case TagConstants.FIELDACCESS: {
@@ -1644,17 +1865,24 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                             }
                             break;
                         }
-	      
-                        case TagConstants.ARRAYREFEXPR:
-                        case TagConstants.WILDREFEXPR:
-                        case TagConstants.EVERYTHINGEXPR:
-                        case TagConstants.NOTHINGEXPR:
-                        case TagConstants.NOTSPECIFIEDEXPR:
-                            break;
+	  
+			case TagConstants.ARRAYREFEXPR:
+			case TagConstants.WILDREFEXPR:
+			case TagConstants.EVERYTHINGEXPR:
+			case TagConstants.NOTHINGEXPR:
+			case TagConstants.NOTSPECIFIEDEXPR:
+			    break;
 
-                        default:
-                            ErrorSet.error(emp.expr.getStartLoc(),
-                                           "Not a specification designator expression");
+			default:
+			    if (escjava.parser.EscPragmaParser.
+				 informalPredicateDecoration.get(emp.expr)==null) {
+					// The expression is not a designator
+					// but we allow an informal predicate
+                                ErrorSet.error(emp.expr.getStartLoc(),
+                                               "Not a specification designator expression");
+			    } else {
+			       emp.expr = null;
+			    }
                     }
                     isSpecDesignatorContext = false;
                     if (emp.cond != null) emp.cond = checkExpr(env, emp.cond);
@@ -1741,11 +1969,12 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
             }
 
             case TagConstants.ASSUME:
-            case TagConstants.ASSERT: {
-                ExprStmtPragma es = (ExprStmtPragma)s;
-                es.expr = checkPredicate(e, es.expr);
-                break;
-            }
+            case TagConstants.ASSERT:
+		{
+		    ExprStmtPragma es = (ExprStmtPragma)s;
+		    es.expr = checkPredicate(e, es.expr);
+		    break;
+		}
       
             case TagConstants.LOOP_INVARIANT:
             case TagConstants.JML_MAINTAINING:
@@ -1778,7 +2007,8 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                 }
 
             default:
-                Assert.fail("Unexpected tag " + tag +" "+s);
+                Assert.fail("Unexpected tag " + tag +" "+s +
+				" " + Location.toString(s.getStartLoc()));
         }
         inAnnotation = false;
     }
@@ -1922,11 +2152,31 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
         return MSTATUS_CLASS_NEW_METHOD;
     }
 
-    protected Expr checkDesignator(Env env, Expr e) {
-	if (e instanceof AmbiguousVariableAccess) 
-		return super.checkDesignator(env,e);
+    /** Returns null if method md is allowed to declare its jth (counting
+	from 0) formal parameter as non_null.  That is the case if the 
+	method does not override anything, or if in everything that it does
+	override that parameter is declared non_null.  Otherwise returns the
+	MethodDecl corresponding to the overridden method with which the
+	argument rd is in conflict.
+    */
+    public MethodDecl getSuperNonNullStatus(RoutineDecl rd, int j) {
+        if (!(rd instanceof MethodDecl) || Modifiers.isStatic(rd.modifiers)) {
+            return null;
+        }
+        MethodDecl md = (MethodDecl)rd;
 
-	return e;
+        Set direct = javafe.tc.PrepTypeDeclaration.inst.getOverrides(md.parent, md);
+        if (direct.size() == 0) {
+            return null;
+        }
+
+        Enumeration e = direct.elements();
+        while (e.hasMoreElements()) {
+            MethodDecl directMD = (MethodDecl)(e.nextElement());
+	    FormalParaDecl f = directMD.args.elementAt(j);
+	    if (GetSpec.findModifierPragma(f,TagConstants.NON_NULL) == null)
+		return directMD;
+        }
+        return null;
     }
-
 }

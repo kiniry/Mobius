@@ -529,6 +529,10 @@ public class TagConstants extends javafe.tc.TagConstants
                 Result = TagConstants.JML_CONSTRAINT_REDUNDANTLY; break;
             case TagConstants.JML_DECREASING:
                 Result = TagConstants.JML_DECREASING_REDUNDANTLY; break;
+            case TagConstants.JML_DURATION:
+                Result = TagConstants.JML_DURATION_REDUNDANTLY; break;
+            case TagConstants.JML_WORKING_SPACE:
+                Result = TagConstants.JML_WORKING_SPACE_REDUNDANTLY; break;
         }
         return Result;
     }
@@ -580,6 +584,10 @@ public class TagConstants extends javafe.tc.TagConstants
                 Result = TagConstants.JML_CONSTRAINT; break;
             case TagConstants.JML_DECREASING_REDUNDANTLY:
                 Result = TagConstants.JML_DECREASING; break;
+            case TagConstants.JML_DURATION_REDUNDANTLY:
+                Result = TagConstants.JML_DURATION; break;
+            case TagConstants.JML_WORKING_SPACE_REDUNDANTLY:
+                Result = TagConstants.JML_WORKING_SPACE; break;
         }
         return Result;
     }
@@ -593,6 +601,8 @@ public class TagConstants extends javafe.tc.TagConstants
             (tag == TagConstants.JML_POST_REDUNDANTLY) ||
             (tag == TagConstants.JML_EXSURES_REDUNDANTLY) ||
             (tag == TagConstants.JML_SIGNALS_REDUNDANTLY) ||
+            (tag == TagConstants.JML_DURATION_REDUNDANTLY) ||
+            (tag == TagConstants.JML_WORKING_SPACE_REDUNDANTLY) ||
             tag == TagConstants.JML_MODIFIABLE_REDUNDANTLY ||
             tag == TagConstants.JML_ASSIGNABLE_REDUNDANTLY ||
             tag == TagConstants.JML_MODIFIES_REDUNDANTLY ||

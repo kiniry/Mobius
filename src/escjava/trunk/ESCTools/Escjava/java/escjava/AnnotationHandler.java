@@ -32,6 +32,7 @@ public class AnnotationHandler {
 	defined in EscTypeReader.
     */
     public void handlePragmas(CompilationUnit cu) {
+	if (cu == null) return;
 	// move any model imports into the list of imports
 	for (int i = 0; i < cu.lexicalPragmas.size(); ++i) {
 		LexicalPragma p = cu.lexicalPragmas.elementAt(i);
@@ -75,38 +76,61 @@ public class AnnotationHandler {
     protected void process(TypeDeclElem tde) {
 	int tag = tde.getTag();
 	switch (tag) {
-	   case TagConstants.FIELDDECL:
+// What about initially, monitored_by, readable_if clauses ??? FIXME
+// What about nested classes ??? FIXME
+// What about redundant clauses ??? FIXME
 
-		// skip
-		break;
 
 	    case TagConstants.CONSTRUCTORDECL:
 	    case TagConstants.METHODDECL:
 		process((RoutineDecl)tde);
 		break;
 
+	    case TagConstants.FIELDDECL:
+	    case TagConstants.GHOSTDECLPRAGMA:
+	    case TagConstants.MODELDECLPRAGMA:
+	    case TagConstants.INVARIANT:
+	    case TagConstants.JML_INVARIANT_REDUNDANTLY:
+	    case TagConstants.JML_CONSTRAINT:
+	    case TagConstants.JML_REPRESENTS:
+	    case TagConstants.AXIOM:
+	    case TagConstants.JML_DEPENDS:
+		(new CheckPurity()).visitNode((ASTNode)tde);
+		break;
+
 	    default:
-		//System.out.println("TAG " + tag + " " + TagConstants.toString(tag));
+		//System.out.println("TAG " + tag + " " + TagConstants.toString(tag) + " " + tde.getClass() );
 	}
 
     }
 
     protected void process(RoutineDecl tde) {
 	ModifierPragmaVec pmodifiers = tde.pmodifiers;
+	//System.out.println("Method " + (tde instanceof MethodDecl ? ((MethodDecl)tde).id.toString() : "Constructor"));
+	//System.out.println("   Mods " + Modifiers.toString(tde.modifiers));
 	if (pmodifiers == null) return;
 	for (int i = 0; i<pmodifiers.size(); ++i) {
 	    ModifierPragma mp = pmodifiers.elementAt(i);
+
 /*
 	    System.out.print("   pmod " + escjava.ast.TagConstants.toString(mp.getTag()) + " "  );
 	    if (mp instanceof ExprModifierPragma) {
 		ExprModifierPragma mpe = (ExprModifierPragma)mp;
 		PrettyPrint.inst.print(System.out,0,mpe.expr);
-		System.out.println("");
 	    }
+	    System.out.println("");
 */
+
+	    (new CheckPurity()).visitNode((ASTNode)mp);
+/*
 	    Object o;
 	    if (mp instanceof ExprModifierPragma)
 	      (new CheckPurity()).visitNode(((ExprModifierPragma)mp).expr);
+	    if (mp instanceof CondExprModifierPragma) {
+	      (new CheckPurity()).visitNode(((CondExprModifierPragma)mp).expr);
+	      (new CheckPurity()).visitNode(((CondExprModifierPragma)mp).cond);
+	    }
+*/
 	}
 	Identifier id =
 		tde instanceof MethodDecl ?
@@ -559,11 +583,11 @@ public class AnnotationHandler {
 		case TagConstants.METHODINVOCATION:
 		    MethodInvocation m = (MethodInvocation)x;
 		    if (!Modifiers.isPure(m.decl.modifiers)) {
-/* FIXME - wait to enable this error.  ALso need it for constructors.
 			ErrorSet.error(m.locId,
 			    "Method " + m.id + " is used in an annotation" +
 			    " but is not pure (" + 
 			    Location.toFileLineString(m.decl.loc) + ")");
+/* FIXME - wait to enable this error.  ALso need it for constructors.
 */
 		    }
 		    break;
