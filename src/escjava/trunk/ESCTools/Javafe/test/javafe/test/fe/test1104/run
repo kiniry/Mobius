@@ -1,0 +1,24 @@
+#!/bin/csh -f
+
+## Removed because redundant
+
+# Was: Test javac with all sources in front end.
+#
+# test1102 with doj does this
+
+exit 0
+
+
+
+setenv JDKCLASSES /proj/cra/pkg/jdk1.0.2/lib/classes.zip
+
+setenv TOOLCMD "javac -verbose -classpath ${CLASSDIRECTORY}:${JDKCLASSES}:${ZIPFILE} -d `pwd`/classes"
+
+setenv TOOL "${TOOLCMD}"
+
+cd ../../..
+
+foreach i (*.java */*.java)
+  ${TOOL} $i || break
+end
+
