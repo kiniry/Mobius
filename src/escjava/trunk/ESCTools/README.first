@@ -44,8 +44,7 @@ Here are the general steps to follow:
     compile all generated and manually written code for Javafe,
     compile all test code for Javafe, then run all lexer and parser
     tests for Javafe.  These tests can take several minutes to run.
-    All tests but for test6, test1007, and test1103 should complete
-    normally.
+    All tests should complete normally.
 
  5. Change to the Escjava directory (../Escjava from Javafe).
 
