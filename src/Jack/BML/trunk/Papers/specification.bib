@@ -5,6 +5,8 @@
 @string{tacas00 	= "Tools and Algorithms
                            for the Construction and Analysis of
 		  Systems (TACAS 2000)"}
+@string{fase00          = "Fundamental Approaches to Software Engineering (FASE 2000)"}
+@string{fase01          = "Fundamental Approaches to Software Engineering (FASE 2001)"}
 
 @Book{Alexander79,
   author = 	 {C. Alexander},
@@ -14,15 +16,20 @@
   year = 	 {1979},
 }
 
-@journal{bartetzko01assertions,
-    author = {Detlef Bartetzko and Clemens Fischer and Michael M{"o}ller and 
-              Heike Wehrheim},
+@misc{BanderaURL,
+key = {Bandera},
+title={{Bandera project}},
+note={\verb!http://www.cis.ksu.edu/santos/bandera!}}
+
+@inproceedings{bartetzko01assertions,
+    author = {D. Bartetzko and C. Fischer and M. M{\"o}ller and 
+              H. Wehrheim},
     title = {{Jass~{--}~Java with Assertions}},
-    journal = ENTCS,
+    booktitle = ENTCS,
     volume = {55},
     issue = {2},
     publisher = elsevier,
-    editor = {Klaus Havelund and Grigore Rosu},
+    editor = {K. Havelund and G. Rosu},
     year = {2001}
 }
 
@@ -78,6 +85,7 @@ year = 2002
 
 @InProceedings{CorbettDHLPRZ00,
   author = 	 {J. Corbett and M. Dwyer and J. Hatcliff and S. Laubach and C. P\u as\u areanu and Robby and H. Zheng},
+  title = {{Bandera: Extracting finite-states models from Java source code}},
   booktitle = 	 {22nd International Conference on Software Engineering},
   pages = 	 {439--448},
   year = 	 {2000},
@@ -90,8 +98,6 @@ year = 2002
   pages = 	 {7--15},
   year = 	 {1998},
   title = 	 {{Property Specification Patterns for Finite-state Verification}},
-  pages = 	 {7--15},
-  year = 	 {1998},
   month = 	 {March},
 }
 
@@ -123,6 +129,12 @@ year = 2001,
 pages = {500--517}
 }
 
+@inproceedings{HavelundR01,
+title = "Java PathExplorer - A Runtime Verification Tool",
+author = "K. Havelund and G. Rosu",
+booktitle = "6th International Symposium on AI, Robotics and Automation in Space",
+year = 2001
+}
 
 @article{JacobsMP01,
   author = 	 {B. Jacobs and H. Meijer and E. Poll},
@@ -132,16 +144,18 @@ pages = {500--517}
   year = 	 {2001},
 }
 
-@INPROCEEDINGS{JacobsP01a,
-AUTHOR       = "B. Jacobs and E. Poll",
-TITLE        = "{A Logic for the Java Modeling Language JML}",
-BOOKTITLE    = "Fundamental Approaches to Software Engineering",
-EDITOR       = "H. Hussmann",
-PUBLISHER    = "Springer",
-SERIES       = LNCS,
-NUMBER       = "2029",
+
+@INPROCEEDINGS{JacobsP01,
+AUTHOR = "B. Jacobs and E. Poll",
+title = {A Logic for the {Java Modeling Language JML}},
+series = lncs,
+publisher = springer,
+editor = "H. Hussmann",
 PAGES        = "284--299",
-YEAR         = 2001}
+number = "2029",
+booktitle = fase01,
+year = 2001
+}		  
 
 @misc{JassUrl,
 title        = {{The JASS project}},
@@ -161,6 +175,24 @@ key = {JavaCard},
 note= {\texttt{http://java.sun.com/products/javacard/}}
 }
 
+%double of Huisman01
+@PhdThesis{Huisman00,
+  author = 	 {M. Huisman},
+  title = 	 {{Reasoning about Java Programs in Higher Order Logic with PVS and Isabelle}},
+  school = 	 {University of Nijmegen},
+  year = 	 {2001},
+}
+
+
+%double of Huisman01
+@PhdThesis{Huisman01,
+  author = 	 {M. Huisman},
+  title = 	 {{Reasoning about Java Programs in Higher Order Logic with PVS and Isabelle}},
+  school = 	 {University of Nijmegen},
+  year = 	 {2001},
+}
+
+%double of HuismanJB01
 @ARTICLE{HuismanJB00a, 
 AUTHOR       = "M. Huisman and B. Jacobs and Berg, J. van den", 
 TITLE        = "A case study in class library verification:
@@ -170,19 +202,21 @@ volume       = "3/3",
 pages        = "332 -- 352",
 YEAR         = 2001}
 
-@PhdThesis{Huisman00,
-  author = 	 {M. Huisman},
-  title = 	 {{Reasoning about Java Programs in Higher Order Logic with PVS and Isabelle}},
-  school = 	 {University of Nijmegen},
-  year = 	 {2000},
-}
-
+% double of HuismanJB00a
+@ARTICLE{HuismanJB01, 
+AUTHOR       = "M. Huisman and B. Jacobs and Berg, J. van den", 
+TITLE        = "A case study in class library verification:
+	        {Java}'s {Vector} class", 
+JOURNAL      = "Software Tools for Technology Transfer (STTT)",
+volume       = "3/3",
+pages        = "332 -- 352",
+YEAR         = 2001}
 
 
 @InProceedings{HuismanJ00,
   author = 	 {M. Huisman and B. Jacobs},
   title = 	 {{Java Program Verification via a Hoare Logic with Abrupt Termination}},
-  booktitle = 	 {Fundamental Approaches to Software Engineering},
+  booktitle = 	 fase00,
   pages = 	 {284-303},
   year = 	 {2000},
   number = 	 {1783},
@@ -232,11 +266,17 @@ key       = {LOOP},
 note    = {\texttt{http://www.cs.kun.nl/\~{}bart/LOOP/}}
 }
 
+@misc{LoopAPIURL,
+note = {\texttt{http://www.cs.kun.nl/}\verb|~|\texttt{erikpoll/publications/jc211\_specs.html}},
+title = {{ESC/Java specifications for the Java Card API 2.1.1}},
+key = {LoopAPI}
+}
+
 @inproceedings{MeijerP01,
   author =       {Meijer, H. and Poll, E.},
   title =        {{Towards a Full Formal Specification of the Java Card API}},
   editor =       {I. Attali and T. Jensen},
-  booktitle =    {Smart Card Programming and Security},
+  booktitle =    {Smart Card Programming and Security (E-smart 2001)},
   series =       LNCS,
   publisher =    Springer,
   year =         {2001},
@@ -270,7 +310,7 @@ pages = "63--77"
 @misc{PatternsURL,
   key = {Patterns},
   title = 	 {A system of specification patterns},
-  note = {\texttt{http://www.cis.ksu.edu/~dwyer/spec-patterns.html}}
+  note = {\texttt{http://www.cis.ksu.edu/}\verb|~|\texttt{dwyer/spec-patterns.html}}
 }
 
 @inproceedings{PollBergJacobs99,
