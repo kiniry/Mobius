@@ -326,6 +326,8 @@ public class EscPragmaParser extends Parse implements PragmaParser
 	addOperator(TagConstants.NIFF, 73, true);
 	addOperator(TagConstants.SUBTYPE, 140, true);
 	addOperator(TagConstants.DOTDOT, 1, true);
+	scanner.addKeyword("\\real", TagConstants.JML_REAL);
+	scanner.addKeyword("\\bigint", TagConstants.JML_BIGINT);
 	scanner.addKeyword("\\result", TagConstants.RES);
 	scanner.addKeyword("\\lockset", TagConstants.LS);
 	scanner.addKeyword("\\TYPE", TagConstants.TYPETYPE);
@@ -1813,6 +1815,8 @@ public class EscPragmaParser extends Parse implements PragmaParser
     public boolean isPrimitiveKeywordTag(int tag) {
         switch(tag) {
             case TagConstants.TYPETYPE:
+            case TagConstants.JML_REAL:
+            case TagConstants.JML_BIGINT:
                 return true;
 
             default:
@@ -1835,6 +1839,8 @@ public class EscPragmaParser extends Parse implements PragmaParser
 
         switch (l.ttype) {
             case TagConstants.TYPETYPE: tag = TagConstants.TYPECODE; break;
+            case TagConstants.JML_REAL: tag = TagConstants.DOUBLETYPE; break;
+            case TagConstants.JML_BIGINT: tag = TagConstants.LONGTYPE; break;
 
             default: return super.parsePrimitiveType(l);
         }
@@ -1944,6 +1950,8 @@ public class EscPragmaParser extends Parse implements PragmaParser
 	int tag;
 	switch(l.ttype) {
             case TagConstants.TYPETYPE:tag = TagConstants.TYPECODE;    break;
+            case TagConstants.JML_REAL:tag = TagConstants.DOUBLETYPE;    break;
+            case TagConstants.JML_BIGINT:tag = TagConstants.LONGTYPE;    break;
             case TagConstants.BOOLEAN: tag = TagConstants.BOOLEANTYPE; break;
             case TagConstants.BYTE:    tag = TagConstants.BYTETYPE;    break;
             case TagConstants.SHORT:   tag = TagConstants.SHORTTYPE;   break;

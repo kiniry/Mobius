@@ -220,7 +220,8 @@ public class TagConstants extends javafe.tc.TagConstants
     //// JML keywords
     public static final int FIRSTJMLKEYWORDTAG = CHK_AS_SKIP + 1;
 
-    public static final int JML_WACK_DURATION = FIRSTJMLKEYWORDTAG;
+    public static final int JML_BIGINT = FIRSTJMLKEYWORDTAG;
+    public static final int JML_WACK_DURATION = JML_BIGINT + 1;
     // \elemtype -- an ESC keyword
     public static final int JML_EVERYTHING = JML_WACK_DURATION + 1;
     // \exists -- an ESC keyword
@@ -244,8 +245,9 @@ public class TagConstants extends javafe.tc.TagConstants
     public static final int JML_PRIVATE_DATA = JML_OTHER + 1;
     public static final int JML_PRODUCT = JML_PRIVATE_DATA + 1;
     public static final int JML_REACH = JML_PRODUCT + 1;
+    public static final int JML_REAL = JML_REACH + 1;
     // \result -- an ESC keyword
-    public static final int JML_SPACE = JML_REACH + 1;
+    public static final int JML_SPACE = JML_REAL + 1;
     public static final int JML_SUCH_THAT = JML_SPACE + 1;
     public static final int JML_SUM = JML_SUCH_THAT + 1;
     // \type -- an ESC keyword
@@ -775,6 +777,7 @@ public class TagConstants extends javafe.tc.TagConstants
     };
 
     private static Identifier[] jmlkeywords = {
+        Identifier.intern("\\bigint"),
         Identifier.intern("\\duration"),
         Identifier.intern("\\everything"),
         Identifier.intern("\\fields_of"),
@@ -789,6 +792,7 @@ public class TagConstants extends javafe.tc.TagConstants
         Identifier.intern("\\private_data"),
         Identifier.intern("\\product"),
         Identifier.intern("\\reach"),
+        Identifier.intern("\\real"),
         Identifier.intern("\\space"),
         Identifier.intern("\\such_that"),
         Identifier.intern("\\sum"),
