@@ -22,3 +22,5 @@ DesugaringA.java
 Inconsistent.java
 THERR.java
 StaticInit.java
+## Until purity is resolved
+NL.java
