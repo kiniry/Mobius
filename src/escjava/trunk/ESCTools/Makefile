@@ -47,6 +47,26 @@ build buildall test:
 alltests:
 	${MAKE} test ALLTESTS=1
 
+########################################### general
+
+.PHONY: fix-perms
+fix-perms:
+	find $(ESCTOOLS_ROOT) -type f \
+		-name "*.[0-9]" -or \
+		-name "*.[chjlo]" -or \
+		-name "*ans" -or \
+		-name "*diff" -or \
+		-name "*.el" -or \
+		-name "*.gif" -or \
+		-name "*.html" -or \
+		-name "*.j*" -or \
+		-name "*Make*" -or \
+		-name "*out" -or \
+		-name "README*" -or \
+		-name "*.txt" -or \
+		-name "*.zip" \
+		-exec chmod 644 {} \;
+
 ########################################### clean
 
 # To really clean, we need to clean Javafe last since some of its
@@ -94,7 +114,7 @@ javadoc:  build
 	  -d $(JAVADOC_GEN_DIR) \
           $(PACKAGE_LIST)
 
-########################################### docs
+########################################### release
 
 ## FIXME: get mocha right
 
@@ -102,6 +122,7 @@ javadoc:  build
 release: 
 	@echo Making release version ${ESC_PROJECT}-${ESC_VERSION}
 	${MAKE} clean
+	${MAKE} -k generate-patches
 	${MAKE} build
 	${MAKE} test
 	${MAKE} make-release
@@ -110,6 +131,7 @@ release:
 .PHONY: release-notest
 release-notest:
 	${MAKE} clean
+	${MAKE} -k generate-patches
 	${MAKE} build
 	${MAKE} make-release
 
@@ -129,7 +151,7 @@ make-release:
 	cp ${ESCJAVA_ROOT}/simplify ${RELDIR}/simplify-script
 	cp README.first README.txt ${RELDIR}
 	cd release-files; cp `ls | grep -v CVS` ${RELDIR}
-	cd ${RELDIR}; tar cvf ${RELTAR} *
+	cd ${RELDIR}; tar czvf ${RELTAR} *
 
 ## FIXME - simplify script, simplify binary; alter escj to use alternate simplify script
 ## FIXME - also zip up the source and ship it as well.
@@ -140,3 +162,46 @@ test-release:
 	export ESCTOOLS_RELEASE=${RELDIR} ;\
 	${MAKE} -C Javafe  test-release ;\
 	${MAKE} -C Escjava test-release 
+
+## For this target to work, you must unpack the original ESCTools
+## archives (e.g., Calvin.tar.Z, Escjava.tar.Z, etc.) into a directory
+## "ESCTools.orig" that is adjacent to your "ESCTools" sandbox.  The
+## Simplify package must be unpacked into the directory
+## "ESCTools.orig/Simplify".  Then, this rule is run from the
+## directory above the two ESCTools{.orig} directories.
+.PHONY: generate-patches
+generate-patches: clean
+	(cd ..; \
+	LC_ALL=C TZ=UTC0 diff -Naur --exclude=*.class --exclude=.#* --exclude=CVS \
+		--exclude=Simplify-1* ESCTools.orig/Calvin ESCTools/Calvin \
+		| bzip2 -9 > ${ESC_PROJECT}-${ESC_VERSION}-`date "+%d-%m-%y"`-Calvin.patch.bz; \
+	LC_ALL=C TZ=UTC0 diff -Naur --exclude=*.class --exclude=.#* --exclude=CVS \
+		--exclude=Simplify-1* --exclude=javadoc \
+		ESCTools.orig/Escjava ESCTools/Escjava \
+		| bzip2 -9 > ${ESC_PROJECT}-${ESC_VERSION}-`date "+%d-%m-%y"`-Escjava.patch.bz; \
+	LC_ALL=C TZ=UTC0 diff -Naur --exclude=*.class --exclude=.#* --exclude=CVS \
+		ESCTools.orig/Houdini ESCTools/Houdini \
+		| bzip2 -9 > ${ESC_PROJECT}-${ESC_VERSION}-`date "+%d-%m-%y"`-Houdini.patch.bz; \
+	LC_ALL=C TZ=UTC0 diff -Naur --exclude=*.class --exclude=.#* --exclude=CVS \
+		ESCTools.orig/Rcc ESCTools/Rcc \
+		| bzip2 -9 > ${ESC_PROJECT}-${ESC_VERSION}-`date "+%d-%m-%y"`-Rcc.patch.bz; \
+	LC_ALL=C TZ=UTC0 diff -Naur --exclude=PPC_DARWIN --exclude=.#* --exclude=CVS \
+		--exclude=*.dylib --exclude=*.a --exclude=*.io --exclude=*.mo \
+		ESCTools.orig/Simplify ESCTools/Simplify \
+		| bzip2 -9 > ${ESC_PROJECT}-${ESC_VERSION}-`date "+%d-%m-%y"`-Simplify.patch.bz; \
+	)
+
+.PHONY: generate-toplevel-archive
+generate-toplevel-archive: clean
+	mkdir -p ${RELTEMP}/ESCTools; \
+	cp ${ESCTOOLS_ROOT}/ChangeLog ${ESCTOOLS_ROOT}/Makefile ${ESCTOOLS_ROOT}/Makefile.defs \
+		${ESCTOOLS_ROOT}/Makefile.local.sample ${ESCTOOLS_ROOT}/README.first ${ESCTOOLS_ROOT}/README.txt \
+		${ESCTOOLS_ROOT}/TODO.kotl ${ESCTOOLS_ROOT}/build.xml ${ESCTOOLS_ROOT}/clean_env.sh ${RELTEMP}/ESCTools; \
+	cp -r ${ESCTOOLS_ROOT}/docs ${RELTEMP}/ESCTools; \
+	cp -r ${ESCTOOLS_ROOT}/Utils ${RELTEMP}/ESCTools; \
+	cp -r ${ESCTOOLS_ROOT}/jars ${RELTEMP}/ESCTools; \
+	find ${RELTEMP} -name "CVS" -exec rm -rf {} \; ; \
+	(cd ${RELTEMP}; \
+		tar cjf ${ESCTOOLS_ROOT}/../${ESC_PROJECT}-${ESC_VERSION}-`date "+%d-%m-%y"`-TopLevel.tbz \
+		ESCTools;); \
+	rm -rf ${RELTEMP}/ESCTools

@@ -118,7 +118,7 @@ export JDKSPEC_ROOT ?= ${ESCJAVA_ROOT}/release/master/specs
 export RELTEMP = ${ESCTOOLS_ROOT}/release-temp
 export RELDIR  = ${ESCTOOLS_ROOT}/release
 export RELJAR  = esctools2.jar
-export RELTAR  = esctools2-${ESC_VERSION}.tar
+export RELTAR  = esctools2-${ESC_VERSION}.tgz
 export RELCLASSPATH = ${RELDIR}/${RELJAR}
 
 ############################### JUnit
