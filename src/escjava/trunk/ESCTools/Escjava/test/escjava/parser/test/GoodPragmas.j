@@ -56,4 +56,3 @@ monitored non_null
 /*@ also_modifies this; */
 //@ also_modifies this, this.bar ; also_modifies this[10], this.a[this];
 //@ also_modifies this.a[*];
-
