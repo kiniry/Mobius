@@ -180,11 +180,20 @@ ESCTOOLS_ROOT - defined to be the absolute path to the ESCTools
         directory
 
 SIMPLIFY - defined to be the *name* of (*not* path to) an appropriate
-	Simplify executable in
-	$ESCTOOLS_ROOT/Escjava/release/master/bin
-	(e.g. Simplify-1.5.4.linux). The Makefile makes a guess at an
+	Simplify executable in the directory
+           $ESCTOOLS_ROOT/Escjava/release/master/bin
+
+	For example, with a bash shell:
+           export SIMPLIFY=Simplify-1.5.4.linux
+
+        The Makefile and Escjava shell scripts make a guess at an
 	appropriate value for some platforms, but defining it yourself
-	will avoid the warning messages.
+	will avoid the warning messages.  A guess is only made for
+	Linux, Darwin on PowerPC (OS X), SPARC/Solaris, and Cygwin on
+	recent versions of Windows.  No guess is made for Compaq
+	True64 as we do not have access to such a machine.  If you
+	have a True64 machine, please send us the output of "uname
+	-a"!
 
 When a release is built, these two variables are used:
 
