@@ -69,6 +69,9 @@ public class Main extends javafe.SrcTool
     public static boolean stats = false;
     public static boolean plainWarning = false;
 
+    /** Statically check against redundant specs?  Default is true. */
+    public static boolean checkRedundantSpecs = true;
+
     // trace info: (0) no, (1) default, (2) verbose
     public static int traceInfo = 1;
     //@ invariant 0 <= traceInfo && traceInfo < 3;
@@ -214,7 +217,7 @@ public class Main extends javafe.SrcTool
          * at SRC.
          */
         System.err.println("  -counterexample -loopSafe -loop <iterCount>[.0|.5] -nocheck");
-        System.err.println("  -notrace -nowarn <category> -plainwarning -quiet");
+        System.err.println("  -noredundancy -notrace -nowarn <category> -plainwarning -quiet");
         System.err.println("  -routine <routineId> -routine <fullyQualifiedRoutineSignature>");
         System.err.println("  -routineIndirect <routineFile> -start <line#> -suggest");
         System.err.println("  -vclimit <n> -warn <category>");
@@ -557,7 +560,10 @@ public class Main extends javafe.SrcTool
 	    showLoopDetails = true;
 	    return offset;
 	} else if (option.equals("-plainwarning")) {
-	    plainWarning= true;
+	    plainWarning = true;
+	    return offset;
+	} else if (option.equals("-noredundancy")) {
+	    checkRedundantSpecs = false;
 	    return offset;
 	} else if (option.equals("-notrace")) {
 	    traceInfo = 0;
@@ -747,20 +753,17 @@ public class Main extends javafe.SrcTool
     // SrcTool-instance specific processing
 
     /**
-     * Our Simplify instance or null iff stages<6.
+     * Our Simplify instance, or null iff stages < 6.
      */
     public static Simplify prover = null;
     //@ invariant (prover == null) == (stages<6)
 
-
     /** An instance of the GC->VC translator */
     public static Translate gctranslator = new Translate();
 
-
     /**
-     * Override setup so can issue version # as soon as possible
-     * (aka, just after decode options so know if -quiet issued or
-     * not).
+     * Override setup so can issue version # as soon as possible (aka,
+     * just after decode options so know if -quiet issued or not).
      */
     public void setup() {
 	super.setup();
@@ -769,10 +772,9 @@ public class Main extends javafe.SrcTool
 	    System.out.println("ESC/Java version " + version);
     }
 
-
     /**
-     * Hook for any work needed before <code>handleCU</code> is
-     * called on each <code>CompilationUnit</code> to process them.
+     * Hook for any work needed before <code>handleCU</code> is called
+     * on each <code>CompilationUnit</code> to process them.
      */
     public void preprocess() {
 
@@ -810,8 +812,8 @@ public class Main extends javafe.SrcTool
     }
 
     /**
-     * Hook for any work needed after <code>handleCU</code> has been called
-     * on each <code>CompilationUnit</code> to process them.
+     * Hook for any work needed after <code>handleCU</code> has been
+     * called on each <code>CompilationUnit</code> to process them.
      */
     public void postprocess() {
 
@@ -839,8 +841,8 @@ public class Main extends javafe.SrcTool
     }
 
     /**
-     * This method is called on each <code>CompilationUnit</code>
-     * that this tool processes.  This method overrides the implementation
+     * This method is called on each <code>CompilationUnit</code> that
+     * this tool processes.  This method overrides the implementation
      * given in the superclass, adding a couple of lines before the
      * superclass implementation is called.
      */
@@ -856,10 +858,10 @@ public class Main extends javafe.SrcTool
 
     /**
      * This method is called by SrcTool on the TypeDecl of each
-     * outside type that SrcTool is to process. <p>
+     * outside type that SrcTool is to process.
      *
-     * In addition, it calls itself recursively to handle types
-     * nested within outside types.<p>
+     * <p> In addition, it calls itself recursively to handle types
+     * nested within outside types.
      */
     public void handleTD(TypeDecl td) {
 	TypeSig sig = TypeCheck.inst.getSig(td);
@@ -891,12 +893,11 @@ public class Main extends javafe.SrcTool
 	}
     }
 
-
     /**
-     * Run all the requested stages on a given TypeDecl;
-     * return true if we had to abort. <p>
+     * Run all the requested stages on a given TypeDecl; return true
+     * if we had to abort.
      *
-     * Precondition: td is not from a binary file.<p>
+     * @precondition - td is not from a binary file.
      */
     private boolean processTD(TypeDecl td) {
 	// ==== Start stage 1 ====
@@ -925,8 +926,8 @@ public class Main extends javafe.SrcTool
 	if (errorCount < ErrorSet.errors) {
 	    if (stages>1) {
 		stages = 1;
-		ErrorSet.caution(
-                                 "Turning off extended static checking due to type error(s)");
+		ErrorSet.caution("Turning off extended static checking " + 
+                                 "due to type error(s)");
 	    }
 	    return true;
 	}
@@ -966,8 +967,8 @@ public class Main extends javafe.SrcTool
 	// occured while generating the type-specific background predicate:
 	if (errorCount < ErrorSet.errors) {
 	    stages = 1;
-	    ErrorSet.caution(
-                             "Turning off extended static checking due to type error(s)");
+	    ErrorSet.caution("Turning off extended static checking " + 
+                             "due to type error(s)");
 	    return true;
 	}
 
@@ -1005,11 +1006,10 @@ public class Main extends javafe.SrcTool
 
 
     /**
-     * Run stages 3+..6 as requested on a TypeDeclElem. <p>
+     * Run stages 3+..6 as requested on a TypeDeclElem.
      *
-     * Precondition: te is not from a binary file,
-     *		      sig is the TypeSig for te's parent, and
-     *		      initState != null.<p>
+     * @precondition - te is not from a binary file, sig is the
+     * TypeSig for te's parent, and initState != null.
      */
     private void processTypeDeclElem(TypeDeclElem te, TypeSig sig,
 				     InitialState initState) {
@@ -1049,14 +1049,12 @@ public class Main extends javafe.SrcTool
 
     }
 
-
     /**
      * Run stages 3+..6 as requested on a RoutineDeclElem; returns a
-     * short (~ 1 word) status message. <p>
+     * short (~ 1 word) status message.
      *
-     * Precondition: r is not from a binary file,
-     *		      sig is the TypeSig for r's parent, and
-     *		      initState != null.<p>
+     * @precondition - r is not from a binary file, sig is the TypeSig
+     * for r's parent, and initState != null.
      */
     //@ ensures \result != null;
     private String processRoutineDecl(/*@ non_null */ RoutineDecl r,
@@ -1349,14 +1347,13 @@ public class Main extends javafe.SrcTool
 	return status;
     }
 
-
     /**
      * This method computes the guarded command (including assuming
-     * the precondition, the translated body, the checked postcondition,
-     * and the modifies constraints) for the method or constructor
-     * <code>r</code> in scope <code>scope</code>. <p>
+     * the precondition, the translated body, the checked
+     * postcondition, and the modifies constraints) for the method or
+     * constructor <code>r</code> in scope <code>scope</code>.
      *
-     * Returns <code>null</code> if <code>r</code> doesn't have a body.
+     * @return <code>null</code> if <code>r</code> doesn't have a body.
      */
 
     private GuardedCmd computeBody(RoutineDecl r, InitialState initState) {
@@ -1448,7 +1445,8 @@ public class Main extends javafe.SrcTool
             long T = java.lang.System.currentTimeMillis();
             Traverse.compute(fullCmd, initState, gctranslator);
             if (stats) {
-                System.out.println("      [predicate abstraction time: " + timeUsed(T) + "]");
+                System.out.println("      [predicate abstraction time: " + 
+                                   timeUsed(T) + "]");
             }
         }
         Translate.addTraceLabelSequenceNumbers(fullCmd);
@@ -1464,7 +1462,7 @@ public class Main extends javafe.SrcTool
      * Compute the time used from a start time to now, then return it
      * in a user readable form.
      */
-    /*@ensures \result != null*/
+    /*@ ensures \result != null */
     public static String timeUsed(long startTime) {
 	long delta = java.lang.System.currentTimeMillis() - startTime;
 
