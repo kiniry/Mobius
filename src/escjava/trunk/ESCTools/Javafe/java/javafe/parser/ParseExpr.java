@@ -151,29 +151,27 @@ public abstract class ParseExpr extends ParseType
 
 
     /** 
-
-     Parse an <TT>Expression</TT>.
-
-     <P>Does operator-precedence parsing of a large amount of the
-     <TT>Expression</TT> hierarchy, all the way down to
-     <TT>UnaryExpression</TT>.
-
-     <PRE>
-     Expression:
-     UnaryExpression
-     Expression BinaryOp Expression
-     Expression instanceof Type
-     Expression ? Expression : Expression
-
-     BinaryOp: one of
-     STAR / % PLUS - << >> >>> > >= < <= == != & BITOR ^ && || 
-     = *= /= %= += -= <<= >>= >>>= &= |= ^=
-     </PRE>
-
-     <P>This grammar is ambiguous; the precedence parsing machinery
-     resolves the ambiguity appropriately, according to the grammar in
-     chapter 19 of "The Java Language Specification".
-
+     * Parse an <tt>Expression</tt>.
+     *
+     * <p> Does operator-precedence parsing of a large amount of the
+     * <tt>Expression</tt> hierarchy, all the way down to
+     * <tt>UnaryExpression</tt>.
+     *
+     * <pre>
+     * Expression:
+     * UnaryExpression
+     * Expression BinaryOp Expression
+     * Expression instanceof Type
+     * Expression ? Expression : Expression
+     * 
+     * BinaryOp: one of
+     * STAR / % PLUS - << >> >>> > >= < <= == != & BITOR ^ && || 
+     * = *= /= %= += -= <<= >>= >>>= &= |= ^=
+     * </pre>
+     * 
+     * <p> This grammar is ambiguous; the precedence parsing machinery
+     * resolves the ambiguity appropriately, according to the grammar
+     * in chapter 19 of "The Java Language Specification".
      */
       
     //@ requires l != null && l.m_in != null
