@@ -1,3 +1,314 @@
+2003-05-20  Joseph R. Kiniry  <kiniry@acm.org>
+
+	* Escjava/java/escjava/parser/EscPragmaParser.java:
+	Added parsing of numerous new expressions.  Not all of these
+	expressions work yet, but I promised to commit tonight so I'm
+	doing so even though all the new features do not work.  Updated
+	the documented grammar to match all features.  I believe it is
+	complete for my work.  Added some private methods to track when
+	certain pragmas are being worked on, are not checkable, etc.
+
+	* Escjava/java/escjava/ast/EscPrettyPrint.java:
+	Added pretty-printing for numerous new expressions added in this
+	commit.  Also added some missing expressions from previous commits
+	including various behavior keywords.
+
+	* Escjava/java/escjava/ast/hierarchy.j:
+	* Javafe/java/javafe/ast/hierarchy.j:
+	Added redundant flag to appropriate AST nodes.  Each node that has
+	this attribute has two related methods: isRedundant() and
+	setRedundant(boolean) that do the obvious things.
+
+	* Escjava/java/escjava/Main.java:
+	A bit of documentation cleanup.  Also, if the "extra verbosity"
+	switch is turned on with "-v" now ESC/Java will print the
+	predicate that it generates and sends to Simplify on System.out
+	with all the other verbose information it generates.  We needed
+	this feature for current large-scale spec writing here in
+	Nijmegen.  This kind of informational output will be refined once
+	we get the new parser done.
+
+	* clean_env.sh: New script to clean environment.
+
+	* Makefile.defs:
+	Added a -source flag to the default JAVAC_FLAGS so we can begin
+	using Java asserts.
+
+	Documented the jMocha dependency better and refined the
+	MOCHA-related environmental variables.
+
+	* Escjava/setup.sh: New script to clean environment.
+
+	* Escjava/Makefile:
+	I didn't change much here but I think that we got some Windows
+	line feeds in the file so it looks like a big diff.  We need to be
+	careful about that and make sure we stick with UNIX EOL
+	conventions.
+
+	I tweaked a few dependencies, added some explicit compiler
+	parameters, and merged with Patrice's refinements for test cases.
+
+	* Escjava/test/escjava/parser/test/GoodJmlPragmas.j:
+	Temporarily (?) removed "raw" \not_specified from tests.
+
+2003-05-19  Patrice Chalin  <chalin@kind.cs.kun.nl>
+
+	* Escjava/Makefile:
+	Added -classpath option to invocation of java in commands for
+	targets test_{lexer,parser,parser_idempotence}. Also changed
+	test_lexer so that makefile stops as soon as one of the tests
+	fails.
+
+2003-05-19  David Cok  <cok@frontiernet.net>
+
+	* Escjava/Makefile:
+	* Javafe/test/javafe/test/fe/Makefile:
+	* Makefile.defs:
+	A bit of further cleaning up of Makefiles: especially handling of
+	MOCHA library.  More to do.
+
+2003-05-18  David Cok  <cok@frontiernet.net>
+
+	* Javafe/Makefile:
+	* Javafe/java/javafe/decsrc/ClassFileConstants.java:
+	* Javafe/java/javafe/decsrc/ClassFileParser.java:
+	* Javafe/java/javafe/filespace/PkgTree.java:
+	* Javafe/java/javafe/reader/ASTClassFileParser.java:
+	* Javafe/test/javafe/test/fe/Makefile:
+	* Javafe/test/javafe/test/fe/do:
+	* Javafe/test/javafe/test/fe/make_outputs:
+	* Javafe/test/javafe/test/fe/skip:
+	* Javafe/test/javafe/test/fe/test1102/run:
+	* Makefile.defs:
+	Fixes to enable the reading of binary files under java 1.4.  In
+	particular, the ClassFileParser now is not restricted to a single
+	version of class file - it seems that the parsing of signatures is
+	sufficiently stable to work for java 1.4 as well as 1.2.  There is
+	a curious issue in that directories in jar files are not reported
+	as directories, which also had to be worked around.  The Makefiles
+	for the tests are cleaned up and now (under Linux with java1.4)
+	the tests all run successfully except for two understandable
+	cases; these are now skipped with a test skip file.  Eventually
+	these tests ought to be JUnit-ized (it would speed them up).  In
+	addition I arbitarily consolidated JDB_BINARIES and JDKBINARIES to
+	JDK_BINARIES.  The files in decsrclib are no longer needed - the 2
+	that are relevant to javafe are now within the javafe sources.
+
+2003-05-16  Joseph R. Kiniry  <kiniry@acm.org>
+
+	* Makefile.defs:
+	OS-independent bits for possible use for Cygwin building.
+
+	* jars/decsrc.jar, jars/mochalib.jar: Snapshot of jar files.
+
+2003-05-16  David Cok  <cok@frontiernet.net>
+
+	* Escjava/java/escjava/AnnotationHandler.java:
+	* Escjava/java/escjava/parser/EscPragmaParser.java:
+	* Escjava/java/escjava/tc/FlowInsensitiveChecks.java:
+	* Escjava/java/escjava/translate/TrAnExpr.java:
+	* Escjava/java/escjava/translate/VcToString.java:
+	Changes to implement implies_that and the various example
+	keywords; part of implementation of initially; fixed some bugs in
+	desugaring
+
+	* Javafe/java/javafe/tc/FlowInsensitiveChecks.java:
+	Relaxing access restrictions so getType and setType can be used in
+	other packages
+
+2003-05-15  Joseph R. Kiniry  <kiniry@acm.org>
+
+	* Makefile:
+	* Makefile.defs:
+	Documentation cleanup and some extra details.
+
+	* Escjava/java/escjava/Main.java:
+	Wrote a new default version string to include "Kodak".
+
+	* Escjava/doc/jml/.cvsignore:
+	* Escjava/doc/jml/Makefile:
+	* Escjava/doc/jml/bringingjml.tex:
+	A bit of outline for a paper describing the issues of supporting the
+	full JML language in ESC/Java.
+
+	* Escjava/Makefile:
+	* Javafe/Makefile:
+	Cleaned up documentation: clarified some issues, and removed rm -f on
+	the generated jar files for decsrc and mocha libs as they are not
+	changing at all right now.
+
+	* Escjava/test/escjava/parser/test/GoodJmlPragmas.j:
+	Uncommented all new pragmas that should parse correctly given David's
+	recent updates.
+
+2003-05-14  Joseph R. Kiniry  <kiniry@acm.org>
+
+	* Javafe/java/javafe/parser/ParseExpr.java:
+	Just a little documentation cleanup.
+
+2003-05-14  Joseph R. Kiniry  <kiniry@acm.org>
+
+	* Javafe/java/javafe/parser/ParseExpr.java:
+	Just a little documentation cleanup.
+
+2003-05-13  David Cok  <cok@frontiernet.net>
+
+	* Escjava/java/escjava/ast/.cvsignore:
+	* Escjava/java/escjava/AnnotationHandler.java:
+	* Escjava/java/escjava/Main.java:
+	* Escjava/java/escjava/ast/TagConstants.java:
+	* Escjava/java/escjava/ast/hierarchy.j:
+	* Escjava/java/escjava/parser/EscPragmaParser.java:
+	* Escjava/java/escjava/reader/EscTypeReader.java:
+	* Escjava/java/escjava/tc/FlowInsensitiveChecks.java:
+	Added support for Depends clauses: constraint clauses. the .. in a
+	store-ref, and for imports in annotations (with or without a model
+	keyword).  Implementing model imports in types referenced but not
+	on the command-line took some alteration and subclassing of the
+	javafe classes.
+
+	* Escjava/java/escjava/translate/Translate.java:
+	Allowing constructors with no bodies.
+
+	* Javafe/java/javafe/util/StackVector.java:
+	Adding a toString method for help in debugging.
+
+	* Javafe/java/javafe/tc/FlowInsensitiveChecks.java:
+	Allowing constructors with no bodies.
+
+	* Javafe/java/javafe/parser/Lex.java:
+	Altered to allow access to the lexical pragma vector to the pragma
+	parser.
+
+	* Javafe/java/javafe/parser/Parse.java:
+	Altered to allow constructors with no bodies and to allow access
+	to method parseImportDeclaration to subclasses.
+
+2003-05-11  David Cok  <cok@frontiernet.net>
+
+	* Escjava/java/escjava/parser/EscPragmaParser.java:
+	* Escjava/java/escjava/tc/FlowInsensitiveChecks.java:
+	* Escjava/java/escjava/translate/GetSpec.java:
+	* Escjava/java/escjava/AnnotationHandler.java:
+	* Escjava/java/escjava/ast/.cvsignore:
+	* Escjava/java/escjava/ast/DerivedMethodDecl.java:
+	* Escjava/java/escjava/ast/EscPrettyPrint.java:
+	* Escjava/java/escjava/ast/TagConstants.java:
+	* Escjava/java/escjava/ast/hierarchy.j:
+	* Escjava/Makefile:
+	Initial changes to implement the parsing and desugaring of
+	heavyweight specifications.  In the process, the conditional part
+	of modifies clauses was also implemented (for parsing - not sure
+	yet how escjava uses the modifies clauses).  The treatment of the
+	also keyword is implemented in JML style, with the also_xxx ESC
+	form still parsed.  At present no warnings are given for
+	inappropriate use of also.  Parsing the when and measured_by
+	clauses as well, for good measure.
+
+2003-05-10  David Cok  <cok@frontiernet.net>
+
+	* Escjava/java/escjava/ast/.cvsignore:
+	* Escjava/java/escjava/ast/hierarchy.j:
+	* Escjava/java/escjava/backpred/.cvsignore:
+	CVS corrections.
+
+	* Escjava/test/matrix/SparseMatrix.java:
+	* Escjava/test/matrix/SparseVector.java:
+	Syntax corrections.
+
+	* Escjava/java/escjava/AnnotationHandler.java:
+	* Escjava/java/escjava/Main.java:
+	* Escjava/java/escjava/ast/hierarchy.j:
+	* Escjava/java/escjava/parser/EscPragmaParser.java:
+	* Escjava/java/escjava/tc/FlowInsensitiveChecks.java:
+	* Javafe/java/javafe/parser/Parse.java:
+	* Javafe/java/javafe/ast/hierarchy.j:
+	Enhanced the parsing of 'pure' annotations and model methods;
+	model methods are now found in scope; an error is generated if a
+	non-model method is used in an annotation.
+
+	* Escjava/Makefile: 
+	More cleaning and a start on the test targets.
+
+	* Escjava/java/escjava/ast/Modifiers.java:
+	Altering encoding of JML modifiers to move them out of the 16bit
+	range of the Java modifiers.
+
+	* Javafe/java/javafe/ast/Makefile: 
+	Repaired dependency problem.
+
+	* Javafe/java/javafe/util/ErrorSet.java: 
+	Simplified debugging code.
+
+	* Javafe/java/javafe/util/Location.java:
+	Adding a function to format the filename and line number for output.
+
+2003-05-09  David Cok  <cok@frontiernet.net>
+
+	* Escjava/java/escjava/backpred/DefaultUnivBackPred.java:
+	* Javafe/classfiles/.cvsignore:
+	* Javafe/java/javafe/tc/FieldDeclVec.java:
+	* Javafe/java/javafe/tc/MethodDeclVec.java:
+	* Javafe/java/javafe/tc/TypeSigVec.java:
+	Cleaning up generated files.
+
+	* Escjava/java/escjava/parser/EscPragmaParser.java:
+	* Escjava/java/escjava/tc/FlowInsensitiveChecks.java:
+	Support added to parse diverges clauses.
+
+	* Escjava/Makefile:
+	* Javafe/java/javafe/ast/Makefile:
+	Improvements/corrections to Makefiles.
+
+2003-05-08  David Cok  <cok@frontiernet.net>
+
+	* Makefile.defs:
+	Adding an additional file that is part of the new Make structure.
+
+	* Calvin/java/escjava/ast/VisitorArgResult.java:
+	Removing a generated file from CVS.
+
+	* Escjava/java/escjava/tc/FlowInsensitiveChecks.java:
+	* Escjava/java/escjava/tc/GhostEnv.java:
+	* Escjava/java/escjava/translate/GC.java:
+	* Escjava/java/escjava/translate/GetSpec.java:
+	* Escjava/java/escjava/translate/Substitute.java:
+	* Escjava/java/escjava/translate/Suggestion.java:
+	* Escjava/java/escjava/translate/TrAnExpr.java:
+	* Escjava/java/escjava/translate/Translate.java:
+	* Escjava/java/escjava/translate/VcToString.java:
+	* Escjava/java/escjava/Main.java:
+	* Escjava/java/escjava/ast/EscPrettyPrint.java:
+	* Escjava/java/escjava/ast/Modifiers.java:
+	* Escjava/java/escjava/ast/TagConstants.java:
+	* Escjava/java/escjava/ast/hierarchy.j:
+	* Escjava/java/escjava/backpred/FindContributors.java:
+	* Escjava/java/escjava/pa/PredicateAbstraction.java:
+	* Escjava/java/escjava/parser/EscPragmaParser.java:
+	* Escjava/java/escjava/sp/VarMap.java:
+	Added support for pure, represents, model methods; semantics is
+	not necessarily in place, but files containing these constructs
+	parse without complaint.  Also added an option -parsePlus to
+	enable parsing of annotations in the JML /*+@ comments, just for
+	testing. Added <- and -> as punctuation.
+
+	* Javafe/java/javafe/parser/Parse.java:
+	Making a method protected so it can be called in esc; commenting
+	out an error (modifiers on a type declaration pragma) so that
+	model methods can be parsed.
+
+	* Escjava/Makefile:
+	* Javafe/Makefile:
+	* Javafe/java/javafe/ast/Makefile:
+	* Javafe/java/jtools/Makefile:
+	* Javafe/test/javafe/test/fe/Makefile:
+	* Makefile:
+	* Makefile.local:
+	Revised Makefiles so that we can build incrementally and so that
+	setup.sh is not needed (especially do not need different setups
+	for Javafe and Escjava).  Instead edit Makefile.local for your
+	local settings of environment variables.
+
 2003-05-05  Joseph Kiniry  <kiniry@acm.org>
 
 	* Javafe/astgen/astgen.l:
@@ -43,7 +354,6 @@
 
 2003-04-30  David Cok  <cok@frontiernet.net>
 
-	* Escjava/java/escjava/ast/.cvsignore:
 	* Escjava/java/escjava/ast/EscPrettyPrint.java:
 	* Escjava/java/escjava/ast/hierarchy.j:
 	Some changes to support model keyword
@@ -58,7 +368,7 @@
 	regression testing
 
 	* Javafe/test/javafe/parser/test/.cvsignore:
-	Adding all .class files to .cvcsignore
+	Adding all .class files to .cvsignore
 
 	* Javafe/java/tohtml/Java2Html.java: Adding a FIXME
 
@@ -175,7 +485,8 @@
 
 2003-04-29  David Cok  <cok@frontiernet.net>
 
-	* Escjava/java/escjava/ast/.cvsignore: Hiding some generated files
+	* Escjava/java/escjava/ast/.cvsignore:
+	Hiding some generated files
 
 	* Escjava/java/escjava/reader/EscTypeReader.java:
 	ALlowing esc to find other JML refinement suffixes
@@ -586,7 +897,8 @@
 	* Escjava/simplify:
 	Added support for automatic use of ESCTools-built simplify.
 
-	* Escjava/java/escjava/ast/.cvsignore, Escjava/setup.sh:
+	* Escjava/java/escjava/ast/.cvsignore:
+	* Escjava/setup.sh:
 	Added support for setting up JAVA_HOME if it is unset.  Added support
 	for automatically addding Java source to path dependent upon version
 	(very rough now).  Refined definition of CLASSES and ESC_CLASSPATH to
