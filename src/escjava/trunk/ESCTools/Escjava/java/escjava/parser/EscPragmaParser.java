@@ -621,6 +621,9 @@ public class EscPragmaParser extends Parse implements PragmaParser
                 Info.out("next tag is: " + tag);
 
             switch (tag) {
+
+// FIXME - these three cases should not be here, I think, since the
+// items will only appear in expressions??? -- DRCok
                 case TagConstants.JML_NOT_SPECIFIED:
                     dst.ttype = TagConstants.MODIFIERPRAGMA;
                     NotSpecifiedExpr nse =
@@ -1269,6 +1272,8 @@ public class EscPragmaParser extends Parse implements PragmaParser
             dst.startingLoc = inProcessLoc;
 	    int tempInProcessTag = inProcessTag;
 	    int t = scanner.lookahead(0);
+// FIXME - if \nothing, \everything, \not_specified are parsed as part of
+// expressions we don't need to catch them here -- DRCok
 	    if (t == TagConstants.JML_NOTHING) {
 		scanner.getNextToken();
 		dst.auxVal = ExprModifierPragma.make(tempInProcessTag, 
@@ -1301,6 +1306,8 @@ public class EscPragmaParser extends Parse implements PragmaParser
 	    int tempInProcessTag = inProcessTag;
 	    int t = scanner.lookahead(0);
 	    Expr e = null;
+// FIXME - if \nothing, \everything, \not_specified are parsed as part of
+// expressions we don't need to catch them here -- DRCok
 	    if (t == TagConstants.JML_NOTHING) {
 		scanner.getNextToken();
 		e = NothingExpr.make(scanner.startingLoc);
