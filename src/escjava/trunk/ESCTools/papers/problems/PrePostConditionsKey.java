@@ -8,7 +8,7 @@ class PrePostConditionsKey
   String s;
   static Object so;
   
-  //@ requires o != null;
+  //@ requires s != null;
   //@ ensures o.equals(s.toString());
   //@ signals (Exception) false;
   void m() {
@@ -36,14 +36,14 @@ class PrePostConditionsKey
   }
   
   //@ requires t != null;
-  //@ requires t.length >= 6;
+  //@ requires t.length() >= 6;
   //@ ensures PrePostConditionsKey.so.equals(t.substring(3,6));
   //@ signals (Exception) false;
   void p(String t) {
     PrePostConditionsKey.so = t.substring(3,6);
   }
 
-  //@ requires StaticPreconditionsKey.o != null;
+  //@ requires StaticPreconditionsKey.s != null;
   //@ requires s == StaticPreconditionsKey.s;
   //@ ensures s == StaticPreconditionsKey.s;
   //@ signals (Exception) false;
@@ -59,7 +59,7 @@ class PrePostConditionsKey
   //@ ensures i == 2;
   //@ signals (IllegalArgumentException) (\old(o == null));
   //@ signals (IllegalArgumentException iae) (\old(b < 0) && iae.getMessage().equals("bogus byte"));
-  void r(Object o, byte b) {
+  void r(Object o, byte b) throws IllegalArgumentException {
     if (o == null)
       throw new IllegalArgumentException();
     if (b < 0)
@@ -69,10 +69,15 @@ class PrePostConditionsKey
   
   public static void main(String[] args) {
     PrePostConditionsKey ppc = new PrePostConditionsKey();
+    ppc.s = "foobar";
     ppc.m();
+    ppc.i = -1;
     ppc.n();
-    ppc.o(127);
+    ppc.o = new Object();
+    ppc.o(Byte.MAX_VALUE + 1);
     ppc.p("foobar");
+    StaticPreconditionsKey.s = "piggie";
+    ppc.s = StaticPreconditionsKey.s;
     ppc.q();
   }
 }

@@ -439,13 +439,11 @@ E.g., this method verifies:
   @}
 @end example
 
-@page
-
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @node PrePost, Modifies, Assumptions, Core
-@unnumberedsec Preconditions and Postconditions
+@unnumberedsec Lightweight Contracts
 
-@cindex Preconditions and Postconditions
+@cindex Lightweight Contracts
 
 A @emph{specification} of the class and its methods describes the
 manner in which the class is correctly used.  To write such a
@@ -458,10 +456,25 @@ A @emph{method contract} consists of two basic assertions: a
 is guaranteed to behave correctly, and a @emph{postcondition} which
 states what is true when the method completes executing.
 
+@unumberedsubsec Preconditions
+@cindex Preconditions
+
 The assume statements written for the preceding problems that were
 ``pushed'' to the beginning of the method are preconditions; they
 state some of the conditions necessary for their method to terminate
 properly.
+
+Preconditions are specified in JML using the @code{requires} clause
+which has the following form:
+@display
+@var{requires-clause} ::= @code{requires} @var{pred-or-not} @code{;}
+@var{pred-or-not} ::= @var{predicate} | @code{\not_specified}
+@end display
+
+The value @code{\not_specified} says that you have a precondition in
+mind but you simply are not specifying it.  Different tools can view
+such an unspecified precondition in different ways.  For example,
+ESC/Java2 assumes a default precondition of @code{true}.
 
 The process of writing preconditions is a tricky business.
 Preconditions must be ensured by the @emph{caller} of the method,
@@ -473,18 +486,134 @@ as visible'' as the method they are guarding.
 @strong{Problem 3.} @anchor{Problem-3} Annotate the following code
 with @emph{preconditions} only.  Consider what are the
 @emph{necessary} conditions for the method bodies to (a) not fail
-abnormally (e.g., throw NullPointerExceptions,
-ArrayIndexOutOfBoundExceptions, etc.), @emph{and} (b) perform their
-job correctly (e.g., not compute an incorrect value, given your
-intuition of the purpose of the method).
+abnormally (e.g., throw @code{NullPointerExceptions},
+@code{IndexOutOfBoundsExceptions}, etc.), (b) pass all assertions
+in the code, and (c) perform their job correctly (e.g., not compute an
+incorrect value, given your intuition of the purpose of the method).
+Check the use of all of your method calls with ESC/Java2.
 
-@c Additionally, frequently in Java APIs various exceptions are thrown
-@c in response to particular 
+@example
+@include problems/PrePostConditions.java.texinfo
+@end example
 
-@c use of \old in postconditions
+Notice that many preconditions focus on variables other than the
+formal parameters of their method (as in the method @code{o(int)}).
+Some depend upon class attributes (as in the methods @code{m()} and
+@code{n()}), while others focus on ``global'' values like static
+fields of the enclosing class (as in the method @code{p(String)}) or
+static field of other classes (as in the method @code{q()}).
 
+It is frequently argued that the more a method's precondition depends
+upon variables other than @code{this} and its fields, @code{this}'s
+class and its ancestors and their fields, and the method itself's
+parameters, the more poorly designed the method is due to the
+complexity of its interdependencies and its consequent fragility in
+the face of ``external'' changes.
 
-@page
+In this example in particular, the method @code{q()} is poorly
+designed due to its dependence on the (static) fields of the seeminly
+unrelated class @code{StaticPreconditions}.
+
+@c Additionally, the more complex a precondition is, the harder it
+@c sometimes is to ensure it is fulfilled.
+
+@unnumberedsubsec Postconditions
+@cindex Postconditions
+
+@emph{Postconditions} are used to describe how a method should behave.
+If a method's preconditions are fulfilled, then the (normal)
+postconditions @emph{must} be true if the method terminates
+normally---that is, does not throw an exception or never terminates,
+perhaps by going into an infinite loop.
+
+Normal postconditions are specified in JML using the @code{ensures}
+clause:
+@display
+@var{ensures-clause} ::= @code{ensures} @var{pred-or-not} @code{;}
+@end display
+
+Once again, an unspecified postcondition means ``I have something in
+mind but I'm not writing it down.''  The default postcondition for
+ESC/Java2 is @code{true}.
+
+In a postcondition predicate one can reference any visible fields, the
+parameters of the method, the special keyword @code{\result} if the
+method has a non-@code{void} return type, and may contain expressions
+of the form @code{\old(@var{E})}.  @code{\result} is used to reference
+the value of the result of the method.  The @code{\old()} expression
+is used to references values in the pre-state of the method; that is,
+you can refer to the state of any values just @emph{before} the method
+began executing.
+
+@strong{Problem 4.} @anchor{Problem-4} Annotate the code of the
+previous problem with @emph{postconditions} that match your
+preconditions.  Consider what is known to be true when each method
+terminates @emph{normally}.  Check your postconditions with ESC/Java2.
+
+@unnumberedsubsec Exceptional (Abnormal) Postconditions
+@cindex Exceptional Postconditions
+@cindex Abnormal Postconditions
+
+Frequently Java APIs use exceptions and errors (all descendents of the
+class @code{Throwable}) to indicate errors or perform flow-control.
+Erroneous termination of a method is due to unexpected circumstances;
+changes in program flow are non-erroneous termination of a method due
+to expected, but not ``normal'' behavior in response to some
+particular expected circumstances.  This ``design confusion'' of
+exceptions in Java is a primary criticism of the language.
+
+Both situations are deemed @emph{exceptional termination} in the JML
+vernacular because both use Java exceptions to signal termination of a
+method.  To state what is known about the system when an exception is
+thrown, an @emph{exceptional postcondition} is used.
+
+Exceptional postconditions are written in JML using the @code{signals}
+clause:
+@display
+@var{signals-clause} ::= @code{signals} @code{(} @var{reference-type} [ @var{ident} ] @code{)} [ @var{pred-or-not} ] @code{;}
+@end display
+
+In many circumstances the value(s) of the exception object simply do
+not matter.  In those circumstances the simpler form of the
+exceptional postcondition can be used:
+@example
+  //@@ signals (java.io.IOException) aPredicate();
+@end example
+
+If one wants to refer to the exception object being thrown in the
+exceptional postcondition, a bound identifier can be included in the
+signals clause.  E.g.,
+@example
+  //@@ signals (java.io.IOException ioe) ioe.getMessage().equals("I/O Error!");
+@end example
+which is equivalent to the signals clause
+@example
+  //@@ signals (java.lang.Exception e) (e instanceof IOException) ==> ioe.getMessage().equals("I/O Error!");
+@end example
+
+The default exceptional postcondition for ESC/Java2 is currently
+@example
+  //@@ signals (java.lang.Exception) true;
+@end example
+
+Note that a @code{signals} clause specifies when a certain exception
+@emph{may} be thrown, not when a certain exception @emph{must} be
+thrown.  To say that an exception must be thrown in some situation,
+one has to exclude that situation from other signals clauses and from
+all ensures clauses.
+
+Also note that Java @emph{errors} are @emph{very} rarely specified and
+are not reasoned about at all using ESC/Java2.  Also, Java ``runtime
+exceptions'' (descendents of the class
+@code{java.lang.RuntimeException}) are also rarely specified using
+exceptional postconditions.
+
+@strong{Problem 5.} @anchor{Problem-5} Annotate the code of the
+previous problem with @emph{exceptional postconditions}.  Consider
+what is known to be true when each method terminates
+@emph{abnormally}.  If a method @emph{cannot} terminate abnormally,
+annotate such using an exceptional postcondition with a @code{false}
+predicate.  Check your exceptional postconditions with ESC/Java2.
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @node  Modifies, Heavyweight, PrePost, Core
