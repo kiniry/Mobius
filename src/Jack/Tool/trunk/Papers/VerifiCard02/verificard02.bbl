@@ -1,0 +1,107 @@
+\begin{thebibliography}{10}
+
+\bibitem{BretagneMGL00}
+E.~Bretagne, A.~El Marouani, P.Girard, and J.-L. Lanet.
+\newblock Pacap purse and loyalty specification.
+\newblock Technical Report V 0.4, Gemplus, 2000.
+
+\bibitem{BreunesseJB02}
+C.~Breunesse, B.~Jacobs, and J.~van~den Berg.
+\newblock {Specifying and Verifying a Decimal Representation in Java for Smart
+  Cards}.
+\newblock In {\em Algebraic Methodology And Software Technology (AMAST '02)},
+  LNCS. Springer, 2002.
+\newblock To appear.
+
+\bibitem{CatanoH01Url}
+N.~Cata{\~n}o and M.~Huisman.
+\newblock Annotated files {Electronic Purse} case study, 2001.
+\newblock \texttt{http://www-sop.inria.fr/lemme/verificard/electronic\_purse}.
+
+\bibitem{CatanoH02b}
+N.~Cata{\~n}o and M.~Huisman.
+\newblock {A static checker for JML's \emph{assignable} clause}, 2002.
+\newblock Manuscript.
+
+\bibitem{EscJmlDiff}
+Differences between {E}sc/{Java} and {JML}, 2000.
+\newblock Comes with {JML} distribution, in file \texttt{esc-jml-diffs.txt}.
+
+\bibitem{ESCJavaUrl}
+{Extended static checking for Java}.
+\newblock \texttt{http://research.compaq.com/SRC/esc/}.
+
+\bibitem{LoopAPIURL}
+{ESC/Java specifications for the JavaCard API}.
+\newblock \newline
+  \texttt{http://www.cs.kun.nl/\~{}erikpoll/publications/jc211\_specs.html}.
+
+\bibitem{PurseUrl}
+Gemplus.
+\newblock Applet benchmark kit.\\
+\newblock \texttt{http://www.gemplus.com/smart/r\_d/publications/case-study/}.
+
+\bibitem{HuismanJB01}
+M.~Huisman, B.~Jacobs, and J.~van~den Berg.
+\newblock {A Case Study in Class Library Verification: Java's Vector Class}.
+\newblock {\em Software Tools for Technology Transfer}, 3/3:332--352, 2001.
+
+\bibitem{JassUrl}
+{The JASS project}.
+\newblock
+  \texttt{http://semantik.informatik.uni-oldenburg.de/}\verb|~|\texttt{jass/}.
+
+\bibitem{LeavensBR00}
+G.T. Leavens, A.L. Baker, and C.~Ruby.
+\newblock {Preliminary Design of JML: a Behavioral Interface Specification
+  Language for Java}.
+\newblock Technical Report 98-06, Iowa State University, Department of Computer
+  Science, 2000.
+
+\bibitem{LeinoNS00}
+K.R.M. Leino, G.~Nelson, and J.B. Saxe.
+\newblock {ESC/Java} user's manual.
+\newblock Technical Report SRC 2000-002, Compaq System Research Center, 2000.
+
+\bibitem{LOOPUrl}
+{The LOOP project}.
+\newblock \texttt{http://www.cs.kun.nl/\~{}bart/LOOP/}.
+
+\bibitem{MeijerP01}
+H.~Meijer and E.~Poll.
+\newblock {Towards a Full Formal Specification of the Java Card API}.
+\newblock In I.~Attali and T.~Jensen, editors, {\em Smart Card Programming and
+  Security (E-smart 2001)}, number 2140 in LNCS, pages 165--178. Springer,
+  2001.
+
+\bibitem{Meyer97}
+B.~Meyer.
+\newblock {\em {Object-Oriented Software Construction}}.
+\newblock Prentice Hall, 2nd rev. edition, 1997.
+
+\bibitem{MeyerP00}
+J.~Meyer and A.~Poetzsch-Heffter.
+\newblock An architecture of interactive program provers.
+\newblock In S.~Graf and M.~Schwartzbach, editors, {\em Tools and Algorithms
+  for the Construction and Analysis of Systems (TACAS 2000)}, number 1785 in
+  LNCS, pages 63--77. Springer, 2000.
+
+\bibitem{JavaCardAPI}
+{Sun Microsystems, Inc.}
+\newblock {Java Card 2.1. Platform Application Programming Interface (API)
+  Specification}.
+\newblock \texttt{http://java.sun.com/products/javacard/htmldoc/}.
+
+\bibitem{JavaCardURL}
+{Sun Microsystems, Inc.}
+\newblock {JavaCard Technology}.\\
+\newblock \texttt{http://java.sun.com/products/javacard/}.
+
+\bibitem{TrentelmanH02}
+K.~Trentelman and M.~Huisman.
+\newblock {Extending JML Specifications with Temporal Logic}.
+\newblock In {\em Algebraic Methodology And Software Technology (AMAST '02)},
+  LNCS. Springer, 2002.
+\newblock To appear.
+
+\end{thebibliography}

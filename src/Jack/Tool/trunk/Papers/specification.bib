@@ -2,12 +2,22 @@
 @string{elsevier="Elsevier  Publishing"}
 @string {LNCS           = {LNCS}}
 @string{springer        = {Springer}}%{Springer-Verlag}}            %
+
+@string{cav96           = {Computer-Aided Verification (CAV '96)}}
 @string{tacas00 	= "Tools and Algorithms
                            for the Construction and Analysis of
 		  Systems (TACAS 2000)"}
+@string{tacas01 	= "Tools and Algorithms
+                           for the Construction and Analysis of
+		  Systems (TACAS 2001)"}
 @string{fase00          = "Fundamental Approaches to Software Engineering (FASE 2000)"}
 @string{fase01          = "Fundamental Approaches to Software Engineering (FASE 2001)"}
 
+@STRING{OOPSLA98  = "Object-Oriented Programming, Systems, Languages
+		   and Applications (OOPSLA '98)"}
+@STRING{ACMTPLS         = "ACM Trans. on Progr. Lang. and Systems"}
+@string{amast02         = "Algebraic Methodology And Software
+                  Technology (AMAST '02)"}
 
 @book{Alexander79,
   author = {C. Alexander},
@@ -50,12 +60,6 @@ note    = {\texttt{http://www.cis.ksu.edu/santos/bandera/}}
     year = {2001}
 }
 
-@techreport{ BBJP01,
- title = "On the Role of Invariants in Reasoning about Object Oriented Languages",
- year = "2001",
- author = "Joachim {van den} Berg and Cees-Bart Breunesse and Bart Jacobs and Erik Poll",
- institution = "Computing Science Institute, University of Nijmegen",
-}
 
 @book{BerardBLPS99,
   author = 	 {B. B\'erard and M. Bidoit and F. Laroussinie and A. Petit and P. Schnoebelen},
@@ -65,6 +69,17 @@ note    = {\texttt{http://www.cis.ksu.edu/santos/bandera/}}
   year = 	 {1999},
   address = 	 "\texttt{http://www.vuibert.com/livre593.html}",
 }
+
+@INPROCEEDINGS{BergJ01,
+AUTHOR       = "Berg, J. van den and B. Jacobs",
+TITLE        = "The {LOOP} compiler for {Java} and {JML}",
+number       = "2031",
+editor       = "Margaria, T. and Yi, W.",
+series       = lncs,
+pages        = "299--312",
+publisher    = springer,
+booktitle    = tacas01,
+year         = 2001}
 
 @inproceedings{BergJP01,
   author =       "Berg, J. van den and B. Jacobs and E. Poll",
@@ -91,6 +106,13 @@ pages        = "1-21",
 editor       = "D. Bert and C. Choppy and P.D. Mosses",
 publisher    = springer,
 year         = 2000
+}
+
+@techreport{ BBJP01,
+ title = "On the Role of Invariants in Reasoning about Object Oriented Languages",
+ year = "2001",
+ author = "Joachim {van den} Berg and Cees-Bart Breunesse and Bart Jacobs and Erik Poll",
+ institution = "Computing Science Institute, University of Nijmegen",
 }
 
 @techreport{Bhorkar00runtime,
@@ -125,6 +147,16 @@ year         = 2000
   year         = "1999",
 }
 
+@article{BorgidaMR95,
+author = "A. Borgida and J. Mylopoulos and R. Reiter",
+title = "On the Frame problem in Procedure Specifications",
+journal = "IEEE Transactions on Software Engineering",
+year = 1995,
+volume = 21,
+number = 10,
+pages = "785--798"
+}
+
 @misc{BratKPV00,
   author = "G. Brat and K. Havelund and S. Park and W. Visser",
   title = "Java PathFinder - Second Generation of a Java Model Checker",
@@ -143,10 +175,13 @@ year         = 2000
 }
 
 @inproceedings{BreunesseJB02,
-title = {{Specifying and Verifying an Example: a decimal representation in Java for smartcards }},
+title = {{Specifying and Verifying a Decimal Representation in Java for Smart Cards}},
 author = "C. Breunesse and B. Jacobs and Berg, J. van den",
 year = 2002,
-booktitle = "Annual VerifiCard Meeting",
+booktitle = amast02,
+publisher = springer,
+series = lncs,
+note = "To appear"
 }
 
 @misc{CatanoH01URL,
@@ -164,7 +199,7 @@ booktitle = "Annual VerifiCard Meeting",
 }
 
 @misc{CatanoH02b,
-title = {The modifies clause: semantics, verification and application},
+title = {{A static checker for JML's \emph{assignable} clause}},
 author = "N. Cata{\~n}o and M. Huisman",
 note = "Manuscript",
 year = 2002
@@ -176,6 +211,16 @@ year = 2002
   school = 	 {Universit\'e de Paris $VII$},
   year = 	 {2001}
 }
+
+@techReport{CauM97,
+  author = 	 {Antonio Cau and Ben Moszkowski},
+  title =        {Interval Temporal Logic Proof Checker},
+  institution =  {Department of Computer Science De Montfort University and Department of Electrical and Electronic Engineering University of Newcastle upon Type},
+  year = 	 {1997},
+  month =        {April},
+  day =          {14},
+}
+
 
 @InProceedings{ClarkeE81,
   author =       "E. M. Clarke and E. A. Emerson",
@@ -200,6 +245,18 @@ year = 2002
     pages = "1512--1542",
     year = "1994"
 }
+
+@inproceedings{ ClavelDELMMQ99,
+    author = "M. Clavel and F. Dur{\'a}n and S. Eker and P. Lincoln and N. Mart{\'\i}-Oliet and J. Meseguer and J. F. Quesada",
+    title = "The {Maude} System",
+    booktitle = "Proceedings of the 10th International Conference on Rewriting Techniques and Applications ({RTA}-99)",
+    publisher = "Springer-Verlag LNCS 1631",
+    address = "Trento, Italy",
+    editor = "P. Narendran and M. Rusinowitch",
+    pages = "240--243",
+    year = "1999",
+}
+
 
 @TechReport{CorbettDHR01,
   author = 	 {J. Corbett and M. Dwyer and J. Hatcliff and Robby},
@@ -311,6 +368,14 @@ pages = {500--517}
   institution = "University of Cambridge Computer Laboratory",
   year = "1993",
 }
+
+@BOOK{GoslingJSB00, 
+AUTHOR       = "J. Gosling and B. Joy and G. Steele and G. Bracha", 
+TITLE        = "The Java Language Specification Second Edition", 
+PUBLISHER    = "Addison-Wesley", 
+SERIES       = "The Java Series",
+YEAR         = 2000}
+
 
 @INPROCEEDINGS{JacobsP01,
 AUTHOR = "B. Jacobs and E. Poll",
@@ -468,11 +533,13 @@ note    = {\texttt{http://semantik.informatik.uni-oldenburg.de/}\verb|~|\texttt{
 @misc{JavaCardAPI,
 title = {{Java Card 2.1. Platform Application Programming Interface (API) Specification}},
 key = {API},
+author = {{Sun Microsystems, Inc.}},
 note = {\texttt{http://java.sun.com/products/javacard/htmldoc/}}
 }
 
 @Misc{JavaCardURL,
 title={{JavaCard Technology}},
+author = {{Sun Microsystems, Inc.}},
 key = {JavaCard},
 note= {\texttt{http://java.sun.com/products/javacard/}}
 }
@@ -481,14 +548,15 @@ note= {\texttt{http://java.sun.com/products/javacard/}}
 @misc{JavaSpecificLanguage,
     key =   {Jav},
     title = "The \textsc{Java} Language Specification",
-    note = "Sun {Microsystems} Inc, {http$:$//java.sun.com/docs/books/jls/index.html}", 
+    author = {{Sun Microsystems, Inc.}},
+    note = "{http$:$//java.sun.com/docs/books/jls/index.html}", 
     year = "2001", 
 }
 
 @misc{InsurePP,
 title   = {ParaSoft Insure$++$},
 key     = {INSURE},
-note    = {\texttt{{http://www}.parasoft.com/products/insure/}},
+note    = {\texttt{{http://www.parasoft.com/jsp/products/home.jsp?product=Insure}}}
 }
 
 @book{JoyJiniSpecification99,
@@ -563,10 +631,13 @@ Java}",
   year =   1995,
 }
 
-@misc{ Leino97,
-    title = "Data groups$:$ Specifying the modification of extended state",
-    author = "K. Rustan M. Leino",
-    year = 1997,
+@INPROCEEDINGS{Leino98,
+AUTHOR       = "K.R.M. Leino",
+TITLE        = "Data groups: specifying the modification of extended state",
+BOOKTITLE    = OOPSLA98, 
+PUBLISHER = "ACM Press", 
+PAGES        = "144--153",
+YEAR         = "1998"
 }
 
 @techreport{LeinoNS00,
@@ -576,6 +647,28 @@ institution = "Compaq System Research Center",
 number = "SRC 2000-002",
 year   = 2000
 }		  
+
+@inproceedings{Leino01,
+author = "K.R.M. Leino",
+title = "{Applications of Extended Static Checking}",
+booktitle = "Static Analysis (SAS 2001)",
+editor = "P. Cousot",
+year = 2001,
+series = lncs,
+publisher = springer,
+number = 2126,
+pages = "185--193"
+}
+
+@ARTICLE{LiskovW94,
+  author =       "B.H. Liskov and J.M. Wing",
+  title =        "A behavioral notion of subtyping.",
+  journal =      ACMTPLS,
+  volume =       "16",
+  number =       "1",
+  pages =        "1811--1841",
+  year =         "1994",
+}
 
 @Misc{LoopAPIURL,
 title={{ESC/Java specifications for the JavaCard API}},
@@ -588,6 +681,17 @@ note= {\newline \texttt{http://www.cs.kun.nl/\~{}erikpoll/publications/jc211\_sp
 title        = {{The LOOP project}},
 key       = {LOOP},
 note    = {\texttt{http://www.cs.kun.nl/\~{}bart/LOOP/}}
+}
+
+@inproceedings{McCarthyH69,
+author = "J. McCarthy and P. Hayes",
+title = "Some philosophical problems from the standpoint of artificial
+                  intelligence",  
+editor = "B. Meltzer and D. Michie",
+booktitle = "Machine Intelligence 4",
+publisher = "Edinburgh Univ. Press",
+year = 1969,
+pages = "463--502"
 }
 
 @inproceedings{MeijerP01,
@@ -852,24 +956,14 @@ number = 828
     year = "1997",
 }
 
-
-
-@inproceedings{ ClavelDELMMQ99,
-    author = "M. Clavel and F. Dur{\'a}n and S. Eker and P. Lincoln and N. Mart{\'\i}-Oliet and J. Meseguer and J. F. Quesada",
-    title = "The {Maude} System",
-    booktitle = "Proceedings of the 10th International Conference on Rewriting Techniques and Applications ({RTA}-99)",
-    publisher = "Springer-Verlag LNCS 1631",
-    address = "Trento, Italy",
-    editor = "P. Narendran and M. Rusinowitch",
-    pages = "240--243",
-    year = "1999",
+@inproceedings{TrentelmanH02,
+title = {{Extending JML Specifications with Temporal Logic}},
+author = "K. Trentelman and M. Huisman",
+year = 2002,
+booktitle = amast02,
+publisher = springer,
+series = lncs,
+note = "To appear"
 }
 
-@techReport{CauM97,
-  author = 	 {Antonio Cau and Ben Moszkowski},
-  title =        {Interval Temporal Logic Proof Checker},
-  institution =  {Department of Computer Science De Montfort University and Department of Electrical and Electronic Engineering University of Newcastle upon Type},
-  year = 	 {1997},
-  month =        {April},
-  day =          {14},
-}
+
