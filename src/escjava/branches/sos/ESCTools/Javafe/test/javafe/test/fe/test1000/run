@@ -1,0 +1,5 @@
+#!/bin/csh -f
+
+## Misc tests on labels from Rustan and Jim, implemented by Cormac
+
+${TOOL} all.java
