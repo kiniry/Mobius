@@ -153,7 +153,12 @@ high-performance prover interfaces.
 
 @menu
 * Introduction::                An introduction to this document.
+* The ESC/Java2 Prover API::    
+* Prover Communication::        
+* ESC/Java2 Prover Built-in Theories::  
+* References::                  
 * Copying::                     Your rights and freedoms.
+* JML API::                     
 * Index::                       Complete index.
 
 @end menu
@@ -164,7 +169,7 @@ high-performance prover interfaces.
 @c =============================================================================
 @c %**body
 
-@node Introduction, Copying, Top, Top
+@node Introduction, The ESC/Java2 Prover API, Top, Top
 @chapter Introduction
 
 @cindex Introduction
@@ -172,7 +177,7 @@ high-performance prover interfaces.
 * Discuss what this document contains.
 
 @c =============================================================================
-@node Copying, Prover Communication, Introduction, Top
+@node The ESC/Java2 Prover API, Prover Communication, Introduction, Top
 @chapter The ESC/Java2 Prover API
 
 @cindex The ESC/Java2 Prover API
@@ -180,17 +185,23 @@ high-performance prover interfaces.
 @cindex API
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-@node A JML API, A WSDL API, Copying, Copying
+@menu
+* A JML API::                   
+* A WSDL API::                  
+@end menu
+
+@node A JML API, A WSDL API, The ESC/Java2 Prover API, The ESC/Java2 Prover API
 @section A JML API
 
-See ProverInterface.java and ProverResponse.java.
+@ref{JML API} includes the JML specifications of the core classes of
+this API.
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-@node A WSDL API,  , A JML API, Copying
+@node A WSDL API,  , A JML API, The ESC/Java2 Prover API
 @section A WSDL API
 
 @c =============================================================================
-@node Prover Communication, Copying, Copying, Top
+@node Prover Communication, ESC/Java2 Prover Built-in Theories, The ESC/Java2 Prover API, Top
 @chapter Prover Communication
 
 The ESC/Java2 front-end must communicate with one or more prover
@@ -228,6 +239,13 @@ maintainability, flexibility, simplicity, and robustness.
 @c Add sections on use of callbacks and asynchronous communication.
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@menu
+* Raw IPC::                     
+* Java JMI::                    
+* XML-RPC::                     
+* Java Native Methods::         
+@end menu
+
 @node Raw IPC, Java JMI, Prover Communication, Prover Communication
 @section Using Raw Inter-Process Communication (IPC)
 
@@ -294,7 +312,7 @@ new to JDK 1.4, permits native code to access @code{java.nio} direct
 buffers.
 
 @c =============================================================================
-@node Copying, Copying, Prover Communication, Top
+@node ESC/Java2 Prover Built-in Theories, References, Prover Communication, Top
 @chapter ESC/Java2 Prover Built-in Theories
 
 @cindex ESC/Java2 Prover Built-in Theories
@@ -304,7 +322,7 @@ buffers.
 @cindex Theoretical Assumptions
 
 @c =============================================================================
-@node Copying, Copying, Copying, Top
+@node References, Copying, ESC/Java2 Prover Built-in Theories, Top
 @chapter References
 
 @cindex References
@@ -313,7 +331,7 @@ buffers.
 @c software, JML docs, Java native method interface stuff, etc.
 
 @c =============================================================================
-@node Copying, Index, Copying, Top
+@node Copying, JML API, References, Top
 @chapter Copying
 
 @cindex Copying
@@ -326,7 +344,27 @@ buffers.
 @c =============================================================================
 @c %**end of document
 
-@node Index,  , Copying, Top
+@c =============================================================================
+@node JML API, Index, Copying, Top
+@appendix JML API
+
+The main interface of the prover is specified in the Java interface
+@code{ProverInterface}.
+
+@example
+@include ProverInterface.java.texinfo
+@end example
+
+The response codes sent by the prover to the front-end are specified
+in the Java class @code{ProverResponse}.
+
+@example
+@include ProverResponse.java.texinfo
+@end example
+
+The classes @code{Formula} and @code{Signature} are still to be defined.
+
+@node Index,  , JML API, Top
 @unnumbered Index
 
 @printindex cp

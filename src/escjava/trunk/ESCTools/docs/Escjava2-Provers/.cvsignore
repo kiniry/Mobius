@@ -4,6 +4,8 @@
 *.dvi
 *.fn
 *.fns
+*.info
+*.java.texinfo
 *.k
 *.ky
 *.kys
