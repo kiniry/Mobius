@@ -639,10 +639,14 @@ public class SwitchStmt extends GenericBlockStmt
 
 public class AssertStmt extends Stmt
 {
-  //# Expr expr
-  //# Expr label NoCheck
+  //# Expr pred
+  //# Expr label NoCheck NullOk
   //# int loc NotNullLoc
+  public IfStmt ifStmt;
   public int getStartLoc() { return loc; }
+  public int getEndLoc() { 
+        return (label == null ? pred.getEndLoc() : label.getEndLoc());
+  }
 }
 
 public class VarDeclStmt extends Stmt
@@ -1064,7 +1068,7 @@ public class ThisExpr extends Expr
 	return loc;
     }
 
-  public int getEndLoc() { return Location.inc(loc,3); }
+  public int getEndLoc() { return Location.inc(loc, 3); }
 }
 
 /**
@@ -1212,8 +1216,7 @@ public class NewInstanceExpr extends Expr
 
   public ConstructorDecl decl;
 
-  public int getStartLoc()
-{
+  public int getStartLoc() {
     if (enclosingInstance == null) return loc;
     else return enclosingInstance.getStartLoc();
   }
@@ -1474,7 +1477,6 @@ public class BinaryExpr extends Expr
 
 public class UnaryExpr extends Expr
 {
-
   /*@ invariant (op == TagConstants.UNARYADD || op == TagConstants.UNARYSUB
        || op == TagConstants.NOT || op == TagConstants.BITNOT
        || op == TagConstants.INC || op == TagConstants.DEC
@@ -1960,7 +1962,7 @@ public class ArrayType extends Type
   //# int locOpenBracket NotNullLoc
   public int getStartLoc() { return elemType.getStartLoc(); }
   public int getEndLoc() {
-    return Location.inc(locOpenBracket,1);
+    return Location.inc(locOpenBracket, 1);
   }
 
   //# NoMaker
@@ -2025,7 +2027,7 @@ public abstract class Name extends ASTNode
     public abstract boolean equals(Object other);
 
     /**
-     * The number of identifiers we contain
+     * The number of identifiers we contain.
      */
     //@ invariant length >= 1;
     /*@ ghost public int length; */
