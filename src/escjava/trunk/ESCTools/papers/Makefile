@@ -50,6 +50,12 @@ ${talk}.ps: ${talk}.dvi
 ${talk}.dvi: ${talk}.tex
 	latex ${talk};
 
+koa_state_diagram.eps: koa_state_diagram.fig Makefile
+	fig2dev -L eps koa_state_diagram.fig koa_state_diagram.eps
+
+koa_state_diagram.pdf: koa_state_diagram.fig Makefile
+	fig2dev -L pdf koa_state_diagram.fig koa_state_diagram.pdf
+
 cleanup:
 	rm -f _region_* *.aux *.log *# *~
 
