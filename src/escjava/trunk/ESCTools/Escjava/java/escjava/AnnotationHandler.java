@@ -1340,6 +1340,12 @@ static public class NestedPragmaParser {
 	    ++pos;
             pos = parseAlsoSeq(pos,pm,2,null,pms.examples);
         }
+        if (pm.elementAt(pos).getTag() == TagConstants.IMPLIES_THAT) {
+	    ErrorSet.caution(pm.elementAt(pos).getStartLoc(),
+		"implies_that sections are expected to precede for_example sections");
+	    ++pos;
+            pos = parseAlsoSeq(pos,pm,1,null,pms.impliesThat);
+        }
         while (true) {
             ModifierPragma mp = pm.elementAt(pos);
             int tag = mp.getTag();
