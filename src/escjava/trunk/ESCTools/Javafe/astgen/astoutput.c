@@ -17,15 +17,15 @@ void outputExpansion(FILE *o, Class *c, DirectiveListNode *d)
     nonnull = d->i.f.notnull && !isJavaPrimitiveType(d->i.f.type);
     if (d->i.f.notnullloc) {
       indent(o, d->indent);
-      fprintf(o, "//@ invariant %s!=javafe.util.Location.NULL\n", d->i.f.name);
+      fprintf(o, "//@ invariant %s != javafe.util.Location.NULL;\n", d->i.f.name);
     }
     if (d->i.f.syntax) {
       indent(o, d->indent);
-      fprintf(o, "//@ invariant %s.syntax\n", d->i.f.name);
+      fprintf(o, "//@ invariant %s.syntax;\n", d->i.f.name);
     }
     indent(o, d->indent);
     fprintf(o, "public %s%s%s %s;\n\n",
-	    (nonnull ? "/*@non_null*/ " : ""),
+	    (nonnull ? "/*@ non_null */ " : ""),
 	    d->i.f.type,
 	    (d->i.f.sequence ? VECTORSUFFIX : ""),
 	    d->i.f.name);
@@ -109,7 +109,7 @@ void outputEndClass(FILE *o, Class *class, const char *text, int len,
     indent(o, ind);
     fprintf(o, " */\n");
     indent(o, ind);
-    fprintf(o, "//@ requires I_will_establish_invariants_afterwards\n");
+    fprintf(o, "//@ requires I_will_establish_invariants_afterwards;\n");
     indent(o, ind);
     fprintf(o, "protected %s() {}    //@ nowarn Invariant,NonNullInit\n\n", class->name);
 /*  } */
@@ -123,13 +123,13 @@ void outputEndClass(FILE *o, Class *class, const char *text, int len,
     indent(o, ind);
     fprintf(o, "/** Return the number of children a node has. */\n");
     indent(o, ind);
-    fprintf(o, "//@ ensures \\result>=0\n");
+    fprintf(o, "//@ ensures \\result >= 0;\n");
     indent(o, ind); fprintf(o, "public abstract int childCount();\n\n");
 
     indent(o, ind);
     fprintf(o, "/** Return the first-but-ith child of a node. */\n");
     indent(o, ind);
-    fprintf(o, "//@ requires 0<=i\n");
+    fprintf(o, "//@ requires 0 <= i;\n");
     indent(o, ind);fprintf(o, "public abstract Object childAt(int i);\n\n");
 
     indent(o, ind);
@@ -151,7 +151,7 @@ void outputEndClass(FILE *o, Class *class, const char *text, int len,
     indent(o, ind);
     fprintf(o,"as the argument.  See the design patterns book. */\n");
     indent(o, ind);
-    fprintf(o,"//@ requires v!=null\n");
+    fprintf(o,"//@ requires v != null;\n");
     indent(o, ind);
     if (visitorRoot) {
       /* assume arg result visitor has similar root */
@@ -160,15 +160,15 @@ void outputEndClass(FILE *o, Class *class, const char *text, int len,
       strcat(visitorArgResultRoot, "ArgResult");
       fprintf(o, "public abstract void accept(%s v);\n\n", visitorRoot);
       indent(o, ind);
-      fprintf(o,"//@ requires v!=null\n");
-      fprintf(o,"//@ ensures \\result!=null\n");
+      fprintf(o,"//@ requires v != null;\n");
+      fprintf(o,"//@ ensures \\result != null;\n");
       fprintf(o, "public abstract Object accept(%s v, Object o);\n\n", visitorArgResultRoot);
     }
     else {
       fprintf(o, "public abstract void accept(" VISITORCLASS " v);\n\n");
       indent(o, ind);
-      fprintf(o,"//@ requires v!=null\n");
-      fprintf(o,"//@ ensures \\result!=null\n");
+      fprintf(o,"//@ requires v != null;\n");
+      fprintf(o,"//@ ensures \\result != null;\n");
       fprintf(o, "public abstract Object accept(" VISITORARGRESULTCLASS " v, Object o);\n\n");
     }
   }
@@ -350,12 +350,12 @@ void outputEndClass(FILE *o, Class *class, const char *text, int len,
     FOREACHFIELD(c, d, classlist) {
       if (d->i.f.notnullloc) {
         indent(o, ind); 
-        fprintf(o, "//@ requires %s!=javafe.util.Location.NULL\n",
+        fprintf(o, "//@ requires %s != javafe.util.Location.NULL;\n",
 		d->i.f.name);
       }
       if (d->i.f.syntax) {
         indent(o, ind); 
-        fprintf(o, "//@ requires %s.syntax\n",
+        fprintf(o, "//@ requires %s.syntax;\n",
 		d->i.f.name);
       }
     }
@@ -367,7 +367,7 @@ void outputEndClass(FILE *o, Class *class, const char *text, int len,
       }
     }
     indent(o, ind); 
-    fprintf(o, "//@ ensures \\result!=null\n");
+    fprintf(o, "//@ ensures \\result != null;\n");
 
     indent(o, ind); 
     fprintf(o, "public static %s make(", class->name);
@@ -388,7 +388,7 @@ void outputEndClass(FILE *o, Class *class, const char *text, int len,
 
     /* Output body of maker*/
     indent(o, ind+3);
-    fprintf(o, "//@ set I_will_establish_invariants_afterwards = true\n");
+    fprintf(o, "//@ set I_will_establish_invariants_afterwards = true;\n");
     indent(o, ind+3);
     fprintf(o, "%s %s = new %s();\n", class->name,
 	    rname, class->name);
@@ -435,14 +435,14 @@ void outputEndOfAstFile(const char *text, int len,
       if (c->c->superclass != NULL) { 
 	/* If superclass exists, gen visit method that dispatches to
 	   visit method of superclass. */
-	fprintf(visitorOutputFile, "  //@ requires x!=null\n");
+	fprintf(visitorOutputFile, "  //@ requires x != null;\n");
 	fprintf(visitorOutputFile, "  public void visit%s(%s x) {\n",
 		c->c->name, c->c->name);
 	fprintf(visitorOutputFile, "    visit%s(x);\n",
 		c->c->superclass->name);
 	fprintf(visitorOutputFile, "  }\n\n");
       } else /* Gen an abstract visit method */ {
-	fprintf(visitorOutputFile, "  //@ requires x!=null\n");
+	fprintf(visitorOutputFile, "  //@ requires x != null;\n");
 	fprintf(visitorOutputFile, "  public abstract void visit%s(%s x);\n\n",
 		c->c->name, c->c->name);
       }
@@ -477,16 +477,16 @@ void outputEndOfAstFile(const char *text, int len,
       if (c->c->superclass != NULL) { 
 	/* If superclass exists, gen visit method that dispatches to
 	   visit method of superclass. */
-	fprintf(visitorOutputFile, "  //@ requires x!=null\n");
-	fprintf(visitorOutputFile, "  //@ ensures \\result!=null\n");
+	fprintf(visitorOutputFile, "  //@ requires x != null;\n");
+	fprintf(visitorOutputFile, "  //@ ensures \\result != null;\n");
 	fprintf(visitorOutputFile, "  public Object visit%s(%s x, Object o) {\n",
 		c->c->name, c->c->name);
 	fprintf(visitorOutputFile, "    return visit%s(x, o);\n",
 		c->c->superclass->name);
 	fprintf(visitorOutputFile, "  }\n\n");
       } else /* Gen an abstract visit method */ {
-	fprintf(visitorOutputFile, "  //@ requires x!=null\n");
-	fprintf(visitorOutputFile, "  //@ ensures \\result!=null\n");
+	fprintf(visitorOutputFile, "  //@ requires x != null\n");
+	fprintf(visitorOutputFile, "  //@ ensures \\result != null;\n");
 	fprintf(visitorOutputFile, "  public abstract Object visit%s(%s x, Object o);\n\n",
 		c->c->name, c->c->name);
       }
