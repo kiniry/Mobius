@@ -3585,7 +3585,8 @@ public final class Translate
     }
 
     private boolean modifiesCheckFieldHelper(Expr eod, int callLoc,
-		    FieldDecl fd, int calleeLoc, Expr callee_tpred, Expr callee_tprecondition, boolean addConds) {
+		FieldDecl fd, int calleeLoc, Expr callee_tpred, 
+		Expr callee_tprecondition, boolean addConds) {
 	boolean notMod = true;
 
 	if (!issueCautions && addConds) return false;
@@ -3633,7 +3634,9 @@ public final class Translate
 		    if (Modifiers.isStatic(fd.modifiers)) {
 		       // Both are static and we already know that they point
 		       // to the same declaration.  So they match.
-			if (addTImplication(ev,callee_tpred,caller_tpred)) { ev = null; break THISGROUP; }
+			if (addTImplication(ev,callee_tpred,caller_tpred)) { 
+			    ev = null; break THISGROUP; 
+			}
 		    } else {
 			Expr e1 = eod;
 			Expr e2 = odd instanceof ExprObjectDesignator ?
@@ -3806,8 +3809,8 @@ public final class Translate
     }
 	// Returns true if definitely not modified
 	// Returns false if possibly or definitely modified
-    private boolean modChecksComplete(Expr precondition, Expr tprecond2, ExprVec ev, int callLoc, int aloc, int aloc2, boolean doCheck) {
-		// FIXME - need to let aloc2 shut of warnings as well
+    private boolean modChecksComplete(Expr precondition, Expr tprecond2, 
+		ExprVec ev, int callLoc, int aloc, int aloc2, boolean doCheck) {
 	if (!doCheck) {
 	    //TrAnExpr.closeForClause();
 	    if (ev.size() == 0) return true;
@@ -3818,6 +3821,12 @@ public final class Translate
 	    TrAnExpr.closeForClause();
 	    return false;
         }
+	if (aloc2 != Location.NULL) {
+	    if (NoWarn.getChkStatus(TagConstants.CHKMODIFIES,callLoc,aloc2)
+				!= TagConstants.CHK_AS_ASSERT) {
+	    TrAnExpr.closeForClause();
+	    return false;
+        }}
 	Expr tprecondition = modTranslate(precondition,true,null);
 	if (tprecond2 != null) {
 		tprecondition = GC.and(tprecondition, tprecond2);
@@ -3830,18 +3839,17 @@ public final class Translate
 		    "There is no assignable clause allowing this "
 			+ kindOfModCheck,aloc);
 		if (aloc2 != Location.NULL) ErrorSet.assocLoc(aloc2);
-	} else if (!doCheck) {
-	    // skip
 	} else if (aloc == Location.NULL) {
 	    //System.out.println("Generating a modifies check " + ev.size());    
 	    addNewAssumptionsNow();
-	    addCheck(callLoc,TagConstants.CHKMODIFIES, GC.implies(tprecondition,GC.or(ev)));
+	    addCheck(callLoc,TagConstants.CHKMODIFIES, 
+			GC.implies(tprecondition,GC.or(ev)));
         } else {
 	    //System.out.println("Generating a modifies check " + ev.size());    
 	    addNewAssumptionsNow();
-	    addCheck(callLoc,TagConstants.CHKMODIFIES, GC.implies(tprecondition,GC.or(ev)),aloc);
-		// FIXME - need to include aloc2 in the warning message as well
+	    addCheck(callLoc,TagConstants.CHKMODIFIES, GC.implies(tprecondition,GC.or(ev)),aloc,aloc2);
 		// FIXME - could also include a list of locations from the caller modifies group
+		// FIXME will aloc2 be sensitive to warnings that are shut off?
 	}
 	TrAnExpr.closeForClause();
 	return false;
@@ -3969,9 +3977,13 @@ if (mg.precondition == null) {
 		// skip
 	    } else if (ex instanceof FieldAccess) {
 		FieldAccess fa = (FieldAccess)ex;
-		Expr eeod = (((FieldAccess)ex).od instanceof ExprObjectDesignator) ? ((ExprObjectDesignator)((FieldAccess)ex).od).expr : null;
-		Expr lval = eeod == null ? null : modTranslate(eeod, false,  eod, args);
-		modifiesCheckFieldHelper(lval,loccall, fa.decl, calleeLoc, callee_tpred, callee_tprecondition,true);
+		Expr eeod = (fa.od instanceof ExprObjectDesignator) ? 
+			((ExprObjectDesignator)fa.od).expr : null;
+		Expr lval = eeod == null ? null 
+			: modTranslate(eeod, false,  eod, args);
+
+		modifiesCheckFieldHelper(lval,loccall, fa.decl, calleeLoc, 
+			callee_tpred, callee_tprecondition,true);
 		// A bit of a hack - the FieldHelper routine iterates over
 		// all of the caller frame conditions, so we short-circuit
 		// that here
@@ -4152,6 +4164,10 @@ if (mg.precondition == null) {
     //@ modifies code.elementCount;
     private void addCheck(int locUse, int errorName, Expr pred, int locPragmaDecl) {
         code.addElement(GC.check(locUse, errorName, pred, locPragmaDecl));
+    }
+  
+    private void addCheck(int locUse, int errorName, Expr pred, int locPragmaDecl, int auxLoc) {
+        code.addElement(GC.check(locUse, errorName, pred, locPragmaDecl, auxLoc,null));
     }
   
     /**

@@ -161,10 +161,12 @@ static {
 
     public ArrayList extractChildren(DefaultMutableTreeNode d) {
 	ArrayList list = new ArrayList();
+/* Part of maintaining the tree between reloads, but that is disabled for now
 	Enumeration e = d.children();
 	while (e.hasMoreElements()) {
 	    list.add(e.nextElement());
 	}
+*/
 	d.removeAllChildren();
         return list;
     }

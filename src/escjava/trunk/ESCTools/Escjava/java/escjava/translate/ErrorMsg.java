@@ -194,11 +194,19 @@ public final class ErrorMsg
 	    s = s.substring(0, k);
 	}
 
-	k = s.indexOf(':');
 	boolean hasAssocDecl = false;
 	int locDecl =  Location.NULL;
+	int locAux = Location.NULL;
+	k = s.lastIndexOf(':');
 	if (k != -1) {
 	    hasAssocDecl = true;
+	    locDecl = getLoc(s, k+1);
+	    s = s.substring(0, k);
+	}
+	
+	k = s.lastIndexOf(':');
+	if (k != -1) {
+	    locAux = locDecl;
 	    locDecl = getLoc(s, k+1);
 	    s = s.substring(0, k);
 	}
@@ -225,6 +233,17 @@ public final class ErrorMsg
 	    } else {
 		System.out.println("Associated declaration is "
 			       + Location.toString(locDecl) );
+	    }
+	}
+
+	if( locAux != Location.NULL) {
+	    if (!Location.isWholeFileLoc(locAux)) {
+		System.out.println("Associated declaration is "
+			       + Location.toString(locAux) + ":");
+		ErrorSet.displayColumn(locAux, assocDeclClipPolicy);
+	    } else {
+		System.out.println("Associated declaration is "
+			       + Location.toString(locAux) );
 	    }
 	}
 

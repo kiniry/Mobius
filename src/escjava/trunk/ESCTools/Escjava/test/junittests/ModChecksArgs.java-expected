@@ -16,6 +16,9 @@ ModChecksArgs.java:13: Warning: Possible violation of modifies clause (Modifies)
 Associated declaration is "ModChecksArgs.java", line 18, col 14:
         //@ modifies aa[i];
                      ^
+Associated declaration is "ModChecksArgs.java", line 10, col 5:
+        //@ modifies a[0];
+            ^
 ------------------------------------------------------------------------
     [TIME]  failed
 

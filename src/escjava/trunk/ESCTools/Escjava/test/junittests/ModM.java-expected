@@ -13,6 +13,9 @@ ModM.java:11: Warning: Possible violation of modifies clause (Modifies)
 Associated declaration is "ModM.java", line 16, col 14:
         //@ modifies j;
                      ^
+Associated declaration is "ModM.java", line 9, col 5:
+        //@ modifies i,k;
+            ^
 ------------------------------------------------------------------------
 ModM.java:11: Warning: Possible violation of modifies clause (Modifies)
                 mm();       // WARNING
@@ -20,6 +23,9 @@ ModM.java:11: Warning: Possible violation of modifies clause (Modifies)
 Associated declaration is "ModM.java", line 19, col 16:
         //@ modifies i,k;
                        ^
+Associated declaration is "ModM.java", line 6, col 5:
+        //@ modifies i,j;
+            ^
 ------------------------------------------------------------------------
     [TIME]  failed
 
@@ -52,6 +58,9 @@ ModM.java:44: Warning: Possible violation of modifies clause (Modifies)
 Associated declaration is "ModM.java", line 47, col 14:
         //@ modifies j;
                      ^
+Associated declaration is "ModM.java", line 42, col 5:
+        //@ modifies i,k;
+            ^
 Execution trace information:
     Executed then branch in "ModM.java", line 44, col 14.
 
@@ -62,6 +71,9 @@ ModM.java:44: Warning: Possible violation of modifies clause (Modifies)
 Associated declaration is "ModM.java", line 50, col 16:
         //@ modifies i,k;
                        ^
+Associated declaration is "ModM.java", line 39, col 5:
+        //@ modifies i,j;
+            ^
 Execution trace information:
     Executed then branch in "ModM.java", line 44, col 14.
 

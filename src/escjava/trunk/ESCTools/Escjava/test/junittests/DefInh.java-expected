@@ -36,6 +36,9 @@ DefInh.java:29: Warning: Possible violation of modifies clause (Modifies)
 Associated declaration is "DefInh.java", line 14, col 14:
         //@ modifies si,sj;
                      ^
+Associated declaration is "DefInh.java", line 28, col 6:
+        //@  modifies sj, ((DefS)this).si;
+             ^
 ------------------------------------------------------------------------
     [TIME]  failed
 

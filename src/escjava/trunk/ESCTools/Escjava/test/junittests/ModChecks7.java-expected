@@ -19,6 +19,9 @@ ModChecks7.java:23: Warning: Possible violation of modifies clause (Modifies)
 Associated declaration is "ModChecks7.java", line 31, col 14:
         //@ modifies i;
                      ^
+Associated declaration is "ModChecks7.java", line 21, col 5:
+        //@ modifies i;
+            ^
 ------------------------------------------------------------------------
     [TIME]  failed
 
@@ -30,6 +33,9 @@ ModChecks7.java:28: Warning: Possible violation of modifies clause (Modifies)
 Associated declaration is "ModChecks7.java", line 31, col 14:
         //@ modifies i;
                      ^
+Associated declaration is "ModChecks7.java", line 26, col 5:
+        //@ modifies o.i;
+            ^
 ------------------------------------------------------------------------
     [TIME]  failed
 

@@ -18,6 +18,8 @@ import escjava.Status;
 import javafe.InputEntry;
 import javafe.ast.CompilationUnit;
 
+//import com.apple.eawt.*;
+
 public class EscFrame extends JFrame {
 
     static public final boolean runningOnMac = (System.getProperty("mrj.version") != null);
@@ -383,7 +385,7 @@ public class EscFrame extends JFrame {
 	    });
 
 	if (!runningOnMac) {
-	    menu.add(mi = new JMenuItem("Close"));
+	    menu.add(mi = new JMenuItem("Exit"));
 	    mi.addActionListener( new ActionListener() {
 		public void actionPerformed(ActionEvent e) { System.exit(0); }
 	    } );
@@ -800,4 +802,29 @@ public class EscFrame extends JFrame {
 
 
     }
+
+/*
+Still puts up the Java about box.
+Need to make a nicer about box - and not a modal one.
+Also make this cross platform.
+
+    static About about = new About();
+
+    static public class About extends Application {
+
+        public About() {
+	    addApplicationListener(new AboutH());
+	}
+
+    }
+    static public class AboutH extends ApplicationAdapter {
+
+	public void handleAbout(ApplicationEvent e) {
+	    JOptionPane.showMessageDialog(GUI.gui.escframe,"ABOUT");
+	}
+	public void handleQuit(ApplicationEvent e) {
+	    System.exit(0);
+        }
+    }
+*/
 }

@@ -22,11 +22,17 @@ CON.java:85: Warning: Possible violation of modifies clause (Modifies)
 Associated declaration is "CON.java", line 89, col 14:
         //@ modifies ii if i >= 3;
                      ^
+Associated declaration is "CON.java", line 82, col 5:
+        //@ modifies i;
+            ^
 CON.java:104: Warning: Possible violation of modifies clause (Modifies)
             this(0,0); // WARNING
                 ^
 Associated declaration is "CON.java", line 68, col 14:
         //@ modifies j if i >= 3;
                      ^
+Associated declaration is "CON.java", line 102, col 5:
+        //@ modifies i;
+            ^
 2 warnings
 2 errors

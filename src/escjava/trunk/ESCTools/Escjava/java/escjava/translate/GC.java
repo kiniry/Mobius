@@ -268,6 +268,13 @@ public final class GC {
 				 int errorName, Expr pred,
 				 int locPragmaDecl,
 				 Object aux) {
+	return check(locUse,errorName, pred, locPragmaDecl, Location.NULL,aux);
+  }
+  public static GuardedCmd check(int locUse,
+				 int errorName, Expr pred,
+				 int locPragmaDecl,
+				 int auxLoc,
+				 Object aux) {
     Assert.notFalse(locUse != Location.NULL);
     if (Main.options().guardedVC && locPragmaDecl != Location.NULL) {
       pred = GuardExpr.make(pred, locPragmaDecl);
@@ -278,7 +285,7 @@ public final class GC {
       return assume(pred);
     case TagConstants.CHK_AS_ASSERT:
       LabelInfoToString.recordAnnotationAssumption(locPragmaDecl);
-      return assertPredicate(locUse, errorName, pred, locPragmaDecl, aux);
+      return assertPredicate(locUse, errorName, pred, locPragmaDecl, auxLoc, aux);
     case TagConstants.CHK_AS_SKIP:
       return skip();
     default:
@@ -351,6 +358,14 @@ public final class GC {
                                             int errorName, Expr pred,
                                             int locPragmaDecl,
                                             Object aux) {
+	return assertPredicate(locUse, errorName, pred, locPragmaDecl,
+		Location.NULL, aux);
+  }
+  private static GuardedCmd assertPredicate(int locUse,
+                                            int errorName, Expr pred,
+                                            int locPragmaDecl,
+					    int auxLoc,
+                                            Object aux) {
     if (Main.options().assertContinue) {
       Identifier idn = Identifier.intern("assertContinue" +
 					 assertContinueCounter);
@@ -365,12 +380,24 @@ public final class GC {
 	  int n = AuxInfo.put(aux);
 	  name += "/" + n;
 	}
-	Identifier en = makeLabel(name,locPragmaDecl,locUse);
+	Identifier en = makeLabel(name,locPragmaDecl,auxLoc,locUse);
 	pred = LabelExpr.make(locUse, locUse, false, en, pred);
     }
     return ExprCmd.make(TagConstants.ASSERTCMD, pred, locUse);
   }
 
+  public static Identifier makeLabel(String name, int locPragmaDecl, int auxLoc, int locUse) {
+	String lab = name;
+	if (locPragmaDecl != Location.NULL) {
+	    lab = lab + ":" + UniqName.locToSuffix(locPragmaDecl);
+	}
+	if (auxLoc != Location.NULL) {
+	    lab = lab + ":" + UniqName.locToSuffix(auxLoc);
+	}
+	if (locUse != Location.NULL)
+	    lab += "@" + UniqName.locToSuffix(locUse);
+	return Identifier.intern(lab);
+  }
   public static Identifier makeLabel(String name, int locPragmaDecl, int locUse) {
 	String lab = name;
 	if (locPragmaDecl != Location.NULL) {

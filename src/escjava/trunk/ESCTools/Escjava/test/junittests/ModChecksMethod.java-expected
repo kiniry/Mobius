@@ -40,6 +40,9 @@ ModChecksMethod.java:32: Warning: Possible violation of modifies clause (Modifie
 Associated declaration is "ModChecksMethod.java", line 257, col 14:
         //@ modifies a[2];
                      ^
+Associated declaration is "ModChecksMethod.java", line 30, col 5:
+        //@ modifies \nothing;
+            ^
 ------------------------------------------------------------------------
     [TIME]  failed
 
@@ -51,6 +54,9 @@ ModChecksMethod.java:36: Warning: Possible violation of modifies clause (Modifie
 Associated declaration is "ModChecksMethod.java", line 254, col 15:
         //@ modifies a[*];
                       ^
+Associated declaration is "ModChecksMethod.java", line 34, col 5:
+        //@ modifies \nothing;
+            ^
 ------------------------------------------------------------------------
     [TIME]  failed
 
@@ -62,6 +68,9 @@ ModChecksMethod.java:40: Warning: Possible violation of modifies clause (Modifie
 Associated declaration is "ModChecksMethod.java", line 260, col 15:
         //@ modifies a[2..5];
                       ^
+Associated declaration is "ModChecksMethod.java", line 38, col 5:
+        //@ modifies \nothing;
+            ^
 ------------------------------------------------------------------------
     [TIME]  failed
 
@@ -115,6 +124,9 @@ ModChecksMethod.java:76: Warning: Possible violation of modifies clause (Modifie
 Associated declaration is "ModChecksMethod.java", line 242, col 14:
         //@ modifies i;
                      ^
+Associated declaration is "ModChecksMethod.java", line 74, col 5:
+        //@ modifies i;
+            ^
 ------------------------------------------------------------------------
     [TIME]  failed
 
@@ -150,6 +162,9 @@ ModChecksMethod.java:88: Warning: Possible violation of modifies clause (Modifie
 Associated declaration is "ModChecksMethod.java", line 257, col 14:
         //@ modifies a[2];
                      ^
+Associated declaration is "ModChecksMethod.java", line 86, col 5:
+        //@ modifies i;
+            ^
 ------------------------------------------------------------------------
     [TIME]  failed
 
@@ -161,6 +176,9 @@ ModChecksMethod.java:92: Warning: Possible violation of modifies clause (Modifie
 Associated declaration is "ModChecksMethod.java", line 254, col 15:
         //@ modifies a[*];
                       ^
+Associated declaration is "ModChecksMethod.java", line 90, col 5:
+        //@ modifies i;
+            ^
 ------------------------------------------------------------------------
     [TIME]  failed
 
@@ -172,6 +190,9 @@ ModChecksMethod.java:96: Warning: Possible violation of modifies clause (Modifie
 Associated declaration is "ModChecksMethod.java", line 260, col 15:
         //@ modifies a[2..5];
                       ^
+Associated declaration is "ModChecksMethod.java", line 94, col 5:
+        //@ modifies i;
+            ^
 ------------------------------------------------------------------------
     [TIME]  failed
 
@@ -222,6 +243,9 @@ ModChecksMethod.java:120: Warning: Possible violation of modifies clause (Modifi
 Associated declaration is "ModChecksMethod.java", line 272, col 14:
         //@ modifies this.*;
                      ^
+Associated declaration is "ModChecksMethod.java", line 117, col 5:
+        //@ modifies this.*;
+            ^
 ------------------------------------------------------------------------
     [TIME]  failed
 
@@ -281,6 +305,9 @@ ModChecksMethod.java:142: Warning: Possible violation of modifies clause (Modifi
 Associated declaration is "ModChecksMethod.java", line 272, col 14:
         //@ modifies this.*;
                      ^
+Associated declaration is "ModChecksMethod.java", line 140, col 5:
+        //@ modifies ModChecksMethod.*;
+            ^
 ------------------------------------------------------------------------
     [TIME]  failed
 
@@ -319,6 +346,9 @@ ModChecksMethod.java:163: Warning: Possible violation of modifies clause (Modifi
 Associated declaration is "ModChecksMethod.java", line 272, col 14:
         //@ modifies this.*;
                      ^
+Associated declaration is "ModChecksMethod.java", line 161, col 5:
+        //@ modifies ModChecksMethodA.*;
+            ^
 ------------------------------------------------------------------------
     [TIME]  failed
 
@@ -360,6 +390,9 @@ ModChecksMethod.java:190: Warning: Possible violation of modifies clause (Modifi
 Associated declaration is "ModChecksMethod.java", line 263, col 15:
         //@ modifies b[*];
                       ^
+Associated declaration is "ModChecksMethod.java", line 188, col 5:
+        //@ modifies a[*];
+            ^
 ------------------------------------------------------------------------
     [TIME]  failed
 
@@ -371,6 +404,9 @@ ModChecksMethod.java:194: Warning: Possible violation of modifies clause (Modifi
 Associated declaration is "ModChecksMethod.java", line 269, col 15:
         //@ modifies b[2..5];
                       ^
+Associated declaration is "ModChecksMethod.java", line 192, col 5:
+        //@ modifies a[*];
+            ^
 ------------------------------------------------------------------------
     [TIME]  failed
 
@@ -382,6 +418,9 @@ ModChecksMethod.java:198: Warning: Possible violation of modifies clause (Modifi
 Associated declaration is "ModChecksMethod.java", line 266, col 14:
         //@ modifies b[2];
                      ^
+Associated declaration is "ModChecksMethod.java", line 196, col 5:
+        //@ modifies a[*];
+            ^
 ------------------------------------------------------------------------
     [TIME]  failed
 
@@ -393,6 +432,9 @@ ModChecksMethod.java:203: Warning: Possible violation of modifies clause (Modifi
 Associated declaration is "ModChecksMethod.java", line 254, col 15:
         //@ modifies a[*];
                       ^
+Associated declaration is "ModChecksMethod.java", line 201, col 5:
+        //@ modifies a[3..5];
+            ^
 ------------------------------------------------------------------------
     [TIME]  failed
 
@@ -404,6 +446,9 @@ ModChecksMethod.java:208: Warning: Possible violation of modifies clause (Modifi
 Associated declaration is "ModChecksMethod.java", line 257, col 14:
         //@ modifies a[2];
                      ^
+Associated declaration is "ModChecksMethod.java", line 206, col 5:
+        //@ modifies a[3..5];
+            ^
 ------------------------------------------------------------------------
     [TIME]  failed
 
@@ -415,6 +460,9 @@ ModChecksMethod.java:213: Warning: Possible violation of modifies clause (Modifi
 Associated declaration is "ModChecksMethod.java", line 260, col 15:
         //@ modifies a[2..5];
                       ^
+Associated declaration is "ModChecksMethod.java", line 211, col 5:
+        //@ modifies a[3..5];
+            ^
 ------------------------------------------------------------------------
     [TIME]  failed
 
@@ -426,6 +474,9 @@ ModChecksMethod.java:218: Warning: Possible violation of modifies clause (Modifi
 Associated declaration is "ModChecksMethod.java", line 254, col 15:
         //@ modifies a[*];
                       ^
+Associated declaration is "ModChecksMethod.java", line 216, col 5:
+        //@ modifies a[2..4];
+            ^
 ------------------------------------------------------------------------
     [TIME]  failed
 
@@ -440,6 +491,9 @@ ModChecksMethod.java:228: Warning: Possible violation of modifies clause (Modifi
 Associated declaration is "ModChecksMethod.java", line 260, col 15:
         //@ modifies a[2..5];
                       ^
+Associated declaration is "ModChecksMethod.java", line 226, col 5:
+        //@ modifies a[2..4];
+            ^
 ------------------------------------------------------------------------
     [TIME]  failed
 
@@ -451,6 +505,9 @@ ModChecksMethod.java:233: Warning: Possible violation of modifies clause (Modifi
 Associated declaration is "ModChecksMethod.java", line 254, col 15:
         //@ modifies a[*];
                       ^
+Associated declaration is "ModChecksMethod.java", line 231, col 5:
+        //@ modifies a[1..6];
+            ^
 ------------------------------------------------------------------------
     [TIME]  failed
 
@@ -543,6 +600,9 @@ ModChecksMethod.java:314: Warning: Possible violation of modifies clause (Modifi
 Associated declaration is "ModChecksMethod.java", line 331, col 15:
         //@ modifies a[*];
                       ^
+Associated declaration is "ModChecksMethod.java", line 312, col 5:
+        //@ modifies a[0..10];
+            ^
 ------------------------------------------------------------------------
     [TIME]  failed
 

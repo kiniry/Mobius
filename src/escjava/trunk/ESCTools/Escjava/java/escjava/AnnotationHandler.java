@@ -280,14 +280,6 @@ public class AnnotationHandler {
 			break;
 		    }
 		}
-/*
-		ModifierPragma mpp = pm.elementAt(pm.size()-1);
-		if (mpp instanceof ParsedSpecs) {
-//System.out.println("QRR " + ((ParsedSpecs)mpp).specs.specs.size());
-		    doit = ((ParsedSpecs)mpp).specs.specs.size() == 0;
-		}
-		else doit = false;
-*/
 // FIXME - why do we get ExprModifierPragmas here (e.g. test8)
 //System.out.println("QT " + mpp.getClass());
 	    }
@@ -625,6 +617,8 @@ System.out.println("END_MPV");
 		case TagConstants.CODE_CONTRACT:
 			// Remember to skip if not specified
 			// FIXME - not yet handled
+		    foundModifies = true; // Don't add a default modifies
+		    foundDiverges = true;
 		    break;
 
 		case TagConstants.NO_WACK_FORALL:
