@@ -25,8 +25,8 @@ include Makefile.defs
 ## release -- What about this ??? FIXME
 
 # List subprojects in the order in which they should be built.  Javafe
-# must be first.
-SUBDIRS = Javafe Escjava
+# must be before any other Esctool directories.
+SUBDIRS = Utils Javafe Escjava
 
 default: build
 

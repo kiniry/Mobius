@@ -78,6 +78,12 @@ export ESCJ = ${ESCJAVA_ROOT}/escj
 # files supplied with the ESC release.
 export JDKSPEC_ROOT ?= ${ESCJAVA_ROOT}/release/master/specs
  
+###############################
+# This is needed for Junit tests.  This may be overridden by defining
+# the variable in Makefile.local or in the user's environment.
+
+export JUNITLIB ?= ${ESCTOOLS_ROOT}/Utils/junit.jar
+
 ######################### locations #########################
  
  
