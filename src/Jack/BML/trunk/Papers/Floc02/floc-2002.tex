@@ -219,12 +219,6 @@ gives conclusions and presents future work.
 
 \section{Static checking of \java~programs with \escj}
 \label{sec-esc-prg}
-
-
-
-
-
-
 \escj~is a static checker for \java~programs developed
 at \csrc~\cite{ESC}, enabling a user to find common programming
 errors of \java~programs. It counts on a dedicated theorem prover
@@ -420,8 +414,8 @@ presented in~\cite{LBR00}.
 
 
 \subsection{Modifiable behavior}
-Below we present the definition of modifiable behavior
-expressed by the modifiable assertions of a method.
+Below we present the definition of the modifiable behavior of a
+method, which is expressed by its modifiable assertions.
 \begin{df}[clause {\bf \it modifiable}]
 \label{def-mod}
 A method may modify an expression provided that$:$ 
@@ -437,26 +431,23 @@ gathered that a method can not modify fields of any parameter.
 
 In \jml, the modifiable behavior of a method can be specified with
 aid of \modif~clauses as presented for \escj~in
-Section~\ref{sec-esc-prg}. The expressions can be appeared in this
+Section~\ref{sec-esc-prg}. The expressions that can be appeared in this
 clause covers any
 \java~indentifiers and all expressions constructed using some
-\jml~specific-constructs. These constructs are presented below.
+\jml~specific constructs. These constructs are presented below.
 
-\paragraph{\bf \jml~constructs.}
+\paragraph{\bf \jml~specific constructs.}
 \begin{itemize} %%%%%%
-\item{\texttt{a$[$i$\dots$j$]$}} denotes \texttt{a$[$i$],$a$[$i$+1],\
-\dots$ a$[$j$]$}
-
-\item{\texttt{x$[*]$}} denotes \texttt{x$[i]$} for all \texttt{i},
-such as $0\leq$\texttt{i}$\le$\texttt{sizeOf(x)}
-
-\item{\texttt{$\backslash$fields\_of(x)}} denotes \texttt{x[*]} if
-\texttt{x} is an array, otherwise it denotes the set of fields
-belonging to \texttt{x}.
-
-\item{\texttt{$\backslash$reach(x)}} denotes the minimal set
-containing \texttt{x}, the fields of \texttt{x} and all objects
-reachable from the fields of \texttt{x}.
+\item{\texttt{a$[$i$\dots$j$]$}}. This construct denotes \texttt{a$[$i$],$a$[$i$+1],\
+\dots$ a$[$j$]$}.
+\item{\texttt{x$[*]$}}. This construct denotes \texttt{x$[i]$} for all
+\texttt{i}, such as $0\leq$\texttt{i}$\le$\texttt{sizeOf(x)}.
+\item{\texttt{$\backslash$fields\_of(x)}}. This construct denotes
+\texttt{x[*]} if \texttt{x} is an array, otherwise it denotes the set
+of fields belonging to \texttt{x}.
+\item{\texttt{$\backslash$reach(x)}}. This construct denotes the
+minimal set containing \texttt{x}, the fields of \texttt{x} and all
+objects reachable from the fields of \texttt{x}.
 \end{itemize} %%%%%%
 \begin{df}[mod] %%%%%
 \label{df-mod}
@@ -500,9 +491,9 @@ $X\ \overrightarrow{mod}\ Y$ iff $\forall x.\ x\in X\Rightarrow x\ mod\ Y$
 First definition presents the concept of inclusion of modifiable
 expressions. This definition is done in terms of not
 standard
-concept $\in$. This concept will be defined later, but intuitively it
-includes the standard membership concept $\in$. Second one, gives a
-more general definition of concept introduced by
+concept $\in$. This concept will be defined later, but intuitively
+includes the standard membership concept $\in$. Second one
+gives a more general definition of concept introduced by
 Definition~\ref{df-mod}.
 
 
@@ -515,13 +506,12 @@ We present the derivation rules for the most important constructs. The
 whole set of rules can be found in~\cite{Cat01}. Rules we present
 check for all \java~construct that the expressions
 modified by instructions inside of all method bodies are according to
-their modifiable specification expressed by
-Definition~\ref{def-mod}. 
+their modifiable specification. 
 
 \textup{METH-DEC} is the
 general rule corresponding to a method declaration
-\texttt{m(}$\overrightarrow{\texttt{o}}$\texttt{)} whose set of
-modifiable declarations is \textsc{Y}. 
+\texttt{m(}$\overrightarrow{\texttt{o}}$\texttt{)}, which has
+specified it may modify the set of expressions \textsc{Y}.
 \begin{table}[hbt]%%%%%
 \rule{\linewidth}{0.25mm}
 \\[0.5ex]
@@ -545,37 +535,29 @@ method declaration is enough to
 check every expression or declaration in its method body, \emph{i.e.},
 \texttt{m(}$\overrightarrow{\texttt{o}}$\texttt{).body}, with respect
 to \textsc{Y}, the set of parameters and the local variables to the
-method. As can be seen, this rule essentially rephrases the
+method. As can be seen, this rule essentially rephrases
 Definition~\ref{def-mod}. We have introduced some other \emph{mod}
 constructs, by exploiting the \java~syntax. These \emph{mod}
 constructs cover concepts such as \textit{modSTM}, \textit{modEXP},
 \textit{modPE}, \textit{modPRM} and \textit{modPS}, which redefine the
 original concept \textit{mod} in terms of concepts for
 \emph{statements}, \emph{expressions}, \emph{post-expressions},
-\emph{primary} and \emph{suffixes} expressions. A primary
-\java~expression
-denotes the expression parameter of an postfix (or prefix)
-expression or the \emph{pre-path} in a sequence of expressions joined
-by the symbol \texttt{``.''}, the 
-last expression will be considered as a suffix expression.
-
+\emph{primary} and \emph{suffixes} expressions respectively. A primary
+\java~expression can be seen as the first expression in a
+sequence of \java~expressions joined by the symbol \texttt{``.''}. All 
+of the other expressions make up the suffix of the original
+expression.
 
 When an instruction is represented by a method invocation
 \textup{e}\texttt{.m(}$\overrightarrow{\texttt{q}}$\texttt{)}, it 
 must fulfill the \modif~clause specification corresponding to its
-method declaration
-\texttt{m(}$\overrightarrow{\texttt{o}}$\texttt{)}, after
-changing the formal parameters
+method declaration \texttt{m(}$\overrightarrow{\texttt{o}}$\texttt{)}
+after changing the formal parameters
 $\overrightarrow{\texttt{o}}$ by the real parameters
 $\overrightarrow{\texttt{q}}$. Additionally, if \emph{this} appears in 
-the formal parameters $\overrightarrow{\texttt{o}}$, that expression
-have to be changed by the path \textup{e}. This fact is shown below by
-the rule
-\textup{METH-INV}.  One must check also the formal parameters
-of the method by using \emph{modExp} rules
-($\overrightarrow{\texttt{q}}\ \overrightarrow{\textit{modEXP}}$) since,
-according to the \java~syntax, they can represent expressions. A similar
-situation occurs with the path \textup{e}.
+the formal parameters $\overrightarrow{\texttt{o}}$, it
+has to be changed by the path \textup{e}. 
+
 \begin{table}[hbt]%%%%%
 \rule{\linewidth}{0.25mm}
 \\[0.5ex]
@@ -597,11 +579,18 @@ METH-INV\,\,\, &
 \rule{\linewidth}{0.25mm}
 \end{table} %%%%%%
 
+This fact is shown by the rule
+\textup{METH-INV}.  One must also check the formal parameters
+of the method by using \emph{modExp} rules
+($\overrightarrow{\texttt{q}}\ \overrightarrow{\textit{modEXP}}$) since,
+according to the \java~syntax, they can represent expressions. A similar
+situation occurs with the path \textup{e}.
+
 When an assignment \textup{e}$_1$\ $\oplus$\
 \textup{e}$_2$ occurs inside of a method body, we must check
 \textup{e}$_1$ belongs to set of expressions that method may modify
-(\textup{e}$_1\underline{\in}$\ \textsc{Y}), since \textup{e}$_1$ is
-target of an assignment. Additionally, and according to the
+(\textup{e}$_1\underline{\in}$\ \textsc{Y}), since \textup{e}$_1$ is a
+assignment target. Additionally, and according to the
 \java~syntax, we must check \textup{e}$_1$ and \textup{e}$_2$ by
 using respectively the \textit{modPE} and \textit{modEXP} rules. This
 fact is showed by the rule \textup{ASSG}.
@@ -624,13 +613,12 @@ ASSG\,\,\, &
 \rule{\linewidth}{0.25mm}
 \end{table} %%%%%
 
-An instruction in a method body can be also represented by a local
-declaration. In this way, if there exist a local declaration with an
-initial value, the rule \textup{VAR-DECL-ASSG} states that this
-variable has
-to belong to the set of expressions modifiable by the method, \emph{i.e.},
-\textup{x}$\underline{\in}$\ \textsc{Y}. We also have to keep checking 
-\textup{e} by using the rules for expressions.
+An instruction in a method body can be represented by a local
+declaration. In this way, if some variable \texttt{x} is declared and is
+provided to it certain initial value, that variable must belong to the
+set \textsc{Y} of expressions modifiable by the method. Rule
+\textup{VAR-DECL-ASSG} states this fact. Additionally, one has to 
+keep checking \textup{e} by using expressions rules.
 \begin{table}[hbt] %%%%%%%%%
 \rule{\linewidth}{0.25mm}
 \\[0.5ex]
@@ -638,7 +626,7 @@ to belong to the set of expressions modifiable by the method, \emph{i.e.},
 VAR-DECL-ASSG\,\,\, & 
 \begin{prooftree}
 \rule[1ex]{0em}{1.5ex}
-\textup{x}\underline{\in}\ \textsc{Y},\ \ \textup{e}\ \textit{modEXP}\ \textsc{Y}
+\texttt{x}\underline{\in}\ \textsc{Y},\ \ \textup{e}\ \textit{modEXP}\ \textsc{Y}
 \justifies
 \texttt{T x =}\ \textup{e}\ \textit{modEXP}\ \textsc{Y}
 \end{prooftree}
@@ -649,7 +637,7 @@ VAR-DECL-ASSG\,\,\, &
 
 Contrary to that, if the variable is not
 assigned while is declared, we do not have to do any
-membership checking, such as presented by the rule \textup{VAR-DECL}.
+membership checking such as presented by the rule \textup{VAR-DECL}.
 \begin{table}[hbt] %%%%%%%%%
 \rule{\linewidth}{0.25mm}
 \\[0.5ex]
@@ -665,14 +653,13 @@ VAR-DECL\,\,\, &
 \rule{\linewidth}{0.25mm}
 \end{table} %%%%% 
 
-Similarly, \java~instructions can be represented by pre and post
-expressions, which can be seen as \emph{in place} allocations. The
-rule \textup{POST-PLUS}
-presents the case for a post increment expression and it states that
-the expression \textup{e}, which is the target of an assignment, has
-to belong to
-set of expressions \textup{Y} modifiable by the method. Additionally one
-must keep checking \textup{e} by using expression rules. 
+\java~instructions can also be represented by pre and post
+expressions. These can be seen as \emph{in place} allocations. Rule
+\textup{POST-PLUS} presents the case for post-increment expressions.
+That rule states that the expression \textup{e}, which is the target
+of an assignment, has to belong to set of expressions \textup{Y}
+modifiable by the method. Additionally, \textup{e} is checked by using
+expression rules.
 \begin{table}[hbt] %%%%%%%%%
 \rule{\linewidth}{0.25mm}
 \\[0.5ex]
@@ -689,11 +676,11 @@ POST-PLUS &
 \end{table} %%%%%
 
 The \textup{BINARY} rule is applicable
-to the arithmetic, relational and logic operators. This rule
+to arithmetic, relational and logic operators. This rule
 does not take into account any consideration about membership of
-\textup{e}$_i$ expressions to some set \textsc{Y} since no expression
+\textup{e}$_i$ expressions to some set \textsc{Y}, since no expression
 is directly modified by these
-operators, although eventually a subexpression can modify some
+operators, although eventually some subexpression could modify some
 variable. This analysis also works for \java~operators as \texttt{unary},
 \texttt{instanceof}, \texttt{()} (\emph{casting}) and $?$.
 \begin{table}[hbt] %%%%%%%%%
@@ -765,7 +752,7 @@ $\phi$. Then,
 by applying the rule \textup{ASSG} we would should be able to
 deduce $myArr\underline\in\ \phi$. That is not possible. Hence, the
 checking of the method \texttt{n()} will
-fail. Figure~\ref{fig-der-cor-fig-esc} presents the derivation
+fail. Figure~\ref{fig-der-cor-fig-esc} presents the whole derivation
 corresponding to this problem.
 \begin{figure}[hbt]%%%%%%%%
 \rule{\linewidth}{0.25mm}
@@ -817,11 +804,10 @@ corresponding to this problem.
 \label{fig-der-cor-fig-esc}
 \rule{\linewidth}{0.25mm}
 \end{figure} %%%%%%%%
-
-\java~expressions can be represented by
-primary and suffix expressions. The rules
+Following with our initial presentation, \java~expressions can be
+represented by primary and suffix expressions. Primary rules
 \textup{ID-FLD}, \textup{SUPER}, \textup{THIS}, \textup{STATIC},
-\textup{CONST} does not take into account any consideration of membership of
+\textup{CONST} do not take into account any consideration of membership of
 \textup{e}$_i$ expressions to some set, since they do not change any expression.
 \begin{table}[hbt] %%%%%%%%%
 \rule{\linewidth}{0.25mm}
@@ -867,13 +853,15 @@ CONST &
 \\[0.5ex]
 \rule{\linewidth}{0.25mm}
 \end{table} %%%%%%%%%%%%%
-The rule \textup{ARR-FLD} have to check the corresponding parameter
-expression \textup{e} by using \textit{modEXP} rules. 
+
+Rule \textup{ARR-FLD} shows that for array primary expressions one
+must check the corresponding parameter expression \textup{e} using
+\textit{modEXP} rules.
 \begin{table}[hbt] %%%%%%%%%
 \rule{\linewidth}{0.25mm}
 \\[0.5ex]
 \begin{tabular}{ll}
-ARR-FLD &
+ARR-FLD\,\,\, &
 \begin{prooftree}
 \rule[1ex]{0em}{1.5ex}
 \textup{e}\ \textit{modEXP}\ \textsc{Y}
@@ -885,16 +873,14 @@ ARR-FLD &
 \rule{\linewidth}{0.25mm}
 \end{table} %%%%%%%%%%%%%
 
-
-The rule \textup{METH} expresses the fact that a method invocation
-can be represented by a primary expression. This rule is similar to
-\textup{METH-INV}, which was presented before. 
-
+The rule \textup{METH} expresses the fact that a primary expression
+can be represented by a method invocation. This rule is similar to
+\textup{METH-INV} presented above. 
 \begin{table}[hbt] %%%%%%%%%
 \rule{\linewidth}{0.25mm}
 \\[0.5ex]
 \begin{tabular}{ll}
-METH &
+METH\,\,\, &
 \begin{prooftree}
 \rule[1ex]{0em}{1.5ex}
 \sem{\texttt{this.m(}\overrightarrow{\texttt{o}}\texttt{).modifies}}[\overrightarrow{\texttt{o}}\
@@ -911,15 +897,16 @@ METH &
 \end{table} %%%%%%%%%%%%%
 
 
-The rules \textup{NEW-EXP} and \textup{NEW-ARR} show the cases when are
-created objects.
-%Only the first four rules defined in this figure are applicable
-%to primary suffixes. %%%%%%%%
+Rules \textup{NEW-EXP} and \textup{NEW-ARR} show the cases when
+primary expressions are represented by expressions \emph{new}. In the
+case of suffixe expressions, we define some \textup{ID-FLD},
+\textup{ARR-FLD}, \textup{THIS} and \textup{SUPER} similar to those
+presented to primary expressions.
 \begin{table}[hbt] %%%%%%%%%
 \rule{\linewidth}{0.25mm}
 \\[0.5ex]
 \begin{tabular}{ll}
-NEW-EXP & 
+NEW-EXP\,\,\, & 
 \begin{prooftree}
 \rule[1ex]{0em}{1.5ex}
 \overrightarrow{\textup{e}}\ \overrightarrow{\textit{modEXP}}\ \textsc{Y}
@@ -927,7 +914,7 @@ NEW-EXP &
 \texttt{new T(}\overrightarrow{\textup{e}}\texttt{)}\ \textit{modPRM}\ \textsc{Y}
 \end{prooftree}
 \\[3.0ex]
-NEW-ARR & 
+NEW-ARR\,\,\, & 
 \begin{prooftree}
 \rule[1ex]{0em}{1.5ex}
 \textup{e}\ \textit{modEXP}\ \textsc{Y}
@@ -939,35 +926,54 @@ NEW-ARR &
 \rule{\linewidth}{0.25mm}
 \end{table} %%%%%%%%%%%%%
 
-The \java~instructions can be also represented by statements. 
-%Their checking
-%rules are showed in Figure~\ref{fig-rul-con-sta}. 
-The rule
-\textup{SEQ} presents the composition of instructions. This rule states that
-the composition of instructions \textup{S} and \textup{T} may modify
-\textsc{Y} if \textup{S} may modify \textsc{Y} and \textup{T} may
-modify \textsc{Y}. 
-\begin{table}[hbt] %%%%%%%
+\java~instructions can be also represented by statements. In the case
+of a \texttt{if$cdots$then$cdots$} statement, rule
+\textup{IF-THEN} states that its guard must be checked using
+\textit{modEXP} rules since, according to the \java~syntax, a guard
+correspond to an expression. Its body \textsc{S} can be represented by
+a set of
+statements (an expression can be seen as a statement), thus it must be
+checked by using rules for statements. A similar analysis can be
+formulated for \textup{IF-THEN-ELSE} and \textup{WHILE} rules.
+\begin{table}[hbt] %%%%%%%%%%%%
 \rule{\linewidth}{0.25mm}
 \begin{tabular}{ll}
-SEQ\,\,\, & 
+IF-THEN\,\,\, & 
 \begin{prooftree}
 \rule[1ex]{0em}{1.5ex}
-\textsc{S}\ \textit{modSTM}\ \textsc{Y},\ \ \textsc{T}\ \textit{modSTM}\ \textsc{Y}
+\textsc{C}\ \textit{modEXP}\ \textsc{Y},\ \ \textsc{S}\ \textit{modSTM}\ \textsc{Y}
 \justifies
-\textsc{S}\texttt{;}\textsc{T}\ \textit{modSTM}\ \textsc{Y}
-\end{prooftree} 
+\texttt{if(}\textsc{C}\texttt{) }\textsc{S}\ \textit{modSTM}\ \textsc{Y}
+\end{prooftree}
+\\[3.0ex]
+IF-THEN-ELSE\,\,\, & 
+\begin{prooftree}
+\rule[1ex]{0em}{1.5ex}
+\textsc{C}\ \textit{modEXP}\ \textsc{Y},\ \ \textsc{S}\
+\textit{modSTM}\ \textsc{Y},\ \ \textsc{T}\ \textit{modSTM}\
+\textsc{Y}
+\justifies
+\texttt{if(}\textsc{C}\texttt{)}\ \textsc{S}\ \texttt{else}\ \textsc{T}\ \textit{modSTM}\ Y
+\end{prooftree}
+\\[3.0ex]
+WHILE\,\,\, & 
+\begin{prooftree}
+\rule[1ex]{0em}{1.5ex}
+\textsc{C}\ \textit{modEXP}\ \textsc{Y},\ \ \textsc{B}\ \textit{modSTM}\ \textsc{Y}
+\justifies
+\texttt{while(}\textsc{C}\texttt{)}{\tt \{}\textsc{B}{\tt \}}
+\end{prooftree}
 \end{tabular}
 \\[0.5ex]
 \rule{\linewidth}{0.25mm}
 \end{table} %%%%%%%%%%%%%
 
-The rules \textup{SKIP}, \textup{BREAK},
-\textup{BREAK-LBL}, \textup{CONTINUE} and \textup{CONTINUE-LBL}
-present the analysis for the \java~instructions \texttt{skip},
+Rules \textup{SKIP}, \textup{BREAK}, \textup{BREAK-LBL},
+\textup{CONTINUE} and \textup{CONTINUE-LBL}
+present the analysis for the \texttt{skip},
 \texttt{break}, \texttt{break} \emph{lbl}, \texttt{continue} and
-\texttt{continue} \emph{lbl} respectively. 
-\begin{table}[hbt] %%%%%%%%%%%%
+\texttt{continue} \emph{lbl} \java~statements. 
+\begin{table}[htb] %%%%%%%%%%%%
 \rule{\linewidth}{0.25mm}
 \begin{tabular}{ll}
 SKIP &  
@@ -1015,6 +1021,32 @@ RETURN &
 \\[0.5ex]
 \rule{\linewidth}{0.25mm}
 \end{table} %%%%%%%%%%%%%
+
+Rule \textup{SEQ} presents the analysis for the composition of
+\java~instructions. This rule
+states that the composition of instructions \textup{S} and \textup{T}
+may modify \textsc{Y} if \textup{S} may modify \textsc{Y} and
+\textup{T} may modify \textsc{Y}. This rule enable us to express
+modifiable conditions for different \java~instructions as the
+secuentialization of their respectives conditions.
+\begin{table}[hbt] %%%%%%%
+\rule{\linewidth}{0.25mm}
+\begin{tabular}{ll}
+SEQ\,\,\, & 
+\begin{prooftree}
+\rule[1ex]{0em}{1.5ex}
+\textsc{S}\ \textit{modSTM}\ \textsc{Y},\ \ \textsc{T}\
+\textit{modSTM}\ \textsc{Y}
+\justifies
+\textsc{S}\texttt{;}\textsc{T}\ \textit{modSTM}\ \textsc{Y}
+\end{prooftree} 
+\end{tabular}
+\\[0.5ex]
+\rule{\linewidth}{0.25mm}
+\end{table} %%%%%%%%%%%%%
+
+
+%-------------------------------------------------------------
 %RETURN-EXP & 
 %\begin{prooftree} 
 %\rule[1ex]{0em}{1.5ex}
@@ -1023,51 +1055,12 @@ RETURN &
 %\texttt{return}\ \textup{e}\ \textit{modSTM}\ \textsc{Y}
 %\end{prooftree}
 
-The rule for
-\textup{IF-THEN} states that the guard of the conditional must be
-checked by using
-\textit{modEXP} rules since, according to the \java~syntax, a guard is
-an expression. Its body \textsc{S} can be represented by a set of
-statements (an expression can be seen as a statement), thus it must be
-checked by using rules for statements. A similar analysis can be
-formulated for the rules \textup{IF-THEN-ELSE} and \textup{WHILE}.
-\begin{table}[hbt] %%%%%%%%%%%%
-\rule{\linewidth}{0.25mm}
-\begin{tabular}{ll}
-IF-THEN & 
-\begin{prooftree}
-\rule[1ex]{0em}{1.5ex}
-\textsc{C}\ \textit{modEXP}\ \textsc{Y},\ \ \textsc{S}\ \textit{modSTM}\ \textsc{Y}
-\justifies
-\texttt{if(}\textsc{C}\texttt{) }\textsc{S}\ \textit{modSTM}\ \textsc{Y}
-\end{prooftree}
-\\[3.0ex]
-IF-THEN-ELSE & 
-\begin{prooftree}
-\rule[1ex]{0em}{1.5ex}
-\textsc{C}\ \textit{modEXP}\ \textsc{Y},\ \ \textsc{S}\
-\textit{modSTM}\ \textsc{Y},\ \ \textsc{T}\ \textit{modSTM}\
-\textsc{Y}
-\justifies
-\texttt{if(}\textsc{C}\texttt{)}\ \textsc{S}\ \texttt{else}\ \textsc{T}\ \textit{modSTM}\ Y
-\end{prooftree}
-\\[3.0ex]
-WHILE & 
-\begin{prooftree}
-\rule[1ex]{0em}{1.5ex}
-\textsc{C}\ \textit{modEXP}\ \textsc{Y},\ \ \textsc{B}\ \textit{modSTM}\ \textsc{Y}
-\justifies
-\texttt{while(}\textsc{C}\texttt{)}{\tt \{}\textsc{B}{\tt \}}
-\end{prooftree}
-\end{tabular}
-\\[0.5ex]
-\rule{\linewidth}{0.25mm}
-\end{table} %%%%%%%%%%%%%
-
-According to the \jml~specification
+Finally, an other aspect that must be analized is that corresponding
+with the different constructs that can appear in modifiable
+specifications. So, according to the \jml~specification
 \texttt{$\backslash$fields}$\_$\texttt{of} and
-\texttt{$\backslash$reach} pragmas can occur inside of a
-\modifies~pragma. So, when establishing membership conditions
+\texttt{$\backslash$reach} pragmas can occur inside of them. So, when
+establishing membership conditions
 \textup{e}$_1$\texttt{.}\textup{e}$_2$$\underline\in$ \textsc{Y}, we
 also need
 to define rules taking into account the fact that these pragmas can
