@@ -49,11 +49,15 @@ import javafe.util.Location;
 
 
  ModifierPragma ::=
- SimpleModifierPragma 
- | ExprModifierPragma SpecExpr [';']
- | VarExprModifierPragma '(' Type Idn ')' SpecExpr [';']
- | 'monitored_by' SpecExpr [',' SpecExpr]* [';']
- | ModifiesModifierPragma SpecDesignator [',' SpecDesignator]* [';']
+ [PrivacyPragma] [BehaviorPragma] SimpleModifierPragma 
+ | [PrivacyPragma] [BehaviorPragma] ExprModifierPragma SpecExpr [';']
+ | [PrivacyPragma] [BehaviorPragma] VarExprModifierPragma '(' Type Idn ')' SpecExpr [';']
+ | [PrivacyPragma] [BehaviorPragma] 'monitored_by' SpecExpr [',' SpecExpr]* [';']
+ | [PrivacyPragma] [BehaviorPragma] ModifiesModifierPragma SpecDesignator [',' SpecDesignator]* [';']
+
+ PrivacyPragma ::= 'public' | 'private' | 'protected'
+
+ BehaviorPragma ::= 'behavior' | 'normal_behavior' | 'exceptional_behavior'
 
  SimpleModifierPragma ::=
  'uninitialized' | 'monitored' | 'non_null' | 'spec_public'
@@ -513,7 +517,59 @@ public class EscPragmaParser extends Parse implements PragmaParser
                 Info.out("next tag is: " + tag);
 
             switch (tag) {
-                
+
+                case TagConstants.JML_NOT_SPECIFIED:
+                    // ignore the \not_specified keyword for now.
+                    return getNextPragma(dst);                    
+
+                case TagConstants.JML_BEHAVIOR:
+                case TagConstants.JML_NORMAL_BEHAVIOR:
+                case TagConstants.JML_EXCEPTIONAL_BEHAVIOR:
+                    // If a behavior pragma is parsed, inject the
+                    // appropriate desugared elements.  In particular,
+                    // if a 'normal_behavior' is parsed, inject the
+                    // parse of 'signals (java.lang.Exception)
+                    // false;'.  Likewise, if an
+                    // 'exceptional_behavior' is parsed, inject a
+                    // parse of 'ensures false;' into the AST.
+                    if (tag == TagConstants.JML_EXCEPTIONAL_BEHAVIOR) {
+                        dst.ttype = TagConstants.MODIFIERPRAGMA;
+                        Expr falseExpr = LiteralExpr.make(TagConstants.BOOLEANLIT, 
+                                                          new Boolean(false), loc);
+                        // @note kiniry 24 Apr 2003 - I don't know if
+                        // this should necessarily be an ALSO_ENSURES
+                        // or an ENSURE or if it even matters.
+                        dst.auxVal = ExprModifierPragma.make(TagConstants.ENSURES,
+                                                             falseExpr, loc);
+                    } else if (tag == TagConstants.JML_NORMAL_BEHAVIOR) {
+                        dst.ttype = TagConstants.MODIFIERPRAGMA;
+                        final int noModifiers = 0;
+                        final ModifierPragmaVec noPragmaModifiers = null;
+                        final Identifier noExceptionIdentifier = 
+                            TagConstants.ExsuresIdnName;
+                        final TypeModifierPragmaVec noTypeModifierPragmas = null;
+                        final Name javaLangExceptionName =
+                            Name.make("java.lang.Exception", loc);
+                        final Type javaLangExceptionType = 
+                            TypeName.make(noTypeModifierPragmas, javaLangExceptionName);
+                        //@ assert noExceptionIdentifier != null;
+                        //@ assert javaLangExceptionType != null;
+                        FormalParaDecl javaLangException =
+                            FormalParaDecl.make(noModifiers, noPragmaModifiers,
+                                                noExceptionIdentifier, 
+                                                javaLangExceptionType, loc);
+                        Expr falseExpr = LiteralExpr.make(TagConstants.BOOLEANLIT, 
+                                                          new Boolean(false), loc);
+                        dst.auxVal = VarExprModifierPragma.make(TagConstants.EXSURES, 
+                                                                javaLangException,
+                                                                falseExpr, loc);
+                    } else {
+                        // Otherwise we have seen a 'behavior' keyword
+                        // and it is simply ignored.
+                        return getNextPragma(dst);
+                    }
+                    break;
+
                 case TagConstants.NOWARN:
                     dst.ttype = TagConstants.LEXICALPRAGMA;
                     seqIdentifier.push();
@@ -688,6 +744,8 @@ public class EscPragmaParser extends Parse implements PragmaParser
                 case TagConstants.UNINITIALIZED:
                 case TagConstants.MONITORED:
                 case TagConstants.NON_NULL:
+                case TagConstants.JML_INSTANCE:
+                case TagConstants.JML_PURE:
                 case TagConstants.SPEC_PUBLIC:
                 case TagConstants.WRITABLE_DEFERRED:
                 case TagConstants.HELPER:
