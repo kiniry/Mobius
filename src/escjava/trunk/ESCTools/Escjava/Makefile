@@ -304,16 +304,20 @@ self_test: compile
 	  tc/*.java bacpred/*.java prover/*.java
 
 .PHONY: test_escjava
-test_escjava: build build_javafe_test test_escjava_parser
+test_escjava: build build_javafe_test junittests test_escjava_parser 
 
 .PHONY: build_javafe_test
 build_javafe_test:
-	make -C ${JAVAFE_ROOT} javafe_test
+	$(MAKE) -C ${JAVAFE_ROOT} javafe_test
+
+.PHONY: junittests
+junittests:
+	$(MAKE) -C test/junittests runtests
 
 test_parser: build test_escjava_parser test_matrix self_test
 
 test_escjava_parser:
-	make -C ${TOP_ESCJAVA_TEST_DIR} test_and_clean
+	$(MAKE) -C ${TOP_ESCJAVA_TEST_DIR} test_and_clean
 
 test_matrix:
 	(cd ${TESTSOURCEDIRECTORY}/matrix; \
