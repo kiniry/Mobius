@@ -18,7 +18,6 @@ public class WindowThread extends Thread {
 		    GUI.gui.escframe,500,0,600,400);
 		jf.showit();
 	    } else if (o instanceof String) {
-		    JOptionPane.showMessageDialog(GUI.gui.escframe,o.toString());
 		// Pop up an editor window
 		try {
 		    // Here we parse the various kinds of error messages
@@ -56,7 +55,6 @@ public class WindowThread extends Thread {
 			} catch (NumberFormatException e) {
 			    lin = 0;
 			}
-		    JOptionPane.showMessageDialog(GUI.gui.escframe, name + " ## " + lin);
 		    }
 		    if (name.endsWith(".class")) {
 			int result =
