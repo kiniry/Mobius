@@ -162,6 +162,12 @@ public class Location
    	         +", col "  + toColumn(loc);
   }
 
+  public static String toFileLineString(int loc) {
+    String s = Location.toFileName(loc);
+    if (!Location.isWholeFileLoc(loc))
+	s = s + ":" + Location.toLineNumber(loc);
+    return s;
+  }
 
     /**********************************************************************
      * Create a whole file location corresponding to the given GenericFile.
