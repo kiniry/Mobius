@@ -22,6 +22,8 @@ import escjava.Main;
 import escjava.tc.Types;
 import escjava.parser.OldVarDecl;
 
+import escjava.prover.Atom;
+
 /** Translates Annotation Expressions to GCExpr. */
 
 public class TrAnExpr {
@@ -153,8 +155,10 @@ public class TrAnExpr {
         return e;
 
       case TagConstants.STRINGLIT:
-        { Expr ee = GC.nary(Identifier.intern("interned"),
-                            GC.symlit(Translate.Strings.interned(((LiteralExpr)e).value.toString()).toString()));
+        { String s = ((LiteralExpr)e).value.toString();
+          Expr ee = GC.nary(TagConstants.INTERN,
+                            GC.symlit(Translate.Strings.intern(s).toString()),
+                            GC.symlit(Integer.toString(s.length())) );
 	  return ee;
         }
       
@@ -1808,15 +1812,6 @@ public class TrAnExpr {
     return Identifier.intern(fullname); 
   }
   
-  /* This decoration (on a RoutineDecl) is an Expr that is an axiom that 
-   defines the behavior of the routine.  The routine must be a pure function.
-   */
-  // NOT USED static private ASTDecoration axiomDecoration = new ASTDecoration("axioms");
-  
-  /* This decoration (on a RoutineDecl) is a ??? of RoutineDecl whose axioms
-   are needed by the routine.
-   */
-  // NOT USED static private ASTDecoration axiomSetDecoration = new ASTDecoration("axiomset");
   
   static public Expr getEquivalentAxioms(RepHelper o, Hashtable sp) {
     Expr ax = null;
@@ -1827,45 +1822,25 @@ public class TrAnExpr {
       boolean isConstructor = astn instanceof ConstructorDecl;
       RoutineDecl rd = (RoutineDecl)astn;
       GenericVarDecl newThis = UniqName.newBoundThis();
-      // Make the list of bound parameters
-      ArrayList bounds = new ArrayList(rd.args.size()+4);
-      if (!Modifiers.isStatic(rd.modifiers)) {
-        if (rd instanceof MethodDecl) bounds.add( newThis );
-      }
-      Hashtable h = new Hashtable();
-      LocalVarDecl alloc1=null, alloc2=null;
-      if (isConstructor) {
-        alloc1 = UniqName.newBoundVariable("alloc_");
-        bounds.add(alloc1);
-        alloc2 = UniqName.newBoundVariable("allocNew_");
-        bounds.add(alloc2);
-      }
-      for (int k=0; k<rd.args.size(); ++k) {
-        FormalParaDecl a = rd.args.elementAt(k);
-        //LocalVarDecl n = UniqName.newBoundVariable(a.id.toString());
-        VariableAccess vn = makeVarAccess( a, Location.NULL);
-        bounds.add(a);
-        h.put(a,vn);
-      }
-      
-      // create a function call
-      ExprVec ev = ExprVec.make( bounds.size()+1 );
-      if (!Utils.isFunction(rd)) {
-        ev.addElement( stateVar(sp) );
-      }
-      for (int k=0; k<bounds.size(); ++k) {
-        ev.addElement( makeVarAccess( (GenericVarDecl)bounds.get(k), Location.NULL));
-      }
-      Expr fcall = GC.nary(fullName(rd,false), ev);
-      specialResultExpr = fcall;
-      if (astn instanceof MethodDecl) {
-        specialThisExpr = makeVarAccess( newThis, Location.NULL);
-      } else {
-        specialThisExpr = fcall;
-      }
-      
+
+
+      // NOTE: We wrap each postcondition in a separate forall quantification
+      // because the variable names might be different.  In addition, 
+      // Esc/java tacks on location information to make the names somewhat
+      // unique, and these differ for different postconditions.  The 
+      // postconditions themselves already have the variable usages within
+      // them resolved to point to the original formal parameter declarations.
+      // Thus it is easiest to simply use the formal parameters for the 
+      // quantification variables.  Once could combine all the postconditions
+      // that are associated with a single syntactic declaration; 
+      // constructors and static methods have just one relevant declaration;
+      // but we haven't done this - in part because the output is more readable
+      // with the conjunct broken up.
+
       ModifierPragmaVec v = Utils.getAllSpecs(rd);
       ExprVec conjuncts = ExprVec.make(v.size());
+
+
       // FIXME - what about ensures clauses with \old in them
       // Note - if there is an ensures clause with object fields, then it is
       // not a great candidate for a function call
@@ -1881,21 +1856,47 @@ public class TrAnExpr {
           //System.out.println("SKIPPING-B");
           continue;
         }
-        Expr e = ((ExprModifierPragma)p).expr;
-        e = trSpecExpr(e,h,null); // FIXME - no subst?
-        conjuncts.addElement(e);
+
+      RoutineDecl trd = (RoutineDecl) Utils.owningDecl.get(p);
+
+      ArrayList bounds = makeBounds(trd, newThis);
+      
+      Expr fcall = createFunctionCall(trd,bounds,sp);
+
+      specialResultExpr = fcall;
+      if (astn instanceof MethodDecl) {
+        specialThisExpr = makeVarAccess( newThis, Location.NULL);
+      } else {
+        specialThisExpr = fcall;
       }
+      
+        Expr translatedPostcondition = trSpecExpr(
+                 ((ExprModifierPragma)p).expr,null,null); // FIXME - no subst?
+
+        // Wrap the expression in a forall
+
+        Expr ee = createForall(translatedPostcondition,fcall,bounds);
+        conjuncts.addElement(ee);
+      }
+
       specialResultExpr = null;
       specialThisExpr = null;
+
+      // There are a few more special axioms to create
+
+      ArrayList bounds = makeBounds(rd, newThis);
+      Expr fcall = createFunctionCall(rd,bounds,sp);
       
+      Expr expr2;
       if (isConstructor) {
+	ExprVec conjuncts2 = ExprVec.make(4);
         // If this is a constructor, then we are generating
         // axioms for a new instance expression.  There are
         // a couple more implicit axioms
         
         // result != null
         Expr ee = GC.nary(TagConstants.REFNE, fcall, GC.nulllit);
-        conjuncts.addElement(ee);
+        conjuncts2.addElement(ee);
         
         // Adds \typeof(v) == \type(...)
         Type type = TypeSig.getSig(rd.parent);
@@ -1903,39 +1904,33 @@ public class TrAnExpr {
             GC.nary(TagConstants.TYPEOF, fcall),
             trType(type));
         //GC.nary(TagConstants.CLASSLITERALFUNC, trType(type)));
-        conjuncts.addElement(ee);
+        conjuncts2.addElement(ee);
         // Adds ! isAllocated(v, alloc)
         ee = GC.nary(TagConstants.BOOLNOT,
             GC.nary(TagConstants.ISALLOCATED, fcall, 
-                makeVarAccess( alloc1, Location.NULL)));
-        conjuncts.addElement(ee);
+                makeVarAccess( (LocalVarDecl)bounds.get(0), Location.NULL)));
+        conjuncts2.addElement(ee);
         // Adds isAllocated(v, newalloc)
         ee = GC.nary(TagConstants.ISALLOCATED, fcall,
-            makeVarAccess( alloc2, Location.NULL));
-        conjuncts.addElement(ee);
+            makeVarAccess( (LocalVarDecl)bounds.get(1), Location.NULL));
+        conjuncts2.addElement(ee);
+        expr2 = GC.and(conjuncts2);
       } else {
         // add an axiom about the type of the method result
         Type type = ((MethodDecl)rd).returnType;
         // Is allows the result to be null for reference types
         // but is equivalent to \typeof() == . for primitive types
-        Expr ee = GC.nary(TagConstants.IS,
+        expr2 = GC.nary(TagConstants.IS,
             fcall,
             trType(type));
-        conjuncts.addElement(ee);
       }
       
       
-      // create a composite AND and wrap it in a forall
-      Expr ee = GC.and(conjuncts);
-      Expr ee2 = ee;
-      ExprVec pats = ExprVec.make(1);
-      pats.addElement(fcall);
-      for (int k=bounds.size()-1; k>=0; --k) {
-        GenericVarDecl oo = (GenericVarDecl)bounds.get(k);
-        ee = GC.forall(oo,ee);
-        ee2 = GC.forallwithpats(oo,ee2,pats);
-      }
-      ax = GC.and(ee,ee2);
+      conjuncts.addElement(createForall(expr2,fcall,bounds));
+
+      // create a composite AND of all the foralls
+      ax = GC.and(conjuncts);
+
     } else if (astn instanceof FieldDecl) {
       FieldDecl fd = (FieldDecl)astn;
       Expr ee = GC.and(getModelVarAxioms(td,fd,sp));
@@ -1950,14 +1945,57 @@ public class TrAnExpr {
     closeForClause();
     return ax;
   }
+
+  static private ArrayList makeBounds(RoutineDecl rd, GenericVarDecl newThis) {
+      // Make the list of bound parameters
+      ArrayList bounds = new ArrayList(rd.args.size()+4);
+      Hashtable h = new Hashtable();
+      LocalVarDecl alloc1=null, alloc2=null;
+      if (rd instanceof ConstructorDecl) {
+        alloc1 = UniqName.newBoundVariable("alloc_");
+        bounds.add(alloc1);
+        alloc2 = UniqName.newBoundVariable("allocNew_");
+        bounds.add(alloc2);
+      }
+      if (!Modifiers.isStatic(rd.modifiers)) {
+        if (rd instanceof MethodDecl) bounds.add( newThis );
+      }
+      for (int k=0; k<rd.args.size(); ++k) {
+        FormalParaDecl a = rd.args.elementAt(k);
+        //LocalVarDecl n = UniqName.newBoundVariable(a.id.toString());
+        VariableAccess vn = makeVarAccess( a, Location.NULL);
+        bounds.add(a);
+        h.put(a,vn);
+      }
+      return bounds;
+  }
   
-  /*
-   static public java.util.Set getAxiomSet(TypeDecl td, ASTNode o) {
-   //java.util.Set s = (java.util.Set)axiomSetDecoration.get(o);
-    
-    return s; // FIXME - needs represents axiomx
-    }
-    */
+  static private Expr createFunctionCall(RoutineDecl rd, ArrayList bounds, Hashtable sp) {
+
+      // create a function call
+      ExprVec ev = ExprVec.make( bounds.size()+1 );
+      if (!Utils.isFunction(rd)) {
+        ev.addElement( stateVar(sp) );
+      }
+      for (int k=0; k<bounds.size(); ++k) {
+        ev.addElement( makeVarAccess( (GenericVarDecl)bounds.get(k), Location.NULL));
+      }
+      return GC.nary(fullName(rd,false), ev);
+      
+  }
+
+  static private Expr createForall(Expr expr, Expr fcall, ArrayList bounds)  {
+      Expr ee = expr;
+      Expr ee2 = ee;
+      ExprVec pats = ExprVec.make(1);
+      pats.addElement(fcall);
+      for (int k=bounds.size()-1; k>=0; --k) {
+        GenericVarDecl oo = (GenericVarDecl)bounds.get(k);
+        ee = GC.forall(oo,ee);
+        ee2 = GC.forallwithpats(oo,ee2,pats);
+      }
+      return GC.and(ee,ee2);
+  }
   
   /** Translates an individual represents clause into a class-level axiom. */
   static public Expr getRepresentsAxiom(NamedExprDeclPragma p, Hashtable sp) {
