@@ -1,3 +1,94 @@
+2003-03-11  Joseph R. Kiniry  <kiniry@kind.cs.kun.nl>
+
+	* Escjava/java/escjava/parser/EscPragmaParser.java:
+	Continuing to add support for JML "also" keyword (JML_ALSO).  This
+	commit is simply some code cleanup, extending an invariant, and
+	beginning to drop in code to handle the ALSO case in the large
+	keyword/classifier switch.
+
+	* Simplify/simplify/test/test.out:
+	Our in-house-built Simpilfy outputs this new data.  It is unclear why
+	it is different from the pre-built shipped Simplify binary.
+
+	* Javafe/test/javafe/test/fe/sources:
+	Generated source list to be full absolute path.  I still need to add a
+	Makefile rule to automatically generate such.  This data is simply a
+	placeholder for now.
+
+	* Escjava/test/escjava/test/test1/Modifiers2.java:
+	* Escjava/test/escjava/test/test1/ans:
+	* Escjava/test/escjava/test/test25/MethodSpec.java:
+	* Escjava/test/escjava/test/test34/BogusInput.java:
+	* Escjava/test/escjava/test/test34/BogusSpec.java:
+	* Escjava/test/escjava/test/test34/BogusVisibility.java:
+	* Escjava/test/escjava/test/test37/Exsures.java:
+	* Escjava/test/escjava/test/test37/Exsures2.java:
+	* Escjava/test/escjava/test/test59/Typecheck.java:
+	* Escjava/test/escjava/test/test60/C.java:
+	* Escjava/test/escjava/test/test60/Typecheck.java:
+	* Escjava/test/escjava/test/test60/ans:
+	* Escjava/test/escjava/test/test60/out.raw:
+	Some initial outlines of new unit tests for extended JML support.
+
+	* Escjava/escj: Rewrote as a bash script.
+
+	* Escjava/Makefile:
+	Abstracting use of Java compiler and ensuring that -g is used during
+	compilation.
+
+2003-02-17  Joseph R. Kiniry  <kiniry@kind.cs.kun.nl>
+
+	* Escjava/java/escjava/ast/EscPrettyPrint.java:
+	First cut at JML keyword "also" support.
+
+	* Escjava/java/escjava/parser/EscPragmaParser.java:
+	Some documentation, code, and specification cleanup.  First cut at JML
+	keyword "also" support.  Need to write non-trivial non-lexer unit
+	tests next.
+
+	* Escjava/java/escjava/prover/SubProcess.java:
+	Full first-pass documentation, code, and specification cleanup to
+	determine what the problem is wrt the Java<->Simplify subprocess
+	problems we are currently witnessing.
+
+	* Escjava/java/escjava/tc/FlowInsensitiveChecks.java:
+	Javadoc documentation cleanup.
+
+	* Escjava/java/escjava/translate/NoWarn.java:
+	Corrected several off-by-one errors wrt TagConstants.LASTESCCHECKTAG.
+
+	* Escjava/java/escjava/translate/GC.java:
+	Renamed assert() method to assertPredicate() to avoid JDK 1.4 assert
+	keyword warnings.
+
+	* Escjava/test/escjava/parser/test/GoodJmlPragmas.ans:
+	* Escjava/test/escjava/parser/test/GoodJmlPragmas.j:
+	Added in simple lex tests for JML "also" keyword.
+
+	* Escjava/setup.sh:
+	Added back in CLASSES env var used by escj script.  Default reference
+	to ESCJ_SIMPLIFY is now pre-built executable provided with the
+	ESC/Java binary download.
+
+	* Escjava/Makefile:
+	* Escjava/java/escjava/Makefile:
+	* Escjava/java/escjava/ast/Makefile:
+	* Escjava/java/escjava/backpred/Makefile:
+	* Escjava/java/escjava/parser/Makefile:
+	* Escjava/java/escjava/prover/Makefile:
+	* Escjava/java/escjava/tc/Makefile:
+	* Escjava/java/escjava/translate/Makefile:
+	* Escjava/test/Makefile:
+	* Escjava/test/escjava/parser/test/Makefile:
+	* Escjava/test/escjava/test/Makefile:
+	* Escjava/test/houdini/test/Makefile:
+	Unified all (recursive, messy, incomprehensible) Makefiles into a
+	single top-level makefile that does everything.
+
+	* Escjava/java/escjava/backpred/collectDefpreds.lim:
+	* Escjava/java/escjava/backpred/gatherBGPushes.lim:
+	.lim files are no longer used to generate a minimal background predicate.
+
 2003-02-17  Joseph R. Kiniry  <kiniry@acm.org>
 
 	* Escjava/java/escjava/ast/EscPrettyPrint.java:
