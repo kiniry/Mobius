@@ -57,11 +57,12 @@ public class ArrayAccessExpression extends Expression implements RefFunction {
 		return index;
 	}
 	public Expression getArray() {
-		Expression index = getSubExpressions()[0];
-		return index;
+		Expression array = getSubExpressions()[0];
+		return array;
 	}
 	
-
+	
+	
 
 	/* (non-Javadoc)
 	 * @see bcexpression.Expression#toString()
@@ -69,7 +70,7 @@ public class ArrayAccessExpression extends Expression implements RefFunction {
 	public String toString() {
 		String s ;
 		Expression[] subExpr = getSubExpressions();
-		s = subExpr[0] + "[" + subExpr[1] + "]";
+		s =  subExpr[0] + "[" + subExpr[1] + "]";
 		return s;
 	}
 

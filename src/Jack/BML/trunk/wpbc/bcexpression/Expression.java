@@ -96,7 +96,7 @@ public abstract class Expression {
 	 * @param subExpressions
 	 *            The subExpressions to set.
 	 */
-	protected void setSubExpressions(Expression[] subExpressions) {
+	public void setSubExpressions(Expression[] subExpressions) {
 		this.subExpressions = subExpressions;
 	}
 
