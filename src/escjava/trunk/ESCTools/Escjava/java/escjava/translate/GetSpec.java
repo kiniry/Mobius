@@ -1417,9 +1417,14 @@ while (ee.hasMoreElements()) {
 
     static public ModifierPragma findModifierPragma(/*@ non_null */ GenericVarDecl vdecl,
                                                     int tag) {
-        if (vdecl.pmodifiers != null) {
-            for (int j = 0; j < vdecl.pmodifiers.size(); j++) {
-                ModifierPragma prag= vdecl.pmodifiers.elementAt(j);
+	return findModifierPragma(vdecl.pmodifiers,tag);
+    }
+
+    static public ModifierPragma findModifierPragma(ModifierPragmaVec mp,
+                                                    int tag) {
+        if (mp != null) {
+            for (int j = 0; j < mp.size(); j++) {
+                ModifierPragma prag= mp.elementAt(j);
                 if (prag.getTag() == tag)
                     return prag;
             }

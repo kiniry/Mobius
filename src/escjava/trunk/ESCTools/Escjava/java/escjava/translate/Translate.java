@@ -3072,6 +3072,11 @@ public final class Translate
                         firstMonitoredPragma = prag;
                     break;
 
+		case TagConstants.GHOST:
+		case TagConstants.MODEL:
+			// ignore
+		    break;
+
                 default:
                     Assert.fail("Unexpected tag \"" + TagConstants.toString(tag)
                                 + "\" (" + tag + ")");
@@ -3163,8 +3168,13 @@ public final class Translate
                 case TagConstants.READABLE_IF:
                 case TagConstants.SPEC_PUBLIC:
                 case TagConstants.SPEC_PROTECTED:
+                case TagConstants.GHOST:
                 case TagConstants.NON_NULL:		// handled above
                     break;
+
+		case TagConstants.MODEL:
+		    ErrorSet.error(locAssignOp,"May not assign to a model variable");
+		    break;
 
                 case TagConstants.WRITABLE_IF:
                     map = initializeRWCheckSubstMap(map, actualSelf, locAssignOp);

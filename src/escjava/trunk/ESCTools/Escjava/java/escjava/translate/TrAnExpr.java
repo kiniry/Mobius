@@ -474,6 +474,10 @@ wrap those variables being modified and not everything.
       case TagConstants.NOTHINGEXPR:
 	return null;
 
+      case TagConstants.NEWINSTANCEEXPR:
+// FIXME - no translation support for new Type() expressions
+	ErrorSet.fatal(e.getStartLoc(),"No support as yet for constructor invocations in specification expressions");
+
       default:
 	Assert.fail("UnknownTag<"+e.getTag()+","+
 		    TagConstants.toString(e.getTag())+"> on "+e+ " " +
@@ -836,6 +840,8 @@ wrap those variables being modified and not everything.
 	       && Types.isTypeType(rightType)) {
       naryTag = binary_table[i][6];
     } else {
+	System.out.println("LTYPE " + leftType);
+	System.out.println("RTYPE " + rightType);
       Assert.fail("Bad types on tag "+TagConstants.toString(tag) );
       naryTag = -1; // dummy assignment
     }
