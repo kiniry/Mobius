@@ -1174,7 +1174,7 @@ System.out.println("TYPE " + t);
 
 		    env.resolveType(sig, s.type);
 		    env.resolveType(sig, s.fp.type);
-		    Env subenv = new EnvForLocals(env,s.fp);
+		    Env subenv = new EnvForLocals(env,s.fp,false);
 		    boolean savedPredicateContext = isPredicateContext;
 		    isPredicateContext = true;
 		    s.expr = checkExpr(subenv, s.expr, Types.booleanType);
@@ -2628,34 +2628,6 @@ FIXME - see uses of countFreeVarsAccess
         }
         return null;
     }
-
-    /**
-     * @return true if directly or indirectly pure.
-     */
-/* Moved to escjava.ast.Utils
-    static public boolean isPure(RoutineDecl rd) {
-	if ((rd.modifiers & Modifiers.ACC_PURE_CLOSURE)!=0) return true;
-	if ((rd.modifiers & Modifiers.ACC_IMPURE_CLOSURE)!=0) return false;
-	boolean b = Modifiers.isPure(rd.modifiers) ||   // pure on the routine
-		 Modifiers.isPure(rd.parent.modifiers); // pure on the class
-	if (b) { rd.modifiers |= Modifiers.ACC_PURE_CLOSURE; return b; }
-	// find and test interfaces and extendsions
-	if (rd instanceof MethodDecl) {
-	    MethodDecl md = (MethodDecl)rd;
-	    Set direct = javafe.tc.PrepTypeDeclaration.inst.getOverrides(md.parent, md);
-	    Enumeration e = direct.elements();
-	    while (e.hasMoreElements()) {
-		MethodDecl directMD = (MethodDecl)(e.nextElement());
-		if (isPure(directMD)) {
-		    md.modifiers |= Modifiers.ACC_PURE_CLOSURE;
-		    return true;
-		}
-	    }
-        }
-	rd.modifiers |= Modifiers.ACC_IMPURE_CLOSURE;
-	return false;
-    }
-*/
 
     /** Returns non-zero if the expression is a ghost expression - that is, it
 	would not exist if all ghost declarations were removed.  Otherwise
