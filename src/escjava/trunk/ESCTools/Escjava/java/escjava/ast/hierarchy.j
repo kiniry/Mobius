@@ -260,8 +260,8 @@ public class WildRefExpr extends Expr
   //# Expr var
   //# ObjectDesignator od
 
-  public int getStartLoc() { return od.getStartLoc(); }
-  public int getEndLoc() { return od.getEndLoc(); }
+  public int getStartLoc() { return od != null ? od.getStartLoc() : var.getStartLoc(); }
+  public int getEndLoc() { return od != null ? od.getEndLoc() : var.getEndLoc(); }
 }
 
 public class GuardExpr extends Expr
