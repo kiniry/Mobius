@@ -1,3 +1,115 @@
+2003-01-13  Joseph R. Kiniry  <kiniry@kind.cs.kun.nl>
+
+	* build.xml: Added new properties to denote top-level envelope and test
+	directories.  Added supplied decsrclib classpath to the
+	javafe_classpath.  Added creation of javadoc target directories to
+	initialize target.  Compile target now only depends upon those
+	envelopes that we need and build correctly at this time.  Changed
+	javac rules to attempt to generate 1.1 bytecodes with jikes and denote
+	that the input source is certainly not 1.4 code.  Added more cleanup
+	rules to delete escjava, houdini, and javafe jars files.
+
+	* Javafe/Makefile: Tweaks to support new test hierarchy reorganization.
+
+	* Javafe/sources:
+	Regenerated sources list necessary because of new test hierarchy
+	reorganization.
+
+	* Javafe/setup.sh: First version of bash setup script.
+
+	* Javafe/test/javafe/test/lex/Makefile:
+	Added conditional JAVA env var definition.
+
+	* Javafe/test/javafe/test/fe/Makefile:
+	* Javafe/test/javafe/test/fe/do:
+	* Javafe/test/javafe/test/fe/make_outputs:
+	Tweaks to support modernized environment and move of test code
+	hierarchy.  Setup test parses of source all major JDK releases.
+
+	* Javafe/java/javafe/tc/FieldDeclVec.java:
+	* Javafe/java/javafe/tc/MethodDeclVec.java:
+	* Javafe/java/javafe/tc/TypeSigVec.java:
+	Makefile sed-generated files.
+
+	* Javafe/test/javafe/parser/test/Makefile:
+	* Javafe/test/javafe/parser/test/jdk-1.0.2-files:
+	* Javafe/test/javafe/parser/test/jdk-1.1.18-files:
+	* Javafe/test/javafe/parser/test/jdk-1.2.2-files:
+	* Javafe/test/javafe/parser/test/jdk-1.3.1-files:
+	* Javafe/test/javafe/parser/test/jdk-1.4.1-files:
+	* Javafe/test/javafe/parser/test/jdk-files:
+	* Javafe/test/javafe/parser/test/jdk-files-bad:
+	Updated parser tests.  Support new test hierarchy location, test
+	parsing the source available for all JDKs from 1.0 to 1.4.  Removed
+	old JDK files list.
+
+2003-01-06  Joseph R. Kiniry  <kiniry@kind.cs.kun.nl>
+
+	* Javafe/java/javafe/ast/:
+	Dependent files generated with Makefile-sed fun.  Since we won't
+	be changing these much, I'm checking them in to the repository.
+
+	* Javafe/astgen/astfilelist:
+	* Javafe/astgen/astgen:
+	* jars/.cvsignore:
+	Added placeholder .cvsignore to keep jars directory in CVS project repository.
+
+	* libs/.cvsignore:
+	Added placeholder .cvsignore to keep libs directory in CVS project repository.
+
+	* Escjava/test/houdini/:
+	* Escjava/test/escjava/:
+	Moved Escjava test hierarchy.
+
+	* Javafe/test/:
+	Moved Javafe test hierarchy.
+
+2003-01-02  Joseph R. Kiniry  <kiniry@kind.cs.kun.nl>
+
+	* ChangeLog: Initial ChangeLog.
+
+	* build.xml:
+	Extended excludes of compile_rcc target to include the rccwizard/test
+	directory and its subdirectories.
+
+	* Calvin/java/escjava/prover/SExp.java:
+	* Calvin/java/escjava/prover/SList.java:
+	Removed bogus empty expression ("};" again).
+
+	* Escjava/java/escjava/ast/TagConstants.java:
+	Removed bogus static intialization.
+
+	* Escjava/java/escjava/pa/generic/DisjunctionProver.java:
+	Changed reference to constants to use a static class reference rather
+	than an object reference to satisfy jikes complaints.
+
+	* Rcc/java/rccwizard/test/src/Ambit-noAnnot/Ambit/AmbitApplet.java:
+	* Rcc/java/rccwizard/test/src/Ambit-noAnnot/Ambit/Applet1.java:
+	Removed references to symantec.itools source which we do not have and
+	is unnecessary.
+
+	* Javafe/astgen/lex.yy.c:
+	Added include of unistd.h necessary for new Linux systems.
+
+	* Escjava/java/escjava/parser/ErrorPragmaParser.java:
+	Removed unnecessary semicolons (e.g., "};" at the end of a block).
+
+	* Houdini/java/houdini/WorkList.java:
+	* Houdini/java/houdini/WorkerState.java:
+	Removed unnecessary semicolons (e.g., "};" at the end of a block).
+	Removed Windoz EOLs.
+
+	* Escjava/java/escjava/parser/EscPragmaLex.java:
+	* Escjava/java/escjava/ast/AnOverview.java:
+	* Escjava/java/escjava/ast/GeneratedTags.java:
+	* Escjava/java/escjava/ast/Visitor.java:
+	Commented out bogus current-package imports.
+
+	* build.xml:
+	Initial build.xml file.  Full coverage of all build targets,
+	documentation generation, initial jmlc support, clean, archives,
+	etc. is included.
+
 2003-01-02  Joseph R. Kiniry  <kiniry@kind.cs.kun.nl>
 
 	* build.xml:
