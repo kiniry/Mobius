@@ -7,6 +7,7 @@ import javafe.ast.ASTDecoration;
 import javafe.ast.ModifierPragma;
 import javafe.ast.ModifierPragmaVec;
 import javafe.ast.GenericVarDecl;
+import javafe.ast.IdentifierNode;
 import javafe.ast.ASTDecoration;
 import javafe.ast.RoutineDecl;
 import javafe.ast.MethodDecl;
@@ -111,7 +112,7 @@ public final class Utils
     return false; // default
   }
 
-  static protected abstract class BooleanDecoration extends ASTDecoration {
+  static public abstract class BooleanDecoration extends ASTDecoration {
     private static final Object decFALSE = new Object();
     private static final Object decTRUE = new Object();
     public BooleanDecoration(String s) {
@@ -162,38 +163,6 @@ public final class Utils
     } 
     return null;
   }
-  private static final BooleanDecoration functionDecoration = new BooleanDecoration("function") {
-      public boolean calculate(ASTNode o) {
-        RoutineDecl rd = (RoutineDecl)o;
-        if (findModifierPragma(rd.pmodifiers,TagConstants.FUNCTION)
-            != null) return true;
-        if (!isPure(rd)) return false;
-        // If non-static, the owning class must be immutable
-        // Constructors don't depend on the owning class
-        if (!Modifiers.isStatic(rd.modifiers) && (rd instanceof MethodDecl)) {
-          if ( ! isImmutable(rd.parent) ) return false;
-        }
-        // All argument types must be primitive or immutable
-        FormalParaDeclVec args = rd.args;
-        for (int i=0; i<args.size(); ++i) {
-          FormalParaDecl f = args.elementAt(i);
-          Type t = f.type;
-          if (t instanceof TypeName) t = TypeSig.getSig((TypeName)t);
-          if (t instanceof PrimitiveType) continue;
-          if (t instanceof ArrayType) return false;
-          if (t instanceof TypeSig) {
-            if (! isImmutable(((TypeSig)t).getTypeDecl())) return false;
-          }
-        }
-        return true;
-      }
-    };
-  public static boolean isFunction(RoutineDecl rd) {
-    // FIXME - try all methods being true
-    //if (rd instanceof MethodDecl) return true;
-    return functionDecoration.isTrue(rd);
-  }
-
   private static final BooleanDecoration immutableDecoration = new BooleanDecoration("immutable") {
       public boolean calculate(ASTNode o) {
         return findModifierPragma(((TypeDecl)o).pmodifiers, TagConstants.IMMUTABLE)
@@ -204,6 +173,44 @@ public final class Utils
   public static boolean isImmutable(TypeDecl cd) {
     return immutableDecoration.isTrue(cd);
   }
+
+  public static final BooleanDecoration ensuresDecoration = new BooleanDecoration("ensuresFromException") {
+    public boolean calculate(ASTNode o) {
+      return false;
+    }
+  };
+
+  private static final BooleanDecoration functionDecoration = new BooleanDecoration("function") {
+    public boolean calculate(ASTNode o) {
+      RoutineDecl rd = (RoutineDecl)o;
+      if (findModifierPragma(rd.pmodifiers,TagConstants.FUNCTION)
+          != null) return true;
+      if (!isPure(rd)) return false;
+      // If non-static, the owning class must be immutable
+      // Constructors don't depend on the owning class
+      if (!Modifiers.isStatic(rd.modifiers) && (rd instanceof MethodDecl)) {
+        if ( ! isImmutable(rd.parent) ) return false;
+      }
+      // All argument types must be primitive or immutable
+      FormalParaDeclVec args = rd.args;
+      for (int i=0; i<args.size(); ++i) {
+        FormalParaDecl f = args.elementAt(i);
+        Type t = f.type;
+        if (t instanceof TypeName) t = TypeSig.getSig((TypeName)t);
+        if (t instanceof PrimitiveType) continue;
+        if (t instanceof ArrayType) return false;
+        if (t instanceof TypeSig) {
+          if (! isImmutable(((TypeSig)t).getTypeDecl())) return false;
+        }
+      }
+      return true;
+    }
+  };
+public static boolean isFunction(RoutineDecl rd) {
+  // FIXME - try all methods being true
+  //if (rd instanceof MethodDecl) return true;
+  return functionDecoration.isTrue(rd);
+}
 
 
   public static final ASTDecoration axiomDecoration = new ASTDecoration("axioms");
@@ -239,5 +246,34 @@ public final class Utils
 	
     return result;
   }
+  
+  public static final ASTDecoration inheritedSpecs = new ASTDecoration("inheritedSpecs");
+
+  static public ModifierPragmaVec getInheritedSpecs(RoutineDecl rd) {
+    IdentifierNode fullName = IdentifierNode.make(escjava.translate.TrAnExpr.fullName(rd,false));
+    Object o = inheritedSpecs.get(fullName);
+    if (o != null) return (ModifierPragmaVec)o;
+    ModifierPragmaVec result = ModifierPragmaVec.make();
+    inheritedSpecs.set(fullName,result);
+    return result;
+  }
+  
+  static public ModifierPragmaVec addInheritedSpecs(RoutineDecl rd, ModifierPragmaVec mp) {
+    ModifierPragmaVec mpv = Utils.getInheritedSpecs(rd);
+    mpv.append(mp);
+    ExprModifierPragma req = null;
+    int index = 0;
+    for (int i=0; i<mpv.size(); ++i) {
+      ModifierPragma m = mpv.elementAt(i);
+      if (m.getTag() != TagConstants.REQUIRES) continue;
+      if (req == null) { req = (ExprModifierPragma)m; index = i; continue; }
+      req = escjava.AnnotationHandler.or(req,(ExprModifierPragma)m);
+      mpv.setElementAt(req,index);
+      mpv.removeElementAt(i);
+      --i;
+    }
+    return mpv;
+  }
+
 }
 
