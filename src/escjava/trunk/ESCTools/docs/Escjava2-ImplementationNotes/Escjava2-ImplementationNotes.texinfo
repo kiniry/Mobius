@@ -79,6 +79,7 @@ Copyright @copyright{} 2003-2004 David R. Cok
 * features::                    
 * Changes to static checking::  
 * Incompatibilities::           
+* Modifier Summary::            
 * Bibliography::                
 * Concept Index::               
 
@@ -141,7 +142,7 @@ Annotations pertinent to a class or interface
 * initializer::                 
 * static initializer::          
 * Java method::                 
-* nested types::                
+* Nested types::                
 
 Annotation clauses for a class or interface
 
@@ -465,6 +466,9 @@ provided guidance on the semantics and the current and future state of
 JML.  K. Rustan M. Leino has provided advice with respect to the
 original ESC/Java.
 
+The website for the project is hosted by the Security of Systems group
+at the Katholieke Universiteit Nijmegen in Nijmegen, Netherlands.
+
 The work of producing ESC/Java2 stands on the very much more
 considerable effort of the ESC/Java team in conceiving of and
 producing ESC/Java, Simplify and related tools in the first place.
@@ -518,6 +522,7 @@ the grammar and semantics of JML.  JML is available at
 Further information about JML and ESC/Java2 can be obtained from these sources.
 
 @itemize @bullet
+@item The ESC/Java2 website: @uref{www.cs.kun.nl/sos/research/nl}
 @item The JML web site:  @uref{www.jmlspecs.org}
 @item The JML project on sourceforge: @uref{sourceforge.net/projects/jmlspecs}
 @item The JML interest mailing list on sourceforge: 
@@ -679,7 +684,7 @@ convenient to specify them to the tool using the @code{-specs}
 option, which takes a standard directory path as its single argument.
 
 The command-line arguments consist of options and their arguments,
-described in @ref{Command-line options}, and input entries.  Input
+(described in @ref{Command-line options}) and input entries.  Input
 entries may be files, directories, package names, or class names.
 These input entries designate the classes on which ESC/Java2 operates.
 
@@ -1438,7 +1443,7 @@ the whole object (not just to individual methods).
 * initializer::                 
 * static initializer::          
 * Java method::                 
-* nested types::                
+* Nested types::                
 @end menu
 
 @node Ghost fields, Model fields, Type Annotations, Type Annotations
@@ -1555,7 +1560,8 @@ implementation of a Java routine.
 is a conventional type declaration modified by the JML keyword @code{model}
 (and in an annotation comment).  The entire declaration must be within one
 annotation comment.  The model type may be used within annotation expressions
-and statements.
+and statements.  Model types may have these modifiers: @code{pure}, 
+@code{static}, @code{strictfp}.  A model class may be @code{final}.
 
 @item @strong{Status:} Implemented.
 
@@ -1595,23 +1601,23 @@ but not all and no reasoning is implemented.
 @subsection initializer
 @itemize @bullet
 @item @strong{Description:} The JML @code{initializer} and 
-@code{static_initializer} keywords are used in specification
-files as stand-ins for all of the instance and class initialization
-that is performed as part of initialization. Within a class
-declaration in a compilation unit there may be just one each of
-the @code{initializer} and @code{static_initializer} keywords, 
-each preceded by specifications (like those preceding a routine
-declaration or a Java initialization block).  If more than one
-compilation unit of a refinement sequence has these keywords, then
-the associated specifications are combined just like routine
-specification are combined.  The composite specifications associated
-with an @code{initializer} keyword give preconditions that must hold
-before any instance initialization and postconditions that must hold
-after any instance initialization (but before constructors are executed).
+@code{static_initializer} keywords are used in specification files as
+stand-ins for all of the instance and class initialization that is
+performed as part of object creation of class loading. Within a class
+declaration in a compilation unit there may be just one each of the
+@code{initializer} and @code{static_initializer} keywords, each
+preceded by specifications (like those preceding a routine declaration
+or a Java initialization block).  If more than one compilation unit of
+a refinement sequence has these keywords, then the associated
+specifications are combined just like routine specifications are
+combined.  The composite specifications associated with an
+@code{initializer} keyword give preconditions that must hold before
+any instance initialization and postconditions that must hold after
+any instance initialization (but before constructors are executed).
 Similarly, the specifications of a @code{static_initializer} keyword
-hold before and after the static initialization of the class.  Note that
-these are different than the specifications for a Java initializer block,
-which apply only to that block.
+hold before and after the static initialization of the class.  Note
+that these are different than the specifications for a Java
+initializer block, which apply only to that block.
 
 @item @strong{Status:} Not yet parsed or implemented in static checking.
 
@@ -1635,14 +1641,15 @@ which apply only to that block.
 @end itemize
 
 @c -----------------------------------------------------------------------
-@node Java method, nested types, static initializer, Type Annotations
+@node Java method, Nested types, static initializer, Type Annotations
 @subsection Java method, constructor and field declarations
 @itemize @bullet
 
 @item @strong{Description:} These declarations are identical 
 to those defined by Java.  An implementation or initialization for
 such a declaration may appear only in the .java file, not in any
-repeated declaration in a specification file.
+repeated declaration in a specification file.  The modifiers allowed
+are listed in Appendix A.
 
 @item @strong{Status:} Parsed and typechecked fully.  
 Java fields may be used in annotations.  JML and ESC/Java2 also allow
@@ -1652,15 +1659,16 @@ pure methods and pure constructors to be used in annotations.
 @end itemize
 
 @c -----------------------------------------------------------------------
-@node nested types,  , Java method, Type Annotations
-@subsection inner or nested Java type declarations
+@node Nested types,  , Java method, Type Annotations
+@subsection Nested Java type declarations
 @itemize @bullet
 
 @item @strong{Description:} Java allows declarations of classes and interfaces
 within a class or interface.  These are called nested classes or
-interfaces if they are @code{static} and inner classes or interfaces
-if they are not @code{static}.
-[[[ CHeck the definitions; what modifiers are allowed ???]]]
+interfaces.  Inner classes or interfaces are nested classes or interfaces
+that are not @code{static}.  The modifiers allowed are listed in 
+Appendix A.
+
 
 @item @strong{Status:} Implemented.
 
@@ -2767,11 +2775,13 @@ itself.
 @subsection maps, \into (JML)
 @itemize @bullet
 @item @strong{Description:} [[[ Comment needed. ]]]
-@item @strong{Status:} Parsed, not typechecked, and ignored.[[[Check this???]]]
+@item @strong{Status:} Parsed, typechecked and static checked using a 
+limited unrolling of any recursive definitions.
 @item @strong{Differences from JML or Java:} [[[ Comment needed. ]]]
 
 [[[ COmment on the unrolling of recursive mappings. ]]]
-[[[ Potential performance improvement: unroll datagroups, wildcard refs only when needed. Perhaps have to do this to verify superclasses.  ]]]
+[[[ Potential performance improvement: unroll datagroups, wildcard refs 
+only when needed. Perhaps have to do this to verify superclasses.  ]]]
 [[[ Comment on non-support for wild-cards and array ranges in the middle of
 spec-ref expressions.]]]
 
@@ -3567,7 +3577,7 @@ a function.  The parser is able to distinguish the two usages.
 @c ---------------------------------------------------------------------------
 @cindex set comprehension
 @node set comprehension, notspecified, quantified expressions, JML functions (extensions to expressions)
-@subsection set comprehension
+@subsection Set comprehension
 
 JML has a syntax for expressions whose value is a set.  An example is
 @*@center{@code{new JMLObjectSet @{ Integer i | o.has(i) && i.intValue() > 0 @}}}
@@ -3577,6 +3587,7 @@ No side-effects are permitted in the predicate.
 @*@strong{Status: }ESC/Java2 parses and typechecks set comprehension expressions, with
 the following omissions:
 @itemize @bullet
+@item Set comprehension in class-level specifications are not handled.
 @item Expressions containing set comprehension are not used in static checking
 @item No restrictions on the type of the set are imposed
 @item The JML restrictions on the form of the predicate are not checked
@@ -3621,6 +3632,7 @@ elements when initializers are provided.
 @item .class expression [[[ ?? ]]]
 @item anonymous classes
 @end itemize
+[[[ CLarify the above. ]]]
 
 @c ---------------------------------------------------------------------------
 @node store-ref expressions, Statements within model programs, JML functions (extensions to expressions), Status
@@ -3744,7 +3756,7 @@ as well.  These are described in this section.
 @subsection nowarn annotations
 ESC/Java2 allows an annotation to suppress warnings otherwise produced
 by the static checker.  These are discussed in @ref{Nowarn annotations
-and warnings}.
+and warnings}.  JML parses but ignores these annotations.
 
 
 @menu
@@ -4052,9 +4064,11 @@ to the dynamic type of an expression
 	@tab @code{t.getComponentType()}
 @end multitable
 
-In JML and ESC/Java2, @code{\TYPE} and @code{java.lang.Class} have been made
-equivalent; thus the corresponding quantities in each row may be used
-interchangeably (in annotations). 
+In JML and ESC/Java2, @code{\TYPE} and @code{java.lang.Class} have
+been made equivalent; thus the corresponding quantities in each row
+may be used interchangeably (in annotations). The one exception in
+ESC/Java2 is that methods of @code{Class} (or @code{Object}) may not
+be invoked on a value of type @code{\TYPE}.
 
 The location where the equivalence is particularly needed is in
 writing the specifications for a method such as
@@ -4546,6 +4560,8 @@ combination of @code{non_null} annotations or lack thereof.
 
 This chapter describes some of the user-interface 
 features and usage of ESC/Java2.
+A description of how to run ESC/Java2 is provided in
+@ref{Running ESCJava2}.
 
 @c ------ section Error and warning messages --------
 @menu
@@ -4801,6 +4817,10 @@ default is the platform-dependent classpath specified by Java
 preferences (using the -v option will show the full classpath being
 used)
 
+@cindex -class
+@item @code{-class} @emph{fully-qualified-class-name} :
+the named class will be one of the input entries upon which the program acts
+
 @cindex -classpath
 @cindex classpath
 @item @code{-classpath} @emph{directory-path} : specifies the 
@@ -4812,51 +4832,109 @@ neither @code{-classpath} nor CLASSPATH is specified
 
 @cindex -da
 @item @code{-da} : synonym for @code{-disableassertions}
+
+@cindex -dir
+@item @code{-dir} @emph{directory} : providing a directory as an input entry
+is equivalent to (but much shorted and more robust than)
+listing all JML-relevant files within that directory
+
 @cindex -disableassertions
 @item @code{-disableassertions} : as in Java, causes parsing to 
 read Java 1.4 source but ignores any Java assert statements
+
 @cindex -ea
 @item @code{-ea} : synonym for @code{-enableassertions}
+
 @cindex -eajava
 @item @code{-eajava} : synonym for @code{-javaAssertions}
+
 @cindex -eajml
 @item @code{-eajml} : synonym for @code{-jmlAssertions}
+
 @cindex -enableassertions
 @item @code{-enableassertions} : as in Java, causes parsing to 
 read Java 1.4 source and to use Java assert statements
+
+@cindex -f
+@item @code{-f} : this takes a single argument, a filename; the 
+text within that file is inserted at that location in the command-line;
+this option is typically used to insert standard sets of options or
+input elements into the command-line.
+
+@cindex -file
+@item @code{-file} @emph{filename} : the
+file given is one of the input elements upon which the program will act
+
 @cindex -gui
 @item @code{-gui} : this must be the first command-line argument;
 it causes the GUI version of ESC/Java2 to start
+
 @cindex -help
 @item @code{-help} : causes the program to print information 
 about command-line options and then to terminate
+
 @cindex -javaAssertions
 @item @code{-javaAssertions} : causes parsing to read Java 1.4 
 source and to treat Java assert statements as Java does, as a throw of
 a @code{java.lang.AssertionError} exception
+
 @cindex -jmlAssertions
 @item @code{-jmlAssertions} : causes parsing to read Java 1.4 
 source and to treat Java assert statements like JML assert statements
+
+@cindex -list
+@item @code{-list} @emph{filename} : the given file must contain a sequence
+of input entries, one per line; the option can be used to include a standard
+set of files, directories, packages, or classes (see also @code{-f})
+
 @cindex -loop
 @item @code{-loop} @emph{n}[ | .0 | .5 ] : ESC/Java analyzes loops by
 unrolling them.  The argument of the option specifies the number of times the
 loop is unrolled.  The default is 1.5.  The precise meaning of the argument
 (including the inclusion of the .5) is described in the ESC/Java User's Manual.
+
+@cindex -neverBinary
+@item @code{-neverBinary} : do not use any class files, even if there is no
+java file for a type
+
+@cindex -neverSource
+@item @code{-neverSource} : do not use any java files, even if there is no
+class file for a type
+
 @cindex -noCautions
 @cindex cautions
 @item @code{-noCautions} : suppresses the reporting of any cautions
+
 @cindex -nocheck
 @item @code{-nocheck} : will not execute the static checking phase, though does all
 the parsing, typechecking and verification condition generation
+
 @cindex -nowarn
 @item @code{-nowarn} @emph{warning-type} : turns off the reporting of warnings of the given type; use a warning-type of `All' to turn off all warnings
+
 @cindex -package
 @item @code{-package} @emph{package-name} : includes all the source files in the given package in the list of source files being processed 
 [[[ wihch suffixes ?]]]
+
 @anchor{-parsePlus}
 @cindex -parsePlus
 @item @code{-parsePlus} : causes ESC/Java2 to process annotations following
 the markers @code{//+@@} and @code{/*+@@} (@pxref{Format of annotations}).
+
+@cindex -preferBinary
+@item @code{-preferBinary} : if both java and class files exist on the source
+and classpath for a type, then always use the class file
+
+@cindex -preferRecent
+@item @code{-preferRecent} : if both java and class files exist on the source
+and classpath for a type, then always use the one with the most recent
+modification time
+
+@cindex -preferSource
+@item @code{-preferSource} : if both java and class files exist on the source
+and classpath for a type, then always use the java file
+
+
 @cindex -quiet
 @item @code{-quiet} : turns off any informational messages, leaving only reports of errors, warnings and cautions.
 
@@ -4908,7 +4986,7 @@ There are several environment variables which alter the behavior of
 ESC/Java2 or Simplify, which is called by ESC/Java2.  These are
 described in this section.
 
-[[[ Finish comments ]]]
+[[[ THESE NEED A LOT OF CLEANUP !!!!! Finish comments ]]]
 @itemize @bullet
 
 @item @code{ESCTOOLS_RELEASE}
@@ -5174,7 +5252,7 @@ replacing it with the predicate @code{ x == \old(x) } for each argument
 
 @c ----------------------------------------------------------------------------
 
-@node Incompatibilities, Bibliography, Changes to static checking, Top
+@node Incompatibilities, Modifier Summary, Changes to static checking, Top
 @chapter Incompatibilities
 
 @menu
@@ -5267,7 +5345,7 @@ from the other specifications.
 JML technically does not permit annotations to be split across comments,
 though there is no definition of an unsplittable unit of an annotation.
 In practice, the JML tools allow some splitting and ESC/Java2 allows some
-splitting but they are not consistent.  @ref{Format of annotations}.
+splitting but they are not consistent.  (See @ref{Format of annotations}).
 When in doubt, use a multi-line comment.
 
 @c ----------------------------------------------------------------------------
@@ -5589,7 +5667,8 @@ in a lockset); JML does not yet include the membership in a lockset operation.
 @node Extensions,  , JML features needing clarification, Incompatibilities
 @section Desired extensions
 
-This is a list of some discussed but not resolved extensions to current JML.
+This is a list of some discussed but not resolved potential
+extensions to current JML.
 @itemize @bullet
 @item Changing the order of suffixes so that either jml or spec comes before 
 java.
@@ -5603,11 +5682,168 @@ distributed across the nested specifications just like requires is.
 
 @end itemize
 
-@c ----------------------------------------------------------------------------
+@c --------- chapter Modifier Summary -----------
+@node Modifier Summary, Bibliography, Incompatibilities, Top
+@c  node-name,  next,  previous,  up
+@appendix Modifier Summary
+This table summarizes which Java and JML modifiers may be used in 
+various grammatical contexts.
+
+@multitable @columnfractions .5 .05 .2 .05 .22
+
+@item Grammatical construct @tab @tab Java modifiers @tab @tab JML modifiers
+
+@item All modifiers
+@tab
+@tab @code{public protected private abstract static final synchronized transient volatile native strictfp}
+@tab
+@tab @code{spec_public spec_protected model ghost pure instance helper non_null}
+
+@item
+
+@item Class declaration
+@tab
+@tab @code{public final abstract strictfp}
+@tab
+@tab @code{pure model}
+
+@item
+
+@item Interface declaration
+@tab
+@tab @code{public strictfp}
+@tab
+@tab @code{pure model}
+
+@item
+
+@item Nested Class declaration
+@tab
+@tab @code{public protected private static final abstract strictfp}
+@tab
+@tab @code{spec_public spec_protected model pure}
+
+@item
+
+@item Nested interface declaration
+@tab
+@tab @code{public protected private static strictfp}
+@tab
+@tab @code{spec_public spec_protected model pure}
+
+@item
+
+@item Local Class (and local model class) declaration
+@tab
+@tab @code{final abstract strictfp}
+@tab
+@tab @code{pure model}
+
+@item
+
+@item Type specification (e.g. invariant)
+@tab
+@tab @code{public protected private}
+@tab
+@tab -
+
+@item
+
+@item Field declaration
+@tab
+@tab @code{public protected private final volatile transient static}
+@tab
+@tab @code{spec_public spec_protected non_null instance}
+
+@item
+
+@item Ghost Field declaration
+@tab
+@tab @code{public protected private static final}
+@tab
+@tab @code{non_null instance}
+
+@item
+
+@item Model Field declaration
+@tab
+@tab @code{public protected private static}
+@tab
+@tab @code{non_null instance}
+
+@item
+
+@item Method declaration
+@tab
+@tab @code{public protected private abstract final static synchronized native strictfp}
+@tab
+@tab @code{spec_public spec_protected pure non_null helper }
+
+@item
+
+
+@item Constructor declaration
+@tab
+@tab @code{public protected private}
+@tab
+@tab @code{spec_public spec_protected helper pure}
+
+@item
+
+@item Model method
+@tab
+@tab @code{public protected private abstract static final synchronized strictfp}
+@tab
+@tab @code{pure non_null helper}
+
+@item
+
+@item Model constructor
+@tab
+@tab @code{public protected private}
+@tab
+@tab @code{pure helper}
+
+@item
+
+@item Java Initialization block 
+@tab
+@tab @code{static} ???
+@tab
+@tab ???
+
+@item JML initializer annotation 
+@tab
+@tab @code{static} ???
+@tab
+@tab ???
+
+@item
+
+@item Formal parameter 
+@tab
+@tab @code{final}
+@tab
+@tab @code{non_null}
+
+@item
+
+@item Local variable and local ghost variable declaration
+@tab
+@tab @code{final}
+@tab
+@tab @code{ghost non_null uninitialized}
+
+@end multitable
+
+Note that within interfaces, fields are implicitly public, static and final.
+Ghost and model fields are implicitly public and static, though they may be
+declared instance (i.e. not static).
+@c ----------------------------------------------------------------
 @c ----------------------------------------------------------------------------
 @c ----------------------------------------------------------------------------
 
-@node Bibliography, Concept Index, Incompatibilities, Top
+@node Bibliography, Concept Index, Modifier Summary, Top
 @unnumbered Bibliography
 
 @table @asis
@@ -5615,7 +5851,7 @@ distributed across the nested specifications just like requires is.
 @item [Flanagan-etal02]
 C. Flanagan, K. R. M. Leino, M. Lillibridge, G. Nelson, J. B. Saxe, R. Stata,
 ``Extended Static Checking for Java''. 
-Proceedings of the ACM SIGPLAN 2002 CONference on Programming
+Proceedings of the ACM SIGPLAN 2002 Conference on Programming
 Language Design and Implementation.  June, 2002.
 
 @item [LeavensBakerRuby02]
@@ -5635,6 +5871,8 @@ JML Reference Manual.  Available from @url{http://www.jmlspecs.org}.
 @node  Concept Index,  , Bibliography, Top
 @c node-name, next, previous, up
 @unnumbered Concept Index
+
+[[[ The index needs a lot of work. ]]]
 
 @printindex cp
 

@@ -43,7 +43,7 @@ TEXINFOS =
 #
 TEXIBASE = $(ROOT)
 
-all : html postscript pdf
+all : clean html postscript pdf
 
 postscript : $(TEXIBASE).ps
 
@@ -131,7 +131,7 @@ clean-classes-this: remove-dot-class-files
 distclean-this: distclean-local
 
 distclean-local: clean-this cleanhtmldir
-	$(RM) $(LOCAL)/*.texinfo
+	##$(RM) $(LOCAL)/*.texinfo
 
 cleanhtmldir:
 	$(DELTREE) $(TEXIBASE)
