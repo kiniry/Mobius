@@ -45,6 +45,7 @@ NothingExpr.java
 NothingExpr.java
 NowarnPragma.java
 QuantifiedExpr.java
+RepresentsPragma.java
 ResExpr.java
 RestoreFromCmd.java
 SeqCmd.java
