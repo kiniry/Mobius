@@ -12,6 +12,7 @@ Package-javafe.html
 Package-javafe.parser.html
 Package-javafe.reader.html
 Package-javafe.tc.html
+escjava
 escjava.Main.html
 escjava.Root.html
 escjava.ast.AnOverview.html
@@ -127,6 +128,7 @@ escjava.translate.TrAnExpr.html
 escjava.translate.Translate.html
 escjava.translate.UniqName.html
 escjava.translate.VcToString.html
+javafe
 javafe.CopyLoaded.html
 javafe.CountLines.html
 javafe.FrontEndTool.html
@@ -311,4 +313,6 @@ javafe.tc.TagConstants.html
 javafe.tc.TypeCheck.html
 javafe.tc.TypePrint.html
 javafe.tc.TypeSig.html
+package-list
 packages.html
+stylesheet.css
