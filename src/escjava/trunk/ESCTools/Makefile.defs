@@ -36,7 +36,7 @@ endif
 ifdef COMSPEC
     export DIFF = diff --strip-trailing-cr
 else
-    export DIFF = diff 
+    export DIFF = diff -w
 endif
 
 ######### Check if ESCTOOLS_ROOT is set
