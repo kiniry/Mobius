@@ -76,6 +76,11 @@ public class Main extends javafe.SrcTool
     public static int traceInfo = 1;
     //@ invariant 0 <= traceInfo && traceInfo < 3;
 
+    /** When true, no variable output (e.g. execution time) is printed,
+	so that output can be compared to an oracle output file.
+    */
+    public static boolean testMode = false;
+
     public static boolean spvc = true;
     public static boolean dsa = true;
     //@ invariant spvc ==> dsa  // spvc requires dsa for soundness
@@ -627,6 +632,9 @@ public class Main extends javafe.SrcTool
 	    }
 	    NoWarn.setChkStatus(tag, TagConstants.CHK_AS_ASSERT);
 	    return offset+1;
+	} else if (option.equals("-testMode")) {
+	    testMode = true;
+	    return offset;
         }
 
 	// Pass on unrecognized options:
@@ -769,7 +777,7 @@ public class Main extends javafe.SrcTool
 	super.setup();
 	
 	if (!quiet)
-	    System.out.println("ESC/Java version " + version);
+	    System.out.println("ESC/Java version " + (testMode?"VERSION":version));
     }
 
     /**
@@ -1464,6 +1472,7 @@ public class Main extends javafe.SrcTool
      */
     /*@ ensures \result != null */
     public static String timeUsed(long startTime) {
+	if (testMode) return "TIME";
 	long delta = java.lang.System.currentTimeMillis() - startTime;
 
 	return (delta/1000.0) + " s";
