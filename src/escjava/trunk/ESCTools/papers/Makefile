@@ -34,6 +34,9 @@ all:	$(dvifiles) $(psfiles) $(pdffiles)
 %.ps.gz: %.ps
 	gzip -c $< > $@
 
+%.dvi: %.tex
+	latex $<
+
 # ${paper}.dvi: ${paper}.tex
 # 	latex ${paper}; latex ${paper}; bibtex ${paper}; \
 # 	latex ${paper}; latex ${paper}; \
