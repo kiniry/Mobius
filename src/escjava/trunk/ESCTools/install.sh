@@ -57,6 +57,8 @@ chmod +x `find . -name rtest`
 chmod +x `find . -name make_tags`
 chmod +x `find . -name insert_ensures`
 
+(cd Escjava/release/master/bin; mv Simplify-1.5.4.exe.win Simplify-1.5.4.exe)
+
 ###### Have the user create their own Makefile.local.
 ###### Wait for them to finish.
 
