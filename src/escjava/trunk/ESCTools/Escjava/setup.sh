@@ -50,7 +50,9 @@ fi
 
 ######################### locations #########################
 
-export JAVA_HOME=/usr/java/jdk-1.2
+if ! [ -d ${JAVA_HOME} ]; then
+    export JAVA_HOME=/usr/java/jdk-1.2
+fi
 export PATH=$JAVA_HOME/bin:$PATH
 
 export CLASSDIRECTORY=${ESCJAVA_ROOT}/classfiles
@@ -68,7 +70,12 @@ export SRCCLASSDIRECTORY=${JAVAFE_ROOT}/decsrclib
 # bytecodes that the decsrc package can parse, and (b) contains some
 # classes (e.g., java.util.Arrays) on which ESC/Java depends.
 
-export JDK_SOURCES=/usr/local/Java/src/jdk-1.2.2_012
+if [ "${JAVA_HOME}" == "/usr/java/jdk-1.2" ]; then
+  export JDK_SOURCES=/usr/local/Java/src/jdk-1.2
+elif [ "${JAVA_HOME}" == "/usr/java/jdk-1.3" ]; then
+  export JDK_SOURCES=/usr/local/Java/src/jdk-1.3
+fi
+# rt.jar exists in jdk 1.2 and later.
 export JDKBINARIES=${JAVA_HOME}/jre/lib/rt.jar
 export JDK_BINARIES=${JDKBINARIES}
 
@@ -92,10 +99,10 @@ export MOCHA_CLASSES=${MOCHA_ROOT}/classes
 #
 
 # do not change the number of components here without updating escj!!
-export CLASSES=${CLASSDIRECTORY}:${ESCTOOLS_JARS}/javafe.jar:${SRCCLASSDIRECTORY}:${MOCHA_CLASSES}
+export CLASSES=${ESCTOOLS_JARS}/decsrc.jar:${ESCTOOLS_JARS}/mochalib.jar:${ESCTOOLS_JARS}/javafe.jar:${ESCTOOLS_JARS}/escjava.jar:${SRCCLASSDIRECTORY}:${MOCHA_CLASSES}:${CLASSDIRECTORY}
 
 export CLASSPATH=${SOURCEDIRECTORY}:${CLASSES}:.
-export ESC_CLASSPATH=${CLASSDIRECTORY}:${ESCTOOLS_JARS}/javafe.jar:${JDK_BINARIES}:${JDK_SOURCES}:${MOCHA_CLASSES}
+export ESC_CLASSPATH=${CLASSDIRECTORY}:${ESCTOOLS_JARS}/decsrc.jar:${ESCTOOLS_JARS}/mochalib.jar:${ESCTOOLS_JARS}/javafe.jar:${ESCTOOLS_JARS}/escjava.jar:${JDK_BINARIES}:${JDK_SOURCES}:${MOCHA_CLASSES}
 # javadepend needs a classpath where all the sources are in the current dir:
 export LCLASSPATH=.:${CLASSES}
 
