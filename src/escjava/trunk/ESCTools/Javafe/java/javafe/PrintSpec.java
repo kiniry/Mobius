@@ -21,7 +21,7 @@ import java.util.StringTokenizer;
 
 public class PrintSpec extends FrontEndTool implements Listener {
 
-    public String name() { return "PRintSpec"; }
+    public String name() { return "PrintSpec"; }
 
     private final Vector argumentClassNames = new Vector();
     //@ invariant argumentClassNames.elementType == \type(String);
