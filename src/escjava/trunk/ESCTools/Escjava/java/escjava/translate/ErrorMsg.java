@@ -45,13 +45,14 @@ public final class ErrorMsg
 		if (isErrorLabel(s)) {
 		    printErrorMessage(s, counterexampleContext, rd, directTargets, out, false);
 		    iErrorLabel = i;
-		    tail = s.substring(s.indexOf('@'));
+		    int j = s.indexOf('@');
+		    if (j != -1) tail = s.substring(j);
 		    break;
 		}	  
 	    }
 	    if (iErrorLabel == -1) {
 		//@ unreachable
-		String s = "Unknown cause!  Lables are";
+		String s = "Unknown cause!  Labels are";
 		for (int i = 0; i < cLabels; i++) {
 		     s = s + " " + labelList.at(i).getAtom().toString();
 		}
@@ -151,6 +152,7 @@ public final class ErrorMsg
      */
 
     private static boolean isErrorLabel(String s) {
+	if (s.equals("Inconsistent")) return true;
 	return s.indexOf('@') != -1;
     }
 
@@ -187,7 +189,7 @@ public final class ErrorMsg
 	}
 
 	int k = s.indexOf('@');
-	Assert.notFalse(k != -1 || assocOnly);
+	//Assert.notFalse(k != -1 || assocOnly);
 	int locUse = 0;
 	if (k != -1) {
 	    locUse = getLoc(s, k+1);
@@ -222,8 +224,10 @@ public final class ErrorMsg
 	String msg = chkToMsg( tag, hasAssocDecl );
 	if (msg == null) return;
 
-	if (!assocOnly) ErrorSet.warning( locUse, 
+	if (locUse != Location.NULL) ErrorSet.warning( locUse, 
 			  msg+" (" + TagConstants.toString(tag) + ")" );
+	else if (tag != TagConstants.CHKADDINFO)
+		ErrorSet.warning( msg+" (" + TagConstants.toString(tag) + ")" );
 
 	if( locDecl != Location.NULL) {
 	    if (!Location.isWholeFileLoc(locDecl)) {
@@ -305,6 +309,9 @@ public final class ErrorMsg
 	case TagConstants.CHKCODEREACHABILITY:
 	    r = ("Code marked as unreachable may possibly be reached");
 	    Assert.notFalse(!hasAssocDecl);
+	    break;
+	case TagConstants.CHKCONSISTENT:
+	    r = ("Possible inconsistent added axiom");
 	    break;
 	case TagConstants.CHKCONSTRAINT:
 	    r = ("Possible violation of object constraint at exit");
