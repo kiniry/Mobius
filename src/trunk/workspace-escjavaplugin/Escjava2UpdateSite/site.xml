@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/EscJava2_1.0.3.jar" id="EscJava2" version="1.0.3">
+      <category name="Escjava2"/>
+      <category name="EscJava2"/>
+   </feature>
+   <category-def name="EscJava2" label="EscJava2">
+      <description>
+         EscJava2 Plugin
+      </description>
+   </category-def>
+</site>
