@@ -203,6 +203,12 @@ public class ErrorSet
 	report(loc, ERROR, msg);
     }
 
+    public static void error(int loc, String msg, int addLoc) {
+	errors++;
+	report(loc, ERROR, msg);
+	report(addLoc, "Associated declaration", "");
+    }
+
 
     /**
      * Report a fatal error.  Warning: This method does not
@@ -279,7 +285,8 @@ public class ErrorSet
 	    System.out.println(type + ": " + msg);
 
         // Hack so we can see where error occurred, for debugging:
-	//(new Throwable()).printStackTrace();
+	if (javafe.Tool.options.showErrorLocation)
+		(new Throwable()).printStackTrace();
 	
     }
 
@@ -304,7 +311,8 @@ public class ErrorSet
 	    return;
 
         // Hack so we can see where error occurred, for debugging:
-	//(new Throwable()).printStackTrace();
+	if (javafe.Tool.options.showErrorLocation)
+		(new Throwable()).printStackTrace();
 
 	if (loc==Location.NULL)
 	    Assert.fail("NULL location erroneously passed to ErrorSet;"

@@ -78,6 +78,12 @@ public class Options
      */
     public boolean assertionsEnabled = false;
 
+    /**
+     *	Debugging flag used to turn on stack trace dumps when error messages
+     *	are issued. (cf. javafe.util.ErrorSet)
+     */
+    public boolean showErrorLocation = false;
+
     //************************************************************************
     //     Constructors
     //************************************************************************   
@@ -207,6 +213,9 @@ public class Options
         } else if (option.equals("-help")) {
 	    issueUsage = true;
 	    return offset;
+	} else if (option.equals("-showErrorLocation")) {
+	    showErrorLocation = true;
+            return offset;
 	}
 
 	// Pass on unrecognized options:
