@@ -3558,6 +3558,7 @@ public final class Translate
 	modifiesCheckField(lhs,loc,fd,Location.NULL);
     }
     private void modifiesCheckField(Expr lhs, int loc, FieldDecl fd, int locdecl) {
+	kindOfModCheck = "assignment";
 	// FIXME - I don't think this handles this and super that are not the
 	// prefix.
 	if (!issueCautions) return;
@@ -3676,6 +3677,7 @@ public final class Translate
     }
 
     private void modifiesCheckArray(Expr array, Expr arrayIndex, int loc) {
+	kindOfModCheck = "assignment";
 	modifiesCheckArray(array,arrayIndex,loc,Location.NULL,null);
     }
     private void modifiesCheckArray(Expr array, Expr arrayIndex, int loc, int locdecl,
@@ -3753,6 +3755,8 @@ public final class Translate
 	modChecksComplete(ev,loc,locdecl);
     }
 
+    private String kindOfModCheck = "assignment";
+
     private void modChecksComplete(ExprVec ev, int loc, int aloc) {
 	if (NoWarn.getChkStatus(TagConstants.CHKMODIFIES,loc,aloc==Location.NULL?loc:aloc)
 				!= TagConstants.CHK_AS_ASSERT) {
@@ -3761,9 +3765,11 @@ public final class Translate
         }
 	if (ev.size() == 0) {
 		if (aloc == TagConstants.NULL) ErrorSet.error(loc, 
-		    "There is no assignable clause allowing this assignment");
+		    "There is no assignable clause allowing this " +
+			kindOfModCheck);
 		else ErrorSet.error(loc, 
-		    "There is no assignable clause allowing this assignment",aloc);
+		    "There is no assignable clause allowing this "
+			+ kindOfModCheck,aloc);
 	} else if (aloc == Location.NULL) {
 	    //System.out.println("Generating a modifies check " + ev.size());    
 	    addNewAssumptionsNow();
@@ -3845,6 +3851,7 @@ public final class Translate
     }
 
     private void modifiesCheckMethod(Expr eod, int loccall, int locdecl, CondExprModifierPragmaVec mp, Hashtable args, boolean freshResult) {
+	kindOfModCheck = "method call";
 	pFreshResult = freshResult;
 	try {
 	if (!issueCautions) return;

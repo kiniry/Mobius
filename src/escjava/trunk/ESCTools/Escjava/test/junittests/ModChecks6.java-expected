@@ -9,7 +9,7 @@ ModChecks6: ModChecks6() ...
     [TIME]  passed immediately
 
 ModChecks6: m() ...
-ModChecks6.java:19: Error: There is no assignable clause allowing this assignment
+ModChecks6.java:19: Error: There is no assignable clause allowing this method call
             o.mm();
                 ^
 ModChecks6.java:25: Associated declaration: 

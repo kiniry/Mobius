@@ -6,7 +6,7 @@ ModChecksMethod ...
     [TIME]
 
 ModChecksMethod: mnothing() ...
-ModChecksMethod.java:20: Error: There is no assignable clause allowing this assignment
+ModChecksMethod.java:20: Error: There is no assignable clause allowing this method call
             pe(); // WARNING
               ^
 ModChecksMethod.java:245: Associated declaration: 
@@ -15,7 +15,7 @@ ModChecksMethod.java:245: Associated declaration:
     [TIME]  passed
 
 ModChecksMethod: mnothingA() ...
-ModChecksMethod.java:24: Error: There is no assignable clause allowing this assignment
+ModChecksMethod.java:24: Error: There is no assignable clause allowing this method call
             pi(); // WARNING
               ^
 ModChecksMethod.java:6: Associated declaration: 
@@ -60,7 +60,7 @@ Associated declaration is "ModChecksMethod.java", line 260, col 15:
     [TIME]  failed
 
 ModChecksMethod: mnothingF() ...
-ModChecksMethod.java:44: Error: There is no assignable clause allowing this assignment
+ModChecksMethod.java:44: Error: There is no assignable clause allowing this method call
             ptstar(); // WARNING
                   ^
 ModChecksMethod.java:272: Associated declaration: 
@@ -69,7 +69,7 @@ ModChecksMethod.java:272: Associated declaration:
     [TIME]  passed
 
 ModChecksMethod: mnothingG() ...
-ModChecksMethod.java:48: Error: There is no assignable clause allowing this assignment
+ModChecksMethod.java:48: Error: There is no assignable clause allowing this method call
             pTstar(); // WARNING
                   ^
 ModChecksMethod.java:278: Associated declaration: 
@@ -78,7 +78,7 @@ ModChecksMethod.java:278: Associated declaration:
     [TIME]  passed
 
 ModChecksMethod: mnothingH() ...
-ModChecksMethod.java:52: Error: There is no assignable clause allowing this assignment
+ModChecksMethod.java:52: Error: There is no assignable clause allowing this method call
             pATstar(); // WARNING
                    ^
 ModChecksMethod.java:275: Associated declaration: 
@@ -104,7 +104,7 @@ Associated declaration is "ModChecksMethod.java", line 6, col 8:
     [TIME]  failed
 
 ModChecksMethod: mi2() ...
-ModChecksMethod.java:80: Error: There is no assignable clause allowing this assignment
+ModChecksMethod.java:80: Error: There is no assignable clause allowing this method call
             pe(); // WARNING
               ^
 ModChecksMethod.java:245: Associated declaration: 
@@ -113,7 +113,7 @@ ModChecksMethod.java:245: Associated declaration:
     [TIME]  passed
 
 ModChecksMethod: mi3() ...
-ModChecksMethod.java:84: Error: There is no assignable clause allowing this assignment
+ModChecksMethod.java:84: Error: There is no assignable clause allowing this method call
             o.pe(); // WARNING
                 ^
 ModChecksMethod.java:245: Associated declaration: 
@@ -155,7 +155,7 @@ Associated declaration is "ModChecksMethod.java", line 260, col 15:
     [TIME]  failed
 
 ModChecksMethod: mi3D() ...
-ModChecksMethod.java:100: Error: There is no assignable clause allowing this assignment
+ModChecksMethod.java:100: Error: There is no assignable clause allowing this method call
             ptstar(); // WARNING
                   ^
 ModChecksMethod.java:272: Associated declaration: 
@@ -164,7 +164,7 @@ ModChecksMethod.java:272: Associated declaration:
     [TIME]  passed
 
 ModChecksMethod: mi3E() ...
-ModChecksMethod.java:104: Error: There is no assignable clause allowing this assignment
+ModChecksMethod.java:104: Error: There is no assignable clause allowing this method call
             pTstar(); // WARNING
                   ^
 ModChecksMethod.java:278: Associated declaration: 
@@ -173,7 +173,7 @@ ModChecksMethod.java:278: Associated declaration:
     [TIME]  passed
 
 ModChecksMethod: mi3F() ...
-ModChecksMethod.java:108: Error: There is no assignable clause allowing this assignment
+ModChecksMethod.java:108: Error: There is no assignable clause allowing this method call
             pATstar(); // WARNING
                    ^
 ModChecksMethod.java:275: Associated declaration: 
@@ -196,7 +196,7 @@ Associated declaration is "ModChecksMethod.java", line 272, col 14:
     [TIME]  failed
 
 ModChecksMethod: mtstarA() ...
-ModChecksMethod.java:124: Error: There is no assignable clause allowing this assignment
+ModChecksMethod.java:124: Error: There is no assignable clause allowing this method call
             pTstar(); // WARNING
                   ^
 ModChecksMethod.java:278: Associated declaration: 
@@ -205,7 +205,7 @@ ModChecksMethod.java:278: Associated declaration:
     [TIME]  passed
 
 ModChecksMethod: mtstarB() ...
-ModChecksMethod.java:128: Error: There is no assignable clause allowing this assignment
+ModChecksMethod.java:128: Error: There is no assignable clause allowing this method call
             o.pTstar(); // WARNING
                     ^
 ModChecksMethod.java:278: Associated declaration: 
@@ -214,7 +214,7 @@ ModChecksMethod.java:278: Associated declaration:
     [TIME]  passed
 
 ModChecksMethod: mtstarC() ...
-ModChecksMethod.java:132: Error: There is no assignable clause allowing this assignment
+ModChecksMethod.java:132: Error: There is no assignable clause allowing this method call
             pATstar(); // WARNING
                    ^
 ModChecksMethod.java:275: Associated declaration: 
@@ -223,7 +223,7 @@ ModChecksMethod.java:275: Associated declaration:
     [TIME]  passed
 
 ModChecksMethod: mTstar() ...
-ModChecksMethod.java:137: Error: There is no assignable clause allowing this assignment
+ModChecksMethod.java:137: Error: There is no assignable clause allowing this method call
             ptstar(); // WARNING
                   ^
 ModChecksMethod.java:272: Associated declaration: 
@@ -246,7 +246,7 @@ ModChecksMethod: mTstarB() ...
     [TIME]  passed
 
 ModChecksMethod: mTstarC() ...
-ModChecksMethod.java:153: Error: There is no assignable clause allowing this assignment
+ModChecksMethod.java:153: Error: There is no assignable clause allowing this method call
             pATstar(); // WARNING
                    ^
 ModChecksMethod.java:275: Associated declaration: 
@@ -255,7 +255,7 @@ ModChecksMethod.java:275: Associated declaration:
     [TIME]  passed
 
 ModChecksMethod: mATstar() ...
-ModChecksMethod.java:158: Error: There is no assignable clause allowing this assignment
+ModChecksMethod.java:158: Error: There is no assignable clause allowing this method call
             ptstar(); // WARNING
                   ^
 ModChecksMethod.java:272: Associated declaration: 
@@ -275,7 +275,7 @@ Associated declaration is "ModChecksMethod.java", line 272, col 14:
     [TIME]  failed
 
 ModChecksMethod: mATstarB() ...
-ModChecksMethod.java:168: Error: There is no assignable clause allowing this assignment
+ModChecksMethod.java:168: Error: There is no assignable clause allowing this method call
             pTstar(); // WARNING
                   ^
 ModChecksMethod.java:278: Associated declaration: 
@@ -284,7 +284,7 @@ ModChecksMethod.java:278: Associated declaration:
     [TIME]  passed
 
 ModChecksMethod: mATstarC() ...
-ModChecksMethod.java:173: Error: There is no assignable clause allowing this assignment
+ModChecksMethod.java:173: Error: There is no assignable clause allowing this method call
             o.pTstar(); // WARNING
                     ^
 ModChecksMethod.java:278: Associated declaration: 
@@ -443,7 +443,7 @@ ModChecksMethod: pTstar() ...
     [TIME]  passed immediately
 
 ModChecksMethod: ModChecksMethod() ...
-ModChecksMethod.java:284: Error: There is no assignable clause allowing this assignment
+ModChecksMethod.java:284: Error: There is no assignable clause allowing this method call
             this(0); // WARNING
                 ^
 ModChecksMethod.java:297: Associated declaration: 
@@ -452,7 +452,7 @@ ModChecksMethod.java:297: Associated declaration:
     [TIME]  passed
 
 ModChecksMethod: mcnothing() ...
-ModChecksMethod.java:289: Error: There is no assignable clause allowing this assignment
+ModChecksMethod.java:289: Error: There is no assignable clause allowing this method call
             new ModChecksMethod(0); // WARNING 
                                ^
 ModChecksMethod.java:297: Associated declaration: 
@@ -496,7 +496,7 @@ ModChecksMethod: parangeC() ...
     [TIME]  passed immediately
 
 ModChecksMethod: mstatic() ...
-ModChecksMethod.java:336: Error: There is no assignable clause allowing this assignment
+ModChecksMethod.java:336: Error: There is no assignable clause allowing this method call
                 new ModChecksMethod(null); // WARNING
                                    ^
 ModChecksMethod.java:7: Associated declaration: 
@@ -511,7 +511,7 @@ ModChecksMethod: ModChecksMethod(java.lang.Object, int) ...
     [TIME]  passed
 
 ModChecksMethod: ModChecksMethod(java.lang.Object, double) ...
-ModChecksMethod.java:350: Error: There is no assignable clause allowing this assignment
+ModChecksMethod.java:350: Error: There is no assignable clause allowing this method call
                 super(0); // WARNING
                      ^
 ModChecksMethod.java:393: Associated declaration: 
@@ -523,7 +523,7 @@ ModChecksMethod: ModChecksMethod(java.lang.Object, double, int) ...
     [TIME]  passed
 
 ModChecksMethod: ModChecksMethod(java.lang.Object, java.lang.Object) ...
-ModChecksMethod.java:360: Error: There is no assignable clause allowing this assignment
+ModChecksMethod.java:360: Error: There is no assignable clause allowing this method call
                 super(0.0); // WARNING
                      ^
 ModChecksMethod.java:394: Associated declaration: 
@@ -544,7 +544,7 @@ ModChecksMethod: mstaticA() ...
     [TIME]  passed
 
 ModChecksMethod: mstaticB() ...
-ModChecksMethod.java:381: Error: There is no assignable clause allowing this assignment
+ModChecksMethod.java:381: Error: There is no assignable clause allowing this method call
                 pstaticB();  // WARNING
                         ^
 ModChecksMethod.java:371: Associated declaration: 

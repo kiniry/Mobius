@@ -1,10 +1,10 @@
-CON.java:18: Error: There is no assignable clause allowing this assignment
+CON.java:18: Error: There is no assignable clause allowing this method call
                 Object o = new CON(0); // WARNING
                                   ^
 CON.java:7: Associated declaration: 
         static int i,ii;
                ^
-CON.java:28: Error: There is no assignable clause allowing this assignment
+CON.java:28: Error: There is no assignable clause allowing this method call
                 Object oo = new CON(o); // WARNING
                                    ^
 CON.java:48: Associated declaration: 
