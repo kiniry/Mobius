@@ -1,5 +1,6 @@
 # Simp=../AOSF/Simplify
- Simp=../LINUXLIBC6/Simplify
+# Simp=../LINUXLIBC6/Simplify
+# Simp=../PPC_DARWIN/Simplify
 # Simp=/proj/m3/pkg/simplify/AOSF/Simplify
 # Simp=/proj/m3/pkg/simplify/LINUXLIBC6/Simplify
 

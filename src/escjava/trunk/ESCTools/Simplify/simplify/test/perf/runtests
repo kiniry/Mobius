@@ -1,5 +1,7 @@
-#!/proj/system/bin/tcsh
+#!/bin/tcsh
 setenv PROVER_KILL_TIME 500
+setenv SIMPLIFY /usr/local/bin/Simplify
+setenv NICE /usr/bin/nice
 # setenv PROVER_STATS
 echo Running Simplify performance tests using the following switches: $*
 echo The machine is:  ${HOST}
@@ -7,10 +9,10 @@ printenv | egrep "AXIOM|PROVER" | xargs echo Environment variables:
 date
 foreach f (`cat m3tests`)
   echo $f
-  time /usr/bin/nice -n10 Simplify -noprune -ax esc $* $f
+  time $NICE -n10 $SIMPLIFY -noprune -ax esc $* $f
 end
 foreach f (`cat tests`)
   echo $f
-  time /usr/bin/nice -n10 Simplify -noprune $* $f
+  time $NICE -n10 $SIMPLIFY -noprune $* $f
 end
 date
