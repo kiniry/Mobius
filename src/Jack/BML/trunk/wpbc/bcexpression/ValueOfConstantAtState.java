@@ -5,6 +5,7 @@
  */
 package bcexpression;
 
+import bcexpression.javatype.JavaType;
 import constants.BCConstantFieldRef;
 
 /**
@@ -30,8 +31,17 @@ public class ValueOfConstantAtState extends Expression {
 	public Expression atState(int state) {
 		return this;
 	}
+	
 	public Expression getConstant() {
 		return getSubExpressions()[0];
+	}
+	
+	public Expression getType() {
+		return getConstant().getType();
+		/*if (getConstant() instanceof BCConstantFieldRef ) {
+			BCConstantFieldRef constField = ( BCConstantFieldRef ) getConstant();
+			return (JavaType)constField.getType();
+		}*/
 	}
 	
 	/* (non-Javadoc)
