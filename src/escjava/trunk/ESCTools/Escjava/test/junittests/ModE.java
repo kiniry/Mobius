@@ -38,7 +38,7 @@ public class ModE extends ModES {
 		e.me();  // WARNING
 		e = new ModE(1,2,3);  // WARNING
 		e.md();  // WARNING
-		e.mss();  // WARNING
+		e.mss();  // OK
 	}
 
 	//@ modifies \nothing;

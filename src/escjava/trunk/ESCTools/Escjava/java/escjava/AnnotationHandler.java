@@ -291,8 +291,7 @@ public class AnnotationHandler {
         newpm.addElement(defaultModifies(tde.getStartLoc(),T,tde));
       }
     }
-    
-    
+
     RoutineDecl previousDecl = null;
     int pos = 0;
     while (pos < pm.size()) {
@@ -329,9 +328,27 @@ public class AnnotationHandler {
         previousDecl = ps.decl;
       }
     }
-    
+
     
     ParsedRoutineSpecs accumulatedSpecs = new ParsedRoutineSpecs();
+
+    if (Utils.isPure(tde)) {
+      // FIXME - the following if avoids a problem with the OwnerNull assertion when
+      // the pure Object() constructor gets assignable this.* along with assignable \nothing
+      // Should be fixed at a more fundamental level eventually
+      if (!(isConstructor && tde.getParent().id == Identifier.intern("Object") && TypeSig.getSig(tde.getParent()).getPackageName().equals("java.lang") )) {
+        // Add another spec case 
+        ModifierPragma mp = Utils.findModifierPragma(tde.pmodifiers,TagConstants.PURE);
+        // FIXME - if mp is null,then the pure modifier is in a superclass - find it
+        int loc = mp == null ? Location.NULL : mp.getStartLoc();
+        ModifiesGroupPragma m = defaultModifies(loc,T,tde);
+        ModifierPragmaVec mv = ModifierPragmaVec.make(1);
+        mv.append(nonnullBehavior);
+        mv.addElement(m);
+        accumulatedSpecs.specs.add(mv);
+      }
+    }
+    
     pos = 0;
     while (pos < pm.size()) {
       ModifierPragma p = pm.elementAt(pos++);
@@ -348,16 +365,7 @@ public class AnnotationHandler {
         newpm.addElement(p);
       }
     }
-    if (Utils.isPure(tde) && false && !isConstructor) { // FIXME - not doing constructors till modify problems are fixed
-      // Add another spec case 
-      ModifierPragma mp = Utils.findModifierPragma(tde.pmodifiers,TagConstants.PURE);
-      // FIXME - if mp is null,then the pure modifier is in a superclass - find it
-      int loc = mp == null ? Location.NULL : mp.getStartLoc();
-      ModifiesGroupPragma m = defaultModifies(loc,T,tde);
-      ModifierPragmaVec mv = ModifierPragmaVec.make(1);
-      mv.addElement(m);
-      accumulatedSpecs.specs.add(mv);
-    }
+
     ModifierPragmaVec r = desugar(accumulatedSpecs.specs, tde);
     // accumulatedSpecs.impliesThat = desugar(accumulatedSpecs.impliesThat);
     // accumulatedSpecs.examples = desugar(accumulatedSpecs.examples); // FIXME - not doing this because we are not doing anything with the result.
@@ -696,7 +704,7 @@ public class AnnotationHandler {
     ModifiesGroupPragma r = ModifiesGroupPragma.make(
         TagConstants.MODIFIES,loc);
     r.addElement( CondExprModifierPragma.make(
-        TagConstants.MODIFIES,e,loc,req));
+        TagConstants.MODIFIES,e,loc,null));
     r.precondition = req;
     return r;
   }
@@ -1041,7 +1049,7 @@ public class AnnotationHandler {
   
   /** The routines in this class parse a sequence of ModifierPragma that 
    occur prior to a method or constructor declaration.  These consist
-   of lightwieght or heavywieght specifications, possibly nested or
+   of lightweight or heavyweight specifications, possibly nested or
    with consecutive spec-cases separated by 'also'.  The parsing of the
    compilation unit simply produces a flat sequence of such ModifierPragmas,
    since they may occur in separate annotation comments and the Javafe

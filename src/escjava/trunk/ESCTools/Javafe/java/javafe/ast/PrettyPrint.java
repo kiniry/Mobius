@@ -183,6 +183,36 @@ public abstract class PrettyPrint {
   //@ requires o != null && tp != null;
   public abstract void print(OutputStream o, int ind, TypeModifierPragma tp);
 
+  /**
+   * Writes an Object (a type of ASTNode) to the given PrintStream,
+   * followed by an end-of-line.
+   * @param out The PrintStream to write to
+   * @param e   The expression to write
+   */
+  public void println(java.io.PrintStream out, Object e) {
+    out.println(e.toString());
+  }
+  
+  /**
+   * Writes an Expr (a type of ASTNode) to the given PrintStream,
+   * followed by an end-of-line.
+   * @param out The PrintStream to write to
+   * @param e   The expression to write
+   */
+  public void println(java.io.PrintStream out, Expr e) {
+    print(out,0,e); out.println("");
+  }
+  
+  /**
+   * Writes an ObjectDesignator (a type of ASTNode) to the given PrintStream,
+   * followed by an end-of-line.
+   * @param out The PrintStream to write to
+   * @param e   The expression to write
+   */
+  public void println(java.io.PrintStream out, ObjectDesignator e) {
+    print(out,0,e); out.println("");
+  }
+  
   //// toString methods
 
   /** Returns a canonical text representation for literal values.

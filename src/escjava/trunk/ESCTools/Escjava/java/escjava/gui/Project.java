@@ -28,7 +28,7 @@ public class Project {
 	    GUI.gui.run(args);
 	    GUI.gui.escframe.init();
 	} finally {
-	    Utils.restoreStreams();
+	    Utils.restoreStreams(true);
 	}
 	String s = ba.toString();
 	if (s.length() != 0) JOptionPane.showMessageDialog(

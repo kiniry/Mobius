@@ -170,23 +170,23 @@ public class TestFilesTestSuite  extends TestSuite {
 		returnedObject = dotest(fileToTest,args);
 		
 	    } catch (IllegalAccessException e) {
-		Utils.restoreStreams();
+		Utils.restoreStreams(true);
 		fail(e.toString());
 	    } catch (IllegalArgumentException e) {
-		Utils.restoreStreams();
+		Utils.restoreStreams(true);
 		fail(e.toString());
 	    } catch (java.lang.reflect.InvocationTargetException e) {
-		Utils.restoreStreams();
+		Utils.restoreStreams(true);
 		java.io.StringWriter sw = new StringWriter();
 		sw.write(e.toString());
 		e.printStackTrace(new PrintWriter(sw));
 		fail(sw.toString());
 	    } catch (Throwable e) {  // THIS JUST FOR DEBUG
-		Utils.restoreStreams(); // Have to have this before the use of System.out on the next line
+		Utils.restoreStreams(true); // Have to have this before the use of System.out on the next line
 		System.out.println(e);
 		e.printStackTrace();
 	    } finally {
-		Utils.restoreStreams();
+		Utils.restoreStreams(true);
 		if (ps != null) ps.close();
 	    }
 	    String err = doOutputCheck(fileToTest,ba.toString(),returnedObject);
