@@ -4382,6 +4382,7 @@ if (mg.precondition == null) {
                          "formal args: " + spec.dmd.args.size()
                          + " actualargs: " + call.args.size() );
 
+
         // now start creating code and temporaries
         code.push();         // this mark popped by "spill"
         temporaries.push();  // this mark popped by "spill"
@@ -4422,6 +4423,10 @@ if (mg.precondition == null) {
 */
             code.addElement(GC.gets(piLs[i], call.args.elementAt(i)));
         }
+
+	if (spec.dmd.isConstructor()) {
+	    code.addElement(GC.gets(GC.resultvar, eod));
+	}
 
 	for (int i=0; i<spec.preAssumptions.size(); ++i) {
 	    addAssumption(spec.preAssumptions.elementAt(i));
@@ -4535,8 +4540,12 @@ if (mg.precondition == null) {
 
             // modify EC, RES, XRES
             code.addElement(modify(GC.ecvar, scall));
-            if (freshResult) code.addElement(GC.gets(GC.resultvar, eod));
-	    else            code.addElement(modify(GC.resultvar, scall));
+	    if (!spec.dmd.isConstructor()) {
+		if (freshResult) code.addElement(GC.gets(GC.resultvar, eod));
+		else {
+		    code.addElement(modify(GC.resultvar, scall));
+		}
+	    }
             code.addElement(modify(GC.xresultvar, scall));
 
 	    if (!Utils.isPure(rd))

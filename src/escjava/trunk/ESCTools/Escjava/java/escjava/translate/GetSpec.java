@@ -563,6 +563,17 @@ premap generated from the uses of \old in the body of the method + the spec of t
             }
         }
 
+        if (dmd.isConstructor()) {
+            // Free:  RES != null && !isAllocated(RES, wt[[alloc]])
+            Expr nonnull = GC.nary(TagConstants.REFNE, GC.resultvar, GC.nulllit);
+            Expr allocated = GC.nary(TagConstants.ISALLOCATED,
+                                     GC.resultvar,
+				     GC.allocvar);
+                                     //(VariableAccess)wt.get(GC.allocvar.decl));
+            Expr notAllocated = GC.not(allocated);
+	    preAssumptions.addElement(nonnull);
+	    preAssumptions.addElement(notAllocated);
+        }
         // Add the declared preconditions
 
 	// Make the disjunction of all of the preconditions
@@ -579,7 +590,16 @@ premap generated from the uses of \old in the body of the method + the spec of t
 		javafe.tc.FlowInsensitiveChecks.setType(expr,Types.booleanType);
 	    }
 	    TrAnExpr.initForClause();
-	    Expr pred = TrAnExpr.trSpecExpr(expr);
+
+            Hashtable map = null;
+            if (dmd.isConstructor()) {
+                map = new Hashtable();
+                map.put(GC.thisvar.decl, GC.resultvar);
+		//map.put(GC.thisvar.decl, temporary(GC.resultvar.id.toString(), scall, scall)
+            }
+	    Expr pred = TrAnExpr.trSpecExpr(expr,map,null);
+
+	    //Expr pred = TrAnExpr.trSpecExpr(expr);
 	    if (TrAnExpr.extraSpecs) {
 		preAssumptions.append(TrAnExpr.trSpecExprAuxAssumptions);
 		preAssumptions.append(TrAnExpr.trSpecExprAuxConditions);

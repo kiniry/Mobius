@@ -48,12 +48,21 @@ class c1 {
 	r.result2 = x.c;
 	x.c = true;
 	r.result3 = X.f;
-	X z = new X(true, false);
-	r.result4 = !z.c;
-	X u = new X(z);
-	r.result5 = !u.b;
-	x = z.next(u);
-	r.result6 = x.c;
+	X z = new X(true, false);   // z.b=true, z.c=false, z.d=false
+	//@ assert z.b;
+	//@ assert !z.c;
+	r.result4 = !z.c;           // r.result4=true
+	X u = new X(z);             // u.b=z.c=false, u.c=z.b=true
+	//@ assert !z.c;
+	//@ assert z.b;
+	//@ assert u.c;
+	//@ assert !u.b;
+	r.result5 = !u.b;           // true
+	//@ assert r.result5;
+	x = z.next(u);              // x.b=u.b=false, z.c=false, x.c=u.c=true
+	//@ assert u.c;
+	//@ assert x.c;
+	r.result6 = x.c;            // true
 	r.result7 = x.b;
 	r.result8 = X.f;
  	return r;
