@@ -36,7 +36,7 @@ FormalNonnullInheritance.java:40: Associated declaration:
 FormalNonnullInheritance.java:11: Caution: The non_null annotation is ignored because this method overrides a method declaration in which this parameter is not declared non_null: 
         public void t3(/*@ non_null */ Object tt3e); // Error here
                            ^
-FormalNonnullInheritance.java:48: Associated declaration: 
+FormalNonnullInheritance.java:41: Associated declaration: 
         public void t3( Object tt3e);
                         ^
 FormalNonnullInheritance.java:13: Caution: The non_null annotation is ignored because this method overrides a method declaration in which this parameter is not declared non_null: 

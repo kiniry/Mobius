@@ -34,27 +34,6 @@ InstanceError.java:27: Error: May not specify both static and instance on a decl
   [TIME total] (aborted)
 
 InstanceError ...
-InstanceError.java:68: Error: Undefined variable 'gi'
-                set ii = gi; // ERROR
-                         ^
-InstanceError.java:71: Error: Undefined variable 'gmi'
-                set ii = gmi; // ERROR
-                         ^
-InstanceError.java:73: Error: Undefined variable 'cg'
-                set ii = cg; // ERROR
-                         ^
-InstanceError.java:74: Error: Undefined variable 'cgi'
-                set ii = cgi; // ERROR
-                         ^
-InstanceError.java:76: Error: Undefined variable 'cgm'
-                set ii = cgm; // ERROR
-                         ^
-InstanceError.java:77: Error: Undefined variable 'cgmi'
-                set ii = cgmi; // ERROR
-                         ^
-InstanceError.java:86: Error: An instance modifier may only be applied to ghost and model fields
-        //@ instance   // ERROR
-            ^
 InstanceError.java:38: Error: May not specify both static and instance on a declaration
         //@ public instance static ghost boolean b1; // ERROR
                    ^
@@ -73,6 +52,24 @@ InstanceError.java:42: Error: May not specify both static and instance on a decl
 InstanceError.java:43: Error: May not specify both static and instance on a declaration
         //@ public ghost static instance boolean b6; // ERROR
                                 ^
+InstanceError.java:68: Error: Undefined variable 'gi'
+                set ii = gi; // ERROR
+                         ^
+InstanceError.java:71: Error: Undefined variable 'gmi'
+                set ii = gmi; // ERROR
+                         ^
+InstanceError.java:73: Error: Undefined variable 'cg'
+                set ii = cg; // ERROR
+                         ^
+InstanceError.java:74: Error: Undefined variable 'cgi'
+                set ii = cgi; // ERROR
+                         ^
+InstanceError.java:76: Error: Undefined variable 'cgm'
+                set ii = cgm; // ERROR
+                         ^
+InstanceError.java:77: Error: Undefined variable 'cgmi'
+                set ii = cgmi; // ERROR
+                         ^
 InstanceError.java:82: Error: An instance modifier may only be applied to ghost and model fields
         //@ instance model interface I {}   // ERROR
             ^
@@ -90,6 +87,9 @@ InstanceError.java:85: Error: An instance modifier may only be applied to ghost 
             ^
 InstanceError.java:85: Error: Unknown kind of pragma for a routine declaration: instance
         //@ instance model InstanceError(double d) {}   // ERROR
+            ^
+InstanceError.java:86: Error: An instance modifier may only be applied to ghost and model fields
+        //@ instance   // ERROR
             ^
   [TIME total] (aborted)
 
