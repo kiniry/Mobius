@@ -1,10 +1,4 @@
 ESC/Java version VERSION
-Quant.java:25: Error: A range predicate is required
-        //@ invariant (\min int i; i) == 1;
-                                   ^
-Quant.java:26: Error: A range predicate is required
-        //@ invariant (\min int i;; i) == 1;
-                                  ^
   Prover started:TIME
 
 Quant ...
@@ -18,4 +12,3 @@ Quant: n() ...
 Quant: Quant() ...
     [TIME]  passed
   [TIME total]
-2 errors

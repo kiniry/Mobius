@@ -1815,7 +1815,6 @@ public class EscPragmaParser extends Parse implements PragmaParser
         } else if (tag == TagConstants.MAXQUANT || tag == TagConstants.MIN ||
                    tag == TagConstants.PRODUCT || tag == TagConstants.SUM) {
 	    if (rangeExpr == null) {
-		ErrorSet.error(locSemi, "A range predicate is required");
 		rangeExpr = LiteralExpr.make(TagConstants.BOOLEANLIT,Boolean.TRUE,Location.NULL);
 	    }
             returnExpr = GeneralizedQuantifiedExpr.make(loc, endLoc, tag, vs, rest, rangeExpr, null);
