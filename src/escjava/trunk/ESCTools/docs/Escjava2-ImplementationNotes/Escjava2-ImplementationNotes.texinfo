@@ -1893,7 +1893,7 @@ Within a heavyweight specification, if a particular clause type is
 omitted, the default for that clause is as follows:
 @example
         ensures true;
-        signals (java.langException) true;
+        signals (java.lang.Exception) true;
         diverges false;
         assignable \everything;
         accessible \everything;
@@ -1908,7 +1908,7 @@ The defaults defined by JML for lightweight specifications are
 ESC/Java2 as follows.
 @example
         ensures true;
-        signals (java.langException) true;
+        signals (java.lang.Exception) true;
         diverges true;
         assignable \everything;
         accessible \everything;
