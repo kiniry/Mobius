@@ -218,6 +218,13 @@ public class ParseUtil
 	return 0;
     }
 
+    public boolean isJavaModifier(int ttype) {
+	for( int i=0; i<modifierKeywords.length; i++ ) {
+	    if( ttype == modifierKeywords[i] ) return true;
+	}
+	return false;
+    }
+
     static public String arrayToString(Object[] a, String sep) {
 	if (a==null || a.length == 0) return "";
 	else {
