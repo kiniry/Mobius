@@ -6,6 +6,7 @@ import javafe.ast.*;
 import javafe.util.Location;
 import javafe.util.StackVector;
 import javafe.util.Assert;
+import javafe.Tool;
 
 /**
  * Parses java expressions.  Extended by {@link javafe.ast.ParseStmt}.
@@ -605,7 +606,14 @@ public abstract class ParseExpr extends ParseType
                 // Try Name, Name ( ArgumentListopt ), Name []..., Name . class,
                 //    Name . this
                 //
-                // Note that TypeModifierPragmas may appear between Name and (.
+                // Note that TypeModifierPragmas may appear between
+                // Name and (.
+            case TagConstants.ASSERT:
+                // Only process if assert is *not* a keyword.
+                if (Tool.options.assertIsKeyword) {
+                    fail(l.startingLoc, "\"assert\" is a Java keyword when you use the" +
+                         " -source 1.4 option; rename this identifier.");
+                }
             case TagConstants.IDENT: 
                 {
                     Name n = parseName(l);
@@ -711,7 +719,7 @@ public abstract class ParseExpr extends ParseType
                     primary = parseClassLiteralSuffix(l, t);
                 } else {
                     fail(l.startingLoc,
-                         "Unexpected token '"+PrettyPrint.inst.toString( l.ttype )+
+                         "Unexpected token '" + PrettyPrint.inst.toString(l.ttype) +
                          "' in Primary expression");
                     primary = null;       // dummy initialization
                 }
