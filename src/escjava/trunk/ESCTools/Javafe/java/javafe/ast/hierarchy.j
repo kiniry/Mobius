@@ -1096,6 +1096,8 @@ public class LiteralExpr extends Expr
 {
   /*@ invariant (
 	(tag==TagConstants.BOOLEANLIT) ||
+	(tag==TagConstants.BYTELIT) ||
+	(tag==TagConstants.SHORTLIT) ||
 	(tag==TagConstants.INTLIT) ||
 	(tag==TagConstants.LONGLIT) ||
 	(tag==TagConstants.FLOATLIT) ||
@@ -1110,6 +1112,8 @@ public class LiteralExpr extends Expr
   /*@ invariant (
 	((tag==TagConstants.BOOLEANLIT) ==> (value instanceof Boolean)) &&
 	((tag==TagConstants.NULLLIT) ==> (value == null)) &&
+	((tag==TagConstants.BYTELIT) ==> (value instanceof Byte)) &&
+	((tag==TagConstants.SHORTLIT) ==> (value instanceof Short)) &&
 	((tag==TagConstants.INTLIT) ==> (value instanceof Integer)) &&
 	((tag==TagConstants.LONGLIT) ==> (value instanceof Long)) &&
 	((tag==TagConstants.FLOATLIT) ==> (value instanceof Float)) &&
@@ -1128,11 +1132,16 @@ public class LiteralExpr extends Expr
       (tag == TagConstants.BOOLEANLIT || tag == TagConstants.INTLIT
        || tag == TagConstants.LONGLIT || tag == TagConstants.CHARLIT
        || tag == TagConstants.FLOATLIT || tag == TagConstants.DOUBLELIT
+       || tag == TagConstants.BYTELIT || tag == TagConstants.SHORTLIT
        || tag == TagConstants.STRINGLIT 
        || tag == TagConstants.NULLLIT);
     Assert.notFalse(goodtag);
     if (tag == TagConstants.BOOLEANLIT && value != null)
       Assert.notFalse(value instanceof Boolean);
+    if (tag == TagConstants.BYTELIT && value != null)
+      Assert.notFalse(value instanceof Byte);
+    if (tag == TagConstants.SHORTLIT && value != null)
+      Assert.notFalse(value instanceof Short);
     if (tag == TagConstants.INTLIT && value != null)
       Assert.notFalse(value instanceof Integer);
     if (tag == TagConstants.LONGLIT && value != null)
@@ -1150,6 +1159,30 @@ public class LiteralExpr extends Expr
   public int getStartLoc() { return loc; }
   public int getEndLoc() { return loc; }
 
+  static public LiteralExpr cast(LiteralExpr lit, int t) {
+	if (!(lit.value instanceof Number)) return lit;
+	Number num = (Number)lit.value;
+	if (t == TagConstants.DOUBLELIT) {
+	    return LiteralExpr.make(t,new Double(num.doubleValue()),lit.getStartLoc());
+	} else if (t == TagConstants.FLOATLIT) {
+	    return LiteralExpr.make(t,new Float(num.floatValue()),lit.getStartLoc());
+	} else if (t == TagConstants.LONGLIT) {
+	    return LiteralExpr.make(t,new Long(num.longValue()),lit.getStartLoc());
+	} else if (t == TagConstants.INTLIT) {
+	    return LiteralExpr.make(t,new Integer(num.intValue()),lit.getStartLoc());
+	} else if (t == TagConstants.SHORTLIT) {
+	    return LiteralExpr.make(t,new Short(num.shortValue()),lit.getStartLoc());
+	} else if (t == TagConstants.BYTELIT) {
+	    return LiteralExpr.make(t,new Integer(num.byteValue()),lit.getStartLoc());
+	} else return lit;
+	// FIXME - what about casts to character values ???
+  }
+
+  // Note: Java does not actually have byte and short literals.
+  // We include them here because we pre-compute literals that have been
+  // cast to other types, e.g. (short)0, as a literal of the target type
+  // FIXME - short and byte are included for completeness, but I'm not sure they actually ever get used that way
+
   //# NoMaker
   /*@ requires (
 	(tag==TagConstants.BOOLEANLIT) ||
@@ -1157,6 +1190,8 @@ public class LiteralExpr extends Expr
 	(tag==TagConstants.LONGLIT) ||
 	(tag==TagConstants.FLOATLIT) ||
 	(tag==TagConstants.DOUBLELIT) ||
+	(tag==TagConstants.BYTELIT) ||
+	(tag==TagConstants.SHORTLIT) ||
 	(tag==TagConstants.STRINGLIT) ||
 	(tag==TagConstants.NULLLIT) ||
 	(tag==TagConstants.CHARLIT)
@@ -1164,6 +1199,8 @@ public class LiteralExpr extends Expr
   /*@ requires (
 	((tag==TagConstants.BOOLEANLIT) ==> (value instanceof Boolean)) &&
 	((tag==TagConstants.NULLLIT) ==> (value == null)) &&
+	((tag==TagConstants.BYTELIT) ==> (value instanceof Byte)) &&
+	((tag==TagConstants.SHORTLIT) ==> (value instanceof Short)) &&
 	((tag==TagConstants.INTLIT) ==> (value instanceof Integer)) &&
 	((tag==TagConstants.LONGLIT) ==> (value instanceof Long)) &&
 	((tag==TagConstants.FLOATLIT) ==> (value instanceof Float)) &&
