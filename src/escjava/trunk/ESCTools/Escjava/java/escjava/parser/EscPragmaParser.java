@@ -381,6 +381,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
                 case '@':
                     /* Normal escjava annotation: */
 
+		    eatAts(in);
                     eatWizardComment(in);
                     in = new JmlCorrelatedReader(in,
 					     eolComment ?
@@ -464,6 +465,16 @@ public class EscPragmaParser extends Parse implements PragmaParser
             return false;
         }
     } //@ nowarn Exception // IndexOutOfBoundsException
+
+    /** Eats any extra @ symbols.
+     */
+    private void eatAts(/*@ non_null @*/ CorrelatedReader in) 
+		throws IOException {
+	do {
+	    in.mark();
+	} while (in.read() == '@');
+	in.reset();
+    }
 
     /**
      * Eat any wizard inserted comment at the start of an escjava annotation.

@@ -2,10 +2,6 @@ Error0.java:10: Fatal error: Unexpected character '@'
   @             \nonnullelements((Object[])\result);</esc>
   ^
 1 error
-Error1.java:5: Fatal error: Unexpected character '@'
-  //@@@@@@@@ requires x instanceof Error1
-     ^
-1 error
 Error2.java:5: Fatal error: Unexpected character '@'
   //@ requires x instanceof Error2    @@@@@
                                       ^
