@@ -63,12 +63,12 @@ public /*+@ pure @+*/ interface CharSequence {
     public String toString();
 
     /** According to the javadocs, the equals method should not be called. */
-    //+@ also
-    //+@    requires false;
+    // +@ also
+    // +@    requires false;
     //public boolean equals(Object obj);
 
     /** According to the javadocs, the hashCode method should not be called. */
-    //+@ also
-    //+@    requires false;
+    // +@ also
+    // +@    requires false;
     //public int hashCode();
 }
