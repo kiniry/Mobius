@@ -1221,10 +1221,10 @@ compiler but will be deemed ambiguous between @code{java.io.File} and
 unresolved bugs.
 
 
-@item @strong{Comment:} Though legal, there is no point to a 
-statement of the form
+@item @strong{Comment:} This form is also illegal:
 @*@center @code{/*@@ model @@*/ import }@emph{typename}@code{;}
-@* This is equivalent to simply using a Java import statement.
+@* Either use a Java import statement (without a @code{model) keyword) or
+enclose the entire model import statement in an annotation comment.
 @end itemize
 
 @node automatic imports,  , model import statements, Compilation unit annotations
