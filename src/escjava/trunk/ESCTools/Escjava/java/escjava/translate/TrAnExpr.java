@@ -153,7 +153,7 @@ public final class TrAnExpr {
 			    }
 			} else if (fa.od instanceof SuperObjectDesignator) {
 				// FIXME
-			    System.out.println("NOT SUPPORTED " + fa.od.getClass());
+			    System.out.println("NOT SUPPORTED-A " + fa.od.getClass());
 			} // fall-through for TypeObjectDesignator
 			    
 			ex = Substitute.doSubst(h,ex);
@@ -284,32 +284,62 @@ public final class TrAnExpr {
       
       case TagConstants.OR:
       case TagConstants.AND:
+      case TagConstants.IMPLIES:
+      case TagConstants.IFF:
+      case TagConstants.NIFF:
       case TagConstants.BITOR:
       case TagConstants.BITAND:
       case TagConstants.BITXOR:
-      case TagConstants.EQ:
-      case TagConstants.NE:
-      case TagConstants.GE:
-      case TagConstants.GT:
-      case TagConstants.LE:
-      case TagConstants.LT:
-      case TagConstants.LSHIFT:
-      case TagConstants.RSHIFT:
-      case TagConstants.URSHIFT:
-      case TagConstants.ADD:
-      case TagConstants.SUB:
-      case TagConstants.DIV:
-      case TagConstants.MOD:
-      case TagConstants.STAR:
-      case TagConstants.IMPLIES:
-      case TagConstants.IFF:
-      case TagConstants.NIFF: {
+      {
         BinaryExpr be = (BinaryExpr)e;
 	int newtag = getGCTagForBinary(be);
 	return GC.nary(be.getStartLoc(), be.getEndLoc(),
 		       newtag,
 		       trSpecExpr(be.left, sp, st),
 		       trSpecExpr(be.right, sp, st));
+      }
+
+      case TagConstants.EQ:
+      case TagConstants.NE:
+      case TagConstants.LSHIFT:
+      case TagConstants.RSHIFT:
+      case TagConstants.URSHIFT:
+      { // FIXME - do these have any type matching to do?
+        BinaryExpr be = (BinaryExpr)e;
+	int newtag = getGCTagForBinary(be);
+	return GC.nary(be.getStartLoc(), be.getEndLoc(),
+		       newtag,
+		       trSpecExpr(be.left, sp, st),
+		       trSpecExpr(be.right, sp, st));
+      }
+
+      case TagConstants.GE:
+      case TagConstants.GT:
+      case TagConstants.LE:
+      case TagConstants.LT:
+      case TagConstants.ADD:
+      case TagConstants.SUB:
+      case TagConstants.DIV:
+      case TagConstants.MOD:
+      case TagConstants.STAR:
+      {
+	// Must do appropriate primitive type casting to make arguments the same type
+	// FIXME - what about + on strings?
+        BinaryExpr be = (BinaryExpr)e;
+	//EscPrettyPrint.inst.print(System.out,0,be);
+	int newtag = getGCTagForBinary(be);
+        Expr left = trSpecExpr(be.left, sp, st);
+	Expr right = trSpecExpr(be.right, sp, st);
+/*
+	int leftType = ((PrimitiveType)TypeCheck.inst.getType(be.left)).getTag();
+	int rightType = ((PrimitiveType)TypeCheck.inst.getType(be.right)).getTag();
+	// FIXME - do we need to do any promotion ?
+	if (leftType != rightType && false) {
+		System.out.println("TYPES " + TagConstants.toString(newtag) + " " + TagConstants.toString(leftType) + " " + TagConstants.toString(rightType));
+	}
+*/
+	return GC.nary(be.getStartLoc(), be.getEndLoc(),
+		       newtag, left, right);
       }
 
       case TagConstants.NEWINSTANCEEXPR: {
@@ -392,7 +422,7 @@ public final class TrAnExpr {
 
 	    trSpecAuxAxiomsNeeded.add(me.decl);
 	    trSpecAuxAxiomsNeeded.add(me.decl.parent);
-	    Identifier constructorname = fullName(me.decl);
+	    Identifier constructorname = fullName(me.decl,false);
 	    ExprVec ev = ExprVec.make(me.args.size());
 		    // FIXME - enclosingInstance ???
 	    for (int i=0; i<me.args.size(); ++i) {
@@ -468,20 +498,10 @@ System.out.println("");
 		    ev.addElement( trSpecExpr( ex, sp, st));
 		} else {
 			// FIXME
-		    System.out.println("NOT SUPPORTED " + me.od.getClass());
+		    System.out.println("NOT SUPPORTED-B " + me.od.getClass());
 		} 
 	    }
 
-/*
-	    for (int i=0; i<me.args.size(); ++i) {
-		ev.addElement( trSpecExpr( me.args.elementAt(i), sp, st));
-	    }
-	    Expr ne = GC.nary( me.getStartLoc(), me.getEndLoc(),
-			    TagConstants.METHODCALL,ev);
-	    ((NaryExpr)ne).methodName = fullName(me.decl); 
-	    Expr ee = GC.nary(TagConstants.ANYEQ, v, ne);
-	    trSpecExprAuxConditions.addElement(ee);
-*/
 	    getCalledSpecs(me.decl,me.od,me.args,v,sp,st); // adds to trSpecExprAuxConditions
 	    --level;
 	    declStack.removeFirst();
@@ -492,13 +512,16 @@ System.out.println("");
 		trSpecAuxAxiomsNeeded.add(me.decl.parent);
 	    }
 	    ExprVec ev = ExprVec.make(me.args.size());
+	    boolean useSuper = false;
 	    if (!Modifiers.isStatic(me.decl.modifiers)) {
 		if (me.od instanceof ExprObjectDesignator) {
 		    Expr ex = ((ExprObjectDesignator)me.od).expr;
 		    ev.addElement( trSpecExpr( ex, sp, st));
 		} else {
+		    useSuper = true;
+		    ev.addElement( trSpecExpr(javafe.ast.ThisExpr.make(null,me.od.getStartLoc()),sp,st));
 			// FIXME
-		    System.out.println("NOT SUPPORTED " + me.od.getClass());
+		    //System.out.println("NOT SUPPORTED-C " + me.od.getClass());
 		} 
 	    }
 	    for (int i=0; i<me.args.size(); ++i) {
@@ -506,7 +529,7 @@ System.out.println("");
 	    }
 	    Expr ne = GC.nary(me.getStartLoc(), me.getEndLoc(),
 			    TagConstants.METHODCALL,ev);
-	    ((NaryExpr)ne).methodName = fullName(me.decl); 
+	    ((NaryExpr)ne).methodName = fullName(me.decl,useSuper); 
 	    return ne;
 	}
       }
@@ -715,7 +738,7 @@ System.out.println("");
 		Assert.notFalse(st == null || ! st.contains(decl));
 		dummyDecls.addElement(decl);
 
-		goodTypes = GC.and(goodTypes, quantTypeCorrect(decl, sp));
+		// FIXME goodTypes = GC.and(goodTypes, quantTypeCorrect(decl, sp));
 	    }
 	    if (qe.expr.getTag() == tag) {
 	      qe = (QuantifiedExpr)qe.expr;
@@ -1306,8 +1329,9 @@ wrap those variables being modified and not everything.
     else if (Types.isIntegralType(argType)) col = 2;
     else if (Types.isNumericType(argType)) col = 3;
     else if (Types.isErrorType(argType)) {
-	ErrorSet.notImplemented(true || !Main.options().noNotCheckedWarnings,e.expr.getStartLoc(),
-				"Failed to translate some unimplemented construct");
+	ErrorSet.notImplemented(!Main.options().noNotCheckedWarnings,
+		e.expr.getStartLoc(),
+		"Failed to translate some unimplemented construct");
     } else Assert.fail("Bad type");
 
     int result = unary_table[row][col];
@@ -1389,7 +1413,7 @@ System.out.println("");
 		    }
 		} else if (od instanceof SuperObjectDesignator) {
 			// FIXME
-		    System.out.println("NOT SUPPORTED " + od.getClass());
+		    System.out.println("NOT SUPPORTED-D " + od.getClass());
 		} // fall-through for TypeObjectDesignator or null
 		    
 		FormalParaDeclVec args = decl.args;
@@ -1430,7 +1454,7 @@ System.out.println("");
 		    }
 		} else if (od instanceof SuperObjectDesignator) {
 			// FIXME
-		    System.out.println("NOT SUPPORTED " + od.getClass());
+		    System.out.println("NOT SUPPORTED-E " + od.getClass());
 		} else if (od == null) { // Constructor case
 		    h.put(Substitute.thisexpr, resultVar);
 		} // fall-through for TypeObjectDesignator 
@@ -1444,9 +1468,11 @@ System.out.println("");
 
   // This creates a unique name for a function call for a routine, without
   // having to append all of the signature.
-  static public Identifier fullName(RoutineDecl rd) {
+  static public Identifier fullName(RoutineDecl rd,boolean useSuper) {
     int loc = rd.getStartLoc();
-    String fullname = TypeSig.getSig(rd.parent).getExternalName() + "." 
+    TypeSig sig = TypeSig.getSig(rd.parent);
+    if (useSuper) sig = sig.superClass();
+    String fullname = sig.getExternalName() + "." 
     		+ rd.id().toString() + "." ;
     int line = Location.toLineNumber(loc);
     if (line == 1) {
@@ -1475,10 +1501,9 @@ System.out.println("");
 	    initForClause();
 	    if (astn instanceof RoutineDecl) {
 		RoutineDecl rd = (RoutineDecl)astn;
+		GenericVarDecl newThis = UniqName.newBoundThis();
 		// Make the list of bound parameters
 		ArrayList bounds = new ArrayList(rd.args.size()+1);
-		GenericVarDecl newThis = UniqName.newBoundThis();
-		specialThisExpr = makeVarAccess( newThis, Location.NULL);
 		if (!Modifiers.isStatic(rd.modifiers)) {
 		    if (rd instanceof MethodDecl) bounds.add( newThis );
 		}
@@ -1496,8 +1521,13 @@ System.out.println("");
 		for (int k=0; k<bounds.size(); ++k) {
 		    ev.addElement( makeVarAccess( (GenericVarDecl)bounds.get(k), Location.NULL));
 		}
-		Expr fcall = GC.nary(fullName(rd), ev);
+		Expr fcall = GC.nary(fullName(rd,false), ev);
 		specialResultExpr = fcall;
+		if (astn instanceof MethodDecl) {
+		    specialThisExpr = makeVarAccess( newThis, Location.NULL);
+		} else {
+		    specialThisExpr = fcall;
+		}
 
 		// FIXME - what about AUx conditions and assumptions?
 		// FIXME - what about ensures clauses with \old in them
