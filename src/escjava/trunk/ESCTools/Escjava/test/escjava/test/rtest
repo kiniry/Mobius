@@ -2,7 +2,8 @@
 
 # use: rtest directory FLAGS
 
-echo === ESC/Java regression test $1 ===
+##echo === ESC/Java regression test $1 ===
+echo -n .
 
 dir=$1
 cd ${dir}
@@ -14,7 +15,8 @@ flags="$*"
 #./run -plainwarning -notrace ${flags} > out 2>&1
 
 if ! diff out ans > diffs; then
-  echo Failed;
+  echo
+  echo $dir Failed;
   cd ..
   exit 1;
 else
