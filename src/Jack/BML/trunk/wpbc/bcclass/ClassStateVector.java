@@ -118,13 +118,15 @@ public class ClassStateVector {
 		return stateVector;
 	}
 		
+	
 	public Formula atState(int state, ModifiesSet modSet) {
 		Formula f = Predicate.TRUE;
 		
 		if (modSet.modifiesEverything()) {
 			return Predicate.TRUE;
 		}
-		Formula modifiesAtState = modSet.getPostcondition(state);
+		//deprecated
+		/*Formula modifiesAtState = modSet.getPostcondition(state);*/
 		/*if (state == ClassStateVector.RETURN_STATE) {
 			return modifiesAtState;
 		}*/
@@ -136,11 +138,12 @@ public class ClassStateVector {
 			Formula forAllfAtStateEqf = getFieldAtState( state, fieldRef);
 			f = Formula.getFormula(f, forAllfAtStateEqf, Connector.AND );
 		}
-		f = Formula.getFormula(f, modifiesAtState, Connector.AND);
+		//deprecated
+		/*f = Formula.getFormula(f, modifiesAtState, Connector.AND);*/
 		return f;
 	}
 	
-	public Formula atState(int state) {
+/*	public Formula atState(int state) {
 		Formula f = Predicate.TRUE;
 		for (int i = 0 ; i < stateVector.size() ; i++) {
 			BCConstantFieldRef fieldRef = (BCConstantFieldRef) stateVector.elementAt(i);
@@ -148,7 +151,7 @@ public class ClassStateVector {
 			f = Formula.getFormula(f, forAllfAtStateEqf, Connector.AND );
 		}
 		return f;
-	}
+	}*/
 	
 	private Formula getFieldAtState(int state, BCConstantFieldRef fieldRef ) {
 		Variable objDeref =  new Variable(FreshIntGenerator.getInt(), JavaReferenceType.ReferenceType );

@@ -73,15 +73,15 @@ public class BCClass {
 		initFields(f);
 	}
 	
-	public Formula getVectorAtState(int state) {
+/*	public Formula getVectorAtState(int state) {
 		if (stateVector == null ) {
 			initStateVector(null);
 		}
 		Formula f = stateVector.atState(state);
 		return f;
-	}
+	}*/
 	
-	public Formula getVectorAtState(int state, ModifiesSet modifSet) {
+	public Formula getVectorAtStateToHold(int state, ModifiesSet modifSet) {
 		if (stateVector == null ) {
 			initStateVector(null);
 		}

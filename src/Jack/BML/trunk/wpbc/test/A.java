@@ -23,7 +23,7 @@ public class A {
 
 	
 	//@ requires true;
-	//@ modifies this.arr[1..3] ;
+	//@ modifies this.b ;
 	//@ ensures \result == this;
 	//@ exsures (ArrayIndexOutOfBoundsException e) arr.length < 2;
 	public A testThisAccess(A a1, A a2)  {

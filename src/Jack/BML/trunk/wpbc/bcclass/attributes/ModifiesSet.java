@@ -8,10 +8,12 @@ package bcclass.attributes;
 
 import modifexpression.Everything;
 import modifexpression.ModifiesExpression;
+import modifexpression.ModifiesLocalVariable;
 import modifexpression.Nothing;
 
 import constants.BCConstantFieldRef;
 import bcclass.BCConstantPool;
+import bcexpression.BCLocalVariable;
 import bcexpression.Expression;
 
 import formula.Connector;
@@ -45,6 +47,9 @@ public class ModifiesSet implements BCAttribute {
 		}
 		for (int i = 0; i < modifiesExpression.length; i++) {
 			if (modifiesExpression[i] == null) {
+				continue;
+			}
+			if (modifiesExpression[i] instanceof ModifiesLocalVariable) {
 				continue;
 			}
 			Formula f = (Formula)modifiesExpression[i].getPostCondition(state);
@@ -106,6 +111,27 @@ public class ModifiesSet implements BCAttribute {
 		return false;
 	}
 	
+	/**
+	 * @param fieldRef
+	 * @return
+	 */
+	public boolean modifies(BCLocalVariable locVar) {
+		 
+		for (int k = 0; k < modifiesExpression.length; k++ ) {
+			if (modifiesExpression[k] == null) {
+				continue;
+			} 
+			if ( !(modifiesExpression[k] instanceof ModifiesLocalVariable) ) {
+				continue;
+			}
+			ModifiesLocalVariable modLocVar = (ModifiesLocalVariable)modifiesExpression[k];
+			// if there is  a modifies expression that modifies this local variable then return true 
+			if ( locVar.equals( modLocVar.getLocalVariable()) ) {
+				return true;
+			}					
+		}
+		return false;
+	}
 	
 	
 	

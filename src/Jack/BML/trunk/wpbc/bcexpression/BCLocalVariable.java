@@ -9,6 +9,7 @@ package bcexpression;
 import org.apache.bcel.generic.LocalVariableGen;
 
 
+import bcclass.BCMethod;
 import bcexpression.javatype.JavaType;
 
 /**
@@ -23,16 +24,19 @@ public class BCLocalVariable extends Expression {
 	private String name;
 	private JavaType type; 
 	private  int start_pc;
+	private BCMethod method ;
 	
-	public BCLocalVariable(String _name, int _start_pc,  int _index,  JavaType _type ) {
+	public BCLocalVariable(String _name, int _start_pc,  int _index,  JavaType _type , BCMethod _method) {
 		name = _name;
 		start_pc = _start_pc;
 		index = _index;
 		type = _type;
+		method = _method;
 	}
 
-	public BCLocalVariable(LocalVariableGen lv) {
-		this(lv.getName(), lv.getStart().getPosition() ,  lv.getIndex(), JavaType.getJavaType( lv.getType()));	
+	public BCLocalVariable(LocalVariableGen lv, BCMethod _method) {
+		this(lv.getName(), lv.getStart().getPosition() ,  lv.getIndex(), JavaType.getJavaType( lv.getType()), _method);	
+		
 	}
 
 	/**
@@ -71,10 +75,23 @@ public class BCLocalVariable extends Expression {
 //	}
 //
 	public boolean equals(Expression expr) {
-		if (expr == this) {
-			return true;
+		boolean isEq = super.equals(expr);
+		if (!isEq) {
+			return false;
 		}
-		return false;
+		BCLocalVariable locVar = (BCLocalVariable)expr;
+		if (locVar.getIndex() != getIndex() ) { 
+			return false;
+		}
+		if ( locVar.getMethod() != method ) {
+			return false;
+		}
+		
+		
+		/*if (expr == this) {
+			return true;
+		}*/
+		return true;
 	}
 
 	/**
@@ -105,7 +122,7 @@ public class BCLocalVariable extends Expression {
 	 * @see bcexpression.Expression#copy()
 	 */
 	public Expression copy() {
-		BCLocalVariable copy = new BCLocalVariable(name, start_pc, index, type);
+		BCLocalVariable copy = new BCLocalVariable(name, start_pc, index, type, method);
 		return copy;
 	}
 	
@@ -114,4 +131,22 @@ public class BCLocalVariable extends Expression {
 		return valueOfLocalVarAtIndex;
 	}
 
+	/**
+	 * @return Returns the name.
+	 */
+	public String getName() {
+		return name;
+	}
+	/**
+	 * @param name The name to set.
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+	/**
+	 * @return Returns the method.
+	 */
+	public BCMethod getMethod() {
+		return method;
+	}
 }

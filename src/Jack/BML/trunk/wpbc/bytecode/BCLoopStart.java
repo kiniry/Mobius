@@ -8,6 +8,10 @@ package bytecode;
 
 import java.util.Vector;
 
+import modifexpression.ModifiesExpression;
+import modifexpression.ModifiesLocalVariable;
+import constants.BCConstantFieldRef;
+
 import utils.FreshIntGenerator;
 
 import bcclass.BCClass;
@@ -15,6 +19,7 @@ import bcclass.BCMethod;
 import bcclass.ClassStateVector;
 import bcclass.attributes.ExsuresTable;
 import bcclass.attributes.ModifiesSet;
+import bcexpression.BCLocalVariable;
 import bcexpression.Expression;
 import bcexpression.Variable;
 import bcexpression.javatype.JavaType;
@@ -23,6 +28,7 @@ import formula.Connector;
 import formula.Formula;
 import formula.Quantificator;
 import formula.QuantifiedFormula;
+import formula.atomic.Predicate;
 
 /**
  * @author mpavlova
@@ -88,18 +94,42 @@ public class BCLoopStart extends BCInstruction {
 	public Formula wp(
 		Formula _normal_Postcondition,
 		ExsuresTable _exc_Postcondition) {
-
 		// calculate  wp of the instruction that is the loop start
-		Formula wpInstr =
+		
+		Formula  wpInstr = (Formula)_normal_Postcondition.removeAtState(getPosition());
+		wpInstr =
 			loopStartInstruction.wp(_normal_Postcondition, _exc_Postcondition);
 		
-		wpInstr = (Formula)wpInstr.removeAtState(getPosition());
 		
 		
-		// Invariant ==> wp
 		Formula invariant_implies_wp =
 			Formula.getFormula((Formula)invariant.copy(), wpInstr, Connector.IMPLIES);
-	
+		Formula invariantHoldsAtState = (Formula)invariant.copy();
+		Formula wp = Formula.getFormula( invariantHoldsAtState, invariant_implies_wp, Connector.AND); 
+
+		ModifiesExpression[] modifExpr = modifies.getModifiesExpressions();
+		Formula assumeStateOfVars = Predicate.TRUE;
+		for (int i = 0; i < modifExpr.length ; i++ ) {
+			if (modifExpr[i] == null) {
+				continue;
+			}
+			Formula f = (Formula)modifExpr[i].getPostCondition(getPosition());
+			if (modifExpr[i] instanceof ModifiesLocalVariable) {
+				BCLocalVariable lVar = ((ModifiesLocalVariable)modifExpr[i]).getLocalVariable();
+				wp =  (Formula)wp.substitute( lVar, lVar.atState( getPosition()));
+				assumeStateOfVars  = Formula.getFormula(assumeStateOfVars, f, Connector.AND);
+				
+			} else {
+				BCConstantFieldRef fieldRef =  (BCConstantFieldRef)modifExpr[i].getConstantFieldRef();
+				wp =  (Formula)wp.substitute( fieldRef, fieldRef.atState( getPosition()));
+				assumeStateOfVars  = Formula.getFormula(assumeStateOfVars, f, Connector.AND);
+			}
+		}
+		
+		wp = Formula.getFormula( assumeStateOfVars, wp, Connector.IMPLIES);
+		return wp;
+		
+		
 		//if the set of modified expressions for the bytecode that loop is part of is not empty then copy them
 		/*Expression[] modifies1 = null;*/
 		/*Formula forall_modified_expressions_invariant_implies_wp =
@@ -129,16 +159,7 @@ public class BCLoopStart extends BCInstruction {
 			}
 		}*/
 		
-		Formula invariantHoldsAtState = (Formula)invariant.copy();
 		
-		Formula wp = null;
-		wp =
-			Formula.getFormula(
-			invariantHoldsAtState,
-			invariant_implies_wp,
-				Connector.AND);
-	/*	wp = Formula.getFormula( wp,vectorStateAtThisInstruction , Connector.AND);*/
-		return wp;
 	}
 
 	/**

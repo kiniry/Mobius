@@ -386,16 +386,18 @@ public class BCMethod {
 	}
 	
 	
-	public Formula getStateVectorAtInstr(int state) {
+/*	public Formula getStateVectorAtInstr(int state) {
 			Formula fieldsAtInstr = (Formula)clazz.getVectorAtState(state);
 			Formula localVarsAtInstr = (Formula)getLocalVariableStateAtInstr(state);
 			Formula  f = Formula.getFormula(fieldsAtInstr, localVarsAtInstr, Connector.AND);
 			return f;
-	}
-	public Formula getStateVectorAtInstr(int state, ModifiesSet modifies) {
-		Formula fieldsAtInstr = (Formula)clazz.getVectorAtState(state, modifies);
-		Formula localVarsAtInstr = getLocalVariableStateAtInstr(state);
+	}*/
+	public Formula getVectorAtStateToHold(int state, ModifiesSet modifies) {
+		Formula fieldsAtInstr = (Formula)clazz.getVectorAtStateToHold(state, modifies);
+		Formula localVarsAtInstr = getLocalVariableAtStateToHold(state, modifies);
+		Formula modifiesAtState = modifies.getPostcondition(state);
 		Formula  f = Formula.getFormula(fieldsAtInstr, localVarsAtInstr, Connector.AND);
+		f = Formula.getFormula(f, modifiesAtState, Connector.AND );
 		return f;
 	}
 
@@ -406,12 +408,31 @@ public class BCMethod {
 	 * @param state
 	 * @return
 	 */
-	public Formula getLocalVariableStateAtInstr(int state) {
+	public Formula getLocalVariableAtStateToHold(int state, ModifiesSet modifies) {
 		Formula localVarsAtInstr = Predicate.TRUE;
 		if (localVariables == null) {
 			return localVarsAtInstr;
 		}
 		for (int i = 1; i < localVariables.length; i++) {
+			if (modifies.modifies(localVariables[i])) {
+				continue;
+			}
+			Expression localVarAtInstr = localVariables[i].atState(state);
+			Predicate localVarAtInstrEqLocVar = new Predicate2Ar(localVariables[i], localVarAtInstr, PredicateSymbol.EQ );
+			localVarsAtInstr = Formula.getFormula(localVarsAtInstr, localVarAtInstrEqLocVar, Connector.AND );
+		}		
+		return localVarsAtInstr;
+	}
+	
+	public Formula  getLocalVarAtStateToAssume(int state, ModifiesSet modifies) {
+		Formula localVarsAtInstr = Predicate.TRUE;
+		if (localVariables == null) {
+			return localVarsAtInstr;
+		}
+		for (int i = 1; i < localVariables.length; i++) {
+			if (!modifies.modifies(localVariables[i])) {
+				continue;
+			}
 			Expression localVarAtInstr = localVariables[i].atState(state);
 			Predicate localVarAtInstrEqLocVar = new Predicate2Ar(localVariables[i], localVarAtInstr, PredicateSymbol.EQ );
 			localVarsAtInstr = Formula.getFormula(localVarsAtInstr, localVarAtInstrEqLocVar, Connector.AND );
@@ -749,7 +770,7 @@ public class BCMethod {
 		}
 		localVariables = new BCLocalVariable[gens.length];
 		for (int i = 0; i < localVariables.length; i++) {
-			localVariables[i] = new BCLocalVariable(gens[i]);
+			localVariables[i] = new BCLocalVariable(gens[i], this);
 		}
 	}
 	/**
@@ -1180,7 +1201,7 @@ public class BCMethod {
 			return;
 		}
 		for (int i = 0; i < specCases.length; i++) {
-			Formula stateCondition = clazz.getVectorAtState(ClassStateVector.RETURN_STATE, specCases[i].getModifies() );	
+			Formula stateCondition = clazz.getVectorAtStateToHold(ClassStateVector.RETURN_STATE, specCases[i].getModifies() );	
 			Formula post = (Formula)specCases[i].getPostcondition().copy();
 			post = Formula.getFormula( post, stateCondition, Connector.AND  );
 			

@@ -6,13 +6,18 @@
  */
 package bytecode;
 
+import modifexpression.ModifiesExpression;
+import modifexpression.ModifiesLocalVariable;
+import constants.BCConstantFieldRef;
 import bcclass.BCMethod;
 import bcclass.attributes.ExsuresTable;
 import bcclass.attributes.ModifiesSet;
+import bcexpression.BCLocalVariable;
 import bcexpression.Expression;
 import bytecode.branch.BCConditionalBranch;
 import formula.Connector;
 import formula.Formula;
+import formula.atomic.Predicate;
 
 /**
  * @author mpavlova
@@ -83,14 +88,45 @@ public class BCLoopEnd extends BCInstruction {
 	}
 	
 	private Formula _wp(Formula wp, ExsuresTable _exc_Postcondition) {
-		wp = (Formula)wp.atState(getPosition() );
+	/*	wp = (Formula)wp.atState(getPosition() );*/
 		//forall fields (f ) f==f_at_loop_end /\ forall i : locVar index.  loc(i) = loc_at_start_end
-		Formula vectorStateAtThisInstruction = method.getStateVectorAtInstr( getPosition(), modifies);
+		Formula localVarStateAssume = Predicate.TRUE;
+		Formula  vectorOfFieldToAssume = Predicate.TRUE;
+	
+		ModifiesExpression[] modifExpr = modifies.getModifiesExpressions();
+		for (int i = 0; i < modifExpr.length ; i++ ) {
+			if (modifExpr[i] == null) {
+				continue;
+			}
+			Formula f = (Formula)modifExpr[i].getPostCondition(getPosition());
+			if (modifExpr[i] instanceof ModifiesLocalVariable) {
+				BCLocalVariable lVar = ((ModifiesLocalVariable)modifExpr[i]).getLocalVariable();
+				wp =  (Formula)wp.substitute( lVar, lVar.atState( getPosition()));
+				vectorOfFieldToAssume  = Formula.getFormula(vectorOfFieldToAssume, f, Connector.AND);
+				
+			} else {
+				BCConstantFieldRef fieldRef =  (BCConstantFieldRef)modifExpr[i].getConstantFieldRef();
+				wp =  (Formula)wp.substitute( fieldRef, fieldRef.atState( getPosition()));
+				vectorOfFieldToAssume  = Formula.getFormula(vectorOfFieldToAssume, f, Connector.AND);
+			}
+		}
+		
+//		 NB : with loop_end_state
+		Formula vectorStateAssumption = Formula.getFormula( localVarStateAssume, vectorOfFieldToAssume, Connector.AND);
+		
 		//forall fields (f ) f =f_at_start_loop /\ forall i : locVar index.  loc(i) = loc_at_start_loop
- 		Formula varsNotChanged = method.getStateVectorAtInstr( loopStartPosition, modifies);
-		// wp for invariant and modifies correctness
+		
+		//commented 
+ 		/*Formula varsNotChanged = method.getVectorAtStateToHold( loopStartPosition, modifies);*/
+		
+		Formula varsNotChanged = method.getVectorAtStateToHold( loopStartPosition, modifies);
+ 		// wp for invariant and modifies correctness
 		wp = Formula.getFormula( wp , varsNotChanged, Connector.AND );
-		wp = Formula.getFormula( vectorStateAtThisInstruction,wp,  Connector.IMPLIES);
+		
+		// NB : with loop_end_state
+		wp = Formula.getFormula( vectorStateAssumption, wp, Connector.IMPLIES);
+		
+		/*wp = Formula.getFormula( vectorStateAssumption,wp,  Connector.IMPLIES);*/
 		
 		return wp;
 	} 

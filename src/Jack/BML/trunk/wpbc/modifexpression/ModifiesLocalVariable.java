@@ -36,9 +36,9 @@ public class ModifiesLocalVariable extends  ModifiesIdent {
 		super(localVar, _constantPool);
 	}
 	
-	/* (non-Javadoc)
+/*	 (non-Javadoc)
 	 * @see modifexpression.ModifiesExpression#getPostConditionWhenCalled(bcexpression.ConstantVariable)
-	 */
+	 
 	public Expression getPostConditionWhenCalled(ValueOfConstantAtState constantVar) {
 		Predicate2Ar ref_diff_from_localVar = new Predicate2Ar(constantVar , getSubExpressions()[0], PredicateSymbol.NOTEQ);
 		Predicate2Ar ref_eq_old_ref = new Predicate2Ar(constantVar, new OLD( constantVar), PredicateSymbol.EQ);
@@ -48,5 +48,14 @@ public class ModifiesLocalVariable extends  ModifiesIdent {
 		
 		return f;
 	}
-
+*/
+	public BCLocalVariable getLocalVariable() {
+		return (BCLocalVariable)getSubExpressions()[0];
+	}
+	
+	public  Expression getPostCondition(int state) {
+		BCLocalVariable locvar = (BCLocalVariable)getSubExpressions()[0];
+		Formula f = new Predicate2Ar( locvar, locvar.atState( state) , PredicateSymbol.EQ); 
+		return f;
+	}
 }
