@@ -1,0 +1,13 @@
+ESC/Java version VERSION
+  Prover started:TIME
+    [TIME]
+
+AccessMods ...
+    [TIME]
+
+AccessMods: f(int) ...
+    [TIME]  passed
+
+AccessMods: AccessMods() ...
+    [TIME]  passed
+  [TIME total]

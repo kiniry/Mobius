@@ -1,0 +1,13 @@
+ESC/Java version VERSION
+  Prover started:TIME
+    [TIME]
+
+MethodRef ...
+    [TIME]
+
+MethodRef: m() ...
+    [TIME]  passed immediately
+
+MethodRef: MethodRef() ...
+    [TIME]  passed
+  [TIME total]

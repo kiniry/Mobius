@@ -1,0 +1,23 @@
+ESC/Java version VERSION
+  Prover started:TIME
+    [TIME]
+
+ModChecks6 ...
+    [TIME]
+
+ModChecks6: ModChecks6() ...
+    [TIME]  passed immediately
+
+ModChecks6: m() ...
+ModChecks6.java:19: Error: There is no assignable clause allowing this assignment
+            o.mm();
+                ^
+ModChecks6.java:25: Associated declaration: 
+        //@ modifies ModChecks6.*;  // WARNING
+                     ^
+    [TIME]  passed
+
+ModChecks6: mm() ...
+    [TIME]  passed immediately
+  [TIME total]
+1 error
