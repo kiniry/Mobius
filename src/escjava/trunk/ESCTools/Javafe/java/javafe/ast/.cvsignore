@@ -39,6 +39,7 @@ ImportDecl.java
 ImportDeclVec.java
 InitBlock.java
 InstanceOfExpr.java
+IntegerVec.java
 InterfaceDecl.java
 LabelStmt.java
 LexicalPragma.java
