@@ -293,7 +293,8 @@ As will be obvious to any Java programmer, the argument list of the method does 
 actually contain all of the relevant arguments to the method.  If the method is not static, the
 argument list must include the receiver object (\texttt{this}) as well.  Not quite as obviously,
 functions representing constructors of inner classes must also include a reference to the
-enclosing class as an argument.  Thus \texttt{sort()} must be translated as \texttt{(sort this)}.
+enclosing class as an argument.  Thus a method call 
+\texttt{sort()} must be translated as \texttt{(sort this)}.
 This allows a natural distinction between method calls \texttt{sort()}, \texttt{a.sort()}, and
 \texttt{b.sort()}.  These are translated into the terms \texttt{(sort this)}, \texttt{(sort a')}, and
 \texttt{(sort b')} (here \texttt{a'} and \texttt{b'} are the translations into terms of
@@ -379,6 +380,27 @@ is called and translate any free variables in the context of that call.
 statements for example.  These are translated in the same way as postconditions; they simply
 use a different state constant.
 \end{itemize}
+
+For example, the somewhat contrived example of Fig.~\ref{fig:TEX} is translated into guarded 
+commands as shown in Fig.~\ref{fig:TRA}. ~\footnote{To avoid needing an explanation of
+ details of guarded commands and the translation that are not relevant to this discussion, this
+is an approximation of the relevant part of the translation.}  Though not shown here, if there are
+more than one instance of the same method call within a given program state, those calls are
+translated in the same way, enabling the prover to identify their return values as equal.  Similarly,
+a method call in the postcondition is contained within an \texttt{\char'134 old}, indicating it is to
+be evaluted in the pre-state, then it will be translated using the state constant for the pre-state.
+
+\begin{BFIGURE}
+\verbatiminput{Example.java}
+\caption{A somewhat contrived example to illustrate the translations of method calls.}
+\label{fig:TEX}
+\end{BFIGURE}
+
+\begin{BFIGURE}
+\verbatiminput{Translation.txt}
+\caption{A portion of the translation of method Example.checkMin.}
+\label{fig:TRA}
+\end{BFIGURE}
 
 [[[ Experience; example of what is not possible to conclude ]]]
 
