@@ -64,9 +64,9 @@ erik,
 \title{\embf{\blue 
        {\huge Introduction to JML
       }}}
-\author{\embf{\Large{\red Erik Poll}}
+\author{\embf{\Large{\red Erik Poll, Joe Kiniry, David Cok}}
        }
-\institution{\embf{\large University of Nijmegen}}
+\institution{\embf{\large University of Nijmegen; Eastman Kodak Company}}
 \slideCaption{{\blue Erik Poll - ESC/Java2 Tutorial - June 2004 -  JML}}
 %\Logo{{\blue Erik Poll}}
 
@@ -561,11 +561,12 @@ into {\blue runtime checks}:
   {\blue better testing}, because {\green more properties} are tested,
   at {\green more places} in the code}
 \end{itemize}
-\fromSlide{3}{Of course, an assertion violation can be {\em error in
-    code} {\green or} {\em error in specification}.}
-\medskip
+
+\fromSlide{3}{Of course, an assertion violation can be an {\em error in
+    code} {\green or} an {\em error in specification}.}
+
 \fromSlide{4}{
-  The {\blue jmlunit} tool combines jmlrac and {\green unit testing}}
+  The {\blue jmlunit} tool combines jmlrac and {\green unit testing}.}
 \end{slide}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -578,9 +579,9 @@ jmlrac can generate complicated test-code for free.  E.g., for
     {\blue signals (Exception) 
                  balance == \old(balance);}
  {\green  @*/}
-  public int{\green debit}(int amount) \{ ...
+  public int{\green debit}(int amount) \{ ... \}
 }}
-\end{alltt} %}
+\end{alltt} 
 it will test that {\green if \code{debit} throws an exception,
 the balance hasn't changed, and all invariants still hold}.
 

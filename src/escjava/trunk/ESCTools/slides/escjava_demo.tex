@@ -63,9 +63,9 @@ erik,
        \\ \medskip
        {\Large extended static checking for Java }}
       }}
-\author{\embf{\Large{\red Erik Poll}}
+\author{\embf{\Large{\red Erik Poll, Joe Kiniry, David Cok}}
        }
-\institution{\embf{\large University of Nijmegen}}
+\institution{\embf{\large University of Nijmegen; Eastman Kodak Company}}
 \slideCaption{{\blue Erik Poll - JML}}
 %\Logo{{\blue Erik Poll}}
 
@@ -397,7 +397,7 @@ then understanding the code is easier.
 \begin{itemize}
 \item For {\green runtime assertion checking}, we could {\green choose
     what we specify}, e.g. all, one, or none of the properties we have
-  written for for \code{Bag}.
+  written for \code{Bag}.
 \item But for {\blue ESC/Java} to accept a spec, we are {\em {\blue
       forced}} to specify {\em {\blue all properties}} (e.g.\ 
   invariants, preconditions) that this spec relies on.
@@ -413,7 +413,7 @@ Like most tools, ESC/Java is
 \item {\blue not complete}: it may {\green complain about a correct spec}
 \item {\blue not sound}: it may {\green fail to warn about an incorrect spec}
 \end{itemize}
-ESC/Java warns about {\green many potential bugs} , but {\green not
+ESC/Java warns about {\green many potential bugs}, but {\green not
   about all actual bugs.}
 
 \medskip
