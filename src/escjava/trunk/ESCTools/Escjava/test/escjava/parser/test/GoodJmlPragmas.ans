@@ -29,8 +29,6 @@ GoodJmlPragmas.j:43: /*@ exceptional_behavior */
 GoodJmlPragmas.j:57: /*@ assert_redundantly predicate; */
 GoodJmlPragmas.j:60: /*@ modifies a; @*/
 GoodJmlPragmas.j:61: /*@ modifies a, b, c; @*/
-GoodJmlPragmas.j:62: /*@ modifies a if predicate; @*/
-GoodJmlPragmas.j:63: /*@ modifies a if pred1, b if pred2, c if pred3; @*/
 GoodJmlPragmas.j:66: /*@ assume_redundantly predicate; */
 GoodJmlPragmas.j:83: /*@ constraint_redundantly predicate; */
 GoodJmlPragmas.j:84: /*@ constraint_redundantly predicate; */
@@ -61,8 +59,6 @@ GoodJmlPragmas.j:129: /*@ modifies a, b[*], c[1]; @*/
 GoodJmlPragmas.j:131: /*@ modifies a; @*/
 GoodJmlPragmas.j:132: /*@ modifies a[*]; @*/
 GoodJmlPragmas.j:133: /*@ modifies a, b[*], c[1]; @*/
-GoodJmlPragmas.j:134: /*@ modifies a if predicate; @*/
-GoodJmlPragmas.j:135: /*@ modifies a if pred1, b if pred2, c if pred3; @*/
 GoodJmlPragmas.j:137: /*@ post_redundantly predicate; */
 GoodJmlPragmas.j:139: /*@ pre_redundantly predicate; */
 GoodJmlPragmas.j:140: /*@ represents_redundantly store_ref_expression == spec_expression; */

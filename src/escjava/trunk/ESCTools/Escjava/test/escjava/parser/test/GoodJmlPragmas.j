@@ -59,8 +59,8 @@
 
 //@ assignable_redundantly a;
 //@ assignable_redundantly a, b, c;
-//@ assignable_redundantly a if predicate;
-//@ assignable_redundantly a if pred1, b if pred2, c if pred3;
+
+
 // still need to add store_refs
 
 //@ assume_redundantly predicate;
@@ -131,8 +131,8 @@
 //@ modifies_redundantly a;
 //@ modifies_redundantly a[*];
 //@ modifies_redundantly a, b[*], c[1];
-//@ modifies_redundantly a if predicate;
-//@ modifies_redundantly a if pred1, b if pred2, c if pred3;
+
+
 
 //@ post_redundantly predicate;
 

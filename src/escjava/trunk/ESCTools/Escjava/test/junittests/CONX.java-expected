@@ -16,22 +16,22 @@ CONX.java:48: Associated declaration:
 CONX.java:26: Associated declaration: 
         //@ modifies \nothing;
             ^
-CONX.java:85: Warning: Possible violation of modifies clause (Modifies)
+CONX.java:89: Warning: Possible violation of modifies clause (Modifies)
                 new CONX(0,0.0);  // WARNING
                         ^
-Associated declaration is "CONX.java", line 89, col 14:
-        //@ modifies ii if i >= 3;
+Associated declaration is "CONX.java", line 97, col 14:
+        //@ modifies ii ;
                      ^
-Associated declaration is "CONX.java", line 82, col 5:
+Associated declaration is "CONX.java", line 86, col 5:
         //@ modifies i;
             ^
-CONX.java:104: Warning: Possible violation of modifies clause (Modifies)
+CONX.java:112: Warning: Possible violation of modifies clause (Modifies)
             this(0,0); // WARNING
                 ^
-Associated declaration is "CONX.java", line 68, col 14:
-        //@ modifies j if i >= 3;
+Associated declaration is "CONX.java", line 72, col 14:
+        //@ modifies j ;
                      ^
-Associated declaration is "CONX.java", line 102, col 5:
+Associated declaration is "CONX.java", line 110, col 5:
         //@ modifies i;
             ^
 2 warnings

@@ -3,7 +3,7 @@
 public class EverythingParse {
 	// These are ok.
 	//@ modifies \everything;
-	//@ modifies \everything if true;
+	//@ modifies \everything if true;  // deprecated
 	//@ accessible \everything;
 	//@ accessible \everything if true;
 	//@ subclassing_contract

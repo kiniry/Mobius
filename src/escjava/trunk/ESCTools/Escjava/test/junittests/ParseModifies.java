@@ -15,9 +15,9 @@ public class ParseModifies {
 	public boolean r,rr,r2;
 	//@ requires r;
 	//@ requires r2;
-	//@ modifies b if bbb, bb if b;
+	//@ {| requires bbb; modifies b; also requires b; modifies bb; |}
 	//@ also requires rr;
-	//@ modifies b if true, bb if false;
+	//@ {| requires true; modifies b; also requires false; modifies bb; |}
 	public void q();
 
 	public int i,j;

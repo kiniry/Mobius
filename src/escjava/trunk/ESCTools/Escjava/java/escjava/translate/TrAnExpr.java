@@ -195,7 +195,7 @@ public class TrAnExpr {
 		TypeDeclElemVec reps = GetSpec.getRepresentsClauses(
 			ts.getTypeDecl(), fa.decl);
 		if (reps == null || reps.size() == 0) {
-		    boolean b = translate.isDefinitelyNotAssignable(
+		    boolean b = translate.frameHandler.isDefinitelyNotAssignable(
 			(od instanceof ExprObjectDesignator) ?
 			   ((ExprObjectDesignator)od).expr : null ,fa.decl);
 		   treatLikeAField = b;

@@ -65,7 +65,11 @@ public class CONX {
 	}
 
 	//@ requires i >= 0;
-	//@ modifies j if i >= 3;
+	//@ modifies i;
+	//@ ensures i == 4;
+	//@ also
+	//@ requires i >= 3;
+	//@ modifies j ;
 	//@ modifies i;
 	//@ ensures i == 4;
 	public CONX(int kk, int kkk);
@@ -86,7 +90,11 @@ public class CONX {
 	}
 
 	//@ requires i >= 0;
-	//@ modifies ii if i >= 3;
+	//@ modifies i;
+	//@ ensures i == 4;
+	//@ also
+	//@ requires i >= 3;
+	//@ modifies ii ;
 	//@ modifies i;
 	//@ ensures i == 4;
 	public CONX(int kk, double kkk);
