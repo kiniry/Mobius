@@ -2987,6 +2987,7 @@ written.  Instead of
                 ...
         @}
 @end example
+@end itemize  
 
 Finally note that
 @itemize @bullet
@@ -3308,6 +3309,10 @@ The handling of the Java 1.4 assert statement is discussed in
 @ref{Java and JML assert statements}.
 The assert statement is translated into equivalent Java or JML constructs and the
 static checker is used without modification.
+
+@section The @code{\TYPE} and @code{java.lang.Class} types
+
+[[[ discussion needed ]]]
 
 @section The initially clause
 
