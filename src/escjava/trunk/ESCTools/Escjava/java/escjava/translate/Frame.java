@@ -694,7 +694,7 @@ public class Frame {
     //      fields must have the same object designator
     //      arrays must have the same array expression and same index
 
-      for (int kk=0; kk<mg.size(); ++kk) {
+    for (int kk=0; kk<mg.size(); ++kk) {
       ModifiesGroupPragma mge = mg.elementAt(kk);
       int callerLoc = mge.clauseLoc;
       // The composite condition is the OR of everything in ev.

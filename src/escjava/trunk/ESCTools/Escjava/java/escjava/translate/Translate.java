@@ -48,6 +48,7 @@ public final class Translate
   public static java.util.Set axsToAdd = new java.util.HashSet();
 
   private Hashtable premap;
+  private Hashtable premapWithArgs;
 
   /** The type containing the routine whose body is being translated. */
   private TypeDecl typeDecl;
@@ -74,7 +75,12 @@ public final class Translate
                            Translate inlineParent,
                            boolean issueCautions) {
 
-    frameHandler = new Frame(this, issueCautions, rd, premap);
+    Hashtable paramMap = GetSpec.makeSubst(rd.args, "pre");
+    premapWithArgs = new Hashtable();
+    premapWithArgs.putAll(paramMap);
+    if (premap != null) premapWithArgs.putAll(premap);
+
+    frameHandler = new Frame(this, issueCautions, rd, premapWithArgs);
     TrAnExpr.translate = this;
     this.typeDecl = rd.parent;
     this.premap = premap;
@@ -172,7 +178,6 @@ public final class Translate
       res = body;
     }
     else {
-      Hashtable paramMap = GetSpec.makeSubst(rd.args, "pre");
 	
       declaredLocals.push();  // this mark popped by "popDeclBlock"
       code.push();  // this mark popped by "popDeclBlock"
@@ -700,7 +705,7 @@ public final class Translate
     ConditionVec invs = ConditionVec.make();
     for (int i = 0; i < J.size(); i++) {
       ExprStmtPragma loopinv = J.elementAt(i);
-      Expr pred = TrAnExpr.trSpecExpr(loopinv.expr, null, h);
+      Expr pred = TrAnExpr.trSpecExpr(loopinv.expr, null, h);  // FIXME - what about formal params in old?
       Condition cond = GC.condition(TagConstants.CHKLOOPINVARIANT,
                                     pred,
                                     loopinv.getStartLoc());
@@ -710,7 +715,7 @@ public final class Translate
     DecreasesInfoVec decs = DecreasesInfoVec.make();
     for (int i = 0; i < decreases.size(); i++) {
       ExprStmtPragma d = decreases.elementAt(i);
-      Expr de = TrAnExpr.trSpecExpr(d.expr);
+      Expr de = TrAnExpr.trSpecExpr(d.expr);  // FIXME - what about old?
       int loc = d.getStartLoc();
       VariableAccess fOld = temporary("decreases", loc, loc);
       DecreasesInfo di = new DecreasesInfo(loc, de, fOld);
@@ -720,7 +725,7 @@ public final class Translate
     ExprVec preds = ExprVec.make();
     for (int i = 0; i < P.size(); i++) {
       ExprStmtPragma looppred = P.elementAt(i);
-      preds.addElement(TrAnExpr.trSpecExpr(looppred.expr, null, h));
+      preds.addElement(TrAnExpr.trSpecExpr(looppred.expr, null, h));  // FIXME - what about params?
     }
 
     // If we ever implement the "safe" (as opposed to "fast") version of
@@ -1325,7 +1330,7 @@ public final class Translate
 
               C = GC.nary(s.getStartLoc(),s.getEndLoc(),
                           TagConstants.INTEGRALEQ,
-                          e, TrAnExpr.trSpecExpr(sl.expr));
+                          e, TrAnExpr.trSpecExpr(sl.expr));  // FIXME -why a trSpecExpr?
             } else {
 
               C = GC.truelit;
@@ -1341,7 +1346,7 @@ public final class Translate
                                C,
                                GC.nary(s.getStartLoc(),s.getEndLoc(),
                                        TagConstants.INTEGRALNE,
-                                       e, TrAnExpr.trSpecExpr(sl2.expr)));
+                                       e, TrAnExpr.trSpecExpr(sl2.expr)));  // FIXME - why a specExpr
                 }
               }
             }
@@ -1718,7 +1723,7 @@ public final class Translate
           VariableAccess lhs = TrAnExpr.makeVarAccess(vd, vd.getStartLoc());
           TrAnExpr.initForClause();
           Expr rval = isGhost ? 
-            TrAnExpr.trSpecExpr((Expr)vd.init,null,premap) :
+            TrAnExpr.trSpecExpr((Expr)vd.init,null,premapWithArgs) :
             ptrExpr(vd.init);
           if (TrAnExpr.extraSpecs) addNewAssumptions();
           if (! isUninitialized) {
@@ -1748,7 +1753,7 @@ public final class Translate
         FieldAccess fa = (FieldAccess)s.target;
         TrAnExpr.initForClause();
         Expr lhs= trFieldAccess(true, fa); // FIXME - premap?
-        Expr rval = TrAnExpr.trSpecExpr(s.value,null,premap);
+        Expr rval = TrAnExpr.trSpecExpr(s.value,null,premapWithArgs);
         if (TrAnExpr.extraSpecs) addNewAssumptions();
         // Add check that the lhs is allowed to be written (writable pragma)
         writeCheck(lhs, s.value, rval, s.locOp, false);
@@ -1793,7 +1798,7 @@ public final class Translate
         // Assignments to local ghost variables end here
         VariableAccess lhs = (VariableAccess)s.target;
         TrAnExpr.initForClause();
-        Expr rval = TrAnExpr.trSpecExpr(s.value,null,premap);
+        Expr rval = TrAnExpr.trSpecExpr(s.value,null,premapWithArgs);
         if (TrAnExpr.extraSpecs) addNewAssumptions();
         writeCheck(lhs, s.value, rval, s.locOp, false);
         code.addElement(GC.gets(lhs,rval));
@@ -1807,9 +1812,9 @@ public final class Translate
         ArrayRefExpr lhs= (ArrayRefExpr)s.target;
 
         TrAnExpr.initForClause();
-        Expr array= TrAnExpr.trSpecExpr(lhs.array,null,premap);
-        Expr index= TrAnExpr.trSpecExpr(lhs.index,null,premap);
-        Expr rval= TrAnExpr.trSpecExpr(s.value,null,premap);
+        Expr array= TrAnExpr.trSpecExpr(lhs.array,null,premapWithArgs);
+        Expr index= TrAnExpr.trSpecExpr(lhs.index,null,premapWithArgs);
+        Expr rval= TrAnExpr.trSpecExpr(s.value,null,premapWithArgs);
         if (TrAnExpr.extraSpecs) addNewAssumptions();
         // Add a check that the value of the array index is in bounds
         arrayAccessCheck(lhs.array, array, lhs.index, index, lhs.locOpenBracket);
@@ -1846,7 +1851,7 @@ public final class Translate
       {
         ExprStmtPragma x = (ExprStmtPragma)stmt;
         TrAnExpr.initForClause();
-        Expr p = TrAnExpr.trSpecExpr(x.expr,null,premap);
+        Expr p = TrAnExpr.trSpecExpr(x.expr,null,premapWithArgs);
         if (TrAnExpr.extraSpecs) addNewAssumptionsNow();
         code.addElement(GC.assume(p));
         return;
@@ -1855,7 +1860,7 @@ public final class Translate
     case TagConstants.ASSERT: {
       ExprStmtPragma x = (ExprStmtPragma)stmt;
       TrAnExpr.initForClause();
-      Expr p = TrAnExpr.trSpecExpr(x.expr,null,premap);
+      Expr p = TrAnExpr.trSpecExpr(x.expr,null,premapWithArgs);
       if (TrAnExpr.extraSpecs) addNewAssumptionsNow();
       code.addElement(GC.check(x.getStartLoc(), TagConstants.CHKASSERT,
                                p, Location.NULL));
