@@ -5,23 +5,36 @@
 
 ############################################################################
 ## Required variables:
-##	ESCTOOLS_ROOT
-##	SIMPLIFY
-##	ESC_CLASSPATH (defaults to the files in the CVS directories)
-##	CLASSPATH (defaults to ".")
+##	ESCTOOLS_RELEASE (if present, presumes a release; if not defined,
+##			  presumes running within CVS directories)
+##	ESCTOOLS_ROOT    (if not defined, tries to guess from the location
+##                        of the current file)
+##	SIMPLIFY         (if not defined, guesses for some platforms)
+##	CLASSPATH        (defaults to "."; set it to point to any java or
+##                        spec files that escjava is acting on)
 
 ## Optional variables:
-##	ESCJ_VERBOSE
-##	BOOTCLASSPATH
-##	ESCJ_STDARGS
-##	JAVA
-##	ESC_REMOTE_DEBUG
-##	JAVA_VM_FLAGS
-##	JAVA_VM_DEBUG_FLAGS
-##      ESCJ_SIMPLIFY_DIR
-##      ESCJ_SIMPLIFY_SCRIPT
+##	ESCJ_VERBOSE     (turns on some debugging)
+##	BOOTCLASSPATH    (rarely needed - changes the system files being used)
+##	ESCJ_STDARGS     (the set of always used arguments to escjava)
+##	JAVA             (the VM to use)
+##	JAVA_VM_FLAGS    (the set of flags to supply to the VM)
+##	ESC_REMOTE_DEBUG (if on, adds the debug flags to JAVA_VM_FLAGS)
+##	JAVA_VM_DEBUG_FLAGS (the set of debug flags - a default set is already
+##                           defined)
+##
+## The following are set based on the structure of a standard release (if
+## ESCTOOLS_RELEASE is defined) or otherwise on the structure of the CVS files
+##      ESCJ_SIMPLIFY_DIR  (The directory containing the Simplify executable,
+##                          as named by the SIMPLIFY variable)
+##      ESCJ_SIMPLIFY_SCRIPT (The full path to the script that sets settings
+##                            and invokes SIMPLIFY)
+##	ESC_CLASSPATH      (The class path needed to invoke escjava)
+##                     
 
 ############################################################################
+
+if ( ! $?ESCTOOLS_RELEASE ) then
 
 if ( ! $?ESCTOOLS_ROOT ) then
     set NAME=$PWD/$0
@@ -39,6 +52,8 @@ if ( ! $?ESCTOOLS_ROOT ) then
 endif
 
 setenv ESCJAVA_ROOT ${ESCTOOLS_ROOT}/Escjava
+
+endif
 
 ############ Setting ESCJ_SIMPLIFY_DIR, if necessary
 if ( ! $?ESCJ_SIMPLIFY_DIR) then

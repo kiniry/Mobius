@@ -12,9 +12,16 @@
 ##  - replace the following lines by those below
 
 # For bash:
+unset ESCTOOLS_RELEASE
+export ESCTOOLS_RELEASE
 export ESCTOOLS_ROOT=$HOME/ESCTools/ESCTools
 export SIMPLIFY=Simplify-1.5.4.linux
 $ESCTOOLS_ROOT/Escjava/escj $@
+
+## To run in the context of a release, define
+# export ESCTOOLS_RELEASE=$HOME/esctools-release
+# export SIMPLIFY=SImplify-1.5.4.linux
+# $ESCTOOLS_RELEASE/escj $@
 
 # For tcsh:
 # setenv ESCTOOLS_ROOT $HOME/ESCTools
