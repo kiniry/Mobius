@@ -31,7 +31,9 @@ GoodPragmas.j:45: /*@ readable_if uninitialized; */
 GoodPragmas.j:45: /*@ requires true; */
 GoodPragmas.j:45: /*@ ensures false; */
 GoodPragmas.j:46: /*@ uninitialized */
-GoodPragmas.j:46: /*@ also_ensures monitored; */
+GoodPragmas.j:46: Error: Original ESC/Java keywords beginning with also_ are obsolete; they have been replaced with the corresponding JML keywords and the use of 'also' - note that the semantics has also changed.
+(line text not available; see column 18)
+GoodPragmas.j:46: /*@ ensures monitored; */
 GoodPragmas.j:46: /*@ monitored */
 GoodPragmas.j:46: /*@ non_null */
 GoodPragmas.j:50: /*@ monitored */
@@ -50,12 +52,20 @@ GoodPragmas.j:55: /*@ modifies a[a[x]]; */
 GoodPragmas.j:55: /*@ modifies a.b.c; */
 GoodPragmas.j:55: /*@ modifies a.b[q]; */
 GoodPragmas.j:55: /*@ modifies a.b[*]; */
-GoodPragmas.j:56: /*@ also_modifies this; */
-GoodPragmas.j:57: /*@ also_modifies this; */
-GoodPragmas.j:57: /*@ also_modifies this.bar; */
-GoodPragmas.j:57: /*@ also_modifies this[10]; */
-GoodPragmas.j:57: /*@ also_modifies this.a[this]; */
-GoodPragmas.j:58: /*@ also_modifies this.a[*]; */
+GoodPragmas.j:56: Error: Original ESC/Java keywords beginning with also_ are obsolete; they have been replaced with the corresponding JML keywords and the use of 'also' - note that the semantics has also changed.
+(line text not available; see column 4)
+GoodPragmas.j:56: /*@ modifies this; */
+GoodPragmas.j:57: Error: Original ESC/Java keywords beginning with also_ are obsolete; they have been replaced with the corresponding JML keywords and the use of 'also' - note that the semantics has also changed.
+(line text not available; see column 4)
+GoodPragmas.j:57: /*@ modifies this; */
+GoodPragmas.j:57: /*@ modifies this.bar; */
+GoodPragmas.j:57: Error: Original ESC/Java keywords beginning with also_ are obsolete; they have been replaced with the corresponding JML keywords and the use of 'also' - note that the semantics has also changed.
+(line text not available; see column 35)
+GoodPragmas.j:57: /*@ modifies this[10]; */
+GoodPragmas.j:57: /*@ modifies this.a[this]; */
+GoodPragmas.j:58: Error: Original ESC/Java keywords beginning with also_ are obsolete; they have been replaced with the corresponding JML keywords and the use of 'also' - note that the semantics has also changed.
+(line text not available; see column 4)
+GoodPragmas.j:58: /*@ modifies this.a[*]; */
 GoodPragmas.j:1: //@ nowarn
 GoodPragmas.j:2: //@ nowarn
 GoodPragmas.j:3: //@ nowarn
