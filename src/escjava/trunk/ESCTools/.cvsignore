@@ -6,3 +6,5 @@ libs
 optimized
 javadoc
 Makefile.local
+release
+release-temp
