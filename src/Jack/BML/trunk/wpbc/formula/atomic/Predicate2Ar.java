@@ -180,9 +180,16 @@ public class Predicate2Ar extends Predicate {
 	public Expression getRightExpression() {
 		return term2;
 	}
+	
 	public Expression atState(int instrIndex) {
 		term1 = term1.atState(instrIndex);
 		term2 = term2.atState(instrIndex);
+		return this;
+	}
+	
+	public Expression removeAtState(int index) {
+		term1 = term1.removeAtState(index);
+		term2 = term2.removeAtState(index);
 		return this;
 	}
 	

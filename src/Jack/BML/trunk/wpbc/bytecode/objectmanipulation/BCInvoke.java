@@ -167,7 +167,8 @@ public class BCInvoke extends BCFieldOrMethodInstruction {
 			/*ModifiesSet modifiesSet = specCases[n].getModifies();*/
 			ModifiesExpression[] modifies = specCases[n].getModifies().getModifiesExpressions();
 			ModifiesExpression[] modifiesSubst = new ModifiesExpression[modifies.length];
-			ModifiesSet modifiesSetSubst = new ModifiesSet(modifiesSubst, specCases[n].getModifies().getConstantPool());
+			/*ModifiesSet modifiesSetSubst = new ModifiesSet(modifiesSubst, specCases[n].getModifies().getConstantPool());
+		*/	
 			for (int i = 0; i < modifies.length; i++) {
 				modifiesSubst[i] = (ModifiesExpression)modifies[i].copy();
 			}
@@ -199,15 +200,24 @@ public class BCInvoke extends BCFieldOrMethodInstruction {
 			// arg_num(method(index)) + i)]
 			// ==>
 			// psi^n[ S(t ) <-- fresh]
-			Formula wpNormal = Formula.getFormula(postcondition,
-					_normal_Postcondition, Connector.IMPLIES);
 			
-			for (int i = 0 ; i < modifiesSubst.length; i++) {				
-				
-				Formula f = method.getStateVectorAtInstr(getBCIndex(), modifiesSetSubst);
-				wpNormal =  (Formula)wpNormal.atState( getBCIndex());
-				modPostCalled = Formula.getFormula( modPostCalled, f , Connector.AND );
+			Formula modifiesCondition = Predicate.TRUE;
+			for (int i = 0; i < modifiesSubst.length ; i++ ) {
+				if (modifiesSubst[i] == null) {
+					continue;
+				}
+				Formula f = (Formula)modifiesSubst[i].getPostCondition(getBCIndex());
+				BCConstantFieldRef fieldRef =  (BCConstantFieldRef)modifiesSubst[i].getConstantFieldRef();
+				postcondition =  (Formula)postcondition.substitute( fieldRef, fieldRef.atState( getBCIndex()));
+				_normal_Postcondition = (Formula)_normal_Postcondition.substitute( fieldRef, fieldRef.atState( getPosition()));
+				modifiesCondition  = Formula.getFormula(modifiesCondition, f, Connector.AND);
 			}
+			postcondition = Formula.getFormula(postcondition, modifiesCondition, Connector.AND );
+			Formula wpNormal = Formula.getFormula(postcondition,
+						_normal_Postcondition, Connector.IMPLIES);
+				
+			/*modPostCalled = Formula.getFormula( modPostCalled, f , Connector.AND );*/
+			
 			
 			
 			// if there is a value returned by the invoked method then quantify

@@ -31,7 +31,7 @@ public class FieldWITH extends Expression {
 	 * @param substituteWIth  - see the explanation for objWith
 	 */
 	public FieldWITH(
-		BCConstantFieldRef _constantFieldRef,
+		Expression _constantFieldRef,
 		Expression concreteObject,
 		Expression objWith,
 		Expression substituteWIth) {

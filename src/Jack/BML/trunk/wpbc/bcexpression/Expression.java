@@ -223,6 +223,29 @@ public abstract class Expression {
 		setSubExpressions(subExprAtState);
 		return this;
 	}
+	
+	/**
+	 * @param instrIndex - the instruction at which the value of the expression
+	 * is instantiated 
+	 * the method converts the expression in an expression that represents
+	 * the value of the expression in a state instrIndex
+	 * 
+	 * 
+	 * for example for ((a_at_state_x ) == a + 1 ).removeAtState(x) = a == a + 1
+	 */
+	public Expression removeAtState(int instrIndex) {
+		Expression[] subExpr = getSubExpressions();
+		if (subExpr == null) {
+			return this;
+		}
+		Expression[] subExprAtState = new Expression[subExpr.length];
+		for ( int i = 0; i < subExpr.length; i++ ) {
+			subExprAtState[i] = subExpr[i].removeAtState( instrIndex);
+		}	
+		setSubExpressions(subExprAtState);
+		return this;
+	}
+	
 
 }
 

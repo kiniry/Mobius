@@ -60,4 +60,12 @@ public class ValueOfConstantAtState extends Expression {
 		// TODO Auto-generated method stub
 		return this;
 	}
+	
+	public Expression removeAtState(int instrIndex) {
+		if (atInstruction == instrIndex) {
+			return getSubExpressions()[0];
+		}
+		return this;
+	}
+	
 }

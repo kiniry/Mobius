@@ -125,9 +125,9 @@ public class ClassStateVector {
 			return Predicate.TRUE;
 		}
 		Formula modifiesAtState = modSet.getPostcondition(state);
-		if (state == ClassStateVector.RETURN_STATE) {
+		/*if (state == ClassStateVector.RETURN_STATE) {
 			return modifiesAtState;
-		}
+		}*/
 		for (int i = 0 ; i < stateVector.size() ; i++) {
 			BCConstantFieldRef fieldRef = (BCConstantFieldRef) stateVector.elementAt(i);		
 			if ( (!modSet.modifiesNothing() ) && ( modSet.modifies( fieldRef) )) {

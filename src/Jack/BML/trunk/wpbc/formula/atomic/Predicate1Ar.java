@@ -64,6 +64,12 @@ public class Predicate1Ar extends Predicate {
 		term = term.atState(instrIndex);
 		return this;
 	}
+	
+	public Expression removeAtState(int index) {
+		term = term.removeAtState(index);
+		return this;
+	}
+	
 	public String toString() {
 		String s = "";
 		if (getPredicateSymbol() == PredicateSymbol.ODD) {

@@ -92,12 +92,14 @@ public class BCLoopStart extends BCInstruction {
 		// calculate  wp of the instruction that is the loop start
 		Formula wpInstr =
 			loopStartInstruction.wp(_normal_Postcondition, _exc_Postcondition);
-
+		
+		wpInstr = (Formula)wpInstr.removeAtState(getPosition());
+		
+		
 		// Invariant ==> wp
 		Formula invariant_implies_wp =
 			Formula.getFormula((Formula)invariant.copy(), wpInstr, Connector.IMPLIES);
-		invariant_implies_wp = (Formula)invariant_implies_wp.atState(getBCIndex());
-		Formula vectorStateAtThisInstruction = method.getStateVectorAtInstr( getBCIndex(), modifies);
+	
 		//if the set of modified expressions for the bytecode that loop is part of is not empty then copy them
 		/*Expression[] modifies1 = null;*/
 		/*Formula forall_modified_expressions_invariant_implies_wp =
@@ -128,14 +130,14 @@ public class BCLoopStart extends BCInstruction {
 		}*/
 		
 		Formula invariantHoldsAtState = (Formula)invariant.copy();
-		invariantHoldsAtState = (Formula)invariantHoldsAtState.atState(getBCIndex());
+		
 		Formula wp = null;
 		wp =
 			Formula.getFormula(
 			invariantHoldsAtState,
 			invariant_implies_wp,
 				Connector.AND);
-		wp = Formula.getFormula( wp,vectorStateAtThisInstruction , Connector.AND);
+	/*	wp = Formula.getFormula( wp,vectorStateAtThisInstruction , Connector.AND);*/
 		return wp;
 	}
 

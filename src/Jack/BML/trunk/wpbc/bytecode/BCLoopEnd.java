@@ -66,24 +66,35 @@ public class BCLoopEnd extends BCInstruction {
 
 	/* (non-Javadoc)
 	 * @see bytecode.ByteCode#wp(formula.Formula, bcclass.attributes.ExsuresTable)
+	 * 
+	 * forall fields (f ) f==f_at_loop_end ==> Invariant[f <- f_at_loop_end] /\ f == f_at_start_loop 
 	 */
 	public Formula wp(Formula _normal_Postcondition, ExsuresTable _exc_Postcondition) {
-//			Formula  normal_Post = Formula.getFormula(_normal_Postcondition, invariant, Connector.AND);
 			Formula wp = loopEndInstruction.wp( _normal_Postcondition, _exc_Postcondition);
-			wp = (Formula)wp.atState(getBCIndex() );
-			Formula vectorStateAtThisInstruction = method.getStateVectorAtInstr( getBCIndex(), modifies);
-			wp = Formula.getFormula(wp, vectorStateAtThisInstruction, Connector.AND);
-			return wp;
+			wp =  _wp(wp, _exc_Postcondition);
+			return wp;			
 	}
 	
 	public Formula wpBranch(Formula _normal_Postcondition, ExsuresTable _exc_Postcondition) {
-//			Formula  normal_Post = Formula.getFormula(_normal_Postcondition, invariant, Connector.AND);
-			Formula wp = ((BCConditionalBranch)loopEndInstruction).wpBranch( _normal_Postcondition, _exc_Postcondition);
-			wp = (Formula)wp.atState(getBCIndex() );
-			Formula vectorStateAtThisInstruction = method.getStateVectorAtInstr( getBCIndex(), modifies);
-			wp = Formula.getFormula(wp, vectorStateAtThisInstruction, Connector.AND);
-			return wp;
+//		Formula  normal_Post = Formula.getFormula(_normal_Postcondition, invariant, Connector.AND);
+		Formula wp = ((BCConditionalBranch)loopEndInstruction).wpBranch( _normal_Postcondition, _exc_Postcondition);
+		wp = _wp(wp, _exc_Postcondition);
+		return wp;
 	}
+	
+	private Formula _wp(Formula wp, ExsuresTable _exc_Postcondition) {
+		wp = (Formula)wp.atState(getPosition() );
+		//forall fields (f ) f==f_at_loop_end /\ forall i : locVar index.  loc(i) = loc_at_start_end
+		Formula vectorStateAtThisInstruction = method.getStateVectorAtInstr( getPosition(), modifies);
+		//forall fields (f ) f =f_at_start_loop /\ forall i : locVar index.  loc(i) = loc_at_start_loop
+ 		Formula varsNotChanged = method.getStateVectorAtInstr( loopStartPosition, modifies);
+		// wp for invariant and modifies correctness
+		wp = Formula.getFormula( wp , varsNotChanged, Connector.AND );
+		wp = Formula.getFormula( vectorStateAtThisInstruction,wp,  Connector.IMPLIES);
+		
+		return wp;
+	} 
+	
 	
 	public String toString() {
 		return "LOOPEND :  "  + super.toString();
