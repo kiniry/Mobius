@@ -18,11 +18,16 @@ unset ESCJ		# prevent confusion w/ escjava repository
 
 ######################### locations #########################
 
+export JAVA_HOME=/usr/java/jdk-1.1
+export PATH=$JAVA_HOME/bin:$PATH
+
 export CLASSDIRECTORY=${JAVAFE_ROOT}/classfiles
 export SOURCEDIRECTORY=${JAVAFE_ROOT}/java
 export JAVADOCDIRECTORY=${JAVAFE_ROOT}/doc/javadoc
 
-export JDKBINARIES=/usr/java/jdk-1.1/lib/classes.zip
+export JDK_SOURCES=/usr/local/Java/src/jdk-1.18_03
+export JDK_BINARIES=${JAVA_HOME}/lib/classes.zip
+export JDKBINARIES=${JDK_BINARIES}
 
 ######################### classpaths #########################
 
@@ -34,7 +39,7 @@ export JDKBINARIES=/usr/java/jdk-1.1/lib/classes.zip
 export CLASSES=${CLASSDIRECTORY}
 export DECSRCLIBRARY=${JAVAFE_ROOT}/decsrclib
 
-export CLASSPATH=${SOURCEDIRECTORY}:${CLASSES}:${DECSRCLIBRARY}
+export CLASSPATH=${CLASSES}:${DECSRCLIBRARY}
 # javadepend needs a classpath where all the sources are in the current dir:
 export LCLASSPATH=.:${CLASSES}
 
@@ -53,6 +58,7 @@ export JAVA=java
 # Other java* commands:
 #
 export JAVAC=javac
+export OLD_JAVAC=/usr/java/jdk-1.1/bin/javac
 export JAVADOC=javadoc
 
 #
