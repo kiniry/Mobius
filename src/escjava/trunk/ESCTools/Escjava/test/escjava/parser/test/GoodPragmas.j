@@ -43,7 +43,7 @@ z
 
 /*@ uninitialized monitored non_null writable_deferred */
 //@ readable_if uninitialized; requires true; ensures false;
-/*@ uninitialized also_ensures
+/*@ uninitialized ensures
 monitored;
 monitored non_null
 */
@@ -53,6 +53,6 @@ monitored non_null
 //@ monitored_by monitored_by, monitored, non_null, a.b.c; uninitialized
 /*@ modifies a; */
 //@ requires true; modifies a[x], a[a[x]], a.b.c, a.b[q], a.b[*];
-/*@ also_modifies this; */
-//@ also_modifies this, this.bar ; also_modifies this[10], this.a[this];
-//@ also_modifies this.a[*];
+/*@ modifies this; */
+//@ modifies this, this.bar ; modifies this[10], this.a[this];
+//@ modifies this.a[*];
