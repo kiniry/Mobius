@@ -263,7 +263,7 @@ Other issues
 * Original also specifications::  
 * anonymous classes::           
 * block-level class declarations::  
-* @code{field}::                
+* field-method-constructor keywords::  
 * TYPE Equivalence::            
 * exceptions in annotation expressions::  
 * Specifications and inheritance::  
@@ -3733,7 +3733,7 @@ as well.  These are described in this section.
 * Original also specifications::  
 * anonymous classes::           
 * block-level class declarations::  
-* @code{field}::                
+* field-method-constructor keywords::  
 * TYPE Equivalence::            
 * exceptions in annotation expressions::  
 * Specifications and inheritance::  
@@ -3950,7 +3950,7 @@ class is a subclass and not the same class as its super class.
 of the methods of an anonymous class.
 
 @c ----------------------------------------------------------------------------
-@node block-level class declarations, @code{field}, anonymous classes, Other issues
+@node block-level class declarations, field-method-constructor keywords, anonymous classes, Other issues
 @subsection block-level class declarations
 
 Java allows classes to be declared as local classes within a 
@@ -3965,7 +3965,7 @@ specifications are used when the methods of the class are called.
 [[[ what about model classes ??? ]]]
 
 @c ----------------------------------------------------------------------------
-@node @code{field}, TYPE Equivalence, block-level class declarations, Other issues
+@node field-method-constructor keywords, TYPE Equivalence, block-level class declarations, Other issues
 @subsection  @code{field}, @code{method} and @code{constructor} keywords
 
 JML is designed to work with any Java code.  In particular that code may use
@@ -4007,7 +4007,7 @@ pre/post-conditions instead.]]]  @*@noindent @code{Status: } Fully
 implemented.
 
 @c ----------------------------------------------------------------------------
-@node TYPE Equivalence, exceptions in annotation expressions, @code{field}, Other issues
+@node TYPE Equivalence, exceptions in annotation expressions, field-method-constructor keywords, Other issues
 @subsection Equivalence of @code{\TYPE} and @code{java.lang.Class}
 
 In Java, the types of classes can be treated as first class values of
