@@ -67,6 +67,8 @@ public abstract class FrontEndTool
 	if (sys == null)
 	    // This works only on Sun implementations of Java...
 	    sys = System.getProperty("sun.boot.class.path", null);
+	if (sys == null)
+	    sys = System.getProperty("java.home") + "/jre/lib/rt.jar";
 
 	if (sys != null && !sys.equals("")) {
 	    if (!classPath.equals("")) {

@@ -132,7 +132,8 @@ endif
 ########################################### docs
 
 .PHONY: docs
-docs: textdocs
+docs: 
+##textdocs
 ##docs: textdocs javadoc  ## FIXME Turn off until the javadoc target is fixed
 
 .PHONY: textdocs
@@ -213,6 +214,7 @@ jar:
 	( cd ${RELTEMP}/sub; jar cvmf ../../manifest.txt ../${RELJAR} *; )
 	##jar umf manifest.txt ${RELTEMP}/${RELJAR}
 	rm -rf ${RELTEMP}/sub
+	cp ${RELTEMP}/${RELJAR} ${ESCTOOLS_ROOT}
 
 .PHONY: binary-release
 binary-release: build docs
@@ -228,7 +230,7 @@ binary-release: build docs
 	cp -r ${ESCTOOLS_ROOT}/specs ${RELTEMP}
 	-find ${RELTEMP}/specs -name "CVS" -exec rm -rf {} \;  >& /dev/null 
 	## Copy other miscellaneous files
-	cp docs/Escjava2-ImplementationNotes/*.pdf ${RELTEMP}
+	#cp docs/Escjava2-ImplementationNotes/*.pdf ${RELTEMP}
 	cp docs/ESCJAVA-UsersManual.html ${RELTEMP}
 	${MAKE} clean-norel-noreltemp
 	${MAKE} -C Utils/junitutils build
