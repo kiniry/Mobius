@@ -164,7 +164,7 @@ public class StandardPrettyPrint extends PrettyPrint {
       
             case TagConstants.ASSERTSTMT: {
                 AssertStmt a = (AssertStmt)s;
-                write(o, "assert ("); self.print(o, ind, a.expr); write(o, ")");
+                write(o, "assert ("); self.print(o, ind, a.pred); write(o, ")");
                 if (a.label != null) {
                     write(o, " : ");
                     self.print(o, ind, a.label);
