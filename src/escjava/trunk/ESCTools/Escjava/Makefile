@@ -57,7 +57,6 @@ buildall: compileall
 test: test_escjava
 
 
-
 ###########################################################################
 # Documentation targets.
 
@@ -244,7 +243,8 @@ clean: clean_classfiles clean_docs clean_escjava clean_tests \
 
 clean_escjava: clean_escjava_ast clean_escjava_backpred 
 
-clean_tests: clean_escjava_parser_test clean_test_escjava
+clean_tests:
+	make -C ${TOP_ESCJAVA_TEST_DIR} clean
 
 clean_classfiles:
 	rm -rf ${CLASSDIRECTORY}
@@ -297,66 +297,24 @@ self_test: compile
 	escjava -nocheck -v \*.java ast/*.java parser/*.java \
 	  tc/*.java bacpred/*.java prover/*.java
 
-.PHONY: test_escjava_parser
-test_escjava: build build_javafe_test test_escjava_parser clean_test_escjava
-	(cd ${TOP_ESCJAVA_TEST_DIR}; \
-	./rtestall)
+.PHONY: test_escjava
+test_escjava: build build_javafe_test test_escjava_parser
 
 .PHONY: build_javafe_test
 build_javafe_test:
 	make -C ${JAVAFE_ROOT} javafe_test
 
-clean_test_escjava:
-	(cd ${TOP_ESCJAVA_TEST_DIR}; \
-	rm -f test*/out test*/diff)
+test_parser: build test_escjava_parser test_matrix self_test
+
+test_escjava_parser:
+	make -C ${TOP_ESCJAVA_TEST_DIR} test_and_clean
 
 test_matrix:
 	(cd ${TESTSOURCEDIRECTORY}/matrix; \
 	escjava *.java;)
 
-
-###########################################################################
-## parser test targets
-
-test_parser: build test_escjava_parser test_matrix self_test
-
-PARSER_TEST_PACKAGE = escjava.parser.test
-PARSER_TEST_DIR = ${TESTSOURCEDIRECTORY}/escjava/parser/test
-
-test_escjava_parser: compile_escjava_parser_test_programs \
-		test_lexer test_parser_only test_parser_idempotence
-
-compile_escjava_parser_test_programs:
-	@${JAVAC} ${JAVAC_FLAGS} \
-		${PARSER_TEST_DIR}/TestLex.java \
-		${PARSER_TEST_DIR}/TestEscPragmaParser.java
-
-clean_escjava_parser_test:
-	rm -f ${PARSER_TEST_DIR}/*.out
-	rm -f ${CLASSDIRECTORY}/javafe/parser/test/*.class
-
-CD_AND_JAVA = cd $(PARSER_TEST_DIR); $(JAVA) -classpath $(ESCJAVA_CLASSPATH) $(PARSER_TEST_PACKAGE)
-
-test_lexer: compile_escjava_parser_test_programs
-	@echo "test_lexer: "
-	$(CD_AND_JAVA).TestLex GoodPragmas.j    | diff - GoodPragmas.ans
-	$(CD_AND_JAVA).TestLex GoodSpecExpr.j   | diff - GoodSpecExpr.ans
-	$(CD_AND_JAVA).TestLex GoodJmlPragmas.j | diff - GoodJmlPragmas.ans
-	$(CD_AND_JAVA).TestLex lookahead GoodPragmas.j | diff - GoodPragmas.ans
-	$(CD_AND_JAVA).TestLex lookahead GoodSpecExpr.j   | diff - GoodSpecExpr.ans
-	$(CD_AND_JAVA).TestLex lookahead GoodJmlPragmas.j | diff - GoodJmlPragmas.ans
-
-test_parser_only: compile_escjava_parser_test_programs
-	$(CD_AND_JAVA).TestEscPragmaParser print TypeDeclElemPragmas1.java | \
-		diff - TypeDeclElemPragmas1.ans
-
-test_parser_idempotence: compile_escjava_parser_test_programs
-	$(CD_AND_JAVA).TestEscPragmaParser progress check idempotence \
-		*.java $(SOURCEDIRECTORY)/escjava/ast/*.java
-
 ###########################################################################
 # Miscellaneous targets.
-
 
 # Roughly counting size of source.
 
