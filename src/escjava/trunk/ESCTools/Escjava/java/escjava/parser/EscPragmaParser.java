@@ -541,6 +541,8 @@ public class EscPragmaParser extends Parse implements PragmaParser
 	}
     }
 
+    private FieldDecl previousDecl;
+
     /**
      * Parse the next pragma, putting information about it in the provided token
      * <code>dst</code>, and return a flag indicating if there are further pragmas to
@@ -921,14 +923,19 @@ public class EscPragmaParser extends Parse implements PragmaParser
 			    parseMoreModifierPragmas(scanner, modifierPragmas);
 			}
 		  
-			if (scanner.ttype == TagConstants.COMMA)
-			    fail(scanner.startingLoc,
-				 "Only one field may be declared per ghost or model annotation.");
-		  
 			if (tag == TagConstants.GHOST) {
 			    dst.auxVal = GhostDeclPragma.make(decl, loc);
 			} else if (tag == TagConstants.MODEL) {
 			    dst.auxVal = ModelDeclPragma.make(decl, loc);
+			}
+			if (scanner.ttype == TagConstants.COMMA) {
+			    scanner.getNextToken();
+			    inProcessTag = tag;
+			    previousDecl = decl;
+			    return true;
+			//    fail(scanner.startingLoc,
+				 //"Only one field may be declared per ghost or model annotation.");
+		  
 			}
 			semiNotOptional = true;
                         // FIXME - monitored_by as well??
@@ -1268,6 +1275,11 @@ public class EscPragmaParser extends Parse implements PragmaParser
                 // Unsupported JML clauses/keywords.
 
                 // The following clauses must be followed by a semi-colon.
+		case TagConstants.WHERE:
+		case TagConstants.IN:
+		case TagConstants.MAPS:
+		    // Ignored for now
+
                 case TagConstants.ACCESSIBLE_REDUNDANTLY:
                     // SC HPT AAST 2 unclear syntax and semantics (kiniry)
                 case TagConstants.ACCESSIBLE:
@@ -1528,6 +1540,30 @@ public class EscPragmaParser extends Parse implements PragmaParser
             Expr e = parseExpression(scanner);
             dst.auxVal = ExprStmtPragma.make(inProcessTag, e, null, inProcessLoc);
             dst.ttype = TagConstants.STMTPRAGMA;
+        } else if (inProcessTag == TagConstants.GHOST ||
+		   inProcessTag == TagConstants.MODEL) {
+	    int locId = scanner.startingLoc;
+	    Identifier id = parseIdentifier(scanner);
+     	    // No bracket pairs allowed with subsequent ids
+ 
+	    VarInit init = null;
+	    int locAssignOp = Location.NULL;
+	    if (scanner.ttype == TagConstants.ASSIGN) {
+		locAssignOp = scanner.startingLoc;
+		scanner.getNextToken();
+		init = parseVariableInitializer(scanner, false);
+	    }
+	    FieldDecl decl = FieldDecl.make(
+		previousDecl.modifiers, previousDecl.pmodifiers,
+		id, previousDecl.type, locId, init, locAssignOp);
+	    if (inProcessTag == TagConstants.GHOST) {
+		dst.auxVal = GhostDeclPragma.make(decl, locId);
+	    } else if (inProcessTag == TagConstants.MODEL) {
+		dst.auxVal = ModelDeclPragma.make(decl, locId);
+	    }
+	    if (scanner.ttype != TagConstants.COMMA) {
+                inProcessTag = NEXT_TOKEN_STARTS_NEW_PRAGMA;
+	    }
         } else if (inProcessTag == TagConstants.DEPENDS) {
             // FIXME - not sure why we end up here or what we are supposed to do
         } else {
