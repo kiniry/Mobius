@@ -32,10 +32,10 @@ test_and_clean: test clean
 
 test_escjava:
 	@echo "TESTING Escjava: test_escjava"
-	./rtestall
+	env CLASSPATH=. ./rtestall
 
 %-run:
-	./rtest $* || ${DIFF} $*/out $*/ans
+	env CLASSPATH=. ./rtest $* || ${DIFF} $*/out $*/ans
 
 
 CD_AND_JAVA = cd $(PARSER_TEST_DIR); $(JAVA) -classpath $(call canonicalize,$(ESC_CLASSPATH)) $(PARSER_TEST_PACKAGE)

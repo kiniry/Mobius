@@ -46,6 +46,9 @@ public final class Translate
 
     private Hashtable premap;
 
+    /** The type containing the routine whose body is being translated. */
+    private TypeDecl typeDecl;
+
     /**
      * Translates the body of a method or constructor, as described in ESCJ 16,
      * section 8.
@@ -68,6 +71,7 @@ public final class Translate
                              Translate inlineParent,
                              boolean issueCautions) {
 
+	this.typeDecl = rd.parent;
 	this.premap = premap;
 	axsToAdd = new java.util.HashSet();
 
@@ -118,15 +122,15 @@ public final class Translate
         if (rd.getTag() == TagConstants.METHODDECL) {
             if (! Modifiers.isSynchronized(rd.modifiers)) {
                 // non-synchronized method
-                trStmt(rd.body);
+                trStmt(rd.body,rd.parent);
             } else if (! Modifiers.isStatic(rd.modifiers)) {
                 // synchronized instance method
-                trSynchronizedBody(GC.thisvar, rd.body, rd.locOpenBrace);
+                trSynchronizedBody(GC.thisvar, rd.body, rd.locOpenBrace, typeDecl);
             } else {
                 // synchronized static method
                 trSynchronizedBody(GC.nary(TagConstants.CLASSLITERALFUNC,
                                            getClassObject(rd.parent)),
-                                   rd.body, rd.locOpenBrace);
+                                   rd.body, rd.locOpenBrace, typeDecl);
             }      
         } else {
             Assert.notFalse(rd.getTag() == TagConstants.CONSTRUCTORDECL);
@@ -322,7 +326,7 @@ public final class Translate
 	declaredLocals.push();  // this mark popped by "wrapUpDeclBlock"
 	code.push();            // this mark popped by "wrapUpDeclBlock"
 	for (int i = 1; i < body.stmts.size(); i++) {
-	    trStmt(body.stmts.elementAt(i));
+	    trStmt(body.stmts.elementAt(i),cd.parent);
 	}
 	wrapUpDeclBlock();
     }
@@ -366,7 +370,7 @@ public final class Translate
             if (tde.getTag() == TagConstants.INITBLOCK) {
                 InitBlock ib = (InitBlock)tde;
                 if (!Modifiers.isStatic(ib.modifiers)) {
-                    trStmt(ib.block);
+                    trStmt(ib.block,tdecl);
                 }
             } else if (tde.getTag() == TagConstants.FIELDDECL) {
                 FieldDecl fd = (FieldDecl)tde;
@@ -1246,7 +1250,7 @@ public final class Translate
      * @param stmt the statement that is to be translated.
      */
     //@ assignable temporaries, loopinvariants, loopDecreases, skolemConstants;
-    private void trStmt(/*@ non_null */ Stmt stmt) {
+    private void trStmt(/*@ non_null */ Stmt stmt, TypeDecl decl) {
         int tag = stmt.getTag();
         switch (tag) {
       
@@ -1296,7 +1300,7 @@ public final class Translate
 
                         if( s.getTag() != TagConstants.SWITCHLABEL ) {
                             // just a regular statement
-                            trStmt( s );
+                            trStmt( s , decl);
                         } else {
 	    
                             SwitchLabel sl = (SwitchLabel)s;
@@ -1359,7 +1363,7 @@ public final class Translate
                     code.push();            // this mark popped by "wrapUpDeclBlock"
 
                     for (int i= 0; i < b.stmts.size(); i++)
-                        trStmt(b.stmts.elementAt(i));
+                        trStmt(b.stmts.elementAt(i),decl);
 
                     wrapUpDeclBlock();
                     return;
@@ -1387,7 +1391,7 @@ public final class Translate
                     skolemConstants = LocalVarDeclVec.make();
 
                     code.push();  // this mark popped by "opBlockCmd"
-                    trStmt(w.stmt);
+                    trStmt(w.stmt,decl);
                     GuardedCmd bodyCmd = opBlockCmd(continueLabel(w));
 
                     makeLoop(w.getStartLoc(), w.getEndLoc(), w.locGuardOpenParen,
@@ -1417,7 +1421,7 @@ public final class Translate
                     skolemConstants = LocalVarDeclVec.make();
 
                     code.push(); // this mark popped by "opBlockCmd"
-                    trStmt(d.stmt);
+                    trStmt(d.stmt,decl);
                     code.addElement(opBlockCmd(continueLabel(d)));
 
                     Guard(d.expr, bLabel);
@@ -1440,7 +1444,7 @@ public final class Translate
 	  
                     // initializers
                     for (int i= 0; i < x.forInit.size(); i++)
-                        trStmt(x.forInit.elementAt(i));
+                        trStmt(x.forInit.elementAt(i),decl);
 
                     Expr bLabel = breakLabel(x);
 
@@ -1463,7 +1467,7 @@ public final class Translate
                     code.push(); // this mark popped below
 
                     code.push(); // this mark popped by "opBlockCmd"
-                    trStmt(x.body);
+                    trStmt(x.body,decl);
                     code.addElement(opBlockCmd(continueLabel(x)));
 
                     for(int i=0; i < x.forUpdate.size(); i++)
@@ -1483,7 +1487,7 @@ public final class Translate
             case TagConstants.IFSTMT: 
                 {
                     IfStmt i = (IfStmt)stmt;
-                    trIfStmt(i.expr, i.thn, i.els);
+                    trIfStmt(i.expr, i.thn, i.els, decl);
                     return;
                 }
       
@@ -1525,7 +1529,7 @@ public final class Translate
 
                     nullCheck(x.expr, mu, x.locOpenParen);
 
-                    trSynchronizedBody(mu, x.stmt, x.locOpenParen);
+                    trSynchronizedBody(mu, x.stmt, x.locOpenParen, decl);
                     return;
                 }
 
@@ -1541,7 +1545,7 @@ public final class Translate
                 {
                     LabelStmt x = (LabelStmt)stmt;
                     code.push(); // this mark popped by "opBlockCmd"
-                    trStmt(x.stmt);
+                    trStmt(x.stmt,decl);
                     code.addElement(opBlockCmd(breakLabel(x.stmt)));
                     return;
                 }
@@ -1557,7 +1561,7 @@ public final class Translate
                     GuardedCmd temp;
 
                     code.push();
-                    trStmt(x.tryClause);
+                    trStmt(x.tryClause,decl);
                     GuardedCmd c0 = GC.seq(GuardedCmdVec.popFromStackVector(code));
 
                     code.push();
@@ -1582,7 +1586,7 @@ public final class Translate
                                                       GC.xresultvar, xresultSave)));
 
                     code.push();
-                    trStmt(x.finallyClause);
+                    trStmt(x.finallyClause,decl);
                     temp = DynInstCmd.make(UniqName.locToSuffix(x.getStartLoc()) + "#n",
                                            GC.seq(GuardedCmdVec.popFromStackVector(code)));
                     code.addElement(temp);
@@ -1603,7 +1607,7 @@ public final class Translate
                     code.addElement(GC.trycmd(c0,c1));
 
                     code.push();
-                    trStmt(x.finallyClause);
+                    trStmt(x.finallyClause,decl);
                     temp = DynInstCmd.make(UniqName.locToSuffix(x.getStartLoc()) + "#x",
                                            GC.seq(GuardedCmdVec.popFromStackVector(code)));
                     code.addElement(temp);
@@ -1618,7 +1622,7 @@ public final class Translate
                     int xEnd = x.getEndLoc();
 
                     code.push();
-                    trStmt(x.tryClause);
+                    trStmt(x.tryClause,decl);
                     GuardedCmd tryGC = GC.seq(GuardedCmdVec.popFromStackVector(code));
 
 
@@ -1658,7 +1662,7 @@ public final class Translate
                                                           TagConstants.ANYEQ,
                                                           arg,
                                                           GC.xresultvar)));
-                        trStmt(cc.body);
+                        trStmt(cc.body,decl);
                         GuardedCmd thn = GC.seq(GuardedCmdVec.popFromStackVector(code));
 
                         els = GC.ifcmd(tst, thn, els);
@@ -1895,7 +1899,7 @@ public final class Translate
 		} else if (Main.options().assertionMode ==
 				Options.JAVA_ASSERTIONS) {
 			// Treat a Java assert as a (conditional) throw
-                    trIfStmt(assertStmt.ifStmt.expr, assertStmt.ifStmt.thn, assertStmt.ifStmt.els);
+                    trIfStmt(assertStmt.ifStmt.expr, assertStmt.ifStmt.thn, assertStmt.ifStmt.els,decl);
                 }
                 return;
             }
@@ -1914,7 +1918,7 @@ public final class Translate
      * @design This method was refactored out to handle Java's "assert" keyword as
      * well as normal "if" statements.
      */
-    private void trIfStmt(Expr guard, Stmt thenStmt, Stmt elseStmt) {
+    private void trIfStmt(Expr guard, Stmt thenStmt, Stmt elseStmt, TypeDecl decl) {
         Expr guardExpr = ptrExpr(guard);
         
         code.push();
@@ -1923,7 +1927,7 @@ public final class Translate
             GuardedCmd g = traceInfoLabelCmd(thenStmt, "Then");
             code.addElement(g);
         }  
-        trStmt(thenStmt);
+        trStmt(thenStmt,decl);
         GuardedCmd thenGuardedCmd = GC.seq(GuardedCmdVec.popFromStackVector(code));
         
         code.push();          
@@ -1932,7 +1936,7 @@ public final class Translate
             GuardedCmd g = traceInfoLabelCmd(elseStmt, "Else");
             code.addElement(g);
         }  
-        trStmt(elseStmt);
+        trStmt(elseStmt,decl);
         GuardedCmd elseGuardedCmd = GC.seq(GuardedCmdVec.popFromStackVector(code));
         
         code.addElement(GC.ifcmd(guardExpr, thenGuardedCmd, elseGuardedCmd));
@@ -1941,7 +1945,7 @@ public final class Translate
 
     //@ requires loc != Location.NULL;
     private void trSynchronizedBody(/*@ non_null */ Expr mu,
-                                    /*@ non_null */ Stmt stmt, int loc) {
+                                    /*@ non_null */ Stmt stmt, int loc, TypeDecl decl) {
         // check LockingOrderViolation: mutexLE(max(LS),mu) || LS[mu]
         addCheck(loc,
                  TagConstants.CHKLOCKINGORDER,
@@ -1988,7 +1992,7 @@ public final class Translate
         // Translate the body, using the new LS
         VariableAccess oldLS = GC.LSvar;
         GC.LSvar = newLS;
-        trStmt(stmt);
+        trStmt(stmt,decl);
         GC.LSvar = oldLS;
     }
 

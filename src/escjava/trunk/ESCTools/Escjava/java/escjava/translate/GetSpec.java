@@ -906,15 +906,19 @@ while (ee.hasMoreElements()) {
     }
 
 
+    /** axsToAdd holds a Set of RepHelper - we need to add to the assumptions
+	any axioms pertinent to the RepHelper.
+     */
     static public void addAxioms(java.util.Set axsToAdd, ExprVec assumptions) {
 	    java.util.Set axsDone = new java.util.HashSet();
 	    while (! axsToAdd.isEmpty()) {
-		ASTNode o = (ASTNode)axsToAdd.iterator().next();
+		RepHelper o = (RepHelper)axsToAdd.iterator().next();
 		axsToAdd.remove(o);
 		if (!axsDone.add(o)) continue;
 		Expr e = TrAnExpr.getEquivalentAxioms(o,null);
 		assumptions.addElement(e);
-		axsToAdd.addAll( TrAnExpr.getAxiomSet(o));
+		axsToAdd.addAll( TrAnExpr.trSpecAuxAxiomsNeeded); 
+		TrAnExpr.trSpecAuxAxiomsNeeded.clear();
 	    }
     }
 
@@ -1442,22 +1446,40 @@ while (ee.hasMoreElements()) {
                         exprIsVisible(scope.originType, axiom.expr)) {
                         r.addElement( TrAnExpr.trSpecExpr( axiom.expr, null, null ) );
                     }
-                } else if (tde.getTag() == TagConstants.REPRESENTS &&
-				Main.options().useFcnsForModelVars ) {
-		    NamedExprDeclPragma p = (NamedExprDeclPragma)tde;
-		    FieldDecl fd = ((FieldAccess)p.target).decl;
-		    Expr e = TrAnExpr.getRepresentsAxiom(p,null);
-		    ExprVec ev = (ExprVec)Utils.axiomDecoration.get(fd);
-		    if (ev == null) ev = ExprVec.make(10);
-		    ev.addElement(e);
-		    Utils.axiomDecoration.set(fd,ev);
-		    r.addElement( e );
 		}
+	    }
+
+	    TypeDeclElemVec tv = (TypeDeclElemVec)Utils.representsDecoration.get(td);
+	    for (int i=0; i<tv.size(); ++i) {
+		TypeDeclElem tde = tv.elementAt(i);
+		NamedExprDeclPragma p = (NamedExprDeclPragma)tde;
+		FieldDecl fd = ((FieldAccess)p.target).decl;
+		Expr e = TrAnExpr.getRepresentsAxiom(p,null);
+		r.addElement( e );
             }
         }
 
+
 	TrAnExpr.closeForClause();
         return r;
+    }
+
+    /** Gets the represents clauses for a model field fd as seen from a 
+	type declaration td; fd may be declared in td or in a supertype of
+	td.
+     */
+    static public TypeDeclElemVec getRepresentsClauses(TypeDecl td, FieldDecl fd) {
+//System.out.println("GETTING REP CL " + td.id + " " + fd.id);
+	TypeDeclElemVec mpv = (TypeDeclElemVec)Utils.representsDecoration.get(td);
+	TypeDeclElemVec n = TypeDeclElemVec.make(mpv.size());
+	for (int i=0; i<mpv.size(); ++i) {
+	    TypeDeclElem m = mpv.elementAt(i);
+	    if (!(m instanceof NamedExprDeclPragma)) continue;
+	    NamedExprDeclPragma nem = (NamedExprDeclPragma)m;
+	    if (((FieldAccess)nem.target).decl == fd) n.addElement(m);
+	    //if (((FieldAccess)nem.target).decl == fd) System.out.println("    FOUND AT " + Location.toString(m.getStartLoc() ));
+	}
+	return n;
     }
 
     /** Collects the invariants in <code>scope</code>. */
@@ -1545,11 +1567,11 @@ while (ee.hasMoreElements()) {
 	  axsToAdd.addAll(TrAnExpr.trSpecAuxAxiomsNeeded);
 	  java.util.Set axsDone = new java.util.HashSet();
 	    while (false && ! axsToAdd.isEmpty()) {  // FIXME - keep this off ???
-		ASTNode o = (ASTNode)axsToAdd.iterator().next();
+		RepHelper o = (RepHelper)axsToAdd.iterator().next();
 		axsToAdd.remove(o);
 		if (!axsDone.add(o)) continue;
 		Expr e = TrAnExpr.getEquivalentAxioms(o,null);
-		axsToAdd.addAll( TrAnExpr.getAxiomSet(o));
+		//axsToAdd.addAll( TrAnExpr.trSpecAuxAxiomsNeeded); 
                 // Add a new node at the end of "ii"
                 InvariantInfo invinfo = new InvariantInfo();
 		invinfo.J = e;

@@ -10,6 +10,7 @@ import javafe.ast.ClassDecl;
 import javafe.ast.InterfaceDecl;
 import javafe.ast.Identifier;
 import javafe.ast.TypeNameVec;
+import javafe.ast.TypeDeclElemVec;
 import javafe.ast.ModifierPragmaVec;
 import javafe.util.ErrorSet;
 import javafe.util.StackVector;
@@ -23,6 +24,7 @@ import escjava.ast.SimpleModifierPragma;
 import escjava.ast.Modifiers;
 import escjava.ast.TagConstants;
 import escjava.ast.Utils;
+import escjava.ast.NamedExprDeclPragma;
 
 public class PrepTypeDeclaration extends javafe.tc.PrepTypeDeclaration {
 
@@ -43,6 +45,7 @@ public class PrepTypeDeclaration extends javafe.tc.PrepTypeDeclaration {
 	    jmlFieldsSeq.push();
 	    jmlHiddenFieldsSeq.push();
 	    jmlDupFieldsSeq.push();
+	    Utils.representsDecoration.set(decl, TypeDeclElemVec.make());
 	    numJmlList.addFirst(new Integer(numJmlFields));
 	    numJmlFields = -1;
 	}
@@ -216,6 +219,8 @@ public class PrepTypeDeclaration extends javafe.tc.PrepTypeDeclaration {
 	} else if (e instanceof ModelTypePragma) {
 		System.out.println("MODEL TYPE PRAGMA");
 */
+	} else if (e instanceof NamedExprDeclPragma) {
+	    ((TypeDeclElemVec)Utils.representsDecoration.get(currentSig.getTypeDecl())).addElement(e);
 	} else 
 	    super.visitTypeDeclElem(e,currentSig,abstractMethodsOK, 
 			inFinalClass, inInterface);
@@ -258,6 +263,16 @@ public class PrepTypeDeclaration extends javafe.tc.PrepTypeDeclaration {
 	}
 	for (int i=0; i<st.jmlHiddenFields.size(); ++i) {
 	    jmlHiddenFieldsSeq.addElement(st.jmlHiddenFields.elementAt(i));
+	}
+	TypeDeclElemVec mpv = (TypeDeclElemVec)Utils.representsDecoration.get(type.getTypeDecl());
+	TypeDeclElemVec mpvsuper = (TypeDeclElemVec)Utils.representsDecoration.get(st.getTypeDecl());
+	if (st.getTypeDecl() instanceof ClassDecl) {
+	    mpv.append(mpvsuper);
+	} else {
+	    mpv.append(mpvsuper);
+		//interfaces get them from Object as well ?
+		// FIXME - no dups
+	    //for (int i=0; i<mpvsuper.size(); ++i) 
 	}
     }
 

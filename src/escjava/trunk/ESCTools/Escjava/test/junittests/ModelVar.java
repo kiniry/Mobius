@@ -9,7 +9,7 @@ public class ModelVar {
 
 	//@ static public model int ssize;
 	//@ private represents ssize = slength+1;
-	static int slength;
+	static int slength; //@ in ssize;
 
 	//@ requires ssize == 1;
 	//@ modifies ssize;
@@ -29,11 +29,11 @@ public class ModelVar {
 
 	//@ public model int size;
 	//@ private represents size = length+1;
-	int length;
+	int length; //@ in size;
+
 
 
 	//@ requires size == 1;
-	// @ requires length == 0;
 	//@ modifies size;
 	//@ modifies length;
 	//@ ensures length == 2;
@@ -49,7 +49,7 @@ public class ModelVar {
 	}
 		
 	//@ public non_null model int[] a;
-	final public /*@ non_null */ int[] ac = new int[10];
+	final public /*@ non_null */ int[] ac = new int[10]; //@ in a;
 	//@ represents a = ac;
 	//@ public invariant a.length > 4;
 
@@ -63,7 +63,7 @@ public class ModelVar {
 		//@ assert a[2] == 6;
 		ac[2] = ac[2] + 1;
 	}
-
+	// FIXME - need a[x] to model ac[x]?  Why may we modify ac[2]?
 
 	//@ public model int size2;
 	//@ represents size2 = size * 2;

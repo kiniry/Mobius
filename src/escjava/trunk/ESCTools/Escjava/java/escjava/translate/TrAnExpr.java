@@ -173,15 +173,25 @@ public class TrAnExpr {
         case TagConstants.FIELDACCESS: {
             FieldAccess fa = (FieldAccess)e;
             VariableAccess va = makeVarAccess(fa.decl, fa.locId);
+	    boolean treatLikeAField = false;
             // va accesses the field
 	    if (Utils.isModel(va.decl.pmodifiers)) {
-                if (Main.options().useFcnsForModelVars && doRewrites()) {
-		    trSpecAuxAxiomsNeeded.add(fa.decl);
+		// Treat a model variable like a field if (a) it has no
+		// represents clauses and (b) it is not modified.
+
+		//if (va.decl.id.toString().equals("isOpen")) treatLikeAField = true;
+//System.out.println("MODEL VAR " + fa.decl.id + " " + Location.toString(fa.locId));
+                if (!treatLikeAField && doRewrites()) {
+		    trSpecAuxAxiomsNeeded.add(new RepHelper(fa));
 		    Identifier id = representsMethodName(va);
 		    if (Modifiers.isStatic(fa.decl.modifiers)) {
 			return GC.nary(id,stateVar(sp)); // FIXME or should this be a function of the class object
 		    }
-		} else { // Use a skolem variables for model var
+		} else { // Treat like a field - only good if the model
+			 // variable is not modified, since modifications
+			 // to model vars are not by assignment.
+		    
+/*
 		    java.util.List reps = escjava.AnnotationHandler.findRepresents(fa.decl);
 		    java.util.Iterator it = reps.iterator();
 		    while (it.hasNext()) {
@@ -208,6 +218,7 @@ public class TrAnExpr {
 			    declStack.removeFirst();
 			}
 		    }
+*/
 		}
 	    }
 
@@ -240,7 +251,7 @@ public class TrAnExpr {
                 if (fa.decl == Types.lengthFieldDecl) {
                     return GC.nary(fa.getStartLoc(), fa.getEndLoc(),
                                    TagConstants.ARRAYLENGTH, lhs);
-	        } else if (Utils.isModel(va.decl.pmodifiers) && Main.options().useFcnsForModelVars && doRewrites()) {
+	        } else if (Utils.isModel(va.decl.pmodifiers) && !treatLikeAField && doRewrites()) {
 		    Identifier id = representsMethodName(va);
 		    ExprVec arg = ExprVec.make(2);
 		    arg.addElement(stateVar(sp));
@@ -462,8 +473,7 @@ public class TrAnExpr {
 	    return v;
 	} else if (genFunctionCallAndAxioms) {
 
-	    trSpecAuxAxiomsNeeded.add(me.decl);
-	    trSpecAuxAxiomsNeeded.add(me.decl.parent);
+	    trSpecAuxAxiomsNeeded.add(new RepHelper(me.decl.parent,me.decl));
 	    Identifier constructorname = fullName(me.decl,false);
 	    VariableAccess newAlloc =
 		apply(sp,GC.makeVar(GC.allocvar.id,e.getStartLoc())); // alloc
@@ -581,8 +591,7 @@ System.out.println("");
 	    return v;
 	} else if (genFunctionCallAndAxioms) {
 	    if (doRewrites()) {
-		trSpecAuxAxiomsNeeded.add(me.decl);
-		trSpecAuxAxiomsNeeded.add(me.decl.parent);
+		trSpecAuxAxiomsNeeded.add(new RepHelper(me.decl.parent,me.decl));
 	    }
 	    ExprVec ev = ExprVec.make(me.args.size()+1);
 	    boolean useSuper = false;
@@ -1593,9 +1602,10 @@ System.out.println("");
   */
   static private ASTDecoration axiomSetDecoration = new ASTDecoration("axiomset");
 
-  static public Expr getEquivalentAxioms(ASTNode astn, Hashtable sp) {
-	Expr ax = (Expr)axiomDecoration.get(astn);
-	if (ax == null) {
+  static public Expr getEquivalentAxioms(RepHelper o, Hashtable sp) {
+	    Expr ax = null;
+	    ASTNode astn = o.a;
+	    TypeDecl td = o.td;
 	    initForClause();
 	    if (astn instanceof RoutineDecl) {
 		boolean isConstructor = astn instanceof ConstructorDecl;
@@ -1699,33 +1709,13 @@ System.out.println("");
 		ExprVec pats = ExprVec.make(1);
 		pats.addElement(fcall);
 		for (int k=bounds.size()-1; k>=0; --k) {
-		    GenericVarDecl o = (GenericVarDecl)bounds.get(k);
-		    ee = GC.forallwithpats(o,ee,pats);
+		    GenericVarDecl oo = (GenericVarDecl)bounds.get(k);
+		    ee = GC.forallwithpats(oo,ee,pats);
 		}
 		ax = ee;
 	    } else if (astn instanceof FieldDecl) {
 		FieldDecl fd = (FieldDecl)astn;
-/*
-		// create a function call
-		Identifier id = representsMethodName(fd);
-		ExprVec ev = ExprVec.make( 2 );
-		if (!Utils.isFunction(fd)) {
-		    ev.addElement( stateVar(sp) );
-		}
-		GenericVarDecl newThis = UniqName.newBoundThis();
-		if (!Modifiers.isStatic(fd.modifiers)) {
-		    ev.addElement( makeVarAccess( newThis, Location.NULL));
-		}
-		Expr fcall = GC.nary(id, ev);
-*/
-		Expr ee = GC.and(getModelVarAxioms(fd,sp));
-/*
-		ExprVec pats = ExprVec.make(1);
-		pats.addElement(fcall);
-		if (!Modifiers.isStatic(fd.modifiers)) {
-		    ee = GC.forallwithpats(newThis,ee,pats);
-		}
-*/
+		Expr ee = GC.and(getModelVarAxioms(td,fd,sp));
 		ax = ee;
 
 	    } else {
@@ -1733,19 +1723,20 @@ System.out.println("");
 		// FIXME are these already included by virtue of the FindContributors mechanism
 		ax = GC.truelit;
 	    }
-	    axiomDecoration.set(astn,ax);
-	    axiomSetDecoration.set(astn,trSpecAuxAxiomsNeeded);
 
 	    closeForClause();
-	}
 	return ax;
   }
 
-  static public java.util.Set getAxiomSet(ASTNode o) {
-	// presumes getEquivalentAxioms has been run at least once
-	return (java.util.Set)axiomSetDecoration.get(o);
+/*
+  static public java.util.Set getAxiomSet(TypeDecl td, ASTNode o) {
+	//java.util.Set s = (java.util.Set)axiomSetDecoration.get(o);
+	
+	return s; // FIXME - needs represents axiomx
   }
+*/
 
+  /** Translates an individual represents clause into a class-level axiom. */
   static public Expr getRepresentsAxiom(NamedExprDeclPragma p, Hashtable sp) {
 	boolean isStatic;
 	if (p.target instanceof FieldAccess) {
@@ -1792,8 +1783,10 @@ System.out.println("");
 	return Identifier.intern(id);
   }
 
-  public static ExprVec getModelVarAxioms(FieldDecl fd, Hashtable sp) {
-	TypeDeclElemVec tv = (TypeDeclElemVec)Utils.representsDecoration.get(fd);
+  public static ExprVec getModelVarAxioms(TypeDecl td, FieldDecl fd, Hashtable sp) {
+	//TypeDeclElemVec tv = (TypeDeclElemVec)Utils.representsDecoration.get(fd);
+	TypeDeclElemVec tv = GetSpec.getRepresentsClauses(td,fd);
+
 	ExprVec ev = ExprVec.make();
 	if (tv != null) for (int i=0; i<tv.size(); ++i) {
 	    NamedExprDeclPragma p = (NamedExprDeclPragma)tv.elementAt(i);

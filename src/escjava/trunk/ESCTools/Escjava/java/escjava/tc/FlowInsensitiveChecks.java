@@ -1411,19 +1411,24 @@ FIXME - see uses of countFreeVarsAccess
 			}
 	    
 			ep.expr = checkPredicate(rootEnv, ep.expr);
-			    // check that it is a modelfield FIXME
 			isLocksetContext = oldIsLocksetContext;
 
 			FieldAccess fa = (FieldAccess)ep.target;
-			TypeDeclElemVec tv = (TypeDeclElemVec)Utils.representsDecoration.get(fa.decl);
-			if (tv == null) tv = TypeDeclElemVec.make(10);
-			tv.addElement(ep);
-			Utils.representsDecoration.set(fa.decl,tv);
 			if (!Utils.isModel(fa.decl)) {
 			    ErrorSet.error(fa.getStartLoc(),
 				"A represents clause must name a model field",
 				fa.decl.locId);
 			}
+
+/* THis is done in type prepping
+			TypeDecl td = ep.parent;
+			TypeDeclElemVec tv = (TypeDeclElemVec)Utils.representsDecoration.get(td);
+			if (tv == null) {
+			    tv = TypeDeclElemVec.make(10);
+			    Utils.representsDecoration.set(td,tv);
+			}
+			tv.addElement(ep);
+*/
 		    } else if (!(ep.target instanceof AmbiguousVariableAccess)){
 			// If the type is Ambiguous, then an Undefined variable
 			// error has already been issued.  I'm not actually
