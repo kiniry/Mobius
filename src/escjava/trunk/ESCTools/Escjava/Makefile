@@ -6,9 +6,7 @@
 export TOP = ..
 include ${TOP}/Makefile.defs
 # Makefile.defs and the parent Makefile provide definitions of the following variables needed here:
-#	JAVA, JAVAC, JAVAC_FLAGS,
-#	ESCJAVA_ROOT, ESCJAVA_CLASSPATH, ESCJAVA_CLASSFILES, 
-#	JAVAFE_ROOT, JAVAFE_SOURCE_DIR
+# unset JAVAC, JAVAC_FLAGS, ESCJAVA_ROOT, ESCJAVA_CLASSPATH, ESCJAVA_CLASSFILES, JAVAFE_ROOT, JAVAFE_SOURCE_DIR
 # (Building Escjava relies on the AST building tools in ${JAVAFE_ROOT}/astgen)
 
 # Various conventional UNIX tools are used in the following, including
@@ -18,25 +16,25 @@ include ${TOP}/Makefile.defs
 ###########################################################################
 # Defining relevant directory locations and other variables.
 
-ESCJAVA_SOURCE_DIR = $(ESCJAVA_ROOT)/java
-JAVAFE_SOURCE_DIR ?= $(JAVAFE_ROOT)/java
-JAVASOURCEFILES = $(ESCJAVA_SOURCE_DIR)/escjava/ast/*.java \
-	$(ESCJAVA_SOURCE_DIR)/escjava/backpred/*.java \
-	$(ESCJAVA_SOURCE_DIR)/escjava/parser/*.java \
-	$(ESCJAVA_SOURCE_DIR)/escjava/prover/*.java \
-	$(ESCJAVA_SOURCE_DIR)/escjava/reader/*.java \
-	$(ESCJAVA_SOURCE_DIR)/escjava/sp/*.java \
-	$(ESCJAVA_SOURCE_DIR)/escjava/tc/*.java \
-	$(ESCJAVA_SOURCE_DIR)/escjava/translate/*.java \
-	$(ESCJAVA_SOURCE_DIR)/escjava/*.java
+ESCJAVA_SOURCE_DIR = ${ESCJAVA_ROOT}/java
+JAVAFE_SOURCE_DIR ?= ${JAVAFE_ROOT}/java
+JAVASOURCEFILES = ${ESCJAVA_SOURCE_DIR}/escjava/ast/*.java \
+	${ESCJAVA_SOURCE_DIR}/escjava/backpred/*.java \
+	${ESCJAVA_SOURCE_DIR}/escjava/parser/*.java \
+	${ESCJAVA_SOURCE_DIR}/escjava/prover/*.java \
+	${ESCJAVA_SOURCE_DIR}/escjava/reader/*.java \
+	${ESCJAVA_SOURCE_DIR}/escjava/sp/*.java \
+	${ESCJAVA_SOURCE_DIR}/escjava/tc/*.java \
+	${ESCJAVA_SOURCE_DIR}/escjava/translate/*.java \
+	${ESCJAVA_SOURCE_DIR}/escjava/*.java
 OTHERSOURCEFILES = /dev/null
 TESTHARNESSFILES = /dev/null
 
 ## These are the options to JAVAC used to build Escjava.
 ## FIXME - what does SOURCEPATH do ?
-JAVAC_FLAGS += -classpath $(ESCJAVA_BUILD_CLASSPATH) \
-	-sourcepath $(SOURCEPATH) \
-	-d $(ESCJAVA_CLASSFILES) 
+JAVAC_FLAGS += -classpath ${ESCJAVA_BUILD_CLASSPATH} \
+	-sourcepath ${SOURCEPATH} \
+	-d ${ESCJAVA_CLASSFILES} 
 
 ## These definitions are used in subsidiary makes, hence are exported
 export CLASSDIRECTORY=${ESCJAVA_CLASSFILES}
@@ -67,18 +65,18 @@ test: test_escjava
 #docs: docs_escjava
 docs:
 
-ESCJAVA_CORE_DOC = $(ESCJAVA_SOURCE_DIR)/escjava/escjava.mtex
+ESCJAVA_CORE_DOC = ${ESCJAVA_SOURCE_DIR}/escjava/escjava.mtex
 
 .PHONY: docs_escjava
-docs_escjava:	$(ESCJAVA_CORE_DOC)
-	cc -C -E $(ESCJAVA_CORE_DOC) | grep -v "^#" | mtex2man \
-		> $(ESCJAVA_ROOT)/doc/man1/escjava.1
-	cc -C -E $(ESCJAVA_CORE_DOC) | grep -v "^#" | mtex2html \
-		> $(ESCJAVA_ROOT)/doc/escjava.html
-	cc -C -E -DPUBLIC $(ESCJAVA_CORE_DOC) | grep -v "^#" | mtex2man \
-		> $(ESCJAVA_ROOT)/doc/man1/escjava-public.1
-	cc -C -E -DPUBLIC $(ESCJAVA_CORE_DOC) | grep -v "^#" | mtex2html \
-		> $(ESCJAVA_ROOT)/doc/escjava-public.html
+docs_escjava:	${ESCJAVA_CORE_DOC}
+	cc -C -E ${ESCJAVA_CORE_DOC} | grep -v "^#" | mtex2man \
+		> ${ESCJAVA_ROOT}/doc/man1/escjava.1
+	cc -C -E ${ESCJAVA_CORE_DOC} | grep -v "^#" | mtex2html \
+		> ${ESCJAVA_ROOT}/doc/escjava.html
+	cc -C -E -DPUBLIC ${ESCJAVA_CORE_DOC} | grep -v "^#" | mtex2man \
+		> ${ESCJAVA_ROOT}/doc/man1/escjava-public.1
+	cc -C -E -DPUBLIC ${ESCJAVA_CORE_DOC} | grep -v "^#" | mtex2html \
+		> ${ESCJAVA_ROOT}/doc/escjava-public.html
 
 
 ###########################################################################
@@ -94,24 +92,24 @@ STAMPFILE = classes.stamp
 ## file has not been modified.  If in doubt do a clean before a build
 ## - it doesn't take long.
 .PHONY: compile
-compile: $(CLASSDIRECTORY) generate_files $(MOCHA_LIB) $(STAMPFILE)
+compile: ${CLASSDIRECTORY} generate_files ${MOCHA_LIB} ${STAMPFILE}
 
 .PHONY: compileall
-compileall: $(CLASSDIRECTORY) generate_files allclasses
+compileall: ${CLASSDIRECTORY} generate_files allclasses
 
 .PHONY: allclasses
 allclasses:
-	@$(JAVAC) $(JAVAC_FLAGS) $(JAVASOURCEFILES)
-	touch $(STAMPFILE)
+	@${JAVAC} ${JAVAC_FLAGS} ${JAVASOURCEFILES}
+	touch ${STAMPFILE}
 
-$(CLASSDIRECTORY):
+${CLASSDIRECTORY}:
 	mkdir -p $@
 
 .PHONY: generate_files
 generate_files: generate_escjava_ast_source generate_escjava_backpred
 
-$(STAMPFILE): $(JAVASOURCEFILES)
-	$(JAVAC) $(JAVAC_FLAGS) $?
+${STAMPFILE}: ${JAVASOURCEFILES}
+	${JAVAC} ${JAVAC_FLAGS} $?
 	touch $@
 
 ###########################################################################
@@ -123,13 +121,12 @@ MOCHA_CLASSES_DIR = ${MOCHA_DIR}/classes
 
 .PHONY: mocha
 mocha ${MOCHA_LIB}: ${MOCHA_CLASSES_DIR}
-	${JAVAC} ${JAVAC_FLAGS} -d ${MOCHA_CLASSES_DIR} ${MOCHA_SOURCES}
+	${JAVAC} -d ${MOCHA_CLASSES_DIR} ${MOCHA_SOURCES}
 	(cd ${MOCHA_CLASSES_DIR}; jar cf ${MOCHA_LIB} mocha/*/*/*.class )
 
- 
 ${MOCHA_CLASSES_DIR}:
 	mkdir $@
- 
+
 .PHONY: clean_mocha
 clean_mocha:
 	rm -rf ${MOCHA_CLASSES_DIR}
@@ -139,49 +136,49 @@ clean_mocha:
 ###########################################################################
 # source file generation for escjava.ast
 
-AST_DIR = $(ESCJAVA_SOURCE_DIR)/escjava/ast
+AST_DIR = ${ESCJAVA_SOURCE_DIR}/escjava/ast
 
 # Dependence on Javafe astgen programs:
 
-ASTGEN_DIR = $(JAVAFE_ROOT)/astgen
-ASTGEN = $(ASTGEN_DIR)/astgen
-ASTFILELIST = $(ASTGEN_DIR)/astfilelist
+ASTGEN_DIR = ${JAVAFE_ROOT}/astgen
+ASTGEN = ${ASTGEN_DIR}/astgen
+ASTFILELIST = ${ASTGEN_DIR}/astfilelist
 
-$(ASTFILELIST) $(ASTGEN):
-	${MAKE} -C $(ASTGEN_DIR)
+${ASTFILELIST} ${ASTGEN}:
+	${MAKE} -C ${ASTGEN_DIR}
 
 # Generating Java files:
 
-VECTEMPLATE = $(JAVAFE_SOURCE_DIR)/javafe/util/_TYPE_Vec.j
+VECTEMPLATE = ${JAVAFE_SOURCE_DIR}/javafe/util/_TYPE_Vec.j
 
 # The component type for these (e.g. FieldDecl.java) is in Javafe.
 JavafeTypeVec = \
-	$(AST_DIR)/FieldDeclVec.java $(AST_DIR)/LocalVarDeclVec.java \
-	$(AST_DIR)/GenericVarDeclVec.java
+	${AST_DIR}/FieldDeclVec.java ${AST_DIR}/LocalVarDeclVec.java \
+	${AST_DIR}/GenericVarDeclVec.java
 
 # The component type for these (e.g. GuardedCmd.java) is in Escjava.
 TypeVec = \
-	$(AST_DIR)/GuardedCmdVec.java  \
-	$(AST_DIR)/ConditionVec.java  \
-	$(AST_DIR)/ExprModifierPragmaVec.java \
-	$(AST_DIR)/CondExprModifierPragmaVec.java \
-	$(AST_DIR)/ExprDeclPragmaVec.java \
-	$(AST_DIR)/ExprStmtPragmaVec.java \
-	$(AST_DIR)/VarExprModifierPragmaVec.java \
-	$(AST_DIR)/DefPredVec.java \
-	$(AST_DIR)/DecreasesInfoVec.java
+	${AST_DIR}/GuardedCmdVec.java  \
+	${AST_DIR}/ConditionVec.java  \
+	${AST_DIR}/ExprModifierPragmaVec.java \
+	${AST_DIR}/CondExprModifierPragmaVec.java \
+	${AST_DIR}/ExprDeclPragmaVec.java \
+	${AST_DIR}/ExprStmtPragmaVec.java \
+	${AST_DIR}/VarExprModifierPragmaVec.java \
+	${AST_DIR}/DefPredVec.java \
+	${AST_DIR}/DecreasesInfoVec.java
 
 .PHONY: generate_escjava_ast_source
-generate_escjava_ast_source: $(AST_DIR)/GeneratedTags.java $(TypeVec) $(JavafeTypeVec)
+generate_escjava_ast_source: ${AST_DIR}/GeneratedTags.java ${TypeVec} ${JavafeTypeVec}
 
 # FIXME - ought to make these depend on the component type.
-$(AST_DIR)/%Vec.java: $(VECTEMPLATE)
-	@if [ -e $(ESCJAVA_SOURCE_DIR)/escjava/ast/$*.java ]; then \
-		sed s/_TYPE_/$*/g $(VECTEMPLATE) | \
+${AST_DIR}/%Vec.java: ${VECTEMPLATE}
+	@if [ -e ${ESCJAVA_SOURCE_DIR}/escjava/ast/$*.java ]; then \
+		sed s/_TYPE_/$*/g ${VECTEMPLATE} | \
 		sed s/_PKG_/escjava.ast/g              | \
 		sed s/_COMPONENTPKG_/escjava.ast/g > $@ ;\
-	elif [ -e $(JAVAFE_SOURCE_DIR)/javafe/ast/$*.java ]; then \
-		sed s/_TYPE_/$*/g $(VECTEMPLATE) | \
+	elif [ -e ${JAVAFE_SOURCE_DIR}/javafe/ast/$*.java ]; then \
+		sed s/_TYPE_/$*/g ${VECTEMPLATE} | \
 		sed s/_PKG_/escjava.ast/g              | \
 		sed s/_COMPONENTPKG_/javafe.ast/g > $@ ;\
 	else \
@@ -190,8 +187,8 @@ $(AST_DIR)/%Vec.java: $(VECTEMPLATE)
 
 
 # This also generates all the .java files implied by "hierarchy.j".
-$(AST_DIR)/GeneratedTags.java: $(ASTGEN) $(AST_DIR)/hierarchy.j
-	@(cd $(AST_DIR); $(ASTGEN) < hierarchy.j; \
+${AST_DIR}/GeneratedTags.java: ${ASTGEN} ${AST_DIR}/hierarchy.j
+	@(cd ${AST_DIR}; ${ASTGEN} < hierarchy.j; \
 	grep -v "//@" AnOverview.java > AnOverview.tmp; \
 	mv AnOverview.tmp AnOverview.java; \
 	grep -v "//@" GCExpr.java > GCExpr.tmp; \
@@ -201,36 +198,36 @@ $(AST_DIR)/GeneratedTags.java: $(ASTGEN) $(AST_DIR)/hierarchy.j
 ## The above grep's etc. are a kludge and ought to be fixed. - FIXME
 
 .PHONY: clean_escjava_ast
-clean_escjava_ast: $(ASTFILELIST)
-	(cd $(AST_DIR); rm -f `$(ASTFILELIST) < $(AST_DIR)/hierarchy.j`)
-	rm -f *~ $(TypeVec) $(JavafeTypeVec) $(AST_DIR)/ASTGEN* $(AST_DIR)/zASTGEN* *.tmp
-	rm -f $(AST_DIR)/*.class $(CLASSDIRECTORY)/escjava/ast/*.class
+clean_escjava_ast: ${ASTFILELIST}
+	(cd ${AST_DIR}; rm -f `${ASTFILELIST} < ${AST_DIR}/hierarchy.j`)
+	rm -f *~ ${TypeVec} ${JavafeTypeVec} ${AST_DIR}/ASTGEN* ${AST_DIR}/zASTGEN* *.tmp
+	rm -f ${AST_DIR}/*.class ${CLASSDIRECTORY}/escjava/ast/*.class
 
 
 ###########################################################################
 ## Generating the source files in backpred.
 
-BACKPRED_DIR = $(ESCJAVA_SOURCE_DIR)/escjava/backpred
-DEFAULT_UNIV_BACKPRED = $(BACKPRED_DIR)/DefaultUnivBackPred.java
+BACKPRED_DIR = ${ESCJAVA_SOURCE_DIR}/escjava/backpred
+DEFAULT_UNIV_BACKPRED = ${BACKPRED_DIR}/DefaultUnivBackPred.java
 
 .PHONY: generate_escjava_backpred
-generate_escjava_backpred: $(DEFAULT_UNIV_BACKPRED)
+generate_escjava_backpred: ${DEFAULT_UNIV_BACKPRED}
 
-$(DEFAULT_UNIV_BACKPRED): $(BACKPRED_DIR)/UnivBackPred.ax
-	@rm -f $(DEFAULT_UNIV_BACKPRED)
-	@echo 'package escjava.backpred;' > $(DEFAULT_UNIV_BACKPRED)
-	@echo 'class DefaultUnivBackPred {' >> $(DEFAULT_UNIV_BACKPRED)
-	@echo '  static String s =' >> $(DEFAULT_UNIV_BACKPRED)
+${DEFAULT_UNIV_BACKPRED}: ${BACKPRED_DIR}/UnivBackPred.ax
+	@rm -f ${DEFAULT_UNIV_BACKPRED}
+	@echo 'package escjava.backpred;' > ${DEFAULT_UNIV_BACKPRED}
+	@echo 'class DefaultUnivBackPred {' >> ${DEFAULT_UNIV_BACKPRED}
+	@echo '  static String s =' >> ${DEFAULT_UNIV_BACKPRED}
 	@sed -e 's/"/\\"/g' \
 	  -e 's/^/    "/' \
 	  -e 's/$$/\\n" +/' \
-	  $(BACKPRED_DIR)/UnivBackPred.ax >> $(DEFAULT_UNIV_BACKPRED)
-	@echo '    "";' >> $(DEFAULT_UNIV_BACKPRED)
-	@echo '}' >> $(DEFAULT_UNIV_BACKPRED)
+	  ${BACKPRED_DIR}/UnivBackPred.ax >> ${DEFAULT_UNIV_BACKPRED}
+	@echo '    "";' >> ${DEFAULT_UNIV_BACKPRED}
+	@echo '}' >> ${DEFAULT_UNIV_BACKPRED}
 
 .PHONY: clean_escjava_backpred
 clean_escjava_backpred:
-	rm -f $(DEFAULT_UNIV_BACKPRED)
+	rm -f ${DEFAULT_UNIV_BACKPRED}
 
 ###########################################################################
 # Clean targets.
@@ -248,23 +245,23 @@ clean_escjava: clean_escjava_ast clean_escjava_backpred
 clean_tests: clean_escjava_parser_test clean_test_escjava
 
 clean_classfiles:
-	rm -rf $(CLASSDIRECTORY)
+	rm -rf ${CLASSDIRECTORY}
 
 clean_docs: 
 	rm -f doc/escjava.html doc/escjava-public.html doc/man1/*.1
 
 clean_misc:
-	rm -f $(STAMPFILE)
+	rm -f ${STAMPFILE}
 	find . -name mon.out -exec rm -f {} \;
 	rm -f ${TESTSOURCEDIRECTORY}/escjava/test/*/log ${TESTSOURCEDIRECTORY}/matrix/log
 	find . -name 'core.*' -exec rm -f {} \;
 
 clean_jars:
-#	rm -f $(ESCTOOLS_JARS)/*.jar
+#	rm -f ${ESCTOOLS_JARS}/*.jar
 
 clean_archives:
-	rm -f $(CLASSDIRECTORY)/escjava.zip $(CLASSDIRECTORY)/javafe.zip
-	rm -f $(CLASSDIRECTORY)/compiled.zip
+	rm -f ${CLASSDIRECTORY}/escjava.zip ${CLASSDIRECTORY}/javafe.zip
+	rm -f ${CLASSDIRECTORY}/compiled.zip
 
 ###########################################################################
 # Deliverable generation targets.
@@ -272,35 +269,35 @@ clean_archives:
 ## FIXME - check this out - move it one level up???
 
 archives: archive_esctools
-	cd $(ESCTOOLS_ROOT); \
-	tar cjf $(PROJECT)-$(VERSION).tbz $(PROJECT)
+	cd ${ESCTOOLS_ROOT}; \
+	tar cjf ${PROJECT}-${VERSION}.tbz ${PROJECT}
 
 jars: jar_javafe jar_escjava #jar_escjava_complete
 
 jar_javafe: #compile_javafe
 
 jar_escjava: compile_escjava
-	cd $(CLASSDIRECTORY); \
-	jar -cf0 $(ESCTOOLS_JARS)/escjava.jar escjava
+	cd ${CLASSDIRECTORY}; \
+	jar -cf0 ${ESCTOOLS_JARS}/escjava.jar escjava
 
 jar_escjava_complete: compile_escjava
-	cd $(CLASSDIRECTORY); \
-	jar -cf0 $(ESCTOOLS_JARS)/escjava.jar decsrc javafe escjava
+	cd ${CLASSDIRECTORY}; \
+	jar -cf0 ${ESCTOOLS_JARS}/escjava.jar decsrc javafe escjava
 
 ###########################################################################
 # Testing targets.
 
-TOP_ESCJAVA_TEST_DIR = $(TESTSOURCEDIRECTORY)/escjava/test
+TOP_ESCJAVA_TEST_DIR = ${TESTSOURCEDIRECTORY}/escjava/test
 
 .PHONY: self_test
 self_test: compile
-	cd $(ESCJAVA_SOURCE_DIR)/escjava; \
+	cd ${ESCJAVA_SOURCE_DIR}/escjava; \
 	escjava -nocheck -v \*.java ast/*.java parser/*.java \
 	  tc/*.java bacpred/*.java prover/*.java
 
 .PHONY: test_escjava_parser
 test_escjava: build build_javafe_test test_escjava_parser clean_test_escjava
-	(cd $(TOP_ESCJAVA_TEST_DIR); \
+	(cd ${TOP_ESCJAVA_TEST_DIR}; \
 	rtestall)
 
 .PHONY: build_javafe_test
@@ -308,73 +305,52 @@ build_javafe_test:
 	make -C ${JAVAFE_ROOT} javafe_test
 
 clean_test_escjava:
-	(cd $(TOP_ESCJAVA_TEST_DIR); \
+	(cd ${TOP_ESCJAVA_TEST_DIR}; \
 	rm -f test*/out test*/diff)
 
 test_matrix:
-	(cd $(TESTSOURCEDIRECTORY)/matrix; \
+	(cd ${TESTSOURCEDIRECTORY}/matrix; \
 	escjava *.java;)
 
 
 ###########################################################################
 ## parser test targets
 
-test_parser: test_escjava_parser test_matrix self_test
+test_parser: build test_escjava_parser test_matrix self_test
 
 PARSER_TEST_PACKAGE = escjava.parser.test
-PARSER_TEST_DIR = $(TESTSOURCEDIRECTORY)/escjava/parser/test
+PARSER_TEST_DIR = ${TESTSOURCEDIRECTORY}/escjava/parser/test
 
 test_escjava_parser: compile_escjava_parser_test_programs \
 		test_lexer test_parser test_parser_idempotence
 
 compile_escjava_parser_test_programs:
-	$(JAVAC) $(JAVAC_FLAGS) \
-		$(PARSER_TEST_DIR)/TestLex.java \
-		$(PARSER_TEST_DIR)/TestEscPragmaParser.java
+	@${JAVAC} ${JAVAC_FLAGS} \
+		${PARSER_TEST_DIR}/TestLex.java \
+		${PARSER_TEST_DIR}/TestEscPragmaParser.java
 
 clean_escjava_parser_test:
-	rm -f $(PARSER_TEST_DIR)/*.out
-	rm -f $(CLASSDIRECTORY)/javafe/parser/test/*.class
+	rm -f ${PARSER_TEST_DIR}/*.out
+	rm -f ${CLASSDIRECTORY}/javafe/parser/test/*.class
 
 CD_AND_JAVA = echo "."; cd $(PARSER_TEST_DIR); $(JAVA) -classpath $(ESCJAVA_CLASSPATH) $(PARSER_TEST_PACKAGE)
 
 test_lexer: compile_escjava_parser_test_programs
-	@echo "text_lexer: "
-	@$(CD_AND_JAVA).TestLex GoodPragmas.j    | diff - GoodPragmas.ans
-	@$(CD_AND_JAVA).TestLex GoodSpecExpr.j   | diff - GoodSpecExpr.ans
-	@$(CD_AND_JAVA).TestLex GoodJmlPragmas.j | diff - GoodJmlPragmas.ans
-	@$(CD_AND_JAVA).TestLex lookahead GoodPragmas.j | diff - GoodPragmas.ans
-	@$(CD_AND_JAVA).TestLex lookahead GoodSpecExpr.j   | diff - GoodSpecExpr.ans
-	@$(CD_AND_JAVA).TestLex lookahead GoodJmlPragmas.j | diff - GoodJmlPragmas.ans
+	echo "text_lexer: "
+	$(CD_AND_JAVA).TestLex GoodPragmas.j    | diff - GoodPragmas.ans
+	$(CD_AND_JAVA).TestLex GoodSpecExpr.j   | diff - GoodSpecExpr.ans
+	$(CD_AND_JAVA).TestLex GoodJmlPragmas.j | diff - GoodJmlPragmas.ans
+	$(CD_AND_JAVA).TestLex lookahead GoodPragmas.j | diff - GoodPragmas.ans
+	$(CD_AND_JAVA).TestLex lookahead GoodSpecExpr.j   | diff - GoodSpecExpr.ans
+	$(CD_AND_JAVA).TestLex lookahead GoodJmlPragmas.j | diff - GoodJmlPragmas.ans
 
 test_parser: compile_escjava_parser_test_programs
-	@$(CD_AND_JAVA).TestEscPragmaParser print TypeDeclElemPragmas1.java | \
+	$(CD_AND_JAVA).TestEscPragmaParser print TypeDeclElemPragmas1.java | \
 		diff - TypeDeclElemPragmas1.ans
 
 test_parser_idempotence: compile_escjava_parser_test_programs
-	@$(CD_AND_JAVA).TestEscPragmaParser progress check idempotence \
+	$(CD_AND_JAVA).TestEscPragmaParser progress check idempotence \
 		*.java $(SOURCEDIRECTORY)/escjava/ast/*.java
-
-was_test_lexer: compile_escjava_parser_test_programs
-	(cd $(PARSER_TEST_DIR); \
-	$(JAVA) $(PARSER_TEST_PACKAGE).TestLex GoodPragmas.j | diff - GoodPragmas.ans; \
-	$(JAVA) $(PARSER_TEST_PACKAGE).TestLex GoodSpecExpr.j | diff - GoodSpecExpr.ans; \
-	$(JAVA) $(PARSER_TEST_PACKAGE).TestLex GoodJmlPragmas.j | diff - GoodJmlPragmas.ans; \
-	$(JAVA) $(PARSER_TEST_PACKAGE).TestLex lookahead GoodPragmas.j | diff - GoodPragmas.ans; \
-	$(JAVA) $(PARSER_TEST_PACKAGE).TestLex lookahead GoodSpecExpr.j | diff - GoodSpecExpr.ans; \
-	$(JAVA) $(PARSER_TEST_PACKAGE).TestLex lookahead GoodJmlPragmas.j | diff - GoodJmlPragmas.ans)
-
-was_test_parser: compile_escjava_parser_test_programs
-	(cd $(PARSER_TEST_DIR); \
-	$(JAVA)  -classpath $(ESCJAVA_CLASSPATH) $(PARSER_TEST_PACKAGE).TestEscPragmaParser print \
-		TypeDeclElemPragmas1.java | \
-		diff - TypeDeclElemPragmas1.ans)
-
-was_test_parser_idempotence: compile_escjava_parser_test_programs
-	(cd $(PARSER_TEST_DIR); \
-	$(JAVA) $(PARSER_TEST_PACKAGE).TestEscPragmaParser progress check idempotence \
-		*.java $(SOURCEDIRECTORY)/escjava/ast/*.java)
-
 
 ###########################################################################
 # Miscellaneous targets.
@@ -385,13 +361,13 @@ was_test_parser_idempotence: compile_escjava_parser_test_programs
 .PHONY: word_count
 word_count:
 # --- Non-java Source files ---
-	wc $(OTHERSOURCEFILES)
+	wc ${OTHERSOURCEFILES}
 # --- Java Source files ---
-	wc $(JAVASOURCEFILES)
-	java javafe.parser.test.TestParse print $(JAVASOURCEFILES) | wc
+	wc ${JAVASOURCEFILES}
+	java javafe.parser.test.TestParse print ${JAVASOURCEFILES} | wc
 # --- Test harness files ---
-	wc $(TESTHARNESSFILES)
-	java javafe.parser.test.TestParse print $(TESTHARNESSFILES) | wc
+	wc ${TESTHARNESSFILES}
+	java javafe.parser.test.TestParse print ${TESTHARNESSFILES} | wc
 
 # @todo Add javancss count here as well.
 
