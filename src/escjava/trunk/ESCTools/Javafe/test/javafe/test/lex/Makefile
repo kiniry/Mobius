@@ -1,8 +1,9 @@
 # Copyright 2000, 2001, Compaq Computer Corporation
 
+JAVA ?= java
+
 clean:
 	rm -rf *.class test*.out
-
 
 #
 # Testing using TestLex:
