@@ -1,7 +1,6 @@
 \documentclass[a4paper]{llncs}
 
-\usepackage{epsf}     %% om xfig gegenereerde pstexs te includen
-
+\usepackage{epsfig}     %% om xfig gegenereerde pstexs te includen
 
 % to be removed in final version
 \pagestyle{plain}
@@ -164,8 +163,11 @@ presents future work.
 
 
 
-\section{General outline of the Electronic Purse}
+
+
+\section{General outiline fo the Electronic Purse}
 \label{SectGenPurse}
+
 Every \textit{Smart Card} application is split in two
 parts$:$ an external application (called terminal) and an
 internal one (called applet). The electronic purse is a
@@ -196,10 +198,10 @@ general outline of \textit{the electronic purse}.
 The  \texttt{CardIssuer} applet contains personal information of the card
 holder and the pin code of the card. The \texttt{Purse}
 applet carries out the \textit{credit} and \textit{debit}
-operations. This applet also allows the card holder to change the
+operations. This applet also allows the card holder to change its
 current currency type defined for the Purse application. The
 \textit{currency type} represents the
-currency used by the credit and debit operations. Apart from that,
+currency used by the credit and debit operations. Moreover,
 this applet has several mechanisms
 which prevent that a command is executed if the applet is not in a
 suitable state. The \texttt{Loyalty} applet manages a loyalty counter
@@ -209,8 +211,9 @@ enough, the loyalty will request other loyalties present in the card
 to provide it some points.
 
 
-\subsubsection{\bf The \textit{debit} operation.}
-This operation allows to carry out a debit transaction. During a debit 
+
+\paragraph{\bf The \textit{debit} operation.}
+This operation allows to perform a debit transaction. During a debit
 operation, if severals transactions are carried out in the same
 session, it is possible that
 the card user presents once his pin code for any transaction lesser than
@@ -227,26 +230,48 @@ empty, the
 card holder can execute a debit operation. In this case, the terminal
 sends the bank a request asking for any credit permission. If the card 
 holder has some permission, the bank will send to the terminal a
-certificate of this.
+certificate of this one.
 
 
-\subsubsection{\bf The \textit{Currency} operation.} The balance is
-expressed in a certain currency. When the card holder travels, he has
-the possibility to
+\paragraph{\bf The \textit{Currency} operation.} The balance of the
+Purse is expressed in a certain currency. When the card holder
+travels, he has the possibility to
 change the current currency defined for the purse. In this case, the
 terminal requests to the bank a
 new exchange rate and a certificate. The purse verifies that the bank is 
 really the expected bank and validates the exchange rate. After
 changing the balance value, the purse must modify all variables related
-to the currency.
-When a currency change occurs, the purse sends a
-\textit{changeCurrency} warning to the loyalties . It is expected than
-each loyalty
-requests to the purse all logged transactions. After that the purse
-may erase
-the log transaction file. The purse can be associated to different
-loyalties and must differentiate them when the purse is sending
-their logged transactions. 
+to the currency. \\
+
+The \textit{Purse} is constituted by the \texttt{utils}, \texttt{purse}
+and \texttt{pacapinterfaces} packages. \texttt{TransactionInterface}
+class models the operations and dates corresponding to a
+transaction. When the operation is about a currency exchange, the
+\texttt{Purse} class uses an \texttt{ExchangeSession} class instance to 
+record the information corresponding to a session. The record of
+different currency exchanges will be registered using a
+\texttt{exchangeRecord} instance variable. The class
+\texttt{Currencies} serves to model the currency used by the Purse
+application. 
+In case of a \textit{Loyalty} program, the \texttt{Purse} class uses
+an \texttt{AllowedLoyalty} class instance to record the information
+corresponding to \texttt{Loyalty} applet. The list of Loyalties which
+the purse may communicate with are recorded into a
+\texttt{LoyaltiesTable} instance class. Whenever the purse executes an 
+operation that is about a certain \textit{Loyalty}, the purse send it
+the concerning information, using a class which implements the
+\texttt{TransactionInterfaceObject} interface. The
+\texttt{LoyaltyInterfaceObject} class model the general interface
+between Purse and Loyalty applets. The class
+\texttt{AccessCondition} models the access conditions. That is$:$
+$FREE$, $LOCKED$, $SECRET\_CODE$, $SECURE\_MESSAGING$, $SECRET\_CODE \&
+SECURE\_MESSAGING$. The \texttt{AccessControl} class enables to define
+an access condition for a specific method. Thus, when a
+card holder intends to perform a certain operation, the purse
+application will check that card holder permissions correspond to the
+operation which he intends to carry out. The \texttt{Purse} applet
+records the different access condition for every method on an
+\texttt{AccessControlTable} class instance.
 
 
 
@@ -287,24 +312,63 @@ expressions which are similar to Java expressions. In spite
 of this similarity, in ESC/Java, the specification
 expressions must be free of subexpressions that, in general, may have
 side effects. The following section presents some of the
-ESC/Java pragmas, together to some examples of its
-utilization. Their full description can be found in~\cite{LeinoNS00}.
+\textsc{Esc/Java} pragmas, together to some examples of its
+utilization. Their full description can be found in~\cite{ESCManual}.
 
-\subsubsection{\sc \bf ESC/Java pragmas}
+
+
+
+
+
+\paragraph{\sc \bf ESC/Java pragmas}
 \begin{itemize}
+
+\item{\texttt{requires P}.} A \textit{requires} pragma is a routine
+modifier pragma. This pragma makes \texttt{P} a precondition of the
+routine which the pragma asserts. When \textsc{Esc/Java} checks the
+body of the
+routine, it assumes that \texttt{P} holds initially, but when
+\textsc{Esc/Java} checks a method call, it will issue a warning if
+it can not establish that \texttt{P} holds at the call site.
+
+\item{\texttt{ensures Q}.} An \textit{ensures} pragma is a routine
+modifier pragma. This pragma makes \texttt{Q} a normal, i.e
+non-exceptional, post-condition of the routine which the pragma
+asserts to. When checking the body of the routine, \textsc{Esc/Java}
+issues a warning if it can not establish that \texttt{Q} holds
+whenever the methods finish normally. When \textsc{Esc/Java} checks a
+method call, it assumes \texttt{Q} as long as this finishes normally.
+
+\item{\texttt{exsures (E) R}.} A \textit{exsures} pragma is a routine
+modifier pragma. This pragma specifies that \texttt{R} holds whenever
+the routine completes abruptly by throwing an exception \texttt{e}
+which is subclass of \texttt{E}. When \textsc{Esc/Java} check the body 
+of the routine, it checks that \texttt{R} holds whenever the routine
+completes abruptly by throwing an exception \texttt{e} which is
+subclass of \texttt{E}. When \textsc{Esc/Java} checks code that calls
+the routine, it assumes that \texttt{R} holds just after the call as
+long as the call completes abruptly by throwing an exception which is
+subclass of \texttt{E}.
+
+\item{\texttt{modifies L}.} A \textit{modifies} pragma is a routine
+pragma. It specifies that the routine \emph{may} only modify any of
+the state components listed in \texttt{L}, the formal parameter of
+the method and the method variables. Any other state will remain
+unchanged as consequence of the method invocation.
+ 
 \item{\texttt{==>}.} It is the logical implication. So, \texttt{P
 ==> Q} is true if and only if \texttt{P} is false or \texttt{Q} is
-true, where \texttt{P} and \texttt{Q} are specification expressions of
-type \texttt{boolean}. Furthermore, \texttt{<==>} represents the
-equivalence relation and \texttt{<=!=>} the in-equivalence one.
+true, where \texttt{P} and \texttt{Q} are specification expressions of 
+\texttt{boolean} type. Furthermore, \texttt{<==>} represents the
+equivalence relation and \texttt{<=!=>} the non-equivalence one.
 
 \item {($\backslash$\texttt{forall T V; E)} and
 ($\backslash$\texttt{exists T V; E}).}
-They are specification expressions of type \texttt{boolean}. The first one
+They are specification expressions of \texttt{boolean} type. The first one
 denotes that \texttt{E} is true for all substitution of values
-of type \texttt{T} for the bound variables \texttt{V}. The second one
+of type \texttt{T} by the bound variables \texttt{V}. The second one
 denotes that \texttt{E} is true for some substitution of values of
-type \texttt{T} for the bound variables \texttt{V}.
+type \texttt{T} by the bound variables \texttt{V}.
 
 \item {$\backslash$\texttt{max}.} An expression of the form
 \texttt{$\backslash$max(S)}, where \texttt{S} is a specification
@@ -314,8 +378,8 @@ $\backslash$\texttt{min} pragma.
 
 \item{\texttt{$\backslash$fresh}.} An expression of the form
 \texttt{$\backslash$fresh(E)}, where \texttt{E} is a specification
-expression of a reference type is a specification expression of type
-\texttt{boolean}. Within a postcondition, it denotes that \texttt{E}
+expression, is a specification expression of \texttt{boolean}
+type. Within a postcondition, it denotes that \texttt{E}
 is non-null and was not allocated in the pre-state of the routine
 call.
 
@@ -352,11 +416,12 @@ the method. %In the following example, the clause \texttt{ensures} of
 \item{\texttt{$\backslash$nonnullelements}.} An expression of the form
 \texttt{$\backslash$nonnullelements(a)}, where \texttt{a} is a
 specification expression of array type is a specification expression
-of type \texttt{boolean}. It is equivalent to$:$
+of \texttt{boolean} type. It is equivalent to$:$
 
-\texttt{a != null \&\&}
-\texttt{($\backslash$forall int i; i >= 0 \&\& i < a.length; a[i] !=
-null)}. 
+\texttt{a!=null \&\&}
+\texttt{($\backslash$forall int i; i >= 0 \&\& i < a.length;
+a[i]!=null)}. 
+
 \end{itemize}
 
 
@@ -394,16 +459,21 @@ null)}.
 %\end{tabbing}
 %\end{itemize}
 
-Figure~\ref{fig-add-cur} shows a typical annotation example using the
-ESC/Java language. This example was taken from the modeling 
-we have done of the \textit{Electronic Purse}. \texttt{addCurrency}
-method belongs to \texttt{Currencies} class. This class models all
+
+
+
+
+\textsc{Esc/Java} language. This example was taken from the
+specification ESC/Java language. This example was taken from the
+modeling we have done of the \textit{Electronic
+Purse}. \texttt{addCurrency} method belongs to \texttt{Currencies}
+class. This class models all
 currency supported by the Purse application. The method
 \texttt{addCurrency} adds a new currency to the list of valid
 currencies for the Purse. This list is represented by the
 \texttt{data} array. The clause
-\texttt{modifies} declared in the method's header declares
-that the method may modify \texttt{nbData} et
+\texttt{modifies} declared in the method's header specifies
+this method may modify \texttt{nbData} and
 \texttt{data} in the position \texttt{nbData}. More precisely, it
 declares that it only may modify these instance variables and the local
 variables and formal parameters of the method. The method
@@ -411,9 +481,9 @@ variables and formal parameters of the method. The method
 two post-conditions by mean of its \texttt{ensure} clauses. The first
 one indicates that if \texttt{nbData} have not reached yet the threshold
 value $MAX\_DATA$, \texttt{nbData} will increase its value one
-unities and the \texttt{data} array in the \texttt{nbData} position
-will take the value indicated by the formal parameter
-\texttt{cur}. Within these post-conditions, the expressions
+unities and that the array variable \texttt{data} will take the value
+indicated by the formal parameter \texttt{cur} on the \texttt{nbData}
+position. Inside of these post-conditions, the expressions
 \texttt{$\backslash$old(nbData)} refers to \texttt{nbDate} value
 before the method invocation.
 
@@ -441,89 +511,8 @@ $\mathtt{\}}$
 
 
 
-%\subsection{\bf Modifiable Checker}
-%The functional behavior expressed by mean of ESC/Java
-%pre-conditions and post-conditions is not enough to reason about
-%arbitray method calls. Suppose we want to check the method presented by
-%the figure~\ref{fig-mod-cas}. The specification corresponding to
-%method \texttt{m} establish that after its invocation the length of
-%\texttt{myArr} will be $15$. This post-condition is ensured by
-%the assigment presented on the line $7$. However, the specification of
-%the
-%method \texttt{p} must be taken into account for ensuring this
-%post-condition, due to the instruction on the line $8$. Thus, in a
-%some manner, the specification of method \texttt{p} must ensure that
-%its implementation
-%will not modify the lenght of \texttt{myArray}. That would be possible
-%with a declaration such as \texttt{modifies $\backslash$nothing}, which
-%declares that \texttt{p} will not modify any allocation memory. In the 
-%case of ESC/Java, when a 
-%situation like this occurs, it assumes effectivaly a
-%declaration by default \texttt{modifies $\backslash$nothing}, but it
-%does not check this declarations holds. En consequence, if
-%method \texttt{p} is overriden in a subclass of \texttt{C} and it
-%changes the length of \texttt{myArray},
-%\texttt{ESC/Java} will not complain. Thus, \texttt{ESC/Java} will
-%accept like true the specification of method \texttt{m} in spite of it
-%would be wrong. These kind of problems can be overcame if a static checking on
-%the method overriden is performed. This kind of operation must check
-%every assignment presented in the method body and establishes wheather
-%any variable modified for it belongs to set of variables that method
-%declared or not. More precisely, it must be checked that method body
-%only modify the variables declared as modifiable, or its formal
-%parameters o its method variables. 
-
-
-%\begin{figure}[hbt]
-%\begin{tabbing}
-%dd\=dddd\=ddd\=ddd \kill
-%$1$\>{public class {\bf C} \{} \\
-%$2$\>\>{int [] myArr ;} \\
-%\\
-%$3$\>\>{/*@\ normal\_behavior} \\
-%$4$\>\>\>{ ensures\ myArr.length\ $==$\ 15\ ;} \\
-%$5$\>\>{ */} \\
-%$6$\>\>{public void {\bf m}()\{} \\
-%$7$\>\>\>{myArr = new int [15] ;} \\
-%$8$\>\>\>{p() ;} \\
-%$9$\>\>{\}} \\ \\
- 
-%$10$\>\>{/*@ normal$\_$behavior} \\
-%$11$\>\>\>{ensures true ; }     \\ 
-%$12$\>\>{ */} \\
-%$13$\>\>{public void {\bf p}()\{ \} } \\
-%$14$\>{\}}
-%\end{tabbing}
-%\caption{Modifiable clause}
-%\label{fig-mod-cas}
-%\end{figure}
-
-%Ainsi, for instead, if a declaration such as \texttt{myArray $=$ new
-%int$[6]$} was occurred inside of the overriden method \texttt{p}, this 
-%kind of checking would complain due to \texttt{myArray} variable does not
-%belong to set of variables that method \texttt{m} may
-%modify\footnote{$\phi$, in this case}.
-
-
-%We have developed a static checker for checking
-%specification of modifies clauses in Java programs with
-%assertions ESC/Java. Its implementation follows the static approach
-%mentioned above and profites the Java Syntaxe for making a
-%hierarchical checking. This checker will be fully presented in a
-%separated paper. This checker allows to detect abnomalies situations
-%such as will be presented in section ??????????. These abnomalies were 
-%found in the process of checking the modifies clause for the Purse
-%specifications. 
-
-
-
-
 \section{Specification of the Electronic Purse}
 \label{SectSpecPurse}
-
-
-
-
 
 
 \subsection{The general specification approach}
@@ -671,52 +660,52 @@ d.getDecPart()}. In this way, the condition asserted by the clause
 \texttt{ensures} will be satisfied.
 
 
-%\begin{center}
-%\begin{figure}[tbh]
-%\rule{\linewidth}{0.3mm}
-%\rule{0em}{0.1ex}
-%\begin{tabbing}
-%pub\=lic\=cla\=ssD\=ecimale\=xtendsObject\kill
-%\emph{1.}\>$\mathtt{package com.gemplus.pacap.utils\ ;}$ \\
-%\\
-%\emph{2.}\>$\mathtt{public\ class\ {\bf Decimal}\ extends\ Object\{}$ \\
-%\>\>\vdots     \\
-%\emph{3.}\>\>{\it /*@ spec$\_$public */} $\mathtt{private\ short\ intPart\ =\
-%(short) 0\ ;}$ \\
-%\emph{4.}\>\>{\it /*@ spec$\_$public */} $\mathtt{private\ short\ decPart\ =\ (short)\ 0\ ;}$ \\
-%\>\>\vdots \\ 
-%\emph{5.}\>\>{\it /*@}  \\
-%\emph{6.}\>\>\>{\it //modifies $\backslash$nothing} \\
-%\emph{7.}\>\>\>{\it requires d $!=$ null;} \\
-%\emph{8.}\>\>\>{\it ensures $\backslash$ result $==$ (intPart $>$ d.intPart
-%$||$} \\
-%\emph{9.}\>\>\>\>{\it (intPart $==$
-%d.intPart $\&\&$ (decPart $==$ d.decPart $||$ decPart $>$ d.decPart))) ;} \\ 
-%\emph{10.}\>\>{\it */} \\
-%\emph{11.}\>\>$\mathtt{public\ boolean\ {\bf isGreaterEqualThan}(Decimal\ d)\{}$ \\
-%\emph{12.}\>\>\>$\mathtt{boolean\ resu\ =\ false\ ;}$ \\
-%\\
-%\emph{13.}\>\>\>$\mathtt{if(intPart\ >\ d.getIntPart())}$ \\
-%\emph{14.}\>\>\>\>$\mathtt{resu\ =\ true\ ;}$ \\
-%\emph{15.}\>\>\>$\mathtt{else\ if\ (intPart\ <\ d.getIntPart())}$ \\
-%\emph{16.}\>\>\>\>$\mathtt{resu\ =\ false\ ;}$ \\
-%\emph{17.}\>\>\>$\mathtt{else\ if(intPart\ ==\ d.getIntPart())\{} $        \\
-%\emph{18.}\>\>\>\>$\mathtt{if((decPart\ >\ d.getDecPart())\ ||\ (decPart\ >\
-%d.getDecPart()))}$ \\
-%\emph{19.}\>\>\>\>\>$\mathtt{resu\ =\ true\ ;}$ \\
-%\emph{20.}\>\>\>\>$\mathtt{else\ if\ (decPart\ <\ d.getDecPart())}$\\
-%\emph{21.}\>\>\>\>\>$\mathtt{resu = false;}$ \\
-%\emph{22.}\>\>\>$\mathtt{\}}$ \\
-%\emph{23.}\>\>\>$\mathtt{return\ resu\ ;}$ \\
-%\emph{24.}\>\>$\mathtt{\}}$ \\
-%\>\>\vdots \\
-%\emph{25.}\>$\mathtt{\}}$ 
-%\end{tabbing}
-%\caption{Piece of {\tt Decimal} class}
-%\label{fig-cla-dec}
-%\rule{\linewidth}{0.3mm}
-%\end{figure}
-%\end{center}
+\begin{center}
+\begin{figure}[hbt]
+\rule{\linewidth}{0.3mm}
+\rule{0em}{0.1ex}
+\begin{tabbing}
+pub\=lic\=cla\=ssD\=ecimale\=xtendsObject\kill
+\emph{1.}\>$\mathtt{package com.gemplus.pacap.utils\ ;}$ \\
+\\
+\emph{2.}\>$\mathtt{public\ class\ {\bf Decimal}\ extends\ Object\{}$ \\
+\>\>\vdots     \\
+\emph{3.}\>\>{\it /*@ spec$\_$public */} $\mathtt{private\ short\ intPart\ =\
+(short) 0\ ;}$ \\
+\emph{4.}\>\>{\it /*@ spec$\_$public */} $\mathtt{private\ short\ decPart\ =\ (short)\ 0\ ;}$ \\
+\>\>\vdots \\ 
+\emph{5.}\>\>{\it /*@}  \\
+\emph{6.}\>\>\>{\it //modifies $\backslash$nothing} \\
+\emph{7.}\>\>\>{\it requires d $!=$ null;} \\
+\emph{8.}\>\>\>{\it ensures $\backslash$ result $==$ (intPart $>$ d.intPart
+$||$} \\
+\emph{9.}\>\>\>\>{\it (intPart $==$
+d.intPart $\&\&$ (decPart $==$ d.decPart $||$ decPart $>$ d.decPart))) ;} \\ 
+\emph{10.}\>\>{\it */} \\
+\emph{11.}\>\>$\mathtt{public\ boolean\ {\bf isGreaterEqualThan}(Decimal\ d)\{}$ \\
+\emph{12.}\>\>\>$\mathtt{boolean\ resu\ =\ false\ ;}$ \\
+\\
+\emph{13.}\>\>\>$\mathtt{if(intPart\ >\ d.getIntPart())}$ \\
+\emph{14.}\>\>\>\>$\mathtt{resu\ =\ true\ ;}$ \\
+\emph{15.}\>\>\>$\mathtt{else\ if\ (intPart\ <\ d.getIntPart())}$ \\
+\emph{16.}\>\>\>\>$\mathtt{resu\ =\ false\ ;}$ \\
+\emph{17.}\>\>\>$\mathtt{else\ if(intPart\ ==\ d.getIntPart())\{} $        \\
+\emph{18.}\>\>\>\>$\mathtt{if((decPart\ >\ d.getDecPart())\ ||\ (decPart\ >\
+d.getDecPart()))}$ \\
+\emph{19.}\>\>\>\>\>$\mathtt{resu\ =\ true\ ;}$ \\
+\emph{20.}\>\>\>\>$\mathtt{else\ if\ (decPart\ <\ d.getDecPart())}$\\
+\emph{21.}\>\>\>\>\>$\mathtt{resu = false;}$ \\
+\emph{22.}\>\>\>$\mathtt{\}}$ \\
+\emph{23.}\>\>\>$\mathtt{return\ resu\ ;}$ \\
+\emph{24.}\>\>$\mathtt{\}}$ \\
+\>\>\vdots \\
+\emph{25.}\>$\mathtt{\}}$ 
+\end{tabbing}
+\caption{Piece of {\tt Decimal} class}
+\label{fig-cla-dec}
+\rule{\linewidth}{0.3mm}
+\end{figure}
+\end{center}
 
 
 
@@ -742,15 +731,14 @@ conditions expressed by the clauses ensures. In this way, if the
 pre-condition is satisfied, the internal variables will be assigned
 with the values of their parameters. Otherwise, the method will raise
 an \texttt{DateException} exception. This abnormality condition is
-declared by the \texttt{exsures} clause. 
-
-ESC/Java complains when it finds a declaration such as$:$ 
+declared by the \texttt{exsures} clause. ESC/Java complains when it
+finds a declaration such as$:$ 
 \mbox{\tt date.setDate((byte)1, (byte)1, (byte)110);} (where date is a
 \texttt{Date} instance). The warning message signals that its third
 parameter does not verify the condition established by the clause
 \texttt{requires} belonging to the method \texttt{setDate} (line
 $5$). This warning is desployed in spite of this call respect the
-requires condition, i.e, $110>=99\ \&\&\ 110<= 127$. 
+requires condition, i.e, $110>=99\ \&\&\ 110<= 127$.
 
 The problem is happend due to the wrong declaration of \textsc{MIN}
 and \textsc{MAX} variables belonging to the \texttt{Annee}
@@ -769,99 +757,99 @@ application. This kind of control is carried out by
 ESC/Java. 
 
 
-%\begin{center}
-%\begin{figure}[tbh]
-%\rule{\linewidth}{0.3mm}
-%\\[2.0ex]
-%\begin{tabbing}
-%pub\=lic\=cla\=ssD\=ate  \kill
-%$\mathtt{package\ com.gemplus.pacap.utils\ ;}$ \\
-% \\
-%$\mathtt{public\ abstract\ class\ {\bf Annee}\ extends\ Object\ \{}$ \\
-%\>{\it //@ invariant MIN $<=$ MAX} \\
-% \\ 
-%\>$\mathtt{public\ static\ byte\ MIN\ =\ (byte)99\ ;} $\\
-%\>$\mathtt{public\ static\ byte\ MAX\ =\ (byte)127\ ;} $\\
-%\\
-%\\
-%\>{\it /*@} \\
-%\>\>{\it //modifies $\backslash$nothing ;} \\
-%\>\>{\it requires true ;} \\
-%\>\>{\it ensures $\backslash$result $==$ (j $>=$ MIN $\&\&$ j $<=$ MAX) ;} \\
-%\>\>{\it //exsures (RuntimeException)false ;} \\
-%\>*/ \\
-%\>$\mathtt{public\ static\ boolean\ {\bf check}(byte\ j)\ \{} $ \\
-%\>\>$\mathtt{return\ ((j\ >=\ Annee.MIN)\ \&\&\ (j\ <=\ Annee.MAX))\ ;}$  \\
-%\>$\mathtt{\}} $ \\
-%$\mathtt{\}} $ \\
-%\end{tabbing}
-%\caption{{\tt Annee} class}
-%\label{fig-cla-ann}
-%\rule{\linewidth}{0.3mm}
-%\end{figure}
-%\end{center}
+\begin{center}
+\begin{figure}[hbt]
+\rule{\linewidth}{0.3mm}
+\\[2.0ex]
+\begin{tabbing}
+pub\=lic\=cla\=ssD\=ate  \kill
+$\mathtt{package\ com.gemplus.pacap.utils\ ;}$ \\
+ \\
+$\mathtt{public\ abstract\ class\ {\bf Annee}\ extends\ Object\ \{}$ \\
+\>{\it //@ invariant MIN $<=$ MAX} \\
+ \\ 
+\>$\mathtt{public\ static\ byte\ MIN\ =\ (byte)99\ ;} $\\
+\>$\mathtt{public\ static\ byte\ MAX\ =\ (byte)127\ ;} $\\
+\\
+\\
+\>{\it /*@} \\
+\>\>{\it //modifies $\backslash$nothing ;} \\
+\>\>{\it requires true ;} \\
+\>\>{\it ensures $\backslash$result $==$ (j $>=$ MIN $\&\&$ j $<=$ MAX) ;} \\
+\>\>{\it //exsures (RuntimeException)false ;} \\
+\>*/ \\
+\>$\mathtt{public\ static\ boolean\ {\bf check}(byte\ j)\ \{} $ \\
+\>\>$\mathtt{return\ ((j\ >=\ Annee.MIN)\ \&\&\ (j\ <=\ Annee.MAX))\ ;}$  \\
+\>$\mathtt{\}} $ \\
+$\mathtt{\}} $ \\
+\end{tabbing}
+\caption{{\tt Annee} class}
+\label{fig-cla-ann}
+\rule{\linewidth}{0.3mm}
+\end{figure}
+\end{center}
 
 
 
 
 
-%\begin{center}
-%\begin{figure}[tbh]
-%\rule{\linewidth}{0.3mm}
-%\\[2.0ex]
-%\begin{tabbing}
-%pub\=lic\=cla\=ssD\=ate\=ext\=endsObject  \kill
-%$\mathtt{public\ class\ {\bf Date}\ extends\ Object\ \{}$ \\
+\begin{center}
+\begin{figure}[hbt]
+\rule{\linewidth}{0.3mm}
+\\[2.0ex]
+\begin{tabbing}
+pub\=lic\=cla\=ssD\=ate\=ext\=endsObject  \kill
+$\mathtt{public\ class\ {\bf Date}\ extends\ Object\ \{}$ \\
 
-%\>{\it /*@} \\
-%\>\>{\it invariant jour $>=$ Jour.MIN $\&\&$ jour $<=$ Jour.MAX ;} \\	
-%\>\>{\it invariant mois $>=$ Mois.MIN $\&\&$ mois $<=$ Mois.MAX ;} \\
-%\>\>{\it invariant annee $>=$ Annee.MIN $\&\&$ annee $<=$ Annee.MAX ;} \\
-%\>{\it */}
-%\\
-%\\
-%\>{\it /*@ spec$\_$public */} $\mathtt{private\ byte\ jour\ =\ Jour.MIN\ ;}$ \\
-%\>{\it /*@ spec$\_$public */} $\mathtt{private\ byte\ mois\ =\ Mois.MIN\ ; }$ \\   
-%\>{\it /*@ spec$\_$public */} $\mathtt{private\ byte\ annee\ =\ Annee.MIN\ ;}$ \\
-%\\ 
-%\\
-%\emph{1. }\>{\it /*@} \\ 
-%\emph{2. }\>\>{\it modifies jour, mois, annee ;} \\
-%\emph{3. }\>\>{\it requires j $>=$ Jour.MIN  $\&\&$ j $<=$ Jour.MAX ;} \\
-%\emph{4. }\>\>{\it requires m $>=$ Mois.MIN  $\&\&$ m $<=$ Mois.MAX ;} \\
-%\emph{5. }\>\>{\it requires a $>=$ Annee.MIN $\&\&$ a $<=$ Annee.MAX ;} \\
-%\emph{6. }\>\>{\it ensures jour $==$ j $\&\&$ annee $==$ a $\&\&$ mois $==$ m ;} \\
-%\emph{7. }\>\>{\it exsures (DateException) false ;} \\
-%\emph{8. }\>{\it */} \\
-%\>$\mathtt{public\ void\ {\bf setDate}(byte\ j,\ byte\ m,\ byte\ a)\ throws\ DateException\{}$ \\
-%\>\>{\it // check the day } \\        
-%\>\>$\mathtt{if(!Jour.check(j)) \{}$ \\
-%\>\>\>$\mathtt{DateException.throwIt(DateException.ERREUR\_JOUR)\ ;}$ \\
-%\>\>$\mathtt{\}else\ \{}$ \\
-%\>\>\>{\it // check the month} \\
-%\>\>\>$\mathtt{if(!Mois.check(m))\ \{}$\\
-%\>\>\>\>$\mathtt{DateException.throwIt(DateException.ERREUR\_MOIS)\ ;}$ \\
-%\>\>\>$\mathtt{\}else\ \{}$ \\
-%\>\>\>\>{\it // check the year} \\
-%\>\>\>\>$\mathtt{if(!Annee.check(a)) \{}$ \\
-%\>\>\>\>\>$\mathtt{DateException.throwIt(DateException.ERREUR\_ANNEE)\ ;}$ \\
-%\>\>\>\>$\mathtt{\}else\ \{}$ \\
-%\>\>\>\>\>{\it $\slash \slash$ all is good} \\
-%\>\>\>\>\>$\mathtt{jour\ =\ j\ ;} $\\
-%\>\>\>\>\>$\mathtt{mois\ =\ m\ ;} $\\
-%\>\>\>\>\>$\mathtt{annee\ =\ a\ ;} $\\
-%\>\>\>\>$\mathtt{\}}$ \\
-%\>\>\>$\mathtt{\}} $\\
-%\>\>$\mathtt{\}} $\\
-%\>$\mathtt{\}} $\\
-%\>$\vdots$ \\
-%$\mathtt{\}}$ \\
-%\end{tabbing}
-%\caption{{\tt Date} class}
-%\label{fig-cla-dat}
-%\rule{\linewidth}{0.3mm}
-%\end{figure}
-%\end{center}
+\>{\it /*@} \\
+\>\>{\it invariant jour $>=$ Jour.MIN $\&\&$ jour $<=$ Jour.MAX ;} \\	
+\>\>{\it invariant mois $>=$ Mois.MIN $\&\&$ mois $<=$ Mois.MAX ;} \\
+\>\>{\it invariant annee $>=$ Annee.MIN $\&\&$ annee $<=$ Annee.MAX ;} \\
+\>{\it */}
+\\
+\\
+\>{\it /*@ spec$\_$public */} $\mathtt{private\ byte\ jour\ =\ Jour.MIN\ ;}$ \\
+\>{\it /*@ spec$\_$public */} $\mathtt{private\ byte\ mois\ =\ Mois.MIN\ ; }$ \\   
+\>{\it /*@ spec$\_$public */} $\mathtt{private\ byte\ annee\ =\ Annee.MIN\ ;}$ \\
+\\ 
+\\
+\emph{1. }\>{\it /*@} \\ 
+\emph{2. }\>\>{\it modifies jour, mois, annee ;} \\
+\emph{3. }\>\>{\it requires j $>=$ Jour.MIN  $\&\&$ j $<=$ Jour.MAX ;} \\
+\emph{4. }\>\>{\it requires m $>=$ Mois.MIN  $\&\&$ m $<=$ Mois.MAX ;} \\
+\emph{5. }\>\>{\it requires a $>=$ Annee.MIN $\&\&$ a $<=$ Annee.MAX ;} \\
+\emph{6. }\>\>{\it ensures jour $==$ j $\&\&$ annee $==$ a $\&\&$ mois $==$ m ;} \\
+\emph{7. }\>\>{\it exsures (DateException) false ;} \\
+\emph{8. }\>{\it */} \\
+\>$\mathtt{public\ void\ {\bf setDate}(byte\ j,\ byte\ m,\ byte\ a)\ throws\ DateException\{}$ \\
+\>\>{\it // check the day } \\        
+\>\>$\mathtt{if(!Jour.check(j)) \{}$ \\
+\>\>\>$\mathtt{DateException.throwIt(DateException.ERREUR\_JOUR)\ ;}$ \\
+\>\>$\mathtt{\}else\ \{}$ \\
+\>\>\>{\it // check the month} \\
+\>\>\>$\mathtt{if(!Mois.check(m))\ \{}$\\
+\>\>\>\>$\mathtt{DateException.throwIt(DateException.ERREUR\_MOIS)\ ;}$ \\
+\>\>\>$\mathtt{\}else\ \{}$ \\
+\>\>\>\>{\it // check the year} \\
+\>\>\>\>$\mathtt{if(!Annee.check(a)) \{}$ \\
+\>\>\>\>\>$\mathtt{DateException.throwIt(DateException.ERREUR\_ANNEE)\ ;}$ \\
+\>\>\>\>$\mathtt{\}else\ \{}$ \\
+\>\>\>\>\>{\it $\slash \slash$ all is good} \\
+\>\>\>\>\>$\mathtt{jour\ =\ j\ ;} $\\
+\>\>\>\>\>$\mathtt{mois\ =\ m\ ;} $\\
+\>\>\>\>\>$\mathtt{annee\ =\ a\ ;} $\\
+\>\>\>\>$\mathtt{\}}$ \\
+\>\>\>$\mathtt{\}} $\\
+\>\>$\mathtt{\}} $\\
+\>$\mathtt{\}} $\\
+\>$\vdots$ \\
+$\mathtt{\}}$ \\
+\end{tabbing}
+\caption{{\tt Date} class}
+\label{fig-cla-dat}
+\rule{\linewidth}{0.3mm}
+\end{figure}
+\end{center}
 
 
 
@@ -1141,7 +1129,6 @@ Also, it would be nice if one could specify runtime exceptions in
 \texttt{exsures} clauses, while they are not mentioned in the
 \texttt{throws} clause of the method.
 
-
 With respect to the verification that is done by ESC/Java, we found
 that is unfortunate that ESC/Java does not try to check the modifiable 
 clauses, because an incorrect modifiable clause can influence the 
@@ -1172,12 +1159,15 @@ statements and then checks whether the variables that are the
 clauses. This checker will be described in more detail in a separate
 paper.
 
-
 Finally, we feel that it would be an improvement if the ESC/Java
 theorem prover would deal more precisely with arithmetic operations
 (also on bytes and shorts). For example, several times we needed that
 for \emph{e.g.}~a byte \texttt{b} with a value between 0 and 10, after
 the operation \texttt{b++} this variable still has a positive value.
+
+
+
+
 
 
 \section{Conclusions}
