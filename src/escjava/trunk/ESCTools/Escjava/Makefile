@@ -333,6 +333,8 @@ test_escjava: build build_javafe_test
 tests:
 	$(MAKE) junittests
 	$(MAKE) test_escjava_parser
+	$(MAKE) -C test/nijmegen/OCF runtests
+	$(MAKE) -C test/nijmegen/JCF runtests
 	##$(MAKE) test_matrix   ## FIXME
 
 .PHONY: build_javafe_test

@@ -1,4 +1,4 @@
-import javacard.framework.*;
+//import javacard.framework.*;
 
 class SecurityKey
 {
