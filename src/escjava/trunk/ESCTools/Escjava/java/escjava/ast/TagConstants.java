@@ -268,7 +268,8 @@ public class TagConstants extends javafe.tc.TagConstants
     public static final int ACCESSIBLE_REDUNDANTLY = ABRUPT_BEHAVIOR + 1;
     public static final int ACCESSIBLE = ACCESSIBLE_REDUNDANTLY + 1;
     public static final int ALSO = ACCESSIBLE + 1;
-    public static final int ASSERT_REDUNDANTLY = ALSO + 1;
+    public static final int ALSO_REFINE = ALSO + 1; // Internal use only
+    public static final int ASSERT_REDUNDANTLY = ALSO_REFINE + 1;
     public static final int ASSIGNABLE_REDUNDANTLY = ASSERT_REDUNDANTLY + 1;
     public static final int ASSIGNABLE = ASSIGNABLE_REDUNDANTLY + 1;
     public static final int ASSUME_REDUNDANTLY = ASSIGNABLE + 1;
@@ -295,7 +296,8 @@ public class TagConstants extends javafe.tc.TagConstants
     public static final int DIVERGES = DIVERGES_REDUNDANTLY + 1;
     public static final int DURATION_REDUNDANTLY = DIVERGES + 1;
     public static final int DURATION = DURATION_REDUNDANTLY + 1;
-    public static final int ENSURES_REDUNDANTLY = DURATION + 1;
+    public static final int END = DURATION + 1; // Internal use only
+    public static final int ENSURES_REDUNDANTLY = END + 1;
     // ensures -- an ESC keyword
     public static final int EXAMPLE = ENSURES_REDUNDANTLY + 1;
     public static final int EXCEPTIONAL_BEHAVIOR = EXAMPLE + 1;
@@ -829,6 +831,7 @@ public class TagConstants extends javafe.tc.TagConstants
         Identifier.intern("accessible_redundantly"),
         Identifier.intern("accessible"),
         Identifier.intern("also"),
+	Identifier.intern("---also_refine---"), // internal use only
         Identifier.intern("assert_redundantly"),
         Identifier.intern("assignable_redundantly"),
         Identifier.intern("assignable"),
@@ -853,6 +856,7 @@ public class TagConstants extends javafe.tc.TagConstants
         Identifier.intern("diverges"),
         Identifier.intern("duration_redundantly"),
         Identifier.intern("duration"),
+	Identifier.intern("---end---"), // Internal use only
         Identifier.intern("ensures_redundantly"),
         Identifier.intern("example"),
         Identifier.intern("exceptional_behavior"),
