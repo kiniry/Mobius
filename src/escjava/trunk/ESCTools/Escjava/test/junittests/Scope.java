@@ -1,4 +1,4 @@
-//#FLAGS: -testMode -showFields -quiet -classpath .
+//#FLAGS: -testMode -showFields -quiet -classpath . -specs ../../../specs
 public class Scope extends ScopeS implements ScopeI {
 //@	model int k; // ERROR - duplicates a java field
 

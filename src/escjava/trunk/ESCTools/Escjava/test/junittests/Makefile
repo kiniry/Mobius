@@ -3,11 +3,7 @@ include ${TOP}/Makefile.defs
 
 ############################################################################
 # ESCJAVA is (only) used for standalone tests
-ifdef COMSPEC
-ESCJAVA = ${ESCTOOLS_ROOT}/Escjava/escj.bat
-else
 ESCJAVA = ${ESCTOOLS_ROOT}/Escjava/escj 
-endif
 
 ##_CLASSPATH = $(call canonicalize,${ESCTOOLS_ROOT}/Escjava/java/daikon-instrumented:${ESC_CLASSPATH}:${JUNIT_UTILS_PATH}:.:/home/cok/Daikon/daikon/daikon.jar:/home/cok/Daikon/daikon/java/ajax-ship/ajax.jar)
 _CLASSPATH = ${ESC_CLASSPATH}$(call canonicalize,:${JUNIT_UTILS_PATH}:.)

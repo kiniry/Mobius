@@ -1,13 +1,10 @@
 ESC/Java version VERSION
-Caution: Duplicate command-line file (or part of a refinement sequence): Triple.jml
-Caution: Duplicate command-line file (or part of a refinement sequence): Triple.java
-  Prover started:TIME
     [TIME]
 
 Triple ...
+  Prover started:TIME
     [TIME]
 
 Triple: Triple() ...
     [TIME]  passed
   [TIME total]
-2 cautions

@@ -1,12 +1,10 @@
 ESC/Java version VERSION
-Caution: Duplicate command-line file (or part of a refinement sequence): Duplicate.java
-  Prover started:TIME
     [TIME]
 
 Duplicate ...
+  Prover started:TIME
     [TIME]
 
 Duplicate: Duplicate() ...
     [TIME]  passed
   [TIME total]
-1 caution
