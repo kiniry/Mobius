@@ -665,6 +665,8 @@ public class VcToString
     case TagConstants.INTEGRALSUB:
     case TagConstants.INTEGRALXOR:
 	    
+    case TagConstants.INTERN:
+    case TagConstants.INTERNED:
     case TagConstants.IS:
     case TagConstants.ISALLOCATED:
     case TagConstants.ISNEWARRAY:

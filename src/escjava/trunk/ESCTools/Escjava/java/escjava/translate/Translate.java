@@ -2312,9 +2312,11 @@ public final class Translate
 
     case TagConstants.STRINGLIT:
       {
+        String s = ((LiteralExpr)expr).value.toString();
         Expr result = GC.nary(
-                              Identifier.intern("interned"),
-                              GC.symlit(Strings.interned(((LiteralExpr)expr).value.toString()).toString()));
+                              TagConstants.INTERN,
+                              GC.symlit(Strings.intern(s).toString()),
+                              GC.symlit(Integer.toString(s.length())) );
 
         return result;
       }
@@ -3876,7 +3878,7 @@ public final class Translate
     // are allowed to be assigned by the caller
     DerivedMethodDecl calledSpecs = GetSpec.getCombinedMethodDecl(rd);
     frameHandler.modifiesCheckMethodI(calledSpecs.modifies,
-                         eod, locOpenParen, pt,freshResult);
+                         eod, locOpenParen, pt,freshResult, rd.parent);
 
     if (inline != null && Main.options().traceInfo > 0) {
       // add a label to say that a routine is being called
@@ -3980,7 +3982,8 @@ public final class Translate
         Expr precondition = mgp.precondition;
         precondition = TrAnExpr.trSpecExpr(precondition,argsMap,argsMap,eod);
         codevec = GuardedCmdVec.make();
-        Frame.ModifiesIterator iter = new Frame.ModifiesIterator(mgp.items,true,true);
+        Frame.ModifiesIterator iter = new Frame.ModifiesIterator(
+                                              rd.parent,mgp.items,true,true);
         while (iter.hasNext()) {
           Object o = iter.next();
           if (o instanceof FieldAccess) {
@@ -4060,7 +4063,7 @@ public final class Translate
         // unspecified values.  For instance, for simple variables
         // we add the command: i:7.19 = after@16.2:20.19
         // There is nothing specified about the after variables.
-        iter = new Frame.ModifiesIterator(mgp.items,true,true);
+        iter = new Frame.ModifiesIterator(rd.parent,mgp.items,true,true);
         while (iter.hasNext()) {
           Object o = iter.next();
           if (o instanceof FieldAccess) {
@@ -4676,7 +4679,7 @@ public final class Translate
   public static class Strings {
     static Map map = new HashMap();
     static private int count = 0;
-    static Integer interned(String s) {
+    static Integer intern(String s) {
       Object o = map.get(s);
       if (o != null) return ((Integer)o);
       Integer i = new Integer(++count);
