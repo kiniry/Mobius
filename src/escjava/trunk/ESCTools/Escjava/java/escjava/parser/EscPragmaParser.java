@@ -497,7 +497,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
             }
             //@ assume scanner.m_in != null;  // TBW: is this right??  --KRML
 
-	    // Skip any access modifiers
+	    // Skip any access modifiers - DRC 4/20/2003
 	    if (scanner.ttype == TagConstants.PUBLIC ||
 		scanner.ttype == TagConstants.PROTECTED ||
                 scanner.ttype == TagConstants.PRIVATE)
@@ -592,12 +592,14 @@ public class EscPragmaParser extends Parse implements PragmaParser
                 case TagConstants.ALSO_MODIFIES:
                 case TagConstants.JML_MODIFIABLE:
                 case TagConstants.JML_ASSIGNABLE:
+/* Turn off this caution - making the JML synonyms ok
                     if (tag == TagConstants.JML_MODIFIABLE ||
                         tag == TagConstants.JML_ASSIGNABLE) {
                         ErrorSet.caution(loc, "ESC/Java keyword 'modifies' " +
                                          "is preferred to JML keywords " + 
                                          "'modifiable' and 'assignable'.");
                     }
+*/
                     inProcessTag = tag;
                     inProcessLoc = loc;
                     continuePragma(dst);
@@ -761,6 +763,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
                 case TagConstants.ALSO_ENSURES:
                 case TagConstants.JML_PRE:
                 case TagConstants.JML_POST:
+// FIXME: DO we need to include JML_PRE along with REQUIRES here
                     // Check if also clauses are permitted on
                     // requires clauses.
                     if ((tag == TagConstants.ALSO_REQUIRES ||
@@ -768,11 +771,13 @@ public class EscPragmaParser extends Parse implements PragmaParser
                         && !Main.allowAlsoRequires)
                         ErrorSet.fatal(loc, TagConstants.toString(tag) +
                                        " is not allowed pragma");
+/* Turn off this caution - making the JML synonyms ok
                     // Make suggestions about choice of keywords.
                     if (tag == TagConstants.JML_POST || tag == TagConstants.JML_PRE)
                         ErrorSet.caution(loc, "ESC/Java keywords 'require' and 'ensures' " +
                                          "are preferred to JML keywords " + 
                                          "'pre' and 'post'.");
+*/
                     dst.ttype = TagConstants.MODIFIERPRAGMA;
                     // Convert normal requires and pre clauses and
                     // ensures and post clauses inside of also blocks
@@ -807,11 +812,13 @@ public class EscPragmaParser extends Parse implements PragmaParser
                 case TagConstants.EXSURES:
                 case TagConstants.ALSO_EXSURES:
                 case TagConstants.JML_SIGNALS: {
+/* Turn off this caution - making the JML synonyms ok
                     if (tag == TagConstants.JML_SIGNALS) {
                         ErrorSet.caution(loc, "ESC/Java keywords 'exsures' " +
                                          "is preferred to JML keyword " + 
                                          "'signals'.");
                     }
+*/
 
                     dst.ttype = TagConstants.MODIFIERPRAGMA;
                     expect(scanner, TagConstants.LPAREN);
@@ -873,12 +880,21 @@ public class EscPragmaParser extends Parse implements PragmaParser
                    inProcessTag == TagConstants.JML_MODIFIABLE ||
                    inProcessTag == TagConstants.JML_ASSIGNABLE) {
             dst.startingLoc = inProcessLoc;
-            Expr e = parseExpression(scanner);
-            if (inAlsoClause && inProcessTag == TagConstants.MODIFIES) {
-                dst.auxVal = ExprModifierPragma.make(TagConstants.ALSO_MODIFIES, 
+	    int t = scanner.lookahead(1);
+	    if (t == TagConstants.NOTHING) {
+		scanner.getNextToken();
+	        dst.auxVal = ExprModifierPragma.make(inProcessTag, null, inProcessLoc);
+	    } else if (t == TagConstants.EVERYTHING) {
+		scanner.getNextToken();
+	        dst.auxVal = ExprModifierPragma.make(inProcessTag, null, inProcessLoc);
+	    } else {	
+	        Expr e = parseExpression(scanner);
+		if (inAlsoClause && inProcessTag == TagConstants.MODIFIES) {
+                    dst.auxVal = ExprModifierPragma.make(TagConstants.ALSO_MODIFIES, 
                                                      e, inProcessLoc);
-            } else {
-                dst.auxVal = ExprModifierPragma.make(inProcessTag, e, inProcessLoc);
+                } else {
+                    dst.auxVal = ExprModifierPragma.make(inProcessTag, e, inProcessLoc);
+                }
             }
             dst.ttype = TagConstants.MODIFIERPRAGMA;
         } else if (inProcessTag == TagConstants.LOOP_PREDICATE) {
@@ -980,8 +996,13 @@ public class EscPragmaParser extends Parse implements PragmaParser
                         Identifier kw = n.identifierAt(0);
                         int tag = TagConstants.fromIdentifier(kw);
 
-                        if (n.size() != 1)
-                            fail(loc, "Annotations may not contain method calls");
+                        if (n.size()!=1) {
+			    ExprVec args = parseArgumentList(l);
+			    primary = AmbiguousMethodInvocation.make(n, 
+					null, locOpenParen, args);
+
+                            //fail(loc, "Annotations may not contain method calls");
+			} else {
                         switch (tag) {
                             case TagConstants.TYPE:
                                 {
@@ -1015,9 +1036,13 @@ public class EscPragmaParser extends Parse implements PragmaParser
                                 }
 	    
                             default:
-                                ErrorSet.fatal(loc, "Unknown ESC function symbol " + kw);
+			        ExprVec args = parseArgumentList(l);
+			        primary = AmbiguousMethodInvocation.make(n, 
+					null, locOpenParen, args);
+                            //    ErrorSet.fatal(loc, "Unknown ESC function symbol " + kw);
                         }
                         break;
+			}
                     }
 
                     // Look for 'TypeName . this'
