@@ -325,9 +325,7 @@ specifications to those contained in the referenced file.  If present, it must
 be located after any Java package statement and before any Java or model import 
 statements.
 It has the form
-@code{
-//@ refine "<I>filename</I>";
-}
+@center{@code{//@ refine "}@emph{filename}@code{";}}
 The given name must have the same name with a different suffix as the current file.
 [see the discussion on suffixes...] [Location of refine statement in CU - FIXME] [FIXME - this has changed... define the refinement sequence]
 
@@ -342,9 +340,8 @@ The given name must have the same name with a different suffix as the current fi
 @itemize @bullet
 @item @strong{Description:}
 A model import statement has the form
-@code{
-//@ model <I>java-import-statement</I>;
-}
+@center{@code{//@ model }@emph{java-import-statement}@code{;}}
+
 Note that simply including a Java import statement in an annotation is not legal JML
 (in otherwords, omitting the @strong{model} keyword).
 A model import statement may occur wherever a Java import statement may be placed.
@@ -362,9 +359,7 @@ statement.
 
 
 @item @strong{Comment:} Though legal, there is no point to a statement of the form
-@code{
-/*@ model @*/ import "<I>filename</I>";
-}
+@center{@code{/*@ model @*/ import "}@emph{filename}@code{";}}
 This is equivalent to simply using a Java import statement.
 @end itemize
 
@@ -751,7 +746,7 @@ Annotation clauses for a method (or constructor) appear ...
 
 @subsection @strong{requires} (@strong{requires_redundantly}, @strong{pre}, pre_redundantly)
 @itemize @bullet
-@item @strong{Syntax:} @code{requires <I>predicate</I>}
+@item @strong{Syntax:} @code{requires @emph{predicate}}
 @item @strong{Description:} A requires clause begins a sequence of specification clauses 
 (the other method/constructor clauses described in this section).  The remaining 
 clauses must hold whenever the requires clause (or the conjunction of multiple
@@ -1136,14 +1131,14 @@ These operators are fully implemented.
 
 @item \lockset : This value has type @code{\LockSet}.  It is a set of objects whose
 locks are held by the current thread. 
-<BR>@strong{Status:} This feature is fully implemented by Escjava-2 (inherited from ESC/Java).
+@*@strong{Status:} This feature is fully implemented by Escjava-2 (inherited from ESC/Java).
 
 @cindex @code{\max}
 @item @code{\max} : This function takes an argument of type @code{\LockSet}.  
 It returns an object of type @code{java.lang.Object}.  The result is one of the
 elements of the argument; the function satisfies the following for any 
 @code{\LockSet} @code{s} and Object @code{o} in @code{s}: @code{o <= \max(s)}.
-<BR>@strong{Status:} This feature is fully implemented by Escjava-2 (inherited from ESC/Java).
+@*@strong{Status:} This feature is fully implemented by Escjava-2 (inherited from ESC/Java).
 
 
 @item \nowarn, \nowarn_op, \warn, \warn_op : These operators take an
@@ -1152,10 +1147,10 @@ They are used to check or to suppress checking of overflow and underflow in the
 use of unary negation and binary addition, subtraction, multiplication and division 
 on any integer-typed arguments.  More detail is provided in the JML reference 
 manual.
-<BR>@strong{Status:} These expressions are parsed but are currently treated as identity
+@*@strong{Status:} These expressions are parsed but are currently treated as identity
  operators.  They are not part of ESC/Java.
 
-@item <I>informal predicate</I>
+@item @emph{informal predicate}
 
 @end itemize
 
@@ -1165,18 +1160,18 @@ manual.
 For example, @strong{\typeof} and @strong{\type} produce results of type @strong{\TYPE}, 
 and the @strong{<=} operator takes arguments of type @strong{\TYPE}.  Values of type
 @strong{\TYPE} can also be compared using the @strong{==} operator.
-<BR>@strong{Status:} This is fully implemented.
+@*@strong{Status:} This is fully implemented.
 
 @item @code{\bigint} : This is a new type name used in JML to denote an integral type 
 equivalent to the mathematical integers.  That is, it has infinite range and no
 underflow or overflow as a result of a fixed bit depth.
-<BR>@strong{Status:} The type name is parsed but is equivalent to @strong{long}.
+@*@strong{Status:} The type name is parsed but is equivalent to @strong{long}.
 
 @item @code{\real} : This is a new type name used in JML to denote a type 
 equivalent to the mathematical real numbers.  That is, it has infinite range 
 and precision and no
 underflow, overflow, or rounding error as do @strong{float} and @strong{double}.
-<BR>@strong{Status:} The type name is parsed but is equivalent to @strong{double}.
+@*@strong{Status:} The type name is parsed but is equivalent to @strong{double}.
 
 @end itemize
 
@@ -1189,16 +1184,16 @@ underflow, overflow, or rounding error as do @strong{float} and @strong{double}.
 @cindex @code{\sum}
 @cindex @code{\product}
 @subsection quantified expressions - \forall, \exists, \num_of, \max, \min, \sum, \product
-As described in the JML documentation, quantified expressions take the form<BR>
-<center>@code{( <I>quantifier-keyword</I> <I>type</I> <I>idlist</I> ; <I>range-expr</I> ; <I>expr</I> )}</center>
+As described in the JML documentation, quantified expressions take the form@*
+<center>@code{( @emph{quantifier-keyword} @emph{type} @emph{idlist} ; @emph{range-expr} ; @emph{expr} )}</center>
 or
-<center>@code{( <I>quantifier-keyword</I> <I>type</I> <I>idlist</I> ; ; <I>expr</I> )}</center>
+<center>@code{( @emph{quantifier-keyword} @emph{type} @emph{idlist} ; ; @emph{expr} )}</center>
 or
-<center>@code{( <I>quantifier-keyword</I> <I>type</I> <I>idlist</I> ; <I>expr</I> )}</center>
-The <I>range-expr</I> is a boolean expression; its default value is @strong{true}.
-The <I>idlist</I> is a comma-separated list of identifiers; these are the bound
+<center>@code{( @emph{quantifier-keyword} @emph{type} @emph{idlist} ; @emph{expr} )}</center>
+The @emph{range-expr} is a boolean expression; its default value is @strong{true}.
+The @emph{idlist} is a comma-separated list of identifiers; these are the bound
 variables of the quantification.
-<BR>@strong{Status:} 
+@*@strong{Status:} 
 @itemize @bullet
 @item \forall, \exists: Fully implemented and used in static checking.
 @item \num_of, \max, \min, \sum, \product: Parsed and ignored.  The expressions are translated to values of 0, and so may lead to unexpected results.
