@@ -2357,7 +2357,7 @@ try{
                    tag == TagConstants.PRODUCT || tag == TagConstants.SUM) {
 	    if (rangeExpr == null) {
 		rangeExpr = LiteralExpr.make(TagConstants.BOOLEANLIT,
-					Boolean.TRUE,Location.NULL);
+                                             Boolean.TRUE, Location.NULL);
 	    }
             returnExpr = GeneralizedQuantifiedExpr.make(loc, endLoc, tag, 
 					vs, rest, rangeExpr, null);
