@@ -32,14 +32,15 @@
 
 \begin{abstract}
 This paper presents a case study in formal specification of smart card
-programs, using ESC/Java. It presents an electronic purse application,
-provided by Gemplus, that we have annotated with its functional
-specification (\emph{i.e.}~pre-post-conditions, modifies clauses and
-class invariants), that are as detailed as possible. The specification
-has been based on the informal documentation of the application. The
-implementation has been checked \emph{w.r.t.}~the specification, using
-ESC/Java.  This revealed several errors or possibilities for
-improvement in the code (\emph{e.g.}~removing unnecessary tests). 
+programs, using ESC/Java. It discusses an electronic purse
+application, provided by Gemplus, that we have annotated with
+functional specifications (\emph{i.e.}~pre-post-conditions, modifies
+clauses and class invariants), that are as detailed as possible. The
+specification has been based on the informal documentation of the
+application. The implementation has been checked \emph{w.r.t.}~the
+specification, using ESC/Java.  This revealed several errors or
+possibilities for improvement in the source code (\emph{e.g.}~removing
+unnecessary tests).
 
 The main contribution of this paper is that it shows that relatively
 lightweight use of formal specification techniques already can have
@@ -52,19 +53,20 @@ could be further improved, both
 \section{Introduction}
 \label{SectIntro}
 
-\paragraph{Background}
+\subsubsection{Background}
 When developing a large software application, a significant part of
 the work is spent on writing clear and concise documentation. This
 documentation serves several purposes: it helps the developers of the
 application (to understand the implementation decisions taken by a
 colleague, but also to understand ones own decisions after a certain
-period of time), and it also is of use when somebody else builds a new
+period of time), and it also is useful when somebody else builds a new
 application, using features provided by the application at hand.
 
 However, such program documentation is only useful if it correctly
 describes the implementation, thus one would like to have some trust
 in its appropriateness. A way to achieve this is to write a formal
-specification and then prove the correctness of the implementation
+specification, \emph{i.e.}~a description of the program behaviour in
+logic, and then prove the correctness of the implementation
 \emph{w.r.t.}~this specification, but this is difficult (as it
 requires a good understanding of the semantics underlying the
 specification and programming language), and labour-intensive (see
@@ -80,15 +82,15 @@ which are close to programming languages. The annotation language for
 Eiffel~\cite{Meyer97} is the first example of such a specification
 language, and recently several annotation languages for Java have been
 proposed, following the same strategy:
-JML~\cite{LeavensBR99}, Esc/Java~\cite{ESCJavaUrl}, and
-the Jass annotation language~\cite{JassUrl}. For JML and Esc/Java,
+JML~\cite{LeavensBR99}, ESC/Java~\cite{ESCJavaUrl}, and
+the Jass annotation language~\cite{JassUrl}. For JML and ESC/Java,
 effort has been put into making these specification languages
 converge~\cite{EscJmlDiff}, so that the respective tools can be used
 for both languages. Typical for these languages is that
 expressions are written as Java expressions, extended with some
 specification-specific constructs.
 
-Secondly, together with the Esc/Java language, a static checker has
+Secondly, together with the ESC/Java language, a static checker has
 been developed~\cite{ESCJavaUrl}, which can be used to check simple,
 but useful properties. This static checker tries to check that a
 program satisfies its annotations, by using a dedicated, automated
@@ -96,29 +98,29 @@ theorem prover. This automated theorem prover has been fine-tuned to
 find common programming problems like
 \texttt{Null\-pointer\-Exception}s, and
 \texttt{Array\-Index\-Out\-Of\-Bound\-Exception}s, but it also can be
-used to check other annotations. If it cannot establish that a certain
-specification is satisfied, it issues a warning. Such a warning does
-not necessarily mean that the program is wrong, as the Esc/Java
-approach is neither sound, nor complete. When designing the system, a
-compromise has been made between soundness, completeness, and
-efficiency. The result is an efficient checker, that can increase the
-confidence in the correctness of programs, and that finds many common
-programming errors. However, if one wishes to establish formally the
-correctness of a complicated algorithm, other verification techniques
-have to be used, as advocated \emph{e.g.}~in the LOOP
-project~\cite{LOOPUrl} or the Jive project~\cite{MeyerP00}. But even
-for such complex algorithms it pays to off to use Esc/Java first, in
-order to find a first approximation of the errors in the algorithm
-and/or specification, before diving into the complete formal
-verification.
+used to check other annotations. If the theorem prover cannot
+establish that a certain specification is satisfied, ESC/Java issues a
+warning. Such a warning does not necessarily mean that the program is
+wrong, as the ESC/Java approach is neither sound, nor complete. When
+designing the tool, a compromise has been made between soundness,
+completeness, and efficiency. The result is an efficient checker, that
+can increase the confidence in the correctness of programs, and that
+finds many common programming errors. However, if one wishes to
+establish formally the correctness of a complicated algorithm, other
+verification techniques have to be used, as advocated in
+\emph{e.g.}~the LOOP project~\cite{LOOPUrl} or the Jive
+project~\cite{MeyerP00}. But even for such complex algorithms it pays
+to off to use ESC/Java first, in order to find a first approximation
+of the errors in the algorithm and/or specification, before diving
+into the complete formal verification.
 
-Annotating programs with Esc/Java specifications can thus be helpful
+Annotating programs with ESC/Java specifications can thus be helpful
 to create -- reasonably quick -- clear and concise documentation for
 a software application, which is according to the implementation.
 
-\paragraph{This paper}
+\subsubsection{This paper}
 To demonstrate the usefulness of this approach, this paper describes
-the Esc/Java annotation of a smart card application case study, which
+the ESC/Java annotation of a smart card application case study, which
 is the implementation of an electronic purse. The original source code
 of this case study comes from Gemplus~\cite{PurseUrl}. In this
 paper we discuss the annotations of the source code, and several
@@ -133,26 +135,25 @@ weight use of formal verification techniques, it is feasible to
 \emph{(i)} write a formal specification of an application, and
 \emph{(ii)} have the implementation checked \emph{w.r.t.}~the 
 specification so as to increase confidence in the correctness of the
-implementation. When specifying the purse we have
-found several (simple) properties which are informally documented, but
-are not preserved by the implementation. It is straightforward to
-formally specify these properties (typically as class invariants) and
-Esc/Java immediately finds the places where these properties are
-not preserved in the implementation.
+implementation. When specifying the purse we have found several
+(simple) properties which are informally documented, but are not
+preserved by the implementation. It is straightforward to formally
+specify these properties and ESC/Java immediately finds the places
+where these properties are not preserved in the implementation.
 
 Furthermore, this case study has been one of the first larger case
-studies done by using Esc/Java\comment{Is this correct?}, and we found
+studies done by using ESC/Java\comment{Is this correct?}, and we found
 several points for improvement in the static checker and its
 specification language. This lead us to a wish list on improvements in
 the specification language and to the development of a checker for
 so-called modifiable clauses. This checker will be described in a
-separate paper, but we use it in this case study to get further
-confidence in the accurateness of the specification.
+separate paper.%, but we use it in this case study to get further
+%confidence in the accurateness of the specification.
 
 The remaining of this paper is organised as
 follows. Section~\ref{SectGenPurse} describes the general outline of
 the case study. Section~\ref{SectStatic} describes the tools that we
-used for the static checking of the specification: Esc/Java and our
+used for the static checking of the specification: ESC/Java and our
 own modifiability checker. Section~\ref{SectSpecPurse} describes the
 annotations of the purse in more detail, and discusses several
 interesting aspects of the specification. Section~\ref{SectESC}
@@ -181,7 +182,8 @@ general outline of \textit{the electronic purse}.
 \rule{\linewidth}{0.3mm}
 \\[2.5ex]
 \centering
-\epsfig{file=figures/javacard.eps, width=11cm, clip=}
+\mbox{\epsfxsize=11cm\epsffile{figures/javacard.eps}}
+%{file=figures/javacard.eps, width=11cm, clip=}
 \caption{Outline of the purse}
 \label{fig-cas-pur}
 \rule{\linewidth}{0.3mm}
@@ -207,7 +209,7 @@ enough, the loyalty will request other loyalties present in the card
 to provide it some points.
 
 
-\paragraph{\bf The \textit{debit} operation.}
+\subsubsection{\bf The \textit{debit} operation.}
 This operation allows to carry out a debit transaction. During a debit 
 operation, if severals transactions are carried out in the same
 session, it is possible that
@@ -219,7 +221,7 @@ security reasons, the card holder can do at most
 \texttt{maxTransactionWithoutPIN} transactions in a same session. 
 
 
-\paragraph{\bf The \textit{credit} operation.} This operation allows
+\subsubsection{\bf The \textit{credit} operation.} This operation allows
 to carry out a credit transaction. In spite of fact the purse is
 empty, the
 card holder can execute a debit operation. In this case, the terminal
@@ -228,7 +230,7 @@ holder has some permission, the bank will send to the terminal a
 certificate of this.
 
 
-\paragraph{\bf The \textit{Currency} operation.} The balance is
+\subsubsection{\bf The \textit{Currency} operation.} The balance is
 expressed in a certain currency. When the card holder travels, he has
 the possibility to
 change the current currency defined for the purse. In this case, the
@@ -255,40 +257,40 @@ their logged transactions.
 \label{SectStatic}
 
 
-\subsection{\sc \bf Esc/Java}
+%\subsection{\sc \bf ESC/Java}
 \label{SubSectEscJava}
-\textsc{Esc/Java} is the verification tool developed at
+ESC/Java is the verification tool developed at
 Compaq SRC (Compaq Systems Research Center), which permits to find
- errors in \textsc{Java} programs. \textsc{Esc/Java} detects, at
+ errors in Java programs. ESC/Java detects, at
 compile time, common programming errors which usually are not
 detected until run time. 
 
-\textsc{Esc/Java} includes an annotation language with which
+ESC/Java includes an annotation language with which
 programmers can express desirable conditions, using light weight
 specifications. These desirable conditions represent the conditions
 that programmer aspire the program satisfies. For example, one may
 give a method precondition which
 says that a parameter is not null, or declare an object invariant which
 says than an integer field lies between $0$ and the length of some
-array field. \textsc{Esc/Java} uses the given annotations in reducing
+array field. ESC/Java uses the given annotations in reducing
 spurious warnings, and also checks that the program is consistent with 
 the given annotations. 
 
-\textsc{Esc/Java} performs \textit{modular checking}, i.e,
-\textsc{Esc/Java} checks each class separately. That means that
-\textsc{Esc/Java} can be applied to code that calls libraries even if
-the code for the libraries is not available. \textsc{Esc/Java} is a
-checker for \textsc{Java} programs, which optionally can be annotated
+ESC/Java performs \textit{modular checking}, i.e,
+ESC/Java checks each class separately. That means that
+ESC/Java can be applied to code that calls libraries even if
+the code for the libraries is not available. ESC/Java is a
+checker for Java programs, which optionally can be annotated
 with user supplied pragmas. These pragmas must occur within pragma
 containing comments. Furthermore, these pragmas can contain
-expressions which are similar to \textsc{Java} expressions. In spite
-of this similarity, in \textsc{Esc/Java}, the specification
+expressions which are similar to Java expressions. In spite
+of this similarity, in ESC/Java, the specification
 expressions must be free of subexpressions that, in general, may have
 side effects. The following section presents some of the
-\textsc{Esc/Java} pragmas, together to some examples of its
-utilization. Their full description can be found in~\cite{ESCManual}.
+ESC/Java pragmas, together to some examples of its
+utilization. Their full description can be found in~\cite{LeinoNS00}.
 
-\paragraph{\sc \bf Esc/Java pragmas}
+\subsubsection{\sc \bf ESC/Java pragmas}
 \begin{itemize}
 \item{\texttt{==>}.} It is the logical implication. So, \texttt{P
 ==> Q} is true if and only if \texttt{P} is false or \texttt{Q} is
@@ -321,7 +323,7 @@ call.
 the value of \texttt{E} in the pre-state of the method invocation. %In
 %the following example, the post-condition establishes that the
 %variable \texttt{x} will change \texttt{d} units from its original
-%value. \textsc{Esc/Java} enables to establish a post-condition by means
+%value. ESC/Java enables to establish a post-condition by means
 %of the \texttt{ensures} clause.\\
 
 %\begin{tabular}{l}
@@ -361,7 +363,7 @@ null)}.
 %\begin{itemize} 
 %\item{\tt ghost} est une instruction de
 %d\'eclaration qui permet de d\'eclarer une variables abstraite. Cette
-%variable ne peut pas \^etre utilis\'e dans le code \textsc{Java}. \\
+%variable ne peut pas \^etre utilis\'e dans le code Java. \\
 
 %\item{\tt set} est une instruction d'affectation qui permet
 %modifier une variable abstraite (\textit{ghost}). Ainsi, la ligne $2$
@@ -393,7 +395,7 @@ null)}.
 %\end{itemize}
 
 Figure~\ref{fig-add-cur} shows a typical annotation example using the
-\textsc{Esc/Java} language. This example was taken from the modeling 
+ESC/Java language. This example was taken from the modeling 
 we have done of the \textit{Electronic Purse}. \texttt{addCurrency}
 method belongs to \texttt{Currencies} class. This class models all
 currency supported by the Purse application. The method
@@ -430,7 +432,7 @@ $\mathtt{void\ {\bf addCurrency}(byte\ cur)\ \{}$ \\
 \>$\mathtt{\}}$ \\
 $\mathtt{\}}$ 
 \end{tabbing}
-\caption{Asserting with {\sc Esc/Java}}
+\caption{Asserting with ESC/Java}
 \label{fig-add-cur}
 \end{figure}
 
@@ -439,79 +441,79 @@ $\mathtt{\}}$
 
 
 
-\subsection{\bf Modifiable Checker}
-The functional behavior expressed by mean of \textsc{Esc/Java}
-pre-conditions and post-conditions is not enough to reason about
-arbitray method calls. Suppose we want to check the method presented by
-the figure~\ref{fig-mod-cas}. The specification corresponding to
-method \texttt{m} establish that after its invocation the length of
-\texttt{myArr} will be $15$. This post-condition is ensured by
-the assigment presented on the line $7$. However, the specification of
-the
-method \texttt{p} must be taken into account for ensuring this
-post-condition, due to the instruction on the line $8$. Thus, in a
-some manner, the specification of method \texttt{p} must ensure that
-its implementation
-will not modify the lenght of \texttt{myArray}. That would be possible
-with a declaration such as \texttt{modifies $\backslash$nothing}, which
-declares that \texttt{p} will not modify any allocation memory. In the 
-case of \textsc{Esc/Java}, when a 
-situation like this occurs, it assumes effectivaly a
-declaration by default \texttt{modifies $\backslash$nothing}, but it
-does not check this declarations holds. En consequence, if
-method \texttt{p} is overriden in a subclass of \texttt{C} and it
-changes the length of \texttt{myArray},
-\texttt{Esc/Java} will not complain. Thus, \texttt{Esc/Java} will
-accept like true the specification of method \texttt{m} in spite of it
-would be wrong. These kind of problems can be overcame if a static checking on
-the method overriden is performed. This kind of operation must check
-every assignment presented in the method body and establishes wheather
-any variable modified for it belongs to set of variables that method
-declared or not. More precisely, it must be checked that method body
-only modify the variables declared as modifiable, or its formal
-parameters o its method variables. 
+%\subsection{\bf Modifiable Checker}
+%The functional behavior expressed by mean of ESC/Java
+%pre-conditions and post-conditions is not enough to reason about
+%arbitray method calls. Suppose we want to check the method presented by
+%the figure~\ref{fig-mod-cas}. The specification corresponding to
+%method \texttt{m} establish that after its invocation the length of
+%\texttt{myArr} will be $15$. This post-condition is ensured by
+%the assigment presented on the line $7$. However, the specification of
+%the
+%method \texttt{p} must be taken into account for ensuring this
+%post-condition, due to the instruction on the line $8$. Thus, in a
+%some manner, the specification of method \texttt{p} must ensure that
+%its implementation
+%will not modify the lenght of \texttt{myArray}. That would be possible
+%with a declaration such as \texttt{modifies $\backslash$nothing}, which
+%declares that \texttt{p} will not modify any allocation memory. In the 
+%case of ESC/Java, when a 
+%situation like this occurs, it assumes effectivaly a
+%declaration by default \texttt{modifies $\backslash$nothing}, but it
+%does not check this declarations holds. En consequence, if
+%method \texttt{p} is overriden in a subclass of \texttt{C} and it
+%changes the length of \texttt{myArray},
+%\texttt{ESC/Java} will not complain. Thus, \texttt{ESC/Java} will
+%accept like true the specification of method \texttt{m} in spite of it
+%would be wrong. These kind of problems can be overcame if a static checking on
+%the method overriden is performed. This kind of operation must check
+%every assignment presented in the method body and establishes wheather
+%any variable modified for it belongs to set of variables that method
+%declared or not. More precisely, it must be checked that method body
+%only modify the variables declared as modifiable, or its formal
+%parameters o its method variables. 
 
 
-\begin{figure}[hbt]
-\begin{tabbing}
-dd\=dddd\=ddd\=ddd \kill
-$1$\>{public class {\bf C} \{} \\
-$2$\>\>{int [] myArr ;} \\
-\\
-$3$\>\>{/*@\ normal\_behavior} \\
-$4$\>\>\>{ ensures\ myArr.length\ $==$\ 15\ ;} \\
-$5$\>\>{ */} \\
-$6$\>\>{public void {\bf m}()\{} \\
-$7$\>\>\>{myArr = new int [15] ;} \\
-$8$\>\>\>{p() ;} \\
-$9$\>\>{\}} \\ \\
+%\begin{figure}[hbt]
+%\begin{tabbing}
+%dd\=dddd\=ddd\=ddd \kill
+%$1$\>{public class {\bf C} \{} \\
+%$2$\>\>{int [] myArr ;} \\
+%\\
+%$3$\>\>{/*@\ normal\_behavior} \\
+%$4$\>\>\>{ ensures\ myArr.length\ $==$\ 15\ ;} \\
+%$5$\>\>{ */} \\
+%$6$\>\>{public void {\bf m}()\{} \\
+%$7$\>\>\>{myArr = new int [15] ;} \\
+%$8$\>\>\>{p() ;} \\
+%$9$\>\>{\}} \\ \\
  
-$10$\>\>{/*@ normal$\_$behavior} \\
-$11$\>\>\>{ensures true ; }     \\ 
-$12$\>\>{ */} \\
-$13$\>\>{public void {\bf p}()\{ \} } \\
-$14$\>{\}}
-\end{tabbing}
-\caption{Modifiable clause}
-\label{fig-mod-cas}
-\end{figure}
+%$10$\>\>{/*@ normal$\_$behavior} \\
+%$11$\>\>\>{ensures true ; }     \\ 
+%$12$\>\>{ */} \\
+%$13$\>\>{public void {\bf p}()\{ \} } \\
+%$14$\>{\}}
+%\end{tabbing}
+%\caption{Modifiable clause}
+%\label{fig-mod-cas}
+%\end{figure}
 
-Ainsi, for instead, if a declaration such as \texttt{myArray $=$ new
-int$[6]$} was occurred inside of the overriden method \texttt{p}, this 
-kind of checking would complain due to \texttt{myArray} variable does not
-belong to set of variables that method \texttt{m} may
-modify\footnote{$\phi$, in this case}.
+%Ainsi, for instead, if a declaration such as \texttt{myArray $=$ new
+%int$[6]$} was occurred inside of the overriden method \texttt{p}, this 
+%kind of checking would complain due to \texttt{myArray} variable does not
+%belong to set of variables that method \texttt{m} may
+%modify\footnote{$\phi$, in this case}.
 
 
-We have developed a static checker for checking
-specification of modifies clauses in \textsc{Java} programs with
-assertions \textsc{Esc/Java}. Its implementation follows the static approach
-mentioned above and profites the \textsc{Java} Syntaxe for making a
-hierarchical checking. This checker will be fully presented in a
-separated paper. This checker allows to detect abnomalies situations
-such as will be presented in section ??????????. These abnomalies were 
-found in the process of checking the modifies clause for the Purse
-specifications. 
+%We have developed a static checker for checking
+%specification of modifies clauses in Java programs with
+%assertions ESC/Java. Its implementation follows the static approach
+%mentioned above and profites the Java Syntaxe for making a
+%hierarchical checking. This checker will be fully presented in a
+%separated paper. This checker allows to detect abnomalies situations
+%such as will be presented in section ??????????. These abnomalies were 
+%found in the process of checking the modifies clause for the Purse
+%specifications. 
 
 
 
@@ -534,7 +536,7 @@ interfaces -- \texttt{Shareable}, so the inheritance structure is not
 very complex. Therefore, we started by specifying classes that
 provide basic (and general) features, \emph{e.g.}~those in the
 \texttt{utils} package,
-that are used by the more classes in the \texttt{purse} package. The
+that are used by the classes in the \texttt{purse} package. The
 specifications for these basic classes form the basis for the
 specification of the more application-specific classes, so it is
 important that they are sufficiently detailed.
@@ -549,7 +551,7 @@ about this, in such a case we added a comment
 \texttt{modifiable \noth;} -- as in JML. Further, ESC/Java requires 
 that every exception that is mentioned in the exceptional
 postcondition, is also mentioned in the \texttt{throws} clause of the
-method. To avoid having to add \texttt{throws} clauses to all methods,
+method. To avoid having to add \texttt{throws} clauses to every method,
 in many cases we chose to have the assertion \texttt{exsures
 (Exception) false;} as a comment, without having it checked by
 ESC/Java. However, everywhere where there can be any doubt about the
@@ -599,13 +601,13 @@ documentation, and we correct the implementation where necessary
 (and document these changes). 
 
 In the case study, several functions from the JavaCard
-API~\cite{?} are used. When we specify methods using API
+API~\cite{JavaCardAPI} are used. When we specify methods using API
 functionalities, we use the API specification as constructed by Erik
-Poll~\cite{?}. 
-In the classes \texttt{Purse} and \texttt{PurseApplet}, several
-classes are used that we do not have access to. To overcome this
-problem, we ... \comment{What do we do? Does the Houdini paper give a
-solution?} 
+Poll and Hans Meijer (see~\emph{e.g.}\cite{MeijerP01}).  In the
+classes \texttt{Purse} and \texttt{PurseApplet}, several classes are
+used that we do not have access to. To overcome this problem, we have
+constructed fake classes declaring the methods and fields that we
+needed, but without an implementation.
 
 Our aim is to give a functional specification of the behaviour of the
 purse. However, we did not study the algorithms to manage secret keys,
@@ -619,7 +621,7 @@ and verify cryptographic algorithms is a topic of future research.
 We aim at giving specifications which produce a minimal amount of
 ESC/Java warnings, but not all warnings can be avoided. Typically, if
 a complex control structure occurs in a method (\emph{e.g.}~loops in
-which method calls are made) ESC/Java is no longer able to estabish
+which method calls are made) ESC/Java is unable to estabish
 complicated postconditions. If one wishes to certify these methods,
 other verification techniques, as advocated \emph{e.g.}~in the LOOP
 project~\cite{LOOPUrl}, should be used. However, in the case study at
@@ -636,7 +638,7 @@ we have had to make to the code.
 
 \subsection{Interesting aspects of the specification}\label{SectSpecDetails}
 Below, several interesting aspects of the specification are discussed
-in more detail. First we will elaborate on some implementation errors
+in more detail. First we elaborate on some implementation errors
 that we found in the purse application.  Then we discuss the
 specification of implicit class invariants, and how this can help to
 simplify the code. Finally, we discuss some miscellaneous aspects of
@@ -646,12 +648,9 @@ thorough testing, but using theorem proving techniques one is sure not
 to forget some cases. Also, writing the formal specifications forces
 one to think very precisely about the intended behaviour of programs,
 which helps in finding errors.
-\comment{I suggest to merge paragraph coding errors and the one about
-the final modifiers into one paragraph. I also move the implicit
-invariants and the unnecessary try-catches in one}
 
 
-\paragraph{Coding errors}
+\subsubsection{Implementation mistakes}
 The \texttt{Decimal} class is a purse class and it allows us to
 represent a floating point number as
 composing by a decimal part and a integer part. These concepts are
@@ -659,12 +658,12 @@ represented by the variables \texttt{intPart} and \texttt{decPart}
 respectively. This class is shown in the figure~\ref{fig-cla-dec}. The
 method \texttt{isGreaterEqualThan} intends to decide when the decimal
 represented by \texttt{this} is greater or equal than its parameter
-\texttt{d}. Therefore, by mean of a \textsc{Esc/Java} assertion, we
+\texttt{d}. Therefore, by mean of a ESC/Java assertion, we
 have established a post-condition corresponding to this
 specification. This work is done by an \texttt{ensures} comment, which
 is shown on the line $8$. 
 
-After running the \textsc{Esc/Java} tool on this method, a warning
+After running the ESC/Java tool on this method, a warning
 signal is activated. This warning suggest that this post-condition
 will not be satisfied by the method. The problem is found on the line
 $18$. This line must be replaced by \texttt{decPart >=
@@ -722,10 +721,9 @@ d.getDecPart()}. In this way, the condition asserted by the clause
 
 
 
-\paragraph{Final modifiers}
 The \texttt{Annee} class allows to represent a \textit{year} in the
 \texttt{purse} application. The Figure~\ref{fig-cla-ann} presents its
-source code with \textsc{Esc/Java}assertions. This class declares two 
+source code with ESC/Javaassertions. This class declares two 
 static variables called \texttt{MIN} and \texttt{MAX}, which represent
 the minimum and maximum year allowed by the application
 respectively. This class declares
@@ -746,7 +744,7 @@ with the values of their parameters. Otherwise, the method will raise
 an \texttt{DateException} exception. This abnormality condition is
 declared by the \texttt{exsures} clause. 
 
-\textsc{Esc/Java} complains when it finds a declaration such as$:$ 
+ESC/Java complains when it finds a declaration such as$:$ 
 \mbox{\tt date.setDate((byte)1, (byte)1, (byte)110);} (where date is a
 \texttt{Date} instance). The warning message signals that its third
 parameter does not verify the condition established by the clause
@@ -768,7 +766,7 @@ The declaration variables as \texttt{static} (commun for all instance)
 and \texttt{final} (which can not be changed) prevent us of doing
 any assumption that will be not satisfied any more by an
 application. This kind of control is carried out by
-\textsc{Esc/Java}. 
+ESC/Java. 
 
 
 %\begin{center}
@@ -870,11 +868,11 @@ application. This kind of control is carried out by
 
 
 
-\paragraph{Class invariants}
+\subsubsection{Class invariants}
 Typically, invariants are used to restrict the state space of a class,
 \emph{i.e.}~the set of allowed values for its instance variables. The
-most common example is an invariant which states that a reference
-variable may never be a null pointer, \emph{e.g.}~the variable
+most common example is an invariant which states that a reference may
+never be a null pointer, \emph{e.g.}~the variable
 \texttt{Purse purse}, as declared in the class \texttt{PurseApplet}
 should never be null.
 \begin{verbatim}
@@ -883,7 +881,7 @@ should never be null.
 Another common example of an invariant is to restrict the possible
 values of a numeric variable to a certain range. As remarked above, in
 the class \texttt{Decimal} it says that the value of the decimal
-fraction must be between 0 and 999. Inspection of the code teaches us
+fraction must be between 0 and 999. Inspection of the code reveals 
 that the integer part of the decimal number is supposed to be a
 positive short, and combining this gives the following class
 invariant\footnote{\texttt{MAX\_DECIMAL\_NUMBER} is equivalent to the
@@ -939,7 +937,7 @@ there are examples in the electronic purse where such implicit
 invariants are violated.
 For example, the class \texttt{AccessCondition} declares constants to
 state the different access conditions for the actions in the
-purse. Following~\cite{?}, variables that denote access conditions
+purse. Following~\cite{BretagneMGL00}, variables that denote access conditions
 should be restricted as follows.
 \begin{verbatim}
 /*@ invariant condition == FREE ||
@@ -984,7 +982,7 @@ the class, and -- which is important for smart cards -- can reduce the
 size of the byte code.
 
 
-\paragraph{Miscellaneous aspects of the specification}
+\subsubsection{Miscellaneous aspects of the specification}
 There are many other aspects of the specification that are worth
 mentioning. Here we mention some.
 
@@ -1049,7 +1047,7 @@ public boolean isNegatif(){ ... }
 \item Two classes, \texttt{TransactionRecord} and
 \texttt{ExchangeRecord} implement a cyclic table (of
 \texttt{Transaction}s and
-\texttt{ExchangeSession}s (representing currency changes),
+\texttt{ExchangeSession}s (storing currency changes),
 respectively).  These implementations are clearly copied from each
 other, but this is nowhere documented. Also the fact that a
 cyclic datastructure is implemented is not very well documented. Class
@@ -1079,23 +1077,26 @@ range of the table.
 
 \section{On the use of ESC/Java}
 \label{SectESC}
-We find ESC/Java a useful tool, that is pleasant to work
-with, but nevertheless we have some suggestions for improvements. In
-particular, we feel that certain specification constructs that are
-available in JML~\cite{LeavensBR99}, should be provided in ESC/Java as 
-well. They could be implemented as syntactic sugar only, but would be
-very useful to give clear and concise specifications.
-First of all, we would like to be able to use method names in
-specifications, as is allowed in JML for so-called
+We find ESC/Java a useful tool, that is pleasant to work with, but
+nevertheless we have some suggestions for improvements, both for the
+specification language as for the verifier.
+
+Concerning the specification language, we feel that certain
+specification constructs that are available in JML~\cite{LeavensBR99},
+should be provided in ESC/Java as well. They could be implemented as
+syntactic sugar only, but would be useful to give clear and concise
+specifications.  First of all, we would like to be able to use method
+names in specifications, as is allowed in JML for so-called
 \emph{pure} methods, \emph{i.e.}~methods without
 side-effects. Further, we would like to have some extra specification
 constructs for modifies clauses, \emph{e.g.}~\fieldsof, to denote all
 the fields of an object, and \noth. Also we feel that having some
 extra quantifiers, such as \texttt{\(\backslash\)min},
-\texttt{\(\backslash\)max}, and \texttt{\(\backslash\)choose} would be 
-very useful.
+\texttt{\(\backslash\)max}, and \texttt{\(\backslash\)choose} could be 
+useful to increase expresssivity of the specification language.
 
 \begin{figure}[tbh]
+\rule{\linewidth}{0.3mm}
 \begin{verbatim}
     /*@
       modifies \fields_of(this), \fields_of(date), \fields_of(heure),
@@ -1116,13 +1117,14 @@ very useful.
 \caption{Specification of \texttt{clone} in \texttt{ExchangeSession}
 in ideal ESC/Java}
 \label{FigIdealESC}
+\rule{\linewidth}{0.3mm}
 \end{figure}
 
 Figure~\ref{FigIdealESC} shows as an example how we would like the
 specification of the method \texttt{clone()} in class
 \texttt{ExchangeSession} to be (see~\cite{CatanoH01Url} for the
-ESC/Java specification as it is). We only specify that the fields of
-the current class all may be modified, without explicitly mentioning
+ESC/Java specification as it is). We only specify that all the fields
+of the current class may be modified, without explicitly mentioning
 them. As the fields of the component classes \texttt{date} and
 \texttt{heure} may be modified as well, we mention this
 explicitly. Similarly, we mention explicitly that the elements in the
@@ -1135,15 +1137,48 @@ equal to the corresponding fields of \texttt{es}, this is denoted by
 writing \texttt{this.equal(es)}, where \texttt{equal} is overwritten
 appropriately in \texttt{ExchangeSession}.
 
-Further, we feel that it would be an improvement if ESC/Java would
-deal more precisely with arithmetic operations (also on bytes and
-shorts). For example, several times we needed that for \emph{e.g.}~a
-byte \texttt{b} with a value between 0 and 10, after the operation
-\texttt{b++} this variable still has a positive value. 
-
-Finally, it would be nice if one could specify runtime exceptions in
+Also, it would be nice if one could specify runtime exceptions in
 \texttt{exsures} clauses, while they are not mentioned in the
 \texttt{throws} clause of the method.
+
+
+With respect to the verification that is done by ESC/Java, we found
+that is unfortunate that ESC/Java does not try to check the modifiable 
+clauses, because an incorrect modifiable clause can influence the 
+acceptance of other specifications. Suppose one has the following
+(annotated) methods.
+\begin{verbatim}
+  /*@ modifies x;
+      ensures x == 3;
+  */
+  void m () { x = 3;
+              n (); }
+
+  void n () { x = 4; }
+\end{verbatim}
+Remember that a method without a modifies clause is assumed to modify
+only fresly allocated memory, if any~\cite{LeinoNS00}. The
+specification for method \texttt{m()} is thus accepted by ESC/Java,
+although it is incorrect. When annotating existing programs, as we
+did, it is easy to forget to mention that a variable may be modified,
+and we felt the need to overcome this problem.
+
+Therefore, we have implemented a static checker for modifiable
+clauses. In the tradition of ESC/Java, this checker is designed to be
+efficient, but it is neither sound, nor complete. It does a syntactic
+analysis of the annotated program to recognise the various assignment
+statements and then checks whether the variables that are the
+``destination'' of an assignment are mentioned in appropriate modifies
+clauses. This checker will be described in more detail in a separate
+paper.
+
+
+Finally, we feel that it would be an improvement if the ESC/Java
+theorem prover would deal more precisely with arithmetic operations
+(also on bytes and shorts). For example, several times we needed that
+for \emph{e.g.}~a byte \texttt{b} with a value between 0 and 10, after
+the operation \texttt{b++} this variable still has a positive value.
+
 
 \section{Conclusions}
 \label{SectConcl}
@@ -1173,7 +1208,7 @@ formal verification can help significantly to increase confidence in a
 program. In particular, explicitly specifying class invariants turns
 out to be very useful.
 
-\paragraph{Future work} We plan to work in the field of
+\subsubsection{Future work} We plan to work in the field of
 specification languages for Java: how to improve them, and how to
 develop appropriate verification techniques for them. In particular,
 we will focus on the following points.
