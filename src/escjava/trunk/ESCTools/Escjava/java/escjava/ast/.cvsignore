@@ -24,6 +24,7 @@ ExprStmtPragma.java
 ExprStmtPragmaVec.java
 FieldDeclVec.java
 GCExpr.java
+GeneralizedQuantifiedExpr.java
 GeneratedTags.java
 GenericVarDeclVec.java
 GetsCmd.java
@@ -31,6 +32,7 @@ GhostDeclPragma.java
 GuardExpr.java
 GuardedCmd.java
 GuardedCmdVec.java
+IdentifierModifierPragma.java
 ImportPragma.java
 LabelExpr.java
 LocalVarDeclVec.java
@@ -44,7 +46,9 @@ NotSpecifiedExpr.java
 NothingExpr.java
 NothingExpr.java
 NowarnPragma.java
+NumericalQuantifiedExpr.java
 QuantifiedExpr.java
+ReachModifierPragma.java
 RepresentsPragma.java
 ResExpr.java
 RestoreFromCmd.java
@@ -56,6 +60,7 @@ SimpleStmtPragma.java
 SkolemConstantPragma.java
 Spec.java
 StillDeferredDeclPragma.java
+StmtModifierPragma.java
 SubGetsCmd.java
 SubSubGetsCmd.java
 SubstExpr.java
