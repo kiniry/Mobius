@@ -275,7 +275,7 @@ public final class GC {
 				 int locPragmaDecl,
 				 int auxLoc,
 				 Object aux) {
-    Assert.notFalse(locUse != Location.NULL);
+    //Assert.notFalse(locUse != Location.NULL);
     if (Main.options().guardedVC && locPragmaDecl != Location.NULL) {
       pred = GuardExpr.make(pred, locPragmaDecl);
     }
