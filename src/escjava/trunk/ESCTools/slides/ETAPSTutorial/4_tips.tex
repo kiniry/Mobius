@@ -96,21 +96,6 @@ cok,
 \part{{\Large \red \#1: Specification inheritance and behavioural subtyping }}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\begin{slide}{Inherited specifications}
-\begin{itemize}
-\item Base class specifications apply to derived classes
-\begin{itemize}
-\item that is, ESC/Java2 enforces \textit{behavioral subtyping}
-\item Specs from implemented interfaces also must hold for implementing classes
-\end{itemize}
-\item Be thoughtful about how strict the base class specs should be
-\item Guard them with {\blue \char'134 typeof(this) == \char'134 type(...) } if need be
-\item Restrictions on exceptions such as {\blue normal\_behavior} or {\blue signals (E e) false; }
-will apply to derived classes as well.
-\end{itemize}
-\end{slide}
 
 
 
@@ -244,8 +229,6 @@ This spec for \code{Child} is equivalent with
 
 \end{slide}
 
-
-
 \ifignore
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -332,6 +315,26 @@ public class Object {
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\begin{slide}{Inherited specifications}
+\vspace*{-4ex}
+
+So
+\begin{itemize}
+\item Base class specifications apply to subclasses
+\begin{itemize}
+\item that is, ESC/Java2 enforces \textit{behavioral subtyping}
+\item Specs from implemented \textit{interfaces} also must hold for implementing classes
+\end{itemize}
+\item Be thoughtful about how strict the base class specs should be
+\item Guard them with {\blue \char'134 typeof(this) == \char'134 type(...) } if need be
+\item Restrictions on exceptions such as {\blue normal\_behavior} or {\blue signals (E e) false; }
+will apply to derived classes as well.
+\end{itemize}
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \ifignore
 
 % treated - in more detail - in 5_jml_more
@@ -366,8 +369,7 @@ states what must be true if an exception of the stated type is thrown.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-
-\begin{slide}{\#2: Aliasing}
+\begin{slide}{Aliasing}
 \vspace*{-9ex}
 A common but non-obvious problem that causes violated invariants is aliasing.
 {\tiny
@@ -399,7 +401,7 @@ Associated declaration is "Alias.java", line 5, col 6:
 }
 
 \end{slide}
-\begin{slide}{\#2: Aliasing}
+\begin{slide}{Aliasing}
 \vspace*{-6ex}
 A full counterexample context ({\blue -counterexample} option) produces, among lots of other information:
 \begin{verbatim}
@@ -430,7 +432,7 @@ that is, {\blue this} and some different object ({\blue brokenObj}) share the \\
 \put(150,92){\circle*{5}}
 \end{picture}
 \end{slide}
-\begin{slide}{\#2: Aliasing}
+\begin{slide}{Aliasing}
 \vspace*{-6ex}
 To fix this, declare that {\blue a} is owned only by its parent object:\\
 ( {\blue owner} is a ghost field of java.lang.Object )
@@ -487,7 +489,7 @@ public class Alias {
 
 \end{slide}
 
-\begin{slide}{\#2: Aliasing}
+\begin{slide}{Aliasing}
 \vspace*{-9ex}
 Another example.  This one fails on the postcondition.
 \tiny
@@ -522,7 +524,7 @@ class Inner {
 
 \end{slide}
 
-\begin{slide}{\#2: Aliasing}
+\begin{slide}{Aliasing}
 \begin{itemize}
 \item The counterexample context shows
 \begin{verbatim}
@@ -537,7 +539,7 @@ class Inner {
 \end{itemize}
 \end{slide}
 
-\begin{slide}{\#2: Aliasing}
+\begin{slide}{Aliasing}
 \begin{itemize}
 
 \item Aliasing is a serious difficulty in verification
@@ -624,7 +626,7 @@ Problems can arise when a reference to an internal object is exported from a cla
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{slide}{\#6: \old}
+\begin{slide}{\old}
 \vspace*{-6ex}
 {\knalblue \old} is used to indicate evaluation in the pre-state in a postcondition expression.\\
 \vspace{1ex}
@@ -647,7 +649,7 @@ ensures (\forall int i; 0<=i && i<length; dest[destPos+i] == src[srcPos+i]);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{slide}{\#6: \old}
+\begin{slide}{\old}
 \vspace*{-6ex}
 {\knalblue \old} is used to indicate evaluation in the pre-state in a postcondition expression.\\
 \vspace{1ex}
@@ -672,7 +674,7 @@ Wrong!}\\
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{slide}{\#6: \old}
+\begin{slide}{\old}
 \vspace*{-6ex}
 {\knalblue \old} is used to indicate evaluation in the pre-state in a postcondition expression.\\
 \vspace{1ex}
@@ -705,14 +707,15 @@ ensures (\forall int i; 0<=i && i<length;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{slide}{\#6: \old}
+\begin{slide}{\old}
 \vspace*{-6ex}
 {\knalblue \old} is used to indicate evaluation in the pre-state in a postcondition expression.\\
 \vspace{1ex}
 Consider specifying
 {\tiny
 \begin{verbatim} 
-public static native void arraycopy(Object[] src, int srcPos,                                    Object[] dest, int destPos, int length);
+public static native void arraycopy(Object[] src, int srcPos,
+                                    Object[] dest, int destPos, int length);
 \end{verbatim}
 }
 Try:
@@ -741,9 +744,103 @@ ensures (\forall int i; (0<=i && i<destPos) ||
 \end{verbatim}
 }
 
+\end{slide}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}{\old}
+\vspace*{-6ex}
+
+In postcondition 
+{\tiny
+\begin{verbatim} 
+ensures (\forall int i; 0<=i && i<length; 
+                            dest[destPos+i] == \old(src[srcPos+i]);
+public static native void arraycopy(Object[] src, int srcPos,
+                                    Object[] dest, int destPos, int length);
+\end{verbatim}
+}
+shouldn't we write \code{\old(length)} instead of \code{length}?
 
 \end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}{\old}
+\vspace*{-6ex}
+
+In postcondition 
+{\tiny
+\begin{verbatim} 
+ensures (\forall int i; 0<=i && i<length; 
+                            dest[destPos+i] == \old(src[srcPos+i]);
+public static native void arraycopy(Object[] src, int srcPos,
+                                    Object[] dest, int destPos, int length);
+\end{verbatim}
+}
+shouldn't we write \code{\old(length)} instead of \code{length}?
+
+And \code{\old(dest)[...]} instead of \code{dest[...]}?
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}{\old}
+\vspace*{-6ex}
+
+In postcondition 
+{\tiny
+\begin{verbatim} 
+ensures (\forall int i; 0<=i && i<length; 
+                            dest[destPos+i] == \old(src[srcPos+i]);
+public static native void arraycopy(Object[] src, int srcPos,
+                                    Object[] dest, int destPos, int length);
+\end{verbatim}
+}
+shouldn't we write \code{\old(length)} instead of \code{length}?
+
+And \code{\old(dest)[...]} instead of \code{dest[destPos+i]}?
+
+\smallskip
+
+Strictly speaking: yes. But because this is so easy to get forget,
+{\blue any mention of an argument \code{x} in postcondition means \code{\old(x)}.}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}{\old}
+\vspace*{-6ex}
+
+In postcondition 
+{\tiny
+\begin{verbatim} 
+ensures (\forall int i; 0<=i && i<length; 
+                            dest[destPos+i] == \old(src[srcPos+i]);
+public static native void arraycopy(Object[] src, int srcPos,
+                                    Object[] dest, int destPos, int length);
+\end{verbatim}
+}
+shouldn't we write \code{\old(length)} instead of \code{length}?
+
+And \code{\old(dest)[...]} instead of \code{dest[destPos+i]}?
+
+\smallskip
+
+Strictly speaking: yes. But because this is so easy to get forget,
+{\blue any mention of an argument \code{x} in postcondition means \code{\old(x)}.}
+
+\medskip
+
+{\scriptsize This means it's impossible to refer to the new value of 
+\code{length} in postcondition of \code{arraycopy}. But this value is
+unobservable for clients anyway.}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \part{{\Large \red \#7: How to write specs }}

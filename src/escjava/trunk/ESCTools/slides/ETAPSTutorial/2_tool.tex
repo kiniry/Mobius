@@ -38,7 +38,7 @@ cok,
 \newcommand{\embf}[1]{\textit{\textbf{#1}}}
 \newcommand{\rmbf}[1]{\textrm{\textbf{#1}}}
 \newcommand{\ttbf}[1]{\mbox{\tt \textbf{#1}}}
-\newcommand{\code}[1]{{\rm \texttt{\textbf{\small #1}}}}
+\newcommand{\code}[1]{{\rm \texttt{\textbf{\scriptsize #1}}}}
 \myitem{1}{\mbox{{$\bullet$}}}
 
 
@@ -223,5 +223,195 @@ public final class Class implements java.io.Serializable {
 
 \end{verbatim}
 \end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}{Bag demo}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}{modular reasoning}
+\vspace*{-6ex}
+
+ESC/Java2 reasons about every method individually.
+So in
+
+\begin{alltt}\code{ class A\{
+  byte[] b;
+  public void n() \{ b = new byte[20]; \}
+  public void m() \{ n();
+                    b[0] = 2;
+                    ...       \}
+}
+\end{alltt} %}
+
+ESC/Java2 warns that \texttt{b[0]} may be a null dereference here,
+even though you can see that it won't be.
+\end{slide}
+
+\begin{slide}{modular reasoning}
+\vspace*{-6ex}
+To stop ESC/Java2 complaining: add a postcondition
+\begin{alltt}\code{ class A\{
+  byte[] b;
+ {\green //@ ensures b != null && b.length = 20;}
+  public void n() \{ a = new byte[20]; \}
+  public void m() \{ n();
+                    b[0] = 2;
+                    ...       \} 
+}
+\end{alltt} %}
+So: property of method that is relied on has to be made explicit.
+
+Also: subclasses that override methods have to preserve these.
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}{modular reasoning}
+\vspace*{-6ex}
+
+Similarly, ESC/Java will complain about \texttt{b[0] = 2} in
+
+\begin{alltt}\code{ class A\{
+  byte[] b;
+  public void A() \{ b = new byte[20]; \}
+  public void m() \{ b[0] = 2;
+                    ...  \}
+
+}
+\end{alltt} %}
+Maybe you can see that this is a spurious warning, though this will be
+harder than in the previous example: you'll have to inspect {\em all}
+constructors and {\em all} methods.
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}{modular reasoning}
+\vspace*{-6ex}
+
+To stop ESC/Java2 complaining here: add an invariant
+
+\begin{alltt}\code{ class A\{
+  byte[] b;
+  {\green //@ invariant b != null && b.length == 20;}
+  {\green     // or weaker property for b.length ?}
+  public void A() \{ b = new byte[20]; \}
+  public void m() \{ b[0] = 2;
+                    ...  \}
+}
+\end{alltt} %}
+
+So again: properties you rely on have to be made explicit.
+
+\medskip
+
+And again: subclasses have to preserve these properties.
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}{assume}
+\vspace*{-6ex}
+
+Alternative to stop ESC/Java2 complaining: add an assumption:
+\begin{alltt}\code{ 
+    ...
+    //@{\blue assume} b != null && b.length > 0;
+    b[0] = 2;
+    ...  
+}
+\end{alltt}
+
+Especially useful during development, when you're still trying to
+discover hidden assumptions, or when ESC/Java2's reasoning power is
+too weak.
+
+\medskip
+
+(\texttt{requires} can be understood as a form of \texttt{assume}.)
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}{need for assignable clauses}
+\vspace*{-6ex}
+
+
+\begin{alltt}\code{ class A\{
+  byte[] b;
+  ...
+  public void m() \{ ... 
+                    b = new byte[3];
+                    //@ assert b != null; // ok!
+                    o.n(...);
+                    //@ assert b != null; // ok?
+                    ... 
+  \}
+
+}
+\end{alltt} %}
+What does ESC/Java need to know about \texttt{o.n} to check the second assert ?
+
+\end{slide}
+
+
+\begin{slide}{need for assignable clauses}
+\vspace*{-6ex}
+
+\begin{alltt}\code{ class A\{
+  byte[] b;
+  ...
+  public void m() \{ ... 
+                    b = new byte[3];
+                    //@ assert b != null; // ok!
+                    o.n(b);
+                    //@ assert b != null; // ok?
+                    ... 
+  \}
+
+}
+\end{alltt} %}
+
+A detailed spec for \texttt{o.n} might give a postcondition saying
+that \texttt{b} is not null.
+
+\end{slide}
+
+
+\begin{slide}{need for assignable clauses}
+\vspace*{-6ex}
+
+\begin{alltt}\code{ class A\{
+  byte[] b;
+  ...
+  public void m() \{ ... 
+                    b = new byte[3];
+                    //@ assert b != null; // ok!
+                    o.n();
+                    //@ assert b != null; // ok?
+                    ... 
+  \}
+
+}
+\end{alltt} %}
+
+If the postcondition of \texttt{o.n} doesn't tell us \texttt{b} won't be not null
+-- and can't be expected to -- we need the \texttt{assignable} clause to
+tell us that \texttt{o.n} won't affect \texttt{b}.
+
+\medskip
+
+{\scriptsize Declaring \texttt{\textbf{o.n}} as pure would solve the problem.}
+
+
+\end{slide}
+
+
+
+
+
 
 \end{document}

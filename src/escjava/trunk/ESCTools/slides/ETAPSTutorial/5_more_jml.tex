@@ -118,7 +118,7 @@ niks
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{Core JML}
-\vspace*{-3ex}
+\vspace*{-4ex}
 
 Remember the core JML keywords were
 
@@ -138,7 +138,7 @@ Remember the core JML keywords were
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{More advanced JML features}
-\vspace*{-3ex}
+\vspace*{-4ex}
 
 \begin{itemize}
 \item Visibility
@@ -200,7 +200,7 @@ refers to {\green private} field {\green\code{n}}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{Visibility: \texttt{spec\_public}}
-\vspace*{-3ex}
+\vspace*{-4ex}
 
 Keyword \code{spec\_public} loosens visibility for specs.\\
 Private \code{spec\_public} fields are allowed in public specs, e.g.:
@@ -230,7 +230,7 @@ Private \code{spec\_public} fields are allowed in public specs, e.g.:
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{Exceptional specifications}
-\vspace*{-3ex}
+\vspace*{-4ex}
 
 A method specification can (dis)allow the throwing of exceptions,
 and specify a exceptional postcondition that should hold in
@@ -253,7 +253,7 @@ Not allowing any exceptions to be thrown is the simplest approach.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{Exceptions allowed by specs} 
-\vspace*{-3ex}
+\vspace*{-4ex}
 
 By default, a method is allowed to throw exceptions, but only those listed
 in its throws clause. So
@@ -279,7 +279,7 @@ and an implicit clause
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{Exceptions allowed by specs}
-\vspace*{-3ex}
+\vspace*{-4ex}
 
 By default, a method is allowed to throw exceptions, \textit{but only those listed
 in its throws clause.} So
@@ -305,7 +305,7 @@ even though Java does not require a throws clause for these.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{Ruling out exceptions}
-\vspace*{-3ex}
+\vspace*{-4ex}
 
 To forbid a particular exception \code{SomeException}
 \begin{enumerate}
@@ -315,14 +315,12 @@ To forbid a particular exception \code{SomeException}
 \end{alltt}
 
 \item limit the set of allowed exceptions, use a postcondition such as
-\begin{alltt}\code{\scriptsize
-    signals (Exception e) e instanceof E1 
+\begin{alltt}\code{\scriptsize    signals (Exception e) e instanceof E1 
                        || ... 
                        || e instanceof En;}
 \end{alltt}
 or, equivalently, us the shorthand for this
-\begin{alltt}\code{\scriptsize
-    signals_only E1, ... En;}
+\begin{alltt}\code{\scriptsize    signals_only E1, ... En;}
 \end{alltt}
 
 \end{enumerate}
@@ -332,7 +330,7 @@ or, equivalently, us the shorthand for this
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{Ruling out exceptions}
-\vspace*{-3ex}
+\vspace*{-4ex}
 
 To forbid \textit{all} exceptions
 \begin{enumerate}
@@ -358,7 +356,7 @@ use keyword {\blue normal\_behavior} to rule out all exceptions
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{may vs must throw an exception}
-\vspace*{-3ex}
+\vspace*{-4ex}
 
 Beware of the difference between 
 \begin{quote}
@@ -382,7 +380,7 @@ These are easy to confuse!
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{\texttt{exceptional\_behavior}}
-\vspace*{-3ex}
+\vspace*{-4ex}
 
 
 \begin{alltt}\code{\scriptsize{\green /*@} exceptional_behavior
@@ -413,7 +411,7 @@ says a \code{BankException} \textit{must} be thrown if \code{amount > balance}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{Example}
-\vspace*{-3ex}
+\vspace*{-4ex}
 
 \begin{alltt}\code{\scriptsize{\green /*@} normal_behavior
         requires amount <= balance;
@@ -432,7 +430,7 @@ says a \code{BankException} \textit{must} be thrown if \code{amount > balance}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{Example}
-\vspace*{-3ex}
+\vspace*{-4ex}
 
 or, equivalently
 
@@ -453,7 +451,7 @@ or, equivalently
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{Exceptional behaviour}
-\vspace*{-3ex}
+\vspace*{-4ex}
 
 Moral: to keep things simple, disallow exceptions
 in specs whenever possible
@@ -483,7 +481,7 @@ elsewhere.}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{Problems with assignable clauses}
-\vspace*{-3ex}
+\vspace*{-4ex}
 
 Assignable clauses
 \begin{itemize}
@@ -504,18 +502,18 @@ Assignable clauses
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{Problems with assignable clauses}
-\vspace*{-3ex}
+\vspace*{-4ex}
 
 
 \begin{alltt}\code{\scriptsize public class Timer\{
-  /*@ spec_public @*/ int time_hrs, time_mins, time_secs; 
-  /*@ spec_public @*/ int alarm_hrs, alarm_mins, alarm_secs; 
+  /*@ spec_public @*/ int{\green time_hrs, time_mins, time_secs}; 
+  /*@ spec_public @*/ int{\green alarm_hrs, alarm_mins, alarm_secs}; 
 
   //@ assignable time_hrs, time_mins,  time_secs;
-  public void tick() \{ ... \}
+  public void{\green tick}() \{ ... \}
 
   //@ assignable alarm_hrs, alarm_mins, alarm_secs ;
-  public void setAlarm(int hrs, int mins, int secs) \{ ... \} 
+  public void{\green setAlarm}(int hrs, int mins, int secs) \{ ... \} 
 \}}
 \end{alltt}
 
@@ -526,19 +524,19 @@ Assignable clauses
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{Solution: datagroups}
-\vspace*{-3ex}
+\vspace*{-4ex}
 
 
 \begin{alltt}\code{\scriptsize public class Timer\{
  {\red //@ model public JMLDatagroup time, alarm;}
-  int time_hrs, time_mins, time_secs;{\red //@ in time;}
-  int alarm_hrs, alarm_mins, alarm_secs;{\red //@ in alarm;}
+  int {\green time_hrs, time_mins, time_secs};{\red //@ in time;}
+  int {\green alarm_hrs, alarm_mins, alarm_secs};{\red //@ in alarm;}
 
   //@ assignable{\red time};
-  public void tick() \{ ... \}
+  public void{\green tick}() \{ ... \}
 
   //@ assignable{\red alarm};
-  public void setAlarm(int hrs, int mins, int secs) \{ ... \} 
+  public void{\green setAlarm}(int hrs, int mins, int secs) \{ ... \} 
 \}
 
 }
@@ -556,7 +554,7 @@ specification-only fields}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{Datagroups}
-\vspace*{-3ex}
+\vspace*{-4ex}
 
 
 Datagroups provide an abstraction mechanism for assignable clauses.
@@ -575,18 +573,18 @@ in \code{objectState}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{Datagroups can be nested}
-\vspace*{-3ex}
+\vspace*{-4ex}
 
 \begin{alltt}\code{\scriptsize public class Timer\{
   //@ model public JMLDatagroup time, alarm; {\red //@ objectState}
-  int time_hrs, time_mins, time_secs; //@ in time;
-  int alarm_hrs, alarm_mins, alarm_secs; //@ in alarm;
+  int{\green time_hrs, time_mins, time_secs}; //@ in time;
+  int{\green alarm_hrs, alarm_mins, alarm_secs}; //@ in alarm;
 
   //@ assignable{\red time};
-  public void tick() \{ ... \}
+  public void{\green tick}() \{ ... \}
 
   //@ assignable{\red alarm};
-  public void setAlarm(int hrs, int mins, int secs) \{ ... \}
+  public void{\green setAlarm}(int hrs, int mins, int secs) \{ ... \}
 \}
 
 }
@@ -604,13 +602,13 @@ Another implementation, using an array of 6 digits to represent
 hrs:mns:secs
 
 \begin{alltt}\code{\scriptsize public class ArrayTimer\{
-  /*@ spec_public @*/ char[] currentTime; 
+  /*@ spec_public @*/ char[]{\green currentTime}; 
 
   //@ invariant currentTime != null;
   //@ invariant currentTime.length == 6;
 
   //@ assignable currentTime[*];
-  public void tick() \{ ... \}
+  public void{\green tick}() \{ ... \}
 
   ...
 \}
@@ -630,14 +628,14 @@ hrs:mns:secs
 
 \begin{alltt}\code{\scriptsize public class ArrayTimer\{
  {\red //@ model public JMLDatagroup time;}
-  char[] currentTime;{\red //@ in time;}
+  char[]{\green currentTime};{\red //@ in time;}
  {\red //@ maps currentTime[*] \into time;}
 
   //@ invariant currentTime != null;
   //@ invariant currentTime.length == 6;
 
   //@ assignable{\red time};
-  public void tick() \{ ... \}
+  public void{\green tick}() \{ ... \}
 
   ...
 \} }
@@ -648,17 +646,18 @@ hrs:mns:secs
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{Datagroups and interfaces}
-\vspace*{-3ex}
+\vspace*{-4ex}
 
 Datagroups are convenient in specs for interfaces.
 
 
 \begin{alltt}\code{\scriptsize public interface TimerInterface\{
   //@ model{\red instance} public JMLDatagroup time, alarm;
+
   //@ assignable time;
-  public void tick();
+  public void{\green tick}();
   //@ assignable alarm;
-  public void setAlarm(int hrs, int mins, int secs);
+  public void{\green setAlarm}(int hrs, int mins, int secs);
 \}
 
 }
@@ -679,7 +678,7 @@ but in JML they can have \textit{model} instance fields
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{The problem with assignable clauses}
-\vspace*{-3ex}
+\vspace*{-4ex}
 
 Despite the abstraction possibilities offered by datagroups,
 assignable clauses remain a bottlecneck both in program specification
@@ -701,7 +700,7 @@ over all fields not mentioned in the assignable clause}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{Aliasing}
-\vspace*{-3ex}
+\vspace*{-4ex}
 
 Aliasing is the root of all evil, for anyone trying trying to verify 
 imperative programs.
@@ -722,17 +721,17 @@ Recall implementation using an array of 6 digits to represent
 hrs:mns:secs
 
 \begin{alltt}\code{\scriptsize public class ArrayTimer\{
-  char[] currentTime;                    
-  char[] alarmTime;
+  char[]{\green currentTime};                    
+  char[]{\green alarmTime};
 
   //@ invariant currentTime != null;
   //@ invariant currentTime.length == 6;
   //@ invariant alarmTime != null;
   //@ invariant alarmTime.length == 6;
 
-  public void tick() \{ ... \}
+  public void{\green tick}() \{ ... \}
 
-  public void setAlarm(...) \{ ... \}
+  public void{\green setAlarm}(...) \{ ... \}
 \}
 
 }
@@ -752,6 +751,7 @@ Things will go wrong if different instances of \code{ArrayTimer}
 share the same \code{alarmTime} array, ie.
 \begin{alltt}\code{\scriptsize
   o.alarmTime == o'.alarmTime}
+
 \end{alltt}
 for some \code{o!=o'}
 
@@ -768,11 +768,11 @@ ESC/Java2 may notice this, produce a correct, but puzzling, warning.
 To rule out such aliasing of eg. \code{alarmTime} fields:
 
 \begin{alltt}\code{\scriptsize public class ArrayTimer\{
-  char[] alarmTime;
+  char[]{\green alarmTime};
   //@ invariant currentTime.owner == this;
   ...
 
-  public ArrayTimer( ...)\{
+  public{\green ArrayTimer}( ...)\{
     ...;
     currentTime = new char[6];
     //@ set currentTime.owner == this;
@@ -825,7 +825,7 @@ to rule out such aliasing.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{Behavioural subtyping}
-\vspace*{-3ex}
+\vspace*{-4ex}
 
 Suppose \code{Child extends Parent}.
 
@@ -842,7 +842,7 @@ code will behave ``as expected'' if we provide an
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{Behavioural subtyping}
-\vspace*{-3ex}
+\vspace*{-4ex}
 
 Behavioural subtyping usually enforced by insisting that
 
@@ -866,7 +866,7 @@ any child class {\green inherits} the specification of its parent.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{$\!\!\!$\small Specification inheritance for invariants}
-\vspace*{-3ex}
+\vspace*{-4ex}
 
 Invariants are inherited in subclasses. Eg.
 \begin{alltt}
@@ -935,7 +935,7 @@ So the complete spec for \code{Child} is
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{$\!\!\!\!\!$\small Specification inheritance for methods specs}
-\vspace*{-3ex}
+\vspace*{-4ex}
 
 This is equivalent with
 
@@ -961,7 +961,7 @@ This is equivalent with
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{Ghost fields}
-\vspace*{-3ex}
+\vspace*{-4ex}
 
 Sometimes it is convenient to introduce an
 extra field, only for the purpose of specification
@@ -981,7 +981,7 @@ to assign a value to a \code{ghost} field.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{Ghost fields - example} 
-\vspace*{-3ex}
+\vspace*{-4ex}
 
 Suppose the informal spec of 
 \begin{alltt}
@@ -1040,12 +1040,12 @@ if protocols is in progress, eg.
 \code{\scriptsize{class SimpleProtocol \{
  {\green //@ private ProtocolStack st;}
   ...
-  void startProtocol() \{ 
+  void start() \{ 
      ...
      st = new ProtocolStack(...);
      ...  \}
       
-  void endProtocol() \{ 
+  void stop() \{ 
      ... 
      st = null;
      ...  \}
@@ -1069,12 +1069,12 @@ There may be correspondence between the {\blue ghost field} and some
   //@ requires  !started;
   //@ assignable started;
   //@ ensures    started;
-  void startProtocol() \{ ...  \}
+  void start() \{ ...  \}
       
   //@ requires   started;
   //@ assignable started;
   //@ ensures   !started;
-  void endProtocol() \{ ...  \} }}
+  void stop() \{ ...  \} }}
 \end{alltt} %}
 \end{slide}
 
@@ -1090,12 +1090,12 @@ We could now get rid of the ghost field, and write
   //@ requires  {\green st==null};
   //@ assignable st;
   //@ ensures  {\green  st!=null};
-  void startProtocol() \{ ... \}
+  void start() \{ ... \}
       
   //@ requires  {\green st!=null};
   //@ assignable st;
   //@ ensures   {\green st==null};
-  void endProtocol() \{ ... \} }}
+  void stop() \{ ... \} }}
 \end{alltt} %}
 
 but this is ugly and exposes implementation details.
@@ -1117,12 +1117,12 @@ Solution: use a {\blue model} field
   //@ requires !started;
   //@ assigable started;
   //@ ensures   started;
-  void startProtocol() \{ ... \}
+  void start() \{ ... \}
       
   //@ requires  started;
   //@ assigable started;
   //@ ensures  !started;
-  void endProtocol() \{ ... \} }
+  void stop() \{ ... \} }
 \end{alltt} %}
 \end{slide}
 
@@ -1141,12 +1141,12 @@ A model field also provided an associated {\blue datagroup}
   //@ requires !started;
   //@ assigable started;
   //@ ensures   started;
-  void startProtocol() \{ ... \}
+  void start() \{ ... \}
       
   //@ requires  started;
   //@ assigable started;
   //@ ensures  !started;
-  void endProtocol() \{ ... \} }
+  void stop() \{ ... \} }
 \end{alltt} %}
 \end{slide}
 
@@ -1155,10 +1155,10 @@ A model field also provided an associated {\blue datagroup}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{Model vs ghost fields}
-\vspace*{-3ex}
+\vspace*{-4ex}
 
 
-Difference between {\green ghost} and {\blue model} is maybe confusing!
+Difference between {\green ghost} and {\blue model} may be confusing!
 
 Both exist only in JML specification, and not in the code.
 
@@ -1186,7 +1186,7 @@ represent clause is like `representation function'.}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{Invariants}
-\vspace*{-3ex}
+\vspace*{-4ex}
 
 Invariants -- aka class invariants -- are a common \& very useful notion.
 
@@ -1214,7 +1214,7 @@ In fact, invariants are a hot research topic.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{When should an invariant hold?}
-\vspace*{-3ex}
+\vspace*{-4ex}
 
 
 \begin{alltt}\code{\scriptsize public class A \{
@@ -1237,7 +1237,7 @@ An invariant can temporarily be broken.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{When should an invariant hold?}
-\vspace*{-3ex}
+\vspace*{-4ex}
 
 \begin{alltt}\code{\scriptsize public class A \{
    B b;
@@ -1260,7 +1260,7 @@ involves an invoking on the current object.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{When should an invariant hold?}
-\vspace*{-3ex}
+\vspace*{-4ex}
 
 Eg, suppose
 
@@ -1288,7 +1288,7 @@ This is known as the {\red call-back} problem.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{When should an invariant hold?}
-\vspace*{-3ex}
+\vspace*{-4ex}
 
 Solution to the call-back problem:
 \begin{quote}
@@ -1320,7 +1320,17 @@ a hot topic of research.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{When should an invariant hold?}
-\vspace*{-3ex}
+\vspace*{-4ex}
+
+Sometimes you do want to invoke a method at a program point
+where the invariant is broken.
+To do this without ESC/Java2 complaining:
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}{When should an invariant hold?}
+\vspace*{-4ex}
 
 Sometimes you do want to invoke a method at a program point
 where the invariant is broken.
@@ -1329,7 +1339,30 @@ To do this without ESC/Java2 complaining:
 \begin{itemize}
 \item
 A private method can be declared as \code{helper} method
-\begin{alltt}\code{\scriptsize private /*@ helper @*/ void m() \{ ... \}}
+\begin{alltt}\code{\scriptsize private{\red /*@ helper @*/} void m() \{ ... \}}
+\end{alltt}
+Invariants do not have to hold when such a helper method is called.
+
+\medskip
+
+Effectively, such methods are in-lined in verifications
+
+\end{itemize}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}{When should an invariant hold?}
+\vspace*{-4ex}
+
+Sometimes you do want to invoke a method at a program point
+where the invariant is broken.
+To do this without ESC/Java2 complaining:
+
+\begin{itemize}
+\item
+A private method can be declared as \code{helper} method
+\begin{alltt}\code{\scriptsize private{\red /*@ helper @*/} void m() \{ ... \}}
 \end{alltt}
 Invariants do not have to hold when such a helper method is called.
 
@@ -1339,7 +1372,7 @@ Effectively, such methods are in-lined in verifications
 
 \item
 add 
-\begin{alltt}\code{\scriptsize //@ nowarn Invariant}
+\begin{alltt}\code{\scriptsize{\red //@ nowarn Invariant}}
 \end{alltt}
 in the line where this method call occurs.
 
@@ -1356,21 +1389,21 @@ NB this is unsafe, and a possible source of unsoundness!
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{More problems with invariants}
-\vspace*{-3ex}
+\vspace*{-4ex}
 
 
 \begin{alltt}\code{\scriptsize public class SortedLinkedList \{
-   private int i;
-   private LinkedList next;
+   private int{\green i};
+   private LinkedList{\green next};
    //@ invariant i > next.i;
-   public /*@ pure @*/ int getValue()\{ return i; \}
-   public /*@ pure @*/ int getNext()\{ return next; \}
-   public /*@ pure @*/ int getValue()\{ return i; \}
-   public void inc() \{ i++; \}
+   public /*@ pure @*/ int{\green getValue}()\{ return i; \}
+   public /*@ pure @*/ int{\green getNext}()\{ return next; \}
+   public /*@ pure @*/ int{\green getValue}()\{ return i; \}
+   public void{\green inc}() \{ i++; \}
   \}}
 \end{alltt}
 
-\code{i++} won't break this object's invariant, but may break the invariant
+\code{inc} won't break this object's invariant, but may break the invariant
 of the object who has this object as it's \code{next}.
 
 \end{slide}
@@ -1378,7 +1411,7 @@ of the object who has this object as it's \code{next}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{More problems with invariants}
-\vspace*{-3ex}
+\vspace*{-4ex}
 
 The essence of the problem is that the invariant of
 one object \code{o} may depend on the state of another object \code{o'}.
