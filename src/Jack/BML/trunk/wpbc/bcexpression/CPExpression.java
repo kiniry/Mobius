@@ -15,6 +15,8 @@ import constants.BCConstant;
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
 public class CPExpression extends Expression {
+	
+	//LB left est assez mal choisi comme nom.
 	private BCConstant left;
 	private Expression right;
 	

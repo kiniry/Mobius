@@ -16,35 +16,42 @@ import org.apache.bcel.generic.Type;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class BCLocalVariable {
-	private  int index;
-	private  int start_pc;
-	private  int length;
-	private  int  name_index;
-	private  int signature_index;
-	  
-	private Type type; 
-	
-	
+	private int index;
+	private int start_pc;
+	private int length;
+	private int name_index;
+	private int signature_index;
+
+	private Type type;
+
 	public BCLocalVariable(int _index, Type _type) {
 		type = _type;
 		index = _index;
 	}
-	
-	public BCLocalVariable(int _start_pc, int _length, int _name_index, int _signature_index, int _index ) {
+
+	public BCLocalVariable(
+		int _start_pc,
+		int _length,
+		int _name_index,
+		int _signature_index,
+		int _index) {
 		//this(_index);
 		index = _index;
 		start_pc = _start_pc;
-		length =  _length;
+		length = _length;
 		name_index = _name_index;
 		signature_index = _signature_index;
 	}
 
 	public BCLocalVariable(LocalVariable lv) {
 		//lv.get
-		this( lv.getStartPC(), lv.getLength(), lv.getNameIndex(), lv.getSignatureIndex(), lv.getIndex());	
+		this(
+			lv.getStartPC(),
+			lv.getLength(),
+			lv.getNameIndex(),
+			lv.getSignatureIndex(),
+			lv.getIndex());
 	}
-	
-	
 
 	/**
 	 * @return

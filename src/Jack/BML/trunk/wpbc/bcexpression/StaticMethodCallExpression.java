@@ -14,20 +14,20 @@ import constants.BCConstantInterfaceMethodRef;
  * To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
-public class StaticMethodCallExpression  extends  CPExpression {
-	
+public class StaticMethodCallExpression extends CPExpression {
+
 	private ExpressionList args;
 
-	public StaticMethodCallExpression(BCConstantInterfaceMethodRef _left, Expression _right, ExpressionList _args ) {
+	public StaticMethodCallExpression(
+		BCConstantInterfaceMethodRef _left,
+		Expression _right,
+		ExpressionList _args) {
 		super(_left, _right);
-		args = _args; 
-	} 
-	
+		args = _args;
+	}
+
 	public ExpressionList getArgs() {
 		return args;
 	}
-	
 
-	 
-	 
 }

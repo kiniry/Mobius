@@ -18,9 +18,9 @@ import java.lang.Class;
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class BCAthrowInstruction extends BCUnconditionalBranch implements EndBlock{
-	
-	
+public class BCAthrowInstruction
+	extends BCUnconditionalBranch
+	implements EndBlock {
 
 	/**
 	 * @param _branchInstruction
@@ -28,20 +28,18 @@ public class BCAthrowInstruction extends BCUnconditionalBranch implements EndBlo
 	public BCAthrowInstruction(InstructionHandle _branchInstruction) {
 		super(_branchInstruction);
 		//dump(_branchInstruction.toString() + " throws "  + getExceptions().length);
-	
+
 	}
-	
-	
-	
+
 	/**
 	 * 
 	 * @return the block that  handles
 	 * that handles this exception; returns null if there is not any
 	 */
 	public ExceptionHandleBlock getHandler() {
-		return (ExceptionHandleBlock)getTargetBlocks().elementAt(0);
+		return (ExceptionHandleBlock) getTargetBlocks().elementAt(0);
 	}
-	
+
 	public void setHandler(ExceptionHandleBlock _excHandler) {
 		addTargetBlock(_excHandler);
 	}

@@ -22,6 +22,7 @@ public class ObjectAccess extends Expression {
 		//setExpressionType(ExpressionConstants.OBJECTACCESS);
 	}
 	
+	//LB A quoi serve ces operations qui retournent null ?
 	public Object getLeft() {
 		return null;
 	}

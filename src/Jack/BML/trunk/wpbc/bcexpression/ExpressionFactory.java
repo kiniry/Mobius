@@ -28,6 +28,7 @@ import constants.BCConstantMethodReference;
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
+//LB Je pense que cette classe devrait disparaitre a terme.
 public class ExpressionFactory {
 	
 	private static ExpressionFactory exprFactory;

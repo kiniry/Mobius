@@ -17,7 +17,9 @@ import bcexpression.type.*;
  */
 public   class  Expression {
 	
-	
+	//LB Moi je ferais plutot une class abstrait Expression avec uniquement
+	// ce qui est commun aux expressions, a priori uniquement le type.
+	 
 	private Expression left;
 	private Expression right;
 	
@@ -52,6 +54,7 @@ public   class  Expression {
 	/*public byte getExpressionType() {
 		return type;
 	}*/
+	//LB Pourquoi Object et pas Expression ?
 	public   Object getLeft() {
 		return left; 
 	}
@@ -60,6 +63,7 @@ public   class  Expression {
 		return right;
 	}
 	
+	//LB Ici ce pourrait etre une method abstraite.
 	public void substitute(Expression expr , Object value) {
 	}
 	
