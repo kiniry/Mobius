@@ -1,0 +1,145 @@
+version 2.0a6
+
+New features include:
+  o Improved implementation of reasoning with model variables.
+  o Implementation of a simple GUI for running ESC/Java2.
+  o Improved specifications from the JML project.
+
+The following bugs are FIXED in this release:
+  [ 781415 ] \TYPE and java.lang.Class should be the same
+  [ 919276 ] weird errors when throw new RuntimeException
+  [ 919359 ] Correct paths mentioned in README to User's Guide
+  [ 924295 ] A type error in Object.jml
+  [ 924302 ] A type error due to Pattern
+  [ 852580 ] Error: Ambiguous field for type
+
+The following bugs are known to STILL EXIST in this release:
+  [ 821466 ] Unexpected output from Simplify
+  [ 866268 ] Scripts should warn when specified paths do not exist
+  [ 868258 ] Unit test Desugaring.java OS-dependency
+  [ 876093 ] Supplying the same command-line switch multiple times
+  [ 879832 ] Implicit constructor postconditions
+  [ 879849 ] SecurityKey & KeySet example
+  [ 888368 ] remaining scope problem with java/jml fields
+
+The following feature requests are still unfulfilled:
+  [ 919162 ] model methods in interfaces
+
+The bug tracking system is available via
+  http://sourceforge.net/tracker/?func=browse&group_id=65346&atid=510629
+
+-------------------------------------------------------------------
+version 2.0a5
+
+This release is the first to include the JML specifications from the
+JMLSpecs tool suite.
+
+Other new features include:
+  o Implementation of default specs for default constructors.
+  o Checks of modifies clauses (including pure constructors).
+    Checks are implemented as a new Warning type.  Note that these
+    warnings can be suppressed just as other warnings can, but a
+    program with incorrect modifies clauses may not check correctly.
+    This also implements the "in" and "maps" clauses.  Recursive maps
+    clauses are implemented by unrolling them.  The unroll depth is
+    set with the option -mapsUnrollCount (default 2).  "modifies
+    \everything" is parsed but (still) not implemented within the
+    static checking.
+  o Implementation of the new org.jmlspecs.lang.JMLDataGroup-based
+    implicit datagroup functionality.
+  o and, of course, a number of bug fixes, especially to the ESC/Java2
+    specifications.
+
+-------------------------------------------------------------------
+version 2.0a4
+
+This new release is the first that officially supports the Windows 
+platform.
+ 
+Other new features include:
+  o new support for parsing annotations within model classes,
+  o better handling of model variables,
+  o and, of course, a number of bug fixes.
+ 
+Currently, to run or build ESC/Java2 on Windows, one must first
+install Cygwin (<http://www.cygwin.com/>) and a number of its tools.
+ 
+To *run* ESC/Java, all one needs is Borne shell (/bin/sh), tcsh, and a
+Java runtime.  This means that one should download and install the
+base Cygwin package and add the tcsh package.
+
+To *build* ESC/Java, one needs several more tools.  See the
+README.first document for more details.
+
+-------------------------------------------------------------------
+version 2.0a3
+
+19 November, 2003: Fourth "Tell a few more folks" alpha release.
+
+This new release is the first that includes basic support for
+verifying code against specifications which use pure methods and
+constructors.
+
+This release also has:
+  o initial support for the new JML code_contract construct,
+  o improved support for modifies clauses,
+  o better support for refinement processing,
+  o better printing of tags and pretty-printing,
+  o implementation of several JML clauses:
+    constraint, initially, model classes and interfaces,
+    monitors_for, and typeof as applied to primitive types
+  o support for multiple variables in old and forall declarations,
+  o specifications for several classes in the java.util package
+  o and, of course, numerous bug fixes.
+
+This release is due entirely to the hard work of David Cok.
+
+-------------------------------------------------------------------
+version 2.0a2
+
+29 September 2003: Third "Friends & Family" alpha release.
+
+Major changes to new release include:
+  o Improved support for ghost and model variables.
+  o Initial support for forall and old clauses.
+  o Initial support for set comprehension.
+  o Improved error messages.
+
+This release also comes with the ESC/Java 1 User's Manual.
+
+This release is due entirely to the work of David Cok.
+
+-------------------------------------------------------------------
+version 2.0a1
+
+18-September-2003: Second "Friends & Family" alpha release.
+
+Major changes to this release include:
+  o Additional support for Java 2 assert statement.  We now support
+    all semantic variants---see the new switches:
+      -eajava, -javaAssertions, -eajml, -jmlAssertions, -source
+  o New support for statically checking JML keyword "non_null".
+  o New support for statically checking JML keyword "modifies".
+  o New support for printing verification conditions generated
+    by Escjava2 for Simplify.  See the switches:
+                           -v, -pgc, -ppvc
+  o Rewrote parsing support for ghost and model fields and model
+    routines.  The intent is to consistently parse these constructs
+    regardless of modifier ordering and use of pragmas.
+
+-------------------------------------------------------------------
+version 2.0a0
+
+05-September-2003: First "Friends & Family" alpha release.
+
+Major changes to this release include:
+  o Parses the full Java 2 and JML languages.
+
+-------------------------------------------------------------------
+
+11-July-2003: work in progress - alpha quality
+
+-------------------------------------------------------------------
+
+
+

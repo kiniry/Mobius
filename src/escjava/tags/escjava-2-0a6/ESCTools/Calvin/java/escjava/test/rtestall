@@ -1,0 +1,10 @@
+# Copyright Hewlett-Packard, 2002
+
+#!/bin/csh -f
+
+# use: rtestall FLAGS
+
+foreach f (`grep Good alltests | awk '{print $1;}'`)
+#echo $f
+./rtest $f $*
+end

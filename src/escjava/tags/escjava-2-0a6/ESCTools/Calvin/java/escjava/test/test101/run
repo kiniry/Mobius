@@ -1,0 +1,25 @@
+#!/bin/csh -f
+# usage: run FLAGS
+
+# B.java - simple test of getting info from loop context, 
+#          preconditions, loop guard, invariants, and nested loops
+# C.java - more complicated tests, including 2d arrays
+# C2.java - clearing a 2d array
+# F.java - clear an array
+# D.java - ensures escjava knows int[] and int are never aliased
+
+foreach p (C2 F B C)
+  foreach q ("-DPAquantifyAssumptions=true" "-DPAquantifyAssumptions=false")
+    foreach f (-DPABDT -DEnumMaxFindMin "-DPA3n=1.2.3.4." -DPANK=4)
+      echo ============ Benchmark $p Alg $f $q
+      setenv JAVA "srcjava $f $q"
+      ${ESCJ} -quiet -predAbstract $* -sxLog log/sx.$p.$f.$q $p.java | tee log/allout.$p.$f.$q | grep "Warning\|Error\|Caution\|reachable" > log/out.$p.$f.$q
+      diff log/out.$p.$f.$q ans-per-run.$p
+    end
+  end
+end
+
+exit
+
+${ESCJ} -quiet -nowarn IndexTooBig $* D.java 
+

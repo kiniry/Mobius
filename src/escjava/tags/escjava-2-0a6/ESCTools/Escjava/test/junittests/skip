@@ -1,0 +1,23 @@
+TestSuite.java
+## Platform dependent
+PureCheck.java
+Quant.java
+Helper.java
+InheritNull.java
+PreconditionWarnings.java
+NonNullResult.java
+InheritedSpecs.java
+## Varying output
+FormalNonnullInheritance.java
+## A bug / tests to be fixed
+MethodInSpec.java
+## Modify everything tests
+ModEverything.java
+## New tests
+Privacy.java
+## Fix
+Desugaring.java
+DesugaringA.java
+Duplicate.java
+Triple.java
+Scope.java

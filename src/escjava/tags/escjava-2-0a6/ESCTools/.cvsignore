@@ -1,0 +1,14 @@
+.emacs.desktop
+Makefile.local
+OOBR
+docs
+jars
+javadoc
+jmlc
+libs
+optimized
+prj.el
+release
+release-temp
+release-test
+semantic.cache
