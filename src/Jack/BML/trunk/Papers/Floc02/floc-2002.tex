@@ -1,0 +1,792 @@
+\documentclass[a4paper]{llncs}
+
+\title{The \modif~clause: semantics, verification and application}
+
+\author{
+  N\'estor Cata\~no and Marieke Huisman
+}
+
+\institute{
+  INRIA Sophia-Antipolis, France \\
+  \email{\{Nestor.Catano, Marieke.Huisman\}@sophia.inria.fr}
+}
+
+\newcommand{\jml}{\textsc{Jml}}
+\newcommand{\escj}{\textsc{Esc/Java}}
+\newcommand{\jass}{\textsc{Jass}}
+\newcommand{\jcontract}{\textsc{JContract}}
+\newcommand{\loopp}{\textsc{Loop}}
+\newcommand{\java}{\textsc{Java}}
+\newcommand{\gplus}{\textsc{GemPlus}}
+\newcommand{\eiff}{\textsc{Eiffel}}
+\newcommand{\ctl}{\textsc{Ctl}}
+\newcommand{\pltl}{\textsc{Pltl}}
+\newcommand{\csrc}{\textsc{Compaq-Src}}
+
+
+\newcommand{\modif}{\textit{modifiable}}
+\newcommand{\sem}[1]{\ensuremath{\mbox{[\![} {#1} \mbox{]\!]}\/}}
+
+\newtheorem {df}{Definition}
+
+
+\usepackage{amsmath} % it is needed by the \sem command
+\input{prooftree} %showing demonstration
+
+
+\begin{document}
+\fussy
+\maketitle
+
+\begin{abstract}
+We have worked in \jml, which is a specification language
+tailored to Java. \jml~allows us to specify the functional behavior
+of methods$:$ preconditions and postconditions, and apart from that,
+class invariants. Unfortunately, using only the functional
+specification of a
+method is not enough to reason about arbitrary method
+invocations. Therefore, the so-called \modif~clauses are
+introduced. By asserting a
+method with a \modif~clause, it is stated this method may only modify
+the set of expressions represented by its \modif~clause. There are
+several projects studying \modif~clauses such as \jml~and \escj~(a subset of
+\jml). The \jml~specification language gives a definition for the
+\modif~clause, but when the \jml~tool is run on an asserted \java~
+program, it does not do any checking on its \modif~clause
+specification. In the \loopp~project the
+implementation of some \jml~assertions pragmas are defined, including
+the \modif~ one. This implementation is based on an underlying memory
+model
+and the logic representation of \java~and the \jml~pragmas. This
+implementation is not yet an easy and fast method for its verification
+. This paper presents a first solution to achieve this in a context
+without \textit{aliasing}. For this specification we have made
+an implementation, which extends the functionality of the
+\jml~parser. Our approach presents some advantages over the
+\loopp~project approach, namely$:$ $(i)$ it is faster, and $(ii)$ the
+verification carried out is closer to the specification
+language. Additionally, an electronic banking case study has been used
+to demonstrate the usability of our approach~\cite{CH02}.
+\end{abstract}
+
+
+\section{Introduction}
+\label{sec-intro}
+
+\paragraph{\bf Background.}
+Currently, there are several techniques claiming to able to carry out
+verifications on software systems. Among these techniques are
+\textit{testing}, \textit{model-checking}, \textit{theorem
+proving} and \textit{program assertion}. Testing is usually enough
+for small systems, and it serves for checking some simple properties
+before applying another more formal technique, but it does not give
+us any certainty that a system provides certain features which we are
+interested in. The model-checking techniques comprise three
+phases~\cite{BBLPS99}. $(i)$ Representing the program or the system
+by means of automatons. The whole system is achieved by composition
+and synchronization of each these parts. Then, this whole automaton is
+simplified by using \textit{abstraction
+methods}~\cite{CGL94,DGG97}. $(ii)$ After constructing this model, one
+must declare, in a formal way, the properties of this automaton we are
+interested in verifying. These properties are declared by using
+certain specification
+languages. \textit{Temporal logic}~\cite{Pnue77} is a specification
+language widely used in model checking, taking into
+account the notion of time. \ctl(\textit{Computation Tree
+Logic})~\cite{CE81,EH82} and \pltl(\textit{Proposition Linear
+Temporal Logic})~\cite{Pnue81} are special cases of temporal
+logics. $(iii)$ Using a Model Checking algorithm for
+verifying if the model constructed in $(i)$ satisfies the properties
+declared in $(ii)$. Currently, there exist multiple model checkers
+developed by universities and industrial teams. These tools provide
+automatisation to the model checking process. Model-checking
+constitutes a strong technique
+but it has limitations$:$ verification (even for simple systems) might
+needs huge amounts of space and time. Theoretically, the
+theorem proving techniques are able to solve any problem proposed in
+practice, but its real implementation is often a
+hard labor$:$ the current tools are only capable in assisting an
+engineer in the proving process and they require a good understanding 
+of the semantics underlying and the programming language. The
+\textit{program assertion} technique tries to overcome these
+problems. One can take a source program and
+assert it by using a special specification language fitted to a
+language in
+which source program is written. These assertions express desirable
+conditions we would like that a program verifies, and typically they
+are
+stated as
+preconditions, postconditions and class invariants. After that, one
+can 
+run an assertion checker tool on this asserted program. It is expected
+this tool issues a message about the feasibility of desirable
+conditions we have asserted
+\emph{w.r.t} the source program. Usually, the assertion language is 
+very close to the programming language in which the source program is
+written. The
+annotation language to
+\eiff~\cite{Mey97} is the first example of such a
+specification language. Currently, several specification languages have
+been proposed for \java, claiming to carry out this kind of
+verification, such as \jml~\cite{LBR00}, \escj~\cite{LeinoNS00}(a
+subset of \jml~doing static checking~\cite{EscJmlDiff}),
+\jass~\cite{JassUrl} and \jcontract~\cite{JContractUrl}.
+
+
+
+\paragraph{\bf This paper.}By using \jml~and \escj~one can specify the
+functional
+behavior of the methods, typically as preconditions and
+postconditions. However, the functional behavior of the method is
+often not enough to reason about arbitrary method invocations. \jml~
+provides an assertion pragma, \modif, which allows us to
+specify the set of expressions which a method is intended to
+modify. Eventhough the \escj~specification language states it should
+do static checking on every method body, its tool does not fulfill
+this feature. Thus, some verification problems are
+present. Consequently (following the \escj~approach), we have
+implemented a static checker for \modif~clauses that is neither
+sound nor complete, but is useful
+for detecting some typical \escj~specification errors such as
+forgetting to mention some variable
+as \modif, when a method implementation actually may modify it, or
+declaring a method without side-effects when it modifies some
+expression. We can not always try the most subtle errors because they 
+require a detailed analysis, but by using our approach the most
+simple errors can be detected quickly.
+
+The rest of this paper is organized as follows$:$
+Section~\ref{sec-esc-prg} presents the specification language \escj~
+together with its most important assertion
+pragmas. Section~\ref{sec-sem-mod-cla} shows the problem
+with not to checking \modif~clauses. Section~\ref{sec-giv-sin-def}
+presents our approach for solving this problem and the definition of
+our checker for \modif~clauses. Section~\ref{sec-imp-asp} presents
+some implementation aspects of our tool. Finally, Section~\ref{sec-con}
+gives conclusions and presents future work.
+
+
+
+
+
+
+\section{Checking with \escj}
+\label{sec-esc-prg}
+
+\escj~is a static checker for \java~programs developed
+at \csrc~\cite{ESC}, which permits  
+a user to find common errors like
+\texttt{NullPointerException} and
+\texttt{ArrayIndexOutOfBoundException}. The basic idea is that
+a user specifies the desired behavior of a class and its methods, by
+using the specification language owned by \escj, and 
+the \escj~tool will check whether the implementation satisfies the given
+specification. So, the \escj~checker contrasts this
+specification against the source code and it will issue a warning 
+message if it can not establish the specification from the
+implementation(the specification is assumed to be correct). Such a
+warning does not necessarily mean the program is
+wrong, since the \escj~approach is neither sound nor complete.
+ 
+These kind of specifications are given as
+\textit{preconditions}, \textit{postconditions} and \textit{class 
+invariants} and they can be represented like \escj ~predicates. An
+\escj~ predicates is a boolean \java~expression
+enriched with several \escj~pragmas.
+
+The rest of this section presents the main \escj~assertions pragmas,
+together with an example of their use. Their full description can be
+found in~\cite{LeinoNS00}. 
+
+
+
+
+\paragraph{\bf Pragmas for specifying methods} 
+\begin{itemize} 
+\item{\texttt{requires P}.} 
+This pragma specifies a precondition {\tt P}. 
+When \escj~checks the body of a
+routine, it assumes that \texttt{P} holds initially, but when \escj~
+checks a method call, it will issue a warning if 
+it can not establish that \texttt{P} holds at the call site. 
+ 
+\item{\texttt{ensures Q}.} 
+This pragma specifies a postcondition \texttt{Q}. The postcondition  
+is supposed to hold if the method terminates normally, \emph{i.e.}
+without throwing an exception.
+ 
+\item{\texttt{exsures (E) R}.} 
+This pragma specifies a exceptional condition. This condition is 
+supposed to hold if the method finishes abruptly, \emph{i.e.}, if
+the exception \texttt{e} that is thrown is a subclass of \texttt{E}. 
+ 
+\item{\texttt{modifies L}.} 
+This pragma specifies that the routine \emph{may} only modify any of 
+the state components listed in \texttt{L}, the formal parameters of 
+the method and the variables local to the method. 
+\end{itemize} 
+ 
+ 
+ 
+\paragraph{\bf Specification expressions} 
+\begin{itemize} 
+\item{\texttt{==>}} is the logical implication. So, \texttt{P 
+==> Q} is true if and only if \texttt{P} is false or \texttt{Q} is 
+true, where \texttt{P} and \texttt{Q} are specification expressions of  
+\texttt{boolean} type. Furthermore, \texttt{<==>} represents the 
+equivalence relation and \texttt{<=!=>} specifies non-equivalence. 
+ 
+\item {($\backslash$\texttt{forall T V; E)} and 
+($\backslash$\texttt{exists T V; E})} are quantifier expressions (of 
+type \texttt{boolean}).  The first denotes that \texttt{E} is true 
+for all substitutions of values of type \texttt{T} for the bound 
+variable \texttt{V}. The second denotes that \texttt{E} is true 
+for a substitution of a value of type \texttt{T} for the bound 
+variable \texttt{V}. 
+ 
+\item{\texttt{$\backslash$old($E$)}} is used within a postcondition, where it
+denotes the value of \texttt{E} in the pre-state of the method invocation. 
+ 
+\item {\tt$\backslash$result} represents the value returned by 
+a non-void method method. It can only be used within an 
+\texttt{ensures} clause. 
+\end{itemize} 
+Figure~\ref{fig-add-cur} shows a typical annotation example using 
+\escj. This example was taken from the formal specification of
+Gemplus' electronic case study~\cite{CH01Url}. The \texttt{addCurrency}
+method belongs
+to the class \texttt{Currencies}. This class stores all currencies 
+supported by the purse application. The method 
+\texttt{addCurrency} adds a new currency to the list of valid 
+currencies. This list is represented by the 
+array \texttt{data}. The \texttt{modifies} clause declared in the 
+method's header specifies that 
+this method may modify \texttt{nbData} and 
+\texttt{data} in the position \texttt{nbData}\footnote{More precisely,
+it specifies that the method only may modify these instance variables
+and the local variables and formal parameters of the method.}. The
+postcondition of the method \texttt{addCurrency} (written as 
+\texttt{ensure} clause) expresses that if \texttt{nbData} has not 
+yet reached the threshold value \texttt{MAX$\_$DATA}, \texttt{nbData} 
+will increase its value by one and the value of the formal parameter 
+\texttt{cur} will be assigned to \texttt{data[\(\backslash\)old(nbData)]}.  
+Inside the postcondition, the expression 
+\texttt{$\backslash$old(nbData)} refers to the value of 
+\texttt{nbData} before the method invocation. 
+\begin{figure}[htb]
+\rule{\linewidth}{0.25mm}
+\begin{tabbing}
+ddd\=ddd\=ddd\=ddd\= \kill 
+\textsl{/*@} \\
+\>\textsl{modifies nbData, data[nbData];}  \\
+\>\textsl{ensures ($\backslash$old(nbData) $<$ MAX$\_$DATA) $?$}  \\
+\>\>\>\textsl{(nbData $==$ $\backslash$old(nbData) + 1 $\&\&$ data$[\backslash$old(nbData)$]$ $==$ cur) $:$}  \\
+\>\>\>\textsl{(nbData $==$ $\backslash$old(nbData));}  \\
+\textsl{*/} \\
+\texttt{void {\bf addCurrency}(byte cur)\{ } \\
+\>\texttt{if(nbData $<$ MAX$\_$DATA)\{data[nbData] $=$ cur ; nbData$++$ ;\}}  \\
+\texttt{\}}
+\end{tabbing}
+\caption{Example \escj~specification} 
+\label{fig-add-cur} 
+\rule{\linewidth}{0.25mm} 
+\end{figure} 
+
+
+
+
+
+
+\section{Specifying \modif~clauses}
+\label{sec-sem-mod-cla}
+The ckecing of \modif~clauses is specially important for not to accepting wrong specifications. For instead, the figure~\ref{fig-mod-spe} presents a typical example, where \escj accepts an incorrect specification. The specification of the method \texttt{m()} states after a method invocation the length of the instance variable \texttt{arr} will be greater or equal than $4$. This property is temporally ensured by the assignation occurred in the method body, but for definetly ensuring this postcondition, it is necessary to establish that method \texttt{n()} will not modify the instance variable \texttt{arr}. What \escj~does, is to see the modifiable specification of the method \texttt{n()} and to establish if this method modifies this instance variable. When a method is asserted without any \modif~clause \escj~takes by default a \texttt{modifies $\backslash$nothing} specification, but it {\bf does not} check it. Thus, and concerning this example, \escj~assumes the method \texttt{n()} does not modify any vairable, \emph{i.e.}, it assumes \texttt{n()} as a method withou side-effects. Consequently, when using this especification in the method \texttt{m()}, \escj~definetly establishs that after a call to \texttt{m()}, its postcondition will hold. Thus, does not reject the especification of \texttt{m()}, eventhough it is incorrect.
+\begin{figure}[htb]
+\rule{\linewidth}{0.25mm}
+\begin{tabbing}
+ddd\=ddd\=ddd\=ddd\= \kill 
+\texttt{public class C\{} \\
+\>\texttt{int[] arr ;} \\
+\>\textsl{/*@ modifies arr.length}  \\
+\>\>\textsl{ ensures arr.length $>=$ 4 ;*/} \\
+\>\texttt{public void {\bf m}()\{} \\
+\>\>\texttt{arr $=$ new int[5] ; n() ;} \\
+\>\texttt{\}} \\
+\\
+\>\texttt{public void n()\{arr $=$ new int [3] ;\}} \\
+\texttt{\}}
+\end{tabbing}
+\caption{\modif~specifications} 
+\label{fig-mod-spe} 
+\rule{\linewidth}{0.25mm} 
+\end{figure} 
+This problem is caused because \escj~does not check any \modif~clause,
+eventough the specification of the \escj~langage claims to do it. We
+have specified and implemented a static checker for \modif~clauses,
+which can detect this kind of inconsistences in \java~asserted
+programas. Section~\ref{sec-giv-sin-def} presents its specification
+and the Section~\ref{sec-imp-asp} presents some implementation
+issues.
+
+
+\section{Giving a syntactical definition}
+\label{sec-giv-sin-def}
+We present the definition of a checker of \modif~clauses. This
+checker, like \escj~self, is neither sound nor complete, but is
+particularly useful for detection specification errors as mentioned in
+the section~\ref{sec-sem-mod-cla}. This checker is an efficient tool
+(it is not spent time) for detecting some frequent specification
+problems in \java~programs before applying them a more formal
+verification. We have defined a syntaxical specification for checking
+\modif~clauses in \java~programs with assertions \jml. This
+specification takes into account its grammar specification
+given in~\cite{LBR00} together with the definition of \modif~clauses
+which we present below.
+\begin{df}[clause {\tt \bf modifiable}]
+\label{def-mod}
+A method may modify an expression provided that\footnote{We do not do
+any dependency analyse as introduced by \emph{model} pragmas}$:$ 
+\begin{itemize}
+\item This expression is mentioned in the \modif~clause \\
+\item The expression is a local variable to the method or a
+parameter\footnote{Particularly, it can not modify fields of any
+parameter}
+\end{itemize}
+\end{df}
+Our rules check for all assignment expression occuring inside of a
+method that the variables belonging to target expression are
+according to definition~\ref{def-mod}, \emph{i.e.}, it check this
+destination variables are mentioned as parametres or are local
+variables to the method or a parameter. Any other variable will be
+rejected by the checker. In defining these rules, we use the following
+notation definition$:$
+\begin{df}[mod]
+\textup{S}\ \textit{mod}\ \textsc{Y} $=$ $\forall x \in LC.
+x\not\in$ \textsc{Y}$\ \Rightarrow Pre(x) = Post(x)$ \\
+where $LC$ is the set of expressions might be modified, $Pre(x)$
+refers to the pre-state of the variable $x$ before executing $S$,
+$Post(x)$ refers to the post-state of the variable $x$ after executing
+$S$ and \textsc{Y} is the set of variables that can be mentioned as
+modified (see~\cite{LBR00}).
+\end{df}
+Consequently, a derivation rule such as$:$ \\
+\begin{prooftree}
+\rule[1ex]{0em}{1.5ex}
+\textup{e}_1\ \textit{mod}\ \textsc{Y}, \cdots ,\textup{e}_n\ \textit{mod}\ \textsc{Y}
+\justifies
+\textup{f}_1\textup{(e}_1\textup{, f}_2\textup{(e}_2\textup{,}\cdots
+\textup{(f}_n\textup{(e}_n\textup{))))}\ \textit{mod}\ \textsc{Y} 
+\end{prooftree}\\
+
+states if for a method \texttt{m} is specified it may modify the set
+of expressions \textsc{Y} and in the method body occur expressions or
+declarations such as \textup{f}$_1$\textup{(e}$_1$\textup{,
+f}$_2$\textup{(e}$_2$\textup{,}$\cdots$
+\textup{(f}$_n$\textup{(e}$_n$\textup{))))}, their correctness will be
+established in terms of the correctness of each subexpression
+\textup{e}$_i$ \emph{w.r.t} \textsc{Y}. We present the most important
+derivation rules, the whole set of rules can be found
+in~\cite{Cat01}. 
+
+\textsc{METH-DEC}(see figure~\ref{fig-meth-decl-inv-rul}) is the
+general rule corresponding to a method declaration
+texttt{m(}$\overrightarrow{\texttt{o}}$\texttt{)} whose set of
+modifiable declarations is \textsc{Y}. This rules states is enough to
+check every expression or declaration in the method body, \emph{i.e.}
+\texttt{m(}$\overrightarrow{\texttt{o}}$\texttt{).body}, with respect
+to \textsc{Y}, the sset of parameters and the local variable to the
+method. As it can seen, this rule escencially rephares the
+definition~\ref{def-mod}. Nevertheless, when we are trying with method
+calls we have to do some special considerations. For this purpose we
+do the following definitions$:$
+\begin{df}[$\sqsubseteq$]
+\label{def-subseq}
+$X \sqsubseteq Y$ ssi $\forall x.\ x\underline{\in}X\Rightarrow x\underline\in Y$. 
+\end{df}
+
+\begin{df}[$\overrightarrow{mod}$]
+\label{def-mod-lis}
+$X\ \overrightarrow{mod}\ Y$ ssi $\forall x.\ x\in X\Rightarrow x\ mod\ Y$
+\end{df}
+
+When an instruction become a method invocation
+\textup{e}\texttt{.m(}$\overrightarrow{\texttt{q}}$\texttt{)}, it 
+must fulfill the \modif~clause declaration corresponding to the
+method declaration, after changing the formal parametres
+$\overrightarrow{\texttt{o}}$ by the real parametres
+$\overrightarrow{\texttt{q}}$ and \emph{this} (if any) by the path
+\textup{e}. This fact is showed below by the rule
+\textsc{METH-INV}. Additionaly, one must check the formal parametres
+of the method by using \emph{modExp} rules
+($\overrightarrow{\texttt{q}}\ \overrightarrow{\textit{modEXP}}$) since,
+according to the \java~syntaxe, they can become expressions. Similar
+situation is happened with the path \textup{e}.
+\begin{figure}[hbt]
+\rule{\linewidth}{0.25mm}
+\begin{tabular}{ll}
+METH-DEC\, & 
+\begin{prooftree}
+\rule[1ex]{0em}{1.5ex}
+\texttt{m(}\overrightarrow{\texttt{o}}\texttt{).body}\
+\overrightarrow{\textit{mod}}\
+\textsc{Y}\cup \{\overrightarrow{\texttt{o}}\}\cup \{
+\texttt{m(}\overrightarrow{\texttt{o}}\texttt{).locvars}\} 
+\justifies
+\texttt{m(}\overrightarrow{\texttt{o}}\texttt{)}\ \textit{mod}\ \textsc{Y}
+\end{prooftree}
+\\[3.0ex]
+METH-INV\,\,\, &
+\begin{prooftree}
+\rule[1ex]{0em}{1.5ex}
+\sem{\textup{e}\texttt{.m(}\overrightarrow{\texttt{o}})\texttt{.modifies}}
+[\overrightarrow{\texttt{o}}\backslash \overrightarrow{\texttt{q}},
+\texttt{this}\backslash \textup{e}]\sqsubseteq \textsc{Y},\
+\textup{e}\ \textit{modPE}\ \textsc{Y},\
+\overrightarrow{\texttt{q}}\ \overrightarrow{\textit{modEXP}}\
+\textsc{Y}
+\justifies
+\textup{e}\texttt{.m(}\overrightarrow{\texttt{q}}\texttt{)}\ \textit{modPE}\ \textsc{Y}
+\end{prooftree}
+\\[3.0ex]
+\end{tabular}
+\caption{Method declaration and invocation rules}
+\label{fig-meth-decl-inv-rul}
+\rule{\linewidth}{0.25mm}
+\end{figure}
+
+
+
+
+
+
+
+
+
+To define rules for instructions in the method body, we have specified
+concepts according to the \java~semantic with assertions~\jml. This
+allows us to profite the \java~structure for defining similiar
+concepts. It covers concepts such as \textit{modSTM},
+\textit{modEXP}, \textit{modPE}, \textit{modPRM} and \textit{modPS},
+which redefine the original concept \textit{mod} in terms of concepts
+for \emph{statements}, \emph{expressions}, \emph{post-expressions},
+\emph{primary expressions} and {primary suffixes}. Thus, the rule
+\textsc{ASSG} states when an assignation \textup{e}$_1$\ $\oplus$\
+\textup{e}$_2$ is occurred inside of a method body, we must check
+\textup{e}$_1$ belongs to set of expressions the method may modify
+(\textup{e}$_1\underline{\in}$\ \textsc{Y}) since \textup{e}$_1$ is
+target of an assignation. Additionnaly, according to the
+\java~sintaxe, we must check \textup{e}$_1$ and \textup{e}$_1$ by
+using respectively \textit{modPE} and \textit{modEXP} rules. The
+concept $\underline{\in}$ will be defined later, but intuitivaly it
+includes the standard concept $\in$.
+
+An instruction in a method body can become a local declaration. So, if
+there exist a local declaration with an intial value, the rule
+\textsc{VAR-DECL-ASSG} states this variable has to belong to the set
+of expressions modifiables, \emph{i.e.} \textup{x}$\underline{\in}$\
+\textsc{Y}. As the last rule, according to the \java~syntaxe we have
+to keep checking \textup{e} by using the rules for expressions. If the
+variable is not assigned while is declared, we do not have to do any
+membership checking, as is stated by the \textsc{VAR-DECL} rule.
+\begin{figure}[hbt]
+\rule{\linewidth}{0.25mm}
+\begin{tabular}{ll}
+ASSG\, & 
+\begin{prooftree} 
+\rule[1ex]{0em}{1.5ex}
+\textup{e}_1\underline{\in}\ \textsc{Y},\ \ \textup{e}_1\
+\textit{modPE}\ \textsc{Y},\ \ \textup{e}_2\ \textit{modEXP}\
+\textsc{Y}
+\justifies
+\textup{e}_1\ \oplus\ \textup{e}_2\ \textit{modEXP}\ \textsc{Y}
+\using
+\oplus \in \{ \texttt{=,+=,-=,*=,/=} \}
+\end{prooftree}
+\\[3.0ex]
+VAR-DECL-ASSG\,\,\, & 
+\begin{prooftree}
+\rule[1ex]{0em}{1.5ex}
+\textup{x}\underline{\in}\ \textsc{Y},\ \ \textup{e}\ \textit{modEXP}\ \textsc{Y}
+\justifies
+\texttt{T x =}\ \textup{e}\ \textit{modEXP}\ \textsc{Y}
+\using
+\end{prooftree}
+\\[3.0ex]
+VAR-DECL & 
+\begin{prooftree}
+\rule[1ex]{0em}{1.5ex}
+\justifies
+\texttt{T x}\ \textit{modEXP}\ \textsc{Y}
+\using
+\end{prooftree}
+\\[3.0ex]
+POST-PLUS &
+\begin{prooftree}
+\rule[1ex]{0em}{1.5ex}  
+\textup{e}\underline{\in}\ \textsc{Y},\ \ \textup{e}\ \textit{modPE}\ \textsc{Y}
+\justifies
+\textup{e}\ \texttt{++}\ \textit{modEXP}\ \textsc{Y}
+\end{prooftree}
+\\[3.0ex]
+BINARY & 
+\begin{prooftree} 
+\rule[1ex]{0em}{1.5ex}
+\textup{e}_1\ \textit{modPE}\ \textsc{Y},\ \ \textup{e}_2\
+\textit{modEXP}\ \textsc{Y}
+\justifies
+\textup{e}_1 \oplus \ \textup{e}_2\ \textit{modEXP}\ \textsc{Y}
+\using
+\oplus \in \{
+	\begin{array}{l}
+		\texttt{<,<=,>,>=,==}	\\
+		\texttt{!=,||,\&\&,+,-}	\\
+		\texttt{*,/,\,\&,\^\ ,|}
+	\end{array}
+	\}
+\end{prooftree}
+\\[3.0ex]
+UNARY & 
+\begin{prooftree} 
+\rule[1ex]{0em}{1.5ex}
+\textup{e}\ \textit{modEXP}\ \textsc{Y}
+\justifies
+\oplus \ \textup{e}\ \textit{modEXP}\ \textsc{Y}
+\using
+\oplus \in \{ \texttt{+,-,$\sim$,!}\}
+\end{prooftree}
+\\[3.0ex]
+INSTANCE & 
+\begin{prooftree} 
+\rule[1ex]{0em}{1.5ex}
+\textup{e}\ \textit{modEXP}\ \textsc{Y}
+\justifies
+\textup{e}\ \texttt{instanceof C}\ \textit{modEXP}\ \textsc{Y}
+\end{prooftree}
+\\[3.0ex]
+CAST & 
+\begin{prooftree} 
+\rule[1ex]{0em}{1.5ex}
+\textup{e}\ \textit{modEXP}\ \textsc{Y}
+\justifies
+\texttt{(T)}\textup{e}\ \textit{modEXP}\ \textsc{Y}
+\end{prooftree}
+\\[3.0ex]
+CONDITIONAL & 
+\begin{prooftree} 
+\rule[1ex]{0em}{1.5ex}
+\textup{e}_1\ \textit{modEXP}\ \textsc{Y},\ \ \textup{e}_2\
+\textit{modEXP}\ \textsc{Y},\ \ \textup{e}3\ \textit{modEXP}\
+\textsc{Y}
+\justifies
+\textup{e}_1?\textup{e}_2:\textup{e}3\ \textit{modEXP}\ \textsc{Y}
+\end{prooftree}
+\\[3.0ex]
+\end{tabular}
+\caption{Method declaration and expression rules}
+\label{fig-exp-rul}
+\rule{\linewidth}{0.25mm}
+\end{figure}
+
+
+Similary, \java~instructions can become pre and post expressions,
+which can be seen as \emph{in place} affectations. As the last rule,
+an similar afectation analyse can be done. The rule \textsc{POST-PLUS}
+presents the case for a post increment and it states the expression
+\textup{e}, which is the target of an assignation, has to belong to
+set of expressions\textsc{Y} modifiable by the method. Additionaly,
+and following the \java~syntaxe, the expression rules have to be
+checked on the expression \textup{e}.
+
+The remaining rules of the figure~\ref{tab-met-dec-exp-rul} states the
+rules for the \java~operators. For the arithmetics, relationals and
+logiques operators is appliable the rule \textsc{BINARY}. This rules
+does not do any membership consideraton to some set \textsc{Y},
+since any expression is directly modified by these
+operators\footnote{Although, eventually a subexpression can modifiy
+some variable}. This analysis is also done for the unary,
+\texttt{instanceof}, \texttt{()} (\emph{casting}) and $?$
+\java~operators.
+
+The rules defined until now enable us to detect the kind of problems
+presented in the section~\ref{sec-sem-mod-cla} (see
+figure~\ref{fig-mod-spe}). Thus, by applying the rule
+\textsc{METH-DEC}, the evaluation for the method \texttt{n()} will
+become$:$\\ 
+$\mathtt{\{myArr\ =\ new\ int[3]\}}$ \textit{mod} $\phi$ \\
+
+Then, by applying the assignation rule we would should be able to
+deduce $myArr\underline\in\ \phi$. What is wrong. Thus, the checking
+of the method \texttt{n()} will fail. Figure~\ref{fig-der-cor-fig-esc}
+presents the derivation corresponding this problem$:$
+\begin{figure}[hbt]
+\rule{\linewidth}{0.25mm}
+\\[2.0ex]
+\begin{prooftree}
+   \[
+     \[
+       \[
+	 \texttt{false}
+         \justifies 
+         \texttt{myArr}\ \in\ \phi
+	 \using
+         \textsc{AX}
+       \]
+       \justifies 
+       \texttt{myArr}\ \underline\in\ \phi
+       \using
+       \textsc{IN-SIMP}
+     \]
+     \[
+       \[
+         \proofdotseparation=1.2ex 
+         \proofdotnumber=3
+         \leadsto 
+       \]
+       \justifies 
+       \texttt{myArr}\ \textit{modPE}\ \phi
+     \]
+     \[
+       \[
+         \proofdotseparation=1.2ex 
+         \proofdotnumber=3
+         \leadsto 
+       \]
+       \justifies 
+       \texttt{new int[3]}\ \textit{modEXP}\ \phi
+     \]
+     \justifies
+     \texttt{myArr = new int[3]}\ \textit{mod}\ \phi
+     \using
+     \textsc{ASSG}
+   \]
+   \justifies
+   \texttt{m}\ \textit{mod}\ \phi
+   \using
+   \textsc{METH-DEC}
+\end{prooftree}
+\caption{Detecting not modifiable definitions}
+\label{fig-der-cor-fig-esc}
+\rule{\linewidth}{0.25mm}
+\end{figure}
+
+
+
+
+fgfgsgfsfg
+\begin{figure}[hbt]
+\rule{\linewidth}{0.25mm}
+\begin{tabular}{ll}
+ID-FLD &
+\begin{prooftree}
+\rule[1ex]{0em}{1.5ex}
+\justifies
+\texttt{x}\ \textit{modPS}\ \textsc{Y}
+\end{prooftree}
+\\[3.0ex]
+ARR-FLD &
+\begin{prooftree}
+\rule[1ex]{0em}{1.5ex}
+\textup{e}\ \texttt{modEXP}\ \textsc{Y}
+\justifies
+\texttt{a[}\textup{e}\texttt{]}\ \textit{modPS}\ \textsc{Y}
+\end{prooftree}
+\\[3.0ex]
+THIS &
+\begin{prooftree}
+\rule[1ex]{0em}{1.5ex}
+\justifies
+\texttt{this}\ \textit{modPS}\ \textsc{Y}
+\end{prooftree}
+\\[3.0ex]
+SUPER &
+\begin{prooftree}
+\rule[1ex]{0em}{1.5ex}
+\justifies
+\texttt{super}\ \textit{modPS}\ \textsc{Y}
+\end{prooftree}
+\\[3.0ex]
+ID-FLD &
+\begin{prooftree}
+\rule[1ex]{0em}{1.5ex}
+\justifies
+\texttt{x}\ \textit{modPRM}\ \textsc{Y}
+\end{prooftree}
+\\[3.0ex]
+ARR-FLD &
+\begin{prooftree}
+\rule[1ex]{0em}{1.5ex}
+\textup{e}\ \textit{modEXP}\ \textsc{Y}
+\justifies
+\texttt{a[}\textup{e}\texttt{]}\ \textit{modPRM}\ \textsc{Y}
+\end{prooftree}
+\\[3.0ex]
+STATIC & 
+\begin{prooftree}
+\rule[1ex]{0em}{1.5ex}
+\justifies
+\texttt{A}\ \textit{modPRM}\ \textsc{Y}
+\end{prooftree}
+\\[3.0ex]
+CONST & 
+\begin{prooftree}
+\rule[1ex]{0em}{1.5ex}
+\justifies
+\texttt{b}\ \textit{modPRM}\ \textsc{Y}
+\using 
+\texttt{b}\in \textsf{Constant} 
+\end{prooftree}
+\\[3.0ex]
+SUPER & 
+\begin{prooftree}
+\rule[1ex]{0em}{1.5ex}
+\justifies
+\texttt{super}\ \textit{modPRM}\ \textsc{Y}
+\end{prooftree}
+\\[3.0ex]
+THIS & 
+\begin{prooftree}
+\rule[1ex]{0em}{1.5ex}
+\justifies
+\texttt{this}\ \textit{modPRM}\ \textsc{Y}
+\end{prooftree}
+\\[3.0ex]
+METH &
+\begin{prooftree}
+\rule[1ex]{0em}{1.5ex}
+\sem{\texttt{this.m(}\overrightarrow{\texttt{o}}\texttt{).modifies}}[\overrightarrow{\texttt{o}}\ \backslash
+\overrightarrow{\texttt{q}}]\sqsubseteq \textsc{Y},\ \ \overrightarrow{\texttt{q}}\ \overrightarrow{\textit{modEXP}}\ \textsc{Y}
+\justifies
+\texttt{m(}\overrightarrow{\texttt{q}}\texttt{)}\ \textit{modPRM}\ \textsc{Y}
+\end{prooftree}
+\\[3.0ex]
+NEW-EXP & 
+\begin{prooftree}
+\rule[1ex]{0em}{1.5ex}
+\overrightarrow{\textup{e}}\ \overrightarrow{\textit{modEXP}}\ \textsc{Y}
+\justifies
+\texttt{new T(}\overrightarrow{\textup{e}}\texttt{)}\ \textit{modPRM}\ \textsc{Y}
+\end{prooftree}
+\\[3.0ex]
+NEW-ARR & 
+\begin{prooftree}
+\rule[1ex]{0em}{1.5ex}
+\textup{e}\ \textit{modEXP}\ \textsc{Y}
+\justifies
+\texttt{new T[}{\textup{e}}\texttt{]}\ \textit{modPRM}\ \textsc{Y}
+\end{prooftree}
+\\[3.0ex]
+\end{tabular}
+\caption{Suffixe Primaire}
+\label{tab-pri-list}
+\rule{\linewidth}{0.25mm}
+\end{figure}
+
+
+\label{sec-imp-asp}
+
+\section{Conclusion}
+\label{sec-con}
+
+\bibliographystyle{alpha}
+\bibliography{../bibliography}
+
+\end{document}
