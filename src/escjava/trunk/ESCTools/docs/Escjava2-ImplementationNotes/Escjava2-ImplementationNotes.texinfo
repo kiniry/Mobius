@@ -54,10 +54,6 @@ F.3.1 [@i{Logics and Meanings of Programs}]
 Copyright @copyright{} 2003-2004 David R. Cok
 
 
-@sp 2
-
-
-
 @sp 4
 @*CVS Version: $Revision$
 @*CVS Date: $Date$
@@ -328,7 +324,6 @@ Major features of Java not implemented in ESC/Java2
 
 Major features of JML not implemented in ESC/Java2
 
-* datagroups::                  
 * codecontract-notimp::         
 * some aspects of store-ref expressions::  
 * implies that and for example behavior::  
@@ -468,6 +463,7 @@ original ESC/Java.
 
 The website for the project is hosted by the Security of Systems group
 at the Katholieke Universiteit Nijmegen in Nijmegen, Netherlands.
+(@url{www.niii.kun.nl/sos/research/escjava}).
 
 The work of producing ESC/Java2 stands on the very much more
 considerable effort of the ESC/Java team in conceiving of and
@@ -522,7 +518,7 @@ the grammar and semantics of JML.  JML is available at
 Further information about JML and ESC/Java2 can be obtained from these sources.
 
 @itemize @bullet
-@item The ESC/Java2 website: @uref{www.cs.kun.nl/sos/research/nl}
+@item The ESC/Java2 website: @uref{www.niii.kun.nl/sos/research/escjava}
 @item The JML web site:  @uref{www.jmlspecs.org}
 @item The JML project on sourceforge: @uref{sourceforge.net/projects/jmlspecs}
 @item The JML interest mailing list on sourceforge: 
@@ -688,7 +684,7 @@ to these specifications can be included in the sourcepath, but it is
 convenient to specify them to the tool using the @code{-specs} 
 option, which takes a standard directory path as its single argument.
 
-The command-line arguments consist of options and their arguments,
+The command-line arguments consist of options and their arguments
 (described in @ref{Command-line options}) and input entries.  Input
 entries may be files, directories, package names, or class names.
 These input entries designate the classes on which ESC/Java2 operates.
@@ -1294,16 +1290,16 @@ modifiers.  ALso ghost and model fields/routines]]]
 @section Type modifiers
 
 A class may be modified with the Java modifiers @code{public},
-@code{protected}, @code{private}, @code{final}, @code{abstract} and
-@code{strictfp} and the JML modifiers @code{pure}, @code{model},
-@code{spec_public}, and @code{spec_protected}.  An interface may be
-modified with the Java modifiers @code{public}, @code{protected},
-@code{private}, @code{strictfp} and the JML modifiers @code{pure},
-@code{model}, @code{spec_public}, and @code{spec_protected}.  Nested
-classes and interfaces may have the additional modifier @code{static}.
-The access modifiers are described in @ref{Access modifiers}.  In
-addition the superclass and super interfaces may be modified with the
-keyword @code{weakly}.
+@code{final}, @code{abstract} and @code{strictfp} and the JML
+modifiers @code{pure}, @code{model}, @code{spec_public}, and
+@code{spec_protected}.  An interface may be modified with the Java
+modifiers @code{public}, @code{strictfp} and the JML modifiers
+@code{pure}, @code{model}, @code{spec_public}, and
+@code{spec_protected}.  Nested classes and interfaces may have the
+additional modifiers @code{static}, @code{protected}, and
+@code{private}.  The access modifiers are described in @ref{Access
+modifiers}.  In addition the superclass and super interfaces may be
+modified with the keyword @code{weakly}.
 
 @menu
 * pure (JML)::                  
@@ -1330,11 +1326,12 @@ being constructed (and its superclasses).
 @item @strong{Differences from JML or Java:} None.
 
 @item @strong{Comment:} A method inherits purity from the methods it overrides;
-that is, if an overridden method is pure, the overriding method will be pure
-whether or not it is declared pure.  This is not the case for classes or 
-for interfaces.  A subclass may add non-pure methods, even if it has a pure
-superclass.  Declaring a class pure is precisely equivalent to declaring all of its
-methods and constructors pure. [[[ Verify with JML]]]
+that is, if an overridden method is pure, the overriding method will
+be pure whether or not it is declared pure.  This is not the case for
+classes or for interfaces.  A subclass may add non-pure methods, even
+if it has a pure superclass.  Declaring a class pure is precisely
+equivalent to declaring all of its methods and constructors pure. [[[
+Verify with JML]]]
 
 @end itemize
 
@@ -1358,8 +1355,8 @@ related name lookup bugs.
 @subsection weakly (JML)
 
 @itemize @bullet
-@item @strong{Description:} This annotation is used to modify super classes and 
-super interfaces in a class
+@item @strong{Description:} This annotation is used to 
+modify super classes and super interfaces in a class
 or interface declaration.  An example of its syntax is this:
 @example
    public class A extends B /*@@ weakly */ 
@@ -1390,10 +1387,11 @@ any static checking.
 @subsection abstract (Java)
 
 @itemize @bullet
-@item @strong{Description:} A class must be declared abstract if it has abstract
-methods.  An abstract class may not be instantiated; only non-abstract subclasses
-of an abstract class may be instantiated.  All interfaces are by definition
-abstract; using the @code{abstract} modifier on an interface has been deprecated.
+@item @strong{Description:} A class must be declared abstract 
+if it has abstract methods.  An abstract class may not be
+instantiated; only non-abstract subclasses of an abstract class may be
+instantiated.  All interfaces are by definition abstract; using the
+@code{abstract} modifier on an interface has been deprecated.
 
 @item @strong{Status:} This modifier is parsed and checked.  It does not need
 any static checking.
@@ -1405,15 +1403,15 @@ any static checking.
 @subsection strictfp (Java)
 
 @itemize @bullet
-@item @strong{Description:} The @code{strictfp} modifier determines the semantics
-of floating point operations within
-the class so modified.
+@item @strong{Description:} 
+The @code{strictfp} modifier determines the semantics of floating
+point operations within the class so modified.
 
-@item @strong{Status:} This modifier is parsed and typechecked.  The static checker
-does not make use of this information.  [[[ Is it inherited, or does
-it just apply to the implementations given in that class?  If so, what
-about interfaces (maybe applies just to initializers in
-interfaces)?]]]
+@item @strong{Status:} This modifier is parsed and typechecked.  
+The static checker does not make use of this information.  [[[ Is it
+inherited, or does it just apply to the implementations given in that
+class?  If so, what about interfaces (maybe applies just to
+initializers in interfaces)?]]]
 
 @item @strong{Differences from JML or Java:} None.
 
@@ -1496,7 +1494,8 @@ of the class.
 A model field may have these modifiers: access modifiers
 (@pxref{Access modifiers}), @code{static}, [[[ what about @code{final}
 ]]] and the JML modifiers @code{non_null}, [[[@code{monitored} ???]]] and
-@code{instance} (@pxref{Field Annotation modifiers}).  Model fields may not have initializers.  [[[ An
+@code{instance} (@pxref{Field Annotation modifiers}).  
+Model fields may not have initializers.  [[[ An
 initializer expression would make nice syntactic sugar for the
 combination of a model declaration and a represents clause. ]]]
 
@@ -1516,15 +1515,17 @@ annotation and modified with the modifier @code{model}.  They declare
 methods that may be used in model programs and (if pure) in
 specifications.  Model methods may have these Java modifiers:
 @code{public}, @code{protected}, @code{private}, @code{static},
-@code{final}, @code{synchronized}, @code{strictfp}; they may have
-these JML modifiers: @code{pure}, @code{non_null}, @code{helper}.
+@code{abstract}, @code{final}, @code{synchronized}, @code{strictfp};
+they may have these JML modifiers: @code{pure}, @code{non_null},
+@code{helper}.
 
 Model methods may be declared in multiple specification files, but may have 
 an implementation in at most one.
 
 
 @item @strong{Status:} Model methods are parsed and converted to regular Java 
-methods within ESC/Java2.  The use of model methods in static checking is described in [[[ ??? ]]]
+methods within ESC/Java2.  The use of model methods in 
+static checking is described in [[[ ??? ]]]
 
 @item @strong{Differences from JML or Java:} Model methods are parsed and 
 converted to regular Java methods within ESC/Java2.  Consequently,
@@ -1549,8 +1550,8 @@ the entire class being declared @code{strictfp}.
 Model constructors may be declared in multiple specification files,
 but may have an implementation in at most one.
 
-@item @strong{Status:} Model constructors are parsed and converted to regular Java 
-constructors within ESC/Java2.  
+@item @strong{Status:} Model constructors are parsed and converted 
+to regular Java constructors within ESC/Java2.  
 @item @strong{Differences from JML or Java:} Model constructors are parsed and 
 converted to regular Java constructors within ESC/Java2.
 Consequently, ESC/Java2 will not detect their (illegal) use within the
@@ -1565,8 +1566,8 @@ implementation of a Java routine.
 is a conventional type declaration modified by the JML keyword @code{model}
 (and in an annotation comment).  The entire declaration must be within one
 annotation comment.  The model type may be used within annotation expressions
-and statements.  Model types may have these modifiers: @code{pure}, 
-@code{static}, @code{strictfp}.  A model class may be @code{final}.
+and statements.  Model types may have the same modifiers as top-level
+and nested java type declarations, as appropriate (see Appendix A).
 
 @item @strong{Status:} Implemented.
 
@@ -1608,7 +1609,7 @@ but not all and no reasoning is implemented.
 @item @strong{Description:} The JML @code{initializer} and 
 @code{static_initializer} keywords are used in specification files as
 stand-ins for all of the instance and class initialization that is
-performed as part of object creation of class loading. Within a class
+performed as part of object creation or class loading. Within a class
 declaration in a compilation unit there may be just one each of the
 @code{initializer} and @code{static_initializer} keywords, each
 preceded by specifications (like those preceding a routine declaration
@@ -1767,7 +1768,7 @@ the restrictions on static.
 property, independent of the implementation of classes or objects.
 Axioms are always considered to be static.
 [[[ Describe circumstances in which an axiom is added to the proof context]]]
-
+[[[ Are access modifiers allowed ???]]]
 
 @item @strong{Status:} Implemented.
 
@@ -4861,8 +4862,8 @@ read Java 1.4 source but ignores any Java assert statements
 read Java 1.4 source and to use Java assert statements
 
 @cindex -f
-@item @code{-f} : this takes a single argument, a filename; the 
-text within that file is inserted at that location in the command-line;
+@item @code{-f} @emph{filename} : the
+text within the named file is inserted at that location in the command-line;
 this option is typically used to insert standard sets of options or
 input elements into the command-line.
 
@@ -5317,7 +5318,6 @@ not implemented in ESC/Java2.
 @section Major features of JML not implemented in ESC/Java2
 
 @menu
-* datagroups::                  
 * codecontract-notimp::         
 * some aspects of store-ref expressions::  
 * implies that and for example behavior::  
@@ -5325,13 +5325,7 @@ not implemented in ESC/Java2.
 @end menu
 
 @c ----------------------------------------------------------------------------
-@node datagroups, codecontract-notimp, Major features of JML not implemented, Major features of JML not implemented
-@subsection datagroups
-[[[ discussion needed  - also modifies, in, maps, pure checking ]]]
-[[[ Actually, these are mostly implemented now. ]]]
-
-@c ----------------------------------------------------------------------------
-@node codecontract-notimp, some aspects of store-ref expressions, datagroups, Major features of JML not implemented
+@node codecontract-notimp, some aspects of store-ref expressions, Major features of JML not implemented, Major features of JML not implemented
 @subsection code_contract clauses
 [[[ discussion needed ]]]
 
@@ -5765,7 +5759,7 @@ various grammatical contexts.
 
 @item Type specification (e.g. invariant)
 @tab
-@tab @code{public protected private}
+@tab @code{public protected private static}
 @tab
 @tab -
 
@@ -5775,7 +5769,7 @@ various grammatical contexts.
 @tab
 @tab @code{public protected private final volatile transient static}
 @tab
-@tab @code{spec_public spec_protected non_null instance}
+@tab @code{spec_public spec_protected non_null instance monitored}
 
 @item
 
@@ -5783,7 +5777,7 @@ various grammatical contexts.
 @tab
 @tab @code{public protected private static final}
 @tab
-@tab @code{non_null instance}
+@tab @code{non_null instance monitored}
 
 @item
 
@@ -5834,9 +5828,9 @@ various grammatical contexts.
 @tab
 @tab ???
 
-@item JML initializer annotation 
+@item JML initializer and static_initializer annotation 
 @tab
-@tab @code{static} ???
+@tab ???
 @tab
 @tab ???
 
