@@ -99,11 +99,11 @@ public class AnnotationHandler {
 
 	for (int i=0; i<td.elems.size(); ++i) {
 	    TypeDeclElem tde = td.elems.elementAt(i);
-	    process(tde);
+	    process(td,tde);
         }
     }
 
-    protected void process(TypeDeclElem tde) {
+    protected void process(TypeDecl parent, TypeDeclElem tde) {
 	int tag = tde.getTag();
 	switch (tag) {
 // What about initially, monitored_by, readable_if clauses ??? FIXME
@@ -113,7 +113,7 @@ public class AnnotationHandler {
 
 	    case TagConstants.CONSTRUCTORDECL:
 	    case TagConstants.METHODDECL:
-		process((RoutineDecl)tde);
+		process(parent, (RoutineDecl)tde);
 		break;
 
 	    case TagConstants.FIELDDECL:
@@ -136,7 +136,7 @@ public class AnnotationHandler {
 
     }
 
-    protected void process(RoutineDecl tde) {
+    protected void process(TypeDecl parent, RoutineDecl tde) {
 	ModifierPragmaVec pmodifiers = tde.pmodifiers;
 	//System.out.println("Method " + (tde instanceof MethodDecl ? ((MethodDecl)tde).id.toString() : "Constructor"));
 	//System.out.println("   Mods " + Modifiers.toString(tde.modifiers));
@@ -152,7 +152,7 @@ public class AnnotationHandler {
 	//System.out.println("Desugaring specifications for " + id);
 	try { // Just for safety's sake
 	    //System.out.println("DESUGARING " + Location.toString(tde.getStartLoc()));
-	    tde.pmodifiers = desugarAnnotations(pmodifiers,tde);
+	    tde.pmodifiers = desugarAnnotations(pmodifiers,tde,parent);
 	} catch (Exception e) {
 	    tde.pmodifiers = ModifierPragmaVec.make();
 	    ErrorSet.error(tde.getStartLoc(),
@@ -161,7 +161,7 @@ public class AnnotationHandler {
 	}
 
 // FIXME - control this with an option
-	if (false) {
+	if (Main.options().desugaredSpecs) {
 	  System.out.println("Desugared specifications for " + id);
 	  for (int i = 0; i<tde.pmodifiers.size(); ++i) {
 	    ModifierPragma mp = tde.pmodifiers.elementAt(i);
@@ -179,8 +179,12 @@ public class AnnotationHandler {
 		}
 	    } else if (mp instanceof VarExprModifierPragma) {
 		VarExprModifierPragma mpe = (VarExprModifierPragma)mp;
-		System.out.print(((TypeName)mpe.arg.type).name.printName() + 
-			" ## " + mpe.arg.id + " : ");
+		if (mpe.arg == null) {
+		    System.out.print( "java.lang.Exception ##  :");
+		} else {
+		    System.out.print(((TypeName)mpe.arg.type).name.printName() 
+			+ " ## " + mpe.arg.id + " : ");
+	  	}
 		print(mpe.expr);
 	    }
 	    System.out.println("");
@@ -189,7 +193,7 @@ public class AnnotationHandler {
     }
 
     protected ModifierPragmaVec desugarAnnotations(ModifierPragmaVec pm,
-						RoutineDecl tde) {
+					    RoutineDecl tde, TypeDecl parent) {
 	java.util.ArrayList newpm = new java.util.ArrayList();
 	int size = pm.size();
 	if (size == 0) return pm;
@@ -236,21 +240,24 @@ public class AnnotationHandler {
 */
 	Behavior accumulatedBehavior = new Behavior();
 
+	// The results array holds the denested spec-cases obtained from
+	// parsing the specification of the routine
 	ArrayList results = new ArrayList();
 	do {
 
-	pos = deNest(false,pos,pm,results,new Behavior(),isPure,isConstructor);
+	pos = deNest(false,pos,pm,results,new Behavior(),isPure,isConstructor,
+			parent);
 	if (pm.elementAt(pos).getTag() == TagConstants.SUBCLASSING_CONTRACT) {
 	    ++pos;
 	    pos = sc_section(pos,pm,accumulatedBehavior.subclassingContracts);
 	}
 	if (pm.elementAt(pos).getTag() == TagConstants.IMPLIES_THAT) {
 	    ++pos;
-	    pos = deNest(false,pos,pm,accumulatedBehavior.implications,new Behavior(),isPure,isConstructor);
+	    pos = deNest(false,pos,pm,accumulatedBehavior.implications,new Behavior(),isPure,isConstructor,parent);
 	}
 	if (pm.elementAt(pos).getTag() == TagConstants.FOR_EXAMPLE) {
 	    ++pos;
-	    pos = deNest(true,pos,pm,accumulatedBehavior.examples,new Behavior(),isPure,isConstructor);
+	    pos = deNest(true,pos,pm,accumulatedBehavior.examples,new Behavior(),isPure,isConstructor,parent);
 	}
 	if (pm.elementAt(pos).getTag() == TagConstants.ALSO_REFINE) {
 	    ++pos;
@@ -267,7 +274,7 @@ public class AnnotationHandler {
 	// Now have to further desugar the annotations that Escjava uses
 	// FIXME - adding model programs may require altering this loop
 	if (results.size() != 1) {
-	    ArrayList orList = new ArrayList(); // Set of groups to be
+	    ArrayList orList = new ArrayList(); // Set of spec-cases to be
 				// ored together to form the final clause
 	    for (Iterator ii = results.iterator(); ii.hasNext();) {
 		Object o = ii.next();
@@ -344,7 +351,7 @@ public class AnnotationHandler {
 	return ModifierPragmaVec.make((ModifierPragma[])(newpm.toArray(out)));
     }
 
-    public int deNest(boolean exampleMode, int pos, ModifierPragmaVec pm, ArrayList results, Behavior cb, boolean isPure, boolean isConstructor) {
+    public int deNest(boolean exampleMode, int pos, ModifierPragmaVec pm, ArrayList results, Behavior cb, boolean isPure, boolean isConstructor, TypeDecl parent) {
 	Behavior currentBehavior = new Behavior();
 	LinkedList commonBehavior = new LinkedList();
 	ModifierPragma m = null;
@@ -358,49 +365,55 @@ public class AnnotationHandler {
 		    if (exampleMode)
 			ErrorSet.error("Behavior keyword should not be used in examples section - use example");
 		    currentBehavior = new Behavior();
+		    currentBehavior.isLightweight = false;
 		    break;
 		case TagConstants.EXAMPLE:
 		    if (!exampleMode)
 			ErrorSet.error("Example keyword should not be used outside the examples section - use behavior");
 		    currentBehavior = new Behavior();
+		    currentBehavior.isLightweight = false;
 		    break;
 
 		case TagConstants.NORMAL_BEHAVIOR:
 		    if (exampleMode)
 			ErrorSet.error("normal_behavior keyword should not be used in examples section - use normal_example");
 		    currentBehavior = new Behavior();
+		    currentBehavior.isLightweight = false;
 		    currentBehavior.isNormal = true;
-		// set a false signals clause
-			// FIXME - we need to turn signals off
-		    //currentBehavior.signals.add(Behavior.DefaultSignalFalse);
+		    // set a false signals clause
+		    currentBehavior.signals.add(Behavior.defaultSignalFalse(
+				parent,m.getStartLoc()));
 		    break;
 
 		case TagConstants.NORMAL_EXAMPLE:
 		    if (!exampleMode)
 			ErrorSet.error("normal_example keyword should not be used outside the examples section - use normal_behavior");
 		    currentBehavior = new Behavior();
+		    currentBehavior.isLightweight = false;
 		    currentBehavior.isNormal = true;
-		// set a false signals clause
-			// FIXME - we need to turn signals off
-		    //currentBehavior.signals.add(Behavior.DefaultSignalFalse);
+		    // set a false signals clause
+		    currentBehavior.signals.add(Behavior.defaultSignalFalse(
+				parent,m.getStartLoc()));
 		    break;
 
 		case TagConstants.EXCEPTIONAL_BEHAVIOR:
 		    if (exampleMode)
 			ErrorSet.error("exceptional_behavior keyword should not be used in examples section - use exceptional_example");
 		    currentBehavior = new Behavior();
+		    currentBehavior.isLightweight = false;
 		    currentBehavior.isExceptional = true;
 		    // set a false ensures clause
-		    currentBehavior.ensures.add(Behavior.EnsuresFalse);
+		    currentBehavior.ensures.add(Behavior.ensuresFalse(m.getStartLoc()));
 		    break;
 
 		case TagConstants.EXCEPTIONAL_EXAMPLE:
 		    if (!exampleMode)
 			ErrorSet.error("exceptional_example keyword should not be used outside the examples section - use exceptional_behavior");
 		    currentBehavior = new Behavior();
+		    currentBehavior.isLightweight = false;
 		    currentBehavior.isExceptional = true;
 		    // set a false ensures clause
-		    currentBehavior.ensures.add(Behavior.EnsuresFalse);
+		    currentBehavior.ensures.add(Behavior.ensuresFalse(m.getStartLoc()));
 		    break;
 
                 // All redundant tokens should not exist in the AST
@@ -729,7 +742,6 @@ public class AnnotationHandler {
 	if (isTrue(e1)) return e2;
 	if (isTrue(e2)) return e2; // Use e2 instead of T to keep location info 
 	if (isFalse(e1)) return Behavior.T;
-	if (isFalse(e2)) return e2;
 	Expr e = BinaryExpr.make(TagConstants.IMPLIES,e1,e2,e2.getStartLoc());
 	javafe.tc.FlowInsensitiveChecks.setType(e,Types.booleanType);
 	return e;
@@ -757,11 +769,14 @@ public class AnnotationHandler {
 		(LiteralExpr)FlowInsensitiveChecks.setType(LiteralExpr.make(
 		TagConstants.BOOLEANLIT, Boolean.FALSE, Location.NULL),
 		Types.booleanType);
-	public final static ExprModifierPragma EnsuresFalse =
-			ExprModifierPragma.make(
+
+	public final static ExprModifierPragma ensuresFalse(int loc) {
+			return ExprModifierPragma.make(
 			    TagConstants.ENSURES,
 			    Behavior.F,
-			    Location.NULL);
+			    loc);
+	}
+
 	public final static VarExprModifierPragma DefaultSignalTrue =
 			VarExprModifierPragma.make(
 			    TagConstants.SIGNALS,
@@ -772,17 +787,17 @@ public class AnnotationHandler {
 				Location.NULL),
 			    Behavior.T,
 			    Location.NULL);
-	public final static VarExprModifierPragma DefaultSignalFalse =
-			VarExprModifierPragma.make(
+	public final static VarExprModifierPragma defaultSignalFalse(
+			TypeDecl parent, int loc) {
+		VarExprModifierPragma v = VarExprModifierPragma.make(
 			    TagConstants.SIGNALS,
-			    FormalParaDecl.make(0,null,Identifier.intern(""),
-				TypeName.make(SimpleName.make(
-					Identifier.intern("Exception"),
-					Location.NULL)),
-				Location.NULL),
+			    null, // Interpreted as java.lang.Exception _
 			    Behavior.F,
-			    Location.NULL);
+			    loc);
+		return v;
+	}
 
+	public boolean isLightweight = true;
 	public boolean isNormal = false;
 	public boolean isExceptional = false;
 	public ModifierPragma openPragma = null;
@@ -812,6 +827,7 @@ public class AnnotationHandler {
 
 	public Behavior copy() {
 		Behavior b = new Behavior();
+		b.isLightweight = isLightweight;
 		b.isNormal = isNormal;
 		b.isExceptional = isExceptional;
 		b.openPragma = openPragma;
@@ -826,25 +842,20 @@ public class AnnotationHandler {
 	public void combine(Behavior b, ArrayList orlist) {
 	    if (b == null) return;
 
-	    // set defaults for anything that has not been set
+	    // The only default that is not trivially satisfied is the
+	    // default for diverges in a heavyweight spec, which is
+	    // 'diverges false'.
+	    // But ESC/Java also needs the modifies default which is
+	    // 'modifies \everything', since otherwise it presumes 
+	    // locations are not modified.
 
-	    if (b.ensures.size() == 0) 
-		b.ensures.add(ExprModifierPragma.make(
-				TagConstants.ENSURES,
-				Behavior.T,Location.NULL));
-	    if (b.when.size() == 0) 
-		b.when.add(ExprModifierPragma.make(
-				TagConstants.WHEN,
-				Behavior.T,Location.NULL));
-	    if (b.diverges.size() == 0)
+	    if (!b.isLightweight && b.diverges.size() == 0)
 		b.diverges.add(ExprModifierPragma.make(
 				TagConstants.DIVERGES,
 				Behavior.F,Location.NULL));
-	// FIXME - we need a default here
-	    //if (signals.size() == 0) 
-	//	signals.add(Behavior.DefaultSignalTrue);
-	// FIXME - this needs to be "modifies \everything;"
-	// but escjava does not know how to reason about that yet
+
+	    // FIXME - this needs to be "modifies \everything;"
+	    // but escjava does not know how to reason about that yet
 	    //if (modifies.size() == 0) 
 		//modifies.add(Behavior.DefaultModifies);
 
