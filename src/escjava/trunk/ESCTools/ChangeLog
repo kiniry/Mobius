@@ -1,3 +1,447 @@
+2003-12-30  Joseph Kiniry  <kiniry@trystero.local.>
+
+	* Makefile:
+	Tweaked fixperms rule to fix permissions of spec files.  Removed
+	-9 switch from bzip2's usage in the patch construction rules as it
+	didn't save us a lot of space and takes a heck of a long time on
+	my old Mac.
+
+	* Makefile.defs:
+	Changed the project name to be ESCJava for now, as we only ship
+	ESC/Java and not the other ESC-tools.  Include build/release date
+	in binary and patch tar filenames.
+
+	* README.first:
+	More details on using and building ESC/Java2 on Windows have been
+	added.
+
+	* Escjava/java/escjava/translate/GetSpec.java:
+	* Escjava/java/escjava/translate/Translate.java:
+	* Escjava/java/escjava/Main.java:
+	* Escjava/java/escjava/backpred/BackPred.java:
+	* Escjava/java/escjava/backpred/FindContributors.java:
+	* Escjava/java/escjava/prover/Atom.java:
+	* Escjava/java/escjava/prover/SExp.java:
+	* Escjava/java/escjava/prover/SInt.java:
+	* Escjava/java/escjava/prover/SList.java:
+	* Escjava/java/escjava/prover/SNil.java:
+	* Escjava/java/escjava/prover/SPair.java:
+	* Escjava/java/escjava/prover/Simplify.java:
+	* Escjava/java/escjava/prover/SubProcess.java:
+	* Escjava/java/escjava/reader/RefinementCachedReader.java:
+	* Escjava/java/escjava/sp/VarMap.java:
+	* Escjava/java/escjava/tc/EnvForGhostLocals.java:
+	* Escjava/java/escjava/tc/FlowInsensitiveChecks.java:
+	* Escjava/java/escjava/tc/GhostEnv.java:
+	* Escjava/java/escjava/translate/ErrorMsg.java:
+	* Escjava/java/escjava/translate/GC.java:
+	* Escjava/java/escjava/translate/Inner.java:
+	* Escjava/java/escjava/translate/NoWarn.java:
+	* Escjava/java/escjava/translate/TrAnExpr.java:
+	* Escjava/java/escwizard/PragmaInstr.java:
+	* Escjava/java/houdini/InferThrows.java:
+	* Escjava/java/houdini/StandardAnnotationGuesser.java:
+	* Escjava/java/houdini/specs/java/util/Collection.spec:
+	* Escjava/java/houdini/specs/java/util/Enumeration.spec:
+	* Escjava/java/houdini/specs/java/util/Hashtable.spec:
+	* Escjava/java/houdini/specs/java/util/Vector.spec:
+	* Escjava/release/master/specs/java/lang/System.spec:
+	* Escjava/test/escjava/test/test25/DirectType.java:
+	* Escjava/test/escjava/test/test25/MethodCall.java:
+	* Escjava/test/escjava/test/test25/OtherClass.java:
+	* Escjava/test/escjava/test/test25/Trans.java:
+	* Escjava/test/escjava/test/test31/Neg.java:
+	* Escjava/test/escjava/test/test40/Basic.java:
+	* Escjava/test/escjava/test/test40/Inherit.java:
+	* Escjava/test/escjava/test/test40/Local.java:
+	* Escjava/test/escjava/test/test40/Static.java:
+	* Escjava/test/escjava/test/test42/Cliteral.java:
+	* Escjava/test/escjava/test/test49/Ghost.java:
+	* Escjava/test/escjava/test/test8/trycatch2.java:
+	* Escjava/test/junittests/Makefile:
+	* Javafe/astgen/astoutput.c:
+	* Javafe/decsrclib/decsrc/util/ClassFileParser.spec:
+	* Javafe/java/javafe/CopyLoaded.java:
+	* Javafe/java/javafe/CountLines.java:
+	* Javafe/java/javafe/FrontEndTool.java:
+	* Javafe/java/javafe/PrintSpec.java:
+	* Javafe/java/javafe/SrcTool.java:
+	* Javafe/java/javafe/TestTool.java:
+	* Javafe/java/javafe/Tool.java:
+	* Javafe/java/javafe/ast/ASTDecoration.java:
+	* Javafe/java/javafe/ast/DefaultVisitor.java:
+	* Javafe/java/javafe/ast/DelegatingPrettyPrint.java:
+	* Javafe/java/javafe/ast/Identifier.java:
+	* Javafe/java/javafe/ast/Modifiers.java:
+	* Javafe/java/javafe/ast/OperatorTags.java:
+	* Javafe/java/javafe/ast/PrettyPrint.java:
+	* Javafe/java/javafe/ast/StandardPrettyPrint.java:
+	* Javafe/java/javafe/ast/_SpecialParserInterface.java:
+	* Javafe/java/javafe/filespace/ClassPath.java:
+	* Javafe/java/javafe/filespace/ExtTree.java:
+	* Javafe/java/javafe/filespace/Extension.java:
+	* Javafe/java/javafe/filespace/FileTree.java:
+	* Javafe/java/javafe/filespace/Filter.java:
+	* Javafe/java/javafe/filespace/FilterEnum.java:
+	* Javafe/java/javafe/filespace/HashTree.java:
+	* Javafe/java/javafe/filespace/LeafTree.java:
+	* Javafe/java/javafe/filespace/LookAheadEnum.java:
+	* Javafe/java/javafe/filespace/PathComponent.java:
+	* Javafe/java/javafe/filespace/PkgTree.java:
+	* Javafe/java/javafe/filespace/PreloadedTree.java:
+	* Javafe/java/javafe/filespace/Query.java:
+	* Javafe/java/javafe/filespace/Resolve.java:
+	* Javafe/java/javafe/filespace/SlowQuery.java:
+	* Javafe/java/javafe/filespace/StringUtil.java:
+	* Javafe/java/javafe/filespace/Tree.java:
+	* Javafe/java/javafe/filespace/TreeWalker.java:
+	* Javafe/java/javafe/filespace/UnionTree.java:
+	* Javafe/java/javafe/filespace/ZipTree.java:
+	* Javafe/java/javafe/genericfile/GenericFile.java:
+	* Javafe/java/javafe/genericfile/UnopenableFile.java:
+	* Javafe/java/javafe/genericfile/ZipGenericFile.java:
+	* Javafe/java/javafe/parser/Lex.java:
+	* Javafe/java/javafe/parser/Parse.java:
+	* Javafe/java/javafe/parser/ParseExpr.java:
+	* Javafe/java/javafe/parser/ParseStmt.java:
+	* Javafe/java/javafe/parser/ParseType.java:
+	* Javafe/java/javafe/parser/ParseUtil.java:
+	* Javafe/java/javafe/parser/PragmaParser.java:
+	* Javafe/java/javafe/parser/Token.java:
+	* Javafe/java/javafe/parser/TokenQueue.java:
+	* Javafe/java/javafe/reader/ASTClassFileParser.java:
+	* Javafe/java/javafe/reader/BinReader.java:
+	* Javafe/java/javafe/reader/CachedReader.java:
+	* Javafe/java/javafe/reader/DescriptorParser.java:
+	* Javafe/java/javafe/reader/MethodSignature.java:
+	* Javafe/java/javafe/reader/Reader.java:
+	* Javafe/java/javafe/reader/SrcReader.java:
+	* Javafe/java/javafe/reader/StandardTypeReader.java:
+	* Javafe/java/javafe/reader/TypeReader.java:
+	* Javafe/java/javafe/tc/CheckCompilationUnit.java:
+	* Javafe/java/javafe/tc/CheckInvariants.java:
+	* Javafe/java/javafe/tc/ConstantExpr.java:
+	* Javafe/java/javafe/tc/Env.java:
+	* Javafe/java/javafe/tc/EnvForCU.java:
+	* Javafe/java/javafe/tc/EnvForEnclosedScope.java:
+	* Javafe/java/javafe/tc/EnvForLocalType.java:
+	* Javafe/java/javafe/tc/EnvForLocals.java:
+	* Javafe/java/javafe/tc/EnvForTypeSig.java:
+	* Javafe/java/javafe/tc/FlowInsensitiveChecks.java:
+	* Javafe/java/javafe/tc/Listener.java:
+	* Javafe/java/javafe/tc/OutsideEnv.java:
+	* Javafe/java/javafe/tc/PrepTypeDeclaration.java:
+	* Javafe/java/javafe/tc/SLResolution.java:
+	* Javafe/java/javafe/tc/TypeCheck.java:
+	* Javafe/java/javafe/tc/TypePrint.java:
+	* Javafe/java/javafe/tc/TypeSig.java:
+	* Javafe/java/javafe/tc/Types.java:
+	* Javafe/java/javafe/util/Assert.java:
+	* Javafe/java/javafe/util/BufferedCorrelatedReader.java:
+	* Javafe/java/javafe/util/CorrelatedReaderTest.java:
+	* Javafe/java/javafe/util/ErrorSet.java:
+	* Javafe/java/javafe/util/FileCorrelatedReader.java:
+	* Javafe/java/javafe/util/Location.java:
+	* Javafe/java/javafe/util/LocationManagerCorrelatedReader.java:
+	* Javafe/java/javafe/util/Set.java:
+	* Javafe/java/javafe/util/StackVector.java:
+	* Javafe/java/javafe/util/SubCorrelatedReader.java:
+	* Javafe/java/jtools/jcheck/JCheck.java:
+	* Javafe/java/jtools/jcheck/parseTypes/ParseFindTypes.java:
+	* Javafe/java/jtools/jls/JLs.java:
+	* Javafe/java/jtools/jwhich/JWhich.java:
+	* Javafe/java/tohtml/DeclLinks.java:
+	* Javafe/java/tohtml/Java2Html.java:
+	* Javafe/test/javafe/test/LocTool.java:
+	* Javafe/test/javafe/test/Print.java:
+	* Javafe/test/javafe/test/SuperlinksTest.java:
+	* Javafe/test/javafe/test/SupertypeTest.java:
+	Syntactic cleanups to many Javafe and some Escjava source and spec
+	files to better conform with JML2 syntax.  Work is still ongoing
+	on this front.
+
+2003-12-30  David Cok  <cok@frontiernet.net>
+
+	* Escjava/test/junittests/ModifiesUse.java:
+	* Escjava/test/junittests/ModifiesUse.java-expected:
+	* Escjava/java/escjava/translate/GetSpec.java:
+	* Escjava/java/escjava/translate/Translate.java:
+	Expanding datagroups when called modifies clauses are used.
+
+2003-12-29  David Cok  <cok@frontiernet.net>
+
+	* Escjava/java/escjava/AnnotationHandler.java:
+	* Escjava/java/escjava/ast/Utils.java:
+	* Escjava/java/escjava/tc/FlowInsensitiveChecks.java:
+	* Escjava/test/junittests/DefInh.java:
+	* Escjava/test/junittests/DefInh.java-expected:
+	* Escjava/test/junittests/Desugaring.java-expected:
+	* Escjava/test/junittests/Ghost.java:
+	* Escjava/test/junittests/Ghost.java-expected:
+	* Escjava/test/junittests/Informal.java:
+	* Escjava/test/junittests/Informal.java-expected:
+	* Escjava/test/junittests/Makefile:
+	* Escjava/test/junittests/ModelConstructors.java:
+	* Escjava/test/junittests/ModifiesPure.java-expected:
+	* Escjava/test/junittests/ParsePure.java:
+	* Escjava/test/junittests/ParsePure.java-expected:
+	* Escjava/test/junittests/PureCheck.java:
+	* Escjava/test/junittests/PureCheck2.java-expected:
+	* Escjava/test/junittests/PureModifies.java:
+	* Escjava/test/junittests/PureModifies.java-expected:
+	* Escjava/test/junittests/SetComprehension.java:
+	* Escjava/test/junittests/SetComprehension.java-expected:
+	* jmlspecs.jar:
+	Implementation of (a) default specs for default constructors and
+	(b) checks of modifies clauses for pure constructors.
+
+	* Escjava/java/escjava/translate/Translate.java:
+	Removing spurious comments.
+
+	* Javafe/java/javafe/util/Makefile: Fixing typo.
+
+2003-12-28  David Cok  <cok@frontiernet.net>
+
+	* Escjava/Makefile:
+	* Escjava/escj:
+	* Escjava/test/escjava/test/Makefile:
+	* Escjava/test/escjava/test/alltests:
+	* Escjava/test/escjava/test/rtestall:
+	* Escjava/test/escjava/test/test54/ans:
+	* Escjava/test/escjava/test/test54/postconditions.java:
+	* Escjava/test/junittests/Makefile:
+	* Makefile:
+	* Makefile.defs:
+	* clean_env.sh:
+	Clean up of Makefile variables and of test54.
+
+	* Escjava/test/junittests/DataGroup.java: Removing file - wrong
+	case.
+
+	* Escjava/Makefile: Cleaning up self_test target.
+
+	* Javafe/java/javafe/reader/ASTClassFileParser.java:
+	* Javafe/java/javafe/util/FileCorrelatedReader.java:
+	Fixing also_ in some annotations.
+
+	* specs/org/jmlspecs/lang/JMLDataGroup.spec:
+	Adding JMLDataGroup to local specs.
+
+	* jmlspecs.jar: Current snapshot of JML specs.
+
+	* README.first: 
+	* release-files/README.release: 
+	Edited documentation.
+
+2003-12-27  David Cok  <cok@frontiernet.net>
+
+	* Makefile: Putting jmlspecs.jar into the patch release.
+
+	* Escjava/escj: An attempt at guessing an executable on Windows.
+
+	* Javafe/java/javafe/ast/hierarchy.j:
+	* Javafe/java/javafe/tc/TypeSig.java:
+	Adjustments to specs
+
+	* Escjava/test/junittests/ModChecksConstructor.java-expected:
+	Fixing an output on changing Object spec.
+
+	* Escjava/java/escjava/prover/CECEnum.java:
+	* Escjava/java/escjava/translate/NoWarn.java:
+	* Escjava/java/escjava/translate/Translate.java:
+	* Escjava/test/escjava/test/Makefile:
+	* Escjava/test/escjava/test/alltests:
+	* Escjava/test/escjava/test/test54/postconditions.java:
+	* Escjava/test/escjava/typecheckJDK:
+	* Escjava/test/junittests/Constraint.java:
+	* Escjava/test/junittests/Constructor.java:
+	* Escjava/test/junittests/DataGroup.java:
+	* Escjava/test/junittests/Datagroup.java:
+	* Escjava/test/junittests/Datagroup.java-expected:
+	* Escjava/test/junittests/Desugaring.java:
+	* Escjava/test/junittests/Desugaring.java-expected:
+	* Escjava/test/junittests/Embedded.java-expected:
+	* Escjava/test/junittests/EmbeddedA.java-expected:
+	* Escjava/test/junittests/Initially.java:
+	* Escjava/test/junittests/Makefile:
+	* Escjava/test/junittests/ModChecksConstructor.java-expected:
+	* Escjava/test/junittests/ModifiesPure.java:
+	* Escjava/test/junittests/ModifiesPure.java-expected:
+	* Escjava/test/junittests/ParsePure.java:
+	* Escjava/test/junittests/ParsePure.java-expected:
+	* Escjava/test/junittests/PureCheck2.java:
+	* Escjava/test/junittests/PureCheck2.java-expected:
+	* Escjava/test/junittests/skip:
+	* Javafe/java/javafe/FrontEndTool.java:
+	* Javafe/java/javafe/parser/ParseStmt.java:
+	* Javafe/java/javafe/parser/PragmaParser.java:
+	* Javafe/java/javafe/util/BufferedCorrelatedReader.java:
+	* Javafe/java/javafe/util/StackVector.java:
+	* Javafe/java/javafe/util/_TYPE_Vec.j:
+	* specs/java/lang/Object.spec:
+	* Escjava/Makefile:
+	* Escjava/escj:
+	* Escjava/java/escjava/Main.java:
+	* Escjava/java/escjava/Options.java:
+	* Escjava/java/escjava/RefinementSequence.java:
+	* Escjava/java/escjava/ast/TagConstants.java:
+	* Makefile:
+	* Makefile.defs:
+	* Makefile.local.sample:
+	* jmlspecs.jar:
+	Fixes to lots of annotations within ESC and bug fixes for support
+	of modifies clauses; a bug in test54 still outstanding.
+
+2003-12-26  David Cok  <cok@frontiernet.net>
+
+	* specs/java/lang/String.jml:
+	* specs/java/lang/String.spec:
+	* specs/java/util/Collection.spec:
+	* specs/java/util/Enumeration.spec:
+	* specs/java/util/Hashtable.spec:
+	* specs/java/util/Vector.spec:
+	* Escjava/java/escjava/translate/GC.java:
+	* Escjava/java/escjava/translate/Translate.java:
+	* Escjava/test/escjava/test/test49/ans:
+	* Escjava/test/escjava/typecheckJDK:
+	* Escjava/test/junittests/CON.java:
+	* Escjava/test/junittests/CON.java-expected:
+	* Escjava/test/junittests/Desugaring.java-expected:
+	* Escjava/test/junittests/Makefile:
+	* Escjava/test/junittests/ModChecks.java:
+	* Escjava/test/junittests/ModChecks3.java:
+	* Escjava/test/junittests/ModChecks3.java-expected:
+	* Escjava/test/junittests/ModChecks4.java:
+	* Escjava/test/junittests/ModChecks5.java:
+	* Escjava/test/junittests/ModChecks5.java-expected:
+	* Escjava/test/junittests/ModChecks6.java:
+	* Escjava/test/junittests/ModChecks7.java:
+	* Escjava/test/junittests/ModChecks7.java-expected:
+	* Escjava/test/junittests/ModChecksConstructor.java:
+	* Escjava/test/junittests/ModChecksConstructor.java-expected:
+	* Escjava/test/junittests/ModChecksMaps.java:
+	* Escjava/test/junittests/ModChecksMaps.java-expected:
+	* Escjava/test/junittests/ModChecksMapsA.java:
+	* Escjava/test/junittests/ModChecksMapsA.java-expected:
+	* Escjava/test/junittests/ModChecksMethod.java:
+	* Escjava/test/junittests/ModChecksMethod.java-expected:
+	* Escjava/test/junittests/ModE.java:
+	* Escjava/test/junittests/ModE.java-expected:
+	* Escjava/test/junittests/ModelVar.java:
+	* Escjava/test/junittests/MultipleAt.java:
+	* Escjava/test/junittests/MultipleAtError1.java:
+	* Escjava/test/junittests/MultipleAtError2.java:
+	* Escjava/test/junittests/ParsePlus.java:
+	* Escjava/test/junittests/skip:
+	* Javafe/java/javafe/parser/Parse.java:
+	* Javafe/java/javafe/util/Makefile:
+	* Javafe/java/jtools/Makefile:
+	* Javafe/java/jtools/jcheck/Makefile:
+	* Javafe/java/jtools/jls/Makefile:
+	* Javafe/java/jtools/jwhich/Makefile:
+	* Javafe/java/jtools/jwhich/jwhich:
+	* Javafe/test/javafe/parser/test/Makefile:
+	* Javafe/test/javafe/test/Makefile:
+	* Escjava/Makefile:
+	* Escjava/java/escjava/AnnotationHandler.java:
+	* Escjava/java/escjava/parser/EscPragmaParser.java:
+	* Escjava/java/escjava/tc/FlowInsensitiveChecks.java:
+	* Makefile:
+	More improvements to checking modifies clauses, particularly to
+	the propagation of changes to instance variables of new instance
+	expressions.
+
+2003-12-24  David Cok  <cok@frontiernet.net>
+
+	* Javafe/Makefile:
+	* Javafe/java/javafe/util/Makefile:
+	* Javafe/test/javafe/parser/test/Makefile:
+	* Javafe/test/javafe/test/Makefile:
+	* Javafe/test/javafe/test/typecheckJDK:
+	* Javafe/test/javafe/test/typecheckJavafe:
+	* Makefile:
+	* Makefile.local.sample:
+	* Utils/README:
+	Cleaning up and fixing Makefiles.
+
+	* Escjava/test/escjava/test/rtest:
+	* Escjava/test/escjava/test/rtestall:
+	* Escjava/test/junittests/DataGroup.java:
+	* Escjava/test/junittests/ModChecksMaps.java:
+	* Escjava/test/junittests/ModChecksMaps.java-expected:
+	* Escjava/java/escjava/translate/Translate.java:
+	Bug fix.
+
+	* Escjava/java/escjava/tc/Datagroups.java:
+	* Escjava/java/escjava/tc/FlowInsensitiveChecks.java:
+	* Escjava/java/escjava/translate/TrAnExpr.java:
+	* Escjava/java/escjava/translate/Translate.java:
+	* Escjava/test/junittests/DataGroup.java:
+	* Escjava/test/junittests/GhostLocal.java:
+	* Escjava/test/junittests/LocalClass.java:
+	* Escjava/test/junittests/MapsIn.java:
+	* Escjava/test/junittests/MapsIn.java-expected:
+	* Escjava/test/junittests/Mod2.java:
+	* Escjava/test/junittests/ModChecks2.java:
+	* Escjava/test/junittests/ModChecks2.java-expected:
+	* Escjava/test/junittests/ModChecks5.java:
+	* Escjava/test/junittests/ModChecks5.java-expected:
+	* Escjava/test/junittests/ModChecks6.java:
+	* Escjava/test/junittests/ModChecks6.java-expected:
+	* Escjava/test/junittests/ModChecksArgs.java:
+	* Escjava/test/junittests/ModChecksArgs.java-expected:
+	* Escjava/test/junittests/ModChecksMaps.java:
+	* Escjava/test/junittests/ModChecksMaps.java-expected:
+	* Escjava/test/junittests/ModChecksMapsA.java:
+	* Escjava/test/junittests/ModChecksMapsA.java-expected:
+	* Escjava/test/junittests/ModChecksMethod.java:
+	* Escjava/test/junittests/ModChecksMethod.java-expected:
+	* Escjava/java/escjava/Options.java:
+	* Escjava/java/escjava/RefinementSequence.java:
+	* Escjava/java/escjava/ast/.cvsignore:
+	* Escjava/java/escjava/ast/hierarchy.j:
+	* Escjava/java/escjava/parser/EscPragmaParser.java:
+	* Javafe/java/javafe/ast/IdPragma.java:
+	* Javafe/java/javafe/parser/Parse.java:
+	Changes to enable modifies checks.  These are implemented as a new
+	Warning type.  Note that these warnings can be suppressed just as
+	other warnings can, but a program with incorrect modifies clauses
+	may not check correctly.  This also implements the in and maps
+	clauses.  Recursive maps clauses are implemented by unrolling
+	them.  The unroll depth is set with the option -mapsUnrollCount
+	(default 2).  'modifies \everything' is parsed but (still) not
+	implemented within the static checking.
+
+2003-12-23  Joseph R. Kiniry  <kiniry@acm.org>
+
+	* Javafe/java/javafe/parser/ParseType.java:
+	Performed a code review; cleaned up code, docs, and specs; made
+	sure specs conformed to recent JML standard.  Implemented support
+	for parsing "assert" as a Name in pre-1.4 Java source.  This meant
+	updating parseName(Lex) to deal with the case when it expected an
+	identifier but it got an assert keyword.
+
+	* Javafe/java/javafe/ast/Identifier.java:
+	* Javafe/test/javafe/parser/test/TestExpr.java:
+	* Javafe/test/javafe/parser/test/TestLex.java:
+	* Javafe/test/javafe/parser/test/TestParse.java:
+	Performed a code review; cleaned up code: docs, and specs; made
+	sure specs conformed to recent JML standard.
+
+	* Makefile: Forgot -f flag on rm command.
+
+2003-12-22  Joseph R. Kiniry  <kiniry@acm.org>
+
+	* Makefile:
+	* Makefile.defs:
+	Moving definition of RELTEST from Makefile to Makefile.defs.
+	Added new clean sub-rule and actions to remove generated jar
+	files, the release test directory, and the generated tags files.
+
+	* install.sh: Correcting permissions on a couple more scripts.
+
+	* ChangeLog: ChangeLog update for release.
+
 2003-12-14  David Cok  <cok@frontiernet.net>
 
 	* Escjava/test/junittests/MapsIn.java-expected:
