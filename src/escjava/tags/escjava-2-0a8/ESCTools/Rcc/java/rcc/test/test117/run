@@ -1,0 +1,5 @@
+#!/bin/csh -f
+# usage: run FLAGS
+
+${RCCN} -warn ThreadLocal $* *.java
+

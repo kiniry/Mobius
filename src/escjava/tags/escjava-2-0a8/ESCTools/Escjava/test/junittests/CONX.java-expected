@@ -1,0 +1,19 @@
+CONX.java:18: Error: There is no assignable clause allowing this method call
+                Object o = new CONX(0); // WARNING
+                                   ^
+CONX.java:40: Associated declaration: 
+        //@ modifies i;
+                     ^
+CONX.java:16: Associated declaration: 
+        //@ modifies \nothing;
+            ^
+CONX.java:28: Error: There is no assignable clause allowing this method call
+                Object oo = new CONX(o); // WARNING
+                                    ^
+CONX.java:48: Associated declaration: 
+        //@ modifies CONX.*;
+                     ^
+CONX.java:26: Associated declaration: 
+        //@ modifies \nothing;
+            ^
+2 errors

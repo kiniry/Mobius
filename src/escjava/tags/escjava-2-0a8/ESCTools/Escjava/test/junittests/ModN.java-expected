@@ -1,0 +1,87 @@
+ESC/Java version VERSION
+    [TIME]
+
+ModN ...
+  Prover started:TIME
+    [TIME]
+
+ModN: mok() ...
+    [TIME]  passed
+
+ModN: m() ...
+ModN.java:18: Error: There is no assignable clause allowing this assignment
+                j = 0;
+                ^
+ModN.java:16: Associated declaration: 
+        //@ modifies i,k;
+            ^
+    [TIME]  passed
+
+ModN: mm() ...
+ModN.java:26: Error: There is no assignable clause allowing this assignment
+                k = 0;
+                ^
+ModN.java:21: Associated declaration: 
+        //@ modifies i;
+            ^
+    [TIME]  passed
+
+ModN: mmm() ...
+ModN.java:34: Error: There is no assignable clause allowing this assignment
+                m = 0;
+                ^
+ModN.java:29: Associated declaration: 
+        //@ modifies i;
+            ^
+ModN.java:34: Error: There is no assignable clause allowing this assignment
+                m = 0;
+                ^
+ModN.java:32: Associated declaration: 
+        //@ modifies i,k;
+            ^
+    [TIME]  passed
+
+ModN: p() ...
+------------------------------------------------------------------------
+ModN.java:45: Warning: Possible violation of modifies clause (Modifies)
+                if (i == 0) j = 0;
+                            ^
+Associated declaration is "ModN.java", line 41, col 5:
+        //@ modifies k;
+            ^
+Execution trace information:
+    Executed else branch in "ModN.java", line 43, col 2.
+    Executed else branch in "ModN.java", line 44, col 2.
+    Executed then branch in "ModN.java", line 45, col 14.
+
+------------------------------------------------------------------------
+    [TIME]  failed
+
+ModN: pp() ...
+------------------------------------------------------------------------
+ModN.java:54: Warning: Possible violation of modifies clause (Modifies)
+                if (i==0) k=0;
+                          ^
+Associated declaration is "ModN.java", line 49, col 5:
+        //@ modifies j;
+            ^
+Execution trace information:
+    Executed then branch in "ModN.java", line 54, col 12.
+
+------------------------------------------------------------------------
+    [TIME]  failed
+
+ModN: pa() ...
+ModN.java:62: Error: There is no assignable clause allowing this assignment
+                a = null;
+                ^
+ModN.java:60: Associated declaration: 
+        //@ modifies i;
+            ^
+    [TIME]  passed
+
+ModN: ModN() ...
+    [TIME]  passed
+  [TIME total]
+2 warnings
+5 errors

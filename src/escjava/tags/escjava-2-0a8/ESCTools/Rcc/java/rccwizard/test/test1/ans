@@ -1,0 +1,28 @@
+/*#(rccwizard:type decl) thread_local */ class C {
+
+    /*#(rccwizard:instance field) readonly */
+    /* REMOVED #(rccwizard:instance field) guarded_by a BECAUSE ./C.java:19: Warning: possible race condition.  Lock a may not be held.  Locks currently held are (null). (Race) */
+    /* REMOVED #(rccwizard:instance field) guarded_by this BECAUSE ./C.java:19: Warning: possible race condition.  Lock C.this may not be held.  Locks currently held are (null). (Race) */
+    /*#(rccwizard:instance field) guarded_by null */
+    Object a = new Object();
+
+    /* REMOVED #(rccwizard:instance field) readonly BECAUSE ./C.java:20: Warning:  Assigning a variable declared as readonly (ReadOnly) */
+    /*#(rccwizard:instance field) guarded_by a */
+    /* REMOVED #(rccwizard:instance field) guarded_by this BECAUSE ./C.java:20: Warning: possible race condition.  Lock C.this may not be held.  Locks currently held are (null, a). (Race) */
+    /*#(rccwizard:instance field) guarded_by null */
+    Object b;
+
+    /* REMOVED #(rccwizard:parameter:instance method) requires a BECAUSE ./C.java:26: Warning: possible race condition.  Lock (new C()).a may not be held.  Locks currently held are (null). (Race) */
+    /* REMOVED #(rccwizard:parameter:instance method) requires this BECAUSE ./C.java:26: Warning: possible race condition.  Lock (new C()) may not be held.  Locks currently held are (null). (Race) */
+    /*#(rccwizard:parameter:instance method) requires null */
+    void m() {
+	synchronized(a) {
+	    b = new Object();
+	}
+    }
+ 
+    /*#(rccwizard:parameter:static method) requires null */
+    public static void main(String[] args) {
+	(new C()).m();
+    }
+}

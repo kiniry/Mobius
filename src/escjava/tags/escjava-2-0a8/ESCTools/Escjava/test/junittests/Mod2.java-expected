@@ -1,0 +1,39 @@
+ESC/Java version VERSION
+    [TIME]
+
+Mod2 ...
+  Prover started:TIME
+    [TIME]
+
+Mod2: m() ...
+------------------------------------------------------------------------
+Mod2.java:19: Warning: Postcondition possibly not established (Post)
+        }
+        ^
+Associated declaration is "Mod2.java", line 10, col 5:
+        //@ ensures j == 3+a;
+            ^
+Execution trace information:
+    Executed implicit return in "Mod2.java", line 19, col 1.
+
+------------------------------------------------------------------------
+    [TIME]  failed
+
+Mod2: mm(int) ...
+------------------------------------------------------------------------
+Mod2.java:32: Warning: Postcondition possibly not established (Post)
+        }
+        ^
+Associated declaration is "Mod2.java", line 22, col 5:
+        //@ ensures j == 3+a+0*\old(j);
+            ^
+Execution trace information:
+    Executed implicit return in "Mod2.java", line 32, col 1.
+
+------------------------------------------------------------------------
+    [TIME]  failed
+
+Mod2: Mod2() ...
+    [TIME]  passed immediately
+  [TIME total]
+2 warnings

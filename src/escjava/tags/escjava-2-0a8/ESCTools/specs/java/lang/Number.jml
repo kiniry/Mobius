@@ -1,0 +1,70 @@
+// @(#)$Id$
+
+// Copyright (C) 2002 Iowa State University
+
+// This file is part of JML
+
+// JML is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation; either version 2, or (at your option)
+// any later version.
+
+// JML is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with JML; see the file COPYING.  If not, write to
+// the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
+
+package java.lang;
+
+/** JML's specification of java.lang.Number.
+ * @version $Revision$
+ * @author Brandon Shilling
+ * @author Gary T. Leavens
+ */
+public abstract class Number implements java.io.Serializable {
+
+    /*@ public normal_behavior
+      @   assignable objectState;
+      @*/
+    public /*@ pure @*/ Number();
+
+    /*@ public normal_behavior
+      @   ensures (* \result is an int approximation
+      @              to the value of this object *);
+      @*/
+    public abstract /*@ pure @*/ int intValue();
+
+    /*@ public normal_behavior
+      @   ensures (* \result is an long approximation
+      @              to the value of this object *);
+      @*/
+    public abstract /*@ pure @*/ long longValue();
+
+    /*@ public normal_behavior
+      @   ensures (* \result is an float approximation
+      @              to the value of this object *);
+      @*/
+    public abstract /*@ pure @*/ float floatValue();
+
+    /*@ public normal_behavior
+      @   ensures (* \result is an double approximation
+      @              to the value of this object *);
+      @*/
+    public abstract /*@ pure @*/ double doubleValue();
+
+    /*@ public normal_behavior
+      @   ensures (* \result is an byte approximation
+      @              to the value of this object *);
+      @*/
+    public /*@ pure @*/ byte byteValue();
+
+    /*@ public normal_behavior
+      @   ensures (* \result is an short approximation
+      @              to the value of this object *);
+      @*/
+    public /*@ pure @*/ short shortValue();
+}
