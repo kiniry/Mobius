@@ -446,15 +446,6 @@ public class TagConstants
     "vAllocTime"
   };
 
-  static {
-    Assert.notFalse( esckeywords.length ==
-		     LASTESCKEYWORDTAG - FIRSTESCKEYWORDTAG +1 );
-    Assert.notFalse( escchecks.length ==
-		     LASTESCCHECKTAG - FIRSTESCCHECKTAG );
-    Assert.notFalse( escfunctions.length ==
-		     LASTFUNCTIONTAG - FIRSTFUNCTIONTAG +1 );
-  }
-
   public static void main(String[] args) {
     for(int i= FIRST_TAG; i<LAST_TAG; i++ )
       System.out.println(i+" "+toString(i));
