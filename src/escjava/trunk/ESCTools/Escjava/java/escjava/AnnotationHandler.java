@@ -646,10 +646,10 @@ public class AnnotationHandler {
 		case TagConstants.NEWINSTANCEEXPR:
 		    NewInstanceExpr c = (NewInstanceExpr)x;
 		    if (!escjava.tc.FlowInsensitiveChecks.isPure(c.decl)) {
-/*FIXME			ErrorSet.error(c.loc,
+			ErrorSet.error(c.loc,
 			    "Constructor is used in an annotation" +
 			    " but is not pure (" + 
-			    Location.toFileLineString(c.decl.loc) + ")");*/
+			    Location.toFileLineString(c.decl.loc) + ")");
 		    }
 		    break;
 		case TagConstants.WACK_DURATION:

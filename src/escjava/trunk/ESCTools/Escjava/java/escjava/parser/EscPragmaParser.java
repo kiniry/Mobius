@@ -1647,7 +1647,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
             Expr e = parseExpression(scanner);
             dst.auxVal = ExprStmtPragma.make(inProcessTag, e, null, inProcessLoc);
             dst.ttype = TagConstants.STMTPRAGMA;
-        } else if (inProcessTag == TagConstants.DEPENDS) {
+//        } else if (inProcessTag == TagConstants.DEPENDS) {
             // FIXME - not sure why we end up here or what we are supposed to do
         } else {
             System.out.println("UNSUPPORTED TAG " + TagConstants.toString(inProcessTag));
