@@ -35,6 +35,8 @@ import javafe.tc.OutsideEnv;
 
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 
 public class RefinementSequence extends CompilationUnit {
 
@@ -119,6 +121,7 @@ public class RefinementSequence extends CompilationUnit {
 	LexicalPragmaVec lexicalPragmaVec = LexicalPragmaVec.make();
 	ImportDeclVec imports = ImportDeclVec.make();
 	TypeDeclVec types = TypeDeclVec.make();
+	initblockmap = new HashMap();
 	if (javacu != null) {
 	    imports = javacu.imports.copy();
 	    types = cleancopy(javacu.elems);
@@ -502,7 +505,10 @@ public class RefinementSequence extends CompilationUnit {
 	    } else if (tde instanceof InitBlock) {
 		// FIXME - combine modifiers ???
 		// FIXME - combine pmodifiers ???
-		if (addNewItems) {
+		InitBlock newtde = (InitBlock)initblockmap.get(tde);
+		if (newtde != null) {
+		    newtde.pmodifiers = ((InitBlock)tde).pmodifiers; // combine ???? FIXME
+		} else if (addNewItems) {
 		    td.elems.addElement(tde);
 		    tde.setParent(td);
 		} else {
@@ -525,7 +531,15 @@ public class RefinementSequence extends CompilationUnit {
 		}
 		if (!found) {
 		    // Can always add specification stuff
-		    td.elems.addElement(tde);
+		    // Could really just at it at the end, but then a bunch
+		    // of tests fail because things get out of order.
+		    int line = Location.toLineNumber(tde.getStartLoc());
+		    int z;
+		    for (z=0; z<td.elems.size(); ++z) {
+			int ln = Location.toLineNumber( td.elems.elementAt(z).getStartLoc() );
+			if (line < ln) break;
+		    }
+		    td.elems.insertElementAt(tde,z);
 		    tde.setParent(td);
 		}
 	    } else if (tde instanceof ModelDeclPragma) {
@@ -544,7 +558,15 @@ public class RefinementSequence extends CompilationUnit {
 		}
 		if (!found) {
 		    // Can always add specification stuff
-		    td.elems.addElement(tde);
+		    // Could really just at it at the end, but then a bunch
+		    // of tests fail because things get out of order.
+		    int line = Location.toLineNumber(tde.getStartLoc());
+		    int z;
+		    for (z=0; z<td.elems.size(); ++z) {
+			int ln = Location.toLineNumber( td.elems.elementAt(z).getStartLoc() );
+			if (line < ln) break;
+		    }
+		    td.elems.insertElementAt(tde,z);
 		    tde.setParent(td);
 		}
 	    } else if (tde instanceof ModelMethodDeclPragma) {
@@ -568,7 +590,15 @@ public class RefinementSequence extends CompilationUnit {
 		}
 		if (!found) {
 		    // Can always add specification stuff
-		    td.elems.addElement(tde);
+		    // Could really just at it at the end, but then a bunch
+		    // of tests fail because things get out of order.
+		    int line = Location.toLineNumber(tde.getStartLoc());
+		    int z;
+		    for (z=0; z<td.elems.size(); ++z) {
+			int ln = Location.toLineNumber( td.elems.elementAt(z).getStartLoc() );
+			if (line < ln) break;
+		    }
+		    td.elems.insertElementAt(tde,z);
 		    tde.setParent(td);
 		}
 		
@@ -594,13 +624,30 @@ public class RefinementSequence extends CompilationUnit {
 		}
 		if (!found) {
 		    // Can always add specification stuff
-		    td.elems.addElement(tde);
+		    // Could really just at it at the end, but then a bunch
+		    // of tests fail because things get out of order.
+		    int line = Location.toLineNumber(tde.getStartLoc());
+		    int z;
+		    for (z=0; z<td.elems.size(); ++z) {
+			int ln = Location.toLineNumber( td.elems.elementAt(z).getStartLoc() );
+			if (line < ln) break;
+		    }
+		    td.elems.insertElementAt(tde,z);
 		    tde.setParent(td);
 		}
 		
 	    } else if (tde instanceof TypeDeclElemPragma) {
+		// FIXME - should we allow merging ???
 		// Can always add specification stuff
-		td.elems.addElement(tde);
+		    // Could really just at it at the end, but then a bunch
+		    // of tests fail because things get out of order.
+		    int line = Location.toLineNumber(tde.getStartLoc());
+		    int z;
+		    for (z=0; z<td.elems.size(); ++z) {
+			int ln = Location.toLineNumber( td.elems.elementAt(z).getStartLoc() );
+			if (line < ln) break;
+		    }
+		    td.elems.insertElementAt(tde,z);
 		tde.setParent(td);
 	    } else {
 		ErrorSet.error(tde.getStartLoc(),"This type of type declaration element is not implemented - please report the problem: " + tde.getClass());
@@ -739,6 +786,7 @@ public class RefinementSequence extends CompilationUnit {
 		d.modifiers, // FIXME trim 
 		null,
 		javaIsBinary? null: d.block);
+	    initblockmap.put(d,newtde);
 	} else if (tde instanceof TypeDeclElemPragma) {
 	    newtde = null;
 	} else {
@@ -751,6 +799,7 @@ public class RefinementSequence extends CompilationUnit {
 	return newtde;
     }
 
+    private Map initblockmap = new HashMap();
     public FormalParaDeclVec cleancopy(FormalParaDeclVec args,boolean omitFirst) {
 	int offset = omitFirst ? 1 : 0;
 	FormalParaDeclVec result = FormalParaDeclVec.make(args.size() - offset );
