@@ -59,7 +59,6 @@ public abstract class FrontEndTool extends Tool {
 	    classPath = javafe.filespace.ClassPath.current();
 
 	String sourcePath = options.userSourcePath;
-	if (sourcePath == null) sourcePath = classPath;
 
 	String sys = options.sysPath;
 	if (sys==null)
@@ -76,6 +75,9 @@ public abstract class FrontEndTool extends Tool {
 	Info.out("[Full classpath is " + classPath + "]");
 	Info.out("[Full sourcepath is " + sourcePath + "]");
 
+	// It is ok if sourcePath is null; it then shares a database of the
+	// contents of the directory path with classpath, rather than 
+	// creating a separate, identical database.
 	OutsideEnv.init(makeStandardTypeReader(classPath, sourcePath,
 					       makePragmaParser()));
 
