@@ -565,6 +565,61 @@
    (AND (<= 0 n) (< n 63))
    (<= 1 (longShiftL 1 n)))))
 
+; === A few floating point axioms - DRCok
+;; FIXME - floatingLT etc are predicates here, but are functions in ESC/java - is that a problem?
+
+;; Order axioms
+(BG_PUSH
+ (FORALL (d dd)
+  (AND
+     (OR
+	(EQ |@true| (floatingLT d dd))
+	(EQ |@true| (floatingEQ d dd))
+	(EQ |@true| (floatingGT d dd))
+     )
+     (IFF (EQ |@true| (floatingLE d dd)) (OR (EQ |@true| (floatingEQ d dd)) (EQ |@true| (floatingLT d dd))))
+     (IFF (EQ |@true| (floatingGE d dd)) (OR (EQ |@true| (floatingEQ d dd)) (EQ |@true| (floatingGT d dd))))
+     (IFF (EQ |@true| (floatingLT d dd)) (EQ |@true| (floatingGT dd d)))
+     (IFF (EQ |@true| (floatingLE d dd)) (EQ |@true| (floatingGE dd d)))
+     (NOT (IFF (EQ |@true| (floatingLT d dd)) (EQ |@true| (floatingGE d dd))))
+     (NOT (IFF (EQ |@true| (floatingGT d dd)) (EQ |@true| (floatingLE d dd))))
+  )))
+
+
+;; floatingNE
+(BG_PUSH (FORALL (d dd) (IFF (EQ |@true| (floatingEQ d dd)) (NOT (EQ |@true| (floatingNE d dd)))) ))
+
+;; floatADD
+(BG_PUSH (FORALL (d dd)
+  (IMPLIES (EQ |@true| (floatingGT d (floatingNEG dd))) (EQ |@true| (floatingGT (floatingADD d dd) |F_0.0|)))
+))
+
+;; floatMUL
+;;(BG_PUSH (FORALL (d dd) (AND
+  ;;(IFF (OR (floatingEQ d |F_0.0|) (floatingEQ dd |F_0.0|)) (floatingEQ (floatingMUL d dd) |F_0.0|))
+  ;;(IMPLIES (AND (floatingGT d |F_0.0|) (floatingGT dd |F_0.0|)) (floatingGT (floatingMUL d dd) |F_0.0|))
+  ;;(IMPLIES (AND (floatingLT d |F_0.0|) (floatingLT dd |F_0.0|)) (floatingGT (floatingMUL d dd) |F_0.0|))
+  ;;(IMPLIES (AND (floatingLT d |F_0.0|) (floatingGT dd |F_0.0|)) (floatingLT (floatingMUL d dd) |F_0.0|))
+  ;;(IMPLIES (AND (floatingGT d |F_0.0|) (floatingLT dd |F_0.0|)) (floatingLT (floatingMUL d dd) |F_0.0|))
+;;)))
+
+;; floatingMOD
+(BG_PUSH
+ (FORALL (d dd)
+  (IMPLIES (EQ |@true| (floatingNE dd |F_0.0|)) (AND
+    (IMPLIES (EQ |@true| (floatingGE d |F_0.0|)) (EQ |@true| (floatingGE (floatingMOD d dd) |F_0.0|)))
+    (IMPLIES (EQ |@true| (floatingLE d |F_0.0|)) (EQ |@true| (floatingLE (floatingMOD d dd) |F_0.0|)))
+))))
+(BG_PUSH (FORALL (d dd) 
+    (IMPLIES (EQ |@true| (floatingGT dd |F_0.0|)) (AND
+        (EQ |@true| (floatingGT (floatingMOD d dd) (floatingNEG dd))) 
+        (EQ |@true| (floatingLT (floatingMOD d dd) dd)) ))
+))
+(BG_PUSH (FORALL (d dd) 
+    (IMPLIES (EQ |@true| (floatingLT dd |F_0.0|)) (EQ |@true| (floatingLT (floatingMOD d dd) (floatingNEG dd)))) ))
+(BG_PUSH (FORALL (d dd) 
+    (IMPLIES (EQ |@true| (floatingLT dd |F_0.0|)) (EQ |@true| (floatingGT (floatingMOD d dd) dd))) ))
+
 ; === Temporary kludge to speed up distinguishing small integers:
 
 (BG_PUSH
