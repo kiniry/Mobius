@@ -1,3 +1,357 @@
+2005-01-04  Joseph Kiniry  <kiniry@Sirius-Black.local>
+
+	* docs/design-notes/index.html: Rewrote as XHTML.
+
+	* docs/Escjava2-Logics/many-sorted/many-sorted-logic.smt:
+	Fixed some closing parenthesis.
+
+	* slides/.cvsignore: *** empty log message ***
+
+	* specs-kiniry/java/io/InputStream.refines-java, specs-kiniry/java/io/unstarted/PrintStream.refines-java, specs-kiniry/java/lang/String.java, specs-kiniry/java/lang/String.jml, specs-kiniry/java/lang/StringCoding.jml, specs-kiniry/java/lang/StringIndexOutOfBoundsException.jml, specs-kiniry/java/lang/System.jml, specs-kiniry/java/lang/_StringBuffer.java, specs-kiniry/run.sh, specs-kiniry/java/lang/unstarted/String.jml-merge, specs-kiniry/java/lang/unstarted/StringBuffer.jml-merge, specs-kiniry/java/lang/unstarted/reflect/Array.jml, specs-kiniry/java/util/Vector.refines-spec:
+	Various new specs of JDK classes that I'm working on.
+
+2005-01-04  cok  <cok@kind.ucd.ie>
+
+	* Escjava/test/nijmegen/JCF/Makefile: Correcting the Makefile
+
+	* Escjava/test/junittests/ParseImports4.java, Escjava/test/junittests/ParseImports4.java-expected:
+	New tests for bad model import statements
+
+	* docs/Escjava2-ImplementationNotes/Escjava2-ImplementationNotes.texinfo:
+	Making statement about model import syntax correct
+
+2004-12-31  cok  <cok@kind.ucd.ie>
+
+	* Escjava/test/junittests/ExceptionArgument.java, Escjava/test/junittests/ExceptionArgument.java-expected, Escjava/test/junittests/ExceptionArgument2.java, Escjava/test/junittests/ExceptionArgument2.java-expected:
+	Some new tests
+
+2004-12-28  cok  <cok@kind.ucd.ie>
+
+	* Escjava/test/junittests/Inconsistent.java, Escjava/test/junittests/StaticInit.java:
+	Adding some disabled tests
+
+	* Escjava/Makefile, Escjava/test/junittests/TH.java, Escjava/test/junittests/TH.java-expected, Escjava/test/junittests/THERR.java, Escjava/test/junittests/skip, Escjava/test/nijmegen/JCF/Makefile, Escjava/test/nijmegen/JCF/info, Escjava/test/nijmegen/OCF/Makefile, Escjava/test/nijmegen/OCF/SecurityKey.java:
+	Additions to tests
+
+	* Escjava/test/nijmegen/JCF/jcf55/c.java, Escjava/java/escjava/translate/GetSpec.java, Escjava/java/escjava/translate/Translate.java:
+	Fixed a problem with original ESC/Java in which the use lf 'this' in preconditions of a constructor was not translated correctly;a in this context, 'this' indicates the object already allocated but not yet constructed
+
+2004-12-21  cok  <cok@kind.ucd.ie>
+
+	* Escjava/test/junittests/Duplicate.java-expected, Escjava/test/junittests/Makefile, Escjava/test/junittests/Scope.java, Escjava/test/junittests/Scope.java-expected, Escjava/test/junittests/Triple.java-expected, Escjava/test/junittests/skip:
+	Fixing some tests
+
+2004-12-18  cok  <cok@kind.ucd.ie>
+
+	* jmlspecs.jar: Updating the jmlspecs.jar
+
+2004-12-16  Joseph Kiniry  <kiniry@Sirius-Black.local>
+
+	* docs/design-notes/escj14.pdf, docs/design-notes/escj15.pdf, docs/design-notes/escj19.pdf, docs/design-notes/escj20.pdf, docs/design-notes/escj22.pdf, docs/design-notes/escj25b.pdf, docs/design-notes/escj28.pdf, docs/design-notes/escj32.pdf:
+	Regenerated all PDFs of design notes in Microsoft formats with actual
+	Microsoft tools (rather than OpenOffice alternatives) so that they are
+	higher quality.
+
+2004-12-15  cok  <cok@kind.ucd.ie>
+
+	* Escjava/escj.bat: Fixes to the escj.bat file
+
+2004-12-14  cok  <cok@kind.ucd.ie>
+
+	* Escjava/java/escjava/ast/Utils.java:
+	Correcting the determination of immutablility
+
+2004-12-13  cok  <cok@kind.ucd.ie>
+
+	* Escjava/Makefile, Javafe/java/javafe/ast/Identifier.java, Javafe/java/javafe/ast/_SpecialParserInterface.java, Javafe/java/javafe/ast/hierarchy.j, Javafe/java/javafe/filespace/EmptyEnum.java, Javafe/java/javafe/filespace/LookAheadEnum.java, Javafe/java/javafe/reader/MethodSignature.java:
+	Various corrections to specs found by running self_testp
+
+	* Escjava/java/escjava/AnnotationHandler.java: Fix to bug#1084104
+
+2004-12-06  cok  <cok@kind.ucd.ie>
+
+	* Javafe/test/javafe/test/Makefile, Escjava/Makefile:
+	Adding typechecking of EscJava to alltests
+
+	* Escjava/java/escjava/ast/Utils.java, Escjava/java/escjava/translate/GetSpec.java, Escjava/java/escjava/translate/TrAnExpr.java, Escjava/test/junittests/Inheritance.java, Escjava/test/junittests/Inheritance.java-expected, Escjava/test/junittests/MethodAnnotations2.java, Escjava/test/junittests/MethodAnnotations2.java-expected, Javafe/java/javafe/tc/TypeSig.java, Makefile:
+	The assumptions generated for methods used in annotations now include the specs from super classes and super interfaces.
+
+2004-11-27  cok  <cok@kind.ucd.ie>
+
+	* Javafe/test/javafe/test/lex/Makefile, Javafe/Makefile, Makefile:
+	Some fixes for Windows Makefiles
+
+	* Escjava/java/escjava/translate/GetSpec.java, Escjava/java/escjava/translate/TrAnExpr.java, Escjava/test/escjava/test/alltests, Escjava/test/junittests/ForallOld.java-expected, Escjava/test/junittests/GhostLocal.java-expected, Escjava/test/junittests/MethodAnnotations.java, Escjava/test/junittests/MethodAnnotations.java-expected, Escjava/test/junittests/Min.java, Escjava/test/junittests/Min.java-expected, Javafe/Makefile, Javafe/test/javafe/test/lex/Makefile, Escjava/java/escjava/Main.java:
+	More fixes and testing of model variables and method calls
+
+2004-11-26  cok  <cok@kind.ucd.ie>
+
+	* Escjava/java/escjava/translate/GetSpec.java:
+	Changes to reduce the size of VCs
+
+2004-11-20  cok  <cok@kind.ucd.ie>
+
+	* docs/Escjava2-ImplementationNotes/Escjava2-ImplementationNotes.texinfo:
+	Fixed texinfo nodes
+
+	* docs/Escjava2-ImplementationNotes/Escjava2-ImplementationNotes.texinfo:
+	Fixing of typos
+
+	* docs/Escjava2-ImplementationNotes/Escjava2-ImplementationNotes.texinfo:
+	Added information about implementing String semantics
+
+	* jmlspecs.jar: Corrected specs
+
+2004-11-16  Joseph Kiniry  <kiniry@Sirius-Black.local>
+
+	* slides/introjml.tex:
+	Small tweak to show better practice for use of \old.
+
+	* slides/escjava_demo.tex:
+	Corrected error in slide pointed out by student.
+
+	* papers/Makefile, papers/jml_homework.texinfo, docs/Makefile, docs/Escjava2-Logics/Escjava2-Logics.texinfo, docs/Escjava2-Provers/Escjava2-Provers.texinfo:
+	Small revisions for new release.
+
+	* docs/Escjava2-Extending/Escjava2-Extending.texinfo, docs/Escjava2-Extending/Makefile, docs/Escjava2-ImplementationNotes/Escjava2-ImplementationNotes.texinfo, docs/Escjava2-ImplementationNotes/Makefile:
+	Outline of lost document on extending ESC/Java2.
+
+2004-11-07  cok  <cok@kind.ucd.ie>
+
+	* Escjava/escj.bat, Escjava/java/escjava/ast/EscPrettyPrint.java, Escjava/java/escjava/prover/PPOutputStream.java, Escjava/java/escjava/prover/Simplify.java, Escjava/java/escjava/translate/GetSpec.java, Escjava/java/escjava/translate/TrAnExpr.java, Escjava/test/junittests/Client1.java, Escjava/test/junittests/Client1.java-expected, Escjava/test/junittests/Client2.java, Escjava/test/junittests/Client2.java-expected, Escjava/test/junittests/Client3.java, Escjava/test/junittests/Client3.java-expected, Escjava/test/junittests/Client4.java, Escjava/test/junittests/Client4.java-expected, Escjava/test/junittests/Client5.java, Escjava/test/junittests/Client5.java-expected, Escjava/test/junittests/Client7.java, Escjava/test/junittests/Client7.java-expected, Escjava/test/junittests/Client8.java, Escjava/test/junittests/Client8.java-expected, Escjava/test/junittests/Client9.java, Escjava/test/junittests/Client9.java-expected, Escjava/test/junittests/Impl1.java, Escjava/test/junittests/Impl1.java-expected, Escjava/test/junittests/Impl2.java, Escjava/test/junittests/Impl2.java-expected, Escjava/test/junittests/Impl3.java, Escjava/test/junittests/Impl3.java-expected, Escjava/test/junittests/Impl4.java, Escjava/test/junittests/Impl4.java-expected, Escjava/test/junittests/Impl5.java, Escjava/test/junittests/Impl5.java-expected, Escjava/test/junittests/M2String.java-expected, Escjava/test/junittests/M3String.java, Escjava/test/junittests/M3String.java-expected, Escjava/test/junittests/skip, Javafe/Makefile, Javafe/test/javafe/test/Makefile, jmlspecs.jar, Makefile.defs:
+	Fixed the problem with String, added tests; also fixed problems with extended tests
+
+2004-10-19  cok  <cok@kind.ucd.ie>
+
+	* Escjava/java/escjava/parser/ErrorPragmaParser.java, Javafe/java/javafe/Options.java, Javafe/java/javafe/SrcToolOptions.java, Javafe/test/javafe/test/typecheckJavafe, Escjava/java/escjava/backpred/BackPred.java, Escjava/java/escjava/gui/EscEditor.java, Escjava/java/escjava/gui/EscFrame.java, Escjava/java/escjava/gui/EscOptions.java, Escjava/java/escjava/gui/GUI.java, Escjava/java/escjava/gui/GuiOptionsPanel.java, Escjava/java/escjava/gui/Project.java, Escjava/java/escjava/AnnotationHandler.java, Escjava/java/escjava/Main.java, Escjava/java/escjava/Options.java, Escjava/java/escjava/RefinementSequence.java:
+	Changes to formatting, fixing cross platform issues, FindBugs fixes
+
+2004-10-18  cok  <cok@kind.ucd.ie>
+
+	* papers/.cvsignore: *** empty log message ***
+
+	* Javafe/java/javafe/parser/ParseExpr.java, Javafe/java/javafe/parser/ParseStmt.java, Javafe/java/javafe/reader/ASTClassFileParser.java, Javafe/java/javafe/reader/StandardTypeReader.java, Javafe/java/javafe/tc/CheckCompilationUnit.java, Javafe/java/javafe/tc/ConstantExpr.java, Javafe/java/javafe/tc/TypeSig.java, Utils/junitutils/TestFilesTestSuite.java, Utils/junitutils/Utils.java, Escjava/java/escjava/tc/FlowInsensitiveChecks.java, Escjava/mochalib/java/mocha/wrappers/jbdd/jbdd.java, Escjava/test/junittests/LoopInvariantErrors.java-expected, Escjava/test/junittests/MX.java, Escjava/test/junittests/MX.java-expected, Escjava/test/junittests/ModelClass2.java-expected, Javafe/java/javafe/CopyLoaded.java, Javafe/java/javafe/Options.java, Javafe/java/javafe/SrcTool.java, Escjava/java/escjava/parser/EscPragmaParser.java:
+	Changes to fix problems with parsing annotations within model files, bigint arguments to loop invariants, and numerous items suggested by FindBugs
+
+2004-10-11  Joseph Kiniry  <kiniry@Sirius-Black.local>
+
+	* papers/CASSIS2004.bib, papers/CASSIS2004.tex:
+	Final edits of CASSIS paper.  All TODOs addressed.
+
+2004-09-24  cok  <cok@kind.ucd.ie>
+
+	* papers/CASSIS2004.bib: One reference put in
+
+2004-09-23  cok  <cok@kind.ucd.ie>
+
+	* papers/CASSIS2004.tex: More copy edits
+
+	* papers/CASSIS2004.tex, papers/CASSIS2004.bib:
+	Copy edited and put the figure inline to simplify sending the Latex input to the publisher.
+
+	* papers/CASSIS2004.tex, papers/Example.java:
+	Signficant additional editing to address the major referee comments
+
+2004-09-22  cok  <cok@kind.ucd.ie>
+
+	* papers/CASSIS2004.bib, papers/CASSIS2004.tex: A few more edits
+
+	* papers/CASSIS2004.tex: Some edits per referees comments
+
+2004-09-20  Joseph Kiniry  <kiniry@Sirius-Black.local>
+
+	* papers/jml_homework.texinfo, papers/problems/FrameConditionsKey.java:
+	Working on discussions of datagroups and frame axioms.
+
+	* papers/CASSIS2004.bib, papers/CASSIS2004.tex, papers/PASTE2004.bib:
+	Added referee reports at end of CASSIS paper in comments.  Made nearly
+	all changes suggested by referees but for adding an intro to JML and
+	a couple of referee 3's suggestions.
+
+2004-09-19  cok  <cok@kind.ucd.ie>
+
+	* .cvsignore: *** empty log message ***
+
+	* jmlspecs.jar: Snapshot of jmlspecs.jar
+
+	* Escjava/java/escjava/translate/VcToString.java, Escjava/test/junittests/StringFresh.java, Escjava/test/junittests/StringFresh.java-expected, Escjava/test/junittests/skip, Javafe/java/javafe/FrontEndTool.java, Javafe/java/javafe/ast/OperatorTags.java, Javafe/java/javafe/parser/ParseUtil.java, Javafe/java/javafe/parser/Token.java, Javafe/java/javafe/tc/OutsideEnv.java, Escjava/java/escjava/ast/EscPrettyPrint.java, Escjava/java/escjava/ast/TagConstants.java, Escjava/java/escjava/backpred/UnivBackPred.ax, Escjava/java/escjava/translate/GC.java, Escjava/java/escjava/translate/NoWarn.java, Escjava/java/escjava/translate/TrAnExpr.java, Escjava/java/escjava/translate/Translate.java:
+	Fixed bug #930747 so that the + operator on Strings now produces a fresh result; also corrected some JML specs in the Escjava code
+
+	* Javafe/test/javafe/test/fe/Makefile, Javafe/test/javafe/test/fe/test1102/run:
+	Fixed a test to run on Windows
+
+	* Escjava/Makefile: Fixed a test to run on windows
+
+	* Makefile: Minor improvements
+
+2004-09-17  cok  <cok@kind.ucd.ie>
+
+	* .cvsignore: *** empty log message ***
+
+	* jmlspecs.jar: A snpshot of the JML specs
+
+	* Escjava/java/escjava/backpred/UnivBackPred.ax, Escjava/java/escjava/translate/ErrorMsg.java, Escjava/java/escjava/translate/GetSpec.java:
+	A few changes to handling model fields
+
+	* Escjava/test/junittests/Bigint.java, Escjava/test/junittests/Bigint.java-expected:
+	A smoke test for bigint support
+
+	* Escjava/test/junittests/M2String.java, Escjava/test/junittests/M2.java, Escjava/test/junittests/M2.java-expected, Escjava/test/junittests/skip:
+	Adjusting some tests
+
+	* Javafe/test/javafe/test/fe/test6/ans.windows, Javafe/test/javafe/test/fe/Makefile:
+	Accommodating a platofrm independence in output
+
+2004-09-14  cok  <cok@kind.ucd.ie>
+
+	* Escjava/java/escjava/ast/EscPrettyPrint.java, Escjava/java/escjava/ast/TagConstants.java, Escjava/java/escjava/parser/EscPragmaParser.java, Escjava/java/escjava/tc/Types.java, Javafe/java/javafe/tc/Types.java:
+	Additional support for bigint and real primitive types
+
+2004-09-13  cok  <cok@kind.ucd.ie>
+
+	* Makefile: Various edits
+
+2004-09-12  cok  <cok@kind.ucd.ie>
+
+	* Escjava/java/escjava/translate/ErrorMsg.java, Javafe/java/javafe/util/ErrorSet.java:
+	Changes to error reporting to support Eclipse
+
+	* Makefile.defs, Makefile:
+	Adding a target to make a jar of source files (for Eclipse debugging)
+
+2004-07-05  cok  <cok@kind.ucd.ie>
+
+	* slides/prosper.cls: Adding a missing file
+
+	* slides/ECOOPTutorial-cok/.cvsignore, slides/ECOOPTutorial-cok/PPRcok.sty, slides/ECOOPTutorial-cok/escjava2-warnings.tex, slides/ECOOPTutorial-cok/examples/Alias.java, slides/ECOOPTutorial-cok/examples/AliasExample.java, slides/ECOOPTutorial-cok/examples/ArrayStoreWarning.java, slides/ECOOPTutorial-cok/examples/ArrayStoreWarningOK.java, slides/ECOOPTutorial-cok/examples/AssertWarning.java, slides/ECOOPTutorial-cok/examples/CastWarning.java, slides/ECOOPTutorial-cok/examples/CastWarningOK.java, slides/ECOOPTutorial-cok/examples/CastWarningOK2.java, slides/ECOOPTutorial-cok/examples/DeadlockWarning.java, slides/ECOOPTutorial-cok/examples/Ex.java, slides/ECOOPTutorial-cok/examples/Exposed.java, slides/ECOOPTutorial-cok/examples/Inconsistent.java, slides/ECOOPTutorial-cok/examples/Inconsistent2.java, slides/ECOOPTutorial-cok/examples/Index.java, slides/ECOOPTutorial-cok/examples/Initially.java, slides/ECOOPTutorial-cok/examples/Invariant.java, slides/ECOOPTutorial-cok/examples/LoopInvWarning.java, slides/ECOOPTutorial-cok/examples/ModifiesWarning.java, slides/ECOOPTutorial-cok/examples/NonNull.java, slides/ECOOPTutorial-cok/examples/NonNullInit.java, slides/ECOOPTutorial-cok/examples/NonNullOK.java, slides/ECOOPTutorial-cok/examples/NonNullOK2.java, slides/ECOOPTutorial-cok/examples/NonNullOK3.java, slides/ECOOPTutorial-cok/examples/NullWarning.java, slides/ECOOPTutorial-cok/examples/NullWarningOK.java, slides/ECOOPTutorial-cok/examples/OwnerNullWarning.java, slides/ECOOPTutorial-cok/examples/PrePost.java, slides/ECOOPTutorial-cok/examples/RaceWarning.java, slides/ECOOPTutorial-cok/examples/RaceWarning2.java, slides/ECOOPTutorial-cok/examples/ReachableWarning.java, slides/ECOOPTutorial-cok/examples/TestCheckedException.java, slides/ECOOPTutorial-cok/examples/TestUncheckedException.java, slides/ECOOPTutorial-cok/examples/Trace.java, slides/ECOOPTutorial-cok/examples/UninitWarning.java, slides/ECOOPTutorial-cok/examples/UnreadableWarning.java, slides/ECOOPTutorial-cok/myprosper.cls, slides/ECOOPTutorial-cok/prosper.cls, slides/ECOOPTutorial-cok/pstricks.pro:
+	Adding the source for Cok's part of the ECOOP Tutorial to CVS
+
+	* Makefile: Updates for building jars
+
+2004-07-04  cok  <cok@kind.ucd.ie>
+
+	* Escjava/test/escjava/test/rtest, Javafe/test/javafe/test/fe/Makefile, Escjava/escj, Makefile.defs:
+	Improvements for cygwin
+
+	* slides/introjml.tex, slides/escjava_demo.tex: Correcting a few typos
+
+	* Escjava/test/junittests/CONX.java-expected: Repaired test result
+
+	* Escjava/java/escjava/tc/FlowInsensitiveChecks.java, Escjava/java/escjava/parser/EscPragmaParser.java:
+	Fixed a crash that occurred when running escjava2 on Utils/junitutils/Diff.java
+
+	* Escjava/java/escjava/gui/GUI.java: Comments adjusted
+
+	* Makefile: Less verbose
+
+	* Escjava/test/junittests/CON.java, Escjava/test/junittests/CON.java-expected:
+	Just moving files from CON to CONX
+
+2004-07-03  cok  <cok@kind.ucd.ie>
+
+	* Escjava/java/escjava/Main.java, Escjava/java/escjava/Options.java, Escjava/java/escjava/gui/GUI.java:
+	Improving and expanding the guessing of the location of Simplify
+
+	* Escjava/escj.bat: Improvements for windows
+
+	* Escjava/escj: Improvments for cygwin
+
+	* Escjava/test/junittests/CONX.java, Escjava/test/junittests/CONX.java-expected:
+	A bit of renaming
+
+	* Escjava/java/escjava/pa/generic/EnumNFindK.java, Escjava/java/escjava/parser/EscPragmaParser.java, Escjava/java/escjava/translate/ErrorMsg.java, Escjava/java/escjava/translate/GC.java, Escjava/java/escjava/translate/Helper.java, Escjava/java/escjava/translate/TrAnExpr.java, Javafe/java/javafe/ast/OperatorTags.java, Javafe/java/javafe/reader/ASTClassFileParser.java, Javafe/java/javafe/reader/MethodSignature.java, Javafe/java/javafe/CopyLoaded.java:
+	Changes inspired by Eclipse complaints
+
+	* Javafe/java/javafe/decsrc/ClassFileParser.java: Adjusting a comment
+
+	* Javafe/java/javafe/FrontEndTool.java, Javafe/java/javafe/parser/ParseExpr.java, Javafe/java/javafe/reader/ASTClassFileParser.java, Javafe/java/javafe/reader/MethodSignature.java, Javafe/java/javafe/tc/OutsideEnv.java, Escjava/java/escjava/gui/EscEditor.java, Escjava/java/escjava/gui/EscFrame.java, Escjava/java/escjava/gui/Project.java, Escjava/java/escjava/parser/EscPragmaParser.java, Escjava/java/escjava/prover/Simplify.java, Escjava/java/escjava/prover/SubProcess.java, Escjava/java/escjava/reader/RefinementCachedReader.java, Escjava/java/escjava/tc/FlowInsensitiveChecks.java, Escjava/java/escjava/tc/GhostEnv.java, Escjava/java/escjava/translate/ATarget.java, Escjava/java/escjava/translate/ErrorMsg.java, Escjava/java/escjava/translate/GC.java, Escjava/java/escjava/translate/NoWarn.java, Escjava/java/escjava/translate/Translate.java, Escjava/java/escjava/AnnotationHandler.java:
+	Fixes to javadoc comments
+
+	* Escjava/test/junittests/Makefile:
+	Fixing some cross-platform classpath issues
+
+	* Escjava/test/escjava/test/Makefile: Fixing classpaths on Windows
+
+	* Makefile.defs: No checking Modifies until purity is resolved
+
+	* Escjava/test/junittests/Makefile, Escjava/test/junittests/notjunittests, Escjava/test/junittests/skip:
+	Improvements and corrections, mostly for Windows
+
+	* Escjava/java/escjava/AnnotationHandler.java, Escjava/java/escjava/Main.java, Escjava/java/escjava/ast/EscPrettyPrint.java, Escjava/java/escjava/gui/Project.java, Escjava/java/escjava/pa/PredicateAbstraction.java, Escjava/java/escjava/pa/generic/EnumMaxClausesFindMinAbstractor.java, Escjava/java/escjava/pa/generic/EnumNFindK.java, Escjava/java/escjava/parser/EscPragmaParser.java, Escjava/java/escjava/tc/GhostEnv.java, Escjava/java/escjava/translate/NoWarn.java, Escjava/java/escjava/translate/Translate.java, Escjava/java/escjava/translate/VcToString.java, Javafe/test/javafe/test/fe/Makefile, Javafe/test/javafe/test/fe/test7/run, Javafe/Makefile, Javafe/java/javafe/CopyLoaded.java, Javafe/java/javafe/CountLines.java, Javafe/java/javafe/FrontEndTool.java, Javafe/java/javafe/Options.java, Javafe/java/javafe/PrintSpec.java, Javafe/java/javafe/SrcTool.java, Javafe/java/javafe/SrcToolOptions.java, Javafe/java/javafe/ast/_SpecialParserInterface.java, Javafe/java/javafe/parser/Lex.java, Javafe/java/javafe/parser/ParseStmt.java, Javafe/java/javafe/parser/ParseUtil.java, Javafe/java/javafe/parser/Token.java, Javafe/java/javafe/reader/ASTClassFileParser.java, Javafe/java/javafe/reader/BinReader.java, Javafe/java/javafe/reader/DescriptorParser.java, Javafe/java/javafe/reader/MethodSignature.java, Javafe/java/javafe/reader/SrcReader.java, Javafe/java/javafe/tc/CheckCompilationUnit.java, Javafe/java/javafe/tc/EnvForEnclosedScope.java, Javafe/java/javafe/tc/EnvForLocalType.java, Javafe/java/javafe/tc/EnvForLocals.java, Javafe/java/javafe/tc/EnvForTypeSig.java, Javafe/java/javafe/tc/OutsideEnv.java, Javafe/java/javafe/tc/PrepTypeDeclaration.java, Javafe/java/javafe/tc/TypeSig.java, Javafe/java/javafe/tc/Types.java, Javafe/java/javafe/util/CorrelatedReader.java, Javafe/java/javafe/util/Info.java, Javafe/java/jtools/jcheck/parseTypes/ParseFindTypesTokenManager.java, Javafe/java/tohtml/DeclLinks.java:
+	Changes for Windows and changes suggested by Eclipse
+
+	* Utils/Makefile, Utils/junitutils/LineIterator.java, Utils/junitutils/Makefile, Utils/junitutils/TestFilesTestSuite.java, Utils/junitutils/Utils.java:
+	Adding specifications
+
+	* Escjava/java/escjava/Main.java, Escjava/java/escjava/Options.java, Escjava/java/escjava/gui/EscHtml.java, Escjava/java/escjava/gui/GUI.java, Escjava/java/escjava/translate/GC.java, Escjava/java/escjava/translate/GetSpec.java:
+	Minor improvements pointed out by findbugs
+
+2004-07-02  Joseph Kiniry  <kiniry@Sirius-Black.local>
+
+	* docs/Escjava2-Provers/Makefile: Makefile for builds of this document.
+
+	* docs/Escjava2-Provers/.cvsignore, docs/Escjava2-Provers/Escjava2-Provers.texinfo, docs/Escjava2-Provers/ProverInterface.java:
+	Flushed out JML API and added it to an appendix in the document.
+
+2004-07-01  Joseph Kiniry  <kiniry@Sirius-Black.local>
+
+	* docs/Escjava2-Provers/.cvsignore, docs/Escjava2-Provers/Escjava2-Provers.texinfo, docs/Escjava2-Provers/ProverInterface.java, docs/Escjava2-Provers/ProverResponse.java:
+	Flushed out outline of document, added some text of JNI, added initial
+	JML specs of prover interface and response classes.
+
+	* docs/Escjava2-Logics/Makefile, docs/Escjava2-Logics/escjava2-object-logic.smt, docs/Escjava2-Logics/many-sorted/.cvsignore, docs/Escjava2-Logics/many-sorted/many-sorted-logic.smt, docs/Makefile:
+	Moved logics source into subdirectories, updated Makefiles to build
+	Texinfo versions of included logics, and added rules to top-level
+	docs/Makefile to build new child documents.
+
+	* docs/Escjava2-Logics/unsorted/.cvsignore, docs/Escjava2-Logics/unsorted/calvin-unsorted-axiom-additions.ax, docs/Escjava2-Logics/unsorted/calvin-unsorted-logic.ax, docs/Escjava2-Logics/unsorted/current-unsorted-logic.ax, docs/Escjava2-Logics/unsorted/escjava2-unsorted-axiom-additions.ax, docs/Escjava2-Logics/unsorted/houdini-unsorted-axiom-additions.ax, docs/Escjava2-Logics/unsorted/houdini-unsorted-logic.ax, docs/Escjava2-Logics/unsorted/original-unsorted-logic.ax:
+	Unsorted (Simplify-based) object logics.
+
+	* docs/Escjava2-Logics/Escjava2-Logics.texinfo:
+	Added appendices to cover all current logics used or under development.
+	Updated many Texinfo menus, filled in all cross-references, and improved
+	formatting.
+
+2004-06-30  Joseph Kiniry  <kiniry@Sirius-Black.local>
+
+	* docs/Escjava2-Logics/.cvsignore, docs/Escjava2-Logics/Escjava2-Logics.texinfo, docs/Escjava2-Logics/escjava2-object-logic.smt:
+	New home for documents relating to the logics of ESC/Java2 to more
+	clearly indicate that this material covers multiple logics.
+
+	* docs/Escjava2-Provers/Escjava2-Provers.texinfo:
+	New document describing the provers used by ESC/Java2. It describes
+	the expected general interface (for I/O) and functionality
+	(mathematically, in terms of built-in theories, and functionally, in
+	terms of proof commands) of ESC/Java2 provers, provides a ESC/Java2
+	Prover API in several forms (as a JML-annotated API, as a WDSL web
+	service API, etc.), provides implementation details for distributed,
+	current, and high-performance prover interfaces.
+
+2004-06-25  Joseph Kiniry  <kiniry@Sirius-Black.local>
+
+	* docs/design-notes/escj16c.txt:
+	Continued revisions to SMT-LIB object logic.  Continued work on
+	syntactic cleanup of original object logic document.  Some syntactic
+	cleanup of text version of guarded commands document.
+
+2004-06-24  Joseph Kiniry  <kiniry@Sirius-Black.local>
+
+	* Makefile:
+	Make check-specs depend upon build target.  Clean up Emacs backup
+	files in RELTEMP.
+
+	* release-files/README.release:
+	Removed mention of documents not shipped with binary release.
+
+2004-06-19  Joseph Kiniry  <kiniry@Sirius-Black.local>
+
+	* ChangeLog: Final update for 2.0a7 release.
+
+	* .cvsignore, ChangeLog, Makefile, papers/Makefile, papers/jml_homework.texinfo, release-files/README.release, release-files/RELEASE_NOTES.txt, release-files/escj.bat, release-files/escjava2, slides/Makefile:
+	Final tweaks for 2.0a7 release.  Now include examples with binary release.
+	Fixed a missing } in the homework texinfo file.  Better build support in
+	papers and slides directories.
+
 2004-06-19  Joseph Kiniry  <kiniry@cs.kun.nl>
 
 	* ChangeLog:
@@ -2341,14 +2695,14 @@
 	refactoring (and new design) of refinement processing, including
 	handling of duplicates on the command line; some correction of
 	Javafe's type lookup mechanism (interacctions with accessibility)
-	- now matches javac behavior but more needs doing and carefule
+	- now matches javac behavior but more needs doing and careful
 	checking; fix to make complaints about duplicate declarations
 	match javac behavior; options added to control source/binary file
 	reading; better printing of tags and pretty printing, including a
 	revision of astgen; implementation of constraint, initially, model
 	classes and interfaces, monitors_for (including improvements on
-	ESC/Java's warning messages); typeof applied to primitive types
-	(which required changes to Simplify's prelude).
+	ESC/Java's warning messages); typeof applied to primitive types,
+	which required changes to Simplify's prelude.
 
 	* docs/Escjava2-ImplementationNotes/Escjava2-ImplementationNotes.texinfo:
 	More updates and editing
