@@ -163,7 +163,7 @@ public class AnnotationHandler {
 			((MethodDecl)tde).id
 		: tde.getParent().id;
 	//System.out.println("Desugaring specifications for " + id);
-	tde.pmodifiers = desugarAnnotations(pmodifiers);
+	tde.pmodifiers = desugarAnnotations(pmodifiers,tde);
 	//if (tde.pmodifiers != pmodifiers) return;
 
 
@@ -198,7 +198,8 @@ public class AnnotationHandler {
 
 // FIXME - this only handles one level of nesting
 
-    protected ModifierPragmaVec desugarAnnotations(ModifierPragmaVec pm) {
+    protected ModifierPragmaVec desugarAnnotations(ModifierPragmaVec pm,
+						RoutineDecl tde) {
 	java.util.ArrayList newpm = new java.util.ArrayList();
 	int size = pm.size();
 	if (size == 0) return pm;
@@ -210,6 +211,8 @@ public class AnnotationHandler {
 	    newpm.add(m);
 	    ++n;
 	}
+	boolean isPure = Modifiers.isPure(tde.modifiers) || 
+		         Modifiers.isPure(tde.getParent().modifiers);
 	// check whether this is lightweight or heavyweight
 	// it is heavyweight if there is an also, a behavior annotation
 	// or a OPENPRAGMA
@@ -310,6 +313,10 @@ public class AnnotationHandler {
 		case TagConstants.MODIFIES:
 		case TagConstants.ALSO_MODIFIES: {
 		    currentBehavior.modifies.add(m);
+		    if (isPure) {
+			ErrorSet.error(m.getStartLoc(),
+			    "A pure method may not have an assignable clause");
+		    }
 		    break;
 		}
 
@@ -361,6 +368,10 @@ public class AnnotationHandler {
 		case TagConstants.JML_FOR_EXAMPLE:
 			// FIXME _ for now count this as the end of annotations
 			break whileloop;
+
+		case TagConstants.JML_PURE:
+			// ignore these
+			break;
 
 	        default:
 		    ErrorSet.warning(m.getStartLoc(),
