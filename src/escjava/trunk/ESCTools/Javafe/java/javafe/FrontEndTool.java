@@ -176,7 +176,7 @@ public abstract class FrontEndTool extends Tool {
      * (This needs to be done because static methods cannot be
      * inherited.)<p>
      */
-    //@ requires \nonnullelements(args)
+    //@ requires \nonnullelements(args);
     public static void main(String[] args) {
         // Tool t = new FrontEndTool();
         // int result = t.run(args);
@@ -258,7 +258,7 @@ public abstract class FrontEndTool extends Tool {
      * The remaining arguments are <code>args[offset]</code>,
      * <code>args[offset+1]</code>, ...<p>
      */
-    //@ requires \nonnullelements(args)
-    //@ requires 0<=offset && offset<=args.length
+    //@ requires \nonnullelements(args);
+    //@ requires 0 <= offset && offset <= args.length;
     public abstract void frontEndToolProcessing(ArrayList args);
 }

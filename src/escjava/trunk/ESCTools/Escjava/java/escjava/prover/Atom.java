@@ -27,9 +27,9 @@ final public class Atom extends SExp {
      ** Our map from interned <code>String</code>s to already created
      ** non-null <code>Atom</code>s.
      **/
-    //@ invariant map != null
-    //@ invariant map.keyType == \type(String)
-    //@ invariant map.elementType == \type(Atom)
+    //@ invariant map != null;
+    //@ invariant map.keyType == \type(String);
+    //@ invariant map.elementType == \type(Atom);
     static private Hashtable map = new Hashtable(200);
 
 
@@ -42,7 +42,7 @@ final public class Atom extends SExp {
     /**
      ** The symbol we represent; always already interned.
      **/
-    //@ invariant value != null
+    //@ invariant value != null;
     private String value;
 
 
@@ -61,12 +61,12 @@ final public class Atom extends SExp {
      ** Precondition: <code>symbol</code> must already have been
      ** interned.<p>
      **/
-    //@ requires symbol != null
+    //@ requires symbol != null;
     private Atom(String symbol) {
 	value = symbol;
 
-	//@ set map.keyType = \type(String)
-	//@ set map.elementType = \type(Atom)
+	//@ set map.keyType = \type(String);
+	//@ set map.elementType = \type(Atom);
 
 	map.put(value, this);		// Save us in the interning table
     }
@@ -77,8 +77,8 @@ final public class Atom extends SExp {
      ** This function always returns the same <code>Atom</code> when
      ** called on equal <code>String</code>s.<p>
      **/
-    //@ requires symbol != null
-    //@ ensures \result != null
+    //@ requires symbol != null;
+    //@ ensures \result != null;
     public static Atom fromString(String symbol) {
 	String key = symbol.intern();
 	Atom existing = (Atom)map.get(key);
@@ -137,7 +137,7 @@ final public class Atom extends SExp {
      ** The list of special symbols that don't need to be quoted when by
      ** themselves.
      **/
-    //@ invariant special != null
+    //@ invariant special != null;
     public final static String special = "!#$%&*+-./:<=>?@[]^_{}";
 
 
@@ -145,7 +145,7 @@ final public class Atom extends SExp {
      ** Returns the printable version (e.g., with escape codes added as
      ** needed) of an S-expression symbol's name.
      **/
-    //@ requires symbol != null
+    //@ requires symbol != null;
     public static String printableVersion(String symbol) {
 	if (symbol.equals(""))
 	    return "||";

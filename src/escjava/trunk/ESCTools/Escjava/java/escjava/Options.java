@@ -107,7 +107,7 @@ public class Options extends javafe.SrcToolOptions
 
     public boolean spvc = true;
     public boolean dsa = true;
-    //@ invariant spvc ==> dsa  // spvc requires dsa for soundness
+    //@ invariant spvc ==> dsa;  // spvc requires dsa for soundness
     public boolean passify = false;
     public boolean wpp = false;
     public boolean useDefpred = false;

@@ -81,7 +81,7 @@ public abstract class Tool {
      * (This needs to be done because static methods cannot be
      * inherited.)<p>
      */
-    //@ requires \nonnullelements(args)
+    //@ requires \nonnullelements(args);
     public static void main(String[] args) {
 		// Tool t = new Tool();
 		// int result = t.run(args);
@@ -94,14 +94,14 @@ public abstract class Tool {
      * command-line arguments we have been invoked with. <p> 
      * @return the exit code (0 = success, >0 is a failure)
      */
-    //@ requires \nonnullelements(args)
+    //@ requires \nonnullelements(args);
     public abstract int run(String[] args);
 
     /**
      * Compute the time used from a start time to now, then return it
      * in a user readable form.
      */
-    /*@ ensures \result != null */
+    //@ ensures \result != null;
     public static String timeUsed(long startTime) {
         if (options.testMode) return "TIME";
         long delta = java.lang.System.currentTimeMillis() - startTime;

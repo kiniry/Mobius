@@ -47,18 +47,18 @@ public abstract class SrcTool extends FrontEndTool implements Listener
      * <code>CompilationUnit</code>s are loaded using notification from
      * <code>OutsideEnv</code>.
      */
-    //@ invariant loaded != null 
-    //@ invariant loaded.elementType == \type(CompilationUnit)
-    //@ invariant !loaded.containsNull
-    //@ invariant loaded.owner == this
+    //@ invariant loaded != null;
+    //@ invariant loaded.elementType == \type(CompilationUnit);
+    //@ invariant !loaded.containsNull;
+    //@ invariant loaded.owner == this;
     public Vector loaded = new Vector();
 
     public SrcTool() {
 	super();
 
-	//@ set loaded.elementType = \type(CompilationUnit)
-	//@ set loaded.containsNull = false
-	//@ set loaded.owner = this
+	//@ set loaded.elementType = \type(CompilationUnit);
+	//@ set loaded.containsNull = false;
+	//@ set loaded.owner = this;
     }
 
 

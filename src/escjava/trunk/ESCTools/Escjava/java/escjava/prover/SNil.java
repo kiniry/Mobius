@@ -2,50 +2,49 @@
 
 package escjava.prover;
 
-
 import java.io.*;
 
-
 /**
- ** The single <code>SNil</code> instance represents the empty list of
- ** <code>SExp</code>s. <p>
- **/
+ * The single <code>SNil</code> instance represents the empty list of
+ * <code>SExp</code>s.
+ */
 
-final class SNil extends SList {
-
-    /***************************************************
-     *                                                 *
-     * Class Variables:				       *
-     *                                                 *
-     ***************************************************/
-
+final class SNil extends SList
+{
     /**
-     ** The single instance of this class or null if it has not yet been
-     ** allocated.
-     **/
+     * The single instance of this class, or <code>null</code> if it
+     * has not yet been allocated.
+     */
     private static SNil single = null;
 
-
-    /***************************************************
-     *                                                 *
-     * Creation:				       *
-     *                                                 *
-     ***************************************************/
-
     /**
-     ** Instance creation is private so we can ensure that at most one
-     ** instance of this class is ever created.
-     **/
-    //@ requires single==null
+     * Instance creation is private so we can ensure that at most one
+     * instance of this class is ever created.
+     */
+    //@ private normal_behavior
+    //@   requires single == null;
+    //@   modifies single;
+    //@   ensures single != null;
     private SNil() {
-	javafe.util.Assert.notFalse(single==null);
+	javafe.util.Assert.notFalse(single == null);
 	single = this;
     }
 
     /**
-     ** Return the single SNil instance.
-     **/
-    //@ ensures \result != null;
+     * @return the single SNil instance.
+     */
+    //@ public normal_behavior
+    //@   ensures \result != null;
+    //@ also
+    //@ private normal_behavior
+    //@   requires single == null;
+    //@   modifies single;
+    //@   ensures single != null;
+    //@ also
+    //@ private normal_behavior
+    //@   requires single != null;
+    //@   modifies \nothing;
+    //@   ensures \result == single;
     public static SNil getNil() {
 	if (single != null) {
 	    return single;
@@ -54,32 +53,35 @@ final class SNil extends SList {
 	    return single;
 	}
     }
-    
 
     /**
-     ** Return true if 0 is also the single instance of SNil.
-     **/
-    public boolean equals(Object o) {
+     * @return true if the parameter is also the single instance of
+     * SNil.
+     */
+    //@ also
+    //@ private normal_behavior
+    //@   ensures \result <==> (o == this);
+    public /*@ pure @*/ boolean equals(Object o) {
         return o == this;
     }
-    
-
-
-    /***************************************************
-     *                                                 *
-     * List Accessors:				       *
-     *                                                 *
-     ***************************************************/
 
     /**
-     ** Are we an empty list?
-     **/
-    public boolean isEmpty() {
+     * @return a flag indicating if we are we an empty list, which is
+     * always <code>true</code> since we are the nil instance.
+     */
+    //@ also
+    //@ public normal_behavior
+    //@   ensures \result;
+    public /*@ pure @*/ boolean isEmpty() {
 	return true;
     }
 
     /**
-     ** Return our length
-     **/
-    public int length() { return 0; }
+     * @return our length, which is zero since we are the nil
+     * instance.
+     */
+    //@ also
+    //@ public normal_behavior
+    //@   ensures \result == 0;
+    public /*@ pure @*/ int length() { return 0; }
 }

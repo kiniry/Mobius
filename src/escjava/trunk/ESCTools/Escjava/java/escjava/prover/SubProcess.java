@@ -2,93 +2,94 @@
 
 package escjava.prover;
 
-
 import java.io.*;
 
 import javafe.util.*;
 
-
 /**
- ** Instances of this class represent subprocesses. <p>
- **
- ** SubProcess'es are created by invoking a named program with a given
- ** pathname.  Input can be submitted to the resulting subprocess;
- ** routines are provided for use in parsing the subprocesses'
- ** resulting output.<p>
- **
- ** SubProcesses can be closed; afterwards none of their methods
- ** (except close) should ever be called again.<p>
- **
- ** If any errors occur (including parsing errors), a fatal error will
- ** be reported. <p>
- **
- **
- ** As a debugging aid, if Info.on is true, we save all the characters
- ** read by clients from this subprocess since the last resetInfo()
- ** call.  In the event of a parsing error (see handleUnexpected()),
- ** we use this information, if available, to produce a more useful
- ** error message.
- **
- **
- ** Note that a Java application will not exit normally (i.e., when
- ** its <code>main</code> method returns) until all subprocesses have
- ** finished.  In particular, this implies that all
- ** <code>SubProcess</code> instances must be closed before this can
- ** occur.  Alternatively, a Java application can just call
- ** <code>java.lang.System.exit</code> to force an exit to occur
- ** without waiting for subprocesses.<p>
+ * Instances of this class represent subprocesses.
+ * 
+ * <p> <code>SubProcess</code>es are created by invoking a named
+ * program with a given pathname.  Input can be submitted to the
+ * resulting subprocess; routines are provided for use in parsing the
+ * subprocesses' resulting output. </p>
+ * 
+ * <p> <code>SubProcess</code>es can be closed; afterwards none of
+ * their methods (except close) should ever be called again. </p>
+ *
+ * <p> If any errors occur (including parsing errors), a fatal error
+ * will be reported. </p>
+ *
+ * <p> As a debugging aid, if {@link Info#on} is true, we save all the
+ * characters read by clients from this subprocess since the last
+ * {@link #resetInfo()} call.  In the event of a parsing error (see
+ * {@link handleUnexpected(String)}), we use this information, if
+ * available, to produce a more useful error message. </p>
+ *
+ * <p> Note that a Java application will not exit normally (i.e., when
+ * its <code>main()</code> method returns) until all subprocesses have
+ * finished.  In particular, this implies that all
+ * <code>SubProcess</code> instances must be closed before this can
+ * occur.  Alternatively, a Java application can just call {@link
+ * java.lang.System#exit(int)} to force an exit to occur without
+ * waiting for subprocesses. </p>
  *
  * @todo Introduce a model variable notClosed that relates to P for
  * clearer preconditions.
- **/
+ */
 
 public class SubProcess
 {
     static public class Died extends RuntimeException {}
-    final static public Died DIED = new Died();
+
+    final static public /*@ non_null @*/ Died DIED = new Died();
 
     /**
      * The name of the subprocess, suitable for use in error messages.
      */
-    //@ invariant name != null
-    public final String name;
+    public final /*@ non_null @*/ String name;
 
     /**
      * The actual subprocess, or <code>null</code> if we are closed.
      */
     private Process P = null;
+    //@ invariant (P == null) ==> closed;
+
+    //@ model boolean closed;
 
     /**
      * The {@link PrintStream} to the actual subprocess, or
      * <code>null</code> if we are closed.
      */
-    //@ invariant (to == null) == (P == null)
+    //@ invariant (to == null) <==> (P == null);
+    //@ invariant (to == null) ==> closed;
     private PrintStream to = null;
 
     /**
      * The {@link PushbackInputStream} from the actual subprocess, or
      * <code>null</code> if we are closed.
      */
-    //@ invariant (from == null) == (P == null)
+    //@ invariant (from == null) <==> (P == null);
     private PushbackInputStream from = null;
 
     /**
-     * If non-null, this buffer keeps a record of (some of) the
-     * characters read from this subprocess using {@link #getChar()}.
+     * If non-<code>null</code>, this buffer keeps a record of (some
+     * of) the characters read from this subprocess using {@link
+     * #getChar()}.
      *
      * <p> In the event of a parsing error (see {@link
      * #handleUnexpected(String)}), we use this information, if
      * available, to produce a more useful error message. </p>
      */
     private final StringBuffer readChars = (escjava.Main.options().trackReadChars ?
-					    new StringBuffer() :
-					    null);
+                                            new StringBuffer() :
+                                            null);
 
     /**
      * Instantiate a subprocess.
      *
      * <p> The resulting invocation is initially open, but may be closed
-     * permanently with the close method. </p>
+     * permanently with the {@link close()} method. </p>
      *
      * <p> This constructor may result in a fatal error if any
      * problems occur. </p>
@@ -98,20 +99,26 @@ public class SubProcess
      * @param path is the full pathname of the program to execute to
      * obtain the subprocess.  E.g., "/usr/bin/emacs".
      */
+    //@ public normal_behavior
+    //@   modifies this.*;
+    //@   ensures this.name == name;
+    //@   ensures to != null;
+    //@   ensures from != null;
+    //@   ensures !closed;
     public SubProcess(/*@ non_null @*/ String name, 
                       /*@ non_null @*/ String[] pathAndArgs,
 		      String[] envp) {
 	this.name = name;
 	try {
 	    P = Runtime.getRuntime().exec(pathAndArgs,envp);
-	    if (P==null)
+	    if (P == null)
 		throw new IOException();
 	} catch (IOException e) {
 	    javafe.util.ErrorSet.fatal("Unable to invoke " + name);
 	}
 
 	OutputStream out = P.getOutputStream();
-	Assert.notNull(out);   //@ nowarn Pre   //Unsure if this is always true
+	Assert.notNull(out);   //@ nowarn Pre;   //Unsure if this is always true
 
 	if (escjava.Main.options().sxLog != null) {
             try {
@@ -140,9 +147,12 @@ public class SubProcess
      * occur.  This subprocess is guaranteed to be destroyed on
      * completion, regardless of which exit is taken. </p>
      */
-    //@ ensures P == null;
-    //@ ensures to == null;
-    //@ ensures from == null;
+    //@ public normal_behavior
+    //@   modifies this.*;
+    //@   ensures P == null;
+    //@   ensures to == null;
+    //@   ensures from == null;
+    //@   ensures closed;
     public void close() {
 	try {
 	    if (to != null)
@@ -167,14 +177,20 @@ public class SubProcess
     /**
      * Send a string to this subprocess.
      */
-    //@ requires P != null;
+    //@ public normal_behavior
+    //@   requires P != null;
+    //@   requires !closed;
+    //@   modifies to;
     public void send(/*@ non_null @*/ String s) {
-	Assert.notNull(P);     //@ nowarn Pre // precondition
+	Assert.notNull(P);     //@ nowarn Pre; // precondition
 	to.println(s);
 	to.flush();
     }
 
-    public PrintStream ToStream() {
+    //@ public normal_behavior
+    //@   requires !closed;
+    //@   ensures (\result == null) <==> (P == null);
+    public /*@ pure @*/ PrintStream ToStream() {
 	return to;
     }
 
@@ -189,7 +205,15 @@ public class SubProcess
      * <p> Saves the output character (if any) in {@link #readChars} if
      * it is non-null.  (This is a private debugging aid.) </p>
      */
-    //@ requires P != null;
+    //@ public normal_behavior
+    //@   requires P != null;
+    //@   requires !closed;
+    //@   modifies readChars.*;
+    //@   ensures \result >= 0;
+    //@ also
+    //@ public exceptional_behavior
+    //@   requires P == null;
+    //@   signals (Died) true;
     public int getChar() {
 	if (P == null) throw new Died();
 
@@ -216,7 +240,14 @@ public class SubProcess
      * @return A -1 is returned on EOF, otherwise the next character
      * read from the subprocess is returned as an integer.
      */
-    //@ requires P != null;
+    //@ public normal_behavior
+    //@   requires P != null;
+    //@   requires !closed;
+    //@   ensures \result >= -1;
+    //@ also
+    //@ public exceptional_behavior
+    //@   requires P == null;
+    //@   signals (Died) true;
     public int peekChar() {
 	// P may have been closed on us 
 	if (P == null) throw new Died();
@@ -239,6 +270,10 @@ public class SubProcess
      * #handleUnexpected(String)}), we use any remembered recent
      * output to produce a more useful error message. </p>
      */
+    //@ public normal_behavior
+    //@   requires !closed;
+    //@   modifies readChars.*;
+    //@   ensures (readChars != null) ==> readChars.length() == 0;
     public void resetInfo() {
 	if (readChars != null)
 	    readChars.setLength(0);
@@ -248,11 +283,13 @@ public class SubProcess
      * Turn an {@link IOException} resulting from a read on {@link
      * #from} into a fatal error.
      */
-    //@ ensures false
+    //@ behavior
+    //@   ensures false;
     private void handleReadError(/*@ non_null @*/ IOException e) {
 	ErrorSet.fatal("I/O error encountered while reading "
 		       + name + "'s output: " + e.getMessage());
     }
+
 
     // Verifying the subprocesses' output.
 
@@ -260,14 +297,15 @@ public class SubProcess
      * Report a fatal error due to unexpected output from the subprocess.
      *
      * <p> Use this routine if at all possible, because it provides
-     * additional useful information (when {@link javafe.util.Info#on} is true)
-     * about the output read recently, what was expected, and the
-     * remaining output. </p>
+     * additional useful information (when {@link javafe.util.Info#on}
+     * is true) about the output read recently, what was expected, and
+     * the remaining output. </p>
      *
      * @param wanted is the output we expected.
      */
-    //@ ensures false
-    public void handleUnexpected(String wanted) {
+    //@ behavior
+    //@   ensures closed;
+    public void handleUnexpected(/*@ non_null @*/ String wanted) {
 	if (readChars != null && Info.on) {
 	    Info.out("***** Unexpected output encountered while parsing "
                      + name + "'s output");
@@ -326,8 +364,7 @@ public class SubProcess
      * @return the parameter <code>s</code>, but with starting and
      * ending newline characters removed
      */
-    //@ ensures \result != null;
-    static private /*@ non_null @*/ String trimNewlines(/*@ non_null */ String s) {
+    static private /*@ pure non_null @*/ String trimNewlines(/*@ non_null @*/ String s) {
         int start = 0;
         int end = s.length();
         while (start < end && s.charAt(start) == '\n') {
@@ -343,7 +380,12 @@ public class SubProcess
      * Consume the next output character from this subprocess.  If it
      * is not exactly <code>c</code>, a fatal error is reported.
      */
-    //@ requires P != null;
+    //@ public normal_behavior
+    //@   requires P != null;
+    //@   requires !closed;
+    //@ also
+    //@ public behavior
+    //@   ensures closed;
     public void checkChar(char c) {
 	if (c == getChar())
 	    return;
@@ -358,7 +400,12 @@ public class SubProcess
      *
      * @param s the string to match.
      */
-    //@ requires P != null;
+    //@ public normal_behavior
+    //@   requires P != null;
+    //@   requires !closed;
+    //@ also
+    //@ public behavior
+    //@   ensures closed;
     public void checkString(/*@ non_null @*/ String s) {
 	for (int i = 0; i < s.length(); i++) {
 	    checkChar(s.charAt(i));
@@ -371,10 +418,13 @@ public class SubProcess
      * Consume any whitespace (spaces, tabs, and newlines) present in
      * the subprocesses' output.
      */
-    //@ requires P != null;
+    //@ public normal_behavior
+    //@   requires P != null;
+    //@   requires !closed;
     public void eatWhitespace() {
-	for (int next=peekChar(); next==' ' || next=='\t' || next=='\n';
-             next=peekChar())
+	for (int next = peekChar();
+             next == ' ' || next == '\t' || next == '\n';
+             next = peekChar())
 	    getChar();
     }
 
@@ -388,11 +438,13 @@ public class SubProcess
      * @return the read characters, not including any character from
      * <code>stops</code>.
      */
-    //@ requires P != null;
-    /*@ ensures (\forall int i; 0 <= i && i <= \result.length;
-      @                  stops.indexOf(\result.charAt(i)) == -1);
+    /*@ public normal_behavior
+      @   requires P != null;
+      @   requires !closed;
+      @   ensures (\forall int i; 0 <= i && i <= \result.length();
+      @                    stops.indexOf(\result.charAt(i)) == -1);
+      @   ensures \result != null;
       @*/
-    //@ ensures \result != null;
     public /*@ non_null @*/ String readWord(/*@ non_null @*/ String stops) {
 	StringBuffer soFar = new StringBuffer();
 
@@ -413,8 +465,10 @@ public class SubProcess
      * and returns the digits as a number.  Assumes no overflow will
      * occur.
      */
-    //@ requires P != null;
-    //@ ensures 0 <= \result;
+    //@ public normal_behavior
+    //@   requires P != null;
+    //@   requires !closed;
+    //@   ensures 0 <= \result;
     public int readNumber() {
         int n = 0;
         while (Character.isDigit((char)peekChar())) {
@@ -422,6 +476,7 @@ public class SubProcess
         }
         return n;
     }
+
 
     // Reading SExps and SLists
 
@@ -431,8 +486,9 @@ public class SubProcess
      *
      * @note See the warnings on {@link #readSExp()}!
      */
-    //@ requires P != null;
-    //@ ensures \result != null
+    //@ public normal_behavior
+    //@   requires P != null;
+    //@   requires !closed;
     public /*@ non_null @*/ SList readSList() {
 	eatWhitespace();
 	checkChar('(');
@@ -477,9 +533,10 @@ public class SubProcess
      * speed reasons, this limitation may be left in the final
      * version.
      */
-    //@ requires P != null;
-    //@ ensures \result != null
-    public SExp readSExp() {
+    //@ public normal_behavior
+    //@   requires P != null;
+    //@   requires !closed;
+    public /*@ non_null @*/ SExp readSExp() {
 	eatWhitespace();
 	if (peekChar() == '(')
 	    return readSList();
@@ -514,13 +571,14 @@ public class SubProcess
      * Read a (possibly empty) series of {@link SList}s from this
      * subprocess.  A fatal error is reported if any errors occur.
      *
-     * <p> I.e., "(a b) (c d (e) f)" returns the SExp ((a b) (c d (e) f)).
-     * This routine never returns null.
+     * <p> I.e., "(a b) (c d (e) f)" returns the SExp ((a b) (c d (e)
+     * f)).  This routine never returns <code>null</code>.
      *
      * @note See the warnings on {@link #readSExp()}!
      */
-    //@ requires P != null;
-    //@ ensures \result != null
+    //@ public normal_behavior
+    //@   requires P != null;
+    //@   requires !closed;
     public /*@ non_null @*/ SList readSLists() {
 	SList l = SList.make();
 
@@ -550,10 +608,11 @@ public class SubProcess
      *
      * @note See the warnings on {@link #readSExp()}!
      */
-    //@ requires P != null;
-    //@ requires stop != ' ' && stop != '\t' && stop != '\n';
-    //@ ensures \result != null
-    public SList readSExps(char stop) {
+    //@ public normal_behavior
+    //@   requires P != null;
+    //@   requires !closed;
+    //@   requires stop != ' ' && stop != '\t' && stop != '\n';
+    public /*@ non_null @*/ SList readSExps(char stop) {
 	SList l = SList.make();
 
         while (true) {

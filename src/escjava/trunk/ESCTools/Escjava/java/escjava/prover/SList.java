@@ -2,347 +2,303 @@
 
 package escjava.prover;
 
-
 import java.io.*;
 
-
 /**
- ** <code>SList</code>s represent possibly-empty lists of
- ** <code>SExp</code>s. <p>
- **
- **
- ** <h3> Creation </h3>
- **
- **     As a convenience, lists of fewer than 9 elements may be created
- ** directly by calling <code>SList.make</code> on the desired elements.
- ** E.g., <code>SList.make(x, y)</code> creates the list
- ** <code>(</code><i>x</i><code> </code><i>y</i><code>)</code> where
- ** <i>x</i> and <i>y</i> are the contents of the <code>SExp</code>
- ** variables <code>x</code> and <code>y</code>.  Longer lists may be
- ** created either from arrays (see <code>fromArray</code>) or by
- ** combining shorter lists via <code>append</code>.<p>
- **
- ** As a further convenience, <code>SList.make</code> calls
- ** <code>SExp.fancyMake</code> on its arguments before placing them in
- ** the resulting list.  This means that <code>Atom</code>s may be
- ** specified by a <code>String</code> holding their name and that
- ** S-expression integers may be specified by <code>Integer</code>s.
- ** E.g., <code>SList.make("NEG", new Integer(1))</code> represents the
- ** S-expression <code>(NEG, 1)</code>.<p>
- **
- ** <code>SList</code>s may not contain <code>null</code> elements.<p>
- **
- **
- ** <h3> Inspection </h3>
- **
- **     <code>SList</code>s can be tested to see if they are empty, can
- ** have their length determined, and can have their
- ** <i>i</i>-index element extracted.  (If an attempt is made to
- ** extract a non-existent element, <code>SExpTypeError</code> will be
- ** thrown.)<p>
- **
- **
- ** <h3> Manipulation </h3>
- **
- **     S-expressions are currently immutable; accordingly all manipulation
- ** methods act functionally.  S-expressions may be made mutable later
- ** via the addition of mutation methods.<p>
- **
- ** <code>SList</code>s can be appended to each other.  Elements can
- ** also be added to the front or end of a list.<p>
- **
- **
- ** <h3> Implementation </h3>
- **
- **    <code>SList</code>s are currently implemented via pairs and a nil
- ** object a la Lisp.  These are provided by the non-public classes
- ** <code>SPair</code> and <code>SNil</code>.  This implementation is
- ** subject to change at any time; clients should rely only on the
- ** publically-provided interface of this class.<p>
- **
- ** @see escjava.prover.SNil
- ** @see escjava.prover.SPair
- **/
+ * <code>SList</code>s represent possibly-empty lists of
+ * <code>SExp</code>s.
+ *
+ * <h3> Creation </h3>
+ *
+ * <p> As a convenience, lists of fewer than 9 elements may be created
+ * directly by calling <code>SList.make</code> on the desired
+ * elements.  E.g., <code>SList.make(x, y)</code> creates the list
+ * <code>(</code><i>x</i><code> </code><i>y</i><code>)</code> where
+ * <i>x</i> and <i>y</i> are the contents of the <code>SExp</code>
+ * variables <code>x</code> and <code>y</code>.  Longer lists may be
+ * created either from arrays (see <code>fromArray</code>) or by
+ * combining shorter lists via <code>append</code>. </p>
+ *
+ * <p> As a further convenience, <code>SList.make</code> calls
+ * {@link SExp#fancyMake(Object)} on its arguments before placing them in
+ * the resulting list.  This means that <code>Atom</code>s may be
+ * specified by a <code>String</code> holding their name and that
+ * S-expression integers may be specified by <code>Integer</code>s.
+ * E.g., <code>SList.make("NEG", new Integer(1))</code> represents the
+ * S-expression <code>(NEG, 1)</code>. </p>
+ *
+ * <p> <code>SList</code>s may not contain <code>null</code>
+ * elements. </p>
+ *
+ *
+ * <h3> Inspection </h3>
+ *
+ * <p> <code>SList</code>s can be tested to see if they are empty, can
+ * have their length determined, and can have their <i>i</i>-index
+ * element extracted.  (If an attempt is made to extract a
+ * non-existent element, <code>SExpTypeError</code> will be
+ * thrown.) </p>
+ *
+ *
+ * <h3> Manipulation </h3>
+ *
+ * <p> S-expressions are currently immutable; accordingly all
+ * manipulation methods act functionally.  S-expressions may be made
+ * mutable later via the addition of mutation methods. </p>
+ *
+ * <p> <code>SList</code>s can be appended to each other.  Elements
+ * can also be added to the front or end of a list. </p>
+ *
+ *
+ * <h3> Implementation </h3>
+ *
+ * <p> <code>SList</code>s are currently implemented via pairs and a
+ * nil object a la Lisp.  These are provided by the non-public classes
+ * <code>SPair</code> and <code>SNil</code>.  This implementation is
+ * subject to change at any time; clients should rely only on the
+ * publically-provided interface of this class. </p>
+ *
+ * @see escjava.prover.SNil
+ * @see escjava.prover.SPair
+ *
+ * @todo kiniry 14 March 2003 - Add a list model.
+ */
 
-public abstract class SList extends SExp {
-
-    /***************************************************
-     *                                                 *
-     * Creation:				       *
-     *                                                 *
-     ***************************************************/
-
-    // <code>SList</code> may not be extended outside this package:
-    /*package*/ SList() {};
-
+public abstract class SList extends SExp
+{
+    /**
+     * <code>SList</code> may not be extended outside this package.
+     */
+    /* package */ SList() {};
 
     /**
-     ** Return a S-expression representing the empty list.
-     **/
-    //@ ensures \result != null
-    public static SList make() {
+     * @return a S-expression representing the empty list.
+     */
+    //@ public normal_behavior
+    //@   ensures \result.isEmpty();
+    //@   ensures \result.length() == 0;
+    public static /*@ pure non_null @*/ SList make() {
 	return SNil.getNil();
     }
 
     /**
-     ** Return a S-expression representing a 1-element list whose
-     ** contents are the result of applying <code>SExp.fancyMake</code>
-     ** to our arguments. <p>
-     **
-     ** Precondition: All arguments meet the precondition for
-     ** <code>SExp.fancyMake</code>.<p>
-     **
-     **/
-    //@ requires a1 != null
-    //@ ensures \result != null
-    public static SList make(Object a1) {
+     * @return a S-expression representing a 1-element list whose
+     * contents are the result of applying {@link SExp#fancyMake(Object)}
+     * to our arguments.
+     */
+    public static /*@ pure non_null @*/ SList make(/*@ non_null @*/ Object a1) {
 	return new SPair(SExp.fancyMake(a1), SNil.make());
     }
 
     /**
-     ** Return a S-expression representing a 2-element list whose
-     ** contents are the result of applying <code>SExp.fancyMake</code>
-     ** to our arguments. <p>
-     **
-     ** Precondition: All arguments meet the precondition for
-     ** <code>SExp.fancyMake</code>.<p>
-     **
-     **/
-    //@ requires a1 != null && a2!=null
-    //@ ensures \result != null
-    public static SList make(Object a1, Object a2) {
+     * @return a S-expression representing a 2-element list whose
+     * contents are the result of applying {@link SExp#fancyMake(Object)}
+     * to our arguments.
+     */
+    public static /*@ pure non_null @*/ SList make(/*@ non_null @*/ Object a1, 
+                                                   /*@ non_null @*/ Object a2) {
 	return new SPair(SExp.fancyMake(a1), make(a2));
     }
 
     /**
-     ** Return a S-expression representing a 3-element list whose
-     ** contents are the result of applying <code>SExp.fancyMake</code>
-     ** to our arguments. <p>
-     **
-     ** Precondition: All arguments meet the precondition for
-     ** <code>SExp.fancyMake</code>.<p>
-     **
-     **/
-    //@ requires a1 != null && a2!=null && a3!=null
-    //@ ensures \result != null
-    public static SList make(Object a1, Object a2, Object a3) {
+     * @return a S-expression representing a 3-element list whose
+     * contents are the result of applying {@link SExp#fancyMake(Object)}
+     * to our arguments. <p>
+     */
+    public static /*@ pure non_null @*/ SList make(/*@ non_null @*/ Object a1,
+                                                   /*@ non_null @*/ Object a2,
+                                                   /*@ non_null @*/ Object a3) {
 	return new SPair(SExp.fancyMake(a1), make(a2,a3));
     }
 
     /**
-     ** Return a S-expression representing a 4-element list whose
-     ** contents are the result of applying <code>SExp.fancyMake</code>
-     ** to our arguments. <p>
-     **
-     ** Precondition: All arguments meet the precondition for
-     ** <code>SExp.fancyMake</code>.<p>
-     **
-     **/
-    //@ requires a1 != null && a2!=null && a3!=null && a4!=null
-    //@ ensures \result != null
-    public static SList make(Object a1, Object a2, Object a3, Object a4) {
+     * @return a S-expression representing a 4-element list whose
+     * contents are the result of applying {@link SExp#fancyMake(Object)}
+     * to our arguments. <p>
+     */
+    public static /*@ pure non_null @*/ SList make(/*@ non_null @*/ Object a1,
+                                                   /*@ non_null @*/ Object a2,
+                                                   /*@ non_null @*/ Object a3,
+                                                   /*@ non_null @*/ Object a4) {
 	return new SPair(SExp.fancyMake(a1), make(a2,a3,a4));
     }
 
     /**
-     ** Return a S-expression representing a 5-element list whose
-     ** contents are the result of applying <code>SExp.fancyMake</code>
-     ** to our arguments. <p>
-     **
-     ** Precondition: All arguments meet the precondition for
-     ** <code>SExp.fancyMake</code>.<p>
-     **
-     **/
-    //@ requires a1 != null && a2!=null && a3!=null && a4!=null
-    //@ requires a5 != null
-    //@ ensures \result != null
-    public static SList make(Object a1, Object a2, Object a3, Object a4,
-			     Object a5) {
+     * @return a S-expression representing a 5-element list whose
+     * contents are the result of applying {@link SExp#fancyMake(Object)}
+     * to our arguments. <p>
+     */
+    public static /*@ pure non_null @*/ SList make(/*@ non_null @*/ Object a1,
+                                                   /*@ non_null @*/ Object a2,
+                                                   /*@ non_null @*/ Object a3,
+                                                   /*@ non_null @*/ Object a4,
+                                                   /*@ non_null @*/ Object a5) {
 	return new SPair(SExp.fancyMake(a1), make(a2,a3,a4,a5));
     }
 
     /**
-     ** Return a S-expression representing a 6-element list whose
-     ** contents are the result of applying <code>SExp.fancyMake</code>
-     ** to our arguments. <p>
-     **
-     ** Precondition: All arguments meet the precondition for
-     ** <code>SExp.fancyMake</code>.<p>
-     **
-     **/
-    //@ requires a1 != null && a2!=null && a3!=null && a4!=null
-    //@ requires a5 != null && a6!=null
-    //@ ensures \result != null
-    public static SList make(Object a1, Object a2, Object a3, Object a4,
-			     Object a5, Object a6) {
+     * @return a S-expression representing a 6-element list whose
+     * contents are the result of applying {@link SExp#fancyMake(Object)}
+     * to our arguments. <p>
+     */
+    public static /*@ pure non_null @*/ SList make(/*@ non_null @*/ Object a1,
+                                                   /*@ non_null @*/ Object a2,
+                                                   /*@ non_null @*/ Object a3,
+                                                   /*@ non_null @*/ Object a4,
+                                                   /*@ non_null @*/ Object a5,
+                                                   /*@ non_null @*/ Object a6) {
 	return new SPair(SExp.fancyMake(a1), make(a2,a3,a4,a5,a6));
     }
 
     /**
-     ** Return a S-expression representing a 7-element list whose
-     ** contents are the result of applying <code>SExp.fancyMake</code>
-     ** to our arguments. <p>
-     **
-     ** Precondition: All arguments meet the precondition for
-     ** <code>SExp.fancyMake</code>.<p>
-     **
-     **/
-    //@ requires a1 != null && a2!=null && a3!=null && a4!=null
-    //@ requires a5 != null && a6!=null && a7!=null
-    //@ ensures \result != null
-    public static SList make(Object a1, Object a2, Object a3, Object a4,
-			     Object a5, Object a6, Object a7) {
+     * @return a S-expression representing a 7-element list whose
+     * contents are the result of applying {@link SExp#fancyMake(Object)}
+     * to our arguments. <p>
+     */
+    public static /*@ pure non_null @*/ SList make(/*@ non_null @*/ Object a1,
+                                                   /*@ non_null @*/ Object a2,
+                                                   /*@ non_null @*/ Object a3,
+                                                   /*@ non_null @*/ Object a4,
+                                                   /*@ non_null @*/ Object a5,
+                                                   /*@ non_null @*/ Object a6,
+                                                   /*@ non_null @*/ Object a7) {
 	return new SPair(SExp.fancyMake(a1), make(a2,a3,a4,a5,a6,a7));
     }
 
     /**
-     ** Return a S-expression representing a 8-element list whose
-     ** contents are the result of applying <code>SExp.fancyMake</code>
-     ** to our arguments. <p>
-     **
-     ** Precondition: All arguments meet the precondition for
-     ** <code>SExp.fancyMake</code>.<p>
-     **
-     **/
-    //@ requires a1 != null && a2!=null && a3!=null && a4!=null
-    //@ requires a5 != null && a6!=null && a7!=null && a8!=null
-    //@ ensures \result != null
-    public static SList make(Object a1, Object a2, Object a3, Object a4,
-			     Object a5, Object a6, Object a7, Object a8) {
+     * @return a S-expression representing a 8-element list whose
+     * contents are the result of applying {@link SExp#fancyMake(Object)}
+     * to our arguments.
+     */
+    public static /*@ pure non_null @*/ SList make(/*@ non_null @*/ Object a1,
+                                                   /*@ non_null @*/ Object a2,
+                                                   /*@ non_null @*/ Object a3,
+                                                   /*@ non_null @*/ Object a4,
+                                                   /*@ non_null @*/ Object a5,
+                                                   /*@ non_null @*/ Object a6,
+                                                   /*@ non_null @*/ Object a7,
+                                                   /*@ non_null @*/ Object a8) {
 	return new SPair(SExp.fancyMake(a1), make(a2,a3,a4,a5,a6,a7,a8));
     }
 
 
     /**
-     ** Return a S-expression representing a list whose
-     ** contents are the contents of a given array. <p>
-     **
-     ** Precondition: <code>a</code> and its elements are non-null.<p>
-     **/
-    //@ requires \nonnullelements(a)
-    //@ ensures \result != null
-    public static SList fromArray(SExp[] a) {
+     * @return a S-expression representing a list whose
+     * contents are the contents of a given array.
+     */
+    //@ public normal_behavior
+    //@   requires \nonnullelements(a);
+    //@   ensures \result != null;
+    public static /*@ pure non_null @*/ SList fromArray(SExp[] a) {
 	SList l = make();
 
-	for (int i=a.length-1; i>=0; i--)
+	for (int i = a.length-1; i >= 0; i--)
 	    l = new SPair(a[i], l);
 
 	return l;
     }
 
-
-    /***************************************************
-     *                                                 *
-     * Accessors:				       *
-     *                                                 *
-     ***************************************************/
-
-    /**
-     ** Do we represent a list?
-     **/
-    public boolean isList() {
+    //@ also
+    //@ public normal_behavior
+    //@   ensures \result;
+    public /*@ pure @*/ boolean isList() {
 	return true;
     }
 
-    /**
-     ** If we represent a list, return it as an <code>SList</code>;
-     ** otherwise, throw <code>SExpTypeError</code>.
-     **/
-    public SList getList() {
+    //@ also
+    //@ public normal_behavior
+    //@   ensures \result == this;
+    public /*@ pure non_null @*/ SList getList() {
 	return this;
     }
 
-
-    /***************************************************
-     *                                                 *
-     * List Accessors:				       *
-     *                                                 *
-     ***************************************************/
+    /**
+     * @return a flag indicating if we are we an empty list.
+     */
+    public abstract /*@ pure @*/ boolean isEmpty();
 
     /**
-     ** Are we an empty list?
-     **/
-    public abstract boolean isEmpty();
-
-
-    /**
-     ** Return our length
-     **/
-    public abstract int length();
+     * @return our length.
+     */
+    //@ public normal_behavior
+    //@   ensures \result >= 0;
+    public abstract /*@ pure @*/ int length();
 
 
     /**
-     ** If we represent a non-empty list, return it as a
-     ** <code>SPair</code>; otherwise, throw <code>SExpTypeError</code>.
-     **/
-    //@ ensures \result != null
-    /*package*/ SPair getPair() throws SExpTypeError {
+     * If we represent a non-empty list, return it as a
+     * <code>SPair</code>; otherwise, throw <code>SExpTypeError</code>.
+     */
+    //@ exceptional_behavior
+    //@   signals (SExpTypeError) true;
+    /*package*/ /*@ non_null @*/ SPair getPair() throws SExpTypeError {
 	throw new SExpTypeError();
     }
 
-
     /**
-     ** Attempt to return our element at index <code>i</code> (indices
-     ** start at 0).  If we are not long enough to have an element at
-     ** that index, then <code>SExpTypeError</code> is thrown. <p>
-     **
-     ** Precondition: <code>i</code> >= 0<p>
-     **/
-    //@ requires i>=0
-    //@ ensures \result != null
-    public SExp at(int i) throws SExpTypeError {
+     * @return our element at index <code>i</code> (indices start at
+     * 0).  If we are not long enough to have an element at that
+     * index, then <code>SExpTypeError</code> is thrown.
+     */
+    //@ public normal_behavior
+    //@   requires i >= 0;
+    //@   ensures \result != null;
+    //@ also
+    //@ public exceptional_behavior
+    //@   signals (SExpTypeError) true;
+    public /*@ pure @*/ SExp at(int i) throws SExpTypeError {
 	SPair ptr = getPair();
 
-	for (; i>0; i--)
+	for (; i > 0; i--)
 	    ptr = ptr.tail.getPair();
 	
 	return ptr.head;
     }
 
-
     /**
-     ** Modify the list in place by set the i'th element
-     ** to s.
-     **/
-    //@ requires 0 <= i;
-    // requires i < this.length();
+     * Modify the list in place by set the <code>i</code>th element to
+     * <code>s</code>.
+     */
+    //@ public normal_behavior
+    //@   requires 0 <= i;
+    //@   requires i < this.length();
+    //@   ensures at(i) == s;
     public void setAt(int i, SExp s) throws SExpTypeError {
 	SPair ptr = getPair();
 
-	for (; i>0; i--)
+	for (; i > 0; i--)
 	    ptr = ptr.tail.getPair();
 	
 	ptr.head = s;;
     }
     
-    /***************************************************
-     *                                                 *
-     * List Manipulation:			       *
-     *                                                 *
-     ***************************************************/
-
     /**
-     ** Return the functional result of appending another list to
-     ** us. <p>
-     **/
-    //@ requires x != null
-    //@ ensures \result != null
+     * @return the functional result of appending another list to
+     * us.
+     */
+    //@ public normal_behavior
+    //@   requires x != null;
+    //@   ensures \result != null;
+    //@ also
+    //@ public normal_behavior
+    //@   requires (this instanceof SNil);
+    //@   ensures \result == x;
     public SList append(SList x) {
 	if (this instanceof SNil)
 	    return x;
 	else {
-	    SPair us = (SPair)this;		//@ nowarn Cast
+	    SPair us = (SPair)this;		//@ nowarn Cast;
 
 	    return new SPair(us.head, us.tail.append(x));
 	}
     }
 
-
     /** 
-     ** Destructive list reversal
-     **/
-    //@ requires l != null;
-    //@ ensures \result != null;
+     * Destructive list reversal
+     */
+    //@ public normal_behavior
+    //@   requires l != null;
+    //@   ensures \result != null;
     public static SList reverseD(SList l){
 	SList res = SNil.getNil();
 	while (! (l instanceof SNil)){
@@ -353,46 +309,41 @@ public abstract class SList extends SExp {
     }
 
     /**
-     ** Return the functional result of adding a given element at the
-     ** front of us. <p>
-     **
-     ** Precondition: <code>x</code> is non-null.<p>
-     **/
-    //@ requires x != null
-    //@ ensures \result != null
+     * @return the functional result of adding a given element at the
+     * front of us.
+     *
+     * Precondition: <code>x</code> is non-null.<p>
+     */
+    //@ public normal_behavior
+    //@   requires x != null;
+    //@   ensures \result != null;
+    //@   ensures \result.at(0) == x;
     public SList addFront(SExp x) {
 	return new SPair(x, this);
     }
 
     /**
-     ** Return the functional result of adding a given element at the
-     ** end of us. <p>
-     **
-     ** Precondition: <code>x</code> is non-null.<p>
-     **
-     ** This function is likely to be slower than <code>addFront</code>.<p>
-     **/
-    //@ requires x != null
-    //@ ensures \result != null
+     * @return the functional result of adding a given element at the
+     * end of us.
+     *
+     * <p> This function is likely to be slower than <code>addFront</code>.
+     */
+    //@ public normal_behavior
+    //@   requires x != null;
+    //@   ensures \result != null;
+    //@   ensures \result.at(\result.length()) == x;
     public SList addEnd(SExp x) {
 	return append(make(x));	
     }
 
-
-    /***************************************************
-     *                                                 *
-     * Printing:				       *
-     *                                                 *
-     ***************************************************/
-
     /**
-     ** Print a textual representation of us on a given
-     ** <code>PrintStream</code>. <p>
-     **
-     ** Note: This routine will take a <code>PrintWriter</code> instead
-     ** when we switch to a more recent version of JDK.<p>
-     **/
-    public void print(PrintStream out) {
+     * Print a textual representation of us on a given
+     * <code>PrintStream</code>.
+     *
+     * <p> Note: This routine will take a <code>PrintWriter</code>
+     * instead when we switch to a more recent version of JDK. </p>
+     */
+    public /*@ pure @*/ void print(/*@ non_null @*/ PrintStream out) {
 	// Is this the first item to be printed?
 	boolean first = true;
 
@@ -412,15 +363,14 @@ public abstract class SList extends SExp {
 	out.print(")");
     }
 
-
     /**
-     ** Pretty print a textual representation of us on a given
-     ** <code>PrintStream</code>. <p>
-     **
-     ** Note: This routine will take a <code>PrintWriter</code> instead
-     ** when we switch to a more recent version of JDK.<p>
-     **/
-    public void prettyPrint(PrintStream out) {
+     * Pretty-print a textual representation of us on a given
+     * <code>PrintStream</code>.
+     *
+     * <p> Note: This routine will take a <code>PrintWriter</code>
+     * instead when we switch to a more recent version of JDK. </p>
+     */
+    public /*@ pure @*/ void prettyPrint(/*@ non_null @*/ PrintStream out) {
 	try {
 	    if (!specialPrint(out)) {
 		if (this instanceof SNil)
@@ -450,16 +400,15 @@ public abstract class SList extends SExp {
 	}
     }
 
-
     /**
-     ** Specially print a textual representation of us on a given
-     ** <code>PrintStream</code>.  This is a subroutine used in
-     ** pretty printing. <p>
-     **
-     ** Note: This routine will take a <code>PrintWriter</code> instead
-     ** when we switch to a more recent version of JDK.<p>
-     **/
-    private boolean specialPrint(PrintStream out) throws SExpTypeError {
+     * Specially print a textual representation of us on a given
+     * <code>PrintStream</code>.  This is a subroutine used in
+     * pretty-printing.
+     *
+     * <p> Note: This routine will take a <code>PrintWriter</code>
+     * instead when we switch to a more recent version of JDK. </p>
+     */
+    private boolean specialPrint(/*@ non_null @*/ PrintStream out) throws SExpTypeError {
 	int len = length();
 	if (len < 2 || len > 3)
 	    return false;
@@ -610,16 +559,9 @@ public abstract class SList extends SExp {
 	}
     }
 
-
-    /***************************************************
-     *                                                 *
-     * Test methods:				       *
-     *                                                 *
-     ***************************************************/
-
     /**
-     ** A simple test routine
-     **/
+     * A simple test routine
+     */
     public static void main(String[] args) throws SExpTypeError {
 	make().print(System.out);
 	System.out.println();

@@ -140,7 +140,7 @@ public class Main extends javafe.SrcTool
      * This is the main entry point for the <code>escjava</code>
      * command.<p>
      */
-    //@ requires \nonnullelements(args)
+    //@ requires \nonnullelements(args);
     public static void main(String[] args) {
 	int exitcode = compile(args);
 	if (exitcode != 0) System.exit(exitcode);
@@ -558,7 +558,7 @@ public class Main extends javafe.SrcTool
 
         LabelInfoToString.resetToMark();
         GuardedCmd gc = computeBody(r, initState);
-        /*@ uninitialized */ /*@ readable_if stats */ int origgcSize = 0;
+        /*@ uninitialized @*/ /*@ readable_if stats; @*/ int origgcSize = 0;
         if (options().stats) {
                 origgcSize = Util.size(gc);
         }

@@ -81,7 +81,7 @@ public class Location
    location.
    *********************************************************************/
 
-    //@ requires loc != Location.NULL
+    //@ requires loc != Location.NULL;
     //@ modifies \nothing;
     //@ ensures \result != null;
     public static GenericFile toFile(int loc) {
@@ -96,7 +96,7 @@ public class Location
    location.
    *********************************************************************/
 
-    //@ requires loc != Location.NULL
+    //@ requires loc != Location.NULL;
     //@ modifies \nothing;
     //@ ensures \result != null;
     public static String toFileName(int loc) {
@@ -128,7 +128,7 @@ public class Location
 
     //@ requires loc != Location.NULL;
     //@ modifies \nothing;
-    //@ ensures \result >= 1
+    //@ ensures \result >= 1;
     public static int toLineNumber(int loc) {
 	return LocationManagerCorrelatedReader.locToLineNumber(loc);
     }
@@ -141,9 +141,9 @@ public class Location
    * <p>Precondition: loc should be a regular location.
    *********************************************************************/
 
-    //@ requires loc != Location.NULL
+    //@ requires loc != Location.NULL;
     //@ modifies \nothing;
-    //@ ensures \result >= 0
+    //@ ensures \result >= 0;
     public static int toColumn(int loc) {
 	return LocationManagerCorrelatedReader.locToColumn(loc);
     }
@@ -183,7 +183,7 @@ public class Location
      * this file.
      *********************************************************************/
 
-    //@ ensures \result != Location.NULL
+    //@ ensures \result != Location.NULL;
     public static int createWholeFileLoc(/*@ non_null @*/ GenericFile file) {
 	return FileCorrelatedReader.createWholeFileLoc(file);
     }
@@ -198,7 +198,7 @@ public class Location
      * The resulting location is a whole-file location associated
      * with an unopenable file with human-name description.
      */
-    //@ ensures \result != Location.NULL
+    //@ ensures \result != Location.NULL;
     public static int createFakeLoc(/*@ non_null @*/ String description) {
 	return FileCorrelatedReader.createWholeFileLoc(
 		   new UnopenableFile(description));
@@ -208,9 +208,9 @@ public class Location
 
     //@ requires 0 <= streamId;
     //@ requires streamId < LocationManagerCorrelatedReader.allCorrStreams.elementCount;
-    //@ requires line > 0
-    //@ requires col>=0
-    //@ ensures \result != Location.NULL  
+    //@ requires line > 0;
+    //@ requires col >= 0;
+    //@ ensures \result != Location.NULL  ;
     public static int make(int streamId, int line, int col) {
 	return LocationManagerCorrelatedReader.makeLocation(streamId, line, col);
     }
@@ -223,8 +223,8 @@ public class Location
      * Produces an assertion failure if that location does not exist
      * (e.g., the line is too short.).
      */
-    //@ requires n>=0
-    //@ ensures loc != NULL ==> \result != NULL
+    //@ requires n >= 0;
+    //@ ensures loc != NULL ==> \result != NULL;
     public static int inc(int loc, int n) {
 	if (isWholeFileLoc(loc) || loc==NULL)
 	    return loc;
@@ -240,15 +240,14 @@ public class Location
         // which obviously is longer than the original statement.
 	// Assert.notFalse(toLineNumber(loc) == toLineNumber(loc+n)); //@ nowarn pre
 	return loc+n;
-    }                        //@ nowarn Post
+    }                        //@ nowarn Post;
 
 
   /**
     * Returns the internal stream ID used for the stream associated
     * with location <code>loc</code>.
-    *
-    * <esc> requires loc != Location.NULL </esc>
     */
+    //@ requires loc != Location.NULL;
   public static int toStreamId(int loc) {
     return LocationManagerCorrelatedReader.locToStreamId(loc);
   }
@@ -258,7 +257,7 @@ public class Location
      * where <code>id</code> has previously been returned by
      * <code>toStreamId</code>.
      */
-    //@ requires 0<=id && id<LocationManagerCorrelatedReader.allCorrStreams.elementCount
+    //@ requires 0 <= id && id < LocationManagerCorrelatedReader.allCorrStreams.elementCount;
     public static GenericFile streamIdToFile(int id) {
 	return LocationManagerCorrelatedReader.streamIdToFile(id);
     }

@@ -110,8 +110,8 @@ class CECEnum implements Enumeration {
      *                                                 *
      ***************************************************/
 
-    //@ invariant pending.elementCount>0 ==> moreElements 
-    //@ invariant moreElements ==> !simplifyDone || pending.elementCount>0
+    //@ invariant pending.elementCount>0 ==> moreElements;
+    //@ invariant moreElements ==> !simplifyDone || pending.elementCount > 0;
 
 
     /**
@@ -122,7 +122,7 @@ class CECEnum implements Enumeration {
     /**
      ** Do we ever return null as an element?
      **/
-    //@ invariant !returnsNull
+    //@ invariant !returnsNull;
 
 
     /**
@@ -134,7 +134,7 @@ class CECEnum implements Enumeration {
 	if (pending.size()==0 && !simplifyDone)
 	    readFromSimplify();
 
-	//@ set moreElements = pending.elementCount!=0
+	//@ set moreElements = pending.elementCount != 0;
 	return pending.size()!=0;
     }
 
@@ -143,7 +143,7 @@ class CECEnum implements Enumeration {
      ** method will enumerate successive elements.  Throws
      ** NoSuchElementException if no more elements are left.
      **/
-    //@ also modifies simplifyDone
+    //@ also modifies simplifyDone;
     public Object nextElement() /*throws NoSuchElementException*/ {
 	if (!hasMoreElements())
 	    throw new NoSuchElementException();
@@ -179,9 +179,9 @@ class CECEnum implements Enumeration {
      ** Attempt to read another output (for example, a counter-example)
      ** from Simplify, then append it to <code>pending</code>.
      **/
-    //@ requires !simplifyDone
-    //@ modifies simplifyDone, pending.elementCount
-    //@ ensures simplifyDone || pending.elementCount>0
+    //@ requires !simplifyDone;
+    //@ modifies simplifyDone, pending.elementCount;
+    //@ ensures simplifyDone || pending.elementCount > 0;
     private void readFromSimplify() {
 	P.eatWhitespace();
 

@@ -2,23 +2,29 @@
 
 package escjava.prover;
 
-/** An object of this class represent a progress comment produced by Simplify.
- ** <p>
- ** 
- ** @see Simplify
- ** @see escjava.prover.CECEnum
- ** @see SExp
- **/
+/**
+ * An object of this class represent a progress comment produced by
+ * Simplify.
+ * 
+ * @see Simplify
+ * @see escjava.prover.CECEnum
+ * @see SExp
+ */
 
-public class SimplifyComment extends SimplifyOutput {
-  final String msg;
+public class SimplifyComment extends SimplifyOutput
+{
+    /*@ spec_public @*/ final String msg;
 
-  public String getMsg() {
-    return msg;
-  }
+    //@ normal_behavior
+    //@   modifies this.*;
+    //@   ensures this.msg == msg;
+    SimplifyComment(String msg) {
+        super(COMMENT);
+        this.msg = msg;
+    }
 
-  SimplifyComment(String msg) {
-    super(COMMENT);
-    this.msg = msg;
-  }
+    //@ ensures \result == msg;
+    public /*@ pure @*/ String getMsg() {
+        return msg;
+    }
 }
