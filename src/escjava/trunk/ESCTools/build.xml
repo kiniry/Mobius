@@ -34,27 +34,34 @@
 
   <!-- Source code locations for various packages...I mean "envelopes". -->
 
-  <property name="javafe_source_dir" value="Javafe/java"/>
-  <property name="escjava_source_dir" value="Escjava/java"/>
-  <property name="mochalib_source_dir" value="Escjava/mochalib/java"/>
-  <property name="rcc_source_dir" value="Rcc/java"/>
-  <property name="houdini_source_dir" value="Houdini/java"/>
+  <property name="javafe_root_dir" value="Javafe"/>
+  <property name="escjava_root_dir" value="Escjava"/>
+  <property name="rcc_root_dir" value="Rcc"/>
+  <property name="houdini_root_dir" value="Houdini"/>
+  <property name="calvin_root_dir" value="Calvin"/>
+
+  <property name="javafe_source_dir" value="${javafe_root_dir}/java"/>
+  <property name="javafe_test_dir" value="${javafe_root_dir}/test"/>
+  <property name="escjava_source_dir" value="${escjava_root_dir}/java"/>
+  <property name="escjava_test_dir" value="${escjava_root_dir}/test"/>
+  <property name="mochalib_source_dir" value="${escjava_root_dir}/mochalib/java"/>
+  <property name="rcc_source_dir" value="${rcc_root_dir}/java"/>
+  <property name="houdini_source_dir" value="${houdini_root_dir}/java"/>
+  <property name="calvin_source_dir" value="${calvin_root_dir}/java"/>
 
   <!-- Note that simplify is written in Modula3, so you need a good
   install of one of the Modula3 compiler suites to build it. -->
   <property name="simplify_source_dir" value="Simplify/"/>
 
-  <property name="calvin_source_dir" value="Calvin/java"/>
-
   <!-- Target locations for various build results. -->
 
   <!-- Classfiles are put here in a parallel hierarchy for each envelope. -->
-  <property name="javafe_classes_dir" value="Javafe/classfiles"/>
-  <property name="escjava_classes_dir" value="Escjava/classfiles"/>
-  <property name="mochalib_classes_dir" value="Escjava/mochalib/classfiles"/>
-  <property name="rcc_classes_dir" value="Rcc/classfiles"/>
-  <property name="houdini_classes_dir" value="Houdini/classfiles"/>
-  <property name="calvin_classes_dir" value="Calvin/classfiles"/>
+  <property name="javafe_classes_dir" value="${javafe_root_dir}/classfiles"/>
+  <property name="escjava_classes_dir" value="${escjava_root_dir}/classfiles"/>
+  <property name="mochalib_classes_dir" value="${escjava_root_dir}/mochalib/classfiles"/>
+  <property name="rcc_classes_dir" value="${rcc_root_dir}/classfiles"/>
+  <property name="houdini_classes_dir" value="${houdini_root_dir}/classfiles"/>
+  <property name="calvin_classes_dir" value="${calvin_root_dir}/classfiles"/>
 
   <!-- Top-level documentation location. -->
   <property name="docs_dir" value="docs"/>  
@@ -64,11 +71,11 @@
   <property name="javadoc_dir" value="${docs_dir}/api"/>
 
   <!-- Locations for per-envelope documentation generation. -->
-  <property name="javafe_docs_dir" value="Javafe/doc/api"/>
-  <property name="escjava_docs_dir" value="Escjava/doc/api"/>
-  <property name="rcc_docs_dir" value="Rcc/doc/api"/>
-  <property name="houdini_docs_dir" value="Houdini/doc/api"/>
-  <property name="calvin_docs_dir" value="Calvin/doc/api"/>
+  <property name="javafe_docs_dir" value="${javafe_root_dir}/doc/api"/>
+  <property name="escjava_docs_dir" value="${escjava_root_dir}/doc/api"/>
+  <property name="rcc_docs_dir" value="${rcc_root_dir}/doc/api"/>
+  <property name="houdini_docs_dir" value="${houdini_root_dir}/doc/api"/>
+  <property name="calvin_docs_dir" value="${calvin_root_dir}/doc/api"/>
 
   <!-- And Xrefactory docs are generated here. -->
   <property name="xref_doc_dir" value="${docs_dir}/Xref"/>
@@ -165,6 +172,7 @@
   <path id="javafe_classpath">
     <path refid="base_classpath"/>
     <pathelement path="${javafe_classes_dir}"/>
+    <pathelement path="${javafe_root}/decsrclib"/>
   </path>
 
   <path id="rcc_classpath">
@@ -193,11 +201,11 @@
   </path>
 
 <!--
-  <property name="javafe_classes_dir" value="Javafe/classes"/>
-  <property name="escjava_classes_dir" value="Escjava/classes"/>
-  <property name="rcc_classes_dir" value="Rcc/classes"/>
-  <property name="houdini_classes_dir" value="Houdini/classes"/>
-  <property name="calvin_classes_dir" value="Calvin/classes"/>
+  <property name="javafe_classes_dir" value="${javafe_root_dir}/classes"/>
+  <property name="escjava_classes_dir" value="${escjava_root_dir}/classes"/>
+  <property name="rcc_classes_dir" value="${rcc_root_dir}/classes"/>
+  <property name="houdini_classes_dir" value="${houdini_root_dir}/classes"/>
+  <property name="calvin_classes_dir" value="${calvin_root_dir}/classes"/>
 -->
 
   <path id="test_classpath">
@@ -256,8 +264,12 @@
     <mkdir dir="${opt_dir}"/>
     <mkdir dir="${jmlc_dir}"/>
     <mkdir dir="${javadoc_dir}"/>
+    <mkdir dir="${javafe_docs_dir}"/>
+    <mkdir dir="${escjava_docs_dir}"/>
+    <mkdir dir="${rcc_docs_dir}"/>
+    <mkdir dir="${houdini_docs_dir}"/>
+    <mkdir dir="${calvin_docs_dir}"/>
     <mkdir dir="${xref_doc_dir}"/>
-    <mkdir dir="${javadoc_dir}"/>
   </target>
 
   <!-- Compile all source to binaries. -->
@@ -367,7 +379,7 @@
       <arg value="--keepGoing"/>
       <arg value="--purity"/>
       <arg value="--multijava"/>
-      <arg line="--source '1.4'"/>
+      <arg line="--source '1.3'"/>
       <arg line="--sourcepath '${javafe_source_dir}'"/>
       <arg line="javafe"/>
     </java>
@@ -455,9 +467,7 @@
 
   <target name="compile" depends="compile_javafe,
                                   compile_javafe_ast,
-                                  compile_escjava,
-                                  compile_houdini,
-                                  compile_simplify">
+                                  compile_escjava">
     <description>
       Compile all source code.
     </description>
@@ -470,14 +480,15 @@
     <description>
       Compile all Javafe source code.
     </description>
-    <javac srcdir="${javafe_source_dir}"
+    <javac srcdir="${javafe_source_dir}:${javafe_test_dir}"
            destdir="${javafe_classes_dir}"
            excludes="javafe/test/**,javafe/tc/test/**,jtools/**"
            debug="on"
            deprecation="off"
            optimize="off"
            failonerror="false"
-           source="1.4"
+           source="1.3"
+           target="1.1"
            classpathref="javafe_classpath">
       <compilerarg line="+Pno-modifier-order +Pno-redundant-modifiers"
                    compiler="jikes"/>
@@ -499,7 +510,8 @@
            deprecation="off"
            optimize="off"
            failonerror="false"
-           source="1.4"
+           source="1.3"
+           target="1.1"
            classpathref="rcc_classpath">
       <compilerarg line="+Pno-modifier-order +Pno-redundant-modifiers"
                    compiler="jikes"/>
@@ -522,6 +534,7 @@
     <description>
       Compile all ESC/Java source code.
     </description>
+    <!-- :${escjava_test_dir} -->
     <javac srcdir="${escjava_source_dir}"
            destdir="${escjava_classes_dir}"
            excludes="instrumenter/**,escwizard/**,houdini/**,
@@ -529,6 +542,8 @@
            debug="on"
            deprecation="off"
            optimize="off"
+           source="1.3"
+           target="1.1"
            failonerror="false"
            classpathref="escjava_classpath">
       <compilerarg line="+Pno-modifier-order +Pno-redundant-modifiers"
@@ -570,7 +585,8 @@
            deprecation="off"
            optimize="off"
            failonerror="false"
-           source="1.4"
+           source="1.3"
+           target="1.1"
            classpathref="calvin_classpath">
       <compilerarg line="+Pno-modifier-order +Pno-redundant-modifiers"
                    compiler="jikes"/>
@@ -592,7 +608,8 @@
            deprecation="off"
            optimize="off"
            failonerror="false"
-           source="1.4"
+           source="1.3"
+           target="1.1"
            classpathref="houdini_classpath">
       <compilerarg line="+Pno-modifier-order +Pno-redundant-modifiers"
                    compiler="jikes"/>
@@ -635,7 +652,8 @@
            optimize="on"
            depend="true"
            failonerror="false"
-           source="1.4"
+           source="1.3"
+           target="1.1"
            classpathref="default_classpath">
       <compilerarg line="+P"
                    compiler="jikes"/>
@@ -807,7 +825,8 @@
              sourcepath="${calvin_source_dir}"
              destdir="${calvin_docs_dir}"
              maxmemory="256m"
-             source="1.4"
+             source="1.3"
+             target="1.1"
              author="true"
              version="true"
              access="private"
@@ -828,7 +847,8 @@
              sourcepath="${houdini_source_dir}"
              destdir="${houdini_docs_dir}"
              maxmemory="256m"
-             source="1.4"
+             source="1.3"
+             target="1.1"
              author="true"
              version="true"
              access="private"
@@ -906,6 +926,10 @@
     <delete>
       <fileset dir="${libs_dir}"
                includes="${project}*.jar"/>
+    </delete>            
+    <delete>
+      <fileset dir="${libs_dir}"
+               includes="escjava.jar,houdini.jar,javafe.jar"/>
     </delete>            
     <delete>
       <fileset dir="." includes="*.txt"/>
