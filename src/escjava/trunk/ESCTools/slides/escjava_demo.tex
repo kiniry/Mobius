@@ -41,8 +41,6 @@ erik,
 \newcommand{\ttbf}[1]{\mbox{\tt \textbf{#1}}}
 \newcommand{\code}[1]{{\rm \texttt{\textbf{\small #1}}}}
 
-
-
 \myitem{1}{\mbox{{$\bullet$}}}
 \newcommand{\old}{\(\backslash\)old}
 \newcommand{\vooralle}{\(\backslash\)forall}
@@ -79,7 +77,6 @@ erik,
 
 \boldmath
 
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \overlays{4}{
 \begin{slide}{ESC/Java}
@@ -88,18 +85,15 @@ erik,
 {\blue Extended static checker}
 {\rm by Rustan Leino et.al. [Compaq].}
 \begin{itemstep}
-\item$\!$
-{\blue {\em tries} to {\em prove} correctness of specifications,}\\
-{\green at compile-time, fully automatically}
-\item$\!$
-{\em not sound}, {\em not complete}, but {\blue finds lots of potential bugs quickly}
-\item
-good at proving absence of runtime exceptions
-{\scriptsize (eg Null-, ArrayIndexOutOfBounds-, ClassCast-)}
-and verifying relatively simple properties.
-\item
-ESC/Java only supported a subset of full JML, but
-ESC/Java2 by Joe Kiniry [KUN] \& David Cok [Kodak] remedies this.
+\item$\!$ {\blue {\em tries} to {\em prove} correctness of specifications,}\\
+  {\green at compile-time, fully automatically}
+\item$\!$ {\em not sound}, {\em not complete}, but {\blue finds lots
+    of potential bugs quickly}
+\item good at proving absence of runtime exceptions {\scriptsize (eg
+    Null-, ArrayIndexOutOfBounds-, ClassCast-)} and verifying
+  relatively simple properties.
+\item ESC/Java only supported a subset of full JML, but ESC/Java2 by
+  Joe Kiniry [KUN] \& David Cok [Kodak] remedies this.
 \end{itemstep}
 
 \end{slide}}
@@ -148,8 +142,6 @@ class Bag \{
 \end{alltt} %}
 \end{slide}
 
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{ESC/Java ``demo''}
 \vspace*{-6ex}
@@ -172,7 +164,6 @@ class Bag \{
 \vspace*{-3ex}
 \doos{Warning: {\red possible null deference}. Plus other warnings}
 \end{slide}
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{ESC/Java ``demo''}
@@ -219,9 +210,6 @@ class Bag \{
 \doos{Warning: {\red  Array index possibly too large }}
 \end{slide}
 
-
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{ESC/Java ``demo''}
 \vspace*{-6ex}
@@ -267,7 +255,6 @@ class Bag \{
 \doos{Warning: {\red  Array index possibly too large }}
 \end{slide}
 
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{ESC/Java ``demo''}
 \vspace*{-6ex}
@@ -311,7 +298,6 @@ class Bag \{
 \vspace*{-3ex}
 \doos{Warning: {\red  Possible negative array index }}
 \end{slide}
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{ESC/Java ``demo''}
@@ -380,10 +366,9 @@ class Bag \{
 }}
 \end{alltt} %}
 \vspace*{-4ex}
-\doos{\parbox{24em}{\ldots but warnings about calls to \code{extractMin()} that do not ensure precondition}}
-
+\doos{\parbox{24em}{\ldots but warnings about calls to
+    \code{extractMin()} that do not ensure precondition}}
 \end{slide}
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \overlays{3}{
@@ -391,7 +376,7 @@ class Bag \{
 \vspace*{-3ex}
 \begin{itemstep}
 \item
-ESC/Java {\em {\green forces}}  to specify some properties.
+ESC/Java {\em {\green forces}} one to specify some properties.
 \medskip
 \item
 If you inderstand the code, \\
@@ -410,15 +395,12 @@ then understanding the code is easier.
 \begin{slide}{ESC/Java vs runtime checking (cont.)}
 \vspace*{-3ex}
 \begin{itemize}
-\item
-For {\green runtime assertion checking}, we could {\green choose
-what we specify}, e.g. all, one, or none of the properties
-we have written for for \code{Bag}.
-\item
-But for {\blue ESC/Java} to accept a spec, we are
-{\em {\blue forced}}  to specify {\em {\blue all properties}}
-(e.g.\ invariants, preconditions)
-that this spec relies on.
+\item For {\green runtime assertion checking}, we could {\green choose
+    what we specify}, e.g. all, one, or none of the properties we have
+  written for for \code{Bag}.
+\item But for {\blue ESC/Java} to accept a spec, we are {\em {\blue
+      forced}} to specify {\em {\blue all properties}} (e.g.\ 
+  invariants, preconditions) that this spec relies on.
 \end{itemize}
 \end{slide}
 
@@ -431,18 +413,20 @@ ESC/Java is
 \item {\blue not sound}: it may {\green complain a correct spec}
 \item {\blue not complete}: it may {\green accept an incorrect spec}
 \end{itemize}
-ESC/Java warns about {\green many potential bugs} , but {\green not about all actual bugs.}
+ESC/Java warns about {\green many potential bugs} , but {\green not
+  about all actual bugs.}
 
 \medskip
+
 These are unavoidable concessions to main goal:\\
-{\green pointing out lots of potential bugs quickly \& completely automatically}
+{\green pointing out lots of potential bugs quickly \& completely
+  automatically}
 
 \medskip
 
-In practice ESC/Java is quite good at checking
-simple specs, e.g.\ ruling out any
-\code{NullPointer-}
-and \code{IndexOutOfBounds\-Exceptions}
+In practice ESC/Java is quite good at checking simple specs, e.g.\ 
+ruling out any \code{NullPointer-} and
+\code{IndexOutOfBounds\-Exceptions}
 
 \end{slide}
 

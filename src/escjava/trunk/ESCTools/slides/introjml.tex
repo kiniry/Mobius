@@ -41,8 +41,6 @@ erik,
 \newcommand{\ttbf}[1]{\mbox{\tt \textbf{#1}}}
 \newcommand{\code}[1]{{\rm \texttt{\textbf{\small #1}}}}
 
-
-
 \myitem{1}{\mbox{{$\bullet$}}}
 \newcommand{\old}     {\(\backslash\)old}
 \newcommand{\vooralle}{\(\backslash\)forall}
@@ -116,8 +114,10 @@ niks
 What this set of slides aims to do
 \begin{itemize}
 \item introduction to JML
-\item overview of tool support for JML (jmlrac, jmlunit, escjava)
-\item explain idea of extended static checking and difference with runtime assertion checking
+\item provide overview of tool support for JML (jmlrac, jmlunit,
+  escjava)
+\item explain idea of extended static checking and difference with
+  runtime assertion checking
 \item some more ESC/Java2 tips
 \end{itemize}
 
@@ -127,7 +127,9 @@ What this set of slides aims to do
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\part{{\Large \red The Java Modeling Language \\ JML \\[2ex] {\large\black \texttt{www.jmlspecs.org}}}}
+\part{{\Large \red The Java Modeling Language \\
+    JML \\
+    [2ex] {\large\black \texttt{www.jmlspecs.org}}}}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -153,11 +155,12 @@ by adding {\green assertions} to Java source code, eg
 
 \medskip
 
-as in Eiffel (Design-by-Contract), but more expressive.
+as in Eiffel (Design by Contract), but more expressive.
 
 \medskip
 
-\fromSlide{2}{\doos{Goal: JML should be easy to use for any Java programmer.}}
+\fromSlide{2}{\doos{Goal: JML should be easy to use for any Java
+    programmer.}}
 
 
 \end{slide}}
@@ -179,8 +182,8 @@ or after {\green \texttt{\textbf{\small //@}}},
 
 \medskip
 \item
-Properties are specified as Java boolean expressions,
-extended with a few operators
+Properties are specified as Java boolean expressions, extended
+  with a few operators
 ({\green \old, \vooralle, \result, \ldots}).
 
 \medskip
@@ -221,14 +224,12 @@ using a few keywords
 Here \code{\old(balance)} refers to the value of \code{balance}
 before execution of the method.
 
-
 \end{slide}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{requires, ensures}
 \vspace*{-3ex}
 
 JML specs can be as strong or as weak as you want.
-
 
 \begin{alltt}
 \texttt{\textbf{\small
@@ -249,8 +250,8 @@ This default postcondition ``\code{ensures true}'' can be omitted.
 \begin{slide}{Design-by-Contract}
 \vspace*{-3ex}
 
-Pre- and postconditions define a {\blue contract} 
-between a class and its clients:
+Pre- and postconditions define a {\blue contract} between a class and
+its clients:
 \medskip
 \begin{itemize}
 \item
@@ -263,9 +264,9 @@ and must {\green ensure postcondition}
 
 \bigskip
 
-Eg, in the example specs for \code{debit}, it is the obligation of
-the client to ensure that \code{amount} is positive.
-The \code{requires} clause makes this {\green explicit}.
+Eg, in the example specs for \code{debit}, it is the obligation of the
+client to ensure that \code{amount} is positive.  The \code{requires}
+clause makes this {\green explicit}.
 
 \end{slide}
 
@@ -297,7 +298,7 @@ The \code{requires} clause makes this {\green explicit}.
 \vspace*{-3ex}
 
 Exceptions are allowed by default,
-ie.\ the default signals clause is
+i.e.\ the default signals clause is
 \begin{alltt}\texttt{\textbf{\small {\blue signals} (Exception){\green true}; }}
 \end{alltt}
 
@@ -316,14 +317,13 @@ or use the keyword {\blue normal\_behavior}
 }}
 \end{alltt}
 
-
 \end{slide}
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{invariant}
 \vspace*{-3ex}
-{\blue Invariants} (aka {\em class} invariants) are properties that must be maintained by all methods, eg
+{\blue Invariants} (aka {\em class} invariants) are properties that
+must be maintained by all methods, e.g.,
 \begin{alltt}
 \texttt{\textbf{\small{public class {\green Wallet} \{
   public static final short{\green MAX_BAL} = 1000;
@@ -334,7 +334,7 @@ or use the keyword {\blue normal\_behavior}
   ...  }}}
 \end{alltt} %}
 
-Invariants implicitly included in all pre- and postconditions.
+Invariants are implicitly included in all pre- and postconditions.
 
 Invariants must {\em also} be preserved if exception is thrown!
 \end{slide}
@@ -343,7 +343,7 @@ Invariants must {\em also} be preserved if exception is thrown!
 \begin{slide}{invariant}
 \vspace*{-4ex}
 
-Invariants document design decisions, eg.
+Invariants document design decisions, e.g.,
 \begin{alltt}
 \texttt{\textbf{\small public class{\green Directory} \{
  private File[]{\green files};
@@ -363,8 +363,9 @@ Making them {\green explicit} helps in understanding the code.
 \begin{slide}{non\_null}
 \vspace*{-4ex}
 
-Many invariants, pre- and postconditions are about references not being null.
-{\blue non\_null} is a convenient short-hand for these.
+Many invariants, pre- and postconditions are about references not
+being \texttt{null}.  {\blue non\_null} is a convenient short-hand for
+these.
 
 \begin{alltt}
 \texttt{\textbf{\small public class Directory \{
@@ -380,17 +381,12 @@ Many invariants, pre- and postconditions are about references not being null.
 
 \end{slide}
 
-
-
-
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{assert}
 \vspace*{-3ex}
 
 An {\blue \texttt{\textbf{\small assert}}} clause specifies
-a property that should hold at some point in the code, eg.
+a property that should hold at some point in the code, e.g.,
 \begin{alltt}
 \texttt{\textbf{\small if (i <= 0 || j < 0) \{
       ...
@@ -424,8 +420,6 @@ Still, assert in JML is more expressive, for example in
   {\green @*/} }}
 \end{alltt} 
 
-
-
 \end{slide}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -433,7 +427,6 @@ Still, assert in JML is more expressive, for example in
 \vspace*{-3ex}
 
 {\blue Frame properties} limit possible side-effects of methods.
-
 
 \begin{alltt}
 \texttt{\textbf{\small {\green /*@}   requires amount >= 0;
@@ -444,7 +437,7 @@ Still, assert in JML is more expressive, for example in
     ...
 }}
 \end{alltt}
-Eg. \code{debit} will {\em only} assign to field \code{balance}.
+E.g., \code{debit} can {\em only} assign to the field \code{balance}.
 
 NB this does {\em not} follow from the post-condition.
 
@@ -453,7 +446,6 @@ NB this does {\em not} follow from the post-condition.
 Default assignable clause: \code{assignable \everything}.
 
 \end{slide}
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{pure}
@@ -477,7 +469,6 @@ Pure method are implicitly \code{assignable \nothing}.
 Only pure methods can be used {\em in} specifications.
 
 \end{slide}
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{visibility}
@@ -507,7 +498,7 @@ Specs of {\blue public} methods may not refer to {\green private} fields.
 \vspace*{-3ex}
 
 Keyword \code{spec\_public} loosens visibility for specs.\\
-Private \code{spec\_public} fields are allowed in public specs, eg:
+Private \code{spec\_public} fields are allowed in public specs, e.g.:
 
 \begin{alltt} \texttt{\textbf{\small{\blue public} int{\blue pub};
  {\green private}{\black /*@}{\blue spec\_public}{\black @*/} int{\green priv};
@@ -518,21 +509,18 @@ Private \code{spec\_public} fields are allowed in public specs, eg:
 }}
 \end{alltt}
 
-
 \bigskip
 
-{\rm Exposing private details is ugly, of course.
-A nicer, but more advanced alternative in JML is to
- use public \code{\red model} fields to represent 
-(abstract away from) private implementation details.}
+{\rm Exposing private details is ugly, of course.  A nicer, but more
+  advanced alternative in JML is to use public \code{\red model}
+  fields to represent (abstract away from) private implementation
+  details.}
 
 \end{slide}
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \part{{\Large \red Tools for JML}}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \overlays{3}{\begin{slide}{tools for JML}
@@ -549,7 +537,7 @@ A nicer, but more advanced alternative in JML is to
       {\blue at compile-time}\\
       {\green ESC/Java2}\\
 
-      This is program verification, not just testing}
+      This is program verification, not just testing.}
 \end{itemize}
 \end{slide}}
 
@@ -564,28 +552,27 @@ A nicer, but more advanced alternative in JML is to
 translates {\blue JML assertions}
 into {\blue runtime checks}:
 \begin{quote}
-during execution, {\em all} assertions are tested and
-any violation of an assertion produces an Error
+  during execution, {\em all} assertions are tested and any violation
+  of an assertion produces an Error.
 \end{quote}
 \fromSlide{2}{\item$\!$
-{\blue cheap \& easy} to do as part of
-existing testing practice}
+  {\blue cheap \& easy} to do as part of existing testing practice}
 \fromSlide{2}{\item$\!$
-{\blue better testing}, because {\green more properties} are tested, at {\green more places} in the code}
+  {\blue better testing}, because {\green more properties} are tested,
+  at {\green more places} in the code}
 \end{itemize}
-\fromSlide{3}{Of course, an assertion violation can be {\em error in code} {\green or} {\em error in specification}.}
-
+\fromSlide{3}{Of course, an assertion violation can be {\em error in
+    code} {\green or} {\em error in specification}.}
 \medskip
 \fromSlide{4}{
-The {\blue jmlunit} tool combines jmlrac and {\green unit testing}}
-
+  The {\blue jmlunit} tool combines jmlrac and {\green unit testing}}
 \end{slide}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{runtime assertion checking}
 \vspace*{-3ex}
 
-jmlrac can generate complicated test-code for free.  Eg for
+jmlrac can generate complicated test-code for free.  E.g., for
 \begin{alltt}
 \texttt{\textbf{\small{\green /*@} ...
     {\blue signals (Exception) 
@@ -604,9 +591,6 @@ quantification is finite.}
 
 \end{slide}
 
-
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \overlays{5}{
 \begin{slide}{extended static checking}
@@ -618,15 +602,15 @@ quantification is finite.}
 {\blue {\em tries} to {\em prove} correctness of specifications,}\\
 {\green at compile-time, fully automatically}
 \item$\!$
-\Red{\em not sound}: ESC/Java may warn about correctly specified code
+\Red{\em not sound}: ESC/Java may miss an error that is actually present
 \item$\!$
-\Red{\em not complete}: ESC/Java may accept incorrectly specified code
+\Red{\em not complete}: ESC/Java may warn of errors that are impossible
 \item$\!$
  but {\blue finds lots of potential bugs quickly}
 \item
-good at proving absence of runtime exceptions
-{\scriptsize (eg Null-, ArrayIndexOutOfBounds-, ClassCast-)}
-and verifying relatively simple properties.
+good at proving absence of runtime exceptions {\scriptsize (eg
+Null-, ArrayIndexOutOfBounds-, ClassCast-)} and verifying
+relatively simple properties.
 \end{itemstep}
 
 \end{slide}}
@@ -655,7 +639,6 @@ Hence
 
 \end{slide}
 
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{static checking vs runtime checking}
 \vspace*{-3ex}
@@ -673,14 +656,12 @@ One of the assertions below is wrong:
    \}  
 }}\end{alltt}
 
+Runtime assertion checking {\blue {\em may}} detect this with a
+comprehensive test suite.
 
-Runtime assertion checking {\blue {\em may}} detect this.
-
-ESC/Java2 {\blue {\em will}} detect this.
+ESC/Java2 {\blue {\em will}} detect this at compile-time.
 
 \end{slide}
-
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{modular reasoning (1)}
@@ -734,12 +715,11 @@ Similarly, ESC/Java will complain about \code{b[0] = 2} in
 
 }
 \end{alltt}
-Maybe you can see that this is a spurious warning,
-though this will be harder than in the previous example:
-you'll have to inspect {\em all} constructors and {\em all} methods.
+Maybe you can see that this is a spurious warning, though this will be
+harder than in the previous example: you'll have to inspect {\em all}
+constructors and {\em all} methods.
 
 \end{slide}
-
 
 \begin{slide}{modular reasoning (2)}
 \vspace*{-3ex}
@@ -769,25 +749,22 @@ And again: subclasses have to preserve these properties.
 \begin{slide}{assume}
 \vspace*{-3ex}
 
-Alternative to stop  ESC/Java2 complaining:
-add an assumption:
+Alternative to stop ESC/Java2 complaining: add an assumption:
 \begin{alltt}\code{ 
     ...
     //@{\blue assume} b != null && b.length > 0;
     b[0] = 2;
     ...  
-
 }
 \end{alltt}
 
-Especially useful during development,
-when you're still trying to discover hidden assumptions,
-or when ESC/Java2's reasoning power is too weak.
+Especially useful during development, when you're still trying to
+discover hidden assumptions, or when ESC/Java2's reasoning power is
+too weak.
 
 \medskip
 
-(requires can be understood as a form of assume.)
-
+(\code{requires} can be understood as a form of \code{assume}.)
 
 \end{slide}
 
@@ -806,17 +783,14 @@ Other red {\blue verification} tools:
 \item$\!$ {\green Krakatoa tool + Coq} (INRIA)
 \end{itemize}
 These tools (also) aim at {\blue interactive} verification of complex
-properties,
-whereas
-ESC/Java2 aims at {\blue automatic} verification of relatively simple
-properties.
+properties, whereas ESC/Java2 aims at {\blue automatic} verification
+of relatively simple properties.
 \item runtime {\blue detection of invariants}: {\green Daikon} (Michael Ernst, MIT)
 \item$\!$ {\blue model-checking} multi-threaded programs: {\green Bogor} (Kansas State)
 \end{itemize}
 See \texttt{www.jmlspecs.org}
 
 \end{slide}}
-
 
 \end{document}
 
