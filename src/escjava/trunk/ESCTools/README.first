@@ -121,7 +121,7 @@ d) Execute a CVS checkout on the server (replacing the characters
    'username' in the command below with your username on Joe's
    server):
 
-   cvs -d :ext:username@kindsoftware.com/cvsroot checkout ESCTools 
+   cvs -d :ext:username@kindsoftware.com/cvsroot checkout -P ESCTools 
 
 e) If you want to avoid using your password on every CVS transaction,
   you will need to generate a public key/private key pair and copy the
