@@ -24,11 +24,13 @@ public class Options extends javafe.SrcToolOptions
     final String[][] escOptionData = {
 	{ "-eajava, -javaAssertions", "Treat Java assert statements as Java exceptions"},
 	{ "-eajml, -jmlAssertions", "Treat Java assert statements like JML assert statements"},
+	{ "-nocheck", "Do all steps, including verification condition generation, but no actual verifying"},
 	{ "-noSemicolonWarnings", "Suppress warnings about semicolons missing at the end of annotations (to support old ESC/Java)" },
 	{ "-pgc", "Print the guarded commands"},
 	{ "-ppvc", "Prettyprint the VCs generated with -v"},
         { "-pxLog <log>", "PrettyPrint the commands sent to Simplify in the file named <log>"},
         { "-sxLog <log>", "Print the commands sent to Simplify in the file named <log>"},
+	{ "-typecheck", "Do only parsing and typechecking, no generation or proving of verification conditions" },
     };
 
     // Global escjava flags
@@ -264,6 +266,9 @@ public class Options extends javafe.SrcToolOptions
         if (option.equals("-nocheck")) {
             stages = 5;        // run all but last stage
             return offset;
+        } else if (option.equals("-typecheck")) {
+	    stages = 1;
+	    return offset;
         } else if (option.equals("-stages")) {
             if (offset == args.length) {
                 throw new UsageError("Option " + option +
