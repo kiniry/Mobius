@@ -1,3 +1,91 @@
+2003-04-16  Joseph R. Kiniry  <kiniry@acm.org>
+
+	* README.first:
+	Fixed two of the three problem test cases for Javafe (test1007 and
+	test6).  Test1103 still fails; it is just a problem with the generated
+	'sources' file and relative paths.
+
+	* Many Java files:
+	Cleaned up documentation and formatting of many classes to more
+	closely conform to modern Java standards, use of Javadoc, etc.
+
+	Wrote new documentation for EscPragmaLex and EscPragmaParser, as large
+	portions of both classes were undocumented.
+
+	Removed bogus imports that are no longer necessary to work around
+	Javac 1.0 bugs.
+
+	Rewrote section comments that used large amounts of space and
+	asterisks to denote method sets; we're just using normal EOL comments
+	now.
+
+	Moved the opening brace of a class to column 0 to help Emacs fontify
+	(much) more efficiently.  The opening brace of methods is still in the
+	trailer position.
+
+	Removed double-asterisk-prefixed comments in code emitted from astgen
+	to conform with the rest of the rewritten docs.
+
+	Fixed two of the three problem test cases for Javafe (test1007 and
+	test6).  Test1103 still fails; it is just a problem with the generated
+	'sources' file and relative paths.
+
+2003-04-15  Joseph R. Kiniry  <kiniry@acm.org>
+
+	* Javafe/astgen/astfilelist, Javafe/astgen/astgen:
+	Removed two ast* binaries as they are the results of a build.
+
+	* README.first:
+	Revised new top-level build docs according to David Cok's experience
+	and suggestions.
+
+	* build.xml:
+	Added a couple of excludes on clean target classfiles to avoid
+	deleting classfiles that cannot be built because we don't have their
+	source.
+
+2003-03-27  cok  <cok@kind.cs.kun.nl>
+
+	* Makefile: A top-level Makefile
+
+2003-03-11  Joseph R. Kiniry  <kiniry@acm.org>
+
+	* Escjava/java/escjava/parser/EscPragmaParser.java:
+	Continuing to add support for JML "also" keyword (JML_ALSO).  This
+	commit is simply some code cleanup, extending an invariant, and
+	beginning to drop in code to handle the ALSO case in the large
+	keyword/classifier switch.
+
+	* Simplify/simplify/test/test.out:
+	Our in-house-built Simpilfy outputs this new data.  It is unclear why
+	it is different from the pre-built shipped Simplify binary.
+
+	* Javafe/test/javafe/test/fe/sources:
+	Generated source list to be full absolute path.  I still need to add a
+	Makefile rule to automatically generate such.  This data is simply a
+	placeholder for now.
+
+	* Escjava/test/escjava/test/test1/Modifiers2.java:
+	* Escjava/test/escjava/test/test1/ans:
+	* Escjava/test/escjava/test/test25/MethodSpec.java:
+	* Escjava/test/escjava/test/test34/BogusInput.java:
+	* Escjava/test/escjava/test/test34/BogusSpec.java:
+	* Escjava/test/escjava/test/test34/BogusVisibility.java:
+	* Escjava/test/escjava/test/test37/Exsures.java:
+	* Escjava/test/escjava/test/test37/Exsures2.java:
+	* Escjava/test/escjava/test/test59/Typecheck.java:
+	* Escjava/test/escjava/test/test60/C.java:
+	* Escjava/test/escjava/test/test60/Typecheck.java:
+	* Escjava/test/escjava/test/test60/ans:
+	* Escjava/test/escjava/test/test60/out.raw:
+	Some initial outlines of new unit tests for extended JML support.
+
+	* Escjava/escj: Rewrote as a bash script.
+
+	* Escjava/Makefile:
+	Abstracting use of Java compiler and ensuring that -g is used during
+	compilation.
+
 2003-03-11  Joseph R. Kiniry  <kiniry@kind.cs.kun.nl>
 
 	* Escjava/java/escjava/parser/EscPragmaParser.java:

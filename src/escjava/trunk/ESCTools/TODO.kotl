@@ -35,3 +35,5 @@
 
 ** Duplicate existing parser tests with also_* uses to extract out JML
   "also" keyword.
+
+** Replace Assert with assert.
