@@ -158,7 +158,8 @@ and we end with some outstanding issues in section 8.
 
 There are by now a number of research tools that translate Java into verification conditions
 appropriate to some logical reasoning engine.  There are numerous tools that insert
-assertion checking code into compiled Java programs, but
+assertion checking code into compiled Java programs, and others that do model checking,
+but
 we are aware only of these tools that do static
 checking of assertions:
 \begin{itemize}
@@ -400,9 +401,22 @@ This may limit the conclusions that may be drawn about relationships among state
 been simple to apply and suitably effective in practice.
 
 The translation, then, consists of the following steps,
+\begin{itemize}
+\item Select a unique identifier for each method declaration in the program (e.g. by using its
+textual location in a specific file).
+\item Define a unique state constant (distinct from all other constants) for each unique program
+state within the method.  If the method is \texttt{pure}, the pre-state constant and the post-state
+constant may be identical.  A new state is created after every operation with a side-effect.  In
+practice state constants are only needed for those program points where an annotation with
+a method call (or other construct that is translated with a state argument) occurs.
+\item Where a method call is used in an annotation expression, translate that method call
+into the Simplify input language as a function call.  Use the unique identifier for the static
+type of the method as the function name.  Include as arguments the translations of (a) the
+state constant for this pre- or post-state, (b) the receiver object (if the method is not static),
+and (c) each of the usual arguments of the method.
+\end{itemize}
 
-.... [[[ Complete ]]]
-
+[[[ Mention method calls in annotations within the body of a routine as well.]]]
 [[[ Experience; example of what is not possible to conclude ]]]
 
 \section{Application to other \\ annotation constructs}
