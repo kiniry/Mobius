@@ -29,7 +29,8 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
                 write(o, nwp.checks.elementAt(i).toString());
             }
             write(o, "\n");
-        } else writeln(o, "// Unknown LexicalPragma (tag = " + lp.getTag() + ')');
+        } else writeln(o, "// Unknown LexicalPragma (tag = " + lp.getTag() + 
+		" " + TagConstants.toString(lp.getTag()) + ')');
     }
 
     public void exsuresPrintDecl(OutputStream o, GenericVarDecl d) {
@@ -103,7 +104,7 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
                 break;
             }
             default:
-                write(o, "/* Unknown TypeDeclElemPragma (tag = " + tag + ") */");
+                write(o, "/* Unknown TypeDeclElemPragma (tag = " + TagConstants.toString(tag) + ") */");
                 break;
         }
     }
@@ -119,9 +120,19 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
 
 	    case TagConstants.CLOSEPRAGMA:
 	    case TagConstants.OPENPRAGMA:
+			// FIXME - do these but they have to be part of a 
+			// bigger pragma; also indenting?
                 Assert.fail("Open and close pragmas are not yet handled.");
                 break;
 
+	    case TagConstants.MODEL_PROGRAM:
+                write(o, "/*@ "); 
+                write(o, TagConstants.toString(tag)); 
+                write(o, "{...} */"); // FIXME - do all of model program
+                break;
+
+            case TagConstants.END:
+            case TagConstants.ALSO_REFINE:
             case TagConstants.HELPER:
             case TagConstants.EXAMPLE:
             case TagConstants.EXCEPTIONAL_EXAMPLE:
@@ -246,7 +257,7 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
                 break;
 
             default:
-                write(o, "/* Unknown ModifierPragma (tag = " + tag + ") */");
+                write(o, "/* Unknown ModifierPragma (tag = " + TagConstants.toString(tag) + ") */");
                 break;
         }
     }
@@ -309,7 +320,7 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
             }
 
             default:
-                write(o, "/* Unknown StmtPragma (tag = " + tag + ") */");
+                write(o, "/* Unknown StmtPragma (tag = " + TagConstants.toString(tag) + ") */");
                 break;
         }
     }
