@@ -1,4 +1,4 @@
-//#FLAGS: -source 1.4
+//#FLAGS: -source 1.4 -ea
 public class JavaAssert
 {
     // Currently only testing lightweight specs.
