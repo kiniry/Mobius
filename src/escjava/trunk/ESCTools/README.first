@@ -151,9 +151,13 @@ Development has taken place on Linux (Redhat 8) and MacOSX (10.2). The
 build environment uses GNU make.  Developers use both bash and tcsh as
 working shells.
 
-No work has yet been done to make the environment portable to Cygwin,
-where the file separator and path separators are different than on
-Linux and Mac OS X.  Volunteers are welcome!
+The entire build, test, and runtime environment has been ported to
+Windows through the use of Cygwin.  All environmental variables
+mentioned in this and related documents should be specified in POSIX
+style (e.g., ESCTOOLS_ROOT should be something like
+/home/kiniry/ESCTools, *not* C:\cygwin\home\kiniry).  The build, test,
+and run scripts all automatically convert POSIX-style paths and
+filenames into Windows-style versions.
 
 Step (d) above created a subdirectory named ESCTools in a directory of
 your choice.  We will refer to this directory as ESCTools or
@@ -255,6 +259,32 @@ JUNIT_LIB - the location of the JUnit library, used in compiling and
 ----------------------------------------------------------------------------
 
 BUILDING A WORKING VERSION OF ESC/Java2 FROM CVS SOURCES
+
+The following tools are *necessary* to build ESC/Java2 from source:
+
++-----------------------+----------+-------+---------+----------+
+|A C compiler,          |A Java    |awk    |bash     |bzcat     |
+|preferably a recent    |Developers|       |         |          |
+|version of gcc         |Kit       |       |         |          |
+|                       |          |       |         |          |
+|                       |          |       |         |          |
+|                       |          |       |         |          |
++-----------------------+----------+-------+---------+----------+
+|bzip2                  |cat       |cmp    |csh      |diff      |
++-----------------------+----------+-------+---------+----------+
+|grep, egrep            |ls        |patch  |sed      |sh        |
+|                       |          |       |         |          |
++-----------------------+----------+-------+---------+----------+
+|tcsh                   |tee       |xargs  |         |          |
+|                       |          |       |         |          |
++-----------------------+----------+-------+---------+----------+
+
+The following tools are *optional*, but we believe will make your
+development a more pleasant one:
+
++-------+-------+-------+
+|ctags  |etags  |wc     |
++-------+-------+-------+
 
 With the environment set up as described above, you should be able to
 execute, while in the $ESCTOOLS_ROOT directory (in either a bash or
