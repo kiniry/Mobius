@@ -23,43 +23,44 @@ public class ProverManager {
     final static private int STARTED = 1;
     final static private int PUSHED = 2;
 
-	static private int status = 0;
-	static private boolean isStarted = false;
-	//@ invariant status != NOTSTARTED <==> isStarted;
+    static private int status = 0;
+    static private boolean isStarted = false;
+    //@ invariant status != NOTSTARTED <==> isStarted;
 
-	static private FindContributors savedScope = null;
+    static private FindContributors savedScope = null;
 
-	//@ ensures isStarted && prover != null;
-	synchronized
-	static public void start() {
-	    if (isStarted) return;
-            long startTime = java.lang.System.currentTimeMillis();
-            prover = new Simplify();
-            
-	    if (listener != null) listener.stateChanged(1);
-            if (!Main.options().quiet)
-                System.out.println("  Prover started:" + Main.timeUsed(startTime));
+    //@ ensures isStarted && prover != null;
+    synchronized
+    static public void start() {
+	if (isStarted) return;
+	long startTime = java.lang.System.currentTimeMillis();
+	prover = new Simplify();
+	
+	if (listener != null) listener.stateChanged(1);
+	if (!Main.options().quiet)
+	    System.out.println("  Prover started:" + Main.timeUsed(startTime));
 
-            escjava.backpred.BackPred.genUnivBackPred(prover.subProcessToStream());
-            prover.sendCommands("");
-	    isStarted = true;
-	    status = STARTED;
-	}
+	escjava.backpred.BackPred.genUnivBackPred(prover.subProcessToStream());
+	prover.sendCommands("");
+	isStarted = true;
+	status = STARTED;
+    }
 
-	synchronized
-	static public Simplify prover() {
-	    start();
-	    return prover;
-	}
-	//@ ensures status == NOTSTARTED && prover == null;
-	synchronized
-	static public void kill() {
-            if (prover != null) prover.close();
-	    if (listener != null) listener.stateChanged(0);
-            prover = null;
-	    isStarted = false;
-	    status = NOTSTARTED;
-	}
+    synchronized
+    static public Simplify prover() {
+	start();
+	return prover;
+    }
+
+    //@ ensures status == NOTSTARTED && prover == null;
+    synchronized
+    static public void kill() {
+	if (prover != null) prover.close();
+	if (listener != null) listener.stateChanged(0);
+	prover = null;
+	isStarted = false;
+	status = NOTSTARTED;
+    }
 
     synchronized
     static public void died() {

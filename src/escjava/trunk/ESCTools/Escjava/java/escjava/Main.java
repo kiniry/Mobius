@@ -676,130 +676,18 @@ public class Main extends javafe.SrcTool
         if (stages<6)
             return "ok";
 
-//	Enumeration results = ProverManager.prove(vc);
-
         // Process Simplify's output
         String status = "unexpectedly missing Simplify output";
 	try {
 
-	int stat = doProving(vc,r,directTargets,null);
-	switch (stat) {
-	    case Status.STATICCHECKED_OK: status = "passed"; break;
-	    case Status.STATICCHECKED_ERROR: status = "failed"; break;
-	    case Status.STATICCHECKED_TIMEOUT: status = "timed out"; break;
-            default: status = "unexpectedly missing Simplify output";
-	}
+	    int stat = doProving(vc,r,directTargets,null);
+	    switch (stat) {
+		case Status.STATICCHECKED_OK: status = "passed"; break;
+		case Status.STATICCHECKED_ERROR: status = "failed"; break;
+		case Status.STATICCHECKED_TIMEOUT: status = "timed out"; break;
+		default: status = "unexpectedly missing Simplify output";
+	    }
 	
-/*
-
-        boolean nextWarningNeedsPrecedingLine = true;
-	if (results != null) while (results.hasMoreElements()) {
-            SimplifyOutput so = (SimplifyOutput)results.nextElement();
-            switch (so.getKind()) {
-                case SimplifyOutput.VALID:
-                    status = "passed";
-                    break;
-                case SimplifyOutput.INVALID:
-                    status = "failed";
-                    break;
-                case SimplifyOutput.UNKNOWN:
-                    status = "timed out";
-                    break;
-                case SimplifyOutput.COMMENT: {
-                    SimplifyComment sc = (SimplifyComment)so;
-                    System.out.println("SIMPLIFY: " + sc.getMsg());
-                    break;
-                }
-                case SimplifyOutput.COUNTEREXAMPLE: {
-                    if (nextWarningNeedsPrecedingLine) {
-                        escjava.translate.ErrorMsg.printSeparatorLine(System.out);
-                        nextWarningNeedsPrecedingLine = false;
-                    }
-                    SimplifyResult sr = (SimplifyResult)so;
-                    escjava.translate.ErrorMsg.print(TypeCheck.inst.getName(r),
-                                                     sr.getLabels(), sr.getContext(),
-                                                     r, directTargets, System.out);
-                    break;
-                }
-                case SimplifyOutput.EXCEEDED_PROVER_KILL_TIME: {
-                    SimplifyResult sr = (SimplifyResult)so;
-                    ErrorSet.caution("Unable to check " +
-                                     TypeCheck.inst.getName(r) +
-                                     " of type " + TypeSig.getSig(r.parent) +
-                                     " completely because too much time required");
-                    if (Info.on && sr.getLabels() != null) {
-                        Info.out("Current labels: " + sr.getLabels());
-                    }
-                    nextWarningNeedsPrecedingLine = true;
-                    break;
-                }
-                case SimplifyOutput.EXCEEDED_PROVER_KILL_ITER: {
-                    SimplifyResult sr = (SimplifyResult)so;
-                    ErrorSet.caution("Unable to check " +
-                                     TypeCheck.inst.getName(r) +
-                                     " of type " + TypeSig.getSig(r.parent) +
-                                     " completely because" +
-                                     " too many iterations required");
-                    if (Info.on && sr.getLabels() != null) {
-                        Info.out("Current labels: " + sr.getLabels());
-                    }
-                    nextWarningNeedsPrecedingLine = true;
-                    break;
-                }
-                case SimplifyOutput.REACHED_CC_LIMIT:
-                    ErrorSet.caution("Not checking " +
-                                     TypeCheck.inst.getName(r) +
-                                     " of type " + TypeSig.getSig(r.parent) +
-                                     " completely because" +
-                                     " warning limit (PROVER_CC_LIMIT) reached");
-                    break;
-                case SimplifyOutput.EXCEEDED_PROVER_SUBGOAL_KILL_TIME: {
-                    SimplifyResult sr = (SimplifyResult)so;
-                    ErrorSet.caution("Unable to check subgoal of " +
-                                     TypeCheck.inst.getName(r) +
-                                     " of type " + TypeSig.getSig(r.parent) +
-                                     " completely because too much time required");
-                    if (Info.on && sr.getLabels() != null) {
-                        Info.out("Current labels: " + sr.getLabels());
-                    }
-                    nextWarningNeedsPrecedingLine = true;
-                    break;
-                }
-                case SimplifyOutput.EXCEEDED_PROVER_SUBGOAL_KILL_ITER: {
-                    SimplifyResult sr = (SimplifyResult)so;
-                    ErrorSet.caution("Unable to check subgoal of " +
-                                     TypeCheck.inst.getName(r) +
-                                     " of type " + TypeSig.getSig(r.parent) +
-                                     " completely because" +
-                                     " too many iterations required");
-                    if (Info.on && sr.getLabels() != null) {
-                        Info.out("Current labels: " + sr.getLabels());
-                    }
-                    nextWarningNeedsPrecedingLine = true;
-                    break;
-                }
-                case SimplifyOutput.WARNING_TRIGGERLESS_QUANT: {
-                    TriggerlessQuantWarning tqw = (TriggerlessQuantWarning)so;
-                    int loc = tqw.getLocation();
-                    String msg = "Unable to use quantification because " +
-                        "no trigger found: " + tqw.e1;
-                    if (loc != Location.NULL) {
-                        ErrorSet.caution(loc, msg);
-                    } else {
-                        ErrorSet.caution(msg);
-                    }
-                    if (Info.on && tqw.getLabels() != null) {
-                        Info.out("Current labels: " + tqw.getLabels());
-                    }
-                    break;
-                }
-                default:
-                    Assert.fail("unexpected type of Simplify output");
-                    break;
-            }
-        }
-*/
-
 	} catch (escjava.prover.SubProcess.Died e) {
 	    //System.out.println("DIED");
 	    ProverManager.died();
@@ -845,7 +733,7 @@ public class Main extends javafe.SrcTool
             SimplifyOutput so = (SimplifyOutput)results.nextElement();
             switch (so.getKind()) {
                 case SimplifyOutput.VALID:
-                    status = "passed";
+		    status = "passed";
 		    stat = Status.STATICCHECKED_OK;
                     break;
                 case SimplifyOutput.INVALID:
