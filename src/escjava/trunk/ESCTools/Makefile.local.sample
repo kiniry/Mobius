@@ -49,7 +49,7 @@ export JDK_BINARIES ?=
 ## (This can alternatively be the location of the junit class files)
 ## This is only needed to run some of the tests, which use JUnit
 ## A version of JUnit is also supplied as part of the ESCTools distribution. 
-export JUNITLIB ?= ${ESCTOOLS_ROOT}/Utils/junit.jar
+export JUNIT_LIB ?= ${ESCTOOLS_ROOT}/Utils/junit.jar
 
 ## Other optional definitions
 

@@ -125,12 +125,12 @@ export RELCLASSPATH = ${RELDIR}/${RELJAR}
 ## The location of the JUnit library as obtained from the JUnit project
 ## You can override this default setting in Makefile.local or in your
 ## environment
-export JUNITLIB ?= ${ESCTOOLS_ROOT}/Utils/junit.jar
+export JUNIT_LIB ?= ${ESCTOOLS_ROOT}/Utils/junit.jar
 export JUNIT_SOURCEPATH ?= /usr/local/Java/junit/src
 
 ## This contains items needed for compiling/running JUnit tests,
 ## but not for compiling or running the tools themselves
-export JUNIT_UTILS_PATH = ${ESCTOOLS_ROOT}/Utils:${JUNITLIB}
+export JUNIT_UTILS_PATH = ${ESCTOOLS_ROOT}/Utils:${JUNIT_LIB}
 
 ##########################################################################
 ##########################################################################

@@ -7,7 +7,7 @@ clean:
 build: classes.stamp
 
 classes.stamp: *.java
-	javac -classpath ${JUNITLIB} $?
+	javac -classpath ${JUNIT_LIB} $?
 	touch classes.stamp
 
 .PHONY: test
