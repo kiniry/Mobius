@@ -1009,15 +1009,16 @@ public final class GC {
     }
   }
 
-  /** Adds elements to <code>to</code> from <code>from</code>.
-      Elements equal to bot are dropped. If an element equal to top
-      is encountered, true is returned and to is undefined. If top is
-      never encountered, false is returned. If from contains an
-      NaryExpr with tag naryTagMerge, the components of that NaryExpr
-      are treated in a similar manner. */
-
-  private static boolean selectiveAdd( ExprVec to, ExprVec from,
-				       Expr bot, Expr top, int naryTagMerge )
+  /**
+   * Adds elements to <code>to</code> from <code>from</code>.
+   * Elements equal to bot are dropped. If an element equal to top is
+   * encountered, true is returned and to is undefined. If top is
+   * never encountered, false is returned. If from contains an
+   * NaryExpr with tag naryTagMerge, the components of that NaryExpr
+   * are treated in a similar manner.
+   */
+  private static boolean selectiveAdd(ExprVec to, ExprVec from,
+				      Expr bot, Expr top, int naryTagMerge)
     {
       for(int i=0; i<from.size(); i++) {
 	Expr e = from.elementAt(i);

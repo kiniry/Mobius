@@ -19,45 +19,43 @@ package javafe.util;
 
 public class Info
 {
-    // Prevent javadoc from displaying a public constructor
-    private Info() {}
+  // Prevent javadoc from displaying a public constructor
+  private Info() {}
 
+  // Class Variables
 
-    // Class Variables
+  /**
+   * Verbose and debugging information is displayed iff this is true.
+   * Defaults to false.
+   */
+  public static boolean on = false;
 
-    /**
-     * Verbose and debugging information is displayed iff this is
-     * true.  Defaults to false.
-     */
-    public static boolean on = false;
+  // Reporting information
 
-
-    // Reporting information
-
-    /**
-     * Report verbose or debugging information if <code>on</code> is
-     * set.
-     * 
-     * <p> Precondition: <code>msg</code> is not null.
-     *
-     * <p> The message is displayed directly, without any indication
-     * that it is verbose or debugging information.
-     *
-     * <p> Clients of this routine may wish to place calls to it
-     * within a conditional on <code>on</code>.  For example,
-     *
-     * <code>
-     *    if (Info.on) Info.out("[total count = " + countNodes() + "]");
-     * </code><p>
-     *
-     * <p> This may be especially useful if <code>countNodes()</code>
-     * is an expensive operation.
-     */
-    //@ requires msg != null;
-    public static void out(String msg) {
-      if (on) {
-	System.out.println(msg);
-	System.out.flush();
-      }
+  /**
+   * Report verbose or debugging information if <code>on</code> is
+   * set.
+   * 
+   * <p> Precondition: <code>msg</code> is not null.
+   *
+   * <p> The message is displayed directly, without any indication
+   * that it is verbose or debugging information.
+   *
+   * <p> Clients of this routine may wish to place calls to it
+   * within a conditional on <code>on</code>.  For example,
+   *
+   * <code>
+   *    if (Info.on) Info.out("[total count = " + countNodes() + "]");
+   * </code><p>
+   *
+   * <p> This may be especially useful if <code>countNodes()</code>
+   * is an expensive operation.
+   */
+  //@ requires msg != null;
+  public static void out(String msg) {
+    if (on) {
+      System.out.println(msg);
+      System.out.flush();
     }
+  }
 }
