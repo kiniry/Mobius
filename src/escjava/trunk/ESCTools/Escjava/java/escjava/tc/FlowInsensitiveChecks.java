@@ -2274,6 +2274,7 @@ FIXME - see uses of countFreeVarsAccess
 	    case TagConstants.ALSO:
 	    case TagConstants.ALSO_REFINE:
 	    case TagConstants.MODEL_PROGRAM:
+	    case TagConstants.CODE_CONTRACT:
 	    case TagConstants.BEHAVIOR:
 	    case TagConstants.CLOSEPRAGMA:
 	    case TagConstants.EXAMPLE:

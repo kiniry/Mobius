@@ -550,6 +550,7 @@ System.out.println("END_MPV");
 		case TagConstants.CALLABLE:
 		case TagConstants.MEASURED_BY:
 		case TagConstants.MODEL_PROGRAM:
+		case TagConstants.CODE_CONTRACT:
 			// Remember to skip if not specified
 			// FIXME - not yet handled
 		    break;
@@ -991,11 +992,6 @@ static public class NestedPragmaParser {
 	    // parseRoutineSpecs twice on a routine we get problems.
 	    // This test is here to avoid problems if a bug elsewhere
 	    // causes this to happen.
-	    // In fact there currently is such a bug - if the same type is
-	    // listed more than once on the command-line, the refinement
-	    // file list gets redetermined and the files within it are
-	    // parsed a second time.  That may be fixed by the time you
-	    // read this, but until then...
 	    System.out.println("OUCH - attempt to reparse " + Location.toString(rd.getStartLoc()));
 javafe.util.ErrorSet.dump("OUCH");
 	    return;
@@ -1100,6 +1096,20 @@ javafe.util.ErrorSet.dump("OUCH");
 			break;
 		    }
 		    continue;
+		case TagConstants.CODE_CONTRACT:
+		    if (behaviorMode == 2) {
+			ErrorSet.error(mp.getStartLoc(),
+			"code_contract sections may not be in an examples section");
+			encounteredError = true;
+		    } else {
+			// FIXME - code_contract sections are ignored for now
+			ModifierPragmaVec r = ModifierPragmaVec.make();
+			pos = parseCCSeq(pos,pm,r);
+			mpv.addElement(mp);
+			result.add(mpv);
+			break;
+		    }
+		    continue;
 
 		case TagConstants.BEHAVIOR:
 		    if (behaviorMode == 2) ErrorSet.error(mp.getStartLoc(),
@@ -1174,6 +1184,39 @@ javafe.util.ErrorSet.dump("OUCH");
 
     private boolean encounteredError;
  
+    /** Parse the clauses in a code_contract section */
+    public int parseCCSeq(int pos, ModifierPragmaVec pm, ModifierPragmaVec result) {
+	boolean badCCSection = false;
+	while (true) {
+	    ModifierPragma mp = pm.elementAt(pos);
+	    int loc = mp.getStartLoc();
+	    int tag = mp.getTag();
+	    // System.out.println("TAG " + TagConstants.toString(tag));
+	    if (isRoutineModifier(tag)) return pos;
+	    switch (tag) {
+		case TagConstants.END:
+		case TagConstants.IMPLIES_THAT:
+		case TagConstants.FOR_EXAMPLE:
+		case TagConstants.ALSO:
+		    return pos;
+
+		case TagConstants.ACCESSIBLE:
+		case TagConstants.CALLABLE:
+		case TagConstants.MEASURED_BY:
+		    result.addElement(mp);
+		    ++pos;
+		    break;
+
+		default:
+		    if (!badCCSection) // Just one error message
+			ErrorSet.error(loc,"Unexpected pragma in a code_contract section");
+		    badCCSection = true;
+		    ++pos;
+		    break;
+	    }
+	} 
+    }
+
     //@ requires (* pm.elementAt(pm.size()-1).getTag() == TagConstants.END *);
     public int parseSeq(int pos, ModifierPragmaVec pm, 
 			int behaviorMode, ModifierPragma behavior, 
@@ -1184,6 +1227,14 @@ javafe.util.ErrorSet.dump("OUCH");
 	    if (behaviorMode == 0) {
 		ErrorSet.error(pm.elementAt(pos).getStartLoc(),
 		    "Model programs may not be nested");
+		encounteredError = true;
+	    }
+	    ++pos;
+	}
+	if (pm.elementAt(pos).getTag() == TagConstants.CODE_CONTRACT) {
+	    if (behaviorMode == 0) {
+		ErrorSet.error(pm.elementAt(pos).getStartLoc(),
+		    "code_contract sections may not be nested");
 		encounteredError = true;
 	    }
 	    ++pos;
@@ -1205,6 +1256,20 @@ javafe.util.ErrorSet.dump("OUCH");
 		case TagConstants.MODEL_PROGRAM:
 		    ErrorSet.error(mp.getStartLoc(),
 			 "Model programs may not be combined with other clauses");
+		    ++pos;
+		    break;
+
+		case TagConstants.CODE_CONTRACT:
+		    ErrorSet.error(mp.getStartLoc(),
+			 "code_contract sections may not be combined with other clauses");
+		    ++pos;
+		    break;
+
+		case TagConstants.ACCESSIBLE:
+		case TagConstants.CALLABLE:
+		case TagConstants.MEASURED_BY:
+		    ErrorSet.error(mp.getStartLoc(),
+			"This clause may only be in a code_contract section");
 		    ++pos;
 		    break;
 

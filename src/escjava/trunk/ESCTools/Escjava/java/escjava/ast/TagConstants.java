@@ -184,7 +184,8 @@ public class TagConstants extends GeneratedTags
 
     public static final int ASSUME = FIRSTJMLKEYWORDTAG;
     public static final int AXIOM = ASSUME + 1;
-    public static final int DECREASES = AXIOM + 1;
+    public static final int CODE_CONTRACT = AXIOM + 1;
+    public static final int DECREASES = CODE_CONTRACT + 1;
     public static final int DTTFSA = DECREASES + 1;
     public static final int ENSURES = DTTFSA + 1;
     public static final int ELEMSNONNULL = ENSURES + 1; // Function
@@ -798,6 +799,7 @@ public class TagConstants extends GeneratedTags
     private static Identifier[] jmlkeywords = {
         Identifier.intern("assume"),
         Identifier.intern("axiom"),
+        Identifier.intern("code_contract"),
         Identifier.intern("decreases"),
         Identifier.intern("\\dttfsa"),
         Identifier.intern("ensures"),

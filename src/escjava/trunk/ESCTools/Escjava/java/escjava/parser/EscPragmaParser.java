@@ -796,6 +796,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
                 Info.out("next tag is: " + tag);
 
             switch (tag) {
+		case TagConstants.CODE_CONTRACT:
                 case TagConstants.BEHAVIOR:
                 case TagConstants.EXCEPTIONAL_BEHAVIOR:
                 case TagConstants.NORMAL_BEHAVIOR:

@@ -141,6 +141,7 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
                 break;
 
             case TagConstants.END:
+            case TagConstants.CODE_CONTRACT:
             case TagConstants.ALSO_REFINE:
             case TagConstants.HELPER:
             case TagConstants.EXAMPLE:

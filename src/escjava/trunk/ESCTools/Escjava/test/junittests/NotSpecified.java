@@ -10,8 +10,9 @@ public class NotSpecified {
 	//@ when \not_specified;
 	//@ duration \not_specified;
 	//@ working_space \not_specified;
-	//@ accessible \not_specified;
+        //@ also code_contract
 	//@	measured_by \not_specified;
+	//@     accessible \not_specified;
 	//@	callable \not_specified;
 	public void m();
 }
