@@ -16,7 +16,7 @@ MODULE Simplify EXPORTS Main;
 IMPORT Prover, PredSx, Axioms, Html;
 IMPORT CGITrans;
 IMPORT RefList, Wr, Rd, RdClass, Sx, Params, FileRd, Process, OSError,
-       Text, Bundle, TextRd, Env, Pathname, Fmt, Atom, RdCopy, TextF,
+       Text, Bundle, TextRd, Env, Pathname, Fmt, Atom, RdCopy, 
        FileWr, FmtTime, Date, Time, Trit;
 (* For Dill-Burch reader... *)
 IMPORT RefSeq, Lex, FloatMode;
@@ -459,7 +459,7 @@ BEGIN
         IF html THEN
           Wr.PutText(stdout, "<h2>Predicate</h2><p>\n<pre>\n");
           WHILE htmlInputUsed < in.cur DO
-            Wr.PutChar(stdout, htmlInput^[htmlInputUsed]);
+            Wr.PutChar(stdout, Text.GetChar(htmlInput, htmlInputUsed));
             INC(htmlInputUsed)
           END (* WHILE *);
           Wr.PutText(stdout,

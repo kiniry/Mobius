@@ -6,7 +6,7 @@
 
 MODULE HTMLUtils;
 
-IMPORT TextWr, TextF, Word, Rd, Wr, Text;
+IMPORT TextWr, Word, Rd, Wr, Text;
 IMPORT Thread;
 
 <*FATAL Rd.Failure, Thread.Alerted, Wr.Failure *>
@@ -24,9 +24,16 @@ PROCEDURE FMakeWord(rd: Rd.T; stop: CHAR; VAR cl: INTEGER): TEXT =
   END FMakeWord;
 
 PROCEDURE PlusToSpace(str: TEXT) =
+  VAR newStr := NEW(TextWr.T).init();
   BEGIN
-    FOR i := 0 TO LAST(str^) DO
-      IF str^[i] = '+' THEN str^[i] := ' ' END (* IF *)
+    FOR i := 0 TO Text.Length(str) DO
+      IF Text.GetChar(str, i) = '+' THEN
+        (* replace the '+' with a ' ' *)
+        Wr.PutText(newStr, Text.Sub(str, 0, i));
+        Wr.PutChar(newStr, ' ');
+        Wr.PutText(newStr, Text.Sub(str, i+1, Text.Length(str)-i-1));
+        str := TextWr.ToText(newStr);
+      END (* IF *)
     END (* FOR *)
   END PlusToSpace;
 
@@ -34,12 +41,12 @@ PROCEDURE UnEscapeURL(old: TEXT): TEXT =
   VAR res := NEW(TextWr.T).init();
       i := 0;
   BEGIN
-    WHILE i < LAST(old^) DO
-      IF old^[i] = '%' THEN
-        Wr.PutChar(res, X2C(old^, i+1));
+    WHILE i < Text.Length(old) DO
+      IF Text.GetChar(old, i) = '%' THEN
+        Wr.PutChar(res, X2C(old, i+1));
         INC(i, 3);
       ELSE
-        Wr.PutChar(res, old^[i]);
+        Wr.PutChar(res, Text.GetChar(old, i));
         INC(i)
       END (* IF *);
     END (* WHILE *);
@@ -49,19 +56,19 @@ PROCEDURE UnEscapeURL(old: TEXT): TEXT =
 CONST Magic = 16_df;
 
 (* Assumes ASCII encoding of CHAR *)
-PROCEDURE X2C(READONLY ac: ARRAY OF CHAR; i: CARDINAL): CHAR =
+PROCEDURE X2C(READONLY text: TEXT; i: CARDINAL): CHAR =
   VAR res: INTEGER := 0;
-      c := ORD(ac[i]);
+      c := ORD(Text.GetChar(text, i));
   BEGIN
-    IF ac[i] >= 'A' THEN
+    IF Text.GetChar(text, i) >= 'A' THEN
       c := Word.And(c, Magic);
       res := res + (c - ORD('A')) + 10
     ELSE
       res := res + c - ORD('0')
     END (* IF *);
     res := res * 16;
-    INC(i); c := ORD(ac[i]);
-    IF ac[i] >= 'A' THEN
+    INC(i); c := ORD(Text.GetChar(text, i));
+    IF Text.GetChar(text, i) >= 'A' THEN
       c := Word.And(c, Magic);
       res := res + (c - ORD('A')) + 10
     ELSE
@@ -75,14 +82,14 @@ PROCEDURE MakeWord(VAR str: TEXT; stop: CHAR): TEXT =
       len := Text.Length(str);
   BEGIN
     FOR i := 0 TO len-1 DO
-      IF str^[i] # stop THEN
-        Wr.PutChar(res, str^[i])
+      IF Text.GetChar(str, i) # stop THEN
+        Wr.PutChar(res, Text.GetChar(str, i))
       ELSE
         VAR j := i + 1;
             res2 := NEW(TextWr.T).init();
         BEGIN
           WHILE j < len DO
-            Wr.PutChar(res2, str^[j]); INC(j)
+            Wr.PutChar(res2, Text.GetChar(str, j)); INC(j)
           END (* WHILE *);
           str := TextWr.ToText(res2);
           RETURN TextWr.ToText(res)
