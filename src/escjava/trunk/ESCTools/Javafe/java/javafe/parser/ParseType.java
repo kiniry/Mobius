@@ -7,7 +7,7 @@ import javafe.util.StackVector;
 import javafe.Tool;
 
 /**
- * Parses java types.
+ * Parses Java types.
  * Extended by {@link javafe.parser.ParseExpr}.
  *
  * @see javafe.ast.ASTNode
@@ -18,25 +18,25 @@ import javafe.Tool;
 public class ParseType extends ParseUtil
 {
     public ParseType() {
-	//@ set seqIdentifier.elementType = \type(Identifier)
-	//@ set seqIdentifier.owner = this
+	//@ set seqIdentifier.elementType = \type(Identifier);
+	//@ set seqIdentifier.owner = this;
 
-	//@ set nameIdLocs.owner = this
-	//@ set nameDotLocs.owner = this
+	//@ set nameIdLocs.owner = this;
+	//@ set nameDotLocs.owner = this;
     }
 
-    //* Internal working storage for parseName function
-    //@ invariant seqIdentifier.elementType == \type(Identifier)
-    //@ invariant seqIdentifier.owner == this
-    protected final /*@non_null*/ StackVector seqIdentifier
+    //* Internal working storage for parseName function.
+    //@ invariant seqIdentifier.elementType == \type(Identifier);
+    //@ invariant seqIdentifier.owner == this;
+    protected final /*@ non_null @*/ StackVector seqIdentifier
             = new StackVector();
 
-
-
-    /** Parse an <TT>Identifier</TT>. */
-    //@ requires l.m_in != null
-    //@ ensures \result != null
-    public Identifier parseIdentifier(/*@non_null*/ Lex l) {
+    /**
+     * Parse an {@link Identifier}.
+     */
+    //@ requires l.m_in != null;
+    //@ ensures \result != null;
+    public Identifier parseIdentifier(/*@ non_null @*/ Lex l) {
 	if (l.ttype != TagConstants.IDENT) {
             if (l.ttype == TagConstants.UNKNOWN_KEYWORD)
                 fail(l.startingLoc, 
@@ -71,42 +71,57 @@ public class ParseType extends ParseUtil
 	return r;
     }
 
-    /* The following private ivars are used in parseName. 
-     * They cannot be defined inside parseName because they would be 
-     * reallocated at each invocation.
-     * They cannot be defined as static variables inside parseName because 
-     * then the code would not be thread-safe.
+    /**
+     * The following private ivars are used in parseName.  They cannot
+     * be defined inside parseName because they would be reallocated
+     * at each invocation.  They cannot be defined as static variables
+     * inside parseName because then the code would not be
+     * thread-safe.
      */
-    //@ invariant nameIdLocs.length>=10
-    //@ invariant nameIdLocs.owner == this
+    //@ invariant nameIdLocs.length >= 10;
+    //@ invariant nameIdLocs.owner == this;
     private /*@non_null*/ int nameIdLocs[]  = new int[10];
-    //@ invariant nameDotLocs.length == nameIdLocs.length
-    //@ invariant nameDotLocs.owner == this
+    //@ invariant nameDotLocs.length == nameIdLocs.length;
+    //@ invariant nameDotLocs.owner == this;
     private /*@non_null*/ int nameDotLocs[] = new int[nameIdLocs.length];
 
-    /** Parse a <TT>Name</TT>.
-     <PRE>
-     Name:
-     Identifier ( . Identifier ) *
-     </PRE>
+    /**
+     * Parse a {@link Name}.
+     * <pre>
+     * Name:
+     * Identifier ( . Identifier ) *
+     * </pre>
      */
-
-    //@ requires l != null && l.m_in != null
-    //@ ensures \result != null
+    //@ requires l != null && l.m_in != null;
+    //@ ensures \result != null;
     public Name parseName(Lex l) {
-        if (l.ttype != TagConstants.IDENT) {
-            if (l.ttype == TagConstants.UNKNOWN_KEYWORD)
-                fail(l.startingLoc,
-                     "Expected a Name, got '"+PrettyPrint.inst.toString(l.ttype)+"'" +
-                     "; Unrecognized keyword");
-            else
-                fail(l.startingLoc,
-                     "Expected a Name, got '"+PrettyPrint.inst.toString(l.ttype)+"'");
+        Identifier id = null;
+        final Identifier assertIdentifier = Identifier.intern("assert");
+        final boolean parsingPreAssertJava = 
+            Tool.options != null && !Tool.options.assertIsKeyword;
+
+        // If we are parsing pre-1.4 Java code and we see an assert
+        // keyword, then we must convert it into a Name.
+        if (parsingPreAssertJava && l.ttype == TagConstants.ASSERT) {
+            id = assertIdentifier;
+        } else {
+            // Otherwise, if we saw something that is not an identifier,
+            // then it is an error.
+            if (l.ttype != TagConstants.IDENT) {
+                if (l.ttype == TagConstants.UNKNOWN_KEYWORD)
+                    fail(l.startingLoc,
+                         "Expected a Name, got '"+PrettyPrint.inst.toString(l.ttype)+"'" +
+                         "; Unrecognized keyword");
+                else
+                    fail(l.startingLoc,
+                         "Expected a Name, got '"+PrettyPrint.inst.toString(l.ttype)+"'");
+            }
+            id = l.identifierVal;
         }
-        Identifier id = l.identifierVal;
         int loc = l.startingLoc;
         l.getNextToken();
-        if (l.ttype != TagConstants.FIELD || l.lookahead(1) != TagConstants.IDENT)
+        if (l.ttype != TagConstants.FIELD || l.lookahead(1) != TagConstants.IDENT ||
+            (l.lookahead (1) == TagConstants.ASSERT && !parsingPreAssertJava))
             return SimpleName.make(id, loc);
 
         // Deal with less common, multiple-name case...
@@ -114,17 +129,20 @@ public class ParseType extends ParseUtil
         seqIdentifier.addElement(id);
         int stkPtr = 0;
         nameIdLocs[stkPtr] = loc;
-        /*@ loop_invariant stkPtr<nameIdLocs.length &&
-         stkPtr == (seqIdentifier.elementCount
-         - seqIdentifier.currentStackBottom)-1 */
-        while (l.ttype == TagConstants.FIELD
-               && l.lookahead(1) == TagConstants.IDENT) {
+        /*@ loop_invariant stkPtr < nameIdLocs.length &&
+          @                stkPtr == (seqIdentifier.elementCount -
+          @                seqIdentifier.currentStackBottom) - 1;
+          @*/
+        while (l.ttype == TagConstants.FIELD &&
+               (l.lookahead(1) == TagConstants.IDENT ||
+                (parsingPreAssertJava && l.lookahead(1) == TagConstants.ASSERT))) {
             // need to use lookahead for "import Name . *" case
             nameDotLocs[stkPtr++] = l.startingLoc;
             l.getNextToken();  // swallow the FIELD
 
-            if( l.ttype != TagConstants.IDENT ) { 
-                if ( l.ttype == TagConstants.UNKNOWN_KEYWORD )
+            if (l.ttype != TagConstants.IDENT ||
+                (!parsingPreAssertJava && l.ttype == TagConstants.ASSERT)) { 
+                if (l.ttype == TagConstants.UNKNOWN_KEYWORD)
                     fail(l.startingLoc, ("Expected an identifier, got '"
                                          +PrettyPrint.inst.toString(l.ttype)+"'" +
                                          "; Unrecognized keyword"));
@@ -132,10 +150,13 @@ public class ParseType extends ParseUtil
                     fail(l.startingLoc, ("Expected an identifier, got '"
                                          +PrettyPrint.inst.toString(l.ttype)+"'"));
             }
-            seqIdentifier.addElement( l.identifierVal );
+            if (l.ttype == TagConstants.ASSERT)
+                seqIdentifier.addElement (assertIdentifier);
+            else
+                seqIdentifier.addElement (l.identifierVal);
 
             // Check for resizing
-            if( stkPtr == nameIdLocs.length ) {
+            if (stkPtr == nameIdLocs.length) {
                 // Extend it
                 int nuid[] = new int[2*nameIdLocs.length];
                 //@ set nuid.owner = this
@@ -149,7 +170,7 @@ public class ParseType extends ParseUtil
             nameIdLocs[stkPtr] = l.startingLoc;
             l.getNextToken();
         }
-        //@ assume stkPtr>0   // loop always runs at least once
+        //@ assume stkPtr > 0;   // loop always runs at least once
 
         // Id locations in nameIdLocs[0 .. stkPtr inclusive]
         // Dot locations in nameIdLocs[0 .. stkPtr-1 inclusive]
@@ -163,42 +184,43 @@ public class ParseType extends ParseUtil
                                  ids, dots);
     }
 
-    /** Parse a <TT>TypeName</TT>.
-     <PRE>
-     TypeName:
-     Name [TypeModifierPragmas]
-     </PRE>
+    /**
+     * Parse a {@link TypeName}.
+     * <pre>
+     * TypeName:
+     * Name [TypeModifierPragmas]
+     * </pre>
      */
-
-    //@ requires l != null && l.m_in != null
-    //@ ensures \result != null
-    //@ ensures \result.syntax
+    //@ requires l != null && l.m_in != null;
+    //@ ensures \result != null;
+    //@ ensures \result.syntax;
     public TypeName parseTypeName(Lex l) {
         Name name = parseName(l);
         TypeModifierPragmaVec modifiers = parseTypeModifierPragmas(l);
         return TypeName.make( modifiers, name );
     }
 
-    /** Parse square bracket pairs.
-     Wraps argument <TT>type</TT> in <TT>ArrayType</TT> objects
-     accordingly.
-     <PRE>
-     BracketPairs:
-     (LSQBRACKET RSQBRACKET)*
-     </PRE>
-     <P>Warning: when this method sees "{'[' ']'}* {'[' not-']'}", it
-     returns with "l" pointing to the '[' just before the not-']'
+    /**
+     * Parse square bracket pairs.  Wraps argument <code>type</code> in
+     * {@link ArrayType} objects accordingly.
+     *
+     * <pre>
+     * BracketPairs:
+     * (LSQBRACKET RSQBRACKET)*
+     * </pre>
+     *
+     * <p> Warning: when this method sees "{'[' ']'}* {'[' not-']'}",
+     * it returns with "l" pointing to the '[' just before the
+     * not-']'.
      */
-
-    //@ requires l != null && type != null && l.m_in != null
-    //@ requires type.syntax
-    //@ ensures \result != null
-    //@ ensures \result.syntax
+    //@ requires l != null && type != null && l.m_in != null;
+    //@ requires type.syntax;
+    //@ ensures \result != null;
+    //@ ensures \result.syntax;
     public Type parseBracketPairs(Lex l, Type type) {
-        /*
-         most of this code is to preserve the warning in comment above.
-         also, it is now recursive to put the annotations on the current dimensions.
-         */
+        // most of this code is to preserve the warning in comment
+        // above.  also, it is now recursive to put the annotations on
+        // the current dimensions.
         if (l.ttype == TagConstants.LSQBRACKET) {
             int loc=l.startingLoc;
             int i = 1;
@@ -221,20 +243,19 @@ public class ParseType extends ParseUtil
             type = ArrayType.make( modifiers,
                                    parseBracketPairs(l,type), loc);
         }
-        /* old impl:
-         while(l.ttype == TagConstants.LSQBRACKET 
-         && l.lookahead(1) == TagConstants.RSQBRACKET ) {
-         type = ArrayType.make( type, l.startingLoc );
-         l.getNextToken();
-         expect( l, TagConstants.RSQBRACKET );
-         }
-         */
+//      old impl:
+//      while(l.ttype == TagConstants.LSQBRACKET 
+//            && l.lookahead(1) == TagConstants.RSQBRACKET ) {
+//        type = ArrayType.make( type, l.startingLoc );
+//        l.getNextToken();
+//        expect( l, TagConstants.RSQBRACKET );
+//      }
+
         return type;
     }
     
-    
-    //@ requires l != null && l.m_in != null
-    public TypeModifierPragmaVec parseTypeModifierPragmas(/*@non_null*/ Lex l) {
+    //@ requires l != null && l.m_in != null;
+    public TypeModifierPragmaVec parseTypeModifierPragmas(/*@ non_null @*/ Lex l) {
         if (l.ttype != TagConstants.TYPEMODIFIERPRAGMA) return null;
         TypeModifierPragmaVec seq = TypeModifierPragmaVec.make();
         do {
@@ -245,10 +266,10 @@ public class ParseType extends ParseUtil
     }
     
     /**
-     * Is a tag a PrimitiveType keyword?
+     * @return is a tag a {@link PrimitiveType} keyword?
      */
     public boolean isPrimitiveKeywordTag(int tag) {
-        switch( tag ) {
+        switch (tag) {
             case TagConstants.BOOLEAN:
             case TagConstants.BYTE:
             case TagConstants.SHORT:
@@ -265,17 +286,17 @@ public class ParseType extends ParseUtil
         }
     }
 
-
-    /** Parses a PrimitiveType. 
-     Returns null on failure.
-     <PRE>   
-     PrimitiveType: one of
-     boolean byte short int long char float double void
-     </PRE>
+    /**
+     * Parses a {@link PrimitiveType}.  Returns <code>null</code> on
+     * failure.
+     *
+     * <pre>   
+     * PrimitiveType: one of
+     * boolean byte short int long char float double void
+     * </PRE>
      */
-
-    //@ requires l != null && l.m_in != null
-    //@ ensures \result != null ==> \result.syntax
+    //@ requires l != null && l.m_in != null;
+    //@ ensures \result != null ==> \result.syntax;
     public PrimitiveType parsePrimitiveType(Lex l) {
 
         int tag;
@@ -299,18 +320,19 @@ public class ParseType extends ParseUtil
         return PrimitiveType.make( tag, loc );
     }
   
-    /** Parse a type, either a primitive type, a type name, 
-     but not an array type.
-     <PRE>
-     PrimitiveTypeOrTypeName:
-     PrimitiveType
-     TypeName
-     </PRE>
+    /**
+     * Parse a type, either a primitive type, a type name, but not an
+     * array type.
+     *
+     * <pre>
+     * PrimitiveTypeOrTypeName:
+     * PrimitiveType
+     * TypeName
+     * </pre>
      */
-  
-    //@ requires l != null && l.m_in != null
-    //@ ensures \result != null
-    //@ ensures \result.syntax
+    //@ requires l != null && l.m_in != null;
+    //@ ensures \result != null;
+    //@ ensures \result.syntax;
     public Type parsePrimitiveTypeOrTypeName(Lex l) {
         Type type = parsePrimitiveType(l);
         if( type != null ) 
@@ -319,22 +341,22 @@ public class ParseType extends ParseUtil
             return parseTypeName(l);
     }
   
-    /** Parse a <TT>Type</TT>, 
-     either a primitive type, a type name, or an array type.
-     <PRE>
-     Type:
-     PrimitiveTypeOrTypeName BracketPairs
-     </PRE>
+    /**
+     * Parse a {@link Type}, either a primitive type, a type name, or
+     * an array type.
+     *
+     * <pre>
+     * Type:
+     * PrimitiveTypeOrTypeName BracketPairs
+     * </pre>
      */
-  
-    //@ requires l != null && l.m_in != null
-    //@ ensures \result != null
-    //@ ensures \result.syntax
+    //@ requires l != null && l.m_in != null;
+    //@ ensures \result != null;
+    //@ ensures \result.syntax;
     public Type parseType(Lex l) {
         Type type = parsePrimitiveTypeOrTypeName(l);
     
         // Allow for brackets on end 
         return parseBracketPairs(l, type);
     }
-  
 }
