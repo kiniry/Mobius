@@ -147,6 +147,13 @@ endif
 # environment.  If that is not set, the default is the current directory.
 if ( ! $?CLASSPATH ) setenv CLASSPATH .
 
+if ( ! $?ESC_SPECS ) then
+	if ( $?ESCTOOLS_RELEASE ) then
+		setenv ESC_SPECS  $ESCTOOLS_RELEASE/specs
+	else
+		setenv ESC_SPECS  $ESCTOOLS_ROOT/specs
+	endif
+endif
 
 ## (Optional) Set this to whatever flags the VM needs (empty by default)
 if ( ! $?JAVA_VM_FLAGS ) setenv JAVA_VM_FLAGS ""
@@ -202,4 +209,4 @@ endif
 
 ${JAVA} ${JAVA_VM_FLAGS} -Dsimplify=${ESCJ_SIMPLIFY_SCRIPT} \
     -classpath ${ESC_CLASSPATH} escjava.Main \
-    ${JBIN} -classpath ${CLASSPATH} ${ESCJ_STDARGS} $*
+    ${JBIN} -classpath ${CLASSPATH}:${ESC_SPECS} ${ESCJ_STDARGS} $*
