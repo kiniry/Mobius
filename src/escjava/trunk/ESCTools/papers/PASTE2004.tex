@@ -59,7 +59,7 @@
 \crdata{TODO}  % Allows default copyright data (X-XXXXX-XX-X/XX/XX) to be over-ridden.
 % --- End of Author Metadata ---
 
-\title{Uniting ESC/Java and JML ???TODO}
+\title{Uniting ESC/Java and JML: Progress in building and using ESC/Java2}
 % \subtitle{???TODO}
 %
 % You need the command \numberofauthors to handle the "boxing"
@@ -117,13 +117,16 @@
 
 \maketitle
 \begin{abstract}
-Abstract. - TODO
+The ESC/Java tool was a useful advance in effective static checking of realistic Java programs,
+but had become somewhat out of date with respect to Java and the Java Modeling Language (JML).
+The ESC/Java2 project, whose progress is described in this paper, builds on ESC/Java to parse
+all of JML, to increase the amount of static checking performed, and to make the tool widely
+available.  It is intended that ESC/Java2 be used for further research in annotation and verification, for larger-scale case studies of annotation and verification, and for studies in programmer productivity that may result from integration with other tools that work with JML.
 \end{abstract}
 
 \category{D.2.4}{Software Engineering}
                 {Software/Program Verification}
                 [Formal methods, Programming by Contract]
-
 \category{F.3.1}{Logics and Meanings of Programs}
                 {Specifying and Verifying and Reasoning about Programs}
                 [assertions, invariants, logics of programs,
@@ -190,7 +193,7 @@ to use the tool as a basis for research in unexplored aspects of
   annotation and static program analysis.
 
 We currently have an alpha version of ESC/Java2 available on the
-web\footnote{Available from \myhref{http://www.niii.kun.nl/ita/sos/projects/escframe.html}
+web\footnote{At \myhref{http://www.niii.kun.nl/ita/sos/projects/escframe.html}
 {http://www.niii.kun.nl/ita/sos/projects/escframe.html}}
 and encourage experimentation and feedback.  The source code itself is
 available (and additional contributors are welcome) subject to fairly
@@ -208,7 +211,7 @@ The original work was performed in 1998--2000, and Java has evolved
 since then\footnote{Java 1.5 went beta recently.  No work has begun on
   parsing or statically checking Java 1.5 code.  Interested parties
   are welcome to contact the authors with regards to this work.}.  The
-principle addition required by Java 1.4 is support for the Java {\tt
+principal addition required by Java 1.4 is support for the Java {\tt
   assert} statement.  This is complicated slightly by the presence of
 a similar \texttt{assert} statement in JML.
 
@@ -244,7 +247,7 @@ ESC/Java:
 \item \texttt{constraint} and \texttt{initially} clauses,
 \item frame conditions, including the \texttt{in} and \texttt{maps} clauses,
 \item model fields and represents clauses, and
-\item annotations that include routine calls and dynamic allocations.
+\item annotations that include (pure) routine calls and dynamic allocations.
 \end{itemize}
 
 \subsection{Backwards incompatibilities}
@@ -258,9 +261,9 @@ introduced.  The principal such incompatibilities are these:
 \begin{itemize}
 \setlength{\partopsep}{0in}\setlength{\parskip}{0in}\setlength{\itemsep}{0in}\setlength{\topsep}{0in}
 \item The semantics of inheritance of specification clauses and of
-  \texttt{non\_null} modifiers was modified to that defined by JML, since
+  \texttt{non\_null} modifiers was modified to match that defined by JML, since
   the work on JML resulted in an interpretation consistent with
-  behavioral subtyping.  This also changed the usage of \texttt{also}.
+  behavioral subtyping.  This also changed the usage and semantics of \texttt{also}.
 \item \texttt{modifies \char'134 everything;} is now the default modifies clause.
 \item The syntax and semantics of \texttt{initially}, {\tt
     monitored\_by}, and \texttt{readable\_if} have changed.
@@ -272,14 +275,17 @@ introduced.  The principal such incompatibilities are these:
 \section{Aspects of JML not yet implemented}
 
 Though the core is well-supported, there are several features of JML
-which are parsed and ignored, most of them experimental or not yet
-endowed with a clear semantics.  The features that are ignored are:
+which are parsed and ignored, some of them experimental or not yet
+endowed with a clear semantics.  The features that are currently ignored are:
 \setlength{\partopsep}{0in}\setlength{\parskip}{0in}\setlength{\itemsep}{0in}\setlength{\topsep}{0in}
 \begin{itemize}
 \setlength{\partopsep}{0in}\setlength{\parskip}{0in}\setlength{\itemsep}{0in}\setlength{\topsep}{0in}
 \item checking of access modifiers,
 \item the \texttt{weakly}, \texttt{strictfp}, \texttt{volatile}, and
   \texttt{transient} modifiers,
+\item the \texttt{diverges}, \texttt{hence\_by}, \texttt{measured\_by}, \texttt{when}, and
+\texttt{code\_contract}
+  clauses,
 \item annotations labeled as redundant are handled just like other
   annotations, or are ignored (e.g. \texttt{implies\_that} and {\tt
     for\_example} sections),
@@ -289,8 +295,7 @@ endowed with a clear semantics.  The features that are ignored are:
 \item serialization,
 \item annotations regarding space and time consumption,
 \item full support of recursive \texttt{maps} declarations,
-\item model programs, \texttt{diverges} clauses, and \texttt{hence\_by}
-  clauses,
+\item model programs, 
 \item verification of anonymous and block-level classes,
 \item verification of set comprehension and some forms of quantified
   expressions, and
@@ -307,21 +312,21 @@ source code base than other JML tools, differences of interpretation
 in both syntax and semantics arise on occasion.  These are generally
 resolved and documented via mailing list discussions by interested
 parties.  There are, however, still unresolved issues, some of which
-are the subject of ongoing research.
+are the subject of ongoing research:
 \setlength{\partopsep}{0in}\setlength{\parskip}{0in}\setlength{\itemsep}{0in}\setlength{\topsep}{0in}
 \begin{itemize}
 \setlength{\partopsep}{0in}\setlength{\parskip}{0in}\setlength{\itemsep}{0in}\setlength{\topsep}{0in}
 \item interpretation of the combination of purity and benevolent
-  side-effects that is suitable for both static and run-time checking
-\item interpretation of exceptions in pure expressions
-\item the use of helper annotations on routines
+  side-effects that is suitable for both static and run-time checking;
+\item interpretation of exceptions in pure expressions;
+\item the use of helper annotations on routines;
 \item the interpretation of annotations for initialization code and
-  constructors
+  constructors;
 \item use of \texttt{measured\_by} clauses to assist in checking
-  termination
-\item meaning of \texttt{code\_contract} clauses
+  termination;
+\item meaning of \texttt{code\_contract} clauses;
 \item axioms and reasoning procedures to handle safe
-  arithmetic~\cite{Chalin03}
+  arithmetic~\cite{Chalin03}.
 \end{itemize}
 
 \section{Usage experience to date}
@@ -364,18 +369,16 @@ In addition, research is required to clarify the semantics and usability of
 Finally, though not part of this project, there is another set of beneficial
 work to be done.  There are now a number of tools~\cite{Burdy-etal03},
 generated by different research groups, that interact with JML.  Among
-other tools, the jmlc~\cite{Cheon-Leavens02b} tool dynamically checks
+them, the jmlc~\cite{Cheon-Leavens02b} tool dynamically checks
 specifications; the ESC/Java2 tool statically checks specifications;
 Daikon generates specifications from execution histories (and was
 integrated with the DEC/SRC version of ESC/Java~\cite{NimmerErnst01});
 jmlunit~\cite{Cheon-Leavens02} generates test cases from
-specifications.  To provide a productive working environment for
-large-scale projects that use these tools but are not focused on their
-improvement or analysis, the tools need to be better integrated.  To a
-fair extent that integration is present, but there are additional
-opportunities.  For example, a closer integration of the annotations
-produced by Daikon with those used by other tools would be a worthy
-endeavor.
+specifications.  A productive prgrammer's working environment for a
+large-scale project that uses these tools would need the tools to be integrated
+in a way that their outputs and inputs seamlessly inter-communicate, but
+also that the user can iterate among the tools as writing, testing, 
+annotating, and verifying each incrementally advance.
 
 \section{Conclusion}
 TODO ???
