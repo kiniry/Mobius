@@ -146,6 +146,10 @@ public class JmlCorrelatedReader extends FilterCorrelatedReader
                     lastUnreturnedChar = child.read();
                     unreturnedChars++;
                 } while (lastUnreturnedChar == specialCharacter);
+		if (escjava.Main.parsePlus && lastUnreturnedChar == '+') {
+                    lastUnreturnedChar = child.read();
+                    unreturnedChars++;
+		}
             }
         }
         if (unreturnedChars > 0) {
