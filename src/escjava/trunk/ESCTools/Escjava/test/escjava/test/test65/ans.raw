@@ -43,9 +43,15 @@ Associated declaration is "C.java", line 45, col 20:
 C.java:47: Warning: Possible race condition (Race)
       case 7:  b = a; break;
                  ^
-Associated declaration is "C.java", line 29, col 13:
+Associated declaration is "C.java", line 30, col 8:
+      , this.a </esc> */
+        ^
+C.java:47: Warning: Possible race condition (Race)
+      case 7:  b = a; break;
+                 ^
+Associated declaration is "C.java", line 29, col 26:
   /** "<esc> monitored_by this ...
-             ^
+                          ^
 C.java:48: Warning: Possible race condition (Race)
       case 8:  c = a; break;
                  ^
@@ -109,4 +115,4 @@ C.java:94: Warning: Postcondition possibly not established (Post)
 Associated declaration is "C.java", line 90, col 6:
   /*@ ensures c // why "c" one wonders ...
       ^
-19 warnings
+20 warnings
