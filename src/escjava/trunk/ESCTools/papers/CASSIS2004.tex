@@ -39,8 +39,8 @@
 % --- End of Metadata ---
 
 \title{ESC/Java2: Uniting ESC/Java and JML}
-\subtitle{Progress and issues in building and using ESC/Java2
-and a report on a case study involving the use of ESC/Java2
+\subtitle{Progress and issues in building and using ESC/Java2,
+including a case study involving the use of the tool
 to verify portions of an Internet voting tally system}
 
 \author{David R.~Cok\inst{1} \and Joseph R.~Kiniry\inst{2}}
@@ -105,7 +105,7 @@ operates on full Java programs, not on special-purpose languages.  It acts
 modularly on each method (as opposed to whole-program analysis), 
 keeping the complexity low for industrial-sized programs, but requiring 
 annotations on methods that are used by other methods.  The program source
-and its specifications are translated into verification conditions that are passed
+and its specifications are translated into verification conditions; these are passed
 to a theorem prover, which in turn either verifies that no problems are found or
 generates a counterexample indicating a potential bug. The tool
 and its built-in prover operate automatically with reasonable
@@ -197,11 +197,11 @@ the production of ESC/Java and the Simplify prover in the first place.
 
 \section{JML Example}
 The Java Modeling language is described in detail in several other publications
-(\cite{Leavens-etal00} and various papers listed at \cite{jmlpapers}), so here we will give one example showing some of the syntax.  The class in Fig.~\ref{fig:example}
+(\cite{Leavens-etal00} and various papers listed at \cite{jmlpapers}), so here we will give just one example showing some of the syntax.  The class in Fig.~\ref{fig:example}
 uses an array to implement a List.  A few methods with partial specifications are shown.
 They demonstrate the following features of JML:
 %\begin{BFIGURE}
-%\verbatiminput{Example.java}
+%\input{Example.java}
 %\caption{A List class with a partial specification.}
 %\label{fig:example}
 %\end{BFIGURE}
@@ -255,8 +255,8 @@ public class Example {
 \begin{itemize}
 \item JML annotations are contained in comments beginning with \texttt{//@} or \texttt{/*@}.
 \item \texttt{model import} statements declare classes imported for use in annotations.
-\item \texttt{spec\_public} indicates that the field named \texttt{seq} has public visibility in specifications.
-\item The \texttt{invariant} states that after construction \texttt{seq} is never null and is an array with \texttt{Object}s as elements.
+\item \texttt{spec\_public} indicates that the field named {\em seq} has public visibility in specifications.
+\item The \texttt{invariant} states that after construction {\em seq} is never null and is an array with \texttt{Object}s as elements.
 \item The \texttt{requires} keyword states a precondition for the {\em reverse} method, namely 
 its argument is presumed to be non-null.
 \item The \texttt{modifies} keyword states a frame condition for the {\em reverse} method, namely 
@@ -278,10 +278,11 @@ side effects (it does not assign to any fields).
 
 This class will compile with javac and will pass all the checks of the jml checker.  If it is subjected to the ESC/Java2 tool described in this paper, three warnings are produced, correctly pointing out three potential problems with this code:
 \begin{itemize}
-\item The default constructor does not set the value of \texttt{seq} to a non null array.
+\item The default constructor does not set the value of \texttt{seq} to a non null array as required
+by the invariant.
 \item The assignment to \texttt{out[i++]} on line 16 is problematic because the index may be too large for the array; this is fixed by stating that the length of \texttt{out} must be equal to the length of \texttt{seq}.
 \item An additional warning on that line indicates that the type of the \texttt{out} array may possibly not allow
-assignments of Object references.
+assignments of Object references to its elements.
 \end{itemize} 
 \section{Changes to DEC/SRC ESC/Java}
 
@@ -424,8 +425,8 @@ fixed depth; since in ESC/Java loops are also unrolled to a fixed
 number of iterations, this solution handles common cases of iterating
 over recursive structures.
 
-\paragraph*{Annotations containing routine calls and dynamic allocations}
-JML, but not ESC/Java, allows pure method calls and constructors (that is, methods
+\paragraph*{Annotations containing method and constructor calls}
+JML, but not ESC/Java, allows pure method and constructor calls (that is, methods
 and constructors without side-effects) to be
 used in annotations.  This allows both a degree of abstraction and
 more readable and writable specifications.
@@ -433,7 +434,7 @@ more readable and writable specifications.
 ESC/Java2 supports the JML syntax and also performs some static
 checking.  The underlying prover, Simplify, does support function
 definitions and reasoning with functions.  But, as is the rule in
-first-order provers, the result of a function in Simplify depends only on its
+first-order logic, the result of a function in Simplify depends only on its
 arguments and not on hidden arguments or on global structures
 referenced by the arguments.  Consequently there is a mismatch between
 the concept of a pure method in Java and the concept of a function in
@@ -460,12 +461,12 @@ Simple representations can be implemented in ESC/Java2 by inlining the
 representation wherever the model field is used in an annotation.
 However, that proves not to be workable in larger systems.  Instead,
 we translate instances of model fields as functions of the object that
-owns them and the global state (as model fields can depend upon fields
+owns them and the global state (because model fields can depend upon fields
 in other, non-owner, objects).  This allows a useful degree of
 reasoning when combined with the class invariants that describe the
 behavior of the model fields.
 
-The Simplify theorem prover used by both ESC/Java and ESC/Java2 remains unchanged,
+\paragraph*{} The Simplify theorem prover used by both ESC/Java and ESC/Java2 remains unchanged,
 except for being compiled for a new platform (MacOSX).  It is written in Modula-3
 and consequently requires compilation for each supported platform.  Although the prover
 has definite limitations, as pointed out below, revising it would be a significant project in
@@ -489,7 +490,7 @@ The principal incompatibilities are these:
 that indicates there are inherited explicit or implicit specifications; its
 interpretation of specification inheritance is consistent with behavioral
 subtyping.  By contrast, ESC/Java's use of inherited specifications had
-limitations and was a known source of soundness problems. \cite{Leino-Nelson-Saxe00}
+limitations and was a known source of soundness problems~\cite{Leino-Nelson-Saxe00}.
 See
   the section titled ``Inheritance and \texttt{non\_null}'' in the
   ESC/Java2 Implementation Notes for more
@@ -596,7 +597,7 @@ troublesome experience.  Because of limitations of various tools which
 depended upon the specifications, several alternate forms of
 specifications were required.  Additionally, it was sometimes the case
 that the alternate forms were neither equivalent nor had obvious
-logical relationships between them.
+logical relationships among them.
 
 This experience was one of the motivators for the SoS group's support
 of this work on ESC/Java2.  Now that multiple tools are available that
@@ -672,12 +673,12 @@ Dr.~Martijn Oostdijk, and the second author) partitioned the system
 into three subcomponents: file I/O, graphical I/O, and core
 data structures and algorithms.  It was decided that, due to the
 challenges inherent in full system verification and the restricted
-time alloted to the project, while all subsystems would be annotated
+time allotted to the project, while all subsystems would be annotated
 with JML, only the third ``core'' subsystem (Dr.~Kiniry's
 responsibility) would be fully elaborated in specification.
 
 Additionally, ESC/Java2 would only be used on the core subsystem.  In
-the alloted time a ``best-effort'' verification would be attempted, in
+the allotted time a ``best-effort'' verification would be attempted, in
 addition to all other standard software engineering practices.  This
 approach is a standard strategy for lightweight use of formal
 methods~\cite{ClarkeWing96}.
@@ -875,7 +876,7 @@ Simplify) on that core is correct and valuable.
 \paragraph*{Verification Logic} The logic into which Java and JML are
 embedded in both ESC/Java and ESC/Java2, by design and admission of
 the original authors, neither identifies all potential errors (e.g., because not
-all aspects of Java are modeled in the Logic) nor avoids all false alarms (e.g., 
+all aspects of Java are modeled in the logic) nor avoids all false alarms (e.g., 
 because of limitations in the prover).  This was the
 result of an engineering judgment in favor of performance and
 usability.  Research studying expanded and larger use cases may show
@@ -977,10 +978,10 @@ After all, the goal need not be fully automated verification of an
 arbitrary computer program.  Reflect that a computer-produced proof of
 a mathematical conjecture that cannot be understood at least in its
 broad outlines by mathematicians leaves those mathematicians
-unsatisfied and unsettled with respect to the result.  Similarly, we
+unsatisfied and unsettled with respect to the proof.  Similarly, we
 expect that ``verifications'' of programs whose overall design is
 incomprehensible to readers of the program (not to mention its author)
-will not engender much confidence in the result.  If programming is
+will not engender much confidence in the verification.  If programming is
 writing for others and we expect that the authors could explain their
 programs to their colleagues, we may well have a chance at being able
 to explain those programs to a computer.
