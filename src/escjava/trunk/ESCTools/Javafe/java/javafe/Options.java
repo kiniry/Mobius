@@ -65,6 +65,11 @@ public class Options
      */
     public boolean assertIsKeyword = false;
 
+    /**
+     * Are assertions enabled?
+     */
+    public boolean enableAssertions = false;
+
 
     //************************************************************************
     //     Constructors
@@ -177,6 +182,9 @@ public class Options
             if (args[offset].equals("1.4"))
                 assertIsKeyword = true;
             return offset+1;
+        } else if (option.equals("-ea")) {
+            enableAssertions = true;
+            return offset;
         }
 
 	// Pass on unrecognized options:
@@ -243,6 +251,7 @@ public class Options
     {"-noCautions", ""},
     {"-package <packagename>", "Loads all the files in the named package"},
     {"-source <release>", "Provide source compatibility with specified release"},
+    {"-ea", "enable Java assertion checking"},
     };
     
     final public String eol = System.getProperty("line.separator");
