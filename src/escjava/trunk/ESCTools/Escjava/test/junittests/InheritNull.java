@@ -16,7 +16,7 @@ public class InheritNull extends SuperNull {
 	public void m5(int i,  Object o);
 	public void m6(int i,  /*@ non_null */ Object o);
 
-	public InheritNull();
+	/*@ pure */ public InheritNull();
 
 	public static Object oo;
 
@@ -27,7 +27,7 @@ public class InheritNull extends SuperNull {
 		m1(1,oo); // FAILS
 	}
 	public void mm2a() {
-		m2(-1,oo); // FAILS
+		m2(-1,oo); // OK - non_null ignored
 	}
 	public void mm2b() {
 		m2(1,oo); // OK
@@ -69,18 +69,18 @@ public class InheritNull extends SuperNull {
 
 class SuperNull {
 	//@ requires i>0;
-	public void m1(int i, /*@ non_null*/ Object o);
+	/*@ pure */ public void m1(int i, /*@ non_null*/ Object o);
 	//@ requires i>0;
-	public void m2(int i,  Object o);
+	/*@ pure */ public void m2(int i,  Object o);
 	//@ requires i>0;
-	public void m3(int i, /*@ non_null*/ Object o);
+	/*@ pure */ public void m3(int i, /*@ non_null*/ Object o);
 	//@ requires i>0;
-	public void m4(int i,  Object o);
+	/*@ pure */ public void m4(int i,  Object o);
 
-	public void m5(int i, /*@ non_null*/ Object o);
+	/*@ pure */ public void m5(int i, /*@ non_null*/ Object o);
 
 	//@ requires i>0;
-	public void m6(int i, Object o);
+	/*@ pure */ public void m6(int i, Object o);
 
-	public SuperNull();
+	/*@ pure */ public SuperNull();
 }

@@ -3,8 +3,8 @@
 // description.
 
 public class AOption2 {
-
-	public void m(Object o) {
-		String s = o.toString();
+	//@ pure
+	public void m(AOption2 o) {
+		o.m(this);
 	}
 }

@@ -7,7 +7,7 @@ public class PreconditionWarnings {
 	//@ also
 	//@ requires i > 0;
 	//@ requires j > 0;
-	public void m(int i, int j) {}
+	/*@ pure */ public void m(int i, int j) {}
 
 	public void mm() {
 		m(1,0);

@@ -1,5 +1,5 @@
 // Tests the behavior of assert in ignore mode
-//#FLAGS: -source 1.4 -da
+//#FLAGS: -source 1.4 -da -sourcepath .:../../../specs
 public class AssertNone {
 
 	//no -ea:  Unexpected exception

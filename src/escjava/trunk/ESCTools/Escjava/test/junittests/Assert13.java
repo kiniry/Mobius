@@ -1,5 +1,5 @@
 // Tests the behavior of assert without -source 1.4
-
+//#FLAGS: -sourcepath .:../../../specs
 public class Assert13 {
 
 	//no -ea:  Unexpected exception

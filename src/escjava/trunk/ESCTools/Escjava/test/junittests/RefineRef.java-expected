@@ -12,7 +12,7 @@ RefineRef: mm(RefineRefHelper) ...
 RefineRef: mmm(RefineRefHelper) ...
 ------------------------------------------------------------------------
 RefineRef.java:13: Warning: Possible null dereference (Null)
-                r.ooo.getClass();
+                r.ooo.get();
                      ^
 ------------------------------------------------------------------------
     [TIME]  failed

@@ -1,5 +1,5 @@
 // Tests the behavior of assert in java mode
-//#FLAGS: -javaAssertions
+//#FLAGS: -javaAssertions -sourcepath .:../../../specs
 public class Assert {
 
 	//no -ea:  Unexpected exception

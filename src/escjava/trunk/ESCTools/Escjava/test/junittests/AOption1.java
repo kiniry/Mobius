@@ -12,8 +12,8 @@
 //#FLAGS: -quiet -nowarn Null
 
 public class AOption1 {
-
-	public void m(Object o) {
-		String s = o.toString();
+	//@ pure
+	public void m(AOption1 o) {
+		o.m(this);
 	}
 }

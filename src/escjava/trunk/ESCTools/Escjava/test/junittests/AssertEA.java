@@ -1,5 +1,5 @@
 // Tests the behavior of assert in jml mode
-//#FLAGS: -jmlAssertions
+//#FLAGS: -jmlAssertions -sourcepath .:../../../specs
 public class AssertEA {
 
 	//no -ea:  Unexpected exception

@@ -1,5 +1,5 @@
 // Tests defaults in behavior specs
-
+//#FLAGS: -sourcepath .:../../../specs
 
 public class Behavior {
 

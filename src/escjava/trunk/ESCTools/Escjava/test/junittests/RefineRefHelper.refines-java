@@ -2,5 +2,7 @@
 
 public class RefineRefHelper {
 
-	/*@ non_null */ Object o;
+	/*@ non_null */ RefineRefHelper o;
+
+	public /*@ pure */ void get();
 }

@@ -6,7 +6,7 @@ public class InheritedSpecs extends ISHelper {
 	//@ also
 	//@ requires i >= 0;
 	//@ ensures \result >= 0;
-	public int m(int i, int j) {
+	/*@ pure */ public int m(int i, int j) {
 		return i;
 	} // FAILS
 
@@ -21,13 +21,13 @@ public class InheritedSpecs extends ISHelper {
 
 	//@ also
 	//@ requires i > 0;
-	public void n(int i);
+	/*@ pure */ public void n(int i);
 
 	public void nn() { 
 		n(-1);  // OK
 	}
 
-	public InheritedSpecs();
+	/*@ pure */ public InheritedSpecs();
 
 
 	public void n1(int i);
@@ -110,12 +110,12 @@ class ISHelper extends ISSHelper {
 
 	//@ requires j >= 0;
 	//@ ensures \result >= 0;
-	public int m(int i, int j) { return 1; }
+	/*@ pure */ public int m(int i, int j) { return 1; }
 
 	// Test that no specs are inherited as 'requires true'
-	public void n(int i);
+	/*@ pure */ public void n(int i);
 
-	public ISHelper();
+	/*@ pure */ public ISHelper();
 
 	public void n1(int i);
 	//@ also
@@ -135,19 +135,19 @@ class ISHelper extends ISSHelper {
 }
 
 class ISSHelper {
-	public ISSHelper();
+	/*@ pure */ public ISSHelper();
 
 	//@ requires i>=0;
-	public void n1(int i);
+	/*@ pure */ public void n1(int i);
 
-	public void n2(int i);
+	/*@ pure */ public void n2(int i);
 	//@ requires i>=0;
-	public void n3(int i);
-	public void n4(int i);
+	/*@ pure */ public void n3(int i);
+	/*@ pure */ public void n4(int i);
 	//@ requires i>=0;
-	public void n5(int i);
-	public void n6(int i);
+	/*@ pure */ public void n5(int i);
+	/*@ pure */ public void n6(int i);
 	//@ requires i>=0;
-	public void n7(int i);
+	/*@ pure */ public void n7(int i);
 }
 

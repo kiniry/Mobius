@@ -1,10 +1,10 @@
+// Tests that escjava handles methods with no body.
+
 public class NoBody {
-
-	public Object m();
-
+	//@ modifies \nothing;
+	public NoBody m();
 	public void n() {
-
-		String s = m().toString();
+	    m().m();
 	}
 
 }

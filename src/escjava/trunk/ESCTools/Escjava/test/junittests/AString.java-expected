@@ -5,7 +5,7 @@ AString ...
 
 AString: f(java.lang.String) ...
 ------------------------------------------------------------------------
-AString.java:3: Warning: Possible null dereference (Null)
+AString.java:4: Warning: Possible null dereference (Null)
                 int i = s.length();
                          ^
 ------------------------------------------------------------------------

@@ -9,8 +9,8 @@ NoBody: m() ...
 NoBody: n() ...
 ------------------------------------------------------------------------
 NoBody.java:7: Warning: Possible null dereference (Null)
-                String s = m().toString();
-                              ^
+            m().m();
+               ^
 ------------------------------------------------------------------------
     [TIME]  failed
 

@@ -1,6 +1,6 @@
 
 public class RefineRefHelper {
 
-	/*@ non_null */ Object oo;
-	Object ooo;
+	/*@ non_null */ RefineRefHelper oo;
+	RefineRefHelper ooo;
 }

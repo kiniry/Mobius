@@ -44,13 +44,19 @@ lists:
 		| sed -e 's?//#FLAGS:??' -e "s/\$$/ $$f/" >> listtests ; \
 	done
 
-septest: skips othertests 
+septest: 
+	$(MAKE) skips
+	$(MAKE) othertests
+	$(MAKE) sepjavatests
+
+sepjavatests:
 	@touch skip
 	@for f in `ls *.java | grep -v -f skip` ; do \
 		$(MAKE) --no-print-directory $${f}-test; \
 	done
 
 skips:
+	@touch skip
 	@echo Skipped: `cat skip | grep -v "^#" `
 
 othertests: $(addsuffix -test,${OTHERTESTS})

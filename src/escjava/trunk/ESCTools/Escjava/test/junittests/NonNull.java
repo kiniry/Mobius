@@ -4,16 +4,16 @@ class non_null {
 }
 
 public class NonNull {
-	void qq(non_null n) {}
-	void q(/*@ non_null */ Object o) {}
+	/*@ pure */ void qq(non_null n) {}
+	/*@ pure */ void q(/*@ non_null */ Object o) {}
 /*@
-	model void m(int i);
-	model void m(non_null Object i);
-	model void m(non_null i);
+	model pure void m(int i);
+	model pure void m(non_null Object i);
+	model pure void m(non_null i);
 
-	model NonNull(int i);
-	model NonNull(non_null Object i);
-	model NonNull(non_null i);
+	model pure NonNull(int i);
+	model pure NonNull(non_null Object i);
+	model pure NonNull(non_null i);
 
 	model void p() {
 		Object o = null;

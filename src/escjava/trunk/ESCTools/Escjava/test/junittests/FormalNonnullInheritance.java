@@ -4,7 +4,7 @@ public class FormalNonnullInheritance extends FMIHelper implements FMIHelperT, F
 	public void n(/*@ non_null */ Object a, /*@ non_null */ Object b, Object c); // Error on b
 	public void q(/*@ non_null */ Object d); // Error here
 	public void r(/*@ non_null */ Object rd);
-	public void s(/*@ non_null */ Object sd);
+	public void s(/*@ non_null */ Object sd); // Error here
 
 	public void t1(/*@ non_null */ Object tt1e);
 	public void t2(/*@ non_null */ Object tt2e); // error here

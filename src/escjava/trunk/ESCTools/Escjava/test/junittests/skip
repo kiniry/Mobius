@@ -21,6 +21,9 @@ ModifiesPure.java
 EX.java
 ## dangling also
 Heavyweight.java
+## Modify everything tests
+ModEverything.java
+ModE.java
 ## New tests
 Privacy.java
 Instance.java
