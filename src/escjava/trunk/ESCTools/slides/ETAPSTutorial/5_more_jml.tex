@@ -46,6 +46,7 @@ erik,
 \newcommand{\into}     {\(\backslash\)into}
 \newcommand{\result}     {\(\backslash\)result}
 \newcommand{\vooralle}{\(\backslash\)forall}
+\newcommand{\eris}{\(\backslash\)exists}
 \newcommand{\everything}{\(\backslash\)everything}
 \newcommand{\nothing}{\(\backslash\)nothing}
 \newcommand{\nonnull} {non\verb|_|null}
@@ -58,8 +59,8 @@ erik,
 
 \renewcommand{\familydefault}{phv}
 \renewcommand{\rmdefault}{phv}
-\newif\ifignore
 
+\newif\ifignore
 \newrgbcolor{Bluish}{0.9 0.9 1.0}
 \newcommand{\doos}[1]{\psshadowbox[fillstyle=solid,
                         fillcolor=Bluish,
@@ -70,7 +71,7 @@ erik,
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \title{\embf{\blue 
-       {\huge Advanced JML
+       {\huge Advanced JML  \\ {\large and more tips and pitfalls}
       }}}
 \author{\embf{\Large{\red David Cok, Joe Kiniry, and Erik Poll}}
        }
@@ -125,11 +126,12 @@ Remember the core JML keywords were
 \item {\green \code{requires}}
 \item {\green \code{ensures}}
 \item {\green \code{signals}}
+\item {\green \code{assignable}}
+\item {\green \code{normal\_behavior}}
 \item {\green \code{invariant}}
 \item {\green \code{non\_null}}
 \item {\green \code{pure}}
-\item {\green \code{assignable}}
-\item {\green \code{\old}, \code{\result}, \code{\vooralle}}
+\item {\green \code{\old}, \code{\vooralle}, \code{\eris}, \code{\result}}
 \end{itemize}
 
 \end{slide}
@@ -169,7 +171,7 @@ JML imposes visibility rules similar to Java, eg.
     //@ requires{\green n} > 0;
      {\blue public} int{\blue extractMin}()\{ ... \}
 }
-\end{alltt}
+\end{alltt}  %}
 
 is not type-correct, because
 {\blue public} method {\blue \code{extractMin}}
@@ -228,6 +230,7 @@ Private \code{spec\_public} fields are allowed in public specs, e.g.:
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{Exceptional specifications}
+\vspace*{-3ex}
 
 A method specification can (dis)allow the throwing of exceptions,
 and specify a exceptional postcondition that should hold in
@@ -304,13 +307,39 @@ even though Java does not require a throws clause for these.
 \begin{slide}{Ruling out exceptions}
 \vspace*{-3ex}
 
-To rule out \code{SomeException}
+To forbid a particular exception \code{SomeException}
 \begin{enumerate}
 \item omit it from throws clause (only possible for unchecked exceptions)
 \item add an explicit
 \begin{alltt} \code{\scriptsize{\blue signals} (SomeException){\green false};}
 \end{alltt}
 
+\item limit the set of allowed exceptions, use a postcondition such as
+\begin{alltt}\code{\scriptsize
+    signals (Exception e) e instanceof E1 
+                       || ... 
+                       || e instanceof En;}
+\end{alltt}
+or, equivalently, us the shorthand for this
+\begin{alltt}\code{\scriptsize
+    signals_only E1, ... En;}
+\end{alltt}
+
+\end{enumerate}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}{Ruling out exceptions}
+\vspace*{-3ex}
+
+To forbid \textit{all} exceptions
+\begin{enumerate}
+\item omit all exceptions from throws clause (only possible for unchecked exceptions)
+\item add an explicit
+\begin{alltt} \code{\scriptsize{\blue signals} (Exception){\green false};}
+\end{alltt}
 \item
 use keyword {\blue normal\_behavior} to rule out all exceptions
 \begin{alltt} \code{\scriptsize {\green /*@}{\blue normal\_behavior}
@@ -324,6 +353,8 @@ use keyword {\blue normal\_behavior} to rule out all exceptions
 \end{enumerate}
 
 \end{slide}
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{may vs must throw an exception}
@@ -665,7 +696,7 @@ over all fields not mentioned in the assignable clause}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\part{{\Large \red Aliasing}}
+\part{{\Large \red Aliasing (revisited)}}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -677,7 +708,7 @@ imperative programs.
 
 \medskip
 
-The \code{ArrayTimer} class given earlier is a nice example
+The \code{ArrayTimer} class just earlier is another nice example
 to illustrate this.
 
 \end{slide}
@@ -786,25 +817,8 @@ to rule out such aliasing.
 
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{slide}{More advanced alias control?}
-
-The \code{owner} field provides a simple form of alias control.
-
-\medskip
-
-More advanced systems for alias control are still an active 
-topic of research.
-
-\medskip
-
-There is a proposal to add so-called {\blue universes} to JML 
-to provide a more advanced form of alias control.
-
-\end{slide}
-
-
-
+\ifignore 
+% in part 4
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \part{{\Large \red Specification inheritance and behavioural subtyping }}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -830,7 +844,7 @@ code will behave ``as expected'' if we provide an
 \begin{slide}{Behavioural subtyping}
 \vspace*{-3ex}
 
-Behavioural subtyping can be enforced by insisting that
+Behavioural subtyping usually enforced by insisting that
 
 \begin{itemize}
 \item 
@@ -938,6 +952,9 @@ This is equivalent with
 
 \end{slide}
 
+\fi
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \part{{\Large \red Specification-only fields: \\ \texttt{ghost} and \texttt{model} fields}}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -976,7 +993,7 @@ Suppose the informal spec of
      void stop() \{ ... \}
     \}}}
 
-\end{alltt}
+\end{alltt} %}
 says that \code{stop()}
 may only be invoked after \code{start()},
 and vice versa.
@@ -1009,7 +1026,7 @@ to represent the {\green state} of the protocol.
      ... 
     {\blue //@ set started = false;} \}
  }}
-\end{alltt}
+\end{alltt} %}
 \end{slide}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1033,7 +1050,7 @@ if protocols is in progress, eg.
      st = null;
      ...  \}
  }}
-\end{alltt}
+\end{alltt} %}
 \end{slide}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1058,7 +1075,7 @@ There may be correspondence between the {\blue ghost field} and some
   //@ assignable started;
   //@ ensures   !started;
   void endProtocol() \{ ...  \} }}
-\end{alltt}
+\end{alltt} %}
 \end{slide}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1079,7 +1096,7 @@ We could now get rid of the ghost field, and write
   //@ assignable st;
   //@ ensures   {\green st==null};
   void endProtocol() \{ ... \} }}
-\end{alltt}
+\end{alltt} %}
 
 but this is ugly and exposes implementation details.
 

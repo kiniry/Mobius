@@ -576,10 +576,10 @@ ESC/Java2 warnings fall into various categories:
 \put(180,60){Exception}
 \put(206,57){\vector(-3,-1){53}}
 \put(206,57){\vector(3,-1){53}}
-\put(100,30){\it checked exceptions}
+\put(100,30)\textit{checked exceptions}
 \put(220,30){RuntimeException}
 \put(270,28){\vector(0,-1){20}}
-\put(215,0){\it unchecked exceptions}
+\put(215,0)\textit{unchecked exceptions}
 \end{picture}
 
 \end{slide}
@@ -594,7 +594,7 @@ ESC/Java2 warnings fall into various categories:
 \item ESC/Java2 checks during typechecking that throws declarations are correct (as a Java compiler does)
 \item Typically specified in signals clauses in JML
 \item ESC/Java2 checks via reasoning that signals conditions hold
-\item Default specification is that {\it declared} exceptions may occur:  signals (Exception) true;
+\item Default specification is that \textit{declared} exceptions may occur:  signals (Exception) true;
 \item ESC/Java2 presumes that checked exceptions not declared in a throws clause will not occur.
 \end{itemize}
 \end{itemize}
@@ -608,7 +608,7 @@ ESC/Java2 warnings fall into various categories:
 \item Java {\knalblue unchecked} exceptions (e.g. NoSuchElementException) are RuntimeExceptions:
 \begin{itemize}
 \item Java does not require these to be declared in throws clauses
-\item ESC/Java2 is stricter than Java - it will issue an Exception warning if an unchecked exception might be {\it explicitly} thrown but is not declared in a throws declaration 
+\item ESC/Java2 is stricter than Java - it will issue an Exception warning if an unchecked exception might be \textit{explicitly} thrown but is not declared in a throws declaration 
 \item Caution: currently ESC/Java2 will assume that an undeclared unchecked exception will not be thrown, even if it is specified in a signals clause - 
 \begin{itemize}
 \item[] Declare all unchecked exceptions that might be thrown! 
@@ -824,7 +824,7 @@ Execution trace information:
 \vspace*{-6ex}
 \begin{itemize}
 \item Sometimes when a specification is found to be invalid, ESC/Java2 will produce a 
-{\it counterexample context}.
+\textit{counterexample context}.
 \item A full context will be produced with the {\knalblue -counterexample} option
 \item These are difficult to read, but can give information about the reason for failure.
 \item They state formulae that the prover believes to be true; if there is something you think should

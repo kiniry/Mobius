@@ -78,7 +78,27 @@ cok,
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{slide}{\#1: Inherited specifications}
+\begin{slide}{Specifications tips and pitfalls}
+\begin{enumerate}
+\item Inherited specifications 
+\item Aliasing
+\item Object invariants
+\item Inconsistent assumptions
+\item Exposed references
+\item \old
+\item How to write specs
+\end{enumerate}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\part{{\Large \red \#1: Specification inheritance and behavioural subtyping }}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}{Inherited specifications}
 \begin{itemize}
 \item Base class specifications apply to derived classes
 \begin{itemize}
@@ -93,9 +113,143 @@ will apply to derived classes as well.
 \end{slide}
 
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}{Behavioural subtyping}
+\vspace*{-3ex}
+
+Suppose \code{Child extends Parent}.
+
+\begin{itemize}
+\item $\!$ {\green Behavioural subtyping} =
+objects from subclass \code{Child} ``behave like''
+objects from superclass \code{Parent}
+\item $\!$ {\green Principle of substitutivity} [Liskov]:\\
+code will behave ``as expected'' if we provide an 
+\code{Child} object where a \code{Parent} object was expected.
+\end{itemize}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}{Behavioural subtyping}
+\vspace*{-3ex}
+
+Behavioural subtyping usually enforced by insisting that
+
+\begin{itemize}
+\item 
+invariant in subclass is {\green stronger} than invariant in superclass
+\item
+for every method,
+\begin{itemize}
+\item 
+precondition in subclass is {\blue weaker} (!) than precondition is superclass
+\item
+postcondition in subclass is {\green stronger} than postcondition is superclass
+\end{itemize}
+\end{itemize}
+
+JML achieves behavioural subtyping by {\green specification inheritance}:
+any child class {\green inherits} the specification of its parent.
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}{$\!\!\!$\small Specification inheritance for invariants}
+\vspace*{-3ex}
+
+Invariants are inherited in subclasses. Eg.
+\begin{alltt}
+\code{\scriptsize class Parent \{
+     ...
+     //@ invariant invParent;
+     ...  \}
+
+  class Child extends Parent \{
+     ...
+     //@ invariant invChild;
+     ...  \}}
+\end{alltt}
+
+the invariant for \code{Child} is \code{invChild \&\& invParent}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}{$\!\!\!\!\!$\small Specif\-ication inheritance for method specs}
+\vspace*{-4ex}
+\begin{alltt}
+\code{{\scriptsize class Parent \{
+     //@ requires i >= 0;
+     //@ ensures  \result >= i;
+     int m(int i)\{ ... \}
+  \}
+
+  class Child extends Parent \{
+     //@{\green also}
+     //@   requires i <= 0
+     //@   ensures  \result <= i;
+     int m(int i)\{ ... \}
+   \}}}
+\end{alltt}
+
+{\scriptsize Keyword {\green \texttt{also}} indicates there are inherited specs.}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}{$\!\!\!\!\!$\small Specif\-ication inheritance for method specs}
+\vspace*{-4ex}
+
+Method \code{m} in \code{Child} also has to meet the spec
+given in \code{Parent} class.
+So the complete spec for \code{Child} is
+
+\begin{alltt}
+\code{\scriptsize class Child extends Parent \{
+
+  /*@   requires i >= 0;
+    @   ensures  \result >= i;
+    @{\green also}
+    @   requires i <= 0
+    @   ensures  \result <= i;
+    @*/
+  int m(int i)\{ ... \}
+ \}}
+\end{alltt}
+
+{\tiny What can result of \code{m(0)} be?}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}{$\!\!\!\!\!$\small Specification inheritance for method specs}
+\vspace*{-3ex}
+
+This spec for \code{Child} is equivalent with
+
+\begin{alltt}
+\code{\scriptsize class Child extends Parent \{
+
+  /*@   requires i <= 0 || i >= 0;
+    @   ensures  \old(i) >= 0 ==> \result >= i;
+    @   ensures  \old(i) <= 0 ==> \result <= i;
+    @*/
+  int m(int i)\{ ... \}
+ \}}
+\end{alltt}
+
+\end{slide}
+
+
+
+\ifignore
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{slide}{\#1: Inherited specifications}
+\begin{slide}{Inherited specifications}
 \vspace*{-7ex}
 For example, in the code below
 \begin{itemize}
@@ -143,8 +297,12 @@ c.m(i); // i must be >= 0 or <= 0
 \end{picture}
 
 \end{slide}
+\fi
 
-\begin{slide}{\#1: Inherited specifications}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}{Inherited specifications: trick}
+\vspace*{-4ex}
 Another example: two Objects that are == are always also {\knalblue equals}.  But the converse is not
 necessarily true.  But it is true for objects whose dynamic type is Object.
 
@@ -174,6 +332,10 @@ public class Object {
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\ifignore
+
+% treated - in more detail - in 5_jml_more
+
 \begin{slide}{\#2: Specifying exceptions}
 \vspace*{-8ex}
 \begin{itemize}
@@ -196,9 +358,16 @@ states what must be true if an exception of the stated type is thrown.
 
 \end{slide}
 
+\fi
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{slide}{\#3: Aliasing}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\part{{\Large \red \#2: Aliasing}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+\begin{slide}{\#2: Aliasing}
 \vspace*{-9ex}
 A common but non-obvious problem that causes violated invariants is aliasing.
 {\tiny
@@ -230,7 +399,7 @@ Associated declaration is "Alias.java", line 5, col 6:
 }
 
 \end{slide}
-\begin{slide}{\#3: Aliasing}
+\begin{slide}{\#2: Aliasing}
 \vspace*{-6ex}
 A full counterexample context ({\blue -counterexample} option) produces, among lots of other information:
 \begin{verbatim}
@@ -261,7 +430,7 @@ that is, {\blue this} and some different object ({\blue brokenObj}) share the \\
 \put(150,92){\circle*{5}}
 \end{picture}
 \end{slide}
-\begin{slide}{\#3: Aliasing}
+\begin{slide}{\#2: Aliasing}
 \vspace*{-6ex}
 To fix this, declare that {\blue a} is owned only by its parent object:\\
 ( {\blue owner} is a ghost field of java.lang.Object )
@@ -318,7 +487,7 @@ public class Alias {
 
 \end{slide}
 
-\begin{slide}{\#3: Aliasing}
+\begin{slide}{\#2: Aliasing}
 \vspace*{-9ex}
 Another example.  This one fails on the postcondition.
 \tiny
@@ -353,7 +522,7 @@ class Inner {
 
 \end{slide}
 
-\begin{slide}{\#3: Aliasing}
+\begin{slide}{\#2: Aliasing}
 \begin{itemize}
 \item The counterexample context shows
 \begin{verbatim}
@@ -368,7 +537,7 @@ class Inner {
 \end{itemize}
 \end{slide}
 
-\begin{slide}{\#3: Aliasing}
+\begin{slide}{\#2: Aliasing}
 \begin{itemize}
 
 \item Aliasing is a serious difficulty in verification
@@ -376,12 +545,14 @@ class Inner {
 \item It is all about knowing what is modified and what is not
 \item These {\blue owner} fields or the equivalent create a form of encapsulation that can be 
 checked by ESC/Java to control what might be modified by a given operation
+\item There is a proposal to add so-called {\blue universes} to JML
+to provide a more advanced form of alias control.
 \end{itemize}
 \end{slide}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{slide}{\#4: Write object invariants}
+\begin{slide}{\#3: Write object invariants}
 \vspace*{-6ex}
 \begin{itemize}
 \item Be sure that class invariants are about the object at hand.  
@@ -405,14 +576,14 @@ a class may indeed be true, but they are difficult to prove, especially for auto
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{slide}{\#5: Inconsistent assumptions}
+\begin{slide}{\#4: Inconsistent assumptions}
 \vspace*{-3ex}
 If you have inconsistent specifications you can prove anything:
 
 \verbatimcode{examples/Inconsistent.java}
 \end{slide}
 
-\begin{slide}{\#5: Inconsistent assumptions}
+\begin{slide}{\#4: Inconsistent assumptions}
 \vspace*{-3ex}
 Another example:
 
@@ -425,7 +596,7 @@ We hope to put in checks for this someday!
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{slide}{\#6: Exposed references}
+\begin{slide}{\#5: Exposed references}
 \vspace*{-9ex}
 Problems can arise when a reference to an internal object is exported from a class:
 \begin{figure*}
@@ -446,16 +617,22 @@ Problems can arise when a reference to an internal object is exported from a cla
 
 \end{slide}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\part{{\Large \red \#6: \old }}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{slide}{\#7: \old}
+\begin{slide}{\#6: \old}
 \vspace*{-6ex}
 {\knalblue \old} is used to indicate evaluation in the pre-state in a postcondition expression.\\
 \vspace{1ex}
 Consider specifying
 {\tiny
 \begin{verbatim} 
-public static native void arraycopy(Object[] src, int srcPos,                                    Object[] dest, int destPos, int length);
+public static native void arraycopy(Object[] src, int srcPos,
+                                    Object[] dest, int destPos, int length);
 \end{verbatim}
 }
 Try:
@@ -470,14 +647,15 @@ ensures (\forall int i; 0<=i && i<length; dest[destPos+i] == src[srcPos+i]);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{slide}{\#7: \old}
+\begin{slide}{\#6: \old}
 \vspace*{-6ex}
 {\knalblue \old} is used to indicate evaluation in the pre-state in a postcondition expression.\\
 \vspace{1ex}
 Consider specifying
 {\tiny
 \begin{verbatim} 
-public static native void arraycopy(Object[] src, int srcPos,                                    Object[] dest, int destPos, int length);
+public static native void arraycopy(Object[] src, int srcPos,
+                                    Object[] dest, int destPos, int length);
 \end{verbatim}
 }
 Try:
@@ -494,14 +672,15 @@ Wrong!}\\
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{slide}{\#7: \old}
+\begin{slide}{\#6: \old}
 \vspace*{-6ex}
 {\knalblue \old} is used to indicate evaluation in the pre-state in a postcondition expression.\\
 \vspace{1ex}
 Consider specifying
 {\tiny
 \begin{verbatim} 
-public static native void arraycopy(Object[] src, int srcPos,                                    Object[] dest, int destPos, int length);
+public static native void arraycopy(Object[] src, int srcPos,
+                                    Object[] dest, int destPos, int length);
 \end{verbatim}
 }
 Try:
@@ -526,7 +705,7 @@ ensures (\forall int i; 0<=i && i<length;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{slide}{\#7: \old}
+\begin{slide}{\#6: \old}
 \vspace*{-6ex}
 {\knalblue \old} is used to indicate evaluation in the pre-state in a postcondition expression.\\
 \vspace{1ex}
@@ -566,38 +745,47 @@ ensures (\forall int i; (0<=i && i<destPos) ||
 
 \end{slide}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\part{{\Large \red \#7: How to write specs }}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\overlays{9}{
 \begin{slide}{Getting started}
 \vspace*{-6ex}
-\begin{itemize}
+\begin{itemstep}
 \item Start with foundation and library routines
-\item For each field: should it be {\knalblue non\_null}?
+\item For each field: is there an invariant for this field?
+\item For each reference field: should it be {\knalblue non\_null}?
 \item For each reference field: should an {\knalblue owner} field be set for it?
 \item For each method: should it be {\knalblue pure}?  Should the arguments or the result be {\knalblue non\_null}?
 \item For each class: what {\knalblue invariant} expresses the self-consistency of the internal data?
 \item Add {\knalblue pre-} and {\knalblue post-conditions} to limit the inputs and outputs of each method.
 \item Add possible unchecked {\knalblue exceptions} to throws clauses.
 \item Start with simple specifications; proceed to complex ones as they have value.
-\end{itemize}
+\end{itemstep}
 
-\end{slide}
+\end{slide}}
 
 \begin{slide}{Getting started}
 \begin{itemize}
 \item Separate conjunctions to get information about which conjunct is violated. Use
-{\tiny \begin{verbatim}
+{\scriptsize \begin{verbatim}
 requires A;
 requires B;
 \end{verbatim}
 }
 not
-{\tiny \begin{verbatim}
+{\scriptsize \begin{verbatim}
 requires A && B;
 \end{verbatim}
 }
 
-\item Use {\knalblue assert} statements to find out what is going wrong.  Use {\knalblue assume} statements {\red \it that you KNOW are correct} to help the prover along.
+\item Use {\knalblue assert} statements to find out what is going wrong.
+
+\item Use {\knalblue assume} statements {\red \textit{that you KNOW are correct}} to help the prover along.
 \end{itemize}
 
 \end{slide}
