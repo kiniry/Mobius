@@ -737,6 +737,10 @@ public class AnnotationHandler {
 		    currentBehavior.extras.add(m);
 		    continue; 
 
+	 	case TagConstants.GHOST:
+		case TagConstants.MODEL:
+		    break;
+
 	        default:
 
 		    ErrorSet.caution(m.getStartLoc(),
