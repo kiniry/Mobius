@@ -64,6 +64,22 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
       self.print(o, ind, e); write(o, "  */");
       break;
     }
+    case TagConstants.MODELDECLPRAGMA: {
+      FieldDecl d = ((ModelDeclPragma)tp).decl;
+      /*
+       * Below is a "//@" to prevent illegal nested /* ...  comments
+       * that otherwise might result from any attached modifier pragmas.
+       *
+       * We rely on the fact that no ESC modifier can generate newlines
+       * when pretty printed.  !!!!
+       */
+      write(o, "//@ model ");
+      self.print(o, ind, d, true); 
+      // write(o, "  */\n");
+      write(o, "\n");
+      break;
+    }
+
     case TagConstants.GHOSTDECLPRAGMA: {
       FieldDecl d = ((GhostDeclPragma)tp).decl;
       /*

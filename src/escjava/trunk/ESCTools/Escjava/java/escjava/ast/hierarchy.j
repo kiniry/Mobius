@@ -65,7 +65,9 @@ import javafe.util.Location;
  *       - TypeDeclElemPragma ()
  *         + ExprDeclPragma (Expr expr) // Axiom, ObjectInvariant
  *	    + GhostDeclPragma (GhostFieldDecl decl)
+ *	    + ModelDeclPragma (ModelFieldDecl decl)
  *         + StillDeferredDeclPragma (Identifier var)
+ *         + RepresentsPragma (Expr target, Expr value)
  *    - Stmt ()
  *       - StmtPragma ()
  *         + SimpleStmtPragma () // Unreachable
@@ -444,12 +446,27 @@ public class ExprDeclPragma extends TypeDeclElemPragma
   //# PostCheckCall
   private void postCheck() {
     boolean goodtag =
-      (tag == TagConstants.AXIOM || tag == TagConstants.INVARIANT);
+      (tag == TagConstants.AXIOM || tag == TagConstants.INVARIANT || tag == TagConstants.JML_REPRESENTS);
     Assert.notFalse(goodtag);
   }
 
   public int getStartLoc() { return loc; }
   public int getEndLoc() { return expr.getEndLoc(); }
+}
+
+public class ModelDeclPragma extends TypeDeclElemPragma
+{
+  //# FieldDecl decl
+  //# int loc
+
+  public void setParent(TypeDecl p) {
+    super.setParent(p);
+    if (decl != null)
+	decl.setParent(p);
+  }
+
+  public int getStartLoc() { return loc; }
+  public int getEndLoc() { return decl.getEndLoc(); }
 }
 
 public class GhostDeclPragma extends TypeDeclElemPragma
@@ -517,6 +534,19 @@ public class ExprStmtPragma extends StmtPragma
 
   public int getStartLoc() { return loc; }
   public int getEndLoc() { return expr.getEndLoc(); }
+}
+
+public class RepresentsPragma extends TypeDeclElemPragma
+{
+  // represents 'target' <- 'value':
+
+  //# Expr target
+  //# int locOp
+  //# Expr value
+  //# int loc
+
+  public int getStartLoc() { return loc; }
+  public int getEndLoc() { return value.getEndLoc(); }
 }
 
 public class SetStmtPragma extends StmtPragma
