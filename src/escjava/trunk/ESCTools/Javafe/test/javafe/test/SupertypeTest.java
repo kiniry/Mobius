@@ -4,6 +4,7 @@ package javafe.test;
 
 
 import java.util.Vector;
+import java.util.ArrayList;
 
 import javafe.*;
 import javafe.ast.*;
@@ -69,9 +70,9 @@ public class SupertypeTest extends javafe.FrontEndTool {
      ** The remaining arguments are <code>args[offset]</code>,
      ** <code>args[offset+1]</code>, ...<p>
      **/
-    public void frontEndToolProcessing(String[] args, int offset) {
-		int i = offset;
-		int left = args.length - i;	
+    public void frontEndToolProcessing(ArrayList argsv) {
+		String[] args = (String[])argsv.toArray(new String[0]);
+		int left = args.length;	
 	
 		// Must have an positive even # of type names:
 		if (left % 2 != 0 || left==0)
@@ -79,6 +80,7 @@ public class SupertypeTest extends javafe.FrontEndTool {
 	
 		// Handle each query:
 		//@ loop_invariant left==args.length-i
+		int i = 0;
 		for (; left>1; left-=2, i+=2) {
 		    query(args[i], args[i+1]);
 		}

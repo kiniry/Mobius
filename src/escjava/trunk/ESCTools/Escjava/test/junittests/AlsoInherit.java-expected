@@ -5,7 +5,6 @@ AlsoInherit.java:19: Error: Original ESC/Java keywords beginning with also_ are 
 AlsoInherit.java:22: Error: Original ESC/Java keywords beginning with also_ are obsolete; they have been replaced with the corresponding JML keywords and the use of 'also' - note that the semantics has also changed.
         //@ also_exsures (Exception) true; // OBSOLETE
             ^
-  Prover started:TIME
     [TIME]
 
 AlsoInherit ...
@@ -27,6 +26,7 @@ AlsoInherit.java:35: Associated declaration:
 AlsoInherit.java:31: Caution: No initial also expected since there are no overridden or refined methods
         //@ also                // ERROR - no also expected
             ^
+  Prover started:TIME
     [TIME]
 
 AlsoInherit: m() ...

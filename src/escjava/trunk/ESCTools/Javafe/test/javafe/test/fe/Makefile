@@ -78,6 +78,11 @@ do%: testclasses
 	   ./run 2>&1 | sed "s|`pwd`|<TEST>|g" > out)
 	@diff $*/out $*/ans || echo Test $* failed
 
+ex%: testclasses
+	@( cd $*; \
+	   export TOOL="${TOOL} -classpath ." ; \
+	   ./run 2>&1 | sed "s|`pwd`|<TEST>|g" )
+
 testclasses: ${CLASSDIRECTORY}/javafe/test/Print.class
 
 ${CLASSDIRECTORY}/javafe/test/Print.class:

@@ -2,10 +2,10 @@ ESC/Java version VERSION
 BadAccess.java:3: Caution: Duplicate occurrence of modifier 'public'
         //@ public ghost public int i;
                          ^
-  Prover started:TIME
     [TIME]
 
 BadAccess ...
+  Prover started:TIME
     [TIME]
 
 BadAccess: BadAccess() ...

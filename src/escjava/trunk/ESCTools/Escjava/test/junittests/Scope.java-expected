@@ -1,8 +1,3 @@
-ESC/Java version VERSION
-  Prover started:TIME
-    [TIME]
-
-Scope ...
 DUMP java.lang.Object
  Java fields
  Hidden Java fields
@@ -139,15 +134,5 @@ Scope.java:21: Error: Ambiguous field for type Scope
         //@ ghost public int zzzz = dupm; // ERROR - is in a java and  ...
                                     ^
 Caution: Turning off extended static checking due to type error(s)
-  [TIME total] (aborted)
-
-ScopeI ...
-  [TIME total]
-
-ScopeII ...
-  [TIME total]
-
-ScopeS ...
-  [TIME total]
 1 caution
 5 errors

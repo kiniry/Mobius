@@ -1,0 +1,575 @@
+
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+<head>
+  <title>Extended Static Checking for Java - v2 - GUI application</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+</head>
+<body bgcolor="#FFFFFF">
+<h1>
+  Extended Static Checking for Java - V2 - GUI application
+</h1>
+
+The ESC/Java2 tool is an updated version of 
+<A HREF="http://research.compaq.com/SRC/esc/">ESC/Java</A>.
+It is consistent with Java 1.4 and with the current version of
+<A href="http://www.cs.iastate.edu/~leavens/JML/">JML</A>.
+It is available as a 
+<A href="http://www.niii.kun.nl/ita/sos/projects/escframe.html">Java release</A>
+and there is additional information about how to use Esc/Java2 and JML
+in that release.
+
+The documentation page that you are now reading describes a GUI tool
+that contains ESC/Java2, providing a convenient graphical interface
+as an alternative to the command-line application.
+
+
+<table><tr>
+<td width="10%" valign="top">
+<h3>Table of Contents</h3>
+<hr>
+  <a href="#Start">Starting the tool</a>
+<hr>
+  <a href="#Organization">Organization of the tool</a>
+<hr>	   
+  <a href="#Projects">Projects</a>
+<hr>	   
+  <a href="#GettingStarted">Quick start</a>
+<hr>	   
+  <a href="#Details">Details of a project</a>
+<hr>	   
+  <a href="#StaticChecking">Static checking</a>
+<hr>	   
+  <a href="#Reviewing">Reviewing the results</a>
+<hr>	   
+  <a href="#Actions">Static Checking Actions</a>
+<hr>	   
+  <a href="#ESCOptions">ESC Options</a>
+<hr>	   
+  <a href="#GUIOptions">GUI Options</a>
+<hr>
+</td>
+<td width=5%></td>
+<td width="85%">
+
+<A NAME="Start">
+<h2>Starting the tool</h2>
+
+The Esc/Java2 GUI tool is shipped as a double-clickable jar file
+named esctools2.jar.  Thus
+it can be launched either (a) by double-clicking the file (on most platforms)
+or (b) by issuing the command-line command "java -jar esctools2.jar" or
+(c) by issuing the command-line command "java -classpath esctools2.jar escjava.gui.GUI ... options and input files ... ".
+<P>
+Some typechecking can be performed with this tool alone, but any static checking
+requires in addition a copy of the Simplify executable appropriate for the platform.
+There are versions of Simplify available in the Esc/Java2 release for Mac OS X, WIndows, 
+Linux, and Solaris platforms.
+</p>
+
+<A NAME="Organization">
+<h2>Organization of the UI</h2>
+
+The UI has the following pieces:
+<UL>
+<LI> A menubar across the top of the window or the top of the screen.
+<LI> a number of buttons that provide easy access to some of the menubar functionality
+<LI> a status area
+<LI> A main panel with 4 tabs:
+<UL>
+<LI> a tab, "GUI Options", that allows the setting of options that
+control the GUI tool itself (these are not saved as part of a project);
+<LI> a tab, "ESC Options", that allows the setting of options that
+control the running of the ESC/Java2 tool;
+<LI> a tab, "Project files", in which classpaths and input files are listed;
+<LI> a tab, "Results", that allows initiating and reviewing the results
+of the static checking operations.
+</UL>
+<LI> The results panel itself has these elements:
+<UL>
+<LI> a panel showing a tree structure of the compilation units, 
+types and routines contained in the input files;
+<LI> a free-floating error message window (not initially shown);
+<LI> a free-floating rudimentary source code display and editor window (not initially shown).
+</UL>
+<LI> Most GUI elements also have tooltips that provide 
+information about the purpose of that element.
+<LI> The "Help" menu item brings up this help document.
+</UL>
+
+<A NAME="Projects">
+<h2>Projects</h2>
+
+The tool allows work to be organized into 
+<I>projects</I>.  A project contains the options, classpath definitions,
+and list of the files, directories, packages, classes, or list files
+ to be acted upon.  It is the same material as
+would be specified on the command-line.  Project information can be
+saved into project files and reloaded from project files.  Project 
+files do not contain the results of the tool, only the input material.
+The tool operates only on a single project at a time.
+<p>
+The tool begins with a default project.  All options are set to default
+values, the classpath is obtained from the environment, and the list of
+input files is empty.  Thus to begin work, you first have to add some
+content to the project.  You do this on the "Project Files" tab.
+<P>
+Projects can be saved in and laoded from project files.  You can also use project
+files from the command-line using the -f option.
+<p>
+<A NAME="GettingStarted">
+<h2>Quick start</h2>
+<p>
+Step 1: Launch the tool by double-clicking the jar file, or by issuing the 
+command "java -jar esctools2.jar" from the command-line.
+<p>
+Step 2: Click on the tab for the "ESC Options".  Enter into the text field
+labeled "Path to Simplify executable" the absolute path of the executable 
+appropriate for this platform.  You may use the "Browse" button to find the
+executable using a garphical directory navigator, if you like.
+<p>
+Step 3: Click on the tab for "Project files".  Type into the text area, on a single
+line, the path to a file containing the code to be checked.  If you need to adjust the 
+CLASSPATH do so as well.  For a simple file in the ???
+<p>
+Step 4: Click on the tab for "Result".  The name of the input file should be present
+in the Results Pane.  Click the "Check" button.  The results tree will expand to show
+the types and routine names found in the input file.  The will be colored green if the
+various checks pass successfully.  If not, the nodes will be colored red and a text
+window will appear containing error messages.
+<p>
+Step 5: To analyze the results, click on any node in the tree that is colored red.  
+This will bring up a scrollable text window containing the messages generated by 
+checking that item.  If a line in that window begins with a filename and a line number,
+you can triple-click on the line to bring up an editor window for that file with the
+offending line selected and viewable in the scrollable editor window.  Changes made
+there can be saved back to the file by pressing the Save button.
+	   
+<p>
+  <a name="Details">
+<h2>Details of a project</h2>
+
+<B>Input files</B>: The tool operates on a set of input files, directories,
+packages, or filelists.  These are listed one per line within the 
+input file text area. 
+<p>
+Files and directories are listed by name in the
+manner defined for the platform on which the tool is running; they are
+found relative to the working directory (TBD) that is specified in the
+"Working directory" text field.  Listing a directory is equivalent to
+listing all the files in that directory that have active JML suffixes
+(.java, .jml, .spec, .refines-java, .refines-spec, .refines-jml).
+<p>
+If a package name is listed it is looked for on the sourcepath
+(rather than the working directory), and
+results in the tool operating on all JML files in that package.
+<p>
+A filelist is a text file that contains the names of files, directories,
+packages or other filelists, listed one per line.
+<P>Question: what about white space before and after names??? use of quotes???
+<P>Question: what about ambiguous names, -package option
+<P> Question: Class names on the command-line ???
+
+<p>
+<B>Browse button</B>: TBD???
+
+<!--
+<p>
+<B>Working directory text field</B>:  The working directory is the directory 
+relative to which files and directories specified on the command-line
+are found.  The user can adjust the working directory for a project using
+this text field.  The default value for the working directory depends
+on the means by which the GUI tool is launched.  Using methods (a) or
+(b) <A href="#Starting">above</A> the default is the user's home directory.
+Using method (c), the default is the working directory of the shell
+in which the command is issued. [TBD - CHeck this ???]
+-->
+<!--
+<p>
+<B>Sourcepath</B>:  The sourcepath is used to find the packages listed 
+as input files and the specification files for any classes referenced
+by the input files.  If the sourcepath is empty (the default), then its value is
+the same as the classpath.  The sourcepath is not often used, but on
+occasion is useful to provide different paths to find .class files
+vs. .java and specification files.
+-->
+<p>
+<B>Classpath text field</B>: The classpath is used to find any .class files for 
+classes contained in or referenced by the input files (and for all .java
+and specification files if there is no sourcepath).  By default, the
+classpath value is taken from the environment (the CLASSPATH environment
+variable).  If that is not defined the value will be just the working
+directory.  The classpath (and sourcepath) is a sequence of directories
+separated by a platform-dependent separator character (typically
+either a colon or semi-colon); be sure to use the correct character for
+your platform.
+
+<p>
+<B>Specpath text field</B>: The specpath is a directory path containing
+specification files for system classes.  This would typically include
+specifications for classes shipped with a Java implementation (e.g. for java.lang.String),
+but might also include specifications for other class libraries you
+use.
+
+<P>
+TBD: Default??? Can we bundle these with the tool???
+
+
+
+<p>
+Questions: color -coding of lines to indicate validity?  default for working directory?
+
+TBD...
+	   
+<p>
+  <a name="StaticChecking">
+<h2>Static checking</h2>
+<p>
+There are four phases to the checking of the input.
+<UL>
+<LI>Resolving input names.  Each input item is interpreted as a filename, a directory,
+a package, a class or a list.  Each input item can be prefaced by one of the option keywords
+-file, -dir, -package, -class, or -list to indicate which kind of input it is.  AN input
+without one of these is interpreted first as a file if a file with that name (or path) exists, as a 
+directory if a directory with that name or path exists, then as a package or class.  A file
+that is a list must be prefaced by the -list keyword.  Each input is expanded into the
+set of jml-relevant files that it contains.
+<LI>Parsing a file.  Each file generated by the above is read and parsed.  In doing so
+other files in the compilation unit's refinement sequence are also read, but no reference
+is made to any of the classes that are referenced in the input file.  The result is a 
+composite parsed compilation unit.  Syntax errors will cause this phase to partially
+or completely fail.
+<LI>Typechecking.  Each class and routine in a compilation unit is then
+checked to be sure it is well-formed.  In the process, any type names in
+the compilation unit are resolved: their type declarations are found from the
+directories specified in the sourcepath and classpath.  Consequently 
+additional files are parsed and typechecked.  Errors such as missing
+type definitions, expressions that have the wrong type or semantic errors
+such as misusing a static declaration of a member of a type can cause this phase to fail.
+Typechecking currently cannot be performed incrementally, since the
+checking of one class is dependent on many others.  Thus if the 
+project settings or the set of
+input files are changed, all typechecking must be redone.
+<LI>Static checking.  In this phase, verification conditions are 
+created for each class and routine and sent to the prover subsystem
+for checking.  Code that appears to violate
+the specifications, according to the prover, results in "warnings" being
+issued.  The checking of a given routine may depend on the specifications
+of many other classes and routines. 
+The static checker can operate on each routine individually,
+presuming all relevant classes have typechecked successfully.
+</UL>
+TBD...
+
+  <a name="Reviewing">
+<h2>Reviewing the results</h2>
+
+There are three tools for reviewing the results of static checking.
+<p>
+<h3>The tree of input elements</h3>
+The results pane shows the list of input elements (files, directories, packages, etc.).
+Once the input element has been resolved into the list of files contained in it, those
+files are shown as the next level of nesting.  If the file is parsed successfully
+(including the other files in the refinement sequence),
+then the next two levels of nesting will show the classes and the routines
+contained in the parent compilation unit.
+<p>
+The tree of compilation units, classes, and routines is color-coded.  
+The background color
+for each tree node indicates the errors produced.
+<UL>
+<LI><B>White</B>: The item has not been processed.
+<LI><B>Red</B>: An error or static checker warning occurred in processing.
+<LI><B>Green</B>: All checks passed.
+<LI><B>Yellow</B>: Some cautions were generated, but no errors or warnings.
+<LI><B>Orange</B>: Some child nodes have errors (useful if the tree is collapsed, 
+to know about hidden children with errors).
+<LI><B>Blue</B>: The static checker timed out or the verification condition was too large.
+</UL>
+<p>
+
+<h3>The error window</h3>
+As each routine is checked, if there are warnings or errors or cautions produced,
+an output window is generated that contains the text of the corresponding messages.  
+This is produced for any of the parsing, typechecking or static checking
+phases that have errors.  Thus there is displaqable output for any node that is marked
+as having not passed its checks.  The output window is scrollable and the output
+messages contain the file name and line numbers of the offending statements.  You can
+display the output of any node by clicking on the node label in the results tree.
+
+<P>
+An editor window can be launched for a compilation unit, a class, a
+routine, or an error message.  This brings up a very rudimentary 
+editor, positioned at the appropriate line number.  Minor edits can
+be performed and the result saved back out to the file system.
+Changes that are not saved (or not yet saved) are not used in static
+checking; the checker always reads from the file system.  You can bring up
+an editor window by either
+<UL>
+<LI>triple-clicking on a line in the error window that begins with a file name and a 
+line number (this will scroll the window to the specified line), or
+<LI>selecting a file, class, or routine in the results tree and then selecting the 
+View->Editor menu item from the menu bar.  [[[TBD - what about multiple files of a
+compilation unit.]]]
+	   
+<a name="Actions">
+<h2>Static Checking Actions</h2>
+
+This section is a reference to all the GUI operations (menus, buttons,
+accelerator keys,...) that can be performed by the tool.  Details of 
+the two option panes are given in succeeding sections.
+
+<h3>Window actions</h3>
+<B>Close window</B>: (Clicking the X in the upper right on Windows,
+the red button in the upper left on Mac).  This action terminates the
+program.  There is no confirmation dialog, even if you have loaded and
+altered a project.
+<BR>
+Question: TBD - should it ask to save the current project?
+<P>
+<B>Other window operations</B>: Other generic window operations have
+the same effect as for other windows on that platform.
+
+<h3>File menu</h3>
+<B>New Project</B>: This action will delete the current project
+(but not the project file or any other file associated with the project)
+from the tool and initialize to a default, empty project.  There is no
+confirmation dialog that you want to forget that current project.
+<BR>
+Question: TBD - does it ask to save the current project?
+
+<P>
+<B>Open Project</B>:  This action will launch a file browser enabling
+the user to choose a new project file to load.  There is no
+confirmation dialog that you want to forget that current project.  The file
+browser begins in the current working directory, but subsequent uses of the
+file browser begin in the directory where it was last left.
+
+<P>
+<B>Save Project</B>:  This action will save the current project
+in the same file from which it was loaded.  If there is no source file
+(since the project is a modification of a default project), then this
+button will provoke the same action as "SaveAs Project".  There is no
+confirmation that you do indeed want to save the new state of the project.
+
+<p>
+<B>SaveAs Project</B>:  This action will launch a file browser enabling
+the user to choose a directory and file name under which to save the
+current project.  There is a confirmation dialog that asks if you want to
+overwrite an existing file, should you choose one.  The same file browser is
+used as in the "Open Project" browser, and thus repeated uses of SaveAs will
+start the file browser in the directory where the previous one ended.
+<p>
+<B>Exit</B> (on non-Mac platforms):  Exits the program without any confirmation 
+dialogs.
+<P>
+<B>Quit</B> (on Mac platforms and located under the ???? menubar item): 
+  Exits the program without any confirmation 
+dialogs.
+<P>
+[[[ TBD - on non-Mac platforms, need ... for menu items that bring up dialogs]]]
+<p>
+[[[ What about accelerator keys? ]]]
+
+<h3>
+<P>
+<H3>View menu</h3>
+<p>
+TBD...
+<P>
+<h3>Check menu</h3>
+<p>
+<B>Check All</B>:  Begins a full set of checks on all the input.  Items that are already
+checked are not re-checked.
+<P>
+<B>Check Selected</B>:  Begins a full set of checks on each selected node and its children.  Items that are already
+checked are not re-checked.
+<p>
+<B>TypeCheck All</B>:  Performs typechecking but not static-checking on all the input.  Items that are already
+typechecked are not re-checked.
+<P>
+<B>TypeCheck Selected</B>:  Performs typechecking but not static-checking on each selected node and its children.  Items that are already
+typechecked are not re-checked.
+<p>
+<B>Parse All</B>:  Performs parsing but not type- or static-checking on all the input.  Items that are already
+parsed are skipped.
+<P>
+<B>Parse Selected</B>:  Performs parsing but not type- or static-checking on each selected node and its children.  Items that are already
+parsed are skipped.
+<p>
+<B>Resolve All</B>:  Converts all input items into the set of implied files.  Items that are already
+resolved are skipped.
+<P>
+<B>Resolve Selected</B>:  Performs parsing but not type- or static-checking on each selected node and its children.  Items that are already
+resolved are skipped.
+<p>
+<B>Clear All</B>:  Clears away all results of static checking.  This is useful if you want to
+rerun static-checking with a different set of options.  It does not reread the input files.
+<P>
+<B>Clear Selected</B>:  Clears away all results of static checking for selected nodes and their children.  This is useful if you want to
+rerun static-checking with a different set of options.  It does not reread the input files.
+
+
+<P>
+<h3>Help menu</h3>
+
+<p>
+TBD...
+
+<h2>Buttons</h2>
+<P>
+<B>Reload</B>
+<P>
+<B>Clear</B>
+<P>
+<B>Check</b>
+
+<h2>Project inputs Pane</h2>
+
+<h3>CLASSPATH</H3>
+
+<h3>Input list</h3>
+
+<P>
+<h2>Results tree</h2>
+
+<P>
+<h2>Error output window</H2>
+
+<P>
+<h2>Editor windows</h2>
+	   
+  <a name="ESCOptions">
+<h2>ESC Options</h2>
+
+Not all of the options available on the command-line are available in
+the GUI.  Some are not relevant, some have an unknown or untested effect,
+and some are too little used (and some we haven't gotten around to).
+Unless indicated, the default for each option is off.  Most of them
+are binary valued options with simple toggles to turn them on or off.
+<p>
+
+
+<h3>Control of input</h3>
+<B>source 1.4</B>: The default is on, in which case Java 1.4 input, 
+possibly including assert statements,
+is presumed.  If the option is off, the assert identifier is 
+interpreted as an ordinary identifier and not a keyword.
+<p>
+<B>enableassertions</B>: If on (requires source 1.4), then Java assert
+statements
+are enabled; otherwise they are ignored.
+<p>
+<B>jmlAssertions</B>: If on, then Java assertion statements are 
+enabled and are treated as JML assertions.  [[[ TBD - fix this one]]]
+<p>
+<B>preferSource, preferBinary, preferRecent, neverBinary, neverSource</B>:
+(Default is preferRecent) These mutually exclusive options determine which of
+a .java or a .class file is used.  [[[ TBD - fix this one ]]]
+<p>
+<B>parsePlus</B>: If on, parses annotations in '//@' and '/*@' comments,
+which are normally only processed by the JML checker.
+
+<h3>Control of output</h3>
+<B>noCautions</B>: If on, no Caution messages are output, only warnings and
+errors and fatal errors.
+<p>
+<B>noSemicolonWarnings</B>: If on, suppresses errors caused by missing
+terminating semicolons (technically illegal in JML, but tolerated by
+ESC/Java2).
+<p>
+<B>noNotCheckedWarnings</B>: If on, suppresses cautions about JML 
+language features that are not checked by the static checker.
+<p>
+<B>nocheck</B>: TBD
+<p>
+<B>typecheck</B>: TBD
+
+<h3>Control of static checking</h3>
+<B>loopSafe, loop, loopCount</B>: TBD
+<p>
+<B>mapsUnrollCount</B>: TBD
+<p>
+TBD: counterexample, noredundancy, plainwarning
+
+
+<h3>Debugging helps</h3>
+<B>verbose</B>: Logs a large quantity of output to show the progress of
+the tool's execution.
+<p>
+<B>showErrorLocation</B>: If on, then a stack dump is produced just prior to each
+output message, to assist in determing the location in the code reporting
+the condition.
+<p>
+<B>showDesugaredSpecs</B>: If on, outputs a desugared and denested form of
+each routine's specifications.
+<p>
+<B>pxLog</B>: TBD
+<p>
+<B>pgc</B>: If on, outputs the guarded commands generated for each routine.
+<p>
+<B>pdsa</B>: If on, outputs the dsa form generated for each routine.
+<p>
+<B>ppvc</B>: If on, outputs the verification conditions (as sent to the prover) generated for each routine.
+<p>
+<B>testMode</B>: If on, replaces the output of version numbers, time
+stamps and other variable elements so that output can be compared
+automatically against oracle data files.
+<p>
+TBD... quiet, bootpath, -v
+<p>
+TBD - show usage message
+<p>
+TBD - avoidSpec, depend, processRecursively
+
+<h3>Warning types</h3>
+The options in the two columns on the right side of the pane designate the various
+types of warnings that the static checker checks.  All except 'DeadLock' are on by 
+default.  Turning these off is equivalent to using the '-nowarn' option on the command-line.
+The documentation of ESC/Java2 provides information about each kind of warning.
+	   
+  <a name="GUIOptions">
+<h2>GUI Options</h2>
+
+<B>Output line wrap</B>: If on, then lines are wrapped in the output (error) windows;
+if off, then horizontal scrollbars are used if the lines extend off-screen.
+<p>
+<B>Editor line wrap</B>: If on, then lines are wrapped in the editor windows;
+if off, then horizontal scrollbars are used if the lines extend off-screen.
+<p>
+<B>Separate output windows</B>: If on, then each routine, class or compilation unit
+that generates output will generate its own window.  If off, then one window is shared;
+as output is generated for a new check, it replaces what was formerly in the window.
+Note that individual separate windows can always be obtained by selecting an item 
+with the Control(???) key held down.
+
+TBD...
+<p>
+TBD on color options
+<p>
+  <a name="CLOptions">
+<h2>Command-line Options</h2>
+<p>
+TBD...
+
+<P>
+<h2>Issues</h2>
+<UL>
+<LI> There is currently a race condition between the running of checks and various GUI 
+operations.  You should wait for checking to complete or stop checking using the STOP
+button (and wait for the stop to take effect), before saving, loading, or reinitializing
+the project.
+<LI>Some of the color coding could be cleaned up.
+<LI>It would be nice if the title showed the current project name.
+
+
+</UL>
+
+</td>
+</tr></table>
+
+<! Server supplied footer starts here>
+
+
+</body>
+</html>

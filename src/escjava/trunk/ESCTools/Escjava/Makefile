@@ -23,6 +23,7 @@ JAVAFE_SOURCE_DIR ?= ${JAVAFE_ROOT}/java
 JAVASOURCEFILES = \
 	${ESCJAVA_SOURCE_DIR}/escjava/ast/*.java \
 	${ESCJAVA_SOURCE_DIR}/escjava/backpred/*.java \
+	${ESCJAVA_SOURCE_DIR}/escjava/gui/*.java \
 	${ESCJAVA_SOURCE_DIR}/escjava/parser/*.java \
 	${ESCJAVA_SOURCE_DIR}/escjava/prover/*.java \
 	${ESCJAVA_SOURCE_DIR}/escjava/reader/*.java \
@@ -54,7 +55,7 @@ export SOURCEDIRECTORY=${ESCJAVA_SOURCE_DIR}
 export TESTSOURCEDIRECTORY=${ESCJAVA_ROOT}/test
 
 ## This is the path for classfiles (not sources) needed to build Escjava
-export ESCJAVA_BUILD_CLASSPATH = $(call canonicalize,${JAVAFE_CLASSFILES}:${ESCJAVA_CLASSFILES}:${MOCHA_LIB})
+export ESCJAVA_BUILD_CLASSPATH = $(call canonicalize,${JAVAFE_CLASSFILES}:${ESCJAVA_CLASSFILES}:${MOCHA_LIB}:${ESCTOOLS_ROOT}/Utils)
 
 ###########################################################################
 .PHONY: all
@@ -116,6 +117,7 @@ compileall: generate_files ${MOCHA_LIB} ${CLASSDIRECTORY}
 		-sourcepath $(call canonicalize,${SOURCEPATH}) \
 		-d $(call canonicalize,${CLASSDIRECTORY}) \
 		${JAVASOURCEFILES}
+	cp ${ESCJAVA_SOURCE_DIR}/escjava/gui/*.html ${CLASSDIRECTORY}/escjava/gui
 	touch ${STAMPFILE}
 
 VERSION_FILE = ${ESCJAVA_SOURCE_DIR}/escjava/Version.java
@@ -148,6 +150,7 @@ ${STAMPFILE}: ${JAVASOURCEFILES}
 		-sourcepath $(call canonicalize,${SOURCEPATH}) \
 		-d $(call canonicalize,${CLASSDIRECTORY}) \
 		$(foreach file,$?,$(call canonicalize,$(file)))
+	cp ${ESCJAVA_SOURCE_DIR}/escjava/gui/*.html ${CLASSDIRECTORY}/escjava/gui
 	touch $@
 
 ###########################################################################

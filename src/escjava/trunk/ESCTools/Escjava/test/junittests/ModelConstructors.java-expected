@@ -8,7 +8,6 @@ ModelConstructors.java:5: Error: A constructor-like declaration has an id which 
 ModelConstructors.java:3: Associated declaration: 
 public class ModelConstructors {
              ^
-  Prover started:TIME
     [TIME]
 
 ModelConstructors ...

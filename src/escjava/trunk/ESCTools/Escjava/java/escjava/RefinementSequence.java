@@ -45,6 +45,7 @@ public class RefinementSequence extends CompilationUnit {
     protected boolean hasJavaDef;
     protected boolean javaIsBinary = false;
 
+    public ArrayList refinements() { return refinements; }
 
     //@ requires refinements != null;
     //@ requires refinements.size() > 0;

@@ -2,10 +2,10 @@ ESC/Java version VERSION
 .|RefineBadPackage.spec:1: Error: Package name does not match the package name in RefineBadPackage.java: junittests vs. 
 package junittests;
 ^
-  Prover started:TIME
     [TIME]
 
 RefineBadPackage ...
+  Prover started:TIME
     [TIME]
 
 RefineBadPackage: RefineBadPackage() ...

@@ -15,6 +15,8 @@ import javafe.util.ErrorSet;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.io.File;
+import java.io.FilenameFilter;
 
 /**
  * <code>OutsideEnv</code> implements the top-level environment
@@ -343,22 +345,33 @@ public final class OutsideEnv {
     /** Adds all relevant files from the given package; 'relevant' is defined
 	by the 'findFiles' method of the current reader.
     */
-    //@ requires pname != null;
-    public static void addSources(String[] pname) {
+    //@ requires sources.elementType <: \type(GenericFile);
+    //@ ensures \result.elementType <: \type(CompilationUnit);
+    public static ArrayList addSources(ArrayList sources) {
+	ArrayList out = new ArrayList(sources.size());
+	Iterator i = sources.iterator();
+	while (i.hasNext()) {
+	    GenericFile gf = (GenericFile)i.next();
+	    out.add(addSource( gf ));
+	}
+	return out;
+    }
+
+    //@ ensures sources.elementType <: \type(GenericFile);
+    public static ArrayList resolveSources(String[] pname) {
 	ArrayList a = reader.findFiles(pname);
 	if (a == null) {
 	    ErrorSet.caution("Could not locate package: " +
 			javafe.parser.ParseUtil.arrayToString(pname,"."));
-	} else if (a.isEmpty()) {
+	    return null;
+	}
+	if (a.isEmpty()) {
 	    ErrorSet.caution("Package has no files: " +
 			javafe.parser.ParseUtil.arrayToString(pname,"."));
-	} else {
-	    Iterator i = a.iterator();
-	    while (i.hasNext()) {
-		addSource( (GenericFile)i.next() );
-	    }
 	}
+	return a;
     }
+
     /**
      * Attempt to add the package-member types contained in a named
      * source file to the package-member-types environment, returning
@@ -379,6 +392,24 @@ public final class OutsideEnv {
 	return addSource(source);
     }
 
+	// Output is an ArrayList of GenericFile
+    //@ ensures \result == null || \result.elementType <: \type(GenericFile);
+    public static ArrayList resolveDirSources(String dirname) {
+	File f = new File(dirname);
+	if (!f.exists()) {
+	    ErrorSet.caution("Directory does not exist: " + dirname);
+	    return null;
+	}
+	File[] names = f.listFiles(reader.filter());
+	if (names.length == 0) {
+	    ErrorSet.caution("Directory has no files: " + dirname);
+	}
+	ArrayList a = new ArrayList(names.length);
+	for (int i=0; i<names.length; ++i) {
+	    a.add(new NormalGenericFile(names[i]));
+	}
+	return a;
+    }
 
     /**
      * This routine creates TypeSigs for each TypeDecl member of cu. <p>

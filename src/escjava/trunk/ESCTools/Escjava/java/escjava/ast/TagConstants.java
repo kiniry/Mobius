@@ -684,7 +684,7 @@ public class TagConstants extends GeneratedTags
             tag == TagConstants.DECREASING_REDUNDANTLY;
     }
 
-    private static String[] escchecks = {
+    public final static String[] escchecks = {
         "ZeroDiv",
         "ArrayStore",
         "Assert",

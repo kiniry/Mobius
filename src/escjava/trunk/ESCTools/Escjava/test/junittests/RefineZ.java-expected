@@ -4,10 +4,10 @@ Error: The command-line argument RefineZ.java was not in the refinement sequence
 .|sub|RefineZ.spec:1: Error: Package name does not match the package name in .|sub|RefineZ.spec:  vs. sub
 public class RefineZ {}
 ^
-  Prover started:TIME
     [TIME]
 
 sub.RefineZ ...
+  Prover started:TIME
     [TIME]
 
 sub.RefineZ: RefineZ() ...

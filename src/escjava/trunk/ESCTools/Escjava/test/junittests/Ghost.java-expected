@@ -5,7 +5,6 @@ Ghost.java:46: Error: Cannot have modifiers outside of the annotation on a TypeD
 Ghost.java:48: Error: Expected a declaration within the annotation following the ghost keyword
         /*@ ghost */ int jjj; // ERROR
             ^
-  Prover started:TIME
     [TIME]
 
 Ghost ...

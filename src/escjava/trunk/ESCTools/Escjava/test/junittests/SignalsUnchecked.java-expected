@@ -1,8 +1,8 @@
 ESC/Java version VERSION
-  Prover started:TIME
     [TIME]
 
 SignalsUnchecked ...
+  Prover started:TIME
     [TIME]
 
 SignalsUnchecked: redundant_signals_unchecked() ...

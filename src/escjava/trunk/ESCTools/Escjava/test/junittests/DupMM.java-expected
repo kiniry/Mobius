@@ -11,7 +11,6 @@ DupMM.java:8: Error: Model constructor has more than one implementation
 .|DupMM.spec:6: Associated declaration: 
         //@ model public DupMM(int i) {}
                                       ^
-  Prover started:TIME
     [TIME]
 
 DupMM ...

@@ -8,10 +8,10 @@ ParseImports.java:7: Caution: An import statement in an annotation should begin 
 ParseImports.java:8: Caution: An import statement in an annotation should begin with 'model import'
 //@ import java.util.Collection;
     ^
-  Prover started:TIME
     [TIME]
 
 ParseImports ...
+  Prover started:TIME
     [TIME]
 
 ParseImports: ParseImports() ...

@@ -6,6 +6,8 @@ import javafe.ast.CompilationUnit;
 
 import javafe.genericfile.*;
 import java.util.ArrayList;
+import java.io.FilenameFilter;
+import java.io.File;
 
 /**
  * A TypeReader is an extended {@link Reader} that understands how to
@@ -47,6 +49,11 @@ abstract public class TypeReader extends Reader
     //@ requires \nonnullelements(P) && T != null;
     abstract public boolean exists(String[] P, String T);
 
+
+    /**
+     *  Returns a (source or binary) file for the given type.
+     */
+    abstract public GenericFile findType(String[] P, String T);
 
     /***************************************************
      *                                                 *
@@ -123,4 +130,7 @@ abstract public class TypeReader extends Reader
 	package P.
     */
     abstract public ArrayList findFiles(String[] P);
+
+    public FilenameFilter filter() { return new FilenameFilter() {
+		public boolean accept(File f, String s) { return true; }}; }
 }

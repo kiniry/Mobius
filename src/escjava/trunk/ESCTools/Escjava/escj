@@ -35,6 +35,14 @@
 
 set NAME=$PWD/$0
 
+if ( "$1" == "-gui" ) then
+	## Run GUI
+	set MAIN=escjava.gui.GUI
+	shift
+else
+	set MAIN=escjava.Main
+endif
+
 if ( ! $?ESCTOOLS_RELEASE ) then
     ## Check if this looks like a release even if ESCTOOLS_RELEASE is not set
     if ( -e $NAME ) then
@@ -236,5 +244,5 @@ if ( $?ESCJ_VERBOSE ) then
 endif
 
 ${JAVA} ${JAVA_VM_FLAGS} -Dsimplify=${ESCJ_SIMPLIFY} \
-    -classpath ${ESC_CLASSPATH} escjava.Main \
+    -classpath ${ESC_CLASSPATH} ${MAIN} \
     ${JBIN} -classpath ${CLASSPATH} -specs ${ESC_SPECS} ${ESCJ_STDARGS} $*

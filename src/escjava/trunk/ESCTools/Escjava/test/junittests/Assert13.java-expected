@@ -17,10 +17,10 @@ Assert13.java:22: Error: Java keyword "assert" is only supported if the -source 
 Assert13.java:23: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
                 assert false : 0; //@ nowarn Assert;
                 ^
-  Prover started:TIME
     [TIME]
 
 Assert13 ...
+  Prover started:TIME
     [TIME]
 
 Assert13: m_Exception_Assert(int) ...

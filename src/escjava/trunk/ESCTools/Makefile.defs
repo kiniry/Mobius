@@ -132,10 +132,10 @@ export JAVAFE_SOURCE_DIR = ${JAVAFE_ROOT}/java
 export JAVAFE_CLASSFILES = ${JAVAFE_ROOT}/classfiles
 
 ## This is the path needed to build Javafe
-export JAVAFE_BUILD_CLASSPATH = ${JAVAFE_CLASSFILES}
+export JAVAFE_BUILD_CLASSPATH = ${JAVAFE_CLASSFILES}:${ESCTOOLS_ROOT}/Utils
 
 # This is the path needed to run Javafe (only used for testing)
-export JAVAFE_CLASSPATH = ${JAVAFE_CLASSFILES}
+export JAVAFE_CLASSPATH = ${JAVAFE_CLASSFILES}:${ESCTOOLS_ROOT}/Utils
  
 ## Pertinent things for Escjava
 export ESCJAVA_ROOT = ${ESCTOOLS_ROOT}/Escjava

@@ -11,10 +11,10 @@ Heavyweight.java:44: Error: JML does not allow empty clause sequences
 Heavyweight.java:51: Error: There is no opening {| to match this closing |}
             |}                  // ERROR - no opening {|
             ^
-  Prover started:TIME
     [TIME]
 
 Heavyweight ...
+  Prover started:TIME
     [TIME]
 
 Heavyweight: m() ...

@@ -105,6 +105,22 @@ public class ErrorSet
 	gag = false;
     }
 
+    private static int savedErrorsWarnings;
+    private static int savedCautions;
+
+    public static void mark() {
+	savedErrorsWarnings = errors + warnings;
+	savedCautions = cautions;
+    }
+
+    public static boolean errorsSinceMark() {
+	return errors + warnings > savedErrorsWarnings;
+    }
+
+    public static boolean cautionsSinceMark() {
+	return cautions > savedCautions;
+    }
+
     /***************************************************
      *                                                 *
      * Reporting entry points:			       *
@@ -401,6 +417,10 @@ public class ErrorSet
 	// Display which column # visually if available:
 	if (!Location.isWholeFileLoc(loc))
 	    displayColumn(loc);
+	else if (msg.length() == 0) {
+	    System.out.println("                ( line not available )");
+	    System.out.println("");
+        }
     }
 
 

@@ -1,6 +1,13 @@
 package javafe;
-import javafe.util.UsageError;
+
 import java.util.ArrayList;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+
+import javafe.util.ErrorSet;
+import javafe.util.UsageError;
+import junitutils.Utils;
 
 /**
  * This is the super-class of classes that hold the values of
@@ -23,6 +30,11 @@ public class Options
     //************************************************************************
     //     Options
     //************************************************************************   
+    /**
+     * Holds all the non-option arguments.
+     */
+    public ArrayList inputEntries;  // elements are InputEntry
+
     /**
      * Option to restrict output to error/caution/warning messages
      * only - no progress or informational output.
@@ -47,6 +59,10 @@ public class Options
      */
     public boolean noCautions = false;
     
+    /** Option holding the current working directory.
+     */
+    public String currentdir = System.getProperty("user.dir");
+
     /**
      * Option holding the user-specified classpath.
      */
@@ -67,13 +83,6 @@ public class Options
 
     // Note - the "-v" option is directly set in javafe.util.Info.on
     
-    /** 
-     * Option holding a list of packages to be processed along with
-     * files.
-     */
-    //*@ invariant (* elements have type java.lang.String *)
-    public ArrayList packagesToProcess = new ArrayList();
-
     /**
      * Are we parsing Java 1.4 source code (i.e., we must parse the
      * new "assert" Java keyword).
@@ -134,15 +143,26 @@ public class Options
      */
     //@ requires \nonnullelements(args);
     //@ ensures 0 <= \result && \result <= args.length;
-    public final int processOptions(String[] args) throws UsageError {
+    public final void processOptions(String[] args) throws UsageError {
+	inputEntries = new ArrayList(args.length);
+	processOptionsLoop(args);
+    }
+
+    //@ requires \nonnullelements(args);
+    //@ ensures 0 <= \result && \result <= args.length;
+    protected final void processOptionsLoop(String[] args) throws UsageError {
 	int offset = 0;
 
-	while (offset<args.length && args[offset].length()>0 &&
-		args[offset].charAt(0)=='-') {
-	    offset = processOption(args[offset], args, offset+1);
+	while (offset < args.length) {
+	    String s = args[offset++];
+	    if (s.length() == 0) {
+		// skip
+	    } else if (s.charAt(0) == '-') {
+		offset = processOption(s, args, offset);
+	    } else {
+		inputEntries.add(new InputEntry.Unknown(s));
+	    }
 	}
-
-	return offset;
     }
 
     /**
@@ -206,12 +226,54 @@ public class Options
 	    }
 	    sysPath = args[offset];
 	    return offset+1;
+	} else if (option.equals("-currentdir")) {
+	    if (offset >= args.length) {
+		throw new UsageError("Option " + option + 
+                                     " requires one argument");
+	    }
+	    currentdir = args[offset];
+	    return offset+1;
 	} else if (option.equals("-package")) {
 	    if (offset>=args.length) {
 		throw new UsageError("Option " + option + 
                                      " requires one argument");
 	    }
-	    packagesToProcess.add(args[offset]);
+	    inputEntries.add(new InputEntry.Package(args[offset]));
+	    return offset+1;
+	} else if (option.equals("-class")) {
+	    if (offset>=args.length) {
+		throw new UsageError("Option " + option + 
+                                     " requires one argument");
+	    }
+	    inputEntries.add(new InputEntry.Class(args[offset]));
+	    return offset+1;
+	} else if (option.equals("-dir")) {
+	    if (offset>=args.length) {
+		throw new UsageError("Option " + option + 
+                                     " requires one argument");
+	    }
+	    inputEntries.add(new InputEntry.Dir(args[offset]));
+	    return offset+1;
+	} else if (option.equals("-file")) {
+	    if (offset>=args.length) {
+		throw new UsageError("Option " + option + 
+                                     " requires one argument");
+	    }
+	    inputEntries.add(new InputEntry.File(args[offset]));
+	    return offset+1;
+	} else if (option.equals("-list")) {
+	    if (offset>=args.length) {
+		throw new UsageError("Option " + option + 
+                                     " requires one argument");
+	    }
+	    inputEntries.add(new InputEntry.List(args[offset]));
+	    return offset+1;
+	} else if (option.equals("-f")) {
+	    if (offset>=args.length) {
+		throw new UsageError("Option " + option + 
+                                     " requires one argument");
+	    }
+	    processFileOfArgs(args[offset]);
 	    return offset+1;
 	} else if (option.equals("-source")) {
             if ((offset >= args.length) ||
@@ -255,7 +317,12 @@ public class Options
 	} else if (option.equals("-neverSource")) {
 	    fileOrigin = NEVER_SOURCE;
 	    return offset;
-	}
+	} else if (option.equals("--")) {
+	    while (offset < args.length) {
+		inputEntries.add(new InputEntry.Unknown(args[offset++]));
+	    }
+	    return offset;
+        }
 
 	// Pass on unrecognized options:
 	
@@ -266,6 +333,21 @@ public class Options
         throw new UsageError("Unknown option: " + option);
     }
 
+    public void processFileOfArgs(String filename) throws UsageError {
+	try {
+	    String[] sa = new String[20]; // more than most lines in the file will be, just for efficiency
+	    BufferedReader r = new BufferedReader(new FileReader(filename));
+	    String s;
+	    while ( (s=r.readLine()) != null) {
+		sa = Utils.parseLine(s);
+		processOptionsLoop(sa);
+	    }
+	} catch (IOException e) {
+	    ErrorSet.error("Failure while reading input arguments from file " +
+		filename + ": " + e);
+	}
+    }
+		
 
     //************************************************************************
     //     Routines to print options and usage

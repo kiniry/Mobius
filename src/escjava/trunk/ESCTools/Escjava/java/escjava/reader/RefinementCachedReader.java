@@ -71,7 +71,9 @@ public class RefinementCachedReader extends CachedReader
      *                                                 *
      **************************************************/
 
-	// Inherited
+    public CompilationUnit isAlreadyRead(GenericFile target) {
+	return (CompilationUnit)get(target);
+    }
 
     /***************************************************
      *                                                 *
@@ -101,9 +103,16 @@ public class RefinementCachedReader extends CachedReader
      */
     public CompilationUnit read(GenericFile target, boolean avoidSpec) {
 	// Note - reading has the side effect of caching
-	if (isCached(target)) {
+	CompilationUnit cu = (CompilationUnit)get(target);
+	if (cu != null) {
+	    cu.duplicate = true;
+	    return cu;
+/*
+Don't complain, but don't do it twice either. ???
 	    CompilationUnit cu = (CompilationUnit)get(target);
 	    if (cu != null) {
+		// If we are processing a package, we do not want to complain
+		// about multiple files from a refinement sequence.
 		Name n = cu.pkgName;
 		if (n != null && escjava.Main.options().
 			packagesToProcess.contains(n.printName()))
@@ -112,12 +121,14 @@ public class RefinementCachedReader extends CachedReader
 	    ErrorSet.caution("Duplicate command-line file " +
 				"(or part of a refinement sequence): " +
 				target.getHumanName());
-	    return null;
+*/
+	    
+	    //return null;
 	}
 
 	// not cached - read and do refinement combination
 	refinementSequence = null;
-	CompilationUnit cu = super.read(target,avoidSpec);
+	cu = super.read(target,avoidSpec);
 	if (cu == null) return null;
 	CompilationUnit result = readRefinements(cu,avoidSpec);
 

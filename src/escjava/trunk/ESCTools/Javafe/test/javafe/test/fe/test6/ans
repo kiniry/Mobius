@@ -1,5 +1,5 @@
-Error: I/O error: NonExistantFile.java (No such file or directory)
-1 error
+Caution: Skipping unknown (or not found) input item: NonExistantFile.java
+1 caution
 Error: I/O error: ErrorFile.java (Permission denied)
 1 error
 Error: I/O error: ./ErrorFile.java (Permission denied)

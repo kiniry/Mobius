@@ -253,6 +253,8 @@ public class CompilationUnit extends ASTNode
   //# int loc NotNullLoc
   //# TypeDeclElem* otherPragmas NoCheck
 
+  public boolean duplicate = false;
+
   //# PostCheckCall
   private void postCheck() {
     for(int i = 0; i < elems.size(); i++) {

@@ -19,7 +19,7 @@ export SOURCEDIRECTORY = ${JAVAFE_ROOT}/java
 export TESTSOURCEDIRECTORY = ${JAVAFE_ROOT}/test
 
 ## This one is needed in submakes that don't define their own classpath
-export CLASSPATH = $(call canonicalize,${CLASSDIRECTORY})
+export CLASSPATH = $(call canonicalize,${CLASSDIRECTORY}:${ESCTOOLS_ROOT}/Utils)
 
 ##############################################################################
 
@@ -56,7 +56,7 @@ compile: ${CLASSDIRECTORY} source ${CLASSESSTAMP}
 
 ## Compiles all out of date java files
 ${CLASSESSTAMP}: ${SOURCEFILES}
-	${JAVAC} ${JAVAC_FLAGS} -classpath $(call canonicalize,${CLASSDIRECTORY}:${SOURCEDIRECTORY}) \
+	${JAVAC} ${JAVAC_FLAGS} -classpath $(call canonicalize,${CLASSDIRECTORY}:${SOURCEDIRECTORY}:${ESCTOOLS_ROOT}/Utils) \
 	  -d $(call canonicalize,${CLASSDIRECTORY}) $?
 	touch ${CLASSESSTAMP}
 
@@ -68,7 +68,7 @@ compileall: ${CLASSDIRECTORY} source javafeall
 .PHONY: javafeall
 javafeall:
 	( cd java; \
-	${JAVAC} ${JAVAC_FLAGS} -classpath $(call canonicalize,${CLASSDIRECTORY}:${SOURCEDIRECTORY}) \
+	${JAVAC} ${JAVAC_FLAGS} -classpath $(call canonicalize,${CLASSDIRECTORY}:${SOURCEDIRECTORY}:${ESCTOOLS_ROOT}/Utils) \
 	  -d $(call canonicalize,${CLASSDIRECTORY}) \
 	  `find javafe -name "*.java"` \
 	  `find tohtml -name "*.java"` )

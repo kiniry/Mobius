@@ -33,6 +33,8 @@ import java.lang.reflect.Method;
 */
 public class Utils {
 
+    static public boolean disable = false;
+
     /** A cached value of the usual System out stream. */
     final private static PrintStream pso = System.out;
 
@@ -49,10 +51,18 @@ public class Utils {
     */
     //@ requires ps != null;
     static public void setStreams(PrintStream ps) {
+	if (disable) return;
 	pso.flush();
 	pse.flush();
 	System.setOut(ps);
 	System.setErr(ps);
+    }
+
+    static public ByteArrayOutputStream setStreams() {
+	ByteArrayOutputStream ba = new ByteArrayOutputStream(10000);
+	PrintStream ps = new PrintStream(ba);
+	setStreams(ps);
+	return ba;
     }
 
     /** Restores System.out and System.err to the initial, 
@@ -64,9 +74,19 @@ public class Utils {
 	race conditions if you utilize these in more than one thread.
     */
     static public void restoreStreams() {
+	restoreStreams(false);
+    }
+
+    static public void restoreStreams(boolean close) {
+	if (disable) return;
+	if (close) {
+	    if (pso != System.out) pso.close();
+	    if (pse != System.err) pse.close();
+	}
 	System.setOut(pso);
 	System.setErr(pse);
     }
+	
 
 
     /** Parses a string into arguments as if it were a command-line, using

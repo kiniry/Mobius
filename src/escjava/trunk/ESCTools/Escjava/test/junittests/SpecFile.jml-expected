@@ -1,5 +1,4 @@
 ESC/Java version VERSION
-  Prover started:TIME
     [TIME]
 
 SpecFile ...
@@ -15,6 +14,7 @@ SpecFile.jml:5: Associated declaration:
 .|SpecFile.spec:6: Associated declaration: 
         public void m();
                     ^
+  Prover started:TIME
     [TIME]
 
 SpecFile: m() ...

@@ -1,4 +1,4 @@
-//#FLAGS: -testMode -showFields
+//#FLAGS: -testMode -showFields -quiet
 public class Scope extends ScopeS implements ScopeI {
 //@	model int k; // ERROR - duplicates a java field
 

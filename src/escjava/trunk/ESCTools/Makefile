@@ -141,7 +141,7 @@ textdocs:
 
 PACKAGE_LIST = escjava escjava.ast escjava.backpred escjava.parser \
 	  escjava.prover escjava.tc escjava.translate escjava.sp \
-	  escjava.reader \
+	  escjava.reader escjava.gui \
           javafe javafe.ast javafe.parser  \
 	  javafe.reader javafe.genericfile javafe.filespace \
 	  javafe.tc javafe.util \
@@ -202,6 +202,18 @@ patch-release: clean
 	cd ${PATCH_DIR}; tar cvjf ${RELDIR}/${RELPATCHTAR} .
 	rm -rf ${PATCH_DIR}
 
+.PHONY: jar
+jar:
+	mkdir -p ${RELTEMP}/sub
+	cp -r ${JAVAFE_CLASSFILES}/* ${RELTEMP}/sub
+	cp -r ${ESCJAVA_CLASSFILES}/* ${RELTEMP}/sub
+	mkdir -p ${RELTEMP}/sub/junitutils
+	(cd ${ESCTOOLS_ROOT}/Utils/junitutils; cp `find . -name '*.class'` ${RELTEMP}/sub/junitutils)
+	( cd ${RELTEMP}/sub; jar xf ../../jmlspecs.jar )
+	( cd ${RELTEMP}/sub; jar cf ../${RELJAR} *; )
+	jar umf manifest.txt ${RELTEMP}/${RELJAR}
+	rm -rf ${RELTEMP}/sub
+
 .PHONY: binary-release
 binary-release: build docs
 	@echo "Creating binary release .........."
@@ -210,11 +222,7 @@ binary-release: build docs
 	mkdir -p ${RELDIR}
 	rm -rf ${RELTEMP}
 	mkdir -p ${RELTEMP}
-	mkdir -p ${RELTEMP}/sub
-	cp -r ${JAVAFE_CLASSFILES}/* ${RELTEMP}/sub
-	cp -r ${ESCJAVA_CLASSFILES}/* ${RELTEMP}/sub
-	cd ${RELTEMP}/sub; jar cf ../${RELJAR} *
-	rm -rf ${RELTEMP}/sub
+	${MAKE} jar
 	## Now copy in all specs
 	rm -rf ${RELTEMP}/specs
 	cp -r ${ESCTOOLS_ROOT}/specs ${RELTEMP}

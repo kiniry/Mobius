@@ -3,10 +3,10 @@ Error: Failed to find some but not all binary files: BinaryD
 .|Binary.spec:5: Error: Type declaration is not in the java file
 class BinaryD{}
 ^
-  Prover started:TIME
     [TIME]
 
 BinaryB ...
+  Prover started:TIME
     [TIME]
 
 BinaryB: BinaryB() ...

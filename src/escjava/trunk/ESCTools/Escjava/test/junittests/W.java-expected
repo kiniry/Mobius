@@ -26,10 +26,10 @@ ESC/Java version VERSION
 .|W.spec:13: Error: A java field declaration may not be initialized in a specification file
         public int n = 0;
                        ^
-  Prover started:TIME
     [TIME]
 
 W ...
+  Prover started:TIME
     [TIME]
 
 W: W() ...

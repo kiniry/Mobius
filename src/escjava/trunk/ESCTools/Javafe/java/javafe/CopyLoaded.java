@@ -15,6 +15,8 @@ import java.io.*;
 
 import java.util.StringTokenizer;
 import java.util.Hashtable;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 public class CopyLoaded extends FrontEndTool implements Listener {
 
@@ -235,7 +237,7 @@ public class CopyLoaded extends FrontEndTool implements Listener {
         PrettyPrint.inst.print(fos, sig.getCompilationUnit());
     }
 
-    public final void frontEndToolProcessing(String[] args, int offset) {
+    public final void frontEndToolProcessing(ArrayList args) {
         /*
          * At this point, all options have already been processed and
          * the front end has been initialized.
@@ -270,12 +272,13 @@ public class CopyLoaded extends FrontEndTool implements Listener {
         /*
          * Load in each source file:
          */
-        for (; offset<args.length; offset++)
-            OutsideEnv.addSource(args[offset]);
+	Iterator i = args.iterator();
+	while (i.hasNext()) OutsideEnv.addSource((String)i.next());
     
          /* load in source files from supplied file name */
-        for (int i = 0; i < argumentFileNames.size(); i++) {
-            String argumentFileName = (String)argumentFileNames.elementAt(i);
+	i = argumentFileNames.iterator();
+	while (i.hasNext()) {
+            String argumentFileName = (String)i.next();
              try {
                  BufferedReader in = new BufferedReader(
                              new FileReader(argumentFileName));
@@ -292,9 +295,9 @@ public class CopyLoaded extends FrontEndTool implements Listener {
              }
          }
     
-        int end=loaded.size();
-        for (int i=0; i<end; i++) {
-            handleCU((CompilationUnit)loaded.elementAt(i));
+	i = loaded.iterator();
+	while (i.hasNext()) {
+            handleCU((CompilationUnit)i.next());
         }
     
         progIndirectWriter.close();
@@ -422,14 +425,7 @@ class CopyLoadedOptions extends SrcToolOptions {
     
     public int processOption(String option, String[] args, int offset) 
                                         throws UsageError {
-        if (option.equals("-f")) {
-            if (offset>=args.length) {
-                throw new UsageError("Option " + option + 
-                                         " requires one argument");
-            }
-            argumentFileNames.addElement(args[offset]);
-            return offset + 1;
-        } else if (option.equals("-outProgIndirect")) {
+        if (option.equals("-outProgIndirect")) {
             if (offset>=args.length) {
                 throw new UsageError("Option " + option + 
                                          " requires one argument");

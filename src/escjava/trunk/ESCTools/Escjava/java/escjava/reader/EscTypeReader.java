@@ -36,6 +36,8 @@ import javafe.tc.OutsideEnv;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Iterator;
+import java.io.File;
+import java.io.FilenameFilter;
 
 /**
  * An <code>EscTypeReader</code> is a <code>StandardTypeReader</code>
@@ -165,25 +167,28 @@ public class EscTypeReader extends StandardTypeReader
 	return javaFileSpace.findFile(P,filename);
     }
 
-    // Finds source files
-    public ArrayList findFiles(String[] P) {
-	Enumeration e = javaSrcFileSpace.findFiles(P);
-	if (e == null) return null;
-	ArrayList a = new ArrayList();
-	while (e.hasMoreElements()) {
-	    Tree t = (Tree)e.nextElement();
-	    String s = t.getLabel();
-	    int p = s.lastIndexOf('.');
-	    if (p == -1) continue;
-	    String suffix = s.substring(p+1);
-	    for (int i=0; i<activeSuffixes.length; ++i) {
-		if (suffix.equals(activeSuffixes[i])) { 
-		    a.add(t.data); 
-		    break; 
+    public GenericFile findType(String[] P, String T) {
+        GenericFile gf = javaSrcFileSpace.findFile(P,T,activeSuffixes);
+        if (gf == null) gf = javaFileSpace.findFile(P, T, "class");
+        return gf;
+    }
+
+
+
+    public FilenameFilter filter() {
+	return new FilenameFilter() {
+	    public boolean accept(File f, String n) {
+		int p = n.indexOf('.');
+		if (p == -1) return false;
+		n = n.substring(p+1);
+		for (int i=0; i<activeSuffixes.length; ++i) {
+		    if (n.equals(activeSuffixes[i])) { 
+			return true;
+		    }
 		}
+		return false;
 	    }
-        }
-	return a;
+	};
     }
 
     String[] activeSuffixes = { "refines-java", "refines-spec", "refines-jml",

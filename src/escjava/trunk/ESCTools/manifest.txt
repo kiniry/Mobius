@@ -1,1 +1,1 @@
-Main-class: escjava.GUI
+Main-class: escjava.gui.GUI

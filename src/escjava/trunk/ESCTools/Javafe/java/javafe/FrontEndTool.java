@@ -14,6 +14,7 @@ import javafe.tc.TypeCheck;
 
 import javafe.util.*;
 
+import java.util.ArrayList;
 
 /**
  * <code>FrontEndTool</code> is an abstract class for tools that use
@@ -131,8 +132,8 @@ public abstract class FrontEndTool extends Tool {
      	return new Options();
     }
     
-    public int processOptions(String[] args) throws UsageError {
-        return options.processOptions(args);
+    public void processOptions(String[] args) throws UsageError {
+        options.processOptions(args);
     }
 
     /**
@@ -182,32 +183,52 @@ public abstract class FrontEndTool extends Tool {
         // if (result != 0) System.exit(result);
     }
 
-
-    /**
-     * A tool's main entry point; <code>args</code> are the
-     * command-line arguments we have been invoked with. <p> 
+    /** Parses the options into a new instance of an Options
+	subclass.  Returns -1 if all is well and the program
+	should continue with processing.  Otherwise returns
+	an exit code.
+<P>
+	If the argument is null, the tool is initialized with the
+	existing options.
      */
-    public final int run(String[] args) {
+    public int handleOptions(String[] args) {
+	if (args != null) {
 	try {
 	    // Handle all tool options:
 	    options = makeOptions();
-	    int offset = processOptions(args);
+	    processOptions(args);
 	    if (options.issueUsage) {
 		usage();
 		return okExitCode;
 	    }
-	
-	    // Setup the front end using them:
-	    setup();
-		
-	    // Do our front-end-tool-specific processing:
-	    frontEndToolProcessing(args, offset);
-	
         } catch (UsageError e) {
             badOptionUsage(e);
 	    ErrorSet.errors++; // Just so that the JUnit tests detect that
 				// an error message was issued
             return badUsageExitCode;
+        } catch (FatalError e) {
+	    Info.out("[" + name() + " exiting due to a fatal error]");
+	}
+	}
+	// Setup the front end using the options:
+	setup();
+	return -1;
+    }
+
+    /**
+     * A tool's main entry point; <code>args</code> are the
+     * command-line arguments we have been invoked with. <p> 
+     */
+    //@ requires args != null;
+    public final int run(String[] args) {
+	int r = handleOptions(args);
+	if (r != -1) return r;
+	
+	if (ErrorSet.errors == 0) try {
+		
+	    // Do our front-end-tool-specific processing:
+	    frontEndToolProcessing(options.inputEntries);
+	
         } catch (FatalError e) {
 	    Info.out("[" + name() + " exiting due to a fatal error]");
 	}
@@ -239,5 +260,5 @@ public abstract class FrontEndTool extends Tool {
      */
     //@ requires \nonnullelements(args)
     //@ requires 0<=offset && offset<=args.length
-    public abstract void frontEndToolProcessing(String[] args, int offset);
+    public abstract void frontEndToolProcessing(ArrayList args);
 }

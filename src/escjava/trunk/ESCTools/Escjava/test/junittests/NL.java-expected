@@ -1,5 +1,4 @@
 ESC/Java version VERSION
-  Prover started:TIME
     [TIME]
 
 NL ...
@@ -15,6 +14,7 @@ NL.java:65: Caution: The non_null annotation is ignored because this method over
 NL.java:108: Associated declaration: 
         /*@ pure */ public void n(Object o) {
                                   ^
+  Prover started:TIME
     [TIME]
 
 NL: m(java.lang.Object) ...

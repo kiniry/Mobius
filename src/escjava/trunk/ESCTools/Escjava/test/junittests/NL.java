@@ -1,7 +1,7 @@
+//#FLAGS: 
 // Tests the behavior of non_null under inheritance
 public class NL extends NLS {
-	Object oo;
-// CASE 2:
+	Object oo; // CASE 2:
 	// Parent has non_null
 	// No spec, so inherit the full spec of the parent method
 	public void m(Object o) {

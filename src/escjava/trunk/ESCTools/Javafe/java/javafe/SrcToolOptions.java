@@ -1,6 +1,6 @@
 package javafe;
 
-import java.util.Vector;
+import java.util.ArrayList;
 import javafe.util.UsageError;
 
 /**
@@ -52,8 +52,6 @@ public class SrcToolOptions extends Options
      * The list of filenames on the command line; this Vector is aliased
      * with a variable in SrcTool.
      */
-    public Vector argumentFileNames;
-    
     
     //************************************************************************
     // Support routines
@@ -63,13 +61,7 @@ public class SrcToolOptions extends Options
 
     public int processOption(String option, String[] args, int offset) 
         throws UsageError {
-        if (option.equals("-f")) {
- 	    if (offset>=args.length) {
-                throw new UsageError("Option -f requires at least one argument");
- 	    }
- 	    argumentFileNames.addElement(args[offset]);
- 	    return offset + 1;
- 	} else if (option.equals("-depend") && allowDepend) {
+ 	if (option.equals("-depend") && allowDepend) {
 	    processRecursively = true;
 	    return offset;
 	} else if (option.equals("-avoidSpec") && allowAvoidSpec) {

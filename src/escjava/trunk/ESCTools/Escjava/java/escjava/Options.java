@@ -796,6 +796,12 @@ public class Options extends javafe.SrcToolOptions
 	} else if (option.equals("-showFields")) {
 	    showFields = true;
 	    return offset;
+	} else if (option.equals("-simplify")) {
+	    System.setProperty("simplify",args[offset]);
+	    return offset+1;
+	} else if (option.equals("-EscProjectFileV0")) {
+	    // Ignored, but also used to mark a project file.
+	    return offset;
         }
     
         // Pass on unrecognized options:
@@ -826,6 +832,18 @@ public class Options extends javafe.SrcToolOptions
         } catch(IOException e) {
             throw new RuntimeException("IOException: " + e);
         }
+    }
+
+    public String nowarnOptionString() {
+	StringBuffer sb = new StringBuffer(200);
+	for (int i = escjava.ast.TagConstants.FIRSTESCCHECKTAG;
+		i < escjava.ast.TagConstants.CHKQUIET; ++i) {
+	    if (NoWarn.getChkStatus(i) == escjava.ast.TagConstants.CHK_AS_ASSUME) {
+		sb.append(" -nowarn ");
+		sb.append(escjava.ast.TagConstants.toString(i));
+	    }
+	}
+	return sb.toString();
     }
 } // end of class Options
 

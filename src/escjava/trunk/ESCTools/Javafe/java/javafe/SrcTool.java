@@ -11,6 +11,7 @@ import javafe.ast.*;
 import javafe.tc.*;
 import javafe.util.*;
 import javafe.genericfile.GenericFile;
+import javafe.genericfile.NormalGenericFile;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -34,17 +35,6 @@ import java.io.IOException;
 public abstract class SrcTool extends FrontEndTool implements Listener
 {
 
-    /**
-     * Contains the filenames that contain the names of the sources on which
-     * to invoke the tool.
-     */
-    protected final Vector argumentFileNames = new Vector();
-    //@ invariant argumentFileNames.elementType == \type(String);
-    //@ invariant !argumentFileNames.containsNull;
-    //@ invariant argumentFileNames.owner == this
-
-
-
     /***************************************************
      *                                                 *
      * Keeping track of loaded CompilationUnits:       *
@@ -63,18 +53,12 @@ public abstract class SrcTool extends FrontEndTool implements Listener
     //@ invariant loaded.owner == this
     public Vector loaded = new Vector();
 
-    //@ invariant loaded != argumentFileNames;
-
     public SrcTool() {
-		super();
+	super();
 
-        //@ set argumentFileNames.elementType = \type(String);
-        //@ set argumentFileNames.containsNull = false;
-		//@ set argumentFileNames.owner = this
-	
-		//@ set loaded.elementType = \type(CompilationUnit)
-		//@ set loaded.containsNull = false
-		//@ set loaded.owner = this
+	//@ set loaded.elementType = \type(CompilationUnit)
+	//@ set loaded.containsNull = false
+	//@ set loaded.owner = this
     }
 
 
@@ -85,7 +69,7 @@ public abstract class SrcTool extends FrontEndTool implements Listener
      * <code>Listener</code> interface.<p>
      */
     public void notify(CompilationUnit justLoaded) {
-		loaded.addElement(justLoaded);
+	if (!justLoaded.duplicate) loaded.addElement(justLoaded);
     }
 
 
@@ -99,11 +83,6 @@ public abstract class SrcTool extends FrontEndTool implements Listener
     	return new SrcToolOptions();
     }
 
-    public int processOptions(String[] args) throws UsageError {
-        options().argumentFileNames = argumentFileNames;
-        return super.processOptions(args);
-    }
-    
     private static SrcToolOptions options() { 
     	return (SrcToolOptions)options;
     }
@@ -114,25 +93,20 @@ public abstract class SrcTool extends FrontEndTool implements Listener
      * The remaining arguments are <code>args[offset]</code>,
      * <code>args[offset+1]</code>, ...<p>
      *
-     * This method calls preload, loadAllFiles, preprocess, handleAllCU, postprocess.
+     * This method calls preload, loadAllFiles, postload, preprocess, handleAllCU, postprocess.
      */
-    public void frontEndToolProcessing(String[] args, int offset) {
+    public void frontEndToolProcessing(ArrayList args) {
 	long startTime = currentTime();
 	/*
 	 * At this point, all options have already been processed and
 	 * the front end has been initialized.
 	 */
 
-	// Set up to receive CompilationUnit-loading notification events:
-	OutsideEnv.setListener(this);
-	
         preload();
 	
-        loadAllFiles(offset,args);
+        loadAllFiles(args);
 	
-	OutsideEnv.avoidSpec = options().avoidSpec;
-	if (options().processRecursively)
-	    OutsideEnv.avoidSpec = true;
+	postload();
 
 	// Do any tool-specific pre-processing:
 	preprocess();
@@ -153,43 +127,100 @@ public abstract class SrcTool extends FrontEndTool implements Listener
      *                                                 *
      **************************************************/
 
-    public void loadAllFiles(int offset, String[] args) {
-    	/*
-	 * Load in each source file:
-	 */
-	for (; offset<args.length; offset++)
-	    OutsideEnv.addSource(args[offset]);
-
-	loadPackages(options.packagesToProcess);
-
-	/* load in source files from supplied file name */
-	for (int i = 0; i < argumentFileNames.size(); i++) {
-	    String argumentFileName = (String)argumentFileNames.elementAt(i);
-	    try {
-		BufferedReader in = new BufferedReader(
-				    new FileReader(argumentFileName));
-		String s;
-		while ((s = in.readLine()) != null) {
-		    // allow blank lines in files list
-		    if (!s.equals("")) {
-			OutsideEnv.addSource(s);
-		    }
-		}
-	    } catch (IOException e) {
-		ErrorSet.fatal(e.getMessage());
-	    }
+    public void loadAllFiles(ArrayList args) {
+	ArrayList accumulatedResults = new ArrayList(args.size());
+	Iterator i = args.iterator();
+	while (i.hasNext()) {
+	    InputEntry ie = (InputEntry)i.next();
+	    ArrayList a = resolveInputEntry(ie);
+	    OutsideEnv.addSources(a);
 	}
     }
 
-    public void loadPackages(ArrayList packagesToProcess) {
+    //@ ensures \result.elementType <: \type(GenericFile);
+    public ArrayList resolveInputEntry(InputEntry iee) {
+	InputEntry ie = iee;
+	if (ie.contents == null) {
+	    ie = ie.resolve();
+	    if (!ie.auto) {
+		String s = ie.verify();
+		if (s != null) {
+		    ErrorSet.error(s);
+		    ie.contents = new ArrayList(0);
+		    return ie.contents;
+		}
+	    }
+	    if (ie instanceof InputEntry.File) {
+		ie.contents = new ArrayList(1);
+		ie.contents.add(new NormalGenericFile(ie.name));
+	    } else if (ie instanceof InputEntry.Dir) {
+		ie.contents = OutsideEnv.resolveDirSources(ie.name);
+	    } else if (ie instanceof InputEntry.Package) {
+		String[] pa = javafe.filespace.StringUtil.parseList(ie.name,'.');
+		ie.contents = OutsideEnv.resolveSources(pa);
+	    } else if (ie instanceof InputEntry.Class) {
+		ie.contents = new ArrayList(1);
+		int p = ie.name.lastIndexOf('.');
+		if (p == -1) {
+		    GenericFile gf = OutsideEnv.reader.findType(
+				new String[0],ie.name);
+		    ie.contents.add(gf);
+		} else if (p==0 || p == ie.name.length()-1) {
+		    ErrorSet.error("Invalid type name: " + ie.name);
+		    ie.contents = new ArrayList(0);
+		} else {
+		    String[] pa = javafe.filespace.StringUtil.parseList(
+				    ie.name.substring(0,p),'.');
+		    GenericFile gf = OutsideEnv.reader.findType(pa,
+				    ie.name.substring(p+1));
+		    ie.contents.add(gf);
+	        }
+	    } else if (ie instanceof InputEntry.List) {
+		ie.contents = resolveList(ie.name);
+	    } else {
+		ErrorSet.caution("Skipping unknown (or not found) input item: "
+			+ ie.name);
+		ie.contents = new ArrayList(0);
+	    }
+	}
+	return ie.contents;
+    }
+
+    public void loadInputEntry(InputEntry ie) {
+	OutsideEnv.addSources(resolveInputEntry(ie));
+    }
+
+    //@ requires argumentFileName != null;
+    //@ ensures \result.elementType <: \type(GenericFile);
+    public ArrayList resolveList(String argumentFileName) {
+	/* load in source files from supplied file name */
+	ArrayList list = new ArrayList();
+	try {
+	    BufferedReader in = new BufferedReader(
+				new FileReader(argumentFileName));
+	    String s;
+	    while ((s = in.readLine()) != null) {
+		// allow blank lines in files list
+		if (!s.equals("")) {
+		    ArrayList a = (resolveInputEntry(InputEntry.make(s)));
+		    if (a != null) list.addAll(a);
+		}
+	    }
+	} catch (IOException e) {
+	    ErrorSet.error("I/O failure while reading argument list file "
+		    + argumentFileName + ": " + e.getMessage());
+	}
+	return list;
+    }
+
+/*
+    public void resolvePackages(ArrayList packagesToProcess) {
 	Iterator i = packagesToProcess.iterator();
 	while (i.hasNext()) {
 	    String p = (String)i.next();
-	    String[] pa = javafe.filespace.StringUtil.parseList(p,'.');
-	    OutsideEnv.addSources(pa);
 	}
     }
-
+*/
     /** Iterates, calling handleCU for each loaded CU.
      */	
     public void handleAllCUs() {
@@ -215,8 +246,21 @@ public abstract class SrcTool extends FrontEndTool implements Listener
     /**
      * Hook for any work needed before any files are loaded.
      */
-    public void preload() {}
+    public void preload() {
+	// Set up to receive CompilationUnit-loading notification events:
+	OutsideEnv.setListener(this);
+    }
     
+    /**
+     * Called for any work after loading files
+     */
+// FIXME - can this be done at preload time?
+    public void postload() {
+	OutsideEnv.avoidSpec = options().avoidSpec;
+	if (options().processRecursively)
+	    OutsideEnv.avoidSpec = true;
+    }
+
     /**
      * Hook for any work needed after files are loaded
      * but before <code>handleCU</code> is called

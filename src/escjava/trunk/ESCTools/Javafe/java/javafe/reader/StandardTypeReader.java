@@ -20,6 +20,8 @@ import javafe.util.ErrorSet;
 
 import java.util.Enumeration;
 import java.util.ArrayList;
+import java.io.File;
+import java.io.FilenameFilter;
 
 /**
  * A StandardTypeReader is a {@link TypeReader} that uses {@link
@@ -215,6 +217,11 @@ public class StandardTypeReader extends TypeReader
 	    || (javaFileSpace.findFile(P, T, "class") != null);
     }
 
+    public GenericFile findType(String[] P, String T) {
+	GenericFile gf = javaSrcFileSpace.findFile(P, T, "java");
+	if (gf == null) gf = javaFileSpace.findFile(P, T, "class");
+	return gf;
+    }
 
     /***************************************************
      *                                                 *
@@ -288,13 +295,25 @@ public class StandardTypeReader extends TypeReader
 
 	// Finds source files
     public ArrayList findFiles(String[] P) {
+	FilenameFilter ff = filter();
 	ArrayList a = new ArrayList();
 	Enumeration e = javaSrcFileSpace.findFiles(P);
 	while (e.hasMoreElements()) {
 	    Tree t = (Tree)e.nextElement();
-	    if (t.getLabel().endsWith(".java")) { a.add(t.data); }
+	    String s = t.getLabel();
+	    if (ff.accept(new File(s),s)) { a.add(t.data); }
 	}
 	return a;
+    }
+
+    public FilenameFilter filter() {
+	return new FilenameFilter() {
+	    public boolean accept(File f, String n) {
+		if (!f.isFile()) return false;
+		if (n.endsWith(".java")) return true;
+		return false;
+	    }
+	};
     }
 
     /***************************************************

@@ -23,7 +23,6 @@ MapsIn.java:35: Error: Expected either a . or a [ in the maps field reference he
 MapsIn.java:36: Error: Expected either a . or a [ in the maps field reference here
         //@ maps i j 
                    ^
-  Prover started:TIME
     [TIME]
 
 MapsIn ...

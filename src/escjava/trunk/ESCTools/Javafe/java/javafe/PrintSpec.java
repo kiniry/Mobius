@@ -14,6 +14,7 @@ import java.io.FileReader;
 import java.io.*;
 
 import java.util.StringTokenizer;
+import java.util.ArrayList;
 
 /**
  * <code>PrintSpec</code> print specs for class files.
@@ -120,7 +121,7 @@ public class PrintSpec extends SrcTool {
     }
 
 
-    public final void frontEndToolProcessing(String[] args, int offset) {
+    public final void frontEndToolProcessing(ArrayList args) {
 	/*
 	 * At this point, all options have already been processed and
 	 * the front end has been initialized.
@@ -132,13 +133,16 @@ public class PrintSpec extends SrcTool {
 	/*
 	 * Load in each source file:
 	 */
+/* FIXME
 	for (; offset<args.length; offset++) {
 	    this.loadAndPrintSpec(args[offset]);
 	}
+*/
 	
 	/* load in source files from supplied file name */
+/* FIXME
 	for (int i = 0; i < argumentFileNames.size(); i++) {
-	    String argumentClassName = (String)argumentFileNames.elementAt(i);
+	    String argumentClassName = (String)argumentFileNames.get(i);
 	    try {
 		BufferedReader in = new BufferedReader(
 					    new FileReader(argumentClassName));
@@ -153,5 +157,6 @@ public class PrintSpec extends SrcTool {
 		ErrorSet.fatal(e.getMessage());
 	    }
 	}
+*/
     }
 }
