@@ -101,12 +101,12 @@ public class TagConstants extends javafe.ast.TagConstants
 
     public static final int LAST_TAG = LAST_KEYWORD;
 
-
-
-    /** Returns text representation of <code>code</code> (e.g., "=" for
-     <TT>ASSIGN</TT>).  Requires <code>code</code> is one of the token
-     constants defined in <code>Tokens</code> (including ones inherited
-     from <code>OperatorTags</code>). */
+    /**
+     * @return text representation of <code>code</code> (e.g., "=" for
+     * <tt>ASSIGN</tt>).  Requires <code>code</code> is one of the
+     * token constants defined in <code>Tokens</code> (including ones
+     * inherited from <code>OperatorTags</code>).
+     */
 
     //@ ensures \result != null
     public static String toString(int code) {
@@ -119,13 +119,16 @@ public class TagConstants extends javafe.ast.TagConstants
             return javafe.ast.TagConstants.toString(code);
 
         return "Tag unknown to javafe.parser.TagConstants <" + code 
-            + " (+" + (code-javafe.ast.TagConstants.LAST_TAG) + ") >";
+            + " (+" + (code - javafe.ast.TagConstants.LAST_TAG) + ") >";
     }
 
 
-    /** Alphabetical list of Java punctuation strings.  In addition to
-     being used in <code>Tokens</code>, this variable is used by
-     <code>Lex</code> to implement <code>addJavaPunctuation</code>. */
+    /**
+     * Alphabetical list of Java punctuation strings.  In addition to
+     * being used in <code>Tokens</code>, this variable is used by
+     * <code>Lex</code> to implement
+     * <code>addJavaPunctuation</code>.
+     */
 
     //@ invariant \nonnullelements(punctuationStrings)
     static final String punctuationStrings[] = {
@@ -135,15 +138,18 @@ public class TagConstants extends javafe.ast.TagConstants
         "?", "[", "]", "^", "^=", "{", "|", "|=", "||", "}", "~", "/*", "//"
     };
 
-    /** List of codes for Java punctuation.  Order of this list agrees
-     with with order of punctuationStrings.  In addition to being used
-     in <code>Tokens</code>, this variable is used by <code>Lex</code>
-     to implement <code>addJavaPunctuation</code>. */
+    /**
+     * List of codes for Java punctuation.  Order of this list agrees
+     * with with order of punctuationStrings.  In addition to being
+     * used in <code>Tokens</code>, this variable is used by
+     * <code>Lex</code> to implement
+     * <code>addJavaPunctuation</code>.
+     */
 
     //@ invariant punctuationCodes.length == punctuationStrings.length
-    /*@ invariant (\forall int i; 0<=i && i<=punctuationCodes.length
+    /*@ invariant (\forall int i; 0 <= i && i <= punctuationCodes.length
      ==> punctuationCodes[i] != TagConstants.NULL ) */
-    /*@ invariant (\forall int i; 0<=i && i<=punctuationCodes.length
+    /*@ invariant (\forall int i; 0 <= i && i <= punctuationCodes.length
      ==>  punctuationCodes[i] != TagConstants.IDENT &&
      punctuationCodes[i] != TagConstants.BOOLEANLIT &&
      punctuationCodes[i] != TagConstants.INTLIT &&
@@ -169,9 +175,11 @@ public class TagConstants extends javafe.ast.TagConstants
     };
 
 
-    /** Alphabetical list of Java keywords.  The keyword codes are also
-     alphabetical, which menas that if X is code of keyword K, then
-     keywordStrings[X - FIRST_KEYWORD] should equal K.  */
+    /**
+     * Alphabetical list of Java keywords.  The keyword codes are also
+     * alphabetical, which menas that if X is code of keyword K, then
+     * keywordStrings[X - FIRST_KEYWORD] should equal K.
+     */
 
     //@ invariant keywordStrings.length == 1 + LAST_KEYWORD - FIRST_KEYWORD
     //@ invariant \nonnullelements(keywordStrings)
@@ -205,7 +213,7 @@ public class TagConstants extends javafe.ast.TagConstants
     };
 
     /*@ invariant noTokens == keywordStrings.length + punctuationStrings.length
-     + otherStrings.length */
+                              + otherStrings.length */
     private static final int noTokens =
         keywordStrings.length + punctuationStrings.length + otherStrings.length;
 
@@ -223,7 +231,7 @@ public class TagConstants extends javafe.ast.TagConstants
         return -1; // Dummy
     }
 
-    //@ requires 0<=index && index<noTokens
+    //@ requires 0 <= index && index < noTokens
     //@ ensures \result != null
     private static String getString(int index) {
         Assert.precondition(0 <= index && index < noTokens);

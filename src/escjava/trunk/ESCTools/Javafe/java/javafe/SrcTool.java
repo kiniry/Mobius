@@ -2,7 +2,6 @@
 
 package javafe;
 
-
 import java.util.Vector;
 
 import javafe.ast.*;
@@ -12,7 +11,6 @@ import javafe.util.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-
 
 /**
  * <code>SrcTool</code> is an abstract class for tools that use
@@ -29,13 +27,9 @@ import java.io.IOException;
  * The remaining processing, if any, is front-end-tool specific.<p>
  */
 
-public abstract class SrcTool extends FrontEndTool implements Listener {
-
-    /***************************************************
-     *                                                 *
-     * Generating a usage message:		       *
-     *                                                 *
-     **************************************************/
+public abstract class SrcTool extends FrontEndTool implements Listener
+{
+    // Generating a usage message
 
     /**
      * Do we allow the <code>-avoidSpec</code> option?  Defaults to
@@ -48,7 +42,6 @@ public abstract class SrcTool extends FrontEndTool implements Listener {
      */
     public boolean allowDepend = true;
 
-
     /**
      * Contains the filenames that contain the names of the sources on which
      * to invoke the tool.
@@ -60,7 +53,7 @@ public abstract class SrcTool extends FrontEndTool implements Listener {
 
     /**
      * Print non-option usage info to <code>System.err</code>.  Output
-     * must include at least one newline. <p>
+     * must include at least one newline.
      */
     public final void showNonOptions() {
 	System.err.println("<source files>");
@@ -68,10 +61,10 @@ public abstract class SrcTool extends FrontEndTool implements Listener {
 
     /**
      * Print option information to <code>System.err</code>.  Each
-     * printed line should be preceeded by two blank spaces. <p>
+     * printed line should be preceeded by two blank spaces.
      *
-     * Each overriding method should first call
-     * <code>super.showOptions()</code>.<p>
+     * <p> Each overriding method should first call
+     * <code>super.showOptions()</code>.
      */
     public void showOptions() {
         super.showOptions();
@@ -84,33 +77,27 @@ public abstract class SrcTool extends FrontEndTool implements Listener {
     }
 
 
-    /***************************************************
-     *                                                 *
-     * Option processing:			       *
-     *                                                 *
-     **************************************************/
+    // Option processing
 
-    /*
-     * Variables to store the settings of the standard SrcTool options:
-     */ 
-
+    // Variables to store the settings of the standard SrcTool options
 
     /**
      * Should we avoid specs for all types loaded after the initial
-     * set of source files? <p>
+     * set of source files?
      *
-     * Defaults to false.  Set by -avoidSpec option.<p>
+     * <p> Defaults to false.  Set by -avoidSpec option.
      *
-     * Note: if processRecursively is set, then we always avoid specs.<p>
+     * <p> Note: if <code>processRecursively</code> is set, then we
+     * always avoid specs.
      */
     private boolean avoidSpec = false;
 
     /**
      * Should we process files recursively?  Defaults to no, 
-     * can be set by a sub-class, or the -depend option.<p>
+     * can be set by a sub-class, or the -depend option.
      *
-     * Warning: this needs to be set before option processing is
-     * finished!<p>
+     * <p> Warning: this needs to be set before option processing is
+     * finished!
      */
     public boolean processRecursively = false;
 
