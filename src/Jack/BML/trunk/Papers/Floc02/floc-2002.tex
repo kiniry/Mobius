@@ -148,9 +148,9 @@ commonly used and they are typically \emph{asserted} as comments in
 the
 program source code. The annotation language for \eiff~is the first
 example of such a specification language, following the \emph{design
-by contract} approach~\cite{Mey97}. Currently, several specific
+by contract} approach~\cite{Meyer97}. Currently, several specific
 specification languages have been proposed for \java~such as
-\jml~\cite{LBR00}, \jcontract~\cite{JContractUrl},
+\jml~\cite{LeavensBR00}, \jcontract~\cite{JContractUrl},
 \jass~\cite{JassUrl} and \escj~\cite{LeinoNS00} (a subset of
 \jml~\cite{EscJmlDiff}). Usually, these specifications serve to state
 the functional behavior of the methods (typically as preconditions and
@@ -192,7 +192,7 @@ variables may be modified. Moreover, we have implemented
 this approach by extending the \jml~parser and embedding these
 conditions as \java~code. The viability of our approach is
 shown by presenting some gaps found in the process of expressing the
-\emph{changeable} behavior of a realistic case study~\cite{CH02} and
+\emph{changeable} behavior of a realistic case study~\cite{CatanoH02a} and
 checking these specifications with our tool.
 
 
@@ -206,7 +206,7 @@ presents our approach for checking \modif~clauses and the definition
 of the respective syntactical rules. Section~\ref{sec-imp-iss}
 presents a modifiable checker (~\modtool) implementing these
 rules. Additionally, we discuss some problems found using our tool on a
-realistic case study~\cite{CH02}.
+realistic case study~\cite{CatanoH02a}.
 Finally, Section~\ref{sec-con}
 gives conclusions and presents future work. 
 
@@ -218,7 +218,7 @@ gives conclusions and presents future work.
 \section{Static checking of \java~programs with \escj}
 \label{sec-esc-prg}
 \escj~is a static checker for \java~programs developed
-at \csrc~\cite{ESC}, enabling a user to find common programming
+at \csrc~\cite{ESCJavaUrl}, enabling a user to find common programming
 errors of \java~programs. It counts on a dedicated theorem prover for
 finding problems such as \emph{array index bounds},
 \emph{nil deference} and \emph{synchronization} in multi-thread
@@ -297,9 +297,9 @@ a non-void method. It can only be used within an
 \end{itemize}
 Figure~\ref{fig-add-cur} shows a typical annotation example using 
 \escj. This example was taken from the formal specification of an
-\emph{electronic purse} presented in~\cite{CH02}\footnote{The overall
+\emph{electronic purse} presented in~\cite{CatanoH02a}\footnote{The overall
 specifications of this application can be taken
-from~\cite{CH01Url}}. The \texttt{addCurrency} method belongs
+from~\cite{CatanoH01URL}}. The \texttt{addCurrency} method belongs
 to a class \texttt{Currencies}. This class stores all currencies 
 supported by the purse application. The method 
 \texttt{addCurrency} adds a new currency to the list of valid 
@@ -402,7 +402,7 @@ We present a set of syntactical rules which check the correct
 specification of \modif~clauses in \java~asserted programs. These
 rules have been defined taking into account both of the \jml~grammar
 specification and the definition of \modif~clauses presented
-in~\cite{LBR00}.
+in~\cite{LeavensBR00}.
 
 
 
@@ -420,7 +420,7 @@ parameter
 \end{itemize}
 \end{df}
 This definition makes no dependency analysis as introduced by
-\emph{model} pragmas (see~\cite{LBR00}). Apart from that, from this
+\emph{model} pragmas (see~\cite{LeavensBR00}). Apart from that, from this
 definition it can be
 gathered that a method can not modify fields of any parameter.
 
@@ -502,7 +502,7 @@ all \java~constructs that the expressions modified by instructions
 inside all method bodies are according to
 their modifiable specification. We present the derivation rules for
 the most important \java~constructs. The whole set of rules can be found
-in~\cite{Cat01}.
+in~\cite{CatanoMasterThesis01}.
 
 \textup{METH-DEC} is the
 general rule corresponding to a method declaration
@@ -1271,10 +1271,10 @@ IN-EXP-ARR-REACH\,\,\, &
 \rule{\linewidth}{0.25mm}
 \end{table}%%%%%%%%%
 
-Appendix~\ref{ane-der-exa} shows some derivation examples of checking
-\java~asserted programs using the rules we present below. These examples
-allow us to see how incorrect modifiable specifications can be
-detected using our rules.
+%Appendix ~\ref{ane-der-exa} shows some derivation examples of checking
+%\java~asserted programs using the rules we present below. These examples
+%allow us to see how incorrect modifiable specifications can be
+%detected using our rules.
 
 
 
@@ -1474,6 +1474,10 @@ public static boolean _modEXP(AST e, Vector Y, Stack contexts)\verb!{!
 
 
 
+\bibliographystyle{alpha}
+\bibliography{../specification}
+
+\end{document}
 
 
 
@@ -1784,10 +1788,3 @@ fields\_of(\backslash reach(this)), val, myArr\}}
 
 \end{landscape}
 
-
-
-
-\bibliographystyle{alpha}
-\bibliography{../bibliography}
-
-\end{document}
