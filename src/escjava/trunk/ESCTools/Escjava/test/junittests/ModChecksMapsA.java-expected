@@ -16,6 +16,9 @@ ModChecksMapsA: ma() ...
 ModChecksMapsA.java:36: Warning: Possible violation of modifies clause (Modifies)
                 list.array[1] = 0;  // WARNING
                 ^
+Associated declaration is "ModChecksMapsA.java", line 29, col 5:
+        //@ modifies list.values;
+            ^
 ------------------------------------------------------------------------
     [TIME]  failed
 

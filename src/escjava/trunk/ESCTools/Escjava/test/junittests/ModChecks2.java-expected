@@ -1,35 +1,68 @@
 ModChecks2.java:19: Error: There is no assignable clause allowing this assignment
                 i = 0;                  // ERROR
                 ^
+ModChecks2.java:17: Associated declaration: 
+        //@ modifies \nothing;
+            ^
 ModChecks2.java:23: Error: There is no assignable clause allowing this assignment
                 j++;                    // ERROR
                 ^
+ModChecks2.java:21: Associated declaration: 
+        //@ modifies \nothing;
+            ^
 ModChecks2.java:27: Warning: Possible violation of modifies clause (Modifies)
                 a[0] = 7;               // ERROR
                 ^
+Associated declaration is "ModChecks2.java", line 25, col 5:
+        //@ modifies \nothing;
+            ^
 ModChecks2.java:31: Error: There is no assignable clause allowing this assignment
                 a = new int[15];        // ERROR
                 ^
+ModChecks2.java:29: Associated declaration: 
+        //@ modifies \nothing;
+            ^
 ModChecks2.java:35: Error: There is no assignable clause allowing this assignment
                 //@ set gi = 0;         // ERROR
                         ^
+ModChecks2.java:33: Associated declaration: 
+        //@ modifies \nothing;
+            ^
 ModChecks2.java:39: Error: There is no assignable clause allowing this assignment
                 o.j += 3;               // ERROR
                 ^
+ModChecks2.java:37: Associated declaration: 
+        //@ modifies \nothing;
+            ^
 ModChecks2.java:44: Error: There is no assignable clause allowing this assignment
                 i = 0; // ERROR
                 ^
+ModChecks2.java:42: Associated declaration: 
+        //@ modifies ModChecks2.*;
+            ^
 ModChecks2.java:50: Error: There is no assignable clause allowing this assignment
                 o.j = 0; // ERROR
                   ^
+ModChecks2.java:48: Associated declaration: 
+        //@ modifies this.*;
+            ^
 ModChecks2.java:55: Error: There is no assignable clause allowing this assignment
                 j = 0;   // ERROR
                 ^
+ModChecks2.java:53: Associated declaration: 
+        //@ modifies this.*;
+            ^
 ModChecks2.java:60: Error: There is no assignable clause allowing this assignment
                 i = 0; // ERROR
                 ^
+ModChecks2.java:58: Associated declaration: 
+        //@ modifies super.i;
+            ^
 ModChecks2.java:65: Error: There is no assignable clause allowing this assignment
                 super.i = 0; // ERROR
                 ^
+ModChecks2.java:63: Associated declaration: 
+        //@ modifies i;
+            ^
 1 warning
 10 errors

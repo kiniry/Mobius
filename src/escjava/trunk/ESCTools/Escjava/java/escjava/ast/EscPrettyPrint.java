@@ -239,6 +239,28 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
 				+ TagConstants.toString(tag));
                 break;
 
+	    case TagConstants.MODIFIESGROUPPRAGMA: {
+		ModifiesGroupPragma mm = (ModifiesGroupPragma)mp;
+		write(o, "/*@ modifies ");
+		if (mm.precondition != null) {
+		    self.print(o,ind,mm.precondition);
+		    write(o, " ==> (");
+		}
+		for (int i=0; i<mm.items.size(); ++i) {
+		    if (i != 0) write(o, ", ");
+		    CondExprModifierPragma ce = mm.items.elementAt(i);
+		    self.print(o, ind, ce.expr); 
+		    if (ce.cond != null) {
+			write(o, " if ");
+			self.print(o, ind, ce.cond); 
+		    }
+		}
+		if (mm.precondition != null) write(o, ")");
+
+		write(o, "; @*/");
+		break;
+	    }
+
 	    case TagConstants.DURATION:
 	    case TagConstants.WORKING_SPACE:
             case TagConstants.ALSO_MODIFIES:
@@ -953,7 +975,8 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
     case TagConstants.WILDREFEXPR: {
       WildRefExpr we = (WildRefExpr)e;
       print( o, ind, we.od );
-      write(o, ".*");
+	// The ObjectDesignator prints the '.'
+      write(o, "*");
       break;
     }
 

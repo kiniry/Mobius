@@ -45,6 +45,8 @@ ModelMethodDeclPragma.java
 ModelConstructorDeclPragma.java
 ModelProgamModifierPragma.java
 ModelTypePragma.java
+ModifiesGroupPragma.java
+ModifiesGroupPragmaVec.java
 NamedExprDeclPragma.java
 NaryExpr.java
 NestedModifierPragma.java

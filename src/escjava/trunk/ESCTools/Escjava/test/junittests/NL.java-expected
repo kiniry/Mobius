@@ -1,5 +1,6 @@
 ESC/Java version VERSION
   Prover started:TIME
+    [TIME]
 
 NL ...
 NL.java:61: Caution: The non_null annotation is ignored because this method overrides a method declaration in which this parameter is not declared non_null: 
@@ -14,6 +15,7 @@ NL.java:65: Caution: The non_null annotation is ignored because this method over
 NL.java:108: Associated declaration: 
         /*@ pure */ public void n(Object o) {
                                   ^
+    [TIME]
 
 NL: m(java.lang.Object) ...
     [TIME]  passed
@@ -79,15 +81,15 @@ NL: qqm(java.lang.Object) ...
 
 NL: qqmm1() ...
 ------------------------------------------------------------------------
-NL.java:54: Warning: Precondition possibly not established (Pre)
+NL.java:54: Warning: Possible assignment of null to variable declared non_null (NonNull)
                 qqm(oo); // FAILS 
                    ^
-Associated declaration is "NL.java", line 49, col 5:
-        //@ requires false;
-            ^
 Associated declaration is "NL.java", line 103, col 33:
         /*@ pure */ public void qqm(/*@ non_null */ Object o) {
                                         ^
+Associated declaration is "NL.java", line 49, col 5:
+        //@ requires false;
+            ^
 ------------------------------------------------------------------------
     [TIME]  failed
 
@@ -141,10 +143,10 @@ NL: pp() ...
 NL.java:82: Warning: Possible assignment of null to variable declared non_null (NonNull)
                 p(oo);  // FAILS
                  ^
-Associated declaration is "NL.java", line 114, col 31:
+Associated declaration is "NL.java", line 75, col 31:
         /*@ pure */ public void p(/*@ non_null */ Object o) {
                                       ^
-Associated declaration is "NL.java", line 75, col 31:
+Associated declaration is "NL.java", line 114, col 31:
         /*@ pure */ public void p(/*@ non_null */ Object o) {
                                       ^
 ------------------------------------------------------------------------
@@ -166,6 +168,7 @@ NL: NL() ...
   [TIME total]
 
 NLS ...
+    [TIME]
 
 NLS: nonnull(java.lang.Object) ...
     [TIME]  passed immediately

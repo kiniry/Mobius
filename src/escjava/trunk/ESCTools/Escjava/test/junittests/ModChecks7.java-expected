@@ -16,9 +16,9 @@ ModChecks7: mi2() ...
 ModChecks7.java:23: Warning: Possible violation of modifies clause (Modifies)
                 o.pi(); // ERROR
                     ^
-Associated declaration is "ModChecks7.java", line 12, col 8:
-        public int i;
-               ^
+Associated declaration is "ModChecks7.java", line 31, col 14:
+        //@ modifies i;
+                     ^
 ------------------------------------------------------------------------
     [TIME]  failed
 
@@ -27,9 +27,9 @@ ModChecks7: mi3() ...
 ModChecks7.java:28: Warning: Possible violation of modifies clause (Modifies)
                 pi(); // ERROR
                   ^
-Associated declaration is "ModChecks7.java", line 12, col 8:
-        public int i;
-               ^
+Associated declaration is "ModChecks7.java", line 31, col 14:
+        //@ modifies i;
+                     ^
 ------------------------------------------------------------------------
     [TIME]  failed
 
@@ -43,10 +43,16 @@ ModChecks7: mo2() ...
 ModChecks7.java:44: Error: There is no assignable clause allowing this assignment
                 o = oo;
                 ^
+ModChecks7.java:42: Associated declaration: 
+        //@ modifies o.i;
+            ^
 ------------------------------------------------------------------------
 ModChecks7.java:45: Warning: Possible violation of modifies clause (Modifies)
                 o.i = 0; // ERROR
                 ^
+Associated declaration is "ModChecks7.java", line 42, col 5:
+        //@ modifies o.i;
+            ^
 ------------------------------------------------------------------------
     [TIME]  failed
 
@@ -54,6 +60,9 @@ ModChecks7: mo3() ...
 ModChecks7.java:50: Error: There is no assignable clause allowing this assignment
                 o = oo;
                 ^
+ModChecks7.java:48: Associated declaration: 
+        //@ modifies oo.i;
+            ^
     [TIME]  passed
   [TIME total]
 3 warnings

@@ -33,9 +33,9 @@ DefD: DefD() ...
 DefInh.java:29: Warning: Possible violation of modifies clause (Modifies)
         public DefD() {  // FIXME - should be ok
                       ^
-Associated declaration is "DefInh.java", line 17, col 1:
-        int si;
-        ^
+Associated declaration is "DefInh.java", line 14, col 14:
+        //@ modifies si,sj;
+                     ^
 ------------------------------------------------------------------------
     [TIME]  failed
 

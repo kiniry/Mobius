@@ -44,7 +44,7 @@ public class NL extends NLS {
 	public void qqm2(Object o) {
 		nonnull(o); // OK 
 	}
-	// Parent has non_null
+	// Parent has non_null on the formal argument
 	//@ also
 	//@ requires false;
 	/*@ pure */ public void qqm(Object o) {

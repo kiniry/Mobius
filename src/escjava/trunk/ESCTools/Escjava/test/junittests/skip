@@ -7,10 +7,14 @@ InheritNull.java
 PreconditionWarnings.java
 NonNullResult.java
 InheritedSpecs.java
+## Varying output
+FormalNonnullInheritance.java
 ## A bug / tests to be fixed
-GhostFieldOverride.java
 MethodInSpec.java
 ## Modify everything tests
 ModEverything.java
 ## New tests
 Privacy.java
+## Fix
+Desugaring.java
+DesugaringA.java

@@ -1,17 +1,13 @@
 GoodJmlPragmas.j:3: /*@ pre true; */
 GoodJmlPragmas.j:4: /*@ post false; */
 GoodJmlPragmas.j:5: /*@ pre a_boolean_expression; */
-GoodJmlPragmas.j:9: /*@ modifies x; */
-GoodJmlPragmas.j:10: /*@ modifies y; */
-GoodJmlPragmas.j:10: /*@ modifies z; */
-GoodJmlPragmas.j:11: /*@ modifies a; */
-GoodJmlPragmas.j:11: /*@ modifies b; */
-GoodJmlPragmas.j:11: /*@ modifies c; */
-GoodJmlPragmas.j:12: /*@ assignable x; */
-GoodJmlPragmas.j:12: /*@ assignable y; */
-GoodJmlPragmas.j:13: /*@ modifiable z; */
-GoodJmlPragmas.j:14: /*@ assignable x[0]; */
-GoodJmlPragmas.j:14: /*@ modifiable z[0][y]; */
+GoodJmlPragmas.j:9: /*@ modifies x; @*/
+GoodJmlPragmas.j:10: /*@ modifies y, z; @*/
+GoodJmlPragmas.j:11: /*@ modifies a, b, c; @*/
+GoodJmlPragmas.j:12: /*@ modifies x, y; @*/
+GoodJmlPragmas.j:13: /*@ modifies z; @*/
+GoodJmlPragmas.j:14: /*@ modifies x[0]; @*/
+GoodJmlPragmas.j:14: /*@ modifies z[0][y]; @*/
 GoodJmlPragmas.j:18: /*@ signals (Exception e) true == false; */
 GoodJmlPragmas.j:19: /*@ signals (Throwable t) x < y; */
 GoodJmlPragmas.j:20: /*@ signals (TYPE tt) tt == \type(SomeException); */
@@ -24,21 +20,17 @@ GoodJmlPragmas.j:30: /*@ post q2; */
 GoodJmlPragmas.j:31: /*@ also */
 GoodJmlPragmas.j:31: /*@ pre x[0]; */
 GoodJmlPragmas.j:32: /*@ also */
-GoodJmlPragmas.j:32: /*@ modifies z; */
+GoodJmlPragmas.j:32: /*@ modifies z; @*/
 GoodJmlPragmas.j:36: /*@ writable_if x; */
 GoodJmlPragmas.j:37: /*@ readable_if y > 0; */
 GoodJmlPragmas.j:41: /*@ behavior */
 GoodJmlPragmas.j:42: /*@ normal_behavior */
 GoodJmlPragmas.j:43: /*@ exceptional_behavior */
 GoodJmlPragmas.j:57: /*@ assert_redundantly predicate; */
-GoodJmlPragmas.j:60: /*@ assignable_redundantly a; */
-GoodJmlPragmas.j:61: /*@ assignable_redundantly a; */
-GoodJmlPragmas.j:61: /*@ assignable_redundantly b; */
-GoodJmlPragmas.j:61: /*@ assignable_redundantly c; */
-GoodJmlPragmas.j:62: /*@ assignable_redundantly a if predicate; */
-GoodJmlPragmas.j:63: /*@ assignable_redundantly a if pred1; */
-GoodJmlPragmas.j:63: /*@ assignable_redundantly b if pred2; */
-GoodJmlPragmas.j:63: /*@ assignable_redundantly c if pred3; */
+GoodJmlPragmas.j:60: /*@ modifies a; @*/
+GoodJmlPragmas.j:61: /*@ modifies a, b, c; @*/
+GoodJmlPragmas.j:62: /*@ modifies a if predicate; @*/
+GoodJmlPragmas.j:63: /*@ modifies a if pred1, b if pred2, c if pred3; @*/
 GoodJmlPragmas.j:66: /*@ assume_redundantly predicate; */
 GoodJmlPragmas.j:83: /*@ constraint_redundantly predicate; */
 GoodJmlPragmas.j:84: /*@ constraint_redundantly predicate; */
@@ -62,21 +54,15 @@ GoodJmlPragmas.j:120: /*@ maintaining_redundantly predicate; */
 GoodJmlPragmas.j:122: /*@ measured_by_redundantly \not_specified; */
 GoodJmlPragmas.j:123: /*@ measured_by_redundantly spec_expression; */
 GoodJmlPragmas.j:124: /*@ measured_by_redundantly spec_expression if predicate; */
-GoodJmlPragmas.j:126: /*@ modifiable_redundantly \not_specified; */
-GoodJmlPragmas.j:127: /*@ modifiable_redundantly a; */
-GoodJmlPragmas.j:128: /*@ modifiable_redundantly a[*]; */
-GoodJmlPragmas.j:129: /*@ modifiable_redundantly a; */
-GoodJmlPragmas.j:129: /*@ modifiable_redundantly b[*]; */
-GoodJmlPragmas.j:129: /*@ modifiable_redundantly c[1]; */
-GoodJmlPragmas.j:131: /*@ modifies_redundantly a; */
-GoodJmlPragmas.j:132: /*@ modifies_redundantly a[*]; */
-GoodJmlPragmas.j:133: /*@ modifies_redundantly a; */
-GoodJmlPragmas.j:133: /*@ modifies_redundantly b[*]; */
-GoodJmlPragmas.j:133: /*@ modifies_redundantly c[1]; */
-GoodJmlPragmas.j:134: /*@ modifies_redundantly a if predicate; */
-GoodJmlPragmas.j:135: /*@ modifies_redundantly a if pred1; */
-GoodJmlPragmas.j:135: /*@ modifies_redundantly b if pred2; */
-GoodJmlPragmas.j:135: /*@ modifies_redundantly c if pred3; */
+GoodJmlPragmas.j:126: /*@ modifies \not_specified; @*/
+GoodJmlPragmas.j:127: /*@ modifies a; @*/
+GoodJmlPragmas.j:128: /*@ modifies a[*]; @*/
+GoodJmlPragmas.j:129: /*@ modifies a, b[*], c[1]; @*/
+GoodJmlPragmas.j:131: /*@ modifies a; @*/
+GoodJmlPragmas.j:132: /*@ modifies a[*]; @*/
+GoodJmlPragmas.j:133: /*@ modifies a, b[*], c[1]; @*/
+GoodJmlPragmas.j:134: /*@ modifies a if predicate; @*/
+GoodJmlPragmas.j:135: /*@ modifies a if pred1, b if pred2, c if pred3; @*/
 GoodJmlPragmas.j:137: /*@ post_redundantly predicate; */
 GoodJmlPragmas.j:139: /*@ pre_redundantly predicate; */
 GoodJmlPragmas.j:140: /*@ represents_redundantly store_ref_expression == spec_expression; */

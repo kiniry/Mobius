@@ -1118,7 +1118,8 @@ consistent with JML
 			    checkObjectDesignator(env,r.od);
 			} else {
 			    Type t = checkObjectDesignator(env,r.od);
-System.out.println("TYPE " + t);
+// FIXME
+//System.out.println("TYPE " + t);
 			}
 		    } 
                     return r;
@@ -2187,18 +2188,30 @@ FIXME - see uses of countFreeVarsAccess
                 break;
             }
 
+	    case TagConstants.MODIFIESGROUPPRAGMA: {
+		ModifiesGroupPragma mg = (ModifiesGroupPragma)p;
+                if (!(ctxt instanceof RoutineDecl ) ) {
+                    ErrorSet.error(mg.clauseLoc,
+                                   "A modifies annotation " +
+                                   "can occur only on " +
+                                   "method and constructor declarations");
+		} else {
+		    CondExprModifierPragmaVec v = mg.items;
+		    for (int i=0; i<v.size(); ++i) {
+			checkModifierPragma(v.elementAt(i),ctxt,env);
+		    }
+		    if (mg.precondition != null) mg.precondition = checkPredicate(env,mg.precondition); // FIXME - pre environment ?
+		}
+		break;
+	    }
+
 	    case TagConstants.MODIFIES:
             case TagConstants.ASSIGNABLE:
             case TagConstants.MODIFIABLE:
             case TagConstants.STILL_DEFERRED: {
                 CondExprModifierPragma emp = (CondExprModifierPragma)p;
 
-                if (!(ctxt instanceof RoutineDecl ) ) {
-                    ErrorSet.error(p.getStartLoc(),
-                                   "A modifies annotation " +
-                                   "can occur only on " +
-                                   "method and constructor declarations");
-                } else {
+                if ((ctxt instanceof RoutineDecl ) ) {
                     RoutineDecl rd = (RoutineDecl)ctxt;
 	    
                     Assert.notFalse(!isSpecDesignatorContext);

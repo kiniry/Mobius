@@ -1,26 +1,32 @@
 CON.java:18: Error: There is no assignable clause allowing this method call
                 Object o = new CON(0); // WARNING
                                   ^
-CON.java:7: Associated declaration: 
-        static int i,ii;
-               ^
+CON.java:40: Associated declaration: 
+        //@ modifies i;
+                     ^
+CON.java:16: Associated declaration: 
+        //@ modifies \nothing;
+            ^
 CON.java:28: Error: There is no assignable clause allowing this method call
                 Object oo = new CON(o); // WARNING
                                    ^
 CON.java:48: Associated declaration: 
         //@ modifies CON.*;
                      ^
+CON.java:26: Associated declaration: 
+        //@ modifies \nothing;
+            ^
 CON.java:85: Warning: Possible violation of modifies clause (Modifies)
                 new CON(0,0.0);  // WARNING
                        ^
-Associated declaration is "CON.java", line 7, col 8:
-        static int i,ii;
-               ^
+Associated declaration is "CON.java", line 89, col 14:
+        //@ modifies ii if i >= 3;
+                     ^
 CON.java:104: Warning: Possible violation of modifies clause (Modifies)
             this(0,0); // WARNING
                 ^
-Associated declaration is "CON.java", line 8, col 1:
-        int j;
-        ^
+Associated declaration is "CON.java", line 68, col 14:
+        //@ modifies j if i >= 3;
+                     ^
 2 warnings
 2 errors

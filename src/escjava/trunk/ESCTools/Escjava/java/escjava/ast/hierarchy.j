@@ -97,7 +97,9 @@ import escjava.ParsedRoutineSpecs;
  *         + ReachModifierPragma (Expr expr, Identifier id, StoreRefExpr)
  *                   // \Reach
  *	   + CondExprModifierPragma (Expr expr, Expr cond) 
- *                   // Modifiers, AlsoModifiers, Assignable, Modifiable
+ *                   // Modifies, AlsoModifiers, Assignable, Modifiable
+ *         + ModifiesGroupPragma
+ *                   // Group of Modifies, etc., pragmas from one spec case
  *         + MapsExprModifierPragma (Identifier id, Expr mapsexpr, Expr expr) 
  *		     // maps
  *         + VarExprModifierPragma (GenericVarDecl arg, Expr expr)
@@ -902,6 +904,38 @@ public class ExprModifierPragma extends ModifierPragma
 
     public int getStartLoc() { return loc; }
     public int getEndLoc() { return expr.getEndLoc(); }
+}
+
+public class ModifiesGroupPragma extends ModifierPragma {
+    //# int tag
+    //# CondExprModifierPragma* items
+    //# Expr precondition
+    //# int clauseLoc
+
+    public int getStartLoc() { return clauseLoc; }
+
+    static public ModifiesGroupPragma make(int tag, int loc) {
+	ModifiesGroupPragma t = new ModifiesGroupPragma();
+	t.tag = tag;
+	t.clauseLoc = loc;
+	t.precondition = null;
+	t.items = CondExprModifierPragmaVec.make();
+	return t;
+    }
+
+    public void addElement(CondExprModifierPragma e) {
+	items.addElement(e);
+    }
+
+    public ModifiesGroupPragma append(ModifiesGroupPragma m) {
+	items.append(m.items);
+	return this;
+    }
+
+    public ModifiesGroupPragma append(CondExprModifierPragmaVec ev) {
+	items.append(ev);
+	return this;
+    }
 }
 
 public class CondExprModifierPragma  extends ModifierPragma {

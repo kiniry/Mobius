@@ -12,15 +12,21 @@ ModChecksMethod.java:20: Error: There is no assignable clause allowing this meth
 ModChecksMethod.java:245: Associated declaration: 
         //@ modifies \everything;
                      ^
+ModChecksMethod.java:18: Associated declaration: 
+        //@ modifies \nothing;
+            ^
     [TIME]  passed
 
 ModChecksMethod: mnothingA() ...
 ModChecksMethod.java:24: Error: There is no assignable clause allowing this method call
             pi(); // WARNING
               ^
-ModChecksMethod.java:6: Associated declaration: 
-        public int i;
-               ^
+ModChecksMethod.java:242: Associated declaration: 
+        //@ modifies i;
+                     ^
+ModChecksMethod.java:22: Associated declaration: 
+        //@ modifies \nothing;
+            ^
     [TIME]  passed
 
 ModChecksMethod: mnothingB() ...
@@ -66,6 +72,9 @@ ModChecksMethod.java:44: Error: There is no assignable clause allowing this meth
 ModChecksMethod.java:272: Associated declaration: 
         //@ modifies this.*;
                      ^
+ModChecksMethod.java:42: Associated declaration: 
+        //@ modifies \nothing;
+            ^
     [TIME]  passed
 
 ModChecksMethod: mnothingG() ...
@@ -75,6 +84,9 @@ ModChecksMethod.java:48: Error: There is no assignable clause allowing this meth
 ModChecksMethod.java:278: Associated declaration: 
         //@ modifies ModChecksMethod.*;
                      ^
+ModChecksMethod.java:46: Associated declaration: 
+        //@ modifies \nothing;
+            ^
     [TIME]  passed
 
 ModChecksMethod: mnothingH() ...
@@ -84,6 +96,9 @@ ModChecksMethod.java:52: Error: There is no assignable clause allowing this meth
 ModChecksMethod.java:275: Associated declaration: 
         //@ modifies ModChecksMethodA.*;
                      ^
+ModChecksMethod.java:50: Associated declaration: 
+        //@ modifies \nothing;
+            ^
     [TIME]  passed
 
 ModChecksMethod: meverything() ...
@@ -97,9 +112,9 @@ ModChecksMethod: mi1() ...
 ModChecksMethod.java:76: Warning: Possible violation of modifies clause (Modifies)
             o.pi(); // WARNING
                 ^
-Associated declaration is "ModChecksMethod.java", line 6, col 8:
-        public int i;
-               ^
+Associated declaration is "ModChecksMethod.java", line 242, col 14:
+        //@ modifies i;
+                     ^
 ------------------------------------------------------------------------
     [TIME]  failed
 
@@ -110,6 +125,9 @@ ModChecksMethod.java:80: Error: There is no assignable clause allowing this meth
 ModChecksMethod.java:245: Associated declaration: 
         //@ modifies \everything;
                      ^
+ModChecksMethod.java:78: Associated declaration: 
+        //@ modifies i;
+            ^
     [TIME]  passed
 
 ModChecksMethod: mi3() ...
@@ -119,6 +137,9 @@ ModChecksMethod.java:84: Error: There is no assignable clause allowing this meth
 ModChecksMethod.java:245: Associated declaration: 
         //@ modifies \everything;
                      ^
+ModChecksMethod.java:82: Associated declaration: 
+        //@ modifies i;
+            ^
     [TIME]  passed
 
 ModChecksMethod: mi3A() ...
@@ -161,6 +182,9 @@ ModChecksMethod.java:100: Error: There is no assignable clause allowing this met
 ModChecksMethod.java:272: Associated declaration: 
         //@ modifies this.*;
                      ^
+ModChecksMethod.java:98: Associated declaration: 
+        //@ modifies i;
+            ^
     [TIME]  passed
 
 ModChecksMethod: mi3E() ...
@@ -170,6 +194,9 @@ ModChecksMethod.java:104: Error: There is no assignable clause allowing this met
 ModChecksMethod.java:278: Associated declaration: 
         //@ modifies ModChecksMethod.*;
                      ^
+ModChecksMethod.java:102: Associated declaration: 
+        //@ modifies i;
+            ^
     [TIME]  passed
 
 ModChecksMethod: mi3F() ...
@@ -179,6 +206,9 @@ ModChecksMethod.java:108: Error: There is no assignable clause allowing this met
 ModChecksMethod.java:275: Associated declaration: 
         //@ modifies ModChecksMethodA.*;
                      ^
+ModChecksMethod.java:106: Associated declaration: 
+        //@ modifies i;
+            ^
     [TIME]  passed
 
 ModChecksMethod: mii() ...
@@ -202,6 +232,9 @@ ModChecksMethod.java:124: Error: There is no assignable clause allowing this met
 ModChecksMethod.java:278: Associated declaration: 
         //@ modifies ModChecksMethod.*;
                      ^
+ModChecksMethod.java:122: Associated declaration: 
+        //@ modifies this.*;
+            ^
     [TIME]  passed
 
 ModChecksMethod: mtstarB() ...
@@ -211,6 +244,9 @@ ModChecksMethod.java:128: Error: There is no assignable clause allowing this met
 ModChecksMethod.java:278: Associated declaration: 
         //@ modifies ModChecksMethod.*;
                      ^
+ModChecksMethod.java:126: Associated declaration: 
+        //@ modifies this.*;
+            ^
     [TIME]  passed
 
 ModChecksMethod: mtstarC() ...
@@ -220,6 +256,9 @@ ModChecksMethod.java:132: Error: There is no assignable clause allowing this met
 ModChecksMethod.java:275: Associated declaration: 
         //@ modifies ModChecksMethodA.*;
                      ^
+ModChecksMethod.java:130: Associated declaration: 
+        //@ modifies this.*;
+            ^
     [TIME]  passed
 
 ModChecksMethod: mTstar() ...
@@ -229,6 +268,9 @@ ModChecksMethod.java:137: Error: There is no assignable clause allowing this met
 ModChecksMethod.java:272: Associated declaration: 
         //@ modifies this.*;
                      ^
+ModChecksMethod.java:135: Associated declaration: 
+        //@ modifies ModChecksMethod.*;
+            ^
     [TIME]  passed
 
 ModChecksMethod: mTstarA() ...
@@ -252,6 +294,9 @@ ModChecksMethod.java:153: Error: There is no assignable clause allowing this met
 ModChecksMethod.java:275: Associated declaration: 
         //@ modifies ModChecksMethodA.*;
                      ^
+ModChecksMethod.java:151: Associated declaration: 
+        //@ modifies ModChecksMethod.*;
+            ^
     [TIME]  passed
 
 ModChecksMethod: mATstar() ...
@@ -261,6 +306,9 @@ ModChecksMethod.java:158: Error: There is no assignable clause allowing this met
 ModChecksMethod.java:272: Associated declaration: 
         //@ modifies this.*;
                      ^
+ModChecksMethod.java:156: Associated declaration: 
+        //@ modifies ModChecksMethodA.*;
+            ^
     [TIME]  passed
 
 ModChecksMethod: mATstarA() ...
@@ -281,6 +329,9 @@ ModChecksMethod.java:168: Error: There is no assignable clause allowing this met
 ModChecksMethod.java:278: Associated declaration: 
         //@ modifies ModChecksMethod.*;
                      ^
+ModChecksMethod.java:166: Associated declaration: 
+        //@ modifies ModChecksMethodA.*;
+            ^
     [TIME]  passed
 
 ModChecksMethod: mATstarC() ...
@@ -290,6 +341,9 @@ ModChecksMethod.java:173: Error: There is no assignable clause allowing this met
 ModChecksMethod.java:278: Associated declaration: 
         //@ modifies ModChecksMethod.*;
                      ^
+ModChecksMethod.java:171: Associated declaration: 
+        //@ modifies ModChecksMethodA.*;
+            ^
     [TIME]  passed
 
 ModChecksMethod: mATstarD() ...
@@ -449,6 +503,9 @@ ModChecksMethod.java:284: Error: There is no assignable clause allowing this met
 ModChecksMethod.java:297: Associated declaration: 
         //@ modifies \everything;
                      ^
+ModChecksMethod.java:282: Associated declaration: 
+        //@ modifies \nothing;
+            ^
     [TIME]  passed
 
 ModChecksMethod: mcnothing() ...
@@ -458,6 +515,9 @@ ModChecksMethod.java:289: Error: There is no assignable clause allowing this met
 ModChecksMethod.java:297: Associated declaration: 
         //@ modifies \everything;
                      ^
+ModChecksMethod.java:287: Associated declaration: 
+        //@ modifies \nothing;
+            ^
     [TIME]  passed
 
 ModChecksMethod: mcnothingA() ...
@@ -499,9 +559,12 @@ ModChecksMethod: mstatic() ...
 ModChecksMethod.java:336: Error: There is no assignable clause allowing this method call
                 new ModChecksMethod(null); // WARNING
                                    ^
-ModChecksMethod.java:7: Associated declaration: 
-        public static int si;
-                      ^
+ModChecksMethod.java:339: Associated declaration: 
+        //@ modifies ModChecksMethod.si;
+                     ^
+ModChecksMethod.java:334: Associated declaration: 
+        //@ modifies \nothing;
+            ^
     [TIME]  passed
 
 ModChecksMethod: ModChecksMethod(java.lang.Object) ...
@@ -514,9 +577,12 @@ ModChecksMethod: ModChecksMethod(java.lang.Object, double) ...
 ModChecksMethod.java:350: Error: There is no assignable clause allowing this method call
                 super(0); // WARNING
                      ^
-ModChecksMethod.java:393: Associated declaration: 
-        public int zi;
-               ^
+ModChecksMethod.java:399: Associated declaration: 
+        //@ modifies zi;
+                     ^
+ModChecksMethod.java:348: Associated declaration: 
+        //@ modifies \nothing;
+            ^
     [TIME]  passed
 
 ModChecksMethod: ModChecksMethod(java.lang.Object, double, int) ...
@@ -526,9 +592,12 @@ ModChecksMethod: ModChecksMethod(java.lang.Object, java.lang.Object) ...
 ModChecksMethod.java:360: Error: There is no assignable clause allowing this method call
                 super(0.0); // WARNING
                      ^
-ModChecksMethod.java:394: Associated declaration: 
-        public static int szi;
-                      ^
+ModChecksMethod.java:402: Associated declaration: 
+        //@ modifies szi;
+                     ^
+ModChecksMethod.java:358: Associated declaration: 
+        //@ modifies \nothing;
+            ^
     [TIME]  passed
 
 ModChecksMethod: ModChecksMethod(java.lang.Object, java.lang.Object, int) ...
@@ -550,6 +619,9 @@ ModChecksMethod.java:381: Error: There is no assignable clause allowing this met
 ModChecksMethod.java:371: Associated declaration: 
         //@ modifies ModChecksMethod.*;
                      ^
+ModChecksMethod.java:379: Associated declaration: 
+        //@ modifies ModChecksMethodZ.*;
+            ^
     [TIME]  passed
   [TIME total]
 

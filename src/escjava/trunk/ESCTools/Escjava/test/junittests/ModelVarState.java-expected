@@ -29,6 +29,9 @@ ModelVarState: mmmm() ...
 ModelVarState.java:34: Error: There is no assignable clause allowing this assignment
                 sz = 2;  // ERROR - no modifies
                 ^
+ModelVarState.java:32: Associated declaration: 
+        //@ modifies \nothing;
+            ^
     [TIME]  passed
 
 ModelVarState: m5() ...

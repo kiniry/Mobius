@@ -28,7 +28,6 @@ buildtests:
 
 .PHONY: test runtests
 test runtests: buildtests
-	@echo TESTING Escjava: junittests
 	$(MAKE) skips
 	$(MAKE) dotests
 
@@ -39,6 +38,7 @@ dotests: lists
 
 .PHONY: junittests
 junittests:
+	@echo TESTING Escjava: junittests
 	$(JUNIT) TestSuite
 
 .PHONY: dotests-nolist
@@ -74,16 +74,16 @@ OTHERTESTS = \
 ## happened in the previous junittests), so the output is more stable when
 ## run separately
 NOTJUNITTESTS = 
-## Desugaring.java 
-## FormalNonnullInheritance.java 
-## DesugaringA.java
-## InheritedSpecs.java NL.java
+ifdef PDTESTS
+## These are platform-dependent tests or tests whose output is a bit random
+NOTJUNITTESTS += $(shell cat notjunittests | grep -v -f skip)
+endif
 
 .PHONY: lists
 lists:
 	@rm -f listtests
 	@touch listtests
-	@for f in `ls *.java ${OTHERTESTS} | grep -v -f skip`; do \
+	@for f in `ls *.java ${OTHERTESTS} | grep -v -f skip -f notjunittests`; do \
 		echo -n ${ALWAYSFLAGS} " " >> listtests ; \
 		( grep FLAGS $$f || echo ${DEFAULTFLAGS} ) \
 		| sed -e 's?//#FLAGS:??' -e "s/\$$/ $$f/"  \
@@ -99,6 +99,7 @@ septest:
 
 .PHONY: notjunittests
 notjunittests:
+	@echo TESTING Escjava: notjunittests
 	@touch skip
 	@for f in ${NOTJUNITTESTS} ; do \
 		$(MAKE) --no-print-directory $${f}-test; \

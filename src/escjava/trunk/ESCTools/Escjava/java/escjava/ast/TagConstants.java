@@ -487,6 +487,8 @@ public class TagConstants extends GeneratedTags
                     return escfunctions[tag - FIRSTFUNCTIONTAG];
                 else if (FIRSTJMLKEYWORDTAG <= tag && tag <= LASTJMLKEYWORDTAG)
                     return jmlkeywords[tag - FIRSTJMLKEYWORDTAG].toString();
+		else if (tag == TagConstants.MODIFIESGROUPPRAGMA)
+		    return "modifies";
                 else if (tag <= GeneratedTags.LAST_TAG)
                     return GeneratedTags.toString(tag);
                 else {

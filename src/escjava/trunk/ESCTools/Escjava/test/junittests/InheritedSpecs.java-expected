@@ -1,7 +1,9 @@
 ESC/Java version VERSION
   Prover started:TIME
+    [TIME]
 
 InheritedSpecs ...
+    [TIME]
 
 InheritedSpecs: m(int, int) ...
 ------------------------------------------------------------------------
@@ -31,11 +33,11 @@ InheritedSpecs: mm4() ...
 InheritedSpecs.java:16: Warning: Precondition possibly not established (Pre)
         public void mm4() { m(-1,-1); } // FAILS
                              ^
-Associated declaration is "InheritedSpecs.java", line 7, col 5:
-        //@ requires i >= 0;
-            ^
 Associated declaration is "InheritedSpecs.java", line 111, col 5:
         //@ requires j >= 0;
+            ^
+Associated declaration is "InheritedSpecs.java", line 7, col 5:
+        //@ requires i >= 0;
             ^
 ------------------------------------------------------------------------
     [TIME]  failed
@@ -143,11 +145,11 @@ InheritedSpecs: nn5e() ...
 InheritedSpecs.java:85: Warning: Precondition possibly not established (Pre)
                 n5(-1); // FAILS
                   ^
-Associated declaration is "InheritedSpecs.java", line 41, col 5:
-        //@ requires i%2 == 0;
-            ^
 Associated declaration is "InheritedSpecs.java", line 147, col 5:
         //@ requires i>=0;
+            ^
+Associated declaration is "InheritedSpecs.java", line 41, col 5:
+        //@ requires i%2 == 0;
             ^
 ------------------------------------------------------------------------
     [TIME]  failed
@@ -177,6 +179,7 @@ Associated declaration is "InheritedSpecs.java", line 47, col 5:
   [TIME total]
 
 ISHelper ...
+    [TIME]
 
 ISHelper: m(int, int) ...
     [TIME]  passed
@@ -210,6 +213,7 @@ ISHelper: n7(int) ...
   [TIME total]
 
 ISSHelper ...
+    [TIME]
 
 ISSHelper: ISSHelper() ...
     [TIME]  passed immediately

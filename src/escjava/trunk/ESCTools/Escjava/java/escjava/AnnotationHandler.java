@@ -206,6 +206,10 @@ public class AnnotationHandler {
 	   }
     }
     static public void printSpec(ModifierPragma mp) {
+	    if (mp instanceof ModifiesGroupPragma) {
+		EscPrettyPrint.inst.print(System.out,0,(ModifiesGroupPragma)mp);
+		return;
+	    }
 	    System.out.print("   " + 
 		escjava.ast.TagConstants.toString(mp.getTag()) + " "  );
 	    if (mp instanceof ExprModifierPragma) {
@@ -352,6 +356,7 @@ public class AnnotationHandler {
 		    int t = m.getTag();
 		    if (t == TagConstants.REQUIRES ||
 			t == TagConstants.PRECONDITION ||
+			t == TagConstants.MODIFIESGROUPPRAGMA ||
 			t == TagConstants.MODIFIES ||
 			t == TagConstants.ASSIGNABLE) {
 			newpm.addElement(m);
@@ -557,6 +562,15 @@ System.out.println("END_MPV");
 		    resultList.addElement(mm);
 		    break;
 		}
+		case TagConstants.MODIFIESGROUPPRAGMA:
+		  {
+		    foundModifies = true;
+		    ModifiesGroupPragma mm = (ModifiesGroupPragma)mp;
+		    mm.precondition = req;
+		    resultList.addElement(mm);
+		    break;
+		  }
+/*
 		case TagConstants.MODIFIES:
 		case TagConstants.MODIFIABLE:
 		case TagConstants.ASSIGNABLE:
@@ -570,6 +584,7 @@ System.out.println("END_MPV");
 		    resultList.addElement(mm);
 		    break;
 		  }
+*/
 
 		case TagConstants.WORKING_SPACE:
 		case TagConstants.DURATION:
@@ -675,12 +690,29 @@ added, it doesn't change whether a routine appears to have a spec or not.
 
     public void deNest(ArrayList ps, ModifierPragmaVec prefix, ArrayList deNestedSpecs) {
 	if (ps.size() == 0 && prefix.size() != 0) {
+	    combineModifies(prefix);
 	    deNestedSpecs.add(prefix);
 	} else {
 	    Iterator i = ps.iterator();
 	    while (i.hasNext()) {
 		ModifierPragmaVec m = (ModifierPragmaVec)i.next();
 		deNest(m,prefix,deNestedSpecs);
+	    }
+	}
+    }
+
+    public void combineModifies(ModifierPragmaVec list) {
+	ModifiesGroupPragma m = null;
+	for (int i=0; i<list.size(); ++i) {
+	    ModifierPragma mp = list.elementAt(i);
+	    if (mp.getTag() == TagConstants.MODIFIESGROUPPRAGMA) {
+		ModifiesGroupPragma mm = (ModifiesGroupPragma)mp;
+		if (m == null) m = mm;
+		else {
+		    m.append(mm);
+		    list.removeElementAt(i);
+		    --i;
+		}
 	    }
 	}
     }
@@ -700,6 +732,7 @@ added, it doesn't change whether a routine appears to have a spec or not.
 	} else {
 	    ModifierPragmaVec mm = prefix.copy();
 	    mm.append(m);
+	    combineModifies(mm);
 	    deNestedSpecs.add(mm);
 	}
     }

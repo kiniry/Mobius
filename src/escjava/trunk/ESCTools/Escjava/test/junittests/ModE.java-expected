@@ -4,40 +4,34 @@ ModE.java:37: Error: There is no assignable clause allowing this method call
 ModE.java:7: Associated declaration: 
         //@ modifies \everything;
                      ^
+ModE.java:35: Associated declaration: 
+        //@ modifies \nothing;
+            ^
 ModE.java:38: Error: There is no assignable clause allowing this method call
                 e.me();  // WARNING
                     ^
 ModE.java:21: Associated declaration: 
         //@ modifies \everything;
                      ^
-ModE.java:39: Error: There is no assignable clause allowing this method call
-                e = new ModE(1,2,3);  // WARNING
-                            ^
-ModE.java:19: Associated declaration: 
-        public ModE(int i, int j, int k);
-        ^
-ModE.java:40: Error: There is no assignable clause allowing this method call
-                e.md();  // WARNING
-                    ^
-ModE.java:30: Associated declaration: 
-        public void md();
-        ^
-ModE.java:41: Error: There is no assignable clause allowing this method call
-                e.mss();  // WARNING
-                     ^
-ModE.java:67: Associated declaration: 
-        //@ also ensures true;
-        ^
+ModE.java:35: Associated declaration: 
+        //@ modifies \nothing;
+            ^
 ModE.java:47: Error: There is no assignable clause allowing this method call
                 e = new ModE(5);  // WARNING
                             ^
 ModE.java:10: Associated declaration: 
         //@ modifies \not_specified;
+                     ^
+ModE.java:44: Associated declaration: 
+        //@ modifies \nothing;
             ^
 ModE.java:48: Error: There is no assignable clause allowing this method call
                 e.mns();  // WARNING
                      ^
 ModE.java:27: Associated declaration: 
         //@ modifies \not_specified;
+                     ^
+ModE.java:44: Associated declaration: 
+        //@ modifies \nothing;
             ^
-7 errors
+4 errors

@@ -537,6 +537,7 @@ class CalcFreeVars {
 	}
       case TagConstants.FIELDACCESS:
 	{
+System.out.println("FA " + Location.toString(e.getStartLoc()) + " " + e);
 	  Assert.precondition
 	      ("ASTNode with FieldAccess subnode passed to freeVars");
 	  break;

@@ -891,6 +891,9 @@ try{
                 case TagConstants.MODIFIES_REDUNDANTLY: // SUPPORT COMPLETE (kiniry)
                 case TagConstants.MODIFIES: {
 		    checkNoModifiers(tag,loc);
+		   ModifiesGroupPragma group = ModifiesGroupPragma.make(tag,loc);
+			if (TagConstants.isRedundant(tag))
+			    group.setRedundant(true);
 		   do {
 		    Expr e = parseStoreRef(scanner);
 		    // deal with optional conditional ('if' <predicate>)
@@ -909,24 +912,22 @@ try{
 			CondExprModifierPragma pragma = 
 			    CondExprModifierPragma.make(
 				    TagConstants.unRedundant(tag),
-						    e, loc, cond);
+						    e, e.getStartLoc(), cond);
 			if (TagConstants.isRedundant(tag))
 			    pragma.setRedundant(true);
-			savePragma(loc,TagConstants.MODIFIERPRAGMA, pragma);
+			//savePragma(loc,TagConstants.MODIFIERPRAGMA, pragma);
+			group.addElement(pragma);
 		    }
 		    if (scanner.ttype != TagConstants.COMMA) break;
 		    scanner.getNextToken(); // skip comma
 		   } while (true);
-/*
-		    if (!getPragma(dst)) {
-			expect(scanner,TagConstants.SEMICOLON);
-			return getNextPragmaHelper(dst);
-		    }
-*/
 		    semicolonExpected = true;
                     if (DEBUG)
                         Info.out("getNextPragma: parsed a frame axiom: " + 
                                  dst.ztoString());
+		    dst.startingLoc = loc;
+		    dst.ttype = TagConstants.MODIFIERPRAGMA;
+		    dst.auxVal = group;
 		    break;
 		}
 

@@ -1,5 +1,6 @@
 ESC/Java version VERSION
   Prover started:TIME
+    [TIME]
 
 GhostFieldOverride ...
 GhostFieldOverride.java:7: Error: Another field named 'z' already exists in this type

@@ -101,7 +101,7 @@ public final class GetSpec
 
 	dmd.throwsSet = rd.raises;
 	dmd.requires  = ExprModifierPragmaVec.make();
-	dmd.modifies  = CondExprModifierPragmaVec.make();
+	dmd.modifies  = ModifiesGroupPragmaVec.make();
 	dmd.ensures   = ExprModifierPragmaVec.make();
 	dmd.exsures   = VarExprModifierPragmaVec.make();
 
@@ -206,6 +206,33 @@ public final class GetSpec
                         dmd.requires.addElement(emp);
                         break;
                     }
+	        case TagConstants.MODIFIESGROUPPRAGMA:
+                    {
+                        ModifiesGroupPragma em = (ModifiesGroupPragma)mp;
+			for (int ii=0; ii<em.items.size(); ++ii) {
+			    CondExprModifierPragma emp = em.items.elementAt(ii);
+			    if (emp.expr == null) {
+				em.items.removeElementAt(i);
+				--ii;
+				continue;
+			    }
+			    int t = emp.expr.getTag();
+			    // FIXME - no contribution to spec for these keywords
+			    if (t == TagConstants.EVERYTHINGEXPR) {
+				dmd.modifiesEverything = true;
+			    } else if (t == TagConstants.NOTSPECIFIEDEXPR) {
+				dmd.modifiesEverything = true;
+			    	emp.expr = EverythingExpr.make(emp.expr.getStartLoc());
+			    } else if (t == TagConstants.NOTHINGEXPR ) {
+				// no action
+			    }
+			    emp = doSubst(subst, emp);
+			    em.items.setElementAt(emp,ii);
+			}
+                        dmd.modifies.addElement(em);
+                        break;
+                    }
+/*
                 case TagConstants.MODIFIES:
                 case TagConstants.ALSO_MODIFIES:
                 case TagConstants.MODIFIABLE:
@@ -217,7 +244,6 @@ public final class GetSpec
 			// FIXME - no contribution to spec for these keywords
 			if (t == TagConstants.EVERYTHINGEXPR) {
 			    dmd.modifiesEverything = true;
-			    emp = doSubst(subst, emp);
 			} else if (t == TagConstants.NOTSPECIFIEDEXPR) {
 			    dmd.modifiesEverything = true;
 			    //emp = doSubst(subst, 
@@ -226,11 +252,12 @@ public final class GetSpec
 			} else if (t == TagConstants.NOTHINGEXPR ) {
 			    // no action
 			} else {
-			    emp = doSubst(subst, emp);
 			}
+			emp = doSubst(subst, emp);
                         dmd.modifies.addElement(emp);
                         break;
                     }
+*/
                 case TagConstants.ENSURES:
                 case TagConstants.ALSO_ENSURES:
                 case TagConstants.POSTCONDITION:
@@ -308,7 +335,7 @@ public final class GetSpec
         dmdFiltered.throwsSet = dmd.throwsSet;
 
         dmdFiltered.requires = dmd.requires;
-        dmdFiltered.modifies = filterCondExprModPragmas(dmd.modifies, scope);
+        dmdFiltered.modifies = filterModifies(dmd.modifies, scope);
         dmdFiltered.ensures = filterExprModPragmas(dmd.ensures, scope);
         dmdFiltered.exsures = filterVarExprModPragmas(dmd.exsures, scope);
 
@@ -346,33 +373,36 @@ public final class GetSpec
     }
 
 
-    private static CondExprModifierPragmaVec filterCondExprModPragmas(/*@ non_null */ CondExprModifierPragmaVec vec,
+    private static ModifiesGroupPragmaVec filterModifies(/*@ non_null */ ModifiesGroupPragmaVec mvec,
                                                                     /*@ non_null */ FindContributors scope) {
-        int n = vec.size();
-        CondExprModifierPragmaVec vecNew = null;  // lazily allocated
-        for (int i = 0; i < n; i++) {
-            CondExprModifierPragma vemp = vec.elementAt(i);
-            if (exprIsVisible(scope.originType, vemp.expr) &&
-		exprIsVisible(scope.originType, vemp.cond)) {
-                // keep this pragma
-                if (vecNew != null) {
-                    vecNew.addElement(vemp);
-                }
-            } else {
-                // filter out this pragma
-                if (vecNew == null) {
-                    vecNew = CondExprModifierPragmaVec.make(n-1);
-                    for (int j = 0; j < i; j++) {
-                        vecNew.addElement(vec.elementAt(j));
-                    }
-                }
-            }
+	ModifiesGroupPragmaVec result = ModifiesGroupPragmaVec.make();
+        int mn = mvec.size();
+	for (int j=0; j<mn; ++j) {
+	    ModifiesGroupPragma mv = mvec.elementAt(j);
+	    CondExprModifierPragmaVec vec = mv.items;
+	    CondExprModifierPragmaVec vecNew = null;  // lazily allocated
+	    int n = vec.size();
+	    for (int i = 0; i < n; i++) {
+		CondExprModifierPragma vemp = vec.elementAt(i);
+		if (exprIsVisible(scope.originType, vemp.expr) &&
+		    exprIsVisible(scope.originType, vemp.cond)) {
+		    // keep this pragma
+		    if (vecNew != null) {
+			vecNew.addElement(vemp);
+		    }
+		} else {
+		    // filter out this pragma
+		    if (vecNew == null) {
+			vecNew = CondExprModifierPragmaVec.make(n-1);
+			for (int k = 0; k < i; k++) {
+			    vecNew.addElement(vec.elementAt(k));
+			}
+		    }
+		}
+	    }
+	    result.addElement( ModifiesGroupPragma.make(mv.tag,mv.clauseLoc).append(vecNew == null ? vec : vecNew));
         }
-        if (vecNew == null) {
-            return vec;
-        } else {
-            return vecNew;
-        }
+	return result;
     }
 
     private static VarExprModifierPragmaVec filterVarExprModPragmas(/*@ non_null */ VarExprModifierPragmaVec vec,
@@ -436,15 +466,17 @@ public final class GetSpec
 
         // translates modifies list
 
-	Translate.ModifiesIterator ii = new Translate.ModifiesIterator(dmd.modifies,true);
-	while (ii.hasNext()) {
-	    Expr designator = (Expr)ii.next();
-	    if (Utils.isModel(designator)) continue;
-            Expr gcDesignator = TrAnExpr.trSpecExpr(designator);
-		// Returns null for modifies \nothing, \everything  FIXME?
-		// array-range, wild-ref expressions  FIXME!!
-            if (gcDesignator != null) targets.addElement(gcDesignator);
-        }
+	for (int k=0; k<dmd.modifies.size(); ++k) {
+	    Translate.ModifiesIterator ii = new Translate.ModifiesIterator(dmd.modifies.elementAt(k).items,true);
+	    while (ii.hasNext()) {
+		Expr designator = (Expr)ii.next();
+		if (Utils.isModel(designator)) continue;
+		Expr gcDesignator = TrAnExpr.trSpecExpr(designator);
+		    // Returns null for modifies \nothing, \everything  FIXME?
+		    // array-range, wild-ref expressions  FIXME!!
+		if (gcDesignator != null) targets.addElement(gcDesignator);
+	    }
+	}
 
         // handle targets stuff, and create preVarMap
 

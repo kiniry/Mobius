@@ -25,7 +25,7 @@ public class DerivedMethodDecl {
   public TypeNameVec throwsSet;
   public boolean usesFresh;
   public ExprModifierPragmaVec requires;
-  public CondExprModifierPragmaVec modifies;
+  public ModifiesGroupPragmaVec modifies;
   public boolean modifiesEverything = false;
   public ExprModifierPragmaVec ensures;
   public VarExprModifierPragmaVec exsures;

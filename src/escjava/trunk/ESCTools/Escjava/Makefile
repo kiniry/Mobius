@@ -202,6 +202,7 @@ TypeVec = \
 	${AST_DIR}/ConditionVec.java  \
 	${AST_DIR}/ExprModifierPragmaVec.java \
 	${AST_DIR}/CondExprModifierPragmaVec.java \
+	${AST_DIR}/ModifiesGroupPragmaVec.java \
 	${AST_DIR}/ExprDeclPragmaVec.java \
 	${AST_DIR}/ExprStmtPragmaVec.java \
 	${AST_DIR}/VarExprModifierPragmaVec.java \

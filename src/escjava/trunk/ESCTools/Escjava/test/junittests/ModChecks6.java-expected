@@ -15,6 +15,9 @@ ModChecks6.java:19: Error: There is no assignable clause allowing this method ca
 ModChecks6.java:25: Associated declaration: 
         //@ modifies ModChecks6.*;  // WARNING
                      ^
+ModChecks6.java:12: Associated declaration: 
+        //@ modifies \nothing;
+            ^
     [TIME]  passed
 
 ModChecks6: mm() ...

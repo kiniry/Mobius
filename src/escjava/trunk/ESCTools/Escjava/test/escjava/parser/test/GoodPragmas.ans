@@ -43,19 +43,13 @@ GoodPragmas.j:53: /*@ monitored_by monitored; */
 GoodPragmas.j:53: /*@ monitored_by non_null; */
 GoodPragmas.j:53: /*@ monitored_by a.b.c; */
 GoodPragmas.j:53: /*@ uninitialized */
-GoodPragmas.j:54: /*@ modifies a; */
+GoodPragmas.j:54: /*@ modifies a; @*/
 GoodPragmas.j:55: /*@ requires true; */
-GoodPragmas.j:55: /*@ modifies a[x]; */
-GoodPragmas.j:55: /*@ modifies a[a[x]]; */
-GoodPragmas.j:55: /*@ modifies a.b.c; */
-GoodPragmas.j:55: /*@ modifies a.b[q]; */
-GoodPragmas.j:55: /*@ modifies a.b[*]; */
-GoodPragmas.j:56: /*@ modifies this; */
-GoodPragmas.j:57: /*@ modifies this; */
-GoodPragmas.j:57: /*@ modifies this.bar; */
-GoodPragmas.j:57: /*@ modifies this[10]; */
-GoodPragmas.j:57: /*@ modifies this.a[this]; */
-GoodPragmas.j:58: /*@ modifies this.a[*]; */
+GoodPragmas.j:55: /*@ modifies a[x], a[a[x]], a.b.c, a.b[q], a.b[*]; @*/
+GoodPragmas.j:56: /*@ modifies this; @*/
+GoodPragmas.j:57: /*@ modifies this, this.bar; @*/
+GoodPragmas.j:57: /*@ modifies this[10], this.a[this]; @*/
+GoodPragmas.j:58: /*@ modifies this.a[*]; @*/
 GoodPragmas.j:1: //@ nowarn
 GoodPragmas.j:2: //@ nowarn
 GoodPragmas.j:3: //@ nowarn

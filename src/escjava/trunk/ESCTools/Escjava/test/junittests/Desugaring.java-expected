@@ -114,19 +114,19 @@ Desugared specifications for Desugaring.Desugaring
    modifies \nothing if true
 Desugared specifications for Exception.Exception
    requires true
-   modifies this..* if true
+   modifies this.* if true
    pure 
 Desugared specifications for Exception.Exception
    requires true
-   modifies this..* if true
+   modifies this.* if true
    pure 
 Desugared specifications for Exception.Exception
    requires true
-   modifies this..* if true
+   modifies this.* if true
    pure 
 Desugared specifications for Exception.Exception
    requires true
-   modifies this..* if true
+   modifies this.* if true
    pure 
 Desugared specifications for Throwable.Throwable
    requires true
