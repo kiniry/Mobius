@@ -1,9 +1,13 @@
 # Copyright 2003 ...
 #
 
+export TOP = ../../../..
+include ${TOP}/Makefile.defs
+
 export ESC_CLASSPATH ?= ${ESCJAVA_ROOT}/classfiles:${ESCJAVA_ROOT}/../Javafe/classfiles
 export ESCJ = ${ESCJAVA_ROOT}/escj -quiet
-#export BOOTCLASSPATH=${JDKSPEC_ROOT}:${JDK_BINARIES}
+export BOOTCLASSPATH ?= ${JDK_BINARIES}
+#export BOOTCLASSPATH ?= ${JDKSPEC_ROOT}:${JDK_BINARIES}
 
 ###########################################################################
 
