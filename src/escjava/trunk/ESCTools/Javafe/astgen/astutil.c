@@ -159,9 +159,9 @@ char *mktmpstr(const char *s, int len)
   tmpstr[len] = '\0';
   return tmpstr;
 }
-
+/* jrk: added return to this function.  is it necessary? */
 char *cpstr(const char *s)
-{ mkstr(s, strlen(s)); }
+{ return mkstr(s, strlen(s)); }
 
 char *catstr(const char *s1, const char *s2)
 {

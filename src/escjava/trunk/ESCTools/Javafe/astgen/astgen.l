@@ -11,7 +11,7 @@
 
 #define ECHO astecho(yytext, yyleng)
 /* #define ECHO do { \
-   fwrite( yytext, yyleng, 1, yyout ); fflush(yyout); \
+	fwrite( yytext, yyleng, 1, yyout ); fflush(yyout); \
   } while(0) */
 
 #define yywrap() 1
@@ -104,7 +104,8 @@ PNAME ([a-zA-Z][a-zA-Z0-9_.]*)
 
 int main(int argc, char **argv)
 {
-  astgen(stdin);
+  /* jrk: return added; is it necessary/correct? */
+  return astgen(stdin);
 }
 
 static int modes_size, modes_next_slot;
@@ -114,9 +115,9 @@ static void modes_init()
 {
   if (DEBUGPRINT) fprintf(stderr, "void modes_init()\n");
   if (modes == NULL) {
-    modes_size = 8;
-    modes = (int *)malloc(modes_size * sizeof(int));
-    if (modes == NULL) YY_FATAL_ERROR("out of memory");
+	modes_size = 8;
+	modes = (int *)malloc(modes_size * sizeof(int));
+	if (modes == NULL) YY_FATAL_ERROR("out of memory");
   }
   modes[0] = INITIAL;
   modes_next_slot = 1;
@@ -126,9 +127,9 @@ static void modes_push(int m)
 {
   if (DEBUGPRINT) fprintf(stderr, "Pushing %d\n", m);
   if (modes_next_slot >= modes_size) {
-    modes_size *= 2;
-    modes = (int *)realloc(modes, modes_size*sizeof(int));
-    if (modes == NULL) YY_FATAL_ERROR("out of memory");
+	modes_size *= 2;
+	modes = (int *)realloc(modes, modes_size*sizeof(int));
+	if (modes == NULL) YY_FATAL_ERROR("out of memory");
   }
   modes[modes_next_slot++] = m;
 }
@@ -137,8 +138,8 @@ static void modes_pop()
 {
   assert(modes_next_slot > 1);
   if (DEBUGPRINT)
-    fprintf(stderr, "Popping %d, re-entering %d\n", modes[modes_next_slot-1],
-	    modes[modes_next_slot-2]);
+	fprintf(stderr, "Popping %d, re-entering %d\n", modes[modes_next_slot-1],
+		 modes[modes_next_slot-2]);
   modes_next_slot--;
 }
 
@@ -156,7 +157,7 @@ static int in_comment()
 {
   int i;
   for(i = 0; i < modes_next_slot; i++)
-    if (modes[i] == COMMENT) return 1;
+	if (modes[i] == COMMENT) return 1;
   return 0;
 }
 
