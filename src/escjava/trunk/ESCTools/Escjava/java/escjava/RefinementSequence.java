@@ -488,7 +488,10 @@ public class RefinementSequence extends CompilationUnit {
 			    ErrorSet.caution(((RoutineDecl)tde).locId,
 				"Method is not declared in the java/class file");
 			}
-		      } else {
+			// FIXME - the use of implicit prevents some spurious
+			// error messages, but should the default constructor
+			// be created at all ?
+		      } else if (!((RoutineDecl)tde).implicit) {
 			ErrorSet.error(((RoutineDecl)tde).locId,
 			    "Method is not declared in the java/class file");
 		      }
