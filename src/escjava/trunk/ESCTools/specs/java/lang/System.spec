@@ -6,6 +6,7 @@ import java.io.*;
 import java.util.Properties;
 
 public final class System {
+
     public final static /*@non_null*/ InputStream in;
 
     public final static /*@non_null*/ PrintStream out;
@@ -27,8 +28,8 @@ public final class System {
     //@ requires src != null;
     //@ requires dst != null;
     //@ requires 0 <= length;
-    //@ requires 0 <= src_position
-    //@ requires 0 <= dst_position
+    //@ requires 0 <= src_position;
+    //@ requires 0 <= dst_position;
     //@ requires src_position+length <= \dttfsa(Object[], "identity", src).length;
     //@ requires dst_position+length <= \dttfsa(Object[], "identity", dst).length;
     //@ modifies \dttfsa(Object[], "identity", dst)[*];
@@ -72,7 +73,7 @@ public final class System {
     //@ modifies \nothing;
     public static String getenv(String name);
 
-    //@ ensures false
+    //@ ensures false;
     public static void exit(int status);
 
     public static void gc();

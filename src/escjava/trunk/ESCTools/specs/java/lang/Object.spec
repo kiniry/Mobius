@@ -3,6 +3,14 @@
 package java.lang;
 
 public class Object {
+    /** A data group for the state of this object.  This is used to
+     * allow side effects on unknown variables in methods such as
+     * equals, clone, and toString. It also provides a convenient way
+     * to talk about "the state" of an object in assignable
+     * clauses.
+     */
+    //@ public non_null model JMLDataGroup objectState;
+    //@ model public class JMLDataGroup {}
 
     /**
      ** The Object that has a field pointing to this Object.
