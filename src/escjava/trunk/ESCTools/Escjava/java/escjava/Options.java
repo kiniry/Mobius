@@ -47,6 +47,13 @@ public class Options extends javafe.SrcToolOptions
     public int traceInfo = 1;
     //@ invariant 0 <= traceInfo && traceInfo < 3;
 
+    /** When set, pretty-prints the VCs that are obtained with verbose output
+	or in the log (-sxLog) */
+    public boolean prettyPrintVC = false;
+
+    /** When set, prints out the desugared specs for debugging purposes. */
+    public boolean desugaredSpecs = false;
+
     /** When true, no variable output (e.g. execution time) is printed,
      so that output can be compared to an oracle output file.
      */
@@ -664,6 +671,12 @@ public class Options extends javafe.SrcToolOptions
             return offset;
 	} else if (option.equals("-checkPurity")) {
 	    checkPurity = true;
+	    return offset;
+	} else if (option.equals("-ppvc") | option.equals("-prettyPrintVC")) {
+	    prettyPrintVC = true;
+	    return offset;
+	} else if (option.equals("-showDesugaredSpecs")) {
+	    desugaredSpecs = true;
 	    return offset;
         }
     
