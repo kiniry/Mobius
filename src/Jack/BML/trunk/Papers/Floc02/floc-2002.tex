@@ -551,8 +551,8 @@ variable is not assigned while is declared, we do not have to do any
 membership checking. This is presented by the rule \textup{VAR-DECL}.
 
 Similarly, \java~instructions can become pre and post expressions,
-which can be seen as \emph{in place} affectations. As the last rule,
-a similar affectation analysis can be done. The rule \textup{POST-PLUS}
+which can be seen as \emph{in place} allocations. As the last rule,
+a similar allocation analysis can be done. The rule \textup{POST-PLUS}
 presents the case for a post increment expression and it states that
 the expression \textup{e}, which is the target of an assignment, has
 to belong to
