@@ -23,9 +23,9 @@ import javafe.genericfile.*;
  * offset of a character read by <code>CorrelatedReader</code>.  A
  * call to the <code>getLocation()</code> method of a
  * <code>CorrelatedReader</code> object returns the regular location
- * of the last character read from that
- * <code>CorrelatedReader</code>object.  The file/line/column/offset
- * of that location can be extracted via the methods described below.
+ * of the last character read from that <code>CorrelatedReader</code>
+ * object.  The file/line/column/offset of that location can be
+ * extracted via the methods described below.
 
  * <br>Following emacs, line numbers begin at 1, column numbers at 0,
  * and offsets at 1.  A newline character is considered the last
