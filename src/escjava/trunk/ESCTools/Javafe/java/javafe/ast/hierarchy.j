@@ -352,7 +352,7 @@ public abstract class TypeDecl extends ASTNode implements TypeDeclElem
      * @return true iff this TypeDecl was created from a .class
      * file.
      *
-     * @precondition We have already been associated with a TypeSig.
+     * precondition: We have already been associated with a TypeSig.
      */
     public boolean isBinary() {
         javafe.tc.TypeSig sig = javafe.tc.TypeSig.getSig(this);
@@ -938,7 +938,7 @@ public class ConstructorInvocation extends Stmt
    * call ( <enclosingInstance>.super(...) ).  This field may be null
    * if there is no such expression.
    *
-   * @note: If the supertype in question is an inner class, then the
+   * @note If the supertype in question is an inner class, then the
    * type checker will infer a [<C>.]this expression if no expression
    * is present and place it in this slot.  (See ThisExpr for how to
    * distinguish inferred this expressions.)<p>
@@ -2107,7 +2107,7 @@ public abstract class Name extends ASTNode
      * <p> This routine parses a non-empty <code>String</code> consisting
      * of a series of dot-separated components into a <code>Name</code>.
      * 
-     * @precondition <code>N.length()>0</code><p>
+     * precondition: <code>N.length()>0</code><p>
      */
     //@ requires N != null;
     //@ requires N.count>0;
