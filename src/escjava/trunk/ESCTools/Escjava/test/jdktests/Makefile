@@ -59,8 +59,7 @@ ifdef COMSPEC
 	        >> listtests ; \
 	done
 else
-	@for f in `ls Test*.java | grep -v -f skip `;
-do \
+	@for f in `ls Test*.java | grep -v -f skip `; do \
 	        echo -n ${ALWAYSFLAGS} " " >> listtests ; \
 	        ( grep FLAGS $$f || echo ${DEFAULTFLAGS} ) \
 	        | sed -e 's?//#FLAGS:??' -e "s/\$$/ $$f/"  \
