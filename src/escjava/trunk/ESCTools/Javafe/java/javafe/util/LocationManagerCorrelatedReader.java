@@ -155,7 +155,7 @@ public abstract class LocationManagerCorrelatedReader extends BufferedCorrelated
     //@ set v.containsNull = false;
     for(int i = 0; i < allCorrStreams.size(); i++) {
       LocationManagerCorrelatedReader s = getCorrStreamAt(i);
-      v.add(s.getFile().getHumanName());
+      v.addElement(s.getFile().getHumanName());
     }
     return v;
   }
