@@ -362,7 +362,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
      * @param eolComment a flag that indicates we are parsing an EOL
      * comment (a comment that starts with "//").
      */
-    public void restart(CorrelatedReader /*@ non_null @*/ in, 
+    public void restart(/*@ non_null @*/ CorrelatedReader in, 
                         boolean eolComment) {
         try {
             int c = in.read();
@@ -421,7 +421,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
     }
 
     /**
-     * Parse embedded <esc> ... </esc> in Javadoc comments.
+     * Parse embedded &lt;esc&gr; ... &lt;/esc&gt; in Javadoc comments.
      *
      * @return a flag indicating if an embedded comment was recognized.
      * @exception IOException if something goes wrong during reading.
@@ -474,7 +474,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
      *
      * @param in the stream from which to read.
      */
-    private void eatWizardComment(CorrelatedReader /*@ non_null @*/ in) 
+    private void eatWizardComment(/*@ non_null @*/ CorrelatedReader in) 
             throws IOException {
         in.mark();
         int cc = in.read();
@@ -511,8 +511,8 @@ public class EscPragmaParser extends Parse implements PragmaParser
      * @return the location of the match, or
      * <code>Location.NULL</code> if there is no match.
      */
-    private int scanFor(CorrelatedReader /*@ non_null @*/ in,
-			String /*@ non_null @*/ match)
+    private int scanFor(/*@ non_null @*/ CorrelatedReader in,
+			/*@ non_null @*/ String match)
             throws IOException
     {
 
@@ -541,16 +541,15 @@ public class EscPragmaParser extends Parse implements PragmaParser
 	}
     }
 
-    /** Scans for one of <esc> <jml> <ESC> <JML>.  This is hard-coded to
-	simplify the code.  Also sets the variable endTag to the
-	corresponding tag that closes the opening tag that was found
-	(null if none was found).
-    */
     private String endTag;
-
-    //@ requires in != null;
+    /**
+     * Scans for one of &lt;esc&gt; &lt;jml&gt; &lt;ESC&gt; &lt;JML&gt;.  This is
+     * hard-coded to simplify the code.  Also sets the variable endTag to the
+     * corresponding tag that closes the opening tag that was found (null if none
+     * was found).
+     */
     //@ modifies endTag;
-    private int scanForOpeningTag(CorrelatedReader /*@ non_null @*/ in)
+    private int scanForOpeningTag(/*@ non_null @*/ CorrelatedReader in)
             throws IOException
     {
 	endTag = null;
@@ -682,7 +681,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
      * @return a flag indicating if further pragmas need to be parsed.
      * @see Lex
      */
-    public boolean getNextPragma(Token /*@ non_null @*/ dst) {
+    public boolean getNextPragma(/*@ non_null @*/ Token dst) {
         try {
 	    if (getPragma(dst)) return true;
             if (inProcessTag == NOTHING_ELSE_TO_PROCESS) {
@@ -1611,20 +1610,20 @@ public class EscPragmaParser extends Parse implements PragmaParser
 		    + TagConstants.toString(scanner.ttype) + " instead).");
     }
 
-    /*@ require  inProcessTag == TagConstants.ALSO_MODIFIES ||
-     @          inProcessTag == TagConstants.ASSIGNABLE ||
-     @          inProcessTag == TagConstants.ASSIGNABLE_REDUNDANTLY ||
-     @          inProcessTag == TagConstants.MODIFIABLE ||
-     @          inProcessTag == TagConstants.MODIFIABLE_REDUNDANTLY ||
-     @          inProcessTag == TagConstants.MODIFIES_REDUNDANTLY ||
-     @          inProcessTag == TagConstants.LOOP_PREDICATE ||
-     @          inProcessTag == TagConstants.MODIFIES ||
-     @          inProcessTag == TagConstants.MONITORED_BY ||
-     @          inProcessTag == TagConstants.STILL_DEFERRED;
-     @*/
+    /*@ requires inProcessTag == TagConstants.ALSO_MODIFIES ||
+      @          inProcessTag == TagConstants.ASSIGNABLE ||
+      @          inProcessTag == TagConstants.ASSIGNABLE_REDUNDANTLY ||
+      @          inProcessTag == TagConstants.MODIFIABLE ||
+      @          inProcessTag == TagConstants.MODIFIABLE_REDUNDANTLY ||
+      @          inProcessTag == TagConstants.MODIFIES_REDUNDANTLY ||
+      @          inProcessTag == TagConstants.LOOP_PREDICATE ||
+      @          inProcessTag == TagConstants.MODIFIES ||
+      @          inProcessTag == TagConstants.MONITORED_BY ||
+      @          inProcessTag == TagConstants.STILL_DEFERRED;
+      @*/
     //@ requires scanner.startingLoc != Location.NULL;
     //@ requires scanner.m_in != null;
-    private void continuePragma(Token /*@ non_null @*/ dst) throws IOException {
+    private void continuePragma(/*@ non_null @*/ Token dst) throws IOException {
         if (inProcessTag == TagConstants.STILL_DEFERRED) {
             int locId = scanner.startingLoc;
             Identifier idn = parseIdentifier(scanner);
@@ -1986,15 +1985,15 @@ public class EscPragmaParser extends Parse implements PragmaParser
      */
     //@ requires l.m_in != null;
     //@ requires type.syntax;
-    //@ requires tag == TagConstants.FORALL || tag == TagConstants.EXISTS ||
-    //@          tag == TagConstants.MAX || tag == TagConstants.MIN ||
-    //@          tag == TagConstants.PRODUCT || tag == TagConstants.SUM ||
-    //@          tag == TagConstants.NUM_OF;
-    //@ ensures \result != null;
-    private GCExpr parseQuantifierRemainder(Lex /*@ non_null @*/ l,
-                                            int tag,
-                                            Type /*@ non_null @*/ type,
-                                            int loc) {
+    /*@ requires tag == TagConstants.FORALL || tag == TagConstants.EXISTS ||
+      @          tag == TagConstants.MAX || tag == TagConstants.MIN ||
+      @          tag == TagConstants.PRODUCT || tag == TagConstants.SUM ||
+      @          tag == TagConstants.NUM_OF;
+      @*/
+    private /*@ non_null */ GCExpr parseQuantifierRemainder(/*@ non_null @*/ Lex l,
+                                                            int tag,
+                                                            /*@ non_null @*/ Type type,
+                                                            int loc) {
         int idLoc = l.startingLoc;
         Identifier idn = parseIdentifier(l);
         LocalVarDecl v = LocalVarDecl.make(0, null, idn, type, idLoc,
@@ -2151,7 +2150,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
      */
     //@ requires l.m_in != null;
     public FormalParaDecl 
-            parseExsuresFormalParaDecl(EscPragmaLex /*@ non_null @*/ l) {
+            parseExsuresFormalParaDecl(/*@ non_null @*/ EscPragmaLex l) {
         int modifiers = parseModifiers(l);
         ModifierPragmaVec modifierPragmas = this.modifierPragmas;
         Type paratype = parseExsuresType(l);
@@ -2179,9 +2178,8 @@ public class EscPragmaParser extends Parse implements PragmaParser
      * @return the parsed type declaration.
      */
     //@ requires l.m_in != null;
-    //@ ensures \result != null;
     //@ ensures \result.syntax;
-    public Type parseExsuresType(EscPragmaLex /*@ non_null @*/ l) {
+    public /*@ non_null */ Type parseExsuresType(/*@ non_null @*/ EscPragmaLex l) {
 	Type type = parseExsuresPrimitiveTypeOrTypeName(l);
 	return parseBracketPairs(l, type);
     }
@@ -2194,9 +2192,8 @@ public class EscPragmaParser extends Parse implements PragmaParser
      * @return the parsed type declaration.
      */
     //@ requires l.m_in != null
-    //@ ensures \result != null
     //@ ensures \result.syntax
-    public Type parseExsuresPrimitiveTypeOrTypeName(EscPragmaLex /*@ non_null @*/ l) {
+    public /*@ non_null */ Type parseExsuresPrimitiveTypeOrTypeName(/*@ non_null @*/ EscPragmaLex l) {
 	Type type = parseExsuresPrimitiveType(l);
 	if (type != null)
 	    return type;
@@ -2213,7 +2210,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
      */
     //@ requires l.m_in != null
     //@ ensures \result != null ==> \result.syntax
-    public PrimitiveType parseExsuresPrimitiveType(EscPragmaLex /*@ non_null @*/ l) {
+    public PrimitiveType parseExsuresPrimitiveType(/*@ non_null @*/ EscPragmaLex l) {
 	int tag;
 	switch(l.ttype) {
             case TagConstants.TYPETYPE:tag = TagConstants.TYPECODE;    break;
@@ -2245,9 +2242,8 @@ public class EscPragmaParser extends Parse implements PragmaParser
      * @equivalent parseTypeName(l);
      */
     //@ requires l.m_in != null
-    //@ ensures \result != null
     //@ ensures \result.syntax
-    public TypeName parseExsuresTypeName(EscPragmaLex /*@ non_null @*/ l) {
+    public /*@ non_null */ TypeName parseExsuresTypeName(/*@ non_null @*/ EscPragmaLex l) {
 	return parseTypeName(l);	
     }
 
@@ -2259,7 +2255,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
      * </pre>
      */
     //@ requires l.m_in != null
-    public void parseFieldsOfExpr(EscPragmaLex /*@ non_null @*/ l) {
+    public void parseFieldsOfExpr(/*@ non_null @*/ EscPragmaLex l) {
         int loc = l.startingLoc;
         int tag = TagConstants.fromIdentifier(l.identifierVal);
         Expr expr = null;
@@ -2280,7 +2276,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
      * Parse a StoreRef and discard it.
      */
     //@ requires l.m_in != null
-    public void parseStoreRef(EscPragmaLex /*@ non_null @*/ l) {
+    public void parseStoreRef(/*@ non_null @*/ EscPragmaLex l) {
         // StoreRefKeyword
         if (l.ttype == TagConstants.NOTHING || 
             l.ttype == TagConstants.EVERYTHING ||
@@ -2309,7 +2305,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
      * Parses an <em>optional</em> StoreRefNameSuffix and discards it.
      */
     //@ requires l.m_in != null
-    public void parseStoreRefNameSuffix(EscPragmaLex /*@ non_null @*/ l) {
+    public void parseStoreRefNameSuffix(/*@ non_null @*/ EscPragmaLex l) {
         // StoreRefNameSuffix ::= '.' Idn | '.' 'this' | '[' SpecArrayRefExpr ']'
         if (l.ttype == TagConstants.FIELD ||
             l.ttype == TagConstants.LSQBRACKET) {
@@ -2353,7 +2349,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
      * Parse a StoreRefExpr and discard it
      */
     //@ requires l.m_in != null
-    public void parseStoreRefExpr(EscPragmaLex /*@ non_null @*/ l) {
+    public void parseStoreRefExpr(/*@ non_null @*/ EscPragmaLex l) {
 
         // Must start with Idn | 'super' | 'this'
         if (l.ttype == TagConstants.IDENT ||
