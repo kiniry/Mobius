@@ -11,12 +11,10 @@ shift
 
 flags="$*"
 
-./run -quiet -plainwarning -notrace -noSemicolonWarnings ${flags} > out 2>&1
+./run -quiet -plainwarning -notrace -noSemicolonWarnings -nowarn Modifies ${flags} > out 2>&1
 #./run -plainwarning -notrace ${flags} > out 2>&1
 
-if ! diff --strip-trailing-cr out ans > diffs; then
-  echo
-  echo $dir Failed;
+if ! ${DIFF} out ans > diffs; then
   cd ..
   exit 1;
 else

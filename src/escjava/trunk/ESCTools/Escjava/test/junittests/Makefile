@@ -130,7 +130,7 @@ othertests: $(addsuffix -test,${OTHERTESTS})
 		sed -e "sx//#FLAGS:xx" -e "s@ESCTOOLS_ROOT@${ESCTOOLS_ROOT}@" ` \
 		$* 2>&1 | sed -e s/x/x/ > $*-ckd ) || exit 0; \
 	if [ -e $*-expected ] ; then \
-		diff --strip-trailing-cr $*-ckd $*-expected  \
+		${DIFF} $*-ckd $*-expected  \
 		  && rm $*-ckd ;\
 	else \
 		echo ... Creating $*-expected ;\

@@ -49,7 +49,7 @@ endif
 %-run:
 	env $(call canonicalize,CLASSPATH=.:${ESCJAVA_CLASSPATH}:${SYSTEM_SPECS}) \
 	env ESC_CLASSPATH=$(call canonicalize,${ESCJAVA_ROOT}/classfiles:${ESCJAVA_ROOT}/../Javafe/classfiles) \
-	./rtest $* || diff --strip-trailing-cr $*/out $*/ans
+	./rtest $* || ${DIFF} $*/out $*/ans
 
 temp:
 	cd test32; \
@@ -61,17 +61,17 @@ CD_AND_JAVA = cd $(PARSER_TEST_DIR); $(JAVA) -classpath $(call canonicalize,$(ES
 
 test_lexer: compile_escjava_parser_test_programs
 	@echo "test_lexer: "
-	$(CD_AND_JAVA).TestLex GoodPragmas.j | tee GoodPragmas.out | diff --strip-trailing-cr - GoodPragmas.ans
-	$(CD_AND_JAVA).TestLex GoodSpecExpr.j | tee GoodSpecExpr.out | diff --strip-trailing-cr - GoodSpecExpr.ans
-	$(CD_AND_JAVA).TestLex GoodJmlPragmas.j | tee GoodJmlPragmas.out | diff --strip-trailing-cr - GoodJmlPragmas.ans
-	$(CD_AND_JAVA).TestLex lookahead GoodPragmas.j | tee GoodPragmas-lookahead.out | diff --strip-trailing-cr - GoodPragmas.ans
-	$(CD_AND_JAVA).TestLex lookahead GoodSpecExpr.j | tee GoodSpecExpr-lookahead.out  | diff --strip-trailing-cr - GoodSpecExpr.ans
-	$(CD_AND_JAVA).TestLex lookahead GoodJmlPragmas.j | tee GoodJmlPragmas-lookahead.out | diff --strip-trailing-cr - GoodJmlPragmas.ans
+	$(CD_AND_JAVA).TestLex GoodPragmas.j | tee GoodPragmas.out | ${DIFF} - GoodPragmas.ans
+	$(CD_AND_JAVA).TestLex GoodSpecExpr.j | tee GoodSpecExpr.out | ${DIFF} - GoodSpecExpr.ans
+	$(CD_AND_JAVA).TestLex GoodJmlPragmas.j | tee GoodJmlPragmas.out | ${DIFF} - GoodJmlPragmas.ans
+	$(CD_AND_JAVA).TestLex lookahead GoodPragmas.j | tee GoodPragmas-lookahead.out | ${DIFF} - GoodPragmas.ans
+	$(CD_AND_JAVA).TestLex lookahead GoodSpecExpr.j | tee GoodSpecExpr-lookahead.out  | ${DIFF} - GoodSpecExpr.ans
+	$(CD_AND_JAVA).TestLex lookahead GoodJmlPragmas.j | tee GoodJmlPragmas-lookahead.out | ${DIFF} - GoodJmlPragmas.ans
 
 test_parser: compile_escjava_parser_test_programs
 	$(CD_AND_JAVA).TestEscPragmaParser print TypeDeclElemPragmas1.java | \
 		tee TypeDeclElemPragmas1.out | \
-		diff --strip-trailing-cr - TypeDeclElemPragmas1.ans
+		${DIFF} - TypeDeclElemPragmas1.ans
 
 test_parser_idempotence: compile_escjava_parser_test_programs
 	$(CD_AND_JAVA).TestEscPragmaParser progress check idempotence \

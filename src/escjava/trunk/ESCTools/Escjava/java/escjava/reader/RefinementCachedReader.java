@@ -243,7 +243,10 @@ public class RefinementCachedReader extends CachedReader
 		    // We have a .java source file so read from it.
 		    javafe.util.Info.out("Reading source file "
 			+ javafile.getHumanName());
-		    ErrorSet.caution("The file " + javafile + " is not in the refinement sequence that begins with " + cu.sourceFile() + "; it is used to generate a class signature, but no refinements within it are used.");
+		    ErrorSet.caution("The file " + javafile.getHumanName() + 
+			" is not in the refinement sequence that begins with " +
+			cu.sourceFile().getHumanName() + 
+			"; it is used to generate a class signature, but no refinements within it are used.");
 		    javacu = underlyingReader.read(javafile, false);
 			// The false above means only read a signature and not
 			// the implementation or the annotations.
@@ -354,8 +357,10 @@ public class RefinementCachedReader extends CachedReader
 		gfile = findRefined(pkgStrings,ccu);
 		if (gfile != null) {
 		  if (!gfile.getLocalName().startsWith(type.toString() + ".")){
-			ErrorSet.caution("The refinement file " + gfile +
-			    " in the sequence beginning with " + mrcufile +
+			ErrorSet.caution("The refinement file " + 
+			    gfile.getHumanName() +
+			    " in the sequence beginning with " + 
+			    mrcufile.getHumanName() +
 			    " has a prefix that does not match the type name "
 			    + type);
 		  }

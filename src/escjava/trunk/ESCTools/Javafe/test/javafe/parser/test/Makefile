@@ -16,21 +16,21 @@ clean:
 testlex:
 	${JAVA} -classpath ${CLASSPATH} javafe.parser.test.TestLex \
 	  < simpletoks > simpletoks.out \
-	  && diff --strip-trailing-cr simpletoks.Lex simpletoks.out
+	  && ${DIFF} simpletoks.Lex simpletoks.out
 	${JAVA} -classpath ${CLASSPATH} javafe.parser.test.TestLex \
 	  < literaltoks > literaltoks.out \
-	  && diff --strip-trailing-cr literaltoks.Lex literaltoks.out
+	  && ${DIFF} literaltoks.Lex literaltoks.out
 	${JAVA} -classpath ${CLASSPATH} javafe.parser.test.TestLex lookahead javakeywords \
 	  < simpletoks > simpletoks.out \
-	  && diff --strip-trailing-cr simpletoks.Lookahead simpletoks.out
+	  && ${DIFF} simpletoks.Lookahead simpletoks.out
 	${JAVA} -classpath ${CLASSPATH} javafe.parser.test.TestLex lookahead javakeywords \
 	  < literaltoks > literaltoks.out \
-	  && diff --strip-trailing-cr literaltoks.Lookahead literaltoks.out
+	  && ${DIFF} literaltoks.Lookahead literaltoks.out
 
 testpragmalexer:
 	${JAVA} -classpath ${CLASSPATH} javafe.parser.test.TestLex parsepragmas javakeywords \
 	  < pragmatoks >pragmatoks.out \
-	&& diff --strip-trailing-cr pragmatoks.out pragmatoks.ans
+	&& ${DIFF} pragmatoks.out pragmatoks.ans
 
 testpragmaparser:
 	${JAVA} -classpath ${CLASSPATH} javafe.parser.test.TestParse idempotence check HasPragmas.j

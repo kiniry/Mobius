@@ -31,6 +31,14 @@ else
   canonicalize = $(1)
 endif
 
+## Define a multi-platform diff
+
+ifdef COMSPEC
+    export DIFF = diff --strip-trailing-cr
+else
+    export DIFF = diff 
+endif
+
 ######### Check if ESCTOOLS_ROOT is set
 
 ifndef ESCTOOLS_ROOT
@@ -255,3 +263,4 @@ export SOURCEPATH = ${JAVAFE_SOURCE_DIR}:${ESCJAVA_SOURCE_DIR}:${MOCHA_SOURCE_DI
 # need the binaries because don't have source for sun.* classes...
 #
 export JDKSPEC = ${JDKSPEC_ROOT}
+
