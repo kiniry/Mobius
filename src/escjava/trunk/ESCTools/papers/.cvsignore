@@ -4,6 +4,8 @@
 *.log
 *.pdf
 .auto
+CASSIS2004.dvi
+CASSIS2004.out
 FTFJP2004.dvi
 FTFJP2004.out
 PASTE2004.dvi

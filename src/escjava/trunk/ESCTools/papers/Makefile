@@ -2,7 +2,7 @@
 # $Id$
 #
 
-paper =		FTFJP2004
+paper =		CASSIS2004
 
 talk =		talk
 
