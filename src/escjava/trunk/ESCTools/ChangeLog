@@ -1,3 +1,18 @@
+2004-06-19  Joseph Kiniry  <kiniry@cs.kun.nl>
+
+	* ChangeLog:
+	* Makefile:
+	* papers/Makefile:
+	* papers/jml_homework.texinfo:
+	* release-files/README.release:
+	* release-files/RELEASE_NOTES.txt:
+	* release-files/escj.bat:
+	* release-files/escjava2:
+	* slides/Makefile:
+	Final tweaks for 2.0a7 release.  Now include examples with binary release.
+	Fixed a missing } in the homework texinfo file.  Better build support in
+	papers and slides directories.
+
 2004-06-18  Joseph Kiniry  <kiniry@cs.kun.nl>
 
 	* papers/koa_state_diagram.eps:
