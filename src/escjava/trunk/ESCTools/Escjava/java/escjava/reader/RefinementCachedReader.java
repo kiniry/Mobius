@@ -110,6 +110,7 @@ public class RefinementCachedReader extends CachedReader
 	// not cached - read and do refinement combination
 	refinementSequence = null;
 	CompilationUnit cu = super.read(target,avoidSpec);
+	if (cu == null) return null;
 	CompilationUnit result = readRefinements(cu);
 
 	// Do anything to pragmas that must be done before type signatures
