@@ -52,7 +52,8 @@ OTHERTESTS = RefineT.t SpecFile.jml RefineNoJava.refines-java Binary.refines-spe
 ## happened in the previous junittests), so the output is more stable when
 ## run separately
 NOTJUNITTESTS = Desugaring.java FormalNonnullInheritance.java \
-	DesugaringA.java InheritedSpecs.java NL.java
+	DesugaringA.java
+## InheritedSpecs.java NL.java
 
 .PHONY: lists
 lists:

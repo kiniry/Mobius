@@ -3,11 +3,11 @@ TestSuite.java
 FormalNonnullInheritance.java
 Desugaring.java
 DesugaringA.java
-InheritedSpecs.java
-NL.java
 # Problem when run separately, but not in junit tests?
 ParsePlus.java 
 ## Platform dependent
+InheritedSpecs.java
+NL.java
 PureCheck.java
 Quant.java
 Helper.java
