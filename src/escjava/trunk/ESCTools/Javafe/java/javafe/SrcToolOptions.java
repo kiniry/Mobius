@@ -41,7 +41,7 @@ public class SrcToolOptions extends Options
   public boolean processRecursively = false;
 
   /**
-   * The list of filenames on the command line; this {@link Vector} is
+   * The list of filenames on the command line; this {@link java.util.Vector} is
    * aliased with a variable in {@link SrcTool}.
    */
     

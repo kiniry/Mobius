@@ -43,6 +43,9 @@ all: clean build jars test quiet-docs
 all+: clean build jars quiet-docs alltests
 
 .PHONY: nodocs
+nodocs: clean build jars test
+
+.PHONY: nodocs+
 nodocs: clean build jars alltests
 
 .PHONY: jars
@@ -203,7 +206,11 @@ javadoc:  build
 	  -windowtitle "ESCTools" \
 	  -author -version -use \
 	  -linksource \
+	  -group EscJava "escjava.*" \
+	  -group Javafe  "javafe.*" \
+	  -group Utils   "junitutils.*" \
 	  -tag warning -tag todo -tag note -tag design -tag usage \
+	  -tag requires \
 	  -d $(JAVADOC_GEN_DIR) \
           $(PACKAGE_LIST)
 

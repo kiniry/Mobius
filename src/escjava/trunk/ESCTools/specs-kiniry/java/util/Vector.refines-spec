@@ -25,12 +25,8 @@ package java.util;
 /**
  * JML's specification of {@link java.util.Vector}.
  * Some of this specification is taken from ESC/Java.
-<<<<<<< Vector.refines-spec
  *
  * @version $Revision$
-=======
- * @version $Revision$
->>>>>>> 1.34
  * @author Clyde Ruby
  * @author Gary T. Leavens
  * @author David R. Cok

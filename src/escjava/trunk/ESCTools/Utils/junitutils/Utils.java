@@ -366,7 +366,7 @@ FIXME
 	 *  TODO
      * @param s
      * @param rootname
-     * @return
+     * @return The Diff structure that contains the comparison
      * @throws java.io.IOException
      */
     static public Diff compareStringToFile(String s, String rootname) 
