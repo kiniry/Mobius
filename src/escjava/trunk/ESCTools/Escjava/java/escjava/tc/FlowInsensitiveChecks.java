@@ -32,6 +32,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
      */
     public static boolean inAnnotation = false;
 
+    public escjava.AnnotationHandler annotationHandler = new escjava.AnnotationHandler();
     /**
      * Indicates whether <code>LS</code> is allowed in this context.  The default is
      * <code>true</code>.  For contexts where <code>LS</code> is not allowed,
@@ -2133,6 +2134,10 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 	return result;
     }
 
+    public static javafe.util.Set getDirectOverrides(MethodDecl md) {
+	return javafe.tc.PrepTypeDeclaration.inst.getOverrides(md.parent, md);
+    }
+
     /**
      * @return If <code>md</code> is a method that overrides a method in a
      * superclass, the overridden method is returned.  Otherwise, if <code>md</code>
@@ -2285,6 +2290,18 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
         }
 	rd.modifiers |= Modifiers.ACC_IMPURE_CLOSURE;
 	return false;
+    }
+
+    protected void checkModifierPragmaVec(ModifierPragmaVec v,
+					  ASTNode ctxt,
+					  Env env) {
+	super.checkModifierPragmaVec(v,ctxt,env);
+	int tag = ctxt.getTag();
+	if (tag == TagConstants.METHODDECL ||
+	    tag == TagConstants.CONSTRUCTORDECL) {
+		RoutineDecl m = (RoutineDecl)ctxt;
+		annotationHandler.desugar(m);
+	}
     }
 } // end of class FlowInsensitiveChecks
 

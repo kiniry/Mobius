@@ -355,20 +355,28 @@ public final class GC {
       acVar.loc = Location.NULL;
       pred = or(pred, acVar);
     }
-    String name = TagConstants.toString(errorName);
-    if (aux != null && Main.options().suggest) {
-      int n = AuxInfo.put(aux);
-      name += "/" + n;
+    if (errorName != TagConstants.CHKQUIET) {
+	String name = TagConstants.toString(errorName);
+	if (aux != null && Main.options().suggest) {
+	  int n = AuxInfo.put(aux);
+	  name += "/" + n;
+	}
+	Identifier en = makeLabel(name,locPragmaDecl,locUse);
+	pred = LabelExpr.make(locUse, locUse, false, en, pred);
     }
-    if (locPragmaDecl != Location.NULL) {
-      name += ":" + UniqName.locToSuffix(locPragmaDecl);
-    }
-    name += "@" + UniqName.locToSuffix(locUse);
-    Identifier en = Identifier.intern(name);
-    Expr p = LabelExpr.make(locUse, locUse, false, en, pred);
-    return ExprCmd.make(TagConstants.ASSERTCMD, p, locUse);
+    return ExprCmd.make(TagConstants.ASSERTCMD, pred, locUse);
   }
 
+  public static Identifier makeLabel(String name, int locPragmaDecl, int locUse) {
+	String lab = name;
+	if (locPragmaDecl != Location.NULL) {
+	    lab = lab + ":" + UniqName.locToSuffix(locPragmaDecl);
+	}
+	if (locUse != Location.NULL)
+	    lab += "@" + UniqName.locToSuffix(locUse);
+	return Identifier.intern(lab);
+  }
+	    
   //@ requires subst != null && target != null ;
   //@ requires subst.keyType == \type(GenericVarDecl) ;
   //@ requires subst.elementType <: \type(Expr) ;

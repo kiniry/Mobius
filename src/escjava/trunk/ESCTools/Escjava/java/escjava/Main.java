@@ -401,6 +401,7 @@ public class Main extends javafe.SrcTool
             return true;
         }
 
+	// FIXME - a variety of checks, but not desugaring
         //====== Stage 2.5 - desugar the annotations, including desugaring model
         //====== fields and use of methods in annotations
 

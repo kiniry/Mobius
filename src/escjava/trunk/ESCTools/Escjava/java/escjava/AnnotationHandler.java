@@ -15,6 +15,7 @@ import javafe.tc.Types;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Enumeration;
 import java.util.LinkedList;
 
 /** This class handles the desugaring of annotations.
@@ -99,11 +100,11 @@ public class AnnotationHandler {
 
 	for (int i=0; i<td.elems.size(); ++i) {
 	    TypeDeclElem tde = td.elems.elementAt(i);
-	    process(td,tde);
+	    process(tde);
         }
     }
 
-    protected void process(TypeDecl parent, TypeDeclElem tde) {
+    protected void process(TypeDeclElem tde) {
 	int tag = tde.getTag();
 	switch (tag) {
 // What about initially, monitored_by, readable_if clauses ??? FIXME
@@ -113,7 +114,7 @@ public class AnnotationHandler {
 
 	    case TagConstants.CONSTRUCTORDECL:
 	    case TagConstants.METHODDECL:
-		process(parent, (RoutineDecl)tde);
+		process((RoutineDecl)tde);
 		break;
 
 	    case TagConstants.FIELDDECL:
@@ -136,35 +137,53 @@ public class AnnotationHandler {
 
     }
 
-    protected void process(TypeDecl parent, RoutineDecl tde) {
+    protected void process(RoutineDecl tde) {
 	ModifierPragmaVec pmodifiers = tde.pmodifiers;
 	//System.out.println("Method " + (tde instanceof MethodDecl ? ((MethodDecl)tde).id.toString() : "Constructor"));
 	//System.out.println("   Mods " + Modifiers.toString(tde.modifiers));
-	if (pmodifiers == null) return;
-	for (int i = 0; i<pmodifiers.size(); ++i) {
-	    ModifierPragma mp = pmodifiers.elementAt(i);
-	    (new CheckPurity()).visitNode((ASTNode)mp);
+	if (pmodifiers != null) {
+	    for (int i = 0; i<pmodifiers.size(); ++i) {
+		ModifierPragma mp = pmodifiers.elementAt(i);
+		(new CheckPurity()).visitNode((ASTNode)mp);
+	    }
 	}
+	//desugar(tde);
+    }
+
+    public void desugar(RoutineDecl tde) {
+	if ((tde.modifiers & Modifiers.ACC_DESUGARED) != 0) return;
+
+	// Now desugar this routine itself
+
+	ModifierPragmaVec pmodifiers = tde.pmodifiers;
 	Identifier id =
 		tde instanceof MethodDecl ?
 			((MethodDecl)tde).id
 		: tde.getParent().id;
-	//System.out.println("Desugaring specifications for " + id);
+	javafe.util.Info.out("Desugaring specifications for " + tde.parent.id + "." + id);
 	try { // Just for safety's sake
-	    //System.out.println("DESUGARING " + Location.toString(tde.getStartLoc()));
-	    tde.pmodifiers = desugarAnnotations(pmodifiers,tde,parent);
+	    tde.pmodifiers = desugarAnnotations(pmodifiers,tde);
 	} catch (Exception e) {
 	    tde.pmodifiers = ModifierPragmaVec.make();
 	    ErrorSet.error(tde.getStartLoc(),
 		"Internal error while desugaring annotations: " + e);
 	    e.printStackTrace();
 	}
+	tde.modifiers |=  Modifiers.ACC_DESUGARED;
 
-// FIXME - control this with an option
 	if (Main.options().desugaredSpecs) {
-	  System.out.println("Desugared specifications for " + id);
-	  for (int i = 0; i<tde.pmodifiers.size(); ++i) {
+	  System.out.println("Desugared specifications for " + tde.parent.id + "." + id);
+	    printSpecs(tde);
+	}
+    }
+    static public void printSpecs(RoutineDecl tde) {
+	  if (tde.pmodifiers != null)
+	   for (int i = 0; i<tde.pmodifiers.size(); ++i) {
 	    ModifierPragma mp = tde.pmodifiers.elementAt(i);
+		printSpec(mp);
+	   }
+    }
+    static public void printSpec(ModifierPragma mp) {
 	    System.out.print("   " + 
 		escjava.ast.TagConstants.toString(mp.getTag()) + " "  );
 	    if (mp instanceof ExprModifierPragma) {
@@ -188,76 +207,81 @@ public class AnnotationHandler {
 		print(mpe.expr);
 	    }
 	    System.out.println("");
-	  }
-        }
     }
 
     protected ModifierPragmaVec desugarAnnotations(ModifierPragmaVec pm,
-					    RoutineDecl tde, TypeDecl parent) {
+					    RoutineDecl tde) {
+	if (pm == null) {
+	    pm = ModifierPragmaVec.make();
+	}
 	java.util.ArrayList newpm = new java.util.ArrayList();
-	int size = pm.size();
-	if (size == 0) return pm;
+
+	boolean isPure = escjava.tc.FlowInsensitiveChecks.isPure(tde);
+	boolean isConstructor = tde instanceof ConstructorDecl;
+
+	// Get non_null specs
+	Behavior nonnullBehavior = getNonNull(tde);
+
+	boolean overrides = 
+	    !(isConstructor ||
+		escjava.tc.FlowInsensitiveChecks.getDirectOverrides((MethodDecl)tde).isEmpty());
+	
+	if (pm.size() == 0 && !overrides && nonnullBehavior.isEmpty()) {
+		// No specs at all and no overridden methods.
+		ExprModifierPragma e = ExprModifierPragma.make(
+			TagConstants.REQUIRES, Behavior.T, Location.NULL);
+		pm.addElement(e);
+	}
 
 	// We add this (internal use only) END pragma so that we don't have
 	// to continually check the value of pos vs. the size of the array
 	pm.addElement(SimpleModifierPragma.make(TagConstants.END,
-			pm.elementAt(size-1).getStartLoc()));
-	++size;
+			pm.size() == 0 ? Location.NULL :
+			pm.elementAt(pm.size()-1).getStartLoc()));
 
 	int pos = 0;
-	// FIXME - check whether we should have an initial also or not ???
+
 	// check for an initial also
 	ModifierPragma m = pm.elementAt(pos);
 	if (m.getTag() == TagConstants.ALSO) {
 	    newpm.add(m);
 	    ++pos;
-	}
-	boolean isPure = escjava.tc.FlowInsensitiveChecks.isPure(tde);
-	boolean isConstructor = tde instanceof ConstructorDecl;
-/*
-	// check whether this is lightweight or heavyweight
-	// it is heavyweight if there is an also (besides an initial also),
-	// a behavior annotation or a OPENPRAGMA
-	boolean isHeavyweight = false;
-	for (int j=pos; j<size; ++j) {
-	    m = pm.elementAt(j);
-	    int t = m.getTag();
-	    if (t == TagConstants.BEHAVIOR
-	     || t == TagConstants.NORMAL_BEHAVIOR
-	     || t == TagConstants.EXCEPTIONAL_BEHAVIOR
-	     || t == TagConstants.ALSO
-	     || t == TagConstants.IMPLIES_THAT
-	     || t == TagConstants.OPENPRAGMA) {
-		isHeavyweight = true;
-		break;
+	    if (!overrides)
+		ErrorSet.caution(m.getStartLoc(),
+		    "JML does not permit a specification to begin with 'also' when the method does not override anything");
+	} else if (overrides && pm.size() > 1) {
+	    // Check if all of the modifiers are pure, helper, non_null, END
+	    for (int q=0; q<pm.size(); ++q) {
+		int tag = pm.elementAt(q).getTag();
+		if (! (tag==TagConstants.PURE || tag == TagConstants.NON_NULL
+		  || tag == TagConstants.HELPER || tag == TagConstants.END)) {
+	    		ErrorSet.caution(pm.elementAt(0).getStartLoc(),"JML requires a specification to begin with 'also' when the method overrides other methods");
+			break;
+		}
 	    }
 	}
-	if (!isHeavyweight) {
-	    if (size > 0 && pos == size)
-		ErrorSet.caution(tde.getStartLoc(),"Empty annotation");
-	    return pm;
-	}
-*/
+
 	Behavior accumulatedBehavior = new Behavior();
+
+
 
 	// The results array holds the denested spec-cases obtained from
 	// parsing the specification of the routine
 	ArrayList results = new ArrayList();
 	do {
 
-	pos = deNest(false,pos,pm,results,new Behavior(),isPure,isConstructor,
-			parent);
+	pos = deNest(false,pos,pm,results,nonnullBehavior,isPure,isConstructor);
 	if (pm.elementAt(pos).getTag() == TagConstants.SUBCLASSING_CONTRACT) {
 	    ++pos;
 	    pos = sc_section(pos,pm,accumulatedBehavior.subclassingContracts);
 	}
 	if (pm.elementAt(pos).getTag() == TagConstants.IMPLIES_THAT) {
 	    ++pos;
-	    pos = deNest(false,pos,pm,accumulatedBehavior.implications,new Behavior(),isPure,isConstructor,parent);
+	    pos = deNest(false,pos,pm,accumulatedBehavior.implications,new Behavior(),isPure,isConstructor);
 	}
 	if (pm.elementAt(pos).getTag() == TagConstants.FOR_EXAMPLE) {
 	    ++pos;
-	    pos = deNest(true,pos,pm,accumulatedBehavior.examples,new Behavior(),isPure,isConstructor,parent);
+	    pos = deNest(true,pos,pm,accumulatedBehavior.examples,new Behavior(),isPure,isConstructor);
 	}
 	if (pm.elementAt(pos).getTag() == TagConstants.ALSO_REFINE) {
 	    ++pos;
@@ -273,7 +297,10 @@ public class AnnotationHandler {
 	
 	// Now have to further desugar the annotations that Escjava uses
 	// FIXME - adding model programs may require altering this loop
-	if (results.size() != 1) {
+	// Always do the incorporation of the precondition into the
+	// postconditions - otherwise desugaring of inheritance does not
+	// work soundly.
+	{
 	    ArrayList orList = new ArrayList(); // Set of spec-cases to be
 				// ored together to form the final clause
 	    for (Iterator ii = results.iterator(); ii.hasNext();) {
@@ -282,32 +309,33 @@ public class AnnotationHandler {
 		accumulatedBehavior.combine(b,orList);
 	    }
 	    if (orList.isEmpty()) {
-		// No non-false groups - there is no spec
+		// No groups
+		// This should not happen
 		accumulatedBehavior.requires = null;
-	    } else if (orList.size() == 1) {
-		// Just one non-false group, use it directly
-		accumulatedBehavior.requires = (ArrayList)orList.get(0);
 	    } else {
-		// Multiple groups - have to combine them
+		// Multiple spec cases - have to combine them
 		ArrayList newList = new ArrayList();
+		boolean trueItem = false;
 		Iterator i = orList.iterator();
 		while (i.hasNext()) {
 		    ArrayList a = (ArrayList)i.next();
-		    ExprModifierPragma e = and(a);
+		    ExprModifierPragma e = andLabeled(a);
 		    if (e != null) newList.add(e);
+		    else trueItem = true;
 		}
 		accumulatedBehavior.requires = new ArrayList();
-		accumulatedBehavior.requires.add(or(newList));
+		if (!trueItem) {
+		    ExprModifierPragma ee = or(newList);
+		    accumulatedBehavior.requires.add(ee);
+		} else {
+		    // Need to make a default true requires clause so that
+		    // the translation to a VC works correctly
+		    ExprModifierPragma ee = 
+			ExprModifierPragma.make(TagConstants.REQUIRES,
+				Behavior.T, Location.NULL);
+		    accumulatedBehavior.requires.add(ee);
+		}
 	    }
-	} else { // results.size() == 1
-		Behavior b = (Behavior)results.get(0);
-		accumulatedBehavior.requires = b.requires;
-		accumulatedBehavior.ensures = b.ensures;
-		accumulatedBehavior.signals = b.signals;
-		accumulatedBehavior.when = b.when;
-		accumulatedBehavior.diverges = b.diverges;
-		accumulatedBehavior.modifies = b.modifies;
-		accumulatedBehavior.extras = b.extras;
 	}
 
 	// End
@@ -351,8 +379,37 @@ public class AnnotationHandler {
 	return ModifierPragmaVec.make((ModifierPragma[])(newpm.toArray(out)));
     }
 
-    public int deNest(boolean exampleMode, int pos, ModifierPragmaVec pm, ArrayList results, Behavior cb, boolean isPure, boolean isConstructor, TypeDecl parent) {
-	Behavior currentBehavior = new Behavior();
+    public Behavior getNonNull(RoutineDecl rd) {
+	Behavior b = new Behavior();
+	FormalParaDeclVec args = rd.args;
+	for (int i=0; i<args.size(); ++i) {
+	    FormalParaDecl arg = args.elementAt(i);
+	    ModifierPragma m = findModifierPragma(arg.pmodifiers,TagConstants.NON_NULL);
+	    if (m == null) continue;
+	    int locNN = m.getStartLoc();
+	    b.requires.add(
+		ExprModifierPragma.make(TagConstants.REQUIRES,
+			NonNullExpr.make(arg,locNN),
+			locNN)
+		);
+	}
+	ModifierPragma m = findModifierPragma(rd.pmodifiers,TagConstants.NON_NULL);
+	if (m != null) {
+	    int locNN = m.getStartLoc();
+	    Expr r = ResExpr.make(locNN);
+	    Expr n = LiteralExpr.make(TagConstants.NULLLIT, null, locNN);
+	    javafe.tc.FlowInsensitiveChecks.setType(n, Types.nullType);
+	    Expr e = BinaryExpr.make(TagConstants.NE, r, n, locNN);
+	    javafe.tc.FlowInsensitiveChecks.setType(e, Types.booleanType);
+	    b.ensures.add(
+		ExprModifierPragma.make(TagConstants.ENSURES, e, locNN)
+		);
+	}
+	return b;
+    }
+
+    public int deNest(boolean exampleMode, int pos, ModifierPragmaVec pm, ArrayList results, Behavior cb, boolean isPure, boolean isConstructor) {
+	Behavior currentBehavior = cb.copy(); // new Behavior();
 	LinkedList commonBehavior = new LinkedList();
 	ModifierPragma m = null;
 	boolean terminate = false;
@@ -364,7 +421,7 @@ public class AnnotationHandler {
 		case TagConstants.BEHAVIOR:
 		    if (exampleMode)
 			ErrorSet.error("Behavior keyword should not be used in examples section - use example");
-		    currentBehavior = new Behavior();
+		    currentBehavior = cb.copy(); //new Behavior();
 		    currentBehavior.isLightweight = false;
 		    break;
 		case TagConstants.EXAMPLE:
@@ -377,12 +434,12 @@ public class AnnotationHandler {
 		case TagConstants.NORMAL_BEHAVIOR:
 		    if (exampleMode)
 			ErrorSet.error("normal_behavior keyword should not be used in examples section - use normal_example");
-		    currentBehavior = new Behavior();
+		    currentBehavior = cb.copy(); //new Behavior();
 		    currentBehavior.isLightweight = false;
 		    currentBehavior.isNormal = true;
 		    // set a false signals clause
 		    currentBehavior.signals.add(Behavior.defaultSignalFalse(
-				parent,m.getStartLoc()));
+				m.getStartLoc()));
 		    break;
 
 		case TagConstants.NORMAL_EXAMPLE:
@@ -393,13 +450,13 @@ public class AnnotationHandler {
 		    currentBehavior.isNormal = true;
 		    // set a false signals clause
 		    currentBehavior.signals.add(Behavior.defaultSignalFalse(
-				parent,m.getStartLoc()));
+				m.getStartLoc()));
 		    break;
 
 		case TagConstants.EXCEPTIONAL_BEHAVIOR:
 		    if (exampleMode)
 			ErrorSet.error("exceptional_behavior keyword should not be used in examples section - use exceptional_example");
-		    currentBehavior = new Behavior();
+		    currentBehavior = cb.copy(); // new Behavior();
 		    currentBehavior.isLightweight = false;
 		    currentBehavior.isExceptional = true;
 		    // set a false ensures clause
@@ -433,7 +490,7 @@ public class AnnotationHandler {
 		    if (currentBehavior == null) {
 			ErrorSet.error(m.getStartLoc(),"Missing also");
 			if (commonBehavior.isEmpty()) {
-			    currentBehavior = new Behavior();
+			    currentBehavior = cb.copy(); // new Behavior();
 			} else {
 			    currentBehavior = ((Behavior)commonBehavior.getFirst()).copy();
 			}
@@ -449,7 +506,7 @@ public class AnnotationHandler {
 		    if (currentBehavior == null) {
 			ErrorSet.error(m.getStartLoc(),"Missing also");
 			if (commonBehavior.isEmpty()) {
-			    currentBehavior = new Behavior();
+			    currentBehavior = cb.copy(); // new Behavior();
 			} else {
 			    currentBehavior = ((Behavior)commonBehavior.getFirst()).copy();
 			}
@@ -467,7 +524,7 @@ public class AnnotationHandler {
 		    if (currentBehavior == null) {
 			ErrorSet.error(m.getStartLoc(),"Missing also");
 			if (commonBehavior.isEmpty()) {
-			    currentBehavior = new Behavior();
+			    currentBehavior = cb.copy(); // new Behavior();
 			} else {
 			    currentBehavior = ((Behavior)commonBehavior.getFirst()).copy();
 			}
@@ -482,7 +539,7 @@ public class AnnotationHandler {
 		    if (currentBehavior == null) {
 			ErrorSet.error(m.getStartLoc(),"Missing also");
 			if (commonBehavior.isEmpty()) {
-			    currentBehavior = new Behavior();
+			    currentBehavior = cb.copy(); //  new Behavior();
 			} else {
 			    currentBehavior = ((Behavior)commonBehavior.getFirst()).copy();
 			}
@@ -501,7 +558,7 @@ public class AnnotationHandler {
 		    if (currentBehavior == null) {
 			ErrorSet.error(m.getStartLoc(),"Missing also");
 			if (commonBehavior.isEmpty()) {
-			    currentBehavior = new Behavior();
+			    currentBehavior = cb.copy(); // new Behavior();
 			} else {
 			    currentBehavior = ((Behavior)commonBehavior.getFirst()).copy();
 			}
@@ -525,7 +582,7 @@ public class AnnotationHandler {
 		    if (currentBehavior == null) {
 			ErrorSet.error(m.getStartLoc(),"Missing also");
 			if (commonBehavior.isEmpty()) {
-			    currentBehavior = new Behavior();
+			    currentBehavior = cb.copy(); //new Behavior();
 			} else {
 			    currentBehavior = ((Behavior)commonBehavior.getFirst()).copy();
 			}
@@ -537,7 +594,7 @@ public class AnnotationHandler {
 		    if (currentBehavior == null) {
 			ErrorSet.error(m.getStartLoc(),"Missing also");
 			if (commonBehavior.isEmpty()) {
-			    currentBehavior = new Behavior();
+			    currentBehavior = cb.copy(); // new Behavior();
 			} else {
 			    currentBehavior = ((Behavior)commonBehavior.getFirst()).copy();
 			}
@@ -550,7 +607,7 @@ public class AnnotationHandler {
 		    if (currentBehavior != null) 
 			results.add(currentBehavior);
 		    if (commonBehavior.isEmpty()) {
-			currentBehavior = new Behavior();
+			currentBehavior = cb.copy(); // new Behavior();
 		    } else {
 			currentBehavior = ((Behavior)commonBehavior.getFirst()).copy();
 		    }
@@ -572,7 +629,7 @@ public class AnnotationHandler {
 		    if (currentBehavior == null && !currentBehavior.isEmpty()) {
 			ErrorSet.error(m.getStartLoc(),"Missing also");
 			if (commonBehavior.isEmpty()) {
-			    currentBehavior = new Behavior();
+			    currentBehavior = cb.copy(); // new Behavior();
 			} else {
 			    currentBehavior = ((Behavior)commonBehavior.getFirst()).copy();
 			}
@@ -702,6 +759,33 @@ public class AnnotationHandler {
 	}
     }
 
+    static public ExprModifierPragma andLabeled(ArrayList a) {
+	if (a.size() == 0) {
+	    return null;
+	} else {
+	    Expr e = null;
+	    int floc = Location.NULL;
+	    Iterator i = a.iterator();
+	    while (i.hasNext()) {
+		ExprModifierPragma emp = (ExprModifierPragma)i.next();
+		int loc = emp.getStartLoc();
+		if (floc == Location.NULL) floc = loc;
+		boolean nn = emp.expr instanceof NonNullExpr;
+		Expr le = LabelExpr.make(
+				emp.getStartLoc(), emp.getEndLoc(), false, 
+				escjava.translate.GC.makeLabel(
+					nn?"NonNull":"Pre",loc,Location.NULL),
+				emp.expr);
+		javafe.tc.FlowInsensitiveChecks.setType(le,Types.booleanType);
+		if (!isTrue(emp.expr)) e = and(e, le);
+		else if (e == null) e = le;
+		javafe.tc.FlowInsensitiveChecks.setType(e,Types.booleanType);
+	    }
+	    return ExprModifierPragma.make(TagConstants.REQUIRES,
+			e, floc);
+	}
+    }
+
     static public Expr or(Expr e1, Expr e2) {
 	if (e1 == null || isFalse(e1)) return e2;
 	if (e2 == null || isFalse(e2)) return e1;
@@ -777,18 +861,7 @@ public class AnnotationHandler {
 			    loc);
 	}
 
-	public final static VarExprModifierPragma DefaultSignalTrue =
-			VarExprModifierPragma.make(
-			    TagConstants.SIGNALS,
-			    FormalParaDecl.make(0,null,Identifier.intern(""),
-				TypeName.make(SimpleName.make(
-					Identifier.intern("Exception"),
-					Location.NULL)),
-				Location.NULL),
-			    Behavior.T,
-			    Location.NULL);
-	public final static VarExprModifierPragma defaultSignalFalse(
-			TypeDecl parent, int loc) {
+	public final static VarExprModifierPragma defaultSignalFalse( int loc) {
 		VarExprModifierPragma v = VarExprModifierPragma.make(
 			    TagConstants.SIGNALS,
 			    null, // Interpreted as java.lang.Exception _
@@ -832,7 +905,20 @@ public class AnnotationHandler {
 		b.isExceptional = isExceptional;
 		b.openPragma = openPragma;
 		b.requires = new ArrayList(requires);
-		b.ensures = new ArrayList(ensures);
+		// We have to make copies of the ensures pragmas because
+		// if the routine result is declared non_null, then
+		// the fabricated ensures clause stating this needs to be
+		// duplicated so that the implication can be inserted back
+		// into the pragma
+		b.ensures = new ArrayList();
+		Iterator i = ensures.iterator();
+		while (i.hasNext()) {
+		    ExprModifierPragma m = (ExprModifierPragma)(i.next());
+		    ExprModifierPragma mm = 
+			ExprModifierPragma.make(m.getTag(),
+				m.expr,m.loc);
+		    b.ensures.add(mm);
+		}
 		b.when = new ArrayList(when);
 		b.diverges = new ArrayList(diverges);
 		b.signals = new ArrayList(signals);
@@ -875,7 +961,14 @@ public class AnnotationHandler {
 	    // If the composite requires from the argument(b) are
 	    // literally false, then none of the subsequent clauses are
 	    // useful.  To save work, we omit them entirely.
-	    if (reqIsFalse) return;
+	    if (reqIsFalse) {
+		// However, we do have to add an explicitly false requires
+		// clause so that we can retain the location information
+		ArrayList a = new ArrayList();
+		a.add(reqclause);
+		orlist.add(a);
+		return;
+	    }
 
 	    // Form the composite requires clause for all the groups
 	    // If there is only one non-false group, then we retain the
@@ -894,14 +987,13 @@ public class AnnotationHandler {
 					// ExprModifierPragma objects
 
 	    Expr req = Behavior.T;
-	    if (!b.requires.isEmpty()) {
-		ExprModifierPragma mm = (ExprModifierPragma)b.requires.get(0);
-		ExprVec arg = ExprVec.make(new Expr[]{mm.expr});
+	    if (reqexpr != null) {
+		ExprVec arg = ExprVec.make(new Expr[]{reqexpr});
 		req = NaryExpr.make(Location.NULL,
 				    reqexpr.getStartLoc(),TagConstants.PRE,
 				    Identifier.intern("\\old"),arg);
 		javafe.tc.FlowInsensitiveChecks.setType(req,
-			    javafe.tc.FlowInsensitiveChecks.getType(mm.expr));
+				    Types.booleanType);
 	    }
 
 	    // Add in all the annotations from the argument, taking care
@@ -940,6 +1032,15 @@ public class AnnotationHandler {
 		signals.add(m);
 	    }
 	    extras.addAll(b.extras);
+	}
+
+	public void print() {
+	    // FIXME - expand to print all of the fields
+	    Iterator i = ensures.iterator();
+	    while (i.hasNext()) {
+		ExprModifierPragma m = (ExprModifierPragma)i.next();
+		printSpec(m);
+	    }
 	}
     }
     static public class CheckPurity {
@@ -985,10 +1086,39 @@ public class AnnotationHandler {
 
     }
 
+
+	// FIXME - This functionality is duplicated elsewhere, e.g. in
+	// translate/GetSpec.  Should be unified and cleaned up in a common
+	// utility.
+    public static ModifierPragma findModifierPragma(ModifierPragmaVec v, int tag) {
+	if (v == null) return null;
+	for (int i=0; i<v.size(); ++i) {
+		if (v.elementAt(i).getTag() == tag) return v.elementAt(i);
+	}
+	return null;
+    }
+
     static private void print(Expr e) {
 	if (e != null) PrettyPrint.inst.print(System.out,0,e);
     }
 
+    static public class NonNullExpr extends BinaryExpr {
+
+	static NonNullExpr make(FormalParaDecl arg, int locNN) {
+	    NonNullExpr e = new NonNullExpr();
+	    int loc = arg.getStartLoc();
+	    Expr v = VariableAccess.make(arg.id, loc, arg);
+	    javafe.tc.FlowInsensitiveChecks.setType(v, arg.type);
+	    Expr n = LiteralExpr.make(TagConstants.NULLLIT, null, locNN);
+	    javafe.tc.FlowInsensitiveChecks.setType(n, Types.nullType);
+	    e.op = TagConstants.NE;
+	    e.left = v;
+	    e.right = n;
+	    e.locOp = locNN;
+	    javafe.tc.FlowInsensitiveChecks.setType(e,Types.booleanType);
+	    return e;
+	}
+    }
 }
 		
 

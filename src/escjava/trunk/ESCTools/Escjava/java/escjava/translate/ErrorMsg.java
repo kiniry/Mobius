@@ -39,11 +39,13 @@ public final class ErrorMsg
 	try {
 	    int cLabels = labelList.length();
 	    int iErrorLabel = -1;
+	    String tail = null;
 	    for (int i = 0; i < cLabels; i++) {
 		String s = labelList.at(i).getAtom().toString();
 		if (isErrorLabel(s)) {
-		    printErrorMessage(s, counterexampleContext, rd, directTargets, out);
+		    printErrorMessage(s, counterexampleContext, rd, directTargets, out, false);
 		    iErrorLabel = i;
+		    tail = s.substring(s.indexOf('@'));
 		    break;
 		}	  
 	    }
@@ -104,6 +106,10 @@ public final class ErrorMsg
 		    (Main.options().traceInfo > 0 && isTraceLabel(label))) {
 		    continue;
 		}
+		if (label.endsWith(tail)) {
+		    printErrorMessage(label, counterexampleContext, rd, directTargets, out, true);
+		    continue;
+		}
 		if (!userLabels) {
 		    out.println("Counterexample labels:");
 		    userLabels = true;
@@ -161,7 +167,8 @@ public final class ErrorMsg
 					  SList counterexampleContext,
 					  /*@ non_null */ RoutineDecl rd,
 					  /*@ non_null */ Set directTargets,
-					  /*@ non_null */ PrintStream out)
+					  /*@ non_null */ PrintStream out,
+					  boolean assocOnly)
 	throws SExpTypeError {
 
 	if (counterexampleContext == null) {
@@ -192,7 +199,9 @@ public final class ErrorMsg
 	int tag = TagConstants.checkFromString(s);
 	String msg = chkToMsg( tag, hasAssocDecl );
 
-	ErrorSet.warning( locUse, 
+	if (msg == null) return;
+
+	if (!assocOnly) ErrorSet.warning( locUse, 
 			  msg+" (" + TagConstants.toString(tag) + ")" );
 
 	if( locDecl != Location.NULL && !Location.isWholeFileLoc(locDecl)) {
@@ -361,6 +370,8 @@ public final class ErrorMsg
 	default:
 	    //@ unreachable
 	    Assert.fail("Bad tag");
+	    break;
+	case TagConstants.CHKQUIET:
 	    break;
 	}
 	return r;

@@ -470,6 +470,7 @@ public final class GetSpec {
             } else {
                 // regular parameters
                 addFreeTypeCorrectAs(arg, arg.type, pre);
+/* non_null is handled in the desugaring
                 SimpleModifierPragma nonNullPragma = NonNullPragma(arg);
                 if (nonNullPragma != null) {
                     VariableAccess argAccess = TrAnExpr.makeVarAccess(arg,
@@ -479,10 +480,31 @@ public final class GetSpec {
                                                       nonNullPragma.getStartLoc());
                     pre.addElement(cond);
                 }
+*/
             }
         }
 
         // Add the declared preconditions
+
+	// Make the disjunction of all of the preconditions
+
+	if (dmd.requires.size() != 0) {
+	    Expr expr = dmd.requires.elementAt(0).expr;
+	    int loc = dmd.requires.elementAt(0).getStartLoc();
+	    for (int i = 1; i < dmd.requires.size(); ++i) {
+		ExprModifierPragma e = dmd.requires.elementAt(i);
+		if (loc == Location.NULL) loc = e.getStartLoc();
+		expr = BinaryExpr.make(TagConstants.OR,expr,
+			e.expr, loc);
+		javafe.tc.FlowInsensitiveChecks.setType(expr,Types.booleanType);
+	    }
+	    Expr gcExpr = TrAnExpr.trSpecExpr(expr);
+            Condition cond = GC.condition(TagConstants.CHKPRECONDITION, gcExpr,
+                                          loc);
+            pre.addElement(cond);
+	}
+		
+/*
         for (int i = 0; i < dmd.requires.size(); i++) {
             ExprModifierPragma prag = dmd.requires.elementAt(i);
             Expr gcExpr = TrAnExpr.trSpecExpr(prag.expr);
@@ -490,7 +512,7 @@ public final class GetSpec {
                                           prag.getStartLoc());
             pre.addElement(cond);
         }
-
+*/
         return pre;
     }
 
@@ -817,7 +839,7 @@ public final class GetSpec {
                                           ii.s, TrAnExpr.makeVarAccess(info.vdecl,
                                                                        Location.NULL));
                         alternatives.addElement(eq);
-                        if (! info.isNonnull)
+                        //if (! info.isNonnull) // FIXME
                             allAreNonnull = false;
                     }
 
@@ -925,6 +947,7 @@ public final class GetSpec {
                                                    Location.NULL ) );
         }
 
+//((EscPrettyPrint)javafe.ast.PrettyPrint.inst).printSpec(System.out,0,spec);
         return spec;
     }
 
@@ -1268,10 +1291,11 @@ public final class GetSpec {
             boolean isNonnull;
             if (i == 0 && arg == GC.thisvar.decl) {
                 classSig = TypeSig.getSig(spec.dmd.getContainingClass());
-                isNonnull = true;
+		isNonnull = true;
             } else {
                 classSig = Types.toClassTypeSig(arg.type);
-                isNonnull = NonNullPragma(arg) != null;
+                isNonnull = NonNullPragma(arg) != null; 
+		isNonnull = false; // FIXME
             }
       
             if (classSig != null) {
@@ -1637,10 +1661,12 @@ public final class GetSpec {
      **/
     public static SimpleModifierPragma NonNullPragma(GenericVarDecl v) {
 	// First check for a mark:
+/* In JML, non_null pragmas do not inherit!
 	SimpleModifierPragma mark = (SimpleModifierPragma)
             nonnullDecoration.get(v);
 	if (mark!=null)
 	    return mark;
+*/
 
 	// Else fall back on a direct search of local modifiers:
 	return (SimpleModifierPragma)

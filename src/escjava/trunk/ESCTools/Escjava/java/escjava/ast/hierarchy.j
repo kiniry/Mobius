@@ -872,6 +872,12 @@ public class Condition extends ASTNode
   //# int locPragmaDecl
 
   public int getStartLoc() { return locPragmaDecl; }
+
+  public String prettyPrint() {
+	return "Condition: label = " + TagConstants.toString(label) + "\n"
+		+ "     loc = " + Location.toString(locPragmaDecl) + "\n"
+		+ "     pred = " + pred;
+  }
 }
 
 public class DefPred extends ASTNode

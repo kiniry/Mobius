@@ -129,7 +129,8 @@ public class TagConstants extends javafe.tc.TagConstants
     public static final int CHKUNEXPECTEDEXCEPTION = CHKUNENFORCEBLEOBJECTINVARIANT + 1;
     public static final int CHKWRITABLEDEFERRED = CHKUNEXPECTEDEXCEPTION + 1;
     public static final int CHKWRITABLE = CHKWRITABLEDEFERRED + 1;
-    public static final int CHKFREE = CHKWRITABLE + 1;
+    public static final int CHKQUIET = CHKWRITABLE + 1;
+    public static final int CHKFREE = CHKQUIET + 1;
     public static final int LASTESCCHECKTAG = CHKFREE;
 
     //// Tags for Nary function symbols that are _not_ ESCJ keywords
@@ -724,6 +725,7 @@ public class TagConstants extends javafe.tc.TagConstants
         "Exception",
         "Deferred",
         "Writable",
+        "vc.Quiet",  // printed in debugging output only
         "Free"  // printed in debugging output only
     };
         

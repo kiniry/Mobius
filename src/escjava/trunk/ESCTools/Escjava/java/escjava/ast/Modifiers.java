@@ -14,6 +14,8 @@ public class Modifiers extends javafe.ast.Modifiers {
 					// directly or indirectly pure
   public static final int ACC_IMPURE_CLOSURE = 0x200000; // for methods if 
 					// not directly or indirectly pure
+  public static final int ACC_DESUGARED = 0x400000; // set if desugaring 
+					// of routine specs is complete
 
   public static boolean isModel(int modifiers) {
 	return (modifiers&ACC_MODEL) != 0;

@@ -1781,12 +1781,17 @@ public final class Translate
             case TagConstants.ASSERTSTMT: {
                 // Only process if we are supposed to be parsing Java
                 // 1.4 or later and assertions are enabled.
-                if (Tool.options.assertIsKeyword &&
-                    Tool.options.enableAssertions) {
-                    AssertStmt assertStmt = (AssertStmt)stmt;
+		AssertStmt assertStmt = (AssertStmt)stmt;
+		if (!Tool.options.assertIsKeyword) {
+			// Should not be encountering an assert statement
+			// if assert is not a keyword
+		} else if (Tool.options.enableAssertions) {
+			// Treat a Java assert as a JML assert
                     Expr predicate = TrAnExpr.trSpecExpr(assertStmt.pred);
                     code.addElement(GC.check(assertStmt.getStartLoc(), TagConstants.CHKASSERT,
                                              predicate, Location.NULL));
+		} else {
+			// Treat a Java assert as a (conditional) throw
                     trIfStmt(assertStmt.ifStmt.expr, assertStmt.ifStmt.thn, assertStmt.ifStmt.els);
                 }
                 return;
@@ -3421,7 +3426,7 @@ public final class Translate
             GenericVarDecl pi = spec.dmd.args.elementAt(i);
             piLs[i] = (VariableAccess)pt.get( pi );
             temporaries.addElement( piLs[i].decl );
-            SimpleModifierPragma nonnull = GetSpec.NonNullPragma(pi);
+            SimpleModifierPragma nonnull = null; // GetSpec.NonNullPragma(pi); // FIXME
             if (nonnull != null && !pi.id.toString().equals("this$0arg")) {
                 Expr argRaw = argsRaw.elementAt(i);
                 nullCheck(argRaw, call.args.elementAt(i),
@@ -3434,9 +3439,15 @@ public final class Translate
         // check all preconditions
         for(int i=0; i<spec.pre.size(); i++) {
             Condition cond = spec.pre.elementAt(i);
+	    int label = cond.label;
+	    Expr p = cond.pred;
+	    if (cond.label == TagConstants.CHKPRECONDITION) {
+		p = mapLocation(p,locOpenParen);
+		label = TagConstants.CHKQUIET;
+	    }
             addCheck(locOpenParen,
-                     cond.label,
-                     GC.subst( call.scall, call.ecall, pt, cond.pred ),
+                     label,
+                     GC.subst( call.scall, call.ecall, pt, p ),
                      cond.locPragmaDecl);
         }
 
@@ -3931,6 +3942,34 @@ public final class Translate
         result.loc = locAccess;
 
         return result;
+    }
+
+    public static Expr mapLocation(Expr e, int loc) {
+	int tag = e.getTag();
+	switch (tag) {
+	    case TagConstants.LABELEXPR:
+		LabelExpr le = (LabelExpr)e;
+		String s = le.label.toString();
+		if (s.indexOf('@') != -1) return e;
+		return LabelExpr.make(le.sloc,le.eloc,le.positive,
+			Identifier.intern(
+			    s+"@"+UniqName.locToSuffix(loc)),
+			le.expr);
+	    case TagConstants.BOOLOR:
+	    case TagConstants.BOOLAND:
+		ExprVec ev = ExprVec.make();
+		NaryExpr ne = (NaryExpr)e;
+		ExprVec evo = ne.exprs;
+		for (int k=0; k<evo.size(); ++k) {
+		    Expr ex = evo.elementAt(k);
+		    ex = mapLocation(ex,loc);
+		    ev.addElement(ex);
+		}
+		return NaryExpr.make(ne.sloc, ne.eloc, ne.op,
+			ne.methodName, ev);
+	    default:
+		return e;
+        }
     }
 } // end of class Translate
 
