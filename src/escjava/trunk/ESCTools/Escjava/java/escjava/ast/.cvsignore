@@ -34,6 +34,7 @@ GuardExpr.java
 GuardedCmd.java
 GuardedCmdVec.java
 IdentifierModifierPragma.java
+IdExprDeclPragma.java
 ImportPragma.java
 LabelExpr.java
 LocalVarDeclVec.java
@@ -43,9 +44,11 @@ ModelDeclPragma.java
 ModelMethodDeclPragma.java
 ModelConstructorDeclPragma.java
 ModelProgamModifierPragma.java
+ModelTypePragma.java
 NamedExprDeclPragma.java
 NaryExpr.java
 NestedModifierPragma.java
+NotModifiedExpr.java
 NotSpecifiedExpr.java
 NotSpecifiedExpr.java
 NothingExpr.java
