@@ -614,6 +614,7 @@ public class ModelDeclPragma extends TypeDeclElemPragma
 	decl.pmodifiers.append(modifierPragmas); 
     }
   }
+  public ModifierPragmaVec getPModifiers() { return decl.pmodifiers; }
 }
 
 public class DependsPragma extends TypeDeclElemPragma
@@ -720,6 +721,7 @@ public class GhostDeclPragma extends TypeDeclElemPragma
 	decl.pmodifiers.append(modifierPragmas); 
     }
   }
+  public ModifierPragmaVec getPModifiers() { return decl.pmodifiers; }
 }
 
 public class StillDeferredDeclPragma extends TypeDeclElemPragma

@@ -1037,9 +1037,9 @@ the same package.
 					object.locId,
 					object.locOpenBrace,
 					object.locCloseBrace);
-	_rootCache = new TypeSig(objSig.packageName,
+	_rootCache = Types.makeTypeSig(objSig.packageName,
 				 "<the root interface>",
-				 i, objSig.getCompilationUnit());
+				 null, i, objSig.getCompilationUnit());
 
 	// PrettyPrint.inst.print(System.out, 0, i);
 
@@ -1047,7 +1047,7 @@ the same package.
     }
 
 
-    private TypeSig _rootCache = null;
+    protected TypeSig _rootCache = null;
 
 
 

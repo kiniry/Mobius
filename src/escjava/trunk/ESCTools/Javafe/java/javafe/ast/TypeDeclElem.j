@@ -40,6 +40,7 @@ public interface TypeDeclElem {
 
     public int getModifiers();
     public void setModifiers(int m);
+    public ModifierPragmaVec getPModifiers();
 	
     public int getStartLoc();
 }

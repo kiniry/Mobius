@@ -6,6 +6,8 @@ import javafe.ast.FieldDecl;
 import javafe.ast.FieldDeclVec;
 import javafe.ast.MethodDecl;
 import javafe.ast.TypeDecl;
+import javafe.ast.ClassDecl;
+import javafe.ast.InterfaceDecl;
 import javafe.ast.Identifier;
 import javafe.ast.TypeNameVec;
 import javafe.ast.ModifierPragmaVec;
@@ -17,6 +19,7 @@ import escjava.ast.ModelDeclPragma;
 import escjava.ast.ModelMethodDeclPragma;
 import escjava.ast.ModelConstructorDeclPragma;
 import escjava.ast.ModelTypePragma;
+import escjava.ast.SimpleModifierPragma;
 import escjava.ast.Modifiers;
 import escjava.ast.TagConstants;
 import escjava.ast.Utils;
@@ -120,8 +123,13 @@ public class PrepTypeDeclaration extends javafe.tc.PrepTypeDeclaration {
 
 	    // ghost fields differ from regular fields in that transient and
 	    // volatile do not apply to them
+	    // We have a special case of field decls in an interface that are
+	    // inherited from java.lang.Object - they might be protected
+	    boolean fromClass = x.parent instanceof ClassDecl;
 	    checkModifiers( x.modifiers,
-		(inInterface ? Modifiers.ACC_PUBLIC : Modifiers.ACCESS_MODIFIERS)
+		(!inInterface ? Modifiers.ACCESS_MODIFIERS : 
+		 !fromClass ? Modifiers.ACC_PUBLIC : 
+		   Modifiers.ACC_PUBLIC|Modifiers.ACC_PROTECTED)
 				 | Modifiers.ACC_FINAL | Modifiers.ACC_STATIC ,
 		x.locId, jmltype + (inInterface ? " interface field" : " field"));
 
@@ -217,7 +225,7 @@ public class PrepTypeDeclaration extends javafe.tc.PrepTypeDeclaration {
 				       javafe.tc.TypeSig superType) {
 
 	super.addInheritedMembers(type,superType);
-	if (!(superType instanceof escjava.tc.TypeSig)) return;
+	if (!(superType instanceof escjava.tc.TypeSig) ) return;
 
 	escjava.tc.TypeSig st = (escjava.tc.TypeSig)superType;
         for (int i=0; i<st.jmlFields.size(); ++i) {
@@ -297,5 +305,33 @@ public class PrepTypeDeclaration extends javafe.tc.PrepTypeDeclaration {
 	    if (id.equals(((FieldDecl)jmlDupFieldsSeq.elementAt(i)).id)) return true;
 	}
 	return false;
+    }
+
+    public javafe.tc.TypeSig getRootInterface() {
+	if (_rootCache != null) return _rootCache;
+	javafe.tc.TypeSig ts = super.getRootInterface();
+	InterfaceDecl td = (InterfaceDecl) ts.getTypeDecl();
+	// Add in any ghost or model fields
+
+	TypeDecl object = Types.javaLangObject().getTypeDecl();
+	for (int i=0; i<object.elems.size(); ++i) {
+	    TypeDeclElem e = object.elems.elementAt(i);
+// FIXME - should really only do inherited elements
+// FIXME - what about inherited model methods, types?
+	    if ((e instanceof ModelDeclPragma)
+	    	|| (e instanceof GhostDeclPragma)
+	    	|| (e instanceof FieldDecl)) {
+		if (!Modifiers.isStatic(e.getModifiers())) {
+		    e.getPModifiers().addElement(
+			SimpleModifierPragma.make(TagConstants.INSTANCE,Location.NULL));
+		}
+		td.elems.addElement(e);
+	    }
+	}
+
+        _rootCache = ts;
+	return _rootCache;
+
+
     }
 }

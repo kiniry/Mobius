@@ -12,12 +12,24 @@ DUMP Object class escjava.tc.TypeSig
     objectTimesFinalized "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 155, col 24
  Jml hidden fields
  DUMP-END
+DUMP <the root interface> class escjava.tc.TypeSig
+ Java fields
+ Hidden Java fields
+ Jml fields
+    objectState "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 40, col 30
+    owner "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 47, col 21
+    objectTimesFinalized "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 155, col 24
+ Jml hidden fields
+ DUMP-END
 DUMP ScopeII class escjava.tc.TypeSig
  Java fields
     j "Scope.java", line 33, col 7
     jj "Scope.java", line 34, col 7
  Hidden Java fields
  Jml fields
+    objectState "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 40, col 30
+    owner "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 47, col 21
+    objectTimesFinalized "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 155, col 24
  Jml hidden fields
  DUMP-END
 DUMP ScopeS class escjava.tc.TypeSig
@@ -50,6 +62,9 @@ DUMP ScopeI class escjava.tc.TypeSig
  Jml fields
     dup "Scope.java", line 27, col 18
     dupm "Scope.java", line 28, col 18
+    objectState "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 40, col 30
+    owner "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 47, col 21
+    objectTimesFinalized "/Users/cok/ESCTools/jmlspecs.jar:java/lang/Object.jml", line 155, col 24
  Jml hidden fields
  DUMP-END
 DUMP Scope class escjava.tc.TypeSig
