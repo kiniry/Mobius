@@ -10,6 +10,8 @@ echo "    CLASSPATH: $CLASSPATH"
 endif
 echo "    ESCJ_SIMPLIFY: $ESCJ_SIMPLIFY"
 
+set errs = 0
 foreach f (`grep Good alltests | awk '{print $1;}'`)
-  ./rtest $f $* || exit 1
+  ./rtest $f $*  || set errs = 1
 end
+exit $errs
