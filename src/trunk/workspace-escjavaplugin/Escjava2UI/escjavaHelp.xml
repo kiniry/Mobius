@@ -28,10 +28,10 @@
           <topic label="ESC/Java2 Key Bindings" href="html/escjavaHelp.html#Commands"/>
           <topic label="ESC/Java2 Help" href="html/escjavaHelp.html#Help"/>
         </topic>
-      <topic label="Problems to fix and features to add" href="html/escjavaHelp.html#TODO"/>
       <topic label="Version History" href="html/escjavaHelp.html#Versions"/>
       <topic label="Getting Started Tutorial" href="html/escjavaHelp.html#Tutorial"/>
       <topic label="Notes for Developers" href="html/escjavaHelp.html#DevNotes"/>
+      <topic label="Problems to fix and features to add" href="html/escjavaHelp.html#TODO"/>
     </topic>   	
 
 </toc>

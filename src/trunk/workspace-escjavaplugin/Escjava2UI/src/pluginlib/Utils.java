@@ -616,7 +616,10 @@ public class Utils {
 		// FIXME do we remove the / on all platforms?
 		// FIXME - do we need to do these back-and-forth conversions of wil this do:
 		// return Platform.resolve(url).getPath().substring(1);
-		return new Path(Platform.resolve(url).getPath()).toOSString().substring(1);
+		p = new Path(Platform.resolve(url).getPath()).makeAbsolute();
+		String s = p.toOSString();
+		if (System.getProperty("os.name").startsWith("Windows")) s = s.substring(1);
+		return s;
 	}
 	
 	/**

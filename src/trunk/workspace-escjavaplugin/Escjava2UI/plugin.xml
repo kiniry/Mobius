@@ -3,7 +3,7 @@
 <plugin
    id="escjava.plugin"
    name="Escjava2 UI"
-   version="1.0.2"
+   version="1.0.4"
    provider-name="David R. Cok"
    class="escjava.plugin.EscjavaPlugin">
 
@@ -21,12 +21,12 @@
       <import plugin="org.eclipse.ui.ide"/>
       <import plugin="org.eclipse.jface.text"/>
       <import plugin="org.eclipse.ui.console"/>
-      <import plugin="escjava.esctools"/>
       <import plugin="escjava.simplify"/>
       <import plugin="org.eclipse.jdt.ui"/>
       <import plugin="org.eclipse.debug.core"/>
       <import plugin="org.eclipse.ui.editors"/>
       <import plugin="org.eclipse.ui.workbench.texteditor"/>
+      <import plugin="escjava.esctools"/>
    </requires>
 
    <!-- This extension defines the Esc/Java project nature -->

@@ -141,64 +141,66 @@ public class EscjavaChecker extends escjava.Main
 	 * @return true if the checker ran successfully, false if there were warnings
 	 */
 	public boolean run(List inputs) {
-		if (inputs.size() == 0) return true;
-		//escjava.parser.JMLParser.setClassPath(Utils.getProjectClassPathEntries(project));
-		//escjava.parser.JMLParser.parse(project,inputs);
-	    if (Log.on) Log.log("Running Escjava checker");
-	    if (!EscjavaUtils.isSpecsInstalled(project)) {
-			EscjavaUtils.installDefaultSpecs(project);
-		}
-		
-		inputs.add("-classpath");
-		inputs.add(Utils.getProjectClassPath(project));
-		
-// FIXME - can avboid getting simplify if we are not doing any static checking
-		
-		String fn = Options.simplify.getValue();
-		if (fn == null || fn.length() == 0) {
-			try {
-				String loc = EscjavaUtils.findDefaultSimplify();
-				if (loc == null) {
-					Utils.showMessageInUI(null,"Esc/Java",
-						"Could not locate a Simplify executable - see error log");
-					Log.errorlog("Could not locate a Simplify executable in the plugin: os = " + System.getProperty("os.name"),null);
-					return false;
-				}
-				inputs.add("-simplify");
-				inputs.add(loc);
-				if (Log.on) Log.log("Using simplify executable at " + loc);
-			} catch (Exception e) {
-				Utils.showMessageInUI(null,"Esc/Java",
-					"Could not locate a Simplify executable - see error log");
-				Log.errorlog("Could not locate a Simplify executable in the plugin",e);
-				return false;
-			}
-		} else {
-			inputs.add("-simplify");
-			inputs.add(fn);
-		}
-		Options.getOptions(inputs);
-
-//		System.out.print("STARTING ESCJAVA WITH");
-//		java.util.Iterator it = inputs.iterator();
-//		while (it.hasNext()) {
-//			System.out.print(" ");
-//			System.out.print(it.next());
-//		}
-//		System.out.println("");
-//		System.out.println("CLASSPATH " + Utils.getProjectClassPath(project));
-		
-		// This method is inherited from org.jmlspecs.checker.Main. Set the initial
-		// task to be executed by the compiler (Parsing in this case).
-		PrintStream out = System.out;
-		PrintStream err = System.err;
-		PrintStream newout = Log.logPrintStream();
-		System.setOut(newout);
-		System.setErr(newout);
-		int i = compile((String[])inputs.toArray(new String[0]));
-		System.setOut(out);
-		System.setErr(err);
-	    if (Log.on) Log.log("Escjava checker ended, status code " + i);
-	    return i == 0;
+	  if (inputs.size() == 0) return true;
+	  //escjava.parser.JMLParser.setClassPath(Utils.getProjectClassPathEntries(project));
+	  //escjava.parser.JMLParser.parse(project,inputs);
+	  if (Log.on) Log.log("Running Escjava checker");
+	  if (!EscjavaUtils.isSpecsInstalled(project)) {
+	    EscjavaUtils.installDefaultSpecs(project);
+	  }
+	  
+	  inputs.add("-classpath");
+	  inputs.add(Utils.getProjectClassPath(project));
+	  
+	  // FIXME - can avboid getting simplify if we are not doing any static checking
+	  
+	  String loc;
+	  try {
+	    if (Options.internalSimplify.getValue()) {
+	      String os = Options.os.getStringValue();
+	      loc = EscjavaUtils.findInternalSimplify(os);
+	      if (loc == null) {
+	        Utils.showMessageInUI(null, "Esc/Java",
+	        "Could not locate a Simplify executable - see error log");
+	        Log.errorlog(
+	            "Could not locate a Simplify executable in the plugin: os = "
+	            + System.getProperty("os.name"), null);
+	        return false;
+	      }
+	    } else {
+	      loc = Options.simplify.getValue();
+	    }
+	  } catch (Exception e) {
+	    Utils.showMessageInUI(null,"Esc/Java",
+	      "Could not locate a Simplify executable - see error log");
+	    Log.errorlog("Could not locate a Simplify executable in the plugin",e);
+	    return false;
+	  }
+	  inputs.add("-simplify");
+	  inputs.add(loc);
+	  if (Log.on) Log.log("Using simplify executable at " + loc);
+	  Options.getOptions(inputs);
+	  
+	  //		System.out.print("STARTING ESCJAVA WITH");
+	  //		java.util.Iterator it = inputs.iterator();
+	  //		while (it.hasNext()) {
+	  //			System.out.print(" ");
+	  //			System.out.print(it.next());
+	  //		}
+	  //		System.out.println("");
+	  //		System.out.println("CLASSPATH " + Utils.getProjectClassPath(project));
+	  
+	  // This method is inherited from org.jmlspecs.checker.Main. Set the initial
+	  // task to be executed by the compiler (Parsing in this case).
+	  PrintStream out = System.out;
+	  PrintStream err = System.err;
+	  PrintStream newout = Log.logPrintStream();
+	  System.setOut(newout);
+	  System.setErr(newout);
+	  int i = compile((String[])inputs.toArray(new String[0]));
+	  System.setOut(out);
+	  System.setErr(err);
+	  if (Log.on) Log.log("Escjava checker ended, status code " + i);
+	  return i == 0;
 	}
 }

@@ -49,12 +49,31 @@ public class Options {
 			"this choice is enabled.");
 
 	/**
+	 * Whether to use the internal simplify.
+	 */
+	static final public AbstractPreference.BooleanOption internalSimplify =
+	  new AbstractPreference.BooleanOption(
+	      PLUGINID + "internalSimplify",
+	      true,
+	      "Use Internal Version",
+	      "Use the Simplify executable internal to the plug-in"
+	      );
+
+	static final public AbstractPreference.ChoiceOption os = new AbstractPreference.ChoiceOption(
+			(PLUGINID + "osname"),
+			new String[]{"","Windows","Linux","MacOSX","Solaris"},
+			0,
+			"Internal Simplify Version",
+			"The choice of internal version of Simplify (pick the host platform)");
+
+
+	/**
 	 * The Simplify executable to use (a value is required).
 	 */
 	static final public AbstractPreference.StringOption simplify = new AbstractPreference.StringOption(
 			(PLUGINID + "simplify"), 
 			"", 
-			"The Simplify executable to use",
+			"External Simplify executable to use",
 			"The static checker needs a version of the Simplify executable for" + Utils.eol +
 			"this platform; it must be obtained indepenedently from either the" + Utils.eol +
 			"Esc/Java2 website or the Compaq/SRC website");
@@ -233,5 +252,19 @@ public class Options {
 			}
 		}
 	}
-
+	
+	static {
+	  if (os.getIndexValue() == 0) {
+	    String osname = System.getProperty("os.name");
+			if (osname.startsWith("Windows")) osname = "Windows";
+			else if (osname.equals("linux")||
+			         osname.equals("Linux")) osname = "Linux";
+			else if (osname.equals("darwin")||
+			         osname.equals("MacOSX")||
+			         osname.equals("Mac OS X")) osname = "MacOSX";
+			else if (osname.equals("solaris")||
+			         osname.equals("Solaris")) osname = "Solaris";
+	    os.setValue(osname);
+	  }
+	}
 }

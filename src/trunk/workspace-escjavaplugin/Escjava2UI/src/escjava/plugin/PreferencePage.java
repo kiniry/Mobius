@@ -45,6 +45,12 @@ public class PreferencePage extends pluginlib.PreferencePage {
                                                                           logging,
                                                                           useConsole,
                                                                           alsoLogInfo };
+  
+  static final public PreferenceWidget.BooleanWidget internalSimplify =
+    new PreferenceWidget.BooleanWidget(Options.internalSimplify);
+
+  static final public PreferenceWidget.ChoiceWidget osSimplify =
+    new PreferenceWidget.ChoiceWidget(Options.os);
 
   /**
    * The Simplify executable to use (a value is required).
@@ -124,6 +130,8 @@ public class PreferencePage extends pluginlib.PreferencePage {
    * An array of the EscJava option widgets.
    */
   static final private PreferenceWidget[] widgets = {
+                                                 internalSimplify,
+                                                 osSimplify,
                                                  simplify,
                                                  new PreferenceWidget.Label(
                                                      "Syntax and semantics checks"),
@@ -186,7 +194,7 @@ public class PreferencePage extends pluginlib.PreferencePage {
     new Widgets.LabeledSeparator(composite1,
         "Options that control Esc/Java2 checking");
     addWidgets(widgets, composite1);
-
+    
     // FIXME - -quiet, nowarn noredundancy loop loopsafe plainwarning pgc ppvc f
     // pxLog quiet sourcepath classpath specpath source
 

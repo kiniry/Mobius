@@ -274,34 +274,36 @@ public class EscjavaUtils {
 			Log.errorlog("Failed to install default specs as a source folder",e);
 		}
 	}
-	// FIXME - watch out for multithreading
-	
-	/** Cached value of the default lcoation of the simplify executable,
-	 * as returned by findDefaultSimplify().
-	 */
-	private static String defaultSimplifyLocation = null;
 	
 	/**
 	 * Finds the simplify executable that is part of the the plugin.
+	 * @param os The name of the OS
 	 * @return The location of the simplify executable as an absolute file system path.
 	 * @throws Exception
 	 */
-	public static String findDefaultSimplify() throws Exception {
-		if (defaultSimplifyLocation == null) {
-			String osname = System.getProperty("os.name");
-			String suffix = "";
-			if (osname.startsWith("Windows")) suffix = "exe";
-			//else if (osname.equals("cygwin")) suffix = "linux";
-			else if (osname.equals("linux")) suffix = "linux";
-			else if (osname.equals("darwin")) suffix = "macosx";
-			else if (osname.equals("solaris")) suffix = "solaris";
-			else return null;
-			
-			String name = "Simplify-1.5.4." + suffix;
-			defaultSimplifyLocation = Utils.findPluginResource("escjava.simplify",name);
+	public static String findInternalSimplify(String os) throws Exception {
+		if (os == null || os.length() == 0) {
+			os = System.getProperty("os.name");
 		}
-		return defaultSimplifyLocation;
+	  String suffix = getSimplifySuffix(os);
+	  if (suffix == null) return null;
+	  String name = "Simplify-1.5.4." + suffix;
+	  name = Utils.findPluginResource("escjava.simplify",name);
+		return name;
 	}
+		
+  public static String getSimplifySuffix(String osname) {
+		String suffix = null;
+		if (osname.startsWith("Windows")) suffix = "exe";
+		else if (osname.equals("linux")||
+		         osname.equals("Linux")) suffix = "linux";
+		else if (osname.equals("darwin")||
+		         osname.equals("MacOSX")||
+		         osname.equals("Mac OS X")) suffix = "macosx";
+		else if (osname.equals("solaris")||
+		         osname.equals("Solaris")) suffix = "solaris";
+		return suffix;
+  }
 	
 }
 // FIXME - check all javadoc comments

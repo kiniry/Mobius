@@ -6,9 +6,9 @@
 </HEAD>
 <BODY>
 
-<CENTER><H1>ESC/Java2 Eclipse Plugin</H1></CENTER>
+<CENTER><H1>ESC/Java2 Eclipse Plugin 1.0.4</H1></CENTER>
 <CENTER>Author: David Cok</CENTER>
-<CENTER> Version alpha, 3 February 2005</CENTER>
+<CENTER> Version alpha, 16 February 2005</CENTER>
 <CENTER>Feedback to: <A href="mailto:FIXME">FIXME</CENTER>
 <P>
 Contents:
@@ -42,10 +42,10 @@ Contents:
           <li><A href="#Commands">Esc/Java2 Key bindings</A>
           <li><A href="#Help">Esc/Java2 Help</A>
         </ul>
-      <li><a href="#TODO">Problems to fix and features to add</a>
       <li><a href="#Versions">Version History</a>
       <li><a href="#Tutorial">Getting Started Tutorial</a>
       <li><A href="#DevNotes">Notes for Developers</a>
+      <li><a href="#TODO">Problems to fix and features to add</a>
     </ul>
 <!-- end toc -->
 </P>
@@ -452,12 +452,16 @@ in some situations to capture all of the output in one place.
 
 <P>
 <B>Simplify executable to use.</B>
-The default behavior is for the plug-in to use a version of Simplify that is
-included in the released plug-in.  If there is a need to select a different
-version of the Simplify executable, the path to that executable should be set
-here.  Such a situation is rare; the default of a blank text field should be
-almost always adequate.  (Simplify is the back-end decision procedure used by 
-the tool).
+Esc/Java uses Simplify as its decision procedure and must have available a
+version of Simplify appropriate for the host platform.  Various versions of
+Simplify are included with the plug-in; by default an internal version is 
+chosen that matches the host operating system.  The user can also explicitly
+chose a particular version using the <B>Internal Simplify Version</B> choice
+menu (if, for example, the internal logic fails to pick the appropriate
+version).  The user can also use an external version of Simplify by deselecting
+the <B>Use Internal Version</B> toggle and entering the absolute path to an
+appropriate executable in the text field (possibly using the <I>Browse</I> button
+as an aid).  The default internal choice should almost always be adequate.
 </P><P>
 <B>Type check only.</B>
 With this option enabled, only syntax and typechecking is performed.  No
@@ -642,6 +646,23 @@ In addition all the various toolbar and dialog box controls have tool tip
 information that gives a bit more explanation of the purpose of the item.
 </P>
 
+
+<A NAME="#Versions"/A>
+<H2>Version history</H2>
+<UL>
+<LI>The plug-in is currently still in a pre-release state.
+</UL>
+
+
+<A NAME="#Tutorial"/A>
+<H2>Getting Started Tutorial</H2>
+--- not written yet -- (FIXME)
+
+
+<A NAME="#DevNotes"/A>
+<H2>Notes for Developers</H2>
+--- not written yet -- (FIXME)
+
 <A NAME="#TODO"/>
 <H2>Problems to fix and features to add</H2>
 
@@ -697,7 +718,7 @@ highlight them all
 checking?
 </UL>
 
-<H3>Uncateogrized issues</H3>
+<H3>Uncategorized issues</H3>
 <UL>
 <LI>Files in linked source folders don't show line numbers or markers when edited
 <LI>The use of nested source folders is not tested
@@ -737,22 +758,6 @@ packages, especially in the presence of spec-only directories
 <LI>Follow accessibility guidelines?  Use mnemonics?
 <LI>Move strings to a properties area?
 </UL>
-
-<A NAME="#Versions"/A>
-<H2>Version history</H2>
-<UL>
-<LI>The plug-in is currently still in a pre-release state.
-</UL>
-
-
-<A NAME="#Tutorial"/A>
-<H2>Getting Started Tutorial</H2>
---- not written yet -- (FIXME)
-
-
-<A NAME="#DevNotes"/A>
-<H2>Notes for Developers</H2>
---- not written yet -- (FIXME)
 
 </BODY>
 </HTML>

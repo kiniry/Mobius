@@ -2,7 +2,7 @@
 <feature
       id="EscJava2"
       label="EscJava2"
-      version="1.0.3"
+      version="1.0.4"
       provider-name="David R. Cok">
 
    <install-handler/>
@@ -16,9 +16,12 @@
    </copyright>
 
    <license>
-      This is an experimental Eclipse plugin.  It is licensed AS IS, without any warranty, and 
-distributed subject to the Eclipse
-Common Public License.
+      This is an experimental Eclipse plugin.  It is 
+licensed AS IS, without any warranty, and 
+distributed subject to the Eclipse Common Public 
+License.  The source code is available through
+the GForge project at 
+http://sort.ucd.ie/projects/escjava-eclipse
    </license>
 
    <requires>
@@ -42,12 +45,12 @@ Common Public License.
          id="escjava.esctools"
          download-size="0"
          install-size="0"
-         version="1.0.2"/>
+         version="1.0.4"/>
 
    <plugin
          id="escjava.plugin"
          download-size="0"
          install-size="0"
-         version="1.0.2"/>
+         version="1.0.4"/>
 
 </feature>
