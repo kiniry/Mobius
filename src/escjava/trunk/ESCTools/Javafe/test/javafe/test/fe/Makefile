@@ -49,9 +49,10 @@ ifndef ALLTESTS
 	@echo tests NOT INCLUDED - ALLTESTS not defined: ` grep -v '^#' skipunlessall`
 endif
 	@for t in ${FILELIST} ; do \
-		echo "   Testing" $$t ... ;\
+		echo -n '.' ; \
 		${MAKE} --no-print-directory do$$t ; \
 	done
+	echo " "
 
 outputs:
 	./make_outputs
@@ -75,7 +76,7 @@ do%:
 	@( cd $*; \
 	   export TOOL="${TOOL} -classpath `pwd`" ; \
 	   ./run 2>&1 | sed "s|`pwd`|<TEST>|g" > out)
-	@diff $*/out $*/ans
+	@diff $*/out $*/ans || echo Test $* failed
 
 ## This target simply executes a given test, e.g. 'make extest1' runs test1
 ## Must have variables JAVA and JAVAFE_ROOT set

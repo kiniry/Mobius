@@ -8,7 +8,7 @@ if ( ! $?CLASSDIRECTORY ) setenv CLASSDIRECTORY ${ESCTOOLS_ROOT}/Javafe/classfil
 
 echo ===== Typechecking the javafe package =====
 
-foreach f (ast parser tc util filespace reader decsrc genericfile)
+foreach f ( . ast parser tc util filespace reader decsrc genericfile)
    echo ===== Typechecking javafe/$f/\*.java =====
    ${JAVA} -classpath ${CLASSDIRECTORY} javafe.test.Print \
         -classpath ${SOURCEDIRECTORY} -typecheck -noprint \

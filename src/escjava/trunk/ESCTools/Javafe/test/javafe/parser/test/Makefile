@@ -54,13 +54,15 @@ jdk_source_listings:
 	find ${JDK13_SOURCES} -follow -name "*.java" -print > jdk-1.3-files 
 	find ${JDK14_SOURCES} -follow -name "*.java" -print > jdk-1.4-files 
 
+.PHONY: testparsejdkidempotence
 testparsejdkidempotence:
 	${JAVA} javafe.parser.test.TestParse diff simpletoks simpletoks
-	cat jdk-1.0-files | xargs ${JAVA} javafe.parser.test.TestParse progress silent idempotence
-	cat jdk-1.1-files | xargs ${JAVA} javafe.parser.test.TestParse progress silent idempotence
-	cat jdk-1.2-files | xargs -n 1000 -s 1024 ${JAVA} javafe.parser.test.TestParse progress silent idempotence
-	cat jdk-1.3-files | xargs -n 1000 -s 1024 ${JAVA} javafe.parser.test.TestParse progress silent idempotence
-	cat jdk-1.4-files | xargs -n 1000 -s 1024 ${JAVA} javafe.parser.test.TestParse progress silent idempotence
+	for d in  ${JDK10_SOURCES} ${JDK11_SOURCES} ${JDK12_SOURCES} ${JDK13_SOURCES} ${JDK14_SOURCES} ; do \
+	   echo "Executing TestParse on " $$d ; \
+	   ( cd $$d; find . -follow -name "*.java" -print | \
+		xargs -n 1000 -s 1024 \
+			${JAVA} javafe.parser.test.TestParse progress silent idempotence );\
+	done
 
 testparse:
 	${JAVA} javafe.parser.test.TestParse progress check print verboseprogress \

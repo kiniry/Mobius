@@ -36,7 +36,11 @@ build: compile
 buildall: compileall
 
 .PHONY: test
+ifdef ALLTESTS
+test: runtest
+else
 test: runtest typecheckTests
+endif
 
 ###########################################################################
 # build targets
@@ -138,19 +142,20 @@ runtest: javafe_test
 	${MAKE} -C java/javafe/util        runtest
 	${MAKE} -C test/javafe/test        runtest
 
-.PHONE: extensive_tests
+# This includes runtest and test_jdk_sources
+.PHONY: extensive_tests
 extensive_tests: javafe_test
 	${MAKE} -C test/javafe/parser/test big
 
+.PHONY: test_jdk_sources
+test_jdk_sources:
+	${MAKE} -C test/javafe/parser/test testparsejdkidempotence
+
 .PHONY: typecheckTests
 typecheckTests: javafe_test
-ifdef ALLTESTS
 	@test/javafe/test/typecheckJavafe
 	@echo 
 	@test/javafe/test/typecheckJDK
-else
-	@true
-endif
 
 ## This tests a binary release that is untarred in the RELTEMP directory,
 ## with RELCLASSPATH pointing to the esctools1.jar file that is being tested.
