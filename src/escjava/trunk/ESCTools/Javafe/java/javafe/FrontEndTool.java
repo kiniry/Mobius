@@ -88,7 +88,7 @@ public abstract class FrontEndTool extends Tool {
     }
 
     public void setup() {
-        javafe.util.Info.on = options.v;
+        // javafe.util.Info.on = options.v;
         setupPaths();
         Info.out("[Full classpath is " + compositeClassPath + "]");
         Info.out("[Full sourcepath is " + compositeSourcePath + "]");
