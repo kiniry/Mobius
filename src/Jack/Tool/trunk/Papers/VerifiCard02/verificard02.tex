@@ -538,7 +538,7 @@ that we have found probably also would have been found by doing
 thorough testing, but using theorem proving techniques one is sure not
 to forget some cases. Also, writing the formal specifications forces
 one to think very precisely about the intended behaviour of programs,
-which helps in finding errors.
+which helps in finding errors. 
 
 
 
@@ -547,10 +547,19 @@ which helps in finding errors.
 
 \subsubsection{Implementation mistakes}
 This section presents some examples of common programming
-errors. Usually, these errors are caused by an inappropriate informal
-specification of the application and although they could have been
-found by hand, using a tool like Esc/Java give us the certainty all
-cases will be considered.
+errors. At the begining, when we start to assert this application, we
+had only on hands an informal specification of the classes, seldom
+complete. Several mails after we achieved to have a more detailed informal
+specifications of classes from the GemPlus team, which reflected what
+the source code actually intended for. By taking this informal
+specification, making assertions Esc/Java specification for classes
+and methods and finally running Esc/Java on this asserted code, we
+have found gap points where the source code, specifically classes and
+methods, does not provide their specification. This kind of errors
+could has been found by hand, but using a tool like Esc/Java give us
+the certainty all cases will be considered.
+
+
 
 
 \paragraph{The isGreaterEqualThan method}
@@ -612,7 +621,7 @@ for instead.
 
 \paragraph{Final modifiers}
 
-The \texttt{Annee} class represents a \textit{year}. This class
+The \texttt{Annee} class represents a \textit{year}. It class
 declares two
 static variables called \texttt{MIN} and \texttt{MAX}, which represent
 the minimum and maximum year allowed by the application.
@@ -643,11 +652,12 @@ requires condition, i.e, $110>=99\ \&\&\ 110<= 127$.
 
 The problem is caused by the wrong declaration of \textsc{MIN}
 and \textsc{MAX} variables belonging to the \texttt{Annee}
-class. These variables were not declared as \texttt{final}\footnote{{\sc
-Java} does not allow to change in runtime the value of a final {\tt
-final} variable.}, thus, their values could be changed in runtime by
+class. These variables were not declared as
+\texttt{final}\footnote{Java does not allow to change in runtime the
+value of a final {\tt final} variable.}, thus, their values could be
+changed in runtime by
 a direct assignation\footnote{In fact, due to these variables
-are declared are \texttt{public}} and the pre-condition would be not
+are declared are \texttt{public}}, and the pre-condition would be not
 satisfied. 
 
 
