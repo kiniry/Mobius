@@ -170,6 +170,14 @@ public abstract class FrontEndTool extends Tool {
 	TypeCheck.inst = makeTypeCheck();
     }
 
+    /** Called to clear any initializations, so that the parser can be
+	called multiple times within one process.  Call before setup()
+	above.
+    */
+    public void clear() {
+	ErrorSet.clear();
+	OutsideEnv.clear();
+    }
 
     /**
      * Called to obtain the StandardTypeReader to be used for locating
@@ -241,7 +249,7 @@ public abstract class FrontEndTool extends Tool {
      * A tool's main entry point; <code>args</code> are the
      * command-line arguments we have been invoked with. <p> 
      */
-    public final void run(String[] args) {
+    public final int run(String[] args) {
 	try {
 	    // Handle all tool options:
 	    int offset = processOptions(args);
@@ -266,12 +274,12 @@ public abstract class FrontEndTool extends Tool {
 	    System.out.println(ErrorSet.errors + " error"
 		+ (ErrorSet.errors>1 ? "s" : ""));
 
+	// If we call exit here, we will break GUI-based clients.
 	// Return error status to caller:
 	if (ErrorSet.errors>0)
-	    System.exit(2);
+	    return 2;
 	else {
-	  // If we call exit here, we will break GUI-based clients.
-	  // System.exit(0);
+	    return 0;
 	}
     }
 

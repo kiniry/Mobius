@@ -170,7 +170,8 @@ public class CopyLoaded extends FrontEndTool implements Listener {
     //@ requires \nonnullelements(args)
     public static void main(String[] args) {
 	Tool t = new CopyLoaded();
-	t.run(args);
+	int result = t.run(args);
+	if (result != 0) System.exit(result);
     }
 
 

@@ -230,6 +230,14 @@ public final class OutsideEnv {
 	reader = R;
     }
 
+    public static void clear() {
+	reader = null;
+	filesRead = 0;
+	listener = null;
+	eagerRead = false;
+	avoidSpec = true;
+    }
+
 
     /***************************************************
      *                                                 *

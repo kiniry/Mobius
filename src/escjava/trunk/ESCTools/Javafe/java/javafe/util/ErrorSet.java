@@ -88,6 +88,13 @@ public class ErrorSet
      */
     public static boolean gag = false;
 
+    /** Resets all error and warning counts. */
+    public static void clear() {
+	errors = 0;
+	warnings = 0;
+	cautions = 0;
+	gag = false;
+    }
 
     /***************************************************
      *                                                 *

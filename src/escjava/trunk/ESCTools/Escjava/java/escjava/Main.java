@@ -759,20 +759,30 @@ public class Main extends javafe.SrcTool
      */
     //@ requires \nonnullelements(args)
     public static void main(String[] args) {
+	int exitcode = compile(args);
+	if (exitcode != 0) System.exit(exitcode);
+    }
+
+    public static int compile(String[] args) {
+	javafe.SrcTool t = new Main();
+	{ // resetting anything left from a previous call of compile
+	    t.clear();
+	    stages = 6; //  FIXME - change this when all options are reset
+        }
         try {
-            javafe.SrcTool t = new Main();
 
             // Disallow the -avoidSpec option:
             t.allowAvoidSpec = false;
 
-            t.run(args);
+            int result = t.run(args);
+	    return result;
         } catch (OutOfMemoryError oom) {
             Runtime rt = Runtime.getRuntime();
             long memUsedBytes = rt.totalMemory() - rt.freeMemory();
             System.out.println("java.lang.OutOfMemoryError (" + memUsedBytes +
                                " bytes used)");
             oom.printStackTrace(System.out);
-            System.exit(1);
+	    return 3;
         }
     }
 
