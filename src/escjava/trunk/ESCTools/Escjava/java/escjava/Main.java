@@ -387,8 +387,10 @@ public class Main extends javafe.SrcTool
 
         // Generate the type-specific background predicate
         errorCount = ErrorSet.errors;
+	if (Info.on) Info.out("[ Finding contributors for " + sig + "]");
         FindContributors scope = new FindContributors(sig);
         VcToString.resetTypeSpecific();
+	if (Info.on) Info.out("[ Found contributors for " + sig + "]");
     
         if (options().guardedVC) {
             String locStr = UniqName.locToSuffix(td.locId);
