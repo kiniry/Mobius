@@ -158,7 +158,9 @@ public class TagConstants extends GeneratedTags
     public static final int LONGSHIFTRU = INTSHIFTRU + 1;
     public static final int INTEGRALSUB = LONGSHIFTRU + 1;
     public static final int INTEGRALXOR = INTEGRALSUB + 1;
-    public static final int IS = INTEGRALXOR + 1;
+    public static final int INTERN = INTEGRALXOR + 1;
+    public static final int INTERNED = INTERN + 1;
+    public static final int IS = INTERNED + 1;
     public static final int ISALLOCATED = IS + 1;
     public static final int ISNEWARRAY = ISALLOCATED + 1;
     // MAX -- an ESC keyword
@@ -800,6 +802,8 @@ public class TagConstants extends GeneratedTags
         "longShiftUR",
         "integralSub",
         "integralXor",
+        "|intern:|", // maps int to String for Strings interned by ESC/Java
+        "|interned:|", // maps String to boolean to say whether a String is interned, per Java semantics
         "is",
         "isAllocated",
         "isNewArray",

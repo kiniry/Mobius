@@ -458,17 +458,31 @@
 
 ; Axioms related to Strings - DRCok
 
-(BG_PUSH
-  (FORALL (s)
-    (PATS (interned s))
-    (AND (NEQ (interned s) null)
-    	 (EQ (typeof (interned s)) |T_java.lang.String| )
-         (isAllocated (interned s) alloc))))
+(DEFPRED (|interned:| s))
 
 (BG_PUSH
-  (FORALL (s ss)
-    (PATS (MPAT (interned s) (interned ss)))
-    (IMPLIES (EQ (interned s) (interned ss))  (EQ s ss)) ))
+  (FORALL (i k)
+    (PATS (|intern:| i k))
+    (AND (NEQ (|intern:| i k) null)
+         (EQ (typeof (|intern:| i k)) |T_java.lang.String|)
+         (isAllocated (|intern:| i k) alloc))))
+
+(BG_PUSH
+  (FORALL (s)
+    (PATS (|interned:| s))
+    (is (|interned:| s) |T_boolean|)
+  ))
+
+(BG_PUSH
+  (FORALL (i ii k kk)
+    (PATS (MPAT (|intern:| i k) (|intern:| ii kk)))
+    (IFF (EQ (|intern:| i k) (|intern:| ii kk))  (EQ i ii)) ))
+
+(BG_PUSH
+  (FORALL (i k)
+    (PATS (|intern:| i k))
+    (|interned:| (|intern:| i k))
+  ))
         
 (BG_PUSH
   (FORALL (x y a)
