@@ -220,7 +220,16 @@ public class TagConstants extends javafe.tc.TagConstants
     public static final int JML_SIGNALS = JML_MODIFIABLE + 1;
     public static final int JML_MAINTAINING = JML_SIGNALS + 1;
     public static final int JML_DECREASING = JML_MAINTAINING + 1;
-    public static final int LASTJMLKEYWORDTAG = JML_DECREASING;
+
+    public static final int JML_BEHAVIOR = JML_DECREASING + 1;
+    public static final int JML_NORMAL_BEHAVIOR = JML_BEHAVIOR + 1;
+    public static final int JML_EXCEPTIONAL_BEHAVIOR = JML_NORMAL_BEHAVIOR + 1;
+    public static final int JML_NOT_SPECIFIED = JML_EXCEPTIONAL_BEHAVIOR + 1;
+
+    public static final int JML_PURE = JML_NOT_SPECIFIED + 1;
+    public static final int JML_INSTANCE = JML_PURE + 1;
+
+    public static final int LASTJMLKEYWORDTAG = JML_INSTANCE;
 
     public static final int LAST_TAG = LASTJMLKEYWORDTAG;
 
@@ -474,17 +483,19 @@ public class TagConstants extends javafe.tc.TagConstants
 
     private static Identifier[] jmlkeywords = {
         Identifier.intern("also"),
-
         Identifier.intern("pre"),
         Identifier.intern("post"),
-
         Identifier.intern("assignable"),
         Identifier.intern("modifiable"),
-
         Identifier.intern("signals"),
-
         Identifier.intern("maintaining"),
-        Identifier.intern("decreasing")
+        Identifier.intern("decreasing"),
+        Identifier.intern("behavior"),
+        Identifier.intern("normal_behavior"),
+        Identifier.intern("exceptional_behavior"),
+        Identifier.intern("\\not_specified"),
+        Identifier.intern("pure"),
+        Identifier.intern("instance")
     };
 
     public static void main(String[] args) {
