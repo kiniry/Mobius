@@ -811,7 +811,7 @@ $?$, as presented by rules \textsf{Unary}, \textsf{Instance},
 \begin{tabular}{ll}
 \textsf{(Binary)} & 
 \begin{prooftree} 
-e_1\ \textsf{modPE}\ Y,\ \ e_2\ \textsf{modEXP}\ Y
+e_1\ \textsf{modEXP}\ Y,\ \ e_2\ \textsf{modEXP}\ Y
 \justifies
 e_1\oplus e_2\ \textsf{modEXP}\ Y
 \using
@@ -1102,7 +1102,7 @@ membership conditions for expressions not linked by ``.''.
 \textsf{(In-Reach-Arr)} &
 \begin{prooftree}
 \backslash \texttt{fields}\_\texttt{of(}\backslash
-\texttt{reach(}e_1\texttt{))}\in Y,\ \ \texttt{this.a}\in \backslash
+\texttt{reach(}e_1\texttt{))}\in Y,\ \ \texttt{a}\in \backslash
 \texttt{reach(}e\texttt{)} 
 \justifies
 \texttt{a[}e\texttt{]}\underline{\in} Y
