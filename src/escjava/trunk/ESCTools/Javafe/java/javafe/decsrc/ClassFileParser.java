@@ -396,9 +396,9 @@ public abstract class ClassFileParser implements ClassFileConstants {
 	    set_class_attribute(name, stream, length);
 	}
 
-	/* XXX We should check that we are at the end of the file,
-	   XXX but that will require generating and catching an
-	   XXX EOFException.
+	/* TODO We should check that we are at the end of the file,
+	        but that will require generating and catching an
+	        EOFException.
 		try {
 		    stream.readByte();
 		    error("garbage at end of class file");
