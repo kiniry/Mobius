@@ -146,7 +146,7 @@ public abstract class ParseStmt extends ParseExpr
     //@ modifies seqStmt.elementCount, seqStmt.currentStackBottom
     /*@ ensures (seqStmt.elementCount - seqStmt.currentStackBottom) >
      (\old(seqStmt.elementCount) - \old(seqStmt.currentStackBottom)) @*/
-    private void addStmt(Lex l) {
+    protected void addStmt(Lex l) {
         int ttype = l.ttype;
 
         // Stmt ::= ';'
