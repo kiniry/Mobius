@@ -641,6 +641,7 @@ public class AnnotationHandler {
 
 		case TagConstants.IMPLIES_THAT:
 		case TagConstants.FOR_EXAMPLE:
+		case TagConstants.END:
 		case TagConstants.PURE:
 		case TagConstants.NON_NULL:
 		    return pos-1;
