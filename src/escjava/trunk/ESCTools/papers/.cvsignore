@@ -6,4 +6,5 @@
 *.dvi
 *.out
 *.ps
+*.eps
 .auto
