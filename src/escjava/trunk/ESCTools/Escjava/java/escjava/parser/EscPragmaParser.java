@@ -3079,7 +3079,11 @@ try{
 		    boolean more;
 		    do {
 			more = parseInPragmas(TagConstants.IN, scanner.startingLoc, temp,first);
-			if (more) decl.pmodifiers.addElement((ModifierPragma)temp.auxVal);
+			if (more) {
+			    if (decl.pmodifiers == null)
+				decl.pmodifiers = ModifierPragmaVec.make();
+			    decl.pmodifiers.addElement((ModifierPragma)temp.auxVal);
+			}
 			first = false;
 		    } while (more);
 		    expect(scanner,TagConstants.SEMICOLON);
@@ -3111,8 +3115,11 @@ try{
 				MapsExprModifierPragma.make(TagConstants.unRedundant(tag), 
 						    idd, mapsod, loc, e);
 			    if (TagConstants.isRedundant(tag)) ppragma.setRedundant(true);
+			    if (decl.pmodifiers == null)
+				decl.pmodifiers = ModifierPragmaVec.make();
 			    decl.pmodifiers.addElement(ppragma);
 			}
+			continue;
 		    }
 		}
 		if (scanner.ttype == TagConstants.POSTMODIFIERPRAGMA) {
