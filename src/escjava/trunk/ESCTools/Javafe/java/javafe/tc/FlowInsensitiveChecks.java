@@ -96,14 +96,15 @@ public class FlowInsensitiveChecks
 
         TypeDecl d = s.getTypeDecl();
 
-        // Process ModifierPragmas
-        checkModifierPragmaVec(d.pmodifiers, d, rootSEnv);
-
         // Process each member declaration
         for(int i = 0, sz = d.elems.size(); i < sz; i++) {
             TypeDeclElem e = d.elems.elementAt(i);
             checkTypeDeclElem(e);
         }
+
+        // Process ModifierPragmas
+        checkModifierPragmaVec(d.pmodifiers, d, rootSEnv);
+
 	sig = null;
     }
 
