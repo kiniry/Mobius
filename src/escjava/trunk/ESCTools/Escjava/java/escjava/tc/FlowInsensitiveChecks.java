@@ -1673,6 +1673,11 @@ FIXME - see uses of countFreeVarsAccess
 // FIXME - what about model methods???
 		}
 
+	    case TagConstants.FUNCTION:
+		// FIXME - do some checking
+		// must be pure, static, immutable arguments, not void
+		break;
+
 	    case TagConstants.PURE:
 		{
 		    // Actually, these are set in AnnotationHandler.

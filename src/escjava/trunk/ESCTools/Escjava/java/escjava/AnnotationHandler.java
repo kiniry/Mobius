@@ -1405,6 +1405,7 @@ static public class NestedPragmaParser {
                 tag == TagConstants.GHOST || // Actually should not occur
                 tag == TagConstants.MODEL ||
                 tag == TagConstants.MONITORED ||
+                tag == TagConstants.FUNCTION ||
                 tag == TagConstants.NON_NULL;
     }
  

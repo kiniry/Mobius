@@ -355,7 +355,6 @@ public final class GetSpec {
                 if (vecNew != null) {
                     vecNew.addElement(vemp);
                 }
-System.out.println("KEEPING " + vemp);
             } else {
                 // filter out this pragma
                 if (vecNew == null) {
@@ -364,7 +363,6 @@ System.out.println("KEEPING " + vemp);
                         vecNew.addElement(vec.elementAt(j));
                     }
                 }
-System.out.println("OMITTING " + vemp);
             }
         }
         if (vecNew == null) {

@@ -47,7 +47,18 @@ MethodInSpec: mm() ...
     [TIME]  passed
 
 MethodInSpec: mmm() ...
-    [TIME]  passed
+------------------------------------------------------------------------
+MethodInSpec.java:30: Warning: Postcondition possibly not established (Post)
+        void mmm() {} // OK
+                    ^
+Associated declaration is "MethodInSpec.java", line 29, col 5:
+        //@ ensures meth(meth(1)) == 3;
+            ^
+Execution trace information:
+    Executed implicit return in "MethodInSpec.java", line 30, col 13.
+
+------------------------------------------------------------------------
+    [TIME]  failed
 
 MethodInSpec: m4(int) ...
     [TIME]  passed
@@ -70,4 +81,4 @@ MMS: mmss() ...
 MMS: MMS() ...
     [TIME]  passed
   [TIME total]
-2 warnings
+3 warnings

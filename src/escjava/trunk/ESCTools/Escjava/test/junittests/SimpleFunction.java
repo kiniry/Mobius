@@ -1,5 +1,6 @@
 public class SimpleFunction {
 
+	//-@ function
 	/*@ pure */ public static int bump(int i);
 	public static int f = 10;
 	public int j = 50;
@@ -17,5 +18,5 @@ public class SimpleFunction {
 	}
 
 	//@ ensures bump(f+j) < 10;
-	public void n() {}
+	public void n() {} // FAILS
 }

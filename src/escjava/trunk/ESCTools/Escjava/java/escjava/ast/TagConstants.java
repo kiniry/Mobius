@@ -60,7 +60,8 @@ public class TagConstants extends javafe.tc.TagConstants
     public static final int EXSURES = EXISTS + 1;
     public static final int FRESH = EXSURES + 1; // Non-GCE function
     public static final int FORALL = FRESH + 1;
-    public static final int GHOST = FORALL + 1;
+    public static final int FUNCTION = FORALL + 1;
+    public static final int GHOST = FUNCTION + 1;
     public static final int HELPER = GHOST + 1;
     public static final int IN = HELPER + 1;
     public static final int IN_REDUNDANTLY = IN + 1;
@@ -669,6 +670,7 @@ public class TagConstants extends javafe.tc.TagConstants
         Identifier.intern("exsures"),
         Identifier.intern("\\fresh"),
         Identifier.intern("\\forall"),
+	Identifier.intern("function"),
         Identifier.intern("ghost"),
         Identifier.intern("helper"),
         Identifier.intern("in"),

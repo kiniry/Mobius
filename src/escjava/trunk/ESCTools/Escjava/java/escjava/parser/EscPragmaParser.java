@@ -347,7 +347,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
      */
     public boolean checkTag(int tag) {
 	if (Main.options().parsePlus && tag == '+') return true;
-        return tag == '@' || tag == '*' ;
+        return tag == '@' || tag == '*' || tag == '-' ;
     }
 
     /**
@@ -365,6 +365,15 @@ public class EscPragmaParser extends Parse implements PragmaParser
             //System.out.println("restart: c = '"+(char)c+"'");
 
 	    if (Main.options().parsePlus && c == '+') {
+		c = in.read();
+		if (c != '@') {
+		    //Not an annotation or doc comment after all - skip to end
+		    while (in.read() != -1) {}
+		    return;
+		}
+	    }
+
+	    if (c == '-') {
 		c = in.read();
 		if (c != '@') {
 		    //Not an annotation or doc comment after all - skip to end
@@ -1292,6 +1301,7 @@ System.out.println("ADVANCING AT " + TagConstants.toString(tag));
 		    // does not get advanced up at the top
 		    // fall-through
                 case TagConstants.PURE:
+                case TagConstants.FUNCTION:
                 case TagConstants.HELPER:
                 case TagConstants.SPEC_PROTECTED: // SC HPT AAST 3, SUPPORT COMPLETE (cok)
                 case TagConstants.SPEC_PUBLIC: // incomplete

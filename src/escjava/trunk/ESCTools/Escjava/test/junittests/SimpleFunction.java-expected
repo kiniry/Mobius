@@ -11,14 +11,14 @@ SimpleFunction: m() ...
 
 SimpleFunction: n() ...
 ------------------------------------------------------------------------
-SimpleFunction.java:20: Warning: Postcondition possibly not established (Post)
-        public void n() {}
+SimpleFunction.java:21: Warning: Postcondition possibly not established (Post)
+        public void n() {} // FAILS
                          ^
-Associated declaration is "SimpleFunction.java", line 19, col 5:
+Associated declaration is "SimpleFunction.java", line 20, col 5:
         //@ ensures bump(f+j) < 10;
             ^
 Execution trace information:
-    Executed implicit return in "SimpleFunction.java", line 20, col 18.
+    Executed implicit return in "SimpleFunction.java", line 21, col 18.
 
 ------------------------------------------------------------------------
     [TIME]  failed

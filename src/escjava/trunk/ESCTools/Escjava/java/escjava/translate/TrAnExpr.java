@@ -344,29 +344,30 @@ public final class TrAnExpr {
 	for (int i=0; i<me.args.size(); ++i) {
 	    ev.addElement( trSpecExpr( me.args.elementAt(i), sp, st));
 	}
+	boolean isFunction = (GetSpec.findModifierPragma(me.decl.pmodifiers,TagConstants.FUNCTION) != null);
+
 	Expr ne = GC.nary(me.getStartLoc(), me.getEndLoc(),
 			TagConstants.METHODCALL,ev);
 	((NaryExpr)ne).methodName = 
 		Identifier.intern(me.id.toString() + "." + me.args.size()); // FIXME -- full name ??? with type signature as well
+	Identifier n = Identifier.intern("tempMethodReturn"+(++tempn));
+	VariableAccess v =  VariableAccess.make(n, e.getStartLoc(), 
+			LocalVarDecl.make(Modifiers.NONE, null,n,
+				TypeCheck.inst.getType(me),
+				UniqName.temporaryVariable,
+				null, Location.NULL));
 	if (trSpecExprAuxConditions != null && !declStack.contains(me.decl)) {
-	    Identifier n = Identifier.intern("tempMethodReturn"+(++tempn));
-	    VariableAccess v =  VariableAccess.make(n, e.getStartLoc(), 
-			    LocalVarDecl.make(Modifiers.NONE, null,n,
-				    TypeCheck.inst.getType(me),
-				    UniqName.temporaryVariable,
-				    null, Location.NULL));
 	    Expr ee = GC.nary(TagConstants.ANYEQ, v, ne);
-	    // FIXME - should add the following mapping of the temp variable
-	    // to the method only if the method is a function call - pure
-	    // method of immutable objects, and either static or has the
-	    // this object inserted as an argument.
-	    trSpecExprAuxConditions.addElement(ee);
+	    if (isFunction) trSpecExprAuxConditions.addElement(ee);
 	    declStack.addFirst(me.decl);
 	    getCalledSpecs(me.decl,me.od,me.args,v,sp,st); // adds to trSpecExprAuxConditions
 	    declStack.removeFirst();
 	    return v;
+	} else if (isFunction) {
+	    return ne;
+	} else {
+	    return v;
 	}
-	return ne;
 
       }
 
