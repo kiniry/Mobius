@@ -218,6 +218,9 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
     // Extensions to Expr and Stmt checkers.
 
     protected Env checkStmt(Env env, Stmt s) {
+	boolean savedTwoStateContext = isTwoStateContext;
+	isTwoStateContext = true;
+	try {
         int tag = s.getTag();
 
         // Check for any loop invariants, loop bounds, loop predicates, or skolem
@@ -341,6 +344,9 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                 break;
         }
 
+	} finally {
+	    isTwoStateContext = savedTwoStateContext;
+	}
         return env;
     }
 
@@ -350,16 +356,16 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
             Assert.notFalse(s.getTag() == TagConstants.LOOP_INVARIANT
                             || s.getTag() == TagConstants.MAINTAINING);
             if (allowed) {
-                Assert.notFalse(!isTwoStateContext);
-                Assert.notFalse(!inAnnotation);
+                //Assert.notFalse(!isTwoStateContext);
+                Assert.notFalse(!inAnnotation || inModelBody);
 		boolean savedInAnnotation = inAnnotation;
                 inAnnotation = true;
-                isTwoStateContext = true;
+                //isTwoStateContext = true;
 		try {
 		    s.expr = checkPredicate(env, s.expr);
 		} finally {
 		    inAnnotation = savedInAnnotation;
-		    isTwoStateContext = false;
+		    //isTwoStateContext = false;
 		}
             } else {
                 errorExpectingLoop(s.getStartLoc(), TagConstants.LOOP_INVARIANT);
@@ -374,8 +380,8 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
             Assert.notFalse(s.getTag() == TagConstants.DECREASES
                             || s.getTag() == TagConstants.DECREASING);
             if (allowed) {
-                Assert.notFalse(!isTwoStateContext);
-                Assert.notFalse(!inAnnotation);
+                //Assert.notFalse(!isTwoStateContext);
+                Assert.notFalse(!inAnnotation || inModelBody);
 		boolean savedInAnnotation = inAnnotation;
                 inAnnotation = true;
 		try {
@@ -395,16 +401,16 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
             ExprStmtPragma s = loopPredicates.elementAt(i);
             Assert.notFalse(s.getTag() == TagConstants.LOOP_PREDICATE);
             if (allowed) {
-                Assert.notFalse(!isTwoStateContext);
-                Assert.notFalse(!inAnnotation);
+                //Assert.notFalse(!isTwoStateContext);
+                Assert.notFalse(!inAnnotation || inModelBody);
 		boolean savedInAnnotation = inAnnotation;
                 inAnnotation = true;
-                isTwoStateContext = true;
+                //isTwoStateContext = true;
 		try {
 		    s.expr = checkPredicate(env, s.expr);
 		} finally {
 		    inAnnotation = savedInAnnotation;
-		    isTwoStateContext = false;
+		    //isTwoStateContext = false;
 		}
             } else {
                 errorExpectingLoop(s.getStartLoc(), TagConstants.LOOP_PREDICATE);
@@ -417,17 +423,17 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
         for (int i = 0; i < skolemConstants.size(); i++) {
             LocalVarDecl s = skolemConstants.elementAt(i);
             if (allowed) {
-                Assert.notFalse(!isTwoStateContext);
-                Assert.notFalse(!inAnnotation);
+                //Assert.notFalse(!isTwoStateContext);
+                Assert.notFalse(!inAnnotation || inModelBody);
 		boolean savedInAnnotation = inAnnotation;
                 inAnnotation = true;
-                isTwoStateContext = true;
+                //isTwoStateContext = true;
 		try {
 		    env.resolveType(sig, s.type);
 		    env = new EnvForLocals(env, s);
 		} finally {
 		    inAnnotation = savedInAnnotation;
-		    isTwoStateContext = false;	
+		    //isTwoStateContext = false;	
 		}
             } else {
                 errorExpectingLoop(s.getStartLoc(), TagConstants.SKOLEM_CONSTANT);
@@ -2434,6 +2440,8 @@ FIXME - see uses of countFreeVarsAccess
     protected Env checkStmtPragma(Env e, StmtPragma s) {
 	boolean savedInAnnotation = inAnnotation;
         inAnnotation = true;	// Must be reset before we exit!
+	boolean savedTwoStateContext = isTwoStateContext;
+	isTwoStateContext = true;
 	try {
         int tag = s.getTag();
         switch(tag) {
@@ -2507,6 +2515,7 @@ FIXME - see uses of countFreeVarsAccess
         }
 	} finally {
 	    inAnnotation = savedInAnnotation;
+	    isTwoStateContext = savedTwoStateContext;
 	}
 	return e;
     }
