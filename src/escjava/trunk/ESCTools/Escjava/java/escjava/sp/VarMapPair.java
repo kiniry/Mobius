@@ -2,7 +2,8 @@
 
 package escjava.sp;
 
-public class VarMapPair {
+public class VarMapPair
+{
   public VarMap n;  // normal
   public VarMap x;  // exceptional
 }

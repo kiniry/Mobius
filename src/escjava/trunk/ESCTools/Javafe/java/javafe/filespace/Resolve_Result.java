@@ -4,8 +4,8 @@ package javafe.filespace;
 
 
 /**
- ** The normal result type for Resolve.lookup:
- **/
+ * The normal result type for Resolve.lookup:
+ */
 
 public class Resolve_Result {
 

@@ -2,37 +2,35 @@
 
 package javafe.reader;
 
-
 import java.util.Hashtable;
 
 import javafe.ast.CompilationUnit;
 import javafe.genericfile.*;
 
-
 /**
- ** CachedReader takes a uncached Reader and produces a cached version
- ** of it using a simple implementation of caching via a HashTable.<p>
- **
- ** Reads from GenericFiles with null canonicalIDs are not cached.<p>
- **/
+ * CachedReader takes a uncached Reader and produces a cached version
+ * of it using a simple implementation of caching via a HashTable.
+ *
+ * <p> Reads from GenericFiles with null canonicalIDs are not cached.
+ */
 
-public class CachedReader extends Reader {
-
+public class CachedReader extends Reader
+{
     /***************************************************
      *                                                 *
      * Creation:				       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
     /**
-     ** The underlying Reader whose results we are caching.
-     **/
+     * The underlying Reader whose results we are caching.
+     */
     //@ invariant underlyingReader!=null
     protected Reader underlyingReader;
 
     /**
-     ** Creating a cached version of a Reader:
-     **/
+     * Creating a cached version of a Reader:
+     */
     //@ requires reader!=null
     public CachedReader(Reader reader) {
 	underlyingReader = reader;
@@ -46,13 +44,13 @@ public class CachedReader extends Reader {
      *                                                 *
      * The Cache itself:			       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
     /**
-     ** Our cache; maps the non-null canonicalID (if it has one) of a
-     ** GenericFile (see GenericFile.getCanonicalID) to either a
-     ** CompilationUnit or a CachedReader_Null.
-     **/
+     * Our cache; maps the non-null canonicalID (if it has one) of a
+     * GenericFile (see GenericFile.getCanonicalID) to either a
+     * CompilationUnit or a CachedReader_Null.
+     */
     //@ invariant cache!=null
     //@ invariant cache.keyType == \type(String)
     //@ invariant cache.elementType == \type(Object)
@@ -63,11 +61,11 @@ public class CachedReader extends Reader {
      *                                                 *
      * Caching methods:				       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
     /**
-     ** Lookup a non-null GenericFile in the cache.
-     **/
+     * Lookup a non-null GenericFile in the cache.
+     */
     //@ requires target!=null
     final protected Object get(GenericFile target) {
 	String canonicalID = target.getCanonicalID();
@@ -79,9 +77,9 @@ public class CachedReader extends Reader {
 
 
     /**
-     ** Store information about a non-null GenericFile in the cache;
-     ** this has no effect if the GenericFile has a null canonicalID.
-     **/
+     * Store information about a non-null GenericFile in the cache;
+     * this has no effect if the GenericFile has a null canonicalID.
+     */
     //@ requires target!=null
     final protected void put(GenericFile target, CompilationUnit value) {
 	String canonicalID = target.getCanonicalID();
@@ -96,10 +94,10 @@ public class CachedReader extends Reader {
 
 
     /**
-     ** Is the result of read on target cached for this Reader?<p>
-     **
-     ** Target must be non-null.<p> 
-     **/
+     * Is the result of read on target cached for this Reader?<p>
+     *
+     * Target must be non-null.<p> 
+     */
     //@ requires target!=null
     public boolean isCached(GenericFile target) {
 	String canonicalID = target.getCanonicalID();
@@ -110,10 +108,10 @@ public class CachedReader extends Reader {
     }
 
     /**
-     ** Flush the saved info (if any) for target for this Reader.
-     **
-     ** Target must be non-null.<p>
-     **/
+     * Flush the saved info (if any) for target for this Reader.
+     *
+     * Target must be non-null.<p>
+     */
     //@ requires target!=null
     public void flushTarget(GenericFile target) {
 	String canonicalID = target.getCanonicalID();
@@ -124,8 +122,8 @@ public class CachedReader extends Reader {
     }
 
     /**
-     ** Flush all cached information for this Reader.
-     **/
+     * Flush all cached information for this Reader.
+     */
     public void flushAll() {
 	cache = new Hashtable();
 
@@ -138,28 +136,28 @@ public class CachedReader extends Reader {
      *                                                 *
      * Reading:					       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
     /**
-     ** Attempt to read and parse a CompilationUnit from target.
-     ** Any errors encountered are reported via javafe.util.ErrorSet.
-     ** Null is returned iff an error was encountered.<p>
-     **
-     **
-     ** By default, we attempt to read only a spec (e.g., specOnly is set
-     ** in the resulting CompilationUnit) to save time.  If avoidSpec is
-     ** true, we attempt to return a non-spec, although this may not
-     ** always be possible.<p>
-     **
-     **
-     ** The results of this function (including null results, but not
-     ** the action of reporting error messages) are cached.
-     ** Only the value of avoidSpec used the first time a given file is
-     ** read is used.  This may result in a spec being returned
-     ** unnecessarily when avoidSpec is true.<p>
-     **
-     ** Target must be non-null.<p>
-     **/
+     * Attempt to read and parse a CompilationUnit from target.
+     * Any errors encountered are reported via javafe.util.ErrorSet.
+     * Null is returned iff an error was encountered.<p>
+     *
+     *
+     * By default, we attempt to read only a spec (e.g., specOnly is set
+     * in the resulting CompilationUnit) to save time.  If avoidSpec is
+     * true, we attempt to return a non-spec, although this may not
+     * always be possible.<p>
+     *
+     *
+     * The results of this function (including null results, but not
+     * the action of reporting error messages) are cached.
+     * Only the value of avoidSpec used the first time a given file is
+     * read is used.  This may result in a spec being returned
+     * unnecessarily when avoidSpec is true.<p>
+     *
+     * Target must be non-null.<p>
+     */
     public CompilationUnit read(GenericFile target, boolean avoidSpec) {
 	Object result = get(target);
 	if (result!=null) {
@@ -179,8 +177,8 @@ public class CachedReader extends Reader {
 
 
 /**
- ** Instances of this class are used privately by CachedReader to
- ** represent null values in Hashtables.
- **/
+ * Instances of this class are used privately by CachedReader to
+ * represent null values in Hashtables.
+ */
 /*package*/ class CachedReader_Null {
 }

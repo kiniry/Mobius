@@ -98,16 +98,16 @@ void outputEndClass(FILE *o, Class *class, const char *text, int len,
     fprintf(o, "/**\n");
     indent(o, ind);
 
-    fprintf(o, " ** Construct a raw %s whose class invariant(s) have not\n",
+    fprintf(o, " * Construct a raw %s whose class invariant(s) have not\n",
 	    class->name);
     indent(o, ind);
-    fprintf(o, " ** yet been established.  It is the caller's job to\n");
+    fprintf(o, " * yet been established.  It is the caller's job to\n");
     indent(o, ind);
-    fprintf(o, " ** initialize the returned node's fields so that any\n");
+    fprintf(o, " * initialize the returned node's fields so that any\n");
     indent(o, ind);
-    fprintf(o, " ** class invariants hold.\n");
+    fprintf(o, " * class invariants hold.\n");
     indent(o, ind);
-    fprintf(o, " **/\n");
+    fprintf(o, " */\n");
     indent(o, ind);
     fprintf(o, "//@ requires I_will_establish_invariants_afterwards\n");
     indent(o, ind);

@@ -25,8 +25,8 @@ import escjava.pa.generic.*;
 
 import mocha.wrappers.jbdd.*;
 
-public class PredicateAbstraction {
-
+public class PredicateAbstraction
+{
     public static ASTDecoration paDecoration = new ASTDecoration("paDecoration");
     
     static GuardedCmd abstractLoop(LoopCmd g, GuardedCmd context, Set env) {
@@ -38,7 +38,8 @@ public class PredicateAbstraction {
 	return pa.abstractLoopHelper(context, env);
     }
 
-    private static boolean quantifyAssumptions = !Boolean.getBoolean("PAnoQuantifyAssumptions");
+    private static boolean quantifyAssumptions = 
+        !Boolean.getBoolean("PAnoQuantifyAssumptions");
     ExprVec invariants = ExprVec.make();
     private jbddManager bddManager;
     public Abstractor abstractor;
@@ -397,7 +398,9 @@ public class PredicateAbstraction {
 	}
     }
 
-    private void guessPredicate( Expr e, Expr eOld, Type type, ExprVec predicates, int loc, Expr sca, ExprVec boundsSC ) {
+    private void guessPredicate( Expr e, Expr eOld, Type type, 
+                                 ExprVec predicates, int loc, 
+                                 Expr sca, ExprVec boundsSC ) {
 
 	if( type != null ) {
 	    Expr pred;
@@ -447,5 +450,4 @@ public class PredicateAbstraction {
 	}
     }
     */
-	
 }

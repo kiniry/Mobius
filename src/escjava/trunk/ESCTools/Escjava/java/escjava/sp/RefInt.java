@@ -2,11 +2,12 @@
 
 package escjava.sp;
 
-/** The <code>RefInt</code> class essentially provides pointers
-  * to mutable integers.
-  **/
+/**
+ * This class essentially provides pointers to mutable integers.
+ */
 
-public class RefInt {
+public class RefInt
+{
   public int value;
 
   RefInt(int value) {

@@ -4,4 +4,4 @@
 
 cd ${JAVAFE_ROOT}/java
 
-${TOOL} -classpath ${DECSRCLIBRARY} `cat ../sources`
+${TOOL} -classpath ${DECSRCLIBRARY} `cat sources`

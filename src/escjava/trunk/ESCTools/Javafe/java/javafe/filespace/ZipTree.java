@@ -12,35 +12,35 @@ import javafe.genericfile.*;
 
 
 /**
- ** A ZipTree is a Tree that mirrors the contents of a zipfile;
- ** the constructor takes in a pathname and returns a tree
- ** representing the filesystem contained in that zipfile.<p>
- **
- ** ZipTree works by scanning the zipfile at object creation time,
- ** building up a hierarchical list of all the files in the zipfile.
- ** Later modifications to the zipfile will not be reflected in the
- ** ZipTree.<p>
- **
- ** The data field of every (sub)node in a ZipTree contains a
- ** non-null ZipGenericFile representing the file it mirrors (or would
- ** mirror if a corresponding entry existed) in the underlying zipfile.<p>
- **
- ** 
- ** Note: ZipTree interior or root nodes (and only interior or root
- ** nodes) may contain ZipGenericFiles that do not have a corresponding
- ** zip entry because there may be no zip entries for those directories.
- ** E.g., the zipfile might contain a file for X/Y but not for X<p>
- **
- ** We use "./" as the ZipGenericFile name to represent the missing
- ** root directory (no ZipTree actually has a root directory as far as
- ** we can tell).
- **
- ** This gives the right isDirectory behavior (since it ends with a
- ** "/"), but the wrong local name (".").  This is the best we can do,
- ** though, since the other alternative ("") gives the reverse
- ** behavior, which is worse for us since we rely on the isDirectory
- ** bit and only use local names for non-directories.
- **/
+ * A ZipTree is a Tree that mirrors the contents of a zipfile;
+ * the constructor takes in a pathname and returns a tree
+ * representing the filesystem contained in that zipfile.<p>
+ *
+ * ZipTree works by scanning the zipfile at object creation time,
+ * building up a hierarchical list of all the files in the zipfile.
+ * Later modifications to the zipfile will not be reflected in the
+ * ZipTree.<p>
+ *
+ * The data field of every (sub)node in a ZipTree contains a
+ * non-null ZipGenericFile representing the file it mirrors (or would
+ * mirror if a corresponding entry existed) in the underlying zipfile.<p>
+ *
+ * 
+ * Note: ZipTree interior or root nodes (and only interior or root
+ * nodes) may contain ZipGenericFiles that do not have a corresponding
+ * zip entry because there may be no zip entries for those directories.
+ * E.g., the zipfile might contain a file for X/Y but not for X<p>
+ *
+ * We use "./" as the ZipGenericFile name to represent the missing
+ * root directory (no ZipTree actually has a root directory as far as
+ * we can tell).
+ *
+ * This gives the right isDirectory behavior (since it ends with a
+ * "/"), but the wrong local name (".").  This is the best we can do,
+ * though, since the other alternative ("") gives the reverse
+ * behavior, which is worse for us since we rely on the isDirectory
+ * bit and only use local names for non-directories.
+ */
 
 class ZipTree extends ExtTree {
 
@@ -48,18 +48,18 @@ class ZipTree extends ExtTree {
      *                                                 *
      * Creation:				       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
-    /** The zipfile we are a snapshot of **/
+    /** The zipfile we are a snapshot of */
     //@ invariant zip!=null
     protected ZipFile zip;
 
 
     /**
-     ** Initialize a node's data field to a ZipGenericFile that
-     ** represents the file that it would correspond to if the tree it
-     ** belongs to mirrored zip.<p>
-     **/
+     * Initialize a node's data field to a ZipGenericFile that
+     * represents the file that it would correspond to if the tree it
+     * belongs to mirrored zip.<p>
+     */
     //@ requires node!=null && zip!=null
     protected static void missingEntry(Tree node, ZipFile zip) {
 	String name = node.getLabel();
@@ -76,14 +76,14 @@ class ZipTree extends ExtTree {
 
 
     /**
-     ** Create a ZipTree to mirror a zipfile's contents.<p>
-     **
-     ** May throw an IOException (e.g., file doesn't exist) or a
-     ** ZipException (e.g., file is not a properly formatted
-     ** zipfile).<p>
-     **
-     ** <esc> requires zipfile!=null </esc>
-     **/
+     * Create a ZipTree to mirror a zipfile's contents.<p>
+     *
+     * May throw an IOException (e.g., file doesn't exist) or a
+     * ZipException (e.g., file is not a properly formatted
+     * zipfile).<p>
+     *
+     * <esc> requires zipfile!=null </esc>
+     */
     public ZipTree(File zipfile) throws IOException, ZipException {
 	super(null);
 
@@ -95,9 +95,9 @@ class ZipTree extends ExtTree {
     }
 
     /**
-     ** Create a tree of ZipEntry's from the pathnames of the ZipEntry's
-     ** in zip
-     **/
+     * Create a tree of ZipEntry's from the pathnames of the ZipEntry's
+     * in zip
+     */
     private void loadZipData() {
 	// data may be overwritten later if an entry exists for us:
 	missingEntry(this, zip);		
@@ -108,7 +108,7 @@ class ZipTree extends ExtTree {
 	}
     }
 
-    /** Add a ZipEntry to this tree according to its pathname: **/
+    /** Add a ZipEntry to this tree according to its pathname: */
     //@ requires z!=null
     private void addZipEntry(ZipEntry z) {
 	String pathname = z.getName();
@@ -145,9 +145,9 @@ class ZipTree extends ExtTree {
      *                                                 *
      * Debugging functions:			       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
-    /** A simple test driver **/
+    /** A simple test driver */
     //@ requires args!=null;
     /*@ requires (\forall int i; (0<=i && i<=args.length)
 		==> args[i]!=null) */

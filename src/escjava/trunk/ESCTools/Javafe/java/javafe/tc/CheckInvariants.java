@@ -4,7 +4,6 @@ package javafe.tc;
 
 
 import javafe.ast.*;
-import javafe.tc.TagConstants; // Work around compiler bug
 import javafe.util.Assert;
 
 

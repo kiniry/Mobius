@@ -7,10 +7,10 @@ import javafe.util.*;
 
 
 /**
- ** Env's are the environments used during typechecking to keep track
- ** of what types, local variables, fields, and current/enclosing
- ** instances are in scope.
- **/
+ * Env's are the environments used during typechecking to keep track
+ * of what types, local variables, fields, and current/enclosing
+ * instances are in scope.
+ */
 
 public abstract class Env {
 
@@ -25,53 +25,53 @@ public abstract class Env {
      *                                                 *
      * Current/enclosing instances I:		       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
     /**
-     ** Is there a current instance in scope? <p>
-     **
-     ** E.g., is "this" (or "<enclosing class>.this") legal here? <p>
-     **
-     ** This is also refered to as "are we in a static context?".  The
-     ** legality of super also depends on this result. <p>
-     **
-     ** The legality of C.this, C!=<enclosing class> is different; see 
-     ** canAccessInstance(-).
-     **/
+     * Is there a current instance in scope? <p>
+     *
+     * E.g., is "this" (or "<enclosing class>.this") legal here? <p>
+     *
+     * This is also refered to as "are we in a static context?".  The
+     * legality of super also depends on this result. <p>
+     *
+     * The legality of C.this, C!=<enclosing class> is different; see 
+     * canAccessInstance(-).
+     */
     abstract public boolean isStaticContext();
 
 
     /**
-     ** Return the intermost class enclosing the code that is checked
-     ** in this environment. <p>
-     **
-     ** May return null if there is no enclosing class (aka, for
-     ** environments for CompilationUnits). <p>
-     **
-     ** If isStaticContext() returns true, then this is the type of "this".
-     **/
+     * Return the intermost class enclosing the code that is checked
+     * in this environment. <p>
+     *
+     * May return null if there is no enclosing class (aka, for
+     * environments for CompilationUnits). <p>
+     *
+     * If isStaticContext() returns true, then this is the type of "this".
+     */
     //@ ensures (this instanceof EnvForCU) == (\result==null)
     abstract public TypeSig getEnclosingClass();
 
 
     /**
-     ** If there is an enclosing instance in scope, then return the
-     ** (exact) type of the innermost such instance. <p>
-     **
-     ** Note: this is considered a current instance, not an enclosing
-     ** instance, even inside its methods.
-     **/
+     * If there is an enclosing instance in scope, then return the
+     * (exact) type of the innermost such instance. <p>
+     *
+     * Note: this is considered a current instance, not an enclosing
+     * instance, even inside its methods.
+     */
     abstract public TypeSig getEnclosingInstance();
 
 
     /**
-     ** Returns a new Env that acts the same as us, except that its
-     ** current instance (if any) is not accessible. <p>
-     **
-     ** Note: this routine is somewhat inefficient and should be
-     ** avoided unless an unknown environment needs to be coerced in
-     ** this way. <p>
-     **/
+     * Returns a new Env that acts the same as us, except that its
+     * current instance (if any) is not accessible. <p>
+     *
+     * Note: this routine is somewhat inefficient and should be
+     * avoided unless an unknown environment needs to be coerced in
+     * this way. <p>
+     */
     //@ ensures \result!=null
     //@ ensures (this instanceof EnvForCU) == (\result instanceof EnvForCU)
     abstract public Env asStaticContext();
@@ -81,50 +81,50 @@ public abstract class Env {
      *                                                 *
      * Simple names:				       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
     /**
-     ** Attempt to lookup a simple TypeName in this environment to get
-     ** the TypeSig it denotes.  Returns null if no such type
-     ** exists.<p>
-     **
-     ** This routine does not check that the resulting type (if any)
-     ** is actually accessible. <p>
-     **
-     ** If id is ambiguous, then if loc!=Location.NULL then a fatal
-     ** error is reported at that location via ErrorSet else one of
-     ** its possible meanings is returned.<p>
-     **/
+     * Attempt to lookup a simple TypeName in this environment to get
+     * the TypeSig it denotes.  Returns null if no such type
+     * exists.<p>
+     *
+     * This routine does not check that the resulting type (if any)
+     * is actually accessible. <p>
+     *
+     * If id is ambiguous, then if loc!=Location.NULL then a fatal
+     * error is reported at that location via ErrorSet else one of
+     * its possible meanings is returned.<p>
+     */
     abstract public TypeSig lookupSimpleTypeName(/*@non_null*/ Identifier id,
 						 int loc);
 
 
     /**
-     ** Locate the lexically innermost field or local variable
-     ** declaration with a given name. <p>
-     **
-     ** Let d be the lexically innermost field or local variable
-     ** declaration (including formals) of id (if any such declaration
-     ** exists).  Then this routine returns: <p>
-     **
-     **    d (a LocalVarDecl or FormalParaDecl) if d is a local
-     **                                            variable declaration
-     **
-     **    the class C that lexically encloses us and contains the
-     **    (inherited) field d if d is a field declaration
-     **
-     **    null if d does not exist
-     **
-     ** Note: inherited fields are considered to lexically enclose the
-     ** code of their subclasses.  We give the class containing the
-     ** field instead of the field itself to postpone dealing with
-     ** multiple fields named id visible in the same class.<p>
-     **
-     ** In the field case, id disambiguates to C[.this].id.<p>
-     **
-     ** This routine does not check that a resulting field
-     ** is actually accessible. <p>
-     **/
+     * Locate the lexically innermost field or local variable
+     * declaration with a given name. <p>
+     *
+     * Let d be the lexically innermost field or local variable
+     * declaration (including formals) of id (if any such declaration
+     * exists).  Then this routine returns: <p>
+     *
+     *    d (a LocalVarDecl or FormalParaDecl) if d is a local
+     *                                            variable declaration
+     *
+     *    the class C that lexically encloses us and contains the
+     *    (inherited) field d if d is a field declaration
+     *
+     *    null if d does not exist
+     *
+     * Note: inherited fields are considered to lexically enclose the
+     * code of their subclasses.  We give the class containing the
+     * field instead of the field itself to postpone dealing with
+     * multiple fields named id visible in the same class.<p>
+     *
+     * In the field case, id disambiguates to C[.this].id.<p>
+     *
+     * This routine does not check that a resulting field
+     * is actually accessible. <p>
+     */
     /*@ ensures \result==null || (\result instanceof GenericVarDecl)
                 || (\result instanceof TypeSig) */
     /*@ ensures \result instanceof GenericVarDecl ==>
@@ -134,19 +134,19 @@ public abstract class Env {
 
 
     /**
-     ** Locate the lexically innermost method named id. <p>
-     **
-     ** Returns the TypeSig for the innermost lexically enclosing type
-     ** that has a method named id or null if no such type exists.<p>
-     **
-     ** Note: inherited methods are considered to lexically enclose
-     ** the code of their subclasses.<p>
-     **
-     ** id disambiguates to C[.this].id.<p>
-     **
-     ** This routine does not check that a resulting method
-     ** is actually accessible. <p>
-     **/
+     * Locate the lexically innermost method named id. <p>
+     *
+     * Returns the TypeSig for the innermost lexically enclosing type
+     * that has a method named id or null if no such type exists.<p>
+     *
+     * Note: inherited methods are considered to lexically enclose
+     * the code of their subclasses.<p>
+     *
+     * id disambiguates to C[.this].id.<p>
+     *
+     * This routine does not check that a resulting method
+     * is actually accessible. <p>
+     */
     //@ ensures (this instanceof EnvForCU) ==> \result==null
     abstract public TypeSig locateMethod(/*@non_null*/ Identifier id);
 
@@ -155,12 +155,12 @@ public abstract class Env {
      *                                                 *
      * Debugging functions:			       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
     /**
-     ** Display information about us to System.out.  This function is
-     ** intended only for debugging use.
-     **/
+     * Display information about us to System.out.  This function is
+     * intended only for debugging use.
+     */
     abstract public void display();
 
 
@@ -175,33 +175,33 @@ public abstract class Env {
      *                                                 *
      * Type variable names:			       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
     /**
-     ** Attempts to find the canonical prefix of a given name that
-     ** denotes a TypeName in this environment. <p>
-     **
-     ** A canonical prefix is composed of a base type name (either the
-     ** leftmost identifer or a fully-quantified outside type name
-     ** (P.I) depending), extended by some number of type member
-     ** accesses (.C1.C2...).
-     **
-     ** If ignoreFields is not set, then we stop extending the base
-     ** type name as soon as we encounter an access that can refer to
-     ** a field.  If it is set, then we stop extending only when we
-     ** reach the end of the name or an access that cannot refer to a
-     ** type member. <p>
-     **
-     ** If we encounter an ambiguous prefix, we report a fatal error
-     ** at loc via ErrorSet.<p>
-     **
-     ** Otherwise, we return the TypeSig that the found prefix denotes
-     ** (null if the prefix is of length 0) and sets prefixSize to the
-     ** prefix's size. <p>
-     **
-     ** This routine does not check that the resulting type (if any)
-     ** is actually accessible. <p>
-     **/
+     * Attempts to find the canonical prefix of a given name that
+     * denotes a TypeName in this environment. <p>
+     *
+     * A canonical prefix is composed of a base type name (either the
+     * leftmost identifer or a fully-quantified outside type name
+     * (P.I) depending), extended by some number of type member
+     * accesses (.C1.C2...).
+     *
+     * If ignoreFields is not set, then we stop extending the base
+     * type name as soon as we encounter an access that can refer to
+     * a field.  If it is set, then we stop extending only when we
+     * reach the end of the name or an access that cannot refer to a
+     * type member. <p>
+     *
+     * If we encounter an ambiguous prefix, we report a fatal error
+     * at loc via ErrorSet.<p>
+     *
+     * Otherwise, we return the TypeSig that the found prefix denotes
+     * (null if the prefix is of length 0) and sets prefixSize to the
+     * prefix's size. <p>
+     *
+     * This routine does not check that the resulting type (if any)
+     * is actually accessible. <p>
+     */
     //@ modifies prefixSize;
     //@ ensures \result==null ==> 0==prefixSize
     //@ ensures \result!=null ==> 0<prefixSize && prefixSize <= n.length
@@ -253,17 +253,17 @@ public abstract class Env {
 
 
     /**
-     ** Attempt to lookup a TypeName using this environment. <p>
-     **
-     ** If it encounters an ambiguous prefix, a fatal error is
-     ** reported via ErrorSet.<p>
-     **
-     ** Otherwise, returns the TypeSig that n denotes or null if n
-     ** does not denote a type.<p>
-     **
-     ** This routine does not check that the resulting type (if any)
-     ** is actually accessible. <p>
-     **/
+     * Attempt to lookup a TypeName using this environment. <p>
+     *
+     * If it encounters an ambiguous prefix, a fatal error is
+     * reported via ErrorSet.<p>
+     *
+     * Otherwise, returns the TypeSig that n denotes or null if n
+     * does not denote a type.<p>
+     *
+     * This routine does not check that the resulting type (if any)
+     * is actually accessible. <p>
+     */
     public TypeSig lookupTypeName(/*@non_null*/ Name n) {
 	TypeSig sig = findTypeNamePrefix(n, true);
 	if (prefixSize!=n.size())
@@ -274,8 +274,8 @@ public abstract class Env {
 
 
     /**
-     ** This processes the annotations on a type name
-     **/
+     * This processes the annotations on a type name
+     */
     //@ ensures \result!=null
     public TypeSig processTypeNameAnnotations(/*@non_null*/ TypeName n, 
 					      /*@non_null*/ TypeSig sig) {
@@ -284,17 +284,17 @@ public abstract class Env {
     
 
     /**
-     ** Attempt to resolve a TypeName using this environment. <p>
-     **
-     ** If an error occurs (including no such type), reports it to
-     ** ErrorSet via a fatal error.<p>
-     **
-     ** Otherwise, returns the TypeSig that n denotes.  This TypeSig
-     ** may also later be obtained by using TypeSig.getSig on n.<p>
-     **
-     ** This routine does not check that the resulting type (if any)
-     ** is actually accessible. <p>
-     **/
+     * Attempt to resolve a TypeName using this environment. <p>
+     *
+     * If an error occurs (including no such type), reports it to
+     * ErrorSet via a fatal error.<p>
+     *
+     * Otherwise, returns the TypeSig that n denotes.  This TypeSig
+     * may also later be obtained by using TypeSig.getSig on n.<p>
+     *
+     * This routine does not check that the resulting type (if any)
+     * is actually accessible. <p>
+     */
     //@ ensures \result!=null
     public TypeSig resolveTypeName(/*@non_null*/ TypeName tn) {
 	Name n = tn.name;
@@ -316,21 +316,21 @@ public abstract class Env {
     }
 
     /**
-     ** decoration holding the type environment in which a type is resolved.
-     **/
+     * decoration holding the type environment in which a type is resolved.
+     */
     //@ invariant typeEnv!=null
     //@ invariant typeEnv.decorationType == \type(Env)
     static public ASTDecoration typeEnv = 
 	new ASTDecoration("environment");
 
     /**
-     ** Attempt to resolve a Type using this environment. <p>
-     **
-     ** If an error occurs, reports it to ErrorSet via a fatal error.<p>
-     **
-     ** This routine does not check that (immediate) types (if any)
-     ** are actually accessible. <p>
-     **/
+     * Attempt to resolve a Type using this environment. <p>
+     *
+     * If an error occurs, reports it to ErrorSet via a fatal error.<p>
+     *
+     * This routine does not check that (immediate) types (if any)
+     * are actually accessible. <p>
+     */
     public void resolveType(/*@non_null*/ Type t) {
       	typeEnv.set(t,this);
 	switch(t.getTag()) {
@@ -351,28 +351,28 @@ public abstract class Env {
      *                                                 *
      * Expr names:				       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
     /**
-     ** Attempt to disambiguate an Expr Name.  Either returns the
-     ** disambiguated Name as an Expr or null if it does not denote
-     ** anything. <p>
-     **
-     ** If non-null, the result will always be a field access of some
-     ** kind.
-     **
-     ** If a prefix of n is ambiguous because of multiple
-     ** import-on-demand declarations, a fatal error will result.
-     ** Nothing is reported if n does not name anything.<p>
-     **
-     **
-     ** If n is a reference to a field f in lexically enclosing class
-     ** C, then the result will be of the form "[C.]this.n" if C's
-     ** instance fields are accessible and "C.n" otherwise.<p>
-     **
-     ** (At this point we haven't decided which field f refers to so
-     ** we don't know if it is an instance field or not.)
-     **/
+     * Attempt to disambiguate an Expr Name.  Either returns the
+     * disambiguated Name as an Expr or null if it does not denote
+     * anything. <p>
+     *
+     * If non-null, the result will always be a field access of some
+     * kind.
+     *
+     * If a prefix of n is ambiguous because of multiple
+     * import-on-demand declarations, a fatal error will result.
+     * Nothing is reported if n does not name anything.<p>
+     *
+     *
+     * If n is a reference to a field f in lexically enclosing class
+     * C, then the result will be of the form "[C.]this.n" if C's
+     * instance fields are accessible and "C.n" otherwise.<p>
+     *
+     * (At this point we haven't decided which field f refers to so
+     * we don't know if it is an instance field or not.)
+     */
     //@ ensures !(\result instanceof AmbiguousVariableAccess)
     public Expr disambiguateExprName(/*@non_null*/ Name n) {
 	/*
@@ -432,27 +432,27 @@ public abstract class Env {
      *                                                 *
      * Routine names:				       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
     /**
-     ** Attempt to disambiguate an AmbiguousMethodInvocation.  Either
-     ** returns the disambiguated method invocation as an Expr or
-     ** reports a fatal error to ErrorSet if it does not denote
-     ** anything.<p>
-     **
-     ** The result will always be a method invocation.<p>
-     **
-     ** If a prefix of n is ambiguous because of multiple
-     ** import-on-demand declarations, a fatal error will result.
-     **
-     **
-     ** If n is a reference to a method m in lexically enclosing class
-     ** C, then the result will be of the form "[C.]this.m" if C's
-     ** instance methods are accessible and "C.m" otherwise.<p>
-     **
-     ** (At this point we haven't decided which method m refers to so
-     ** we don't know if it is an instance method or not.)
-     **/
+     * Attempt to disambiguate an AmbiguousMethodInvocation.  Either
+     * returns the disambiguated method invocation as an Expr or
+     * reports a fatal error to ErrorSet if it does not denote
+     * anything.<p>
+     *
+     * The result will always be a method invocation.<p>
+     *
+     * If a prefix of n is ambiguous because of multiple
+     * import-on-demand declarations, a fatal error will result.
+     *
+     *
+     * If n is a reference to a method m in lexically enclosing class
+     * C, then the result will be of the form "[C.]this.m" if C's
+     * instance methods are accessible and "C.m" otherwise.<p>
+     *
+     * (At this point we haven't decided which method m refers to so
+     * we don't know if it is an instance method or not.)
+     */
     public MethodInvocation disambiguateMethodName(
 				/*@non_null*/ AmbiguousMethodInvocation inv) {
 	ObjectDesignator where;     // Where the method comes from
@@ -515,12 +515,12 @@ public abstract class Env {
      *                                                 *
      * Current/enclosing instances II:		       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
     /**
-     ** Returns the innermost current or enclosing instance, or null
-     ** if none exists.
-     **/
+     * Returns the innermost current or enclosing instance, or null
+     * if none exists.
+     */
     public TypeSig getInnermostInstance() {
 	if (!isStaticContext())
 	    return getEnclosingClass();
@@ -530,11 +530,11 @@ public abstract class Env {
 
 
     /**
-     ** Are C's instance variables accessible? <p>
-     **
-     ** If C is getEnclosingClass(), then this is equivalent to
-     ** isStaticContext().
-     **/
+     * Are C's instance variables accessible? <p>
+     *
+     * If C is getEnclosingClass(), then this is equivalent to
+     * isStaticContext().
+     */
     public boolean canAccessInstance(/*@non_null*/ TypeSig C) {
 	/*
 	 * C's instance variables are accessible iff C is one of our
@@ -552,15 +552,15 @@ public abstract class Env {
 
 
     /**
-     ** Attempt to locate a current or enclosing instance that has
-     ** type T. <p>
-     **
-     ** If such exist, return an inferred "<actual class>.this" Expr
-     ** for the innermost such one; otherwise, return null.  The
-     ** location fields of the Expr will be set to loc.<p>
-     **
-     ** Note: The returned instance may have be of a subtype of T.<p>
-     **/
+     * Attempt to locate a current or enclosing instance that has
+     * type T. <p>
+     *
+     * If such exist, return an inferred "<actual class>.this" Expr
+     * for the innermost such one; otherwise, return null.  The
+     * location fields of the Expr will be set to loc.<p>
+     *
+     * Note: The returned instance may have be of a subtype of T.<p>
+     */
     //@ requires loc!=Location.NULL
     public Expr lookupEnclosingInstance(/*@non_null*/ TypeSig T,
 					int loc) {
@@ -585,25 +585,25 @@ public abstract class Env {
      *                                                 *
      * Finding where something is declared:	       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
     /**
-     ** Decorates LocalVarDecl and FormalParaDecl nodes to point to
-     ** the TypeSig of the type they are declared in. <p>
-     **
-     ** Set by the EnvForLocals constructor.<p>
-     **/
+     * Decorates LocalVarDecl and FormalParaDecl nodes to point to
+     * the TypeSig of the type they are declared in. <p>
+     *
+     * Set by the EnvForLocals constructor.<p>
+     */
     //@ invariant whereDecoration.decorationType == \type(TypeSig)
     protected static final ASTDecoration whereDecoration
 	= new ASTDecoration("whereDecoration");
 
 
     /**
-     ** What type is a GenericVarDecl declared in? <p>
-     **
-     ** Precondition: decl's type has been "parsed"; an Env containing
-     ** decl has been constructed.<p>
-     **/
+     * What type is a GenericVarDecl declared in? <p>
+     *
+     * Precondition: decl's type has been "parsed"; an Env containing
+     * decl has been constructed.<p>
+     */
     //@ requires (decl instanceof FieldDecl) ==> ((FieldDecl)decl).hasParent
     //@ ensures \result!=null
     public static TypeSig whereDeclared(/*@non_null*/ GenericVarDecl decl) {
@@ -627,14 +627,14 @@ public abstract class Env {
      *                                                 *
      * Expr-construction utility functions:	       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
     /**
-     ** Return an inferred ThisExpr for "[C.]this", using location loc. <p>
-     **
-     ** The "C." part is omitted if C is the type of this (e.g.,
-     ** getEnclosingClass()).
-     **/
+     * Return an inferred ThisExpr for "[C.]this", using location loc. <p>
+     *
+     * The "C." part is omitted if C is the type of this (e.g.,
+     * getEnclosingClass()).
+     */
     //@ requires loc!=Location.NULL
     //@ ensures \result!=null
     public final ThisExpr getInferredThisExpr(/*@non_null*/ TypeSig C,
@@ -650,18 +650,18 @@ public abstract class Env {
 
 
     /**
-     ** Return an inferred ObjectDesignator for use in a reference to
-     ** a possibly-instance member of class C from here. <p>
-     **
-     **
-     ** If C's instance variables are not accessible from this point
-     ** (see canAccessInstance(-)), then returns "C.". <p>
-     **
-     ** Otherwise returns an inferred "[C.]this.".
-     ** (cf. getInferredThisExpr(-))
-     **
-     ** loc is used as the location for the this. and C. parts.
-     **/
+     * Return an inferred ObjectDesignator for use in a reference to
+     * a possibly-instance member of class C from here. <p>
+     *
+     *
+     * If C's instance variables are not accessible from this point
+     * (see canAccessInstance(-)), then returns "C.". <p>
+     *
+     * Otherwise returns an inferred "[C.]this.".
+     * (cf. getInferredThisExpr(-))
+     *
+     * loc is used as the location for the this. and C. parts.
+     */
     //@ requires loc!=Location.NULL
     //@ ensures \result!=null
     public final ObjectDesignator getObjectDesignator(/*@non_null*/ TypeSig C,

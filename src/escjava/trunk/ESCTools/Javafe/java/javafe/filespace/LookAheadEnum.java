@@ -8,17 +8,17 @@ import java.util.NoSuchElementException;
 
 
 /**
- ** This layer describes how to implement an {@link Enumeration} in
- ** terms of a single function that returns the next element in a
- ** series, or null if the series is exhausted.<p>
- **
- ** Using one function instead of the two used by {@link Enumeration}
- ** has the advantage of avoiding possible duplication of code to
- ** determine whether or not any elements remain in the series.<p>
- **
- ** Limitation: <code>null</code> cannot belong to the resulting
- ** {@link Enumeration}s.<p>
- **/
+ * This layer describes how to implement an {@link Enumeration} in
+ * terms of a single function that returns the next element in a
+ * series, or null if the series is exhausted.<p>
+ *
+ * Using one function instead of the two used by {@link Enumeration}
+ * has the advantage of avoiding possible duplication of code to
+ * determine whether or not any elements remain in the series.<p>
+ *
+ * Limitation: <code>null</code> cannot belong to the resulting
+ * {@link Enumeration}s.<p>
+ */
 
 abstract class LookAheadEnum implements Enumeration {
 
@@ -45,9 +45,9 @@ abstract class LookAheadEnum implements Enumeration {
 
 
     /**
-     ** Ensure that lookAheadValid is set, calling calcNextElement if
-     ** needed.
-     **/
+     * Ensure that lookAheadValid is set, calling calcNextElement if
+     * needed.
+     */
     //@ modifies lookAheadValid, lookAhead	// NOT moreElements
     //@ ensures lookAheadValid
     private void ensureLookedAhead() {
@@ -67,12 +67,12 @@ abstract class LookAheadEnum implements Enumeration {
      *                                                 *
      * Creation:				       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
     /**
-     ** Create an look-ahead enumerator that will return the non-null
-     ** results of calcNextElement().
-     **/
+     * Create an look-ahead enumerator that will return the non-null
+     * results of calcNextElement().
+     */
     //@ ensures !lookAheadValid
     //@ ensures lookAhead==null		// So subclass can set elementType...
     public LookAheadEnum() {
@@ -81,9 +81,9 @@ abstract class LookAheadEnum implements Enumeration {
     }
 
     /**
-     ** Create a look-ahead enumerator that will return first followed
-     ** by the non-null results of calcNextElement().
-     **/
+     * Create a look-ahead enumerator that will return first followed
+     * by the non-null results of calcNextElement().
+     */
     //@ requires first!=null
     //@ ensures moreElements
     //   So subclass can set elementType...:
@@ -103,9 +103,9 @@ abstract class LookAheadEnum implements Enumeration {
      *                                                 *
      * Handling the Enumeration interface:	       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
-    /** Returns true iff any more elements exist in this enumeration. **/
+    /** Returns true iff any more elements exist in this enumeration. */
     public final boolean hasMoreElements() {
 	ensureLookedAhead();
 
@@ -113,10 +113,10 @@ abstract class LookAheadEnum implements Enumeration {
     }
 
     /**
-     ** Returns the next element of the enumeration. Calls to this
-     ** method will enumerate successive elements.  Throws
-     ** NoSuchElementException if no more elements are left.
-     **/
+     * Returns the next element of the enumeration. Calls to this
+     * method will enumerate successive elements.  Throws
+     * NoSuchElementException if no more elements are left.
+     */
     public final Object nextElement()
 		/* throws NoSuchElementException*/ {
 	ensureLookedAhead();
@@ -133,14 +133,14 @@ abstract class LookAheadEnum implements Enumeration {
      *                                                 *
      * Calculating the next element:		       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
     /**
-     ** Compute the next element in the series, or return null if the
-     ** series is exhausted.
-     **
-     ** This function will never be called again once it returns null.
-     **/
+     * Compute the next element in the series, or return null if the
+     * series is exhausted.
+     *
+     * This function will never be called again once it returns null.
+     */
     //@ ensures \typeof(\result) <: elementType || \result==null
     protected abstract Object calcNextElement();
 

@@ -24,8 +24,8 @@ import escjava.prover.*;
 
 import mocha.wrappers.jbdd.*;
 
-public class GCProver implements Prover {
-
+public class GCProver implements Prover
+{
     private jbddManager bddManager;
     private ExprVec loopPredicates;
 
@@ -278,5 +278,4 @@ public class GCProver implements Prover {
 	return size( b.jbdd_then(), nbitsFree-1 )
 	    +  size( b.jbdd_else(), nbitsFree-1 );
     }
-
 }

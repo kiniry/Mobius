@@ -8,15 +8,15 @@ import java.io.File;
 
 
 /**
- ** This class provides a way to enumerate all the nodes of a
- ** given Tree in depth-first pre-order using lexical ordering on
- ** siblings.  I.e., X preceeds X.A, which in turn preceeds X.B.
- ** The first node in the list will be the root note of the Tree.
- ** It also allows enumerating a Tree's direct children in sorted order
- ** (based on their labels).<p>
- **
- ** Guarantee: Returned elements are always non-null Trees.<p>
- **/
+ * This class provides a way to enumerate all the nodes of a
+ * given Tree in depth-first pre-order using lexical ordering on
+ * siblings.  I.e., X preceeds X.A, which in turn preceeds X.B.
+ * The first node in the list will be the root note of the Tree.
+ * It also allows enumerating a Tree's direct children in sorted order
+ * (based on their labels).<p>
+ *
+ * Guarantee: Returned elements are always non-null Trees.<p>
+ */
 
 public final class TreeWalker extends LookAheadEnum {
 
@@ -24,24 +24,24 @@ public final class TreeWalker extends LookAheadEnum {
      *                                                 *
      * Instance variables:			       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
     //@ invariant elementType == \type(Tree)
     //@ invariant !returnsNull
 
 
     /**
-     ** The remaining children we have yet to start processing:
-     **/
+     * The remaining children we have yet to start processing:
+     */
     //@ invariant remainingChildren != null
     //@ invariant !remainingChildren.returnsNull
     //@ invariant remainingChildren.elementType == \type(Tree)
     protected Enumeration remainingChildren;
 
     /**
-     ** The remaining nodes from the child we are currently
-     ** processing:
-     **/
+     * The remaining nodes from the child we are currently
+     * processing:
+     */
     //@ invariant remainingNodes != null
     //@ invariant !remainingNodes.returnsNull
     //@ invariant remainingNodes.elementType == \type(Tree)
@@ -52,13 +52,13 @@ public final class TreeWalker extends LookAheadEnum {
      *                                                 *
      * Creation:				       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
     /**
-     ** From a Tree create an enumeration that enumerates
-     ** all of the Tree's nodes (including the root node first).
-     ** The nodes are produced in depth-first lexical pre-order.
-     **/
+     * From a Tree create an enumeration that enumerates
+     * all of the Tree's nodes (including the root node first).
+     * The nodes are produced in depth-first lexical pre-order.
+     */
     //@ requires T!=null
     public TreeWalker(Tree T) {
 	// First element is the tree itself:
@@ -77,7 +77,7 @@ public final class TreeWalker extends LookAheadEnum {
      *                                                 *
      * Calculating the next element:		       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
     /*
      * This returns the next element in the enumeration or null if there
@@ -104,14 +104,14 @@ public final class TreeWalker extends LookAheadEnum {
      *                                                 *
      * Enumerating children in order:		       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
     /**
-     ** Enumerate a Tree's direct children in sorted order (of labels).<p>
-     **
-     ** Guarantee: The resulting enumeration never yields null as an
-     ** element.<p>
-     **/
+     * Enumerate a Tree's direct children in sorted order (of labels).<p>
+     *
+     * Guarantee: The resulting enumeration never yields null as an
+     * element.<p>
+     */
     //@ requires T!=null
     //@ ensures \result!=null
     //@ ensures !\result.returnsNull
@@ -122,7 +122,7 @@ public final class TreeWalker extends LookAheadEnum {
     }
 
 
-    /** Return a sorted list of a Tree's direct children: **/
+    /** Return a sorted list of a Tree's direct children: */
     //@ requires T!=null
     //@ ensures \result!=null
     //@ ensures \elemtype(\typeof(\result)) == \type(Tree)
@@ -174,9 +174,9 @@ public final class TreeWalker extends LookAheadEnum {
      *                                                 *
      * Debugging:				       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
-   /** A simple test driver. **/
+   /** A simple test driver. */
     //@ requires \nonnullelements(args)
    public static void main(String[] args) {
        	if (args.length != 1) {
@@ -198,11 +198,11 @@ public final class TreeWalker extends LookAheadEnum {
 
 
 /**
- ** A Enumeration for enumerating the members of an array of Objects.
- **
- ** This filter is for the use of the TreeWalker class only; if inner
- ** classes were available, it would be expressed as an anonymous class.
- **/
+ * A Enumeration for enumerating the members of an array of Objects.
+ *
+ * This filter is for the use of the TreeWalker class only; if inner
+ * classes were available, it would be expressed as an anonymous class.
+ */
 class TreeWalker_ArrayEnum extends LookAheadEnum {
 
     //@ invariant list!=null

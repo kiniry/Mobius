@@ -2,7 +2,6 @@
 
 package escjava.backpred;
 
-
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
@@ -22,37 +21,31 @@ import escjava.translate.Inner;
 import escjava.translate.Translate;
 import escjava.translate.Helper;
 
-
-
 /**
- ** This class is responsible for determining the contributors to a
- ** given TypeSig or RoutineDecl. <p>
- **
- ** The contributors are divided into a set of TypeSigs, a set of
- ** Invariants, and a set of Fields.
- **/
+ * This class is responsible for determining the contributors to a
+ * given TypeSig or RoutineDecl.
+ *
+ * <p> The contributors are divided into a set of TypeSigs, a set of
+ * Invariants, and a set of Fields.
+ */
 
-public class FindContributors {
-
-    /***************************************************
-     *                                                 *
-     * Public interface:			       *
-     *                                                 *
-     ***************************************************/
+public class FindContributors
+{
+    // Public interface
 
     /**
-     ** Generate the contributors for a given TypeSig.  This may result
-     ** in errors being reported and TypeSigs being type checked. <p>
-     **
-     ** The originType is taken to be that Typesig.<p>
-     **
-     ** Precondition: T must have been typechecked.<p>
-     **
-     ** Note: in the process of locating contributors,
-     ** FindContributors may type check additional types leading
-     ** possibly to type errors.  If such error(s) occur, a fatal
-     ** error is reproted.
-     **/
+     * Generate the contributors for a given TypeSig.  This may result
+     * in errors being reported and TypeSigs being type checked. <p>
+     *
+     * The originType is taken to be that Typesig.<p>
+     *
+     * Precondition: T must have been typechecked.<p>
+     *
+     * Note: in the process of locating contributors,
+     * FindContributors may type check additional types leading
+     * possibly to type errors.  If such error(s) occur, a fatal
+     * error is reproted.
+     */
     public FindContributors(TypeSig T) {
 	originType = T;
 	addType(T);
@@ -69,18 +62,18 @@ public class FindContributors {
     }
 
     /**
-     ** Generate the contributors for a given RoutineDecl.  This may
-     ** result in errors being reported and TypeSigs being type checked.<p>
-     **
-     ** The originType is taken to be the type declaring that RoutineDecl.<p>
-     **
-     ** Precondition: the type declaring rd must have been typechecked.<p>
-     **
-     ** Note: in the process of locating contributors,
-     ** FindContributors may type check additional types leading
-     ** possibly to type errors.  If such error(s) occur, a fatal
-     ** error is reproted.
-     **/
+     * Generate the contributors for a given RoutineDecl.  This may
+     * result in errors being reported and TypeSigs being type checked.<p>
+     *
+     * The originType is taken to be the type declaring that RoutineDecl.<p>
+     *
+     * Precondition: the type declaring rd must have been typechecked.<p>
+     *
+     * Note: in the process of locating contributors,
+     * FindContributors may type check additional types leading
+     * possibly to type errors.  If such error(s) occur, a fatal
+     * error is reproted.
+     */
     public FindContributors(RoutineDecl rd) {
 	originType = TypeSig.getSig(rd.parent);
 	addType(originType);
@@ -98,102 +91,98 @@ public class FindContributors {
 
 
     /**
-     ** Our origin type; used to determine visibility and accessibility
-     ** when needed.
-     **/
+     * Our origin type; used to determine visibility and accessibility
+     * when needed.
+     */
     public TypeSig originType;
 
 
     /**
-     ** Enumerate the TypeSig contributors
-     **/
+     * Enumerate the TypeSig contributors
+     */
     public Enumeration typeSigs() {
 	return contributorTypes.elements();
     }
 
     /**
-     ** Enumerate the invariant contributors
-     **/
+     * Enumerate the invariant contributors
+     */
     public Enumeration invariants() {
 	return contributorInvariants.elements();
     }
 
     /**
-     ** Enumerate the field contributors
-     **/
+     * Enumerate the field contributors
+     */
     public Enumeration fields() {
 	return contributorFields.elements();
     }
 
 
-    /***************************************************
-     *                                                 *
-     * Closure code:				       *
-     *                                                 *
-     ***************************************************/
+    // Closure code
 
     /** The set of routines visited so far.
-     **/
+     */
 
     private Set visitedRoutines = new Set();
 
     /**
-     ** The set of TypeSigs we've determined to be contributors so far. <p>
-     **
-     ** Invariant: This set is closed under taking supertypes
-     **/
+     * The set of TypeSigs we've determined to be contributors so far. <p>
+     *
+     * Invariant: This set is closed under taking supertypes
+     */
     private Set contributorTypes = new Set();
 
     /**
-     ** The set of invariants (elementType ExprDeclPragmas) we've
-     ** determined to be contributors so far. <p>
-     **
-     ** Closure Property: walk(-) has been called on each of
-     ** these invariants.
-     **/
+     * The set of invariants (elementType ExprDeclPragmas) we've
+     * determined to be contributors so far. <p>
+     *
+     * Closure Property: walk(-) has been called on each of
+     * these invariants.
+     */
     private Set contributorInvariants = new Set();
 
     /**
-     ** The set of fields (elementType FieldDecl) we've determined to be
-     ** contributors so far. <p>
-     **
-     ** Closure Property:
-     **
-     **    all invariants J that are declared in types in
-     **    contributorTypes and "mention the field" f for f a field in
-     **    contributorFields are members of contributorInvariants
-     **/
+     * The set of fields (elementType FieldDecl) we've determined to be
+     * contributors so far. <p>
+     *
+     * Closure Property:
+     *
+     *    all invariants J that are declared in types in
+     *    contributorTypes and "mention the field" f for f a field in
+     *    contributorFields are members of contributorInvariants
+     */
     private Set contributorFields = new Set();
 
     /**
-     ** A mapping from fields (FieldDecls) to possible invariant
-     ** contributors (ExprDeclPragmaVec). <p>
-     **
-     ** (An invariant is a possible contributor if it is declared in a
-     ** type of contributorTypes.)
-     **
-     ** Invariant:
-     **
-     **	   if (f,J) in fieldToPossible then the invariant J "mentions
-     **    the field" f and J is a possible invariant contributor
-     **
-     ** Closure property:
-     **
-     **    if J is possible invariant contributor,
-     **    J not in contributorInvariants, and J "mentions the field" f,
-     **    then (f,J) is in fieldToPossible.
-     **
-     **/
+     * A mapping from fields (FieldDecls) to possible invariant
+     * contributors (ExprDeclPragmaVec). <p>
+     *
+     * (An invariant is a possible contributor if it is declared in a
+     * type of contributorTypes.)
+     *
+     * Invariant:
+     *
+     *	   if (f,J) in fieldToPossible then the invariant J "mentions
+     *    the field" f and J is a possible invariant contributor
+     *
+     * Closure property:
+     *
+     *    if J is possible invariant contributor,
+     *    J not in contributorInvariants, and J "mentions the field" f,
+     *    then (f,J) is in fieldToPossible.
+     *
+     */
     Hashtable fieldToPossible = new Hashtable();
 
 
 
     /**
-     ** Add the TypeSigs mentioned explicitly in a given Type to
-     ** contributorTypes, maintaining all the closure properties. <p>
-     **
-     ** Precondition: T has been resolved.<p>
-     **/
+     * Add the TypeSigs mentioned explicitly in a given Type to
+     * contributorTypes, maintaining all the closure properties. <p>
+     *
+     * Precondition: T has been resolved.<p>
+     */
     //@ requires T!=null
     private void addType(Type T) {
 	// TypeName case:
@@ -257,9 +246,9 @@ public class FindContributors {
 
 
     /**
-     ** Add a given field to contributorFields, maintaining all the
-     ** closure properties. <p>
-     **/
+     * Add a given field to contributorFields, maintaining all the
+     * closure properties. <p>
+     */
     //@ requires fd!=null
     private void addField(FieldDecl fd) {
 	if (contributorFields.contains(fd))
@@ -283,11 +272,11 @@ public class FindContributors {
     }
 
     /**
-     ** Add the mapping (fd, J) to fieldToPossible.
-     **
-     ** Precondition: J is a possible invariant contributor, J "mentions
-     ** the field" fd.
-     **/
+     * Add the mapping (fd, J) to fieldToPossible.
+     *
+     * Precondition: J is a possible invariant contributor, J "mentions
+     * the field" fd.
+     */
     private void addPossibleMentions(FieldDecl fd, ExprDeclPragma J) {
 	ExprDeclPragmaVec range = (ExprDeclPragmaVec)fieldToPossible.get(fd);
 	if (range==null) {
@@ -300,12 +289,12 @@ public class FindContributors {
 
 
     /**
-     ** Add a possible invariant contributor to either fieldToPossible
-     ** or contributorInvariants as approperiate, maintaining all
-     ** closure properties. <p>
-     **
-     ** Precondition: J has been type checked.
-     **/
+     * Add a possible invariant contributor to either fieldToPossible
+     * or contributorInvariants as approperiate, maintaining all
+     * closure properties. <p>
+     *
+     * Precondition: J has been type checked.
+     */
     //@ requires J!=null
     private void addPossibleInvariant(ExprDeclPragma J) {
 	FieldDeclVec fieldsMentioned = fieldsInvariantMentions(J);
@@ -325,11 +314,11 @@ public class FindContributors {
     }
 
     /**
-     ** Add a given invariant to contributorInvarints, maintaining all
-     ** closure properties. <p>
-     **
-     ** Precondition: J has been type checked.
-     **/
+     * Add a given invariant to contributorInvarints, maintaining all
+     * closure properties. <p>
+     *
+     * Precondition: J has been type checked.
+     */
     //@ requires J!=null
     private void addInvariant(ExprDeclPragma J) {
 	if (contributorInvariants.contains(J))
@@ -341,32 +330,28 @@ public class FindContributors {
     }
 
 
-    /***************************************************
-     *                                                 *
-     * Walking ASTNodes:			       *
-     *                                                 *
-     ***************************************************/
+    // Walking ASTNodes
 
     /**
-     ** Walks a given ASTNode, adding all the types it "mentions" via
-     ** addType and adding all the fields it "mentions" via
-     ** addField. <p>
-     **
-     ** Precondition: N has been typechecked.
-     **
-     ** WARNING: N is assumed to have no free local or parameter
-     ** varables.
-     **/
+     * Walks a given ASTNode, adding all the types it "mentions" via
+     * addType and adding all the fields it "mentions" via
+     * addField. <p>
+     *
+     * Precondition: N has been typechecked.
+     *
+     * WARNING: N is assumed to have no free local or parameter
+     * varables.
+     */
     private void walk(ASTNode N) {
 	walk(N, null, true);
     }
 
 
     /**
-     ** Returns the set of fields that a given invariant mentions. <p>
-     **
-     ** Precondition: J must be an invariant, J must be typechecked.
-     **/
+     * Returns the set of fields that a given invariant mentions. <p>
+     *
+     * Precondition: J must be an invariant, J must be typechecked.
+     */
     private FieldDeclVec fieldsInvariantMentions(ExprDeclPragma J) {
 	// We may cache this function later...
 
@@ -377,16 +362,16 @@ public class FindContributors {
 
 
     /**
-     ** Walks a given ASTNode, finding all the types it "mentions" and
-     ** all the fields it "mentions". <p>
-     **
-     ** If fields is null, the fields mentioned are added via addField;
-     ** otherwise, they are added to fields directly.<p>
-     **
-     ** If addTypes is true, the types mentioned are added via addType.<p>
-     **
-     ** Precondition: N has been typechecked.
-     **/
+     * Walks a given ASTNode, finding all the types it "mentions" and
+     * all the fields it "mentions". <p>
+     *
+     * If fields is null, the fields mentioned are added via addField;
+     * otherwise, they are added to fields directly.<p>
+     *
+     * If addTypes is true, the types mentioned are added via addType.<p>
+     *
+     * Precondition: N has been typechecked.
+     */
     private void walk(ASTNode N, FieldDeclVec fields, boolean addTypes) {
 	/*
 	 * Leaf nodes:
@@ -465,18 +450,18 @@ public class FindContributors {
   /** Returns <code>true</code> if and only if <code>r</code> is a helper
     * routine that has not been visited by this <code>FindContributor</code>
     * object.
-    **/
+    */
 
   private boolean isNonRecursiveHelperInvocation(/*@ non_null */ RoutineDecl r) {
     return Helper.isHelper(r) && !visitedRoutines.contains(r);
   }
 
     /**
-     ** Add implicit references from a ConstructorDecl that do not
-     ** appear in Java code or via backedges as per walk(,,).
-     **
-     ** Precondition: the type declaring cd has been typechecked.
-     **/
+     * Add implicit references from a ConstructorDecl that do not
+     * appear in Java code or via backedges as per walk(,,).
+     *
+     * Precondition: the type declaring cd has been typechecked.
+     */
     private void addImplicitConstructorRefs(ConstructorDecl cd,
 					    FieldDeclVec fields,
 					    boolean addTypes) {
@@ -502,29 +487,29 @@ public class FindContributors {
 
 
     /**
-     ** Walk the implicit instance initializer code for a given
-     ** TypeDecl, excluding any field initializations of
-     ** superinterface fields. <p>
-     **
-     ** E.g., f_1 = 0; ...; f_3 = <initializer exp>; ... ; <instance
-     ** initializer block>...
-     ** 
-     ** This is the code that constructors of that type implicitly
-     ** start with after their super/sibling call modulo the
-     ** initialization of superinterface fields.
-     **
-     ** See addImplicitConstructorRefs for the full version w/o the
-     ** exclusion.
-     **
-     **
-     ** Addition: This now also pulls in all invariants in the given
-     **           TypeDecl, regardless of what they mention.  This is
-     **           to avoid user surprise; see also Vanilla.java in
-     **           test58.
-     **
-     **
-     ** Precondition: the TypeDecl has been typechecked.
-     **/
+     * Walk the implicit instance initializer code for a given
+     * TypeDecl, excluding any field initializations of
+     * superinterface fields. <p>
+     *
+     * E.g., f_1 = 0; ...; f_3 = <initializer exp>; ... ; <instance
+     * initializer block>...
+     * 
+     * This is the code that constructors of that type implicitly
+     * start with after their super/sibling call modulo the
+     * initialization of superinterface fields.
+     *
+     * See addImplicitConstructorRefs for the full version w/o the
+     * exclusion.
+     *
+     *
+     * Addition: This now also pulls in all invariants in the given
+     *           TypeDecl, regardless of what they mention.  This is
+     *           to avoid user surprise; see also Vanilla.java in
+     *           test58.
+     *
+     *
+     * Precondition: the TypeDecl has been typechecked.
+     */
     private void walkInstanceInitialier(TypeDecl td,
 					FieldDeclVec fields,
 					boolean addTypes) {
@@ -555,9 +540,9 @@ public class FindContributors {
 
 
     /**
-     ** Calculate the fields and types "mentioned" by a backedge to a
-     ** GenericVarDecl and then add them as per walk(,,).
-     **/
+     * Calculate the fields and types "mentioned" by a backedge to a
+     * GenericVarDecl and then add them as per walk(,,).
+     */
     private void backedgeToGenericVarDecl(GenericVarDecl decl,
 				          FieldDeclVec fields,
 				          boolean addTypes) {
@@ -609,16 +594,16 @@ public class FindContributors {
     }
 
     /**
-     ** Calculate the fields and types "mentioned" by a backedge to a
-     ** RoutineDecl and then add them as per walk(,,). <p>
-     **
-     ** <code>inlined</code> is one of: 0 (not an inlined routine),
-     ** 1 (an inlined helper routine), or 2 (a routine inlined for
-     ** a reason other than being a helper).  (Why this complication,
-     ** why not just use a boolean field "inlined"?  By distinguishing
-     ** cases 1 and 2, one can write a nice run-time assert inside the
-     ** implementation of this method.)
-     **/
+     * Calculate the fields and types "mentioned" by a backedge to a
+     * RoutineDecl and then add them as per walk(,,). <p>
+     *
+     * <code>inlined</code> is one of: 0 (not an inlined routine),
+     * 1 (an inlined helper routine), or 2 (a routine inlined for
+     * a reason other than being a helper).  (Why this complication,
+     * why not just use a boolean field "inlined"?  By distinguishing
+     * cases 1 and 2, one can write a nice run-time assert inside the
+     * implementation of this method.)
+     */
     //@ requires inlined == 0 || inlined == 1 || inlined == 2;
     private void backedgeToRoutineDecl(RoutineDecl rd,
 				       FieldDeclVec fields,
@@ -679,18 +664,14 @@ public class FindContributors {
     }
 
 
-    /***************************************************
-     *                                                 *
-     * Utility routines:			       *
-     *                                                 *
-     ***************************************************/
+    // Utility routines
 
     /**
-     ** Make sure a given TypeSig has been type checked, type checking
-     ** it if necessary. <p>
-     **
-     ** Throws a fatal error if a type error occurs while checking sig.
-     **/
+     * Make sure a given TypeSig has been type checked, type checking
+     * it if necessary. <p>
+     *
+     * Throws a fatal error if a type error occurs while checking sig.
+     */
     void typecheck(TypeSig sig) {
 	int errorCount = ErrorSet.errors;
 

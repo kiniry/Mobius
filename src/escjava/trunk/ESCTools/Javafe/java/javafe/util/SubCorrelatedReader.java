@@ -6,39 +6,39 @@ import javafe.genericfile.GenericFile;
 import java.io.IOException;
 
 /** 
+ * A reader (aka input stream) that provides an associated
+ * <i>location</i> with each character read.
  *
- * A reader (aka input stream) that provides an associated <I>location</I>
- * with each character read. <p>
+ * <p>See javafe.util.Location for the interpretation of these
+ * locations.
  *
- * See javafe.util.Location for the interpretation of these locations. <p>
- *
- * We also provide a method to create a new
+ * <p> We also provide a method to create a new
  * <code>CorrelatedReader</code> for the text between the marked
  * position and the current point in the stream.  Marking is also
- * allowed on the new <code>CorrelatedReader</code> object. <p>
+ * allowed on the new <code>CorrelatedReader</code> object.
  *
- * @see        javafe.util.Location
+ * @see javafe.util.Location
  * @author Cormac Flanagan
  */
 
-public class SubCorrelatedReader extends BufferedCorrelatedReader {
-
+public class SubCorrelatedReader extends BufferedCorrelatedReader
+{
   private /*@ non_null */ GenericFile file;
 
   /** Returns the file underlying this correlated reader.
-   **/
+   */
 
   public GenericFile getFile() {
     return file;
   }
 
     /**
-     ** Creates a sub-reader. <p>
-     **
-     ** This method captures the given <code>buf</code>, that is,
-     ** callers should no longer use <code>buf</code> after passing it
-     ** in to this constructor.
-     **/
+     * Creates a sub-reader. <p>
+     *
+     * This method captures the given <code>buf</code>, that is,
+     * callers should no longer use <code>buf</code> after passing it
+     * in to this constructor.
+     */
     //@ requires STARTFREELOC-1 <= beforeBufLoc;
     public SubCorrelatedReader(/*@non_null*/ GenericFile file,
 			       /*@non_null*/ byte[] buf,
@@ -52,14 +52,14 @@ public class SubCorrelatedReader extends BufferedCorrelatedReader {
 	this.endBufNdx = buf.length;
     }
 
-  /* *************************************************
+  /* ************************************************
    *                                                 *
    * The methods:                                    *
    *                                                 *
-   ***************************************************/
+   **************************************************/
 
   /** See spec in the abstract <code>CorrelatedReader</code> class.
-   **/
+   */
 
   public int read() throws IOException {
     if (buf == null) {

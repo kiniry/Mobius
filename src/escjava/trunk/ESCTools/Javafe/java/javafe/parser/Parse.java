@@ -3,7 +3,6 @@
 package javafe.parser;
 
 import javafe.ast.*;
-// import javafe.parser.TagConstants; // Work around compiler bug
 import javafe.util.StackVector;
 import javafe.util.ErrorSet;
 
@@ -11,7 +10,6 @@ import javafe.util.CorrelatedReader;	// For test harness only
 import javafe.util.Location;
 
 /**
- * 
  * Parses java source.
  * 
  * <p> Uses the static <code>make*()</code> methods of the classes of
@@ -33,8 +31,8 @@ import javafe.util.Location;
  * @see javafe.ast.ParseStmt
  */
 
-public class Parse extends ParseStmt {
-
+public class Parse extends ParseStmt
+{
     public Parse() {
 	//@ set seqTypeName.elementType = \type(TypeName)
 	//@ set seqTypeName.owner = this
@@ -50,32 +48,32 @@ public class Parse extends ParseStmt {
     }
 
     /**
-     ** Internal working storage for many Parse functions.
-     **/
+     * Internal working storage for many Parse functions.
+     */
     //@ invariant seqTypeName.elementType == \type(TypeName)
     //@ invariant seqTypeName.owner == this
     protected final /*@non_null*/ StackVector seqTypeName
 	= new StackVector();
 
     /**
-     ** Internal working storage for many Parse functions.
-     **/
+     * Internal working storage for many Parse functions.
+     */
     //@ invariant seqFormalParaDecl.elementType == \type(FormalParaDecl)
     //@ invariant seqFormalParaDecl.owner == this
     protected final /*@non_null*/ StackVector seqFormalParaDecl
 	= new StackVector();
 
     /**
-     ** Internal working storage for many Parse functions.
-     **/
+     * Internal working storage for many Parse functions.
+     */
     //@ invariant seqImportDecl.elementType == \type(ImportDecl)
     //@ invariant seqImportDecl.owner == this
     protected final /*@non_null*/ StackVector seqImportDecl
 	= new StackVector();
 
     /**
-     ** Internal working storage for many Parse functions.
-     **/
+     * Internal working storage for many Parse functions.
+     */
     //@ invariant seqTypeDecl.elementType == \type(TypeDecl)
     //@ invariant seqTypeDecl.owner == this
     protected final /*@non_null*/ StackVector seqTypeDecl
@@ -94,7 +92,7 @@ public class Parse extends ParseStmt {
     @see javafe.util.ErrorSet
     */
 
-  //@ requires in!=null
+  //@ requires in != null
   public CompilationUnit parseStream(CorrelatedReader in, boolean specOnly) {
     if (parseStreamLexer == null) parseStreamLexer = new Lex(null, true);
     parseStreamLexer.restart(in);
@@ -113,8 +111,8 @@ public class Parse extends ParseStmt {
       with an appropriate <TT>Lex</TT> object.
     */
 
-  //@ requires l!=null && l.m_in!=null
-  //@ ensures \result!=null
+  //@ requires l != null && l.m_in != null
+  //@ ensures \result != null
   public CompilationUnit parseCompilationUnit(Lex l, boolean specOnly) {
     Name pkgName = null;
     int loc = l.startingLoc;
@@ -156,8 +154,8 @@ public class Parse extends ParseStmt {
     </PRE>
    */
         
-  //@ requires l!=null && l.m_in!=null
-  //@ ensures \result!=null
+  //@ requires l != null && l.m_in != null
+  //@ ensures \result != null
   ImportDecl parseImportDeclaration(Lex l) {
     int loc = l.startingLoc;
     l.getNextToken();                // swallow import keyword
@@ -191,8 +189,8 @@ public class Parse extends ParseStmt {
      </PRE>
    */
 
-  //@ requires l!=null && l.m_in!=null
-  //@ ensures \result!=null
+  //@ requires l != null && l.m_in != null
+  //@ ensures \result != null
   TypeDecl parseTypeDeclaration(Lex l, boolean specOnly) {
     TypeDeclElemVec extras = null;
     if (l.ttype == TagConstants.TYPEDECLELEMPRAGMA) {
@@ -290,8 +288,8 @@ public class Parse extends ParseStmt {
       in the input stream. 
       Use this to match the beginning of a constructor or method declration
       versus the beginning of a field declaration.
-  **/
-    //@ requires l!=null && l.m_in!=null
+  */
+    //@ requires l != null && l.m_in != null
     private boolean atStartOfConstructorOrMethod(Lex l) {
 	int i = 1;
 	while ((l.lookahead(i) == TagConstants.TYPEMODIFIERPRAGMA)) {
@@ -345,8 +343,8 @@ public class Parse extends ParseStmt {
       </PRE>
    */
 
-  //@ requires l!=null && l.m_in!=null
-  //@ ensures \result!=null
+  //@ requires l != null && l.m_in != null
+  //@ ensures \result != null
   TypeNameVec parseTypeNames(Lex l, int keyword)
   {
     if( l.ttype != keyword ) 
@@ -600,8 +598,8 @@ VariableDeclarator:
     <PRE>       
    */
 
-  //@ requires l!=null && l.m_in!=null
-  //@ ensures \result!=null
+  //@ requires l != null && l.m_in != null
+  //@ ensures \result != null
   public FormalParaDeclVec parseFormalParameterList(Lex l) 
   {
     /* Should be on LPAREN */

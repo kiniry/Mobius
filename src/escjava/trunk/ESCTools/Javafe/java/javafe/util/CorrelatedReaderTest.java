@@ -5,8 +5,8 @@ package javafe.util;
 import java.util.Random;
 import java.io.*;
 
-public class CorrelatedReaderTest {
-
+public class CorrelatedReaderTest
+{
   static final int SEED          = 0xCAFEBABE;
   static final int MASKRESET     = 0x1f;
   static final int MASKSUBREADER = 0x1ff;

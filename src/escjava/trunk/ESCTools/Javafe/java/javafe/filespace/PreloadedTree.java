@@ -7,14 +7,14 @@ import java.util.Enumeration;
 
 
 /**
- ** A PreloadedTree is a HashTree whose edges map is loaded exactly once
- ** before any children-fetching queries complete; the loading is lazy,
- ** however, and occurs when the first children-fetching method is
- ** called.<p>
- **
- ** If a subclass adds additional methods that refer to edges, it should
- ** make sure ensureEdgesLoaded is called before edges is used.<p>
- **/
+ * A PreloadedTree is a HashTree whose edges map is loaded exactly once
+ * before any children-fetching queries complete; the loading is lazy,
+ * however, and occurs when the first children-fetching method is
+ * called.<p>
+ *
+ * If a subclass adds additional methods that refer to edges, it should
+ * make sure ensureEdgesLoaded is called before edges is used.<p>
+ */
 
 abstract class PreloadedTree extends HashTree {
 
@@ -22,12 +22,12 @@ abstract class PreloadedTree extends HashTree {
      *                                                 *
      * Loading the edges map:			       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
-    /** Have we loaded the edges map yet? **/
+    /** Have we loaded the edges map yet? */
     private boolean loaded = false;
 
-    /** Ensure that the edges map is ready for use **/
+    /** Ensure that the edges map is ready for use */
     public final void ensureEdgesLoaded() {
 	if (!loaded) {
 	    loadEdges();
@@ -35,7 +35,7 @@ abstract class PreloadedTree extends HashTree {
         }
     }
 
-    /** Load the edges map for use.  **/
+    /** Load the edges map for use.  */
     protected abstract void loadEdges();
 
 
@@ -43,14 +43,14 @@ abstract class PreloadedTree extends HashTree {
      *                                                 *
      * Creation:				       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
-    /** Create a root node: **/
+    /** Create a root node: */
     public PreloadedTree(Object data) {
 	super(data);
     }
 
-    /** Create a non-root node: **/
+    /** Create a non-root node: */
     //@ requires parent!=null && label!=null
     protected PreloadedTree(Tree parent, String label, Object data) {
 	super(parent, label, data);
@@ -61,7 +61,7 @@ abstract class PreloadedTree extends HashTree {
      *                                                 *
      * Fetching and counting children:		       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
     public final Enumeration children() {
 	/* Ensure edges is loaded before we use it: */

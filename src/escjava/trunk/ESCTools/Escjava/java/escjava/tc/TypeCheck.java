@@ -8,35 +8,35 @@ import escjava.ast.TagConstants;
 import javafe.tc.TypeSig;
 import javafe.util.Info;
 
-
-public class TypeCheck extends javafe.tc.TypeCheck {
-
+public class TypeCheck extends javafe.tc.TypeCheck
+{
     /**
-     ** Creates a instance of TypeCheck, and sets the <code>inst</code>
-     ** field to this instance. Only one instance should be created. 
-     ** Also initializes PrepTypeDeclaration.
-     **/
+     * Creates a instance of TypeCheck, and sets the <code>inst</code>
+     * field to this instance. Only one instance should be created. 
+     * Also initializes PrepTypeDeclaration.
+     */
     public TypeCheck() {
 	inst = this;
     }
 
-
     /**
-     ** Called to obtain the algorithm for performing name resolution
-     ** and type checking.  Returns an instance of
-     ** <code>escjava.tc.FlowInsensitiveChecks</code>.
-     **/
+     * Called to obtain the algorithm for performing name resolution
+     * and type checking. 
+     *
+     * @return an instance of
+     * <code>escjava.tc.FlowInsensitiveChecks</code>.
+     */
     public javafe.tc.FlowInsensitiveChecks makeFlowInsensitiveChecks() {
 	return new escjava.tc.FlowInsensitiveChecks();
     }
 
-
     /**
-     ** Override canAccess to account for spec_public
-     **/
+     * Override {@link javafe.tc.TypeCheck.canAccess()} to account for
+     * spec_public.
+     */
     public boolean canAccess(TypeSig from, TypeSig target,
-				    int modifiers,
-				    ModifierPragmaVec pmodifiers) {
+                             int modifiers,
+                             ModifierPragmaVec pmodifiers) {
 	if (super.canAccess(from, target, modifiers, pmodifiers))
 	    return true;
 

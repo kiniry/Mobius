@@ -8,7 +8,6 @@ import java.util.Vector;
 
 import javafe.*;
 import javafe.ast.*;
-import javafe.tc.TagConstants; // Work around compiler bug
 import javafe.tc.*;
 import javafe.parser.*;
 import javafe.util.*;

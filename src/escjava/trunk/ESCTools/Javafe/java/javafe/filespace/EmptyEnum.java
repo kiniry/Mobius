@@ -7,9 +7,9 @@ import java.util.*;
 
 
 /**
- ** EmptyEnum: This class simply implements an enumeration with
- **	       no elements.
- **/
+ * EmptyEnum: This class simply implements an enumeration with
+ *	       no elements.
+ */
 
 class EmptyEnum implements Enumeration {
 
@@ -23,16 +23,16 @@ class EmptyEnum implements Enumeration {
     }
 
 
-    /** Returns true iff any more elements exist in this enumeration. **/
+    /** Returns true iff any more elements exist in this enumeration. */
     public boolean hasMoreElements() {
 	return false;
     }
 
     /**
-     ** Returns the next element of the enumeration. Calls to this
-     ** method will enumerate successive elements.  Throws
-     ** NoSuchElementException if no more elements are left.
-     **/
+     * Returns the next element of the enumeration. Calls to this
+     * method will enumerate successive elements.  Throws
+     * NoSuchElementException if no more elements are left.
+     */
     public Object nextElement()
 	/*throws NoSuchElementException*/ {
 	throw new NoSuchElementException();

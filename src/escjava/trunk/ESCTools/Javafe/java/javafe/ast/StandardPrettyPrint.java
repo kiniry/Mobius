@@ -1104,8 +1104,8 @@ public class StandardPrettyPrint extends PrettyPrint {
   }
   
   /**
-   ** Generate text to describe a ASTNote with an unknown tag
-   **/
+   * Generate text to describe a ASTNote with an unknown tag
+   */
   //@ requires n!=null
   //@ ensures \result!=null
   public String unknownTag(ASTNode n) {
@@ -1113,8 +1113,8 @@ public class StandardPrettyPrint extends PrettyPrint {
   }
   
   /**
-   ** Generate text to describe a given unknown tag
-   **/
+   * Generate text to describe a given unknown tag
+   */
   //@ ensures \result!=null
   public String unknownTagMsg(int tag) {
     return "UnknownTag<" + tag + ":"

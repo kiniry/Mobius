@@ -116,27 +116,24 @@ import java.io.IOException;
  | '&' | '|' | '^' | '&&' | '||'
  </pre>
 
- Also, the grammar for Type is extended (recursively) with the new base
- type 'TYPE'.
-
- @note kiniry 24 Jan 2003 - All rules named Jml* added by
- kiniry@cs.kun.nl starting on 24 Jan 2003.
-
- @todo kiniry 24 Jan 2003 - Make semicolon at end of 'nowarn' lexical
- pragma non-optional.  This requires updating spec files &c.
-
- @todo kiniry 24 Jan 2003 - Permit 'non_null' annotations on arguments
- in overrides of methods. Make such specifications redundant.
-
- @todo kiniry 31 Jan 2003 - Check semantics of non_null in ESC/Java
- vs. JML.
-
- @todo kiniry 24 Jan 2003 - Permit splitting syntactic constructs
- across multiple @code{//@@} comments.
-
+ * Also, the grammar for Type is extended (recursively) with the new base
+ * type 'TYPE'.
+ *
+ * @note kiniry 24 Jan 2003 - All rules named Jml* added by
+ * kiniry@cs.kun.nl starting on 24 Jan 2003.
+ *
+ * @todo kiniry 24 Jan 2003 - Make semicolon at end of 'nowarn' lexical
+ * pragma non-optional.  This requires updating spec files &c.
+ *
+ * @todo kiniry 24 Jan 2003 - Permit 'non_null' annotations on arguments
+ * in overrides of methods. Make such specifications redundant.
+ *
+ * @todo kiniry 31 Jan 2003 - Check semantics of non_null in ESC/Java
+ * vs. JML.
+ *
+ * @todo kiniry 24 Jan 2003 - Permit splitting syntactic constructs
+ * across multiple @code{//@@} comments.
  */
-
-
 
 public class EscPragmaParser extends Parse implements PragmaParser
 {
@@ -144,14 +141,17 @@ public class EscPragmaParser extends Parse implements PragmaParser
      * The informal-predicate decoration is associated with a
      * true-valued boolean literal expression, if the concrete syntax
      * of this expression was an informal comment.  The value
-     * associated with the decoration is the String of the informal
-     * predicate.
+     * associated with the decoration is the string of the informal
+     * predicate (i.e., the comment itself).
      */
-
     public static final ASTDecoration informalPredicateDecoration =
         new ASTDecoration("informalPredicate");
 
-    private /*@ non_null */ EscPragmaLex scanner;
+    /**
+     * The lexer associated with this pragma parser from which we
+     * will read tokens.
+     */
+    private /*@ non_null @*/ EscPragmaLex scanner;
 
     /** 
      * The value -2 means there is nothing else to process.  The value
@@ -162,15 +162,16 @@ public class EscPragmaParser extends Parse implements PragmaParser
      * continue this parsing next time it gets control.
      */
     private int inProcessTag;
-    /*@ invariant inProcessTag==-2 || inProcessTag==-1 ||
-      inProcessTag==TagConstants.STILL_DEFERRED ||
-      inProcessTag==TagConstants.MONITORED_BY ||
-      inProcessTag==TagConstants.MODIFIES ||
-      inProcessTag==TagConstants.ALSO_MODIFIES ||
-      inProcessTag==TagConstants.JML_MODIFIABLE ||
-      inProcessTag==TagConstants.JML_ASSIGNABLE ||
-      inProcessTag==TagConstants.LOOP_PREDICATE ||
-      inProcessTag==TagConstants.JML_ALSO; */
+    /*@ invariant inProcessTag == -2 || inProcessTag == -1 ||
+      @           inProcessTag==TagConstants.STILL_DEFERRED ||
+      @           inProcessTag==TagConstants.MONITORED_BY ||
+      @           inProcessTag==TagConstants.MODIFIES ||
+      @           inProcessTag==TagConstants.ALSO_MODIFIES ||
+      @           inProcessTag==TagConstants.JML_MODIFIABLE ||
+      @           inProcessTag==TagConstants.JML_ASSIGNABLE ||
+      @           inProcessTag==TagConstants.LOOP_PREDICATE ||
+      @           inProcessTag==TagConstants.JML_ALSO; 
+      @*/
 
     private int inProcessLoc;
     private CorrelatedReader pendingJavadocComment;
@@ -189,12 +190,13 @@ public class EscPragmaParser extends Parse implements PragmaParser
      * 0 == no nesting of annotation comments allowed.
      * 
      * <p> If you change this, change the error message in
-     * EscPragmaParser(int) below as well. </p>
+     * EscPragmaParser(int) below as well.
      */
     static final int maxAnnotationNestingLevel = 1;
 
     /**
      * Constructs a new pragma parser with zero nesting level.
+     *
      * @see EscPragmaParser(int)
      */
     public EscPragmaParser() {
@@ -234,25 +236,24 @@ public class EscPragmaParser extends Parse implements PragmaParser
     }
 
     /**
-     * Describe <code>checkTag</code> method here.
-     *
-     * @param tag an <code>int</code> value
-     * @return a <code>boolean</code> value
+     * @param tag the comment tag character to check.
+     * @return true iff tag is an '@' or an '*' character.
      */
     public boolean checkTag(int tag) {
         return tag == '@' || tag == '*';
     }
 
-
     /**
      * Restart a pragma parser on a new input stream.  If
      * <code>this</code> is already opened on another {@link
-     * CorrelatedReader}, closes the old reader.
+     * CorrelatedReader}, close the old reader.
      *
-     * @param in the reader on which to read.
-     * @param eolComment unknown.
+     * @param in the reader from which to read.
+     * @param eolComment a flag that indicates we are parsing an EOL
+     * comment (a comment that starts with "//").
      */
-    public void restart(CorrelatedReader in, boolean eolComment) {
+    public void restart(CorrelatedReader /*@ non_null @*/ in, 
+                        boolean eolComment) {
         try {
             int c = in.read();
             // System.out.println("restart: c = '"+(char)c+"'");
@@ -269,8 +270,8 @@ public class EscPragmaParser extends Parse implements PragmaParser
                 /*
                  * At this point, <code>in</code> has been
                  * trimmed/replaced as needed to represent the
-                 * annotation part of the comment (if any -- it
-                 * may be empty).
+                 * annotation part of the comment (if any -- it may be
+                 * empty).
                  */
                 scanner.restart(in);
                 inProcessTag = -1;
@@ -300,10 +301,10 @@ public class EscPragmaParser extends Parse implements PragmaParser
     }
 
     /**
-     * Unknown.
+     * Parse embedded <esc> ... </esc> in Javadoc comments.
      *
-     * @return unknown.
-     * @exception IOException when?
+     * @return a flag indicating if an embedded comment was recognized.
+     * @exception IOException if something goes wrong during reading.
      */
     private boolean processJavadocComment() throws IOException {
         if (pendingJavadocComment == null) {
@@ -346,14 +347,14 @@ public class EscPragmaParser extends Parse implements PragmaParser
      * Eat any wizard inserted comment at the start of an escjava
      * annotation.
      *
-     * <p> May side-effect the mark of <code>in</code>. </p>
+     * <p> May side-effect the mark of <code>in</code>.
      *
-     * <p> Eats "([^)]*)", if present, from <code>in</code>. </p>
+     * <p> Eats "([^)]*)", if present, from <code>in</code>.
      *
      * @param in the stream from which to read.
      */
-    private void eatWizardComment(/*@ non_null */ CorrelatedReader in) 
-        throws IOException {
+    private void eatWizardComment(CorrelatedReader /*@ non_null @*/ in) 
+            throws IOException {
         in.mark();
         int cc = in.read();
         if (cc != '(') {
@@ -375,20 +376,22 @@ public class EscPragmaParser extends Parse implements PragmaParser
     }
 
     /** 
-     * Scans input stream for a string matching match. Only works if
-     * the first character is not repeated in the string.
+     * Scans input stream for a string matching the parameter
+     * <code>match</code>. Only works if the first character is not
+     * repeated in the string.
      *
      * <p> If present, the location of the match is returned.  If not
-     * present, Location.NULL is returned. </p>
+     * present, <code>Location.NULL</code> is returned.
      *
-     * <p> Requires that <code>in</code> is not closed. </p>
+     * <p> Requires that <code>in</code> is not closed.
      *
      * @param in the stream from which to read.
-     * @param match unknown.
-     * @return unknown.
+     * @param match the string to match against the input stream.
+     * @return the location of the match, or
+     * <code>Location.NULL</code> if there is no match.
      */
-    private int scanFor(/*@ non_null */ CorrelatedReader in,
-			/*@ non_null */ String match)
+    private int scanFor(CorrelatedReader /*@ non_null @*/ in,
+			String /*@ non_null @*/ match)
         throws IOException
     {
 
@@ -400,15 +403,15 @@ public class EscPragmaParser extends Parse implements PragmaParser
 	    while (c != -1 && c != start )
 		c = in.read();
 
-	    if( c == -1 ) return Location.NULL;
+	    if (c == -1) return Location.NULL;
 	    int startLoc = in.getLocation();
 	    Assert.notFalse(startLoc != Location.NULL);
 
 	    // Have a match for the first character in the string
 	    
-	    for( int i=1; i<match.length(); i++ ) {
+	    for (int i=1; i<match.length(); i++) {
 		c = in.read();
-		if( c != match.charAt(i) )
+		if (c != match.charAt(i))
 		    continue mainLoop;
 	    }
 
@@ -430,12 +433,16 @@ public class EscPragmaParser extends Parse implements PragmaParser
     }
 
     /**
-     * Unknown.
+     * Parse the next pragma, putting information about it in the
+     * provided token <code>dst</code>, and return a flag indicating if
+     * there are further pragmas to be parsed.
      *
-     * @param dst unknown.
-     * @return unknown.
+     * @param dst the token in which to store information about the
+     * current pragma.
+     * @return a flag indicating if further pragmas need to be parsed.
+     * @see Lex
      */
-    public boolean getNextPragma(Token dst) {
+    public boolean getNextPragma(Token /*@ non_null @*/ dst) {
         try {
             if (inProcessTag == -2) {
                 return false;
@@ -489,7 +496,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
                 dst.auxVal = NowarnPragma.make(checks, loc);
                 if (scanner.ttype == TagConstants.SEMICOLON) scanner.getNextToken();
                 if (scanner.ttype != TagConstants.EOF)
-ErrorSet.fatal(loc, "Syntax error in nowarn pragma");
+                    ErrorSet.fatal(loc, "Syntax error in nowarn pragma");
                     break;
 
                 case TagConstants.STILL_DEFERRED:
@@ -567,7 +574,7 @@ ErrorSet.fatal(loc, "Syntax error in nowarn pragma");
                         Type type = parseType(scanner);
 	      
                         // make modifierPragmas non-null, so can retroactively extend
-                        if( modifierPragmas == null )
+                        if (modifierPragmas == null)
                             modifierPragmas = ModifierPragmaVec.make();
 	      
                         int locId     = scanner.startingLoc;
@@ -576,7 +583,7 @@ ErrorSet.fatal(loc, "Syntax error in nowarn pragma");
 	      
                         VarInit init = null;
                         int locAssignOp = Location.NULL;
-                        if( scanner.ttype == TagConstants.ASSIGN ) {
+                        if (scanner.ttype == TagConstants.ASSIGN) {
                             locAssignOp = scanner.startingLoc;
                             scanner.getNextToken();
                             init = parseVariableInitializer(scanner, false);
@@ -588,7 +595,7 @@ ErrorSet.fatal(loc, "Syntax error in nowarn pragma");
                         if (scanner.ttype == TagConstants.MODIFIERPRAGMA
                             || scanner.ttype == TagConstants.SEMICOLON ) {
                             // if modifier pragma, retroactively add to modifierPragmas
-                            parseMoreModifierPragmas( scanner, modifierPragmas );
+                            parseMoreModifierPragmas(scanner, modifierPragmas);
                         }
 	      
                         if (scanner.ttype == TagConstants.COMMA)
@@ -621,7 +628,7 @@ ErrorSet.fatal(loc, "Syntax error in nowarn pragma");
                                                     vartype, locId, null, Location.NULL);
                             v.addElement(decl);
 		  
-                            switch( scanner.ttype ) {
+                            switch (scanner.ttype) {
                                 case TagConstants.COMMA:
                                     scanner.getNextToken();
                                     continue loop;
@@ -725,10 +732,9 @@ ErrorSet.fatal(loc, "Syntax error in nowarn pragma");
       @          inProcessTag==TagConstants.JML_MODIFIABLE ||
       @          inProcessTag==TagConstants.JML_ASSIGNABLE ||
       @          inProcessTag==TagConstants.LOOP_PREDICATE */
-    //@ requires dst != null
     //@ requires scanner.startingLoc != Location.NULL;
     //@ requires scanner.m_in != null;
-    private void continuePragma(Token dst) throws IOException {
+    private void continuePragma(Token /*@ non_null @*/ dst) throws IOException {
         if (inProcessTag == TagConstants.STILL_DEFERRED) {
             int locId = scanner.startingLoc;
             Identifier idn = parseIdentifier(scanner);
@@ -769,11 +775,24 @@ ErrorSet.fatal(loc, "Syntax error in nowarn pragma");
         }
     }
 
+
+    // Special parsing methods for handling quantified expressions.
+
     /**
-     * Unknown.
+     * Parse a "primary expression" from <code>l</code>.  A primary
+     * expression is an expression of the form
+     * <pre>
+     * \result
+     * \lockset
+     * (*...*)
+     * Function '('
+     * '\type' '('
+     * '(' {'\forall'|'\exists'} Type
+     * '(' {'\lblpos'|'\lblneg'} Idn
+     * </pre>
      *
-     * @param l unknown.
-     * @return unknown.
+     * @param l the lexer from which to read and parse.
+     * @return the parsed expression.
      */
     protected Expr parsePrimaryExpression(Lex l) {
 
@@ -787,21 +806,21 @@ ErrorSet.fatal(loc, "Syntax error in nowarn pragma");
          * '(' {'\lblpos'|'\lblneg'} Idn
          */
 
-        Expr primary = null /*@ uninitialized */;
+        Expr primary = null /*@ uninitialized @*/;
 
         // First parse PrimaryCore into variable primary
         switch(l.ttype) {
 
             case TagConstants.RES: 
                 { 
-                    primary = ResExpr.make( l.startingLoc );
+                    primary = ResExpr.make(l.startingLoc);
                     l.getNextToken();
                     break;
                 }
 
             case TagConstants.LS: 
                 { 
-                    primary = LockSetExpr.make( l.startingLoc );
+                    primary = LockSetExpr.make(l.startingLoc);
                     l.getNextToken();
                     break;
                 }
@@ -872,9 +891,9 @@ ErrorSet.fatal(loc, "Syntax error in nowarn pragma");
                     // Look for 'TypeName . this'
                     if (l.lookahead(0) == TagConstants.FIELD &&
                         l.lookahead(1) == TagConstants.THIS) {
-                        expect( l, TagConstants.FIELD );
+                        expect(l, TagConstants.FIELD);
                         int locThis = l.startingLoc;
-                        expect( l, TagConstants.THIS );
+                        expect(l, TagConstants.THIS);
                         primary = ThisExpr.make(TypeName.make(n), locThis);
                         break;
                     }
@@ -909,8 +928,8 @@ ErrorSet.fatal(loc, "Syntax error in nowarn pragma");
                     if (l.ttype == TagConstants.IDENT) {
                         Identifier kw = l.identifierVal;
                         int tag = TagConstants.fromIdentifier(kw);
-                        if ((tag == TagConstants.LBLPOS || tag == TagConstants.LBLNEG)
-                            && l.lookahead(1) == TagConstants.IDENT) {
+                        if ((tag == TagConstants.LBLPOS || tag == TagConstants.LBLNEG) &&
+                            l.lookahead(1) == TagConstants.IDENT) {
                             regularParenExpr = false;
                             boolean pos = (tag == TagConstants.LBLPOS);
                             l.getNextToken(); // Discard LBLxxx
@@ -920,16 +939,16 @@ ErrorSet.fatal(loc, "Syntax error in nowarn pragma");
                             primary = LabelExpr.make(locOpenParen, l.startingLoc,
                                                      pos, label, e);
                             expect(l, TagConstants.RPAREN);
-                        } else if (tag == TagConstants.FORALL
-                                   || tag == TagConstants.EXISTS) 
-                        {
+                        } else if (tag == TagConstants.FORALL || 
+                                   tag == TagConstants.EXISTS) {
                             int lookahead = l.lookahead(1);
-                            if (lookahead==TagConstants.IDENT ||
+                            if (lookahead == TagConstants.IDENT ||
                                 isPrimitiveKeywordTag(lookahead)) {
                                 regularParenExpr = false;
                                 l.getNextToken(); // Discard quantifier
                                 Type type = parseType(l);
-                                primary = parseQuantifierRemainder(l, tag, type, locOpenParen);
+                                primary = parseQuantifierRemainder(l, tag, 
+                                                                   type, locOpenParen);
                             }
                         }
                     }
@@ -943,27 +962,28 @@ ErrorSet.fatal(loc, "Syntax error in nowarn pragma");
                 }
 
             default:
-                primary = super.parsePrimaryExpression( l );
+                primary = super.parsePrimaryExpression(l);
 			     
         }
 
         // Ok, parsed a PrimaryCore expression into primary. 
         // Now handle PrimarySuffix*
 
-        return parsePrimarySuffix( l, primary );
+        return parsePrimarySuffix(l, primary);
     }
 
     /**
-     * Unknown.
+     * Parse the suffix of a "primary expression" from <code>l</code>,
+     * given the prefix primary expression <code>primary</code>.  A
+     * primary expression suffice is an expression of the form
      *
-     * @param l unknown.
-     * @param primary unknown.
-     * @return unknown.
+     * @param l the lexer from which to read and parse.
+     * @param primary the primary expression previously parsed.
+     * @return the parsed expression.
      */
     protected Expr parsePrimarySuffix(Lex l, Expr primary) {
-
         for(;;) {
-            primary = super.parsePrimarySuffix( l, primary );
+            primary = super.parsePrimarySuffix(l, primary);
 
             if( l.ttype == TagConstants.LSQBRACKET 
                 && l.lookahead(1) == TagConstants.STAR 
@@ -974,7 +994,7 @@ ErrorSet.fatal(loc, "Syntax error in nowarn pragma");
                 l.getNextToken();
                 int locClose = l.startingLoc;
                 l.getNextToken();
-                primary = WildRefExpr.make( primary, locOpen, locClose );
+                primary = WildRefExpr.make(primary, locOpen, locClose);
                 // and go around again
             } else {
                 // no PrimarySuffix left, all done
@@ -984,21 +1004,25 @@ ErrorSet.fatal(loc, "Syntax error in nowarn pragma");
     }
 
     /**
-     * Unknown.
+     * Parse the balance (everything after the quantifier to the end
+     * of the current quantified scope) of a quantifier expression
+     * from <code>l</code>.
      *
-     * @param l unknown.
-     * @param tag unknown.
-     * @param type unknown.
-     * @param loc unknown.
-     * @return unknown.
+     * @param l the lexer from which to read and parse.
+     * @param tag identifies which kind of quantifier we are parsing.
+     * @param type the type of the quantified variable.
+     * @param loc the starting location of the quantified expression.
+     * @return the parsed quantified expression.
      */
     //@ requires l.m_in != null;
     //@ requires type.syntax;
+    //@ requires tag == TagConstants.FORALL || tag == TagConstants.EXISTS;
     //@ ensures \result != null;
-    private QuantifiedExpr parseQuantifierRemainder(/*@ non_null */ Lex l,
-                                                    int tag,
-                                                    /*@ non_null */ Type type,
-                                                    int loc) {
+    private QuantifiedExpr 
+            parseQuantifierRemainder(Lex /*@ non_null @*/ l,
+                                     int tag,
+                                     Type /*@ non_null @*/ type,
+                                     int loc) {
         int idLoc = l.startingLoc;
         Identifier idn = parseIdentifier(l);
         LocalVarDecl v = LocalVarDecl.make(0, null, idn, type, idLoc,
@@ -1007,8 +1031,8 @@ ErrorSet.fatal(loc, "Syntax error in nowarn pragma");
         GenericVarDeclVec vs = GenericVarDeclVec.make();
         vs.addElement(v);
     
-        int endLoc = 0 /*@ uninitialized */;
-        Expr rest = null /*@ uninitialized */;
+        int endLoc = 0 /*@ uninitialized @*/;
+        Expr rest = null /*@ uninitialized @*/;
         if (l.ttype == TagConstants.COMMA) {
             l.getNextToken();
             QuantifiedExpr r = parseQuantifierRemainder(l, tag, type, Location.NULL);
@@ -1041,8 +1065,12 @@ ErrorSet.fatal(loc, "Syntax error in nowarn pragma");
     }
 
 
+    // Overridden methods to handle new keywords and types specific
+    // to this parser.
+
     /**
-     * Is a <code>tag</code> a PrimitiveType keyword?  Overriden to add type TYPE.
+     * Is a <code>tag</code> a PrimitiveType keyword?  Overriden to
+     * add type <code>TYPE</code>.
      *
      * @param tag the tag to check.
      * @return a flag indicating if the supplied parameter is a
@@ -1063,15 +1091,15 @@ ErrorSet.fatal(loc, "Syntax error in nowarn pragma");
      * <code>null</code> on failure.
      * 
      * <p> PrimitiveType is one of: boolean byte short int long char
-     * float double void TYPE. </p>
+     * float double void TYPE.
      *
-     * @param l a <code>Lex</code> value
-     * @return a <code>PrimitiveType</code> value
+     * @param l the lexer from which to read and parse.
+     * @return the parsed primative type.
      */
     public PrimitiveType parsePrimitiveType(Lex l) {
         int tag;
 
-        switch( l.ttype ) {
+        switch (l.ttype) {
             case TagConstants.TYPETYPE: tag = TagConstants.TYPECODE; break;
 
             default: return super.parsePrimitiveType(l);
@@ -1080,15 +1108,14 @@ ErrorSet.fatal(loc, "Syntax error in nowarn pragma");
     
         int loc = l.startingLoc;
         l.getNextToken();
-        return PrimitiveType.make( tag, loc );
+        return PrimitiveType.make(tag, loc);
     }
 
     /**
-     * Describe <code>isStartOfUnaryExpressionNotPlusMinus</code> method
-     * here.
-     *
-     * @param tag an <code>int</code> value
-     * @return a <code>boolean</code> value
+     * @param tag the tag to check.
+     * @return a flag indicating if <code>tag</code> is the start of
+     * an unary expression other than unary '+' or '-'.  Overridded
+     * to handle new identifier-like keywords "\result" and "\lockset".
      */
     public boolean isStartOfUnaryExpressionNotPlusMinus(int tag) {
 	// All previous cases apply...
@@ -1096,20 +1123,28 @@ ErrorSet.fatal(loc, "Syntax error in nowarn pragma");
 	    return true;
 
 	// New Identifier-like keywords:
-	if (tag==TagConstants.RES || tag==TagConstants.LS)
+	if (tag == TagConstants.RES || tag == TagConstants.LS)
 	    return true;
 
 	return false;
     }
 
+
+    // Special handling for parsing exsures/signals clauses.
+
     /**
-     * Describe <code>parseExsuresFormalParaDecl</code> method here.
+     * Parse the formal parameter declaration (the type and name of
+     * the associated exception) of an <code>exsures</code> or
+     * <code>signals</code> pragma.  This is a bit complicated because
+     * these expressions have an optional identifier name associated
+     * with the specified Throwable type.
      *
-     * @param l an <code>EscPragmaLex</code> value
-     * @return a <code>FormalParaDecl</code> value
+     * @param l the lexer from which to read and parse.
+     * @return the parsed formal paramater declaration.
      */
     //@ requires l.m_in != null;
-    public FormalParaDecl parseExsuresFormalParaDecl(/*@ non_null */ EscPragmaLex l) {
+    public FormalParaDecl 
+            parseExsuresFormalParaDecl(EscPragmaLex /*@ non_null @*/ l) {
         int modifiers = parseModifiers(l);
         ModifierPragmaVec modifierPragmas = this.modifierPragmas;
         Type paratype = parseExsuresType(l);
@@ -1124,36 +1159,37 @@ ErrorSet.fatal(loc, "Syntax error in nowarn pragma");
         }
       
         // allow more modifier pragmas
-        modifierPragmas = parseMoreModifierPragmas( l, modifierPragmas );
+        modifierPragmas = parseMoreModifierPragmas(l, modifierPragmas);
         return FormalParaDecl.make(modifiers, modifierPragmas, 
                                    idn, paratype, locId);
     }
 
     /**
-     * Describe <code>parseExsuresType</code> method here.
+     * Parse the type of the of an <code>exsures</code> or
+     * <code>signals</code> pragma parameter.
      *
-     * @param l an <code>EscPragmaLex</code> value
-     * @return a <code>Type</code> value
+     * @param l the lexer from which to read and parse.
+     * @return the parsed type declaration.
      */
     //@ requires l.m_in != null;
     //@ ensures \result != null;
     //@ ensures \result.syntax;
-    public Type parseExsuresType(/*@ non_null */ EscPragmaLex l) {
+    public Type parseExsuresType(EscPragmaLex /*@ non_null @*/ l) {
 	Type type = parseExsuresPrimitiveTypeOrTypeName(l);
 	return parseBracketPairs(l, type);
     }
 
     /**
-     * Describe <code>parseExsuresPrimitiveTypeOrTypeName</code> method
-     * here.
+     * Parse the type associated with an <code>exsures</code> or
+     * <code>signals</code> pragma parameter.
      *
-     * @param l an <code>EscPragmaLex</code> value
-     * @return a <code>Type</code> value
+     * @param l the lexer from which to read and parse.
+     * @return the parsed type declaration.
      */
-    //@ requires l!=null && l.m_in!=null
-    //@ ensures \result!=null
+    //@ requires l.m_in != null
+    //@ ensures \result != null
     //@ ensures \result.syntax
-    public Type parseExsuresPrimitiveTypeOrTypeName(EscPragmaLex l) {
+    public Type parseExsuresPrimitiveTypeOrTypeName(EscPragmaLex /*@ non_null @*/ l) {
 	Type type = parseExsuresPrimitiveType(l);
 	if (type != null)
 	    return type;
@@ -1162,18 +1198,18 @@ ErrorSet.fatal(loc, "Syntax error in nowarn pragma");
     }
 
     /**
-     * Describe <code>parseExsuresPrimitiveType</code> method here.
+     * Parse the primative type used in an <code>exsures</code> or
+     * <code>signals</code> pragma.
      *
-     * @param l an <code>EscPragmaLex</code> value
-     * @return a <code>PrimitiveType</code> value
+     * @param l the lexer from which to read and parse.
+     * @return the parsed type declaration, if the type is primative.
      */
-    //@ requires l!=null && l.m_in!=null
-    //@ ensures \result!=null ==> \result.syntax
-    public PrimitiveType parseExsuresPrimitiveType (EscPragmaLex l) {
-
+    //@ requires l.m_in != null
+    //@ ensures \result != null ==> \result.syntax
+    public PrimitiveType parseExsuresPrimitiveType(EscPragmaLex /*@ non_null @*/ l) {
 	int tag;
-	switch( l.ttype ) {
-            case TagConstants.TYPETYPE:tag = TagConstants.TYPECODE; break;
+	switch(l.ttype) {
+            case TagConstants.TYPETYPE:tag = TagConstants.TYPECODE;    break;
             case TagConstants.BOOLEAN: tag = TagConstants.BOOLEANTYPE; break;
             case TagConstants.BYTE:    tag = TagConstants.BYTETYPE;    break;
             case TagConstants.SHORT:   tag = TagConstants.SHORTTYPE;   break;
@@ -1188,20 +1224,21 @@ ErrorSet.fatal(loc, "Syntax error in nowarn pragma");
 	// get here => tag is defined
 	int loc = l.startingLoc;
 	l.getNextToken();
-	return PrimitiveType.make( tag, loc );
+	return PrimitiveType.make(tag, loc);
     }
 
     /**
-     * Describe <code>parseExsuresTypeName</code> method here.
+     * Parse the type name used in an <code>exsures</code> or
+     * <code>signals</code> pragma.
      *
-     * @param l an <code>EscPragmaLex</code> value
-     * @return a <code>TypeName</code> value
+     * @param l the lexer from which to read and parse.
+     * @return the parsed type declaration.
+     * @equivalent parseTypeName(l);
      */
-    //@ requires l!=null && l.m_in!=null
-    //@ ensures \result!=null
+    //@ requires l.m_in != null
+    //@ ensures \result != null
     //@ ensures \result.syntax
-    public TypeName parseExsuresTypeName(EscPragmaLex l) {
+    public TypeName parseExsuresTypeName(EscPragmaLex /*@ non_null @*/ l) {
 	return parseTypeName(l);	
     }
-
 }

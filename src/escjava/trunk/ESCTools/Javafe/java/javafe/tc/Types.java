@@ -12,10 +12,10 @@ import javafe.util.Location;
 public class Types {
 
   /**
-   ** Types uses the inst pattern to allow subclasses
-   ** to provide alternative implementations of some
-   ** of the static methods here.
-   **/
+   * Types uses the inst pattern to allow subclasses
+   * to provide alternative implementations of some
+   * of the static methods here.
+   */
   static public /*@non_null*/ Types inst;
 
   static {
@@ -23,8 +23,8 @@ public class Types {
   }
   
   /**
-   ** Factory method for TypeSig structures
-   **/
+   * Factory method for TypeSig structures
+   */
   //@ requires !(enclosingEnv instanceof EnvForCU)
   //@ ensures \result!=null
   public static TypeSig makeTypeSig(String simpleName,
@@ -46,8 +46,8 @@ public class Types {
   }
 
   /**
-   ** Factory method for TypeSig structures
-   **/
+   * Factory method for TypeSig structures
+   */
   //@ requires \nonnullelements(packageName)
   //@ requires (enclosingType!=null) ==> (decl!=null)
   //@ requires (decl==null) == (CU==null)
@@ -143,12 +143,12 @@ public class Types {
      *                                                 *
      * Fields for java.lang types:		       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
     /**
-     ** Return the package java.lang as a String[] for use in calling
-     ** OutsideEnv.lookup[deferred].
-     **/
+     * Return the package java.lang as a String[] for use in calling
+     * OutsideEnv.lookup[deferred].
+     */
     //@ ensures \nonnullelements(\result)
     public static String[] javaLangPackage() {
 	if (s_javaLangPackage==null) {
@@ -164,14 +164,14 @@ public class Types {
 
 
     /**
-     ** Find the TypeSig for the required package-member type
-     ** java.lang.T.<p>
-     **
-     ** If the type is not found in the classpath, an error message is
-     ** reported via ErrorSet and an unloaded TypeSig is returned.<p>
-     **
-     ** Precondition: the TypeSig has been initialized.<p>
-     **/
+     * Find the TypeSig for the required package-member type
+     * java.lang.T.<p>
+     *
+     * If the type is not found in the classpath, an error message is
+     * reported via ErrorSet and an unloaded TypeSig is returned.<p>
+     *
+     * Precondition: the TypeSig has been initialized.<p>
+     */
     //@ requires T!=null
     //@ ensures \result!=null
     public static TypeSig getJavaLang(String T) {
@@ -262,7 +262,7 @@ public class Types {
      *                                                 *
      * Predicates on types:			       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
   public static boolean isReferenceType(Type t) {
     return !(t instanceof PrimitiveType);
@@ -390,7 +390,7 @@ public class Types {
   /** Returns true if and only if <code>x</code> is a subclass or
     * superinterface of <code>y</code>.  (The occurrence of "class"
     * in the name of the method is rather unfortunate.)
-    **/
+    */
   //@ requires x!=null && y!=null
   //@ ensures \result ==> (x instanceof TypeSig) || (x instanceof TypeName)
   public static boolean isSubclassOf( Type x, TypeSig y ) {
@@ -407,14 +407,14 @@ public class Types {
   }
 
     /** 
-     ** Returns true iff <code>x</code> is a superclass or
-     ** superinterface of <code>y</code>, or if <code>x</code> is the
-     ** same type as <code>y</code>.
-     **
-     ** <b>Warning</b>: This is *not* the same as is <code>x</code> a
-     ** subtype of <code>y</code>!  It does not consider short below
-     ** int.
-     **/
+     * Returns true iff <code>x</code> is a superclass or
+     * superinterface of <code>y</code>, or if <code>x</code> is the
+     * same type as <code>y</code>.
+     *
+     * <b>Warning</b>: This is *not* the same as is <code>x</code> a
+     * subtype of <code>y</code>!  It does not consider short below
+     * int.
+     */
     //@ requires x!=null && y!=null
     public static boolean isSubClassOrEq(/*non_null*/ Type x,
 					 /*non_null*/ Type y) {
@@ -786,12 +786,12 @@ public class Types {
     return true;
   }
 
-  // **********************************************************************
+  // *********************************************************************
 
 
     /**
-     ** Is an exception a checked one?
-     **/
+     * Is an exception a checked one?
+     */
     static boolean isCheckedException(/*@non_null*/ Type E) {
 	return !Types.isSubclassOf(E, Types.javaLangRuntimeException())
 	    && !Types.isSubclassOf(E, Types.javaLangError());
@@ -799,12 +799,12 @@ public class Types {
 
 
     /**
-     ** Is "throws <x>" a valid overriding of "throws <y>"? <p>
-     **
-     ** Answer: Each exception E in the list <x> must be either:
-     **    (a) an unchecked exception
-     **    (b) a subtype of some exception in the list <y>
-     **/
+     * Is "throws <x>" a valid overriding of "throws <y>"? <p>
+     *
+     * Answer: Each exception E in the list <x> must be either:
+     *    (a) an unchecked exception
+     *    (b) a subtype of some exception in the list <y>
+     */
     //@ requires x!=null && y!=null
     static boolean isCompatibleRaises( TypeNameVec x, TypeNameVec y) {
     nextx:
@@ -853,17 +853,17 @@ public class Types {
      *                                                 *
      * Generating print names for Type(s):	       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
     /**
-     ** Returns the name of a <code>Type</code> as a
-     ** <code>String</code>.  The resulting name will be fully qualified
-     ** if the <code>Type</code> has been name resolved. <p>
-     **
-     ** Note: <code>t</code> may safely be null.<p>
-     **
-     ** Precondition: <code>PrettyPrint.inst</code> != null <p>
-     **/
+     * Returns the name of a <code>Type</code> as a
+     * <code>String</code>.  The resulting name will be fully qualified
+     * if the <code>Type</code> has been name resolved. <p>
+     *
+     * Note: <code>t</code> may safely be null.<p>
+     *
+     * Precondition: <code>PrettyPrint.inst</code> != null <p>
+     */
     //@ ensures \result!=null
     public static String printName(Type t) {
       return inst.printNameInstance(t);
@@ -884,16 +884,16 @@ public class Types {
     }
 
     /**
-     ** Formats an array of <code>Type</code>s as a <code>String</code>
-     ** containing a parenthesized list of user-readable names.  The
-     ** resulting names  will be fully qualified if the
-     ** <code>Type</code>s have been name resolved.  <p>
-     **
-     ** Sample output: "(int, javafe.tc.TypeSig, char[])" <p>
-     **
-     ** Precondition: <code>PrettyPrint.inst</code> != null,
-     **		      <code>ts</code>!=null <p>
-     **/
+     * Formats an array of <code>Type</code>s as a <code>String</code>
+     * containing a parenthesized list of user-readable names.  The
+     * resulting names  will be fully qualified if the
+     * <code>Type</code>s have been name resolved.  <p>
+     *
+     * Sample output: "(int, javafe.tc.TypeSig, char[])" <p>
+     *
+     * Precondition: <code>PrettyPrint.inst</code> != null,
+     *		      <code>ts</code>!=null <p>
+     */
     //@ requires ts!=null
     public static String printName(Type[] ts) {
 	StringBuffer s = new StringBuffer("(");

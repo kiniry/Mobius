@@ -6,10 +6,6 @@ package escjava.ast;
 import java.util.Hashtable;
 
 import javafe.ast.*;
-import escjava.ast.Visitor;      // Work around 1.0.2 compiler bug
-import escjava.ast.TagConstants; // Work around 1.0.2 compiler bug
-import escjava.ast.GeneratedTags;// Work around 1.0.2 compiler bug
-import escjava.ast.AnOverview;   // Work around 1.0.2 compiler bug
 import javafe.util.Assert;
 import javafe.util.Location;
 import escjava.Main;

@@ -8,27 +8,27 @@ import java.io.File;
 
 
 /**
- ** A UnionTree is a Tree which represents the union of a series of
- ** Tree's.<p>
- **
- ** A node exists in a UnionTree iff a corresponding node (i.e., same
- ** fully qualified name) exists in any of the underlying Trees.  Its
- ** data field is copied at creation time from the first such
- ** corresponding node (i.e., the one whose Tree is first in the list
- ** of underlying Trees).<p>
- **
- ** Exception: if the underlying list contains 0 Trees, then the
- ** UnionTree contains exactly 1 node, the root node, which will have
- ** data equal to null.<p>
- **
- ** The other corresponding nodes of a node X can be accessed by calling
- ** X.duplicates(), which returns a list of all the corresponding nodes
- ** (including the first one) in the same order as the original input
- ** list of Trees.<p>
- ** 
- ** The behavior of a UnionTree is undefined if the underlying Trees it
- ** depends on are altered after it has been created.<p>
- **/
+ * A UnionTree is a Tree which represents the union of a series of
+ * Tree's.<p>
+ *
+ * A node exists in a UnionTree iff a corresponding node (i.e., same
+ * fully qualified name) exists in any of the underlying Trees.  Its
+ * data field is copied at creation time from the first such
+ * corresponding node (i.e., the one whose Tree is first in the list
+ * of underlying Trees).<p>
+ *
+ * Exception: if the underlying list contains 0 Trees, then the
+ * UnionTree contains exactly 1 node, the root node, which will have
+ * data equal to null.<p>
+ *
+ * The other corresponding nodes of a node X can be accessed by calling
+ * X.duplicates(), which returns a list of all the corresponding nodes
+ * (including the first one) in the same order as the original input
+ * list of Trees.<p>
+ * 
+ * The behavior of a UnionTree is undefined if the underlying Trees it
+ * depends on are altered after it has been created.<p>
+ */
 
 public class UnionTree extends PreloadedTree {
 
@@ -36,22 +36,22 @@ public class UnionTree extends PreloadedTree {
      *                                                 *
      * Creation:				       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
     /**
-     ** The list of Trees we represent the union of:<p>
-     **
-     ** Invariant: contains no nulls and is non-null.<p>
-     **/
+     * The list of Trees we represent the union of:<p>
+     *
+     * Invariant: contains no nulls and is non-null.<p>
+     */
     //@ invariant \nonnullelements(roots)
     protected Tree[] roots;
 
     /**
-     ** Create a new Tree that represents the union of the Trees in
-     ** roots.<p>
-     **
-     ** roots must be non-null and contain no nulls.<p>
-     **/
+     * Create a new Tree that represents the union of the Trees in
+     * roots.<p>
+     *
+     * roots must be non-null and contain no nulls.<p>
+     */
     //@ requires \nonnullelements(roots)
     public UnionTree(Tree[] roots) {
 	super(null);
@@ -62,10 +62,10 @@ public class UnionTree extends PreloadedTree {
     }
 
     /**
-     ** Create a non-root node:<p>
-     **
-     ** roots must be non-null and contain no nulls.<p>
-     **/
+     * Create a non-root node:<p>
+     *
+     * roots must be non-null and contain no nulls.<p>
+     */
     //@ requires \nonnullelements(roots)
     //@ requires parent!=null && label!=null
     protected UnionTree(Tree parent, String label, Tree[] roots) {
@@ -80,22 +80,22 @@ public class UnionTree extends PreloadedTree {
      *                                                 *
      * Accessors:				       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
     /**
-     ** Return a list of all the nodes that correspond to this one in
-     ** the underlying Trees in the same order as the original list of
-     ** Trees.  This ist is never null and never contains any nulls.
-     **/
+     * Return a list of all the nodes that correspond to this one in
+     * the underlying Trees in the same order as the original list of
+     * Trees.  This ist is never null and never contains any nulls.
+     */
     //@ ensures \nonnullelements(\result)
     public Tree[] duplicates() {
 	return roots;
     }
 
     /**
-     ** Return the number of nodes corresponding to this one there are
-     ** in the underlying Trees.
-     **/
+     * Return the number of nodes corresponding to this one there are
+     * in the underlying Trees.
+     */
     public int countDuplicates() {
 	return roots.length;
     }
@@ -105,9 +105,9 @@ public class UnionTree extends PreloadedTree {
      *                                                 *
      * Loading the edges map:			       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
-    /** Load the edges map for use.  **/
+    /** Load the edges map for use.  */
     protected void loadEdges() {
 	/*
          * Make sure all our direct children are loaded by trying to
@@ -155,7 +155,7 @@ public class UnionTree extends PreloadedTree {
      *                                                 *
      * Debugging functions:			       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
     public void printDetails(String prefix) {
 	System.out.print(" [" + countDuplicates() + "]");
@@ -165,7 +165,7 @@ public class UnionTree extends PreloadedTree {
 //	    roots[i].print(prefix + "  >> ");
     }
 
-    /** A simple test driver **/
+    /** A simple test driver */
     //@ requires args!=null;
     /*@ requires (\forall int i; (0<=i && i<args.length)
 		==> args[i]!=null) */

@@ -48,11 +48,11 @@ fields.
 public abstract class _SpecialParserInterface {
 
     /**
-     ** Return the hidden "token type" field of <CODE>id</CODE>.
-     **
-     ** The token code will be one that does not require a
-     ** non-null auxVal (cf. Token.auxVal).
-     **/
+     * Return the hidden "token type" field of <CODE>id</CODE>.
+     *
+     * The token code will be one that does not require a
+     * non-null auxVal (cf. Token.auxVal).
+     */
     //@ ensures \result!=TagConstants.BOOLEANLIT
     //@ ensures \result!=TagConstants.INTLIT
     //@ ensures \result!=TagConstants.LONGLIT
@@ -71,11 +71,11 @@ public abstract class _SpecialParserInterface {
 
 
     /**
-     ** Set the hidden "token type" field of <CODE>id</CODE>.
-     **
-     ** The token code must be one that does not require a
-     ** non-null auxVal (cf. Token.auxVal).
-     **/
+     * Set the hidden "token type" field of <CODE>id</CODE>.
+     *
+     * The token code must be one that does not require a
+     * non-null auxVal (cf. Token.auxVal).
+     */
     //@ requires tokenType!=TagConstants.BOOLEANLIT
     //@ requires tokenType!=TagConstants.INTLIT
     //@ requires tokenType!=TagConstants.LONGLIT

@@ -242,11 +242,11 @@ public class TypeCheck
 
 
     /**
-     ** Retrieves the {@link TypeSig} associated with a particular
-     ** {@link TypeName}.
-     **
-     ** Precondition: n has been resolved.
-     **/
+     * Retrieves the {@link TypeSig} associated with a particular
+     * {@link TypeName}.
+     *
+     * Precondition: n has been resolved.
+     */
     //@ ensures \result!=null
     public TypeSig getSig(/*@non_null*/ TypeName n) {
 	return TypeSig.getSig( n );
@@ -259,17 +259,17 @@ public class TypeCheck
 
 
     /**
-     ** Construct a <code>String</code> listing the signature of a
-     ** {@link RoutineDecl}, omitting the return type and throws
-     ** causes if any. <p>
-     **
-     ** All types are fully qualified if <code>r</code> has
-     ** been name resolved.<p>
-     **
-     ** Sample output: "(int, javafe.tc.TypeSig, char[])" <p>
-     **
-     ** Precondition: PrettyPrint.inst, and r non-null.<p>
-     **/
+     * Construct a <code>String</code> listing the signature of a
+     * {@link RoutineDecl}, omitting the return type and throws
+     * causes if any. <p>
+     *
+     * All types are fully qualified if <code>r</code> has
+     * been name resolved.<p>
+     *
+     * Sample output: "(int, javafe.tc.TypeSig, char[])" <p>
+     *
+     * Precondition: PrettyPrint.inst, and r non-null.<p>
+     */
     //@ requires r!=null
     public static String getSignature(RoutineDecl r) {
 	StringBuffer s = new StringBuffer("(");
@@ -286,17 +286,17 @@ public class TypeCheck
 
 
     /**
-     ** Returns the user-readable name for a {@link RoutineDecl}. <p>
-     **
-     ** Either of the form "method <name>(<argument types>)" or the form
-     ** "constructor <classname>(<argument types>)".<p>
-     **
-     ** All argument types are fully qualified if
-     ** <code>r</code> has been name resolved.  The method/constructor
-     ** name is not qualified.<p>
-     **
-     ** Precondition: PrettyPrint.inst, and r non-null.<p>
-     **/
+     * Returns the user-readable name for a {@link RoutineDecl}. <p>
+     *
+     * Either of the form "method <name>(<argument types>)" or the form
+     * "constructor <classname>(<argument types>)".<p>
+     *
+     * All argument types are fully qualified if
+     * <code>r</code> has been name resolved.  The method/constructor
+     * name is not qualified.<p>
+     *
+     * Precondition: PrettyPrint.inst, and r non-null.<p>
+     */
     //@ requires r.hasParent
     public String getName(/*@non_null*/ RoutineDecl r) {
 	String argumentTypes = getSignature(r);
@@ -319,10 +319,10 @@ public class TypeCheck
     }
 
     /**
-     ** Returns the user-readable simple name for a {@link RoutineDecl}. <p>
-     **
-     ** Precondition: r non-null.<p>
-     **/
+     * Returns the user-readable simple name for a {@link RoutineDecl}. <p>
+     *
+     * Precondition: r non-null.<p>
+     */
     //@ requires r.hasParent
     public String getRoutineName(/*@non_null*/ RoutineDecl r) {
 	switch (r.getTag()) {
@@ -343,11 +343,11 @@ public class TypeCheck
 
 
     /**
-     ** Can a member of type target with modifiers
-     ** modifiers/pmodifiers be accessed by code located in from? <p>
-     **
-     ** Note: pmodifiers may be null. <p>
-     **/
+     * Can a member of type target with modifiers
+     * modifiers/pmodifiers be accessed by code located in from? <p>
+     *
+     * Note: pmodifiers may be null. <p>
+     */
     public boolean canAccess(/*@non_null*/ TypeSig from, 
 			     /*@non_null*/ TypeSig target,
 			     int modifiers,

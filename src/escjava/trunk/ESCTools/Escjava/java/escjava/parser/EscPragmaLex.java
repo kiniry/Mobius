@@ -20,7 +20,25 @@ import javafe.ast.*;
 
 import escjava.ast.*;
 import escjava.ast.TagConstants;
-//import escjava.parser.EscPragmaLex;
+
+/**
+ * This lexer overrides {@link Lex#scanJavaExtensions(int)} to
+ * support "informal predicates".  An informal predicate is an
+ * embedded comment. <br>
+ * <pre>
+ * //@ requires (* this is an informal predicate *);
+ * //@ requires true &&(*soIsThis*)
+ * //@ ensures (((((* Here's one inside some parens *)))));
+ * </pre>
+ * Informal predicates can even be more crazy with embedded comments.
+ * See the file ESCTools/Escjava/test/escjava/test/test70/C.java for
+ * examples.
+ *
+ * <p> Informal predicates are parsed as boolean literal expressions
+ * with an AST decoration of "informalPredicate".  See
+ * {@link EscPragmaParser#parsePrimaryExpression(Lex)} and
+ * {@link EscPragmaParser#informalPredicateDecoration} for details.
+ */
 
 public final class EscPragmaLex extends Lex
 {
@@ -29,7 +47,6 @@ public final class EscPragmaLex extends Lex
     }
 
     protected int scanJavaExtensions(int nextchr) {
-
         try { 
             if (nextchr == '\\') {
                 int h = 0;
@@ -37,8 +54,10 @@ public final class EscPragmaLex extends Lex
                     try {
                         text[textlen] = (char)nextchr;
                         textlen++;
-                    } catch (ArrayIndexOutOfBoundsException e) { this.append(nextchr);}
-                    h = _SpecialParserInterface.HC*h + nextchr;
+                    } catch (ArrayIndexOutOfBoundsException e) { 
+                        this.append(nextchr);
+                    }
+                    h = _SpecialParserInterface.HC * h + nextchr;
                     nextchr = m_in.read();
                 } while (Character.isJavaLetterOrDigit((char)nextchr));
                 m_nextchr = nextchr;
@@ -61,7 +80,6 @@ public final class EscPragmaLex extends Lex
                     ttype = TagConstants.NULL;
                 }
                 return ttype;
-
             } else if (nextchr == '(') {
                 // Try to lex an informal predicate
                 m_in.mark();
@@ -103,13 +121,11 @@ public final class EscPragmaLex extends Lex
                                            "Unterminated informal predicate");
                         }
                     }
-
                 } else {
                     // it wasn't an informal predicate after all
                     m_in.reset();
                 }
             }
-
 
             ttype = TagConstants.NULL;
             return ttype;
@@ -118,7 +134,6 @@ public final class EscPragmaLex extends Lex
             return TagConstants.NULL; // Dummy
         }
     }
-
 }
 
 

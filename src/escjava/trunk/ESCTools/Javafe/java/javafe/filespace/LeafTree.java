@@ -7,9 +7,9 @@ import java.util.Enumeration;
 
 
 /**
- ** A LeafTree is a degenerate form of Tree that never contains
- ** children.  It is used for the leaf nodes of a Tree.
- **/
+ * A LeafTree is a degenerate form of Tree that never contains
+ * children.  It is used for the leaf nodes of a Tree.
+ */
 
 class LeafTree extends Tree {
 
@@ -17,14 +17,14 @@ class LeafTree extends Tree {
      *                                                 *
      * Creation:				       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
-    /** Create a root node: **/
+    /** Create a root node: */
     public LeafTree(Object data) {
 	super(data);
     }
 
-    /** Create a non-root node: **/
+    /** Create a non-root node: */
     //@ requires parent!=null && label!=null
     /* package */ LeafTree(Tree parent, String label, Object data) {
 	super(parent, label, data);
@@ -35,7 +35,7 @@ class LeafTree extends Tree {
      *                                                 *
      * Fetching and counting children:		       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
     /*
      * Hardwire the fact that we never have children.  New definitions

@@ -25,7 +25,7 @@ public class ASTDecoration {
      *                                                 *
      * Class variables:				       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
     //@ invariant allocated >= 0
     private static int allocated=0;
@@ -38,13 +38,13 @@ public class ASTDecoration {
      *                                                 *
      * Instance variables:			       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
-    /** The name of our decoration **/
+    /** The name of our decoration */
     //@ invariant name!=null
     private String name;
 
-    /** Our decoration's actual "static" type **/
+    /** Our decoration's actual "static" type */
     //@ ghost public \TYPE decorationType
 
 
@@ -52,14 +52,14 @@ public class ASTDecoration {
      *                                                 *
      * Creation:				       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
     /**
-     ** Creates a new <code>ASTDecoration</code> object with the given
-     ** name. <p>
-     **
-     ** The caller should set the decorationType field of the result.<p>
-     **/
+     * Creates a new <code>ASTDecoration</code> object with the given
+     * name. <p>
+     *
+     * The caller should set the decorationType field of the result.<p>
+     */
     //@ requires s!=null
     public ASTDecoration(String s) {
 	name = s;
@@ -72,12 +72,12 @@ public class ASTDecoration {
      *                                                 *
      * Methods:					       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
    /**
-    ** Return the decoration value of an <code>ASTNode</code>, or <code> null
-    ** if the <code>ASTNode</code> has no decoration.
-    **/
+    * Return the decoration value of an <code>ASTNode</code>, or <code> null
+    * if the <code>ASTNode</code> has no decoration.
+    */
     //@ requires n!=null
     //@ ensures \typeof(\result) <: decorationType
     public Object get(ASTNode n) {
@@ -91,8 +91,8 @@ public class ASTDecoration {
 
 
     /**
-     ** Set the decoration value of an <code>ASTNode</code>.
-     **/
+     * Set the decoration value of an <code>ASTNode</code>.
+     */
     //@ requires n!=null
     //@ requires \typeof(val) <: decorationType
     public void set(ASTNode n, Object val) {
@@ -109,16 +109,16 @@ public class ASTDecoration {
 
 
     /**
-     ** Return the name associated with <code>this</code>. 
-     **/
+     * Return the name associated with <code>this</code>. 
+     */
     public String toString() {
       return name;
     }
 
     /**
-     ** Return a string  containing the decoration's name, and the
-     ** decoration value for this <code>ASTNode</code>.
-     **/
+     * Return a string  containing the decoration's name, and the
+     * decoration value for this <code>ASTNode</code>.
+     */
     //@ requires n!=null
     public String toString(ASTNode n) {
 	Object val = get(n);

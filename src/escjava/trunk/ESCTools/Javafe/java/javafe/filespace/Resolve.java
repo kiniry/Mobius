@@ -7,15 +7,15 @@ import java.io.IOException;
 
 
 /**
- ** This module encapsulates how to resolve an ambiguous multi-part
- ** identifier (i.e., X.Y.Z) into a package + (possibly a) reference
- ** type + a type field/member multi-part identifier, using the output
- ** of ClassPath.<p>
- **
- ** I.e., it would split java.util.zip.Foo.Subclass.x.y into the package
- ** java.util.zip, the (inner) type Foo$Subclass, and the field/member
- ** identifier x.y.<p>
- **/
+ * This module encapsulates how to resolve an ambiguous multi-part
+ * identifier (i.e., X.Y.Z) into a package + (possibly a) reference
+ * type + a type field/member multi-part identifier, using the output
+ * of ClassPath.<p>
+ *
+ * I.e., it would split java.util.zip.Foo.Subclass.x.y into the package
+ * java.util.zip, the (inner) type Foo$Subclass, and the field/member
+ * identifier x.y.<p>
+ */
 
 public class Resolve {
 
@@ -23,17 +23,17 @@ public class Resolve {
      *                                                 *
      * Primitive functions for looking up identifiers: *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
     /**
-     ** Does a package contain a reference type with a given simple
-     ** name?<p>
-     **
-     ** Currently true if a source or a binary for that type exists
-     ** (directly) in the given package.<p>
-     **
-     ** <esc> requires P!=null && typeName!=null </esc>
-     **/
+     * Does a package contain a reference type with a given simple
+     * name?<p>
+     *
+     * Currently true if a source or a binary for that type exists
+     * (directly) in the given package.<p>
+     *
+     * <esc> requires P!=null && typeName!=null </esc>
+     */
     public static boolean typeExists(Tree P, String typeName) {
 	if (P.getChild(typeName+".java")!=null)
 	    return true;
@@ -56,40 +56,40 @@ public class Resolve {
 
 
     /**
-     ** Lookup a multi-part identifier in a Java filespace in the same
-     ** way that the Java compiler does so.<p>
-     **
-     ** Precondition: the identifier parts should not contain the '.' or
-     ** '$' characters, and each must be non-null and non-empty.<p>
-     **
-     ** The leftmost part of the identifier is assumed to refer to an
-     ** existing package; the longest such name is used.  The returned
-     ** package will always be non-null because package names may be
-     ** empty ("" refers to the top package).<p>
-     **
-     ** The remaining part of the identifier (may be empty) is then
-     ** assumed to be the concatenation of a (inner) reference-type name
-     ** and a remainder part.  Again, as with the package name, the type
-     ** name is assumed to be the longest such name that refers to an
-     ** existing type, with the proviso that a type is considered to
-     ** exist only if all prefix types (i.e., X and X$Y for X$Y$Z)
-     ** also exist.  If no non-empty prefix names an existing type,
-     ** then the type name is taken to be empty and the returned
-     ** typeName will be null.  Otherwise, the returned typeName
-     ** contains the (non-null) name of the type, with its parts
-     ** separated by '$'s.<p>
-     **
-     ** The remaining part of the identifier after the package name and
-     ** type name have been removed is returned as the remainder part.<p>
-     **
-     **
-     ** EXCEPTION: if, while identifying the package name, a package is
-     ** encountered that has the same name as a reference type, then the
-     ** exception Resolve_AmbiguousName will be thrown with
-     ** ambiguousPackage set to the package with the ambiguous name.
-     ** Such package/type naming conflicts are illegal according to the
-     ** Java documentation.<p>
-     **/
+     * Lookup a multi-part identifier in a Java filespace in the same
+     * way that the Java compiler does so.<p>
+     *
+     * Precondition: the identifier parts should not contain the '.' or
+     * '$' characters, and each must be non-null and non-empty.<p>
+     *
+     * The leftmost part of the identifier is assumed to refer to an
+     * existing package; the longest such name is used.  The returned
+     * package will always be non-null because package names may be
+     * empty ("" refers to the top package).<p>
+     *
+     * The remaining part of the identifier (may be empty) is then
+     * assumed to be the concatenation of a (inner) reference-type name
+     * and a remainder part.  Again, as with the package name, the type
+     * name is assumed to be the longest such name that refers to an
+     * existing type, with the proviso that a type is considered to
+     * exist only if all prefix types (i.e., X and X$Y for X$Y$Z)
+     * also exist.  If no non-empty prefix names an existing type,
+     * then the type name is taken to be empty and the returned
+     * typeName will be null.  Otherwise, the returned typeName
+     * contains the (non-null) name of the type, with its parts
+     * separated by '$'s.<p>
+     *
+     * The remaining part of the identifier after the package name and
+     * type name have been removed is returned as the remainder part.<p>
+     *
+     *
+     * EXCEPTION: if, while identifying the package name, a package is
+     * encountered that has the same name as a reference type, then the
+     * exception Resolve_AmbiguousName will be thrown with
+     * ambiguousPackage set to the package with the ambiguous name.
+     * Such package/type naming conflicts are illegal according to the
+     * Java documentation.<p>
+     */
     //@ requires filespace!=null
     //@ requires identifier!=null
     /*@ requires (\forall int i; (0<=i && i<identifier.length)
@@ -154,13 +154,13 @@ public class Resolve {
      *                                                 *
      * Handling names:				       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
     /**
-     ** Combine two names using a separator if both are non-empty. <p>
-     **
-     ** <esc> requires first!=null && second!=null </esc>
-     **/
+     * Combine two names using a separator if both are non-empty. <p>
+     *
+     * <esc> requires first!=null && second!=null </esc>
+     */
     //@ ensures \result!=null
     public static String combineNames(String first, String second,
 					String separator) {
@@ -171,13 +171,13 @@ public class Resolve {
     }
 
     /**
-     ** Convert a multi-part identifier into a path.  Returns null if
-     ** the identifier is badly formed (i.e., contains empty
-     ** components).  id must be non-null. <p>
-     **
-     ** Only uses '.' as a separator.  If you wish to allow '$' as well,
-     ** use tr first to map all the '$'s in the name into '.'s.<p>
-     **/
+     * Convert a multi-part identifier into a path.  Returns null if
+     * the identifier is badly formed (i.e., contains empty
+     * components).  id must be non-null. <p>
+     *
+     * Only uses '.' as a separator.  If you wish to allow '$' as well,
+     * use tr first to map all the '$'s in the name into '.'s.<p>
+     */
     //@ requires id!=null
     /*@ ensures \result!=null ==>
 	(\forall int i; (0<=i && i<\result.length) ==> \result[i]!=null) */   
@@ -192,12 +192,12 @@ public class Resolve {
     }
 
     /**
-     ** Do a lookup using the result of parseIdentifier extended to
-     ** allow '$' as an additional separator.<p>
-     **
-     ** Complains to System.err then returns null if the name is badly
-     ** formed.  identifier and filespace must be non-null.<p>
-     **/
+     * Do a lookup using the result of parseIdentifier extended to
+     * allow '$' as an additional separator.<p>
+     *
+     * Complains to System.err then returns null if the name is badly
+     * formed.  identifier and filespace must be non-null.<p>
+     */
     //@ requires filespace!=null && identifier!=null
     //@ ensures \result!=null ==> \result.myPackage!=null
     public static Resolve_Result lookupName(Tree filespace, String identifier)
@@ -219,26 +219,26 @@ public class Resolve {
      *                                                 *
      * Maintaining a notion of a current namespace:    *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
     /**
-     ** The current Java namespace; must be a non-null filespace.<p>
-     **
-     ** Starts out empty.<p>
-     **/ 
+     * The current Java namespace; must be a non-null filespace.<p>
+     *
+     * Starts out empty.<p>
+     */ 
     //@ invariant namespace!=null
     public static Tree namespace = PathComponent.empty();
 
 
     /**
-     ** Attempt to set the current namespace to a new non-null class path.<p>
-     **
-     ** Complains about any errors to System.err.  The current namespace
-     ** remains unchanged in the case of an error.<p>
-     **
-     ** Iff complain is set, we complain if non-existent
-     ** or ill-formed path components are present in the classpath.<p>
-     **/
+     * Attempt to set the current namespace to a new non-null class path.<p>
+     *
+     * Complains about any errors to System.err.  The current namespace
+     * remains unchanged in the case of an error.<p>
+     *
+     * Iff complain is set, we complain if non-existent
+     * or ill-formed path components are present in the classpath.<p>
+     */
     //@ requires classpath!=null
     public static void set(String classpath, boolean complain) {
 	try {
@@ -249,22 +249,22 @@ public class Resolve {
     }
 
     /**
-     ** Attempt to set the current namespace to current classpath (cf.
-     ** ClassPath).<p>
-     **
-     ** Complains about any errors to System.err.  The current namespace
-     ** remains unchanged in the case of an error.<p>
-     **
-     ** Iff complain is set, we complain if non-existent
-     ** or ill-formed path components are present in the classpath.<p>
-     **/
+     * Attempt to set the current namespace to current classpath (cf.
+     * ClassPath).<p>
+     *
+     * Complains about any errors to System.err.  The current namespace
+     * remains unchanged in the case of an error.<p>
+     *
+     * Iff complain is set, we complain if non-existent
+     * or ill-formed path components are present in the classpath.<p>
+     */
     public static void init(boolean complain) {
 	set(ClassPath.current(), complain);
     }
 
     /**
-     ** Convenience function: do a lookupName using the current namespace
-     **/
+     * Convenience function: do a lookupName using the current namespace
+     */
     //@ requires identifier!=null
     //@ ensures \result!=null ==> \result.myPackage!=null
     public static Resolve_Result lookupName(String identifier) 
@@ -277,20 +277,20 @@ public class Resolve {
      *                                                 *
      * Error handling:				       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
     /**
-     ** Check the result of a lookup to ensure that it refers to an
-     ** (inner) reference type or a package.  I.e., that there are no
-     ** remainder parts.<p>
-     **
-     ** If the check fails, complains appropriately to System.err and then
-     ** returns null.  If answer is already null, returns null
-     ** immediately.<p>
-     **
-     ** Otherwise, returns its argument unchanged; the argument will
-     ** always have a remainder of length 0 in this case.<p>
-     **/
+     * Check the result of a lookup to ensure that it refers to an
+     * (inner) reference type or a package.  I.e., that there are no
+     * remainder parts.<p>
+     *
+     * If the check fails, complains appropriately to System.err and then
+     * returns null.  If answer is already null, returns null
+     * immediately.<p>
+     *
+     * Otherwise, returns its argument unchanged; the argument will
+     * always have a remainder of length 0 in this case.<p>
+     */
     /*@ requires answer!=null ==> answer.myPackage!=null */
     //@ ensures \result!=null ==> \result.myPackage!=null
     public static Resolve_Result ensureUnit(Resolve_Result answer) {
@@ -319,17 +319,17 @@ public class Resolve {
     }
 
     /**
-     ** Check the result of a lookup to ensure that it refers to an
-     ** (inner) reference type.<p>
-     **
-     ** If the check fails, complains appropriately to System.err and then
-     ** returns null.  If answer is already null, returns null
-     ** immediately.<p>
-     **
-     ** Otherwise, returns its argument unchanged; the argument will
-     ** have a non-null myTypeName and a remainder with length 0 in
-     ** this case.<p>
-     **/
+     * Check the result of a lookup to ensure that it refers to an
+     * (inner) reference type.<p>
+     *
+     * If the check fails, complains appropriately to System.err and then
+     * returns null.  If answer is already null, returns null
+     * immediately.<p>
+     *
+     * Otherwise, returns its argument unchanged; the argument will
+     * have a non-null myTypeName and a remainder with length 0 in
+     * this case.<p>
+     */
     //@ requires answer!=null ==> answer.myPackage!=null
     //@ ensures \result!=null ==> \result.myTypeName!=null
     //@ ensures \result!=null ==> \result.myPackage!=null
@@ -354,14 +354,14 @@ public class Resolve {
      *                                                 *
      * Utility functions:			       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
     /**
-     ** Convert 1 character to another everywhere it appears in a given
-     ** string.
-     **
-     ** <esc> requires input!=null; ensures \result!=null </esc>
-     **/
+     * Convert 1 character to another everywhere it appears in a given
+     * string.
+     *
+     * <esc> requires input!=null; ensures \result!=null </esc>
+     */
     public static String tr(String input, char from, char to) {
 	StringBuffer chars = new StringBuffer(input);
 
@@ -377,9 +377,9 @@ public class Resolve {
      *                                                 *
      * Debugging functions:			       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
-    /** A simple test driver **/
+    /** A simple test driver */
     //@ requires args!=null;
     /*@ requires (\forall int i; (0<=i && i<args.length)
 		==> args[i]!=null) */

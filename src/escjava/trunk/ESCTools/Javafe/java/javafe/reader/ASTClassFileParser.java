@@ -6,7 +6,6 @@
 
 package javafe.reader;
 
-
 import java.io.*;
 import java.util.*;
 
@@ -22,14 +21,13 @@ import javafe.genericfile.GenericFile;
  * ------------------------------------------------------------------------- */
 
 /**
- * Parses the contents of a class file into an AST for the purpose of type
- * checking.
- * Ignores components of the class file that have no relevance to type checking
- * (e.g. method bodies).
+ * Parses the contents of a class file into an AST for the purpose of
+ * type checking.  Ignores components of the class file that have no
+ * relevance to type checking (e.g. method bodies).
  */
 
-class ASTClassFileParser extends ClassFileParser {
-
+class ASTClassFileParser extends ClassFileParser
+{
     /* -- package instance methods ------------------------------------------- */
 
     /**

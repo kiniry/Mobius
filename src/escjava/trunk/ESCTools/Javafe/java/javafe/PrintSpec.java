@@ -16,8 +16,8 @@ import java.io.*;
 import java.util.StringTokenizer;
 
 /**
- ** <code>PrintSpec</code> print specs for class files.
- **/
+ * <code>PrintSpec</code> print specs for class files.
+ */
 
 public class PrintSpec extends FrontEndTool implements Listener {
 
@@ -42,7 +42,7 @@ public class PrintSpec extends FrontEndTool implements Listener {
      *                                                 *
      * Option processing:			       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
     public int processOption(String option, String[] args, int offset) {
         if (option.equals("-f")) {
@@ -62,7 +62,7 @@ public class PrintSpec extends FrontEndTool implements Listener {
      *                                                 *
      * Keeping track of loaded CompilationUnits:       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
 
     //@ invariant loaded!=null 
@@ -113,7 +113,7 @@ public class PrintSpec extends FrontEndTool implements Listener {
      *                                                 *
      * Main processing code:			       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
 
 

@@ -4,7 +4,7 @@
 
 (rm -f *.class) >& /dev/null
 cp A-java A.java
-${OLD_JAVAC} A.java
+${JAVAC} A.java
 rm A.java
 
 ${TOOL} Test.java

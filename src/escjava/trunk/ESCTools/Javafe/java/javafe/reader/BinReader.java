@@ -2,7 +2,6 @@
 
 package javafe.reader;
 
-
 import java.io.*;
 import java.util.*;
 
@@ -15,48 +14,46 @@ import javafe.ast.PrettyPrint;			// Debugging methods only
 import javafe.genericfile.*;
 import javafe.util.Location;
 
-
 /**
- ** A BinReader is a Reader that reads in CompilationUnits from binary
- ** files (.class files).<p>
- **
- ** BinReaders do not cache the results of their reading and always
- ** return spec files.<p>
- **
- ** TypeDecls produced by BinReaders always have specOnly set.<p>
- **
- **
- ** This version is not known to work on Java 1.1 class files.  Later
- ** versions are planned to return CompilationUnits with stubs where
- ** inner classes should be.  It is then the caller's responsibility to
- ** call this class repeatedly to obtain all the inner classes then
- ** stitch them together in a single seamless CompilationUnit.  (Most
- ** likely, a new class will be introduced to perform this function,
- ** mapping P.N's to Compilation Units.<p>
- **/
+ * A BinReader is a Reader that reads in CompilationUnits from binary
+ * files (.class files).
+ *
+ * <p> BinReaders do not cache the results of their reading and always
+ * return spec files.
+ *
+ * <p> TypeDecls produced by BinReaders always have specOnly set.
+ *
+ * <p> This version is not known to work on Java 1.1 class files.
+ * Later versions are planned to return CompilationUnits with stubs
+ * where inner classes should be.  It is then the caller's
+ * responsibility to call this class repeatedly to obtain all the
+ * inner classes then stitch them together in a single seamless
+ * CompilationUnit.  (Most likely, a new class will be introduced to
+ * perform this function, mapping P.N's to Compilation Units.
+ */
 
-public class BinReader extends Reader {
-
+public class BinReader extends Reader
+{
     /***************************************************
      *                                                 *
      * Reading:					       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
     /**
-     ** Attempt to read and parse a CompilationUnit from *binary*
-     ** target.   Any errors encountered are reported via
-     ** javafe.util.ErrorSet.  Null is returned iff an error was
-     ** encountered.<p>
-     **
-     **
-     ** We always return a spec file.  (avoidSpec is ignored)<p>
-     **
-     **
-     ** This function is not cached.<p>
-     **
-     ** Target must be non-null.<p>
-     **/
+     * Attempt to read and parse a CompilationUnit from *binary*
+     * target.   Any errors encountered are reported via
+     * javafe.util.ErrorSet.  Null is returned iff an error was
+     * encountered.<p>
+     *
+     *
+     * We always return a spec file.  (avoidSpec is ignored)<p>
+     *
+     *
+     * This function is not cached.<p>
+     *
+     * Target must be non-null.<p>
+     */
     public CompilationUnit read(GenericFile target, boolean avoidSpec) {
 	javafe.util.Info.out("[loading " + target.getHumanName() + "]");
 	try {
@@ -88,7 +85,7 @@ public class BinReader extends Reader {
      *                                                 *
      * Test methods:				       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
     //@ requires \nonnullelements(args)
     public static void main(String[] args) {

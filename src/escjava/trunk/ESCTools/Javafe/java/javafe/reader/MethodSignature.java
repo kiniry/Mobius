@@ -1,6 +1,5 @@
 /* Copyright 2000, 2001, Compaq Computer Corporation */
 
-
 /* =========================================================================
  * MethodSignature.java
  * ========================================================================= */
@@ -21,8 +20,8 @@ import javafe.util.*;
  * Represents the signature of a method in terms of AST elements.
  */
 
-class MethodSignature {
-
+class MethodSignature
+{
   /* -- package instance methods ------------------------------------------- */
 
   /**

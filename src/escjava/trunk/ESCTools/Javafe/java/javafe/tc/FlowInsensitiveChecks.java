@@ -6,19 +6,18 @@ package javafe.tc;
 import java.util.Hashtable;
 
 import javafe.ast.*;
-import javafe.tc.TagConstants; // Work around compiler bug
 import javafe.util.*;
 
 
 /**
- ** Does disambiguation and flow insensitive checks on a type declaration. 
- **/
+ * Does disambiguation and flow insensitive checks on a type declaration. 
+ */
 
 public class FlowInsensitiveChecks {
 
     /** Controls whether or not implicit super-calls in constructors
      * are made explicit.  By default they are.
-     **/
+     */
   
     public static boolean dontAddImplicitConstructorInvocations = false;
 
@@ -27,7 +26,7 @@ public class FlowInsensitiveChecks {
     protected FlowInsensitiveChecks() {}
 
 
-    /** Factory method so subclasses can override **/
+    /** Factory method so subclasses can override */
     //@ requires s!=null
     //@ ensures \result!=null
     protected EnvForTypeSig makeEnvForTypeSig(TypeSig s,
@@ -109,10 +108,10 @@ public class FlowInsensitiveChecks {
     // -------------------------------------------------------------
 
     /**
-     ** Moves <CODE>fd</CODE> into implementation checked state.<p>
-     **
-     ** Requires: <code>fd</code> is in prepped state.
-     **/
+     * Moves <CODE>fd</CODE> into implementation checked state.<p>
+     *
+     * Requires: <code>fd</code> is in prepped state.
+     */
     //@ modifies sig
     public void checkFieldDecl(/*@non_null*/ FieldDecl fd) {
 	/*
@@ -306,15 +305,15 @@ public class FlowInsensitiveChecks {
 
 
     /**
-     ** Typecheck a statement in a given environment then return the
-     ** environment in effect for statements that follow the given
-     ** statement. <p>
-     **
-     ** (The returned environment will be the same as the one passed
-     ** in unless the statement is a declaration.) <p>
-     **
-     ** Requires: <CODE>s</CODE> is not a case label.<p>
-     **/
+     * Typecheck a statement in a given environment then return the
+     * environment in effect for statements that follow the given
+     * statement. <p>
+     *
+     * (The returned environment will be the same as the one passed
+     * in unless the statement is a declaration.) <p>
+     *
+     * Requires: <CODE>s</CODE> is not a case label.<p>
+     */
     //@ requires e!=null && s!=null
     //@ requires !(e instanceof EnvForCU)
     //@ requires sig!=null
@@ -882,7 +881,7 @@ public class FlowInsensitiveChecks {
 
     /** This method should call <code>setType</code> on <code>x</code>
      * before its done.<p>
-     **/
+     */
 
     //@ requires env!=null && x!=null
     //@ requires !(env instanceof EnvForCU)
@@ -1487,11 +1486,11 @@ public class FlowInsensitiveChecks {
     // ======================================================================
 
     /**
-     ** Return the type of a E1 : L ? R expression given the
-     ** typechecked Expr's for L and R, as per JLS 15.24. <p>
-     **
-     ** Returns null if the given combination is illegal.<p>
-     **/
+     * Return the type of a E1 : L ? R expression given the
+     * typechecked Expr's for L and R, as per JLS 15.24. <p>
+     *
+     * Returns null if the given combination is illegal.<p>
+     */
     //@ requires leftExpr!=null && rightExpr!=null
     private Type tryCondExprMatch(Expr leftExpr, Expr rightExpr ) {
         Type leftType = getType( leftExpr );
@@ -1756,7 +1755,7 @@ public class FlowInsensitiveChecks {
         }
     }
 
-    // **********************************************************************
+    // *********************************************************************
 
     //@ requires e!=null
     static boolean checkIntegralType( Expr e) {
@@ -1800,9 +1799,9 @@ public class FlowInsensitiveChecks {
     // ======================================================================
 
     /**
-     ** Decorates <code>VarInit</code>
-     ** nodes to point to <code>Type</code> objects.
-     **/
+     * Decorates <code>VarInit</code>
+     * nodes to point to <code>Type</code> objects.
+     */
     //@ invariant typeDecoration!=null
     //@ invariant typeDecoration.decorationType == \type(Type)
     private static ASTDecoration typeDecoration
@@ -1969,7 +1968,7 @@ public class FlowInsensitiveChecks {
      * <code>ASTNode</code> is the parent of the
      * <code>ModifierPragma</code>, and <code>env</code> is the current
      * environment.<p>
-     **/
+     */
 
     //@ requires p!=null && env!=null
     protected void checkModifierPragma(ModifierPragma p, ASTNode ctxt, Env env) {
@@ -1998,8 +1997,8 @@ public class FlowInsensitiveChecks {
     }
 
     /**
-     ** This may be called more than once on a Type t.
-     **/
+     * This may be called more than once on a Type t.
+     */
     //@ requires t != null
     protected void  checkTypeModifiers(Env env, Type t) {
         // don't know context for type, so pull it out of the

@@ -6,53 +6,52 @@ import java.io.*;
 import javafe.FrontEndTool;
 
 /**
- ** The <code>ErrorSet</code> class is responsible for displaying
- ** cautions, warnings, ordinary errors, and fatal errors to the user.
- ** It maintains counts of how many cautions, warnings, and errors have
- ** been reported so far.<p>
- **
- **
- ** Currently, reporting is done via printing all messages to
- ** <code>System.out</code>.  Messages are accompanied by an indication
- ** of whether they are a caution, a warning, an ordinary error, or a
- ** fatal error.<p>
- **
- ** Messages are printed as soon as they are reported.  A future version
- ** of <code>ErrorSet</code> may group together messages concerning the
- ** same file to be printed in location sorted order once the file
- ** has been processed fully.  (This will require adding some kind of
- ** <code>end_of_file(F)</code> call.)<p>
- **
- **
- ** Rough rules for determining what class to report something as:
- **
- **   Error: something that is definitely wrong and which prevents
- **	     processing everything the tool was requested to work on.
- **
- **   Fatal Error: similar except that it prevents any further processing
- **                at all.  (Tools may continue after ordinary errors by
- **	           aborting processing of some, but not all, parts of the
- **                input program.)
- **
- **   Caution: (1) something that is technically illegal according to
- **	           the language spec(s), but the tool accepts anyways
- **	           for compatibility with other tools.  (It must not
- **                force aborting.)
- **	       (2) something that inhibits the tool's ability to catch
- **		   errors, but is not wrong.  Often caused by poor use
- **		   of annotations in escjava.
- **
- **   Warning: something that the Tool believes, but is not sure, is
- **	       a serious problem.
- **
- **
- **
- ** @see Location
- ** @see FatalError
- **/
+ * The <code>ErrorSet</code> class is responsible for displaying
+ * cautions, warnings, ordinary errors, and fatal errors to the user.
+ * It maintains counts of how many cautions, warnings, and errors have
+ * been reported so far.
+ *
+ * <p> Currently, reporting is done via printing all messages to
+ * <code>System.out</code>.  Messages are accompanied by an indication
+ * of whether they are a caution, a warning, an ordinary error, or a
+ * fatal error.
+ *
+ * <p> Messages are printed as soon as they are reported.  A future
+ * version of <code>ErrorSet</code> may group together messages
+ * concerning the same file to be printed in location sorted order
+ * once the file has been processed fully.  (This will require adding
+ * some kind of <code>end_of_file(F)</code> call.)
+ *
+ * <p> Rough rules for determining what class to report something as:
+ * <dl>
+ * <dt> Error: <dd> something that is definitely wrong and which
+ *	prevents processing everything the tool was requested to work
+ *	on.
+ *
+ * <dt> Fatal Error: <dd> similar except that it prevents any further
+ *      processing at all.  (Tools may continue after ordinary errors
+ *      by aborting processing of some, but not all, parts of the
+ *      input program.)
+ *
+ * <dt> Caution: <dd>
+ *      (1) something that is technically illegal according to the
+ *	language spec(s), but the tool accepts anyways for
+ *	compatibility with other tools.  (It must not force
+ *      aborting.) <br>
+ *      (2) something that inhibits the tool's ability to catch
+ *	errors, but is not wrong.  Often caused by poor use of
+ *	annotations in escjava.
+ *
+ * <dt> Warning: <dd>something that the Tool believes, but is not
+ *	sure, is a serious problem.
+ * </dl>
+ *
+ * @see Location
+ * @see FatalError
+ */
 
-public class ErrorSet {
-
+public class ErrorSet
+{
     // Prevent javadoc from displaying a public constructor
     private ErrorSet() {};
 
@@ -61,32 +60,32 @@ public class ErrorSet {
      *                                                 *
      * Class Variables:				       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
     /**
-     ** The number of cautions reported so far.
-     **/
+     * The number of cautions reported so far.
+     */
     public static int cautions = 0;
 
 
     /**
-     ** The number of warnings reported so far.
-     **/
+     * The number of warnings reported so far.
+     */
     public static int warnings = 0;
 
 
     /**
-     ** The number of errors reported so far.
-     **/
+     * The number of errors reported so far.
+     */
     public static int errors = 0;
 
 
     /**
-     ** If <code>gag</code> is true, then no output is produced by
-     ** <code>ErrorSet</code> methods (useful for test harnesses).
-     **
-     ** Defaults to false.<p>
-     **/
+     * If <code>gag</code> is true, then no output is produced by
+     * <code>ErrorSet</code> methods (useful for test harnesses).
+     *
+     * Defaults to false.<p>
+     */
     public static boolean gag = false;
 
 
@@ -94,14 +93,14 @@ public class ErrorSet {
      *                                                 *
      * Reporting entry points:			       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
     /**
-     ** Report a caution. <p>
-     ** 
-     ** The message will be marked as a caution when it is displayed to
-     ** the user.  Increments <code>cautions</code> by one.<p>
-     **/
+     * Report a caution. <p>
+     * 
+     * The message will be marked as a caution when it is displayed to
+     * the user.  Increments <code>cautions</code> by one.<p>
+     */
     public static void caution(String msg) {
 	if (FrontEndTool.noCautions) {
 	    return;
@@ -111,14 +110,14 @@ public class ErrorSet {
     }
 
     /**
-     ** Report a caution associated with a location. <p>
-     ** 
-     ** Precondition: <code>loc</code> must be a regular location or a
-     ** whole file location.<p>
-     **
-     ** The message will be marked as a caution when it is displayed to
-     ** the user.  Increments <code>cautions</code> by one.<p>
-     **/
+     * Report a caution associated with a location. <p>
+     * 
+     * Precondition: <code>loc</code> must be a regular location or a
+     * whole file location.<p>
+     *
+     * The message will be marked as a caution when it is displayed to
+     * the user.  Increments <code>cautions</code> by one.<p>
+     */
     //@ requires loc!=Location.NULL
     public static void caution(int loc, String msg) {
 	if (FrontEndTool.noCautions) {
@@ -130,25 +129,25 @@ public class ErrorSet {
 
 
     /**
-     ** Report a warning. <p>
-     ** 
-     ** The message will be marked as a warning when it is displayed to
-     ** the user.  Increments <code>warnings</code> by one.<p>
-     **/
+     * Report a warning. <p>
+     * 
+     * The message will be marked as a warning when it is displayed to
+     * the user.  Increments <code>warnings</code> by one.<p>
+     */
     public static void warning(String msg) {
 	warnings++;
 	report(WARNING, msg);
     }
 
     /**
-     ** Report a warning associated with a location. <p>
-     ** 
-     ** Precondition: <code>loc</code> must be a regular location or a
-     ** whole file location.<p>
-     **
-     ** The message will be marked as a warning when it is displayed to
-     ** the user.  Increments <code>warnings</code> by one.<p>
-     **/
+     * Report a warning associated with a location. <p>
+     * 
+     * Precondition: <code>loc</code> must be a regular location or a
+     * whole file location.<p>
+     *
+     * The message will be marked as a warning when it is displayed to
+     * the user.  Increments <code>warnings</code> by one.<p>
+     */
     //@ requires loc!=Location.NULL
     public static void warning(int loc, String msg) {
 	warnings++;
@@ -157,25 +156,25 @@ public class ErrorSet {
 
 
     /**
-     ** Report an ordinary error. <p>
-     ** 
-     ** The message will be marked as an error when it is displayed to
-     ** the user.  Increments <code>errors</code> by one.<p>
-     **/
+     * Report an ordinary error. <p>
+     * 
+     * The message will be marked as an error when it is displayed to
+     * the user.  Increments <code>errors</code> by one.<p>
+     */
     public static void error(String msg) {
 	errors++;
 	report(ERROR, msg);
     }
 
     /**
-     ** Report an ordinary error associated with a location. <p>
-     ** 
-     ** Precondition: <code>loc</code> must be a regular location or a
-     ** whole file location.<p>
-     **
-     ** The message will be marked as an error when it is displayed to
-     ** the user.  Increments <code>errors</code> by one. <p>
-     **/
+     * Report an ordinary error associated with a location. <p>
+     * 
+     * Precondition: <code>loc</code> must be a regular location or a
+     * whole file location.<p>
+     *
+     * The message will be marked as an error when it is displayed to
+     * the user.  Increments <code>errors</code> by one. <p>
+     */
     //@ requires loc!=Location.NULL
     public static void error(int loc, String msg) {
 	errors++;
@@ -184,16 +183,16 @@ public class ErrorSet {
 
 
     /**
-     ** Report a fatal error.  Warning: This method does not
-     ** return normally!<p>
-     ** 
-     ** The variable <code>errors</code> is incremented by one, the
-     ** error reported as a fatal error, and then an unchecked
-     ** <code>FatalError</code> exception is thrown.  The top level of a
-     ** <code>Tool</code> is responsible for catching the
-     ** <code>FatalError</code>, so that it can do whatever cleanup is
-     ** required before exiting.<p>
-     **/
+     * Report a fatal error.  Warning: This method does not
+     * return normally!<p>
+     * 
+     * The variable <code>errors</code> is incremented by one, the
+     * error reported as a fatal error, and then an unchecked
+     * <code>FatalError</code> exception is thrown.  The top level of a
+     * <code>Tool</code> is responsible for catching the
+     * <code>FatalError</code>, so that it can do whatever cleanup is
+     * required before exiting.<p>
+     */
     //@ ensures false
     public static void fatal(String msg) /*throws FatalError*/ {
 	errors++;
@@ -202,19 +201,19 @@ public class ErrorSet {
     }    //@ nowarn Exception
 
     /**
-     ** Report a fatal error associated with a location.  Warning: This
-     ** method does not return normally!<p>
-     ** 
-     ** Precondition: <code>loc</code> must be a regular location or a
-     ** whole file location.<p>
-     **
-     ** The variable <code>errors</code> is incremented by one, the
-     ** error reported as a fatal error, and then an unchecked
-     ** <code>FatalError</code> exception is thrown.  The top level of a
-     ** <code>Tool</code> is responsible for catching the
-     ** <code>FatalError</code>, so that it can do whatever cleanup is
-     ** required before exiting.<p>
-     **/
+     * Report a fatal error associated with a location.  Warning: This
+     * method does not return normally!<p>
+     * 
+     * Precondition: <code>loc</code> must be a regular location or a
+     * whole file location.<p>
+     *
+     * The variable <code>errors</code> is incremented by one, the
+     * error reported as a fatal error, and then an unchecked
+     * <code>FatalError</code> exception is thrown.  The top level of a
+     * <code>Tool</code> is responsible for catching the
+     * <code>FatalError</code>, so that it can do whatever cleanup is
+     * required before exiting.<p>
+     */
     //@ requires loc!=Location.NULL
     //@ ensures false
     public static void fatal(int loc, String msg) /*throws FatalError*/ {
@@ -228,7 +227,7 @@ public class ErrorSet {
      *                                                 *
      * Common code for reporting:		       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
     // Constants for use as the type field of report:
 
@@ -239,16 +238,16 @@ public class ErrorSet {
 
 
     /**
-     ** Report general information. <p>
-     **
-     ** Type contains a non-null String describing the type of the
-     ** information (usually one of the above constants).  The
-     ** information itself is contained in the non-null String
-     ** msg.<p>
-     **
-     ** This function is not responsible for incrementing counts or
-     ** other ErrorSet functionality.<p>
-     **/
+     * Report general information. <p>
+     *
+     * Type contains a non-null String describing the type of the
+     * information (usually one of the above constants).  The
+     * information itself is contained in the non-null String
+     * msg.<p>
+     *
+     * This function is not responsible for incrementing counts or
+     * other ErrorSet functionality.<p>
+     */
     private static void report(String type, String msg) {
 	if (! gag)
 	    System.out.println(type + ": " + msg);
@@ -266,19 +265,19 @@ public class ErrorSet {
 
 
     /**
-     ** Report information associated with a location. <p>
-     **
-     ** Type contains a non-null String describing the type of the
-     ** information (usually one of the above constants).  The
-     ** information itself is contained in the non-null String
-     ** msg.<p>
-     **
-     ** Precondition: <code>loc</code> must be a regular location or a
-     ** whole file location.<p>
-     **
-     ** This function is not responsible for incrementing counts or
-     ** other ErrorSet functionality.<p>
-     **/
+     * Report information associated with a location. <p>
+     *
+     * Type contains a non-null String describing the type of the
+     * information (usually one of the above constants).  The
+     * information itself is contained in the non-null String
+     * msg.<p>
+     *
+     * Precondition: <code>loc</code> must be a regular location or a
+     * whole file location.<p>
+     *
+     * This function is not responsible for incrementing counts or
+     * other ErrorSet functionality.<p>
+     */
     //@ requires loc != Location.NULL
     private static void report(int loc, String type, String msg) {
 	if (gag)
@@ -316,17 +315,17 @@ public class ErrorSet {
      *                                                 *
      * Utility routines:			       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
     /**
-     ** Return a new InputStream for the file that loc refers to or null
-     ** if an I/O error occurs while attempting to open the stream. <p>
-     **
-     ** Precondition: <code>loc</code> must be a regular location or a
-     ** whole file location.<p>
-     **
-     ** No error is reported if an I/O error occurs.
-     **/
+     * Return a new InputStream for the file that loc refers to or null
+     * if an I/O error occurs while attempting to open the stream. <p>
+     *
+     * Precondition: <code>loc</code> must be a regular location or a
+     * whole file location.<p>
+     *
+     * No error is reported if an I/O error occurs.
+     */
     //@ requires loc!=Location.NULL
     private static InputStream getFile(int loc) {
 	try {
@@ -338,14 +337,14 @@ public class ErrorSet {
 
 
     /**
-     ** Return the line loc refers to or null if an I/O error occurs
-     ** while attempting to read the line in. <p>
-     **
-     ** Precondition: <code>loc</code> is a regular location (e.g., not
-     ** a whole-file location).<p>
-     **
-     ** No error is reported if an I/O error occurs.
-     **/
+     * Return the line loc refers to or null if an I/O error occurs
+     * while attempting to read the line in. <p>
+     *
+     * Precondition: <code>loc</code> is a regular location (e.g., not
+     * a whole-file location).<p>
+     *
+     * No error is reported if an I/O error occurs.
+     */
     //@ requires loc!=Location.NULL
     private static String getLine(int loc) {
 	InputStream i = getFile(loc);
@@ -377,29 +376,29 @@ public class ErrorSet {
 
     /** See documentation for two-argument version of <code>displayColumn</code>.
       * This version differs in that the default clip policy is applied.
-      **/
+      */
     //@ requires loc!=Location.NULL
     public static void displayColumn(int loc) {
       displayColumn(loc, null);
     }
 
     /**
-     ** Display (part of) the line that loc occurs on, then indicate via
-     ** a caret (^) which column loc points to. <p>
-     **
-     ** Tabs are expanded before the line is displayed using 8-character
-     ** tab stops.<p>
-     **
-     ** Precondition: <code>loc</code> is a regular location (e.g., not
-     ** a whole-file location).<p>
-     **
-     ** If an I/O error does occur, then the user is informed of the
-     ** column number and that the line in question is not available; no
-     ** error is reported.
-     **
-     ** By using a non-null <code>policy</code> argument, a caller can fine-
-     ** tune the policy used for introducing ellipses in the printed line.
-     **/
+     * Display (part of) the line that loc occurs on, then indicate via
+     * a caret (^) which column loc points to. <p>
+     *
+     * Tabs are expanded before the line is displayed using 8-character
+     * tab stops.<p>
+     *
+     * Precondition: <code>loc</code> is a regular location (e.g., not
+     * a whole-file location).<p>
+     *
+     * If an I/O error does occur, then the user is informed of the
+     * column number and that the line in question is not available; no
+     * error is reported.
+     *
+     * By using a non-null <code>policy</code> argument, a caller can fine-
+     * tune the policy used for introducing ellipses in the printed line.
+     */
     //@ requires loc!=Location.NULL
     public static void displayColumn(int loc, ClipPolicy policy) {
 	String line = getLine(loc);

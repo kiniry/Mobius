@@ -6,7 +6,6 @@ import javafe.genericfile.*;
 
 
 /** 
-
  * A <I>location</I> is an integer that identifies the position in a
  * file of a particular piece of program source text.  This class is
  * never instantiated. It contains static functions for manipulating
@@ -16,10 +15,9 @@ import javafe.genericfile.*;
  * identify the program source that caused a particular error or
  * warning.
 
- * <p>There are three kinds of locations.
- * <OL>
-
- * <LI><I>Regular locations</I> encode the file, line, column, and
+ * <p> There are three kinds of locations.
+ * <ol>
+ * <li> <i>Regular locations</i> encode the file, line, column, and
  * offset of a character read by <code>CorrelatedReader</code>.  A
  * call to the <code>getLocation()</code> method of a
  * <code>CorrelatedReader</code> object returns the regular location
@@ -27,11 +25,11 @@ import javafe.genericfile.*;
  * object.  The file/line/column/offset of that location can be
  * extracted via the methods described below.
 
- * <br>Following emacs, line numbers begin at 1, column numbers at 0,
+ * <br> Following emacs, line numbers begin at 1, column numbers at 0,
  * and offsets at 1.  A newline character is considered the last
  * character on a line.
 
- * <LI><I>Whole file locations</I> encode just file information.
+ * <li> <i>Whole file locations</i> encode just file information.
  * They are currently used for error messages that are global to a
  * file (eg. the error message given when a file that is expected to
  * contain a package declaration does not have one). We expect they
@@ -39,17 +37,18 @@ import javafe.genericfile.*;
  * no meaningful line or column information, and offset information
  * would not be useful in an error message).
 
- * <LI><I>The null location</I> is a constant that plays a similar
+ * <li><i>The null location</i> is a constant that plays a similar
  * role for locations that null plays for reference types.
-
- * Interface reviewed at Sparta Meeting 1/8/97.
-
- * </OL><p>
+ * </ol>
+ *
+ * <p> Interface reviewed at Sparta Meeting 1/8/97.
+ *
  * @see javafe.util.CorrelatedReader
- * @see javafe.util.ErrorSet */
+ * @see javafe.util.ErrorSet 
+ */
 
-public class Location {
-
+public class Location
+{
   /** Private constructor. Never called. */
 
   private Location() {}
@@ -65,7 +64,7 @@ public class Location {
 
    * <p>Precondition: loc should be a valid location (ie a regular,
    * whole file, or dummy location).
-   **********************************************************************/
+   *********************************************************************/
 
   public static boolean isWholeFileLoc(int loc) {
     return LocationManagerCorrelatedReader.isWholeFileLoc(loc);
@@ -77,7 +76,7 @@ public class Location {
 
    * <p>Precondition: loc should be a regular location or a whole file
    location.
-   **********************************************************************/
+   *********************************************************************/
 
     //@ requires loc!=Location.NULL
     //@ ensures \result!=null
@@ -91,7 +90,7 @@ public class Location {
 
    * <p>Precondition: loc should be a regular location or a whole file
    location.
-   **********************************************************************/
+   *********************************************************************/
 
     //@ requires loc!=Location.NULL
     //@ ensures \result!=null
@@ -106,7 +105,7 @@ public class Location {
    * The first character in a stream is at offset 1.
 
    * <p>Precondition: loc should be a regular location.
-   **********************************************************************/
+   *********************************************************************/
 
     //@ requires loc!=Location.NULL
     public static int toOffset(int loc) {
@@ -119,7 +118,7 @@ public class Location {
    * The first line in a stream is numbered 1.
 
    * <p>Precondition: loc should be a regular location.
-   **********************************************************************/
+   *********************************************************************/
 
     //@ requires loc!=Location.NULL
     //@ ensures \result >= 1
@@ -133,7 +132,7 @@ public class Location {
    * The first column on each line is numbered 0.
 
    * <p>Precondition: loc should be a regular location.
-   **********************************************************************/
+   *********************************************************************/
 
     //@ requires loc!=Location.NULL
     //@ ensures \result >= 0
@@ -147,7 +146,7 @@ public class Location {
 
    * <p>Precondition: loc should be a valid location (ie a regular,
    * whole file, or dummy location).
-   **********************************************************************/
+   *********************************************************************/
 
   public static String toString(int loc) {
 
@@ -168,7 +167,7 @@ public class Location {
      * Create a whole file location corresponding to the given GenericFile.
      * Calls to <code>toFile</code> on that location will return
      * this file.
-     **********************************************************************/
+     *********************************************************************/
 
     //@ ensures \result!=Location.NULL
     public static int createWholeFileLoc(/*@non_null*/ GenericFile file) {
@@ -177,14 +176,14 @@ public class Location {
 
 
     /**
-     ** Create a fake location described by description.<p>
-     **
-     ** This should only be used by debugging code and in places where
-     ** it should never see the light of day.
-     **
-     ** The resulting location is a whole-file location associated
-     ** with an unopenable file with human-name description.
-     **/
+     * Create a fake location described by description.<p>
+     *
+     * This should only be used by debugging code and in places where
+     * it should never see the light of day.
+     *
+     * The resulting location is a whole-file location associated
+     * with an unopenable file with human-name description.
+     */
     //@ ensures \result!=Location.NULL
     public static int createFakeLoc(/*@non_null*/ String description) {
 	return FileCorrelatedReader.createWholeFileLoc(
@@ -203,13 +202,13 @@ public class Location {
     }
 
     /**
-     ** Attempts to return a location <code>n</code> characters further
-     ** to the right of <code>loc</code> on the same line.  Returns the
-     ** same location if it is not a regular location.
-     **
-     ** Produces an assertion failure if that location does not exist
-     ** (e.g., the line is too short.).
-     **/
+     * Attempts to return a location <code>n</code> characters further
+     * to the right of <code>loc</code> on the same line.  Returns the
+     * same location if it is not a regular location.
+     *
+     * Produces an assertion failure if that location does not exist
+     * (e.g., the line is too short.).
+     */
     //@ requires n>=0
     //@ ensures loc!=NULL ==> \result!=NULL
     public static int inc(int loc, int n) {

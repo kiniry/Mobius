@@ -1,6 +1,5 @@
 /* Copyright 2000, 2001, Compaq Computer Corporation */
 
-
 /* =========================================================================
  * DescriptorParser.java
  * ========================================================================= */
@@ -18,12 +17,12 @@ import javafe.util.*;
  * ------------------------------------------------------------------------- */
 
 /**
- * Parses various kinds of class-file-format descriptor strings into abstract
- * syntax.
+ * Parses various kinds of class-file-format descriptor strings into
+ * abstract syntax.
  */
 
-class DescriptorParser {
-
+class DescriptorParser
+{
   /* -- package class methods ---------------------------------------------- */
 
   /**

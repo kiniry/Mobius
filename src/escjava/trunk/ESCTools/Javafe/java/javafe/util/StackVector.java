@@ -4,65 +4,61 @@ package javafe.util;
 
 import java.util.Vector;
 
-
 /**
- **
- ** A stack of Vector objects. <p>
- **
- ** Contains 1 or more Vectors arranged in a stack.  Direct access is
- ** allowed only to the elements of the top Vector via a subset of the
- ** usual java.util.Vector operations.  These Vectors may not contain
- ** null elements.<p>
- **
- ** push() pushs a zero-length Vector on the stack, pop()
- ** discards the top Vector, and merge() combines the top two Vectors.<p>
- **
- ** The caller is responsible for ensuring that pop() and merge() are
- ** called only when the stack has at least 2 Vectors on it.<p>
- **
- **
- ** All the elements in the Vectors must be of type elementType.<p>
- **
- ** 
- ** Note: Although this class as a whole is thread safe, individual
- ** instances are not.  Thus, different threads can safely access
- ** different instances of <CODE>StackVector</CODE> without any
- ** synchronization, but different threads accessing the <EM>same</EM>
- ** instance will have to lock and synchronize.
- **/
+ * A stack of Vector objects.
+ *
+ * <p> Contains 1 or more Vectors arranged in a stack.  Direct access
+ * is allowed only to the elements of the top Vector via a subset of
+ * the usual java.util.Vector operations.  These Vectors may not
+ * contain null elements.<p>
+ *
+ * <p> push() pushs a zero-length Vector on the stack, pop() discards
+ * the top Vector, and merge() combines the top two Vectors.
+ *
+ * <p> The caller is responsible for ensuring that pop() and merge()
+ * are called only when the stack has at least 2 Vectors on it.
+ *
+ * <p> All the elements in the Vectors must be of type elementType.
+ *
+ * <p> Note: Although this class as a whole is thread safe, individual
+ * instances are not.  Thus, different threads can safely access
+ * different instances of <CODE>StackVector</CODE> without any
+ * synchronization, but different threads accessing the <EM>same</EM>
+ * instance will have to lock and synchronize.
+ */
 
-public final class StackVector {
-
+public final class StackVector
+{
     /***************************************************
      *                                                 *
      * Private instance fields:			       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
-    /** The type of our elements **/
+    /** The type of our elements */
     //@ ghost public \TYPE elementType
 
     /**
-     ** Our data representation is as follows: <p>
-     **
-     ** elements[0], ..., elements[elementCount-1] contain
-     ** the Vectors on our stack, stored as sequences of elements from
-     ** the bottom of the stack (pushed longest ago) to the top of the
-     ** stack.  Each sequence is seperated by a null element.<p>
-     **
-     ** Example: [1, 2, null, 3, 4, null, 5, 6] represents the stack [1,
-     ** 2], [3, 4], [5, 6] where the Vector [5, 6] is on top so
-     ** elementAt(1) will return 6. <p>
-     **
-     ** To speed access to the top Vector, currentStackBottom points to
-     ** the first element of the top Vector (5 in the example).  Note
-     ** that this may point just beyond the last element of elements if
-     ** the top Vector is zero-length.<p>
-     **
-     ** vectorCount holds the # of Vectors; it exists so that clients
-     ** can make sure they've left a StackVector the way they found it
-     ** and so that preconditions can be written for pop(), etc.<p>
-     **/
+     * Our data representation is as follows: <p>
+     *
+     * elements[0], ..., elements[elementCount-1] contain
+     * the Vectors on our stack, stored as sequences of elements from
+     * the bottom of the stack (pushed longest ago) to the top of the
+     * stack.  Each sequence is seperated by a null element.<p>
+     *
+     * Example: [1, 2, null, 3, 4, null, 5, 6] represents the stack [1,
+     * 2], [3, 4], [5, 6] where the Vector [5, 6] is on top so
+     * elementAt(1) will return 6. <p>
+     *
+     * To speed access to the top Vector, currentStackBottom points to
+     * the first element of the top Vector (5 in the example).  Note
+     * that this may point just beyond the last element of elements if
+     * the top Vector is zero-length.<p>
+     *
+     * vectorCount holds the # of Vectors; it exists so that clients
+     * can make sure they've left a StackVector the way they found it
+     * and so that preconditions can be written for pop(), etc.<p>
+     */
 
     //@ invariant elements!=null
     //@ invariant elements.length>0
@@ -101,11 +97,11 @@ public final class StackVector {
      *                                                 *
      * Constructors:				       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
     /**
-     ** Create a StackVector that contains only 1 zero-length Vector.
-     **/
+     * Create a StackVector that contains only 1 zero-length Vector.
+     */
     //@ ensures elementCount == 0
     //@ ensures vectorCount == 1
     public StackVector() {
@@ -117,15 +113,15 @@ public final class StackVector {
      *                                                 *
      * Accessing the top Vector:		       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
     /**
-     ** Return the size of the top Vector. <p>
-     **
-     ** Indices into the top Vector range from 0 to size()-1.<p>
-     **
-     ** <esc> ensures \result >= 0 </esc>
-     **/
+     * Return the size of the top Vector. <p>
+     *
+     * Indices into the top Vector range from 0 to size()-1.<p>
+     *
+     * <esc> ensures \result >= 0 </esc>
+     */
     //@ ensures \result == (elementCount - currentStackBottom)
     public final int size() {
 	return elementCount - currentStackBottom;
@@ -148,11 +144,11 @@ public final class StackVector {
     }
 
     /**
-     ** Return the element in the top Vector at the given index. <p>
-     **
-     ** @exception ArrayIndexOutOfBoundsException if the index is out of
-     ** range.
-     **/
+     * Return the element in the top Vector at the given index. <p>
+     *
+     * @exception ArrayIndexOutOfBoundsException if the index is out of
+     * range.
+     */
     //@ requires 0<=i && i+currentStackBottom<elementCount
     //@ ensures \typeof(\result) <: elementType
     //@ ensures \result!=null
@@ -164,11 +160,11 @@ public final class StackVector {
 
 
     /**
-     ** Add x to the end of the top Vector. <p>
-     **
-     ** x may be null, in which case the caller needs to cleanup to
-     ** ensure that a null element does not stay in the top Vector. <p>
-     **/
+     * Add x to the end of the top Vector. <p>
+     *
+     * x may be null, in which case the caller needs to cleanup to
+     * ensure that a null element does not stay in the top Vector. <p>
+     */
     //@ requires x==null || \typeof(x) <: elementType
     //@ modifies elementCount
     //@ ensures elementCount == \old(elementCount)+1
@@ -187,10 +183,10 @@ public final class StackVector {
 
 
     /**
-     ** Add an element at the end of the top Vector. <p>
-     **
-     ** <esc> requires x!=null </esc>
-     **/
+     * Add an element at the end of the top Vector. <p>
+     *
+     * <esc> requires x!=null </esc>
+     */
     //@ requires \typeof(x) <: elementType
     //@ modifies elementCount
     /*@ ensures (elementCount - currentStackBottom) ==
@@ -210,7 +206,7 @@ public final class StackVector {
   */
 
 
-    /** Zero the top Vector. **/
+    /** Zero the top Vector. */
     //@ modifies elementCount
     //@ ensures elementCount == currentStackBottom
     public final void removeAllElements() {
@@ -233,8 +229,8 @@ public final class StackVector {
 
 
     /**
-     ** Return true iff the top Vector contains o.
-     **/
+     * Return true iff the top Vector contains o.
+     */
     public final boolean contains(Object o) {
 	for( int i=currentStackBottom; i<elementCount; i++ ) {
 	    if( elements[i] == o ) return true;
@@ -247,12 +243,12 @@ public final class StackVector {
      *                                                 *
      * Stack manipulation methods:		       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
     /**
-     ** Reset us to the state where we contain only 1 Vector, which has
-     ** zero-length.
-     **/
+     * Reset us to the state where we contain only 1 Vector, which has
+     * zero-length.
+     */
     //@ modifies vectorCount
     //@ ensures vectorCount == 1
     //@ modifies elementCount, currentStackBottom
@@ -265,20 +261,20 @@ public final class StackVector {
 
 
     /**
-     ** Return the number of Vectors on our stack. <p>
-     **
-     ** <esc> ensures \result==vectorCount </esc>
-     **/
+     * Return the number of Vectors on our stack. <p>
+     *
+     * <esc> ensures \result==vectorCount </esc>
+     */
     public final int vectors() {
 	return vectorCount;
     }
 
 
     /**
-     ** Push a zero-length Vector.
-     **
-     ** <esc> ensures vectorCount == \old(vectorCount)+1 </esc>
-     **/
+     * Push a zero-length Vector.
+     *
+     * <esc> ensures vectorCount == \old(vectorCount)+1 </esc>
+     */
     //@ modifies vectorCount, currentStackBottom
     //@ ensures currentStackBottom == elementCount
     public void push() {
@@ -288,10 +284,10 @@ public final class StackVector {
     }
 
     /**
-     ** Pop off the current top Vector. <p>
-     **
-     ** Precondition: at least 2 Vectors are on our stack.<p>
-     **/
+     * Pop off the current top Vector. <p>
+     *
+     * Precondition: at least 2 Vectors are on our stack.<p>
+     */
     //@ requires vectorCount>=2
     //@ modifies vectorCount
     //@ ensures vectorCount == \old(vectorCount)-1
@@ -315,13 +311,13 @@ public final class StackVector {
 
 
     /**
-     ** Merge the top Vector with the Vector just under it by appending
-     ** the former to the latter. <p>
-     **
-     **   Example: ..., A, TOP -> ..., A^TOP <p>
-     **
-     ** Precondition: there are at least two vectors on our stack.<p>
-     **/
+     * Merge the top Vector with the Vector just under it by appending
+     * the former to the latter. <p>
+     *
+     *   Example: ..., A, TOP -> ..., A^TOP <p>
+     *
+     * Precondition: there are at least two vectors on our stack.<p>
+     */
     //@ requires vectorCount>=2
     //@ modifies vectorCount
     //@ ensures vectorCount == \old(vectorCount)-1

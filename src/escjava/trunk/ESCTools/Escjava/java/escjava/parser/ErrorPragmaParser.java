@@ -11,7 +11,6 @@ import javafe.util.ErrorSet;
 
 import java.io.IOException;
 
-
 /**
  * This class produces a {@link PragmaParser} that reports an
  * client-chosen error message each time an annotation comment is
@@ -20,16 +19,15 @@ import java.io.IOException;
 
 public class ErrorPragmaParser implements PragmaParser
 {
-    /** The error message to report **/
+    /** The error message to report. */
     public String msg;
 
-    /** Create a new ErrorPragmaParser that report error message msg **/
+    /** Create a new ErrorPragmaParser that report error message msg. */
     public ErrorPragmaParser(String msg) {
 	this.msg = msg;
     }
 
-
-    /** We consider both ESC and Javadoc comments to be annotations **/
+    /** We consider both ESC and Javadoc comments to be annotations. */
     public boolean checkTag(int tag) {
       return tag == '@' || tag == '*';
     }
@@ -45,10 +43,9 @@ public class ErrorPragmaParser implements PragmaParser
 	ErrorSet.error(in.getLocation(), msg);
     }
 
-
-    /** Produce no actual pragmas **/
+    /** Produce no actual pragmas. */
     public boolean getNextPragma(Token dst) { return false; }
 
-    /** No work to close us **/
-    public void close() { }
+    /** No work to close us. */
+    public void close() {}
 }

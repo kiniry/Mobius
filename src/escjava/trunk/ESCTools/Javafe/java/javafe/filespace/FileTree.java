@@ -9,22 +9,22 @@ import javafe.genericfile.*;
 
 
 /**
- ** A FileTree is a Tree that mirrors the contents of a disk filesystem;
- ** the constructor takes in a directory and returns a tree representing
- ** the filesystem rooted at that directory.<p>
- **
- ** FileTree works by scanning directories the first time clients
- ** ask for information about that part of the tree.  If the filesystem
- ** is changed afterwards, the changes will not be visible in the
- ** FileTree.<p>
- **
- ** The data field of every (sub)node in a FileTree contains a
- ** non-null NormalGenericFile representing the file it mirrors on disk.<p>
- **/
+ * A FileTree is a Tree that mirrors the contents of a disk filesystem;
+ * the constructor takes in a directory and returns a tree representing
+ * the filesystem rooted at that directory.<p>
+ *
+ * FileTree works by scanning directories the first time clients
+ * ask for information about that part of the tree.  If the filesystem
+ * is changed afterwards, the changes will not be visible in the
+ * FileTree.<p>
+ *
+ * The data field of every (sub)node in a FileTree contains a
+ * non-null NormalGenericFile representing the file it mirrors on disk.<p>
+ */
 
 class FileTree extends PreloadedTree {
 
-    /** The directory we are a snapshot of **/
+    /** The directory we are a snapshot of */
     protected File dir;
 
 
@@ -32,16 +32,16 @@ class FileTree extends PreloadedTree {
      *                                                 *
      * Creation:				       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
-    /** Create a root node: **/
+    /** Create a root node: */
     //@ requires dir!=null
     public FileTree(File dir) {
 	super(new NormalGenericFile(dir));
 	this.dir = dir;
     }
 
-    /** Create a non-root node: **/
+    /** Create a non-root node: */
     //@ requires dir!=null
     //@ requires parent!=null && label!=null
     protected FileTree(Tree parent, String label, File dir) {
@@ -54,9 +54,9 @@ class FileTree extends PreloadedTree {
      *                                                 *
      * Loading the edges map:			       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
-    /** Load the edges map for use.  **/
+    /** Load the edges map for use.  */
     protected void loadEdges() {
 	/*
 	 * If our directory is null or not an actual existing directory
@@ -99,9 +99,9 @@ class FileTree extends PreloadedTree {
      *                                                 *
      * Debugging functions:			       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
-    /** A simple test driver **/
+    /** A simple test driver */
     //@ requires \nonnullelements(args)
     public static void main(String[] args) {
 	if (args.length>1) {

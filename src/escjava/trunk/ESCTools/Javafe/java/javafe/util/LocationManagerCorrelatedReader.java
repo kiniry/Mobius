@@ -8,72 +8,75 @@ import java.util.Vector;
 import java.io.StringBufferInputStream;
 import java.io.IOException;
 
-/** This <code>CorrelatedReader</code> class manages the allocation of location
- ** numbers.
- **/
+/**
+ * This <code>CorrelatedReader</code> class manages the allocation of
+ * location numbers.
+ */
 
-public abstract class LocationManagerCorrelatedReader extends BufferedCorrelatedReader {
+public abstract class LocationManagerCorrelatedReader 
+    extends BufferedCorrelatedReader
+{
 
-  /* *************************************************
+  /* ************************************************
    *                                                 *
    * Class variables & constants:                    *
    *                                                 *
-   * *************************************************/
+   * ************************************************/
 
   /**
-   ** The next location to be allocated to a LocationManagerCorrelatedReader
-   ** instance.  (The next instance's stream will have locations in a prefix of
-   ** [freeLoc, freeLoc+MAXFILESIZE).) <p>
-   **
-   ** We do not use ints below STARTFREELOC to denote locations.  If
-   ** freeLoc+MAXFILESIZE results in an overflow, then too many
-   ** LocationManagerCorrelatedReader instances have been created and an
-   ** assertion failure occurs.
-   **/
+   * The next location to be allocated to a LocationManagerCorrelatedReader
+   * instance.  (The next instance's stream will have locations in a prefix of
+   * [freeLoc, freeLoc+MAXFILESIZE).) <p>
+   *
+   * We do not use ints below STARTFREELOC to denote locations.  If
+   * freeLoc+MAXFILESIZE results in an overflow, then too many
+   * LocationManagerCorrelatedReader instances have been created and an
+   * assertion failure occurs.
+   */
   //@ invariant STARTFREELOC <= freeLoc;
 
   private static int freeLoc = STARTFREELOC;
 
   /**
-   ** A location is an integer that encodes file/line/column/offset
-   ** information.  When a LocationManagerCorrelatedReader is created,
-   ** we allocate MAXFILESIZE locations for its stream.  An assertion
-   ** failure will occur if a location is requested for a character
-   ** located at an offset greater than or equal to MAXFILESIZE.
-   **/
+   * A location is an integer that encodes file/line/column/offset
+   * information.  When a LocationManagerCorrelatedReader is created,
+   * we allocate MAXFILESIZE locations for its stream.  An assertion
+   * failure will occur if a location is requested for a character
+   * located at an offset greater than or equal to MAXFILESIZE.
+   */
 
   static final int MAXFILESIZE = 30000000;
 
   /**
-   ** Each LocationManagerCorrelatedReader has a "new line offset
-   ** array", or NLOA, that contains the offset of the beginning of
-   ** each line. This array allows us to map an offset to line or
-   ** column information. <p>
-   **
-   ** NLOA is defined for indexes in [0..curLineNo). <p>
-   **
-   ** If NLOA[i], i in [0..curLineNo), = j, then the characters at
-   ** offset j and j-1 were on different lines. Furthermore, either
-   **   (a) i=j=0, or
-   **   (b) i>0, j>0, and the character at offset j-1 is a newline. <p>
-   **
-   ** Note: this means a line ends just *after* a newline, not before. <p>
-   **/
+   * Each LocationManagerCorrelatedReader has a "new line offset
+   * array", or NLOA, that contains the offset of the beginning of
+   * each line. This array allows us to map an offset to line or
+   * column information. <p>
+   *
+   * NLOA is defined for indexes in [0..curLineNo). <p>
+   *
+   * If NLOA[i], i in [0..curLineNo), = j, then the characters at
+   * offset j and j-1 were on different lines. Furthermore, either
+   *   (a) i=j=0, or
+   *   (b) i>0, j>0, and the character at offset j-1 is a newline. <p>
+   *
+   * Note: this means a line ends just *after* a newline, not before. <p>
+   */
   //@ invariant curLineNo <= NLOA.length;
   /*@ invariant (\forall int i; 0 <= i && i < curLineNo ==> 0 <= NLOA[i]); */
 
   /*@ spec_public */ private /*@ non_null */ int[] NLOA;
 
-  /** The default initial size to allocate an NLOA array **/
+  /** The default initial size to allocate an NLOA array */
   //@ invariant NLOA_DEFAULT_SIZE <= NLOA.length;
 
   private static final int NLOA_DEFAULT_SIZE = 200;
 
 
     /**
-     ** This constructor allocates a range of location for use by the
-     ** CorrelatedReader.
-     **/
+     * This constructor allocates a range of location for use by the
+     * CorrelatedReader.
+     */
     //@ ensures curNdx == 0;
     //@ ensures !marked;
     //@ ensures !isWholeFile;
@@ -98,9 +101,9 @@ public abstract class LocationManagerCorrelatedReader extends BufferedCorrelated
 
 
   /**
-   ** Closes us.  No other I/O operations may be called on us after
-   ** we have been closed.
-   **/
+   * Closes us.  No other I/O operations may be called on us after
+   * we have been closed.
+   */
 
   public void close() {
     if (maxLoc == freeLoc) {
@@ -111,7 +114,7 @@ public abstract class LocationManagerCorrelatedReader extends BufferedCorrelated
   }
 
   /** Records a newline at the current location.
-   **/
+   */
   //@ modifies NLOA;
   //@ ensures curLineNo < NLOA.length;
   //@ ensures 0 <= NLOA[curLineNo];
@@ -127,24 +130,24 @@ public abstract class LocationManagerCorrelatedReader extends BufferedCorrelated
   }
 
   /**
-   ** A static Vector containing all LocationManagerCorrelatedReader
-   ** instances, in the order they were allocated, which is used to
-   ** map a given location to a corresponding LocationManagerCorrelatedReader
-   ** instance. <p>
-   **
-   ** A location's streamId is its index in allCorrStreams.  See
-   ** locToStreamId(int) for the algorithm mapping locations to
-   ** streamId's.
-   **/
+   * A static Vector containing all LocationManagerCorrelatedReader
+   * instances, in the order they were allocated, which is used to
+   * map a given location to a corresponding LocationManagerCorrelatedReader
+   * instance. <p>
+   *
+   * A location's streamId is its index in allCorrStreams.  See
+   * locToStreamId(int) for the algorithm mapping locations to
+   * streamId's.
+   */
   //@ invariant !allCorrStreams.containsNull;
   //@ invariant allCorrStreams.elementType == \type(LocationManagerCorrelatedReader);
 
   /*@spec_public*/ private static /*@non_null*/ Vector allCorrStreams = new Vector();
 
   /**
-   ** Creates and returns a vector that associates file numbers 
-   ** to file names.
-   **/
+   * Creates and returns a vector that associates file numbers 
+   * to file names.
+   */
   //@ ensures \result != null;
   //@ ensures \result.elementType == \type(String);
   //@ ensures !\result.containsNull;
@@ -160,7 +163,7 @@ public abstract class LocationManagerCorrelatedReader extends BufferedCorrelated
     return v;
   }
 
-  /* *************************************************
+  /* ************************************************
    *                                                 *
    * Inspecting Locations:                           *
    *                                                 *
@@ -169,15 +172,15 @@ public abstract class LocationManagerCorrelatedReader extends BufferedCorrelated
    * The Location class provides access to these     *
    * methods.                                        *
    *                                                 *
-   * *************************************************/
+   * ************************************************/
 
   /**
-   ** Return the LocationManagerCorrelatedReader associated with
-   ** streamId i. <p>
-   **
-   ** If i is not a valid streamId (aka, i not in
-   ** [0, allCorrStreams.size()) ), an assertion failure occurs. <p>
-   **/
+   * Return the LocationManagerCorrelatedReader associated with
+   * streamId i. <p>
+   *
+   * If i is not a valid streamId (aka, i not in
+   * [0, allCorrStreams.size()) ), an assertion failure occurs. <p>
+   */
   //@ requires 0 <= i && i < allCorrStreams.elementCount;
   //@ ensures \result != null;
 
@@ -194,14 +197,14 @@ public abstract class LocationManagerCorrelatedReader extends BufferedCorrelated
   }
 
   /**
-   ** Attempt to return the valid regular location associated with a
-   ** given streamId, line #, and col #. <p>
-   **
-   ** If there is no such location currently in existence, an
-   ** assertion failure will occur. <p>
-   **
-   ** This method is intended mainly for debugging purposes. <p>
-   **/
+   * Attempt to return the valid regular location associated with a
+   * given streamId, line #, and col #. <p>
+   *
+   * If there is no such location currently in existence, an
+   * assertion failure will occur. <p>
+   *
+   * This method is intended mainly for debugging purposes. <p>
+   */
   //@ requires 0 <= streamId && streamId < allCorrStreams.elementCount;
   //@ requires 0 < line;
   //@ requires 0 <= col;
@@ -241,11 +244,11 @@ public abstract class LocationManagerCorrelatedReader extends BufferedCorrelated
   }
 
   /**
-   ** Return the LocationManager CorrelatedReader instance associated
-   ** with location loc. <p>
-   **
-   ** Requires that loc be a valid location. <p>
-   **/
+   * Return the LocationManager CorrelatedReader instance associated
+   * with location loc. <p>
+   *
+   * Requires that loc be a valid location. <p>
+   */
   //@ requires loc != Location.NULL;
   //@ ensures \result != null;
   //@ ensures \result.minLoc <= loc && loc <= \result.beforeBufLoc + \result.curNdx;
@@ -258,11 +261,11 @@ public abstract class LocationManagerCorrelatedReader extends BufferedCorrelated
   }
 
   /**
-   ** Returns the internal stream ID used for the stream associated
-   ** with location <code>loc</code>.
-   **
-   ** Requires that loc be a valid location. <p>
-   **/
+   * Returns the internal stream ID used for the stream associated
+   * with location <code>loc</code>.
+   *
+   * Requires that loc be a valid location. <p>
+   */
   //@ requires loc != Location.NULL;
   //@ ensures 0 <= \result && \result < allCorrStreams.elementCount;
 
@@ -281,10 +284,10 @@ public abstract class LocationManagerCorrelatedReader extends BufferedCorrelated
   }
 
   /**
-   ** Is a location a whole file location?
-   **
-   ** Requires that loc be a valid location or NULL. <p>
-   **/
+   * Is a location a whole file location?
+   *
+   * Requires that loc be a valid location or NULL. <p>
+   */
 
   static boolean isWholeFileLoc(int loc) {
     if (loc == Location.NULL) {
@@ -294,14 +297,14 @@ public abstract class LocationManagerCorrelatedReader extends BufferedCorrelated
   }
 
   /**
-   ** Returns the offset associated with location 
-   ** <code>loc</code>. <p>
-   **
-   ** Requires that loc be a valid regular location (regular ==> not
-   ** a whole-file location). <p>
-   **
-   ** Note: offsets start with 1 (a la emacs). <p>
-   **/
+   * Returns the offset associated with location 
+   * <code>loc</code>. <p>
+   *
+   * Requires that loc be a valid regular location (regular ==> not
+   * a whole-file location). <p>
+   *
+   * Note: offsets start with 1 (a la emacs). <p>
+   */
   //@ requires loc != Location.NULL;
 
   static int locToOffset(int loc) {
@@ -314,14 +317,14 @@ public abstract class LocationManagerCorrelatedReader extends BufferedCorrelated
   }
 
   /**
-   ** Returns the line number associated with location 
-   ** <code>loc</code>. <p>
-   **
-   ** Requires that loc be a valid regular location (regular ==> not
-   ** a whole-file location). <p>
-   **
-   ** Note: line numbers start with 1 (a la emacs). <p>
-   **/
+   * Returns the line number associated with location 
+   * <code>loc</code>. <p>
+   *
+   * Requires that loc be a valid regular location (regular ==> not
+   * a whole-file location). <p>
+   *
+   * Note: line numbers start with 1 (a la emacs). <p>
+   */
   //@ requires loc != Location.NULL;
   //@ ensures 1 <= \result;
 
@@ -330,14 +333,14 @@ public abstract class LocationManagerCorrelatedReader extends BufferedCorrelated
   }
 
   /**
-   ** Returns the column number associated with location 
-   ** <code>loc</code>. <p>
-   **
-   ** Requires that loc be a valid regular location (regular ==> not
-   ** a whole-file location). <p>
-   **
-   ** Note: column numbers start with 0. <p>
-   **/
+   * Returns the column number associated with location 
+   * <code>loc</code>. <p>
+   *
+   * Requires that loc be a valid regular location (regular ==> not
+   * a whole-file location). <p>
+   *
+   * Note: column numbers start with 0. <p>
+   */
   //@ requires loc != Location.NULL;
   //@ ensures 0 <= \result;
 
@@ -346,15 +349,15 @@ public abstract class LocationManagerCorrelatedReader extends BufferedCorrelated
   }
 
   /**
-   ** Returns the column number (if wantColumn) or line number (if
-   ** !wantColumn) associated with location <code>loc</code>. <p>
-   **
-   ** Requires that loc be a valid regular location (regular ==> not
-   ** a whole-file location). <p>
-   **
-   ** Note: line numbers start with 1 (a la emacs), while column
-   ** numbers start with 0. <p>
-   **/
+   * Returns the column number (if wantColumn) or line number (if
+   * !wantColumn) associated with location <code>loc</code>. <p>
+   *
+   * Requires that loc be a valid regular location (regular ==> not
+   * a whole-file location). <p>
+   *
+   * Note: line numbers start with 1 (a la emacs), while column
+   * numbers start with 0. <p>
+   */
   //@ requires loc != Location.NULL;
   //@ ensures 0 <= \result;
   //@ ensures !wantColumn ==> 1 <= \result;
@@ -372,12 +375,12 @@ public abstract class LocationManagerCorrelatedReader extends BufferedCorrelated
   }
 
   /**
-   ** Returns the GenericFile associated with stream id
-   ** <code>id</code>, where <code>id</code> has previously been
-   ** returned by <code>locToStreamId</code>.
-   **
-   ** Requires that id be a valid streamId.
-   **/
+   * Returns the GenericFile associated with stream id
+   * <code>id</code>, where <code>id</code> has previously been
+   * returned by <code>locToStreamId</code>.
+   *
+   * Requires that id be a valid streamId.
+   */
   //@ requires 0 <= id && id < allCorrStreams.elementCount;
 
   static GenericFile streamIdToFile(int id) {
@@ -385,11 +388,11 @@ public abstract class LocationManagerCorrelatedReader extends BufferedCorrelated
   }
 
   /**
-   ** Returns the GenericFile associated with location
-   ** <code>loc</code>. <p>
-   **
-   ** Requires that id be a valid streamId of a FileCorrelatedReader. <p>
-   **/
+   * Returns the GenericFile associated with location
+   * <code>loc</code>. <p>
+   *
+   * Requires that id be a valid streamId of a FileCorrelatedReader. <p>
+   */
   //@ requires loc != Location.NULL;
   //@ ensures \result != null;
 
@@ -398,56 +401,56 @@ public abstract class LocationManagerCorrelatedReader extends BufferedCorrelated
   }
 
 
-  /* *************************************************
+  /* ************************************************
    *                                                 *
    * Whole-file correlated readers:                  *
    *                                                 *
-   * *************************************************/
+   * ************************************************/
 
   /**
-   ** Are all of our locations whole-file locations?
-   **/
+   * Are all of our locations whole-file locations?
+   */
   /*@spec_public*/ protected boolean isWholeFile = false;
 
   //@ invariant isWholeFile ==> buf==null;
 
 
-  /* *************************************************
+  /* ************************************************
    *                                                 *
    * Stuff related to counting lines:                *
    *                                                 *
-   * *************************************************/
+   * ************************************************/
 
   /**
-   ** The total # of lines that have been read so far by all
-   ** FileCorrelatedReaders. <p>
-   **
-   ** This is not used internally, and is kept only for interested
-   ** clients.
-   **/
+   * The total # of lines that have been read so far by all
+   * FileCorrelatedReaders. <p>
+   *
+   * This is not used internally, and is kept only for interested
+   * clients.
+   */
 
   public static int totalLinesRead = 0;
 
   /**
-   ** The current line number; that is, the number of <newlines>
-   ** we've read from our stream so far + 1. <p>
-   **
-   ** (Line numbers are counted from 1 not 0.) <p>
-   **/
+   * The current line number; that is, the number of <newlines>
+   * we've read from our stream so far + 1. <p>
+   *
+   * (Line numbers are counted from 1 not 0.) <p>
+   */
   //@ invariant 1 <= curLineNo;
 
   protected int curLineNo = 1;
 
   /**
-   ** The value of curLineNo at the mark point (if marked is true). <p>
-   **
-   ** The justification for why it's okay to place the following invariant
-   ** in this class, even though <code>marked</code> is declared in the
-   ** superclass, is that this class overrides the methods that set
-   ** <code>marked</code> to <code>true</code>.  (But there's no mechanical
-   ** check that this justification is upheld, so it needs to be upheld
-   ** manually.)
-   **/
+   * The value of curLineNo at the mark point (if marked is true). <p>
+   *
+   * The justification for why it's okay to place the following invariant
+   * in this class, even though <code>marked</code> is declared in the
+   * superclass, is that this class overrides the methods that set
+   * <code>marked</code> to <code>true</code>.  (But there's no mechanical
+   * check that this justification is upheld, so it needs to be upheld
+   * manually.)
+   */
   //@ invariant marked ==> 0 < markLineNo && markLineNo <= curLineNo;
   
   private int markLineNo /*@ readable_if marked */;
@@ -462,11 +465,11 @@ public abstract class LocationManagerCorrelatedReader extends BufferedCorrelated
     super.reset();
   }
 
-  /* *************************************************
+  /* ************************************************
    *                                                 *
    * Misc:                                           *
    *                                                 *
-   * *************************************************/
+   * ************************************************/
 
   public String toString() {
     StringBuffer r = new StringBuffer("LocationManagerCorrelatedReader: \"");

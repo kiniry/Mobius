@@ -58,7 +58,7 @@ public class CopyLoaded extends FrontEndTool implements Listener {
      *                                                 *
      * Option processing:			       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
     public int processOption(String option, String[] args, int offset) {
         if (option.equals("-f")) {
@@ -100,7 +100,7 @@ public class CopyLoaded extends FrontEndTool implements Listener {
      *                                                 *
      * Keeping track of loaded CompilationUnits:       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
 
     //@ invariant loaded!=null 
@@ -163,7 +163,7 @@ public class CopyLoaded extends FrontEndTool implements Listener {
      *                                                 *
      * Main processing code:			       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
 
 
@@ -255,9 +255,9 @@ public class CopyLoaded extends FrontEndTool implements Listener {
     }
 
     /**
-     ** Prints the spec file for the FQN s.  The file is written
-     ** relative to the outDir.
-     **/  
+     * Prints the spec file for the FQN s.  The file is written
+     * relative to the outDir.
+     */  
     public void printSpec(/*@ non_null */ String s) {
 	String P[] = FQNpackage(s);
 	String T = FQNname(s);
@@ -350,11 +350,11 @@ public class CopyLoaded extends FrontEndTool implements Listener {
 
 
     /**
-     ** Copy the source file original into the file newName.  newName
-     ** is appended to the outDir to construct the full file location
-     ** of the new file.  This method also puts the newName into the
-     ** correct indirection file.
-     **/
+     * Copy the source file original into the file newName.  newName
+     * is appended to the outDir to construct the full file location
+     * of the new file.  This method also puts the newName into the
+     * correct indirection file.
+     */
     private void copySourceFile(/*@ non_null */ String original, 
 				/*@ non_null */ String newName) {
 	try {
@@ -388,8 +388,8 @@ public class CopyLoaded extends FrontEndTool implements Listener {
 
 
     /**
-     ** Process each CU's type decls.
-     **/
+     * Process each CU's type decls.
+     */
     public void handleCU(/*@ non_null */ CompilationUnit cu) {
 	// Iterate over all the TypeDecls representing outside types in cu:
 	TypeDeclVec elems = cu.elems;
@@ -400,10 +400,10 @@ public class CopyLoaded extends FrontEndTool implements Listener {
     }
 
     /**
-     ** Called from handleCU on each TypeDecl from the CU's loaded from the
-     ** program files.  In addition, it calls itself recursively to handle types
-     ** nested within outside types.<p>
-     **/
+     * Called from handleCU on each TypeDecl from the CU's loaded from the
+     * program files.  In addition, it calls itself recursively to handle types
+     * nested within outside types.<p>
+     */
     public void handleTD(/*@ non_null */ TypeDecl td) {
 	TypeSig sig = TypeCheck.inst.getSig(td);
 	if (sig.getTypeDecl().specOnly)	// do not process specs
@@ -423,11 +423,11 @@ public class CopyLoaded extends FrontEndTool implements Listener {
     
     
     /**
-     ** Typecheck a TypeDecl;
-     ** return true if we had to abort. <p>
-     **
-     ** Precondition: td is not from a binary file.<p>
-     **/
+     * Typecheck a TypeDecl;
+     * return true if we had to abort. <p>
+     *
+     * Precondition: td is not from a binary file.<p>
+     */
     private boolean processTD(/*@ non_null */ TypeDecl td) {
 	int errorCount = ErrorSet.errors;
 	TypeSig sig = TypeCheck.inst.getSig(td);

@@ -2,7 +2,6 @@
 
 package javafe.reader;
 
-
 import java.io.IOException;
 
 import javafe.ast.CompilationUnit;
@@ -17,22 +16,21 @@ import javafe.parser.PragmaParser;
 import javafe.util.FileCorrelatedReader;
 import javafe.util.Location;
 
-
 /**
- ** A SrcReader is a {@link Reader} that reads in {@link
- ** CompilationUnits} from source files (.java files) using the
- ** <code>javafe.parser</code> package.<p>
- **
- ** SrcReaders do not cache the results of their reading.<p>
- **/
+ * A SrcReader is a {@link Reader} that reads in {@link
+ * CompilationUnits} from source files (.java files) using the
+ * <code>javafe.parser</code> package.
+ *
+ * <p> SrcReaders do not cache the results of their reading.
+ */
 
-public class SrcReader extends Reader {
-
+public class SrcReader extends Reader
+{
     /***************************************************
      *                                                 *
      * Creation:				       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
     //@ invariant readLex!=null;
     private Lex readLex;
@@ -54,23 +52,23 @@ public class SrcReader extends Reader {
      *                                                 *
      * Reading:					       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
     /**
-     ** Attempt to read and parse a CompilationUnit from *source* target.
-     ** Any errors encountered are reported via javafe.util.ErrorSet.
-     ** Null is returned iff an error was encountered.<p>
-     **
-     **
-     ** By default, we attempt to read only a spec (e.g., specOnly is set
-     ** in the resulting CompilationUnit) to save time.  If avoidSpec is
-     ** true, we always return a non-spec.<p>
-     **
-     **
-     ** The result of this function is not cached.<p>
-     **
-     ** Target must be non-null.<p>
-     **/
+     * Attempt to read and parse a CompilationUnit from *source* target.
+     * Any errors encountered are reported via javafe.util.ErrorSet.
+     * Null is returned iff an error was encountered.<p>
+     *
+     *
+     * By default, we attempt to read only a spec (e.g., specOnly is set
+     * in the resulting CompilationUnit) to save time.  If avoidSpec is
+     * true, we always return a non-spec.<p>
+     *
+     *
+     * The result of this function is not cached.<p>
+     *
+     * Target must be non-null.<p>
+     */
     public CompilationUnit read(GenericFile target, boolean avoidSpec) {
 	javafe.util.Info.out("[parsing "
 			     + (avoidSpec ? "" : "spec from ")
@@ -93,7 +91,7 @@ public class SrcReader extends Reader {
      *                                                 *
      * Test methods:				       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
     //@ requires \nonnullelements(args)
     public static void main(String[] args) {

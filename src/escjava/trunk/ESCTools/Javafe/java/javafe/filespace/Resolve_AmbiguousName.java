@@ -3,8 +3,8 @@
 package javafe.filespace;
 
 /**
- ** The exceptional result type for lookup:
- **/
+ * The exceptional result type for lookup:
+ */
 
 public class Resolve_AmbiguousName extends Exception {
 

@@ -2,7 +2,6 @@
 
 package escjava.tc;
 
-
 import java.util.Enumeration;
 
 import javafe.ast.*;
@@ -23,14 +22,9 @@ import escjava.translate.GetSpec;  // for "findModifierPragma" -- it would be
                                    // utilities class somewhere
 import escjava.Main;
 
-
-public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
-
-    /***************************************************
-     *                                                 *
-     * Setup for ghost variables:		       *
-     *                                                 *
-     ***************************************************/
+public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
+{
+    // Setup for ghost variables
 
     /**
      * Are we in the middle of processing an annotation?
@@ -156,13 +150,8 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
 	return new GhostEnv(s.getEnclosingEnv(), s, staticContext);
     }
   
-  
 
-    /***************************************************
-     *                                                 *
-     * Extensions to type declaration member checkers: *
-     *                                                 *
-     ***************************************************/
+    // Extensions to type declaration member checkers
 
     protected void checkTypeDeclElem(TypeDeclElem e) {
         super.checkTypeDeclElem(e);
@@ -201,11 +190,8 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
         }
     }
 
-    /***************************************************
-     *                                                 *
-     * Extensions to Expr and Stmt checkers:	       *
-     *                                                 *
-     ***************************************************/
+
+    // Extensions to Expr and Stmt checkers
 
     protected Env checkStmt(Env env, Stmt s) {
         int tag = s.getTag();
@@ -380,9 +366,10 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
                        "statement expected (and not found) here.");
     }
 
-    /** Not to be used as a recursive call from <code>checkExpr</code>,
+    /**
+     * Not to be used as a recursive call from <code>checkExpr</code>,
      * since <code>isPredicateContext</code> is set to <code>true</code>.
-     **/
+     */
   
     protected Expr checkPredicate(Env env, Expr e) {
         Assert.notFalse(!isPredicateContext);
@@ -949,11 +936,8 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
         }
     }
 
-    /***************************************************
-     *                                                 *
-     * Pragma checkers:				       *
-     *                                                 *
-     ***************************************************/
+
+    // Pragma checkers
 
     protected  void checkTypeDeclElemPragma(TypeDeclElemPragma e) {
         inAnnotation = true;	// Must be reset before we exit!
@@ -1020,7 +1004,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
                 /*
                  * Handle initializer:
                  */
-                if (decl.init!=null) {
+                if (decl.init != null) {
                     ErrorSet.error(decl.init.getStartLoc(),
                                    "Ghost fields may not have initializers");
                 }
@@ -1546,9 +1530,10 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
         inAnnotation = false;
     }
 
-    /** Returns whether or not <code>md</code> can be overridden in some
+    /**
+     * Returns whether or not <code>md</code> can be overridden in some
      * possible subclass.
-     **/
+     */
 
     public static boolean isOverridable(/*@ non_null */ MethodDecl md) {
         return !(Modifiers.isPrivate(md.modifiers) ||
@@ -1557,9 +1542,10 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
                  Modifiers.isStatic(md.modifiers));
     }
 
-    /** Returns a value appropriate for assignment to
+    /**
+     * Returns a value appropriate for assignment to
      * <code>accessibilityLowerBound</code>, given member modifiers.
-     **/
+     */
 
     protected int getAccessibility(int modifiers) {
         if (Modifiers.isPrivate(modifiers)) {
@@ -1646,31 +1632,27 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
     }
 
 
-    /***************************************************
-     *                                                 *
-     * Utility routines:			       *
-     *                                                 *
-     ***************************************************/
+    // Utility routines
 
     /**
-     ** Copy the Type associated with an expression by the typechecking
-     ** pass to another Expr.  This is used by Substitute to ensure it
-     ** returns an Expr of the same Type.
-     **/
+     * Copy the Type associated with an expression by the typechecking
+     * pass to another Expr.  This is used by Substitute to ensure it
+     * returns an Expr of the same Type.
+     */
     public static void copyType(VarInit from, VarInit to) {
 	Type t = getTypeOrNull(from);
-	if (t!=null)
+	if (t != null)
 	    setType(to, t);
     }
 
 
     /**
-     ** Return a set of *all* the methods a given method overrides. <p>
-     **
-     ** This includes transitivity.<p>
-     **/
-    //@ requires md!=null
-    //@ ensures \result!=null
+     * Return a set of *all* the methods a given method overrides. <p>
+     *
+     * This includes transitivity.<p>
+     */
+    //@ requires md != null
+    //@ ensures \result != null
     //@ ensures \result.elementType == \type(MethodDecl);
     public static Set getAllOverrides(MethodDecl md) {
 	Set direct = javafe.tc.PrepTypeDeclaration.inst.getOverrides(md.parent, md);
@@ -1687,11 +1669,12 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
     }
 
 
-    /** If <code>md</code> is a method that overrides a method in a superclass,
-     * the overridden method is returned.  Otherwise, if <code>md</code> overrides
-     * a method in an interface, such a method is returned.  Otherwise,
-     * <code>null</code> is returned.
-     **/
+    /**
+     * If <code>md</code> is a method that overrides a method in a
+     * superclass, the overridden method is returned.  Otherwise, if
+     * <code>md</code> overrides a method in an interface, such a
+     * method is returned.  Otherwise, <code>null</code> is returned.
+     */
 
     public static MethodDecl getSuperClassOverride(MethodDecl md) {
         MethodDecl classOverride = null;
@@ -1732,10 +1715,11 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
         }
     }
 
-    /** Returns whether or not <code>rd</code> is a method override
+    /**
+     * Returns whether or not <code>rd</code> is a method override
      * declaration, that is, whether or not <code>rd</code> overrides
      * a method declared in a superclass or superinterface.
-     **/
+     */
 
     public static boolean isMethodOverride(RoutineDecl rd) {
         return getOverrideStatus(rd) != MSTATUS_NEW_ROUTINE;
@@ -1745,16 +1729,19 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
     static public final int MSTATUS_CLASS_NEW_METHOD = 1;
     static public final int MSTATUS_OVERRIDE = 2;
 
-    /** Returns <code>MSTATUS_NEW_ROUTINE</code> if <code>rd</code> is a 
-     * routine that doesn't override any other method.  This includes the case
-     * where <code>rd</code> is a constructor or a static method.
+    /**
+     * Returns <code>MSTATUS_NEW_ROUTINE</code> if <code>rd</code> is
+     * a routine that doesn't override any other method.  This
+     * includes the case where <code>rd</code> is a constructor or a
+     * static method.
      *
-     * Returns <code>MSTATUS_CLASS_NEW_METHOD</code> if <code>rd</code>
-     * is a method declared in a class, doesn't override any method in any
-     * superclass, but overrides a method in an interface.
+     * Returns <code>MSTATUS_CLASS_NEW_METHOD</code> if
+     * <code>rd</code> is a method declared in a class, doesn't
+     * override any method in any superclass, but overrides a method
+     * in an interface.
      *
      * Otherwise, returns <code>MSTATUS_OVERRIDE</code>.
-     **/
+     */
 
     /*@ ensures \result == MSTATUS_NEW_ROUTINE ||
      \result == MSTATUS_CLASS_NEW_METHOD ||

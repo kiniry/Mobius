@@ -4,7 +4,6 @@ package javafe.tc;
 
 
 import javafe.ast.*;
-import javafe.tc.TagConstants; // Work around compiler bug
 import javafe.parser.*;
 import javafe.util.*;
 
@@ -22,9 +21,9 @@ declarations is legal.
 public class CheckCompilationUnit {
 
     /**
-     ** A new field for CompilationUnits: iff it is non-null then we
-     ** have already checked that CompilationUnit.
-     **/
+     * A new field for CompilationUnits: iff it is non-null then we
+     * have already checked that CompilationUnit.
+     */
     //@ invariant checkedField!=null
     //@ invariant checkedField.decorationType == \type(Boolean)
     private static ASTDecoration checkedField =
@@ -32,18 +31,18 @@ public class CheckCompilationUnit {
 
 
     /**
-     ** Check a <code>CompilationUnit</code>. <p>
-     **
-     ** If this method is called multiple times on the same
-     ** <code>CompilationUnit</code>, it has no effect the second and
-     ** later times.<p>
-     **
-     ** Precondition: <code>cu</code> must have already been loaded by
-     ** <code>OutsideEnv</code>.<p>
-     **
-     ** Any resulting errors or warnings are reported via
-     ** <code>ErrorSet</code>.<p>
-     **/
+     * Check a <code>CompilationUnit</code>. <p>
+     *
+     * If this method is called multiple times on the same
+     * <code>CompilationUnit</code>, it has no effect the second and
+     * later times.<p>
+     *
+     * Precondition: <code>cu</code> must have already been loaded by
+     * <code>OutsideEnv</code>.<p>
+     *
+     * Any resulting errors or warnings are reported via
+     * <code>ErrorSet</code>.<p>
+     */
     //@ requires cu!=null
     public static void checkCompilationUnit(CompilationUnit cu) {
 	/*
@@ -180,22 +179,22 @@ public class CheckCompilationUnit {
 
 
     /**
-     ** Check a <code>CompilationUnit<code> to make sure that each
-     ** import is individually well formed. <p>
-     **
-     ** In particular,
-     **
-     **   - Type in single import must exist
-     **
-     **   - Single imports from other packages must be public (not
-     **     implemented)
-     **
-     **   - Packages in all imports must be "accessible" (disabled)
-     **
-     ** This routine does not check legality of pairs of import
-     ** statements or import statements and the types declared in the
-     ** rest of the CompilationUnit.<p>
-     **/
+     * Check a <code>CompilationUnit<code> to make sure that each
+     * import is individually well formed. <p>
+     *
+     * In particular,
+     *
+     *   - Type in single import must exist
+     *
+     *   - Single imports from other packages must be public (not
+     *     implemented)
+     *
+     *   - Packages in all imports must be "accessible" (disabled)
+     *
+     * This routine does not check legality of pairs of import
+     * statements or import statements and the types declared in the
+     * rest of the CompilationUnit.<p>
+     */
     //@ requires cu!=null
     private static void checkImports(CompilationUnit cu) {
 	ImportDeclVec imports = cu.imports;

@@ -11,8 +11,8 @@ import javafe.genericfile.*;
 
 
 /**
- ** Functions for dealing with classpaths.
- **/
+ * Functions for dealing with classpaths.
+ */
 
 public class ClassPath {
 
@@ -20,20 +20,20 @@ public class ClassPath {
      *								*
      * Accessing our current classpath:				*
      *								*
-     ************************************************************/
+     ***********************************************************/
 
     /**
-     ** Return our current classpath; if the Java system property
-     ** <code>java.class.path.skip</code> is set to <var>n</var>, we
-     ** ignore the first <var>n</var> components of the path. <p>
-     **
-     ** This makes it easier to write Java applications that use the
-     ** classpath because we can append the path component containing
-     ** the application binaries to the start of the classpath then
-     ** remove them here, making it look like the classpath was not
-     ** disturbed.  (In particular, the automatic addition of the system
-     ** libraries is not disturbed.)
-     **/
+     * Return our current classpath; if the Java system property
+     * <code>java.class.path.skip</code> is set to <var>n</var>, we
+     * ignore the first <var>n</var> components of the path. <p>
+     *
+     * This makes it easier to write Java applications that use the
+     * classpath because we can append the path component containing
+     * the application binaries to the start of the classpath then
+     * remove them here, making it look like the classpath was not
+     * disturbed.  (In particular, the automatic addition of the system
+     * libraries is not disturbed.)
+     */
     //@ ensures \result!=null
     public static String current() {
 	String arg = System.getProperty("java.class.path.skip", "0");
@@ -55,11 +55,11 @@ public class ClassPath {
     }
 
     /**
-     ** Set our current classpath by changing the property
-     ** <code>java.class.path</code>.<p>
-     **
-     ** <esc> requires newClassPath!=null </esc>
-     **/
+     * Set our current classpath by changing the property
+     * <code>java.class.path</code>.<p>
+     *
+     * <esc> requires newClassPath!=null </esc>
+     */
     public static void set(String newClassPath) {
 	Properties P = System.getProperties();
 	P.put("java.class.path", newClassPath);
@@ -71,25 +71,25 @@ public class ClassPath {
      *								*
      * Obtaining the namespace associated with a classpath:	*
      *								*
-     ************************************************************/
+     ***********************************************************/
 
     /**
-     ** Get the filtered filespace (cf {@link PathComponent})
-     ** specified by a classpath.  (Filtering is performed using
-     ** {@link PkgTree} on each of the path components before they are
-     ** union'ed together).<p>
-     **
-     ** All {@link PkgTree} accessors and enumerators can be used on
-     ** the resulting filespace.<p>
-     **
-     ** May throw an {@link IOException} if errors occur.<p>
-     **
-     ** Iff complain is set, we throw {@link IOException}s if
-     ** non-existent or ill-formed path components are present in the
-     ** classpath.<p>
-     **
-     ** <esc> requires classpath!=null;  ensures \result!=null</esc>
-     **/
+     * Get the filtered filespace (cf {@link PathComponent})
+     * specified by a classpath.  (Filtering is performed using
+     * {@link PkgTree} on each of the path components before they are
+     * union'ed together).<p>
+     *
+     * All {@link PkgTree} accessors and enumerators can be used on
+     * the resulting filespace.<p>
+     *
+     * May throw an {@link IOException} if errors occur.<p>
+     *
+     * Iff complain is set, we throw {@link IOException}s if
+     * non-existent or ill-formed path components are present in the
+     * classpath.<p>
+     *
+     * <esc> requires classpath!=null;  ensures \result!=null</esc>
+     */
     public static Tree open(String classpath, boolean complain)
 				throws IOException {
 	if (classpath.length()==0) {
@@ -109,13 +109,13 @@ public class ClassPath {
 
 
     /**
-     ** Get the namespace specified by the current classpath using open;
-     ** this is a convenience function.<p>
-     **
-     ** Iff complain is set, we throw {@link IOException}s if
-     ** non-existent or ill-formed path components are present in the
-     ** classpath.<p>
-     **/
+     * Get the namespace specified by the current classpath using open;
+     * this is a convenience function.<p>
+     *
+     * Iff complain is set, we throw {@link IOException}s if
+     * non-existent or ill-formed path components are present in the
+     * classpath.<p>
+     */
     //@ ensures \result!=null
     public static Tree open(boolean complain) throws IOException {
 	return open(current(), complain);
@@ -126,14 +126,14 @@ public class ClassPath {
      *                                                 *
      * Debugging functions:			       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
     /**
-     ** A nicer, formatted version of print.<p>
-     **
-     ** @param P must be a filespace filtered via {@link PkgTree};
-     ** moreover <code>PkgTree.isPackage(P)</code> should be true.<p>
-     **/
+     * A nicer, formatted version of print.<p>
+     *
+     * @param P must be a filespace filtered via {@link PkgTree};
+     * moreover <code>PkgTree.isPackage(P)</code> should be true.<p>
+     */
     //@ requires P!=null
     public static void displayPackage(Tree P) {
 	// Enumerate P's subpackages:
@@ -158,7 +158,7 @@ public class ClassPath {
     }
 
 
-    /** A simple test driver **/
+    /** A simple test driver */
     //@ requires args!=null
     /*@ requires (\forall int i; (0<=i && i<args.length)
 		==> args[i]!=null) */

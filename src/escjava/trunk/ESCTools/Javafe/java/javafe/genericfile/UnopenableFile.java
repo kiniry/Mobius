@@ -8,16 +8,16 @@ import java.io.InputStream;
 
 
 /**
- ** Instances of UnopenableFile are {@link GenericFile}s that cannot
- ** be opened. <p>
- **
- ** Their value lies solely in their associated naming, etc., info.<p>
- **
- ** Example: {@link javafe.util.CorrelatedReader}'s keeps an open
- ** {@link InputStream} and an associated {@link GenericFile}.  In the
- ** case of unreopenable streams like stdin, the associated {@link
- ** GenericFile} is an UnopenableFile with the name "stdin".
- **/
+ * Instances of UnopenableFile are {@link GenericFile}s that cannot
+ * be opened. <p>
+ *
+ * Their value lies solely in their associated naming, etc., info.<p>
+ *
+ * Example: {@link javafe.util.CorrelatedReader}'s keeps an open
+ * {@link InputStream} and an associated {@link GenericFile}.  In the
+ * case of unreopenable streams like stdin, the associated {@link
+ * GenericFile} is an UnopenableFile with the name "stdin".
+ */
 
 public class UnopenableFile implements GenericFile {
 
@@ -25,7 +25,7 @@ public class UnopenableFile implements GenericFile {
      *                                                 *
      * Instance variables:			       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
     //* Our human readable name:
     /*@non_null*/ String humanName;
@@ -38,27 +38,27 @@ public class UnopenableFile implements GenericFile {
      *                                                 *
      * Creation:				       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
     /**
-     ** Create a ordinary (aka, non-directory) UnopenableFile with
-     ** human-name name.
-     **
-     ** The resulting file has no modification date available and a
-     ** local name of "".
-     **/
+     * Create a ordinary (aka, non-directory) UnopenableFile with
+     * human-name name.
+     *
+     * The resulting file has no modification date available and a
+     * local name of "".
+     */
     public UnopenableFile(/*@non_null*/ String name) {
 	this(name, false);
     }
 
 
     /**
-     ** Create an UnopenableFile with human-name name that is a
-     ** directory iff isDir.
-     **
-     ** The resulting file has no modification date available and a
-     ** local name of "".
-     **/
+     * Create an UnopenableFile with human-name name that is a
+     * directory iff isDir.
+     *
+     * The resulting file has no modification date available and a
+     * local name of "".
+     */
     public UnopenableFile(/*@non_null*/ String name, boolean isDir) {
 	humanName = name;
 	this.isDir = isDir;
@@ -69,7 +69,7 @@ public class UnopenableFile implements GenericFile {
      *                                                 *
      * GenericFile interface implementation:	       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
     public String getHumanName() { return humanName; }
 

@@ -4,19 +4,19 @@ package javafe.filespace;
 
 
 /**
- ** A simple filter interface for use in filtering out values.
- **/
+ * A simple filter interface for use in filtering out values.
+ */
 
 
 public interface Filter {
 
     /**
-     ** The actual "static" type of objects we filter
-     **/
+     * The actual "static" type of objects we filter
+     */
     //@ ghost public \TYPE acceptedType
 
 
-    /** Should our client accept a given value? **/
+    /** Should our client accept a given value? */
     //@ requires value!=null
     //@ requires \typeof(value) <: acceptedType
     boolean accept(Object value);

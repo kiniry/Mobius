@@ -9,10 +9,10 @@ import javafe.genericfile.*;
 
 
 /**
- ** This module implements the Query "interface" by using the Java
- ** filespace classes (ClassPath, PathComponent, etc.) provided by the
- ** javafe.filespace package.
- **/
+ * This module implements the Query "interface" by using the Java
+ * filespace classes (ClassPath, PathComponent, etc.) provided by the
+ * javafe.filespace package.
+ */
 
 public class SlowQuery extends Query {
 
@@ -20,30 +20,30 @@ public class SlowQuery extends Query {
      *                                                 *
      * Creation:				       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
     /**
-     ** The Java file space that corresponds to our classpath.
-     **/
+     * The Java file space that corresponds to our classpath.
+     */
     private Tree javaFileSpace;
 
 
     /**
-     ** Create an query engine that may be queried about packages and
-     ** classes in the classpath classpath.
-     **
-     ** <esc> requires classpath!=null </esc>
-     **/
+     * Create an query engine that may be queried about packages and
+     * classes in the classpath classpath.
+     *
+     * <esc> requires classpath!=null </esc>
+     */
     public SlowQuery(String classpath) throws java.io.IOException {
 	javaFileSpace = ClassPath.open(classpath, false);
     }
 
     /**
-     ** Create an query engine that may be queried about packages and
-     ** classes in the current Java classpath (cf. ClassPath) at the
-     ** time the engine was created.  (I.e., later changes to the
-     ** current classpath have no effect on the query engine.)
-     **/
+     * Create an query engine that may be queried about packages and
+     * classes in the current Java classpath (cf. ClassPath) at the
+     * time the engine was created.  (I.e., later changes to the
+     * current classpath have no effect on the query engine.)
+     */
     public SlowQuery() throws java.io.IOException {
 	javaFileSpace = ClassPath.open(false);
     }
@@ -53,27 +53,27 @@ public class SlowQuery extends Query {
      *                                                 *
      * Locating files:				       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
     /**
-     ** Return true iff the package P in the Java filespace is
-     ** "accessible".<p>
-     **
-     ** Warning: the definition of accessible is host system dependent
-     ** and may in fact be defined as always true.<p>
-     **/
+     * Return true iff the package P in the Java filespace is
+     * "accessible".<p>
+     *
+     * Warning: the definition of accessible is host system dependent
+     * and may in fact be defined as always true.<p>
+     */
     public boolean accessable(String[] P) {
 	return (getPackage(P)!=null);
     }
 
 
     /**
-     ** Attempt to locate the file typename+"."+extension in the package
-     ** P in the Java filespace.<p>
-     **
-     ** If such a file is found, then a (non-null) GenericFile
-     ** representing it is returned.  Otherwise, null is returned.<p>
-     **/
+     * Attempt to locate the file typename+"."+extension in the package
+     * P in the Java filespace.<p>
+     *
+     * If such a file is found, then a (non-null) GenericFile
+     * representing it is returned.  Otherwise, null is returned.<p>
+     */
     public GenericFile findFile(String[] P, String typename,
 					String extension) {
 	Tree Package = getPackage(P);
@@ -110,9 +110,9 @@ public class SlowQuery extends Query {
      *                                                 *
      * Debugging functions:			       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
-    /** A simple test driver **/
+    /** A simple test driver */
     //@ requires \nonnullelements(args)
     public static void main(String[] args) throws IOException {
 	/*

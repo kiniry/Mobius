@@ -4,29 +4,28 @@ package javafe.util;
 
 import java.util.*;
 
-
 /**
- ** A simple implementation of imperative sets.  Set's may not contain
- ** null.
- **/
+ * A simple implementation of imperative sets.  Set's may not contain
+ * null.
+ */
 
-public class Set implements Cloneable {
-
+public class Set implements Cloneable
+{
     /***************************************************
      *                                                 *
      * Instance variables:			       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
-    /** Our element type **/
+    /** Our element type */
     //@ ghost public \TYPE elementType
 
 
     /**
-     ** We contain the element e iff ht has the mapping e -> e. <p>
-     **
-     ** All mappings of ht are of the form e' -> e' for some e'.
-     **/
+     * We contain the element e iff ht has the mapping e -> e. <p>
+     *
+     * All mappings of ht are of the form e' -> e' for some e'.
+     */
     //@ invariant ht.keyType == elementType
     //@ invariant ht.elementType == elementType
     //@ invariant ht.owner == this
@@ -37,11 +36,11 @@ public class Set implements Cloneable {
      *                                                 *
      * Construction:				       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
     /**
-     ** Create an empty set
-     **/
+     * Create an empty set
+     */
     public Set() {
 	int initCapacity = 5;
 	ht = new Hashtable(initCapacity);
@@ -52,8 +51,8 @@ public class Set implements Cloneable {
 
 
     /**
-     ** Create a set from the elements of an Enumeration
-     **/
+     * Create a set from the elements of an Enumeration
+     */
     //@ requires e!=null
     //@ requires !e.returnsNull
     //@ ensures elementType==e.elementType
@@ -75,26 +74,26 @@ public class Set implements Cloneable {
      *                                                 *
      * Inspectors:				       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
     /**
-     ** Return the number of elements we hold.
-     **/
+     * Return the number of elements we hold.
+     */
     public int size() {
 	return ht.size();
     }
 
     /**
-     ** Do we contain no elements?
-     **/
+     * Do we contain no elements?
+     */
     public boolean isEmpty() {
 	return ht.isEmpty();
     }
 
 
     /**
-     ** Do we contain a particular element?
-     **/
+     * Do we contain a particular element?
+     */
     //@ requires o!=null
     //@ requires \typeof(o) <: elementType
     public boolean contains(Object o) {
@@ -103,8 +102,8 @@ public class Set implements Cloneable {
 
 
     /**
-     ** Return an enumeration of our elements
-     **/
+     * Return an enumeration of our elements
+     */
     //@ ensures \result!=null
     //@ ensures !\result.returnsNull
     //@ ensures \result.elementType == elementType
@@ -122,21 +121,21 @@ public class Set implements Cloneable {
      *                                                 *
      * Manipulators:				       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
     /**
-     ** Remove all our elements
-     **/
+     * Remove all our elements
+     */
     public void clear() {
 	ht.clear();
     }
 
 
     /**
-     ** Add an element
-     **
-     ** Return 'true' iff the element was already in the set.
-     **/
+     * Add an element
+     *
+     * Return 'true' iff the element was already in the set.
+     */
     //@ requires o!=null
     //@ requires \typeof(o) <: elementType
     public boolean add(Object o) {
@@ -144,8 +143,8 @@ public class Set implements Cloneable {
     }
 
     /**
-     ** Add all the elements of a given enumeration
-     **/
+     * Add all the elements of a given enumeration
+     */
     //@ requires e!=null
     //@ requires !e.returnsNull
     //@ requires e.elementType <: elementType
@@ -159,9 +158,9 @@ public class Set implements Cloneable {
 
 
     /**
-     ** Remove a particular element if we contain it.  Return true
-     ** iff the element was previously in the set.
-     **/
+     * Remove a particular element if we contain it.  Return true
+     * iff the element was previously in the set.
+     */
     //@ requires o!=null
     //@ requires \typeof(o) <: elementType
     public boolean remove(Object o) {
@@ -170,10 +169,10 @@ public class Set implements Cloneable {
 
 
     /**
-     ** Remove all elements not contained in another set.  This has the
-     ** effect of setting us to the intersection of our original value
-     ** and the other set.
-     **/
+     * Remove all elements not contained in another set.  This has the
+     * effect of setting us to the intersection of our original value
+     * and the other set.
+     */
     //@ requires s!=null
     //@ requires s.elementType == elementType
     public void intersect(Set s) {
@@ -187,10 +186,10 @@ public class Set implements Cloneable {
 
 
     /**
-     ** Adds all elements  in another set.  This has the
-     ** effect of setting us to the union of our original value
-     ** and the other set. Return true if any values were added.
-     **/
+     * Adds all elements  in another set.  This has the
+     * effect of setting us to the union of our original value
+     * and the other set. Return true if any values were added.
+     */
     //@ requires s!=null
     //@ requires s.elementType == elementType
     public boolean union(Set s) {
@@ -206,11 +205,11 @@ public class Set implements Cloneable {
     }
 
     /**
-     ** Returns whether or not the set has any element in common with
-     ** <code>s</code>.  Thus, if the intersection of the sets is empty,
-     ** that is, if the sets are disjoint, then <code>false</code> is returned.
-     ** The operation leaves both sets unchanged.
-     **/
+     * Returns whether or not the set has any element in common with
+     * <code>s</code>.  Thus, if the intersection of the sets is empty,
+     * that is, if the sets are disjoint, then <code>false</code> is returned.
+     * The operation leaves both sets unchanged.
+     */
     //@ requires s!=null
     //@ requires s.elementType == elementType
     public boolean containsAny(Set s) {

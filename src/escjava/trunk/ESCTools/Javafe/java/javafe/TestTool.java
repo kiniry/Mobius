@@ -10,17 +10,17 @@ import javafe.util.*;
 
 
 /**
- ** <code>TestTool</code> is an test class for <code>SrcTool</code> and
- ** its superclasses. <p>
- **
- ** It just loads in files unless <code>-superclasses</code> is
- ** supplied, in which case it chases down each classes' superclass
- ** chain.<p>
- **
- ** Note: because this class is intended as a test class routine, the 
- ** code for chasing superclass pointers is kludgey and does not always
- ** work correctly.
- **/
+ * <code>TestTool</code> is an test class for <code>SrcTool</code> and
+ * its superclasses. <p>
+ *
+ * It just loads in files unless <code>-superclasses</code> is
+ * supplied, in which case it chases down each classes' superclass
+ * chain.<p>
+ *
+ * Note: because this class is intended as a test class routine, the 
+ * code for chasing superclass pointers is kludgey and does not always
+ * work correctly.
+ */
 
 public class TestTool extends SrcTool {
 
@@ -28,23 +28,23 @@ public class TestTool extends SrcTool {
      *                                                 *
      * Generating a usage message:		       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
     /**
-     ** Return the name of this tool.  E.g., "ls" or "cp".<p>
-     **
-     ** Used in usage and error messages.<p>
-     **/
+     * Return the name of this tool.  E.g., "ls" or "cp".<p>
+     *
+     * Used in usage and error messages.<p>
+     */
     public String name() { return "TestTool"; }
 
 
     /**
-     ** Print option information to <code>System.err</code>.  Each
-     ** printed line should be preceeded by two blank spaces. <p>
-     **
-     ** Each overriding method should first call
-     ** <code>super.showOptions()</code>.<p>
-     **/
+     * Print option information to <code>System.err</code>.  Each
+     * printed line should be preceeded by two blank spaces. <p>
+     *
+     * Each overriding method should first call
+     * <code>super.showOptions()</code>.<p>
+     */
     public void showOptions() {
         super.showOptions();
 
@@ -56,23 +56,23 @@ public class TestTool extends SrcTool {
      *                                                 *
      * Option processing:			       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
     /**
-     ** Should we chase superclass pointers?  Defaults to no, set by
-     ** <code>-superclasses</code>.
-     **/
+     * Should we chase superclass pointers?  Defaults to no, set by
+     * <code>-superclasses</code>.
+     */
     public boolean chaseSuperclasses = false;
 
 
     /**
-     ** Process next tool option. <p>
-     **
-     ** See <code>Tool.processOption</code> for the complete
-     ** specification of this routine.<p>
-     **
-     ** This routine handles the <code>-superclasses</code> option.<p>
-     **/
+     * Process next tool option. <p>
+     *
+     * See <code>Tool.processOption</code> for the complete
+     * specification of this routine.<p>
+     *
+     * This routine handles the <code>-superclasses</code> option.<p>
+     */
     public int processOption(String option, String[] args, int offset) {
 	if (option.equals("-superclasses")) {
 	    chaseSuperclasses = true;
@@ -88,19 +88,19 @@ public class TestTool extends SrcTool {
      *                                                 *
      * Main processing code:			       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
     /**
-     ** Start up an instance of this tool using command-line arguments
-     ** <code>args</code>. <p> 
-     **
-     ** <b>Note</b>: this code needs to be copied verbatim to each
-     ** subclass of <code>Tool</code> except with the name of the actual
-     ** subclass inserted after the new operator.<p>
-     **
-     ** (This needs to be done because static methods cannot be
-     ** inherited.)<p>
-     **/
+     * Start up an instance of this tool using command-line arguments
+     * <code>args</code>. <p> 
+     *
+     * <b>Note</b>: this code needs to be copied verbatim to each
+     * subclass of <code>Tool</code> except with the name of the actual
+     * subclass inserted after the new operator.<p>
+     *
+     * (This needs to be done because static methods cannot be
+     * inherited.)<p>
+     */
     //@ requires \nonnullelements(args)
     public static void main(String[] args) {
 	Tool t = new TestTool();
@@ -112,12 +112,12 @@ public class TestTool extends SrcTool {
      *                                                 *
      * SrcTool-instance specific processing:	       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
     /**
-     ** This method is called on the TypeDecl of each
-     ** outside type that SrcTool is to process. <p>
-     **/
+     * This method is called on the TypeDecl of each
+     * outside type that SrcTool is to process. <p>
+     */
     public void handleTD(TypeDecl td) {
 	Info.out("[processing "
 		+ TypeSig.getSig(td).getExternalName());
@@ -137,11 +137,11 @@ public class TestTool extends SrcTool {
 
 
     /**
-     ** Attempt to fetch the <code>TypeSig</code> for a given
-     ** <code>TypeDecl</code>. <p>
-     ** 
-     ** Returns null if none exists.<p>
-     **/
+     * Attempt to fetch the <code>TypeSig</code> for a given
+     * <code>TypeDecl</code>. <p>
+     * 
+     * Returns null if none exists.<p>
+     */
     public TypeSig getSuperClass(TypeDecl td) {
 	// If  td is not a class, then it has no superclass:
 	if (!(td instanceof ClassDecl))

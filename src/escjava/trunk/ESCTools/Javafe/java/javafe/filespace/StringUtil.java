@@ -35,9 +35,9 @@ public final class StringUtil {
 
 
     /**
-     ** Print an array of Strings on System.out, one string per
-     ** line.  Prints "<null>" if list is null.
-     **/
+     * Print an array of Strings on System.out, one string per
+     * line.  Prints "<null>" if list is null.
+     */
     //@ requires list!=null
     public static void printList(String[] list) {
 	if (list == null) {
@@ -51,9 +51,9 @@ public final class StringUtil {
 
 
     /**
-     ** Parse a (possibly empty) separator-separated list into an array of
-     **	Strings:
-     **/
+     * Parse a (possibly empty) separator-separated list into an array of
+     *	Strings:
+     */
     //@ ensures \nonnullelements(\result)
     public static String[] parseList(/*@non_null*/ String s, char separator) {
 	// Handle empty list case:

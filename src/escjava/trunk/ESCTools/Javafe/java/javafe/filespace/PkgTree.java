@@ -10,32 +10,32 @@ import javafe.genericfile.*;
 
 
 /**
- ** A PkgTree is a filtered representation of a filespace {@link Tree}
- ** (cf {@link PathComponent}) where some files and directories that
- ** are clearly not part of the Java namespace have been filtered out;
- ** the remaining nodes can be divided into two categories: (a)
- ** (usually interior) nodes that correspond to potential Java
- ** packages, and (b) exterior nodes that correspond to files that
- ** reside in one of the potential Java packages and that have an
- ** extension (e.g., .java).<p>
- **
- ** A function, {@link #isPackage(Tree)}, is provided to distinguish
- ** the two categories.  A convenience function, {@link
- ** #packages(Tree)}, is provided to enumerate all the potential Java
- ** packages in a PkgTree.<p>
- **
- ** {@link #isPackage(Tree)} depends only on a node's label; this
- ** ensures that a {@link UnionTree} of several PkgTree's never
- ** combines package and non-package nodes into a single node.  (This
- ** is why (b) excludes files without extensions.)  Accordingly,
- ** PkgTree's accessors and enumerators can also be used on {@link
- ** UnionTree}s of PkgTrees.<p>
- **
- ** This module is meant to do a reasonable job of identifying potential
- ** packages.  It is not 100% accurate, however, erring on the side of
- ** admitting too many packages.  For example, it does not attempt to
- ** disallow package names containing Java keywords.<p>
- **/
+ * A PkgTree is a filtered representation of a filespace {@link Tree}
+ * (cf {@link PathComponent}) where some files and directories that
+ * are clearly not part of the Java namespace have been filtered out;
+ * the remaining nodes can be divided into two categories: (a)
+ * (usually interior) nodes that correspond to potential Java
+ * packages, and (b) exterior nodes that correspond to files that
+ * reside in one of the potential Java packages and that have an
+ * extension (e.g., .java).<p>
+ *
+ * A function, {@link #isPackage(Tree)}, is provided to distinguish
+ * the two categories.  A convenience function, {@link
+ * #packages(Tree)}, is provided to enumerate all the potential Java
+ * packages in a PkgTree.<p>
+ *
+ * {@link #isPackage(Tree)} depends only on a node's label; this
+ * ensures that a {@link UnionTree} of several PkgTree's never
+ * combines package and non-package nodes into a single node.  (This
+ * is why (b) excludes files without extensions.)  Accordingly,
+ * PkgTree's accessors and enumerators can also be used on {@link
+ * UnionTree}s of PkgTrees.<p>
+ *
+ * This module is meant to do a reasonable job of identifying potential
+ * packages.  It is not 100% accurate, however, erring on the side of
+ * admitting too many packages.  For example, it does not attempt to
+ * disallow package names containing Java keywords.<p>
+ */
 
 public class PkgTree extends PreloadedTree {
 
@@ -43,18 +43,18 @@ public class PkgTree extends PreloadedTree {
      *                                                 *
      * Creation:				       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
 
-    /** The non-null filespace Tree we are filtering **/
+    /** The non-null filespace Tree we are filtering */
     //@ invariant underlyingTree!=null
     protected Tree underlyingTree;
 
 
     /**
-     ** Filter a non-null filespace Tree, leaving potential Java
-     ** packages and files.
-     **/
+     * Filter a non-null filespace Tree, leaving potential Java
+     * packages and files.
+     */
     //@ requires underlyingTree!=null
     public PkgTree(Tree underlyingTree) {
 	super(underlyingTree.data);
@@ -62,9 +62,9 @@ public class PkgTree extends PreloadedTree {
     }
 
     /**
-     ** Create a non-root node.  underlyingTree must be a non-null
-     ** filespace Tree.
-     **/
+     * Create a non-root node.  underlyingTree must be a non-null
+     * filespace Tree.
+     */
     //@ requires underlyingTree!=null
     //@ requires parent!=null && label!=null
     protected PkgTree(Tree parent, String label, Tree underlyingTree) {
@@ -77,28 +77,28 @@ public class PkgTree extends PreloadedTree {
      *                                                 *
      * Deciding what nodes to filter out:	       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
     /*
      * Status codes returned by getStatus:
      */
 
-    /** ignore the node and its children **/
+    /** ignore the node and its children */
     protected static final int IGNORE = 0;
 
-    /** include the node but not its children **/
+    /** include the node but not its children */
     protected static final int INCLUDE_NODE = 1;
 
-    /** include the node and its children **/
+    /** include the node and its children */
     protected static final int INCLUDE_TREE = 2;
 
 
     /**
-     ** Decide what to do with a node of the underlying filespace, returning
-     ** one of the following codes: IGNORE, INCLUDE_NODE, or INCLUDE_TREE.
-     **
-     ** <esc> requires node!=null </esc>
-     **/
+     * Decide what to do with a node of the underlying filespace, returning
+     * one of the following codes: IGNORE, INCLUDE_NODE, or INCLUDE_TREE.
+     *
+     * <esc> requires node!=null </esc>
+     */
     protected static int getStatus(Tree node) {
 	String label = node.getSimpleName();
 	String extension = Extension.getExtension(label);
@@ -137,9 +137,9 @@ public class PkgTree extends PreloadedTree {
      *                                                 *
      * Loading the edges map:			       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
-    /** Load the edges map for use.  **/
+    /** Load the edges map for use.  */
     protected void loadEdges() {
 	if (getStatus(underlyingTree) != INCLUDE_TREE)
 	    return;	// We are ignoring this tree or its children
@@ -159,30 +159,30 @@ public class PkgTree extends PreloadedTree {
      *                                                 *
      * Accessors:				       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
     /**
-     ** Is a node of a PkgTree (or a union of PkgTree's) a potential
-     ** Java package?
-     **
-     ** <esc> requires node!=null </esc>
-     **/
+     * Is a node of a PkgTree (or a union of PkgTree's) a potential
+     * Java package?
+     *
+     * <esc> requires node!=null </esc>
+     */
     public static boolean isPackage(Tree node) {
 	return Extension.getExtension(node.getSimpleName()).equals("");
     }
 
-    /** The name to use for root packages **/
+    /** The name to use for root packages */
     public static String rootPackageName = "<the unnamed package>";
 
     /**
-     ** Return the human-readable name of a package.  Uses rootPackageName
-     ** as the name of root packages.<p>
-     **
-     ** Note: the resulting name will only make sense if node is a
-     ** package.<p>
-     **
-     ** <esc> requires node!=null </esc>
-     **/
+     * Return the human-readable name of a package.  Uses rootPackageName
+     * as the name of root packages.<p>
+     *
+     * Note: the resulting name will only make sense if node is a
+     * package.<p>
+     *
+     * <esc> requires node!=null </esc>
+     */
     public static String getPackageName(Tree node) {
 	if (node.getParent() == null)
 	    return rootPackageName;
@@ -195,13 +195,13 @@ public class PkgTree extends PreloadedTree {
      *                                                 *
      * Enumerators:				       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
     /**
-     ** Enumerate all the potential packages of a PkgTree (or a union of
-     ** PkgTree's) in depth-first pre-order using lexical ordering on
-     ** siblings (cf. TreeWalker).
-     **/
+     * Enumerate all the potential packages of a PkgTree (or a union of
+     * PkgTree's) in depth-first pre-order using lexical ordering on
+     * siblings (cf. TreeWalker).
+     */
     //@ requires node!=null
     //@ ensures \result!=null
     //@ ensures !\result.returnsNull
@@ -213,13 +213,13 @@ public class PkgTree extends PreloadedTree {
     }
 
     /**
-     ** Enumerate all the components of package P with extension E in
-     ** sorted order (of labels).<p>
-     **
-     ** For a PkgTree (or a union of PkgTrees), if E is "", then all
-     ** direct potential subpackages will be selected.  Otherwise, only
-     ** non-subpackages will be selected.<p>
-     **/
+     * Enumerate all the components of package P with extension E in
+     * sorted order (of labels).<p>
+     *
+     * For a PkgTree (or a union of PkgTrees), if E is "", then all
+     * direct potential subpackages will be selected.  Otherwise, only
+     * non-subpackages will be selected.<p>
+     */
     //@ requires P!=null && E!=null
     //@ ensures \result!=null
     //@ ensures !\result.returnsNull
@@ -236,16 +236,16 @@ public class PkgTree extends PreloadedTree {
      *                                                 *
      * Debugging functions:			       *
      *                                                 *
-     ***************************************************/
+     **************************************************/
 
-    /** Extend printDetails to include our isPackage status **/
+    /** Extend printDetails to include our isPackage status */
     public void printDetails(String prefix) {
 	super.printDetails(prefix);
 	if (isPackage(this))
 	    System.out.print(" [P]");
     }
 
-    /** A simple test driver **/
+    /** A simple test driver */
     //@ requires args!=null
     /*@ requires (\forall int i; (0<=i && i<args.length)
 		==> args[i]!=null) */
@@ -295,11 +295,11 @@ public class PkgTree extends PreloadedTree {
 
 
 /**
- ** A filter for accepting only packages:
- **
- ** This filter is for the use of the PkgTree class only; if inner
- ** classes were available, it would be expressed as an anonymous class.
- **/
+ * A filter for accepting only packages:
+ *
+ * This filter is for the use of the PkgTree class only; if inner
+ * classes were available, it would be expressed as an anonymous class.
+ */
 class PkgTree_PackagesOnly implements Filter {
     //@ invariant acceptedType == \type(Tree)
 
@@ -314,11 +314,11 @@ class PkgTree_PackagesOnly implements Filter {
 
 
 /**
- ** A filter for accepting only node's with a particular extension:
- **
- ** This filter is for the use of the PkgTree class only; if inner
- ** classes were available, it would be expressed as an anonymous class.
- **/
+ * A filter for accepting only node's with a particular extension:
+ *
+ * This filter is for the use of the PkgTree class only; if inner
+ * classes were available, it would be expressed as an anonymous class.
+ */
 class PkgTree_MatchesExtension implements Filter {
 
     //@ invariant acceptedType == \type(Tree)

@@ -3,14 +3,12 @@
 package javafe.util;
 
 /**
+ * A class with static methods for checking assertions.
+ * (Inspired by <cite>Mastering the AWT</code> by David Geary.)
+ */
 
-  A class with static methods for checking assertions.
-  (Inspired by <CITE>Mastering the AWT</CODE> by David Geary.)
-
-*/
-
-public class Assert {
-
+public class Assert
+{
     //@ ensures false 
     static public void fail(String msg) {
 	throw new AssertionFailureException(msg);

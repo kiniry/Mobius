@@ -72,9 +72,9 @@ public final class Identifier {
 
 
     /**
-     ** This field defaults to <CODE>TagConstants.IDENT</CODE>, but
-     ** is set to other values by the scanner to indicate keywords.
-     **/
+     * This field defaults to <CODE>TagConstants.IDENT</CODE>, but
+     * is set to other values by the scanner to indicate keywords.
+     */
     /*@ invariant tokenType!=TagConstants.BOOLEANLIT &&
                   tokenType!=TagConstants.INTLIT &&
                   tokenType!=TagConstants.LONGLIT &&
