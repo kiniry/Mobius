@@ -312,7 +312,8 @@ number of iterations, this solution handles common cases of iterating
 over recursive structures.
 
 \paragraph*{Annotations containing routine calls and dynamic allocations}
-JML, but not ESC/Java, allows pure method calls and constructors to be
+JML, but not ESC/Java, allows pure method calls and constructors (that is, methods
+and constructors without side-effects) to be
 used in annotations.  This allows both a degree of abstraction and
 more readable and writable specifications.
 
@@ -330,8 +331,11 @@ the current state of the heap as an additional uninterpreted
 parameter, and (c) incorporate the specifications of the called method
 as additional axioms.
 
-Dynamic allocations of objects using constructors are simply recast as
-method calls and treated as described above.  Dynamic allocations of
+Dynamic allocations of objects using constructors are simply static
+method calls that return new objects and are treated 
+in the same way as other method calls.  The logic 
+includes axioms that ensure that a newly allocated object is distinct (reference values
+are unequal) from any previously allocated object.  Dynamic allocations of
 arrays are translated into first-order logic as functions without
 difficulty, as they were in ESC/Java.
 
@@ -351,7 +355,7 @@ behavior of the model fields.
 \subsection{Backwards incompatibilities}
 The ESC/Java specification language and JML arose separately; there
 was some initial but incomplete work to unify the
-two~\cite{Leavens-etal03}.  The ESC/Java2 project intends to have the
+two.~\cite{Leavens-etal03}  The ESC/Java2 project intends to have the
 tool reflect JML as precisely as reasonable.  In some cases,
 discussion about differences resulted in changes to JML.  In a few
 cases, some backwards incompatibilities in ESC/Java were introduced.
@@ -362,10 +366,12 @@ The principal incompatibilities are these:
 \item The semantics of inheritance of specification clauses and of
   \texttt{non\_null} modifiers was modified to match that defined by
   JML, since the work on JML resulted in an interpretation consistent
-  with behavioral subtyping.  This also changed the usage and
-  semantics of the \texttt{also} keyword, because confusing
-  situtations can arise if formal parameters in an overridden and
-  overriding declaration differ in \texttt{non\_null} annotations.  See
+  with behavioral subtyping.  JML has a standalone \texttt{also} keyword
+that indicates there are inherited explicit or implicit specifications; its
+interpretation of of specification inheritance is consistent with behavioral
+subtyping.  By contrast, ESC/Java's use of inherited specifications had
+limitations and was a known source of soundness problems. \cite{Leino-Nelson-Saxe00}
+See
   the section titled ``Inheritance and \texttt{non\_null}'' in the
   ESC/Java2 Implementation Notes for more
   details~\cite{Cok04-Impl-Notes}.
@@ -1087,13 +1093,13 @@ Clarified.
 %    The two sentences about dynamic allocations are unclear, so need 
 % rewriting.
 
-TODO!!!!
+Revised and expanded a bit.
 
 %    p5: "This also changed the usage and semantics of the also 
 % keyword."
 %    Explain!
 
-TODO!!!!
+Explained and references added.
 
 % Detailed comments
 
