@@ -217,9 +217,11 @@ public class ErrorSet
      */
     //@ ensures false
     public static void fatal(String msg) /*throws FatalError*/ {
-	fatals++;
-	errors++;
-	if (msg != null) report(FATALERROR, msg);
+	if (msg != null) {
+	    fatals++;
+	    errors++;
+	    report(FATALERROR, msg);
+	}
 	throw new FatalError();
     }    //@ nowarn Exception
 
