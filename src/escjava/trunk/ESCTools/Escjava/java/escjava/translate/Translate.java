@@ -1800,6 +1800,12 @@ public final class Translate {
 	  //Assert.notImplemented("block-level types");
 	  return;
 
+      case TagConstants.ASSERTSTMT:
+	  if (this.issueCautions && !escjava.Main.options().noNotCheckedWarnings) {
+	      ErrorSet.caution(stmt.getStartLoc(),
+			       "Not translating assert statements");
+	  }	  
+	  return;
       default:
 	//@ unreachable
 	Assert.notFalse(false,"Unexpected tag " + TagConstants.toString(tag)
