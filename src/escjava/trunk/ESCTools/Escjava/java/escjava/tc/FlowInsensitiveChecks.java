@@ -190,9 +190,6 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
           // The desugaring of m can require the desugared
           // specs of a parent constructor, so we have to be
           // sure that the parent constructor is typechecked.
-          // This does not appear to result in the constructor
-          // being type checked twice (or at least not in
-          // double error messages).
           TypeSig s = TypeSig.getSig(m.parent).superClass();
           if (s != null) checkTypeDeclElem(s.getTypeDecl());
         }
@@ -2135,6 +2132,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
               }
             } else if( ctxt instanceof RoutineDecl ) {
               RoutineDecl rd = (RoutineDecl)ctxt;
+              escjava.ast.Utils.owningDecl.set(emp,rd);
               boolean oldIsRESContext = isRESContext;
               boolean oldIsTwoStateContext = isTwoStateContext;
               boolean oldIsPrivFieldAccessAllowed = isPrivateFieldAccessAllowed;
@@ -2452,11 +2450,15 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
           if (e == null || TypeCheck.inst.getType(e) == Types.errorType) {
             // skip
           } else if (e instanceof FieldAccess) {
-            if (Modifiers.isStatic( ((FieldAccess)e).decl.modifiers)
-                && !Modifiers.isStatic( ((FieldDecl)ctxt).modifiers) ){
-              ErrorSet.error(((FieldDecl)ctxt).getStartLoc(), "An instance field may not be added to a static datagroup", ((FieldAccess)e).decl.getStartLoc());
+            FieldAccess fe = (FieldAccess)e; // datagroup
+            FieldDecl fd = (FieldDecl)ctxt;  // field with which maps decl is associated
+            if (Modifiers.isStatic( fe.decl.modifiers)
+                && !Modifiers.isStatic( fd.modifiers) ){
+              ErrorSet.error(((FieldDecl)ctxt).getStartLoc(), 
+                     "An instance field may not be added to a static datagroup",
+                     fe.decl.getStartLoc());
             } else {
-              Datagroups.add(((FieldAccess)e).decl,ep.mapsexpr);
+              Datagroups.add(fd.parent,fe.decl,ep.mapsexpr);
             }
           } else {
             ErrorSet.error(e.getStartLoc(),
@@ -2467,20 +2469,23 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
         }
 
         case TagConstants.IN: {
-          //System.out.println("FOUND " + TagConstants.toString(tag) + " for " + ((FieldDecl)ctxt).id );
           MapsExprModifierPragma ep = (MapsExprModifierPragma)p;
           if (ep.expr != null) ep.expr = checkExpr(env,ep.expr);
           Expr e = ep.expr;
           if (e == null || TypeCheck.inst.getType(e) == Types.errorType) {
           } else if (e instanceof FieldAccess) {
-            FieldDecl fd = (FieldDecl)ctxt;
-            Expr eva = AmbiguousVariableAccess.make(SimpleName.make(fd.id,fd.getStartLoc()));
+            FieldAccess fe = (FieldAccess)e;  // datagroup
+            FieldDecl fd = (FieldDecl)ctxt;  // field being put in the datagroup
+            Expr eva = AmbiguousVariableAccess.make(
+                                    SimpleName.make(fd.id,fd.getStartLoc()));
             eva = checkExpr(env,eva);
-            if (Modifiers.isStatic( ((FieldAccess)e).decl.modifiers ) &&
+            if (Modifiers.isStatic( fe.decl.modifiers ) &&
                 !Modifiers.isStatic(fd.modifiers)) {
-              ErrorSet.error(fd.getStartLoc(), "An instance field may not be added to a static datagroup", ((FieldAccess)e).decl.getStartLoc());
+              ErrorSet.error(fd.getStartLoc(), 
+                   "An instance field may not be added to a static datagroup", 
+                    fe.decl.getStartLoc());
             } else {
-              Datagroups.add(((FieldAccess)e).decl,eva);
+              Datagroups.add(fd.parent,fe.decl,eva);
             }
           } else {
             ErrorSet.error(e.getStartLoc(),

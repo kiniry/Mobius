@@ -509,6 +509,7 @@ public class AnnotationHandler {
         javafe.tc.FlowInsensitiveChecks.setType(e, Types.booleanType);
         ExprModifierPragma emp = ExprModifierPragma.make(TagConstants.ENSURES,
             e, locNN);
+        Utils.owningDecl.set(emp,rd);
         emp.errorTag = TagConstants.CHKNONNULLRESULT;
         result.addElement(emp);
       }

@@ -24,6 +24,7 @@ import javafe.ast.RoutineDecl;
 import javafe.ast.SuperObjectDesignator;
 import javafe.ast.ThisExpr;
 import javafe.ast.Type;
+import javafe.ast.TypeDecl;
 import javafe.ast.TypeObjectDesignator;
 import javafe.ast.VariableAccess;
 import javafe.tc.EnvForTypeSig;
@@ -247,7 +248,8 @@ public class Frame {
       // Now iterate over all the store-refs in this specification case,
       // including store-refs that are in datagroups - we use this
       // iterator to hide the expansion of the datagroups
-      ModifiesIterator caller_iterator = new ModifiesIterator(mge.items,true);
+      ModifiesIterator caller_iterator = new ModifiesIterator(
+                                          rdCurrent.parent,mge.items,true);
       while (ev != null && caller_iterator.hasNext()) {
         Object ex = caller_iterator.next();
         if (ex instanceof FieldAccess || ex instanceof FieldDecl) {
@@ -402,9 +404,11 @@ public class Frame {
    * @param loccall the location of the call
    * @param args the mapping of the arguments of the call
    * @param freshResult - true if eod is known to be fresh since the prestate
+   * @param td_callee The TypeDecl in which the called method is declared
    */
   void modifiesCheckMethodI(ModifiesGroupPragmaVec calleeFrameConditions, 
-      Expr eod, int loccall, Hashtable args, boolean freshResult) {
+      Expr eod, int loccall, Hashtable args, boolean freshResult,
+      TypeDecl td_callee) {
     if (!issueCautions) return;
     kindOfModCheck = "method call";
     for (int i=0; i<calleeFrameConditions.size(); ++i) {
@@ -418,7 +422,7 @@ public class Frame {
         javafe.tc.FlowInsensitiveChecks.setType(mg.precondition,Types.booleanType);
       }
       Expr tp = modTranslate(mg.precondition,false,eod,args);
-      ModifiesIterator callee_iterator = new ModifiesIterator(mg.items,false);
+      ModifiesIterator callee_iterator = new ModifiesIterator(td_callee,mg.items,false);
       while (callee_iterator.hasNext()) {
         Object ex = callee_iterator.next();
         Expr e = modifiesCheckMethod(eod, Location.NULL, 
@@ -480,7 +484,8 @@ public class Frame {
         ExprVec ev = ExprVec.make(10);
         
         if (calleeStoreRef instanceof EverythingExpr) {
-          ModifiesIterator caller_iterator = new ModifiesIterator(mge.items,true);
+          ModifiesIterator caller_iterator = new ModifiesIterator(
+                                               rdCurrent.parent,mge.items,true);
           while (caller_iterator.hasNext()) {
             Object callerStoreRef = caller_iterator.next();
             if (callerStoreRef instanceof EverythingExpr) {
@@ -523,7 +528,8 @@ public class Frame {
                 false,eod,args);
             if (!genExpr) addAllocExpression(ev,e1);
           }
-          ModifiesIterator caller_iterator = new ModifiesIterator(mge.items,true);
+          ModifiesIterator caller_iterator = new ModifiesIterator(
+                                                 rdCurrent.parent,mge.items,true);
           while (caller_iterator.hasNext()) {
             Object callerStoreRef = caller_iterator.next();
             //System.out.println("CALLER " + callerStoreRef);
@@ -560,7 +566,8 @@ public class Frame {
           Expr ah = highIndex == null ? null :
             modTranslate(highIndex,false,eod,args); 
           if (!genExpr) addAllocExpression(ev,ao);
-          ModifiesIterator caller_iterator = new ModifiesIterator(mge.items,true);
+          ModifiesIterator caller_iterator = new ModifiesIterator(
+					  rdCurrent.parent,mge.items,true);
           while (caller_iterator.hasNext()) {
             Object callerStoreRef = caller_iterator.next();
             if (callerStoreRef instanceof EverythingExpr) {
@@ -704,7 +711,8 @@ public class Frame {
       // The assignment is ok if the array whose element is assigned
       // is fresh since the prestate
       if (!genExpr) addAllocExpression(ev,array); 
-      ModifiesIterator caller_iterator = new ModifiesIterator(mge.items,true);
+      ModifiesIterator caller_iterator = new ModifiesIterator(
+					     rdCurrent.parent,mge.items,true);
       while (ev != null && caller_iterator.hasNext()) {
         Object ex = caller_iterator.next();
         if (ex instanceof FieldAccess) {
@@ -919,46 +927,6 @@ public class Frame {
     Object value = lit.value;
     return ((Boolean)value).booleanValue() ;
   }
-/*
-  static class ModifiesIteratorSpecs {
-    private boolean expandDatagroups;
-
-    private boolean expandWildRefs;
-
-    private int specsPos = 0;
-
-    final private ModifiesGroupPragmaVec specs;
-
-    private ModifiesIterator iterator = null;
-
-    public ModifiesIteratorSpecs(ModifiesGroupPragmaVec specs, boolean expandDatagroups, boolean expandWildRefs) {
-System.out.println("MISOECS " + specs.size());
-      this.expandDatagroups = expandDatagroups;
-      this.expandWildRefs = expandWildRefs;
-      this.specs = specs;
-      specsPos = 0;
-    }
-
-    public boolean hasNext() {
-System.out.println("MISO-HN");
-	if (iterator != null) {
-	    if (iterator.hasNext()) return true;
-	}
-	while (specsPos < specs.size()) {
-	    ModifiesGroupPragma m = specs.elementAt(specsPos++);
-	    iterator = new ModifiesIterator(((ModifiesGroupPragma)m).items,
-			    expandDatagroups,expandWildRefs);
-	    if (iterator.hasNext()) return true;
-	}
-	return false;
-    }
-
-    public Object next() {
-System.out.println("MISO-NEXT");
-	return iterator.next();
-    }
-  }
-  */
   
   /** This class enables iterating over the set of store-ref
    * locations in a ModifiesGroupPragma.  It also has the ability
@@ -969,6 +937,9 @@ System.out.println("MISO-NEXT");
    *
    */
   static class ModifiesIterator {
+
+    /** The TypeDecl whose view of any datagroups is to be used.*/
+    final private TypeDecl td;
     
     /** The set of store-ref locations over which to iterate. */
     final private CondExprModifierPragmaVec mp;
@@ -1003,8 +974,9 @@ System.out.println("MISO-NEXT");
      *      expanded and their contents (recursively) become
      *      steps in the iteration
      */
-    public ModifiesIterator(CondExprModifierPragmaVec mp, boolean expandDatagroups) {
-      this(mp,expandDatagroups,false);
+    public ModifiesIterator(TypeDecl td,
+                CondExprModifierPragmaVec mp, boolean expandDatagroups) {
+      this(td,mp,expandDatagroups,false);
     }
 
     
@@ -1019,8 +991,9 @@ System.out.println("MISO-NEXT");
      *      of the form  obj.* are expanded into their
      *      individual fields
      */
-    public ModifiesIterator(CondExprModifierPragmaVec mp, 
+    public ModifiesIterator(TypeDecl td, CondExprModifierPragmaVec mp, 
         boolean expandDatagroups, boolean expandWild) {
+      this.td = td;
       this.mp = mp;
       this.expandDatagroups = expandDatagroups;
       this.expandWild = expandWild;
@@ -1118,18 +1091,28 @@ System.out.println("MISO-NEXT");
     }
     
     /** Adds the contents of the datagroup d (of object od, which
-     * is null if static) to the 'others' list.
+     * may not be null) to the 'others' list.
      * @param od Object reference
      * @param d  Declaration of the datagroup
      */
+    //@ requires od != null && d != null;
     private void add(ObjectDesignator od, FieldDecl d) {
       if (count(d) >= limit) return;
       done.add(d);
-      if (od == null || !(od instanceof ExprObjectDesignator)) {
-        others.addAll(Datagroups.get(d));
-      } else {
+      if (od == null) {
+        System.out.println("UNSUPPORTED OPTION IN FRAME.ModifiesIterator");
+        others.addAll(Datagroups.get(td,d));
+      } else if (od instanceof TypeObjectDesignator) {
+        TypeSig ts = (TypeSig)((TypeObjectDesignator)od).type;
+        TypeDecl tdd = ts.getTypeDecl();
+        if (TypeSig.getSig(td).isSubtypeOf(ts)) tdd = td;
+        others.addAll(Datagroups.get(tdd,d));
+      } else if (od instanceof ExprObjectDesignator) {
         Expr e = ((ExprObjectDesignator)od).expr;
-        Iterator i = Datagroups.get(d).iterator();
+        Type t = javafe.tc.FlowInsensitiveChecks.getType(e);
+        TypeDecl tdd = ((TypeSig)t).getTypeDecl();
+        if (TypeSig.getSig(td).isSubtypeOf((TypeSig)t)) tdd = td;
+        Iterator i = Datagroups.get(tdd,d).iterator();
         // FIXME - need to determine what the permissible content
         // of Datagroups.get() is
         Hashtable h = new Hashtable();
@@ -1146,6 +1129,11 @@ System.out.println("MISO-NEXT");
             ErrorSet.caution("INTERNAL ERROR: Unhandled case in ModifiesIterator.add: " + o.getClass());
           }
         }
+      } else if (od instanceof SuperObjectDesignator) {
+        TypeSig ts = (TypeSig)((SuperObjectDesignator)od).type;
+        TypeDecl tdd = ts.getTypeDecl();
+        if (TypeSig.getSig(td).isSubtypeOf(ts)) tdd = td;
+        others.addAll(Datagroups.get(tdd,d));
       }
     }
     

@@ -218,6 +218,7 @@ public static boolean isFunction(RoutineDecl rd) {
   public static final ASTDecoration representsDecoration =
     new ASTDecoration("representsClauses");
 
+  public static final ASTDecoration owningDecl = new ASTDecoration("owningDecl");
   public static final ASTDecoration allSpecs = new ASTDecoration("allSpecs");
 
   static public ModifierPragmaVec getAllSpecs(RoutineDecl rd) {
