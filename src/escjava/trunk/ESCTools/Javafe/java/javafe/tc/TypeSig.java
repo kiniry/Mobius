@@ -612,16 +612,15 @@ public class TypeSig extends Type
 	 * Then try our superclass (if any):
 	 */
 	resolveSupertypeLinks();
-	TypeDecl decl = getTypeDecl();
-	if (decl instanceof ClassDecl) {
-	    TypeName n = ((ClassDecl)decl).superClass;
-	    if (n!=null)
-		result = getSig(n).lookupType(caller,id, loc);
+	TypeSig s = superClass();
+	if (s != null) {
+	    result = s.lookupType(caller,id,loc);
 	}
 
 	/*
 	 * and our superinterfaces, checking for duplicates:
 	 */
+	TypeDecl decl = getTypeDecl();
 	for (int i=0; i<decl.superInterfaces.size(); i++ ) {
 	    TypeName superInterfaceName = decl.superInterfaces.elementAt(i);
 	    TypeSig newResult = getSig(superInterfaceName).lookupType(caller,id, loc);
@@ -1415,6 +1414,22 @@ public class TypeSig extends Type
             CheckInvariants.checkTypeDeclOfSig(this);
         }
     }
+
+    private TypeSig superClass = null;
+
+    // Probably should use this only after super types have been resolved.
+    public TypeSig superClass() {
+	if (superClass != null) return superClass;
+	TypeDecl decl = getTypeDecl();
+	if (decl instanceof ClassDecl) {
+	    TypeName n = ((ClassDecl)decl).superClass;
+	    if (n!=null) {
+		superClass = getSig(n);
+	    }
+	}
+	return superClass;
+    }
+
 } // end of class TypeSig
 
 /*
