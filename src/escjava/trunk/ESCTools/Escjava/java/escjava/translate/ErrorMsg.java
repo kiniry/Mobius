@@ -51,7 +51,11 @@ public final class ErrorMsg
 	    }
 	    if (iErrorLabel == -1) {
 		//@ unreachable
-		ErrorSet.error("Unknown cause!");
+		String s = "Unknown cause!  Lables are";
+		for (int i = 0; i < cLabels; i++) {
+		     s = s + " " + labelList.at(i).getAtom().toString();
+		}
+		ErrorSet.error(s);
 	    }
 
 	    // print the execution trace info if requested
@@ -106,7 +110,7 @@ public final class ErrorMsg
 		    (Main.options().traceInfo > 0 && isTraceLabel(label))) {
 		    continue;
 		}
-		if (label.endsWith(tail)) {
+		if (tail != null && label.endsWith(tail)) {
 		    printErrorMessage(label, counterexampleContext, rd, directTargets, out, true);
 		    continue;
 		}
