@@ -82,7 +82,7 @@ public class AnnotationHandler {
 
 	if (mpp != null) for (int i=0; i<mpp.size(); ++i) {
 	    ModifierPragma m = mpp.elementAt(i);
-	    if (m.getTag() == TagConstants.JML_PURE) {
+	    if (m.getTag() == TagConstants.PURE) {
 		tde.setModifiers(tde.getModifiers() | Modifiers.ACC_PURE);
 	    }
 	}
@@ -116,11 +116,11 @@ public class AnnotationHandler {
 	    case TagConstants.GHOSTDECLPRAGMA:
 	    case TagConstants.MODELDECLPRAGMA:
 	    case TagConstants.INVARIANT:
-	    case TagConstants.JML_INVARIANT_REDUNDANTLY:
-	    case TagConstants.JML_CONSTRAINT:
-	    case TagConstants.JML_REPRESENTS:
+	    case TagConstants.INVARIANT_REDUNDANTLY:
+	    case TagConstants.CONSTRAINT:
+	    case TagConstants.REPRESENTS:
 	    case TagConstants.AXIOM:
-	    case TagConstants.JML_DEPENDS:
+	    case TagConstants.DEPENDS:
 		(new CheckPurity()).visitNode((ASTNode)tde);
 		break;
 
@@ -207,7 +207,7 @@ public class AnnotationHandler {
 	// FIXME - check whether we should have an initial also or not ???
 	// check for an initial also
 	ModifierPragma m = pm.elementAt(n);
-	if (m.getTag() == TagConstants.JML_ALSO) {
+	if (m.getTag() == TagConstants.ALSO) {
 	    newpm.add(m);
 	    ++n;
 	}
@@ -222,12 +222,12 @@ public class AnnotationHandler {
 	for (int j=n; j<size; ++j) {
 	    m = pm.elementAt(j);
 	    int t = m.getTag();
-	    if (t == TagConstants.JML_BEHAVIOR
-	     || t == TagConstants.JML_NORMAL_BEHAVIOR
-	     || t == TagConstants.JML_EXCEPTIONAL_BEHAVIOR
-	     || t == TagConstants.JML_ALSO
-	     || t == TagConstants.JML_IMPLIES_THAT
-	     || t == TagConstants.JML_OPENPRAGMA) {
+	    if (t == TagConstants.BEHAVIOR
+	     || t == TagConstants.NORMAL_BEHAVIOR
+	     || t == TagConstants.EXCEPTIONAL_BEHAVIOR
+	     || t == TagConstants.ALSO
+	     || t == TagConstants.IMPLIES_THAT
+	     || t == TagConstants.OPENPRAGMA) {
 		isHeavyweight = true;
 		break;
 	    }
@@ -244,17 +244,17 @@ public class AnnotationHandler {
 	    m = pm.elementAt(n++);
 	    int t = m.getTag();
 	    switch (t) {
-		case TagConstants.JML_BEHAVIOR:
+		case TagConstants.BEHAVIOR:
 		    currentBehavior = new Behavior();
 		    break;
-		case TagConstants.JML_NORMAL_BEHAVIOR:
+		case TagConstants.NORMAL_BEHAVIOR:
 		    currentBehavior = new Behavior();
 		    currentBehavior.isNormal = true;
 		// set a false signals clause
 			// FIXME - we need to turn signals off
 		    //currentBehavior.signals.add(Behavior.DefaultSignalFalse);
 		    break;
-		case TagConstants.JML_EXCEPTIONAL_BEHAVIOR:
+		case TagConstants.EXCEPTIONAL_BEHAVIOR:
 		    currentBehavior = new Behavior();
 		    currentBehavior.isExceptional = true;
 		    // set a false ensures clause
@@ -264,17 +264,17 @@ public class AnnotationHandler {
                 // All redundant tokens should not exist in the AST
                 // anymore; they are represented with redundant fields in
                 // the AST nodes.
-		case TagConstants.JML_DIVERGES_REDUNDANTLY:
-		case TagConstants.JML_ENSURES_REDUNDANTLY:
-		case TagConstants.JML_EXSURES_REDUNDANTLY:
-		case TagConstants.JML_REQUIRES_REDUNDANTLY:
-		case TagConstants.JML_SIGNALS_REDUNDANTLY:
+		case TagConstants.DIVERGES_REDUNDANTLY:
+		case TagConstants.ENSURES_REDUNDANTLY:
+		case TagConstants.EXSURES_REDUNDANTLY:
+		case TagConstants.REQUIRES_REDUNDANTLY:
+		case TagConstants.SIGNALS_REDUNDANTLY:
                     assert false : "Redundant keywords should not be in AST!";
                     break;
 
 		case TagConstants.REQUIRES:
 		case TagConstants.ALSO_REQUIRES:
-		case TagConstants.PRE: {
+		case TagConstants.PRECONDITION: {
 		    ExprModifierPragma e = (ExprModifierPragma)m;
 		    currentBehavior.requires =
 			and(currentBehavior.requires,e.expr);
@@ -283,7 +283,7 @@ public class AnnotationHandler {
 		    
 		case TagConstants.ENSURES:
 		case TagConstants.ALSO_ENSURES:
-		case TagConstants.JML_POST: {
+		case TagConstants.POSTCONDITION: {
 		    if (currentBehavior.isExceptional) {
 			ErrorSet.error(m.getStartLoc(),
 			   "This type of annotation is not permitted in an excpetional_behavior clause");
@@ -293,14 +293,14 @@ public class AnnotationHandler {
 		    break;
 		 }
 
-		case TagConstants.JML_DIVERGES:
+		case TagConstants.DIVERGES:
 		    ExprModifierPragma e = (ExprModifierPragma)m;
 		    currentBehavior.diverges.add(e);
 		    break;
 
 		case TagConstants.EXSURES:
 		case TagConstants.ALSO_EXSURES:
-		case TagConstants.JML_SIGNALS:
+		case TagConstants.SIGNALS:
 		    if (currentBehavior.isNormal) {
 			ErrorSet.error(m.getStartLoc(),
 			   "This type of annotation is not permitted in an normal_behavior clause");
@@ -308,8 +308,8 @@ public class AnnotationHandler {
 		    currentBehavior.signals.add(m);
 		    break;
 
-		case TagConstants.JML_ASSIGNABLE:
-		case TagConstants.JML_MODIFIABLE:
+		case TagConstants.ASSIGNABLE:
+		case TagConstants.MODIFIABLE:
 		case TagConstants.MODIFIES:
 		case TagConstants.ALSO_MODIFIES: {
 		    currentBehavior.modifies.add(m);
@@ -320,21 +320,21 @@ public class AnnotationHandler {
 		    break;
 		}
 
-		case TagConstants.JML_WHEN:
+		case TagConstants.WHEN:
 		    currentBehavior.when.add(m);
 		    break;
 
-		case TagConstants.JML_MEASURED_BY:
+		case TagConstants.MEASURED_BY:
 		    currentBehavior.measuredby.add(m);
 		    break;
 
-		case TagConstants.JML_OPENPRAGMA:
+		case TagConstants.OPENPRAGMA:
 		    commonBehavior = currentBehavior;
 		    currentBehavior = new Behavior();
 		    openPragma = m;
 		    break;
 
-		case TagConstants.JML_ALSO:
+		case TagConstants.ALSO:
 		    if (commonBehavior == null) {
 			accumulatedBehavior.combine(currentBehavior);
 			currentBehavior = new Behavior();
@@ -345,7 +345,7 @@ public class AnnotationHandler {
 		    }
 		    break;
 
-		case TagConstants.JML_CLOSEPRAGMA:
+		case TagConstants.CLOSEPRAGMA:
 		    if (commonBehavior == null) {
 			ErrorSet.error(m.getStartLoc(),
 			    "Encountered |} without a matching {|");
@@ -357,19 +357,19 @@ public class AnnotationHandler {
 		    }
 		    break;
 
-		case TagConstants.JML_IMPLIES_THAT:
-		case TagConstants.JML_EXAMPLE:
-		case TagConstants.JML_NORMAL_EXAMPLE:
-		case TagConstants.JML_EXCEPTIONAL_EXAMPLE:
+		case TagConstants.IMPLIES_THAT:
+		case TagConstants.EXAMPLE:
+		case TagConstants.NORMAL_EXAMPLE:
+		case TagConstants.EXCEPTIONAL_EXAMPLE:
 			// FIXME _ for now count this as the end of annotations
 			currentBehavior = null;
 			break whileloop;
 
-		case TagConstants.JML_FOR_EXAMPLE:
+		case TagConstants.FOR_EXAMPLE:
 			// FIXME _ for now count this as the end of annotations
 			break whileloop;
 
-		case TagConstants.JML_PURE:
+		case TagConstants.PURE:
 			// ignore these
 			break;
 
@@ -494,7 +494,7 @@ public class AnnotationHandler {
 			    Location.NULL);
 	public final static VarExprModifierPragma DefaultSignalTrue =
 			VarExprModifierPragma.make(
-			    TagConstants.JML_SIGNALS,
+			    TagConstants.SIGNALS,
 			    FormalParaDecl.make(0,null,Identifier.intern(""),
 				TypeName.make(SimpleName.make(
 					Identifier.intern("Exception"),
@@ -504,7 +504,7 @@ public class AnnotationHandler {
 			    Location.NULL);
 	public final static VarExprModifierPragma DefaultSignalFalse =
 			VarExprModifierPragma.make(
-			    TagConstants.JML_SIGNALS,
+			    TagConstants.SIGNALS,
 			    FormalParaDecl.make(0,null,Identifier.intern(""),
 				TypeName.make(SimpleName.make(
 					Identifier.intern("Exception"),
@@ -547,11 +547,11 @@ public class AnnotationHandler {
 				Behavior.T,Location.NULL));
 	    if (when.size() == 0) 
 		when.add(ExprModifierPragma.make(
-				TagConstants.JML_WHEN,
+				TagConstants.WHEN,
 				Behavior.T,Location.NULL));
 	    if (diverges.size() == 0)
 		diverges.add(ExprModifierPragma.make(
-				TagConstants.JML_DIVERGES,
+				TagConstants.DIVERGES,
 				Behavior.F,Location.NULL));
 	// FIXME - we need a default here
 	    //if (signals.size() == 0) 

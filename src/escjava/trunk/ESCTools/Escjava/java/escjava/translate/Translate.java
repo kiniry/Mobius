@@ -1763,7 +1763,7 @@ public final class Translate {
       }
 
       case TagConstants.LOOP_INVARIANT:
-      case TagConstants.JML_MAINTAINING:
+      case TagConstants.MAINTAINING:
 	{
 	  ExprStmtPragma x = (ExprStmtPragma)stmt;
 	  loopinvariants.addElement(x);
@@ -1771,7 +1771,7 @@ public final class Translate {
 	}
 
       case TagConstants.DECREASES:
-      case TagConstants.JML_DECREASING:
+      case TagConstants.DECREASING:
 	{
 	  ExprStmtPragma x = (ExprStmtPragma)stmt;
 	  loopDecreases.addElement(x);
@@ -2993,7 +2993,7 @@ public final class Translate {
       switch (tag) {
 	case TagConstants.NON_NULL:
 	case TagConstants.SPEC_PUBLIC:
-	case TagConstants.JML_SPEC_PROTECTED:
+	case TagConstants.SPEC_PROTECTED:
 	case TagConstants.WRITABLE_IF:
 	  break;
 	  
@@ -3124,7 +3124,7 @@ public final class Translate {
 	case TagConstants.UNINITIALIZED:
 	case TagConstants.READABLE_IF:
 	case TagConstants.SPEC_PUBLIC:
-	case TagConstants.JML_SPEC_PROTECTED:
+	case TagConstants.SPEC_PROTECTED:
 	case TagConstants.NON_NULL:		// handled above
 	  break;
 

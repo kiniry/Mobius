@@ -189,10 +189,10 @@ public class GeneralizedQuantifiedExpr extends GCExpr
   //# PostCheckCall
   private void postCheck() {
     boolean goodtag =
-      (quantifier == TagConstants.JML_MIN
-       || quantifier == TagConstants.JML_PRODUCT
+      (quantifier == TagConstants.MIN
+       || quantifier == TagConstants.PRODUCT
        || quantifier == TagConstants.MAX
-       || quantifier == TagConstants.JML_SUM);
+       || quantifier == TagConstants.SUM);
     Assert.notFalse(goodtag);
   }
 }
@@ -211,7 +211,7 @@ public class NumericalQuantifiedExpr extends GCExpr
   //# PostCheckCall
   private void postCheck() {
     boolean goodtag =
-      (quantifier == TagConstants.JML_NUM_OF);
+      (quantifier == TagConstants.NUM_OF);
     Assert.notFalse(goodtag);
   }
 }
@@ -504,7 +504,9 @@ public class ExprDeclPragma extends TypeDeclElemPragma
   //# PostCheckCall
   private void postCheck() {
     boolean goodtag =
-      (tag == TagConstants.AXIOM || tag == TagConstants.INVARIANT || tag == TagConstants.JML_REPRESENTS);
+      (tag == TagConstants.AXIOM || 
+       tag == TagConstants.INVARIANT || 
+       tag == TagConstants.REPRESENTS);
     Assert.notFalse(goodtag);
   }
 
@@ -615,7 +617,7 @@ public class IdentifierModifierPragma extends ModifierPragma
   //# PostCheckCall
   private void postCheck() {
     boolean goodtag =
-      (tag == TagConstants.JML_IS_INITIALIZED);
+      (tag == TagConstants.IS_INITIALIZED);
     Assert.notFalse(goodtag);
   }
 
@@ -634,8 +636,8 @@ public class StmtModifierPragma extends ModifierPragma
   //# PostCheckCall
   private void postCheck() {
     boolean goodtag =
-      (tag == TagConstants.JML_WACK_DURATION || 
-       tag == TagConstants.JML_WACK_WORKING_SPACE);
+      (tag == TagConstants.WACK_DURATION || 
+       tag == TagConstants.WACK_WORKING_SPACE);
     Assert.notFalse(goodtag);
   }
 
@@ -660,8 +662,8 @@ public class ExprStmtPragma extends StmtPragma
       (tag == TagConstants.ASSERT || 
        tag == TagConstants.ASSUME || 
        tag == TagConstants.DECREASES ||
-       tag == TagConstants.JML_DECREASING ||
-       tag == TagConstants.JML_MAINTAINING || 
+       tag == TagConstants.DECREASING ||
+       tag == TagConstants.MAINTAINING || 
        tag == TagConstants.LOOP_INVARIANT || 
        tag == TagConstants.LOOP_PREDICATE);
     Assert.notFalse(goodtag);
@@ -739,9 +741,9 @@ public class ExprModifierPragma extends ModifierPragma
     }
 
     private boolean isJMLExprModifier() {
-        return tag == TagConstants.JML_ALSO 
-                || tag == TagConstants.JML_PRE
-                || tag == TagConstants.JML_POST;
+        return tag == TagConstants.ALSO 
+                || tag == TagConstants.PRECONDITION
+                || tag == TagConstants.POSTCONDITION;
     }
 
     public int getStartLoc() { return loc; }
@@ -768,8 +770,8 @@ public class CondExprModifierPragma  extends ModifierPragma {
     }
 
     private boolean isJMLExprModifier() {
-        return (tag == TagConstants.JML_ASSIGNABLE ||
-                tag == TagConstants.JML_MODIFIABLE);
+        return (tag == TagConstants.ASSIGNABLE ||
+                tag == TagConstants.MODIFIABLE);
     }
 
     public int getStartLoc() { return loc; }
@@ -803,7 +805,7 @@ public class VarExprModifierPragma extends ModifierPragma
         boolean goodtag =
             (tag == TagConstants.EXSURES 
              || tag == TagConstants.ALSO_EXSURES
-             || tag == TagConstants.JML_SIGNALS);
+             || tag == TagConstants.SIGNALS);
         Assert.notFalse(goodtag);
     }
 

@@ -49,7 +49,7 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
         switch (tag) {
             case TagConstants.AXIOM:
             case TagConstants.INVARIANT:
-	    case TagConstants.JML_CONSTRAINT: {
+	    case TagConstants.CONSTRAINT: {
                 Expr e = ((ExprDeclPragma)tp).expr;
                 write(o, "/*@ "); 
                 write(o, TagConstants.toString(
@@ -109,26 +109,26 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
     public void print(OutputStream o, int ind, ModifierPragma mp) {
         int tag = mp.getTag();
         switch (tag) {
-            case TagConstants.JML_ALSO:
+            case TagConstants.ALSO:
                 write(o, "/*@ "); 
                 write(o, TagConstants.toString(tag)); 
                 write(o, " */");
                 break;
 
-	    case TagConstants.JML_CLOSEPRAGMA:
-	    case TagConstants.JML_OPENPRAGMA:
+	    case TagConstants.CLOSEPRAGMA:
+	    case TagConstants.OPENPRAGMA:
                 Assert.fail("Open and close pragmas are not yet handled.");
                 break;
 
             case TagConstants.HELPER:
-            case TagConstants.JML_EXAMPLE:
-            case TagConstants.JML_EXCEPTIONAL_EXAMPLE:
-            case TagConstants.JML_FOR_EXAMPLE:
-            case TagConstants.JML_IMPLIES_THAT:
-            case TagConstants.JML_INSTANCE:
-            case TagConstants.JML_NORMAL_EXAMPLE:
-            case TagConstants.JML_PURE:
-            case TagConstants.JML_SPEC_PROTECTED: // SC HPT AAST 3
+            case TagConstants.EXAMPLE:
+            case TagConstants.EXCEPTIONAL_EXAMPLE:
+            case TagConstants.FOR_EXAMPLE:
+            case TagConstants.IMPLIES_THAT:
+            case TagConstants.INSTANCE:
+            case TagConstants.NORMAL_EXAMPLE:
+            case TagConstants.PURE:
+            case TagConstants.SPEC_PROTECTED: // SC HPT AAST 3
             case TagConstants.MONITORED:
             case TagConstants.NON_NULL:
             case TagConstants.SPEC_PUBLIC:
@@ -142,10 +142,10 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
             case TagConstants.ALSO_ENSURES:
             case TagConstants.ALSO_REQUIRES:
             case TagConstants.ENSURES:
-            case TagConstants.JML_DIVERGES:
-            case TagConstants.JML_POST:
-            case TagConstants.JML_PRE:
-            case TagConstants.JML_WHEN:
+            case TagConstants.DIVERGES:
+            case TagConstants.POSTCONDITION:
+            case TagConstants.PRECONDITION:
+            case TagConstants.WHEN:
             case TagConstants.MONITORED_BY: // from EscPragmaParser.continuePragma(Token)
             case TagConstants.READABLE_IF:
             case TagConstants.REQUIRES:
@@ -165,39 +165,39 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
                 // All redundant tokens should not exist in the AST
                 // anymore; they are represented with redundant fields in
                 // the AST nodes.
-            case TagConstants.JML_ASSERT_REDUNDANTLY:
-            case TagConstants.JML_ASSIGNABLE_REDUNDANTLY:
-            case TagConstants.JML_ASSUME_REDUNDANTLY:
-            case TagConstants.JML_CONSTRAINT_REDUNDANTLY:
-            case TagConstants.JML_DECREASES_REDUNDANTLY:
-            case TagConstants.JML_DECREASING_REDUNDANTLY:
-            case TagConstants.JML_DIVERGES_REDUNDANTLY:
-            case TagConstants.JML_DURATION_REDUNDANTLY:
-            case TagConstants.JML_ENSURES_REDUNDANTLY:
-            case TagConstants.JML_EXSURES_REDUNDANTLY:
-            case TagConstants.JML_INVARIANT_REDUNDANTLY: 
-            case TagConstants.JML_LOOP_INVARIANT_REDUNDANTLY: 
-            case TagConstants.JML_MAINTAINING_REDUNDANTLY:
-            case TagConstants.JML_MEASURED_BY_REDUNDANTLY:
-            case TagConstants.JML_MODIFIABLE_REDUNDANTLY:
-            case TagConstants.JML_MODIFIES_REDUNDANTLY:
-            case TagConstants.JML_POST_REDUNDANTLY:
-            case TagConstants.JML_PRE_REDUNDANTLY:
-            case TagConstants.JML_REQUIRES_REDUNDANTLY:
-            case TagConstants.JML_SIGNALS_REDUNDANTLY:
-            case TagConstants.JML_WHEN_REDUNDANTLY:
-            case TagConstants.JML_WORKING_SPACE_REDUNDANTLY:
+            case TagConstants.ASSERT_REDUNDANTLY:
+            case TagConstants.ASSIGNABLE_REDUNDANTLY:
+            case TagConstants.ASSUME_REDUNDANTLY:
+            case TagConstants.CONSTRAINT_REDUNDANTLY:
+            case TagConstants.DECREASES_REDUNDANTLY:
+            case TagConstants.DECREASING_REDUNDANTLY:
+            case TagConstants.DIVERGES_REDUNDANTLY:
+            case TagConstants.DURATION_REDUNDANTLY:
+            case TagConstants.ENSURES_REDUNDANTLY:
+            case TagConstants.EXSURES_REDUNDANTLY:
+            case TagConstants.INVARIANT_REDUNDANTLY: 
+            case TagConstants.LOOP_INVARIANT_REDUNDANTLY: 
+            case TagConstants.MAINTAINING_REDUNDANTLY:
+            case TagConstants.MEASURED_BY_REDUNDANTLY:
+            case TagConstants.MODIFIABLE_REDUNDANTLY:
+            case TagConstants.MODIFIES_REDUNDANTLY:
+            case TagConstants.POSTCONDITION_REDUNDANTLY:
+            case TagConstants.PRECONDITION_REDUNDANTLY:
+            case TagConstants.REQUIRES_REDUNDANTLY:
+            case TagConstants.SIGNALS_REDUNDANTLY:
+            case TagConstants.WHEN_REDUNDANTLY:
+            case TagConstants.WORKING_SPACE_REDUNDANTLY:
                 Assert.fail("Redundant keywords should not be in AST!: "
 				+ TagConstants.toString(tag));
                 break;
 
-	    case TagConstants.JML_DURATION:
-	    case TagConstants.JML_WORKING_SPACE:
+	    case TagConstants.DURATION:
+	    case TagConstants.WORKING_SPACE:
             case TagConstants.ALSO_MODIFIES:
-            case TagConstants.JML_ASSIGNABLE:
-            case TagConstants.JML_MEASURED_BY:
-            case TagConstants.JML_MODIFIABLE:
-            case TagConstants.JML_NOT_MODIFIED:
+            case TagConstants.ASSIGNABLE:
+            case TagConstants.MEASURED_BY:
+            case TagConstants.MODIFIABLE:
+            case TagConstants.NOT_MODIFIED:
             case TagConstants.MODIFIES: {
                 Expr e = ((CondExprModifierPragma)mp).expr;
                 Expr p = ((CondExprModifierPragma)mp).cond;
@@ -218,7 +218,7 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
                 
             case TagConstants.ALSO_EXSURES: 
             case TagConstants.EXSURES:
-            case TagConstants.JML_SIGNALS: {
+            case TagConstants.SIGNALS: {
                 VarExprModifierPragma vemp = (VarExprModifierPragma)mp;
                 write(o, "/*@ "); 
                 if (vemp.isRedundant())
@@ -234,9 +234,9 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
                 break;
             }
                 
-            case TagConstants.JML_BEHAVIOR:
-            case TagConstants.JML_EXCEPTIONAL_BEHAVIOR:
-            case TagConstants.JML_NORMAL_BEHAVIOR:
+            case TagConstants.BEHAVIOR:
+            case TagConstants.EXCEPTIONAL_BEHAVIOR:
+            case TagConstants.NORMAL_BEHAVIOR:
                 write(o, "/*@ "); 
                 write(o, TagConstants.toString(tag));
                 write(o, " */");
@@ -277,8 +277,8 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
 
             case TagConstants.ASSUME:
             case TagConstants.DECREASES:
-            case TagConstants.JML_DECREASING:
-            case TagConstants.JML_MAINTAINING:
+            case TagConstants.DECREASING:
+            case TagConstants.MAINTAINING:
             case TagConstants.LOOP_INVARIANT:
             case TagConstants.LOOP_PREDICATE: {
                 Expr e = ((ExprStmtPragma)sp).expr;
@@ -894,13 +894,13 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
       break;
 
     case TagConstants.EVERYTHINGEXPR:
-      write(o, TagConstants.toString(TagConstants.JML_EVERYTHING));
+      write(o, TagConstants.toString(TagConstants.EVERYTHING));
       break;
     case TagConstants.NOTHINGEXPR:
-      write(o, TagConstants.toString(TagConstants.JML_NOTHING));
+      write(o, TagConstants.toString(TagConstants.NOTHING));
       break;
     case TagConstants.NOTSPECIFIEDEXPR:
-      write(o, TagConstants.toString(TagConstants.JML_NOT_SPECIFIED));
+      write(o, TagConstants.toString(TagConstants.NOT_SPECIFIED));
       break;
 
     default:

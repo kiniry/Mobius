@@ -229,9 +229,9 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                 case TagConstants.FORSTMT:
                 case TagConstants.LABELSTMT:
                 case TagConstants.LOOP_INVARIANT:
-                case TagConstants.JML_MAINTAINING:
+                case TagConstants.MAINTAINING:
                 case TagConstants.DECREASES:
-                case TagConstants.JML_DECREASING:
+                case TagConstants.DECREASING:
                 case TagConstants.LOOP_PREDICATE:
                 case TagConstants.SKOLEMCONSTANTPRAGMA:
                     break;
@@ -307,7 +307,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
         for (int i = 0; i < loopInvariants.size(); i++) {
             ExprStmtPragma s = loopInvariants.elementAt(i);
             Assert.notFalse(s.getTag() == TagConstants.LOOP_INVARIANT
-                            || s.getTag() == TagConstants.JML_MAINTAINING);
+                            || s.getTag() == TagConstants.MAINTAINING);
             if (allowed) {
                 Assert.notFalse(!isTwoStateContext);
                 Assert.notFalse(!inAnnotation);
@@ -327,7 +327,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
         for (int i = 0; i < loopDecreases.size(); i++) {
             ExprStmtPragma s = loopDecreases.elementAt(i);
             Assert.notFalse(s.getTag() == TagConstants.DECREASES
-                            || s.getTag() == TagConstants.JML_DECREASING);
+                            || s.getTag() == TagConstants.DECREASING);
             if (allowed) {
                 Assert.notFalse(!isTwoStateContext);
                 Assert.notFalse(!inAnnotation);
@@ -715,7 +715,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                     return e;
                 }
 
-            case TagConstants.JML_NOT_MODIFIED:
+            case TagConstants.NOT_MODIFIED:
                 {
                     NaryExpr ne = (NaryExpr)e;
 // FIXME - Is this a one argument function ?
@@ -1026,16 +1026,16 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 
         switch(tag) {
             case TagConstants.AXIOM:
-	    case TagConstants.JML_INITIALLY:
+	    case TagConstants.INITIALLY:
             case TagConstants.INVARIANT:
-	    case TagConstants.JML_CONSTRAINT: // FIXME - do we need to change the logic below to handle constraints?
-	    case TagConstants.JML_REPRESENTS:
+	    case TagConstants.CONSTRAINT: // FIXME - do we need to change the logic below to handle constraints?
+	    case TagConstants.REPRESENTS:
                 {
                     ExprDeclPragma ep = (ExprDeclPragma)e;
                     Env rootEnv = (tag == TagConstants.AXIOM) ? rootSEnv : rootIEnv;
 
                     invariantContext = (tag == TagConstants.INVARIANT);
-		    isTwoStateContext = (tag == TagConstants.JML_CONSTRAINT);
+		    isTwoStateContext = (tag == TagConstants.CONSTRAINT);
                     boolean oldIsLocksetContext = isLocksetContext;
                     isLocksetContext = false;
                     if (invariantContext){
@@ -1071,7 +1071,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                     break;
                 }
 
-	    case TagConstants.JML_DEPENDS:
+	    case TagConstants.DEPENDS:
 		{
                     DependsPragma ep = (DependsPragma)e;
 			// FIXME - perhaps use rootSEnv if the variable
@@ -1214,9 +1214,9 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
         switch(tag) 
         {
 	    case TagConstants.EVERYTHINGEXPR:
-	    case TagConstants.JML_EVERYTHING:
-	    case TagConstants.JML_NOTHING:
-	    case TagConstants.JML_NOT_SPECIFIED:
+	    case TagConstants.EVERYTHING:
+	    case TagConstants.NOTHING:
+	    case TagConstants.NOT_SPECIFIED:
 	    case TagConstants.NOTHINGEXPR:
 	    case TagConstants.NOTSPECIFIEDEXPR:
 		// FIXME - check the context???
@@ -1338,7 +1338,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                     break;
                 }
 
-            case TagConstants.JML_SPEC_PROTECTED:
+            case TagConstants.SPEC_PROTECTED:
 		{
 		    int ctag = ctxt.getTag();
                     if( ctag == TagConstants.FIELDDECL ) {
@@ -1389,7 +1389,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                     break;
                 }
 
-	    case TagConstants.JML_PURE:
+	    case TagConstants.PURE:
 		{
 		    // Actually, these are set in AnnotationHandler.
 		    if (ctxt instanceof ConstructorDecl) {
@@ -1491,7 +1491,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 
             case TagConstants.ALSO_REQUIRES:
             case TagConstants.REQUIRES:
-            case TagConstants.JML_PRE:
+            case TagConstants.PRECONDITION:
                 {
                     ExprModifierPragma emp = (ExprModifierPragma)p;
 
@@ -1499,7 +1499,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                         ErrorSet.error(p.getStartLoc(), TagConstants.toString(tag) +
                                        " annotations can occur only on method" +
                                        ((tag == TagConstants.REQUIRES || 
-                                         tag == TagConstants.JML_PRE) ? " and constructor" : "") +
+                                         tag == TagConstants.PRECONDITION) ? " and constructor" : "") +
                                        " declarations");
                     } else {
                         RoutineDecl rd = (RoutineDecl)ctxt;
@@ -1515,7 +1515,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 */
                             }
                         } else if (ms == MSTATUS_CLASS_NEW_METHOD) {
-                            if (tag == TagConstants.REQUIRES || tag == TagConstants.JML_PRE) {
+                            if (tag == TagConstants.REQUIRES || tag == TagConstants.PRECONDITION) {
                                 String remedy;
                                 if (Main.options().allowAlsoRequires) {
                                     remedy = "declare in supertype or use " +
@@ -1531,7 +1531,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                             }
                         } else {
                             Assert.notFalse(ms == MSTATUS_OVERRIDE);
-                            if (tag == TagConstants.REQUIRES || tag == TagConstants.JML_PRE) {
+                            if (tag == TagConstants.REQUIRES || tag == TagConstants.PRECONDITION) {
 /* FIXME
                                 ErrorSet.error(p.getStartLoc(), TagConstants.toString(tag) +
                                                " cannot be used on method overrides");
@@ -1556,8 +1556,8 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                     break;
                 }
 
-	    case TagConstants.JML_DURATION:
-	    case TagConstants.JML_WORKING_SPACE:
+	    case TagConstants.DURATION:
+	    case TagConstants.WORKING_SPACE:
 	        {
                     CondExprModifierPragma emp = (CondExprModifierPragma)p;
 
@@ -1588,11 +1588,11 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                     break;
                 }
 
-	    case TagConstants.JML_DIVERGES:
+	    case TagConstants.DIVERGES:
             case TagConstants.ENSURES:
             case TagConstants.ALSO_ENSURES:
-            case TagConstants.JML_POST:
-	    case TagConstants.JML_WHEN:
+            case TagConstants.POSTCONDITION:
+	    case TagConstants.WHEN:
                 {
                     ExprModifierPragma emp = (ExprModifierPragma)p;
 
@@ -1639,7 +1639,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 
             case TagConstants.EXSURES:
             case TagConstants.ALSO_EXSURES:
-            case TagConstants.JML_SIGNALS:
+            case TagConstants.SIGNALS:
                 {
                     VarExprModifierPragma vemp = (VarExprModifierPragma)p;
 
@@ -1654,7 +1654,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                         // Check for correct use of exsures vs. also_exsures
                         if (getOverrideStatus(rd) != MSTATUS_NEW_ROUTINE) {
                             if (tag == TagConstants.EXSURES ||
-                                tag == TagConstants.JML_SIGNALS) {
+                                tag == TagConstants.SIGNALS) {
 /* FIXME
                                 ErrorSet.error(p.getStartLoc(),
                                                "exsures cannot be used on method overrides; "+
@@ -1756,7 +1756,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                 break;
             }
 
-	    case TagConstants.JML_MEASURED_BY:
+	    case TagConstants.MEASURED_BY:
 // FIXME - simplify this and make it specific for measured_by
                 {
                     CondExprModifierPragma emp = (CondExprModifierPragma)p;
@@ -1772,8 +1772,8 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 /*
                         if (getOverrideStatus(rd) != MSTATUS_NEW_ROUTINE) {
                             if (tag == TagConstants.MODIFIES
-                                || tag == TagConstants.JML_MODIFIABLE
-                                || tag == TagConstants.JML_ASSIGNABLE) {
+                                || tag == TagConstants.MODIFIABLE
+                                || tag == TagConstants.ASSIGNABLE) {
                                 ErrorSet.error(p.getStartLoc(),
 				   "modifies cannot be used on method " +
 				   "overrides; use also_modifies instead");
@@ -1832,8 +1832,8 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 
 	    case TagConstants.MODIFIES:
             case TagConstants.ALSO_MODIFIES:
-            case TagConstants.JML_ASSIGNABLE:
-            case TagConstants.JML_MODIFIABLE:
+            case TagConstants.ASSIGNABLE:
+            case TagConstants.MODIFIABLE:
             case TagConstants.STILL_DEFERRED: {
                 CondExprModifierPragma emp = (CondExprModifierPragma)p;
 
@@ -1848,8 +1848,8 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                     /*
                      if (getOverrideStatus(rd) != MSTATUS_NEW_ROUTINE) {
                      if (tag == TagConstants.MODIFIES
-                     || tag == TagConstants.JML_MODIFIABLE
-                     || tag == TagConstants.JML_ASSIGNABLE) {
+                     || tag == TagConstants.MODIFIABLE
+                     || tag == TagConstants.ASSIGNABLE) {
                      ErrorSet.error(p.getStartLoc(),
                      "modifies cannot be used on method " +
                      "overrides; use also_modifies instead");
@@ -1911,17 +1911,17 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                 break;
             }
 
-	    case TagConstants.JML_ALSO:
-	    case TagConstants.JML_BEHAVIOR:
-	    case TagConstants.JML_CLOSEPRAGMA:
-	    case TagConstants.JML_EXAMPLE:
-	    case TagConstants.JML_EXCEPTIONAL_BEHAVIOR:
-	    case TagConstants.JML_EXCEPTIONAL_EXAMPLE:
-	    case TagConstants.JML_FOR_EXAMPLE:
-	    case TagConstants.JML_IMPLIES_THAT:
-	    case TagConstants.JML_NORMAL_BEHAVIOR:
-	    case TagConstants.JML_NORMAL_EXAMPLE:
-	    case TagConstants.JML_OPENPRAGMA:
+	    case TagConstants.ALSO:
+	    case TagConstants.BEHAVIOR:
+	    case TagConstants.CLOSEPRAGMA:
+	    case TagConstants.EXAMPLE:
+	    case TagConstants.EXCEPTIONAL_BEHAVIOR:
+	    case TagConstants.EXCEPTIONAL_EXAMPLE:
+	    case TagConstants.FOR_EXAMPLE:
+	    case TagConstants.IMPLIES_THAT:
+	    case TagConstants.NORMAL_BEHAVIOR:
+	    case TagConstants.NORMAL_EXAMPLE:
+	    case TagConstants.OPENPRAGMA:
 		// Make these unexpected again after the desugaring is implemented
 		break;
 
@@ -1998,7 +1998,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 		}
       
             case TagConstants.LOOP_INVARIANT:
-            case TagConstants.JML_MAINTAINING:
+            case TagConstants.MAINTAINING:
                 {
                     ExprStmtPragma lis = (ExprStmtPragma)s;
                     loopInvariants.addElement(lis);
@@ -2006,7 +2006,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                 }
 
             case TagConstants.DECREASES:
-            case TagConstants.JML_DECREASING:
+            case TagConstants.DECREASING:
                 {
                     ExprStmtPragma lis = (ExprStmtPragma)s;
                     loopDecreases.addElement(lis);

@@ -19,13 +19,13 @@ public class TagConstants extends javafe.tc.TagConstants
     public static final int DOTDOT = SUBTYPE + 1;
 
     //// Tags for pragma punctuation
-    public static final int JML_LEFTARROW = DOTDOT + 1; // <-
-    public static final int JML_RIGHTARROW = JML_LEFTARROW + 1; // ->
-    public static final int JML_OPENPRAGMA = JML_RIGHTARROW + 1; // {|
-    public static final int JML_CLOSEPRAGMA = JML_OPENPRAGMA + 1; // |}
+    public static final int LEFTARROW = DOTDOT + 1; // <-
+    public static final int RIGHTARROW = LEFTARROW + 1; // ->
+    public static final int OPENPRAGMA = RIGHTARROW + 1; // {|
+    public static final int CLOSEPRAGMA = OPENPRAGMA + 1; // |}
 
     //// Tags for new literal expressions
-    public static final int SYMBOLLIT = JML_CLOSEPRAGMA + 1;
+    public static final int SYMBOLLIT = CLOSEPRAGMA + 1;
 
     //// Tags for new primitive types
     public static final int ANY = SYMBOLLIT + 1;
@@ -220,140 +220,140 @@ public class TagConstants extends javafe.tc.TagConstants
     //// JML keywords
     public static final int FIRSTJMLKEYWORDTAG = CHK_AS_SKIP + 1;
 
-    public static final int JML_BIGINT = FIRSTJMLKEYWORDTAG;
-    public static final int JML_WACK_DURATION = JML_BIGINT + 1;
+    public static final int BIGINT = FIRSTJMLKEYWORDTAG;
+    public static final int WACK_DURATION = BIGINT + 1;
     // \elemtype -- an ESC keyword
-    public static final int JML_EVERYTHING = JML_WACK_DURATION + 1;
+    public static final int EVERYTHING = WACK_DURATION + 1;
     // \exists -- an ESC keyword
-    public static final int JML_FIELDS_OF = JML_EVERYTHING + 1;
+    public static final int FIELDS_OF = EVERYTHING + 1;
     // \forall -- an ESC keyword
     // \fresh -- an ESC keyword 
-    public static final int JML_INVARIANT_FOR = JML_FIELDS_OF + 1;
-    public static final int JML_IS_INITIALIZED = JML_INVARIANT_FOR + 1;
+    public static final int INVARIANT_FOR = FIELDS_OF + 1;
+    public static final int IS_INITIALIZED = INVARIANT_FOR + 1;
     // \lblneg -- an ESC keyword
     // \lblpos -- an ESC keyword
     // \lockset -- an ESC keyword
     // \max -- an ESC keyword 
-    public static final int JML_MIN = JML_IS_INITIALIZED + 1;
+    public static final int MIN = IS_INITIALIZED + 1;
     // \nonnullelements -- an ESC keyword
-    public static final int JML_NOTHING = JML_MIN + 1;
-    public static final int JML_NOT_MODIFIED = JML_NOTHING + 1;
-    public static final int JML_NOT_SPECIFIED = JML_NOT_MODIFIED + 1;
-    public static final int JML_NUM_OF = JML_NOT_SPECIFIED + 1;
+    public static final int NOTHING = MIN + 1;
+    public static final int NOT_MODIFIED = NOTHING + 1;
+    public static final int NOT_SPECIFIED = NOT_MODIFIED + 1;
+    public static final int NUM_OF = NOT_SPECIFIED + 1;
     // \old -- an ESC keyword
-    public static final int JML_OTHER = JML_NUM_OF + 1;
-    public static final int JML_PRIVATE_DATA = JML_OTHER + 1;
-    public static final int JML_PRODUCT = JML_PRIVATE_DATA + 1;
-    public static final int JML_REACH = JML_PRODUCT + 1;
-    public static final int JML_REAL = JML_REACH + 1;
+    public static final int OTHER = NUM_OF + 1;
+    public static final int PRIVATE_DATA = OTHER + 1;
+    public static final int PRODUCT = PRIVATE_DATA + 1;
+    public static final int REACH = PRODUCT + 1;
+    public static final int REAL = REACH + 1;
     // \result -- an ESC keyword
-    public static final int JML_SPACE = JML_REAL + 1;
-    public static final int JML_SUCH_THAT = JML_SPACE + 1;
-    public static final int JML_SUM = JML_SUCH_THAT + 1;
+    public static final int SPACE = REAL + 1;
+    public static final int SUCH_THAT = SPACE + 1;
+    public static final int SUM = SUCH_THAT + 1;
     // \type -- an ESC keyword
     // \typeof -- an ESC keyword
     // \TYPE -- an ESC keyword
-    public static final int JML_WACK_WORKING_SPACE = JML_SUM + 1;
+    public static final int WACK_WORKING_SPACE = SUM + 1;
 
-    public static final int JML_ABRUPT_BEHAVIOR = JML_WACK_WORKING_SPACE + 1;
-    public static final int JML_ACCESSIBLE_REDUNDANTLY = JML_ABRUPT_BEHAVIOR + 1;
-    public static final int JML_ACCESSIBLE = JML_ACCESSIBLE_REDUNDANTLY + 1;
-    public static final int JML_ALSO = JML_ACCESSIBLE + 1;
-    public static final int JML_ASSERT_REDUNDANTLY = JML_ALSO + 1;
-    public static final int JML_ASSIGNABLE_REDUNDANTLY = JML_ASSERT_REDUNDANTLY + 1;
-    public static final int JML_ASSIGNABLE = JML_ASSIGNABLE_REDUNDANTLY + 1;
-    public static final int JML_ASSUME_REDUNDANTLY = JML_ASSIGNABLE + 1;
+    public static final int ABRUPT_BEHAVIOR = WACK_WORKING_SPACE + 1;
+    public static final int ACCESSIBLE_REDUNDANTLY = ABRUPT_BEHAVIOR + 1;
+    public static final int ACCESSIBLE = ACCESSIBLE_REDUNDANTLY + 1;
+    public static final int ALSO = ACCESSIBLE + 1;
+    public static final int ASSERT_REDUNDANTLY = ALSO + 1;
+    public static final int ASSIGNABLE_REDUNDANTLY = ASSERT_REDUNDANTLY + 1;
+    public static final int ASSIGNABLE = ASSIGNABLE_REDUNDANTLY + 1;
+    public static final int ASSUME_REDUNDANTLY = ASSIGNABLE + 1;
     // assume -- an ESC keyword
     // axiom -- an ESC keyword
-    public static final int JML_BEHAVIOR = JML_ASSUME_REDUNDANTLY + 1;
-    public static final int JML_BREAKS_REDUNDANTLY = JML_BEHAVIOR + 1;
-    public static final int JML_BREAKS = JML_BREAKS_REDUNDANTLY + 1;
-    public static final int JML_CALLABLE_REDUNDANTLY = JML_BREAKS + 1;
-    public static final int JML_CALLABLE = JML_CALLABLE_REDUNDANTLY + 1;
-    public static final int JML_CHOOSE_IF = JML_CALLABLE + 1;
-    public static final int JML_CHOOSE = JML_CHOOSE_IF + 1;
-    public static final int JML_CONSTRAINT_REDUNDANTLY = JML_CHOOSE + 1;
-    public static final int JML_CONSTRAINT = JML_CONSTRAINT_REDUNDANTLY + 1;
-    public static final int JML_CONTINUES_REDUNDANTLY = JML_CONSTRAINT + 1;
-    public static final int JML_CONTINUES = JML_CONTINUES_REDUNDANTLY + 1; // @review
-    public static final int JML_DECREASES_REDUNDANTLY = JML_CONTINUES + 1;
+    public static final int BEHAVIOR = ASSUME_REDUNDANTLY + 1;
+    public static final int BREAKS_REDUNDANTLY = BEHAVIOR + 1;
+    public static final int BREAKS = BREAKS_REDUNDANTLY + 1;
+    public static final int CALLABLE_REDUNDANTLY = BREAKS + 1;
+    public static final int CALLABLE = CALLABLE_REDUNDANTLY + 1;
+    public static final int CHOOSE_IF = CALLABLE + 1;
+    public static final int CHOOSE = CHOOSE_IF + 1;
+    public static final int CONSTRAINT_REDUNDANTLY = CHOOSE + 1;
+    public static final int CONSTRAINT = CONSTRAINT_REDUNDANTLY + 1;
+    public static final int CONTINUES_REDUNDANTLY = CONSTRAINT + 1;
+    public static final int CONTINUES = CONTINUES_REDUNDANTLY + 1; // @review
+    public static final int DECREASES_REDUNDANTLY = CONTINUES + 1;
     // decreases -- an ESC keyword
-    public static final int JML_DECREASING_REDUNDANTLY = JML_DECREASES_REDUNDANTLY + 1;
-    public static final int JML_DECREASING = JML_DECREASING_REDUNDANTLY + 1;
-    public static final int JML_DEPENDS_REDUNDANTLY = JML_DECREASING + 1;
-    public static final int JML_DEPENDS = JML_DEPENDS_REDUNDANTLY + 1;
-    public static final int JML_DIVERGES_REDUNDANTLY = JML_DEPENDS + 1;
-    public static final int JML_DIVERGES = JML_DIVERGES_REDUNDANTLY + 1;
-    public static final int JML_DURATION_REDUNDANTLY = JML_DIVERGES + 1;
-    public static final int JML_DURATION = JML_DURATION_REDUNDANTLY + 1;
-    public static final int JML_ENSURES_REDUNDANTLY = JML_DURATION + 1;
+    public static final int DECREASING_REDUNDANTLY = DECREASES_REDUNDANTLY + 1;
+    public static final int DECREASING = DECREASING_REDUNDANTLY + 1;
+    public static final int DEPENDS_REDUNDANTLY = DECREASING + 1;
+    public static final int DEPENDS = DEPENDS_REDUNDANTLY + 1;
+    public static final int DIVERGES_REDUNDANTLY = DEPENDS + 1;
+    public static final int DIVERGES = DIVERGES_REDUNDANTLY + 1;
+    public static final int DURATION_REDUNDANTLY = DIVERGES + 1;
+    public static final int DURATION = DURATION_REDUNDANTLY + 1;
+    public static final int ENSURES_REDUNDANTLY = DURATION + 1;
     // ensures -- an ESC keyword
-    public static final int JML_EXAMPLE = JML_ENSURES_REDUNDANTLY + 1;
-    public static final int JML_EXCEPTIONAL_BEHAVIOR = JML_EXAMPLE + 1;
-    public static final int JML_EXCEPTIONAL_EXAMPLE = JML_EXCEPTIONAL_BEHAVIOR + 1;
-    public static final int JML_EXSURES_REDUNDANTLY = JML_EXCEPTIONAL_EXAMPLE + 1;
+    public static final int EXAMPLE = ENSURES_REDUNDANTLY + 1;
+    public static final int EXCEPTIONAL_BEHAVIOR = EXAMPLE + 1;
+    public static final int EXCEPTIONAL_EXAMPLE = EXCEPTIONAL_BEHAVIOR + 1;
+    public static final int EXSURES_REDUNDANTLY = EXCEPTIONAL_EXAMPLE + 1;
     // exsures -- an ESC keyword
-    public static final int JML_FORALL = JML_EXSURES_REDUNDANTLY + 1;
-    public static final int JML_FOR_EXAMPLE = JML_FORALL + 1;
+    public static final int NO_WACK_FORALL = EXSURES_REDUNDANTLY + 1;
+    public static final int FOR_EXAMPLE = NO_WACK_FORALL + 1;
     // ghost -- an ESC keyword
-    public static final int JML_IMPLIES_THAT = JML_FOR_EXAMPLE + 1;
+    public static final int IMPLIES_THAT = FOR_EXAMPLE + 1;
     // helper -- an ESC keyword
-    public static final int JML_HENCE_BY_REDUNDANTLY = JML_IMPLIES_THAT + 1;
-    public static final int JML_HENCE_BY = JML_HENCE_BY_REDUNDANTLY + 1;
-    public static final int JML_INITIALIZER = JML_HENCE_BY + 1;
-    public static final int JML_INITIALLY = JML_INITIALIZER + 1;
-    public static final int JML_INSTANCE = JML_INITIALLY + 1;
-    public static final int JML_INVARIANT_REDUNDANTLY = JML_INSTANCE + 1;
+    public static final int HENCE_BY_REDUNDANTLY = IMPLIES_THAT + 1;
+    public static final int HENCE_BY = HENCE_BY_REDUNDANTLY + 1;
+    public static final int INITIALIZER = HENCE_BY + 1;
+    public static final int INITIALLY = INITIALIZER + 1;
+    public static final int INSTANCE = INITIALLY + 1;
+    public static final int INVARIANT_REDUNDANTLY = INSTANCE + 1;
     // invariant -- an ESC keyword
-    public static final int JML_LOOP_INVARIANT_REDUNDANTLY = JML_INVARIANT_REDUNDANTLY + 1;
+    public static final int LOOP_INVARIANT_REDUNDANTLY = INVARIANT_REDUNDANTLY + 1;
     // loop_invariant -- an ESC keyword
-    public static final int JML_MAINTAINING_REDUNDANTLY = JML_LOOP_INVARIANT_REDUNDANTLY + 1;
-    public static final int JML_MAINTAINING = JML_MAINTAINING_REDUNDANTLY + 1;
-    public static final int JML_MEASURED_BY_REDUNDANTLY = JML_MAINTAINING + 1;
-    public static final int JML_MEASURED_BY = JML_MEASURED_BY_REDUNDANTLY + 1;
-    public static final int JML_MODEL = JML_MEASURED_BY + 1;
-    public static final int JML_MODEL_PROGRAM = JML_MODEL + 1;
-    public static final int JML_MODIFIABLE_REDUNDANTLY = JML_MODEL_PROGRAM + 1;
-    public static final int JML_MODIFIABLE = JML_MODIFIABLE_REDUNDANTLY + 1;
-    public static final int JML_MODIFIES_REDUNDANTLY = JML_MODIFIABLE + 1;
+    public static final int MAINTAINING_REDUNDANTLY = LOOP_INVARIANT_REDUNDANTLY + 1;
+    public static final int MAINTAINING = MAINTAINING_REDUNDANTLY + 1;
+    public static final int MEASURED_BY_REDUNDANTLY = MAINTAINING + 1;
+    public static final int MEASURED_BY = MEASURED_BY_REDUNDANTLY + 1;
+    public static final int MODEL = MEASURED_BY + 1;
+    public static final int MODEL_PROGRAM = MODEL + 1;
+    public static final int MODIFIABLE_REDUNDANTLY = MODEL_PROGRAM + 1;
+    public static final int MODIFIABLE = MODIFIABLE_REDUNDANTLY + 1;
+    public static final int MODIFIES_REDUNDANTLY = MODIFIABLE + 1;
     // modifies -- an ESC keyword
     // monitored_by -- an ESC keyword
     // monitored -- an ESC keyword
     // non_null -- an ESC keyword
-    public static final int JML_NORMAL_BEHAVIOR = JML_MODIFIES_REDUNDANTLY + 1;
-    public static final int JML_NORMAL_EXAMPLE = JML_NORMAL_BEHAVIOR + 1;
+    public static final int NORMAL_BEHAVIOR = MODIFIES_REDUNDANTLY + 1;
+    public static final int NORMAL_EXAMPLE = NORMAL_BEHAVIOR + 1;
     // nowarn -- an ESC keyword
-    public static final int JML_OLD = JML_NORMAL_EXAMPLE + 1;
-    public static final int JML_OR = JML_OLD + 1;
-    public static final int JML_POST_REDUNDANTLY = JML_OR + 1;
-    public static final int JML_POST = JML_POST_REDUNDANTLY + 1;
-    public static final int JML_PRE_REDUNDANTLY = JML_POST + 1;
-    public static final int JML_PRE = JML_PRE_REDUNDANTLY + 1;
-    public static final int JML_PURE = JML_PRE + 1;
+    public static final int OLD = NORMAL_EXAMPLE + 1;
+    public static final int OR = OLD + 1;
+    public static final int POSTCONDITION_REDUNDANTLY = OR + 1;
+    public static final int POSTCONDITION = POSTCONDITION_REDUNDANTLY + 1;
+    public static final int PRECONDITION_REDUNDANTLY = POSTCONDITION + 1;
+    public static final int PRECONDITION = PRECONDITION_REDUNDANTLY + 1;
+    public static final int PURE = PRECONDITION + 1;
     // readable_if -- an ESC keyword
-    public static final int JML_REFINE = JML_PURE + 1;
-    public static final int JML_REPRESENTS_REDUNDANTLY = JML_REFINE + 1;
-    public static final int JML_REPRESENTS = JML_REPRESENTS_REDUNDANTLY + 1;
-    public static final int JML_REQUIRES_REDUNDANTLY = JML_REPRESENTS + 1;
+    public static final int REFINE = PURE + 1;
+    public static final int REPRESENTS_REDUNDANTLY = REFINE + 1;
+    public static final int REPRESENTS = REPRESENTS_REDUNDANTLY + 1;
+    public static final int REQUIRES_REDUNDANTLY = REPRESENTS + 1;
     // requires -- an ESC keyword
-    public static final int JML_RETURNS_REDUNDANTLY = JML_REQUIRES_REDUNDANTLY + 1;
-    public static final int JML_RETURNS = JML_RETURNS_REDUNDANTLY + 1;
+    public static final int RETURNS_REDUNDANTLY = REQUIRES_REDUNDANTLY + 1;
+    public static final int RETURNS = RETURNS_REDUNDANTLY + 1;
     // set -- an ESC keyword
-    public static final int JML_SIGNALS_REDUNDANTLY = JML_RETURNS + 1;
-    public static final int JML_SIGNALS = JML_SIGNALS_REDUNDANTLY + 1;
-    public static final int JML_SPEC_PROTECTED = JML_SIGNALS + 1;
+    public static final int SIGNALS_REDUNDANTLY = RETURNS + 1;
+    public static final int SIGNALS = SIGNALS_REDUNDANTLY + 1;
+    public static final int SPEC_PROTECTED = SIGNALS + 1;
     // spec_public -- an ESC keyword
-    public static final int JML_STATIC_INITIALIZER = JML_SPEC_PROTECTED + 1;
-    public static final int JML_SUBCLASSING_CONTRACT = JML_STATIC_INITIALIZER + 1;
+    public static final int STATIC_INITIALIZER = SPEC_PROTECTED + 1;
+    public static final int SUBCLASSING_CONTRACT = STATIC_INITIALIZER + 1;
     // uninitialized -- an ESC keyword
     // unreachable -- an ESC keyword
-    public static final int JML_WEAKLY = JML_SUBCLASSING_CONTRACT + 1;
-    public static final int JML_WHEN_REDUNDANTLY = JML_WEAKLY + 1;
-    public static final int JML_WHEN = JML_WHEN_REDUNDANTLY + 1;
-    public static final int JML_WORKING_SPACE_REDUNDANTLY = JML_WHEN + 1;
-    public static final int JML_WORKING_SPACE = JML_WORKING_SPACE_REDUNDANTLY + 1;
+    public static final int WEAKLY = SUBCLASSING_CONTRACT + 1;
+    public static final int WHEN_REDUNDANTLY = WEAKLY + 1;
+    public static final int WHEN = WHEN_REDUNDANTLY + 1;
+    public static final int WORKING_SPACE_REDUNDANTLY = WHEN + 1;
+    public static final int WORKING_SPACE = WORKING_SPACE_REDUNDANTLY + 1;
 
-    public static final int LASTJMLKEYWORDTAG = JML_WORKING_SPACE;
+    public static final int LASTJMLKEYWORDTAG = WORKING_SPACE;
 
     public static final int LAST_TAG = LASTJMLKEYWORDTAG;
 
@@ -419,13 +419,13 @@ public class TagConstants extends javafe.tc.TagConstants
                 return "<:";
 	    case DOTDOT:
 		return "..";
-	    case JML_LEFTARROW:
+	    case LEFTARROW:
 		return "<-";
-	    case JML_RIGHTARROW:
+	    case RIGHTARROW:
 		return "->";
-	    case JML_OPENPRAGMA:
+	    case OPENPRAGMA:
 		return "{|";
-	    case JML_CLOSEPRAGMA:
+	    case CLOSEPRAGMA:
 		return "|}";
             case ANY:
                 return "ANY";
@@ -492,49 +492,49 @@ public class TagConstants extends javafe.tc.TagConstants
         int Result = tag;
         switch (tag) {
 	    case TagConstants.REQUIRES:
-                Result = TagConstants.JML_REQUIRES_REDUNDANTLY; break;
+                Result = TagConstants.REQUIRES_REDUNDANTLY; break;
             case TagConstants.ENSURES:
-                Result = TagConstants.JML_ENSURES_REDUNDANTLY; break;
-            case TagConstants.JML_PRE:
-                Result = TagConstants.JML_PRE_REDUNDANTLY; break;
-            case TagConstants.JML_DIVERGES:
-                Result = TagConstants.JML_DIVERGES_REDUNDANTLY; break;
-            case TagConstants.JML_WHEN:
-                Result = TagConstants.JML_WHEN_REDUNDANTLY; break;
-            case TagConstants.JML_POST:
-                Result = TagConstants.JML_POST_REDUNDANTLY; break;
+                Result = TagConstants.ENSURES_REDUNDANTLY; break;
+            case TagConstants.PRECONDITION:
+                Result = TagConstants.PRECONDITION_REDUNDANTLY; break;
+            case TagConstants.DIVERGES:
+                Result = TagConstants.DIVERGES_REDUNDANTLY; break;
+            case TagConstants.WHEN:
+                Result = TagConstants.WHEN_REDUNDANTLY; break;
+            case TagConstants.POSTCONDITION:
+                Result = TagConstants.POSTCONDITION_REDUNDANTLY; break;
             case TagConstants.EXSURES:
-                Result = TagConstants.JML_EXSURES_REDUNDANTLY; break;
-            case TagConstants.JML_SIGNALS:
-                Result = TagConstants.JML_SIGNALS_REDUNDANTLY; break;
-            case TagConstants.JML_MODIFIABLE:
-                Result = TagConstants.JML_MODIFIABLE_REDUNDANTLY; break;
-            case TagConstants.JML_ASSIGNABLE:
-                Result = TagConstants.JML_ASSIGNABLE_REDUNDANTLY; break;
+                Result = TagConstants.EXSURES_REDUNDANTLY; break;
+            case TagConstants.SIGNALS:
+                Result = TagConstants.SIGNALS_REDUNDANTLY; break;
+            case TagConstants.MODIFIABLE:
+                Result = TagConstants.MODIFIABLE_REDUNDANTLY; break;
+            case TagConstants.ASSIGNABLE:
+                Result = TagConstants.ASSIGNABLE_REDUNDANTLY; break;
             case TagConstants.MODIFIES:
-                Result = TagConstants.JML_MODIFIES_REDUNDANTLY; break;
-            case TagConstants.JML_MEASURED_BY:
-                Result = TagConstants.JML_MEASURED_BY_REDUNDANTLY; break;
+                Result = TagConstants.MODIFIES_REDUNDANTLY; break;
+            case TagConstants.MEASURED_BY:
+                Result = TagConstants.MEASURED_BY_REDUNDANTLY; break;
             case TagConstants.ASSERT:
-                Result = TagConstants.JML_ASSERT_REDUNDANTLY; break;
+                Result = TagConstants.ASSERT_REDUNDANTLY; break;
             case TagConstants.ASSUME:
-                Result = TagConstants.JML_ASSUME_REDUNDANTLY; break;
+                Result = TagConstants.ASSUME_REDUNDANTLY; break;
             case TagConstants.LOOP_INVARIANT:
-                Result = TagConstants.JML_LOOP_INVARIANT_REDUNDANTLY; break;
-            case TagConstants.JML_MAINTAINING:
-                Result = TagConstants.JML_MAINTAINING_REDUNDANTLY; break;
+                Result = TagConstants.LOOP_INVARIANT_REDUNDANTLY; break;
+            case TagConstants.MAINTAINING:
+                Result = TagConstants.MAINTAINING_REDUNDANTLY; break;
             case TagConstants.DECREASES:
-                Result = TagConstants.JML_DECREASES_REDUNDANTLY; break;
+                Result = TagConstants.DECREASES_REDUNDANTLY; break;
             case TagConstants.INVARIANT:
-                Result = TagConstants.JML_INVARIANT_REDUNDANTLY; break;
-            case TagConstants.JML_CONSTRAINT:
-                Result = TagConstants.JML_CONSTRAINT_REDUNDANTLY; break;
-            case TagConstants.JML_DECREASING:
-                Result = TagConstants.JML_DECREASING_REDUNDANTLY; break;
-            case TagConstants.JML_DURATION:
-                Result = TagConstants.JML_DURATION_REDUNDANTLY; break;
-            case TagConstants.JML_WORKING_SPACE:
-                Result = TagConstants.JML_WORKING_SPACE_REDUNDANTLY; break;
+                Result = TagConstants.INVARIANT_REDUNDANTLY; break;
+            case TagConstants.CONSTRAINT:
+                Result = TagConstants.CONSTRAINT_REDUNDANTLY; break;
+            case TagConstants.DECREASING:
+                Result = TagConstants.DECREASING_REDUNDANTLY; break;
+            case TagConstants.DURATION:
+                Result = TagConstants.DURATION_REDUNDANTLY; break;
+            case TagConstants.WORKING_SPACE:
+                Result = TagConstants.WORKING_SPACE_REDUNDANTLY; break;
         }
         return Result;
     }
@@ -546,77 +546,77 @@ public class TagConstants extends javafe.tc.TagConstants
     public static int unRedundant(int tag) {
         int Result = tag;
         switch (tag) {
-	    case TagConstants.JML_REQUIRES_REDUNDANTLY:
+	    case TagConstants.REQUIRES_REDUNDANTLY:
                 Result = TagConstants.REQUIRES; break;
-            case TagConstants.JML_ENSURES_REDUNDANTLY:
+            case TagConstants.ENSURES_REDUNDANTLY:
                 Result = TagConstants.ENSURES; break;
-            case TagConstants.JML_PRE_REDUNDANTLY:
-                Result = TagConstants.JML_PRE; break;
-            case TagConstants.JML_DIVERGES_REDUNDANTLY:
-                Result = TagConstants.JML_DIVERGES; break;
-            case TagConstants.JML_WHEN_REDUNDANTLY:
-                Result = TagConstants.JML_WHEN; break;
-            case TagConstants.JML_POST_REDUNDANTLY:
-                Result = TagConstants.JML_POST; break;
-            case TagConstants.JML_EXSURES_REDUNDANTLY:
+            case TagConstants.PRECONDITION_REDUNDANTLY:
+                Result = TagConstants.PRECONDITION; break;
+            case TagConstants.DIVERGES_REDUNDANTLY:
+                Result = TagConstants.DIVERGES; break;
+            case TagConstants.WHEN_REDUNDANTLY:
+                Result = TagConstants.WHEN; break;
+            case TagConstants.POSTCONDITION_REDUNDANTLY:
+                Result = TagConstants.POSTCONDITION; break;
+            case TagConstants.EXSURES_REDUNDANTLY:
                 Result = TagConstants.EXSURES; break;
-            case TagConstants.JML_SIGNALS_REDUNDANTLY:
-                Result = TagConstants.JML_SIGNALS; break;
-            case TagConstants.JML_MODIFIABLE_REDUNDANTLY:
-                Result = TagConstants.JML_MODIFIABLE; break;
-            case TagConstants.JML_ASSIGNABLE_REDUNDANTLY:
-                Result = TagConstants.JML_ASSIGNABLE; break;
-            case TagConstants.JML_MODIFIES_REDUNDANTLY:
+            case TagConstants.SIGNALS_REDUNDANTLY:
+                Result = TagConstants.SIGNALS; break;
+            case TagConstants.MODIFIABLE_REDUNDANTLY:
+                Result = TagConstants.MODIFIABLE; break;
+            case TagConstants.ASSIGNABLE_REDUNDANTLY:
+                Result = TagConstants.ASSIGNABLE; break;
+            case TagConstants.MODIFIES_REDUNDANTLY:
                 Result = TagConstants.MODIFIES; break;
-            case TagConstants.JML_MEASURED_BY_REDUNDANTLY:
-                Result = TagConstants.JML_MEASURED_BY; break;
-            case TagConstants.JML_ASSERT_REDUNDANTLY:
+            case TagConstants.MEASURED_BY_REDUNDANTLY:
+                Result = TagConstants.MEASURED_BY; break;
+            case TagConstants.ASSERT_REDUNDANTLY:
                 Result = TagConstants.ASSERT; break;
-            case TagConstants.JML_ASSUME_REDUNDANTLY:
+            case TagConstants.ASSUME_REDUNDANTLY:
                 Result = TagConstants.ASSUME; break;
-            case TagConstants.JML_LOOP_INVARIANT_REDUNDANTLY:
+            case TagConstants.LOOP_INVARIANT_REDUNDANTLY:
                 Result = TagConstants.LOOP_INVARIANT; break;
-            case TagConstants.JML_MAINTAINING_REDUNDANTLY:
-                Result = TagConstants.JML_MAINTAINING; break;
-            case TagConstants.JML_DECREASES_REDUNDANTLY:
+            case TagConstants.MAINTAINING_REDUNDANTLY:
+                Result = TagConstants.MAINTAINING; break;
+            case TagConstants.DECREASES_REDUNDANTLY:
                 Result = TagConstants.DECREASES; break;
-            case TagConstants.JML_INVARIANT_REDUNDANTLY:
+            case TagConstants.INVARIANT_REDUNDANTLY:
                 Result = TagConstants.INVARIANT; break;
-            case TagConstants.JML_CONSTRAINT_REDUNDANTLY:
-                Result = TagConstants.JML_CONSTRAINT; break;
-            case TagConstants.JML_DECREASING_REDUNDANTLY:
-                Result = TagConstants.JML_DECREASING; break;
-            case TagConstants.JML_DURATION_REDUNDANTLY:
-                Result = TagConstants.JML_DURATION; break;
-            case TagConstants.JML_WORKING_SPACE_REDUNDANTLY:
-                Result = TagConstants.JML_WORKING_SPACE; break;
+            case TagConstants.CONSTRAINT_REDUNDANTLY:
+                Result = TagConstants.CONSTRAINT; break;
+            case TagConstants.DECREASING_REDUNDANTLY:
+                Result = TagConstants.DECREASING; break;
+            case TagConstants.DURATION_REDUNDANTLY:
+                Result = TagConstants.DURATION; break;
+            case TagConstants.WORKING_SPACE_REDUNDANTLY:
+                Result = TagConstants.WORKING_SPACE; break;
         }
         return Result;
     }
 
     public static boolean isRedundant(int tag) {
-	return (tag == TagConstants.JML_REQUIRES_REDUNDANTLY) ||
-            (tag == TagConstants.JML_ENSURES_REDUNDANTLY) ||
-            (tag == TagConstants.JML_PRE_REDUNDANTLY) ||
-            (tag == TagConstants.JML_DIVERGES_REDUNDANTLY) ||
-            (tag == TagConstants.JML_WHEN_REDUNDANTLY) ||
-            (tag == TagConstants.JML_POST_REDUNDANTLY) ||
-            (tag == TagConstants.JML_EXSURES_REDUNDANTLY) ||
-            (tag == TagConstants.JML_SIGNALS_REDUNDANTLY) ||
-            (tag == TagConstants.JML_DURATION_REDUNDANTLY) ||
-            (tag == TagConstants.JML_WORKING_SPACE_REDUNDANTLY) ||
-            tag == TagConstants.JML_MODIFIABLE_REDUNDANTLY ||
-            tag == TagConstants.JML_ASSIGNABLE_REDUNDANTLY ||
-            tag == TagConstants.JML_MODIFIES_REDUNDANTLY ||
-            tag == TagConstants.JML_MEASURED_BY_REDUNDANTLY ||
-            tag == TagConstants.JML_ASSERT_REDUNDANTLY ||
-            tag == TagConstants.JML_ASSUME_REDUNDANTLY ||
-            tag == TagConstants.JML_LOOP_INVARIANT_REDUNDANTLY ||
-            tag == TagConstants.JML_MAINTAINING_REDUNDANTLY ||
-            tag == TagConstants.JML_DECREASES_REDUNDANTLY ||
-            tag == TagConstants.JML_INVARIANT_REDUNDANTLY ||
-            tag == TagConstants.JML_CONSTRAINT_REDUNDANTLY ||
-            tag == TagConstants.JML_DECREASING_REDUNDANTLY;
+	return (tag == TagConstants.REQUIRES_REDUNDANTLY) ||
+            (tag == TagConstants.ENSURES_REDUNDANTLY) ||
+            (tag == TagConstants.PRECONDITION_REDUNDANTLY) ||
+            (tag == TagConstants.DIVERGES_REDUNDANTLY) ||
+            (tag == TagConstants.WHEN_REDUNDANTLY) ||
+            (tag == TagConstants.POSTCONDITION_REDUNDANTLY) ||
+            (tag == TagConstants.EXSURES_REDUNDANTLY) ||
+            (tag == TagConstants.SIGNALS_REDUNDANTLY) ||
+            (tag == TagConstants.DURATION_REDUNDANTLY) ||
+            (tag == TagConstants.WORKING_SPACE_REDUNDANTLY) ||
+            tag == TagConstants.MODIFIABLE_REDUNDANTLY ||
+            tag == TagConstants.ASSIGNABLE_REDUNDANTLY ||
+            tag == TagConstants.MODIFIES_REDUNDANTLY ||
+            tag == TagConstants.MEASURED_BY_REDUNDANTLY ||
+            tag == TagConstants.ASSERT_REDUNDANTLY ||
+            tag == TagConstants.ASSUME_REDUNDANTLY ||
+            tag == TagConstants.LOOP_INVARIANT_REDUNDANTLY ||
+            tag == TagConstants.MAINTAINING_REDUNDANTLY ||
+            tag == TagConstants.DECREASES_REDUNDANTLY ||
+            tag == TagConstants.INVARIANT_REDUNDANTLY ||
+            tag == TagConstants.CONSTRAINT_REDUNDANTLY ||
+            tag == TagConstants.DECREASING_REDUNDANTLY;
     }
 
     private static Identifier[] esckeywords = {
@@ -856,7 +856,7 @@ public class TagConstants extends javafe.tc.TagConstants
         Identifier.intern("post_redundantly"),
         Identifier.intern("post"),
         Identifier.intern("pre_redundantly"),
-        Identifier.intern("pre"), // JML_PRE not PRE (which is \old )
+        Identifier.intern("pre"), // PRE not PRE (which is \old )
         Identifier.intern("pure"),
         Identifier.intern("refine"),
         Identifier.intern("represents_redundantly"),

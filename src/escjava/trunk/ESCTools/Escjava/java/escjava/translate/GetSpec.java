@@ -196,7 +196,7 @@ public final class GetSpec {
 	    switch (mp.getTag()) {
                 case TagConstants.REQUIRES:
                 case TagConstants.ALSO_REQUIRES:
-                case TagConstants.JML_PRE:
+                case TagConstants.PRECONDITION:
                     {
                         ExprModifierPragma emp = (ExprModifierPragma)mp;
                         emp = doSubst(subst, emp);
@@ -205,8 +205,8 @@ public final class GetSpec {
                     }
                 case TagConstants.MODIFIES:
                 case TagConstants.ALSO_MODIFIES:
-                case TagConstants.JML_MODIFIABLE:
-                case TagConstants.JML_ASSIGNABLE:
+                case TagConstants.MODIFIABLE:
+                case TagConstants.ASSIGNABLE:
                     {
                         CondExprModifierPragma emp = (CondExprModifierPragma)mp;
 			if (emp.expr == null) break; // ignore - informal
@@ -221,7 +221,7 @@ public final class GetSpec {
                     }
                 case TagConstants.ENSURES:
                 case TagConstants.ALSO_ENSURES:
-                case TagConstants.JML_POST:
+                case TagConstants.POSTCONDITION:
                     {
                         ExprModifierPragma emp = (ExprModifierPragma)mp;
                         emp = doSubst(subst, emp);
@@ -235,7 +235,7 @@ public final class GetSpec {
                     break;
                 case TagConstants.EXSURES:
                 case TagConstants.ALSO_EXSURES:
-                case TagConstants.JML_SIGNALS:
+                case TagConstants.SIGNALS:
                     {
                         VarExprModifierPragma vemp = (VarExprModifierPragma)mp;
                         vemp = doSubst(subst, vemp);
@@ -1159,7 +1159,7 @@ public final class GetSpec {
 
             for (int i = 0; i < td.elems.size(); i++) {
                 TypeDeclElem tde = td.elems.elementAt(i);
-                if (tde.getTag() == TagConstants.AXIOM || tde.getTag() == TagConstants.JML_REPRESENTS) {
+                if (tde.getTag() == TagConstants.AXIOM || tde.getTag() == TagConstants.REPRESENTS) {
                     ExprDeclPragma axiom = (ExprDeclPragma)tde;
                     if (!Main.options().filterInvariants ||
                         exprIsVisible(scope.originType, axiom.expr)) {
