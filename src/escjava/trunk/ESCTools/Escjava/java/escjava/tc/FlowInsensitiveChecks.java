@@ -1054,8 +1054,21 @@ consistent with JML
                             subenv = new EnvForLocals(subenv, decl, false);
                         }
                         isPredicateContext = true;
+                        if (qe.rangeExpr != null) {
+			    qe.rangeExpr = checkExpr(subenv, qe.rangeExpr, Types.booleanType);
+			}
                         qe.expr = checkExpr(subenv, qe.expr, Types.booleanType);
                     }
+		    if (qe.rangeExpr == null) { // skip
+		    } else if (tag == TagConstants.FORALL) {
+			qe.expr = BinaryExpr.make(TagConstants.IMPLIES,
+					qe.rangeExpr,qe.expr,Location.NULL);
+			setType(qe.expr,Types.booleanType);
+		    } else {
+			qe.expr = BinaryExpr.make(TagConstants.AND,
+					qe.rangeExpr,qe.expr,Location.NULL);
+			setType(qe.expr,Types.booleanType);
+		    }
                     setType(e, Types.booleanType);
                     return e;
                 }

@@ -2344,13 +2344,13 @@ try{
 				"Syntax error in quantified expression.");
         GCExpr returnExpr = null;
         if (tag == TagConstants.FORALL) {
-	    if (rangeExpr != null) rest = BinaryExpr.make(TagConstants.IMPLIES,
-						 rangeExpr, rest, locSemi);
+	    //if (rangeExpr != null) rest = BinaryExpr.make(TagConstants.IMPLIES,
+						 //rangeExpr, rest, locSemi);
             returnExpr = QuantifiedExpr.make(loc, endLoc, tag, vs, 
 				rangeExpr, rest, null, null);
         } else if (tag == TagConstants.EXISTS) {
-	    if (rangeExpr != null) rest = BinaryExpr.make(TagConstants.AND, 
-						rangeExpr, rest, locSemi);
+	    //if (rangeExpr != null) rest = BinaryExpr.make(TagConstants.AND, 
+						//rangeExpr, rest, locSemi);
             returnExpr = QuantifiedExpr.make(loc, endLoc, tag, vs, 
 				rangeExpr, rest, null, null);
         } else if (tag == TagConstants.MAXQUANT || tag == TagConstants.MIN ||
