@@ -31,6 +31,15 @@
 \end{figure}
 }
 
+%% regular figures, the width of two column of text, at the top of the page
+\newenvironment{BFIGUREDB}{
+\begin{figure*}[t!]
+}{%
+\par\vskip-\parskip
+\BFULLFIGURELINE%
+\end{figure*}
+}
+
 %% figures on a page by themselves
 \newenvironment{BFIGUREP}{
 \begin{figure}[p!]
@@ -45,6 +54,16 @@
 \newenvironment{BFIGURET}{
 \begin{figure}[t!]
 \BFIGURELINE
+}{%
+\par\vskip-\parskip
+\BFIGURELINE%
+\end{figure}
+}
+
+%% figures at the bottom of the page
+\newenvironment{BFIGUREB}{
+\begin{figure}[b!]
+\BTOPFIGURELINE
 }{%
 \par\vskip-\parskip
 \BFIGURELINE%
