@@ -1,0 +1,24 @@
+\section{Assertion tools}
+
+
+\subsection{\sc Esc/Java}
+\textsc{Esc/Java} is the verification tool developed at
+Compaq SRC (Compaq Systems Research Center), which allow us to find
+some errors in \textsc{Java} programs. \textsc{Esc/Java} allow us to
+detect, at compile time, errors which usually are not detected until
+run time. \\
+
+\textsc{Esc/Java} includes an annotation langage with which
+programmers can express design decisions using light weight
+specifications. For example, one may give a method preconditions that
+says than parameter is not null, or declare an object invariant that
+says than an integer field lies between $0$ and the length of some
+array field. \textsc{Esc/Java} uses the given annotations in reducing
+spurious warnings, and also checks that the program is consistent with 
+the given annotations. \\
+
+\textsc{Esc/Java} performs a \textit{modular checking}, i.e,
+\textsc{Esc/Java} checks each class separately. That means that
+\textsc{Esc/Java} can be applied to code that calls libraries even if
+the code for the libraries is not available. \\
+
