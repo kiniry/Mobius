@@ -20,6 +20,8 @@ public abstract class Types extends javafe.tc.Types
     public static PrimitiveType
             locksetType = PrimitiveType.make(TagConstants.LOCKSET, Location.NULL);
 
+    public static PrimitiveType
+	    rangeType = PrimitiveType.make(TagConstants.DOTDOT, Location.NULL);
     /**
      * This routine overrides {@link javafe.tc.Types#lookupField()}.
      * Unlike that routine, it knows about ghost fields and
