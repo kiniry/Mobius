@@ -23,7 +23,7 @@ else
 JBIN =
 endif
 
-export TOOLCMD = ${JAVA} -mx40m -classpath ${CLASSPATH} javafe.test.Print ${JBIN}
+export TOOLCMD = ${JAVA} -mx40m -classpath ${CLASSDIRECTORY} javafe.test.Print ${JBIN}
 export TOOLARGS = -noprint -typecheck
 export TOOL = ${TOOLCMD} ${TOOLARGS}
 
@@ -80,10 +80,11 @@ do%:
 
 ## This target simply executes a given test, e.g. 'make extest1' runs test1
 ## Must have variables JAVA and JAVAFE_ROOT set
-ex%:
+%-run:
 	(  cd $*; \
-	   export CLASSPATH=`pwd`; \
-	   export TOOL="${TOOL} -classpath `pwd`" ; \
+	   export JAVAFE=${ESCTOOLS_ROOT}/Javafe; \
+	   export CLASSPATH=`pwd` ;\
+	   export TOOL="${TOOL} -classpath `pwd` " ; \
 	   ./run )
 
 clean: 

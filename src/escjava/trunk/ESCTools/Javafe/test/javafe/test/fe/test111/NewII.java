@@ -44,7 +44,7 @@ class LevelOne {
 	    return x.new Inner();
 	}
     }
-    static Inner unavailable = new Inner();    // error
+    static Inner unavailable = new Inner();    // OK
 }
 
 
@@ -59,7 +59,7 @@ class Inference {
 
     class C {
 	A.B foo() {
-	    return new A.B();          // error: no A available
+	    return new A.B();          // OK
 	}
     }
 

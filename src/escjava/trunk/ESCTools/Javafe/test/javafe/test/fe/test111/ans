@@ -31,12 +31,12 @@ NewII.java:36: Error: No enclosing instance of class LevelOne is in scope; an ex
 NewII.java:40: Error: Undefined variable: LevelOne.this
             return LevelOne.this.new Inner();   // error
                    ^
-NewII.java:47: Error: No enclosing instance of class LevelOne is in scope; an explicit one must be provided when creating instances of inner class LevelOne$Inner.
-    static Inner unavailable = new Inner();    // error
-                               ^
-NewII.java:62: Error: No enclosing instance of class Inference$A is in scope; an explicit one must be provided when creating instances of inner class Inference$A$B.
-            return new A.B();          // error: no A available
+NewII.java:40: Error: The enclosing instance supplied in a new expression must be of a class type.
+            return LevelOne.this.new Inner();   // error
                    ^
+NewII.java:40: Fatal error: No such type: java.lang.Object$Inner
+            return LevelOne.this.new Inner();   // error
+                                     ^
 4 errors
 Anon.java:31: Error: Cannot convert boolean to int
             int y = false;                      // error

@@ -51,7 +51,4 @@ Prefixes.java:52: Error: No such field in type P.C
 MethodScoping.java:69: Error: No such method m(java.lang.String) in type Arguments$I
             boolean x = m("hello");  // Error: wrong # of arguments
                         ^
-MethodScoping.java:69: Error: Cannot convert int to boolean
-            boolean x = m("hello");  // Error: wrong # of arguments
-                        ^
-2 errors
+1 error
