@@ -127,7 +127,7 @@ What this set of slides aims to do
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\part{{\Large \red The Java Modeling Language JML}}
+\part{{\Large \red The Java Modeling Language \\ JML \\[2ex] {\large\black \texttt{www.jmlspecs.org}}}}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -292,14 +292,40 @@ The \code{requires} clause makes this {\green explicit}.
 
 \end{slide}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}{signals}
+\vspace*{-3ex}
+
+Exceptions are allowed by default,
+ie.\ the default signals clause is
+\begin{alltt}\texttt{\textbf{\small {\blue signals} (Exception){\green true}; }}
+\end{alltt}
+
+\medskip
+To rule them out, add an explicit
+\begin{alltt}\texttt{\textbf{\small {\blue signals} (Exception){\green false}; 
+}}
+
+\end{alltt}
+or use the keyword {\blue normal\_behavior}
+\begin{alltt}
+\texttt{\textbf{\small {\green /*@}{\blue normal\_behavior}
+       {\black requires} ...
+       {\black ensures}  ...              
+ {\green   @*/}
+}}
+\end{alltt}
+
+
+\end{slide}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{invariant}
 \vspace*{-3ex}
 {\blue Invariants} (aka {\em class} invariants) are properties that must be maintained by all methods, eg
 \begin{alltt}
-\texttt{\textbf{\small{
- public class {\green Wallet} \{
+\texttt{\textbf{\small{public class {\green Wallet} \{
   public static final short{\green MAX_BAL} = 1000;
   private short{\green balance};
   {\green /*@}{\blue invariant 0 <= balance &&
@@ -316,20 +342,20 @@ Invariants must {\em also} be preserved if exception is thrown!
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{invariant}
 \vspace*{-4ex}
+
+Invariants document design decisions, eg.
 \begin{alltt}
 \texttt{\textbf{\small public class{\green Directory} \{
  private File[]{\green files};
 {\green /*@}{\blue invariant} 
      files != null    
      &&
-     ({\red\vooralle} int i; 0 <= i && i < files.length;
+     (\vooralle int i; 0 <= i && i < files.length;
                    ; files[i] != null &&
                      files[i].getParent() == this);
-  {\green @*/}
-}}
+  {\green @*/} }}
 \end{alltt} %}
 
-Invariants document design decisions.\\
 Making them {\green explicit} helps in understanding the code.
 \end{slide}
 
@@ -453,18 +479,71 @@ Only pure methods can be used {\em in} specifications.
 \end{slide}
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}{visibility}
+\vspace*{-4ex}
+JML supports the standard Java visibilities: 
+
+\begin{alltt}
+\texttt{\textbf{\small {\blue public} int{\blue pub}; {\green private} int{\green priv}; 
+
+ {\black //@} requires i <={\blue pub};
+ {\blue public} void{\blue pub1} (int i) \{ ... \}
+
+ {\black //@} requires i <={\blue pub} && i <={\green priv};
+ {\green private} void{\green priv1} (int i) { ... } 
+
+ {\black //@} requires i <={\blue pub} && i <={\green priv}; // WRONG !!
+ {\blue public} void{\blue pub2}(int i) \{ ... \}
+ }}
+\end{alltt}
+
+Specs of {\blue public} methods may not refer to {\green private} fields.
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}{visibility: spec\_public}
+\vspace*{-3ex}
+
+Keyword \code{spec\_public} loosens visibility for specs.\\
+Private \code{spec\_public} fields are allowed in public specs, eg:
+
+\begin{alltt} \texttt{\textbf{\small{\blue public} int{\blue pub};
+ {\green private}{\black /*@}{\blue spec\_public}{\black @*/} int{\green priv};
+
+ {\black //@} requires i <={\blue pub} && i <={\green priv}; // OK
+ {\blue public} void{\blue pub2}(int i) \{ ... \} 
+
+}}
+\end{alltt}
+
+
+\bigskip
+
+{\rm Exposing private details is ugly, of course.
+A nicer, but more advanced alternative in JML is to
+ use public \code{\red model} fields to represent 
+(abstract away from) private implementation details.}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\part{{\Large \red Tools for JML}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\overlays{4}{\begin{slide}{Tools for JML}
+\overlays{3}{\begin{slide}{tools for JML}
 \vspace*{-2ex}
 
 \begin{itemize}
-\fromSlide{2}{\item$\!$ {\red parsing} and {\red typechecking}} 
-\fromSlide{3}{\item$\!$ {\red runtime assertion checking}:\\
+\fromSlide{1}{\item$\!$ {\red parsing} and {\red typechecking}} 
+\fromSlide{2}{\item$\!$ {\red runtime assertion checking}:\\
       {\blue test} for violations of assertions {\blue during execution}\\
       {\green jmlrac}}
-\fromSlide{4}{\item$\!$ {\red extended static checking}:\\
+\fromSlide{3}{\item$\!$ {\red extended static checking}:\\
       {\blue prove} 
       that contracts are never violated
       {\blue at compile-time}\\
@@ -474,34 +553,9 @@ Only pure methods can be used {\em in} specifications.
 \end{itemize}
 \end{slide}}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{slide}{Runtime vs static checking}
-\vspace*{-3ex}
-
-One of the assertions below is wrong:
-\begin{alltt}
-\texttt{\textbf{\small  if (i <= 0 || j < 0) \{
-      ...
-   \} else if (j < 5) \{
-       //@ assert i > 0 && 0 < j && j < 5;
-       ...
-   \} else \{
-       //@ assert i > 0 && j > 5;
-       ...
-   \}  
-}}\end{alltt}
-
-
-Runtime assertion checking {\blue {\em may}} detect this.
-
-ESC/Java2 {\blue {\em will}} detect this.
-
-\end{slide}
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \overlays{4}{
-\begin{slide}{jmlrac}
+\begin{slide}{runtime assertion checking}
 \vspace*{-3ex}
 {\blue jmlrac compiler} by Gary Leavens et al. at Iowa State Univ.
 
@@ -528,7 +582,7 @@ The {\blue jmlunit} tool combines jmlrac and {\green unit testing}}
 \end{slide}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{slide}{jmlrac example}
+\begin{slide}{runtime assertion checking}
 \vspace*{-3ex}
 
 jmlrac can generate complicated test-code for free.  Eg for
@@ -551,13 +605,14 @@ quantification is finite.}
 \end{slide}
 
 
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \overlays{5}{
-\begin{slide}{ESC/Java2}
+\begin{slide}{extended static checking}
 \vspace*{-3ex}
 
-{\blue Extended static checker}
-by Rustan Leino et. al at Compaq.
+{\blue ESC/Java(2)}
 \begin{itemstep}
 \item$\!$
 {\blue {\em tries} to {\em prove} correctness of specifications,}\\
@@ -577,7 +632,168 @@ and verifying relatively simple properties.
 \end{slide}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\overlays{1}{\begin{slide}{More JML tools}
+\begin{slide}{static checking vs runtime checking}
+\vspace*{-3ex}
+
+Important differences:
+
+\begin{itemize}
+\item ESC/Java2 checks specs at {\blue compile-time}, \\
+      jmlrac checks specs at {\green run-time}
+
+\item ESC/Java2 {\blue proves} correctness of specs,\\
+      jml only {\green tests} correctness of specs.
+\\
+Hence
+\begin{itemize}
+\item ESC/Java2 independent of any test suite, \\
+      results of runtime testing only as good as the test suite,
+\item ESC/Java2 provides higher degree of confidence.
+\end{itemize}
+
+\end{itemize}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}{static checking vs runtime checking}
+\vspace*{-3ex}
+
+One of the assertions below is wrong:
+\begin{alltt}
+\texttt{\textbf{\small  if (i <= 0 || j < 0) \{
+      ...
+   \} else if (j < 5) \{
+       {\green //@ assert i > 0 && 0 < j && j < 5;}
+       ...
+   \} else \{
+       {\green //@ assert i > 0 && j > 5;}
+       ...
+   \}  
+}}\end{alltt}
+
+
+Runtime assertion checking {\blue {\em may}} detect this.
+
+ESC/Java2 {\blue {\em will}} detect this.
+
+\end{slide}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}{modular reasoning (1)}
+\vspace*{-3ex}
+
+ESC/Java2 reasons about every method individually.
+So in
+
+\begin{alltt}\code{ class A\{
+  byte[] b;
+  public void n() \{ b = new byte[20]; \}
+  public void m() \{ n();
+                    b[0] = 2;
+                    ...       \}
+}
+\end{alltt}
+
+ESC/Java2 warns that \code{b[0]} may be a null dereference here,\\
+even though you can see that it won't be.
+\end{slide}
+
+\begin{slide}{modular reasoning (1)}
+\vspace*{-3ex}
+To stop ESC/Java2 complaining: add a postcondition
+\begin{alltt}\code{ class A\{
+  byte[] b;
+ {\green //@ ensures b != null && b.length = 20;}
+  public void n() \{ a = new byte[20]; \}
+  public void m() \{ n();
+                    b[0] = 2;
+                    ...       \} 
+}
+\end{alltt}
+So: property of method that is relied on has to be made explicit.
+
+And: subclasses that override methods have to preserve these.
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}{modular reasoning (2)}
+\vspace*{-3ex}
+
+Similarly, ESC/Java will complain about \code{b[0] = 2} in
+
+\begin{alltt}\code{ class A\{
+  byte[] b;
+  public void A() \{ b = new byte[20]; \}
+  public void m() \{ b[0] = 2;
+                    ...  \}
+
+}
+\end{alltt}
+Maybe you can see that this is a spurious warning,
+though this will be harder than in the previous example:
+you'll have to inspect {\em all} constructors and {\em all} methods.
+
+\end{slide}
+
+
+\begin{slide}{modular reasoning (2)}
+\vspace*{-3ex}
+
+To stop ESC/Java2 complaining here: add an invariant
+
+\begin{alltt}\code{ class A\{
+  byte[] b;
+  {\green //@ invariant b != null && b.length == 20;}
+  {\green     // or weaker property for b.length ?}
+  public void A() \{ b = new byte[20]; \}
+  public void m() \{ b[0] = 2;
+                    ...  \}
+}
+\end{alltt}
+
+So again: properties you rely on have to be made explicit.
+
+\medskip
+
+And again: subclasses have to preserve these properties.
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}{assume}
+\vspace*{-3ex}
+
+Alternative to stop  ESC/Java2 complaining:
+add an assumption:
+\begin{alltt}\code{ 
+    ...
+    //@{\blue assume} b != null && b.length > 0;
+    b[0] = 2;
+    ...  
+
+}
+\end{alltt}
+
+Especially useful during development,
+when you're still trying to discover hidden assumptions,
+or when ESC/Java2's reasoning power is too weak.
+
+\medskip
+
+(requires can be understood as a form of assume.)
+
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\overlays{1}{\begin{slide}{more JML tools}
 
 \vspace*{-2ex}
 \begin{itemize}
@@ -595,113 +811,11 @@ whereas
 ESC/Java2 aims at {\blue automatic} verification of relatively simple
 properties.
 \item runtime {\blue detection of invariants}: {\green Daikon} (Michael Ernst, MIT)
-\item$\!$ {\blue model-checking} muli-threaded programs: {\green Bogor} (Kansas State)
+\item$\!$ {\blue model-checking} multi-threaded programs: {\green Bogor} (Kansas State)
 \end{itemize}
+See \texttt{www.jmlspecs.org}
 
 \end{slide}}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\part{{\Large \red More ESC/Java tips \\ to be added to David's ?}}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{slide}{Modular reasoning (1)}
-\vspace*{-3ex}
-
-ESC/Java2 reasons about every method individually.\\
-So in
-
-\begin{verbatim}
-class A{
-  byte[] b;
-
-  public void n() { b = new byte[20]; }
-
-  public void m() { n();
-                    b[0] = 2;
-                    ... }
-}
-\end{verbatim}
-
-ESC/Java2 warns that \code{b[0]} may be a null dereference here,
-even though you can see that it won't be.
-\end{slide}
-
-\begin{slide}{Modular reasoning (1)}
-\vspace*{-3ex}
-To stop ESC/Java2 complaining: add a postcondition
-
-
-\begin{verbatim}
-class A{
-  byte[] b;
-
-  //@ ensures b != null && b.length = 20;
-  public void n() { a = new byte[20]; }
-
-  public void m() { n();
-                    b[0] = 2;
-                    ... }
-}
-\end{verbatim}
-So: properties of method that you rely on have to be made explicit.
-
-And: subclasses that override method have to preserve these.
-
-\end{slide}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{slide}{Modular reasoning (2)}
-\vspace*{-3ex}
-
-Similarly, ESC/Java will complain about {\tt b[0] = 2} in
-
-\begin{verbatim}
-class A{
-  byte[] b;
-
-  public void A() { b = new byte[20]; }
-
-  public void m() { b[0] = 2;
-                    ...  }
-}
-\end{verbatim}
-Maybe you can see that this is a spurious warning,
-though this will be harder than in the previous example:
-you'll have to inspect {\em all} constructors and {\em all} methods.
-
-\end{slide}
-
-
-\begin{slide}{Modular reasoning (2)}
-\vspace*{-3ex}
-
-To stop ESC/Java2 complaining here: add an invariant
-
-\begin{verbatim}
-class A{
-  byte[] b;
-  //@ invariant b != null && b.length == 20;
-          // or a weaker property for b.length ?
-
-  public void A() { b = new byte[20]; }
-
-  public void m() { b[0] = 2;
-                    ...  }
-}
-\end{verbatim}
-
-
-So again: properties you rely on have to be made explicit.
-
-And again: subclasses have to preserve these properties.
-
-\end{slide}
-
-
-
-
 
 
 \end{document}
