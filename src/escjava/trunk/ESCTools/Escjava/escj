@@ -180,14 +180,6 @@ if ( ! $?ESC_CLASSPATH ) then
     endif
 endif
 
-if ( ! $?ESCJ_SIMPLIFY_SCRIPT ) then
-    if ( $?ESCTOOLS_RELEASE ) then
-        setenv ESCJ_SIMPLIFY_SCRIPT $ESCTOOLS_RELEASE/simplify-script
-    else
-        setenv ESCJ_SIMPLIFY_SCRIPT ${ESCTOOLS_ROOT}/Escjava/simplify
-    endif
-endif
-
 ## Simplify settings
 if ($?PROVER_KILL_TIME) then
 else

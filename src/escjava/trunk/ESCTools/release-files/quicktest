@@ -4,6 +4,8 @@
 ## release, but if it is not set, this script attempts to guess it.
 
 unsetenv ESCTOOLS_ROOT
+unsetenv ESC_SPECS
+unsetenv ESCJ_SIMPLIFY_DIR
 
 
 set TMP = /tmp

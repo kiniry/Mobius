@@ -225,6 +225,7 @@ test-binary-release-before-tar:
 	${MAKE} -C ${ESCTOOLS_ROOT} build
 	cd ${ESCTOOLS_ROOT} ;\
 	    unset JUNIT_LIB; \
+	    unset ESC_SPECS; \
 	    unset ESCJ_SIMPLIFY_DIR; \
 	    export RELDIR=${RELTEMP}; \
 	    export RELCLASSPATH=${RELTEMP}/${RELJAR} ;\
