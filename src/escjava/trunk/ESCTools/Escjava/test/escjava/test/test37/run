@@ -1,5 +1,5 @@
 #!/bin/csh -f
 # usage: run FLAGS
 
-${ESCJ} $* Exsures2.java Exsures.java
+${ESCJ} $* Exsures.java Exsures2.java
 

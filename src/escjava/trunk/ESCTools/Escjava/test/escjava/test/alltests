@@ -36,10 +36,10 @@ test30  Empty	Empty (created with the intension of testing SPVC)
 test31  Good	Limited tests that FindContributors doesn't find too much
 test32  Good	error message caret positions
 test33	Empty	Empty
-test34	FIX	annotation type checking - FIXME also_ checking
+test34	Good	annotation type checking 
 test35	Good	fresh
 test36	Good	Exceptional return from constructors
-test37	FIX	exsures and also_exsures -- FIXME also_ checking
+test37	Good	exsures and also_exsures
 test38	Good	Tests knowledge of constants and final fields with initializers
 test39  Good    relative assignments (op=) with shift operators
 
@@ -63,13 +63,13 @@ test55	Good	3 inline flags
 test56	Good	parsing of modifier pragmas after formal parameters
 test57	Good	DTTFSA
 test58	Good	"invariant" and "non_null" inheritance from interfaces
-test59	FIX	instance initializers // FIXME - simple formatting
+test59	Good	instance initializers 
 
-test60	FIX	inheriting method specifications and non_null from interfaces // An _also test - review FIXME
+test60	Omit	inheriting method specifications and non_null from interfaces - Omitted because the also_ syntax and the inheritance semantics are now obsolete
 test61	Good	elements left unchanged by arraycopy (based on ex from Bart Jacobs)
 test62	Good	order of testing assertions
 test63	Good	integer division
-test64	FIX	-inlineFromConstructors flag
+test64	Good	-inlineFromConstructors flag
 test65	Good	continued-line ellipses at the end of associated declarations
 test66	Good	-excuseNullInitializers flag
 test67	Good	comment parsing, including @-signs at beginning of lines

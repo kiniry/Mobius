@@ -8,8 +8,6 @@ public class Constructor {
 		modifies j,k;
 		ensures j == i;
 		ensures k == 1;
-	subclassing_contract
-		measured_by k;
 		callable m();
 	*/
 

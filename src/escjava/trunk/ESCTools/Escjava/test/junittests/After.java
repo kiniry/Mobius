@@ -8,17 +8,17 @@ public class After {
 	;
 
 	native public boolean purem()
-		//@ pure
 		//@ requires true;
 		//@ ensures false;
+		//@ pure
 	;
 
 	public int n()
-		//@ pure
 		/*@ requires true;
 		    ensures false;
 		    ensures purem() && m();
 		*/
+		//@ pure
 	{
 	}
 }

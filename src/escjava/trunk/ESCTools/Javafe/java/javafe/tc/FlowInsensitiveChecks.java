@@ -969,7 +969,7 @@ public class FlowInsensitiveChecks
 
                 if (env.isStaticContext() && t.classPrefix==null) {
                     ErrorSet.error(x.getStartLoc(),
-                                   "Unqualified this cannot be used in static contexts");
+		       "Unqualified this cannot be used in static contexts");
                 }
 
                 Type referredType = sig;
@@ -2080,15 +2080,14 @@ public class FlowInsensitiveChecks
      * <code>env</code> is the current environment.
      */
     //@ requires env != null
-    protected void checkModifierPragmaVec(ModifierPragmaVec v, 
+    protected Env checkModifierPragmaVec(ModifierPragmaVec v, 
                                           ASTNode ctxt, 
                                           Env env) {
         if(v != null)
             for(int i=0; i<v.size(); i++) {
-		boolean remove =
-		    checkModifierPragma(v.elementAt(i), ctxt, env);
-		if (remove) v.removeElementAt(i--);
+		env = checkModifierPragma(v.elementAt(i), ctxt, env);
 	    }
+	return env;
     }
 
     /**
@@ -2098,37 +2097,40 @@ public class FlowInsensitiveChecks
      * @return true if pragma should be deleted
      */
     //@ requires p != null && env != null
-    protected boolean checkModifierPragma(ModifierPragma p, ASTNode ctxt, Env env) {
+    protected Env checkModifierPragma(ModifierPragma p, ASTNode ctxt, Env env) {
         // Assert.fail("Unexpected ModifierPragma");
-	return false;
+	return env;
     }
 
     //@ requires e != null && s != null
-    protected void checkStmtPragma(Env e, StmtPragma s) {
+    protected Env checkStmtPragma(Env e, StmtPragma s) {
         Assert.fail("Unexpected StmtPragma");
+	return e;
     }
 
     //@ requires env != null
-    protected void checkTypeModifierPragmaVec(TypeModifierPragmaVec v, 
+    protected Env checkTypeModifierPragmaVec(TypeModifierPragmaVec v, 
                                               ASTNode ctxt, 
                                               Env env) {
         if(v != null)
             for(int i=0; i<v.size(); i++)
-                checkTypeModifierPragma(v.elementAt(i), ctxt, env);
+                env = checkTypeModifierPragma(v.elementAt(i), ctxt, env);
+	return env;
     }
     
     //@ requires p != null && env != null
-    protected void checkTypeModifierPragma(TypeModifierPragma p,
+    protected Env checkTypeModifierPragma(TypeModifierPragma p,
                                            ASTNode ctxt,
                                            Env env) {
         Assert.fail("Unexpected TypeModifierPragma");
+	return env;
     }
 
     /**
      * This may be called more than once on a Type t.
      */
     //@ requires t != null
-    protected void checkTypeModifiers(Env env, Type t) {
+    protected Env checkTypeModifiers(Env env, Type t) {
         // don't know context for type, so pull it out of the type's decorations.
         if (env == null) {
             env = (Env)Env.typeEnv.get(t);
@@ -2136,8 +2138,9 @@ public class FlowInsensitiveChecks
         Assert.notFalse(env != null);  //@ nowarn Pre
         checkTypeModifierPragmaVec(t.tmodifiers, t, env);
         if (t instanceof ArrayType) {
-            checkTypeModifiers(env, ((ArrayType)t).elemType);
+            env = checkTypeModifiers(env, ((ArrayType)t).elemType);
         }
+	return env;
     }
 
 }

@@ -4,10 +4,12 @@ package escjava.ast;
 
 import java.util.Hashtable;
 import java.util.Set;
+import java.util.ArrayList;
 
 import javafe.ast.*;
 import javafe.util.Assert;
 import javafe.util.Location;
+import escjava.ParsedRoutineSpecs;
 
 // Convention: unless otherwise noted, integer fields named "loc" refer
 // to the locaction of the first character of the syntactic unit
@@ -79,6 +81,7 @@ import javafe.util.Location;
  *    - ModifierPragma ()
  *         + SimpleModifierPragma () 
  *                   // Uninitialized, Monitored, NonNull, WritableDeferred, Helper
+ *	   + NestedModifierPragma (ArrayList list)
  *         + ExprModifierPragma (Expr expr) 
  *                   // DefinedIf, Writable, Requires, Pre, Ensures, Post, AlsoEnsures, 
  *                   // MonitoredBy, Constraint, InvariantFor, Space, 
@@ -92,6 +95,7 @@ import javafe.util.Location;
  *         + VarExprModifierPragma (GenericVarDecl arg, Expr expr)
  *                   // Exsures, AlsoExsures, Signals, AlsoSignals
  *         + ModelProgramModifierPragma()
+ *	   + VarDeclModifierPragma (LocalVarDecl decl)
  *    - LexicalPragma ()
  *      + NowarnPragma (Identifier* checks)
  *      + ImportPragma (ImportDecl decl)
@@ -727,6 +731,29 @@ public class ModelProgamModifierPragma extends ModifierPragma
   public int getStartLoc() { return loc; }
 }
 
+public class NestedModifierPragma extends ModifierPragma
+{
+	// This is a list of ModifierPragmaVec
+  //# ArrayList list   NoCheck
+
+  //# ManualTag
+  public final int getTag() { return TagConstants.NESTEDMODIFIERPRAGMA; }
+
+	// FIXME - need more robust settingn of this
+  public int getStartLoc() { return ((ModifierPragmaVec)list.get(0)).elementAt(0).getStartLoc(); }
+}
+
+public class ParsedSpecs extends ModifierPragma
+{
+  //# RoutineDecl decl         NoCheck
+  //# ParsedRoutineSpecs specs NoCheck
+
+  //# ManualTag
+  public final int getTag() { return TagConstants.PARSEDSPECS; }
+
+  public int getStartLoc() { return decl.locId; }
+}
+
 public class SimpleModifierPragma extends ModifierPragma
 {
   //# int tag
@@ -821,6 +848,19 @@ public class ReachModifierPragma extends ModifierPragma
     //# Identifier id
     //# Identifier* storerefs
     //# int loc
+
+    public int getStartLoc() { return loc; }
+}
+
+public class VarDeclModifierPragma extends ModifierPragma
+{
+    //# int tag
+    //# LocalVarDecl decl
+    //# int loc
+    //# int locId
+
+    //# ManualTag
+    public int getTag() { return tag; }
 
     public int getStartLoc() { return loc; }
 }

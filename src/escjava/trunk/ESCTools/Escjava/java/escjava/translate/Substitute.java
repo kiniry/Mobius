@@ -342,6 +342,9 @@ public class Substitute {
 	  }
 	  result = MethodInvocation.make(me.od, me.id, me.tmodifiers, me.locId, 
 			me.locOpenParen, args);
+	} else if (e instanceof NewInstanceExpr) {
+	  ErrorSet.fatal(e.getStartLoc(),
+		"new expressions are not implemented by the static checker");
 	} else {
 
 	    Assert.fail("Bad expr in Substitute.doSubst: "+e+ " " 

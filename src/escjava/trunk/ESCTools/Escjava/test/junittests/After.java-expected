@@ -2,32 +2,10 @@ ESC/Java version VERSION
   Prover started:TIME
 
 After ...
-After.java:20: Error: Method m is used in an annotation but is not pure (After.java:5)
+After.java:19: Error: Method m is used in an annotation but is not pure (After.java:5)
                     ensures purem() && m();
                                        ^
-
-After: m() ...
-    [TIME]  passed immediately
-
-After: purem() ...
-    [TIME]  passed immediately
-
-After: n() ...
-------------------------------------------------------------------------
-After.java:23: Warning: Postcondition possibly not established (Post)
-        }
-        ^
-Associated declaration is "After.java", line 19, col 6:
-                    ensures false;
-                    ^
-Execution trace information:
-    Executed implicit return in "After.java", line 23, col 1.
-
-------------------------------------------------------------------------
-    [TIME]  failed
-
-After: After() ...
-    [TIME]  passed
-  [TIME total]
-1 warning
+Caution: Turning off extended static checking due to type error(s)
+  [TIME total] (aborted)
+1 caution
 1 error

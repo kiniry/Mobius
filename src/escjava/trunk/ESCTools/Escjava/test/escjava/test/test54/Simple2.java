@@ -9,8 +9,8 @@ class Simple2 {
     //@ assert y == 5;
   }
 
-  //@ helper
   //@ requires -10 <= x;
+  //@ helper
   private int n() {
     //@ assert 0 <= x;
     return x;

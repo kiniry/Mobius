@@ -1,41 +1,24 @@
-WontEvenParse0.java:4: Fatal error: Unknown ESC function symbol m0
-    //@ set x = m0();
-                ^
-1 error
-WontEvenParse1.java:3: Fatal error: Unknown ESC function symbol m1
-    //@ assert m1();
-               ^
-1 error
-WontEvenParse2.java:3: Error: new cannot be used in specification expressions
-    //@ assert new Object();
-               ^
 WontEvenParse2.java:3: Error: Cannot convert java.lang.Object to boolean
     //@ assert new Object();
                ^
 Caution: Turning off extended static checking due to type error(s)
 1 caution
-2 errors
-WontEvenParse3.java:3: Error: new cannot be used in specification expressions
-    //@ assert new int[10];
-               ^
+1 error
 WontEvenParse3.java:3: Error: Cannot convert int[] to boolean
     //@ assert new int[10];
                ^
 Caution: Turning off extended static checking due to type error(s)
 1 caution
-2 errors
-WontEvenParse4.java:2: Error: new cannot be used in specification expressions
+1 error
+WontEvenParse4.java:2: Fatal error: new expressions are not implemented by the static checker
   //@ ensures \result == (3 < 4 ? new Object() : new int[12]);
                                   ^
-WontEvenParse4.java:2: Error: new cannot be used in specification expressions
-  //@ ensures \result == (3 < 4 ? new Object() : new int[12]);
-                                                 ^
+1 error
+WontEvenParse5.java:3: Error: No such method \nonnullelements(java.lang.Object[]) in type WontEvenParse5
+    //@ assert WontEvenParse5.\nonnullelements(a);
+                              ^
 Caution: Turning off extended static checking due to type error(s)
 1 caution
-2 errors
-WontEvenParse5.java:3: Fatal error: Annotations may not contain method calls
-    //@ assert WontEvenParse5.\nonnullelements(a);
-               ^
 1 error
 WontEvenParse6.java:4: Fatal error: Statement pragmas are not legal in this context.
     //@ assert x == x;
@@ -100,18 +83,12 @@ BogusInput.java:24: Error: Keyword \lockset is not allowed in this context
 BogusInput.java:24: Error: Keyword \lockset is not allowed in this context
   //@ invariant \lockset == \lockset
                             ^
-BogusInput.java:24: Error: Class invariants must mention program variables or fields.
-  //@ invariant \lockset == \lockset
-      ^
 BogusInput.java:25: Error: Keyword \lockset is not allowed in this context
   //@ axiom \max(\lockset) == null;
                  ^
 BogusInput.java:26: Error: Keyword \lockset is not allowed in this context
   //@ invariant \max(\lockset) == null
                      ^
-BogusInput.java:26: Error: Class invariants must mention program variables or fields.
-  //@ invariant \max(\lockset) == null
-      ^
 BogusInput.java:28: Error: Keyword \result is not allowed in this context
   //@ axiom \result == \result;
             ^
@@ -124,9 +101,6 @@ BogusInput.java:29: Error: Keyword \result is not allowed in this context
 BogusInput.java:29: Error: Keyword \result is not allowed in this context
   //@ invariant \result == \result
                            ^
-BogusInput.java:29: Error: Class invariants must mention program variables or fields.
-  //@ invariant \result == \result
-      ^
 BogusInput.java:31: Error: The function \old cannot be used in this context
   //@ axiom \old(x) == x && (\forall BogusInput t; t.x == t.x);
             ^
@@ -173,11 +147,11 @@ BogusInput.java:48: Error: ensures annotations can occur only on method and cons
   //@ ensures \result == 0
       ^
 BogusInput.java:49: Error: A modifies/also_modifies annotation can occur only on method and constructor declarations
-  //@ also_modifies a[\result]
-      ^
-BogusInput.java:50: Error: also_ensures annotations can occur only on method and constructor declarations
-  //@ also_ensures \result == 0;
-      ^
+  //@ also modifies a[\result]
+           ^
+BogusInput.java:50: Error: ensures annotations can occur only on method and constructor declarations
+  //@ also ensures \result == 0;
+           ^
 BogusInput.java:53: Error: The uninitialized annotation can occur only on local variable declarations
   /*@ uninitialized */ int uninitA;
                            ^
@@ -197,6 +171,9 @@ BogusInput.java:57: Error: The uninitialized annotation can occur only on local 
   /*@ uninitialized */ int uninitE, uninitF;
                                     ^
 BogusInput.java:58: Error: The uninitialized annotation can occur only on local variable declarations
+  /*@ uninitialized */ int uninitM() { return 0; }
+      ^
+BogusInput.java:58: Error: Unknown kind of pragma for a routine declaration: uninitialized
   /*@ uninitialized */ int uninitM() { return 0; }
       ^
 BogusInput.java:59: Error: The uninitialized annotation can occur only on local variable declarations
@@ -238,6 +215,9 @@ BogusInput.java:101: Error: An instance field may be accessed only via an object
 BogusInput.java:103: Error: The readable_if annotation can occur only on field declarations and local variable declarations
   /*@ readable_if true; */ int definedifM() { return 0; }
       ^
+BogusInput.java:103: Error: Unknown kind of pragma for a routine declaration: readable_if
+  /*@ readable_if true; */ int definedifM() { return 0; }
+      ^
 BogusInput.java:104: Error: The readable_if annotation can occur only on field declarations and local variable declarations
   void definedIf0(/*@ readable_if true; */ int x) {
                       ^
@@ -253,25 +233,10 @@ BogusInput.java:112: Error: An instance field may be accessed only via an object
 BogusInput.java:117: Error: Undefined variable 'a'
     /*@ readable_if a; */ boolean a;  // this is not fine
                     ^
-BogusInput.java:117: Error: Cannot convert int to boolean
-    /*@ readable_if a; */ boolean a;  // this is not fine
-                    ^
 BogusInput.java:119: Error: Undefined variable 'c'
     /*@ readable_if c; */ boolean b, c, d;  // this is not fine, for a ...
                     ^
-BogusInput.java:119: Error: Cannot convert int to boolean
-    /*@ readable_if c; */ boolean b, c, d;  // this is not fine, for a ...
-                    ^
-BogusInput.java:119: Error: Cannot convert int to boolean
-    /*@ readable_if c; */ boolean b, c, d;  // this is not fine, for a ...
-                    ^
-BogusInput.java:119: Error: Cannot convert int to boolean
-    /*@ readable_if c; */ boolean b, c, d;  // this is not fine, for a ...
-                    ^
 BogusInput.java:123: Error: Undefined variable 'undeclaredVariable'
-  /*@ monitored_by mus[0], this, undeclaredVariable, this.mus[1]; moni ...
-                                 ^
-BogusInput.java:123: Error: Cannot convert int to java.lang.Object
   /*@ monitored_by mus[0], this, undeclaredVariable, this.mus[1]; moni ...
                                  ^
 BogusInput.java:123: Error: Cannot convert int to java.lang.Object
@@ -295,6 +260,9 @@ BogusInput.java:125: Error: The monitored_by annotation can occur only on field 
 BogusInput.java:126: Error: The monitored_by annotation can occur only on field declarations
     /*@ monitored_by this */ int x;
         ^
+BogusInput.java:125: Error: monitored_by is obsolete and only applies to fields
+  /*@ monitored_by mus */ void monitoredBy0(/*@ monitored_by this */ i ...
+      ^
 BogusInput.java:128: Error: The monitored_by annotation can occur only on field declarations
   /*@ monitored_by mb1 */ static void monitoredBy1(/*@ monitored_by mb ...
                                                        ^
@@ -307,6 +275,9 @@ BogusInput.java:129: Error: The monitored_by annotation can occur only on field 
 BogusInput.java:130: Error: The monitored_by annotation can occur only on field declarations
     /*@ monitored_by this */ int y;
         ^
+BogusInput.java:128: Error: monitored_by is obsolete and only applies to fields
+  /*@ monitored_by mb1 */ static void monitoredBy1(/*@ monitored_by mb ...
+      ^
 BogusInput.java:135: Error: The monitored annotation can occur only on instance field declarations
   /*@ monitored */ static int mo2;
                               ^
@@ -319,6 +290,9 @@ BogusInput.java:136: Error: The monitored annotation can occur only on field dec
 BogusInput.java:137: Error: The monitored annotation can occur only on field declarations
     /*@ monitored */ int x;
                          ^
+BogusInput.java:136: Error: monitored only applies to fields
+  /*@ monitored */ void monitored0(/*@ monitored */ int p) {
+      ^
 BogusInput.java:139: Error: The monitored annotation can occur only on field declarations
   /*@ monitored */ static void monitored1(/*@ monitored */ int p) {
                                                                ^
@@ -328,6 +302,9 @@ BogusInput.java:139: Error: The monitored annotation can occur only on field dec
 BogusInput.java:140: Error: The monitored annotation can occur only on field declarations
     /*@ monitored */ int x;
                          ^
+BogusInput.java:139: Error: monitored only applies to fields
+  /*@ monitored */ static void monitored1(/*@ monitored */ int p) {
+      ^
 BogusInput.java:144: Error: Unqualified this cannot be used in static contexts
     this.pp();  // "this" is not allowed in this context
     ^
@@ -346,9 +323,6 @@ BogusInput.java:151: Error: Array index wild cards allowed only as specification
 BogusInput.java:151: Error: Invalid types (int and null) in equality comparison
   //@ ensures mus[*] == null;
                      ^
-BogusInput.java:156: Error: new cannot be used in specification expressions
-  //@ axiom new Object(blah);
-            ^
 BogusInput.java:156: Error: Undefined variable 'blah'
   //@ axiom new Object(blah);
                        ^
@@ -357,9 +331,6 @@ BogusInput.java:156: Error: No such constructor in type java.lang.Object
             ^
 BogusInput.java:156: Error: Cannot convert java.lang.Object to boolean
   //@ axiom new Object(blah);
-            ^
-BogusInput.java:157: Error: new cannot be used in specification expressions
-  //@ axiom new int[5];
             ^
 BogusInput.java:157: Error: Cannot convert int[] to boolean
   //@ axiom new int[5];
@@ -483,10 +454,19 @@ BogusInput.java:206: Error: Variable 'xyz' is already defined here.
                              ^
 Caution: Turning off extended static checking due to type error(s)
 1 caution
-144 errors
+140 errors
+BogusAssignments.java:4: Caution: May not assign to a final field
+    x = 3;  // this is a "final" field, but we don't currently disallo ...
+    ^
+BogusAssignments.java:2: Associated declaration: 
+  final int x = 5;
+        ^
 BogusAssignments.java:9: Error: Invalid designator
     a.length = 3;
       ^
+BogusAssignments.java:9: Error: May not assign to array's length field
+    a.length = 3;
+    ^
 BogusAssignments.java:12: Error: Invalid designator
   //@ modifies a.length;
                  ^
@@ -494,8 +474,8 @@ BogusAssignments.java:13: Error: a final field is not allowed as the designator 
   //@ modifies x;
                ^
 Caution: Turning off extended static checking due to type error(s)
-1 caution
-3 errors
+2 cautions
+4 errors
 BogusLoops.java:13: Error: 'loop_invariant' pragmas can occur only immediately prior to a loop statement.  Loop statement expected (and not found) here.
       //@ loop_invariant a != null
           ^
@@ -550,7 +530,7 @@ BogusFunctions.java:18: Error: Cannot convert TYPE to boolean
 BogusFunctions.java:19: Error: Cannot convert TYPE to boolean
     /*@ assert \elemtype(\type(java.lang.Object[])); */  // illegal
                ^
-BogusFunctions.java:20: Error: Cannot convert boolean to TYPE
+BogusFunctions.java:20: Error: The argument must have TYPE type
     /*@ assert \elemtype(5 < 5) == \elemtype((\TYPE)this); */  // ille ...
                          ^
 BogusFunctions.java:20: Error: Bad cast from BogusFunctions to TYPE
@@ -643,70 +623,52 @@ BogusFunctions.java:75: Error: Invalid types (boolean and int) in equality compa
 Caution: Turning off extended static checking due to type error(s)
 1 caution
 34 errors
-BogusGhost.java:3: Error: Ghost fields may not have initializers
-  //@ ghost public int a = 5
-                           ^
-BogusGhost.java:4: Error: Ghost fields must be declared public
-  //@ ghost int b
-                ^
-BogusGhost.java:5: Error: Ghost fields must be declared public
-  //@ ghost protected int c
-                          ^
-BogusGhost.java:9: Error: Ghost-field modifiers may only be public or static
-  //@ ghost final public int g;
-                             ^
-BogusGhost.java:10: Error: Ghost-field modifiers may only be public or static
-  //@ ghost static final public int h;
-                                    ^
 BogusGhost.java:14: Error: Another field named 'l' already exists in this type
   //@ ghost public int l;
                        ^
+BogusGhost.java:15: Associated declaration: 
+  //@ ghost static public int l;
+                              ^
 BogusGhost.java:15: Error: Another field named 'l' already exists in this type
   //@ ghost static public int l;
                               ^
+BogusGhost.java:14: Associated declaration: 
+  //@ ghost public int l;
+                       ^
 BogusGhost.java:17: Error: Another field named 'm' already exists in this type
   //@ ghost public int m;
                        ^
+BogusGhost.java:16: Associated declaration: 
+  int m;
+      ^
 BogusGhost.java:19: Error: Another field named 'n' already exists in this type
   //@ ghost public static int n;
                               ^
+BogusGhost.java:18: Associated declaration: 
+  int n;
+      ^
 BogusGhost.java:21: Error: Another field named 'o' already exists in this type
   //@ ghost public int o;
                        ^
+BogusGhost.java:20: Associated declaration: 
+  static int o;
+             ^
 BogusGhost.java:23: Error: Another field named 'p' already exists in this type
   //@ ghost public static int p;
                               ^
+BogusGhost.java:22: Associated declaration: 
+  static int p;
+             ^
 Caution: Turning off extended static checking due to type error(s)
-BogusGhost.java:40: Error: Another field named 'x' already exists in this type
-  //@ ghost public int x;
-                       ^
-BogusGhost.java:44: Error: Another field named 'x' already exists in this type
-  //@ ghost public int x;
-                       ^
-BogusGhost.java:48: Error: Another field named 'x' already exists in this type
-  //@ ghost public int x;
-                       ^
-BogusGhost.java:52: Error: Another field named 'x' already exists in this type
-  //@ ghost public int x;
-                       ^
-BogusGhost.java:56: Error: Another field named 'x' already exists in this type
-  //@ ghost public int x;
-                       ^
-BogusGhost.java:60: Error: Another field named 'x' already exists in this type
-  //@ ghost public int x;
-                       ^
-BogusGhost.java:81: Error: An instance field may be accessed only via an object and/or from a non-static context or an inner class enclosed by a type possessing that field.
+BogusGhost.java:81: Error: Undefined variable 'y'
     /*@ set y = 0; */   // not legal
             ^
-BogusGhost.java:98: Error: Can use set only on ghost fields
+BogusGhost.java:98: Error: May use set only with assignment targets that are declared ghost
     /*@ set z = 5; */            // not legal
-            ^
-BogusGhost.java:99: Error: new cannot be used in specification expressions
-    /*@ set w = new int[10]; */  // not legal
-                ^
-BogusGhost.java:100: Error: Can use set only on fields
-    /*@ set w[z] = 3; */         // not legal
         ^
+BogusGhost.java:94: Associated declaration: 
+  int z;
+  ^
 BogusGhost.java:105: Error: Quantified expressions are not allowed in this context
     /*@ set bo = (\forall int i; i < i+1); */
                  ^
@@ -720,7 +682,7 @@ BogusGhost.java:108: Error: Labeled predicates are not allowed in this context
     /*@ set bo = (\lblpos Hello 1 < 2); */
                  ^
 1 caution
-25 errors
+12 errors
 BogusSpec.java:2: Error: Cannot convert void to a numeric type 
   //@ ensures \result < 6;
               ^
@@ -754,13 +716,13 @@ BogusSpec.java:19: Error: Keyword \result is not allowed in this context
 BogusSpec.java:19: Error: Not a specification designator expression
   //@ modifies \result
                ^
-BogusSpec.java:26: Error: also_modifies can be used only on method overrides; use modifies instead
+BogusSpec.java:26: Error: Unknown kind of pragma for a routine declaration: also_modifies
   //@ also_modifies x, x
       ^
-BogusSpec.java:26: Error: also_modifies can be used only on method overrides; use modifies instead
+BogusSpec.java:26: Error: Unknown kind of pragma for a routine declaration: also_modifies
   //@ also_modifies x, x
       ^
-BogusSpec.java:28: Error: also_ensures can be used only on method overrides; use ensures instead
+BogusSpec.java:28: Error: Unknown kind of pragma for a routine declaration: also_ensures
   //@ also_ensures x == null;
       ^
 BogusSpec.java:32: Error: Not a specification designator expression
@@ -850,12 +812,6 @@ BogusSpec.java:79: Error: Keyword \result is not allowed in this context
 BogusSpec.java:79: Error: No such field in type int
   //@ modifies \result.x
                        ^
-BogusSpec.java:80: Error: An instance field may be accessed only via an object and/or from a non-static context or an inner class enclosed by a type possessing that field.
-  //@ modifies x, this.x;
-               ^
-BogusSpec.java:80: Error: Unqualified this cannot be used in static contexts
-  //@ modifies x, this.x;
-                  ^
 BogusSpec.java:85: Error: Keyword \result is not allowed in this context
   //@ exsures (Throwable t) \result == null
                             ^
@@ -871,9 +827,6 @@ BogusSpec.java:87: Error: Invalid types (SomeException and int) in equality comp
 BogusSpec.java:88: Error: Invalid types (SomeException and BogusSpec) in equality comparison
   //@ exsures (SomeException se) se == x && se == this;
                                                ^
-BogusSpec.java:89: Error: also_exsures can be used only on method overrides; use exsures instead
-  //@ also_exsures (Throwable t) t == null
-      ^
 BogusSpec.java:90: Error: The type of the exsures argument must be a subtype of java.lang.Throwable
   //@ exsures (Object o) true; exsures (int t) false;
                ^
@@ -898,27 +851,21 @@ BogusSpec.java:99: Error: The type of the exsures argument must be a subtype of 
 BogusSpec.java:100: Error: The type of the exsures argument must be a subtype of java.lang.Throwable
   //@ exsures (Cloneable c) true;
                ^
+BogusSpec.java:89: Error: Unknown kind of pragma for a routine declaration: also_exsures
+  //@ also_exsures (Throwable t) t == null
+      ^
 BogusSpec.java:106: Error: Invalid types (java.lang.Throwable and int) in equality comparison
   //@ exsures (Throwable t) t == 5;
                               ^
-BogusSpec.java:108: Error: The type of the exsures argument must be comparable to some type mentioned in the routine's throws set
-  //@ exsures (SomeOtherException soe) soe != null;
-               ^
-BogusSpec.java:110: Error: The type of the exsures argument must be comparable to some type mentioned in the routine's throws set
-  //@ exsures (ArrayStoreException ase) ase == ase;
-               ^
-BogusSpec.java:114: Error: Keyword \result is not allowed in this context
+BogusSpec.java:113: Error: Keyword \result is not allowed in this context
   //@ exsures (SomeException se) \result == 2;
                                  ^
-BogusSpec.java:115: Error: Unqualified this cannot be used in static contexts
+BogusSpec.java:114: Error: Unqualified this cannot be used in static contexts
   //@ exsures (SomeException se) this != x;
                                  ^
-BogusSpec.java:115: Error: An instance field may be accessed only via an object and/or from a non-static context or an inner class enclosed by a type possessing that field.
+BogusSpec.java:114: Error: An instance field may be accessed only via an object and/or from a non-static context or an inner class enclosed by a type possessing that field.
   //@ exsures (SomeException se) this != x;
                                          ^
-BogusSpec.java:116: Error: also_exsures can be used only on method overrides; use exsures instead
-  //@ also_exsures (SomeException se) true
-      ^
 BogusSpec.java:121: Error: Keyword \result is not allowed in this context
   //@ exsures (SomeException se) se == \result && se == this && se ==  ...
                                        ^
@@ -937,100 +884,208 @@ BogusSpec.java:121: Error: An instance field may be accessed only via an object 
 BogusSpec.java:122: Error: Undefined variable 'se'
   //@ exsures (Throwable tt) tt == se;
                                    ^
-BogusSpec.java:122: Error: Invalid types (java.lang.Throwable and int) in equality comparison
-  //@ exsures (Throwable tt) tt == se;
-                                ^
-BogusSpec.java:124: Error: The type of the exsures argument must be comparable to some type mentioned in the routine's throws set
-  //@ exsures (SomeOtherException soe) true;
-               ^
-BogusSpec.java:125: Error: also_exsures can be used only on method overrides; use exsures instead
+BogusSpec.java:125: Error: Unknown kind of pragma for a routine declaration: also_exsures
   //@ also_exsures (Throwable tt) true
       ^
+BogusSpec.java:130: Error: Keyword \result is not allowed in this context
+  //@ exsures (SomeException se) se == \result && se == this && se ==  ...
+                                       ^
+BogusSpec.java:130: Error: Invalid types (SomeException and int) in equality comparison
+  //@ exsures (SomeException se) se == \result && se == this && se ==  ...
+                                    ^
+BogusSpec.java:130: Error: Unqualified this cannot be used in static contexts
+  //@ exsures (SomeException se) se == \result && se == this && se ==  ...
+                                                        ^
+BogusSpec.java:130: Error: Invalid types (SomeException and BogusSpec) in equality comparison
+  //@ exsures (SomeException se) se == \result && se == this && se ==  ...
+                                                     ^
+BogusSpec.java:130: Error: An instance field may be accessed only via an object and/or from a non-static context or an inner class enclosed by a type possessing that field.
+ ...  == \result && se == this && se == x;
+                                        ^
+BogusSpec.java:131: Error: Undefined variable 'se'
+  //@ exsures (Throwable tt) tt == se;
+                                   ^
 Caution: Turning off extended static checking due to type error(s)
-BogusSpec.java:131: Error: requires cannot be used on method overrides
-  //@ requires true;
+BogusSpec.java:146: Caution: JML requires a specification to begin with 'also' when the method overrides other methods
+  void m3() {
+       ^
+BogusSpec.java:30: Associated declaration: 
+  void m3() {
+  ^
+BogusSpec.java:142: Error: Unknown kind of pragma for a routine declaration: also_modifies
+  //@ also_modifies x, x
       ^
-BogusSpec.java:132: Error: modifies cannot be used on method overrides; use also_modifies instead
-  //@ modifies x, x
+BogusSpec.java:142: Error: Unknown kind of pragma for a routine declaration: also_modifies
+  //@ also_modifies x, x
       ^
-BogusSpec.java:132: Error: modifies cannot be used on method overrides; use also_modifies instead
-  //@ modifies x, x
+BogusSpec.java:144: Error: Unknown kind of pragma for a routine declaration: also_ensures
+  //@ also_ensures x == null;
       ^
-BogusSpec.java:134: Error: ensures cannot be used on method overrides; use also_ensures instead
-  //@ ensures x == null;
-      ^
-BogusSpec.java:139: Error: Not a specification designator expression
+BogusSpec.java:155: Error: Not a specification designator expression
   //@ also_modifies \lockset
                     ^
-BogusSpec.java:141: Error: Cannot convert LOCKSET to boolean
+BogusSpec.java:157: Error: Cannot convert LOCKSET to boolean
   //@ also_ensures \lockset;
                    ^
-BogusSpec.java:145: Error: exsures cannot be used on method overrides; use also_exsures instead
-  //@ exsures (Throwable t) true;
+BogusSpec.java:158: Error: Not a specification designator expression
+  //@ also modifies \lockset; ensures \lockset == \lockset; ensures \l ...
+                    ^
+BogusSpec.java:158: Error: Cannot convert LOCKSET to boolean
+ ... ures \lockset == \lockset; ensures \lockset;
+                                        ^
+BogusSpec.java:159: Caution: JML requires a specification to begin with 'also' when the method overrides other methods
+  void m6() {
+       ^
+BogusSpec.java:53: Associated declaration: 
+  void m6() {
+  ^
+BogusSpec.java:155: Error: Unknown kind of pragma for a routine declaration: also_modifies
+  //@ also_modifies \lockset
       ^
-BogusSpec.java:147: Error: Invalid types (java.lang.Throwable and int) in equality comparison
+BogusSpec.java:156: Error: Unknown kind of pragma for a routine declaration: also_ensures
+  //@ also_ensures \lockset == \lockset;
+      ^
+BogusSpec.java:157: Error: Unknown kind of pragma for a routine declaration: also_ensures
+  //@ also_ensures \lockset;
+      ^
+BogusSpec.java:162: Error: Not a specification designator expression
+  //@ also modifies \lockset; ensures \lockset == \lockset; ensures \l ...
+                    ^
+BogusSpec.java:162: Error: Cannot convert LOCKSET to boolean
+ ... ures \lockset == \lockset; ensures \lockset;
+                                        ^
+BogusSpec.java:162: Caution: No initial also expected since there are no overridden or refined methods
+  //@ also modifies \lockset; ensures \lockset == \lockset; ensures \l ...
+      ^
+BogusSpec.java:168: Error: Invalid types (java.lang.Throwable and int) in equality comparison
   //@ also_exsures (Throwable t) t == 5;
                                    ^
-BogusSpec.java:149: Error: The type of the also_exsures argument must be comparable to some type mentioned in the routine's throws set
-  //@ also_exsures (SomeOtherException soe) soe != null;
-                    ^
-BogusSpec.java:150: Error: The type of the also_exsures argument must be comparable to some type mentioned in the routine's throws set
-  //@ also_exsures (NullPointerException npe) true;
-                    ^
-BogusSpec.java:151: Error: The type of the also_exsures argument must be a subtype of java.lang.Throwable
+BogusSpec.java:172: Error: The type of the also_exsures argument must be a subtype of java.lang.Throwable
   //@ also_exsures (\TYPE tt) tt == \type(SomeException);
                     ^
-BogusSpec.java:130: Error: No such constructor BogusSpec() in type BogusSpec
+BogusSpec.java:174: Caution: JML requires a specification to begin with 'also' when the method overrides other methods
+  void m10() throws SomeSubException, AnotherException {
+       ^
+BogusSpec.java:111: Associated declaration: 
+  void m10() throws SomeException, NullPointerException, AnotherExcept ...
+  ^
+BogusSpec.java:167: Error: Unknown kind of pragma for a routine declaration: also_exsures
+  //@ also_exsures (SomeException se) se != null;
+      ^
+BogusSpec.java:168: Error: Unknown kind of pragma for a routine declaration: also_exsures
+  //@ also_exsures (Throwable t) t == 5;
+      ^
+BogusSpec.java:169: Error: Unknown kind of pragma for a routine declaration: also_exsures
+  //@ also_exsures (SomeSubException sse) false;
+      ^
+BogusSpec.java:170: Error: Unknown kind of pragma for a routine declaration: also_exsures
+  //@ also_exsures (SomeOtherException soe) soe != null;
+      ^
+BogusSpec.java:171: Error: Unknown kind of pragma for a routine declaration: also_exsures
+  //@ also_exsures (NullPointerException npe) true;
+      ^
+BogusSpec.java:172: Error: Unknown kind of pragma for a routine declaration: also_exsures
+  //@ also_exsures (\TYPE tt) tt == \type(SomeException);
+      ^
+BogusSpec.java:173: Error: Unknown kind of pragma for a routine declaration: also_exsures
+  //@ also_exsures (AnotherException ae) ae == null;
+      ^
+BogusSpec.java:179: Error: Invalid types (java.lang.Throwable and int) in equality comparison
+  //@ exsures (Throwable t) t == 5;
+                              ^
+BogusSpec.java:183: Error: The type of the exsures argument must be a subtype of java.lang.Throwable
+  //@ exsures (\TYPE tt) tt == \type(SomeException);
+               ^
+BogusSpec.java:177: Caution: No initial also expected since there are no overridden or refined methods
+  //@ also 
+      ^
+BogusSpec.java:139: Error: No such constructor BogusSpec() in type BogusSpec
 class BogusSpecSub extends BogusSpec {
                                      ^
-BogusSpec.java:175: Error: a final field is not allowed as the designator in a modifies clause
+BogusSpec.java:207: Error: a final field is not allowed as the designator in a modifies clause
   //@ modifies x, this.x, this.b, FClass.b;
                ^
-BogusSpec.java:175: Error: a final field is not allowed as the designator in a modifies clause
+BogusSpec.java:207: Error: a final field is not allowed as the designator in a modifies clause
   //@ modifies x, this.x, this.b, FClass.b;
                        ^
-BogusSpec.java:175: Error: a final field is not allowed as the designator in a modifies clause
+BogusSpec.java:207: Error: a final field is not allowed as the designator in a modifies clause
   //@ modifies x, this.x, this.b, FClass.b;
                                ^
-BogusSpec.java:175: Error: a final field is not allowed as the designator in a modifies clause
+BogusSpec.java:207: Error: a final field is not allowed as the designator in a modifies clause
   //@ modifies x, this.x, this.b, FClass.b;
                                          ^
-BogusSpec.java:176: Error: a final field is not allowed as the designator in a modifies clause
+BogusSpec.java:208: Error: a final field is not allowed as the designator in a modifies clause
   //@ modifies b, y;
                ^
-BogusSpec.java:177: Error: a final field is not allowed as the designator in a modifies clause
+BogusSpec.java:209: Error: a final field is not allowed as the designator in a modifies clause
   //@ modifies a, a.length, a[4], a[*]
                ^
-BogusSpec.java:177: Error: Invalid designator
+BogusSpec.java:209: Error: Invalid designator
   //@ modifies a, a.length, a[4], a[*]
                     ^
-BogusSpec.java:181: Error: a final field is not allowed as the designator in a modifies clause
+BogusSpec.java:213: Error: a final field is not allowed as the designator in a modifies clause
   //@ modifies b, f.x;
                ^
-BogusSpec.java:181: Error: a final field is not allowed as the designator in a modifies clause
+BogusSpec.java:213: Error: a final field is not allowed as the designator in a modifies clause
   //@ modifies b, f.x;
                     ^
-BogusSpec.java:190: Error: a final field is not allowed as the designator in a modifies clause
+BogusSpec.java:222: Error: a final field is not allowed as the designator in a modifies clause
   //@ also_modifies this.xx;
                          ^
-BogusSpec.java:191: Error: a final field is not allowed as the designator in a modifies clause
+BogusSpec.java:223: Error: a final field is not allowed as the designator in a modifies clause
   //@ also_modifies x, y, b;
                     ^
-BogusSpec.java:191: Error: a final field is not allowed as the designator in a modifies clause
+BogusSpec.java:223: Error: a final field is not allowed as the designator in a modifies clause
   //@ also_modifies x, y, b;
                           ^
-BogusSpec.java:192: Error: a final field is not allowed as the designator in a modifies clause
+BogusSpec.java:224: Error: a final field is not allowed as the designator in a modifies clause
   //@ also_modifies bb;
                     ^
-1 caution
-100 errors
-BogusVisibility.java:9: Error: The spec_public annotation can occur only on non-public field declarations
+BogusSpec.java:225: Caution: JML requires a specification to begin with 'also' when the method overrides other methods
+  void m() {
+       ^
+BogusSpec.java:210: Associated declaration: 
+  void m() {
+  ^
+BogusSpec.java:222: Error: Unknown kind of pragma for a routine declaration: also_modifies
+  //@ also_modifies this.xx;
+      ^
+BogusSpec.java:223: Error: Unknown kind of pragma for a routine declaration: also_modifies
+  //@ also_modifies x, y, b;
+      ^
+BogusSpec.java:223: Error: Unknown kind of pragma for a routine declaration: also_modifies
+  //@ also_modifies x, y, b;
+      ^
+BogusSpec.java:223: Error: Unknown kind of pragma for a routine declaration: also_modifies
+  //@ also_modifies x, y, b;
+      ^
+BogusSpec.java:224: Error: Unknown kind of pragma for a routine declaration: also_modifies
+  //@ also_modifies bb;
+      ^
+BogusSpec.java:228: Error: a final field is not allowed as the designator in a modifies clause
+  //@ also modifies this.xx;
+                         ^
+BogusSpec.java:229: Error: a final field is not allowed as the designator in a modifies clause
+  //@ modifies x, y, b;
+               ^
+BogusSpec.java:229: Error: a final field is not allowed as the designator in a modifies clause
+  //@ modifies x, y, b;
+                     ^
+BogusSpec.java:230: Error: a final field is not allowed as the designator in a modifies clause
+  //@ modifies bb;
+               ^
+BogusSpec.java:228: Caution: No initial also expected since there are no overridden or refined methods
+  //@ also modifies this.xx;
+      ^
+8 cautions
+120 errors
+BogusVisibility.java:9: Error: The spec_public annotation can occur only on non-public declarations
   /*@ spec_public */ public int spub3;
                                 ^
-BogusVisibility.java:18: Error: The spec_public annotation can occur only on non-public field declarations
+BogusVisibility.java:18: Error: The spec_public annotation can occur only on non-public declarations
   /*@ spec_public */ public static int spub3St;
                                        ^
-BogusVisibility.java:27: Error: The spec_public annotation can occur only on non-public field declarations
+BogusVisibility.java:27: Error: The spec_public annotation can occur only on non-public declarations
   /*@ spec_public */ public Object spub3Mu;
                                    ^
 BogusVisibility.java:40: Error: Fields mentioned in this modifier pragma must be at least as accessible as the field/method being modified (perhaps try spec_public)
@@ -1090,63 +1145,129 @@ BogusVisibility.java:104: Error: Fields mentioned in this modifier pragma must b
 BogusVisibility.java:108: Error: Undefined variable 'reqProtSelf'
   //@ requires reqProtSelf;
                ^
-BogusVisibility.java:108: Error: Cannot convert int to boolean
-  //@ requires reqProtSelf;
-               ^
-BogusVisibility.java:117: Error: A private field can be used in postconditions of overridable methods only if it is declared spec_public
+BogusVisibility.java:117: Error: A private field can be used in postconditions of overridable methods only if it is declared spec_public or spec_protected
   //@ ensures priv == pack && prot == publ;
               ^
-BogusVisibility.java:121: Error: A private field can be used in postconditions of overridable methods only if it is declared spec_public
+BogusVisibility.java:121: Error: A private field can be used in postconditions of overridable methods only if it is declared spec_public or spec_protected
   //@ ensures priv == pack && prot == publ;
               ^
-BogusVisibility.java:125: Error: A private field can be used in postconditions of overridable methods only if it is declared spec_public
+BogusVisibility.java:125: Error: A private field can be used in postconditions of overridable methods only if it is declared spec_public or spec_protected
   //@ ensures priv == pack && prot == publ;
               ^
 Caution: Turning off extended static checking due to type error(s)
-BogusVisibility.java:150: Error: also_ensures can be used only on method overrides; use ensures instead
-  //@ also_ensures privSub == pack && prot == publ;
-      ^
-BogusVisibility.java:151: Error: also_ensures can be used only on method overrides; use ensures instead
-  //@ also_ensures spub4 == spub1 && spub2 == spub3;
-      ^
-BogusVisibility.java:152: Error: also_ensures can be used only on method overrides; use ensures instead
-  //@ also_ensures spub0 == spub4;
-      ^
 BogusVisibility.java:152: Error: Undefined variable 'spub0'
   //@ also_ensures spub0 == spub4;
                    ^
-BogusVisibility.java:155: Error: A private field can be used in postconditions of overridable methods only if it is declared spec_public
-  //@ also_ensures privSub == pack && prot == publ;
-                   ^
-BogusVisibility.java:159: Error: A private field can be used in postconditions of overridable methods only if it is declared spec_public
-  //@ also_ensures privSub == pack && prot == publ;
-                   ^
-BogusVisibility.java:163: Error: A private field can be used in postconditions of overridable methods only if it is declared spec_public
-  //@ also_ensures privSub == pack && prot == publ;
-                   ^
-BogusVisibility.java:167: Error: also_ensures can be used only on method overrides; use ensures instead
+BogusVisibility.java:150: Error: Unknown kind of pragma for a routine declaration: also_ensures
   //@ also_ensures privSub == pack && prot == publ;
       ^
-BogusVisibility.java:168: Error: also_ensures can be used only on method overrides; use ensures instead
+BogusVisibility.java:151: Error: Unknown kind of pragma for a routine declaration: also_ensures
   //@ also_ensures spub4 == spub1 && spub2 == spub3;
       ^
-BogusVisibility.java:171: Error: also_ensures can be used only on method overrides; use ensures instead
+BogusVisibility.java:152: Error: Unknown kind of pragma for a routine declaration: also_ensures
+  //@ also_ensures spub0 == spub4;
+      ^
+BogusVisibility.java:157: Error: Undefined variable 'spub0'
+  //@ ensures spub0 == spub4;
+              ^
+BogusVisibility.java:155: Caution: No initial also expected since there are no overridden or refined methods
+  //@ also ensures privSub == pack && prot == publ;
+      ^
+BogusVisibility.java:160: Error: A private field can be used in postconditions of overridable methods only if it is declared spec_public or spec_protected
+  //@ also_ensures privSub == pack && prot == publ;
+                   ^
+BogusVisibility.java:162: Caution: JML requires a specification to begin with 'also' when the method overrides other methods
+  void ens1() {}
+       ^
+BogusVisibility.java:119: Associated declaration: 
+  void ens1() {}
+  ^
+BogusVisibility.java:160: Error: Unknown kind of pragma for a routine declaration: also_ensures
+  //@ also_ensures privSub == pack && prot == publ;
+      ^
+BogusVisibility.java:161: Error: Unknown kind of pragma for a routine declaration: also_ensures
+  //@ also_ensures spub4 == spub1 && spub2 == spub3;
+      ^
+BogusVisibility.java:164: Error: A private field can be used in postconditions of overridable methods only if it is declared spec_public or spec_protected
+  //@ also ensures privSub == pack && prot == publ;
+                   ^
+BogusVisibility.java:164: Caution: No initial also expected since there are no overridden or refined methods
+  //@ also ensures privSub == pack && prot == publ;
+      ^
+BogusVisibility.java:168: Error: A private field can be used in postconditions of overridable methods only if it is declared spec_public or spec_protected
+  //@ also_ensures privSub == pack && prot == publ;
+                   ^
+BogusVisibility.java:170: Caution: JML requires a specification to begin with 'also' when the method overrides other methods
+  protected void ens2() {}
+                 ^
+BogusVisibility.java:123: Associated declaration: 
+  protected void ens2() {}
+            ^
+BogusVisibility.java:168: Error: Unknown kind of pragma for a routine declaration: also_ensures
+  //@ also_ensures privSub == pack && prot == publ;
+      ^
+BogusVisibility.java:169: Error: Unknown kind of pragma for a routine declaration: also_ensures
+  //@ also_ensures spub4 == spub1 && spub2 == spub3;
+      ^
+BogusVisibility.java:172: Error: A private field can be used in postconditions of overridable methods only if it is declared spec_public or spec_protected
+  //@ also ensures privSub == pack && prot == publ;
+                   ^
+BogusVisibility.java:172: Caution: No initial also expected since there are no overridden or refined methods
+  //@ also ensures privSub == pack && prot == publ;
+      ^
+BogusVisibility.java:176: Error: A private field can be used in postconditions of overridable methods only if it is declared spec_public or spec_protected
+  //@ also_ensures privSub == pack && prot == publ;
+                   ^
+BogusVisibility.java:178: Caution: JML requires a specification to begin with 'also' when the method overrides other methods
+  public void ens3() {}
+              ^
+BogusVisibility.java:127: Associated declaration: 
+  public void ens3() {}
+         ^
+BogusVisibility.java:176: Error: Unknown kind of pragma for a routine declaration: also_ensures
+  //@ also_ensures privSub == pack && prot == publ;
+      ^
+BogusVisibility.java:177: Error: Unknown kind of pragma for a routine declaration: also_ensures
+  //@ also_ensures spub4 == spub1 && spub2 == spub3;
+      ^
+BogusVisibility.java:180: Error: A private field can be used in postconditions of overridable methods only if it is declared spec_public or spec_protected
+  //@ also ensures privSub == pack && prot == publ;
+                   ^
+BogusVisibility.java:180: Caution: No initial also expected since there are no overridden or refined methods
+  //@ also ensures privSub == pack && prot == publ;
+      ^
+BogusVisibility.java:184: Error: Unknown kind of pragma for a routine declaration: also_ensures
+  //@ also_ensures privSub == pack && prot == publ;
+      ^
+BogusVisibility.java:185: Error: Unknown kind of pragma for a routine declaration: also_ensures
+  //@ also_ensures spub4 == spub1 && spub2 == spub3;
+      ^
+BogusVisibility.java:188: Caution: No initial also expected since there are no overridden or refined methods
+  //@ also ensures privSub == pack && prot == publ;
+      ^
+BogusVisibility.java:192: Error: Unknown kind of pragma for a routine declaration: also_ensures
   //@ also_ensures privSubSt == packSt && protSt == publSt;
       ^
-BogusVisibility.java:172: Error: also_ensures can be used only on method overrides; use ensures instead
+BogusVisibility.java:193: Error: Unknown kind of pragma for a routine declaration: also_ensures
   //@ also_ensures spub4St == spub1St && spub2St == spub3St;
       ^
-BogusVisibility.java:175: Error: also_ensures can be used only on method overrides; use ensures instead
+BogusVisibility.java:196: Caution: No initial also expected since there are no overridden or refined methods
+  //@ also ensures privSubSt == packSt && protSt == publSt;
+      ^
+BogusVisibility.java:200: Error: Unknown kind of pragma for a routine declaration: also_ensures
   //@ also_ensures privSubSt == packSt && protSt == publSt;
       ^
-BogusVisibility.java:176: Error: also_ensures can be used only on method overrides; use ensures instead
+BogusVisibility.java:201: Error: Unknown kind of pragma for a routine declaration: also_ensures
   //@ also_ensures spub4St == spub1St && spub2St == spub3St;
       ^
-BogusVisibility.java:183: Error: Cannot access this field
+BogusVisibility.java:204: Caution: No initial also expected since there are no overridden or refined methods
+  //@ also ensures privSubSt == packSt && protSt == publSt;
+      ^
+BogusVisibility.java:212: Error: Cannot access this field
         int y = x.spub0;    // Error: spec_public only applies to anno ...
                   ^
-1 caution
-40 errors
+11 cautions
+49 errors
 BogusModifiers.java:23: Error: Modifier 'native' not allowed on field declarations
   abstract native int xx = 0;
                       ^
@@ -1177,9 +1298,6 @@ BogusModifiers.java:37: Error: Modifier 'native' not allowed on local variable d
 BogusModifiers.java:38: Error: Modifier 'abstract' not allowed on local variable declarations
     abstract int x9 = 0;
                  ^
-BogusModifiers.java:42: Error: The spec_public annotation can occur only on field declarations
-    /*@ spec_public */ int x0 = 0;
-                           ^
 BogusModifiers.java:43: Error: The non_null pragma can be applied only to variables, fields, and parameters of reference types
     /*@ non_null */ int x1 = 0;
                         ^
@@ -1200,7 +1318,7 @@ BogusModifiers.java:48: Error: exsures annotations can occur only on method and 
                    ^
 Caution: Turning off extended static checking due to type error(s)
 1 caution
-17 errors
+16 errors
 BogusNowarns.java:2: Error: 'Bogus' is not a legal warning category
   //@ nowarn Null, Bogus, Exception
       ^

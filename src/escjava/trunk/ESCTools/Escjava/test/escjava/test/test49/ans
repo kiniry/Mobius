@@ -74,9 +74,9 @@ class NonNull
    //@ ghost public static Object s  /*@ non_null */;
 
    void foo(Object x /*@ non_null */)
+    /*@ pure */
     /*@ requires (/*boolean*/ (\lblneg NonNull:32.16 (/*boolean*/ (/*java.lang.Object*/ x:32.34) != (/*null*/ null)))); */
-    /*@ modifies (/*UNAVAILABLE*/ \nothing) if (/*boolean*/ \old((/*boolean*/ (/*java.lang.Object*/ x:32.34) != (/*null*/ null)))); */
-    /*@ pure */ 
+    /*@ modifies (/*UNAVAILABLE*/ \nothing) if (/*boolean*/ \old((/*boolean*/ (/*java.lang.Object*/ x:32.34) != (/*null*/ null)))); */ 
    {
       /*@ assert (/*boolean*/ (/*java.lang.Object*/ foo) != (/*null*/ null)); */
       /*@ set (/*java.lang.Object*/ foo) = (/*java.lang.Object*/ x:32.34); */
@@ -85,9 +85,9 @@ class NonNull
    }
 
    void foo2(Object x /*@ non_null */)
+    /*@ pure */
     /*@ requires (/*boolean*/ (\lblneg NonNull:39.17 (/*boolean*/ (/*java.lang.Object*/ x:39.35) != (/*null*/ null)))); */
-    /*@ modifies (/*UNAVAILABLE*/ \nothing) if (/*boolean*/ \old((/*boolean*/ (/*java.lang.Object*/ x:39.35) != (/*null*/ null)))); */
-    /*@ pure */ 
+    /*@ modifies (/*UNAVAILABLE*/ \nothing) if (/*boolean*/ \old((/*boolean*/ (/*java.lang.Object*/ x:39.35) != (/*null*/ null)))); */ 
    {
       /*@ assert (/*boolean*/ (/*java.lang.Object*/ s) != (/*null*/ null)); */
       /*@ set (/*java.lang.Object*/ s) = (/*java.lang.Object*/ x:39.35); */

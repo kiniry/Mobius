@@ -11,9 +11,7 @@ public class NotSpecified {
 	//@ duration \not_specified;
 	//@ working_space \not_specified;
 	//@ accessible \not_specified;
-	//@ subclassing_contract
 	//@	measured_by \not_specified;
 	//@	callable \not_specified;
-	//@	accessible \not_specified;
 	public void m();
 }

@@ -37,7 +37,7 @@ Simple0.java:14: Warning: Possible assertion failure (Assert)
 Simple2.java:8: Warning: Precondition possibly not established (Pre)
     int y = n();
              ^
-Associated declaration is "Simple2.java", line 13, col 6:
+Associated declaration is "Simple2.java", line 12, col 6:
   //@ requires -10 <= x;
       ^
 Simple2.java:15: Warning: Possible assertion failure (Assert)

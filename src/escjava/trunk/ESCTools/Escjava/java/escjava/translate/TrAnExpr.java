@@ -17,7 +17,7 @@ import escjava.ast.TagConstants;
 import escjava.ast.Modifiers;
 import escjava.Main;
 import escjava.tc.Types;
-
+import escjava.parser.OldVarDecl;
 
 /** Translates Annotation Expressions to GCExpr. */
 
@@ -76,8 +76,19 @@ public final class TrAnExpr {
 
         case TagConstants.VARIABLEACCESS: {
             VariableAccess va = (VariableAccess)e;
-            // local variable, parameter, or bound variable
-            return apply(sp, va);
+	    if (va.decl instanceof OldVarDecl) {
+		// variable declared in an old pragma (not the \old fcn.)
+		VarInit vi = ((OldVarDecl)va.decl).init;
+		if (vi instanceof Expr) {
+		    return trSpecExpr( (Expr)vi, sp, st);
+		} else {
+		    ErrorSet.fatal(e.getStartLoc(),
+			"Have not implemented array initializers in old annotations");
+		}
+	    } else {
+		// local variable, parameter, or bound variable
+		return apply(sp, va);
+	    }
         }
 
         case TagConstants.FIELDACCESS: {

@@ -1,5 +1,5 @@
 // Tests the informal predicate
-
+// FIXME - add the remaining predicates
 public class Informal {
 
 	public int i;
@@ -14,10 +14,8 @@ public class Informal {
 	//@ duration (* ok *) ? 0:0;
 	//@ working_space (* ok *)?0:0;
 	// accessible (* ok *);
-	// subclassing_contract
 	//	measured_by (* ok *);
 	//	callable (* ok *);
-	//	accessible (* ok *);
 	public void m() {}
 
 }

@@ -43,12 +43,14 @@ ModelMethodDeclPragma.java
 ModelConstructorDeclPragma.java
 ModelProgamModifierPragma.java
 NaryExpr.java
+NestedModifierPragma.java
 NotSpecifiedExpr.java
 NotSpecifiedExpr.java
 NothingExpr.java
 NothingExpr.java
 NowarnPragma.java
 NumericalQuantifiedExpr.java
+ParsedSpecs.java
 QuantifiedExpr.java
 ReachModifierPragma.java
 RefinePragma.java
@@ -69,6 +71,7 @@ SubGetsCmd.java
 SubSubGetsCmd.java
 SubstExpr.java
 TypeExpr.java
+VarDeclModifierPragma.java
 VarExprModifierPragma.java
 VarExprModifierPragmaVec.java
 VarInCmd.java

@@ -167,8 +167,18 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 		inModelBody = true;
 	}
         super.checkTypeDeclElem(e);
+	if (e instanceof MethodDecl || e instanceof ConstructorDecl) {
+		// Desugaring presumes that typechecking has already
+		// been performed
+		RoutineDecl m = (RoutineDecl)e;
+		annotationHandler.desugar(m); 
+	}
 	inAnnotation = savedInAnnotation;
 	inModelBody = savedInModelBody;
+
+	// Do a separate set of checks - purity checking
+	// FIXME - perhaps these should be moved into this routine
+	annotationHandler.process(e);
     
         if (e.getTag() == TagConstants.INITBLOCK) {
             InitBlock ib = (InitBlock)e;
@@ -433,8 +443,8 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                     // invariant.
                     if (invariantContext) countFreeVarsAccesses++;
 
-                    // set default result type to integer, in case there is an error.
-                    setType( e, Types.intType );
+                    // set default result type to errorType, in case there is an error.
+                    setType( e, Types.errorType );
                     FieldAccess fa = (FieldAccess)e;
                     Type t = checkObjectDesignator(env, fa.od);
                     if (t==null)
@@ -462,7 +472,6 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                         if (thisField ||
                             ((TypeObjectDesignator)fa.od).type instanceof TypeName) {
 
-//FIXME - fix this error for modifiable clauses before construcctors
                             ErrorSet.error(fa.locId,
                                            "An instance field may be accessed only via "
                                            + "an object and/or from a non-static"
@@ -570,6 +579,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 
             case TagConstants.METHODINVOCATION:
                 {
+			countFreeVarsAccesses++;
 /*                    if (!inAnnotation)
                         return super.checkExpr(env, e);
 	
@@ -711,7 +721,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                     setType(e, resultType);
                     return e;
                 }
-
+/*
 	    case TagConstants.WACK_NOWARN:
 	    case TagConstants.NOWARN_OP:
 	    case TagConstants.WARN:
@@ -723,9 +733,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                         ErrorSet.error(ne.sloc, 
                                        "The function " + TagConstants.toString(tag) + 
                                        " takes only one argument");
-		    }
-		    if (ne.exprs.size() == 0) {
-			setType( e, Types.intType );
+			setType( e, Types.errorType );
                     } else {
                         nu = checkExpr(env, ne.exprs.elementAt(0));
                         ne.exprs.setElementAt( nu, 0 );			
@@ -733,7 +741,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                     }
                     return e;
                 }
-
+*/
             case TagConstants.ELEMTYPE:
                 {
                     NaryExpr ne = (NaryExpr)e;
@@ -743,6 +751,9 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                     else {
                         Expr nu = checkExpr(env, ne.exprs.elementAt(0));
                         ne.exprs.setElementAt( nu, 0 );			
+			if (!Types.isTypeType(getType(nu)))
+			    ErrorSet.error(nu.getStartLoc(),
+				"The argument must have TYPE type");
                     }
                     setType( e, Types.typecodeType );
                     return e;
@@ -1106,6 +1117,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
             case TagConstants.NEWINSTANCEEXPR:
             case TagConstants.NEWARRAYEXPR:
                 {
+		    countFreeVarsAccesses++;
                     if (inAnnotation) {
 /* FIXME - Yes it can, but it must be pure!
                         ErrorSet.error(e.getStartLoc(),
@@ -1168,7 +1180,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                     boolean oldIsLocksetContext = isLocksetContext;
                     isLocksetContext = false;
                     if (invariantContext){
-                        Assert.notFalse(countFreeVarsAccesses == 0);
+ // FIXME                       Assert.notFalse(countFreeVarsAccesses == 0);
                         countFreeVarsAccesses = 0;
                     }
 	
@@ -1180,19 +1192,20 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                         sig==javafe.tc.Types.javaLangCloneable()) {
                         if (invariantContext) ErrorSet.fatal(e.getStartLoc(),
 			   "java.lang.Object and java.lang.Cloneable may not"
-			   + " contain invariants.");
+			   + " contain invariants.");  // FIXME - Why?
                     }
-/* FIXME - should also allow model methods
                     if (invariantContext && countFreeVarsAccesses == 0 &&
 			// Don't print an error if the entire invariant
 			// is an informal predicate
 			escjava.parser.EscPragmaParser.
 			     informalPredicateDecoration.get(ep.expr)==null) {
+/*
+FIXME - see uses of countFreeVarsAccess
                         ErrorSet.error(e.getStartLoc(),
 			   "Class invariants must mention program variables"
 			   + " or fields.");
-                    }
 */
+                    }
 
                     if (invariantContext) {countFreeVarsAccesses = 0;}
                     invariantContext = false;
@@ -1374,9 +1387,8 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
         inAnnotation = savedInAnnotation;
     }
 
-    protected boolean checkModifierPragma(ModifierPragma p, ASTNode ctxt, Env env) {
+    protected Env checkModifierPragma(ModifierPragma p, ASTNode ctxt, Env env) {
 
-	boolean remove = false;
 	boolean savedInAnnotation = inAnnotation;
         inAnnotation = true;	// Must be reset before we exit!
         int tag = p.getTag();
@@ -1449,13 +1461,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                     }
                     case TagConstants.METHODDECL: {
                         MethodDecl md = (MethodDecl) ctxt;
-                        if (getOverrideStatus(md) != MSTATUS_NEW_ROUTINE) {
-/* FIXME - only give this error if the overridden method is not non_null
-                            ErrorSet.error(md.getStartLoc(),
-                                           "'non_null' cannot be used on method overrides; "+
-                                           "use 'also_ensures \\result != null;' instead");
-*/
-                        } else if (!Types.isReferenceType(md.returnType)) {
+                        if (!Types.isReferenceType(md.returnType)) {
                             ErrorSet.error(md.getStartLoc(),
                                            "'non_null' can only be used with methods whose "+
                                            "result type is a reference type");
@@ -1671,6 +1677,31 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                     break;
                 }
 
+	    case TagConstants.NO_WACK_FORALL:
+	    case TagConstants.OLD:
+	        {
+		    VarDeclModifierPragma vd = (VarDeclModifierPragma)p;
+		    LocalVarDecl x = vd.decl;
+		    checkTypeModifiers(env, x.type);
+		    javafe.tc.PrepTypeDeclaration.inst.
+			checkModifiers(x.modifiers, Modifiers.NONE,
+			    x.locId, "local specification variable");
+
+		    Env newEnv = new EnvForGhostLocals(env,x);
+		    boolean savedContext = isTwoStateContext;
+		    isTwoStateContext = true;
+		    if (x.init != null) {
+			//if (x.init instanceof ArrayInit) {
+			    x.init = checkInit(newEnv, x.init, x.type);
+			//} else {
+			    //checkExpr(newEnv, (Expr)x.init, x.type);
+			//}
+		    }
+		    isTwoStateContext = savedContext;
+		    env = newEnv;
+		    break;
+		}
+
             case TagConstants.ALSO_REQUIRES:
             case TagConstants.REQUIRES:
             case TagConstants.PRECONDITION:
@@ -1687,52 +1718,17 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                         RoutineDecl rd = (RoutineDecl)ctxt;
 
                         int ms = getOverrideStatus(rd);
-                        if (ms == MSTATUS_NEW_ROUTINE) {
-                            if (tag == TagConstants.ALSO_REQUIRES) {
-/* FIXME
-                                ErrorSet.error(p.getStartLoc(), TagConstants.toString(tag) +
-                                               " can only be used on method overrides; use " +
-                                               TagConstants.toString(TagConstants.REQUIRES) +
-                                               " instead");
-*/
-                            }
-                        } else if (ms == MSTATUS_CLASS_NEW_METHOD) {
-                            if (tag == TagConstants.REQUIRES || tag == TagConstants.PRECONDITION) {
-                                String remedy;
-                                if (Main.options().allowAlsoRequires) {
-                                    remedy = "declare in supertype or use " +
-                                        TagConstants.toString(TagConstants.ALSO_REQUIRES);
-                                } else {
-                                    remedy = "try declaring in supertype instead";
-                                }
-/* FIXME
-                                ErrorSet.error(p.getStartLoc(), TagConstants.toString(tag) +
-                                               " cannot be used on method overrides; " +
-                                               remedy);
-*/
-                            }
-                        } else {
-                            Assert.notFalse(ms == MSTATUS_OVERRIDE);
-                            if (tag == TagConstants.REQUIRES || tag == TagConstants.PRECONDITION) {
-/* FIXME
-                                ErrorSet.error(p.getStartLoc(), TagConstants.toString(tag) +
-                                               " cannot be used on method overrides");
-*/
-                            } else {
-                                ErrorSet.error(p.getStartLoc(), TagConstants.toString(tag) + 
-                                               " can only be used on class-new method overrides");
-                            }
-                        }
 
+			Env newenv = env;
                         if (rd instanceof ConstructorDecl) {
-                            env = env.asStaticContext();
+                            newenv = env.asStaticContext();
                         }
                         int oldAccessibilityLowerBound = accessibilityLowerBound;
                         ASTNode oldAccessibilityContext = accessibilityContext;
                         accessibilityLowerBound = getAccessibility(rd.modifiers);
                         accessibilityContext = rd;
 			if (emp.expr.getTag() != TagConstants.NOTSPECIFIEDEXPR)
-			    emp.expr = checkPredicate(env, emp.expr);
+			    emp.expr = checkPredicate(newenv, emp.expr);
                         accessibilityLowerBound = oldAccessibilityLowerBound;
                         accessibilityContext = oldAccessibilityContext;
                     }
@@ -1791,21 +1787,6 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                                        +"method and constructor declarations");
                     } else {
                         RoutineDecl rd = (RoutineDecl)ctxt;
-/*
-                        if (getOverrideStatus(rd) != MSTATUS_NEW_ROUTINE) {
-                            if (tag == TagConstants.ENSURES) {
-                                ErrorSet.error(p.getStartLoc(),
-                                               "ensures cannot be used on method overrides; "+
-                                               "use also_ensures instead");
-                            }
-                        } else {
-                            if (tag == TagConstants.ALSO_ENSURES) {
-                                ErrorSet.error(p.getStartLoc(),
-                                               "also_ensures can be used only on method " +
-                                               "overrides; use ensures instead");
-                            }
-                        }
-*/
                         boolean oldIsRESContext = isRESContext;
                         boolean oldIsTwoStateContext = isTwoStateContext;
                         boolean oldIsPrivFieldAccessAllowed = isPrivateFieldAccessAllowed;
@@ -1840,26 +1821,6 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                     } else {
                         RoutineDecl rd = (RoutineDecl)ctxt;
 
-                        // Check for correct use of exsures vs. also_exsures
-                        if (getOverrideStatus(rd) != MSTATUS_NEW_ROUTINE) {
-                            if (tag == TagConstants.EXSURES ||
-                                tag == TagConstants.SIGNALS) {
-/* FIXME
-                                ErrorSet.error(p.getStartLoc(),
-                                               "exsures cannot be used on method overrides; "+
-                                               "use also_exsures instead");
-*/
-                            }
-                        } else {
-                            if (tag == TagConstants.ALSO_EXSURES) {
-/* FIXME
-                                ErrorSet.error(p.getStartLoc(),
-                                               "also_exsures can be used only on method " +
-                                               "overrides; use exsures instead");
-*/
-                            }
-                        }
-
                         // Resolve type and check that it is a subtype of Throwable
                         // and comparable to some type mentioned in the throws set.
                         env.resolveType(vemp.arg.type);
@@ -1892,18 +1853,20 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                             if (!okay) {
 				if (!( (vemp.expr instanceof LiteralExpr) &&
 					((LiteralExpr)vemp.expr).value.equals(Boolean.FALSE))) {
-/* FIXME - what about Error exceptions, must they be mentioned? 
+/* FIXME - what about Error exceptions, must they be mentioned?  */
+/* FIXME
                                 ErrorSet.error(vemp.arg.type.getStartLoc(),
-                                               "The type of the " +
-                                               TagConstants.toString(tag) +
-                                               " argument must be comparable to some type " +
-                                               "mentioned in the routine's throws set");
+				   "The type of the " +
+				   TagConstants.toString(tag) +
+				   " argument must be comparable to some type"+
+				   " mentioned in the routine's throws set");
 */
 				}
                             }
                         }
 
                         Env subenv = new EnvForLocals(env, vemp.arg);
+// FIXME - below we say that this is a twostate context, in which case we should not set this to static???
                         if (rd instanceof ConstructorDecl) {
                             subenv = subenv.asStaticContext();
                         }
@@ -1963,15 +1926,16 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 	    
                     Assert.notFalse(!isSpecDesignatorContext);
                     isSpecDesignatorContext = true;
+		    Env newenv = env;
 /*
 // But we do need to allow the fields of this in the modifies clause, which
 // using the static context does not permit.
                         if (rd instanceof ConstructorDecl) {
                             // disallow "this" from constructor "modifies" clauses
-                            env = env.asStaticContext();
+                            newenv = env.asStaticContext();
                         }
 */
-                    emp.expr = checkDesignator(env, emp.expr);
+                    emp.expr = checkDesignator(newenv, emp.expr);
                     switch (emp.expr.getTag()) {
                         case TagConstants.FIELDACCESS: {
                             FieldAccess fa = (FieldAccess)emp.expr;
@@ -2005,7 +1969,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 			    }
                     }
                     isSpecDesignatorContext = false;
-                    if (emp.cond != null) emp.cond = checkExpr(env, emp.cond);
+                    if (emp.cond != null) emp.cond = checkExpr(newenv, emp.cond);
                 }
                 break;
             }
@@ -2023,31 +1987,61 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 	    case TagConstants.NORMAL_BEHAVIOR:
 	    case TagConstants.NORMAL_EXAMPLE:
 	    case TagConstants.OPENPRAGMA:
-	    case TagConstants.SUBCLASSING_CONTRACT:
-		// Desugaring happens after type-checking,
-		// Just ignore these.
+		// Desugaring happens before type-checking,
+		// This shouldn't happen.
 		break;
 
 	    case TagConstants.GHOST:
 	    case TagConstants.MODEL:
-		if (ctxt instanceof ConstructorDecl) {
+		break;
 
-			// FIXME
-			//System.out.println("CHECK CONSTRCUTOR");
-
+	    case TagConstants.NESTEDMODIFIERPRAGMA:
+	      {
+		java.util.ArrayList list = ((NestedModifierPragma)p).list;
+		java.util.Iterator i = list.iterator();
+		while (i.hasNext()) {
+		    ModifierPragmaVec mpv = (ModifierPragmaVec)i.next();
+		    checkModifierPragmaVec(mpv,ctxt,env);
 		}
 		break;
+	      }
+
+	    case TagConstants.PARSEDSPECS:
+	      {
+		escjava.ParsedRoutineSpecs pp = ((ParsedSpecs)p).specs;
+		java.util.Iterator i = pp.specs.iterator();
+		while (i.hasNext()) {
+		    checkModifierPragmaVec((ModifierPragmaVec)i.next(),ctxt,env);    
+		}
+		i = pp.impliesThat.iterator();
+		while (i.hasNext()) {
+		    checkModifierPragmaVec((ModifierPragmaVec)i.next(),ctxt,env);    
+		}
+		i = pp.examples.iterator();
+		while (i.hasNext()) {
+		    checkModifierPragmaVec((ModifierPragmaVec)i.next(),ctxt,env);    
+		}
+/* This duplicates stuff
+		// The last element is the ParsedSpecs containing all the
+		// clauses etc.
+		ModifierPragmaVec mpv = pp.modifiers;
+		ModifierPragma last = mpv.elementAt(mpv.size()-1);
+		mpv.removeElementAt(mpv.size()-1);
+		checkModifierPragmaVec(mpv,ctxt,env);
+		mpv.addElement(last);
+*/
+		break;
+	      }
 
             default:
                 ErrorSet.error(p.getStartLoc(),
 				"Ignored unexpected " +  
 				TagConstants.toString(tag) +
 				" tag");
-		remove = true;
 		break;
         }
         inAnnotation = savedInAnnotation;
-	return remove;
+	return env;
     }
 
     /**
@@ -2080,7 +2074,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
         }
     }
 
-    protected void checkStmtPragma(Env e, StmtPragma s) {
+    protected Env checkStmtPragma(Env e, StmtPragma s) {
 	boolean savedInAnnotation = inAnnotation;
         inAnnotation = true;	// Must be reset before we exit!
         int tag = s.getTag();
@@ -2151,6 +2145,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 				" " + Location.toString(s.getStartLoc()));
         }
         inAnnotation = savedInAnnotation;
+	return e;
     }
 
 
@@ -2349,17 +2344,6 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 	return false;
     }
 
-    protected void checkModifierPragmaVec(ModifierPragmaVec v,
-					  ASTNode ctxt,
-					  Env env) {
-	super.checkModifierPragmaVec(v,ctxt,env);
-	int tag = ctxt.getTag();
-	if (tag == TagConstants.METHODDECL ||
-	    tag == TagConstants.CONSTRUCTORDECL) {
-		RoutineDecl m = (RoutineDecl)ctxt;
-		annotationHandler.desugar(m);
-	}
-    }
 
     /** Returns non-zero if the expression is a ghost expression - that is, it
 	would not exist if all ghost declarations were removed.  Otherwise

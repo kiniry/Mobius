@@ -28,6 +28,7 @@ import javafe.filespace.Query;
 
 import javafe.util.Assert;
 import javafe.util.ErrorSet;
+import javafe.util.Info;
 
 import javafe.reader.*;
 import javafe.tc.OutsideEnv;
@@ -37,18 +38,18 @@ import java.util.Enumeration;
 
 public class RefinementSequence extends CompilationUnit {
 
-    protected AnnotationHandler annotationHandler;
     protected CompilationUnit javacu;
     protected ArrayList refinements; // list of CompilationUnits
     protected boolean hasJavaDef;
     protected boolean javaIsBinary = false;
 
 
+    //@ requires refinements != null;
+    //+@ requires refinements.size() > 0;
     public RefinementSequence(
 		ArrayList refinements, // list of CompilationUnit
 		CompilationUnit javacu,
 		AnnotationHandler ah) {
-	annotationHandler = ah; // FIXME - not sure this is needed
 	this.refinements = refinements;
 	this.javacu = javacu;
 	hasJavaDef = javacu != null;
@@ -65,7 +66,8 @@ public class RefinementSequence extends CompilationUnit {
 	loc = newcu.loc;
     }
 
-    //@ requires refinements.size() > 0;
+    //@ requires refinements != null;
+    //+@ requires refinements.size() > 0;
     CompilationUnit consolidateRefinements(ArrayList refinements,
 	    CompilationUnit javacu) {
 
@@ -94,13 +96,22 @@ public class RefinementSequence extends CompilationUnit {
 	// the work is done here and the type comparisons are not real
 	// robust.  FIXME -- DRCok
 
+	Info.out("Consolidating " + refinements.size() + " refinement; java file " + (hasJavaDef? "exists" : "does not exist"));
+
 	CompilationUnit lastcu = (CompilationUnit)refinements.get(refinements.size()-1);
 		    
-	if (javacu != null && refinements.size() == 0) return javacu;
-	if (javacu == null && refinements.size() == 1) return lastcu;
-	if (javacu == lastcu && refinements.size() == 1) return javacu;
+	// There are two cases in which we can avoid this work and just return
+	// the CU that we are given:
+	//  - no Java CU and a single element of the refinement sequence
+	//  - a Java CU that is the same as the single element of the RS
 
-	//System.out.println("CONSOLIDATION NEEDED " + lastcu.sourceFile().getHumanName() + " " + (javacu==null?"":javacu.sourceFile().getHumanName()));
+	if (refinements.size() == 1) {
+	    CompilationUnit cu = (CompilationUnit)refinements.get(0);
+	    if (javacu == null || javacu == cu) return cu;
+	}
+
+	// Otherwise we set up a clean version of the types into which we
+	// put everything as we accumulate declarations from the RS.
 
 	// Variables into which to accumulate all the refinements
 	Name pkgName = (javacu==null?lastcu:javacu).pkgName;
@@ -116,7 +127,6 @@ public class RefinementSequence extends CompilationUnit {
 
 	for (int k=refinements.size()-1; k>=0; --k) {
 	    CompilationUnit cu = (CompilationUnit)refinements.get(k);
-	    //System.out.println("INSERTING " + cu.sourceFile().getHumanName());
 
 	    // Check that the package name is always consistent
 	    String p = pkgName==null ? "" : pkgName.printName();
@@ -124,6 +134,8 @@ public class RefinementSequence extends CompilationUnit {
 	    if (!cp.equals(p)) {
 		ErrorSet.error(cu.loc,"Package name does not match the package name in " + Location.toFile(loc).getHumanName() + ": " +
 		    cp + " vs. " + p);
+		// FIXME - try this with the Name (does it have a location?)
+		// to improve the error message
 	    }
 
 	    // Combine all the NoWarn and Import pragmas 
@@ -137,6 +149,7 @@ public class RefinementSequence extends CompilationUnit {
 	    }
 
 	    // Combine imports
+		// FIXME - this may duplicate a lot of them
 	    imports.append(cu.imports);
 
 	    // Combine all of the top-level type declarations
@@ -147,11 +160,11 @@ public class RefinementSequence extends CompilationUnit {
 		for (int j=0; j<types.size(); ++j) {
 		    if (types.elementAt(j).id.equals(td.id)) {
 			foundMatch = true;
-			combineType(td,types.elementAt(j),javacu==null);
+			combineType(td,types.elementAt(j),!hasJavaDef);
 		    }
 		}
 		if (!foundMatch) {
-		    if (javacu == null) {
+		    if (!hasJavaDef) {
 			types.addElement(td);
 		    } else if (!javaIsBinary) {
 // FIXME - need to find the right class file for each type
@@ -174,9 +187,14 @@ public class RefinementSequence extends CompilationUnit {
 	    fd.pmodifiers.append(newfd.pmodifiers); 
 	}
 	if (fd.init == null) fd.init = newfd.init;
-	else if (newfd.init != null) {
+	else if (newfd.init != null && fd.init != newfd.init) {
+	    // Note - fd is initialized by a cleancopy() of the java file, if
+	    // it exists; then the files of the RS are added in.  One of those
+	    // might be the java file, back to put in its annotations.  So
+	    // we can't complain if the java file has it's initializer.
 	    ErrorSet.error(newfd.locAssignOp,
-		"A field may be initialized only once in a refinement sequence");
+		"A field may be initialized only once in a refinement sequence",
+		fd.locAssignOp);
 	}
 	if (!equalTypes(fd.type,newfd.type)) {
 	    ErrorSet.error(newfd.type.getStartLoc(),
@@ -238,7 +256,17 @@ public class RefinementSequence extends CompilationUnit {
 	}
     }
 
+	/* This presumes that newrd.pmodifiers has already been parsed,
+	and hence consists of just a sequence of simple routine modifiers
+	and a single ParsedSpecs containing all the clauses.
+	The output rd.pmodifiers will consist of a sequence of ParsedSpecs,
+	one (or zero) for each of the CUs in the Refinement Sequence, along
+	with any simple routine modifiers.
+	This difference is why all routines need to go through this method,
+	even if there is only one item in the refinement sequence.
+	*/
     void combineRoutine(RoutineDecl newrd, RoutineDecl rd) {
+	//Info.out("Combining routine "+Location.toString(newrd.getStartLoc()));
 	// FIXME - check exceptions
 	for (int i=0; i<newrd.args.size(); ++i) {
 	    FormalParaDecl newarg = newrd.args.elementAt(i);
@@ -292,8 +320,7 @@ public class RefinementSequence extends CompilationUnit {
 	    if (rd.pmodifiers == null) {
 		rd.pmodifiers = ModifierPragmaVec.make();
 	    }
-	    if (rd.pmodifiers.size() != 0) 
-		rd.pmodifiers.addElement(SimpleModifierPragma.make(TagConstants.ALSO_REFINE,rd.pmodifiers.elementAt(rd.pmodifiers.size()-1).getStartLoc() ));
+// FIXME - check the pmodifiers - don't drop any
 		// FIXME - should not need this check anymore
 	    if (rd.pmodifiers != newrd.pmodifiers)
 		rd.pmodifiers.append(newrd.pmodifiers);
@@ -311,6 +338,7 @@ public class RefinementSequence extends CompilationUnit {
 
     void combineType(TypeDecl newtd, TypeDecl td, boolean addNewItems) {
 	// Compare modifiers -- FIXME
+Info.out("Combining type " + newtd.id);
 	td.modifiers |= newtd.modifiers;
 	td.specOnly = td.specOnly && newtd.specOnly;
 	td.loc = newtd.loc; // Just to avoid having loc in a class file
@@ -507,10 +535,11 @@ public class RefinementSequence extends CompilationUnit {
 	compilation unit obtained from java or class files.  Any part that
 	needs to be changed via refinement is cloned.  In addition all 
 	pragma stuff is removed (to be added in via the refinement sequence).
-	Even prgam stuff in the java file is removed, so that it is added in
+	Even pragma stuff in the java file is removed, so that it is added in
 	in the correct sequence and is not added in twice.  In the case of
-	binary files, the ids of formal arguments are set to null since they
-	have arbitrary names rather than the declared ones.
+	binary files, we record in the binaryArgNames the fact that the binary
+	file has arbitrary formal argument names, so that we don't complain
+	about mismatches on formal names.
     */
     TypeDeclVec cleancopy(TypeDeclVec types) {
 	TypeDeclVec v = TypeDeclVec.make();
@@ -521,7 +550,7 @@ public class RefinementSequence extends CompilationUnit {
     }
 
     TypeDecl cleancopy(TypeDecl td) {
-	TypeDeclElemVec newelems = TypeDeclElemVec.make();
+	TypeDeclElemVec newelems = TypeDeclElemVec.make(td.elems.size());
 	for (int i=0; i<td.elems.size(); ++i) {
 	    TypeDeclElem tde = cleancopy(td.elems.elementAt(i));
 	    if (tde != null) newelems.addElement(tde);
@@ -579,7 +608,7 @@ public class RefinementSequence extends CompilationUnit {
 		d.modifiers,
 		null,
 		null,
-		d.args,
+		cleancopy(d.args),
 		d.raises,
 		javaIsBinary? null: d.body,
 		d.locOpenBrace,
@@ -596,7 +625,7 @@ public class RefinementSequence extends CompilationUnit {
 		d.modifiers,
 		null,
 		null,
-		d.args,
+		cleancopy(d.args),
 		d.raises,
 		javaIsBinary? null: d.body,
 		d.locOpenBrace,
@@ -622,5 +651,19 @@ public class RefinementSequence extends CompilationUnit {
 	    ((RoutineDecl)newtde).binaryArgNames = true;
 	}
 	return newtde;
+    }
+
+    public FormalParaDeclVec cleancopy(FormalParaDeclVec args) {
+	FormalParaDeclVec result = args.copy();
+	for (int i=0; i<result.size(); ++i) {
+	    FormalParaDecl a = result.elementAt(i);
+	    a = FormalParaDecl.make(a.modifiers,
+			null, // clean out the pragmas
+			a.id,
+			a.type,
+			a.locId);
+	    result.setElementAt(a,i);
+	}
+	return result;
     }
 }

@@ -20,6 +20,10 @@ EmbeddedA.java
 PureCheck2.java
 ParsePure.java
 ModifiesPure.java
+# Delete
+Subclassing.java
+WarnOp.java
+WarnOpA.java
 ## A bug
 EX.java
 FormalNonnullInheritance.java
@@ -33,7 +37,5 @@ ModE.java
 Privacy.java
 Instance.java
 Mod.java
-InstanceError.java
 Type.java
 ModelConstructors.java
-SetComprehension.java

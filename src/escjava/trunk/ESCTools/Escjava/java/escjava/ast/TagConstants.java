@@ -334,13 +334,15 @@ public class TagConstants extends javafe.tc.TagConstants
     // modifies -- an ESC keyword
     // monitored_by -- an ESC keyword
     // monitored -- an ESC keyword
+    public static final int NESTEDMODIFIERPRAGMA = MODIFIES_REDUNDANTLY + 1;
     // non_null -- an ESC keyword
-    public static final int NORMAL_BEHAVIOR = MODIFIES_REDUNDANTLY + 1;
+    public static final int NORMAL_BEHAVIOR = NESTEDMODIFIERPRAGMA + 1;
     public static final int NORMAL_EXAMPLE = NORMAL_BEHAVIOR + 1;
     // nowarn -- an ESC keyword
     public static final int OLD = NORMAL_EXAMPLE + 1;
     public static final int MODELPROGRAM_OR = OLD + 1;
-    public static final int POSTCONDITION_REDUNDANTLY = MODELPROGRAM_OR + 1;
+    public static final int PARSEDSPECS = MODELPROGRAM_OR + 1;
+    public static final int POSTCONDITION_REDUNDANTLY = PARSEDSPECS + 1;
     public static final int POSTCONDITION = POSTCONDITION_REDUNDANTLY + 1;
     public static final int PRECONDITION_REDUNDANTLY = POSTCONDITION + 1;
     public static final int PRECONDITION = PRECONDITION_REDUNDANTLY + 1;
@@ -889,10 +891,12 @@ public class TagConstants extends javafe.tc.TagConstants
         Identifier.intern("modifiable_redundantly"),
         Identifier.intern("modifiable"),
         Identifier.intern("modifies_redundantly"),
+	Identifier.intern("--- nested specs ---"),
         Identifier.intern("normal_behavior"),
         Identifier.intern("normal_example"),
         Identifier.intern("old"),
         Identifier.intern("or"),
+	Identifier.intern("--- parsed specs ---"),
         Identifier.intern("post_redundantly"),
         Identifier.intern("post"),
         Identifier.intern("pre_redundantly"),

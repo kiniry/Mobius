@@ -29,12 +29,6 @@ class BogusSpec {
   //@ also modifies x, x; ensures x == null;
   void m3() {
   }
-
-  //@ requires true;
-  //@ also modifies x, x; ensures x == null;
-  void m3also() {
-  }
-
   //@ modifies a
   //@ requires 0 <= p && a != null;
   //@ modifies a[*], a, a[p]
@@ -116,14 +110,6 @@ class BogusSpec {
   //@ exsures (ArrayStoreException ase) ase == ase;
   void m10() throws SomeException, NullPointerException, AnotherException {
   }
-
-  //@ exsures (SomeException se) \result == 2;
-  //@ exsures (SomeException se) this != x;
-  //@ also_exsures (SomeException se) true
-  static int m11() throws SomeException {
-    return 4;
-  }
-
   //@ exsures (SomeException se) \result == 2;
   //@ exsures (SomeException se) this != x;
   //@ also

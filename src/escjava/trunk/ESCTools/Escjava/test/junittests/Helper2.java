@@ -3,11 +3,11 @@
 public class Helper2 {
 
 	//@ helper
-	public void m();
+	public void m(); // ERROR
 
 	//@ helper
-	protected void m2();
+	protected void m2(); // ERROR
 
 	//@ helper
-	void m3();
+	void m3(); // ERROR
 }

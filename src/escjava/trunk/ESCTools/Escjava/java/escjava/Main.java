@@ -405,11 +405,11 @@ public class Main extends javafe.SrcTool
             return true;
         }
 
-	// FIXME - a variety of checks, but not desugaring
-        //====== Stage 2.5 - desugar the annotations, including desugaring model
-        //====== fields and use of methods in annotations
+        //====== Stage 2.5 
+	// Desugaring of annotation is already performed.  This does some
+	// additional checks - e.g. purity checking.
 
-        annotationHandler.process(td);
+        //annotationHandler.process(td);
 	if (options().testRef) makePrettyPrint().print(System.out,0,td);
 
         // ==== Start stage 3 ====

@@ -31,8 +31,8 @@ Typecheck.java:14: Error: modifies pragma cannot be applied to initializer block
 Typecheck.java:15: Error: ensures pragma cannot be applied to initializer block
   //@ ensures x + y + z;  // this doesn't even type check, but that's  ...
       ^
-Typecheck.java:23: Error: also_ensures pragma cannot be applied to initializer block
-  //@ also_ensures true;
+Typecheck.java:23: Error: ensures pragma cannot be applied to initializer block
+  //@ ensures true;
       ^
 Typecheck.java:25: Error: monitored pragma cannot be applied to initializer block
   //@ monitored

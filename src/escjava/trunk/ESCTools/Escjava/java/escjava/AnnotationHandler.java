@@ -51,7 +51,7 @@ public class AnnotationHandler {
     }
 
     /** After parsing, but before type checking, we need to convert model
-	methods to regular methods (with the MODEL modifier bit set), so that
+	methods to regular methods, so that
 	names are resolved correctly; also need to set ACC_PURE bits correctly
 	in all classes so that later checks get done correctly.
     */ // FIXME - possibly should put these in GhostEnv??
@@ -102,6 +102,8 @@ public class AnnotationHandler {
 	}
     }
 
+    //-----------------------------------------------------------------------
+/*
     public void process(TypeDecl td) {
 	this.td = td;
 
@@ -110,8 +112,9 @@ public class AnnotationHandler {
 	    process(tde);
         }
     }
+*/
 
-    protected void process(TypeDeclElem tde) {
+    public void process(TypeDeclElem tde) {
 	int tag = tde.getTag();
 	switch (tag) {
 // What about initially, monitored_by, readable_if clauses ??? FIXME
@@ -146,7 +149,6 @@ public class AnnotationHandler {
 
     protected void process(RoutineDecl tde) {
 	ModifierPragmaVec pmodifiers = tde.pmodifiers;
-	//System.out.println("Method " + (tde instanceof MethodDecl ? ((MethodDecl)tde).id.toString() : "Constructor"));
 	//System.out.println("   Mods " + Modifiers.toString(tde.modifiers));
 	if (pmodifiers != null) {
 	    for (int i = 0; i<pmodifiers.size(); ++i) {
@@ -154,8 +156,13 @@ public class AnnotationHandler {
 		(new CheckPurity()).visitNode((ASTNode)mp);
 	    }
 	}
-	//desugar(tde);
     }
+
+    //-----------------------------------------------------------------------
+    // Desugaring is done as a last stage of type-checking.  The desugar
+    // methods below may presume that all expressions are type-checked.
+    // As a result, any constructed expressions must have type information
+    // inserted.
 
     public void desugar(RoutineDecl tde) {
 	if ((tde.modifiers & Modifiers.ACC_DESUGARED) != 0) return;
@@ -205,12 +212,9 @@ public class AnnotationHandler {
 		}
 	    } else if (mp instanceof VarExprModifierPragma) {
 		VarExprModifierPragma mpe = (VarExprModifierPragma)mp;
-		if (mpe.arg == null) {
-		    System.out.print( "java.lang.Exception ##  :");
-		} else {
-		    System.out.print(((TypeName)mpe.arg.type).name.printName() 
-			+ " ## " + mpe.arg.id + " : ");
-	  	}
+		System.out.print("(" + Types.toClassTypeSig(mpe.arg.type).getExternalName()
+		    + (mpe.arg.id == TagConstants.ExsuresIdnName ? "" :
+			" " + mpe.arg.id.toString()) + ")");
 		print(mpe.expr);
 	    }
 	    System.out.println("");
@@ -221,61 +225,100 @@ public class AnnotationHandler {
 	if (pm == null) {
 	    pm = ModifierPragmaVec.make();
 	}
-	java.util.ArrayList newpm = new java.util.ArrayList();
+
+	ModifierPragmaVec newpm = ModifierPragmaVec.make();
 
 	boolean isPure = escjava.tc.FlowInsensitiveChecks.isPure(tde);
 	boolean isConstructor = tde instanceof ConstructorDecl;
 
 	// Get non_null specs
-	Behavior nonnullBehavior = getNonNull(tde);
+	ModifierPragmaVec nonnullBehavior = getNonNull(tde);
 
 	javafe.util.Set overrideSet = null;
 	if (!isConstructor) overrideSet = escjava.tc.FlowInsensitiveChecks.getDirectOverrides((MethodDecl)tde);
 	boolean overrides = !isConstructor && !overrideSet.isEmpty();
 	
-	if (pm.size() == 0 && !overrides && nonnullBehavior.isEmpty()) {
-		// No specs at all and no overridden methods.
-		ExprModifierPragma e = ExprModifierPragma.make(
-			TagConstants.REQUIRES, Behavior.T, Location.NULL);
-		pm.addElement(e);
-	}
 
-	// We add this (internal use only) END pragma so that we don't have
-	// to continually check the value of pos vs. the size of the array
-	pm.addElement(SimpleModifierPragma.make(TagConstants.END,
-			pm.size() == 0 ? Location.NULL :
-			pm.elementAt(pm.size()-1).getStartLoc()));
-
-	int pos = 0;
-
-	// check for an initial also
-	ModifierPragma m = pm.elementAt(pos);
-	if (m.getTag() == TagConstants.ALSO) {
-	    newpm.add(m);
-	    ++pos;
-	    if (!overrides)
-		ErrorSet.caution(m.getStartLoc(),
-		    "JML does not permit a specification to begin with 'also' when the method does not override anything");
-	} else if (overrides && pm.size() > 1) {
-	    // Check if all of the modifiers are pure, helper, non_null, END
-	    for (int q=0; q<pm.size(); ++q) {
-		int tag = pm.elementAt(q).getTag();
-		if (! (tag==TagConstants.PURE || tag == TagConstants.NON_NULL
-		  || tag == TagConstants.HELPER || tag == TagConstants.END)) {
-			MethodDecl ex = (MethodDecl)(overrideSet.elements().nextElement());
-	    		ErrorSet.caution(pm.elementAt(0).getStartLoc(),"JML requires a specification to begin with 'also' when the method overrides other methods (e.g. " + Location.toString(ex.getStartLoc()) + ")");
-			break;
+	if (!overrides && nonnullBehavior.size()==0) {
+	    // Add a default 'requires true' clause if there are no
+	    // specs at all and the routine is not overriding anything
+//if (tde instanceof MethodDecl)
+//System.out.println("QQQ " +  ((MethodDecl)tde).id + " " + overrides + " " + nonnullBehavior.size() + " " + pm.size());
+	    boolean doit = pm.size() == 0;
+	    if (!doit) {
+		// Need to determine if there are any clause specs
+		doit = true;
+		ModifierPragma mpp = pm.elementAt(pm.size()-1);
+		if (mpp instanceof ParsedSpecs) {
+//System.out.println("QRR " + ((ParsedSpecs)mpp).specs.specs.size());
+		    doit = ((ParsedSpecs)mpp).specs.specs.size() == 0;
 		}
+		else doit = false;
+// FIXME - why do we get ExprModifierPragmas here (e.g. test8)
+//System.out.println("QT " + mpp.getClass());
+	    }
+	    if (doit) {
+		ExprModifierPragma e = ExprModifierPragma.make(
+			TagConstants.REQUIRES, T, Location.NULL);
+		newpm.addElement(e);
+		newpm.addElement(defaultModifies(Location.NULL,T));
 	    }
 	}
 
-	Behavior accumulatedBehavior = new Behavior();
+
+	RoutineDecl previousDecl = null;
+	int pos = 0;
+	while (pos < pm.size()) {
+	    ModifierPragma p = pm.elementAt(pos++);
+	    if (p.getTag() == TagConstants.PARSEDSPECS) {
+		ParsedSpecs ps = (ParsedSpecs)p;
+		previousDecl = ps.decl;
+		if (overrides && ps.specs.initialAlso == null && ps.specs.specs.size() != 0) {
+		    ErrorSet.caution(ps.getStartLoc(),"JML requires a specification to begin with 'also' when the method overrides other methods" ,((MethodDecl)overrideSet.elements().nextElement()).locType);
+		}
+		if (!overrides && ps.specs.initialAlso != null) {
+		    ErrorSet.caution(ps.specs.initialAlso.getStartLoc(),
+			"No initial also expected since there are no overridden or refined methods");
+		}
+		break;
+	    }
+	}
+	while (pos < pm.size()) {
+	    ModifierPragma p = pm.elementAt(pos++);
+	    if (p.getTag() == TagConstants.PARSEDSPECS) {
+		ParsedSpecs ps = (ParsedSpecs)p;
+		if (ps.specs.initialAlso == null && ps.specs.specs.size() != 0) {
+		    ErrorSet.caution(ps.getStartLoc(),
+			"JML requires a specification to begin with 'also' when the declaration refines a previous declaration",previousDecl.locId);
+		}
+		previousDecl = ps.decl;
+	    }
+	}
 
 
-
-	// The results array holds the denested spec-cases obtained from
-	// parsing the specification of the routine
-	ArrayList results = new ArrayList();
+	ParsedRoutineSpecs accumulatedSpecs = new ParsedRoutineSpecs();
+	pos = 0;
+	while (pos < pm.size()) {
+	    ModifierPragma p = pm.elementAt(pos++);
+	    if (p.getTag() == TagConstants.PARSEDSPECS) {
+		ParsedRoutineSpecs ps = ((ParsedSpecs)p).specs;
+		ParsedRoutineSpecs newps = new ParsedRoutineSpecs();
+		deNest(ps.specs,nonnullBehavior,newps.specs);
+		deNest(ps.impliesThat,nonnullBehavior, newps.impliesThat);
+		deNest(ps.examples,nonnullBehavior, newps.examples);
+		accumulatedSpecs.specs.addAll(newps.specs);
+		accumulatedSpecs.impliesThat.addAll(newps.impliesThat);
+		accumulatedSpecs.examples.addAll(newps.examples);
+	    } else {
+		newpm.addElement(p);
+	    }
+	}
+	ModifierPragmaVec r = desugar(accumulatedSpecs.specs);
+	// accumulatedSpecs.impliesThat = desugar(accumulatedSpecs.impliesThat);
+	// accumulatedSpecs.examples = desugar(accumulatedSpecs.examples); // FIXME - not doing this because we are not doing anything with the result.
+	newpm.append(r);
+	return newpm;
+/*
 	do {
 
 	pos = deNest(false,pos,pm,results,nonnullBehavior,isPure,isConstructor);
@@ -302,7 +345,8 @@ public class AnnotationHandler {
 	}
 	break;
 	} while(true);
-	
+*/
+/*	
 	// Now have to further desugar the annotations that Escjava uses
 	// FIXME - adding model programs may require altering this loop
 	// Always do the incorporation of the precondition into the
@@ -391,17 +435,24 @@ public class AnnotationHandler {
 
 	ModifierPragma[] out = new ModifierPragma[newpm.size()];
 	return ModifierPragmaVec.make((ModifierPragma[])(newpm.toArray(out)));
+*/
     }
 
-    public Behavior getNonNull(RoutineDecl rd) {
-	Behavior b = new Behavior();
+	// NOTE: If we do desugaring after typechecking, we need to put in 
+	// all of the types for the expressions we construct.  If we do
+	// desugaring before typechecking, we do not, or we risk not 
+	// checking any of the details of that expression. Currently
+	// desugaring comes first. 
+
+    public ModifierPragmaVec getNonNull(RoutineDecl rd) {
+	ModifierPragmaVec result = ModifierPragmaVec.make(2);
 	FormalParaDeclVec args = rd.args;
 
 	// Check that non_null on parameters is allowed
 	if (rd instanceof MethodDecl) {
 	    MethodDecl md = (MethodDecl)rd;
-		// Need to check all overrides, because we may not have processed a
-		// given direct override yet, removing its spurious non_null
+	    // Need to check all overrides, because we may not have processed a
+	    // given direct override yet, removing its spurious non_null
 	    javafe.util.Set overrides = FlowInsensitiveChecks.getAllOverrides(md);
 	    if (overrides != null && !overrides.isEmpty()) {
 		for (int i=0; i<args.size(); ++i) {
@@ -426,7 +477,7 @@ public class AnnotationHandler {
 	    ModifierPragma m = findModifierPragma(arg.pmodifiers,TagConstants.NON_NULL);
 	    if (m == null) continue;
 	    int locNN = m.getStartLoc();
-	    b.requires.add(
+	    result.addElement(
 		ExprModifierPragma.make(TagConstants.REQUIRES,
 			NonNullExpr.make(arg,locNN),
 			locNN)
@@ -445,11 +496,257 @@ public class AnnotationHandler {
 	    javafe.tc.FlowInsensitiveChecks.setType(e, Types.booleanType);
 	    ExprModifierPragma emp = ExprModifierPragma.make(TagConstants.ENSURES, e, locNN);
 	    emp.errorTag = TagConstants.CHKNONNULLRESULT;
-	    b.ensures.add(emp);
+	    result.addElement(emp);
 	}
-	return b;
+	return result;
     }
 
+/*
+public static void psprint(ArrayList ps) {
+	if (ps == null) {System.out.println("PS IS NULL"); return;}
+System.out.println("START PS " + ps.size());
+Iterator i = ps.iterator();
+while (i.hasNext()) {
+	Object o = i.next();
+	System.out.println("ELEM " + o.getClass());
+	if (o instanceof ModifierPragmaVec) psprint((ModifierPragmaVec)o);
+}
+System.out.println("END PS");
+}
+
+public static void psprint(ModifierPragmaVec mp) {
+if (mp == null) { System.out.println("MPV IS NULL"); return; }
+System.out.println("MPV " + mp.size());
+for (int i=0; i<mp.size(); ++i) {
+ModifierPragma m = mp.elementAt(i);
+System.out.println("MPV-ELEM " + TagConstants.toString(m.getTag()));
+if (m instanceof ParsedSpecs) {
+	ArrayList a = ((ParsedSpecs)m).specs.specs;
+	psprint(a);
+}
+}
+System.out.println("END_MPV");
+}
+*/
+
+	// Argument is an ArrayList of ModifierPragmaVec corresponding to
+	// also-connected de-nested specification cases
+	// result is a single ModifierPragmaVec with all the requires
+	// clauses combined and all the other clauses guarded by the 
+	// relevant precondition
+    public ModifierPragmaVec desugar(ArrayList ps) {
+	ArrayList requiresList = new ArrayList();
+	ModifierPragmaVec resultList = ModifierPragmaVec.make();
+	resultList.addElement(null); // replaced below
+	Iterator i = ps.iterator();
+	while (i.hasNext()) {
+	    ModifierPragmaVec m = (ModifierPragmaVec)i.next();
+	    desugar(m,requiresList,resultList);
+	}
+	// combine all of the requires
+	ExprModifierPragma requires = or(requiresList);
+	resultList.setElementAt(requires,0);
+	if (requires == null) resultList.removeElementAt(0);
+	return resultList;
+    }
+
+	// requiresList is an ArrayList of ModifierPragma
+    public void desugar(ModifierPragmaVec m,ArrayList requiresList,
+				ModifierPragmaVec resultList){
+	GenericVarDeclVec foralls = GenericVarDeclVec.make();
+	// First collect all the requires clauses together
+	int pos = 0;
+	ArrayList list = new ArrayList();
+	while (pos < m.size()) {
+	    ModifierPragma mp = m.elementAt(pos++);
+	    int tag = mp.getTag();
+	    if (tag == TagConstants.NO_WACK_FORALL) foralls.addElement(
+			((VarDeclModifierPragma)mp).decl );
+	    if (tag != TagConstants.REQUIRES &&
+		tag != TagConstants.PRECONDITION) continue;
+	    if (((ExprModifierPragma)mp).expr.getTag() 
+			== TagConstants.NOTSPECIFIEDEXPR) continue;
+	    list.add(forallWrap(foralls,mp));
+	}
+	ExprModifierPragma conjunction = and(list);
+	boolean reqIsTrue = conjunction == null || isTrue(conjunction.expr);
+	boolean reqIsFalse = conjunction != null && isFalse(conjunction.expr);
+	Expr reqexpr = conjunction==null? null : conjunction.expr;
+//System.out.println("REQ " + reqexpr);
+	Expr req = T;
+	if (reqexpr != null) {
+	    ExprVec arg = ExprVec.make(new Expr[]{reqexpr});
+	    //req = UnaryExpr.make(TagConstants.PRE, reqexpr, Location.NULL);
+
+	    req = NaryExpr.make(Location.NULL,
+				reqexpr.getStartLoc(),TagConstants.PRE,
+				Identifier.intern("\\old"),arg);
+	    javafe.tc.FlowInsensitiveChecks.setType(req, Types.booleanType);
+	}
+
+	if (reqIsTrue && m.size() == 0) return;
+
+	requiresList.add(reqIsTrue? 
+		ExprModifierPragma.make(TagConstants.REQUIRES,T,Location.NULL) 
+		: andLabeled(list)); 
+
+	// Now transform each non-requires pragma
+	boolean foundDiverges = false;
+	boolean foundModifies = false;
+	pos = 0;
+	while (pos < m.size()) {
+	    ModifierPragma mp = m.elementAt(pos++);
+	    int tag = mp.getTag();
+	    if (tag == TagConstants.REQUIRES ||
+		tag == TagConstants.PRECONDITION) continue;
+	    switch (tag) {
+		case TagConstants.DIVERGES:
+		    foundDiverges = true;
+		    // fall-through
+		case TagConstants.ENSURES:
+		case TagConstants.POSTCONDITION:
+		case TagConstants.WHEN:
+		{
+		    ExprModifierPragma mm = (ExprModifierPragma)mp;
+		    if (mm.expr.getTag() == TagConstants.NOTSPECIFIEDEXPR)
+			break;
+		    if (!reqIsTrue) mm.expr = implies(req,mm.expr);
+		    resultList.addElement(mm);
+		    break;
+		}
+
+		case TagConstants.SIGNALS:
+		case TagConstants.EXSURES:
+		{
+		    VarExprModifierPragma mm = (VarExprModifierPragma)mp;
+		    if (mm.expr.getTag() == TagConstants.NOTSPECIFIEDEXPR)
+			break;
+		    if (!reqIsTrue) mm.expr = implies(req,mm.expr);
+		    resultList.addElement(mm);
+		    break;
+		}
+		case TagConstants.MODIFIES:
+		case TagConstants.MODIFIABLE:
+		case TagConstants.ASSIGNABLE:
+		    foundModifies = true;
+		    // fall-through
+		case TagConstants.WORKING_SPACE:
+		case TagConstants.DURATION:
+		  {
+		    CondExprModifierPragma mm = (CondExprModifierPragma)mp;
+		    if (mm.expr != null &&
+		        mm.expr.getTag() == TagConstants.NOTSPECIFIEDEXPR)
+			break;
+		    mm.cond = and(mm.cond,req);
+		    resultList.addElement(mm);
+		    break;
+		  }
+
+		case TagConstants.ACCESSIBLE:
+		case TagConstants.CALLABLE:
+		case TagConstants.MEASURED_BY:
+		case TagConstants.MODEL_PROGRAM:
+			// Remember to skip if not specified
+			// FIXME - not yet handled
+		    break;
+
+		case TagConstants.NO_WACK_FORALL:
+		case TagConstants.OLD:
+		    // These are handled elsewhere and don't get put into
+		    // the pragma list.
+		    break;
+
+		case TagConstants.MONITORED_BY:
+		    ErrorSet.error(mp.getStartLoc(),"monitored_by is obsolete and only applies to fields");
+		    break;
+
+		case TagConstants.MONITORED:
+		    ErrorSet.error(mp.getStartLoc(),"monitored only applies to fields");
+		    break;
+
+		default:
+		    ErrorSet.error(mp.getStartLoc(),"Unknown kind of pragma for a routine declaration: " + TagConstants.toString(tag));
+		    break;
+	    }
+	}
+	if (!foundDiverges) {
+	    // lightweight default - req ==> true which is true
+	    // heavyweight default - req ==> false which is !req
+	    // The lightweight default need not be added since it does
+	    // not need any verification.
+/* FIXME - don't need this for now, but need to be sure that when it is 
+added, it doesn't change whether a routine appears to have a spec or not.
+	    resultList.addElement(ExprModifierPragma.make(
+		TagConstants.DIVERGES,implies(req,AnnotationHandler.F),
+			Location.NULL));
+*/
+// FIXME - Null location above and below needs to be fixed.
+// Also other use of defaultModifies
+// Diverges expression depends on lightweight or heavyweight
+	}
+	if (!foundModifies) {
+	    resultList.addElement(defaultModifies(Location.NULL,req));
+	}
+    }
+    public final static CondExprModifierPragma defaultModifies(int loc, 
+				Expr req) {
+	boolean nothing = true;
+	return CondExprModifierPragma.make(
+		TagConstants.MODIFIES,
+		nothing ? (Expr)NothingExpr.make(loc) :
+			    (Expr)EverythingExpr.make(loc),
+		loc,req);
+    }
+
+
+    public ModifierPragma forallWrap(GenericVarDeclVec foralls, 
+					ModifierPragma mp) {
+	if (mp instanceof ExprModifierPragma) {
+		((ExprModifierPragma)mp).expr = 
+			forallWrap(foralls, ((ExprModifierPragma)mp).expr) ;
+	}
+	return mp;
+    }
+
+    public Expr forallWrap(GenericVarDeclVec foralls, Expr e) {
+	if (foralls.size() == 0) return e;
+	int loc = foralls.elementAt(0).getStartLoc();
+	int endLoc = foralls.elementAt(foralls.size()-1).getStartLoc();
+	return QuantifiedExpr.make(loc,endLoc,TagConstants.FORALL,
+		foralls,e,null);
+    }
+
+    public void deNest(ArrayList ps, ModifierPragmaVec prefix, ArrayList deNestedSpecs) {
+	if (ps.size() == 0 && prefix.size() != 0) {
+	    deNestedSpecs.add(prefix);
+	} else {
+	    Iterator i = ps.iterator();
+	    while (i.hasNext()) {
+		ModifierPragmaVec m = (ModifierPragmaVec)i.next();
+		deNest(m,prefix,deNestedSpecs);
+	    }
+	}
+    }
+
+    //@ requires (* m.size() > 0 *);
+    // Uses the fact that if there is a nesting it is the last element of
+    // the ModifierPragmaVec
+    public void deNest(ModifierPragmaVec m, ModifierPragmaVec prefix, ArrayList deNestedSpecs) {
+	ModifierPragma last = m.elementAt(m.size()-1);
+	if (last instanceof NestedModifierPragma) {
+	    m.removeElementAt(m.size()-1);
+	    ModifierPragmaVec newprefix = prefix.copy();
+	    newprefix.append(m);
+	    m.addElement(last);
+	    ArrayList list = ((NestedModifierPragma)last).list;
+	    deNest(list,newprefix,deNestedSpecs);
+	} else {
+	    ModifierPragmaVec mm = prefix.copy();
+	    mm.append(m);
+	    deNestedSpecs.add(mm);
+	}
+    }
+/*
     public int deNest(boolean exampleMode, int pos, ModifierPragmaVec pm, ArrayList results, Behavior cb, boolean isPure, boolean isConstructor) {
 	Behavior currentBehavior = cb.copy(); // new Behavior();
 	LinkedList commonBehavior = new LinkedList();
@@ -759,11 +1056,6 @@ public class AnnotationHandler {
         } 
 	if (currentBehavior != null) {
 	    if (currentBehavior.isEmpty()) {
-/* This test is not correct or robust - maybe simply allow an empty also?
-		//@ if m is null, currentBehavior will not be null
-		 if (!results.isEmpty())
-			ErrorSet.error(m.getStartLoc(),"Dangling also");
-*/
 	    } else {
 		results.add(currentBehavior);
 	    }
@@ -774,7 +1066,8 @@ public class AnnotationHandler {
 	}
 	return pos;
     }
-
+*/
+/*
     public int sc_section(int pos, ModifierPragmaVec pm, ArrayList results) {
 	while (pos < pm.size()) {
 	    ModifierPragma m = pm.elementAt(pos++);
@@ -798,7 +1091,11 @@ public class AnnotationHandler {
 	}
 	return pos;
     }
-
+*/
+    /** Produces an expression which is the conjunction of the two expressions.
+	If either input is null, the other is returned.  If either input is
+	literally true or false, the appropriate constant folding is performed.
+    */
     static public Expr and(Expr e1, Expr e2) {
 	if (e1 == null || isTrue(e1)) return e2;
 	if (e2 == null || isTrue(e2)) return e1;
@@ -809,6 +1106,11 @@ public class AnnotationHandler {
 	return e;
     }
 
+    /** Produces an ExprModifierPragma whose expression is the conjunction 
+	of the expressions in the input pragmas.
+	If either input is null, the other is returned.  If either input is
+	literally true or false, the appropriate constant folding is performed.
+    */
     static public ExprModifierPragma and(ExprModifierPragma e1, ExprModifierPragma e2) {
 	if (e1 == null || isTrue(e1.expr)) return e2;
 	if (e2 == null || isTrue(e2.expr)) return e1;
@@ -820,7 +1122,12 @@ public class AnnotationHandler {
 			e1.getTag(),e,e1.getStartLoc());
     }
 
-    static public ExprModifierPragma and(ArrayList a) {
+    /** Produces an ExprModifierPragma whose expression is the conjunction of
+	all of the expressions in the ExprModifierPragmas in the argument.
+	If the argument is empty, null is returned.  Otherwise, some
+	object is returned, though its expression might be a literal.
+    */
+    static public ExprModifierPragma and(/*@ non_null */ ArrayList a) {
 	if (a.size() == 0) {
 	    return null;
 	} else if (a.size() == 1) {
@@ -835,7 +1142,10 @@ public class AnnotationHandler {
 	}
     }
 
-    static public ExprModifierPragma andLabeled(ArrayList a) {
+    /** The same as and(ArrayList), but produces labelled expressions within
+	the conjunction so that error messages come out with useful locations.
+    */
+    static public ExprModifierPragma andLabeled(/*@ non_null */ ArrayList a) {
 	if (a.size() == 0) {
 	    return null;
 	} else {
@@ -861,7 +1171,7 @@ public class AnnotationHandler {
 			e, floc);
 	}
     }
-
+/*
     static public Expr or(Expr e1, Expr e2) {
 	if (e1 == null || isFalse(e1)) return e2;
 	if (e2 == null || isFalse(e2)) return e1;
@@ -871,7 +1181,12 @@ public class AnnotationHandler {
 	javafe.tc.FlowInsensitiveChecks.setType(e,Types.booleanType);
 	return e;
     }
-
+*/
+    /** Produces an ExprModifierPragma whose expression is the disjunction 
+	of the expressions in the input pragmas.
+	If either input is null, the other is returned.  If either input is
+	literally true or false, the appropriate constant folding is performed.
+    */
     static public ExprModifierPragma or(ExprModifierPragma e1, ExprModifierPragma e2) {
 	if (e1 == null || isFalse(e1.expr)) return e2;
 	if (e2 == null || isFalse(e2.expr)) return e1;
@@ -883,7 +1198,12 @@ public class AnnotationHandler {
 			e1.getTag(),e,e1.getStartLoc());
     }
 
-    static public ExprModifierPragma or(ArrayList a) {
+    /** Produces an ExprModifierPragma whose expression is the disjunction of
+	all of the expressions in the ExprModifierPragmas in the argument.
+	If the argument is empty, null is returned.  Otherwise, some
+	object is returned, though its expression might be a literal.
+    */
+    static public ExprModifierPragma or(/*@ non_null */ ArrayList a) {
 	if (a.size() == 0) {
 	    return null;
 	} else if (a.size() == 1) {
@@ -898,27 +1218,45 @@ public class AnnotationHandler {
 	}
     }
 
-    static public Expr implies(Expr e1, Expr e2) {
+    /** Produces an expression which is the implication of the two expressions.
+	Neither input may be null.  If either input is
+	literally true or false, the appropriate constant folding is performed.
+    */
+    static public Expr implies(/*@ non_null */Expr e1, /*@ non_null */ Expr e2) {
 	if (isTrue(e1)) return e2;
 	if (isTrue(e2)) return e2; // Use e2 instead of T to keep location info 
-	if (isFalse(e1)) return Behavior.T;
+	if (isFalse(e1)) return T;
 	Expr e = BinaryExpr.make(TagConstants.IMPLIES,e1,e2,e2.getStartLoc());
 	javafe.tc.FlowInsensitiveChecks.setType(e,Types.booleanType);
 	return e;
     }
 
-    static boolean isTrue(Expr e) {
-	return e == Behavior.T || 
+    /** Returns true if the argument is literally true, and returns
+	false if it is not a literal or is literally false. */
+    static boolean isTrue(/*@ non_null */ Expr e) {
+	return e == T || 
 	    (e instanceof LiteralExpr && 
-		((LiteralExpr)e).value.equals(Behavior.T.value));
+		((LiteralExpr)e).value.equals(T.value));
     }
 
-    static boolean isFalse(Expr e) {
-	return e == Behavior.F || 
+    /** Returns true if the argument is literally false, and returns
+	false if it is not a literal or is literally true. */
+    static boolean isFalse(/*@ non_null */ Expr e) {
+	return e == F || 
 	    (e instanceof LiteralExpr && 
-		((LiteralExpr)e).value.equals(Behavior.F.value));
+		((LiteralExpr)e).value.equals(F.value));
     }
 
+    public final static LiteralExpr T = 
+	    (LiteralExpr)FlowInsensitiveChecks.setType(LiteralExpr.make(
+	    TagConstants.BOOLEANLIT, Boolean.TRUE, Location.NULL),
+	    Types.booleanType);
+    public final static LiteralExpr F = 
+	    (LiteralExpr)FlowInsensitiveChecks.setType(LiteralExpr.make(
+	    TagConstants.BOOLEANLIT, Boolean.FALSE, Location.NULL),
+	    Types.booleanType);
+
+/*
     static public class Behavior {
 
 	public final static LiteralExpr T = 
@@ -1147,6 +1485,7 @@ public class AnnotationHandler {
 	    }
 	}
     }
+*/
     static public class CheckPurity {
 
 	public void visitNode(ASTNode x) {
@@ -1191,6 +1530,7 @@ public class AnnotationHandler {
     }
 
 
+
 	// FIXME - This functionality is duplicated elsewhere, e.g. in
 	// translate/GetSpec.  Should be unified and cleaned up in a common
 	// utility.
@@ -1223,9 +1563,308 @@ public class AnnotationHandler {
 	    return e;
 	}
     }
+
+    //----------------------------------------------------------------------
+    // Parsing the sequence of ModifierPragmas for each method of a 
+    // compilation unit happens as a part of the original parsing and
+    // refinement processing.
+
+    static NestedPragmaParser specparser = new NestedPragmaParser();
+
+    public void parseAllRoutineSpecs(CompilationUnit ccu) {
+	specparser.parseAllRoutineSpecs(ccu);
+    }
 }
 		
 
 
 
 
+/** The routines in this class parse a sequence of ModifierPragma that 
+    occur prior to a method or constructor declaration.  These consist
+    of lightwieght or heavywieght specifications, possibly nested or
+    with consecutive spec-cases separated by 'also'.  The parsing of the
+    compilation unit simply produces a flat sequence of such ModifierPragmas,
+    since they may occur in separate annotation comments and the Javafe
+    parser does not provide mechanisms to associate them together.
+    However, we do need to determine the nesting structure of the sequence
+    of pragmas because the forall and old pragmas introduce new variable
+    declarations that may be used in subsequent pragmas.  This parsing into
+    the nested structure (and checking of it) needs to be completed prior
+    to type checking so that the variable references are properly 
+    determined.  The ultimate desugaring then happens after typechecking.
+ */    
+
+class NestedPragmaParser {
+ 
+    /** Parses the sequence of pragma modifiers for each routine in 
+	the CompilationUnit,
+	replacing the existing sequence with the parsed one in each case.
+    */
+    public void parseAllRoutineSpecs(CompilationUnit ccu) {
+        TypeDeclVec v = ccu.elems;
+        for (int i=0; i<v.size(); ++i) {
+            parseAllRoutineSpecs(v.elementAt(i));
+        }
+    }
+ 
+    public void parseAllRoutineSpecs(TypeDecl td) {
+        TypeDeclElemVec v = td.elems;
+        for (int i=0; i<v.size(); ++i) {
+            TypeDeclElem tde = v.elementAt(i);
+            if (tde instanceof RoutineDecl) {
+                parseRoutineSpecs((RoutineDecl)tde);
+            } else if (tde instanceof ModelMethodDeclPragma) {
+                parseRoutineSpecs( ((ModelMethodDeclPragma)tde).decl );
+            } else if (tde instanceof ModelConstructorDeclPragma) {
+                parseRoutineSpecs( ((ModelConstructorDeclPragma)tde).decl );
+            } else if (tde instanceof TypeDecl) {
+                parseAllRoutineSpecs((TypeDecl)tde);
+            }
+        }
+    }
+ 
+    public void parseRoutineSpecs(RoutineDecl rd) {
+        ModifierPragmaVec pm = rd.pmodifiers;
+        if (pm == null || pm.size() == 0) {
+	    ParsedRoutineSpecs pms = new ParsedRoutineSpecs();
+	    pms.modifiers.addElement(ParsedSpecs.make(rd,pms));
+	    rd.pmodifiers = pms.modifiers;
+	    return;
+	}
+
+	// We add this (internal use only) END pragma so that we don't have
+	// to continually check the value of pos vs. the size of the array
+	pm.addElement(SimpleModifierPragma.make(TagConstants.END,
+			pm.size() == 0 ? Location.NULL :
+			pm.elementAt(pm.size()-1).getStartLoc()));
+
+        ParsedRoutineSpecs pms = new ParsedRoutineSpecs();
+        int pos = 0;
+        if (pm.elementAt(0).getTag() == TagConstants.ALSO) {
+                pms.initialAlso = pm.elementAt(0);
+                ++pos;
+        }
+        pos = parseAlsoSeq(pos,pm,1,null,pms.specs);
+        if (pm.elementAt(pos).getTag() == TagConstants.IMPLIES_THAT) {
+	    ++pos;
+            pos = parseAlsoSeq(pos,pm,1,null,pms.impliesThat);
+        }
+        if (pm.elementAt(pos).getTag() == TagConstants.FOR_EXAMPLE) {
+	    ++pos;
+            pos = parseAlsoSeq(pos,pm,2,null,pms.examples);
+        }
+        while (true) {
+            ModifierPragma mp = pm.elementAt(pos);
+            int tag = mp.getTag();
+            if (tag == TagConstants.END) break;
+            if (!isRoutineModifier(tag)) {
+                int loc = Location.NULL;
+                if (pms.modifiers.size() > 0)
+                    loc = pms.modifiers.elementAt(0).getStartLoc();
+                ErrorSet.error(mp.getStartLoc(),
+                    "Unexpected or out of order pragma (expected a simple routine modifier)",loc);
+            } else {
+                pms.modifiers.addElement(mp);
+            }
+	    ++pos;
+        }
+	pms.modifiers.addElement(ParsedSpecs.make(rd,pms));
+	rd.pmodifiers = pms.modifiers;
+    }
+ 
+    static public boolean isRoutineModifier(int tag) {
+        return tag == TagConstants.PURE ||
+                tag == TagConstants.HELPER ||
+                tag == TagConstants.GHOST || // Actually should not occur
+                tag == TagConstants.MODEL ||
+                tag == TagConstants.NON_NULL;
+    }
+ 
+    // behaviorMode == 0 : nested call
+    // behaviorMode == 1 : outer call - non-example mode, model programs allowed
+    // behaviorMode == 2 : outer call - example mode
+    // The behaviorMode is used to determine which behavior/example keywords
+    // are valid - but this is only needed on the outermost nesting level.
+    // The behaviorTag is used to determine whether signals or ensures clauses
+    // are permitted; 0 means either are ok; not valid on outermost call
+    public int parseAlsoSeq(int pos, ModifierPragmaVec pm, 
+		    int behaviorMode, ModifierPragma behavior, ArrayList result) {
+        while(true) {
+          ModifierPragmaVec mpv = ModifierPragmaVec.make();
+	  if (behaviorMode != 0) {
+	    ModifierPragma mp = pm.elementAt(pos);
+	    behavior = mp;
+	    int behaviorTag = mp.getTag();
+	    ++pos;
+	    switch (behaviorTag) {
+		case TagConstants.MODEL_PROGRAM:
+		    mpv.addElement(mp);
+		    result.add(mpv);
+		    if (pm.elementAt(pos).getTag() != TagConstants.ALSO) break;
+		    ++pos;
+		    continue;
+
+		case TagConstants.BEHAVIOR:
+		    if (behaviorMode == 2) ErrorSet.error(mp.getStartLoc(),
+			"Behavior keywords may not be in the for_example section");
+		    break;
+		case TagConstants.NORMAL_BEHAVIOR:
+		    if (behaviorMode == 2) ErrorSet.error(mp.getStartLoc(),
+			"Behavior keywords may not be in the for_example section");
+		    mpv.addElement(VarExprModifierPragma.make(
+			    TagConstants.SIGNALS,
+			    FormalParaDecl.make(0,null,
+				TagConstants.ExsuresIdnName,
+				Types.javaLangException(),mp.getStartLoc()),
+			    AnnotationHandler.F,
+			    mp.getStartLoc()));
+		    break;
+		case TagConstants.EXCEPTIONAL_BEHAVIOR:
+		    if (behaviorMode == 2) ErrorSet.error(mp.getStartLoc(),
+			"Behavior keywords may not be in the for_example section");
+		    mpv.addElement(
+			ExprModifierPragma.make(TagConstants.ENSURES,
+				AnnotationHandler.F, mp.getStartLoc()));
+		    break;
+		case TagConstants.EXAMPLE:
+		    if (behaviorMode == 1) ErrorSet.error(mp.getStartLoc(),
+			"Example keywords may be used only in the for_example section");
+		    break;
+		case TagConstants.NORMAL_EXAMPLE:
+		    if (behaviorMode == 1) ErrorSet.error(mp.getStartLoc(),
+			"Example keywords may be used only in the for_example section");
+		    mpv.addElement(VarExprModifierPragma.make(
+			    TagConstants.SIGNALS,
+			    FormalParaDecl.make(0,null,
+				TagConstants.ExsuresIdnName,
+				Types.javaLangException(),mp.getStartLoc()),
+			    AnnotationHandler.F,
+			    mp.getStartLoc()));
+		    break;
+		case TagConstants.EXCEPTIONAL_EXAMPLE:
+		    if (behaviorMode == 1) ErrorSet.error(mp.getStartLoc(),
+			"Example keywords may be used only in the for_example section");
+		    mpv.addElement(
+			ExprModifierPragma.make(TagConstants.ENSURES,
+				AnnotationHandler.F, mp.getStartLoc()));
+		    break;
+		default:
+		    // lightweight
+		    --pos;
+		    behavior = null;
+	      }
+	    }
+	    pos = parseSeq(pos,pm,0,behavior,mpv);
+            if (mpv.size() != 0) result.add(mpv);
+	    else if (behaviorMode == 0) {
+		ErrorSet.error(pm.elementAt(pos).getStartLoc(),
+			"JML does not allow empty clause sequences");
+	    }
+            if (pm.elementAt(pos).getTag() != TagConstants.ALSO) break;
+            ++pos;
+        }
+	if (behaviorMode != 0) {
+	    while (pm.elementAt(pos).getTag() == TagConstants.CLOSEPRAGMA) {
+		ErrorSet.error(pm.elementAt(pos).getStartLoc(),
+			"There is no opening {| to match this closing |}");
+		++pos;
+	    }
+	}
+	return pos;
+    }
+
+ 
+    //@ requires (* pm.elementAt(pm.size()-1).getTag() == TagConstants.END *);
+    public int parseSeq(int pos, ModifierPragmaVec pm, 
+			int behaviorMode, ModifierPragma behavior, 
+			ModifierPragmaVec result) {
+	int behaviorTag = behavior==null? 0 : behavior.getTag();
+	//System.out.println("STARTING " + behaviorMode + " " + behaviorTag);
+        while (true) {
+            ModifierPragma mp = pm.elementAt(pos);
+	    int loc = mp.getStartLoc();
+            int tag = mp.getTag();
+            if (isRoutineModifier(tag)) return pos;
+	    //System.out.println("TAG " + TagConstants.toString(tag));
+            switch (tag) {
+                case TagConstants.END:
+                case TagConstants.IMPLIES_THAT:
+                case TagConstants.FOR_EXAMPLE:
+                case TagConstants.ALSO:
+                case TagConstants.CLOSEPRAGMA:
+                    return pos;
+
+		case TagConstants.MODEL_PROGRAM:
+		    if (behaviorMode == 0) ErrorSet.error(mp.getStartLoc(),
+			"Model programs may not be nested");
+		    if (behaviorMode == 2) ErrorSet.error(mp.getStartLoc(),
+			"Model programs may not be in the examples section");
+// FIXME - parse model program
+		    break;
+
+		case TagConstants.BEHAVIOR:
+		case TagConstants.NORMAL_BEHAVIOR:
+		case TagConstants.EXCEPTIONAL_BEHAVIOR:
+		case TagConstants.EXAMPLE:
+		case TagConstants.NORMAL_EXAMPLE:
+		case TagConstants.EXCEPTIONAL_EXAMPLE:
+		    if (behaviorMode == 0) ErrorSet.error(mp.getStartLoc(),
+			"Misplaced " + TagConstants.toString(tag) + " keyword");
+		    ++pos;
+		    break;
+ 
+                case TagConstants.OPENPRAGMA:
+                  {
+                    int openLoc = loc;
+                    ++pos;
+		    ArrayList s = new ArrayList();
+                    pos = parseAlsoSeq(pos,pm,0,behavior,s);
+                    if (pm.elementAt(pos).getTag() != TagConstants.CLOSEPRAGMA) {
+                        ErrorSet.error(pm.elementAt(pos).getStartLoc(),
+                            "Expected a closing |}",openLoc);
+                    } else {
+			++pos;
+		    }
+		    if (s.size() == 0) {
+			ErrorSet.error(openLoc,
+				"JML does not allow an empty clause sequence");
+		    } else {
+			result.addElement(NestedModifierPragma.make(s));
+		    }
+                  }
+		  break;
+
+		// Any clause keyword ends up in the default (as well as
+		// anything unrecognized).  We do that because there are
+		// so many clause keywords.  However, that means that we
+		// have to be sure to have the list of keywords in 
+		// isRoutineModifier correct.
+                default:
+		    if (
+			(((behaviorTag == TagConstants.NORMAL_BEHAVIOR ||
+			behaviorTag == TagConstants.NORMAL_EXAMPLE) &&
+			(tag == TagConstants.SIGNALS ||
+			 tag == TagConstants.EXSURES))) 
+			||
+			(((behaviorTag == TagConstants.EXCEPTIONAL_BEHAVIOR ||
+			behaviorTag == TagConstants.EXCEPTIONAL_EXAMPLE) &&
+			(tag == TagConstants.ENSURES ||
+			 tag == TagConstants.POSTCONDITION))) 
+			) {
+			ErrorSet.error(loc,"A " + TagConstants.toString(tag) +
+			    " clause is not allowed in a " +
+			    TagConstants.toString(behaviorTag) + " section",
+			    behavior.getStartLoc());
+		    } else {
+			result.addElement(mp);
+		    }
+		    ++pos;
+            }
+        }
+    }
+}
+// FIXME - things not checked
+//	There should be no clauses after a |} (only |} only also or END or simple mods)
+//	The order of clauses is not checked
+//	JML only allows forall, old, requires prior to a nesting.

@@ -772,6 +772,16 @@ public class EscPragmaParser extends Parse implements PragmaParser
 		scanner.copyInto(dst);
 		scanner.getNextToken();
 		return true;
+/*
+	    } else if (tag != TagConstants.IMPORT) {
+		// Punctuation (e.g. {| ) and Java keywords fall here.
+		// The tag will be 'import' in the case that the user writes
+		// an import statement without a model keyword.  We handle
+		// it gracefully later on, but it requires not advancing the
+		// scanner.
+System.out.println("ADVANCING AT " + TagConstants.toString(tag));
+		scanner.getNextToken();
+*/
 	    }
 	    // Note: If the tag is not obtained from the identifier (e.g. if it
 	    // is also a Java keyword, such as assert) and is not already a
@@ -1179,17 +1189,79 @@ public class EscPragmaParser extends Parse implements PragmaParser
                     break;
                 }
 
-                case TagConstants.PURE: // SC parsed and checked SUPPORT COMPLETE (cok)
+                case TagConstants.NO_WACK_FORALL:
+                    // this is 'forall', *NOT* '\forall'
+		  {
+		    Type type = parseType(scanner);
+		    int locId = scanner.startingLoc;
+		    Identifier id = parseIdentifier(scanner);
+		    Type vartype = parseBracketPairs(scanner, type);
+		    if (scanner.ttype == TagConstants.ASSIGN) {
+			ErrorSet.error(scanner.startingLoc,
+			    "forall annotations may not have initializers");
+			eatThroughSemiColon();
+			semicolonExpected = false;
+		    } else {
+			semicolonExpected = true;
+		    }
+		    LocalVarDecl decl = LocalVarDecl.make(Modifiers.NONE,
+			null, id, vartype, locId, null, Location.NULL);
+		    dst.ttype = TagConstants.MODIFIERPRAGMA;
+		    dst.auxVal = VarDeclModifierPragma.make(tag,decl,loc,locId);
+		    break;
+		  }
+                case TagConstants.OLD:
+		  {
+		    Type type = parseType(scanner);
+		    int locId = scanner.startingLoc;
+		    if (scanner.ttype == TagConstants.ASSIGN) {
+			ErrorSet.error(locId, "Missing type or id");
+			eatThroughSemiColon();
+			semicolonExpected = false;
+			return getNextPragma(dst);
+		    }
+		    Identifier id = parseIdentifier(scanner);
+		    Type vartype = parseBracketPairs(scanner, type);
+		    if (scanner.ttype != TagConstants.ASSIGN) {
+			ErrorSet.error(locId,"old annotations must be initialized");
+			eatThroughSemiColon();
+			semicolonExpected = false;
+			return getNextPragma(dst);
+		    } else {
+			int locAssignOp = scanner.startingLoc;
+			scanner.getNextToken();
+			VarInit init = parseVariableInitializer(scanner, false);
+			if (init instanceof Expr) {
+			    ExprVec args = ExprVec.make();
+			    args.addElement((Expr)init);
+			    init = NaryExpr.make(loc, locAssignOp, TagConstants.PRE, null, args);
+			} else {
+				ErrorSet.error(locAssignOp,
+				"Array initializers in old statements are not implemented");
+			}
+			OldVarDecl decl = OldVarDecl.make(
+			    id, vartype, locId, init, locAssignOp);
+			
+			dst.ttype = TagConstants.MODIFIERPRAGMA;
+			dst.auxVal =
+			    VarDeclModifierPragma.make(tag,decl,loc,locId);
+			semicolonExpected = true;
+		    }
+		    break;
+		  }
 
-                case TagConstants.HELPER:
 
 		case TagConstants.OPENPRAGMA: // complete (ok)
 		case TagConstants.CLOSEPRAGMA: // complete (cok)
-
+		    scanner.getNextToken();
+		    // punctuation does not look like an identifier so it
+		    // does not get advanced up at the top
+		    // fall-through
+                case TagConstants.PURE:
+                case TagConstants.HELPER:
                 case TagConstants.SPEC_PROTECTED: // SC HPT AAST 3, SUPPORT COMPLETE (cok)
                 case TagConstants.SPEC_PUBLIC: // incomplete
-
-                case TagConstants.INSTANCE: // SC AAST 3 parses but no semantics (cok)
+                case TagConstants.INSTANCE: // complete (cok)
                 case TagConstants.MONITORED: // incomplete
                 case TagConstants.NON_NULL: // incomplete
                 case TagConstants.UNINITIALIZED: // incomplete
@@ -1343,15 +1415,10 @@ public class EscPragmaParser extends Parse implements PragmaParser
                     // unclear syntax and semantics (kiniry)
                 case TagConstants.CONTINUES:
                     // unclear syntax and semantics (kiniry)
-                case TagConstants.NO_WACK_FORALL:
-                    // unclear syntax and semantics - note that this is the keyword
-                    // 'forall', *NOT* '\forall'
                 case TagConstants.HENCE_BY_REDUNDANTLY:
                     // unclear syntax and semantics (kiniry)
                 case TagConstants.HENCE_BY:
                     // unclear syntax and semantics (kiniry)
-                case TagConstants.OLD:
-                    // unclear semantics (kiniry)
                 case TagConstants.RETURNS_REDUNDANTLY:
                     // unclear syntax and semantics (kiniry)
                 case TagConstants.RETURNS:
@@ -1381,7 +1448,9 @@ public class EscPragmaParser extends Parse implements PragmaParser
                 case TagConstants.MODEL_PROGRAM: {
                     // unclear syntax and semantics (cok/kiniry)
 		    // SKIP the compound statement
-		    checkNoModifiers(tag,loc);
+		    //checkNoModifiers(tag,loc);
+		    // FIXME - allow but ignore modifiers for now
+		    modifiers = Modifiers.NONE;
 		    expect(scanner,TagConstants.LBRACE);
 		    int braceCount = 1;
 		    while(true) {
@@ -1774,6 +1843,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
 				    l.getNextToken();
                                     ExprVec args = parseExpressionList(l, TagConstants.RPAREN);
                                     primary = NaryExpr.make(loc, l.startingLoc, tag, null, args);
+				    //primary = UnaryExpr.make(tag, args.elementAt(0), loc);
                                     break;
                                 }
 
@@ -1784,6 +1854,8 @@ public class EscPragmaParser extends Parse implements PragmaParser
 				    l.getNextToken();
                                     ExprVec args = parseExpressionList(l, TagConstants.RPAREN);
                                     primary = NaryExpr.make(loc, l.startingLoc, tag, null, args);
+				    //primary = UnaryExpr.make(tag, args.elementAt(0), loc);
+// FIXME why Nary instead of Unary?
                                     break;
 
 				}

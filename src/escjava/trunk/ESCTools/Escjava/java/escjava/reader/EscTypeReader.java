@@ -122,7 +122,17 @@ public class EscTypeReader extends StandardTypeReader
 
 	public CompilationUnit readRefinements(CompilationUnit cu) {
      
+	    // Get and parse the package name
 	    Name pkgName = cu.pkgName;
+	    String pkg = pkgName == null ? "" : pkgName.printName();
+	    //System.out.println("CU " + pkg + " " + type);
+	    String[] pkgStrings = pkgName == null ? new String[0] : 
+					pkgName.toStrings();
+
+
+	    // Look through all the types in the compilation unit and
+	    // find the public one.  That is the one whose name should
+	    // be used to find the refinement files.
 	    TypeDeclVec types = cu.elems;
 	    Identifier type = null;
 	    for (int i=0; i<types.size(); ++i) {
@@ -132,23 +142,39 @@ public class EscTypeReader extends StandardTypeReader
 		    break;
 		}
 	    }
+
+	    // See if there is a java file for this type.
+	    // Note that if there is no public type, then type == null,
+	    // and we don't look for a java file.
+	    GenericFile javafile = null;
 	    if (type == null) {
 		// No public type declaration
-		// Do no refinement processing
-		return cu;
-	    }
-	    String pkg = pkgName == null ? "" : pkgName.printName();
-	    //System.out.println("CU " + pkg + " " + type);
-	    String[] pkgStrings = pkgName == null ? new String[0] : 
-					pkgName.toStrings();
+		// So there are no other files to be found
+		// Have to do the refinement processing, because that makes
+		// a (singleton) composite set of pragma modifiers
 
+		String s = cu.sourceFile().getLocalName();
+		if (s.endsWith(".java")) javafile = cu.sourceFile();
+		
+	    } else {
+	    	javafile = ((EscTypeReader)OutsideEnv.reader).findSrcFile(pkgStrings,type.toString()+".java");
+
+	    }
+
+	    // Now find the refinement sequence belonging to the given type.
+	    // If there is none, or if type is null, then a refinement sequence
+	    // consisting of just the one compilation unit cu is returned.
+	    // If an error happens while tracing the RS, null is returned.
+	    // Note that this parses each of the files in the RS.
+	    // Note also that 'cu' need not be in its own RS.
 	    ArrayList refinements = getRefinementSequence(pkgStrings, type, cu);
-	    if (refinements == null) return null;
-	    if (refinements.size() == 0) return cu;
+	    if (refinements == null) return null; // Error already reported
 
 
 		// FIXME - Probably does not work for nested classes.
-	    GenericFile javafile = ((EscTypeReader)OutsideEnv.reader).findSrcFile(pkgStrings,type.toString()+".java");
+
+	    // Now find the compilation unit for the java file.  If it is
+	    // already in the RS or is the same as cu, we don't read it again.  
 	    CompilationUnit javacu = null;
 	    if (javafile != null) {
 		if (javafile.getCanonicalID().equals(cu.sourceFile().getCanonicalID())) javacu = cu;
@@ -160,22 +186,43 @@ public class EscTypeReader extends StandardTypeReader
 	    }
 	    //System.out.println("HAVE " + cu.sourceFile().getHumanName());
 	    if (javacu == null) {
+		// We don't already have a CU for the java file (that is, it
+		// is not cu or in the RS) so we need to parse the source or
+		// binary file.
+
+		// Note - if we are not using any implementation or 
+		// specs from the source file, why not just read the 
+		// binary if it is available?   FIXME
 		if (javafile != null) {
-		    //System.out.println("READING SOURCE " + javafile.getHumanName());
+		    // We have a .java source file so read from it.
+		    javafe.util.Info.out("Reading source file "
+			+ javafile.getHumanName());
 		    ErrorSet.caution("The file " + javafile + " is not in the refinement sequence that begins with " + cu.sourceFile() + "; it is used to generate a class signature, but no refinements within it are used.");
 		    javacu = super.read(javafile, false);
-		} else {
-	    	    javafile = ((EscTypeReader)OutsideEnv.reader).findBinFile(pkgStrings,type.toString()+".class");
-		    //System.out.println("READING BINARY " + javafile.getHumanName());
-		    if (javafile != null) javacu = ((EscTypeReader)OutsideEnv.reader).binaryReader.read(javafile, false); //read the binary??? FIXME
+			// The false above means only read a signature and not
+			// the implementation or the annotations.
+		} else if (type != null) {
+		    // If we have a type name by which to get a binary file,
+		    // then do so.
+	    	    javafile = ((EscTypeReader)OutsideEnv.reader).
+			findBinFile(pkgStrings,type.toString()+".class");
+		    if (javafile != null) {
+			javafe.util.Info.out("Reading class file "
+			    + javafile.getHumanName());
+			javacu = ((EscTypeReader)OutsideEnv.reader).
+				binaryReader.read(javafile, false); 
+		    }
 		}
 	    }
+
 // FIXME - really want a routine that reads binary if up to date otherwise 
 // source, simply to get signature.  Read java with bodies if it is one of the
 // files to be checked.  The above should be able to be greatly improved!!!!
      
-	    CompilationUnit newcu = new RefinementSequence(refinements,javacu,annotationHandler);
-	    //newcu = consolidateRefinements(refinements,javacu);
+	    CompilationUnit newcu = new RefinementSequence(refinements,
+						javacu,annotationHandler);
+	    
+	    javafe.util.Info.out("Constructed refinement sequence");
 	    return newcu;
 	}
      
@@ -183,9 +230,16 @@ public class EscTypeReader extends StandardTypeReader
         boolean refining = false;
 
 	// result is a list of CompilationUnits
+	// result is null if there was an error
+	// result will contain something, perhaps just the given cu
 	ArrayList getRefinementSequence(String[] pkgStrings, Identifier type, 
 				CompilationUnit cu) {
 	    ArrayList refinements = new ArrayList();
+	    if (type == null) {
+		annotationHandler.parseAllRoutineSpecs(cu);
+		refinements.add(cu);
+		return refinements;
+	    }
 	    GenericFile gf = cu.sourceFile();
 	    String gfid = gf.getCanonicalID();
 	    GenericFile mrcufile =
@@ -209,6 +263,7 @@ public class EscTypeReader extends StandardTypeReader
 		    ccu = tr.read(gfile,false);
 		    refining = false;
 		}
+		annotationHandler.parseAllRoutineSpecs(ccu);
 		refinements.add(ccu);
 		gfile = findRefined(pkgStrings,ccu);
 		if (gfile != null) {
@@ -250,6 +305,7 @@ public class EscTypeReader extends StandardTypeReader
 		    return null;
 		}
 	    }
+	    javafe.util.Info.out("Found refinement sequence files");
 	    return refinements;
 	}
 
