@@ -972,6 +972,7 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
     case TagConstants.ANYNE:
     case TagConstants.ARRAYLENGTH:
     case TagConstants.ARRAYFRESH:
+    case TagConstants.ARRAYMAKE:
     case TagConstants.ARRAYSHAPEMORE:
     case TagConstants.ARRAYSHAPEONE:
     case TagConstants.ASELEMS:

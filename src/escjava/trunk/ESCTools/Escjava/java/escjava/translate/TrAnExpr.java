@@ -58,6 +58,7 @@ public final class TrAnExpr {
     }
 
     public static void initForRoutine() {
+	extraSpecs = false;
 	trSpecExprAuxConditions = null;
 	tempn = 100;
 	declStack = new LinkedList();
@@ -67,7 +68,7 @@ public final class TrAnExpr {
     }
 
     public static boolean doRewrites() {
-	return trSpecExprAuxConditions != null;
+	return extraSpecs;
     }
 
     public static int level = 0;
@@ -457,11 +458,31 @@ public final class TrAnExpr {
       }
 
       case TagConstants.METHODINVOCATION: {
+	/* We can handle a method invocation in a spec expression in two ways.
+	a) We can turn the method invocation into a funcction call within the target
+	logic.  The we add axioms for that function call corresponding to the 
+	postconditions of the method in the Java program.  We add the implicit this
+	parameter as an argument of the function if the method is not static.
+	The difficulty is that not all methods are functions; functions have equal
+	results if their arguments are equal.  Methods don't necessarily satisfy this
+	because their arguments have structure that might change without the object
+	identity changing.  Having immutable objects helps.
+	b) Alternatively we define a new constant corresponding to the result of the
+	method invocation. [If the method invocation is within the scope of 
+	quantifiers, then we have to define a new function with the appropriate 
+	arguments.] Then we add an assumption that the constant satisfies the 
+	postconditions of the method (with \result replaced by the new constant).
+	The difficulties are that we need a new constant for each method invocations
+	and that we have to limit the depth since method postconditions can contain
+	more method calls.
+	*/
 	
 	MethodInvocation me = (MethodInvocation)e;
 
+	// FIXME - when is me.decl null ?
 	boolean isFunction = me.decl == null ? false : Utils.isFunction(me.decl);
-	//boolean isFunction = (Utils.findModifierPragma(me.decl.pmodifiers,TagConstants.FUNCTION) != null);
+	// The above result will be true if the method is declared to be a function
+	// or if it has only immutable arguments.
 
 	Expr v;
 	VariableAccess vv = tempName(e.getStartLoc(),"tempMethodReturn",
@@ -482,7 +503,7 @@ public final class TrAnExpr {
 			GenericVarDecl g = gi.elementAt(kk);
 			ev.addElement( VariableAccess.make(g.id, g.getStartLoc(), g) );
 		    }
-		} else System.out.print("[[" + o.getClass() + "]]");
+		} else System.out.print("[[" + o.getClass() + "]]");  // FIXME
 	    }
 	    v = GC.nary(vv.id,ev);
 	}
@@ -505,10 +526,10 @@ System.out.println("");
 	} else {
 	    genVarAndConditions = true;
 	}
-//boolean bstart = tempn==5363;
-//if (bstart) System.out.println("BB " + genSimpleVar + " " + genFunctionCallAndAxioms + " " + genVarAndConditions + " " + isFunction + " " + doRewrites() + " " + declStack.contains(me.decl) + " " + me.decl.parent.id + " " + me.decl.id);
 	    
 	if (genSimpleVar) {
+	    // Just replace the method invocation with a simple new variable
+	    // We won't be able to reason about it because it will be unique.
 	    return v;
 	} else if (genVarAndConditions) {
 	    ++level;
@@ -558,9 +579,26 @@ System.out.println("");
 
       case TagConstants.NEWARRAYEXPR: {
 	NewArrayExpr nae = (NewArrayExpr)e;
-// FIXME - need to put in the type and the dimension array
-// also need to make SImplify understand the make$Array function
 	if (doRewrites() ) {
+	    ExprVec ev = ExprVec.make(5);
+	    ev.addElement(apply(sp,currentAlloc) ); // current alloc
+	    VariableAccess newAlloc = GC.makeVar(GC.allocvar.id,nae.getStartLoc());
+	    ev.addElement(apply(sp,newAlloc) ); // new alloc value
+	    trSpecExprAuxAssumptions.addElement(
+		GC.nary(TagConstants.ALLOCLT, currentAlloc, newAlloc));
+	    currentAlloc = newAlloc;
+	    Expr edims = GC.nary( TagConstants.ARRAYSHAPEONE, 
+				trSpecExpr( nae.dims.elementAt(0), sp, st));
+	    for (int kk = 1; kk < nae.dims.size(); ++kk) {
+		edims = GC.nary( TagConstants.ARRAYSHAPEMORE,
+				trSpecExpr( nae.dims.elementAt(kk), sp, st), edims);
+	    }
+	    ev.addElement(edims ); // arrayShape
+	    Type t = TypeCheck.inst.getType(nae);
+	    ev.addElement( TypeExpr.make(Location.NULL, Location.NULL, t) );
+	    ev.addElement(Types.zeroEquivalent(Types.baseType(t))); // initial value
+	    return GC.nary(TagConstants.ARRAYMAKE,ev);
+/*
 	    VariableAccess v = tempName(e.getStartLoc(),"tempNewArray",
 				TypeCheck.inst.getType(nae));
 
@@ -577,18 +615,16 @@ System.out.println("");
 				trSpecExpr( nae.dims.elementAt(0), sp, st));
 	    for (int kk = 1; kk < nae.dims.size(); ++kk) {
 		edims = GC.nary( TagConstants.ARRAYSHAPEMORE,
-				trSpecExpr( nae.dims.elementAt(kk), sp, st));
+				trSpecExpr( nae.dims.elementAt(kk), sp, st), edims);
 	    }
 	    ev.addElement(edims ); // arrayShape
 	    ev.addElement( TypeExpr.make(Location.NULL, Location.NULL, TypeCheck.inst.getType(nae)) );
-	    if (Types.isIntType(nae.type))
-		ev.addElement( LiteralExpr.make(TagConstants.INTLIT, new Integer(0), Location.NULL)); // initial value
-	    else if (Types.isReferenceType(nae.type))
-		ev.addElement( LiteralExpr.make(TagConstants.NULLLIT, null, Location.NULL));
+	    ev.addElement(Types.zeroEquivalent(TypeCheck.inst.getType(nae)); // initial value
 
 	    trSpecExprAuxConditions.addElement(GC.nary(TagConstants.ARRAYFRESH,ev));
 	    return v;
 		// FIXME for multiple dimensions, other types
+*/
 	} else {
 	    ErrorSet.notImplemented(!Main.options().noNotCheckedWarnings,
 		e.getStartLoc(),"Not checking predicates containing new array expressions");

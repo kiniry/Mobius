@@ -604,6 +604,7 @@ public class VcToString {
       case TagConstants.ALLOCLE:
       case TagConstants.ARRAYLENGTH:
       case TagConstants.ARRAYFRESH:
+      case TagConstants.ARRAYMAKE:
       case TagConstants.ARRAYSHAPEMORE:
       case TagConstants.ARRAYSHAPEONE:
       case TagConstants.ASELEMS:

@@ -1727,6 +1727,7 @@ public final class Translate
 		    Expr rval = TrAnExpr.trSpecExpr(s.value);
 		    if (TrAnExpr.extraSpecs) addNewAssumptions();
 		    writeCheck(lhs, s.value, rval, s.locOp, false);
+		    // modifiesCheck(fa);
 		    String name;
 		    if (lhs.getTag() == TagConstants.VARIABLEACCESS) {
 			VariableAccess valhs = (VariableAccess)lhs;
@@ -3375,6 +3376,23 @@ public final class Translate
         }
         mutexList.removeAllElements(); // Help the garbage collector...
         locList.clear(); // Help the garbage collector...
+    }
+
+    private void modifiesCheck(Expr lhs) {
+	if (lhs instanceof FieldAccess) {
+		System.out.println("MCHECK " + ((FieldAccess)lhs).decl.id);
+	} else {
+		System.out.println("MC " + lhs.getClass());
+	}
+	DerivedMethodDecl dmd = GetSpec.getCombinedMethodDecl(rdCurrent);
+	CondExprModifierPragmaVec mods = dmd.modifies;
+	int sz = mods.size();
+	for (int i=0; i<sz; ++i) {
+	    CondExprModifierPragma mp = mods.elementAt(i);
+	    Expr ex = mp.expr;
+	    Expr pred = mp.cond;
+	    System.out.println("COMPARE TO " + ex.getClass());
+	}
     }
 
     /**

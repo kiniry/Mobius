@@ -791,6 +791,35 @@ public class Types
             return intType;
     }
 
+    public static Type baseType(Type t) {
+	if (!(t instanceof ArrayType)) return t;
+	return baseType( ((ArrayType)t).elemType );
+    }
+
+    public static LiteralExpr zeroEquivalent(Type t) {
+	if (isReferenceType(t)) {
+	    return LiteralExpr.make(TagConstants.NULLLIT,null,Location.NULL);
+	} else if (isIntType(t)) {
+	    return LiteralExpr.make(TagConstants.INTLIT, new Integer(0), Location.NULL);
+	} else if (isLongType(t)) {
+	    return LiteralExpr.make(TagConstants.LONGLIT, new Long(0), Location.NULL);
+	} else if (isBooleanType(t)) {
+	    return LiteralExpr.make(TagConstants.BOOLEANLIT, Boolean.FALSE, Location.NULL);
+	} else if (isDoubleType(t)) {
+	    return LiteralExpr.make(TagConstants.DOUBLELIT, new Double(0), Location.NULL);
+	} else if (isFloatType(t)) {
+	    return LiteralExpr.make(TagConstants.FLOATLIT, new Float(0), Location.NULL);
+	} else if (isShortType(t)) {
+	    return LiteralExpr.make(TagConstants.SHORTLIT, new Short((short)0), Location.NULL);
+	} else if (isByteType(t)) {
+	    return LiteralExpr.make(TagConstants.BYTELIT, new Byte((byte)0), Location.NULL);
+	} else if (isCharType(t)) {
+	    return LiteralExpr.make(TagConstants.CHARLIT, new Character((char)0), Location.NULL);
+	}
+	System.out.println("UNSUPPORTED TYPE - zeroEquivalent " + printName(t));
+	return null;
+    }
+
     // ----------------------------------------------------------------------
     // Miscilaneous operations
   

@@ -180,7 +180,7 @@ public final class Utils {
     };
     public static boolean isFunction(RoutineDecl rd) {
 	// FIXME - try all methods being true
-	if (rd instanceof MethodDecl) return true;
+	//if (rd instanceof MethodDecl) return true;
 	return functionDecoration.isTrue(rd);
     }
 

@@ -100,7 +100,8 @@ public class TagConstants extends GeneratedTags
     public static final int ANYNE = ANYEQ+1;
     public static final int ARRAYLENGTH = ANYNE+1;
     public static final int ARRAYFRESH = ARRAYLENGTH + 1;
-    public static final int ARRAYSHAPEMORE = ARRAYFRESH + 1;
+    public static final int ARRAYMAKE = ARRAYFRESH + 1;
+    public static final int ARRAYSHAPEMORE = ARRAYMAKE + 1;
     public static final int ARRAYSHAPEONE = ARRAYSHAPEMORE + 1;
     public static final int ASELEMS = ARRAYSHAPEONE + 1;
     public static final int ASFIELD = ASELEMS + 1;
@@ -730,6 +731,7 @@ public class TagConstants extends GeneratedTags
         "anyNE",
         "arrayLength",
         "arrayFresh",
+        "arrayMake",
         "arrayShapeMore",
         "arrayShapeOne",
         "asElems",
