@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin
+   id="escjava.esctools"
+   name="Esctools Library Plug-in"
+   version="1.0.2"
+   provider-name="David R. Cok">
+
+   <runtime>
+     <library name="esctools2.jar">
+         <export name="*"/>
+      </library>
+   </runtime>
+
+</plugin>
