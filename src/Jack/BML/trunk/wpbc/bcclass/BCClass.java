@@ -6,6 +6,7 @@
  */
 package bcclass;
 
+import java.io.PrintStream;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -18,12 +19,8 @@ import org.apache.bcel.classfile.Method;
 import org.apache.bcel.classfile.Unknown;
 import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.MethodGen;
-import org.apache.bcel.generic.Type;
 
-import formula.Formula;
-import formula.atomic.Predicate;
-import formula.atomic.Predicate0Ar;
-
+import application.JavaApplication;
 import bc.io.AttributeReader;
 import bc.io.ReadAttributeException;
 import bcclass.attributes.BCAttribute;
@@ -32,8 +29,8 @@ import bcclass.attributes.HistoryConstraints;
 import bcclass.attributes.ModifiesSet;
 import bcclass.utils.MethodSignature;
 import bytecode.block.IllegalLoopException;
-import utils.Util;
-import application.JavaApplication;
+import formula.Formula;
+import formula.atomic.Predicate0Ar;
 
 /**
  * @author mpavlova
@@ -270,6 +267,14 @@ public class BCClass {
 	
 	public String toString() {
 		return getName();
+	}
+
+	/**
+	 * @param pt
+	 */
+	public void saveCode(PrintStream pt) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	
