@@ -91,7 +91,6 @@ abstract class LookAheadEnum implements Enumeration {
 	lookAheadValid = true;
 	lookAhead = first;
 
-	//@ set moreElements = true;
     }
 
 

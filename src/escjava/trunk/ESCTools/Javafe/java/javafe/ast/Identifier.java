@@ -54,12 +54,12 @@ public final class Identifier
   /** Sequence of characters represented by this Identifier (never
     <code>null</code>). */
   //@ invariant chars != null;
-  private char[] chars;
+  private char[] chars; //@ in objectState;
 
   /** Memoization of <code>String.valueOf(chars, 0,
     chars.length)</code>; may be <code>null</code>.  This variable may
     be written exactly once. */
-  private String equiv;
+  private String equiv; //@ in objectState;
 
 
   //// "Friend", variables

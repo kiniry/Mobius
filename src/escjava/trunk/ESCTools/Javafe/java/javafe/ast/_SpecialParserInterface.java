@@ -1,7 +1,7 @@
 /* Copyright 2000, 2001, Compaq Computer Corporation */
 
 package javafe.ast;
-
+//@ model import javafe.parser.TagConstants;
 
 /** <CODE>_SpecialParserInterface</CODE> is not a class that should be
 used by general clients of the <CODE>javafe.ast</CODE> package.  It

@@ -2076,6 +2076,7 @@ public abstract class Name extends ASTNode
      * X.Y.Z, ...
      */
     //@ ensures \result != null;
+    //@ pure
     public abstract String printName();
 
     /**
@@ -2099,6 +2100,7 @@ public abstract class Name extends ASTNode
 
     /** Return the number of identifiers in <code>this</code>. */
     //@ ensures \result==length;
+    //@ pure
     public abstract int size();
 
     /**
@@ -2106,6 +2108,7 @@ public abstract class Name extends ASTNode
      */
     //@ requires 0 <= i && i<length;
     //@ ensures \result != null;
+    //@ pure
     public abstract Identifier identifierAt(int i);
 
     /**
@@ -2113,6 +2116,7 @@ public abstract class Name extends ASTNode
      */
     //@ requires 0 <= i && i<length;
     //@ ensures \result != Location.NULL;
+    //@ pure
     public abstract int locIdAt(int i);
 
     /**
@@ -2121,6 +2125,7 @@ public abstract class Name extends ASTNode
      */
     //@ requires 0 <= i && i<length-1;
     //@ ensures \result != Location.NULL;
+    //@ pure
     public abstract int locDotAfter(int i);
 
     /**
@@ -2131,6 +2136,7 @@ public abstract class Name extends ASTNode
     //@ requires 0 <= len && len <= length;
     //@ ensures \nonnullelements(\result);
     //@ ensures \result.length == len;
+    //@ pure
     public abstract String[] toStrings(int len);
 
     /**
@@ -2138,6 +2144,7 @@ public abstract class Name extends ASTNode
      */
     //@ ensures \nonnullelements(\result);
     //@ ensures \result.length == length;
+    //@ pure
     public String[] toStrings() {
 	return toStrings(size());
     }
@@ -2155,6 +2162,7 @@ public abstract class Name extends ASTNode
     /*@ requires (\forall int i; (0 <= i && i<locDots.length)
 			==> locDots[i] != Location.NULL) */
     //@ ensures \result != null;
+    //@ pure
     public static Name make(int[] locIds, int[] locDots, IdentifierVec ids) {
 	int sz = ids.size();
 	Assert.precondition(sz > 0 && locIds.length == sz
@@ -2178,6 +2186,7 @@ public abstract class Name extends ASTNode
     //@ requires N.length()>0;
     //@ requires loc != Location.NULL;
     //@ ensures \result != null;
+    //@ pure
     public static Name make(String N, int loc) {
 	// Convert N to a list of its components:
 	String[] components = javafe.filespace.StringUtil.parseList(N, '.');
@@ -2210,11 +2219,13 @@ public abstract class Name extends ASTNode
      */
     //@ requires 0<len && len <= length;
     //@ ensures \result != null;
+    //@ pure
     public abstract Name prefix(int len);
 
     /**
      * Override getEndLoc so it refers to the actual end of us.
      */
+    //@ pure
     public int getEndLoc() {
 	return Location.inc(getStartLoc(),
 			    Math.max(0, printName().length()-1));
@@ -2225,7 +2236,7 @@ public abstract class Name extends ASTNode
      */
     //@ invariant \nonnullelements(emptyStringArray);
     //@ invariant emptyStringArray.length == 0;
-    protected static String[] emptyStringArray = new String[0];
+    final protected static String[] emptyStringArray = new String[0];
 
 }
 

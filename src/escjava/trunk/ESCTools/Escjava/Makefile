@@ -369,9 +369,16 @@ test_matrix:
 
 .PHONY: self_test
 self_test: build
-	${ESCJ} -classpath "${call canonicalize,${ESCTOOLS_ROOT}/Javafe/java:${ESCTOOLS_ROOT}/Escjava/java:${ESCTOOLS_ROOT}/Utils}" \
+	${ESCJ} -classpath "${call canonicalize,${ESCTOOLS_ROOT}/Javafe/java:${ESCTOOLS_ROOT}/Escjava/java:${ESCTOOLS_ROOT}/Utils:${JUNIT_LIB}}" \
 		-nocheck -source 1.4 -quiet -noSemicolonWarnings \
 		${foreach file,${OTHERSOURCEFILES} ${JAVASOURCEFILES},$(call canonicalize,$(file))}
+
+.PHONY: self_testp
+self_testp: build
+	echo ${foreach file,${OTHERSOURCEFILES} ${JAVASOURCEFILES},$(call canonicalize,$(file))} | \
+	xargs -t -n 50 \
+	${ESCJ} -classpath "${call canonicalize,${ESCTOOLS_ROOT}/Javafe/java:${ESCTOOLS_ROOT}/Escjava/java:${ESCTOOLS_ROOT}/Utils:${JUNIT_LIB}}" \
+		-nocheck -source 1.4 -quiet -noSemicolonWarnings
 
 ## FIXME - is this used? should it be?
 ## This tests a binary release that is present in the RELTEMP directory,

@@ -14,7 +14,6 @@ class EmptyEnum implements Enumeration
     //@ invariant !returnsNull;
 
     EmptyEnum() {
-	//@ set moreElements = false;
 	//@ set returnsNull = false;
 	//@ set elementType = \type(Object);
     }
