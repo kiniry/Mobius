@@ -230,24 +230,26 @@ public final class ErrorMsg
 		ErrorSet.warning( msg+" (" + TagConstants.toString(tag) + ")" );
 
 	if( locDecl != Location.NULL) {
+	    ErrorSet.getReporter().reportAssociatedInfo2(locDecl, assocDeclClipPolicy);
 	    if (!Location.isWholeFileLoc(locDecl)) {
-		System.out.println("Associated declaration is "
-			       + Location.toString(locDecl) + ":");
-		ErrorSet.displayColumn(locDecl, assocDeclClipPolicy);
+		//System.out.println("Associated declaration is "
+		//	       + Location.toString(locDecl) + ":");
+		//ErrorSet.displayColumn(locDecl, assocDeclClipPolicy);
 	    } else {
-		System.out.println("Associated declaration is "
-			       + Location.toString(locDecl) );
+		//System.out.println("Associated declaration is "
+		//	       + Location.toString(locDecl) );
 	    }
 	}
 
 	if( locAux != Location.NULL) {
+	    ErrorSet.getReporter().reportAssociatedInfo2(locAux, assocDeclClipPolicy);
 	    if (!Location.isWholeFileLoc(locAux)) {
-		System.out.println("Associated declaration is "
-			       + Location.toString(locAux) + ":");
-		ErrorSet.displayColumn(locAux, assocDeclClipPolicy);
+		//System.out.println("Associated declaration is "
+		//	       + Location.toString(locAux) + ":");
+		//ErrorSet.displayColumn(locAux, assocDeclClipPolicy);
 	    } else {
-		System.out.println("Associated declaration is "
-			       + Location.toString(locAux) );
+		//System.out.println("Associated declaration is "
+		//	       + Location.toString(locAux) );
 	    }
 	}
 

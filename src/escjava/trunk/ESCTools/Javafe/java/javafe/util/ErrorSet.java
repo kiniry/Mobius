@@ -252,9 +252,8 @@ public class ErrorSet
     //@ modifies System.out.output;
     public static void assocLoc(int loc) {
 	if (loc != Location.NULL)
-	    report(loc, "Associated declaration", "");
+	    reporter.reportAssociatedInfo(loc);
     }
-
 
     /**
      * Report a fatal error.  Warning: This method does not
@@ -369,7 +368,7 @@ public class ErrorSet
     //@ requires msg != null;
     //@ modifies System.out.output;
     public static void report(/*@ non_null @*/ String msg) {
-	System.out.println(msg);
+	reporter.report(0,Location.NULL,-1,msg);
     }
 
 
@@ -407,20 +406,9 @@ public class ErrorSet
 	}
 
 	// Display the file human-readable name and line # if available:
-	System.out.print(Location.toFileName(loc) + ":");
-	if (!Location.isWholeFileLoc(loc))
-	    System.out.print(Location.toLineNumber(loc) + ":");
 
-	// Display the type of the information & the information:
-	System.out.println(" " + type + ": "+ msg);
+	reporter.report(0,loc,-1,type + ": " + msg);
 
-	// Display which column # visually if available:
-	if (!Location.isWholeFileLoc(loc))
-	    displayColumn(loc);
-	else if (msg.length() == 0) {
-	    System.out.println("                ( line not available )");
-	    System.out.println("");
-        }
     }
 
 
@@ -540,8 +528,8 @@ public class ErrorSet
     //@ ensures true;
     public static void displayColumn(int loc, ClipPolicy policy) {
 	String line = getLine(loc);
-	int col = Location.toColumn(loc);	// zero-based
-	//@ assume col >= 0 && col < line.length();  // FIXME
+	int col = Location.toColumn(loc);     // zero-based
+	//@ assume line != null ==> (col >= 0 && col < line.length());  // FIXME
 	if (line==null) {
 	     System.out.println("(line text not available; see column "
 					+ col + ")");
@@ -627,5 +615,93 @@ public class ErrorSet
     static public void dump(String s) {
 	if (s != null) System.out.println(s);
 	(new Exception()).printStackTrace();
+    }
+
+    public static interface Reporter {
+	/**
+	 * Unified interface for reporting information - all messages to the
+	 * user go through this method.
+	 * @param severity - the severity of the condition: 0 for information
+	 *	1 for warnings, 2 for errors
+	 * @param loc - the location (as in @loc(javafe.util.Location))
+	 *	referred to by the message; Location.NULL if the message
+	 *	does not refer to any location in particular
+	 * @param length - the length of the section of the line that should
+	 *	be high-lighted; -1 if the length is not known.
+	 * @param message - the text message to be conveyed to the user
+	 */
+	void report(int severity, int loc, int length, String message);
+
+	/** This method reports the location of an associated bit of
+	 *  information (e.g. the location of a referenced declaration)
+	 *  that goes with the most recent call of 'report'.
+	 * @param loc The Location of theassociated information
+	 */
+	void reportAssociatedInfo(int loc);
+	void reportAssociatedInfo2(int loc, ClipPolicy cp);
+    }
+
+    static private Reporter reporter = new StandardReporter();
+
+    /** Returns the current output reporter.
+	@return the current reporter
+      */
+    static public Reporter getReporter() {
+	return reporter;
+    }
+
+    /**
+     * Sets the reporter to be used to convey information to the user;
+     * returns the previous value of the reporter.
+     *
+     * @param r The new value of the single reporter object.
+     * @return  The previous value of the reporter object.
+     */
+    public static Reporter setReporter(Reporter r) {
+	Reporter rr = reporter;
+	reporter = r;
+	return rr;
+    }
+
+    public static class StandardReporter implements Reporter {
+	public void report(int severity, int loc, 
+		int length, String message) {
+	    if (loc == Location.NULL) {
+		System.out.println(message);
+
+	    } else {
+		System.out.print(Location.toFileName(loc) + ":");
+		if (!Location.isWholeFileLoc(loc))
+		    System.out.print(Location.toLineNumber(loc) + ":");
+
+		// Display the type of the information & the information:
+		System.out.println(" " + message);
+
+		// Display which column # visually if available:
+		if (!Location.isWholeFileLoc(loc))
+		    displayColumn(loc);
+		else if (message.length() == 0) {
+		    System.out.println("                ( line not available )");
+		    System.out.println("");
+		}
+	    }
+	}
+
+	public void reportAssociatedInfo(int loc) {
+	    if (loc != Location.NULL)
+		report(0, loc, -1, "Associated declaration: ");
+	}
+
+	// Alternate syntax for associated declarations - they
+	// should be unified, but that involves fixing all of the tests - FIXME
+	public void reportAssociatedInfo2(int loc, ClipPolicy cp) {
+	    System.out.println("Associated declaration is "
+			    + Location.toString(loc) + ":");
+	    if (!Location.isWholeFileLoc(loc)) {
+		ErrorSet.displayColumn(loc, cp);
+	    }
+	}
+
+
     }
 }
