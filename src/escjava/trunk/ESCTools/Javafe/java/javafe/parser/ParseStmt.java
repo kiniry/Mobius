@@ -204,12 +204,8 @@ public abstract class ParseStmt extends ParseExpr
         int keywordloc = l.startingLoc;
         switch (ttype) {
             case TagConstants.ASSERT: { // 'assert' BoolExpr [ ':' NonVoidExpr ] ';'
-                // Only process if assert *is* a keyword.
-                if (!Tool.options.assertIsKeyword) {
-                    javafe.util.ErrorSet.error(l.startingLoc, "Java keyword \"assert\" is only supported if the" +
-                         " -source 1.4 option is provided.");
-                }
                 
+		int loc = l.startingLoc;
                 l.getNextToken(); // Discard the keyword
                 Expr predicate = parseExpression(l);
                 Expr label = null;
@@ -218,7 +214,11 @@ public abstract class ParseStmt extends ParseExpr
                     label = parseExpression(l);
                 }
                 expect(l, TagConstants.SEMICOLON);
-                if (Tool.options.assertIsKeyword)
+                // Only process if assert *is* a keyword.
+                if (Tool.options != null && !Tool.options.assertIsKeyword) {
+                    javafe.util.ErrorSet.error(loc, "Java keyword \"assert\" is only supported if the" +
+                         " -source 1.4 option is provided.");
+                } else
 		    seqStmt.addElement(AssertStmt.make(predicate, label, keywordloc));
                 return;
             }

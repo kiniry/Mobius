@@ -48,7 +48,7 @@ public class ParseType extends ParseUtil
                     // can be null if we are not running in a "real"
                     // tool, as is the case during testing with
                     // javafe.parser.test.TestParse.
-                    if ((Tool.options != null) && (Tool.options.assertIsKeyword)) {
+                    if ((Tool.options == null) || (Tool.options.assertIsKeyword)) {
                         // if "assert" is a keyword, then it cannot be
                         // used as an identifier.
                         fail(l.startingLoc,

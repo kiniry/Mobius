@@ -610,7 +610,7 @@ public abstract class ParseExpr extends ParseType
                 // Name and (.
             case TagConstants.ASSERT:
                 // Only process if assert is *not* a keyword.
-                if (Tool.options.assertIsKeyword) {
+                if (Tool.options == null || Tool.options.assertIsKeyword) {
                     fail(l.startingLoc, "\"assert\" is a Java keyword when you use the" +
                          " -source 1.4 option; rename this identifier.");
                 }
