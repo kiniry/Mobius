@@ -20,6 +20,9 @@
 @string{amast02         = "Algebraic Methodology And Software
                   Technology (AMAST'02)"}
 @string{fme02           = "Formal Methods Europe (FME'02)"}
+@string{fme03           = "Formal Methods Europe (FME'03)"}
+
+@string{jlap = "Journal of Logic and Algebraic Programming"}
 
 @book{Alexander79,
   author = {C. Alexander},
@@ -158,9 +161,10 @@ number = 10,
 pages = "785--798"
 }
 
-@misc{BratKPV00,
+@inproceedings{BratKPV00,
   author = "G. Brat and K. Havelund and S. Park and W. Visser",
-  title = "Java PathFinder - Second Generation of a Java Model Checker",
+  title = "{Java PathFinder} - Second Generation of a {Java} Model Checker",
+  booktitle = "Workshop on Advances in Verification",
   text = "G. Brat, and K. Havelund, and S. Park and W. Visser. Java PathFinder - Second
     Generation of a Java Model Checker. In Proc. of Post-CAV Workshop on Advances
     in Verification, Chicago, July 2000.",
@@ -190,15 +194,26 @@ editor = "H. Kirchner and C. Ringeissen"
 @misc{BreunesseCHJ03,
 title = {{Formal Methods for Smart Cards: an experience report}},
 author = "C. Breunesse and N. Cata{\~n}o and M. Huisman and B. Jacobs",
-year = 2003,
-note = "Manuscript"
+note = "Manuscript",
+year = 2003
 }
 
-@misc{BurdyRL03,
+@inproceedings{BurdyRL03,
 title = {{Java Applet Correctness: a Developer-Oriented Approach}},
 author = "L. Burdy and A. Requet and J.-L. Lanet",
 year = 2003,
-note = "Manuscript"
+booktitle = fme03,
+publisher = springer,
+series = lncs,
+note = "To appear"
+}
+
+@inproceedings{BurdyCCEKLLP03,
+title = "An overview of {JML} tools and applications",
+author = "L. Burdy and Y. Cheon and D. Cok and M. Ernst and J. Kiniry and G.T. Leavens and K.R.M. Leino and E. Poll",
+booktitle = "Formal Methods for Industrial Critical Systems (FMICS 03)",
+year = 2003,
+series = entcs
 }
 
 
@@ -229,7 +244,7 @@ pages = "272--289"
 }
 
 @inproceedings{CatanoH03,
-title = "{Chase: a Static Checker for JML's Assignable Clause}",
+title = "{Chase: a Static Checker for {JML}'s Assignable Clause}",
 author = "N. Cata{\~n}o and M. Huisman",
 year = 2003,
 booktitle = "Verification, Model Checking and Abstract Interpretation (VMCAI '03)",
@@ -404,8 +419,10 @@ key = {EJ00}
 author = "J.-C. Filli{\^a}tre",
 title = "Verification of Non-Functional Programs using Interpretations in Type Theory",
 journal = "Journal of Functional Programming",
-year = 2001,
-note = "To appear"
+year = 2003,
+volume = "13",
+number = "4",
+pages ="709---745"
 }
 
 @inproceedings{FlanaganL01,
@@ -690,11 +707,12 @@ YEAR = 1999}
 }
 
 @INPROCEEDINGS{LeavensLPRJ00,
-author = "G.T. Leavens and K.R.M. Leino and E. Poll and C. Ruby and B. Jacobs",
+author = "G.T. Leavens and K.R.M. Leino and E. Poll and C. Ruby and B. Jacobs"
+,
 title = "{JML: notations and tools supporting detailed design in Java}",
 year = 2000,
 booktitle = "OOPSLA 2000 Companion",
-  Pages =       "105--106",
+Pages =       "105--106",
 publisher = "ACM Press",
 note = {Also as Technical Report TR \#00-15, Iowa State University}
 }
@@ -710,7 +728,7 @@ note = {Also as Technical Report TR \#00-15, Iowa State University}
 
 @phdthesis{Leino95,
   author = "K.R.M. Leino",
-  title =  {Toward Reliable Modular Programs, PhD Thesis},
+  title =  {Toward Reliable Modular Programs},
   school = {California Institute of Technology},
   year =   1995,
 }
@@ -771,7 +789,15 @@ note    = {\texttt{http://www.cs.kun.nl/\homedir bart/LOOP/}}
 author = "C. March\'e and C. Paulin-Mohring and X. Urbain",
 title = "The {Krakatoa} Tool for {JML/Java} Program Certification",
 note = "Manuscript",
-year = 2002
+year = 2003
+}
+
+@article{MarchePU03,
+author = "C. March\'e and C. Paulin-Mohring and X. Urbain",
+title = "The {Krakatoa} Tool for {JML/Java} Program Certification",
+note = "To appear",
+journal = jlap,
+year = 2003
 }
 
 @inproceedings{McCarthyH69,
@@ -1031,4 +1057,35 @@ editor = "H. Kirchner and C. Ringeissen"
 }
 
 
+@article{BartJacobsWP,
+author = "B. Jacobs",
+title = "Weakest Precondition Reasoning for {Java} Programs with {JML} Annotations",
+journal = "Journal of Logic and Algebraic Programming",
+year = 2003,
+note = "To appear (copy: \verb+http://www.cs.kun.nl/~bart/PAPERS/jmlwp.ps.Z+)"
+}
+
+@techreport{Chalin03,
+  author = "P. Chalin",
+  title = "{JML} Support for Primitive Arbitrary Precision Numeric Types: Definition and Semantics",
+  institution = "Concordia University 002.1.1",
+  year  = "2003",
+}
+
+@UNPUBLISHED{Jacobs03b, 
+AUTHOR       = "B. Jacobs", 
+TITLE        = "{Java}'s Integral Types in {PVS}",
+NOTE         = "Manuscript, 
+                \\\verb+http://www.cs.kun.nl/~bart/PAPERS/integral.ps.gz+", 
+YEAR         = "2003"}
+
+@unpublished{Leavens03,
+AUTHOR = "G.T. Leavens and E. Poll and C. Clifton and Y. Cheon and C. Ruby",
+TITLE  = "{JML} Reference Manual",
+NOTE   = "Preliminary draft \\\verb+http://www.cs.iastate.edu/~leavens/JML/jmlrefman/jmlrefman_toc.html+"}
+
+@MISC{VERIF,
+KEY = "VER",
+AUTHOR   = "VerifiCard Project homepage",
+NOTE    = "\texttt{http://www.verificard.org}"}
 
