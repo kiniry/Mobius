@@ -298,7 +298,7 @@ class ASTClassFileParser extends ClassFileParser
 	Identifier terminal  = getNameTerminal(typeName.name);
 
 	this_class_index = cindex;
-	this_class      = typeName;
+	//this_class      = typeName;
 	classPackage    = qualifier;
 	classIdentifier = terminal;
 
@@ -544,7 +544,7 @@ class ASTClassFileParser extends ClassFileParser
      * The type name of the class being parsed.
      * Initialized by set_this_class.
      */
-    private TypeName this_class;
+    //private TypeName this_class;
 
     /**
      * The type name of the superclass of the class being parsed.

@@ -23,9 +23,14 @@ public class Helper {
        have to recompute this fact.  In particular, the helperDecoration of
        a RoutineDecl is non-null precisely when the RoutineDecl is known
        to be not helper recursive.
+       
+       FIXME - this is not currently used, but should be?
+    
+    static {
+        ASTDecoration helperDecoration = 
+            new ASTDecoration("helperDecoration");
+    }
     */
-    private static ASTDecoration helperDecoration =
-	new ASTDecoration("helperDecoration");
 
 
     /* Returns true iff the given RoutineDecl has a 'helper' modifier

@@ -32,7 +32,7 @@ public class EnumNFindK implements Abstractor {
     // invariant: R = conjunction of clauses
     // clauses are bdds, disj are Disjunctions, otherwise identical
 
-    private Prover prover;
+    //private Prover prover;
 
     private boolean noisy = Boolean.getBoolean("PANOISY");
     private static boolean invLeqK = Boolean.getBoolean("INVLEQK");
@@ -82,7 +82,7 @@ public class EnumNFindK implements Abstractor {
 	clauses = new Vector();
 	disj = new Vector();
 
-	this.prover = prover;
+	//this.prover = prover;
 	DisjunctionProver disjProver = new DisjunctionProver( prover, bddManager );
 
 	for(int i=0; i<oldDisj.size(); i++) {

@@ -420,7 +420,7 @@ class CopyLoadedOptions extends SrcToolOptions {
      *                                                 *
      **************************************************/
 
-    private final String name = "CopyLoaded";
+    //private final String name = "CopyLoaded";
     
     public int processOption(String option, String[] args, int offset) 
                                         throws UsageError {

@@ -77,13 +77,13 @@ public class OperatorTags extends GeneratedTags
         return "Unknown tag <" + opTag + ">";
     }
 
-    private static final /*@ non_null @*/ int[] opTags = {
-        OR, AND, BITOR, BITXOR, BITAND, NE, EQ, GE, GT, LE, LT,
-        LSHIFT, RSHIFT, URSHIFT, ADD, SUB, DIV, MOD, STAR,
-        ASSIGN, ASGMUL, ASGDIV, ASGREM, ASGADD, ASGSUB,
-        ASGLSHIFT, ASGRSHIFT, ASGURSHIFT, ASGBITAND, ASGBITOR, ASGBITXOR,
-        UNARYADD, UNARYSUB, NOT, BITNOT, INC, DEC, POSTFIXINC, POSTFIXDEC
-    };
+//    private static final /*@ non_null @*/ int[] opTags = {
+//        OR, AND, BITOR, BITXOR, BITAND, NE, EQ, GE, GT, LE, LT,
+//        LSHIFT, RSHIFT, URSHIFT, ADD, SUB, DIV, MOD, STAR,
+//        ASSIGN, ASGMUL, ASGDIV, ASGREM, ASGADD, ASGSUB,
+//        ASGLSHIFT, ASGRSHIFT, ASGURSHIFT, ASGBITAND, ASGBITOR, ASGBITXOR,
+//        UNARYADD, UNARYSUB, NOT, BITNOT, INC, DEC, POSTFIXINC, POSTFIXDEC
+//    };
 
     //@ private invariant \nonnullelements(opStrings);
     //@ private invariant opTags.length == opStrings.length;

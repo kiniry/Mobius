@@ -542,17 +542,7 @@ public final class ErrorMsg
 			location + ".");
 	}
     }
-
-
-    /** Converts string <code>s</code>, beginning at index <code>k</code>,
-     * to a pair of locations, represented as a String.
-     **/
-
-    private static String getLocation(String s, int k) {
-	String suffix = s.substring(k);
-	return UniqName.suffixToString(suffix);
-    }
-
+    
     /** Converts string <code>s</code>, beginning at index <code>k</code>,
      * into a location.
      **/

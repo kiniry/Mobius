@@ -32,7 +32,7 @@ public class TrAnExpr {
      * duplicate cautions.
      **/
 
-    private static Set issuedPRECautions = new Set();  
+    // NOT USED private static Set issuedPRECautions = new Set();  
 
 
     public static Translate translate = null;
@@ -1711,12 +1711,12 @@ System.out.println("");
   /* This decoration (on a RoutineDecl) is an Expr that is an axiom that 
      defines the behavior of the routine.  The routine must be a pure function.
   */
-  static private ASTDecoration axiomDecoration = new ASTDecoration("axioms");
+  // NOT USED static private ASTDecoration axiomDecoration = new ASTDecoration("axioms");
 
   /* This decoration (on a RoutineDecl) is a ??? of RoutineDecl whose axioms
      are needed by the routine.
   */
-  static private ASTDecoration axiomSetDecoration = new ASTDecoration("axiomset");
+  // NOT USED static private ASTDecoration axiomSetDecoration = new ASTDecoration("axiomset");
 
   static public Expr getEquivalentAxioms(RepHelper o, Hashtable sp) {
 	    Expr ax = null;

@@ -633,7 +633,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
 	}
     }
 
-    private FieldDecl previousDecl;
+    //private FieldDecl previousDecl;
 
     /*
 	A bit of refactoring of the old Esc/java design.  This method returns
@@ -1797,13 +1797,15 @@ try{
      * supplied tag at the specified location is unsupported by the
      * current version of ESC/Java and is statically uncheckable.
      */
+/* UNUNSED
     private void noteUnsupportedUncheckableJmlPragma(int loc, int tag) {
         if (Info.on)
             ErrorSet.caution(loc, "Unsupported uncheckable pragma '" + 
                              TagConstants.toString(tag) +
                              "' ignored.");
     }
-
+*/
+    
     /**
      * Eat tokens up through and including terminating semi-colon.
      * This method is used to pretend like we are parsing

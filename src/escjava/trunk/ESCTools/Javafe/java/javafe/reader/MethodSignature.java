@@ -112,13 +112,5 @@ class MethodSignature
   //@ invariant return_.syntax
   private Type return_;
 
-  /* -- private class variables -------------------------------------------- */
-
-  /**
-   * The primitive void type.
-   */
-  //@ invariant voidType != null;
-  private static final Type voidType =
-    PrimitiveType.makeNonSyntax(TagConstants.VOIDTYPE);
 }
 
