@@ -14,6 +14,7 @@ import bcclass.attributes.ExsuresTable;
 import bcclass.attributes.ModifiesSet;
 import bcexpression.BCLocalVariable;
 import bcexpression.Expression;
+import bcexpression.NumberLiteral;
 import bytecode.branch.BCConditionalBranch;
 import formula.Connector;
 import formula.Formula;
@@ -130,8 +131,9 @@ public class BCLoopEnd extends BCInstruction {
 		Expression decreasesAtLoopStart = decreases.copy() ;
 		decreasesAtLoopStart = decreasesAtLoopStart.atState(loopStartPosition);
 		
-		Predicate2Ar terminationCondition = new Predicate2Ar( decreasesCopy, decreasesAtLoopStart,  PredicateSymbol.LESS);
-		
+		Predicate2Ar terminationConditionDecreases = new Predicate2Ar( decreasesCopy, decreasesAtLoopStart,  PredicateSymbol.LESS);
+		Predicate2Ar terminationWF =  new Predicate2Ar(decreasesAtLoopStart, new NumberLiteral(0), PredicateSymbol.GRTEQ );
+		Formula terminationCondition = Formula.getFormula( terminationConditionDecreases, terminationWF, Connector.AND);
 //		 NB : with loop_end_state
 		Formula vectorStateAssumption = Formula.getFormula( localVarStateAssume, vectorOfFieldToAssume, Connector.AND);
 		
