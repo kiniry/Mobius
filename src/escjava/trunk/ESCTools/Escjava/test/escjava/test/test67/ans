@@ -5,7 +5,10 @@ Error0.java:10: Fatal error: Unexpected character '@'
 Error2.java:5: Fatal error: Unexpected character '@'
   //@ requires x instanceof Error2    @@@@@
                                       ^
-1 error
+Error2.java:5: Fatal error: Unexpected character '@'
+  //@ requires x instanceof Error2    @@@@@
+                                       ^
+2 errors
 Error3.java:6: Fatal error: Unexpected character '@'
   /*@ @@@@@@  requires x instanceof Error3 */
       ^
@@ -13,7 +16,10 @@ Error3.java:6: Fatal error: Unexpected character '@'
 Error4.java:6: Fatal error: Unexpected character '@'
     @@ @@@@@@  x
        ^
-1 error
+Error4.java:6: Fatal error: Unexpected character '@'
+    @@ @@@@@@  x
+        ^
+2 errors
 D.java:14: Warning: Postcondition possibly not established (Post)
   }
   ^
