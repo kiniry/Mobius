@@ -4,6 +4,7 @@ AmbiguousVariableAccess.java
 ArrayInit.java
 ArrayRefExpr.java
 ArrayType.java
+AssertStmt.java
 BinaryExpr.java
 BlockStmt.java
 BranchStmt.java

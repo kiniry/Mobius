@@ -1,3 +1,148 @@
+2003-05-23  Joseph R. Kiniry  <kiniry@acm.org>
+
+	* Escjava/java/escjava/ast/EscPrettyPrint.java:
+	* Escjava/java/escjava/ast/TagConstants.java:
+	* Escjava/java/escjava/ast/hierarchy.j:
+	* Escjava/java/escjava/parser/EscPragmaParser.java:
+	* Escjava/java/escjava/tc/FlowInsensitiveChecks.java:
+	* Escjava/java/escjava/translate/Translate.java:
+	* Escjava/test/escjava/parser/test/GoodPragmas.ans:
+	* Escjava/test/escjava/parser/test/GoodPragmas.j:
+	* Javafe/java/javafe/ast/StandardPrettyPrint.java:
+	* Javafe/java/javafe/ast/VisitorArgResult.java:
+	* Javafe/java/javafe/ast/hierarchy.j:
+	* Javafe/java/javafe/parser/ParseStmt.java:
+	* Javafe/java/javafe/parser/TagConstants.java:
+	Added support for "assert" statement to Java front-end (javafe).
+	Typechecking the optional non-void expression (label) on the assert is
+	not yet done.  The EscPragmaParser now uses the front-end's keyword
+	ASSERT to recognize pragma asserts as well.  Dealing with the optional
+	label/expression on asserts meant extending the ExprStmtPragma with a
+	new field for such.  Pretty-printing works as expected.
+
+	Parsing "assert" as a keyword is currently *unconditional* (i.e., we
+	have no "-source" switch like javac), so you cannot have identifiers
+	called "assert" right now.  I don't know whether to keep it this way
+	or to add a -source switch to Escjava.
+
+	Because this commit changes the ASTs, make sure you "make all" after
+	updating.
+
+2003-05-22  Joseph R. Kiniry  <kiniry@acm.org>
+
+	* Javafe/Makefile:
+	Added author attribution.  Some general makefile syntax cleanup.
+	Replace uses of javac with ${JAVAC}.
+
+	* Rcc/Makefile, Calvin/Makefile:
+	Renamed JAVADOCDIRECTORY to JAVADOC_GEN_DIR for better conformance
+	with other environmental variables names and clarity.
+
+	* Escjava/Makefile, Makefile, Makefile.defs:
+	Renamed JAVADOCDIRECTORY to JAVADOC_GEN_DIR for better conformance
+	with other environmental variables names and clarity.  Updated version
+	information, though it'll probably be June before we make a release.
+	Some general makefile syntax cleanup.  Added some documentation on
+	SOURCEPATH use and need.  Added ESCJAVA environmental variable that
+	can point to whichever escjava script should be used to run tests.
+	Renamed some MOCHA-related variables for better conformance with other
+	variable names.
+
+	* Escjava/java/escjava/ast/EscPrettyPrint.java:
+	* Escjava/java/escjava/ast/TagConstants.java:
+	* Escjava/java/escjava/parser/EscPragmaParser.java:
+	* Escjava/test/escjava/parser/test/GoodJmlPragmas.ans:
+	* Escjava/test/escjava/parser/test/GoodPragmas.ans:
+	* Escjava/test/escjava/parser/test/GoodSpecExpr.ans:
+	* Escjava/test/escjava/parser/test/TypeDeclElemPragmas1.ans:
+	Completed support for parsing redundant specs as redundant-annotated
+	canonical AST nodes.
+
+	All switches in parser and pretty-printer that previously looked for
+	_REDUNDANTLY tags now have a single case block that looks for such
+	tags and asserts that this should never happen.
+
+	Tweaked pretty-printing to match JML's syntax for mandatory
+	semi-colons.  Updated test cases to match.  ESC/Java's syntax is
+	generally more lax as semi-colons are optional for singleton
+	specifications, but given we are moving toward supporting the full JML
+	language, and the JML tools are not going to stop needing terminating
+	semi-colons for easier parsing, we need to start
+	using/parsing/expressing them.
+
+	Added pretty-printing support for redundant-annotated AST nodes.
+
+	Removed extra space from spec comment for behaviors.
+
+	Moved method isRedundant() from EscPragmaParser to TagConstants.
+	Added methods makeRedundant(tag) and unRedundant(tag) to convert
+	to/from redundant variants of JML keywords.
+
+	* Escjava/java/escjava/tc/GhostEnv.java:
+	* Escjava/java/escjava/tc/TypeCheck.java:
+	* Escjava/java/escjava/tc/Types.java:
+	Full code, doc, and spec review to prepare for typechecking
+	modifications.  No functional changes; just some extra docs.
+
+	* Escjava/java/escjava/tc/FlowInsensitiveChecks.java:
+	Some code cleanup, sorting case blocks, indentation standardization,
+	etc.  No functional changes.
+
+	* Escjava/java/escjava/AnnotationHandler.java:
+	All switches in parser and pretty-printer that previously looked for
+	_REDUNDANTLY tags now have a single case block that looks for such
+	tags and asserts that this should never happen.
+
+	* Escjava/java/escjava/ast/hierarchy.j:
+	Added missing LOOP_PREDICATE option on the invariant for an
+	ExprStmtPragma node.
+
+2003-05-22  Patrice Chalin  <chalin@cs.concordia.ca>
+
+	* Escjava/escj:
+	Error message printed when environment variables are not set.
+	Debug info is now echoed only when ESCJ_VERBOSE is set.
+
+	* Escjava/Makefile:
+	Escjava parse test targets moved to test/escjava/test/Makefile.
+
+2003-05-22  David Cok  <cok@frontiernet.net>
+
+	* Escjava/java/escjava/parser/EscPragmaParser.java:
+	Fixing parsing of method calls in annotations
+
+2003-05-22  Patrice Chalin  <chalin@cs.concordia.ca>
+
+	* Escjava/test/escjava/test/Makefile:
+	Added definition of ESC_CLASSPATH required to run ESCJ.
+
+	* Escjava/test/escjava/test/rtest:
+	* Escjava/test/escjava/test/rtestall:
+	Test script now returns error code on failure.
+
+2003-05-22  David Cok  <cok@frontiernet.net>
+
+	* Escjava/java/escjava/ast/EscPrettyPrint.java:
+	* Escjava/java/escjava/ast/TagConstants.java:
+	* Escjava/test/escjava/parser/test/GoodJmlPragmas.ans:
+	* Escjava/test/escjava/parser/test/GoodJmlPragmas.j:
+	Fixing the spelling of abrupt and the pretty printing of
+	conditional clauses.
+
+	* Escjava/java/escjava/parser/EscPragmaParser.java:
+	A few FIXMEs to be resolved
+
+2003-05-21  Patrice Chalin  <chalin@cs.concordia.ca>
+
+	* Escjava/Makefile, Escjava/test/escjava/test/rtest:
+	Added prefix of ./ before rtestall and run in two files.
+
+	* Escjava/Makefile:
+	Minor changes. Removed echo "." from CD_AND_JAVA (no point in echoing
+	without '@' when using CD_AND_JAVA). Renamed second occurrence of
+	test_parser (this was an error) to test_parser_only so as to avoid a
+	cyclic dependency.
+
 2003-05-21  Joseph R. Kiniry  <kiniry@acm.org>
 
 	* Escjava/java/escjava/parser/EscPragmaParser.java:
@@ -84,7 +229,7 @@
 	* Escjava/test/escjava/parser/test/GoodJmlPragmas.j:
 	Temporarily (?) removed "raw" \not_specified from tests.
 
-2003-05-19  Patrice Chalin  <chalin@kind.cs.kun.nl>
+2003-05-19  Patrice Chalin  <chalin@cs.concordia.ca>
 
 	* Escjava/Makefile:
 	Added -classpath option to invocation of java in commands for
