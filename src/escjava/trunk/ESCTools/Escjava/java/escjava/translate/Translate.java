@@ -4505,8 +4505,8 @@ if (mg.precondition == null) {
 	    else            code.addElement(modify(GC.resultvar, scall));
             code.addElement(modify(GC.xresultvar, scall));
 
-	    // FIXME - only if not pure
-	    code.addElement(modify(GC.statevar, scall));
+	    if (!Utils.isPure(rd))
+		code.addElement(modify(GC.statevar, scall));
 						 
 	    for (int i=0; i<spec.postAssumptions.size(); ++i) {
 		addAssumption(spec.postAssumptions.elementAt(i));

@@ -1155,6 +1155,39 @@ wrap those variables being modified and not everything.
     }
   }
 
+  public static Expr resultEqualsCall(GenericVarDecl vd, RoutineDecl rd, Hashtable sp) {
+    VariableAccess v = makeVarAccess(vd, Location.NULL);
+    boolean isConstructor = rd instanceof ConstructorDecl;
+
+    ExprVec ev = ExprVec.make( rd.args.size()+4 );
+    if (!Utils.isFunction(rd)) {
+	ev.addElement( stateVar(sp) ); 
+    }
+
+    ArrayList bounds = new ArrayList(rd.args.size()+4);
+    if (!Modifiers.isStatic(rd.modifiers)) {
+	if (!isConstructor) {
+	    ev.addElement( apply(sp,GC.thisvar));
+	}
+    }
+    LocalVarDecl alloc1=null, alloc2=null;
+    if (isConstructor) {
+		// FIXME - do we need anything for constructors? is this right?
+	alloc1 = UniqName.newBoundVariable("alloc_");
+	ev.addElement( makeVarAccess( (GenericVarDecl)alloc1, Location.NULL));
+	alloc2 = UniqName.newBoundVariable("allocNew_");
+	ev.addElement( makeVarAccess( (GenericVarDecl)alloc2, Location.NULL));
+    }
+
+    for (int k=0; k<rd.args.size(); ++k) {
+	FormalParaDecl a = rd.args.elementAt(k);
+	VariableAccess vn = makeVarAccess( a, Location.NULL);
+	ev.addElement(vn);
+    }    
+    Expr fcall = GC.nary(fullName(rd,false), ev);
+    return GC.nary(TagConstants.ANYEQ, v, fcall);
+  }
+
   public static Expr typeCorrectAs(GenericVarDecl vd, Type type) {
     return typeAndNonNullCorrectAs(vd, type, null, false, null);
   }

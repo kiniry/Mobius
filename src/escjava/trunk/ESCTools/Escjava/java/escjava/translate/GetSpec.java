@@ -627,6 +627,13 @@ premap generated from the uses of \old in the body of the method + the spec of t
         if (!Types.isVoidType(dmd.returnType)) {
             // Free:  TypeCorrectAs[[ RES, T ]]
             addFreeTypeCorrectAs(GC.resultvar.decl, dmd.returnType, post);
+
+	    if (Utils.isPure(dmd.original)) {
+		Expr e = TrAnExpr.resultEqualsCall(GC.resultvar.decl, 
+			dmd.original,wt);
+		Condition cond = GC.freeCondition(e, Location.NULL);
+		post.addElement(cond);
+	    }
         }
 
         TypeSig T = TypeSig.getSig(dmd.getContainingClass());
