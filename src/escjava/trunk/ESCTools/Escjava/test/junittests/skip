@@ -11,6 +11,9 @@ ParsePlus.java
 ## Platform dependent
 PureCheck.java
 Quant.java
+Helper.java
+InheritNull.java
+PreconditionWarnings.java
 ## Pure and embedded checks
 Embedded.java
 EmbeddedA.java
