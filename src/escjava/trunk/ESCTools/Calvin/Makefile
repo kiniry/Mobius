@@ -42,7 +42,7 @@ doc:	javadoc
 #
 javadoc: source
 	cd java; \
-	${JAVADOC} -d ${JAVADOCDIRECTORY} \
+	${JAVADOC} -d ${JAVADOC_GEN_DIR} \
 		-sourcepath ${CLASSPATH}:${JAVAFE_ROOT}/java:${JDKBINARIES} \
 		-package \
                 escjava escjava.ast escjava.backpred escjava.parser \
@@ -55,7 +55,7 @@ fastdoc: source
 	cd java; \
 	CLASSPATH="${CLASSPATH}:${JAVAFE_ROOT}/java"; \
 	export CLASSPATH; \
-	${JAVADOC} -d ${JAVADOCDIRECTORY} \
+	${JAVADOC} -d ${JAVADOC_GEN_DIR} \
                 escjava escjava.ast escjava.parser escjava.prover escjava.tc
 
 fixdoc:

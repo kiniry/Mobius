@@ -36,7 +36,7 @@ javadoc: source
 	cd java; \
 	CLASSPATH="${CLASSPATH}:${JAVAFE_ROOT}/java"; \
 	export CLASSPATH; \
-	${JAVADOC} -d ${JAVADOCDIRECTORY} -package \
+	${JAVADOC} -d ${JAVADOC_GEN_DIR} -package \
                 rcc rcc.ast  rcc.parser \
                 javafe javafe.ast javafe.parser  \
 		javafe.reader javafe.genericfile javafe.filespace \
@@ -46,7 +46,7 @@ fastdoc: source
 	cd java; \
 	CLASSPATH="${CLASSPATH}:${JAVAFE_ROOT}/java"; \
 	export CLASSPATH; \
-	${JAVADOC} -d ${JAVADOCDIRECTORY} \
+	${JAVADOC} -d ${JAVADOC_GEN_DIR} \
                 rcc rcc.ast rcc.parser rcc.tc
 
 fixdoc:
