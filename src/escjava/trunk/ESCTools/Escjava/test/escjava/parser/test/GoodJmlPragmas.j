@@ -16,5 +16,7 @@
 /*@ maintaining x; */
 //@ decreasing z-1
 
-// also post q;
-/* also post q2; @*/
+//@ also post q;
+/*@ also post q2; @*/
+//@ also pre x[0];
+//@ also modifies z;

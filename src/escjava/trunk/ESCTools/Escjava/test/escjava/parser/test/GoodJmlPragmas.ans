@@ -1,17 +1,27 @@
 GoodJmlPragmas.j:1: /*@ pre true  */
 GoodJmlPragmas.j:2: /*@ post false  */
 GoodJmlPragmas.j:3: /*@ pre a_boolean_expression  */
-GoodJmlPragmas.j:4: /*@ pre a_boolean_expression  */
-GoodJmlPragmas.j:4: /*@ post q  */
-GoodJmlPragmas.j:5: /*@ post q  */
-GoodJmlPragmas.j:5: /*@ post q2  */
-GoodJmlPragmas.j:7: /*@ assignable x  */
-GoodJmlPragmas.j:7: /*@ assignable y  */
-GoodJmlPragmas.j:8: /*@ modifiable z  */
-GoodJmlPragmas.j:9: /*@ assignable x[0]  */
-GoodJmlPragmas.j:9: /*@ modifiable z[0][y]  */
-GoodJmlPragmas.j:11: /*@ signals (Exception e) true == false  */
-GoodJmlPragmas.j:12: /*@ signals (Throwable t) x < y  */
-GoodJmlPragmas.j:13: /*@ signals (TYPE tt) tt == \type(SomeException)  */
-GoodJmlPragmas.j:15: /*@ maintaining x  */
-GoodJmlPragmas.j:16: /*@ decreasing z - 1  */
+GoodJmlPragmas.j:5: /*@ modifies x  */
+GoodJmlPragmas.j:6: /*@ modifies y  */
+GoodJmlPragmas.j:6: /*@ modifies z  */
+GoodJmlPragmas.j:7: /*@ modifies a  */
+GoodJmlPragmas.j:7: /*@ modifies b  */
+GoodJmlPragmas.j:7: /*@ modifies c  */
+GoodJmlPragmas.j:8: /*@ assignable x  */
+GoodJmlPragmas.j:8: /*@ assignable y  */
+GoodJmlPragmas.j:9: /*@ modifiable z  */
+GoodJmlPragmas.j:10: /*@ assignable x[0]  */
+GoodJmlPragmas.j:10: /*@ modifiable z[0][y]  */
+GoodJmlPragmas.j:12: /*@ signals (Exception e) true == false  */
+GoodJmlPragmas.j:13: /*@ signals (Throwable t) x < y  */
+GoodJmlPragmas.j:14: /*@ signals (TYPE tt) tt == \type(SomeException)  */
+GoodJmlPragmas.j:16: /*@ maintaining x  */
+GoodJmlPragmas.j:17: /*@ decreasing z - 1  */
+GoodJmlPragmas.j:19: /*@ decreasing z - 1  */
+GoodJmlPragmas.j:19: /*@ post q  */
+GoodJmlPragmas.j:20: /*@ post q  */
+GoodJmlPragmas.j:20: /*@ post q2  */
+GoodJmlPragmas.j:21: /*@ post q2  */
+GoodJmlPragmas.j:21: /*@ pre x[0]  */
+GoodJmlPragmas.j:22: /*@ pre x[0]  */
+GoodJmlPragmas.j:22: /*@ modifies z  */
