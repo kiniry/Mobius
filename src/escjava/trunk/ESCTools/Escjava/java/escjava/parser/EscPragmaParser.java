@@ -1073,12 +1073,11 @@ public class EscPragmaParser extends Parse implements PragmaParser
                 case TagConstants.GHOST: {
                     // SUPPORT COMPLETE (cok)
                     dst.ttype = TagConstants.TYPEDECLELEMPRAGMA;
-	      
 		    int modifiers = parseModifiers(scanner,true);
 		    if ((modifiers & prefixModifiers) != 0) {
 			ErrorSet.caution(loc,
 			     TagConstants.toString(tag) +
-			     " annotation has a repeated access modifier");
+			     " annotation has a repeated modifier");
 		    }
 		    modifiers |= prefixModifiers;
 			
@@ -1213,6 +1212,8 @@ public class EscPragmaParser extends Parse implements PragmaParser
 			    parseMoreModifierPragmas(scanner, modifierPragmas);
 			}
 
+//System.out.println("GF static ? " + Modifiers.isStatic(modifiers));
+//((EscPrettyPrint) javafe.ast.PrettyPrint.inst).print(System.out,0,modifierPragmas);
 			FieldDecl decl
 			    = FieldDecl.make(modifiers, modifierPragmas, 
 					     id, vartype, locId, init, locAssignOp );
