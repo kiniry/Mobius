@@ -211,6 +211,11 @@ public class ErrorSet
 	    report(addLoc, "Associated declaration", "");
     }
 
+    public static void assocLoc(int loc) {
+	if (loc != Location.NULL)
+	    report(loc, "Associated declaration", "");
+    }
+
 
     /**
      * Report a fatal error.  Warning: This method does not
