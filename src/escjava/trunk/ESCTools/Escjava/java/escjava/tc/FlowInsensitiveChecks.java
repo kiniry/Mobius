@@ -157,55 +157,14 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
     protected void checkTypeDeclElem(TypeDeclElem e) {
         super.checkTypeDeclElem(e);
     
-        if (e.getTag() == TagConstants.METHODDECL) {
-            MethodDecl md = (MethodDecl)e;
-
-	    // If a method is not pure, then no super class or interface
-	    // may be pure
-	    if (!Modifiers.isPure(md.modifiers) &&
-		 !Modifiers.isPure(md.parent.modifiers)) {
-		Set direct = javafe.tc.PrepTypeDeclaration.inst.getOverrides(md.parent, md);
-
-		Enumeration ee = direct.elements();
-		while (ee.hasMoreElements()) {
-		    MethodDecl directMD = (MethodDecl)(ee.nextElement());
-		    if (Modifiers.isPure(directMD.modifiers) &&
-			!md.parent.isBinary()) {
-/* FIXME			ErrorSet.error(md.getStartLoc(),
-			    "Method must be declared pure since it " +
-			    (directMD.parent instanceof ClassDecl ?
-				"overrides" : "implements" ) +
-			    " a pure method (" + 
-			    Location.toString(directMD.getStartLoc()) + ")");*/
-		    }
-		    if (Modifiers.isPure(directMD.getParent().modifiers) &&
-			!md.parent.isBinary()) {
-		      if (directMD.parent instanceof ClassDecl) {
-/* FIXME			ErrorSet.error(md.getStartLoc(),
-			    "Method must be declared pure since it " +
-			    "overrides a method in a class " +
-			    "that is pure (" + 
-			    Location.toString(directMD.parent.getStartLoc()) +
-			    ")"); */
-		      } else {
-/* FIXME			ErrorSet.error(md.getStartLoc(),
-			    "Method must be declared pure since it " +
-			    "implements a method in an " +
-			    "interface that is pure (" + 
-			    Location.toString(directMD.parent.getStartLoc()) +
-			    ")"); */
-		      }
-		    }
-		}
-            }
-        } else if (e.getTag() == TagConstants.INITBLOCK) {
+        if (e.getTag() == TagConstants.INITBLOCK) {
             InitBlock ib = (InitBlock)e;
             if (ib.pmodifiers != null) {
                 for (int i = 0; i < ib.pmodifiers.size(); i++) {
                     ModifierPragma mp = (ModifierPragma)ib.pmodifiers.elementAt(i);
                     ErrorSet.error(mp.getStartLoc(),
-                                   TagConstants.toString(mp.getTag()) +
-                                   " pragma cannot be applied to initializer block");
+			   TagConstants.toString(mp.getTag()) +
+			   " pragma cannot be applied to initializer block");
                 }
             }
         }
@@ -2302,6 +2261,30 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 		return directMD;
         }
         return null;
+    }
+
+    // Returns true if directly or indirectly pure
+    static public boolean isPure(RoutineDecl rd) {
+	if ((rd.modifiers & Modifiers.ACC_PURE_CLOSURE)!=0) return true;
+	if ((rd.modifiers & Modifiers.ACC_IMPURE_CLOSURE)!=0) return false;
+	boolean b = Modifiers.isPure(rd.modifiers) ||
+		 Modifiers.isPure(rd.parent.modifiers);
+	if (b) { rd.modifiers |= Modifiers.ACC_PURE_CLOSURE; return b; }
+	// find and test interfaces and extendsions
+	if (rd instanceof MethodDecl) {
+	    MethodDecl md = (MethodDecl)rd;
+	    Set direct = javafe.tc.PrepTypeDeclaration.inst.getOverrides(md.parent, md);
+	    Enumeration e = direct.elements();
+	    while (e.hasMoreElements()) {
+		MethodDecl directMD = (MethodDecl)(e.nextElement());
+		if (isPure(directMD)) {
+		    md.modifiers |= Modifiers.ACC_PURE_CLOSURE;
+		    return true;
+		}
+	    }
+        }
+	rd.modifiers |= Modifiers.ACC_IMPURE_CLOSURE;
+	return false;
     }
 } // end of class FlowInsensitiveChecks
 

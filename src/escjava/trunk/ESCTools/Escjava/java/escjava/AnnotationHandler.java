@@ -636,18 +636,16 @@ public class AnnotationHandler {
 	    switch (x.getTag()) {
 		case TagConstants.METHODINVOCATION:
 		    MethodInvocation m = (MethodInvocation)x;
-		    if (!Modifiers.isPure(m.decl.modifiers) &&
-			!Modifiers.isPure(m.decl.getParent().modifiers)) {
-/*FIXME			ErrorSet.error(m.locId,
+		    if (!escjava.tc.FlowInsensitiveChecks.isPure(m.decl)) {
+			ErrorSet.error(m.locId,
 			    "Method " + m.id + " is used in an annotation" +
 			    " but is not pure (" + 
-			    Location.toFileLineString(m.decl.loc) + ")");*/
+			    Location.toFileLineString(m.decl.loc) + ")");
 		    }
 		    break;
 		case TagConstants.NEWINSTANCEEXPR:
 		    NewInstanceExpr c = (NewInstanceExpr)x;
-		    if (!Modifiers.isPure(c.decl.modifiers) &&
-			!Modifiers.isPure(c.decl.getParent().modifiers)) {
+		    if (!escjava.tc.FlowInsensitiveChecks.isPure(c.decl)) {
 /*FIXME			ErrorSet.error(c.loc,
 			    "Constructor is used in an annotation" +
 			    " but is not pure (" + 
