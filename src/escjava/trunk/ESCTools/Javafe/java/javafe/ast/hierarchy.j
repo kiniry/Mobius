@@ -277,6 +277,10 @@ public class CompilationUnit extends ASTNode
 
     return elems.elementAt(elems.size()-1).getEndLoc();
   }
+
+  public javafe.genericfile.GenericFile sourceFile() {
+    return Location.toFile(loc);
+  }
 }
 
 /* ---------------------------------------------------------------------- */
@@ -1840,6 +1844,7 @@ public abstract class Type extends ASTNode
     //@ ghost public boolean syntax;
 
     //# TypeModifierPragma* tmodifiers NullOK
+
 }
 
 /**
@@ -1870,7 +1875,6 @@ public class PrimitiveType extends Type
 
 
   public final int getTag() { return this.tag; }
-
 
   //# NoMaker
   /**
@@ -1958,6 +1962,7 @@ public class TypeName extends Type
   static public TypeName make(/*@ non_null @*/ Name name) {
     return TypeName.make(null, name);
   }
+
 }
 
 public class ArrayType extends Type

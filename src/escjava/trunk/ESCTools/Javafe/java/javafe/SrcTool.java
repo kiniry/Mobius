@@ -173,25 +173,25 @@ public abstract class SrcTool extends FrontEndTool implements Listener
 
     /** Iterates, calling handleCU for each loaded CU.
      */	
-	public void handleAllCUs() {
-		/*
-		 * Call handleCU on the resulting loaded CompilationUnits.
-		 *
-		 * If processRecursively is true, then continue calling handleCU
-	         * on loaded CompilationUnits that have not had handleCU called
-	         * on them in the order they were loaded until no such
-	         * CompilationUnits remain.  (handleCU may load CompilationUnits
-	         * indirectly.)
-		 */
-		int i=0;
-		for (int end=loaded.size(); i<end; i++) {
-		    handleCU((CompilationUnit)loaded.elementAt(i));
-		    if (options().processRecursively) {
-				Assert.notFalse(OutsideEnv.avoidSpec == true);
-				end = loaded.size();
-		    }
-		}
+    public void handleAllCUs() {
+	/*
+	 * Call handleCU on the resulting loaded CompilationUnits.
+	 *
+	 * If processRecursively is true, then continue calling handleCU
+	 * on loaded CompilationUnits that have not had handleCU called
+	 * on them in the order they were loaded until no such
+	 * CompilationUnits remain.  (handleCU may load CompilationUnits
+	 * indirectly.)
+	 */
+	int i=0;
+	for (int end=loaded.size(); i<end; i++) {
+	    handleCU((CompilationUnit)loaded.elementAt(i));
+	    if (options().processRecursively) {
+			Assert.notFalse(OutsideEnv.avoidSpec == true);
+			end = loaded.size();
+	    }
 	}
+    }
 	 
     /**
      * Hook for any work needed before any files are loaded.
