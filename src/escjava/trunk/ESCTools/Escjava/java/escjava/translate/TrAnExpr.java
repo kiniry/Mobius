@@ -116,7 +116,7 @@ public final class TrAnExpr {
             FieldAccess fa = (FieldAccess)e;
             VariableAccess va = makeVarAccess(fa.decl, fa.locId);
             // va accesses the field
-	    if (GetSpec.findModifierPragma(va.decl.pmodifiers,TagConstants.MODEL) != null) {
+	    if (Utils.findModifierPragma(va.decl.pmodifiers,TagConstants.MODEL) != null) {
 		java.util.List reps = escjava.AnnotationHandler.findRepresents(fa.decl);
 		java.util.Iterator it = reps.iterator();
 		while (it.hasNext()) {
@@ -349,7 +349,7 @@ public final class TrAnExpr {
 	
 	MethodInvocation me = (MethodInvocation)e;
 
-	boolean isFunction = (GetSpec.findModifierPragma(me.decl.pmodifiers,TagConstants.FUNCTION) != null);
+	boolean isFunction = (Utils.findModifierPragma(me.decl.pmodifiers,TagConstants.FUNCTION) != null);
 
 	Identifier n = Identifier.intern("tempMethodReturn"+(++tempn));
 	VariableAccess v =  VariableAccess.make(n, e.getStartLoc(), 

@@ -10,7 +10,6 @@ import javafe.util.Location;
 import escjava.ast.*;
 import escjava.ast.TagConstants;
 import escjava.ast.Modifiers;
-import escjava.translate.GetSpec;
 import escjava.tc.FlowInsensitiveChecks;
 import javafe.tc.Types;
 
@@ -367,14 +366,14 @@ public class AnnotationHandler {
 	    if (overrides != null && !overrides.isEmpty()) {
 		for (int i=0; i<args.size(); ++i) {
 		    FormalParaDecl arg = args.elementAt(i);
-		    ModifierPragma m = GetSpec.findModifierPragma(arg,TagConstants.NON_NULL);
+		    ModifierPragma m = Utils.findModifierPragma(arg,TagConstants.NON_NULL);
 		    if (m != null) { // overriding method has non_null for parameter i
 			MethodDecl smd = FlowInsensitiveChecks.getSuperNonNullStatus(md,i,overrides);
 			if (smd != null) { // overridden method does not have non_null for i
 			    FormalParaDecl sf = smd.args.elementAt(i);
 			    ErrorSet.caution(m.getStartLoc(),
 				    "The non_null annotation is ignored because this method overrides a method declaration in which this parameter is not declared non_null: ",sf.getStartLoc());
-			    GetSpec.removeModifierPragma(arg,TagConstants.NON_NULL);
+			    Utils.removeModifierPragma(arg,TagConstants.NON_NULL);
 			}
 		    }
 		}
@@ -384,7 +383,7 @@ public class AnnotationHandler {
 	// Handle non_null on any parameter
 	for (int i=0; i<args.size(); ++i) {
 	    FormalParaDecl arg = args.elementAt(i);
-	    ModifierPragma m = findModifierPragma(arg.pmodifiers,TagConstants.NON_NULL);
+	    ModifierPragma m = Utils.findModifierPragma(arg.pmodifiers,TagConstants.NON_NULL);
 	    if (m == null) continue;
 	    int locNN = m.getStartLoc();
 	    result.addElement(
@@ -395,7 +394,7 @@ public class AnnotationHandler {
 	}
 
 	// Handle non_null on the result
-	ModifierPragma m = findModifierPragma(rd.pmodifiers,TagConstants.NON_NULL);
+	ModifierPragma m = Utils.findModifierPragma(rd.pmodifiers,TagConstants.NON_NULL);
 	if (m != null) {
 	    int locNN = m.getStartLoc();
 	    Expr r = ResExpr.make(locNN);
@@ -1241,17 +1240,6 @@ added, it doesn't change whether a routine appears to have a spec or not.
     }
 
 
-
-	// FIXME - This functionality is duplicated elsewhere, e.g. in
-	// translate/GetSpec.  Should be unified and cleaned up in a common
-	// utility.
-    public static ModifierPragma findModifierPragma(ModifierPragmaVec v, int tag) {
-	if (v == null) return null;
-	for (int i=0; i<v.size(); ++i) {
-		if (v.elementAt(i).getTag() == tag) return v.elementAt(i);
-	}
-	return null;
-    }
 
     static private void print(Expr e) {
 	if (e != null) PrettyPrint.inst.print(System.out,0,e);

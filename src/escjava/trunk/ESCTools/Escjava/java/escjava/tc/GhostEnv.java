@@ -9,7 +9,7 @@ import javafe.ast.*;
 import escjava.ast.GhostDeclPragma;
 import escjava.ast.ModelDeclPragma;
 import escjava.ast.TagConstants;
-import escjava.translate.GetSpec;
+import escjava.ast.Utils;
 
 import javafe.tc.*;
 
@@ -114,9 +114,9 @@ public class GhostEnv extends EnvForTypeSig
 		fd = (FieldDecl)elem;
 		if (Modifiers.isPrivate(fd.modifiers) ||
 		    Modifiers.isPackage(fd.modifiers)) {
-			if (!(GetSpec.findModifierPragma(fd.pmodifiers,
+			if (!(Utils.findModifierPragma(fd.pmodifiers,
 				TagConstants.SPEC_PUBLIC) != null ||
-			    GetSpec.findModifierPragma(fd.pmodifiers,
+			    Utils.findModifierPragma(fd.pmodifiers,
 				TagConstants.SPEC_PROTECTED) != null)) continue;
 		}
 	    } else continue;
@@ -145,7 +145,7 @@ public class GhostEnv extends EnvForTypeSig
     static public boolean isStatic(FieldDecl d) {
 	boolean isStatic = d.parent instanceof InterfaceDecl;
 	if (Modifiers.isStatic(d.modifiers)) isStatic = true;
-	if (GetSpec.findModifierPragma(d,
+	if (Utils.findModifierPragma(d,
 		TagConstants.INSTANCE)!=null) isStatic = false;
 	return isStatic;
     }

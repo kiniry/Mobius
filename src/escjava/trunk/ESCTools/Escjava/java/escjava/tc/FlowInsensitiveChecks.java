@@ -18,9 +18,6 @@ import escjava.ast.*;
 import escjava.ast.Modifiers;
 import escjava.ast.TagConstants;
 import escjava.tc.Types;
-import escjava.translate.GetSpec;  // for "findModifierPragma" -- it would be
-                                   // nicer to move that method to some
-                                   // utilities class somewhere
 import escjava.Main;
 
 public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
@@ -157,12 +154,12 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 	boolean savedInAnnotation = inAnnotation;
 	boolean savedInModelBody = inModelBody;
 	if (e instanceof ConstructorDecl &&
-		null != GetSpec.findModifierPragma(((ConstructorDecl)e).pmodifiers,TagConstants.MODEL)) {
+		null != Utils.findModifierPragma(((ConstructorDecl)e).pmodifiers,TagConstants.MODEL)) {
 		inAnnotation = true;
 		inModelBody = true;
 	}
 	if (e instanceof MethodDecl &&
-		null != GetSpec.findModifierPragma(((MethodDecl)e).pmodifiers,TagConstants.MODEL)) {
+		null != Utils.findModifierPragma(((MethodDecl)e).pmodifiers,TagConstants.MODEL)) {
 		inAnnotation = true;
 		inModelBody = true;
 	}
@@ -283,7 +280,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 	    case TagConstants.VARDECLSTMT: {
 		VarDeclStmt vs = (VarDeclStmt)s;
 		LocalVarDecl x = vs.decl;
-		if (escjava.translate.GetSpec.findModifierPragma(x.pmodifiers,
+		if (Utils.findModifierPragma(x.pmodifiers,
 				TagConstants.GHOST) != null) {
 		    boolean savedInAnnotation = inAnnotation;
 		    inAnnotation = true;
@@ -425,27 +422,22 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                        "statement expected (and not found) here.");
     }
 
-    /**
-     * Not to be used as a recursive call from <code>checkExpr</code>, since
-     * <code>isPredicateContext</code> is set to <code>true</code>.
-     */
-  
     protected Expr checkPredicate(Env env, Expr e) {
-        Assert.notFalse(!isPredicateContext);
+	boolean savedPredicateContext = isPredicateContext;
         isPredicateContext = true;
         Expr ee = checkExpr(env, e, Types.booleanType);
-        // "isPredicateContext" is reset by "checkExpr"
-        Assert.notFalse(!isPredicateContext);
+	isPredicateContext = savedPredicateContext;
         return ee;
     }
 
-    //@ also_ensures !isPredicateContext
     protected Expr checkExpr(Env env, Expr e) {
         // Anticipate that the next context is probably not one suitable for
         // quantifications and labels.  "isPredicateContext" must revert to its old
         // value before return.
         boolean isCurrentlyPredicateContext = isPredicateContext;
         isPredicateContext = false;
+
+	try {
 
         if (getTypeOrNull(e) != null )
             // already done
@@ -517,9 +509,9 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 
                     if (!isPrivateFieldAccessAllowed &&
                         Modifiers.isPrivate(fa.decl.modifiers) &&
-                        GetSpec.findModifierPragma(fa.decl,
+                        Utils.findModifierPragma(fa.decl,
 			       TagConstants.SPEC_PUBLIC) == null &&
-                        GetSpec.findModifierPragma(fa.decl,
+                        Utils.findModifierPragma(fa.decl,
 			       TagConstants.SPEC_PROTECTED) == null) {
                         ErrorSet.error(fa.locId, 
 			   "A private field can be used in "+
@@ -534,11 +526,11 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                     if (accessibilityLowerBound != ACC_LOW_BOUND_Private) {
                         boolean isAccessibleEnough;
                         if (Modifiers.isPublic(fa.decl.modifiers) ||
-                            GetSpec.findModifierPragma(fa.decl,
+                            Utils.findModifierPragma(fa.decl,
                                                        TagConstants.SPEC_PUBLIC) != null) {
                             // public and spec_public fields are always accessible
                             isAccessibleEnough = true;
-			} else if (GetSpec.findModifierPragma(fa.decl,
+			} else if (Utils.findModifierPragma(fa.decl,
 					TagConstants.SPEC_PROTECTED)!=null) {
 
 			    // Copied from the protected case down below.
@@ -1238,6 +1230,11 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
             default:
                 return super.checkExpr(env, e);
         }
+
+	} finally {
+
+	    isPredicateContext = isCurrentlyPredicateContext;
+        }
     }
 
     // Pragma checkers
@@ -1422,7 +1419,7 @@ FIXME - see uses of countFreeVarsAccess
 		// Check for both static and instance declarations
 
 		if (Modifiers.isStatic(decl.modifiers)) {
-		    ModifierPragma inst = GetSpec.findModifierPragma(decl,
+		    ModifierPragma inst = Utils.findModifierPragma(decl,
 					TagConstants.INSTANCE);
 		    if (inst != null) ErrorSet.error(inst.getStartLoc(),
 			"May not specify both static and instance on a declaration");
@@ -1456,7 +1453,7 @@ FIXME - see uses of countFreeVarsAccess
 
             case TagConstants.GHOSTDECLPRAGMA: {
                 FieldDecl decl = ((GhostDeclPragma)e).decl;
-		ModifierPragma inst = GetSpec.findModifierPragma(decl,
+		ModifierPragma inst = Utils.findModifierPragma(decl,
 					TagConstants.INSTANCE);
 		// Check for both static and instance declarations
 
@@ -1722,8 +1719,8 @@ FIXME - see uses of countFreeVarsAccess
 			!(ctxt instanceof ModelDeclPragma)) {
 
 			if (ctxt instanceof FieldDecl &&
-			    (GetSpec.findModifierPragma( ((FieldDecl)ctxt).pmodifiers, TagConstants.MODEL) != null ||
-			    GetSpec.findModifierPragma( ((FieldDecl)ctxt).pmodifiers, TagConstants.GHOST) != null )) {
+			    (Utils.findModifierPragma( ((FieldDecl)ctxt).pmodifiers, TagConstants.MODEL) != null ||
+			    Utils.findModifierPragma( ((FieldDecl)ctxt).pmodifiers, TagConstants.GHOST) != null )) {
 				// skip
 			} else {
 			    ErrorSet.error(p.getStartLoc(),
@@ -2311,6 +2308,8 @@ FIXME - see uses of countFreeVarsAccess
 		{
 		    ExprStmtPragma es = (ExprStmtPragma)s;
 		    es.expr = checkPredicate(e, es.expr);
+		    if (es.label != null) 
+			es.label = checkExpr(e, es.label);
 		    break;
 		}
       
@@ -2518,7 +2517,7 @@ FIXME - see uses of countFreeVarsAccess
         while (e.hasMoreElements()) {
             MethodDecl directMD = (MethodDecl)(e.nextElement());
 	    FormalParaDecl f = directMD.args.elementAt(j);
-	    if (GetSpec.findModifierPragma(f,TagConstants.NON_NULL) == null)
+	    if (Utils.findModifierPragma(f,TagConstants.NON_NULL) == null)
 		return directMD;
         }
         return null;
@@ -2570,7 +2569,7 @@ FIXME - see uses of countFreeVarsAccess
 	} else if (t instanceof VariableAccess) {
 	    VariableAccess va = (VariableAccess)t;
 	    GenericVarDecl gd = va.decl;
-	    if ( escjava.translate.GetSpec.findModifierPragma(
+	    if ( Utils.findModifierPragma(
 			gd.pmodifiers,TagConstants.GHOST) == null)
 		return gd.getStartLoc();
 	} else if (t instanceof ParenExpr) {

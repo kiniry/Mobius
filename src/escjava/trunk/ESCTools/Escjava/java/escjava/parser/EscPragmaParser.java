@@ -2789,10 +2789,6 @@ public class EscPragmaParser extends Parse implements PragmaParser
 				modifierPragmas);
 	}
 
-/*
-	if (escjava.translate.GetSpec.findModifierPragma(modifierPragmas,TagConstants.INSTANCE)
-		== null) modifiers |= Modifiers.ACC_STATIC|Modifiers.ACC_FINAL;
-*/
 	FieldDecl decl
 	    = FieldDecl.make(modifiers, modifierPragmas, 
 			     id, vartype, locId, init, locAssignOp );
@@ -2991,7 +2987,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
 	int tag = smp.getTag();
 	if (tag == TagConstants.MODELDECLPRAGMA) {
 	    ModelDeclPragma mdp = (ModelDeclPragma)smp;
-	    ModifierPragma mp = escjava.translate.GetSpec.findModifierPragma(mdp.decl.pmodifiers,TagConstants.MODEL);
+	    ModifierPragma mp = Utils.findModifierPragma(mdp.decl.pmodifiers,TagConstants.MODEL);
 	    ErrorSet.error(mp != null ? mp.getStartLoc() : loc,
 		"Model variables are not allowed here");
 	    return null;

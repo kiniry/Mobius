@@ -187,7 +187,7 @@ public class RefinementSequence extends CompilationUnit {
 	    fd.pmodifiers.append(newfd.pmodifiers); 
 	}
 	if (newfd.init != null && fd.init != newfd.init &&
-		escjava.translate.GetSpec.findModifierPragma(newfd.pmodifiers,TagConstants.GHOST)
+		Utils.findModifierPragma(newfd.pmodifiers,TagConstants.GHOST)
 			== null) {
 	    ErrorSet.error(newfd.init.getStartLoc(),
 		"A java field declaration may not be initialized in a specification file");

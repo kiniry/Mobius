@@ -12,6 +12,7 @@ import escjava.ast.ModelConstructorDeclPragma;
 import escjava.ast.ModelTypePragma;
 import escjava.ast.Modifiers;
 import escjava.ast.TagConstants;
+import escjava.ast.Utils;
 
 public class PrepTypeDeclaration extends javafe.tc.PrepTypeDeclaration {
 
@@ -47,7 +48,7 @@ public class PrepTypeDeclaration extends javafe.tc.PrepTypeDeclaration {
 	    // they are implicitly static only if they are not declared instance
 	    if (inInterface) {
 		x.modifiers |= Modifiers.ACC_PUBLIC;
-		if (escjava.translate.GetSpec.findModifierPragma(
+		if (Utils.findModifierPragma(
 			x.pmodifiers, TagConstants.INSTANCE) == null) {
 		    x.modifiers |= Modifiers.ACC_STATIC;
 		}
@@ -81,7 +82,7 @@ public class PrepTypeDeclaration extends javafe.tc.PrepTypeDeclaration {
 	    // they are implicitly static only if they are not declared instance
 	    if (inInterface) {
 		x.modifiers |= Modifiers.ACC_PUBLIC;
-		if (escjava.translate.GetSpec.findModifierPragma(
+		if (Utils.findModifierPragma(
 			x.pmodifiers, TagConstants.INSTANCE) == null) {
 		    x.modifiers |= Modifiers.ACC_STATIC;
 		}
