@@ -197,8 +197,7 @@ this approach by extending the \jml~parser and embedding these
 conditions as \java~code. The viability of our approach is
 shown by presenting some gaps found in the process of expressing the
 \emph{changeable} behavior of a ``real'' case study~\cite{CH02} and
-checking
-these specifications with our tool.
+checking these specifications with our tool.
 
 
 The rest of this paper is organized as follows$:$
@@ -208,8 +207,8 @@ pragmas. Section~\ref{sec-sem-mod-cla} shows the problems which are
 arised when the specifications of \modif~clauses are not
 checked. Section~\ref{sec-giv-sin-def}
 presents our approach for checking \modif~clauses and the definition
-of the respective syntactical rules. Section~\ref{sec-imp-iss} presents
-some implementational aspects of our tool. Finally, Section~\ref{sec-con}
+of the respective syntactical rules. Section~\ref{sec-imp-iss} we present \modtool$:$ a modifiable checker which implements these rules. Additionaly, we present some problems found using \modtool~on a ``real'' case study~\cite{CH02}.
+Finally, Section~\ref{sec-con}
 gives conclusions and presents future work.
 
 
@@ -664,7 +663,7 @@ expression rules.
 \rule{\linewidth}{0.25mm}
 \\[0.5ex]
 \begin{tabular}{ll}
-POST-PLUS &
+POST-PLUS\,\,\, &
 \begin{prooftree}
 \textup{e}\underline{\in}\ \textsc{Y},\ \ \textup{e}\ \textit{modPE}\ \textsc{Y}
 \justifies
@@ -804,6 +803,7 @@ corresponding to this problem.
 \label{fig-der-cor-fig-esc}
 \rule{\linewidth}{0.25mm}
 \end{figure} %%%%%%%%
+
 Following with our initial presentation, \java~expressions can be
 represented by primary and suffix expressions. Primary rules
 \textup{ID-FLD}, \textup{SUPER}, \textup{THIS}, \textup{STATIC},
@@ -927,7 +927,7 @@ NEW-ARR\,\,\, &
 \end{table} %%%%%%%%%%%%%
 
 \java~instructions can be also represented by statements. In the case
-of a \texttt{if$cdots$then$cdots$} statement, rule
+of a \texttt{if$\cdots$then$\cdots$} statement, rule
 \textup{IF-THEN} states that its guard must be checked using
 \textit{modEXP} rules since, according to the \java~syntax, a guard
 correspond to an expression. Its body \textsc{S} can be represented by
@@ -1057,17 +1057,15 @@ SEQ\,\,\, &
 
 Finally, an other aspect that must be analized is that corresponding
 with the different constructs that can appear in modifiable
-specifications. So, according to the \jml~specification
+specifications. According to \jml~specification, 
 \texttt{$\backslash$fields}$\_$\texttt{of} and
-\texttt{$\backslash$reach} pragmas can occur inside of them. So, when
-establishing membership conditions
+\texttt{$\backslash$reach} pragmas can occur inside of such modifiable specifications. Hence, when establishing membership conditions
 \textup{e}$_1$\texttt{.}\textup{e}$_2$$\underline\in$ \textsc{Y}, we
-also need
-to define rules taking into account the fact that these pragmas can
+also need to define rules taking into account the fact that these constructs can
 occur inside of \textsc{Y}. 
-%Figure~\ref{fig-mem-def} shows these rules. 
-Typically, if any of these pragmas occur in the modifiable
-clause we fall on the standard definition of membership (see rules
+
+Typically, if none of these pragmas occur in the modifiable
+clause we fall on standard definition of membership (see rules
 rules \textup{IN-SIMP}, \textup{IN-ARR}, \textup{IN-EXP},
 \textup{IN-EXP-ARR}).
 \begin{table}[hbt]
@@ -1098,7 +1096,7 @@ IN-EXP &
 \textup{e}\texttt{.x}\underline{\in} \textsc{Y}
 \end{prooftree}
 \\[3.0ex]
-IN-EXP-ARR &
+IN-EXP-ARR\,\,\, &
 \begin{prooftree}
 \rule[1ex]{0em}{1.5ex}
 \textup{e}_2\texttt{.a[}\textup{e}_1\texttt{]}\in \textsc{Y}
@@ -1110,13 +1108,38 @@ IN-EXP-ARR &
 \rule{\linewidth}{0.25mm}
 \end{table} %%%%%%%%%%%%%
 
+Moreover, if we are checking simple array membership conditions as \texttt{a[}\textup{e}\texttt{]}$\underline{\in}$ \textsc{Y}, it will be enough to find a \jml~construct in \textsc{Y} specifying that correspoding method may modify any element of \texttt{a} (rule \textup{TIMES-ARR}) or the specific position represented by the expression \textup{e} (rule INTERV-ARR).
+\begin{table}[hbt]%%%%%%%%%%
+\rule{\linewidth}{0.25mm}
+\\[0.5ex]
+\begin{tabular}{ll}
+INTERV-ARR\,\,\, & 
+\begin{prooftree}
+\rule[1ex]{0em}{1.5ex}
+\texttt{a[}i..j\texttt{]}\in \textsc{Y},\ i\leq \textup{e}\leq j
+\justifies
+\texttt{a[}\textup{e}\texttt{]}\underline{\in} \textsc{Y}
+\end{prooftree}
+\\[3.0ex]
+TIMES-ARR\,\,\, &
+\begin{prooftree}
+\rule[1ex]{0em}{1.5ex}
+\texttt{a[*]}\in \textsc{Y}
+\justifies
+\texttt{a[}\textup{e}\texttt{]}\underline{\in} \textsc{Y}
+\end{prooftree}
+\end{tabular}
+\\[0.5ex]
+          \rule{\linewidth}{0.25mm}
+\end{table}%%%%%%%%%
+
+
 If an expression like
 $\backslash$\texttt{fields}$\_$\texttt{of(}\textup{e}\texttt{)}
-is occured in \textsc{Y}, we
-have to consider some cases according to the shape of \textup{e}. If
-\textup{e} has the form \textup{e}$_1$\texttt{.}\textup{e}$_2$ and
-\textup{e}$_2$ is not an array expression, it will be enough to have
-the expression \texttt{fields$\_$of(}\textup{e}$_1$\texttt{)} occuring 
+occurs in \textsc{Y}, we
+must consider some cases according to shape of \textup{e} when establishing membership conditions \textup{e}$_1$\texttt{.}\textup{e}$_2$$\underline\in$ \textsc{Y}. If
+\textup{e} has the form \textup{e}$_1$ and \textup{e}$_2$ is not an array expression, it will be enough to have
+\texttt{fields$\_$of(}\textup{e}$_1$\texttt{)} occuring 
 in \textsc{Y} for establishing the original condition of membership
 (see rules \textup{IN-THIS} and \textup{IN-EXP-FLD}). 
 \begin{table}[hbt]
@@ -1131,7 +1154,7 @@ IN-THIS &
 \texttt{this.x}\underline{\in} \textsc{Y}
 \end{prooftree}
 \\[3.0ex]
-IN-EXP-FLD &
+IN-EXP-FLD\,\,\, &
 \begin{prooftree}
 \rule[1ex]{0em}{1.5ex}
 \backslash \texttt{fields}\_\texttt{of(}\textup{e}\texttt{)}\in \textsc{Y}
@@ -1148,26 +1171,25 @@ Otherwise, if \textup{e}$_2$ is an array expression
 it will be enough to have
 \texttt{fields$\_$of(}\textup{e}$_1$\texttt{.a}\texttt{)} occurring in
 \textsc{Y} for establishing the original condition of membership
-(see rules \textup{IN-ARR-FLD} and
-\textup{IN-EXP-ARR-FLD}). 
+(see rules \textup{IN-ARR-FLD} and \textup{IN-EXP-ARR-FLD}). 
 \begin{table}[hbt] %%%%%%%%%%%%%
 \rule{\linewidth}{0.25mm}
 \\[0.5ex]
 \begin{tabular}{ll}
-IN-ARR-FLD &
+IN-ARR-FLD\,\,\, &
 \begin{prooftree}
 \rule[1ex]{0em}{1.5ex}
 \backslash \texttt{fields}\_\texttt{of(a)}\in \textsc{Y}
 \justifies
-\texttt{this.a[}\textup{e}\texttt{]}\underline{\in} \textsc{Y}
+\texttt{this.a[}\textup{e}_3\texttt{]}\underline{\in} \textsc{Y}
 \end{prooftree}
 \\[3.0ex]
-IN-EXP-ARR-FLD &
+IN-EXP-ARR-FLD\,\,\, &
 \begin{prooftree}
 \rule[1ex]{0em}{1.5ex}
-\backslash \texttt{fields}\_\texttt{of(}\textup{e}_2\texttt{.a)}\in \textsc{Y}
+\backslash \texttt{fields}\_\texttt{of(}\textup{e}_1\texttt{.a)}\in \textsc{Y}
 \justifies
-\textup{e}_2\texttt{.a[}\textup{e}_1\texttt{]}\underline{\in} \textsc{Y}
+\textup{e}_1\texttt{.a[}\textup{e}_3\texttt{]}\underline{\in} \textsc{Y}
 \end{prooftree}
 \end{tabular}
 \\[0.5ex]
@@ -1176,23 +1198,15 @@ IN-EXP-ARR-FLD &
 
 Similarly, $\backslash$\texttt{reach}
 expressions can occur in \modif~clauses\footnote{According to the
-\jml~syntax a $\backslash$\texttt{reach} expression only can occur
+\jml~syntax $\backslash$\texttt{reach} expressions can only occur
 inside of a
 $\backslash$\texttt{fields}$\_$\texttt{of} expression.}. So, if an
 expression as
-$\backslash$\texttt{fields}$\_$\texttt{of($\backslash$reach(}\textup{e}$\_1$\texttt{))}
-is found in \textsc{Y}, and we would like to establish
-\textup{e}\texttt{.x}$\underline\in$\textsc{Y}, it will be enough to
-find an expression \textup{e}$_1$ from which
-\textup{e}\texttt{.x}$\underline\in$\textsc{Y} is reachable. This
-situation is presented by the rule \textup{IN-EXP-REACH}. Similar
-situations happen when \texttt{x} is any other expression. This
-is presented by the rules \textup{IN-REACH} and
-\textup{IN-ARR-REACH}.
-
-
-
-
+$\backslash$\texttt{fields}$\_$\texttt{of($\backslash$reach(}\textup{e}$_1$\texttt{))} occurs
+in \textsc{Y}, and we would like to establish
+\textup{e}\texttt{.x}$\underline\in$\textsc{Y}, it will be enough to have \textup{e}\texttt{.x} belonging to set expressions reachable from \textup{e}$_1$. This
+situation is presented by the rule \textup{IN-EXP-REACH}. Something similar happens when \texttt{x} is an array expression. All of this
+is presented by rules \textup{IN-REACH}, \textup{IN-ARR-REACH} and \textup{IN-EXP-ARR-REACH}.
 \begin{table}[hbt]%%%%%%%%%%
 \rule{\linewidth}{0.25mm}
 \\[0.5ex]
@@ -1228,40 +1242,171 @@ IN-ARR-REACH &
 \justifies
 \texttt{this.a[}\textup{e}\texttt{]}\underline{\in} Y
 \end{prooftree}
+\\[3.0ex]
+IN-EXP-ARR-REACH\,\,\, &
+\begin{prooftree}
+\rule[1ex]{0em}{1.5ex}
+\backslash \texttt{fields}\_\texttt{of(}\backslash
+\texttt{reach(}\textup{e}\texttt{))}\in \textsc{Y},\ \
+\textup{e}_2\texttt{.a}\in \backslash
+\texttt{reach(}\textup{e}\texttt{)}
+\justifies
+\textup{e}_2\texttt{.a[}\textup{e}_1\texttt{]}\underline{\in} \textsc{Y}
+\end{prooftree}
 \end{tabular}
 \\[0.5ex]
 \rule{\linewidth}{0.25mm}
 \end{table}%%%%%%%%%
 
-%IN-EXP-ARR-REACH\,\,\, &
-%\begin{prooftree}
-%\rule[1ex]{0em}{1.5ex}
-%\backslash \texttt{fields}\_\texttt{of(}\backslash
-%\texttt{reach(}\textup{e}\texttt{))}\in \textsc{Y},\ \
-%\textup{e}_2\texttt{.a}\in \backslash
-%\texttt{reach(}\textup{e}\texttt{)}
-%\justifies
-%\textup{e}_2\texttt{.a[}\textup{e}_1\texttt{]}\underline{\in} \textsc{Y}
-%\end{prooftree}
-%\\[3.0ex]
-%INTERV-ARR & 
-%\begin{prooftree}
-%\rule[1ex]{0em}{1.5ex}
-%\texttt{a[}i..j\texttt{]}\in \textsc{Y},\ i\leq \textup{e}\leq j,\ \
-%\textup{e}\ \textit{modEXP}\ \textsc{Y}
-%\justifies
-%\texttt{this.a[}\textup{e}\texttt{]}\ \textit{modPRM}\ \textsc{Y}
-%\end{prooftree}
-%\\[3.0ex]
-%TIMES-ARR &
-%\begin{prooftree}
-%\rule[1ex]{0em}{1.5ex}
-%\texttt{a[*]}\in \textsc{Y},\ \ \textup{e}\ \textit{modEXP}\ \textsc{Y}
-%\justifies
-%\texttt{this.a[}\textup{e}\texttt{]}\ \textit{modPRM}\ \textsc{Y}
-%\end{prooftree}
-%\\[3.0ex]
+Annex~\ref{ane-der-exa} shows some derivation examples of checking \java~asserted programs using rules we presented below. These examples allow us see how can be detected wrong modifiable specification using our rules. 
 
+
+
+
+
+
+\section{A checker for \modif~clauses}
+\label{sec-imp-iss}
+We present the implementation of \modtool$:$ a modifiable checker implementing the syntactical rules presented during Section~\ref{sec-giv-sin-def}. For doing such implementation we have taken certain \jml~classes for representing the \java~syntactical constructs. Additionally, we have used the \jml~parser for parsing \java~asserted programs, storing the underlying context on which modifiable specifications are done and embedding the calling of respectives classes which implement our syntactical rules. 
+
+Section~\ref{abo-jml-cla-use} gives a general overview about \jml~classes we used fo representing \java~constructs and doing parsing. Section~\ref{fig-out-met-cal-con}shows how is figured out the context underlyng method specifications and how is done calling to the methods which implement our syntactical rules. Section~\ref{mod-and-con-clab} presents classes \texttt{Context} and \texttt{Modifiable}, which implement the underlying method contexts and modifiable syntactical rules.
+
+
+
+
+\subsection{About \jml~classes}
+\label{abo-jml-cla-use}
+We have retaken two \jml~classes for modeling \java~constructs$:$ \texttt{AST} and \texttt{ASTFactory}. Abstract class \texttt{AST} represents \java~constructs as tree structurs and class \texttt{ASTFactory} defines a set of operations for handling \texttt{AST} trees. These operations cover \texttt{create{AST}}, \texttt{dupTree{AST}} and \texttt{ASTChild(AST)}, which create, duplicate and add an child to a tree.
+
+Class \texttt{JmlParser} implements the \jml~syntactical analyzer and can be extended by embedding \java~source code implementing any specific functionality. 
+
+\subsection{Figuring out contexts of calling}
+\label{fig-out-met-cal-con}
+We have extended the \jml~parser by adding semantics actions for figuring out contexts under which instructions are ocurred. These semantics actions have been embeded as \java~code in this parser. A context for a method consist of its parameters, its local variables and the set of variables declared as modifiable for it. Figuring out the context for a method allow us to apply the general rule for method declarations \textup{METH-DEC} defined during Section~\ref{sec-giv-sin-def} and enable us to apply the rest of rules for any instruction occuring inside of this method, since the context for any instruction coincide with the context of the method which they occur in.
+
+Figure~\ref{fig-out-par} shows the source code embeded to the \jml~parser for adding any parameter to a method context. Specifically, this code is added in the \texttt{param$\_$declaration()} method. For doing that, the variable \texttt{currentContext}, having \texttt{Context} type and which serves to store the current method context, makes a call to \texttt{addParameter(AST)} passing it as parameter the parameter just parsed. Implementation of \texttt{Context} class will be presented is Section~\ref{mod-and-con-clab}. Aditionally, similar actions are considered for the declaration of modifiable and local variables.
+\begin{figure}[hbt]
+\rule{\linewidth}{0.25mm}
+\begin{tabbing}
+pub\=lic final\= void\=par\=am$\_$declaration() throws \kill
+\>$\mathtt{public\ final\ void\ {\bf param\_declaration}()\ throws\ \hdots \{ }$ \\
+\>\>\vdots \\
+\>\>$\mathtt{AST\ tmp87\_AST\ =\ null\ ;}$ \\
+\>\>$\mathtt{if\ (inputState.guessing==0)\ \{}$ \\
+\>\>\>$\mathtt{tmp87\_AST\ =\ (AST)astFactory.create(LT(1))\ ;}$ \\
+\>\>\>$\mathtt{astFactory.addASTChild(currentAST,\ tmp87\_AST)\ ;}$ \\
+\>\>\>{\it //code added for modifiable checker$:$ parameter of the method} \\
+\>\>\>$\mathtt{currentContext.addParameter(astFactory.dupTree(tmp87\_AST))\ ;}$ \\
+\>\>$\mathtt{\}}$ \\
+\>\>\vdots \\
+\>$\mathtt{\}}$
+\end{tabbing}
+\caption{Figuring out parameters}
+\label{fig-out-par}
+\rule{\linewidth}{0.25mm}
+\end{figure}
+
+
+
+
+\subsection{Making calls to static rules}
+\label{mak-cal-sta-rul}
+After figuring out the context of each method and its instructions, we are ready to statically call methods of the \texttt{Modifiable} class for checking its modifiable declarations. Figure~\ref{fig-cal-whi-rul} shows the case for rule corresponding a \texttt{wile} constructs. Its respective rule \textup{WHILE} is presented below.
+\begin{table}[hbt] %%%%%%%%%%%%
+\rule{\linewidth}{0.25mm}
+\begin{tabular}{ll}
+WHILE\,\,\, & 
+\begin{prooftree}
+\rule[1ex]{0em}{1.5ex}
+\textsc{C}\ \textit{modEXP}\ \textsc{Y},\ \ \textsc{B}\ \textit{modSTM}\ \textsc{Y}
+\justifies
+\texttt{while(}\textsc{C}\texttt{)}{\tt \{}\textsc{B}{\tt \}}
+\end{prooftree}
+\end{tabular}
+\\[0.5ex]
+\rule{\linewidth}{0.25mm}
+\end{table} %%%%%%%%%%%%%
+
+As can be seen, as far as the method \texttt{statement} parses the differents sintagmas of a \texttt{while} statement, we store the guard and block constructs as variables of type \texttt{AST} \texttt{temp4$\_$MOD} and \texttt{temp5$\_$MOD}\footnote{In the rule above, these correspond to \textsc{C} and \textsc{B} respestively}. Finally, we use the statical method \texttt{$\_$WHILE} of \texttt{Modifiable} class for doing the corresponding checking. In addition to variables \texttt{temp4$\_$MOD} and \texttt{temp5$\_$MOD}, we have to pass to method \texttt{$\_$WHILE} the context of the method where this statement is declared and a list of all other known contexts. Class \texttt{Modifiable} will be presented in Section~\ref{mod-and-con-clab}.
+\begin{figure}[hbt]
+\rule{\linewidth}{0.25mm}
+\begin{tabbing}
+pub\=lic f\=ina\=l vo\=ids\=tat\=ement(boolean in model prog) \kill 
+\> $\mathtt{public\ final\ void\ {\bf statement}(boolean\ in\_model\_prog)\hdots \ \{}$ \\
+\>\>\vdots \\
+\>\>$\mathtt{case LITERAL\_while:}$ \\
+\>\>\>$\mathtt{match(LITERAL\_while)\ ;\cdots match(LPAREN)\ ; \cdots expression(side\_effects\_allowed)\ ;}$ \\
+\>\>\>{\it //code added for modifiable checker} \\
+\>\>\>{\it AST temp4$\_$MOD = (AST)astfactoryMOD.dupTree(returnAST) ;} \\
+\>\>\>$\mathtt{match(RPAREN)\ ; \cdots statement(in\_model\_prog)\ ;}$ \\
+\>\>\>{\it //code added for modifiable checker} \\
+\>\>\>{\it AST temp5$\_$MOD = (AST)astfactoryMOD.dupTree(returnAST) ;} \\
+\>\>\>{\it Modifiable.$\_$WHILE(temp4$\_$MOD,temp5$\_$MOD, currentContext.getY(), contextStack) ;} \\
+\>$\mathtt{\}}$ 
+\end{tabbing}
+\caption{Calling of {\tt while} rule}
+\label{fig-cal-whi-rul}
+\rule{\linewidth}{0.25mm}
+\end{figure}
+
+
+
+
+\subsection{\texttt{Modifiable} and \texttt{Context} classes}
+\label{mod-and-con-clab}
+\texttt{Modifiable} class implements rules presented in Section~\ref{sec-giv-sin-def} as statical methods. As an example Figure~\ref{fig-met-sta-whi} shows method \textup{$\_$WHILE}, which implements rule \textup{WHILE} presented above. This method makes calls to \texttt{$\_$modEXP($\cdots$)} and \texttt{$\_$modSTM($\cdots$)} statical methods, which implement rules \texttt{modEXP} and \texttt{modSTM}.
+
+
+
+
+\begin{figure}[hbt]
+\rule{\linewidth}{0.25mm}
+\begin{tabbing}
+ddd\=ddd\=ddd\=ddd\=ddd\=ddd\=dd \kill
+$\mathtt{public\ static\ boolean\ \_{\bf WHILE}(AST\ C,\ AST\ B,\ Vector\ Y,\ Stack\ contexts)\{}$
+\\
+\>$\mathtt{return(\ \_modEXP(C,Y,contexts)\ \&\&}$ {\it //C modEXP Y} \\
+\>\>\>$\mathtt{\_modSTM(B,\ Y,\ contexts)\ ;}$ {\it //B modSTM Y} \\
+\>\>$\mathtt{)}$ ; \\
+$\mathtt{\}}$ 
+\\
+\\
+$\mathtt{public\ static\ boolean\ \_modEXP(AST\ e,\ Vector\ Y,\ Stack\ contexts)\{}$ \\
+\>$\mathtt{boolean\ tempRes\ ;}$ \\
+\>$\mathtt{switch(e.getType(\ ))\{}$ \\
+\>\>$\mathtt{case\ JavaTokenTypes.ASSIGN:\,\, case\ JavaTokenTypes.PLUS\_ASSIGN:}$  \\
+\>\>$\mathtt{case\ JavaTokenTypes.MINUS\_ASSIGN:\,\,case\ JavaTokenTypes.STAR\_ASSIGN:}$ \\
+\>\>$\mathtt{case\ JavaTokenTypes.DIV\_ASSIGN:\,\,case\ JavaTokenTypes.BITWISE\_ASSIGNMENT\_OP:}$ \\
+\>\>$\mathtt{tempRes\ =\ \_in\_PRIME(astfactoryMOD.dupTree(e.getFirstChild(\ )),Y,contexts)\ \&\&}$  \\ %{\it //e1 $\underline\in$ Y} \\
+\>\>\>$\mathtt{\_modPE(astfactoryMOD.dupTree(e.getFirstChild(\ )),Y,contexts)\ \&\&}$  \\ %{\it //e1 modPE Y} \\
+\>\>\>$\mathtt{\_modEXP(astfactoryMOD.dupTree(e.getFirstChild(\ ).getNextSibling(\ )),Y,contexts)\ ;}$ \\% {\it //e2 modEXP Y} \\
+\>\>$\mathtt{break\ ;}$ \\
+\>\>\vdots \\
+\>$\mathtt{\}}$ \\
+\>$\mathtt{return tempRes\ ;} $ \\
+$\mathtt{\}}$
+\end{tabbing}
+\caption{Statical method \texttt{$\_$WHILE}}
+\label{fig-met-sta-whi}
+\rule{\linewidth}{0.25mm}
+\end{figure}
+
+
+\section{Conclusion}
+\label{sec-con}
+dfdf
+
+
+
+
+
+
+\appendix
+\section{Checking specifications}
+\label{ane-der-exa}
+
+
+This appendix present some derivation examples of checking \java~asserted programs using rules we presented in Section~\ref{sec-giv-sin-def}. 
 
 
 
@@ -1566,27 +1711,6 @@ IN-ARR-REACH &
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-\section{Implementation issues}
-\label{sec-imp-iss}
-dfdf
-\section{Conclusion}
-\label{sec-con}
-dfdf
 \bibliographystyle{alpha}
 \bibliography{../bibliography}
 
