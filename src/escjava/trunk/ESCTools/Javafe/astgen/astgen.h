@@ -38,4 +38,4 @@ extern void endastfile();
 #define DEBUGPRINT 0
 #endif
 
-#endif ASTGEN_H
+#endif /* ASTGEN_H */
