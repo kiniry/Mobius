@@ -152,7 +152,7 @@ public class ParseUtil
      * be the list of modifier pragmas seen in the course of parsing any
      * Java modifiers.
      *
-     * @see javafe.ast.ModifierConstants
+     * @see javafe.ast.Modifiers
      */
     //@ requires l.m_in != null;
     //@ modifies modifierPragmas;

@@ -236,7 +236,7 @@ import java.util.Vector;
  * code right now---perhaps we can refactor and clean up?  It is sometimes parsed
  * and discarded, sometimes recognized and ignored, etc.
  *
- * @see escjava.Main.checkRedundantSpecs
+ * @see escjava.Options#checkRedundantSpecs
  */
 
 public class EscPragmaParser extends Parse implements PragmaParser
@@ -296,7 +296,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
     /**
      * Constructs a new pragma parser with zero nesting level.
      *
-     * @see EscPragmaParser(int)
+     * @see #EscPragmaParser(int)
      */
     public EscPragmaParser() {
 	this(0);
@@ -1726,7 +1726,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
      *
      * @param l the lexer from which to read and parse.
      * @return the parsed expression.
-     * @see javafe.parser.ParseExpr#parsePrimaryExpression(javafe.ast.Lex)
+     * @see javafe.parser.ParseExpr#parsePrimaryExpression(javafe.parser.Lex)
      */
     protected Expr parsePrimaryExpression(Lex l) {
         /* Lookahead for:
@@ -2262,7 +2262,6 @@ public class EscPragmaParser extends Parse implements PragmaParser
      *
      * @param l the lexer from which to read and parse.
      * @return the parsed type declaration.
-     * @equivalent parseTypeName(l);
      */
     //@ requires l.m_in != null
     //@ ensures \result.syntax

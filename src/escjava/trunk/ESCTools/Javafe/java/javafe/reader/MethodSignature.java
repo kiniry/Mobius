@@ -86,7 +86,7 @@ class MethodSignature
 
   /**
    * Change the return type of this method signature.
-   * @parame return_  the new return type
+   * @param return_  the new return type
    */
   //@ requires return_!=null
   //@ requires return_.syntax

@@ -7,7 +7,7 @@ package escjava.prover;
  ** <p>
  ** 
  ** @see Simplify
- ** @see CECEnum
+ ** @see escjava.prover.CECEnum
  ** @see SExp
  **/
 

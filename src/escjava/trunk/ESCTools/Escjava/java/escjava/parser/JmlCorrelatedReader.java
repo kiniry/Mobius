@@ -92,7 +92,7 @@ public class JmlCorrelatedReader extends FilterCorrelatedReader
      * #unreturnedChars} is non-zero only when {@link
      * #lastUnreturnedChar} is not an @-sign.
      *
-     * <p> {@link unreturnedChars} is not used (actually, is 0) when
+     * <p> unreturnedChars is not used (actually, is 0) when
      * scanning Javadoc comments.
      */
 
@@ -102,7 +102,7 @@ public class JmlCorrelatedReader extends FilterCorrelatedReader
     //@ invariant specialCharacter != '@' ==> unreturnedChars == 0;
 
     /**
-     * If there are unreturned characters, {@link lastUnreturnedChar}
+     * If there are unreturned characters, lastUnreturnedChar
      * indicates the last of these characters.
      */
 
@@ -120,9 +120,8 @@ public class JmlCorrelatedReader extends FilterCorrelatedReader
 
     /**
      * Reads the next character from this input stream.  Performs Unicode
-     * conversion and JML filtering.
+     * conversion and JML filtering.  Requires that the stream is open.
      *
-     * @requires We are open.
      * @return A Unicode character, or -1.
      */
     public int read() throws IOException {

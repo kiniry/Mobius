@@ -16,7 +16,7 @@ import javafe.util.Location;
  * the <code>javafe.ast</code> package to create AST nodes.
  * 
  * <p> The main entry point is the method
- * {@link parseStream(CorrelatedReader, boolean)}.
+ * {@link #parseStream(CorrelatedReader, boolean)}.
  * 
  * <P>Each parsing method for a particular syntactic unit is
  * documented with appropriate grammar production rules for that
@@ -28,7 +28,7 @@ import javafe.util.Location;
  * PLUS and BITOR.
  * 
  * @see javafe.ast.ASTNode
- * @see javafe.ast.ParseStmt
+ * @see javafe.parser.ParseStmt
  */
 
 public class Parse extends ParseStmt

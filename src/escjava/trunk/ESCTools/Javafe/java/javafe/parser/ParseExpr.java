@@ -9,11 +9,11 @@ import javafe.util.Assert;
 import javafe.Tool;
 
 /**
- * Parses java expressions.  Extended by {@link javafe.ast.ParseStmt}.
+ * Parses java expressions.  Extended by {@link javafe.parser.ParseStmt}.
  * 
  * @see javafe.ast.ASTNode
- * @see javafe.ast.ParseType
- * @see javafe.ast.ParseStmt
+ * @see javafe.parser.ParseType
+ * @see javafe.parser.ParseStmt
  */
 
 public abstract class ParseExpr extends ParseType

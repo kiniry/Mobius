@@ -143,7 +143,7 @@ public class GhostEnv extends EnvForTypeSig
      * @return a flag that indicates if the FieldDecl <code>field</code> a ghost
      * field.
      *
-     * @time-complexity The current implementation of this is slow.  If you need to
+     * @note The current implementation of this is slow.  If you need to
      * call this routine a lot, rewrite it so it runs faster.
      */
     public static boolean isGhostField(FieldDecl field) {

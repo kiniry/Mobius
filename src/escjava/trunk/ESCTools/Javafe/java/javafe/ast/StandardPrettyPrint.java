@@ -966,8 +966,7 @@ public class StandardPrettyPrint extends PrettyPrint {
     //// toString methods
 
     /**
-     * @return a canonical text representation for literal values.
-     * @require <code>tag</code> is one of constants on the left of this
+     * Requires that <code>tag</code> is one of constants on the left of this
      * table:
      * <center><code><table>
      * <tr> <td> TagConstants.BOOLEANLIT </td> <td> Boolean </td> </tr>
@@ -981,6 +980,7 @@ public class StandardPrettyPrint extends PrettyPrint {
      * 
      * and that <code>val</code> is an instance of the corresponding type
      * on the right.
+     * @return a canonical text representation for literal values.
      */
 
     /*@ requires ((tag==TagConstants.BOOLEANLIT) ||

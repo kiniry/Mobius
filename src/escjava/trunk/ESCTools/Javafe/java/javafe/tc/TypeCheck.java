@@ -17,13 +17,16 @@ import javafe.tc.TagConstants;	// resolve ambiguity
  * 
  * <h3> Overview of checking, resolution, and disambiguation </h3>
  * 
+ * <p> This description is out of date, particularly with respect to the names
+ *     of classes. </P>
+ *
  * <p> <em>Checking</em> involves performing the static checks specified by the Java
  * language specification. </p>
  * 
  * <p> <em>Resolution</em> involves connecting symbolic references in the parse tree
  * to objects representing declarations of the referred-to entities.  The parser
- * generates a number of nodes -- instances of {@link IdnExpr}, {@link FieldAccess},
- * and {@link MethodAccess} -- containing identifiers found in the input plus a
+ * generates a number of nodes -- instances of {@link Identifier}, {@link FieldAccess},
+ * and {@link MethodDecl} -- containing identifiers found in the input plus a
  * <code>decl</code> field which is initially <code>null</code>.  Resolution sets
  * these <code>decl</code> fields to point to the declaration referred to by the
  * identifiers.  Similarly, {@link TypeName} nodes have a <code>sig</code> field
@@ -42,29 +45,29 @@ import javafe.tc.TagConstants;	// resolve ambiguity
  * fully-qualified name of a type, as in <code>java.lang.String.concat</code>. </p>
  * 
  * <p> When it encounters an ambiguous name, the parser generates either an {@link
- * ExprName} or {@link MethodName} node depending on the context.  These are leaf
+ * AmbiguousVariableAccess} or {@link AmbiguousMethodInvocation} node depending on the context.  These are leaf
  * nodes.  In these cases, disambiguation involves replacing these nodes with
- * appropriate {@link FieldAccess} or {@link MethodAccess} nodes; these are non-leaf
+ * appropriate {@link VariableAccess} or {@link MethodInvocation} nodes; these are non-leaf
  * nodes, and in general the replacement might be fairly deep. </p>
  * 
  * <p> As an example of disambiguation, assume the name <code>x.y</code> is parsed as
- * an {@link ExprName}.  Assume further that no local named <code>x</code> is in
+ * an {@link AmbiguousVariableAccess}.  Assume further that no local named <code>x</code> is in
  * scope, the current scope is in an instance method for a class that has a field
  * named <code>x</code>.  In this case, disambiguation would replace this {@link
- * ExprName} with:
+ * AmbiguousVariableAccess} with:
  * 
  * <blockquote>
- * <code>(ExprFieldAccess (ExprFieldAccess this x) y)</code>
+ * <code>(FieldAccess (FieldAccess this x) y)</code>
  * </blockquote>
  * 
- * that is, an instance of {@link ExprFieldAccess} whose <code>id</code> field was
+ * that is, an instance of {@link FieldAccess} whose <code>id</code> field was
  * <code>y</code> and whose <code>expr</code> field was another {@link
- * ExprFieldAccess} whose <code>id</code> field was <code>x</code> and whose
+ * FieldAccess} whose <code>id</code> field was <code>x</code> and whose
  * <code>expr</code> field was an instance of {@link ThisExpr}. </p>
  * 
  * <p> An alternative design for disambiguation and resolution was considered.  In
  * this design, the {@link Name} class, the three subclasses of {@link FieldAccess},
- * and the three subclasses of {@link MethodAccess} would be replaced with a new
+ * and the three subclasses of {@link MethodInvocation} would be replaced with a new
  * expression class that looked something like:
  * 
  * <blockquote>
@@ -79,7 +82,7 @@ import javafe.tc.TagConstants;	// resolve ambiguity
  * </p>
  * 
  * <p> When confronted with phrases of the form <code>I1.I2...In</code>, the parser
- * would generate trees of {@link DotExpr} nodes all with the same tag, this tag
+ * would generate trees of DotExpr nodes all with the same tag, this tag
  * indicating that the meaning of the dot was ambiguous.  Disambiguation would
  * involve replacing this ambiguous tag with a tag whose meaning was clear (e.g., a
  * tag that meant "select a type from a package").  Resolution would involve using
@@ -134,15 +137,11 @@ import javafe.tc.TagConstants;	// resolve ambiguity
  * <p> Details of the states of type declarations are found with documentation of the
  * {@link TypeSig} class. </p>
  * 
- * @see TypeSig
- * @see BaseEnv
- * @see TypeDecl
- * @see TypeName
- * @see ExprName
- * @see MethodName
- * @see IdnExpr
- * @see FieldAccess
- * @see MethodAccess
+ * @see javafe.tc.TypeSig
+ * @see javafe.tc.Env
+ * @see javafe.ast.TypeDecl
+ * @see javafe.ast.TypeName
+ * @see javafe.ast.FieldAccess
  */
 
 public class TypeCheck

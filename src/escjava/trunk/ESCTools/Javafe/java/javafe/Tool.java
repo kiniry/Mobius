@@ -92,7 +92,7 @@ public abstract class Tool {
     /**
      * A tool's main entry point; <code>args</code> are the
      * command-line arguments we have been invoked with. <p> 
-     * @returns the exit code (0 = success, >0 is a failure)
+     * @return the exit code (0 = success, >0 is a failure)
      */
     //@ requires \nonnullelements(args)
     public abstract int run(String[] args);

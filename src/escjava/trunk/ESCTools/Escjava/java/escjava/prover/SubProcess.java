@@ -74,7 +74,7 @@ public class SubProcess
      * characters read from this subprocess using {@link #getChar()}.
      *
      * <p> In the event of a parsing error (see {@link
-     * handleUnexpected(String)}), we use this information, if
+     * #handleUnexpected(String)}), we use this information, if
      * available, to produce a more useful error message. </p>
      */
     private final StringBuffer readChars = (escjava.Main.options().trackReadChars ?
@@ -255,7 +255,7 @@ public class SubProcess
      * Report a fatal error due to unexpected output from the subprocess.
      *
      * <p> Use this routine if at all possible, because it provides
-     * additional useful information (when {@link Info.on} is true)
+     * additional useful information (when {@link javafe.util.Info#on} is true)
      * about the output read recently, what was expected, and the
      * remaining output. </p>
      *

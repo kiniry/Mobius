@@ -24,7 +24,7 @@ public abstract class Types extends javafe.tc.Types
 	    rangeType = PrimitiveType.make(TagConstants.DOTDOT, Location.NULL);
 
     /**
-     * This routine overrides {@link javafe.tc.Types#lookupField()}.  Unlike that
+     * This routine overrides {@link javafe.tc.Types#lookupField}.  Unlike that
      * routine, it knows about ghost fields and spec_public.
      *
      * <p> This routine assumes we are in an annotation so ghost fields are visible

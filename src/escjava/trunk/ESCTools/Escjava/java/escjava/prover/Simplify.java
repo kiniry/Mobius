@@ -28,7 +28,7 @@ import javafe.util.*;
  **
  ** @see SExp
  ** @see SubProcess
- ** @see CECEnum
+ ** @see escjava.prover.CECEnum
  **/
 
 public class Simplify {

@@ -8,11 +8,11 @@ import javafe.Tool;
 
 /**
  * Parses java types.
- * Extended by {@link javafe.ast.ParseExpr}.
+ * Extended by {@link javafe.parser.ParseExpr}.
  *
  * @see javafe.ast.ASTNode
- * @see javafe.ast.ParseUtil
- * @see javafe.ast.ParseExpr
+ * @see javafe.parser.ParseUtil
+ * @see javafe.parser.ParseExpr
  */
 
 public class ParseType extends ParseUtil

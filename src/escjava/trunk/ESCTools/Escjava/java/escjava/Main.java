@@ -326,8 +326,8 @@ public class Main extends javafe.SrcTool
      * Run all the requested stages on a given TypeDecl; return true
      * if we had to abort.
      *
-     * @precondition - td is not from a binary file.
      */
+    //@ requires (* td is not from a binary file. *);
     private boolean processTD(TypeDecl td) {
         // ==== Start stage 1 ====
 
@@ -442,7 +442,7 @@ public class Main extends javafe.SrcTool
     /**
      * Run stages 3+..6 as requested on a TypeDeclElem.
      *
-     * @precondition - te is not from a binary file, sig is the
+     * requires te is not from a binary file, sig is the
      * TypeSig for te's parent, and initState != null.
      */
     private void processTypeDeclElem(TypeDeclElem te, TypeSig sig,
@@ -487,7 +487,7 @@ public class Main extends javafe.SrcTool
      * Run stages 3+..6 as requested on a RoutineDeclElem; returns a
      * short (~ 1 word) status message.
      *
-     * @precondition - r is not from a binary file, sig is the TypeSig
+     * requires - r is not from a binary file, sig is the TypeSig
      * for r's parent, and initState != null.
      */
     //@ ensures \result != null;

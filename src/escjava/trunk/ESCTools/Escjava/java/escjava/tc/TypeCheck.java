@@ -13,7 +13,7 @@ public class TypeCheck extends javafe.tc.TypeCheck
     /**
      * Creates a singleton instance of this class, and sets the <code>inst</code>
      * field to this instance. Only one instance should be created.  Also initializes
-     * {@link PrepTypeDeclaration}.
+     * {@link javafe.tc.PrepTypeDeclaration}.
      */
     public TypeCheck() {
 	inst = this;
@@ -30,7 +30,7 @@ public class TypeCheck extends javafe.tc.TypeCheck
     }
 
     /**
-     * Override {@link javafe.tc.TypeCheck.canAccess()} to account for
+     * Override {@link javafe.tc.TypeCheck#canAccess} to account for
      * <code>spec_public</code>.
      */
     public boolean canAccess(TypeSig from, TypeSig target,

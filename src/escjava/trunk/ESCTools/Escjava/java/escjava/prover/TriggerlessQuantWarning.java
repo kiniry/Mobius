@@ -10,7 +10,7 @@ import javafe.util.Location;
  ** <p>
  ** 
  ** @see Simplify
- ** @see CECEnum
+ ** @see escjava.prover.CECEnum
  ** @see SExp
  **/
 

@@ -21,7 +21,7 @@ public class FlowInsensitiveChecks
     public static boolean dontAddImplicitConstructorInvocations = false;
 
     /**
-     * @review kiniry 29 Jul 2003 - Why is an empty parameterless
+     * @todo kiniry 29 Jul 2003 - Why is an empty parameterless
      * constructor provided?
      */
     protected FlowInsensitiveChecks() {}
@@ -83,8 +83,8 @@ public class FlowInsensitiveChecks
     /**
      * Moves <code>s</code> into implementation checked state.
      *
-     * @require <code>s</code> is in prepped state.
      */
+    //@ requires (* <code>s</code> is in prepped state.*);
     //@ requires s.state >= TypeSig.PREPPED
     public void checkTypeDeclaration(/*@non_null*/ TypeSig s) {
         Assert.precondition(s.state >= TypeSig.PREPPED);
@@ -112,8 +112,8 @@ public class FlowInsensitiveChecks
     /**
      * Moves <code>fd</code> into implementation checked state.
      *
-     * @require <code>fd</code> is in prepped state.
      */
+    //@ requires (* <code>fd</code> is in prepped state. *);
     //@ modifies sig
     public void checkFieldDecl(/*@non_null*/ FieldDecl fd) {
 	/*
@@ -316,7 +316,7 @@ public class FlowInsensitiveChecks
      * <p> (The returned environment will be the same as the one passed in unless the
      * statement is a declaration.)
      *
-     * @require <code>s</code> is not a case label. </p>
+     * </p>
      */
     //@ requires e != null && s != null
     //@ requires !(e instanceof EnvForCU)

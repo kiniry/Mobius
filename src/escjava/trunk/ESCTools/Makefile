@@ -102,10 +102,12 @@ clean-norel-noreltemp:
 ########################################### docs
 
 .PHONY: docs
-docs: javadoc
-	for d in $(SUBDIRS) docs ; do \
-	    $(MAKE) -C $$d $@ || exit 1; \
-	done
+docs: textdocs
+##docs: textdocs javadoc  ## FIXME Turn off until the javadoc target is fixed
+
+.PHONY: textdocs
+textdocs: 
+	${MAKE} -C docs build
 
 PACKAGE_LIST = escjava escjava.ast escjava.backpred escjava.parser \
 	  escjava.prover escjava.tc escjava.translate escjava.sp \
@@ -124,8 +126,18 @@ javadoc:  build
 	mkdir -p $(JAVADOC_GEN_DIR)/images
 	cp $(JAVAFE_ROOT)/doc/javadoc/images/*.gif $(JAVADOC_GEN_DIR)/images
 	$(JAVADOC) -sourcepath $(JAVADOC_SOURCEPATH):$(JUNIT_SOURCEPATH) \
+	  -classpath ${CLASSPATH}:${JUNIT_LIB} \
+	  -private \
+	  -doctitle "ESCTools API" \
+	  -windowtitle "ESCTools" \
+	  -author -version -use \
+	  -linksource \
+	  -tag warning -tag todo -tag note -tag design -tag usage \
 	  -d $(JAVADOC_GEN_DIR) \
           $(PACKAGE_LIST)
+
+## Should have -overview , header, footer, bottom, group, stylesheetfile
+##    link/linkoffline, subpackages  FIXME
 
 ########################################### release
 

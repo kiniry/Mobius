@@ -14,8 +14,7 @@ import java.util.ArrayList;
  * <ul>
  * <li> {@link #processOption(String, String[], int)},
  * <li> {@link #showNonOptions()},
- * <li> {@link #showOptions(boolean)},
- * <li> as well as a constructor {@link Options(String[] args)}.
+ * <li> {@link #showOptions(boolean)}
  * </ul>
  */
   

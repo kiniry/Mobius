@@ -80,7 +80,7 @@ public abstract class CorrelatedReader
      *
      * @see javafe.util.CorrelatedReader#reset()
      * @see javafe.util.CorrelatedReader#clearMark()
-     * @see javafe.util.CorrelatedReader#createReaderFromMark()
+     * @see javafe.util.CorrelatedReader#createReaderFromMark
      */
     //@ modifies marked;
     //@ ensures marked;

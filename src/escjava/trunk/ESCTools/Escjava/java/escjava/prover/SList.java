@@ -60,8 +60,8 @@ import java.io.*;
  ** subject to change at any time; clients should rely only on the
  ** publically-provided interface of this class.<p>
  **
- ** @see SNil
- ** @see SPair
+ ** @see escjava.prover.SNil
+ ** @see escjava.prover.SPair
  **/
 
 public abstract class SList extends SExp {

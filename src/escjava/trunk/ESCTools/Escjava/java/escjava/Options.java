@@ -247,7 +247,7 @@ public class Options extends javafe.SrcToolOptions
     /**
      * Process next tool option.
      *
-     * <p> See {@link javafe.Options#processOption(String [])} for the complete
+     * <p> See {@link javafe.Options#processOptions(String [])} for the complete
      * specification of this routine.
      */
     public int processOption(String option, String[] args, int offset) 

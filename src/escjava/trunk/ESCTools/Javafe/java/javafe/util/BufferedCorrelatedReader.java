@@ -224,7 +224,7 @@ public abstract class BufferedCorrelatedReader extends CorrelatedReader
    *
    * @see     javafe.util.BufferedCorrelatedReader#reset()
    * @see     javafe.util.BufferedCorrelatedReader#clearMark()
-   * @see     javafe.util.BufferedCorrelatedReader#createReaderFromMark()
+   * @see     javafe.util.BufferedCorrelatedReader#createReaderFromMark
    */
 
   public void mark() {
