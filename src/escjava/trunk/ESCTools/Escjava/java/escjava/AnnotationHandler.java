@@ -374,14 +374,18 @@ public class AnnotationHandler {
 	if (e1 == null || isTrue(e1)) return e2;
 	if (e2 == null || isTrue(e2)) return e1;
 	if (isFalse(e1) || isFalse(e2)) return Behavior.F;
-	return BinaryExpr.make(TagConstants.AND,e1,e2,Location.NULL);
+	Expr e = BinaryExpr.make(TagConstants.AND,e1,e2,Location.NULL);
+	javafe.tc.FlowInsensitiveChecks.setType(e,Types.booleanType);
+	return e;
     }
 
     static public Expr or(Expr e1, Expr e2) {
 	if (e1 == null || isFalse(e1)) return e2;
 	if (e2 == null || isFalse(e2)) return e1;
 	if (isTrue(e1) || isTrue(e2)) return Behavior.T;
-	return BinaryExpr.make(TagConstants.OR,e1,e2,Location.NULL);
+	Expr e = BinaryExpr.make(TagConstants.OR,e1,e2,Location.NULL);
+	javafe.tc.FlowInsensitiveChecks.setType(e,Types.booleanType);
+	return e;
     }
 
     static public Expr implies(Expr e1, Expr e2) {
@@ -389,7 +393,9 @@ public class AnnotationHandler {
 	if (isTrue(e2)) return e2; // Yes, e2
 	if (isFalse(e1)) return Behavior.T;
 	if (isFalse(e2)) return Behavior.F;
-	return BinaryExpr.make(TagConstants.IMPLIES,e1,e2,Location.NULL);
+	Expr e = BinaryExpr.make(TagConstants.IMPLIES,e1,e2,Location.NULL);
+	javafe.tc.FlowInsensitiveChecks.setType(e,Types.booleanType);
+	return e;
     }
 
     static boolean isTrue(Expr e) {
