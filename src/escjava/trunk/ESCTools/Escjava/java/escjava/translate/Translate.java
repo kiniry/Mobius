@@ -190,7 +190,9 @@ public final class Translate
             }
             res = popDeclBlock();
         }
-	TrAnExpr.translate = null;
+	//TrAnExpr.translate = null;
+	// Don't turn the above off because at present helper methods
+	// are inlined in which case this method is called recursively.
         return res;
     }
 
