@@ -2,6 +2,8 @@
 # Altered extensively by David R. Cok as part of the 2003 upgrade of
 # the ESC tools.
 
+# author: David Cok
+# author: Joe Kiniry
 
 export TOP = ..
 include ${TOP}/Makefile.defs
@@ -12,12 +14,12 @@ include ${TOP}/Makefile.defs
 
 ##############################################################################
 ## Variables needed in the Makefile.
-export CLASSDIRECTORY=${JAVAFE_ROOT}/classfiles
-export SOURCEDIRECTORY=${JAVAFE_ROOT}/java
-export TESTSOURCEDIRECTORY=${JAVAFE_ROOT}/test
+export CLASSDIRECTORY = ${JAVAFE_ROOT}/classfiles
+export SOURCEDIRECTORY = ${JAVAFE_ROOT}/java
+export TESTSOURCEDIRECTORY = ${JAVAFE_ROOT}/test
 
-export CLASSES=${CLASSDIRECTORY}
-export CLASSPATH=${CLASSES}:.
+export CLASSES = ${CLASSDIRECTORY}
+export CLASSPATH = ${CLASSES}:.
 
 ##############################################################################
 
@@ -49,23 +51,23 @@ CLASSESSTAMP = classes.stamp
 
 
 .PHONY: compile
-compile: $(CLASSDIRECTORY) source $(CLASSESSTAMP)
+compile: ${CLASSDIRECTORY} source ${CLASSESSTAMP}
 
-$(CLASSESSTAMP): $(SOURCEFILES)
-	$(JAVAC) $(JAVAC_FLAGS) -classpath ${CLASSPATH}:${SOURCEDIRECTORY} \
+${CLASSESSTAMP}: ${SOURCEFILES}
+	${JAVAC} ${JAVAC_FLAGS} -classpath ${CLASSPATH}:${SOURCEDIRECTORY} \
 	  -d ${CLASSDIRECTORY} $?
-	touch $(CLASSESSTAMP)
+	touch ${CLASSESSTAMP}
 
 .PHONY: compileall
-compileall: $(CLASSDIRECTORY) source javafeall
+compileall: ${CLASSDIRECTORY} source javafeall
 
 .PHONY: javafeall
 javafeall:
 	( cd java; \
-	$(JAVAC) $(JAVAC_FLAGS) -classpath ${CLASSPATH}:${SOURCEDIRECTORY} \
+	${JAVAC} ${JAVAC_FLAGS} -classpath ${CLASSPATH}:${SOURCEDIRECTORY} \
 	  -d ${CLASSDIRECTORY} `find javafe -name "*.java"` \
 				`find tohtml -name "*.java"` )
-	touch $(CLASSESSTAMP)
+	touch ${CLASSESSTAMP}
 
 .PHONY: source
 source: 
@@ -73,8 +75,8 @@ source:
 	${MAKE} -C java/javafe/ast source
 	${MAKE} -C java/javafe/tc source
 
-$(CLASSDIRECTORY):
-	mkdir -p $(CLASSDIRECTORY)
+${CLASSDIRECTORY}:
+	mkdir -p ${CLASSDIRECTORY}
 
 .PHONY: jtools
 jtools:	
@@ -97,7 +99,7 @@ zip:
 
 .PHONY: clean
 clean: cleanclasses
-	rm -f doc/javadoc/*.html $(CLASSESSTAMP)
+	rm -f doc/javadoc/*.html ${CLASSESSTAMP}
 	${MAKE} -C java/javafe/ast clean
 	${MAKE} -C test/javafe/parser/test clean
 	${MAKE} -C java/javafe/tc clean
@@ -107,7 +109,7 @@ clean: cleanclasses
 
 .PHONY: cleanclasses
 cleanclasses:
-	rm -rf $(CLASSDIRECTORY)
+	rm -rf ${CLASSDIRECTORY}
 
 
 ###########################################################################
@@ -143,7 +145,7 @@ runtest:
 .PHONY: javafe_test
 javafe_test:
 	( cd test; \
-	javac -classpath ${CLASSPATH}:${SOURCEDIRECTORY}:${TESTSOURCEDIRECTORY} \
+	${JAVAC} -classpath ${CLASSPATH}:${SOURCEDIRECTORY}:${TESTSOURCEDIRECTORY} \
 	  -d ${CLASSDIRECTORY} ${JAVAFETESTTARGETS} )
 
 ###########################################################################
