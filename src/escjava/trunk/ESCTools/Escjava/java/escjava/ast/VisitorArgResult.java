@@ -6,15 +6,15 @@ package escjava.ast;
 import java.util.Hashtable;
 
 import javafe.ast.*;
-import escjava.ast.Visitor;      // Work around 1.0.2 compiler bug
-import escjava.ast.TagConstants; // Work around 1.0.2 compiler bug
-import escjava.ast.GeneratedTags;// Work around 1.0.2 compiler bug
-import escjava.ast.AnOverview;   // Work around 1.0.2 compiler bug
+//import escjava.ast.Visitor;      // Work around 1.0.2 compiler bug
+//import escjava.ast.TagConstants; // Work around 1.0.2 compiler bug
+//import escjava.ast.GeneratedTags;// Work around 1.0.2 compiler bug
+//import escjava.ast.AnOverview;   // Work around 1.0.2 compiler bug
 import javafe.util.Assert;
 import javafe.util.Location;
 
 
-// Convention: unless otherwise noted, integer fields named "loc"g refer
+// Convention: unless otherwise noted, integer fields named "loc" refer
 // to the locaction of the first character of the syntactic unit
 
 //# TagBase javafe.tc.TagConstants.LAST_TAG + 1
