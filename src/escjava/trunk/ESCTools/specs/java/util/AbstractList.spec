@@ -27,8 +27,7 @@ package java.util;
  */
 public abstract class AbstractList extends AbstractCollection implements List {
 
-    //@ pure
-    protected AbstractList();
+    /*@ pure @*/ protected AbstractList();
 
     /*@ also
       @   protected model_program {
@@ -46,7 +45,7 @@ public abstract class AbstractList extends AbstractCollection implements List {
       @     assignable \nothing;
       @     signals (Exception e) e instanceof UnsupportedOperationException;
       @*/
-    public Object set(int index, Object element);
+    public Object set(int index, Object element) throws UnsupportedOperationException;
 
     /*@ also
       @   protected exceptional_behavior
@@ -54,7 +53,7 @@ public abstract class AbstractList extends AbstractCollection implements List {
       @     assignable \nothing;
       @     signals (Exception e) e instanceof UnsupportedOperationException;
       @*/
-    public void add(int index, Object element);
+    public void add(int index, Object element) throws UnsupportedOperationException;
 
     /*@ also
       @   protected exceptional_behavior
@@ -62,7 +61,7 @@ public abstract class AbstractList extends AbstractCollection implements List {
       @     assignable \nothing;
       @     signals (Exception e) e instanceof UnsupportedOperationException;
       @*/
-    public Object remove(int index);
+    public Object remove(int index) throws UnsupportedOperationException;
 
     // Search Operations
 
@@ -110,7 +109,7 @@ public abstract class AbstractList extends AbstractCollection implements List {
     // specification inherited from Object
     public /*@ pure @*/ int hashCode();
 
-    /* FIXME +@ protected normal_behavior
+    /*@ protected normal_behavior
       @  requires 0 <= fromIndex && fromIndex <= toIndex
       @              && toIndex <= size();
       @  {|
@@ -118,15 +117,14 @@ public abstract class AbstractList extends AbstractCollection implements List {
       @     assignable \nothing;
       @   also
       @     requires fromIndex < toIndex && toIndex < size();
-      @     assignable theCollection;
-      @     ensures theList.equals(\old(theList.subsequence(0,fromIndex)
-      @                         .concat(theList.subsequence(toIndex,size()))));
+      @     assignable objectState;
+      @     //FIXME detailed postcondition missing
       @  |}
       @*/
     protected void removeRange(int fromIndex, int toIndex);
 
     protected transient int modCount;
-    //@                       in _theList;
+    //@                       in objectState;
 
     //@ protected initially modCount == 0;
 }

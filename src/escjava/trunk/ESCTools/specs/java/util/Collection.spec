@@ -28,10 +28,11 @@ package java.util;
  * @version $Revision$
  * @author Gary T. Leavens
  * @author Brandon Shilling
+ * @author Erik Poll 
  */
 public interface Collection {
-    
-    //@ public model instance non_null Object[] _theCollection;
+
+    //@ public model instance non_null Object[] _theCollection; //in objectState;
 
     // Subclasses may not support some operations.  The following
     // model variables should be given a representation that indicates
@@ -46,7 +47,7 @@ public interface Collection {
     //@ public model instance boolean addOperationSupported;
     //@ public model instance boolean removeOperationSupported;
     //@ public model instance boolean nullElementsSupported;
-
+    
     /**
      * The (more specific) type of our elements (set by the user of the
      * object to state what is allowed to be added to the collection, and
@@ -67,13 +68,14 @@ public interface Collection {
     // FIXME - that condition is not in the javadoc specs.
     // Need \bigint returned from theCollection.size()?
     /*@ public normal_behavior
-          ensures \result == _theCollection.length;
-          ensures \result >= 0;
+      @    ensures \result >= 0;
+      @    ensures \result == _theCollection.length;
+      @    ensures \result == 0 <==> isEmpty();
       @*/
     /*@ pure @*/ int size();
 
     /*@ public normal_behavior
-          ensures \result == (size()==0);
+      @  ensures \result <==> (size() == 0);
       @*/
     /*@ pure @*/ boolean isEmpty();
 
@@ -81,20 +83,22 @@ public interface Collection {
       @   ensures !containsNull && o == null ==> !\result;
       @   ensures (o == null) || \typeof(o) <: elementType || !\result;
       @   ensures \result <==> (\exists int i; 0<=i && i<_theCollection.length;
-                                 _theCollection[i] == o);
+      @                          _theCollection[i] == o);
+		// The exceptions are optional says the Java documentation
+      @   signals (ClassCastException)
+      @           (* \typeof(o) is incompatible
+      @              with the elementType of this collection *);
+      @   signals (NullPointerException) o == null;
       @*/
-    /*@ pure @*/ public boolean contains(Object o);
+    /*@ pure @*/ boolean contains(Object o);
 
     /*@ public normal_behavior
-      @   assignable \nothing;
       @   ensures \result != null;
       @   ensures \result.elementType == elementType;
       @   ensures containsNull == \result.returnsNull;
-      @*/
-    /* FIXME +@ also public normal_behavior
       @   ensures (\forall int i; 0 <= i && i < size();
-      @                 theCollection.has(\result.nthNextElement(i)));
-      @   ensures (\forall Object o; theCollection.has(o) ==>
+      @                 contains(\result.nthNextElement(i)));
+      @   ensures (\forall Object o; contains(o) ==>
       @              (\exists int i; 0 <= i && i < size(); 
       @                 o == \result.nthNextElement(i)));
       @   ensures size() > 0 ==> \result.hasNext((int)(size()-1));
@@ -104,80 +108,63 @@ public interface Collection {
       @                 this.contains(\result.nthNextElement(i)));
       @   ensures_redundantly size() != 0 ==> \result.moreElements;
       @*/
-    // FIXME - need specs for escjava case
     /*@ non_null @*/ /*@ pure @*/ Iterator iterator();
 
     /*@ public normal_behavior
       @   requires size() < Integer.MAX_VALUE;
-      @   assignable \nothing;
       @   ensures \result != null;
       @   ensures containsNull || \nonnullelements(\result);
       @   ensures \result.length == size();
+      @   ensures (\forall int i; 0 <= i && i < size(); contains(\result[i]));
+      @   ensures (\forall Object o; contains(o) ==>
+      @              (\exists int i; 0 <= i && i < size(); o.equals(\result[i])));
       @*/
-    /* FIXME +@ also public normal_behavior
-      @   ensures (\forall int i; 0 <= i && i < size();
-      @                 theCollection.count(\result[i])
-      @                 == JMLArrayOps.valueEqualsCount(\result, \result[i]));
-      @*/
-    // FIXME - need specs for escjava case
     /*@ pure @*/ Object[] toArray();
        
-    /* FIXME +@ public normal_behavior
-      @   old int colSize = theCollection.int_size();
+    /*@ public normal_behavior
+      @   old int colSize = size();
       @   old int arrSize = a.length;
-      @   requires a!= null && colSize < Integer.MAX_VALUE;
+      @   requires a!= null;
+      @   requires colSize < Integer.MAX_VALUE;
       @   requires elementType <: \elemtype(\typeof(a));
       @   requires (\forall Object o; contains(o); \typeof(o) <: \elemtype(\typeof(a)));
       @   {|
       @     requires colSize <= arrSize;
       @     assignable a[*];
       @     ensures \result == a;
-      @     ensures (\forall int k; 0 <= k && k < colSize;
-      @                  theCollection.count(\result[k])
-      @                  == JMLArrayOps.valueEqualsCount(\result,
-      @                                                  \result[k], colSize));
-      @     ensures (\forall int i; colSize <= i && i < arrSize;
+      @     ensures (\forall int k; 0 <= k && k < colSize; contains(\result[k]));
+      @     ensures (\forall Object o; contains(o) ==>
+      @              (\exists int i; 0 <= i && i < colSize; o.equals(\result[i])));
+      @     ensures (\forall int i; colSize <= i && i < arrSize; 
       @                             \result[i] == null);
       @     ensures_redundantly \typeof(\result) == \typeof(a);
       @   also
       @     requires colSize > arrSize;
       @     assignable \nothing;
       @     ensures \fresh(\result) && \result.length == colSize;
-      @     ensures (\forall int k; 0 <= k && k < colSize;
-      @        theCollection.count(\result[k])
-      @        == JMLArrayOps.valueEqualsCount(\result, \result[k], colSize));
-      @     ensures (\forall int k; 0 <= k && k < colSize;
-      @                \result[k] == null || 
-      @                \typeof(\result[k]) <: \elemtype(\typeof(\result)));
-      @     ensures \typeof(\result) == \typeof(a);
+      @     ensures (\forall int k; 0 <= k && k < colSize; contains(\result[k]));
+      @     ensures (\forall Object o; contains(o) ==>
+      @              (\exists int i; 0 <= i && i < colSize; o.equals(\result[i])));
+      @    ensures \typeof(\result) == \typeof(a);
       @   |}
-      @*/
-    /*@
+      @ also
       @ public exceptional_behavior
       @   requires a == null;
       @   assignable \nothing;
-      @   signals (Exception e) (e instanceof NullPointerException) ;
+      @   signals (NullPointerException) ;
       @ also
       @ public behavior
-      @   requires a != null;
       @   requires !(\forall Object o; o != null && contains(o);
       @                                \typeof(o) <: \elemtype(\typeof(a)));
       @   assignable a[*];
-      @   signals (Exception e) (e instanceof ArrayStoreException) ;
+      @   signals (ArrayStoreException) ;
       @*/
-    // FIXME - need specs for escjava case
-    /*@ non_null @*/
-    Object[] toArray(Object[] a);
+    /*@ non_null @*/ Object[] toArray(Object[] a);
 
     /*@ public behavior
       @   requires !containsNull ==> o != null;
       @   requires  (o == null) || \typeof(o) <: elementType;
-      @*/
-    //@  assignable _theCollection;
-    /* FIXME +@
-      @   assignable theCollection;
-      @   ensures \result
-      @         ==> theCollection.equals(\old(theCollection.insert(o)));
+      @   assignable objectState; 
       @   ensures \result && \old(size() < Integer.MAX_VALUE)
       @           ==> size() == \old(size()+1);
 	// FIXME - The above limitation to MAX_VALUE is just because
@@ -197,18 +184,12 @@ public interface Collection {
       @                prevents it from being added to this *);
       @   
       @*/
-    // FIXME - need specs for escjava case
     boolean add(Object o);
 
     /*@ public behavior
       @   requires !containsNull ==> o != null;
       @   requires  (o == null) || \typeof(o) <: elementType;
-      @*/
-    //@  assignable _theCollection;
-    /* FIXME +@
-      @   assignable theCollection;
-      @   ensures \result
-      @         ==> theCollection.equals(\old(theCollection.remove(o)));
+      @   assignable objectState; 
       @   ensures \result && \old(size() <= Integer.MAX_VALUE)
       @           ==> size() == \old(size()-1) && size() < Integer.MAX_VALUE
       @               && size() >= 0;
@@ -220,39 +201,29 @@ public interface Collection {
       @            (* the type of this element is not 
       @               compatible with this *);
       @*/
-    // FIXME - need specs for escjava case
     boolean remove(Object o);
 
-    /* FIXME +@ public behavior
+    /*@ public behavior
       @   requires c != null;
       @   requires c.elementType <: elementType;
       @   requires !containsNull ==> !c.containsNull;
-      @   assignable \nothing;
-          ensures \result <==> (\forall Object o; c.contains(o) ==> contains(o));
-      @*/
-    /* FIXME +@
-      @   ensures \result <==> theCollection.containsAll(c);
       @   signals (ClassCastException)
       @           (* class of specified element prevents it 
       @              from being added to this *);
       @   signals (NullPointerException)
       @           (* argument contains null elements and this does not support 
       @              null elements *);
-      @*/
-    /*@
-      @ public exceptional_behavior
+      @ also public exceptional_behavior
       @  requires c == null;
       @  signals (NullPointerException);
       @*/
     /*@ pure @*/ boolean containsAll(Collection c);
 
-    /* FIXME +@ public behavior
+    /*@ public behavior
       @   requires c != null;
       @   requires c.elementType <: elementType;
       @   requires !containsNull ==> !c.containsNull;
-      @   assignable theCollection;
-      @   ensures theCollection
-      @           .equals(\old(theCollection).union(c.theCollection));
+      @   assignable objectState; 
       @   signals (UnsupportedOperationException)
       @           (* this does not support addAll *);
       @   signals (ClassCastException)
@@ -271,13 +242,11 @@ public interface Collection {
       @*/
     boolean addAll(Collection c);
 
-    /* FIXME +@ public behavior
+    /*@ public behavior
       @   requires c != null;
       @   requires elementType <: c.elementType;
       @   requires !c.containsNull ==> !containsNull;
-      @  assignable theCollection;
-      @   ensures theCollection
-      @           .equals(\old(theCollection).difference(c.theCollection));
+      @  assignable objectState; 
       @   signals (UnsupportedOperationException)
       @               (* this does not support removeAll *);
       @   signals (ClassCastException)
@@ -293,13 +262,11 @@ public interface Collection {
       @*/
     boolean removeAll(Collection c);
 
-    /* FIXME +@ public behavior
+    /*@ public behavior
       @   requires c != null;
       @   requires elementType <: c.elementType;
       @   requires !c.containsNull ==> !containsNull;
-      @  assignable theCollection;
-      @   ensures theCollection
-      @           .equals(\old(theCollection).intersection(c.theCollection));
+      @  assignable objectState; 
       @   signals (UnsupportedOperationException)
       @            (* this does not support retainAll *);
       @   signals (ClassCastException)
@@ -315,9 +282,9 @@ public interface Collection {
       @*/
     boolean retainAll(Collection c);
 
-    /* FIXME +@ public behavior
-      @   assignable theCollection;
-      @   ensures theCollection.isEmpty();
+    /*@ public behavior
+      @   assignable objectState; 
+      @   ensures isEmpty();
       @   ensures_redundantly size() == 0;
       @   signals (UnsupportedOperationException)
       @           (* clear is not supported by this *);
@@ -327,6 +294,6 @@ public interface Collection {
     boolean equals(Object o);
 
     int hashCode();
-
+    
     //@ public model int hashValue();
 }
