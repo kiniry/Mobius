@@ -1702,8 +1702,9 @@ public final class Translate
                         Assert.notFalse(vd.locAssignOp != Location.NULL);
                         VariableAccess lhs = TrAnExpr.makeVarAccess(vd, vd.getStartLoc());
 			TrAnExpr.initForClause();
-                        Expr rval = isGhost ? TrAnExpr.trSpecExpr((Expr)vd.init) :
-						ptrExpr(vd.init);
+                        Expr rval = isGhost ? 
+				TrAnExpr.trSpecExpr((Expr)vd.init,null,premap) :
+				ptrExpr(vd.init);
 			if (TrAnExpr.extraSpecs) addNewAssumptions();
                         if (! isUninitialized) {
                             writeCheck(lhs, vd.init, rval, vd.locAssignOp, false);
@@ -1731,8 +1732,8 @@ public final class Translate
 		if (s.target instanceof FieldAccess) {
 		    FieldAccess fa = (FieldAccess)s.target;
 		    TrAnExpr.initForClause();
-		    Expr lhs= trFieldAccess(true, fa);
-		    Expr rval = TrAnExpr.trSpecExpr(s.value);
+		    Expr lhs= trFieldAccess(true, fa); // FIXME - premap?
+		    Expr rval = TrAnExpr.trSpecExpr(s.value,null,premap);
 		    if (TrAnExpr.extraSpecs) addNewAssumptions();
 		    writeCheck(lhs, s.value, rval, s.locOp, false);
 		    modifiesCheckField(lhs,fa.getStartLoc(),fa.decl);
@@ -1775,7 +1776,7 @@ public final class Translate
 		    // Assignments to local ghost variables end here
 		    VariableAccess lhs = (VariableAccess)s.target;
 		    TrAnExpr.initForClause();
-		    Expr rval = TrAnExpr.trSpecExpr(s.value);
+		    Expr rval = TrAnExpr.trSpecExpr(s.value,null,premap);
 		    if (TrAnExpr.extraSpecs) addNewAssumptions();
 		    writeCheck(lhs, s.value, rval, s.locOp, false);
 		    code.addElement(GC.gets(lhs,rval));
@@ -1787,9 +1788,9 @@ public final class Translate
 		    ArrayRefExpr lhs= (ArrayRefExpr)s.target;
 
 		    TrAnExpr.initForClause();
-		    Expr array= TrAnExpr.trSpecExpr(lhs.array);
-		    Expr index= TrAnExpr.trSpecExpr(lhs.index);
-		    Expr rval= TrAnExpr.trSpecExpr(s.value);
+		    Expr array= TrAnExpr.trSpecExpr(lhs.array,null,premap);
+		    Expr index= TrAnExpr.trSpecExpr(lhs.index,null,premap);
+		    Expr rval= TrAnExpr.trSpecExpr(s.value,null,premap);
 		    if (TrAnExpr.extraSpecs) addNewAssumptions();
 
 		    arrayAccessCheck(lhs.array, array, lhs.index, index, lhs.locOpenBracket);
@@ -1824,7 +1825,7 @@ public final class Translate
                 {
                     ExprStmtPragma x = (ExprStmtPragma)stmt;
 		    TrAnExpr.initForClause();
-                    Expr p = TrAnExpr.trSpecExpr(x.expr);
+                    Expr p = TrAnExpr.trSpecExpr(x.expr,null,premap);
 		    if (TrAnExpr.extraSpecs) addNewAssumptionsNow();
                     code.addElement(GC.assume(p));
                     return;
@@ -1833,7 +1834,7 @@ public final class Translate
             case TagConstants.ASSERT: {
                 ExprStmtPragma x = (ExprStmtPragma)stmt;
 		TrAnExpr.initForClause();
-                Expr p = TrAnExpr.trSpecExpr(x.expr);
+                Expr p = TrAnExpr.trSpecExpr(x.expr,null,premap);
 		if (TrAnExpr.extraSpecs) addNewAssumptionsNow();
                 code.addElement(GC.check(x.getStartLoc(), TagConstants.CHKASSERT,
                                          p, Location.NULL));
@@ -1887,6 +1888,7 @@ public final class Translate
 				Options.JML_ASSERTIONS) {
 			// Treat a Java assert as a JML assert
 		    // Since it is a Java statement, it can't contain JML constructs
+			// FIXME - so should it be translated this way?
 		    Expr predicate = TrAnExpr.trSpecExpr(assertStmt.pred);
                     code.addElement(GC.check(assertStmt.getStartLoc(), TagConstants.CHKASSERT,
                                              predicate, Location.NULL));

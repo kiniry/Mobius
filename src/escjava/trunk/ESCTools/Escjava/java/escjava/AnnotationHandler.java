@@ -270,9 +270,9 @@ public class AnnotationHandler {
 	    if (doit) {
 		defaultSpecs = true;
 		ExprModifierPragma e = ExprModifierPragma.make(
-		    TagConstants.REQUIRES, T, Location.NULL);
+		    TagConstants.REQUIRES, T, tde.getStartLoc());
 		newpm.addElement(e);
-		newpm.addElement(defaultModifies(Location.NULL,T,tde));
+		newpm.addElement(defaultModifies(tde.getStartLoc(),T,tde));
 	    }
 	}
 
@@ -627,12 +627,12 @@ added, it doesn't change whether a routine appears to have a spec or not.
 // Diverges expression depends on lightweight or heavyweight
 	}
 	if (!foundModifies) {
-	    resultList.addElement(defaultModifies(Location.NULL,req,tde));
+	    resultList.addElement(defaultModifies(tde.getStartLoc(),req,tde));
 	}
     }
     public final static CondExprModifierPragma defaultModifies(int loc, 
 				Expr req, RoutineDecl rd) {
-	boolean everythingIsDefault = true; // FIXME - eventually change to true
+	boolean everythingIsDefault = true;
 	boolean nothing = !everythingIsDefault;
 	boolean isPure = Utils.isPure(rd);
 

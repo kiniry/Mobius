@@ -181,6 +181,7 @@ public final class ErrorMsg
 					  boolean assocOnly)
 	throws SExpTypeError {
 
+      try {
 	if (counterexampleContext == null) {
 	    counterexampleContext = SList.make();
 	}
@@ -216,10 +217,15 @@ public final class ErrorMsg
 	if (!assocOnly) ErrorSet.warning( locUse, 
 			  msg+" (" + TagConstants.toString(tag) + ")" );
 
-	if( locDecl != Location.NULL && !Location.isWholeFileLoc(locDecl)) {
-	    System.out.println("Associated declaration is "
+	if( locDecl != Location.NULL) {
+	    if (!Location.isWholeFileLoc(locDecl)) {
+		System.out.println("Associated declaration is "
 			       + Location.toString(locDecl) + ":");
-	    ErrorSet.displayColumn(locDecl, assocDeclClipPolicy);
+		ErrorSet.displayColumn(locDecl, assocDeclClipPolicy);
+	    } else {
+		System.out.println("Associated declaration is "
+			       + Location.toString(locDecl) );
+	    }
 	}
 
 	switch (tag) {
@@ -243,6 +249,10 @@ public final class ErrorMsg
 	    System.out.println("Suggestion [" + Location.toLineNumber(locUse)+
 			       "," + Location.toColumn(locUse) + "]: " + sug);
 	}
+      } catch (javafe.util.AssertionFailureException e) {
+	System.out.println("FAILED TO PRINT ERROR MESSAGE FOR " + s);
+	throw e;
+      }
     }
 
 
@@ -523,7 +533,7 @@ public final class ErrorMsg
 
     private static int getLoc(String s, int k) {
 	String suffix = s.substring(k);
-	return UniqName.suffixToLoc(suffix);
+	return UniqName.suffixToLoc(suffix,true);
     }
 
     /** Converts the substring beginning at <code>k</code> of <code>s</code>

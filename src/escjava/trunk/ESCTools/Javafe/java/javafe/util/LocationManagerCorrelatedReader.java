@@ -213,7 +213,8 @@ public abstract class LocationManagerCorrelatedReader
     LocationManagerCorrelatedReader s = getCorrStreamAt(streamId);
 	
     if (s.isWholeFile) {
-      Assert.fail("streamId denotes a whole file location");
+      return s.minLoc;
+      //Assert.fail("streamId denotes a whole file location");
     }
 
     if (line>s.curLineNo) {
