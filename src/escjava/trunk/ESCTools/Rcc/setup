@@ -22,7 +22,7 @@ setenv	JAVAFE_ROOT		${RCC_ROOT}/../Javafe
 
 setenv	CLASSDIRECTORY		${RCC_ROOT}/classes
 setenv	SOURCEDIRECTORY		${RCC_ROOT}/java
-setenv	JAVADOCDIRECTORY	${RCC_ROOT}/doc/javadoc
+setenv	JAVADOC_GEN_DIR		${RCC_ROOT}/doc/javadoc
 
 setenv  DECSRCLIBRARY		${JAVAFE_ROOT}/decsrclib
 

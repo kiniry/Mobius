@@ -54,7 +54,7 @@ endif
 
 setenv	CLASSDIRECTORY		${ESCJAVA_ROOT}/classes
 setenv	SOURCEDIRECTORY		${ESCJAVA_ROOT}/java
-setenv	JAVADOCDIRECTORY	${ESCJAVA_ROOT}/doc/javadoc
+setenv	JAVADOC_GEN_DIR	${ESCJAVA_ROOT}/doc/javadoc
 
 setenv  SRCDIRECTORY		${JAVAFE_ROOT}/decsrclib
 setenv  SRCCLASSDIRECTORY	${JAVAFE_ROOT}/decsrclib

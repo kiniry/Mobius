@@ -28,7 +28,7 @@ export PATH=$JAVA_HOME/bin:$PATH
 export CLASSDIRECTORY=${JAVAFE_ROOT}/classfiles
 export SOURCEDIRECTORY=${JAVAFE_ROOT}/java
 export TESTSOURCEDIRECTORY=${JAVAFE_ROOT}/test
-export JAVADOCDIRECTORY=${JAVAFE_ROOT}/doc/javadoc
+export JAVADOC_GEN_DIR=${JAVAFE_ROOT}/doc/javadoc
 
 export JDK_SOURCES=/usr/local/Java/src/jdk-1.2.2_012
 export JDK_BINARIES=${JAVA_HOME}/jre/lib/rt.jar
