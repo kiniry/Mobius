@@ -1481,7 +1481,8 @@ ESC/Java and other JML tools.  These alternates are complete synonyms.
 @item @strong{Description:} A requires clause specifies a condition that must hold in the pre-state of the method.  The remaining 
 clauses of the specification case
 must hold whenever the requires clause (or the conjunction of multiple
-requires clauses) holds.
+requires clauses) holds.  The expression in the clause
+may also be @code{\not_specified}, which is equivalent to omitting the clause.
 
 @item @strong{Status:} The requires clause is implemented and is utilized by ESC/Java2
 in generating verification conditions.
@@ -1495,6 +1496,8 @@ not yet exist prior to allocation); JML does not.
 @item @strong{Description:} An ensures clause states a condition that must hold in
 the post-state of a method or constructor whenever the associated preconditions
 hold in the pre-state and the method or constructor exits normally.
+  The expression in the clause
+may also be @code{\not_specified}, which is equivalent to omitting the clause.
 
 @item @strong{Status:} Implemented and used by the static checker.
 @item @strong{Differences from JML or Java:} None.
@@ -1506,7 +1509,8 @@ hold in the pre-state and the method or constructor exits normally.
 @item @strong{Description:} A signals clause states a condition that must hold in
 the post-state of a method or constructor whenever the associated preconditions
 hold in the pre-state and the method or constructor exits with an exception of
-(or a subclass of) the designated type.
+(or a subclass of) the designated type.  The expression in the clause
+may also be @code{\not_specified}, which is equivalent to omitting the clause.
 
 @item @strong{Status:} Implemented and used by the static checker.
 
@@ -1521,7 +1525,9 @@ may be assigned within
  the associated routine when the routine is called in a pre-state
 that satisfies the associated preconditions.  In JML a modifies clause may also
 have its own conditional predicate that further constrains when the associated 
-memory locations may be assigned.
+memory locations may be assigned.  The list of locations in the modifies clause
+may also contain the special keywords @code{\nothing}, @code{\everything},
+@code{not_specified}.
 
 @item @strong{Status:} Implemented and used by the static checker.  However, 
 ESC/Java2 ignores the conditional predicate of a modifies clause.  Furthermore
@@ -1571,6 +1577,8 @@ handled by ESC/Java2.
 (in the pre-state) if the
 method never terminates (given that
 the associated precondition holds in the pre-state).
+  The expression in the clause
+may also be @code{\not_specified}, which is equivalent to omitting the clause.
 
 @item @strong{Status:} Parsed and typechecked, but not used in any static checking.
 
@@ -1582,6 +1590,8 @@ the associated precondition holds in the pre-state).
 @subsection when
 @itemize @bullet
 @item @strong{Description:} description.... [[[ description needed ]]]
+  The expression in the clause
+may also be @code{\not_specified}, which is equivalent to omitting the clause.
 
 @item @strong{Status:} Parsed and typechecked, but not used in any static checking.
 @item @strong{Differences from JML or Java:} None.
@@ -1591,6 +1601,8 @@ the associated precondition holds in the pre-state).
 @subsection duration
 @itemize @bullet
 @item @strong{Description:} description....[[[ description needed ]]]
+  The expression in the clause
+may also be @code{\not_specified}, which is equivalent to omitting the clause.
 
 @item @strong{Status:} Parsed and typechecked but not used in any static checking.
 @item @strong{Differences from JML or Java:} None.
@@ -1601,6 +1613,8 @@ the associated precondition holds in the pre-state).
 @subsection working_space
 @itemize @bullet
 @item @strong{Description:} description....[[[ description needed ]]]
+  The expression in the clause
+may also be @code{\not_specified}, which is equivalent to omitting the clause.
 
 @item @strong{Status:} Parsed and typechecked, but not used in any static checking.
 
@@ -1612,6 +1626,9 @@ the associated precondition holds in the pre-state).
 @subsection accessible
 @itemize @bullet
 @item @strong{Description:} description....[[[ description needed ]]]
+  The list of locations in the clause
+may also contain the special keywords @code{\nothing}, @code{\everything},
+@code{not_specified}.
 
 @item @strong{Status:} status....  - status unknown
 
@@ -1647,6 +1664,8 @@ section of a method's specification.
 @subsection measured_by
 @itemize @bullet
 @item @strong{Description:} description.... [[[ Description needed ]]]
+  The expression in the clause
+may also be @code{\not_specified}, which is equivalent to omitting the clause.
 
 @item @strong{Status:} Parsed and ignored.
 
@@ -1658,7 +1677,9 @@ section of a method's specification.
 @subsection callable
 @itemize @bullet
 @item @strong{Description:} description.... [[[ Description needed ]]]
-
+  The list of locations in the  clause
+may also contain the special keywords @code{\nothing}, @code{\everything},
+@code{not_specified}.
 
 @item @strong{Status:} Parsed and ignored.
 
@@ -1670,7 +1691,9 @@ section of a method's specification.
 @subsection accessible
 @itemize @bullet
 @item @strong{Description:} description....  [[[ Description needed ]]]
-
+  The list of locations in the  clause
+may also contain the special keywords @code{\nothing}, @code{\everything},
+@code{not_specified}.
 @item @strong{Status:} Parsed and ignored.
 
 @item @strong{Differences from JML or Java:} bugs...
@@ -2284,9 +2307,10 @@ a function.  The parser is able to distinguish the two usages.
 
 @subsection \not_specified
 This may be used, within the guidelines of the JML grammar, as the predicate or
-store-ref expression in a annotation clause.  It is equivalent to stating that there
-is no specification of that clause type.
-@*@strong{Status: } Not implemented.
+store-ref expression in a annotation clause.  JMJL allows tools to provide their 
+own behavior for @code{\not_specified}.  Escjava2 treats such clauses as if they
+were not present, making them equivalent to the default for that clause type.
+@*@strong{Status: } Fully implemented.
 
 @subsection \private_data
 [[[ description, status, differences needed here ]]]
@@ -2347,15 +2371,23 @@ This designates all static fields, of any privacy level, including
 those in superclasses and interfaces, of the given class.
 @*@strong{Status: } Not implemented.
 
+@cindex \nothing
 @subsection \nothing 
-This designates an empty set of store-refs.
-@*@strong{Status: } Not implemented.
+This designates an empty set of store-refs.  It may be used with the 
+@code{modifies}, @code{accessible}, and @code{callable} clauses.
+If @code{\nothing} appears in a sequence of store-refs, it is ignored.
+@*@strong{Status: } Fully implemented.
 
+@cindex \everything
 @subsection \everything 
 This designates a universal set - the set of references to all object and class
 fields for every object and class allocated in the current state of the program.
-@*@strong{Status: } Not implemented.
+  It may be used with the 
+@code{modifies}, @code{accessible}, and @code{callable} clauses.
+@*@strong{Status: } Fully parsed - refer to the clause descriptions for specific
+behavior.
 
+@cindex model program statements
 @section Statements within model programs
 A model program consists of imperative programming statements and control 
 structures, much like a typical Java program.  However, a model program allows
@@ -3165,6 +3197,9 @@ is a partial list of command-line options available in ESC/Java2; those not
 labelled "ESC/Java2 only" were inherited from ESC/Java and are available in both 
 tools, though the behavior may be slightly different.
 
+Note that in ESC/Java2 (and in ESC/Java) all command-line options and their 
+arguments must precede all file names.
+
 @itemize
 @cindex -bootclasspath
 @item @code{-bootclasspath} @emph{directory-path} : specifies the location of 
@@ -3283,7 +3318,7 @@ static checker is used without modification.
 
 [[[ discussion needed - no change yet ]]]
 
-@section use of modifies clause in checking routine bodies
+@section Use of modifies clauses in checking routine bodies
 
 ESC/Java does not check the correctness of the @code{modifies} clauses.  However, 
 it does use that information during the checking of the body of a routine in the
@@ -3293,14 +3328,32 @@ construct, the pre-state value is used.  However, variables not mentioned in
 a modifies clauses are presumed not to change in the course of the routine body
 and hence are not mapped to a pre-state value.  Instances of those variables in
 an @code{\old} construct are simply mapped to the current value, which may not be
-the pre-state value if indeed the variable is modified.
+the pre-state value if indeed the variable is modified.  In this example
+@example
+public class E @{
+        public static int i,j;
+        
+        //@@ requires i == j;
+        //@@ modifies i;
+        //@@ ensures i == \old(i);
+        //@@ ensures i + j == \old(i + j);
+        public void m() @{
+                ++i;
+                --j;
+        @}
+@}
+@end example
+@noindent
+ESC/Java reports a failure on the second postcondition; this is because the @code{j}
+in the @code{\old} construct is translated the same as the @code{j} outside of the
+{\old} construct.
 
 ESC/Java2 mitigates problems caused by errors in modifies clauses by maintaining
 pre-state values for any variable mentioned in an @code{\old} construct (in 
 addition to those in modifies clauses).  As a result, the static checking of the
 routine body proceeds correctly despite any errors in the modifies clauses.
 
-@section defaults for modifies clauses
+@section Defaults for modifies clauses
 
 ESC/Java had an implicit default for a missing modifies clause, namely that nothing
 was modified (@code{modifies \nothing;} in JML).  JML defines the default instead
