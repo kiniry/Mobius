@@ -15,6 +15,8 @@ following files:
 	Simplify* - various builds of the Simplify theorem prover
 	RELEASE_NOTES.txt - descriptions of changes and previous versions
 	quicktest - a short test that an installation was successful
+	specs - a directory containing some specification files for 
+		Java classes
 
 -----------------------INSTALLATION ----------------------------
 
@@ -26,11 +28,19 @@ the directory in which you placed the release files. [If this is not set,
 the executables will attempt to guess an appropriate value.]
 c) Set the SIMPLIFY environment variable to the name of one of the Simplify
 executables contained in $ESCTOOLS_RELEASE, depending on the operating system
-you are using. [If SIMPLIFY is not set, the executables will attempt to guess
-an appropriate value for some platforms.]
-d) Execute the program $ESCTOOLS_RELEASE/escj - this is the new escjava2
+you are using. [If SIMPLIFY is not set, the sample escjava2 executable
+will attempt to guess an appropriate value for some platforms.]
+d) The program works best with some specification files for the Java 
+system classes.  A basic set is provided with the release in the specs
+subdirectory; those are used unless the user provides an alternate set.
+An alternate set can be specified as a classpath in the ESC_SPECS
+environment variable.  For example, if you wished to use the specs in
+the JML release, you might write 
+	setenv ESC_SPECS /home/cok/JML/JML2:/home/cok/JML/JML2/specs
+to include both the specs and the model files on which the specs depend
+e) Execute the program $ESCTOOLS_RELEASE/escj - this is the new escjava2
 program.
-e) If you wish, run $ESCTOOLS_RELEASE/quicktest to execute a quick smoke test
+f) If you wish, run $ESCTOOLS_RELEASE/quicktest to execute a quick smoke test
 of the release.
 
 ---------------------- RUNNING THE TOOL ------------------------

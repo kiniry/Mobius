@@ -203,9 +203,11 @@ ESC_SPECS - defined to be a classpath containing directories of JML
 	specification files for Java system classes that is part of
 	the release.  You may instead want to obtain a current copy
 	of the specification files provided by the JML project and
-	define this variable to reference them.  You may also want
-	to include in this classpath any specification files for your
-	own projects.
+	define this variable to reference them.  If you use the JML
+	specification files (in .../JML/JML2/specs) you also need
+	the model files that are rooted at .../JML/JML2.  You may 
+	also want to include in this classpath any specification 
+	files for your own projects.
 
 When a release is built, these two variables are used:
 

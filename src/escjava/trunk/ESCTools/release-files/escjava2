@@ -8,7 +8,7 @@
 ## variables, the user should set these:
 
 ## setenv ESCTOOLS_RELEASE ??? ## The directory containing the release files
-## setenv SIMPLIFY ??? ## The name of a SImplify executable in $ESCTOOLS_RELEASE
+## setenv SIMPLIFY ??? ## The name of a Simplify executable in $ESCTOOLS_RELEASE
 
 ########## Check if ESCTOOLS_RELEASE is defined; try to guess it if it is not
 
