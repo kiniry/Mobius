@@ -194,14 +194,19 @@ in sequence, as the exercises build upon each other in the order
 presented.  @i{I.e.}, Problem @ref{Problem-2,,two} builds on the
 knowledge that you gained in Problem @ref{Problem-1,,one}.
 
+It is assumed that the reader has a basic understanding of the
+following notions: @emph{assertion}, @emph{invariant},
+@emph{specification}, @emph{signature}, @emph{class}, and @emph{type}.
+
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @menu
 * Assertions::                  Understanding basic assertions.
-* Loops::                       Reasoning about loops.
+* Assumptions::                 Making basic assumptions explicit.
 * PrePost::                     Core concepts of method specifications.
 * Modifies::                    Reasoning about and with frame axioms.
 * Heavyweight::                 Expressive and easy to understand specifications.
 * Invariants::                  Core concepts of class specifications.
+* Loops::                       Reasoning about loops.
 * Aliasing::                    Reasoning in the face of aliasing adversity.
 * Models::                      Specifying and reasoning with models.
 @end menu
@@ -209,7 +214,7 @@ knowledge that you gained in Problem @ref{Problem-1,,one}.
 @page
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-@node Assertions, Loops, Core, Core
+@node Assertions, Assumptions, Core, Core
 @unnumberedsec Assertions
 
 @cindex Assertions
@@ -217,7 +222,7 @@ knowledge that you gained in Problem @ref{Problem-1,,one}.
 An assertion is a predicate that @emph{must always} be true.  Assertions
 are typically used for debugging and (localized) documentation purposes.
 
-In JML, an assertion expression has the form
+In JML, an assertion statement has the form
 @display
 @var{assert-statement} ::= @code{assert} @var{expression} [ @code{:} @var{expression} ] @code{;}
 @end display
@@ -271,39 +276,167 @@ xref)
 
 @page
 
-@strong{Problem 1.} @anchor{Problem-1} Annotate the following code block
+@strong{Problem 1.} @anchor{Problem-1} Annotate the following code
 with Java assertions as indicated.  The expression @code{P(a0,a1,...)}
 means ``replace this expression with a predicate that is true of the
-variables @code{a0} and @code{a1} and @ldots''.  Write the strongest
+variables @code{a0} and @code{a1} and ...''.  Write the strongest
 predicate possible, given the context of the assertion.  Execute the
 class to check your answers.
 
+The provided @t{Makefile} in the @t{problems} directory can be used to
+compile, run, and verify all problems.
+
 @example
-@include problems/Assertions.java.texinfo
+@include problems/JavaAssertions.java.texinfo
 @end example
 
-@strong{Problem 2.} @anchor{Problem-2} Annotate the following code block
-with JML assertions as indicated.
+@strong{Problem 2.} @anchor{Problem-2} Annotate the following code
+with JML assertions as indicated.  Write the strongest predicate
+possible, given the context of the assertion.  After you have written
+the assertions, first execute the class using @code{jmlrac} to check
+your answers, then attempt to verify your answers using
+@code{escjava2}.
 
 @example
-@include problems/Assertions.java.texinfo
+@include problems/JmlAssertions.java.texinfo
 @end example
 
 @page
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-@node Loops, PrePost, Assertions, Core
-@unnumberedsec Reasoning about Loops
+@node Assumptions, PrePost, Assertions, Core
+@unnumberedsec Assumptions
 
-@cindex Reasoning about Loops
+@cindex Assumptions
 
-@page
+You will notice that nearly all of the assertions that you wrote for
+Problems @ref{Problem-1,,one} and @ref{Problem-2,,two} cannot be
+checked with ESC/Java2 as the @code{JavaAnnotations} and
+@code{JmlAnnotations} classes are currently written.  While @emph{you}
+might know that each assertion is true, given the context of the
+program and the body of the @code{main()} method, there is no
+information that ESC/Java2 can use to reach this same conclusion.
+
+Because ESC/Java2 performs verification in a @emph{modular} fashion,
+the @emph{assumptions} you based your assertions upon in each method,
+which in turn were based upon what you read in the @code{main()}
+method's body, are unknown to ESC/Java2.
+
+More precisely, to reason about the correctness of the method
+@code{n(int, Object, String)}, ESC/Java2 only uses the signature and
+body of @code{n()} and everything they depends upon.  This set of
+dependencies is large.  It including all the types mentioned in
+@code{n()}, the signature and specification of any methods @code{n()}
+might be overriding, and all invariants of the class
+@code{JmlAssertions} that relate to fields mentioned in @code{n()}.
+(More details about method specifications and class invariants will be
+covered shortly.)
+
+Notice that, to reason about @code{n()}, @strong{nothing} needs to be
+known about the body of the @code{main()} method of
+@code{JmlAssertions}.  Thus, all of the assumptions you made by
+reading the body of @code{main()} are unknown to ESC/Java2.
+
+The next two problems will focus on making assumptions explicit.  The
+JML keyword @code{assume} is used to specify assumptions precisely.
+@code{assume} is used very much like @code{assert}, except instead of
+stating what @emph{must} be true at a certain point in a program (as
+one does with an @code{assert}), an @code{assume} statement says what
+@emph{is} true at a certain point in a program.
+
+In JML, an assume statement has the form
+@display
+@var{assume-statement} ::= @var{assume-keyword} @var{predicate} [ @code{:} @var{expression} ] @code{;}
+@end display
+The assume statement thus has the exact same structure of the assert
+statement, but means exactly the opposite.
+
+@strong{Problem 3.} @anchor{Problem-3} Annotate your code from Problem
+@ref{Problem-2,,two} with JML assumptions.  Try to write down the
+@emph{minimal} set of assumptions that ensure all of your assertions
+verify correctly with ESC/Java2.
+
+For the following discussion we will refer to the answer key found in
+the class @code{JmlAssertionsAndAssumptionsKey}.
+
+@example
+@include problems/JmlAssertionsAndAssumptionsKey.java.texinfo
+@end example
+
+Note that the assumptions in this class are not the only ones that are
+correct.
+
+Stronger assumptions (that is, logically stronger predicates) that
+imply these weaker assumptions are correct also, though are not as
+weak as possible.
+
+For example, if one were to write
+@example
+  //@ assume p != null && t != null;
+@end example
+to provide an assumption to fulfill the assertion
+@example
+  //@ assert p != null;
+@end example
+the assertion would verify.  But the assumption is stronger than
+necessary, since the information about the variable @code{t} is
+superfluous.  The assumption can be made @emph{weaker} by simply
+removing the term @code{t != null} because @t{A && B ==> A}.  I.e.,
+@example
+  //@ assert p != null && t != null ==> p != null;
+@end example
+is always a true assertion, regardless of the values of @code{p} and
+@code{t}.
+
+The locations of the assumptions can also vary to some degree.  Many
+cannot, in particular, those having to do with assertions located at
+the very beginning of method bodies cannot be moved any "earlier"
+because there is no earlier statement.  Moving the assumption
+@emph{outside} of the method body, for example into the @code{main()}
+method, has no effect due to the nature of modular verification, as
+discussed earlier.  (add xref)
+
+On the other hand, assumptions in the middle of a method can often be
+moved around with some latitude.  For example,  the statement
+@example
+  //@ assume i == 257;
+@end example
+in the method @code{o(int, Object, String)} could be moved earlier in
+the method.  In fact, because the variable @code{i} is not referenced
+anywhere earlier in the method, the assumption could (in theory) be
+moved all of the way to the beginning of the method.
+
+One problem with ESC/Java2 highlighted by this exercise is its
+incomplete support for arithmetic, and bitwise operations in
+particular.  You will find that nearly all assertions having to do
+with the results of bitwise operations cannot be verified.
+
+Consider the following method:
+@example
+  static void nn(Object p, Object t) {
+    int i = 1, j = 1;
+    i = i | 0x100;
+    //@ assert i == 257;
+    //@ assert 0 <= i && i <= 1000;
+    //@ assert i == (1 | 0x100);
+  }
+@end example
+While all three assertions are true, only the third one (the most
+complicated one, in some respects!) can be verified by ESC/Java2.
+This weakness is being investigate at this time (see Bug #965748 at
+SourceForge for more information).
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-@node PrePost, Modifies, Loops, Core
+@node PrePost, Modifies, Assumptions, Core
 @unnumberedsec Preconditions and Postconditions
 
 @cindex Preconditions and Postconditions
+
+A @emph{specification} of the class or its methods which says that the
+manner in which the class is used here is actually @emph{correct}.
+
+To write such a specification, one uses two primary concepts:
+@emph{method contracts} and @emph{class invariants}.
 
 @page
 
@@ -324,7 +457,7 @@ with JML assertions as indicated.
 @page
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-@node Invariants, Aliasing, Heavyweight, Core
+@node Invariants, Loops, Heavyweight, Core
 @unnumberedsec Invariants
 
 @cindex Invariants
@@ -332,7 +465,15 @@ with JML assertions as indicated.
 @page
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-@node Aliasing, Models, Invariants, Core
+@node Loops, Aliasing, Invariants, Core
+@unnumberedsec Reasoning about Loops
+
+@cindex Reasoning about Loops
+
+@page
+
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node Aliasing, Models, Loops, Core
 @unnumberedsec Aliasing
 
 @cindex Aliasing

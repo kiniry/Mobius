@@ -2,19 +2,19 @@ package problems;
 
 class Predicates
 {
-  public static boolean I(int i) {
+  public static /*@ pure @*/ boolean I(int i) {
     return true;
   }
 
-  public static boolean O(Object o) {
+  public static /*@ pure @*/ boolean O(Object o) {
     return true;
   }
 
-  public static boolean S(String s) {
+  public static /*@ pure @*/ boolean S(String s) {
     return true;
   }
   
-  public static boolean J(int i, int j) {
+  public static /*@ pure @*/ boolean J(int i, int j) {
     return true;
   }
 }

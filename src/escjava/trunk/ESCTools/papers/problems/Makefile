@@ -3,23 +3,59 @@ javafiles =	$(wildcard *.java)
 javakeyfiles =	$(wildcard *Key.java)
 
 classfiles =	$(foreach javafile,$(javafiles),\
-		$(subst .java,.class,$(javafile)))
+		$(addprefix classes/problems/,$(subst .java,.class,$(javafile))))
+
+jmlcclassfiles =	$(foreach javafile,$(javafiles),\
+			$(addprefix jmlc/problems/,$(subst .java,.class,$(javafile))))
 
 keyclasses =	$(foreach javakeyfile,$(javakeyfiles),\
 		$(subst .java,,$(javakeyfile)))
 
-%.class: %.java
-	javac -g -source 1.4 $<
+classes/problems/%.class: %.java
+	mkdir -p classes; javac -d classes -g -source 1.4 $<
 
-.PHONY:	all run clean
+jmlc/problems/%.class: %.java
+	mkdir -p jmlc; jmlc -d jmlc -g -source 1.4 $<
 
-all:	$(classfiles)
+.PHONY:	all test \
+	build javac jmlc \
+	run java jmlrac \
+	verify \
+	clean
 
-run:
+all:	build run verify
+
+test:
+	@echo $(javafiles)
+	@echo $(classfiles)
+	@echo $(jmlcclassfiles)
+
+build:	javac jmlc
+
+javac:
+	javac -d classes -g -source 1.4 *.java
+
+jmlc:
+	jmlc -d jmlc -g -source 1.4 *.java
+
+run:	java jmlrac
+
+java:
 	for i in $(keyclasses); \
 	do \
-	  CLASSPATH=..; java -ea problems.$$i; \
+	  CLASSPATH=classes; java -ea problems.$$i; \
 	done
 
+jmlrac:
+	for i in $(keyclasses); \
+	do \
+	  CLASSPATH=jmlc; jmlrac problems.$$i; \
+	done
+
+verify:
+#	CLASSPATH=..; escjava2 -jmlAssertions JavaAssertionsKey.java
+	CLASSPATH=..; escjava2 -specs ~/JML2/:~/JML2/specs/ JmlAssertionsKey.java
+
 clean:
-	rm -f *.class
+	rm -f `find . -name "*.class"`
+
