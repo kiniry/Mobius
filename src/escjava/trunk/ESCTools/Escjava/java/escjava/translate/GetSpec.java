@@ -5,6 +5,8 @@ package escjava.translate;
 
 import java.util.Hashtable;
 import java.util.Enumeration;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 import escjava.Main;
 
@@ -686,7 +688,7 @@ premap generated from the uses of \old in the body of the method + the spec of t
 	    
         // Finally, add declared postconditions
         // First normal postconditions
-        {
+        try {
             // EC == ecReturn
             Expr ante = GC.nary(TagConstants.ANYEQ, GC.ecvar, GC.ec_return);
 
@@ -697,9 +699,12 @@ premap generated from the uses of \old in the body of the method + the spec of t
             } else {
                 map = null;
             }
+	    java.util.Set axsToAdd = new java.util.HashSet();
+	    ArrayList conds = new ArrayList();
             for (int i = 0; i < dmd.ensures.size(); i++) {
 	      try {
                 ExprModifierPragma prag = dmd.ensures.elementAt(i);
+//System.out.println("HANDLING PRAGMA " + Location.toString(prag.getStartLoc()));
 		TrAnExpr.initForClause();
                 Expr pred = TrAnExpr.trSpecExpr(prag.expr, map, wt);
 		if (TrAnExpr.trSpecExprAuxConditions != null) {
@@ -708,20 +713,37 @@ premap generated from the uses of \old in the body of the method + the spec of t
 			post.addElement(GC.assumeCondition(g,Location.NULL));
 		    }
 		    if (TrAnExpr.trSpecExprAuxConditions.size() != 0) {
-		    Expr g = GC.nary(Location.NULL, Location.NULL,
-			    TagConstants.BOOLAND, 
-			    TrAnExpr.trSpecExprAuxConditions);
-		    pred = GC.implies(g,pred);
+			Expr g = GC.nary(Location.NULL, Location.NULL,
+				TagConstants.BOOLAND, 
+				TrAnExpr.trSpecExprAuxConditions);
+			pred = GC.implies(g,pred);
 		    }
 		}
+		axsToAdd.addAll(TrAnExpr.trSpecAuxAxiomsNeeded);
 		TrAnExpr.trSpecExprAuxConditions = null;
                 pred = GC.implies(ante, pred);
 		int tag = prag.errorTag == 0 ? TagConstants.CHKPOSTCONDITION : prag.errorTag;
                 Condition cond = GC.condition(tag, pred, prag.getStartLoc());
-                post.addElement(cond);
+		conds.add(cond);
+//System.out.println("HANDLING PRAGMA - END " + Location.toString(prag.getStartLoc()));
 	      } catch (NotImplementedException e) {}
             }
-        }
+	    java.util.Set axsDone = new java.util.HashSet();
+	    while (! axsToAdd.isEmpty()) {
+		ASTNode o = (ASTNode)axsToAdd.iterator().next();
+		axsToAdd.remove(o);
+		if (!axsDone.add(o)) continue;
+		Expr e = TrAnExpr.getEquivalentAxioms(o);
+		post.addElement(GC.assumeCondition(e,Location.NULL));
+		axsToAdd.addAll( TrAnExpr.getAxiomSet(o));
+	    }
+	    Iterator jj = conds.iterator();
+	    while (jj.hasNext()) {
+		post.addElement( (Condition)jj.next() );
+	    }
+        } finally {
+	    TrAnExpr.closeForClause();
+	}
 /*
 System.out.println("WT");
 Enumeration ee = wt.keys();
@@ -737,10 +759,13 @@ while (ee.hasMoreElements()) {
             // typeof(XRES)
             Expr typeofXRES = GC.nary(TagConstants.TYPEOF, GC.xresultvar);
 
+	    java.util.Set axsToAdd = new java.util.HashSet();
+	    ArrayList conds = new ArrayList();
             for (int i = 0; i < dmd.exsures.size(); i++) {
 	      try {
                 // Pragma has the form:  exsures (T v) E
                 VarExprModifierPragma prag = dmd.exsures.elementAt(i);
+		TrAnExpr.initForClause();
                 // TrSpecExpr[[ E, {v-->XRES}, wt ]]
                 Hashtable map = new Hashtable();
 		Expr pred;
@@ -757,11 +782,39 @@ while (ee.hasMoreElements()) {
 		    pred = TrAnExpr.trSpecExpr(prag.expr, map, wt);
 		    pred = GC.implies(ante0, pred);
 		}
-                Condition cond = GC.condition(TagConstants.CHKPOSTCONDITION,
-                                              pred, prag.getStartLoc());
-                post.addElement(cond);
+		if (TrAnExpr.trSpecExprAuxConditions != null) {
+		    for (int j=0; j<TrAnExpr.trSpecExprAuxAssumptions.size(); ++j) {
+			Expr g = TrAnExpr.trSpecExprAuxAssumptions.elementAt(j);
+			post.addElement(GC.assumeCondition(g,Location.NULL));
+		    }
+		    if (TrAnExpr.trSpecExprAuxConditions.size() != 0) {
+			Expr g = GC.nary(Location.NULL, Location.NULL,
+				TagConstants.BOOLAND, 
+				TrAnExpr.trSpecExprAuxConditions);
+			pred = GC.implies(g,pred);
+		    }
+		}
+		axsToAdd.addAll(TrAnExpr.trSpecAuxAxiomsNeeded);
+		TrAnExpr.trSpecExprAuxConditions = null;
+		//int tag = prag.errorTag == 0 ? TagConstants.CHKPOSTCONDITION : prag.errorTag;
+		int tag = TagConstants.CHKPOSTCONDITION;
+                Condition cond = GC.condition(tag, pred, prag.getStartLoc());
+		conds.add(cond);
 	      } catch (NotImplementedException e) {}
             }
+	    java.util.Set axsDone = new java.util.HashSet();
+	    while (! axsToAdd.isEmpty()) {
+		ASTNode o = (ASTNode)axsToAdd.iterator().next();
+		axsToAdd.remove(o);
+		if (!axsDone.add(o)) continue;
+		Expr e = TrAnExpr.getEquivalentAxioms(o);
+		post.addElement(GC.assumeCondition(e,Location.NULL));
+		axsToAdd.addAll( TrAnExpr.getAxiomSet(o));
+	    }
+	    Iterator jj = conds.iterator();
+	    while (jj.hasNext()) {
+		post.addElement( (Condition)jj.next() );
+	    }
         }
 
 	// Then any initially clauses (for constructors, if not a helper)
@@ -884,7 +937,7 @@ while (ee.hasMoreElements()) {
 
 	    int tag = ii.prag.getTag();
 	    boolean includeInPre = true;
-	    boolean includeInPost = true;
+	    boolean includeInPost = tag != TagConstants.AXIOM;
 
             /*
              * Does ii mention a variable that this GC call will modify?
@@ -1363,7 +1416,9 @@ while (ee.hasMoreElements()) {
         InvariantInfo iiPrev = null;
 
         Enumeration enum = scope.invariants();
-        while (enum.hasMoreElements()) {
+	try {
+	  TrAnExpr.initForClause();
+          while (enum.hasMoreElements()) {
             ExprDeclPragma ep = (ExprDeclPragma)enum.nextElement();
             Expr J = ep.expr;
 
@@ -1375,6 +1430,7 @@ while (ee.hasMoreElements()) {
            // System.out.println();
 	  
             if( Jvisible ) {
+//System.out.println("COLLECTING INVARIANT " + Location.toString(ep.getStartLoc()));
 
                 // Add a new node at the end of "ii"
                 InvariantInfo invinfo = new InvariantInfo();
@@ -1408,7 +1464,11 @@ while (ee.hasMoreElements()) {
                  */
                 Type savedType = GC.thisvar.decl.type;
                 GC.thisvar.decl.type = TypeSig.getSig(ep.getParent());
-                invinfo.J = TrAnExpr.trSpecExpr(J, map, null);
+		invinfo.J = TrAnExpr.trSpecExpr(J, map, null);
+		if (TrAnExpr.trSpecExprAuxConditions.size() != 0) {
+		    invinfo.J = GC.implies( GC.nary(TagConstants.BOOLAND, TrAnExpr.trSpecExprAuxConditions),
+					invinfo.J);
+		}
                 GC.thisvar.decl.type = savedType;
 
                 if (cReplacementsBefore == TrAnExpr.getReplacementCount()) {
@@ -1423,8 +1483,49 @@ while (ee.hasMoreElements()) {
                     invinfo.s = s;
                     invinfo.map = map;
                 }
+//System.out.println("COLLECTING INVARIANT-END " + Location.toString(ep.getStartLoc()));
             }
-        }
+          }
+	  java.util.Set axsToAdd = new java.util.HashSet();
+	  axsToAdd.addAll(TrAnExpr.trSpecAuxAxiomsNeeded);
+	  java.util.Set axsDone = new java.util.HashSet();
+	    while (false && ! axsToAdd.isEmpty()) {
+		ASTNode o = (ASTNode)axsToAdd.iterator().next();
+		axsToAdd.remove(o);
+		if (!axsDone.add(o)) continue;
+		Expr e = TrAnExpr.getEquivalentAxioms(o);
+
+//System.out.println("CI-ADDING ");
+//EscPrettyPrint.inst.print(System.out,0,e);
+//System.out.println("");
+
+		axsToAdd.addAll( TrAnExpr.getAxiomSet(o));
+                // Add a new node at the end of "ii"
+                InvariantInfo invinfo = new InvariantInfo();
+		invinfo.J = e;
+                invinfo.prag = ExprDeclPragma.make(TagConstants.AXIOM, e, Location.NULL);
+                // FIXME invinfo.U = TypeSig.getSig(ep.parent);
+                if (iiPrev == null)
+                    ii = invinfo;
+                else
+                    iiPrev.next = invinfo;
+                iiPrev = invinfo;
+                if (true ) { //|| cReplacementsBefore == TrAnExpr.getReplacementCount()) { // FIXME
+                    // static invariant
+                    invinfo.isStatic = true;
+                    invinfo.sdecl = null;
+                    invinfo.s = null;
+                    invinfo.map = null;
+                } else {
+                    invinfo.isStatic = false;
+                    // FIXME invinfo.sdecl = sdecl;
+                    // FIXME invinfo.s = s;
+                    // FIXME invinfo.map = map;
+                }
+	    }
+	} finally {
+	  TrAnExpr.closeForClause();
+	}
 
         return ii;
     }

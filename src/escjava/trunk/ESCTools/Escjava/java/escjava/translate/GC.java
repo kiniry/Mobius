@@ -610,6 +610,18 @@ public final class GC {
 	return nary(Location.NULL, Location.NULL, tag, ev);
   }
 
+  public static Expr nary(Identifier id, ExprVec ev) {
+	Expr e = nary(Location.NULL, Location.NULL, TagConstants.METHODCALL, ev);
+	((NaryExpr)e).methodName = id;
+	return e;
+  }
+
+  public static Expr nary(int sloc, int eloc, Identifier id, ExprVec ev) {
+	Expr e = nary(sloc, eloc, TagConstants.METHODCALL, ev);
+	((NaryExpr)e).methodName = id;
+	return e;
+  }
+
   public static Expr nary(int sloc, int eloc, int tag, ExprVec ev) {
 
     if( Main.options().peepOptE ) {

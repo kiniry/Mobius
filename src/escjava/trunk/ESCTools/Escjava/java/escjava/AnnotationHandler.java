@@ -92,17 +92,6 @@ public class AnnotationHandler {
     }
 
     public void handlePragmas(TypeDeclElem tde) {
-	ModifierPragmaVec mpp = 
-	    (tde instanceof TypeDecl) ? ((TypeDecl)tde).pmodifiers:
-	    (tde instanceof RoutineDecl) ? ((RoutineDecl)tde).pmodifiers :
-	    null;
-
-	if (mpp != null) for (int i=0; i<mpp.size(); ++i) {
-	    ModifierPragma m = mpp.elementAt(i);
-	    if (m.getTag() == TagConstants.PURE) {
-		tde.setModifiers(tde.getModifiers() | Modifiers.ACC_PURE);
-	    }
-	}
     }
 
     //-----------------------------------------------------------------------
@@ -246,7 +235,7 @@ public class AnnotationHandler {
 
 	ModifierPragmaVec newpm = ModifierPragmaVec.make();
 
-	boolean isPure = FlowInsensitiveChecks.isPure(tde);
+	boolean isPure = Utils.isPure(tde);
 	boolean isConstructor = tde instanceof ConstructorDecl;
 
 	// Get non_null specs
@@ -519,6 +508,9 @@ System.out.println("END_MPV");
 		    ExprModifierPragma mm = (ExprModifierPragma)mp;
 		    if (mm.expr.getTag() == TagConstants.NOTSPECIFIEDEXPR)
 			break;
+		    if (mm.expr.getTag() == TagConstants.INFORMALPRED_TOKEN)
+			break;
+		    if (isTrue(mm.expr)) break;
 		    if (!reqIsTrue) mm.expr = implies(req,mm.expr);
 		    resultList.addElement(mm);
 		    break;
@@ -530,6 +522,9 @@ System.out.println("END_MPV");
 		    VarExprModifierPragma mm = (VarExprModifierPragma)mp;
 		    if (mm.expr.getTag() == TagConstants.NOTSPECIFIEDEXPR)
 			break;
+		    if (mm.expr.getTag() == TagConstants.INFORMALPRED_TOKEN)
+			break;
+		    if (isTrue(mm.expr)) break;
 		    if (!reqIsTrue) mm.expr = implies(req,mm.expr);
 		    resultList.addElement(mm);
 		    break;
@@ -601,7 +596,7 @@ added, it doesn't change whether a routine appears to have a spec or not.
 				Expr req, RoutineDecl rd) {
 	boolean everythingIsDefault = false; // FIXME - eventually change to true
 	boolean nothing = !everythingIsDefault;
-	boolean isPure = FlowInsensitiveChecks.isPure(rd);
+	boolean isPure = Utils.isPure(rd);
 
 	if (isPure) nothing = true;
 	if (isPure && rd instanceof ConstructorDecl) nothing = true; // FIXME - this is wrong - should be this.*
@@ -662,352 +657,7 @@ added, it doesn't change whether a routine appears to have a spec or not.
 	    deNestedSpecs.add(mm);
 	}
     }
-/*
-    public int deNest(boolean exampleMode, int pos, ModifierPragmaVec pm, ArrayList results, Behavior cb, boolean isPure, boolean isConstructor) {
-	Behavior currentBehavior = cb.copy(); // new Behavior();
-	LinkedList commonBehavior = new LinkedList();
-	ModifierPragma m = null;
-	boolean terminate = false;
-	while (!terminate) {
-	    m = pm.elementAt(pos++);
-	    int t = m.getTag();
-	    //System.out.println("GOT TAG " + TagConstants.toString(t));
-	    switch (t) {
-		case TagConstants.BEHAVIOR:
-		    if (exampleMode)
-			ErrorSet.error("Behavior keyword should not be used in examples section - use example");
-		    currentBehavior = cb.copy(); //new Behavior();
-		    currentBehavior.isLightweight = false;
-		    break;
-		case TagConstants.EXAMPLE:
-		    if (!exampleMode)
-			ErrorSet.error("Example keyword should not be used outside the examples section - use behavior");
-		    currentBehavior = new Behavior();
-		    currentBehavior.isLightweight = false;
-		    break;
 
-		case TagConstants.NORMAL_BEHAVIOR:
-		    if (exampleMode)
-			ErrorSet.error("normal_behavior keyword should not be used in examples section - use normal_example");
-		    currentBehavior = cb.copy(); //new Behavior();
-		    currentBehavior.isLightweight = false;
-		    currentBehavior.isNormal = true;
-		    // set a false signals clause
-		    currentBehavior.signals.add(Behavior.defaultSignalFalse(
-				m.getStartLoc()));
-		    break;
-
-		case TagConstants.NORMAL_EXAMPLE:
-		    if (!exampleMode)
-			ErrorSet.error("normal_example keyword should not be used outside the examples section - use normal_behavior");
-		    currentBehavior = new Behavior();
-		    currentBehavior.isLightweight = false;
-		    currentBehavior.isNormal = true;
-		    // set a false signals clause
-		    currentBehavior.signals.add(Behavior.defaultSignalFalse(
-				m.getStartLoc()));
-		    break;
-
-		case TagConstants.EXCEPTIONAL_BEHAVIOR:
-		    if (exampleMode)
-			ErrorSet.error("exceptional_behavior keyword should not be used in examples section - use exceptional_example");
-		    currentBehavior = cb.copy(); // new Behavior();
-		    currentBehavior.isLightweight = false;
-		    currentBehavior.isExceptional = true;
-		    // set a false ensures clause
-		    currentBehavior.ensures.add(Behavior.ensuresFalse(m.getStartLoc()));
-		    break;
-
-		case TagConstants.EXCEPTIONAL_EXAMPLE:
-		    if (!exampleMode)
-			ErrorSet.error("exceptional_example keyword should not be used outside the examples section - use exceptional_behavior");
-		    currentBehavior = new Behavior();
-		    currentBehavior.isLightweight = false;
-		    currentBehavior.isExceptional = true;
-		    // set a false ensures clause
-		    currentBehavior.ensures.add(Behavior.ensuresFalse(m.getStartLoc()));
-		    break;
-
-                // All redundant tokens should not exist in the AST
-                // anymore; they are represented with redundant fields in
-                // the AST nodes.
-		case TagConstants.DIVERGES_REDUNDANTLY:
-		case TagConstants.ENSURES_REDUNDANTLY:
-		case TagConstants.EXSURES_REDUNDANTLY:
-		case TagConstants.REQUIRES_REDUNDANTLY:
-		case TagConstants.SIGNALS_REDUNDANTLY:
-                    assert false : "Redundant keywords should not be in AST!";
-                    break;
-
-		case TagConstants.REQUIRES:
-		case TagConstants.ALSO_REQUIRES:
-		case TagConstants.PRECONDITION: {
-		    if (currentBehavior == null) {
-			ErrorSet.error(m.getStartLoc(),"Missing also");
-			if (commonBehavior.isEmpty()) {
-			    currentBehavior = cb.copy(); // new Behavior();
-			} else {
-			    currentBehavior = ((Behavior)commonBehavior.getFirst()).copy();
-			}
-		    }
-		    ExprModifierPragma e = (ExprModifierPragma)m;
-		    if (e.expr.getTag() != TagConstants.NOTSPECIFIEDEXPR)
-			currentBehavior.requires.add(e);
-		    break;
-		}
-		    
-		case TagConstants.ENSURES:
-		case TagConstants.ALSO_ENSURES:
-		case TagConstants.POSTCONDITION: {
-		    if (currentBehavior == null) {
-			ErrorSet.error(m.getStartLoc(),"Missing also");
-			if (commonBehavior.isEmpty()) {
-			    currentBehavior = cb.copy(); // new Behavior();
-			} else {
-			    currentBehavior = ((Behavior)commonBehavior.getFirst()).copy();
-			}
-		    }
-		    if (currentBehavior.isExceptional) {
-			ErrorSet.error(m.getStartLoc(),
-			   "This type of annotation is not permitted in an excpetional_behavior clause");
-		    }
-		    ExprModifierPragma e = (ExprModifierPragma)m;
-		    if (e.expr.getTag() != TagConstants.NOTSPECIFIEDEXPR)
-			currentBehavior.ensures.add(e);
-		    break;
-		 }
-
-		case TagConstants.DIVERGES:
-		    if (currentBehavior == null) {
-			ErrorSet.error(m.getStartLoc(),"Missing also");
-			if (commonBehavior.isEmpty()) {
-			    currentBehavior = cb.copy(); // new Behavior();
-			} else {
-			    currentBehavior = ((Behavior)commonBehavior.getFirst()).copy();
-			}
-		    }
-		    ExprModifierPragma e = (ExprModifierPragma)m;
-		    if (e.expr.getTag() != TagConstants.NOTSPECIFIEDEXPR)
-			currentBehavior.diverges.add(e);
-		    break;
-
-		case TagConstants.EXSURES:
-		case TagConstants.ALSO_EXSURES:
-		case TagConstants.SIGNALS:
-		    if (currentBehavior == null) {
-			ErrorSet.error(m.getStartLoc(),"Missing also");
-			if (commonBehavior.isEmpty()) {
-			    currentBehavior = cb.copy(); //  new Behavior();
-			} else {
-			    currentBehavior = ((Behavior)commonBehavior.getFirst()).copy();
-			}
-		    }
-		    if (currentBehavior.isNormal) {
-			ErrorSet.error(m.getStartLoc(),
-			   "This type of annotation is not permitted in an normal_behavior clause");
-		    }
-		    if (((VarExprModifierPragma)m).expr.getTag() != TagConstants.NOTSPECIFIEDEXPR)
-			currentBehavior.signals.add(m);
-		    break;
-
-		case TagConstants.ASSIGNABLE:
-		case TagConstants.MODIFIABLE:
-		case TagConstants.MODIFIES:
-		case TagConstants.ALSO_MODIFIES: {
-		    if (currentBehavior == null) {
-			ErrorSet.error(m.getStartLoc(),"Missing also");
-			if (commonBehavior.isEmpty()) {
-			    currentBehavior = cb.copy(); // new Behavior();
-			} else {
-			    currentBehavior = ((Behavior)commonBehavior.getFirst()).copy();
-			}
-		    }
-			// null value indicates an informal annotation
-		    if (((CondExprModifierPragma)m).expr == null ||
-		    	((CondExprModifierPragma)m).expr.getTag() != 
-				TagConstants.NOTSPECIFIEDEXPR)
-			currentBehavior.modifies.add(m);
-		    if (isPure && !isConstructor) {
-			CondExprModifierPragma cm = 
-				(CondExprModifierPragma)m;
-			if (! ( cm.expr instanceof NothingExpr &&
-				cm.cond == null)) {
-			    ErrorSet.error(m.getStartLoc(),
-			     "A pure method may not have an assignable clause");
-			}
-		    }
-			// FIXME - for constructors, should check that 
-			//  the assignable clause has only the allowed stuff.
-		    break;
-		}
-
-		case TagConstants.WHEN:
-		    if (currentBehavior == null) {
-			ErrorSet.error(m.getStartLoc(),"Missing also");
-			if (commonBehavior.isEmpty()) {
-			    currentBehavior = cb.copy(); //new Behavior();
-			} else {
-			    currentBehavior = ((Behavior)commonBehavior.getFirst()).copy();
-			}
-		    }
-		    if (((ExprModifierPragma)m).expr.getTag() != 
-					TagConstants.NOTSPECIFIEDEXPR)
-			currentBehavior.when.add(m);
-		    break;
-
-		case TagConstants.DURATION:
-		case TagConstants.WORKING_SPACE:
-		    if (currentBehavior == null) {
-			ErrorSet.error(m.getStartLoc(),"Missing also");
-			if (commonBehavior.isEmpty()) {
-			    currentBehavior = cb.copy(); //new Behavior();
-			} else {
-			    currentBehavior = ((Behavior)commonBehavior.getFirst()).copy();
-			}
-		    }
-		    if (((CondExprModifierPragma)m).expr.getTag() != 
-					TagConstants.NOTSPECIFIEDEXPR) {
-			if (t == TagConstants.DURATION)
-			    currentBehavior.duration.add(m);
-			else
-			    currentBehavior.workingSpace.add(m);
-		    }
-		    break;
-
-		case TagConstants.OPENPRAGMA:
-		    if (currentBehavior == null) {
-			ErrorSet.error(m.getStartLoc(),"Missing also");
-			if (commonBehavior.isEmpty()) {
-			    currentBehavior = cb.copy(); // new Behavior();
-			} else {
-			    currentBehavior = ((Behavior)commonBehavior.getFirst()).copy();
-			}
-		    }
-		    currentBehavior.openPragma = m;
-		    commonBehavior.addFirst(currentBehavior.copy());
-		    break;
-
-		case TagConstants.ALSO:
-		    if (currentBehavior != null) 
-			results.add(currentBehavior);
-		    if (commonBehavior.isEmpty()) {
-			currentBehavior = cb.copy(); // new Behavior();
-		    } else {
-			currentBehavior = ((Behavior)commonBehavior.getFirst()).copy();
-		    }
-		    break;
-
-		case TagConstants.CLOSEPRAGMA:
-		    if (currentBehavior != null) 
-			results.add(currentBehavior);
-		    if (commonBehavior.isEmpty()) {
-			ErrorSet.error(m.getStartLoc(),
-			    "Encountered |} without a matching {|");
-		    } else {
-			commonBehavior.removeFirst();
-			currentBehavior = null;
-		    }
-		    break;
-
-		case TagConstants.MODEL_PROGRAM:
-		    if (currentBehavior == null && !currentBehavior.isEmpty()) {
-			ErrorSet.error(m.getStartLoc(),"Missing also");
-			if (commonBehavior.isEmpty()) {
-			    currentBehavior = cb.copy(); // new Behavior();
-			} else {
-			    currentBehavior = ((Behavior)commonBehavior.getFirst()).copy();
-			}
-		    }
-		    if (!commonBehavior.isEmpty()) {
-			ErrorSet.error(m.getStartLoc(),
-			     "A model program may not be nested");
-		    }
-		    // FIXME - the model programs aren't saved anywhere
-		    currentBehavior = null;
-		    break;
-
-		case TagConstants.SUBCLASSING_CONTRACT:
-		    if (exampleMode)
-			ErrorSet.error(m.getStartLoc(),
-			      "Misplaced subclassing_contract clause");
-		    --pos;
-		    terminate = true;
-		    break; 
-
-		case TagConstants.IMPLIES_THAT:
-		    if (exampleMode) 
-			ErrorSet.error("Did not expect implies_that after examples section");
-		    // fall through
-		case TagConstants.FOR_EXAMPLE:
-		case TagConstants.ALSO_REFINE:
-		case TagConstants.END:
-		    --pos;
-		    terminate = true;
-		    break; 
-
-		case TagConstants.SPEC_PUBLIC:
-		case TagConstants.SPEC_PROTECTED:
-		case TagConstants.PURE:
-		case TagConstants.NON_NULL:
-		case TagConstants.HELPER:
-		case TagConstants.INSTANCE:
-		    if (currentBehavior == null) 
-				currentBehavior = new Behavior();
-		    currentBehavior.extras.add(m);
-		    continue; 
-
-	 	case TagConstants.GHOST:
-		case TagConstants.MODEL:
-		    break;
-
-	        default:
-
-		    ErrorSet.caution(m.getStartLoc(),
-			"Desugaring does not support "
-			+ TagConstants.toString(m.getTag()));
-
-		    currentBehavior.extras.add(m);
-		    break;
-            }
-        } 
-	if (currentBehavior != null) {
-	    if (currentBehavior.isEmpty()) {
-	    } else {
-		results.add(currentBehavior);
-	    }
-	}
-	if (!commonBehavior.isEmpty()) {
-	    ModifierPragma openPragma = ((Behavior)commonBehavior.getFirst()).openPragma;
-	    ErrorSet.error(openPragma.getStartLoc(),"No closing |} for this {|");
-	}
-	return pos;
-    }
-*/
-/*
-    public int sc_section(int pos, ModifierPragmaVec pm, ArrayList results) {
-	while (pos < pm.size()) {
-	    ModifierPragma m = pm.elementAt(pos++);
-	    switch (m.getTag()) {
-		case TagConstants.ACCESSIBLE:
-		case TagConstants.CALLABLE:
-		case TagConstants.MEASURED_BY:
-		    results.add(m);
-		    break;
-
-		case TagConstants.IMPLIES_THAT:
-		case TagConstants.FOR_EXAMPLE:
-		case TagConstants.END:
-		case TagConstants.PURE:
-		case TagConstants.NON_NULL:
-		    return pos-1;
-
-		default:
-		    ErrorSet.error("Did not expect this annotation in a subclassing_contract");
-	    }
-	}
-	return pos;
-    }
-*/
     /** Produces an expression which is the conjunction of the two expressions.
 	If either input is null, the other is returned.  If either input is
 	literally true or false, the appropriate constant folding is performed.
@@ -1187,7 +837,7 @@ added, it doesn't change whether a routine appears to have a spec or not.
 		case TagConstants.METHODINVOCATION:
 		    MethodInvocation m = (MethodInvocation)x;
 		    if (Main.options().checkPurity &&
-		        !FlowInsensitiveChecks.isPure(m.decl)) {
+		        !Utils.isPure(m.decl)) {
 			ErrorSet.error(m.locId,
 			    "Method " + m.id + " is used in an annotation" +
 			    " but is not pure (" + 
@@ -1197,7 +847,7 @@ added, it doesn't change whether a routine appears to have a spec or not.
 		case TagConstants.NEWINSTANCEEXPR:
 		    NewInstanceExpr c = (NewInstanceExpr)x;
 		    if (Main.options().checkPurity &&
-		        !FlowInsensitiveChecks.isPure(c.decl)) {
+		        !Utils.isPure(c.decl)) {
 			ErrorSet.error(c.loc,
 			    "Constructor is used in an annotation" +
 			    " but is not pure (" + 

@@ -1840,15 +1840,8 @@ FIXME - see uses of countFreeVarsAccess
 
 	    case TagConstants.PURE:
 		{
-		    // Actually, these are set in AnnotationHandler.
-		    if (ctxt instanceof ConstructorDecl) {
-			((ConstructorDecl)ctxt).modifiers |= Modifiers.ACC_PURE;
-		    } else if (ctxt instanceof MethodDecl) {
-			((MethodDecl)ctxt).modifiers |= Modifiers.ACC_PURE;
-		    } else if (ctxt instanceof ClassDecl) {
-			((ClassDecl)ctxt).modifiers |= Modifiers.ACC_PURE;
-		    } else if (ctxt instanceof InterfaceDecl) {
-			((InterfaceDecl)ctxt).modifiers |= Modifiers.ACC_PURE;
+		    if (ctxt instanceof RoutineDecl) {
+		    } else if (ctxt instanceof TypeDecl) {
 		    } else {
 			ErrorSet.error(p.getStartLoc(),
 				"Expected pure to modify a class, interface, constructor or method declaration");
@@ -2257,7 +2250,7 @@ FIXME - see uses of countFreeVarsAccess
 			       emp.expr = null;
 			    }
                     }
-		    if (rd instanceof MethodDecl && isPure(rd) &&
+		    if (rd instanceof MethodDecl && Utils.isPure(rd) &&
 			emp.expr != null && emp.expr.getTag() != TagConstants.NOTHINGEXPR) {
 			ErrorSet.error(p.getStartLoc(),
 				"A pure method may not have a modifies clause");
@@ -2629,6 +2622,7 @@ FIXME - see uses of countFreeVarsAccess
     /**
      * @return true if directly or indirectly pure.
      */
+/* Moved to escjava.ast.Utils
     static public boolean isPure(RoutineDecl rd) {
 	if ((rd.modifiers & Modifiers.ACC_PURE_CLOSURE)!=0) return true;
 	if ((rd.modifiers & Modifiers.ACC_IMPURE_CLOSURE)!=0) return false;
@@ -2651,7 +2645,7 @@ FIXME - see uses of countFreeVarsAccess
 	rd.modifiers |= Modifiers.ACC_IMPURE_CLOSURE;
 	return false;
     }
-
+*/
 
     /** Returns non-zero if the expression is a ghost expression - that is, it
 	would not exist if all ghost declarations were removed.  Otherwise

@@ -5,6 +5,7 @@ package escjava.translate;
 import java.util.Hashtable;
 import java.util.Enumeration;
 import java.util.LinkedList;
+import java.util.ArrayList;
 
 import javafe.ast.*;
 import javafe.tc.*;
@@ -44,6 +45,13 @@ public final class TrAnExpr {
     public static void initForClause() {
 	trSpecExprAuxConditions = ExprVec.make();
 	trSpecExprAuxAssumptions = ExprVec.make();
+	trSpecAuxAxiomsNeeded = new java.util.HashSet();
+	boundStack.clear();
+    }
+
+    public static void closeForClause() {
+	trSpecExprAuxConditions = null;
+	boundStack.clear();
     }
 
     public static void initForRoutine() {
@@ -51,15 +59,23 @@ public final class TrAnExpr {
 	tempn = 100;
 	declStack = new LinkedList();
 	currentAlloc = GC.allocvar;
+	boundStack = new LinkedList();
+	maxLevel = Main.options().rewriteDepth;
+    }
+
+    public static boolean doRewrites() {
+	return trSpecExprAuxConditions != null;
     }
 
     public static int level = 0;
-    public static int maxLevel = 2; // FIXME if this is much bigger the JML specs file java.math.BigInteger.parse runs out of memory
+    public static int maxLevel = 3; // FIXME if this is much bigger the JML specs file java.math.BigInteger.parse runs out of memory
     public static ExprVec trSpecExprAuxConditions = null;
     public static ExprVec trSpecExprAuxAssumptions = null;
+    public static java.util.Set trSpecAuxAxiomsNeeded = null;
     public static int tempn = 100;
     public static LinkedList declStack = new LinkedList();
     public static VariableAccess currentAlloc = GC.allocvar;
+    public static LinkedList boundStack;
 
     /** This is the full form of function <code>TrSpecExpr</code>
      * described in ESCJ 16.  Each of the parameters <code>sp</code>
@@ -67,10 +83,14 @@ public final class TrAnExpr {
      * as the empty map.
      **/
 
+    private static Expr specialResultExpr = null;
+    private static Expr specialThisExpr = null;
+
     public static Expr trSpecExpr(Expr e, Hashtable sp, Hashtable st) {
         int tag = e.getTag();
         switch (tag) {
         case TagConstants.THISEXPR: {
+	    if (specialThisExpr != null) return specialThisExpr;
             ThisExpr t = (ThisExpr)e;
             if (t.classPrefix!=null)
                 return trSpecExpr(Inner.unfoldThis(t), sp, st);
@@ -90,6 +110,7 @@ public final class TrAnExpr {
             return e;
       
         case TagConstants.RESEXPR:
+	    if (specialResultExpr != null) return specialResultExpr;
             return apply(sp, makeVarAccess(GC.resultvar.decl, e.getStartLoc()));
 
         case TagConstants.LOCKSETEXPR:
@@ -122,7 +143,7 @@ public final class TrAnExpr {
 		while (it.hasNext()) {
 		    Expr ex = (Expr)it.next();
 	
-		    if (trSpecExprAuxConditions != null && !declStack.contains(fa.decl)) {
+		    if (doRewrites() && !declStack.contains(fa.decl)) {
 			declStack.addFirst(fa.decl);
 
 			Hashtable h = new Hashtable();
@@ -144,7 +165,7 @@ public final class TrAnExpr {
 	    }
 
             if (Modifiers.isStatic(fa.decl.modifiers)) {
-		//fa.od.getTag() == TagConstants.TYPEOBJECTDESIGNATOR) {
+		//fa.od.getTag() == TagConstants.TYPEOBJECTDESIGNATOR) 
 		VariableAccess nva = apply(sp, va);
                 return nva;
             } else {
@@ -294,127 +315,209 @@ public final class TrAnExpr {
       case TagConstants.NEWINSTANCEEXPR: {
 	NewInstanceExpr me = (NewInstanceExpr)e;
 	Type type = TypeCheck.inst.getType(me);
-	Identifier n = Identifier.intern("tempNewObject"+(++tempn));
-	VariableAccess v =  VariableAccess.make(n, e.getStartLoc(), 
-			LocalVarDecl.make(Modifiers.NONE, null,n,
-				type,
-				UniqName.temporaryVariable,
-				null, Location.NULL));
-	if (trSpecExprAuxConditions == null || level > maxLevel
-		|| declStack.contains(me.decl)) {
-	    return v;
+	Expr v;
+	VariableAccess vv = tempName(e.getStartLoc(),"tempNewObject",type);
+	if (boundStack.size() == 0) {
+	    v = vv;
+	} else {
+	    ExprVec ev = ExprVec.make();
+	    java.util.Iterator ii = boundStack.iterator();
+	    while (ii.hasNext()) {
+		Object o = ii.next();
+		if (o instanceof GenericVarDecl) {
+		    GenericVarDecl g = (GenericVarDecl)o;
+		    ev.addElement( VariableAccess.make(g.id, g.getStartLoc(), g) );
+		} else if (o instanceof GenericVarDeclVec) {
+		    GenericVarDeclVec gi = (GenericVarDeclVec)o;
+		    for (int kk = 0; kk<gi.size(); ++kk) {
+			GenericVarDecl g = gi.elementAt(kk);
+			ev.addElement( VariableAccess.make(g.id, g.getStartLoc(), g) );
+		    }
+		} else System.out.print("[[" + o.getClass() + "]]");
+	    }
+	    v = GC.nary(vv.id,ev);
+	    //v = MethodInvocation.make(ExprObjectDesignator.make(Location.NULL,ThisExpr.make(null,Location.NULL)),vv.id,null, Location.NULL, Location.NULL, ev);
 	}
-//System.out.println("NEWINST " + Location.toString(me.decl.getStartLoc()) + " " + declStack.contains(me.decl));
-	++level;
-	declStack.addFirst(me.decl);
-	if (false) { // FIXME - do this if a functional constructor
+	boolean genSimpleVar = false;
+	boolean genFunctionCallAndAxioms = false;
+	boolean genVarAndConditions = false;
+	boolean isFunction = Utils.isFunction(me.decl);
+	if (isFunction && doRewrites()) {
+	    genFunctionCallAndAxioms = true;
+	} else if ( !doRewrites()
+		|| level > maxLevel 
+		|| declStack.contains(me.decl)
+		) {
+	    genSimpleVar = true;
+	} else {
+	    genVarAndConditions = true;
+	}
+
+	if (genSimpleVar) {
+	    return v;
+	} else if (genVarAndConditions) {
+	    ++level;
+	    declStack.addFirst(me.decl);
+	    // v is the variable that is the result of the constructor call 
+	    // Adds v != null
+	    Expr ee = GC.nary(TagConstants.REFNE, v, 
+		LiteralExpr.make(TagConstants.NULLLIT, null, Location.NULL));
+	    trSpecExprAuxConditions.addElement(ee);
+	    // Adds \typeof(v) == \type(...)
+	    ee = GC.nary(TagConstants.TYPEEQ,
+		GC.nary(TagConstants.TYPEOF, v),
+		TypeExpr.make(Location.NULL, Location.NULL, type));
+	    trSpecExprAuxConditions.addElement(ee);
+	    // Adds alloc < newalloc
+	    VariableAccess newAlloc =
+		apply(sp,GC.makeVar(GC.allocvar.id,e.getStartLoc())); // alloc
+	    trSpecExprAuxAssumptions.addElement(
+		GC.nary(TagConstants.ALLOCLT, currentAlloc, newAlloc));
+	    // Adds ! isAllocated(v, alloc)
+	    trSpecExprAuxConditions.addElement(
+		GC.nary(TagConstants.BOOLNOT,
+		    GC.nary(TagConstants.ISALLOCATED, v, currentAlloc)));
+	    // Adds isAllocated(v, newalloc)
+	    trSpecExprAuxConditions.addElement(
+		GC.nary(TagConstants.ISALLOCATED, v, newAlloc));
+	    currentAlloc = newAlloc;
+	    // Go add all the specs generated by substituting v for \result
+	    // in the specs of the constructor
+	    getCalledSpecs(me.decl,null,me.args,v,sp,st); // adds to trSpecExprAuxConditions
+    //System.out.println("END-NEWINST " + Location.toString(me.decl.getStartLoc()) + " " + declStack.contains(me.decl));
+	    declStack.removeFirst();
+	    --level;
+	    return v;
+	} else if (genFunctionCallAndAxioms) {
+
+	    trSpecAuxAxiomsNeeded.add(me.decl);
+	    trSpecAuxAxiomsNeeded.add(me.decl.parent);
+	    Identifier constructorname = fullName(me.decl);
 	    ExprVec ev = ExprVec.make(me.args.size());
-		    // FIXME - 'this' argument???
 		    // FIXME - enclosingInstance ???
 	    for (int i=0; i<me.args.size(); ++i) {
 		ev.addElement( trSpecExpr( me.args.elementAt(i), sp, st));
 	    }
 	    Expr ne = GC.nary(me.getStartLoc(), me.getEndLoc(),
-			    TagConstants.METHODCALL,ev);
-	    ((NaryExpr)ne).methodName = Identifier.intern(
-		    "new#" + me.args.size() + "#" + me.type.name.printName());
-		    // FIXME - does the name need to be unique across signatures?
-	    Expr ee = GC.nary(TagConstants.ANYEQ, v, ne);
-	    // FIXME - should add the following mapping of the temp variable
-	    // to the method only if the method is a function call - pure
-	    // method of immutable objects, and either static or has the
-	    // this object inserted as an argument.
-	    trSpecExprAuxConditions.addElement(ee);
+			    constructorname,ev);
+	    return ne;
 	}
-	Expr ee = GC.nary(TagConstants.REFNE, v, 
-	    LiteralExpr.make(TagConstants.NULLLIT, null, Location.NULL));
-	trSpecExprAuxConditions.addElement(ee);
-	ee = GC.nary(TagConstants.TYPEEQ,
-	    GC.nary(TagConstants.TYPEOF, v),
-	    TypeExpr.make(Location.NULL, Location.NULL, type));
-	trSpecExprAuxConditions.addElement(ee);
-	VariableAccess newAlloc =
-	    apply(sp,GC.makeVar(GC.allocvar.id,e.getStartLoc())); // alloc
-	trSpecExprAuxAssumptions.addElement(
-	    GC.nary(TagConstants.ALLOCLT, currentAlloc, newAlloc));
-	trSpecExprAuxConditions.addElement(
-	    GC.nary(TagConstants.BOOLNOT,
-		GC.nary(TagConstants.ISALLOCATED, v, currentAlloc)));
-	trSpecExprAuxConditions.addElement(
-	    GC.nary(TagConstants.ISALLOCATED, v, newAlloc));
-	currentAlloc = newAlloc;
-	getCalledSpecs(me.decl,null,me.args,v,sp,st); // adds to trSpecExprAuxConditions
-//System.out.println("END-NEWINST " + Location.toString(me.decl.getStartLoc()) + " " + declStack.contains(me.decl));
-	declStack.removeFirst();
-	--level;
-	return v;
-		// FIXME could allow for functional constructors
       }
 
       case TagConstants.METHODINVOCATION: {
 	
 	MethodInvocation me = (MethodInvocation)e;
 
-	boolean isFunction = (Utils.findModifierPragma(me.decl.pmodifiers,TagConstants.FUNCTION) != null);
+	boolean isFunction = me.decl == null ? false : Utils.isFunction(me.decl);
+	//boolean isFunction = (Utils.findModifierPragma(me.decl.pmodifiers,TagConstants.FUNCTION) != null);
 
-	Identifier n = Identifier.intern("tempMethodReturn"+(++tempn));
-	VariableAccess v =  VariableAccess.make(n, e.getStartLoc(), 
-			LocalVarDecl.make(Modifiers.NONE, null,n,
-				TypeCheck.inst.getType(me),
-				UniqName.temporaryVariable,
-				null, Location.NULL));
-	if (trSpecExprAuxConditions == null || level > maxLevel 
-		|| declStack.contains(me.decl)) {
-	    if (!isFunction) return v;
-	    ExprVec ev = ExprVec.make(me.args.size());
-		    // FIXME - 'this' argument???
-	    for (int i=0; i<me.args.size(); ++i) {
-		ev.addElement( trSpecExpr( me.args.elementAt(i), sp, st));
+	Expr v;
+	VariableAccess vv = tempName(e.getStartLoc(),"tempMethodReturn",
+				TypeCheck.inst.getType(me));
+	if (boundStack.size() == 0) {
+	    v = vv;
+	} else {
+	    ExprVec ev = ExprVec.make();
+	    java.util.Iterator ii = boundStack.iterator();
+	    while (ii.hasNext()) {
+		Object o = ii.next();
+		if (o instanceof GenericVarDecl) {
+		    GenericVarDecl g = (GenericVarDecl)o;
+		    ev.addElement( VariableAccess.make(g.id, g.getStartLoc(), g) );
+		} else if (o instanceof GenericVarDeclVec) {
+		    GenericVarDeclVec gi = (GenericVarDeclVec)o;
+		    for (int kk = 0; kk<gi.size(); ++kk) {
+			GenericVarDecl g = gi.elementAt(kk);
+			ev.addElement( VariableAccess.make(g.id, g.getStartLoc(), g) );
+		    }
+		} else System.out.print("[[" + o.getClass() + "]]");
 	    }
-	    Expr ne = GC.nary(me.getStartLoc(), me.getEndLoc(),
-			    TagConstants.METHODCALL,ev);
-	    ((NaryExpr)ne).methodName = 
-		    Identifier.intern(me.id.toString() + "." + me.args.size()); // FIXME -- full name ??? with type signature as well
-	    return ne;
+	    v = GC.nary(vv.id,ev);
 	}
-//for (int ind=0; ind<level; ++ind) System.out.print(" " ); System.out.println("METHINV " + Location.toString(me.decl.getStartLoc()) + " " + declStack.contains(me.decl));
+/*
+System.out.print("METHOD " + me.decl.parent.id + " " + me.decl.id + " " );
+EscPrettyPrint.inst.print(System.out,0,me.od);
+System.out.println("");
+*/
 
-	++level;
-	declStack.addFirst(me.decl);
-
+	boolean genSimpleVar = false;
+	boolean genFunctionCallAndAxioms = false;
+	boolean genVarAndConditions = false;
 	if (isFunction) {
+	    genFunctionCallAndAxioms = true;
+	} else if (!doRewrites()
+		|| level > maxLevel 
+		|| declStack.contains(me.decl)
+		) {
+	    genSimpleVar = true;
+	} else {
+	    genVarAndConditions = true;
+	}
+//boolean bstart = tempn==5363;
+//if (bstart) System.out.println("BB " + genSimpleVar + " " + genFunctionCallAndAxioms + " " + genVarAndConditions + " " + isFunction + " " + doRewrites() + " " + declStack.contains(me.decl) + " " + me.decl.parent.id + " " + me.decl.id);
+	    
+	if (genSimpleVar) {
+	    return v;
+	} else if (genVarAndConditions) {
+	    ++level;
+	    declStack.addFirst(me.decl);
 	    ExprVec ev = ExprVec.make(me.args.size());
-		    // FIXME - 'this' argument???
+	    if (!Modifiers.isStatic(me.decl.modifiers)) {
+		if (me.od instanceof ExprObjectDesignator) {
+		    Expr ex = ((ExprObjectDesignator)me.od).expr;
+		    ev.addElement( trSpecExpr( ex, sp, st));
+		} else {
+			// FIXME
+		    System.out.println("NOT SUPPORTED " + me.od.getClass());
+		} 
+	    }
+
+/*
 	    for (int i=0; i<me.args.size(); ++i) {
 		ev.addElement( trSpecExpr( me.args.elementAt(i), sp, st));
 	    }
-	    Expr ne = GC.nary(me.getStartLoc(), me.getEndLoc(),
+	    Expr ne = GC.nary( me.getStartLoc(), me.getEndLoc(),
 			    TagConstants.METHODCALL,ev);
-	    ((NaryExpr)ne).methodName = 
-		    Identifier.intern(me.id.toString() + "." + me.args.size()); // FIXME -- full name ??? with type signature as well
+	    ((NaryExpr)ne).methodName = fullName(me.decl); 
 	    Expr ee = GC.nary(TagConstants.ANYEQ, v, ne);
 	    trSpecExprAuxConditions.addElement(ee);
+*/
+	    getCalledSpecs(me.decl,me.od,me.args,v,sp,st); // adds to trSpecExprAuxConditions
+	    --level;
+	    declStack.removeFirst();
+	    return v;
+	} else if (genFunctionCallAndAxioms) {
+	    if (doRewrites()) {
+		trSpecAuxAxiomsNeeded.add(me.decl);
+		trSpecAuxAxiomsNeeded.add(me.decl.parent);
+	    }
+	    ExprVec ev = ExprVec.make(me.args.size());
+	    if (!Modifiers.isStatic(me.decl.modifiers)) {
+		if (me.od instanceof ExprObjectDesignator) {
+		    Expr ex = ((ExprObjectDesignator)me.od).expr;
+		    ev.addElement( trSpecExpr( ex, sp, st));
+		} else {
+			// FIXME
+		    System.out.println("NOT SUPPORTED " + me.od.getClass());
+		} 
+	    }
+	    for (int i=0; i<me.args.size(); ++i) {
+		ev.addElement( trSpecExpr( me.args.elementAt(i), sp, st));
+	    }
+	    Expr ne = GC.nary(me.getStartLoc(), me.getEndLoc(),
+			    TagConstants.METHODCALL,ev);
+	    ((NaryExpr)ne).methodName = fullName(me.decl); 
+	    return ne;
 	}
-
-	getCalledSpecs(me.decl,me.od,me.args,v,sp,st); // adds to trSpecExprAuxConditions
-	--level;
-//for (int ind=0; ind<level; ++ind) System.out.print(" " ); System.out.println("END-METHINV " + Location.toString(me.decl.getStartLoc()) + " " + declStack.contains(me.decl));
-	declStack.removeFirst();
-	return v;
-
       }
 
       case TagConstants.NEWARRAYEXPR: {
 	NewArrayExpr nae = (NewArrayExpr)e;
 // FIXME - need to put in the type and the dimension array
 // also need to make SImplify understand the make$Array function
-	if (trSpecExprAuxConditions != null ) {
-	    Identifier n = Identifier.intern("tempMethodReturn"+(++tempn));
-	    VariableAccess v =  VariableAccess.make(n, e.getStartLoc(), 
-			    LocalVarDecl.make(Modifiers.NONE, null,n,
-				    TypeCheck.inst.getType(nae),
-				    UniqName.temporaryVariable,
-				    null, Location.NULL));
+	if (doRewrites() ) {
+	    VariableAccess v = tempName(e.getStartLoc(),"tempNewArray",
+				TypeCheck.inst.getType(nae));
 
 	    ExprVec ev = ExprVec.make(7);
 	    ev.addElement( v ); // variable name
@@ -533,12 +636,43 @@ public final class TrAnExpr {
       case TagConstants.FORALL:
       case TagConstants.EXISTS: {
 	  QuantifiedExpr qe = (QuantifiedExpr)e;
+	if (doRewrites()) boundStack.add(qe.vars);
+//if (doRewrites()) System.out.println("FORALL " + Location.toString(e.getStartLoc()));
+//if (doRewrites()) ErrorSet.dump(null);
 	if (qe.vars.size() != 1) {
 	  int locStart = e.getStartLoc();
 	  int locEnd = e.getEndLoc();
 
 	  Expr goodTypes = GC.truelit;
+	  int pos = 0;
+	  if (doRewrites()) pos = trSpecExprAuxConditions.size();
 	  Expr body = trSpecExpr(qe.expr, sp, st);
+//if (doRewrites()) System.out.println("FORALL " + pos + " " + trSpecExprAuxConditions.size());
+	  if (doRewrites() && pos != trSpecExprAuxConditions.size() ) {
+		ExprVec ev;
+		if (pos == 0) {
+		    ev = trSpecExprAuxConditions;
+		    trSpecExprAuxConditions = ExprVec.make();
+		} else {
+		    int sz = trSpecExprAuxConditions.size();
+		    ev = ExprVec.make(sz - pos);
+		    for (int i=pos; i < sz; ++i) {
+			ev.addElement(trSpecExprAuxConditions.elementAt(i));
+		    }
+		    for (int i=pos; i<sz; ++i) {
+			trSpecExprAuxConditions.removeElementAt(sz+pos-i-1);
+		    }
+		}
+		body = GC.implies( GC.nary(TagConstants.BOOLAND,ev), body);
+          }
+	  if (doRewrites()) boundStack.removeLast();
+/*
+if (doRewrites()) {
+System.out.println("FORALL-ENDA " + Location.toString(e.getStartLoc()));
+EscPrettyPrint.inst.print(System.out,0,body);
+System.out.println("");
+}
+*/
 	  return GC.quantifiedExpr(locStart, locEnd, tag,
 				   qe.vars, body, null);
 	} else if (Main.options().nestQuantifiers) {
@@ -557,6 +691,8 @@ public final class TrAnExpr {
 	  Expr body = GC.nary(qe.getStartLoc(), qe.getEndLoc(), op,
 			      quantTypeCorrect(decl, sp),
 			      trSpecExpr(qe.expr, sp, st));
+	  if (doRewrites()) boundStack.removeLast();
+//if (doRewrites()) System.out.println("FORALL-ENDB " + Location.toString(e.getStartLoc()));
 	  return GC.quantifiedExpr(qe.getStartLoc(), qe.getEndLoc(),
 				   qe.getTag(),
 				   decl, body, null);
@@ -586,6 +722,8 @@ public final class TrAnExpr {
 	    } else {
 	      Expr body = trSpecExpr(qe.expr, sp, st);
 	      Expr qbody = GC.nary(locStart, locEnd, op, goodTypes, body);
+	      if (doRewrites()) boundStack.removeLast();
+//if (doRewrites()) System.out.println("FORALL-ENDC " + Location.toString(e.getStartLoc()));
 	      return GC.quantifiedExpr(locStart, locEnd, tag,
 				       dummyDecls, qbody, null);
 	    }
@@ -728,7 +866,7 @@ wrap those variables being modified and not everything.
   }
 
   static VariableAccess tempName(int loc, String prefix, Type type) {
-	Identifier n = Identifier.intern(prefix + (++tempn));
+	Identifier n = Identifier.intern(prefix + "#" + (++tempn));
 	VariableAccess v =  VariableAccess.make(n, loc, 
 			LocalVarDecl.make(Modifiers.NONE, null,n,
 				type,
@@ -1223,7 +1361,7 @@ wrap those variables being modified and not everything.
   public static void getCalledSpecs( 
 			RoutineDecl decl,
 			ObjectDesignator od, ExprVec ev, 
-			VariableAccess resultVar,
+			Expr resultVar,
 			Hashtable sp, Hashtable st) {
 //System.out.println("GCS " + decl.parent.id + " " + (decl instanceof MethodDecl ? (((MethodDecl)decl).id.toString()) : "" ) + " " + Location.toString(decl.getStartLoc()) + " " + (declStack.contains(decl)) );
     ModifierPragmaVec md = decl.pmodifiers;
@@ -1235,9 +1373,16 @@ wrap those variables being modified and not everything.
 	    case TagConstants.POSTCONDITION:
 	     {
 		Expr e = ((ExprModifierPragma)m).expr;
+/*
+System.out.println("GCS-INSERTING FOR " + decl.parent.id + " " + (decl instanceof MethodDecl ? ((MethodDecl)decl).id.toString() : "") + " " + Location.toString(m.getStartLoc()) );
+EscPrettyPrint.inst.print(System.out,0,m);
+System.out.println("");
+*/
 //System.out.println("ENSURES " + e);
 		Hashtable h = new Hashtable();
-		h.put(Substitute.resexpr,resultVar);
+		Expr oldResultExpr = specialResultExpr;
+		specialResultExpr = resultVar;
+		//h.put(Substitute.resexpr,resultVar);
 		if (od instanceof ExprObjectDesignator) {
 		    if (!(((ExprObjectDesignator)od).expr instanceof ThisExpr)) {
 			h.put(Substitute.thisexpr, ((ExprObjectDesignator)od).expr);
@@ -1254,6 +1399,12 @@ wrap those variables being modified and not everything.
 		e = Substitute.doSimpleSubst(h,e);
 		e = trSpecExpr(e,sp,st);
 		trSpecExprAuxConditions.addElement(e);
+		specialResultExpr = oldResultExpr;
+/*
+System.out.println("INSERTING-END " + Location.toString(m.getStartLoc()) );
+EscPrettyPrint.inst.print(System.out,0,e);
+System.out.println("");
+*/
 	     }
 
 	    default:
@@ -1262,6 +1413,7 @@ wrap those variables being modified and not everything.
     }
 
 	// FIXME - What about constraint clauses
+/*
 
 	TypeDeclElemVec tdev = decl.parent.elems;
 	for (int j=0; j<tdev.size(); ++j) {
@@ -1287,5 +1439,113 @@ wrap those variables being modified and not everything.
 		trSpecExprAuxConditions.addElement(ee);
 	    }
 	}
+*/
+  }
+
+  static public Identifier fullName(RoutineDecl rd) {
+    String fullname = TypeSig.getSig(rd.parent).getExternalName() + "." ;
+    if (rd instanceof MethodDecl) fullname = fullname + ((MethodDecl)rd).id.toString();
+    return Identifier.intern(fullname + "." + rd.args.size()); 
+				// FIXME -- with type signature as well ???
+  }
+
+  static private ASTDecoration axiomDecoration = new ASTDecoration("axioms");
+  static private ASTDecoration axiomSetDecoration = new ASTDecoration("axiomset");
+
+  static public Expr getEquivalentAxioms(ASTNode astn) {
+	Expr ax = (Expr)axiomDecoration.get(astn);
+	if (ax == null) {
+	    initForClause();
+	    if (astn instanceof RoutineDecl) {
+		RoutineDecl rd = (RoutineDecl)astn;
+		// Make the list of bound parameters
+		ArrayList bounds = new ArrayList(rd.args.size()+1);
+		GenericVarDecl newThis = UniqName.newBoundThis();
+		specialThisExpr = makeVarAccess( newThis, Location.NULL);
+		if (!Modifiers.isStatic(rd.modifiers)) {
+		    if (rd instanceof MethodDecl) bounds.add( newThis );
+		}
+		Hashtable h = new Hashtable();
+		for (int k=0; k<rd.args.size(); ++k) {
+		    FormalParaDecl a = rd.args.elementAt(k);
+		    LocalVarDecl n = UniqName.newBoundVariable(a.id.toString());
+		    VariableAccess vn = makeVarAccess( n, Location.NULL);
+		    bounds.add(n);
+		    h.put(a,vn);
+		}
+
+		// create a function call
+		ExprVec ev = ExprVec.make( bounds.size() );
+		for (int k=0; k<bounds.size(); ++k) {
+		    ev.addElement( makeVarAccess( (GenericVarDecl)bounds.get(k), Location.NULL));
+		}
+		Expr fcall = GC.nary(fullName(rd), ev);
+		specialResultExpr = fcall;
+
+		// FIXME - what about AUx conditions and assumptions?
+		// FIXME - what about ensures clauses with \old in them
+		// Note - if there is an ensures clause with object fields, then it is
+		// not a great candidate for a function call
+
+		// find ensures pragmas and translate them into axioms
+		ModifierPragmaVec v = rd.pmodifiers;
+		ExprVec conjuncts = ExprVec.make(v.size());
+		for (int i=0; i<v.size(); ++i) {
+		    ModifierPragma p = v.elementAt(i);
+		    if (p.getTag() != TagConstants.ENSURES &&
+			p.getTag() != TagConstants.POSTCONDITION) continue;
+		    Expr e = ((ExprModifierPragma)p).expr;
+		    e = trSpecExpr(e,h,null); // FIXME - no subst?
+		    conjuncts.addElement(e);
+		}
+		specialResultExpr = null;
+		specialThisExpr = null;
+
+		if (rd instanceof ConstructorDecl) {
+		    // If this is a constructor, then we are generating
+		    // axioms for a new instance expression.  There are
+		    // a couple more implicit axioms
+
+		    // result != null
+		    Expr ee = GC.nary(TagConstants.REFNE, fcall, GC.nulllit);
+		    conjuncts.addElement(ee);
+
+		    // Adds \typeof(v) == \type(...)
+		    Type type = TypeSig.getSig(rd.parent);
+		    ee = GC.nary(TagConstants.TYPEEQ,
+			GC.nary(TagConstants.TYPEOF, fcall),
+			GC.nary(TagConstants.CLASSLITERALFUNC, trType(type)));
+		    conjuncts.addElement(ee);
+		} else {
+
+		    // add an axiom about the type of the method result?
+		    Type type = ((MethodDecl)rd).returnType;
+		    Expr ee = GC.nary(TagConstants.TYPELE,
+			GC.nary(TagConstants.TYPEOF, fcall),
+			GC.nary(TagConstants.CLASSLITERALFUNC, trType(type)));
+		    conjuncts.addElement(ee);
+		}
+
+		// create a composite AND and wrap it in a forall
+		Expr ee = GC.and(conjuncts);
+		for (int k=bounds.size()-1; k>=0; --k) {
+		    GenericVarDecl o = (GenericVarDecl)bounds.get(k);
+		    ee = GC.forall(o,ee);
+		}
+		ax = ee;
+	    } else {
+		//System.out.println("NOTHING FOR TYPE YET");
+		ax = GC.truelit;
+	    }
+	    axiomDecoration.set(astn,ax);
+	    axiomSetDecoration.set(astn,trSpecAuxAxiomsNeeded);
+
+	}
+	return ax;
+  }
+
+  static public java.util.Set getAxiomSet(ASTNode o) {
+	// presumes getEquivalentAxioms has been run at least once
+	return (java.util.Set)axiomSetDecoration.get(o);
   }
 }
