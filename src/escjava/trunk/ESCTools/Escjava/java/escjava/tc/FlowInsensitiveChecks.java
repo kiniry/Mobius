@@ -1517,7 +1517,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                         } else if (ms == MSTATUS_CLASS_NEW_METHOD) {
                             if (tag == TagConstants.REQUIRES || tag == TagConstants.JML_PRE) {
                                 String remedy;
-                                if (Main.allowAlsoRequires) {
+                                if (Main.options().allowAlsoRequires) {
                                     remedy = "declare in supertype or use " +
                                         TagConstants.toString(TagConstants.ALSO_REQUIRES);
                                 } else {

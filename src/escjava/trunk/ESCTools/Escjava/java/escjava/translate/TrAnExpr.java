@@ -315,7 +315,7 @@ public final class TrAnExpr {
 
       case TagConstants.FORALL:
       case TagConstants.EXISTS: {
-	if (Main.nestQuantifiers) {
+	if (Main.options().nestQuantifiers) {
 	  QuantifiedExpr qe = (QuantifiedExpr)e;
 	  GenericVarDecl decl = qe.vars.elementAt(0);
 
@@ -507,7 +507,7 @@ wrap those variables being modified and not everything.
   public static Expr quantTypeCorrect(GenericVarDecl vd, Hashtable sp) {
     Assert.notFalse(GetSpec.NonNullPragma(vd) == null);
     if ((Types.isIntType(vd.type) || Types.isLongType(vd.type)) &&
-	!Main.useIntQuantAntecedents) {
+	!Main.options().useIntQuantAntecedents) {
       return GC.truelit;
     } else {
       return typeAndNonNullCorrectAs(vd, vd.type, null, true, sp);
@@ -560,7 +560,7 @@ wrap those variables being modified and not everything.
       e = GC.nary(TagConstants.REFNE, v, GC.nulllit);
       if (nonNullPragma != null) {
 	int locPragmaDecl = nonNullPragma.getStartLoc();
-        if (Main.guardedVC && locPragmaDecl != Location.NULL) {
+        if (Main.options().guardedVC && locPragmaDecl != Location.NULL) {
           e = GuardExpr.make(e, locPragmaDecl);
         }
 	LabelInfoToString.recordAnnotationAssumption(locPragmaDecl);
@@ -604,7 +604,7 @@ wrap those variables being modified and not everything.
       Expr quant = GC.forall(sDecl, GC.implies(c0, c1));
       int locPragmaDecl = nonNullPragma.getStartLoc();
       LabelInfoToString.recordAnnotationAssumption(locPragmaDecl);
-      if (Main.guardedVC && locPragmaDecl != Location.NULL) {
+      if (Main.options().guardedVC && locPragmaDecl != Location.NULL) {
         quant = GuardExpr.make(quant, locPragmaDecl);
       }
       conjuncts.addElement(quant);

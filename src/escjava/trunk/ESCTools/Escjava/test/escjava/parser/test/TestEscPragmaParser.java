@@ -16,7 +16,8 @@ import java.io.IOException;
 
 public class TestEscPragmaParser {
   public static void main(String[] argv) throws IOException {
-    escjava.Main.nvu = true;
+    escjava.Main.options = new escjava.Options();
+    escjava.Main.options().nvu = true;
 
     // DelegatingPrettyPrint p = new javafe.tc.TypePrint();
     // p.del = new EscPrettyPrint(p, new StandardPrettyPrint(p));

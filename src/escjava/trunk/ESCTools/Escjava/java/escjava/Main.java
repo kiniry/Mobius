@@ -51,171 +51,10 @@ public class Main extends javafe.SrcTool
     public final static String version = "(Nijmegen/Kodak) 1.3, 2003";
 
 
-    // Global escjava flags
-
-    /*
-     * These are set by the command-line switches of the same name.
-     * They default to false (unset).
-     */
-
-    public static boolean quiet	= false;
-    public static boolean suggest = false;
-
-    public static boolean pjt	= false; // print java w/ types
-    public static boolean nvu	= false;
-    public static boolean pgc	= false;
-    public static boolean pdsa	= false;
-    public static boolean pcc	= false;
-    // a pruned, pretty printed version of pcc:
-    public static boolean counterexample = false;
-    public static boolean stats = false;
-    public static boolean plainWarning = false;
-
-    /** Statically check against redundant specs?  Default is true. */
-    public static boolean checkRedundantSpecs = true;
-
-    // trace info: (0) no, (1) default, (2) verbose
-    public static int traceInfo = 1;
-    //@ invariant 0 <= traceInfo && traceInfo < 3;
-
-    /** When true, no variable output (e.g. execution time) is printed,
-     so that output can be compared to an oracle output file.
-     */
-    public static boolean testMode = false;
-
-    /** When true, parses pragmas that begin with /*+@, which are normally
-     parsed only by JML; this allows test runs in which everything JML
-     parses is parsed by escjava, to see if we have full coverage of all
-     of JML.
-     */
-    public static boolean parsePlus = false;
-
-    /** When true, does not print any warnings about things not checked. */
-    public static boolean noNotCheckedWarnings = false;
-
-    public static boolean spvc = true;
-    public static boolean dsa = true;
-    //@ invariant spvc ==> dsa  // spvc requires dsa for soundness
-    public static boolean passify = false;
-    public static boolean wpp = false;
-    public static boolean useDefpred = false;
-    public static int wpnxw = 0;
-    public static int namePCsize = 0;
-
-    public static boolean peepOptE=true;
-    public static boolean peepOptGC=true;
-    public static boolean lazySubst = false;
-    public static boolean mergeInv=false;
-
-    public static boolean useAllInvPostCall = false;
-    public static boolean useAllInvPostBody = false;
-    public static boolean useAllInvPreBody = false;
-    public static boolean allocUseOpt = true;
-
-    public static final int LOOP_FAST = 0;
-    public static final int LOOP_SAFE = 1;
-    public static final int LOOP_FALL_THRU = 2;
-    public static int loopTranslation = LOOP_FAST;
-    //@ invariant LOOP_FAST <= loopTranslation && loopTranslation <= LOOP_FALL_THRU;
-
-    // The default loop unrolling is: -loop 1.5 
-    public static int loopUnrollCount = 1;
-    public static boolean loopUnrollHalf = true;
-
-    public static boolean preciseTargets = false;
-
-    public static boolean predAbstract = false;
-    public static boolean inferPredicates = false;
-
-    public static boolean noDirectTargetsOpt = false;
-    public static boolean nestQuantifiers = false;
-
-    public static boolean lastVarUseOpt = true;
-    public static boolean noVarCheckDeclsAndUses = false;
-
-    public static boolean useIntQuantAntecedents = false;
-
-    public static boolean excuseNullInitializers = false;
-
-    /** The following values are used: <br>
-     *   0-never, 1-atomic (default), 2-always
-     */
-    public static int strongAssertPost = 1;
-
-    public static boolean showCallDetails = true;
-    public static boolean showLoopDetails = false;
-    public static boolean bubbleNotDown=false;
-    public static int startLine = -1;    // starting line # for processing
-    public static int vclimit = 500000;
-
-    public static boolean noOutCalls = false;
-
-    // flags primarily used by Houdini
-    public static boolean printAssumers = false;
-    public static boolean noPeepOptGCAssertFalse = false;
-    public static boolean assertContinue = false;
-    public static boolean trackReadChars = true;
-    public static boolean guardedVC = false;
-    public static String guardedVCDir;
-    public static String guardedVCFileNumbers = "files.txt";
-    public static String guardedVCGuardFile = "guards.txt";
-    public static String guardedVCPrefix = "G_";
-    public static String guardedVCFileExt = "sx";
-    public static Set guardVars = new Set();  
-    public static String ClassVCPrefix = "*Class*";
-    public static String MethodVCPrefix = "*Method*";
-
-    public static Set ignoreAnnSet = null;
-
-    public static boolean printCompilationUnitsOnLoad = false;
-
-    // filter invariants and axioms
-    public static boolean filterInvariants = false;
-    // filter method specifications
-    public static boolean filterMethodSpecs = false;
-
-    public static Set routinesToCheck = null;  // null means "check everything"
-
-    // do the inlined constructor experiment?
-    public static boolean inlineConstructors = false;
-    // do some other inlining experiment, using at least one of the two
-    // inline depth flags?
-    public static boolean inlineDepthFlags = false;
-    // when checking a constructor of a class T, inline every call
-    // this.m(...) transitively from within the constructor, whenever m
-    // statically resolves to a non-overridable instance method defined in T.
-    public static boolean inlineFromConstructors = false;
-
-    public static String sxLog = null;
-
-    // The following switch hardcodes whether or not also_requires is to
-    // be part of the annotation language
-    public static boolean allowAlsoRequires = true;
-
-    /**
-     * Number of stages to run.  The stages currently in order are:
-     *     1. loading, parsing, and type checking
-     *     2. generating the type-specific background predicate
-     *	    3. translating from Java to GC
-     *	    4. translating from GC to DSA
-     *     5. generating the VC from the GC
-     *     6. calling the theorem prover to verify the VC<p>
-     *
-     * defaults to running all stages (6); must be positive.<p>
-     *
-     * -nocheck sets <code>stages</code> to run all but the last
-     * stage (5).  The -stages option can be used to set
-     * <code>stages</code> to a particular value.<p>
-     */
-    public static int stages	= 6;
-
-
-    //* Which file to obtain the universal background predicate from.
-    public static String univBackPredFile = null;
-
     public AnnotationHandler annotationHandler = new AnnotationHandler();
 
-    // Generating an options message
+    // Convenience copy of options().stages
+    public int stages;
 
     /**
      * Return the name of this tool.  E.g., "ls" or "cp".<p>
@@ -224,475 +63,9 @@ public class Main extends javafe.SrcTool
      */
     public String name() { return "escjava"; }
 
-    /**
-     * Print option option information to
-     * <code>System.err</code>. <p>
-     */
-    public void showOptions() {
-        super.showOptions();
-        /* Note:  The following should list all of the "public" options, not
-         * debugging options that are present only in experimental versions
-         * at SRC.
-         */
-        System.err.println("  -counterexample -loopSafe -loop <iterCount>[.0|.5] -nocheck");
-        System.err.println("  -noredundancy -notrace -nowarn <category> -plainwarning -quiet");
-        System.err.println("  -routine <routineId> -routine <fullyQualifiedRoutineSignature>");
-        System.err.println("  -routineIndirect <routineFile> -start <line#> -suggest");
-        System.err.println("  -vclimit <n> -warn <category>");
-    }
-
-
-    // Option processing
-
-    /**
-     * Process next tool option. <p>
-     *
-     * See <code>Tool.processOption</code> for the complete
-     * specification of this routine.<p>
-     */
-    public int processOption(String option, String[] args, int offset) {
-	if (option.equals("-nocheck")) {
-	    stages = 5;		// run all but last stage
-	    return offset;
-	} else if (option.equals("-stages")) {
-	    if (offset == args.length) {
-		usage();
-		System.exit(usageError);
-	    }
-	    try {
-	        stages = new Integer(args[offset]).intValue();
-		if (stages<1)
-                    throw new NumberFormatException();
-	    } catch (NumberFormatException e) {
-	        badOptionUsage("illegal argument to -stages: " +
-			       args[offset]);
-	    }
-	    return offset+1;
-	} else if (option.equals("-start")) {
-	    if (offset>=args.length) {
-		usage();
-		System.exit(usageError);
-	    }
-	    try {
-	        startLine = new Integer(args[offset]).intValue();
-	    } catch (NumberFormatException e) {
-	        badOptionUsage("illegal argument to -start: " + args[offset]);
-	    }
-	    return offset+1;
-	} else if (option.equals("-vclimit")) {
-	    if (offset>=args.length) {
-		usage();
-		System.exit(usageError);
-	    }
-	    try {
-	        vclimit = new Integer(args[offset]).intValue();
-	    } catch (NumberFormatException e) {
-	        badOptionUsage("illegal argument to -vclimit: " + args[offset]);
-	    }
-	    return offset+1;
-	} else if (option.equals("-inlineFromConstructors")) {
-            inlineFromConstructors = true;
-            return offset;
-	} else if (option.equals("-inlineCheckDepth")) {
-	    inlineDepthFlags = true;
-	    // can't use this along with the -inlineConstructors flag
-	    if (inlineConstructors)
-		badOptionUsage("can't use -inlineConstructors in combination with either -inlineCheckDepth or -inlineDepthPastCheck");
-	    if (offset == args.length) {
-		usage();
-		System.exit(usageError);
-	    }
-	    try {
-	        gctranslator.inlineCheckDepth =
-		    new Integer(args[offset]).intValue();
-		if (gctranslator.inlineCheckDepth < 0)
-		    throw new NumberFormatException();
-	    } catch (NumberFormatException e) {
-	        badOptionUsage("illegal argument to -inlineDepth: " +
-			       args[offset]);
-	    }
-	    return offset+1;
-	} else if (option.equals("-inlineDepthPastCheck")) {
-	    inlineDepthFlags = true;
-	    // can't use this along with the -inlineConstructors flag
-	    if (inlineConstructors)
-		badOptionUsage("can't use -inlineConstructors in combination with either -inlineCheckDepth or -inlineDepthPastCheck");
-	    if (offset == args.length) {
-		usage();
-		System.exit(usageError);
-	    }
-	    try {
-	        gctranslator.inlineDepthPastCheck =
-		    new Integer(args[offset]).intValue();
-		if (gctranslator.inlineDepthPastCheck < 0)
-		    throw new NumberFormatException();
-	    } catch (NumberFormatException e) {
-	        badOptionUsage("illegal argument to -inlineDepth: " +
-			       args[offset]);
-	    }
-	    return offset+1;
-	} else if (option.equals("-inlineConstructors")) {
-	    // can't use this along with either of the inline depth flags
-	    if (inlineDepthFlags)
-		badOptionUsage("can't use -inlineConstructors in combination with either -inlineCheckDepth or -inlineDepthPastCheck");
-	    inlineConstructors = true;
-	    return offset;
-	} else if (option.equals("-suggest")) {
-	    suggest = true;
-	    return offset;
-	} else if (option.equals("-pgc")) {
-	    pgc = true;
-	    return offset;
-	} else if (option.equals("-pcc")) {
-	    pcc = true;
-	    return offset;
-	} else if (option.equals("-nospvc")) {
-            spvc = false;
-            return offset;
-	} else if (option.equals("-passify")) {
-            passify = true;
-            return offset;
-	} else if (option.equals("-wpp")) {
-            wpp = true;
-            return offset;
-	} else if (option.equals("-useDefpred")) {
-	    useDefpred = true;
-	    return offset;
-	} else if (option.equals("-nodsa")) {
-	    dsa = false;
-	    spvc = false;  // spvc requires dsa for soundness
-	    return offset;
-	} else if (option.equals("-pdsa")) {
-	    pdsa = true;
-	    return offset;
-	} else if (option.equals("-wpnxw")) {
-	    if (offset >= args.length) {
-                badOptionUsage("-wpnxw expects an integer parameter");
-	    }
-	    wpnxw = new Integer(args[offset]).intValue();
-	    return offset+1;
-
-	} else if (option.equals("-namePCsize")) {
-	    if (offset >= args.length) {
-                badOptionUsage("-namePCsize expects an integer parameter");
-	    }
-	    namePCsize = new Integer(args[offset]).intValue();
-	    return offset+1;
-	} else if (option.equals("-stats")) {
-	    stats = true;
-	    return offset;
-	} else if (option.equals("-pjt")) {
-	    pjt = true;
-	    return offset;
-	} else if (option.equals("-nvu")) {
-	    nvu = true;
-	    return offset;
-	} else if (option.equals("-assertContinue")) {
-	    assertContinue = true;
-	    return offset;
-	} else if (option.equals("-noTrackReadChars")) {
-	    trackReadChars = false;
-	    return offset;
-	} else if (option.equals("-filterMethodSpecs")) {
-	    filterMethodSpecs = true;
-	    return offset;
-	} else if (option.equals("-noPeepOptGCAssertFalse")) {
-	    noPeepOptGCAssertFalse = true;
-	    return offset;
-	} else if (option.equals("-quiet")) {
-	    quiet = true;
-	    return offset;
-	} else if (option.equals("-noEpeepopt")) {
-	    peepOptE = false;
-	    return offset;
-	} else if (option.equals("-noGCpeepopt")) {
-	    peepOptGC = false;
-	    return offset;
-	} else if (option.equals("-lazySubst")) {
-	    lazySubst = true;
-	    return offset;
-	} else if (option.equals("-mergeinv")) {
-	    mergeInv = true;
-	    return offset;
-	} else if (option.equals("-noAllocUseOpt")) {
-	    allocUseOpt = false;
-	    return offset;
-	} else if (option.equals("-useAllInvPostCall")) {
-	    useAllInvPostCall = true;
-	    return offset;
-	} else if (option.equals("-useAllInvPostBody")) {
-	    useAllInvPostBody = true;
-	    return offset;
-	} else if (option.equals("-useAllInvPreBody")) {
-	    useAllInvPreBody = true;
-	    return offset;
-	} else if (option.equals("-filterInvariants")) {
-	    filterInvariants = true;
-	    return offset;
-	} else if (option.equals("-printAssumers")) {
-	    printAssumers = true;
-	    return offset;
-	} else if (option.equals("-printCompilationUnitsOnLoad")) {
-	    printCompilationUnitsOnLoad = true;
-	    return offset;
-	} else if (option.equals("-guardedVC")) {
-	    if (offset >= args.length) {
-                badOptionUsage("-guardedVC expects a directory parameter");
-	    }
-	    guardedVC = true;
-            guardedVCDir = args[offset];
-	    return offset+1;
-	} else if (option.equals("-ignoreAnnFile")) {
-	    if (offset >= args.length) {
-                badOptionUsage("-ignoreAnnFile expects a file parameter");
-	    }
-	    ignoreAnnSet = new Set(readFile(args[offset]).elements());
-	    // System.out.println("Ignore set: "+ignoreAnnSet+"\n");
-	    return offset+1;
-	} else if (option.equals("-routine")) {
-            // the argument to "-routine" is either a simple routine name or a fully
-            // qualified routine name with signature, but we won't ever parse these
-            if (offset == args.length) {
-                badOptionUsage("missing argument to -routine");
-            }
-            String routine = args[offset].intern();
-            if (routinesToCheck == null) {
-                routinesToCheck = new Set();
-            }
-            routinesToCheck.add(routine);
-            return offset+1;
-	} else if (option.equals("-routineIndirect")) {
-            if (offset == args.length) {
-                badOptionUsage("missing argument to -routineIndirect");
-            }
-            if (routinesToCheck == null) {
-                routinesToCheck = new Set();
-            }
-            String routineIndirectionFilename = args[offset];
-            try {
-                BufferedReader in = new BufferedReader(
-                                                       new FileReader(routineIndirectionFilename));
-                while (true) {
-                    String routine = in.readLine();
-                    if (routine == null) {
-                        break;
-                    }
-                    routine = routine.intern();
-                    routinesToCheck.add(routine);
-                }
-            } catch (IOException e) {
-                badOptionUsage("error reading routine indirection file '" +
-                               routineIndirectionFilename + "': " +
-                               e.toString());
-            }
-            return offset+1;
-	} else if (option.equals("-loopSafe")) {
-  	    loopTranslation = LOOP_SAFE;
-	    return offset;
-	} else if (option.equals("-preciseTargets")) {
-  	    preciseTargets = true;
-  	    loopTranslation = LOOP_SAFE;
-	    return offset;
-	} else if (option.equals("-loop")) {
-            // syntax:  -loop <N>[.0|.5]
-            if (offset == args.length) {
-                badOptionUsage("missing argument to -loop");
-            }
-            String number = args[offset];
-            if (number.length() == 0 || option.charAt(0) == '.') {
-                badOptionUsage("illegal argument to -loop: " + number);
-            }
-            // any other parsing error will be caught in the following loop
-            int cnt = 0;
-            boolean andAHalf = false;
-            for (int i = 0; i < number.length(); i++) {
-                char ch = number.charAt(i);
-                if ('0' <= ch && ch <= '9') {
-                    if (10000 <= cnt) {
-                        badOptionUsage("-loop specifies too many iterations: " +
-                                       number);
-                    }
-                    cnt = 10*cnt + ch - '0';
-                    continue;
-                } else if (ch == '.') {
-                    if (number.length() == i+2) {
-                        if (number.charAt(i+1) == '5') {
-                            andAHalf = true;
-                            break;
-                        } else if (number.charAt(i+1) == '0') {
-                            andAHalf = false;
-                            break;
-                        }
-                    }
-                }
-                badOptionUsage("illegal argument to -loop: " + number);
-            }
-            loopUnrollCount = cnt;
-            loopUnrollHalf = andAHalf;
-            return offset+1;
-	} else if (option.equals("-loopFallThru")) {
-	    loopTranslation = LOOP_FALL_THRU;
-	    return offset;
-	} else if (option.equals("-predAbstract")) {
-	    predAbstract = true;
-	    loopTranslation = LOOP_SAFE;
-	    lastVarUseOpt = false;
-	    return offset;
-	} else if (option.equals("-inferPredicates")) {
-	    inferPredicates = true;
-	    predAbstract = true;
-	    loopTranslation = LOOP_SAFE;
-	    lastVarUseOpt = false;
-	    return offset;
-	} else if (option.equals("-noDirectTargetsOpt")) {
-	    noDirectTargetsOpt = true;
-	    return offset;
-	} else if (option.equals("-nestQuantifiers")) {
-	    nestQuantifiers = true;
-	    return offset;
-	} else if (option.equals("-useIntQuantAntecedents")) {
-	    useIntQuantAntecedents = true;
-	    return offset;
-	} else if (option.equals("-excuseNullInitializers")) {
-	    excuseNullInitializers = true;
-	    return offset;
-	} else if (option.equals("-strongAssertPostNever")) {
-	    strongAssertPost = 0;
-	    return offset;
-	} else if (option.equals("-strongAssertPostAtomic")) {
-	    strongAssertPost = 1;
-	    return offset;
-	} else if (option.equals("-strongAssertPostAlways")) {
-	    strongAssertPost = 2;
-	    return offset;
-	} else if (option.equals("-noLastVarUseOpt")) {
-	    lastVarUseOpt = false;
-	    return offset;
-	} else if (option.equals("-noVarCheckDeclsAndUses")) {
-	    noVarCheckDeclsAndUses = true;
-	    return offset;
-	} else if (option.equals("-hidecall")) {
-	    showCallDetails = false;
-	    return offset;
-	} else if (option.equals("-showloop")) {
-	    showLoopDetails = true;
-	    return offset;
-	} else if (option.equals("-plainwarning")) {
-	    plainWarning = true;
-	    return offset;
-	} else if (option.equals("-noredundancy")) {
-	    checkRedundantSpecs = false;
-	    return offset;
-	} else if (option.equals("-notrace")) {
-	    traceInfo = 0;
-	    return offset;
-	} else if (option.equals("-verboseTrace")) {
-	    traceInfo = 2;
-	    return offset;
-	} else if (option.equals("-counterexample")) {
-	    counterexample = true;
-	    return offset;
-	} else if (option.equals("-bubbleNotDown")) {
-            bubbleNotDown = true;
-            return offset;
-	} else if (option.equals("-noOutCalls")) {
-            noOutCalls = true;
-            return offset;
-	} else if (option.equals("-backpredfile")) {
-	    if (offset>=args.length) {
-		usage();
-		System.exit(usageError);
-	    }
-	    univBackPredFile = args[offset];
-	    return offset+1;
-	} else if (option.equals("-sxLog")) {
-	    if (offset>=args.length) {
-		usage();
-		System.exit(usageError);
-	    }
-	    sxLog = args[offset];
-	    return offset+1;
-	} else if (option.equals("-nowarn")) {
-	    if (offset>=args.length) {
-		usage();
-		System.exit(usageError);
-	    }
-	    if (args[offset].equals("All")) {
-                NoWarn.setAllChkStatus(TagConstants.CHK_AS_ASSUME);
-	    } else {
-                int tag = NoWarn.toNoWarnTag(args[offset]);
-                if (tag==0) {
-                    badOptionUsage(name() + ": '" + args[offset]
-                                   + "' is not a legal warning category");
-                }
-                NoWarn.setChkStatus(tag, TagConstants.CHK_AS_ASSUME);
-	    }
-	    return offset+1;
-	} else if (option.equals("-warn")) {
-	    if (offset>=args.length) {
-		usage();
-		System.exit(usageError);
-	    }
-	    // Note:  There's an intentional lack of symmetry with -nowarn
-	    // here, in that "-warn All" is not supported.  This design
-	    // allows ESC/Java to include special checks, perhaps like the
-	    // Stale checks of the Higher-Level Races checker, that won't
-	    // be publicly advertised.
-	    int tag = NoWarn.toNoWarnTag(args[offset]);
-	    if (tag==0) {
-		badOptionUsage(name() + ": '" + args[offset]
-			       + "' is not a legal warning category");
-	    }
-	    NoWarn.setChkStatus(tag, TagConstants.CHK_AS_ASSERT);
-	    return offset+1;
-	} else if (option.equals("-parsePlus")) {
-	    parsePlus = true;
-	    return offset;
-	} else if (option.equals("-noNotCheckedWarnings")) {
-	    noNotCheckedWarnings = true;
-	    return offset;
-	} else if (option.equals("-testMode")) {
-	    testMode = true;
-	    return offset;
-        }
-
-	// Pass on unrecognized options:
-	return super.processOption(option, args, offset);
-    }
-
-    private Vector readFile(String filename) {
-	Vector r = new Vector();
-	StringBuffer s = new StringBuffer();
-	try {
-	    Reader R = new BufferedReader(new InputStreamReader(new FileInputStream(filename)));
-	    int c;
-	    do {
-		while( (c=R.read())!= -1 && c != '\n' ) {
-		    s.append( (char)c );
-		}
-		// Delete from 3rd space on
-		String st = s.toString();
-		int i=st.indexOf(' ');
-		if( i != -1 ) i=st.indexOf(' ',i+1);
-		if( i != -1 ) i=st.indexOf(' ',i+1);
-		if( i != -1 ) st=st.substring(0,i);
-		r.addElement( st );
-		s.setLength(0);
-	    } while( c != -1 );
-	    return r;
-        } catch(IOException e) {
-            throw new RuntimeException("IOException: " + e);
-	}
-    }
-
-    //@ ensures false;
-    private void badOptionUsage(String s) {
-        System.err.println(s);
-        System.err.println();
-        usage();
-        System.exit(usageError);
-    }
-
+    public javafe.Options makeOptions() { return new Options(); }
+    
+    public static Options options() { return (Options)options; }
 
     // Front-end setup
 
@@ -700,7 +73,7 @@ public class Main extends javafe.SrcTool
      * Returns the Esc StandardTypeReader, EscTypeReader.
      */
     public StandardTypeReader makeStandardTypeReader(String path,
-						     PragmaParser P) {
+                             PragmaParser P) {
         return EscTypeReader.make(path, P, annotationHandler);
     }
 
@@ -727,7 +100,7 @@ public class Main extends javafe.SrcTool
      * default, returns <code>javafe.tc.TypeCheck</code>.
      */
     public javafe.tc.TypeCheck makeTypeCheck() {
-	return new escjava.tc.TypeCheck();
+        return new escjava.tc.TypeCheck();
     }
 
 
@@ -736,15 +109,15 @@ public class Main extends javafe.SrcTool
      * registered as they are loaded.
      */
     public void notify(CompilationUnit justLoaded) {
-	super.notify(justLoaded);
-
-	NoWarn.registerNowarns(justLoaded.lexicalPragmas);
-
-	if (printCompilationUnitsOnLoad) {
+        super.notify(justLoaded);
+    
+        NoWarn.registerNowarns(justLoaded.lexicalPragmas);
+    
+        if (options().printCompilationUnitsOnLoad) {
             String pkgName = justLoaded.pkgName.printName();
             String filename = Location.toFileName(justLoaded.loc);
             System.out.println("LOADED: " + pkgName + " " + filename);
-	}
+        }
     }
 
 
@@ -759,30 +132,38 @@ public class Main extends javafe.SrcTool
      */
     //@ requires \nonnullelements(args)
     public static void main(String[] args) {
-	int exitcode = compile(args);
-	if (exitcode != 0) System.exit(exitcode);
+        int exitcode = compile(args);
+        if (exitcode != 0) System.exit(exitcode);
+    }
+
+    public Main() {
+        clear(); // resets any static variables left from a previous instantiation
+    }
+
+    public void clear() {
+        super.clear();
+        gctranslator = new Translate();
+        prover = null;
+        // restore ordinary checking of assertions
+        NoWarn.useGlobalStatus = false; 
+	NoWarn.setAllChkStatus(TagConstants.CHK_AS_ASSERT);
+        // Disallow the -avoidSpec option:
+        javafe.SrcToolOptions.allowAvoidSpec = false; 
+
     }
 
     public static int compile(String[] args) {
-	javafe.SrcTool t = new Main();
-	{ // resetting anything left from a previous call of compile
-	    t.clear();
-	    stages = 6; //  FIXME - change this when all options are reset
-        }
         try {
-
-            // Disallow the -avoidSpec option:
-            t.allowAvoidSpec = false;
-
+            Main t = new Main();
             int result = t.run(args);
-	    return result;
+            return result;
         } catch (OutOfMemoryError oom) {
             Runtime rt = Runtime.getRuntime();
             long memUsedBytes = rt.totalMemory() - rt.freeMemory();
             System.out.println("java.lang.OutOfMemoryError (" + memUsedBytes +
-                               " bytes used)");
+                                " bytes used)");
             oom.printStackTrace(System.out);
-	    return 3;
+            return outofmemoryExitCode;
         }
     }
 
@@ -803,10 +184,12 @@ public class Main extends javafe.SrcTool
      * just after decode options so know if -quiet or -testMode issued or not).
      */
     public void setup() {
-	super.setup();
-	
-	if (!quiet)
-	    System.out.println("ESC/Java version " + (testMode?"VERSION":version));
+        stages = options().stages;
+        super.setup();
+        
+        if (!options().quiet)
+            System.out.println("ESC/Java version " + 
+                (options().testMode?"VERSION":version));
     }
 
     /**
@@ -814,25 +197,25 @@ public class Main extends javafe.SrcTool
      * on each <code>CompilationUnit</code> to process them.
      */
     public void preprocess() {
-
-	// call our routines to run the constructor inlining experiment
-	if (inlineConstructors)
-	    InlineConstructor.inlineConstructorsEverywhere(loaded);
-	
-
-	if (6 <= stages || predAbstract) {
-	    long startTime = java.lang.System.currentTimeMillis();
-	    prover = new Simplify();
-
-	    if (!quiet)
+        
+        // call our routines to run the constructor inlining experiment
+        if (options().inlineConstructors)
+            InlineConstructor.inlineConstructorsEverywhere(loaded);
+            
+            
+        if (6 <= stages || options().predAbstract) {
+            long startTime = java.lang.System.currentTimeMillis();
+            prover = new Simplify();
+            
+            if (!options().quiet)
                 System.out.println("  Prover started:" + timeUsed(startTime));
-	}
-
-	if (prover != null) {
+        }
+        
+        if (prover != null) {
             escjava.backpred.BackPred.genUnivBackPred(prover.subProcessToStream());
             prover.sendCommands("");
-	}
-
+        }
+    
     }
 
     /**
@@ -857,14 +240,14 @@ public class Main extends javafe.SrcTool
         // If we are in the Houdini context (guardedVC is true), output
         // the association of file numbers to their names.
         // Also, dump out a list of guard variable names.
-        if (guardedVC) {
-            PrintStream o = fileToPrintStream(guardedVCDir, guardedVCFileNumbers);
+        if (options().guardedVC) {
+            PrintStream o = fileToPrintStream(options().guardedVCDir, options().guardedVCFileNumbers);
             Vector v = LocationManagerCorrelatedReader.fileNumbersToNames();
             for(int i=0; i<v.size(); i++) o.println(i + " " + v.elementAt(i));
             o.close();
 
-            o = fileToPrintStream(guardedVCDir, guardedVCGuardFile);
-            Enumeration e = guardVars.elements();
+            o = fileToPrintStream(options().guardedVCDir, options().guardedVCGuardFile);
+            Enumeration e = options().guardVars.elements();
             while (e.hasMoreElements()) {
                 o.println((String)e.nextElement());
             }
@@ -884,12 +267,12 @@ public class Main extends javafe.SrcTool
      * superclass implementation is called.
      */
     public void handleCU(CompilationUnit cu) {
-	NoWarn.setStartLine(startLine, cu);
+        NoWarn.setStartLine(options().startLine, cu);
 
         UniqName.setDefaultSuffixFile(cu.getStartLoc());
-	super.handleCU(cu);
+        super.handleCU(cu);
 
-	startLine = -1;		// StartLine applies only to first CU
+        options().startLine = -1;        // StartLine applies only to first CU
     }
 
 
@@ -901,33 +284,33 @@ public class Main extends javafe.SrcTool
      * nested within outside types.
      */
     public void handleTD(TypeDecl td) {
-	TypeSig sig = TypeCheck.inst.getSig(td);
-	if (sig.getTypeDecl().specOnly)	// do not process specs
-	    return;
-
-	if (Location.toLineNumber(td.getEndLoc()) < startLine)
+        TypeSig sig = TypeCheck.inst.getSig(td);
+        if (sig.getTypeDecl().specOnly)    // do not process specs
             return;
 
-	long startTime = java.lang.System.currentTimeMillis();
-	if (!quiet)
+        if (Location.toLineNumber(td.getEndLoc()) < options().startLine)
+            return;
+
+        long startTime = java.lang.System.currentTimeMillis();
+        if (!options().quiet)
             System.out.println("\n" + sig.toString() + " ...");
 
-	// Do actual work:
-	boolean aborted = processTD(td);
+        // Do actual work:
+        boolean aborted = processTD(td);
 
-	if (!quiet)
-	    System.out.println("  [" + timeUsed(startTime)
+        if (!options().quiet)
+            System.out.println("  [" + timeUsed(startTime)
                                + " total]"
                                + (aborted ? " (aborted)" : "") );
 
-	/*
-	 * Handled any nested types:  [1.1]
-	 */
-	TypeDecl decl = sig.getTypeDecl();
-	for (int i=0; i<decl.elems.size(); i++) {
-	    if (decl.elems.elementAt(i) instanceof TypeDecl)
-		handleTD((TypeDecl)decl.elems.elementAt(i));
-	}
+        /*
+         * Handled any nested types:  [1.1]
+         */
+        TypeDecl decl = sig.getTypeDecl();
+        for (int i=0; i<decl.elems.size(); i++) {
+            if (decl.elems.elementAt(i) instanceof TypeDecl)
+            handleTD((TypeDecl)decl.elems.elementAt(i));
+        }
     }
 
     /**
@@ -937,54 +320,54 @@ public class Main extends javafe.SrcTool
      * @precondition - td is not from a binary file.
      */
     private boolean processTD(TypeDecl td) {
-	// ==== Start stage 1 ====
+        // ==== Start stage 1 ====
 
-	/*
-	 * Do Java type checking then print Java types if we've been
-	 * asked to:
-	 */
-	int errorCount = ErrorSet.errors;
-	TypeSig sig = TypeCheck.inst.getSig(td);
-	sig.typecheck();
-	NoWarn.typecheckRegisteredNowarns();
+        /*
+         * Do Java type checking then print Java types if we've been
+         * asked to:
+         */
+        int errorCount = ErrorSet.errors;
+        TypeSig sig = TypeCheck.inst.getSig(td);
+        sig.typecheck();
+        NoWarn.typecheckRegisteredNowarns();
+    
 
+        if (options().pjt) {
+            // Create a pretty-printer that shows types
+            DelegatingPrettyPrint p = new javafe.tc.TypePrint();
+            p.del = new EscPrettyPrint(p, new StandardPrettyPrint(p));
 
-	if (pjt) {
-	    // Create a pretty-printer that shows types
-	    DelegatingPrettyPrint p = new javafe.tc.TypePrint();
-	    p.del = new EscPrettyPrint(p, new StandardPrettyPrint(p));
+            System.out.println("\n**** Source code with types:");
+            p.print(System.out, 0, td);
+        }
 
-	    System.out.println("\n**** Source code with types:");
-	    p.print(System.out, 0, td);
-	}
+        // Turn off extended static checking and abort if any errors
+        // occured while type checking *this* TypeDecl:
+        if (errorCount < ErrorSet.errors) {
+            if (stages>1) {
+                stages = 1;
+                ErrorSet.caution("Turning off extended static checking " + 
+                                     "due to type error(s)");
+            }
+            return true;
+        }
 
-	// Turn off extended static checking and abort if any errors
-	// occured while type checking *this* TypeDecl:
-	if (errorCount < ErrorSet.errors) {
-	    if (stages>1) {
-		stages = 1;
-		ErrorSet.caution("Turning off extended static checking " + 
-                                 "due to type error(s)");
-	    }
-	    return true;
-	}
+        // ==== Start stage 2 ====
+        if (stages<2)
+            return false;
+        
 
-	// ==== Start stage 2 ====
-	if (stages<2)
-	    return false;
-	
-
-	// Generate the type-specific background predicate
-	errorCount = ErrorSet.errors;
-	FindContributors scope = new FindContributors(sig);
-	VcToString.resetTypeSpecific();
-
-        if (guardedVC) {
+        // Generate the type-specific background predicate
+        errorCount = ErrorSet.errors;
+        FindContributors scope = new FindContributors(sig);
+        VcToString.resetTypeSpecific();
+    
+        if (options().guardedVC) {
             String locStr = UniqName.locToSuffix(td.locId);
-            String fn = locStr + ".class." + guardedVCFileExt;
-            File f = new File(guardedVCDir, fn);
-            PrintStream o = fileToPrintStream(guardedVCDir, fn);
-            o.println(ClassVCPrefix);
+            String fn = locStr + ".class." + options().guardedVCFileExt;
+            File f = new File(options().guardedVCDir, fn);
+            PrintStream o = fileToPrintStream(options().guardedVCDir, fn);
+            o.println(options().ClassVCPrefix);
             o.println(td.id + "@" + locStr);
             o.print("\n(BG_PUSH ");
             escjava.backpred.BackPred.genTypeBackPred(scope, o);
@@ -992,58 +375,56 @@ public class Main extends javafe.SrcTool
             o.close();
         }
 
-	if (prover != null) {
-	    PrintStream ps = prover.subProcessToStream();
-	    ps.print("\n(BG_PUSH ");
-	    escjava.backpred.BackPred.genTypeBackPred(scope, ps);
-	    ps.println(")");
-	    prover.sendCommands("");
-	}
+        if (prover != null) {
+            PrintStream ps = prover.subProcessToStream();
+            ps.print("\n(BG_PUSH ");
+            escjava.backpred.BackPred.genTypeBackPred(scope, ps);
+            ps.println(")");
+            prover.sendCommands("");
+        }
 
-	// Turn off extended static checking and abort if any type errors
-	// occured while generating the type-specific background predicate:
-	if (errorCount < ErrorSet.errors) {
-	    stages = 1;
-	    ErrorSet.caution("Turning off extended static checking " + 
+        // Turn off extended static checking and abort if any type errors
+        // occured while generating the type-specific background predicate:
+        if (errorCount < ErrorSet.errors) {
+            stages = 1;
+            ErrorSet.caution("Turning off extended static checking " + 
                              "due to type error(s)");
-	    return true;
-	}
+            return true;
+        }
 
-	//====== Stage 2.5 - desugar the annotations, including desugaring model
-	//====== fields and use of methods in annotations
+        //====== Stage 2.5 - desugar the annotations, including desugaring model
+        //====== fields and use of methods in annotations
 
-	annotationHandler.process(td);
+        annotationHandler.process(td);
 
-	// ==== Start stage 3 ====
-	if (3 <= stages) {
+        // ==== Start stage 3 ====
+        if (3 <= stages) {
 
-	    LabelInfoToString.reset();
-	    InitialState initState = new InitialState(scope);
-	    LabelInfoToString.mark();
+            LabelInfoToString.reset();
+            InitialState initState = new InitialState(scope);
+            LabelInfoToString.mark();
+    
+            // Process the elements of "td"; stage 3 continues into stages 4
+            // and 5 inside processTypeDeclElem:
+            if (options().inlineConstructors && !Modifiers.isAbstract(td.modifiers)) {
+                // only process inlined versions of methods
+                for (int i = 0; i < td.elems.size(); i++) {
+                    TypeDeclElem tde = td.elems.elementAt(i);
+                    if (!InlineConstructor.isConstructorInlinable(tde) ||
+                        InlineConstructor.isConstructorInlinedMethod((MethodDecl) tde))
+                    processTypeDeclElem(tde, sig, initState);
+                }
+            } else {
+                for (int i = 0; i < td.elems.size(); i++) 
+                    processTypeDeclElem(td.elems.elementAt(i), sig, initState);
+            }
+        }
 
-	    // Process the elements of "td"; stage 3 continues into stages 4
-	    // and 5 inside processTypeDeclElem:
-	    if (inlineConstructors && !Modifiers.isAbstract(td.modifiers)) {
-		// only process inlined versions of methods
-		for (int i = 0; i < td.elems.size(); i++) {
-		    TypeDeclElem tde = td.elems.elementAt(i);
-		    if (!InlineConstructor.isConstructorInlinable(tde) ||
-			InlineConstructor.isConstructorInlinedMethod((MethodDecl) tde))
-			processTypeDeclElem(tde, sig, initState);
-		}
-	    }
-	    else {
-		for (int i = 0; i < td.elems.size(); i++)
-		    processTypeDeclElem(td.elems.elementAt(i),
-					sig, initState);
-	    }
-	}
-
-	// ==== all done; clean up ====
-	if (prover!=null)
-	    prover.sendCommand("(BG_POP)");
-
-	return false;
+        // ==== all done; clean up ====
+        if (prover!=null)
+            prover.sendCommand("(BG_POP)");
+        
+        return false;
     }
 
 
@@ -1054,38 +435,38 @@ public class Main extends javafe.SrcTool
      * TypeSig for te's parent, and initState != null.
      */
     private void processTypeDeclElem(TypeDeclElem te, TypeSig sig,
-				     InitialState initState) {
-	// Only handle methods and constructors here:
-	if (!(te instanceof RoutineDecl))
-	    return;
-	RoutineDecl r = (RoutineDecl)te;
+                     InitialState initState) {
+        // Only handle methods and constructors here:
+        if (!(te instanceof RoutineDecl))
+            return;
+        RoutineDecl r = (RoutineDecl)te;
 
 
-	long startTime = java.lang.System.currentTimeMillis();
-	if (!quiet) {
-	    String name = TypeCheck.inst.getRoutineName(r) +
+        long startTime = java.lang.System.currentTimeMillis();
+        if (!options().quiet) {
+            String name = TypeCheck.inst.getRoutineName(r) +
                 TypeCheck.inst.getSignature(r);
-	    System.out.println("\n" + sig.toString() + ": " +
-			       name + " ...");
-	}
+            System.out.println("\n" + sig.toString() + ": " +
+                   name + " ...");
+        }
 
-	// Do the actual work, handling not implemented exceptions:
-	String status = "error";
-	try {
-	    status = processRoutineDecl(r, sig, initState);
-	} catch (javafe.util.NotImplementedException e) {
-	    ErrorSet.error(e.getMessage());
-	}
-
-	if (!quiet)
-            System.out.println("    [" + timeUsed(startTime) + "]  "
+        // Do the actual work, handling not implemented exceptions:
+        String status = "error";
+        try {
+            status = processRoutineDecl(r, sig, initState);
+        } catch (javafe.util.NotImplementedException e) {
+            ErrorSet.error(e.getMessage());
+        }
+    
+        if (!options().quiet)
+                System.out.println("    [" + timeUsed(startTime) + "]  "
                                + status);
 
-	/*************************
-         System.out.println("Lines " +
-         (Location.toLineNumber(r.getEndLoc())
-         -Location.toLineNumber(r.getStartLoc()))
-         +" time "+timeUsed(startTime));
+        /*************************
+             System.out.println("Lines " +
+                 (Location.toLineNumber(r.getEndLoc())
+                     -Location.toLineNumber(r.getStartLoc()))
+                     +" time "+timeUsed(startTime));
          *******************/
 
 
@@ -1100,66 +481,63 @@ public class Main extends javafe.SrcTool
      */
     //@ ensures \result != null;
     private String processRoutineDecl(/*@ non_null */ RoutineDecl r,
-				      /*@ non_null */ TypeSig sig,
-				      /*@ non_null */ InitialState initState) {
+                      /*@ non_null */ TypeSig sig,
+                      /*@ non_null */ InitialState initState) {
 
 
-	if (r.body == null) return "passed immediately";
-	if ( Location.toLineNumber(r.getEndLoc()) < startLine )
-            return "skipped";
-	String simpleName = TypeCheck.inst.getRoutineName(r).intern();
-	String fullName = sig.toString() + "." + simpleName +
+        if (r.body == null) return "passed immediately";
+        if ( Location.toLineNumber(r.getEndLoc()) < options().startLine )
+                return "skipped";
+        String simpleName = TypeCheck.inst.getRoutineName(r).intern();
+        String fullName = sig.toString() + "." + simpleName +
             TypeCheck.inst.getSignature(r);
-	fullName = removeSpaces(fullName).intern();
-	if (routinesToCheck != null &&
-	    !routinesToCheck.contains(simpleName) &&
-	    !routinesToCheck.contains(fullName)) {
+        fullName = removeSpaces(fullName).intern();
+        if (options().routinesToCheck != null &&
+                !options().routinesToCheck.contains(simpleName) &&
+                !options().routinesToCheck.contains(fullName)) {
             return "skipped";
-	}
+        }
 
-	// ==== Stage 3 continues here ====
-	/*
-	 * Translate body into a GC:
-	 */
-	long startTime = java.lang.System.currentTimeMillis();
-	long routineStartTime = startTime;
+        // ==== Stage 3 continues here ====
+        /*
+         * Translate body into a GC:
+         */
+        long startTime = java.lang.System.currentTimeMillis();
+        long routineStartTime = startTime;
 
-	// don't check the body if we're checking some other inlining depth
-	Translate.globallyTurnOffChecks(gctranslator.inlineCheckDepth > 0);
+        // don't check the body if we're checking some other inlining depth
+        Translate.globallyTurnOffChecks(gctranslator.inlineCheckDepth > 0);
 
-	LabelInfoToString.resetToMark();
-	GuardedCmd gc = computeBody(r, initState);
-	/*@ uninitialized */ /*@ readable_if stats */ int origgcSize = 0;
-	if (stats) {
-            origgcSize = Util.size(gc);
-	}
+        LabelInfoToString.resetToMark();
+        GuardedCmd gc = computeBody(r, initState);
+        /*@ uninitialized */ /*@ readable_if stats */ int origgcSize = 0;
+        if (options().stats) {
+                origgcSize = Util.size(gc);
+        }
 
-	// restore ordinary checking of assertions
-	NoWarn.useGlobalStatus = false;
+        String gcTime = timeUsed(startTime);
+        startTime = java.lang.System.currentTimeMillis();
+    
+        UniqName.resetUnique();
+        if (gc==null)
+            return "passed immediately";
+        if (options().pgc) {
+            System.out.println("\n**** Guarded Command:");
+            ((EscPrettyPrint)PrettyPrint.inst).print(System.out, 0, gc);
+            System.out.println("");
+        }
+        Set directTargets = Targets.direct(gc);
+        GCSanity.check(gc);
 
-	String gcTime = timeUsed(startTime);
-	startTime = java.lang.System.currentTimeMillis();
-	
-	UniqName.resetUnique();
-	if (gc==null)
-	    return "passed immediately";
-	if (pgc) {
-	    System.out.println("\n**** Guarded Command:");
-	    ((EscPrettyPrint)PrettyPrint.inst).print(System.out, 0, gc);
-	    System.out.println("");
-	}
-	Set directTargets = Targets.direct(gc);
-	GCSanity.check(gc);
+    
+        // ==== Start stage 4 ====
+        if (stages<4)
+            return "ok";
 
+        // Convert GC to DSA:
 
-	// ==== Start stage 4 ====
-	if (stages<4)
-	    return "ok";
-
-	// Convert GC to DSA:
-
-	String dsaTime = "";
-	if (dsa) {
+        String dsaTime = "";
+        if (options().dsa) {
             /*
              * From experiements from POPL01 (Cormac)
              gc = passify ? Passify.compute(gc) : DSA.dsa(gc);
@@ -1167,105 +545,105 @@ public class Main extends javafe.SrcTool
             gc = DSA.dsa(gc);
             dsaTime = timeUsed(startTime);
             startTime = java.lang.System.currentTimeMillis();
-	
-            if (pdsa) {
+    
+            if (options().pdsa) {
                 System.out.println("\n**** Dynamic Single Assignment:");
                 ((EscPrettyPrint)PrettyPrint.inst).print(System.out, 0, gc);
                 System.out.println("");
             }
-	}
-	
-	// ==== Start stage 5 ====
-	if (stages<5)
-	    return "ok";
+        }
+    
+        // ==== Start stage 5 ====
+        if (stages<5)
+            return "ok";
 
-	// Generate the VC for GC:
-	Expr vcBody;
-	/*
+        // Generate the VC for GC:
+        Expr vcBody;
+        /*
          * From experiements from POPL01 (Cormac)
          if(wpnxw != 0 ) {
          vcBody = WpName.compute( gc, wpnxw );
          } else 
          */
-	if (spvc) {
-	    /*  
-	     * From experiements from POPL01 (Cormac)
-             vcBody = wpp ? Wpp.compute(gc, GC.truelit, GC.truelit) : 
-             SPVC.compute(gc);
+        if (options().spvc) {
+            /*  
+             * From experiements from POPL01 (Cormac)
+                 vcBody = wpp ? Wpp.compute(gc, GC.truelit, GC.truelit) : 
+                 SPVC.compute(gc);
              */ 
-	    vcBody = SPVC.compute(gc);
-	} else {
+            vcBody = SPVC.compute(gc);
+        } else {
             vcBody = Ejp.compute(gc, GC.truelit, GC.truelit);
-	}
-	Expr vc = GC.implies(initState.getInitialState(), vcBody);
-        // Attach a label for use in the logfile generated (if any):
-	String label = "vc." + sig.toString() + ".";
-	if (r instanceof MethodDecl)
-	    label += ((MethodDecl)r).id;
-	else
-	    label += "<constructor>";
-	label += "." + UniqName.locToSuffix(r.getStartLoc());
-	vc = LabelExpr.make(r.getStartLoc(), r.getEndLoc(),
-			    false, Identifier.intern(label), vc);
+        }
+        Expr vc = GC.implies(initState.getInitialState(), vcBody);
+            // Attach a label for use in the logfile generated (if any):
+        String label = "vc." + sig.toString() + ".";
+        if (r instanceof MethodDecl)
+            label += ((MethodDecl)r).id;
+        else
+            label += "<constructor>";
+        label += "." + UniqName.locToSuffix(r.getStartLoc());
+        vc = LabelExpr.make(r.getStartLoc(), r.getEndLoc(),
+                false, Identifier.intern(label), vc);
 
-	// Check for VC too big:
-	int usize = Util.size(vc, vclimit);
-	if (usize == -1) {
-	    ErrorSet.caution("Unable to check "
+        // Check for VC too big:
+        int usize = Util.size(vc, options().vclimit);
+        if (usize == -1) {
+            ErrorSet.caution("Unable to check "
                              + TypeCheck.inst.getName(r)
                              + " of type " + TypeSig.getSig(r.parent)
                              + " because its VC is too large");
-	    return "VC too big";
-	}
+            return "VC too big";
+        }
 
-	if (printAssumers) {
+        if (options().printAssumers) {
             System.out.print("ASSUMERS: ");
             System.out.print(Location.toFileName(r.getStartLoc()));
             System.out.print('|');
             System.out.print(fullName);
             System.out.println(LabelInfoToString.get());
-	}
+        }
 
-	String ejpTime = timeUsed(startTime);
-	startTime = java.lang.System.currentTimeMillis();
-	// Translate VC to a string
-	Info.out("[converting VC to a string]");
-        if (Info.on && traceInfo > 0)
+        String ejpTime = timeUsed(startTime);
+        startTime = java.lang.System.currentTimeMillis();
+        // Translate VC to a string
+        Info.out("[converting VC to a string]");
+        if (Info.on && options().traceInfo > 0)
             VcToString.compute(vc, System.out);
-        if (guardedVC) {
+        if (options().guardedVC) {
             String fn = UniqName.locToSuffix(r.locId) + ".method." + 
-                guardedVCFileExt;
-            PrintStream o = fileToPrintStream(guardedVCDir, fn);
-            o.println(MethodVCPrefix);
+                options().guardedVCFileExt;
+            PrintStream o = fileToPrintStream(options().guardedVCDir, fn);
+            o.println(options().MethodVCPrefix);
             o.println(r.parent.id + "@" + UniqName.locToSuffix(r.parent.locId));
             VcToString.compute(vc, o);
             o.close();
             return "guarded VC generation finished";
         }
 
-	String vcTime = timeUsed(startTime);
-	startTime = java.lang.System.currentTimeMillis();
+        String vcTime = timeUsed(startTime);
+        startTime = java.lang.System.currentTimeMillis();
 
-	// ==== Start stage 6 ====
-	if (stages<6)
-	    return "ok";
+        // ==== Start stage 6 ====
+        if (stages<6)
+            return "ok";
 
-	// Check the VC:
+        // Check the VC:
         prover.startProve();
 
-	VcToString.compute(vc, prover.subProcessToStream());
+        VcToString.compute(vc, prover.subProcessToStream());
         //,,,
         //  FindContributors scope = new FindContributors(sig);
         //  System.out.println("+++");
         //  escjava.backpred.BackPred.genTypeBackPred(scope, System.out);
         //  VcToString.compute(vc, System.out);
         //  System.out.println("+++");
-	Enumeration results = prover.streamProve();
+        Enumeration results = prover.streamProve();
 
-	// Process Simplify's output
-	String status = "unexpectedly missing Simplify output";
-	boolean nextWarningNeedsPrecedingLine = true;
-	while (results.hasMoreElements()) {
+        // Process Simplify's output
+        String status = "unexpectedly missing Simplify output";
+        boolean nextWarningNeedsPrecedingLine = true;
+        while (results.hasMoreElements()) {
             SimplifyOutput so = (SimplifyOutput)results.nextElement();
             switch (so.getKind()) {
                 case SimplifyOutput.VALID:
@@ -1369,10 +747,10 @@ public class Main extends javafe.SrcTool
                     Assert.fail("unexpected type of Simplify output");
                     break;
             }
-	}
+        }
 
-	String proofTime = timeUsed(startTime);
-	if (stats) {
+        String proofTime = timeUsed(startTime);
+        if (options().stats) {
             System.out.println("    [Time: "+timeUsed(routineStartTime)
                                +" GC: "+gcTime
                                +" DSA: "+dsaTime
@@ -1386,8 +764,8 @@ public class Main extends javafe.SrcTool
                                +" DSA: "+Util.size(gc)
                                +" VC: "+Util.size(vc)
                                +"]");
-	}
-	return status;
+        }
+        return status;
     }
 
     /**
@@ -1419,7 +797,7 @@ public class Main extends javafe.SrcTool
          * For now, do this via the kludge of calling trBody...  !!!!
          */
         Set predictedSynTargs = null;
-        if (!useAllInvPreBody) {
+        if (!options().useAllInvPreBody) {
             long T = java.lang.System.currentTimeMillis();
             /*
              * Compute translation assuming synTargs is empty:
@@ -1430,11 +808,11 @@ public class Main extends javafe.SrcTool
                                                      /*predictedSynTargs*/new Set(),
                                                      null,
                                                      /* issueCautions */ false);
-            if (noDirectTargetsOpt)
+            if (options().noDirectTargetsOpt)
                 predictedSynTargs = Targets.normal(tmpBody);
             else
                 predictedSynTargs = Targets.direct(tmpBody);
-            if (stats)
+            if (options().stats)
                 System.out.println("      [prediction time: " + timeUsed(T) + "]");
         }
 
@@ -1451,7 +829,7 @@ public class Main extends javafe.SrcTool
 
         Set fullSynTargs = Targets.normal(body);
         Set synTargs;
-        if (noDirectTargetsOpt)
+        if (options().noDirectTargetsOpt)
             synTargs = fullSynTargs;
         else
             synTargs = Targets.direct(body);
@@ -1477,17 +855,18 @@ public class Main extends javafe.SrcTool
         // constructor-inlined methods, then zero out its postconditions
         if (r instanceof MethodDecl &&
             InlineConstructor.isConstructorInlinedMethod((MethodDecl) r))
-            spec.post = ConditionVec.make();
+                spec.post = ConditionVec.make();
 
         GuardedCmd fullCmd = 
             GetSpec.surroundBodyBySpec(body, spec, scope, fullSynTargs,
                                        initState.getPreMap(),
                                        r.getEndLoc());
 
-        if (Main.loopTranslation == LOOP_SAFE && Main.predAbstract) {
+        if (Main.options().loopTranslation == Options.LOOP_SAFE 
+                                 && Main.options().predAbstract) {
             long T = java.lang.System.currentTimeMillis();
             Traverse.compute(fullCmd, initState, gctranslator);
-            if (stats) {
+            if (options().stats) {
                 System.out.println("      [predicate abstraction time: " + 
                                    timeUsed(T) + "]");
             }
@@ -1507,10 +886,10 @@ public class Main extends javafe.SrcTool
      */
     /*@ ensures \result != null */
     public static String timeUsed(long startTime) {
-	if (testMode) return "TIME";
-	long delta = java.lang.System.currentTimeMillis() - startTime;
-
-	return (delta/1000.0) + " s";
+        if (options().testMode) return "TIME";
+        long delta = java.lang.System.currentTimeMillis() - startTime;
+    
+        return (delta/1000.0) + " s";
     }
 
     private static String removeSpaces(/*@ non_null */ String s) {

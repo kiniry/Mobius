@@ -15,6 +15,12 @@ public class TestSuite extends junitutils.TestFilesTestSuite {
 			if (javafe.util.ErrorSet.errors > 0) return 2;
 			return 0;
 		    }
+                    public String expectedStatusReport(String fileToTest,
+                        int ecode, String expectedOutput) {
+                        int ret = expectedIntegerStatus(fileToTest,expectedOutput);
+                        if ((ecode > 0) == (ret > 0)) return null;
+                        return super.expectedStatusReport(fileToTest,ecode,expectedOutput);
+                    }
 		};
 	return suite;
     }

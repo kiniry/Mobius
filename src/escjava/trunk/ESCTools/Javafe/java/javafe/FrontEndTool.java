@@ -29,99 +29,7 @@ import javafe.util.*;
  */
 
 public abstract class FrontEndTool extends Tool {
-
-    /***************************************************
-     *                                                 *
-     * Generating a usage message:		       *
-     *                                                 *
-     **************************************************/
-
-    /**
-     * Print our usage message to <code>System.err</code>. <p>
-     */
-    public final void usage() {
-	System.err.print(name() + ": usage: " + name() + " options* ");
-	showNonOptions();
-	System.err.println("where options include:");
-	showOptions();
-    }
-
-    /**
-     * option to turn off caution warnings.  This is used for 
-     * houdini where it is a pain to weed out the cautions from
-     * code where we are looking only at warnings.
-     */
-    static public boolean noCautions = false;
-
-    /**
-     * Print non-option usage info to <code>System.err</code>.  Output
-     * must include at least one newline. <p>
-     */
-    public abstract void showNonOptions();
-
-    /**
-     * Print option information to <code>System.err</code>.  Each
-     * printed line should be preceeded by two blank spaces. <p>
-     *
-     * Each overriding method should first call
-     * <code>super.showOptions()</code>.<p>
-     */
-    public void showOptions() {
-	System.err.println("  -v -bootclasspath <classpath> "
-			   + "-classpath <classpath>");
-    }
-
-
-    /***************************************************
-     *                                                 *
-     * Standard option processing:		       * 
-     *                                                 *
-     **************************************************/
-
-    /*
-     * Variables to store the settings of the standard front-end options:
-     */ 
-    protected String userPath   = null; 	// null = none supplied
-    protected String sysPath    = null; 	// null = none supplied
-
-
-    /**
-     * Process next tool option. <p>
-     *
-     * See <code>Tool.processOption</code> for the complete
-     * specification of this routine.<p>
-     *
-     * This routine handles the standard front-end options, storing the
-     * resulting information in the preceding instance variables and
-     * <code>Info.on</code>.<p>
-     */
-    public int processOption(String option, String[] args, int offset) {
-	if (option.equals("-v")) {
-	    javafe.util.Info.on = true;
-	    return offset;
-	} else if (option.equals("-noCautions")) {
-	    noCautions = true;
-	    return offset;
-	} else if (option.equals("-classpath")) {
-	    if (offset>=args.length) {
-	        usage();
-	        System.exit(usageError);
-	    }
-	    userPath = args[offset];
-	    return offset+1;
-	} else if (option.equals("-bootclasspath")) {
-	    if (offset>=args.length) {
-	        usage();
-	        System.exit(usageError);
-	    }
-	    sysPath = args[offset];
-	    return offset+1;
-	}
-
-	// Pass on unrecognized options:
-	return super.processOption(option, args, offset);
-    }
-
+    
 
     /***************************************************
      *                                                 *
@@ -144,39 +52,39 @@ public abstract class FrontEndTool extends Tool {
      * default front end values.
      */
     public void setup() {
-	String classPath = userPath;
-	if (classPath==null)
-	    // The behavior of this code differs between 1.1 and 1.2:
-	    classPath = javafe.filespace.ClassPath.current();
-
-	String sys = sysPath;
-	if (sys==null)
-	    // This works only on Sun implementations of Java...
-	    sys = System.getProperty("sun.boot.class.path", null);
-
-	if (sys!=null && !sys.equals("")) {
-	    if (!classPath.equals("")) {
-		classPath += System.getProperty("path.separator", ":");
-	    }
-	    classPath += sys;
-	}
-
-	Info.out("[Full classpath is " + classPath + "]");
-
-	OutsideEnv.init(makeStandardTypeReader(classPath,
-					       makePragmaParser()));
-
-	PrettyPrint.inst = makePrettyPrint();
-	TypeCheck.inst = makeTypeCheck();
+		String classPath = options.userPath;
+		if (classPath==null)
+		    // The behavior of this code differs between 1.1 and 1.2:
+		    classPath = javafe.filespace.ClassPath.current();
+	
+		String sys = options.sysPath;
+		if (sys==null)
+		    // This works only on Sun implementations of Java...
+		    sys = System.getProperty("sun.boot.class.path", null);
+	
+		if (sys!=null && !sys.equals("")) {
+		    if (!classPath.equals("")) {
+			classPath += System.getProperty("path.separator", ":");
+		    }
+		    classPath += sys;
+		}
+	
+		Info.out("[Full classpath is " + classPath + "]");
+	
+		OutsideEnv.init(makeStandardTypeReader(classPath,
+						       makePragmaParser()));
+	
+		PrettyPrint.inst = makePrettyPrint();
+		TypeCheck.inst = makeTypeCheck();
     }
 
-    /** Called to clear any initializations, so that the parser can be
-	called multiple times within one process.  Call before setup()
-	above.
+    /** Called to clear any static initializations, so that the parser can be
+        called multiple times within one process.  Called as part of
+        construction of a new Main.
     */
     public void clear() {
-	ErrorSet.clear();
-	OutsideEnv.clear();
+        ErrorSet.clear();
+        OutsideEnv.clear();
     }
 
     /**
@@ -196,6 +104,18 @@ public abstract class FrontEndTool extends Tool {
      */
     public PragmaParser makePragmaParser() {
         return null;
+    }
+    
+    /**
+     * Called to create a new Options object.
+     */
+     //@ ensures \result != null;
+    public Options makeOptions() {
+     	return new Options();
+    }
+    
+    public int processOptions(String[] args) throws UsageError {
+        return options.processOptions(args);
     }
 
     /**
@@ -240,8 +160,9 @@ public abstract class FrontEndTool extends Tool {
      */
     //@ requires \nonnullelements(args)
     public static void main(String[] args) {
-	// Tool t = new FrontEndTool();
-	// t.run(args);
+        // Tool t = new FrontEndTool();
+        // int result = t.run(args);
+        // if (result != 0) System.exit(result);
     }
 
 
@@ -252,18 +173,24 @@ public abstract class FrontEndTool extends Tool {
     public final int run(String[] args) {
 	try {
 	    // Handle all tool options:
+	    options = makeOptions();
 	    int offset = processOptions(args);
-
+	
 	    // Setup the front end using them:
 	    setup();
-	
+		
 	    // Do our front-end-tool-specific processing:
 	    frontEndToolProcessing(args, offset);
-
+	
+        } catch (UsageError e) {
+            badOptionUsage(e);
+	    ErrorSet.errors++; // Just so that the JUnit tests detect that
+				// an error message was issued
+            return badUsageExitCode;
         } catch (FatalError e) {
-	     Info.out("[" + name() + " exiting due to a fatal error]");
+	    Info.out("[" + name() + " exiting due to a fatal error]");
 	}
-
+	
 	if (ErrorSet.cautions!=0)
 	    System.out.println(ErrorSet.cautions + " caution"
 		+ (ErrorSet.cautions>1 ? "s" : ""));
@@ -273,16 +200,15 @@ public abstract class FrontEndTool extends Tool {
 	if (ErrorSet.errors!=0)
 	    System.out.println(ErrorSet.errors + " error"
 		+ (ErrorSet.errors>1 ? "s" : ""));
-
+	
 	// If we call exit here, we will break GUI-based clients.
 	// Return error status to caller:
 	if (ErrorSet.errors>0)
-	    return 2;
+	    return errorExitCode;
 	else {
-	    return 0;
+	    return okExitCode;
 	}
     }
-
 
     /**
      * Perform any front-end-tool-specific processing. <p>

@@ -60,7 +60,7 @@ public final class UniqName {
       return streamID + "..";
 
     String suffix = Location.toLineNumber(loc) + "." + Location.toColumn(loc);
-    if (streamID == idDefaultSuffixFile && !escjava.Main.guardedVC)
+    if (streamID == idDefaultSuffixFile && !escjava.Main.options().guardedVC)
       return suffix;
     else
       return streamID + "." + suffix;

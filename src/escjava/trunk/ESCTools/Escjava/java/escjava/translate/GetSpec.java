@@ -279,7 +279,7 @@ public final class GetSpec {
     //@ ensures \result != null;
     public static DerivedMethodDecl filterMethodDecl(/*@ non_null */ DerivedMethodDecl dmd,
                                                      /*@ non_null */ FindContributors scope) {
-        if (!Main.filterMethodSpecs) {
+        if (!Main.options().filterMethodSpecs) {
             return dmd;
         }
 
@@ -714,7 +714,7 @@ public final class GetSpec {
              * Does ii mention a variable that this GC call will modify?
              */
             Set invFV = Substitute.freeVars( ii.J );
-            boolean mentionsModifiedVars = Main.useAllInvPostCall ||
+            boolean mentionsModifiedVars = Main.options().useAllInvPostCall ||
                 invFV.containsAny(modifiedVars);
 
             /*
@@ -723,7 +723,7 @@ public final class GetSpec {
              */
             boolean falsifiable = true;
             if (predictedSynTargs!=null) {
-                Assert.notFalse(!Main.useAllInvPreBody);
+                Assert.notFalse(!Main.options().useAllInvPreBody);
                 falsifiable = invFV.containsAny(predictedSynTargs);
             }
 
@@ -821,7 +821,7 @@ public final class GetSpec {
                      * non-null allocated objects of dynamic type U *except*
                      * objectToBeConstructed:
                      */
-                    if (Main.noOutCalls) {
+                    if (Main.options().noOutCalls) {
                         // isAllocated(ii.s, alloc [in pre-state])
                         Expr isAllocated = GC.nary(TagConstants.ISALLOCATED,
                                                    ii.s,
@@ -1009,7 +1009,7 @@ public final class GetSpec {
         /* Include invariant in post only if intersection of vars of
          invariant and vars modified in the method body is nonempty. */
 
-        boolean includeInPost = Main.useAllInvPostBody ||
+        boolean includeInPost = Main.options().useAllInvPostBody ||
             invFV.containsAny(synTargs);
 
         if (ii.isStatic) {
@@ -1161,7 +1161,7 @@ public final class GetSpec {
                 TypeDeclElem tde = td.elems.elementAt(i);
                 if (tde.getTag() == TagConstants.AXIOM || tde.getTag() == TagConstants.JML_REPRESENTS) {
                     ExprDeclPragma axiom = (ExprDeclPragma)tde;
-                    if (!Main.filterInvariants ||
+                    if (!Main.options().filterInvariants ||
                         exprIsVisible(scope.originType, axiom.expr)) {
                         r.addElement( TrAnExpr.trSpecExpr( axiom.expr, null, null ) );
                     }
@@ -1183,7 +1183,7 @@ public final class GetSpec {
             ExprDeclPragma ep = (ExprDeclPragma)enum.nextElement();
             Expr J = ep.expr;
 
-            boolean Jvisible = !Main.filterInvariants ||
+            boolean Jvisible = !Main.options().filterInvariants ||
                 exprIsVisible( scope.originType, J );
 	  
             // System.out.print( (Jvisible?"Visible":"Invisible")+": ");
@@ -1495,7 +1495,7 @@ public final class GetSpec {
     }
 
     private static InvariantInfo mergeInvariants(InvariantInfo ii) {
-        if( !Main.mergeInv )
+        if( !Main.options().mergeInv )
             return ii;
     
         // Combined static/dynamic invariants, indexed by TypeSIg

@@ -346,7 +346,7 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
 
     case TagConstants.GETSCMD: {
       GetsCmd gc = (GetsCmd)g;
-      if (escjava.Main.nvu)
+      if (escjava.Main.options().nvu)
 	write(o, gc.v.decl.id.toString());
       else
 	write(o, escjava.translate.UniqName.variable(gc.v.decl));
@@ -357,7 +357,7 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
 
     case TagConstants.SUBGETSCMD: {
       SubGetsCmd sgc = (SubGetsCmd)g;
-      if (escjava.Main.nvu)
+      if (escjava.Main.options().nvu)
 	write(o, sgc.v.decl.id.toString());
       else
 	write(o, escjava.translate.UniqName.variable(sgc.v.decl));
@@ -370,7 +370,7 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
 
     case TagConstants.SUBSUBGETSCMD: {
       SubSubGetsCmd ssgc = (SubSubGetsCmd)g;
-      if (escjava.Main.nvu)
+      if (escjava.Main.options().nvu)
 	write(o, ssgc.v.decl.id.toString());
       else
 	write(o, escjava.translate.UniqName.variable(ssgc.v.decl));
@@ -386,7 +386,7 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
     case TagConstants.RESTOREFROMCMD: {
       RestoreFromCmd gc = (RestoreFromCmd)g;
       write(o, "RESTORE ");
-      if (escjava.Main.nvu)
+      if (escjava.Main.options().nvu)
 	write(o, gc.v.decl.id.toString());
       else
 	write(o, escjava.translate.UniqName.variable(gc.v.decl));
@@ -443,7 +443,7 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
       }
       write(o, "CALL "+ call.spec.dmd.getId());
       print(o, ind, call.args );
-      if (escjava.Main.showCallDetails) {
+      if (escjava.Main.options().showCallDetails) {
 	writeln(o, " {");
 	spaces(o, ind+INDENT);
 	printSpec(o, ind+INDENT, call.spec );
@@ -507,7 +507,7 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
 	writeln(o, "END");
       }
 
-      if (escjava.Main.showLoopDetails) {
+      if (escjava.Main.options().showLoopDetails) {
 	spaces(o, ind);
 	writeln(o, "PREDICATES:");
 	for (int i = 0; i < lp.predicates.size(); i++) {
@@ -577,7 +577,7 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
 	write(o, "]");
       } else print(o, vd.type);
       write(o, ' ');
-      if (escjava.Main.nvu)
+      if (escjava.Main.options().nvu)
 	write(o, vd.id.toString());
       else
 	write(o, escjava.translate.UniqName.variable(vd));
@@ -669,7 +669,7 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
 
     case TagConstants.VARIABLEACCESS: {
       VariableAccess lva = (VariableAccess)e;
-      if (escjava.Main.nvu)
+      if (escjava.Main.options().nvu)
 	write(o, lva.decl.id.toString());
       else
 	write(o, escjava.translate.UniqName.variable(lva.decl));
@@ -744,7 +744,7 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
 	write(o, prefix );
 	self.print(o, decl.type);
 	write(o, ' ');
-	if (escjava.Main.nvu)
+	if (escjava.Main.options().nvu)
 	  write(o, decl.id.toString());
 	else
 	  write(o, escjava.translate.UniqName.variable(decl));
@@ -781,7 +781,7 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
       write(o, "[subst ");
       self.print(o, ind, subst.val);
       write(o, " for ");
-      if (escjava.Main.nvu)
+      if (escjava.Main.options().nvu)
 	write(o, subst.var.id.toString());
       else
 	write(o, escjava.translate.UniqName.variable(subst.var));

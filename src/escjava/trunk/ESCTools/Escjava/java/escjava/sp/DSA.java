@@ -31,7 +31,7 @@ public class DSA {
   public static GuardedCmd dsa(/*@ non_null */ GuardedCmd g, VarMapPair out) {
     RefInt preOrderCount;
     Hashtable lastVarUse;
-    if (Main.lastVarUseOpt) {
+    if (Main.options().lastVarUseOpt) {
       preOrderCount = new RefInt(0);
       lastVarUse = new Hashtable();  // mapping GenericVarDecl to RefInt
       //@ set lastVarUse.keyType = \type(GenericVarDecl);

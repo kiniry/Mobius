@@ -19,6 +19,7 @@ import javafe.tc.ConstantExpr;
 import javafe.tc.TypeSig;
 
 import escjava.Main;
+import escjava.Options;
 
 import escjava.ast.*;
 import escjava.ast.TagConstants;
@@ -123,8 +124,8 @@ public final class Translate {
     // "code" now contains two marks followed by what ESCJ 16 calls "CS"
     // (except for the "assume !isAllocated(objectToBeConstructed, alloc)",
     // which has already been prepended to "code" here)
-    if (Main.traceInfo > 0 &&
-	(inlineParent != null || Main.traceInfo > 1)) {
+    if (Main.options().traceInfo > 0 &&
+	(inlineParent != null || Main.options().traceInfo > 1)) {
       // add a label to track the implicit return ("falling off the end
       // of the routine")
       int loc = rd.getEndLoc();
@@ -708,18 +709,18 @@ public final class Translate {
     LoopCmd loop = GC.loop(sLoop, eLoop, locHotspot, h,
 			   invs, decs, skolemConsts, preds,
 			   tempVars, guard, body);
-    switch (Main.loopTranslation) {
-      case Main.LOOP_FAST:
-      case Main.LOOP_FALL_THRU:
+    switch (Main.options().loopTranslation) {
+      case Options.LOOP_FAST:
+      case Options.LOOP_FALL_THRU:
 	desugarLoopFast(loop);
 	break;
 
-      case Main.LOOP_SAFE:
+      case Options.LOOP_SAFE:
 	desugarLoopSafe(loop);
 	break;
 
       default:
-	Assert.fail("unexpected loop translation scheme: " + Main.loopTranslation);
+	Assert.fail("unexpected loop translation scheme: " + Main.options().loopTranslation);
     }
 
     code.addElement(loop);
@@ -761,8 +762,8 @@ public final class Translate {
 
     String locString = UniqName.locToSuffix(loop.getStartLoc()) + "#";
 
-    int numOfComponents = 3 * Main.loopUnrollCount +
-                          (Main.loopUnrollHalf ? 2 : 1);
+    int numOfComponents = 3 * Main.options().loopUnrollCount +
+                          (Main.options().loopUnrollHalf ? 2 : 1);
     int iComp = 0;
     int i = 0;
     for ( ; true; i++) {
@@ -770,7 +771,7 @@ public final class Translate {
 
       // -- J --
       Assert.notFalse(iComp != numOfComponents);
-      if (Main.traceInfo > 0) {
+      if (Main.options().traceInfo > 0) {
 	String label = locString + i;
 	code.addElement(traceInfoLabelCmd(loop.getStartLoc(),
 					  loop.getEndLoc(),
@@ -784,7 +785,7 @@ public final class Translate {
       // -- B --
       addLoopDecreases(loop, 0);  // fOld = F;
       GuardedCmd B = loop.guard;
-      if (Main.traceInfo > 0 && 0 < i) {
+      if (Main.options().traceInfo > 0 && 0 < i) {
 	B = cloneGuardedCommand(B);
       }
       code.addElement(B);
@@ -794,7 +795,7 @@ public final class Translate {
       }
       // -- S --
       GuardedCmd S = loop.body;
-      if (Main.traceInfo > 0 && 0 < i) {
+      if (Main.options().traceInfo > 0 && 0 < i) {
 	S = cloneGuardedCommand(S);
       }
       code.addElement(S);
@@ -813,7 +814,7 @@ public final class Translate {
     code.addElement(iter);
 
     // Stop unrolling here
-    if (Main.loopTranslation != Main.LOOP_FALL_THRU) {
+    if (Main.options().loopTranslation != Options.LOOP_FALL_THRU) {
       code.addElement(GC.fail());
     }
 
@@ -957,7 +958,7 @@ public final class Translate {
     Set vds = Targets.normal(GC.block(loop.tempVars, S));
     GuardedCmd modifyGc = modify(vds, loop.locStart);
 
-    if( Main.preciseTargets ) {
+    if( Main.options().preciseTargets ) {
 	Set aTargets = ATarget.compute( GC.block(loop.tempVars, loop ));
 	modifyGc = modifyATargets( aTargets, S.getStartLoc());
     }
@@ -977,7 +978,7 @@ public final class Translate {
       code.addElement(GC.assume(cond.pred));
     }
 
-    if (Main.traceInfo > 0) {
+    if (Main.options().traceInfo > 0) {
 	String label = UniqName.locToSuffix(loop.getStartLoc());
 	code.addElement(traceInfoLabelCmd(loop, "LoopIter"));
     }
@@ -1002,7 +1003,7 @@ public final class Translate {
     }
   }
 
-  //@ requires Main.traceInfo > 0;
+  //@ requires Main.options().traceInfo > 0;
   private GuardedCmd traceInfoLabelCmd(/*@ non_null */ ASTNode ast,
 				       /*@ non_null */ String traceInfoTag) {
     int sloc = ast.getStartLoc();
@@ -1010,7 +1011,7 @@ public final class Translate {
     return traceInfoLabelCmd(sloc, eloc, traceInfoTag, sloc);
   }
 
-  //@ requires Main.traceInfo > 0;
+  //@ requires Main.options().traceInfo > 0;
   //@ requires loc != Location.NULL;
   private GuardedCmd traceInfoLabelCmd(/*@ non_null */ ASTNode ast,
 				       /*@ non_null */ String traceInfoTag,
@@ -1019,7 +1020,7 @@ public final class Translate {
 			     traceInfoTag, loc);
   }
 
-  //@ requires Main.traceInfo > 0;
+  //@ requires Main.options().traceInfo > 0;
   //@ requires loc != Location.NULL;
   private GuardedCmd traceInfoLabelCmd(int sloc, int eloc,
 				       /*@ non_null */ String traceInfoTag,
@@ -1032,7 +1033,7 @@ public final class Translate {
   private GuardedCmd traceInfoLabelCmd(int sloc, int eloc,
 				       /*@ non_null */ String traceInfoTag,
 				       String sortSeq) {
-    Assert.notFalse(Main.traceInfo > 0);
+    Assert.notFalse(Main.options().traceInfo > 0);
 
     String str = "trace." + traceInfoTag + "^" + sortSeq;
     Identifier id = Identifier.intern(str);
@@ -1237,7 +1238,7 @@ public final class Translate {
 	  ReturnStmt r = (ReturnStmt)stmt;
 	  if (r.expr != null)
 	      code.addElement(GC.gets(GC.resultvar, ptrExpr(r.expr)));
-	  if (Main.traceInfo > 0) {
+	  if (Main.options().traceInfo > 0) {
 	      // add a label to track the return
 	      GuardedCmd g = traceInfoLabelCmd(r, "Return", r.loc);	
 	      code.addElement(g);
@@ -1251,7 +1252,7 @@ public final class Translate {
 	  ThrowStmt t = (ThrowStmt)stmt;
 	  code.addElement(GC.gets(GC.xresultvar, ptrExpr(t.expr)));
 	  nullCheck(t.expr, GC.xresultvar, t.getStartLoc());
-	  if (Main.traceInfo > 0) {
+	  if (Main.options().traceInfo > 0) {
 	      // add a label to track the throw
 	      GuardedCmd g = traceInfoLabelCmd(t, "Throw", t.loc);
 	      code.addElement(g);
@@ -1314,7 +1315,7 @@ public final class Translate {
 	      }
 	    
 	      GuardedCmd boxRhs = GC.assume(C);
-	      if (Main.traceInfo > 0) {
+	      if (Main.options().traceInfo > 0) {
 		  // add a label to track the switch branch taken
 		  GuardedCmd g = traceInfoLabelCmd(s, "Switch");
 		  boxRhs = GC.seq(g, boxRhs);
@@ -1468,7 +1469,7 @@ public final class Translate {
 	  Expr test = ptrExpr(i.expr);
 
 	  code.push();
-	  if (Main.traceInfo > 0) {
+	  if (Main.options().traceInfo > 0) {
 	      // add a label to track the if branch taken
 	      GuardedCmd g = traceInfoLabelCmd(i.thn, "Then");
 	      code.addElement(g);
@@ -1477,7 +1478,7 @@ public final class Translate {
 	  GuardedCmd thn = GC.seq(GuardedCmdVec.popFromStackVector(code));
 
 	  code.push();          
-	  if (Main.traceInfo > 0) {
+	  if (Main.options().traceInfo > 0) {
 	      // add a label to track the if branch taken
 	      GuardedCmd g = traceInfoLabelCmd(i.els, "Else");
 	      code.addElement(g);
@@ -1493,7 +1494,7 @@ public final class Translate {
 	{
 	  BreakStmt b = (BreakStmt)stmt;
 	  Stmt label = TypeCheck.inst.getBranchLabel(b);
-	  if (Main.traceInfo > 0) {
+	  if (Main.options().traceInfo > 0) {
 	      // add a label to track the break
 	      GuardedCmd g = traceInfoLabelCmd(b, "Break", b.loc);
 	      code.addElement(g);
@@ -1506,7 +1507,7 @@ public final class Translate {
 	{ 
 	  ContinueStmt c = (ContinueStmt)stmt;
 	  Stmt label = TypeCheck.inst.getBranchLabel(c);
-	  if (Main.traceInfo > 0) {
+	  if (Main.options().traceInfo > 0) {
 	      // add a label to track the continue
 	      GuardedCmd g = traceInfoLabelCmd(c, "Continue", c.loc);
 	      code.addElement(g);
@@ -1567,7 +1568,7 @@ public final class Translate {
 	  VariableAccess resultSave = adorn(GC.resultvar);
 	  VariableAccess xresultSave = adorn(GC.xresultvar); 
 
-	  if (Main.traceInfo > 0) {
+	  if (Main.options().traceInfo > 0) {
 	    // add a label to track that the finally clause is entered because
 	    // an exception was raised
 	    GuardedCmd g = traceInfoLabelCmd(x, "FinallyBegin", x.locFinally);
@@ -1592,7 +1593,7 @@ public final class Translate {
 	  code.addElement(GC.gets(GC.ecvar, ecSave));
 	  code.addElement(GC.gets(GC.resultvar, resultSave));
 	  code.addElement(GC.gets(GC.xresultvar, xresultSave));
-	  if (Main.traceInfo > 0) {
+	  if (Main.options().traceInfo > 0) {
 	    // add a label to track that the finally clause is exited when it
 	    // was entered due to that an exception was raised
 	    GuardedCmd g = traceInfoLabelCmd(x, "FinallyEnd", x.getEndLoc());
@@ -1792,7 +1793,7 @@ public final class Translate {
 	  }
 
       case TagConstants.CLASSDECLSTMT: 
-	  if (this.issueCautions && !escjava.Main.noNotCheckedWarnings) {
+	  if (this.issueCautions && !escjava.Main.options().noNotCheckedWarnings) {
 	      ErrorSet.caution(stmt.getStartLoc(),
 			       "Not checking block-level types");
 	  }	  
@@ -2080,7 +2081,7 @@ public final class Translate {
 	  ExprVec args = ExprVec.make(ni.args.size());
 
 	  if (ni.anonDecl!=null) {
-              if (this.issueCautions && ! Main.noNotCheckedWarnings) {
+              if (this.issueCautions && ! Main.options().noNotCheckedWarnings) {
 		  ErrorSet.caution(ni.anonDecl.loc,
 				   "Not checking body of anonymous class" +
 				   " (subclass of " +
@@ -2207,7 +2208,7 @@ public final class Translate {
 	  VariableAccess result= fresh(x, x.locQuestion, "cond");
 	  
 	  code.push();
-	  if (Main.traceInfo > 0) {
+	  if (Main.options().traceInfo > 0) {
 	      // add a label to track the if branch taken
 	      GuardedCmd g = traceInfoLabelCmd(x.thn, "Then");
 	      code.addElement(g);
@@ -2217,7 +2218,7 @@ public final class Translate {
 	  GuardedCmd thenbody= GC.seq(GuardedCmdVec.popFromStackVector(code));
 	  
 	  code.push();
-	  if (Main.traceInfo > 0) {
+	  if (Main.options().traceInfo > 0) {
 	      // add a label to track the if branch taken
 	      GuardedCmd g = traceInfoLabelCmd(x.els, "Else");
 	      code.addElement(g);
@@ -2296,7 +2297,7 @@ public final class Translate {
 	    thn= rightbody;
 	    els= GC.gets(result, GC.falselit);
 	  }
-	  if (Main.traceInfo > 0) {
+	  if (Main.options().traceInfo > 0) {
 	      // add labels to track which operands are evaluated
 	      GuardedCmd g = traceInfoLabelCmd(x, "FirstOpOnly", x.locOp);
 	      if (tag == TagConstants.OR) {
@@ -2888,7 +2889,7 @@ public final class Translate {
       case TagConstants.VARIABLEACCESS: {
 	GenericVarDecl d = ((VariableAccess)E).decl;
 	SimpleModifierPragma nonNullPragma = GetSpec.NonNullPragma(d);
-	if (nonNullPragma != null && !Main.guardedVC) {
+	if (nonNullPragma != null && !Main.options().guardedVC) {
 	  LabelInfoToString.recordAnnotationAssumption(nonNullPragma.getStartLoc());
 	  return;
 	}
@@ -2898,7 +2899,7 @@ public final class Translate {
       case TagConstants.FIELDACCESS: {
 	FieldDecl fd = ((FieldAccess)E).decl;
 	SimpleModifierPragma nonNullPragma = GetSpec.NonNullPragma(fd);
-	if (nonNullPragma != null && !Main.guardedVC) {
+	if (nonNullPragma != null && !Main.options().guardedVC) {
 	  if (Modifiers.isStatic(fd.modifiers) ||
 	      rdCurrent.getTag() != TagConstants.CONSTRUCTORDECL ||
 	      rdCurrent.parent != fd.parent) {
@@ -3102,7 +3103,7 @@ public final class Translate {
 	Expr nullcheck = GC.nary(TagConstants.REFNE, rval, GC.nulllit);
 	addCheck(locAssignOp, TagConstants.CHKNONNULL, nullcheck,
 		 nonNullPragma.getStartLoc());
-      } else if (!Main.excuseNullInitializers || !inInitializerContext ||
+      } else if (!Main.options().excuseNullInitializers || !inInitializerContext ||
 		 trim(Rval).getTag() != TagConstants.NULLLIT) {
 	nullCheck(Rval, rval, locAssignOp, TagConstants.CHKNONNULL,
 		  nonNullPragma.getStartLoc());
@@ -3412,7 +3413,7 @@ public final class Translate {
 		 cond.locPragmaDecl);
     }
 
-    if (inline != null && Main.traceInfo > 0) {
+    if (inline != null && Main.options().traceInfo > 0) {
       // add a label to say that a routine is being called
       GuardedCmd g = traceInfoLabelCmd(call.scall, call.ecall,
 				       "Call", call.scall);
@@ -3459,7 +3460,7 @@ public final class Translate {
 		     GC.subst( call.scall, call.ecall, pt, cond.pred ),
 		     cond.locPragmaDecl);
 	}
-	if (Main.traceInfo > 1) {
+	if (Main.options().traceInfo > 1) {
 	  // add a label to say that the inlined call has returned
 	  GuardedCmd g = traceInfoLabelCmd(call.scall, call.ecall,
 					   "CallReturn", call.scall);
@@ -3503,7 +3504,7 @@ public final class Translate {
 	code.addElement( GC.assume( GC.nary(TagConstants.ANYEQ, GC.ecvar, GC.ec_return )));
 	
 	code.push();
-	if (Main.traceInfo > 0) {
+	if (Main.options().traceInfo > 0) {
 	    // add a label to track whether the method invocation throws an
 	    // exception
 	    GuardedCmd g = traceInfoLabelCmd(scall, ecall,
@@ -3568,7 +3569,7 @@ public final class Translate {
 
     // Set the inlining bits appropriately, according to the
     // flag -inlineFromConstructors.
-    if (Main.inlineFromConstructors && inConstructorContext &&
+    if (Main.options().inlineFromConstructors && inConstructorContext &&
 	!isRecursiveInvocation(rd)) {
       // inline if "rd" is an instance method in the same class as rdCurrent
       if (rd instanceof MethodDecl && !Modifiers.isStatic(rd.modifiers) &&
@@ -3755,7 +3756,7 @@ public final class Translate {
 
     public static void addTraceLabelSequenceNumbers(/*@ non_null */ GuardedCmd gc) {
       // order the body's trace labels by execution order
-      if (Main.traceInfo > 0) {
+      if (Main.options().traceInfo > 0) {
 	orderTraceLabels(gc, 0);
       }
     }

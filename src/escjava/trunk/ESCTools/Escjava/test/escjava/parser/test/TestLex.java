@@ -30,6 +30,7 @@ public class TestLex {
     EscPrettyPrint p = new EscPrettyPrint();
     p.del = new StandardPrettyPrint(p);
     PrettyPrint.inst = p;
+    escjava.Main.options = new escjava.Options();
 
     boolean lookahead = false;
     int argi = 0;

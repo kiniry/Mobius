@@ -244,16 +244,16 @@ public class VcToString {
 
     case TagConstants.GUARDEXPR:
       {
-        if (!escjava.Main.guardedVC) {
+        if (!escjava.Main.options().guardedVC) {
           Assert.fail("VcToString.reallyPrintFormula: unreachable");
         } else {
           GuardExpr ge = (GuardExpr)e;
-          String var = escjava.Main.guardedVCPrefix + 
+          String var = escjava.Main.options().guardedVCPrefix + 
             UniqName.locToSuffix(ge.locPragmaDecl);
           out.print("(IMPLIES |" + var + "| ");
           printFormula( out, subst, ge.expr );
           out.print(")");
-          escjava.Main.guardVars.add(var);
+          escjava.Main.options().guardVars.add(var);
           break;
         }
       }

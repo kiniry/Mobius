@@ -54,7 +54,7 @@ public final class GC {
 
   public static GuardedCmd seq(/*@ non_null */ GuardedCmdVec cmds) {
     int n;
-    if (!Main.peepOptGC) {
+    if (!Main.options().peepOptGC) {
       n = cmds.size();
     } else {
       n = 0;
@@ -79,7 +79,7 @@ public final class GC {
 	      cmds.setElementAt(g, n);
 	      n++;
 	      if ((tag != TagConstants.ASSERTCMD ||
-		   !Main.noPeepOptGCAssertFalse) &&
+		   !Main.options().noPeepOptGCAssertFalse) &&
 		  isFalse(((ExprCmd)g).pred)) {
 		// don't keep any further commands, since they won't
 		// be reached anyway
@@ -158,7 +158,7 @@ public final class GC {
   }
 
   public static GuardedCmd choosecmd(GuardedCmd a, GuardedCmd b) {
-    if (Main.peepOptGC) {
+    if (Main.options().peepOptGC) {
       if (a.getTag() == TagConstants.ASSUMECMD && isFalse(((ExprCmd)a).pred)) {
 	return b;
       }
@@ -176,7 +176,7 @@ public final class GC {
   }
 
   public static GuardedCmd trycmd(GuardedCmd c, GuardedCmd a) {
-    if (Main.peepOptGC) {
+    if (Main.options().peepOptGC) {
       if (a.getTag() == TagConstants.RAISECMD) {
 	return c;
       }
@@ -269,7 +269,7 @@ public final class GC {
 				 int locPragmaDecl,
 				 Object aux) {
     Assert.notFalse(locUse != Location.NULL);
-    if (Main.guardedVC && locPragmaDecl != Location.NULL) {
+    if (Main.options().guardedVC && locPragmaDecl != Location.NULL) {
       pred = GuardExpr.make(pred, locPragmaDecl);
     }
     switch( NoWarn.getChkStatus( errorName, locUse, locPragmaDecl) ) {
@@ -317,7 +317,7 @@ public final class GC {
   //@ requires locPragmaDecl != Location.NULL;
   public static GuardedCmd assumeAnnotation(int locPragmaDecl,
 					    /*@ non_null */ Expr p) {
-    if (Main.guardedVC && locPragmaDecl != Location.NULL) {
+    if (Main.options().guardedVC && locPragmaDecl != Location.NULL) {
       p = GuardExpr.make(p, locPragmaDecl);
     }
     LabelInfoToString.recordAnnotationAssumption(locPragmaDecl);
@@ -325,7 +325,7 @@ public final class GC {
   }
 
   public static GuardedCmd assume(Expr p) {
-    if (Main.peepOptGC && isBooleanLiteral(p, true)) {
+    if (Main.options().peepOptGC && isBooleanLiteral(p, true)) {
       return skip();
     }
     return ExprCmd.make(TagConstants.ASSUMECMD, p, Location.NULL);
@@ -347,7 +347,7 @@ public final class GC {
                                             int errorName, Expr pred,
                                             int locPragmaDecl,
                                             Object aux) {
-    if (Main.assertContinue) {
+    if (Main.options().assertContinue) {
       Identifier idn = Identifier.intern("assertContinue" +
 					 assertContinueCounter);
       assertContinueCounter++;
@@ -356,7 +356,7 @@ public final class GC {
       pred = or(pred, acVar);
     }
     String name = TagConstants.toString(errorName);
-    if (aux != null && Main.suggest) {
+    if (aux != null && Main.options().suggest) {
       int n = AuxInfo.put(aux);
       name += "/" + n;
     }
@@ -374,7 +374,7 @@ public final class GC {
   //@ requires subst.elementType <: \type(Expr) ;
   public static Expr subst(int sloc, int eloc, Hashtable subst, Expr target)
     {
-      if ( !Main.lazySubst ) {
+      if ( !Main.options().lazySubst ) {
 	// perform substitution eagerly
 
 	return Substitute.doSubst( subst, target );
@@ -396,7 +396,7 @@ public final class GC {
   //@ requires var!=null && val!=null
   public static Expr subst(int sloc, int eloc,
 			   GenericVarDecl var, Expr val, Expr target) {
-    if ( !Main.lazySubst ) {
+    if ( !Main.options().lazySubst ) {
       // perform substitution eagerly
       Hashtable t = new Hashtable();
       t.put( var, val );
@@ -587,7 +587,7 @@ public final class GC {
 
   public static Expr nary(int sloc, int eloc, int tag, ExprVec ev) {
 
-    if( Main.peepOptE ) {
+    if( Main.options().peepOptE ) {
       // Do some optimizations ...
 
       switch( tag ) {
@@ -630,7 +630,7 @@ public final class GC {
 	    Expr c0 = ev.elementAt(0);
 	    Expr c1 = ev.elementAt(1);
 
-	    if( Main.bubbleNotDown ) {
+	    if( Main.options().bubbleNotDown ) {
 	      return or( sloc, eloc,
 			 not( sloc, eloc, c0 ),
 			 c1 );
@@ -670,7 +670,7 @@ public final class GC {
 	      return falselit;
 	    } else if ( c0.getTag() == TagConstants.BOOLNOT ) {
 		return ((NaryExpr)c0).exprs.elementAt(0);
-	    } else if( Main.bubbleNotDown ) {
+	    } else if( Main.options().bubbleNotDown ) {
 	      switch( c0.getTag() ) {
 	      case TagConstants.BOOLOR:
 	      case TagConstants.BOOLAND:
@@ -794,7 +794,7 @@ public final class GC {
     Assert.notNull(v);
     Assert.notNull(e);
 
-    if( Main.peepOptE ) {
+    if( Main.options().peepOptE ) {
 
       // Change forall (a) ((a==b) ==> e) -> e[b/a] if b a variable
 
@@ -849,7 +849,7 @@ public final class GC {
 	  return e;
       }
 
-      if( Main.peepOptE ) {
+      if( Main.options().peepOptE ) {
 
 	// change Q(a)Q(b)e -> Q(a b) e, where Q is a quantifier
 

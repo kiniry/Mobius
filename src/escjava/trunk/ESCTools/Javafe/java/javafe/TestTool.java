@@ -36,51 +36,56 @@ public class TestTool extends SrcTool {
      * Used in usage and error messages.<p>
      */
     public String name() { return "TestTool"; }
+    
+    public javafe.Options makeOptions() { return new Options(); }
+    
+    public final Options options() { return (Options)options; }
 
-
-    /**
-     * Print option information to <code>System.err</code>.  Each
-     * printed line should be preceeded by two blank spaces. <p>
-     *
-     * Each overriding method should first call
-     * <code>super.showOptions()</code>.<p>
-     */
-    public void showOptions() {
-        super.showOptions();
-
-	System.err.println("  -superclasses");
-    }
-
-
-    /***************************************************
-     *                                                 *
-     * Option processing:			       *
-     *                                                 *
-     **************************************************/
-
-    /**
-     * Should we chase superclass pointers?  Defaults to no, set by
-     * <code>-superclasses</code>.
-     */
-    public boolean chaseSuperclasses = false;
-
-
-    /**
-     * Process next tool option. <p>
-     *
-     * See <code>Tool.processOption</code> for the complete
-     * specification of this routine.<p>
-     *
-     * This routine handles the <code>-superclasses</code> option.<p>
-     */
-    public int processOption(String option, String[] args, int offset) {
-	if (option.equals("-superclasses")) {
-	    chaseSuperclasses = true;
-	    return offset;
+    public class Options extends SrcToolOptions {
+	    /**
+	     * Print option information to <code>System.err</code>.  Each
+	     * printed line should be preceeded by two blank spaces. <p>
+	     *
+	     * Each overriding method should first call
+	     * <code>super.showOptions()</code>.<p>
+	     */
+	    public String showOptions(boolean all) {
+	        return super.showOptions(all) + ("  -superclasses") + eol;
+	    }
+	
+	
+	    /***************************************************
+	     *                                                 *
+	     * Option processing:			       *
+	     *                                                 *
+	     **************************************************/
+	
+	    /**
+	     * Should we chase superclass pointers?  Defaults to no, set by
+	     * <code>-superclasses</code>.
+	     */
+	    public boolean chaseSuperclasses = false;
+	
+	
+	/**
+	 * Process next tool option. <p>
+	 *
+	 * See <code>Tool.processOption</code> for the complete
+	 * specification of this routine.<p>
+	 *
+	 * This routine handles the <code>-superclasses</code> option.<p>
+	 */
+	public int processOption(String option, String[] args, int offset) 
+                                     throws UsageError {
+	    if (option.equals("-superclasses")) {
+		chaseSuperclasses = true;
+		return offset;
+	    }
+    
+	    // Pass on unrecognized options:
+	    return super.processOption(option, args, offset);
 	}
-
-	// Pass on unrecognized options:
-	return super.processOption(option, args, offset);
+	    
     }
 
 
@@ -103,9 +108,9 @@ public class TestTool extends SrcTool {
      */
     //@ requires \nonnullelements(args)
     public static void main(String[] args) {
-	Tool t = new TestTool();
-	int result = t.run(args);
-	if (result != 0) System.exit(result);
+		Tool t = new TestTool();
+		int result = t.run(args);
+		if (result != 0) System.exit(result);
     }
 
 
@@ -120,20 +125,20 @@ public class TestTool extends SrcTool {
      * outside type that SrcTool is to process. <p>
      */
     public void handleTD(TypeDecl td) {
-	Info.out("[processing "
-		+ TypeSig.getSig(td).getExternalName());
-
-	if (!chaseSuperclasses)
-	   return;
-
-	TypeSig current = TypeSig.getSig(td);
-	while (current!=null) {
-	    Info.out("  At " + current.getExternalName());
-
-	    current = getSuperClass(current.getTypeDecl());
-	}
-
-	Info.out("]");
+		Info.out("[processing "
+			+ TypeSig.getSig(td).getExternalName());
+	
+		if (!options().chaseSuperclasses)
+		   return;
+	
+		TypeSig current = TypeSig.getSig(td);
+		while (current!=null) {
+		    Info.out("  At " + current.getExternalName());
+	
+		    current = getSuperClass(current.getTypeDecl());
+		}
+	
+		Info.out("]");
     }
 
 
@@ -144,38 +149,38 @@ public class TestTool extends SrcTool {
      * Returns null if none exists.<p>
      */
     public TypeSig getSuperClass(TypeDecl td) {
-	// If  td is not a class, then it has no superclass:
-	if (!(td instanceof ClassDecl))
-	    return null;
-	ClassDecl cd = (ClassDecl)td;
-
-	// Get td's superclass name:
-	TypeSig root = Types.javaLangObject();
-	if (TypeSig.getSig(td) == root)
-	    return null;
-	if (cd.superClass == null) {
-	    Info.out("    extended by java.lang.Object");
-	    return root;
-	}
-
-	Name superClassName = cd.superClass.name;
-	Info.out("    extended by " + superClassName.printName());
-
-	int sz = superClassName.size();
-	String[] P = superClassName.toStrings(sz-1);
-	String   T = superClassName.identifierAt(sz-1).toString();
-
-	if (sz == 1) {
-	    // Simple name -- assume for now in same package:
-	    // This is a bit of a hack:
-	    TypeSig sig = TypeSig.getSig(td);
-	    P = sig.packageName;
-	}
-
-	TypeSig S = OutsideEnv.lookup(P, T);
-	if (S == null)
-	    ErrorSet.error("unable to load type "
-				+ superClassName.printName());
-	return S;
+		// If  td is not a class, then it has no superclass:
+		if (!(td instanceof ClassDecl))
+		    return null;
+		ClassDecl cd = (ClassDecl)td;
+	
+		// Get td's superclass name:
+		TypeSig root = Types.javaLangObject();
+		if (TypeSig.getSig(td) == root)
+		    return null;
+		if (cd.superClass == null) {
+		    Info.out("    extended by java.lang.Object");
+		    return root;
+		}
+	
+		Name superClassName = cd.superClass.name;
+		Info.out("    extended by " + superClassName.printName());
+	
+		int sz = superClassName.size();
+		String[] P = superClassName.toStrings(sz-1);
+		String   T = superClassName.identifierAt(sz-1).toString();
+	
+		if (sz == 1) {
+		    // Simple name -- assume for now in same package:
+		    // This is a bit of a hack:
+		    TypeSig sig = TypeSig.getSig(td);
+		    P = sig.packageName;
+		}
+	
+		TypeSig S = OutsideEnv.lookup(P, T);
+		if (S == null)
+		    ErrorSet.error("unable to load type "
+					+ superClassName.printName());
+		return S;
     }
 }

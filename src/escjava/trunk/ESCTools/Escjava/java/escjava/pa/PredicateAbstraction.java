@@ -64,7 +64,7 @@ public class PredicateAbstraction
 
 	Set vds = Targets.normal(body);
 
-	if( Main.inferPredicates ) {
+	if( Main.options().inferPredicates ) {
 	    //System.out.println("Before inf: "+g.predicates);
 	    inferPredicates(g, env, vds);
 	    //System.out.println("After inf: "+g.predicates);
@@ -90,7 +90,7 @@ public class PredicateAbstraction
 	Translate translate = (new Translate());
 	GuardedCmd modifyGc = translate.modify(vds, g.locStart);
 
-	if( Main.preciseTargets ) {
+	if( Main.options().preciseTargets ) {
 	    Set aTargets = ATarget.compute( VarInCmd.make(g.tempVars, g ));
 	    modifyGc = translate.modifyATargets( aTargets, g.getStartLoc());
 	}
@@ -157,7 +157,7 @@ public class PredicateAbstraction
 	    bodyDesugared = Traverse.computeHelper(body, c, env);	
 	    milliSecsUsed -= java.lang.System.currentTimeMillis();
 
-	    if( Main.pgc ) {
+	    if( Main.options().pgc ) {
 		System.out.println("\n**** Guarded Command c:");
 		((EscPrettyPrint)PrettyPrint.inst).print(System.out, 0, c);
 		System.out.println("");

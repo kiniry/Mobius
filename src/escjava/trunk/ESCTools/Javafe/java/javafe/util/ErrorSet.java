@@ -109,7 +109,8 @@ public class ErrorSet
      * the user.  Increments <code>cautions</code> by one.<p>
      */
     public static void caution(String msg) {
-	if (FrontEndTool.noCautions) {
+	if (FrontEndTool.options.noCautions) {
+
 	    return;
 	}
 	cautions++;
@@ -127,7 +128,7 @@ public class ErrorSet
      */
     //@ requires loc!=Location.NULL
     public static void caution(int loc, String msg) {
-	if (FrontEndTool.noCautions) {
+	if (FrontEndTool.options.noCautions) {
 	    return;
 	}
 	cautions++;

@@ -77,7 +77,7 @@ public class SubProcess
      * handleUnexpected(String)}), we use this information, if
      * available, to produce a more useful error message. </p>
      */
-    private final StringBuffer readChars = (escjava.Main.trackReadChars ?
+    private final StringBuffer readChars = (escjava.Main.options().trackReadChars ?
 					    new StringBuffer() :
 					    null);
 
@@ -109,13 +109,14 @@ public class SubProcess
 	OutputStream out = P.getOutputStream();
 	Assert.notNull(out);   //@ nowarn Pre   //Unsure if this is always true
 
-	if (escjava.Main.sxLog != null) {
+	if (escjava.Main.options().sxLog != null) {
             try {
-                FileOutputStream fos = new FileOutputStream(escjava.Main.sxLog);
+                OutputStream fos = new FileOutputStream(escjava.Main.options().sxLog);
+		//fos = new PPOutputStream(fos);
                 out = new TeeOutputStream(fos, out);
             } catch (FileNotFoundException fnfe) {
                 javafe.util.ErrorSet.fatal("error opening sxLog file " +
-                                           escjava.Main.sxLog);
+                                           escjava.Main.options().sxLog);
             }
 	}
 	to = new PrintStream(out);

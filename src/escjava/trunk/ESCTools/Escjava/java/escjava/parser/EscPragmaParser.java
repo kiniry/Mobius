@@ -341,7 +341,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
      * @return true iff tag is an '@' or an '*' character.
      */
     public boolean checkTag(int tag) {
-	if (Main.parsePlus && tag == '+') return true;
+	if (Main.options().parsePlus && tag == '+') return true;
         return tag == '@' || tag == '*' ;
     }
 
@@ -360,7 +360,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
             int c = in.read();
             //System.out.println("restart: c = '"+(char)c+"'");
 
-	    if (Main.parsePlus && c == '+') c = in.read();
+	    if (Main.options().parsePlus && c == '+') c = in.read();
             switch (c) {
                 case '@':
                     /* Normal escjava annotation: */
@@ -595,7 +595,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
 
             // Start a new pragma
             int loc = scanner.startingLoc;
-            if (Main.parsePlus &&
+            if (Main.options().parsePlus &&
 		scanner.ttype == TagConstants.ADD &&
 		scanner.lookahead(1) == TagConstants.EOF) {
 		return false;

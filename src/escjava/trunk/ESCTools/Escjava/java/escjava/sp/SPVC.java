@@ -35,7 +35,7 @@ public class SPVC
     private static int predNum = 0;
 
     private Expr name(Expr e) {
-        if( Main.useDefpred && Util.size(e) >= Main.namePCsize) {
+        if( Main.options().useDefpred && Util.size(e) >= Main.options().namePCsize) {
             Identifier predId = Identifier.intern("PREDN"+predNum);
             predNum++;
             preds.addElement( DefPred.make( predId, GenericVarDeclVec.make(), e ));
@@ -47,7 +47,7 @@ public class SPVC
 
     private Expr computeNotWrong(GuardedCmd root) {
         Expr r = GC.nary(TagConstants.BOOLNOT, calcNxw(root).w);
-        if( Main.useDefpred ) {
+        if( Main.options().useDefpred ) {
             return DefPredLetExpr.make( preds, r);
         } else {
             return r;
@@ -96,8 +96,8 @@ public class SPVC
                  */
                 {
                     ExprCmd ec = (ExprCmd)g;
-                    if (Main.strongAssertPost == 2 ||
-                        (Main.strongAssertPost == 1 && isSimpleConjunction(ec.pred))) {
+                    if (Main.options().strongAssertPost == 2 ||
+                        (Main.options().strongAssertPost == 1 && isSimpleConjunction(ec.pred))) {
                         nxw.n = ec.pred;
                     } else {
                         nxw.n = GC.truelit;

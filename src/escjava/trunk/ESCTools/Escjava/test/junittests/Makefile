@@ -6,10 +6,11 @@ export ESCJAVA = escjava -nowarn Deadlock -verboseTrace
 export JUNIT = $(JAVA) -Xmx256M -classpath ${ESCJAVA_CLASSPATH}:${JUNIT_UTILS_PATH}:. -Djava.io.tmpdir=/tmp -Dsimplify=${ESCJAVA_ROOT}/simplify junit.textui.TestRunner
 export JUNITSW = $(JAVA) -Xmx256M -classpath ${ESCJAVA_CLASSPATH}:${JUNIT_UTILS_PATH}:. -Djava.io.tmpdir=/tmp -Dsimplify=${ESCJAVA_ROOT}/simplify junit.swingui.TestRunner
 
+.PHONY: buildtests
 buildtests:
 	javac -classpath .:${JUNIT_UTILS_PATH}:${ESCJAVA_CLASSPATH} TestSuite.java
 
-runtests: buildtests skips lists dotests
+test runtests: buildtests skips lists dotests
 
 .PHONY: dotests
 dotests:
@@ -32,28 +33,23 @@ lists:
 		| sed -e 's?//#FLAGS:??' -e "s/\$$/ $$f/" >> listtests ; \
 	done
 
-test: skips othertests 
+septest: skips othertests 
 	@touch skip
-	@for f in `ls *.java | grep -v -f skip`; do \
-	    echo Testing $${f} ;\
-	    ${ESCJAVA} -testMode `grep '//#FLAGS:' $${f} | sed -e "sx//#FLAGS:xx" ` $$f 2>&1 > $${f}-ckd ; \
-	    if [ -e $${f}-expected ] ; then \
-		diff $${f}-ckd $${f}-expected  \
-		  && rm $${f}-ckd ;\
-	    else \
-		echo ... Creating $${f}-expected ;\
-		mv $${f}-ckd $${f}-expected ;\
-	    fi ;\
+	@for f in `ls *.java | grep -v -f skip` ; do \
+		$(MAKE) --no-print-directory $${f}-test; \
 	done
 
 skips:
-	@echo Skipped: `cat skip`
+	@echo Skipped: `cat skip | grep -v "^#" `
 
 othertests: SpecFile.jml-test
 
+# The sed -e s/x/x/ is just meant to be a noop since I can't seem
+# to get 2>&1 > to work in order to output directly into the -ckd file
+# (FIXME)
 %-test: 
 	@echo Testing $* 
-	@-escjava -testMode `grep '//#FLAGS:' $* | sed -e "sx//#FLAGS:xx" ` $* 2>&1 > $*-ckd 
+	@-(${ESCJAVA} -testMode `grep '//#FLAGS:' $* | sed -e "sx//#FLAGS:xx" ` $* 2>&1 | sed -e s/x/x/ > $*-ckd ) || exit 0;
 	@if [ -e $*-expected ] ; then \
 		diff $*-ckd $*-expected  \
 		  && rm $*-ckd ;\

@@ -19,7 +19,7 @@ import escjava.Main;
 
 public class GCSanity {
   public static void check(/*@ non_null */ GuardedCmd g) {
-    if (! Main.noVarCheckDeclsAndUses) {
+    if (! Main.options().noVarCheckDeclsAndUses) {
       Set edci = new Set();
       Set cdni = new Set();
       Set euei = new Set();

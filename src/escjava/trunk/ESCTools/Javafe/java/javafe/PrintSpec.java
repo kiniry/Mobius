@@ -19,43 +19,9 @@ import java.util.StringTokenizer;
  * <code>PrintSpec</code> print specs for class files.
  */
 
-public class PrintSpec extends FrontEndTool implements Listener {
+public class PrintSpec extends SrcTool {
 
     public String name() { return "PrintSpec"; }
-
-    private final Vector argumentClassNames = new Vector();
-    //@ invariant argumentClassNames.elementType == \type(String);
-    //@ invariant !argumentClassNames.containsNull;
-    //@ invariant argumentClassNames.owner == this
-
-    public final void showNonOptions() {
-	System.err.println("<class files>");
-    }
-
-    public void showOptions() {
-        super.showOptions();
- 	System.err.println("  -f <file containing source file names>");
-    }
-
-
-    /***************************************************
-     *                                                 *
-     * Option processing:			       *
-     *                                                 *
-     **************************************************/
-
-    public int processOption(String option, String[] args, int offset) {
-        if (option.equals("-f")) {
- 	    if (offset>=args.length) {
- 	        usage();
- 	        System.exit(usageError);
- 	    }
- 	    argumentClassNames.addElement(args[offset]);
- 	    return offset + 1;
-	} else
-	    // Pass on unrecognized options:
-	    return super.processOption(option, args, offset);
-    }
 
 
     /***************************************************
@@ -64,49 +30,23 @@ public class PrintSpec extends FrontEndTool implements Listener {
      *                                                 *
      **************************************************/
 
-
-    //@ invariant loaded!=null 
-    //@ invariant loaded.elementType == \type(CompilationUnit)
-    //@ invariant !loaded.containsNull
-    //@ invariant loaded.owner == this
-    public Vector loaded = new Vector();
-
-    //@ invariant loaded != argumentClassNames;
-
-    public PrintSpec() {
-	super();
-
-        //@ set argumentClassNames.elementType = \type(String);
-        //@ set argumentClassNames.containsNull = false;
-	//@ set argumentClassNames.owner = this
-
-	//@ set loaded.elementType = \type(CompilationUnit)
-	//@ set loaded.containsNull = false
-	//@ set loaded.owner = this
-    }
-
     class PrintSpecPrettyPrint extends StandardPrettyPrint {
 
-	public void printnoln(OutputStream o, int ind, TypeDecl d) {
-	    if (d != null && d.getTag() == javafe.ast.TagConstants.CLASSDECL) {
-		ClassDecl cd = (ClassDecl)d;
-		if (Character.isDigit((cd.id.toString().charAt(0)))) {
-		    System.out.println("---> skipping anonymous inner class");
-		    return;
+		public void printnoln(OutputStream o, int ind, TypeDecl d) {
+		    if (d != null && d.getTag() == javafe.ast.TagConstants.CLASSDECL) {
+				ClassDecl cd = (ClassDecl)d;
+				if (Character.isDigit((cd.id.toString().charAt(0)))) {
+				    System.out.println("---> skipping anonymous inner class");
+				    return;
+				}
+		    }
+		    super.printnoln(o, ind, d);
 		}
-	    }
-	    super.printnoln(o, ind, d);
-	}
     }	    
 
     public void setup() { 
-	super.setup();
-	PrettyPrint.inst = new PrintSpecPrettyPrint();
-    }
-
-
-    public void notify(CompilationUnit justLoaded) {
-	loaded.addElement(justLoaded);
+		super.setup();
+		PrettyPrint.inst = new PrintSpecPrettyPrint();
     }
 
     /***************************************************
@@ -119,9 +59,9 @@ public class PrintSpec extends FrontEndTool implements Listener {
 
     //@ requires \nonnullelements(args)
     public static void main(String[] args) {
-	Tool t = new PrintSpec();
-	int result = t.run(args);
-	if (result != 0) System.exit(result);
+		Tool t = new PrintSpec();
+		int result = t.run(args);
+		if (result != 0) System.exit(result);
     }
 
 
@@ -131,9 +71,9 @@ public class PrintSpec extends FrontEndTool implements Listener {
     public String[] FQNpackage(/*@ non_null */ String s) {
         StringTokenizer st = new StringTokenizer(s, ".", false);
         int len = st.countTokens();
-	if (len < 1) {
-	    return new String[0];
-	}
+		if (len < 1) {
+		    return new String[0];
+		}
         String array[] = new String[len-1];
         for (int i = 0; i < len-1; i++) {
             array[i] = st.nextToken();
@@ -143,7 +83,7 @@ public class PrintSpec extends FrontEndTool implements Listener {
 
     //@ ensures \result != null
     public String FQNname(/*@ non_null */ String s) {
- 	return s.substring(s.lastIndexOf(".") + 1);
+	 	return s.substring(s.lastIndexOf(".") + 1);
     } 
     
 
@@ -174,11 +114,11 @@ public class PrintSpec extends FrontEndTool implements Listener {
 	try {
 	    fos = new FileOutputStream(filename);
 	} catch (Exception e) {
-	    System.out.println(e);
-	    System.exit(0);
+	    ErrorSet.fatal(e.getMessage());
 	}
 	PrettyPrint.inst.print(fos, sig.getCompilationUnit());
     }
+
 
     public final void frontEndToolProcessing(String[] args, int offset) {
 	/*
@@ -194,25 +134,24 @@ public class PrintSpec extends FrontEndTool implements Listener {
 	 */
 	for (; offset<args.length; offset++) {
 	    this.loadAndPrintSpec(args[offset]);
-        }
-        
- 	/* load in source files from supplied file name */
-	for (int i = 0; i < argumentClassNames.size(); i++) {
-	    String argumentClassName = (String)argumentClassNames.elementAt(i);
- 	    try {
- 		BufferedReader in = new BufferedReader(
- 				    new FileReader(argumentClassName));
- 		String s;
- 		while ((s = in.readLine()) != null) {
+	}
+	
+	/* load in source files from supplied file name */
+	for (int i = 0; i < argumentFileNames.size(); i++) {
+	    String argumentClassName = (String)argumentFileNames.elementAt(i);
+	    try {
+		BufferedReader in = new BufferedReader(
+					    new FileReader(argumentClassName));
+		String s;
+		while ((s = in.readLine()) != null) {
 		    // allow blank lines in files list
 		    if (!s.equals("")) {
 			this.loadAndPrintSpec(s);
 		    }
 		}
- 	    } catch (IOException e) {
- 		System.err.println(e.toString());
- 		System.exit(usageError);
- 	    }
- 	}
+	    } catch (IOException e) {
+		ErrorSet.fatal(e.getMessage());
+	    }
+	}
     }
 }

@@ -1,0 +1,17 @@
+ESC/Java version VERSION
+  Prover started:TIME
+
+AOption2 ...
+
+AOption2: m(java.lang.Object) ...
+------------------------------------------------------------------------
+AOption2.java:8: Warning: Possible null dereference (Null)
+                String s = o.toString();
+                            ^
+------------------------------------------------------------------------
+    [TIME]  failed
+
+AOption2: AOption2() ...
+    [TIME]  passed
+  [TIME total]
+1 warning

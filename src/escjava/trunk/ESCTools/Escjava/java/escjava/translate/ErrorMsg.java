@@ -52,7 +52,7 @@ public final class ErrorMsg {
 	    }
 
 	    // print the execution trace info if requested
-	    if (Main.traceInfo > 0) {
+	    if (Main.options().traceInfo > 0) {
 		// copy the trace labels to a String array
 		String traceLabels[] = new String[cLabels];
 		int index = 0;
@@ -72,7 +72,7 @@ public final class ErrorMsg {
 		}
 	    }
       
-	    if (Main.counterexample) {
+	    if (Main.options().counterexample) {
 		out.println("Counterexample context:");
 		SList prunedCC = pruneCC(counterexampleContext);
 		int n = prunedCC.length();
@@ -84,7 +84,7 @@ public final class ErrorMsg {
 		out.println();
 	    }     
 
-	    if (Info.on || Main.pcc) {
+	    if (Info.on || Main.options().pcc) {
 		Assert.notFalse(counterexampleContext.length() > 1 &&
 				counterexampleContext.at(0).toString().equals("AND"));
 		out.println("Full counterexample context:");
@@ -100,7 +100,7 @@ public final class ErrorMsg {
 	    for (int i = 0; i < cLabels; i++) {
 		String label = labelList.at(i).getAtom().toString();
 		if (i == iErrorLabel || label.startsWith("vc.") ||
-		    (Main.traceInfo > 0 && isTraceLabel(label))) {
+		    (Main.options().traceInfo > 0 && isTraceLabel(label))) {
 		    continue;
 		}
 		if (!userLabels) {
@@ -120,7 +120,7 @@ public final class ErrorMsg {
     }
 
     public static void printSeparatorLine(/*@ non_null */ PrintStream out) {
-	if (!Main.quiet) {
+	if (!Main.options().quiet) {
 	    out.println("------------------------------------------------------------------------");
 	}
     }
@@ -203,7 +203,7 @@ public final class ErrorMsg {
 	    displayInvariantContext(counterexampleContext, out);
 	}
 
-	if (Main.suggest) {
+	if (Main.options().suggest) {
 	    Object auxInfo;
 	    if (auxID == -1) {
 		auxInfo = null;
@@ -501,7 +501,7 @@ public final class ErrorMsg {
     private static void displayInvariantContext(/*@ non_null */ SList counterexampleContext,
 						/*@ non_null */ PrintStream out)
 	throws SExpTypeError {
-	if (Main.plainWarning)
+	if (Main.options().plainWarning)
 	    return;
 
 	boolean headerDisplayed = false;

@@ -42,45 +42,6 @@ public class DeclLinks extends javafe.SrcTool {
      **/
     public String name() { return "decl linker"; }
 
-    /**
-     ** Print option option information to
-     ** <code>System.err</code>. <p>
-     **/
-    public void showOptions() {
-      super.showOptions();
-      System.err.println("");
-    }
-
-  
-    /***************************************************
-     *                                                 *
-     * Option processing:			       *
-     *                                                 *
-     ***************************************************/
-
-    /**
-     ** Process next tool option. <p>
-     **
-     ** See <code>Tool.processOption</code> for the complete
-     ** specification of this routine.<p>
-     **/
-    public int processOption(String option, String[] args, int offset) {
-
-	// Pass on unrecognized options:
-	return super.processOption(option, args, offset);
-    }
-
-
-    /**
-     ** This method is called on each <code>CompilationUnit</code>
-     ** that this tool processes.  This method overrides the implementation
-     ** given in the superclass, adding a couple of lines before the
-     ** superclass implementation is called.
-     **/
-    public void handleCU(CompilationUnit cu) {
-	//System.out.println ("handleCU"+cu );
-	super.handleCU(cu);
-    }
   
     /***************************************************
      *                                                 *
@@ -112,9 +73,9 @@ public class DeclLinks extends javafe.SrcTool {
      **/
     //@ requires \nonnullelements(args);
     public static void main(String[] args) {
-	//System.out.println ("main,"+args[2]);
-	javafe.SrcTool t = new DeclLinks();
-	t.run(args);
+		//System.out.println ("main,"+args[2]);
+		javafe.SrcTool t = new DeclLinks();
+		t.run(args);
     }
 
 
@@ -175,27 +136,27 @@ class DeclLinkVisitor extends DefaultVisitor {
       Set overrides = TypeCheck.inst.getAllOverrides(x);
       Enumeration e = overrides.elements();
       if( e.hasMoreElements() ) {
-	  MethodDecl md = (MethodDecl)e.nextElement();
-	  if( e.hasMoreElements() ) {
-	      // Overrides multiple methods, put dummy link 
-	      if( x.locId != Location.NULL && !Location.isWholeFileLoc(x.locId)) {
-		  System.out.println(Location.toFileName(x.locId)+
-				     " "+Location.toOffset(x.locId)+
-				     " OverridesMultipleMethods 0");
-	      }
-	  } else {
-	      // Overrides single method, link to it
-	      report( x.locId, md.loc );
-	  }
+		  MethodDecl md = (MethodDecl)e.nextElement();
+		  if( e.hasMoreElements() ) {
+		      // Overrides multiple methods, put dummy link 
+		      if( x.locId != Location.NULL && !Location.isWholeFileLoc(x.locId)) {
+			  System.out.println(Location.toFileName(x.locId)+
+					     " "+Location.toOffset(x.locId)+
+					     " OverridesMultipleMethods 0");
+		      }
+		  } else {
+		      // Overrides single method, link to it
+		      report( x.locId, md.loc );
+		  }
       } else {
 	  // Overrides no method, no link
 	      // Overrides multiple methods, put dummy link 
 	      if( x.locId != Location.NULL && !Location.isWholeFileLoc(x.locId)) {
-		  /*
-		  System.out.println(Location.toFileName(x.locId)+
-				     " "+Location.toOffset(x.locId)+
-				     " OverridesNoMethods 0");
-		  */
+			  /*
+			  System.out.println(Location.toFileName(x.locId)+
+					     " "+Location.toOffset(x.locId)+
+					     " OverridesNoMethods 0");
+			  */
 	      }
       }
   }
@@ -215,20 +176,20 @@ class DeclLinkVisitor extends DefaultVisitor {
     
   private void report(int locref, int locdecl) {
       if( locref != Location.NULL && !Location.isWholeFileLoc(locref) ) {
-	  if( locdecl == Location.NULL ) {
-	      System.out.println(Location.toFileName(locref)+
-				 " "+Location.toOffset(locref)+
-				 " LinktoNullLoc 0");
-	  } else if( Location.isWholeFileLoc(locdecl) ) {
-	      System.out.println(Location.toFileName(locref)+
-				 " "+Location.toOffset(locref)+
-				 " "+Location.toFileName(locdecl)+" -1");
-	  } else {
-	      System.out.println(Location.toFileName(locref)+
-				 " "+Location.toOffset(locref)+
-				 " "+Location.toFileName(locdecl)+
-				 " "+Location.toLineNumber(locdecl));
-	  }
+		  if( locdecl == Location.NULL ) {
+		      System.out.println(Location.toFileName(locref)+
+					 " "+Location.toOffset(locref)+
+					 " LinktoNullLoc 0");
+		  } else if( Location.isWholeFileLoc(locdecl) ) {
+		      System.out.println(Location.toFileName(locref)+
+					 " "+Location.toOffset(locref)+
+					 " "+Location.toFileName(locdecl)+" -1");
+		  } else {
+		      System.out.println(Location.toFileName(locref)+
+					 " "+Location.toOffset(locref)+
+					 " "+Location.toFileName(locdecl)+
+					 " "+Location.toLineNumber(locdecl));
+		  }
       }
   }
     

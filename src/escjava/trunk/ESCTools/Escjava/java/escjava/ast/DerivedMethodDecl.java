@@ -97,7 +97,7 @@ public class DerivedMethodDecl {
 
   public void computeFreshUsage() {
     usesFresh = false;
-    if (!Main.allocUseOpt) {
+    if (!Main.options().allocUseOpt) {
       // continue as if "fresh" (and hence "alloc") were used
       usesFresh = true;
       return;

@@ -12,6 +12,7 @@ import javafe.parser.Lex;
 import javafe.parser.Parse;
 import javafe.util.CorrelatedReader;
 import javafe.util.FileCorrelatedReader;
+import javafe.util.ErrorSet;
 
 
 public class CountLines {
@@ -30,18 +31,21 @@ public class CountLines {
 
     try {
       for(int i = 0; i<argv.length; i++) {
-	CorrelatedReader in =
-	  new FileCorrelatedReader(new NormalGenericFile(argv[1]));
-	l.restart(in);
-	int thisFile = count( p.parseCompilationUnit(l, false) );
-	in.close();
-
-	String tf = Integer.toString(thisFile);
-	System.out.println(indent[Math.min(indent.length-1, tf.length())]
-			   + tf + " " + argv[i]);
-	total += thisFile;
+		CorrelatedReader in =
+		  new FileCorrelatedReader(new NormalGenericFile(argv[1]));
+		l.restart(in);
+		int thisFile = count( p.parseCompilationUnit(l, false) );
+		in.close();
+	
+		String tf = Integer.toString(thisFile);
+		System.out.println(indent[Math.min(indent.length-1, tf.length())]
+				   + tf + " " + argv[i]);
+		total += thisFile;
       }
-    } catch(IOException e) { e.printStackTrace(); System.exit(2); }
+    } catch(IOException e) { 
+        e.printStackTrace(); 
+        ErrorSet.fatal(e.getMessage());
+    }
     String tf = Long.toString(total);
     System.out.println(indent[Math.min(indent.length-1, tf.length())]
 		       + tf + " total");
@@ -50,15 +54,14 @@ public class CountLines {
   //@ requires n!=null
   public static int count(ASTNode n) {
     int result = 0;
-    if (n instanceof TypeDecl || n instanceof TypeDeclElem
-	|| n instanceof Stmt)
-      result = 1;
+    if (n instanceof TypeDecl || n instanceof TypeDeclElem|| n instanceof Stmt)
+	      result = 1;
     else result = 0;
 
     for(int i = 0; i < n.childCount(); i++) {
       Object c = n.childAt(i);
       if (c instanceof ASTNode)
-	result += count((ASTNode)c);
+		result += count((ASTNode)c);
     }
 
     return result;

@@ -29,103 +29,16 @@ import java.io.IOException;
 
 public abstract class SrcTool extends FrontEndTool implements Listener
 {
-    // Generating a usage message
-
-    /**
-     * Do we allow the <code>-avoidSpec</code> option?  Defaults to
-     * yes.
-     */
-    public boolean allowAvoidSpec = true;
-
-    /**
-     * Do we allow the -depend option?  Defaults to yes.
-     */
-    public boolean allowDepend = true;
 
     /**
      * Contains the filenames that contain the names of the sources on which
      * to invoke the tool.
      */
-    private final Vector argumentFileNames = new Vector();
+    protected final Vector argumentFileNames = new Vector();
     //@ invariant argumentFileNames.elementType == \type(String);
     //@ invariant !argumentFileNames.containsNull;
     //@ invariant argumentFileNames.owner == this
 
-    /**
-     * Print non-option usage info to <code>System.err</code>.  Output
-     * must include at least one newline.
-     */
-    public final void showNonOptions() {
-	System.err.println("<source files>");
-    }
-
-    /**
-     * Print option information to <code>System.err</code>.  Each
-     * printed line should be preceeded by two blank spaces.
-     *
-     * <p> Each overriding method should first call
-     * <code>super.showOptions()</code>.
-     */
-    public void showOptions() {
-        super.showOptions();
-
-	if (allowAvoidSpec || allowDepend)
-	    System.err.println("  " +
-		(allowAvoidSpec ? "-avoidSpec " : "") +
-		(allowDepend ? "-depend " : ""));
- 	System.err.println("  -f <file containing source file names>");
-    }
-
-
-    // Option processing
-
-    // Variables to store the settings of the standard SrcTool options
-
-    /**
-     * Should we avoid specs for all types loaded after the initial
-     * set of source files?
-     *
-     * <p> Defaults to false.  Set by -avoidSpec option.
-     *
-     * <p> Note: if <code>processRecursively</code> is set, then we
-     * always avoid specs.
-     */
-    private boolean avoidSpec = false;
-
-    /**
-     * Should we process files recursively?  Defaults to no, 
-     * can be set by a sub-class, or the -depend option.
-     *
-     * <p> Warning: this needs to be set before option processing is
-     * finished!
-     */
-    public boolean processRecursively = false;
-
-
-    /**
-     * Process next tool option. <p>
-     *
-     * See <code>Tool.processOption</code> for the complete
-     * specification of this routine.<p>
-     */
-    public int processOption(String option, String[] args, int offset) {
-        if (option.equals("-f")) {
- 	    if (offset>=args.length) {
- 	        usage();
- 	        System.exit(usageError);
- 	    }
- 	    argumentFileNames.addElement(args[offset]);
- 	    return offset + 1;
- 	} else if (option.equals("-depend") && allowDepend) {
-	    processRecursively = true;
-	    return offset;
-	} else if (option.equals("-avoidSpec") && allowAvoidSpec) {
-	    avoidSpec = true;
-	    return offset;
-	} else
-	    // Pass on unrecognized options:
-	    return super.processOption(option, args, offset);
-    }
 
 
     /***************************************************
@@ -149,15 +62,15 @@ public abstract class SrcTool extends FrontEndTool implements Listener
     //@ invariant loaded != argumentFileNames;
 
     public SrcTool() {
-	super();
+		super();
 
         //@ set argumentFileNames.elementType = \type(String);
         //@ set argumentFileNames.containsNull = false;
-	//@ set argumentFileNames.owner = this
-
-	//@ set loaded.elementType = \type(CompilationUnit)
-	//@ set loaded.containsNull = false
-	//@ set loaded.owner = this
+		//@ set argumentFileNames.owner = this
+	
+		//@ set loaded.elementType = \type(CompilationUnit)
+		//@ set loaded.containsNull = false
+		//@ set loaded.owner = this
     }
 
 
@@ -168,7 +81,7 @@ public abstract class SrcTool extends FrontEndTool implements Listener
      * <code>Listener</code> interface.<p>
      */
     public void notify(CompilationUnit justLoaded) {
-	loaded.addElement(justLoaded);
+		loaded.addElement(justLoaded);
     }
 
 
@@ -178,101 +91,51 @@ public abstract class SrcTool extends FrontEndTool implements Listener
      *                                                 *
      **************************************************/
 
-    /**
-     * Start up an instance of this tool using command-line arguments
-     * <code>args</code>. <p> 
-     *
-     * <b>Note</b>: this code needs to be copied verbatim to each
-     * subclass of <code>Tool</code> except with the name of the actual
-     * subclass inserted after the new operator and the comment
-     * characters (//) removed.<p>
-     *
-     * (This needs to be done because static methods cannot be
-     * inherited.)<p>
-     */
-    //@ requires \nonnullelements(args)
-    public static void main(String[] args) {
-	// Tool t = new SrcTool();
-	// t.run(args);
+    public Options makeOptions() {
+    	return new SrcToolOptions();
     }
 
+    public int processOptions(String[] args) throws UsageError {
+        options().argumentFileNames = argumentFileNames;
+        return super.processOptions(args);
+    }
+    
+    private static SrcToolOptions options() { 
+    	return (SrcToolOptions)options;
+    }
 
     /**
      * Main processing loop for <code>SrcTool</code>. <p>
      *
      * The remaining arguments are <code>args[offset]</code>,
      * <code>args[offset+1]</code>, ...<p>
+     *
+     * This method calls preload, loadAllFiles, preprocess, handleAllCU, postprocess.
      */
-    public final void frontEndToolProcessing(String[] args, int offset) {
-	/*
-	 * At this point, all options have already been processed and
-	 * the front end has been initialized.
-	 */
-
-	// Set up to receive CompilationUnit-loading notification events:
-	OutsideEnv.setListener(this);
-
-	/*
-	    // Complain if no source files provided:
-	    if (offset>=args.length) {
-		usage();
-		System.exit(usageError);
-	    }
-	*/
-
-
-	/*
-	 * Load in each source file:
-	 */
-	for (; offset<args.length; offset++)
-	    OutsideEnv.addSource(args[offset]);
-
- 	/* load in source files from supplied file name */
-	for (int i = 0; i < argumentFileNames.size(); i++) {
-	    String argumentFileName = (String)argumentFileNames.elementAt(i);
- 	    try {
- 		BufferedReader in = new BufferedReader(
- 				    new FileReader(argumentFileName));
- 		String s;
- 		while ((s = in.readLine()) != null) {
-		    // allow blank lines in files list
-		    if (!s.equals("")) {
-			OutsideEnv.addSource(s);
-		    }
-		}
- 	    } catch (IOException e) {
- 		System.err.println(e.toString());
- 		System.exit(usageError);
- 	    }
- 	}
-
-	OutsideEnv.avoidSpec = avoidSpec;
-	if (processRecursively)
-	    OutsideEnv.avoidSpec = true;
-
-	// Do any tool-specific pre-processing:
-	preprocess();
-
-	/*
-	 * Call handleCU on the resulting loaded CompilationUnits.
-	 *
-	 * If processRecursively is true, then continue calling handleCU
-         * on loaded CompilationUnits that have not had handleCU called
-         * on them in the order they were loaded until no such
-         * CompilationUnits remain.  (handleCU may load CompilationUnits
-         * indirectly.)
-	 */
-	int i=0;
-	for (int end=loaded.size(); i<end; i++) {
-	    handleCU((CompilationUnit)loaded.elementAt(i));
-	    if (processRecursively) {
-		Assert.notFalse(OutsideEnv.avoidSpec == true);
-		end = loaded.size();
-	    }
-	}
-
-	// Do any tool-specific post-processing:
-	postprocess();
+    public void frontEndToolProcessing(String[] args, int offset) {
+		/*
+		 * At this point, all options have already been processed and
+		 * the front end has been initialized.
+		 */
+	
+		// Set up to receive CompilationUnit-loading notification events:
+		OutsideEnv.setListener(this);
+	
+        preload();
+	
+        loadAllFiles(offset,args);
+	
+		OutsideEnv.avoidSpec = options().avoidSpec;
+		if (options().processRecursively)
+		    OutsideEnv.avoidSpec = true;
+	
+		// Do any tool-specific pre-processing:
+		preprocess();
+	
+        handleAllCUs();
+	
+		// Do any tool-specific post-processing:
+		postprocess();
     }
 
 
@@ -282,8 +145,62 @@ public abstract class SrcTool extends FrontEndTool implements Listener
      *                                                 *
      **************************************************/
 
+    public void loadAllFiles(int offset, String[] args) {
+    	/*
+	 * Load in each source file:
+	 */
+	for (; offset<args.length; offset++)
+	    OutsideEnv.addSource(args[offset]);
+
+	/* load in source files from supplied file name */
+	for (int i = 0; i < argumentFileNames.size(); i++) {
+	    String argumentFileName = (String)argumentFileNames.elementAt(i);
+	    try {
+		BufferedReader in = new BufferedReader(
+				    new FileReader(argumentFileName));
+		String s;
+		while ((s = in.readLine()) != null) {
+		    // allow blank lines in files list
+		    if (!s.equals("")) {
+			OutsideEnv.addSource(s);
+		    }
+		}
+	    } catch (IOException e) {
+		ErrorSet.fatal(e.getMessage());
+	    }
+	}
+    }
+
+    /** Iterates, calling handleCU for each loaded CU.
+     */	
+	public void handleAllCUs() {
+		/*
+		 * Call handleCU on the resulting loaded CompilationUnits.
+		 *
+		 * If processRecursively is true, then continue calling handleCU
+	         * on loaded CompilationUnits that have not had handleCU called
+	         * on them in the order they were loaded until no such
+	         * CompilationUnits remain.  (handleCU may load CompilationUnits
+	         * indirectly.)
+		 */
+		int i=0;
+		for (int end=loaded.size(); i<end; i++) {
+		    handleCU((CompilationUnit)loaded.elementAt(i));
+		    if (options().processRecursively) {
+				Assert.notFalse(OutsideEnv.avoidSpec == true);
+				end = loaded.size();
+		    }
+		}
+	}
+	 
     /**
-     * Hook for any work needed before <code>handleCU</code> is called
+     * Hook for any work needed before any files are loaded.
+     */
+    public void preload() {}
+    
+    /**
+     * Hook for any work needed after files are loaded
+     * but before <code>handleCU</code> is called
      * on each <code>CompilationUnit</code> to process them.
      */
     public void preprocess() {}
@@ -305,13 +222,13 @@ public abstract class SrcTool extends FrontEndTool implements Listener
      */
     //@ requires cu!=null
     public void handleCU(CompilationUnit cu) {
-	// Iterate over all the TypeDecls representing outside types in cu:
-	TypeDeclVec elems = cu.elems;
-	for (int i=0; i<elems.size(); i++) {
-	    TypeDecl d = elems.elementAt(i);
-
-	    handleTD(d);
-	}
+		// Iterate over all the TypeDecls representing outside types in cu:
+		TypeDeclVec elems = cu.elems;
+		for (int i=0; i<elems.size(); i++) {
+		    TypeDecl d = elems.elementAt(i);
+	
+		    handleTD(d);
+		}
     }
 
 
@@ -320,6 +237,6 @@ public abstract class SrcTool extends FrontEndTool implements Listener
      * outside type that SrcTool is to process. <p>
      */
     //@ requires td!=null
-    public abstract void handleTD(TypeDecl td);
+    public void handleTD(TypeDecl td) {}
 
 }

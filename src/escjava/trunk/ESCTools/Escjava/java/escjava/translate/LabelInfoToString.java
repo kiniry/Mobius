@@ -45,7 +45,7 @@ public class LabelInfoToString {
   }
   
   public static void recordAnnotationAssumption(int locPragmaDecl) {
-    if (escjava.Main.printAssumers && locPragmaDecl != Location.NULL) {
+    if (escjava.Main.options().printAssumers && locPragmaDecl != Location.NULL) {
       String location = Location.toFileName(locPragmaDecl) + ':' +
 	                Location.toLineNumber(locPragmaDecl) + ':' +
 	                Location.toColumn(locPragmaDecl);

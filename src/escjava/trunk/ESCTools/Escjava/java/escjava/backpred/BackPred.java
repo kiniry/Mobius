@@ -37,11 +37,11 @@ public class BackPred
      */
 
     public static void genUnivBackPred(/*@ non_null */ PrintStream proverStream) {
-        if (escjava.Main.univBackPredFile == null) {
+        if (escjava.Main.options().univBackPredFile == null) {
             proverStream.print(DefaultUnivBackPred.s);
             return;
         }
-        String filename = escjava.Main.univBackPredFile;
+        String filename = escjava.Main.options().univBackPredFile;
         try {
             FileInputStream fis = new FileInputStream(filename);
             int c;
