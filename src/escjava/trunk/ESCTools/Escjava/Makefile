@@ -34,6 +34,12 @@ export ESCJ = ${ESCJAVA_ROOT}/escj
 
 ## These are the options to JAVAC used to build Escjava.
 ## FIXME - what does SOURCEPATH do ?
+## kiniry - SOURCEPATH should include all directories that
+## contain source code on which Escjava depends.  That
+## should include all the source for Javafe, Escjava,
+## Mocha, etc.  We use -sourcepath because all of these
+## different collections of source code have no common root.
+
 JAVAC_FLAGS += -classpath ${ESCJAVA_BUILD_CLASSPATH} \
 	-sourcepath ${SOURCEPATH} \
 	-d ${ESCJAVA_CLASSFILES} 
@@ -294,7 +300,7 @@ TOP_ESCJAVA_TEST_DIR = ${TESTSOURCEDIRECTORY}/escjava/test
 .PHONY: self_test
 self_test: compile
 	cd ${ESCJAVA_SOURCE_DIR}/escjava; \
-	escjava -nocheck -v \*.java ast/*.java parser/*.java \
+	${ESCJAVA} -nocheck -v \*.java ast/*.java parser/*.java \
 	  tc/*.java bacpred/*.java prover/*.java
 
 .PHONY: test_escjava
@@ -311,7 +317,7 @@ test_escjava_parser:
 
 test_matrix:
 	(cd ${TESTSOURCEDIRECTORY}/matrix; \
-	escjava *.java;)
+	${ESCJAVA} *.java;)
 
 ###########################################################################
 # Miscellaneous targets.

@@ -1,6 +1,7 @@
 ## This file is part of the 2003 Revision of the ESC Tools
 ##
 ## author: David Cok - 26 March 2003
+## author: Joe Kiniry
 ##
 
 export TOP = .
@@ -62,10 +63,10 @@ JAVADOC_SOURCEPATH = $(subst : ,:,$(addsuffix /java:,$(addprefix $(ESCTOOLS_ROOT
 
 .PHONY: javadoc
 javadoc: 
-	mkdir -p $(JAVADOCDIRECTORY)/images
-	cp $(JAVAFE_ROOT)/doc/javadoc/images/*.gif $(JAVADOCDIRECTORY)/images
+	mkdir -p $(JAVADOC_GEN_DIR)/images
+	cp $(JAVAFE_ROOT)/doc/javadoc/images/*.gif $(JAVADOC_GEN_DIR)/images
 	$(JAVADOC) -sourcepath $(JAVADOC_SOURCEPATH) \
-	  -d $(JAVADOCDIRECTORY) \
+	  -d $(JAVADOC_GEN_DIR) \
           $(PACKAGE_LIST)
 
 .PHONY: check_env
