@@ -163,48 +163,30 @@ The Java Modeling Language (JML) has by now been described in several publicatio
 \cite{jmlpapers,Leavens-Baker-Ruby99b,Leavens-Baker-Ruby02} and we will not repeat that full description here.  This language is suitable for
 describing the issues at hand and is used in the implementation of the solution.
  The advances described in this paper
-can be illustrated using simple invariants and lightweight preconditions,
-frame conditions and postconditions.  
-A class with examples of these annotations is shown in Fig.~\ref{fig:SS}.
-
-\begin{BFIGURE}
-\verbatiminput{SortedSequence.java}
-\caption{The specification and code for the class \texttt{SortedSequence}.  This class maintains a Bag of integer values, always returning the largest value.  For demonstration purposes, 
-the sorting of values is performed only on demand.}
-\label{fig:SS}
-\end{BFIGURE}
-
+can be illustrated using simple preconditions and postconditions.  
+\begin{itemize}
+\setlength{\itemsep}{0in}
+\setlength{\parsep}{0in}
+\item A \texttt{requires} keyword followed by a predicate declares a precondition for a routine.
+\item A \texttt{ensures} keyword followed by a predicate declares a postcondition for a routine.
+\end{itemize}
 Specifications are included in the text of a Java program by placing them in 
-specially formatted comments; these comments are either single-line comments
-beginning with  \texttt{//@} or are multi-line comments beginning with  \texttt{/*@}.
-Some specifications, such as the \texttt{invariant} clause
-in Fig.~\ref{fig:SS},  are properties of the class.
-It contains a predicate that is expected to be satisfied in 
-each 'visible' state, that is, in the program state just after execution of constructors and
-just before and after execution of methods of the object.  In addition each routine may
-have a set of specifications: a \texttt{requires} clause 
-stipulates a precondition that must be satisfied in the program state just prior to a call
-of the method with which it is associated; an \texttt{ensures} clause stipulates the 
-postcondition that must be satisfied in the program state just after method execution;
-the \texttt{assignable} clause lists the only memory locations that may be assigned to (and hence 
-potentially modified) in the course of execution of the method.  The \texttt{pure} modifier on the \texttt{sort} method states that that method does not assign to any non-local memory locations
-and does not have any side-effects (that is, it does not change any observable aspect of 
-the program state).
-
+specially formatted comments: either single-line comments
+beginning with  \texttt{//@} or multi-line comments beginning with  \texttt{/*@}.
 The syntax of the specification predicates follows Java closely.  It excludes any operations 
 that have side effects, such as the increment operator
  \texttt{++}.  Other operations, such as arithmetic and 
 comparison operators, have the same syntax and semantics as in Java.  In particular, 
 predicates may include method calls, if those methods are designated \texttt{pure},
-indicating that the method has no side-effects.  Purity is
-required because annotations must be statements
-about the annotated program and may not modify its state.  This is particularly the case for
-tools which execute and check annotations at run-time.
+indicating that the method has no side-effects. 
 
 \section{ESC/Java2}
 
-The ESC/Java tool~\cite{Flanagan-etal02} developed at DEC/SRC 
-(and subsequently at Compaq) was a pioneering tool in the
+The ESC/Java2 tool, an extension of ESC/Java,
+ implements the translation of Java programs and JML specifications into
+the target logic.   
+ESC/Java~\cite{Flanagan-etal02}
+ was a pioneering tool in the
 application of static program analysis and verification technology to
 annotated Java programs.  The tool and its built-in
 prover operated automatically with reasonable performance and needed
@@ -222,27 +204,16 @@ and its long-term utility by addressing a number of issues.
 \begin{itemize}
 \setlength{\itemsep}{0in}
 \setlength{\parsep}{0in}
-\item As companies were bought and sold and research groups
+\item ESC/Java2 provides ongoing support and maintenance.
+As companies were bought and sold and research groups
 disbanded, there was no continuing development or support of 
 ESC/Java and the tool was untouched for over two years and its
-source code was not available.  The ESC/Java2 project has established
-an open-source repository for the tool, brought the code up to the current
-definition of Java, and provided a degree of ongoing development and
-maintenance.
-\item  ESC/Java only partially supported JML and JML continued to evolve as
-research on the needs of annotations for program checking advanced.
-This unavoidable divergence of specification languages made writing,
-verifying, and maintaining specifications of non-trivial APIs
-troublesome.
-Additionally, JML has grown significantly in popularity.  A number of
-tools have been developed that use JML, representing the work of several
-groups~\cite{jmlpapers,Burdy-etal03,Leavens-etal00,NimmerErnst01,Bogor03,BergJ01}.
-Thus, many new research tools worked well with ``modern'' JML, but
-ESC/Java did not.  ESC/Java2 has evolved from ESC/Java to be
-consistent with the current definition of JML.
-\item Finally, and most relevant to this paper,
-not all of the specification constructs of JML were checked by ESC/Java.  For
-example, frame conditions were not checked, but errors in frame
+source code was not available. 
+\item ESC/Java2 fully supports current JML and Java 1.4, so it is
+compatible with the variety of tools that now work with JML specifications.
+~\cite{jmlpapers,Burdy-etal03,Leavens-etal00,NimmerErnst01,Bogor03,BergJ01}.
+For
+example, in ESC/Java, frame conditions were not checked, but errors in frame
 conditions could cause the prover to reach incorrect conclusions.
 Also, the annotation language lacked the ability to use methods in
 annotations, limiting the annotations to statements only about
@@ -256,7 +227,7 @@ been corrected.
 
 \section{SIMPLIFY and the target verification condition language}
 
-As is customary in this field, ESC/Java2 (following the parent tool ESC/Java) translates program source code into guarded commands, then into a single-assignment representation, and 
+ESC/Java2 (following the parent tool ESC/Java) translates program source code into guarded commands, then into a single-assignment representation, and 
 finally
 into verification conditions (VCs).  These conditions are passed to an accompanying prover which
 judges them to be valid or invalid and may produce counterexamples to demonstrate
@@ -266,22 +237,9 @@ Simplify \cite{nelson80,simplify} prover, accepting verification conditions expr
 first-order logic (including universal and existential quantification) with equality and untyped total
 functions, extended with a simple theory of arithmetic.
 
-Briefly, the input language for VCs consists of the following:
-\begin{itemize}
-\item a VC is a logical formula, constructed using the conventional constants and connectors
-\texttt{TRUE}, \texttt{FALSE}, \texttt{AND}, \texttt{OR}, \texttt{NOT}, \texttt{IMPLIES},
-\texttt{IFF}, \texttt{FORALL}, \texttt{EXISTS}, \texttt{EQ}, and \texttt{NEQ}.  Here \texttt{EQ} and
-\texttt{NEQ} are equality and the negation of equality among pairs of terms.
-\item Terms are either constants, variables (as used in quantification), or function terms.
-\item Function terms consist of function symbols and zero or more arguments, which are also
-terms.  Function symbols are typically uninterpreted, but may have a meaning supplied by
-one of the supporting theories.  For example, numeric literals will have an interpreted meaning
-to Simplify's theory of linear inequalities over rational variables.
-\item Constants are uninterpreted symbols or ground constants of one of the theories.
-\end{itemize}
 
-Different provers will implement different sets of decision procedures on this input language.
-Simplify includes four interacting subtheories that cooperate to assess the satisfiability of a 
+Simplify includes four interacting decision procedures
+ that cooperate to assess the satisfiability of a 
 set of input formulas:
 \begin{itemize}
 \item an e-graph sub-theory, which reasons about the equality (as in \texttt{EQ}) of sets of
@@ -499,7 +457,12 @@ Model variables are declarations of fields within annotation comments that are n
 as fields of the object.  Rather a model variable is given a representation, typically in 
 terms of the internal state of the object.  The model variable may be used in annotations
 as an abstract representation, or {\em model}, of some quantity related to the object at hand.
-For example, [[[ ... provide example ]]]
+For example, Java's java.util.Collection interface, which has no implementation, might 
+nonetheless declare a model variable such as
+\begin{center} \texttt{public model instance non\_null JMLObjectBag theCollection;} \end{center}
+(using one of JML's mathematical library classes).  Then, even in the absence of an implementation of the method, a routine such as 
+\texttt{isEmpty()} could use the model variable in the specification
+\begin{center} \texttt{ensures \char'134 result <==> theCollection.isEmpty();} \end{center}
 
 Model variables in JML may have a functional representation, a predicate representation, or 
 no representation at all.  Work on translation of model variables in JML for the LOOP tool 
