@@ -5,3 +5,4 @@ jmlc
 libs
 optimized
 javadoc
+Makefile.local
