@@ -195,6 +195,7 @@ public final class GetSpec {
 	    switch (mp.getTag()) {
 	      case TagConstants.REQUIRES:
 	      case TagConstants.ALSO_REQUIRES:
+	      case TagConstants.JML_PRE:
 	        {
 		   ExprModifierPragma emp = (ExprModifierPragma)mp;
 		   emp = doSubst(subst, emp);
@@ -203,6 +204,8 @@ public final class GetSpec {
 		}
 	      case TagConstants.MODIFIES:
 	      case TagConstants.ALSO_MODIFIES:
+                case TagConstants.JML_MODIFIABLE:
+                case TagConstants.JML_ASSIGNABLE:
 		{
 		  ExprModifierPragma emp = (ExprModifierPragma)mp;
 		  emp = doSubst(subst, emp);
@@ -211,6 +214,7 @@ public final class GetSpec {
 		}
 	      case TagConstants.ENSURES:
 	      case TagConstants.ALSO_ENSURES:
+	      case TagConstants.JML_POST:
 		{
 		  ExprModifierPragma emp = (ExprModifierPragma)mp;
 		  emp = doSubst(subst, emp);
@@ -224,6 +228,7 @@ public final class GetSpec {
 		break;
 	      case TagConstants.EXSURES:
 	      case TagConstants.ALSO_EXSURES:
+	      case TagConstants.JML_SIGNALS:
 		{
 		  VarExprModifierPragma vemp = (VarExprModifierPragma)mp;
 		  vemp = doSubst(subst, vemp);

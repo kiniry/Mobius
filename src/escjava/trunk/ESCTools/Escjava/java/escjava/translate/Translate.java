@@ -1757,6 +1757,7 @@ public final class Translate {
 	}
 
       case TagConstants.LOOP_INVARIANT:
+      case TagConstants.JML_MAINTAINING:
 	{
 	  ExprStmtPragma x = (ExprStmtPragma)stmt;
 	  loopinvariants.addElement(x);
@@ -1764,6 +1765,7 @@ public final class Translate {
 	}
 
       case TagConstants.DECREASES:
+      case TagConstants.JML_DECREASING:
 	{
 	  ExprStmtPragma x = (ExprStmtPragma)stmt;
 	  loopDecreases.addElement(x);

@@ -13,179 +13,181 @@ import javafe.util.ErrorSet;
 //# EndHeader
 
 /**
+ * <code>ASTNode</code> is the root of the abstract syntax tree node
+ * hierarchy.  Every class representing a node in the AST is a (direct
+ * or indirect) subclass of this class.
+ *
+ * <p> In designing our AST classes, the following, broad approach was
+ * taken:
+ *
+ * <ul>
+ * 
+ * <li> <b>Design package javafe.ast to stand alone.</b>
+ * 
+ * <li> <b>Have a large, deep hierarchy, using the type system to
+ * encode many invariants.</b> (Used a program to generate boilerplate
+ * code, making it the large hierarchy more manageable.)
+ * 
+ * <li> <b>Represent children with public fields.</b>
+ * 
+ * <li> <b>Put most code outside AST classes.</b>
+ * 
+ * <li> <b>Support both switch-based and visitor-based traversal.</b>
+ * 
+ * <li> <b>Liberal use of locations.</b> AST classes contain location
+ * fields that indicate the corresponding part of the source program.
+ * 
+ * <li> <b>Use generic decorations.</b>
+ * 
+ * <li> <b>Rewrite tree to handle disambiguation.</b> Expression names
+ * and method names are ambiguous: the be of the form
+ * <i>package.type.members</i> or <i>type.members</i> or
+ * <i>local-variable.members</i> or even <i>members</i>.  The parser
+ * does not attempt to disambiguate among these, but rather generates
+ * either <code>ExprName</code> or <code>MethodName</code>.  A later
+ * pass replaces these nodes with either <code>VariableAccess</code>
+ * or concrete subclasses of <code>FieldAccess</code> or
+ * <code>MethodInvocation</code>.
+ * 
+ * <li> <b>Fill in fields and decorations to handle resolution.</b>
+ * The nodes that need to be resolved are: <code>TypeName</code>,
+ * <code>VariableAccess</code>, (three subclasses of)
+ * <code>FieldAccess</code>, (three subclasses of)
+ * <code>MethodInvocation</code>, <code>ConstructorInvocation</code>,
+ * and <code>NewInstanceExpr</code>.  All nodes except
+ * <code>TypeName</code> have a field named <code>decl</code> of the
+ * approriate type that is initialized to <code>null</code> and is
+ * filled in by name resolution.  For <code>TypeName</code> we use a
+ * decoration rather than a field to avoid a dependency on the
+ * <code>javafe.tc</code> package.
+ * 
+ * </ul>
+ * 
+ * <p> Measurements:
+ * <blockquote>
+ * Node abstract classes: 13
+ * <br> Node concrete classes: 59
+ * <br> Sequence classes: 12
+ * <br> Total classes: 84
+ * <br>
+ * <br> Input to code generator: 842 lines of code (513 excluding comments)
+ * <br> Code generator: 993 (675)
+ * <br> Total lines of code: 1835 (1188)
+ * <br> Output of code generator: 4298
+ * </blockquote>
+ * 
+ * <p> The complete list of subclasses is shown below.  The names of
+ * subclasses of this class correspond (in general) to the syntactic
+ * units that they represent.  Any exceptions to this rule are
+ * documented.  All non-leaf classes are abstract.  In parenthesis,
+ * the names and types of fields holding the locally-defined children
+ * classes are listed; a postfix <code>*</code> on a type indicates a
+ * sequence.  Square brackets indicate optional elements; the only
+ * these fields can be null.
+ * 
+ * <pre>
+ * ASTNode
+ *    CompilationUnit ([Name pkgName], [LexicalPragma* lexicalPragmas], ImportDecl* imports, TypeDecl* elems)
+ *    ImportDecl ()
+ *       SingleTypeImport (TypeName typeName)
+ *       OnDemandImport (Name pkgName)
+ *    TypeDecl (int modifiers, [ModifierPragma* pmodifiers], Identifier id, [TypeModifierPragma* tmodifiers], TypeName* superInterfaces, TypeDeclElem* elems)
+ *       ClassDecl ([TypeName superClass])
+ *       InterfaceDecl ()
+ *    TypeDeclElem () NOTE: This is an <em>interface</em>
+ *       TypeDecl
+ *       FieldDecl
+ *       RoutineDecl (int modifiers, [ModifierPragma* pmodifiers], FormalParaDecl* args, TypeName* raises, [BlockStmt body])
+ *          ConstructorDecl ([TypeModifierPragma* tmodifiers])
+ *          MethodDecl (Identifier id, Type returnType)
+ *       InitBlock (int modifiers, [ModifierPragma* pmodifiers], BlockStmt block)
+ *       TypeDeclElemPragma ()
+ *    GenericVarDecl (int modifiers, [ModifierPragma* pmodifiers], Identifier id, Type type)
+ *       LocalVarDecl ([VarInit init])
+ *       FieldDecl ([VarInit init])
+ *       FormalParaDecl ()
+ *    Stmt ()
+ *       GenericBlockStmt (Stmt* stmts)
+ *          BlockStmt ()
+ *          SwitchStmt (Expr expr)
+ *       VarDeclStmt (LocalVarDecl decl)
+ *       ClassDeclStmt (ClassDecl anonDecl)
+ *       WhileStmt (Expr expr, Stmt stmt)
+ *       DoStmt (Expr expr, Stmt stmt)
+ *       SynchronizeStmt (Expr expr, BlockStmt stmt)
+ *       EvalStmt (Expr expr)
+ *       ReturnStmt ([Expr expr])
+ *       ThrowStmt (Expr expr)
+ *       BranchStmt ([Identifier label])
+ *          BreakStmt ()
+ *          ContinueStmt ()
+ *       LabelStmt (Identifier label, Stmt stmt)
+ *       IfStmt (Expr expr, Stmt thn, Stmt els)
+ *       ForStmt (Stmt* forInit, Expr test, Expr* forUpdate, Stmt body)
+ *       SkipStmt ()
+ *       SwitchLabel ([Expr expr])
+ *       TryFinallyStmt (Stmt tryClause, Stmt finallyClause)
+ *       TryCatchStmt (Stmt tryClause, CatchClause* catchClauses)
+ *       StmtPragma ()
+ *       ConstructorInvocation (boolean superCall, [Expr enclosingInstance], Expr* args)
+ *    CatchClause (FormalParaDecl arg, Stmt body)
+ *    VarInit ()
+ *       ArrayInit (VarInit* elems)
+ *       Expr ()
+ *          ThisExpr (Type classPrefix)
+ *          LiteralExpr (int tag, [Object value])
+ *          ArrayRefExpr (Expr array, Expr index)
+ *          NewInstanceExpr ([Expr enclosingInstance], TypeName type, Expr* args, [ClassDecl decl])
+ *          NewArrayExpr (Type type, Expr* dims, [ArrayInit init])
+ *          CondExpr (Expr test, Expr thn, Expr els)
+ *          InstanceOfExpr (Expr expr, Type type)
+ *          CastExpr (Expr expr, Type type)
+ *          BinaryExpr (int op, Expr left, Expr right)
+ *          UnaryExpr (int op, Expr expr)
+ *          ParenExpr (Expr expr)
+ *          AmbiguousVariableAccess (Name name)
+ *          VariableAccess (Identifier id)
+ *          FieldAccess (ObjectDesignator od, Identifier id)
+ *          AmbiguousMethodInvocation (Name name, Expr* args)
+ *          MethodInvocation (ObjectDesignator od, Identifier id, Expr* args)
+ *          ClassLiteral (Type type)
+ *    ObjectDesignator ()  // "expr.", "type." or "super."
+ *       ExprObjectDesignator (Expr expr)
+ *       TypeObjectDesignator (Type type)
+ *       SuperObjectDesignator ()
+ *    Type ()
+ *       PrimitiveType (int tag)
+ *       TypeName (Name name)
+ *       ArrayType (Type elemType)
+ *    Name ()
+ *       SimpleName (Identifier id)
+ *       CompoundName (Identifier* ids)
+ *    ModifierPragma ()
+ *    LexicalPragma ()
+ *    TypeModifierPragma ()
+ * </pre>
+ */
 
-<code>ASTNode</code> is the root of the abstract syntax tree node
-hierarchy.  Every class representing a node in the AST is a (direct or
-indirect) subclass of this class.
+public abstract class ASTNode implements Cloneable
+{
+  /**
+   * The decorations that have been attached to this node.  This is a
+   * package-level field accessed by the <code>ASTDecoration</code>
+   * class.  There are different ways to implement decorations; this
+   * way is not space-efficient, but it's pretty fast.
+   */
 
-<p> In designing our AST classes, the following, broad approach was taken:
-<ul>
-
-<p> <li> <b>Design package javafe.ast to stand alone.</b>
-
-<p> <li> <b>Have a large, deep hierarchy, using the type system to
-encode many invariants.</b> (Used a program to generate boilerplate
-code, making it the large hierarchy more manageable.)
-
-<p> <li> <b>Represent children with public fields.</b>
-
-<p> <li> <b>Put most code outside AST classes.</b>
-
-<p> <li> <b>Support both switch-based and visitor-based traversal.</b>
-
-<p> <li> <b>Liberal use of locations.</b> AST classes contain location
-fields that indicate the corresponding part of the source program.
-
-<p> <li> <b>Use generic decorations.</b>
-
-<p> <li> <b>Rewrite tree to handle disambiguation.</b> Expression
-names and method names are ambiguous: the be of the form
-<i>package.type.members</i> or <i>type.members</i> or
-<i>local-variable.members</i> or even <i>members</i>.  The parser does
-not attempt to disambiguate among these, but rather generates either
-<code>ExprName</code> or <code>MethodName</code>.  A later pass
-replaces these nodes with either <code>VariableAccess</code> or
-concrete subclasses of <code>FieldAccess</code> or
-<code>MethodInvocation</code>.
-
-
-<p> <li> <b>Fill in fields and decorations to handle resolution.</b>
-The nodes that need to be resolved are: <code>TypeName</code>,
-<code>VariableAccess</code>, (three subclasses of)
-<code>FieldAccess</code>, (three subclasses of)
-<code>MethodInvocation</code>, <code>ConstructorInvocation</code>, and
-<code>NewInstanceExpr</code>.  All nodes except <code>TypeName</code>
-have a field named <code>decl</code> of the approriate type that is
-initialized to <code>null</code> and is filled in by name resolution.
-For <code>TypeName</code> we use a decoration rather than a field to
-avoid a dependency on the <code>javafe.tc</code> package.
-
-</ul>
-
-Measurements:
-<blockquote>
-Node abstract classes: 13
-<br> Node concrete classes: 59
-<br> Sequence classes: 12
-<br> Total classes: 84
-<br>
-<br> Input to code generator: 842 lines of code (513 excluding comments)
-<br> Code generator: 993 (675)
-<br> Total lines of code: 1835 (1188)
-<br> Output of code generator: 4298
-</blockquote>
-
-<p> The complete list of subclasses is shown below.  The names of
-subclasses of this class correspond (in general) to the syntactic
-units that they represent.  Any exceptions to this rule are
-documented.  All non-leaf classes are abstract.  In parenthesis,
-the names and types of fields holding the locally-defined children
-classes are listed; a postfix <code>*</code> on a type indicates a
-sequence.  Square brackets indicate optional elements; the only
-these fields can be null.
-
-  * <PRE>
-  * ASTNode
-  *    CompilationUnit ([Name pkgName], [LexicalPragma* lexicalPragmas], ImportDecl* imports, TypeDecl* elems)
-  *    ImportDecl ()
-  *       SingleTypeImport (TypeName typeName)
-  *       OnDemandImport (Name pkgName)
-  *    TypeDecl (int modifiers, [ModifierPragma* pmodifiers], Identifier id, [TypeModifierPragma* tmodifiers], TypeName* superInterfaces, TypeDeclElem* elems)
-  *       ClassDecl ([TypeName superClass])
-  *       InterfaceDecl ()
-  *    TypeDeclElem () NOTE: This is an <em>interface</em>
-  *       TypeDecl
-  *       FieldDecl
-  *       RoutineDecl (int modifiers, [ModifierPragma* pmodifiers], FormalParaDecl* args, TypeName* raises, [BlockStmt body])
-  *          ConstructorDecl ([TypeModifierPragma* tmodifiers])
-  *          MethodDecl (Identifier id, Type returnType)
-  *       InitBlock (int modifiers, [ModifierPragma* pmodifiers], BlockStmt block)
-  *       TypeDeclElemPragma ()
-  *    GenericVarDecl (int modifiers, [ModifierPragma* pmodifiers], Identifier id, Type type)
-  *       LocalVarDecl ([VarInit init])
-  *       FieldDecl ([VarInit init])
-  *       FormalParaDecl ()
-  *    Stmt ()
-  *       GenericBlockStmt (Stmt* stmts)
-  *          BlockStmt ()
-  *          SwitchStmt (Expr expr)
-  *       VarDeclStmt (LocalVarDecl decl)
-  *       ClassDeclStmt (ClassDecl anonDecl)
-  *       WhileStmt (Expr expr, Stmt stmt)
-  *       DoStmt (Expr expr, Stmt stmt)
-  *       SynchronizeStmt (Expr expr, BlockStmt stmt)
-  *       EvalStmt (Expr expr)
-  *       ReturnStmt ([Expr expr])
-  *       ThrowStmt (Expr expr)
-  *       BranchStmt ([Identifier label])
-  *          BreakStmt ()
-  *          ContinueStmt ()
-  *       LabelStmt (Identifier label, Stmt stmt)
-  *       IfStmt (Expr expr, Stmt thn, Stmt els)
-  *       ForStmt (Stmt* forInit, Expr test, Expr* forUpdate, Stmt body)
-  *       SkipStmt ()
-  *       SwitchLabel ([Expr expr])
-  *       TryFinallyStmt (Stmt tryClause, Stmt finallyClause)
-  *       TryCatchStmt (Stmt tryClause, CatchClause* catchClauses)
-  *       StmtPragma ()
-  *       ConstructorInvocation (boolean superCall, [Expr enclosingInstance], Expr* args)
-  *    CatchClause (FormalParaDecl arg, Stmt body)
-  *    VarInit ()
-  *       ArrayInit (VarInit* elems)
-  *       Expr ()
-  *          ThisExpr (Type classPrefix)
-  *          LiteralExpr (int tag, [Object value])
-  *          ArrayRefExpr (Expr array, Expr index)
-  *          NewInstanceExpr ([Expr enclosingInstance], TypeName type, Expr* args, [ClassDecl decl])
-  *          NewArrayExpr (Type type, Expr* dims, [ArrayInit init])
-  *          CondExpr (Expr test, Expr thn, Expr els)
-  *          InstanceOfExpr (Expr expr, Type type)
-  *          CastExpr (Expr expr, Type type)
-  *          BinaryExpr (int op, Expr left, Expr right)
-  *          UnaryExpr (int op, Expr expr)
-  *          ParenExpr (Expr expr)
-  *          AmbiguousVariableAccess (Name name)
-  *          VariableAccess (Identifier id)
-  *          FieldAccess (ObjectDesignator od, Identifier id)
-  *          AmbiguousMethodInvocation (Name name, Expr* args)
-  *          MethodInvocation (ObjectDesignator od, Identifier id, Expr* args)
-  *          ClassLiteral (Type type)
-  *    ObjectDesignator ()  // "expr.", "type." or "super."
-  *       ExprObjectDesignator (Expr expr)
-  *       TypeObjectDesignator (Type type)
-  *       SuperObjectDesignator ()
-  *    Type ()
-  *       PrimitiveType (int tag)
-  *       TypeName (Name name)
-  *       ArrayType (Type elemType)
-  *    Name ()
-  *       SimpleName (Identifier id)
-  *       CompoundName (Identifier* ids)
-  *    ModifierPragma ()
-  *    LexicalPragma ()
-  *    TypeModifierPragma ()
-  * </PRE>
-
-*/
-
-public abstract class ASTNode implements Cloneable {
-
-  /** The decorations that have been attached to this node.  This is a
-    package-level field accessed by the <code>ASTDecoration</code>
-    class.  There are different ways to implement decorations; this
-    way is not space-efficient, but it's pretty fast. */
-
-  //@ invariant decorations!=null ==> (\typeof(decorations)==\type(Object[]))
+  //@ invariant decorations != null ==> (\typeof(decorations) == \type(Object[]));
   Object[] decorations;  
 
-  //@ ensures !(this instanceof  Type) ==> \result!=Location.NULL
+  //@ ensures !(this instanceof  Type) ==> \result != Location.NULL;
   /*@ ensures (this instanceof Type) ==>
-	         ((Type)this).syntax ==> (\result!=Location.NULL) */
+	         ((Type)this).syntax ==> (\result != Location.NULL); */
   public abstract int getStartLoc();
 
-  //@ ensures !(this instanceof  Type) ==> \result!=Location.NULL
+  //@ ensures !(this instanceof  Type) ==> \result != Location.NULL;
   /*@ ensures (this instanceof Type) ==>
-	         ((Type)this).syntax ==> (\result!=Location.NULL) */
+	         ((Type)this).syntax ==> (\result != Location.NULL); */
   public int getEndLoc() { 
     int start = getStartLoc();
     if( start == Location.NULL )
@@ -195,8 +197,8 @@ public abstract class ASTNode implements Cloneable {
   }
 
 
-  //@ ensures \result!=null
-  //@ ensures \typeof(\result) == \typeof(this)
+  //@ ensures \result != null;
+  //@ ensures \typeof(\result) == \typeof(this);
   //@ ensures \result.owner == null;
   public Object clone(boolean b)  {
     ASTNode n = null;
@@ -213,8 +215,8 @@ public abstract class ASTNode implements Cloneable {
   }
  
   /**
-   ** clone node, where the clone has the same decorations as original.
-   **/
+   * Clone node, where the clone has the same decorations as original.
+   */
   public Object clone() {
     return clone(true);
   }
@@ -223,18 +225,18 @@ public abstract class ASTNode implements Cloneable {
     return decorations;
   }
 
-  //@ requires d!=null ==> \typeof(d)==\type(Object[])
+  //@ requires d != null ==> \typeof(d) == \type(Object[]);
   public void setDecorations(Object d[]) {
     decorations = d;
   }
   
   /**
-   ** Used to remind callers of ASTNode subclass constructors that they
-   ** must manually establish any required invariants after calling an
-   ** AST constructor.  (AST constructors do not establish any class
-   ** invariants.)
-   **/
-  //@ ghost public static boolean I_will_establish_invariants_afterwards
+   * Used to remind callers of ASTNode subclass constructors that they
+   * must manually establish any required invariants after calling an
+   * AST constructor.  (AST constructors do not establish any class
+   * invariants.)
+   */
+  //@ ghost public static boolean I_will_establish_invariants_afterwards;
 }
 
 /* ---------------------------------------------------------------------- */
@@ -243,7 +245,8 @@ public abstract class ASTNode implements Cloneable {
 pointing the <code>parent</code> pointers of the <code>TypeDecl</code>s
 inside a <code>CompilationUnit</code> to point to that unit. */
 
-public class CompilationUnit extends ASTNode {
+public class CompilationUnit extends ASTNode
+{
   //# Name pkgName NullOK		// null if in unnamed package
   //# LexicalPragma* lexicalPragmas NullOK
   //# ImportDecl* imports
@@ -259,16 +262,16 @@ public class CompilationUnit extends ASTNode {
   }
 
     /**
-     ** Return true iff this CompilationUnit was created from a .class
-     ** file.
-     **/
+     * @return true iff this CompilationUnit was created from a .class
+     * file.
+     */
     public boolean isBinary() {
 	return Location.toFileName(loc).endsWith(".class");
     }
 
   public int getStartLoc() { return loc; }
   public int getEndLoc() { 
-    if (elems==null || elems.size()<1)
+    if (elems == null || elems.size() < 1)
       return super.getEndLoc();
 
     return elems.elementAt(elems.size()-1).getEndLoc();
@@ -277,16 +280,19 @@ public class CompilationUnit extends ASTNode {
 
 /* ---------------------------------------------------------------------- */
 
-public abstract class ImportDecl extends ASTNode {
+public abstract class ImportDecl extends ASTNode
+{
   //# int loc NotNullLoc
   public int getStartLoc() { return loc; }
 }
 
-public class SingleTypeImportDecl extends ImportDecl {
+public class SingleTypeImportDecl extends ImportDecl
+{
   //# TypeName typeName
 }
 
-public class OnDemandImportDecl extends ImportDecl {
+public class OnDemandImportDecl extends ImportDecl
+{
   //# Name pkgName
 }
 
@@ -296,12 +302,13 @@ public class OnDemandImportDecl extends ImportDecl {
  *  Common fields of ClassDeclarations and InterfaceDeclarations are here.
  */
 
-public abstract class TypeDecl extends ASTNode implements TypeDeclElem {
+public abstract class TypeDecl extends ASTNode implements TypeDeclElem
+{
   /**
-   ** if specOnly is true, then this is only a spec.  In particular,
-   ** methods do not have non-empty bodies, no initializers are present
-   ** for fields, and no static bodies are present.
-   **/
+   * If specOnly is true, then this is only a spec.  In particular,
+   * methods do not have non-empty bodies, no initializers are present
+   * for fields, and no static bodies are present.
+   */
   public boolean specOnly = false;
 
   //# int modifiers
@@ -320,7 +327,7 @@ public abstract class TypeDecl extends ASTNode implements TypeDeclElem {
   //# int locCloseBrace NotNullLoc
 
 
-  //@ invariant hasParent ==> parent!=null
+  //@ invariant hasParent ==> parent != null;
   public TypeDecl parent;
 
   public TypeDecl getParent() { return parent; }
@@ -338,11 +345,11 @@ public abstract class TypeDecl extends ASTNode implements TypeDeclElem {
   }
 
     /**
-     ** Return true iff this TypeDecl was created from a .class
-     ** file. <p>
-     **
-     ** Precondition: we have already been associated with a TypeSig.<p>
-     **/
+     * @return true iff this TypeDecl was created from a .class
+     * file.
+     *
+     * @precondition We have already been associated with a TypeSig.
+     */
     public boolean isBinary() {
         javafe.tc.TypeSig sig = javafe.tc.TypeSig.getSig(this);
 	CompilationUnit cu = sig.getCompilationUnit();
@@ -354,7 +361,8 @@ public abstract class TypeDecl extends ASTNode implements TypeDeclElem {
   public int getEndLoc() { return locCloseBrace; }
 }
 
-public class ClassDecl extends TypeDecl {
+public class ClassDecl extends TypeDecl
+{
   //# TypeName superClass NullOK
 
   //# PostMakeCall
@@ -367,7 +375,8 @@ public class ClassDecl extends TypeDecl {
   }
 }
 
-public class InterfaceDecl extends TypeDecl {
+public class InterfaceDecl extends TypeDecl
+{
   //# PostMakeCall
 
   /** Set the parent pointer of the <code>TypeDeclElems</code>s
@@ -383,8 +392,9 @@ public class InterfaceDecl extends TypeDecl {
 /** Represents both MethodDeclarations and ConstructorDeclarations.
  */
 
-public abstract class RoutineDecl extends ASTNode implements TypeDeclElem {
-  //@ invariant hasParent ==> parent!=null
+public abstract class RoutineDecl extends ASTNode implements TypeDeclElem
+{
+  //@ invariant hasParent ==> parent != null;
   public TypeDecl parent;
 
   public boolean implicit = false;
@@ -418,7 +428,7 @@ public abstract class RoutineDecl extends ASTNode implements TypeDeclElem {
   public int getStartLoc() { return loc; }
 
     public int getEndLoc() { 
-	if (body==null)
+	if (body == null)
 	    return super.getEndLoc();
 
 	return body.getEndLoc();
@@ -432,11 +442,13 @@ public abstract class RoutineDecl extends ASTNode implements TypeDeclElem {
  *  inserted by the parser.
  */
 
-public class ConstructorDecl extends RoutineDecl {
+public class ConstructorDecl extends RoutineDecl
+{
   //# MakerSpec requires body != null ==> locOpenBrace != Location.NULL;
 }
 
-public class MethodDecl extends RoutineDecl {
+public class MethodDecl extends RoutineDecl
+{
   //# Identifier id NoCheck
   //# Type returnType Syntax
   //# int locType NotNullLoc
@@ -450,8 +462,9 @@ public class MethodDecl extends RoutineDecl {
  *  static and dynamic initializer blocks are allowed.
  */
 
-public class InitBlock extends ASTNode implements TypeDeclElem {
-  //@ invariant hasParent ==> parent!=null
+public class InitBlock extends ASTNode implements TypeDeclElem
+{
+  //@ invariant hasParent ==> parent != null;
   public TypeDecl parent;
 
   //# int modifiers
@@ -465,9 +478,10 @@ public class InitBlock extends ASTNode implements TypeDeclElem {
 }
 
 public abstract class TypeDeclElemPragma
-         extends ASTNode implements TypeDeclElem {
+         extends ASTNode implements TypeDeclElem
+{
 
-  //@ invariant hasParent ==> parent!=null
+  //@ invariant hasParent ==> parent != null;
   public TypeDecl parent;
 
   public TypeDecl getParent() { return parent; }
@@ -487,7 +501,8 @@ public abstract class TypeDeclElemPragma
  *  starting location.
  */
 
-public abstract class GenericVarDecl extends ASTNode {
+public abstract class GenericVarDecl extends ASTNode
+{
   //# int modifiers
   //# ModifierPragma* pmodifiers NullOK
   //# Identifier id NoCheck
@@ -501,7 +516,8 @@ public abstract class GenericVarDecl extends ASTNode {
  *  The modifiers field of LocalVarDecl allow for future extensibility.
  */
 
-public class LocalVarDecl extends GenericVarDecl {
+public class LocalVarDecl extends GenericVarDecl
+{
   //# VarInit init NullOK
 
   // The "locAssignOp" field is used only if "init" is non-null
@@ -514,7 +530,7 @@ public class LocalVarDecl extends GenericVarDecl {
   }
 
   public int getEndLoc() {
-    if (init==null)
+    if (init == null)
       return super.getEndLoc();
 
     return init.getEndLoc();
@@ -523,8 +539,9 @@ public class LocalVarDecl extends GenericVarDecl {
 
 /** Represents a field declaration. */
 
-public class FieldDecl extends GenericVarDecl implements TypeDeclElem {
-  //@ invariant hasParent ==> parent!=null
+public class FieldDecl extends GenericVarDecl implements TypeDeclElem
+{
+  //@ invariant hasParent ==> parent != null;
   public TypeDecl parent;
 
   //# VarInit init NullOK
@@ -542,7 +559,7 @@ public class FieldDecl extends GenericVarDecl implements TypeDeclElem {
   public void setParent(TypeDecl p) { parent = p; }
 
   public int getEndLoc() {
-    if (init==null)
+    if (init == null)
       return super.getEndLoc();
 
     return init.getEndLoc();
@@ -553,22 +570,23 @@ public class FieldDecl extends GenericVarDecl implements TypeDeclElem {
 /** Represents a FormalParameter. 
  */
 
-public class FormalParaDecl extends GenericVarDecl {
-}
+public class FormalParaDecl extends GenericVarDecl
+{ }
 
 /* ---------------------------------------------------------------------- */
 
 /** Represents a BlockStatement syntactic unit (which includes
  * variable declarations). */
 
-public abstract class Stmt extends ASTNode {
-}
+public abstract class Stmt extends ASTNode
+{ }
 
 /** Abstract class containing common parts of Block and SwitchBlock
  *  syntactic units. 
  */
 
-public abstract class GenericBlockStmt extends Stmt {
+public abstract class GenericBlockStmt extends Stmt
+{
   //# Stmt* stmts
   //# int locOpenBrace NotNullLoc
   //# int locCloseBrace NotNullLoc
@@ -576,7 +594,8 @@ public abstract class GenericBlockStmt extends Stmt {
   public int getEndLoc() { return locCloseBrace; }
 }
 
-public class BlockStmt extends GenericBlockStmt {
+public class BlockStmt extends GenericBlockStmt
+{
   //# PostCheckCall
   private void postCheck() {
     for(int i = 0; i < stmts.size(); i++) {
@@ -589,19 +608,22 @@ public class BlockStmt extends GenericBlockStmt {
   public int getStartLoc() { return locOpenBrace; }
 }
 
-public class SwitchStmt extends GenericBlockStmt {
+public class SwitchStmt extends GenericBlockStmt
+{
   //# Expr expr
   //# int loc NotNullLoc
   public int getStartLoc() { return loc; }
 }
 
-public class VarDeclStmt extends Stmt {
+public class VarDeclStmt extends Stmt
+{
   //# LocalVarDecl decl
   public int getStartLoc() { return decl.getStartLoc(); }
   public int getEndLoc() { return decl.getEndLoc(); }
 }
 
-public class ClassDeclStmt extends Stmt {
+public class ClassDeclStmt extends Stmt
+{
   //# ClassDecl decl
 
   //# PostCheckCall
@@ -613,7 +635,8 @@ public class ClassDeclStmt extends Stmt {
   public int getEndLoc() { return decl.getEndLoc(); }
 }
 
-public class WhileStmt extends Stmt {
+public class WhileStmt extends Stmt
+{
   //# Expr expr
   //# Stmt stmt
   //# int loc NotNullLoc
@@ -630,7 +653,8 @@ public class WhileStmt extends Stmt {
   public int getEndLoc() { return stmt.getEndLoc(); }
 }
 
-public class DoStmt extends Stmt {
+public class DoStmt extends Stmt
+{
   //# Expr expr
   //# Stmt stmt
   //# int loc NotNullLoc
@@ -646,7 +670,8 @@ public class DoStmt extends Stmt {
   public int getEndLoc() { return expr.getEndLoc(); }
 }
 
-public class SynchronizeStmt extends Stmt {
+public class SynchronizeStmt extends Stmt
+{
   //# Expr expr
   //# BlockStmt stmt
   //# int loc NotNullLoc
@@ -656,44 +681,49 @@ public class SynchronizeStmt extends Stmt {
   public int getEndLoc() { return stmt.getEndLoc(); }
 }
 
-public class EvalStmt extends Stmt {
+public class EvalStmt extends Stmt
+{
   //# Expr expr
   public int getStartLoc() { return expr.getStartLoc(); }
   public int getEndLoc() { return expr.getEndLoc(); }
 }
 
-public class ReturnStmt extends Stmt {
+public class ReturnStmt extends Stmt
+{
   //# Expr expr NullOK
   //# int loc NotNullLoc
   public int getStartLoc() { return loc; }
   public int getEndLoc() {
-    if (expr==null)
+    if (expr == null)
       return super.getEndLoc();
 
     return expr.getEndLoc();
   }
 }
 
-public class ThrowStmt extends Stmt {
+public class ThrowStmt extends Stmt
+{
   //# Expr expr
   //# int loc NotNullLoc
   public int getStartLoc() { return loc; }
   public int getEndLoc() { return expr.getEndLoc(); }
 }
 
-public abstract class BranchStmt extends Stmt {
+public abstract class BranchStmt extends Stmt
+{
   //# Identifier label NoCheck NullOK
   //# int loc NotNullLoc
   public int getStartLoc() { return loc; }
 }
 
-public class BreakStmt extends BranchStmt {
-}
+public class BreakStmt extends BranchStmt
+{ }
 
-public class ContinueStmt extends BranchStmt {
-}
+public class ContinueStmt extends BranchStmt
+{ }
 
-public class LabelStmt extends Stmt {
+public class LabelStmt extends Stmt
+{
   //# Identifier label NoCheck
   //# Stmt stmt
   //# int locId NotNullLoc
@@ -709,7 +739,8 @@ public class LabelStmt extends Stmt {
   public int getEndLoc() { return stmt.getEndLoc(); }
 }
 
-public class IfStmt extends Stmt {
+public class IfStmt extends Stmt
+{
   //# Expr expr
   //# Stmt thn
   //# Stmt els
@@ -743,7 +774,8 @@ public class IfStmt extends Stmt {
  *  so <code>forInit</code> can contain variable declarations.
  */
 
-public class ForStmt extends Stmt {
+public class ForStmt extends Stmt
+{
   //# Stmt* forInit
   //# Expr test
   //# Expr* forUpdate
@@ -769,31 +801,34 @@ public class ForStmt extends Stmt {
   public int getEndLoc() { return body.getEndLoc(); }
 }
 
-public class SkipStmt extends Stmt {
+public class SkipStmt extends Stmt
+{
   //# int loc NotNullLoc
   
   public int getStartLoc() { return loc; }
 }
 
-/** Represents a SwitchLabel syntactic unit.
- *  If expr is null, then represents the "default" label, 
- *  otherwise represents a case label.<p>
+/**
+ * Represents a SwitchLabel syntactic unit.  If expr is null, then
+ * represents the "default" label, otherwise represents a case
+ * label.
  *
- *
- *  We infer a default: break at the end of each switch statement that
- *  does not contain a default case to simplify translation.  Such
- *  inferred cases will have their location equal to the location of the
- *  closing bracket of the switch statement they are contained in.
+ * <p> We infer a default: break at the end of each switch statement
+ * that does not contain a default case to simplify translation.  Such
+ * inferred cases will have their location equal to the location of
+ * the closing bracket of the switch statement they are contained in.
  */
 
-public class SwitchLabel extends Stmt {
+public class SwitchLabel extends Stmt
+{
   //# Expr expr NullOK
   //# int loc NotNullLoc
   public int getStartLoc() { return loc; }
 }
 
-public class TryFinallyStmt extends Stmt {
-  // Note: locTry might will be shared with tryClause.locTry if
+public class TryFinallyStmt extends Stmt
+{
+  // @note locTry might will be shared with tryClause.locTry if
   // tryClause is a TryCatchStmt
   //# Stmt tryClause
   //# Stmt finallyClause
@@ -815,10 +850,12 @@ public class TryFinallyStmt extends Stmt {
   public int getEndLoc() { return finallyClause.getEndLoc(); }
 }
 
-/** Represents a try-catch statement.
+/**
+ * Represents a try-catch statement.
  */
 
-public class TryCatchStmt extends Stmt {
+public class TryCatchStmt extends Stmt
+{
   //# Stmt tryClause
   //# CatchClause* catchClauses
   //# int loc NotNullLoc
@@ -832,40 +869,43 @@ public class TryCatchStmt extends Stmt {
   }
   public int getStartLoc() { return loc; }
   public int getEndLoc() { 
-    if (catchClauses==null || catchClauses.size()<1)
+    if (catchClauses == null || catchClauses.size()<1)
       return tryClause.getEndLoc();
 
     return catchClauses.elementAt(catchClauses.size()-1).getEndLoc();
   }
 }
 
-public abstract class StmtPragma extends Stmt { }
+public abstract class StmtPragma extends Stmt
+{ }
 
-/** Represents an ExplicitConstructorInvocation. 
- *  <p> Only occurs as the first Stmt in a ConstructorDecl. 
- *  <p> Name resolution sets the decl field to the callee.
+/**
+ * Represents an ExplicitConstructorInvocation. 
+ * <p> Only occurs as the first Stmt in a ConstructorDecl. 
+ * <p> Name resolution sets the decl field to the callee.
  */
 
-public class ConstructorInvocation extends Stmt {
+public class ConstructorInvocation extends Stmt
+{
   /**
-   ** superCall is true implies call is "super(...)",
-   ** superCall is false implies call is "this(...)".
-   **/
+   * superCall is true implies call is "super(...)",
+   * superCall is false implies call is "this(...)".
+   */
   //# boolean superCall
 
   /**
-   ** The enclosing instance is the object expression before a super
-   ** call ( <enclosingInstance>.super(...) ).  This field may be null
-   ** if there is no such expression.<p>
-   **
-   ** Note: if the supertype in question is an inner class, then the
-   ** type checker will infer a [<C>.]this expression if no expression
-   ** is present and place it in this slot.  (See ThisExpr for how to
-   ** distinguish inferred this expressions.)<p>
-   **/
+   * The enclosing instance is the object expression before a super
+   * call ( <enclosingInstance>.super(...) ).  This field may be null
+   * if there is no such expression.
+   *
+   * @note: If the supertype in question is an inner class, then the
+   * type checker will infer a [<C>.]this expression if no expression
+   * is present and place it in this slot.  (See ThisExpr for how to
+   * distinguish inferred this expressions.)<p>
+   */
   //# Expr enclosingInstance NullOK
 
-  //@ invariant enclosingInstance!=null && superCall ==> locDot!=Location.NULL
+  //@ invariant enclosingInstance != null && superCall ==> locDot != Location.NULL;
   //# int locDot
 
   //# int locKeyword NotNullLoc
@@ -896,13 +936,18 @@ public class ConstructorInvocation extends Stmt {
 
 
   //# NoMaker
-  //@ requires enclosingInstance!=null && superCall ==> locDot!=Location.NULL
+  //@ requires enclosingInstance != null && superCall ==> locDot != Location.NULL;
   //
-  //@ requires locKeyword!=javafe.util.Location.NULL
-  //@ requires locOpenParen!=javafe.util.Location.NULL
-  //@ ensures \result!=null
-  public static ConstructorInvocation make(boolean superCall, Expr enclosingInstance, int locDot, int locKeyword, int locOpenParen, /*@non_null*/ ExprVec args) {
-     //@ set I_will_establish_invariants_afterwards = true
+  //@ requires locKeyword != javafe.util.Location.NULL;
+  //@ requires locOpenParen != javafe.util.Location.NULL;
+  //@ ensures \result != null;
+  public static ConstructorInvocation make(boolean superCall, 
+                                           Expr enclosingInstance, 
+                                           int locDot, 
+                                           int locKeyword, 
+                                           int locOpenParen, 
+                                           /*@ non_null @*/ ExprVec args) {
+     //@ set I_will_establish_invariants_afterwards = true;
      ConstructorInvocation result = new ConstructorInvocation();
      result.superCall = superCall;
      result.enclosingInstance = enclosingInstance;
@@ -916,7 +961,8 @@ public class ConstructorInvocation extends Stmt {
 
 /* ---------------------------------------------------------------------- */
 
-public class CatchClause extends ASTNode {
+public class CatchClause extends ASTNode
+{
   //# FormalParaDecl arg
   //# BlockStmt body
   //# int loc NotNullLoc
@@ -926,16 +972,19 @@ public class CatchClause extends ASTNode {
 
 /* ---------------------------------------------------------------------- */
 
-/** Represents a VariableInitializer. 
+/**
+ * Represents a VariableInitializer. 
  */
 
-public abstract class VarInit extends ASTNode {
-}
+public abstract class VarInit extends ASTNode
+{ }
 
-/** Represents an ArrayInitializer. 
+/**
+ * Represents an ArrayInitializer. 
  */
 
-public class ArrayInit extends VarInit {
+public class ArrayInit extends VarInit
+{
   //# VarInit* elems
   //# int locOpenBrace NotNullLoc
   //# int locCloseBrace NotNullLoc
@@ -943,28 +992,30 @@ public class ArrayInit extends VarInit {
   public int getEndLoc() { return locCloseBrace; }
 }
 
-/** Represents an Expression.
+/**
+ * Represents an Expression.
  *
- *  We define Expr as a subclass of VarInit to yield a more compact
- *  representation. An alternative is for VarInit to contain a pointer to
- *  an Expr, which would result in a number of additional pointers, in
- *  particular for array initializers.
+ * We define Expr as a subclass of VarInit to yield a more compact
+ * representation. An alternative is for VarInit to contain a pointer
+ * to an Expr, which would result in a number of additional pointers,
+ * in particular for array initializers.
  */
 
-public abstract class Expr extends VarInit {
-}
+public abstract class Expr extends VarInit
+{ }
 
 /**
- ** We represent [C.]this. <p>
- **
- ** classPrefix holds C if present, and null otherwise.<p>
- **
- ** Note: classPrefix will hold a **TypeSig** instead of a TypeName if
- ** we have been inferred.  (The inferred field specifies whether or
- ** not we have been inferred).<p>
- **/
+ * We represent [C.]this.
+ *
+ * <p> classPrefix holds C if present, and null otherwise.
+ *
+ * @note classPrefix will hold a <em>**TypeSig**</em> instead of a
+ * TypeName if we have been inferred.  (The inferred field specifies
+ * whether or not we have been inferred.)
+ */
 
-public class ThisExpr extends Expr {
+public class ThisExpr extends Expr
+{
   //# Type classPrefix NullOK
 
   //# int loc NotNullLoc
@@ -973,7 +1024,7 @@ public class ThisExpr extends Expr {
   public boolean inferred = false;
 
     public int getStartLoc() {
-        if (classPrefix!=null && classPrefix instanceof TypeName)
+        if (classPrefix != null && classPrefix instanceof TypeName)
 	    return classPrefix.getStartLoc();
 	return loc;
     }
@@ -981,14 +1032,16 @@ public class ThisExpr extends Expr {
   public int getEndLoc() { return Location.inc(loc,3); }
 }
 
-/** Represents a Literal.
+/**
+ * Represents a Literal.
  *
- *  The tag of a LiteralExpr should be one of the *LIT (eg INTLIT)
- *  constants defined in TagConstants.  The value fields is a
- *  Character/String/Long/Double/Boolean/null, as appropriate.
+ * <p> The tag of a LiteralExpr should be one of the *LIT (eg INTLIT)
+ * constants defined in TagConstants.  The value fields is a
+ * Character/String/Long/Double/Boolean/null, as appropriate.
  */
 
-public class LiteralExpr extends Expr {
+public class LiteralExpr extends Expr
+{
   /*@ invariant (
 	(tag==TagConstants.BOOLEANLIT) ||
 	(tag==TagConstants.INTLIT) ||
@@ -1004,7 +1057,7 @@ public class LiteralExpr extends Expr {
 
   /*@ invariant (
 	((tag==TagConstants.BOOLEANLIT) ==> (value instanceof Boolean)) &&
-	((tag==TagConstants.NULLLIT) ==> (value==null)) &&
+	((tag==TagConstants.NULLLIT) ==> (value == null)) &&
 	((tag==TagConstants.INTLIT) ==> (value instanceof Integer)) &&
 	((tag==TagConstants.LONGLIT) ==> (value instanceof Long)) &&
 	((tag==TagConstants.FLOATLIT) ==> (value instanceof Float)) &&
@@ -1060,7 +1113,7 @@ public class LiteralExpr extends Expr {
       ) */
   /*@ requires (
 	((tag==TagConstants.BOOLEANLIT) ==> (value instanceof Boolean)) &&
-	((tag==TagConstants.NULLLIT) ==> (value==null)) &&
+	((tag==TagConstants.NULLLIT) ==> (value == null)) &&
 	((tag==TagConstants.INTLIT) ==> (value instanceof Integer)) &&
 	((tag==TagConstants.LONGLIT) ==> (value instanceof Long)) &&
 	((tag==TagConstants.FLOATLIT) ==> (value instanceof Float)) &&
@@ -1069,10 +1122,10 @@ public class LiteralExpr extends Expr {
 	((tag==TagConstants.CHARLIT) ==> (value instanceof Integer))
       ) */
   //
-  //@ requires loc!=javafe.util.Location.NULL
-  //@ ensures \result!=null
+  //@ requires loc != javafe.util.Location.NULL;
+  //@ ensures \result != null;
   public static LiteralExpr make(int tag, Object value, int loc) {
-     //@ set I_will_establish_invariants_afterwards = true
+     //@ set I_will_establish_invariants_afterwards = true;
      LiteralExpr result = new LiteralExpr();
      result.tag = tag;
      result.value = value;
@@ -1081,7 +1134,8 @@ public class LiteralExpr extends Expr {
   }
 }
 
-public class ArrayRefExpr extends Expr {
+public class ArrayRefExpr extends Expr
+{
   //# Expr array
   //# Expr index
   //# int locOpenBracket NotNullLoc
@@ -1090,33 +1144,34 @@ public class ArrayRefExpr extends Expr {
   public int getEndLoc() { return locCloseBracket; }
 }
 
-public class NewInstanceExpr extends Expr {
+public class NewInstanceExpr extends Expr
+{
   /**
-   ** The enclosing instance is the object expression before a new
-   ** call ( <enclosingInstance>.new T(...) ).  This field may be null
-   ** if there is no such expression.<p>
-   **
-   ** Note: if the type in question is an inner class, then the
-   ** type checker will infer a [<C>.]this expression if no expression
-   ** is present and place it in this slot.  (See ThisExpr for how to
-   ** distinguish inferred this expressions.)<p>
-   **/
+   * The enclosing instance is the object expression before a new
+   * call ( <enclosingInstance>.new T(...) ).  This field may be null
+   * if there is no such expression.
+   *
+   * @note If the type in question is an inner class, then the
+   * type checker will infer a [<C>.]this expression if no expression
+   * is present and place it in this slot.  (See ThisExpr for how to
+   * distinguish inferred this expressions.)<p>
+   */
   //# Expr enclosingInstance NullOK
 
-  //@ invariant (enclosingInstance==null) == (locDot==Location.NULL)
+  //@ invariant (enclosingInstance == null) == (locDot==Location.NULL);
   //# int locDot
 
   //# TypeName type
   //# Expr* args
 
   /**
-   ** If the new expression includes a declaration of an inner class,
-   ** then "anonDecl" will be non-null.  In this case, the
-   ** "superclass" field of "ananDecl" will be null and
-   ** "superinterfaces" list of "anonDecl" will be empty.  One of
-   ** these fields needs to be modified during type checking depending
-   ** on whether "type" is a class or an interface.
-   **/
+   * If the new expression includes a declaration of an inner class,
+   * then "anonDecl" will be non-null.  In this case, the
+   * "superclass" field of "ananDecl" will be null and
+   * "superinterfaces" list of "anonDecl" will be empty.  One of
+   * these fields needs to be modified during type checking depending
+   * on whether "type" is a class or an interface.
+   */
   //# ClassDecl anonDecl NullOK
 
   //# int loc NotNullLoc
@@ -1124,7 +1179,8 @@ public class NewInstanceExpr extends Expr {
 
   public ConstructorDecl decl;
 
-  public int getStartLoc() {
+  public int getStartLoc()
+{
     if (enclosingInstance == null) return loc;
     else return enclosingInstance.getStartLoc();
   }
@@ -1138,13 +1194,19 @@ public class NewInstanceExpr extends Expr {
 
 
   //# NoMaker
-  //@ requires (enclosingInstance==null) == (locDot==Location.NULL)
+  //@ requires (enclosingInstance == null) == (locDot==Location.NULL);
   //
-  //@ requires loc!=javafe.util.Location.NULL
-  //@ requires locOpenParen!=javafe.util.Location.NULL
-  //@ ensures \result!=null
-  public static NewInstanceExpr make(Expr enclosingInstance, int locDot, /*@non_null*/ TypeName type, /*@non_null*/ ExprVec args, ClassDecl anonDecl, int loc, int locOpenParen) {
-     //@ set I_will_establish_invariants_afterwards = true
+  //@ requires loc != javafe.util.Location.NULL;
+  //@ requires locOpenParen != javafe.util.Location.NULL;
+  //@ ensures \result != null;
+  public static NewInstanceExpr make(Expr enclosingInstance, 
+                                     int locDot, 
+                                     /*@ non_null @*/ TypeName type, 
+                                     /*@ non_null @*/ ExprVec args, 
+                                     ClassDecl anonDecl, 
+                                     int loc, 
+                                     int locOpenParen) {
+     //@ set I_will_establish_invariants_afterwards = true;
      NewInstanceExpr result = new NewInstanceExpr();
      result.enclosingInstance = enclosingInstance;
      result.locDot = locDot;
@@ -1157,51 +1219,52 @@ public class NewInstanceExpr extends Expr {
   }
 }
 
-public class NewArrayExpr extends Expr {
+public class NewArrayExpr extends Expr
+{
   /**
-   ** The type of the elements being given zero-default values, or (if
-   ** an array initializer is present), the type of the array
-   ** initializer elements.<p>
-   **
-   ** E.g., new int[4][3][] yields a type of int[] and new int[][][]{a, b}
-   ** yields a type of int[][].
-   **/
+   * The type of the elements being given zero-default values, or (if
+   * an array initializer is present), the type of the array
+   * initializer elements.
+   *
+   * <p> E.g., new int[4][3][] yields a type of int[] and new int[][][]{a, b}
+   * yields a type of int[][].
+   */
   //# Type type Syntax
 
   /**
-   ** The array initializer, if any.  If it is present then dims will
-   ** contain exactly 1 element, the inferred size of the array
-   ** initializer.<p>
-   **
-   ** E.g., new int[][]{7, 5} will generate a dims of {INTLIT(2)}.
-   **/
-  //@ invariant init!=null ==> dims.count==1
+   * The array initializer, if any.  If it is present then dims will
+   * contain exactly 1 element, the inferred size of the array
+   * initializer.
+   *
+   * <p> E.g., new int[][]{7, 5} will generate a dims of {INTLIT(2)}.
+   */
+  //@ invariant init != null ==> dims.count==1;
   //# ArrayInit init NullOK
 
   /**
-   ** If init is null, then holds Expr's between []'s in order.  If init
-   ** is not null, then holds the inferred array size.  (cf. init).
-   **
-   ** E.g., new int[x+y][z][] will generate a dims of {<x+y>, <z>}.
-   **/
-  //@ invariant dims.count >= 1
+   * If init is null, then holds Expr's between []'s in order.  If init
+   * is not null, then holds the inferred array size.  (cf. init).
+   *
+   * E.g., new int[x+y][z][] will generate a dims of {<x+y>, <z>}.
+   */
+  //@ invariant dims.count >= 1;
   //# Expr* dims
 
   //# int loc NotNullLoc
 
   /**
-   ** The locations of the open brackets for each Expr (possibly
-   ** inferred if init!=null) in dims.<p>
-   **
-   ** the open bracket in front of dims[i] is located at
-   ** locOpenBrackets[i].<p>
-   **
-   ** Note: locOpenBrackets may contain junk after the first
-   ** dims.size() entries.
-   **/
-  //@ invariant locOpenBrackets.length >= dims.count
-  /*@ invariant (\forall int i; (0<=i && i<dims.count) ==> 
-			locOpenBrackets[i]!=Location.NULL) */
+   * The locations of the open brackets for each Expr (possibly
+   * inferred if init != null) in dims.
+   *
+   * <p> The open bracket in front of dims[i] is located at
+   * locOpenBrackets[i].
+   *
+   * @note locOpenBrackets may contain junk after the first
+   * dims.size() entries.
+   */
+  //@ invariant locOpenBrackets.length >= dims.count;
+  /*@ invariant (\forall int i; (0 <= i && i<dims.count) ==> 
+			locOpenBrackets[i] != Location.NULL) */
   //# int[] locOpenBrackets NoCheck
 
   public int getStartLoc() { return loc; }
@@ -1216,24 +1279,28 @@ public class NewArrayExpr extends Expr {
 
   //# PostCheckCall
   private void postCheck() {
-    Assert.notFalse(dims.size()>=1);
-    if (init!=null)
+    Assert.notFalse(dims.size() >= 1);
+    if (init != null)
         Assert.notFalse(dims.size()==1);
   }
 
 
   //# NoMaker
-  //@ requires init!=null ==> dims.count==1
-  //@ requires dims.count >= 1
-  //@ requires locOpenBrackets.length >= dims.count
-  /*@ requires (\forall int i; (0<=i && i<dims.count) ==> 
-			locOpenBrackets[i]!=Location.NULL) */
+  //@ requires init != null ==> dims.count==1;
+  //@ requires dims.count >= 1;
+  //@ requires locOpenBrackets.length >= dims.count;
+  /*@ requires (\forall int i; (0 <= i && i<dims.count) ==> 
+			locOpenBrackets[i] != Location.NULL); */
   //
-  //@ requires type.syntax
-  //@ requires loc!=javafe.util.Location.NULL
-  //@ ensures \result!=null
-  public static NewArrayExpr make(/*@non_null*/ Type type, /*@non_null*/ ExprVec dims, ArrayInit init, int loc, /*@non_null*/ int[] locOpenBrackets) {
-     //@ set I_will_establish_invariants_afterwards = true
+  //@ requires type.syntax;
+  //@ requires loc != javafe.util.Location.NULL;
+  //@ ensures \result != null;
+  public static NewArrayExpr make(/*@ non_null @*/ Type type, 
+                                  /*@ non_null @*/ ExprVec dims, 
+                                  ArrayInit init, 
+                                  int loc, 
+                                  /*@ non_null @*/ int[] locOpenBrackets) {
+     //@ set I_will_establish_invariants_afterwards = true;
      NewArrayExpr result = new NewArrayExpr();
      result.type = type;
      result.dims = dims;
@@ -1244,7 +1311,8 @@ public class NewArrayExpr extends Expr {
   }
 }
 
-public class CondExpr extends Expr {
+public class CondExpr extends Expr
+{
   //# Expr test
   //# Expr thn
   //# Expr els
@@ -1258,7 +1326,8 @@ public class CondExpr extends Expr {
   }
 }
 
-public class InstanceOfExpr extends Expr {
+public class InstanceOfExpr extends Expr
+{
   //# Expr expr
   //# Type type Syntax
   //# int loc NotNullLoc
@@ -1266,7 +1335,8 @@ public class InstanceOfExpr extends Expr {
   public int getEndLoc() { return type.getEndLoc(); }
 }
 
-public class CastExpr extends Expr {
+public class CastExpr extends Expr
+{
   //# Expr expr
   //# Type type Syntax
   //# int locOpenParen NotNullLoc
@@ -1275,12 +1345,14 @@ public class CastExpr extends Expr {
   public int getEndLoc() { return expr.getEndLoc(); }
 }
 
-/** Represents various kinds of binary expressions (eg +,-,|,%=, etc).
- *  The tag is one of the binary operator tags or assignment operator
- *  tags defined in OperatorTags.
+/**
+ * Represents various kinds of binary expressions (eg +,-,|,%=, etc).
+ * The tag is one of the binary operator tags or assignment operator
+ * tags defined in OperatorTags.
  */
 
-public class BinaryExpr extends Expr {
+public class BinaryExpr extends Expr
+{
   /*@ invariant (op == TagConstants.OR || op == TagConstants.AND
        || op == TagConstants.BITOR || op == TagConstants.BITXOR
        || op == TagConstants.BITAND
@@ -1347,11 +1419,13 @@ public class BinaryExpr extends Expr {
        || op == TagConstants.ASGLSHIFT || op == TagConstants.ASGRSHIFT
        || op == TagConstants.ASGURSHIFT || op == TagConstants.ASGBITAND) */
   //
-  //@ requires locOp!=javafe.util.Location.NULL
-  //@ ensures \result!=null
-  public static BinaryExpr make(int op, /*@non_null*/ Expr left,
-			        /*@non_null*/ Expr right, int locOp) {
-     //@ set I_will_establish_invariants_afterwards = true
+  //@ requires locOp != javafe.util.Location.NULL;
+  //@ ensures \result != null;
+  public static BinaryExpr make(int op, 
+                                /*@ non_null @*/ Expr left,
+			        /*@ non_null @*/ Expr right, 
+                                int locOp) {
+     //@ set I_will_establish_invariants_afterwards = true;
      BinaryExpr result = new BinaryExpr();
      result.op = op;
      result.left = left;
@@ -1361,13 +1435,15 @@ public class BinaryExpr extends Expr {
   }
 }
 
-/** Represents various kinds of unary expressions.
- *  The tag is one of the constants:
- *       ADD SUB NOT BITNOT INC DEC POSTFIXINC POSTFIXDEC
- *  defined in OperatorTags.
+/**
+ * Represents various kinds of unary expressions.
+ * The tag is one of the constants:
+ *      ADD SUB NOT BITNOT INC DEC POSTFIXINC POSTFIXDEC
+ * defined in OperatorTags.
  */
 
-public class UnaryExpr extends Expr {
+public class UnaryExpr extends Expr
+{
 
   /*@ invariant (op == TagConstants.UNARYADD || op == TagConstants.UNARYSUB
        || op == TagConstants.NOT || op == TagConstants.BITNOT
@@ -1406,10 +1482,10 @@ public class UnaryExpr extends Expr {
        || op == TagConstants.INC || op == TagConstants.DEC
        || op == TagConstants.POSTFIXINC || op == TagConstants.POSTFIXDEC) */
   //
-  //@ requires locOp!=javafe.util.Location.NULL
-  //@ ensures \result!=null
-  public static UnaryExpr make(int op, /*@non_null*/ Expr expr, int locOp) {
-     //@ set I_will_establish_invariants_afterwards = true
+  //@ requires locOp != javafe.util.Location.NULL;
+  //@ ensures \result != null;
+  public static UnaryExpr make(int op, /*@ non_null @*/ Expr expr, int locOp) {
+     //@ set I_will_establish_invariants_afterwards = true;
      UnaryExpr result = new UnaryExpr();
      result.op = op;
      result.expr = expr;
@@ -1418,7 +1494,8 @@ public class UnaryExpr extends Expr {
   }
 }
 
-public class ParenExpr extends Expr {
+public class ParenExpr extends Expr
+{
   //# Expr expr
   //# int locOpenParen NotNullLoc
   //# int locCloseParen NotNullLoc
@@ -1426,27 +1503,31 @@ public class ParenExpr extends Expr {
   public int getEndLoc() { return locCloseParen; }
 }
 
-/** Represents a Name that occurs in an Expression position. 
- *  These are name-resolved to VariableAccess,
- *  ExprFieldAccess or TypeFieldAccess.
+/**
+ * Represents a Name that occurs in an Expression position. 
+ * These are name-resolved to VariableAccess,
+ * ExprFieldAccess or TypeFieldAccess.
  */
 
-public class AmbiguousVariableAccess extends Expr {
+public class AmbiguousVariableAccess extends Expr
+{
   //# Name name
   public int getStartLoc() { return name.getStartLoc(); }
   public int getEndLoc() { return name.getEndLoc(); }
 }
 
-/** Represents a simple name that is bound to a local variable declaration.
- *  Is created only by the name resolution code, not by the parser.
+/**
+ * Represents a simple name that is bound to a local variable declaration.
+ * Is created only by the name resolution code, not by the parser.
  */
 
-public class VariableAccess extends Expr {
+public class VariableAccess extends Expr
+{
   //# Identifier id NoCheck
   //# int loc NotNullLoc
 
-  //@ invariant decl.id==id
-  public /*@non_null*/ GenericVarDecl decl;
+  //@ invariant decl.id==id;
+  public /*@ non_null @*/ GenericVarDecl decl;
 
   //# PostCheckCall
   private void postCheck() {
@@ -1458,13 +1539,14 @@ public class VariableAccess extends Expr {
 
 
   //# NoMaker
-  //@ requires decl.id == id
+  //@ requires decl.id == id;
   //
-  //@ requires loc!=javafe.util.Location.NULL
-  //@ ensures \result!=null
-  public static VariableAccess make(/*@non_null*/ Identifier id, int loc,
-				    /*@non_null*/ GenericVarDecl decl) {
-        //@ set I_will_establish_invariants_afterwards = true
+  //@ requires loc != javafe.util.Location.NULL;
+  //@ ensures \result != null;
+  public static VariableAccess make(/*@ non_null @*/ Identifier id, 
+                                    int loc,
+				    /*@ non_null @*/ GenericVarDecl decl) {
+        //@ set I_will_establish_invariants_afterwards = true;
 	VariableAccess result = new VariableAccess();
 	result.id = id;
 	result.loc = loc;
@@ -1473,16 +1555,18 @@ public class VariableAccess extends Expr {
   }
 }
 
-/** Represents various kinds of field access expressions. 
- *  The FieldDecl is filled in by the name resolution code.
+/**
+ * Represents various kinds of field access expressions. 
+ * The FieldDecl is filled in by the name resolution code.
  */
 
-public class FieldAccess extends Expr {
+public class FieldAccess extends Expr
+{
   //# ObjectDesignator od
   //# Identifier id NoCheck
   //# int locId NotNullLoc
 
-  //@ invariant decl==null || decl.id==id
+  //@ invariant decl == null || decl.id==id;
   public FieldDecl decl;
 
   //# PostCheckCall
@@ -1502,10 +1586,12 @@ public class FieldAccess extends Expr {
   public int getEndLoc() { return locId; }
 
   //# NoMaker
-  //@ requires locId!=javafe.util.Location.NULL
-  //@ ensures \result!=null
-  public static FieldAccess make(/*@non_null*/ ObjectDesignator od, /*@non_null*/ Identifier id, int locId) {
-     //@ set I_will_establish_invariants_afterwards = true
+  //@ requires locId != javafe.util.Location.NULL;
+  //@ ensures \result != null;
+  public static FieldAccess make(/*@ non_null @*/ ObjectDesignator od, 
+                                 /*@ non_null @*/ Identifier id, 
+                                 int locId) {
+     //@ set I_will_establish_invariants_afterwards = true;
      FieldAccess result = new FieldAccess();
      result.od = od;
      result.id = id;
@@ -1515,17 +1601,19 @@ public class FieldAccess extends Expr {
   }
 }
 
-/** Represents a Name occuring before an argument list.
- *  Is created by the parser, and then resolved to either an
- *  InstanceMethodAccess or ClassMethodAccess by the name resolution code.
+/**
+ * Represents a Name occuring before an argument list.
+ * Is created by the parser, and then resolved to either an
+ * InstanceMethodAccess or ClassMethodAccess by the name resolution code.
  *
- *  <p> Thus for the method call "x.y()", the "x.y" part is initially 
- *  represented as a MethodName, 
- *  and then resolved to a InstanceMethodAccess if "x" is a variable, 
- *  or resolved to a ClassMethodAccess if "x" is a type name.
+ * <p> Thus for the method call "x.y()", the "x.y" part is initially 
+ * represented as a MethodName, 
+ * and then resolved to a InstanceMethodAccess if "x" is a variable, 
+ * or resolved to a ClassMethodAccess if "x" is a type name.
  */
 
-public class AmbiguousMethodInvocation extends Expr {
+public class AmbiguousMethodInvocation extends Expr
+{
   //# Name name
   //# TypeModifierPragma* tmodifiers  NullOK
   //# int locOpenParen NotNullLoc
@@ -1539,10 +1627,12 @@ public class AmbiguousMethodInvocation extends Expr {
   }
 }
 
-/** Represents a MethodInvocation. 
+/**
+ * Represents a MethodInvocation. 
  */
 
-public class MethodInvocation extends Expr {
+public class MethodInvocation extends Expr
+{
   //# ObjectDesignator od
   //# Identifier id NoCheck
   //# TypeModifierPragma* tmodifiers  NullOK
@@ -1550,7 +1640,7 @@ public class MethodInvocation extends Expr {
   //# int locOpenParen NotNullLoc
   //# Expr* args
 
-  //@ invariant decl==null || decl.id==id
+  //@ invariant decl == null || decl.id==id;
   public MethodDecl decl;
 
   //# PostCheckCall
@@ -1576,11 +1666,16 @@ public class MethodInvocation extends Expr {
 
 
   //# NoMaker
-  //@ requires locId!=javafe.util.Location.NULL
-  //@ requires locOpenParen!=javafe.util.Location.NULL
-  //@ ensures \result!=null
-  public static MethodInvocation make(/*@non_null*/ ObjectDesignator od, /*@non_null*/ Identifier id, TypeModifierPragmaVec tmodifiers, int locId, int locOpenParen, /*@non_null*/ ExprVec args) {
-     //@ set I_will_establish_invariants_afterwards = true
+  //@ requires locId != javafe.util.Location.NULL;
+  //@ requires locOpenParen != javafe.util.Location.NULL;
+  //@ ensures \result != null;
+  public static MethodInvocation make(/*@ non_null @*/ ObjectDesignator od, 
+                                      /*@ non_null @*/ Identifier id, 
+                                      TypeModifierPragmaVec tmodifiers, 
+                                      int locId, 
+                                      int locOpenParen, 
+                                      /*@ non_null @*/ ExprVec args) {
+     //@ set I_will_establish_invariants_afterwards = true;
      MethodInvocation result = new MethodInvocation();
      result.od = od;
      result.id = id;
@@ -1594,10 +1689,11 @@ public class MethodInvocation extends Expr {
 }
 
 /**
- ** Represents a class literal (Type . class)
- **/
+ * Represents a class literal (Type . class)
+ */
 
-public class ClassLiteral extends Expr {
+public class ClassLiteral extends Expr
+{
   //# Type type Syntax
   //# int locDot NotNullLoc
 
@@ -1611,41 +1707,47 @@ public class ClassLiteral extends Expr {
 }
 
 
-/** Designates the object or type used for a field or method access.
- *  Subclasses represent "expr.", "type.", or "super."
+/**
+ * Designates the object or type used for a field or method access.
+ * Subclasses represent "expr.", "type.", or "super."
  */
 
-public abstract class ObjectDesignator extends ASTNode {
+public abstract class ObjectDesignator extends ASTNode
+{
   //# int locDot NotNullLoc
 
     public int getEndLoc() { return locDot; }
 }
 
 
-/** Represents an ObjectDesignator of the form "Expr . ".
+/**
+ * Represents an ObjectDesignator of the form "Expr . ".
  *
- *  Is created both by the parser (eg for "(x).y"),
- *  and by the name resolution code (eg for "x.y").
+ * Is created both by the parser (eg for "(x).y"),
+ * and by the name resolution code (eg for "x.y").
  */
 
-public class ExprObjectDesignator extends ObjectDesignator {
+public class ExprObjectDesignator extends ObjectDesignator
+{
   //# Expr expr
   public int getStartLoc() { return expr.getStartLoc(); }
 }
 
-/** Represents a ObjectDesignator of the form "TypeName . " 
+/**
+ * Represents a ObjectDesignator of the form "TypeName . " 
  *
- *  <p> Is created from AmbiguousVariableAccess/AmbiguousMethodInvocation
- *  by the name resolution code.  
- *  The <code>type</code> must be an instance of either <code>TypeName</code>
- *  or <code>TypeSig</code>  (found in <code>javafe.tc</code>).
- *  If <code>type</code> is a <code>TypeName</code>, then an explicit
- *  type name was given in the program text; if <code>type</code> 
- *  is a <code>TypeSig</code>, then the type was inferred.
+ * <p> Is created from AmbiguousVariableAccess/AmbiguousMethodInvocation
+ * by the name resolution code.  
+ * The <code>type</code> must be an instance of either <code>TypeName</code>
+ * or <code>TypeSig</code>  (found in <code>javafe.tc</code>).
+ * If <code>type</code> is a <code>TypeName</code>, then an explicit
+ * type name was given in the program text; if <code>type</code> 
+ * is a <code>TypeSig</code>, then the type was inferred.
  */
 
-public class TypeObjectDesignator extends ObjectDesignator {
-  //@ invariant type instanceof TypeName || type instanceof javafe.tc.TypeSig
+public class TypeObjectDesignator extends ObjectDesignator
+{
+  //@ invariant type instanceof TypeName || type instanceof javafe.tc.TypeSig;
   //# Type type
 
   //# PostCheckCall
@@ -1662,12 +1764,13 @@ public class TypeObjectDesignator extends ObjectDesignator {
 
   //# NoMaker
   //* Manual maker to ensure invariant on type satisfied
-  //@ requires type instanceof TypeName || type instanceof javafe.tc.TypeSig
+  //@ requires type instanceof TypeName || type instanceof javafe.tc.TypeSig;
   //
-  //@ requires locDot!=javafe.util.Location.NULL
-  //@ ensures \result!=null
-  public static TypeObjectDesignator make(int locDot, /*@non_null*/ Type type) {
-     //@ set I_will_establish_invariants_afterwards = true
+  //@ requires locDot != javafe.util.Location.NULL;
+  //@ ensures \result != null;
+  public static TypeObjectDesignator make(int locDot, 
+                                          /*@ non_null @*/ Type type) {
+     //@ set I_will_establish_invariants_afterwards = true;
      TypeObjectDesignator result = new TypeObjectDesignator();
      result.locDot = locDot;
      result.type = type;
@@ -1675,11 +1778,13 @@ public class TypeObjectDesignator extends ObjectDesignator {
   }
 }
 
-/** Represents a ObjectDesignator of the form "super . ".
- *  Is created only by the parser, not by name resolution.
+/**
+ * Represents a ObjectDesignator of the form "super . ".
+ * Is created only by the parser, not by name resolution.
  */
 
-public class SuperObjectDesignator extends ObjectDesignator {
+public class SuperObjectDesignator extends ObjectDesignator
+{
   //# int locSuper NotNullLoc
   public int getStartLoc() { return locSuper; }
 }
@@ -1687,32 +1792,34 @@ public class SuperObjectDesignator extends ObjectDesignator {
 /* ---------------------------------------------------------------------- */
 
 /**
- ** Represents a Type syntactic unit. <p>
- **
- ** WARNING: unlike other AST nodes, Type and it's subtypes may
- ** not have associated locations!  Locations exist only if syntax is
- ** true.
- **/
+ * Represents a Type syntactic unit. <p>
+ *
+ * WARNING: unlike other AST nodes, Type and it's subtypes may
+ * not have associated locations!  Locations exist only if syntax is
+ * true.
+ */
 
-public abstract class Type extends ASTNode {
+public abstract class Type extends ASTNode
+{
     /**
-     ** Does this AST Node have associated locations?  True if yes.
-     **/
-    //@ ghost public boolean syntax
+     * Does this AST Node have associated locations?  True if yes.
+     */
+    //@ ghost public boolean syntax;
 
     //# TypeModifierPragma* tmodifiers NullOK
 }
 
 /**
- ** Represents a PrimitiveType syntactic unit. 
- ** The tag should be one of the *TYPE constants defined in TagConstants
- **  (eg INTTYPE).<p>
- **
- ** WARNING: this AST node has associated locations only if syntax is
- ** true.
- **/
+ * Represents a PrimitiveType syntactic unit. 
+ * The tag should be one of the *TYPE constants defined in TagConstants
+ * (e.g., INTTYPE).
+ *
+ * @warning This AST node has associated locations only if syntax is
+ * true.
+ */
 
-public class PrimitiveType extends Type {
+public class PrimitiveType extends Type
+{
 
   /*@ invariant (tag == TagConstants.BOOLEANTYPE || tag == TagConstants.INTTYPE
        || tag == TagConstants.LONGTYPE || tag == TagConstants.CHARTYPE
@@ -1723,7 +1830,7 @@ public class PrimitiveType extends Type {
   //# int tag
 
 
-  //@ invariant syntax ==> loc!=Location.NULL
+  //@ invariant syntax ==> loc != Location.NULL;
   //# int loc
 
   public int getStartLoc() { return loc; }
@@ -1734,45 +1841,45 @@ public class PrimitiveType extends Type {
 
   //# NoMaker
   /**
-   ** Normal maker that produces syntax, but requires a non-NULL location.
-   **/
+   * Normal maker that produces syntax, but requires a non-NULL location.
+   */
   /*@ requires (tag == TagConstants.BOOLEANTYPE || tag == TagConstants.INTTYPE
        || tag == TagConstants.LONGTYPE || tag == TagConstants.CHARTYPE
        || tag == TagConstants.FLOATTYPE || tag == TagConstants.DOUBLETYPE
        || tag == TagConstants.VOIDTYPE || tag == TagConstants.NULLTYPE
        || tag == TagConstants.BYTETYPE || tag == TagConstants.SHORTTYPE) */
-  //@ ensures \result.syntax
-  //@ requires loc!=javafe.util.Location.NULL
-  //@ ensures \result!=null
+  //@ ensures \result.syntax;
+  //@ requires loc != javafe.util.Location.NULL;
+  //@ ensures \result != null;
   public static PrimitiveType make(TypeModifierPragmaVec tmodifiers,
 				   int tag, int loc) {
-     //@ set I_will_establish_invariants_afterwards = true
+     //@ set I_will_establish_invariants_afterwards = true;
      PrimitiveType result = new PrimitiveType();
      result.tag = tag;
      result.loc = loc;
      result.tmodifiers = tmodifiers;
-     //@ set result.syntax = true
+     //@ set result.syntax = true;
      return result;
   }
 
   /**
-   ** Special maker for producing non-syntax, which does not require a
-   ** location.
-   **/
+   * Special maker for producing non-syntax, which does not require a
+   * location.
+   */
   /*@ requires (tag == TagConstants.BOOLEANTYPE || tag == TagConstants.INTTYPE
        || tag == TagConstants.LONGTYPE || tag == TagConstants.CHARTYPE
        || tag == TagConstants.FLOATTYPE || tag == TagConstants.DOUBLETYPE
        || tag == TagConstants.VOIDTYPE || tag == TagConstants.NULLTYPE
        || tag == TagConstants.BYTETYPE || tag == TagConstants.SHORTTYPE) */
-  //@ ensures !\result.syntax
-  //@ ensures \result!=null
+  //@ ensures !\result.syntax;
+  //@ ensures \result != null;
   public static PrimitiveType makeNonSyntax(int tag) {
-     //@ set I_will_establish_invariants_afterwards = true
+     //@ set I_will_establish_invariants_afterwards = true;
      PrimitiveType result = new PrimitiveType();
      result.tag = tag;
      result.loc = Location.NULL;
      result.tmodifiers = null;
-     //@ set result.syntax = false
+     //@ set result.syntax = false;
      return result;
   }
 
@@ -1795,17 +1902,18 @@ public class PrimitiveType extends Type {
        || tag == TagConstants.FLOATTYPE || tag == TagConstants.DOUBLETYPE
        || tag == TagConstants.VOIDTYPE || tag == TagConstants.NULLTYPE
        || tag == TagConstants.BYTETYPE || tag == TagConstants.SHORTTYPE) */
-  //@ ensures \result.syntax
-  //@ ensures \result!=null
-  //@ requires loc!=javafe.util.Location.NULL
+  //@ ensures \result.syntax;
+  //@ ensures \result != null;
+  //@ requires loc != javafe.util.Location.NULL;
   static public PrimitiveType make(int tag, int loc) {
     return PrimitiveType.make(null, tag, loc);
   }
 }
 
-public class TypeName extends Type {
+public class TypeName extends Type
+{
   // We always have associated locations:
-  //@ invariant syntax
+  //@ invariant syntax;
 
   //# Name name
   public int getStartLoc() { return name.getStartLoc(); }
@@ -1813,15 +1921,16 @@ public class TypeName extends Type {
 
   // overloaded constructor for type names that
   // do not have any type modifiers
-  //@ ensures \result!=null
-  static public TypeName make(/*@non_null*/ Name name) {
+  //@ ensures \result != null;
+  static public TypeName make(/*@ non_null @*/ Name name) {
     return TypeName.make(null, name);
   }
 }
 
-public class ArrayType extends Type {
+public class ArrayType extends Type
+{
   // We have associated locations iff elemType does:
-  //@ invariant elemType.syntax == syntax
+  //@ invariant elemType.syntax == syntax;
 
   //# Type elemType
   //# int locOpenBracket NotNullLoc
@@ -1832,28 +1941,28 @@ public class ArrayType extends Type {
 
   //# NoMaker
   // Generate this manually to add condition about syntax:
-  //@ ensures elemType.syntax ==> \result.syntax
+  //@ ensures elemType.syntax ==> \result.syntax;
   //
-  //@ requires locOpenBracket!=javafe.util.Location.NULL
-  //@ ensures \result!=null
-  public static ArrayType make(/*@non_null*/ Type elemType,
+  //@ requires locOpenBracket != javafe.util.Location.NULL;
+  //@ ensures \result != null;
+  public static ArrayType make(/*@ non_null @*/ Type elemType,
                                int locOpenBracket) {
-     //@ set I_will_establish_invariants_afterwards = true
+     //@ set I_will_establish_invariants_afterwards = true;
      ArrayType result = new ArrayType();
      // Can't fix this since elemType is *not* injective:
-     //@ assume (\forall ArrayType a; a.elemType != result)
+     //@ assume (\forall ArrayType a; a.elemType != result);
      result.elemType = elemType;
      result.locOpenBracket = locOpenBracket;
-     //@ set result.syntax = elemType.syntax
+     //@ set result.syntax = elemType.syntax;
      return result;
   }
 
-  //@ ensures elemType.syntax ==> \result.syntax
+  //@ ensures elemType.syntax ==> \result.syntax;
   //
-  //@ requires locOpenBracket!=javafe.util.Location.NULL
-  //@ ensures \result!=null
+  //@ requires locOpenBracket != javafe.util.Location.NULL;
+  //@ ensures \result != null;
   public static ArrayType make(TypeModifierPragmaVec tmodifiers,
-			       /*@non_null*/ Type elemType,
+			       /*@ non_null @*/ Type elemType,
                                int locOpenBracket) {
 	ArrayType at = ArrayType.make(elemType, locOpenBracket);
 	at.tmodifiers = tmodifiers;
@@ -1864,84 +1973,85 @@ public class ArrayType extends Type {
 /* ---------------------------------------------------------------------- */
 
 /**
- ** Treated as an immutable type. <p>
- **
- ** Invariant: There is always at least one element in a Name.<p>
- **/
+ * Treated as an immutable type. <p>
+ *
+ * Invariant: There is always at least one element in a Name.
+ */
 
-public abstract class Name extends ASTNode {
+public abstract class Name extends ASTNode
+{
 
     /**
-     ** Return our printname, which will be of one of the forms X, X.Y,
-     ** X.Y.Z, ...
-     **/
-    //@ ensures \result!=null
+     * Return our printname, which will be of one of the forms X, X.Y,
+     * X.Y.Z, ...
+     */
+    //@ ensures \result != null;
     public abstract String printName();
 
     /**
-     ** Return a hash code for <code>this</code> such that two
-     ** <code>Name</code>s that are <code>equals</code> have the same
-     ** hash code.
-     **/
+     * Return a hash code for <code>this</code> such that two
+     * <code>Name</code>s that are <code>equals</code> have the same
+     * hash code.
+     */
     public abstract int hashCode();
 
     /**
-     ** Return true if <code>other</code> is a <code>Name</code> that
-     ** is component-wise equal to <code>this</code>.
-     **/
+     * Return true if <code>other</code> is a <code>Name</code> that
+     * is component-wise equal to <code>this</code>.
+     */
     public abstract boolean equals(Object other);
 
 
 
     /**
-     ** The number of identifiers we contain
-     **/
-    //@ invariant length>=1
+     * The number of identifiers we contain
+     */
+    //@ invariant length >= 1;
     /*@ ghost public int length; */
 
     /** Return the number of identifiers in <code>this</code>. */
-    //@ ensures \result==length
+    //@ ensures \result==length;
     public abstract int size();
 
 
     /**
-     ** Return the ith identifier of <code>this</code>.
-     **/
-    //@ requires 0<=i && i<length
-    //@ ensures \result!=null
+     * Return the ith identifier of <code>this</code>.
+     */
+    //@ requires 0 <= i && i<length;
+    //@ ensures \result != null;
     public abstract Identifier identifierAt(int i);
 
     /**
-     ** Return the location of the ith identifier of <code>this</code>.
-     **/
-    //@ requires 0<=i && i<length
-    //@ ensures \result!=Location.NULL
+     * Return the location of the ith identifier of <code>this</code>.
+     */
+    //@ requires 0 <= i && i<length;
+    //@ ensures \result != Location.NULL;
     public abstract int locIdAt(int i);
 
     /**
-     ** Return the location of the dot after the ith identifier of
-     ** <code>this</code>.
-     **/
-    //@ requires 0<=i && i<length-1
-    //@ ensures \result!=Location.NULL
+     * Return the location of the dot after the ith identifier of
+     * <code>this</code>.
+     */
+    //@ requires 0 <= i && i<length-1;
+    //@ ensures \result != Location.NULL;
     public abstract int locDotAfter(int i);
 
 
     /**
-     ** Return the first <code>len</code> identifiers in
-     ** <code>this</code> in an array.  Requires that <code>len</code>
-     ** be between 0 and length of <code>this</code> inclusive.
-     **/
-    //@ requires 0<=len && len<=length
-    //@ ensures \nonnullelements(\result)
-    //@ ensures \result.length == len
+     * Return the first <code>len</code> identifiers in
+     * <code>this</code> in an array.  Requires that <code>len</code>
+     * be between 0 and length of <code>this</code> inclusive.
+     */
+    //@ requires 0 <= len && len <= length;
+    //@ ensures \nonnullelements(\result);
+    //@ ensures \result.length == len;
     public abstract String[] toStrings(int len);
 
     /**
-     ** Return all identifiers in <code>this</code> in an array.
-     **/
-    //@ ensures \nonnullelements(\result)
-    //@ ensures \result.length == length
+     * Return all identifiers in <code>this</code> in an array.
+     */
+    //@ ensures \nonnullelements(\result);
+    //@ ensures \result.length == length;
     public String[] toStrings() {
 	return toStrings(size());
     }
@@ -1949,18 +2059,18 @@ public abstract class Name extends ASTNode {
 
 
     /**
-     ** Make a <code>Name</code> with the given identifiers and
-     ** locations.  Caller must forget about the Vecs/arrays passed
-     ** here.
-     **/
-    //@ requires ids!=null && locIds!=null && locDots!=null
-    //@ requires ids.count>0
-    //@ requires ids.count==locIds.length && ids.count==locDots.length+1
-    /*@ requires (\forall int i; (0<=i && i<locIds.length)
-			==> locIds[i]!=Location.NULL) */
-    /*@ requires (\forall int i; (0<=i && i<locDots.length)
-			==> locDots[i]!=Location.NULL) */
-    //@ ensures \result!=null
+     * Make a <code>Name</code> with the given identifiers and
+     * locations.  Caller must forget about the Vecs/arrays passed
+     * here.
+     */
+    //@ requires ids != null && locIds != null && locDots != null;
+    //@ requires ids.count>0;
+    //@ requires ids.count==locIds.length && ids.count==locDots.length+1;
+    /*@ requires (\forall int i; (0 <= i && i<locIds.length)
+			==> locIds[i] != Location.NULL) */
+    /*@ requires (\forall int i; (0 <= i && i<locDots.length)
+			==> locDots[i] != Location.NULL) */
+    //@ ensures \result != null;
     public static Name make(int[] locIds, int[] locDots, IdentifierVec ids) {
 	int sz = ids.size();
 	Assert.precondition(sz > 0 && locIds.length == sz
@@ -1972,18 +2082,18 @@ public abstract class Name extends ASTNode {
     }
 
     /**
-     ** Make a <code>Name</code> whose locations are all
-     ** <code>loc</code> from a <code>String</code>. <p>
-     **
-     ** Precondition: <code>N.length()>0</code><p>
-     ** 
-     ** This routine parses a non-empty <code>String</code> consisting
-     ** of a series of dot-separated components into a <code>Name</code>.<p>
-     **/
-    //@ requires N!=null
-    //@ requires N.count>0
-    //@ requires loc!=Location.NULL
-    //@ ensures \result!=null
+     * Make a <code>Name</code> whose locations are all
+     * <code>loc</code> from a <code>String</code>.
+     *
+     * <p> This routine parses a non-empty <code>String</code> consisting
+     * of a series of dot-separated components into a <code>Name</code>.
+     * 
+     * @precondition <code>N.length()>0</code><p>
+     */
+    //@ requires N != null;
+    //@ requires N.count>0;
+    //@ requires loc != Location.NULL;
+    //@ ensures \result != null;
     public static Name make(String N, int loc) {
 	// Convert N to a list of its components:
 	String[] components = javafe.filespace.StringUtil.parseList(N, '.');
@@ -2011,20 +2121,21 @@ public abstract class Name extends ASTNode {
 
 
 
-    /** Return a <code>Name</code> consisting of the first
-     ** <code>len</code> identifiers of <code>this</code>.  Requires
-     ** that <code>len</code> is greater than zero and less than or
-     ** equal to the length of <code>this</code>.
-     **/
-    //@ requires 0<len && len<=length
-    //@ ensures \result!=null
+    /**
+     * Return a <code>Name</code> consisting of the first
+     * <code>len</code> identifiers of <code>this</code>.  Requires
+     * that <code>len</code> is greater than zero and less than or
+     * equal to the length of <code>this</code>.
+     */
+    //@ requires 0<len && len <= length;
+    //@ ensures \result != null;
     public abstract Name prefix(int len);
 
 
 
     /**
-     ** Override getEndLoc so it refers to the actual end of us.
-     **/
+     * Override getEndLoc so it refers to the actual end of us.
+     */
     public int getEndLoc() {
 	return Location.inc(getStartLoc(),
 			    Math.max(0, printName().length()-1));
@@ -2032,22 +2143,23 @@ public abstract class Name extends ASTNode {
 
 
     /**
-     ** Avoid allocating more than one of these.
-     **/
-    //@ invariant \nonnullelements(emptyStringArray)
-    //@ invariant emptyStringArray.length == 0
+     * Avoid allocating more than one of these.
+     */
+    //@ invariant \nonnullelements(emptyStringArray);
+    //@ invariant emptyStringArray.length == 0;
     protected static String[] emptyStringArray = new String[0];
 
 }
 
 
-public class SimpleName extends Name {
+public class SimpleName extends Name
+{
   //# Identifier id NoCheck
 
   //# int loc NotNullLoc
 
 
-  //@ invariant length == 1
+  //@ invariant length == 1;
 
 
   /** Return a String representation of <code>this</code> in Java's
@@ -2078,10 +2190,10 @@ public class SimpleName extends Name {
   }
 
     /**
-     ** Return the first <code>len</code> identifiers in
-     ** <code>this</code> in an array.  Requires that <code>len</code>
-     ** be between 0 and length of <code>this</code> inclusive.
-     **/
+     * Return the first <code>len</code> identifiers in
+     * <code>this</code> in an array.  Requires that <code>len</code>
+     * be between 0 and length of <code>this</code> inclusive.
+     */
   public String[] toStrings(int len) {
     Assert.precondition(len == 0 || len == 1);
     if (len == 0) return emptyStringArray;
@@ -2114,21 +2226,22 @@ public class SimpleName extends Name {
   public int getStartLoc() { return loc; }
 }
 
-public class CompoundName extends Name {
-  //@ invariant length>1
+public class CompoundName extends Name
+{
+  //@ invariant length>1;
 
-  //@ invariant ids!=null
-  //@ invariant ids.count == length
+  //@ invariant ids != null;
+  //@ invariant ids.count == length;
   //# Identifier* ids NoCheck
 
-  //@ invariant locIds.length == length
-  /*@ invariant (\forall int i; (0<=i && i<locIds.length)
-			==> locIds[i]!=Location.NULL) */
+  //@ invariant locIds.length == length;
+  /*@ invariant (\forall int i; (0 <= i && i<locIds.length)
+			==> locIds[i] != Location.NULL) */
   //# int[] locIds NoCheck
 
-  //@ invariant locDots.length == length-1
-  /*@ invariant (\forall int i; (0<=i && i<locDots.length)
-			==> locDots[i]!=Location.NULL) */
+  //@ invariant locDots.length == length-1;
+  /*@ invariant (\forall int i; (0 <= i && i<locDots.length)
+			==> locDots[i] != Location.NULL) */
   //# int[] locDots NoCheck
 
   //# PostMakeCall
@@ -2205,12 +2318,12 @@ public class CompoundName extends Name {
   }
 
     /**
-     ** Return the first <code>len</code> identifiers in
-     ** <code>this</code> in an array.  Requires that <code>len</code>
-     ** be between 0 and length of <code>this</code> inclusive.
-     **/
+     * Return the first <code>len</code> identifiers in
+     * <code>this</code> in an array.  Requires that <code>len</code>
+     * be between 0 and length of <code>this</code> inclusive.
+     */
   public String[] toStrings(int len) {
-    Assert.precondition(0<=len && len<=ids.size());
+    Assert.precondition(0 <= len && len <= ids.size());
     if (len == 0) return emptyStringArray;
     String[] result = new String[len];
     for(int i = 0; i < len; i++)
@@ -2238,19 +2351,21 @@ public class CompoundName extends Name {
 
 
   //# NoMaker
-  //@ requires ids.count>1
-  //@ requires locIds.length == ids.count
-  /*@ requires (\forall int i; (0<=i && i<locIds.length)
-			==> locIds[i]!=Location.NULL) */
-  //@ requires locDots.length == ids.count-1
-  /*@ requires (\forall int i; (0<=i && i<locDots.length)
-			==> locDots[i]!=Location.NULL) */
+  //@ requires ids.count>1;
+  //@ requires locIds.length == ids.count;
+  /*@ requires (\forall int i; (0 <= i && i<locIds.length)
+			==> locIds[i] != Location.NULL) */
+  //@ requires locDots.length == ids.count-1;
+  /*@ requires (\forall int i; (0 <= i && i<locDots.length)
+			==> locDots[i] != Location.NULL) */
   //
-  //@ ensures \result!=null
-  public static CompoundName make(/*@non_null*/ IdentifierVec ids, /*@non_null*/ int[] locIds, /*@non_null*/ int[] locDots) {
-     //@ set I_will_establish_invariants_afterwards = true
+  //@ ensures \result != null;
+  public static CompoundName make(/*@ non_null @*/ IdentifierVec ids, 
+                                  /*@ non_null @*/ int[] locIds, 
+                                  /*@ non_null @*/ int[] locDots) {
+     //@ set I_will_establish_invariants_afterwards = true;
      CompoundName result = new CompoundName();
-     //@ set result.length = ids.count
+     //@ set result.length = ids.count;
      result.ids = ids;
      result.locIds = locIds;
      result.locDots = locDots;
@@ -2259,11 +2374,14 @@ public class CompoundName extends Name {
   }
 }
 
-public abstract class ModifierPragma extends ASTNode { }
+public abstract class ModifierPragma extends ASTNode
+{ }
 
-public abstract class LexicalPragma extends ASTNode { }
+public abstract class LexicalPragma extends ASTNode
+{ }
 
-public abstract class TypeModifierPragma extends ASTNode { }
+public abstract class TypeModifierPragma extends ASTNode
+{ }
 
 /* ---------------------------------------------------------------------- */
 
