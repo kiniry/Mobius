@@ -2,10 +2,11 @@
 \label{sec-pur-spe}
 
 \subsection{Some interesting aspects and problems}
-This sections presents some interesting problems found in the process
+The following sections present some interesting problems found in the
+process
 of doing assertions for the purse application. These cases highlight
 some commun programming problems and they show how an verification
-tool can be help us to find them. 
+tool can be used to find them. 
 
 \subsubsection{The method {\tt \bf isGreaterEqualThan}}
 
@@ -83,20 +84,21 @@ d.getDecPart()))}$ \\
 
 \subsubsection{The {\tt \bf final} variable}
 The \texttt{Annee} class allows to represent a \textit{year} in the
-\texttt{purse} application. Figure~\ref{fig-cla-ann} presents its
+\texttt{purse} application. The Figure~\ref{fig-cla-ann} presents its
 source code with \textsc{Esc/Java}assertions. This class declares two 
 static variables called \texttt{MIN} and \texttt{MAX}, which represent
-the minimum and maximum year allowed respectively. This class declares 
+the minimum and maximum year allowed by the application
+respectively. This class declares
 also an invariant which relates these values. The static method
 \texttt{check} allow us to verify that its parameter is a valid
 year. \\
 
-The figure~\ref{fig-cla-dat} shows the \texttt{Date} class. This class 
-allows the purse to represent a date$:$ \texttt{jour}(day),
+The figure~\ref{fig-cla-dat} shows the \texttt{Date} class. This class
+represents a date for the application$:$ \texttt{jour}(day),
 \texttt{mois}(month), \texttt{annee}(year). We have established some
 invariants for this class, which allow the purse application to place
 each of them between valide intervals. The method \texttt{setDate}
-allow us to assign some values to the internal variables as long as
+assigns some values to the internal variables as long as
 these variables have valide values, i.e, these variables verify the
 conditions expressed by the clauses ensures. In this way, if the
 pre-condition is satisfied, the internal variables will be assigned
@@ -110,11 +112,11 @@ declared by the \texttt{exsures} clause. \\
 parameter does not verify the condition established by the clause
 \texttt{requires} belonging to the method \texttt{setDate} (line
 $5$). This warning is desployed in spite of this call respect the
-requires condition, i.e, ($110>=99\ \&\&\ 110<= 127 $). \\
+requires condition, i.e, $110>=99\ \&\&\ 110<= 127$. \\
 
 The problem is happend due to the wrong declaration of \textsc{MIN}
 and \textsc{MAX} variables belonging to the \texttt{Annee}
-class. These variables were not declared as final~\footnote{{\sc
+class. These variables were not declared as \texttt{final}~\footnote{{\sc
 Java} does not allow to change in runtime the value of a final {\tt
 final} variable.}. Thus, their values could be changed in runtime by
 mean of a direct assignation~\footnote{In fact, due to these variables
@@ -123,9 +125,10 @@ satisfied. \\
 
 
 The declaration variables as \texttt{static} (commun for all instance)
-and \texttt{final} (which can not be changed) to prevent us of doing
-any assumption that will be not satisfied by an application. This kind 
-of control is carried out by \textsc{Esc/Java}. \\
+and \texttt{final} (which can not be changed) prevent us of doing
+any assumption that will be not satisfied any more by an
+application. This kind of control is carried out by
+\textsc{Esc/Java}. \\
 
 
 \begin{center}
@@ -224,14 +227,14 @@ $\mathtt{\}}$ \\
 
 
 \subsubsection{The {\tt \bf AccessCondition} invariant}
-The figure~\ref{fig-cla-acc} shows the class \texttt{AccessCondition}
+The figure~\ref{fig-cla-acc} shows the \texttt{AccessCondition}
 class. This class models the access conditions for the purse
 commands. These access conditions are represented by the variables
-\texttt{FREE}, \texttt{LOCKED}, \texttt{SECRET$\_$CODE} et
+\texttt{FREE}, \texttt{LOCKED}, \texttt{SECRET$\_$CODE} and
 \texttt{SECURE$\_$MESSAGING}. The internal variable \texttt{condition} 
 may take one of these values. According to the purse
 specification~\cite{BMGL00}, the \texttt{AccessCondition} class have
-to verify the invariant$:$ \\
+to verify the following invariant$:$ \\
 
 \begin{tabbing}
 //@ invariant \=condition == FREE || condition == LOCKED \kill
@@ -249,7 +252,7 @@ $15$. There, its constructor initialises the variable
 \texttt{condition} to a value which have not been considered by the
 class \texttt{AccessCondition}. Apart from that, strangely this
 variable have been initialised to $FREE$ on the line $7$ and to $0$
-in the constructor.
+in the class constructor.
 
 
 
