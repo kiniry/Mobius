@@ -36,12 +36,6 @@ SuperPure: spm() ...
     [TIME]  passed
 
 SuperPure: SuperPure() ...
-PureCheck2.java:10: Error: There is no assignable clause allowing this assignment
-class SuperPure extends NonPure {
-                                ^
-PureCheck2.java:20: Associated declaration: 
-class NonPure {
-              ^
     [TIME]  passed
   [TIME total]
 
@@ -63,4 +57,3 @@ NonPure: NonPure() ...
   [TIME total]
 1 caution
 1 warning
-1 error

@@ -7,14 +7,14 @@ Informal ...
 
 Informal: m() ...
 ------------------------------------------------------------------------
-Informal.java:19: Warning: Postcondition possibly not established (Post)
+Informal.java:23: Warning: Postcondition possibly not established (Post)
         public void m() {}
                          ^
 Associated declaration is "Informal.java", line 10, col 5:
         //@ ensures ! (* ok *);
             ^
 Execution trace information:
-    Executed implicit return in "Informal.java", line 19, col 18.
+    Executed implicit return in "Informal.java", line 23, col 18.
 
 ------------------------------------------------------------------------
     [TIME]  failed

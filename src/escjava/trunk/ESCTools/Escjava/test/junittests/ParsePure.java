@@ -12,7 +12,7 @@ public class ParsePure {
 	//@ model public pure int n2();
 	//@ model pure public int n3();
 
-	//@ modifies \everything;
+	//@ modifies \everything;  // ERROR
 	//@ pure
 	public ParsePure() {}
 
@@ -41,7 +41,7 @@ class B extends D {
 
 //@ pure
 class D {
-	//@ modifies \everything;
+	//@ modifies \everything; // ERROR
 	D();
 
 	public void d() {}

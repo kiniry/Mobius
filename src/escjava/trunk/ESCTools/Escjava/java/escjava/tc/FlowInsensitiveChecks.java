@@ -169,6 +169,15 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 		    // Desugaring presumes that typechecking has already
 		    // been performed
 		    RoutineDecl m = (RoutineDecl)e;
+		    if ((m instanceof ConstructorDecl) && m.implicit) {
+			// The desugaring of m can require the desugared
+			// specs of a parent constructor, so we have to be
+			// sure that the parent constructor is typechecked.
+			// This does not appear to result in the constructor
+			// being type checked twice (or at least not in 				// double error messages).
+			TypeSig s = TypeSig.getSig(m.parent).superClass();
+			if (s != null) checkTypeDeclElem(s.getTypeDecl());
+		    }
 		    annotationHandler.desugar(m); 
 	    }
 	} finally {
@@ -2210,8 +2219,26 @@ FIXME - see uses of countFreeVarsAccess
 		    if (rd instanceof MethodDecl && Utils.isPure(rd) &&
 			emp.expr != null && emp.expr.getTag() != TagConstants.NOTHINGEXPR) {
 			ErrorSet.error(p.getStartLoc(),
-				"A pure method may not have a modifies clause");
-				// FIXME - point to the pure designation
+				"A pure method may not have a modifies clause",
+				Utils.findPurePragma(rd).getStartLoc());
+		    }
+		    if (rd instanceof ConstructorDecl && Utils.isPure(rd) &&
+			emp.expr != null && 
+			!(emp.expr.getTag() == TagConstants.NOTHINGEXPR ||
+			 (emp.expr.getTag() == TagConstants.WILDREFEXPR &&
+			 (((WildRefExpr)emp.expr).var instanceof ThisExpr) &&
+			 ((ThisExpr)((WildRefExpr)emp.expr).var).classPrefix == null)
+			 ||
+			 ((emp.expr instanceof FieldAccess) &&
+			  Types.isSubclassOf(
+				TypeSig.getSig(rd.parent),
+				TypeSig.getSig(((FieldAccess)emp.expr).decl.parent)
+			  )
+			 ))
+			  ) {
+			ErrorSet.error(p.getStartLoc(),
+				"A pure constructor may not have a modifies clause",
+				Utils.findPurePragma(rd).getStartLoc());
 		    }
                     isSpecDesignatorContext = false;
                     if (emp.cond != null) emp.cond = checkExpr(newenv, emp.cond);

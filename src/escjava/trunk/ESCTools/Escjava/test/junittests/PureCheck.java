@@ -5,7 +5,6 @@ public class PureCheck extends A implements B {
 	//@ axiom PureCheck.m() + PureCheck.nn() == 0;
 	//@ public model int modeli;
 	//@ public represents modeli <- m() + n();
-	//@ public depends modeli <- oo[m()],oo[nn()];
 	//@ invariant (new PureCheck()).k() + (new PureCheck(1)).k() > 0;
 	//@ invariant (new PureCheck[5]).length > 0;
 
@@ -36,9 +35,11 @@ public class PureCheck extends A implements B {
 	//@ signals (Exception e) m() + n() > 0;
 	//@ duration m() + n();
 	//@ working_space m() + n();
+	//@ also code_contract
 	//@ measured_by m() + n();
 	//@ diverges m() + n() > 0;
-	// accessible oo[m()+n()];  // FIXME
+	//@ accessible oo[m()+n()]; 
+	//@ callable m, n;
 	public int p();
 
 	// This one is at the end just to check that we can use before

@@ -118,9 +118,6 @@ skips:
 .PHONY: othertests
 othertests: $(addsuffix -test,${OTHERTESTS})
 
-# I can't seem
-# to get 2>&1 > to work in order to output directly into the -ckd file
-# (FIXME)
 %-test: 
 	@echo Testing $* 
 	@if [ ! -e $* ] ; then \

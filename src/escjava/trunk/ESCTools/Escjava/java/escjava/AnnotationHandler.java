@@ -12,6 +12,7 @@ import escjava.ast.TagConstants;
 import escjava.ast.Modifiers;
 import escjava.tc.FlowInsensitiveChecks;
 import javafe.tc.Types;
+import javafe.tc.TypeSig;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -247,6 +248,7 @@ public class AnnotationHandler {
 	boolean overrides = !isConstructor && !overrideSet.isEmpty();
 	
 
+	boolean defaultSpecs = false;
 	if (!overrides && nonnullBehavior.size()==0) {
 	    // Add a default 'requires true' clause if there are no
 	    // specs at all and the routine is not overriding anything
@@ -266,8 +268,9 @@ public class AnnotationHandler {
 //System.out.println("QT " + mpp.getClass());
 	    }
 	    if (doit) {
+		defaultSpecs = true;
 		ExprModifierPragma e = ExprModifierPragma.make(
-			TagConstants.REQUIRES, T, Location.NULL);
+		    TagConstants.REQUIRES, T, Location.NULL);
 		newpm.addElement(e);
 		newpm.addElement(defaultModifies(Location.NULL,T,tde));
 	    }
@@ -333,6 +336,31 @@ public class AnnotationHandler {
 	// accumulatedSpecs.impliesThat = desugar(accumulatedSpecs.impliesThat);
 	// accumulatedSpecs.examples = desugar(accumulatedSpecs.examples); // FIXME - not doing this because we are not doing anything with the result.
 	newpm.append(r);
+	if (defaultSpecs && (tde instanceof ConstructorDecl) && tde.implicit) {
+	    TypeSig td = TypeSig.getSig(tde.parent);
+	    TypeSig tds = td.superClass();
+	    if (tds != null && tde.pmodifiers != null && 
+			tde.pmodifiers.size() > 0) try {
+		ConstructorDecl cd = tds.lookupConstructor(new Type[0],td);
+		desugar(cd);
+		// Only remove previous elements after successfully finding
+		// a parent constructor
+		newpm.removeAllElements();
+		ModifierPragmaVec mp = cd.pmodifiers;
+		for (int i=0; i<mp.size(); ++i) {
+		    ModifierPragma m = mp.elementAt(i);
+		    int t = m.getTag();
+		    if (t == TagConstants.REQUIRES ||
+			t == TagConstants.PRECONDITION ||
+			t == TagConstants.MODIFIES ||
+			t == TagConstants.ASSIGNABLE) {
+			newpm.addElement(m);
+		    }
+		}
+	    } catch (Exception e) {
+		// Purposely ignore this
+	    }
+	}
 	return newpm;
     }
 

@@ -1,6 +1,6 @@
 // Tests for error messages when there are modifies clauses on pure routines
 
-public class PureModifies {
+public class PureModifies extends PureModifiesS {
 
 	//@ requires true;
 	void notpure();
@@ -53,7 +53,7 @@ public class PureModifies {
 	requires true;
 	pure model void mm1();
 
-	modifies \everything;  // ERROR - FIXME
+	modifies \everything;  // ERROR
 	pure model PureModifies(Object o);
 
 	requires true;
@@ -61,7 +61,7 @@ public class PureModifies {
 */
 
 
-	//@ modifies \everything; // ERROR - FIXME
+	//@ modifies \everything; // ERROR
 	//@ pure
 	PureModifies();
 
@@ -69,9 +69,24 @@ public class PureModifies {
 	//@ pure
 	PureModifies(int i, int j);
 
-	// modifies this.*; // ERROR - FIXME
+	// modifies this.*; // OK
 	//@ pure
 	PureModifies(int i);
 
 
+	//@ also modifies \everything;  // ERROR
+	void ms() {}
+}
+
+//@ pure
+class PureModifiesA {
+
+	//@ modifies \everything;  // ERROR
+	PureModifiesA();
+}
+
+class PureModifiesS {
+
+	//@ pure
+	void ms() {}
 }

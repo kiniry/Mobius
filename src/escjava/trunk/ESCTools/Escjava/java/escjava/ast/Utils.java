@@ -135,25 +135,7 @@ public final class Utils {
     static private BooleanDecoration pureDecoration = new BooleanDecoration("pure") {
         public boolean calculate(ASTNode o) {
 	    RoutineDecl rd = (RoutineDecl)o;
-	    if (findModifierPragma(rd.pmodifiers,TagConstants.PURE)!=null)
-		return true;
-	    else if (findModifierPragma(rd.parent.pmodifiers,TagConstants.PURE)
-			!= null)
-		return true;
-	    else if (rd instanceof MethodDecl) {
-		MethodDecl md = (MethodDecl)rd;
-		Set direct = javafe.tc.PrepTypeDeclaration.inst.getOverrides(md.parent, md);
-		Enumeration e = direct.elements();
-		while (e.hasMoreElements()) {
-		    MethodDecl directMD = (MethodDecl)e.nextElement();
-		    if (isPure(directMD)) { 
-			return true;
-		    }
-	        }
-		return false;
-	    } else {
-		return false;
-	    }
+	    return findPurePragma(rd) != null;
 	}
     };
     static public boolean isPure(RoutineDecl rd) {
@@ -162,7 +144,24 @@ public final class Utils {
     static public void setPure(RoutineDecl rd) {
 	pureDecoration.set(rd,true);
     }
-
+    static public ModifierPragma findPurePragma(RoutineDecl rd) {
+	ModifierPragma m = null;
+	m = findModifierPragma(rd.pmodifiers,TagConstants.PURE);
+	if (m!=null) return m;
+	m = findModifierPragma(rd.parent.pmodifiers,TagConstants.PURE);
+	if (m != null) return m;
+	if (rd instanceof MethodDecl) {
+	    MethodDecl md = (MethodDecl)rd;
+	    Set direct = javafe.tc.PrepTypeDeclaration.inst.getOverrides(md.parent, md);
+	    Enumeration e = direct.elements();
+	    while (e.hasMoreElements()) {
+		MethodDecl directMD = (MethodDecl)e.nextElement();
+		m = findPurePragma(directMD);
+		if (m != null) return m;
+	    }
+	} 
+	return null;
+    }
     private static final BooleanDecoration functionDecoration = new BooleanDecoration("function") {
 	public boolean calculate(ASTNode o) {
 	    RoutineDecl rd = (RoutineDecl)o;

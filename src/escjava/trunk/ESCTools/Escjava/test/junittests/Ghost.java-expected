@@ -30,14 +30,14 @@ Ghost.java:57: Error: Undefined variable 'superinst'
 Ghost.java:58: Error: Undefined variable 'superinst2'
         //@ static ghost int temp5 = superinst2; // ERROR
                                      ^
+Ghost.java:68: Error: May not specify both static and instance on a declaration
+        //@ static ghost instance int superiii; // ERROR
+                         ^
 Caution: Turning off extended static checking due to type error(s)
   [TIME total] (aborted)
 
 GhostA ...
-Ghost.java:68: Error: May not specify both static and instance on a declaration
-        //@ static ghost instance int superiii; // ERROR
-                         ^
-  [TIME total] (aborted)
+  [TIME total]
 
 GhostI ...
 Ghost.java:79: Error: May not specify both static and instance on a declaration

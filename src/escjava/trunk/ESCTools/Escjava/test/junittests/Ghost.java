@@ -17,9 +17,9 @@ public class Ghost extends GhostA implements GhostI {
 
 	//@ ensures o != null && oo != null && ooo != null;
 	public void m() {
-		// ghost int k; // FIXME
+		//@ ghost int k;
 		int p;
-		//@ set i = p;
+		//@ set i = p + k;
 		//@ set i = pp;
 		//@ set i = j;
 		//@ set i = jj;
@@ -30,9 +30,9 @@ public class Ghost extends GhostA implements GhostI {
 	}
 
 	public static void mm() {
-		// ghost int k; // FIXME
+		//@ ghost int k;
 		int p;
-		//@ set ii = pp;
+		//@ set ii = pp + k;
 		//@ set ii = jj;
 		//@ set ii = superinst; // ERROR - in static method
 		//@ set ii = interk; // OK

@@ -46,9 +46,6 @@ Desugared specifications for Desugaring.ppp
    modifies \everything if \old(p)
 Desugared specifications for Desugaring.ppp1
 Desugared specifications for Desugaring.ppp2
-Desugared specifications for Desugaring.Desugaring
-   requires true
-   modifies \everything if true
 Desugared specifications for JJ.ppp
    requires true
    modifies \everything if true
@@ -57,9 +54,6 @@ Desugared specifications for JJ.ppp1
    ensures \old(pp) ==> qq
    modifies \everything if \old(pp)
 Desugared specifications for JJ.ppp2
-   requires true
-   modifies \everything if true
-Desugared specifications for JJ.JJ
    requires true
    modifies \everything if true
 Desugared specifications for Object.Object
@@ -112,6 +106,12 @@ Desugared specifications for Object.finalize
 Desugared specifications for Object.<clinit>
    requires true
    modifies \everything if true
+Desugared specifications for JJ.JJ
+   requires true
+   modifies \nothing if true
+Desugared specifications for Desugaring.Desugaring
+   requires true
+   modifies \nothing if true
 Desugared specifications for Exception.Exception
    requires true
    modifies this..* if true
