@@ -476,6 +476,7 @@ public class Main extends javafe.SrcTool
             status = processRoutineDecl(r, sig, initState);
         } catch (javafe.util.NotImplementedException e) {
 	    // continue - problem already reported
+	    status = "not-implemented";
         } catch (FatalError e) {
 	    // continue;
 	}
