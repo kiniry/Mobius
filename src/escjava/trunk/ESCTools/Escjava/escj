@@ -34,10 +34,40 @@
 
 ############################################################################
 
-if ( ! $?ESCTOOLS_RELEASE ) then
+set NAME=$PWD/$0
 
+if ( ! $?ESCTOOLS_RELEASE ) then
+    ## Check if this looks like a release even if ESCTOOLS_RELEASE is not set
+    if ( -e $NAME ) then
+	set ROOT=$NAME:h
+    else if ( -e $0 ) then
+	set ROOT=$0:h
+    endif
+    if ( $?ROOT ) then
+	if ( -e $ROOT/README.release ) then
+	    ## We are running an executable from a release, so set 
+	    ## ESCTOOLS_RELEASE
+	    setenv ESCTOOLS_RELEASE $ROOT
+	    echo Warning: Guessing ESCTOOLS_RELEASE = $ESCTOOLS_RELEASE
+	endif
+    endif
+endif
+
+## Check that if ESCTOOLS_RELEASE is defined, it looks like a release directory
+if ( $?ESCTOOLS_RELEASE ) then
+    if ( ! -e $ESCTOOLS_RELEASE/escj ) then
+	echo Warning: $ESCTOOLS_RELEASE does not appear to be a release
+    endif
+    if ( ! -e $ESCTOOLS_RELEASE/README.release ) then
+	echo Warning: $ESCTOOLS_RELEASE does not appear to be a release
+    endif
+    unsetenv ESCTOOLS_ROOT
+endif
+
+## If ESCTOOLS_RELEASE is not defined, try to guess ESCTOOLS_ROOT if it is not
+## defined
+if ( ! $?ESCTOOLS_RELEASE ) then
 if ( ! $?ESCTOOLS_ROOT ) then
-    set NAME=$PWD/$0
     if ( -e $NAME ) then
 	set ESCTOOLS_ROOT=$NAME:h:h
 	echo Warning: Guessing ESCTOOLS_ROOT = $ESCTOOLS_ROOT
@@ -50,9 +80,17 @@ if ( ! $?ESCTOOLS_ROOT ) then
 	exit 2
     endif
 endif
-
 setenv ESCJAVA_ROOT ${ESCTOOLS_ROOT}/Escjava
+endif
 
+## Check that if ESCTOOLS_ROOT is defined, it looks like a CVS hierarchy
+if ( $?ESCTOOLS_ROOT && ! $?ESCTOOLS_RELEASE ) then
+    if ( ! -d $ESCTOOLS_ROOT/Escjava ) then
+	echo Warning: $ESCTOOLS_ROOT does not appear to be a legitimate root
+    endif
+    if ( ! -e $ESCTOOLS_ROOT/Makefile ) then
+	echo Warning: $ESCTOOLS_ROOT does not appear to be a legitimate root
+    endif
 endif
 
 ############ Setting ESCJ_SIMPLIFY_DIR, if necessary
@@ -128,7 +166,7 @@ endif
 ## release
 if ( ! $?ESC_CLASSPATH ) then
     if ( $?ESCTOOLS_RELEASE ) then
-        setenv ESC_CLASSPATH $ESCTOOLS_RELEASE/esctools.jar
+        setenv ESC_CLASSPATH $ESCTOOLS_RELEASE/esctools2.jar
     else
         setenv ESC_CLASSPATH ${ESCTOOLS_ROOT}/Escjava/classfiles:${ESCTOOLS_ROOT}/Javafe/classfiles
     endif

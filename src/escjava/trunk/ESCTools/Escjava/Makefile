@@ -28,7 +28,9 @@ JAVASOURCEFILES = ${ESCJAVA_SOURCE_DIR}/escjava/ast/*.java \
 	${ESCJAVA_SOURCE_DIR}/escjava/sp/*.java \
 	${ESCJAVA_SOURCE_DIR}/escjava/tc/*.java \
 	${ESCJAVA_SOURCE_DIR}/escjava/translate/*.java \
-	${ESCJAVA_SOURCE_DIR}/escjava/*.java
+	${ESCJAVA_SOURCE_DIR}/escjava/*.java \
+	${ESCJAVA_SOURCE_DIR}/escjava/Version.java
+
 OTHERSOURCEFILES = /dev/null
 TESTHARNESSFILES = /dev/null
 
@@ -48,7 +50,7 @@ export ESCJAVA_BUILD_CLASSPATH = ${JAVAFE_CLASSFILES}:${ESCJAVA_CLASSFILES}:${MO
 all: clean build docs test
 
 .PHONY: build
-build: compile
+build: version compile
 
 .PHONY: buildall
 buildall: compileall
@@ -105,11 +107,29 @@ compileall: generate_files ${MOCHA_LIB} ${CLASSDIRECTORY}
 		${JAVASOURCEFILES}
 	touch ${STAMPFILE}
 
+VERSION_FILE = ${ESCJAVA_SOURCE_DIR}/escjava/Version.java
+VERSION_TEMP = ${VERSION_FILE}-temp
+.PHONY: version
+version:
+	@rm -f ${VERSION_TEMP}
+	@touch ${VERSION_TEMP}
+	@echo "package escjava;" >> ${VERSION_TEMP}
+	@echo "public class Version {" >> ${VERSION_TEMP}
+	@echo "    public static final String VERSION = " \"${ESC_PROJECT}-${ESC_VERSION}\" ";" >> ${VERSION_TEMP}
+	@echo "}" >> ${VERSION_TEMP}
+	@if [ ! -e ${VERSION_FILE} ]; then \
+		cp ${VERSION_TEMP} ${VERSION_FILE} ; fi
+	@cmp -s ${VERSION_FILE} ${VERSION_TEMP} || cp ${VERSION_TEMP} ${VERSION_FILE}
+	@rm -f ${VERSION_TEMP}
+
 ${CLASSDIRECTORY}:
 	mkdir -p $@
 
 .PHONY: generate_files
 generate_files: generate_escjava_ast_source generate_escjava_backpred
+
+${ESCJAVA_SOURCE_DIR}/escjava/Main.java: ${ESCJAVA_SOURCE_DIR}/escjava/Version.java
+	touch $@
 
 ${STAMPFILE}: ${JAVASOURCEFILES}
 	${JAVAC} ${JAVAC_FLAGS} \
@@ -243,13 +263,14 @@ clean_escjava_backpred:
 ## FIXME - Check all these
 
 .PHONY: clean clean_escjava clean_tests clean_classfiles \
-	clean_docs clean_misc clean_jars cleanarchives
+	clean_docs clean_misc cleanarchives
 
 clean: clean_classfiles clean_docs clean_escjava clean_tests \
-	clean_misc clean_jars clean_archives \
+	clean_misc clean_archives \
 	clean_mocha
 
 clean_escjava: clean_escjava_ast clean_escjava_backpred 
+	rm -f ${VERSION_FILE}
 
 clean_tests:
 	${MAKE} -C ${TOP_ESCJAVA_TEST_DIR} clean
@@ -266,9 +287,6 @@ clean_misc:
 	rm -f ${TESTSOURCEDIRECTORY}/escjava/test/*/log ${TESTSOURCEDIRECTORY}/matrix/log
 	find . -name 'core.*' -exec rm -f {} \;
 
-clean_jars:
-#	rm -f ${ESCTOOLS_JARS}/*.jar
-
 clean_archives:
 	rm -f ${CLASSDIRECTORY}/escjava.zip ${CLASSDIRECTORY}/javafe.zip
 	rm -f ${CLASSDIRECTORY}/compiled.zip
@@ -281,18 +299,6 @@ clean_archives:
 archives: archive_esctools
 	cd ${ESCTOOLS_ROOT}; \
 	tar cjf ${PROJECT}-${VERSION}.tbz ${PROJECT}
-
-jars: jar_javafe jar_escjava #jar_escjava_complete
-
-jar_javafe: #compile_javafe
-
-jar_escjava: compile_escjava
-	cd ${CLASSDIRECTORY}; \
-	jar -cf0 ${ESCTOOLS_JARS}/escjava.jar escjava
-
-jar_escjava_complete: compile_escjava
-	cd ${CLASSDIRECTORY}; \
-	jar -cf0 ${ESCTOOLS_JARS}/escjava.jar decsrc javafe escjava
 
 ###########################################################################
 # Testing targets.

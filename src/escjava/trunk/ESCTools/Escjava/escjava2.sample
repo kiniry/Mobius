@@ -20,10 +20,11 @@ $ESCTOOLS_ROOT/Escjava/escj $@
 
 ## To run in the context of a release, define
 # export ESCTOOLS_RELEASE=$HOME/esctools-release
-# export SIMPLIFY=SImplify-1.5.4.linux
+# export SIMPLIFY=Simplify-1.5.4.linux
 # $ESCTOOLS_RELEASE/escj $@
 
-# For tcsh:
+# For tcsh (in a CVS hirearchy):
+# unsetenv ESCTOOLS_RELEASE
 # setenv ESCTOOLS_ROOT $HOME/ESCTools
 # setenv SIMPLIFY      Simplify-1.5.4.linux
 # $ESCTOOLS_ROOT/Escjava/escj $*

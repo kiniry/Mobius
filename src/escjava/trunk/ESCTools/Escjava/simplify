@@ -1,7 +1,10 @@
 #!/bin/csh -f
+## This script is a wrapper that sets some environment variables and then
+## invokes the executable specified by ESCJ_SIMPLIFY, which should be the
+## Simplify executable appropriate for the platform.
 
 ## The environment must set ESCJ_SIMPLIFY
-## Typically the user sets SIMPLIFY and the scripts construct ESCJ_SIMPLIFY
+## Typically the user sets SIMPLIFY and the escj script constructs ESCJ_SIMPLIFY
 
 #
 # Handle defaults:
