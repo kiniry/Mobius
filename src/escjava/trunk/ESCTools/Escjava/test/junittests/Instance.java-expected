@@ -1,0 +1,16 @@
+ESC/Java version VERSION
+
+Instance ...
+
+Instance: Instance() ...
+    [TIME]  ok
+  [TIME total]
+
+I ...
+
+I: m() ...
+    [TIME]  passed immediately
+
+I: im() ...
+    [TIME]  passed immediately
+  [TIME total]
