@@ -141,4 +141,4 @@ struct DirectiveListNode_s {
   DirectiveListNode *next;
 };
 
-#endif ASTUTIL_H
+#endif /* ASTUTIL_H */

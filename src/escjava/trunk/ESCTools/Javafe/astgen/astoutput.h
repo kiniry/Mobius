@@ -20,4 +20,6 @@ extern void outputEndOfAstFile(const char *text, int len,
 			       const char *tagBase,
 			       const char *visitorRoot);
 
-#endif ASTOUTPUT_H
+static boolean isJavaPrimitiveType(const char *s);
+
+#endif /* ASTOUTPUT_H */

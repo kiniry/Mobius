@@ -93,4 +93,4 @@ extern void expand(const char *text, int len);
 #define DEBUGPRINT 0
 #endif
 
-#endif ASTACTIONS_H
+#endif /* ASTACTIONS_H */
