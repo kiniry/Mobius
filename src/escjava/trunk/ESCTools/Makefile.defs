@@ -60,7 +60,7 @@ export ESCJAVA_CLASSPATH=${JAVAFE_CLASSFILES}:${ESCJAVA_CLASSFILES}:${MOCHA_LIB}
 ## Definitions of Java tools.
 export JAVA ?= java
 export JAVAC ?= javac 
-export JAVAC_FLAGS ?= -g
+export JAVAC_FLAGS ?= -g -source 1.4
 export JAVADOC ?= javadoc -J-mx200m
 
 # This is the location of any specification files for the JDK.
@@ -74,7 +74,6 @@ export JDKSPEC_ROOT ?= ${ESCJAVA_ROOT}/release/master/specs
 ##### This stuff with MOCHA needs to be cleaned up
 ### FIXME
  
-
 ## Escjava relies on the jMocha library from UC Berkeley.
 ## It uses (a) a jar file of java classes (mochalib.jar) that
 ## is supplied with the Escjava distribution.
@@ -83,7 +82,13 @@ export JDKSPEC_ROOT ?= ${ESCJAVA_ROOT}/release/master/specs
 ## FIXME: DO we supply these?  DO we supply the tools to build them?
 ## Do we leave it to the user to figure it out?  What are the license
 ## restrictions on jMocha?  What version do we have here?
- 
+
+## Joe: We do not supply these, nor is jMocha absolutely necessary for
+## using ESC/Java.  The license on jMocha is BSDish so we can
+## redistribute whatever bits of it that we like so long as we give
+## proper attribution.  http://www.ucop.edu/ott/permissn.html
+## See http://www.cs.sunysb.edu/~mocha/ for more information.
+
 # To get predicate abstraction to work with ESC/Java, you need to
 # download jMocha from UC Berkeley.  When you build jMocha, you'll get
 # 3 shared objects: libjbdd.so, libglu.so, libcu.so.  These have to be
@@ -91,8 +96,10 @@ export JDKSPEC_ROOT ?= ${ESCJAVA_ROOT}/release/master/specs
 # the name of that directory.  For example, if you put the shared
 # objects in a directory called ${MOCHA_ROOT}/platform/alpha, then you
 # would include the following line here:
-export MOCHA_PROOT=${HOME}/apps/mocha/j-mocha.2.0/mocha
+export MOCHA_ROOT=${ESCJAVA_ROOT}/mochalib
+export MOCHA_PROOT=/usr/local/Java/j-mocha.2.0/mocha
 export LD_LIBRARY_PATH=${MOCHA_PROOT}/platform/linux
+export MOCHA_CLASSES=${MOCHA_ROOT}/java:${ESCJAVA_ROOT}/jars/mochalib.jar
  
 ######################### classpaths #########################
  
