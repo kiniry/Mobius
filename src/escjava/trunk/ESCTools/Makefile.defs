@@ -84,6 +84,8 @@ export JDKSPEC_ROOT ?= ${ESCJAVA_ROOT}/release/master/specs
 
 export JUNITLIB ?= ${ESCTOOLS_ROOT}/Utils/junit.jar
 
+export JUNIT_UTILS_PATH = ${ESCTOOLS_ROOT}/Utils:${JUNITLIB}
+
 ######################### locations #########################
  
  
