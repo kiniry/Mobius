@@ -20,6 +20,7 @@ public class ModChecks4 {
 		//@ assert y == 1;
 	}
 
+	//@ modifies \nothing;
 	//@ ensures \result == this;
 	ModChecks4 f(int i) {
 		return this;

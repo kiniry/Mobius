@@ -3071,7 +3071,8 @@ try{
 		// FIXME - the following code is another reason why the handling of pragmas
 		// should be totally refactored here and within javafe.
 		if (scanner.ttype == TagConstants.IDENT &&
-		    scanner.identifierVal.toString().equals("in")) {
+		    (scanner.identifierVal.toString().equals("in")||
+		     scanner.identifierVal.toString().equals("in_redundantly"))) {
 		    scanner.getNextToken(); // skip the in token
 
 		    boolean first = true;
@@ -3085,7 +3086,8 @@ try{
 		    continue;
 		}
 		if (scanner.ttype == TagConstants.IDENT &&
-		    scanner.identifierVal.toString().equals("maps")) {
+		    (scanner.identifierVal.toString().equals("maps") ||
+		     scanner.identifierVal.toString().equals("maps_redundantly"))) {
 		    scanner.getNextToken(); // skip the maps token
 		    // Already parsed something - should be an identifier
 		    //System.out.println("MAPPING " + scanner.identifierVal.toString());

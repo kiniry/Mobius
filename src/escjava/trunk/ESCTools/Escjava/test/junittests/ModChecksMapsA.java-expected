@@ -27,6 +27,6 @@ MCMList ...
     [TIME]
 
 MCMList: MCMList() ...
-    [TIME]  passed
+    [TIME]  passed immediately
   [TIME total]
 1 warning

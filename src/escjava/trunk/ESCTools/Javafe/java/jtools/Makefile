@@ -1,6 +1,6 @@
 # Copyright 2000, 2001, Compaq Computer Corporation
 
-all clean:
+all build clean:
 	${MAKE} -C jwhich $@
 	${MAKE} -C jls $@
 	${MAKE} -C jcheck $@

@@ -1,7 +1,7 @@
 // Tests when fresh or local items are modified
-
 public class ModChecks6 {
 	//@ ensures \fresh(a);
+	//@ modifies this.*;
 	ModChecks6();
 
 	public int i;

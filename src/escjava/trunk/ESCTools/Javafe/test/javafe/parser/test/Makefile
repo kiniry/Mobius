@@ -16,7 +16,7 @@ clean:
 	rm -f *~ *.out
 
 testlex:
-	echo "TESTING Javafe: testlex"
+	@echo "TESTING Javafe: testlex"
 	${JAVA} -classpath ${CLASSPATH} javafe.parser.test.TestLex \
 	  < simpletoks > simpletoks.out \
 	  && ${DIFF} simpletoks.Lex simpletoks.out
@@ -31,22 +31,22 @@ testlex:
 	  && ${DIFF} literaltoks.Lookahead literaltoks.out
 
 testpragmalexer:
-	echo "TESTING Javafe: testpragmalexer"
+	@echo "TESTING Javafe: testpragmalexer"
 	${JAVA} -classpath ${CLASSPATH} javafe.parser.test.TestLex parsepragmas javakeywords \
 	  < pragmatoks >pragmatoks.out \
 	&& ${DIFF} pragmatoks.out pragmatoks.ans
 
 testpragmaparser:
-	echo "TESTING Javafe: testpragmaparser"
+	@echo "TESTING Javafe: testpragmaparser"
 	${JAVA} -classpath ${CLASSPATH} javafe.parser.test.TestParse idempotence check HasPragmas.j
 
 testexpr:
-	echo "TESTING Javafe: testexpr"
+	@echo "TESTING Javafe: testexpr"
 	${JAVA} -classpath ${CLASSPATH} javafe.parser.test.TestExpr check < test-exprs1.j
 	${JAVA} -classpath ${CLASSPATH} javafe.parser.test.TestExpr check compare < compare-exprs-small.j
 
 testparseidempotence:
-	echo "TESTING Javafe: testparseidempotence"
+	@echo "TESTING Javafe: testparseidempotence"
 	${JAVA} -classpath ${CLASSPATH} javafe.parser.test.TestParse diff simpletoks simpletoks
 	${JAVA} -classpath ${CLASSPATH} javafe.parser.test.TestParse progress check idempotence \
 		compilation-unit.j $(call canonicalize,${parseidempotence_java_files})
@@ -54,7 +54,7 @@ testparseidempotence:
 
 
 testexprbig:
-	echo "TESTING Javafe: testexprbig"
+	@echo "TESTING Javafe: testexprbig"
 	${JAVA} -classpath ${CLASSPATH} javafe.parser.test.TestExpr check compare < compare-exprs-big.j
 
 .PHONY: jdk_source_listings
@@ -67,7 +67,7 @@ jdk_source_listings:
 
 .PHONY: testparsejdkidempotence
 testparsejdkidempotence:
-	echo "TESTING Javafe: testparsejdkidempotence"
+	@echo "TESTING Javafe: testparsejdkidempotence"
 	${JAVA} -classpath ${CLASSPATH} javafe.parser.test.TestParse diff simpletoks simpletoks assert
 	for d in  ${JDK10_SOURCES} ${JDK11_SOURCES} ${JDK12_SOURCES} ${JDK13_SOURCES} ${JDK14_SOURCES} ; do \
 	   echo "Executing TestParse on " $$d  ; \
@@ -78,7 +78,7 @@ testparsejdkidempotence:
 	done
 
 testparse:
-	echo "TESTING Javafe: testparse"
+	@echo "TESTING Javafe: testparse"
 	${JAVA} -classpath ${CLASSPATH} javafe.parser.test.TestParse progress check print verboseprogress \
 		compilation-unit.j *.java \
 		${JAVAFE_ROOT}/java/javafe/parser/*.java \

@@ -1,5 +1,5 @@
 // Tests that multiple @ signs are allowed.
-//#FLAGS: -parsePlus
+//#FLAGS: -parsePlus -classpath .
 public class MultipleAt {
 
 	//@ ghost public int i;

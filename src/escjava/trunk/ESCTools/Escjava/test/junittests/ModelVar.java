@@ -1,5 +1,5 @@
 //#FLAGS:  -classpath . -quiet
-/*
+/* FIXME
 Need to test model variables of other objects.
 Model variables whose definitions are recursive.
 */
@@ -102,7 +102,7 @@ public class ModelVar {
 		next = new ModelVar();
 		// @ assert next.len == 0;
 	}
-
+	//@ modifies this.*;
 	//@ ensures next == null;
 	//@ ensures len == 0;
 	public ModelVar();

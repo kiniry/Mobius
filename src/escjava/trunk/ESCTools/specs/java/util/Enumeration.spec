@@ -54,7 +54,7 @@ public interface Enumeration {
     /**
      ** Do we have more elements?
      **/
-    //@ ghost public boolean moreElements
+    //@ ghost public boolean moreElements;
 
     /**
      * Tests if this enumeration contains more elements.
@@ -63,7 +63,7 @@ public interface Enumeration {
      *           contains at least one more element to provide;
      *          <code>false</code> otherwise.
      */
-    //@ ensures \result==moreElements
+    //@ ensures \result==moreElements;
     boolean hasMoreElements();
 
 
@@ -84,9 +84,9 @@ public interface Enumeration {
      * @return     the next element of this enumeration.
      * @exception  NoSuchElementException  if no more elements exist.
      */
-    //@ requires moreElements
-    //@ modifies moreElements
-    //@ ensures \typeof(\result) <: elementType || \result==null
-    //@ ensures (\result!=null)
+    //@ requires moreElements;
+    //@ modifies moreElements;
+    //@ ensures \typeof(\result) <: elementType || \result==null;
+    //@ ensures (\result!=null);
     Object nextElement();
 }

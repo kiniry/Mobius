@@ -1,105 +1,43 @@
-ESC/Java version VERSION
-  Prover started:TIME
-
-ModE ...
-
-ModE: ModE() ...
-    [TIME]  passed immediately
-
-ModE: ModE(int) ...
-    [TIME]  passed immediately
-
-ModE: ModE(float) ...
-    [TIME]  passed immediately
-
-ModE: ModE(int, int) ...
-    [TIME]  passed immediately
-
-ModE: ModE(int, int, int) ...
-    [TIME]  passed immediately
-
-ModE: me() ...
-    [TIME]  passed immediately
-
-ModE: mn() ...
-    [TIME]  passed immediately
-
-ModE: mns() ...
-    [TIME]  passed immediately
-
-ModE: md() ...
-    [TIME]  passed immediately
-
-ModE: mi() ...
-    [TIME]  passed immediately
-
-ModE: mm() ...
-ModE.java:38: Caution: A method that 'modifies everything' has been called; the verification of a body with such a call is not correct.
-                ModE e = new ModE();
-                         ^
-ModE.java:39: Caution: A method that 'modifies everything' has been called; the verification of a body with such a call is not correct.
-                e = new ModE(5);
+ModE.java:37: Error: There is no assignable clause allowing this assignment
+                ModE e = new ModE();  // WARNING
+                                 ^
+ModE.java:7: Associated declaration: 
+        //@ modifies \everything;
+                     ^
+ModE.java:38: Error: There is no assignable clause allowing this assignment
+                e.me();  // WARNING
                     ^
-ModE.java:40: Caution: A method that 'modifies everything' has been called; the verification of a body with such a call is not correct.
-                e.me();
-                  ^
-ModE.java:41: Caution: A method that 'modifies everything' has been called; the verification of a body with such a call is not correct.
-                e.mns();
-                  ^
-ModE.java:42: Caution: A method that 'modifies everything' has been called; the verification of a body with such a call is not correct.
-                e = new ModE(1,2,3);
+ModE.java:21: Associated declaration: 
+        //@ modifies \everything;
+                     ^
+ModE.java:39: Error: There is no assignable clause allowing this assignment
+                e = new ModE(1,2,3);  // WARNING
+                            ^
+ModE.java:19: Associated declaration: 
+        public ModE(int i, int j, int k);
+        ^
+ModE.java:40: Error: There is no assignable clause allowing this assignment
+                e.md();  // WARNING
                     ^
-ModE.java:43: Caution: A method that 'modifies everything' has been called; the verification of a body with such a call is not correct.
-                e.md();
-                  ^
-ModE.java:44: Caution: A method that 'modifies everything' has been called; the verification of a body with such a call is not correct.
-                e.mss();
-                  ^
-ModE.java:38: Caution: A method that 'modifies everything' has been called; the verification of a body with such a call is not correct.
-                ModE e = new ModE();
-                         ^
-ModE.java:39: Caution: A method that 'modifies everything' has been called; the verification of a body with such a call is not correct.
-                e = new ModE(5);
-                    ^
-ModE.java:40: Caution: A method that 'modifies everything' has been called; the verification of a body with such a call is not correct.
-                e.me();
-                  ^
-ModE.java:41: Caution: A method that 'modifies everything' has been called; the verification of a body with such a call is not correct.
-                e.mns();
-                  ^
-ModE.java:42: Caution: A method that 'modifies everything' has been called; the verification of a body with such a call is not correct.
-                e = new ModE(1,2,3);
-                    ^
-ModE.java:43: Caution: A method that 'modifies everything' has been called; the verification of a body with such a call is not correct.
-                e.md();
-                  ^
-ModE.java:44: Caution: A method that 'modifies everything' has been called; the verification of a body with such a call is not correct.
-                e.mss();
-                  ^
-    [TIME]  passed
-  [TIME total]
-
-ModES ...
-
-ModES: ms() ...
-    [TIME]  passed immediately
-
-ModES: mss() ...
-    [TIME]  passed immediately
-
-ModES: ModES() ...
-    [TIME]  passed
-  [TIME total]
-
-ModESS ...
-
-ModESS: ms() ...
-    [TIME]  passed immediately
-
-ModESS: mss() ...
-    [TIME]  passed immediately
-
-ModESS: ModESS() ...
-    [TIME]  passed
-  [TIME total]
-14 cautions
+ModE.java:30: Associated declaration: 
+        public void md();
+        ^
+ModE.java:41: Error: There is no assignable clause allowing this assignment
+                e.mss();  // WARNING
+                     ^
+ModE.java:67: Associated declaration: 
+        //@ also ensures true;
+        ^
+ModE.java:47: Error: There is no assignable clause allowing this assignment
+                e = new ModE(5);  // WARNING
+                            ^
+ModE.java:10: Associated declaration: 
+        //@ modifies \not_specified;
+            ^
+ModE.java:48: Error: There is no assignable clause allowing this assignment
+                e.mns();  // WARNING
+                     ^
+ModE.java:27: Associated declaration: 
+        //@ modifies \not_specified;
+            ^
+7 errors

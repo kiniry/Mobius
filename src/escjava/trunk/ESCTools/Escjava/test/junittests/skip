@@ -23,7 +23,6 @@ GhostFieldOverride.java
 MethodInSpec.java
 ## Modify everything tests
 ModEverything.java
-ModE.java
 ## New tests
 Privacy.java
 DataGroup.java

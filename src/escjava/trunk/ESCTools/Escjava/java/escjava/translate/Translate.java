@@ -2233,7 +2233,8 @@ public final class Translate
                     InlineSettings is = (InlineSettings)inlineDecoration.get(ni);
                     code.addElement(call(ni.decl, rawArgs, args, scope,
                                          ni.loc, ni.getEndLoc(), ni.locOpenParen,
-                                         false, is, null, true));  // FIXME - what shold the null be?
+                                         false, is, temporary("RES", ni.loc, ni.loc),
+					true));  
 	  
                     {   Expr tType = TypeExpr.make(ni.loc, ni.getEndLoc(), ni.type);
                     Expr resType = GC.nary(TagConstants.TYPEOF, GC.resultvar);
@@ -3506,11 +3507,11 @@ public final class Translate
 		System.out.println("LHS " + lhs.getClass());
 		return;
 	}
-	modifiesCheckFieldHelper(eod,loc,fd,locdecl);
+	modifiesCheckFieldHelper(eod,loc,fd,locdecl,null);
     }
 
     private void modifiesCheckFieldHelper(Expr eod, int loc,
-					FieldDecl fd, int locdecl) {
+		    FieldDecl fd, int locdecl, Expr callee_tpred) {
 	if (!issueCautions) return;
 	// We need to create a translated predicate expression that is true
 	// if the lhs is allowed to be modified and false if it is not
@@ -3526,15 +3527,15 @@ public final class Translate
 	//		fields must have the same object designator
 	//		arrays must have the same array expression and same index
 	ExprVec ev = ExprVec.make(10);
-	addAllocExpression(ev,eod);
-	ModifiesIterator mi = new ModifiesIterator(rdCurrent);
-	while (mi.hasNext()) {
-	    Object ex = mi.next();
-	    Expr pred = mi.cond();
-	    Expr tpred = null;
-	    if (!isTrueLiteral(pred)) tpred = 
-			modTranslate(pred,true,null);
-	    Expr disjunct = null;
+	if (!Modifiers.isStatic(fd.modifiers)) addAllocExpression(ev,eod);
+	if (callee_tpred != null) ev.addElement(GC.not(callee_tpred));
+	ModifiesIterator caller_iterator = new ModifiesIterator(rdCurrent);
+	while (caller_iterator.hasNext()) {
+	    Object ex = caller_iterator.next();
+	    Expr caller_pred = caller_iterator.cond();
+	    Expr caller_tpred = null;
+	    if (!isTrueLiteral(caller_pred)) caller_tpred = 
+			modTranslate(caller_pred,true,null);
 	    if (ex instanceof FieldAccess || ex instanceof FieldDecl) {
 		FieldDecl fdd;
 		ObjectDesignator odd;
@@ -3550,28 +3551,25 @@ public final class Translate
 		    if (Modifiers.isStatic(fd.modifiers)) {
 		       // Both are static and we already know that they point
 		       // to the same declaration.  So they match.
-		       if (tpred == null) return;
-		       disjunct = tpred;
+			if (addTImplication(ev,callee_tpred,caller_tpred)) return;
 		    } else {
 			Expr e1 = eod;
 			Expr e2 = odd instanceof ExprObjectDesignator ?
 				    ((ExprObjectDesignator)odd).expr:
 				    ThisExpr.make(null,Location.NULL);
 			if (e1 instanceof ThisExpr && e2 instanceof ThisExpr && 
-			    tpred == null) {
+			    caller_tpred == null) {
 			    //System.out.println("TRIVIAL PERMISSION - THIS FIELDS" );
 			    return;
-			} 
-			//System.out.println("FF " + e1.getClass() + " " + e2.getClass());
-			ExprVec evv = ExprVec.make(1);
-			evv.addElement(e2);
-			e1 = eod;
-			e2 = modTranslate(e2,true,null);
-			Expr e = GC.nary(TagConstants.REFEQ,e1,e2);
-			if (tpred != null) {
-			    e = GC.and(e, tpred);
+			} else {
+			    //System.out.println("FF " + e1.getClass() + " " + e2.getClass());
+			    ExprVec evv = ExprVec.make(1);
+			    evv.addElement(e2);
+			    e1 = eod;
+			    e2 = modTranslate(e2,true,null);
+			    Expr e = GC.nary(TagConstants.REFEQ,e1,e2);
+			    addTImplication(ev,e,callee_tpred,caller_tpred);
 			}
-			disjunct = e;
 		    }
 		}
 	    } else if (ex instanceof ArrayRefExpr) {
@@ -3580,12 +3578,8 @@ public final class Translate
 		//System.out.println("MATCHING AGAINST NOTHING " );
 		// skip
 	    } else if (ex instanceof EverythingExpr) {
-		if (tpred == null) {
-		    //System.out.println("TRIVIAL PERMISSION - EVERYTHING");
-		    return;
-		}
 		//System.out.println("MATCHING AGAINST EVERYTHING " );
-		disjunct = tpred;
+		if (addTImplication(ev,callee_tpred,caller_tpred)) return;
 		
 	    } else if (ex instanceof ArrayRangeRefExpr) {
 		// skip
@@ -3596,8 +3590,7 @@ public final class Translate
 			TypeSig t = TypeCheck.inst.getSig(fd.parent);
 			Type tt = ((TypeObjectDesignator)odd).type;
 			if (t == tt || Types.isSubclassOf(tt,t)) {
-			    if (tpred == null) return;
-			    disjunct = tpred;
+			    if (addTImplication(ev,callee_tpred,caller_tpred)) return;
 			}
 		    }
 		} else if (odd instanceof ExprObjectDesignator) {
@@ -3606,8 +3599,7 @@ public final class Translate
 		    Expr e2 = modTranslate(((ExprObjectDesignator)odd).expr,
 					true,null);
 		    e1 = GC.nary(TagConstants.REFEQ,e1,e2);
-		    if (tpred != null) e1 = GC.and(e1,tpred);
-		    disjunct = e1;
+		    addTImplication(ev,e1,callee_tpred,caller_tpred);
 		  }
 		} else {
 		    System.out.println("COMPARE TO " + odd.getClass());
@@ -3615,8 +3607,6 @@ public final class Translate
 	    } else {
 		System.out.println("COMPARE TO " + ex.getClass());
 	    }
-	    // System.out.println(EscPrettyPrint.inst.toString(disjunct));
-	    if (disjunct != null) ev.addElement(disjunct);
 	}
 	modChecksComplete(ev,loc,locdecl);
     }
@@ -3643,13 +3633,13 @@ public final class Translate
 	//		arrays must have the same array expression and same index
 	ExprVec ev = ExprVec.make(10);
 	addAllocExpression(ev,array);
-	ModifiesIterator mi = new ModifiesIterator(rdCurrent);
-	while (mi.hasNext()) {
-	    Object ex = mi.next();
-	    Expr pred = mi.cond();
-	    Expr tpred = null;
-	    if (!isTrueLiteral(pred)) tpred = 
-			modTranslate(pred,true,null);
+	ModifiesIterator caller_iterator = new ModifiesIterator(rdCurrent);
+	while (caller_iterator.hasNext()) {
+	    Object ex = caller_iterator.next();
+	    Expr caller_pred = caller_iterator.cond();
+	    Expr caller_tpred = null;
+	    if (!isTrueLiteral(caller_pred)) caller_tpred = 
+			modTranslate(caller_pred,true,null);
 	    Expr disjunct = null;
 	    if (ex instanceof FieldAccess) {
 	    } else if (ex instanceof FieldDecl) {
@@ -3663,20 +3653,20 @@ public final class Translate
 		    ao = GC.nary(TagConstants.REFEQ,array,ao);
 		    ai = GC.nary(TagConstants.INTEGRALEQ,arrayIndex,ai);
 		    ao = GC.and(ao,ai);
-		    if (tpred != null) {
-			ao = GC.and(ao, tpred);
+		    if (caller_tpred != null) {
+			ao = GC.and(ao, caller_tpred);
 		    }
 		    disjunct = ao;
 		}
 	    } else if (ex instanceof NothingExpr) {
 		//System.out.println("MATCHING AGAINST NOTHING " );
 	    } else if (ex instanceof EverythingExpr) {
-		if (tpred == null) {
+		if (caller_tpred == null) {
 		    //System.out.println("TRIVIAL PERMISSION - EVERYTHING");
 		    return;
 		}
 		//System.out.println("MATCHING AGAINST EVERYTHING " );
-		disjunct = tpred;
+		disjunct = caller_tpred;
 		
 	    } else if (ex instanceof ArrayRangeRefExpr) {
 		if (array != null) {
@@ -3695,7 +3685,7 @@ public final class Translate
 		    al = al == null ? ah : ah == null ? al :
 			    GC.and(al,ah);
 		    ao = al == null ? ao : GC.and(ao,al);
-		    if (tpred != null) ao = GC.and(ao,tpred);
+		    if (caller_tpred != null) ao = GC.and(ao,caller_tpred);
 		    disjunct = ao;
 		}
 	    } else if (ex instanceof WildRefExpr) {
@@ -3736,24 +3726,28 @@ public final class Translate
 	return ((Boolean)value).booleanValue() ;
     }
 
-    private boolean addImplication(ExprVec ev, Expr tpred, Expr ppred) {
-	Expr tppred = null;
-	if (!isTrueLiteral(ppred)) tppred = 
-		    modTranslate(ppred,false,null);  
-	if (tpred != null && tppred != null) {
-	    ev.addElement(GC.implies(tpred,tppred));
-	} else if (tpred != null && tppred == null) {
+    private boolean addImplication(ExprVec ev, Expr callee_tpred, Expr caller_pred) {
+	Expr caller_tpred = null;
+	if (!isTrueLiteral(caller_pred)) caller_tpred = 
+		    modTranslate(caller_pred,false,null);  
+	return addTImplication(ev,callee_tpred,caller_tpred);
+    }
+    private boolean addTImplication(ExprVec ev, Expr callee_tpred, Expr caller_tpred) {
+	if (callee_tpred != null && caller_tpred != null) {
+	    ev.addElement(GC.implies(callee_tpred,caller_tpred));
+	} else if (callee_tpred != null && caller_tpred == null) {
 	    return true;
-	} else if (tpred == null && tppred != null) {
-	    ev.addElement(tppred);
+	} else if (callee_tpred == null && caller_tpred != null) {
+	    ev.addElement(caller_tpred);
 	} else {
-	    return true; // obviously ok - both  are unconditional modifies \everything;
+	    return true; // obviously ok - both  are unconditional
 	}
 	return false;
     }
 
     final private Identifier thisid = Identifier.intern("this");
-    private boolean pFreshResult = false;
+
+    private boolean pFreshResult = false;;
 
     private void addAllocExpression(ExprVec ev, Expr e) {
 	if (e == null) return;
@@ -3773,51 +3767,59 @@ public final class Translate
 	);
     }
 
-    private void addImplication(ExprVec ev, Expr e, Expr tpred, Expr ppred) {
-	Expr tppred = null;
-	if (!isTrueLiteral(ppred)) tppred = 
-		    modTranslate(ppred,true,null);  
-	if (tpred != null && tppred != null) {
-	    ev.addElement(GC.and(e,GC.implies(tpred,tppred)));
-	} else if (tpred != null && tppred == null) {
+    private void addImplication(ExprVec ev, Expr e, Expr callee_tpred, Expr caller_pred) {
+	Expr caller_tpred = null;
+	if (!isTrueLiteral(caller_pred)) caller_tpred = 
+		    modTranslate(caller_pred,true,null);  
+	addTImplication(ev,e,callee_tpred,caller_tpred);
+    }
+    private void addTImplication(ExprVec ev, Expr e, Expr callee_tpred, Expr caller_tpred) {
+	if (callee_tpred != null && caller_tpred != null) {
+	    ev.addElement(GC.and(e,GC.implies(callee_tpred,caller_tpred)));
+	} else if (callee_tpred != null && caller_tpred == null) {
 	    ev.addElement(e);
-	} else if (tpred == null && tppred != null) {
-	    ev.addElement(GC.and(e,tppred));
+	} else if (callee_tpred == null && caller_tpred != null) {
+	    ev.addElement(GC.and(e,caller_tpred));
 	} else {
 	    ev.addElement(e);
 	}
     }
 
     private void modifiesCheckMethod(Expr eod, int loccall, int locdecl, CondExprModifierPragmaVec mp, Hashtable args, boolean freshResult) {
-	if (!issueCautions) return;
 	pFreshResult = freshResult;
 	try {
-	ModifiesIterator mii = new ModifiesIterator(rdCurrent);
-	ModifiesIterator mi = new ModifiesIterator(mp);
-	OUTER: while (mi.hasNext()) {
+	if (!issueCautions) return;
+	ModifiesIterator caller_iterator = new ModifiesIterator(rdCurrent);
+	ModifiesIterator callee_iterator = new ModifiesIterator(mp);
+	OUTER: while (callee_iterator.hasNext()) {
 	    ExprVec ev = ExprVec.make(10);
-	    Object ex = mi.next();
-	    locdecl = ((ASTNode)ex).getStartLoc();
-	    Expr pred = mi.cond();
-	    Expr tpred = null;
-	    if (!isTrueLiteral(pred)) tpred = 
-			modTranslate(pred,false,eod,args); 
+	    Object ex = callee_iterator.next();
+	    int loc = ((ASTNode)ex).getStartLoc();
+	    if (loc != Location.NULL) locdecl = loc;
+	    Expr callee_pred = callee_iterator.cond();
+	    Expr callee_tpred = null;
+	    if (!isTrueLiteral(callee_pred)) callee_tpred = 
+			modTranslate(callee_pred,false,eod,args); 
+	    if (callee_tpred != null) {
+		ev.addElement(GC.not(callee_tpred));
+	    }
 	    if (ex instanceof EverythingExpr) {
-		mii.reset();
-		while (mii.hasNext()) {
-		    Object exx = mii.next();
-		    Expr ppred = mii.cond();
+		caller_iterator.reset();
+		while (caller_iterator.hasNext()) {
+		    Object exx = caller_iterator.next();
+		    Expr caller_pred = caller_iterator.cond();
 		    if (exx instanceof EverythingExpr) {
-			if (addImplication(ev,tpred,ppred)) continue OUTER;
+			if (addImplication(ev,callee_tpred,caller_pred)) continue OUTER;
 		    }
 		}
 		modChecksComplete(ev,loccall,locdecl);
 	    } else if (ex instanceof NothingExpr) {
 		// skip
 	    } else if (ex instanceof FieldAccess) {
+		FieldAccess fa = (FieldAccess)ex;
 		Expr eeod = (((FieldAccess)ex).od instanceof ExprObjectDesignator) ? ((ExprObjectDesignator)((FieldAccess)ex).od).expr : null;
 		Expr lval = eeod == null ? null : modTranslate(eeod, false,  eod, args);
-		modifiesCheckFieldHelper(lval,loccall, ((FieldAccess)ex).decl,locdecl);
+		modifiesCheckFieldHelper(lval,loccall, fa.decl,fa.decl.getStartLoc(), callee_tpred);
 	    } else if (ex instanceof ArrayRefExpr) {
 		Expr array= modTranslate(((ArrayRefExpr)ex).array, false,  eod, args );
 		Expr index= modTranslate(((ArrayRefExpr)ex).index, false,  eod, args );
@@ -3830,25 +3832,25 @@ public final class Translate
 						false,eod,args);
 		    addAllocExpression(ev,e1);
 		}
-		mii.reset();
-		while (mii.hasNext()) {
-		    Object exx = mii.next();
-		    Expr ppred = mii.cond();
+		caller_iterator.reset();
+		while (caller_iterator.hasNext()) {
+		    Object exx = caller_iterator.next();
+		    Expr caller_pred = caller_iterator.cond();
 		    if (exx instanceof EverythingExpr) {
-			if (addImplication(ev,tpred,ppred)) continue OUTER;
+			if (addImplication(ev,callee_tpred,caller_pred)) continue OUTER;
 		    } else if (exx instanceof WildRefExpr) {
 			ObjectDesignator oddd = ((WildRefExpr)exx).od;
 			if ((odd instanceof TypeObjectDesignator) && (oddd instanceof TypeObjectDesignator)) {
 			    Type t = ((TypeObjectDesignator)odd).type;
 			    Type tt = ((TypeObjectDesignator)oddd).type;
 			    if (t == tt || ((t instanceof TypeSig) && Types.isSubclassOf(tt,(TypeSig)t)) ) {
-				if (addImplication(ev,tpred,ppred)) continue OUTER;
+				if (addImplication(ev,callee_tpred,caller_pred)) continue OUTER;
 			    }
 			} else if (odd instanceof ExprObjectDesignator && oddd instanceof ExprObjectDesignator) {
 			    Expr e2 = modTranslate(((ExprObjectDesignator)oddd).expr,
 						true,null);
 			    e1 = GC.nary(TagConstants.REFEQ,e1,e2);
-			    addImplication(ev,e1,tpred,ppred);
+			    addImplication(ev,e1,callee_tpred,caller_pred);
 			} else {
 			    //System.out.println("COMPARE TO " + odd.getClass() + " " + oddd.getClass());
 			}
@@ -3866,12 +3868,12 @@ public final class Translate
 		Expr ah = highIndex == null ? null :
 			modTranslate(highIndex,false,eod,args); 
 		addAllocExpression(ev,ao);
-		mii.reset();
-		while (mii.hasNext()) {
-		    Object exx = mii.next();
-		    Expr ppred = mii.cond();
+		caller_iterator.reset();
+		while (caller_iterator.hasNext()) {
+		    Object exx = caller_iterator.next();
+		    Expr caller_pred = caller_iterator.cond();
 		    if (exx instanceof EverythingExpr) {
-			if (addImplication(ev,tpred,ppred)) continue OUTER;
+			if (addImplication(ev,callee_tpred,caller_pred)) continue OUTER;
 		    } else if (exx instanceof ArrayRangeRefExpr) {
 			ArrayRangeRefExpr aaexpr = (ArrayRangeRefExpr)exx;
 			Expr aarray = aaexpr.array;
@@ -3890,7 +3892,7 @@ public final class Translate
 				GC.nary(TagConstants.INTEGRALLE,ah,aah);
 			aal = aal == null ? aah : aah == null ? aal : GC.and(aal,aah);
 			aao = aal == null ? aao : GC.and(aao,aal);
-			addImplication(ev,aao,tpred,ppred);
+			addImplication(ev,aao,callee_tpred,caller_pred);
 		    } else if (exx instanceof ArrayRefExpr) {
 			if (ah == null) continue; // FIXME - could compare against the length of ao
 			ArrayRefExpr aaexpr = (ArrayRefExpr)exx;
@@ -3903,24 +3905,23 @@ public final class Translate
 			Expr aah = GC.nary(TagConstants.INTEGRALLE,ah,aindex);
 			aal = GC.and(aal,aah);
 			aao = GC.and(aao,aal);
-			addImplication(ev,aao,tpred,ppred);
+			addImplication(ev,aao,callee_tpred,caller_pred);
 		    }
 		}
 		modChecksComplete(ev,loccall,locdecl);
 	    } else {
 		System.out.println("Modifies Check not implemented for " + ex.getClass());
-		mii.reset();
-		while (mii.hasNext()) {
-		    Object exx = mii.next();
-		    Expr ppred = mii.cond();
+		caller_iterator.reset();
+		while (caller_iterator.hasNext()) {
+		    Object exx = caller_iterator.next();
+		    Expr caller_pred = caller_iterator.cond();
 		    if (exx instanceof EverythingExpr) {
-			if (addImplication(ev,tpred,ppred)) continue OUTER;
+			if (addImplication(ev,callee_tpred,caller_pred)) continue OUTER;
 		    }
 		}
 		modChecksComplete(ev,loccall,locdecl);
 	    }
 	}
-
 	} finally {
 	    pFreshResult = false;
 	}
@@ -4191,9 +4192,12 @@ public final class Translate
             code.addElement(GC.gets(piLs[i], call.args.elementAt(i)));
         }
 
+// HERE??
+
 	for (int i=0; i<spec.preAssumptions.size(); ++i) {
 	    addAssumption(spec.preAssumptions.elementAt(i));
 	}
+
         // check all preconditions
         for(int i=0; i<spec.pre.size(); i++) {
             Condition cond = spec.pre.elementAt(i);
@@ -4208,6 +4212,9 @@ public final class Translate
                      GC.subst( call.scall, call.ecall, pt, p ),
                      cond.locPragmaDecl);
         }
+
+	    modifiesCheckMethod(eod, locOpenParen, rd.getStartLoc(), 
+		    GetSpec.getCombinedMethodDecl(rd).modifies,pt,freshResult);
 
         if (inline != null && Main.options().traceInfo > 0) {
             // add a label to say that a routine is being called
@@ -4230,15 +4237,11 @@ public final class Translate
 	    code.addElement( GC.gets( wL, wAccess ) );
 	}
 
-	modifiesCheckMethod(eod, locOpenParen, rd.getStartLoc(), 
-		    GetSpec.getCombinedMethodDecl(rd).modifies,pt,freshResult);
-	
         // restore original checking of warnings
         NoWarn.useGlobalStatus = useGlobalStatus;
 
 
         if (inline != null) {
-// FIXME - need to fix this for modifies behavior
 
             // insert the translated body, with appropriate substitutions of
             // formals for the new names provided above
@@ -4257,6 +4260,9 @@ public final class Translate
 	    for (int i=0; i<spec.postAssumptions.size(); ++i) {
 		addAssumption(spec.postAssumptions.elementAt(i));
 	    }
+
+		// FINAL MODIFIES CHECK
+	
             // check all postconditions
             for(int i=0; i<spec.post.size(); i++) {
                 Condition cond = spec.post.elementAt(i);
@@ -4302,12 +4308,14 @@ public final class Translate
 
             // modify EC, RES, XRES
             code.addElement(modify(GC.ecvar, scall));
-            code.addElement(modify(GC.resultvar, scall));
+            if (freshResult) code.addElement(GC.gets(GC.resultvar, eod));
+	    else            code.addElement(modify(GC.resultvar, scall));
             code.addElement(modify(GC.xresultvar, scall));
 						 
 	    for (int i=0; i<spec.postAssumptions.size(); ++i) {
 		addAssumption(spec.postAssumptions.elementAt(i));
 	    }
+
             // assume postconditions
             for(int i=0; i<spec.post.size(); i++) {
                 Condition cond = spec.post.elementAt(i);
@@ -4315,6 +4323,9 @@ public final class Translate
                                                     GC.subst(call.scall, call.ecall,
                                                              pt, cond.pred)));
             }
+
+// WAS HERE
+	
         }
     
         if( spec.dmd.throwsSet != null && spec.dmd.throwsSet.size() != 0 ) {	

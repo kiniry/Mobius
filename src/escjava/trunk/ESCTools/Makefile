@@ -27,6 +27,8 @@ include Makefile.defs
 ## subdirectories other than Javafe presume that Javafe has been
 ## built.
 
+export ESCJAVA = ${ESCTOOLS_ROOT}/Escjava/escj
+
 # List subprojects in the order in which they should be built.  Javafe
 # must be before any other Esctool directories.
 SUBDIRS = Utils Javafe Escjava 
@@ -45,9 +47,12 @@ build buildall test:
 	    $(MAKE) -C $$d $@ || exit 1; \
 	done
 
+test: specs-test
+
 .PHONY: alltests
 alltests:
 	${MAKE} test ALLTESTS=1
+	${MAKE} specs-test
 
 ########################################### general
 
@@ -336,6 +341,12 @@ zero-length-files:
 	  done ) > ${PATCH_PREFIX}-emptyFilesThatDisappeared
 
 ############################################################################
+
+## Run escjava on the specs
+.PHONY: specs-test
+specs-test:
+	@echo TESTING specs
+	cd specs; ${ESCJAVA} -quiet -classpath . java/*/*.spec
 
 ## This is simply a smoke test of the Makefile (particularly for Windows)
 .PHONY: make-test

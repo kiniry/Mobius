@@ -20,7 +20,7 @@ export JUNITSW = $(JAVA) -Xmx256M -classpath "${_CLASSPATH}" \
 # The default is to run tests without any spec files.  This is to keep them
 # robust against changes in specs.  You can adjust this by adding 
 # explicit command-line settings in any particular test.
-export ESC_SPECS = :
+export ESC_SPECS = $(call canonicalize,../../../specs)
 
 ##############################################################################
 .PHONY: buildtests
@@ -60,7 +60,7 @@ ifdef COMSPEC
 	@touch .canonicalized
 endif
 
-ALWAYSFLAGS = -nowarn Deadlock -verboseTrace -testMode -classpath .
+ALWAYSFLAGS = -nowarn Deadlock -verboseTrace -testMode -classpath .:${ESC_SPECS}
 DEFAULTFLAGS = " "
 
 ## This lists files without .java suffixes that need to be added to the
@@ -125,7 +125,7 @@ othertests: $(addsuffix -test,${OTHERTESTS})
 	@if [ ! -e $* ] ; then \
 		echo No such file $* ;\
 	else \
-	(${ESCJAVA} -testMode -classpath . \
+	(${ESCJAVA} ${ALWAYSFLAGS} \
 		`grep '//#FLAGS:' $* | \
 		sed -e "sx//#FLAGS:xx" -e "s@ESCTOOLS_ROOT@${ESCTOOLS_ROOT}@" ` \
 		$* 2>&1 | sed -e s/x/x/ > $*-ckd ) || exit 0; \
@@ -139,7 +139,7 @@ othertests: $(addsuffix -test,${OTHERTESTS})
 	fi ;\
 
 %-expected: %
-	escjava -testMode \
+	escjava ${ALWAYSFLAGS} \
 		`grep '//#FLAGS:' $* | sed -e "sx//#FLAGS:xx"` $* 2>&1 > $@
 
 .PHONY: clean

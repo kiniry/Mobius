@@ -131,7 +131,7 @@ public class Hashtable extends Dictionary implements Map, Cloneable,
      * rehash).  This field is used to make iterators on Collection-views of
      * the Hashtable fail-fast.  (See ConcurrentModificationException).
      */
-    private transient int modCount = 0;
+    private transient int modCount; //@ initially modCount == 0;
 
     /** use serialVersionUID from JDK 1.0.2 for interoperability */
     private static final long serialVersionUID; 
@@ -146,9 +146,9 @@ public class Hashtable extends Dictionary implements Map, Cloneable,
      * @exception  IllegalArgumentException  if the initial capacity is less
      *             than zero, or if the load factor is nonpositive.
      */
-    //@ requires initialCapacity >= 0
-    //@ requires loadFactor > 0
-    //@ ensures keyType==\type(Object) && elementType==\type(Object)
+    //@ requires initialCapacity >= 0;
+    //@ requires loadFactor > 0;
+    //@ ensures keyType==\type(Object) && elementType==\type(Object);
     public Hashtable(int initialCapacity, float loadFactor); 
 
     /**
@@ -159,15 +159,15 @@ public class Hashtable extends Dictionary implements Map, Cloneable,
      * @exception IllegalArgumentException if the initial capacity is less
      *              than zero.
      */
-    //@ requires initialCapacity >= 0
-    //@ ensures keyType==\type(Object) && elementType==\type(Object)
+    //@ requires initialCapacity >= 0;
+    //@ ensures keyType==\type(Object) && elementType==\type(Object);
     public Hashtable(int initialCapacity); 
 
     /**
      * Constructs a new, empty hashtable with a default capacity and load
      * factor, which is <tt>0.75</tt>. 
      */
-    //@ ensures keyType==\type(Object) && elementType==\type(Object)
+    //@ ensures keyType==\type(Object) && elementType==\type(Object);
     public Hashtable(); 
 
     /**
@@ -178,7 +178,7 @@ public class Hashtable extends Dictionary implements Map, Cloneable,
      *
      * @since   JDK1.2
      */
-    //@ ensures keyType==\type(Object) && elementType==\type(Object)
+    //@ ensures keyType==\type(Object) && elementType==\type(Object);
     public Hashtable(/*@non_null*/ Map t); 
 
     /**
@@ -238,7 +238,7 @@ public class Hashtable extends Dictionary implements Map, Cloneable,
      * @see        #containsValue(Object)
      * @see	   Map
      */
-    //@ requires \typeof(value) <: elementType
+    //@ requires \typeof(value) <: elementType;
     public synchronized boolean contains(/*@non_null*/ Object value); 
 
     /**
@@ -252,7 +252,7 @@ public class Hashtable extends Dictionary implements Map, Cloneable,
      * @since JDK1.2
      */
     //@ also
-    //@ requires \typeof(value) <: elementType
+    //@ requires \typeof(value) <: elementType;
     //@ requires value != null;
     public boolean containsValue(Object value); 
 
@@ -266,7 +266,7 @@ public class Hashtable extends Dictionary implements Map, Cloneable,
      * @see     #contains(Object)
      */
     //@ also
-    //@ requires \typeof(key) <: keyType
+    //@ requires \typeof(key) <: keyType;
     //@ requires key != null;
     public synchronized boolean containsKey(Object key); 
 
@@ -359,9 +359,9 @@ public class Hashtable extends Dictionary implements Map, Cloneable,
 
     // Views
 
-    private transient Set keySet = null;
-    private transient Set entrySet = null;
-    private transient Collection values = null;
+    private transient volatile Set keySet; //@ initially keySet == null;
+    private transient volatile Set entrySet; //@ initially entrySet == null;
+    private transient volatile Collection values; //@ initially values == null;
 
     /**
      * Returns a Set view of the keys contained in this Hashtable.  The Set
@@ -372,7 +372,7 @@ public class Hashtable extends Dictionary implements Map, Cloneable,
      *
      * @since JDK1.2
      */
-    //@ also ensures \result!=null
+    //@ also ensures \result!=null;
     public Set keySet(); 
 
     /**
@@ -386,7 +386,7 @@ public class Hashtable extends Dictionary implements Map, Cloneable,
      * @see   Map.Entry
      * @since JDK1.2
      */
-    //@ also ensures \result!=null
+    //@ also ensures \result!=null;
     public Set entrySet(); 
 
     /**
@@ -398,7 +398,7 @@ public class Hashtable extends Dictionary implements Map, Cloneable,
      *
      * @since JDK1.2
      */
-    //@ also ensures \result!=null
+    //@ also ensures \result!=null;
     public Collection values(); 
 
     // Comparison and hashing

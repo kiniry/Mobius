@@ -18,9 +18,9 @@ ModChecksMethod: mnothingA() ...
 ModChecksMethod.java:24: Error: There is no assignable clause allowing this assignment
             pi(); // WARNING
               ^
-ModChecksMethod.java:242: Associated declaration: 
-        //@ modifies i;
-                     ^
+ModChecksMethod.java:6: Associated declaration: 
+        public int i;
+               ^
     [TIME]  passed
 
 ModChecksMethod: mnothingB() ...
@@ -97,9 +97,9 @@ ModChecksMethod: mi1() ...
 ModChecksMethod.java:76: Warning: Possible violation of modifies clause (Modifies)
             o.pi(); // WARNING
                 ^
-Associated declaration is "ModChecksMethod.java", line 242, col 14:
-        //@ modifies i;
-                     ^
+Associated declaration is "ModChecksMethod.java", line 6, col 8:
+        public int i;
+               ^
 ------------------------------------------------------------------------
     [TIME]  failed
 
@@ -461,12 +461,6 @@ ModChecksMethod.java:297: Associated declaration:
     [TIME]  passed
 
 ModChecksMethod: mcnothingA() ...
-ModChecksMethod.java:294: Error: There is no assignable clause allowing this assignment
-            new ModChecksMethod(0.0); //OK - FIXME
-                               ^
-ModChecksMethod.java:300: Associated declaration: 
-        //@ modifies i;
-                     ^
     [TIME]  passed
 
 ModChecksMethod: ModChecksMethod(int) ...
@@ -505,9 +499,9 @@ ModChecksMethod: mstatic() ...
 ModChecksMethod.java:336: Error: There is no assignable clause allowing this assignment
                 new ModChecksMethod(null); // WARNING
                                    ^
-ModChecksMethod.java:339: Associated declaration: 
-        //@ modifies ModChecksMethod.si;
-                     ^
+ModChecksMethod.java:7: Associated declaration: 
+        public static int si;
+                      ^
     [TIME]  passed
 
 ModChecksMethod: ModChecksMethod(java.lang.Object) ...
@@ -520,9 +514,9 @@ ModChecksMethod: ModChecksMethod(java.lang.Object, double) ...
 ModChecksMethod.java:350: Error: There is no assignable clause allowing this assignment
                 super(0); // WARNING
                      ^
-ModChecksMethod.java:399: Associated declaration: 
-        //@ modifies zi;
-                     ^
+ModChecksMethod.java:393: Associated declaration: 
+        public int zi;
+               ^
     [TIME]  passed
 
 ModChecksMethod: ModChecksMethod(java.lang.Object, double, int) ...
@@ -532,9 +526,9 @@ ModChecksMethod: ModChecksMethod(java.lang.Object, java.lang.Object) ...
 ModChecksMethod.java:360: Error: There is no assignable clause allowing this assignment
                 super(0.0); // WARNING
                      ^
-ModChecksMethod.java:402: Associated declaration: 
-        //@ modifies szi;
-                     ^
+ModChecksMethod.java:394: Associated declaration: 
+        public static int szi;
+                      ^
     [TIME]  passed
 
 ModChecksMethod: ModChecksMethod(java.lang.Object, java.lang.Object, int) ...
@@ -579,4 +573,4 @@ ModChecksMethodZ: ModChecksMethodZ(double) ...
     [TIME]  passed immediately
   [TIME total]
 20 warnings
-25 errors
+24 errors

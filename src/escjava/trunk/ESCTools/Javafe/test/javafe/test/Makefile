@@ -1,7 +1,7 @@
 # Copyright 2000, 2001, Compaq Computer Corporation
 
 runtest:
-	echo "TESTING Javafe: test/javafe/test"
+	@echo "TESTING Javafe: test/javafe/test"
 	cd lex; ${MAKE} runtest
 	cd fe; ${MAKE} runtest
 

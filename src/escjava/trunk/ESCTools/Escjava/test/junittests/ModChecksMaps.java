@@ -62,4 +62,7 @@ class MCMList {
 	public MCMList next; //@ in links;
 		//@ maps next.links \into links;
 		//@ maps next.values \into values;
+
+	//@ modifies \nothing;
+	public MCMList();
 }

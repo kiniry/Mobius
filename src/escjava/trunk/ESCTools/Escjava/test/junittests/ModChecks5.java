@@ -1,6 +1,6 @@
 public class ModChecks5 {
 
-	public int i;
+	public int i,ii;
 
 	public int j; //@ in i;
 
@@ -17,10 +17,16 @@ public class ModChecks5 {
 		k = 0;
 		kk = 0;
 	}
+
+	public int kkk; //@ in i,ii;
+
+	//@ modifies ii;
+	void mmm() {
+		kkk = 0;
+	}
+
+	//@ modifies i;
+	void mmmm() {
+		kkk = 0;
+	}
 }
-
-
-// FIXME - test multiple items in an in
-// in referring to super class
-// static in
-// maps

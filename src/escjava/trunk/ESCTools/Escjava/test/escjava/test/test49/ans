@@ -49,7 +49,7 @@ class WritableIf
 
    WritableIf()
     /*@ requires (/*boolean*/ true); */
-    /*@ modifies (/*UNAVAILABLE*/ \nothing) if (/*boolean*/ true); */
+    /*@ modifies (/*UNAVAILABLE*/ (/*UNAVAILABLE*/ this)..*) if (/*boolean*/ true); */
     /*@ pure */ 
    {
       super();
@@ -61,7 +61,7 @@ class WritableIf
 
    WritableIf(int x)
     /*@ requires (/*boolean*/ true); */
-    /*@ modifies (/*UNAVAILABLE*/ \nothing) if (/*boolean*/ true); */
+    /*@ modifies (/*UNAVAILABLE*/ (/*UNAVAILABLE*/ this)..*) if (/*boolean*/ true); */
     /*@ pure */ 
    {
       super();

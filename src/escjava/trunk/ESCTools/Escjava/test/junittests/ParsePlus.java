@@ -1,4 +1,4 @@
-//#FLAGS: -parsePlus
+//#FLAGS: -parsePlus -classpath .
 public class ParsePlus {
 
 	//+@ ensures false;

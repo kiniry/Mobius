@@ -17,5 +17,20 @@ ModChecks3.java:8: Error: Reference wild cards allowed only as specification des
                      ^
 Caution: Turning off extended static checking due to type error(s)
   [TIME total] (aborted)
+
+ModChecks3A ...
+ModChecks3.java:15: Error: An instance field may not be added to a static datagroup
+        public int j; //@ in i; // ERROR
+               ^
+ModChecks3.java:14: Associated declaration: 
+        static public int i;
+                      ^
+ModChecks3.java:17: Error: An instance field may not be added to a static datagroup
+        ModChecks3A o; //@ maps o.j \into i; // ERROR
+        ^
+ModChecks3.java:14: Associated declaration: 
+        static public int i;
+                      ^
+  [TIME total] (aborted)
 1 caution
-4 errors
+6 errors

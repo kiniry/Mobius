@@ -384,7 +384,8 @@ public final class String
       @                 == ((JMLChar)s2.first()).charValue();
       @     ensures \result == lessThan(s1.trailer(), s2.trailer());
       @   |}
-      @   subclassing_contract
+      @ also
+      @   code_contract
       @     measured_by Math.min(s1.length(), s2.length());
     public static pure model boolean lessThan(JMLValueSequence s1,
                                               JMLValueSequence s2);  @+*/

@@ -532,8 +532,17 @@ System.out.println("END_MPV");
 		case TagConstants.MODIFIES:
 		case TagConstants.MODIFIABLE:
 		case TagConstants.ASSIGNABLE:
+		  {
+		    CondExprModifierPragma mm = (CondExprModifierPragma)mp;
+		    if (mm.expr != null &&
+		        mm.expr.getTag() == TagConstants.NOTSPECIFIEDEXPR)
+			break;
 		    foundModifies = true;
-		    // fall-through
+		    mm.cond = and(mm.cond,req);
+		    resultList.addElement(mm);
+		    break;
+		  }
+
 		case TagConstants.WORKING_SPACE:
 		case TagConstants.DURATION:
 		  {
@@ -595,18 +604,24 @@ added, it doesn't change whether a routine appears to have a spec or not.
     }
     public final static CondExprModifierPragma defaultModifies(int loc, 
 				Expr req, RoutineDecl rd) {
-	boolean everythingIsDefault = false; // FIXME - eventually change to true
+	boolean everythingIsDefault = true; // FIXME - eventually change to true
 	boolean nothing = !everythingIsDefault;
 	boolean isPure = Utils.isPure(rd);
 
 	if (isPure) nothing = true;
-	if (isPure && rd instanceof ConstructorDecl) nothing = true; // FIXME - this is wrong - should be this.*
+	Expr e;
+	if (isPure && rd instanceof ConstructorDecl) {
+	    e = WildRefExpr.make(null,
+		ExprObjectDesignator.make(loc,ThisExpr.make(null,loc)));
+	} else if (nothing) {
+	    e = NothingExpr.make(loc);
+	} else {
+	    e = EverythingExpr.make(loc);
+	}
+
 	// FIXME - need default for COnstructor, ModelConstructor
 	return CondExprModifierPragma.make(
-		TagConstants.MODIFIES,
-		nothing ? (Expr)NothingExpr.make(loc) :
-			    (Expr)EverythingExpr.make(loc),
-		loc,req);
+		TagConstants.MODIFIES,e,loc,req);
     }
 
 

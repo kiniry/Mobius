@@ -1,5 +1,5 @@
 // Tests the handling of special modifies clauses
-
+//#FLAGS: -quiet -classpath .
 public class ModE extends ModES {
 
 	public int i;
@@ -11,7 +11,7 @@ public class ModE extends ModES {
 	public ModE(int i);
 
 	//@ modifies \nothing;
-	public ModE(float f);
+	public ModE(double f);
 
 	//@ modifies i;
 	public ModE(int jj, int j);
@@ -34,15 +34,24 @@ public class ModE extends ModES {
 
 	//@ modifies \nothing;
 	public void mm() {
-				// These give cautions for now
-		ModE e = new ModE();
-		e = new ModE(5);
-		e.me();
-		e.mns();
-		e = new ModE(1,2,3);
-		e.md();
-		e.mss();
+		ModE e = new ModE();  // WARNING
+		e.me();  // WARNING
+		e = new ModE(1,2,3);  // WARNING
+		e.md();  // WARNING
+		e.mss();  // WARNING
+	}
+
+	//@ modifies \nothing;
+	public void mm1() {
+		ModE e = new ModE(0,0);
+		e = new ModE(5);  // WARNING
+		e.mns();  // WARNING
+	}
+
+	//@ modifies \nothing;
+	public void mm3() {
 				// These are OK
+		ModE e = new ModE(0.0);;
 		e.mi();
 		e.mn();
 		e = new ModE(1,2);

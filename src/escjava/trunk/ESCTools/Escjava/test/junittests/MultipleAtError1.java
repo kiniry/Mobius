@@ -1,6 +1,6 @@
 // Tests that multiple @ signs are allowed.
 // jml fails on the multiple ats that terminate the comment
-//#FLAGS: -parsePlus
+//#FLAGS: -parsePlus -classpath .
 public class MultipleAtError1 {
 
 	//@ ghost public int i;

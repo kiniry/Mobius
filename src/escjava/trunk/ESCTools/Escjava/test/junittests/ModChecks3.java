@@ -9,3 +9,13 @@ public class ModChecks3{
 	void zz() {}
 }
 
+class ModChecks3A {
+
+	static public int i;
+	public int j; //@ in i; // ERROR
+
+	ModChecks3A o; //@ maps o.j \into i; // ERROR
+
+	static ModChecks3A oo; //@ maps oo.j \into i; // OK
+}
+

@@ -542,6 +542,10 @@ public final class GC {
 						    UniqName.specialVariable);
   public static final VariableAccess objectTBCvar = makeVar("objectToBeConstructed",
 							    UniqName.specialVariable);
+  public static final VariableAccess statevar = makeVar("state",
+						  UniqName.specialVariable);
+  public static final VariableAccess modifiesvar = makeVar("modifiesvar",
+						  UniqName.specialVariable);
 
   // LSvar is not final because it is temporarily updated at
   // synchronized expressions. See trExpr

@@ -11,7 +11,7 @@ endif
 #
 # The class path needed to find JWhich and its associated classes:
 #
-setenv CLASSPATH ${CLASSDIRECTORY}
+setenv CLASSPATH ${ESCTOOLS_ROOT}/Javafe/classfiles
 setenv CLASSSIZE 1			# of components in CLASSPATH...
 
 #

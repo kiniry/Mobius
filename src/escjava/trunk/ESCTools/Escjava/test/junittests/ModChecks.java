@@ -225,7 +225,7 @@ public class ModChecks extends S {
 		//@ set i = 0;
 	}
 
-	// FIXME - Also method calls !!!
+
 }
 
 class S {

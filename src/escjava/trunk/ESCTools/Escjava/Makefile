@@ -53,7 +53,7 @@ all: clean build docs test
 build: version compile
 
 .PHONY: buildall
-buildall: compileall
+buildall: version compileall
 
 .PHONY: test
 test: test_escjava
@@ -358,20 +358,6 @@ test-release:
 
 
 ###########################################################################
-# Miscellaneous targets.
-
-# Roughly counting size of source.
-
-.PHONY: word_count
-word_count:
-# --- Non-java Source files ---
-	wc ${OTHERSOURCEFILES}
-# --- Java Source files ---
-	wc ${JAVASOURCEFILES}
-	java javafe.parser.test.TestParse print ${JAVASOURCEFILES} | wc
-# --- Test harness files ---
-	wc ${TESTHARNESSFILES}
-	java javafe.parser.test.TestParse print ${TESTHARNESSFILES} | wc
 
 
 

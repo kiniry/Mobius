@@ -522,8 +522,8 @@ VariableDeclarator:
       l.getNextToken();
     }
     else if (l.ttype == TagConstants.POSTMODIFIERPRAGMA) {
-	System.out.println("ORPHAN POSTMODIFIERPRAGMA " + Location.toString(l.startingLoc));
-	// FIXME - ignore for now
+	ErrorSet.error(l.startingLoc,
+	    "Ignoring a modifier pragma that presumably follows a field declaration but is not in the same annotation comment"); // FIXME - can this be fixed?
       l.getNextToken();
     }
     else {

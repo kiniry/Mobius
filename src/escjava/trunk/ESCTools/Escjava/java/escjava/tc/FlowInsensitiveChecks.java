@@ -2289,8 +2289,14 @@ FIXME - see uses of countFreeVarsAccess
 		isSpecDesignatorContext = false;
 		Expr e = ep.expr;
 		if (e == null || TypeCheck.inst.getType(e) == Types.errorType) {
+		    // skip
 		} else if (e instanceof FieldAccess) {
-		    Datagroups.add(((FieldAccess)e).decl,ep.mapsexpr);
+		    if (Modifiers.isStatic( ((FieldAccess)e).decl.modifiers)
+			&& !Modifiers.isStatic( ((FieldDecl)ctxt).modifiers) ){
+			ErrorSet.error(((FieldDecl)ctxt).getStartLoc(), "An instance field may not be added to a static datagroup", ((FieldAccess)e).decl.getStartLoc());
+		    } else {
+			Datagroups.add(((FieldAccess)e).decl,ep.mapsexpr);
+		    }
 		} else {
 		    ErrorSet.error(e.getStartLoc(),
 			"Expected a field reference here, found " +
@@ -2309,7 +2315,12 @@ FIXME - see uses of countFreeVarsAccess
 		    FieldDecl fd = (FieldDecl)ctxt;
 		    Expr eva = AmbiguousVariableAccess.make(SimpleName.make(fd.id,fd.getStartLoc()));
 		    eva = checkExpr(env,eva);
-		    Datagroups.add(((FieldAccess)e).decl,eva);
+		    if (Modifiers.isStatic( ((FieldAccess)e).decl.modifiers ) &&
+			!Modifiers.isStatic(fd.modifiers)) {
+			ErrorSet.error(fd.getStartLoc(), "An instance field may not be added to a static datagroup", ((FieldAccess)e).decl.getStartLoc());
+		    } else {
+			Datagroups.add(((FieldAccess)e).decl,eva);
+		    }
 		} else {
 		    ErrorSet.error(e.getStartLoc(),
 			"Expected a field reference here, found " +

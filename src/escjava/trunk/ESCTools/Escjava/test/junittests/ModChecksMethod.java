@@ -291,7 +291,7 @@ public class ModChecksMethod extends ModChecksMethodZ {
 
 	//@ modifies \nothing;
 	public void mcnothingA() {
-	    new ModChecksMethod(0.0); //OK - FIXME
+	    new ModChecksMethod(0.0); //OK
 	}
 
 	//@ modifies \everything;
@@ -402,9 +402,3 @@ class ModChecksMethodZ {
 	//@ modifies szi;
 	ModChecksMethodZ(double d);
 }
-// FIXME - add tests that translation of this from callee is ok
-// FIXME - add tests that distinction between \old and current state is ok
-// FIXME - what about the arguments of a method or constructor call?
-// FIXME - test method/constructor calls in annotations as well as out
-// FIXME - also assignments of all sorts in annotations as well as out
-// FIXME - test super
