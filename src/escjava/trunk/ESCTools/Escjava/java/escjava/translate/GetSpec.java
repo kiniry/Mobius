@@ -102,7 +102,7 @@ public final class GetSpec {
 
 	dmd.throwsSet = rd.raises;
 	dmd.requires  = ExprModifierPragmaVec.make();
-	dmd.modifies  = ExprModifierPragmaVec.make();
+	dmd.modifies  = CondExprModifierPragmaVec.make();
 	dmd.ensures   = ExprModifierPragmaVec.make();
 	dmd.exsures   = VarExprModifierPragmaVec.make();
 
@@ -208,7 +208,7 @@ public final class GetSpec {
                 case TagConstants.JML_MODIFIABLE:
                 case TagConstants.JML_ASSIGNABLE:
                     {
-                        ExprModifierPragma emp = (ExprModifierPragma)mp;
+                        CondExprModifierPragma emp = (CondExprModifierPragma)mp;
 			int t = emp.expr.getTag();
 			// FIXME - no contribution to spec for these keywords
 			if (t == TagConstants.EVERYTHINGEXPR ||
@@ -256,6 +256,15 @@ public final class GetSpec {
 				       emp.loc);
     }
 
+    /** Perform a substitution on a CondExprModifierPragma **/
+    private static CondExprModifierPragma doSubst(Hashtable subst,
+					      CondExprModifierPragma emp) {
+	return CondExprModifierPragma.make(emp.tag,
+				       Substitute.doSubst(subst, emp.expr),
+				       emp.loc,
+		emp.cond == null ? null : Substitute.doSubst(subst, emp.cond));
+    }
+
     /** Perform a substitution on a VarExprModifierPragma **/
     private static VarExprModifierPragma doSubst(Hashtable subst,
 					         VarExprModifierPragma vemp) {
@@ -279,7 +288,7 @@ public final class GetSpec {
         dmdFiltered.throwsSet = dmd.throwsSet;
 
         dmdFiltered.requires = dmd.requires;
-        dmdFiltered.modifies = filterExprModPragmas(dmd.modifies, scope);
+        dmdFiltered.modifies = filterCondExprModPragmas(dmd.modifies, scope);
         dmdFiltered.ensures = filterExprModPragmas(dmd.ensures, scope);
         dmdFiltered.exsures = filterVarExprModPragmas(dmd.exsures, scope);
 
@@ -316,6 +325,35 @@ public final class GetSpec {
         }
     }
 
+
+    private static CondExprModifierPragmaVec filterCondExprModPragmas(/*@ non_null */ CondExprModifierPragmaVec vec,
+                                                                    /*@ non_null */ FindContributors scope) {
+        int n = vec.size();
+        CondExprModifierPragmaVec vecNew = null;  // lazily allocated
+        for (int i = 0; i < n; i++) {
+            CondExprModifierPragma vemp = vec.elementAt(i);
+            if (exprIsVisible(scope.originType, vemp.expr) &&
+		exprIsVisible(scope.originType, vemp.cond)) {
+                // keep this pragma
+                if (vecNew != null) {
+                    vecNew.addElement(vemp);
+                }
+            } else {
+                // filter out this pragma
+                if (vecNew == null) {
+                    vecNew = CondExprModifierPragmaVec.make(n-1);
+                    for (int j = 0; j < i; j++) {
+                        vecNew.addElement(vec.elementAt(j));
+                    }
+                }
+            }
+        }
+        if (vecNew == null) {
+            return vec;
+        } else {
+            return vecNew;
+        }
+    }
 
     private static VarExprModifierPragmaVec filterVarExprModPragmas(/*@ non_null */ VarExprModifierPragmaVec vec,
                                                                     /*@ non_null */ FindContributors scope) {

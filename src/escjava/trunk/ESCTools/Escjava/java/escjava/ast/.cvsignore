@@ -2,6 +2,8 @@ AnOverview.java
 AssignCmd.java
 Call.java
 CmdCmdCmd.java
+CondExprModifierPragma.java
+CondExprModifierPragmaVec.java
 Condition.java
 ConditionVec.java
 DecreasesInfoVec.java

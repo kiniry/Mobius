@@ -1384,6 +1384,8 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
             case TagConstants.ENSURES:
             case TagConstants.ALSO_ENSURES:
             case TagConstants.JML_POST:
+	    case TagConstants.JML_WHEN:
+	    case TagConstants.JML_WHEN_REDUNDANTLY:
                 {
                     ExprModifierPragma emp = (ExprModifierPragma)p;
 
@@ -1394,7 +1396,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                                        +"method and constructor declarations");
                     } else {
                         RoutineDecl rd = (RoutineDecl)ctxt;
-
+/*
                         if (getOverrideStatus(rd) != MSTATUS_NEW_ROUTINE) {
                             if (tag == TagConstants.ENSURES) {
                                 ErrorSet.error(p.getStartLoc(),
@@ -1408,7 +1410,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                                                "overrides; use ensures instead");
                             }
                         }
-
+*/
                         boolean oldIsRESContext = isRESContext;
                         boolean oldIsTwoStateContext = isTwoStateContext;
                         boolean oldIsPrivFieldAccessAllowed = isPrivateFieldAccessAllowed;
@@ -1543,8 +1545,9 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
             case TagConstants.ALSO_MODIFIES:
             case TagConstants.JML_MODIFIABLE:
             case TagConstants.JML_ASSIGNABLE:
+	    case TagConstants.JML_MEASURED_BY:
                 {
-                    ExprModifierPragma emp = (ExprModifierPragma)p;
+                    CondExprModifierPragma emp = (CondExprModifierPragma)p;
 
                     if (!(ctxt instanceof RoutineDecl ) ) {
                         ErrorSet.error(p.getStartLoc(),
@@ -1554,6 +1557,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                     } else {
                         RoutineDecl rd = (RoutineDecl)ctxt;
 	    
+/*
                         if (getOverrideStatus(rd) != MSTATUS_NEW_ROUTINE) {
                             if (tag == TagConstants.MODIFIES
                                 || tag == TagConstants.JML_MODIFIABLE
@@ -1569,7 +1573,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 				   "overrides; use modifies instead");
                             }
                         }
-
+*/
                         Assert.notFalse(!isSpecDesignatorContext);
                         isSpecDesignatorContext = true;
                         if (rd instanceof ConstructorDecl) {
@@ -1603,9 +1607,19 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                                                "Not a specification designator expression");
                         }
                         isSpecDesignatorContext = false;
+			if (emp.cond != null) emp.cond = checkExpr(env, emp.cond);
                     }
                     break;
                 }
+
+	    case TagConstants.JML_OPENPRAGMA:
+	    case TagConstants.JML_CLOSEPRAGMA:
+	    case TagConstants.JML_ALSO:
+	    case TagConstants.JML_NORMAL_BEHAVIOR:
+	    case TagConstants.JML_EXCEPTIONAL_BEHAVIOR:
+	    case TagConstants.JML_BEHAVIOR:
+		// Make these unexpected again after the desugaring is implemented
+		break;
 
             default:
                 Assert.fail("Unexpected tag " + tag);

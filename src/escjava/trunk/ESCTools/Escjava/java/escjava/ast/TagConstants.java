@@ -16,11 +16,15 @@ public class TagConstants extends javafe.tc.TagConstants
     public static final int IFF = EXPLIES + 1;  // equivalence (equality)
     public static final int NIFF = IFF + 1;     // discrepance (xor)
     public static final int SUBTYPE = NIFF + 1;
-    public static final int LEFTARROW = SUBTYPE + 1;
-    public static final int RIGHTARROW = LEFTARROW + 1;
+
+    //// Tags for pragma punctuation
+    public static final int JML_LEFTARROW = SUBTYPE + 1; // <-
+    public static final int JML_RIGHTARROW = JML_LEFTARROW + 1; // ->
+    public static final int JML_OPENPRAGMA = JML_RIGHTARROW + 1; // {|
+    public static final int JML_CLOSEPRAGMA = JML_OPENPRAGMA + 1; // |}
 
     //// Tags for new literal expressions
-    public static final int SYMBOLLIT = RIGHTARROW + 1;
+    public static final int SYMBOLLIT = JML_CLOSEPRAGMA + 1;
 
     //// Tags for new primitive types
     public static final int ANY = SYMBOLLIT + 1;
@@ -411,10 +415,14 @@ public class TagConstants extends javafe.tc.TagConstants
                 return "<=!=>";
             case SUBTYPE:
                 return "<:";
-	    case LEFTARROW:
+	    case JML_LEFTARROW:
 		return "<-";
-	    case RIGHTARROW:
+	    case JML_RIGHTARROW:
 		return "->";
+	    case JML_OPENPRAGMA:
+		return "{|";
+	    case JML_CLOSEPRAGMA:
+		return "|}";
             case ANY:
                 return "ANY";
             case TYPECODE:
@@ -503,7 +511,7 @@ public class TagConstants extends javafe.tc.TagConstants
         Identifier.intern("monitored_by"),
         Identifier.intern("non_null"),
         Identifier.intern("nowarn"),
-        Identifier.intern("\\old"),
+        Identifier.intern("\\old"),  // TagConstants.PRE
         Identifier.intern("readable_if"),
         Identifier.intern("\\result"),
         Identifier.intern("requires"),
@@ -708,7 +716,7 @@ public class TagConstants extends javafe.tc.TagConstants
         Identifier.intern("post_redundantly"),
         Identifier.intern("post"),
         Identifier.intern("pre_redundantly"),
-        Identifier.intern("pre"),
+        Identifier.intern("pre"), // JML_PRE not PRE (which is \old )
         Identifier.intern("pure"),
         Identifier.intern("refine"),
         Identifier.intern("represents_redundantly"),

@@ -137,9 +137,12 @@ JavafeTypeVec = \
 TypeVec = \
 	$(AST_DIR)/GuardedCmdVec.java  \
 	$(AST_DIR)/ConditionVec.java  \
-	$(AST_DIR)/ExprModifierPragmaVec.java $(AST_DIR)/ExprDeclPragmaVec.java \
+	$(AST_DIR)/ExprModifierPragmaVec.java \
+	$(AST_DIR)/CondExprModifierPragmaVec.java \
+	$(AST_DIR)/ExprDeclPragmaVec.java \
 	$(AST_DIR)/ExprStmtPragmaVec.java \
-	$(AST_DIR)/VarExprModifierPragmaVec.java $(AST_DIR)/DefPredVec.java \
+	$(AST_DIR)/VarExprModifierPragmaVec.java \
+	$(AST_DIR)/DefPredVec.java \
 	$(AST_DIR)/DecreasesInfoVec.java
 
 .PHONY: generate_escjava_ast_source

@@ -76,8 +76,9 @@ import javafe.util.Location;
  *         + SkolemConstantPragma (LocalVarDecl* decl)
  *    - ModifierPragma ()
  *         + SimpleModifierPragma () // Uninitialized, Monitored, Nonnull, WritableDeferred, Helper
- *         + ExprModifierPragma (Expr expr) // DefinedIf, Writable, Requires, Ensures, AlsoEnsures, MonitoredBy, Modifies, AlsoModifies
- *           // plus JML keywords: Also, Pre, Post, Assignable, Modifiable (kiniry)
+ *         + ExprModifierPragma (Expr expr) // DefinedIf, Writable, Requires, Ensures, AlsoEnsures, MonitoredBy
+ *           // plus JML keywords: Also, Pre, Post (kiniry)
+ *	   + CondExprModifierPragma (Expr expr, Expr cond) // Modifiers, AlsoModifiers, Assignable, Modifiable // (cok)
  *         + VarExprModifierPragma (GenericVarDecl arg, Expr expr) // Exsures, AlsoExsures
  *           // plus JML keywords: Signals
  *    - LexicalPragma ()
@@ -617,25 +618,52 @@ public class ExprModifierPragma extends ModifierPragma
     //# PostCheckCall
     private void postCheck() {
         boolean goodtag =
-            (tag == TagConstants.READABLE_IF || tag == TagConstants.WRITABLE_IF
+            tag == TagConstants.READABLE_IF || tag == TagConstants.WRITABLE_IF
              || tag == TagConstants.REQUIRES || tag == TagConstants.ALSO_REQUIRES
              || tag == TagConstants.ENSURES || tag == TagConstants.ALSO_ENSURES
-             || tag == TagConstants.MONITORED_BY || tag == TagConstants.MODIFIES
+             || tag == TagConstants.MONITORED_BY; 
+        boolean isJMLExprModifier = isJMLExprModifier();
+        Assert.notFalse(goodtag || isJMLExprModifier);
+    }
+
+    private boolean isJMLExprModifier() {
+        return tag == TagConstants.JML_ALSO 
+                || tag == TagConstants.JML_PRE
+                || tag == TagConstants.JML_POST;
+    }
+
+    public int getStartLoc() { return loc; }
+    public int getEndLoc() { return expr.getEndLoc(); }
+}
+
+public class CondExprModifierPragma  extends ModifierPragma {
+    // Extended to support JML
+
+    //# int tag
+    //# Expr expr
+    //# int loc
+    //# Expr cond
+
+    //# ManualTag
+    public final int getTag() { return tag; }
+
+    //# PostCheckCall
+    private void postCheck() {
+        boolean goodtag =
+             ( tag == TagConstants.MODIFIES
              || tag == TagConstants.ALSO_MODIFIES);
         boolean isJMLExprModifier = isJMLExprModifier();
         Assert.notFalse(goodtag || isJMLExprModifier);
     }
 
     private boolean isJMLExprModifier() {
-        return (tag == TagConstants.JML_ALSO 
-                || tag == TagConstants.JML_PRE
-                || tag == TagConstants.JML_POST
-                || tag == TagConstants.JML_MODIFIABLE
+        return ( 
+                 tag == TagConstants.JML_MODIFIABLE
                 || tag == TagConstants.JML_ASSIGNABLE);
     }
 
     public int getStartLoc() { return loc; }
-    public int getEndLoc() { return expr.getEndLoc(); }
+    public int getEndLoc() { return cond.getEndLoc(); }
 }
 
 public class VarExprModifierPragma extends ModifierPragma

@@ -808,6 +808,16 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
       self.print(o, ind, ((NaryExpr)e).exprs);
       break;
 
+    case TagConstants.EVERYTHINGEXPR:
+      write(o, TagConstants.toString(TagConstants.JML_EVERYTHING));
+      break;
+    case TagConstants.NOTHINGEXPR:
+      write(o, TagConstants.toString(TagConstants.JML_NOTHING));
+      break;
+    case TagConstants.NOTSPECIFIEDEXPR:
+      write(o, TagConstants.toString(TagConstants.JML_NOT_SPECIFIED));
+      break;
+
     default:
       Assert.notFalse(tag<=javafe.tc.TagConstants.LAST_TAG,
 	"illegal attempt to pass tag #" + tag + " (" +
@@ -825,9 +835,6 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
       break;
 
     case TagConstants.TYPECODE:
-      write(o, TagConstants.toString(t.getTag()) );
-      break;
-
     case TagConstants.LOCKSET:
       write(o, TagConstants.toString(t.getTag()) );
       break;
