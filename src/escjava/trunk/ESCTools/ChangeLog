@@ -1,3 +1,142 @@
+2003-02-17  Joseph R. Kiniry  <kiniry@acm.org>
+
+	* Escjava/java/escjava/ast/EscPrettyPrint.java:
+	First cut at JML keyword "also" support.
+
+	* Escjava/java/escjava/parser/EscPragmaParser.java:
+	Some documentation, code, and specification cleanup.  First cut at JML
+	keyword "also" support.  Need to write non-trivial non-lexer unit
+	tests next.
+
+	* Escjava/java/escjava/prover/SubProcess.java:
+	Full first-pass documentation, code, and specification cleanup to
+	determine what the problem is wrt the Java<->Simplify subprocess
+	problems we are currently witnessing.
+
+	* Escjava/java/escjava/tc/FlowInsensitiveChecks.java:
+	Javadoc documentation cleanup.
+
+	* Escjava/java/escjava/translate/NoWarn.java:
+	Corrected several off-by-one errors wrt TagConstants.LASTESCCHECKTAG.
+
+	* Escjava/java/escjava/translate/GC.java:
+	Renamed assert() method to assertPredicate() to avoid JDK 1.4 assert
+	keyword warnings.
+
+	* Escjava/test/escjava/parser/test/GoodJmlPragmas.ans:
+	* Escjava/test/escjava/parser/test/GoodJmlPragmas.j:
+	Added in simple lex tests for JML "also" keyword.
+
+	* Escjava/setup.sh:
+	Added back in CLASSES env var used by escj script.  Default reference
+	to ESCJ_SIMPLIFY is now pre-built executable provided with the
+	ESC/Java binary download.
+
+	* Escjava/Makefile:
+	* Escjava/java/escjava/Makefile:
+	* Escjava/java/escjava/ast/Makefile:
+	* Escjava/java/escjava/backpred/Makefile:
+	* Escjava/java/escjava/parser/Makefile:
+	* Escjava/java/escjava/prover/Makefile:
+	* Escjava/java/escjava/tc/Makefile:
+	* Escjava/java/escjava/translate/Makefile:
+	* Escjava/test/Makefile:
+	* Escjava/test/escjava/parser/test/Makefile:
+	* Escjava/test/escjava/test/Makefile:
+	* Escjava/test/houdini/test/Makefile:
+	Unified all (recursive, messy, incomprehensible) Makefiles into a
+	single top-level makefile that does everything.
+
+	* Escjava/java/escjava/backpred/collectDefpreds.lim:
+	* Escjava/java/escjava/backpred/gatherBGPushes.lim:
+	.lim files are no longer used to generate a minimal background predicate.
+
+2003-02-04  Joseph R. Kiniry  <kiniry@acm.org>
+
+	* Javafe/Makefile:
+	* Javafe/setup.sh: More makefile and setup cleanup.
+
+	* Javafe/java/javafe/ast/Makefile:
+	Moved first target down as it was in front of variable declarations
+	and was mistakenly the default rule.
+
+	* Javafe/java/javafe/Root.java:
+	Removed Root dummy build class as it is no longer needed for the new
+	build system.
+
+	* Escjava/doc/escjava-public.html: Removed auto-generated file.
+
+	* Escjava/setup.sh:
+	* Javafe/Makefile:
+	* Javafe/setup.sh:
+	Cleaned up all Makefiles, made env variables more clear in Escjava
+	envelope, made compiles more quiet using the '@' make operator in
+	appropriate places.
+
+	* README.first: New top-level simple doc for building.
+
+	* Escjava/Makefile:
+	* Escjava/java/escjava/Makefile:
+	* Escjava/java/escjava/ast/Makefile:
+	* Escjava/java/escjava/backpred/Makefile:
+	* Escjava/java/escjava/parser/Makefile:
+	* Escjava/java/escjava/prover/Makefile:
+	* Escjava/java/escjava/tc/Makefile:
+	* Escjava/java/escjava/translate/Makefile:
+	* Escjava/test/Makefile:
+	* Escjava/test/escjava/parser/test/Makefile:
+	* Escjava/test/escjava/test/Makefile:
+	* Escjava/test/escjava/test/rtest:
+	* Escjava/test/houdini/test/Makefile:
+	* Javafe/java/javafe/ast/Makefile:
+	* Javafe/java/javafe/tc/Makefile:
+	Cleaned up all Makefiles, made env variables more clear in Escjava
+	envelope, made compiles more quiet using the '@' make operator in
+	appropriate places.
+
+	* Escjava/java/escjava/Root.java:
+	Dummy Root class for old compile method no longer needed.
+
+	* Escjava/Makefile:
+	Cleaned up Makefile for general use.  Added .PHONY target
+	information. Added rewritten sourcecheck target to ensure user sources
+	setup.sh.
+
+	* Escjava/setup:
+	* Escjava/setup.sh:
+	Switched entirely to supporting only a (ba)sh version of setup.sh.
+
+	* Escjava/java/escjava/parser/Makefile:
+	Began using TESTSOURCEDIRECTORY.
+
+	* Escjava/java/escjava/Makefile:
+	Removed references to test subdirectories.
+
+	* Escjava/doc/javadoc/package-list:
+	* Escjava/doc/javadoc/stylesheet.css:
+	Removed all auto-generated files.
+
+2003-02-03  Joseph R. Kiniry  <kiniry@acm.org>
+
+	* build.xml:
+	Added targets "generate_javafe_ast" and "generate_escjava_ast" to
+	generate various ASTGEN-dependent sources.  Added targets
+	"generate_default_backpred", "create_decsrc_jar",
+	"create_mochalib_jar".  Added corresponding clean targets and
+	dependencies.
+
+	* Javafe/java/javafe/parser/TagConstants.java:
+	Corrected error in tag indexing; EOF was missing entirely due to off-by-one error.
+
+	* Javafe/Makefile, Javafe/java/javafe/ast/Makefile:
+	Updating all Makefiles to work correctly in a modern, typical environment.
+
+	* Javafe/sources: "sources" files no longer used.
+
+	* Javafe/setup:
+	* Javafe/setup.sh:
+	Switched entirely to supporting only a (ba)sh version of setup.sh.
+
 2003-02-03  Joseph R. Kiniry  <kiniry@acm.org>
 
 	* build.xml:
