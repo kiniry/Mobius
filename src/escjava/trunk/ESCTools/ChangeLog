@@ -1,4 +1,101 @@
-2005-01-04  Joseph Kiniry  <kiniry@Sirius-Black.local>
+2005-01-04  Joseph Kiniry <jkiniry@ucd.ie>
+
+	* docs/Escjava2-Extending/Escjava2-Extending.texinfo, docs/Escjava2-Logics/Escjava2-Logics.texinfo:
+	A bit of new text and formatting.
+
+	* docs/Escjava2-Extending/.cvsignore: *** empty log message ***
+
+	* Utils/ant.jar: Most recent release of Ant's jar file.
+
+	* Escjava/java/escjava/ast/Utils.java:
+	Standardized formatting of class.
+
+	* Escjava/java/escjava/gui/welcome.html:
+	URL reference tweak as we'll have a new UCD site soon.
+
+	* Escjava/java/escjava/parser/EscPragmaParser.java: Indentation fix.
+
+	* Escjava/java/escjava/tc/FlowInsensitiveChecks.java:
+	Standardized formatting of classes and merge with David's recent work.
+
+	* Escjava/java/escjava/translate/GC.java, Escjava/java/escjava/translate/Translate.java, Escjava/java/escjava/translate/VcToString.java, Javafe/java/javafe/reader/StandardTypeReader.java, Javafe/java/javafe/util/ErrorSet.java, Javafe/java/javafe/util/Info.java:
+	Standardized formatting of classes.
+
+	* Javafe/java/javafe/SrcToolOptions.java:
+	Revised support for all command-line switches.  All switches now have
+	consistent, case-insensitive long and short forms.  Public switches
+	are shown when help is requested; private switches are shown when
+	verbose help is requested.  Several switches are still undocumented;
+	please review.  Standardized formatting of class as well.
+
+	* Javafe/java/javafe/PrintSpec.java:
+	Added and updated some annoations; standardized formatting of class as
+	well.
+
+	* Javafe/java/javafe/Options.java:
+	Revised support for all command-line switches.  All switches now have
+	consistent, case-insensitive long and short forms.  Public switches
+	are shown when help is requested; private switches are shown when
+	verbose help is requested.  Several switches are still undocumented;
+	please review.  Standardized formatting of class as well.
+
+	* Javafe/java/javafe/FrontEndTool.java:
+	Removed bogus assignment of options.v to javafe.util.Info.on as it was
+	botching use of verbosity.
+
+	* Javafe/java/javafe/CountLines.java:
+	Non-null annotation and formatting change.
+
+	* Javafe/Makefile:
+	Added new fixperms target to build dependencies to help with fresh CVS
+	users.
+
+	* Escjava/test/matrix/Rational.java, Escjava/test/matrix/SparseVector.java:
+	Added some terminating semi-colons to specs.
+
+	* Escjava/java/escjava/ant/Commandline.java, Escjava/java/escjava/ant/ESCJavaTask.java, Escjava/java/escjava/ant/example.ant:
+	Revised Ant task for latest version of Ant.
+
+	* Escjava/java/escjava/Main.java, Escjava/java/escjava/Options.java, Escjava/java/escjava/escjava.mtex:
+	Revised support for all command-line switches.  All switches now have
+	consistent, case-insensitive long and short forms.  Public switches
+	are shown when help is requested; private switches are shown when
+	verbose help is requested.  Several switches are still undocumented;
+	please review.
+
+	* Escjava/Makefile:
+	Updated to support Ant task.  Removed mention of generated
+	Version.java.  Conditionalized use of mtex2man to run only if the tool
+	is installed.  Removed old bogus cleanarchives target.  Added new
+	javaspecs target for my experimentation with new JDK specs.  Increased
+	vclimit of self_test target.  Added string target specific to checking
+	String's specs.
+
+	* clean_env.sh: Updated to correspond to tweaks for new Makefile.defs.
+
+	* build.xml: Updated header/contact information.
+
+	* README.first: Updated email address and a bit of docs.
+
+	* Makefile.local.sample: Corresponding tweaks for new Makefile.defs.
+
+	* Makefile.defs:
+	Added JMLDOC and JMLDOC_GEND_DIR vars to support new jmldoc target in
+	Makefile.  Added ANT_LIB and ANT_SOURCEPATH vars to support new Ant
+	task.
+
+	* Makefile:
+	Made build/buildall targets depend upon fix-perms to help first-time
+	CVS users to build everything without issue.  Separated out the test
+	target to depend upon upon build.  Made alltests depend upon build.
+	Added support in fix-perms for testing the executability of one of the
+	core scripts that is run to conditionalize the (slowish) find/chmod.
+	Added a find/clean of .DS_Store to clean target for OS X.  Added
+	escjava.ant package to PACKAGE_LIST so that we'll ship the Ant task.
+	Added a jmldoc target.
+
+	* ChangeLog:
+	Updated for last few month's work, but has not been reformatted yet.
 
 	* docs/design-notes/index.html: Rewrote as XHTML.
 
@@ -10,7 +107,7 @@
 	* specs-kiniry/java/io/InputStream.refines-java, specs-kiniry/java/io/unstarted/PrintStream.refines-java, specs-kiniry/java/lang/String.java, specs-kiniry/java/lang/String.jml, specs-kiniry/java/lang/StringCoding.jml, specs-kiniry/java/lang/StringIndexOutOfBoundsException.jml, specs-kiniry/java/lang/System.jml, specs-kiniry/java/lang/_StringBuffer.java, specs-kiniry/run.sh, specs-kiniry/java/lang/unstarted/String.jml-merge, specs-kiniry/java/lang/unstarted/StringBuffer.jml-merge, specs-kiniry/java/lang/unstarted/reflect/Array.jml, specs-kiniry/java/util/Vector.refines-spec:
 	Various new specs of JDK classes that I'm working on.
 
-2005-01-04  cok  <cok@kind.ucd.ie>
+2005-01-04  David Cok  <cok@frontiernet.net>
 
 	* Escjava/test/nijmegen/JCF/Makefile: Correcting the Makefile
 
@@ -20,12 +117,34 @@
 	* docs/Escjava2-ImplementationNotes/Escjava2-ImplementationNotes.texinfo:
 	Making statement about model import syntax correct
 
-2004-12-31  cok  <cok@kind.ucd.ie>
+2005-01-04  Joseph Kiniry <jkiniry@ucd.ie>
+
+	* docs/design-notes/index.html: Rewrote as XHTML.
+
+	* docs/Escjava2-Logics/many-sorted/many-sorted-logic.smt:
+	Fixed some closing parenthesis.
+
+	* slides/.cvsignore: *** empty log message ***
+
+	* specs-kiniry/java/io/InputStream.refines-java, specs-kiniry/java/io/unstarted/PrintStream.refines-java, specs-kiniry/java/lang/String.java, specs-kiniry/java/lang/String.jml, specs-kiniry/java/lang/StringCoding.jml, specs-kiniry/java/lang/StringIndexOutOfBoundsException.jml, specs-kiniry/java/lang/System.jml, specs-kiniry/java/lang/_StringBuffer.java, specs-kiniry/run.sh, specs-kiniry/java/lang/unstarted/String.jml-merge, specs-kiniry/java/lang/unstarted/StringBuffer.jml-merge, specs-kiniry/java/lang/unstarted/reflect/Array.jml, specs-kiniry/java/util/Vector.refines-spec:
+	Various new specs of JDK classes that I'm working on.
+
+2005-01-04  David Cok  <cok@frontiernet.net>
+
+	* Escjava/test/nijmegen/JCF/Makefile: Correcting the Makefile
+
+	* Escjava/test/junittests/ParseImports4.java, Escjava/test/junittests/ParseImports4.java-expected:
+	New tests for bad model import statements
+
+	* docs/Escjava2-ImplementationNotes/Escjava2-ImplementationNotes.texinfo:
+	Making statement about model import syntax correct
+
+2004-12-31  David Cok  <cok@frontiernet.net>
 
 	* Escjava/test/junittests/ExceptionArgument.java, Escjava/test/junittests/ExceptionArgument.java-expected, Escjava/test/junittests/ExceptionArgument2.java, Escjava/test/junittests/ExceptionArgument2.java-expected:
 	Some new tests
 
-2004-12-28  cok  <cok@kind.ucd.ie>
+2004-12-28  David Cok  <cok@frontiernet.net>
 
 	* Escjava/test/junittests/Inconsistent.java, Escjava/test/junittests/StaticInit.java:
 	Adding some disabled tests
@@ -36,39 +155,39 @@
 	* Escjava/test/nijmegen/JCF/jcf55/c.java, Escjava/java/escjava/translate/GetSpec.java, Escjava/java/escjava/translate/Translate.java:
 	Fixed a problem with original ESC/Java in which the use lf 'this' in preconditions of a constructor was not translated correctly;a in this context, 'this' indicates the object already allocated but not yet constructed
 
-2004-12-21  cok  <cok@kind.ucd.ie>
+2004-12-21  David Cok  <cok@frontiernet.net>
 
 	* Escjava/test/junittests/Duplicate.java-expected, Escjava/test/junittests/Makefile, Escjava/test/junittests/Scope.java, Escjava/test/junittests/Scope.java-expected, Escjava/test/junittests/Triple.java-expected, Escjava/test/junittests/skip:
 	Fixing some tests
 
-2004-12-18  cok  <cok@kind.ucd.ie>
+2004-12-18  David Cok  <cok@frontiernet.net>
 
 	* jmlspecs.jar: Updating the jmlspecs.jar
 
-2004-12-16  Joseph Kiniry  <kiniry@Sirius-Black.local>
+2004-12-16  Joseph Kiniry <jkiniry@ucd.ie>
 
 	* docs/design-notes/escj14.pdf, docs/design-notes/escj15.pdf, docs/design-notes/escj19.pdf, docs/design-notes/escj20.pdf, docs/design-notes/escj22.pdf, docs/design-notes/escj25b.pdf, docs/design-notes/escj28.pdf, docs/design-notes/escj32.pdf:
 	Regenerated all PDFs of design notes in Microsoft formats with actual
 	Microsoft tools (rather than OpenOffice alternatives) so that they are
 	higher quality.
 
-2004-12-15  cok  <cok@kind.ucd.ie>
+2004-12-15  David Cok  <cok@frontiernet.net>
 
 	* Escjava/escj.bat: Fixes to the escj.bat file
 
-2004-12-14  cok  <cok@kind.ucd.ie>
+2004-12-14  David Cok  <cok@frontiernet.net>
 
 	* Escjava/java/escjava/ast/Utils.java:
 	Correcting the determination of immutablility
 
-2004-12-13  cok  <cok@kind.ucd.ie>
+2004-12-13  David Cok  <cok@frontiernet.net>
 
 	* Escjava/Makefile, Javafe/java/javafe/ast/Identifier.java, Javafe/java/javafe/ast/_SpecialParserInterface.java, Javafe/java/javafe/ast/hierarchy.j, Javafe/java/javafe/filespace/EmptyEnum.java, Javafe/java/javafe/filespace/LookAheadEnum.java, Javafe/java/javafe/reader/MethodSignature.java:
 	Various corrections to specs found by running self_testp
 
 	* Escjava/java/escjava/AnnotationHandler.java: Fix to bug#1084104
 
-2004-12-06  cok  <cok@kind.ucd.ie>
+2004-12-06  David Cok  <cok@frontiernet.net>
 
 	* Javafe/test/javafe/test/Makefile, Escjava/Makefile:
 	Adding typechecking of EscJava to alltests
@@ -76,7 +195,7 @@
 	* Escjava/java/escjava/ast/Utils.java, Escjava/java/escjava/translate/GetSpec.java, Escjava/java/escjava/translate/TrAnExpr.java, Escjava/test/junittests/Inheritance.java, Escjava/test/junittests/Inheritance.java-expected, Escjava/test/junittests/MethodAnnotations2.java, Escjava/test/junittests/MethodAnnotations2.java-expected, Javafe/java/javafe/tc/TypeSig.java, Makefile:
 	The assumptions generated for methods used in annotations now include the specs from super classes and super interfaces.
 
-2004-11-27  cok  <cok@kind.ucd.ie>
+2004-11-27  David Cok  <cok@frontiernet.net>
 
 	* Javafe/test/javafe/test/lex/Makefile, Javafe/Makefile, Makefile:
 	Some fixes for Windows Makefiles
@@ -84,12 +203,12 @@
 	* Escjava/java/escjava/translate/GetSpec.java, Escjava/java/escjava/translate/TrAnExpr.java, Escjava/test/escjava/test/alltests, Escjava/test/junittests/ForallOld.java-expected, Escjava/test/junittests/GhostLocal.java-expected, Escjava/test/junittests/MethodAnnotations.java, Escjava/test/junittests/MethodAnnotations.java-expected, Escjava/test/junittests/Min.java, Escjava/test/junittests/Min.java-expected, Javafe/Makefile, Javafe/test/javafe/test/lex/Makefile, Escjava/java/escjava/Main.java:
 	More fixes and testing of model variables and method calls
 
-2004-11-26  cok  <cok@kind.ucd.ie>
+2004-11-26  David Cok  <cok@frontiernet.net>
 
 	* Escjava/java/escjava/translate/GetSpec.java:
 	Changes to reduce the size of VCs
 
-2004-11-20  cok  <cok@kind.ucd.ie>
+2004-11-20  David Cok  <cok@frontiernet.net>
 
 	* docs/Escjava2-ImplementationNotes/Escjava2-ImplementationNotes.texinfo:
 	Fixed texinfo nodes
@@ -102,7 +221,7 @@
 
 	* jmlspecs.jar: Corrected specs
 
-2004-11-16  Joseph Kiniry  <kiniry@Sirius-Black.local>
+2004-11-16  Joseph Kiniry <jkiniry@ucd.ie>
 
 	* slides/introjml.tex:
 	Small tweak to show better practice for use of \old.
@@ -116,33 +235,33 @@
 	* docs/Escjava2-Extending/Escjava2-Extending.texinfo, docs/Escjava2-Extending/Makefile, docs/Escjava2-ImplementationNotes/Escjava2-ImplementationNotes.texinfo, docs/Escjava2-ImplementationNotes/Makefile:
 	Outline of lost document on extending ESC/Java2.
 
-2004-11-07  cok  <cok@kind.ucd.ie>
+2004-11-07  David Cok  <cok@frontiernet.net>
 
 	* Escjava/escj.bat, Escjava/java/escjava/ast/EscPrettyPrint.java, Escjava/java/escjava/prover/PPOutputStream.java, Escjava/java/escjava/prover/Simplify.java, Escjava/java/escjava/translate/GetSpec.java, Escjava/java/escjava/translate/TrAnExpr.java, Escjava/test/junittests/Client1.java, Escjava/test/junittests/Client1.java-expected, Escjava/test/junittests/Client2.java, Escjava/test/junittests/Client2.java-expected, Escjava/test/junittests/Client3.java, Escjava/test/junittests/Client3.java-expected, Escjava/test/junittests/Client4.java, Escjava/test/junittests/Client4.java-expected, Escjava/test/junittests/Client5.java, Escjava/test/junittests/Client5.java-expected, Escjava/test/junittests/Client7.java, Escjava/test/junittests/Client7.java-expected, Escjava/test/junittests/Client8.java, Escjava/test/junittests/Client8.java-expected, Escjava/test/junittests/Client9.java, Escjava/test/junittests/Client9.java-expected, Escjava/test/junittests/Impl1.java, Escjava/test/junittests/Impl1.java-expected, Escjava/test/junittests/Impl2.java, Escjava/test/junittests/Impl2.java-expected, Escjava/test/junittests/Impl3.java, Escjava/test/junittests/Impl3.java-expected, Escjava/test/junittests/Impl4.java, Escjava/test/junittests/Impl4.java-expected, Escjava/test/junittests/Impl5.java, Escjava/test/junittests/Impl5.java-expected, Escjava/test/junittests/M2String.java-expected, Escjava/test/junittests/M3String.java, Escjava/test/junittests/M3String.java-expected, Escjava/test/junittests/skip, Javafe/Makefile, Javafe/test/javafe/test/Makefile, jmlspecs.jar, Makefile.defs:
 	Fixed the problem with String, added tests; also fixed problems with extended tests
 
-2004-10-19  cok  <cok@kind.ucd.ie>
+2004-10-19  David Cok  <cok@frontiernet.net>
 
 	* Escjava/java/escjava/parser/ErrorPragmaParser.java, Javafe/java/javafe/Options.java, Javafe/java/javafe/SrcToolOptions.java, Javafe/test/javafe/test/typecheckJavafe, Escjava/java/escjava/backpred/BackPred.java, Escjava/java/escjava/gui/EscEditor.java, Escjava/java/escjava/gui/EscFrame.java, Escjava/java/escjava/gui/EscOptions.java, Escjava/java/escjava/gui/GUI.java, Escjava/java/escjava/gui/GuiOptionsPanel.java, Escjava/java/escjava/gui/Project.java, Escjava/java/escjava/AnnotationHandler.java, Escjava/java/escjava/Main.java, Escjava/java/escjava/Options.java, Escjava/java/escjava/RefinementSequence.java:
 	Changes to formatting, fixing cross platform issues, FindBugs fixes
 
-2004-10-18  cok  <cok@kind.ucd.ie>
+2004-10-18  David Cok  <cok@frontiernet.net>
 
 	* papers/.cvsignore: *** empty log message ***
 
 	* Javafe/java/javafe/parser/ParseExpr.java, Javafe/java/javafe/parser/ParseStmt.java, Javafe/java/javafe/reader/ASTClassFileParser.java, Javafe/java/javafe/reader/StandardTypeReader.java, Javafe/java/javafe/tc/CheckCompilationUnit.java, Javafe/java/javafe/tc/ConstantExpr.java, Javafe/java/javafe/tc/TypeSig.java, Utils/junitutils/TestFilesTestSuite.java, Utils/junitutils/Utils.java, Escjava/java/escjava/tc/FlowInsensitiveChecks.java, Escjava/mochalib/java/mocha/wrappers/jbdd/jbdd.java, Escjava/test/junittests/LoopInvariantErrors.java-expected, Escjava/test/junittests/MX.java, Escjava/test/junittests/MX.java-expected, Escjava/test/junittests/ModelClass2.java-expected, Javafe/java/javafe/CopyLoaded.java, Javafe/java/javafe/Options.java, Javafe/java/javafe/SrcTool.java, Escjava/java/escjava/parser/EscPragmaParser.java:
 	Changes to fix problems with parsing annotations within model files, bigint arguments to loop invariants, and numerous items suggested by FindBugs
 
-2004-10-11  Joseph Kiniry  <kiniry@Sirius-Black.local>
+2004-10-11  Joseph Kiniry <jkiniry@ucd.ie>
 
 	* papers/CASSIS2004.bib, papers/CASSIS2004.tex:
 	Final edits of CASSIS paper.  All TODOs addressed.
 
-2004-09-24  cok  <cok@kind.ucd.ie>
+2004-09-24  David Cok  <cok@frontiernet.net>
 
 	* papers/CASSIS2004.bib: One reference put in
 
-2004-09-23  cok  <cok@kind.ucd.ie>
+2004-09-23  David Cok  <cok@frontiernet.net>
 
 	* papers/CASSIS2004.tex: More copy edits
 
@@ -152,13 +271,13 @@
 	* papers/CASSIS2004.tex, papers/Example.java:
 	Signficant additional editing to address the major referee comments
 
-2004-09-22  cok  <cok@kind.ucd.ie>
+2004-09-22  David Cok  <cok@frontiernet.net>
 
 	* papers/CASSIS2004.bib, papers/CASSIS2004.tex: A few more edits
 
 	* papers/CASSIS2004.tex: Some edits per referees comments
 
-2004-09-20  Joseph Kiniry  <kiniry@Sirius-Black.local>
+2004-09-20  Joseph Kiniry <jkiniry@ucd.ie>
 
 	* papers/jml_homework.texinfo, papers/problems/FrameConditionsKey.java:
 	Working on discussions of datagroups and frame axioms.
@@ -168,7 +287,7 @@
 	all changes suggested by referees but for adding an intro to JML and
 	a couple of referee 3's suggestions.
 
-2004-09-19  cok  <cok@kind.ucd.ie>
+2004-09-19  David Cok  <cok@frontiernet.net>
 
 	* .cvsignore: *** empty log message ***
 
@@ -184,7 +303,7 @@
 
 	* Makefile: Minor improvements
 
-2004-09-17  cok  <cok@kind.ucd.ie>
+2004-09-17  David Cok  <cok@frontiernet.net>
 
 	* .cvsignore: *** empty log message ***
 
@@ -202,16 +321,16 @@
 	* Javafe/test/javafe/test/fe/test6/ans.windows, Javafe/test/javafe/test/fe/Makefile:
 	Accommodating a platofrm independence in output
 
-2004-09-14  cok  <cok@kind.ucd.ie>
+2004-09-14  David Cok  <cok@frontiernet.net>
 
 	* Escjava/java/escjava/ast/EscPrettyPrint.java, Escjava/java/escjava/ast/TagConstants.java, Escjava/java/escjava/parser/EscPragmaParser.java, Escjava/java/escjava/tc/Types.java, Javafe/java/javafe/tc/Types.java:
 	Additional support for bigint and real primitive types
 
-2004-09-13  cok  <cok@kind.ucd.ie>
+2004-09-13  David Cok  <cok@frontiernet.net>
 
 	* Makefile: Various edits
 
-2004-09-12  cok  <cok@kind.ucd.ie>
+2004-09-12  David Cok  <cok@frontiernet.net>
 
 	* Escjava/java/escjava/translate/ErrorMsg.java, Javafe/java/javafe/util/ErrorSet.java:
 	Changes to error reporting to support Eclipse
@@ -219,7 +338,7 @@
 	* Makefile.defs, Makefile:
 	Adding a target to make a jar of source files (for Eclipse debugging)
 
-2004-07-05  cok  <cok@kind.ucd.ie>
+2004-07-05  David Cok  <cok@frontiernet.net>
 
 	* slides/prosper.cls: Adding a missing file
 
@@ -228,7 +347,7 @@
 
 	* Makefile: Updates for building jars
 
-2004-07-04  cok  <cok@kind.ucd.ie>
+2004-07-04  David Cok  <cok@frontiernet.net>
 
 	* Escjava/test/escjava/test/rtest, Javafe/test/javafe/test/fe/Makefile, Escjava/escj, Makefile.defs:
 	Improvements for cygwin
@@ -247,7 +366,7 @@
 	* Escjava/test/junittests/CON.java, Escjava/test/junittests/CON.java-expected:
 	Just moving files from CON to CONX
 
-2004-07-03  cok  <cok@kind.ucd.ie>
+2004-07-03  David Cok  <cok@frontiernet.net>
 
 	* Escjava/java/escjava/Main.java, Escjava/java/escjava/Options.java, Escjava/java/escjava/gui/GUI.java:
 	Improving and expanding the guessing of the location of Simplify
@@ -286,14 +405,14 @@
 	* Escjava/java/escjava/Main.java, Escjava/java/escjava/Options.java, Escjava/java/escjava/gui/EscHtml.java, Escjava/java/escjava/gui/GUI.java, Escjava/java/escjava/translate/GC.java, Escjava/java/escjava/translate/GetSpec.java:
 	Minor improvements pointed out by findbugs
 
-2004-07-02  Joseph Kiniry  <kiniry@Sirius-Black.local>
+2004-07-02  Joseph Kiniry <jkiniry@ucd.ie>
 
 	* docs/Escjava2-Provers/Makefile: Makefile for builds of this document.
 
 	* docs/Escjava2-Provers/.cvsignore, docs/Escjava2-Provers/Escjava2-Provers.texinfo, docs/Escjava2-Provers/ProverInterface.java:
 	Flushed out JML API and added it to an appendix in the document.
 
-2004-07-01  Joseph Kiniry  <kiniry@Sirius-Black.local>
+2004-07-01  Joseph Kiniry <jkiniry@ucd.ie>
 
 	* docs/Escjava2-Provers/.cvsignore, docs/Escjava2-Provers/Escjava2-Provers.texinfo, docs/Escjava2-Provers/ProverInterface.java, docs/Escjava2-Provers/ProverResponse.java:
 	Flushed out outline of document, added some text of JNI, added initial
@@ -312,7 +431,7 @@
 	Updated many Texinfo menus, filled in all cross-references, and improved
 	formatting.
 
-2004-06-30  Joseph Kiniry  <kiniry@Sirius-Black.local>
+2004-06-30  Joseph Kiniry <jkiniry@ucd.ie>
 
 	* docs/Escjava2-Logics/.cvsignore, docs/Escjava2-Logics/Escjava2-Logics.texinfo, docs/Escjava2-Logics/escjava2-object-logic.smt:
 	New home for documents relating to the logics of ESC/Java2 to more
@@ -327,14 +446,14 @@
 	service API, etc.), provides implementation details for distributed,
 	current, and high-performance prover interfaces.
 
-2004-06-25  Joseph Kiniry  <kiniry@Sirius-Black.local>
+2004-06-25  Joseph Kiniry <jkiniry@ucd.ie>
 
 	* docs/design-notes/escj16c.txt:
 	Continued revisions to SMT-LIB object logic.  Continued work on
 	syntactic cleanup of original object logic document.  Some syntactic
 	cleanup of text version of guarded commands document.
 
-2004-06-24  Joseph Kiniry  <kiniry@Sirius-Black.local>
+2004-06-24  Joseph Kiniry <jkiniry@ucd.ie>
 
 	* Makefile:
 	Make check-specs depend upon build target.  Clean up Emacs backup
@@ -343,7 +462,7 @@
 	* release-files/README.release:
 	Removed mention of documents not shipped with binary release.
 
-2004-06-19  Joseph Kiniry  <kiniry@Sirius-Black.local>
+2004-06-19  Joseph Kiniry <jkiniry@ucd.ie>
 
 	* ChangeLog: Final update for 2.0a7 release.
 
