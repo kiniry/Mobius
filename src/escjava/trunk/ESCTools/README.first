@@ -1,7 +1,7 @@
 This is a completely revised README for building and running Escjava2,
-a revision of the original escjava from DEC/Compaq/HP.  The revisions were
+a revision of the original ESC/Java from DEC/Compaq/HP.  The revisions were
 mostly performed by Joe Kiniry and David Cok. You can read the general
-background on the original Escjava in README.txt.   - DRCok 7/2/2003
+background on the original ESC/Java in README.txt.   - DRCok 7/2/2003
 
 If you obtained Escjava2 as part of a binary release, you should also
 consult README.release for installation and execution instructions 
@@ -40,7 +40,7 @@ H.P. in 2Q 2003.  We have added that documentation in its original
 form to the CVS repository in ESCTools/docs/design-notes.  Note that
 these are, for the most part, historically illuminating short
 documents about the high-level design decisions and goals for ESC/Java
-and related tools, but they are in no way complete, proscriptive, or
+and related tools, but they are in no way complete, prescriptive, or
 accurate with respect to the current architecture.
 
 A snapshot of the "ESC/Java User's Manual" that documents the final
@@ -51,11 +51,11 @@ An "ESC/Java Quick Reference Manual" for the final H.P. release is also
 available in the file ESCTools/Escjava/doc/SRC-2000-004.html.
 
 In general, the only documentation that we are trying to keep up to
-date are the "ESC/Java User's Manual", "ESC/Java Implementation
-Notes", and "JML Reference Manual", the last of which has an appendix
-on ESC/Java.
+date are "ESC/Java2 User's Manual",
+"ESC/Java Implementation Notes" and "JML Reference Manual"; 
+the latter has an appendix on ESC/Java.
 
-The new "ESC/Java User's Manual" is found in the file
+The new "ESC/Java2 User's Manual" is found in the file
 ESCTools/docs/ESCJAVA-UsersManual.html.  It is currently in HTML
 format, but we have plans on moving to Texinfo like the other main
 JML documents.
@@ -142,7 +142,7 @@ e) If you want to avoid using your password on every CVS transaction, you will
 
 SETTING UP YOUR ENVIRONMENT FOR BUILDING AND RUNNING ESC/Java2
 
-Development has taken place on Linux (Redhat 8), MacOSX (10.2), The
+Development has taken place on Linux (Redhat 8) and MacOSX (10.2). The
 build environment uses GNU make.  Developers use both bash and tcsh as
 working shells.
 
@@ -174,7 +174,7 @@ c) for executables, namely escj, by creating a wrapper script file
    that sets the variables prior to invoking escj.  A sample such
    wrapper script is found in $ESCTOOLS_ROOT/Escjava/escjava.sample .
 
-The two required variables are:
+The required variables are:
 
 ESCTOOLS_ROOT - defined to be the absolute path to the ESCTools
         directory
@@ -195,6 +195,18 @@ SIMPLIFY - defined to be the *name* of (*not* path to) an appropriate
 	have a True64 machine, please send us the output of "uname
 	-a"!
 
+Additionally the following variable is important:
+
+ESC_SPECS - defined to be a classpath containing directories of JML 
+	specification files.  If there is no definition provided, the
+	executables will use the location of a small set of 
+	specification files for Java system classes that is part of
+	the release.  You may instead want to obtain a current copy
+	of the specification files provided by the JML project and
+	define this variable to reference them.  You may also want
+	to include in this classpath any specification files for your
+	own projects.
+
 When a release is built, these two variables are used:
 
 ESC_PROJECT - the name of the project, e.g. 'ESCTools'
@@ -214,7 +226,9 @@ JAVA - set to the name of a java VM executable.  By default this is
 JAVAC - set to the name of a java compiler.  By default this is
         'javac', but an alternate value might be, for example, 'jikes'
 
-JAVADOC - set to the name of the javadoc executable
+JAVADOC - set to the name of the javadoc executable.  By default this
+	is 'javadoc', but you may want to use 'jmldoc' if you have a 
+	copy of the JML project.
 
 JDK_BINARIES - the value is an alternate set of directories (in
         classpath form) that will be used in place of the system
@@ -225,7 +239,7 @@ JDK_SOURCES - the directory that contains the source files for the
         Java system classes.  This is currently just used in testing,
         though it could also be used in static checking.
 
-JUNITLIB - the location of the JUnit library, used in compiling and
+JUNIT_LIB - the location of the JUnit library, used in compiling and
         running some of the tests that are JUnit based.  There is a
         version of the JUnit library included in the CVS distribution,
         but you can substitute your own by defining this variable.
@@ -264,7 +278,7 @@ docs - generates the documentation (including javadoc pages).  Note
        documentation using Javadoc and correct XHTML, but this
        task will take some time to complete.
 
-release - generates a release package (uses the variables ESC_PROJECT
+releases - generates a release package (uses the variables ESC_PROJECT
           and ESC_VERSION)
 
 The $ESCTOOLS_ROOT directory contains a number of major subsystems:
