@@ -334,6 +334,8 @@ public abstract class TypeDecl extends ASTNode implements TypeDeclElem
   public TypeDecl getParent() { return parent; }
   public void setParent(TypeDecl p) { parent = p; }
 
+  public int getModifiers() { return modifiers; }
+  public void setModifiers(int m) { modifiers = m; }
 
   //# PostCheckCall
   private void postCheck() {
@@ -426,6 +428,9 @@ public abstract class RoutineDecl extends ASTNode implements TypeDeclElem
   public TypeDecl getParent() { return parent; }
   public void setParent(TypeDecl p) { parent = p; }
 
+
+  public int getModifiers() { return modifiers; }
+  public void setModifiers(int m) { modifiers = m; }
   public int getStartLoc() { return loc; }
 
     public int getEndLoc() { 
@@ -474,6 +479,9 @@ public class InitBlock extends ASTNode implements TypeDeclElem
 
   public TypeDecl getParent() { return parent; }
   public void setParent(TypeDecl p) { parent = p; }
+
+  public int getModifiers() { return modifiers; }
+  public void setModifiers(int m) { modifiers = m; }
   public int getStartLoc() { return block.getStartLoc(); }
   public int getEndLoc() { return block.getEndLoc(); }
 }
@@ -491,6 +499,9 @@ public abstract class TypeDeclElemPragma
   public void setParent(TypeDecl p) { parent = p; }
   public void decorate(ModifierPragmaVec modifierPragmas) {}
 
+  abstract public int getTag();
+  public int getModifiers() { return 0; }
+  public void setModifiers(int m) {}
   public boolean isRedundant() { return redundant; }
   public void setRedundant(boolean v) { redundant = v; }
 }
@@ -517,6 +528,8 @@ public abstract class GenericVarDecl extends ASTNode
   //# int locId NotNullLoc
   public int getStartLoc() { return type.getStartLoc(); }
   public int getEndLoc() { return type.getEndLoc(); }
+  public int getModifiers() { return modifiers; }
+  public void setModifiers(int m) { modifiers = m; }
 }
 
 /** Represents a LocalVariableDeclarationStatement.
