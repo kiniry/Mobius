@@ -1405,6 +1405,7 @@ public class FlowInsensitiveChecks
 			if (!Types.isErrorType(t))
 			    reportLookupException(ex, "field", 
 				Types.printName(t), fa.locId);
+			    setType(fa, Types.errorType);
                     }
                 }
                 return fa;
@@ -1460,6 +1461,7 @@ public class FlowInsensitiveChecks
                                               "method "+mi.id
                                               +Types.printName(argTypes), 
                                               Types.printName(t), mi.locId);
+			    setType(mi, Types.errorType);
                     }
                 }
                 return mi;
