@@ -343,8 +343,20 @@ public class Substitute {
 	  result = MethodInvocation.make(me.od, me.id, me.tmodifiers, me.locId, 
 			me.locOpenParen, args);
 	} else if (e instanceof NewInstanceExpr) {
-	  ErrorSet.fatal(e.getStartLoc(),
+	  if (escjava.Main.options().stages == 6)
+	      ErrorSet.fatal(e.getStartLoc(),
 		"new expressions are not implemented by the static checker");
+	  NewInstanceExpr me = (NewInstanceExpr)e;
+	  ExprVec args = ExprVec.make(me.args.size());
+	  for (int i = 0; i< me.args.size(); ++i) {
+		Expr ee = me.args.elementAt(i);
+		args.addElement( doSubst(subst, ee, rhsVars));
+	  }
+	  Expr ee = me.enclosingInstance;
+	  if (ee != null) ee = doSubst(subst, ee, rhsVars);
+	  result = NewInstanceExpr.make(ee,
+			me.locDot, me.type, args, me.anonDecl,
+			me.loc, me.locOpenParen);
 	} else {
 
 	    Assert.fail("Bad expr in Substitute.doSubst: "+e+ " " 

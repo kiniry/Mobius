@@ -237,6 +237,22 @@ public final class TrAnExpr {
 		       trSpecExpr(be.right, sp, st));
       }
 
+      case TagConstants.NEWINSTANCEEXPR: {
+	// FIXME - no translation support for new Type() expressions
+	//ErrorSet.fatal(e.getStartLoc(),"No support as yet for constructor invocations in specification expressions");
+	NewInstanceExpr me = (NewInstanceExpr)e;
+	ExprVec ev = ExprVec.make(me.args.size());
+		// FIXME - 'this' argument???
+		// FIXME - enclosingInstance ???
+	for (int i=0; i<me.args.size(); ++i) {
+	    ev.addElement( trSpecExpr( me.args.elementAt(i), sp, st));
+	}
+	Expr ne = GC.nary(me.getStartLoc(), me.getEndLoc(),
+			TagConstants.METHODCALL,ev);
+	((NaryExpr)ne).methodName = Identifier.intern("<constructor>");
+	return ne;
+      }
+
       case TagConstants.METHODINVOCATION: {
 	MethodInvocation me = (MethodInvocation)e;
 	ExprVec ev = ExprVec.make(me.args.size());
@@ -379,13 +395,14 @@ public final class TrAnExpr {
 	  GenericVarDeclVec dummyDecls = GenericVarDeclVec.make();
 	  Expr goodTypes = GC.truelit;
 	  while (true) {
-	    Assert.notFalse(qe.vars.size() == 1);
-	    GenericVarDecl decl = qe.vars.elementAt(0);
-	    Assert.notFalse(sp == null || ! sp.contains(decl));
-	    Assert.notFalse(st == null || ! st.contains(decl));
-	    dummyDecls.addElement(decl);
+	    for (int k=0; k<qe.vars.size(); ++k) {
+		GenericVarDecl decl = qe.vars.elementAt(k);
+		Assert.notFalse(sp == null || ! sp.contains(decl));
+		Assert.notFalse(st == null || ! st.contains(decl));
+		dummyDecls.addElement(decl);
 
-	    goodTypes = GC.and(goodTypes, quantTypeCorrect(decl, sp));
+		goodTypes = GC.and(goodTypes, quantTypeCorrect(decl, sp));
+	    }
 	    if (qe.expr.getTag() == tag) {
 	      qe = (QuantifiedExpr)qe.expr;
 	    } else {
@@ -484,10 +501,6 @@ wrap those variables being modified and not everything.
 
       case TagConstants.NOTHINGEXPR:
 	return null;
-
-      case TagConstants.NEWINSTANCEEXPR:
-// FIXME - no translation support for new Type() expressions
-	ErrorSet.fatal(e.getStartLoc(),"No support as yet for constructor invocations in specification expressions");
 
       default:
 	Assert.fail("UnknownTag<"+e.getTag()+","+
