@@ -4,7 +4,7 @@
 foreach i (test? test?? test??? test???? test?????)
   echo "  Running $i..."
 
-  setenv TOOLCMD "${JAVA} -mx40m javafe.test.Print -classpath `pwd`/${i} -bootclasspath ${JDKBINARIES}"
+  setenv TOOLCMD "${JAVA} -mx40m javafe.test.Print -classpath `pwd`/${i}:../../../../classfiles -bootclasspath ${JDKBINARIES}"
   setenv TOOLARGS "-noprint -typecheck"
 
   setenv TOOL "${TOOLCMD} ${TOOLARGS}"

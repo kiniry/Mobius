@@ -28,4 +28,8 @@ clean:
 	find . -name \*~ -exec rm {} \;
 
 prepjdk:
-	cat ${SOURCEDIRECTORY}/javafe/parser/test/jdk-files | xargs ${JAVA} javafe.test.PrepTest -classpath ${CLASSPATH}:/udir/stata/src/jdk-alpha/src/share/java -v
+	cat ${SOURCEDIRECTORY}/test/javafe/parser/test/jdk-1.0.2-files | xargs ${JAVA} javafe.test.PrepTest -classpath ${CLASSPATH}:/usr/local/Java/src/jdk-1.0.2 -v
+	cat ${SOURCEDIRECTORY}/test/javafe/parser/test/jdk-1.1.18-files | xargs ${JAVA} javafe.test.PrepTest -classpath ${CLASSPATH}:/usr/local/Java/src/jdk-1.18_03 -v
+	cat ${SOURCEDIRECTORY}/test/javafe/parser/test/jdk-1.2.2-files | xargs ${JAVA} javafe.test.PrepTest -classpath ${CLASSPATH}:/usr/local/Java/src/jdk-1.2.2_012 -v
+	cat ${SOURCEDIRECTORY}/test/javafe/parser/test/jdk-1.3.1-files | xargs ${JAVA} javafe.test.PrepTest -classpath ${CLASSPATH}:/usr/local/Java/src/jdk-1.3.1_06 -v
+	cat ${SOURCEDIRECTORY}/test/javafe/parser/test/jdk-1.4.1-files | xargs ${JAVA} javafe.test.PrepTest -classpath ${CLASSPATH}:/usr/local/Java/src/jdk-1.4.1_01 -v
