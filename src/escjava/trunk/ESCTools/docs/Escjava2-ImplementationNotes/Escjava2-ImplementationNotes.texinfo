@@ -18,7 +18,7 @@
 @sp 1
 
 
-@center January 2004
+@center November 2004
 
 @sp 2
 
@@ -1348,7 +1348,7 @@ the Java program.
 @item @strong{Status:} Parsed and fully implemented.
 
 @item @strong{Differences from JML or Java:} JML does not yet properly handle
-model classes, especially those at the top level.  Both JML and ESC/Java 
+model classes, especially those at the top level.  Both JML and ESC/Java2 
 parse model types as if they were Java types and so will not detected
 erroneous uses of model types in Java code; both tools may also have some
 related name lookup bugs.
@@ -1787,21 +1787,22 @@ Axioms are always considered to be static.
 @item @strong{Description:} This clause specifies a condition 
 that must hold in the post-state of any (non-helper) constructor
 (including the default constructor).  Within the body of a
-constructor, any super class initially clauses are assumed to hold
+constructor, any super class @code{initially} clauses are assumed to hold
 after the execution of a (non-helper) @code{super(...)} call,
 including a possible implied call of the default superclass
-constructor.  A class does not inherit any superclass initially
-clauses; initially clauses are not permitted in interfaces.
+constructor.  A class does not inherit any superclass @code{initially}
+clauses; @code{initially} clauses are not permitted in interfaces.
 If the clause is declared static, it may only reference static fields
 and routines.
 
-@item @strong{Status:} Implemented.  Initially clauses are typechecked as 
+@item @strong{Status:} Implemented.  @code{Initially} clauses are 
+typechecked as 
 additional postconditions on every constructor of a class.  Failures provoke
 an `Initially' warning.
 
 @item @strong{Differences from JML or Java:} None.  
 [[[ Actually TBD - JML has not
-clarified the semantics of initially clauses, such 
+clarified the semantics of @code{initially} clauses, such 
 as whether they are inherited and whether they can be
 present in interfaces. ]]]
 
@@ -2120,7 +2121,7 @@ parser.
 @c ----------------------------------------------------------------------------
 @node codecontract, impliesthat, modelprogram, Routine Annotations
 @subsection code_contract
-[[[ Needs discussion - also accessible, callable, measured_by clauses ]]]
+[[[ Needs discussion - also accessible, callable, captures, measured_by clauses ]]]
 
 @c ----------------------------------------------------------------------------
 @node impliesthat, forexample specification, codecontract, Routine Annotations
@@ -2478,7 +2479,7 @@ any static checking.
 @node workingspace, accessible, duration, Routine Annotation clauses
 @subsection working_space
 @itemize @bullet
-@item @strong{Description:} Tihs specification asserts that the execution
+@item @strong{Description:} This specification asserts that the execution
 of the routine will not utilize more than the stated number of bytes
 of heap space.  The expression in the clause may also be
 @code{\not_specified}, which is equivalent to omitting the clause.
@@ -2561,7 +2562,7 @@ implications of other specifications, either to facilitate
 understanding by the reader or to assist the prover in verifying
 conclusions.
 
-Note that the implies_that and for_example specifications are
+Note that the @code{implies_that} and @code{for_example} specifications are
 additional forms of redundancy.
 
 
@@ -2847,7 +2848,9 @@ form
 @*with the same
 access modifiers as the field itself.
 
-[[[ Must be non_null after construction or after initialization???]]]
+Note that the field is not null after @emph{construction}. The field may
+indeed be null after class innitialization and during the execution of
+constructors or helper methods called by constructors.
 
 @item @strong{Status:} Fully implemented and supported by the static checker.
 
@@ -2859,7 +2862,7 @@ access modifiers as the field itself.
 @subsection monitored (JML)
 @itemize @bullet
 @item @strong{Description:} This modifier indicates that the field modified
-is guarded by the monitor associated with `this' if the field is not
+is guarded by the monitor associated with @code{this} if the field is not
 static and by the monintor associated with the class object if the
 field is static.  On any write to the field, all monitors guarding the
 field must be held by the thread executing the write; on any read of
@@ -2964,7 +2967,7 @@ public interface are implicitly public.
 
 @item @strong{Status:} Implemented.
 
-@item @strong{Differences from JML or Java:} [[[ CHeck that illformed JML uses are checked and forbidden by ESC/Java]]]
+@item @strong{Differences from JML or Java:} [[[ CHeck that illformed JML uses are checked and forbidden by ESC/Java2]]]
 
 
 @end itemize
@@ -3614,7 +3617,7 @@ No side-effects are permitted in the predicate.
 @*@strong{Status: }ESC/Java2 parses and typechecks set comprehension expressions, with
 the following omissions:
 @itemize @bullet
-@item Set comprehension in class-level specifications are not handled.
+@item Set comprehension in class-level specifications is not handled.
 @item Expressions containing set comprehension are not used in static checking
 @item No restrictions on the type of the set are imposed
 @item The JML restrictions on the form of the predicate are not checked
@@ -3779,6 +3782,22 @@ as well.  These are described in this section.
 @end menu
 
 @c ---------------------------------------------------------------------------
+@subsection universe type system
+
+JML has recently introduced a universe type system for alias control.  This
+includes type modifiers \readonly, \rep, \peer.  These have not yet been
+implemented in Esc/Java2, either in the parser or in the semantics.
+
+@c ---------------------------------------------------------------------------
+@subsection infinite-precision arithmetic
+
+JML defines primitive data types @code{\bigint} and @code{\real} 
+which denote infinite
+precision integers and reals, for use in specifications.  
+These type names are parsed, but the underlying semantics and the Simplify
+prover do not handle the finite-ness of numeric representations.
+
+@c ---------------------------------------------------------------------------
 @node nowarn annotations-JML, Java and JML assert statements, Other issues, Other issues
 @subsection nowarn annotations
 ESC/Java2 allows an annotation to suppress warnings otherwise produced
@@ -3896,7 +3915,7 @@ Java behavior: No warnings - no exception ever thrown
 
 @item  
 @example
-        //@ exsures (java.lang.AssertionError e) true;
+        //@@ exsures (java.lang.AssertionError e) true;
         public void m() @{
                 assert false : "Message";
         @} 
@@ -3910,7 +3929,7 @@ ESC/Java2 does not.]]]
 
 @item  
 @example
-        //@ exsures (java.lang.AssertionError e) true;
+        //@@ exsures (java.lang.AssertionError e) true;
         public void m() throws AssertionError @{
                 assert false : "Message"; 
         @} 
@@ -3922,7 +3941,7 @@ Java behavior: No warnings - the exsures clause allows the exception.
 
 @item  
 @example
-        //@ exsures (java.lang.AssertionError e) false;
+        //@@ exsures (java.lang.AssertionError e) false;
         public void m() throws AssertionError @{
                 assert false : "Message"; 
         @} 
@@ -5372,6 +5391,11 @@ replacing it with the predicate @code{ x == \old(x) } for each argument
 * most multi-threading considerations::  
 * Java generics::               
 @end menu
+
+@c ----------------------------------------------------------------------------
+@subsection Java 1.5
+@cindex Java 1.5
+ESC/Java2 does not implement any of the new features in Java 1.5.
 
 @c ----------------------------------------------------------------------------
 @node anonymous and block-level classes, serialization, Major features of Java not implemented, Major features of Java not implemented
