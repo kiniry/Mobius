@@ -498,8 +498,8 @@ public class PrepTypeDeclaration {
 	    ErrorSet.error(decl.locId,
 			   "Duplicate nested-type declaration: the type "
 			   + TypeSig.getSig(decl)
-			   + " is already declared at "
-			   + Location.toString(first.locId));
+			   + " is already declared",
+			   first.locId);
     } else if (e instanceof InitBlock) {
 	InitBlock x = (InitBlock)e;
 	

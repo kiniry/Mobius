@@ -432,6 +432,59 @@ public abstract class Env {
 	return left;
     }
 
+    public Object disambiguateTypeOrFieldName(/*@ non_null */ Name n) {
+	/*
+	 * Find the smallest prefix of n, n[0]..n[prefix-1], such that
+	 * it denotes an Expr, call it left:
+	 */
+	Expr left = null;
+	Identifier leftmost = n.identifierAt(0);
+	int leftmostLoc = n.getStartLoc();
+
+	ASTNode result = locateFieldOrLocal(leftmost);
+	int prefix = 1;
+	if (result instanceof GenericVarDecl) {
+	    // leftmost is a local variable:
+	    left = VariableAccess.make(leftmost, leftmostLoc,
+				       (GenericVarDecl)result);
+	} else if (result instanceof TypeSig) {
+	    // leftmost is a field in class result:
+	    ObjectDesignator od = getObjectDesignator((TypeSig)result,
+						      leftmostLoc);
+	    left = FieldAccess.make(od, leftmost, leftmostLoc);
+	} else {
+	    // n *must* start with a typename then:
+	    TypeSig sig = findTypeNamePrefix(null, n, false); // FIXME - a caller for access checking?
+	    if (sig==null) return null;
+	    if (prefixSize==n.size()) return sig;
+
+	    prefix = prefixSize+1;
+	    TypeName tn = TypeName.make(n.prefix(prefixSize));
+	    TypeSig.setSig(tn, sig);
+	    int leftmostDot = leftmostLoc;
+	    if (prefixSize>0)
+		leftmostDot = n.locDotAfter(prefixSize-1);
+	    ObjectDesignator od =
+		TypeObjectDesignator.make(leftmostDot, tn);
+	    left = FieldAccess.make(od, n.identifierAt(prefixSize),
+				    n.locIdAt(prefixSize));
+	}
+
+
+	/*
+	 * Extend the prefix to the full n by using field dereferences:
+	 */
+	for (; prefix<n.size(); prefix++) {
+	    left = FieldAccess.make(
+			    ExprObjectDesignator.make(n.locDotAfter(prefix-1),
+						      left),
+			    n.identifierAt(prefix),
+			    n.locIdAt(prefix));
+	}
+
+	return left;
+    }
+
 
     /***************************************************
      *                                                 *

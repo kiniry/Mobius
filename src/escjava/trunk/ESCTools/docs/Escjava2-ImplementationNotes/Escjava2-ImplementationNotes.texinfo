@@ -977,12 +977,15 @@ ESC/Java2; consequently annotations containing model fields are not yet checked.
 @subsection Model methods
 @itemize @bullet
 @item @strong{Description:} Model methods are method declarations within an
-annotation and prefixed with the modifier @code{model}.  They declare methods that
+annotation and modified with the modifier @code{model}.  They declare methods that
 may be used in model programs and (if pure) in specifications.  Model methods
 may have these Java modifiers: @code{public}, @code{protected}, @code{private},
 @code{static}, @code{final}, @code{synchronized}, @code{strictfp};
 they may have these JML modifiers: @code{pure}, @code{non_null}, @code{monitored},
 @code{helper}.
+
+Model methods may be declared in multiple specification files, but may have 
+an implementation in at most one.
 
 
 @item @strong{Status:} Model methods are parsed and converted to regular Java 
@@ -1001,7 +1004,7 @@ use within the implementation of a Java routine.
 @itemize @bullet
 @item @strong{Description:} Model constructors are constructor
  declarations within an
-annotation and prefixed with the modifier @code{model}.  They declare 
+annotation and modified with the modifier @code{model}.  They declare 
 constructors that
 may be used in model programs and (if pure) in specifications.
 A model constructor
@@ -1010,6 +1013,8 @@ it may have these JML modifiers: @code{pure}, @code{helper}.  Constructors may
 be @code{strictfp} only by virtue of the entire class being declared
 @code{strictfp}.
 
+Model constructors may be declared in multiple specification files, but may have 
+an implementation in at most one.
 
 @item @strong{Status:} Model constructors are parsed and converted to regular Java 
 constructors within ESC/Java2.  However, the static checking mechanism of ESC/Java is
@@ -4049,7 +4054,7 @@ a required semicolon is not present (@pxref{Terminating semicolons}).
 The original ESC/Java allowed routines declared in specification files to have
 bodies, which were then checked.  ESC/Java2 allows bodies for Java 
 declarations only in .java files.  Model methods, model constructors, and
-routines in model classes may have bodies in one specification file.
+routines in model classes may have bodies in at most one specification file.
 
 @section Non-JML features in ESC/Java2
 

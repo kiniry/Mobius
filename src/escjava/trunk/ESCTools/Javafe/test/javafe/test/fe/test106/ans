@@ -11,8 +11,11 @@ ExprScoping.java:142: Error: Duplicate field with same identifier
 ExprScoping.java:141: Associated declaration: 
     int f;
         ^
-ExprScoping.java:146: Error: Duplicate nested-type declaration: the type DupNames2$f is already declared at "ExprScoping.java", line 145, col 10
+ExprScoping.java:146: Error: Duplicate nested-type declaration: the type DupNames2$f is already declared
     class f{};      // error: duplicate types
+          ^
+ExprScoping.java:145: Associated declaration: 
+    class f{};
           ^
 ExprScoping.java:151: Error: Variable 'f' is already defined here.
         boolean f;      // error: duplicate locals
