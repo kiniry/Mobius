@@ -108,7 +108,7 @@ if ( ! $?ESCJ_SIMPLIFY ) then
     if ( ! $?SIMPLIFY ) then
 	if ( "$OSTYPE" == "linux" ) setenv SIMPLIFY Simplify-1.5.4.linux
 	if ( "$OSTYPE" == "darwin" ) setenv SIMPLIFY Simplify-1.5.4.macosx
-        if ( "$OSTYPE" == "cgywin" ) setenv SIMPLIFY Simplify-1.5.4.win
+        if ( "$OSTYPE" == "cgywin" ) setenv SIMPLIFY Simplify-1.5.4.exe
         if ( "$OSTYPE" == "solaris" ) setenv SIMPLIFY Simplify-1.5.4.solaris
 	if ( $?SIMPLIFY ) then
 		echo Warning: Guessing SIMPLIFY = $SIMPLIFY
