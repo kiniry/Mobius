@@ -23,7 +23,7 @@ public class PureCheck3 {
     }
     public void ap() {
 	b = false;
-	np();
+	np();   // WARNING
     }
 
     //@ modifies \nothing;
@@ -47,6 +47,6 @@ class PureCheck3A extends PureCheck3 {
     }
     public void ap() {
 	b = false;
-	n();    // OK
+	n();    // WARNING
     }
 }

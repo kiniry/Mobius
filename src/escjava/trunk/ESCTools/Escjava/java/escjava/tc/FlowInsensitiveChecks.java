@@ -2067,6 +2067,30 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
           }
 
         case TagConstants.DIVERGES:
+            if (ctxt instanceof RoutineDecl) {
+		RoutineDecl rd = (RoutineDecl)ctxt;
+                if (Utils.isPure(rd)) {
+		ExprModifierPragma emp = (ExprModifierPragma)p;
+                if (emp.expr instanceof LiteralExpr &&
+			((LiteralExpr)emp.expr).value == Boolean.FALSE) {
+		  // OK
+                } else if (p.getStartLoc() == Location.NULL) {
+		  // Default clause - ignore it and deal with it during desugaring
+                } else {
+                  int locp = Utils.findPurePragma(rd).getStartLoc();
+                  int loc = p.getStartLoc();
+                  if (loc == Location.NULL) {
+                    ErrorSet.error(locp,
+                             "A lightweight specification case for a pure method must have a 'diverges false' clause");
+                  } else {
+                    ErrorSet.error(loc,
+                             "A pure method may not have a diverges clause",
+                             locp);
+                  }
+                }
+              }
+            }
+            // fall-through
         case TagConstants.ENSURES:
         case TagConstants.ALSO_ENSURES:
         case TagConstants.POSTCONDITION:

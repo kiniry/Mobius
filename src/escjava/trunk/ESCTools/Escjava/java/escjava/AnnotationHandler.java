@@ -332,23 +332,6 @@ public class AnnotationHandler {
     
     ParsedRoutineSpecs accumulatedSpecs = new ParsedRoutineSpecs();
 
-    if (Utils.isPure(tde)) {
-      // FIXME - the following if avoids a problem with the OwnerNull assertion when
-      // the pure Object() constructor gets assignable this.* along with assignable \nothing
-      // Should be fixed at a more fundamental level eventually
-      if (!(isConstructor && tde.getParent().id == Identifier.intern("Object") && TypeSig.getSig(tde.getParent()).getPackageName().equals("java.lang") )) {
-        // Add another spec case 
-        ModifierPragma mp = Utils.findModifierPragma(tde.pmodifiers,TagConstants.PURE);
-        // FIXME - if mp is null,then the pure modifier is in a superclass - find it
-        int loc = mp == null ? Location.NULL : mp.getStartLoc();
-        ModifiesGroupPragma m = defaultModifies(loc,T,tde);
-        ModifierPragmaVec mv = ModifierPragmaVec.make(1);
-        mv.append(nonnullBehavior);
-        mv.addElement(m);
-        accumulatedSpecs.specs.add(mv);
-      }
-    }
-    
     pos = 0;
     while (pos < pm.size()) {
       ModifierPragma p = pm.elementAt(pos++);
@@ -557,7 +540,9 @@ public class AnnotationHandler {
     
     // Now transform each non-requires pragma
     boolean foundDiverges = false;
+    ExprModifierPragma defaultDiverges = null;
     boolean foundModifies = false;
+    boolean isLightweight = true;
     pos = 0;
     while (pos < m.size()) {
       ModifierPragma mp = m.elementAt(pos++);
@@ -567,7 +552,7 @@ public class AnnotationHandler {
       switch (tag) {
         case TagConstants.DIVERGES:
           foundDiverges = true;
-        // fall-through
+          // fall-through
         case TagConstants.ENSURES:
         case TagConstants.POSTCONDITION:
         case TagConstants.WHEN:
@@ -657,26 +642,37 @@ public class AnnotationHandler {
           ErrorSet.error(mp.getStartLoc(),"monitored only applies to fields");
         break;
         
+        case TagConstants.BEHAVIOR:
+          // Used to distinguish lightweight and heavyweight sequences
+          isLightweight = false;
+          break;
+
         default:
           ErrorSet.error(mp.getStartLoc(),"Unknown kind of pragma for a routine declaration: " + TagConstants.toString(tag));
         break;
       }
     }
-    /* FIXME - don't need this for now, but need to be sure that when it is 
-     added, it doesn't change whether a routine appears to have a spec or not.
-     if (!foundDiverges) {
-     // lightweight default - req ==> true which is true
+    if (!foundDiverges) {
+      // lightweight default - req ==> true which is true
       // heavyweight default - req ==> false which is !req
-       // The lightweight default need not be added since it does
-        // not need any verification.
-         resultList.addElement(ExprModifierPragma.make(
-         TagConstants.DIVERGES,implies(req,AnnotationHandler.F),
-         Location.NULL));
-         // FIXME - Null location above and below needs to be fixed.
-          // Also other use of defaultModifies
-           // Diverges expression depends on lightweight or heavyweight
-            }
-            */
+      // The lightweight default need not be added since it does
+      // not need any verification.
+      isLightweight = false ; // FIXME - no way to distinguis at present
+      if (Utils.isPure(tde) && isLightweight) {
+	// Routine is pure and there is no diverges clause
+        // and this is a lightweight spec case
+// FIXME - this is turned off because it will cause too many cautions right now
+//        ErrorSet.caution(Utils.findModifierPragma(tde.pmodifiers,TagConstants.PURE).getStartLoc(),
+//             "A lightweight specification case for a pure method or constructor must have an explicit 'diverges false' clause");
+          isLightweight = false;  // Force a false diverges default clause
+      }
+      resultList.addElement(
+            ExprModifierPragma.make(
+              TagConstants.DIVERGES,implies(req,
+                  isLightweight ? AnnotationHandler.T : AnnotationHandler.F),
+              Location.NULL));
+    }
+    
     if (!foundModifies) {
       resultList.addElement(defaultModifies(tde.getStartLoc(),req,tde));
     }
@@ -1280,6 +1276,10 @@ public class AnnotationHandler {
           }
         }
         pos = parseSeq(pos,pm,0,behavior,mpv);
+        if (behaviorMode != 0 && behavior != null) {
+           // Tag each heavyweight spec case
+           //if (mpv.size() > 0) mpv.addElement(heavyweightFlag);
+        }
         if (mpv.size() != 0) result.add(mpv);
         else if (behaviorMode == 0 || result.size() != 0) {
           if (!encounteredError) 
@@ -1471,6 +1471,8 @@ public class AnnotationHandler {
     }	
     return results;
   }
+  static private ModifierPragma heavyweightFlag = SimpleModifierPragma.make(TagConstants.BEHAVIOR,
+				Location.NULL);
 }
 // FIXME - things not checked
 //	There should be no clauses after a |} (only |} only also or END or simple mods)

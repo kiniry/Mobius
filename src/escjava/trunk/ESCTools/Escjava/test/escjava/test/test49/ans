@@ -50,9 +50,7 @@ class WritableIf
    WritableIf()
     /*@ requires (/*boolean*/ true); */
     /*@ modifies (/*boolean*/ true) ==> ((/*UNAVAILABLE*/ (/*WritableIf*/ this).*)); @*/
-    /*@ pure */
-    /*@ requires (/*boolean*/ true); */
-    /*@ modifies (/*boolean*/ true) ==> ((/*UNAVAILABLE*/ (/*WritableIf*/ this).*)); @*/ 
+    /*@ pure */ 
    {
       super();
       Object newthing = (/*java.lang.Object*/ new Object());
@@ -64,9 +62,7 @@ class WritableIf
    WritableIf(int x)
     /*@ requires (/*boolean*/ true); */
     /*@ modifies (/*boolean*/ true) ==> ((/*UNAVAILABLE*/ (/*WritableIf*/ this).*)); @*/
-    /*@ pure */
-    /*@ requires (/*boolean*/ true); */
-    /*@ modifies (/*boolean*/ true) ==> ((/*UNAVAILABLE*/ (/*WritableIf*/ this).*)); @*/ 
+    /*@ pure */ 
    {
       super();
       Object newthing = (/*java.lang.Object*/ new Object());
@@ -85,8 +81,8 @@ class NonNull
 
    void foo(Object x /*@ non_null */)
     /*@ pure */
-    /*@ requires (/*boolean*/ (/*boolean*/ (\lblneg NonNull:0.32.16 (/*boolean*/ (/*java.lang.Object*/ x:32.34) != (/*null*/ null)))) || (/*boolean*/ (\lblneg NonNull:0.32.16 (/*boolean*/ (/*java.lang.Object*/ x:32.34) != (/*null*/ null))))); */
-    /*@ modifies (/*boolean*/ \old((/*boolean*/ (/*java.lang.Object*/ x:32.34) != (/*null*/ null)))) ==> ((/*UNAVAILABLE*/ \nothing)); @*/
+    /*@ requires (/*boolean*/ (\lblneg NonNull:0.32.16 (/*boolean*/ (/*java.lang.Object*/ x:32.34) != (/*null*/ null)))); */
+    /*@ diverges (/*boolean*/ (/*boolean*/ \old((/*boolean*/ (/*java.lang.Object*/ x:32.34) != (/*null*/ null)))) ==> (/*boolean*/ false)); */
     /*@ modifies (/*boolean*/ \old((/*boolean*/ (/*java.lang.Object*/ x:32.34) != (/*null*/ null)))) ==> ((/*UNAVAILABLE*/ \nothing)); @*/ 
    {
       /*@ assert (/*boolean*/ (/*java.lang.Object*/ foo) != (/*null*/ null)); */
@@ -97,8 +93,8 @@ class NonNull
 
    void foo2(Object x /*@ non_null */)
     /*@ pure */
-    /*@ requires (/*boolean*/ (/*boolean*/ (\lblneg NonNull:0.39.17 (/*boolean*/ (/*java.lang.Object*/ x:39.35) != (/*null*/ null)))) || (/*boolean*/ (\lblneg NonNull:0.39.17 (/*boolean*/ (/*java.lang.Object*/ x:39.35) != (/*null*/ null))))); */
-    /*@ modifies (/*boolean*/ \old((/*boolean*/ (/*java.lang.Object*/ x:39.35) != (/*null*/ null)))) ==> ((/*UNAVAILABLE*/ \nothing)); @*/
+    /*@ requires (/*boolean*/ (\lblneg NonNull:0.39.17 (/*boolean*/ (/*java.lang.Object*/ x:39.35) != (/*null*/ null)))); */
+    /*@ diverges (/*boolean*/ (/*boolean*/ \old((/*boolean*/ (/*java.lang.Object*/ x:39.35) != (/*null*/ null)))) ==> (/*boolean*/ false)); */
     /*@ modifies (/*boolean*/ \old((/*boolean*/ (/*java.lang.Object*/ x:39.35) != (/*null*/ null)))) ==> ((/*UNAVAILABLE*/ \nothing)); @*/ 
    {
       /*@ assert (/*boolean*/ (/*java.lang.Object*/ s) != (/*null*/ null)); */
@@ -120,9 +116,7 @@ class MonitoredBy
    void foo(Object foo)
     /*@ requires (/*boolean*/ true); */
     /*@ modifies (/*boolean*/ true) ==> ((/*UNAVAILABLE*/ \nothing)); @*/
-    /*@ pure */
-    /*@ requires (/*boolean*/ true); */
-    /*@ modifies (/*boolean*/ true) ==> ((/*UNAVAILABLE*/ \nothing)); @*/ 
+    /*@ pure */ 
    {
       /*@ assert (/*boolean*/ (/*java.lang.Object*/ x) == (/*java.lang.Object*/ x)); */
       /*@ set (/*java.lang.Object*/ x) = (/*java.lang.Object*/ foo:54.20); */

@@ -29,7 +29,15 @@ Associated declaration is "PureCheck3.java", line 11, col 8:
     [TIME]  failed
 
 PureCheck3: ap() ...
-    [TIME]  passed
+------------------------------------------------------------------------
+PureCheck3.java:26: Warning: Precondition possibly not established (Pre)
+        np();   // WARNING
+          ^
+Associated declaration is "PureCheck3.java", line 15, col 8:
+    //@ requires b;
+        ^
+------------------------------------------------------------------------
+    [TIME]  failed
 
 PureCheck3: PureCheck3() ...
     [TIME]  passed
@@ -48,9 +56,17 @@ PureCheck3A: a() ...
     [TIME]  passed
 
 PureCheck3A: ap() ...
-    [TIME]  passed
+------------------------------------------------------------------------
+PureCheck3.java:50: Warning: Precondition possibly not established (Pre)
+        n();    // WARNING
+         ^
+Associated declaration is "PureCheck3.java", line 11, col 8:
+    //@ requires b;
+        ^
+------------------------------------------------------------------------
+    [TIME]  failed
 
 PureCheck3A: PureCheck3A() ...
     [TIME]  passed
   [TIME total]
-1 warning
+3 warnings
