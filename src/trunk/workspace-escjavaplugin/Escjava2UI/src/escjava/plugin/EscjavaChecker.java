@@ -185,8 +185,19 @@ public class EscjavaChecker extends escjava.Main
 	  }
 	  inputs.add("-simplify");
 	  inputs.add(loc);
-	  simplifyloc = loc;
 	  if (Log.on) Log.log("Using simplify executable at " + loc);
+	  // Simplify can get installed without being executable.
+	  // This is an attempt to fix that, at least on Unix-like platforms
+	  // This fails benignly on Windows platforms, but they don't need 
+	  // any changes in premissions
+	  try {
+	    if (simplifyloc == null || !loc.equals(simplifyloc)) {
+		    Process p = Runtime.getRuntime().exec(
+		    	new String[]{"chmod","ugo+x",loc});
+		    p.waitFor();
+	    }
+	  } catch (Exception e) { /* skip */ }
+	  simplifyloc = loc;
 	  Options.getOptions(inputs);
 	  
 	  //		System.out.print("STARTING ESCJAVA WITH");

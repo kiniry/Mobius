@@ -6,9 +6,9 @@
 </HEAD>
 <BODY>
 
-<CENTER><H1>ESC/Java2 Eclipse Plugin 1.1.0</H1></CENTER>
+<CENTER><H1>ESC/Java2 Eclipse Plugin 1.1.1</H1></CENTER>
 <CENTER>Author: David Cok</CENTER>
-<CENTER> Version alpha, 18 February 2005</CENTER>
+<CENTER> Version alpha, 20 February 2005</CENTER>
 <CENTER><A href="mailto:xcok@frontiernet.net">Feedback</A> (temporarily)</CENTER>
 <P>
 Contents:
@@ -118,6 +118,9 @@ The plug-in is installed from a standard Eclipse update site as follows.
           items may not appear.
      <LI> Within the file system, find the installation site plugins directory,
           and set all of the Simplify* files to have executable permission.
+          (As of version 1.1.1, this should be taken care of automatically when
+          the Simplify executable is first used, but it is best if the installer
+          fixes the permissions at install time.)
      <LI> The plug-in will be available from any newly opened workspace from this
           installation site.
      <LI> The plug-in can be disabled or uninstalled 
@@ -652,7 +655,12 @@ information that gives a bit more explanation of the purpose of the item.
 <A NAME="#Versions"/A>
 <H2>Version history</H2>
 <UL>
-<LI><B>Version 1.1.0</B> is the first publically released version.
+<LI><B>Version 1.1.1</B> (20 February 2005):
+<UL>
+<LI>Fixes a problem in which newly installed Simplify executables
+do not have executable permission on Unix-like systems.
+</UL>
+<LI><B>Version 1.1.0</B> (18 February 2005) is the first publically released version.
 It includes Esc/Java2 as of 18 February 2005, which is an
 interim version of the tool.
 </UL>
