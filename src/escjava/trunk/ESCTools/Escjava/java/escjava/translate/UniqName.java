@@ -291,7 +291,7 @@ public final class UniqName {
      **
      ** This handles case 3 of ESCJ 23b.
      **/
-    private static LocalVarDecl newBoundVariable(String name) {
+    public static LocalVarDecl newBoundVariable(String name) {
 	Identifier id = Identifier.intern(name);
 	return LocalVarDecl.make(Modifiers.NONE,  // Java modifiers
 	 		         null,            // pragma modifiers
