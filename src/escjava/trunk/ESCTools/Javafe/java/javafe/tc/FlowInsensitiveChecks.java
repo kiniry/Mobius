@@ -1357,10 +1357,10 @@ public class FlowInsensitiveChecks
                     if (av.name.size() == 1) {
                         ErrorSet.error(av.getStartLoc(),
                                        "Undefined variable '" + av.name.printName() + "'");
-			setType(x, Types.errorType);
                     } else ErrorSet.error(av.getStartLoc(),
                                         "Cannot resolve variable access '"
                                         +av.name.printName()+"'");
+		    setType(x, Types.errorType);
                     return av;
                 }
                 Assert.notFalse(resolved.getTag() !=

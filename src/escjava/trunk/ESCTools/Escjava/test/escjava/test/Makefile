@@ -13,8 +13,8 @@ export ESCJ ?= ${ESCJAVA_ROOT}/escj
 
 ## Some tests need a few system spec files.  We include the ones that are part
 ## of the build so that they are consistent across platforms and users for tests
-##export SYSTEM_SPECS = ${ESCTOOLS_ROOT}/Escjava/release/master/specs
-export SYSTEM_SPECS = ${ESCTOOLS_ROOT}/specs
+export SYSTEM_SPECS = ${ESCTOOLS_ROOT}/Escjava/release/master/specs
+##export SYSTEM_SPECS = ${ESCTOOLS_ROOT}/specs
 
 ###########################################################################
 
