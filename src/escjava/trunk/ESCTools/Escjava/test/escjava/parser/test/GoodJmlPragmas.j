@@ -1,9 +1,10 @@
 /*@ pre true; @*/
 /*@ post false; */
 //@ pre a_boolean_expression;
-//@ also post q;
-/*@ also post q2; @*/
 
+//@ modifies x;
+//@ modifies y, z;
+//@ modifies a, b, c
 /*@ assignable x, y; @*/
 //@ modifiable z;
 /*@ assignable x[0]; modifiable z[0][y]; */
@@ -14,3 +15,6 @@
 
 /*@ maintaining x; */
 //@ decreasing z-1
+
+// also post q;
+/* also post q2; @*/
