@@ -18,7 +18,7 @@ public class Monitored {
 	//-@ monitored
 	static public int j; //Needs class - via monitored
 
-	//-@ monitored_by Monitored.class
+	//-@ monitored_by Monitored.class;
 	static public int jj; //Needs class - via monitored_by
 
 	static public int jjj; //Needs class - via monitors_for

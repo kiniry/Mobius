@@ -18,6 +18,7 @@ public class TestEscPragmaParser {
   public static void main(String[] argv) throws IOException {
     escjava.Main.options = new escjava.Options();
     escjava.Main.options().nvu = true;
+    escjava.Main.options().noSemicolonWarnings = true;
 
     // DelegatingPrettyPrint p = new javafe.tc.TypePrint();
     // p.del = new EscPrettyPrint(p, new StandardPrettyPrint(p));

@@ -21,7 +21,7 @@ public class PureModifies {
 	void m4();
 
 	//@ behavior
-	//@ requires true
+	//@ requires true;
 	//@ pure
 	void m5();
 

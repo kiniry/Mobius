@@ -1828,8 +1828,12 @@ public class EscPragmaParser extends Parse implements PragmaParser
      * more pragmas.
      */
     private void eatSemiColon(Identifier kw) {
-        if (scanner.ttype == TagConstants.SEMICOLON) scanner.getNextToken();
-        else if (scanner.ttype != TagConstants.EOF) {
+        if (scanner.ttype == TagConstants.SEMICOLON) {
+
+	    scanner.getNextToken();
+
+        } else if (scanner.ttype != TagConstants.EOF ) {
+
 	  if (kw != null)
             ErrorSet.fatal(scanner.startingLoc, 
 		   "Semicolon required when a " + kw.toString()
@@ -1840,14 +1844,16 @@ public class EscPragmaParser extends Parse implements PragmaParser
 		   "Semicolon required when a"
 		    + " pragma is followed by another pragma (found "
 		    + TagConstants.toString(scanner.ttype) + " instead).");
+
+	} else if (!Main.options().noSemicolonWarnings) {
+
+	    ErrorSet.caution(scanner.startingLoc,
+		"JML requires annotations to be terminated with a semicolon");
 	}
-//	else
-//	    ErrorSet.caution(scanner.startingLoc,
-//		"JML requires annotations to be terminated with a semicolon");
     }
 
+// FIXME - should get rid of this method, along with inProcessTag
     /*@ requires inProcessTag == TagConstants.LOOP_PREDICATE ||
-      @          inProcessTag == TagConstants.MONITORED_BY ||
       @          inProcessTag == TagConstants.STILL_DEFERRED;
       @*/
     //@ requires scanner.startingLoc != Location.NULL;

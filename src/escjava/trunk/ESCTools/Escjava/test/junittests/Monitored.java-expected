@@ -101,7 +101,7 @@ Monitored.java:70: Warning: Possible race condition (Race)
         static void mjj() { jj = 0; }  // ERROR - needs class
                                ^
 Associated declaration is "Monitored.java", line 21, col 19:
-        //-@ monitored_by Monitored.class
+        //-@ monitored_by Monitored.class;
                           ^
 ------------------------------------------------------------------------
     [TIME]  failed
@@ -163,7 +163,7 @@ Monitored.java:93: Warning: Possible race condition (Race)
         static void rjj() { int p = jj; } // ERROR
                                     ^
 Associated declaration is "Monitored.java", line 21, col 6:
-        //-@ monitored_by Monitored.class
+        //-@ monitored_by Monitored.class;
              ^
 ------------------------------------------------------------------------
     [TIME]  failed

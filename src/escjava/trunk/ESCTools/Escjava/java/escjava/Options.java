@@ -24,10 +24,11 @@ public class Options extends javafe.SrcToolOptions
     final String[][] escOptionData = {
 	{ "-eajava, -javaAssertions", "Treat Java assert statements as Java exceptions"},
 	{ "-eajml, -jmlAssertions", "Treat Java assert statements like JML assert statements"},
+	{ "-noSemicolonWarnings", "Suppress warnings about semicolons missing at the end of annotations (to support old ESC/Java)" },
 	{ "-pgc", "Print the guarded commands"},
 	{ "-ppvc", "Prettyprint the VCs generated with -v"},
-        { "-sxLog <log>", "Print the commands sent to Simplify in the file named <log>"},
         { "-pxLog <log>", "PrettyPrint the commands sent to Simplify in the file named <log>"},
+        { "-sxLog <log>", "Print the commands sent to Simplify in the file named <log>"},
     };
 
     // Global escjava flags
@@ -83,6 +84,13 @@ public class Options extends javafe.SrcToolOptions
 
     /** When true, does not print any warnings about things not checked. */
     public boolean noNotCheckedWarnings = false;
+
+    /** JML requires semicolons to terminate annotations.  ESC/Java2 will
+	warn about such missing semicolons; these were not required in
+	ESC/Java.  When the following option is true, such warnings are
+	suppressed to support old ESC/Java annotations.
+     **/
+    public boolean noSemicolonWarnings = false;
 
     //** The limit to the rewriting depth when handling non-functional method calls. */
     public int rewriteDepth = 2;
@@ -723,6 +731,9 @@ public class Options extends javafe.SrcToolOptions
             }
             rewriteDepth = new Integer(args[offset]).intValue();
             return offset+1;
+	} else if (option.equals("-noSemicolonWarnings")) {
+	    noSemicolonWarnings = true;
+	    return offset;
 	}
     
         // Pass on unrecognized options:

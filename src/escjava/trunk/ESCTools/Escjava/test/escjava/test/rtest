@@ -11,7 +11,7 @@ shift
 
 flags="$*"
 
-./run -quiet -plainwarning -notrace ${flags} > out 2>&1
+./run -quiet -plainwarning -notrace -noSemicolonWarnings ${flags} > out 2>&1
 #./run -plainwarning -notrace ${flags} > out 2>&1
 
 if ! diff out ans > diffs; then
