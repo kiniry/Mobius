@@ -437,7 +437,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
         if (pendingJavadocComment == null) {
             return false;
         }
-	int startLoc = scanForOpeningTag(pendingJavadocComment);
+	int startLoc = scanForOpeningTag(pendingJavadocComment); // sets the value of endTag
         if (startLoc == Location.NULL) {
             pendingJavadocComment = null;
             inProcessTag = NOTHING_ELSE_TO_PROCESS;
@@ -727,14 +727,19 @@ try{
             }
 
 		// FIXME -- explain this - what circumstances need it?
+	    // Eventually the scanner comes to an EOF as the next character (the one the lexer is
+	    // looking at.  Then we proceed into this block for clean up.
             if (scanner.ttype == TagConstants.EOF) { 
 		if (savedGhostModelPragma != null) {
+		    // Came to the end of an annotation without finding a declaration after having
+		    // seen a ghost or model keyword.
 		    ErrorSet.error(savedGhostModelPragma.getStartLoc(),
 			"Expected a declaration within the annotation following the " + TagConstants.toString(savedGhostModelPragma.getTag()) + " keyword");
 		    savedGhostModelPragma = null;
 		}
                 LexicalPragma PP = scanner.popLexicalPragma();
                 if (PP != null) {
+		    // FIXME - check if this actually ever occurs - perhaps it was a case without a terminating semicolon
                     dst.ttype = TagConstants.LEXICALPRAGMA;
                     dst.auxVal = PP;
                     if (DEBUG)
@@ -744,6 +749,9 @@ try{
                 }
 
                 if (pendingJavadocComment != null) {
+		    // In this case, we were processing an annotation embedded in a
+		    // javadoc comment.  So we go back to process more of the
+		    // javadoc comment.
                     scanner.close();
                     if (!processJavadocComment()) {
 			close();
@@ -791,7 +799,7 @@ try{
 		// model declaration - then the IDENT is not a 
 		// may or may not be a keyword, but is the beginning
 		// of the type
-		if (tag != TagConstants.NULL) scanner.getNextToken();
+		if (tag != TagConstants.NULL) scanner.getNextToken(); // advance the scanner
 		// For an IDENT that is not a JML keyword, the tag is
 		// NULL and the switch statment below falls into the default
 		// case - all pragmas begin with a keyword, so this must be
