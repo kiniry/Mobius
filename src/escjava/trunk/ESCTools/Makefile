@@ -168,7 +168,7 @@ patch-release: clean
 	${MAKE} generate-patches generate-archives zero-length-files
 	cp ${ESCTOOLS_ROOT}/install.sh ${PATCH_DIR}
 	mkdir -p ${RELDIR}
-	cd ${PATCH_DIR}; tar cvjf ${RELDIR}/${PATCH_NAME}-patch.tbz .
+	cd ${PATCH_DIR}; tar cvjf ${RELDIR}/${RELPATCHTAR} .
 	rm -rf ${PATCH_DIR}
 
 .PHONY: binary-release
@@ -251,16 +251,18 @@ test-patch-release:
 ## Simplify package must be unpacked into the directory
 ## "${ESCTOOLS_ORIGINAL}/Simplify".  
 
-## Use make patch-release instead of this; 
-##    then use make-test-patch-release to test it
-##.PHONY: generate-patch-based-release
-##generate-patch-based-release: generate-patches generate-archives zero-length-files
-##	(cd ${ESCTOOLS_ROOT}/..; \
-##	tar cjvf ${RELPATCHTAR} \
-##		${CALVIN_PATCHES} ${ESCJAVA_PATCHES} ${HOUDINI_PATCHES} \
-##		${JAVAFE_PATCHES} ${RCC_PATCHES} ${SIMPLIFY_PATCHES} \
-##		${SPECS_TAR} ${TOPLEVEL_TAR} ${ZERO_LENGTH_TAR}; \
-##	)
+## THis seems to duplicate material in the 'patch-release' target ??? FIXME
+.PHONY: generate-patch-based-release
+generate-patch-based-release: generate-patches generate-archives zero-length-files
+	mkdir -p ${RELDIR}
+	(cd ${PATCH_DIR}; \
+	cp ${ESCTOOLS_ROOT}/install.sh . ; \
+	tar cjvf ${RELDIR}/${RELPATCHTAR} \
+		${CALVIN_PATCHES} ${ESCJAVA_PATCHES} ${HOUDINI_PATCHES} \
+		${JAVAFE_PATCHES} ${RCC_PATCHES} ${SIMPLIFY_PATCHES} \
+		install.sh \
+		${SPECS_TAR} ${TOPLEVEL_TAR} ${ZERO_LENGTH_TAR}; \
+	)
 
 ## These patches are used by unpacking the original
 ## Compaq/H.P. ESCTools sources as appropriate, cd-ing to the
@@ -271,8 +273,7 @@ test-patch-release:
 PATCH_PREFIX = ${PATCH_DIR}/${PATCH_NAME}
 .PHONY: generate-patches
 generate-patches: clean
-	(cd ${ESCTOOLS_ROOT}/..; \
-	mkdir -p ${PATCH_DIR}; \
+	( mkdir -p ${PATCH_DIR}; \
 	LC_ALL=C TZ=UTC0 diff -Naur --exclude=*.class --exclude=.#* --exclude=CVS \
 		--exclude=Simplify-1* ${ESCTOOLS_ORIGINAL}/Calvin ESCTools/Calvin \
 		| bzip2 -9 > ${PATCH_DIR}/${CALVIN_PATCHES}; \

@@ -143,7 +143,7 @@ export RELNAME ?= ${ESC_PROJECT}-${ESC_VERSION}
 export RELNAME-DATE ?= ${RELNAME}-${ESC_RELEASE_DATE}
 export RELJAR  ?= esctools2.jar
 export RELTAR  ?= ${RELNAME}-binary.tbz
-export RELPATCHTAR  ?= ${RELNAME}-patches.tbz
+export RELPATCHTAR  ?= ${RELNAME}-patch.tbz
 export RELCLASSPATH = ${RELDIR}/${RELJAR}
 
 export CALVIN_PATCHES   = ${RELNAME-DATE}-Calvin-patch.bz
