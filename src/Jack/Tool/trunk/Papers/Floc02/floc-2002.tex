@@ -1,15 +1,17 @@
 \documentclass[a4paper]{llncs}
 
-\title{Specification of the \emph{assignable} clause of \jml}
+\title{A static checker for JML's \emph{assignable} clause}
 
 \author{
   N\'estor Cata\~no and Marieke Huisman  \\
   \institute{
-       \inria~Sophia-Antipolis, France \\
-       \lemme~Project
+       \inria\ Sophia-Antipolis, France \\
+%       \lemme~Project
   } 
   \email{\{Nestor.Catano, Marieke.Huisman\}@sophia.inria.fr}
 }
+
+\newcommand{\defn}[1]{\:\hat{#1}\:}
 
 \newcommand{\lemme}{\textsc{Lemme}}
 \newcommand{\inria}{\textsc{Inria}}
@@ -29,11 +31,44 @@
 \newcommand{\insPP}{\textsc{Insure\nolinebreak\hspace{-.05em}\raisebox{.4ex}{\tiny\bf
 +}\nolinebreak\hspace{-.10em}\raisebox{.4ex}{\tiny\bf +}}}
 
-\newcommand{\modtool}{\texttt{assignable$:$tool}}
+\newcommand{\modtool}{\texttt{assignable:tool}}
 
 \newcommand{\sem}[1]{\ensuremath{\mbox{[\![} {#1} \mbox{]\!]}\/}}
 
 \newtheorem {df}{Definition}
+
+\newcommand{\FullExp}{\(<\)\textsf{Full-exp}\(>\)}
+\newcommand{\SufExp}{\(<\)\textsf{Suf-exp}\(>\)}
+\newcommand{\Exp}{\(<\)\textsf{Exp}\(>\)}
+\newcommand{\Identifier}{\(<\)\textsf{Identifier}\(>\)}
+\newcommand{\MethodCall}{\(<\)\textsf{Identifier}\(>\)(\Exp\ldots\Exp)}
+\newcommand{\Static}{\(<\)\textsf{StaticClass}\(>\)}
+\newcommand{\Type}{\(<\)\textsf{Type}\(>\)}
+\newcommand{\option}{\(\:||\)}
+
+\newcommand{\MOD}[2]{\ensuremath{\mathit{#1}\:\mathsf{mod}\:\ensuremath{\mathit{#2}}}}
+\newcommand{\MODFE}[2]{\ensuremath{\mathit{#1}\:\mathsf{modFE}\:\mathit{#2}}}
+\newcommand{\MODSuf}[2]{\ensuremath{\mathit{#1}\:\mathsf{modSuf}\:\mathit{#2}}}
+\newcommand{\MODS}[2]{\ensuremath{\mathit{#1}\:\overrightarrow{\mathsf{mod}}\:\mathit{#2}}}
+
+\newcommand{\method}[2]{\ensuremath{\mathtt{#1}\texttt{(}
+                                    \overrightarrow{\mathtt{#2}}
+                                    \texttt{)}}}
+\newcommand{\methodbody}[2]{\ensuremath{\method{#1}{#2}\mathtt{.body}}}
+\newcommand{\methodloc}[2]{\ensuremath{\method{#1}{#2}\mathtt{.locvars}}}
+\newcommand{\methodassign}[2]{\ensuremath{\method{#1}{#2}\mathtt{.assignable}}}
+
+
+\newcommand{\extmember}[2]{\ensuremath{#1\: \underline\in\: #2}}
+\newcommand{\member}[2]{\ensuremath{#1\: \in\: #2}}
+\newcommand{\extsubset}[2]{\ensuremath{#1 \sqsubseteq #2}}
+
+\newcommand{\fieldsof}{\texttt{\(\backslash\)fields\_of}}
+\newcommand{\fieldsofarg}[1]{\texttt{\(\backslash\)fields\_of(#1)}}
+\newcommand{\reach}{\texttt{\(\backslash\)reach}}
+\newcommand{\reacharg}[1]{\texttt{\(\backslash\)reach(#1)}}
+\newcommand{\nothing}{\texttt{\(\backslash\)nothing}}
+\newcommand{\everything}{\texttt{\(\backslash\)everything}}
 
 \usepackage{lscape} % it's needed to turn a page
 \usepackage{amsmath} % it is needed by the \sem command
@@ -46,17 +81,34 @@
 \pagestyle{plain}
 
 \begin{abstract}
-This paper presents a method for checking the specification of
-\emph{assignable} clauses in \java~programs with assertions \jml. We
-propose syntactical rules for each type of \java~instruction. These
-rules check for each \java~instruction occurring in a method
-declaration that locations assigned by the instruction belong to set
-of variable locations the method has specified as
-\emph{assignable}. Hence, our specification does not concern with
-modification but the assignment. We show the feasibility of our
-approach presenting several specifications gaps found in the case
-study \emph{Formal Specification and Static Checking of \gplus's
-Electronic Purse Using \textsc{Esc/Java}}~\cite{CatanoH02a}.
+This paper proposes a syntactic method to check so-called
+\emph{assignable} clauses in \java\ programs, annotated with \jml\
+assertions. Assignable clauses describe which variables may be
+modified by a method. Their correctness is crucial for reasoning about 
+class specifications. 
+
+The method that we propose in this paper is incomplete, as it only
+does a syntactic check and it does not take aliasing or expression evaluation
+into account, but it provides an efficient check that will find most
+common specification errors in assignable clauses in practice. This is 
+demonstrated by applying the method to the specification of an
+industrial case study.
+
+
+%The method is a
+%syntactic one
+
+%This paper presents a method for checking the specification of
+%\emph{assignable} clauses in \java\ programs with assertions \jml. We
+%propose syntactical rules for each type of \java\ instruction. These
+%rules check for each \java\ instruction occurring in a method
+%declaration that locations assigned by the instruction belong to set
+%of variable locations the method has specified as
+%\emph{assignable}. Hence, our specification does not concern with
+%modification but the assignment. We show the feasibility of our
+%approach presenting several specifications gaps found in the case
+%study \emph{Formal Specification and Static Checking of \gplus's
+%Electronic Purse Using \textsc{Esc/Java}}~\cite{CatanoH02a}.
 \end{abstract}
 
 
@@ -67,47 +119,77 @@ Electronic Purse Using \textsc{Esc/Java}}~\cite{CatanoH02a}.
 \section{Introduction}
 \label{sec-intro}
 
-\paragraph{\bf Background.}
-Several decades ago, the \emph{formal methods} were considered as a merely
-theoretical issue in computer science, not suitable for real
-problems$:$ \emph{complicated} notations taken from the logic and
-the lack of tools supporting formal methods could not compete with the
-tools and methods used in industry for software development. Recently, 
-this has been changing. There are several reasons for this
-change. Firstly, the specification languages are now closer to
-programming languages than ever before and the techniques used are
-more suitable to the actual programming paradigms (object oriented
-and distributed programming). Secondly, industry has started to feel
-the need for certified software. An
-example~\cite{Borger99programmer}$:$ during $1995$,
-\textsc{Intel} found a problem with its microprocessors
-\textsc{Pentium}. This company was forced to replace around two
-million processors. Thus, it realized that the costs of formal
-verification would have been much lower than the costs required to
-fix this bug.
+\paragraph{\bf Formal methods}
+For a long time, formal methods have been considered as a merely
+theoretical issue in computer science, which was not suitable to apply
+to ``real'' problems: the complicated logical notations and the lack
+of tool support made that formal methods could not compete with the
+software development tools and methods used in industry. However,
+recently this has started to change, for several reasons. First of
+all, formal methods have become more applicable: specification
+languages have been developed which resemble programming languages,
+and together with these specification languages powerful tools have
+been developed. At the same time, industry has started to feel the
+need for certified software, in particular after the discovery of bugs such as
+the one in the \textsc{Intel} \textsc{Pentium II} microprocessors,
+which costed the company several billion dollars.
 
-Currently, with the interest of the industry and the academic world,
-the developments in formal methods have become
-increased. These developments are specially concerned with techniques
-such as
-\textit{model-checking} and \textit{theorem proving}.
-Model-checking is technique based on constructing a finite model of a
-problem and exhaustively checking the satisfaction of certain
-properties. Model-checking is
-a strong technique, as it is \emph{decidable}, but it presents some
-limitations$:$ $(i)$~it can validate a
-model of a certain system but not the system itself, and
-$(ii)$~verification even for simple systems might need huge amounts
-of space and time. 
 
-Theoretically, interactive theorem proving techniques are able to
-solve any problem proposed in practice, but it presents some
-disadvantages$:$ $(i)$~it is \emph{undecidable}, $(ii)$~the tools are
-only capable of assisting an engineer in the process of constructing a
-proof, and $(iii)$~it requires expressing and understanding the
-semantics underlying the
-programming language in the logic of the theorem prover, in order to
-do program verification. 
+%Several decades ago, the \emph{formal methods} were considered as a merely
+%theoretical issue in computer science, not suitable for real
+%problems: \emph{complicated} notations taken from the logic and
+%the lack of tools supporting formal methods could not compete with the
+%tools and methods used in industry for software development. Recently, 
+%this has been changing. There are several reasons for this
+%change. Firstly, the specification languages are now closer to
+%programming languages than ever before and the techniques used are
+%more suitable to the actual programming paradigms (object oriented
+%and distributed programming). Secondly, industry has started to feel
+%the need for certified software. An
+%example~\cite{Borger99programmer}: during $1995$,
+%\textsc{Intel} found a problem with its microprocessors
+%\textsc{Pentium}. This company was forced to replace around two
+%million processors. Thus, it realized that the costs of formal
+%verification would have been much lower than the costs required to
+%fix this bug.
+
+Traditionally, formal methods are concerned with the verification of
+programs, using \textit{model checking} or 
+\textit{theorem proving} techniques. Drawbacks of both these
+techniques is that they require a good inside in the particular
+verification technique and tool (\emph{e.g.}~to construct the model
+that is input for the model checker or to formalise the programming
+language in the logic of the theorem prover), and that it is often time
+and memory consuming. By providing a front-end to the verification
+tool, which translates the program (and possibly also its
+specification) automatically into the input language for the tool,
+this first drawback partially can be overcome. But, when the program
+does not satisfy the specification, one still has to trace the problem 
+in the language of the verification tool.
+
+
+%Currently, with the interest of the industry and the academic world,
+%the developments in formal methods have become
+%increased. These developments are specially concerned with techniques
+%such as
+%\textit{model-checking} and \textit{theorem proving}.
+%Model-checking is technique based on constructing a finite model of a
+%problem and exhaustively checking the satisfaction of certain
+%properties. Model-checking is
+%a strong technique, as it is \emph{decidable}, but it presents some
+%limitations: $(i)$\ it can validate a
+%model of a certain system but not the system itself, and
+%$(ii)$\ verification even for simple systems might need huge amounts
+%of space and time. 
+
+%Theoretically, interactive theorem proving techniques are able to
+%solve any problem proposed in practice, but it presents some
+%disadvantages: $(i)$\ it is \emph{undecidable}, $(ii)$\ the tools are
+%only capable of assisting an engineer in the process of constructing a
+%proof, and $(iii)$\ it requires expressing and understanding the
+%semantics underlying the
+%programming language in the logic of the theorem prover, in order to
+%do program verification. 
 %Testing checks whether a program produces
 %correct output on certain input. This technique is important for
 %checking some properties before applying a formal technique. A
@@ -116,96 +198,263 @@ do program verification.
 %sometimes it is not possible to check all possible
 %inputs. 
 
-Recently, several approaches have been
-proposed to overcome these kind of problems and although they can not
-actually replace formal verification techniques, they constitute
-important alternatives for checking the behavior of software
-systems. \emph{Run-time
-checking} is a kind of extended checking where, in addition to checking
-the input-output behavior, it is checked whether certain specific
-conditions are
-satisfied at particular points in the program. For checking these
-conditions, the original program is expressed into another
-one
-which can be then executed. If the execution throws an exception,
-this indicates that the original program does not fulfill the
-expected conditions.
+To make the use of formal methods more efficient, some more
+lightweigth approaches such as
+\textit{run-time checking} and
+\textit{static checking} have been developed. These techniques allow 
+to do quick checks on a program specification in order to find the
+most common errors. Using these techniques, one does not get a full
+correctness proof, but one can increase the trust in the correctness
+of the implementation \emph{w.r.t.}~the specification.
 
-\emph{Static checking} techniques check the behavior of programs
-from their source code. This technique can be complemented with
-an automatic theorem prover which automatically can detect
-some specific problems. It is expected not to expend too much time in
-this process.
+Run-time checking is a technique where a program is transformed into a 
+program which tests several safety conditions at run-time,
+\emph{e.g.}~a program can be transformed so that every time a method 
+is called, it is tested whether the precondition of this method is
+satisfied at the calling point. Typically, if such a condition is
+violated the transformed program will throw an exception, indicating
+which condition was violated at which program point. The specification
+language \jml\ that is in this paper ships with a run-time assertion
+checker, which can perform such program transformations. Run-time
+checking can be seen as extended testing: not only the input-output
+behaviour is tested, but also the internal state of the program at
+dedicated points. An important advantage of run-time checking is that
+one does not have to change to another formalism, all the work is done
+at the level of the programming language.
 
-When using static and run-time checking techniques on software systems,
-it is possible to state
-some specifications which we are interested to check. These
-specifications can be provided to the checking tools as part of the
-source code and written by using a suitable
-specific-specification language. 
+Other examples of run-time checkers are \insPP~\cite{InsurePP}, which
+checks several memory operations for \cPP programs, and
+\jass~\cite{bartetzko01assertions} which allows to check certain
+assertions for \java\ programs. A special feature of \jass\ are the
+so-called trace assertions, which allow to check that methods are
+invoked in a prescribed order.
 
-Currently, several specification languages have been proposed
-for \java~and \cPP. \jml~\ (\java~Model
-Language)~\cite{LeavensBR00} is a tool developed at the Iowa State
-University
-doing run-time checking. Its specification language follows the
-\eiff's approach of \emph{Design by
-Contract}~\cite{Meyer97}, hence
-it is possible to state the functional behavior of methods as
-pre- and postconditions as well as class
-invariants. For
-constructing predicates, in addition to the \java~boolean operators, 
-\jml~relies on several logical operators such as the equivalence,
-\texttt{<==>}, and the implication \texttt{==>}, and several
-quantifiers as the existential,
-\texttt{$\backslash$exists}, and the universal, \texttt{$\backslash$forall}.
-Additionally, in \jml~ it is possible to use method
-invocations inside the predicates provide that
-those do not have \emph{side effects}.
+%. This checker keeps track of a \cPP\ program and
+%complains whether a block of memory is liberated too many times, a memory
+%block is used without being initialized or there exist memory leaks.
 
-\insPP~is a automatic run-time error detector for
-\cPP~\cite{InsurePP}. This checker keeps track of a \cPP~program and
-complains whether a block of memory is liberated too many times, a memory
-block is used without being initialized or there exist memory leaks.
-
-\jass\~ (\java~With Assertions)~\cite{bartetzko01assertions} is a Design
-by Contract extension for \java~which allows to annotate
-\java~programs. The \jass~tool~\cite{JassUrl} is developed at the
-University of Oldenburg by the group Semantics. \jass~supports the
-concept of \emph{trace assertions} which are used to monitor the
-dynamic behavior of objects in run-time. This language provides a
-construct called \texttt{changeonly} to specify the list of
-attributes than \emph{may} be modified for a method invocation. This
-list of attributes just consist of identifiers separated by ``.''.
-
-\escj~\cite{ESCJavaUrl} is a specification language developed at
-\csrc, conceived as a subset of the \jml~specification
-language~\cite{EscJmlDiff}. The \escj~tool advocates for doing static
-checking of annotated \java~programs. Additionally it relies on an
-automatic theorem prover for checking some specific problems. These
-problems cover \texttt{ArrayIndexOutOfBoundExceptions},
-\texttt{NullPointerExceptions} and \emph{Deadlock} and \emph{Race}
-problems in multi-thread \java~programs. \escj~neither is sound nor
-complete, hence whether it issues a warning it does not necessary
-means that some problem occurs. \escj~ships with a specific construct,
-\texttt{modifies}, for specifying the \emph{assignable} behavior of a
-method, but unlike the \jass~tool the variable locations one can
-annotate as assignable can become intricate. Thus, it is possible,
-for instance, to state as assignable all elements of some array
-(\texttt{a[$*$]}) or the fields of some object
-expression $e$ (\texttt{fields\_of($e$)}). \escj~tool does not check
-the correct specification of the assignable behavior of a method,
-hence some verifications problems arise.
-%The annotation language for \eiff~is the first
-%example of such a specification language, following the \emph{design
-%by contract} approach~\cite{Meyer97}. 
+%Recently, several approaches have been
+%proposed to overcome these kind of problems and although they can not
+%actually replace formal verification techniques, they constitute
+%important alternatives for checking the behavior of software
+%systems. \emph{Run-time
+%checking} is a kind of extended checking where, in addition to checking
+%the input-output behavior, it is checked whether certain specific
+%conditions are
+%satisfied at particular points in the program. For checking these
+%conditions, the original program is expressed into another
+%one
+%which can be then executed. If the execution throws an exception,
+%this indicates that the original program does not fulfill the
+%expected conditions.
 
 
+Complementary to run-time checking is so-called static checking, where 
+one tries to find problems in a program by using static analysis
+techniques. Static checking can be considered as an extended form of
+type checking, by using static checking many potential run-time
+problems already can be found at compile-time.
+Within this paper, we develop a static checking method to check
+so-called assignable clauses, \emph{i.e.}~the part of the
+specification which states which variables may be changed by a method.
+Typically, static checking gives quick feedback on a program and can
+find many common errors, so that more expensive formal verification
+techniques can concentrate on the essential parts of the program.
 
-\paragraph{\bf The side-effects freeness problem.}
-The functional behavior as can be expressed by pre- and postconditions
-is not enough to reason about arbitrary method invocations. Suppose we 
-have the example presented below. 
+
+% check the behavior of programs
+%from its source code. This technique can be complemented with
+%an automatic theorem prover which automatically can detect
+%some specific problems. It is expected not to expend too much time in
+%this process.
+
+%When using static and run-time checking techniques on software systems,
+%it is possible to state
+%some specifications which we are interested to check. These
+%specifications can be provided to the checking tools as part of the
+%source code and written by using a suitable
+%specific-specification language. 
+
+\paragraph{\bf{Formal methods for \java}}
+Recently, much work on (light-weight) formal methods has focused on
+\java\ and \textsc{Javacard}. Several specification languages, such as
+\jml~\cite{LeavensBR00}~and \jass~\cite{bartetzko01assertions},
+have been developed which are especially tailored to
+\java. \jml\ (\java\ modeling language) is developed by Leavens \emph{et 
+al.}~at Iowa State University. As mentioned above, together with the
+specification language a run-time assertion checker is
+developed. \jml\ follows the \emph{Design by Contract}
+approach~\cite{Meyer97} as advocated in \eiff. It allows to state pre
+and post conditions of methods as well as class invariants. The
+predicates are boolean \java\ expressions, with some
+specification-specific constructs. \jml\ is designed to be easy to
+understand for a \java\ programmer.
+
+
+%proposed
+%for \java\ and \cPP. \jml\ \ (\java\ Model
+%Language)~\cite{LeavensBR00} is a tool developed at the Iowa State
+%University
+%doing run-time checking. Its specification language follows the
+%\eiff's approach of \emph{Design by
+%Contract}~\cite{Meyer97}, hence
+%it is possible to state the functional behavior of methods as
+%pre- and postconditions as well as class
+%invariants. For
+%constructing predicates, in addition to the \java\ boolean operators, 
+%\jml\ relies on several logical operators such as the equivalence,
+%\texttt{<==>}, and the implication \texttt{==>}, and several
+%quantifiers as the existential,
+%\texttt{$\backslash$exists}, and the universal, \texttt{$\backslash$forall}.
+%Additionally, in \jml\  it is possible to use method
+%invocations inside the predicates provide that
+%those do not have \emph{side effects}.
+
+
+%\jass\\  (\java\ With Assertions)~\cite{bartetzko01assertions} is a Design
+%by Contract extension for \java\ which allows to annotate
+%\java\ programs. The \jass\ tool~\cite{JassUrl} is developed at the
+%University of Oldenburg by the group Semantics. \jass\ supports the
+%concept of \emph{trace assertions} which are used to monitor the
+%dynamic behavior of objects in run-time. This language provides a
+%construct called \texttt{changeonly} to specify the list of
+%attributes than \emph{may} be modified for a method invocation. This
+%list of attributes just consist of identifiers separated by ``.''.
+
+%\escj~\cite{ESCJavaUrl} is a specification language developed at
+%\csrc, conceived as a subset of the \jml\ specification
+%language~\cite{EscJmlDiff}. The \escj\ tool advocates for doing static
+%checking of annotated \java\ programs. Additionally it relies on an
+%automatic theorem prover for checking some specific problems. These
+%problems cover \texttt{ArrayIndexOutOfBoundExceptions},
+%\texttt{NullPointerExceptions} and \emph{Deadlock} and \emph{Race}
+%problems in multi-thread \java\ programs.
+
+\jml\ (and variations) is used as input language for several
+tools. Apart from the \jml\ tool mentioned above, it is also used as
+input for \emph{e.g.}~the \textsc{Loop}~\cite{LoopURL} tool, which translates
+\jml-annotated \java\ programs into a series of input theories for the 
+theorem prover \textsc{pvs}~\cite{?}, and for \escj~\cite{ESCJavaUrl}, 
+which is a static checker for \java. \escj\ allows the user to
+annotate the program and then tries to check the specification by
+using an automatic, dedicated theorem prover. It is especially tuned
+to find possible errors such as array index out of bounds errors, null 
+pointer errors, deadlocks and race conditions, but it also can check
+arbitrary specifications. If it cannot establish a certain
+specification, it issues a warning. As \escj\ neither is sound nor
+complete, a warning does not necessarily mean that the program is incorrect.
+
+
+
+\paragraph{\bf{Static checking of assignable clauses}}
+When checking method specifications for object-oriented programs,
+verification should be done in a modular way. When one encounters a
+method call in the method that one is checking, one does not know
+which method actually will be called~--~due to dynamic
+binding. Following the behavioural subtype approach~\cite{LiskovW?},
+the method specification corresponding with the static type of the
+receiver of the method call will be used. Additionally, for each
+overriding method in a subclass, one has to show that it satisfies the 
+specification of the superclass. 
+
+When reasoning in such a way, pre and post conditions of methods alone 
+are not sufficient, one also needs to know which variables may have
+been changed by a method. Consider for example the following annotated 
+code.
+
+%<<<<<<< floc-2002.tex
+%=======
+%Recently, several approaches have been
+%proposed to overcome these kind of problems and although they can not
+%actually replace formal verification techniques, they constitute
+%important alternatives for checking the behavior of software
+%systems. \emph{Run-time
+%checking} is a kind of extended checking where, in addition to checking
+%the input-output behavior, it is checked whether certain specific
+%conditions are
+%satisfied at particular points in the program. For checking these
+%conditions, the original program is expressed into another
+%one
+%which can be then executed. If the execution throws an exception,
+%this indicates that the original program does not fulfill the
+%expected conditions.
+
+%\emph{Static checking} techniques check the behavior of programs
+%from their source code. This technique can be complemented with
+%an automatic theorem prover which automatically can detect
+%some specific problems. It is expected not to expend too much time in
+%this process.
+
+%When using static and run-time checking techniques on software systems,
+%it is possible to state
+%some specifications which we are interested to check. These
+%specifications can be provided to the checking tools as part of the
+%source code and written by using a suitable
+%specific-specification language. 
+
+%Currently, several specification languages have been proposed
+%for \java~and \cPP. \jml~\ (\java~Model
+%Language)~\cite{LeavensBR00} is a tool developed at the Iowa State
+%University
+%doing run-time checking. Its specification language follows the
+%\eiff's approach of \emph{Design by
+%Contract}~\cite{Meyer97}, hence
+%it is possible to state the functional behavior of methods as
+%pre- and postconditions as well as class
+%invariants. For
+%constructing predicates, in addition to the \java~boolean operators, 
+%\jml~relies on several logical operators such as the equivalence,
+%\texttt{<==>}, and the implication \texttt{==>}, and several
+%quantifiers as the existential,
+%\texttt{$\backslash$exists}, and the universal, \texttt{$\backslash$forall}.
+%Additionally, in \jml~ it is possible to use method
+%invocations inside the predicates provide that
+%those do not have \emph{side effects}.
+
+%\insPP~is a automatic run-time error detector for
+%\cPP~\cite{InsurePP}. This checker keeps track of a \cPP~program and
+%complains whether a block of memory is liberated too many times, a memory
+%block is used without being initialized or there exist memory leaks.
+
+%\jass\~ (\java~With Assertions)~\cite{bartetzko01assertions} is a Design
+%by Contract extension for \java~which allows to annotate
+%\java~programs. The \jass~tool~\cite{JassUrl} is developed at the
+%University of Oldenburg by the group Semantics. \jass~supports the
+%concept of \emph{trace assertions} which are used to monitor the
+%dynamic behavior of objects in run-time. This language provides a
+%construct called \texttt{changeonly} to specify the list of
+%attributes than \emph{may} be modified for a method invocation. This
+%list of attributes just consist of identifiers separated by ``.''.
+
+%\escj~\cite{ESCJavaUrl} is a specification language developed at
+%\csrc, conceived as a subset of the \jml~specification
+%language~\cite{EscJmlDiff}. The \escj~tool advocates for doing static
+%checking of annotated \java~programs. Additionally it relies on an
+%automatic theorem prover for checking some specific problems. These
+%problems cover \texttt{ArrayIndexOutOfBoundExceptions},
+%\texttt{NullPointerExceptions} and \emph{Deadlock} and \emph{Race}
+%problems in multi-thread \java~programs. \escj~neither is sound nor
+%complete, hence whether it issues a warning it does not necessary
+%means that some problem occurs. \escj~ships with a specific construct,
+%\texttt{modifies}, for specifying the \emph{assignable} behavior of a
+%method, but unlike the \jass~tool the variable locations one can
+%annotate as assignable can become intricate. Thus, it is possible,
+%for instance, to state as assignable all elements of some array
+%(\texttt{a[$*$]}) or the fields of some object
+%expression $e$ (\texttt{fields\_of($e$)}). \escj~tool does not check
+%the correct specification of the assignable behavior of a method,
+%hence some verifications problems arise.
+%%The annotation language for \eiff~is the first
+%%example of such a specification language, following the \emph{design
+%%by contract} approach~\cite{Meyer97}. 
+
+
+
+%\paragraph{\bf The side-effects freeness problem.}
+%The functional behavior as can be expressed by pre- and postconditions
+%is not enough to reason about arbitrary method invocations. Suppose we 
+%have the example presented below. 
+%>>>>>>> 1.16
 \begin{alltt}
 public class C\verb!{!
   int[] arr;
@@ -215,51 +464,118 @@ public class C\verb!{!
   public void m()\verb!{!
     arr = new int[5]; n();
   \verb!}!
+  /*@
+    ensures true;
+   */
   public void n()\verb!{}!
 \verb!}!
 \end{alltt}
-The functional behavior of \texttt{n} is not enough to \emph{ensure}
-the post-condition of \texttt{m}, \emph{i.e.}, to ensure that the
-length of \texttt{arr} still will be greater or equal than $4$ after
-the invocation of \texttt{n}. Hence, it arises the need of specifying
-the \emph{changeable} behavior of methods,\emph{i.e}, of specifying what
-is set of variables locations a certain method modifies.
+To establish whether \texttt{m} will satisfy its postcondition, the
+functional specification of \texttt{n} alone does not give enough
+information, one also needs to know whether \texttt{n} might change
+the variable \texttt{arr}. Therefore, \jml\ and \escj\ allow the user
+to specify a so-called assignable clause,  using the
+keyword \texttt{modifies}\footnote{\jml\ also allows the alternative
+keywords \texttt{assignable} and \texttt{modifiable}}, specifying a
+set of locations (typically variables) that may be modified by a
+method. An assignable clause can contain variable names,
+but also more  complicated expressions, \emph{e.g.}~to denote all the
+elements in an array. \jml\ even allows more general expressions to
+occur in the assignable clause.
+
+However, as the information that is given in the modifies clause is
+crucial in the verification of other methods, it is important that the
+modifies clause is correct. An incorrect modifies clause can cause
+incorrect method specifications to be accepted, which can then cause
+other incorrect method specifications to be accepted, and so
+on... \escj\ does not check assignable clauses, it only uses them when
+checking method calls. But when specifying a real-life application it
+is very easy to forget to mention that a certain variable may be
+changed~--~see for example our experiences with the specification and
+static checking of an industrial case study: Gemplus' electronic
+purse~\cite{CatanoH02a}. Therefore, it is important to have a tool
+which checks assignable clauses, even when it is only on a syntactic
+basis, without taking aliasing into account. Such a tool is presented
+in this paper.
+
+The tool works completely on a syntactic basis. It analyses the
+program code, and for every assignment (and syntactic variation of
+this) it checks whether this does not possibly violate the specified
+modifies clause. Similarly, for every method call it encounters, it
+checks whether this method call does not violate the modifies clause
+of the calling method. Currently, the tool does not work with model
+variables (specification only variables), but these could be handled
+in a similar way.
+
+The tool is neither sound nor complete, as it does not handle
+aliasing, and it does not keep track of variable updates. For example,
+for a program fragment \texttt{i++; a[i] = 3;} the tool will accept a
+modifies clause \texttt{modifies a[i];}. However, we feel that in
+practice this is not such a heavy limitation. When specifying a method
+in which variables are modifies in a complicated or tricky way, a
+specifier will be very carefull when writing the modifies clause,
+while for simple methods he is more likely to forget to mention some
+variables. Moreover, one can always fall back on complete verification
+techniques, such as advocated in the \textsc{Loop} project.
+
+%The functional behavior of \texttt{n} is not enough to \emph{ensure}
+%the post-condition of \texttt{m}, \emph{i.e.}, to ensure that the
+%length of \texttt{arr} still will be greater or equal than $4$ after
+%the invocation of \texttt{n}. Hence, it arises the need of specifying
+%the \emph{changeable} behavior of methods,\emph{i.e}, of specifying what
+%is set of variables locations a certain method modifies.
 
 
 
-
-\paragraph{\bf This paper.}We propose a static checker for the correct
-specification of the
-\emph{assignable} (as a subset of \emph{modifiable}) behavior of
-\jml~annotated programs. For this purpose, we define a set
-of rules for each \java~construct which state the variable locations
-these instructions \emph{may} modify. This checker carries out an
-syntactical analysis of the source program and checks whether its
-methods declarations fulfill their assignable specifications. By using
-these rules one can detect errors such as
-declaring a method without \emph{side-effects} when it actually modifies 
-some variable location. Our rules are neither sound nor complete
-(following the \escj~approach), as we can not detect the most subtle
-errors since they require a detailed analysis, but using them the
-most simple errors can be detected quickly. We have developed the tool
-\modtool~which implements these rules, by using the Abstract syntax
-tree generated by the parser of \jml. The feasibility of our approach is
-shown by presenting some gaps found in the process of checking the
-specification of the
-assignable behavior of a realistic case study~\cite{CatanoH02a}.
+%\escj\ ships with a specific construct,
+%\texttt{modifies}, 
 
 
-The rest of this paper is organized as follows$:$
-Section~\ref{sec-esc-prg} presents briefly the specification language
-\escj~together with its most important assertion
-constructs. Section~\ref{sec-syn-met-che-ass-cla}
-presents our approach for checking assignable clauses and the
-definition of our rules. Section~\ref{sec-che-for-ass-cla}
-presents our assignable checker (\modtool) implementing these
-rules. Additionally, we discuss some problems we have found using our
-tool on a realistic case study \emph{Formal Specification and Static
-Checking of \gplus's Electronic Purse Using
-\textsc{Esc/Java}}~\cite{CatanoH02a}. Finally,
+%for specifying the \emph{assignable} behavior of a
+%method, but unlike the \jass\ tool the variable locations one can
+%annotate as assignable can become intricate. Thus, it is possible,
+%for instance, to state as assignable all elements of some array
+%(\texttt{a[$*$]}) or the fields of some object
+%expression $e$ (\texttt{fields\_of($e$)}). \escj\ tool does not check
+%the correct specification of the assignable behavior of a method,
+%hence some verifications problems arise.
+
+
+%\paragraph{\bf This paper.}We propose a static checker for the correct
+%specification of the
+%\emph{assignable} (as a subset of \emph{modifiable}) behavior of
+%\jml\ annotated programs. For this purpose, we define a set
+%of rules for each \java\ construct which state the variable locations
+%these instructions \emph{may} modify. This checker carries out an
+%syntactical analysis of the source program and checks whether its
+%methods declarations fulfill their assignable specifications. By using
+%these rules one can detect errors such as
+%declaring a method without \emph{side-effects} when it actually modifies 
+%some variable location. Our rules are neither sound nor complete
+%(following the \escj\ approach), as we can not detect the most subtle
+%errors since they require a detailed analysis, but using them the
+%most simple errors can be detected quickly. We have developed the tool
+%\modtool\ which implements these rules, by using the Abstract syntax
+%tree generated by the parser of \jml. The feasibility of our approach is
+%shown by presenting some gaps found in the process of checking the
+%specification of the
+%assignable behavior of a realistic case study~\cite{CatanoH02a}.
+
+\paragraph{\bf{Related work}}
+
+
+\paragraph{\bf{Organisation}}
+
+The rest of this paper is organized as follows:
+Section~\ref{sec-esc-prg} briefly presents the the most important
+assertion constructs of of \jml\ and \escj. Then Section~\ref{sec-ass} 
+discusses the meaning of the assignable clause in more detail.
+Section~\ref{sec-syn-met-che-ass-cla}
+presents the rules that we use to check assignable clauses, and
+Section~\ref{sec-che-for-ass-cla} discusses how we have implemented
+this on top of the \jml\ parser. Section~\ref{sec-example} then
+discusses how we used the tool to improve the specification of the
+electronic purse case study~\cite{CatanoH02a}. Finally,
 Section~\ref{sec-con-and-fut-wor} gives conclusions and presents
 future work.
 
@@ -268,95 +584,122 @@ future work.
 
 
 
-\section{Static checking of \java~programs with \escj}
+\section{JML and ESC/Java specifications}
 \label{sec-esc-prg}
-\escj~is a static checker for \java~programs developed
-at \csrc~\cite{ESCJavaUrl} which allows a user to find common
-programming errors. It relies on a dedicated theorem prover to
-find specific problems such as\texttt{NullPointerExceptions},
-\texttt{ArrayIndexOutOfBoundExceptions},
- and \emph{Deadlock} and \emph{Race}
-problems in multi-thread \java~programs.
+%\escj\ is a static checker for \java\ programs developed
+%at \csrc~\cite{ESCJavaUrl}, allowing a user to find common programming
+%errors, such as nullpointer exceptions, array index out of bound
+%exceptions, deadlocks and race conditions. It does this by generating
+%appropriate proof obligations and sending these off to an automatic,
+%dedicated theorem prover. A user can specify additional class and
+%method specifications (\emph{e.g.}~class invariants, pre and post
+%conditions), which the tool will also try to check.  If the underlying
+%theorem prover cannot establish a certain proof obligation, the tool
+%issues a warning. Such a warning does not necessarily mean that the
+%program is wrong, since the \escj\ approach is neither sound nor
+%complete. \escj\ expressions are boolean \java\ expressions, extended
+%with several specification-specific constructs. 
 
-The basic idea is that
-a user specifies the behavior of a class and its methods, by
-using the specification language of \escj. This
-behavior can be expressed as \textit{preconditions},
-\textit{postconditions} and \textit{class invariants}. The \escj~tool
-checks whether the implementation satisfies the given
-specification and it issues a warning 
-message if it can not establish this. Such a
-warning does not necessarily mean that the program is
-wrong, since the \escj~approach is neither sound nor
-complete. \escj~is enriched with several
-specific-specification constructs. Among them on can find the
-\texttt{modifies} one. This construct allow one to model the
-assignable behavior of a method, although this kind of specification
-are not checked by the tool.
+%It relies on a dedicated theorem prover to
+%find specific problems
+%The basic idea is that
+%a user specifies the behavior of a class and its methods, by
+%using the specification language of \escj. This
+%behavior can be expressed as \textit{preconditions},
+%\textit{postconditions} and \textit{class invariants}. The \escj\ tool
+%checks whether the implementation satisfies the given
+%specification and 
 
-Below, we present
-the main \escj~constructs together with an example of their
-use. Their full description can be found in~\cite{LeinoNS00}. 
+As mentioned above, the \jml\ specification language is designed to be 
+easy to use for \java\ programmers. In particular, \jml\ expressions
+are side-effect free, boolean \java\ expressions, extended with some
+specification-specific constructs. The specification language for
+\escj\ used the same design principles. Initially there were some
+differences between the two language, but to enable the use of
+different tools on the same specification, effort has been put in
+making the two languages converge~\cite{EscJmlDiff}. In this paper, we 
+do not really distinguish between the two languages\footnote{In
+particular, we do not consider \jml's model variables}, although we
+take the more general format of \jml\ for expressions that can occur
+within assignable clauses.
+
+Below, we briefly present the main \jml\ and \escj\ constructs,
+followed by a simple method specification example. A complete
+description can be found in~\cite{LeavensBR00,LeinoNS00}.
 
 
 \paragraph{\bf Constructs for specifying methods} 
 \begin{itemize}
-\item{\texttt{requires P}.} 
-This construct specifies a precondition {\tt P}. 
-When \escj~checks the body of a
-method, it assumes that \texttt{P} holds initially and when checking
-a method call, \escj~will issue a warning if 
-it can not establish that \texttt{P} holds at the call point. 
+\item{\texttt{requires P}: precondition {\tt P}.}
+%This construct specifies a precondition {\tt P}. 
+%When \escj\ checks the body of a
+%method, it assumes that \texttt{P} holds initially and when checking
+%a method call, it will issue a warning if 
+%it can not establish that \texttt{P} holds at the call point. 
  
-\item{\texttt{ensures Q}.} 
-This construct specifies a postcondition \texttt{Q}. This postcondition
-is checked against the body of method and assumed for any method
-invocation if the method terminates normally (without throwing an
-exception).
+\item{\texttt{ensures Q}: postcondition {\tt Q}.} 
+%This construct specifies a postcondition \texttt{Q}. This postcondition
+%is checked against the body of method and assumed for any method
+%invocation if the method terminates normally (without throwing an
+%exception).
  
-\item{\texttt{exsures (E) R}.}
-This construct specifies an exceptional condition \texttt{R}. This
-condition is
-supposed to hold if the method finishes abruptly and if
-the exception \texttt{e} that is thrown is a subclass of \texttt{E}. 
+\item{\texttt{exsures (E) R}: exceptional postcondition \texttt{R},
+\emph{i.e.}~if the method terminates abruptly with exception
+\texttt{E}, then \texttt{R} should be satisfied.}
+%This construct specifies an exceptional condition \texttt{R}. This
+%condition is
+%supposed to hold if the method finishes abruptly and if
+%the exception \texttt{e} that is thrown is a subclass of \texttt{E}. 
+
+\item{\texttt{modifies L}: the set of variable locations that
+a method may modify. (Section~\ref{sec-ass} below discuss this in more 
+detail)}
  
-\item{\texttt{modifies L}.} 
-This construct specifies \texttt{L} as the set of variable locations that
-a method \emph{may} modify.
 \end{itemize}
  
  
  
 \paragraph{\bf Specification expressions} 
 \begin{itemize} 
-\item{\texttt{==>}} is the logical implication. So, \texttt{P 
-==> Q} is true if and only if \texttt{P} is false or \texttt{Q} is 
-true, where \texttt{P} and \texttt{Q} are specification expressions of  
-\texttt{boolean} type. Furthermore, \texttt{<==>} represents the logical
-equivalence and \texttt{<=!=>} specifies non-equivalence. 
+\item{\texttt{==>}, \texttt{<==>} and \texttt{<=!=>}}: logical
+implication, equivalence, and non-equivalence. 
+%So, \texttt{P 
+%==> Q} is true if and only if \texttt{P} is false or \texttt{Q} is 
+%true, where \texttt{P} and \texttt{Q} are specification expressions of  
+%\texttt{boolean} type. Furthermore, \texttt{<==>} represents the logical
+%equivalence and \texttt{<=!=>} specifies non-equivalence. 
  
 \item {($\backslash$\texttt{forall T V; E)} and 
-($\backslash$\texttt{exists T V; E})} are quantifier expressions (of 
-type \texttt{boolean}).  The first expression denotes that \texttt{E}
-is true
-for all substitutions of values of type \texttt{T} for the bound 
-variable \texttt{V}. The second one denotes that \texttt{E} is true 
-for a substitution of a value of type \texttt{T} for the bound 
-variable \texttt{V}. 
+($\backslash$\texttt{exists T V; E})}: universal and existential
+quantification. 
+% are quantifier expressions (of 
+%type \texttt{boolean}).  The first expression denotes that \texttt{E}
+%is true
+%for all substitutions of values of type \texttt{T} for the bound 
+%variable \texttt{V}. The second one denotes that \texttt{E} is true 
+%for a substitution of a value of type \texttt{T} for the bound 
+%variable \texttt{V}. 
  
-\item{\texttt{$\backslash$old(E)}} is used within a postcondition,
-where it denotes the value of the expression \texttt{E} in the
-pre-state of the method.
+\item{\texttt{$\backslash$old(E)}}: 
+the value of the expression \texttt{E} in the pre-state of the method
+(in postconditions only).
  
-\item {\tt$\backslash$result} represents the value returned by 
-a non-void method. It can only be used within an
-\texttt{ensures} clause.
-\end{itemize}
-Below we present a typical annotation example using 
-\escj. This example was taken from the formal specification of an
-\emph{electronic purse} as presented in~\cite{CatanoH02a}\footnote{The whole
-specification can be taken
-from~\cite{CatanoH01URL}.}. 
+\item {\tt$\backslash$result}: method return value (postcondition
+only).
+%returned by 
+%a non-void method. It can only be used within an
+%\texttt{ensures} clause.
+\end{itemize} 
+
+As an example of a method specification, we give the
+specification of the method \texttt{addCurrency} from the electronic
+purse case study~\cite{CatanoH02a}. This specification has been
+checked with \escj.
+%A typical annotation example using 
+%\escj. This example was taken from the formal specification of an
+%\emph{electronic purse} as presented in~\cite{CatanoH02a}\footnote{The whole
+%specification can be taken
+%from~\cite{CatanoH01URL}.}. 
 %%%%%%%
 \begin{alltt}
 /*@
@@ -371,16 +714,12 @@ void addCurrency(byte cur)\verb!{!
 \end{alltt}
 %%%%%%%%
 The \texttt{addCurrency} method belongs
-to a class \texttt{Currencies}. This class stores all currencies 
+to the class \texttt{Currencies}, which stores all currencies 
 supported by the purse application. The method 
 \texttt{addCurrency} adds a new currency to the list of valid 
-currencies. This list is represented by the 
-array \texttt{data}. The \texttt{modifies} clause declared in the 
-method's header specifies that 
-this method \emph{may} modify \texttt{nbData} and 
-\texttt{data} in the position \texttt{nbData}\footnote{More precisely,
-it specifies that the method only may modify these instance variables
-and the local variables and formal parameters of the method.}. The
+currencies (the array \texttt{data}). The \texttt{modifies} clause
+specifies that this method may modify \texttt{nbData} and 
+\texttt{data} in the position \texttt{nbData}. The
 postcondition of the method \texttt{addCurrency} (written as 
 \texttt{ensures} clauses) expresses that if \texttt{nbData} has not 
 yet reached the threshold value \texttt{MAX$\_$DATA}, \texttt{nbData} 
@@ -392,115 +731,59 @@ Inside the postcondition, the expression
 
 
 
+\section{JML's assignable clauses}
+\label{sec-ass}
 
+As mentioned above, an assignable clause specifies which variables may 
+be modified by a method; all other variables \emph{should} remain
+unchanged. Within an assignable clause, a list of so-called assignable 
+expressions is specified which describe which memory locations may be
+modified. The exact syntax for an assignable
+expresssion is given in Figure~\ref{fig-syn-mod-spe}.
+%The syntax of specification of a assignable clause in a
+%\java\ annotated program
+%is presented by the figure~\ref{fig-syn-mod-spe}. 
+An assignable expression can be an identifier or a simple array
+indexing expression denoting a single location, but it can also denote
+a set of locations. For example,
+\texttt{a[i\dots j]} denotes the locations
+\texttt{a[i], a[i+1], \dots, a[j] }. Similarly,
+\texttt{a[*]} denotes all locations
+\texttt{a[0], \dots, a[a.length - 1]}. The assignable clause also can 
+contain an expression
+\fieldsofarg{x}, where \texttt{x} is some
+object (possibly \texttt{this}) or it is the
+\reach\ of some object. This means that all the
+fields of the objects denoted by \texttt{x} may be modified. 
+The expression \reacharg{y}, where \texttt{y} is some 
+object, possibly \texttt{this}, denotes
+the minimal set containing \texttt{y}, the fields of \texttt{y} and
+all objects reachable from the fields of \texttt{y}.
+Finally, there are special keywords \nothing\ and
+\everything, denoting that a method may not modify 
+any variables, or may modify all variables, respectively.
 
-
-\section{A syntactical method to check assignable clauses}
-\label{sec-syn-met-che-ass-cla}
-We present a set of syntactical rules which define the conditions that
-must be fulfilled for any instruction occurring in a
-\java~annotated program. We have profited the syntax of \java~for
-defining our rules. Thus, for instance, we rely on rules for
-expressions, statements, and so on. The basic idea is that for each
-sort of instruction occurring in a method
-declaration, these rules check that the variable locations they assign
-belongs to the set of variable locations that the
-method \emph{may} modify.
-
-Our specification just does not concern with the modification but the
-assignment, hence in a context with \emph{Aliasing} we miss the
-variable modified. Thereby, suppose we have a class \texttt{C} as
-presented below. 
-%%%%%%%%
-\begin{alltt}
-public class C\verb!{!
-  O y = new O(), x = new O();    
-  //@modifies x, y.i
-  public void p()\verb!{!
-     x = y ;
-     y.i = 7;
-  \verb!}!    
-\verb!}!
-public class O\verb!{!
-  public int i;
-\verb!}!
-\end{alltt}
-%%%%%%%%%%
-The specification of the method \texttt{p} states it may modify
-\texttt{x} and
-the field \texttt{i} of the object \texttt{y}. Although the expression 
-\texttt{y.i = 7;}, in addition to modify the field \texttt{i} of the
-object \texttt{y}, modifies the field \texttt{i} of the object
-\texttt{x} (since the aliasing between \texttt{x} and \texttt{y} as
-consequence of the \emph{assignment} \texttt{x = y}), our rules
-accept as valid this specification.
-
-On the other hand, in the process of specifying abstract classes, some
-times is useful to define fields
-which \emph{represents} or \emph{depends} of certain properties of those
-classes. Due to the nature of the abstract classes it becomes not
-convenient to define these fields in an implementation
-level. \jml~provides the construct \texttt{model} to overcome this
-difficulty. This construct allow one to define fields in a
-specification level, hence they do not have to be implemented. Besides 
-this construct, \jml~provide the constructs
-\texttt{depends} and \texttt{represents}. Our specification does not do any 
-analyses of this type as ``it is reasonable to wait until we clarify
-the precise semantics of dependencies''\footnote{Text taken from an
-email from Gary Leavens.}.
-
-The rest of this section is organized as it follows. Section
-\ref{sub-sec-ass-beh} present the syntax of specification of
-assignable clause and certain other definitions used in the
-specification of our rules. Sections \ref{sub-sec-rul-con-met},
-\ref{sub-sec-rul-con-pri-suf-and-pri-exp}, \ref{sub-sec-rul-con-ass},
-\ref{sub-sec-rul-con-ope}, \ref{sub-sec-rul-con-sta}, and
-\ref{sub-sec-tra-rul} present the rules for the different
-\java~constructs. Section \ref{sub-sec-the-rel-mem} the definition of
-membership operator used in the specification of our rules.
-
-
-
-
-
-
-\subsection{Assignable Behavior}
-\label{sub-sec-ass-beh}
-\jml~as well as \escj~provides a construct for specifying the
-assignable behavior of a method. For historical reasons this construct
-can be named \texttt{assignable}, \texttt{modifiable} or
-\texttt{modifies} like in \escj. In the following we use indistinctly
-any among them. 
-
-The syntax of specification of a assignable clause in a
-\java~annotated program
-is presented by the figure~\ref{fig-syn-mod-spe}. From this scheme, it
-is possible to specify as assignable expressions like
-\texttt{a$[$i$\dots$j$]$}. A such expression declares as assignable
-the variable locations
-\texttt{a$[$i$],$a$[$i$+1],\dots$a$[$j$]$}. Something similar happens
-with an expression like
-\texttt{a$[*]$}, which denotes the variable locations
-\texttt{a$[$i$]$}, for all \texttt{i} lying between $0$ and
-\texttt{sizeOf(a)}. An expression like
-\texttt{$\backslash$fields\_of(x)} denotes \texttt{x[*]} if \texttt{x}
-is an array, otherwise the set of fields of \texttt{x}. The construct
-\texttt{$\backslash$reach} only can occur inside a \texttt{fields\_of}
-construct. An specification like \texttt{$\backslash$reach(x)} denotes
-the minimal set containing \texttt{x}, the fields of \texttt{x} and
-all objects
-reachable from the fields of \texttt{x}. A specification like
-\texttt{modifies \!\!$\backslash$nothing} expresses the method as not
-having
-side-effects. Additionally, a specification like \texttt{modifies
-\!\!$\backslash$everything} expresses that the method may modify any
-variable location.
+%collection of
+%variable of reference type, and where
+%\texttt{$\backslash$fields\_of(x)} denotes all fields of \texttt{
+%denotes \texttt{x[*]} if \texttt{x}
+%is an array, otherwise the set of fields of \texttt{x}. The construct
+%\texttt{$\backslash$reach} only can occur inside a \texttt{fields\_of}
+%construct. An specification like \texttt{$\backslash$reach(x)} denotes
+%the minimal set containing \texttt{x}, the fields of \texttt{x} and
+%all objects
+%reachable from the fields of \texttt{x}. A specification like
+%\texttt{modifies \!\!$\backslash$nothing} expresses the method as not
+%having
+%side-effects. Additionally, a specification like \texttt{modifies
+%\!\!$\backslash$everything} expresses that the method may modify any
+%variable location.
 %%%%%%%%%%%%%%%%%%
 \begin{figure}[hbt]
 \begin{tabular}{lll}
-$<$\textsf{Assignable-spec}$>$ &::= &$<$\textsf{Assignable-clause}$>$ $<$\textsf{Assignable-exps}$>$ \\
-$<$\textsf{Assignable-exps}$>$ &::= &$<$\textsf{Assignable-exp}$>$\texttt{,}$<$\textsf{Assignable-exps}$>$ $|| $\\
-                           &    &$<$\textsf{Assignable-exp}$>$ \\
+%$<$\textsf{Assignable-spec}$>$ &::= &$<$\textsf{Assignable-clause}$>$ $<$\textsf{Assignable-exps}$>$ \\
+%$<$\textsf{Assignable-exps}$>$ &::= &$<$\textsf{Assignable-exp}$>$\texttt{,}$<$\textsf{Assignable-exps}$>$ $|| $\\
+%                           &    &$<$\textsf{Assignable-exp}$>$ \\
 $<$\textsf{Assignable-exp}$>$  &::= &$<$\textsf{Identifier}$>$ $||$ \\
                            &    &$<$\textsf{Array-exp}$>$  $||$ \\
                            &  &$\backslash$\texttt{fields\_of(}$<$\textsf{Field-exp}$>$\texttt{)} $||$ \\
@@ -515,91 +798,233 @@ $<$\textsf{Field-exp}$>$      &::=  &$\backslash$\texttt{reach(}$<$\textsf{Point
                            &     &\texttt{this} \\
 $<$\textsf{Point-identif}$>$   &::=  &$<$\textsf{Identifier}$>$\texttt{.}$<$\textsf{Point-identif}$> $$||$ \\
                            &     &$<$\textsf{Identifier}$>$ \\
-$<$\textsf{Assignable-clause}$>$ &::= &\texttt{assignable} $||$  \\
-                             &    &\texttt{modifiable} $||$  \\
-                             &    &\texttt{modifies} \\
+%$<$\textsf{Assignable-clause}$>$ &::= &\texttt{assignable} $||$  \\
+%                             &    &\texttt{modifiable} $||$  \\
+%                             &    &\texttt{modifies} \\
 \end{tabular}
 \label{fig-syn-mod-spe}
-\caption{Syntax of a assignable specification}
+\caption{Grammar of the assignable clause}
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%
 %We present a set of syntactical rules which check the correct
-%specification of assignable clauses in \java~asserted programs. These
-%rules have been defined taking into account both of the \jml~grammar
+%specification of assignable clauses in \java\ asserted programs. These
+%rules have been defined taking into account both of the \jml\ grammar
 %%specification and the definition of assignable clauses presented
 %in~\cite{LeavensBR00}.
 
-We present the definition concerning the conditions about the assigment
-of expressions in \jml. This definition was taken directly
-from~\cite{LeavensBR00}.
-\begin{df}
+In \jml\ assingnable clauses are defined as
+follows~\cite{LeavensBR00}\footnote{This definition differs
+from~\cite{LeavensBR00} in that it does not consider dependencies, 
+as we do not consider model variables yet.}
+%We present the definition concerning the conditions about the assigment
+%of expressions in \jml. This definition was taken directly
+%from~\cite{LeavensBR00}.
+\begin{definition}[Assignable clause]
 \label{def-mod}
-In \jml, a method may modify a location \emph{loc} provided that$:$
+An assignable clause permits a method to modify a location \emph{loc}
+provided that:
 \begin{itemize}
-\item \emph{loc} is mentioned in the \emph{assignable} clause, or
-\item \emph{loc} is a local variable to the method, or 
-\item \emph{loc} is a parameter
+\item \emph{loc} is mentioned in the method's \emph{assignable}
+clause;
+\item \emph{loc} was not allocated when the method started execution, or
+\item \emph{loc} is local to the method (\emph{i.e.}, a local
+variable or a formal parameter)
 \end{itemize}
-\end{df}
+\end{definition}
 
-We have adapted this definition in the presentation of our \textsf{mod}
-rules. Thereby the definition~\ref{df-mod}.
-%%%%%%%%%%%%%%
-\begin{df}[\textsf{mod}]
-\label{df-mod}
-$S$\ \textsf{mod}\ $Y$ $\Leftrightarrow$ $\forall x \in LC.
-x\not\in$ \textsc{Y}$\ \Rightarrow Pre(x) = Post(x)$ \\
-where $LC$ is a global set of variable locations, $Pre(x)$
-refers to the state of $x$ before executing $S$,
-$Post(x)$ refers to the state of $x$ after executing
-$S$ and $Y$ is the set of variables that can be mentioned
-inside a assignable clause as well as parameters and local variable to the 
-method.
-\end{df}
-%%%%%%%%%%%%%%
-These \textsf{mod} rules have beeing reformulated in other more
-specific ones, considering the syntactical structure of
-\java. Consequently, we rely on \textsf{modEXP} for
-expressions, \textsf{modSTM} for statements and so on. Each rule
-checks that the set of locations modified by the corresponding
-instruction \emph{belongs} to a set of locations specifined as modified for
-the method. This concept $\underline\in$ of membership must be
-formulated considering
-the syntaxis of the assignable declarations (see
-Figure~\ref{fig-syn-mod-spe}), but intituivaly subsumes the standard
-concept $\in$. Section~\ref{sub-sec-the-rel-mem} shows the definition
-of this concept. 
+Notice that this is a syntactic definition, thus an assignment
+\texttt{x = x;} in a method \(m\) would only be correct if the 
+variable \texttt{x} is mentioned in the assignable clause of the
+method \(m\), or if \texttt{x} is local to the method.
 
-Once we count on the definition of membership for assignable
-locations, we should give the definition for the
-inclusion. Figure~\ref{def-subseq} presents the definition of inclusion of
-assignable locations.
-%%%%%%%%%%
-\begin{df}[$\sqsubseteq$]
-\label{def-subseq}
-$X \sqsubseteq Y$ iff $\forall x.\ x\underline{\in}X\Rightarrow
-x\underline\in Y$
-\end{df} 
-%%%%%%%%%%
-Definition~\ref{def-mod-lis} generalize the concept introduce by
-Definition~\ref{df-mod}, by extending it for set of instructions.
-%%%%%%%%%
-\begin{df}[$\overrightarrow{\textsf{mod}}$]
+%To ensure that a method implementation respects its assignable clause, 
+%one should state proof obligations of the form \(s\:\mathsf{mod}\:Y\),
+%for each instruction \(s\) in the method, where \textsf{mod} is
+%defined as follows\footnote{Notice that 
+
+%meaning \(s\) may only modify the variables
+%denoted by \(Y\).
+
+Below, in the next section, we present a syntactic method to derive
+whether a modification of a location (\emph{i.e.} an assignment) is
+correct. 
+
+%We have adapted this definition in the presentation of our \textsf{mod}
+%rules. Thereby the definition~\ref{df-mod}.
+%%%%%%%%%%%%%%
+%\begin{definition}[\textsf{mod}]
+%\label{df-mod}
+%\[s\:\mathsf{mod}\:Y \defn{=} \forall x \in LC.\,x \not\in Y \Rightarrow 
+%\textit{Pre}_s(x) = \textit{Post}_s(x)\]
+%%$s$\ \textsf{mod}~$Y$ $\Leftrightarrow$ $\forall x \in LC.\,
+%%x\not\in$ \textsc{Y}$\ \Rightarrow Pre(x) = Post(x)$ \\
+%where $LC$ is a set of variable locations, $s$ is some
+%instruction, $\textit{Pre}_s(x)$
+%refers to the value of $x$ before executing $s$,
+%$\textit{Post}_s(x)$ refers to the value of $x$ after executing
+%$s$ and $Y$ is the set of variables that may be modified by \(s\).
+%\end{definition}
+
+
+
+%This section 
+
+
+%We present a set of syntactical rules which define the conditions that
+%must be fulfilled for any instruction occurring in a
+%\java\ annotated program. We have profited the syntax of \java\ for
+%defining our rules. Thus, for instance, we rely on rules for
+%expressions, statements, and so on. The basic idea is that for each
+%sort of instruction occurring in a method
+%declaration, these rules check that the variable locations they assign
+%belongs to the set of variable locations that the
+%method \emph{may} modify.
+
+
+%The rest of this section is organized as it follows. Section
+%\ref{sub-sec-ass-beh} present the syntax of specification of
+%assignable clause and certain other definitions used in the
+%specification of our rules. Sections \ref{sub-sec-rul-con-met},
+%\ref{sub-sec-rul-con-pri-suf-and-pri-exp}, \ref{sub-sec-rul-con-ass},
+%\ref{sub-sec-rul-con-ope}, \ref{sub-sec-rul-con-sta}, and
+%\ref{sub-sec-tra-rul} present the rules for the different
+%\java\ constructs. Section \ref{sub-sec-the-rel-mem} the definition of
+%membership operator used in the specification of our rules.
+
+
+
+
+
+
+%\subsection{Assignable Behavior}
+%\label{sub-sec-ass-beh}
+
+
+%%%%%%%%%%%%%%
+%These \textsf{mod} rules have beeing reformulated in other more
+%specific ones, considering the syntactical structure of
+%\java. Consequently, we rely on \textsf{modEXP} for
+%expressions, \textsf{modSTM} for statements and so on. 
+%on so-called primary
+%expressions (
+
+
+\section{A syntactical method to check assignable clauses}
+\label{sec-syn-met-che-ass-cla}
+
+\subsection{Preliminaries}
+As explained above, for each language construct \(s\) we define a rule
+which allows us to derive the correctness of statements
+\MOD{s}{Y}, with the intuitive meaning: \(s\) only assigns
+to variables which are mentioned in \(Y\). Notice that \textsf{mod} is
+a syntactic notion, and we cannot give a semantic definition for
+it\footnote{In particular, a semantic definition would never be able
+to find that \texttt{x = x;} could violate an assignable clause.}, but 
+the rules presented below together define \textsf{mod}.
+Below, we will also use the notions \textsf{modFE} and
+\textsf{modSuf}, which are defined only on so- called \emph{full
+expressions} and \emph{suffix expression}, respectively. Full
+expressions and suffix expressions are defined according to the
+grammar in Figure~\ref{FigExpGrammar}. Thus, a full-expression is an
+array indexing expression, a method call, a quantified expression or a 
+suffix-expression. A suffix-expresion can be for example an
+identifier, a reference to super or this, a literal or an
+initialisation of an object or an array.
+
+This grammar is derived from
+the \jml\ grammar~\cite{LeavensBR00} and the \java\
+grammar~\cite{GoslingS?}, but with some simplifications, because we
+assume that the program is accepted by the \java\ compiler and/or the
+\jml\ tool. Thus, we can rely on the fact that the syntax will obey
+this grammar.
+
+The notions
+\textsf{modFE} and \textsf{modSuf} have the similar intuitive meaning as
+\textsf{mod}. We assume that we have predicates \textsf{full?} and
+\textsf{suffix?} which can decide whether an expression is a full
+expression, or an expression suffix, respectively.
+
+\begin{figure}[t]
+\begin{tabular}{rcl}
+\FullExp & ::= & \FullExp[\Exp\(^+\)] \option \\
+         &     & \FullExp(\Exp\(^*\)) \option \\
+         &     & \FullExp.\SufExp \option \\
+         &     & \SufExp\\
+\\
+\SufExp  & ::= & \Identifier \option \\
+         &     & \texttt{this} \option \\
+         &     & \texttt{super} \option \\
+         &     & \texttt{new} \Type [\Exp]\\
+         &     & \texttt{new} \Type (\Exp\(^*\))\\
+         &     & \textsf{Literal}
+%\FullExp & ::= & \FullExp.\SufExp \option \\
+%              && \textsf{Literal} \option \\ && \texttt{new}
+%              \Type(\Exp) \option \\ && \texttt{new} \Type[\Exp]
+%              \option \\ && \FullExp.\MethodCall \option \\ &&
+%              \MethodCall \option\\ && \SufExp \\
+%\\
+%\SufExp & ::= & \Identifier \option \texttt{super} \option
+%                \texttt{this} \option \Static \option
+%                \Identifier[\Exp]\\
+\end{tabular}
+\caption{Grammar of full expressions and expression suffices}
+\label{FigExpGrammar}
+\end{figure}
+In some cases we need to lift the notion \textsf{mod} over a set of
+instructions. Therefore, we define the following.
+
+\begin{definition}[$\overrightarrow{\textsf{mod}}$]
 \label{def-mod-lis}
-$X\ \overrightarrow{\textsf{mod}}\ Y$ iff $\forall x.\ x\in
-X\Rightarrow x\ \textsf{mod}\ Y$
-\end{df}
+\[\MODS{S}{Y} \defn{=}\forall s.\,s\in S\Rightarrow \MOD{s}{Y}\]
+%$S\ \overrightarrow{\textsf{mod}}~Y$ iff $\forall s.\ s\in
+%S\Rightarrow s\ \textsf{mod}~Y$
+\end{definition}
+
+As explained above, \(s\:\mathsf{mod}\:Y\) is correct if each variable 
+assigned to in \(s\) is mentioned in \(Y\). As mentioned in the
+previous section, the assignable clause can contain expressions as
+\fieldsofarg{this}, thus testing whether a
+variable occurs in \(Y\) cannot be done by simply using set
+membership (\(\in\)). Therefore, we use an extended notion of set
+membership, subsuming \(\in\), denoted as \(\underline\in\). Below, in 
+Subsection~\ref{sub-sec-the-rel-mem} this notion is defined precisely.
+Based on the notion of extended set membership, we can also define the 
+notion of an \emph{extended membership subset}.
+%Each rule
+%checks that the set of locations modified by the corresponding
+%instruction \emph{belongs} to a set of locations specifined as modified for
+%the method. This concept $\underline\in$ of membership must be
+%formulated considering
+%the syntaxis of the assignable declarations (see
+%Figure~\ref{fig-syn-mod-spe}), but intituivaly subsumes the standard
+%concept $\in$. Section~\ref{sub-sec-the-rel-mem} shows the definition
+%of this concept. 
+
+%Once we count on the definition of membership for assignable
+%locations, we should give the definition for the
+%inclusion. Figure~\ref{def-subseq} presents the definition of inclusion of
+%assignable locations.
+%%%%%%%%%%
+\begin{definition}[Extended membership subset $\sqsubseteq$]
+\label{def-subseq}
+\[\extsubset{Y_1}{Y_2} \defn{=} \forall v.\ \extmember{v}{Y_1}
+\Rightarrow \extmember{v}{Y_2}\]
+\end{definition} 
+%%%%%%%%%%
+%Definition~\ref{def-mod-lis} generalize the concept introduce by
+%Definition~\ref{df-mod}, by extending it for set of instructions.
+%%%%%%%%%
 %%%%%%%%%%
 
 %We have also introduced some other \emph{mod}
-%constructs by exploiting the \java~syntax. These \emph{mod}
+%constructs by exploiting the \java\ syntax. These \emph{mod}
 %constructs cover concepts such as \textit{modSTM}, \textit{modEXP},
 %\textit{modPE}, \textit{modPRM} and \textit{modPS}, which redefine the
 %original concept \textit{mod} in terms of concepts for
 %\emph{statements}, \emph{expressions}, \emph{post-expressions},
 %\emph{primary} and \emph{suffixes} expressions respectively. A primary
-%\java~expression can be seen as the first expression in a
-%sequence of \java~expressions joined by the symbol \texttt{``.''}. All 
+%\java\ expression can be seen as the first expression in a
+%sequence of \java\ expressions joined by the symbol \texttt{``.''}. All 
 %of the other expressions make up the suffix of the original
 %expression.
 %
@@ -615,570 +1040,816 @@ X\Rightarrow x\ \textsf{mod}\ Y$
 
 
 
+\subsection{The rules for \textsf{mod}}
 
-
-\subsection{Rules concerning methods}
+\subsubsection{Method rules}
 \label{sub-sec-rul-con-met}
-%We have defined certain syntactical rules for every \java~construct,
+%We have defined certain syntactical rules for every \java\ construct,
 %stating which variables may be modified. Our rules check for
-%all \java~constructs that the expressions modified by instructions
+%all \java\ constructs that the expressions modified by instructions
 %inside all method bodies are according to
 %their assignable specification. We present the derivation rules for
-%the most important \java~constructs. The whole set of rules can be found
+%the most important \java\ constructs. The whole set of rules can be found
 %in~\cite{CatanoMasterThesis01}.
+The first rules that we define are related with methods.
+Checking of assignable clauses is always done on a method by method
+basis. The first rule therefore deals with method
+declarations. Following Definition~\ref{def-mod}, it is sufficient for 
+the body of the method to check that it only modifies the variables in 
+the assignable clause of the method (denoted as \(Y\)) or the local
+variables or formal parameters of the method.
 
-\textsf{Meth-Dec} is the rule corresponding to a method declaration
-\texttt{m(}$\overrightarrow{\texttt{o}}$\texttt{)} that has
-specified may modify the set of variable locations $Y$. This rule
-states that for this method declaration, it is enough to
-check every instruction in its method body
-(\texttt{m(}$\overrightarrow{\texttt{o}}$\texttt{).body}) with respect
-to \textsc{Y}, the set of parameters and the local variables to the
-method. As can be seen, this rule essentially formalizes
-Definition~\ref{def-mod}. 
+
+%\textsf{Meth-Dec} is the rule corresponding to a method declaration
+%\texttt{m(}$\overrightarrow{\texttt{o}}$\texttt{)} that has
+%specified may modify the set of variable locations $Y$. This rule
+%states that for this method declaration, it is enough to
+%check every instruction in its method body
+%(\texttt{m(}$\overrightarrow{\texttt{o}}$\texttt{).body}) with respect
+%to \textsc{Y}, the set of parameters and the local variables to the
+%method. As can be seen, this rule essentially formalizes
+%Definition~\ref{def-mod}. 
 %%%%%
 \[
 \begin{tabular}{ll}
 \textsf{(Meth-Dec)}\,\,\,&
 \begin{prooftree} 
-\texttt{m(}\overrightarrow{\texttt{o}}\texttt{).body}\
-\overrightarrow{\textsf{mod}}\ 
-Y\cup \{\overrightarrow{\texttt{o}}\}\cup \{
-\texttt{m(}\overrightarrow{\texttt{o}}\texttt{).locvars}\} 
+\MOD{\methodbody{m}{o}}{(Y \cup \{\overrightarrow{\texttt{o}}\}
+                           \cup \{\methodloc{m}{o}\}) }
 \justifies
-\texttt{m(}\overrightarrow{\texttt{o}}\texttt{)}\ \textsf{mod}\ Y
+\MOD{\method{m}{o}}{Y}
 \end{prooftree}
 \end{tabular}
 \]
 %%%%%
 
-A method invocation
-$e\texttt{.m(}\overrightarrow{\texttt{q}}\texttt{)}$,
-must fulfill the assignable specification corresponding to its
-method declaration $\texttt{m(}\overrightarrow{\texttt{o}}\texttt{)}$
-previous replacing$:$ $(i)$~\texttt{this} by $e$ and
-$(ii)$~$\overrightarrow{\texttt{o}}$ by
-$\overrightarrow{\texttt{q}}$. Additionally, the actual parameters
-$\overrightarrow{\texttt{q}}$ must be checked for
-side-effects. It similar to the expression $e$ (see rule
-\textsf{Meth-Inv}). As can be seen this rules use \textsf{modEXP}
-and \textsf{modPE} rules. \textsf{modEXP} stands for expressions and
-\textsf{modPE} for post-fix expressions. A \java~post-fix
-expression represents a sort of \emph{primary} expressions linked by
-``.''. A typical primary \java~expression is a \java~identifier.
+When checking a method body, if one encounters a method invocation the
+assignable clause of this method is compared with the assignable
+clause of the method body that is currently checked. The assignable
+clause of the invoked method should be a subset of the assignable
+clause of the current method~--~with appropriate substitutions~--~to
+ensure that no other variables than the one mentioned in the
+assignable clause can be modified. According to the grammar, method
+invocations are always full expressions, thus the method invocation
+will be of the form \(\method{\textit{fe}}{o}\) where \textit{fe} is a
+full expression. The last element in \textit{fe} will be a method
+name, \texttt{this} or \texttt{super}. In all cases, the appropriate
+assignable clause can be found by looking at the static type of the
+one but last element of \textit{fe}, if it exists, or otherwise by
+taking the default value \texttt{this}.  This is sufficient, because
+behavioural subtyping ensures that overriding methods in subclasses do
+not modify more variables~\cite{?}.
+
+Additionally, it has to be checked that the full expression
+\textit{fe} and the actual parameters \(\overrightarrow{\texttt{q}}\)
+respect the assignable clause.
+
+The rule for method invocations is only defined on \textsf{modFE}: the 
+\java\ grammar ensures that a method call can only occur in this context 
+(provided the \java\ program is accepted by the compiler).
+
+%A method invocation
+%$e\texttt{.m(}\overrightarrow{\texttt{q}}\texttt{)}$,
+%must fulfill the assignable specification corresponding to its
+%method declaration $\texttt{m(}\overrightarrow{\texttt{o}}\texttt{)}$
+%previous replacing: $(i)$\ \texttt{this} by $e$ and
+%$(ii)$\ $\overrightarrow{\texttt{o}}$ by
+%$\overrightarrow{\texttt{q}}$. Additionally, the actual parameters
+%$\overrightarrow{\texttt{q}}$ must be checked for
+%side-effects. It similar to the expression $e$ (see rule
+%\textsf{Meth-Inv}). As can be seen this rules use \textsf{modEXP}
+%and \textsf{modPE} rules. \textsf{modEXP} stands for expressions and
+%\textsf{modPE} for post-fix expressions. A \java\ post-fix
+%expression represents a sort of \emph{primary} expressions linked by
+%``.''. A typical primary \java\ expression is a \java\ identifier.
 %%%%%%
 \[
 \begin{tabular}{ll}
 \textsf{(Meth-Inv)}\,\, &
 \begin{prooftree}
-\sem{e\texttt{.m(}\overrightarrow{\texttt{o}})\texttt{.modifies}}
-[\overrightarrow{\texttt{o}}\backslash \overrightarrow{\texttt{q}},
-\texttt{this}\backslash e]\sqsubseteq Y,\
-e\ \textsf{modPE}\ Y,\
-\overrightarrow{\texttt{q}}\ \overrightarrow{\textsf{modEXP}}\ Y
+\extsubset{\methodassign{\textit{fe}}{o}
+\:[\overrightarrow{\texttt{o}}/\overrightarrow{\texttt{q}},
+\texttt{this}/ \textit{fe}]}{Y}
+\quad
+\MODFE{fe}{Y}
+\quad
+\MODS{q}{Y}
 \justifies
-e\texttt{.m(}\overrightarrow{\texttt{q}}\texttt{)}\ \textsf{modPE}\ Y
+\MODFE{\method{\textit{fe}}{q}}{Y}
 \end{prooftree}
 \end{tabular}
 \]
 %%%%%%
 
 
-
-
-
-\subsection{Rules concerning primary suffix and primary expressions}
-\label{sub-sec-rul-con-pri-suf-and-pri-exp}
-\java~\emph{post-fix} expressions can be seen as set of \emph{suffix}
-expressions linked by ``.''. The first expression of which must be a
-\emph{primary} expression. Typical primary expressions correspond to
-identifiers, constants, the special \java~keywords \texttt{this},
-\texttt{static} and \texttt{super}, method invocations (as presented
-before) and \emph{new} expressions. 
-
-In the case of \emph{new} expressions (see rule \textsf{New-Exp}), the
-expressions passed as parameters must be checked for side-effects by
-using \textsf{modEXP} rules. The other cases of primary expression do
-not require an additional analyze.
-%%%%%%%%
-\[
-\begin{tabular}{ll}
-\textsf{(New-Exp)}\,\, & 
-\begin{prooftree}
-\overrightarrow{e}\ \overrightarrow{\textsf{modEXP}}\ Y
-\justifies
-\texttt{new T(}\overrightarrow{e}\texttt{)}\ \textsf{modPRM}\ Y
-\end{prooftree}
-\end{tabular}
-\]
-%%%%%%%%%%
-
-
-
-
-
-
-
-
-
-
-\subsection{Rules concerning assignments}
+\subsubsection{Assignment rules}
 \label{sub-sec-rul-con-ass}
-When an assignment $e_1\oplus e_2$ occurs inside a method body, we
-must check that
-$e_1$ belongs to set of locations the method may modify
-(\textup{e}$_1\underline{\in}$\ \textsc{Y}), since $e_1$ is
-target of an assignment. Additionally, and according to the
-\java~syntax, we must check $e_1$ and $e_2$ by
-using the \textsf{modPE} and \textsf{modEXP} rules respectively. This
-is showed by the rule \textsf{(Assg)}.
+When we encounter an assignment $e_1\:\texttt{=}\:e_2$ we must check
+that $e_1$ belongs to set of locations that the method may modify
+(\(\extmember{e_1}{Y}\)). Additionally we must check that $e_1$ and
+$e_2$ do not have unwanted side-effect. Following the \java\ syntax,
+we know that for \(e_1\) we have to check \textsf{modFE} only.
 %%%%%%%%%
 \[
 \begin{tabular}{ll}
 \textsf{(Assg)}\,\,\, & 
 \begin{prooftree}
-e_1\underline{\in}Y,\ \ e_1\ \textsf{modPE}\ Y,\ \ e_2\ \textsf{modEXP}\ Y
+\extmember{e_1}{Y}
+\quad
+\MODFE{e_1}{Y}
+\quad
+\MOD{e_2}{Y}
 \justifies
-e_1\oplus \textup{e}_2\ \textsf{modEXP}\ Y
-\using
-\oplus \in \{\texttt{=,+=,-=,*=,/=}\}
+\MOD{e_1\:\texttt{=}\:e_2}{Y}
 \end{prooftree}
 \end{tabular}
 \]
 %%%%%%%%
-An assignment can also be occurred in the declaration of a local
-variable. Suppose we have the declaration of certain variable
-\texttt{x} which is initialized with the value corresponding to
-certain expression $e$. The location
-corresponding a this variable must belong to the set $Y$ of possible
-assignable locations. Rule \textsf{Var-Decl-Assg} states this
-fact. Additionally, one must check the expression $e$ by using
-expressions rules.
-%%%%%%%%%
-\[
-\begin{tabular}{ll}
-\textsf{(Var-Decl-Assg)}\,\, & 
-\begin{prooftree}
-\rule[1ex]{0em}{1.5ex}
-\texttt{x}\underline{\in}Y,\ \ e\ \textsf{modEXP}\ Y
-\justifies
-\texttt{T x =}\ e\ \textsf{modEXP}\ Y
-\end{prooftree}
-\end{tabular}
-\]
-%%%%%%%
+This rule generalises to all variations on assignments, as provided by
+\java (\texttt{+=}, \texttt{*=} \emph{etc.}).
+For initialisations of local variables we use a similar rule, although 
+by default we know that the local variable will occur in \(Y\)~--~as
+this is guaranteed by the rule \textsf{Meth-Decl}.
 
-\java~instructions can also be represented by pre- and
-\emph{post-expressions}. A post-expression can be seen as \emph{in
-place} assignment. Rule \textsf{(Post-Plus)} presents the case for
-post-increment expressions. This rule states that the expression $e$,
-which is the target
-of an assignment, has to belong to set of expressions $Y$ which may
-modified by the method. Additionally, $e$ must be checked for
-side-effects.
+%An assignment can also be occurred in the declaration of a local
+%variable. Suppose we have the declaration of certain variable
+%\texttt{x} which is initialized with the value corresponding to
+%certain expression $e$. The location
+%corresponding a this variable must belong to the set $Y$ of possible
+%assignable locations. Rule \textsf{Var-Decl-Assg} states this
+%fact. Additionally, one must check the expression $e$ by using
+%expressions rules.
+%%%%%%%%%%
+%\[
+%\begin{tabular}{ll}
+%\textsf{(Var-Decl-Assg)}\,\, & 
+%\begin{prooftree}
+%\rule[1ex]{0em}{1.5ex}
+%\texttt{x}\underline{\in}Y,\ \ e\ \textsf{modEXP}~Y
+%\justifies
+%\texttt{T x =}~e\ \textsf{modEXP}~Y
+%\end{prooftree}
+%\end{tabular}
+%\]
+%%%%%%%%
+
+A special kind of assignments in \java\ are constructed by using the
+pre- and postfix operators (\emph{e.g.}~\texttt{x++} and
+\texttt{++x}). Such instructions can be considered as  \emph{in
+place} assignments, thus the rules for pre- and postfix operators are
+similar to the assignment rule. For example, the rule
+\textsf{Post-Plus} states that the expression $e$, which is the
+target of an assignment, has to belong to set of expressions $Y$ which
+may modified by the method, and that additionally $e$ must be checked for
+(unwanted) side-effects.
 %%%%%%
 \[
 \begin{tabular}{ll}
 \textsf{(Post-Plus)}\,\, &
 \begin{prooftree}
-e\underline{\in}Y,\ \ e\ \textsf{modPE}\ Y
+\extmember{e}{Y}
+\quad
+\MODFE{e}{Y}
 \justifies
-e\texttt{++}\ \textsf{modEXP}\ Y
+\MOD{e\texttt{++}}{Y}
 \end{prooftree}
 \end{tabular}
 \]
 %%%%%%%%
 
-
-
-
-
-
-\subsection{Rules concerning \java~operators}
-\label{sub-sec-rul-con-ope}
-The rule \textsf{Binary} is applicable
-to arithmetic, relational and logic operators. This rule
-does not take into account any consideration about membership of
-expressions $e_i$ to $Y$, since no expression
-is directly modified by these
-operators. This analysis also works for \java~operators as
-\textsf{unary}, \texttt{instanceof}, \texttt{()} (\emph{casting}) and
-$?$, as presented by rules \textsf{Unary}, \textsf{Instance},
-\textsf{Cast} and \textsf{Conditional}.
-
-%%%%%%%%%
-\[
-\begin{tabular}{ll}
-\textsf{(Binary)} & 
-\begin{prooftree} 
-e_1\ \textsf{modEXP}\ Y,\ \ e_2\ \textsf{modEXP}\ Y
-\justifies
-e_1\oplus e_2\ \textsf{modEXP}\ Y
-\using
-\oplus \in \{
-	\begin{array}{l}
-		\texttt{<,<=,>,>=,==,!=,||}	\\
-		\texttt{\&\&,+,-,*,/,\,\&,\^\ ,|}
-	\end{array}
-	\}
-\end{prooftree}
-\\[3.0ex] 
-\textsf{(Unary)} & 
-\begin{prooftree} 
-e\ \textsf{modEXP}\ Y
-\justifies
-\oplus \ e\ \textsf{modEXP}\ Y
-\using
-\oplus \in \{\texttt{+,-,$\sim$,!}\}
-\end{prooftree}
-\\[3.0ex] 
-\textsf{(Instance)} & 
-\begin{prooftree} 
-e\ \textsf{modEXP}\ Y
-\justifies
-e\ \texttt{instanceof C}\ \textsf{modEXP}\ Y
-\end{prooftree}
-\\[3.0ex] 
-\textsf{(Cast)} & 
-\begin{prooftree}
-e\ \textsf{modEXP}\ Y
-\justifies
-\texttt{(T)}e\ \textsf{modEXP}\ Y
-\end{prooftree}
-\\[3.0ex] 
-\textsf{(Conditional)}\,\, & 
-\begin{prooftree} 
-e_1\ \textsf{modEXP}\ Y,\ \ e_2\ \textsf{modEXP}\ Y,\ \ e_3\
-\textsf{modEXP}\ Y
-\justifies
-e_1\texttt{?}e_2\texttt{:}e_3\ \textsf{modEXP}\ Y
-\end{prooftree}
-\end{tabular}
-\]
-%%%%%%%%%%
-
-
-
-
-
-
-\subsection{Rules concerning statements}
+\subsubsection{Statement rules}
 \label{sub-sec-rul-con-sta}
-Typical \java~statements are
-\texttt{if(}c\texttt{)\{$\overrightarrow{s}$\texttt{\}}},
-\texttt{if(}c\texttt{)\{$\overrightarrow{s}$\texttt{\}}else\{$\overrightarrow{t}$\}},
-\texttt{while(c)\{$\overrightarrow{s}$\}}. For the first case, for
-instance, the guard $c$ must be checked using
-\textsf{modEXP} rules since a guard
-corresponds to an expression. The set of instructions occurring in its
-body $\overrightarrow{s}$ must be checked using the most general rules
-\textsf{mod}. This is showed by the rule \textsf{(If-Then)}. For the
-others \java~statements a similar analysis can be done.
+For all  \java\ constructs used to build statements, such as
+\(S\texttt{;}T\), 
+\(\texttt{if(}c\texttt{)\{}S\texttt{\}}\) and
+%\(\texttt{if(}c\texttt{)\{}S\texttt{\}else\{}T\texttt{\}}\) and
+\(\texttt{while(}c\texttt{)\{}S\texttt{\}}\) the rules simply pass on
+the check on the modifies clause to the components of the
+statement. As an example, we present the rule \textsf{If-Then}.
+%$\overrightarrow{s}$\texttt{\}}},
+%\texttt{if(}c\texttt{)\{$\overrightarrow{s}$\texttt{\}}else\{$\overrightarrow{t}$\}},
+%\texttt{while(c)\{$\overrightarrow{s}$\}}
+
+%. For the first case, for
+%instance, the guard $c$ must be checked using
+%\textsf{modEXP} rules since a guard
+%corresponds to an expression. The set of instructions occurring in its
+%body $\overrightarrow{s}$ must be checked using the most general rules
+%\textsf{mod}. This is showed by the rule \textsf{If-Then}. For the
+%others \java\ statements a similar analysis can be done.
 %%%%%%%%%%
 \[
 \begin{tabular}{ll}
 \textsf{(If-Then)}\,\, & 
 \begin{prooftree}
-c\ \textsf{modEXP}\ Y,\ \ \overrightarrow{s}\ \overrightarrow{\textsf{mod}}\ Y
+\MOD{c}{Y}
+\quad
+\MOD{s}{Y}
 \justifies
-\texttt{if(}c\texttt{)\{}\overrightarrow{s}\ \texttt{\}}\ 
-\textsf{modSTM}\ Y
+\MOD{\texttt{if(}c\texttt{)\{}S\texttt{\}}}{Y}
 \end{prooftree}
 \end{tabular}
 \]
-%%%%%%%%%%%
 
+\subsubsection{Expression rules}
+\label{sub-sec-rul-con-ope}
+For most expressions, the same applies as for statements: the rules
+simply passes on the check for side-effects to the arguments of the
+expressions. In this way, we define for example the rule
+\textsf{BinOp}, which applies to all binary operators (arithmetic,
+relational and logical). Similar rules are defined for \emph{e.g.}~the 
+unary operators, the \texttt{instanceof} expression, the casting
+operator, and the conditional expression.
 
-
-
-
-
-\subsection{Transition rules}
-\label{sub-sec-tra-rul}
-In addition to define rules for each \java~construct, we need also
-certain \emph{transition} rules which allow us to pass from more
-general rules to more particular ones, depending on the kind of the
-instruction. So, for example, we need transition rules from the most
-general case to expressions statements (\textsf{Mod-To-Exp} and
-\textsf{Mod-To-Stm}), from expressions to post-fix expressions
-(\textsf{Exp-To-Pe}), and from post-fix expressions to primary suffix
-and primary expressions.
-%%%%%%%%%%
+%%%%%%%%%
 \[
 \begin{tabular}{ll}
-\textsf{(Mod-To-Exp)}\,\, & 
-\begin{prooftree}
-e\ \textsf{modEXP}\ Y
+\textsf{(BinOp)} & 
+\begin{prooftree} 
+\MOD{e_1}{Y}
+\quad
+\MOD{e_2}{Y}
 \justifies
-e\ \textsf{mod}\ Y
+\MOD{e_1 \oplus e_2}{Y}
 \using
-e\in Expression
+\oplus \in \Big\{
+	\begin{array}{l}
+		\texttt{<},\texttt{<=},\texttt{>},
+                \texttt{>=},\texttt{==},\texttt{!=},\texttt{||},	\\
+		\texttt{\&\&},\texttt{+},\texttt{-},\texttt{*},
+                \texttt{/},\mathtt{\backslash},\texttt{\&},
+                \texttt{\^\,}, \texttt{|}
+	\end{array}
+	\Big\}
 \end{prooftree}
-\\[3.0ex]
-\textsf{(Mod-To-Stm)} & 
+%\\[3.0ex] 
+%\textsf{(Unary)} & 
+%\begin{prooftree} 
+%e\ \textsf{modEXP}~Y
+%\justifies
+%\oplus \ e\ \textsf{modEXP}~Y
+%\using
+%\oplus \in \{\texttt{+,-,$\sim$,!}\}
+%\end{prooftree}
+%\\[3.0ex] 
+%\textsf{(Instance)} & 
+%\begin{prooftree} 
+%e\ \textsf{modEXP}~Y
+%\justifies
+%e\ \texttt{instanceof C}~\textsf{modEXP}~Y
+%\end{prooftree}
+%\\[3.0ex] 
+%\textsf{(Cast)} & 
+%\begin{prooftree}
+%e\ \textsf{modEXP}~Y
+%\justifies
+%\texttt{(T)}e\ \textsf{modEXP}~Y
+%\end{prooftree}
+%\\[3.0ex] 
+%\textsf{(Conditional)}\,\, & 
+%\begin{prooftree} 
+%e_1\ \textsf{modEXP}~Y,\ \ e_2\ \textsf{modEXP}~Y,\ \ e_3\
+%\textsf{modEXP}~Y
+%\justifies
+%e_1\texttt{?}e_2\texttt{:}e_3\ \textsf{modEXP}~Y
+%\end{prooftree}
+\end{tabular}
+\]
+%%%%%%%%%%
+
+
+However, if none of these rules applies to an expression, then it
+means that we have a so-called full expression (see
+Figure~\ref{FigExpGrammar}) and we apply the \textsf{To-Fe}.
+\[
+\begin{tabular}{ll}
+\textsf{(To-Fe)}\,\, & 
 \begin{prooftree}
-e\ \textsf{modSTM}\ Y
+\MODFE{e}{Y}
 \justifies
-e\ \textsf{mod}\ Y
+\MOD{e}{Y}
 \using
-e\in Statement
-\end{prooftree}
-\\[3.0ex]
-\textsf{(Exp-To-Pe)}\,\, & 
-\begin{prooftree}
-e\ \textsf{modPE}\ Y
-\justifies
-e\ \textsf{modEXP}\ Y
-\using
-e\in Post\!\!-\! expression
-\end{prooftree}
-\\[3.0ex]
-\textsf{(Pe-To-Ps)} &
-\begin{prooftree}
-e_1\ \textsf{modPE}\ Y,\ e_2\ \textsf{modPS}\ Y
-\justifies
-e_1\ \texttt{.}\ e_2\ \textsf{modPE}\ Y
-\end{prooftree}
-\\[3.0ex]
-\textsf{(Pe-to-Prm)} &
-\begin{prooftree}
-e\ \textsf{modPRM}\ Y
-\justifies
-e\ \textsf{modPE}\ Y
-\using
-e\in \ \textsf{Primary}
+\textsf{full?}(e)
 \end{prooftree}
 \end{tabular}
 \]
+
+\subsubsection{Full expression rules}
+Following the grammar for full expressions, we define rules defining
+\textsf{modFE}. The rule for method invocation \textsf{Meth-Inv} 
+already has been presented above. If this rule does not apply, then
+one of the following rules (for array, qualified or suffix
+expressions, respectively should apply.
+\[
+\begin{tabular}{c}
+\begin{tabular}{p{6cm}p{5cm}}
+
+\begin{tabular}{ll}
+\textsf{(Array)}\,\, & 
+\begin{prooftree}
+\MODFE{fe}{Y}
+\quad 
+\MODS{\overrightarrow{e}}{Y}
+\justifies
+\MODFE{fe\texttt{[}\overrightarrow{e}\texttt{]}}{Y}
+\end{prooftree}
+\end{tabular}
+&
+\begin{tabular}{ll}
+\textsf{(Qualified)} &
+\begin{prooftree}
+\MODFE{fe}{Y}
+\quad
+\MODSuf{s}{Y}
+\justifies
+\MODFE{fe\texttt{.}s}{Y}
+\end{prooftree}
+\end{tabular}
+
+\end{tabular}
+
+\\[3.0ex]
+\begin{tabular}{ll}
+\textsf{(To-Suf)}\,\, & 
+\begin{prooftree}
+\MODSuf{fe}{Y}
+\justifies
+\MODFE{fe}{Y}
+\using
+\textsf{suffix?}(\textit{fe})
+\end{prooftree}
+\end{tabular}
+\end{tabular}
+\]
+
+\subsubsection{Suffix expression rules}
+Finally, we present some rules for suffix expressions. Most
+suffix expressions are constant values (\emph{e.g.}~\texttt{this} and
+all the literals) which do not modify anything, thus the rules for
+these constructs are straightforward. Also the access to an identifier 
+does not modify anything~--~and if the identifier is the target of an
+assignment, the rule \textsf{Assg} takes care that it is mentioned in
+the assignable clause. Thus, the only suffix expressions which are of
+some interest are the \texttt{new} expressions. Here, the possible
+arguments have to be checked for unwanted side-effects. The creation
+of a new object or array does not violate the rules for the assignable 
+clause (\emph{cf.}~Definition~\ref{def-mod}).
+
+%\subsubsection{Transition rules}
+%\label{sub-sec-tra-rul}
+%In addition to define rules for each \java\ construct, we need also
+%certain \emph{transition} rules which allow us to pass from more
+%general rules to more particular ones, depending on the kind of the
+%instruction. So, for example, we need transition rules from the most
+%general case to expressions statements (\textsf{Mod-To-Exp} and
+%\textsf{Mod-To-Stm}), from expressions to post-fix expressions
+%(\textsf{Exp-To-Pe}), and from post-fix expressions to primary suffix
+%and primary expressions.
+%%%%%%%%%%%
+%\[
+%\begin{tabular}{ll}
+%\textsf{(Mod-To-Exp)}\,\, & 
+%\begin{prooftree}
+%e\ \textsf{modEXP}~Y
+%\justifies
+%e\ \textsf{mod}~Y
+%\using
+%e\in Expression
+%\end{prooftree}
+%\\[3.0ex]
+%\textsf{(Mod-To-Stm)} & 
+%\begin{prooftree}
+%e\ \textsf{modSTM}~Y
+%\justifies
+%e\ \textsf{mod}~Y
+%\using
+%e\in Statement
+%\end{prooftree}
+%\\[3.0ex]
+%\\[3.0ex]
+%\textsf{(Pe-To-Ps)} &
+%\begin{prooftree}
+%e_1\ \textsf{modPE}~Y,\ e_2\ \textsf{modPS}~Y
+%\justifies
+%e_1\ \texttt{.}~e_2\ \textsf{modPE}~Y
+%\end{prooftree}
+%\\[3.0ex]
+%\textsf{(Pe-to-Prm)} &
+%\begin{prooftree}
+%e\ \textsf{modPRM}~Y
+%\justifies
+%e\ \textsf{modPE}~Y
+%\using
+%e\in \ \textsf{Primary}
+%\end{prooftree}
+%\end{tabular}
+%\]
+%%%%%%%%%%%%
+
+
+%\subsubsection{Rules concerning primary suffix and primary expressions}
+%\label{sub-sec-rul-con-pri-suf-and-pri-exp}
+%\java\ \emph{post-fix} expressions can be seen as set of \emph{suffix}
+%expressions linked by ``.''. The first expression of which must be a
+%\emph{primary} expression. Typical primary expressions correspond to
+%identifiers, constants, the special \java\ keywords \texttt{this},
+%\texttt{static} and \texttt{super}, method invocations (as presented
+%before) and \emph{new} expressions. 
+
+%In the case of \emph{new} expressions (see rule \textsf{New-Exp}), the
+%expressions passed as parameters must be checked for side-effects by
+%using \textsf{modEXP} rules. The other cases of primary expression do
+%not require an additional analyze.
+%%%%%%%%
+\[
+\begin{tabular}{ll}
+\textsf{(New-Exp)}\,\, & 
+\begin{prooftree}
+\MODS{\overrightarrow{e}}{Y}
+\justifies
+\MODSuf{\texttt{new T(}\overrightarrow{e}\texttt{)}}{Y}
+\end{prooftree}
+\end{tabular}
+\]
+%%%%%%%%%%
+
+
+
+
+
 %%%%%%%%%%%
 
 
 
 
-\subsection{The relation of membership $\underline{\in}$}
-\label{sub-sec-the-rel-mem}
-Another important aspect that must be analyzed is
-the different constructs that can appear in assignable
-specifications. According to the syntax of the assignable clause as
-presented by Figure~\ref{fig-syn-mod-spe},
-\texttt{$\backslash$fields\_of} and \texttt{$\backslash$reach}
-constructs can occur inside of such assignable specifications, the
-latter only occurring inside the former. Hence, when establishing
-membership conditions $e\underline\in Y$, we need to define suitable
-rules taking into account the fact that these constructs can occur
-inside $Y$.
 
-Typically, if none of these constructs occur in the assignable clause
-we fall on the standard definition of membership (see rules rules
-\textsf{In-Var},\textsf{In-Arr}, \textsf{In-Exp} and
-\textsf{In-Exp-Arr}).
+\subsection{The extended membership relation}
+\label{sub-sec-the-rel-mem}
+Finally, we have to give rules to define the extended membership
+relation. Figure~\ref{fig-syn-mod-spe} shows which expressions can
+occur inside an assignable clause. Again, we give syntactic rules for
+all possible formats of an assignment targets. First we consider the
+assignable expressions \nothing\ and
+\everything. In the first case the assignable
+clause is the emptyset, in the second case it is the global
+universe. The rules for these constructs are obvious.
+\[
+\begin{tabular}{p{5cm}p{5cm}}
+\begin{tabular}{ll}
+\textsf{(In-Nothing)} &
+\begin{prooftree}
+\textsf{false}
+\justifies
+\extmember{e}{\emptyset}
+\end{prooftree}
+\end{tabular}
+&
+\begin{tabular}{ll}
+\textsf{(In-Everything)} &
+\begin{prooftree}
+\textsf{true}
+\justifies
+\extmember{e}{\mathcal{U}}
+\end{prooftree}
+\end{tabular}
+\end{tabular}
+\]
+
+%Another important aspect that must be analyzed is
+%the different constructs that can appear in assignable
+%specifications. According to the syntax of the assignable clause as
+%presented by Figure~\ref{fig-syn-mod-spe},
+%\texttt{$\backslash$fields\_of} and \texttt{$\backslash$reach}
+%constructs can occur inside of such assignable specifications, the
+%latter only occurring inside the former. Hence, when establishing
+%membership conditions $e\underline\in Y$, we need to define suitable
+%rules taking into account the fact that these constructs can occur
+%inside $Y$.
+
+For non-trivial assignable clauses, the most simple case is where a
+variable is mentioned literally in the assignable clause. In this
+case, we fall back directly on the standard definition of set
+membership.
 %%%%%%%
 \[
+\begin{tabular}{p{5cm}p{5cm}}
 \begin{tabular}{ll}
 \textsf{(In-Var)} &
 \begin{prooftree}
-\texttt{x}\in \textsc{Y}
+\member{\texttt{x}}{Y}
 \justifies
-\texttt{x}\underline{\in}Y
+\extmember{\texttt{x}}{Y}
 \end{prooftree}
 \\[3.0ex]
 \textsf{(In-Arr)} &
 \begin{prooftree}
-\texttt{a[}e\texttt{]}\in Y
+\member{\texttt{a[}e\texttt{]}}{Y}
 \justifies
-\texttt{a[}e\texttt{]}\underline{\in}Y
+\extmember{\texttt{a[}e\texttt{]}}{Y}
 \end{prooftree}
-\\[3.0ex]
+\end{tabular}
+&
+\begin{tabular}{ll}
 \textsf{(In-Exp)} &
 \begin{prooftree}
-e\texttt{.x}\in Y
+\member{e\texttt{.x}}{Y}
 \justifies
-e\texttt{.x}\underline{\in} Y
+\extmember{e\texttt{.x}}{Y}
 \end{prooftree}
 \\[3.0ex]
 \textsf{(In-Exp-Arr)}\,\, &
 \begin{prooftree}
-e\texttt{.a[}e_1\texttt{]}\in Y
+\member{e\texttt{.a[}e_1\texttt{]}}{Y}
 \justifies
-e\texttt{.a[}e_1\texttt{]}\underline{\in} Y
+\extmember{e\texttt{.a[}e_1\texttt{]}}{Y}
 \end{prooftree}
+\end{tabular}
 \end{tabular}
 \]
 %%%%%%%%%%
 
-Moreover, when we are checking simple array membership conditions as
-\texttt{a[}$e$\texttt{]$\underline{\in} Y$}, it is
-enough to find a \jml~construct in $Y$ specifying that the
-corresponding method may modify any element of \texttt{a}
-(\textsf{Times-Arr}) or a certain interval where the value of $e$ is
-found (rule \textsf{Interv-Arr}).
+When checking array index expressions as
+\texttt{a[}$e$\texttt{]$\underline{\in} Y$}, it is also sufficient
+to find an expression \texttt{a[*]} or \texttt{a[i..j]} in the
+assignable clause\footnote{Assuming that \(i \leq e \leq j\) can be
+checked syntactically, which will not always be the case.}.
+
+% \jml\ construct in $Y$ specifying that the
+%corresponding method may modify any element of \texttt{a}
+%(\textsf{Times-Arr}) or a certain interval where the value of $e$ is
+%found (rule \textsf{Interv-Arr}).
 %%%%%%%%%%
 \[
+\begin{tabular}{p{5cm}p{5cm}}
 \begin{tabular}{ll}
-\textsf{(Times-Arr)}\,\, &
+\textsf{(Global-Arr)}\,\, &
 \begin{prooftree}
-\texttt{a[}*\texttt{]}\in Y
+\member{{a[}*\texttt{]}}{Y}
 \justifies
-\texttt{a[}e_1\texttt{]}\underline{\in} Y
+\extmember{{a[}e_1\texttt{]}}{Y}
 \end{prooftree}
-\\[3.0ex]
+\end{tabular}
+&%\\[3.0ex]
+\begin{tabular}{ll}
 \textsf{(Interv-Arr)}\,\, & 
 \begin{prooftree}
-\texttt{a[}i..j\texttt{]}\in Y,\ i\leq e\leq j
+\member{\texttt{a[}i..j\texttt{]}}{Y}
+\quad\ i\leq e\leq j
 \justifies
-\texttt{a[}e\texttt{]}\underline{\in} Y
+\extmember{\texttt{a[}e\texttt{]}}{Y}
 \end{prooftree}
+\end{tabular}
 \end{tabular}
 \]
 %%%%%%%%%%%
-If these rules do not apply, we
-have to consider some cases according to the shape of $e$. If
-$e$ has shape $e_1\texttt{.}e_2$ and $e_2$ is not an array expression,
-it will be enough to have \texttt{$\backslash$fields\_of($e_1$)}
-occurring in $Y$ to establish the original condition of membership
-(rule \textsf{In-Fld-Exp-Var}). Otherwise, if $e_2$ is an array
-expression \texttt{a[$e_3$]}, it will be enough to have
-\texttt{$\backslash$fields\_of($e_1$.a)} occurring in $Y$ (see rule
-\textsf{In-Fld-Exp-Arr}). We have similar rules when $e$ is an
-expression not linked by ``.'' (see rules \textsf{In-Fld-Var} and
-\textsf{In-Fld-Arr}).
+Further, an expression \fieldsofarg{\(e\)} can
+occur in an assignable clause. Here we distinguish two cases: \(e\) is 
+a single object or array\footnote{For arrays,
+\fieldsofarg{\(e\)} is
+equivalent to \(e\)\texttt{[*]}.}, or it is a
+\reach\ expression. In the first case, the rules
+check for each qualified expression whether
+\fieldsof\ occurs for the receiving object. For 
+unqualified expressions, this is checked for \texttt{this}.
+
+
+%If these rules do not apply, we
+%have to consider some cases according to the shape of $e$. If
+%$e$ has shape $e_1\texttt{.}e_2$ and $e_2$ is not an array expression,
+%it will be enough to have \texttt{$\backslash$fields\_of($e_1$)}
+%occurring in $Y$ to establish the original condition of membership
+%(rule \textsf{In-Fld-Exp-Var}). Otherwise, if $e_2$ is an array
+%expression \texttt{a[$e_3$]}, it will be enough to have
+%\texttt{$\backslash$fields\_of($e_1$.a)} occurring in $Y$ (see rule
+%\textsf{In-Fld-Exp-Arr}). We have similar rules when $e$ is an
+%expression not linked by ``.'' (see rules \textsf{In-Fld-Var} and
+%\textsf{In-Fld-Arr}).
 %%%%%%%%%%%
 \[
+\begin{tabular}{p{6.5cm}p{5cm}}
 \begin{tabular}{ll}
 \textsf{(In-Fld-Exp-Var)}\,\, &
 \begin{prooftree}
-\backslash \texttt{fields\_of(}e\texttt{)}\in Y
+\member{\fieldsofarg{\(e\)}}{Y}
 \justifies
-e\texttt{.x}\underline{\in} Y
+\extmember{e\texttt{.x}}{Y}
 \end{prooftree}
 \\[3.0ex]
 \textsf{(In-Fld-Exp-Arr)}\,\, &
 \begin{prooftree}
-\backslash \texttt{fields\_of(}e\texttt{.a)}\in Y
+\member{\fieldsofarg{\(e\)\texttt{.a)}}}{Y}
 \justifies
-e\texttt{.a[}e_1\texttt{]}\underline{\in} Y
+\extmember{e\texttt{.a[}e'\texttt{]}}{Y}
 \end{prooftree}
-\\[3.0ex]
+\end{tabular}
+&
+\begin{tabular}{ll}
 \textsf{(In-Fld-Var)} &
 \begin{prooftree}
-\backslash \texttt{fields\_of(this)}\in Y
+\member{\fieldsofarg{this}}{Y}
 \justifies
-\texttt{x}\underline{\in} Y
+\extmember{\texttt{x}}{Y}
 \end{prooftree}
 \\[3.0ex]
 \textsf{(In-Fld-Arr)}\,\, &
 \begin{prooftree}
-\backslash \texttt{fields\_of(a)}\in Y
+\member{\fieldsofarg{a}}{Y}
 \justifies
-\texttt{a[}e_1\texttt{]}\underline{\in} Y
+\extmember{\texttt{a[}e'\texttt{]}}{Y}
 \end{prooftree}
+\end{tabular}
 \end{tabular}
 \]
 %%%%%%%%%%%
+For reach expressions, we check whether an expression
+\fieldsofarg{\reacharg{\(e'\)}} occurs in the assignable clause, and if \(e
+\in \reacharg{\(e'\)}\), \emph{i.e.}~\(e\) is in the reach of \(e'\).
 
-Furthermore, \texttt{$\backslash$reach} expressions can occur in
-assignable clauses. So, if an expression such as
-\texttt{$\backslash$fields\_of($\backslash$reach($e_1$))} occurs in
-$Y$ it is sufficient having $e$ belonging to set expressions reachable
-from $e_1$ for establish the condition \texttt{$e$.x$\underline\in
-Y$}. This situation is presented by the rule
-\textsf{In-Reach-Exp}. Something similar happens when \texttt{x} is an
-array expression. This is presented by rules
-\textsf{In-Reach-Exp-Arr}. The rules \textsf{In-Reach-Var} and
-\textsf{In-Reach-Arr} present the cases when we intend to establish
-membership conditions for expressions not linked by ``.''.
+%Furthermore, \texttt{$\backslash$reach} expressions can occur in
+%assignable clauses. So, if an expression such as
+%\texttt{$\backslash$fields\_of($\backslash$reach($e_1$))} occurs in
+%$Y$ it is sufficient having $e$ belonging to set expressions reachable
+%from $e_1$ for establish the condition \texttt{$e$.x$\underline\in
+%Y$}. This situation is presented by the rule
+%\textsf{In-Reach-Exp}. Something similar happens when \texttt{x} is an
+%array expression. This is presented by rules
+%\textsf{In-Reach-Exp-Arr}. The rules \textsf{In-Reach-Var} and
+%\textsf{In-Reach-Arr} present the cases when we intend to establish
+%membership conditions for expressions not linked by ``.''.
 %%%%%%%%%
 \[
 \begin{tabular}{ll}
 \textsf{(In-Reach-Var)} &
 \begin{prooftree}
-\backslash
-\texttt{fields\_of(}\backslash\texttt{reach(}e\texttt{))}\in Y,\ \
-\texttt{this}\in \backslash \texttt{reach(}e\texttt{)} 
+\member{\fieldsofarg{\reacharg{\(e\)}}}{Y}
+\quad
+\member{\texttt{this}}{\reacharg{\(e\)}}
 \justifies
-\texttt{x}\underline{\in} Y
+\extmember{\texttt{x}}{Y}
 \end{prooftree}
 \\[3.0ex]
 \textsf{(In-Reach-Arr)} &
 \begin{prooftree}
-\backslash \texttt{fields}\_\texttt{of(}\backslash
-\texttt{reach(}e_1\texttt{))}\in Y,\ \ \texttt{a}\in \backslash
-\texttt{reach(}e\texttt{)} 
+\member{\fieldsofarg{\reacharg{\(e'\)}}}{Y}
+\quad
+\member{\texttt{a}}{\reacharg{\(e'\)}}
 \justifies
-\texttt{a[}e\texttt{]}\underline{\in} Y
+\extmember{\texttt{a[}e\texttt{]}}{Y}
 \end{prooftree}
 \\[3.0ex]
 \textsf{(In-Reach-Exp)} &
 \begin{prooftree}
-\backslash \texttt{fields\_of(}\backslash
-\texttt{reach(}e_1\texttt{))}\in Y,\ \ e\in \backslash
-\texttt{reach(}e_1\texttt{)}
+\member{\fieldsofarg{\reacharg{\(e'\)}}}{Y}
+\quad
+\member{e}{\reacharg{\(e'\)}}
 \justifies
-e\texttt{.x}\underline{\in} Y
+\extmember{e\texttt{.x}}{Y}
 \end{prooftree}
 \\[3.0ex]
 \textsf{(In-Reach-Exp-Arr)}\,\, &
 \begin{prooftree}
-\backslash \texttt{fields\_of(}\backslash
-\texttt{reach(}e\texttt{))}\in Y,\ \ e_2\texttt{.a}\in \backslash
-\texttt{reach(}e\texttt{)}
+\member{\fieldsofarg{\reacharg{\(e'\)}}}{Y}
+\quad
+\member{e\texttt{.a}}{\reacharg{\(e'\)}}
 \justifies
-e_2\texttt{.a[}e_1\texttt{]}\underline{\in} Y
+\extmember{e\texttt{.a[}e''\texttt{]}}{Y}
 \end{prooftree}
 \end{tabular}
 \]
+The reach of an object is defined recursively: an element \(e\) is in
+the reach of an object, if it is the object itself, or if it is in the 
+reach of one of the fields of this object.
+\[
+\begin{tabular}{ll}
+\textsf{(Reach-Base)} &
+\begin{prooftree}
+e = e'
+\justifies
+\member{e}{\reacharg{\(e'\)}}
+\end{prooftree}
+\\[3.0ex]
+\textsf{(Reach-Rec)} &
+\begin{prooftree}
+\member{e''}{\fieldsofarg{\(e'\)}}
+\quad
+\member{e}{\reacharg{\(e''\)}}
+\justifies
+\member{e}{\reacharg{\(e'\)}}
+\end{prooftree}
+\end{tabular}
+\]
+
 %%%%%%%%%%%
-HERE I HAVE TO PRESENT AN DERIVATION EXAMPLE.
+\subsection{A deriviation example}
 %%%%%%%%%%%
+Do we have the space to put this????
 
 
+\subsection{Limitations of our approach}
+As our method works on a purely syntactical basis, it has some
+limitations. In particular, our method does not work in the context of 
+\emph{aliasing}. For example, suppose we have the following class
+\texttt{C}.
 
+%Our specification just does not concern with the modification but the
+%assignment, hence in a context with \emph{Aliasing} we miss the
+%variable modified. Thereby, suppose we have a class \texttt{C} as
+%presented below. 
+%%%%%%%%
+\begin{alltt}
+public class C\verb!{!
+  O y = new O(), x = new O();    
+
+  //@ modifies x, y.i;
+  public void p()\verb!{!
+     x = y;
+     y.i = 7;
+  \verb!}!    
+\verb!}!
+public class O\verb!{!
+  public int i;
+\verb!}!
+\end{alltt}
+%%%%%%%%%%
+According to the specification method \texttt{p} may modify
+\texttt{x} and the field \texttt{i} of the object \texttt{y}. Because
+of the assignment \texttt{x = y;} the variables \texttt{x} and
+\texttt{y} are aliases, so the assignment \texttt{y.i = 7;} implicitly 
+also modifies \texttt{x.i}, which is an unwanted side-effect. However, 
+our method will not reject this method.
+
+%Although the expression
+%\texttt{y.i = 7;}, in addition to modify the field \texttt{i} of the
+%object \texttt{y}, modifies the field \texttt{i} of the object
+%\texttt{x} (since the aliasing between \texttt{x} and \texttt{y} as
+%consequence of the \emph{assignment} \texttt{x = y}), our rules
+%accept as valid this specification.
+
+Our method also does not take earlier assignments to variables into
+account, \emph{e.g.}~a specificiation \texttt{//@ modifies a[i];} will 
+be accepted for a body \texttt{i++; a[i] = 3;}.
+
+However, we think that these limitations do not severely restrict the
+usability of our method. Our method should be considered as a quick
+check to get a reasonable trust in the correctness of the specified
+assignable clauses. In our experience, when specifying the assignable
+clause of a method, it is more likely to forget to mention a simple
+variable then to overlook complicated modification structures. Finding 
+these small specification mistakes before doing formal verification
+significantly can help to improve the verification speed.
 
 
 
 \section{A checker for assignable clauses}
 \label{sec-che-for-ass-cla}
-We present some implementation issues concerning \modtool$:$ a
-modifiable checker implementing the approach and rules presented in
-Section~\ref{sec-syn-met-che-ass-cla}.
+Finally, we briefly discuss the implementation of the \modtool, which
+implements the method presented above.
+%We present some implementation issues concerning \modtool: a
+%modifiable checker implementing the approach and rules presented in
+%Section~\ref{sec-syn-met-che-ass-cla}.
 
-We have reused the syntactical analyzer of \jml~for recovering the
-structure of programs we are checking. This parser returns an
-\emph{Abstract syntax tree} as an \texttt{AST} (see
-Section~\ref{abo-jml-cla-use}). We use this Abstract syntax tree
-for$:$ $(i)$~figuring out the \emph{context} of all method
-declarations in the program and $(ii)$~recovering the structure of the
-program for applying our checking rules.
-
-We have implemented our specification rules as static methods
-parameterized by the context under which the respective instruction is
-found.
-
-Section~\ref{abo-jml-cla-use} gives a general overview of the class
-for handling Abstract syntax trees coming with
-\jml. Section~\ref{sub-sec-cla-ast-con} summarizes the implementation
-of the class \texttt{ASTContext} which is in charge of figuring out
-context of method declarations. Section~\ref{sub-sec-the-cla-ass}
-presents the class \texttt{Assignable}, which implement our
-syntactical rules. Finally, Section ~\ref{sub-sec-usi-the-too}
-summarizes our experience using the tool \modtool.
+For the implementation we reuse the parser of \jml.
+%\jml\ comes with several classes for handling abstract
+%syntax trees. 
+The \jml\ parser returns an
+\emph{abstract syntax tree}, in instance of class \texttt{AST}.
+This class \texttt{AST} allow one to represent pieces of code as the
+sequence of a node and a \emph{sibling}, where a node is a tuple of an
+\texttt{int} and a \texttt{String}, and the sibling is another
+\texttt{AST}.
+Further, there is an utility class \texttt{ASTFactory} which
+provides operations to create and duplicate trees, and a class
+\texttt{ASTArray}, which maintains an array of abstract syntax trees.
 
 
+% for recovering the
+%structure of programs we are checking. 
+We use these classes to first $(i)$\ determine the \emph{assignable
+clause} of all method declarations and then $(ii)$\ to apply the rules
+presented above. In order to do this we have defined a class
+\texttt{ASTContext}, and a class \texttt{Assignable}. 
+%recovering the structure of the program for
+%applying our checking rules.
+The last one implements our deriviation rules as static methods
+parameterized by the assignable clause of an instruction.
+%context under which the respective instruction is
+%found.
+
+%Section~\ref{abo-jml-cla-use} gives a general overview of the class
+%for handling Abstract syntax trees coming with
+%\jml. Section~\ref{sub-sec-cla-ast-con} summarizes the implementation
+%of the class \texttt{ASTContext} which is in charge of figuring out
+%context of method declarations. Section~\ref{sub-sec-the-cla-ass}
+%presents the class \texttt{Assignable}, which implement our
+%syntactical rules. Finally, Section ~\ref{sub-sec-usi-the-too}
+%summarizes our experience using the tool \modtool.
 
 
-\subsection{Representing Abstract syntax trees with \jml}
-\label{abo-jml-cla-use}
 
-\jml~ships with several classes for representing and handling abstract
-syntax trees. The class \texttt{AST} allow one to represent piece of
-code as the sequence of a node a \emph{sibling}. The former
-represented as a tuple of an \texttt{int} and a \texttt{String}, and
-the latter of type \texttt{AST}.
 
-\jml~also ships the utility \texttt{ASTFactory} with operation
-covering create and duplicate trees. Finally, the distribution of
-\jml~comes with the class \texttt{ASTArray} for representing an array
-of trees having type \texttt{AST}.
+%\subsection{Representing Abstract syntax trees with \jml}
+%\label{abo-jml-cla-use}
+
 
 
 
@@ -1186,14 +1857,14 @@ of trees having type \texttt{AST}.
 
 \subsection{The class \texttt{ASTContext}}
 \label{sub-sec-cla-ast-con}
-The class \texttt{ASTContext} represent the context of any method
+The class \texttt{ASTContext} represents the context of a method
 declaration. A method context consists of the representation of its
 assignable locations, its parameters and its local variables. This
 representation is based on the definition~\ref{def-mod}. Additionally
-we provide representation for the package and class where the method
-occurs and the class that it extends (if any).
+we store the package, and the class in which the method
+occurs and for each class we store which class it extends.
 
-These contexts, are passed as parameter to the methods of the class
+These contexts are passed as parameter to the methods of the class
 \texttt{Assignable}, which implements the rules presented in
 Section~\ref{sec-che-for-ass-cla}.
 
@@ -1203,25 +1874,26 @@ Section~\ref{sec-che-for-ass-cla}.
 \subsection{The class \texttt{Assignable}}
 \label{sub-sec-the-cla-ass}
 
-The class \texttt{Assignable} implements the assignable rules like
-static method. As an example, in the case of \textsf{modEXP} rules
-(see below), one must pass to it the expression \texttt{e} currently
-analyzed, the context \texttt{cxt} of the method where the expression
-\texttt{e} occurs and the contexts \texttt{cxts} of all known classes.
+The class \texttt{Assignable} implements the assignable rules as
+static methods. To each static method one passes the expression
+\texttt{e} currently analyzed, the context \texttt{cxt} of the method
+where the expression \texttt{e} occurs and the contexts \texttt{cxts}
+of all known classes.
 
-When the expression \texttt{e} is, for instance, an assignment
-$e_1=e_2$ check that $e_1$ belongs to set of assignable expressions of
-the method (\texttt{\_in\_PRIME($\cdots$)}) and then it applies the
-\textsf{modPE} rules on $e_1$ (\texttt{\_modPE($\cdots$)}) and the
-\textsf{modEXP} rules on $e_2$ (\texttt{\_modEXP($\cdots$)}).
+For example, when the expression \texttt{e} is an assignment
+$e_1\:\texttt{=}\:e_2$, it has to be checked that $e_1$ belongs to set
+of assignable expressions of the method
+(\texttt{\_in\_PRIME($\cdots$)}) and that it obeys the
+\textsf{modFE} rules on $e_1$ (\texttt{\_modFE($\cdots$)}) and the
+\textsf{mod} rules on $e_2$ (\texttt{\_mod($\cdots$)}).
 \begin{alltt}
-public static boolean _modEXP(AST e, ASTContext cxt, Vector cxts)\verb!{!	
+public static boolean _mod(AST e, ASTContext cxt, Vector cxts)\verb!{!	
   boolean tempRes;	
   switch(e.getType())\verb!{!	
     case JavaTokenTypes.ASSIGN:{\it // =}
       tempRes = _in_PRIME(e.getFirstChild(),cxt,cxts) &&
-       _modPE(e.getFirstChild(),currentCxt,cxts) &&
-       _modEXP(e.getFirstChild().getNextSibling(),cxt,cxts);
+       _mod(e.getFirstChild(),currentCxt,cxts) &&
+       _mod(e.getFirstChild().getNextSibling(),cxt,cxts);
       return tempRes;
     \vdots 
   \verb!}!
@@ -1233,7 +1905,15 @@ public static boolean _modEXP(AST e, ASTContext cxt, Vector cxts)\verb!{!
 
 \subsection{Experiences using \modtool}
 \label{sub-sec-usi-the-too}
-
+To test the usability of our approach, we have applied \modtool\ to
+the specifications that we wrote earlier for an electronic purse case
+study~\cite{CatanoH02a}. This case study consists of .. classes,
+containing .. methods all together. The specifications are written in
+\escj, thus the assignable clauses are relatively simple and do not
+contain constructs as \fieldsof\ and \reach. When writing and
+improving the specificaitions, we found several times that we had
+forgotten to mention a variable in an assignable clause, but even
+after correcting this ....
 
 
 
@@ -1241,19 +1921,66 @@ public static boolean _modEXP(AST e, ASTContext cxt, Vector cxts)\verb!{!
 
 \section{Conclusion and future work}
 \label{sec-con-and-fut-wor}
-We have presented a method for checking \emph{side-effects}
-freeness. We are defined syntactical rules for each \java~construct
-checking that they only assign local declared as
-\emph{assignable}. Hence, our method does not concern with
-modification but assignment. Therefore in a context with aliasing, our
-method can miss the variable modified. Several solutions have been
-proposed for solving this problem. In~\cite{Leino97} a solution with
-\emph{Data groups} is proposed, which enables modular checking.
+This paper presents a method to do an efficient check on assignable
+clauses. In particular, this method can be used to do a quick check on 
+side-effect freeness.
+This method works on a syntactic basis: 
+for each \java\ construct a rule is defined which checks that every
+assignment only assigns to variables that are declared as 
+\emph{assignable}. There are some limitations to our approach, in
+particular it does not work in a context with aliasing. In such a
+case, formal verification is necessary, but applying our method first
+helps to find the very common simple mistakes, thus allowing to
+concentrate on the essentials when doing formal verification.
+%, our
+%method can miss the variable modified. Several solutions have been
+%proposed for solving this problem. In~\cite{Leino97} a solution with
+%\emph{Data groups} is proposed, which enables modular checking.
 
-Our rules, and the implementation we are done, allow one to check for
-side-efects efficiently, as no too much is spend in it. 
+%Our rules, and the implementation we are done, allow one to check for
+%side-efects efficiently, as no too much is spend in it. 
 
-BLA-BLA-BLA
+\subsubsection{Future work}
+Our method does not keep track of newly allocated memory. Therefore,
+it will reject for example the following method specification:
+\begin{verbatim}
+class C {int x;}
+class D {
+  //@ modifies \nothing;
+  m() {
+   C c = new C();
+   c.x = 3;
+  }
+}
+\end{verbatim}
+To overcome this limitation, future work is to extend our method to extend the
+assignable clause with the (primitively typed) fields of newly
+allocated method.
+
+\jml\ provides so-called model variables, which allows to define
+specification-only variables and relate them to concrete variables by
+using \texttt{represents} or \texttt{depends} clauses,
+following~\cite{Leino97}. These model variables also can be mentioned
+in assignable clauses. It is future work to extend the tool to
+appropriately handle this.
+
+%On the other hand, in the process of specifying abstract classes, some
+%times is useful to define fields
+%which \emph{represents} or \emph{depends} of certain properties of those
+%classes. Due to the nature of the abstract classes it becomes not
+%convenient to define these fields in an implementation
+%level. \jml\ provides the construct \texttt{model} to overcome this
+%difficulty. This construct allow one to define fields in a
+%specification level, hence they do not have to be implemented. Besides 
+%this construct, \jml\ provide the constructs
+%\texttt{depends} and \texttt{represents}. Our specification does not do any 
+%analyses of this type as ``it is reasonable to wait until we clarify
+%the precise semantics of dependencies''\footnote{Text taken from an
+%email from Gary Leavens.}.
+
+Finally, in the end we hope to be able to give better results in the
+context of aliasing, for example by returning a warning if a possibly
+aliased variable is changed.
 
 \bibliographystyle{alpha}
 \bibliography{../specification}
