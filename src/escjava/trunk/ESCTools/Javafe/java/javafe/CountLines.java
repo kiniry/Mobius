@@ -11,6 +11,8 @@ import javafe.util.CorrelatedReader;
 import javafe.util.ErrorSet;
 import javafe.util.FileCorrelatedReader;
 
+//@ invariant true;
+
 public class CountLines
 {
     //@ requires \nonnullelements(argv);
@@ -47,11 +49,10 @@ public class CountLines
                            + tf + " total");
     }
 
-    //@ requires n != null;
-    public static int count(ASTNode n) {
-        int result = 0;
-        if (n instanceof TypeDecl || n instanceof TypeDeclElem|| n instanceof Stmt)
-            result = 1;
+  public static int count(/*@ non_null @*/ ASTNode n) {
+    int result = 0;
+    if (n instanceof TypeDecl || n instanceof TypeDeclElem|| n instanceof Stmt)
+      result = 1;
         else result = 0;
 
         for(int i = 0; i < n.childCount(); i++) {
