@@ -48,6 +48,8 @@ class BogusInput {
   //@ ensures \result == 0
   //@ also_modifies a[\result]
   //@ also_ensures \result == 0;
+  //@ also modifies a[\result]
+  //@ also ensures \result == 0;
   int notAMethod;
   
   /*@ uninitialized */ int uninitA;

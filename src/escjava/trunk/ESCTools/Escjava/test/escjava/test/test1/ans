@@ -247,8 +247,10 @@ extends Modifiers1
    int v3;
 
    public int update(Modifiers1 v1)
-    /*@ also_modifies (/*int*/ v3)  */
-    /*@ also_ensures (/*boolean*/ (/*int*/ v3) == (/*int*/ (/*Modifiers2*/ this).v1))  */ 
+    /*@ also
+      @ modifies (/*int*/ v3)
+      @ ensures (/*boolean*/ (/*int*/ v3) == (/*int*/ (/*Modifiers2*/ this).v1))  
+      @*/ 
    {
       (/*int*/ (/*int*/ v3) = (/*int*/ (/*Modifiers2*/ this).v1));
       return (/*int*/ super.update((/*Modifiers1*/ v1)));

@@ -26,7 +26,13 @@ class BogusSpec {
   //@ also_modifies x, x
   //@ ensures x == null;
   //@ also_ensures x == null;
+  //@ also modifies x, x; ensures x == null;
   void m3() {
+  }
+
+  //@ requires true;
+  //@ also modifies x, x; ensures x == null;
+  void m3also() {
   }
 
   //@ modifies a
@@ -118,12 +124,29 @@ class BogusSpec {
     return 4;
   }
 
+  //@ exsures (SomeException se) \result == 2;
+  //@ exsures (SomeException se) this != x;
+  //@ also
+  //@ exsures (SomeException se) true
+  static int m11also() throws SomeException {
+    return 4;
+  }
+
   //@ exsures (SomeException se) se == \result && se == this && se == x;
   //@ exsures (Throwable tt) tt == se;
   //@ exsures (Throwable tt) d < 0.0;
   //@ exsures (SomeOtherException soe) true;
   //@ also_exsures (Throwable tt) true
+  //@ also exsures (Throwable tt) true
   BogusSpec(double d) throws SomeException {
+  }
+
+  //@ exsures (SomeException se) se == \result && se == this && se == x;
+  //@ exsures (Throwable tt) tt == se;
+  //@ exsures (Throwable tt) d < 0.0;
+  //@ exsures (SomeOtherException soe) true;
+  //@ also exsures (Throwable tt) true
+  BogusSpec(double d, double e) throws SomeException {
   }
 }
 
@@ -133,13 +156,25 @@ class BogusSpecSub extends BogusSpec {
   //@ also_modifies x, x
   //@ ensures x == null;
   //@ also_ensures x == null;
+  //@ also modifies x, x; ensures x == null;
   void m3() {
+  }
+
+  //@ requires true;
+  //@ modifies x, x
+  //@ also modifies x, x; ensures x == null;
+  void m3also() {
   }
 
   //@ also_modifies \lockset
   //@ also_ensures \lockset == \lockset;
   //@ also_ensures \lockset;
+  //@ also modifies \lockset; ensures \lockset == \lockset; ensures \lockset;
   void m6() {
+  }
+
+  //@ also modifies \lockset; ensures \lockset == \lockset; ensures \lockset;
+  void m6also() {
   }
 
   //@ exsures (Throwable t) true;
@@ -151,6 +186,17 @@ class BogusSpecSub extends BogusSpec {
   //@ also_exsures (\TYPE tt) tt == \type(SomeException);
   //@ also_exsures (AnotherException ae) ae == null;
   void m10() throws SomeSubException, AnotherException {
+  }
+
+  //@ also 
+  //@ exsures (SomeException se) se != null;
+  //@ exsures (Throwable t) t == 5;
+  //@ exsures (SomeSubException sse) false;
+  //@ exsures (SomeOtherException soe) soe != null;
+  //@ exsures (NullPointerException npe) true;
+  //@ exsures (\TYPE tt) tt == \type(SomeException);
+  //@ exsures (AnotherException ae) ae == null;
+  void m10also() throws SomeSubException, AnotherException {
   }
 }
 
@@ -191,5 +237,11 @@ class FFClass extends FClass {
   //@ also_modifies x, y, b;
   //@ also_modifies bb;
   void m() {
+  }
+
+  //@ also modifies this.xx;
+  //@ modifies x, y, b;
+  //@ modifies bb;
+  void malso() {
   }
 }

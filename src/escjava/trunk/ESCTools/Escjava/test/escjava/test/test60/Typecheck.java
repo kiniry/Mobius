@@ -30,7 +30,7 @@ class Super {
   //@ requires 0 <= k;
   public void p1(int k) {
   }
-  /*@ also_requires 0 <= k; */  // error: cannot put "also_requires" here
+  /*@ also requires 0 <= k; */  // error: cannot put "also requires" here
   public void p2(int k) {
   }
 }
@@ -46,9 +46,9 @@ interface J {
   public void p0(int k);
   //@ requires 0 <= k;
   public void p1(int k);
-  /*@ also_requires 0 <= k; */  // error: cannot put "also_requires" here
+  /*@ also requires 0 <= k; */  // error: cannot put "also requires" here
   public void p2(int k);
-  /*@ also_requires 0 <= k; */  // error: cannot put "also_requires" here
+  /*@ also requires 0 <= k; */  // error: cannot put "alsorequires" here
   public void p3(int k);
   public void p4(int k);
 }
@@ -72,13 +72,15 @@ class Typecheck extends Super implements J {
   }
   public void p1(int k) {  // fine
   }
-  /*@ also_requires 0 <= k; */  // error: cannot put "also_requires" here
+  /*@ also requires 0 <= k; */  // error: cannot put "also requires" here
   public void p2(int k) {
   }
-  /*@ also_requires 0 <= k; */  // fine:  class-new methods are where "also_requires" belong
+  /*@ also requires 0 <= k; */  // fine:  class-new methods are where
+                                // "also requires" belong
   public void p3(int k) {
   }
-  /*@ requires 0 <= k; */   // error: cannot put "requires" here (but "also_requires" would work)
+  /*@ requires 0 <= k; */   // error: cannot put "requires" here (but
+                            // "also requires" would work)
   public void p4(int k) {
   }
 }
@@ -91,8 +93,8 @@ interface K extends J {
   /*@ requires 0 <= k; */   // error: cannot put "requires" here
   public void p0(int k);
   public void p1(int k);  // fine
-  /*@ also_requires 0 <= k; */  // error: cannot put "also_requires" here
+  /*@ also requires 0 <= k; */  // error: cannot put "also requires" here
   public void p2(int k);
-  /*@ also_requires 0 <= k; */  // error: cannot put "also_requires" here
+  /*@ also requires 0 <= k; */  // error: cannot put "also requires" here
   public void p3(int k);
 }

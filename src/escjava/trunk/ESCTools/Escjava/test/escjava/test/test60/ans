@@ -39,97 +39,97 @@ cat ans.raw | \
   sed -e 's/\(public void m2(.*)\);/\1 {/' \
       -e 's/\(public void m2(.*) {\).*$/\1 {/' | \
   sort | cat run - >! ans
-                     ^
-                     ^
-                     ^
-                     ^
-                     ^
-                     ^
-                     ^
-                     ^
-                     ^
-                     ^
-                     ^
-                     ^
-                  ^
-                  ^
-                  ^
-                  ^
-                  ^
+  ^
+  ^
+  ^
+      ^
+      ^
+      ^
+      ^
+      ^
+      ^
+      ^
+      ^
+      ^
+      ^
+      ^
+      ^
         ^
         ^
-      ^
-      ^
-      ^
-      ^
-      ^
-      ^
-      ^
-      ^
-      ^
-      ^
-      ^
-      ^
-      case 0:  m0(x);  break;
-      case 1:  m1(x, x);  break;
-      case 2:  m2(x);  break;
-      case 3:  m3(x);  break;
-      case 4:  m4(x);  break;
-    //@ assert (x & 3) == 2;
-    //@ assert y != null;
-  /*@ also_requires 0 <= k; */  // error: cannot put "also_requires" h ...
-  /*@ also_requires 0 <= k; */  // error: cannot put "also_requires" h ...
-  /*@ also_requires 0 <= k; */  // error: cannot put "also_requires" h ...
-  /*@ also_requires 0 <= k; */  // error: cannot put "also_requires" h ...
-  /*@ also_requires 0 <= k; */  // error: cannot put "also_requires" h ...
-  /*@ also_requires 0 <= k; */  // error: cannot put "also_requires" h ...
-  /*@ requires 0 <= k; */   // error: cannot put "requires" here
-  /*@ requires 0 <= k; */   // error: cannot put "requires" here
-  /*@ requires 0 <= k; */   // error: cannot put "requires" here (but  ...
-  //@ also_ensures \result < 10;
-  //@ ensures 0 <= \result;
-  //@ ensures \result != x;
-  ^
-  ^
-  ^
-  public void m0(/*@ non_null */ int[] x) {
-  public void m0(/*@ non_null */ int[] x) { // error: method is not ne ...
-  public void m0(/*@ non_null */ int[] x);  // error:  method is not n ...
-  public void m1(/*@ non_null */ int[] x) { // error: method is not ne ...
-  public void m1(/*@ non_null */ int[] x, int[] y);
-  public void m2(/*@ non_null */ int[] x) { {
-  public void m2(/*@ non_null */ int[] x) { {
-  public void m2(/*@ non_null */ int[] x) { {
-  public void m3(/*@ non_null */ int[] x) {
-  public void m4(/*@ non_null */ int[] x) { // error:  method is class ...
-  public void m4(/*@ non_null */ int[] x);
-  public void m5(/*@ non_null */ int[] x) { // error:  method is class ...
+                  ^
+                  ^
+                  ^
+                  ^
+                  ^
+                     ^
+                     ^
+                     ^
+                     ^
+                     ^
+                     ^
+                     ^
+                     ^
+                     ^
+                     ^
+                     ^
+                     ^
   }
   }
   }
-1 caution
 16 errors
+1 caution
 4 warnings
 6 warnings
+  //@ also_ensures \result < 10;
+  /*@ also_requires 0 <= k; */  // error: cannot put "also_requires" h ...
+  /*@ also_requires 0 <= k; */  // error: cannot put "also_requires" h ...
+  /*@ also_requires 0 <= k; */  // error: cannot put "also_requires" h ...
+  /*@ also_requires 0 <= k; */  // error: cannot put "also_requires" h ...
+  /*@ also_requires 0 <= k; */  // error: cannot put "also_requires" h ...
+  /*@ also_requires 0 <= k; */  // error: cannot put "also_requires" h ...
+    //@ assert (x & 3) == 2;
+    //@ assert y != null;
 Associated declaration is "C.java", line 14, col 6:
-Associated declaration is "C.java", line 2, col 6:
 Associated declaration is "C.java", line 29, col 6:
+Associated declaration is "C.java", line 2, col 6:
 Associated declaration is "N.java", line 14, col 21:
 Associated declaration is "N.java", line 16, col 21:
 Associated declaration is "N.java", line 2, col 21:
 Associated declaration is "N.java", line 6, col 21:
 Associated declaration is "N.java", line 8, col 21:
+      case 0:  m0(x);  break;
+      case 1:  m1(x, x);  break;
+      case 2:  m2(x);  break;
+      case 3:  m3(x);  break;
+      case 4:  m4(x);  break;
+Caution: Turning off extended static checking due to type error(s)
 C.java:32: Warning: Postcondition possibly not established (Post)
 C.java:32: Warning: Postcondition possibly not established (Post)
 C.java:32: Warning: Postcondition possibly not established (Post)
 C.java:44: Warning: Possible assertion failure (Assert)
-Caution: Turning off extended static checking due to type error(s)
+  //@ ensures 0 <= \result;
+  //@ ensures \result != x;
 N.java:25: Warning: Possible assertion failure (Assert)
 N.java:39: Warning: Possible assignment of null to variable declared non_null (NonNull)
 N.java:40: Warning: Possible assignment of null to variable declared non_null (NonNull)
 N.java:41: Warning: Possible assignment of null to variable declared non_null (NonNull)
 N.java:42: Warning: Possible assignment of null to variable declared non_null (NonNull)
 N.java:43: Warning: Possible assignment of null to variable declared non_null (NonNull)
+  public void m0(/*@ non_null */ int[] x) {
+  public void m0(/*@ non_null */ int[] x);  // error:  method is not n ...
+  public void m0(/*@ non_null */ int[] x) { // error: method is not ne ...
+  public void m1(/*@ non_null */ int[] x) { // error: method is not ne ...
+  public void m1(/*@ non_null */ int[] x, int[] y);
+  public void m2(/*@ non_null */ int[] x) { {
+  public void m2(/*@ non_null */ int[] x) { {
+  public void m2(/*@ non_null */ int[] x) { {
+  public void m3(/*@ non_null */ int[] x) {
+  public void m4(/*@ non_null */ int[] x);
+  public void m4(/*@ non_null */ int[] x) { // error:  method is class ...
+  public void m5(/*@ non_null */ int[] x) { // error:  method is class ...
+  /*@ requires 0 <= k; */   // error: cannot put "requires" here
+  /*@ requires 0 <= k; */   // error: cannot put "requires" here
+  /*@ requires 0 <= k; */   // error: cannot put "requires" here (but  ...
 Typecheck.java:33: Error: also_requires can only be used on method overrides; use requires instead
 Typecheck.java:49: Error: also_requires can only be used on method overrides; use requires instead
 Typecheck.java:51: Error: also_requires can only be used on method overrides; use requires instead

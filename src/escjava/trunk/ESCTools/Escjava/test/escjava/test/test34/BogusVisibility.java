@@ -152,29 +152,58 @@ class BogusVisibilitySub extends BogusVisibility {
   //@ also_ensures spub0 == spub4;
   private void ens0() {}
 
+  //@ also ensures privSub == pack && prot == publ;
+  //@ ensures spub4 == spub1 && spub2 == spub3;
+  //@ ensures spub0 == spub4;
+  private void ens0also() {}
+
   //@ also_ensures privSub == pack && prot == publ;
   //@ also_ensures spub4 == spub1 && spub2 == spub3;
   void ens1() {}
+
+  //@ also ensures privSub == pack && prot == publ;
+  //@ ensures spub4 == spub1 && spub2 == spub3;
+  void ens1also() {}
 
   //@ also_ensures privSub == pack && prot == publ;
   //@ also_ensures spub4 == spub1 && spub2 == spub3;
   protected void ens2() {}
 
+  //@ also ensures privSub == pack && prot == publ;
+  //@ ensures spub4 == spub1 && spub2 == spub3;
+  protected void ens2also() {}
+
   //@ also_ensures privSub == pack && prot == publ;
   //@ also_ensures spub4 == spub1 && spub2 == spub3;
   public void ens3() {}
+
+  //@ also ensures privSub == pack && prot == publ;
+  //@ ensures spub4 == spub1 && spub2 == spub3;
+  public void ens3also() {}
 
   //@ also_ensures privSub == pack && prot == publ;
   //@ also_ensures spub4 == spub1 && spub2 == spub3;
   private final void ens4() {}
 
+  //@ also ensures privSub == pack && prot == publ;
+  //@ ensures spub4 == spub1 && spub2 == spub3;
+  private final void ens4also() {}
+
   //@ also_ensures privSubSt == packSt && protSt == publSt;
   //@ also_ensures spub4St == spub1St && spub2St == spub3St;
   private static void ens5() {}
 
+  //@ also ensures privSubSt == packSt && protSt == publSt;
+  //@ ensures spub4St == spub1St && spub2St == spub3St;
+  private static void ens5also() {}
+
   //@ also_ensures privSubSt == packSt && protSt == publSt;
   //@ also_ensures spub4St == spub1St && spub2St == spub3St;
   static void ens6() {}
+
+  //@ also ensures privSubSt == packSt && protSt == publSt;
+  //@ ensures spub4St == spub1St && spub2St == spub3St;
+  static void ens6also() {}
 }
 
 class BogusVisibility2 {

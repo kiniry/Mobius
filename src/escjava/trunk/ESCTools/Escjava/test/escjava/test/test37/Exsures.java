@@ -146,9 +146,10 @@ class SomeException extends Throwable {
 
 class AlsoExsures extends Exsures {
   int gg;
-  //@ also_modifies gg;
-  //@ also_ensures ff < 10 && gg == 4;
-  //@ also_exsures (SomeException se) gg == se.f;
+  //@ also
+  //@ modifies gg;
+  //@ ensures ff < 10 && gg == 4;
+  //@ exsures (SomeException se) gg == se.f;
   void m6() throws SomeException {
     gg = 3;
     try {
@@ -176,8 +177,9 @@ class AlsoExsures extends Exsures {
     }
   }
   
-  //@ also_exsures (Throwable t) 0 < sub0;
-  //@ also_exsures (Throwable t) sub1 < 10;
+  //@ also
+  //@ exsures (Throwable t) 0 < sub0;
+  //@ exsures (Throwable t) sub1 < 10;
   void m8(int sub0, int sub1) throws Throwable {
     if (0 < sub0 && sub1 < 10 && sub0 == sub1) {
       throw new Throwable();
@@ -186,8 +188,9 @@ class AlsoExsures extends Exsures {
 
   // The following method may fail to establish the "exsures" clause declared
   // in the superclass.
-  //@ also_exsures (Throwable t) 0 < sub0;
-  //@ also_exsures (Throwable t) sub1 < 10;
+  //@ also
+  //@ exsures (Throwable t) 0 < sub0;
+  //@ exsures (Throwable t) sub1 < 10;
   void m9(int sub0, int sub1) throws Throwable {
     if (0 < sub0 && sub1 < 10) {
       throw new Throwable();

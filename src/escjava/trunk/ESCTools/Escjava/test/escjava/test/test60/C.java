@@ -26,7 +26,7 @@ interface M extends K, J {
 }
 
 class C extends Super implements J {
-  //@ also_ensures \result < 10;
+  //@ also ensures \result < 10;
   public int m(int x) {
     return x+x;
   }
@@ -39,7 +39,7 @@ class C extends Super implements J {
 }
 
 class D implements M {
-  //@ also_requires x < 1000;
+  //@ also requires x < 1000;
   public int p(int x) {
     //@ assert (x & 3) == 2;
     //@ assert x % 2 == 0;

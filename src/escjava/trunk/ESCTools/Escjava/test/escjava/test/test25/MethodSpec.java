@@ -14,6 +14,6 @@ class MethodSpecSub extends MethodSpec {
      * Ensure we see references in method declarations derived specs
      */
 
-    //@ also_ensures \result<=0;
+    //@ also ensures \result<=0;
     int foo(int arg) { return arg; }
 }

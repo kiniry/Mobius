@@ -20,7 +20,7 @@ class Typecheck {
     x++;
   }
 
-  //@ also_ensures true;
+  //@ also ensures true;
   //@ nowarn Invariant;
   //@ monitored
     { y++; x++; m(); p(); }
