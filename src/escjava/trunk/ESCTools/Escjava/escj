@@ -234,7 +234,7 @@ if ( $?ESCJ_VERBOSE ) then
     echo "${JAVA} ${JAVA_VM_FLAGS}";
     echo "  -Dsimplify=${ESCJ_SIMPLIFY}";
     echo "  -classpath ${ESC_CLASSPATH}";
-    echo "  escjava.Main";
+    echo "  " ${MAIN} ;
     echo "  " ${JBIN} ;
     echo "  -classpath ${CLASSPATH}";
     echo "  -specs ${ESC_SPECS}";
