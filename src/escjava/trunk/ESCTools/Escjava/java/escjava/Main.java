@@ -93,6 +93,7 @@ public class Main extends javafe.SrcTool
 
     public javafe.Options makeOptions() { return new Options(); }
     
+    //@ pure
     public static Options options() { return (Options)options; }
 
     // Front-end setup

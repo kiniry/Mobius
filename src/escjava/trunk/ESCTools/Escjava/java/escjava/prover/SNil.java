@@ -15,6 +15,7 @@ final class SNil extends SList
      * The single instance of this class, or <code>null</code> if it
      * has not yet been allocated.
      */
+    //@ spec_public
     private static SNil single = null;
 
     /**
@@ -34,6 +35,7 @@ final class SNil extends SList
      * @return the single SNil instance.
      */
     //@ public normal_behavior
+    //@   modifies single;
     //@   ensures \result != null;
     //@ also
     //@ private normal_behavior

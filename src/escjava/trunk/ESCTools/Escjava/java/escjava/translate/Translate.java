@@ -494,7 +494,7 @@ public final class Translate
    * is wrapped inside a BLOCK guarded command that gets appended onto
    * <code>code</code>.
    */
-  private final StackVector code = new StackVector();
+  /*@ spec_public */ private final StackVector code = new StackVector();
 
   /**
    * List of loop invariant pragmas seen so far (and not yet used) within the

@@ -1617,6 +1617,7 @@ while (ee.hasMoreElements()) {
 	  java.util.Set axsToAdd = new java.util.HashSet();
 	  //axsToAdd.addAll(TrAnExpr.trSpecAuxAxiomsNeeded);
 	  java.util.Set axsDone = new java.util.HashSet();
+/*
 	  while (false && ! axsToAdd.isEmpty()) {  // FIXME - keep this off ???
 		RepHelper o = (RepHelper)axsToAdd.iterator().next();
 		axsToAdd.remove(o);
@@ -1647,6 +1648,7 @@ while (ee.hasMoreElements()) {
                     // FIXME invinfo.map = map;
                 }
 	    }
+*/
 	} finally {
 	  TrAnExpr.closeForClause();
 	}
@@ -2040,6 +2042,7 @@ while (ee.hasMoreElements()) {
      **/
     //@ invariant nonnullDecoration != null;
     //@ invariant nonnullDecoration.decorationType == \type(SimpleModifierPragma);
+    /*@ spec_public */ 
     private static ASTDecoration nonnullDecoration
         = new ASTDecoration("nonnullDecoration");
 

@@ -889,6 +889,7 @@ public class TypeSig extends Type
 
     // "invariant" fields.<each element>.hasParent
     //@ invariant state>=PREPPED ==> fields != null;
+    //@ spec_public
     protected FieldDeclVec fields;
 
     // Note: 'fields' contains all visible fields
@@ -902,6 +903,7 @@ public class TypeSig extends Type
 
     // "invariant" methods.<each element>.hasParent
     //@ invariant state>=PREPPED ==> methods != null;
+    //@ spec_public
     protected MethodDeclVec methods;
 
     /** Returns all fields of the type declaration associated with

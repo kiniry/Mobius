@@ -20,6 +20,7 @@ public class NoWarn
      *                                                 *
      ***************************************************/
 
+    //@ spec_public
     static private int chkStatus[] 
             = new int[TagConstants.LASTESCCHECKTAG - 
                       TagConstants.FIRSTESCCHECKTAG + 1];
@@ -47,9 +48,9 @@ public class NoWarn
 
     // This will be set to one of the three kinds of checking
     // (CHK_AS_ASSERT/ASSUME/SKIP).
-    /*@ invariant globalStatus == CHK_AS_ASSUME || 
-      @           globalStatus == CHK_AS_ASSERT ||
-      @           globalStatus == CHK_AS_SKIP;
+    /*@ invariant globalStatus == TagConstants.CHK_AS_ASSUME || 
+      @           globalStatus == TagConstants.CHK_AS_ASSERT ||
+      @           globalStatus == TagConstants.CHK_AS_SKIP;
       @*/
     public static int globalStatus;
 
@@ -60,8 +61,8 @@ public class NoWarn
      */
     /*@ requires TagConstants.FIRSTESCCHECKTAG <= tag &&
       @          tag <= TagConstants.LASTESCCHECKTAG;
-      @ requires status == CHK_AS_ASSUME || status == CHK_AS_ASSERT ||
-      @          status == CHK_AS_SKIP;
+      @ requires status == TagConstants.CHK_AS_ASSUME || status == TagConstants.CHK_AS_ASSERT ||
+      @          status == TagConstants.CHK_AS_SKIP;
       @ ensures chkStatus[tag - TagConstants.FIRSTESCCHECKTAG] == status;
       @*/
     public static void setChkStatus( int tag, int status ) {

@@ -12,7 +12,7 @@ package javafe.util;
 
 public class NotImplementedException extends RuntimeException
 {
-    //@ public normal_behavior
+    //@ normal_behavior
     //@ requires s != null;
     //@ modifies this.*;
     /*package*/ NotImplementedException(String s) {

@@ -32,9 +32,11 @@ public class SrcReader extends Reader
      **************************************************/
 
     //@ invariant readLex != null;
+    //@ spec_public
     private Lex readLex;
 
     //@ invariant readParser != null;
+    //@ spec_public
     private Parse readParser;
 
     public SrcReader() {

@@ -179,17 +179,18 @@ slides:
 papers:
 	${MAKE} -C papers build
 
-PACKAGE_LIST = escjava escjava.ant escjava.ast escjava.backpred escjava.parser \
-	  escjava.prover escjava.tc escjava.translate escjava.sp \
-	  escjava.reader escjava.gui \
+PACKAGE_LIST = \
+	  junitutils \
           javafe javafe.ast javafe.parser  \
 	  javafe.reader javafe.genericfile javafe.filespace \
 	  javafe.tc javafe.util \
-	  junitutils
+	  escjava escjava.ant escjava.ast escjava.backpred escjava.parser \
+	  escjava.prover escjava.tc escjava.translate escjava.sp \
+	  escjava.reader escjava.gui \
 
 #JAVADOC_SOURCEPATH = $(subst : ,:,$(addsuffix /java:,$(addprefix $(ESCTOOLS_ROOT)/,$(SUBDIRS)))):${ESCTOOLS_ROOT}/Utils
 JAVADOC_SOURCEPATH = ${SOURCEPATH}
-SPECS = ${JML_ROOT}/specs:${JML_ROOT}
+SPECS = ${JML_ROOT}/JML2/specs:${JML_ROOT}/JML2
 
 ## Javadoc depends on the build target since some of the .java files
 ## are generated in the course of the build (e.g. the AST classes).
@@ -241,6 +242,12 @@ jmldoc:  build
 	  -tag requires \
 	  -d $(JMLDOC_GEN_DIR) \
           $(PACKAGE_LIST)
+
+.PHONY: jml
+jml:  build
+	$(JML) -sourcepath $(call canonicalize,$(JAVADOC_SOURCEPATH):$(SPECS):$(JUNIT_SOURCEPATH)) \
+	  -classpath "$(call canonicalize,$(JAVADOC_SOURCEPATH):${JUNIT_LIB}:${ANT_LIB}:${SPECS}:)${CLASSPATH}" \
+	$(PACKAGE_LIST)
 
 ########################################### release
 

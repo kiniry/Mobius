@@ -23,9 +23,9 @@ public class ProverManager {
     final static private int STARTED = 1;
     final static private int PUSHED = 2;
 
-    static private int status = 0;
-    static private boolean isStarted = false;
-    //@ invariant status != NOTSTARTED <==> isStarted;
+    /*@ spec_public */ static private int status = 0;
+    /*@ spec_public */ static private boolean isStarted = false;
+    //@ private invariant status != NOTSTARTED <==> isStarted;
 
     static private FindContributors savedScope = null;
 
@@ -132,9 +132,9 @@ public class ProverManager {
     /**
      * Our Simplify instance.
      */
-    //@ monitored
+    //-@ monitored
     public static Simplify prover;
-	//@ invariant isStarted ==> prover != null;
+	//@ private invariant isStarted ==> prover != null;
 
 }
 

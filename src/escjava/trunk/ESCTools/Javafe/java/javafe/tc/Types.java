@@ -189,6 +189,8 @@ public class Types
 	return s_javaLangPackage;
     }
     //@ invariant s_javaLangPackage==null || \nonnullelements(s_javaLangPackage);
+
+    //@ spec_public
     private static String[] s_javaLangPackage = null;
 
 

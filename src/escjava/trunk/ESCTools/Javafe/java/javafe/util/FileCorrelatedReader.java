@@ -42,6 +42,7 @@ public class FileCorrelatedReader extends LocationManagerCorrelatedReader
      */
     //@ invariant (buf != null) == (stream != null);
 
+    //@ spec_public
     private InputStream stream;
 
     /**

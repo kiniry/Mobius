@@ -29,6 +29,7 @@ public class Inner {
      ** field (this$0). <p>
      **/
     //@ invariant enclosingInstanceDecoration.decorationType == \type(FieldDecl);
+    //@ spec_public
     private static final ASTDecoration enclosingInstanceDecoration
 	= new ASTDecoration("enclosingInstanceDecoration");
 
@@ -81,6 +82,7 @@ public class Inner {
      **/
     /*@ invariant enclosingInstanceArgument.decorationType
                     == \type(FormalParaDecl); */
+    //@ spec_public
     private static final ASTDecoration enclosingInstanceArgument
 	= new ASTDecoration("enclosingInstanceArgument");
 

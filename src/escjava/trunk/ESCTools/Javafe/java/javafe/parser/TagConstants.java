@@ -162,6 +162,7 @@ public class TagConstants extends javafe.ast.TagConstants
      @                punctuationCodes[i] != TagConstants.TYPEDECLELEMPRAGMA &&
      @                punctuationCodes[i] != TagConstants.TYPEMODIFIERPRAGMA); */
     //@ invariant punctuationCodes.owner instanceof TagConstants;
+    //@ spec_public
     static final int punctuationCodes[] = {
         NOT, NE, MOD, ASGREM, BITAND, AND, ASGBITAND, LPAREN, RPAREN, STAR, ASGMUL,
         ADD, INC, ASGADD, COMMA, SUB, DEC, ASGSUB, FIELD, DIV, ASGDIV, COLON,
@@ -180,6 +181,7 @@ public class TagConstants extends javafe.ast.TagConstants
 
     //@ invariant keywordStrings.length == 1 + LAST_KEYWORD - FIRST_KEYWORD;
     //@ invariant \nonnullelements(keywordStrings);
+    //@ spec_public
     private static final String keywordStrings[] = {
         "abstract", "assert", "boolean", "break", "byte", "case", "catch", "char",
         "class", "const", "continue", "default", "do", "double", "else",
@@ -192,6 +194,7 @@ public class TagConstants extends javafe.ast.TagConstants
     };
 
     //@ invariant \nonnullelements(otherStrings);
+    //@ spec_public
     private static final String otherStrings[] = {
         "IDENT",
         "CHARLIT", "INTLIT", "2147483648",
@@ -202,6 +205,7 @@ public class TagConstants extends javafe.ast.TagConstants
     };
 
     //@ invariant otherCodes.length == otherStrings.length;
+    //@ spec_public
     private static final int otherCodes[] = {
         IDENT,
         CHARLIT, INTLIT, MAX_INT_PLUS_ONE,
@@ -212,6 +216,7 @@ public class TagConstants extends javafe.ast.TagConstants
     };
 
     //@ invariant noTokens == keywordStrings.length + punctuationStrings.length + otherStrings.length;
+    //@ spec_public
     private static final int noTokens =
         keywordStrings.length + punctuationStrings.length + otherStrings.length;
 

@@ -68,7 +68,7 @@ public class Location
    * whole file, or dummy location).
    *********************************************************************/
 
-    //@ modifies \nothing;
+    //@ pure
     public static boolean isWholeFileLoc(int loc) {
 	return LocationManagerCorrelatedReader.isWholeFileLoc(loc);
     }

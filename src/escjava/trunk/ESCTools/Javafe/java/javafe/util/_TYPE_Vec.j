@@ -58,7 +58,7 @@ public class  _TYPE_Vec {
      *                                                 *
      ***************************************************/
 
-    private /*@non_null*/ _TYPE_[] elements;
+    private /*@ spec_public non_null*/ _TYPE_[] elements;
     //@ invariant (\forall int i; (0<=i && i<count) ==> elements[i]!=null);
     //@ invariant \typeof(elements) == \type(_TYPE_[]);
 

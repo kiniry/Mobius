@@ -17,13 +17,13 @@ import java.awt.EventQueue;
  */
 public class FrameShower implements Runnable {
 
-    //@ non_null
+    //@ non_null spec_public
     final private Frame frame;
 
     /** Creates a FrameShower object holding the given Frame.
      */
     //@ requires frame != null;
-    //@ ensures this.frame == frame;
+    //@ also ensures this.frame == frame;
     //@ pure
     protected FrameShower(Frame frame) {
 	this.frame = frame;
@@ -34,7 +34,7 @@ public class FrameShower implements Runnable {
         given frame.
      */
     // Cannot call this pure because it certainly changes the GUI.
-    //@ ensures \not_modified(frame);
+    //@ also ensures \not_modified(frame);
     public void run() {
 	frame.show();
     }

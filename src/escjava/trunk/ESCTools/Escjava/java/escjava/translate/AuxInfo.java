@@ -75,9 +75,13 @@ public class AuxInfo {
 
   private static /*@ non_null */ AuxInfoLink first = new AuxInfoLink();
   private static /*@ non_null */ AuxInfoLink last = first;
-  //@ invariant last.next == null;
+  //@ private invariant last.next == null;
+
+  /*@ spec_public */
   private static int n = 0;
   //@ invariant 0 <= n;
+
+  /*@ spec_public */
   private static int usedInLast = 0;
   //@ invariant 0 <= usedInLast && usedInLast <= AuxInfoLink.LINK_BUFFER_SIZE;
   //@ invariant usedInLast <= n;

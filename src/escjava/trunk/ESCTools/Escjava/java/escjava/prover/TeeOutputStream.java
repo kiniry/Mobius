@@ -20,6 +20,7 @@ public class TeeOutputStream extends FilterOutputStream
      * The other underlying output stream to be filtered (the first
      * being <code>out</code> in the superclass).
      */
+    //@ spec_public
     protected OutputStream out2;
 
     /**
@@ -100,6 +101,7 @@ public class TeeOutputStream extends FilterOutputStream
     //@ also
     //@ public normal_behavior
     //@   requires b.length >= off + len;
+    //@   modifies \everything;
     public void write(byte b[], int off, int len) throws IOException {
         out.write(b, off, len);
         out2.write(b, off, len);

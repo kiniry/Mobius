@@ -47,6 +47,7 @@ class CECEnum implements Enumeration {
      ** Otherwise, the remaining results are those in <code>pending</code>
      ** followed by the results we have yet to read from Simplify.<p>
      **/
+    //@ spec_public
     private boolean simplifyDone = false;
 
     /**
@@ -54,6 +55,7 @@ class CECEnum implements Enumeration {
      **/
     //@ invariant pending.elementType == \type(SimplifyOutput);
     //@ invariant !pending.containsNull;
+    //@ spec_public
     private final Vector pending = new Vector();
 
 
@@ -134,7 +136,7 @@ class CECEnum implements Enumeration {
 	if (pending.size()==0 && !simplifyDone)
 	    readFromSimplify();
 
-	//@ set moreElements = pending.elementCount != 0;
+	// @ set moreElements = pending.elementCount != 0;
 	return pending.size()!=0;
     }
 
@@ -193,7 +195,7 @@ class CECEnum implements Enumeration {
 	  so = readResultMessage();
 	}
 	pending.addElement(so);
-	//@ set moreElements = true;
+	// @ set moreElements = true;
     }
 
     //@ ensures \result != null;

@@ -166,6 +166,7 @@ public class PrepTypeDeclaration {
   }
 
   //@ invariant overridesDecoration.decorationType == \type(Set);
+  //@ spec_public
   private static /*@ non_null @*/ ASTDecoration overridesDecoration 
     = new ASTDecoration("overridesDecoration");
   

@@ -21,6 +21,7 @@ public class CheckCompilationUnit
      */
     //@ invariant checkedField != null;
     //@ invariant checkedField.decorationType == \type(Boolean);
+    //@ spec_public
     private static ASTDecoration checkedField =
 	new ASTDecoration("javafe.tc.CheckCompilationUnit.checked");
 

@@ -23,6 +23,7 @@ public abstract class Tree {
      **************************************************/
 
     /** Our parent or null if we have no parent (aka, we are a root) */
+    //@ spec_public
     private Tree parent = null;
 
     /**
@@ -30,6 +31,7 @@ public abstract class Tree {
      * we have no parent.
      */
     //@ invariant (label == null) == (parent == null);
+    //@ spec_public
     private String label = null;
 
     /*

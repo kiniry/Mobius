@@ -93,13 +93,16 @@ public class VcToString
   }
 
   // holds set of symbols used
+  //@ spec_public
   private /*@ non_null */ Set symbols = new Set();
   
   // string of initial assumptions
+  //@ spec_public
   private /*@ non_null */ Set stringLiterals = new Set();
 
   //@ invariant integralPrintNames.keyType == \type(Long);
   //@ invariant integralPrintNames.elementType == \type(String);
+  //@ spec_public
   private static /*@ non_null */ Hashtable integralPrintNames;
 
   private VcToString() {

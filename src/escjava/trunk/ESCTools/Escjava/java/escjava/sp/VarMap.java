@@ -30,10 +30,12 @@ public class VarMap
      table.keyType == \type(GenericVarDecl) &&
      table.elementType == \type(Expr); */
 
+    //@ spec_public
     final private static VarMap botMap = new VarMap();
     //@ invariant botMap.table == null;
     //@ invariant this == botMap || this.table != null;
 
+    //@ spec_public
     final private static VarMap idMap = new VarMap();
     //@ invariant botMap != idMap;
 

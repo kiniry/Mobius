@@ -111,6 +111,7 @@ class MethodSignature
    */
   //@ invariant return_ != null;
   //@ invariant return_.syntax;
+  //@ spec_public
   private Type return_;
 
 }

@@ -24,6 +24,7 @@ class EmptyEnum implements Enumeration
     //@ also
     //@ public normal_behavior
     //@   ensures \result == false;
+    //@ pure
     public boolean hasMoreElements() {
 	return false;
     }
@@ -35,6 +36,7 @@ class EmptyEnum implements Enumeration
     //@ also
     //@ public exceptional_behavior
     //@   signals (NoSuchElementException);
+    //@ pure
     public Object nextElement() {
 	throw new NoSuchElementException();
     } //@ nowarn Exception;

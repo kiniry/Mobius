@@ -683,6 +683,7 @@ class ASTClassFileParser extends ClassFileParser
      * An empty type name vector.
      */
     //@ invariant emptyTypeNameVec != null;
+    //@ spec_public
     private static final TypeNameVec emptyTypeNameVec = TypeNameVec.make();
 
     /**

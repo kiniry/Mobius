@@ -108,7 +108,7 @@ public class Traverse
             }
 	    
             default:
-                //@ unreachable
+                //@ unreachable;
                 Assert.fail("Fall through on "+g);
                 return;
 	}	
@@ -180,7 +180,7 @@ public class Traverse
                 }
     
             default:
-                //@ unreachable
+                //@ unreachable;
                 Assert.fail("Fall through on "+g);
                 return null;
         }

@@ -35,9 +35,11 @@ abstract class LookAheadEnum implements Enumeration {
 
 
     //@ invariant lookAheadValid ==> moreElements == (lookAhead != null);
+    //@ spec_public
     private boolean lookAheadValid = false;
 
     //@ invariant \typeof(lookAhead) <: elementType || lookAhead == null;
+    //@ spec_public
     private Object lookAhead = null;
 
     /**

@@ -17,12 +17,15 @@ class TokenQueue
      */
 
     //@ invariant \nonnullelements(toks);
+    //@ spec_public
     private Token[] toks;
 
     //@ invariant 0 <= start && start < toks.length;
+    //@ spec_public
     private int start;
 
     //@ invariant 0 <= end && end < toks.length;
+    //@ spec_public
     private int end;
 
 

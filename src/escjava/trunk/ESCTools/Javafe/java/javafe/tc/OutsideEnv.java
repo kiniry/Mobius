@@ -174,6 +174,7 @@ public final class OutsideEnv
 
     /** Count of files read so far. */
     //@ private invariant filesRead >= 0;
+    //@ spec_public
     private static int filesRead = 0;
 
     /**
@@ -181,6 +182,7 @@ public final class OutsideEnv
      * is loaded.  May be <code>null</code> if there is no current
      * <code>Listener</code> (the initial state).
      */
+    //@ spec_public
     private static Listener listener = null;
 
     /** Return count of files read so far. */
@@ -191,7 +193,7 @@ public final class OutsideEnv
 
     // Initialization
 
-    //@ static ghost boolean initialized;
+    //@ public static ghost boolean initialized;
 
     //* No constructors available:
     //@ requires false;

@@ -37,6 +37,7 @@ public abstract class LocationManagerCorrelatedReader
    */
   //@ invariant STARTFREELOC <= freeLoc;
 
+  //@ spec_public
   private static int freeLoc = STARTFREELOC;
 
   /**
@@ -273,7 +274,7 @@ public abstract class LocationManagerCorrelatedReader
    *
    * Requires that loc be a valid location. <p>
    */
-  //@ public normal_behavior
+  //@ normal_behavior
   //@ requires loc != Location.NULL;
   //@ modifies \nothing;
   //@ ensures 0 <= \result && \result < allCorrStreams.elementCount;
@@ -462,6 +463,7 @@ public abstract class LocationManagerCorrelatedReader
    */
   //@ invariant marked ==> 0 < markLineNo && markLineNo <= curLineNo;
   
+  //@ spec_public
   private int markLineNo; /*@ readable markLineNo if marked; */
 
   public void mark() {

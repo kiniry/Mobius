@@ -96,6 +96,7 @@ public class JmlCorrelatedReader extends FilterCorrelatedReader
      * scanning Javadoc comments.
      */
 
+    //@ spec_public
     private int unreturnedChars = 0;
     //@ invariant 0 <= unreturnedChars;
     //@ invariant prefixMode < 2 ==> unreturnedChars == 0;
@@ -106,6 +107,7 @@ public class JmlCorrelatedReader extends FilterCorrelatedReader
      * indicates the last of these characters.
      */
 
+    //@ spec_public
     private int lastUnreturnedChar;
     /*@ readable lastUnreturnedChar if unreturnedChars != 0; */
     //@ invariant lastUnreturnedChar != '@';
@@ -175,6 +177,7 @@ public class JmlCorrelatedReader extends FilterCorrelatedReader
 
     // [Un]marking
 
+    //@ spec_public
     private int prefixModeAtMark; /*@ readable prefixModeAtMark if marked; */
     //@ invariant 0 <= prefixModeAtMark && prefixModeAtMark <= 2;
 
@@ -183,6 +186,7 @@ public class JmlCorrelatedReader extends FilterCorrelatedReader
     //@ invariant prefixModeAtMark < 2 ==> unreturnedCharsAtMark == 0;
     //@ invariant specialCharacter != '@' ==> unreturnedCharsAtMark == 0;
 
+    //@ spec_public
     private int lastUnreturnedCharAtMark; /*@ readable lastUnreturnedCharAtMark if marked; */
     //@ invariant lastUnreturnedCharAtMark != '@';
 

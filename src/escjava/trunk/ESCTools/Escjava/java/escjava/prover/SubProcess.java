@@ -52,10 +52,11 @@ public class SubProcess
     /**
      * The actual subprocess, or <code>null</code> if we are closed.
      */
+    //@ spec_public
     private Process P = null;
-    //@ invariant (P == null) ==> closed;
+    //@ private invariant (P == null) ==> closed;
 
-    //@ model boolean closed;
+    //@ public model boolean closed;
 
     /**
      * The {@link PrintStream} to the actual subprocess, or
@@ -63,6 +64,7 @@ public class SubProcess
      */
     //@ invariant (to == null) <==> (P == null);
     //@ invariant (to == null) ==> closed;
+    //@ spec_public
     private PrintStream to = null;
 
     /**
@@ -70,6 +72,7 @@ public class SubProcess
      * <code>null</code> if we are closed.
      */
     //@ invariant (from == null) <==> (P == null);
+    //@ spec_public
     private PushbackInputStream from = null;
 
     /**
@@ -81,6 +84,7 @@ public class SubProcess
      * #handleUnexpected(String)}), we use this information, if
      * available, to produce a more useful error message. </p>
      */
+    //@ spec_public
     private final StringBuffer readChars = (escjava.Main.options().trackReadChars ?
                                             new StringBuffer() :
                                             null);
@@ -213,6 +217,7 @@ public class SubProcess
     //@ also
     //@ public exceptional_behavior
     //@   requires P == null;
+    //@   modifies \everything;
     //@   signals (Died) true;
     public int getChar() {
 	if (P == null) throw new Died();
@@ -243,10 +248,12 @@ public class SubProcess
     //@ public normal_behavior
     //@   requires P != null;
     //@   requires !closed;
+    //@   modifies \everything;
     //@   ensures \result >= -1;
     //@ also
     //@ public exceptional_behavior
     //@   requires P == null;
+    //@   modifies \everything;
     //@   signals (Died) true;
     public int peekChar() {
 	// P may have been closed on us 
@@ -283,7 +290,8 @@ public class SubProcess
      * Turn an {@link IOException} resulting from a read on {@link
      * #from} into a fatal error.
      */
-    //@ behavior
+    //@ private behavior
+    //@   modifies \everything;
     //@   ensures false;
     private void handleReadError(/*@ non_null @*/ IOException e) {
 	ErrorSet.fatal("I/O error encountered while reading "
@@ -304,6 +312,7 @@ public class SubProcess
      * @param wanted is the output we expected.
      */
     //@ behavior
+    //@   modifies \everything;
     //@   ensures closed;
     public void handleUnexpected(/*@ non_null @*/ String wanted) {
 	if (readChars != null && Info.on) {
@@ -386,8 +395,10 @@ public class SubProcess
     //@ public normal_behavior
     //@   requires P != null;
     //@   requires !closed;
+    //@   modifies \everything;
     //@ also
     //@ public behavior
+    //@   modifies \everything;
     //@   ensures closed;
     public void checkChar(char c) {
 	if (c == getChar())
@@ -406,8 +417,10 @@ public class SubProcess
     //@ public normal_behavior
     //@   requires P != null;
     //@   requires !closed;
+    //@   modifies \everything;
     //@ also
     //@ public behavior
+    //@   modifies \everything;
     //@   ensures closed;
     public void checkString(/*@ non_null @*/ String s) {
 	for (int i = 0; i < s.length(); i++) {
@@ -424,6 +437,7 @@ public class SubProcess
     //@ public normal_behavior
     //@   requires P != null;
     //@   requires !closed;
+    //@   modifies \everything;
     public void eatWhitespace() {
 	for (int next = peekChar();
              next == ' ' || next == '\t' || next == '\n';
@@ -444,6 +458,7 @@ public class SubProcess
     /*@ public normal_behavior
       @   requires P != null;
       @   requires !closed;
+      @   modifies \everything;
       @   ensures (\forall int i; 0 <= i && i <= \result.length();
       @                    stops.indexOf(\result.charAt(i)) == -1);
       @   ensures \result != null;
@@ -471,6 +486,7 @@ public class SubProcess
     //@ public normal_behavior
     //@   requires P != null;
     //@   requires !closed;
+    //@   modifies \everything;
     //@   ensures 0 <= \result;
     public int readNumber() {
         int n = 0;
@@ -492,6 +508,7 @@ public class SubProcess
     //@ public normal_behavior
     //@   requires P != null;
     //@   requires !closed;
+    //@   modifies \everything;
     public /*@ non_null @*/ SList readSList() {
 	eatWhitespace();
 	checkChar('(');
@@ -539,6 +556,7 @@ public class SubProcess
     //@ public normal_behavior
     //@   requires P != null;
     //@   requires !closed;
+    //@   modifies \everything;
     public /*@ non_null @*/ SExp readSExp() {
 	eatWhitespace();
 	if (peekChar() == '(')
@@ -582,6 +600,7 @@ public class SubProcess
     //@ public normal_behavior
     //@   requires P != null;
     //@   requires !closed;
+    //@   modifies \everything;
     public /*@ non_null @*/ SList readSLists() {
 	SList l = SList.make();
 
@@ -615,6 +634,7 @@ public class SubProcess
     //@   requires P != null;
     //@   requires !closed;
     //@   requires stop != ' ' && stop != '\t' && stop != '\n';
+    //@   modifies \everything;
     public /*@ non_null @*/ SList readSExps(char stop) {
 	SList l = SList.make();
 

@@ -30,6 +30,7 @@ final public class Atom extends SExp {
     //@ invariant map != null;
     //@ invariant map.keyType == \type(String);
     //@ invariant map.elementType == \type(Atom);
+    //@ spec_public
     static private Hashtable map = new Hashtable(200);
 
 
@@ -43,6 +44,7 @@ final public class Atom extends SExp {
      ** The symbol we represent; always already interned.
      **/
     //@ invariant value != null;
+    //@ spec_public
     private String value;
 
 

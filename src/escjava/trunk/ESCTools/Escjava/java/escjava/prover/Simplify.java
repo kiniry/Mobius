@@ -35,6 +35,7 @@ public class Simplify
      * Our Simplify subprocess; no actions should be taken on this
      * subprocess unless {@link #readySubProcess()} is called first.
      */
+    //@ spec_public
     private final /*@ non_null @*/ SubProcess P;
 
     //@ invariant P == null ==> closed;
@@ -48,9 +49,10 @@ public class Simplify
      * <code>null</code>.  Use {@link #readySubProcess()} to make
      * Simplify available. </p>
      */
+    //@ spec_public
     private CECEnum subProcessUser = null;
 
-    //@ model boolean closed;
+    //@ public model boolean closed;
 
 
     // Multiplexing Simplify
