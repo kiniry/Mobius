@@ -190,6 +190,7 @@ binary-release: build docs
 	-find ${RELTEMP}/specs -name "CVS" -exec rm -rf {} \;  >& /dev/null 
 	## Copy other miscellaneous files
 	cp docs/Escjava2-ImplementationNotes/*.pdf ${RELTEMP}
+	cp docs/ESCJAVA-UsersManual.html ${RELTEMP}
 	${MAKE} clean-norel-noreltemp
 	${MAKE} -C Utils/junitutils build
 	cp ${ESCJAVA_ROOT}/escj ${RELTEMP}
