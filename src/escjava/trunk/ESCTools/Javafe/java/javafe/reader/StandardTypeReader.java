@@ -442,6 +442,8 @@ public class StandardTypeReader extends TypeReader
 	GenericFile source = null;
 	if (fileOriginOption != Options.NEVER_SOURCE)
 		source = locateSource(P, T, true);
+	// FIXME - even with NEVER_SOURCE, shouldn't we read the source
+	// if avoidSpec is true (that is we need the implementation)???
 
 	// Last modification date for source if known (0L if not known):
 	long after = source==null ? 0L : source.lastModified();
