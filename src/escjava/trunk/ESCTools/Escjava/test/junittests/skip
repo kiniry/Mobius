@@ -24,3 +24,7 @@ THERR.java
 StaticInit.java
 ## Until purity is resolved
 NL.java
+## Simplify problems
+Bug1.java
+## UNtil new String specs in committed
+M3String.java 
