@@ -1,0 +1,53 @@
+\documentclass[a4paper]{llncs}
+
+\usepackage{epsfig}     %% om xfig gegenereerde pstexs te includen
+
+% to be removed in final version
+\pagestyle{plain}
+
+\title{Formal specification and static checking of Gemplus' electronic
+purse using ESC/Java}
+
+\author{
+  N\'estor Cata\~no
+\and
+  Marieke Huisman
+}
+
+\institute{
+  INRIA Sophia-Antipolis, France \\ 
+  \email{\{Nestor.Catano, Marieke.Huisman\}@sophia.inria.fr}
+}
+
+\newcommand{\noth}{\(\backslash\)\texttt{nothing}}
+\newcommand{\fieldsof}{\(\backslash\)\texttt{fields\_of}}
+\newcommand{\reach}{\(\backslash\)\texttt{reach}}
+\newcommand{\comment}[1]{\marginpar{\framebox{\begin{minipage}{\marginparwidth}{#1}\end{minipage}}}}
+
+\begin{document}
+%\input{texdefs.tex}
+
+\maketitle
+
+
+This paper presents a case study in formal specification of smart card
+programs, using ESC/Java. It discusses an electronic purse
+application, provided by Gemplus, that we have annotated with
+functional specifications (\emph{i.e.}~pre- and
+postconditions, modifies
+clauses and class invariants), that are as detailed as possible. The
+specification is based on the informal documentation of the
+application. The implementation has been checked \emph{w.r.t.}~the
+specification, using ESC/Java.  This revealed several errors or
+possibilities for improvement in the source code (\emph{e.g.}~removing
+unnecessary tests).
+
+Our paper shows that a relatively
+lightweight use of formal specification techniques can already have
+a serious impact on the quality of a program and its
+documentation. Furthermore, we also present some ideas on how ESC/Java
+could be further improved, both
+\emph{w.r.t.}~specification and verification.
+\\
+
+\end{document}
