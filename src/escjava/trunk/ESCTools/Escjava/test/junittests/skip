@@ -10,3 +10,8 @@ Test2.java
 ParsePlus.java 
 ## Platform dependent
 PureCheck.java
+## Pure and embedded checks
+Embedded.java
+EmbeddedA.java
+PureCheck2.java
+ParsePure.java
