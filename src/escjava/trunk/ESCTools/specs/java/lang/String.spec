@@ -46,6 +46,9 @@ public final class String
     // Constructors (and their helpers)
     //---------------------------------------------------------------------
 
+    //@ initially !isInterned(this);
+    //@ public invariant charArray.owner == this;
+
     /*@  public normal_behavior
       @      ensures charArray != null;
       @      ensures charArray.length == 0;
@@ -55,14 +58,14 @@ public final class String
     /*@  public normal_behavior
       @   requires original != null;
       @   ensures charArray != null;
-      @   ensures equal(charArray,original.charArray);
+      @   ensures equals(this,original);
       @
       @ also public exceptional_behavior
       @   requires original == null;
       @   assignable \nothing;
       @   signals_only NullPointerException;
       @*/
-    public /*@ pure @*/ String(String original);
+    public /*@ pure @*/ String(String original) throws NullPointerException;
 
     /*@  public normal_behavior
       @   requires value != null;
@@ -243,7 +246,7 @@ public final class String
 
     /*@ public normal_behavior
       @   requires buffer != null;
-      @   ensures this.equals(buffer.accumulatedString);
+      @   ensures equals(this,buffer.accumulatedString);
       @
       @ also public exceptional_behavior
       @   requires buffer == null;
@@ -374,17 +377,21 @@ public final class String
       @   requires s1 == s2;
       @   ensures \result;
       @ also public normal_behavior
-      @   requires s1 == null || s1.isInterned;
-      @   requires s2 == null || s2.isInterned;
+      @   requires s1 == null || s2 == null ||
+                     (isInterned(s1) && isInterned(s2));
       @   ensures \result <==> (s1 == s2);
       @
       @ pure //-@ function
-      @ public static model boolean equalsString(String s1, String s2);
+      @ public static model boolean equals(String s1, String s2);
       @*/
+
+    //@ axiom (\forall String s,ss; equals(s,ss) ==> equals(ss,s));
+
+    //@ axiom (\forall String s1,s2,s3; equals(s1,s2) ==> (equals(s1,s3) <==> equals(s2,s3)));
 
     /*@ also public normal_behavior
       @   requires anObject != null && (anObject instanceof String);
-      @   ensures \result == equalsString(this,(String)anObject);
+      @   ensures \result == equals(this,(String)anObject);
       @ also public normal_behavior
       @   requires this == anObject;
       @   ensures \result;
@@ -421,7 +428,7 @@ public final class String
 
     /*@  public normal_behavior
       @   requires anotherString != null;
-      @   ensures this.equals(anotherString) ==> \result;
+      @   ensures equals(this,anotherString) ==> \result;
       @   ensures \result <==> (length() == anotherString.length())
       @                        && (\forall int i;
       @                             0 <= i && i < this.length();
@@ -432,6 +439,7 @@ public final class String
       @   requires anotherString == null;
       @   ensures !\result;
       @*/
+    //-@ function
     public /*@ pure @*/ boolean equalsIgnoreCase(String anotherString);
 
     /*@  public normal_behavior
@@ -556,8 +564,9 @@ public final class String
       @   requires (0 <= toffset && (toffset + len) <= length())
       @             && (0 <= ooffset && (ooffset + len) <= other.length())
       @             && !ignoreCase;
-      @   ensures \result == substring(toffset, (int)(toffset + len))
-      @                        .equals(other.substring(ooffset, (int)(ooffset + len)));
+      @   ensures \result == equals(
+                            substring(toffset, (int)(toffset + len)),
+      @                     other.substring(ooffset, (int)(ooffset + len)));
       @  also
       @   requires (toffset < 0 || (toffset + len) > length())
       @             || (toffset < 0 || (ooffset + len) > other.length());
@@ -585,8 +594,9 @@ public final class String
 
     /*@  public normal_behavior
       @   requires suffix != null && suffix.length() <= length();
-      @   ensures \result == substring((int)(length() - suffix.length()))
-      @                        .equals(suffix);
+      @   ensures \result == equals(
+                                substring((int)(length() - suffix.length())),
+      @                         suffix);
       @  also
       @   requires suffix != null && suffix.length() > length();
       @   ensures !\result;
@@ -814,7 +824,7 @@ public final class String
     /* FIXME +@ public normal_behavior
       @     requires regex != null && replacement != null;
       @     assignable \nothing;
-      @     ensures \result.equals(
+      @     ensures equals(\result,
       @               Pattern.compile(regex).matcher(this)
       @                      .replaceFirst(replacement));
       @*/
@@ -825,7 +835,7 @@ public final class String
     /* FIXME +@ public normal_behavior
       @     requires regex != null && replacement != null;
       @     assignable \nothing;
-      @     ensures \result.equals(
+      @     ensures equals(\result,
       @               Pattern.compile(regex).matcher(this)
       @                      .replaceAll(replacement));
       @*/
@@ -836,7 +846,8 @@ public final class String
     /* FIXME +@ public normal_behavior
       @     requires regex != null;
       @     assignable \nothing;
-      @     ensures \result.equals(Pattern.compile(regex).split(this, limit));
+      @     ensures equals(\result,
+                            Pattern.compile(regex).split(this, limit));
       @*/
     public /*@ pure @*/ /*@ non_null @*/
         String[] split(/*@ non_null @*/ String regex, int limit);
@@ -844,7 +855,7 @@ public final class String
     /* FIXME +@ public normal_behavior
       @     requires regex != null;
       @     assignable \nothing;
-      @     ensures \result.equals(split(regex,0));
+      @     ensures equals(\result,split(regex,0));
       @*/
     public /*@ pure @*/ /*@ non_null @*/
         String[] split(/*@ non_null @*/ String regex);
@@ -861,7 +872,7 @@ public final class String
     /*@  public normal_behavior
       @   ensures \fresh(\result) && \result.length() == length();
       @   ensures \result != null
-      @            && \result.equals(toLowerCase(Locale.getDefault()));
+      @            && equals(\result,toLowerCase(Locale.getDefault()));
       @*/
     public /*@ pure @*/ /*@ non_null @*/ String toLowerCase();
 
@@ -877,7 +888,7 @@ public final class String
     /*@  public normal_behavior
       @   ensures \fresh(\result) && \result.length() == length();
       @   ensures \result != null
-      @            && \result.equals(toUpperCase(Locale.getDefault()));
+      @            && equals(\result,toUpperCase(Locale.getDefault()));
       @*/
     public /*@ pure @*/ /*@ non_null @*/ String toUpperCase();
 
@@ -909,13 +920,13 @@ public final class String
       @    // FIXME ? \result is fresh?
       @  also public normal_behavior
       @    requires obj == null;
-      @    ensures \result != null && \result.equals("null");
+      @    ensures \result != null && equals(\result,"null");
       @  also public normal_behavior
       @    requires obj instanceof String;
       @    ensures \result.equals(obj);   // \result == obj ??? FIXME
       @  also public behavior
       @    requires obj != null;
-      @    ensures \result.equals(obj.theString); 
+      @    ensures equals(\result,obj.theString); 
       @*/
     public static /*@ pure @*/ /*@ non_null @*/ String valueOf(Object obj);
 
@@ -924,7 +935,7 @@ public final class String
       @   ensures \result != null;
       @   ensures equal(\result.charArray,data);
       @   ensures \fresh(\result);
-      @   ensures \result.equals(new String(data));
+      @   ensures equals(\result,new String(data));
       @*/
     public static /*@ pure @*/
         /*@ non_null @*/ String valueOf(/*@ non_null @*/ char[] data);
@@ -955,7 +966,7 @@ public final class String
 
     /*@ public normal_behavior
       @   requires data != null;
-      @   ensures \result != null && \result.equals(new String(data));
+      @   ensures \result != null && equals(\result,new String(data));
       @   ensures \fresh(\result);
       @   ensures \result.charArray.length == data.length;
       @   ensures equal(\result.charArray,data);
@@ -965,8 +976,8 @@ public final class String
         
     /*@  public normal_behavior
       @   ensures \result != null
-      @            && (b ==> \result.equals("true"))
-      @            && (!b ==> \result.equals("false"));
+      @            && (b ==> equals(\result,"true"))
+      @            && (!b ==> equals(\result,"false"));
       @*/
     public static /*@ pure @*/ /*@ non_null @*/ String valueOf(boolean b);
 
@@ -978,36 +989,40 @@ public final class String
     public static /*@ pure @*/ /*@ non_null @*/ String valueOf(char c);
 
     /*@  public normal_behavior
-      @   ensures \result != null && \result.equals(Integer.toString(i));
+      @   ensures \result != null && equals(\result,Integer.toString(i));
       @*/
     public static /*@ pure @*/ /*@ non_null @*/ String valueOf(int i);
     
     /*@  public normal_behavior
-      @   ensures \result != null && \result.equals(Long.toString(l));
+      @   ensures \result != null && equals(\result,Long.toString(l));
       @*/
     public static /*@ pure @*/ /*@ non_null @*/ String valueOf(long l);
     
     /*@  public normal_behavior
-      @   ensures \result != null && \result.equals(Float.toString(f));
+      @   ensures \result != null && equals(\result,Float.toString(f));
       @*/
     public static /*@ pure @*/ /*@ non_null @*/ String valueOf(float f);
     
     /*@  public normal_behavior
-      @   ensures \result != null && \result.equals(Double.toString(d));
+      @   ensures \result != null && equals(\result,Double.toString(d));
       @*/
     public static /*@ pure @*/ /*@ non_null @*/ String valueOf(double d);
     
-    //@ public model boolean isInterned; initially !isInterned;
-
     /*@  public normal_behavior
-      @   ensures \result.isInterned;
-      @   ensures \result.equals(this);
-      @   ensures this.isInterned ==> (\result == this);
-      @   ensures_redundantly (* \result is a canonical representation 
-      @                           for this *);
+      @   ensures isInterned(\result);
+      @   ensures equals(\result,this);
+      @   ensures isInterned(this) ==> (\result == this);
       @*/
-    //@ pure
+    //@ pure // -@ function
     public native /*@ non_null @*/ String intern();
+
+    /*@ public normal_behavior
+      @    ensures \result <==> (s != null && \dttfsa(boolean,"|interned:|",s));
+        //-@ function
+      @ public pure static model boolean isInterned(String s);
+      @
+      @ axiom (\forall int i,k; \dttfsa(java.lang.String,"|intern:|",i,k).length() == k);
+      @*/
 
 }
 

@@ -206,7 +206,7 @@ public interface List extends Collection {
       @
             // FIXME - other exceptions
       @*/
-    /*@ pure @*/ Object get(int index);
+    /*@ pure @*/ Object get(int index) throws IndexOutOfBoundsException;
 
     /*@
       @ public behavior

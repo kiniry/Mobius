@@ -28,6 +28,15 @@ public class ArrayList extends AbstractList
     implements List, RandomAccess, Cloneable, java.io.Serializable
 {
 
+    /*@ public normal_behavior
+      @   ensures \result <==> (
+      @                  initialAbstractList() &&
+      @                  capacity == initialCapacity &&
+      @                  isEmpty() &&
+      @                  containsNull && elementType == \type(Object));
+      @ public pure model boolean initialArrayList(int initialCapacity);
+      @*/
+
     /** This represents the size of the array used to store the elements 
      *  in the ArrayList.
      **/
@@ -35,23 +44,19 @@ public class ArrayList extends AbstractList
       @*/
 
     // METHODS AND CONSTRUCTORS
-    /*@  public normal_behavior
+    /*@ public normal_behavior
       @   requires 0 <= initialCapacity;
-      @   ensures capacity == initialCapacity;
-      @   ensures this.isEmpty();
-      @   ensures containsNull && elementType == \type(Object);
+      @   ensures initialArrayList(initialCapacity);
       @ also
       @  public exceptional_behavior
       @   requires initialCapacity < 0;
       @   assignable \nothing;
-      @   signals (IllegalArgumentException) initialCapacity < 0;
+      @   signals_only IllegalArgumentException;
       @*/
-    /*@ pure @*/ public ArrayList(int initialCapacity);
+    /*@ pure @*/ public ArrayList(int initialCapacity) throws IllegalArgumentException;
 
-    /*@  public normal_behavior
-      @   ensures capacity == 10;
-      @   ensures this.isEmpty();
-      @   ensures containsNull && elementType == \type(Object);
+    /*@ public normal_behavior
+      @   ensures initialArrayList(10);
       @*/
     /*@ pure @*/ public ArrayList();
 
@@ -70,7 +75,7 @@ public class ArrayList extends AbstractList
       @   assignable \nothing;
       @   signals_only NullPointerException;
       @*/
-    /*@ pure @*/ public ArrayList(Collection c);
+    /*@ pure @*/ public ArrayList(Collection c) throws NullPointerException;
 
     /*@  public normal_behavior
       @   assignable objectState;
@@ -124,7 +129,7 @@ public class ArrayList extends AbstractList
     public Object[] toArray(Object[] a);
 
     // specification inherited from List
-    public /*@ pure @*/ Object get(int index);
+    public /*@ pure @*/ Object get(int index) throws IndexOutOfBoundsException;
 
     // specification inherited from List
     public Object set(int index, Object element);

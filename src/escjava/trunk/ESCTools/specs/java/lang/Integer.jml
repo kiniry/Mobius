@@ -24,6 +24,7 @@ package java.lang;
  * @version $Revision$
  * @author Brandon Shilling
  * @author Gary T. Leavens
+ * @author David R. Cok
  */
 //-@ immutable
 public  /*@ pure @*/ final
@@ -36,6 +37,7 @@ public  /*@ pure @*/ final
     @   public normal_behavior
     @     ensures \result == parseable( s, 10 );
     @   model public static pure boolean parseable( String s );
+
           
     @   public normal_behavior
     @     requires Character.MIN_RADIX <= r && r <= Character.MAX_RADIX;

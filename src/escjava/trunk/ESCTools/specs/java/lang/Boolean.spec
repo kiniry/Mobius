@@ -30,29 +30,46 @@ package java.lang;
 //-@ immutable
 public final /*@ pure @*/ class Boolean implements java.io.Serializable {
 
+    //@ non_null
     public static final Boolean TRUE;
 
+    //@ non_null
     public static final Boolean FALSE;
 
+    //@ non_null
     public static final Class	TYPE;
 
-    //@ public model boolean theBoolean;
-    //  represents theBoolean <- booleanValue();
+    //@ public model boolean theBoolean; in objectState;
 
     /*@ public normal_behavior
-      @   assignable theBoolean;
       @   ensures theBoolean == value;
       @*/
+    //@ pure
     public Boolean(boolean value);
 
     /*@ public normal_behavior
-      @   {|
-      @     requires s != null && s.equalsIgnoreCase("true");
-      @     ensures theBoolean;
-      @   also
-      @     requires s == null || !(s.equalsIgnoreCase("true"));
-      @     ensures !theBoolean;
-      @   |}
+      @   ensures \result <==> (s != null && s.equalsIgnoreCase("true"));
+      @ public static pure model boolean decode(String s);
+      @
+      @ public normal_behavior
+      @   ensures \result == ( b ? "true" : "false" );
+      @ public static pure model String canonicalString(boolean b);
+      @*/
+
+    //@ axiom decode(canonicalString(true)) == true;
+    //@ axiom decode(canonicalString(false)) == false;
+    //@ axiom TRUE.theBoolean;
+    //@ axiom !FALSE.theBoolean;
+    //@ axiom decode("true");
+    //@ axiom decode("True");
+    //@ axiom decode("TRUE");
+    //@ axiom !decode("false");
+    //@ axiom !decode("False");
+    //@ axiom !decode("FALSE");
+    //@ axiom !decode("");
+
+    /*@ public normal_behavior
+      @   ensures theBoolean <==> decode(s);
       @*/
     public /*@ pure @*/ Boolean(String s);
     
@@ -61,55 +78,61 @@ public final /*@ pure @*/ class Boolean implements java.io.Serializable {
       @*/
     public /*@ pure @*/ boolean booleanValue();
 
+    // NOTE: The result is not fresh
     /*@ public normal_behavior
-      @   ensures \result != null && \result.equals(new Boolean(b));
-      @   ensures_redundantly \result != null && \result.booleanValue() == b;
+      @   ensures \result != null && \result.booleanValue() == b;
+      @   ensures \result == ( b ? TRUE : FALSE );
       @*/
     public static /*@ pure @*/ Boolean valueOf(boolean b);
 
 
     /*@ public normal_behavior
-      @   {|
-      @     requires s != null && s.equalsIgnoreCase("true");
-      @     ensures \fresh(\result) && \result.booleanValue();
-      @   also
-      @     requires s == null || !(s.equalsIgnoreCase("true"));
-      @     ensures \fresh(\result) && !\result.booleanValue();
-      @   |}
+      @   ensures \result == ( decode(s) ? TRUE : FALSE );
       @*/
     public static /*@ pure @*/ Boolean valueOf(String s);
 
+    // NOTE: The results are interned (not fresh) Strings.
     /*@ public normal_behavior
-      @   ensures valueOf(\result).booleanValue() == b;
+      @   ensures decode(\result) == b;
+      @   ensures \result == (canonicalString(b));
+      @   ensures String.isInterned(\result);
       @*/
     public static /*@ pure @*/ String toString(boolean b);
 
     /*@ also
       @ public normal_behavior
-      @   ensures valueOf(\result).booleanValue() == theBoolean;
+      @   ensures decode(\result) == theBoolean;
+      @   ensures \result == canonicalString(theBoolean);
       @*/
     public String toString();
 
+    //@ public static final model int TRUE_HC;
+    //@ public static final model int FALSE_HC;
+    //@ axiom TRUE_HC != FALSE_HC;
+
     // inherited specification
+    //@ also public normal_behavior
+    //@   ensures \result == ( theBoolean ? TRUE_HC : FALSE_HC);
     public int hashCode();
+
+    /*@ 
+      @ public normal_behavior
+      @   ensures \result <==> ( t == obj || (t!= null && obj != null 
+                         && (t.theBoolean == ((Boolean) obj).theBoolean)));
+        //-@ function
+      @ public pure static model boolean equalsBoolean(Boolean t, Boolean obj);
+      @*/
 
     /*@ also
       @ public normal_behavior
-      @ {|
-      @   requires obj != null && (obj instanceof Boolean);
-      @   ensures \result == (theBoolean == ((Boolean) obj).booleanValue());
-      @ also
-      @   requires obj == null || !(obj instanceof Boolean);
-      @   ensures !\result;
-      @ |}
+      @   ensures \result <==> ( obj != null && (obj instanceof Boolean)
+                         && equalsBoolean(this, (Boolean)obj));
       @*/
     public /*@ pure @*/ boolean equals(Object obj);
     
-    // FIXME - check if getPRoperty is case-insensitive; getBoolean is supposed to be
     /*@ public normal_behavior
-      @   requires name != null && !name.equals("")
-      @         && System.getProperty(name) != null;
-      @   ensures \result == valueOf(System.getProperty(name)).booleanValue();
+      @   ensures \result <==> (name != null && 
+                                decode(System.getProperty(name)));
       @*/
     public static /*@ pure @*/ boolean getBoolean(String name);
 }
