@@ -507,6 +507,8 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                                            + sig);
                     }
 
+/* FIXME -- need to clean up testing of access modifiers and to make them
+consistent with JML 
                     if (!isPrivateFieldAccessAllowed &&
                         Modifiers.isPrivate(fa.decl.modifiers) &&
                         Utils.findModifierPragma(fa.decl,
@@ -518,6 +520,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 			   "postconditions of overridable methods only if "+
 			   "it is declared spec_public or spec_protected");
                     }
+*/
 
                     // The following code checks that "fa" is at least as
                     // spec-accessible as "accessibilityContext" is Java-accessible.
@@ -606,12 +609,14 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                                 }
                             }
                         }
+/* Need to fix the accessibility checking to conform with JML - FIXME
                         if (!isAccessibleEnough) {
                             ErrorSet.error(fa.locId, "Fields mentioned in this modifier "+
                                            "pragma must be at least as accessible "+
                                            "as the field/method being modified (perhaps "+
                                            "try spec_public)");
                         }
+*/
                     }
   
                     return fa;
@@ -1725,83 +1730,13 @@ FIXME - see uses of countFreeVarsAccess
                 }
                 break;
       
-// FIXME - should have aspec_protected case as well ???
+// FIXME - should have a spec_protected case as well ???
             case TagConstants.SPEC_PUBLIC:
-                {
-		    int ctag = ctxt.getTag();
-                    if( ctag == TagConstants.FIELDDECL ) {
-                        FieldDecl fd = (FieldDecl)ctxt;
-                        if (Modifiers.isPublic(fd.modifiers)) {
-                            ErrorSet.error(fd.locId,
-			       "The spec_public annotation can occur only on "
-			       +"non-public declarations");
-                        }
-                    } else if ( ctag == TagConstants.METHODDECL ) {
-                        MethodDecl fd = (MethodDecl)ctxt;
-                        if (Modifiers.isPublic(fd.modifiers)) {
-                            ErrorSet.error(fd.locId,
-			       "The spec_public annotation can occur only on "
-			       +"non-public declarations");
-                        }
-                    } else if ( ctag == TagConstants.CONSTRUCTORDECL ) {
-                        RoutineDecl fd = (RoutineDecl)ctxt;
-                        if (Modifiers.isPublic(fd.modifiers)) {
-                            ErrorSet.error(fd.locId,
-			       "The spec_public annotation can occur only on "
-			       +"non-public declarations");
-                        }
-                    } else if ( ctag == TagConstants.CLASSDECL  ||
-			        ctag == TagConstants.INTERFACEDECL) {
-                        TypeDecl fd = (TypeDecl)ctxt;
-                        if (Modifiers.isPublic(fd.modifiers)) {
-                            ErrorSet.error(fd.locId,
-			       "The spec_public annotation can occur only on "
-			       +"non-public declarations");
-                        }
-		    }
-                    break;
-                }
-
             case TagConstants.SPEC_PROTECTED:
-		{
-		    int ctag = ctxt.getTag();
-                    if( ctag == TagConstants.FIELDDECL ) {
-                        FieldDecl fd = (FieldDecl)ctxt;
-                        if (Modifiers.isPublic(fd.modifiers) ||
-			    Modifiers.isProtected(fd.modifiers)) {
-                            ErrorSet.error(fd.locId,
-			       "The spec_protected annotation can occur only on "
-			       +"non-public, non-protected declarations");
-                        }
-                    } else if ( ctag == TagConstants.METHODDECL ) {
-                        MethodDecl fd = (MethodDecl)ctxt;
-                        if (Modifiers.isPublic(fd.modifiers) ||
-			    Modifiers.isProtected(fd.modifiers)) {
-                            ErrorSet.error(fd.locId,
-			       "The spec_protected annotation can occur only on "
-			       +"non-public, non-protected declarations");
-                        }
-                    } else if ( ctag == TagConstants.CONSTRUCTORDECL ) {
-                        RoutineDecl fd = (RoutineDecl)ctxt;
-                        if (Modifiers.isPublic(fd.modifiers) ||
-			    Modifiers.isProtected(fd.modifiers)) {
-                            ErrorSet.error(fd.locId,
-			       "The spec_protected annotation can occur only on "
-			       +"non-public, non-protected declarations");
-                        }
-                    } else if ( ctag == TagConstants.CLASSDECL  ||
-			        ctag == TagConstants.INTERFACEDECL) {
-                        TypeDecl fd = (TypeDecl)ctxt;
-                        if (Modifiers.isPublic(fd.modifiers) ||
-			    Modifiers.isProtected(fd.modifiers)) {
-                            ErrorSet.error(fd.locId,
-			       "The spec_protected annotation can occur only on "
-			       +"non-public, non-protected declarations");
-                        }
-		    }
-                    break;
-                }
-	
+		// JML now allows spec_public and spec_protected on declarations
+		// of any java accessibiilty
+		break;
+
             case TagConstants.WRITABLE_DEFERRED: 
                 {
                     if (ctxt.getTag() != TagConstants.FIELDDECL ||

@@ -1021,127 +1021,37 @@ BogusVisibility.java:200: Error: Original ESC/Java keywords beginning with also_
 BogusVisibility.java:201: Error: Original ESC/Java keywords beginning with also_ are obsolete; they have been replaced with the corresponding JML keywords and the use of 'also' - note that the semantics has also changed.
   //@ also_ensures spub4St == spub1St && spub2St == spub3St;
       ^
-BogusVisibility.java:9: Error: The spec_public annotation can occur only on non-public declarations
-  /*@ spec_public */ public int spub3;
-                                ^
-BogusVisibility.java:18: Error: The spec_public annotation can occur only on non-public declarations
-  /*@ spec_public */ public static int spub3St;
-                                       ^
-BogusVisibility.java:27: Error: The spec_public annotation can occur only on non-public declarations
-  /*@ spec_public */ public Object spub3Mu;
-                                   ^
-BogusVisibility.java:40: Error: Fields mentioned in this modifier pragma must be at least as accessible as the field/method being modified (perhaps try spec_public)
-  /*@ readable_if priv == 0; */ int defifPack0;
-                  ^
-BogusVisibility.java:49: Error: Fields mentioned in this modifier pragma must be at least as accessible as the field/method being modified (perhaps try spec_public)
-  /*@ readable_if priv == 0; */ protected int defifProt0;
-                  ^
-BogusVisibility.java:50: Error: Fields mentioned in this modifier pragma must be at least as accessible as the field/method being modified (perhaps try spec_public)
-  /*@ readable_if pack == 0; */ protected int defifProt1;
-                  ^
-BogusVisibility.java:58: Error: Fields mentioned in this modifier pragma must be at least as accessible as the field/method being modified (perhaps try spec_public)
-  /*@ readable_if priv == 0; */ public int defifPubl0;
-                  ^
-BogusVisibility.java:59: Error: Fields mentioned in this modifier pragma must be at least as accessible as the field/method being modified (perhaps try spec_public)
-  /*@ readable_if pack == 0; */ public int defifPubl1;
-                  ^
-BogusVisibility.java:60: Error: Fields mentioned in this modifier pragma must be at least as accessible as the field/method being modified (perhaps try spec_public)
-  /*@ readable_if prot == 0; */ public int defifPubl2;
-                  ^
-BogusVisibility.java:75: Error: Fields mentioned in this modifier pragma must be at least as accessible as the field/method being modified (perhaps try spec_public)
-  /*@ monitored_by privMu, packMu, protMu, publMu */
-                   ^
-BogusVisibility.java:79: Error: Fields mentioned in this modifier pragma must be at least as accessible as the field/method being modified (perhaps try spec_public)
-  /*@ monitored_by privMu, packMu, protMu, publMu */
-                   ^
-BogusVisibility.java:79: Error: Fields mentioned in this modifier pragma must be at least as accessible as the field/method being modified (perhaps try spec_public)
-  /*@ monitored_by privMu, packMu, protMu, publMu */
-                           ^
-BogusVisibility.java:83: Error: Fields mentioned in this modifier pragma must be at least as accessible as the field/method being modified (perhaps try spec_public)
-  /*@ monitored_by privMu, packMu, protMu, publMu */
-                   ^
-BogusVisibility.java:83: Error: Fields mentioned in this modifier pragma must be at least as accessible as the field/method being modified (perhaps try spec_public)
-  /*@ monitored_by privMu, packMu, protMu, publMu */
-                           ^
-BogusVisibility.java:83: Error: Fields mentioned in this modifier pragma must be at least as accessible as the field/method being modified (perhaps try spec_public)
-  /*@ monitored_by privMu, packMu, protMu, publMu */
-                                   ^
-BogusVisibility.java:96: Error: Fields mentioned in this modifier pragma must be at least as accessible as the field/method being modified (perhaps try spec_public)
-  //@ requires priv == pack && prot == publ;
-               ^
-BogusVisibility.java:100: Error: Fields mentioned in this modifier pragma must be at least as accessible as the field/method being modified (perhaps try spec_public)
-  //@ requires priv == pack && prot == publ;
-               ^
-BogusVisibility.java:100: Error: Fields mentioned in this modifier pragma must be at least as accessible as the field/method being modified (perhaps try spec_public)
-  //@ requires priv == pack && prot == publ;
-                       ^
-BogusVisibility.java:104: Error: Fields mentioned in this modifier pragma must be at least as accessible as the field/method being modified (perhaps try spec_public)
-  //@ requires priv == pack && prot == publ;
-               ^
-BogusVisibility.java:104: Error: Fields mentioned in this modifier pragma must be at least as accessible as the field/method being modified (perhaps try spec_public)
-  //@ requires priv == pack && prot == publ;
-                       ^
-BogusVisibility.java:104: Error: Fields mentioned in this modifier pragma must be at least as accessible as the field/method being modified (perhaps try spec_public)
-  //@ requires priv == pack && prot == publ;
-                               ^
 BogusVisibility.java:108: Error: Undefined variable 'reqProtSelf'
   //@ requires reqProtSelf;
                ^
-BogusVisibility.java:117: Error: A private field can be used in postconditions of overridable methods only if it is declared spec_public or spec_protected
-  //@ ensures priv == pack && prot == publ;
-              ^
-BogusVisibility.java:121: Error: A private field can be used in postconditions of overridable methods only if it is declared spec_public or spec_protected
-  //@ ensures priv == pack && prot == publ;
-              ^
-BogusVisibility.java:125: Error: A private field can be used in postconditions of overridable methods only if it is declared spec_public or spec_protected
-  //@ ensures priv == pack && prot == publ;
-              ^
 Caution: Turning off extended static checking due to type error(s)
 BogusVisibility.java:155: Caution: No initial also expected since there are no overridden or refined methods
   //@ also ensures privSub == pack && prot == publ;
       ^
-BogusVisibility.java:160: Error: A private field can be used in postconditions of overridable methods only if it is declared spec_public or spec_protected
-  //@ also_ensures privSub == pack && prot == publ;
-                   ^
 BogusVisibility.java:162: Caution: JML requires a specification to begin with 'also' when the method overrides other methods
   void ens1() {}
        ^
 BogusVisibility.java:119: Associated declaration: 
   void ens1() {}
   ^
-BogusVisibility.java:164: Error: A private field can be used in postconditions of overridable methods only if it is declared spec_public or spec_protected
-  //@ also ensures privSub == pack && prot == publ;
-                   ^
 BogusVisibility.java:164: Caution: No initial also expected since there are no overridden or refined methods
   //@ also ensures privSub == pack && prot == publ;
       ^
-BogusVisibility.java:168: Error: A private field can be used in postconditions of overridable methods only if it is declared spec_public or spec_protected
-  //@ also_ensures privSub == pack && prot == publ;
-                   ^
 BogusVisibility.java:170: Caution: JML requires a specification to begin with 'also' when the method overrides other methods
   protected void ens2() {}
                  ^
 BogusVisibility.java:123: Associated declaration: 
   protected void ens2() {}
             ^
-BogusVisibility.java:172: Error: A private field can be used in postconditions of overridable methods only if it is declared spec_public or spec_protected
-  //@ also ensures privSub == pack && prot == publ;
-                   ^
 BogusVisibility.java:172: Caution: No initial also expected since there are no overridden or refined methods
   //@ also ensures privSub == pack && prot == publ;
       ^
-BogusVisibility.java:176: Error: A private field can be used in postconditions of overridable methods only if it is declared spec_public or spec_protected
-  //@ also_ensures privSub == pack && prot == publ;
-                   ^
 BogusVisibility.java:178: Caution: JML requires a specification to begin with 'also' when the method overrides other methods
   public void ens3() {}
               ^
 BogusVisibility.java:127: Associated declaration: 
   public void ens3() {}
          ^
-BogusVisibility.java:180: Error: A private field can be used in postconditions of overridable methods only if it is declared spec_public or spec_protected
-  //@ also ensures privSub == pack && prot == publ;
-                   ^
 BogusVisibility.java:180: Caution: No initial also expected since there are no overridden or refined methods
   //@ also ensures privSub == pack && prot == publ;
       ^
@@ -1158,7 +1068,7 @@ BogusVisibility.java:212: Error: Cannot access this field
         int y = x.spub0;    // Error: spec_public only applies to anno ...
                   ^
 11 cautions
-47 errors
+17 errors
 BogusModifiers.java:23: Error: Modifier 'native' not allowed on field declarations
   abstract native int xx = 0;
                       ^
