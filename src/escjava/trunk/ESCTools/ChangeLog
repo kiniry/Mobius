@@ -1,3 +1,340 @@
+2004-05-31  Joseph Kiniry  <kiniry@cs.kun.nl>
+
+	* slides/Makefile: New rules in Makefile for Texinfo input.
+
+	* papers/.cvsignore:
+	* papers/Makefile:
+	* papers/jml_homework.texinfo:
+	New rules in Makefile for Texinfo input.  Overall structure of
+	homework exercises document done; need to cut-and-paste in
+	exercises written thus far next.
+
+2004-05-31  David Cok  <cok@frontiernet.net>
+
+	* papers/CASSIS2004.tex: Changing address information.
+
+2004-05-31  Joseph Kiniry  <kiniry@cs.kun.nl>
+
+	* papers/CASSIS2004.tex: Updated/corrected institute information.
+
+2004-05-31  David Cok  <cok@frontiernet.net>
+
+	* papers/Makefile: Adding commands that invoke fig2dev.
+
+	* papers/FTFJP2004.tex: Final version.
+
+	* papers/Trans.java:
+	* papers/Trans.txt:
+	* papers/sig-alternate2.cls:
+	Additional files needed for FTFJP2004.
+
+2004-05-29  David Cok  <cok@frontiernet.net>
+
+	* slides/introjml.tex:
+	Added a more information page with links and mailing lists.
+
+2004-05-29  Joseph Kiniry  <kiniry@cs.kun.nl>
+
+	* slides/Makefile:
+	* slides/.cvsignore:
+	* slides/introjml.tex:
+	Added acknowledgement slide and Makefile.
+
+2004-05-29  David Cok  <cok@frontiernet.net>
+
+	* slides/escjava_demo.tex:
+	Corrected sense of sound and complete and adjusted wording.
+
+	* slides/escjava_demo.tex: Fixing a couple typos.
+
+	* papers/PASTE2004.bib: Adding some bib entries.
+
+	* papers/boxed-figure-new.tex: Additional figure options.
+
+2004-05-29  Joseph Kiniry  <kiniry@cs.kun.nl>
+
+	* slides/escjava_demo.tex:
+	* slides/introjml.tex:
+	Review of Erik's slides; cleaned up some presentation, corrected
+	some language, clarified a few statements, etc.  No new slides
+	added at this time.
+
+2004-05-28  Erik Poll  <erikpoll@cs.kun.nl>
+
+	* slides/introjml.tex:
+	Added discussion of spec_public, normal_behaviour, and assume.
+	Modified tools section.
+
+2004-05-26  Erik Poll  <erikpoll@cs.kun.nl>
+
+	* slides/escjava_demo.tex:
+	The Bag demo in slides.
+
+	* slides/introjml.tex:
+	* slides/PPRerik.sty:
+	Introduction to JML slides for ECOOP 2004 tutorial.
+
+2004-05-26  Joseph Kiniry  <kiniry@cs.kun.nl>
+
+	* papers/Makefile:
+	* papers/NIII-R0413.tex:
+	Tweaked top margin to center better on a4 paper.
+
+	* papers/NIII-R0413.tex: Switched to a4wide per local policy.
+
+	* papers/NIII-R0413.tex:
+	Cleaned up version for submission to NIII.  Used LLNCS style.
+
+	* papers/abbrev.bib:
+	My standard set of bibtex abbreviations for all common journals,
+	conferences, workshops, and publishers.
+
+2004-05-25  Joseph Kiniry  <kiniry@cs.kun.nl>
+
+	* papers/CASSIS2004.bib:
+	* papers/CASSIS2004.tex:
+	* papers/koa_state_diagram.fig:
+	Version to submit.
+
+2004-05-25  David Cok  <cok@frontiernet.net>
+
+	* papers/CASSIS2004.tex: Fixing formatting problems and some phrasing.
+
+2004-05-24  Joseph Kiniry  <kiniry@cs.kun.nl>
+
+	* papers/NIII-R0413.tex:
+	Snapshot of technical report; uses a different style than PASTE paper
+	and has some additional material, since we have the space.
+
+2004-05-23  David Cok  <cok@frontiernet.net>
+
+	* papers/.cvsignore: Generalizing the ignored filenames.
+
+2004-05-23  Joseph Kiniry  <kiniry@cs.kun.nl>
+
+	* Escjava/java/escjava/escjava.mtex:
+	* Javafe/java/javafe/Options.java:
+	Clarified and strengthened documentation on -classpath and
+	-bootclasspath options.  See bug #876093 for details.
+	http://sourceforge.net/tracker/index.php?func=detail&aid=876093&group_id=65346&atid=510629
+
+	* papers/.cvsignore:
+	* papers/CASSIS2004.bib:
+	* papers/CASSIS2004.tex:
+	* papers/Makefile:
+	Draft of CASSIS paper.  It is not quite done yet, we'll see if they
+	take it late.  If not, we'll send it somewhere else soon.
+
+2004-05-22  David Cok  <cok@frontiernet.net>
+
+	* Escjava/test/junittests/M.java:
+	* Escjava/test/junittests/M.java-expected:
+	* Escjava/test/junittests/M1.java:
+	* Escjava/test/junittests/M1.java-expected:
+	* Escjava/test/junittests/M2.java:
+	* Escjava/test/junittests/M2.java-expected:
+	New tests for Bug #955950
+
+	* Escjava/java/escjava/translate/GetSpec.java:
+	* Escjava/java/escjava/translate/TrAnExpr.java:
+	* Escjava/java/escjava/translate/Translate.java:
+	Fixes for Bug #955950
+
+	* Escjava/java/escjava/prover/CECEnum.java:
+	Allowing the output from a LEMMA command as well.
+
+	* Escjava/java/escjava/Main.java:
+	* Escjava/java/escjava/ProverManager.java:
+	Some formatting cleanup.
+
+	* Escjava/test/junittests/.cvsignore:
+	Added some files to ignore - these are temporary files in the Makefile.
+
+	* Escjava/java/escjava/translate/Translate.java: A fix for Bug #955779
+
+	* Escjava/test/junittests/C.java:
+	* Escjava/test/junittests/C.java-expected:
+	A test the replicates #955779
+
+2004-05-18  Joseph Kiniry  <kiniry@cs.kun.nl>
+
+	* Escjava/java/escjava/ant/ESCJavaTask.java:
+	First version of Ant task for ESC/Java.  Written by Will Sargent
+	<will_sargent@yahoo.com> and provided on 17 May 2004.
+
+2004-05-17  David Cok  <cok@frontiernet.net>
+
+	* Escjava/test/junittests/Makefile: Adding partjunittests.
+
+	* docs/Escjava2-ImplementationNotes/Escjava2-ImplementationNotes.texinfo:
+	Some doc updates regarding readable and writable.
+
+	* Escjava/java/escjava/ast/hierarchy.j:
+	* Escjava/java/escjava/pa/PredicateAbstraction.java:
+	* Escjava/java/escjava/parser/EscPragmaParser.java:
+	* Escjava/java/escjava/translate/Ejp.java:
+	* Escjava/java/escjava/translate/GC.java:
+	* Escjava/java/escjava/translate/Substitute.java:
+	* Escjava/java/escjava/translate/TrAnExpr.java:
+	* Escjava/java/escjava/translate/VcToString.java:
+	* Escjava/test/junittests/GhostLocal.java-expected:
+	* Escjava/test/junittests/Min.java:
+	* Escjava/test/junittests/Min.java-expected:
+	* Escjava/java/escjava/AnnotationHandler.java:
+	Commit of the implementation of the axioms for min and max
+	quantifiers - still need the documentation; also Simplify's
+	reasoning with quantified expressions: especially those involving
+	just arithmetic, is quite fragile.
+
+2004-05-12  David Cok  <cok@frontiernet.net>
+
+	* Escjava/test/junittests/NL.java-expected:
+	Slight adjustment because the prover is started lazily.
+
+	* Escjava/java/escjava/translate/GC.java:
+	Improvements to error message printing - consistency checks and
+	auxiliary infornmation without location.
+
+	* Escjava/test/junittests/Readable.java:
+	* Escjava/test/junittests/Readable.java-expected:
+	* Escjava/test/junittests/ReadableBad.java:
+	* Escjava/test/junittests/ReadableBad.java-expected:
+	New tests for readable and writable.
+
+	* Escjava/java/escjava/ast/TagConstants.java:
+	* Escjava/java/escjava/parser/EscPragmaParser.java:
+	* Escjava/java/escjava/tc/FlowInsensitiveChecks.java:
+	Implementing readable and writable.
+
+	* Escjava/java/escjava/translate/ErrorMsg.java:
+	Improvements to erro message printing - consistency checks and
+	auxiliary infornmation without location.
+
+	* Escjava/java/escjava/translate/GetSpec.java:
+	* Escjava/java/escjava/translate/Translate.java:
+	Partial work on handling consistency checks.
+
+	* Javafe/java/javafe/FrontEndTool.java:
+	Debugging the handling of the boot class path on Windows.
+
+	* Escjava/java/escjava/ProverManager.java:
+	Debugging handling of errors in the prover.
+
+	* Escjava/java/escjava/gui/GUI.java:
+	Adding guesses for the simplify executable.
+
+	* Escjava/java/escjava/Options.java:
+	Removing obsolete experimental options.
+
+	* Escjava/escj: Correcting the debug output.
+
+2004-05-11  David Cok  <cok@frontiernet.net>
+
+	* Escjava/test/junittests/LoopBug.java-expected:
+	Output for test added a while ago.
+
+2004-05-04  David Cok  <cok@frontiernet.net>
+
+	* Escjava/test/junittests/LoopBug.java:
+	Adding a test for the stack overflow bug.
+
+	* Escjava/java/escjava/translate/Translate.java:
+	Fixing a stackoverflow bug in handling model fields.
+
+2004-04-27  David Cok  <cok@frontiernet.net>
+
+	* Escjava/java/escjava/gui/GUI.java:
+	* Javafe/java/javafe/FrontEndTool.java:
+	* Makefile:
+	Implementing a guess for the location of Simplify.
+
+2004-04-25  David Cok  <cok@frontiernet.net>
+
+	* release-files/RELEASE_NOTES.txt: Added release comment.
+
+	* Escjava/java/escjava/gui/EscFrame.java:
+	* Escjava/java/escjava/gui/EscOptions.java:
+	* Escjava/java/escjava/gui/GUI.java:
+	Improved organization of the GUI.
+
+2004-04-06  David Cok  <cok@frontiernet.net>
+
+	* papers/Bad.java:
+	* papers/Better.java:
+	* papers/Example.java:
+	* papers/FTFJP2004.tex:
+	* papers/Good.java:
+	* papers/NoRep.java:
+	* papers/PASTE2004.bib:
+	* papers/Translation.txt:
+	Version as submitted.
+
+2004-04-04  David Cok  <cok@frontiernet.net>
+
+	* papers/Exc.java: Missing figure.
+
+2004-04-03  Joseph Kiniry  <kiniry@cs.kun.nl>
+
+	* papers/Makefile:
+	* papers/boxed-figure-new.tex:
+	* papers/obey.tex:
+	TeX files the FTFJP paper needed.  Retargeted makefile for the current
+	paper also.
+
+	* Makefile:
+	Added new target check-specs for experimentation.  It
+	automatically extracts all types in jmlspecs.jar, writes a Java
+	class that references all of them, then runs escjava2 on the
+	resulting class.  With some additional infrastructure, it is hoped
+	that this kind of process can detect the subtle package- and
+	private-level type changes we have been seeing for JDK 1.4.2_01 ->
+	03.
+
+	* papers/FTFJP2004.tex:
+	Some initial revisions on related work.  Still need a couple of
+	references.  Am looking over the rest of the paper now.
+
+2004-04-03  David Cok  <cok@frontiernet.net>
+
+	* papers/Example.java:
+	* papers/FTFJP2004.tex:
+	* papers/NoRep.java:
+	* papers/PASTE2004.bib:
+	More editing.
+
+2004-04-02  David Cok  <cok@frontiernet.net>
+
+	* papers/Example.java:
+	* papers/FTFJP2004.tex:
+	* papers/Translation.txt:
+	Added an example and some commentary, but now have to shrink some
+	more elsewhere.
+
+	* papers/FTFJP2004.tex: Cutting - still need to add a good example.
+
+2004-04-01  David Cok  <cok@frontiernet.net>
+
+	* papers/FTFJP2004.tex:
+	* papers/PASTE2004.bib: More edits.
+
+2004-03-31  David Cok  <cok@frontiernet.net>
+
+	* papers/FTFJP2004.tex: A bit more editing.
+
+	* papers/SortedSequence.java: Fixing the annotations of the example.
+
+	* papers/FTFJP2004.tex:
+	* papers/PASTE2004.bib: More writing.
+
+2004-03-30  David Cok  <cok@frontiernet.net>
+
+	* papers/FTFJP2004.tex:
+	* papers/NoRep.java:
+	* papers/PASTE2004.bib:
+	* papers/SortedSequence.java:
+	* papers/llncs.cls:
+	A draft of a paper on translating method calls.
+
 2004-03-29  Joseph Kiniry  <kiniry@cs.kun.nl>
 
 	* Escjava/java/escjava/AnnotationHandler.java:
@@ -23,7 +360,7 @@
 
 2004-03-26  David Cok  <cok@frontiernet.net>
 
-	* jmlspecs.jar: Prep for release
+	* jmlspecs.jar: Prep for release.
 
 	* Escjava/test/junittests/AxiomAccess.java:
 	* Escjava/test/junittests/AxiomAccess.java-expected:
@@ -37,7 +374,7 @@
 	* Escjava/java/escjava/translate/GetSpec.java:
 	* Escjava/java/escjava/ast/hierarchy.j:
 	Corrected the handling of static on invariants: constraints,
-	represents, monitors_for, axiom clauses
+	represents, monitors_for, axiom clauses.
 
 2004-03-25  Joseph Kiniry  <kiniry@cs.kun.nl>
 
@@ -70,8 +407,9 @@
 	* release-files/README.release:
 	* release-files/RELEASE_NOTES.txt:
 	* release-files/escj.bat:
-	New batch file for running ESC/Java2 on Windows without needing Cygwin.
-	Small updates to readme and relase notes in preparation for 2.0a6 release.
+	New batch file for running ESC/Java2 on Windows without needing
+	Cygwin.  Small updates to readme and relase notes in preparation
+	for 2.0a6 release.
 
 	* Escjava/test/hofmann/InsSort.java:
 	* Escjava/test/hofmann/List.java:
