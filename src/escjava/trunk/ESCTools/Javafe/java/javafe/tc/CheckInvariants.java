@@ -23,7 +23,7 @@ class CheckInvariants {
 	Assert.notNull(supers);  //@ nowarn Pre
       if (supers != null) {
 	Assert.notFalse(supers == sig.getEnclosingEnv()  //@ nowarn Pre
-		   .lookupTypeName(supern.name)); 
+		   .lookupTypeName(null,supern.name)); 
 	Assert.notFalse((sig.state < TypeSig.CHECKED		//@ nowarn Pre
 			 && sig.state <= supers.state)
 			|| supers.state >= TypeSig.PREPPED);
@@ -40,7 +40,7 @@ class CheckInvariants {
 	    Assert.notNull(supers);			//@ nowarn Pre
 	if (supers != null) {
 	  Assert.notFalse(supers ==			//@ nowarn Pre
-		sig.getEnclosingEnv().lookupTypeName(supern.name));
+		sig.getEnclosingEnv().lookupTypeName(null,supern.name));
 	  Assert.notFalse((sig.state < TypeSig.CHECKED	//@ nowarn Pre
 			   && sig.state <= supers.state)
 			  || supers.state >= TypeSig.PREPPED);

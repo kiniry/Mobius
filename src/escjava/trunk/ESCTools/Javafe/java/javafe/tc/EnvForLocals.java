@@ -49,6 +49,14 @@ public class EnvForLocals extends Env implements/*privately*/ Cloneable {
     //@ requires !(parent instanceof EnvForCU)
     public EnvForLocals(/*@non_null*/ Env parent,
 			/*@non_null*/ GenericVarDecl decl) {
+	this(parent,decl,true);
+    }
+
+    //@ requires decl.id!=null
+    //@ requires !(parent instanceof EnvForCU)
+    public EnvForLocals(/*@non_null*/ Env parent,
+			/*@non_null*/ GenericVarDecl decl,
+			boolean warnAboutDuplication) {
 	this.parent = parent;
 	this.decl = decl;
 
@@ -61,12 +69,26 @@ public class EnvForLocals extends Env implements/*privately*/ Cloneable {
 	 *
 	 * (Note that result returns a TypeSig if decl.id refers to a
 	 * field.)
+
+	    The previous code searched for a previous declaration as if it
+	    were looking up a name.  That does not work for a number of
+	    situations:  
+		- declaring a formal parameter for a catch clause
+		- local variables inside a block-level classs declaration
+		- formal parameters of an anonymous class
+	    In the last two situations anyway, the enclosing block is able
+	    to see names declared outside of it, but is also allowed to 
+	    redeclare such names.  Hence we can't use the simple lookup
+	    mechanism to determine duplicateness - and we introduce a
+	    new, but similar, isDuplicate method for that purpose. -- DRCok
 	 */
-	ASTNode result = parent.locateFieldOrLocal(decl.id);
-	if (result instanceof GenericVarDecl)
+	//ASTNode result = parent.locateFieldOrLocal(decl.id);
+	//if (warnAboutDuplication && result instanceof GenericVarDecl)
 	    // && whereDeclared((GenericVarDecl)result)==declaringClass)
+	if (warnAboutDuplication && parent.isDuplicate(decl.id)) {
 	    ErrorSet.error(decl.locId, "Variable '" + decl.id +
 			   "' is already defined here.");
+	}
     }
 
 
@@ -156,9 +178,9 @@ public class EnvForLocals extends Env implements/*privately*/ Cloneable {
      * error is reported at that location via ErrorSet else one of
      * its possible meanings is returned.<p>
      */
-    public TypeSig lookupSimpleTypeName(Identifier id, int loc) {
+    public TypeSig lookupSimpleTypeName(TypeSig caller, Identifier id, int loc) {
 	// We bind no type variables ourshelves:
-	return parent.lookupSimpleTypeName(id, loc);
+	return parent.lookupSimpleTypeName(caller, id, loc);
     }
 
 
@@ -190,6 +212,13 @@ public class EnvForLocals extends Env implements/*privately*/ Cloneable {
 	    return decl;
 	else
 	    return parent.locateFieldOrLocal(id);
+    }
+
+    public boolean isDuplicate(Identifier id) {
+	if (id == decl.id)
+	    return true;
+	else
+	    return parent.isDuplicate(id);
     }
 
 

@@ -124,7 +124,7 @@ public class GhostEnv extends EnvForTypeSig
 	    boolean isStatic = isStatic(fd);
 	    if ((isStatic || !staticContext) &&
 			    !fields.containsKey(fd)) {
-		s.getEnclosingEnv().resolveType(fd.type);
+		s.getEnclosingEnv().resolveType(null, fd.type); // FIXME _ use a caller?
 		fields.put(fd, fd);
 	    }
 	}

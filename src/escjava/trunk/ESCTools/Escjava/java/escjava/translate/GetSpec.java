@@ -540,15 +540,6 @@ premap generated from the uses of \old in the body of the method + the spec of t
             pre.addElement(cond);
 	}
 		
-/*
-        for (int i = 0; i < dmd.requires.size(); i++) {
-            ExprModifierPragma prag = dmd.requires.elementAt(i);
-            Expr gcExpr = TrAnExpr.trSpecExpr(prag.expr);
-            Condition cond = GC.condition(TagConstants.CHKPRECONDITION, gcExpr,
-                                          prag.getStartLoc());
-            pre.addElement(cond);
-        }
-*/
         return pre;
     }
 
@@ -773,6 +764,97 @@ while (ee.hasMoreElements()) {
             }
         }
 
+	// Then any initially clauses (for constructors, if not a helper)
+
+	boolean isHelper = 
+		findModifierPragma(dmd.original.pmodifiers,TagConstants.HELPER) != null; 
+
+	if (dmd.isConstructor() && !isHelper) {
+	    Hashtable map = new Hashtable();
+	    map.put(GC.thisvar.decl, GC.resultvar);
+	    TypeDeclElemVec pmods = dmd.getContainingClass().elems;
+	    for (int i=0; i<pmods.size(); ++i) {
+		TypeDeclElem p = pmods.elementAt(i);
+		if (!(p instanceof TypeDeclElemPragma)) continue;
+		if (((TypeDeclElemPragma)p).getTag() != TagConstants.INITIALLY) continue;
+		ExprDeclPragma prag = (ExprDeclPragma)p;
+		try {
+		    TrAnExpr.initForClause();
+		    Expr pred = TrAnExpr.trSpecExpr(prag.expr, map, wt);
+		    if (TrAnExpr.trSpecExprAuxConditions != null) {
+			for (int j=0; j<TrAnExpr.trSpecExprAuxAssumptions.size(); ++j) {
+			    Expr g = TrAnExpr.trSpecExprAuxAssumptions.elementAt(j);
+			    post.addElement(GC.assumeCondition(g,Location.NULL));
+			}
+			if (TrAnExpr.trSpecExprAuxConditions.size() != 0) {
+			Expr g = GC.nary(Location.NULL, Location.NULL,
+				TagConstants.BOOLAND, 
+				TrAnExpr.trSpecExprAuxConditions);
+			pred = GC.implies(g,pred);
+			}
+		    }
+		    TrAnExpr.trSpecExprAuxConditions = null;
+		    int tag = TagConstants.CHKINITIALLY;
+		    Condition cond = GC.condition(tag, pred, prag.getStartLoc());
+		    post.addElement(cond);
+		} catch (NotImplementedException e) {}
+	    }
+        }
+
+	if (dmd.isConstructor() || isHelper) return post;
+	// Then any constraint clauses (for methods)
+
+	TypeDecl tdecl = dmd.getContainingClass();
+	Set s = new javafe.util.Set();
+	if (tdecl instanceof InterfaceDecl) s.add(tdecl);
+	else {
+	    ClassDecl cdecl = (ClassDecl)tdecl;
+	    while (true) {
+		post = addConstraintClauses(post,cdecl,wt);
+		addSuperInterfaces(cdecl,s);
+		if (cdecl.superClass == null) break;
+		cdecl = (ClassDecl)TypeSig.getSig(cdecl.superClass).getTypeDecl();
+	    }
+	}
+	Enumeration en = s.elements();
+	while (en.hasMoreElements()) {
+	    InterfaceDecl ifd = (InterfaceDecl)en.nextElement();
+	    post = addConstraintClauses(post,ifd,wt);
+	}
+	return post;
+    }
+
+// FIXME - need to include inherited constraint clauses
+    static public ConditionVec addConstraintClauses(ConditionVec post, TypeDecl decl,
+		Hashtable wt) {
+	TypeDeclElemVec pmods = decl.elems;
+	for (int i=0; i<pmods.size(); ++i) {
+	    TypeDeclElem p = pmods.elementAt(i);
+	    if (!(p instanceof TypeDeclElemPragma)) continue;
+	    if (((TypeDeclElemPragma)p).getTag() != TagConstants.CONSTRAINT) continue;
+	    ExprDeclPragma prag = (ExprDeclPragma)p;
+	    try {
+		TrAnExpr.initForClause();
+		Expr pred = TrAnExpr.trSpecExpr(prag.expr, null, wt);
+		if (TrAnExpr.trSpecExprAuxConditions != null) {
+		    for (int j=0; j<TrAnExpr.trSpecExprAuxAssumptions.size(); ++j) {
+			Expr g = TrAnExpr.trSpecExprAuxAssumptions.elementAt(j);
+			post.addElement(GC.assumeCondition(g,Location.NULL));
+		    }
+		    if (TrAnExpr.trSpecExprAuxConditions.size() != 0) {
+			Expr g = GC.nary(Location.NULL, Location.NULL,
+				TagConstants.BOOLAND, 
+				TrAnExpr.trSpecExprAuxConditions);
+			pred = GC.implies(g,pred);
+		    }
+		}
+		TrAnExpr.trSpecExprAuxConditions = null;
+		int tag = TagConstants.CHKCONSTRAINT;
+		Condition cond = GC.condition(tag, pred, prag.getStartLoc());
+		post.addElement(cond);
+	    } catch (NotImplementedException e) {}
+	}
+
         return post;
     }
 
@@ -796,8 +878,13 @@ while (ee.hasMoreElements()) {
     
         ParamAndGlobalVarInfo vars = null;
 
-        for (InvariantInfo ii = mergeInvariants(collectInvariants(scope));
+	boolean isConstructor = spec.dmd.isConstructor();
+        for (InvariantInfo ii = mergeInvariants(collectInvariants(scope, spec.preVarMap));
              ii != null; ii = ii.next) {
+
+	    int tag = ii.prag.getTag();
+	    boolean includeInPre = true;
+	    boolean includeInPost = true;
 
             /*
              * Does ii mention a variable that this GC call will modify?
@@ -816,14 +903,13 @@ while (ee.hasMoreElements()) {
                 falsifiable = invFV.containsAny(predictedSynTargs);
             }
 
-
             if (ii.isStatic) {
                 // static invariant
 
                 // PRECONDITION for static invariant
                 Condition cond = GC.condition(TagConstants.CHKOBJECTINVARIANT, ii.J,
                                               ii.prag.getStartLoc());
-                if (falsifiable)
+                if (falsifiable && includeInPre)
                     spec.pre.addElement(cond);
 
                 // POSTCONDITION for static invariant
@@ -831,7 +917,7 @@ while (ee.hasMoreElements()) {
                 if( mentionsModifiedVars ) {
                     // The free variables of "J" overlap with "synTargs", so add "J"
                     cond = GC.freeCondition(ii.J, ii.prag.getStartLoc());
-                    spec.post.addElement(cond);
+                    if (includeInPost) spec.post.addElement(cond);
                 }
       
             } else {
@@ -944,25 +1030,24 @@ while (ee.hasMoreElements()) {
                         Expr quant = GC.forall(ii.sdecl, GC.implies(ante, cons));
                         Condition cond = GC.condition(TagConstants.CHKOBJECTINVARIANT,
                                                       quant, ii.prag.getStartLoc());
-
-                        spec.pre.addElement(cond);
+                        if (includeInPre) spec.pre.addElement(cond);
                     }
                 }
 
                 // POSTCONDITION for instance invariant
 	
-                if (mentionsModifiedVars) {
+                if (mentionsModifiedVars && includeInPost) {
                     // TypeCorrectNoallocAs[[ s, U ]] && s != null
                     ExprVec ev = TrAnExpr.typeAndNonNullAllocCorrectAs(ii.sdecl, ii.U,
                                                                        null, true,
                                                                        null, false);
                     ExprVec nopats = ev.copy();
 
-                    Expr p = TrAnExpr.trSpecExpr(ii.prag.expr,
+                    Expr p  = TrAnExpr.trSpecExpr(ii.prag.expr,
                                                  TrAnExpr.union(spec.preVarMap, ii.map),
                                                  null);
 		    if (spec.modifiesEverything) collectFields(p, spec.postconditionLocations);
-                    ev.addElement(p);
+                    if (includeInPre) ev.addElement(p);
 
                     Expr ante = GC.and(ev);
                     Expr impl = GC.implies(ante, ii.J);
@@ -983,10 +1068,12 @@ while (ee.hasMoreElements()) {
                                           /*@ non_null */ FindContributors scope,
                                           /*@ non_null */ Set synTargs) {
     
+	ClassDecl cd = (ClassDecl)spec.dmd.getContainingClass();
+	boolean isConstructor = spec.dmd.isConstructor();
+
         // Add NonNullInit checks
-        if (spec.dmd.isConstructor() &&
+        if (isConstructor &&
             !spec.dmd.isConstructorThatCallsSibling()) {
-            ClassDecl cd = (ClassDecl)spec.dmd.getContainingClass();
             // first check fields in first-inherited interfaces
             Enumeration enum = getFirstInheritedInterfaces(cd);
             while (enum.hasMoreElements()) {
@@ -997,9 +1084,10 @@ while (ee.hasMoreElements()) {
             nonNullInitChecks(cd, spec.post);
         }
 
-        for (InvariantInfo ii = mergeInvariants(collectInvariants(scope));
+        for (InvariantInfo ii = mergeInvariants(collectInvariants(scope,spec.preVarMap));
              ii != null; ii = ii.next) {
-            addInvariantBody(ii, spec, synTargs);
+	    int tag = ii.prag.getTag();
+            addInvariantBody(ii, spec, synTargs, true, true);
         }
 
         ExprVec axioms = collectAxioms(scope);
@@ -1009,7 +1097,6 @@ while (ee.hasMoreElements()) {
                                                    Location.NULL ) );
         }
 
-//((EscPrettyPrint)javafe.ast.PrettyPrint.inst).printSpec(System.out,0,spec);
         return spec;
     }
 
@@ -1093,22 +1180,25 @@ while (ee.hasMoreElements()) {
 
     private static void addInvariantBody(/*@ non_null */ InvariantInfo ii,
                                          /*@ non_null */ Spec spec,
-                                         /*@ non_null */ Set synTargs) {
+                                         /*@ non_null */ Set synTargs,
+					boolean includeInPre,
+					boolean includeInPostOrig) {
+
 
         Set invFV = Substitute.freeVars( ii.J );
 
         /* Include invariant in post only if intersection of vars of
          invariant and vars modified in the method body is nonempty. */
 
-        boolean includeInPost = Main.options().useAllInvPostBody ||
-            invFV.containsAny(synTargs);
+        boolean includeInPost = includeInPostOrig && (Main.options().useAllInvPostBody ||
+            invFV.containsAny(synTargs));
 
         if (ii.isStatic) {
             // static invariant
 
             Condition cond = GC.freeCondition(ii.J, ii.prag.getStartLoc());
 
-            spec.pre.addElement(cond);
+            if (includeInPre) spec.pre.addElement(cond);
       
             if (includeInPost) {
                 cond = GC.condition(TagConstants.CHKOBJECTINVARIANT, ii.J,
@@ -1168,11 +1258,10 @@ while (ee.hasMoreElements()) {
                         ante.addElement(p);
                     }
                 }
-                Expr body = GC.implies(GC.and(ante), ii.J);
-                Expr quant = GC.forall(ii.sdecl, body, ante);
-                Condition cond = GC.freeCondition(quant, ii.prag.getStartLoc());
-
-                spec.pre.addElement(cond);
+		Expr body = GC.implies(GC.and(ante), ii.J);
+		Expr quant = GC.forall(ii.sdecl, body, ante);
+		Condition cond = GC.freeCondition(quant, ii.prag.getStartLoc());
+		if (includeInPre) spec.pre.addElement(cond);
             }
 
             // Do the postcondition
@@ -1195,11 +1284,12 @@ while (ee.hasMoreElements()) {
                 }
             }
 
-            if (includeInPost) {
+            if (includeInPost && includeInPostOrig) {
                 // TypeCorrectAs[[ s, U ]] && s != null
-                ExprVec ante = TrAnExpr.typeAndNonNullAllocCorrectAs(ii.sdecl, ii.U,
-                                                                     null, true,
-                                                                     null, true);
+                ExprVec ante = TrAnExpr.typeAndNonNullAllocCorrectAs(
+							ii.sdecl, ii.U,
+							 null, true,
+							 null, true);
 	
                 if (spec.dmd.isConstructor()) {
                     TypeSig tU = ii.U;
@@ -1218,11 +1308,11 @@ while (ee.hasMoreElements()) {
                                               GC.nary(TagConstants.REFNE, ii.s, GC.thisvar)));
                     }
                 }
-                Expr body = GC.implies(GC.and(ante), ii.J);
-                Expr quant = GC.forall(ii.sdecl, body);
-                Condition cond = GC.condition(TagConstants.CHKOBJECTINVARIANT, quant,
-                                              ii.prag.getStartLoc());
-                spec.post.addElement(cond);
+		Expr body = GC.implies(GC.and(ante), ii.J);
+		Expr quant = GC.forall(ii.sdecl, body);
+		Condition cond = GC.condition(TagConstants.CHKOBJECTINVARIANT, quant,
+					      ii.prag.getStartLoc());
+		spec.post.addElement(cond);
                 if (Info.on) {
                     Info.out("[addInvariantBody: Including body-post-invariant at " +
                              Location.toString(ii.prag.getStartLoc()) + "]");
@@ -1265,7 +1355,7 @@ while (ee.hasMoreElements()) {
 
     /** Collects the invariants in <code>scope</code>. */
   
-    private static InvariantInfo collectInvariants(/*@ non_null */ FindContributors scope) {
+    private static InvariantInfo collectInvariants(/*@ non_null */ FindContributors scope, Hashtable premap) {
         InvariantInfo ii = null;
         InvariantInfo iiPrev = null;
 
@@ -1304,7 +1394,7 @@ while (ee.hasMoreElements()) {
                 LocalVarDecl sdecl = UniqName.newBoundThis();
                 VariableAccess s = TrAnExpr.makeVarAccess(sdecl, Location.NULL);
                 Hashtable map = new Hashtable();
-                map.put(GC.thisvar.decl, s);
+		map.put(GC.thisvar.decl, s);
 
                 int cReplacementsBefore = TrAnExpr.getReplacementCount();
 

@@ -110,6 +110,12 @@ public final class ErrorMsg
 		    printErrorMessage(label, counterexampleContext, rd, directTargets, out, true);
 		    continue;
 		}
+		if (label.startsWith("AdditionalInfo")) {
+
+		    printErrorMessage(label, counterexampleContext, rd, directTargets, out, true);
+		    continue;
+
+		}
 		if (!userLabels) {
 		    out.println("Counterexample labels:");
 		    userLabels = true;
@@ -176,9 +182,12 @@ public final class ErrorMsg
 	}
 
 	int k = s.indexOf('@');
-	Assert.notFalse(k != -1);
-	int locUse = getLoc(s, k+1);
-	s = s.substring(0, k);
+	Assert.notFalse(k != -1 || assocOnly);
+	int locUse = 0;
+	if (k != -1) {
+	    locUse = getLoc(s, k+1);
+	    s = s.substring(0, k);
+	}
 
 	k = s.indexOf(':');
 	boolean hasAssocDecl = false;
@@ -198,7 +207,6 @@ public final class ErrorMsg
     
 	int tag = TagConstants.checkFromString(s);
 	String msg = chkToMsg( tag, hasAssocDecl );
-
 	if (msg == null) return;
 
 	if (!assocOnly) ErrorSet.warning( locUse, 
@@ -265,6 +273,10 @@ public final class ErrorMsg
 	    r = ("Code marked as unreachable may possibly be reached");
 	    Assert.notFalse(!hasAssocDecl);
 	    break;
+	case TagConstants.CHKCONSTRAINT:
+	    r = ("Possible violation of object constraint at exit");
+	    Assert.notFalse(hasAssocDecl);
+	    break;
         case TagConstants.CHKDECREASES_BOUND:
 	    r = "Negative loop variant function may not lead to loop exit";
 	    Assert.notFalse(hasAssocDecl);
@@ -284,6 +296,10 @@ public final class ErrorMsg
 	case TagConstants.CHKINDEXTOOBIG:
 	    r = ("Array index possibly too large");
 	    Assert.notFalse(!hasAssocDecl);
+	    break;
+	case TagConstants.CHKINITIALLY:
+	    r = ("Possible violation of initially condition at constructor exit");
+	    Assert.notFalse(hasAssocDecl);
 	    break;
 	case TagConstants.CHKLOOPINVARIANT:
 	    r = ("Loop invariant possibly does not hold");
@@ -371,6 +387,8 @@ public final class ErrorMsg
 	    //@ unreachable
 	    Assert.fail("Bad tag");
 	    break;
+	case TagConstants.CHKADDINFO:
+	    r = TagConstants.toString(tag);
 	case TagConstants.CHKQUIET:
 	    break;
 	}

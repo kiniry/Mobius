@@ -7,8 +7,9 @@ import javafe.util.Assert;
 
 import escjava.prover.Atom;
 
-public class TagConstants extends javafe.tc.TagConstants
-    implements GeneratedTags
+public class TagConstants extends GeneratedTags 
+	//javafe.tc.TagConstants
+    //implements GeneratedTags
 {
     //// Tags for new binary operators
     public static final int IMPLIES = escjava.ast.GeneratedTags.LAST_TAG + 1;
@@ -78,7 +79,8 @@ public class TagConstants extends javafe.tc.TagConstants
     public static final int MODIFIES = MAX + 1;
     public static final int MONITORED = MODIFIES + 1;
     public static final int MONITORED_BY = MONITORED + 1;
-    public static final int NON_NULL = MONITORED_BY + 1;
+    public static final int MONITORS_FOR = MONITORED_BY + 1;
+    public static final int NON_NULL = MONITORS_FOR + 1;
     public static final int NOWARN = NON_NULL + 1;
     public static final int PRE = NOWARN + 1;
     public static final int READABLE_IF = PRE + 1;
@@ -104,7 +106,8 @@ public class TagConstants extends javafe.tc.TagConstants
     public static final int CHKASSERT = CHKARRAYSTORE + 1;
     public static final int CHKCLASSCAST = CHKASSERT + 1;
     public static final int CHKCODEREACHABILITY = CHKCLASSCAST + 1;
-    public static final int CHKCONSTRUCTORLEAK = CHKCODEREACHABILITY + 1;
+    public static final int CHKCONSTRAINT = CHKCODEREACHABILITY + 1;
+    public static final int CHKCONSTRUCTORLEAK = CHKCONSTRAINT + 1;
     public static final int CHKDECREASES_BOUND = CHKCONSTRUCTORLEAK + 1;
     public static final int CHKDECREASES_DECR = CHKDECREASES_BOUND + 1;
     public static final int CHKDEFINEDNESS = CHKDECREASES_DECR + 1;
@@ -112,7 +115,8 @@ public class TagConstants extends javafe.tc.TagConstants
     public static final int CHKINDEXTOOBIG = CHKINDEXNEGATIVE + 1;
     public static final int CHKINITIALIZATION = CHKINDEXTOOBIG + 1;
     public static final int CHKINITIALIZERLEAK = CHKINITIALIZATION + 1;
-    public static final int CHKLOCKINGORDER = CHKINITIALIZERLEAK + 1;
+    public static final int CHKINITIALLY = CHKINITIALIZERLEAK + 1;
+    public static final int CHKLOCKINGORDER = CHKINITIALLY + 1;
     public static final int CHKLOOPINVARIANT = CHKLOCKINGORDER + 1;
     public static final int CHKLOOPOBJECTINVARIANT = CHKLOOPINVARIANT + 1;
     public static final int CHKMODIFIESEXTENSION = CHKLOOPOBJECTINVARIANT + 1;
@@ -133,7 +137,8 @@ public class TagConstants extends javafe.tc.TagConstants
     public static final int CHKWRITABLE = CHKWRITABLEDEFERRED + 1;
     public static final int CHKQUIET = CHKWRITABLE + 1;
     public static final int CHKASSUME = CHKQUIET + 1;
-    public static final int CHKFREE = CHKASSUME + 1;
+    public static final int CHKADDINFO = CHKASSUME + 1;
+    public static final int CHKFREE = CHKADDINFO + 1;
     public static final int LASTESCCHECKTAG = CHKFREE;
 
     //// Tags for Nary function symbols that are _not_ ESCJ keywords
@@ -469,8 +474,8 @@ public class TagConstants extends javafe.tc.TagConstants
                     return escfunctions[tag - FIRSTFUNCTIONTAG];
                 else if (FIRSTJMLKEYWORDTAG <= tag && tag <= LASTJMLKEYWORDTAG)
                     return jmlkeywords[tag - FIRSTJMLKEYWORDTAG].toString();
-                else if (tag <= javafe.tc.TagConstants.LAST_TAG)
-                    return javafe.tc.TagConstants.toString(tag);
+                else if (tag <= GeneratedTags.LAST_TAG)
+                    return GeneratedTags.toString(tag);
                 else {
                     return "Unknown ESC tag <" + tag
                         + " (+" + (tag - javafe.tc.TagConstants.LAST_TAG) + ") >";
@@ -561,6 +566,8 @@ public class TagConstants extends javafe.tc.TagConstants
                 Result = TagConstants.IN_REDUNDANTLY; break;
             case TagConstants.MAPS:
                 Result = TagConstants.MAPS_REDUNDANTLY; break;
+            case TagConstants.HENCE_BY:
+                Result = TagConstants.HENCE_BY_REDUNDANTLY; break;
         }
         return Result;
     }
@@ -622,6 +629,8 @@ public class TagConstants extends javafe.tc.TagConstants
                 Result = TagConstants.IN; break;
             case TagConstants.MAPS_REDUNDANTLY:
                 Result = TagConstants.MAPS; break;
+            case TagConstants.HENCE_BY_REDUNDANTLY:
+                Result = TagConstants.HENCE_BY; break;
         }
         return Result;
     }
@@ -651,6 +660,7 @@ public class TagConstants extends javafe.tc.TagConstants
             tag == TagConstants.MAPS_REDUNDANTLY ||
             tag == TagConstants.MAINTAINING_REDUNDANTLY ||
             tag == TagConstants.DECREASES_REDUNDANTLY ||
+            tag == TagConstants.HENCE_BY_REDUNDANTLY ||
             tag == TagConstants.DECREASING_REDUNDANTLY;
     }
 
@@ -688,6 +698,7 @@ public class TagConstants extends javafe.tc.TagConstants
         Identifier.intern("modifies"),
         Identifier.intern("monitored"),
         Identifier.intern("monitored_by"),
+        Identifier.intern("monitors_for"),
         Identifier.intern("non_null"),
         Identifier.intern("nowarn"),
         Identifier.intern("\\old"),  // TagConstants.PRE
@@ -713,6 +724,7 @@ public class TagConstants extends javafe.tc.TagConstants
         "Assert",
         "Cast",
         "Reachable",
+	"Constraint",
         "CLeak",
         "DecreasesBound",
         "Decreases",
@@ -721,6 +733,7 @@ public class TagConstants extends javafe.tc.TagConstants
         "IndexTooBig",
         "Uninit",
         "ILeak",
+	"Initially",
         "Deadlock",
         "LoopInv",
         "LoopObjInv",
@@ -742,6 +755,7 @@ public class TagConstants extends javafe.tc.TagConstants
         "Writable",
         "vc.Quiet",  // printed in debugging output only
 	"Assume",  // internal use only
+	"AdditionalInfo", // internal use only
         "Free"  // printed in debugging output only
     };
         

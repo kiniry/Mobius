@@ -52,8 +52,9 @@ public class EscTypeReader extends StandardTypeReader
      * non-null.
      */
     //@ requires engine != null && srcReader != null && binReader != null;
-    protected EscTypeReader(Query engine, Query srcEngine, Reader srcReader,
-			      Reader binReader) {
+    protected EscTypeReader(Query engine, Query srcEngine, 
+			CachedReader srcReader,
+			CachedReader binReader) {
 	super(engine, srcEngine, srcReader, binReader);
     }
 
@@ -68,8 +69,8 @@ public class EscTypeReader extends StandardTypeReader
     //@ requires engine != null && srcReader != null && binReader != null;
     //@ ensures \result != null;
     public static StandardTypeReader make(Query engine, 
-					Query srcEngine, Reader srcReader,
-					  Reader binReader) {
+					Query srcEngine, CachedReader srcReader,
+					  CachedReader binReader) {
 	return new EscTypeReader(engine, srcEngine, srcReader, binReader);
     }
 
@@ -83,7 +84,9 @@ public class EscTypeReader extends StandardTypeReader
 			PragmaParser pragmaP, AnnotationHandler ah) {
 	Assert.precondition(Q != null);
 
-	return make(Q, sourceQ, new EscSrcReader(pragmaP,ah), new BinReader());
+	return make(Q, sourceQ, new RefinementCachedReader(
+					new SrcReader(pragmaP)), 
+				new CachedReader(new BinReader()));
     }
 
     /* We have to make this subclass of SrcReader because: a file that
@@ -485,8 +488,8 @@ public class EscTypeReader extends StandardTypeReader
      */
     public boolean exists(String[] P, String T) {
 	if ( super.exists(P, T)) return true;
-	for (int i=0; i<nonJavaSuffixes.length; ++i) {
-	    if (javaSrcFileSpace.findFile(P, T, nonJavaSuffixes[i]) != null) {
+	for (int i=0; i<activeSuffixes.length; ++i) {
+	    if (javaSrcFileSpace.findFile(P, T, activeSuffixes[i]) != null) {
 		return true;
 	    }
 	}
@@ -554,8 +557,8 @@ public class EscTypeReader extends StandardTypeReader
 	}
 
 	// If not, use spec file if available:
-	for (int i=0; i<nonJavaSuffixes.length; ++i) {
-	    GenericFile spec = javaSrcFileSpace.findFile(P, T, nonJavaSuffixes[i]);
+	for (int i=0; i<activeSuffixes.length; ++i) {
+	    GenericFile spec = javaSrcFileSpace.findFile(P, T, activeSuffixes[i]);
 	    if (spec != null) {
 	        return read(spec, false);
 	    }

@@ -33,13 +33,14 @@ foreach jdk_version ( ${JDK14_SOURCES} )
 
     setenv CLASSPATH ${jdk_version}
 
+    ##foreach d ( ${jdk_version}/java/text )
     foreach d ( `find ${jdk_version} -type d ` )
 
     ( glob ${d}/*.java >& /dev/null && \
     	( echo ===== Typechecking $d/\*.java ===== ; \
 	${JAVA} -classpath ${CLASSDIRECTORY} javafe.test.Print \
         -classpath ${CLASSPATH} -source 1.4 \
-        -typecheck -noprint ${d}/*.java ) ) || true
+        -typecheck -noprint -preferBinary ${d}/*.java ) ) || true
 
     end
 end

@@ -150,14 +150,13 @@ public class EnvForTypeSig extends Env {
      * error is reported at that location via ErrorSet else one of
      * its possible meanings is returned.<p>
      */
-    public TypeSig lookupSimpleTypeName(Identifier id, int loc) {
+    public TypeSig lookupSimpleTypeName(TypeSig caller, Identifier id, int loc) {
 	// Check for a definition in peer:
-	TypeSig result = peer.lookupType(id, loc);
-	if (result!=null)
-	    return result;
+	TypeSig result = peer.lookupType(caller, id, loc);
+	if (result!=null) return result;
 
 	// Otherwise, look to enclosing scopes...
-	return parent.lookupSimpleTypeName(id, loc);
+	return parent.lookupSimpleTypeName(caller, id, loc);
     }
 
 
@@ -191,6 +190,10 @@ public class EnvForTypeSig extends Env {
 	return parent.locateFieldOrLocal(id);
     }
 
+    public boolean isDuplicate(Identifier id) {
+	if (hasField(id)) return true;
+	return false;
+    }
 
     /**
      * Locate the lexically innermost method named id. <p>

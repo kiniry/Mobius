@@ -40,19 +40,19 @@ test34	Good	annotation type checking
 test35	Good	fresh
 test36	Good	Exceptional return from constructors
 test37	Good	exsures and also_exsures
-test38	Good	Tests knowledge of constants and final fields with initializers
-test39  Good    relative assignments (op=) with shift operators
+test38	FIX	Tests knowledge of constants and final fields with initializers
+test39  FIX    relative assignments (op=) with shift operators
 
 test40	Drop	non_null -- dropped since rules on inheriting non_null have changed
 test41  Good    test for a previously discovered bug in MODIFIES substitution
 test42	Good	class literals (see also fe/test100)
-test43  Good    substitution for "this" in field-decl modifier pragmas
+test43  FIX    substitution for "this" in field-decl modifier pragmas
 test44  Good    inclusion of types of literals into FindContributors
 test45  Good    "alloc morass" (that something new is not the field of something old)
 test46	Good	test escjava's reasoning about member inner classes [1.1]
 test47	Good	invariants that don't mention any program variables
 test48	Good	execution traces
-test49	Good	writeCheck for set/modifiers on ghost fields
+test49	FIX	writeCheck for set/modifiers on ghost fields
 
 test50  Good	parsing pragmas out of comments
 test51  Good	multiple loop iterations
@@ -62,7 +62,7 @@ test54	Good	helper pragma
 test55	Good	3 inline flags
 test56	Good	parsing of modifier pragmas after formal parameters
 test57	Good	DTTFSA
-test58	Good	"invariant" and "non_null" inheritance from interfaces
+test58	FIX	"invariant" and "non_null" inheritance from interfaces
 test59	Good	instance initializers 
 
 test60	Omit	inheriting method specifications and non_null from interfaces - Omitted because the also_ syntax and the inheritance semantics are now obsolete
@@ -70,7 +70,7 @@ test61	Good	elements left unchanged by arraycopy (based on ex from Bart Jacobs)
 test62	Good	order of testing assertions
 test63	Good	integer division
 test64	FIX	-inlineFromConstructors flag -- FIXME error messages vary in order they are output
-test65	Good	continued-line ellipses at the end of associated declarations
+test65	FIX	continued-line ellipses at the end of associated declarations
 test66	Good	-excuseNullInitializers flag
 test67	Good	comment parsing, including @-signs at beginning of lines
 test68	Good	Various loop tests supplied

@@ -3,7 +3,7 @@
 public class AlsoInherit extends Parent {
 
 	//@ ensures true;
-	public void m();
+	public void m();  // ERROR - no also
 
 	//@ ensures true;
 	public void n();
@@ -12,15 +12,15 @@ public class AlsoInherit extends Parent {
 	//@ ensures true;
 	public void malso();
 
-	//@ also
+	//@ also		// ERROR - should not have an also
 	//@ ensures true;
 	public void nalso();
 
-	//@ also_ensures true;
-	public void p();
+	//@ also_ensures true;  // OBSOLETE
+	public void p();	// ERROR - should have an also
 
-	//@ also_ensures true;
-	public void pp();
+	//@ also_exsures (Exception) true; // OBSOLETE
+	public void pp();	
 
 }
 
@@ -28,10 +28,9 @@ class Parent {
 	//@ ensures true;
 	public void m();
 
-	//@ also
+	//@ also		// ERROR - no also expected
 	//@ ensures true;
 	public void malso();
 
-	//@ ensures true;
 	public void p();
 }

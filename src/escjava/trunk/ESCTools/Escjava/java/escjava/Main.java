@@ -573,7 +573,7 @@ public class Main extends javafe.SrcTool
         // Convert GC to DSA:
 
         String dsaTime = "";
-        if (options().dsa) {
+        if (options().dsa) { // always true
             /*
              * From experiements from POPL01 (Cormac)
              gc = passify ? Passify.compute(gc) : DSA.dsa(gc);

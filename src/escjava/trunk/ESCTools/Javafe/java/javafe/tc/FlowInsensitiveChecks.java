@@ -164,7 +164,7 @@ public class FlowInsensitiveChecks
 	
             case TagConstants.FIELDDECL: {		
                 FieldDecl fd = (FieldDecl)e;
-	
+
                 // Process ModifierPragmas
                 Env rootEnv = Modifiers.isStatic(fd.modifiers) ? rootSEnv : rootIEnv;
                 checkModifierPragmaVec(fd.pmodifiers, fd, rootEnv);
@@ -256,12 +256,12 @@ public class FlowInsensitiveChecks
                 allowedExceptions.removeAllElements();
                 for(int j=0; j<rd.raises.size(); j++) {
                     TypeName n = rd.raises.elementAt(j);
-                    rootEnv.resolveType(n);
+                    rootEnv.resolveType(sig,n);
                     checkTypeModifiers(rootEnv, n);
                     allowedExceptions.addElement(TypeSig.getSig(n));
                 }
 
-                Env env = rootEnv;
+                Env env = new EnvForEnclosedScope(rootEnv);
                 for(int j = 0; j < rd.args.size(); j++) {
                     FormalParaDecl formal = rd.args.elementAt(j);
                     PrepTypeDeclaration.inst.
@@ -290,7 +290,7 @@ public class FlowInsensitiveChecks
                                    si.getStartLoc(), "initializer body");
                 Env rootEnv = Modifiers.isStatic(si.modifiers) ? rootSEnv : rootIEnv;
                 returnType = null;
-                checkStmt(rootEnv, si.block);
+                checkStmt(new EnvForEnclosedScope(rootEnv), si.block);
                 break;
             }
 	
@@ -334,7 +334,7 @@ public class FlowInsensitiveChecks
 
             case TagConstants.VARDECLSTMT: {
                 LocalVarDecl x = ((VarDeclStmt)s).decl;
-                e.resolveType(x.type);
+                e.resolveType(sig,x.type);
                 checkTypeModifiers(e, x.type);
                 PrepTypeDeclaration.inst.
                     checkModifiers(x.modifiers, Modifiers.ACC_FINAL,
@@ -648,7 +648,7 @@ public class FlowInsensitiveChecks
                 for(int i=0; i<tc.catchClauses.size(); i++) {
                     CatchClause c = tc.catchClauses.elementAt(i);
                     Type t = c.arg.type;
-                    e.resolveType(t);
+                    e.resolveType(sig,t);
                     checkTypeModifiers(e, t);
                     if(!Types.isSubclassOf(t, Types.javaLangThrowable()))
                         ErrorSet.error(c.loc, 
@@ -665,7 +665,7 @@ public class FlowInsensitiveChecks
                                                             c.arg.getStartLoc(),
                                                             "formal parameter");
 
-                    EnvForLocals subenv = new EnvForLocals(e, c.arg);
+                    EnvForLocals subenv = new EnvForLocals(e, c.arg, false);
                     checkStmt(subenv, c.body);
                 }
 
@@ -981,7 +981,7 @@ public class FlowInsensitiveChecks
 
                 Type referredType = sig;
                 if (t.classPrefix != null) {
-                    env.resolveType(t.classPrefix);
+                    env.resolveType(sig,t.classPrefix);
                     referredType = t.classPrefix;
                     checkTypeModifiers(env, referredType);
 
@@ -1072,7 +1072,7 @@ public class FlowInsensitiveChecks
                 TypeSig calleeSig;
                 if (ne.enclosingInstance==null) {
                     // 1.0 case:  new N(...) ...
-                    env.resolveType(ne.type);
+                    env.resolveType(sig,ne.type);
                     checkTypeModifiers(env, ne.type);
                     calleeSig = TypeSig.getSig(ne.type);
                 } else {
@@ -1098,7 +1098,7 @@ public class FlowInsensitiveChecks
                                        + " when an enclosing instance is supplied.");
                     Identifier id = ne.type.name.identifierAt(0);
                     int idLoc = ne.type.name.locIdAt(0);
-                    calleeSig = enclosingInstanceType.lookupType(id, idLoc);
+                    calleeSig = enclosingInstanceType.lookupType(enclosingInstanceType, id, idLoc);
                     if (calleeSig==null)
                         ErrorSet.fatal(ne.type.getStartLoc(),
                                        "No such type: "
@@ -1197,7 +1197,7 @@ public class FlowInsensitiveChecks
 
             case TagConstants.NEWARRAYEXPR: {
                 NewArrayExpr na = (NewArrayExpr)x;
-                env.resolveType(na.type);
+                env.resolveType(sig,na.type);
                 Type r = na.type;
                 checkTypeModifiers(env, r); 
                 for(int i = 0; i < na.dims.size(); i++) {
@@ -1235,7 +1235,7 @@ public class FlowInsensitiveChecks
                 InstanceOfExpr ie = (InstanceOfExpr)x;
                 ie.expr = checkExpr(env, ie.expr);
                 Type exprType = getType(ie.expr);
-                env.resolveType(ie.type);
+                env.resolveType(sig,ie.type);
                 checkTypeModifiers(env, ie.type);
                 if(!Types.isReferenceType(ie.type)) {
                     ErrorSet.error(ie.loc, "Non-reference type in instanceof operation");
@@ -1255,7 +1255,7 @@ public class FlowInsensitiveChecks
                 CastExpr ce = (CastExpr)x;
                 ce.expr = checkExpr(env, ce.expr);
                 Type exprType = getType(ce.expr);
-                env.resolveType(ce.type);
+                env.resolveType(sig,ce.type);
                 checkTypeModifiers(env, ce.type); 
  
                 if(!Types.isCastable(exprType, ce.type)) {
@@ -1269,7 +1269,7 @@ public class FlowInsensitiveChecks
 
             case TagConstants.CLASSLITERAL: {
                 ClassLiteral cl = (ClassLiteral)x;
-                env.resolveType(cl.type);
+                env.resolveType(sig,cl.type);
                 checkTypeModifiers(env, cl.type); 
                 setType(cl, Types.javaLangClass());
                 return cl;

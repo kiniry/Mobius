@@ -1,5 +1,5 @@
+// Tests model constructors
 //FIXME - signatures of constructors do not seem to be used. Invalid ones are not complained about.
-
 public class ModelConstructors {
 
 	//@ model constructor badname(int i) {  } // ERROR
@@ -39,8 +39,8 @@ public class ModelConstructors {
 class ModelConstructorZ {
 	public void mm4() {
 		Object oo = new ModelConstructors();
+		oo = new ModelConstructors(0,0); // FIXME - ERROR - model constructor
 		oo = new ModelConstructors(0,0,0); // ERROR - no such constructor
-		oo = new ModelConstructors(0,0); // ERROR - model constructor
 	}
 }
 

@@ -1,5 +1,5 @@
+//#FLAGS: -nocheck
 public class Instance implements I {
-
 	//@ invariant b && ib && mb && mib && m() && im();
 	//@ instance invariant b && ib && mb && mib && m() && im();
 }
@@ -13,7 +13,7 @@ interface I {
 	//@ instance model boolean mib;
 
 	//@ model boolean m();
-	//@ instance model boolean im();
+	//@ model boolean im();
 
 	//@ invariant b && ib;
 	//@ instance invariant ib && b;

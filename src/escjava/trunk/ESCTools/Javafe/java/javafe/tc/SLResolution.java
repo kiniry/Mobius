@@ -130,6 +130,7 @@ public class SLResolution {
 	    }
 	}
 
+	Info.out("[Superlink resolved " + sig + "]");
 	sig.state = TypeSig.LINKSRESOLVED;
     }
 
@@ -150,7 +151,7 @@ public class SLResolution {
     public static TypeSig handleSuperTypeName(
 			       /*@non_null*/ TypeSig sig,
 			       /*@non_null*/ TypeName superName) {
-	TypeSig supertype = sig.getEnclosingEnv().resolveTypeName(superName);
+	TypeSig supertype = sig.getEnclosingEnv().resolveTypeName(null,superName);
 
 	if (supertype.state<TypeSig.LINKSRESOLVED
 	    && sig!=Types.javaLangObject())

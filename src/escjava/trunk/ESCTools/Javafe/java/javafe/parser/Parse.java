@@ -194,7 +194,7 @@ public class Parse extends ParseStmt
 
   //@ requires l != null && l.m_in != null
   //@ ensures \result != null
-  TypeDecl parseTypeDeclaration(Lex l, boolean specOnly) {
+  protected TypeDecl parseTypeDeclaration(Lex l, boolean specOnly) {
     TypeDeclElemVec extras = null;
     if (l.ttype == TagConstants.TYPEDECLELEMPRAGMA) {
       seqTypeDeclElem.push();

@@ -57,7 +57,7 @@ public class EnvForLocalType extends Env implements/*privately*/ Cloneable {
 	 * field.)
 	 */
 	// Note: Location.NULL here prevents ambiguous typename errors
-	TypeSig previous = parent.lookupSimpleTypeName(decl.id,
+	TypeSig previous = parent.lookupSimpleTypeName(null, decl.id,
 						       Location.NULL);
 	if (previous!=null && !previous.member)
 	    ErrorSet.error(decl.locId,
@@ -152,11 +152,13 @@ public class EnvForLocalType extends Env implements/*privately*/ Cloneable {
      * error is reported at that location via ErrorSet else one of
      * its possible meanings is returned.<p>
      */
-    public TypeSig lookupSimpleTypeName(Identifier id, int loc) {
-	if (id==decl.id)
-	    return TypeSig.getSig(decl);
-	else
-	    return parent.lookupSimpleTypeName(id, loc);
+    public TypeSig lookupSimpleTypeName(TypeSig caller, Identifier id, int loc) {
+	if (id==decl.id) {
+	    TypeSig t = TypeSig.getSig(decl);
+	    if (caller == null) return t;
+	    if (TypeCheck.inst.canAccess(caller,t,decl.modifiers,decl.pmodifiers)) return t;
+	} 
+	return parent.lookupSimpleTypeName(caller, id, loc);
     }
 
 
@@ -188,6 +190,12 @@ public class EnvForLocalType extends Env implements/*privately*/ Cloneable {
 	return parent.locateFieldOrLocal(id);
     }
 
+    /** Inside a local class declaration we may reuse identifiers, so 
+	we stop checking for duplicate variables at this point.
+    */
+    public boolean isDuplicate(Identifier id) {
+	return false;
+    }
 
     /**
      * Locate the lexically innermost method named id. <p>

@@ -12,7 +12,7 @@ tags used in the AST.  See <code>Tags</code> for more information.
 
 */
 
-public class OperatorTags implements GeneratedTags
+public class OperatorTags extends GeneratedTags
 {
   // Binary operator tags
   public static final int FIRST_TAG = javafe.ast.GeneratedTags.LAST_TAG + 1;
@@ -74,7 +74,7 @@ public class OperatorTags implements GeneratedTags
        return opStrings[opTag-FIRST_TAG];
 
      if (opTag<FIRST_TAG)
-       return "Unknown javafe.ast.GeneratedTags tag <" + opTag + ">";
+       return GeneratedTags.toString(opTag);
 
      return "Unknown tag <" + opTag + ">";
   }

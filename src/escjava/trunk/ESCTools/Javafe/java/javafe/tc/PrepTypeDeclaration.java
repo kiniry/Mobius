@@ -379,6 +379,7 @@ public class PrepTypeDeclaration {
   //@ requires decl!=null && currentSig!=null
   protected void visitInterfaceDecl(InterfaceDecl decl,
 				  TypeSig currentSig ) {
+    Info.out("[prepping enclosed interface " + decl.id + "]");
     
     // Check that the modifiers are ok
     checkTypeModifiers(decl, currentSig, false);
@@ -558,7 +559,7 @@ public class PrepTypeDeclaration {
 			 "Duplicate field with same identifier",e.locId);
       }
 
-    getEnvForCurrentSig(currentSig, true).resolveType( x.type );
+    getEnvForCurrentSig(currentSig, true).resolveType(currentSig, x.type );
     
     fieldSeq.addElement( x );
   }
@@ -612,11 +613,11 @@ public class PrepTypeDeclaration {
 	"Incompatible modifiers for abstract method");
 
     // resolve types
-     getEnvForCurrentSig(currentSig, true).resolveType( x.returnType );
+     getEnvForCurrentSig(currentSig, true).resolveType( currentSig, x.returnType );
     for( int i=0; i<x.raises.size(); i++ )
-      getEnvForCurrentSig(currentSig, true).resolveType( x.raises.elementAt(i) );
+      getEnvForCurrentSig(currentSig, true).resolveType( currentSig, x.raises.elementAt(i) );
     for( int i=0; i<x.args.size(); i++ )
-      getEnvForCurrentSig(currentSig, true).resolveType( x.args.elementAt(i).type );
+      getEnvForCurrentSig(currentSig, true).resolveType( currentSig, x.args.elementAt(i).type );
     
     // Error if two methods in type body with same signature
     for( int i=0; i<methodSeq.size(); i++ ) 
@@ -651,9 +652,9 @@ public class PrepTypeDeclaration {
     
     // resolve types
     for( int i=0; i<x.raises.size(); i++ )
-      getEnvForCurrentSig(currentSig, true).resolveType( x.raises.elementAt(i) );
+      getEnvForCurrentSig(currentSig, true).resolveType( currentSig, x.raises.elementAt(i) );
     for( int i=0; i<x.args.size(); i++ ) {
-      getEnvForCurrentSig(currentSig, true).resolveType( x.args.elementAt(i).type );
+      getEnvForCurrentSig(currentSig, true).resolveType( currentSig, x.args.elementAt(i).type );
     }
 
     // Error if two constructors in type body with same signature

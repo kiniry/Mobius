@@ -37,18 +37,18 @@ public class Heavyweight {
 	//@ requires true;
 	//@ {| ensures false;
 	//@  also
-	//@    diverges false;
+	//@    diverges false; // ERROR - missing closing |}
 	public void badEnd();
 
 	//@ requires b;
-	//@ also
+	//@ also		// ERROR - dangling also
 	public void danglingAlso();
 
 	/*@ requires true;
 	      ensures true;
             also
               diverges false;
-            |}
+            |}			// ERROR - no opening {|
          */
          public void missingBegin();
 

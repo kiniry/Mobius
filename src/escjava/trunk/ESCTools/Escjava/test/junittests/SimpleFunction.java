@@ -19,4 +19,14 @@ public class SimpleFunction {
 
 	//@ ensures bump(f+j) < 10;
 	public void n() {} // FAILS
+
+	//@ ensures \result == i + 2;
+	//-@ function pure
+	public static int bump2(int i);
+
+	//@ ensures \result == bump2(j);
+	public int mm(int j) {
+	    return j+2;
+	}
+
 }

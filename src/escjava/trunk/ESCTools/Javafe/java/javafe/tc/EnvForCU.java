@@ -121,6 +121,9 @@ public class EnvForCU extends Env {
 	return null;
     }
 
+    public boolean isDuplicate(Identifier id) {
+	return false;
+    }
 
     /**
      * Attempt to lookup a simple TypeName in this environment to get
@@ -134,14 +137,15 @@ public class EnvForCU extends Env {
      * error is reported at that location via ErrorSet else one of
      * its possible meanings is returned.<p>
      */
-    public TypeSig lookupSimpleTypeName(Identifier id, int loc) {
+    public TypeSig lookupSimpleTypeName(TypeSig caller, Identifier id, int loc) {
 	/*
 	 * First, look at types declared in CU:
 	 */
 	for (int i = 0; i < CU.elems.size(); i++) {
 	    TypeDecl d = CU.elems.elementAt(i);
 	    if (id == d.id) {
-		return TypeSig.getSig(d);
+		if (caller == null) return TypeSig.getSig(d);
+		if (TypeCheck.inst.canAccess(caller,TypeSig.getSig(d),d.modifiers,d.pmodifiers)) return TypeSig.getSig(d);
 	    }
 	}
 
@@ -159,7 +163,7 @@ public class EnvForCU extends Env {
 		Identifier T = imp.identifierAt(sz-1);
 
 		if (id == T) {
-		    TypeSig r = lookupWithoutInheritence(P, T.toString());
+		    TypeSig r = lookupWithoutInheritence(caller, P, T.toString());
 		    if (r != null) return r;
 		}
 	    } catch (ClassCastException e) { }
@@ -173,7 +177,7 @@ public class EnvForCU extends Env {
 	    String[] P = new String[0];
 	    if (CU.pkgName!=null)
 		P = CU.pkgName.toStrings();
-	    TypeSig r = lookupWithoutInheritence(P, id.toString());
+	    TypeSig r = lookupWithoutInheritence(caller, P, id.toString());
 	    if (r != null) return r;
 	}
 
@@ -182,13 +186,14 @@ public class EnvForCU extends Env {
 	 * Next, look in on-demand imports of CU:
 	 */
 	{ 
+			// FIXME - caller argument?
 	    TypeSig r = OutsideEnv.lookup(Types.javaLangPackage(),
 					  id.toString());
 	    for(int i = 0; i < CU.imports.size(); i++) {
 		try {
 		    OnDemandImportDecl imp =
 		      (OnDemandImportDecl)CU.imports.elementAt(i); //@ nowarn Cast //caught
-		    TypeSig r2 = lookupWithoutInheritence(
+		    TypeSig r2 = lookupWithoutInheritence(caller,
 					   imp.pkgName.toStrings(),
 					   id.toString());
 		    if (r2 != null)
@@ -215,10 +220,10 @@ public class EnvForCU extends Env {
      * class parts arbitrarily.) <p>
      *
      * This routine does not check that the resulting type (if any)
-     * is actually accessable. <p>
+     * is actually accessable, unless caller is non-null. <p>
      */
     //@ requires \nonnullelements(N)
-    public static TypeSig lookupWithoutInheritence(String[] N,
+    public static TypeSig lookupWithoutInheritence(TypeSig caller, String[] N,
 						   /*@non_null*/ String I) {
 	TypeSig soFar = null;
 	int prefix = 0;
@@ -244,7 +249,7 @@ public class EnvForCU extends Env {
 	// Remaining part of N.I must be a $C1$C2...$Cn expression:
 	while (++prefix<=N.length+1) {
 	    String T = (prefix<=N.length) ? N[prefix-1] : I;
-	    soFar = soFar.lookupLocalType(Identifier.intern(T));
+	    soFar = soFar.lookupLocalType(caller,Identifier.intern(T));
 	    if (soFar==null)
 		return null;
 	}

@@ -53,18 +53,21 @@ ModParsingErrors.java:102: Error: JML does not allow empty clause sequences
 ModParsingErrors.java:110: Error: Model programs may not be nested
                 model_program {} // ERROR - no nested model program
                 ^
-ModParsingErrors.java:111: Error: JML does not allow empty clause sequences
-        |}
-        ^
+ModParsingErrors.java:121: Error: Model programs may not be combined with other clauses
+                model_program{} // ERROR
+                ^
+ModParsingErrors.java:123: Error: A model_program may not be combined with other clauses
+                model_program {} // ERROR
+                ^
 
 ModParsingErrors ...
 ModParsingErrors.java:46: Caution: No initial also expected since there are no overridden or refined methods
         /*@ also behavior        // ERROR -- no also
             ^
 ModParsingErrors.java:95: Caution: JML requires a specification to begin with 'also' when the method overrides other methods
-        void ppp();
+        void ppp();  // ERROR - needs an also
              ^
-ModParsingErrors.java:117: Associated declaration: 
+ModParsingErrors.java:130: Associated declaration: 
         void ppp();
         ^
 
@@ -107,6 +110,9 @@ ModParsingErrors: m15() ...
 ModParsingErrors: m16() ...
     [TIME]  passed immediately
 
+ModParsingErrors: m17() ...
+    [TIME]  passed immediately
+
 ModParsingErrors: ModParsingErrors() ...
     [TIME]  ok
   [TIME total]
@@ -120,4 +126,4 @@ ModParsingJJ: ModParsingJJ() ...
     [TIME]  ok
   [TIME total]
 2 cautions
-16 errors
+17 errors

@@ -153,9 +153,9 @@ test_jdk_sources:
 
 .PHONY: typecheckTests
 typecheckTests: javafe_test
-	@test/javafe/test/typecheckJavafe
-	@echo 
 	@test/javafe/test/typecheckJDK
+	@echo 
+	@test/javafe/test/typecheckJavafe
 
 ## This tests a binary release that is untarred in the RELTEMP directory,
 ## with RELCLASSPATH pointing to the esctools1.jar file that is being tested.

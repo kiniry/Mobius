@@ -207,6 +207,7 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
             case TagConstants.DURATION_REDUNDANTLY:
             case TagConstants.ENSURES_REDUNDANTLY:
             case TagConstants.EXSURES_REDUNDANTLY:
+            case TagConstants.HENCE_BY_REDUNDANTLY: 
             case TagConstants.INVARIANT_REDUNDANTLY: 
             case TagConstants.LOOP_INVARIANT_REDUNDANTLY: 
             case TagConstants.MAINTAINING_REDUNDANTLY:
@@ -230,7 +231,6 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
             case TagConstants.ASSIGNABLE:
             case TagConstants.MEASURED_BY:
             case TagConstants.MODIFIABLE:
-            case TagConstants.NOT_MODIFIED:
             case TagConstants.MODIFIES: {
                 Expr e = ((CondExprModifierPragma)mp).expr;
                 Expr p = ((CondExprModifierPragma)mp).cond;
@@ -308,6 +308,7 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
                 break;
             }
 
+            case TagConstants.HENCE_BY:
             case TagConstants.ASSUME:
             case TagConstants.DECREASES:
             case TagConstants.DECREASING:
@@ -757,6 +758,13 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
     case TagConstants.TYPEOF:
       write(o, TagConstants.toString(tag));
       self.print(o, ind, ((NaryExpr)e).exprs);
+      break;
+
+    case TagConstants.NOT_MODIFIED: 
+      write(o, TagConstants.toString(tag));
+      write(o, '(');
+      self.print(o, ind, ((NotModifiedExpr)e).expr);
+      write(o, ')');
       break;
 
     case TagConstants.DTTFSA: {

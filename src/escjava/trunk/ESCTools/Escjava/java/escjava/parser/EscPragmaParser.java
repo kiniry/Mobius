@@ -600,7 +600,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
 		c = in.read();
 		if (c != '>') continue;
 		endTag = "</ESC>";
-	    } else if (c == 'j' && Main.options().parsePlus) {
+	    } else if (c == 'j') { // && Main.options().parsePlus) {
 		c = in.read();
 		if (c != 'm') continue;
 		c = in.read();
@@ -608,7 +608,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
 		c = in.read();
 		if (c != '>') continue;
 		endTag = "</jml>";
-	    } else if (c == 'J' && Main.options().parsePlus) {
+	    } else if (c == 'J') { // && Main.options().parsePlus) {
 		c = in.read();
 		if (c != 'M') continue;
 		c = in.read();
@@ -783,16 +783,6 @@ public class EscPragmaParser extends Parse implements PragmaParser
 		scanner.copyInto(dst);
 		scanner.getNextToken();
 		return true;
-/*
-	    } else if (tag != TagConstants.IMPORT) {
-		// Punctuation (e.g. {| ) and Java keywords fall here.
-		// The tag will be 'import' in the case that the user writes
-		// an import statement without a model keyword.  We handle
-		// it gracefully later on, but it requires not advancing the
-		// scanner.
-System.out.println("ADVANCING AT " + TagConstants.toString(tag));
-		scanner.getNextToken();
-*/
 	    }
 	    // Note: If the tag is not obtained from the identifier (e.g. if it
 	    // is also a Java keyword, such as assert) and is not already a
@@ -925,8 +915,7 @@ System.out.println("ADVANCING AT " + TagConstants.toString(tag));
 		    break;
 		}
 
-                case TagConstants.STILL_DEFERRED:
-                case TagConstants.MONITORED_BY:{
+                case TagConstants.STILL_DEFERRED: {
 		    checkNoModifiers(tag,loc);
                     inProcessTag = tag;
                     inProcessLoc = loc;
@@ -937,6 +926,51 @@ System.out.println("ADVANCING AT " + TagConstants.toString(tag));
                     return true;
 		}
 
+                case TagConstants.MONITORED_BY:{
+		    checkNoModifiers(tag,loc);
+		    semicolonExpected = true;
+		    int t = scanner.lookahead(0);
+		    Expr e = parseExpression(scanner);
+		    dst.auxVal = ExprModifierPragma.make(tag, e, loc);
+		    while (scanner.ttype == TagConstants.COMMA) {
+			scanner.getNextToken(); // skip comma
+			e = parseExpression(scanner);
+			savePragma(
+			    loc, TagConstants.MODIFIERPRAGMA,
+			    ExprModifierPragma.make(tag, e, loc));
+		    }
+		    dst.ttype = TagConstants.MODIFIERPRAGMA;
+		    break;
+		}
+
+		case TagConstants.MONITORS_FOR:{
+		    checkNoModifiers(tag,loc);
+		    int locId = scanner.startingLoc;
+		    Identifier target = parseIdentifier(scanner);
+		    if (scanner.ttype != TagConstants.ASSIGN &&
+			scanner.ttype != TagConstants.LEFTARROW) {
+			ErrorSet.error(scanner.startingLoc,
+			    "Expected a = character in a monitors_for clause");
+			eatThroughSemiColon();
+			return getNextPragma(dst);
+		    } else {
+			scanner.getNextToken(); // eat =
+			Expr e = parseExpression(scanner);
+			dst.ttype = TagConstants.TYPEDECLELEMPRAGMA;
+			dst.auxVal = IdExprDeclPragma.make(tag,target, 
+					 e, loc, locId);
+			while (scanner.ttype == TagConstants.COMMA) {
+			    scanner.getNextToken(); // skip comma
+			    e = parseExpression(scanner);
+			    savePragma(
+				loc, TagConstants.TYPEDECLELEMPRAGMA,
+				IdExprDeclPragma.make(tag,target, e, 
+					loc, locId));
+			}
+			semicolonExpected = true;
+		    }
+		    break;
+		}
                 case TagConstants.DEPENDS:
                 case TagConstants.DEPENDS_REDUNDANTLY: {
 		    ErrorSet.caution(loc,
@@ -989,6 +1023,8 @@ System.out.println("ADVANCING AT " + TagConstants.toString(tag));
                     break;
                 }
 
+                case TagConstants.HENCE_BY_REDUNDANTLY:
+                case TagConstants.HENCE_BY:
                 case TagConstants.ASSUME:
                 case TagConstants.DECREASES:
                 case TagConstants.ASSUME_REDUNDANTLY: // SUPPORT COMPLETE (kiniry)
@@ -1451,6 +1487,12 @@ System.out.println("ADVANCING AT " + TagConstants.toString(tag));
 			// FIXME - need to define and construct an
 			// appropriate ModifierPragma
 		    //parseIdentifier(scanner);
+		    boolean sup = false;
+		    if (scanner.ttype == TagConstants.SUPER) {
+			scanner.getNextToken();
+			expect(scanner,TagConstants.FIELD);
+			sup = true;
+		    }
 		    if (scanner.ttype != TagConstants.IDENT) {
 			ErrorSet.error(scanner.startingLoc,
 				"Expected an identifier here");
@@ -1463,6 +1505,12 @@ System.out.println("ADVANCING AT " + TagConstants.toString(tag));
 		    scanner.getNextToken();
 		    while (scanner.ttype == TagConstants.COMMA) {
 			scanner.getNextToken();
+			sup = false;
+			if (scanner.ttype == TagConstants.SUPER) {
+			    scanner.getNextToken();
+			    expect(scanner,TagConstants.FIELD);
+			    sup = true;
+			}
 			Identifier id = parseIdentifier(scanner);
 			//System.out.println("IN " + id);
 		    }
@@ -1492,13 +1540,25 @@ System.out.println("ADVANCING AT " + TagConstants.toString(tag));
 			eatThroughSemiColon();
 			semicolonExpected = false;
 		    } else {
+			scanner.getNextToken(); // skip \into
+			boolean sup = false;
+			if (scanner.ttype == TagConstants.SUPER) {
+			    scanner.getNextToken(); // skip super
+			    expect(scanner,TagConstants.FIELD); // skip .
+			    sup = true;
+			}
 			parseIdentifier(scanner);
 			//System.out.println("INTO " + scanner.identifierVal);
-			scanner.getNextToken();
 			while (scanner.ttype == TagConstants.COMMA) {
-			    scanner.getNextToken();
+			    scanner.getNextToken(); // skip comma
 			    //System.out.println("INTO " + scanner.identifierVal);
-			    scanner.getNextToken();
+			    sup = false;
+			    if (scanner.ttype == TagConstants.SUPER) {
+				scanner.getNextToken();
+				expect(scanner,TagConstants.FIELD);
+				sup = true;
+			    }
+			    parseIdentifier(scanner);
 			}
 
 			ExprModifierPragma pragma =
@@ -1530,10 +1590,6 @@ System.out.println("ADVANCING AT " + TagConstants.toString(tag));
                 case TagConstants.CONTINUES_REDUNDANTLY:
                     // unclear syntax and semantics (kiniry)
                 case TagConstants.CONTINUES:
-                    // unclear syntax and semantics (kiniry)
-                case TagConstants.HENCE_BY_REDUNDANTLY:
-                    // unclear syntax and semantics (kiniry)
-                case TagConstants.HENCE_BY:
                     // unclear syntax and semantics (kiniry)
                 case TagConstants.RETURNS_REDUNDANTLY:
                     // unclear syntax and semantics (kiniry)
@@ -1786,29 +1842,6 @@ System.out.println("ADVANCING AT " + TagConstants.toString(tag));
             Identifier idn = parseIdentifier(scanner);
             dst.ttype = TagConstants.TYPEDECLELEMPRAGMA;
             dst.auxVal = StillDeferredDeclPragma.make(idn, inProcessLoc, locId);
-        } else if (inProcessTag == TagConstants.MONITORED_BY) {
-            dst.startingLoc = inProcessLoc;
-	    int tempInProcessTag = inProcessTag;
-	    int t = scanner.lookahead(0);
-            // deal with special case expressions
-	    if (t == TagConstants.NOTHING) {
-		scanner.getNextToken();
-		dst.auxVal = ExprModifierPragma.make(tempInProcessTag, 
-                                                     NothingExpr.make(scanner.startingLoc), inProcessLoc);
-	    } else if (t == TagConstants.NOT_SPECIFIED) {
-		scanner.getNextToken();
-		dst.auxVal = ExprModifierPragma.make(tempInProcessTag, 
-                                                     NotSpecifiedExpr.make(scanner.startingLoc), inProcessLoc);
-	    } else if (t == TagConstants.EVERYTHING) {
-		scanner.getNextToken();
-		dst.auxVal = ExprModifierPragma.make(tempInProcessTag, 
-                                                     EverythingExpr.make(scanner.startingLoc), inProcessLoc);
-	    } else {
-	        Expr e = parseExpression(scanner);
-                dst.auxVal = ExprModifierPragma.make(tempInProcessTag, 
-                                                     e, inProcessLoc);
-            }
-            dst.ttype = TagConstants.MODIFIERPRAGMA;
         } else if (inProcessTag == TagConstants.LOOP_PREDICATE) {
             dst.startingLoc = inProcessLoc;
             Expr e = parseExpression(scanner);
@@ -1914,6 +1947,17 @@ System.out.println("ADVANCING AT " + TagConstants.toString(tag));
                             // fail(loc, "Annotations may not contain method calls");
 			} else {
                             switch (tag) {
+                                case TagConstants.IS_INITIALIZED: {
+				    l.getNextToken();
+                                    Type subexpr = parseType(l);
+                                    primary = TypeExpr.make(loc, l.startingLoc, subexpr);
+                                    expect(l, TagConstants.RPAREN);
+				    ExprVec args = ExprVec.make(1);
+				    args.addElement(primary);
+                                    primary = NaryExpr.make(loc, l.startingLoc, tag, null, args);
+                                    break;
+                                }
+
                                 case TagConstants.TYPE: {
 				    l.getNextToken();
                                     Type subexpr = parseType(l);
@@ -1934,22 +1978,54 @@ System.out.println("ADVANCING AT " + TagConstants.toString(tag));
                                 }
 
 				case TagConstants.NOT_MODIFIED: {
-                                    // SC AAST 4, parsed (cok/kiniry)
-				    l.getNextToken();
-                                    Expr arg = parseExpression(l);
-				    ExprVec args = ExprVec.make(2);
-				    ExprVec args2 = ExprVec.make(1);
-				    args.addElement(arg);
-				    args2.addElement((Expr)arg.clone());
-                                    Expr oldex = 
-					NaryExpr.make(loc, l.startingLoc, 
-					    TagConstants.PRE, null, args2);
+				    int sloc = l.startingLoc;
+				    l.getNextToken(); // parse (
+				    primary = NotModifiedExpr.make(
+					sloc, parseExpression(l));
+				    while (l.ttype == TagConstants.COMMA) {
+					l.getNextToken(); // skip comma
+					Expr arg = NotModifiedExpr.make(
+					    l.startingLoc, parseExpression(l));
+					primary = BinaryExpr.make(
+						TagConstants.AND,
+						primary,arg,
+						arg.getStartLoc());
+				    }
+/*
+				    primary = null;
+				    int num = 0;
+				    while (true) {
+					++num;
+					int exprLoc = l.startingLoc;
+					Expr arg = parseExpression(l);
+					ExprVec args = ExprVec.make(2);
+					ExprVec args2 = ExprVec.make(1);
+					args.addElement(arg);
+					args2.addElement((Expr)arg.clone());
+					Expr oldex = 
+					    NaryExpr.make(exprLoc, l.startingLoc, 
+						TagConstants.PRE, null, args2);
 				
-				    args.addElement(oldex);
-                                    primary = NaryExpr.make(loc, l.startingLoc,
-					TagConstants.EQ, null, args);
-				    primary = BinaryExpr.make(
-					TagConstants.EQ, arg, oldex, loc);
+					args.addElement(oldex);
+					Expr p = NaryExpr.make(exprLoc, l.startingLoc,
+					    TagConstants.EQ, null, args);
+					p = BinaryExpr.make(
+					    TagConstants.EQ, arg, oldex, exprLoc);
+					p = LabelExpr.make(exprLoc,l.startingLoc,
+					    false,
+					    Identifier.intern("Modified-arg-"+
+						num),
+					    p);
+					if (primary == null) primary = p;
+					else {
+					    primary = BinaryExpr.make(
+						TagConstants.AND,
+						primary, p, exprLoc);
+					}
+				        if (l.ttype != TagConstants.COMMA) break;
+				        l.getNextToken(); // parse comma
+				    }
+*/
 				    expect(l,TagConstants.RPAREN);
                                     break;
                                 }
@@ -1960,6 +2036,7 @@ System.out.println("ADVANCING AT " + TagConstants.toString(tag));
 				case TagConstants.WARN_OP:
                                 case TagConstants.FRESH: 
                                 case TagConstants.REACH: 
+                                case TagConstants.INVARIANT_FOR:
                                 case TagConstants.ELEMSNONNULL:
                                 case TagConstants.ELEMTYPE:
                                 case TagConstants.MAX: 
@@ -2621,6 +2698,11 @@ System.out.println("ADVANCING AT " + TagConstants.toString(tag));
 			
 	// Parse the type name and brackets associated with it
 	int locType = scanner.startingLoc; 
+	if (scanner.ttype == TagConstants.CLASS ||
+	    scanner.ttype == TagConstants.INTERFACE) {
+
+	    return parseTypeDeclTail(dst,locType);
+	}
 	Type type = parseType(scanner); 
 
 	if (scanner.ttype == TagConstants.LPAREN) {
@@ -2671,6 +2753,15 @@ System.out.println("ADVANCING AT " + TagConstants.toString(tag));
       }
     }
 
+    public boolean parseTypeDeclTail(Token dst, int loc) {
+	TypeDecl td = parseTypeDeclaration(scanner,false);
+			// Should use false for specOnly only if already 
+			// parsing a file for which specOnly=false
+	
+	dst.auxVal = ModelTypePragma.make(td, loc);
+	return false; // No semicolon after a type declaration
+    }
+
     public boolean parseFieldDeclTail(Token dst, int loc, int locId, Type type, Identifier id) {
 	int tag = savedGhostModelPragma.getTag();
 
@@ -2698,6 +2789,10 @@ System.out.println("ADVANCING AT " + TagConstants.toString(tag));
 				modifierPragmas);
 	}
 
+/*
+	if (escjava.translate.GetSpec.findModifierPragma(modifierPragmas,TagConstants.INSTANCE)
+		== null) modifiers |= Modifiers.ACC_STATIC|Modifiers.ACC_FINAL;
+*/
 	FieldDecl decl
 	    = FieldDecl.make(modifiers, modifierPragmas, 
 			     id, vartype, locId, init, locAssignOp );

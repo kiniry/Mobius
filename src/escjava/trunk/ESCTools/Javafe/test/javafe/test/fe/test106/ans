@@ -1,16 +1,10 @@
-LocalRedefinition.java:14: Error: Variable 'i' is already defined here.
-            void f (int i) { // error - hides parameter
-                        ^
 LocalRedefinition.java:37: Error: Local type definitions may not hide already existing local type definitions.
         class T {};         // error
               ^
 LocalRedefinition.java:49: Error: Local type definitions may not hide already existing local type definitions.
                 class S{};   // error...
                       ^
-3 errors
-ExprScoping.java:63: Error: Variable 'l' is already defined here.
-                boolean l = false;     // error (local hiding a local)
-                        ^
+2 errors
 ExprScoping.java:142: Error: Duplicate field with same identifier
     boolean f;      // error: duplicate fields
             ^
@@ -23,7 +17,7 @@ ExprScoping.java:146: Error: Duplicate nested-type declaration: the type DupName
 ExprScoping.java:151: Error: Variable 'f' is already defined here.
         boolean f;      // error: duplicate locals
                 ^
-4 errors
+3 errors
 Dual.java:7: Fatal error: Reference to type member `T' of type Dual is ambiguous; it may refer to type SuperType$T or to type SuperInterface$T.
     int j = T.i;                 // error: ambiguous
             ^

@@ -56,12 +56,13 @@ jdk_source_listings:
 
 .PHONY: testparsejdkidempotence
 testparsejdkidempotence:
-	${JAVA} javafe.parser.test.TestParse diff simpletoks simpletoks
+	${JAVA} javafe.parser.test.TestParse diff simpletoks simpletoks assert
 	for d in  ${JDK10_SOURCES} ${JDK11_SOURCES} ${JDK12_SOURCES} ${JDK13_SOURCES} ${JDK14_SOURCES} ; do \
-	   echo "Executing TestParse on " $$d ; \
+	   echo "Executing TestParse on " $$d  ; \
+	    CLASSPATH=${CLASSPATH}:. ; \
 	   ( cd $$d; find . -follow -name "*.java" -print | \
 		xargs -n 1000 -s 1024 \
-			${JAVA} javafe.parser.test.TestParse progress silent idempotence );\
+			${JAVA} javafe.parser.test.TestParse assert progress silent idempotence );\
 	done
 
 testparse:

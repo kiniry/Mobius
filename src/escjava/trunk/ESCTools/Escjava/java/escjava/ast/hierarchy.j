@@ -42,6 +42,7 @@ import escjava.ParsedRoutineSpecs;
  *         + LockSetExpr ()
  *         + NotSpecifiedExpr ()
  *         + NothingExpr ()
+ *         + NotModifiedExpr(Expr)
  *         + ResExpr ()
  *	   + SetCompExpr(Type type, Type typeBound, Identifier id, Expr e)
  *         + WildRefExpr (Expr expr)
@@ -68,7 +69,9 @@ import escjava.ParsedRoutineSpecs;
  *         + ExprDeclPragma (Expr expr) // Axiom, ObjectInvariant
  *	   + GhostDeclPragma (GhostFieldDecl decl)
  *	   + ModelDeclPragma (ModelFieldDecl decl)
+ *         + ModelTypePragma (TypeDecl decl)
  *         + NamedExprDeclPragma (Expr target, Expr expr)
+ *         + IdExprDeclPragma (Id target, Expr expr)
  *         + ModelMethodDeclPragma (MethodDecl decl)
  *         + ModelConstructorPragma (ConstructorDecl decl)
  *         + StillDeferredDeclPragma (Identifier var)
@@ -313,6 +316,14 @@ public class NotSpecifiedExpr extends Expr
   public int getStartLoc() { return loc; }
 }
 
+public class NotModifiedExpr extends Expr
+{
+  //# int loc
+  //# Expr expr
+ 
+  public int getStartLoc() { return loc; }
+}
+
 public class FieldsOfExpr extends Expr
 {
   //# int loc
@@ -539,6 +550,21 @@ public class ExprDeclPragma extends TypeDeclElemPragma
   public void setRedundant(boolean v) { redundant = v; }
 }
 
+public class IdExprDeclPragma extends TypeDeclElemPragma
+{
+  //# int tag
+  //# Identifier id      NoCheck
+  //# Expr expr
+  //# int loc
+  //# int locId
+
+  //# ManualTag
+  public final int getTag() { return tag; }
+
+  public int getStartLoc() { return loc; }
+  public int getEndLoc() { return expr.getEndLoc(); }
+}
+
 public class NamedExprDeclPragma extends TypeDeclElemPragma 
 {
   //# int tag
@@ -603,6 +629,28 @@ public class ModelConstructorDeclPragma extends TypeDeclElemPragma
   //# ConstructorDecl decl
   //# int loc
   //# SimpleName id
+
+  public void setParent(TypeDecl p) {
+    super.setParent(p);
+    if (decl != null) 
+	decl.setParent(p);
+  }
+
+  public int getStartLoc() { return loc; }
+  public int getEndLoc() { return decl.getEndLoc(); }
+  public void decorate(ModifierPragmaVec modifierPragmas) {
+    if (decl.pmodifiers == null) {
+	decl.pmodifiers = modifierPragmas;
+    } else if (modifierPragmas != null) {
+	decl.pmodifiers.append(modifierPragmas); 
+    }
+  }
+}
+
+public class ModelTypePragma extends TypeDeclElemPragma
+{
+  //# TypeDecl decl
+  //# int loc
 
   public void setParent(TypeDecl p) {
     super.setParent(p);

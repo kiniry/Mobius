@@ -1,32 +1,32 @@
 ESC/Java version VERSION
-MapsIn.java:27: Error: Expected an identifier here
+MapsIn.java:29: Error: Expected an identifier here
         //@ in
              ^
-MapsIn.java:28: Error: Expected an identifier here
+MapsIn.java:30: Error: Expected an identifier here
         //@ in ;
                ^
-MapsIn.java:29: Fatal error: Semicolon required when a in pragma is followed by another pragma (found IDENT instead).
+MapsIn.java:31: Fatal error: Semicolon required when a in pragma is followed by another pragma (found IDENT instead).
         //@ in i j
                  ^
-MapsIn.java:30: Fatal error: Expected an identifier, found ,
+MapsIn.java:32: Fatal error: Expected an identifier, found ,
         //@ in i,,
                  ^
-MapsIn.java:31: Error: Expected an identifier here
+MapsIn.java:33: Error: Expected an identifier here
         //@ in ,i;
                ^
-MapsIn.java:33: Error: Expected either a . or a [ in the maps field reference here
+MapsIn.java:35: Error: Expected either a . or a [ in the maps field reference here
         //@ maps i;
                   ^
-MapsIn.java:33: Error: Expected \into in the maps clause here
+MapsIn.java:35: Error: Expected \into in the maps clause here
         //@ maps i;
                   ^
-MapsIn.java:34: Error: Expected either a . or a [ in the maps field reference here
+MapsIn.java:36: Error: Expected either a . or a [ in the maps field reference here
         //@ maps i j 
                    ^
-MapsIn.java:34: Error: Expected \into in the maps clause here
+MapsIn.java:36: Error: Expected \into in the maps clause here
         //@ maps i j 
                    ^
-MapsIn.java:33: Fatal error: Expected a Name, got '//'
+MapsIn.java:35: Fatal error: Expected a Name, got '//'
         //@ maps i;
         ^
 10 errors

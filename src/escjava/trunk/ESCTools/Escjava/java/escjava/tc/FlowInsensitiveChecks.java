@@ -288,7 +288,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 		    boolean savedInAnnotation = inAnnotation;
 		    inAnnotation = true;
 		    try {
-			env.resolveType(x.type);
+			env.resolveType(sig, x.type);
 			checkTypeModifiers(env, x.type);
 			javafe.tc.PrepTypeDeclaration.inst.
 			    checkModifiers(x.modifiers, Modifiers.ACC_FINAL,
@@ -404,7 +404,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                 inAnnotation = true;
                 isTwoStateContext = true;
 		try {
-		    env.resolveType(s.type);
+		    env.resolveType(sig, s.type);
 		    env = new EnvForLocals(env, s);
 		} finally {
 		    inAnnotation = savedInAnnotation;
@@ -840,17 +840,26 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                     return e;
                 }
 
-            case TagConstants.NOT_MODIFIED:
-                {
+            case TagConstants.INVARIANT_FOR:
+            case TagConstants.IS_INITIALIZED:
+		{
                     NaryExpr ne = (NaryExpr)e;
 // FIXME - Is this a one argument function ?
                     if( ne.exprs.size() != 1 ) 
                         ErrorSet.error( ne.sloc, 
-                                        "The function \\not_modified takes only one argument");
+			    "The function takes only one argument");
                     else {
                         Expr nu = checkExpr(env, ne.exprs.elementAt(0));
                         ne.exprs.setElementAt( nu, 0 );			
                     }
+                    setType( e, Types.booleanType );
+                    return e;
+                }
+
+            case TagConstants.NOTMODIFIEDEXPR:
+                {
+                    NotModifiedExpr ne = (NotModifiedExpr)e;
+		    ne.expr = checkExpr(env, ne.expr);
                     setType( e, Types.booleanType );
                     return e;
                 }
@@ -901,18 +910,22 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                         ErrorSet.error( ne.sloc, 
                                         "The function \\typeof takes only one argument");
                     else {
-                        Expr nu = 
-                            checkExpr(env, ne.exprs.elementAt(0), Types.javaLangObject() );
+			Expr ex = ne.exprs.elementAt(0);
+                        Expr nu = checkExpr(env, ex );
                         ne.exprs.setElementAt( nu, 0 );			
+			Type t = getType(nu);
+			if (t instanceof PrimitiveType) {
+			    e = TypeExpr.make(ex.getStartLoc(),ex.getEndLoc(),t);
+			}
                     }
-                    setType( e, Types.typecodeType );
-                    return e;
+		    setType( e, Types.typecodeType );
+		    return e;
                 }
 
             case TagConstants.TYPEEXPR:
                 {
                     TypeExpr te = (TypeExpr)e;
-                    env.resolveType( te.type );
+                    env.resolveType( sig, te.type );
                     setType(e, Types.typecodeType );
                     return e;
                 }
@@ -945,7 +958,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 	
                         for( int i=0; i<qe.vars.size(); i++) {
                             GenericVarDecl decl = qe.vars.elementAt(i);
-                            env.resolveType( decl.type );
+                            env.resolveType( sig, decl.type );
 	    
                             subenv = new EnvForLocals(subenv, decl);
                         }
@@ -973,7 +986,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 	
                         for( int i=0; i<qe.vars.size(); i++) {
                             GenericVarDecl decl = qe.vars.elementAt(i);
-                            env.resolveType( decl.type );
+                            env.resolveType( sig, decl.type );
 	    
                             subenv = new EnvForLocals(subenv, decl);
                         }
@@ -998,9 +1011,9 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 	
                         for( int i = 0; i < qe.vars.size(); i++) {
                             GenericVarDecl decl = qe.vars.elementAt(i);
-                            env.resolveType(decl.type);
+                            env.resolveType(sig, decl.type);
 	    
-                            subenv = new EnvForLocals(subenv, decl);
+                            subenv = new EnvForLocals(subenv, decl, false);
                         }
                         isPredicateContext = true;
                         qe.expr = checkExpr(subenv, qe.expr, Types.booleanType);
@@ -1116,8 +1129,8 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 		{
 		    SetCompExpr s = (SetCompExpr)e;
 
-		    env.resolveType(s.type);
-		    env.resolveType(s.fp.type);
+		    env.resolveType(sig, s.type);
+		    env.resolveType(sig, s.fp.type);
 		    Env subenv = new EnvForLocals(env,s.fp);
 		    boolean savedPredicateContext = isPredicateContext;
 		    isPredicateContext = true;
@@ -1244,7 +1257,8 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                     ExprDeclPragma ep = (ExprDeclPragma)e;
                     Env rootEnv = (tag == TagConstants.AXIOM) ? rootSEnv : rootIEnv;
 
-                    invariantContext = (tag == TagConstants.INVARIANT);
+                    invariantContext = (tag == TagConstants.INVARIANT) ||
+					tag == TagConstants.INITIALLY;
 		    isTwoStateContext = (tag == TagConstants.CONSTRAINT);
                     boolean oldIsLocksetContext = isLocksetContext;
                     isLocksetContext = false;
@@ -1358,13 +1372,50 @@ FIXME - see uses of countFreeVarsAccess
 		break;
             }
 
+	    case TagConstants.MONITORS_FOR: {
+                IdExprDeclPragma emp = (IdExprDeclPragma)e;
+		Identifier id = emp.id;
+		TypeDeclElemVec elems = e.parent.elems;
+		FieldDecl fd = null;
+		for (int i=0; i<elems.size(); ++i) {
+		    TypeDeclElem td = elems.elementAt(i);
+		    if (td instanceof FieldDecl &&
+			((FieldDecl)td).id == id) {
+			fd = (FieldDecl)td;
+			break;
+		    }
+		}
+		boolean isStatic = false;
+		if (fd == null) {
+		    ErrorSet.error(emp.loc, 
+			"Could not find identifier " + id + " in this class");
+		} else {
+		    isStatic = Modifiers.isStatic(fd.modifiers);
+		}
+		Env env = isStatic ? rootSEnv : rootIEnv;
+		int oldAccessibilityLowerBound = accessibilityLowerBound;
+		ASTNode oldAccessibilityContext = accessibilityContext;
+		accessibilityLowerBound = getAccessibility(fd.modifiers);
+		accessibilityContext = fd;
+		emp.expr = checkExpr(env, emp.expr, Types.javaLangObject());
+		accessibilityLowerBound = oldAccessibilityLowerBound;
+		accessibilityContext = oldAccessibilityContext;
+		fd.pmodifiers.addElement(
+			ExprModifierPragma.make(
+				TagConstants.MONITORED_BY,
+				emp.expr,
+				emp.loc
+			));
+		break;
+	    }
+
 	    case TagConstants.MODELDECLPRAGMA: {
                 FieldDecl decl = ((ModelDeclPragma)e).decl;
                 Env rootEnv = Modifiers.isStatic(decl.modifiers)
                     ? rootSEnv
                     : rootIEnv;
 
-                rootEnv.resolveType( decl.type );
+                rootEnv.resolveType( sig, decl.type );
                 checkModifierPragmaVec( decl.pmodifiers, decl, rootEnv );
 		checkTypeModifiers(rootEnv, decl.type);
 
@@ -1405,23 +1456,24 @@ FIXME - see uses of countFreeVarsAccess
 
             case TagConstants.GHOSTDECLPRAGMA: {
                 FieldDecl decl = ((GhostDeclPragma)e).decl;
+		ModifierPragma inst = GetSpec.findModifierPragma(decl,
+					TagConstants.INSTANCE);
+		// Check for both static and instance declarations
+
+		if (Modifiers.isStatic(decl.modifiers)) {
+		    if (inst != null) ErrorSet.error(inst.getStartLoc(),
+			"May not specify both static and instance on a declaration");
+		}
+
                 Env rootEnv = Modifiers.isStatic(decl.modifiers)
                     ? rootSEnv
                     : rootIEnv;
 
-                rootEnv.resolveType( decl.type );
+                rootEnv.resolveType( sig, decl.type );
                 checkModifierPragmaVec( decl.pmodifiers, decl, rootEnv );
 		checkTypeModifiers(rootEnv, decl.type);
 
 
-		// Check for both static and instance declarations
-
-		if (Modifiers.isStatic(decl.modifiers)) {
-		    ModifierPragma inst = GetSpec.findModifierPragma(decl,
-					TagConstants.INSTANCE);
-		    if (inst != null) ErrorSet.error(inst.getStartLoc(),
-			"May not specify both static and instance on a declaration");
-		}
 
                 /*
                  * Handle initializer:
@@ -1526,13 +1578,15 @@ FIXME - see uses of countFreeVarsAccess
                         else
                             loc = p.getStartLoc();
                         ErrorSet.error(loc,
-                                       "The monitored annotation can occur only on "
-                                       +"field declarations");
+			   "The monitored annotation can occur only on "
+			   +"field declarations");
+/* added functionality to have monitors on static fields 
                     } else if (env.isStaticContext()) {
                         FieldDecl fd = (FieldDecl)ctxt;
                         ErrorSet.error(fd.locId,
                                        "The monitored annotation can occur only on "+
                                        "instance field declarations");
+*/
                     }
                     break;
                 }
@@ -1663,14 +1717,21 @@ FIXME - see uses of countFreeVarsAccess
 	    case TagConstants.INSTANCE:
 	        {
 		    int ctag = ctxt.getTag();
-/*
+
 		    if (!(ctxt instanceof GhostDeclPragma) &&
-			!(ctxt instanceof ModelDeclPragma)) 
-			ErrorSet.error(p.getStartLoc(),
-			"An instance modifier may only be applied to ghost and model fields");
-*/
+			!(ctxt instanceof ModelDeclPragma)) {
+
+			if (ctxt instanceof FieldDecl &&
+			    (GetSpec.findModifierPragma( ((FieldDecl)ctxt).pmodifiers, TagConstants.MODEL) != null ||
+			    GetSpec.findModifierPragma( ((FieldDecl)ctxt).pmodifiers, TagConstants.GHOST) != null )) {
+				// skip
+			} else {
+			    ErrorSet.error(p.getStartLoc(),
+			    "An instance modifier may only be applied to ghost and model fields");
+			}
+		    }
+
 		    break;
-// FIXME - what about model methods???
 		}
 
 	    case TagConstants.FUNCTION:
@@ -1783,24 +1844,28 @@ FIXME - see uses of countFreeVarsAccess
 	        {
 		    VarDeclModifierPragma vd = (VarDeclModifierPragma)p;
 		    LocalVarDecl x = vd.decl;
-		    env.resolveType( vd.decl.type );
+		    env.resolveType( sig, vd.decl.type );
 		    checkTypeModifiers(env, x.type);
 		    javafe.tc.PrepTypeDeclaration.inst.
 			checkModifiers(x.modifiers, Modifiers.NONE,
 			    x.locId, "local specification variable");
 
-		    Env newEnv = new EnvForGhostLocals(env,x);
 		    boolean savedContext = isTwoStateContext;
 		    isTwoStateContext = true;
+		    // The case of x.init==null is illegal and should have
+		    // been caught by the parser.
 		    if (x.init != null) {
 			//if (x.init instanceof ArrayInit) {
-			    x.init = checkInit(newEnv, x.init, x.type);
+			    x.init = checkInit(env, x.init, x.type);
 			//} else {
 			    //checkExpr(newEnv, (Expr)x.init, x.type);
 			//}
 		    }
 		    isTwoStateContext = savedContext;
-		    env = newEnv;
+		    // We create the new environment after checking the
+		    // initializer to be sure that the initializer does not
+		    // reference itself.
+		    env = new EnvForGhostLocals(env,x);
 		    break;
 		}
 
@@ -1934,7 +1999,7 @@ FIXME - see uses of countFreeVarsAccess
 
                         // Resolve type and check that it is a subtype of Throwable
                         // and comparable to some type mentioned in the throws set.
-                        env.resolveType(vemp.arg.type);
+                        env.resolveType(sig,vemp.arg.type);
                         if (!Types.isSubclassOf(vemp.arg.type,
                                                 Types.javaLangThrowable())) {
                             ErrorSet.error(vemp.arg.type.getStartLoc(),
@@ -2004,13 +2069,14 @@ FIXME - see uses of countFreeVarsAccess
                     break;
                 }
 
+
             case TagConstants.MONITORED_BY: {
                 ExprModifierPragma emp = (ExprModifierPragma)p;
 
                 if (ctxt.getTag() != TagConstants.FIELDDECL) {
-                    ErrorSet.error(p.getStartLoc(),
-                                   "The monitored_by annotation can occur only on "+
-                                   "field declarations");
+                    ErrorSet.error(emp.loc,
+		       "The monitored_by annotation can occur only on "+
+		       "field declarations");
                 } else {
                     FieldDecl fd = (FieldDecl)ctxt;
 
@@ -2239,6 +2305,7 @@ FIXME - see uses of countFreeVarsAccess
                 break;
             }
 
+            case TagConstants.HENCE_BY:
             case TagConstants.ASSUME:
             case TagConstants.ASSERT:
 		{

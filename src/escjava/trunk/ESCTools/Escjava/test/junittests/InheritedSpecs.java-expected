@@ -31,11 +31,11 @@ InheritedSpecs: mm4() ...
 InheritedSpecs.java:16: Warning: Precondition possibly not established (Pre)
         public void mm4() { m(-1,-1); } // FAILS
                              ^
-Associated declaration is "InheritedSpecs.java", line 111, col 5:
-        //@ requires j >= 0;
-            ^
 Associated declaration is "InheritedSpecs.java", line 7, col 5:
         //@ requires i >= 0;
+            ^
+Associated declaration is "InheritedSpecs.java", line 111, col 5:
+        //@ requires j >= 0;
             ^
 ------------------------------------------------------------------------
     [TIME]  failed
@@ -163,14 +163,14 @@ InheritedSpecs: nn7e() ...
 InheritedSpecs.java:105: Warning: Precondition possibly not established (Pre)
                 n7(-1); // FAILS
                   ^
-Associated declaration is "InheritedSpecs.java", line 47, col 5:
-        //@ requires i%2 == 0;
+Associated declaration is "InheritedSpecs.java", line 133, col 5:
+        //@ requires i>1 || i< -10;
             ^
 Associated declaration is "InheritedSpecs.java", line 150, col 5:
         //@ requires i>=0;
             ^
-Associated declaration is "InheritedSpecs.java", line 133, col 5:
-        //@ requires i>1 || i< -10;
+Associated declaration is "InheritedSpecs.java", line 47, col 5:
+        //@ requires i%2 == 0;
             ^
 ------------------------------------------------------------------------
     [TIME]  failed

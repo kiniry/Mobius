@@ -17,6 +17,7 @@ public class TypeCheck extends javafe.tc.TypeCheck
      */
     public TypeCheck() {
 	inst = this;
+	new escjava.tc.PrepTypeDeclaration();
     }
 
     /**

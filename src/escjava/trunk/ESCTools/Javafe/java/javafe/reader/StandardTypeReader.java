@@ -12,6 +12,9 @@ import javafe.filespace.Query;
 import javafe.filespace.SlowQuery;
 import javafe.filespace.Tree;
 
+import javafe.Options;
+import javafe.Tool;
+
 import javafe.util.Assert;
 import javafe.util.ErrorSet;
 
@@ -61,20 +64,20 @@ public class StandardTypeReader extends TypeReader
      */
     //@ requires engine!=null && srcReader!=null && binReader!=null
     protected StandardTypeReader(Query engine, Query srcEngine, 
-			      Reader srcReader,
-			      Reader binReader) {
+			      CachedReader srcReader,
+			      CachedReader binReader) {
 	javaFileSpace = engine;
 	javaSrcFileSpace = srcEngine;
 
 	// The sourceReader must be cached to meet TypeReader's spec:
-	sourceReader = new CachedReader(srcReader);
+	sourceReader = srcReader;
 
 	/*
          * The binaryReader is cached only for efficiency reasons.
 	 *  (this prevents duplicate reads of binaries when useSrcPtr is
 	 *   used)
 	 */
-	binaryReader = new CachedReader(binReader);
+	binaryReader = binReader;
     }
 
     public void clear() {
@@ -97,7 +100,9 @@ public class StandardTypeReader extends TypeReader
     public static StandardTypeReader make(Query engine, Query srcEngine,
 					  Reader srcReader,
 			                  Reader binReader) {
-	return new StandardTypeReader(engine, srcEngine, srcReader, binReader);
+	return new StandardTypeReader(engine, srcEngine, 
+			new CachedReader(srcReader), 
+			new CachedReader(binReader));
     }
 
 
@@ -412,25 +417,33 @@ public class StandardTypeReader extends TypeReader
      */
     public CompilationUnit read(String[] P, String T,
 					boolean avoidSpec) {
+	int fileOriginOption = Tool.options.fileOrigin;
+
 	// Locate source file, if any:
-	GenericFile source = locateSource(P, T, true);
+	GenericFile source = null;
+	if (fileOriginOption != Options.NEVER_SOURCE)
+		source = locateSource(P, T, true);
+
 	// Last modification date for source if known (0L if not known):
 	long after = source==null ? 0L : source.lastModified();
 
 	// If try to avoid spec's, read from source if it exists:
-	if (avoidSpec && source!=null)
+	if (source != null && (avoidSpec 
+				|| fileOriginOption == Options.NEVER_BINARY 
+				|| fileOriginOption == Options.PREFER_SOURCE))
 	    return read(source, avoidSpec);
 
 	// Read from the binaries if they're complete and up-to-date:
-	CompilationUnit bin = readTypeBinaries(P, T, after);
-	if (bin!=null)
-	    return bin;
+	if (fileOriginOption == Options.PREFER_BINARY) after = 0L;
+	if (fileOriginOption != Options.NEVER_BINARY) {
+	    CompilationUnit bin = readTypeBinaries(P, T, after);
+	    if (bin!=null) return bin;
+	}
 
 	// Finally, fall back on source if it's available:
-	if (source==null)
-	    return null;
-	else
-	    return read(source, avoidSpec);
+	if (source!=null) return read(source, avoidSpec);
+
+	return null;
     }
 
 

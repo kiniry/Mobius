@@ -47,15 +47,15 @@ Associated declaration is "sync.java", line 57, col 6:
 sync.java:128: Warning: Possible race condition (Race)
         w = i + 1; // fails
           ^
-Associated declaration is "sync.java", line 60, col 6:
+Associated declaration is "sync.java", line 60, col 23:
   /*@ monitored_by mu, nu; */ int w;
-      ^
+                       ^
 sync.java:145: Warning: Possible race condition (Race)
           w = i + 1; // fails
             ^
-Associated declaration is "sync.java", line 60, col 6:
+Associated declaration is "sync.java", line 60, col 23:
   /*@ monitored_by mu, nu; */ int w;
-      ^
+                       ^
 sync.java:152: Warning: Possible race condition (Race)
     return u;  // fails
            ^
@@ -65,9 +65,15 @@ Associated declaration is "sync.java", line 62, col 6:
 sync.java:156: Warning: Possible race condition (Race)
     u = 8;  // fails
       ^
-Associated declaration is "sync.java", line 62, col 6:
+Associated declaration is "sync.java", line 62, col 25:
   /*@ monitored_by this, mu; */ int u;
+                         ^
+sync.java:156: Warning: Possible race condition (Race)
+    u = 8;  // fails
       ^
+Associated declaration is "sync.java", line 62, col 19:
+  /*@ monitored_by this, mu; */ int u;
+                   ^
 sync.java:161: Warning: Possible race condition (Race)
       return w;  // fails
              ^
@@ -77,16 +83,16 @@ Associated declaration is "sync.java", line 60, col 6:
 sync.java:169: Warning: Possible race condition (Race)
         v = 4;  // fails
           ^
-Associated declaration is "sync.java", line 61, col 6:
+Associated declaration is "sync.java", line 61, col 19:
   /*@ monitored_by this; */ int v;
-      ^
+                   ^
 sync.java:178: Warning: Possible race condition (Race)
         return v;  // fails
                ^
 Associated declaration is "sync.java", line 61, col 6:
   /*@ monitored_by this; */ int v;
       ^
-18 warnings
+19 warnings
 SyncConstructor.java:14: Warning: Possible race condition (Race)
     that.x = 5;  // race, since this != that
            ^
@@ -102,15 +108,15 @@ Associated declaration is "SyncConstructor.java", line 7, col 6:
 SyncConstructor.java:21: Warning: Possible race condition (Race)
     g = 5;  // race, because the special rule applies only to instance ...
       ^
-Associated declaration is "SyncConstructor.java", line 8, col 6:
+Associated declaration is "SyncConstructor.java", line 8, col 19:
   /*@ monitored_by nu; */ static int g;
-      ^
+                   ^
 SyncConstructor.java:25: Warning: Possible race condition (Race)
     this.g = 5;  // race (the "this" is irrelevant to static fields)
            ^
-Associated declaration is "SyncConstructor.java", line 8, col 6:
+Associated declaration is "SyncConstructor.java", line 8, col 19:
   /*@ monitored_by nu; */ static int g;
-      ^
+                   ^
 SyncConstructor.java:29: Warning: Possible race condition (Race)
     x = 5;       // race
       ^
@@ -120,27 +126,27 @@ Associated declaration is "SyncConstructor.java", line 6, col 6:
 SyncConstructor.java:30: Warning: Possible race condition (Race)
     that.x = 5;  // race
            ^
-Associated declaration is "SyncConstructor.java", line 6, col 6:
-  /*@ monitored */ int x;
-      ^
+Associated declaration is "SyncConstructor.java", line 30, col 4:
+    that.x = 5;  // race
+    ^
 SyncConstructor.java:33: Warning: Possible race condition (Race)
     o.y = 6;  // race
         ^
-Associated declaration is "SyncConstructor.java", line 7, col 6:
+Associated declaration is "SyncConstructor.java", line 7, col 19:
   /*@ monitored_by mu; */ int y;
-      ^
+                   ^
 SyncConstructor.java:35: Warning: Possible race condition (Race)
     o.y = 5;  // race
         ^
-Associated declaration is "SyncConstructor.java", line 7, col 6:
+Associated declaration is "SyncConstructor.java", line 7, col 19:
   /*@ monitored_by mu; */ int y;
-      ^
+                   ^
 SyncConstructor.java:37: Warning: Possible race condition (Race)
     g = 5;  // race
       ^
-Associated declaration is "SyncConstructor.java", line 8, col 6:
+Associated declaration is "SyncConstructor.java", line 8, col 19:
   /*@ monitored_by nu; */ static int g;
-      ^
+                   ^
 SyncConstructor.java:45: Warning: Possible race condition (Race)
     k = that.x;  // race, since this != that
              ^

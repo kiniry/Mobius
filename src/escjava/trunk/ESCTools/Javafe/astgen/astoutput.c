@@ -496,7 +496,7 @@ void outputEndOfAstFile(const char *text, int len,
     fclose(visitorOutputFile);
   }
 
-  
+  int makeClass = 1;
   { /* Output constants */
     FILE *constOutputFile = fopen(TAGSBASECLASS ".java", "w");
 
@@ -507,12 +507,23 @@ void outputEndOfAstFile(const char *text, int len,
       
     /* Print header material */ 
     fwrite(text, len, 1, constOutputFile); /* Generic header. */
-    fprintf(constOutputFile, "public interface " TAGSBASECLASS " {\n");
+    if (!makeClass)
+	fprintf(constOutputFile, "public interface " TAGSBASECLASS " {\n");
+    else if (strcmp(tagBase,"0")==0) {
+	fprintf(constOutputFile, "public class " TAGSBASECLASS " {\n");
+    } else {
+	/* Should generalize this - the super class name is part of
+	   tagBase - but I'll wait until it is needed.
+	*/
+	fprintf(constOutputFile, "public class " TAGSBASECLASS " extends javafe.tc.TagConstants {\n");
+    }
   
     /* Output the tags */
     {
 	const char *previousTag = tagBase;
 	ClassListNode *c;
+	const char* prefix = "static public final ";
+        if (!makeClass) prefix = "";
 	for(c = classes; c != NULL; c = c->next) {
 	    int manualtag = FALSE;
 	    DirectiveListNode *d;
@@ -527,21 +538,49 @@ void outputEndOfAstFile(const char *text, int len,
 
 		indent(constOutputFile, 3);
 		if (previousTag == tagBase)
-		  fprintf(constOutputFile,"int %s = %s;\n",
-			  currentTag, tagBase);
+		  fprintf(constOutputFile,"%sint %s = %s;\n",
+			  prefix, currentTag, tagBase);
 		else {
-		    fprintf(constOutputFile, "int %s = %s + 1;\n",
-			    currentTag, previousTag);
+		    fprintf(constOutputFile, "%sint %s = %s + 1;\n",
+			    prefix, currentTag, previousTag);
 		    free(previousTag);
 		}
 		previousTag = currentTag;
 	    }
 	}
 	indent(constOutputFile, 3);
-	fprintf(constOutputFile, "int LAST_TAG = %s;\n",previousTag);
+	fprintf(constOutputFile, "%sint LAST_TAG = %s;\n",prefix,previousTag);
 	if (previousTag == tagBase) free(previousTag);
     }
+    if (makeClass) {
+	fprintf(constOutputFile,"\n\n    static public String toString(int tag) {\n");
+	fprintf(constOutputFile,"      switch (tag) {\n");
+	ClassListNode *c;
+	for(c = classes; c != NULL; c = c->next) {
+	    int manualtag = FALSE;
+	    DirectiveListNode *d;
+	    FOREACHDIRECTIVE(d,c->c->directives)
+	      if (d->tag == MANUALTAGDIRECTIVE) manualtag = TRUE;
+	    if (! manualtag && ! c->c->abstract) {
+		/* get name of tag in upper case */
+		int i, nlen = strlen(c->c->name);
+		char *currentTag = mkstr(c->c->name, nlen+1);
+		for(i = 0; i < nlen; i++)
+		  currentTag[i] = toupper(currentTag[i]);
 
+		indent(constOutputFile, 8);
+		fprintf(constOutputFile,"case %s: return \"%s\";\n",
+			  currentTag,currentTag);
+		free(currentTag);
+	    }
+	}
+	if (strcmp(tagBase,"0")==0) 
+	    fprintf(constOutputFile,"        default: return \"Unknown javafe GeneratedTag \" + tag; \n      }\n    }\n");
+	else
+	    /* This needs generalization - when it needs it */
+	    fprintf(constOutputFile,"        default: return javafe.tc.TagConstants.toString(tag); \n      }\n    }\n");
+
+    }
     fprintf(constOutputFile, "}\n");
     fclose(constOutputFile);
   }

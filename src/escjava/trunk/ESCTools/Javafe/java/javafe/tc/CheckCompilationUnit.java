@@ -186,7 +186,7 @@ public class CheckCompilationUnit
 		String[] P = N.toStrings(sz-1);
 		Identifier T = N.identifierAt(sz-1);
 
-		TypeSig r = EnvForCU.lookupWithoutInheritence(P, T.toString());
+		TypeSig r = EnvForCU.lookupWithoutInheritence(null, P, T.toString());
 		if (r==null)
 		    ErrorSet.error(N.getStartLoc(),
 				   "No such type: " +

@@ -124,7 +124,7 @@ public abstract class Purity {
 	  if (n instanceof VarInit) {
 	    VarInit child = (VarInit)n;
 	    decorate(child);
-	    impure = impure | impure(child);
+	    impure = impure || impure(child);
 	  }
 	}
 	if (impure) makeImpure(expr);
@@ -132,9 +132,26 @@ public abstract class Purity {
       }
 
     default:
-      //@ unreachable;
-      Assert.fail("Tag " + TagConstants.toString(tag) + " " +
-		Location.toString(expr.getStartLoc()) + " " + expr);
+      if (expr instanceof GeneralizedQuantifiedExpr) {
+	GeneralizedQuantifiedExpr q = (GeneralizedQuantifiedExpr)expr;
+        boolean impure = false;
+	decorate(q.expr);
+	impure = impure || impure(q.expr);
+	if (q.rangeExpr != null) {
+	    decorate(q.rangeExpr);
+	    impure = impure || impure(q.rangeExpr);
+	}
+	if (impure) makeImpure(expr);
+	if (impure) {
+	    javafe.util.ErrorSet.error(q.getStartLoc(),
+		"A quantified expression may not contain impure expressions");
+	}
+	return;
+      } else {
+	  //@ unreachable;
+	  Assert.fail("Tag " + TagConstants.toString(tag) + " " +
+		    Location.toString(expr.getStartLoc()) + " " + expr);
+      }
     }
   }
 }

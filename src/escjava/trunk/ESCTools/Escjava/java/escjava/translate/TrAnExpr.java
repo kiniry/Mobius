@@ -116,7 +116,6 @@ public final class TrAnExpr {
             FieldAccess fa = (FieldAccess)e;
             VariableAccess va = makeVarAccess(fa.decl, fa.locId);
             // va accesses the field
-
 	    if (GetSpec.findModifierPragma(va.decl.pmodifiers,TagConstants.MODEL) != null) {
 		java.util.List reps = escjava.AnnotationHandler.findRepresents(fa.decl);
 		java.util.Iterator it = reps.iterator();
@@ -145,6 +144,7 @@ public final class TrAnExpr {
 	    }
 
             if (Modifiers.isStatic(fa.decl.modifiers)) {
+		//fa.od.getTag() == TagConstants.TYPEOBJECTDESIGNATOR) {
 		VariableAccess nva = apply(sp, va);
                 return nva;
             } else {
@@ -516,10 +516,12 @@ public final class TrAnExpr {
       case TagConstants.SUM:
       case TagConstants.PRODUCT:
 	{
-	    ErrorSet.notImplemented(!Main.options().noNotCheckedWarnings,
-		e.getStartLoc(),"Not checking predicates containing generalized quantifier expressions");
+	    //ErrorSet.notImplemented(!Main.options().noNotCheckedWarnings,
+		//e.getStartLoc(),"Not checking predicates containing generalized quantifier expressions");
 	    // FIXME - ignore these till we can figure out how to reason
-	    return LiteralExpr.make(TagConstants.INTLIT,new Integer(0),Location.NULL);
+		// Not sure this is the correct type ??? FIXME
+	    Type t = TypeCheck.inst.getType(e);
+	    return tempName(e.getStartLoc(),"quantvalue",t);
         }
 
       case TagConstants.FORALL:
@@ -632,9 +634,13 @@ wrap those variables being modified and not everything.
 		  issuedPRECautions.add(locStr);
 	      }
 	  }
-*/
-	  return trSpecExpr(ne.exprs.elementAt(0), st, null);
 	  //return trSpecExpr(ne.exprs.elementAt(0), union(sp, st), null);
+*/
+	if (st != null) {
+	    return trSpecExpr(ne.exprs.elementAt(0), st, null);
+	} else {
+	    return trSpecExpr(ne.exprs.elementAt(0), sp, st);
+	}
       }
 
       case TagConstants.FRESH: {
@@ -668,15 +674,44 @@ wrap those variables being modified and not everything.
 	return trSpecExpr(ne.exprs.elementAt(0), sp, st);
       }
 
+      case TagConstants.IS_INITIALIZED:
+      case TagConstants.INVARIANT_FOR:{
+	// We return a fresh temporary variable, unused elsewhere, until
+	// we know how to determine some conditions that these functions
+	// satisfy.  FIXME
+	Identifier n = Identifier.intern("tempInit"+(++tempn));
+	VariableAccess v =  VariableAccess.make(n, e.getStartLoc(), 
+			LocalVarDecl.make(Modifiers.NONE, null,n,
+				Types.booleanType,
+				UniqName.temporaryVariable,
+				null, Location.NULL));
+	return v;
+      } 
+
       case TagConstants.SPACE:
       case TagConstants.WACK_WORKING_SPACE:
-      case TagConstants.WACK_DURATION:
-	// FIXME - translation of these is not implemented.
-	// Set it to (long)0 for now.
-	return LiteralExpr.make(TagConstants.LONGLIT, new Long(0), 0);
+      case TagConstants.WACK_DURATION: {
+	// We return a fresh temporary variable, unused elsewhere, until
+	// we know how to determine some conditions that these functions
+	// satisfy.  FIXME
+	return tempName(e.getStartLoc(),"tempResources",Types.longType);
+      }
 
       case TagConstants.NOTHINGEXPR:
 	return null;
+
+      case TagConstants.NOTMODIFIEDEXPR: {
+	Expr ee = ((NotModifiedExpr)e).expr;
+	Expr post = trSpecExpr(ee,sp,st);
+	Expr pre;
+	if (st == null) {
+	    pre = trSpecExpr(ee,sp,st);
+	} else {
+	    pre = trSpecExpr(ee,st,null);
+	}
+	return LabelExpr.make(ee.getStartLoc(),ee.getEndLoc(),
+		false,GC.makeLabel("AdditionalInfo",ee.getStartLoc(),Location.NULL),GC.nary(TagConstants.ANYEQ,post,pre));
+      }
 
       default:
 	Assert.fail("UnknownTag<"+e.getTag()+","+
@@ -684,6 +719,16 @@ wrap those variables being modified and not everything.
 		    Location.toString(e.getStartLoc()));
 	return null; // dummy return
     }
+  }
+
+  static VariableAccess tempName(int loc, String prefix, Type type) {
+	Identifier n = Identifier.intern(prefix + (++tempn));
+	VariableAccess v =  VariableAccess.make(n, loc, 
+			LocalVarDecl.make(Modifiers.NONE, null,n,
+				type,
+				UniqName.temporaryVariable,
+				null, Location.NULL));
+	return v;
   }
 
   static Hashtable union(Hashtable h0, Hashtable h1) {
@@ -1149,7 +1194,7 @@ wrap those variables being modified and not everything.
     }
     VariableAccess v = (VariableAccess)map.get(va.decl);
     if (v != null) {
-      cSubstReplacements++;
+      if (va.decl == GC.thisvar.decl) cSubstReplacements++;
       return v;
     } else {
       return va;

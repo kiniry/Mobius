@@ -2,7 +2,7 @@ public class Represents {
 
 // ALso need: model fields from super class, model fields from another class
 // Model fields used in pre, post, assert, assume, invariant
-// Model fields not allowed as lhs of set, how about in rhs?
+// Model fields not allowed as lhs of set, how about in rhs? FIXME
 
 	/*@ spec_public */ private int length = 0;
 
@@ -32,14 +32,14 @@ public class Represents {
 	public void n() {
 		length = 1;
 		return;
-	}
+	} // ERROR - postcondition not established
 
 	//@ modifies length, size;
 	//@ ensures size > 1;
 	public void nn() {
 		length = 1;
 		return;
-	}
+	} // OK
 
 	//@ requires size > 1 && bb;
 	public void p() {}

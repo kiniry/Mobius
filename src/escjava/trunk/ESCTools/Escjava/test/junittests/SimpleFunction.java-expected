@@ -23,6 +23,12 @@ Execution trace information:
 ------------------------------------------------------------------------
     [TIME]  failed
 
+SimpleFunction: bump2(int) ...
+    [TIME]  passed immediately
+
+SimpleFunction: mm(int) ...
+    [TIME]  passed
+
 SimpleFunction: SimpleFunction() ...
     [TIME]  passed
   [TIME total]

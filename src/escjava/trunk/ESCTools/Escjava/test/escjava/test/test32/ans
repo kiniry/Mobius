@@ -407,9 +407,9 @@ Associated declaration is "SynchHotspot.java", line 13, col 17:
 SynchHotspot.java:54: Warning: Possible race condition (Race)
     d = new double[100];
       ^
-Associated declaration is "SynchHotspot.java", line 13, col 17:
+Associated declaration is "SynchHotspot.java", line 13, col 35:
   double[] d /*@ monitored_by mu0, this.mu1; */;
-                 ^
+                                   ^
 SynchHotspot.java:58: Warning: Possible race condition (Race)
     return d[1];
            ^
@@ -425,21 +425,21 @@ Associated declaration is "SynchHotspot.java", line 13, col 17:
 SynchHotspot.java:69: Warning: Possible race condition (Race)
     d = null;  // not okay
       ^
-Associated declaration is "SynchHotspot.java", line 13, col 17:
+Associated declaration is "SynchHotspot.java", line 13, col 35:
   double[] d /*@ monitored_by mu0, this.mu1; */;
-                 ^
+                                   ^
 SynchHotspot.java:84: Warning: Possible race condition (Race)
       d = null;  // race condition (mu1 is not held)
         ^
-Associated declaration is "SynchHotspot.java", line 13, col 17:
+Associated declaration is "SynchHotspot.java", line 13, col 35:
   double[] d /*@ monitored_by mu0, this.mu1; */;
-                 ^
+                                   ^
 SynchHotspot.java:105: Warning: Possible race condition (Race)
       d = a;  // race condition (mu0 not held)
         ^
-Associated declaration is "SynchHotspot.java", line 13, col 17:
+Associated declaration is "SynchHotspot.java", line 13, col 30:
   double[] d /*@ monitored_by mu0, this.mu1; */;
-                 ^
+                              ^
 SynchHotspot.java:111: Warning: Possible race condition (Race)
     double[] a = d;  // okay
                  ^

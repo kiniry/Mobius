@@ -51,17 +51,25 @@ public class TestParse
         if (argv.length > 0 && argv[0].equals("diff")) {
             if (argv.length < 3)
                 fatal("Insufficient arguments to diff");
+	    if (argv.length >= 4 && argv[3].equals("assert")) {
+		if (javafe.Tool.options == null)
+			javafe.Tool.options = new javafe.Options();
+		javafe.Tool.options.assertIsKeyword = true;
+	    }
             diff(argv[1], new FileInputStream(argv[1]),new FileInputStream(argv[2]));
             System.exit(0);
         }
 
         int exitStatus = 0;
+	if (javafe.Tool.options == null)
+	    javafe.Tool.options = new javafe.Options();
         for(int i = 0; i < argv.length; i++) {
             if (argv[i].equals("verboseprogress")) { verboseprogress=true;continue; }
             else if (argv[i].equals("check")) { check = true; continue; }
             else if (argv[i].equals("print")) { print = true; continue; }
             else if (argv[i].equals("progress")) { progress = true; continue; }
             else if (argv[i].equals("silent")) { ErrorSet.gag = true; continue; }
+            else if (argv[i].equals("assert")) { javafe.Tool.options.assertIsKeyword = true; continue; }
             else if (argv[i].equals("idempotence")) { idempotence = true; continue; }
 
             if (verboseprogress) System.out.println("Checking: " + argv[i]);
@@ -109,10 +117,12 @@ public class TestParse
 
     //@ requires in1 != null && in2 != null;
     public static boolean diff(String n, InputStream in1, InputStream in2) {
+	StringBuffer sb = new StringBuffer();
         try {
             int c1 = in1.read(), c2 = in2.read();
             int line = 1, col = 1, offset = 1;
             while (c1 == c2 && c1 != -1 && c2 != -1) {
+		//sb.append((char)c1);
                 if (c1 == '\n') { line++; col = 1; }
                 else col++;
                 offset++;
@@ -121,9 +131,10 @@ public class TestParse
             }
             if (c1 != c2) {
                 if (progress) n = "\n" + n;
-                System.out.println(n + " failed (" + c1 + " != " + c2
+                System.out.println(n + " failed (" + (char)c1 + " != " + (char)c2
                                    + " at offset " + offset
                                    + ", line " + line + ", col " + col + ")");
+		//System.out.println(sb.toString());
                 return true;
             } else return false;
         } catch(IOException e) {

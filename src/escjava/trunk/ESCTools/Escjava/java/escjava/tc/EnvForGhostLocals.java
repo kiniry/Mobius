@@ -151,15 +151,15 @@ public class EnvForGhostLocals extends Env implements/*privately*/ Cloneable {
      * exists.<p>
      *
      * This routine does not check that the resulting type (if any)
-     * is actually accessable. <p>
+     * is actually accessable, if caller is null. <p>
      *
      * If id is ambiguous, then if loc!=Location.NULL then a fatal
      * error is reported at that location via ErrorSet else one of
      * its possible meanings is returned.<p>
      */
-    public TypeSig lookupSimpleTypeName(Identifier id, int loc) {
+    public TypeSig lookupSimpleTypeName(TypeSig caller, Identifier id, int loc) {
 	// We bind no type variables ourshelves:
-	return parent.lookupSimpleTypeName(id, loc);
+	return parent.lookupSimpleTypeName(caller, id, loc);
     }
 
 

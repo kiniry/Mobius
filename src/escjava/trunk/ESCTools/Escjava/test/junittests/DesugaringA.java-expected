@@ -3,13 +3,13 @@ ESC/Java version VERSION
 
 DesugaringA ...
 Desugared specifications for DesugaringA.m
-   requires (\lblneg Pre:7.1 p) || (\lblneg Pre:10.1 r) && (\lblneg Pre:11.1 t)
+   requires (\lblneg Pre:0.7.1 p) || (\lblneg Pre:0.10.1 r) && (\lblneg Pre:0.11.1 t)
    ensures \old(p) ==> q
    modifies \nothing if \old(p)
    ensures \old(r && t) ==> s
    modifies \nothing if \old(r && t)
 Desugared specifications for DesugaringA.mm
-   requires (\lblneg Pre:17.2 p) || (\lblneg Pre:17.2 p) && (\lblneg Pre:21.3 s) || (\lblneg Pre:17.2 p) && (\lblneg Pre:25.4 t)
+   requires (\lblneg Pre:0.17.2 p) || (\lblneg Pre:0.17.2 p) && (\lblneg Pre:0.21.3 s) || (\lblneg Pre:0.17.2 p) && (\lblneg Pre:0.25.4 t)
    ensures \old(p) ==> q
    modifies \nothing if \old(p)
    ensures \old(p && s) ==> t
@@ -31,16 +31,16 @@ Desugared specifications for DesugaringA.m5
    ensures \result != null
    modifies \nothing if true
 Desugared specifications for DesugaringA.m6
-   requires (\lblneg NonNull:47.15 o:47.34 != null)
+   requires (\lblneg NonNull:0.47.15 o:47.34 != null)
    modifies \nothing if \old(o:47.34 != null)
 Desugared specifications for DesugaringA.m13
-   requires (\lblneg Pre:50.2 p) || (\lblneg Pre:52.2 q)
+   requires (\lblneg Pre:0.50.2 p) || (\lblneg Pre:0.52.2 q)
    ensures \old(p) ==> false
    modifies \nothing if \old(p)
    signals (java.lang.Exception)\old(q) ==> false
    modifies \nothing if \old(q)
 Desugared specifications for DesugaringA.ppp
-   requires (\lblneg Pre:58.2 p)
+   requires (\lblneg Pre:0.58.2 p)
    ensures \old(p) ==> q
    modifies \nothing if \old(p)
 Desugared specifications for DesugaringA.ppp1
@@ -52,7 +52,7 @@ Desugared specifications for JJ.ppp
    requires true
    modifies \nothing if true
 Desugared specifications for JJ.ppp1
-   requires (\lblneg Pre:72.5 pp)
+   requires (\lblneg Pre:0.72.5 pp)
    ensures \old(pp) ==> qq
    modifies \nothing if \old(pp)
 Desugared specifications for JJ.ppp2
@@ -77,7 +77,7 @@ Desugared specifications for Object.hashCode
 Desugared specifications for Object.equals
    requires true
    modifies \nothing if true
-   ensures obj:133.. == null ==> ! \result
+   ensures obj:5.. == null ==> ! \result
 Desugared specifications for Object.clone
    requires true
    modifies \nothing if true
@@ -98,8 +98,8 @@ Desugared specifications for Object.wait
    requires true
    modifies \nothing if true
 Desugared specifications for Object.wait
-   requires (\lblneg Pre:132.44.8 0 <= timeout:133..) && (\lblneg Pre:132.45.8 0 <= nanos:133.. && nanos:133.. <= 999999)
-   modifies \nothing if \old(0 <= timeout:133.. && 0 <= nanos:133.. && nanos:133.. <= 999999)
+   requires (\lblneg Pre:4.44.8 0 <= timeout:5..) && (\lblneg Pre:4.45.8 0 <= nanos:5.. && nanos:5.. <= 999999)
+   modifies \nothing if \old(0 <= timeout:5.. && 0 <= nanos:5.. && nanos:5.. <= 999999)
 Desugared specifications for Object.wait
    requires true
    modifies \nothing if true

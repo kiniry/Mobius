@@ -324,6 +324,7 @@ public final class OutsideEnv {
      *
      * If an error occurs, it will be reported via
      * <code>ErrorSet</code> and <code>null</code> will be returned.<p>
+     * Null may also be returned if a file is repeated on the command line.<p>
      *
      * Note: calling <code>addSource</code> twice on the same file may
      * or may not produce a duplicate-type error.<p>

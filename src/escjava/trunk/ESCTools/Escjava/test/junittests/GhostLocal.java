@@ -18,6 +18,18 @@ public class GhostLocal {
 		//@ set k = k + 1;
 		//@ assert k == 12;
 	}
+
+	//-@ function
+	public boolean pred(int i);
+
+	public void mm() {
+		//@ ghost int i = (\max int ii; 0<ii && ii<4; ii+2);
+		//@ ghost int j = (\num_of int jj; 0<jj && jj < 4);
+		// ghost boolean b = (\exists int bb;  pred(bb));
+		//@ set i = (\max int ii; 0<ii && ii<4; ii+2);
+		//@ set j = (\num_of int jj; 0<jj && jj < 4);
+		int z;
+	}
 }
 
 class GhostLocalA extends GhostLocalS implements GhostLocalI {

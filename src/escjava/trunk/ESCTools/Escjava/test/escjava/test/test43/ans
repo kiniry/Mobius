@@ -19,9 +19,9 @@ Associated declaration is "DefIf.java", line 36, col 12:
 DefIf.java:53: Warning: Possible race condition (Race)
     this.h = x;  // illegal access
            ^
-Associated declaration is "DefIf.java", line 36, col 12:
+Associated declaration is "DefIf.java", line 36, col 25:
   int h /*@ monitored_by f */;
-            ^
+                         ^
 DefIf.java:70: Warning: Possible race condition (Race)
       x = d.h;  // illegal access
             ^
@@ -31,9 +31,9 @@ Associated declaration is "DefIf.java", line 36, col 12:
 DefIf.java:77: Warning: Possible race condition (Race)
       d.h = x;  // illegal access
           ^
-Associated declaration is "DefIf.java", line 36, col 12:
+Associated declaration is "DefIf.java", line 36, col 25:
   int h /*@ monitored_by f */;
-            ^
+                         ^
 DefIf.java:95: Warning: Possible race condition (Race)
     x = this.h;  // illegal access
              ^
@@ -55,7 +55,7 @@ Associated declaration is "DefIf.java", line 83, col 6:
 DefIf.java:124: Warning: Possible race condition (Race)
       d.h = x;  // illegal access
           ^
-Associated declaration is "DefIf.java", line 83, col 6:
-  /*@ monitored */ int h;
+Associated declaration is "DefIf.java", line 124, col 6:
+      d.h = x;  // illegal access
       ^
 10 warnings

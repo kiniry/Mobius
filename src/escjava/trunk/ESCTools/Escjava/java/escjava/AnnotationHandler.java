@@ -69,8 +69,7 @@ public class AnnotationHandler {
 		handlePragmas(tde);
 		ModelMethodDeclPragma mmp = (ModelMethodDeclPragma)tde;
 		td.elems.setElementAt(((ModelMethodDeclPragma)tde).decl,j);
-	    }
-	    if (tde instanceof ModelConstructorDeclPragma) {
+	    } else if (tde instanceof ModelConstructorDeclPragma) {
 		handlePragmas(tde);
 		ModelConstructorDeclPragma mmp = (ModelConstructorDeclPragma)tde;
 		if (mmp.id == null) {
@@ -80,6 +79,10 @@ public class AnnotationHandler {
 		} else {
 		    td.elems.setElementAt(((ModelConstructorDeclPragma)tde).decl,j);
 		}
+	    } else if (tde instanceof ModelTypePragma) {
+		handlePragmas(tde);
+		ModelTypePragma tdp = (ModelTypePragma)tde;
+		td.elems.setElementAt(tdp.decl,j);
 	    }
 	    // handle PURE pragmas
 	    if (tde instanceof MethodDecl ||
@@ -1347,7 +1350,7 @@ static public class NestedPragmaParser {
 	    // It is a bit of a design problem that the parsing of the
 	    // sequence of pragmas produces a new ModifierPragmaVec that
 	    // overwrites the old one.  That means that if we call 
-	    // parseROutineSpecs twice on a routine we get problems.
+	    // parseRoutineSpecs twice on a routine we get problems.
 	    // This test is here to avoid problems if a bug elsewhere
 	    // causes this to happen.
 	    // In fact there currently is such a bug - if the same type is
@@ -1356,6 +1359,7 @@ static public class NestedPragmaParser {
 	    // parsed a second time.  That may be fixed by the time you
 	    // read this, but until then...
 	    System.out.println("OUCH - attempt to reparse " + Location.toString(rd.getStartLoc()));
+javafe.util.ErrorSet.dump("OUCH");
 	    return;
 	}
 
@@ -1434,16 +1438,22 @@ static public class NestedPragmaParser {
 	    behavior = mp;
 	    int behaviorTag = mp.getTag();
 	    ++pos;
+	    encounteredError = false;
 	    switch (behaviorTag) {
 		case TagConstants.MODEL_PROGRAM:
-		    if (behaviorMode == 2) ErrorSet.error(mp.getStartLoc(),
+		    if (behaviorMode == 2) {
+			ErrorSet.error(mp.getStartLoc(),
 			"Model programs may not be in the examples section");
-		    else {
+			encounteredError = true;
+		    } else if (pm.elementAt(pos).getTag() != TagConstants.ALSO
+		      && pm.elementAt(pos).getTag() != TagConstants.END) {
+			ErrorSet.error(mp.getStartLoc(),
+			    "A model_program may not be combined with other clauses");
+		    } else {
 			mpv.addElement(mp);
 			result.add(mpv);
+			break;
 		    }
-		    if (pm.elementAt(pos).getTag() != TagConstants.ALSO) break;
-		    ++pos;
 		    continue;
 
 		case TagConstants.BEHAVIOR:
@@ -1499,8 +1509,10 @@ static public class NestedPragmaParser {
 	    pos = parseSeq(pos,pm,0,behavior,mpv);
             if (mpv.size() != 0) result.add(mpv);
 	    else if (behaviorMode == 0 || result.size() != 0) {
-		ErrorSet.error(pm.elementAt(pos).getStartLoc(),
+		if (!encounteredError) 
+		    ErrorSet.error(pm.elementAt(pos).getStartLoc(),
 			"JML does not allow empty clause sequences");
+		encounteredError = false;
 	    }
             if (pm.elementAt(pos).getTag() != TagConstants.ALSO) break;
             ++pos;
@@ -1515,6 +1527,7 @@ static public class NestedPragmaParser {
 	return pos;
     }
 
+    private boolean encounteredError;
  
     //@ requires (* pm.elementAt(pm.size()-1).getTag() == TagConstants.END *);
     public int parseSeq(int pos, ModifierPragmaVec pm, 
@@ -1522,6 +1535,14 @@ static public class NestedPragmaParser {
 			ModifierPragmaVec result) {
 	int behaviorTag = behavior==null? 0 : behavior.getTag();
 	//System.out.println("STARTING " + behaviorMode + " " + behaviorTag);
+	if (pm.elementAt(pos).getTag() == TagConstants.MODEL_PROGRAM) {
+	    if (behaviorMode == 0) {
+		ErrorSet.error(pm.elementAt(pos).getStartLoc(),
+		    "Model programs may not be nested");
+		encounteredError = true;
+	    }
+	    ++pos;
+	}
         while (true) {
             ModifierPragma mp = pm.elementAt(pos);
 	    int loc = mp.getStartLoc();
@@ -1537,8 +1558,8 @@ static public class NestedPragmaParser {
                     return pos;
 
 		case TagConstants.MODEL_PROGRAM:
-		    if (behaviorMode == 0) ErrorSet.error(mp.getStartLoc(),
-			"Model programs may not be nested");
+		    ErrorSet.error(mp.getStartLoc(),
+			 "Model programs may not be combined with other clauses");
 		    ++pos;
 		    break;
 

@@ -84,6 +84,16 @@ public class Options
      */
     public boolean showErrorLocation = false;
 
+    /**
+     *	Flags to use or not use source or binary files.
+     */
+    static public final int PREFER_BINARY = 0;
+    static public final int PREFER_SOURCE = 1;
+    static public final int PREFER_RECENT = 2;
+    static public final int NEVER_BINARY = 3;
+    static public final int NEVER_SOURCE = 4;
+    public int fileOrigin = PREFER_RECENT;
+
     //************************************************************************
     //     Constructors
     //************************************************************************   
@@ -216,6 +226,21 @@ public class Options
 	} else if (option.equals("-showErrorLocation")) {
 	    showErrorLocation = true;
             return offset;
+	} else if (option.equals("-preferSource")) {
+	    fileOrigin = PREFER_SOURCE;
+	    return offset;
+	} else if (option.equals("-preferBinary")) {
+	    fileOrigin = PREFER_BINARY;
+	    return offset;
+	} else if (option.equals("-preferRecent")) {
+	    fileOrigin = PREFER_RECENT;
+	    return offset;
+	} else if (option.equals("-neverBinary")) {
+	    fileOrigin = NEVER_BINARY;
+	    return offset;
+	} else if (option.equals("-neverSource")) {
+	    fileOrigin = NEVER_SOURCE;
+	    return offset;
 	}
 
 	// Pass on unrecognized options:

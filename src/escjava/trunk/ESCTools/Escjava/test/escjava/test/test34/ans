@@ -274,9 +274,6 @@ BogusInput.java:130: Error: The monitored_by annotation can occur only on field 
 BogusInput.java:128: Error: monitored_by is obsolete and only applies to fields
   /*@ monitored_by mb1 */ static void monitoredBy1(/*@ monitored_by mb ...
       ^
-BogusInput.java:135: Error: The monitored annotation can occur only on instance field declarations
-  /*@ monitored */ static int mo2;
-                              ^
 BogusInput.java:136: Error: The monitored annotation can occur only on field declarations
   /*@ monitored */ void monitored0(/*@ monitored */ int p) {
                                                         ^
@@ -421,30 +418,9 @@ BogusInput.java:192: Error: Labeled predicates are not allowed in this context
 BogusInput.java:192: Error: Labeled predicates are not allowed in this context
     /*@ assert (\lblpos Hello 1 < 2) ? (\lblpos Hello 1 < 2) : (\lblpo ...
                                                                ^
-BogusInput.java:202: Error: Variable 'i' is already defined here.
-    /*@ assume (\forall int i; (\forall int i; i == i)); */
-                                            ^
-BogusInput.java:203: Error: Variable 'i' is already defined here.
- ... (\forall Object j; (\exists double i; i == i))); */
-                                        ^
-BogusInput.java:204: Error: Variable 'i' is already defined here.
-    /*@ assume (\forall int i, i; (\forall Object j; (\exists double i ...
-                               ^
-BogusInput.java:204: Error: Variable 'i' is already defined here.
- ... (\forall Object j; (\exists double i; i == i))); */
-                                        ^
-BogusInput.java:205: Error: Variable 'j' is already defined here.
-    /*@ assume (\forall int i, j; (\forall Object j; (\exists double i ...
-                                                  ^
-BogusInput.java:205: Error: Variable 'i' is already defined here.
- ... (\forall Object j; (\exists double i; i == i))); */
-                                        ^
-BogusInput.java:206: Error: Variable 'xyz' is already defined here.
-    /*@ assume (\forall char xyz; xyz == xyz); */
-                             ^
 Caution: Turning off extended static checking due to type error(s)
 1 caution
-138 errors
+130 errors
 BogusAssignments.java:4: Caution: May not assign to a final field
     x = 3;  // this is a "final" field, but we don't currently disallo ...
     ^
@@ -847,9 +823,6 @@ BogusSpec.java:95: Error: The type of the exsures argument must be a subtype of 
 BogusSpec.java:96: Error: Variable 'j' is already defined here.
   //@ exsures (Throwable j) true;
                          ^
-BogusSpec.java:97: Error: Variable 't' is already defined here.
-  //@ exsures (Throwable t) (\forall Throwable t; t == t);
-                                               ^
 BogusSpec.java:98: Error: The type of the exsures argument must be a subtype of java.lang.Throwable
   //@ exsures (\TYPE tt) tt == \type(SomeException);
                ^
@@ -1008,7 +981,7 @@ BogusSpec.java:228: Caution: No initial also expected since there are no overrid
   //@ also modifies this.xx;
       ^
 24 cautions
-84 errors
+83 errors
 BogusVisibility.java:150: Error: Original ESC/Java keywords beginning with also_ are obsolete; they have been replaced with the corresponding JML keywords and the use of 'also' - note that the semantics has also changed.
   //@ also_ensures privSub == pack && prot == publ;
       ^

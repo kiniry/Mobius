@@ -55,6 +55,7 @@ GoodJmlPragmas.j:108: /*@ ensures_redundantly \not_specified; */
 GoodJmlPragmas.j:109: /*@ ensures_redundantly predicate; */
 GoodJmlPragmas.j:111: /*@ exsures_redundantly (Exception e) \not_specified; */
 GoodJmlPragmas.j:112: /*@ exsures_redundantly (Exception e) predicate; */
+GoodJmlPragmas.j:114: /*@ hence_by_redundantly predicate; */
 GoodJmlPragmas.j:116: /*@ invariant_redundantly predicate; */
 GoodJmlPragmas.j:118: /*@ loop_invariant_redundantly predicate; */
 GoodJmlPragmas.j:120: /*@ maintaining_redundantly predicate; */

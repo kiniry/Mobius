@@ -327,6 +327,14 @@ public class Substitute {
 	break;
       }
 	  
+    case TagConstants.NOTMODIFIEDEXPR:
+      {
+	NotModifiedExpr nme = (NotModifiedExpr)e;
+	result = NotModifiedExpr.make(nme.loc, 
+	    doSubst(subst, nme.expr, rhsVars));
+	break;
+      }
+
     case TagConstants.VARIABLEACCESS:
       {
 	VariableAccess va = (VariableAccess)e;

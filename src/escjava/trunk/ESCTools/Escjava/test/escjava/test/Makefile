@@ -4,6 +4,7 @@
 export TOP = ../../../..
 include ${TOP}/Makefile.defs
 
+TESTSOURCEDIRECTORY ?= ${ESCJAVA_ROOT}/test
 PARSER_TEST_PACKAGE = escjava.parser.test
 PARSER_TEST_DIR = ${TESTSOURCEDIRECTORY}/escjava/parser/test
 

@@ -89,13 +89,14 @@ public abstract class Env {
      * exists.<p>
      *
      * This routine does not check that the resulting type (if any)
-     * is actually accessible. <p>
+     * is actually accessible, if caller is null. <p>
      *
      * If id is ambiguous, then if loc!=Location.NULL then a fatal
      * error is reported at that location via ErrorSet else one of
      * its possible meanings is returned.<p>
      */
-    abstract public TypeSig lookupSimpleTypeName(/*@non_null*/ Identifier id,
+    abstract public TypeSig lookupSimpleTypeName(
+				TypeSig caller, /*@non_null*/ Identifier id,
 						 int loc);
 
 
@@ -132,6 +133,9 @@ public abstract class Env {
     //@ ensures (this instanceof EnvForCU) ==> \result==null
     abstract public ASTNode locateFieldOrLocal(/*@non_null*/ Identifier id);
 
+    public boolean isDuplicate(/*@ non_null */ Identifier id) {
+	return locateFieldOrLocal(id) instanceof GenericVarDecl;
+    }
 
     /**
      * Locate the lexically innermost method named id. <p>
@@ -200,15 +204,16 @@ public abstract class Env {
      * prefix's size. <p>
      *
      * This routine does not check that the resulting type (if any)
-     * is actually accessible. <p>
+     * is actually accessible, unless caller is not null. <p>
      */
     //@ modifies prefixSize;
     //@ ensures \result==null ==> 0==prefixSize
     //@ ensures \result!=null ==> 0<prefixSize && prefixSize <= n.length
-    public TypeSig findTypeNamePrefix(/*@non_null*/ Name n,
+    public TypeSig findTypeNamePrefix(TypeSig caller,
+				      /*@non_null*/ Name n,
 				      boolean ignoreFields) {
 	// Check for an unqualified name first:
-	TypeSig sig = lookupSimpleTypeName(n.identifierAt(0),
+	TypeSig sig = lookupSimpleTypeName(caller,n.identifierAt(0),
 					   n.getStartLoc());
 	prefixSize = 1;
 	if (sig==null) {
@@ -238,7 +243,7 @@ public abstract class Env {
 		break;
 
 	    // Stop if next access cannot refer to a type member:
-	    TypeSig next = sig.lookupType(id, idLoc);
+	    TypeSig next = sig.lookupType(caller, id, idLoc);
 	    if (next==null)
 		break;
 
@@ -262,10 +267,10 @@ public abstract class Env {
      * does not denote a type.<p>
      *
      * This routine does not check that the resulting type (if any)
-     * is actually accessible. <p>
+     * is actually accessible, unless caller is not null. <p>
      */
-    public TypeSig lookupTypeName(/*@non_null*/ Name n) {
-	TypeSig sig = findTypeNamePrefix(n, true);
+    public TypeSig lookupTypeName(TypeSig caller, /*@non_null*/ Name n) {
+	TypeSig sig = findTypeNamePrefix(caller, n, true);
 	if (prefixSize!=n.size())
 	    return null;
 
@@ -293,24 +298,24 @@ public abstract class Env {
      * may also later be obtained by using TypeSig.getSig on n.<p>
      *
      * This routine does not check that the resulting type (if any)
-     * is actually accessible. <p>
+     * is actually accessible, unless caller is not null. <p>
      */
     //@ ensures \result!=null
-    public TypeSig resolveTypeName(/*@non_null*/ TypeName tn) {
+    public TypeSig resolveTypeName(TypeSig caller, /*@non_null*/ TypeName tn) {
 	Name n = tn.name;
 
-	TypeSig sig = TypeSig.getRawSig(tn);
+	TypeSig sig = TypeSig.getRawSig(tn);  // FIXME - use caller ?
 	if (sig!=null)
 	    return sig;
 
-	sig = lookupTypeName(n);
+	sig = lookupTypeName(caller, n);
 	if (sig==null) {
 	    ErrorSet.fatal(tn.name.locIdAt(0),
 			   "Can't find type named \""
 			   + tn.name.printName() + "\"");
 	}
 
-	sig = processTypeNameAnnotations(tn, sig);
+	sig = processTypeNameAnnotations(tn, sig);  // FIXME - use caller?
 	TypeSig.setSig(tn, sig);
 	return sig;
     }
@@ -329,17 +334,17 @@ public abstract class Env {
      * If an error occurs, reports it to ErrorSet via a fatal error.<p>
      *
      * This routine does not check that (immediate) types (if any)
-     * are actually accessible. <p>
+     * are actually accessible, if caller is null. <p>
      */
-    public void resolveType(/*@non_null*/ Type t) {
+    public void resolveType(TypeSig caller, /*@non_null*/ Type t) {
       	typeEnv.set(t,this);
 	switch(t.getTag()) {
 	  case TagConstants.ARRAYTYPE:
-	    resolveType(((ArrayType)t).elemType);
+	    resolveType(caller, ((ArrayType)t).elemType);
 	    break;
 
 	  case TagConstants.TYPENAME:
-	    resolveTypeName((TypeName)t);
+	    resolveTypeName(caller, (TypeName)t);
 	    break;
 
           // No need to resolve primitive types or TypeSigs...
@@ -396,7 +401,7 @@ public abstract class Env {
 	    left = FieldAccess.make(od, leftmost, leftmostLoc);
 	} else {
 	    // n *must* start with a typename then:
-	    TypeSig sig = findTypeNamePrefix(n, false);
+	    TypeSig sig = findTypeNamePrefix(null, n, false); // FIXME - a caller for access checking?
 	    if (sig==null || prefixSize==n.size())
 		return null;
 
@@ -485,7 +490,7 @@ public abstract class Env {
 		/*
 		 * then try preceeding name as a TypeName:
 		 */
-		TypeSig t = lookupTypeName(butRight);
+		TypeSig t = lookupTypeName(null,butRight); // FIXME - a caller for access checking?
 		if (t != null) {
 		    TypeName tn = TypeName.make(butRight);
 		    TypeSig.setSig(tn, t);

@@ -11,7 +11,7 @@
 class B {
     void f (int i) { // declare parameter
 	class C {
-	    void f (int i) { // error - hides parameter
+	    void f (int i) { // error - hides parameter // NOT AN ERROR in javac
 	    }
 	}
 	

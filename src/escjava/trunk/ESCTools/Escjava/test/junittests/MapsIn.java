@@ -1,9 +1,10 @@
-public class MapsIn {
+public class MapsIn extends MapsInS {
 
 	//@ ghost JMLDataGroup j,k;
 
 	public int i;
 	//@ in j,k;
+	//@ in super.i, super.j;
 
 	public int[] a;
 	//@ maps a[0] \into j,k;
@@ -12,6 +13,7 @@ public class MapsIn {
 
 	public MapsT b;
 	//@ maps b.f \into k;
+	//@ maps b.f \into super.i, super.j;
 
 	public MapsT[] c;
 	//@ maps c[0].f \into k;
@@ -33,6 +35,10 @@ public class MapsIn {
 	//@ maps i;
 	//@ maps i j 
 	//@
+}
+
+class MapsInS {
+	public int i;
 }
 
 class JMLDataGroup {}

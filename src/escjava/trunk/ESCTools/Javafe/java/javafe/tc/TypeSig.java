@@ -561,6 +561,7 @@ public class TypeSig extends Type
 	return v.visitType( this,o );
     }
     
+/*
     // We don't promise any meaningful locations...
     //@ invariant !syntax
     {
@@ -569,6 +570,7 @@ public class TypeSig extends Type
 	//@ assume (\forall GenericVarDecl g; g.type != this)
 	//@ set syntax = false
     }
+*/
 
     public int getStartLoc() {
 	return getTypeDecl().getStartLoc();
@@ -594,12 +596,15 @@ public class TypeSig extends Type
      * fatal error is reported at that location via ErrorSet else one
      * of the relevant type members is returned.<p>
      *
-     * This routine does not check that the resulting type (if any)
-     * is actually accessable. <p>
+     * If caller is null, this routine does not check that the
+     * resulting type (if any) is accessible.  If caller is not
+     * null, then the resulting type is checked to be accessible
+     * from the caller. <p>
      */
-    public TypeSig lookupType(/*@non_null*/ Identifier id, int loc) {
+    public TypeSig lookupType(TypeSig caller,
+				/*@non_null*/ Identifier id, int loc) {
 	// Look locally first:
-	TypeSig result = lookupLocalType(id);
+	TypeSig result = lookupLocalType(caller,id);
 	if (result!=null)
 	    return result;
 
@@ -611,7 +616,7 @@ public class TypeSig extends Type
 	if (decl instanceof ClassDecl) {
 	    TypeName n = ((ClassDecl)decl).superClass;
 	    if (n!=null)
-		result = getSig(n).lookupType(id, loc);
+		result = getSig(n).lookupType(caller,id, loc);
 	}
 
 	/*
@@ -619,7 +624,7 @@ public class TypeSig extends Type
 	 */
 	for (int i=0; i<decl.superInterfaces.size(); i++ ) {
 	    TypeName superInterfaceName = decl.superInterfaces.elementAt(i);
-	    TypeSig newResult = getSig(superInterfaceName).lookupType(id, loc);
+	    TypeSig newResult = getSig(superInterfaceName).lookupType(caller,id, loc);
 	    if (newResult==null)
 		continue;
 
@@ -648,18 +653,26 @@ public class TypeSig extends Type
      * Do we have a type member named id (*not* including inherited
      * type members)?  If so, return it; otherwise, return null. <p>
      *
-     * This routine does not check that the resulting type (if any)
-     * is actually accessable. <p>
+     * If caller is null, then this routine does not check that the 
+     * resulting type (if any) is actually accessable. If caller is
+     * non_null, then the resulting type is checked that it is 
+     * accessible from the caller.<p>
      */
-    public TypeSig lookupLocalType(/*@non_null*/ Identifier id) {
-	TypeDeclElemVec elems = getTypeDecl().elems;
 
+     public TypeSig lookupLocalType(TypeSig caller, Identifier id) {
+	TypeDeclElemVec elems = getTypeDecl().elems;
 	for (int i=0; i<elems.size(); i++) {
 	    TypeDeclElem e = elems.elementAt(i);
-	    if (e instanceof TypeDecl && ((TypeDecl)e).id==id)
-		return getSig((TypeDecl)e);
+	    if (e instanceof TypeDecl && ((TypeDecl)e).id==id) {
+		TypeDecl td = (TypeDecl)e;
+		TypeSig t = getSig(td);
+		if (caller == null) return t;
+                if (TypeCheck.inst.canAccess(caller, t, td.modifiers,
+                                                td.pmodifiers) ) {
+		    return t;
+		}
+	    }
 	}
-
 	return null;
     }
 

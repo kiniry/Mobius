@@ -1,12 +1,10 @@
 TestSuite.java
-## Tests to be fixed
-ParseDependsBad.java
-AlsoInherit.java
-Methods.java
-Represents.java
-Test.java
-Test2.java
-## ModParsingErrors.java - temporarily in, but needs fixing
+# Do these seprately
+FormalNonnullInheritance.java
+Desugaring.java
+DesugaringA.java
+InheritedSpecs.java
+NL.java
 # Problem when run separately, but not in junit tests?
 ParsePlus.java 
 ## Platform dependent
@@ -16,10 +14,6 @@ Helper.java
 InheritNull.java
 PreconditionWarnings.java
 NonNullResult.java
-## Junit order dependence
-DesugaringA.java
-InheritedSpecs.java
-NL.java
 ## Pure and embedded checks
 Embedded.java
 EmbeddedA.java
@@ -28,21 +22,18 @@ ParsePure.java
 ModifiesPure.java
 # Delete
 Subclassing.java
+ParseDependsBad.java
+Methods.java
 WarnOp.java
 WarnOpA.java
-## A bug
+Test.java
+Test2.java
+## A bug / tests to be fixed
 EX.java
-FormalNonnullInheritance.java
 GhostFieldOverride.java
-## dangling also
-Heavyweight.java
+SetComprehension.java
 ## Modify everything tests
 ModEverything.java
 ModE.java
 ## New tests
 Privacy.java
-Instance.java
-Mod.java
-Type.java
-ModelConstructors.java
-Initially.java

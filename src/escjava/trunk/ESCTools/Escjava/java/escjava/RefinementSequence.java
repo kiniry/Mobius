@@ -186,8 +186,14 @@ public class RefinementSequence extends CompilationUnit {
 		fd.pmodifiers = newfd.pmodifiers.copy();
 	    fd.pmodifiers.append(newfd.pmodifiers); 
 	}
-	if (fd.init == null) fd.init = newfd.init;
-	else if (newfd.init != null && fd.init != newfd.init) {
+	if (newfd.init != null && fd.init != newfd.init &&
+		escjava.translate.GetSpec.findModifierPragma(newfd.pmodifiers,TagConstants.GHOST)
+			== null) {
+	    ErrorSet.error(newfd.init.getStartLoc(),
+		"A java field declaration may not be initialized in a specification file");
+	} else if (fd.init == null) {
+		fd.init = newfd.init;
+	} else if (newfd.init != null && fd.init != newfd.init) {
 	    // Note - fd is initialized by a cleancopy() of the java file, if
 	    // it exists; then the files of the RS are added in.  One of those
 	    // might be the java file, back to put in its annotations.  So
@@ -341,7 +347,6 @@ public class RefinementSequence extends CompilationUnit {
 
     void combineType(TypeDecl newtd, TypeDecl td, boolean addNewItems) {
 	// Compare modifiers -- FIXME
-Info.out("Combining type " + newtd.id);
 	td.modifiers |= newtd.modifiers;
 	td.specOnly = td.specOnly && newtd.specOnly;
 	td.loc = newtd.loc; // Just to avoid having loc in a class file
@@ -655,7 +660,7 @@ Info.out("Combining type " + newtd.id);
 		d.modifiers,
 		null,
 		null,
-		cleancopy(d.args,enclosed),
+		cleancopy(d.args,false && enclosed), // FIXME - fixed in the binary reader
 		d.raises,
 		javaIsBinary? null: d.body,
 		d.locOpenBrace,

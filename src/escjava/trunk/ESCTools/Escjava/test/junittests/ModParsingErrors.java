@@ -19,7 +19,7 @@ public class ModParsingErrors  extends ModParsingJJ {
 	/*@ requires p;
 	pure
 	non_null     
-	ensures q;   // ERROR - out of order
+	ensures q;   // ERROR - out of order -- FIXME
 	*/
 	Object m8();
 
@@ -90,9 +90,9 @@ public class ModParsingErrors  extends ModParsingJJ {
 	void m14();
 
 	/*@
-		requires p;	// ERROR - needs an also
+		requires p;
 	*/
-	void ppp();
+	void ppp();  // ERROR - needs an also
 
 
 	/*@ for_example
@@ -108,9 +108,22 @@ public class ModParsingErrors  extends ModParsingJJ {
 		ensures false;
 	also
 		model_program {} // ERROR - no nested model program
-	|}
+	|}    
 	*/
 	void m16();
+
+	/*@
+		requires true;
+	also
+		model_program {} // OK
+	also
+		requires true;
+		model_program{} // ERROR
+	also
+		model_program {} // ERROR
+		ensures true;
+	*/
+	void m17();
 }
 
 class ModParsingJJ {

@@ -8,13 +8,19 @@ GhostLocal: GhostLocal() ...
 
 GhostLocal: m() ...
     [TIME]  passed
+
+GhostLocal: pred(int) ...
+    [TIME]  passed immediately
+
+GhostLocal: mm() ...
+    [TIME]  passed
   [TIME total]
 
 GhostLocalA ...
 
 GhostLocalA: m() ...
 ------------------------------------------------------------------------
-GhostLocal.java:35: Warning: Possible assertion failure (Assert)
+GhostLocal.java:47: Warning: Possible assertion failure (Assert)
                 //@ assert a.i == 3; // ERROR
                     ^
 ------------------------------------------------------------------------

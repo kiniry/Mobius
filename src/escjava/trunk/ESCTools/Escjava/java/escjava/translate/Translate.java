@@ -1667,7 +1667,15 @@ public final class Translate
                     LocalVarDecl vd = ((VarDeclStmt)stmt).decl;
                     declaredLocals.addElement(vd);
                     boolean isUninitialized = false;
+		    boolean isGhost = false;
                     if (vd.pmodifiers != null) {
+                        for (int i= 0; i < vd.pmodifiers.size(); i++) {
+                            ModifierPragma prag= vd.pmodifiers.elementAt(i);
+                            if (prag.getTag() == TagConstants.GHOST) {
+				isGhost = true;
+				break;
+			    }
+			}
                         for (int i= 0; i < vd.pmodifiers.size(); i++) {
                             ModifierPragma prag= vd.pmodifiers.elementAt(i);
                             if (prag.getTag() == TagConstants.UNINITIALIZED) {
@@ -1683,7 +1691,8 @@ public final class Translate
                     if (null != vd.init) {
                         Assert.notFalse(vd.locAssignOp != Location.NULL);
                         VariableAccess lhs = TrAnExpr.makeVarAccess(vd, vd.getStartLoc());
-                        Expr rval = ptrExpr(vd.init);
+                        Expr rval = isGhost ? TrAnExpr.trSpecExpr((Expr)vd.init) :
+						ptrExpr(vd.init);
                         if (! isUninitialized) {
                             writeCheck(lhs, vd.init, rval, vd.locAssignOp, false);
                         }
@@ -1754,18 +1763,18 @@ public final class Translate
 		} else if (s.target instanceof ArrayRefExpr) {
 		    ArrayRefExpr lhs= (ArrayRefExpr)s.target;
 
-		    Expr array= trExpr(true, lhs.array);
-		    Expr index= trExpr(true, lhs.index);
-		    Expr rval= trExpr(false, s.value);
+		    Expr array= TrAnExpr.trSpecExpr(lhs.array);
+		    Expr index= TrAnExpr.trSpecExpr(lhs.index);
+		    Expr rval= TrAnExpr.trSpecExpr(s.value);
 
 		    arrayAccessCheck(lhs.array, array, lhs.index, index, lhs.locOpenBracket);
 		    if (! isFinal(TypeCheck.inst.getType(lhs.array))) {
-			addCheck(s.loc,
-				 TagConstants.CHKARRAYSTORE,
-				 GC.nary(TagConstants.IS, rval,
-					 GC.nary(TagConstants.ELEMTYPE,
-						 GC.nary(TagConstants.TYPEOF, array))),
-				 Location.NULL, lhs.array);
+			 addCheck(s.loc,
+			     TagConstants.CHKARRAYSTORE,
+			     GC.nary(TagConstants.IS, rval,
+				 GC.nary(TagConstants.ELEMTYPE,
+				     GC.nary(TagConstants.TYPEOF, array))),
+			     Location.NULL, lhs.array);
 		    }
 
 		    code.addElement(GC.subsubgets(GC.elemsvar, array, index, rval));
@@ -1779,6 +1788,10 @@ public final class Translate
 		}
                 break;
             }
+
+	    case TagConstants.HENCE_BY:
+		// FIXME - ignored - unclear semantics
+		return;
 
             case TagConstants.ASSUME:
                 {
@@ -2663,9 +2676,9 @@ public final class Translate
                 }
 
             default:
-                //@ unreachable;
-                Assert.fail("UnknownTag<" + tag + ">");
-                return null;
+		//@ unreachable;
+		Assert.fail("UnknownTag<" + TagConstants.toString(tag) + ">");
+		return null;
         }
     }
 
@@ -3050,6 +3063,7 @@ public final class Translate
      * thread re-entrant.
      */
     private /*@ non_null */ ExprVec mutexList = ExprVec.make(new Expr[5]);
+    private /*@ non_null */ ArrayList locList = new ArrayList(5);
 
     /**
      * Insert checks done before reading variables.
@@ -3083,6 +3097,7 @@ public final class Translate
         Hashtable map = null;
 
         mutexList.removeAllElements();
+        locList.clear();
         ModifierPragma firstMonitoredPragma = null;
         for (int i= 0; i < d.pmodifiers.size(); i++) {
             ModifierPragma prag= d.pmodifiers.elementAt(i);
@@ -3111,6 +3126,7 @@ public final class Translate
                     ExprModifierPragma emp = (ExprModifierPragma)prag;
                     map = initializeRWCheckSubstMap(map, actualSelf, locId);
                     mutexList.addElement(TrAnExpr.trSpecExpr(emp.expr, map, null));
+		    locList.add(new Integer(emp.expr.getStartLoc()));
                     if (firstMonitoredPragma == null)
                         firstMonitoredPragma = prag;
                     break;
@@ -3119,10 +3135,13 @@ public final class Translate
                 case TagConstants.MONITORED:
                     Assert.notFalse(d instanceof FieldDecl);
                     if (Modifiers.isStatic(d.modifiers)) {
-                        mutexList.addElement(getClassObject(((FieldDecl)d).parent));
+                        mutexList.addElement(
+			    GC.nary(TagConstants.CLASSLITERALFUNC,
+				getClassObject(((FieldDecl)d).parent)));
                     } else {
                         mutexList.addElement(actualSelf);
                     }
+		    locList.add(new Integer(prag.getStartLoc()));
                     if (firstMonitoredPragma == null)
                         firstMonitoredPragma = prag;
                     break;
@@ -3157,10 +3176,16 @@ public final class Translate
                 onelocked = GC.or(GC.nary(TagConstants.REFEQ, actualSelf, GC.thisvar),
                                   onelocked);
             }
+	    // For a read race, we have a race condition if none of the 
+	    // monitors are locked.  Since we can't point to all of them
+	    // we point to the beginning of the first monitored declaration,
+	    // rather than to a specific expresssion - will likely be 
+	    // confusing to the user anyway.
             addCheck(locId, TagConstants.CHKSHARING, onelocked,
                      firstMonitoredPragma);
         }
         mutexList.removeAllElements(); // Help the garbage collector...
+        locList.clear(); // Help the garbage collector...
     }
 
     /**
@@ -3216,6 +3241,7 @@ public final class Translate
         Hashtable map = null;
 
         mutexList.removeAllElements();
+        locList.clear();
         Expr onenotnull= GC.falselit;
         ModifierPragma firstMonitoredPragma = null;
         for (int i= 0; i < d.pmodifiers.size(); i++) {
@@ -3246,7 +3272,13 @@ public final class Translate
                 case TagConstants.MONITORED_BY: {
                     ExprModifierPragma emp = (ExprModifierPragma)prag;
                     map = initializeRWCheckSubstMap(map, actualSelf, locAssignOp);
+			// We keep a list of locations in locList because the
+			// translated expr (if it refers to this) may have a
+			// dummy location and we want to be sure to have any
+			// Race warning point to the actual object whose monitor
+			// has not been acquired.
                     mutexList.addElement(TrAnExpr.trSpecExpr(emp.expr, map, null));
+		    locList.add(new Integer(emp.expr.getStartLoc()));
                     if (firstMonitoredPragma == null)
                         firstMonitoredPragma = prag;
                     break;
@@ -3255,10 +3287,13 @@ public final class Translate
                 case TagConstants.MONITORED:
                     Assert.notFalse(d instanceof FieldDecl);
                     if (Modifiers.isStatic(d.modifiers)) {
-                        mutexList.addElement(getClassObject(((FieldDecl)d).parent));
+                        mutexList.addElement(GC.nary(
+				TagConstants.CLASSLITERALFUNC,
+				getClassObject(((FieldDecl)d).parent)));
                     } else {
                         mutexList.addElement(actualSelf);
                     }
+		    locList.add(new Integer(prag.getStartLoc()));
                     onenotnull= GC.truelit;
                     if (firstMonitoredPragma == null)
                         firstMonitoredPragma = prag;
@@ -3272,26 +3307,38 @@ public final class Translate
 
         if (mutexList.size() != 0) {
             Expr allnullorlocked= GC.truelit;
+	    boolean doConst = rdCurrent instanceof ConstructorDecl &&
+				actualSelf != null;
             for (int i= mutexList.size()-1; 0 <= i; i--) {
                 Expr mu= mutexList.elementAt(i);
                 onenotnull= GC.or(GC.nary(TagConstants.REFNE, mu, GC.nulllit),
                                   onenotnull);
+		Expr nullOrLocked = 
+                    GC.or(GC.nary(TagConstants.REFEQ, mu, GC.nulllit),
+                          GC.select(GC.LSvar, mu));
+		if (!doConst) {
+		    int loc = mu.getStartLoc();
+		    if (loc == Location.NULL) loc = ((Integer)locList.get(i)).intValue();
+		    addCheck(locAssignOp, TagConstants.CHKSHARING,
+				nullOrLocked,loc); 
+		}
                 allnullorlocked=
-                    GC.and(GC.or(GC.nary(TagConstants.REFEQ, mu, GC.nulllit),
-                                 GC.select(GC.LSvar, mu)),
-                           allnullorlocked);
+                    GC.and(nullOrLocked, allnullorlocked);
             }
             Expr p = GC.and(onenotnull, allnullorlocked);
-            if (rdCurrent instanceof ConstructorDecl && actualSelf != null) {
+            if (doConst) {
                 // In constructors, always allow access to the fields of the object
                 // being constructed.
                 // Note: The following could be optimized so that if "actualSelf"
                 // is ``obviously'' "this", then the check could be omitted altogether.
                 p = GC.or(GC.nary(TagConstants.REFEQ, actualSelf, GC.thisvar), p);
-            }
-            addCheck(locAssignOp, TagConstants.CHKSHARING, p, firstMonitoredPragma);
+		addCheck(locAssignOp, TagConstants.CHKSHARING, p, firstMonitoredPragma);
+            } else {
+		addCheck(locAssignOp, TagConstants.CHKSHARING, onenotnull, firstMonitoredPragma);
+	    }
         }
         mutexList.removeAllElements(); // Help the garbage collector...
+        locList.clear(); // Help the garbage collector...
     }
 
     /**
@@ -3628,6 +3675,7 @@ public final class Translate
 		    Object o = iter.next();
 		    if (o instanceof Expr) el.add((Expr)o);
 		    else System.out.println("WHAT? " + o.getClass() + " " + o);
+			// FIXME
 		}
 		
 	    }

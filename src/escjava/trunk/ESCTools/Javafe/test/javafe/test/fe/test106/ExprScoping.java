@@ -60,7 +60,7 @@ class SameKind2 {
 	
 	class I {
 	    void n() {
-		boolean l = false;     // error (local hiding a local)
+		boolean l = false;     // error (local hiding a local) // Not an error in javac
 
 		boolean s = l;         // inner local hides outer local
 	    }

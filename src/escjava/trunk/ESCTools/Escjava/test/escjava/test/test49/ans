@@ -31,10 +31,16 @@ Associated declaration is "Ghost.java", line 29, col 24:
 Ghost.java:56: Warning: Possible race condition (Race)
         //@ set x = foo         // error
                   ^
+Associated declaration is "Ghost.java", line 52, col 47:
+    //@ ghost public Object x //@ monitored_by mutex
+                                               ^
+Ghost.java:56: Warning: Possible race condition (Race)
+        //@ set x = foo         // error
+                  ^
 Associated declaration is "Ghost.java", line 52, col 34:
     //@ ghost public Object x //@ monitored_by mutex
                                   ^
-6 warnings
+7 warnings
 
 **** Source code with types:
 class WritableIf

@@ -31,6 +31,7 @@ test runtests: buildtests
 
 .PHONY: dotests
 dotests: lists
+	$(MAKE) notjunittests
 	$(JUNIT) TestSuite
 
 dotests-nolist: 
@@ -43,7 +44,15 @@ swtests: lists
 ALWAYSFLAGS = -nowarn Deadlock -verboseTrace -testMode -classpath .
 DEFAULTFLAGS = " "
 
+## This lists files without .java suffixes that need to be added to the
+## set of junittests
 OTHERTESTS = RefineT.t SpecFile.jml RefineNoJava.refines-java Binary.refines-spec NoPublic.refines-spec
+
+## These have output that depends on initialization (e.g. what has already 
+## happened in the previous junittests), so the output is more stable when
+## run separately
+NOTJUNITTESTS = Desugaring.java FormalNonnullInheritance.java \
+	DesugaringA.java InheritedSpecs.java NL.java
 
 .PHONY: lists
 lists:
@@ -60,6 +69,13 @@ septest:
 	$(MAKE) skips
 	$(MAKE) othertests
 	$(MAKE) sepjavatests
+	$(MAKE) notjunittests
+
+notjunittests:
+	@touch skip
+	@for f in  ${NOTJUNITTESTS} ; do \
+		$(MAKE) --no-print-directory $${f}-test; \
+	done
 
 sepjavatests:
 	@touch skip
