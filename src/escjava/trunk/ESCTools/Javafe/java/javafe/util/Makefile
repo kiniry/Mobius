@@ -1,7 +1,7 @@
 # Copyright 2000, 2001, Compaq Computer Corporation
 
 runtest:
-	@echo "TESTING Javafe: java/javfe/util"
+	@echo "TESTING Javafe: java/javafe/util"
 	${JAVA} -classpath ${CLASSPATH} javafe.util.CorrelatedReaderTest subreader < CorrelatedReader.java
 	${JAVA} -classpath ${CLASSPATH} javafe.util.CorrelatedReaderTest reset < CorrelatedReader.java
 
