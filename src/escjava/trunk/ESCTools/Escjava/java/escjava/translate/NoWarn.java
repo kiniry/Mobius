@@ -23,16 +23,16 @@ public class NoWarn {
      ***************************************************/
 
   static private int chkStatus[] 
-  = new int[TagConstants.LASTESCCHECKTAG - 
-	   TagConstants.FIRSTESCCHECKTAG];
+      = new int[TagConstants.LASTESCCHECKTAG - 
+                TagConstants.FIRSTESCCHECKTAG + 1];
 
   static {
     setAllChkStatus(TagConstants.CHK_AS_ASSERT);
   }
 
   public static void setAllChkStatus(int status) {
-    for (int i=TagConstants.FIRSTESCCHECKTAG;
-	 i < TagConstants.LASTESCCHECKTAG; i++) {
+    for (int i = TagConstants.FIRSTESCCHECKTAG;
+	 i <= TagConstants.LASTESCCHECKTAG; i++) {
       setChkStatus(i, status);
     }
 
@@ -55,7 +55,7 @@ public class NoWarn {
   public static void setChkStatus( int tag, int status ) {
 
     Assert.notFalse( TagConstants.FIRSTESCCHECKTAG <= tag
-		     && tag < TagConstants.LASTESCCHECKTAG );
+		     && tag <= TagConstants.LASTESCCHECKTAG );
 
     Assert.notFalse( status == TagConstants.CHK_AS_ASSUME
 		     || status == TagConstants.CHK_AS_ASSERT
@@ -87,10 +87,9 @@ public class NoWarn {
       **/
      public static int toNoWarnTag(String name) {
 	for (int i = TagConstants.FIRSTESCCHECKTAG;
-		i<TagConstants.LASTESCCHECKTAG;
-		i++) {
+             i <= TagConstants.LASTESCCHECKTAG; i++) {
 	    if (TagConstants.toString(i).equals(name)
-		&& i!=TagConstants.CHKFREE)
+		&& i != TagConstants.CHKFREE)
 		return i;
 	}
 
