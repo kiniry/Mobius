@@ -872,7 +872,7 @@ public class Types
     protected String printNameInstance(Type t) {
 	if (t instanceof TypeName) {
 	    TypeSig sig = TypeSig.getRawSig((TypeName)t);
-	    if (signals != null)
+	    if (sig != null)
 		return sig.toString();
 	} else if (t instanceof ArrayType)
 	    return printName(((ArrayType)t).elemType) + "[]";
