@@ -4,6 +4,7 @@ New features include:
   o Improved implementation of reasoning with model variables.
   o Implementation of a simple GUI for running ESC/Java2.
   o Improved specifications from the JML project.
+  o Corrected behavior of static on invariants, etc.
 
 The following bugs are FIXED in this release:
   [ 781415 ] \TYPE and java.lang.Class should be the same
