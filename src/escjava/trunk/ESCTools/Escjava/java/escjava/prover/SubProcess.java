@@ -393,7 +393,7 @@ public class SubProcess
 	    if (next >= 0 && stops.indexOf((char)next) != -1)
 		break;
 
-	    soFar.append(getChar());
+	    soFar.append((char)getChar());
 	}
 
 	return soFar.toString();
