@@ -7,6 +7,7 @@
 *.out
 *.pdf
 *.ps
+*.class
 .auto
 jml_homework
 jml_homework.cp
