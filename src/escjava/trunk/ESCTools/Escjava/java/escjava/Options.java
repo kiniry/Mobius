@@ -64,11 +64,6 @@ public class Options extends javafe.SrcToolOptions
     /** When set, prints out the desugared specs for debugging purposes. */
     public boolean desugaredSpecs = false;
 
-    /** When true, no variable output (e.g. execution time) is printed,
-     so that output can be compared to an oracle output file.
-     */
-    public boolean testMode = false;
-
     /** When true, pretty prints each compilation unit on the command-line;
      this is only used for testing, to test the combining of refinements.
      */
@@ -696,9 +691,6 @@ public class Options extends javafe.SrcToolOptions
             return offset;
         } else if (option.equals("-noNotCheckedWarnings")) {
             noNotCheckedWarnings = true;
-            return offset;
-        } else if (option.equals("-testMode")) {
-            testMode = true;
             return offset;
         } else if (option.equals("-testRef")) {
             testRef = true;

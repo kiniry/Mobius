@@ -1,7 +1,9 @@
 ESC/Java version VERSION
   Prover started:TIME
+    [TIME]
 
 ModelMethods2 ...
+    [TIME]
 
 ModelMethods2: m() ...
     [TIME]  passed immediately

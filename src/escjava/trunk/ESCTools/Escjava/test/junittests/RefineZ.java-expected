@@ -5,8 +5,10 @@ Error: The command-line argument RefineZ.java was not in the refinement sequence
 public class RefineZ {}
 ^
   Prover started:TIME
+    [TIME]
 
 sub.RefineZ ...
+    [TIME]
 
 sub.RefineZ: RefineZ() ...
     [TIME]  passed

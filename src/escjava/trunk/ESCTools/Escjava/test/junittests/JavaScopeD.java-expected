@@ -1,5 +1,6 @@
 ESC/Java version VERSION
   Prover started:TIME
+    [TIME]
 
 JavaScopeD ...
 JavaScopeD.java:7: Fatal error: Can't find type named "J"

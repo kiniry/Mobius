@@ -27,8 +27,10 @@ ESC/Java version VERSION
         public int n = 0;
                        ^
   Prover started:TIME
+    [TIME]
 
 W ...
+    [TIME]
 
 W: W() ...
     [TIME]  passed

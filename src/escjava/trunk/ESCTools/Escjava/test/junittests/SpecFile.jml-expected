@@ -1,5 +1,6 @@
 ESC/Java version VERSION
   Prover started:TIME
+    [TIME]
 
 SpecFile ...
 ./SpecFile.spec:6: Caution: JML requires a specification to begin with 'also' when the declaration refines a previous declaration
@@ -14,6 +15,7 @@ SpecFile.jml:5: Associated declaration:
 ./SpecFile.spec:6: Associated declaration: 
         public void m();
                     ^
+    [TIME]
 
 SpecFile: m() ...
     [TIME]  passed immediately

@@ -59,6 +59,7 @@ ModParsingErrors.java:121: Error: Model programs may not be combined with other 
 ModParsingErrors.java:123: Error: A model_program may not be combined with other clauses
                 model_program {} // ERROR
                 ^
+    [TIME]
 
 ModParsingErrors ...
 ModParsingErrors.java:46: Caution: No initial also expected since there are no overridden or refined methods
@@ -70,6 +71,7 @@ ModParsingErrors.java:95: Caution: JML requires a specification to begin with 'a
 ModParsingErrors.java:130: Associated declaration: 
         void ppp();
         ^
+    [TIME]
 
 ModParsingErrors: m7() ...
     [TIME]  passed immediately
@@ -118,6 +120,7 @@ ModParsingErrors: ModParsingErrors() ...
   [TIME total]
 
 ModParsingJJ ...
+    [TIME]
 
 ModParsingJJ: ppp() ...
     [TIME]  passed immediately

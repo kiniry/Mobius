@@ -6,6 +6,7 @@ AlsoInherit.java:22: Error: Original ESC/Java keywords beginning with also_ are 
         //@ also_exsures (Exception) true; // OBSOLETE
             ^
   Prover started:TIME
+    [TIME]
 
 AlsoInherit ...
 AlsoInherit.java:6: Caution: JML requires a specification to begin with 'also' when the method overrides other methods
@@ -26,6 +27,7 @@ AlsoInherit.java:35: Associated declaration:
 AlsoInherit.java:31: Caution: No initial also expected since there are no overridden or refined methods
         //@ also                // ERROR - no also expected
             ^
+    [TIME]
 
 AlsoInherit: m() ...
     [TIME]  passed immediately
@@ -50,6 +52,7 @@ AlsoInherit: AlsoInherit() ...
   [TIME total]
 
 Parent ...
+    [TIME]
 
 Parent: m() ...
     [TIME]  passed immediately

@@ -1,5 +1,6 @@
 ESC/Java version VERSION
   Prover started:TIME
+    [TIME]
 
 ParseDuration ...
 ParseDuration.java:18: Error: The function \duration takes only one argument

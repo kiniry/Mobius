@@ -1,7 +1,9 @@
 ESC/Java version VERSION
   Prover started:TIME
+    [TIME]
 
 GhostLocal ...
+    [TIME]
 
 GhostLocal: GhostLocal() ...
     [TIME]  passed immediately
@@ -17,6 +19,7 @@ GhostLocal: mm() ...
   [TIME total]
 
 GhostLocalA ...
+    [TIME]
 
 GhostLocalA: m() ...
 ------------------------------------------------------------------------
@@ -31,11 +34,13 @@ GhostLocalA: GhostLocalA() ...
   [TIME total]
 
 GhostLocalS ...
+    [TIME]
 
 GhostLocalS: GhostLocalS() ...
     [TIME]  passed
   [TIME total]
 
 GhostLocalI ...
+    [TIME]
   [TIME total]
 1 warning

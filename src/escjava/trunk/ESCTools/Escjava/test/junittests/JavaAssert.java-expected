@@ -1,7 +1,9 @@
 ESC/Java version VERSION
   Prover started:TIME
+    [TIME]
 
 JavaAssert ...
+    [TIME]
 
 JavaAssert: nothing() ...
     [TIME]  passed

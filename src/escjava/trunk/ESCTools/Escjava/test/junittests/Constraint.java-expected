@@ -1,7 +1,9 @@
 ESC/Java version VERSION
   Prover started:TIME
+    [TIME]
 
 Constraint ...
+    [TIME]
 
 Constraint: m() ...
     [TIME]  passed
@@ -25,6 +27,7 @@ Constraint: Constraint() ...
   [TIME total]
 
 ConstraintA ...
+    [TIME]
 
 ConstraintA: ConstraintA() ...
     [TIME]  passed immediately
@@ -42,6 +45,7 @@ Constraint.java:39: Warning: Possible assertion failure (Assert)
   [TIME total]
 
 ConstraintB ...
+    [TIME]
 
 ConstraintB: m() ...
     [TIME]  passed immediately
@@ -51,6 +55,7 @@ ConstraintB: ConstraintB() ...
   [TIME total]
 
 ConstraintSA ...
+    [TIME]
 
 ConstraintSA: ConstraintSA() ...
     [TIME]  passed immediately
@@ -68,6 +73,7 @@ Constraint.java:72: Warning: Possible assertion failure (Assert)
   [TIME total]
 
 ConstraintC ...
+    [TIME]
 
 ConstraintC: sm() ...
     [TIME]  passed immediately
@@ -93,15 +99,18 @@ ConstraintC: ConstraintC() ...
   [TIME total]
 
 ConstraintR ...
+    [TIME]
 
 ConstraintR: ConstraintR() ...
     [TIME]  passed
   [TIME total]
 
 ConstraintI ...
+    [TIME]
   [TIME total]
 
 ConstraintX ...
+    [TIME]
 
 ConstraintX: m() ...
 ------------------------------------------------------------------------

@@ -1,7 +1,9 @@
 ESC/Java version VERSION
   Prover started:TIME
+    [TIME]
 
 RefineB ...
+    [TIME]
 
 RefineB: m(int) ...
     [TIME]  passed

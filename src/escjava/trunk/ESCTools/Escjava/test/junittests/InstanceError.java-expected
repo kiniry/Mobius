@@ -1,5 +1,6 @@
 ESC/Java version VERSION
   Prover started:TIME
+    [TIME]
 
 InstanceSuperC ...
 InstanceError.java:6: Error: May not specify both static and instance on a declaration

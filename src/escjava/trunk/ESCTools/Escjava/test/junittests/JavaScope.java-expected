@@ -1,5 +1,6 @@
 ESC/Java version VERSION
   Prover started:TIME
+    [TIME]
 
 JavaScope ...
 JavaScope.java:20: Error: Variable 'b' is already defined here.

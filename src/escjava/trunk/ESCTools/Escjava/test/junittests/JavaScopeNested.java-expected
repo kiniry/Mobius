@@ -1,5 +1,6 @@
 ESC/Java version VERSION
   Prover started:TIME
+    [TIME]
 
 JavaScopeNested ...
 JavaScopeNested.java:10: Fatal error: Can't find type named "JSN.I"

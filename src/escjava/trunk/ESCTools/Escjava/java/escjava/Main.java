@@ -924,22 +924,6 @@ public class Main extends javafe.SrcTool
 
     // Misc. Utility routines
 
-    /**
-     * Compute the time used from a start time to now, then return it
-     * in a user readable form.
-     */
-    /*@ ensures \result != null */
-    public static String timeUsed(long startTime) {
-        if (options().testMode) return "TIME";
-        long delta = java.lang.System.currentTimeMillis() - startTime;
-    
-        return (delta/1000.0) + " s";
-    }
-
-    public static long currentTime() {
-	return java.lang.System.currentTimeMillis();
-    }
-
     private static String removeSpaces(/*@ non_null */ String s) {
         while (true) {
             int k = s.indexOf(' ');

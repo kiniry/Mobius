@@ -3,8 +3,10 @@ GhostMethod.java:4: Error: A method may not be declared ghost
         //@ public ghost int n();
                    ^
   Prover started:TIME
+    [TIME]
 
 GhostMethod ...
+    [TIME]
 
 GhostMethod: n() ...
     [TIME]  passed immediately

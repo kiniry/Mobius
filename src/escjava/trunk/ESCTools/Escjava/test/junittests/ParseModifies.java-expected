@@ -1,7 +1,9 @@
 ESC/Java version VERSION
   Prover started:TIME
+    [TIME]
 
 ParseModifies ...
+    [TIME]
 
 ParseModifies: m() ...
     [TIME]  passed immediately

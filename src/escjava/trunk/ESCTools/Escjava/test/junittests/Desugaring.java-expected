@@ -1,5 +1,6 @@
 ESC/Java version VERSION
   Prover started:TIME
+    [TIME]
 
 Desugaring ...
 Desugared specifications for Desugaring.m
@@ -176,6 +177,7 @@ Desugared specifications for Throwable.getStackTraceElement
 Desugared specifications for Throwable.writeObject
    requires true
    modifies \nothing if true
+    [TIME]
 
 Desugaring: m() ...
     [TIME]  passed immediately
@@ -212,6 +214,7 @@ Desugaring: Desugaring() ...
   [TIME total]
 
 JJ ...
+    [TIME]
 
 JJ: ppp() ...
     [TIME]  passed immediately

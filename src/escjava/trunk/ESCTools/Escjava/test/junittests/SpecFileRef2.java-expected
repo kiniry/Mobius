@@ -1,7 +1,9 @@
 ESC/Java version VERSION
   Prover started:TIME
+    [TIME]
 
 SpecFileRef2 ...
+    [TIME]
 
 SpecFileRef2: n() ...
 ------------------------------------------------------------------------

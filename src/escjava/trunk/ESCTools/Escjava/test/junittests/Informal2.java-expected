@@ -1,5 +1,6 @@
 ESC/Java version VERSION
   Prover started:TIME
+    [TIME]
 
 Informal2 ...
 Informal2.java:5: Error: Invalid types (int and boolean) in equality comparison

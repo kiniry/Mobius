@@ -24,7 +24,7 @@ JBIN =
 endif
 
 export TOOLCMD = ${JAVA} -mx40m -classpath ${CLASSDIRECTORY} javafe.test.Print ${JBIN}
-export TOOLARGS = -noprint -typecheck
+export TOOLARGS = -noprint -typecheck -quiet
 export TOOL = ${TOOLCMD} ${TOOLARGS}
 
 runtest: septests

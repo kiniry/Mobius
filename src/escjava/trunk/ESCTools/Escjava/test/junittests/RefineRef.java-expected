@@ -1,7 +1,9 @@
 ESC/Java version VERSION
   Prover started:TIME
+    [TIME]
 
 RefineRef ...
+    [TIME]
 
 RefineRef: m(RefineRefHelper) ...
     [TIME]  passed

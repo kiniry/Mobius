@@ -9,6 +9,7 @@ ModelConstructors.java:3: Associated declaration:
 public class ModelConstructors {
              ^
   Prover started:TIME
+    [TIME]
 
 ModelConstructors ...
 ModelConstructors.java:12: Error: Undefined variable 'ooo'

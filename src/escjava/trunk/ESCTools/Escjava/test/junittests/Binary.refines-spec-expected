@@ -4,20 +4,24 @@ Error: Failed to find some but not all binary files: BinaryD
 class BinaryD{}
 ^
   Prover started:TIME
+    [TIME]
 
 BinaryB ...
+    [TIME]
 
 BinaryB: BinaryB() ...
     [TIME]  passed immediately
   [TIME total]
 
 BinaryC ...
+    [TIME]
 
 BinaryC: BinaryC() ...
     [TIME]  passed immediately
   [TIME total]
 
 BinaryA ...
+    [TIME]
 
 BinaryA: BinaryA() ...
     [TIME]  passed immediately

@@ -1,7 +1,9 @@
 ESC/Java version VERSION
   Prover started:TIME
+    [TIME]
 
 AssignOnConstructor ...
+    [TIME]
 
 AssignOnConstructor: m() ...
     [TIME]  passed immediately

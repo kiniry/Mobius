@@ -1,7 +1,9 @@
 ESC/Java version VERSION
   Prover started:TIME
+    [TIME]
 
 MethodInSpec ...
+    [TIME]
 
 MethodInSpec: meth(int) ...
     [TIME]  passed immediately
@@ -71,6 +73,7 @@ MethodInSpec: MethodInSpec() ...
   [TIME total]
 
 MMS ...
+    [TIME]
 
 MMS: mms() ...
     [TIME]  passed immediately

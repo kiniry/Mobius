@@ -1,5 +1,6 @@
 ESC/Java version VERSION
   Prover started:TIME
+    [TIME]
 
 TypeErrors ...
 TypeErrors.java:10: Error: The function \typeof takes only one argument

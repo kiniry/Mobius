@@ -1,5 +1,6 @@
 ESC/Java version VERSION
   Prover started:TIME
+    [TIME]
 
 GhostLocalScope ...
 GhostLocalScope.java:19: Error: May use set only with assignment targets that are declared ghost

@@ -1,5 +1,6 @@
 ESC/Java version VERSION
   Prover started:TIME
+    [TIME]
 
 FreshErrors ...
 FreshErrors.java:7: Error: The function \fresh cannot be used in this context

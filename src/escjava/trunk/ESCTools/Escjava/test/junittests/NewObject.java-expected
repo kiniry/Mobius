@@ -1,7 +1,9 @@
 ESC/Java version VERSION
   Prover started:TIME
+    [TIME]
 
 NewObject ...
+    [TIME]
 
 NewObject: NewObject() ...
     [TIME]  passed immediately
@@ -20,6 +22,7 @@ NewObject: m4() ...
   [TIME total]
 
 NewObjectA ...
+    [TIME]
 
 NewObjectA: NewObjectA() ...
     [TIME]  passed immediately

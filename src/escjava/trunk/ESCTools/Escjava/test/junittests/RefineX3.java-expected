@@ -3,8 +3,10 @@ RefineX3.java:1: Error: Expected a string literal after 'refine'
 //@ refine 2+3; // invalid expression
            ^
   Prover started:TIME
+    [TIME]
 
 RefineX3 ...
+    [TIME]
 
 RefineX3: RefineX3() ...
     [TIME]  passed

@@ -1,7 +1,9 @@
 ESC/Java version VERSION
   Prover started:TIME
+    [TIME]
 
 JmlAssert ...
+    [TIME]
 
 JmlAssert: trivial() ...
     [TIME]  passed

@@ -29,6 +29,11 @@ public class Options
      */
     public boolean quiet = false;
 
+    /** When true, no variable output (e.g. execution time) is printed,
+     so that output can be compared to an oracle output file.
+     */
+    public boolean testMode = false;
+
     /**
      * Option to turn off caution warnings.  This is used for Houdini
      * where it is a pain to weed out the cautions from code where we
@@ -223,6 +228,9 @@ public class Options
         } else if (option.equals("-help")) {
 	    issueUsage = true;
 	    return offset;
+        } else if (option.equals("-testMode")) {
+            testMode = true;
+            return offset;
 	} else if (option.equals("-showErrorLocation")) {
 	    showErrorLocation = true;
             return offset;
@@ -304,17 +312,18 @@ public class Options
     }
 
     final String[][] optionData = {
-    {"-help", "Prints a usage message and terminates"},
-    {"-v", "verbose mode"},
-    {"-quiet", "quiet mode (no informational messages)"},
+    {"-help",                   "Prints a usage message and terminates"},
+    {"-v",                      "verbose mode"},
+    {"-quiet",                  "quiet mode (no informational messages)"},
     {"-bootclasspath <classpath>", ""},
-    {"-classpath <classpath>", "Directory path for class files (default is value of CLASSPATH)"},
+    {"-classpath <classpath>",  "Directory path for class files (default is value of CLASSPATH)"},
     {"-da, -disableassertions", "Ignores all Java assert statements"},
-    {"-ea, -enableassertions", "Processes all Java assert statements"},
-    {"-noCautions", ""},
-    {"-package <packagename>", "Loads all the files in the named package"},
-    {"-source <release>", "Provide source compatibility with specified release"},
+    {"-ea, -enableassertions",  "Processes all Java assert statements"},
+    {"-noCautions",             ""},
+    {"-package <packagename>",  "Loads all the files in the named package"},
+    {"-source <release>",       "Provide source compatibility with specified release"},
     {"-sourcepath <classpath>", "Directory path for source files (default is classpath)"},
+    {"-testMode",               "Replaces execution time by a constant string so oracle files can be used in automated testing"},
     };
     
     final public String eol = System.getProperty("line.separator");

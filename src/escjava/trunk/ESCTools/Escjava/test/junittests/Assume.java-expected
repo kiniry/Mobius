@@ -1,7 +1,9 @@
 ESC/Java version VERSION
   Prover started:TIME
+    [TIME]
 
 Assume ...
+    [TIME]
 
 Assume: m(int) ...
     [TIME]  passed immediately

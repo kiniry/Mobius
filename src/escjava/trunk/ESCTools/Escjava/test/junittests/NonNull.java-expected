@@ -1,13 +1,16 @@
 ESC/Java version VERSION
   Prover started:TIME
+    [TIME]
 
 non_null ...
+    [TIME]
 
 non_null: non_null() ...
     [TIME]  passed
   [TIME total]
 
 NonNull ...
+    [TIME]
 
 NonNull: qq(non_null) ...
     [TIME]  passed

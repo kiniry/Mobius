@@ -3,8 +3,10 @@ ParseDepends.java:9: Caution: The depends clause is obsolete; it has been replac
         //@ depends b <- bb,bbb;
             ^
   Prover started:TIME
+    [TIME]
 
 ParseDepends ...
+    [TIME]
 
 ParseDepends: m() ...
     [TIME]  passed immediately

@@ -1,7 +1,9 @@
 ESC/Java version VERSION
   Prover started:TIME
+    [TIME]
 
 Mod ...
+    [TIME]
 
 Mod: mm() ...
     [TIME]  passed
@@ -14,6 +16,7 @@ Mod: Mod() ...
   [TIME total]
 
 ModA ...
+    [TIME]
 
 ModA: ModA() ...
     [TIME]  passed immediately

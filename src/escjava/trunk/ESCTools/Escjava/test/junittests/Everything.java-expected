@@ -1,7 +1,9 @@
 ESC/Java version VERSION
   Prover started:TIME
+    [TIME]
 
 Everything ...
+    [TIME]
 
 Everything: m() ...
     [TIME]  passed
@@ -14,6 +16,7 @@ Everything: Everything() ...
   [TIME total]
 
 S ...
+    [TIME]
 
 S: n() ...
     [TIME]  passed

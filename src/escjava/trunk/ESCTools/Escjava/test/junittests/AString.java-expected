@@ -1,7 +1,9 @@
 ESC/Java version VERSION
   Prover started:TIME
+    [TIME]
 
 AString ...
+    [TIME]
 
 AString: f(java.lang.String) ...
 ------------------------------------------------------------------------

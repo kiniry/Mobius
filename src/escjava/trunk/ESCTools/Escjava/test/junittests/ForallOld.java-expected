@@ -1,7 +1,9 @@
 ESC/Java version VERSION
   Prover started:TIME
+    [TIME]
 
 ForallOld ...
+    [TIME]
 
 ForallOld: mm() ...
     [TIME]  passed

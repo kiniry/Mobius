@@ -1,7 +1,9 @@
 ESC/Java version VERSION
   Prover started:TIME
+    [TIME]
 
 AssertNone ...
+    [TIME]
 
 AssertNone: m_Exception_Assert(int) ...
     [TIME]  passed

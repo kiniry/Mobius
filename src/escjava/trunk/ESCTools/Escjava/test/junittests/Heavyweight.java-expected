@@ -12,8 +12,10 @@ Heavyweight.java:51: Error: There is no opening {| to match this closing |}
             |}                  // ERROR - no opening {|
             ^
   Prover started:TIME
+    [TIME]
 
 Heavyweight ...
+    [TIME]
 
 Heavyweight: m() ...
     [TIME]  passed immediately

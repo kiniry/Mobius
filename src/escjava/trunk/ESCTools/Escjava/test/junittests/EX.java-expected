@@ -1,7 +1,9 @@
 ESC/Java version VERSION
   Prover started:TIME
+    [TIME]
 
 EX ...
+    [TIME]
 
 EX: mmm(int) ...
 EX.java:12: Caution: Not checking body of anonymous class (subclass of Object)

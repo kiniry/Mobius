@@ -1,7 +1,9 @@
 ESC/Java version VERSION
   Prover started:TIME
+    [TIME]
 
 AssertEA ...
+    [TIME]
 
 AssertEA: m_Exception_Assert(int) ...
 ------------------------------------------------------------------------

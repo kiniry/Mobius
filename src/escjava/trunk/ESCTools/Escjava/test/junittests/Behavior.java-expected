@@ -1,7 +1,9 @@
 ESC/Java version VERSION
   Prover started:TIME
+    [TIME]
 
 Behavior ...
+    [TIME]
 
 Behavior: m() ...
     [TIME]  passed

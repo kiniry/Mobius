@@ -12,6 +12,7 @@ DupMM.java:8: Error: Model constructor has more than one implementation
         //@ model public DupMM(int i) {}
                                       ^
   Prover started:TIME
+    [TIME]
 
 DupMM ...
 DupMM.java:10: Error: Duplicate nested-type declaration: the type DupMM$C is already declared

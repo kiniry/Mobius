@@ -12,6 +12,7 @@ ForallOldError.java:11: Error: old annotations must be initialized
         //@ old int a=1,b,c=3;  // ERROR
                         ^
   Prover started:TIME
+    [TIME]
 
 ForallOldError ...
 ForallOldError.java:13: Error: Undefined variable 'b'

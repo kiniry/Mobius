@@ -6,6 +6,7 @@ Ghost.java:48: Error: Expected a declaration within the annotation following the
         /*@ ghost */ int jjj; // ERROR
             ^
   Prover started:TIME
+    [TIME]
 
 Ghost ...
 Ghost.java:29: Error: Undefined variable 'i'

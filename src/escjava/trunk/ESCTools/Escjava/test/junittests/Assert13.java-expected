@@ -18,8 +18,10 @@ Assert13.java:23: Error: Java keyword "assert" is only supported if the -source 
                 assert false : 0; //@ nowarn Assert;
                 ^
   Prover started:TIME
+    [TIME]
 
 Assert13 ...
+    [TIME]
 
 Assert13: m_Exception_Assert(int) ...
     [TIME]  passed

@@ -1,5 +1,6 @@
 ESC/Java version VERSION
   Prover started:TIME
+    [TIME]
 
 LoopInvariantErrors ...
 LoopInvariantErrors.java:7: Error: Cannot convert int to boolean

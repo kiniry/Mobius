@@ -1,7 +1,9 @@
 ESC/Java version VERSION
   Prover started:TIME
+    [TIME]
 
 MultipleAtError1 ...
+    [TIME]
 
 MultipleAtError1: p() ...
     [TIME]  passed

@@ -1,5 +1,6 @@
 ESC/Java version VERSION
   Prover started:TIME
+    [TIME]
 
 After ...
 After.java:19: Error: Method m is used in an annotation but is not pure (After.java:5)

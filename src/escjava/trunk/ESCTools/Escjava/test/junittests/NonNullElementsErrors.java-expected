@@ -1,5 +1,6 @@
 ESC/Java version VERSION
   Prover started:TIME
+    [TIME]
 
 NonNullElementsErrors ...
 NonNullElementsErrors.java:8: Error: Cannot convert int to java.lang.Object[]

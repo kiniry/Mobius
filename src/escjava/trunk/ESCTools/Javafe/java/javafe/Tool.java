@@ -103,7 +103,7 @@ public abstract class Tool {
      */
     /*@ ensures \result != null */
     public static String timeUsed(long startTime) {
-        //if (options.testMode) return "TIME";
+        if (options.testMode) return "TIME";
         long delta = java.lang.System.currentTimeMillis() - startTime;
      
         return (delta/1000.0) + " s";

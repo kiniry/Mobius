@@ -1,7 +1,9 @@
 ESC/Java version VERSION
   Prover started:TIME
+    [TIME]
 
 ParseModelMethod ...
+    [TIME]
 
 ParseModelMethod: m() ...
     [TIME]  passed

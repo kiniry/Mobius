@@ -1,7 +1,9 @@
 ESC/Java version VERSION
   Prover started:TIME
+    [TIME]
 
 AnonClass ...
+    [TIME]
 
 AnonClass: p() ...
 AnonClass.java:4: Caution: Not checking body of anonymous class (subclass of AnonClassS)
@@ -22,6 +24,7 @@ AnonClass: AnonClass() ...
   [TIME total]
 
 AnonClassS ...
+    [TIME]
 
 AnonClassS: m(int) ...
     [TIME]  passed

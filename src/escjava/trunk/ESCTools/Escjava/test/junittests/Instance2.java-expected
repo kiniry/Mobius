@@ -1,7 +1,9 @@
 ESC/Java version VERSION
   Prover started:TIME
+    [TIME]
 
 Instance2 ...
+    [TIME]
 
 Instance2: m() ...
     [TIME]  passed
@@ -14,4 +16,5 @@ Instance2: Instance2() ...
   [TIME total]
 
 INSTI ...
+    [TIME]
   [TIME total]

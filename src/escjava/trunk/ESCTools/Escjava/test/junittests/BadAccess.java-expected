@@ -3,8 +3,10 @@ BadAccess.java:3: Caution: Duplicate occurrence of modifier 'public'
         //@ public ghost public int i;
                          ^
   Prover started:TIME
+    [TIME]
 
 BadAccess ...
+    [TIME]
 
 BadAccess: BadAccess() ...
     [TIME]  passed

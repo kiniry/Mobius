@@ -1,7 +1,9 @@
 ESC/Java version VERSION
   Prover started:TIME
+    [TIME]
 
 IsInitialized ...
+    [TIME]
 
 IsInitialized: m() ...
 ------------------------------------------------------------------------
@@ -32,6 +34,7 @@ IsInitialized: IsInitialized() ...
   [TIME total]
 
 IsInitializedA ...
+    [TIME]
 
 IsInitializedA: IsInitializedA() ...
     [TIME]  passed

@@ -1,5 +1,6 @@
 ESC/Java version VERSION
   Prover started:TIME
+    [TIME]
 
 StoreRefs ...
 StoreRefs.java:25: Not implemented: Wild-ref expression not yet implemented
@@ -8,6 +9,7 @@ StoreRefs.java:25: Not implemented: Wild-ref expression not yet implemented
 StoreRefs.java:26: Not implemented: Wild-ref expression not yet implemented
         //@ modifies java.lang.Object.*;
                      ^
+    [TIME]
 
 StoreRefs: m() ...
 StoreRefs.java:25: Not implemented: Wild-ref expression not yet implemented
@@ -29,12 +31,14 @@ StoreRefs: StoreRefs() ...
   [TIME total]
 
 StoreRefsA ...
+    [TIME]
 
 StoreRefsA: StoreRefsA() ...
     [TIME]  passed
   [TIME total]
 
 StoreRefsB ...
+    [TIME]
 
 StoreRefsB: StoreRefsB() ...
     [TIME]  passed
