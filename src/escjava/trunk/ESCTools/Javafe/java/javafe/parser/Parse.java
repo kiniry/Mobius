@@ -117,6 +117,7 @@ public class Parse extends ParseStmt
     Name pkgName = null;
     int loc = l.startingLoc;
 
+
     /* Optional PackageDeclaration: package name ; */
     if( l.ttype == TagConstants.PACKAGE ) {
       l.getNextToken();
@@ -126,8 +127,9 @@ public class Parse extends ParseStmt
 
     /* Import Declarations */
     seqImportDecl.push();
-    while( l.ttype == TagConstants.IMPORT ) 
+    while( l.ttype == TagConstants.IMPORT ) { 
       seqImportDecl.addElement( parseImportDeclaration( l ) );
+    }
     ImportDeclVec imports = ImportDeclVec.popFromStackVector(seqImportDecl);
 
     /* Type Declarations */
@@ -156,7 +158,7 @@ public class Parse extends ParseStmt
         
   //@ requires l != null && l.m_in != null
   //@ ensures \result != null
-  ImportDecl parseImportDeclaration(Lex l) {
+  protected ImportDecl parseImportDeclaration(Lex l) {
     int loc = l.startingLoc;
     l.getNextToken();                // swallow import keyword
     Name name = parseName(l);
@@ -471,15 +473,21 @@ VariableDeclarator:
 
       // allow more modifier pragmas
       modifierPragmas = parseMoreModifierPragmas( l, modifierPragmas );
+      BlockStmt body = null;
+      int locOpenBrace = Location.NULL;
+      if ( l.ttype == TagConstants.SEMICOLON ) {
+          l.getNextToken();   // swallow semicolon
+// FIXME - check that this is specOnly for no body ?
+      } else {
+	  locOpenBrace = l.startingLoc;
+	  body = specOnly ? parseBlock(l, true)
+				    : parseConstructorBody(l);
 
-      int locOpenBrace = l.startingLoc;
-      BlockStmt body = specOnly ? parseBlock(l, true)
-				: parseConstructorBody(l);
-
+      }
       seqTypeDeclElem.addElement( ConstructorDecl.make( modifiers,
-						        modifierPragmas,
-						        tmodifiers,
-						        args, 
+							modifierPragmas,
+							tmodifiers,
+							args, 
 							raises, body,
 							locOpenBrace,
 							loc, locId, 
@@ -526,6 +534,7 @@ VariableDeclarator:
           l.getNextToken();   // swallow semicolon
 	  locOpenBrace = Location.NULL;
           body = null;
+// FIXME - check that this is specOnly for no body ?
         } else {
           if( keyword == TagConstants.INTERFACE ) 
             fail(l.startingLoc, 
