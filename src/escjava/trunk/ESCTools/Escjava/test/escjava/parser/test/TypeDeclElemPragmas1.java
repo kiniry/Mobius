@@ -1,8 +1,8 @@
 
 // Tests for resolution and typechecking of pragmas
 
-/**
-
+/*
+Commented out: pragmas outside of a class are no longer allowed.
 <pre><esc>
 axiom 1 < 2;
 invariant v2 < 100;
