@@ -1,12 +1,71 @@
-To build ESC/Java, follow the sequence:
+To build ESC/Java, follow this sequence.
 
- 0. make sure you are in a bash shell
- 1. change to the Javafe directory
- 2. "source setup.sh"
- 3. make
- 4. cd ..
- 5. change to the Escjava directory
- 6. "source setup.sh"
- 7. make
+Editing the setup.sh scripts only need be done once, of course.
 
-You are done.
+JDK 1.2 is needed to build ESC/Java properly due to classfile parsing
+issues.
+
+Note that following this sequence only builds the Java front-end
+lexer/parser (Javafe) and the ESC/Java tool; it does *not* build
+Simplify.
+
+ESC/Java depends upon the Javafe package (a general Java lexer/parser)
+and the Mocha library (an interface to a BDD library).  Additionally,
+a number of Java files are automatically generated using a custom AST
+generation tool called astgen.
+
+Two build systems are included with this release; one based upon the
+Apache Group's Ant tool, and one based upon GNU make.  Neither is
+complete at this time, as the behind-the-scenes build process for
+ESC/Java is quite complex.  We working hard on simplifying the build
+process.
+
+The GNU make-based build processes for Javafe and Escjava are still
+not very tuned.  In particular, they perform a clean *everytime* a
+build takes place whether you like it or not.  This means that builds
+really are not incremental.
+
+Here are the general steps to follow:
+
+ 0. Make sure you are in a bash shell.
+
+ 1. Change to the Javafe directory.
+
+ 2. Edit the file "setup.sh" to match your local configuration. In
+    particular, see the JAVA_HOME, JDK_SOURCES, and JML_HOME
+    environment variables
+
+ 3. Perform a "source setup.sh".
+
+ 4. Run "make -k" to build the Javafe libraries.
+
+    A top-level make will clean out the build hierarchy, build the
+    astgen tool, use the astgen tool to generate the AST for Javafe,
+    compile all generated and manually written code for Javafe,
+    compile all test code for Javafe, then run all lexer and parser
+    tests for Javafe.  These tests can take several minutes to run.
+    All tests but for test6, test1007, and test1103 should complete
+    normally.
+
+ 5. Change to the Escjava directory (../Escjava from Javafe).
+
+ 6. Edit the file "setup.sh" in the same fashion as #2.
+
+ 7. Perform a "source setup.sh".
+
+ 8. run "make -k" to build the ESC/Java tool.
+
+    A top-level make will clean out the build hierarchy, generated the
+    Escjava AST with astgen, generate the default background predicate
+    for Simplify, compile all library and tools source code (generated
+    or not), compile all test code, and run all tests.
+
+ 9. Review the shell scripts "escj" and "simplify" for your local
+    installation.  Both scripts are located in the Escjava directory.
+    Neither should require customization, but it is important to know
+    the environmental variables therein.
+
+You are done.  Have fun with your own build of ESC/Java.
+    
+
+
