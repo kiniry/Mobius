@@ -42,7 +42,7 @@
 \newcommand{\insPP}{\textsc{Insure\nolinebreak\hspace{-.05em}\raisebox{.4ex}{\tiny\bf
 +}\nolinebreak\hspace{-.10em}\raisebox{.4ex}{\tiny\bf +}}}
 
-\newcommand{\modtool}{\texttt{assignable:tool}}
+\newcommand{\modtool}{\texttt{ChAstE}}
 
 \newcommand{\sem}[1]{\ensuremath{\mbox{[\![} {#1} \mbox{]\!]}\/}}
 
@@ -1971,198 +1971,85 @@ empty assignable clause.
 
 
 
+
+
+
 \section{A checker for assignable clauses}
 \label{sec-che-for-ass-cla}
-%%%---Finally, we briefly discuss the implementation of the \modtool, which
-%%%---implements the method presented above.
-%%%---%We present some implementation issues concerning \modtool: a
-%%%---%modifiable checker implementing the approach and rules presented in
-%%%---%Sect.~\ref{sec-syn-met-che-ass-cla}.
-%%%---
-%%%---For the implementation we reuse the parser of \jml.
-%%%---%\jml\ comes with several classes for handling abstract
-%%%---%syntax trees. 
-%%%---The \jml\ parser returns an
-%%%---\emph{abstract syntax tree}, in instance of class \texttt{AST}.
-%%%---This class \texttt{AST} allow one to represent pieces of code as the
-%%%---sequence of a node and a \emph{sibling}, where a node is a tuple of an
-%%%---\texttt{int} and a \texttt{String}, and the sibling is another
-%%%---\texttt{AST}.
-%%%---Further, there is an utility class \texttt{ASTFactory} which
-%%%---provides operations to create and duplicate trees, and a class
-%%%---\texttt{ASTArray}, which maintains an array of abstract syntax trees.
-%%%---
-%%%---
-%%%---% for recovering the
-%%%---%structure of programs we are checking. 
-%%%---We use these classes to first $(i)$\ determine the \emph{assignable
-%%%---clause} of all method declarations and then $(ii)$\ to apply the rules
-%%%---presented above. In order to do this we have defined a class
-%%%---\texttt{ASTContext}, and a class \texttt{Assignable}. 
-%%%---%recovering the structure of the program for
-%%%---%applying our checking rules.
-%%%---The last one implements our deriviation rules as static methods
-%%%---parameterized by the assignable clause of an instruction.
-%%%---%context under which the respective instruction is
-%%%---%found.
-%%%---
-%%%---%Sect.~\ref{abo-jml-cla-use} gives a general overview of the class
-%%%---%for handling Abstract syntax trees coming with
-%%%---%\jml. Sect.~\ref{sub-sec-cla-ast-con} summarizes the implementation
-%%%---%of the class \texttt{ASTContext} which is in charge of figuring out
-%%%---%context of method declarations. Sect.~\ref{sub-sec-the-cla-ass}
-%%%---%presents the class \texttt{Assignable}, which implement our
-%%%---%syntactical rules. Finally, Sect. ~\ref{sub-sec-usi-the-too}
-%%%---%summarizes our experience using the tool \modtool.
-%%%---
-%%%---
-%%%---
-%%%---
-%%%---%\subsection{Representing Abstract syntax trees with \jml}
-%%%---%\label{abo-jml-cla-use}
-%%%---
-%%%---
-%%%---
-%%%---
-%%%---
-%%%---
-%%%---\subsection{The class \texttt{ASTContext}}
-%%%---\label{sub-sec-cla-ast-con}
-%%%---The class \texttt{ASTContext} represents the context of a method
-%%%---declaration. A method context consists of the representation of its
-%%%---assignable locations, its parameters and its local variables. This
-%%%---representation is based on the definition~\ref{def-mod}. Additionally
-%%%---we store the package, and the class in which the method
-%%%---occurs and for each class we store which class it extends.
-%%%---
-%%%---These contexts are passed as parameter to the methods of the class
-%%%---\texttt{Assignable}, which implements the rules presented in
-%%%---Sect.~\ref{sec-che-for-ass-cla}.
-%%%---
-%%%---
-%%%---
-%%%---
-%%%---\subsection{The class \texttt{Assignable}}
-%%%---\label{sub-sec-the-cla-ass}
-%%%---
-%%%---The class \texttt{Assignable} implements the assignable rules as
-%%%---static methods. To each static method one passes the expression
-%%%---\texttt{e} currently analyzed, the context \texttt{cxt} of the method
-%%%---where the expression \texttt{e} occurs and the contexts \texttt{cxts}
-%%%---of all known classes.
-%%%---
-%%%---For example, when the expression \texttt{e} is an assignment
-%%%---$e_1\:\texttt{=}\:e_2$, it has to be checked that $e_1$ belongs to set
-%%%---of assignable expressions of the method
-%%%---(\texttt{\_in\_PRIME($\cdots$)}) and that it obeys the
-%%%---\textsf{modFE} rules on $e_1$ (\texttt{\_modFE($\cdots$)}) and the
-%%%---\textsf{mod} rules on $e_2$ (\texttt{\_mod($\cdots$)}).
-%%%---\begin{alltt}
-%%%---public static boolean _mod(AST e, ASTContext cxt, Vector cxts)\verb!{!	
-%%%---  boolean tempRes;	
-%%%---  switch(e.getType())\verb!{!	
-%%%---    case JavaTokenTypes.ASSIGN:{\it // =}
-%%%---      tempRes = _in_PRIME(e.getFirstChild(),cxt,cxts) &&
-%%%---       _mod(e.getFirstChild(),currentCxt,cxts) &&
-%%%---       _mod(e.getFirstChild().getNextSibling(),cxt,cxts);
-%%%---      return tempRes;
-%%%---    \vdots 
-%%%---  \verb!}!
-%%%---\verb!}!
-%%%---\end{alltt}
-%%%---
-%%%---
-%%%---
-%%%---
-%%%---\subsection{Experiences using \modtool}
-%%%---\label{sub-sec-usi-the-too}
-%%%---To test the usability of our approach, we have applied \modtool\ to
-%%%---the specifications that we wrote earlier for an electronic purse case
-%%%---study~\cite{CatanoH02a}. This case study consists of .. classes,
-%%%---containing .. methods all together. The specifications are written in
-%%%---\escj, thus the assignable clauses are relatively simple and do not
-%%%---contain constructs as \fieldsof\ and \reach. When writing and
-%%%---improving the specificaitions, we found several times that we had
-%%%---forgotten to mention a variable in an assignable clause, but even
-%%%---after correcting this ....
-Finally we discuss about our experiences in the process of using \modtool
-for checking the specification of the case study Gemplus' electronic
-purse~\cite{CatanoH02a} and briefly present a general overview on its
-structure.
+Finally, we briefly present the tool \modtool~and our experiences in
+the process of checking the assignable specifications we had
+previously stated in the case study\cite{CatanoH02a}. We have
+implemented \modtool, by reusing the syntactical analyzer of \jml~and
+providing an implementation of the rules we presented in
+Section~\ref{sec-syn-met-che-ass-cla} as statical methods.
+
+To the case study mentioned above, the tool successfully found
+some points where the
+implementation do not fulfill the specification we stated at that
+time. Additionally, these checked specifications have permitted us to
+established the set of side-effects freeness methods of this
+\textsc{JavaCard} application.
 
 
 
 
 \subsection{On the structure of the tool}
 \label{sub-on-the-str-too}
-The tool has been constructed in two parts as presented below by the
-figure. The first part has been made by reusing the
-syntactical analyzer used by \jml. This part takes as input the
-classes the user want to check and returns an Abstract syntax tree for 
-each class passed as parameter. The information gather in these
-\textsc{ASTs} is then used by the second part to check the
-specification of the assignable clause.
-
-The class \texttt{Assignable} implements as static methods the rules
-presented in Sect.~\ref{sec-syn-met-che-ass-cla}. This class uses the 
-\textsc{AST} passed by the Syntactical Analyzer of \jml~and figures
-out the context --class \texttt{ASTContext}-- for all methods in the
-source program. Basically, a context represents the \textit{elements} 
-under which the different \java constructs are analyzed. These
+The structure of the tool is presented below. The \java~specified
+files are taken as input of the tool and, by using the syntactical
+analyzer of \jml, are figured out their \textsc{ASTs} (Abstract
+Syntax Trees). The class \texttt{Assignable} implements the rules
+presented in Section~\ref{sec-syn-met-che-ass-cla} as static
+methods. This class takes the \textsc{ASTs} previously provided by the
+syntactical analyzer of \jml~and for each method is
+calculated the contexts where its respective instructions are
+occurred. Basically, a context represents the \textit{elements} 
+under which the different \java~constructs are analyzed. These
 elements typically consist of local variables, assignable declarations
-and parameters of methods.
+and parameters of methods. These contexts are calculated with the aid
+of the class \texttt{Util}, in a such way that whether the tool can
+not establish the context of certain \java~instruction, an exception
+of type \texttt{ContextException} will be thrown.
 
 \begin{figure}[hbt]
 \centering
 \epsfig{file=figures/schema.eps, width=9cm, clip=}
 \end{figure}
 
-The class \texttt{ContextException} represents the kind of exception
-raised up when some element required for figuring out a context has
-not been passed as part of the source program. 
-
-Finally, The class \texttt{Util} 
-meets a sort of methods to handle the \textsc{AST} provided by the
-\jml~syntactical analyzer.
-
-
-
+Additionally, the class \texttt{Utils} contains methods to format the
+Abstract Syntacts Trees returned by the sintactical analyzer, in a
+such way that they can be used by the class \texttt{Assignable}.
 
 
 
 \subsection{Experiences using \modtool}
 \label{sub-sec-usi-the-too}
-We have used \modtool~to check the assignable specifications provided
-for the industrial case study ``Gemplus' electronic purse'' presented
-in~\cite{CatanoH02a} and we have established specification
-errors we made at that time, and which we could not detect before
-because
-\escj~does not do any checking of assignable
-specifications. Basically, the errors detected consist of not
-specifying as
-assignable certain variable locations that the body that the
-\java~structures actually modify. The tool efficiently detect
-that and issues a message showing the structure that
-violates the specification. 
+In the case presented in~\cite{CatanoH02b} we had provided
+specifications for a \textsc{JavaCard} purse application. These
+specifications made allusion to the functional behavior of
+methods (pre- and postconditions), class invariants and assignable
+behavior of methods. At that time, we used \escj~to check our
+specifications but we could not check our assignable specifications
+since \escj~do not check assignable clauses at all. 
 
-Another important aspect of checking this application consist of
-having established the set of its \emph{side-effects freeness}
-methods. 
+We have used \modtool~to check the specifications we carried out at
+that time and we found some points where these specifications do not
+fullfil the implementation. We have checked in total
+the 3 packages of the purse application, namely, \texttt{utils},
+\texttt{pacapinterfaces} and \texttt{purse}--having 27 classes--
+and we found 43 specification problems (See~\cite{CatanoH02URL} for a
+full compendium).
 
-As an example, we present the specification of the
-method \texttt{setValue} of the class \texttt{Decimal}. The class
-\texttt{Decimal} models a floating point number, represented by an
-integer and decimal parts. Our initial specification is presented
-below and they only have stated as assignable the class variables
-\texttt{intPart} and \texttt{decPart} since they are directly assigned 
-in the body of the method. 
+Basically, these problems involved missing assignable clauses. The tool
+efficiently detected those problems by issuing a warning message 
+and displaying the \textsc{AST} tree of the structure that violates
+the specification. Another important aspect of checking this purse
+application consist of having available a list of its side-effects
+freeness methods.
 
-At that time, we did not consider any other
-modification caused by the invocation to the method \texttt{throwIt}
-of \texttt{decimal\_exception} as, in at first glance, when an exception
-is raised you do not expect that that modifies any field, but that
-because of memory management issues in \textsc{JavaCard} applications
-it actually happens.
+
+Below, we presented a typical method for which \modtool~detected a
+missing assignable clause. 
 %%%%%%%
 \begin{alltt}
 /*@ 
@@ -2170,29 +2057,54 @@ it actually happens.
 */ 
 public Decimal setValue(short i, short d) throws DecimalException\verb!{!
   if(i < 0 || d < 0 || d >= PRECISION || 
-     (i == MAX_DECIMAL_NUMBER && d != 0))
-    decimal_exception.throwIt(decimal_exception.DECIMAL_OVERFLOW);
-
+     (i == MAX_DEC_NUMBER && d != 0))
+    decimal_exception.throwIt(decimal_exception.DEC_OVERFLOW);
   intPart = i;
   decPart = d;
   return this;
 \verb!}!
 \end{alltt}
 %%%%%%%
+The method \texttt{setValue} is responsible of setting the fields of
+the class \texttt{Decimal}, which is a representation of an integer
+part --\texttt{intPart}-- and a decimal part --\texttt{decPart}--. At
+that time, our assignable specification just included the 
+variables \texttt{intPart} and \texttt{decPart}, since they are directly
+assigned in the body of the method, but we did not consider that
+actually the invocation to the method \texttt{throwIt} modifies some
+other locations.
 
-When this method is analyzed by \modtool, it obtains the specification 
-of \texttt{throwIt} --\texttt{modifies instance, instance.type;}-- and 
-realizes that it had not been considered by the method
-\texttt{setValue}. Then, it issues a message pointing out the instruction
-having the problem. After adding the specifications
-\texttt{decimal\_exception.instance} and
-\texttt{decimal\_exception.instance.type;} to the specification of
-\texttt{setValue}, the tool stops of complaining.  
+When using \modtool~on this method, it issues the message$:$
+%%%%%%%
+\begin{alltt}
+[[METH,setValue]]
+Warning: expression
+:
+:`--(
+:   |--. 
+:   |  |--decimal_exception
+:   |  `--throwIt
+:   `--.
+:      |--decimal_exception
+:      `--DEC_OVERFLOW
+:
+may contain a problem
+\end{alltt}
+%%%%%%%
+
+Which indicates that the invocation of the method \texttt{throwIt}
+may be the source of some problem. A quick inspection of the
+specification of the method \texttt{throwIt} shows that effectively
+this method
+modifies the locations \texttt{decimal\_exception.instance} and
+\texttt{decimal\_exception.instance.type}, and that therefore they
+must be mentioned as part of the assignable clause of
+\texttt{setValue}.
 
 
-    
 
-%   modifies decimal_exception.instance, decimal_exception.instance.type;
+
+
 
 \section{Conclusion and future work}
 \label{sec-con-and-fut-wor}
