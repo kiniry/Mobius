@@ -182,6 +182,42 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 				Location.toString(omd.getStartLoc()));
                     }
                 }
+	    }
+	    // If a method is not pure, then no super class or interface
+	    // may be pure
+	    if (!Modifiers.isPure(md.modifiers) &&
+		 !Modifiers.isPure(md.parent.modifiers)) {
+		Set direct = javafe.tc.PrepTypeDeclaration.inst.getOverrides(md.parent, md);
+
+		Enumeration ee = direct.elements();
+		while (ee.hasMoreElements()) {
+		    MethodDecl directMD = (MethodDecl)(ee.nextElement());
+		    if (Modifiers.isPure(directMD.modifiers)) {
+			ErrorSet.error(md.getStartLoc(),
+			    "Method must be declared pure since it " +
+			    (directMD.parent instanceof ClassDecl ?
+				"overrides" : "implements" ) +
+			    " a pure method (" + 
+			    Location.toString(directMD.getStartLoc()) + ")");
+		    }
+		    if (Modifiers.isPure(directMD.getParent().modifiers)) {
+		      if (directMD.parent instanceof ClassDecl) {
+			ErrorSet.error(md.getStartLoc(),
+			    "Method must be declared pure since it " +
+			    "overrides a method in a class " +
+			    "that is pure (" + 
+			    Location.toString(directMD.parent.getStartLoc()) +
+			    ")");
+		      } else {
+			ErrorSet.error(md.getStartLoc(),
+			    "Method must be declared pure since it " +
+			    "implements a method in an " +
+			    "interface that is pure (" + 
+			    Location.toString(directMD.parent.getStartLoc()) +
+			    ")");
+		      }
+		    }
+		}
             }
         } else if (e.getTag() == TagConstants.INITBLOCK) {
             InitBlock ib = (InitBlock)e;
@@ -1085,6 +1121,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                 Env rootEnv = Modifiers.isStatic(decl.modifiers)
                     ? rootSEnv
                     : rootIEnv;
+                checkModifierPragmaVec( decl.pmodifiers, decl, rootEnv );
 		// FIXME -- need to do some checks???
 		break;
             }
@@ -1375,15 +1412,18 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 
 	    case TagConstants.JML_PURE:
 		{
+		    // Actually, these are set in AnnotationHandler.
 		    if (ctxt instanceof ConstructorDecl) {
 			((ConstructorDecl)ctxt).modifiers |= Modifiers.ACC_PURE;
 		    } else if (ctxt instanceof MethodDecl) {
 			((MethodDecl)ctxt).modifiers |= Modifiers.ACC_PURE;
+		    } else if (ctxt instanceof ClassDecl) {
+			((ClassDecl)ctxt).modifiers |= Modifiers.ACC_PURE;
+		    } else if (ctxt instanceof InterfaceDecl) {
+			((InterfaceDecl)ctxt).modifiers |= Modifiers.ACC_PURE;
 		    } else {
-/* FIXME - pure can modify a class or interface - need to implement
 			ErrorSet.error(p.getStartLoc(),
-				"Expected pure to modify a constructor or method declaration");
-*/
+				"Expected pure to modify a class, interface, constructor or method declaration");
 		    }
 		    break;
 		}
@@ -1540,7 +1580,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 	    case TagConstants.JML_DURATION:
 	    case TagConstants.JML_WORKING_SPACE:
 	        {
-                    ExprModifierPragma emp = (ExprModifierPragma)p;
+                    CondExprModifierPragma emp = (CondExprModifierPragma)p;
 
                     if( !(ctxt instanceof RoutineDecl ) ) {
                         ErrorSet.error(p.getStartLoc(),
@@ -1560,6 +1600,8 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                             isPrivateFieldAccessAllowed = false;
                         }
                         emp.expr = checkExpr(env, emp.expr, Types.intType);
+                        if (emp.cond != null)
+			 emp.cond = checkExpr(env, emp.cond, Types.booleanType);
                         isRESContext = oldIsRESContext;
                         isTwoStateContext = oldIsTwoStateContext;
                         isPrivateFieldAccessAllowed = oldIsPrivFieldAccessAllowed;
