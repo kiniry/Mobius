@@ -13,14 +13,13 @@ import java.io.IOException;
 
 
 /**
- ** This class produces a PragmaParser that reports an client-chosen
- ** error message each time an annotation comment is encountered.
- ** (Javadoc comments are also considered annotations.)
- **/
+ * This class produces a {@link PragmaParser} that reports an
+ * client-chosen error message each time an annotation comment is
+ * encountered.  (Javadoc comments are also considered annotations.)
+ */
 
-public class ErrorPragmaParser implements PragmaParser {
-  
-
+public class ErrorPragmaParser implements PragmaParser
+{
     /** The error message to report **/
     public String msg;
 

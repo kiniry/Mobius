@@ -9,16 +9,16 @@ import javafe.util.Assert;
 
 
 /** 
- ** This FilterCorrelatedReader creates the illusion that the additional
- ** @-signs, etc. allowed in the JML annotation syntax are really just
- ** whitespace.
- **
- ** @see      javafe.util.FilterCorrelatedReader
- ** @author   Rustan Leino
+ * This {@link FilterCorrelatedReader} creates the illusion that the
+ * additional \@-signs, etc. allowed in the JML annotation syntax are
+ * really just whitespace.
+ *
+ * @see      javafe.util.FilterCorrelatedReader
+ * @author   Rustan Leino
  **/
 
-public class JmlCorrelatedReader extends FilterCorrelatedReader {
-
+public class JmlCorrelatedReader extends FilterCorrelatedReader
+{
   /* *************************************************
    *                                                 *
    * Creation:                                       *
@@ -30,17 +30,18 @@ public class JmlCorrelatedReader extends FilterCorrelatedReader {
   public static final int JAVADOC_COMMENT = 2;
   public static final int COMMENTS_KINDS = 3;
 
-  /** Constructs a JmlCorrelatedReader with <code>child</code> as the
-   ** underlying CorrelatedReader.  After calling this constructor, the
-   ** caller should no longer use <code>child</code> directly. <p>
-   **
-   ** <code>commentKind</code> is <code>EOL_COMMENT</code> to
-   ** indicate a slash-slash comment, <code>C_COMMENT</code> to
-   ** indicate an ordinary slash-star comment, and
-   ** <code>JAVADOC_COMMENT</code> to indicate that
-   ** the portion to be read resides inside a (pair of tags in a) Javadoc
-   ** comment.
-   **/
+  /**
+   * Constructs a JmlCorrelatedReader with <code>child</code> as the
+   * underlying {@link CorrelatedReader}.  After calling this
+   * constructor, the caller should no longer use <code>child</code>
+   * directly.
+   *
+   * <p> <code>commentKind</code> is {@link #EOL_COMMENT} to indicate
+   * a slash-slash comment, {@link #C_COMMENT} to indicate an ordinary
+   * slash-star comment, and {@link #JAVADOC_COMMENT} to indicate that
+   * the portion to be read resides inside a (pair of tags in a)
+   * Javadoc comment.
+   */
 
   //@ requires 0 <= commentKind && commentKind < COMMENTS_KINDS;
   protected JmlCorrelatedReader(/*@ non_null */ CorrelatedReader child,
@@ -72,12 +73,13 @@ public class JmlCorrelatedReader extends FilterCorrelatedReader {
    *                                                 *
    * *************************************************/
 
-  /** The lines of the input consist of (0) a number of whitespace
-    * characters, (1) a number of special characters ('@' in ordinary
-    * comments and '*' inside Javadoc comments), and followed by (2)
-    * the "real meat".  Variable <code>prefixMode</code> indicates
-    * which of these three segments are currently being scanned.
-    **/
+  /**
+   * The lines of the input consist of (0) a number of whitespace
+   * characters, (1) a number of special characters ('@' in ordinary
+   * comments and '*' inside Javadoc comments), and followed by (2)
+   * the "real meat".  The variable <code>prefixMode</code> indicates
+   * which of these three segments are currently being scanned.
+   */
 
   private int prefixMode = 1;  /* 0-whitespace, 1-special, 2-meat */
   //@ invariant 0 <= prefixMode && prefixMode < 3;
@@ -86,49 +88,52 @@ public class JmlCorrelatedReader extends FilterCorrelatedReader {
 
   private final int specialCharacter;
 
-  /** This variable is included so that @-signs at the end of a
-    * pragma-containing comment can be ignored.  In particular,
-    * it counts the number of characters read but not reported.
-    * These characters will be a number of @-signs followed by one
-    * more character (or -1, if at end-of-pragma).  @-signs that
-    * immediately follow the first white space characters
-    * on a line are always "reported" (since these are actually
-    * reported as spaces anyway).  In the steady state of this correlated
-    * reader, <code>unreturnedChars</code> is non-zero only when
-    * <code>lastUnreturnedChar</code> is not an @-sign. <p>
-    *
-    * <code>unreturnedChars</code> is not used (actually, is 0) when
-    * scanning Javadoc comments.
-    **/
+  /**
+   * This variable is included so that @-signs at the end of a
+   * pragma-containing comment can be ignored.  In particular, it
+   * counts the number of characters read but not reported.  These
+   * characters will be a number of @-signs followed by one more
+   * character (or -1, if at end-of-pragma).  @-signs that immediately
+   * follow the first white space characters on a line are always
+   * "reported" (since these are actually reported as spaces anyway).
+   * In the steady state of this correlated reader, {@link
+   * #unreturnedChars} is non-zero only when {@link
+   * #lastUnreturnedChar} is not an @-sign.
+   *
+   * <p> {@link unreturnedChars} is not used (actually, is 0) when
+   * scanning Javadoc comments.
+   */
 
   private int unreturnedChars = 0;
   //@ invariant 0 <= unreturnedChars;
   //@ invariant prefixMode < 2 ==> unreturnedChars == 0;
   //@ invariant specialCharacter != '@' ==> unreturnedChars == 0;
 
-  /** If there are unreturned characters, <code>lastUnreturnedChar</code>
-    * indicates the last of these characters.
-    */
+  /**
+   * If there are unreturned characters, {@link lastUnreturnedChar}
+   * indicates the last of these characters.
+   */
 
   private int lastUnreturnedChar /*@ readable_if unreturnedChars != 0; */;
   //@ invariant lastUnreturnedChar != '@';
 
-  /** Indicates whether or not a sequence of consecutive special characters
-    * at the end of the comment are to be treated as white space.  This is
-    * only done for the special character '@'.
-    **/
+  /**
+   * Indicates whether or not a sequence of consecutive special
+   * characters at the end of the comment are to be treated as white
+   * space.  This is only done for the special character '@'.
+   */
 
   private final boolean allowSpecialSuffix;
   //@ invariant allowSpecialSuffix ==> specialCharacter == '@';
 
   /**
-   ** Reads the next character from this input stream. 
-   ** Does unicode conversion and JML filtering. <p>
-   **
-   ** Requires we are open.<p>
-   ** 
-   ** @return   A unicode character, or -1.<p>
-   **/
+   * Reads the next character from this input stream.  Does unicode
+   * conversion and JML filtering.
+   *
+   * <p> Requires we are open.
+   * 
+   * @return   A unicode character, or -1.
+   */
   public int read() throws IOException {
     /*@ uninitialized */ int ch = 0; // dummy assignment
     if (unreturnedChars == 0) {
