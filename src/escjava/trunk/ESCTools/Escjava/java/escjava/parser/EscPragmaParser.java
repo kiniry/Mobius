@@ -1076,7 +1076,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
 	      
 		    int modifiers = parseModifiers(scanner,true);
 		    if ((modifiers & prefixModifiers) != 0) {
-			ErrorSet.warning(loc,
+			ErrorSet.caution(loc,
 			     TagConstants.toString(tag) +
 			     " annotation has a repeated access modifier");
 		    }
