@@ -237,10 +237,10 @@
 
   <!-- Targets start here. -->
 
+  <!-- Add "docs" dependency when appropriate. -->
   <target name="all" depends="compile,
                               binaries,
                               unit_test,
-                              docs,
                               cleanup">
     <description>
       Convert all XHTML documentation to textfiles, process and compile all
@@ -679,8 +679,7 @@
   <!-- create_rcc_jar create_calvin_jar -->
 
   <target name="create_jars" depends="create_javafe_jar,
-                                      create_escjava_jar,
-                                      create_houdini_jar">
+                                      create_escjava_jar">
     <description>
       Generate jar files of various builds.
     </description>
