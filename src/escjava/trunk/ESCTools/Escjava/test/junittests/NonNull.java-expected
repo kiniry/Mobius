@@ -37,7 +37,7 @@ NonNull: p() ...
 ------------------------------------------------------------------------
 NonNull.java:20: Warning: Possible assignment of null to variable declared non_null (NonNull)
                 m(o);
-                  ^
+                 ^
 Associated declaration is "NonNull.java", line 11, col 14:
         model void m(non_null Object i);
                      ^
@@ -48,7 +48,7 @@ NonNull: p2() ...
 ------------------------------------------------------------------------
 NonNull.java:24: Warning: Possible assignment of null to variable declared non_null (NonNull)
                 new NonNull(o);
-                            ^
+                           ^
 Associated declaration is "NonNull.java", line 15, col 15:
         model NonNull(non_null Object i);
                       ^
@@ -62,7 +62,7 @@ NonNull: p4() ...
 ------------------------------------------------------------------------
 NonNull.java:34: Warning: Possible assignment of null to variable declared non_null (NonNull)
                 q(o);
-                  ^
+                 ^
 Associated declaration is "NonNull.java", line 8, col 12:
         void q(/*@ non_null */ Object o) {}
                    ^
@@ -73,7 +73,7 @@ NonNull: r() ...
 ------------------------------------------------------------------------
 NonNull.java:40: Warning: Possible assignment of null to variable declared non_null (NonNull)
                 q(o);
-                  ^
+                 ^
 Associated declaration is "NonNull.java", line 8, col 12:
         void q(/*@ non_null */ Object o) {}
                    ^

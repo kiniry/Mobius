@@ -2,6 +2,18 @@ ESC/Java version VERSION
   Prover started:TIME
 
 ParseDuration ...
+ParseDuration.java:5: Caution: Desugaring does not support working_space
+        //@ working_space \space(this);
+            ^
+ParseDuration.java:6: Caution: Desugaring does not support working_space
+        //@ working_space \space(this) if true;
+            ^
+ParseDuration.java:9: Caution: Desugaring does not support duration
+        //@ duration \duration(m());
+            ^
+ParseDuration.java:10: Caution: Desugaring does not support duration
+        //@ duration \duration(m()) if false;
+            ^
 ParseDuration.java:18: Error: The function \duration takes only one argument
         //@ invariant \duration() < 10;
                       ^
@@ -16,5 +28,5 @@ ParseDuration.java:21: Error: The function \working_space takes only one argumen
                       ^
 Caution: Turning off extended static checking due to type error(s)
   [TIME total] (aborted)
-1 caution
+5 cautions
 4 errors
