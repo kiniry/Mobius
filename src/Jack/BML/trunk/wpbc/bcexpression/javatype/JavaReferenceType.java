@@ -24,7 +24,7 @@ public class JavaReferenceType extends JavaType {
 	 * @param _type
 	 */
 	public JavaReferenceType(ReferenceType _type, BCConstantClass _cc) {
-		super(_type, _cc);
+		super(_type, _cc, JavaType.COMPUTATIONAL_TYPE_1);
 		
 	}
 	
@@ -46,8 +46,7 @@ public class JavaReferenceType extends JavaType {
 	 * that is do not have a corresponding ConstantClass object
 	 */
 	public JavaReferenceType(ReferenceType _type ) {
-		super(_type);
-	
+		super(_type, JavaType.COMPUTATIONAL_TYPE_1);
 	}
 
 	/**

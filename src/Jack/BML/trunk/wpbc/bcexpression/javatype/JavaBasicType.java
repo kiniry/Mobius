@@ -20,15 +20,15 @@ public class JavaBasicType extends JavaType  {
 	/**
 	 * @param _type
 	 */
-	public JavaBasicType(BasicType _type ) {
-		super(_type);
+	public JavaBasicType(BasicType _type, byte _compType ) {
+		super(_type, _compType);
 	}
 	
 	/**
 	 * @param _type
 	 */
-	public JavaBasicType(Class _class) {
-		this((BasicType)Type.getType(_class));
+	public JavaBasicType(Class _class, byte _compType) {
+		this((BasicType)Type.getType(_class), _compType);
 	}
 
 }

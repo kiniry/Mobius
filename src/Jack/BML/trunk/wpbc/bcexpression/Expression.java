@@ -22,27 +22,31 @@ public   abstract class  Expression {
 	private Expression right;
 	private BCType type;
 	
-	private static final Counter counter  = Counter.getCounter();
+	private static final Counter COUNTER  = Counter.getCounter();
 	
-	private static final ArithmeticExpression counter_plus_1  = new ArithmeticExpression(
-															counter,
+	private static final ArithmeticExpression COUNTER_PLUS_1  = new ArithmeticExpression(
+															COUNTER,
 															new NumberLiteral("1", 10, JavaType.JavaINT),
 															ExpressionConstants.ADD);
 	
-	private static final ArithmeticExpression counter_minus_1  = new ArithmeticExpression(
-															counter,
+	private static final ArithmeticExpression COUNTER_MINUS_1  = new ArithmeticExpression(
+															COUNTER,
 															new NumberLiteral("1", 10, JavaType.JavaINT),
 															ExpressionConstants.SUB);
 	
-	private static final ArithmeticExpression counter_minus_2  = new ArithmeticExpression(
-																counter,
+	private static final ArithmeticExpression COUNTER_MINUS_2  = new ArithmeticExpression(
+																COUNTER,
 																new NumberLiteral("2", 10, JavaType.JavaINT),
 																ExpressionConstants.SUB);
 																
-	private static final ArithmeticExpression counter_minus_3  = new ArithmeticExpression(
-																counter,
+	private static final ArithmeticExpression COUNTER_MINUS_3  = new ArithmeticExpression(
+																COUNTER,
 																new NumberLiteral("3", 10, JavaType.JavaINT),
-																ExpressionConstants.SUB);						
+																ExpressionConstants.SUB);			
+	private static final ArithmeticExpression COUNTER_MINUS_4  = new ArithmeticExpression(
+																	COUNTER,
+																	new NumberLiteral("4", 10, JavaType.JavaINT),
+																	ExpressionConstants.SUB);						
 																									
 	public static final NULL NULL = new NULL();
 	
@@ -55,25 +59,27 @@ public   abstract class  Expression {
 	}
 	
 	public static Counter getCounter() {
-		return counter;
+		return COUNTER;
 	}
 	
 	public static ArithmeticExpression getCounter_plus_1() {
-		return counter_plus_1 ;
+		return COUNTER_PLUS_1 ;
 	}
 	
 	public static ArithmeticExpression getCounter_minus_1() {
-		return counter_minus_1 ;
+		return COUNTER_MINUS_1 ;
 	}
 	
 	public static ArithmeticExpression getCounter_minus_2() {
-		return counter_minus_2;
+		return COUNTER_MINUS_2;
 	}
 	
 	public static ArithmeticExpression getCounter_minus_3() {
-		return counter_minus_3;
+		return COUNTER_MINUS_3;
 	}
-
+	public static ArithmeticExpression getCounter_minus_4() {
+		return COUNTER_MINUS_4;
+	}
 	/**
 	 * @param right2
 	 */
