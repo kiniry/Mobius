@@ -8,6 +8,8 @@
    \pdftrue
 \fi
 
+\usepackage{alltt}
+
 \ifpdf
 \usepackage[pdftex,bookmarks=false,
             plainpages=false,naturalnames=true,
@@ -15,6 +17,12 @@
             linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
 \else
 \usepackage[dvips]{hyperref}
+\fi
+
+\ifpdf
+\usepackage[pdftex]{graphicx}
+\else
+\usepackage{graphicx}
 \fi
 
 \begin{document}
@@ -509,10 +517,12 @@ elections.  In particular, the SoS group was asked to construct the
 vote counting system (henceforth called the \textsc{KOA} system) in
 approximately \emph{four weeks}, with only three developers.
 
+\subsubsection{Development Methodology}
+
 To approach this problem, the three developers (Dr.~Engelbert Hubbers,
 Dr.~Martijn Oostdijk, and the second author) partitioned the system
 into three subcomponents: file I/O, graphical I/O, and core
-datastructures and algorithms.  It was decided that, due to the
+data structures and algorithms.  It was decided that, due to the
 challenges inherent in full system verification and the restricted
 time alloted to the project, while all subsystems would be annotated
 with JML, only the third ``core'' subsystem (Dr.~Kiniry's
@@ -536,7 +546,6 @@ methods~\cite{ClarkeWing96}.
        methods & 154               & 200                    & 83            \\
       NCSS      & 837               & 1,599                  & 395           \\
       Specs     & 446               & 172                    & 529           \\
-      Approx.\\
       Specs:NCSS & 1:2              & 1:10                   & 5:4           \\
       \hline
     \end{tabular}
@@ -545,18 +554,37 @@ methods~\cite{ClarkeWing96}.
 
 Table~\ref{tab:KOA_System_Summary} summarizes the size, complexity,
 and specification coverage of the three subsystems, as measured with
-the JavaNCSS tool version 20.40.  Assertions were approximately
-counted by simply counting the number of uses of appropriate core
-specification keywords (requires, ensures, invariant, non\_null, in,
-set, and modifies).
+the JavaNCSS tool version 20.40 during the week of 24 May, 2004.
+Assertions were counted by simply counting the number of uses of
+appropriate core specification keywords (requires, ensures, invariant,
+non\_null, in, set, and modifies).
+
+\subsubsection{Specification Coverage and Methodology}
 
 Unsurprisingly, the GUI portion of KOA is the largest subsystem with
 the lightest specification coverage with approximately 1 annotation
 for every 10 lines of code.  The focus of the GUI subsystem
 specification is a finite state machine that represents the state of
 the GUI.  The state of the KOA application is tightly coupled to this
-GUI state machine due to the requirements of the client (the
-government), as the vote couting process is highly serialized.
+GUI state machine as the vote courting process is highly serialized.
+
+\begin{figure}[htbp]
+  \begin{center}
+    \ifpdf
+    \includegraphics[width=80mm]{koa_state_diagram}
+    \else
+    \includegraphics[width=80mm]{koa_state_diagram.eps}
+    \fi
+    \caption{KOA State Diagram}
+    \label{fig:KOA_State_Diagram}
+  \end{center}
+\end{figure}
+Figure~\ref{fig:KOA_State_Diagram} contains a diagram that summarizes
+this state machine.  The state of the system is represented in a
+(spec\_public) field ``\texttt{state}'' of the main class of the
+application.  The state machine is formally modeled using the standard
+mechanisms developed in the past by the SoS
+Group~\cite{Hubbers_Oostdijk_Poll:2003sec}.
 
 The file I/O subsystem exhibits better specification coverage, much of
 which focuses on contracts to ensure that data-structures in the core
@@ -565,6 +593,109 @@ files.
 
 The core subsystem understandably has the highest specification
 coverage, at over one line of specification for every line of code.
+
+The verification of the key properties of the system, particularly the
+property of having a correct tally of votes, are directly tied to the
+overall state of the system using invariants of the form
+\begin{alltt}
+     invariant (state >= <STATE>) ==> (state-field != null);
+\end{alltt}
+Such an invariant says that, if the state of the system is at least
+\texttt{<STATE>}, then the appropriate representation for that state,
+captured in the \texttt{state-field}'s datatype is well-formed.  This
+is a strong claim because if \texttt{state-field} is non-null, then
+not only is it initialized, but all of its invariants hold.
+
+At this time, verification coverage of the core subsystem is good, but
+not 100\%.  Approximately 10\% of the core methods (8 methods) are
+unverified due to issues with ESC/Java's Simplify theorem prover
+(either the prover does not terminate or terminates abnormally).
+Another 31\% of the core methods (26 methods) have postconditions that
+cannot be verified, typically due to completeness issues discussed
+above, and 12\% of the methods (10 methods) fail to verify due to
+invariant issues, most of which are due to suspected inconsistencies
+in the specifications of the core Java class libraries or JML model
+classes.  The remaining 47\% (39 methods) of the core verifies
+completely.
+
+Since 100\% verification coverage was not possible in the timeframe of
+the project, and to ensure the KOA application is of the highest
+quality level possible, a large number unit tests were generated with
+the \emph{jmlunit} tool for all core classes.  A total of nearly 8,000
+unit tests were generated, focusing on key values of the various
+datatypes and their dependent base types.  These tests cover 100\% of
+the core code and are 100\% successful.
+
+\subsubsection{Impressions of ESC/Java2}
+
+ESC/Java2 made a very positive impression on the KOA developers.  Its
+increased capabilities as compared to DEC/SRC ESC/Java, particularly
+with regards to handling the full JML language, the ability to reason
+with models and specifications with pure methods, are very impressive.
+And, while the tool is still classified as an ``alpha'' release, we
+found it to be quite robust (perhaps unsurprising given its history,
+the use of JML and ESC/Java2 in and on its own source code, and the
+fact that it is passed through seven alpha releases thus far).  But
+there are still a number of issues with ESC/Java2 and JML that were
+highlighted by the KOA verification effort.
+
+The primary issues that arose include:
+\begin{itemize}
+\item \emph{String semantics in ESC/Java2 are incomplete.}  In
+  particular, one cannot reason effectively about String concatenation
+  or equality.  While Java Strings are certainly a non-trivial type,
+  the are effectively a pseudo-base type because of their prolific
+  application.  Thus, it is vital that this issue is addressed as soon
+  as possible.
+\item \emph{Issues with reasoning about ``representation-less'' model
+    variables.}  If a class declares a model variable but provides no
+  statement about how that model relates to the implementation of the
+  class (using a \texttt{represents} clause or similar), then
+  ESC/Java2 cannot verify assertions that use the model.  We believe
+  that a representation-less model variable is equivalent to a ghost
+  variable since it is being used as a specification-only variable in
+  an API spec.  Thus, by replacing problematic model variables with
+  ghost variables in API specifications we can successfully perform
+  verifications using the APIs.  This problem indicates either a
+  problem with the design and/or use of model variables in JML, or an
+  implementation issue with ESC/Java2.
+\item \emph{Inconsistencies and ambiguities in the specification of
+    core APIs, particularly classes in the \texttt{java.lang} and
+    \texttt{java.util} packages and JML model classes.}  This is the
+  first large-scale verification effort using ``full'' JML
+  specifications of the core JDK.  These ``full'' specifications are
+  much more complete and complex than those that were used with
+  DEC/SRC ESC/Java.  As these core specifications have never been
+  formally analyzed for consistency or completeness, it is not
+  surprising that the KOA verification effort had problems with their
+  use.  It is expected that over time, with more use by a range of
+  JML-compatible tools the core specifications will become more
+  consistent and complete to the benefit of all JML tool users.
+\item \emph{Completeness issues with first-order predicates.}
+  First-order predicates are expressed with the \texttt{forall} and
+  \texttt{exists} constructs in JML.  Only some of these predicates
+  can be used and/or verified in JML-based tools, including ESC/Java2.
+  Unfortunately, many of the most interesting invariants in
+  non-trivial systems can only be expressed using such constructs.
+  Thus, more focus needs to be put on understanding and reasoning
+  about such assertions.
+\item \emph{Aliasing issues and specification convenience constructs
+    for such.}  As usual, reasoning about reference types and avoiding
+  aliasing was one of the key issues in verifying the KOA application.
+  For example, it was frequently the case that we wished to say that a
+  set of references where unique (that is, they were pairwise
+  unequal).  The only way to state this in JML today is quite
+  cumbersome, thus the introduction of a new specification construct
+  for such seems warranted.
+\end{itemize}
+
+% JML test runs: 18/19 (meaningful/total)
+% JML test runs: 35/6716 (meaningful/total)
+% JML test runs: 20/37 (meaningful/total)
+% JML test runs: 36/64 (meaningful/total)
+% JML test runs: 48/210 (meaningful/total)
+% JML test runs: 97/776 (meaningful/total)
+% (+ 19 6716 37 64 210 776)
 
 \section{Ongoing work}
 The work on ESC/Java2 is continuing on a number of fronts.
@@ -715,7 +846,7 @@ Program Security and Correctness and the VerifiCard research project.
 % initial runs of your .tex file to
 % produce the bibliography for the citations in your paper.
 \bibliographystyle{abbrv}
-\bibliography{PASTE2004}  
+\bibliography{abbrev,PASTE2004,CASSIS2004}
 % To create the self-contained file - comment out the line above and include the
 % contents of the .bbl file here
 %% \begin{thebibliography}
