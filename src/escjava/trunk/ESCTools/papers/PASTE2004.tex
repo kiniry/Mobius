@@ -117,7 +117,7 @@
 
 \maketitle
 \begin{abstract}
-Abstract.
+Abstract. - TODO
 \end{abstract}
 
 \category{D.2.4}{Software Engineering}
@@ -163,8 +163,8 @@ ability to use methods in annotations, limiting the annotations to
 statements only about low-level representations.  Finally, as
 companies were bought and sold and research groups disbanded, there
 was no continuing development of the original tool, making it
-difficult to use as the Java language itself evolved and continuing
-support minimal.
+difficult to use as the Java language itself evolved and limiting the
+amount of continuing support.
 
 However, the initial positive experience prompted a vision for a
 reasonably industrial-strength tool that would also be useful for
@@ -173,25 +173,21 @@ source code for the ESC/Java tool was made available for further
 research and experimentation, the authors of this paper began the
 ESC/Java2 project to evolve the ESC/Java tool.  That effort has the
 following goals:
-\begin{enumerate}
-\item to make the source consistent with the current version of Java;
-\item to package the tool in a way that enabled easy application in a
+(1) to make the source consistent with the current version of Java;
+(2) to package the tool in a way that enables easy application in a
   variety of environments, consistent with the licensing provisions of
   the source code release;
-\item to fully parse the current version of JML;
-\item to check as much of the JML annotation language as feasible,
+(3) to fully parse the current version of JML;
+(4) to check as much of the JML annotation language as feasible,
   consistent with the original engineering goals of ESC/Java
   (usability at the expense of full completeness and soundness);
-\item as a long-term goal and if appropriate, to update the related
+and (5) as a long-term goal and if appropriate, to update the related
   tools that use the same code base, namely Calvin, Houdini, and RCC.
-\end{enumerate}
-Success in the above will enable us to:
-\begin{itemize}
-\item test the utility of the tool on a broader range of significant
+Success in the above will enable us to
+ test the utility of the tool on a broader range of significant
   bodies of Java source, and
-\item use the tool as a basis for research in unexplored aspects of
+to use the tool as a basis for research in unexplored aspects of
   annotation and static program analysis.
-\end{itemize}
 
 We currently have an alpha version of ESC/Java2 available on the
 web\footnote{Available from \myhref{http://www.niii.kun.nl/ita/sos/projects/escframe.html}
@@ -214,7 +210,7 @@ since then\footnote{Java 1.5 went beta recently.  No work has begun on
   are welcome to contact the authors with regards to this work.}.  The
 principle addition required by Java 1.4 is support for the Java {\tt
   assert} statement.  This is complicated slightly by the presence of
-a similar {\tt assert} statement in JML.
+a similar \texttt{assert} statement in JML.
 
 \subsection{Current JML}
 The Java Modeling Language is a research project in itself; hence the
@@ -222,29 +218,31 @@ JML syntax and semantics are evolving and are somewhat of a moving
 target (and there is as yet no complete reference manual).  However,
 the core language is reasonably stable.  The following are key
 additions that have been implemented:
-\setlength{\partopsep}{0in}\setlength{\parskip}{0in}
-\begin{itemize}\setlength{\itemsep}{0in}
+\setlength{\partopsep}{0in}\setlength{\parskip}{0in}\setlength{\itemsep}{0in}\setlength{\topsep}{0in}
+\begin{itemize}
+\setlength{\partopsep}{0in}\setlength{\parskip}{0in}\setlength{\itemsep}{0in}\setlength{\topsep}{0in}
 \item parsing of all of current JML, even if the constructs are
   ignored with respect to typechecking or verification,
 \item support for refinement files,
 \item heavyweight annotations,
-\item slight adjustments in annotation format,
-\item inheritance of annotations, particularly of {\tt non\_null}
+\item inheritance of annotations, particularly of \texttt{non\_null}
   modifiers, and
 \item model fields, routines, and types.
 \end{itemize}
 In addition, the differences between ESC/Java and JML noted in the JML
-Reference Manual on JML have been resolved.
+Reference Manual have been resolved.
 % I don't think that there was ever a paper published summarizing 
 % these differences. -JRK
 
 \subsection{New verification checks}
 Though all of JML is parsed, not all of it is currently checked.
-Checking of the following features has been added to that performed by
-ESC/Java: \setlength{\partopsep}{0in}\setlength{\parskip}{0in}
-\begin{itemize}\setlength{\itemsep}{0in}
-\item {\tt constraint} and {\tt initially} clauses,
-\item frame conditions, including the {\tt in} and {\tt maps} clauses,
+Static checking of the following features has been added to that performed by
+ESC/Java: 
+\setlength{\partopsep}{0in}\setlength{\parskip}{0in}\setlength{\itemsep}{0in}\setlength{\topsep}{0in}
+\begin{itemize}
+\setlength{\partopsep}{0in}\setlength{\parskip}{0in}\setlength{\itemsep}{0in}\setlength{\topsep}{0in}
+\item \texttt{constraint} and \texttt{initially} clauses,
+\item frame conditions, including the \texttt{in} and \texttt{maps} clauses,
 \item model fields and represents clauses, and
 \item annotations that include routine calls and dynamic allocations.
 \end{itemize}
@@ -253,19 +251,20 @@ ESC/Java: \setlength{\partopsep}{0in}\setlength{\parskip}{0in}
 The ESC/Java specification language and JML arose separately.  There
 was some initial but uncompleted work to unify the two.  The ESC/Java2
 project intends to have the tool reflect JML as precisely as possible.
-In some cases, discussion resulted in changes to JML, but more often
-(but as little as possible) some backwards incompatibilities were
+In some cases, discussion resulted in changes to JML.  In
+a few cases, some backwards incompatibilities in ESC/Java were
 introduced.  The principal such incompatibilities are these:
-\setlength{\partopsep}{0in}\setlength{\parskip}{0in}
-\begin{itemize}\setlength{\itemsep}{0in}
+\setlength{\partopsep}{0in}\setlength{\parskip}{0in}\setlength{\itemsep}{0in}\setlength{\topsep}{0in}
+\begin{itemize}
+\setlength{\partopsep}{0in}\setlength{\parskip}{0in}\setlength{\itemsep}{0in}\setlength{\topsep}{0in}
 \item The semantics of inheritance of specification clauses and of
-  {\tt non\_null} modifiers was modified to that defined by JML, since
+  \texttt{non\_null} modifiers was modified to that defined by JML, since
   the work on JML resulted in an interpretation consistent with
-  behavioral subtyping.  This also changed the usage of {\tt also}.
-\item The default modifies clause is now {\tt modifies \\everything;}.
-\item The syntax and semantics of {\tt initially}, {\tt
-    monitored\_by}, and {\tt readable\_if} have changed.
-\item ESC/Java2 requires semicolon termination of annotations; it also
+  behavioral subtyping.  This also changed the usage of \texttt{also}.
+\item \texttt{modifies \char'134 everything;} is now the default modifies clause.
+\item The syntax and semantics of \texttt{initially}, {\tt
+    monitored\_by}, and \texttt{readable\_if} have changed.
+\item ESC/Java2 
   forbids bodies of (non-model) routines to be present in non-Java
   specification files.
 \end{itemize}
@@ -275,26 +274,27 @@ introduced.  The principal such incompatibilities are these:
 Though the core is well-supported, there are several features of JML
 which are parsed and ignored, most of them experimental or not yet
 endowed with a clear semantics.  The features that are ignored are:
-\setlength{\partopsep}{0in}\setlength{\parskip}{0in}
-\begin{itemize}\setlength{\itemsep}{0in}
+\setlength{\partopsep}{0in}\setlength{\parskip}{0in}\setlength{\itemsep}{0in}\setlength{\topsep}{0in}
+\begin{itemize}
+\setlength{\partopsep}{0in}\setlength{\parskip}{0in}\setlength{\itemsep}{0in}\setlength{\topsep}{0in}
 \item checking of access modifiers,
 \item the \texttt{weakly}, \texttt{strictfp}, \texttt{volatile}, and
   \texttt{transient} modifiers,
 \item annotations labeled as redundant are handled just like other
-  annotations, or are ignored (e.g. {\tt implies\_that} and {\tt
+  annotations, or are ignored (e.g. \texttt{implies\_that} and {\tt
     for\_example} sections),
 \item any semantics associated with initialization (prior to
   construction),
-\item multi-threading issues beyond that supported by ESC/Java,
+\item multi-threading support beyond that in ESC/Java,
 \item serialization,
 \item annotations regarding space and time consumption,
-\item full support of recursive {\tt maps} declarations,
-\item model programs, {\tt diverges} clauses, and {\tt hence\_by}
+\item full support of recursive \texttt{maps} declarations,
+\item model programs, \texttt{diverges} clauses, and \texttt{hence\_by}
   clauses,
 \item verification of anonymous and block-level classes,
 \item verification of set comprehension and some forms of quantified
   expressions, and
-\item implementation of {\tt modifies \\everything;} within the body
+\item implementation of \texttt{modifies \char'134 everything;} within the body
   of routines.
 \end{itemize}
 
@@ -308,17 +308,18 @@ in both syntax and semantics arise on occasion.  These are generally
 resolved and documented via mailing list discussions by interested
 parties.  There are, however, still unresolved issues, some of which
 are the subject of ongoing research.
-\setlength{\partopsep}{0in}\setlength{\parskip}{0in}
-\begin{itemize}\setlength{\itemsep}{0in}
+\setlength{\partopsep}{0in}\setlength{\parskip}{0in}\setlength{\itemsep}{0in}\setlength{\topsep}{0in}
+\begin{itemize}
+\setlength{\partopsep}{0in}\setlength{\parskip}{0in}\setlength{\itemsep}{0in}\setlength{\topsep}{0in}
 \item interpretation of the combination of purity and benevolent
   side-effects that is suitable for both static and run-time checking
 \item interpretation of exceptions in pure expressions
 \item the use of helper annotations on routines
 \item the interpretation of annotations for initialization code and
   constructors
-\item use of {\tt measured\_by} clauses to assist in checking
+\item use of \texttt{measured\_by} clauses to assist in checking
   termination
-\item meaning of {\tt code\_contract} clauses
+\item meaning of \texttt{code\_contract} clauses
 \item axioms and reasoning procedures to handle safe
   arithmetic~\cite{Chalin03}
 \end{itemize}
@@ -331,15 +332,13 @@ and Smart Card applets. -JRK]
 \section{Future work}
 The work on ESC/Java2 to date has resulted in a number of software
 alpha releases and the work is continuing on a number of fronts.
-\begin{itemize}
-\item As the previous sections show, there is a fair amount of
+
+1. As the previous sections show, there is a fair amount of
   additional software implementation to complete.  As is usually the
   case, users would also appreciate attention to performance and to
   the clarity of errors and warnings.
-\item Research is required to clarify the semantics and usability of
-  outstanding features of JML.  Usage of JML is now broad enough that
-  formal reference documentation would also be valuable.
-\item The current implementation supports the static checking of a
+
+2. The current implementation supports the static checking of a
   stable core of JML.  With this initial implementation of frame
   condition checking and of model fields, represents clauses and use
   of routine calls in annotations, ESC/Java2 can now be used on
@@ -348,7 +347,8 @@ alpha releases and the work is continuing on a number of fronts.
   usage studies that confirm that this core of JML is useful in
   annotations and that the operation of ESC/Java2 (and Simplify) on
   that core is correct and valuable.
-\item The logic into which Java and JML are embedded in ESC/Java is,
+
+3. The logic into which Java and JML are embedded in ESC/Java is,
   by design and admission of the original authors, neither complete or
   fully sound.  This was the result of an engineering judgement in
   favor of performance and usability.  Research that studies expanded
@@ -356,9 +356,12 @@ alpha releases and the work is continuing on a number of fronts.
   generally useful in practical static checking or whether a fuller
   and more complicated state-based logic is required for useful
   results to be obtained.
-\end{itemize}
 
-Though not part of this project, there is another set of beneficial
+In addition, research is required to clarify the semantics and usability of
+  outstanding features of JML.  Usage of JML is now broad enough that
+  formal reference documentation would also be valuable.
+
+Finally, though not part of this project, there is another set of beneficial
 work to be done.  There are now a number of tools~\cite{Burdy-etal03},
 generated by different research groups, that interact with JML.  Among
 other tools, the jmlc~\cite{Cheon-Leavens02b} tool dynamically checks
@@ -370,7 +373,7 @@ specifications.  To provide a productive working environment for
 large-scale projects that use these tools but are not focused on their
 improvement or analysis, the tools need to be better integrated.  To a
 fair extent that integration is present, but there are additional
-opportunities.  For example, a close integration of the annotations
+opportunities.  For example, a closer integration of the annotations
 produced by Daikon with those used by other tools would be a worthy
 endeavor.
 
