@@ -80,7 +80,7 @@ export ESC_VERSION ?= CURRENT-CVS
 ## packages because the tools are used by each other (e.g. all tools use
 ## Javafe).
 
-export JAVADOC_GEN_DIR ?= ${ESCTOOLS_ROOT}/javadoc
+export JAVADOC_GEN_DIR ?= ${ESCTOOLS_ROOT}/docs/api
 
 ## Pertinent definitions for Javafe
 export JAVAFE_ROOT = ${ESCTOOLS_ROOT}/Javafe
@@ -126,6 +126,7 @@ export RELCLASSPATH = ${RELDIR}/${RELJAR}
 ## You can override this default setting in Makefile.local or in your
 ## environment
 export JUNITLIB ?= ${ESCTOOLS_ROOT}/Utils/junit.jar
+export JUNIT_SOURCEPATH ?= /usr/local/Java/junit/src
 
 ## This contains items needed for compiling/running JUnit tests,
 ## but not for compiling or running the tools themselves
