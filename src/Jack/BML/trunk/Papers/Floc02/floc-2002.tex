@@ -33,7 +33,7 @@
 
 \newtheorem {df}{Definition}
 
-
+\usepackage{lscape} % it's needed to turn a page
 \usepackage{amsmath} % it is needed by the \sem command
 \input{prooftree} %showing demonstration
 
@@ -1009,7 +1009,7 @@ IN-EXP-ARR-REACH\,\,\, &
 %\end{prooftree}
 %\\[3.0ex]
 \end{tabular}
-\caption{Memeberhsip definition}
+\caption{Membership definition}
 \label{fig-mem-def}
 \rule{\linewidth}{0.25mm}
 \end{figure}%%%%%%%%%
@@ -1100,10 +1100,335 @@ is found in \textsc{Y}, and we like to establish
 \textup{e}\texttt{.x}$\underline\in$\textsc{Y}, it will be enough to
 find an expression \textup{e}$_1$ from which
 \textup{e}\texttt{.x}$\underline\in$\textsc{Y} is reachable. This
-situation is
-presented by the rule \textup{IN-EXP-REACH}. Similar situations are
-happened when \texttt{x} is any other expression. This is presented by
-the rules \textup{IN-REACH} and \textup{IN-ARR-REACH}.
+situation is presented by the rule \textup{IN-EXP-REACH}. Similar
+situations are happened when \texttt{x} is any other expression. This
+is presented by the rules \textup{IN-REACH} and
+\textup{IN-ARR-REACH}. 
+
+We present some derivation examples in
+figures~\ref{fig-der-tre-c-cal-n},~\ref{fig-der-tre-this-m},~\ref{fig-der-tre-val-n}
+and~\ref{fig-der-tre-c-cal-n} corresponding to
+figure~\ref{fig-der-exa}.
+\begin{figure}[htb]
+\rule{\linewidth}{0.25mm}
+\rule{0em}{0.1ex}
+\begin{tabbing}{l}
+ddd\=ddd\=ddd\=ddd\=ddd\=dddddddddddddddddddddddd \kill
+\>$\mathtt{public\ class\ {\bf C}\{}$ \\
+\>\>$\mathtt{public\ int\ k\ =\ 0;}$ \\
+\\
+\>\>{\it //@modifies arr$[$pos$]$ ;} \\
+\>\>$\mathtt{public\ void\ {\bf m}(int[\ ] arr,\ int\ pos)\{\ arr[pos]\ =\
+this.k;\ \}}$ \\
+\>\>$\mathtt{public\ {\bf C}\ {\bf getC}(\ )\{\ return\ this;\ \}}$ \\
+\>$\mathtt{\}}$ \\
+\>$\mathtt{public\ class\ {\bf D}\{}$ \\
+\>\>$\mathtt{int[\ ]\ myArr\ =\ new\ int[5];}$ \\
+\>\>$\mathtt{int\ myPos\ =\ 3;}$ \\
+\>\>$\mathtt{C\ c\ =\ new\ C(\ );}$ \\
+\\
+\>\>{\it //@modifies $\backslash$fields$\_$of($\backslash$reach(this)) ;} \\
+\>\>$\mathtt{public\ void\ {\bf n}(int\ val)\{\ c.getC(\ ).k\ =\
+val++;\ c.m(myArr,\ myPos);\ \}}$ \\
+\>$\mathtt{\}}$
+\end{tabbing}
+\caption{Derivation example}
+\label{fig-der-exa}
+\rule{\linewidth}{0.25mm}
+\end{figure} %%%%%%%%%
+\begin{landscape} %%%%%%%%
+\begin{center} 
+\begin{figure}[hbt]
+\rule{\linewidth}{0.25mm}
+\\[2.0ex]
+\begin{prooftree}
+   \[
+      \[
+        \[
+	  \justifies
+	  \mathtt{arr[pos]}\in\ \textsc{Y}
+	\]
+	\justifies
+	\mathtt{arr[pos]}\underline\in\ \textsc{Y}
+	\using
+	\textsc{\tiny IN-SIMP}
+      \]
+      \[
+	\[
+	  \[
+            \[
+	      \[
+		\justifies
+	 	\texttt{pos}\  \textit{modPRM}\ \textsc{Y}
+		\using
+		\textsc{\tiny CONST}
+	      \]
+	      \justifies
+	      \texttt{pos}\  \textit{modPE}\ \textsc{Y}
+	      \using
+	      \textsc{\tiny EXP-PRM}	      
+	    \]
+	    \justifies
+	    \texttt{pos}\  \textit{modEXP}\ \textsc{Y}
+	    \using
+	    \textsc{\tiny EXP-TO-PE}
+          \]
+ 	  \justifies
+	  \mathtt{arr[pos]}\  \textit{modPRM}\ \textsc{Y}
+	  \using
+	  \textsc{\tiny ARR-FLD}
+	\]
+ 	\justifies
+	\mathtt{arr[pos]}\  \textit{modPE}\ \textsc{Y}
+	\using
+	\textsc{\tiny EXP-PRM}
+      \]
+      \[ %1
+        \[ %2
+          \[ %2
+	     \[ %3
+	       \justifies
+	       \texttt{this}\ \textit{modPRM}\ \textsc{Y}
+	       \using
+	       \textsc{\tiny THIS}
+	     \] %3
+	     \justifies
+	     \texttt{this}\ \textit{modPE}\ \textsc{Y}
+	     \using
+	     \textsc{\tiny EXP-PRM}
+          \] %2
+	  \[ %3
+	    \justifies
+	    \texttt{k}\ \textit{modPS}\ \textsc{Y}
+	    \using
+	    \textsc{\tiny ID-FLD}
+	  \] %3
+ 	  \justifies
+	  \texttt{this.k}\ \textit{modPE}\ \textsc{Y}
+	  \using
+	  \textsc{\tiny PE-TO-PE}
+ 	\] %2
+ 	 \justifies
+	 \texttt{this.k}\ \textit{modEXP}\ \textsc{Y}
+	 \using
+         \textsc{\tiny EXP-TO-PE}
+     \] %1
+     \justifies
+     \mathtt{arr[pos] = this.k}\  \textit{mod}\ \mathtt{\{arr[pos],arr,pos\}}
+     \using
+     \textsc{\tiny ASSG}
+   \]
+   \justifies
+   \texttt{m(arr,pos)}\ \textit{mod}\ \mathtt{\{arr[pos]\}}
+   \using
+   \textsc{\tiny METH-DEC}
+\end{prooftree}
+\caption{Derivation tree for the method \texttt{m(int$[]$, int)}}
+\label{fig-der-tre-this-m}
+\rule{\linewidth}{0.25mm}
+\end{figure}
+\end{center}
+
+
+
+
+
+
+\begin{center}
+\begin{figure}[hbt]
+\rule{\linewidth}{0.25mm}
+\\[2.0ex]
+\begin{prooftree}
+\footnotesize
+   \[
+     \[
+       \mathtt{fields\_of(\backslash reach(this))}\in \textsc{Y},\ \ \mathtt{c.getC()}\in \backslash\texttt{reach(this)}
+       \justifies
+       \mathtt{c.getC().k}\underline\in\ \textsc{Y} %
+       \using
+       \textsc{\tiny IN-EXP-REACH}
+     \]
+     \[
+       \[
+	 \[
+	   \justifies
+	   \phi \sqsubseteq \textsc{Y}
+	   \using
+	   \textsc{\tiny AX}
+	 \]
+	 \[
+           %\[	     
+	   %  \justifies
+	   %  \texttt{c}\ \textit{modPRM}\ \textsc{Y} 
+	   %  \using
+	   %  \textsc{\tiny ID-FLD}
+	   %\]        
+           \[
+             \proofdotseparation=1.2ex 
+             \proofdotnumber=3
+             \leadsto 
+           \]
+	   \justifies
+	   \texttt{c}\ \textit{modPE}\ \textsc{Y} 
+	   \using 
+	   %\textsc{\tiny EXP-PRM}
+	 \]
+         \justifies
+	 \mathtt{c.getC()}\ \textit{modPE}\ \textsc{Y} 
+       \]
+       \[
+         \justifies
+	 \mathtt{k}\ \textit{modPS}\ \textsc{Y} 
+	 \using
+	 \textsc{\tiny ID-FLD}
+       \]
+       \justifies
+       \mathtt{c.getC().k}\ \textit{modPE}\ \textsc{Y} %
+       \using
+       \textsc{\tiny PE-TO-PE}
+     \]
+      \[ %1
+         \[ %2
+           \[ %3
+             \justifies 
+	     \texttt{val}\in \textsc{Y}\
+	     \using
+	     \textsc{\tiny AX}
+	   \] %3
+           \justifies 
+           \texttt{val}\underline\in \textsc{Y}\ 
+	   \using
+	   \textsc{\tiny IN-SIMP}
+	 \] %2
+         \[ %2
+	   \[ %3
+             \justifies
+             \texttt{val}\ \textit{modPRM}\ \textsc{Y}
+	     \using
+	     \textsc{\tiny ID-FLD}	
+	   \] %3  
+           \justifies
+           \texttt{val}\ \textit{modPE}\ \textsc{Y}
+	   \using
+	   \textsc{\tiny EXP-PRM}
+	 \] %2
+       \justifies
+       \mathtt{val ++}\ \textit{modEXP}\ \textsc{Y} %
+       \using
+       \textsc{\tiny POST-PLUS}
+     \] %1
+    \justifies
+     \mathtt{c.getC().k = val ++}\ \textit{modEXP}\ \mathtt{\{\backslash fields\_of(\backslash reach(this)), val\}} 
+     \using
+     \textsc{\tiny ASSG}
+   \] %0
+   \justifies
+   \texttt{n(val)}\ \textit{mod}\ \mathtt{\{\backslash fields\_of(\backslash reach(this))\}}
+   \using
+   \textsc{\tiny METH-DEC}
+\end{prooftree}
+\caption{Derivation tree for $\mathtt{c.getC().k = val ++}$ in {\tt n(int)}}
+\label{fig-der-tre-val-n}
+\rule{\linewidth}{0.25mm}
+\end{figure}
+\end{center}
+
+
+
+
+\begin{center}
+\begin{figure}[hbt]
+\rule{\linewidth}{0.25mm}
+\\[2.0ex]
+\begin{prooftree}
+   \[
+       \[ %1
+         \[ %---
+         \[ %2
+	   \[ %3
+             \mathtt{\backslash fields\_of(\backslash reach(this))}\in 
+\texttt{Y},\ \ \texttt{myArr}\in \mathtt{\backslash reach(this)}
+	     \justifies
+             \mathtt{myArr[myPos]}\underline\in\textsc{Y}
+             \using
+             \textsc{\tiny IN-ARR-REACH}
+	   \] %3
+           \justifies
+	   \mathtt{\{myArr[myPos]\}}\sqsubseteq\textsc{Y}
+	   \using
+	   \sqsubseteq
+         \] %2
+         \[ %2
+	   \[ %3
+             \proofdotseparation=1.2ex 
+             \proofdotnumber=3
+             \leadsto 
+           \] %3
+	   \justifies
+	   \texttt{c}\ \textit{modPE}\ \textsc{Y}
+         \] %2
+         \[ %2 
+           \[ %3
+             \proofdotseparation=1.2ex 
+             \proofdotnumber=3
+             \leadsto 
+           \] %3
+	   \justifies
+	   \texttt{myArr}\ \textit{modEXP}\ \textsc{Y}
+	 \]  %2
+	 \[  %2
+           \[ %3
+             \proofdotseparation=1.2ex 
+             \proofdotnumber=3
+             \leadsto 
+           \] %3	
+	   \justifies	
+	   \texttt{myPos}\ \textit{modEXP}\ \textsc{Y}
+	 \]  %2
+         \justifies
+         \texttt{c.m(myArr, myPos)}\ \textit{modPE}\ \textsc{Y}
+         \using
+         \textsc{\tiny EXP-METH}
+        \] %-----
+        \justifies
+         \texttt{c.m(myArr, myPos)}\ \textit{modEXP}\ \textsc{Y}
+         \using
+         \textsc{\tiny EXP-TO-PE}
+     \] %1
+     \justifies
+     \texttt{c.m(myArr, myPos)}\ \textit{mod}\ \mathtt{\{\backslash fields\_of(\backslash reach(this)), val, myArr\}}
+     \using
+     \textsc{\tiny MOD-TO-EXP}
+   \] %0
+   \justifies
+   \texttt{n(val)}\ \textit{mod}\ \mathtt{\{\backslash fields\_of(\backslash reach(this))\}}
+   \using
+   \textsc{\tiny METH-DEC}
+\end{prooftree}
+\caption{Derivation tree for {\tt c.m(myArr, myPos)} in {\tt n(int)}}
+\label{fig-der-tre-c-cal-n}
+\rule{\linewidth}{0.25mm}
+\end{figure}
+\end{center}
+
+\end{landscape}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 \section{Implementation issues}
