@@ -1,17 +1,12 @@
 TestSuite.java
-# Do these seperately
-FormalNonnullInheritance.java
-Desugaring.java
-DesugaringA.java
 ## Platform dependent
-InheritedSpecs.java
-NL.java
 PureCheck.java
 Quant.java
 Helper.java
 InheritNull.java
 PreconditionWarnings.java
 NonNullResult.java
+InheritedSpecs.java
 ## A bug / tests to be fixed
 GhostFieldOverride.java
 MethodInSpec.java
@@ -19,4 +14,3 @@ MethodInSpec.java
 ModEverything.java
 ## New tests
 Privacy.java
-Scope.java
