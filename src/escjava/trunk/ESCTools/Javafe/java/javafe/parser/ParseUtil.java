@@ -171,25 +171,11 @@ public class ParseUtil
                 l.getNextToken();
                 continue getModifierLoop;
             } else {
-	      for( int i=0; i<modifierKeywords.length; i++ ) {
-                if( l.ttype == modifierKeywords[i] ) {
-                    // Token is modifier keyword 
-                    int modifierBit = 1<<i;
-                    if( (modifiers & modifierBit) != 0 ) {
-                        error(l.startingLoc, "Duplicate occurrence of modifier '"
-                             +PrettyPrint.inst.toString(l.ttype)+"'");
-                    }
-                    if( (modifiers & Modifiers.ACCESS_MODIFIERS) != 0 &&
-                        (modifierBit & Modifiers.ACCESS_MODIFIERS) != 0 ) {
-                        error(l.startingLoc, 
-                             "Cannot have more than one of the access modifiers "+
-                             "public, protected, private");
-                    }
-                    modifiers |= modifierBit;
-                    l.getNextToken();
+		int i = getJavaModifier(l,modifiers);
+		if (i != 0) {
+                    modifiers |= i;
                     continue getModifierLoop;
                 }
-	      }
             }
             // Next token is not a modifier
             if (! seenPragma)
@@ -199,6 +185,37 @@ public class ParseUtil
                     = ModifierPragmaVec.popFromStackVector(seqModifierPragma);
             return modifiers;
         }
+    }
+
+    /** Checks if the next token is a Java modifier.  Returns 0
+	if it is not; returns an int with the modifier bit turned on
+	if it is.  Also issues an error if the modifier is already 
+	present in the modifiers argument (use 0 for this argument
+	to turn off these errors).
+	Note that the bit that is found is not ORed into the modifiers
+	int; you have to do that outside this call.
+	The Lex is advanced if a modifier is found.
+    */
+    public int getJavaModifier(Lex l, int modifiers) {
+	for( int i=0; i<modifierKeywords.length; i++ ) {
+	    if( l.ttype == modifierKeywords[i] ) {
+		// Token is modifier keyword 
+		int modifierBit = 1<<i;
+		if( (modifiers & modifierBit) != 0 ) {
+		    ErrorSet.caution(l.startingLoc, 
+			"Duplicate occurrence of modifier '"
+			 +PrettyPrint.inst.toString(l.ttype)+"'");
+		} else if( (modifiers & Modifiers.ACCESS_MODIFIERS) != 0 &&
+		    (modifierBit & Modifiers.ACCESS_MODIFIERS) != 0 ) {
+		    ErrorSet.error(l.startingLoc, 
+			 "Cannot have more than one of the access modifiers "+
+			 "public, protected, private");
+		}
+		l.getNextToken();
+		return modifierBit;
+	    }
+	}
+	return 0;
     }
 
     static public String arrayToString(Object[] a, String sep) {
