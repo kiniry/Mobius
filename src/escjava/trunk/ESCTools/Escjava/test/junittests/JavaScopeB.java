@@ -2,14 +2,14 @@
 // types in type name resolution.
 
 import sub.JavaScopeBB;
-
 public class JavaScopeB extends JavaScopeBB {
 
-
 	public static void main(String[] args) {
+		//@ assume System.out != null;
 		(new JavaScopeB()).mm();
 	}
 
+	//@ requires System.out != null;
 	//@ ensures \result == 1; // ERROR
 	//@ ensures \result == 2; 
 	public int mm() {
@@ -19,10 +19,12 @@ public class JavaScopeB extends JavaScopeBB {
 		(new HINN()).p();
 		return k;
 	}
-
 	class Inn {
 		//@ ensures \result == 2;
-		int m() { return 2; System.out.println("B"); }
+		int m() { 
+			//@ assume System.out != null;
+			System.out.println("B"); return 2; }
+
 	}
 
 	class HINN extends JavaScopeBB {
@@ -30,6 +32,7 @@ public class JavaScopeB extends JavaScopeBB {
 		int p() {
 			// Tests that this resolves to JavaScopeB.Inn
 			// rather than to the inaccessible JavaScopeBB.Inn
+			//@ assume System.out != null;
 			return (new Inn()).m();
 		}
 
