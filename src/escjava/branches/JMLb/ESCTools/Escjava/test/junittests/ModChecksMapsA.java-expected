@@ -1,0 +1,32 @@
+ESC/Java version VERSION
+  Prover started:TIME
+    [TIME]
+
+ModChecksMapsA ...
+    [TIME]
+
+ModChecksMapsA: mm() ...
+    [TIME]  passed
+
+ModChecksMapsA: m() ...
+    [TIME]  passed
+
+ModChecksMapsA: ma() ...
+------------------------------------------------------------------------
+ModChecksMapsA.java:36: Warning: Possible violation of modifies clause (Modifies)
+                list.array[1] = 0;  // WARNING
+                ^
+------------------------------------------------------------------------
+    [TIME]  failed
+
+ModChecksMapsA: ModChecksMapsA() ...
+    [TIME]  passed
+  [TIME total]
+
+MCMList ...
+    [TIME]
+
+MCMList: MCMList() ...
+    [TIME]  passed immediately
+  [TIME total]
+1 warning

@@ -1,0 +1,13 @@
+ESC/Java version VERSION
+  Prover started:TIME
+    [TIME]
+
+RefineT ...
+    [TIME]
+
+RefineT: m() ...
+    [TIME]  passed immediately
+
+RefineT: RefineT() ...
+    [TIME]  passed
+  [TIME total]

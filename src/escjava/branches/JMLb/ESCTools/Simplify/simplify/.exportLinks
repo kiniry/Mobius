@@ -1,0 +1,6 @@
+alpha/bin/Simplify AOSF/Simplify
+man/alpha/man1/Simplify.1 AOSF/Simplify.1
+man/mips/man1/Simplify.1 DS/Simplify.1
+mips/bin/Simplify DS/Simplify
+www/SRC/man/AOSF/Simplify.1.html AOSF/Simplify.1.html
+www/SRC/man/DS/Simplify.1.html DS/Simplify.1.html

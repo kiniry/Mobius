@@ -1,0 +1,20 @@
+ESC/Java version VERSION
+  Prover started:TIME
+    [TIME]
+
+ModChecksConstructor ...
+    [TIME]
+
+ModChecksConstructor: ModChecksConstructor() ...
+    [TIME]  passed
+
+ModChecksConstructor: ModChecksConstructor(int) ...
+    [TIME]  passed
+
+ModChecksConstructor: ModChecksConstructor(java.lang.Object) ...
+ModChecksConstructor.java:18: Error: There is no assignable clause allowing this assignment
+            i = 0; // WARNING
+            ^
+    [TIME]  passed
+  [TIME total]
+1 error

@@ -1,0 +1,21 @@
+TestSuite.java
+# Do these seperately
+FormalNonnullInheritance.java
+Desugaring.java
+DesugaringA.java
+## Platform dependent
+InheritedSpecs.java
+NL.java
+PureCheck.java
+Quant.java
+Helper.java
+InheritNull.java
+PreconditionWarnings.java
+NonNullResult.java
+## A bug / tests to be fixed
+GhostFieldOverride.java
+MethodInSpec.java
+## Modify everything tests
+ModEverything.java
+## New tests
+Privacy.java
