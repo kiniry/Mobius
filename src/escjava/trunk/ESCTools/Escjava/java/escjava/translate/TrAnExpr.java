@@ -240,6 +240,8 @@ public final class TrAnExpr {
       case TagConstants.NEWINSTANCEEXPR: {
 	// FIXME - no translation support for new Type() expressions
 	//ErrorSet.fatal(e.getStartLoc(),"No support as yet for constructor invocations in specification expressions");
+	ErrorSet.notImplemented(!Main.options().noNotCheckedWarnings,
+		e.getStartLoc(),"Not checking predicates containing new instance expressions");
 	NewInstanceExpr me = (NewInstanceExpr)e;
 	ExprVec ev = ExprVec.make(me.args.size());
 		// FIXME - 'this' argument???
@@ -254,6 +256,8 @@ public final class TrAnExpr {
       }
 
       case TagConstants.METHODINVOCATION: {
+	//ErrorSet.notImplemented(!Main.options().noNotCheckedWarnings,
+		//e.getStartLoc(),"Not checking predicates containing method call expressions");
 	MethodInvocation me = (MethodInvocation)e;
 	ExprVec ev = ExprVec.make(me.args.size());
 		// FIXME - 'this' argument???
@@ -268,6 +272,8 @@ public final class TrAnExpr {
       }
 
       case TagConstants.NEWARRAYEXPR: {
+	ErrorSet.notImplemented(!Main.options().noNotCheckedWarnings,
+		e.getStartLoc(),"Not checking predicates containing new array expressions");
 	NewArrayExpr nae = (NewArrayExpr)e;
 // FIXME - need to put in the type and the dimension array
 // also need to make SImplify understand the make$Array function

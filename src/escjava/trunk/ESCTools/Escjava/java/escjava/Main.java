@@ -284,8 +284,11 @@ public class Main extends javafe.SrcTool
 
         UniqName.setDefaultSuffixFile(cu.getStartLoc());
 	try {
-        super.handleCU(cu);
-	} catch (FatalError e) {}
+	    super.handleCU(cu);
+	} catch (FatalError e) {
+	    // Errors are already reported
+	    //ErrorSet.report("Aborted processing " + cu.sourceFile().getHumanName() + " because of fatal errors");
+	}
 
         options().startLine = -1;        // StartLine applies only to first CU
     }
@@ -472,7 +475,7 @@ public class Main extends javafe.SrcTool
         try {
             status = processRoutineDecl(r, sig, initState);
         } catch (javafe.util.NotImplementedException e) {
-            ErrorSet.error(e.getMessage());
+	    // continue - problem already reported
         } catch (FatalError e) {
 	    // continue;
 	}

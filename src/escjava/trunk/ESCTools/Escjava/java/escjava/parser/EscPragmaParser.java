@@ -335,6 +335,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
 	scanner.addKeyword("\\everything",TagConstants.EVERYTHING);
 	scanner.addKeyword("\\nothing",TagConstants.NOTHING);
 	scanner.addKeyword("\\fields_of",TagConstants.FIELDS_OF);
+	scanner.addKeyword("\\reach",TagConstants.FIELDS_OF);
 	scanner.addKeyword("\\not_specified",TagConstants.NOT_SPECIFIED);
 	scanner.addKeyword("\\such_that",TagConstants.SUCH_THAT);
 	inProcessTag = NOTHING_ELSE_TO_PROCESS;

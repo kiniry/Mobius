@@ -10,10 +10,12 @@ WontEvenParse3.java:3: Error: Cannot convert int[] to boolean
 Caution: Turning off extended static checking due to type error(s)
 1 caution
 1 error
-WontEvenParse4.java:2: Fatal error: new expressions are not implemented by the static checker
+WontEvenParse4.java:3: Not implemented: Not checking predicates containing new instance expressions
   //@ ensures \result == (3 < 4 ? new Object() : new int[12]);
                                   ^
-1 error
+WontEvenParse4.java:8: Not implemented: Not checking predicates containing new instance expressions
+  //@ requires (new Object()) != null;
+                ^
 WontEvenParse5.java:3: Error: No such method \nonnullelements(java.lang.Object[]) in type WontEvenParse5
     //@ assert WontEvenParse5.\nonnullelements(a);
                               ^
@@ -464,12 +466,12 @@ BogusAssignments.java:9: Error: May not assign to array's length field
 BogusAssignments.java:12: Error: Invalid designator
   //@ modifies a.length;
                  ^
-BogusAssignments.java:13: Error: a final field is not allowed as the designator in a modifies clause
+BogusAssignments.java:13: Caution: a final field is not allowed as the designator in a modifies clause
   //@ modifies x;
                ^
 Caution: Turning off extended static checking due to type error(s)
-2 cautions
-4 errors
+3 cautions
+3 errors
 BogusLoops.java:13: Error: 'loop_invariant' pragmas can occur only immediately prior to a loop statement.  Loop statement expected (and not found) here.
       //@ loop_invariant a != null
           ^
@@ -833,12 +835,6 @@ BogusSpec.java:66: Error: The function \fresh cannot be used in this context
 BogusSpec.java:70: Error: The function \fresh cannot be used inside a \old expression
   //@ ensures \old(\fresh(x));
                    ^
-BogusSpec.java:74: Error: An instance field may be accessed only via an object and/or from a non-static context or an inner class enclosed by a type possessing that field.
-  //@ requires x != null;
-               ^
-BogusSpec.java:75: Error: Unqualified this cannot be used in static contexts
-  //@ requires this != null;
-               ^
 BogusSpec.java:76: Error: Keyword \result is not allowed in this context
   //@ requires \result != null;
                ^
@@ -999,43 +995,43 @@ BogusSpec.java:177: Caution: No initial also expected since there are no overrid
 BogusSpec.java:139: Error: No such constructor BogusSpec() in type BogusSpec
 class BogusSpecSub extends BogusSpec {
                                      ^
-BogusSpec.java:207: Error: a final field is not allowed as the designator in a modifies clause
+BogusSpec.java:207: Caution: a final field is not allowed as the designator in a modifies clause
   //@ modifies x, this.x, this.b, FClass.b;
                ^
-BogusSpec.java:207: Error: a final field is not allowed as the designator in a modifies clause
+BogusSpec.java:207: Caution: a final field is not allowed as the designator in a modifies clause
   //@ modifies x, this.x, this.b, FClass.b;
                        ^
-BogusSpec.java:207: Error: a final field is not allowed as the designator in a modifies clause
+BogusSpec.java:207: Caution: a final field is not allowed as the designator in a modifies clause
   //@ modifies x, this.x, this.b, FClass.b;
                                ^
-BogusSpec.java:207: Error: a final field is not allowed as the designator in a modifies clause
+BogusSpec.java:207: Caution: a final field is not allowed as the designator in a modifies clause
   //@ modifies x, this.x, this.b, FClass.b;
                                          ^
-BogusSpec.java:208: Error: a final field is not allowed as the designator in a modifies clause
+BogusSpec.java:208: Caution: a final field is not allowed as the designator in a modifies clause
   //@ modifies b, y;
                ^
-BogusSpec.java:209: Error: a final field is not allowed as the designator in a modifies clause
+BogusSpec.java:209: Caution: a final field is not allowed as the designator in a modifies clause
   //@ modifies a, a.length, a[4], a[*]
                ^
 BogusSpec.java:209: Error: Invalid designator
   //@ modifies a, a.length, a[4], a[*]
                     ^
-BogusSpec.java:213: Error: a final field is not allowed as the designator in a modifies clause
+BogusSpec.java:213: Caution: a final field is not allowed as the designator in a modifies clause
   //@ modifies b, f.x;
                ^
-BogusSpec.java:213: Error: a final field is not allowed as the designator in a modifies clause
+BogusSpec.java:213: Caution: a final field is not allowed as the designator in a modifies clause
   //@ modifies b, f.x;
                     ^
-BogusSpec.java:222: Error: a final field is not allowed as the designator in a modifies clause
+BogusSpec.java:222: Caution: a final field is not allowed as the designator in a modifies clause
   //@ also_modifies this.xx;
                          ^
-BogusSpec.java:223: Error: a final field is not allowed as the designator in a modifies clause
+BogusSpec.java:223: Caution: a final field is not allowed as the designator in a modifies clause
   //@ also_modifies x, y, b;
                     ^
-BogusSpec.java:223: Error: a final field is not allowed as the designator in a modifies clause
+BogusSpec.java:223: Caution: a final field is not allowed as the designator in a modifies clause
   //@ also_modifies x, y, b;
                           ^
-BogusSpec.java:224: Error: a final field is not allowed as the designator in a modifies clause
+BogusSpec.java:224: Caution: a final field is not allowed as the designator in a modifies clause
   //@ also_modifies bb;
                     ^
 BogusSpec.java:225: Caution: JML requires a specification to begin with 'also' when the method overrides other methods
@@ -1044,23 +1040,23 @@ BogusSpec.java:225: Caution: JML requires a specification to begin with 'also' w
 BogusSpec.java:210: Associated declaration: 
   void m() {
   ^
-BogusSpec.java:228: Error: a final field is not allowed as the designator in a modifies clause
+BogusSpec.java:228: Caution: a final field is not allowed as the designator in a modifies clause
   //@ also modifies this.xx;
                          ^
-BogusSpec.java:229: Error: a final field is not allowed as the designator in a modifies clause
+BogusSpec.java:229: Caution: a final field is not allowed as the designator in a modifies clause
   //@ modifies x, y, b;
                ^
-BogusSpec.java:229: Error: a final field is not allowed as the designator in a modifies clause
+BogusSpec.java:229: Caution: a final field is not allowed as the designator in a modifies clause
   //@ modifies x, y, b;
                      ^
-BogusSpec.java:230: Error: a final field is not allowed as the designator in a modifies clause
+BogusSpec.java:230: Caution: a final field is not allowed as the designator in a modifies clause
   //@ modifies bb;
                ^
 BogusSpec.java:228: Caution: No initial also expected since there are no overridden or refined methods
   //@ also modifies this.xx;
       ^
-8 cautions
-116 errors
+24 cautions
+98 errors
 BogusVisibility.java:150: Error: Original ESC/Java keywords beginning with also_ are obsolete; they have been replaced with the corresponding JML keywords and the use of 'also' - note that the semantics has also changed.
   //@ also_ensures privSub == pack && prot == publ;
       ^
@@ -1182,12 +1178,6 @@ BogusVisibility.java:125: Error: A private field can be used in postconditions o
   //@ ensures priv == pack && prot == publ;
               ^
 Caution: Turning off extended static checking due to type error(s)
-BogusVisibility.java:152: Error: Undefined variable 'spub0'
-  //@ also_ensures spub0 == spub4;
-                   ^
-BogusVisibility.java:157: Error: Undefined variable 'spub0'
-  //@ ensures spub0 == spub4;
-              ^
 BogusVisibility.java:155: Caution: No initial also expected since there are no overridden or refined methods
   //@ also ensures privSub == pack && prot == publ;
       ^
@@ -1249,7 +1239,7 @@ BogusVisibility.java:212: Error: Cannot access this field
         int y = x.spub0;    // Error: spec_public only applies to anno ...
                   ^
 11 cautions
-49 errors
+47 errors
 BogusModifiers.java:23: Error: Modifier 'native' not allowed on field declarations
   abstract native int xx = 0;
                       ^

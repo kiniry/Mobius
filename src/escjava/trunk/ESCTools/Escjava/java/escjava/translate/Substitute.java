@@ -342,10 +342,14 @@ public class Substitute {
 	  }
 	  result = MethodInvocation.make(me.od, me.id, me.tmodifiers, me.locId, 
 			me.locOpenParen, args);
+	} else if (e instanceof NewArrayExpr) {
+	  NewArrayExpr me = (NewArrayExpr)e;
+	  ArrayInit init = me.init;
+	  // FIXME - need substitution
+	  //Expr init = doSubst(subst, me.init, rhsVars);
+	  result = NewArrayExpr.make(me.type,me.dims,init,
+			me.loc,me.locOpenBrackets);
 	} else if (e instanceof NewInstanceExpr) {
-	  if (escjava.Main.options().stages == 6)
-	      ErrorSet.fatal(e.getStartLoc(),
-		"new expressions are not implemented by the static checker");
 	  NewInstanceExpr me = (NewInstanceExpr)e;
 	  ExprVec args = ExprVec.make(me.args.size());
 	  for (int i = 0; i< me.args.size(); ++i) {

@@ -2001,7 +2001,7 @@ FIXME - see uses of countFreeVarsAccess
 					// The expression is not a designator
 					// but we allow an informal predicate
                                 ErrorSet.error(emp.expr.getStartLoc(),
-                                               "Not a specification designator expression " + TagConstants.toString(emp.expr.getTag()) + " " + TagConstants.toString(TagConstants.FIELDACCESS) );
+                                               "Not a specification designator expression");
 			    } else {
 			       emp.expr = null;
 			    }

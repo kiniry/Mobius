@@ -193,6 +193,9 @@ public final class GetSpec {
 	    return;
 
 	for (int i = 0; i < rd.pmodifiers.size(); i++) {
+	  // We omit pragmas that have something notimplemented, but carry on 
+	  // with the rest
+	  try {
 	    ModifierPragma mp = rd.pmodifiers.elementAt(i);
 	    switch (mp.getTag()) {
                 case TagConstants.REQUIRES:
@@ -255,6 +258,9 @@ public final class GetSpec {
                 default:
                     break;
 	    }
+	  } catch (NotImplementedException e) {
+		// Error message already printed
+	  }
 	}
     }
 
@@ -703,21 +709,15 @@ premap generated from the uses of \old in the body of the method + the spec of t
                 map = null;
             }
             for (int i = 0; i < dmd.ensures.size(); i++) {
+	      try {
                 ExprModifierPragma prag = dmd.ensures.elementAt(i);
                 Expr pred = TrAnExpr.trSpecExpr(prag.expr, map, wt);
                 pred = GC.implies(ante, pred);
 		int tag = prag.errorTag == 0 ? TagConstants.CHKPOSTCONDITION : prag.errorTag;
                 Condition cond = GC.condition(tag, pred, prag.getStartLoc());
                 post.addElement(cond);
+	      } catch (NotImplementedException e) {}
             }
-/* This is handled by desugaring now
-            if (dmd.nonnull != null) {
-                Expr pred = GC.nary(TagConstants.REFNE, GC.resultvar, GC.nulllit);
-                Condition cond = GC.condition(TagConstants.CHKNONNULLRESULT,
-                                              pred, dmd.nonnull.getStartLoc());
-                post.addElement(cond);
-            }
-*/
         }
 /*
 System.out.println("WT");
@@ -735,6 +735,7 @@ while (ee.hasMoreElements()) {
             Expr typeofXRES = GC.nary(TagConstants.TYPEOF, GC.xresultvar);
 
             for (int i = 0; i < dmd.exsures.size(); i++) {
+	      try {
                 // Pragma has the form:  exsures (T v) E
                 VarExprModifierPragma prag = dmd.exsures.elementAt(i);
                 // TrSpecExpr[[ E, {v-->XRES}, wt ]]
@@ -756,6 +757,7 @@ while (ee.hasMoreElements()) {
                 Condition cond = GC.condition(TagConstants.CHKPOSTCONDITION,
                                               pred, prag.getStartLoc());
                 post.addElement(cond);
+	      } catch (NotImplementedException e) {}
             }
         }
 

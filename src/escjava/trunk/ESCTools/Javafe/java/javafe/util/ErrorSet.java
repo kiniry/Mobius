@@ -256,6 +256,13 @@ public class ErrorSet
 	throw new FatalError();
     }    //@ nowarn Exception
 
+    /** Special call to report unimplemented features, so they can be caught
+	and handled more easily.
+    */
+    public static void notImplemented(boolean print, int loc, String msg) {
+	if (print) report(loc, "Not implemented", msg);
+	throw new NotImplementedException(msg);
+    }
 
     /***************************************************
      *                                                 *
@@ -282,13 +289,21 @@ public class ErrorSet
      * This function is not responsible for incrementing counts or
      * other ErrorSet functionality.<p>
      */
-    private static void report(String type, String msg) {
+    private static void report(/*@ non_null */ String type, /*@ non_null */ String msg) {
 	if (! gag)
-	    System.out.println(type + ": " + msg);
+	    report(type + ": " + msg);
 
         // Hack so we can see where error occurred, for debugging:
 	if (javafe.Tool.options.showErrorLocation) dump(null);
 	
+    }
+
+    /**
+     *  Reports a general message, implemented here in order to
+     *  have a single location through which error reporting happens.
+     */
+    public static void report(/*@non_null*/ String msg) {
+	System.out.println(msg);
     }
 
 
