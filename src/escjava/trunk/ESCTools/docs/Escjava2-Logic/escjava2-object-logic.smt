@@ -7,129 +7,154 @@
             (design document ESCJ8a)"
 
   :sorts ( # sort that represents *values* of Java's boolean base type
-           booleanValue
-           # sort that represents *values* of all Java's base types but boolean
-           numberValue
+           Boolean
+           # sort that represents *values* of all Java's base types but Boolean
+           Number
            # sort that represents all Java non-base types
-           objectType
+           ReferenceType
            # ... represents object references
-           objectRef
+           Reference
            # ... represents object values
-           objectValue
-           # field names
-           field
-           # 
-           memory )
+           Object
+           # Boolean, Number, Object fields
+           BooleanField
+           NumberField
+           ReferenceField
+           # ... represents the heap
+           Memory )
 
-  :funs ( (java.lang.Object objectType)
-          (0       number)
-          (1       number)
-          (maxLong  number)  (minLong  number)
-          (maxInt   number)  (minInt   number)
-          (maxShort number)  (minShort number)
-          (maxByte  number)  (minByte  number)
-          (maxChar  number)  (minChar  number)
+  # If we had subsorts, we would probably like to introduce the following:
+  #   Time < Number
+  #   Array < Object
+  #   Boolean, Number, Reference < JavaType
 
-          (TRUE     boolean) (FALSE   boolean)
+  :funs ( # The heap.
+          (HEAP    Memory)
+          
+          # Top of the object hierarchy.
+          (java.lang.Object ReferenceType)
+          
+          (0       Number)
+          (1       Number)
+          
+          (java.lang.Long.MAX_VALUE  Number)  (java.lang.Long.MIN_VALUE  Number)
+          (maxInt   Number)                   (minInt   Number)
+          (maxShort Number)                   (minShort Number)
+          (maxByte  Number)                   (minByte  Number)
+          (maxChar  Number)                   (minChar  Number)
 
-          (narrowLong2Int number number)
-          (narrowLong2Short number number)
+          (java.lang.Boolean.TRUE    Boolean) (java.lang.Boolean.FALSE   Boolean)
+
+          (narrowLong2Int   Number Number)
+          (narrowLong2Short Number Number)
           ...etc...
 
-          (NULL     objectRef)
-          (+        number number number)
-          (-        number number number)
+          (NULL     Reference)
+          (+        Number Number Number)
+          (-        Number Number Number)
           ...etc...
 
-          (!        boolean boolean)
-          (&&       boolean boolean boolean)
-          (||       boolean boolean boolean)
+          (!        Boolean Boolean)
+          (&&       Boolean Boolean Boolean)
+          (||       Boolean Boolean Boolean)
           ...etc...
 
-          (?:number      boolean number number)
-          (?:boolean     boolean boolean boolean)
-          (?:object boolean objectRef objectRef)
-          (?:objectArray boolean objectArray objectArray)
+          # Java ternary ?: operator
+          (?:Boolean     Boolean Boolean   Boolean)
+          (?:Number      Boolean Number    Number)
+          (?:Object      Boolean Reference Reference)
 
-          (arrayBoolean  objectType)
-          (arrayNumber   objectType)
-          (arrayObject   objectType objectType)
+          # array type constructors
+          (arrayBoolean   ReferenceType)
+          (arrayNumber    ReferenceType)
+          (arrayReference ReferenceType ReferenceType)
+          
+          # \elementtype of object array
+          (elementReferenceType ReferenceType ReferenceType)
 
-          (elementTypeObject objectType objectType)
+          # dynamic type of a reference
+          (typeOf Reference ReferenceType)
 
-          (typeOf objectRef objectType)
-          (cast objectRef objectType objectRef)
+          # Java typecast
+          (cast   Reference ReferenceType Reference)
 
-          # 
-          (getNumber objectValue numberValue numberValue)
-          (setNumber objectValue numberValue numberValue objectValue)
-          #
-          (getBoolean objectValue numberValue booleanValue)
-          (setBoolean objectValue numberValue booleanValue objectValue)
-          #
-          (getObject objectValue numberValue objectRef)
-          (setObject objectValue numberValue objectRef objectValue)
+          # TODO: perhaps rename getX and xGet
+          
+          # Get/set a value from/at a specific index in an array of numbers.
+          (getNumber Object Number Number)
+          (setNumber Object Number Number Object)
+          # Get/set a value from/at a specific index in an array of booleans.
+          (getBoolean Object Number Boolean)
+          (setBoolean Object Number Boolean Object)
+          # Get/set a value from/at a specific index in an array of objects.
+          (getObject Object Number Reference)
+          (setObject Object Number Reference Object)
 
-          #
-          (getMem memory objectRef objectValue)
-          (setMem memory objectRef objectValue memory)
+          # Get/set objects in the memory (heap).
+          (memGet Memory Reference Object)
+          (memSet Memory Reference Object Memory)
 
-          #
-          (selectObject field objectValue objectRef)
-          (storeObject field objectValue objectRef field)
+          # Get/set boolean fields of objects.
+          (boolSelect   BooleanField Object Boolean)
+          (boolStore    BooleanField Object Boolean BooleanField)
+          # Get/set number fields of objects.
+          (numberSelect NumberField Object Number)
+          (numberStore  NumberField Object Number NumberField)
+          # Get/set object fields of objects.
+          (referenceSelect ReferenceField Object Reference)
+          (referenceStore  ReferenceField Object Reference ReferenceField)
 
-          (selectNumber field objectValue numberValue)
-          (storeNumber field objectValue numberValue field)
+          # Allocation time of a reference.
+          (vAllocTime  Reference Number :injective)
 
-          (selectBool field objectValue booleanValue)
-          (storeBool field objectValue booleanValue field)
+          # Closure of allocation over objects and arrays.
+          (fClosedTime ReferenceField Number)
+          (eClosedTime Memory Number)
 
-          (selectClassObject field objectType objectRef)
-          (storeClassObject field objectType objectRef field)
-
-          (selectClassNumber field objectType numberValue)
-          (storeClassNumber field objectType numberValue field)
-
-          (selectClassBool field objectType booleanValue)
-          (storeClassBool field objectType booleanValue field)
-
-          (vAllocTime objectRef numberValue)
+          # Array length as a first-order construct.
+          (arrayLength Reference Number)
          )
 
-  :preds ( (isChar number)
-           (isByte number)
-           (isShort number)
-           (isInt number)
-           (isLong number)
-           (isZ number)
-           (isFloat number)
-           (isDouble number)
+  :preds ( # Java type predicates on numbers
+           (isChar   Number)
+           (isByte   Number)
+           (isShort  Number)
+           (isInt    Number)
+           (isLong   Number)
+           (isFloat  Number)
+           (isDouble Number)
+           
+           # type predicate for mathematical integers
+           (isZ      Number)
 
-           (extends objectType objectType)
-           (<:      objectType objectType :reflex :trans)
+           # Java class and interface inheritance ("extends" and "implements", but
+           # only smallest "implements" of a class, not inherited implements)
+           (extends ReferenceType ReferenceType)
+           # Java subtyping
+           (<:      ReferenceType ReferenceType :reflex :trans)
            
            # Cesare says these are built-in, since they are 
            # not easily axiomatized.
-           (< number number)
-           (<= number number)
+           (<  Number Number)
+           (<= Number Number)
            ...etc...
 
+           # is-a predicate.  Corresponds to the static type of a Java reference.
+           (isa Reference ReferenceType)
 
-           # "is a" predicate
-           (isa objectRef objectType)
+           # abstract classes and interfaces are not instantiable in Java
+           (instantiable ReferenceType)
 
-           # 
-           (instantiable objectType)
+           # Is the referenced object allocated at the specified time?
+           (isAllocated Reference Number)
 
-           #
-           (isAllocated objectRef)
+           # Allocation of array elements.
+           (arrayFresh Reference Memory Number )
       )
-           
 
   :extensions ()
 
-  :definition "Unlike the logic in ESCJ8a, this is a 
-    many-sorted logic.
+  :definition "Unlike the logic in ESCJ8a, this is a many-sorted logic.
     Additionally, this is a prover-independent logic.  We only
     assume that the prover provides:
       o a theory of rational arithemetic
@@ -138,53 +163,53 @@
         equality is defined"
 
   :axioms ( # extends is antireflexive
-            (forall ?x objectType (not (extends ?x ?x)) )
+            (forall ?x ReferenceType (not (extends ?x ?x)) )
             # subtype includes extends
-            (forall ?x objectType
-               (forall ?y objectType
+            (forall ?x ReferenceType
+               (forall ?y ReferenceType
                   (implies (extends ?x ?y) (<: ?x ?y))))
             # subtype transitivity
-            (forall ?x objectType
-               (forall ?y objectType
-                  (forall ?z objectType
+            (forall ?x ReferenceType
+               (forall ?y ReferenceType
+                  (forall ?z ReferenceType
                      (implies (and (<: ?x ?y)
                                    (<: ?y ?z))
                               (<: ?x ?z)))))
             # subtype reflexivity
-            (forall ?x objectType (<: ?x ?x))
+            (forall ?x ReferenceType (<: ?x ?x))
             # subtype is the smallest relation that contains extends
-            (forall ?x objectType
-               (forall ?y objectType
+            (forall ?x ReferenceType
+               (forall ?y ReferenceType
                   (implies (and (<: ?x ?y)
                                 (not (= ?x ?y)))
-                           (exists ?z objectType
+                           (exists ?z ReferenceType
                               (and (extends ?x ?z)
                                    (<: ?z ?y))))))
 
             # <: is anti-symmetric
-            (forall ?x objectType
-               (forall ?y objectType
+            (forall ?x ReferenceType
+               (forall ?y ReferenceType
                  (implies (and (<: ?x ?y) (<: ?y ?x))
                           (= (?x ?y)))))
 
             # java.lang.Object is top of subtype hierarchy
-            (forall ?x objectType (<: ?x java.lang.Object))
+            (forall ?x ReferenceType (<: ?x java.lang.Object))
 
             # subtype rules for arrays
-            (forall ?x objectType
-               (forall ?y objectType
+            (forall ?x ReferenceType
+               (forall ?y ReferenceType
                  (implies (<: ?x ?y)
                           (<: (array ?x) (array ?y)))))
 
-            # left inverses of object constructors
-            (forall ?x objectType
-               (= (elementTypeObject (arrayObject ?x))
+            # left inverses of Object constructors
+            (forall ?x ReferenceType
+               (= (elementReferenceType (arrayObject ?x))
                   ?x))
 
             # integral type boundaries
             (= minByte -128)
             (= maxByte 127)
-            (forall ?x numberValue
+            (forall ?x Number
                (iff (isByte ?x) (and (<= minByte ?x)
                                      (<= ?x maxByte))))
             ...
@@ -192,31 +217,30 @@
             # define an approximation of Z
             (isZ 0)
             (isZ 1)
-            (forall ?x number
+            (forall ?x Number
               (iff (isZ ?x) (isZ (+ ?x 1))))
-            (forall ?x number
+            (forall ?x Number
               (implies (isZ ?x)
-                (forall ?y number
+                (forall ?y Number
                   (implies (and (< ?x ?y)
                                 (< ?y (+ ?x 1)))
                            (not (isZ ?y))))))
 
-         
-            # all object reference are NULL or have a unique dynamic subtype
-            (forall ?x objectRef
-              (forall ?t objectType 
+            # all Object Reference are NULL or have a unique dynamic subtype
+            (forall ?x Reference
+              (forall ?t ReferenceType 
                 (iff (isa ?x ?t)
                      (or (= ?x NULL)
                          (typeOf ?x ?t)))))
 
             # definition of cast
-            (forall ?x objectRef
-              (forall ?t objectType 
+            (forall ?x Reference
+              (forall ?t ReferenceType 
                 (isa (cast ?x ?t) ?t)))
 
             # upcasting a value does not change it
-            (forall ?x objectRef
-              (forall ?t objectType 
+            (forall ?x Reference
+              (forall ?t ReferenceType 
                 (implies (isa ?x ?t)
                          (= (cast ?x ?t) ?x))))
 
@@ -224,91 +248,123 @@
             # TRUE and FALSE are distinct values
             (distinct TRUE FALSE)
 
-	    # TRUE and FALSE are the only boolean values
-            (forall ?x boolean (or (= ?x TRUE)
+	    # TRUE and FALSE are the only Boolean values
+            (forall ?x Boolean (or (= ?x TRUE)
                                    (= ?x FALSE)))
 
-            # definition of boolean operators
+            # definition of Boolean operators
             ...
 
 	    # definition of instantiable type
             (instantiable arrayBoolean)
             (instantiable arrayNumber)
             (instantiable java.lang.Object)
-            (forall ?x objectRef (instantiable (typeOf ?x)))
-            (forall ?x objectType (iff (instantiable ?x)
+            (forall ?x Reference (instantiable (typeOf ?x)))
+            (forall ?x ReferenceType (iff (instantiable ?x)
                                        (instantiable (arrayObject ?x))))
             # to be checked
-            (forall ?x objectType
-              (forall ?y objectType 
+            (forall ?x ReferenceType
+              (forall ?y ReferenceType 
                 (implies (and (subtype ?x ?y)
                               (instantiable ?x))
                          (instantiable ?x))))
 
             # for simplicity, get* and set* functions are defined
-            # on all object values, whether they are arrays or not
+            # on all Object values, whether they are arrays or not
 
-            (forall ?a objectValue
-              (for all ?i numberValue 
-                (forall ?x numberValue
+            (forall ?a object
+              (for all ?i Number 
+                (forall ?x Number
                    (= (getNumber (setNumber ?a ?i ?x) ?i) 
                       ?x))))
-             (forall ?a objectValue 
-               (for all ?i numberValue 
-                 (for all ?j numberValue 
-                   (forall ?x numberValue
+             (forall ?a Object 
+               (for all ?i Number 
+                 (for all ?j Number 
+                   (forall ?x Number
                      (or (= ?i ?j)
                          (= (getNumber (setNumber ?a ?i ?x) ?j)
                             (getNumber ?a ?j)))))))
 
-            (forall ?a objectValue
-              (for all ?i numberValue 
-                (forall ?x booleanValue
+            (forall ?a object
+              (for all ?i Number 
+                (forall ?x Boolean
                   (= (getBoolean (setBoolean ?a ?i ?x) ?i) 
                      ?x))))
-            (forall ?a objectValue 
-              (for all ?i numberValue 
-                (for all ?j numberValue 
-                  (forall ?x booleanValue
+            (forall ?a Object 
+              (for all ?i Number 
+                (for all ?j Number 
+                  (forall ?x Boolean
                     (or (= ?i ?j)
                         (= (getBoolean (setBoolean ?a ?i ?x) ?j)
                            (getBoolean ?a ?j))))))
 
-            (forall ?a objectValue
-              (for all ?i numberValue 
-                (forall ?x objectRef
+            (forall ?a object
+              (for all ?i Number 
+                (forall ?x Reference
                   (= (getObject (setObject ?a ?i ?x) ?i) 
                      ?x))))
-            (forall ?a objectValue 
-              (for all ?i numberValue 
-                (for all ?j numberValue 
-                  (forall ?x objectRef
+            (forall ?a Object 
+              (for all ?i Number 
+                (for all ?j Number 
+                  (forall ?x Reference
                     (or (= ?i ?j)
                         (= (getObject (setObject ?a ?i ?x) ?j)
                            (getObject ?a ?j)))))))
 
 
-            (forall ?m memory
-              (for all ?o objectRef 
-                (forall ?x objectValue
-                  (= (getMemory (setMemory ?m ?o ?x) ?o) 
+            (forall ?m Memory
+              (for all ?o Reference 
+                (forall ?x object
+                  (= (memGet (memSet ?m ?o ?x) ?o) 
                      ?x))))
-            (forall ?m memory 
-              (for all ?o1 objectRef 
-                (for all ?o2 objectRef 
-                  (forall ?x objectValue
+            (forall ?m Memory 
+              (for all ?o1 Reference 
+                (for all ?o2 Reference 
+                  (forall ?x object
                     (or (= ?o1 ?o2)
-                        (= (getMemory (setMemory ?m ?o1 ?x) ?o2)
-                           (getMemory ?m ?o2)))))))
+                        (= (memGet (memSet ?m ?o1 ?x) ?o2)
+                           (memGet ?m ?o2)))))))
 
             # axioms for select
             ...
 
-            (forall ?x objectRef
-              (forall ?t numberValue
-                (iff (isAllocated x) (< (vAllocTime x) ?t))))
+            # axioms for vAllocTime
+            # injectivity axiom of vAllocTime
+            (forall ?r1 Reference
+               (forall ?r2 Reference
+                  (implies (= (vAllocTime ?r1) (vAllocTime ?r2))
+                           (= ?r1 ?r2))))
 
+            # definition of isAllocated in terms of vAllocTime
+            (forall ?r Reference
+              (forall ?t Number
+                (iff (isAllocated ?r ?t) (< (vAllocTime ?r ?t) ?t))))
 
+            # definition of fClosedTime.  Intuitively, what we are representing
+            # is that, if an object is allocated, then all of its fields are allocated.
+            (forall ?h Memory
+              (forall ?r Reference
+                 (forall ?f ReferenceField
+                    (forall ?t Number
+                      (implies (and (< (fClosedTime ?f) ?t)
+                                    (isAllocated ?r ?t))
+                               (isAllocated (referenceSelect ?f (memGet ?h ?r)) ?t)))))
+            # and the same axiom applies to arrays and their values
+            (forall ?h Memory
+              (forall ?r Reference
+                 (forall ?i Number
+                    (forall ?t Number
+                      (implies (and (< (eClosedTime ?h) ?t)
+                                    (isAllocated ?r ?t))
+                               (isAllocated (getObject (memGet ?h ?r) ?i) ?t)))))
+
+            # length of arrays
+            (forall ?r Reference
+               (let (length (arrayLength ?r))
+                 (and (<= 0 length)
+                       (isZ length))))
+
+            
   )
 
 end)

@@ -274,8 +274,8 @@ wlp.skip.(N, X, W) == N
 wlp.raise.(N, X, W) == X
 wlp.(assert e).(N, X, W) == (e && N) || (!e && W)
 wlp.(assume e).(N, X, W) == (e ==> N)
-wlp.(var v1 ? vn in S end).(N, X, W) == (ALL v1 ? vn :: wlp.S).(N, X, W))
-                                                                 (* provided v1 ? vn are free in N, X, and W *)
+wlp.(var v1 ... vn in S end).(N, X, W) == (ALL v1 ... vn :: wlp.S).(N, X, W))
+      (* provided v1 ... vn are free in N, X, and W *)
 wlp.(S0 ; S1, ).(N, X, W) == wlp.S0.(wlp.(S1).(N, X, W), X, W)
 wlp.(S0 ! S1, ).(N, X, W) == wlp.S0.(N, wlp.S1.(N, X, W), W)
 wlp.(S0 [] S1).(N, X, W) == wlp.S0.(N, X, W) && wlp.S1.(N, X, W)
@@ -289,8 +289,8 @@ ejp[[ skip, N, X ]] == N
 ejp[[ raise, N, X ]] == X
 ejp[[ assert e, N, X ]] == e && N
 ejp[[ assume e, N, X ]] == (e ==> N)
-ejp[[ var v1 ? vn in S end, N, X ]] == (ALL v1 ? vn :: ejp[[ S, N, X ]])
-                                                             (* provided v1 ? vn are free in N and X *)
+ejp[[ var v1 ... vn in S end, N, X ]] == (ALL v1 ... vn :: ejp[[ S, N, X ]])
+      (* provided v1 ? vn are free in N and X *)
 ejp[[ S0 ; S1, N, X ]] == ejp[[ S0, ejp[[ S1, N, X ]], X ]]
 ejp[[ S0 ! S1, N, X ]] == ejp[[ S0, N, ejp[[ S1, N, X ]] ]]
 ejp[[ S0 [] S1, N, X ]] == ejp[[ S0, N, X ]] && ejp[[ S1, N, X ]]
@@ -301,14 +301,14 @@ Thus, any command composed only of assignment, skip, raise, assert, assume, var,
 
 The semantics of the commands loop and call are more elaborate and are described next.
 2.1Semantics of loop
-The predicate wlp.(loop { inv J1 ? Jn } S end).(N, X, W) is defined as the weakest predicate P that satisfies the equation:
+The predicate wlp.(loop { inv J1 ... Jn } S end).(N, X, W) is defined as the weakest predicate P that satisfies the equation:
 
-    P == wlp.(check J1 ; ? ; check Jn ; S).(P, X, W)
+    P == wlp.(check J1 ; ... ; check Jn ; S).(P, X, W)
 
 Since we don't have a way to compute arbitrary weakest fixpoints, we define the ejp of a loop by desugaring the loop into more primitive guarded commands.
 
-ejp[[ loop { inv J1 ? Jn } S end, N, X ]] ==
-  ejp[[ DesugarLoop[[ loop { inv J1 ? Jn } S end ]], N, X ]]
+ejp[[ loop { inv J1 ... Jn } S end, N, X ]] ==
+  ejp[[ DesugarLoop[[ loop { inv J1 ... Jn } S end ]], N, X ]]
 
 ESC/Java features two ways to desugar loop, selected by a command-line switch:
 
@@ -326,33 +326,33 @@ These satisfy, for any loop Loop, and any N, X, and W,
 
 We now define the two loop desugarings.  The first is defined as follows.
 
-DesugarLoopFast[[ loop { inv J1 ? Jn } S end ]] ==
-  CheckLoopInvariants[[ J1 ? Jn, "Initially", Loc ]] ;
+DesugarLoopFast[[ loop { inv J1 ... Jn } S end ]] ==
+  CheckLoopInvariants[[ J1 ... Jn, "Initially", Loc ]] ;
   S ;
-  CheckLoopInvariants[[ J1 ? Jn, "AfterIteration", Loc ]] ;
+  CheckLoopInvariants[[ J1 ... Jn, "AfterIteration", Loc ]] ;
   fail
 
 where Loc is the source location of the Java loop that gave rise to this loop command, and CheckLoopInvariants is defined as follows:
 
-CheckLoopInvariants[[ J1 ? Jn, suffix, Loc ]] ==
+CheckLoopInvariants[[ J1 ... Jn, suffix, Loc ]] ==
   check Loc, ErrorName[[ J1 ]]suffix, Location[[ J1 ]] :  Predicate[[ J1 ]] ;
-  ? ;
+  ... ;
   check Loc, ErrorName[[ Jn ]]suffix, Location[[ Jn ]] :  Predicate[[ Jn ]]
 
 The other loop desugaring is defined as follows.
 
-DesugarLoopSafe[[ loop { inv J1 ? Jn } S end ]] ==
-      ( CheckLoopInvariants[[ J1 ? Jn, "Initially", Loc ]] ; fail )
+DesugarLoopSafe[[ loop { inv J1 ... Jn } S end ]] ==
+      ( CheckLoopInvariants[[ J1 ... Jn, "Initially", Loc ]] ; fail )
   [] ( Modify[[ NTargets[[ S, {} ]] ]] ;
-        assume Predicate[[ J1 ]] ; ? ; assume Predicate[[ Jn ]] ;
+        assume Predicate[[ J1 ]] ; ... ; assume Predicate[[ Jn ]] ;
         S ;
-        CheckLoopInvariants[[ J1 ? Jn, "AfterIteration", Loc ]] ;
+        CheckLoopInvariants[[ J1 ... Jn, "AfterIteration", Loc ]] ;
         fail )
 
 where Loc is the source location of the Java loop that gave rise to this loop command, and where 
 
-Modify[[ {v1 ? vn} ]] ==
-  modify v1 ; ? ; modify vn
+Modify[[ {v1 ... vn} ]] ==
+  modify v1 ; ... ; modify vn
 
 Modify[[ bottom ]] ==
   fail
@@ -393,9 +393,9 @@ We can do a more precise job for NTargets[[ assume e, V ]], by returning bottom 
 NTargets[[ fail, V ]] ==  bottom
 XTargets[[ fail, V ]] ==  bottom
 
-NTargets[[ var v1 ? vn in C end, V ]] ==  NTargets[[ C, V ]] - {v1, ?, vn}
-XTargets[[ var v1 ? vn in C end, V ]] ==  XTargets[[ C, V ]] - {v1, ?, vn}
-We require that v1 ? vn not be elements of V.
+NTargets[[ var v1 ... vn in C end, V ]] ==  NTargets[[ C, V ]] - {v1, ?, vn}
+XTargets[[ var v1 ... vn in C end, V ]] ==  XTargets[[ C, V ]] - {v1, ?, vn}
+We require that v1 ... vn not be elements of V.
 
 NTargets[[ C0 ; C1, V ]] ==  NTargets[[ C0, NTargets[[ C1, V ]] ]] 
 XTargets[[ C0 ; C1, V ]] ==  XTargets[[ C0, V ]] ? NTargets[[ C0, XTargets[[ C1, V ]] ]]
@@ -406,15 +406,19 @@ XTargets[[ C0 ! C1, V ]] ==  XTargets[[ C0, XTargets[[ C1, V ]] ]]
 NTargets[[ C0 [] C1, V ]] ==  NTargets[[ C0, V ]] ? NTargets[[ C1, V ]]
 XTargets[[ C0 [] C1, V ]] ==  XTargets[[ C0, V ]] ? XTargets[[ C1, V ]]
 
-NTargets[[ loop { inv J1 ? Jn} C end, V ]] ==  bottom
-XTargets[[ loop { inv J1 ? Jn} C end, V ]] ==  NTargets[[ C, XTargets[[ C, V ]] ]] ? XTargets[[ C, V ]]
+NTargets[[ loop { inv J1 ... Jn} C end, V ]] ==  bottom
+XTargets[[ loop { inv J1 ... Jn} C end, V ]] ==  NTargets[[ C, XTargets[[ C, V ]] ]] ? XTargets[[ C, V ]]
 
-NTargets[[ call m(e1 ? en), V ]] == V ? Domain[[ wt ]]
-XTargets[[ call m(e1 ? en), V ]] == V ? Domain[[ wt ]]
+NTargets[[ call m(e1 ... en), V ]] == V ? Domain[[ wt ]]
+XTargets[[ call m(e1 ... en), V ]] == V ? Domain[[ wt ]]
 
-where wt is the whole-targets map in the whole-targets clause of the method specification returned by GetSpecForCall[[ m, Sc ]], where Sc is the current scope (see below for all of these definitions).
+where wt is the whole-targets map in the whole-targets clause of the
+method specification returned by GetSpecForCall[[ m, Sc ]], where Sc
+is the current scope (see below for all of these definitions).
 
-Note.  A simpler definition of NTargets that seems good enough for the first cut of ESC/Java is the following.  Note that there is then no need for the XTargets function or the bottom value.
+Note.  A simpler definition of NTargets that seems good enough for the
+first cut of ESC/Java is the following.  Note that there is then no
+need for the XTargets function or the bottom value.
 
 NTargets[[ S, V ]] == SimpleTargets[[ S ]] ? V
 
@@ -425,47 +429,55 @@ SimpleTargets[[ skip ]] ==  {}
 SimpleTargets[[ raise ]] ==  {}
 SimpleTargets[[ assume e ]] ==  {}
 SimpleTargets[[ fail ]] ==  {}
-SimpleTargets[[ var v1 ? vn in C end ]] ==  SimpleTargets[[ C ]] - {v1, ?, vn}
+SimpleTargets[[ var v1 ... vn in C end ]] ==  SimpleTargets[[ C ]] - {v1, ?, vn}
 SimpleTargets[[ C0 ; C1 ]] ==  SimpleTargets[[ C0 ]] ? SimpleTargets[[ C1 ]]
 SimpleTargets[[ C0 ! C1 ]] ==  SimpleTargets[[ C0 ]] ? SimpleTargets[[ C1 ]]
 SimpleTargets[[ C0 [] C1 ]] ==  SimpleTargets[[ C0 ]] ? SimpleTargets[[ C1 ]]
 SimpleTargets[[ C0 ; C1 ]] ==  SimpleTargets[[ C0 ]] ? SimpleTargets[[ C1 ]]
-SimpleTargets[[ loop { inv J1 ? Jn} C end ]] == SimpleTargets[[ C ]]
-SimpleTargets[[ call m(e1 ? en) ]] == Domain[[ wt ]]
+SimpleTargets[[ loop { inv J1 ... Jn} C end ]] == SimpleTargets[[ C ]]
+SimpleTargets[[ call m(e1 ... en) ]] == Domain[[ wt ]]
 
 where wt is as described above.
-2.2Semantics of call
-The semantics of call m(e1 ? en) depends on the method specification associated with m in the scope where the call appears.  A scope is the set of declarations visible from a given class (or interface).  To describe the semantics of call, we will in this section describe the abstract syntax of a method specification and the desugaring of a call command into more primitive commands.  Later in this document (section 7), we describe how the method specification is computed in a given scope.
+2.2 Semantics of call
+
+The semantics of call m(e1 ... en) depends on the method specification
+associated with m in the scope where the call appears.  A scope is the
+set of declarations visible from a given class (or interface).  To
+describe the semantics of call, we will in this section describe the
+abstract syntax of a method specification and the desugaring of a call
+command into more primitive commands.  Later in this document (section
+7), we describe how the method specification is computed in a given
+scope.
 
 A method specification has the form:
 
-spec T m(p1 ? pn) throws {X1 ? Xx}
-precondition P1 ? precondition Pj
-targets D1 ? Dk
+spec T m(p1 ... pn) throws {X1 ... Xx}
+precondition P1 ... precondition Pj
+targets D1 ... Dk
 whole-targets wt
-postcondition Q1 ? postcondition Qm
+postcondition Q1 ... postcondition Qm
 
 In this method specification:
 m is a method name.
-p1 ? pn are formal parameter names, possibly including the special name this.
+p1 ... pn are formal parameter names, possibly including the special name this.
 T is a result type or void.
-P1 ? Pj are conditions whose predicates' free variables are drawn from the top-level program variables (fields, static fields, and special program variables like elems and alloc) and p1 ? pn.  Those conditions whose error name is Free are called free preconditions; the others are called checked preconditions.
-D1 ? Dk are designator expressions (that is, guarded command lhs's) known as target designators.
-wt is a map from variables to variables.  In particular, wt maps the set of variables one gets from "shaving" the target designators D1 ? Dk to similar variables adorning with the suffix @pre (see section 7.2.0).  "Whole targets" refers to the variables in the domain of wt.
-Q1 ? Qm are conditions, the free variables of whose predicates are drawn from the top-level program variables, p1 ? pn, the variables in image of wt, and the special result variables EC, RES, and XRES. Those conditions whose error name is Free are called free postconditions; the others are called checked postconditions.
+P1 ... Pj are conditions whose predicates' free variables are drawn from the top-level program variables (fields, static fields, and special program variables like elems and alloc) and p1 ... pn.  Those conditions whose error name is Free are called free preconditions; the others are called checked preconditions.
+D1 ... Dk are designator expressions (that is, guarded command lhs's) known as target designators.
+wt is a map from variables to variables.  In particular, wt maps the set of variables one gets from "shaving" the target designators D1 ... Dk to similar variables adorning with the suffix @pre (see section 7.2.0).  "Whole targets" refers to the variables in the domain of wt.
+Q1 ... Qm are conditions, the free variables of whose predicates are drawn from the top-level program variables, p1 ... pn, the variables in image of wt, and the special result variables EC, RES, and XRES. Those conditions whose error name is Free are called free postconditions; the others are called checked postconditions.
 
-We consider p1 ? pn and the variables in the image of wt to be bound within the method specification.  All other free variables are either static fields, instance variables, or special variables.  The variables in the image of wt do not occur in the list of target designators, despite the fact that any index expression occurring in a target designator refers to the value of the index expression in the pre-state.
+We consider p1 ... pn and the variables in the image of wt to be bound within the method specification.  All other free variables are either static fields, instance variables, or special variables.  The variables in the image of wt do not occur in the list of target designators, despite the fact that any index expression occurring in a target designator refers to the value of the index expression in the pre-state.
 
-Usually, the formal parameter names p1 ? pn correspond to formal parameters declared by the programmer.  For instance methods, however, p1 is the special variables this and p2 ? pn correspond to the formal parameters declared by the programmer.
+Usually, the formal parameter names p1 ... pn correspond to formal parameters declared by the programmer.  For instance methods, however, p1 is the special variables this and p2 ... pn correspond to the formal parameters declared by the programmer.
 
-All preconditions P1 ? Pj are assumed on entry to implementations, but only the checked preconditions are checked at call sites.  The free preconditions need not be checked at call sites because they are guaranteed by the Java type system and other checking mechanisms (like non_null).  Similarly, all postconditions Q1 ? Qm are assumed after calls, but only the checked postconditions are checked on exit from implementations.  The free postconditions need not be checked on exit from implementations because they are guaranteed by the Java type system and other checking mechanisms.
+All preconditions P1 ... Pj are assumed on entry to implementations, but only the checked preconditions are checked at call sites.  The free preconditions need not be checked at call sites because they are guaranteed by the Java type system and other checking mechanisms (like non_null).  Similarly, all postconditions Q1 ... Qm are assumed after calls, but only the checked postconditions are checked on exit from implementations.  The free postconditions need not be checked on exit from implementations because they are guaranteed by the Java type system and other checking mechanisms.
 
-Given that m is a method name associated in the current scope with the template method specification above, the command call m(e1 ? en) occurring at a location L desugars as follows:
+Given that m is a method name associated in the current scope with the template method specification above, the command call m(e1 ... en) occurring at a location L desugars as follows:
 
-  var p1@L ? pn@L in
-    p1@L = e1 ;  ? ;  pn@L = en ; 
+  var p1@L ... pn@L in
+    p1@L = e1 ;  ... ;  pn@L = en ; 
 
-    check L, P1 ; ? ; check L, Pj ;
+    check L, P1 ; ... ; check L, Pj ;
 Note that the check desugars to skip for free preconditions.
 
     var pt[[ Image[[ wt ]] ]] in
@@ -474,19 +486,19 @@ Note that the check desugars to skip for free preconditions.
 Do we get better performance if instead of this assumption we do the semantically equivalent assignment pt[[ wt[[ w ]] ]] = w ?
       #end
 
-      modify IndexSubst[[ D1, pt ]] ; ? ; modify IndexSubst[[ Dk, pt ]] ; 
+      modify IndexSubst[[ D1, pt ]] ; ... ; modify IndexSubst[[ Dk, pt ]] ; 
       modify EC ; modify RES ; modify XRES ;
 
-      assume pt[[ Predicate[[ Q1 ]] ]] ; ? ; assume pt[[ Predicate[[ Qm ]] ]] ;
+      assume pt[[ Predicate[[ Q1 ]] ]] ; ... ; assume pt[[ Predicate[[ Qm ]] ]] ;
 
-      #if ({X1 ? Xx} is nonempty) 
+      #if ({X1 ... Xx} is nonempty) 
 The reason for producing the following command only conditionally is one of concern for performance:  It would be correct, but we conjecture inefficient, to always emit the following command.
         ( assume EC == ec$return [] assume EC == ec$throw ; raise )
       #end
     end
   end
 
-in which pt is the map {p1 ? p1@L, ?, pn ? pn@L} ? Remap[[ wt, L ]], where
+in which pt is the map {p1 ... p1@L, ?, pn ... pn@L} ... Remap[[ wt, L ]], where
 
 Remap[[ wt, L ]] ==
   #for w in Domain[[ wt ]] do
@@ -551,8 +563,8 @@ Note that the possibility of raising an exception or going wrong does not imply 
 
 The signature of Protect is Protect[[ e, p, V, r ]], where e is a guarded command expression, and p, V, and r are as in the signature of TrExpr.  In a nut shell, Protect sets r to an expression that is equivalent to e, but is insensitive to side effects of the protect expressions in p.  In doing so, it may make use of a temporary variable v, which it adds to V, and generate (i.e., return) a guarded command that assigns the value e to v.
 
-Protect[[ e, {E1 ? En}, V, r ]] ==
-  #if (Clash[[ e, E1 ]] || ? || Clash[[ e, En ]])
+Protect[[ e, {E1 ... En}, V, r ]] ==
+  #if (Clash[[ e, E1 ]] || ... || Clash[[ e, En ]])
     #V = V v ;
     #r = v ;
     v = e ;
@@ -562,7 +574,7 @@ Protect[[ e, {E1 ? En}, V, r ]] ==
 
 An explanation of our notation is in order.  We use assignment statements where the left-hand side begins with a # to denote meta-assignments.  Variables type set in italics denote fresh guarded command variables. Lines that don't begin with # (like the assignment  v = e;  in this example) show a guarded command fragment returned by Protect.
 
-The actual ESC/Java implementation simply uses booleans where we use sets of protect expressions.  Where we have written a set {p1 ? pn} as a protect argument to TrExpr, the implementation passes the boolean Impure[[ p1 ]] || ? || Impure[[ pn ]], where Impure[[ pi ]] is defined as described above if pi is a Java expression and as true if pi has the form F=.  Since TrExpr usually passes its protect argument to Protect, the actual ESC/Java implementation uses a boolean for this parameter, too, and implements Protect as follows:
+The actual ESC/Java implementation simply uses booleans where we use sets of protect expressions.  Where we have written a set {p1 ... pn} as a protect argument to TrExpr, the implementation passes the boolean Impure[[ p1 ]] || ... || Impure[[ pn ]], where Impure[[ pi ]] is defined as described above if pi is a Java expression and as true if pi has the form F=.  Since TrExpr usually passes its protect argument to Protect, the actual ESC/Java implementation uses a boolean for this parameter, too, and implements Protect as follows:
 
 Protect[[ e, p, V, r ]] ==
   #if (p && (e mentions any Java non-final local variable, non-final field, elems, or alloc))
@@ -594,10 +606,10 @@ ReadCheck[[ x ]] ==
   #if (x declared with defined_if P)
     check DefinednessViolation :  TrSpecExpr[[ P ]] ;
   #end
-  #if (x declared with the monitored_by expressions MU1 ? MUn where 0 < n)
+  #if (x declared with the monitored_by expressions MU1 ... MUn where 0 < n)
     check SharingViolation :
                (TrSpecExpr[[ MU1 ]] != null && LS[ TrSpecExpr[[ MU1 ]] ]) ||
-               ? ||
+               ... ||
                (TrSpecExpr[[ MUn ]] != null && LS[ TrSpecExpr[[ MUn ]] ]) ;
   #end
 
@@ -630,10 +642,10 @@ ReadCheck[[ F[e] ] ==
   #if (F declared with defined_if P)
     check DefinednessViolation :  TrSpecExpr[[ P, {this ? e}, {} ]] ;
   #end
-  #if (F declared with the monitored and monitored_by expressions MU1 ? MUn where 0 < n)
+  #if (F declared with the monitored and monitored_by expressions MU1 ... MUn where 0 < n)
     check SharingViolation :
                (TrSpecExpr[[ MU1, {this ? e}, {} ]] != null && LS[ TrSpecExpr[[ MU1, {this ? e}, {} ]] ]) ||
-               ? ||
+               ... ||
                (TrSpecExpr[[ MUn, {this ? e}, {} ]] != null && LS[ TrSpecExpr[[ MUn, {this ? e}, {} ]] ]) ;
   #end
 
@@ -682,32 +694,33 @@ TrExpr[[ (E0 ? E1 : E2), p, V, r ]] ==
     Protect[[ term$conditional(e0, e1, e2), p, V, r ]]
   #end
 
-TrExpr[[ newarray T E1 E2 ? En, p, V, r ]] ==
-  #var e1 e2 ? en in
-    TrExpr[[ E1, {E2 ? En}, V, e1 ]] ;
-    TrExpr[[ E2, {E3 ? En}, V, e2 ]] ;
-    ? ;
+TrExpr[[ newarray T E1 E2 ... En, p, V, r ]] ==
+  #var e1 e2 ... en in
+    TrExpr[[ E1, {E2 ... En}, V, e1 ]] ;
+    TrExpr[[ E2, {E3 ... En}, V, e2 ]] ;
+    ... ;
     TrExpr[[ En, {}, V, en ]] ;
     #V = V a alloc´ ;
     assume array$fresh(a, alloc, alloc´, elems,
-                                      shapeMore(e1, shapeMore(e2, ?(shapeOne(en))?)),
-                                      array(array(?(array(T))?)), zero) ;
+                       shapeMore(e1, shapeMore(e2, ... (shapeOne(en)) ...)),
+                       array(array(...(array(T)) ...)), zero) ;
     alloc = alloc´ ;
     #r = a
   #end
 
-The number of applications of array around T in this assumption is n.  The meta variable zero denotes the zero-equivalent value for type T.
+The number of applications of array around T in this assumption is n.
+The meta variable zero denotes the zero-equivalent value for type T.
 
-TrExpr[[ array T E1 E2 ? En, p, V, r ]] ==
-  #var e1 e2 ? en in
-    TrExpr[[ E1, {E2 ? En}, V, e1 ]] ;
-    TrExpr[[ E2, {E3 ? En}, V, e2 ]] ;
-    ? ;
+TrExpr[[ array T E1 E2 ... En, p, V, r ]] ==
+  #var e1 e2 ... en in
+    TrExpr[[ E1, {E2 ... En}, V, e1 ]] ;
+    TrExpr[[ E2, {E3 ... En}, V, e2 ]] ;
+    ... ;
     TrExpr[[ En, {}, V, en ]] ;
     #V = V a alloc´ ;
     assume alloc < vAllocTime(a) && vAllocTime(a) < alloc´ ;
     assume a != null && typeof(a) == array(T) && array$length(a) == n ;
-    assume elems[a][0] == e1 && ? && elems[a][n-1] == en ;
+    assume elems[a][0] == e1 && ... && elems[a][n-1] == en ;
     alloc = alloc´ ;
     #r = a
   #end
@@ -749,11 +762,11 @@ WriteCheck[[ x, e ]] ==
   #if (x declared with non_null)
     check NullAssignmentViolation :  e != null ;
   #end
-  #if (x declared with the monitored_by expressions MU1 ? MUn where 0 < n)
+  #if (x declared with the monitored_by expressions MU1 ... MUn where 0 < n)
     check SharingViolation :
-               (TrSpecExpr[[ MU1 ]] != null || ? || TrSpecExpr[[ MUn ]] != null) &&
+               (TrSpecExpr[[ MU1 ]] != null || ... || TrSpecExpr[[ MUn ]] != null) &&
                (TrSpecExpr[[ MU1 ]] == null || LS[TrSpecExpr[[ MU1 ]] ] ) &&
-               ? &&
+               ... &&
                (TrSpecExpr[[ MUn ]] == null || LS[TrSpecExpr[[ MUn ]] ] ) ;
   #end
 
@@ -805,13 +818,13 @@ WriteCheck[[ F[e0], e1 ]] ==
   #if (F declared with non_null)
     check NullAssignmentViolation :  e1 != null ;
   #end
-  #if (F declared with the monitored and monitored_by expressions MU1 ? MUn where 0 < n)
+  #if (F declared with the monitored and monitored_by expressions MU1 ... MUn where 0 < n)
     check SharingViolation :
-              (TrSpecExpr[[ MU1, {this ? e0}, {} ]] != null || ? || TrSpecExpr[[ MUn, {this ? e0}, {} ]] != null)
+              (TrSpecExpr[[ MU1, {this ... e0}, {} ]] != null || ... || TrSpecExpr[[ MUn, {this ... e0}, {} ]] != null)
               &&
-              (TrSpecExpr[[ MU1, {this ? e0}, {} ]] == null || LS[ TrSpecExpr[[ MU1, {this ? e0}, {} ]] ]) &&
-              ? &&
-              (TrSpecExpr[[ MUn, {this ? e0}, {} ]] == null || LS[ TrSpecExpr[[ MUn, {this ? e0}, {} ]] ]) ;
+              (TrSpecExpr[[ MU1, {this ... e0}, {} ]] == null || LS[ TrSpecExpr[[ MU1, {this ... e0}, {} ]] ]) &&
+              ... &&
+              (TrSpecExpr[[ MUn, {this ... e0}, {} ]] == null || LS[ TrSpecExpr[[ MUn, {this ... e0}, {} ]] ]) ;
   #end
 
 TrExpr[[ E0.F binOp = E1, p, V, r ]] ==
@@ -911,44 +924,44 @@ We treat this simply as a constructor invocation.
 
 The translation of a method invocation or constructor invocation emits a code fragment containing a call command.
 
-TrExpr[[ m (E1 E2 ? En), p, V, r ]] ==
-  #var e1 ? en in
-    TrExpr[[ E1, {E2 ? En}, V, e1 ]] ; ? ; TrExpr[[ En, {}, V, en ]] ;
-    call m(e1 ? en) ;
+TrExpr[[ m (E1 E2 ... En), p, V, r ]] ==
+  #var e1 ... en in
+    TrExpr[[ E1, {E2 ... En}, V, e1 ]] ; ... ; TrExpr[[ En, {}, V, en ]] ;
+    call m(e1 ... en) ;
     Protect[[ RES, p, V, r ]]
   #end
 
-TrExpr[[ E0 . m (E1 E2 ? En), p, V, r ]] ==
-  #var e0 ? en in
+TrExpr[[ E0 . m (E1 E2 ... En), p, V, r ]] ==
+  #var e0 ... en in
     #if (m is a static method)
       TrExpr[[ E0, {}, V, e0 ]] ;
     #else
-      TrExpr[[ E0, {E1 ? En}, V, e0 ]] ;
+      TrExpr[[ E0, {E1 ... En}, V, e0 ]] ;
     #end
-    TrExpr[[ E1, {E2 ? En}, V, e1 ]] ; ? ; TrExpr[[ En, {}, V, en ]] ;
+    TrExpr[[ E1, {E2 ... En}, V, e1 ]] ; ... ; TrExpr[[ En, {}, V, en ]] ;
     #if (m is a static method)
-      call m(e1 ? en) ; 
+      call m(e1 ... en) ; 
     #else
-      call m(e0 e1 ? en) ;
+      call m(e0 e1 ... en) ;
     #end
     Protect[[ RES, p, V, r ]]
   #end
 
-TrExpr[[ super . m (E1 E2 ? En) , p, V, r ]] ==
-  #var e1 ? en in
-    TrExpr[[ E1, {E2 ? En}, V, e1 ]] ; ? ; TrExpr[[ En, {}, V, en ]] ;
+TrExpr[[ super . m (E1 E2 ... En) , p, V, r ]] ==
+  #var e1 ... en in
+    TrExpr[[ E1, {E2 ... En}, V, e1 ]] ; ... ; TrExpr[[ En, {}, V, en ]] ;
     #if (m is a static method)
-      call m(e1 ? en) ; 
+      call m(e1 ... en) ; 
     #else
-      call m(this e1 ? en) ;
+      call m(this e1 ... en) ;
     #end
     Protect[[ RES, p, V, r ]]
   #end
 
-TrExpr[[ new T m (E1 E2 ? En), p, V, r ]] ==
-  #var e1 ? en in
-    TrExpr[[ E1, {E2 ? En}, V, e1 ]] ; ? ; TrExpr[[ En, {}, V, en ]] ;
-    call m(e1 ? en) ;
+TrExpr[[ new T m (E1 E2 ... En), p, V, r ]] ==
+  #var e1 ... en in
+    TrExpr[[ E1, {E2 ... En}, V, e1 ]] ; ... ; TrExpr[[ En, {}, V, en ]] ;
+    call m(e1 ... en) ;
     assume typeof(RES) == T ;
     Protect[[ RES, p, V, r ]]
   #end
@@ -1008,12 +1021,12 @@ TrType[[ T ]] ==  /* where T is a primitive type or declared type */
 TrType[[ T[] ]] ==
   array( TrType[[ T ]] )
 
-TrSpecExpr[[ (forall (T1 x1) ? (Tn xn) E), sp, st ]] ==
-  /* where we require the domains of sp and st to be disjoint from {x1, ?, xn} */
+TrSpecExpr[[ (forall (T1 x1) ... (Tn xn) E), sp, st ]] ==
+  /* where we require the domains of sp and st to be disjoint from {x1, ..., xn} */
 We believe our translation never violates this requirement, but it might be worthwhile to include a runtime check in the translator.
-  (forall x1 ? xn :: TypeCorrectAs[[ x1, T1 ]] && ? && TypeCorrectAs[[ xn, Tn ]]
+  (forall x1 ... xn :: TypeCorrectAs[[ x1, T1 ]] && ... && TypeCorrectAs[[ xn, Tn ]]
                                 ==> TrSpecExpr[[ E, sp, st ]] )
-We should also replace occurrences of alloc in TypeCorrectAs[[ x1, T1 ]] && ? && TypeCorrectAs[[ xn, Tn ]] with sp[[ alloc ]].
+We should also replace occurrences of alloc in TypeCorrectAs[[ x1, T1 ]] && ... && TypeCorrectAs[[ xn, Tn ]] with sp[[ alloc ]].
 
 TypeCorrectAs[[ v, T ]] ==
   TypeAndNonnullCorrectAs[[ v, T, false ]]
@@ -1028,12 +1041,12 @@ TypeAndNonnullCorrectAs[[ v, T, isNonNull ]] ==
   #end
 An optimization would be to generate typeof(v) <: T instead of is(v, T) if T is a reference type and isNonNull is true.
 
-TrSpecExpr[[ (exists (T1 x1) ? (Tn xn) E), sp, st ]] ==
-  /* where we require the domains of sp and st to be disjoint from {x1, ?, xn} */
+TrSpecExpr[[ (exists (T1 x1) ... (Tn xn) E), sp, st ]] ==
+  /* where we require the domains of sp and st to be disjoint from {x1, ..., xn} */
 We believe our translation never violates this requirement, but it might be worthwhile to include a runtime check in the translator.
-  (exists x1 ? xn :: TypeCorrectAs[[ x1, T1 ]] && ? && TypeCorrectAs[[ xn, Tn ]]
+  (exists x1 ... xn :: TypeCorrectAs[[ x1, T1 ]] && ... && TypeCorrectAs[[ xn, Tn ]]
                               && TrSpecExpr[[ E, sp, st ]] )
-We should also replace occurrences of alloc in TypeCorrectAs[[ x1, T1 ]] && ? && TypeCorrectAs[[ xn, Tn ]] with sp[[ alloc ]].
+We should also replace occurrences of alloc in TypeCorrectAs[[ x1, T1 ]] && ... && TypeCorrectAs[[ xn, Tn ]] with sp[[ alloc ]].
 
 TrSpecExpr[[ (lblpos L E), sp, st ]] ==
   (lblpos L TrSpecExpr[[ E, sp, st ]] )
