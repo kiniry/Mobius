@@ -4,6 +4,7 @@
 @string{springer        = {Springer}}%{Springer-Verlag}}            %
 
 @string{cav96           = {Computer-Aided Verification (CAV~'96)}}
+@string{cav02           = {Computer-Aided Verification (CAV'02)}}
 @string{tacas00 	= "Tools and Algorithms
                            for the Construction and Analysis of
 		  Systems (TACAS~2000)"}
@@ -355,9 +356,20 @@ YEAR         = 1981}
   booktitle = {On branching verus linear time temporal logic},
   series = "Journal of the ACM",
   volume ="33(1)",
-  pages = "151-178",
+  pages = "151--178",
   year  = "1986",
 }
+
+@article{ErnstCGN01,
+author = "M.D. Ernst and J. Cockrell and W.G. Griswold and D. Notkin",
+title = "Dynamically discovering likely program invariants to support program evolution",
+journal = "IEEE Transactions on Software Engineering",
+volume = 27,
+number = 2,
+year = 2001,
+pages = "1--25"
+}
+
 
 @misc{ESCJavaUrl,
 title        = {{Extended static checking for Java}},
@@ -372,6 +384,14 @@ year = 2000,
 key = {EJ00}
 }
 
+@article{Filliatre01,
+author = "J.-C. Filli{\^a}tre",
+title = "Verification of Non-Functional Programs using Interpretations in Type Theory",
+journal = "Journal of Functional Programming",
+year = 2001,
+note = "To appear"
+}
+
 @inproceedings{FlanaganL01,
 title = {Houdini, an annotation assistant for {ESC/Java}},
 author = {C. Flanagan and K.R.M. Leino},
@@ -383,6 +403,18 @@ number = 2021,
 publisher = springer,
 year = 2001,
 pages = {500--517}
+}
+
+@inproceedings{FlanaganQS02,
+author = "C. Flanagan and S. Qadeer and S.A. Seshia",
+title = "A Modular Checker for Multithreaded Programs",
+booktitle = cav02,
+editor = "E. Brinksma and K.G. Larsen",
+year = 2002,
+pages = "180--194",
+series = lncs,
+number = 2404,
+publisher = springer
 }
 
 @book{Floyd67,
@@ -719,6 +751,13 @@ key       = {LOOP},
 note    = {\texttt{http://www.cs.kun.nl/\homedir bart/LOOP/}}
 }
 
+@MISC{MarchePU02,
+author = "C. March\'e and C. Paulin-Mohring and X. Urbain",
+title = "The {Krakatoa} Tool for {JML/Java} Program Certification",
+note = "Manuscript",
+year = 2002
+}
+
 @inproceedings{McCarthyH69,
 author = "J. McCarthy and P. Hayes",
 title = "Some philosophical problems from the standpoint of artificial
@@ -859,6 +898,17 @@ number = 828
   month =        "jan",
   year =         "1981",
 }
+
+@INPROCEEDINGS{PoetzschHeffterM99a,
+AUTHOR       = "A. Poetzsch-Heffter and P. M{\"u}ller",
+TITLE        = "A Programming Logic for Sequential {Java}", 
+BOOKTITLE    = { Programming Languages and Systems ({ESOP}~'99) },
+EDITOR       = "S.D. Swierstra", 
+PUBLISHER    = springer, 
+SERIES       = LNCS, 
+number       = 1576,
+PAGES        = "162--176",
+YEAR         = "1999"}
 
 @inproceedings{PollBJ00,
     author = "Erik Poll and Joachim {van den} Berg and Bart Jacobs",
