@@ -28,9 +28,7 @@ public class NumberLiteral extends Expression {
 	 * e.g. new  NumberLiteral("12")
 	 */
 	public NumberLiteral(String _literal) {
-		literal = _literal;
-		radix =10;
-		type  = JavaType.JavaINT;
+		this(_literal, 10, JavaType.JavaINT);
 	}
 
 	/**
@@ -39,9 +37,7 @@ public class NumberLiteral extends Expression {
 	 * e.g. new  NumberLiteral("12")
 	 */
 	public NumberLiteral(int _literal) {
-		literal = Integer.toString(_literal);
-		radix =10;
-		type  = JavaType.JavaINT;
+		this(Integer.toString(_literal), 10,JavaType.JavaINT);
 	}
 	
 	/**
