@@ -43,7 +43,11 @@ TEXINFOS =
 #
 TEXIBASE = $(ROOT)
 
-all : clean html postscript pdf
+.PHONY: all clean html postscript pdf info texinfos publish ftp-docs
+.PHONY: docs-for-ftp just-ftp-docs www clean-this cleanlocal clean-classes-this
+.PHONY: distclean-this distclean-local cleanhtmldir
+
+all : html postscript pdf
 
 postscript : $(TEXIBASE).ps
 
@@ -124,7 +128,7 @@ clean: clean-this
 clean-this: cleanlocal
 
 cleanlocal:
-	$(DELTREE) `cat .cvsignore` *.log
+	$(DELTREE) `cat .cvsignore` *.log *~
 
 clean-classes-this: remove-dot-class-files
 

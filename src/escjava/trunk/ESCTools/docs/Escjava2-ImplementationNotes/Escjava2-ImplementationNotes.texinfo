@@ -460,17 +460,20 @@ Cok and Joe Kiniry.  Gary Leavens has provided guidance on the
 semantics and the current and future state of JML.  K. Rustan M. Leino
 has provided advice with respect to the original ESC/Java.
 
-The website for the project is hosted by the Security of Systems group
-at the Katholieke Universiteit Nijmegen in Nijmegen, Netherlands.
-(@url{www.niii.kun.nl/sos/research/escjava}).
+The website for the project through version 2.0a8 was hosted by the
+Security of Systems group at the Katholieke Universiteit Nijmegen in
+Nijmegen, Netherlands.  (@url{www.niii.kun.nl/sos/research/escjava}).
+The project will be hosted at the Department of Computer Science at
+University College Dublin from version 2.0a8 onward.
 
 The work of producing ESC/Java2 stands on the very much more
 considerable effort of the ESC/Java team in conceiving of and
 producing ESC/Java, Simplify and related tools in the first place.
 
-It also is built upon the work in designing JML and providing tools for JML led
-by Gary Leavens at Iowa State University, with contributions from several other
-individuals and groups, as described on the JML web page.
+It also is built upon the work in designing JML and providing tools for
+JML led by Gary Leavens at Iowa State University, with contributions
+from several other individuals and groups, as described on the JML web
+page.
 
 @c ------ section Dependencies and license restrictions --------
 @node  Dependencies, Contacts, Acknowledgements, Introduction
@@ -518,7 +521,7 @@ the grammar and semantics of JML.  JML is available at
 Further information about JML and ESC/Java2 can be obtained from these sources.
 
 @itemize @bullet
-@item The ESC/Java2 website: @uref{www.niii.kun.nl/sos/research/escjava}
+@item The KUN ESC/Java2 website: @uref{www.niii.kun.nl/sos/research/escjava}
 @item The JML web site:  @uref{www.jmlspecs.org}
 @item The JML project on sourceforge: @uref{sourceforge.net/projects/jmlspecs}
 @item The JML interest mailing list on sourceforge: 
@@ -541,10 +544,10 @@ Information about multijava can be obtained from these sources.
 @node Running ESCJava2, Status, Introduction, Top
 @chapter Running ESC/Java2
 
-There are three essential items that you need in order to run
-ESC/Java2: a build of ESC/Java2 itself, an executable for Simplify for
-your platform, and a version of the JML specifications for the Java
-system classes.  These are available together as a single release from the
+There are three essential items that you need in order to run ESC/Java2:
+a build of ESC/Java2 itself, an executable for Simplify for your
+platform, and a version of the JML specifications for the Java system
+classes.  These are available together as a single release from the KUN
 ESC/Java2 website (@url{http://www.cs.kun.nl/sos/research/nl}).
 However, you may want to substitute an alternate version of the JML
 specifications that you generate yourself or you obtain from the JML

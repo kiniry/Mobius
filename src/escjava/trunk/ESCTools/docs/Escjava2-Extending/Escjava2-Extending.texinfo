@@ -1,0 +1,259 @@
+\input texinfo   @c -*-texinfo-*-
+@c %**start of header
+
+@setfilename Escjava2-Extending.info
+@settitle Extending ESC/Java2 $Revision$
+@c Other commands that globally affect the document formatting: 
+@c synindex, footnotestyle
+@afourwide
+@paragraphindent 0
+@c firstparagraphindent 0
+@c %**end of header
+@c =============================================================================
+
+@c =============================================================================
+@c Definitions of new indices for this document
+
+@c =============================================================================
+@c Functions are indexed using the built-in @findex
+@c Predicates are indexed using @pindex
+@defcodeindex p
+@c Constants are indexed using @kindex
+@defcodeindex k
+
+@c Map predicates (pindex) and constants (kindex) the function index.
+
+@syncodeindex p fn
+@syncodeindex k fn
+
+@c =============================================================================
+
+@c =============================================================================
+@c %**summary and copyright
+
+Original version by Joseph Kiniry.  Initially written in early 2004,
+then lost, then rewritten beginning in November, 2004.
+
+Current author and editor: Joseph Kiniry.
+
+This document describes how to extend ESC/Java2.  It describes the
+high-level architecture of the system and how to extend it through a
+series of case studies.
+
+This is edition $Revision$.
+
+This document is a work in progress.  Suggestions and input are always
+welcome.
+
+@copying
+``Extending ESC/Java2'' is licensed under the Creative Commons
+Attribution-NonCommercial-ShareAlike 2.0 license.  See
+@uref{http://creativecommons.org/licenses/by-nc-sa/2.0/}
+
+Copyright @copyright{} 2004 Joseph R. Kiniry and University College
+Dublin.
+
+@quotation
+You are free:
+@itemize
+@item
+to copy, distribute, display, and perform the work
+@item
+to make derivative works
+@end itemize
+
+Under the following conditions:
+@itemize
+@item
+Attribution. You must give the original author credit.
+@item
+Noncommercial. You may not use this work for commercial purposes.
+@item
+Share Alike. If you alter, transform, or build upon this work, you may
+distribute the resulting work only under a license identical to this
+one.
+@end itemize
+
+For any reuse or distribution, you must make clear to others the license
+terms of this work.
+
+Any of these conditions can be waived if you get permission from the
+author.
+
+Your fair use and other rights are in no way affected by the above.
+
+This is a human-readable summary of the Legal Code.
+
+See @uref{http://creativecommons.org/licenses/by-nc-sa/2.0/legalcode}
+@end quotation
+
+@end copying
+
+@c %**end of summary and copyright
+@c =============================================================================
+
+@c =============================================================================
+@c %**title, contents, and copyright
+
+@titlepage
+@title Extending ESC/Java2
+@subtitle Edition $Revision$, November 2004
+@subtitle This document describes how to extend ESC/Java2 version 2.0a8 and later.
+@author Joseph R. Kiniry <kiniry@@acm.org>
+
+@c The following two commands start the copyright page.
+@page
+@vskip 0pt plus 1filll
+@insertcopying
+
+@c To be published by the Nijmegen Institute for Computing and Information
+@c Science at the University of Nijmegen as technical report NIII-R04XX.
+@c See @uref{http://www.cs.kun.nl/research/reports/}
+@end titlepage
+
+@c metadata used in HTML
+@documentdescription
+ESC/Java, ESC/Java2, Java Modeling Language, JML, Extended Static
+Checking, Extended Static Checker, Design by Contract, Java,
+Verification, BISL, Object-oriented Logic, Behavioral Interface
+Specification Language, Extending, Lexer, Parser, Kiniry
+@end documentdescription
+
+@c Output the table of contents at the beginning.
+@contents
+
+@c %**end of title, contents, and copyright
+@c =============================================================================
+
+@c =============================================================================
+@c %**top node and master menu
+
+@c We recommend including the copying permissions here as well as the
+@c segments above.
+@ifnottex
+@node Top, Introduction, (dir), (dir)
+@top Extending ESC/Java2
+
+@insertcopying
+@end ifnottex
+
+This document describes how to extend ESC/Java2.  It describes the
+high-level architecture of the system and how to extend it through a
+series of case studies.
+
+@menu
+* Introduction::                An introduction to this document.
+* ESC/Java2 Architecture::      A summary of the architecture.
+* The ESC/Java2 AST::           The abstract symbol table/tree.
+* Extending the ESC/Java2 Lexer::  Turning bytes into tokens.
+* Extending the ESC/Java2 Parser::  Turning tokens into an AST.
+* Extending the ESC/Java2 Type Checker::  Type checking the AST.
+* Extending the VC Generation Calculus::  Generating verification conditions.
+* Extending the ESC/Java2 Logics::  Axioms about Java and JML.
+* The Theorem Prover Interface::  Adding a new prover.
+* Testing Extensions::          How to test your extension.
+* Copying::                     Your rights and freedoms.
+* Index::                       Complete index.
+@end menu
+
+@c %**end top node and master menu
+@c =============================================================================
+
+@c =============================================================================
+@c %**body
+
+@node Introduction, ESC/Java2 Architecture, Top, Top
+@chapter Introduction
+
+@cindex Introduction
+
+@c =============================================================================
+@node ESC/Java2 Architecture, The ESC/Java2 AST, Introduction, Top
+@chapter ESC/Java2 Architecture
+
+@cindex ESC/Java2 Architecture
+
+@c =============================================================================
+@node The ESC/Java2 AST, Extending the ESC/Java2 Lexer, ESC/Java2 Architecture, Top
+@chapter The ESC/Java2 AST
+
+@cindex The ESC/Java2 AST
+
+@c =============================================================================
+@node Extending the ESC/Java2 Lexer, Extending the ESC/Java2 Parser, The ESC/Java2 AST, Top
+@chapter Extending the ESC/Java2 Lexer
+
+@cindex Extending the ESC/Java2 Lexer
+
+@c =============================================================================
+@node Extending the ESC/Java2 Parser, Extending the ESC/Java2 Type Checker, Extending the ESC/Java2 Lexer, Top
+@chapter Extending the ESC/Java2 Parser
+
+@cindex Extending the ESC/Java2 Parser
+
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@menu
+* The Java Parser::             
+* The Java Modeling Language Parser::  
+@end menu
+
+@node The Java Parser, The Java Modeling Language Parser, Extending the ESC/Java2 Parser, Extending the ESC/Java2 Parser
+@section The Java Parser
+
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node The Java Modeling Language Parser,  , The Java Parser, Extending the ESC/Java2 Parser
+@section The Java Modeling Language Parser
+
+@c =============================================================================
+@node Extending the ESC/Java2 Type Checker, Extending the VC Generation Calculus, Extending the ESC/Java2 Parser, Top
+@chapter Extending the ESC/Java2 Type Checker
+
+@cindex Extending the ESC/Java2 Type Checker
+
+@c =============================================================================
+@node Extending the VC Generation Calculus, Extending the ESC/Java2 Logics, Extending the ESC/Java2 Type Checker, Top
+@chapter Extending the VC Generation Calculus
+
+@cindex Extending the VC Generation Calculus
+
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@section The ESC/Java2 Weakest Precondition Calculus
+
+@c =============================================================================
+@node Extending the ESC/Java2 Logics, The Theorem Prover Interface, Extending the VC Generation Calculus, Top
+@chapter Extending the ESC/Java2 Logics
+
+@cindex Extending the ESC/Java2 Logics
+
+@c =============================================================================
+@node The Theorem Prover Interface, Testing Extensions, Extending the ESC/Java2 Logics, Top
+@chapter The Theorem Prover Interface
+
+@cindex The Theorem Prover Interface
+
+@c =============================================================================
+@node Testing Extensions, Copying, The Theorem Prover Interface, Top
+@chapter Testing Extensions
+
+@cindex Testing Extensions
+
+@c =============================================================================
+@node Copying, Index, Testing Extensions, Top
+@appendix Copying
+
+@cindex Copying
+
+@insertcopying
+
+@c %**end of body
+@c =============================================================================
+
+@c =============================================================================
+@c %**end of document
+
+@node Index,  , Copying, Top
+@unnumbered Index
+
+@printindex cp
+
+@bye
