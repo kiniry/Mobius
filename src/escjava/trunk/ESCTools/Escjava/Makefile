@@ -223,7 +223,7 @@ $(AST_DIR)/GeneratedTags.java: $(ASTGEN) $(ESCJAVA_AST_HIERARCHY)
 	grep -v "//@" GuardedCmd.java > GuardedCmd.tmp; \
 	mv GuardedCmd.tmp GuardedCmd.java)
 
-JAVAC_FLAGS = -classpath $(ESCJAVA_CLASSPATH) \
+JAVAC_FLAGS = -g -classpath $(ESCJAVA_CLASSPATH) \
 	-sourcepath $(SOURCEPATH) \
 	-d $(CLASSDIRECTORY) 
 
@@ -278,7 +278,7 @@ TEST_PARSER_DIR = $(ESCJAVA_TEST)
 all_escjava_parser: compile_escjava_parser test_escjava_parser
 
 compile_escjava_parser:
-	javac -d $(CLASSDIRECTORY) $(PARSER_DIR)/*.java
+	$(JAVAC) $(JAVAC_FLAGS) $(PARSER_DIR)/*.java
 
 clean_escjava_parser:
 	rm -f $(CLASSDIRECTORY)/escjava/parser/*.class
@@ -290,7 +290,7 @@ test_escjava_parser: compile_escjava_parser compile_escjava_parser_test_programs
 		test_lexer test_parser test_parser_idempotence
 
 compile_escjava_parser_test_programs:
-	javac -g -d $(CLASSDIRECTORY) \
+	$(JAVAC) $(JAVAC_FLAGS) \
 		$(PARSER_TEST_DIR)/TestLex.java \
 		$(PARSER_TEST_DIR)/TestEscPragmaParser.java
 
