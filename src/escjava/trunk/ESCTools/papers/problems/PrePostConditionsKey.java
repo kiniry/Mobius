@@ -26,7 +26,7 @@ class PrePostConditionsKey
   }
 
   //@ requires o != null;
-  //@ requires j < Byte.MIN_VALUE && Byte.MAX_VALUE < j;
+  //@ requires j < Byte.MIN_VALUE || Byte.MAX_VALUE < j;
   //@ ensures o != null;
   //@ signals (Exception) false;
   void o(int j) {
@@ -54,8 +54,8 @@ class PrePostConditionsKey
     assert s == StaticPreconditionsKey.s;
   }
   
-  //@ requires o == null;
-  //@ requires b < 0;
+  // requires o == null;
+  // requires b < 0;
   //@ ensures i == 2;
   //@ signals (IllegalArgumentException) (\old(o == null));
   //@ signals (IllegalArgumentException iae) (\old(b < 0) && iae.getMessage().equals("bogus byte"));

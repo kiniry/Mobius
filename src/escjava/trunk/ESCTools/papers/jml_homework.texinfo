@@ -198,6 +198,25 @@ It is assumed that the reader has a basic understanding of the
 following notions: @emph{assertion}, @emph{invariant},
 @emph{specification}, @emph{signature}, @emph{class}, and @emph{type}.
 
+It is also assumed that the reader has a good understanding of Java.
+If you want write a specification of a method written in Java,
+@emph{you have to understand what the method does @strong{and} what it
+is @strong{meant to do}.  You cannot expect to write specifications
+for programs written in a language you do not understand.
+
+When working on these problems, do not attempt to obtain full
+verification completeness at the cost of poor specifications.
+Understanding the limitations of ESC/Java2 and other JML-based tools
+is part of the challenge of writing specifications and performing
+verfications today.
+
+In particular, several classes or methods are reused through several
+problems.  As new constructs are introduced, and as your
+specifications become more rich (and thus, complete), more of your
+code will verify.  You should not expect all of your answers to fully
+verify until you have covered all of the concepts discussed in this
+document.
+
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @menu
 * Assertions::                  Understanding basic assertions.
@@ -389,7 +408,7 @@ is always a true assertion, regardless of the values of @code{p} and
 
 The locations of the assumptions can also vary to some degree.  Many
 cannot, in particular, those having to do with assertions located at
-the very beginning of method bodies cannot be moved any "earlier"
+the very beginning of method bodies cannot be moved any ``earlier''
 because there is no earlier statement.  Moving the assumption
 @emph{outside} of the method body, for example into the @code{main()}
 method, has no effect due to the nature of modular verification, as
@@ -442,6 +461,14 @@ E.g., this method verifies:
     //@@ assert true == false;
   @}
 @end example
+
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node Ghost Variables
+@unnumberedsec Ghost Variables
+
+@cindex Ghost Variables
+
+@c TODO
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @node PrePost, Modifies, Assumptions, Core
@@ -518,14 +545,25 @@ In this example in particular, the method @code{q()} is poorly
 designed due to its dependence on the (static) fields of the seeminly
 unrelated class @code{StaticPreconditions}.
 
-@c Additionally, the more complex a precondition is, the harder it
-@c sometimes is to ensure it is fulfilled.
+Additionally, the more complex a precondition is, the harder it
+sometimes is to ensure it is fulfilled.  This means that potentially
+more state has to be exposed as part of the design of related classes,
+as the client is responsible for ensuring the precondition of a method
+is fulfilled before calling the method.  Consequently, complex
+preconditions place more burdon on the client programmer than simple
+preconditions do.
+
+This balancing act, between the complexity of preconditions and
+robustness of API methods in the face of bogus input, is supremely
+evident in the design of core reusable APIs in the Java platform.
+This topic will be discussed in more detail later in this document.
+@c add xref
 
 @unnumberedsubsec Postconditions
 @cindex Postconditions
 
-@emph{Postconditions} are used to describe how a method should behave.
-If a method's preconditions are fulfilled, then the (normal)
+@emph{Postconditions} are used to describe how a method should/must
+behave.  If a method's preconditions are fulfilled, then the (normal)
 postconditions @emph{must} be true if the method terminates
 normally---that is, does not throw an exception or never terminates,
 perhaps by going into an infinite loop.
@@ -685,15 +723,68 @@ the bogus assertion @code{true == false}.  The reason these methods
 pass is because the verification of methods whose frame axiom is
 @code{assignable \everything;} is incomplete.
 
+The old SRC ESC/Java version 1 did not check frame conditions.  This
+led to very specification bugs that exhibited themselves in the subtle
+behavior of ESC/Java verifying a (sometimes very complex) method very
+quickly.
+
+ESC/Java2 now checks frame conditions, but its checking algorithm is
+not complete.  Thus, as a general rule, one should avoid the use of
+@code{\everything} in frame axioms as much as possible at this point
+in time.
+
 @c checking frame axioms
 @c
 
 @strong{Problem 7.} @anchor{Problem-7} Annotate the code of the
 previous problem with @emph{frame axioms}.  Make your assignable
-clauses as precise as possible, given the body of the methods.  Check
-your frame axioms with ESC/Java2.
+clauses as precise as possible, given the body of the methods.  Make
+sure to write a frame axiom for your @code{s()} method, but do not
+bother with the @code{main(String[])} method.  Check your frame axioms
+with ESC/Java2.
+
+Note that now that frame axioms are specified for all of your methods
+more specifications are verified by ESC/Java2.
 
 @c comments on Key, particularly the method calls of main
+
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node Data Groups
+@unnumberedsec Data Groups
+
+@cindex Data Groups
+
+The concept of a @emph{data group} is a useful one, particularly with
+respect to specifying the frame axioms of a method and structuring
+one's specification, from both from a design and a verification point
+of view.
+
+A data group can be thought of as as collection of fields that all
+relate to each other in some way: perhaps they are the key data values
+of a class, or set of classes; or perhaps they are all interdependent
+due to the design of your architecture.
+
+One uses the @code{in} keyword to specify that a particular field is
+@emph{in} (a part of) a specific data group.  A field can be in many
+data groups, but data groups cannot be nested.  Thus, all of the data
+groups of a system define a collection of (possibly overlapping)
+subsets of all fields.
+
+Data groups are defined explicitly and implicitly, using the
+@code{JMLDataGroup} class in the former case, and using @emph{implicit
+data groups} in the latter.
+
+The main data group that is most frequently used in JML specifications
+is an explicitely predefined data group found in the specification for
+the class @code{java.lang.Object}.  It is called the
+@code{objectState} data group.
+@cindex objectState
+
+
+
+The @code{objectState} data group is only an convenience construct; it
+has no special significance to and of the JML tools.
+
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @node Heavyweight, Invariants, Modifies, Core

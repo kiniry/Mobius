@@ -1,6 +1,6 @@
 class BogusFrameConditions
 {
-  int i;
+  public int i;
 
   public void l() {
     //@ assume i == 0;

@@ -23,7 +23,7 @@ jmlc/problems/%.class: %.java
 	verify \
 	clean
 
-all:	build run verify
+all:	build verify
 
 test:
 	@echo $(javafiles)

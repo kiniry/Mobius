@@ -6,7 +6,7 @@ package problems;
  * @author Joe Kiniry
  */
 
-abstract class AbstractList /* extends Bag? implements Container? */
+abstract class ContractsAbstractList /* extends ContractsBag? implements ContractsContainer? */
 {
   /**
    * {@inheritDoc}
@@ -17,9 +17,9 @@ abstract class AbstractList /* extends Bag? implements Container? */
   /**
    * {@inheritDoc}
    * @question Where is the element added?
-   * @question How does this method relate to {@link Container#addElement(Object)}?
+   * @question How does this method relate to {@link ContractsContainer#addElement(Object)}?
    */
-  abstract void addElement(Object /* or Comparable? */ o);
+  abstract void addElement(Object /* or ContractsComparable? */ o);
 
   /**
    * {@inheritDoc}

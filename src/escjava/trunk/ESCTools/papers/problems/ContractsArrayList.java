@@ -6,7 +6,7 @@ package problems;
  * @author Joe Kiniry
  */
 
-class ArrayList extends AbstractList /* implements Container? */
+class ContractsArrayList extends ContractsAbstractList /* implements ContractsContainer? */
 {
   private Object[] my_list;
 
