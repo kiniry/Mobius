@@ -54,10 +54,13 @@ public class Min {
 	}
 	public void pp2() {
 	    //@ ghost Collection c = new LinkedList();
-	    //@ ghost Collection cc = new LinkedList();
-	    /*@ assert (\forall Object o,oo; c.contains(o) && c.contains(oo); 
-			    (\min Object ooo; cc.contains(ooo); cc.hashCode())
-				< o.hashCode() );
+	    /*@ assert (\exists Object o; c.contains(o); 
+			    (\min Object ooo; c.contains(ooo); ooo.hashValue())
+				== o.hashValue() );
+	    */
+	    /*@ assert (\forall Object o; c.contains(o); 
+			    (\min Object ooo; c.contains(ooo); ooo.hashValue())
+				<= o.hashValue() );
 	    */
 	}
 }

@@ -28,3 +28,8 @@ NL.java
 Bug1.java
 ## UNtil new String specs in committed
 M3String.java 
+## Problem with model vars with represents clauses that are not declared
+## modified, but change anyway
+Impl4.java
+Min.java
+ModelVarMod.java

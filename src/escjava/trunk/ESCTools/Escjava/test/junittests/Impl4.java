@@ -19,6 +19,7 @@ interface IntList {
 	//@ public instance model boolean isEmpty;
 	//@ public instance model int length;
 
+	//@ requires !isEmpty;
 	//@ modifies length;
 	//@ ensures \not_modified(isEmpty);
 	public void unique();

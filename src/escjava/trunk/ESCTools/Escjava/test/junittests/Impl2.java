@@ -8,7 +8,11 @@ public class Impl2 implements IntList {
 
 	public void shrink() {
 		size = 1;
-	}
+	} // FAILS
+
+	public void shrinkA() {
+		size = 1;
+	} // OK
 
 	public void clear() {
 		size = 0;
@@ -28,6 +32,11 @@ interface IntList {
 	//@ modifies length;
 	//@ ensures \not_modified(isEmpty);
 	public void shrink();
+
+        //@ requires !isEmpty;
+	//@ modifies length;
+	//@ ensures \not_modified(isEmpty);
+	public void shrinkA();
 
 	//@ modifies length,isEmpty;
 	//@ ensures isEmpty;

@@ -30,7 +30,7 @@ public class CardException2 extends Exception {
 
     /*@ also public normal_behavior
      @ requires true;
-     @ assignable _reason, systemInstance, super.objectState;
+     @ assignable _reason, systemInstance, this.*;
      @ ensures _reason == reason; // that is, _reason equals the argument
      @*/
 
