@@ -140,13 +140,13 @@ BogusInput.java:41: Error: Keyword \result is not allowed in this context
 BogusInput.java:46: Error: requires annotations can occur only on method and constructor declarations
   //@ requires \result == 0
       ^
-BogusInput.java:47: Error: A modifies/also_modifies annotation can occur only on method and constructor declarations
+BogusInput.java:47: Error: A modifies annotation can occur only on method and constructor declarations
   //@ modifies a[\result]
       ^
 BogusInput.java:48: Error: ensures annotations can occur only on method and constructor declarations
   //@ ensures \result == 0
       ^
-BogusInput.java:49: Error: A modifies/also_modifies annotation can occur only on method and constructor declarations
+BogusInput.java:49: Error: A modifies annotation can occur only on method and constructor declarations
   //@ also modifies a[\result]
            ^
 BogusInput.java:50: Error: ensures annotations can occur only on method and constructor declarations
@@ -290,9 +290,6 @@ BogusInput.java:136: Error: The monitored annotation can occur only on field dec
 BogusInput.java:137: Error: The monitored annotation can occur only on field declarations
     /*@ monitored */ int x;
                          ^
-BogusInput.java:136: Error: monitored only applies to fields
-  /*@ monitored */ void monitored0(/*@ monitored */ int p) {
-      ^
 BogusInput.java:139: Error: The monitored annotation can occur only on field declarations
   /*@ monitored */ static void monitored1(/*@ monitored */ int p) {
                                                                ^
@@ -302,9 +299,6 @@ BogusInput.java:139: Error: The monitored annotation can occur only on field dec
 BogusInput.java:140: Error: The monitored annotation can occur only on field declarations
     /*@ monitored */ int x;
                          ^
-BogusInput.java:139: Error: monitored only applies to fields
-  /*@ monitored */ static void monitored1(/*@ monitored */ int p) {
-      ^
 BogusInput.java:144: Error: Unqualified this cannot be used in static contexts
     this.pp();  // "this" is not allowed in this context
     ^
@@ -454,7 +448,7 @@ BogusInput.java:206: Error: Variable 'xyz' is already defined here.
                              ^
 Caution: Turning off extended static checking due to type error(s)
 1 caution
-140 errors
+138 errors
 BogusAssignments.java:4: Caution: May not assign to a final field
     x = 3;  // this is a "final" field, but we don't currently disallo ...
     ^
@@ -683,6 +677,63 @@ BogusGhost.java:108: Error: Labeled predicates are not allowed in this context
                  ^
 1 caution
 12 errors
+BogusSpec.java:26: Error: Original ESC/Java keywords beginning with also_ are obsolete; they have been replaced with the corresponding JML keywords and the use of 'also' - note that the semantics has also changed.
+  //@ also_modifies x, x
+      ^
+BogusSpec.java:28: Error: Original ESC/Java keywords beginning with also_ are obsolete; they have been replaced with the corresponding JML keywords and the use of 'also' - note that the semantics has also changed.
+  //@ also_ensures x == null;
+      ^
+BogusSpec.java:89: Error: Original ESC/Java keywords beginning with also_ are obsolete; they have been replaced with the corresponding JML keywords and the use of 'also' - note that the semantics has also changed.
+  //@ also_exsures (Throwable t) t == null
+      ^
+BogusSpec.java:125: Error: Original ESC/Java keywords beginning with also_ are obsolete; they have been replaced with the corresponding JML keywords and the use of 'also' - note that the semantics has also changed.
+  //@ also_exsures (Throwable tt) true
+      ^
+BogusSpec.java:142: Error: Original ESC/Java keywords beginning with also_ are obsolete; they have been replaced with the corresponding JML keywords and the use of 'also' - note that the semantics has also changed.
+  //@ also_modifies x, x
+      ^
+BogusSpec.java:144: Error: Original ESC/Java keywords beginning with also_ are obsolete; they have been replaced with the corresponding JML keywords and the use of 'also' - note that the semantics has also changed.
+  //@ also_ensures x == null;
+      ^
+BogusSpec.java:155: Error: Original ESC/Java keywords beginning with also_ are obsolete; they have been replaced with the corresponding JML keywords and the use of 'also' - note that the semantics has also changed.
+  //@ also_modifies \lockset
+      ^
+BogusSpec.java:156: Error: Original ESC/Java keywords beginning with also_ are obsolete; they have been replaced with the corresponding JML keywords and the use of 'also' - note that the semantics has also changed.
+  //@ also_ensures \lockset == \lockset;
+      ^
+BogusSpec.java:157: Error: Original ESC/Java keywords beginning with also_ are obsolete; they have been replaced with the corresponding JML keywords and the use of 'also' - note that the semantics has also changed.
+  //@ also_ensures \lockset;
+      ^
+BogusSpec.java:167: Error: Original ESC/Java keywords beginning with also_ are obsolete; they have been replaced with the corresponding JML keywords and the use of 'also' - note that the semantics has also changed.
+  //@ also_exsures (SomeException se) se != null;
+      ^
+BogusSpec.java:168: Error: Original ESC/Java keywords beginning with also_ are obsolete; they have been replaced with the corresponding JML keywords and the use of 'also' - note that the semantics has also changed.
+  //@ also_exsures (Throwable t) t == 5;
+      ^
+BogusSpec.java:169: Error: Original ESC/Java keywords beginning with also_ are obsolete; they have been replaced with the corresponding JML keywords and the use of 'also' - note that the semantics has also changed.
+  //@ also_exsures (SomeSubException sse) false;
+      ^
+BogusSpec.java:170: Error: Original ESC/Java keywords beginning with also_ are obsolete; they have been replaced with the corresponding JML keywords and the use of 'also' - note that the semantics has also changed.
+  //@ also_exsures (SomeOtherException soe) soe != null;
+      ^
+BogusSpec.java:171: Error: Original ESC/Java keywords beginning with also_ are obsolete; they have been replaced with the corresponding JML keywords and the use of 'also' - note that the semantics has also changed.
+  //@ also_exsures (NullPointerException npe) true;
+      ^
+BogusSpec.java:172: Error: Original ESC/Java keywords beginning with also_ are obsolete; they have been replaced with the corresponding JML keywords and the use of 'also' - note that the semantics has also changed.
+  //@ also_exsures (\TYPE tt) tt == \type(SomeException);
+      ^
+BogusSpec.java:173: Error: Original ESC/Java keywords beginning with also_ are obsolete; they have been replaced with the corresponding JML keywords and the use of 'also' - note that the semantics has also changed.
+  //@ also_exsures (AnotherException ae) ae == null;
+      ^
+BogusSpec.java:222: Error: Original ESC/Java keywords beginning with also_ are obsolete; they have been replaced with the corresponding JML keywords and the use of 'also' - note that the semantics has also changed.
+  //@ also_modifies this.xx;
+      ^
+BogusSpec.java:223: Error: Original ESC/Java keywords beginning with also_ are obsolete; they have been replaced with the corresponding JML keywords and the use of 'also' - note that the semantics has also changed.
+  //@ also_modifies x, y, b;
+      ^
+BogusSpec.java:224: Error: Original ESC/Java keywords beginning with also_ are obsolete; they have been replaced with the corresponding JML keywords and the use of 'also' - note that the semantics has also changed.
+  //@ also_modifies bb;
+      ^
 BogusSpec.java:2: Error: Cannot convert void to a numeric type 
   //@ ensures \result < 6;
               ^
@@ -716,15 +767,6 @@ BogusSpec.java:19: Error: Keyword \result is not allowed in this context
 BogusSpec.java:19: Error: Not a specification designator expression
   //@ modifies \result
                ^
-BogusSpec.java:26: Error: Unknown kind of pragma for a routine declaration: also_modifies
-  //@ also_modifies x, x
-      ^
-BogusSpec.java:26: Error: Unknown kind of pragma for a routine declaration: also_modifies
-  //@ also_modifies x, x
-      ^
-BogusSpec.java:28: Error: Unknown kind of pragma for a routine declaration: also_ensures
-  //@ also_ensures x == null;
-      ^
 BogusSpec.java:32: Error: Not a specification designator expression
   //@ modifies a
                ^
@@ -851,9 +893,6 @@ BogusSpec.java:99: Error: The type of the exsures argument must be a subtype of 
 BogusSpec.java:100: Error: The type of the exsures argument must be a subtype of java.lang.Throwable
   //@ exsures (Cloneable c) true;
                ^
-BogusSpec.java:89: Error: Unknown kind of pragma for a routine declaration: also_exsures
-  //@ also_exsures (Throwable t) t == null
-      ^
 BogusSpec.java:106: Error: Invalid types (java.lang.Throwable and int) in equality comparison
   //@ exsures (Throwable t) t == 5;
                               ^
@@ -884,9 +923,6 @@ BogusSpec.java:121: Error: An instance field may be accessed only via an object 
 BogusSpec.java:122: Error: Undefined variable 'se'
   //@ exsures (Throwable tt) tt == se;
                                    ^
-BogusSpec.java:125: Error: Unknown kind of pragma for a routine declaration: also_exsures
-  //@ also_exsures (Throwable tt) true
-      ^
 BogusSpec.java:130: Error: Keyword \result is not allowed in this context
   //@ exsures (SomeException se) se == \result && se == this && se ==  ...
                                        ^
@@ -912,15 +948,6 @@ BogusSpec.java:146: Caution: JML requires a specification to begin with 'also' w
 BogusSpec.java:30: Associated declaration: 
   void m3() {
   ^
-BogusSpec.java:142: Error: Unknown kind of pragma for a routine declaration: also_modifies
-  //@ also_modifies x, x
-      ^
-BogusSpec.java:142: Error: Unknown kind of pragma for a routine declaration: also_modifies
-  //@ also_modifies x, x
-      ^
-BogusSpec.java:144: Error: Unknown kind of pragma for a routine declaration: also_ensures
-  //@ also_ensures x == null;
-      ^
 BogusSpec.java:155: Error: Not a specification designator expression
   //@ also_modifies \lockset
                     ^
@@ -939,15 +966,6 @@ BogusSpec.java:159: Caution: JML requires a specification to begin with 'also' w
 BogusSpec.java:53: Associated declaration: 
   void m6() {
   ^
-BogusSpec.java:155: Error: Unknown kind of pragma for a routine declaration: also_modifies
-  //@ also_modifies \lockset
-      ^
-BogusSpec.java:156: Error: Unknown kind of pragma for a routine declaration: also_ensures
-  //@ also_ensures \lockset == \lockset;
-      ^
-BogusSpec.java:157: Error: Unknown kind of pragma for a routine declaration: also_ensures
-  //@ also_ensures \lockset;
-      ^
 BogusSpec.java:162: Error: Not a specification designator expression
   //@ also modifies \lockset; ensures \lockset == \lockset; ensures \l ...
                     ^
@@ -960,7 +978,7 @@ BogusSpec.java:162: Caution: No initial also expected since there are no overrid
 BogusSpec.java:168: Error: Invalid types (java.lang.Throwable and int) in equality comparison
   //@ also_exsures (Throwable t) t == 5;
                                    ^
-BogusSpec.java:172: Error: The type of the also_exsures argument must be a subtype of java.lang.Throwable
+BogusSpec.java:172: Error: The type of the exsures argument must be a subtype of java.lang.Throwable
   //@ also_exsures (\TYPE tt) tt == \type(SomeException);
                     ^
 BogusSpec.java:174: Caution: JML requires a specification to begin with 'also' when the method overrides other methods
@@ -969,27 +987,6 @@ BogusSpec.java:174: Caution: JML requires a specification to begin with 'also' w
 BogusSpec.java:111: Associated declaration: 
   void m10() throws SomeException, NullPointerException, AnotherExcept ...
   ^
-BogusSpec.java:167: Error: Unknown kind of pragma for a routine declaration: also_exsures
-  //@ also_exsures (SomeException se) se != null;
-      ^
-BogusSpec.java:168: Error: Unknown kind of pragma for a routine declaration: also_exsures
-  //@ also_exsures (Throwable t) t == 5;
-      ^
-BogusSpec.java:169: Error: Unknown kind of pragma for a routine declaration: also_exsures
-  //@ also_exsures (SomeSubException sse) false;
-      ^
-BogusSpec.java:170: Error: Unknown kind of pragma for a routine declaration: also_exsures
-  //@ also_exsures (SomeOtherException soe) soe != null;
-      ^
-BogusSpec.java:171: Error: Unknown kind of pragma for a routine declaration: also_exsures
-  //@ also_exsures (NullPointerException npe) true;
-      ^
-BogusSpec.java:172: Error: Unknown kind of pragma for a routine declaration: also_exsures
-  //@ also_exsures (\TYPE tt) tt == \type(SomeException);
-      ^
-BogusSpec.java:173: Error: Unknown kind of pragma for a routine declaration: also_exsures
-  //@ also_exsures (AnotherException ae) ae == null;
-      ^
 BogusSpec.java:179: Error: Invalid types (java.lang.Throwable and int) in equality comparison
   //@ exsures (Throwable t) t == 5;
                               ^
@@ -1047,21 +1044,6 @@ BogusSpec.java:225: Caution: JML requires a specification to begin with 'also' w
 BogusSpec.java:210: Associated declaration: 
   void m() {
   ^
-BogusSpec.java:222: Error: Unknown kind of pragma for a routine declaration: also_modifies
-  //@ also_modifies this.xx;
-      ^
-BogusSpec.java:223: Error: Unknown kind of pragma for a routine declaration: also_modifies
-  //@ also_modifies x, y, b;
-      ^
-BogusSpec.java:223: Error: Unknown kind of pragma for a routine declaration: also_modifies
-  //@ also_modifies x, y, b;
-      ^
-BogusSpec.java:223: Error: Unknown kind of pragma for a routine declaration: also_modifies
-  //@ also_modifies x, y, b;
-      ^
-BogusSpec.java:224: Error: Unknown kind of pragma for a routine declaration: also_modifies
-  //@ also_modifies bb;
-      ^
 BogusSpec.java:228: Error: a final field is not allowed as the designator in a modifies clause
   //@ also modifies this.xx;
                          ^
@@ -1078,7 +1060,52 @@ BogusSpec.java:228: Caution: No initial also expected since there are no overrid
   //@ also modifies this.xx;
       ^
 8 cautions
-120 errors
+116 errors
+BogusVisibility.java:150: Error: Original ESC/Java keywords beginning with also_ are obsolete; they have been replaced with the corresponding JML keywords and the use of 'also' - note that the semantics has also changed.
+  //@ also_ensures privSub == pack && prot == publ;
+      ^
+BogusVisibility.java:151: Error: Original ESC/Java keywords beginning with also_ are obsolete; they have been replaced with the corresponding JML keywords and the use of 'also' - note that the semantics has also changed.
+  //@ also_ensures spub4 == spub1 && spub2 == spub3;
+      ^
+BogusVisibility.java:152: Error: Original ESC/Java keywords beginning with also_ are obsolete; they have been replaced with the corresponding JML keywords and the use of 'also' - note that the semantics has also changed.
+  //@ also_ensures spub0 == spub4;
+      ^
+BogusVisibility.java:160: Error: Original ESC/Java keywords beginning with also_ are obsolete; they have been replaced with the corresponding JML keywords and the use of 'also' - note that the semantics has also changed.
+  //@ also_ensures privSub == pack && prot == publ;
+      ^
+BogusVisibility.java:161: Error: Original ESC/Java keywords beginning with also_ are obsolete; they have been replaced with the corresponding JML keywords and the use of 'also' - note that the semantics has also changed.
+  //@ also_ensures spub4 == spub1 && spub2 == spub3;
+      ^
+BogusVisibility.java:168: Error: Original ESC/Java keywords beginning with also_ are obsolete; they have been replaced with the corresponding JML keywords and the use of 'also' - note that the semantics has also changed.
+  //@ also_ensures privSub == pack && prot == publ;
+      ^
+BogusVisibility.java:169: Error: Original ESC/Java keywords beginning with also_ are obsolete; they have been replaced with the corresponding JML keywords and the use of 'also' - note that the semantics has also changed.
+  //@ also_ensures spub4 == spub1 && spub2 == spub3;
+      ^
+BogusVisibility.java:176: Error: Original ESC/Java keywords beginning with also_ are obsolete; they have been replaced with the corresponding JML keywords and the use of 'also' - note that the semantics has also changed.
+  //@ also_ensures privSub == pack && prot == publ;
+      ^
+BogusVisibility.java:177: Error: Original ESC/Java keywords beginning with also_ are obsolete; they have been replaced with the corresponding JML keywords and the use of 'also' - note that the semantics has also changed.
+  //@ also_ensures spub4 == spub1 && spub2 == spub3;
+      ^
+BogusVisibility.java:184: Error: Original ESC/Java keywords beginning with also_ are obsolete; they have been replaced with the corresponding JML keywords and the use of 'also' - note that the semantics has also changed.
+  //@ also_ensures privSub == pack && prot == publ;
+      ^
+BogusVisibility.java:185: Error: Original ESC/Java keywords beginning with also_ are obsolete; they have been replaced with the corresponding JML keywords and the use of 'also' - note that the semantics has also changed.
+  //@ also_ensures spub4 == spub1 && spub2 == spub3;
+      ^
+BogusVisibility.java:192: Error: Original ESC/Java keywords beginning with also_ are obsolete; they have been replaced with the corresponding JML keywords and the use of 'also' - note that the semantics has also changed.
+  //@ also_ensures privSubSt == packSt && protSt == publSt;
+      ^
+BogusVisibility.java:193: Error: Original ESC/Java keywords beginning with also_ are obsolete; they have been replaced with the corresponding JML keywords and the use of 'also' - note that the semantics has also changed.
+  //@ also_ensures spub4St == spub1St && spub2St == spub3St;
+      ^
+BogusVisibility.java:200: Error: Original ESC/Java keywords beginning with also_ are obsolete; they have been replaced with the corresponding JML keywords and the use of 'also' - note that the semantics has also changed.
+  //@ also_ensures privSubSt == packSt && protSt == publSt;
+      ^
+BogusVisibility.java:201: Error: Original ESC/Java keywords beginning with also_ are obsolete; they have been replaced with the corresponding JML keywords and the use of 'also' - note that the semantics has also changed.
+  //@ also_ensures spub4St == spub1St && spub2St == spub3St;
+      ^
 BogusVisibility.java:9: Error: The spec_public annotation can occur only on non-public declarations
   /*@ spec_public */ public int spub3;
                                 ^
@@ -1158,15 +1185,6 @@ Caution: Turning off extended static checking due to type error(s)
 BogusVisibility.java:152: Error: Undefined variable 'spub0'
   //@ also_ensures spub0 == spub4;
                    ^
-BogusVisibility.java:150: Error: Unknown kind of pragma for a routine declaration: also_ensures
-  //@ also_ensures privSub == pack && prot == publ;
-      ^
-BogusVisibility.java:151: Error: Unknown kind of pragma for a routine declaration: also_ensures
-  //@ also_ensures spub4 == spub1 && spub2 == spub3;
-      ^
-BogusVisibility.java:152: Error: Unknown kind of pragma for a routine declaration: also_ensures
-  //@ also_ensures spub0 == spub4;
-      ^
 BogusVisibility.java:157: Error: Undefined variable 'spub0'
   //@ ensures spub0 == spub4;
               ^
@@ -1182,12 +1200,6 @@ BogusVisibility.java:162: Caution: JML requires a specification to begin with 'a
 BogusVisibility.java:119: Associated declaration: 
   void ens1() {}
   ^
-BogusVisibility.java:160: Error: Unknown kind of pragma for a routine declaration: also_ensures
-  //@ also_ensures privSub == pack && prot == publ;
-      ^
-BogusVisibility.java:161: Error: Unknown kind of pragma for a routine declaration: also_ensures
-  //@ also_ensures spub4 == spub1 && spub2 == spub3;
-      ^
 BogusVisibility.java:164: Error: A private field can be used in postconditions of overridable methods only if it is declared spec_public or spec_protected
   //@ also ensures privSub == pack && prot == publ;
                    ^
@@ -1203,12 +1215,6 @@ BogusVisibility.java:170: Caution: JML requires a specification to begin with 'a
 BogusVisibility.java:123: Associated declaration: 
   protected void ens2() {}
             ^
-BogusVisibility.java:168: Error: Unknown kind of pragma for a routine declaration: also_ensures
-  //@ also_ensures privSub == pack && prot == publ;
-      ^
-BogusVisibility.java:169: Error: Unknown kind of pragma for a routine declaration: also_ensures
-  //@ also_ensures spub4 == spub1 && spub2 == spub3;
-      ^
 BogusVisibility.java:172: Error: A private field can be used in postconditions of overridable methods only if it is declared spec_public or spec_protected
   //@ also ensures privSub == pack && prot == publ;
                    ^
@@ -1224,41 +1230,17 @@ BogusVisibility.java:178: Caution: JML requires a specification to begin with 'a
 BogusVisibility.java:127: Associated declaration: 
   public void ens3() {}
          ^
-BogusVisibility.java:176: Error: Unknown kind of pragma for a routine declaration: also_ensures
-  //@ also_ensures privSub == pack && prot == publ;
-      ^
-BogusVisibility.java:177: Error: Unknown kind of pragma for a routine declaration: also_ensures
-  //@ also_ensures spub4 == spub1 && spub2 == spub3;
-      ^
 BogusVisibility.java:180: Error: A private field can be used in postconditions of overridable methods only if it is declared spec_public or spec_protected
   //@ also ensures privSub == pack && prot == publ;
                    ^
 BogusVisibility.java:180: Caution: No initial also expected since there are no overridden or refined methods
   //@ also ensures privSub == pack && prot == publ;
       ^
-BogusVisibility.java:184: Error: Unknown kind of pragma for a routine declaration: also_ensures
-  //@ also_ensures privSub == pack && prot == publ;
-      ^
-BogusVisibility.java:185: Error: Unknown kind of pragma for a routine declaration: also_ensures
-  //@ also_ensures spub4 == spub1 && spub2 == spub3;
-      ^
 BogusVisibility.java:188: Caution: No initial also expected since there are no overridden or refined methods
   //@ also ensures privSub == pack && prot == publ;
       ^
-BogusVisibility.java:192: Error: Unknown kind of pragma for a routine declaration: also_ensures
-  //@ also_ensures privSubSt == packSt && protSt == publSt;
-      ^
-BogusVisibility.java:193: Error: Unknown kind of pragma for a routine declaration: also_ensures
-  //@ also_ensures spub4St == spub1St && spub2St == spub3St;
-      ^
 BogusVisibility.java:196: Caution: No initial also expected since there are no overridden or refined methods
   //@ also ensures privSubSt == packSt && protSt == publSt;
-      ^
-BogusVisibility.java:200: Error: Unknown kind of pragma for a routine declaration: also_ensures
-  //@ also_ensures privSubSt == packSt && protSt == publSt;
-      ^
-BogusVisibility.java:201: Error: Unknown kind of pragma for a routine declaration: also_ensures
-  //@ also_ensures spub4St == spub1St && spub2St == spub3St;
       ^
 BogusVisibility.java:204: Caution: No initial also expected since there are no overridden or refined methods
   //@ also ensures privSubSt == packSt && protSt == publSt;
@@ -1304,7 +1286,7 @@ BogusModifiers.java:43: Error: The non_null pragma can be applied only to variab
 BogusModifiers.java:44: Error: requires annotations can occur only on method and constructor declarations
     /*@ requires true; */ int x2 = 0;
         ^
-BogusModifiers.java:45: Error: A modifies/also_modifies annotation can occur only on method and constructor declarations
+BogusModifiers.java:45: Error: A modifies annotation can occur only on method and constructor declarations
     /*@ modifies x0 */ int x3 = 0;
         ^
 BogusModifiers.java:46: Error: ensures annotations can occur only on method and constructor declarations

@@ -1910,7 +1910,6 @@ FIXME - see uses of countFreeVarsAccess
             }
 
 	    case TagConstants.MODIFIES:
-            case TagConstants.ALSO_MODIFIES:
             case TagConstants.ASSIGNABLE:
             case TagConstants.MODIFIABLE:
             case TagConstants.STILL_DEFERRED: {
@@ -1918,7 +1917,7 @@ FIXME - see uses of countFreeVarsAccess
 
                 if (!(ctxt instanceof RoutineDecl ) ) {
                     ErrorSet.error(p.getStartLoc(),
-                                   "A modifies/also_modifies annotation " +
+                                   "A modifies annotation " +
                                    "can occur only on " +
                                    "method and constructor declarations");
                 } else {
@@ -1968,6 +1967,12 @@ FIXME - see uses of countFreeVarsAccess
 			       emp.expr = null;
 			    }
                     }
+		    if (rd instanceof MethodDecl && isPure(rd) &&
+			emp.expr != null && emp.expr.getTag() != TagConstants.NOTHINGEXPR) {
+			ErrorSet.error(p.getStartLoc(),
+				"A pure method may not have a modifies clause");
+				// FIXME - point to the pure designation
+		    }
                     isSpecDesignatorContext = false;
                     if (emp.cond != null) emp.cond = checkExpr(newenv, emp.cond);
                 }
@@ -2329,8 +2334,8 @@ FIXME - see uses of countFreeVarsAccess
     static public boolean isPure(RoutineDecl rd) {
 	if ((rd.modifiers & Modifiers.ACC_PURE_CLOSURE)!=0) return true;
 	if ((rd.modifiers & Modifiers.ACC_IMPURE_CLOSURE)!=0) return false;
-	boolean b = Modifiers.isPure(rd.modifiers) ||
-		 Modifiers.isPure(rd.parent.modifiers);
+	boolean b = Modifiers.isPure(rd.modifiers) ||   // pure on the routine
+		 Modifiers.isPure(rd.parent.modifiers); // pure on the class
 	if (b) { rd.modifiers |= Modifiers.ACC_PURE_CLOSURE; return b; }
 	// find and test interfaces and extendsions
 	if (rd instanceof MethodDecl) {
