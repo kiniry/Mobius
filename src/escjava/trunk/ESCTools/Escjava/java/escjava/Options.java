@@ -23,7 +23,9 @@ public class Options extends javafe.SrcToolOptions
 {
     final String[][] escOptionData = {
 	{ "-eajava, -javaAssertions", "Treat Java assert statements as Java exceptions"},
-	{ "-eajml, -jmlAssertions", "Treat Java assert statements like JML assert statements"}
+	{ "-eajml, -jmlAssertions", "Treat Java assert statements like JML assert statements"},
+	{ "-pgc", "Print the guarded commands"},
+	{ "-ppvc", "Prettyprint the VCs generated with -v"}
     };
 
     // Global escjava flags
@@ -37,8 +39,9 @@ public class Options extends javafe.SrcToolOptions
 
     public boolean pjt    = false; // print java w/ types
     public boolean nvu    = false;
-    public boolean pgc    = false;
-    public boolean pdsa    = false;
+    public boolean pgc    = false;  // print the guarded commands
+    public boolean pdsa    = false; // prints the single-assignment GCs
+    public boolean pvc    = false;  // prettyprint the verification conditions
     public boolean pcc    = false;
     // a pruned, pretty printed version of pcc:
     public boolean counterexample = false;
@@ -369,6 +372,10 @@ public class Options extends javafe.SrcToolOptions
             return offset;
         } else if (option.equals("-pdsa")) {
             pdsa = true;
+            return offset;
+        } else if (option.equals("-pvc")) {
+            pvc = true;
+	    prettyPrintVC = true;
             return offset;
         } else if (option.equals("-wpnxw")) {
             if (offset >= args.length) {

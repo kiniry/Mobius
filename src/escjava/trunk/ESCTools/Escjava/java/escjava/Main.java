@@ -623,7 +623,7 @@ public class Main extends javafe.SrcTool
         startTime = java.lang.System.currentTimeMillis();
         // Translate VC to a string
         Info.out("[converting VC to a string]");
-        if (Info.on && options().traceInfo > 0)
+        if (options().pvc || (Info.on && options().traceInfo > 0))
             VcToString.compute(vc, System.out);
         if (options().guardedVC) {
             String fn = UniqName.locToSuffix(r.locId) + ".method." + 
@@ -836,6 +836,12 @@ public class Main extends javafe.SrcTool
         /*
          * Translate the body:
          */
+	    /* Note: initState.preMap is the same for all declarations.
+		    This may be overkill (FIXME).
+		    It might be better to use information from scope directly
+		    since it is generated from the routine decl.
+		    However, I don't know for sure what would go missing.  DRCok
+	    */
 
         GuardedCmd body = gctranslator.trBody(r, scope,
                                               initState.getPreMap(),
@@ -865,6 +871,7 @@ public class Main extends javafe.SrcTool
 
         Spec spec = GetSpec.getSpecForBody(r, scope, synTargs,
                                            initState.getPreMap());
+	gctranslator.addMoreLocations(spec.postconditionLocations);
 
         // if the current RoutineDecl corresponds to one of our
         // constructor-inlined methods, then zero out its postconditions
@@ -917,4 +924,9 @@ public class Main extends javafe.SrcTool
         }
     }
 
+    /** Prints out (to System.out) the current stack trace, for quick and easy debugging. */
+    static public void dump(String s) {
+	System.out.println(s);
+	(new Exception()).printStackTrace();
+    }
 }
