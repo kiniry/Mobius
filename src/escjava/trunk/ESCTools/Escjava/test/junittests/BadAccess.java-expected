@@ -1,7 +1,7 @@
 ESC/Java version VERSION
-BadAccess.java:3: Caution: ghost annotation has a repeated modifier
+BadAccess.java:3: Caution: Duplicate occurrence of modifier 'public'
         //@ public ghost public int i;
-                   ^
+                         ^
   Prover started:TIME
 
 BadAccess ...

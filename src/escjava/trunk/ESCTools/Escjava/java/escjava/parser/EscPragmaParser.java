@@ -650,6 +650,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
     */
 
     private java.util.LinkedList pragmaQueue = new java.util.LinkedList();
+	// element type is SavedPragma
     protected class SavedPragma {
 	public int loc;
 	public int ttype;
@@ -672,7 +673,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
 	return true;
     }
 
-	// element type is SavedPragma
+    ModifierPragma savedGhostModelPragma = null;
 
     /**
      * Parse the next pragma, putting information about it in the provided token
@@ -697,13 +698,18 @@ public class EscPragmaParser extends Parse implements PragmaParser
 
             // See if we need to continue a previous pragma, for example
             // "monitored_by", which can take multiple SpecExprs
-            if ((inProcessTag != NEXT_TOKEN_STARTS_NEW_PRAGMA) &&
-                (inProcessTag != TagConstants.ALSO)) { 
+            if (inProcessTag != NEXT_TOKEN_STARTS_NEW_PRAGMA) {
                 continuePragma(dst);
                 return true; 
             }
 
+		// FIXME -- explain this - what circumstances need it?
             if (scanner.ttype == TagConstants.EOF) { 
+		if (savedGhostModelPragma != null) {
+		    ErrorSet.error(savedGhostModelPragma.getStartLoc(),
+			"Expected a declaration within the annotation following the " + TagConstants.toString(savedGhostModelPragma.getTag()) + " keyword");
+		    savedGhostModelPragma = null;
+		}
                 LexicalPragma PP = scanner.popLexicalPragma();
                 if (PP != null) {
                     dst.ttype = TagConstants.LEXICALPRAGMA;
@@ -730,29 +736,48 @@ public class EscPragmaParser extends Parse implements PragmaParser
             //@ assume scanner.m_in != null;  // TBW: is this right??  --KRML
 
 	    // FIXME - not everything allows modifiers
-	    int prefixModifiers = parseModifiers(scanner);
+	    // These are Java modifiers that are 
+	    // parsed within an annotation, up until a non-modifier
+	    // is encountered or the end of the annotation.
+	    parseJavaModifiers();
 
             // Start a new pragma
+	    // Need a better explanation - FIXME
             int loc = scanner.startingLoc;
             if (Main.options().parsePlus &&
 		scanner.ttype == TagConstants.ADD &&
 		scanner.lookahead(1) == TagConstants.EOF) {
 		return false;
 	    }
-	    // Pragmas can start with modifiers
-	    //if (scanner.ttype != TagConstants.IDENT)
-            //    ErrorSet.fatal(loc, "Pragma must start with an identifier");
+
 	    int tag = scanner.ttype;
 	    Identifier kw = null;
 	    if (tag == TagConstants.IDENT) {
 		kw = scanner.identifierVal;
+		// Looks up JML keywords
             	tag = TagConstants.fromIdentifier(kw);
-	    }
-	    if (tag != TagConstants.IMPORT) {
-		// Just because the parent class routines expect
-		// to start on the IMPORT token
+		// Note: if we are parsing a ghost or model declaration
+		// then we have already parsed all modifiers and
+		// pragma modifiers and we start getNextPragma looking
+		// at the type name that begins the actual field or
+		// model declaration - then the IDENT is not a 
+		// may or may not be a keyword, but is the beginning
+		// of the type
+		if (tag != TagConstants.NULL) scanner.getNextToken();
+	    } else if (tag == TagConstants.MODIFIERPRAGMA) {
+		// This can happen if there is an embedded annotation within
+		// an annotation, such as 
+		//	//@ ghost public /*@ non_null */ Object o;
+		// We'll just copy the pragma into the output and return.
+		scanner.copyInto(dst);
 		scanner.getNextToken();
+		return true;
 	    }
+	    // Note: If the tag is not obtained from the identifier (e.g. if it
+	    // is also a Java keyword, such as assert) and is not already a
+	    // MODIFIERPRAGMA, then the scanner is
+	    // not advanced here and will need to be in the appropriate case
+	    // within the switch statement.
 
             boolean semicolonExpected = false;
 
@@ -766,10 +791,17 @@ public class EscPragmaParser extends Parse implements PragmaParser
 		case TagConstants.EXAMPLE: 
 		case TagConstants.NORMAL_EXAMPLE: 
 		case TagConstants.EXCEPTIONAL_EXAMPLE:
+                    dst.ttype = TagConstants.MODIFIERPRAGMA;
+                    dst.auxVal = SimpleModifierPragma.make(tag, loc);
+		    // We need to capture the modifiers ??? FIXME
+		    modifiers = Modifiers.NONE;
+                    break;
+
 		case TagConstants.FOR_EXAMPLE: 
 		case TagConstants.IMPLIES_THAT:
                 case TagConstants.SUBCLASSING_CONTRACT:
                 case TagConstants.ALSO: 
+		    checkNoModifiers(tag,loc);
                     // SUPPORT COMPLETE (cok/kiniry)
                     // All desugaring of method specifications
                     // is now performed in the desugaring
@@ -779,6 +811,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
                     break;
 
                 case TagConstants.NOWARN:
+		    checkNoModifiers(tag,loc);
                     dst.ttype = TagConstants.LEXICALPRAGMA;
                     seqIdentifier.push();
                     if (scanner.ttype == TagConstants.IDENT) {
@@ -810,6 +843,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
                 case TagConstants.MODIFIABLE_REDUNDANTLY: // SUPPORT COMPLETE (kiniry)
                 case TagConstants.MODIFIES_REDUNDANTLY: // SUPPORT COMPLETE (kiniry)
                 case TagConstants.MODIFIES: {
+		    checkNoModifiers(tag,loc);
 		   do {
 		    int t = scanner.ttype;
 		    Expr e = null;
@@ -863,6 +897,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
 
                 case TagConstants.STILL_DEFERRED:
                 case TagConstants.MONITORED_BY:{
+		    checkNoModifiers(tag,loc);
                     inProcessTag = tag;
                     inProcessLoc = loc;
                     continuePragma(dst);
@@ -901,13 +936,18 @@ public class EscPragmaParser extends Parse implements PragmaParser
 		}
 
                 case TagConstants.UNREACHABLE:
+		    checkNoModifiers(tag,loc);
                     dst.ttype = TagConstants.STMTPRAGMA;
                     dst.auxVal = SimpleStmtPragma.make(tag, loc);
                     if (scanner.ttype == TagConstants.SEMICOLON) scanner.getNextToken();
                     break;
 	
                 case TagConstants.ASSERT:
+			// The ASSERT token is not obtained from an identifier
+			// so the scanner was not advanced.
+		    scanner.getNextToken();
                 case TagConstants.ASSERT_REDUNDANTLY: { // SUPPORT COMPLETE (kiniry)
+		    checkNoModifiers(tag,loc);
                     dst.ttype = TagConstants.STMTPRAGMA;
                     Expr assertion = parseExpression(scanner);
                     Expr label = null;
@@ -935,6 +975,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
                 case TagConstants.MAINTAINING: // SUPPORT COMPLETE (kiniry)
                 case TagConstants.MAINTAINING_REDUNDANTLY: // SUPPORT COMPLETE (kiniry)
                 case TagConstants.LOOP_INVARIANT: {
+		    checkNoModifiers(tag,loc);
                     dst.ttype = TagConstants.STMTPRAGMA;
                     ExprStmtPragma pragma = 
                         ExprStmtPragma.make(TagConstants.unRedundant(tag), 
@@ -947,6 +988,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
                 }
 
                 case TagConstants.LOOP_PREDICATE:
+		    checkNoModifiers(tag,loc);
                     inProcessTag = tag;
                     inProcessLoc = loc;
                     continuePragma(dst);
@@ -957,6 +999,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
                     return true;	  
 
                 case TagConstants.SET: {
+		    checkNoModifiers(tag,loc);
                     dst.ttype = TagConstants.STMTPRAGMA;
                     Expr target = parsePrimaryExpression(scanner);
                     int locOp = scanner.startingLoc;
@@ -970,6 +1013,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
                 case TagConstants.REPRESENTS: // SC HPT AAST 4 SUPPORT COMPLETE (cok)
                 case TagConstants.REPRESENTS_REDUNDANTLY: // SC HPT AAST 4 (cok)
 		    {
+			// FIXME - need to utilize modifiers
                         dst.ttype = TagConstants.TYPEDECLELEMPRAGMA;
 			// FIXME - the grammar wants a StoreRefExpr here ???
 			int locId = scanner.startingLoc;
@@ -1008,6 +1052,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
 
                 case TagConstants.CONSTRAINT_REDUNDANTLY: // SC AAST 4
                 case TagConstants.CONSTRAINT: {           // SC AAST 4
+			// FIXME - need to utilize modifiers
 		    dst.ttype = TagConstants.TYPEDECLELEMPRAGMA;
                     ExprDeclPragma pragma = 
                         ExprDeclPragma.make(TagConstants.unRedundant(tag), 
@@ -1025,9 +1070,12 @@ public class EscPragmaParser extends Parse implements PragmaParser
                 }
 
                 case TagConstants.AXIOM:
+		    checkNoModifiers(tag,loc);
+		    // fall-through
                 case TagConstants.INVARIANT:
 		case TagConstants.INITIALLY: // SC AAST 4 parsed (cok)
                 case TagConstants.INVARIANT_REDUNDANTLY: { // SUPPORT COMPLETE (kiniry)
+			// Need to utilize modifiers -- FIXME
 		    dst.ttype = TagConstants.TYPEDECLELEMPRAGMA;
                     ExprDeclPragma pragma = 
                         ExprDeclPragma.make(TagConstants.unRedundant(tag), 
@@ -1040,6 +1088,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
                 }
 
 		case TagConstants.IMPORT:
+		    checkNoModifiers(tag,loc);
                     // SUPPORT COMPLETE (cok)
                     ErrorSet.caution(loc,"An import statement in an annotation " +
                                      "should begin with 'model import'");
@@ -1049,8 +1098,25 @@ public class EscPragmaParser extends Parse implements PragmaParser
 			// parseImportDeclaration parses the semicolon
 
                     return getNextPragma(dst);
+		    // no fall-through
+
+                case TagConstants.GHOST: 
+		    // modifiers are used later when we get to the declaration
+		    // let them accumulate
+		    if (savedGhostModelPragma != null) {
+			ErrorSet.caution(loc,"Duplicate " +
+				TagConstants.toString(tag) + " tag",
+				savedGhostModelPragma.getStartLoc() );
+		    } else {
+			savedGhostModelPragma = SimpleModifierPragma.make(tag, loc);
+		    }
+		    return getNextPragma(dst);
+		    // no fall-through
+
 
                 case TagConstants.MODEL:
+		    // modifiers are used later when we get to the declaration
+		    // let them accumulate
                     // SUPPORT COMPLETE (cok)
 		    if (scanner.lookahead(0) == TagConstants.IMPORT) {
 			scanner.lexicalPragmas.addElement( 
@@ -1060,202 +1126,18 @@ public class EscPragmaParser extends Parse implements PragmaParser
 
 			return getNextPragma(dst);
 		    }
-		    prefixModifiers |= Modifiers.ACC_MODEL;
-		    // fall-through
-                case TagConstants.GHOST: {
-                    // SUPPORT COMPLETE (cok)
-                    dst.ttype = TagConstants.TYPEDECLELEMPRAGMA;
-		    int modifiers = parseModifiers(scanner,true);
-		    if ((modifiers & prefixModifiers) != 0) {
-			ErrorSet.caution(loc,
-			     TagConstants.toString(tag) +
-			     " annotation has a repeated modifier");
-		    }
-		    modifiers |= prefixModifiers;
-			
-                    ModifierPragmaVec modifierPragmas = this.modifierPragmas;
-	      
-                    int locType = scanner.startingLoc;
-                    Type type = parseType(scanner);
-	      
-                    // make modifierPragmas non-null, so can retroactively extend
-                    if (modifierPragmas == null)
-                        modifierPragmas = ModifierPragmaVec.make();
-	      
-		    if (scanner.ttype == TagConstants.LPAREN) {
-			// This is a (model) constructor
-			if (tag == TagConstants.GHOST) {
-			    ErrorSet.error(loc, 
-				"A constructor may not be declared ghost");
-			    tag = TagConstants.MODEL;
-			}
-			// Must be a model constructor
-			FormalParaDeclVec args;
-    			argListInAnnotation = true;
-			try {
-			args = parseFormalParameterList(scanner);
-			} finally {
-			argListInAnnotation = false;
-			}
-			int locThrowsKeyword;
-			if (scanner.ttype == TagConstants.THROWS) {
-			    locThrowsKeyword = scanner.startingLoc;
-			} else {
-			    locThrowsKeyword = Location.NULL;
-			}
-			TypeNameVec raises = parseTypeNames(scanner, TagConstants.THROWS);
-			modifierPragmas = parseMoreModifierPragmas(scanner,
-						modifierPragmas);
-			int locOpenBrace = Location.NULL;
-			BlockStmt body = null;
-			if (scanner.ttype == TagConstants.SEMICOLON) {
-			    scanner.getNextToken(); // eats semicolon
-			} else if (scanner.ttype == TagConstants.LBRACE) {
-			    locOpenBrace = scanner.startingLoc;
-			    body = parseBlock(scanner, false);
-                            // FIXME - the above parses with specOnly=true which will not provide the body
-			} else {
-			    ErrorSet.fatal(scanner.startingLoc,
-				"Invalid syntax - expected a " +
-				"semicolon or the start of a constructor body, " +
-				"encountered " + 
-				TagConstants.toString(scanner.ttype));
-			}
-			// FIXME - need to add the method into the decl elements of the type
-			ConstructorDecl md = ConstructorDecl.make(
-						modifiers, modifierPragmas,
-						null, args,
-						raises, body, locOpenBrace,
-						loc, locType, locThrowsKeyword);
-			dst.auxVal = ModelConstructorDeclPragma.make(md,loc);
-			break;
-		    }
-                    int locId = scanner.startingLoc;
-                    Identifier id = parseIdentifier(scanner);
-                    Type vartype = parseBracketPairs(scanner, type);
-	      
-                    VarInit init = null;
-                    int locAssignOp = Location.NULL;
-		    if (scanner.ttype == TagConstants.LPAREN) {
-			// Have the form
-			//     modifiers type id (
-			// so this is a method declaration
-			if (tag == TagConstants.GHOST) {
-			    ErrorSet.error(loc, 
-				"A method may not be declared ghost");
-			    tag = TagConstants.MODEL;
-			}
-			// Must be a model method
-			FormalParaDeclVec args;
-    			argListInAnnotation = true;
-			try {
-			args = parseFormalParameterList(scanner);
-			} finally {
-			argListInAnnotation = false;
-			}
-
-			int locThrowsKeyword;
-			if (scanner.ttype == TagConstants.THROWS) {
-			    locThrowsKeyword = scanner.startingLoc;
-			} else {
-			    locThrowsKeyword = Location.NULL;
-			}
-			TypeNameVec raises = parseTypeNames(scanner, TagConstants.THROWS);
-
-			modifierPragmas = parseMoreModifierPragmas(scanner,
-						modifierPragmas);
-			int locOpenBrace = Location.NULL;
-			BlockStmt body = null;
-			if (scanner.ttype == TagConstants.SEMICOLON) {
-			    scanner.getNextToken(); // eats semicolon
-			} else if (scanner.ttype == TagConstants.LBRACE) {
-			    locOpenBrace = scanner.startingLoc;
-			    body = parseBlock(scanner, false);
-                            // FIXME - the above parses with specOnly=true which will not provide the body
-			} else {
-			    ErrorSet.fatal(scanner.startingLoc,
-				"Invalid syntax - expected a " +
-				"semicolon or the start of a method body, " +
-				"encountered " + 
-				TagConstants.toString(scanner.ttype));
-			}
-			// FIXME - need to add the method into the decl elements of the type
-			MethodDecl md = MethodDecl.make(
-						modifiers, modifierPragmas,
-						null, args,
-						raises, body, locOpenBrace,
-						loc, locId, locThrowsKeyword,
-						id, type,locType);
-			dst.auxVal = ModelMethodDeclPragma.make(md,loc);
+		    if (savedGhostModelPragma != null) {
+			ErrorSet.caution(loc,"Duplicate " +
+				TagConstants.toString(tag) + " tag",
+				savedGhostModelPragma.getStartLoc() );
 		    } else {
-			// Have the form
-			//     modifiers type id X
-		        // where X is not a ( - it is a = or ;
-			// so this is a field declaration
-			if (scanner.ttype == TagConstants.ASSIGN) {
-			    locAssignOp = scanner.startingLoc;
-			    scanner.getNextToken();
-			    init = parseVariableInitializer(scanner, false);
-			}
-			if (scanner.ttype == TagConstants.MODIFIERPRAGMA
-			    || scanner.ttype == TagConstants.SEMICOLON ) {
-			    // if modifier pragma, retroactively add to modifierPragmas
-			    // FIXME - is this still valid ???
-			    parseMoreModifierPragmas(scanner, modifierPragmas);
-			}
-
-//System.out.println("GF static ? " + Modifiers.isStatic(modifiers));
-//((EscPrettyPrint) javafe.ast.PrettyPrint.inst).print(System.out,0,modifierPragmas);
-			FieldDecl decl
-			    = FieldDecl.make(modifiers, modifierPragmas, 
-					     id, vartype, locId, init, locAssignOp );
-		  
-		  
-			if (tag == TagConstants.GHOST) {
-			    dst.auxVal = GhostDeclPragma.make(decl, loc);
-			} else if (tag == TagConstants.MODEL) {
-			    dst.auxVal = ModelDeclPragma.make(decl, loc);
-			}
-			while (scanner.ttype == TagConstants.COMMA) {
-			    scanner.getNextToken(); // skip comma
-			    locId = scanner.startingLoc;
-			    id = parseIdentifier(scanner);
-			    // No bracket pairs allowed with subsequent ids
-		 
-			    init = null;
-			    locAssignOp = Location.NULL;
-			    if (scanner.ttype == TagConstants.ASSIGN) {
-				locAssignOp = scanner.startingLoc;
-				scanner.getNextToken();
-				init = parseVariableInitializer(scanner, false);
-			    }
-			    decl = FieldDecl.make(
-				modifiers, modifierPragmas,
-				id, type, locId, init, locAssignOp);
-			    Object pragma = null;
-			    if (tag == TagConstants.GHOST) {
-				pragma = GhostDeclPragma.make(decl, locId);
-			    } else if (tag == TagConstants.MODEL) {
-				pragma = ModelDeclPragma.make(decl, locId);
-			    }
-			    savePragma( loc, TagConstants.TYPEDECLELEMPRAGMA,
-					pragma);
-
-			}
-			inProcessTag = NEXT_TOKEN_STARTS_NEW_PRAGMA;
-			semicolonExpected = true;
-			if (scanner.ttype == TagConstants.IDENT &&
-			    scanner.identifierVal.toString().equals("initially")) {
-			    // This usage of 'initially' is deprecated
-			    // To get rid of it, just eliminate this if block.
-			    // FIXME
-                            semicolonExpected = false;
-			}
+			savedGhostModelPragma = SimpleModifierPragma.make(tag, loc);
 		    }
-                    break;
-                }
+		    return getNextPragma(dst);
+		    // no fall-through
 
                 case TagConstants.SKOLEM_CONSTANT: {
+		    checkNoModifiers(tag,loc);
                     dst.ttype = TagConstants.STMTPRAGMA;
 	      
                     int locType = scanner.startingLoc;
@@ -1310,6 +1192,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
                 case TagConstants.NON_NULL: // incomplete
                 case TagConstants.UNINITIALIZED: // incomplete
                 case TagConstants.WRITABLE_DEFERRED: // incomplete
+		    // let modifiers accumulate
                     dst.ttype = TagConstants.MODIFIERPRAGMA;
                     dst.auxVal = SimpleModifierPragma.make(tag, loc);
                     break;
@@ -1330,6 +1213,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
                 case TagConstants.READABLE_IF:
                 case TagConstants.REQUIRES:
                 case TagConstants.WRITABLE_IF: {
+		    checkNoModifiers(tag,loc);
                     dst.ttype = TagConstants.MODIFIERPRAGMA;
 		    ExprModifierPragma pragma;
 		    if (scanner.ttype == TagConstants.NOT_SPECIFIED) {
@@ -1358,6 +1242,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
                 case TagConstants.WORKING_SPACE_REDUNDANTLY:// SC HPT 2
                     // parsed and returned (cok)
 		  {
+		    checkNoModifiers(tag,loc);
                     dst.ttype = TagConstants.MODIFIERPRAGMA;
 		    CondExprModifierPragma pragma;
 		    if (scanner.ttype == TagConstants.NOT_SPECIFIED) {
@@ -1388,6 +1273,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
                 case TagConstants.EXSURES_REDUNDANTLY: // SUPPORT COMPLETE (kiniry)
                 case TagConstants.SIGNALS: // SUPPORT COMPLETE (kiniry)
                 case TagConstants.SIGNALS_REDUNDANTLY: {
+		    checkNoModifiers(tag,loc);
                     dst.ttype = TagConstants.MODIFIERPRAGMA;
                     expect(scanner, TagConstants.LPAREN);
                     FormalParaDecl arg = parseExsuresFormalParaDecl(scanner);
@@ -1415,6 +1301,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
 
                 case TagConstants.REFINE:
 		{
+		    checkNoModifiers(tag,loc);
 		    int sloc = scanner.startingLoc;
 		    Expr e = parsePrimaryExpression(scanner);
 		    if (!(e instanceof LiteralExpr) || 
@@ -1467,6 +1354,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
                     // unclear syntax and semantics (kiniry)
                 case TagConstants.RETURNS:
                     // unclear syntax and semantics (kiniry)
+		    checkNoModifiers(tag,loc);
                     eatThroughSemiColon();
                     noteUnsupportedCheckableJmlPragma(loc, tag);
                     return getNextPragma(dst);
@@ -1491,6 +1379,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
                 case TagConstants.MODEL_PROGRAM: {
                     // unclear syntax and semantics (cok/kiniry)
 		    // SKIP the compound statement
+		    checkNoModifiers(tag,loc);
 		    expect(scanner,TagConstants.LBRACE);
 		    int braceCount = 1;
 		    while(true) {
@@ -1527,6 +1416,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
                     // unclear semantics (kiniry)
                 case TagConstants.STATIC_INITIALIZER:
                     // SC AAST 4, unclear syntax and semantics (kiniry)
+		    checkNoModifiers(tag,loc);
                     ErrorSet.fatal(loc, 
                                    "Encountered a keyword we recognize, " + 
                                    "but do not know how to parse: " +
@@ -1534,27 +1424,67 @@ public class EscPragmaParser extends Parse implements PragmaParser
                     break;
 	
                 default:
+		    if (savedGhostModelPragma != null) {
+			// Ghost is special because it can be placed in any
+			// order like a simple modifier, but it signals that
+			// there is a regular field declaration within the
+			// annotation that follows (though there might be 
+			// more modifiers and simple pragmas before the 
+			// field declaration begins).  So we have gotten all
+			// of the modifiers above, and we see that one of them
+			// is ghost, so we go off to parse the field declaration
+			semicolonExpected = parseDeclaration(dst, loc);
+		    } else {
                     ErrorSet.error(loc, "Unrecognized pragma: " + tag + " " +
                                    TagConstants.toString(tag));
 		    // Skip to end
 		    while (scanner.ttype != TagConstants.EOF) scanner.getNextToken();
+		    modifiers = Modifiers.NONE;
 		    return false;
+		    }
             }
 
             if (semicolonExpected) {
+		modifiers = Modifiers.NONE;
                 eatSemiColon(kw);
+		if (savedGhostModelPragma != null) {
+		    ErrorSet.error(savedGhostModelPragma.getStartLoc(),
+			"Expected a declaration within the annotation following the " + TagConstants.toString(savedGhostModelPragma.getTag()) + " keyword");
+		    savedGhostModelPragma = null;
+		}
                 inProcessTag = NEXT_TOKEN_STARTS_NEW_PRAGMA;
 	    }
             if (DEBUG)
                 Info.out("getNextPragma: parsed : " + dst.ztoString());
             return true;
 	} catch (javafe.util.FatalError e) {
+	    modifiers = Modifiers.NONE;
+	    savedGhostModelPragma = null;
 	    eatThroughSemiColon();
 	    return false;
         } catch (IOException e) { 
+	    modifiers = Modifiers.NONE;
+	    savedGhostModelPragma = null;
             return false; 
         }
     }
+
+    /** Issues an error if any Java modifiers have accumulated, and resets the
+	accumulated modifiers to NONE.
+    */
+    //@ modifies modifiers, ErrorSet.cautions if modifiers != 0;
+    //@ ensures true;
+    //@ signals (Exception e) false;
+    //@
+    private void checkNoModifiers(int tag, int loc) {
+	if (modifiers != 0) {
+	    ErrorSet.caution(loc,
+		"Access modifiers are not allowed prior to "
+		+ TagConstants.toString(tag));
+	    modifiers = Modifiers.NONE;
+	}
+    }
+
 
     /**
      * Emit an error message to the user that support for the supplied
@@ -1597,20 +1527,14 @@ public class EscPragmaParser extends Parse implements PragmaParser
      * semi-colon-terminated expressions in pragmas that we do not yet
      * really parse or handle.
      *
-     * @return the full expression, not including the semi-colon, as a string.
      */
-    private String eatThroughSemiColon() {
-        StringBuffer sb = new StringBuffer();
+    private void eatThroughSemiColon() {
         while (scanner.ttype != TagConstants.SEMICOLON) {
-	    if (scanner.ttype == TagConstants.EOF) return sb.toString();
-            sb.append(TagConstants.toString(scanner.ttype));
-            Info.out("eating " + TagConstants.toString(scanner.ttype));
-            sb.append(" ");
+	    if (scanner.ttype == TagConstants.EOF) return;
             scanner.getNextToken();
         }
         // throw away final semi-colon
         scanner.getNextToken();
-        return sb.toString();
     }
 
     /**
@@ -1622,24 +1546,24 @@ public class EscPragmaParser extends Parse implements PragmaParser
      */
     private void eatSemiColon(Identifier kw) {
         if (scanner.ttype == TagConstants.SEMICOLON) scanner.getNextToken();
-        else if (scanner.ttype != TagConstants.EOF)
+        else if (scanner.ttype != TagConstants.EOF) {
+	  if (kw != null)
             ErrorSet.fatal(scanner.startingLoc, 
 		   "Semicolon required when a " + kw.toString()
 		    + " pragma is followed by another pragma (found "
 		    + TagConstants.toString(scanner.ttype) + " instead).");
+	  else
+            ErrorSet.fatal(scanner.startingLoc, 
+		   "Semicolon required when a"
+		    + " pragma is followed by another pragma (found "
+		    + TagConstants.toString(scanner.ttype) + " instead).");
+	}
 //	else
 //	    ErrorSet.caution(scanner.startingLoc,
 //		"JML requires annotations to be terminated with a semicolon");
     }
 
-    /*@ requires inProcessTag == TagConstants.ALSO_MODIFIES ||
-      @          inProcessTag == TagConstants.ASSIGNABLE ||
-      @          inProcessTag == TagConstants.ASSIGNABLE_REDUNDANTLY ||
-      @          inProcessTag == TagConstants.MODIFIABLE ||
-      @          inProcessTag == TagConstants.MODIFIABLE_REDUNDANTLY ||
-      @          inProcessTag == TagConstants.MODIFIES_REDUNDANTLY ||
-      @          inProcessTag == TagConstants.LOOP_PREDICATE ||
-      @          inProcessTag == TagConstants.MODIFIES ||
+    /*@ requires inProcessTag == TagConstants.LOOP_PREDICATE ||
       @          inProcessTag == TagConstants.MONITORED_BY ||
       @          inProcessTag == TagConstants.STILL_DEFERRED;
       @*/
@@ -1742,22 +1666,6 @@ public class EscPragmaParser extends Parse implements PragmaParser
 
         // First parse PrimaryCore into variable primary
         switch(l.ttype) {
-/*
-            case TagConstants.NOT_SPECIFIED:
-                primary = NotSpecifiedExpr.make(l.startingLoc);
-                l.getNextToken();
-                break;
-                
-            case TagConstants.EVERYTHING:
-                primary = EverythingExpr.make(l.startingLoc);
-                l.getNextToken();
-                break;
-                    
-            case TagConstants.NOTHING:
-                primary = NothingExpr.make(l.startingLoc);
-                l.getNextToken();
-                break;
- */               
             case TagConstants.RES: 
                 primary = ResExpr.make(l.startingLoc);
                 l.getNextToken();
@@ -2171,6 +2079,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
      * @return the parsed formal paramater declaration.
      */
     //@ requires l.m_in != null;
+// FIXME - do we really allow modifier pragmas in here?
     public FormalParaDecl 
             parseExsuresFormalParaDecl(/*@ non_null @*/ EscPragmaLex l) {
         int modifiers = parseModifiers(l);
@@ -2224,7 +2133,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
     }
 
     /**
-     * Parse the primative type used in an <code>exsures</code> or
+     * Parse the primitive type used in an <code>exsures</code> or
      * <code>signals</code> pragma.
      *
      * @param l the lexer from which to read and parse.
@@ -2386,85 +2295,19 @@ public class EscPragmaParser extends Parse implements PragmaParser
         parseStoreRefNameSuffix(l);
     }
 
-    //@ requires l.m_in != null
-    //@ modifies modifierPragmas
-    public int parseModifiers(/*@ non_null @*/ Lex l) {
-	return parseModifiers(l,false);
-    }
+    protected int modifiers = Modifiers.NONE;
 
-    public int parseModifiers(/*@ non_null @*/ Lex l, boolean inModel) {
-        boolean seenPragma = false;
-        int modifiers = Modifiers.NONE;
-
-        getModifierLoop:
-        while(true) {
-            if (l.ttype == TagConstants.MODIFIERPRAGMA) {
-		// FIXME
-		// This part does not seem to work, since the Pragmas are
-		// lexed as IDENTs
-                if (! seenPragma) { seqModifierPragma.push(); seenPragma = true; }
-                seqModifierPragma.addElement(l.auxVal);
-                l.getNextToken();
-                continue getModifierLoop;
-            } else {
-                for( int i=0; i<modifierKeywords.length; i++ ) {
-                    if( l.ttype == modifierKeywords[i] ) {
-                        // Token is modifier keyword 
-                        int modifierBit = 1<<i;
-                        if( (modifiers & modifierBit) != 0 ) {
-                            fail(l.startingLoc, 
-				"Duplicate occurrence of modifier '"
-                                 +PrettyPrint.inst.toString(l.ttype)+"'");
-                        }
-                        if( (modifiers & Modifiers.ACCESS_MODIFIERS) != 0 &&
-                            (modifierBit & Modifiers.ACCESS_MODIFIERS) != 0 ) {
-                            fail(l.startingLoc, 
-                                 "Cannot have more than one of the access modifiers "+
-                                 "public, protected, private");
-                        }
-                        modifiers |= modifierBit;
-                        l.getNextToken();
-                        continue getModifierLoop;
-                    }
-                }
-                if (inModel) {
-                    int tag = l.ttype;
-                    if (tag == TagConstants.IDENT)
-                        tag = TagConstants.fromIdentifier(l.identifierVal);
-                    if (tag == TagConstants.PURE) {
-			modifiers |= Modifiers.ACC_PURE;
-			l.getNextToken();
-			continue getModifierLoop;
-                    }		
-                    if (tag == TagConstants.HELPER) {
-			modifiers |= Modifiers.ACC_HELPER;
-			l.getNextToken();
-			continue getModifierLoop;
-                    }		
-                    if (tag == TagConstants.NON_NULL) {
-			// FIXME _ What do we do with it?
-			l.getNextToken();
-			continue getModifierLoop;
-                    }
-                    if (tag == TagConstants.INSTANCE) {
-			// FIXME _ What do we do with it?
-			l.getNextToken();
-			continue getModifierLoop;
-                    }
-                }
-	    }
-            // Next token is not a modifier
-
-            if (! seenPragma)
-                modifierPragmas = null;
-            else
-                modifierPragmas
-                    = ModifierPragmaVec.popFromStackVector(seqModifierPragma);
-            return modifiers;
-        }
+    // Adds any Java modifiers found into the 'modifiers' field
+    public void parseJavaModifiers() {
+	int i;
+        do {
+	    i = getJavaModifier(scanner,modifiers);
+	    modifiers |= i;
+	} while (i != 0);
     }
 
     private boolean argListInAnnotation = false;
+
     public FormalParaDeclVec parseFormalParameterList(Lex l) {
 	/* Should be on LPAREN */
 	if (l.ttype != TagConstants.LPAREN)
@@ -2513,6 +2356,215 @@ public class EscPragmaParser extends Parse implements PragmaParser
 	    return FormalParaDeclVec.popFromStackVector(seqFormalParaDecl);
 	}
     }
+
+    /** Parses a declaration that appears in a ghost or model annotation -
+	can be a ghost or model field or a model method or constructor.
+	@return true if a terminating semicolon is expected next
+    */
+    public boolean parseDeclaration(Token dst, int loc) {
+      try {
+
+	int tag = savedGhostModelPragma.getTag();
+	dst.ttype = TagConstants.TYPEDECLELEMPRAGMA;
+			
+	// Parse the type name and brackets associated with it
+	int locType = scanner.startingLoc; 
+	Type type = parseType(scanner); 
+
+	if (scanner.ttype == TagConstants.LPAREN) {
+	    if (tag == TagConstants.GHOST) {
+		ErrorSet.error(savedGhostModelPragma.getStartLoc(),
+			"A constructor may not be declared ghost");
+	    }
+	    return parseConstructorDeclTail(dst,loc,type,locType);
+	     // Note the finally block
+	}
+
+	// make modifierPragmas non-null, so can retroactively extend
+	// Only need this for old-style ESC/Java appended pragmas
+	ModifierPragmaVec modifierPragmas = ModifierPragmaVec.make();
+	      
+	// Parse the id
+	int locId = scanner.startingLoc;
+	Identifier id = parseIdentifier(scanner);
+
+	// Now we decide whether this is a field or method.
+	// A field will have either an = or ; or , at this point
+	// A method will have a (
+
+	if (scanner.ttype == TagConstants.LPAREN) {
+		if (tag == TagConstants.GHOST) {
+		    ErrorSet.error(savedGhostModelPragma.getStartLoc(),
+			"A method may not be declared ghost");
+		}
+		return parseMethodDeclTail(dst,loc,type,locType,id,locId);
+		// Note the finally block
+	} else {
+		return parseFieldDeclTail(dst,loc,locId,type,id);
+		// Note the finally block
+	}
+      } finally {
+	inProcessTag = NEXT_TOKEN_STARTS_NEW_PRAGMA;
+	savedGhostModelPragma = null;
+	modifiers = Modifiers.NONE;
+      }
+    }
+
+    public boolean parseFieldDeclTail(Token dst, int loc, int locId, Type type, Identifier id) {
+	int tag = savedGhostModelPragma.getTag();
+
+	// Parse any additional brackets and add them to the type
+	Type vartype = parseBracketPairs(scanner, type);
+  
+	// Get the initializer if there is one
+	VarInit init = null;
+	int locAssignOp = Location.NULL;
+	if (scanner.ttype == TagConstants.ASSIGN) {
+	    locAssignOp = scanner.startingLoc;
+	    scanner.getNextToken();
+	    init = parseVariableInitializer(scanner, false);
+	}
+	ModifierPragmaVec modifierPragmas = ModifierPragmaVec.make();
+	if (scanner.ttype == TagConstants.MODIFIERPRAGMA) {
+	    // FIXME - only need this for old ESC/Java pragmas
+	    // but some old tests rely on it
+	    modifierPragmas = parseMoreModifierPragmas(scanner,
+				modifierPragmas);
+	}
+
+	FieldDecl decl
+	    = FieldDecl.make(modifiers, modifierPragmas, 
+			     id, vartype, locId, init, locAssignOp );
+	if (tag == TagConstants.GHOST) {
+	    dst.auxVal = GhostDeclPragma.make(decl, loc);
+	} else if (tag == TagConstants.MODEL) {
+	    dst.auxVal = ModelDeclPragma.make(decl, loc);
+	}
+
+	while (scanner.ttype == TagConstants.COMMA) {
+	    scanner.getNextToken(); // skip comma
+	    locId = scanner.startingLoc;
+	    id = parseIdentifier(scanner);
+	    Type vartype2 = parseBracketPairs(scanner, type);
+ 
+	    init = null;
+	    locAssignOp = Location.NULL;
+	    if (scanner.ttype == TagConstants.ASSIGN) {
+		locAssignOp = scanner.startingLoc;
+		scanner.getNextToken();
+		init = parseVariableInitializer(scanner, false);
+	    }
+	    decl = FieldDecl.make(
+		modifiers, null,
+		id, vartype2, locId, init, locAssignOp);
+	    Object pragma = null;
+	    if (tag == TagConstants.GHOST) {
+		pragma = GhostDeclPragma.make(decl, locId);
+	    } else if (tag == TagConstants.MODEL) {
+		pragma = ModelDeclPragma.make(decl, locId);
+	    }
+	    savePragma( loc, TagConstants.TYPEDECLELEMPRAGMA,
+			pragma);
+
+	}
+	return true;
+    }
+
+    public boolean parseConstructorDeclTail(Token dst, int loc, Type type,
+						int locType) {
+	// Must be a model constructor
+	FormalParaDeclVec args;
+	argListInAnnotation = true;
+	try {
+	    args = parseFormalParameterList(scanner);
+	} finally {
+	    argListInAnnotation = false;
+	}
+	int locThrowsKeyword;
+	if (scanner.ttype == TagConstants.THROWS) {
+	    locThrowsKeyword = scanner.startingLoc;
+	} else {
+	    locThrowsKeyword = Location.NULL;
+	}
+	TypeNameVec raises = parseTypeNames(scanner, TagConstants.THROWS);
+	ModifierPragmaVec modifierPragmas = ModifierPragmaVec.make();
+	modifierPragmas = parseMoreModifierPragmas(scanner,
+				modifierPragmas);
+	int locOpenBrace = Location.NULL;
+	BlockStmt body = null;
+	if (scanner.ttype == TagConstants.SEMICOLON) {
+	    scanner.getNextToken(); // eats semicolon
+	} else if (scanner.ttype == TagConstants.LBRACE) {
+	    locOpenBrace = scanner.startingLoc;
+	    body = parseBlock(scanner, false);
+	    // FIXME - the above parses with specOnly=true which will not provide the body
+	} else {
+	    ErrorSet.fatal(scanner.startingLoc,
+		"Invalid syntax - expected a " +
+		"semicolon or the start of a constructor body, " +
+		"encountered " + 
+		TagConstants.toString(scanner.ttype));
+	}
+	// FIXME - need to add the method into the decl elements of the type
+	ConstructorDecl md = ConstructorDecl.make(
+				modifiers, modifierPragmas,
+				null, args,
+				raises, body, locOpenBrace,
+				loc, locType, locThrowsKeyword);
+	dst.auxVal = ModelConstructorDeclPragma.make(md,loc);
+	return false; // No semicolon, or it is already eaten
+    }
+
+    public boolean parseMethodDeclTail(Token dst, int loc, Type type, 
+			int locType, Identifier id, int locId){
+ 
+  
+	// Must be a model method
+	FormalParaDeclVec args;
+	argListInAnnotation = true;
+	try {
+	    args = parseFormalParameterList(scanner);
+	} finally {
+	    argListInAnnotation = false;
+	}
+
+	int locThrowsKeyword;
+	if (scanner.ttype == TagConstants.THROWS) {
+	    locThrowsKeyword = scanner.startingLoc;
+	} else {
+	    locThrowsKeyword = Location.NULL;
+	}
+	TypeNameVec raises = parseTypeNames(scanner, TagConstants.THROWS);
+
+	ModifierPragmaVec modifierPragmas = ModifierPragmaVec.make();
+	modifierPragmas = parseMoreModifierPragmas(scanner,
+				modifierPragmas);
+	int locOpenBrace = Location.NULL;
+	BlockStmt body = null;
+	if (scanner.ttype == TagConstants.SEMICOLON) {
+	    scanner.getNextToken(); // eats semicolon
+	} else if (scanner.ttype == TagConstants.LBRACE) {
+	    locOpenBrace = scanner.startingLoc;
+	    body = parseBlock(scanner, false);
+	    // FIXME - the above parses with specOnly=true which will not provide the body
+	} else {
+	    ErrorSet.fatal(scanner.startingLoc,
+		"Invalid syntax - expected a " +
+		    "semicolon or the start of a method body, " +
+		    "encountered " + 
+	    TagConstants.toString(scanner.ttype));
+	}
+	MethodDecl md = MethodDecl.make(
+			    modifiers, modifierPragmas,
+			    null, args,
+			    raises, body, locOpenBrace,
+			    loc, locId, locThrowsKeyword,
+			    id, type,locType);
+	dst.auxVal = ModelMethodDeclPragma.make(md,loc);
+	return false; // No semicolon, or it is already eaten
+    }
+
+
 } // end of class EscPragmaParser
 
 /*

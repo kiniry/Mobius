@@ -528,6 +528,13 @@ public class ModelDeclPragma extends TypeDeclElemPragma
 
   public int getStartLoc() { return loc; }
   public int getEndLoc() { return decl.getEndLoc(); }
+  public void decorate(ModifierPragmaVec modifierPragmas) {
+    if (decl.pmodifiers == null) {
+	decl.pmodifiers = modifierPragmas;
+    } else if (modifierPragmas != null) {
+	decl.pmodifiers.append(modifierPragmas); 
+    }
+  }
 }
 
 public class DependsPragma extends TypeDeclElemPragma
@@ -600,6 +607,13 @@ public class GhostDeclPragma extends TypeDeclElemPragma
 
   public int getStartLoc() { return loc; }
   public int getEndLoc() { return decl.getEndLoc(); }
+  public void decorate(ModifierPragmaVec modifierPragmas) {
+    if (decl.pmodifiers == null) {
+	decl.pmodifiers = modifierPragmas;
+    } else if (modifierPragmas != null) {
+	decl.pmodifiers.append(modifierPragmas); 
+    }
+  }
 }
 
 public class StillDeferredDeclPragma extends TypeDeclElemPragma

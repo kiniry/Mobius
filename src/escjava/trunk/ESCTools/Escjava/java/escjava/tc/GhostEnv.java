@@ -8,6 +8,8 @@ import java.util.Hashtable;
 import javafe.ast.*;
 import escjava.ast.GhostDeclPragma;
 import escjava.ast.ModelDeclPragma;
+import escjava.ast.TagConstants;
+import escjava.translate.GetSpec;
 
 import javafe.tc.*;
 
@@ -90,6 +92,7 @@ public class GhostEnv extends EnvForTypeSig
      * the hashtable {@link #fields}.  Also preps them (just resolves their types if
      * needed).
      */
+// FIXME - this gets called a great many times
     private void collectGhostFields(TypeSig s) {
 	// Iterate over all TypeDeclElems in s:
 	TypeDecl d = s.getTypeDecl();
@@ -98,13 +101,17 @@ public class GhostEnv extends EnvForTypeSig
 	    TypeDeclElem elem = elems.elementAt(i);
 	    if (elem instanceof GhostDeclPragma) {
 		FieldDecl ghost = ((GhostDeclPragma)elem).decl;
-		if (!fields.containsKey(ghost)) {
+		boolean isStatic = isStatic(ghost);
+		if ((isStatic || !staticContext) &&
+				!fields.containsKey(ghost)) {
 		    s.getEnclosingEnv().resolveType(ghost.type);
 		    fields.put(ghost, ghost);
 		}
 	    } else if (elem instanceof ModelDeclPragma) {
 		FieldDecl ghost = ((ModelDeclPragma)elem).decl;
-		if (!fields.containsKey(ghost)) {
+		boolean isStatic = isStatic(ghost);
+		if ((isStatic || !staticContext) &&
+				!fields.containsKey(ghost)) {
 		    s.getEnclosingEnv().resolveType(ghost.type);
 		    fields.put(ghost, ghost);
 		}
@@ -122,6 +129,14 @@ public class GhostEnv extends EnvForTypeSig
 	for (int i = 0; i < d.superInterfaces.size(); i++)
 	    collectGhostFields(TypeSig.getSig(
 		d.superInterfaces.elementAt(i)));
+    }
+
+    static public boolean isStatic(FieldDecl d) {
+	boolean isStatic = d.parent instanceof InterfaceDecl;
+	if (Modifiers.isStatic(d.modifiers)) isStatic = true;
+	if (GetSpec.findModifierPragma(d,
+		TagConstants.INSTANCE)!=null) isStatic = false;
+	return isStatic;
     }
 
     /**

@@ -1428,11 +1428,15 @@ while (ee.hasMoreElements()) {
     }
 
     static public void removeModifierPragma(/*@ non_null */ GenericVarDecl vdecl, int tag) {
-        if (vdecl.pmodifiers != null) {
-            for (int j = 0; j < vdecl.pmodifiers.size(); j++) {
-                ModifierPragma prag= vdecl.pmodifiers.elementAt(j);
+	removeModifierPragma(vdecl.pmodifiers,tag);
+    }
+
+    static public void removeModifierPragma(ModifierPragmaVec p, int tag) {
+        if (p != null) {
+            for (int j = 0; j < p.size(); j++) {
+                ModifierPragma prag= p.elementAt(j);
                 if (prag.getTag() == tag) {
-			vdecl.pmodifiers.removeElementAt(j);
+			p.removeElementAt(j);
 			--j;
 		}
             }

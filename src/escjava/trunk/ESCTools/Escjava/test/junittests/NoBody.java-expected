@@ -15,6 +15,6 @@ NoBody.java:7: Warning: Possible null dereference (Null)
     [TIME]  failed
 
 NoBody: NoBody() ...
-    [TIME]  passed
+    [TIME]  passed immediately
   [TIME total]
 1 warning

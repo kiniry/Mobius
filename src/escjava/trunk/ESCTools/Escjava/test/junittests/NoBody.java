@@ -6,5 +6,5 @@ public class NoBody {
 	public void n() {
 	    m().m();
 	}
-
+	public NoBody();
 }

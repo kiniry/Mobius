@@ -402,7 +402,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                     setType( fa, fa.decl.type );
 
                     if (fa.od instanceof TypeObjectDesignator &&
-                        !Modifiers.isStatic(fa.decl.modifiers)) {
+			!GhostEnv.isStatic(fa.decl)) {
                         // Is fa.decl an instance field of the same class as fa is
                         // part of?
                         boolean thisField = false;
@@ -582,8 +582,9 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
             case TagConstants.SUBTYPE:
                 {
                     BinaryExpr be = (BinaryExpr)e;
-                    Type expected = (tag == TagConstants.SUBTYPE ?
-                                     Types.typecodeType : Types.booleanType);
+                    Type expected = Types.booleanType;
+		    if (tag == TagConstants.SUBTYPE) 
+				expected = Types.typecodeType;
                     be.left = checkExpr(env, be.left, expected);
                     be.right = checkExpr(env, be.right, expected);
                     setType(e, Types.booleanType);
@@ -903,8 +904,14 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
                     be.left = checkExpr(env, be.left);
                     isPredicateContext = isCurrentlyPredicateContext;
                     be.right = checkExpr(env, be.right);
-                    Type t = checkBinaryExpr(be.op, be.left, be.right, be.locOp);
-                    setType( be, t );
+		    if (false && Types.isTypeType(getType(be.left)) &&
+// DO WE NEED TO check the composite expressions ??? FIXME TYPE-EQUIV
+			Types.isTypeType(getType(be.right))) {
+			setType( be, Types.booleanType);
+		    } else {
+			Type t = checkBinaryExpr(be.op, be.left, be.right, be.locOp);
+			setType( be, t );
+		    }
                     return be;
                 }
       
@@ -1074,8 +1081,8 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
     // Pragma checkers
 
     protected  void checkTypeDeclElemPragma(TypeDeclElemPragma e) {
-        inAnnotation = true;	// Must be reset before we exit!
         int tag = e.getTag();
+        inAnnotation = true;	// Must be reset before we exit!
 
         switch(tag) {
             case TagConstants.AXIOM:
@@ -1206,6 +1213,12 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 
                 checkModifierPragmaVec( decl.pmodifiers, decl, rootEnv );
 
+		if (Modifiers.isStatic(decl.modifiers)) {
+		    ModifierPragma inst = GetSpec.findModifierPragma(decl,
+					TagConstants.INSTANCE);
+		    if (inst != null) ErrorSet.error(inst.getStartLoc(),
+			"May not specify both static and instance on a declaration");
+		}
 /*
 		System.out.println("GHOST" + Location.toString(e.getStartLoc()));
 	        if (GetSpec.findModifierPragma(decl,TagConstants.INSTANCE) != null) {
@@ -1267,8 +1280,10 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
         inAnnotation = false;
     }
 
-    protected void checkModifierPragma(ModifierPragma p, ASTNode ctxt, Env env) {
+    protected boolean checkModifierPragma(ModifierPragma p, ASTNode ctxt, Env env) {
 
+	boolean remove = false;
+	boolean savedInAnnotation = inAnnotation;
         inAnnotation = true;	// Must be reset before we exit!
         int tag = p.getTag();
         switch(tag) 
@@ -1452,9 +1467,14 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 	    case TagConstants.INSTANCE:
 	        {
 		    int ctag = ctxt.getTag();
-		    ErrorSet.error(p.getStartLoc(),
+/*
+		    if (!(ctxt instanceof GhostDeclPragma) &&
+			!(ctxt instanceof ModelDeclPragma)) 
+			ErrorSet.error(p.getStartLoc(),
 			"An instance modifier may only be applied to ghost and model fields");
+*/
 		    break;
+// FIXME - what about model methods???
 		}
 
 	    case TagConstants.PURE:
@@ -1932,11 +1952,15 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 		break;
 
             default:
-                Assert.fail("Unexpected tag " + tag + 
-				" " + TagConstants.toString(tag) +
-				" " + p.getClass());
+                ErrorSet.error(p.getStartLoc(),
+				"Ignored unexpected " +  
+				TagConstants.toString(tag) +
+				" tag");
+		remove = true;
+		break;
         }
-        inAnnotation = false;
+        inAnnotation = savedInAnnotation;
+	return remove;
     }
 
     /**

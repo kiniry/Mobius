@@ -25,8 +25,11 @@ Heavyweight.java
 ## Modify everything tests
 ModEverything.java
 ModE.java
+## Delete these
+ParseInitially.java
 ## New tests
 Privacy.java
 Instance.java
 Mod.java
 InstanceError.java
+Type.java
