@@ -5,23 +5,40 @@
 
 %%%Macros
 \newcommand{\eframe}[4]{\langle #1, #2, #3, #4 \rangle}
-\newcommand{\state}[2]{\langle #1, #2 \rangle}
-\newcommand{\stateend}{\langle \texttt{end} \rangle}
 \newcommand{\cf}{\mathit{sf}}
 \newcommand{\aut}{a}
 \newcommand{\automata}[5]{\langle #1,#2,#3,#4,#5 \rangle^A} 
-\newcommand{\theautomaton}{\automata{Q}{\delta}{q_0}{V}{I}}
+\newcommand{\qu}{\alpha}
+\newcommand{\theautomaton}{\automata{Q}{\delta}{\qu_0}{V}{I}}
 \newcommand{\floor}[1]{\lfloor #1 \rfloor}
+%\newcommand{\em}{\mathit{em}}
 \newcommand{\emdef}[2]{(#1,#2)}
+\newcommand{\cons}{\texttt{::}}
+
+\newcommand{\excval}[1]{\texttt{E}(#1)}
+\newcommand{\retval}[1]{\texttt{R}}
+\newcommand{\normval}{\texttt{N}}
+\newcommand{\assertval}[1]{\texttt{A}}
+\newcommand{\exc}{\mathit{ex}}
+\newcommand{\brk}{\mathit{brk}}
+
+\newcommand{\means}[1]{\lceil #1 \rceil}
+\newcommand{\eval}[2]{P \vdash #1 \Downarrow #2}
+\newcommand{\emeval}[2]{em \vdash #1 \Downarrow #2}
+\newcommand{\evale}[2]{#1 \Downarrow #2}
+\newcommand{\checktrue}[2]{#1\models #2}
+\newcommand{\evalg}[2]{G \vdash #1 \Downarrow #2}
+\newcommand{\state}[1]{\langle #1 \rangle}
 % annotation
-
-
+\newcommand{\genv}{\gamma}
+\newcommand{\gcomp}{\Gamma}
 
 \newcommand{\annvar}[1]{\mathtt{#1}}
 
 \newcommand{\pre}{\mathit{pre}}
 \newcommand{\post}{\mathit{post}}
 \newcommand{\ppre}{\mathit{ppre}}
+\newcommand{\ppreann}{\overline{\mathit{ppre}}}
 \newcommand{\ppost}{\mathit{ppost}}
 \newcommand{\mod}{\mathit{mod}}
 \newcommand{\fv}{\mathit{fv}}
@@ -39,7 +56,7 @@
 \newtheorem{example}{Example}
 %% End macros
 
-\title{From Security Automata to  Hoare-like Program Annotations}
+\title{Security Automata, Program Annotations and High-level Security Properties}
 
 \author{Igor Siveroni}
 \date{}
@@ -50,238 +67,411 @@
 
 \section{Introduction}
 
+To do:
+\begin{itemize}
+\item Security Automata. Examples.
+\item Core Annotations.
+\item Two propagation functions: wp-based and cfg-based.
+\item Check that recursion works.
+\item Soundness of cfg-based. Try completenes/equality with a more abstract semantics.
+\item Completeness of wp-based.
+\item Examples. What can and can't be done e.g properties about local variables after event (method call).
+\end{itemize}
+
 \section{The Language}
 
 \subsection{Syntax}
 
-The syntax of expressions and statements is defined as follows:
+We define in Figure~\ref{fig:syntax} the syntax of a simple imperative procedural language (core subset) with guard statements and program annotations.
+The core subset corresponds to a simple procedural language with global variables.
+The language deals with two kind of variables: program variables (\textrm{PVar}) and ghost variables (\textrm{Ghost}).
+Statements of the core subset of the language deal solely with program variables, which are introduced by the global variable declaration (global variables) at the begining of the program or as parameters in method declarations (local variables).
+
+Ghost variables are a special type of global variables introduced by the user to model program properties as annotations.
+Annotations are added in two ways: as method  pre- and post- conditions, and in the form of guard statements.
+Annotations use program and ghost variables. Ghost variables are updated with a special set statement.
+
+
+
+\input{syntax.tex}
+
+
+A program is made of a global variable declaration, a ghost variable declaration and  a non-empty sequence of (annotated) method declarations.
+All global and ghost variables must be declared at the beginning of the program and must initialisation values.
+A method delaration is made of the method's annotations, the method's name, the list of parameters (variable names) and the method's body (a statement). Declarations without a body correspond to native methods. 
+
+% statements
+% syntax of anotations
+
+
+% notation
+The global and ghost variable declarations, found in $P.\mathit{globals}$ and  $P.\mathit{ghost}$,  are parsed as mappings from (the declared) variables to (their initial) constants.
+Method declarations, $P.\mathit{methods}$, are denoted by tuples. We write $P\|m\|$ to obtain the tuple that denotes the declaration of method $m$:
+\begin{displaymath}
+P\|m\| = \langle p,\bar{s}_0,q,\bar{s}_1,s_\bot,x_1 :: \ldots ::x_{|m|} \rangle
+\end{displaymath}
+where the first four elements ($p,\bar{s}_0,q,\bar{s}_1$) correspond to the method's annotations (\texttt{requires}, \texttt{pre-set}, \texttt{ensures} and \texttt{post-set}, respectively) $s_\bot$ its body and $|m|$  the method's arity. 
+We shall write $\|m\|$ whenever $P$ is clear from the context. 
+
+\begin{definition}[Valid Program]
+A program is valid if it satisfies the syntactic rules of Figure~\ref{fig:syntax}, all method names used by method call statements correspond to the methods declared in the program i.e. belong to $P.\mathit{methods}$, all execution paths end with \texttt{return} and there exists a non-native method called \texttt{main}.
+\end{definition}
+
+% language subsets.
+
+%%% End of annotations
+
+\subsection{Operational Semantics} \label{sec:opsem}
+
+
+The operational semantics of the language is divided into two parts: execution of statements and evaluation of expressions. Similarly, the semantics deals with two kind of values, expression values ($\textrm{ExpVal}$) and statement values ($\textrm{StmtVal}$).
+
+The first part of the semantics reasons about the changes performed to the program's state by the execution of a statement. 
+A program state $\state{\genv,\rho} $ is made of two components, the local environment $\rho$ that maps local variables to constants, and the environment of  global and ghost variables $\genv$.
 \begin{displaymath}
 \begin{array}{rcl}
-e & \in & \textrm{Exp} \\
-e & ::= & c \mid x \mid e_1 \;aOp\; e_2 \\  
-b & \in & \textrm{BExp} \\
-b & ::= & \texttt{tt} \mid \texttt{ff} \mid e_1 \;\mathit{bOp}\; e_2 \mid
-	   \texttt{not}\;b \mid b_1 \;\texttt{and}\; b_2 \mid b_1 \;\texttt{or}\; b_2   \\
-s & \in & \textrm{Stmt} \\
-s & ::= & \texttt{skip} \mid x \texttt{:=}\; e \mid
-         \texttt{if }e_0\;s_1\;s_2 \mid
-	\texttt{while }b\texttt{ do }s \mid s_1; s_2 \\
-  & & m(e_1,\ldots,e_{|m|}) \mid \texttt{return} \\
-m & \in & \textrm{MethodName} 
+\sigma & \in & \textrm{State} = \textrm{Genv} \times \textrm{Lenv} \\
+\sigma & ::= & \state{\genv,\rho} \\
+\genv & \in & \textrm{Genv} = (\textrm{PVar} \cup \textrm{Ghost}) \rightarrow \textrm{ValConst} \\
+\rho & \in & \textrm{Lenv} = \textrm{PVar} \rightarrow \textrm{ValConst}
 \end{array}
 \end{displaymath}
+Execution is associated to one parameter: the program $P$ that is being executed.
+We write $\eval{\state{\genv,\rho},s}{\state{\genv',\rho'},w}$ if  $\state{\genv',\rho'}$ is  the new state after the execution statement $s$ in program state $\state{\genv,\rho}$, and statement value $w$ is its result.
 
-A PROC program is a non-empty sequence of method declarations. A method delaration is made of the method's name, the list of parameters (variable names) and the method's body, as defined by the following syntax:
+\input{semantics-normal.tex}
+
+The execution of an statement can end either without interruption  or abruptly. The latter is the result of the execution of a return statement or a failed assert - exceptions are treated similarly (Section~\ref{sec:exceptions}).
+Statement values are defined by:
 \begin{displaymath}
 \begin{array}{rcl}
-P & \in & \textrm{Decl}^{+}  \\
-d & \in & \textrm{Decl} \\
-d & ::= & \texttt{method } m(x_1,\ldots,x_n) = s \texttt{ end} \mid \texttt{method } \texttt{native } m(x_1,\ldots,x_n)
+w & \in & \textrm{StmtVal} \\
+w & ::= & \normval \mid \brk \\
+\brk & \in & \textrm{BreakVal} \\
+\brk & ::= & \retval{} \mid \assertval{} 
 \end{array}
 \end{displaymath}
-Given method declaration ``\texttt{method }$m(x_1,\ldots,x_n) = s$\texttt{ end}'', we write $P\|m\|$ to denote the tuple that contains the methods's body and parameter names, such that:
+We write $\eval{\sigma,s}{\sigma',\retval{}}$ if the execution of $s$ was terminated by a $(\texttt{return})$ statement.
+Termination due to the failure of checking an assertion is expressed by $\eval{\sigma,s}{\sigma',\assertval{}}$.
+Otherwise we say a statement returns $\normval$ though we may  write $\eval{\sigma,s}{\sigma'}$ instead.
+
+%%%%%%
+%%%%%%  Natural Semantics - Expressions
+\begin{figure}[tbp]
 \begin{displaymath}
-P\|m\| = \langle s,x_1 :: \ldots ::x_{|m|} \rangle
-\end{displaymath}
-where $|m|$ is the method's arity. However, we shall write $\|m\|$ whenever $P$ is clear from the context.
-
-
-\subsection{Operational Semantics}\label{sec:opsem}
-% variables:
-% state \sigma
-% continuation \kappa
-
-We define the operational semantics of the language as a relation between execution states $s \in \textrm{Config}$.
-The judgement $P \vdash \sigma \rightarrow \sigma'$ describes the changes in state $s$ after the execution of one operational step.  
-
-An execution frame $f \in \textrm{Frame}$ describes the state of execution of a method. A frame $f = \eframe{m}{\rho}{s}{k}$ is made of four components: the method $m$ associated to the frame, an environment $\rho$ that maps local variables (including the method's parameters) to values, the statement $s$ that is being executed and the method's continuations $k$, a stack of staments pending execution.
-
-\begin{displaymath}
-\begin{array}{rcl}
-\sigma \in \textrm{State} & = & \textrm{Frame} \times \textrm{Frame}^* + \textrm{EndState}  \\
-\sigma & ::= & \state{f}{sf} \mid \stateend\\
-f & \in & \textrm{Frame} \\
-\kappa & \in & \textrm{K} =  \textrm{Stmt}^* \\
-\end{array}
-\end{displaymath}
-
-An execution state $\sigma = \state{f}{sf}$ is  made of two components: the current frame $f$ and the call stack $sf$.
-Execution takes place on the current frame according to the evaluation rules shown in Figure~\ref{fig:opsem}.
-
-\begin{figure}
-\begin{displaymath}
-\begin{array}{l}
-\hline
-\ \\
-% skip
-P \vdash \state{\eframe{m}{\rho}{\texttt{skip}}{s::\kappa}}{\cf}\rightarrow \state{\eframe{m}{\rho}{s}{\kappa}}{\cf} \\
-\ \\
-% assignment
-P \vdash \state{\eframe{m}{\rho}{x := e}{s::\kappa}}{\cf}\rightarrow \state{\eframe{m}{\rho[x \mapsto \mathcal{E}(e)]}{s}{\kappa}}{\cf} \\
-\ \\
-% conditional 
 \begin{array}{c}
-s' = \mathcal{B}(b)\rho \;?\; s_1 : s_2 \\
 \hline
-P \vdash \state{\eframe{m}{\rho}{\texttt{if }e_0\;s_1\;s_2}{s::\kappa}}{\cf}\rightarrow \state{\eframe{m}{\rho}{s'}{s::\kappa}}{\cf} 
+\ \\
+\eval{\state{\genv,\rho},c}{c}  \;\;\;\;\;\;\;\;
+\begin{array}{c}
+x \not\in dom(\genv) \\
+\hline
+\evale{\state{\genv,\rho},x}{\rho(x)}
+\end{array} 
+\;\;\;\;
+\begin{array}{c}
+x \in dom(\genv) \\
+\hline
+\evale{\state{\genv,\rho},x}{\genv(x)}
 \end{array} \\
 \ \\
-% while loop - true
+% binary operation - normal
 \begin{array}{c}
-\mathcal{B}(b)\rho  \\
+\evale{\state{\genv_0,\rho},e_1}{\genv_1,c_1} \\
+ \evale{\state{\genv_1,\rho},e_2}{\genv_2,,c_2} \\
+c = \means{\mathit{op}}(c_1,c_2) \\
 \hline
-P \vdash \state{\eframe{m}{\rho}{\texttt{while }b\texttt{ do }s}{\kappa}}{\cf}\rightarrow \state{\eframe{m}{\rho}{s}{(\texttt{while }b\texttt{ do }s)::\kappa}}{\cf}
-\end{array} \\ 
-\ \\
-% while loop - false
-P \vdash \state{\eframe{m}{\rho}{\texttt{while }b\texttt{ do }s}{s' :: \kappa}}{\cf}\rightarrow \state{\eframe{m}{\rho}{s'}{\kappa}}{\cf}  
-	\mbox{ iff } \neg \mathcal{B}(b)\rho \\
-\ \\
-% sequencing
-P \vdash \state{\eframe{m}{\rho}{s_1;s_2}{\kappa}}{\cf}\rightarrow \state{\eframe{m}{\rho}{s_1}{s_2 :: \kappa}}{\cf} \\
-\ \\
-% Native method call
-P \vdash \state{\eframe{m}{\rho}{m(e_1,\ldots,e_{|m|})}{s::\kappa}}{\cf}\rightarrow \state{\eframe{m}{\rho}{s}{\kappa}}{\cf}\;\;\;\;\mbox{if } m.\mathit{isNative} \\
-\ \\
-% method call
-\begin{array}{c}
-\|m\| = \langle s_0,x_1,\ldots,x_{|m|} \rangle \\
- \rho' = \bot[x_1 \mapsto \mathcal{E}(e_1)\rho]_{i \in 1,\ldots,|m|}  \wedge
-f = \eframe{m}{\rho'}{s_0}{\epsilon}  \\
-\hline
-P \vdash \state{\eframe{m'}{\rho}{m(e_1,\ldots,e_{|m|})}{\kappa}}{\cf} \rightarrow \state{f}{\eframe{m'}{\rho}{m(e_1,\ldots,e_{|m|})}{\kappa} ::\cf} 
+\evale{\state{\genv,\rho},{e_1\;\mathit{op}\;e_2}}{c}
 \end{array} \\
-\ \\
-P \vdash \state{\eframe{m}{\rho}{\texttt{return}}{\kappa}}{\eframe{m'}{\rho}{m(e_1,\ldots,e_{|m|})}{s::\kappa}   :: \cf}\rightarrow \state{\eframe{m'}{\rho}{s}{\kappa}   }{\cf} \\
-\ \\
-P \vdash \state{\eframe{m}{\rho}{\texttt{return}}{\kappa}}{\epsilon}\rightarrow \stateend \\
 \ \\
 \hline
 \end{array}
 \end{displaymath}
-\caption{Evaluation rules of PROC}\label{fig:opsem}
+\caption{Expression Evaluation Rules}\label{fig:bigstep-expressions}
 \end{figure}
 
-\begin{definition}[Initial State]
-An execution state $\sigma$ is an initial state if $\sigma = \state{\eframe{\texttt{main}}{\bot}{s}{\epsilon}}{\epsilon}$, where $\|\texttt{main}\| = \langle s,\epsilon \rangle$.
-
-\end{definition}
-
-\begin{definition}[Labelled Small-Step Semantics]\label{def:labelled-opsem}
-We write $P \vdash \sigma \rightarrow^r \sigma'$ iff $P \vdash \sigma \rightarrow \sigma'$ and $r$ corresponds to the evaluation rule from Figure~\ref{fig:opsem} applied to $\sigma$. The labels associated to the evaluation rules of the operational semantics are defined by the \textrm{output} domain:
+Expression evaluation is denoted by the judgement $\evale{\state{\genv,\rho},e}{w}$ and defined according to the rules shown in Figure~\ref{fig:bigstep-expressions}.
+The evaluation of an expression does not change the state and, therefore, is not included in the right-hand side of the judgement above.
+For the time being, expression values only consist of constants:
 \begin{displaymath}
 \begin{array}{rcl}
-\textrm{Output} & = & \texttt{skip} \mid \texttt{assn}(x) \mid \texttt{id} \mid \texttt{while-t} \mid \texttt{while-f} \mid \texttt{seq} \mid \\
-& & \texttt{calllN}(m) \mid \texttt{call}(m) \mid \texttt{ret}(m) \mid \texttt{retE}(m)
+v & \in &  \textrm{ExpVal} \\
+v & ::= & c  \\
 \end{array}
 \end{displaymath}
+
+%The judgement $P \vdash \sigma \rightarrow \sigma'$ describes the changes
+% in state $s$ after the execution of one operational step.  
+
+
+\input{semantics-annotations.tex}
+
+Statement execution is defined according to the evaluation rules shown in Figures~\ref{fig:bigstep-statements} and ~\ref{fig:bigstep-annotations}.
+Figure ~\ref{fig:bigstep-statements} describes the execution of statements that do not involve (directly) manipulation of ghost variables and program assertions.
+The skip command does not modify the program's state. An assignment statement first evaluates the right-hand side expression and then updates the respective environnment (local or global) depending on the type of variable being assigned: all global variables are always part of the global environment. 
+%% return break consitions
+
+
+
+
+The rules in Figure~\ref{fig:bigstep-annotations} correspond to the execution of statements that directly deal with ghost variables and program annotations. 
+Succesful execution of a method, besides the usual conditions,  depends on the success of the assertion of the method's \texttt{requires} and \texttt{ensures} annotations , before and after the execution of the method's body, respectively.
+Ghost variables are maintained by the global environment.
+Updates to global variables can only be performed via \texttt{set} statements.
+Assert statements do not modify the program state but succeed if and only if the enclosed assertion is true.
+Failure on any of the explicit run-time checks generate the special break value $\assertval{}$ value, which is propagated through the program's execution following the rules on Figures~\ref{fig:bigstep-statements}, until it reaches the top entry point.
+
+
+Program execution, defined below, starts with a call to the entry method \texttt{main}. The program's arguments are  bound to \texttt{main}'s parameters and the initial global environment is  set to values indicated by the global and ghost variable declarations.
+
+\begin{definition}[Program Execution]
+Let $\vec{v}$ be the vector of arguments passed to program $P$. Program execution, denoted by $P(\vec{v})$, is defined as follows:
+\begin{displaymath}
+P(\vec{v}) \Downarrow \genv',w \;\Leftrightarrow\; \eval{\state{\genv,\bot},\texttt{main}(\vec{v})}{\state{\genv',\bot},w} 
+\end{displaymath}
+where $\genv = P.\mathit{globals} \cup P.\mathit{ghost}$ and $n = |\texttt{main}|$ .
 \end{definition}
 
 
-\section{Execution monitoring and Security Automata}
+
+\section{Execution Monitoring and Security Automata}\label{sec:em}
 % Variables
 % Automaton \aut
 % actions c
 
 
-Explain high-level semantics of EM: security automata and operational semantics. 
+An execution monitor (EM) is a mechanism that enforces security policies by monitoring the execution steps of some system (target) and terminating the target's execution if it is about to violate the security policy being inforced~\cite{Schneider2000}.
+In this section, we are concerned with the modelling of EMs by security automata.
+
+We start by defining security automata as a special type of automata that receives input from the execution of a program. We then formalize the semantics of the EM by pairing a security automaton with the operational semantics defined in section~\ref{sec:opsem}
+
+% States - \qu
+\subsection{Security Automata}\label{sec:automata}
 
 
-\subsection{Security Automata}
-
-
-A security automaton is a 5-tuple:
+We define a security automaton as a 5-tuple with fields of the form:
 \begin{displaymath}
 \begin{array}{rcl}
-\aut & \in & \textrm{SecAut} = \textrm{AState} \times \textrm{AState} \times \textrm{Var} \times \textrm{Input} \times \Delta \\
+\aut & \in & \textrm{SecAut} = \mathcal{P}(\textrm{AState}) \times \Delta \times \textrm{AState} \times \textrm{Var} \times \textrm{Input}  \\
 \aut & ::= & \theautomaton
 \end{array}
 \end{displaymath}
-where $Q$ denotes the set of the automaton states, $q_0$ the initial state, $V$ the set of state variables that define $Q$, $I$ the set of input symbols and $\delta$ the transition function between program states, and
+where $Q$ denotes the set of the automaton states, $q_0$ the initial state, $V$ the set of state variables that define $Q$, $I$ the set of input symbols and $\delta$ the transition function between program states.
+
 % $a = \theautomaton$ has the following properties:
 \begin{itemize}
-\item \textbf{States and variables.} A security automaton state is defined as an assignment of integer values to state variables. Thus, given automaton $\theautomaton$, the domain of automaton states $\textrm{AState}\ssub{V}$ is defined as follows:
+\item \textbf{Input symbols.} The security automata considered in this paper deal with  input elements that  correspond to the execution of a program's statements as defined by the operational semantics of section~\ref{sec:opsem}.
+More precisely, the input symbols indicate the moments before and after the execution of a statement $s$, as defined by the syntax below:
 \begin{displaymath}
 \begin{array}{rcl}
-q  \in \textrm{AState} & = & (\textrm{Var} \rightarrow \textrm{Integer}_\bot) \\
-q_0 \in Q  \subseteq  \textrm{AState}\ssub{V} & = & (V \rightarrow \textrm{Integer}_\bot) \\
+\imath  & \in & \textrm{Input}\;\;\; \mbox{  (Input Symbols)} \\
+\imath & ::= & \texttt{begin}(s) \mid \texttt{end}(s,w) \;\;\;\;\;w \in \textrm{StmtVal} \\
+I & \subseteq & \textrm{Input} 
 \end{array}
 \end{displaymath}
-where $\bot$ is used to denote uninitialised variables.
+In addition to marking the \texttt{begin} and \texttt{end} of the execution of a statement, \texttt{end} end input symbol indicate if the respective execution ended normally or by a \texttt{return} statement e.g. \texttt{end}$(s,\retval{})$.
+
+A security automaton is concerned with the execution of a particular set of operations. This set of operations is denoted by  $I$, the set of input symbols generated by the execution of the respective statements.
+For example, is we only want to reason about the occurrence of calls to methods  $m_1$ and $m_2$ then we should have:
+\begin{displaymath}
+I = \{ \texttt{begin}(m(e_1,\ldots,e_{|m|})) \mid m \in \{m_1,m_2\} \}
+\end{displaymath}
+
+\item \textbf{States and variables.} A security automaton state is defined as an assignment of integer values to state variables. The set of variables that make out the automaton's state is determined by $V$. Thus, given automaton $\theautomaton$:
+\begin{displaymath}
+\begin{array}{rcl}
+\qu \in \textrm{AState} & = & (\textrm{Ghost} \rightarrow \textrm{Integer}) \cup \{ \texttt{bad} \}  \\
+\qu_0 \in Q  \subseteq  \mathcal{P}(\textrm{AState}) & s.t. & \forall \qu \in Q.\; dom(\qu) = V  \\
+\texttt{bad} \in Q & & 
+\end{array}
+\end{displaymath}
+that is, every valid state must have a value associated to every variable in $V$. We also include a special state \texttt{bad} that should always be part of valid states $Q$. 
 
 \item \textbf{Transition function and input symbols.} Transitions between automata states are defined by the transition function $\delta$. The transition function takes as input a state and an input symbol, and returns a next state, as defined by:
 %State changes triggered by method calls.
 \begin{displaymath}
 \begin{array}{rcll}
-\imath  & \in & \textrm{Input} & \mbox{(Input Symbols)} \\
-I & \subseteq & \textrm{Input} \\
 \delta & \in & \Delta = \textrm{AState} \times I \rightarrow \textrm{AState} & \mbox{(Transition Function)} \\
-\floor{\delta} & \in & \textrm{AState} \times I \rightarrow \textrm{Actions}\ssub{V}^* & \mbox{(get Actions Function)} \\
-c & \in & \textrm{Actions}\ssub{V} = (V \rightarrow \textrm{AExp}\ssub{V})_\bot  & \mbox{(Actions)} \\
-c & ::= & \texttt{skip} \mid (v := e)^*
 \end{array}
 \end{displaymath}
 
-The transition function $\delta$ is defined by the execution of a set of actions on the input state. The transition function is defined as follows:
+The transition function $\delta$ must be completely  defined by the execution of a set of actions applied to states. We restrict these actions to a special type of assignment statements $X := e$ involving solely variables in  $V$. 
+The set of actions that define the transition function $\delta$ is encoded by $\floor{\delta}$:
 \begin{displaymath}
-\delta(q,\imath) = q[x_i \mapsto v_i]_{x_i \in dom(c)}, c = \floor{\delta}(q,\imath) \wedge v_i = \mathcal{E}(c(x_i))s
+\begin{array}{rcll}
+\floor{\delta} & \in & \textrm{AState} \times \textrm{Input} \rightarrow \textrm{Actions}^* & \mbox{(get Actions Function)} \\
+sa  & \in &  \textrm{Actions} \\
+sa & ::= & (X := e) & fv(e) \subseteq V
+\end{array}
 \end{displaymath}
+The domain and range of a transition function is restricted to the set of valid states and input symbols defined by the automaton. 
+Given automaton $\aut = \theautomaton$ and  actions $\floor{\delta} = (X_i := e_i)_{i=1\ldots n}$, the following must be true:
+\begin{displaymath}
+\begin{array}{ll}
+\bullet & \delta \in Q \times I \rightarrow Q \;\wedge \floor{\delta} \in Q \times I \rightarrow \textrm{Actions}^*  \\
+\bullet & dom(\delta) = dom(\floor{\delta}) \;\wedge \\
+\bullet & \forall \imath \in I.\; \delta(\texttt{bad},\imath) = \texttt{bad}\\
+\bullet & \forall (q \times \imath) \in dom(\delta): 
+        \delta(\qu,\imath) = \qu[X_i \mapsto c_i]_{i \in 1\ldots n},\\
+& \;\;\mbox{ where} \evale{\state{\qu,\bot},e_i}{c_i}
+\end{array}
+\end{displaymath}
+where the latter spells out the direct relation between $\delta$ and $\floor{\delta}$. 
+The use of actions becomes an advantage when translating transition functions  into program annotations. For example, the action $X := X + 1$ replaces several assertions of the form $X := c$, one per valid initial value of $X$. 
+A similar generalisation could be applied to the domain of the transtion function by grouping the states asociated to a particular action, and for a given input, under a predicate (or pre-condition). For example, given input $X$, action $X := X + 1$ should be applied only if $X > 0$.
 
 \end{itemize}
 
-\begin{definition}[Semantics of Security Automata]
-\begin{displaymath}
-a \vdash q \stackrel{\imath}{\rightarrow} q'  \;\;\Leftrightarrow\;\; a = \theautomaton\wedge (q' = \delta(q,\imath))
-\end{displaymath}
-\end{definition}
 
+%\begin{definition}[Semantics of Security Automata]
+%\begin{displaymath}
+%a \vdash \qu \stackrel{\imath}{\rightarrow} \qu'  \;\;\Leftrightarrow\;\; a = \theautomaton\wedge (\qu' = \delta(\qu,\imath))
+%\end{displaymath}
+%\end{definition}
 
-The security automata considered in this paper deal with  input elements that  denote evaluation steps as defined by the operational semantics of section~\ref{sec:opsem}.
-More precisely, the input symbols correspond to the (rule) labels used by Definition~\ref{def:labelled-opsem}. Thus, $\textrm{Input} = \textrm{Output}$.
 
 
 \subsection{Execution Monitor Semantics}
 
-Program execution is monitored by a security automaton that captures the desired security property. An execution monitor (EM) is defined by a program $P$ and automaton $\aut = \theautomaton$ such that $I$, the set of input symbols of the automaton, is a subset of the output symbols of the language operational semantics ($I \subseteq \textrm{Output}$).
+Program execution is monitored by a security automaton that captures the desired security property. An execution monitor (EM) is defined by a program $P$ and automaton $\aut = \theautomaton$ such that $I$, the set of input symbols of the automaton, depend on the domains used by the operational semantics of the language.
 
-An EM state $(\sigma,q)$ is made of the automaton's state $q$ and the program's state $\sigma$. The operational semantics of an EM is defined as a combination of the language's operational semantics and the automaton's transition system. The execution of a program's statement generates an output symbol (that corresponds to the evaluation rule applied) which, if recognized as a valid input symbol by the automaton $a$, yields a change of state in $q$.  
+%is a subset of the output symbols of the language operational semantics
+% ($I \subseteq \textrm{Output}$).
+
+An EM state $em$ is made of the program's state $\sigma$ and the automaton's state $\qu$. 
+\begin{displaymath}
+\begin{array}{rcl}
+EM & \in & \mathrm{EMonitor} \\
+EM & ::= & \emdef{P}{\aut}
+\end{array} 
+\;\;\;\;\;\;
+\begin{array}{rcl}
+em & \in & \mathrm{EMState} \\
+em & ::= & (\sigma,\qu) 
+\end{array} 
+\end{displaymath}
+
+
+
+The operational semantics of an EM is defined as a combination of the language's operational semantics and the automaton's transition system. The execution of a program's statement generates an output symbol (that corresponds to the begining or end of the execution of the statement) which, if recognized as a valid input symbol by the automaton $a$, yields a change of state in $\qu$.  
+
+
 
 \begin{definition}[EM Operational Semantics]
-The operational semantics of an EM made of program $P$ and security automaton $\aut$ is defined as a relation between EM states $(\sigma,q)$, and denoted by the judgement $\emdef{P}{\aut} \vdash (\sigma,q) \rightarrow (\sigma',q')$, such that:
+The operational semantics of $em = \emdef{P}{\aut}$ is defined as a relation between EM states $(\sigma,\qu)$, and denoted by the judgement $\emdef{P}{\aut} \vdash (\sigma,\qu) \Downarrow (\sigma',\qu')$.
+The rules that define the semantics of the EM are obtained by rewriting the operational semantics rules using the new judgement $\emdef{P}{\aut} \vdash (\sigma,\qu) \Downarrow (\sigma',\qu')$ and adding feeding the aotutomaton with the respective input symbols corrresponding to the begeniing and end to the execution of the statement. Thus, for every rule of the form
 \begin{displaymath}
-\emdef{P}{\aut} \vdash (\sigma,q) \rightarrow (\sigma',q')  \;\;\Leftrightarrow\;\;
-\begin{array}[c]{l}
-(P \vdash \sigma \stackrel{r}{\rightarrow} \sigma') \;\wedge\; \\
-(r \in I \Rightarrow a \vdash q \stackrel{r}{\rightarrow} q') \;\wedge \\
-(r \not\in I \Rightarrow q' = q)
+\begin{array}{c}
+\ldots \mathit{conditions} \ldots \\
+\eval{\sigma,s_1}{\sigma_1,w_1} \ldots 
+\eval{\sigma_{n-1},s_n}{\sigma_n,w_n} \\
+\hline
+\eval{\sigma,s}{\sigma',w}
+\end{array} \\
+\end{displaymath}
+we should have
+\begin{displaymath}
+\begin{array}{c}
+\ldots \mathit{conditions} \ldots \\
+\begin{array}{ccc}
+\imath = \texttt{begin}(s) & & \imath' = \texttt{end}(s,w) \\
+\qu_0 = \left \{ \begin{array}{ll}
+\delta(\qu,\imath) & \imath \in I \\
+\qu & \imath \not\in I
+\end{array} \right . 
+& & 
+\qu' = \left \{ \begin{array}{ll} 
+\delta(\qu_n,\imath') & \imath' \in I \\
+\qu_n & \imath' \not\in I
+\end{array} \right . 
+\\
+em \vdash (\sigma,\qu_0),s_1 \Downarrow (\sigma_1,\qu_1),w_1 & \ldots & em \vdash (\sigma_{n-1},\qu_{n-1}),s_n \Downarrow (\sigma,\qu_n),w 
+\end{array} \\
+\hline
+em \vdash (\sigma,\qu),s \Downarrow (\sigma',\qu'),w
 \end{array}
 \end{displaymath}
-where $\aut = \theautomaton$. We say that a state $(\sigma,q)$ is an initial state of $\emdef{P}{\aut}$ if $\sigma$ is an initial state of $P$ and $q = q_0$.
+where $\aut = \theautomaton$. Thus, an axiom rule 
+\begin{displaymath}
+\begin{array}{c}
+\Phi(\sigma,s,\sigma',w) \\
+\hline
+\eval{\sigma,s}{\sigma',w}
+\end{array} \\
+\end{displaymath}
+is replaced by
+\begin{displaymath}
+\begin{array}{c}
+\Phi(\sigma,s,\sigma',w)  \\
+\begin{array}{ccc}
+\imath = \texttt{begin}(s) & & \imath' = \texttt{end}(s,w) \\
+\qu_0 = \left \{ \begin{array}{ll}
+\delta(\qu,\imath) & \imath \in I \\
+\qu & \imath \not\in I
+\end{array} \right . 
+& & 
+\qu' = \left \{ \begin{array}{ll} 
+\delta(\qu_0,\imath') & \imath' \in I \\
+\qu_n & \imath' \not\in I
+\end{array} \right . 
+
+\end{array} \\
+\hline
+em \vdash (\sigma,\qu),s \Downarrow (\sigma',\qu'),w
+\end{array}
+\end{displaymath}
+
 \end{definition}
+
+The semantics defined above interweaves the small-step style of the automaton semantics into the big-step style of the source language semantics. This is analoguos to the automaton performing a left-to-right, root-to-branches crawl of the derivation tree. 
+
+A more succint specification can be obtained by using a small-step semantics of the source language. On one hand, the resulting EM semantics is straightforward. On the other hand, the extra machinery needed makes proofs cumbersome, in particular those dealing with pre-- and post-conditions.
+
+EM execution, defined below, starts with a call to the entry method \texttt{main} of the program. The program' arguments are bound to \texttt{main}'s parameters, the automaton is set to its initial state and the initial global environment is set to values indicated by the global and ghost variable declarations.
+
+\begin{definition}[EM execution]\label{def:em-execution}
+Let $em = (P,\aut)$ and  $\vec{v} = v_1\cons\ldots\cons v_n$ the vector of arguments passed to the program. EM execution, denoted by $em(\vec{v})$ is defined as follows:
+\begin{displaymath}
+em(\vec{v}) \Downarrow (\genv',\qu'),w \;\Leftrightarrow\;  \emeval{(\state{\genv,\bot},\qu_0),\texttt{main}(\vec{v})}{(\state{\genv',\bot)},\qu'),w}
+\end{displaymath}
+where $\genv = P.\mathit{globals} \cup P.\mathit{ghost}$ and $n = |\texttt{main}|$ .
+\end{definition}
+
+
+
+
+The following lemma states that the EM semantics respects the semantics of the source language:
+
+\begin{lemma}
+Let $em = \emdef{P}{\aut}$ and $\aut = \theautomaton$.
+If $\qu \in Q$ and $em \vdash (\sigma,\qu),s \Downarrow (\sigma',\qu'),w$ then $\eval{\sigma,s}{\sigma',w}$. Similarly, if $\eval{\sigma,s}{\sigma',w}$ and $\qu \in Q$ then $\exists \qu'$ such that $em \vdash (\sigma,\qu),s \Downarrow (\sigma',\qu'),w$.
+\end{lemma}
+
 \subsection{Examples}
 
 \begin{example}[Transactions]   
-Let's say we have a system that implements atomic memory updates with a transaction mechanism. Memory updates that need to be atomic must be placed inside a transaction. In this system, transactions are started with a call to the \texttt{beginTrans} native method, and terminated with a call to the \texttt{endTrans}  or \texttt{abortTrans} native methods.
+Let's say we have a system that implements atomic memory updates with a transaction mechanism. Memory updates that need to be atomic must be placed inside a transaction. In this system, transactions are started with a call to the \texttt{beginT} native method, and terminated with a call to the \texttt{commitT}  or \texttt{abortT} native methods.
 
-We would like to make sure that transactions are correctly formed and that nested transactions do not exceed a pre-determined depth $n > 0$. Correctly formed transactions are those that have matching calls to the methods that begin and end a transaction.
+We would like to make sure that transactions are correctly formed and that nested transactions do not exceed a pre-determined depth $n > 0$. Correctly formed transactions are those that have matching calls to the methods that begin and end transactions.
 
-We model transaction depth with the $d$ variable, initially set of zero. The automaton $\aut_n = \theautomaton$ that models the desired property is:
+Transaction depth is modelled by $D$, a variable initially set of zero. The elements of the automaton $\aut_n = \theautomaton$ that checks the desired property are:
 \begin{displaymath}
 \begin{array}{rcl}
-Q & = &  \{ (d,i) \mid 0 \leq i \leq n  \}  \\
-\delta & = &  \{ ((d,i),\texttt{callN(beginTrans)},(d,i+1)) \mid 0 \leq i < n \} \cup \\
-& & \{ ((d,i),\texttt{callN(m)},(d,i-1)) \mid (1 \leq i \leq n) \wedge m \in \{\texttt{endTrans},\texttt{abortTrans}   \} \}    \\
-q_0 & = & (d,0) \\
-V & = & \{ d \} \\
-I & = & \{ \texttt{callN}(m) \mid m \in \{ \texttt{beginTrans}, \texttt{endTrans}, \texttt{abortTrans} \}  \}
+Q & = &  \{ (D,i) \mid 0 \leq i \leq n  \}  \\
+\delta & = &  \{ ((D,i),\texttt{begin(beginT())},(D,i+1)) \mid 0 \leq i < n \} \cup \\
+& & \{ ((D,i),\texttt{begin(s)},(D,i-1)) \mid (1 \leq i \leq n) \wedge s \in \{\texttt{commitT()},\texttt{abortT()}   \} \}    \\
+\qu_0 & = & (D,0) \\
+V & = & \{ D \} \\
+I & = & \{ \texttt{begin}(m()) \mid m \in \{ \texttt{beginT}, \texttt{commitT}, \texttt{abortT} \}  \}
 \end{array}
 \end{displaymath}
-where the set of actions associated to the transition function is:
+The actions associated to the transition function are:
 \begin{displaymath}
 \begin{array}{l}
-\floor{\delta}(q,i) = \left \{ \begin{array}{ll}
-d \texttt{:= } d + 1 & \mbox{if } i = \texttt{callN(beginTrans)} \wedge 0 \leq q(d) < n \\
-d \texttt{:= } d - 1 & \mbox{if } i \in  \{\texttt{endTrans},\texttt{abortTrans}   \} \wedge 1 \leq q(d) \leq n
+\floor{\delta}(\qu,i) = \left \{ \begin{array}{ll}
+D \texttt{:= } D + 1 & \mbox{if } i = \texttt{begin(beginT())} \wedge 0 \leq \qu(d) < n \\
+D \texttt{:= } D - 1 & \mbox{if } i = \texttt{begin}(m())\; \wedge\\
+ &  m \in  \{\texttt{commitT()},\texttt{abortT()}   \} \wedge 1 \leq \qu(d) \leq n
 \end{array} \right . \\
 \end{array}
 \end{displaymath}
@@ -290,198 +480,241 @@ d \texttt{:= } d - 1 & \mbox{if } i \in  \{\texttt{endTrans},\texttt{abortTrans}
 
 
 
-\begin{example}[Commands] \end{example}
+\begin{example}[Inside method m, do not call n] \end{example}
+
+\begin{example}[Inside method m, always call n] \end{example}
+
+\begin{example}[Inside method m, if call n then call p]  \end{example}
 
 
-\section{Program Annotations}
+% **********************************************************************
 
-We annotate programs with two type of annotations: assertions and set annotations.
-Assertions are written in a subset of propositional logic with integer variables- or a variation of program boolean expressions -  and denote the conditions that have to be satisfied before (pre-conditions) or after (post-conditions) a particular method is called.
-These conditions do not use program variables. Instead,  they refer to the values of a set of external variables introduced by the annotations called Ghost Variables. 
-Set annotations refer to ghost variable updates performed at certain program points.
+\section{Implemeting Execution Monitors: Generation of Program Annotations from Security Automata}
+
+Execution monitors specified by security automata, as defined in section \ref{sec:em}, can be implemented by encoding the automaton into the program being checked.
+This encoding is obtained by declaring a ghost variable for each state variable, and implementing the transition function and transition actions as a series of guard (assert and set) statements and as method annotations.
 
 
-\subsection{Syntax and Domains}
+\subsection{Encoding states and the transition function}
 
-Program annotations use a separate set of variables, different from the variables used by the program, called ghost variables (\textrm{GVar}).
-Program assertions are propositional logic formulae restricted only to ghost variables. Set! annotations are assignment statements applied to ghost variabes.
-Program assertions and set! annotations are defined as follows:
+The transition function is the core of the semantics of a security automaton.
+A transition function, as  defined in section~\ref{sec:automata}, takes as input an initial state and a token that signals the beginning or end of the execution of a  statement of the program. Tokens can also be extended to denote the occurrence of a group of events such as any call of a particular method of the assignment of a variable - the former is considered by the current definition.
+
+
+Given that the sequence (or possible sequences)  of input symbols is already fixed by the control flow of the program, we encode the transition function by making sure that the ocurrence of each valid input symbol i.e. statement, is wrapped around:
+\begin{itemize}
+\item Checks that ensure that only valid automaton states reach the program point (generated by function $\mathit{cond}$), and
+\item Ghost variable updates that implement state changes (generated by function $\mathit{action}$). 
+\end{itemize}
+
+The conditions checked by the encoding can be either pre-conditions or post-conditions, depending on the type of input symbol considered. Pre-conditions are generated for \texttt{begin}(-) symbols and post-conditions for symbols of the \texttt{end}(-) form.
+The condition $\mathit{cond}(\imath)$ generated for input symbol $\imath$ creates a disjunction with all the valid states that receive $\imath$ as input. It  is defined as follows:
+
 \begin{displaymath}
-\begin{array}{rcl}
-& & \textrm{PVar} \cap \textrm{GVar} = \phi \\
-p & \in & \textrm{Assertion} \\
-p & ::= & b \;\;\mbox{where}\;\;b \in \textrm{BExp} \wedge \fv(b) \subseteq \textrm{GVar}   \\
-\mathit{set!} & \in & \textrm{Set!} \\
-\mathit{set!} & := & (x \textrm{:=} e)^*\;\;\mbox{where}\;\; e \in \textrm{Exp} \wedge \fv(e) \subseteq \textrm{GVar} \\
-
-\end{array}
-\end{displaymath}
-An annotated program is a non-empty sequence of annotated method declararations.
-An annotated method declaration contains four different annotations: pre-conditions and post-conditions (assertions), and pre-set! and post-set! annotations.
-We initially do not annotate individual statements.
-The syntax of annotated program is:
-\begin{displaymath}
-\begin{array}{rcl}
-\bar{P} & \in & \overline{\textrm{Program}} = \overline{\textrm{Decl}}^+ \\
-\bar{d} & \in & \overline{\textrm{ProgDecl}}  \\
-\bar{d} & ::= & \texttt{pre:}\;p\; \\
-& & \texttt{post:}\;p\;   \\
-& & \texttt{pre-set:}\;\mathit{set!}\;\\
-& & \texttt{post-set:}\;\mathit{set!}\; \\
-& & (\texttt{method } m(x_1,\ldots,x_n) = \bar{s} \texttt{ end} \mid \texttt{method } \texttt{native } m(x_1,\ldots,x_n)) \\
-\bar{s} & ::= & [\texttt{assert:}\; p]\; [\texttt{set:} \;\mathit{set!}]\; s 
-\end{array}
+\mathit{cond}(\imath) = \bigvee \{ \qu \mid \exists \qu' \neq \texttt{bad} \wedge (\qu,\texttt{begin}(s),\qu') \in \delta  \} \\
 \end{displaymath}
 
-We represent program annotations by the symbol $\alpha$ and associate them to a particular program $P$ by writing $P^\alpha$.
-Program annotations are obtained by applying the following functions:
-\begin{displaymath}
-\begin{array}{rcl}
+Similarly, the assignments $\mathit{action}(\imath)$ generated by the occurrence of input symbol $\imath$ are:
 
-\alpha.\pre & \in & \textrm{Method} \rightarrow \textrm{Predicate} \\
-\alpha.\post & \in & \textrm{Method} \rightarrow \textrm{Predicate} \\
-\alpha.\mathit{preSet} & \in & \textrm{Method} \rightarrow \textrm{setExp} \\
-\alpha.\mathit{postSet} & \in & \textrm{Method} \rightarrow \textrm{setExp} \\
-\hline
-\alpha.\mathit{assert} & \in & \textrm{Statement} \rightarrow \textrm{Predicate} \\
-\alpha.\mathit{set} & \in & \textrm{Statement} \rightarrow \textrm{setExp} \\
-\end{array}
+\begin{displaymath}
+\mathit{action}(\imath) = \floor{\delta}(\qu,\imath) \;\mbox{iff}\; \exists \qu s.t. (\qu,\imath) \in dom(\delta) 
 \end{displaymath}
 
+However, the function above is only defined if the following condition is true:
+\begin{displaymath}
+\forall \imath. (\forall \qu,\qu' \in \{ \qu_0 \mid (\qu_0,\imath) \in \delta \wedge \delta(\qu_0,\imath) \neq \texttt{bad} \}.
+\floor{\delta}(\qu,\imath) = \floor{\delta}(\qu',\imath) )
+\end{displaymath}
 
-\subsection{Operational Semantics of Annotated Programs}
+This condition imposes a serious restriction to the type of automata that can be encoded in this language. 
 
-The operational semantics of annotated program is an extension of the original semantics that takes into consideration the set! annotations of methods and statements. 
-The execution state is extended with a ghost variable environment $q$ that maps ghost variables to values. This environment is updated according to the following definition:
+\subsection{The annotation function}
 
-\begin{definition}[Small-Step Semantics of Annotated Programs]
+
+The function $\mathit{annotate}$ takes as arguments a program and a security automaton, and returns the original program annotated with the encoding of the automaton.
+The first part of the transformation (above) encodes the initial state of the automaton by adding  $\qu_0$  to the initial mapping of ghost variables of the program. Global variables are left untouched.
+Given program $P$ and automaton $\aut = \theautomaton$, $\mathit{trans}$ is defined as follows:
 \begin{displaymath}
 \begin{array}{l}
-\begin{array}{c}
-(P \vdash \sigma \rightarrow^r \sigma')\;\wedge\; \sigma = \state{\eframe{m}{\rho}{s}{\kappa}}{\cf}   \\
-q' = \left \{ \begin{array}{ll}
-\mathcal{S}(\alpha.\mathit{preSet}(m')::\alpha.\mathit{set}(s),q) & \mbox{if } s = m'\texttt{(}e_1,\ldots,e_{|m|}\texttt{)} \\
-\mathcal{S}(\alpha.\mathit{postSet}(m)::\alpha.\mathit{set}(s),q) & \mbox{if } s= \texttt{return}   \\
-\mathcal{S}(\alpha.\mathit{set}(s),q) & \mbox{otherwise} 
-\end{array} \right . \\
-\hline
-P^\alpha \models (q,\sigma) \rightarrow (q',\sigma')
+P' = \mathit{trans}(P,\aut) \;\Leftrightarrow \\
+\;\;\begin{array}{rcl}
+P'.\mathit{globals} & = & P.\mathit{globals} \\
+P'.\mathit{ghost} & = & P.\mathit{ghost} :: \qu_0 \\
+P'.\mathit{methods} & = & \{ \mathit{trans}(P,\aut,d) \mid d \in P.\mathit{methods} \}
 \end{array}
 \end{array}
 \end{displaymath}
-where
-\begin{displaymath}\begin{array}{rcl}
-\mathcal{S}(\epsilon,q) & = & q \\
-\mathcal{S}((x_1 := e_1::\ldots::(x_n := e_n),q) & = & q[x_i \mapsto \mathcal{E}(e_i)q]_{i = 1,\ldots,n}
-\end{array}
-\end{displaymath}
-\end{definition}
 
-Only set! annotations update the ghost variable environment. 
-Pre-set! annotations are executed every time the annotated method is invoked i.e. $\alpha.\mathit{preSet}(m)$ is executed whenever $\texttt{call}(m)$ - or $\texttt{callN}(m)$ if the method is native -  is evaluated.
-Similarly, post-set! annotations are evaluated on method return i.e. $\alpha.\mathit{postSet}(m)$ is executed when $\texttt{ret}(m)$ or $\texttt{retN}(m)$ is evaluated. In addition to this, set! annotations associated to individual statements ($\alpha.\mathit{set}(s)$) are executed everytime the annotated statements are executed.
-% mathcal{S}
 
-The evaluation of set! annotations, defined by $\mathcal{S}: \textrm{Set!} \times \textrm{GEnv} \rightarrow \textrm{GEnv}$ - is basically the sequential evaluation of assignments as defined in the source language. This is reflected by the definition of $\mathcal{S}$ function which re-uses $\mathcal{E}$ and performs the standard environment update operation.
 
-% Initial Configuration
+Method declarations (including its body) are affected by transitions that depend on input that report the method's invocation or return, and by transitions that depend on the execution of any of the instructions on its body.
+Thus, the $\mathit{requires}$ component of every method declaration is updated if there exists a good transition that takes as input the symbol corresponding to the begining of the method's call i.e. \texttt{begin}($m$(-)). If that is the case, the corresponding initial states, transformed into predicates, are added to the method's $\mathit{requires}$ set.
 
-\subsection{Program Correctness of Annotated Programs}
-
-% must say something about initial configuration.
-
-\begin{definition}[Correctness of $P^\alpha$]
 \begin{displaymath}
-\begin{array}{rcl}
-P \models \alpha & \Leftrightarrow & \forall (\sigma,q) \in \mathit{reach}(P^\alpha).\; (\sigma,q) \models \alpha \\
-(\sigma,q) \models \alpha & \Leftrightarrow &
-\left \{ \begin{array}{ll}
-q \models \alpha.\pre(m) \wedge \alpha.\mathit{assert}(s)  & \mbox{if } s = m\texttt{(}e_1,\ldots,e_{|m|}\texttt{)} \\
-q' \models \alpha.\post(m) \wedge \alpha.\mathit{assert}(s) & \mbox{if } s = \texttt{return} \\
-q \models \alpha.\mathit{assert}(s) & \mbox{otherwise}
-\end{array} \right .  \\
-& & \mbox{where } \sigma = \state{\eframe{m}{\rho}{s}{\kappa}}{\cf} \wedge
- P \vdash   (\sigma,q) \rightarrow  (\sigma',q') \\
+\mathit{cond}(\texttt{begin}(m())
+\end{displaymath}
+
+At the same time, all actions associated to method invocation  must be translated to their respective \texttt{set} annotations. The following actions are appended to the \texttt{preset} annotations of the method:
+\begin{displaymath}
+\mathit{action}(\texttt{begin}(m())
+\end{displaymath}
+Similarly, transitions that depend on method returns - reported by input symbols of the form \texttt{end}($m$(-)) - update the $\mathit{ensures}$ and $\mathit{post-set}$ component of the respective method declarations. For every method $m$:
+
+The complete definition of $\mathit{trans}(P,\aut,d)$ is:
+\begin{displaymath}
+\begin{array}{l}
+d' = \mathit{trans}(P,\aut,d) \;\Leftrightarrow\;  \\
+\;\;\ \begin{array}{rcl}
+d'.\mathit{requires} & = & d.\mathit{requires} \cup \mathit{cond}(\texttt{begin}(m()))  \\
+d'.\mathit{preset} & = & d.\mathit{preset} \cup \mathit{action}(\texttt{begin}(m()))  \\
+d'.\mathit{ensures} & = & d.\mathit{ensures} \cup \mathit{cond}(\texttt{end}(m())) \\
+d'.\mathit{postset} & = & d.\mathit{postset} \cup \mathit{action}(\texttt{end}(m()))  \\
+d'.\mathit{body} & = & \texttt{set}\;\floor{\delta}(-,m(-))  ; \mathit{trans}(P,\aut,P.\mathit{body}) 
+\end{array}
 \end{array}
 \end{displaymath}
-\end{definition}
 
-% (P \models (q,\sigma) \longrightarrow^m (q',\sigma') \wedge
-%  q \models \alpha.\pre(m)) \Rightarrow q \models \alpha.\post(m)
-
-\section{Generation of Program Annotations from Security Automata}
-
-\subsection{Core Annotations}
-
-Given a security automaton $a$ and program $P$, we generate a set of program annotations $\alpha$ according to the following rules: 
+A similar encoding is applied to transitions that take as input the execution of instructions other than method invocation.
 
 \begin{displaymath}
 \begin{array}{l}
-\alpha = \mathit{core}(P,a) \;\Leftrightarrow \forall m \in P: \\
-\;\; \begin{array}{ll}
-\alpha.\pre(m) = \{ \floor{q} \mid \exists q'.\; a \models q \stackrel{i}{\rightarrow} q' \wedge i \in \{ \texttt{call}(m), \texttt{callN}(m) \} \\
-\alpha.\post(m) = \{  \}  \\
-\forall s \in \mathit{return}(s):\; \alpha.\mathit{assert}(s) = \{ \floor{q} \mid \exists q'.\; a \models q \stackrel{i}{\rightarrow} q' \wedge i \in \{ \texttt{ret}(m), \texttt{retE}(m) \}
+\mathit{trans}(P,\aut,s) = s_0; s; s_1 \\
+\mbox{where}\;\;
+\begin{array}[t]{l}
+s_0 = \texttt{assure}\; \mathit{cond}(\texttt{begin}(s));\; \texttt{set}\;\mathit{action}(\texttt{begin}(s)) \\
+s_1 = \texttt{assure}\; \mathit{cond}(\texttt{end}(s));\; \texttt{set}\;\mathit{action}(\texttt{end}(s))
 \end{array}
 \end{array}
 \end{displaymath}
 
-\subsection{Correctness of the Core Annotations}
+
+\subsection{Correctness of Annotations}
+
+The correctness of the annotation function is establised by proving that  the program annotations generated by  $\mathit{annotate}$ correctly encode the original EM. First we show that the execution of an EM with a valid auntomaton state and the execution of the transformed program with a transformed state (where the automaton state is transformed to a mapping and appended to the global environment) both yield to equivalent states. 
 
 \begin{lemma}
-If $P \models \alpha$, $P^\alpha \vdash \sigma^q \rightarrow \sigma'^{q'}$ then $(P,\aut) \vdash (\sigma,q) \rightarrow (\sigma',q')$.
+Let  $em = \emdef{P}{\aut}$, $\aut = \theautomaton$ and  $\qu \in Q$ . If there exists $P'$ s.t. $P' = \mathit{annotate}(P,\aut)$ then
+\begin{displaymath}
+em \vdash (\state{\genv,\rho},\qu),s \Downarrow (\state{\genv',rho'},\qu'),w
+\;\Leftrightarrow\;
+P \vdash \state{\genv::\qu,\rho},s \Downarrow \state{\genv'::\qu',\rho'},w
+\end{displaymath}
 \end{lemma}
 
+%% Program level.
+Then we show, using the result above, that the execution of the EM and the transformed program, for any set of initial arguments, yield to the same result.
+
 \begin{theorem}
-If $P \models \alpha$, $\alpha = \mathit{core}(P,\aut)$, and $(\sigma,q) \in \mathit{reach}(\emdef{P}{\aut})$ then $\exists \sigma',q'$ such that $\emdef{P}{\aut} \vdash (\sigma,q) \rightarrow (\sigma',q)$ 
-\end{theorem}
-
-\begin{corollary}
-Let $P \in \textrm{Program}$, $a \in \textrm{SecAut}$ and $\alpha = \mathit{core}(P,a)$. If $P \models \alpha$ then $\emdef{P}{\aut} \rightarrow \texttt{ok}$.
-\end{corollary}
-
-
-\subsection{Extended Core Annotations}
-
-
-% must use use \delta
-
+Let  $em = \emdef{P}{\aut}$, $\aut = \theautomaton$ and  $\qu \in Q$ . If there exists $P'$ s.t. $P' = \mathit{annotate}(P,\aut)$ then
 \begin{displaymath}
-\begin{array}{l}
-\alpha = \mathit{coreX}(P,a) \;\Leftrightarrow \\
-\begin{array}{ll}
-\alpha.\pre(m) = \mathit{core}(P,a).\pre \\ 
-\post(m,a) = \{ \floor{q} \mid \exists q'.\; a \models q' \stackrel{i}{\rightarrow} q \wedge i = \texttt{callN}(m)  \}  \\
-\end{array}
-\end{array}
+em(v_1,\ldots,v_n) \Downarrow (\genv,\qu),w
+\;\Leftrightarrow\;
+P'(v_1,\ldots,v_n) \Downarrow \genv::\qu,w
 \end{displaymath}
 
+\end{theorem}
 
-\section{Propagation of Annotations}
+
+
+
+
+\section{Static Checking and Propagation of Annotations}
+
+Talk about static checking - define?
+
+\begin{definition}[Static Checking]
+$\mathit{check}(P)$ ...
+\end{definition}
+
+Explain - with example - why a good program will fail static checking.
+
+In order to increase the number of correct programs that pass the static checker we must strengthen the annotations at method level. This is done by lifting the prove obligations - the ones that model the high-level security property - from the method's body to the method declaration. The pre- and post-conditions required by the prove obligations in the body are appended to the ensure and requires elements of the method declation.
+The propagation of annotations is performed  by the $\mathit{prop}$ function, defined below.
 
 
 \begin{definition}[Propagation of Annotations]
-The function $\mathit{prop}$ applied to program $P$ and annotations $\alpha$ generates a new set of annotations according to the following rules:
+The function $\mathit{prop}$ applied to program $P$ generates a new program  according to the following rules:
 \begin{displaymath}
 \begin{array}{l}
-\alpha' = \mathit{prop}(P,\alpha) \Leftrightarrow \\
+P' = \mathit{prop}(P) \Leftrightarrow \\
 \;\;\;\;
 \begin{array}{l}
-(\alpha'.\mathit{assert} = \alpha.\mathit{assert}) \wedge (\alpha'.\mathit{set} = \alpha.\mathit{set}) \;\wedge \\
-(\alpha'.\mathit{preSet} = \alpha.\mathit{preSet}) \wedge (\alpha'.\mathit{postSet} = \alpha.\mathit{postSet}) \;\wedge \\
-\forall m \in P:\\
-\;\;\;\begin{array}{rcl}
-\alpha'.\pre(m) & = & \pre(P^\alpha,\mathit{body}(m),\emptyset) \\
-\alpha'.\post(m) & = & \post(P^\alpha,\mathit{body}(m),\emptyset) \\
-\end{array}
+(P'.\mathit{globals} = P.\mathit{globals}) \wedge (P'.\mathit{ghost} = P.\mathit{ghost}) \;\wedge \\
+P'.\mathit{methods} = \{ \mathit{prop}(P,m) \mid m \in P.\mathit{methods}  \}
+\end{array} \\
+m' = \mathit{prop}(P,d)  \Leftrightarrow \\
+\;\;\;\;
+\begin{array}{l}
+m'.\mathit{requires} = \ppre(P,m)  \\
+m'.\mathit{preset} = m.\mathit{preset} \\
+m'.\mathit{ensures} = \ppost(P,m)  \\
+m'.\mathit{postset} = m.\mathit{postset} \\
+m'.\mathit{body} = m.\mathit{body}
 \end{array}
 \end{array}
 \end{displaymath}
-where $\pre$ and $\post$ are defined by the rules in Figure~\ref{fig:propagation}.
+where $\ppre$ and $\ppost$ can either use the definitions of sections~\ref{sec:wp} or~\ref{sec:cf}. 
 \end{definition}
 
+\subsection{WP-based Propagation}\label{sec:wp}
 
-\begin{figure}
+The propagation of annotations based on weakest pre-conditions (strongest post-conditions) is defined  by the rules in Figure~\ref{fig:propagation}. The algorithm collects proof obligations imposed by assert annotations and method calls (ensures annotation) inside the method's body.
+
+Annotations are collected in sets. The $\Rightarrow$ and update operators are extended to sets in the obvious way:
+\begin{displaymath}
+p \Rightarrow \Psi = \{ p \Rightarrow q \mid q \in \Psi \}
+\Psi[e/x] = \{ p[e/x] \mid p \in Psi \}
+\end{displaymath}
+
+Comment: Note that we no longer carry the set of modified variables since updates are processed in-situ. A similar change could be applied to the control flow based algorithm.
+
+Completeness result for subset - no annoations inside while loops.
+
+
+
+\begin{figure}[tbp]
+\begin{displaymath}
+\begin{array}{rcl}
+\hline 
+\ppre(P,m) & = & m.\mathit{requires} \cup \ppre(P,\mathit{body}(m),\emptyset)[e_i/X_i]  \\
+& & \mbox{where}\; m.\mathit{preset} = [e_i/X_i] \\
+\ppost(P,m) & = & m.\mathit{ensures} \cup \ppost(P,\mathit{body}(m),\emptyset) \\
+\ \\
+\ppre(P,\texttt{skip},\Psi) & = & \Psi  \\
+\ppre(P,x \texttt{:=}\; e,\Psi) & = & \Psi[e/x] \\
+\ppre(P,\texttt{if }e_0\;s_1\;s_2,\Psi) & = & (e_0 \Rightarrow \ppre(P,s_1,\Psi)) \cup (\neg e_0 \Rightarrow \ppre(P,s_2,\Psi)) \\
+\ppre(P,\texttt{while }b\texttt{ do }s,\Psi) & = & \ppre(P,s,\Psi)\ldots\mbox{need invariant} \\
+\ppre(P,s_1; s_2,\Psi) & = & \ppre(P,s_1,\ppre(P,s_2,\Psi))  \\
+\ppre(P,m(e_1,\ldots,e_{|m|}),\Psi) & = & \ppre(P,m)  \\
+\ppre(P,\texttt{return},\Psi) & = & \emptyset  \\
+\ppre(P,\texttt{assert}\;p,\Psi) & = & \Psi \cup \{ p \} \\
+\ppre(P,\texttt{set}\;(X_i = e_i),\Psi) & = & \Psi[e_i/X_i] \\
+\ \\
+\mbox{Post conditions...to do:}\\
+\ppost(P,\texttt{skip},\Psi) & = & \true  \\
+\ppost(P,x \texttt{:=}\; e,\Psi) & = & \true \\
+\ppost(P,\texttt{if }e_0\;s_1\;s_2,\Psi) & = & \ppost(P,s_1,\Psi) \vee \ppost(P,s_2,\Psi) \\
+\ppost(P,\texttt{while }b\texttt{ do }s,\Psi) & = & \ppost(P,s,\Psi)\ldots\mbox{need invariant}  \\
+\ppost(P,s_1; s_2,\Psi) & = & \ppost(P,s_2,\Psi) \wedge \ppost(P,s1,\Psi\cup\mod(s_2))  \\
+\ppost(P,m(e_1,\ldots,e_{|m|}),\Psi) & = & \{ q \mid q \in \ppost(P,m) \wedge \fv(q) \cap \Psi \neq \phi   \}\\
+\ppost(P,\texttt{return},\Psi) & = & \true \\
+\ppost(P,\texttt{assert}\;p,\Psi) & = & \Psi \\
+\ppost(P,\texttt{set}\;(X_i = e_i)*,\Psi) & = & \{ \}  \\
+\hline
+\end{array}
+\end{displaymath}
+\caption{Weakest Pre-Condition and Strong Post-Condition based Propagation of Annotations}\label{fig:wp-propagation}
+\end{figure}
+
+
+\newpage
+
+%% \section{Approximate Propagation of Annotations}
+\subsection{Control Flow based Propagation}\label{sec:cf}
+
+This is the approximation algorithm based on~\cite{PaBaBu03}.
+It uses old notation - change.
+\begin{figure}[tbp]
 \begin{displaymath}
 \begin{array}{rcl}
 \hline 
@@ -492,9 +725,9 @@ where $\pre$ and $\post$ are defined by the rules in Figure~\ref{fig:propagation
 \ppre(P^\alpha,x \texttt{:=}\; e,V) & = & \phi \\
 \ppre(P^\alpha,\texttt{if }e_0\;s_1\;s_2,V) & = & \ppre(P^\alpha,s_1,V) \cup \ppre(P^\alpha,s_2,V) \\
 \ppre(P^\alpha,\texttt{while }b\texttt{ do }s,V) & = & \ppre(P^\alpha,s,V) \\
-\ppre(P^\alpha,s_1; s_2,V) & = & \ppre(P^\alpha,s_1,V\cup\mod(s_2)) \cup \ppre(P^\alpha,s_2,V)  \\
+\ppre(P^\alpha,s_1; s_2,V) & = & \ppre(P^\alpha,s_2,V\cup\mod(s_1)) \cup \ppre(P^\alpha,s_1,V)  \\
 \ppre(P^\alpha,m(e_1,\ldots,e_{|m|}),V) & = & \{ q \mid q \in \ppre(P^\alpha,m) \wedge \fv(q) \cap V \neq \phi  \} \\
-\ppre(P^\alpha,\texttt{return},V) & = & \{ \}  \\
+\ppre(P^\alpha,\texttt{return},V) & = & \emptyset  \\
 \ \\
 \ppost(P^\alpha,\texttt{skip},V) & = & \true  \\
 \ppost(P^\alpha,x \texttt{:=}\; e,V) & = & \true \\
@@ -506,12 +739,40 @@ where $\pre$ and $\post$ are defined by the rules in Figure~\ref{fig:propagation
 \hline
 \end{array}
 \end{displaymath}
-\caption{Propagation of Annotations}\label{fig:propagation}
+\caption{Control Flow based Propagation of Annotations}\label{fig:propagation}
 \end{figure}
 
 \begin{theorem}
 Let $P^\alpha \in \overline{\textrm{Program}}$. Then 
 $P \models \alpha \Leftrightarrow P \models \mathit{prop}(P,\alpha)$.
 \end{theorem}
+
+
+\section{Adding Exceptions}\label{sec:exceptions}
+
+Moved from first sections - requieres special treatment.
+
+\begin{displaymath}
+\begin{array}{rcl}
+s & ::= & \ldots
+    \texttt{throw}\; \exc \mid \texttt{try}\;s_1\;\texttt{catch}(\exc)\; s_2   \\
+\exc & \in & \textrm{Exceptions}
+\end{array}
+\end{displaymath}
+
+The set \textrm{Exceptions} contains the runtime exceptions defined for the language. The set is equipped with a transitive, reflexive and non-conmutative ordering relation $\preceq$ used for exception handling conditions.
+
+New configutation - value.
+Exception hangling - semantics. \\
+New annotations. \\
+New Rules\\
+
+\input{semantics-exceptions}
+
+
+
+%%%% Bibliography
+\bibliographystyle{plain}
+\bibliography{propagation}
 
 \end{document}
