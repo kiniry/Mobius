@@ -49,7 +49,7 @@ nodocs: clean build jars test
 nodocs+: clean build jars alltests
 
 .PHONY: jars
-jars: escspecs-jar jmlspecs-jar jar srcjar
+jars: build escspecs-jar jmlspecs-jar jar srcjar
 
 ########################################### build, test
 
@@ -263,7 +263,6 @@ jml:  build
 releases: releases-notests 
 	${MAKE} test-releases
 
-
 .PHONY: test-releases
 test-releases:
 	@echo "Testing release versions .........."
@@ -320,7 +319,7 @@ srcjar:
 
 
 .PHONY: binary-release
-binary-release: build ##docs ## FIXME javadoc
+binary-release: build jars docs ## FIXME javadoc
 	@echo "Creating binary release .........."
 	## RELDIR is the staging area for all files
 	## First copy all .class files to sub and build a jar file
@@ -333,10 +332,17 @@ binary-release: build ##docs ## FIXME javadoc
 	cp -r ${ESCTOOLS_ROOT}/specs ${RELTEMP}
 	-find ${RELTEMP}/specs -name "CVS" -exec rm -rf {} \; > /dev/null  2>&1
 	## Copy papers and slides and other documentation
-	# cp papers/*.pdf ${RELTEMP}
-	# cp slides/*.pdf ${RELTEMP}
-	-cp docs/Escjava2-ImplementationNotes/*.pdf ${RELTEMP}
-	cp docs/ESCJAVA-UsersManual.html ${RELTEMP}
+	mkdir ${RELTEMP}/papers
+	cp papers/*.pdf ${RELTEMP}
+	mkdir ${RELTEMP}/slides
+	cp slides/ETAPSTutorial/*.pdf ${RELTEMP}/slides
+	cp slides/escjava_demo.pdf ${RELTEMP}/slides
+	mkdir ${RELTEMP}/docs
+	cp docs/Escjava2-ImplementationNotes/*.pdf ${RELTEMP}/docs
+	cp docs/Escjava2-Extending/Escjava2-Extending.pdf ${RELTEMP}/docs
+	cp docs/Escjava2-Logics/Escjava2-Logics.pdf ${RELTEMP}/docs
+	cp docs/Escjava2-Provers/Escjava2-Provers.pdf ${RELTEMP}/docs
+	cp docs/ESCJAVA-UsersManual.html ${RELTEMP}/docs
 	cp -r Escjava/release/master/examples ${RELTEMP}
 	-find ${RELTEMP}/examples -name "CVS" -exec rm -rf {} \; > /dev/null 2>&1
 	## Copy other miscellaneous files
@@ -348,7 +354,7 @@ binary-release: build ##docs ## FIXME javadoc
 	cp README.first README.txt ${RELTEMP}
 	cd release-files; cp `ls | grep -v CVS` ${RELTEMP}
 	cp escspecs.jar ${RELTEMP}
-	cp escspecs.jar ${RELTEMP}/jmlspecs.jar
+	cp jmlspecs.jar ${RELTEMP}
 	-find ${RELTEMP} -name "*~" -exec rm -f {} \; > /dev/null 2>&1
 	cd ${RELTEMP}; tar cjvf ${RELDIR}/${RELTAR} *
 	rm -rf ${RELTEMP}

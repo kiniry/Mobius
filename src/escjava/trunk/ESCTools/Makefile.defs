@@ -183,6 +183,7 @@ export RELDIR  ?= ${ESCTOOLS_ROOT}/release
 # Variables relevant to names of release files
 export RELNAME ?= ${ESC_PROJECT}-${ESC_VERSION}
 export RELNAME-DATE ?= ${RELNAME}-${ESC_RELEASE_DATE}
+export RELCODENAME ?= "ETAPS 2005"
 export RELJAR  ?= esctools2.jar
 export RELSRCJAR  ?= esctools2src.jar
 export RELTAR  ?= ${RELNAME-DATE}-binary.tbz
