@@ -134,7 +134,27 @@ static {
 	    String urlStr = urlJar.toString();
 	    int from = "jar:file:".length();
 	    int to = urlStr.indexOf("!/");
-	    if (to != -1) specspath = urlStr.substring(from, to);
+	    if (to != -1) {
+		specspath = urlStr.substring(from, to);
+		if (System.getProperty("simplify") == null) {
+		    int k = specspath.lastIndexOf('/');
+		    if (k >= 0) {
+			String simpath = specspath.substring(0,k+1)
+					+ "Simplify-1.5.4.";
+			String os = System.getProperty("os.name");
+			System.out.println("OS " + os);
+			if (os.startsWith("Mac")) {
+			    simpath += "macosx";
+			} else if (os.startsWith("Linux")) {
+			    simpath += "linux";
+			} else {
+			    simpath += "exe";
+			}
+			if ((new java.io.File(simpath)).exists()) 
+				System.setProperty("simplify",simpath);
+		    }
+		}
+	    }
 
 	    try {
 	    processOption("-nowarn", new String[]{"Deadlock"}, 0);
