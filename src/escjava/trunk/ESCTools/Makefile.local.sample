@@ -55,11 +55,16 @@ export JDK_BINARIES ?=
 ## contains the directory "JML2".
 #export JML_ROOT = /Users/cok/JML
 
-## Define the location of the junit.jar file
-## (This can alternatively be the location of the junit class files)
-## This is only needed to run some of the tests, which use JUnit
-## A version of JUnit is also supplied as part of the ESCTools distribution. 
+## Define the location of the junit.jar file.  (This can alternatively
+## be the location of the junit class files.)  This is only needed to
+## run some of the tests, which use JUnit.  A version of JUnit is also
+## supplied as part of the ESCTools distribution.
 export JUNIT_LIB ?= ${ESCTOOLS_ROOT}/Utils/junit.jar
+
+## Define the location of the ant.jar file. (This can alternatively
+## be the location of the Ant class files.)  This is only needed to
+## build the ESC/Java2 Ant task.
+export ANT_LIB ?= ${ESCTOOLS_ROOT}/Utils/ant.jar
 
 ## Other optional definitions
 
