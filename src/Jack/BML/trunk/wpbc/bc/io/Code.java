@@ -31,7 +31,7 @@ public interface  Code {
 	public static final int LESSEQ = 0x14;
 	public static final int INSTANCEOF = 0x15;
 	public static final int SUBTYPE = 0x16; //<:
-	public static final int NOTEQ = 0x16;
+	public static final int NOTEQ = 0x17;
 	
 	//arithmetic operations
 	public static final int  PLUS = 0x20;

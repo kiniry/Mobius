@@ -80,6 +80,15 @@ public class FieldWITH extends Expression {
 		return null;
 	}
 
+	public BCConstantFieldRef getConstantFieldRef() {
+		return constantFieldRef;
+	}
+	public Expression getObject() {
+		return object;
+	}
+	public SubstitutionTree getWith() {
+		return with;
+	}
 	/* (non-Javadoc)
 	 * @see bcexpression.Expression#toString()
 	 */

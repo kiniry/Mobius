@@ -158,4 +158,10 @@ public class FunctionApplication extends Expression {
 		return thisCopy;
 	}
 
+	public RefFunction getFunction() {
+		return function;
+	}
+	public SubstitutionTree getMap() {
+		return map;
+	}
 }
