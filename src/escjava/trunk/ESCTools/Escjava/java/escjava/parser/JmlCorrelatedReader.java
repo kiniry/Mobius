@@ -73,11 +73,13 @@ public class JmlCorrelatedReader extends FilterCorrelatedReader
      * which of these three segments are currently being scanned.
      */
 
+    //@ spec_public
     private int prefixMode = 1;  /* 0-whitespace, 1-special, 2-meat */
     //@ invariant 0 <= prefixMode && prefixMode < 3;
 
     /** Indicates the special character. */
 
+    //@ spec_public
     private final int specialCharacter;
 
     /**
@@ -118,6 +120,7 @@ public class JmlCorrelatedReader extends FilterCorrelatedReader
      * space.  This is only done for the special character '@'.
      */
 
+    //@ spec_public
     private final boolean allowSpecialSuffix;
     //@ invariant allowSpecialSuffix ==> specialCharacter == '@';
 
@@ -181,6 +184,7 @@ public class JmlCorrelatedReader extends FilterCorrelatedReader
     private int prefixModeAtMark; /*@ readable prefixModeAtMark if marked; */
     //@ invariant 0 <= prefixModeAtMark && prefixModeAtMark <= 2;
 
+    //@ spec_public
     private int unreturnedCharsAtMark; /*@ readable unreturnedCharsAtMark if marked; */
     //@ invariant 0 <= unreturnedCharsAtMark;
     //@ invariant prefixModeAtMark < 2 ==> unreturnedCharsAtMark == 0;

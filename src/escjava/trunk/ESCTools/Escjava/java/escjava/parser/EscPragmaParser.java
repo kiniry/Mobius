@@ -265,6 +265,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
    * of parsing some pragma, and is expected to continue this parsing next time it
    * gets control.
    */
+  //@ spec_public
   private int inProcessTag;
   /*@ invariant inProcessTag == NOTHING_ELSE_TO_PROCESS || 
    @           inProcessTag == NEXT_TOKEN_STARTS_NEW_PRAGMA ||
@@ -1752,10 +1753,10 @@ public class EscPragmaParser extends Parse implements PragmaParser
   /** Issues an error if any Java modifiers have accumulated, and resets the
    accumulated modifiers to NONE.
    */
-  //@ public normal_behavior
+  //@ private normal_behavior
   //@   requires modifiers == 0;
   //@   modifies \nothing;
-  //@ also public behavior
+  //@ also private behavior
   //@   requires modifiers != 0;
   //@   modifies modifiers, ErrorSet.cautions;
   //@   ensures true;
@@ -2683,6 +2684,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
     return result;
   }	
   
+  //@ spec_public
   protected int modifiers = Modifiers.NONE;
   
   // Adds any Java modifiers found into the 'modifiers' field

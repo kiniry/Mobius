@@ -28,9 +28,11 @@ public class ASTDecoration {
      **************************************************/
 
     //@ invariant allocated >= 0;
+    //@ spec_public
     private static int allocated=0;
 
     //@ invariant 0<=my_slot && my_slot<allocated;
+    //@ spec_public
     private int my_slot;
 
 
@@ -42,6 +44,7 @@ public class ASTDecoration {
 
     /** The name of our decoration */
     //@ invariant name != null;
+    //@ spec_public
     private String name;
 
     /** Our decoration's actual "static" type */

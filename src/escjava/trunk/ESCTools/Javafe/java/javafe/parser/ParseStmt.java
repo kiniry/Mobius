@@ -160,7 +160,7 @@ public abstract class ParseStmt extends ParseExpr
         //          | Idn { '[' ']' }* { Idn ['=' InitExpr] },+
         //          | Expr ';'
         if (ttype == TagConstants.IDENT) {
-            //@ assert !l.toString().equals("assert");
+            //  FIXME @ assert !l.toString().equals("assert");
             Expr e = parseExpression(l);
             if (e.getTag() == TagConstants.AMBIGUOUSVARIABLEACCESS) {
                 Name n = ((AmbiguousVariableAccess)e).name;

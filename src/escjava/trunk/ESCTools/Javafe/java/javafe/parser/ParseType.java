@@ -78,11 +78,11 @@ public class ParseType extends ParseUtil
      * inside parseName because then the code would not be
      * thread-safe.
      */
-    //@ invariant nameIdLocs.length >= 10;
-    //@ invariant nameIdLocs.owner == this;
+    //@ private invariant nameIdLocs.length >= 10;
+    //@ private invariant nameIdLocs.owner == this;
     private /*@ non_null @*/ int nameIdLocs[]  = new int[10];
-    //@ invariant nameDotLocs.length == nameIdLocs.length;
-    //@ invariant nameDotLocs.owner == this;
+    //@ private invariant nameDotLocs.length == nameIdLocs.length;
+    //@ private invariant nameDotLocs.owner == this;
     private /*@ non_null @*/ int nameDotLocs[] = new int[nameIdLocs.length];
 
     /**

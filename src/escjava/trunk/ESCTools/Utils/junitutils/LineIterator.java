@@ -40,6 +40,7 @@ public class LineIterator implements Iterator {
     /** The next value to be returned by the iterator.  We read ahead one so
 	that we know the value of hasNext() when asked.
     */
+    //@ spec_public
     private String nextLine;
 
     /** Starts an iterator reading from the given external process. 
@@ -71,6 +72,7 @@ public class LineIterator implements Iterator {
 	java.util.NoSuchElementException if the list has been exhausted 
 	(hasNext() returns false).
     */
+    //@ also modifies nextLine;
     public Object next() throws java.util.NoSuchElementException, RuntimeException {
 	if (nextLine == null) 
 	    throw new java.util.NoSuchElementException();

@@ -42,6 +42,7 @@ public final class Identifier
 
   /*@ invariant (\forall int i; 0<=i && i<chains.length
 	==> chains[i]==null || chains[i].length>0); */
+  //@ spec_public
   private static final Identifier chains[][] = new Identifier[TABLE_SIZE][];
 
 
@@ -54,6 +55,7 @@ public final class Identifier
   /** Sequence of characters represented by this Identifier (never
     <code>null</code>). */
   //@ invariant chars != null;
+  //@ spec_public
   private char[] chars; //@ in objectState;
 
   /** Memoization of <code>String.valueOf(chars, 0,

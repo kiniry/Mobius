@@ -26,25 +26,25 @@ public abstract class ParseExpr extends ParseType
 
     private int defaultStackSize = 12;
 
-    //@ invariant stackPtr >= -1;
-    //@ invariant stackPtr < exprStack.length;
+    //@ private invariant stackPtr >= -1;
+    //@ private invariant stackPtr < exprStack.length;
     private int stackPtr = -1;         // Always points to top element, if any
 
-    //@ invariant exprStack != null;
-    //@ invariant exprStack.length > 0;
-    //@ invariant \typeof(exprStack) == \type(Expr[]);
+    //@ private invariant exprStack != null;
+    //@ private invariant exprStack.length > 0;
+    //@ private invariant \typeof(exprStack) == \type(Expr[]);
     private Expr exprStack[]      = new Expr[defaultStackSize];
 
-    //@ invariant opStack != null;
-    //@ invariant opStack.length == exprStack.length;
+    //@ private invariant opStack != null;
+    //@ private invariant opStack.length == exprStack.length;
     private int opStack[]         = new int[defaultStackSize];
 
-    //@ invariant precedenceStack != null;
-    //@ invariant precedenceStack.length == exprStack.length;
+    //@ private invariant precedenceStack != null;
+    //@ private invariant precedenceStack.length == exprStack.length;
     private int precedenceStack[] = new int[defaultStackSize];
 
-    //@ invariant locStack != null;
-    //@ invariant locStack.length == exprStack.length;
+    //@ private invariant locStack != null;
+    //@ private invariant locStack.length == exprStack.length;
     private int locStack[]        = new int[defaultStackSize];
 
     // The operator precedence parser can be extended with additional
@@ -53,11 +53,11 @@ public abstract class ParseExpr extends ParseType
     // in the following tables. The precedence is 0 for tokens that are
     // not operators. These tables are sized as necessary.
 
-    //@ invariant precedenceTable != null;
+    //@ private invariant precedenceTable != null;
     private int[] precedenceTable    = new int[0];
 
-    //@ invariant isLeftAssocTable != null;
-    //@ invariant isLeftAssocTable.length == precedenceTable.length;
+    //@ private invariant isLeftAssocTable != null;
+    //@ private invariant isLeftAssocTable.length == precedenceTable.length;
     private boolean[] isLeftAssocTable = new boolean[0];
 
     /** If no constructors are found in "elems", adds a default one to
@@ -863,9 +863,9 @@ public abstract class ParseExpr extends ParseType
                 int[] openBrackets = new int[4];
                 int cOB = 0;
                 seqExpr.push();
-                Type typeNew;
+                Type typeNew = null; // FIXME - JML needs this initializatio nbut Java does not
                 ExprVec dims;
-                ArrayInit init;
+                ArrayInit init = null; // FIXME - JML needs this, javac does not
 
                 if (l.lookahead(1) != TagConstants.RSQBRACKET) {
                     // Parsing 'new' NonArrayType DimExprs Dims_opt

@@ -1129,11 +1129,11 @@ public class Lex extends Token
     // Having this separate from text allows us to accumulate both the
     // original input in text and the escape-converted input in stringLit
 
-    //@ invariant stringLit != null;
-    //@ invariant stringLit.length>=64;
+    //@ private invariant stringLit != null;
+    //@ private invariant stringLit.length>=64;
     private char[] stringLit = new char[64];
 
-    //@ invariant stringLitLen>=0;
+    //@ private invariant stringLitLen>=0;
     private int stringLitLen = 0;
 
     private void stringLitAppend(int c) {
@@ -1151,7 +1151,7 @@ public class Lex extends Token
 
     //// The keyword and punctuation tables, plus methods for changing them
 
-    //@ invariant punctuationTable != null;
+    //@ private invariant punctuationTable != null;
     private PunctuationPrefixTree punctuationTable = new PunctuationPrefixTree();
 
     /**

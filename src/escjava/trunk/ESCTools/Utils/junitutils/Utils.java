@@ -37,11 +37,11 @@ public class Utils {
   static public boolean disable = false;
   
   /** A cached value of the usual System out stream. */
-  //@ non_null
+  //@ non_null spec_public
   final private static PrintStream pso = System.out;
   
   /** A cached value of the usual System err stream. */
-  //@ non_null
+  //@ non_null spec_public
   final private static PrintStream pse = System.err;
   
   /** Redirects System.out and System.err to the given PrintStream. 
@@ -172,7 +172,7 @@ public class Utils {
      ensures \result ==> (pos < cc.length);
      ensures \result == !(\forall int i; pos<=i && i < cc.length;
                                    Character.isWhitespace(cc[i]));
-     model pure boolean moreTokens();
+     model public pure boolean moreTokens();
      */
     
     /**

@@ -296,6 +296,7 @@ public class TypeSig extends Type
      */
     //@ invariant map.keyType == \type(String);
     //@ invariant map.elementType == \type(TypeSig);
+    //@ spec_public
     private static final Hashtable map = new Hashtable(101);
 
     public static final void clear() {

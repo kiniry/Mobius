@@ -29,6 +29,7 @@ public class Set implements Cloneable
     //@ invariant ht.keyType == elementType;
     //@ invariant ht.elementType == elementType;
     //@ invariant ht.owner == this;
+    //@ spec_public
     private /*@ non_null @*/ Hashtable ht;
 
 

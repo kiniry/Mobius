@@ -513,8 +513,8 @@ class ASTClassFileParser extends ClassFileParser
      * MethodRef           null
      * InterfaceMethodRef  null
      */
-    //@ invariant constants != null;
-    //@ invariant \typeof(constants) == \type(Object[]);
+    //@ private invariant constants != null;
+    //@ private invariant \typeof(constants) == \type(Object[]);
     private Object[] constants;
 
     /**
@@ -523,9 +523,9 @@ class ASTClassFileParser extends ClassFileParser
      * parser (versus translated by DescriptorParser).  Initialized
      * by set_const and set_num_constants.
      */
-    //@ invariant rawConstants != null;
-    //@ invariant \typeof(rawConstants) == \type(Object[]);
-    //@ invariant constants.length == rawConstants.length;
+    //@ private invariant rawConstants != null;
+    //@ private invariant \typeof(rawConstants) == \type(Object[]);
+    //@ private invariant constants.length == rawConstants.length;
     private Object[] rawConstants;
 
     /**
@@ -557,8 +557,8 @@ class ASTClassFileParser extends ClassFileParser
      * Initialized by set_num_interfaces.
      * Elements initialized by set_interface.
      */
-    //@ invariant interfaces != null;
-    //@ invariant \typeof(interfaces) == \type(TypeName[]);
+    //@ private invariant interfaces != null;
+    //@ private invariant \typeof(interfaces) == \type(TypeName[]);
     private TypeName[] interfaces;
 
     /**
@@ -575,6 +575,7 @@ class ASTClassFileParser extends ClassFileParser
      */
     //@ invariant fields != null;
     //@ invariant \typeof(fields) == \type(FieldDecl[]);
+    //@ spec_public
     private FieldDecl[] fields;
 
     /**
@@ -584,12 +585,14 @@ class ASTClassFileParser extends ClassFileParser
      */
     //@ invariant routines != null;
     //@ invariant \typeof(routines) == \type(RoutineDecl[]);
+    //@ spec_public
     private RoutineDecl[] routines;
 
     /**
      * The identifier of the class being parsed.
      * Initialized by set_this_class.
      */
+    //@ spec_public
     private Identifier classIdentifier;
 
     /* -- private instance methods ------------------------------------------- */

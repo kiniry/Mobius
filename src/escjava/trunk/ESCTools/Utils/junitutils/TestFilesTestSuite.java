@@ -46,7 +46,7 @@ import java.lang.reflect.Method;
 */
 public class TestFilesTestSuite  extends TestSuite {
 
-    //@ ghost  boolean initialized = false;
+    //@ ghost public boolean initialized = false;
 
     //@ ensures !initialized;
     protected TestFilesTestSuite() {}

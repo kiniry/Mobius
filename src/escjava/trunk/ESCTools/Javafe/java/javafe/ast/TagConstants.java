@@ -49,7 +49,7 @@ public class TagConstants extends OperatorTags
 
     public static final int LAST_TAG = NULLLIT;
 
-    //@ invariant \nonnullelements(tags);
+    //@ private invariant \nonnullelements(tags);
     private static final /*@ non_null @*/ String[] tags = { 
         "IDENT", "ERRORTYPE",
         "BOOLEANTYPE", "CHARTYPE", "VOIDTYPE", "NULLTYPE",

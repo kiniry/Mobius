@@ -426,7 +426,7 @@ public abstract class PrettyPrint {
     } catch (IOException e) { Assert.fail("IO Exception"); }
   }
 
-  //@ invariant _spaces != null;
+  //@ private invariant _spaces != null;
     private static byte[] _spaces = {
 	(byte)' ', (byte)' ', (byte)' ', (byte)' ', (byte)' ',   /*5 spaces*/
 	(byte)' ', (byte)' ', (byte)' ', (byte)' ', (byte)' ',   /*5 spaces*/

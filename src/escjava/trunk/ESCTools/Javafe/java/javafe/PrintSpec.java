@@ -16,7 +16,7 @@ import java.util.ArrayList;
  */
 public class PrintSpec extends SrcTool
 {
-  /*@ public normal_behavior
+  /*@ also public normal_behavior
     @   ensures \result.equals("PrintSpec");
     @*/
   public /*@ pure non_null @*/ String name() { return "PrintSpec"; }
@@ -41,7 +41,8 @@ public class PrintSpec extends SrcTool
     }
   }	    
 
-  /*@ public normal_behavior
+  /*@ also public normal_behavior
+    @   modifies \everything;
     @   ensures \fresh(PrettyPrint.inst);
     @*/
   public void setup() { 
