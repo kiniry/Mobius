@@ -16,8 +16,8 @@ export ESCTOOLS_ROOT=`pwd`/..
 export ESCTOOLS_JARS=${ESCTOOLS_ROOT}/jars
 
 export ESCJAVA_ROOT=`pwd`
-if ! [ -a ${ESCJAVA_ROOT}/setup ]; then
-    echo "Error: Must source setup from the directory that contains it"
+if ! [ -a ${ESCJAVA_ROOT}/setup.sh ]; then
+    echo "Error: Must source setup.sh from the directory that contains it"
     exit 1
 fi
 
@@ -64,8 +64,8 @@ export SOURCEDIRECTORY=${ESCJAVA_ROOT}/java
 export TESTSOURCEDIRECTORY=${ESCJAVA_ROOT}/test
 export JAVADOCDIRECTORY=${ESCJAVA_ROOT}/doc/javadoc
 
-export SRCDIRECTORY=${JAVAFE_ROOT}/decsrclib
-export SRCCLASSDIRECTORY=${JAVAFE_ROOT}/decsrclib
+export DECSRCDIRECTORY=${JAVAFE_ROOT}/decsrclib
+export DECSRCCLASSDIRECTORY=${JAVAFE_ROOT}/decsrclib
 
 #
 # Where to find binaries for the JDK libraries:
@@ -102,14 +102,15 @@ export MOCHA_CLASSES=${MOCHA_ROOT}/classes
 # The classpath for compiling Escjava; no sources outside the repository
 # should be on this list:
 #
+export JARS=${ESCTOOLS_JARS}/decsrc.jar:${ESCTOOLS_JARS}/mochalib.jar:${ESCTOOLS_JARS}/javafe.jar:${ESCTOOLS_JARS}/escjava.jar:
 
-# do not change the number of components here without updating escj!!
-export CLASSES=${ESCTOOLS_JARS}/decsrc.jar:${ESCTOOLS_JARS}/mochalib.jar:${ESCTOOLS_JARS}/javafe.jar:${ESCTOOLS_JARS}/escjava.jar:${SRCCLASSDIRECTORY}:${MOCHA_CLASSES}:${CLASSDIRECTORY}
+export CLASSFILES=${CLASSDIRECTORY}:${MOCHA_CLASSES}:${JAVAFE_CLASSFILES}:${DECSRCCLASSDIRECTORY}
 
-export CLASSPATH=${SOURCEDIRECTORY}:${CLASSES}:.
-export ESC_CLASSPATH=${CLASSDIRECTORY}:${ESCTOOLS_JARS}/decsrc.jar:${ESCTOOLS_JARS}/mochalib.jar:${ESCTOOLS_JARS}/javafe.jar:${ESCTOOLS_JARS}/escjava.jar:${JDK_BINARIES}:${JDK_SOURCES}:${MOCHA_CLASSES}
-# javadepend needs a classpath where all the sources are in the current dir:
-export LCLASSPATH=.:${CLASSES}
+export CLASSPATH=${CLASSFILES}:${JARS}:.:
+
+export ESC_CLASSPATH=${CLASSPATH}:${JDK_BINARIES}:${JDK_SOURCES}
+
+export SOURCEPATH=${SOURCEDIRECTORY}:${TESTSOURCEDIRECTORY}:${JAVAFE_ROOT}/java
 
 #
 # The appropriate -bootclasspath for escjava:
@@ -120,14 +121,14 @@ export LCLASSPATH=.:${CLASSES}
 export JDKSPEC=${JDKSPEC_ROOT}
 export BOOTCLASSPATH=${JDKSPEC}:${JDKBINARIES}
 
-alias jls="jls    -bootclasspath ${BOOTCLASSPATH} -E"
+alias jls="jls -bootclasspath ${BOOTCLASSPATH} -E"
 alias jwhich="jwhich -bootclasspath ${BOOTCLASSPATH} -X.spec"
 
 #
 # The classpath for checking escjava itself (e.g., escself's classpath),
 # not counting -bootclasspath:
 #
-export ESCSPEC=${SOURCEDIRECTORY}:${JAVAFE_ROOT}/java:${SRCDIRECTORY}:${MOCHA_CLASSES}
+export ESCSPEC=${SOURCEDIRECTORY}:${JAVAFE_ROOT}/java:${DECSRCDIRECTORY}:${MOCHA_CLASSES}
 
 ######################### java* cmds #########################
 

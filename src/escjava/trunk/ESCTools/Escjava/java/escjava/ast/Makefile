@@ -6,8 +6,6 @@ all:
 full: source
 	$(JAVAC) -d ${CLASSDIRECTORY} *.java
 
-#####
-
 #
 # Dependence on Javafe astgen programs:
 #
@@ -31,17 +29,17 @@ TypeVec = \
     DefPredVec.java LocalVarDeclVec.java DecreasesInfoVec.java
 
 GenericVarDeclVec.java: $(VECTEMPLATE)
-	sed s/_TYPE_/GenericVarDecl/g $(VECTEMPLATE) | \
+	@sed s/_TYPE_/GenericVarDecl/g $(VECTEMPLATE) | \
         sed s/_PKG_/escjava.ast/g              | \
         sed s/_COMPONENTPKG_/javafe.ast/g > $@
 
 FieldDeclVec.java: $(VECTEMPLATE)
-	sed s/_TYPE_/FieldDecl/g $(VECTEMPLATE) | \
+	@sed s/_TYPE_/FieldDecl/g $(VECTEMPLATE) | \
         sed s/_PKG_/escjava.ast/g              | \
         sed s/_COMPONENTPKG_/javafe.ast/g > $@
 
 %Vec.java: $(VECTEMPLATE)
-	sed s/_TYPE_/$*/g $(VECTEMPLATE) | \
+	@sed s/_TYPE_/$*/g $(VECTEMPLATE) | \
         sed s/_PKG_/escjava.ast/g              | \
         sed s/_COMPONENTPKG_/escjava.ast/g > $@
 
@@ -49,15 +47,15 @@ source: GeneratedTags.java $(TypeVec) $(ASTGEN)
 
 GeneratedTags.java: $(ASTGEN) hierarchy.j
 	$(ASTGEN) < hierarchy.j
-	grep -v "//@" AnOverview.java > AnOverview.tmp
-	mv AnOverview.tmp AnOverview.java
-	grep -v "//@" GCExpr.java > GCExpr.tmp
-	mv GCExpr.tmp GCExpr.java
-	grep -v "//@" GuardedCmd.java > GuardedCmd.tmp
-	mv GuardedCmd.tmp GuardedCmd.java
+	@grep -v "//@" AnOverview.java > AnOverview.tmp
+	@mv AnOverview.tmp AnOverview.java
+	@grep -v "//@" GCExpr.java > GCExpr.tmp
+	@mv GCExpr.tmp GCExpr.java
+	@grep -v "//@" GuardedCmd.java > GuardedCmd.tmp
+	@mv GuardedCmd.tmp GuardedCmd.java
 
 LocalVarDeclVec.java: $(VECTEMPLATE)
-	sed s/_TYPE_/LocalVarDecl/g $(VECTEMPLATE) | \
+	@sed s/_TYPE_/LocalVarDecl/g $(VECTEMPLATE) | \
         sed s/_PKG_/escjava.ast/g              | \
         sed s/_COMPONENTPKG_/javafe.ast/g > $@
 #####
@@ -68,4 +66,4 @@ clean: $(ASTFILELIST)
 	rm -rf *.class ${CLASSDIRECTORY}/escjava/ast/*.class
 
 runtest:
-	echo No tests to do
+	@echo No tests to do.

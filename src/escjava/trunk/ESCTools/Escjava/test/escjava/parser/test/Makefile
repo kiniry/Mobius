@@ -1,12 +1,12 @@
 P = escjava.parser.test
 
-runtest: testlex testparse testparseidempotence
+runtest: full testlex testparse testparseidempotence
 
 full: java
-	javac -d ${CLASSDIRECTORY} TestLex.java TestEscPragmaParser.java
+	javac -g -d ${CLASSDIRECTORY} TestLex.java TestEscPragmaParser.java
 
 java:
-	echo Nothing to do
+	@echo "Nothing to do."
 
 clean:
 	rm -f *~ *.out

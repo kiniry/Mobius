@@ -3,7 +3,10 @@
 # Need to source setup before calling gnumake
 
 .PHONY: all
-all: clean escjava doc runtest
+all: clean compile runtest
+
+.PHONY: everything
+everything: clean compile doc runtest
 
 # Check that 'source setup' has been run in the Javafe directory:
 # if ESCJ is defined, then the following line will fail
@@ -51,8 +54,7 @@ doc:	javadoc
 .PHONY: javadoc
 javadoc: source
 	cd java; \
-	${JAVADOC} -classpath ${CLASSPATH} \
-	  -sourcepath ${SOURCEDIRECTORY}:${TESTSOURCEDIRECTORY}:${JAVAFE_ROOT}/java \
+	${JAVADOC} -sourcepath ${SOURCEPATH} \
 	  -d ${JAVADOCDIRECTORY} \
           escjava escjava.ast escjava.backpred escjava.parser \
 	  escjava.prover escjava.tc escjava.translate \
@@ -63,9 +65,7 @@ javadoc: source
 .PHONY: fastdoc
 fastdoc: source
 	cd java; \
-	CLASSPATH="${CLASSPATH}:${JAVAFE_ROOT}/java"; \
-	export CLASSPATH; \
-	${JAVADOC} -d ${JAVADOCDIRECTORY} \
+	${JAVADOC} -sourcepath ${SOURCEPATH} -d ${JAVADOCDIRECTORY} \
                 escjava escjava.ast escjava.parser escjava.prover escjava.tc
 
 .PHONY: fixdoc
@@ -81,27 +81,21 @@ runtest:
 .PHONY: bigtest
 bigtest:
 	cd ${ESCJAVA_ROOT}/java/escjava; \
-	escjava -nocheck -v \*.java ast/*.java parser/*.java tc/*.java bacpred/*.java prover/*.java
+	escjava -nocheck -v \*.java ast/*.java parser/*.java \
+	  tc/*.java bacpred/*.java prover/*.java
 
 .PHONY: wc
 wc:
 	cd java/escjava; ${MAKE} wc
 
-.PHONY: depend
-depend: source
-	cd java; CLASSPATH=${LCLASSPATH} \
-		javadepend -g -d ${CLASSDIRECTORY} ${ESCJAVATARGETS} \
-		| grep -v /udir/qadeer > ../sources
-
 .PHONY: escjava
 escjava: source
 	cd java; \
-	javac -g -classpath ${CLASSPATH}:${SOURCEDIRECTORY}:${JAVAFE_CLASSFILES} \
-	-d ${CLASSDIRECTORY} `find escjava -name "*.java"`
+	javac -g -d ${CLASSDIRECTORY} `find escjava -name "*.java"`
+
+.PHONY: escjava_test
+escjava_test: source
+	cd test; ${MAKE}
 
 .PHONY: compile
-compile: escjava
-# 	(cd classfiles; swift -O2  ${ESCTOOLS_JARS}/javafe.jar \
-# 		`sed 's/\.java/\.class/' ../sources` \
-# 		-o ${CLASSDIRECTORY}/compiled.zip)
-
+compile: escjava escjava_test

@@ -8,8 +8,8 @@
 ############################## roots ##############################
 
 export JAVAFE_ROOT=`pwd`
-if ! [ -a ${JAVAFE_ROOT}/setup ]; then
-    echo "Error: Must source setup from the directory that contains it"
+if ! [ -a ${JAVAFE_ROOT}/setup.sh ]; then
+    echo "Error: Must source setup.sh from the directory that contains it"
     exit 1
 fi
 

@@ -30,7 +30,7 @@ ASTNode.java TypeDeclElem.java tags: hierarchy.j $(ASTGEN) $(ASTFILELIST) make_t
 	grep -v 'Visitor' | grep -v 'GeneratedTags' | grep -v 'class Type ' | \
 	grep -v 'BinaryExpr' | grep -v 'UnaryExpr' | \
 	grep -v 'LiteralExpr' | grep -v 'PrimitiveType' | \
-	sed 's/.* class \([^ ]*\).*/\1/' | \
+	@sed 's/.* class \([^ ]*\).*/\1/' | \
 	make_tags > tags
 	grep -v "#" manual_tags >> tags
 	#
@@ -42,12 +42,12 @@ ASTNode.java TypeDeclElem.java tags: hierarchy.j $(ASTGEN) $(ASTFILELIST) make_t
 	mv TypeDeclElem.tmp TypeDeclElem.java
 
 IntegerVec.java: ../util/_TYPE_Vec.j
-	sed s/_TYPE_/Integer/g ../util/_TYPE_Vec.j | \
+	@sed s/_TYPE_/Integer/g ../util/_TYPE_Vec.j | \
         sed s/_PKG_/javafe.ast/g              | \
         sed s/_COMPONENTPKG_/java.lang/g > $@
 
 %Vec.java: ../util/_TYPE_Vec.j
-	sed s/_TYPE_/$*/g ../util/_TYPE_Vec.j | \
+	@sed s/_TYPE_/$*/g ../util/_TYPE_Vec.j | \
         sed s/_PKG_/javafe.ast/g              | \
         sed s/_COMPONENTPKG_/javafe.ast/g > $@
 

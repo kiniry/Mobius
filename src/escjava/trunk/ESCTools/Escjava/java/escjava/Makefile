@@ -1,7 +1,3 @@
-class:	source
-	echo !!!!! ${JAVAC} -d ${CLASSDIRECTORY} Root.java
-	${JAVAC} -d ${CLASSDIRECTORY} Root.java
-
 full:	source
 	cd ast; ${MAKE} full
 	cd backpred; ${MAKE} full
