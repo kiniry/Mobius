@@ -51,5 +51,5 @@ public class ErrorPragmaParser implements PragmaParser {
     public boolean getNextPragma(Token dst) { return false; }
 
     /** No work to close us **/
-    public void close() { };
+    public void close() { }
 }
