@@ -628,7 +628,7 @@ public class Main extends javafe.SrcTool
 
         LabelInfoToString.resetToMark();
         GuardedCmd gc = computeBody(r, initState);
-        /*@ uninitialized @*/ /*@ readable_if stats; @*/ int origgcSize = 0;
+        /*-@ uninitialized @-*/ /*-@ readable_if stats; @-*/ int origgcSize = 0;
         if (options().stats) {
                 origgcSize = Util.size(gc);
         }
@@ -1025,8 +1025,8 @@ public class Main extends javafe.SrcTool
                                        initState.getPreMap(),
                                        r.getEndLoc());
 
-        if (Main.options().loopTranslation == Options.LOOP_SAFE 
-                                 && Main.options().predAbstract) {
+        if (Main.options().loopTranslation == Options.LOOP_SAFE &&
+            Main.options().predAbstract) {
             long T = java.lang.System.currentTimeMillis();
             Traverse.compute(fullCmd, initState, gctranslator);
             if (options().stats) {
