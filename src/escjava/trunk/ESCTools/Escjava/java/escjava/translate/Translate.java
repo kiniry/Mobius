@@ -4183,8 +4183,6 @@ public final class Translate
             code.addElement(GC.gets(piLs[i], call.args.elementAt(i)));
         }
 
-// HERE??
-
 	for (int i=0; i<spec.preAssumptions.size(); ++i) {
 	    addAssumption(spec.preAssumptions.elementAt(i));
 	}
@@ -4252,8 +4250,6 @@ public final class Translate
 		addAssumption(spec.postAssumptions.elementAt(i));
 	    }
 
-		// FINAL MODIFIES CHECK
-	
             // check all postconditions
             for(int i=0; i<spec.post.size(); i++) {
                 Condition cond = spec.post.elementAt(i);
@@ -4307,7 +4303,7 @@ public final class Translate
 		addAssumption(spec.postAssumptions.elementAt(i));
 	    }
 
-            // assume postconditions
+		// assume postconditions
             for(int i=0; i<spec.post.size(); i++) {
                 Condition cond = spec.post.elementAt(i);
                 code.addElement(GC.assumeAnnotation(cond.locPragmaDecl,
@@ -4315,8 +4311,6 @@ public final class Translate
                                                              pt, cond.pred)));
             }
 
-// WAS HERE
-	
         }
     
         if( spec.dmd.throwsSet != null && spec.dmd.throwsSet.size() != 0 ) {	
