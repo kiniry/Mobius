@@ -1,3 +1,4 @@
+// FIXME - Simplify spins forever on the recursive definition of fact
 public class MethodInSpec {
 
 	Object a,b,c;

@@ -1,0 +1,32 @@
+ESC/Java version VERSION
+  Prover started:TIME
+    [TIME]
+
+ModelClass2 ...
+    [TIME]
+
+ModelClass2: mjava() ...
+    [TIME]  passed
+
+ModelClass2: ModelClass2() ...
+    [TIME]  passed
+
+ModelClass2: z(int) ...
+    [TIME]  passed
+  [TIME total]
+
+ModelClass2$M ...
+    [TIME]
+
+ModelClass2$M: m() ...
+    [TIME]  passed immediately
+
+ModelClass2$M: n() ...
+    [TIME]  passed immediately
+
+ModelClass2$M: p(int) ...
+    [TIME]  passed
+
+ModelClass2$M: M() ...
+    [TIME]  passed
+  [TIME total]

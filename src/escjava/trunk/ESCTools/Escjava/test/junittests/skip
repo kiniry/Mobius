@@ -3,8 +3,6 @@ TestSuite.java
 FormalNonnullInheritance.java
 Desugaring.java
 DesugaringA.java
-# Problem when run separately, but not in junit tests?
-ParsePlus.java 
 ## Platform dependent
 InheritedSpecs.java
 NL.java
@@ -22,11 +20,9 @@ ParsePure.java
 ModifiesPure.java
 ## A bug / tests to be fixed
 GhostFieldOverride.java
-SetComprehension.java
 MethodInSpec.java
 ## Modify everything tests
 ModEverything.java
 ModE.java
 ## New tests
 Privacy.java
-ModelClass2.java

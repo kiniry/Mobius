@@ -1,7 +1,9 @@
 ESC/Java version VERSION
   Prover started:TIME
+    [TIME]
 
 SetComprehension ...
+    [TIME]
 
 SetComprehension: SetComprehension() ...
 SetComprehension.java:6: Fatal error: Set comprehension is not supported
@@ -11,6 +13,7 @@ SetComprehension.java:6: Fatal error: Set comprehension is not supported
   [TIME total]
 
 JMLObjectSet ...
+    [TIME]
 
 JMLObjectSet: has(java.lang.Object) ...
     [TIME]  passed immediately
@@ -20,6 +23,7 @@ JMLObjectSet: JMLObjectSet() ...
   [TIME total]
 
 JMLValueSet ...
+    [TIME]
 
 JMLValueSet: has(java.lang.Object) ...
     [TIME]  passed immediately
