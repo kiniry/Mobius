@@ -82,18 +82,19 @@ the benefits.
 
 Recently, several projects have started developments to overcome these
 problems. First of all, to encourage application developers to write
-formal specifications, specification languages have been developed
-which are close to programming languages. The assertions that can be
-written in an Eiffel program~\cite{Meyer97} are a first example of
-such a specification style, and recently several annotation
-languages for Java have been proposed, following the same strategy:
-JML~\cite{LeavensBR99}, ESC/Java~\cite{ESCJavaUrl}, and the Jass
-annotation language~\cite{JassUrl}. For JML and ESC/Java, effort has
-been put into making these specification languages
-converge~\cite{EscJmlDiff}, so that the respective tools can be used
-for both languages. Typical for these languages is that expressions
-are written as Java expressions, extended with some
-specification-specific constructs.
+formal specifications, specifications are written in a language that
+is close to the language in which the specified programs are written:
+the specification languages reuses the expression syntax from the
+programming language.  The assertions that can be written in an Eiffel
+program~\cite{Meyer97} are a first example of such a specification
+style, and recently several annotation languages for Java have been
+proposed, following the same strategy: JML~\cite{LeavensBR99},
+ESC/Java~\cite{ESCJavaUrl}, and the Jass annotation
+language~\cite{JassUrl}. For JML and ESC/Java, effort has been put
+into making these specification languages converge~\cite{EscJmlDiff},
+so that the respective tools can be used for both languages. Typical
+for these languages is that expressions are written as Java
+expressions, extended with some specification-specific constructs.
 
 Secondly, together with the ESC/Java language, a static checker has
 been developed~\cite{ESCJavaUrl}, which can be used to check
@@ -150,12 +151,13 @@ specify these properties and ESC/Java immediately finds the places
 where these properties are not preserved in the implementation.
 
 Furthermore, to the best of our knowledge this case study is one of
-the first larger case studies using ESC/Java, and we found
-several points for improvement in the static checker and its
-specification language. This leads us to a wish list on improvements in
-the specification language and to the development of a checker for
+the first larger case studies using ESC/Java, and we found several
+points for improvement in the static checker and its specification
+language. This leads us to a wish list on improvements in the
+specification language and to the development of a checker for
 so-called modifies clauses. This checker will be described in a
-separate paper.%, but we use it in this case study to get further
+separate paper~\cite{CatanoH02b}.%, but we use it in this case study
+to get further
 %confidence in the accurateness of the specification.
 
 The rest of this paper is organised as
@@ -215,13 +217,13 @@ If the balance on the card is not sufficient to execute a certain
 debit operation, the balance can be increased by performing a credit
 operation. To do this, the point of sale terminal asks the bank of the
 card holder for credit permission. If the permission is obtained, the
-account is credited and a confirmation is sent back to the bank.
+account is credited and a confirmation is sent to the bank.
 \\
 \item [\bf The \textit{currency change} operation.]
 %\paragraph 
 The balance
 of the purse is expressed in a certain currency. When the card holder
-travels, he can change the current currency. In order to do this, the
+travels, the current currency can be changed. In order to do this, the
 terminal requests a new exchange rate and a certificate from the
 bank. The purse verifies that the bank is really the expected bank and
 validates the exchange rate. After changing the balance value, the
@@ -234,7 +236,7 @@ loyalty points having made certain purchases, and these points can be
 used later to make other purchases. Further, a \textit{card issuer
 applet} should be available on the card, which can initialise the
 purse. Finally, the purse applet also communicates with the 
-point of sale terminal. 
+\emph{point of sale terminal}. 
 %These applets send and receive
 %information concerning on the card user operations. 
 
@@ -243,7 +245,7 @@ The purse application consists of three packages$:$ \texttt{utils},
 implements basic classes such as \texttt{Annee} (year), 
 \texttt{Mois} (month) \texttt{Jour} (day), and \texttt{Decimal}
 (floating point numbers).  The \texttt{pacap\-interfaces} package
-declares sharable interfaces which enable the purse applet to
+declares shareable interfaces which enable the purse applet to
 communicate with \emph{e.g.}~the loyalty applets on the card.  The
 \texttt{purse} package is the core of the purse application.  It
 contains the class
@@ -305,7 +307,7 @@ a user to find common errors in Java programs. The basic idea is that
 a user specifies the desired behaviour of a class and its methods and
 the ESC/Java tool checks whether the implementation satisfies the
 specification. If it cannot establish this, it issues a warning. As
-discussed above, such a warning does not necessarily mean that there
+explained above, such a warning does not necessarily mean that there
 is an error, as ESC/Java is neither sound, nor complete.
 %specify conditions that class and methods have to provide, and
 %after using the tool for checking them. ESC/Java contrasts the done
@@ -315,7 +317,7 @@ is an error, as ESC/Java is neither sound, nor complete.
 %supposed being correct).
 
 The specifications are given as
-\textit{preconditions}, \textit{postconditions} of methods and 
+\textit{pre-} and \textit{postconditions} of methods and as
 \textit{class
 invariants}. The specifications are written as special Java comments,
 thus they do not change the annotated program.  The properties are
@@ -351,7 +353,7 @@ variable names, field or array accesses and array range expressions
 (denoting the elements within an array). Within a method body, the
 method parameters and the local variables always may be modified. When
 checking a method call, ESC/Java assumes that only the state
-components denoted by the modifies clauses may be changed, but it
+components denoted by the modifies clauses may have been changed, but it
 does not check the correctness of the modifies clause.
 \texttt{L}
 
@@ -360,7 +362,7 @@ does not check the correctness of the modifies clause.
 
 \item{\texttt{invariant I}.} This pragma specifies a class invariant,
 \emph{i.e.}~the property \texttt{I} has to be established by the
-constructor of the class, and it has to be preserved by all the
+constructor of the class and it has to be preserved by all the
 methods in the class. 
 \end{itemize}
 
@@ -426,7 +428,7 @@ this method may modify \texttt{nbData} and
 specifies that the method only may modify these instance variables and
 the local variables and formal parameters of the method.}. The
 postcondition of the method \texttt{addCurrency} (written as
-\texttt{ensure} clause) expresses that if \texttt{nbData} has not
+\texttt{ensures} clause) expresses that if \texttt{nbData} has not
 yet reached the threshold value \texttt{MAX$\_$DATA}, \texttt{nbData}
 will increase its value by one and the value of the formal parameter
 \texttt{cur} will be assigned to \texttt{data[\(\backslash\)old(nbData)]}. 
@@ -508,7 +510,8 @@ variables. In some cases, the class invariant immediately follows from
 the informal documentation (\emph{e.g.}~the documentation in class
 \texttt{Decimal} states:
 \texttt{the decimal part must be done in the interval 
-[000,999]}~\cite{PurseUrl}), and in other cases the appropriate class
+[000,999]}~\cite{PurseUrl})
+and in other cases the appropriate class
 invariant follows from closer inspection of the code, \emph{e.g.}~a
 variable is never \texttt{null}.  Section~\ref{SectSpecDetails}
 discusses the specification of class invariants in more detail.
@@ -523,7 +526,7 @@ behaviour was actually intended.
 In the case study, several functions from the JavaCard
 API~\cite{JavaCardAPI} are used. When we specify methods using API
 functionalities, we use the API specification as constructed by Erik
-Poll and Hans Meijer (see~\emph{e.g.}\cite{MeijerP01}).  In the
+Poll and Hans Meijer (see \emph{e.g.}~\cite{MeijerP01}).  In the
 classes \texttt{Purse} and \texttt{PurseApplet}, several classes are
 used that we do not have access to. To overcome this problem, we
 construct specification files, declaring the methods and fields that we need,
@@ -551,8 +554,8 @@ used. However, in the case study at hand such complex control
 structures are not very frequent and ESC/Java is able to check most of
 the specifications without any problems. In the final version of the
 specifications, the only remaining warnings are caused by ESC/Java's
-uncompleteness. If we encounter other warnings during the
-specification and checking process, we adapt the implementation or
+incompleteness. When we encountered other warnings during the
+specification and checking process, we adapted the implementation or
 specification appropriately.
 
 At~\cite{CatanoH01Url} the full annotated version of the purse case
@@ -596,7 +599,7 @@ code. Finally, we discuss miscellaneous aspects of the case study, and
 present some possible improvements. The problems that we have found
 probably also would have been found by doing thorough testing, but
 using theorem proving techniques one is sure not to forget some cases,
-without having to put much work in developing test scenarios.  Also,
+without having to put much effort in developing test scenarios.  Also,
 writing the formal specifications forces one to think very precisely
 about the intended behaviour of programs, which helps in finding
 errors.
@@ -721,13 +724,13 @@ between 99 and 127.
 %requires condition, i.e, $110>=99\ \&\&\ 110<= 127$.
 
 The problem is caused by the erroneous declaration of the variables 
-\texttt{MIN} and \textsc{MAX} in class \texttt{Annee}.
+\texttt{MIN} and \texttt{MAX} in class \texttt{Annee}.
 Since these variables are not declared 
 \texttt{final}\footnote{According to the Java semantics, final
 variables may only be modified when they are initialised, and
 afterwards they remain constant.}, their values can be changed at
 runtime by a direct assignment (as they are declared public), and thus
-ESC/Java warns that possibly the precondition of \texttt{setDate}
+ESC/Java warns correctly that the precondition of \texttt{setDate}
 might not be satisfied.
 
 
@@ -753,7 +756,7 @@ the class \texttt{Decimal} says that the value of the decimal fraction
 part must be between 0 and 999. Inspection of the code reveals that
 the integer part of the decimal number is supposed to be a positive
 short, and combining this gives the following class
-invariant\footnote{\texttt{MAX\_DECIMAL\_NUMBER} is equivalent to the
+invariant:\footnote{\texttt{MAX\_DECIMAL\_NUMBER} is equivalent to the
 maximal value of a short and the clause \texttt{intPart <=
 MAX\_DECIMAL\_NUMBER} of the invariant will thus be ensured by the
 type of the variable. We chose to state this explicitly for clarity of
@@ -765,12 +768,13 @@ specification.}
 */
 \end{verbatim}
 
-Additionally, in Java(Card) there are no enumeration types, and to
-simulate them typically several constants with suggestive names are
-defined, and a variable is silently assumed to contain always one of
-these values. This implicit assumption can be made explicit by
-specifying invariants. For example, the class \texttt{Transaction}
-contains the following declarations.
+Another way to use class invariants, is to improve the simulatation of
+enumeration types, which are not available in Java(Card).  To simulate
+them, typically several constants with suggestive names are defined
+and a variable is silently assumed to contain always one of these
+values. This implicit assumption can be made explicit by specifying
+invariants. For example, the class \texttt{Transaction} contains the
+following declarations.
 \begin{verbatim}
 public static final byte INDETERMINE		= (byte)0;
 
@@ -781,10 +785,11 @@ public static final byte TYPE_DEBIT		= (byte)51;
 /*@ spec_public*/ private byte type;
 \end{verbatim}
 
-This suggests that the variable \texttt{type} always should have a
-value \texttt{TYPE\_CREDIT} or \texttt{TYPE\_DEBIT}. However, in the
-code (in the method \texttt{reset()}), an assignment \texttt{type =
-INDETERMINE;} occurs, suggesting that this is also a correct value for 
+The documentation above suggests that the variable \texttt{type}
+always should have a value \texttt{TYPE\_CREDIT} or
+\texttt{TYPE\_DEBIT}. However, in the code (in the method
+\texttt{reset()}), an assignment \texttt{type = INDETERMINE;} occurs,
+suggesting that this is also a correct value for
 \texttt{type}. Having a specification which states the allowed values
 for this variable avoids all confusion\footnote{However, notice that
 this does not give type safety, in contrast to real enumeration types.}.
@@ -795,7 +800,7 @@ this does not give type safety, in contrast to real enumeration types.}.
 */
 \end{verbatim}
 
-Invariants of this kind occur often in the specification of the
+Invariants of this kind often occur in the specification of the
 electronic purse. It is easy to specify them, and useful as well, as
 there are examples in the electronic purse where such implicitly assumed
 invariants are violated.
@@ -814,10 +819,10 @@ should be restricted as follows.
 
 However, in the constructor of this class, the variable
 \texttt{condition} is set to 0, which breaks this
-invariant. Correcting this and maintaining the invariant also allows
-to improve other parts of the implementation in this class. For
-example, in the method \texttt{verify()}, the following statement
-occurs:
+invariant\footnote{As none of these constants is equal to
+0.}. Correcting this and maintaining the invariant also allows to
+improve other parts of the implementation in this class. For example,
+in the method \texttt{verify()}, the following statement occurs:
 \begin{verbatim}
 switch(condition) {
   case FREE: ...
@@ -842,7 +847,7 @@ assure that the operation never will throw an exception, the
 \texttt{catch} clause will never be executed. In the specification, we 
 have annotated these cases with \texttt{//@ assert false;}. We think
 that the removal of this ``dead code'' can improve the readability of
-the class and, importantly for smart cards, it can reduce the 
+the class and, importantly for smart cards, it reduces the 
 size of the byte code.
 
 
@@ -916,13 +921,12 @@ public boolean isNegatif(){ ... }
 \texttt{ExchangeSession}s (storing currency changes),
 respectively).  These implementations are clearly copied from each
 other, but this is nowhere documented. Also the fact that a
-cyclic data structure is implemented is not very well documented. Class
+cyclic data structure is implemented is not clearly documented. Class
 \texttt{TransactionRecord} contains a single remark that it is
 implemented as a cyclic table, and for class
 \texttt{ExchangeRecord} this is only stated in the documentation of a
 private method. Also, no specification of the operations on the cyclic
 data structure are given.
-
 As a result, in class \texttt{ExchangeRecord}, part of the code that
 is crucial for its behaviour has been commented out by other
 developers of the electronic purse. Having a formal specification
@@ -944,7 +948,7 @@ range of the table.
 \label{SectESC}
 We find ESC/Java a useful tool, which is pleasant to work with, but
 nevertheless we have some suggestions for improvements, both for the
-specification language and for the verifier.
+specification language and for the checker.
 
 Concerning the specification language, we feel that certain
 specification constructs that are available in JML~\cite{LeavensBR99},
@@ -952,7 +956,7 @@ should be provided in ESC/Java as well in order to be able to write
 clear and concise specifications. 
 
 First of all, it would be convenient to have some extra specification
-constructs for modifies clauses, \emph{e.g.}~\fieldsof, to denote all
+constructs for modifies clauses, \emph{e.g.}~\fieldsof(\(E\)), to denote all
 the fields of an object, and \noth. This could easily be implemented
 as syntactic sugar, in particular \texttt{modifies \noth}.
 
@@ -972,7 +976,7 @@ these language constructs.
 Finally, we would like to be able to use method
 names in specifications, as is allowed in JML for so-called
 \emph{pure} methods, \emph{i.e.}~methods without
-side-effects, but this would be a major change to the tool.
+side-effects, but this would require a major change to ESC/Java.
 
 
 \begin{figure}[t]
@@ -1002,12 +1006,13 @@ in ideal ESC/Java}
 
 Figure~\ref{FigIdealESC} shows as an example the
 specification of the method \texttt{clone()} in class
-\texttt{ExchangeSession} as we would prefer it (see~\cite{CatanoH01Url} for the
+\texttt{ExchangeSession} the way we would prefer it (see~\cite{CatanoH01Url} for the
 ESC/Java specification as it is). We only specify that all the fields
 of the current class may be modified, without explicitly mentioning
-them\footnote{In JML one can write this modifies clause also
-simply as \fieldsof(\reach), which would probably be useful in many
-cases as well, but has a more complex semantics.}. As the fields of the component classes \texttt{date} and
+them\footnote{In JML this whole modifies clause also can be written
+as \texttt{\fieldsof(\reach(this))}, which would probably also be
+useful in many cases, but has a more complex semantics.}. As
+the fields of the component classes \texttt{date} and
 \texttt{heure} may be modified as well, we mention this
 explicitly. Similarly, we mention explicitly that the elements in the
 arrays \texttt{id}, \texttt{terminalTC} and \texttt{terminalSN} may be
@@ -1021,18 +1026,18 @@ appropriately in \texttt{ExchangeSession}.
 
 
 With respect to the verification that is done by ESC/Java, we found
-that is unfortunate that ESC/Java does not try to check the modifies
+that it is unfortunate that ESC/Java does not try to check the modifies
 clauses, because an incorrect modifies clause can influence the
 acceptance of other specifications. For example, suppose one has the
 following (annotated) methods$:$
 \begin{verbatim}
-  /*@ modifies x;
-      ensures x == 3;
-  */
-  void m() { x = 3;
-             n (); }
+/*@ modifies x;
+    ensures x == 3;
+*/
+void m() { x = 3;
+           n (); }
 
-  void n() { x = 4; }
+void n() { x = 4; }
 \end{verbatim}
 Remember that a method without a modifies clause is assumed to modify
 only freshly allocated memory, if any~\cite{LeinoNS00}. The
@@ -1090,16 +1095,18 @@ to find that some parts of the program will never be reached, thus
 allowing reduction of the code size -- which is important for smart
 card applications. 
 
-It has taken approximately three months to write the complete
-specifications. Most of the specifications are written by the first
-author, who beforehand did not have any experience with ESC/Java, or
-with writing formal specifications in general. The second author --
-who had experience in writing formal specifications, but not with
-ESC/Java -- supervised the work and made suggestions to extend the
-specifications. Of the time spend on writing the specifications,
-approximately one third was used on getting to know ESC/Java, and
-understanding the electronic purse application, the remaining time was
-used on writing and checking the actual specifications.
+The whole case study consists of 42 classes and 432 kB in total (736
+kB with annotations).  It has taken approximately three months to
+write the complete specifications. Most of the specifications are
+written by the first author, who beforehand did not have any
+experience with ESC/Java, or with writing formal specifications in
+general. The second author -- who had experience in writing formal
+specifications, but not with ESC/Java -- supervised the work and made
+suggestions to extend the specifications. Of the time spend on writing
+the specifications, approximately one third was used on getting to
+know ESC/Java, and understanding the electronic purse application, the
+remaining time was used on writing and checking the actual
+specifications.
 
 
 The errors that we found in general are not very intricate, they could
