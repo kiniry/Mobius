@@ -9,19 +9,20 @@ import javafe.genericfile.*;
 
 
 /**
- ** A TypeReader is an extended Reader that understands how to read in
- ** Java reference types given either a fully-qualified name or a source
- ** file (in the form of a GenericFile).  A TypeReader can also
- ** determine cheaply if a Java reference type exists or if a Java
- ** package is accessible.<p>
+ ** A TypeReader is an extended {@link Reader} that understands how to
+ ** read in Java reference types given either a fully-qualified name
+ ** or a source file (in the form of a {@link GenericFile}).  A
+ ** TypeReader can also determine cheaply if a Java reference type
+ ** exists or if a Java package is accessible.<p>
  **
  **
  ** TypeReaders encapsulate how to map from fully-qualified names to the
  ** data for the Java reference types.<p>
  **
- ** TypeReaders are responsible for ensuring that all reads from a given
- ** source yield the same CompilationUnit, regardless of whether
- ** the duplicate reads occur through read or readType.<p>
+ ** TypeReaders are responsible for ensuring that all reads from a
+ ** given source yield the same {@link CompilationUnit}, regardless of
+ ** whether the duplicate reads occur through <code>read()</code> or
+ ** <code>readType()</code>.<p>
  **/
 
 abstract public class TypeReader extends Reader {
@@ -118,5 +119,5 @@ abstract public class TypeReader extends Reader {
      **/
     //@ requires \nonnullelements(P) && T!=null
     abstract public CompilationUnit read(String[] P, String T,
-					boolean avoidSpec);
+                                         boolean avoidSpec);
 }

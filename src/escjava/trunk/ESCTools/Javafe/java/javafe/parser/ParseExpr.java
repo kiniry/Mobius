@@ -4,20 +4,18 @@ package javafe.parser;
 
 
 import javafe.ast.*;
-import javafe.parser.TagConstants; // Work around compiler bug
+// import javafe.parser.TagConstants; // Work around compiler bug
 import javafe.util.Location;
 import javafe.util.StackVector;
 import javafe.util.Assert;
 
 /**
-
-Parses java expressions.
-Extended by javafe.ast.ParseStmt
-
-@see javafe.ast.ASTNode
-@see javafe.ast.ParseType
-@see javafe.ast.ParseStmt
-*/
+ * Parses java expressions.  Extended by {@link javafe.ast.ParseStmt}.
+ * 
+ * @see javafe.ast.ASTNode
+ * @see javafe.ast.ParseType
+ * @see javafe.ast.ParseStmt
+ */
 
 
 public abstract class ParseExpr extends ParseType {

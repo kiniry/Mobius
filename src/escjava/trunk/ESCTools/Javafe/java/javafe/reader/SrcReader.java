@@ -19,8 +19,9 @@ import javafe.util.Location;
 
 
 /**
- ** A SrcReader is a Reader that reads in CompilationUnits from source
- ** files (.java files) using the javafe.parser package.<p>
+ ** A SrcReader is a {@link Reader} that reads in {@link
+ ** CompilationUnits} from source files (.java files) using the
+ ** <code>javafe.parser</code> package.<p>
  **
  ** SrcReaders do not cache the results of their reading.<p>
  **/

@@ -8,14 +8,15 @@ import javafe.genericfile.*;
 
 
 /**
- ** A Reader is an object that reads then parses a GenericFile,
- ** returning a CompilationUnit.  Iff problems arise, errors will be
- ** reported via javafe.util.ErrorSet and then null will be returned.<p>
+ ** A Reader is an object that reads then parses a {@link
+ ** GenericFile}, returning a {@link CompilationUnit}.  Iff problems
+ ** arise, errors will be reported via {@link javafe.util.ErrorSet}
+ ** and then <code>null</code> will be returned.<p>
  **
  ** Readers may or may not cache the results of their reading.<p>
  **
- ** The class CachedReader can be used to turn a noncaching Reader into
- ** a caching Reader.<p>
+ ** The class {@link CachedReader} can be used to turn a noncaching
+ ** Reader into a caching Reader.<p>
  **/
 
 abstract public class Reader {

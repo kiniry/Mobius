@@ -3,7 +3,7 @@
 package javafe.parser;
 
 import javafe.ast.*;
-import javafe.parser.TagConstants; // Work around compiler bug
+// import javafe.parser.TagConstants; // Work around compiler bug
 import javafe.util.StackVector;
 
 

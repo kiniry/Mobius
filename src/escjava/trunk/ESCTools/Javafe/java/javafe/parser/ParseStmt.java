@@ -4,53 +4,53 @@ package javafe.parser;
 
 
 import javafe.ast.*;
-import javafe.parser.TagConstants; // Work around compiler bug
+// import javafe.parser.TagConstants; // Work around compiler bug
 import javafe.util.StackVector;
 import javafe.util.Location;
 import javafe.util.Assert;
 
 /**
-
-<TT>Parse</TT> objects parse Java statements, creating AST structures
-for the parsed input using the static <TT>make</TT> methods of the
-classes in <TT>javafe.ast.X</TT>.
-
-<P> The concrete grammar for statements is as follows:
-<PRE>
-Statement:
-';'
-| (Modifier | ModifierPragma)* ClassDeclaration
-| (Modifier | ModifierPragma)* Type { Idn [ '=' InitExpr ] },+ ';'
-| Idn ':' Stmt
-| Expr ';'
-| '{' BlockStmt* '}'
-| 'break' [ Idn ] ';'
-| 'continue' [ Idn ] ';'
-| 'return' [ Expr ] ';'
-| 'throw' Expr ';'
-| 'if' '(' Expr ')' Stmt [ 'else' Stmt ]
-| 'do' Stmt 'while' '(' Expr ')' ';'
-| 'while' '(' Expr ')' Stmt
-| 'for' '(' [ VDeclInit | StmtExpr,* ] ';' Expr ';' StmtExpr,* ')' Stmt
-| 'switch' '(' Expr ')'
-    '{' { {'case' Expr ':' | 'default:'}* BlockStmt* }* '}'
-| 'synchronized' '(' Expr ')' '{' BlockStmt* '}'
-| 'try' '{' BlockStmt* '}' { 'catch' '(' VDecl,* ')' '{' BlockStmt* '}' }*
-    [ 'finally' '{' BlockStmt* '}' ]
-| StmtPragma
-</PRE>
-
-<P> Currently, there is no error recovery.  Upon detection of a syntax
-error, all methods in this class throw a <CODE>RuntimeException</CODE>
-with a (weak) error message.
-
-<P> Although the class as a whole is (that is, different threads can
-be calling methods of different instances of <CODE>ParseStmt</CODE> at
-the same time), individual instances are not.
-
-@see javafe.ast.ASTNode
-
-*/
+ * <code>Parse</code> objects parse Java statements, creating AST
+ * structures for the parsed input using the static
+ * <code>make*()</code> methods of the classes in the
+ * <code>javafe.ast</code> package.
+ *
+ * <p> The concrete grammar for statements is as follows:
+ * <pre>
+ * Statement:
+ * ';'
+ * | (Modifier | ModifierPragma)* ClassDeclaration
+ * | (Modifier | ModifierPragma)* Type { Idn [ '=' InitExpr ] },+ ';'
+ * | Idn ':' Stmt
+ * | Expr ';'
+ * | '{' BlockStmt* '}'
+ * | 'break' [ Idn ] ';'
+ * | 'continue' [ Idn ] ';'
+ * | 'return' [ Expr ] ';'
+ * | 'throw' Expr ';'
+ * | 'if' '(' Expr ')' Stmt [ 'else' Stmt ]
+ * | 'do' Stmt 'while' '(' Expr ')' ';'
+ * | 'while' '(' Expr ')' Stmt
+ * | 'for' '(' [ VDeclInit | StmtExpr,* ] ';' Expr ';' StmtExpr,* ')' Stmt
+ * | 'switch' '(' Expr ')'
+ *     '{' { {'case' Expr ':' | 'default:'}* BlockStmt* }* '}'
+ * | 'synchronized' '(' Expr ')' '{' BlockStmt* '}'
+ * | 'try' '{' BlockStmt* '}' { 'catch' '(' VDecl,* ')' '{' BlockStmt* '}' }*
+ *     [ 'finally' '{' BlockStmt* '}' ]
+ * | StmtPragma
+ * </pre>
+ * 
+ * <p> Currently, there is no error recovery.  Upon detection of a
+ * syntax error, all methods in this class throw a {@link
+ * RuntimeException} with a (weak) error message.
+ * 
+ * <p> Although the class as a whole is thread-safe, that is,
+ * different threads can be calling methods of different instances of
+ * <code>ParseStmt</code> at the same time, individual instances are
+ * not.
+ * 
+ * @see javafe.ast.ASTNode
+ */
 
 public abstract class ParseStmt extends ParseExpr {
 

@@ -36,7 +36,7 @@ import javafe.util.ErrorSet;
  ** methods.  <code>OutsideEnv</code> must be initialized before any of
  ** its lookup methods can be called.<p>
  **
- **     At initialization time <code>OutsideEnv</code> is passed a a
+ **     At initialization time <code>OutsideEnv</code> is passed a
  ** way to determine which fully-qualified package-member-type names
  ** exist and a means to read in and parse the files of those types
  ** into <code>CompilationUnit</code>s.  This is done by passing

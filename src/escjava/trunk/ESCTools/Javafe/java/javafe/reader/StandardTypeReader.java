@@ -17,9 +17,9 @@ import javafe.util.ErrorSet;
 
 
 /**
- ** A StandardTypeReader is a TypeReader that uses
- ** javafe.filespace.SlowQuery to find type files, and user-supplied
- ** Readers to read source and binary files.
+ ** A StandardTypeReader is a {@link TypeReader} that uses {@link
+ ** javafe.filespace.SlowQuery} to find type files, and user-supplied
+ ** {@link Reader}s to read source and binary files.
  **/
 
 public class StandardTypeReader extends TypeReader {

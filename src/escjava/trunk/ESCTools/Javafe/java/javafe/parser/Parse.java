@@ -3,7 +3,7 @@
 package javafe.parser;
 
 import javafe.ast.*;
-import javafe.parser.TagConstants; // Work around compiler bug
+// import javafe.parser.TagConstants; // Work around compiler bug
 import javafe.util.StackVector;
 import javafe.util.ErrorSet;
 
@@ -11,26 +11,27 @@ import javafe.util.CorrelatedReader;	// For test harness only
 import javafe.util.Location;
 
 /**
-
-Parses java source.
-
-<P>Uses the static <TT>make</TT> methods of <TT>javafe.ast.X</TT>
-classes to create AST nodes.
-
-<P>The main entry point is the method
-<code>parseStream(CorrelatedReader, boolean)</codeT>.
-
-<P>Each parsing method for a particular syntactic unit is documented
-with appropriate grammar production rules for that syntactic unit.
-These grammar rules follow the conventions described in "The Java
-Language Specification", with the addition of the symbols '(', ')',
-'[', ']', '*', '+', and '|', which have their usual meaning. When
-necessary, we denote the corresponding concrete tokens using LPAREN,
-RPAREN, LSQBRACKET, RSQBRACKET, STAR, PLUS and BITOR.
-
-@see javafe.ast.ASTNode
-@see javafe.ast.ParseStmt
-*/
+ * 
+ * Parses java source.
+ * 
+ * <p> Uses the static <code>make*()</code> methods of the classes of
+ * the <code>javafe.ast</code> package to create AST nodes.
+ * 
+ * <p> The main entry point is the method
+ * {@link parseStream(CorrelatedReader, boolean)}.
+ * 
+ * <P>Each parsing method for a particular syntactic unit is
+ * documented with appropriate grammar production rules for that
+ * syntactic unit.  These grammar rules follow the conventions
+ * described in "The Java Language Specification", with the addition
+ * of the symbols '(', ')', '[', ']', '*', '+', and '|', which have
+ * their usual meaning. When necessary, we denote the corresponding
+ * concrete tokens using LPAREN, RPAREN, LSQBRACKET, RSQBRACKET, STAR,
+ * PLUS and BITOR.
+ * 
+ * @see javafe.ast.ASTNode
+ * @see javafe.ast.ParseStmt
+ */
 
 public class Parse extends ParseStmt {
 
