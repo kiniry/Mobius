@@ -159,30 +159,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
     
         if (e.getTag() == TagConstants.METHODDECL) {
             MethodDecl md = (MethodDecl)e;
-            if (getOverrideStatus(md) != MSTATUS_NEW_ROUTINE) {
-                for (int j = 0; j < md.args.size(); j++) {
-                    FormalParaDecl formal = md.args.elementAt(j);
-                    // Note:  One calls GetSpec.NonNullPragma() to find out
-                    // whether a variable is non_null.  The NonNullPragma() method
-                    // properly handles inheritance of non_null for parameters.
-                    // However, in this case the information needed is whether
-                    // or not the formal parameter has been declared with a
-                    // "non_null" pragma.
-		    // DRC: I find that the decorations that NonNullPragma
-		    // depends on are not reliably set at this point
-                    ModifierPragma mp = GetSpec.findModifierPragma(formal,
-					       TagConstants.NON_NULL);
-                    if (mp != null) {
-			MethodDecl omd = getSuperNonNullStatus(md,j);
-                        if (omd != null) ErrorSet.error(mp.getStartLoc(),
-			       TagConstants.toString(TagConstants.NON_NULL) +
-			       " cannot be applied to parameters of " +
-			       "this method override; overridden method is " +
-			       "declared at " + 
-				Location.toString(omd.getStartLoc()));
-                    }
-                }
-	    }
+
 	    // If a method is not pure, then no super class or interface
 	    // may be pure
 	    if (!Modifiers.isPure(md.modifiers) &&
@@ -192,7 +169,8 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 		Enumeration ee = direct.elements();
 		while (ee.hasMoreElements()) {
 		    MethodDecl directMD = (MethodDecl)(ee.nextElement());
-		    if (Modifiers.isPure(directMD.modifiers)) {
+		    if (Modifiers.isPure(directMD.modifiers) &&
+			!md.parent.isBinary()) {
 			ErrorSet.error(md.getStartLoc(),
 			    "Method must be declared pure since it " +
 			    (directMD.parent instanceof ClassDecl ?
@@ -200,7 +178,8 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
 			    " a pure method (" + 
 			    Location.toString(directMD.getStartLoc()) + ")");
 		    }
-		    if (Modifiers.isPure(directMD.getParent().modifiers)) {
+		    if (Modifiers.isPure(directMD.getParent().modifiers) &&
+			!md.parent.isBinary()) {
 		      if (directMD.parent instanceof ClassDecl) {
 			ErrorSet.error(md.getStartLoc(),
 			    "Method must be declared pure since it " +
