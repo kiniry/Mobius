@@ -765,11 +765,20 @@ public class FlowInsensitiveChecks
                 return e;
             }
 
+	    case TagConstants.ASSERTSTMT: {
+		AssertStmt a = (AssertStmt)s;
+		if (a.label != null) a.label = checkExpr(e,a.label);
+		a.expr = checkExpr(e,a.expr, Types.booleanType);
+		return e;
+	    }
+
             default:
                 if(s instanceof StmtPragma)
                     checkStmtPragma(e, (StmtPragma)s);
                 else {
-                    Assert.fail("Switch fall-through (" + s.getTag() + ")");
+                    Assert.fail("Switch fall-through (" + s.getTag() + " " +
+			TagConstants.toString(s.getTag()) + " " +
+			Location.toString(s.getStartLoc()) + ")");
                 }
         }
         return e;			// dummy
