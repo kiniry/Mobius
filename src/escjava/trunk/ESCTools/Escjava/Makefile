@@ -36,7 +36,7 @@ export TESTSOURCEDIRECTORY=${ESCJAVA_ROOT}/test
 ## FIXME - check and fix this
 ESCJAVA_CLASSPATH ?= $(JAVAFE_ROOT)/classfiles:$(CLASSDIRECTORY):$(ESCJAVA_ROOT)/jars/mochalib.jar:$(ESCJAVA_ROOT)/jars/javafe.jar:$(ESCJAVA_ROOT)/jars/escjava.jar:$(ESCJAVA_ROOT)/jars/decsrc.jar:..:.:
 
-## FIXEM -- add onto theprevious path ???  SOURCEPATH???
+## FIXME -- add onto theprevious path ???  SOURCEPATH???
 JAVAC_FLAGS = -g -classpath $(ESCJAVA_CLASSPATH) \
 	-sourcepath $(SOURCEPATH) \
 	-d $(CLASSDIRECTORY) 
@@ -122,7 +122,7 @@ ASTGEN = $(JAVAFE_ROOT)/astgen/astgen
 ASTFILELIST = $(JAVAFE_ROOT)/astgen/astfilelist
 
 $(ASTFILELIST) $(ASTGEN):
-	(cd $(JAVAFE_ROOT)/astgen; $(MAKE))
+	${MAKE} -C $(JAVAFE_ROOT)/astgen
 
 # Generating Java files:
 
@@ -147,7 +147,7 @@ generate_escjava_ast_source: $(AST_DIR)/GeneratedTags.java $(TypeVec) $(JavafeTy
 
 # FIXME - ought to make these depend on the component type
 $(AST_DIR)/%Vec.java: $(VECTEMPLATE)
-	if [ -e $(ESCJAVA_ROOT)/java/escjava/ast/$*.java ]; then \
+	@if [ -e $(ESCJAVA_ROOT)/java/escjava/ast/$*.java ]; then \
 		sed s/_TYPE_/$*/g $(VECTEMPLATE) | \
 		sed s/_PKG_/escjava.ast/g              | \
 		sed s/_COMPONENTPKG_/escjava.ast/g > $@ ;\
@@ -162,7 +162,7 @@ $(AST_DIR)/%Vec.java: $(VECTEMPLATE)
 
 # This also generates all the .java files implied by hierarchy.j
 $(AST_DIR)/GeneratedTags.java: $(ASTGEN) $(AST_DIR)/hierarchy.j
-	(cd $(AST_DIR); $(ASTGEN) < hierarchy.j; \
+	@(cd $(AST_DIR); $(ASTGEN) < hierarchy.j; \
 	grep -v "//@" AnOverview.java > AnOverview.tmp; \
 	mv AnOverview.tmp AnOverview.java; \
 	grep -v "//@" GCExpr.java > GCExpr.tmp; \
@@ -173,7 +173,7 @@ $(AST_DIR)/GeneratedTags.java: $(ASTGEN) $(AST_DIR)/hierarchy.j
 
 .PHONY: clean_escjava_ast
 clean_escjava_ast: $(ASTFILELIST)
-	rm -f `$(ASTFILELIST) < $(AST_DIR)/hierarchy.j`
+	(cd $(AST_DIR); rm -f `$(ASTFILELIST) < $(AST_DIR)/hierarchy.j`)
 	rm -f *~ $(TypeVec) $(JavafeTypeVec) $(AST_DIR)/ASTGEN* $(AST_DIR)/zASTGEN* *.tmp
 	rm -f $(AST_DIR)/*.class $(CLASSDIRECTORY)/escjava/ast/*.class
 
@@ -188,16 +188,16 @@ DEFAULT_UNIV_BACKPRED = $(BACKPRED_DIR)/DefaultUnivBackPred.java
 generate_escjava_backpred: $(DEFAULT_UNIV_BACKPRED)
 
 $(DEFAULT_UNIV_BACKPRED): $(BACKPRED_DIR)/UnivBackPred.ax
-	rm -f $(DEFAULT_UNIV_BACKPRED)
-	echo 'package escjava.backpred;' > $(DEFAULT_UNIV_BACKPRED)
-	echo 'class DefaultUnivBackPred {' >> $(DEFAULT_UNIV_BACKPRED)
-	echo '  static String s =' >> $(DEFAULT_UNIV_BACKPRED)
-	sed -e 's/"/\\"/g' \
+	@rm -f $(DEFAULT_UNIV_BACKPRED)
+	@echo 'package escjava.backpred;' > $(DEFAULT_UNIV_BACKPRED)
+	@echo 'class DefaultUnivBackPred {' >> $(DEFAULT_UNIV_BACKPRED)
+	@echo '  static String s =' >> $(DEFAULT_UNIV_BACKPRED)
+	@sed -e 's/"/\\"/g' \
 	  -e 's/^/    "/' \
 	  -e 's/$$/\\n" +/' \
 	  $(BACKPRED_DIR)/UnivBackPred.ax >> $(DEFAULT_UNIV_BACKPRED)
-	echo '    "";' >> $(DEFAULT_UNIV_BACKPRED)
-	echo '}' >> $(DEFAULT_UNIV_BACKPRED)
+	@echo '    "";' >> $(DEFAULT_UNIV_BACKPRED)
+	@echo '}' >> $(DEFAULT_UNIV_BACKPRED)
 
 .PHONY: clean_escjava_backpred
 clean_escjava_backpred:

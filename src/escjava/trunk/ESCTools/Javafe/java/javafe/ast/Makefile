@@ -26,7 +26,7 @@ typevecs: $(TypeVec)
 
 .PHONY: $(ASTFILELIST) $(ASTGEN)
 $(ASTFILELIST) $(ASTGEN):
-	(cd ${JAVAFE_ROOT}/astgen; ${MAKE})
+	${MAKE} -C ${JAVAFE_ROOT}/astgen
 
 ASTNode.java TypeDeclElem.java tags: hierarchy.j $(ASTGEN) $(ASTFILELIST) make_tags manual_tags insert_ensures manual_gettag_spec TypeDeclElem.j
 	$(ASTGEN) < hierarchy.j
