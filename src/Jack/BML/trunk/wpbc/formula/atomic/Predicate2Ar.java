@@ -45,7 +45,7 @@ public class Predicate2Ar extends Predicate {
 			|| (_predicateSymbol == PredicateSymbol.NOTEQ)) {
 			p = simplifyNUMBERRELATION(_term1, _term2, _predicateSymbol);
 		}
-		return null;
+		return p;
 	}
 
 	public static Predicate simplifyNUMBERRELATION(
@@ -116,7 +116,7 @@ public class Predicate2Ar extends Predicate {
 		return p;
 	}
 
-	public Formula substitute(Expression _e, Expression _v) {
+	public Expression substitute(Expression _e, Expression _v) {
 
 		//		Util.dump("substitute [" +_e  +"<- " +  _v + "] in"+  term1.toString());	
 		term1 = term1.substitute(_e, _v);
@@ -129,7 +129,7 @@ public class Predicate2Ar extends Predicate {
 	}
 
 	
-	public Formula rename(Expression _expr1, Expression _expr2) {
+	public Expression rename(Expression _expr1, Expression _expr2) {
 		term1 = term1.rename(_expr1, _expr2);
 		term2 = term2.rename(_expr1, _expr2);
 		return this;
@@ -161,7 +161,7 @@ public class Predicate2Ar extends Predicate {
 
 	}
 
-	public Formula copy() {
+	public Expression copy() {
 		Expression term1Copy = term1.copy();
 		Expression term2Copy = term2.copy();
 		Predicate2Ar copy =

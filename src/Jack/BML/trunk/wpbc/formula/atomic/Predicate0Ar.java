@@ -17,11 +17,11 @@ import formula.Formula;
  */
 public class Predicate0Ar extends Predicate {
 
-	public Formula copy() {
+	public Expression copy() {
 		return this;
 	}
 
-	public Formula substitute(Expression _e, Expression _v) {
+	public Expression substitute(Expression _e, Expression _v) {
 		return this;
 	}
 	

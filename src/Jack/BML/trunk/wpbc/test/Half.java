@@ -14,7 +14,7 @@ package test;
  */
 public class Half {
 	/**
-	 * @requires n >= 0
+	 * @requires n >= 0;
 	 * 
 	 * @ensures a = old (n ) div 2; 
 	 */

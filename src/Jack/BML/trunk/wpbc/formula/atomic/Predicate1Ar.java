@@ -27,19 +27,19 @@ public class Predicate1Ar extends Predicate {
 		return term;
 	}
 
-	public Formula substitute(Expression _e, Expression _v) {
+	public Expression substitute(Expression _e, Expression _v) {
 		term = term.substitute(_e, _v);
 		return this;
 	}
 	/**
 	 * renames the terms which this predicate is verified for
 	 */
-	public Formula rename(Expression _e, Expression _v) {
+	public Expression rename(Expression _e, Expression _v) {
 		term = term.rename(_e, _v);
 		return this;
 	}
 
-	public Formula copy() {
+	public Expression copy() {
 		Expression termCopy = term.copy();
 		Predicate1Ar copy = new Predicate1Ar(termCopy, getPredicateSymbol());
 		return copy;

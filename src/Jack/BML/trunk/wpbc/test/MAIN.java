@@ -6,6 +6,7 @@
  */
 package test;
 
+import bc.io.ReadAttributeException;
 import bcclass.BCClass;
 import application.JavaApplication;
 
@@ -15,18 +16,22 @@ import application.JavaApplication;
  * To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
-public class MAIN  {
-	
+public class MAIN {
+
 	public static void main(String[] args) {
-		BCClass clazz = JavaApplication.Application.getClass("test.A");
-//		BCClass clazz = JavaApplication.Application.getClass("bytecode.objectmanipulation.BCInvoke");
-		clazz.wp();
-	}
-	
-	// Moore example
-	public static void main1(String[] args) {
-			BCClass clazz = JavaApplication.Application.getClass("test.Half");
-//			BCClass clazz = JavaApplication.Application.getClass("bytecode.objectmanipulation.BCInvoke");
+		try {
+			BCClass clazz = JavaApplication.Application.getClass("test.A");
+			//		BCClass clazz = JavaApplication.Application.getClass("bytecode.objectmanipulation.BCInvoke");
 			clazz.wp();
+		} catch (ReadAttributeException e) {
+			e.printStackTrace();
+		}
+	}
+
+	// Moore example
+	public static void main1(String[] args) throws ReadAttributeException {
+		BCClass clazz = JavaApplication.Application.getClass("test.Half");
+		//			BCClass clazz = JavaApplication.Application.getClass("bytecode.objectmanipulation.BCInvoke");
+		clazz.wp();
 	}
 }

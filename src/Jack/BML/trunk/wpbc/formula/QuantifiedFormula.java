@@ -65,8 +65,8 @@ public class QuantifiedFormula extends Formula {
 		return quantificators;
 	}
 
-	public Formula copy() {
-		Formula _subformula = subformula.copy();
+	public Expression copy() {
+		Formula _subformula = (Formula)subformula.copy();
 		Quantificator[] q = new Quantificator[quantificators.length];
 		for (int i = 0; i < quantificators.length; i++) {
 			q[i] = quantificators[i].copy();
@@ -88,7 +88,7 @@ public class QuantifiedFormula extends Formula {
 	 * rename expr1 by expr2
 	 * Renaming must be done in such a way that no capture of variables should be done , i.e. the expr2 must be a fresh variable 
 	 */
-	public Formula rename(Expression expr1, Expression expr2) {
+	public Expression rename(Expression expr1, Expression expr2) {
 		for (int i = 0; i < quantificators.length; i++) {
 			Expression boundExpr = quantificators[i].getBoundVar();
 			if (expr1.equals(boundExpr)) {
@@ -96,7 +96,7 @@ public class QuantifiedFormula extends Formula {
 				quantificators[i].setBoundVar(boundExpr);
 			}
 		}
-		subformula = subformula.rename(expr1, expr2);
+		subformula = (Formula)subformula.rename(expr1, expr2);
 		return this;
 	}
 	
@@ -106,7 +106,7 @@ public class QuantifiedFormula extends Formula {
 	 * 
 	 * @return the substituted formula
 	 */
-	public Formula substitute(Expression _e, Expression _v) {
+	public Expression substitute(Expression _e, Expression _v) {
 		//Util.dump(toString());
 		for (int i = 0; i < quantificators.length; i++) {
 			Expression boundExpr = quantificators[i].getBoundVar();
@@ -114,7 +114,7 @@ public class QuantifiedFormula extends Formula {
 				return this;
 			}
 		}
-		subformula = subformula.substitute(_e,_v);
+		subformula = (Formula)subformula.substitute(_e,_v);
 		return this;
 	}
 }

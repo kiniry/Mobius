@@ -18,7 +18,7 @@ import bcexpression.javatype.JavaType;
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class Formula  {
+public class Formula   extends Expression {
 
 	private Formula[] subformulas;
 
@@ -226,19 +226,19 @@ public class Formula  {
 	 * @param _v
 	 * @return  this[ _e <- _v]
 	 */
-	public Formula substitute(Expression _e, Expression _v) {
+	public Expression substitute(Expression _e, Expression _v) {
 		//Util.dump(toString());
 
 		for (int i = 0; i < subformulas.length; i++) {
-			subformulas[i] = subformulas[i].substitute(_e, _v);
+			subformulas[i] = (Formula)subformulas[i].substitute(_e, _v);
 		}
 		return this;
 	}
 
-	public Formula copy() {
+	public Expression copy() {
 		Formula[] _subformulas = new Formula[subformulas.length];
 		for (int i = 0; i < subformulas.length; i++) {
-			_subformulas[i] = subformulas[i].copy();
+			_subformulas[i] = (Formula)subformulas[i].copy();
 		}
 		Formula _copy = new Formula(_subformulas, connector);
 		return _copy;
@@ -279,12 +279,12 @@ public class Formula  {
 	 * @param expr2
 	 * @return
 	 */
-	public Formula rename(Expression expr1, Expression expr2) {
+	public Expression rename(Expression expr1, Expression expr2) {
 		if (subformulas == null) {
 			return this;
 		}
 		for (int i = 0; i < subformulas.length; i++) {
-			subformulas[i] = subformulas[i].rename(expr1, expr2);
+			subformulas[i] = (Formula)subformulas[i].rename(expr1, expr2);
 		}
 		return this;
 	}
