@@ -339,6 +339,37 @@ public final class GC {
     if (Main.options().peepOptGC && isBooleanLiteral(p, true)) {
       return skip();
     }
+    if (p.getTag() == TagConstants.BOOLAND && (p instanceof NaryExpr)
+           && ((NaryExpr)p).exprs.size() > 1) {
+       // An optimization that makes ASSUME commands simpler - unpacks an AND
+       // into multiple ASSUMEs to make reading easier.
+        NaryExpr ne = (NaryExpr)p;
+        GuardedCmdVec gcv = GuardedCmdVec.make(ne.exprs.size());
+        for (int i=0; i<ne.exprs.size(); ++i) {
+          Expr e = ne.exprs.elementAt(i);
+          ExprCmd a = ExprCmd.make(TagConstants.ASSUMECMD, e, Location.NULL);
+          gcv.addElement(a);
+        }
+        return GC.seq(gcv);
+    }
+    if (p.getTag() == TagConstants.FORALL && (p instanceof QuantifiedExpr)) {
+      // This is an optimization that changes a Forall of a boolean and into
+      // a sequence of foralls of the conjuncts.
+      QuantifiedExpr qe = (QuantifiedExpr)p;
+      if (qe.expr.getTag() == TagConstants.BOOLAND) {
+        ExprVec ev = ((NaryExpr)qe.expr).exprs;
+        if (ev.size() > 1) {
+          GuardedCmdVec gcv = GuardedCmdVec.make(ev.size());
+          for (int i=0; i<ev.size(); ++i) {
+            Expr e =  QuantifiedExpr.make(qe.sloc,qe.eloc,qe.quantifier,
+                         qe.vars,qe.rangeExpr,ev.elementAt(i),qe.nopats,qe.pats);
+            ExprCmd a = ExprCmd.make(TagConstants.ASSUMECMD, e, Location.NULL);
+            gcv.addElement(a);
+          }
+          return GC.seq(gcv);
+        }
+      }
+    }
     return ExprCmd.make(TagConstants.ASSUMECMD, p, Location.NULL);
   }
 
