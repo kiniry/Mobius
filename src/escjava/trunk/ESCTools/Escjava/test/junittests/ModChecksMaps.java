@@ -35,6 +35,15 @@ public class ModChecksMaps {
 		list.next.next.array[0] = 0;
 		list.array[1] = 0;  // WARNING
 	}
+
+	//@ modifies list.values;
+	public void mloop() {
+		MCMList it = list;
+		while (it != null) {
+			it.value ++;
+			it = it.next;
+		}
+	}
 }
 
 

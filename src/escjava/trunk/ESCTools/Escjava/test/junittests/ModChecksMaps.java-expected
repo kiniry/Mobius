@@ -33,6 +33,9 @@ ModChecksMaps.java:36: Warning: Possible violation of modifies clause (Modifies)
 ------------------------------------------------------------------------
     [TIME]  failed
 
+ModChecksMaps: mloop() ...
+    [TIME]  passed
+
 ModChecksMaps: ModChecksMaps() ...
     [TIME]  passed
   [TIME total]

@@ -3709,14 +3709,15 @@ public final class Translate
     }
 
     private void modChecksComplete(ExprVec ev, int loc, int aloc) {
+	if (NoWarn.getChkStatus(TagConstants.CHKMODIFIES,loc,aloc==Location.NULL?loc:aloc)
+				!= TagConstants.CHK_AS_ASSERT) {
+	    return;
+        }
 	if (ev.size() == 0) {
-	    if (NoWarn.getChkStatus(TagConstants.CHKMODIFIES,loc,aloc==Location.NULL?loc:aloc)
-				== TagConstants.CHK_AS_ASSERT) {
 		if (aloc == TagConstants.NULL) ErrorSet.error(loc, 
 		    "There is no assignable clause allowing this assignment");
 		else ErrorSet.error(loc, 
 		    "There is no assignable clause allowing this assignment",aloc);
-	    }
 	} else if (aloc == Location.NULL) {
 	    //System.out.println("Generating a modifies check " + ev.size());    
 	    addCheck(loc,TagConstants.CHKMODIFIES, GC.or(ev));
@@ -3788,9 +3789,9 @@ public final class Translate
     }
 
     private void modifiesCheckMethod(Expr eod, int loccall, int locdecl, CondExprModifierPragmaVec mp, Hashtable args, boolean freshResult) {
+	if (!issueCautions) return;
 	pFreshResult = freshResult;
 	try {
-	if (!issueCautions) return;
 	ModifiesIterator mii = new ModifiesIterator(rdCurrent);
 	ModifiesIterator mi = new ModifiesIterator(mp);
 	OUTER: while (mi.hasNext()) {
