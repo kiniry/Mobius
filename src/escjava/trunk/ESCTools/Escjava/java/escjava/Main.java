@@ -471,7 +471,9 @@ public class Main extends javafe.SrcTool
             status = processRoutineDecl(r, sig, initState);
         } catch (javafe.util.NotImplementedException e) {
             ErrorSet.error(e.getMessage());
-        }
+        } catch (FatalError e) {
+	    // continue;
+	}
     
         if (!options().quiet)
                 System.out.println("    [" + timeUsed(startTime) + "]  "
