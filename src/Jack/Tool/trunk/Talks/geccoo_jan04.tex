@@ -394,13 +394,13 @@ Similar annotations for \textttbf{commitTransaction},
 \begin{alltt}
 \textbf{public void m() \{
    ...
-   \Blue{// will require TRANS == 0}
+   \Blue{// will require TRANSACT == 0}
    JCSystem.beginTransaction();
-   \Blue{// TRANS modified, ensures TRANS == 1}
+   \Blue{// TRANSACT modified, ensures TRANSACT == 1}
    ...
-   \Blue{// will require TRANS == 1}
+   \Blue{// will require TRANSACT == 1}
    JSSystem.commitTransaction();
-   \Blue{// TRANS modified, ensures TRANS == 0}
+   \Blue{// TRANSACT modified, ensures TRANSACT == 0}
    ...
    \}}
 \end{alltt}
@@ -410,18 +410,18 @@ Similar annotations for \textttbf{commitTransaction},
 \begin{alltt}
 \textbf{public void m() \{
    ...
-   \Blue{// will require TRANS == 0}
+   \Blue{// will require TRANSACT == 0}
    JCSystem.beginTransaction();
-   \Blue{// TRANS modified, ensures TRANS == 1}
+   \Blue{// TRANSACT modified, ensures TRANSACT == 1}
    ...
-   \Blue{// will require TRANS == 1}
+   \Blue{// will require TRANSACT == 1}
    JSSystem.commitTransaction();
-   \Blue{// TRANS modified, ensures TRANS == 0}
+   \Blue{// TRANSACT modified, ensures TRANSACT == 0}
    ...
    \}}
 \end{alltt}
 \ \smallskip\\
-\Blue{Thus: precondition for \texttt{m()}: \texttt{TRANS
+\Blue{Thus: precondition for \texttt{m()}: \texttt{TRANSACT
 == 0}}
 \end{slide}
 
@@ -481,6 +481,7 @@ public static native void
    commitTransaction() 
          throws TransactionException;}
 \end{alltt}
+Annotation propagated to each statement block, ending with commit.
 \end{slide}
 
 \begin{slide}{Experiments: checking atomicity properties}
