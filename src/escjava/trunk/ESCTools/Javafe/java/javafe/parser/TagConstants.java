@@ -14,7 +14,7 @@ different kinds of tokens.
 
 public class TagConstants extends javafe.ast.TagConstants {
 
-  public static final int EOF = javafe.ast.TagConstants.LAST_TAG;
+  public static final int EOF = javafe.ast.TagConstants.LAST_TAG + 1;
 
   // Value tokens
   public static final int MAX_INT_PLUS_ONE = EOF + 1;
