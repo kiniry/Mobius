@@ -332,12 +332,12 @@ test_escjava_parser:
 .PHONY: test_matrix
 test_matrix:
 	(cd ${TESTSOURCEDIRECTORY}/matrix; \
-	${ESCJAVA} *.java;)
+	${ESCJ} *.java;)
 
 .PHONY: self_test
 self_test: compile
 	cd ${ESCJAVA_SOURCE_DIR}/escjava; \
-	${ESCJAVA} -nocheck -v \*.java ast/*.java parser/*.java \
+	${ESCJ} -source 1.4 -nocheck -v \*.java ast/*.java parser/*.java \
 	  tc/*.java bacpred/*.java prover/*.java
 
 .PHONY: test-release
