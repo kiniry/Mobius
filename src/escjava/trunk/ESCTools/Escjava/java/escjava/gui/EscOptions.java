@@ -120,7 +120,9 @@ public class EscOptions extends JPanel implements ActionListener {
 		int returnVal = fc.showOpenDialog(EscOptions.this);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 		    java.io.File file = fc.getSelectedFile();
-		    simplify.setText(file.getAbsolutePath());
+		    String name = file.getAbsolutePath();
+		    simplify.setText(name);
+		    System.setProperty("simplify",name);
 		}
 	    }
 	});
