@@ -865,7 +865,7 @@ public class TypeSig extends Type
 	if (this.state < TypeSig.PREPPED)
 	    prep();
 
-	long start;
+	long start = 0;
 	if (Info.on) start = javafe.Tool.currentTime();
 	if (Info.on) Info.out("[typechecking " + this + "]");
 	TypeCheck.inst.makeFlowInsensitiveChecks().checkTypeDeclaration(this);
