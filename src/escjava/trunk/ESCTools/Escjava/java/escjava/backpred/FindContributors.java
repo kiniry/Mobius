@@ -684,7 +684,7 @@ public class FindContributors
 	if (errorCount == ErrorSet.errors)
 	    return;
 
-	ErrorSet.fatal("A type error has occured at an unexpected point;"
+	ErrorSet.fatal("A type error has occurred at an unexpected point;"
 		       + " unable to continue processing");
     }
 }
