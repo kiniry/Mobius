@@ -167,7 +167,8 @@ public class ParseUtil
                 seqModifierPragma.addElement(l.auxVal);
                 l.getNextToken();
                 continue getModifierLoop;
-            } else for( int i=0; i<modifierKeywords.length; i++ ) {
+            } else {
+	      for( int i=0; i<modifierKeywords.length; i++ ) {
                 if( l.ttype == modifierKeywords[i] ) {
                     // Token is modifier keyword 
                     int modifierBit = 1<<i;
@@ -185,9 +186,9 @@ public class ParseUtil
                     l.getNextToken();
                     continue getModifierLoop;
                 }
+	      }
             }
             // Next token is not a modifier
-
             if (! seenPragma)
                 modifierPragmas = null;
             else

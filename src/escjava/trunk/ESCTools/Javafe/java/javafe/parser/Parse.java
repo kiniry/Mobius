@@ -110,6 +110,7 @@ public class Parse extends ParseStmt
       To handle pragmas, call this method directly 
       with an appropriate <TT>Lex</TT> object.
     */
+  // specOnly means parse without keeping the bodies of methods/constructors/..
 
   //@ requires l != null && l.m_in != null
   //@ ensures \result != null
@@ -477,9 +478,9 @@ VariableDeclarator:
       int locOpenBrace = Location.NULL;
       if ( l.ttype == TagConstants.SEMICOLON ) {
           l.getNextToken();   // swallow semicolon
-// FIXME - check that this is specOnly for no body ?
       } else {
 	  locOpenBrace = l.startingLoc;
+	  // specOnly means do not keep any bodies of methods/constructors/etc.
 	  body = specOnly ? parseBlock(l, true)
 				    : parseConstructorBody(l);
 
