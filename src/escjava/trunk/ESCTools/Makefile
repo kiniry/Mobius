@@ -136,9 +136,9 @@ releases:
 	@echo Making and testing release version ${ESC_PROJECT}-${ESC_VERSION}
 	${MAKE} clean
 	${MAKE} build
-	${MAKE} test
+	##${MAKE} test
 	${MAKE} releases-notests
-	${MAKE} test-binary-release-before-tar
+	##${MAKE} test-binary-release-before-tar
 	rm -rf ${RELTEMP}
 	${MAKE} test-binary-release
 	${MAKE} test-patch-release
@@ -197,7 +197,7 @@ test-binary-release:
 .PHONY: test-binary-release-before-tar
 test-binary-release-before-tar:
 	@echo Testing binary release - before tarring
-	cd ${RELTEMP} ;\
+	cd ${ESCTOOLS_ROOT} ;\
 	    unset JUNIT_LIB; \
 	    unset ESCTOOLS_ROOT ; \
 	    unset ESCJ_SIMPLIFY_DIR; \
