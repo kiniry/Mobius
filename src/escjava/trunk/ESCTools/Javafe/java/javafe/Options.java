@@ -2,58 +2,76 @@ package javafe;
 import javafe.util.UsageError;
 import java.util.ArrayList;
 
-/** This is the super-class of classes that hold the values of command-line
-  * options.  The options are separated from the Main class to improve
-  * modularity and to allow the options to be reset during a single execution
-  * of the main program.  Consequently, none of the options fields should be static.
-  * The program may hold a static instance of an Options object if it wishes.
-  * <p>
-  * Derived classes should define overriding methods for
-  *	processOption
-  *	showNonOptions
-  *	showOptions
-  *  as well as a constructor Options(String[] args)
-  *	
-  */
+/**
+ * This is the super-class of classes that hold the values of
+ * command-line options.  The options are separated from the Main
+ * class to improve modularity and to allow the options to be reset
+ * during a single execution of the main program.  Consequently, none
+ * of the options fields should be static.  The program may hold a
+ * static instance of an Options object if it wishes.
+ *
+ * <p> Derived classes should define overriding methods for
+ * <ul>
+ * <li> {@link #processOption(String, String[], int)},
+ * <li> {@link #showNonOptions()},
+ * <li> {@link #showOptions(boolean)},
+ * <li> as well as a constructor {@link Options(String[] args)}.
+ * </ul>
+ */
   
-public class Options {
- 
+public class Options
+{
     //************************************************************************
     //     Options
     //************************************************************************   
     /**
-     * Option to restrict output to error/caution/warning messages only -
-     * no progress or informational output.
+     * Option to restrict output to error/caution/warning messages
+     * only - no progress or informational output.
      */
     public boolean quiet = false;
 
     /**
-     * option to turn off caution warnings.  This is used for 
-     * houdini where it is a pain to weed out the cautions from
-     * code where we are looking only at warnings.
+     * Option to turn off caution warnings.  This is used for Houdini
+     * where it is a pain to weed out the cautions from code where we
+     * are looking only at warnings.
      */
     public boolean noCautions = false;
     
-    /** Option holding the user-specified class path
+    /**
+     * Option holding the user-specified classpath.
      */
     public String userPath = null;
     
-    /** Option holding the user-specified boot class path
+    /**
+     * Option holding the user-specified boot classpath.
      */
     public String sysPath = null;
     
     // Note - the "-v" option is directly set in javafe.util.Info.on
     
-    /** Option holding a list of packages to be processed along with files */
-    // elements have type java.lang.String
+    /** 
+     * Option holding a list of packages to be processed along with
+     * files.
+     */
+    //*@ invariant (* elements have type java.lang.String *)
     public ArrayList packagesToProcess = new ArrayList();
+
+    /**
+     * Are we parsing Java 1.4 source code (i.e., we must parse the
+     * new "assert" Java keyword).
+     *
+     * @design As Java evolves we'll likely have to change this to an
+     * enumeration type.
+     */
+    public boolean assertIsKeyword = false;
+
 
     //************************************************************************
     //     Constructors
     //************************************************************************   
 
     public Options() {
-        // Everything should be initialized to default values
+        // Everything should be initialized to default values.
         javafe.util.Info.on = false;
     }
 
@@ -63,16 +81,20 @@ public class Options {
     //************************************************************************   
 
     /**
-     * Process tool options contained in <code>args</code>. <p>
+     * Process tool options contained in <code>args</code>.
      *
-     * If an error occurs, a UsageError exception is thrown
-     * Otherwise, the offset to the first non-option in
-     * <code>args</code> is returned.  E.g., this routine
-     * "consumes" <code>args[0]</code>, ...,
-     * <code>args[</code><i>returned_value</i><code>-1]</code>.<p>
+     * @param args the command-line arguments that are being processed.
+     * @return The offset to any remaining command-line arguments
+     * should be returned.  (This allows the option to consume some or
+     * all of the following arguments.  E.g., this routine "consumes"
+     * <code>args[0]</code>, ...,
+     * <code>args[</code><i>returned_value</i><code>-1]</code>.)
+     * @exception UsageError If the option is erroneous, throw an
+     * {@link UsageError} exception with a string describing the
+     * problem.
      */
-    //@ requires \nonnullelements(args)
-    //@ ensures 0<=\result && \result<=args.length
+    //@ requires \nonnullelements(args);
+    //@ ensures 0 <= \result && \result <= args.length;
     public final int processOptions(String[] args) throws UsageError {
 	int offset = 0;
 
@@ -85,34 +107,36 @@ public class Options {
     }
 
     /**
-     * Process next tool option. <p>
+     * Process next tool option.
      *
-     * This routine handles the standard front-end options, storing the
+     * <p> This routine handles the standard front-end options, storing the
      * resulting information in the preceding instance variables and
-     * <code>Info.on</code>.<p>
+     * <code>Info.on</code>.
      *
-     * This routine handles processing the next option from the
-     * command-line arguments.  It is passed the option in question
-     * (<code>option</code>), which will always start with a '-'
-     * character, and the remaining command-line arguments (not
-     * counting <code>option</code>)
-     * (<code>args[offset]</code>,...,<code>args[args.length-1]</code>).<p>
-     *
-     * If the option is erroneous, throw an UsageError exception with a
-     * string describing the problem.  Otherwise, the offset to
-     * any remaining command-line arguments should be returned.  (This
-     * allows the option to consume some or all of the following
-     * arguments.)<p>
-     *
-     * When this routine is overridden, the new method body should
+     * @design When this routine is overridden, the new method body should
      * always end with <code>return super.processOption(option, args,
-     * offset)</code>.<p>
+     * offset)</code>.
+     *
+     * @param option the option currently being handled.  An option
+     * always starts with a '-' character, and the remaining
+     * command-line arguments (not counting <code>option</code>)
+     * (<code>args[offset]</code>,...,<code>args[args.length-1]</code>).
+     * @param args the command-line arguments that are being processed.
+     * @param offset the offset into the <code>args</args> array that
+     * indicates which option is currently being dealt with.
+     * @return The offset to any remaining command-line arguments
+     * should be returned.  (This allows the option to consume some or
+     * all of the following arguments.)
+     * @exception UsageError If the option is erroneous, throw an
+     * {@link UsageError} exception with a string describing the
+     * problem.
      */
-    //@ requires option!=null && \nonnullelements(args)
-    //@ requires 0<=offset && offset<=args.length
-    //@ ensures 0<=\result && \result<=args.length
+    //@ requires option != null && \nonnullelements(args);
+    //@ requires 0 <= offset && offset <= args.length;
+    //@ requires option.charAt(0) == '-';
+    //@ ensures 0 <= \result && \result <= args.length;
     public int processOption(String option, String[] args, int offset) 
-			throws UsageError {
+        throws UsageError {
 	if (option.equals("-v")) {
 	    javafe.util.Info.on = true;
 	    return offset;
@@ -123,7 +147,7 @@ public class Options {
 	    noCautions = true;
 	    return offset;
 	} else if (option.equals("-classpath")) {
-	    if (offset>=args.length) {
+	    if (offset >= args.length) {
 		throw new UsageError("Option " + option + 
                                      " requires one argument");
 	    }
@@ -143,7 +167,17 @@ public class Options {
 	    }
 	    packagesToProcess.add(args[offset]);
 	    return offset+1;
-	}
+	} else if (option.equals("-source")) {
+            if ((offset >= args.length) ||
+                (args[offset].charAt(0) == '-')) {
+                throw new UsageError("Option " + option +
+                                     " requires one argument indicating Java source version\n" +
+                                     "(e.g., \"-source 1.4\")");
+            }
+            if (args[offset].equals("1.4"))
+                assertIsKeyword = true;
+            return offset+1;
+        }
 
 	// Pass on unrecognized options:
 	
@@ -160,7 +194,9 @@ public class Options {
     //************************************************************************   
     
     /**
-     * Print our usage message to <code>System.err</code>. <p>
+     * Print our usage message to <code>System.err</code>.
+     *
+     * @param name the name of the tool whose options we are printing.
      */
     public void usage(String name) {
 	System.err.print(name + ": usage: " + name + " options* ");
@@ -170,25 +206,26 @@ public class Options {
     }
     
     /**
-     * Print non-option usage info to the given String.
+     * @return non-option usage information in a string.
      */
     public String showNonOptions() { return ""; }
     
     /**
-     * Print option information to the given StringBuffer.  Each
-     * line should be preceeded by two blank spaces
-     * and followed by a line separator. <p>
+     * Return option information in a string where each line is
+     * preceeded by two blank spaces and followed by a line separator.
      *
-     * If the argument is true, then all options are printed, including
-     * experimental options; otherwise, just the options expected to be
-     * used by standard users are printed.
+     * @param all if true, then all options are printed, including
+     * experimental options; otherwise, just the options expected to
+     * be used by standard users are printed.
+     * @return a String containing all option information ready for
+     * output.
      *
-     * Each overriding method should first call
-     * <code>super.showOptions()</code>.<p>
+     * @usage Each overriding method should first call
+     * <code>super.showOptions()</code>.
      */
     public String showOptions(boolean all) {
     	StringBuffer sb = new StringBuffer();
-	for (int i = 0; i<optionData.length; ++i) {
+	for (int i = 0; i < optionData.length; ++i) {
 	    sb.append(format(optionData[i]));
         }
 	return sb.toString();
@@ -205,8 +242,8 @@ public class Options {
     {"-classpath <classpath>", ""},
     {"-noCautions", ""},
     {"-package <packagename>", "Loads all the files in the named package"},
+    {"-source <release>", "Provide source compatibility with specified release"},
     };
-    
     
     final public String eol = System.getProperty("line.separator");
 }
