@@ -70,7 +70,7 @@ Copyright @copyright{} 2003-2004 David R. Cok
 @synindex ky cp
 @synindex tp cp
 
-@node  Top, NAME, (dir), (dir)
+@node  Top, Introduction, (dir), (dir)
 
 @menu
 * Introduction::                
@@ -389,7 +389,7 @@ JML features needing clarification
 @end detailmenu
 @end menu
 
-@node NAME, Introduction, Top, Top
+@c @node NAME, Introduction, Top, Top
 @c  node-name,  next,  previous,  up
 
 
@@ -5281,7 +5281,7 @@ replacing it with the predicate @code{ x == \old(x) } for each argument
 @subsection anonymous and block-level classes
 
 These are supported, but the bodies of methods are not checked.
-See @xref{anonymous classes} and @xref{block-level class declarations}.
+See @ref{anonymous classes} and @ref{block-level class declarations}.
 
 @c ----------------------------------------------------------------------------
 @node serialization, most multi-threading considerations, anonymous and block-level classes, Major features of Java not implemented
@@ -5640,26 +5640,36 @@ in a lockset); JML does not yet include the membership in a lockset operation.
 * typeof-clarification::        
 @end menu
 
-@node model programs, when-clarification, JML features needing clarification, JML features needing clarification
+@node model programs, callable-clarification, JML features needing clarification, JML features needing clarification
 @subsection model programs
-@node callable-clarification, initializer-clarification, model programs, JML features needing clarification
+
+@node callable-clarification, when-clarification, model programs, JML features needing clarification
 @subsection callable, accessible
-@node when-clarification, desugaring of forall, callable-clarification, JML features needing clarification
+
+@node when-clarification, initializer-clarification, callable-clarification, JML features needing clarification
 @subsection when, measured_by
-@node initializer-clarification, weakly, when-clarification, JML features needing clarification
+
+@node initializer-clarification, desugaring of forall, when-clarification, JML features needing clarification
 @subsection initializer, static_initializer
-@node desugaring of forall, henceby issues, initializer-clarification, JML features needing clarification
+
+@node desugaring of forall, weakly, initializer-clarification, JML features needing clarification
 @subsection desugaring of forall
-@node weakly, use of result in resources clauses, desugaring of forall, JML features needing clarification
+
+@node weakly, henceby issues, desugaring of forall, JML features needing clarification
 @subsection weakly
-@node henceby issues, instance fields, weakly, JML features needing clarification
+
+@node henceby issues, use of result in resources clauses, weakly, JML features needing clarification
 @subsection hence_by
-@node use of result in resources clauses, splitting annotations, henceby issues, JML features needing clarification
+
+@node use of result in resources clauses, instance fields, henceby issues, JML features needing clarification
 @subsection use of \result in duration and working_space clauses
-@node instance fields, typeof-clarification, use of result in resources clauses, JML features needing clarification
+
+@node instance fields, splitting annotations, use of result in resources clauses, JML features needing clarification
 @subsection instance fields and this in constructor preconditions
-@node splitting annotations,  , instance fields, JML features needing clarification
+
+@node splitting annotations, typeof-clarification, instance fields, JML features needing clarification
 @subsection rules about splitting annotations across comments
+
 @node typeof-clarification,  , splitting annotations, JML features needing clarification
 @subsection \typeof applied to primitive types
 
