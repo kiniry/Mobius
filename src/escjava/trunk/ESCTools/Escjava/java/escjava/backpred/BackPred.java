@@ -309,7 +309,7 @@ public class BackPred
     public static String simplifyTypeName(/*@ non_null */ Type x) {
         if (x instanceof ArrayType) {
             ArrayType at = (ArrayType)x;
-            return "(array " + simplifyTypeName(at.elemType) + ")";
+            return "(_array " + simplifyTypeName(at.elemType) + ")";
         } else {
             return Atom.printableVersion(UniqName.type(x));
         }
