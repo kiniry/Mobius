@@ -22,7 +22,7 @@ public final class StringUtil {
 	
     /** Count the number of times a given character occurs in a String: */
     //@ requires s != null;
-    //@ ensures \result>=0
+    //@ ensures \result>=0;
     public static int countChar(String s, char c) {
 	int count = 0;
 	int start = 0;
@@ -54,7 +54,7 @@ public final class StringUtil {
      * Parse a (possibly empty) separator-separated list into an array of
      *	Strings:
      */
-    //@ ensures \nonnullelements(\result)
+    //@ ensures \nonnullelements(\result);
     public static String[] parseList(/*@ non_null @*/ String s, char separator) {
 	// Handle empty list case:
 	if (s.equals(""))
@@ -80,7 +80,7 @@ public final class StringUtil {
 
 
     /** A simple test driver */
-    //@ requires \nonnullelements(args)
+    //@ requires \nonnullelements(args);
     public static void main(String[] args) {
 	if (args.length != 1) {
 	    System.out.println("StringUtil: usage: <cmd> <teststring>");

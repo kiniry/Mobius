@@ -41,7 +41,7 @@ public final class Identifier
      <code>chains</code>. */
 
   /*@ invariant (\forall int i; 0<=i && i<chains.length
-	==> chains[i]==null || chains[i].length>0) */
+	==> chains[i]==null || chains[i].length>0); */
   private static final Identifier chains[][] = new Identifier[TABLE_SIZE][];
 
 
@@ -87,12 +87,12 @@ public final class Identifier
                   tokenType != TagConstants.MODIFIERPRAGMA &&
                   tokenType != TagConstants.STMTPRAGMA &&
                   tokenType != TagConstants.TYPEDECLELEMPRAGMA &&
-                  tokenType != TagConstants.TYPEMODIFIERPRAGMA */
+                  tokenType != TagConstants.TYPEMODIFIERPRAGMA; */
     int tokenType = TagConstants.IDENT;
 
 
   //@ requires text != null;
-  //@ requires 0<=textlen && textlen<=text.length
+  //@ requires 0<=textlen && textlen<=text.length;
   private Identifier(char[] text, int textlen, int hashcode) {
     this.chars = new char[textlen];
     System.arraycopy(text, 0, this.chars, 0, textlen);
@@ -123,7 +123,7 @@ public final class Identifier
     <code>textlen</code> characters of <code>text</code>. */
 
   //@ requires text != null;
-  //@ requires 0<=textlen && textlen<=text.length
+  //@ requires 0<=textlen && textlen<=text.length;
   //@ ensures \result != null;
   static Identifier intern(char[] text, int textlen, int hashcode) {
 
@@ -167,7 +167,7 @@ public final class Identifier
   }
 
   //@ requires text != null;
-  //@ requires 0<=textlen && textlen<=text.length
+  //@ requires 0<=textlen && textlen<=text.length;
   static int hash(char[] text, int textlen) {
     int hashcode = 0;
     for(int i = 0; i < textlen; i++)
@@ -236,7 +236,7 @@ public final class Identifier
 
     //@ requires argv != null;
     /*@ requires (\forall int i; (0<=i && i<argv.length)
-		==> argv[i] != null) */
+		==> argv[i] != null); */
   public static void main(String[] argv) {
     String stem = "gensym";
     int stemlen = stem.length();

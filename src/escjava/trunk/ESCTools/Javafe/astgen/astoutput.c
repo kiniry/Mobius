@@ -111,7 +111,7 @@ void outputEndClass(FILE *o, Class *class, const char *text, int len,
     indent(o, ind);
     fprintf(o, "//@ requires I_will_establish_invariants_afterwards;\n");
     indent(o, ind);
-    fprintf(o, "protected %s() {}    //@ nowarn Invariant,NonNullInit\n\n", class->name);
+    fprintf(o, "protected %s() {}    //@ nowarn Invariant,NonNullInit;\n\n", class->name);
 /*  } */
 
 
@@ -229,7 +229,7 @@ void outputEndClass(FILE *o, Class *class, const char *text, int len,
     }
     indent(o, ind+3);
     fprintf(o, "throw new IndexOutOfBoundsException(\"AST child index \" + indexPre);\n");
-    indent(o, ind); fprintf(o, "}   //@ nowarn Exception\n\n");
+    indent(o, ind); fprintf(o, "}   //@ nowarn Exception;\n\n");
 
     /* Output toString */
     indent(o, ind); fprintf(o, "public final String toString() {\n");
@@ -485,7 +485,7 @@ void outputEndOfAstFile(const char *text, int len,
 		c->c->superclass->name);
 	fprintf(visitorOutputFile, "  }\n\n");
       } else /* Gen an abstract visit method */ {
-	fprintf(visitorOutputFile, "  //@ requires x != null\n");
+	fprintf(visitorOutputFile, "  //@ requires x != null;\n");
 	fprintf(visitorOutputFile, "  //@ ensures \\result != null;\n");
 	fprintf(visitorOutputFile, "  public abstract Object visit%s(%s x, Object o);\n\n",
 		c->c->name, c->c->name);

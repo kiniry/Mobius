@@ -211,7 +211,7 @@ public abstract class BufferedCorrelatedReader extends CorrelatedReader
    */
   //@ invariant marked ==> 0 <= markNdx && markNdx <= curNdx;
 
-  protected int markNdx /*@ readable_if marked */;
+  protected int markNdx; /*@ readable markNdx if marked; */
 
   /**
    * Marks the position of the current character in this input

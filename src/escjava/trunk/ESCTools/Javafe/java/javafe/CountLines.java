@@ -11,8 +11,6 @@ import javafe.util.CorrelatedReader;
 import javafe.util.ErrorSet;
 import javafe.util.FileCorrelatedReader;
 
-//@ invariant true;
-
 public class CountLines
 {
     //@ requires \nonnullelements(argv);

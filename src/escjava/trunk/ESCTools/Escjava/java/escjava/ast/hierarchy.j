@@ -522,7 +522,7 @@ public class Call extends GuardedCmd
   //# boolean inlined
 
   // This is a backedge, so it can't be a child:
-  //@ invariant rd != null
+  //@ invariant rd != null;
   public RoutineDecl rd;
 
   public Spec spec;

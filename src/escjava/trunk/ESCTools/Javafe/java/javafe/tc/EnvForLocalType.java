@@ -22,7 +22,7 @@ public class EnvForLocalType extends Env implements/*privately*/ Cloneable {
     /**
      * Our parent environment
      */
-    //@ invariant !(parent instanceof EnvForCU)
+    //@ invariant !(parent instanceof EnvForCU);
     protected /*@ non_null @*/ Env parent;
 
     /**
@@ -41,7 +41,7 @@ public class EnvForLocalType extends Env implements/*privately*/ Cloneable {
      * member.<p>
      */
     //@ requires decl.id != null;
-    //@ requires !(parent instanceof EnvForCU)
+    //@ requires !(parent instanceof EnvForCU);
     public EnvForLocalType(/*@ non_null @*/ Env parent,
 			   /*@ non_null @*/ TypeDecl decl) {
 	this.parent = parent;

@@ -19,7 +19,7 @@ import escjava.translate.Substitute;
 
 public class InlineConstructor {
 
-    //@ requires cus != null
+    //@ requires cus != null;
     public static void inlineConstructorsEverywhere(Vector cus) {
 	int size = cus.size();
 	for (int i = 0; i < size; i++) {

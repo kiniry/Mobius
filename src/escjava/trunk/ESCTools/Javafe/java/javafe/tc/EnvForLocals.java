@@ -25,7 +25,7 @@ public class EnvForLocals extends Env implements/*privately*/ Cloneable {
     /**
      * Our parent environment
      */
-    //@ invariant !(parent instanceof EnvForCU)
+    //@ invariant !(parent instanceof EnvForCU);
     protected /*@ non_null @*/ Env parent;
 
     /**
@@ -43,14 +43,14 @@ public class EnvForLocals extends Env implements/*privately*/ Cloneable {
      * redefinition of a local binding not hidden by a field.<p>
      */
     //@ requires decl.id != null;
-    //@ requires !(parent instanceof EnvForCU)
+    //@ requires !(parent instanceof EnvForCU);
     public EnvForLocals(/*@ non_null @*/ Env parent,
 			/*@ non_null @*/ GenericVarDecl decl) {
 	this(parent,decl,true);
     }
 
     //@ requires decl.id != null;
-    //@ requires !(parent instanceof EnvForCU)
+    //@ requires !(parent instanceof EnvForCU);
     public EnvForLocals(/*@ non_null @*/ Env parent,
 			/*@ non_null @*/ GenericVarDecl decl,
 			boolean warnAboutDuplication) {

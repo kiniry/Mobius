@@ -211,7 +211,7 @@ public final class OutsideEnv
     //@ ensures reader == R;
     public static void init(/*@ non_null @*/ TypeReader R) {
 	Assert.precondition(R != null);
-	Assert.precondition(reader == null);	//@ nowarn Pre
+	Assert.precondition(reader == null);	//@ nowarn Pre;
 
 	reader = R;
         //@ set initialized=true;

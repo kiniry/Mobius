@@ -232,7 +232,7 @@ public class Lex extends Token
      not be used throughout the lifetime of the lexer.  */
 
     //@ invariant text != null;
-    //@ invariant text.length > 4
+    //@ invariant text.length > 4;
     protected char[] text = new char[64]; // Invariant: text.length > 4
     // 64 should be large enough that overflows won't happen for most inputs
 
@@ -241,17 +241,17 @@ public class Lex extends Token
      <TT>getNextToken</TT> (there is no "current token" between
      creation of a lexer and the first call to getNextToken).  */
 
-    //@ invariant 0 <= textlen &&  textlen <= text.length
+    //@ invariant 0 <= textlen &&  textlen <= text.length;
     protected int textlen = 0;
 
     /** Append 'c' to <CODE>text</CODE>, expanding if necessary. */
-    //@ modifies textlen
-    //@ ensures textlen == \old(textlen)+1
+    //@ modifies textlen;
+    //@ ensures textlen == \old(textlen)+1;
     protected void append(int c) {
         try {
-            text[textlen] = (char)c;		//@ nowarn IndexTooBig  // caught
+            text[textlen] = (char)c;		//@ nowarn IndexTooBig;  // caught
         } catch (ArrayIndexOutOfBoundsException e) {
-            //@ assume textlen>=text.length
+            //@ assume textlen>=text.length;
             char[] newtext = new char[textlen + 128];
             System.arraycopy(text, 0, newtext, 0, textlen);
             text = newtext;

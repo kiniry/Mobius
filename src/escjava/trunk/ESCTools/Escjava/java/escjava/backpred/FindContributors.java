@@ -187,7 +187,7 @@ public class FindContributors
      *
      * Precondition: T has been resolved.<p>
      */
-    //@ requires T != null
+    //@ requires T != null;
     private void addType(Type T) {
 	// TypeName case:
 	if (T instanceof TypeName) {
@@ -253,7 +253,7 @@ public class FindContributors
      * Add a given field to contributorFields, maintaining all the
      * closure properties. <p>
      */
-    //@ requires fd != null
+    //@ requires fd != null;
     private void addField(FieldDecl fd) {
 	if (contributorFields.contains(fd))
 	    return;
@@ -299,7 +299,7 @@ public class FindContributors
      *
      * Precondition: J has been type checked.
      */
-    //@ requires J != null
+    //@ requires J != null;
     private void addPossibleInvariant(ExprDeclPragma J) {
 	FieldDeclVec fieldsMentioned = fieldsInvariantMentions(J);
 
@@ -323,7 +323,7 @@ public class FindContributors
      *
      * Precondition: J has been type checked.
      */
-    //@ requires J != null
+    //@ requires J != null;
     private void addInvariant(ExprDeclPragma J) {
 	if (contributorInvariants.contains(J))
 	    return;

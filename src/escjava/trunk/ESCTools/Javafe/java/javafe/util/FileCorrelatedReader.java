@@ -229,7 +229,7 @@ public class FileCorrelatedReader extends LocationManagerCorrelatedReader
             System.arraycopy( buf, minNdx, buf, 0, curNdx-minNdx );
         }
         curNdx       -= minNdx;
-        markNdx      -= minNdx;       //@ nowarn Unreadable
+        markNdx      -= minNdx;       //@ nowarn Unreadable;
         lastCharNdx  -= minNdx;
         beforeBufLoc += minNdx;
         endBufNdx    = curNdx;

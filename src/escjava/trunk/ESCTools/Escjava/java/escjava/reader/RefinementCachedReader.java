@@ -40,19 +40,19 @@ public class RefinementCachedReader extends CachedReader
     /**
      * The underlying Reader whose results we are caching.
      */
-    //@ invariant underlyingReader != null
+    //@ invariant underlyingReader != null;
 
     protected AnnotationHandler annotationHandler = new AnnotationHandler();
 
     /**
      * Creating a cached version of a Reader:
      */
-    //@ requires reader != null
+    //@ requires reader != null;
     public RefinementCachedReader(Reader reader) {
 	super(reader);
 
-	//@ set cache.keyType = \type(String)
-	//@ set cache.elementType = \type(Object)
+	//@ set cache.keyType = \type(String);
+	//@ set cache.elementType = \type(Object);
     }
 
 

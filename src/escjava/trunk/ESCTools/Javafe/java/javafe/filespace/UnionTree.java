@@ -168,7 +168,7 @@ public class UnionTree extends PreloadedTree {
     /** A simple test driver */
     //@ requires args != null;
     /*@ requires (\forall int i; (0<=i && i<args.length)
-		==> args[i] != null) */
+		==> args[i] != null); */
     public static void main(String[] args) {
 	/*
 	 * Create a list of FileTree's using the paths we're passed in:

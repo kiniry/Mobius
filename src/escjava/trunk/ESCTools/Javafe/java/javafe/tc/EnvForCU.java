@@ -156,7 +156,7 @@ public class EnvForCU extends Env {
 	for(int i = 0; i < CU.imports.size(); i++) {
 	    try {
 		Name imp =
-		    ((SingleTypeImportDecl)CU.imports  //@ nowarn Cast //caught
+		    ((SingleTypeImportDecl)CU.imports  //@ nowarn Cast; //caught
 		          .elementAt(i)).typeName.name; 
 		int sz = imp.size();
 		String[] P = imp.toStrings(sz-1);
@@ -192,7 +192,7 @@ public class EnvForCU extends Env {
 	    for(int i = 0; i < CU.imports.size(); i++) {
 		try {
 		    OnDemandImportDecl imp =
-		      (OnDemandImportDecl)CU.imports.elementAt(i); //@ nowarn Cast //caught
+		      (OnDemandImportDecl)CU.imports.elementAt(i); //@ nowarn Cast; //caught
 		    TypeSig r2 = lookupWithoutInheritence(caller,
 					   imp.pkgName.toStrings(),
 					   id.toString());
@@ -222,7 +222,7 @@ public class EnvForCU extends Env {
      * This routine does not check that the resulting type (if any)
      * is actually accessable, unless caller is non-null. <p>
      */
-    //@ requires \nonnullelements(N)
+    //@ requires \nonnullelements(N);
     public static TypeSig lookupWithoutInheritence(TypeSig caller, String[] N,
 						   /*@ non_null @*/ String I) {
 	TypeSig soFar = null;

@@ -13,11 +13,11 @@ public interface Filter {
     /**
      * The actual "static" type of objects we filter
      */
-    //@ ghost public \TYPE acceptedType
+    //@ ghost public \TYPE acceptedType;
 
 
     /** Should our client accept a given value? */
     //@ requires value != null;
-    //@ requires \typeof(value) <: acceptedType
+    //@ requires \typeof(value) <: acceptedType;
     boolean accept(Object value);
 }

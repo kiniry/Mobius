@@ -263,7 +263,7 @@ public abstract class LocationManagerCorrelatedReader
   protected static LocationManagerCorrelatedReader locToStream(int loc) {
     int i = locToStreamId(loc);
     LocationManagerCorrelatedReader s = getCorrStreamAt(i);
-    Assert.notFalse(s.minLoc <= loc && loc <= s.beforeBufLoc + s.curNdx); //@ nowarn Pre
+    Assert.notFalse(s.minLoc <= loc && loc <= s.beforeBufLoc + s.curNdx); //@ nowarn Pre;
     return s;
   }
 
@@ -462,7 +462,7 @@ public abstract class LocationManagerCorrelatedReader
    */
   //@ invariant marked ==> 0 < markLineNo && markLineNo <= curLineNo;
   
-  private int markLineNo /*@ readable_if marked */;
+  private int markLineNo; /*@ readable markLineNo if marked; */
 
   public void mark() {
     markLineNo = curLineNo;

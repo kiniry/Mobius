@@ -263,7 +263,7 @@ public class TrAnExpr {
                     break;
 		
                 default:
-                    //@ unreachable
+                    //@ unreachable;
                     Assert.fail("Fall thru; tag = "
                                 + escjava.ast.TagConstants.toString(fa.od.getTag()));
                     lhs = null; // dummy assignment
@@ -947,7 +947,7 @@ System.out.println("");
 	    }
 	  }
 	}
-	//@ unreachable
+	//@ unreachable;
       }
 
       case TagConstants.SETCOMPEXPR: {
@@ -1123,7 +1123,7 @@ wrap those variables being modified and not everything.
     *
     **/
 
-  /*@ requires vd == GC.allocvar.decl ==> wt != null */
+  /*@ requires vd == GC.allocvar.decl ==> wt != null; */
   public static Expr targetTypeCorrect(/*@ non_null */ GenericVarDecl vd,
 				       Hashtable wt) {
     if (vd == GC.elemsvar.decl) {
@@ -1562,7 +1562,7 @@ wrap those variables being modified and not everything.
     Assert.notFalse(row < unary_table.length, "Bad tag");
 
     // find correct column in table
-    int col = 0 /*@ uninitialized */;
+    /*-@ uninitialized */ int col = 0;
     Type argType = TypeCheck.inst.getType(e.expr);
     if (Types.isBooleanType(argType)) col = 1;
     else if (Types.isIntegralType(argType)) col = 2;

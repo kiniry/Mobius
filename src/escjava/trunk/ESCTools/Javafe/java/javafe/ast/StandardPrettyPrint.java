@@ -36,7 +36,7 @@ public class StandardPrettyPrint extends PrettyPrint {
                 if (i instanceof SingleTypeImportDecl)
                     self.print(o, ((SingleTypeImportDecl)i).typeName);
                 else {
-                    self.print(o, ((OnDemandImportDecl)i).pkgName);	//@ nowarn Cast
+                    self.print(o, ((OnDemandImportDecl)i).pkgName);	//@ nowarn Cast;
                     write(o, ".*");
                 }
                 writeln(o, ";");
@@ -129,7 +129,7 @@ public class StandardPrettyPrint extends PrettyPrint {
         writeln(o, "{");
         for (int i = 0; i < d.elems.size(); i++) {
             TypeDeclElem elem = d.elems.elementAt(i);
-            //@ assume elem.hasParent   // "invariant"
+            //@ assume elem.hasParent ;  // "invariant"
             spaces(o, ind+INDENT);
             self.print(o, ind+INDENT, elem, id, true);
             if (i != d.elems.size()-1) writeln(o);
@@ -196,10 +196,10 @@ public class StandardPrettyPrint extends PrettyPrint {
                             SwitchLabel x = (SwitchLabel)sub;
                             if (x.expr == null && sub.getStartLoc() == b.locCloseBrace) {
                                 // this is an implicit "default: break;" statement
-                                Assert.notFalse(i == b.stmts.size() - 2); //@ nowarn Pre
+                                Assert.notFalse(i == b.stmts.size() - 2); //@ nowarn Pre;
                                 // don't print this statement or the next, which should be
                                 // a "break"
-                                Assert.notFalse(b.stmts.elementAt(i+1).getTag() //@ nowarn Pre
+                                Assert.notFalse(b.stmts.elementAt(i+1).getTag() //@ nowarn Pre;
                                                 == TagConstants.BREAKSTMT);
                                 if (!PrettyPrint.displayInferred)
                                     break;
@@ -390,11 +390,11 @@ public class StandardPrettyPrint extends PrettyPrint {
         
                     if (x.forInit.size() > 0)
                         if (x.forInit.elementAt(0).getTag() == TagConstants.VARDECLSTMT) {
-                            self.print(o, ((VarDeclStmt)x.forInit.elementAt(0))//@nowarn Cast
+                            self.print(o, ((VarDeclStmt)x.forInit.elementAt(0))//@nowarn Cast;
                                        .decl.type);
                             write(o, ' ');
                             for(int i = 0; i < x.forInit.size(); i++) {
-                                VarDeclStmt d = (VarDeclStmt)x.forInit.elementAt(i); //@nowarn Cast
+                                VarDeclStmt d = (VarDeclStmt)x.forInit.elementAt(i); //@nowarn Cast;
                                 write(o, d.decl.id.toString());
                                 if (d.decl.init != null) {
                                     write(o, '=');
@@ -404,7 +404,7 @@ public class StandardPrettyPrint extends PrettyPrint {
                             }
                         } else
                             for(int i = 0; i < x.forInit.size(); i++) {
-                                EvalStmt e = (EvalStmt) x.forInit.elementAt(i); //@nowarn Cast
+                                EvalStmt e = (EvalStmt) x.forInit.elementAt(i); //@nowarn Cast;
                                 self.print(o, ind, e.expr);
                                 if (i+1 < x.forInit.size()) write(o, ", ");
                             }
@@ -785,7 +785,7 @@ public class StandardPrettyPrint extends PrettyPrint {
                         writeln(o, " {");
                         for (int i = 0; i < ne.anonDecl.elems.size(); i++) {
                             TypeDeclElem elem = ne.anonDecl.elems.elementAt(i);
-                            //@ assume elem.hasParent   // "invariant"
+                            //@ assume elem.hasParent;   // "invariant"
                             spaces(o, ind+INDENT);
                             self.print(o, ind+INDENT, elem, ne.anonDecl.id, true);
                             if (i != ne.anonDecl.elems.size()-1) writeln(o);

@@ -106,7 +106,8 @@ public class JmlCorrelatedReader extends FilterCorrelatedReader
      * indicates the last of these characters.
      */
 
-    private int lastUnreturnedChar /*@ readable_if unreturnedChars != 0; */;
+    private int lastUnreturnedChar;
+    /*@ readable lastUnreturnedChar if unreturnedChars != 0; */
     //@ invariant lastUnreturnedChar != '@';
 
     /**
@@ -125,7 +126,7 @@ public class JmlCorrelatedReader extends FilterCorrelatedReader
      * @return A Unicode character, or -1.
      */
     public int read() throws IOException {
-        /*@ uninitialized */ int ch = 0; // dummy assignment
+        /*-@ uninitialized */ int ch = 0; // dummy assignment
         if (unreturnedChars == 0) {
             ch = child.read();
             if (ch == '\n') {
@@ -174,22 +175,22 @@ public class JmlCorrelatedReader extends FilterCorrelatedReader
 
     // [Un]marking
 
-    private int prefixModeAtMark /*@ readable_if marked; */;
+    private int prefixModeAtMark; /*@ readable prefixModeAtMark if marked; */
     //@ invariant 0 <= prefixModeAtMark && prefixModeAtMark <= 2;
 
-    private int unreturnedCharsAtMark /*@ readable_if marked; */;
+    private int unreturnedCharsAtMark; /*@ readable unreturnedCharsAtMark if marked; */
     //@ invariant 0 <= unreturnedCharsAtMark;
     //@ invariant prefixModeAtMark < 2 ==> unreturnedCharsAtMark == 0;
     //@ invariant specialCharacter != '@' ==> unreturnedCharsAtMark == 0;
 
-    private int lastUnreturnedCharAtMark /*@ readable_if marked; */;
+    private int lastUnreturnedCharAtMark; /*@ readable lastUnreturnedCharAtMark if marked; */
     //@ invariant lastUnreturnedCharAtMark != '@';
 
     public void mark() {
         super.mark();
         prefixModeAtMark = prefixMode;
         unreturnedCharsAtMark = unreturnedChars;
-        lastUnreturnedCharAtMark = lastUnreturnedChar; //@ nowarn Unreadable
+        lastUnreturnedCharAtMark = lastUnreturnedChar; //@ nowarn Unreadable;
     }
 
     public void reset() throws IOException {

@@ -58,8 +58,8 @@ public class ClassPath {
      * Set our current classpath by changing the property
      * <code>java.class.path</code>.<p>
      *
-     * <esc> requires newClassPath != null </esc>
      */
+    //@ requires newClassPath != null;
     public static void set(String newClassPath) {
 	Properties P = System.getProperties();
 	P.put("java.class.path", newClassPath);
@@ -88,8 +88,9 @@ public class ClassPath {
      * non-existent or ill-formed path components are present in the
      * classpath.<p>
      *
-     * <esc> requires classpath != null;  ensures \result != null</esc>
      */
+    //@ requires classpath != null;
+    //@ ensures \result != null;
     public static Tree open(String classpath, boolean complain)
 				throws IOException {
 	if (classpath.length()==0) {
@@ -162,7 +163,7 @@ public class ClassPath {
     /** A simple test driver */
     //@ requires args != null;
     /*@ requires (\forall int i; (0<=i && i<args.length)
-		==> args[i] != null) */
+		==> args[i] != null); */
     public static void main(String[] args) throws IOException {
 	/*
 	 * Parse command arguments:
@@ -202,7 +203,7 @@ public class ClassPath {
         }
 	
 	// Dump the source in question to standard out:
-	GenericFile sourceFile = (GenericFile)source.data;	//@ nowarn Cast
+	GenericFile sourceFile = (GenericFile)source.data;	//@ nowarn Cast;
 	//@ assume sourceFile != null;
 	InputStream I = sourceFile.getInputStream();
 	System.out.println(sourceFile.getHumanName() + ":");

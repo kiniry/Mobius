@@ -27,13 +27,13 @@ public interface TypeDeclElem {
      **   (b) TypeDeclElems before they are installed in a TypeDecl
      **   (c) The length FieldDecl  (belongs to no TypeDecl)
      **/
-     //@ ghost public boolean hasParent
+     //@ ghost public boolean hasParent;
 
     /**
      ** The TypeDecl we are an element of, or null if we do not have a
      **  parent (cf. hasParent).
      **/
-    //@ ensures hasParent ==> \result!=null
+    //@ ensures hasParent ==> \result!=null;
     public TypeDecl getParent();
 
     public void setParent(/*@non_null*/ TypeDecl p);

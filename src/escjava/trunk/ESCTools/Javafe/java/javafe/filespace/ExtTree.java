@@ -55,7 +55,7 @@ class ExtTree extends HashTree {
     //@ ensures \result != null;
     public ExtTree addChild(String label, Object newData) {
 	/* Handle case where child already exists: */
-	ExtTree child = (ExtTree)getChild(label);	//@ nowarn Cast
+	ExtTree child = (ExtTree)getChild(label);	//@ nowarn Cast;
 	if (child != null) {
 	    return child;
 	}
@@ -74,7 +74,7 @@ class ExtTree extends HashTree {
      * newData.  Path must be non-null.
      */
     /*@ requires path != null &&
-	(\forall int i; (0<=i && i<path.length) ==> path[i] != null) */
+	(\forall int i; (0<=i && i<path.length) ==> path[i] != null); */
     //@ ensures \result != null;
     public ExtTree addPath(String[] path) {
 	ExtTree currentNode = this;

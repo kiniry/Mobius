@@ -36,7 +36,7 @@ public final class StackVector
      **************************************************/
 
     /** The type of our elements */
-    //@ ghost public \TYPE elementType
+    //@ ghost public \TYPE elementType;
 
     /**
      * Our data representation is as follows: <p>
@@ -61,29 +61,29 @@ public final class StackVector
      */
 
     //@ invariant elements != null;
-    //@ invariant elements.length>0
-    //@ invariant \typeof(elements) == \type(Object[])
+    //@ invariant elements.length>0;
+    //@ invariant \typeof(elements) == \type(Object[]);
 
-    //@ invariant elements.owner == this
-    private Object[] elements = new Object[10];
+    //@ invariant elements.owner == this;
+    private /*@ spec_public */ Object[] elements = new Object[10];
 
 
-    //@ invariant 0<=elementCount && elementCount <= elements.length
+    //@ invariant 0<=elementCount && elementCount <= elements.length;
     /*@ invariant (\forall int i; 0<=i && i<elementCount
-	   ==> elements[i]==null || \typeof(elements[i]) <: elementType) */
+	   ==> elements[i]==null || \typeof(elements[i]) <: elementType); */
 
     /*@spec_public*/ private int elementCount = 0;
 
 
-    //@ invariant 0<=currentStackBottom && currentStackBottom<=elementCount
+    //@ invariant 0<=currentStackBottom && currentStackBottom<=elementCount;
 
     /*@ invariant currentStackBottom == 0 ||
-         elements[currentStackBottom-1]==null */
+         elements[currentStackBottom-1]==null; */
 
     /*@spec_public*/ private int currentStackBottom = 0;
 
 
-    //@ invariant vectorCount>=1
+    //@ invariant vectorCount>=1;
     /*
      * The following invariant is used in the form of assumes as needed,
      * but not checked.  (too hard)
@@ -102,10 +102,10 @@ public final class StackVector
     /**
      * Create a StackVector that contains only 1 zero-length Vector.
      */
-    //@ ensures elementCount == 0
-    //@ ensures vectorCount == 1
+    //@ ensures elementCount == 0;
+    //@ ensures vectorCount == 1;
     public StackVector() {
-	//@ set elements.owner = this
+	//@ set elements.owner = this;
     }
 
 
@@ -120,9 +120,9 @@ public final class StackVector
      *
      * Indices into the top Vector range from 0 to size()-1.<p>
      *
-     * <esc> ensures \result >= 0 </esc>
      */
-    //@ ensures \result == (elementCount - currentStackBottom)
+    //@ ensures \result >= 0 ;
+    //@ ensures \result == (elementCount - currentStackBottom);
     //@ pure
     public final int size() {
 	return elementCount - currentStackBottom;
@@ -136,7 +136,7 @@ public final class StackVector
      * If caller does want to deal with this, use nowarn Pre on calls to
      * these functions.
      */
-    //@ requires 0<=index && index+currentStackBottom<elementCount
+    //@ requires 0<=index && index+currentStackBottom<elementCount;
     private void checkBounds(int index)
 		/*throws ArrayIndexOutOfBoundsException*/ {
 	if (index < 0 || index+currentStackBottom >= elementCount) {
@@ -150,14 +150,14 @@ public final class StackVector
      * @exception ArrayIndexOutOfBoundsException if the index is out of
      * range.
      */
-    //@ requires 0<=i && i+currentStackBottom<elementCount
-    //@ ensures \typeof(\result) <: elementType
+    //@ requires 0<=i && i+currentStackBottom<elementCount;
+    //@ ensures \typeof(\result) <: elementType;
     //@ ensures \result != null;
     public Object elementAt(int i) 
 		/*throws ArrayIndexOutOfBoundsException*/ {
 	checkBounds(i);
 	return elements[currentStackBottom + i];
-    }		//@ nowarn Post		// (thinks could be null)
+    }		//@ nowarn Post;		// (thinks could be null)
 
     public void setElementAt(Object o, int i)
 		/*throws ArrayIndexOutOfBoundsException*/ {
@@ -171,14 +171,14 @@ public final class StackVector
      * x may be null, in which case the caller needs to cleanup to
      * ensure that a null element does not stay in the top Vector. <p>
      */
-    //@ requires x==null || \typeof(x) <: elementType
-    //@ modifies elementCount
-    //@ ensures elementCount == \old(elementCount)+1
-    //@ ensures elementCount>0 && elements[elementCount-1]==x
+    //@ requires x==null || \typeof(x) <: elementType;
+    //@ modifies elementCount;
+    //@ ensures elementCount == \old(elementCount)+1;
+    //@ ensures elementCount>0 && elements[elementCount-1]==x;
     private void addElementInternal(Object x) {
 	if (elementCount >= elements.length) {
 	    Object[] newElements = new Object[2*elementCount];
-	    //@ set newElements.owner = this
+	    //@ set newElements.owner = this;
 
 	    System.arraycopy(elements, 0, newElements, 0, elements.length);
 	    elements = newElements;
@@ -191,12 +191,12 @@ public final class StackVector
     /**
      * Add an element at the end of the top Vector. <p>
      *
-     * <esc> requires x != null </esc>
      */
-    //@ requires \typeof(x) <: elementType
-    //@ modifies elementCount
+    //@ requires x != null;
+    //@ requires \typeof(x) <: elementType;
+    //@ modifies elementCount;
     /*@ ensures (elementCount - currentStackBottom) ==
-	        (\old(elementCount) - currentStackBottom) + 1 */
+	        (\old(elementCount) - currentStackBottom) + 1; */
     public final void addElement(Object x) {
 	Assert.precondition(x != null);
 
@@ -213,8 +213,8 @@ public final class StackVector
 
 
     /** Zero the top Vector. */
-    //@ modifies elementCount
-    //@ ensures elementCount == currentStackBottom
+    //@ modifies elementCount;
+    //@ ensures elementCount == currentStackBottom;
     public final void removeAllElements() {
 	for (int i = currentStackBottom; i < elementCount; i++)
 	    elements[i] = null; // Allow for GC
@@ -223,15 +223,15 @@ public final class StackVector
 
 
     //@ requires dst != null;
-    //@ requires (elementCount - currentStackBottom) <= dst.length
-    //@ modifies dst[*]
+    //@ requires (elementCount - currentStackBottom) <= dst.length;
+    //@ modifies dst[*];
     /*@ ensures (\forall int i; 0 <= i && i < elementCount-currentStackBottom
-			==> dst[i] != null) */
+			==> dst[i] != null); */
     public final void copyInto(Object[] dst) {
 	System.arraycopy(elements, currentStackBottom,
 			 dst, 0,
 			 elementCount - currentStackBottom);
-    }	//@ nowarn Post
+    }	//@ nowarn Post;
 
 
     /**
@@ -255,11 +255,11 @@ public final class StackVector
      * Reset us to the state where we contain only 1 Vector, which has
      * zero-length.
      */
-    //@ modifies vectorCount
-    //@ ensures vectorCount == 1
-    //@ modifies elementCount, currentStackBottom
-    //@ ensures elementCount == 0
-    //@ ensures currentStackBottom == 0
+    //@ modifies vectorCount;
+    //@ ensures vectorCount == 1;
+    //@ modifies elementCount, currentStackBottom;
+    //@ ensures elementCount == 0;
+    //@ ensures currentStackBottom == 0;
     public void clear() {
 	elementCount = currentStackBottom = 0;
 	vectorCount = 1;
@@ -269,8 +269,8 @@ public final class StackVector
     /**
      * Return the number of Vectors on our stack. <p>
      *
-     * <esc> ensures \result==vectorCount </esc>
      */
+    //@ ensures \result==vectorCount; 
     public final int vectors() {
 	return vectorCount;
     }
@@ -279,10 +279,10 @@ public final class StackVector
     /**
      * Push a zero-length Vector.
      *
-     * <esc> ensures vectorCount == \old(vectorCount)+1 </esc>
      */
-    //@ modifies vectorCount, currentStackBottom
-    //@ ensures currentStackBottom == elementCount
+    //@ modifies vectorCount, currentStackBottom;
+    //@ ensures vectorCount == \old(vectorCount)+1;
+    //@ ensures currentStackBottom == elementCount;
     public void push() {
 	addElementInternal(null);
 	currentStackBottom = elementCount;
@@ -294,12 +294,12 @@ public final class StackVector
      *
      * Precondition: at least 2 Vectors are on our stack.<p>
      */
-    //@ requires vectorCount>=2
-    //@ modifies vectorCount
-    //@ ensures vectorCount == \old(vectorCount)-1
-    //@ modifies elementCount, currentStackBottom
+    //@ requires vectorCount>=2;
+    //@ modifies vectorCount;
+    //@ ensures vectorCount == \old(vectorCount)-1;
+    //@ modifies elementCount, currentStackBottom;
     public void pop() {
-	//@ assume (vectorCount>=2) ==> (currentStackBottom>0) // "invariant"
+	//@ assume (vectorCount>=2) ==> (currentStackBottom>0); // "invariant"
 
 	Assert.precondition(currentStackBottom>0);
 
@@ -324,12 +324,12 @@ public final class StackVector
      *
      * Precondition: there are at least two vectors on our stack.<p>
      */
-    //@ requires vectorCount>=2
-    //@ modifies vectorCount
-    //@ ensures vectorCount == \old(vectorCount)-1
-    //@ modifies currentStackBottom
+    //@ requires vectorCount>=2;
+    //@ modifies vectorCount;
+    //@ ensures vectorCount == \old(vectorCount)-1;
+    //@ modifies currentStackBottom;
     public void merge() {
-	//@ assume (vectorCount>=2) ==> (currentStackBottom>0) // "invariant"
+	//@ assume (vectorCount>=2) ==> (currentStackBottom>0); // "invariant"
 
 	Assert.precondition(currentStackBottom>0);
 	

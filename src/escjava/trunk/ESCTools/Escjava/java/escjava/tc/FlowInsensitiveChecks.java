@@ -104,7 +104,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
     @           accessibilityContext instanceof FieldDecl ||
     @           accessibilityContext instanceof RoutineDecl;
   */
-  //@ readable_if accessibilityLowerBound != ACC_LOW_BOUND_Private;
+  //@ readable accessibilityContext if accessibilityLowerBound != ACC_LOW_BOUND_Private;
   protected ASTNode accessibilityContext;
 
   /**
@@ -2589,8 +2589,8 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks
    * @return a set of *all* the methods a given method overrides. This includes
    * transitivity.
    */
-  //@ requires md != null
-  //@ ensures \result != null
+  //@ requires md != null;
+  //@ ensures \result != null;
   //@ ensures \result.elementType == \type(MethodDecl);
   public static Set getAllOverrides(MethodDecl md) {
     Set direct = javafe.tc.PrepTypeDeclaration.inst.getOverrides(md.parent, md);

@@ -82,8 +82,8 @@ class ZipTree extends ExtTree {
      * ZipException (e.g., file is not a properly formatted
      * zipfile).<p>
      *
-     * <esc> requires zipfile != null </esc>
-     */
+     * <jml> requires zipfile != null; </esc>
+     **/
     public ZipTree(File zipfile) throws IOException, ZipException {
 	super(null);
 
@@ -150,7 +150,7 @@ class ZipTree extends ExtTree {
     /** A simple test driver */
     //@ requires args != null;
     /*@ requires (\forall int i; (0<=i && i<=args.length)
-		==> args[i] != null) */
+		==> args[i] != null); */
     public static void main(String[] args) {
 	if (args.length != 1) {
 	    System.out.println("ZipTree: usage <zipfile>");

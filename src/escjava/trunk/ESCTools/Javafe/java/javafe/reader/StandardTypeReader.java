@@ -119,7 +119,7 @@ public class StandardTypeReader extends TypeReader
                      + " I/O error: " + e.getMessage());
     }
 
-    //@ unreachable
+    //@ unreachable;
     return null;	// make compiler happy
   }
 
@@ -202,7 +202,7 @@ public class StandardTypeReader extends TypeReader
    * be left over from a previous compilation.  Only if P.N can be
    * reached from its containing clases, is it considered to exist.
    */
-  //@ requires \nonnullelements(P) && \nonnullelements(N)
+  //@ requires \nonnullelements(P) && \nonnullelements(N);
   public GenericFile locateBinary(String[] P, String[] N) {
     String typename = "";
 

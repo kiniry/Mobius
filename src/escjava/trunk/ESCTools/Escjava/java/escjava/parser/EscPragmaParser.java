@@ -466,7 +466,7 @@ public class EscPragmaParser extends Parse implements PragmaParser
             inProcessTag = NOTHING_ELSE_TO_PROCESS;
             return false;
         }
-    } //@ nowarn Exception // IndexOutOfBoundsException
+    } //@ nowarn Exception; // IndexOutOfBoundsException
 
     /** Eats any extra @ symbols.
      */
@@ -1753,9 +1753,14 @@ try{
     /** Issues an error if any Java modifiers have accumulated, and resets the
 	accumulated modifiers to NONE.
     */
-    //@ modifies modifiers, ErrorSet.cautions if modifiers != 0;
-    //@ ensures true;
-    //@ signals (Exception e) false;
+    //@ public normal_behavior
+    //@   requires modifiers == 0;
+    //@   modifies \nothing;
+    //@ also public behavior
+    //@   requires modifiers != 0;
+    //@   modifies modifiers, ErrorSet.cautions;
+    //@   ensures true;
+    //@   signals (Exception e) false;
     //@
     private void checkNoModifiers(int tag, int loc) {
 	if (modifiers != 0) {
@@ -1938,7 +1943,8 @@ try{
          * '(' {'\lblpos'|'\lblneg'} Idn
          */
 
-        Expr primary = null /*@ uninitialized @*/;
+        //-@ uninitialized
+	Expr primary = null;
 
         // First parse PrimaryCore into variable primary
         switch(l.ttype) {
@@ -2317,9 +2323,9 @@ try{
         }
 
 	int locSemi = Location.NULL;
-        int endLoc = 0 /*@ uninitialized @*/;
+        /*-@ uninitialized */ int endLoc = 0;
 	Expr rangeExpr = null;
-        Expr rest = null /*@ uninitialized @*/;
+        /*-@ uninitialized */ Expr rest = null;
 
 	if (l.ttype == TagConstants.SEMICOLON) {
             l.getNextToken();
@@ -2499,8 +2505,8 @@ try{
      * @param l the lexer from which to read and parse.
      * @return the parsed type declaration.
      */
-    //@ requires l.m_in != null
-    //@ ensures \result.syntax
+    //@ requires l.m_in != null;
+    //@ ensures \result.syntax;
     public /*@ non_null */ Type parseExsuresPrimitiveTypeOrTypeName(/*@ non_null @*/ EscPragmaLex l) {
 	Type type = parseExsuresPrimitiveType(l);
 	if (type != null)
@@ -2516,8 +2522,8 @@ try{
      * @param l the lexer from which to read and parse.
      * @return the parsed type declaration, if the type is primative.
      */
-    //@ requires l.m_in != null
-    //@ ensures \result != null ==> \result.syntax
+    //@ requires l.m_in != null;
+    //@ ensures \result != null ==> \result.syntax;
     public PrimitiveType parseExsuresPrimitiveType(/*@ non_null @*/ EscPragmaLex l) {
 	int tag;
 	switch(l.ttype) {
@@ -2548,8 +2554,8 @@ try{
      * @param l the lexer from which to read and parse.
      * @return the parsed type declaration.
      */
-    //@ requires l.m_in != null
-    //@ ensures \result.syntax
+    //@ requires l.m_in != null;
+    //@ ensures \result.syntax;
     public /*@ non_null */ TypeName parseExsuresTypeName(/*@ non_null @*/ EscPragmaLex l) {
 	return parseTypeName(l);	
     }
@@ -2557,7 +2563,7 @@ try{
     /**
      * Parse a StoreRef 
      */
-    //@ requires l.m_in != null
+    //@ requires l.m_in != null;
     public Expr parseStoreRef(/*@ non_null @*/ EscPragmaLex l) {
         // StoreRefKeyword
 	int loc = l.startingLoc;
@@ -2589,7 +2595,7 @@ try{
     /**
      * Parse a StoreRefExpr
      */
-    //@ requires l.m_in != null
+    //@ requires l.m_in != null;
     public Expr parseStoreRefExpr(/*@ non_null @*/ EscPragmaLex l) {
 	int loc = l.startingLoc;
 	Name n = null;

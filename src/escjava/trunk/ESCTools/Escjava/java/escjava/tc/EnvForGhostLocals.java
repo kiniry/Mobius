@@ -30,13 +30,13 @@ public class EnvForGhostLocals extends Env implements/*privately*/ Cloneable {
     /**
      * Our parent environment
      */
-    //@ invariant !(parent instanceof EnvForCU)
+    //@ invariant !(parent instanceof EnvForCU);
     protected /*@non_null*/ Env parent;
 
     /**
      * The new local binding.
      */
-    //@ invariant decl.id != null
+    //@ invariant decl.id != null;
     protected /*@non_null*/ GenericVarDecl decl;
 
 
@@ -47,8 +47,8 @@ public class EnvForGhostLocals extends Env implements/*privately*/ Cloneable {
      * We report an error to ErrorSet if the new local binding is a
      * redefinition of a local binding not hidden by a field.<p>
      */
-    //@ requires decl.id != null
-    //@ requires !(parent instanceof EnvForCU)
+    //@ requires decl.id != null;
+    //@ requires !(parent instanceof EnvForCU);
     public EnvForGhostLocals(/*@non_null*/ Env parent,
 			/*@non_null*/ GenericVarDecl decl) {
 	this.parent = parent;

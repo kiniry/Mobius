@@ -27,10 +27,10 @@ public class ASTDecoration {
      *                                                 *
      **************************************************/
 
-    //@ invariant allocated >= 0
+    //@ invariant allocated >= 0;
     private static int allocated=0;
 
-    //@ invariant 0<=my_slot && my_slot<allocated
+    //@ invariant 0<=my_slot && my_slot<allocated;
     private int my_slot;
 
 
@@ -45,7 +45,7 @@ public class ASTDecoration {
     private String name;
 
     /** Our decoration's actual "static" type */
-    //@ ghost public \TYPE decorationType
+    //@ ghost public \TYPE decorationType;
 
 
     /***************************************************
@@ -79,7 +79,7 @@ public class ASTDecoration {
     * if the <code>ASTNode</code> has no decoration.
     */
     //@ requires n != null;
-    //@ ensures \typeof(\result) <: decorationType
+    //@ ensures \typeof(\result) <: decorationType;
     public Object get(ASTNode n) {
 	Assert.notNull(n);
 	Object[] v=n.decorations;
@@ -87,14 +87,14 @@ public class ASTDecoration {
 	    return v[my_slot];
 	else
 	    return null;
-    }	 //@ nowarn Post
+    }	 //@ nowarn Post;
 
 
     /**
      * Set the decoration value of an <code>ASTNode</code>.
      */
     //@ requires n != null;
-    //@ requires \typeof(val) <: decorationType
+    //@ requires \typeof(val) <: decorationType;
     public void set(ASTNode n, Object val) {
 	Object[] v = n.decorations;
 	if (v==null) {

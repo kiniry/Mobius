@@ -106,7 +106,7 @@ public class TestTool extends SrcTool {
      * (This needs to be done because static methods cannot be
      * inherited.)<p>
      */
-    //@ requires \nonnullelements(args)
+    //@ requires \nonnullelements(args);
     public static void main(String[] args) {
 		Tool t = new TestTool();
 		int result = t.run(args);

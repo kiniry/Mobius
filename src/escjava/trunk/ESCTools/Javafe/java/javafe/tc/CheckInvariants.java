@@ -20,11 +20,11 @@ class CheckInvariants {
       TypeName supern = decl.superInterfaces.elementAt(i);
       TypeSig supers = TypeSig.getRawSig(supern);
       if (sig.state >= TypeSig.LINKSRESOLVED)
-	Assert.notNull(supers);  //@ nowarn Pre
+	Assert.notNull(supers);  //@ nowarn Pre;
       if (supers != null) {
-	Assert.notFalse(supers == sig.getEnclosingEnv()  //@ nowarn Pre
+	Assert.notFalse(supers == sig.getEnclosingEnv()  //@ nowarn Pre;
 		   .lookupTypeName(null,supern.name)); 
-	Assert.notFalse((sig.state < TypeSig.CHECKED		//@ nowarn Pre
+	Assert.notFalse((sig.state < TypeSig.CHECKED		//@ nowarn Pre;
 			 && sig.state <= supers.state)
 			|| supers.state >= TypeSig.PREPPED);
       }
@@ -33,20 +33,20 @@ class CheckInvariants {
       TypeName supern = ((ClassDecl)decl).superClass;
       if (sig == Types.javaLangObject()) {
 	if (sig.state >= TypeSig.LINKSRESOLVED)
-	  Assert.notFalse(supern == null);		//@ nowarn Pre
+	  Assert.notFalse(supern == null);		//@ nowarn Pre;
       } else if (supern != null) {
 	TypeSig supers = TypeSig.getRawSig(supern);
 	if (sig.state >= TypeSig.LINKSRESOLVED)
-	    Assert.notNull(supers);			//@ nowarn Pre
+	    Assert.notNull(supers);			//@ nowarn Pre;
 	if (supers != null) {
-	  Assert.notFalse(supers ==			//@ nowarn Pre
+	  Assert.notFalse(supers ==			//@ nowarn Pre;
 		sig.getEnclosingEnv().lookupTypeName(null,supern.name));
-	  Assert.notFalse((sig.state < TypeSig.CHECKED	//@ nowarn Pre
+	  Assert.notFalse((sig.state < TypeSig.CHECKED	//@ nowarn Pre;
 			   && sig.state <= supers.state)
 			  || supers.state >= TypeSig.PREPPED);
 	}
       } else
-	  Assert.notFalse(sig.state < TypeSig.LINKSRESOLVED); //@ nowarn Pre
+	  Assert.notFalse(sig.state < TypeSig.LINKSRESOLVED); //@ nowarn Pre;
     }
 
     for(int i = 0; i < decl.elems.size(); i++) {
@@ -98,9 +98,9 @@ class CheckInvariants {
 	return;
     TypeSig sig = TypeSig.getRawSig((TypeName) t);
     if (resolved)
-	Assert.notNull(sig);			//@ nowarn Pre
+	Assert.notNull(sig);			//@ nowarn Pre;
     else
-	Assert.notFalse(sig == null);		//@ nowarn Pre
+	Assert.notFalse(sig == null);		//@ nowarn Pre;
   }
 
 
@@ -254,9 +254,9 @@ class CheckInvariants {
 	for(int i = 0; i < ci.args.size(); i++)
 	  checkExpr(sig, ci.args.elementAt(i));
 	if (sig.state < TypeSig.CHECKED) 
-	  Assert.notFalse(ci.decl == null);		//@ nowarn Pre
+	  Assert.notFalse(ci.decl == null);		//@ nowarn Pre;
 	else
-	  Assert.notNull(ci.decl);			//@ nowarn Pre
+	  Assert.notNull(ci.decl);			//@ nowarn Pre;
 	return;
       }
 
@@ -397,19 +397,19 @@ class CheckInvariants {
       return;
 
     case TagConstants.AMBIGUOUSVARIABLEACCESS:
-      Assert.notFalse(sig.state < TypeSig.CHECKED);	//@ nowarn Pre
+      Assert.notFalse(sig.state < TypeSig.CHECKED);	//@ nowarn Pre;
       return;
 
     case TagConstants.VARIABLEACCESS:
-      Assert.notFalse(sig.state >= TypeSig.CHECKED);	//@ nowarn Pre
-      Assert.notNull(((VariableAccess)expr).decl);	//@ nowarn Pre
+      Assert.notFalse(sig.state >= TypeSig.CHECKED);	//@ nowarn Pre;
+      Assert.notNull(((VariableAccess)expr).decl);	//@ nowarn Pre;
       return;
 
     case TagConstants.FIELDACCESS:
       {
 	FieldAccess xp = (FieldAccess)expr;
 	checkObjectDesignator( sig, xp.od );
-	Assert.notFalse(				//@ nowarn Pre
+	Assert.notFalse(				//@ nowarn Pre;
 	    (sig.state < TypeSig.CHECKED && xp.decl == null)
 			|| xp.decl != null);
 	return;
@@ -417,7 +417,7 @@ class CheckInvariants {
       
     case TagConstants.AMBIGUOUSMETHODINVOCATION:
       {
-	Assert.notFalse(sig.state < TypeSig.CHECKED);	//@ nowarn Pre
+	Assert.notFalse(sig.state < TypeSig.CHECKED);	//@ nowarn Pre;
 	AmbiguousMethodInvocation ami = (AmbiguousMethodInvocation)expr;
 	for(int i = 0; i < ami.args.size(); i++)
 	  checkExpr(sig, ami.args.elementAt(i));
@@ -430,7 +430,7 @@ class CheckInvariants {
 	checkObjectDesignator( sig, mi.od );
 	for(int i = 0; i < mi.args.size(); i++)
 	  checkExpr(sig, mi.args.elementAt(i));
-	Assert.notFalse((sig.state < TypeSig.CHECKED	//@ nowarn Pre
+	Assert.notFalse((sig.state < TypeSig.CHECKED	//@ nowarn Pre;
 			&& mi.decl == null)
 			|| mi.decl != null);
 	return;
@@ -454,7 +454,7 @@ class CheckInvariants {
       
     case TagConstants.TYPEOBJECTDESIGNATOR:
       {
-	Assert.notFalse(sig.state >= TypeSig.CHECKED);	//@ nowarn Pre
+	Assert.notFalse(sig.state >= TypeSig.CHECKED);	//@ nowarn Pre;
 	TypeObjectDesignator tod = (TypeObjectDesignator)od;
 	checkType(tod.type, sig.state >= TypeSig.CHECKED);
 	Assert.notFalse(tod.type instanceof TypeName || 

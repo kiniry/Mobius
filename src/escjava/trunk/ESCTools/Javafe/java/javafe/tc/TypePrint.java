@@ -8,7 +8,7 @@ import java.io.OutputStream;
 public class TypePrint extends DelegatingPrettyPrint
 {
   // Caller must establish del != null!
-  //@ requires false
+  //@ requires false;
   public TypePrint() { }
 
   //@ requires self != null && del != null;

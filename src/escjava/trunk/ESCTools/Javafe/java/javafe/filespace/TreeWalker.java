@@ -26,16 +26,16 @@ public final class TreeWalker extends LookAheadEnum {
      *                                                 *
      **************************************************/
 
-    //@ invariant elementType == \type(Tree)
-    //@ invariant !returnsNull
+    //@ invariant elementType == \type(Tree);
+    //@ invariant !returnsNull;
 
 
     /**
      * The remaining children we have yet to start processing:
      */
     //@ invariant remainingChildren != null;
-    //@ invariant !remainingChildren.returnsNull
-    //@ invariant remainingChildren.elementType == \type(Tree)
+    //@ invariant !remainingChildren.returnsNull;
+    //@ invariant remainingChildren.elementType == \type(Tree);
     protected Enumeration remainingChildren;
 
     /**
@@ -43,8 +43,8 @@ public final class TreeWalker extends LookAheadEnum {
      * processing:
      */
     //@ invariant remainingNodes != null;
-    //@ invariant !remainingNodes.returnsNull
-    //@ invariant remainingNodes.elementType == \type(Tree)
+    //@ invariant !remainingNodes.returnsNull;
+    //@ invariant remainingNodes.elementType == \type(Tree);
     protected Enumeration remainingNodes;
 
 
@@ -66,10 +66,10 @@ public final class TreeWalker extends LookAheadEnum {
 
 	remainingChildren = sortedChildren(T);
 	remainingNodes    = new EmptyEnum();
-	//@ set remainingNodes.elementType = \type(Tree)
+	//@ set remainingNodes.elementType = \type(Tree);
 
-        //@ set elementType = \type(Tree)
-        //@ set returnsNull = false
+        //@ set elementType = \type(Tree);
+        //@ set returnsNull = false;
     }
 
 
@@ -114,8 +114,8 @@ public final class TreeWalker extends LookAheadEnum {
      */
     //@ requires T != null;
     //@ ensures \result != null;
-    //@ ensures !\result.returnsNull
-    //@ ensures \result.elementType == \type(Tree)
+    //@ ensures !\result.returnsNull;
+    //@ ensures \result.elementType == \type(Tree);
     //@ ensures ((Object)\result).owner == null;
     public static Enumeration sortedChildren(Tree T) {
 	return new TreeWalker_ArrayEnum(getSortedChildren(T));
@@ -125,16 +125,16 @@ public final class TreeWalker extends LookAheadEnum {
     /** Return a sorted list of a Tree's direct children: */
     //@ requires T != null;
     //@ ensures \result != null;
-    //@ ensures \elemtype(\typeof(\result)) == \type(Tree)
+    //@ ensures \elemtype(\typeof(\result)) == \type(Tree);
     private static Tree[] getSortedChildren(Tree T) {
 	Tree[] directChildren = new Tree[T.getChildrenCount()];
 
 	// Copy list of T's direct children into an array:
 	int c = 0;
 	for (Enumeration C=T.children(); C.hasMoreElements(); ) {
-	    directChildren[c++] = (Tree)C.nextElement(); //@nowarn IndexTooBig
+	    directChildren[c++] = (Tree)C.nextElement(); //@nowarn IndexTooBig;
 	}
-	//@ assume \nonnullelements(directChildren)
+	//@ assume \nonnullelements(directChildren);
 
 	// Sort the array then return it:
 	sort(directChildren);
@@ -146,7 +146,7 @@ public final class TreeWalker extends LookAheadEnum {
      *
      * precondition: a[i] is not a root node.
      */
-    //@ requires \nonnullelements(a)
+    //@ requires \nonnullelements(a);
     private static void sort(Tree[] a) {
 	// Only arrays of length>2 need to be sorted:
 	if (a.length<2)
@@ -156,8 +156,8 @@ public final class TreeWalker extends LookAheadEnum {
 	for (;;) {
 	    boolean sorted = true;
 	    for (int i=0; i<a.length-1; i++) {
-		if (a[i].getLabel().compareTo	//@ nowarn Null
-		        (a[i+1].getLabel())>0) {  //@ nowarn NonNull
+		if (a[i].getLabel().compareTo	//@ nowarn Null;
+		        (a[i+1].getLabel())>0) {  //@ nowarn NonNull;
 		    Tree tmp = a[i];
 		    a[i] = a[i+1];
 		    a[i+1] = tmp;
@@ -177,7 +177,7 @@ public final class TreeWalker extends LookAheadEnum {
      **************************************************/
 
    /** A simple test driver. */
-    //@ requires \nonnullelements(args)
+    //@ requires \nonnullelements(args);
    public static void main(String[] args) {
        	if (args.length != 1) {
 	    System.out.println("usage: TreeWalker <pathname>");
@@ -206,19 +206,19 @@ public final class TreeWalker extends LookAheadEnum {
 class TreeWalker_ArrayEnum extends LookAheadEnum {
 
     //@ invariant list != null;
-    //@ invariant \elemtype(\typeof(list)) == elementType
+    //@ invariant \elemtype(\typeof(list)) == elementType;
     Object[] list;
 
-    //@ invariant index+1>=0
+    //@ invariant index+1>=0;
     int index = -1;
 
 
     //@ requires list != null;
-    //@ ensures elementType == \elemtype(\typeof(list))
+    //@ ensures elementType == \elemtype(\typeof(list));
     TreeWalker_ArrayEnum(Object[] list) {
 	this.list = list;
 
-	//@ set elementType = \elemtype(\typeof(list))
+	//@ set elementType = \elemtype(\typeof(list));
     }
 
 

@@ -12,6 +12,6 @@ public class Resolve_Result {
     public Tree     myPackage	= null;
     public String   myTypeName	= null;
 
-    //@ invariant \nonnullelements(remainder)
+    //@ invariant \nonnullelements(remainder);
     public String[] remainder	= new String[0];
 }

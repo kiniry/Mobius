@@ -154,7 +154,7 @@ public class ConstantExpr {
 	  FieldAccess fa = (FieldAccess)e;
 	  // Assume fa.od is prepped, and decl is defined
 
-	  VarInit init = fa.decl.init;	        //@ nowarn Null
+	  VarInit init = fa.decl.init;	        //@ nowarn Null;
 
 	  if(Modifiers.isFinal( fa.decl.modifiers )
 	     && init != null 
@@ -302,8 +302,8 @@ public class ConstantExpr {
     case TagConstants.ADD:     return new Integer(x+y);    
     case TagConstants.SUB:     return new Integer(x-y);    
     case TagConstants.STAR:    return new Integer(x*y);    
-    case TagConstants.DIV:   return new Integer(x/y); //@nowarn ZeroDiv//caught
-    case TagConstants.MOD:   return new Integer(x%y); //@nowarn ZeroDiv//caught
+    case TagConstants.DIV:   return new Integer(x/y); //@nowarn ZeroDiv;//caught
+    case TagConstants.MOD:   return new Integer(x%y); //@nowarn ZeroDiv;//caught
     case TagConstants.LSHIFT:  return new Integer(x<<y);   
     case TagConstants.RSHIFT:  return new Integer(x>>y);   
     case TagConstants.URSHIFT: return new Integer(x>>>y);  
@@ -333,8 +333,8 @@ public class ConstantExpr {
     case TagConstants.ADD:     return new Long(x+y);    
     case TagConstants.SUB:     return new Long(x-y);    
     case TagConstants.STAR:    return new Long(x*y);    
-    case TagConstants.DIV:     return new Long(x/y); //@ nowarn ZeroDiv//caught
-    case TagConstants.MOD:     return new Long(x%y); //@ nowarn ZeroDiv//caught
+    case TagConstants.DIV:     return new Long(x/y); //@ nowarn ZeroDiv;//caught
+    case TagConstants.MOD:     return new Long(x%y); //@ nowarn ZeroDiv;//caught
     case TagConstants.LSHIFT:  return new Long(x<<y);   
     case TagConstants.RSHIFT:  return new Long(x>>y);   
     case TagConstants.URSHIFT: return new Long(x>>>y);  

@@ -55,14 +55,14 @@ public class PrintSpec extends SrcTool
    *                                                 *
    **************************************************/
 
-  //@ requires \nonnullelements(args)
+  //@ requires \nonnullelements(args);
   public static void main(String[] args) {
     Tool t = new PrintSpec();
     int result = t.run(args);
     if (result != 0) System.exit(result);
   }
 
-  //@ ensures \nonnullelements(\result)
+  //@ ensures \nonnullelements(\result);
   //@ ensures \result != null;
   public String[] FQNpackage(/*@ non_null */ String s) {
     StringTokenizer st = new StringTokenizer(s, ".", false);

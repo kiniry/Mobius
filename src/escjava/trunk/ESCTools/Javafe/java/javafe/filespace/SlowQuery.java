@@ -33,8 +33,8 @@ public class SlowQuery extends Query {
      * Create an query engine that may be queried about packages and
      * classes in the classpath classpath.
      *
-     * <esc> requires classpath != null </esc>
      */
+    //@ requires classpath != null;
     public SlowQuery(String classpath) throws java.io.IOException {
 	javaFileSpace = ClassPath.open(classpath, false);
     }
@@ -89,7 +89,7 @@ public class SlowQuery extends Query {
 	if (node==null)
 	    return null;
 
-	return (GenericFile)node.data;		//@ nowarn Cast
+	return (GenericFile)node.data;		//@ nowarn Cast;
     }
 
     public GenericFile findFile(String[] P, String typename,
@@ -102,7 +102,7 @@ public class SlowQuery extends Query {
         for (int i=0; i<extensions.length; ++i) {
 	    String extension = extensions[i];
 	    Tree node = Package.getChild(typename+"."+extension);
-	    if (node != null) return (GenericFile)node.data; //@ nowarn Cast
+	    if (node != null) return (GenericFile)node.data; //@ nowarn Cast;
 	}
 	return null;
      }
@@ -121,7 +121,7 @@ public class SlowQuery extends Query {
      * the Java filespace or null if there is no such corresponding
      * package.
      */
-    //@ requires \nonnullelements(P)
+    //@ requires \nonnullelements(P);
     private Tree getPackage(String[] P) {
 	Tree Package = javaFileSpace;
 
@@ -141,7 +141,7 @@ public class SlowQuery extends Query {
      **************************************************/
 
     /** A simple test driver */
-    //@ requires \nonnullelements(args)
+    //@ requires \nonnullelements(args);
     public static void main(String[] args) throws IOException {
 	/*
 	 * Parse command arguments:

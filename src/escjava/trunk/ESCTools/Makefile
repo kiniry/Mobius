@@ -187,7 +187,9 @@ PACKAGE_LIST = escjava escjava.ant escjava.ast escjava.backpred escjava.parser \
 	  javafe.tc javafe.util \
 	  junitutils
 
-JAVADOC_SOURCEPATH = $(subst : ,:,$(addsuffix /java:,$(addprefix $(ESCTOOLS_ROOT)/,$(SUBDIRS)))):${ESCTOOLS_ROOT}/Utils
+#JAVADOC_SOURCEPATH = $(subst : ,:,$(addsuffix /java:,$(addprefix $(ESCTOOLS_ROOT)/,$(SUBDIRS)))):${ESCTOOLS_ROOT}/Utils
+JAVADOC_SOURCEPATH = ${SOURCEPATH}
+SPECS = ${JML_ROOT}/specs:${JML_ROOT}
 
 ## Javadoc depends on the build target since some of the .java files
 ## are generated in the course of the build (e.g. the AST classes).
@@ -225,14 +227,18 @@ jmldoc:  build
 	mkdir -p $(JMLDOC_GEN_DIR)
 	mkdir -p $(JMLDOC_GEN_DIR)/images
 	cp $(JAVAFE_ROOT)/doc/javadoc/images/*.gif $(JMLDOC_GEN_DIR)/images
-	$(JMLDOC) -sourcepath $(call canonicalize,$(JAVADOC_SOURCEPATH):$(JUNIT_SOURCEPATH)) \
-	  -classpath $(call canonicalize,${CLASSPATH}:${JUNIT_LIB}:${ANT_LIB}) \
+	$(JMLDOC) -sourcepath $(call canonicalize,$(JAVADOC_SOURCEPATH):$(SPECS):$(JUNIT_SOURCEPATH)) \
+	  -classpath "$(call canonicalize,$(JAVADOC_SOURCEPATH):${JUNIT_LIB}:${ANT_LIB}:${SPECS}:)${CLASSPATH}" \
 	  -private --source 1.4 \
 	  -doctitle "ESCTools API" \
 	  -windowtitle "ESCTools" \
 	  -author -version -use \
 	  -linksource \
+	  -group EscJava "escjava.*" \
+	  -group Javafe  "javafe.*" \
+	  -group Utils   "junitutils.*" \
 	  -tag warning -tag todo -tag note -tag design -tag usage \
+	  -tag requires \
 	  -d $(JMLDOC_GEN_DIR) \
           $(PACKAGE_LIST)
 

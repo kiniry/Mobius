@@ -15,7 +15,7 @@ public class DelegatingPrettyPrint extends PrettyPrint {
   public PrettyPrint del;
   
   // Caller must establish del != null!
-  //@ requires false
+  //@ requires false;
   protected DelegatingPrettyPrint() { }
   
   //@ requires del != null;

@@ -82,7 +82,7 @@ public class  _TYPE_Vec {
     private _TYPE_Vec(_TYPE_[] els) {
 	this.count = els.length;
 	this.elements = new _TYPE_[count];
-	//@ set elements.owner = this
+	//@ set elements.owner = this;
 
 	System.arraycopy(els,0, elements,0, count);
     }
@@ -92,7 +92,7 @@ public class  _TYPE_Vec {
     //@ pure
     private _TYPE_Vec(int cnt) {
 	this.elements = new _TYPE_[(cnt == 0 ? 2 : cnt)];
-	//@ set elements.owner = this
+	//@ set elements.owner = this;
 
 	this.count = 0;
     }
@@ -140,15 +140,15 @@ public class  _TYPE_Vec {
 	return new _TYPE_Vec(els);
     }
 
-    // These are from pop() on s:
-    //@ modifies s.vectorCount;
-    //@ ensures s.vectorCount == \old(s.vectorCount)-1;
-    //@ modifies s.elementCount, s.currentStackBottom;
     //
     //@ requires s.vectorCount>1;
     //@ requires s.elementType <: \type(_TYPE_);
     //@ ensures \result!=null;
     //@ ensures \result.count == (\old(s.elementCount) - \old(s.currentStackBottom));
+    // These are from pop() on s:
+    //@ modifies s.vectorCount;
+    //@ ensures s.vectorCount == \old(s.vectorCount)-1;
+    //@ modifies s.elementCount, s.currentStackBottom;
     public static _TYPE_Vec popFromStackVector(/*@non_null*/ StackVector s) {
 	// Creates a new _TYPE_Vec from top stuff in StackVector
 	int sz = s.size();
@@ -242,7 +242,7 @@ public class  _TYPE_Vec {
     if( count == elements.length ) {
       _TYPE_[] newElements = new _TYPE_[ 2*(elements.length==0 ?
 					      2 : elements.length) ];
-      //@ set newElements.owner = this
+      //@ set newElements.owner = this;
 
       System.arraycopy(elements, 0, newElements, 0, elements.length );
       elements = newElements;
@@ -302,12 +302,12 @@ public class  _TYPE_Vec {
     if( count == elements.length ) {
       _TYPE_[] newElements = new _TYPE_[ 2*(elements.length==0 ?
 					      2 : elements.length) ];
-      //@ set newElements.owner = this					      
+      //@ set newElements.owner = this;
       System.arraycopy(elements, 0, newElements, 0, elements.length );
       elements = newElements;
     }
     int ct=count;
-    //@ loop_predicate i!=ct ==> elements[ct] != null, i<= ct
+    //-@ loop_predicate i!=ct ==> elements[ct] != null, i<= ct; // FIXME - what are the semantics
     for( int i=count; i>index; i--) 
       elements[i]=elements[i-1];
     elements[index]=obj;
@@ -318,7 +318,7 @@ public class  _TYPE_Vec {
   //@ modifies count,elements;
   //@ ensures count==\old(count)+vec.count;
   public final void append(_TYPE_Vec vec) {
-      //@ loop_predicate count == \old(count)+i, i <= vec.count
+      //-@ loop_predicate count == \old(count)+i, i <= vec.count; // FIXME - what are the semantics
     for( int i=0; i<vec.size(); i++)
       addElement( vec.elementAt(i) );
   }

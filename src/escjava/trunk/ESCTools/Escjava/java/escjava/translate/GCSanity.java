@@ -111,7 +111,7 @@ public class GCSanity {
       {
 	VarInCmd vc = (VarInCmd)g;
 	boolean emptyInflection = inflection.length() == 0;
-	/*@ uninitialized */ boolean[] previouslyInCdni = null;
+	/*-@ uninitialized */ boolean[] previouslyInCdni = null;
 	if (! emptyInflection) {
 	  previouslyInCdni = new boolean[vc.v.size()];
 	}
@@ -170,7 +170,7 @@ public class GCSanity {
 	}
 
       default:
-	//@ unreachable
+	//@ unreachable;
 	Assert.fail("Fall thru on "+g);
 	break;
     }

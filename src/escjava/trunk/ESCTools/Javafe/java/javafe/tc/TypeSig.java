@@ -66,7 +66,7 @@ public class TypeSig extends Type
      * because of laziness.  Use getCompilationUnit() to obtain an
      * always non-null version of this.
      */
-    //@ invariant (myTypeDecl==null) == (CU==null)
+    //@ invariant (myTypeDecl==null) == (CU==null);
     protected CompilationUnit CU;
 
 
@@ -83,8 +83,8 @@ public class TypeSig extends Type
      *   block level type                  if simpleName != null && !member
      *   anonymous type                    if simpleName==null
      */
-    //@ invariant (enclosingType==null) ==> member   // package-member
-    //@ invariant (simpleName==null) ==> !member      // anonymous
+    //@ invariant (enclosingType==null) ==> member;   // package-member
+    //@ invariant (simpleName==null) ==> !member;      // anonymous
     //@ invariant !member ==> enclosingEnv != null;
     //@ invariant (enclosingType != null) ==> myTypeDecl != null;
 
@@ -99,7 +99,7 @@ public class TypeSig extends Type
      * Decorates <code>TypeDecl</code> nodes to point to
      * <code>TypeSig</code> objects.
      */
-    //@ invariant sigDecoration.decorationType == \type(TypeSig)
+    //@ invariant sigDecoration.decorationType == \type(TypeSig);
     public static final ASTDecoration sigDecoration
 	= new ASTDecoration("sigDecoration");
 
@@ -113,7 +113,7 @@ public class TypeSig extends Type
     //@ ensures \result != null;
     public static TypeSig getSig(/*@ non_null @*/ TypeDecl d) {
 	TypeSig r = (TypeSig)sigDecoration.get(d);
-	if (r == null) Assert.notNull(r,      //@ nowarn Pre
+	if (r == null) Assert.notNull(r,      //@ nowarn Pre;
 	       "getSig called on a TypeDecl (" + d.id + ") not associated with a TypeSig");
 	return r;
     }
@@ -161,11 +161,11 @@ public class TypeSig extends Type
      * We represent a block-level type if simpleName is non-null,
      * and an anonymous type otherwise. <p>
      */
-    //@ requires !(enclosingEnv instanceof EnvForCU)
+    //@ requires !(enclosingEnv instanceof EnvForCU);
     protected TypeSig(String simpleName,
 		      /*@ non_null @*/ Env enclosingEnv,
 		      /*@ non_null @*/ TypeDecl decl) {
-	super();   //@ nowarn Pre // can't do set before super()
+	super();   //@ nowarn Pre; // can't do set before super()
 
 	member = false;
 
@@ -173,7 +173,7 @@ public class TypeSig extends Type
 	this.enclosingEnv = enclosingEnv;
 
 	this.enclosingType = enclosingEnv.getEnclosingClass();
-	//@ assume this.enclosingType != this
+	//@ assume this.enclosingType != this;
 	Assert.notNull(this.enclosingType);
 
 	// We inherit our packageName and CompilationUnit from our
@@ -181,7 +181,7 @@ public class TypeSig extends Type
 	this.packageName = this.enclosingType.packageName;
 	this.CU = this.enclosingType.getCompilationUnit();
 
-	setDecl(decl, this.CU);    //@ nowarn Invariant // helper function
+	setDecl(decl, this.CU);    //@ nowarn Invariant; // helper function
     }
 
 
@@ -202,14 +202,14 @@ public class TypeSig extends Type
      *
      * CU must be the CompilationUnit that decl belongs to.<p>
      */
-    //@ requires \nonnullelements(packageName)
-    //@ requires (enclosingType != null) ==> (decl != null)
-    //@ requires (decl==null) == (CU==null)
+    //@ requires \nonnullelements(packageName);
+    //@ requires (enclosingType != null) ==> (decl != null);
+    //@ requires (decl==null) == (CU==null);
     protected TypeSig(String[] packageName,
 		    /*@ non_null @*/ String simpleName,
 		    TypeSig enclosingType,
 		    TypeDecl decl, CompilationUnit CU) {
-	super();		//@ nowarn Pre // can't do set before super
+	super();		//@ nowarn Pre; // can't do set before super
 
 	member = true;
 
@@ -219,7 +219,7 @@ public class TypeSig extends Type
 
 	this.enclosingEnv = null;      // be lazy...
 	if (decl != null)
-	    setDecl(decl, CU);    //@ nowarn Invariant // helper function
+	    setDecl(decl, CU);    //@ nowarn Invariant; // helper function
     }
 
 
@@ -237,7 +237,7 @@ public class TypeSig extends Type
      *
      * CU must be the CompilationUnit that decl belongs to.<p>
      */
-    //@ requires \nonnullelements(packageName)
+    //@ requires \nonnullelements(packageName);
     protected TypeSig(String[] packageName,
 		    /*@ non_null @*/ String simpleName,
 		    /*@ non_null @*/ TypeDecl decl,
@@ -247,10 +247,10 @@ public class TypeSig extends Type
 
 
 
-    //@ requires \nonnullelements(packageName)
-    //@ requires (enclosingType != null) ==> (decl != null)
-    //@ requires (decl==null) == (CU==null)
-    //@ ensures \result != null;
+//    //@ requires \nonnullelements(packageName);
+//    //@ requires (enclosingType != null) ==> (decl != null);
+//    //@ requires (decl==null) == (CU==null);
+//    //@ ensures \result != null;
 // UNUSED
 //    private static TypeSig make(String[] packageName,
 //				/*@ non_null @*/ String simpleName,
@@ -294,8 +294,8 @@ public class TypeSig extends Type
      * The domain type of map is String and its range type is (non-null)
      * TypeSigs.<p>
      */
-    //@ invariant map.keyType == \type(String)
-    //@ invariant map.elementType == \type(TypeSig)
+    //@ invariant map.keyType == \type(String);
+    //@ invariant map.elementType == \type(TypeSig);
     private static final Hashtable map = new Hashtable(101);
 
     public static final void clear() {
@@ -305,7 +305,7 @@ public class TypeSig extends Type
     /**
      * Compute the key for map for fully-qualified type P.T.
      */
-    //@ requires \nonnullelements(P)
+    //@ requires \nonnullelements(P);
     //@ ensures \result != null;
     private static String getKey(String[] P, /*@ non_null @*/ String T) {
 	String key = "";
@@ -324,7 +324,7 @@ public class TypeSig extends Type
      *
      * This function should only be called by OutsideEnv. <p>
      */
-    //@ requires \nonnullelements(P)
+    //@ requires \nonnullelements(P);
     static public TypeSig lookup(String[] P, /*@ non_null @*/ String T) {
 	return (TypeSig)map.get(getKey(P,T));
     }
@@ -341,7 +341,7 @@ public class TypeSig extends Type
      *
      * This function should only be called by OutsideEnv. <p>
      */
-    //@ requires \nonnullelements(P)
+    //@ requires \nonnullelements(P);
     //@ ensures \result != null;
     static /*package*/ TypeSig get(String[] P, /*@ non_null @*/ String T) {
 	String key = getKey(P,T);
@@ -370,7 +370,7 @@ public class TypeSig extends Type
      * transparent to most clients.) <p>
      */
     //@ ensures \result != null;
-    //@ ensures state>=PARSED
+    //@ ensures state>=PARSED;
     public TypeDecl getTypeDecl() {
 	if (myTypeDecl==null)
 	     preload();
@@ -422,8 +422,8 @@ public class TypeSig extends Type
     /**
      * Is our TypeDecl already loaded?
      */
-    //@ ensures !member ==> \result
-    //@ ensures \result == (myTypeDecl != null)
+    //@ ensures !member ==> \result;
+    //@ ensures \result == (myTypeDecl != null);
     public boolean isPreloaded() {
 	return myTypeDecl != null;
     }
@@ -546,7 +546,7 @@ public class TypeSig extends Type
 
     public Object childAt(int i) {
 	throw new IndexOutOfBoundsException();
-    }	//@ nowarn Exception
+    }	//@ nowarn Exception;
 
     public int getTag() {
 	return TagConstants.TYPESIG;
@@ -565,12 +565,12 @@ public class TypeSig extends Type
     
 /*
     // We don't promise any meaningful locations...
-    //@ invariant !syntax
+    //@ invariant !syntax;
     {
 	// Deal with can't handle non-injective fields & invariants problem:
-	//@ assume (\forall MethodDecl m; m.returnType != this)
-	//@ assume (\forall GenericVarDecl g; g.type != this)
-	//@ set syntax = false
+	//@ assume (\forall MethodDecl m; m.returnType != this);
+	//@ assume (\forall GenericVarDecl g; g.type != this);
+	//@ set syntax = false;
     }
 */
 
@@ -754,7 +754,7 @@ public class TypeSig extends Type
      * Note: This may be called during any state; it may bump
      * TypeSigs to the Parsed state. <p>
      */
-    //@ ensures enclosingType==null ==> \result
+    //@ ensures enclosingType==null ==> \result;
     public boolean isTopLevelType() {
 	if (enclosingType==null)
 	    return true;
@@ -815,8 +815,8 @@ public class TypeSig extends Type
      * A fatal error may be reported if we cannot resolve a supertype
      * name, or detect a cycle in the type hierarchy.<p>
      */
-    //@ modifies state
-    //@ ensures state>=TypeSig.LINKSRESOLVED
+    //@ modifies state;
+    //@ ensures state>=TypeSig.LINKSRESOLVED;
     public void resolveSupertypeLinks() {
 	if (state<LINKSRESOLVED)
 	    SLResolution.transition(this);
@@ -835,8 +835,8 @@ public class TypeSig extends Type
      * See the TypeSig type comments for more details of what this
      * involves.<p>
      */
-    //@ modifies state
-    //@ ensures state >= PREPPED
+    //@ modifies state;
+    //@ ensures state >= PREPPED;
     public void prep() {
 	if (state >= TypeSig.PREPPED)
 	    return;
@@ -858,8 +858,8 @@ public class TypeSig extends Type
      * A fatal error may be reported if we cannot resolve a supertype
      * name, or detect a cycle in the type hierarchy.<p>
      */
-    //@ modifies state
-    //@ ensures state >= CHECKED
+    //@ modifies state;
+    //@ ensures state >= CHECKED;
     public void typecheck() {
 	if (this.state >= TypeSig.CHECKED)
 	    return;
@@ -989,7 +989,7 @@ public class TypeSig extends Type
     /** TBW */
     
     //@ ensures \result != null;
-    //@ ensures \result.id == id
+    //@ ensures \result.id == id;
     public FieldDecl lookupField(Identifier id, /*@ non_null */ TypeSig caller) 
             throws LookupException
     {
@@ -1032,7 +1032,7 @@ public class TypeSig extends Type
     
     //@ requires \nonnullelements(args) && caller != null;
     //@ ensures \result != null;
-    //@ ensures \result.id == id
+    //@ ensures \result.id == id;
     public MethodDecl lookupMethod(Identifier id, Type[] args, TypeSig caller) 
             throws LookupException
     {
@@ -1351,7 +1351,7 @@ public class TypeSig extends Type
 			   "Internal error: getSig called on a TypeName ("
 			   + n + ") that has not been resolved!");
 	    System.out.flush();
-	    Assert.precondition( //@ nowarn Pre // punt on catching this
+	    Assert.precondition( //@ nowarn Pre; // punt on catching this
 				"See previous error message");
 	}
 
@@ -1411,7 +1411,7 @@ public class TypeSig extends Type
      they don't hold. */
 
     public void check() {
-        Assert.notFalse(state != RESOLVINGLINKS);		    //@ nowarn Pre
+        Assert.notFalse(state != RESOLVINGLINKS);		    //@ nowarn Pre;
 
         if (state >= CREATED) {
             if (state == CREATED)
@@ -1420,7 +1420,7 @@ public class TypeSig extends Type
 
         if (state >= PARSED) {
             Assert.notNull(myTypeDecl);
-            Assert.notFalse(this == getSig(myTypeDecl));	    //@ nowarn Pre
+            Assert.notFalse(this == getSig(myTypeDecl));	    //@ nowarn Pre;
         }
     }
 

@@ -39,7 +39,7 @@ class DescriptorParser
     StringTokenizer tokenizer   = new StringTokenizer(s, "/$");
 
     int             count       = tokenizer.countTokens();
-    javafe.util.Assert.notFalse(count>0);	//@ nowarn Pre
+    javafe.util.Assert.notFalse(count>0);	//@ nowarn Pre;
 
     Identifier[]    identifiers = new Identifier[count];
     int[]           locations1  = new int[count];
@@ -71,7 +71,7 @@ class DescriptorParser
    */
   //@ requires s != null;
   //@ ensures \result != null;
-  //@ ensures \result.syntax
+  //@ ensures \result.syntax;
   static Type parseField(String s)
     throws ClassFormatError
   {
@@ -142,7 +142,7 @@ class DescriptorParser
    * A dummy location representing the class being parsed.
    * Should be set externally.
    */
-  //@ invariant classLocation != Location.NULL
+  //@ invariant classLocation != Location.NULL;
   static int classLocation = Location.createFakeLoc("[unknown]");
 
   /* -- private class methods ---------------------------------------------- */
@@ -155,7 +155,7 @@ class DescriptorParser
    */
   //@ requires scanner != null;
   //@ ensures \result != null;
-  //@ ensures \result.syntax
+  //@ ensures \result.syntax;
   private static Type parseType(StringScanner scanner)
     throws ClassFormatError
   {
@@ -236,7 +236,7 @@ class DescriptorParser
    */
   //@ requires scanner != null;
   //@ ensures \result != null;
-  //@ ensures \result.syntax
+  //@ ensures \result.syntax;
   private static Type parseReturn(StringScanner scanner)
     throws ClassFormatError
   {

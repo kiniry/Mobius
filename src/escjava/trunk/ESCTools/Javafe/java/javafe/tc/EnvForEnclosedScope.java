@@ -22,7 +22,7 @@ public class EnvForEnclosedScope extends Env implements/*privately*/ Cloneable {
     /**
      * Our parent environment
      */
-    //@ invariant !(parent instanceof EnvForCU)
+    //@ invariant !(parent instanceof EnvForCU);
     protected /*@ non_null @*/ Env parent;
 
     /**
@@ -33,7 +33,7 @@ public class EnvForEnclosedScope extends Env implements/*privately*/ Cloneable {
      * is a redefinition of a local type binding not hidden by a type
      * member.<p>
      */
-    //@ requires !(parent instanceof EnvForCU)
+    //@ requires !(parent instanceof EnvForCU);
     public EnvForEnclosedScope(/*@ non_null @*/ Env parent) {
 	this.parent = parent;
     }

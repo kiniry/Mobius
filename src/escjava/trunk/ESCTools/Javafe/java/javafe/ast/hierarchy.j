@@ -259,7 +259,7 @@ public class CompilationUnit extends ASTNode
   private void postCheck() {
     for(int i = 0; i < elems.size(); i++) {
       for(int j = i+1; j < elems.size(); j++)
-	Assert.notFalse(elems.elementAt(i) != elems.elementAt(j));  //@ nowarn Pre
+	Assert.notFalse(elems.elementAt(i) != elems.elementAt(j));  //@ nowarn Pre;
     }
   }
 
@@ -346,9 +346,9 @@ public abstract class TypeDecl extends ASTNode implements TypeDeclElem
   private void postCheck() {
     // check invariants on modifiers...
     for(int i = 0; i < elems.size(); i++) {
-      Assert.notFalse(elems.elementAt(i).getParent() == this);	//@ nowarn Pre
+      Assert.notFalse(elems.elementAt(i).getParent() == this);	//@ nowarn Pre;
       for(int j = i+1; j < elems.size(); j++)
-	Assert.notFalse(elems.elementAt(i) != elems.elementAt(j));  //@ nowarn Pre
+	Assert.notFalse(elems.elementAt(i) != elems.elementAt(j));  //@ nowarn Pre;
     }
   }
 
@@ -643,8 +643,8 @@ public class BlockStmt extends GenericBlockStmt
   private void postCheck() {
     for(int i = 0; i < stmts.size(); i++) {
       int t = stmts.elementAt(i).getTag();
-      Assert.notFalse(t != TagConstants.SWITCHLABEL);	//@ nowarn Pre
-      Assert.notFalse(i == 0				//@ nowarn Pre
+      Assert.notFalse(t != TagConstants.SWITCHLABEL);	//@ nowarn Pre;
+      Assert.notFalse(i == 0				//@ nowarn Pre;
 	|| t != TagConstants.CONSTRUCTORINVOCATION);
     }
   }
@@ -700,7 +700,7 @@ public class WhileStmt extends Stmt
   //# PostCheckCall
   private void postCheck() {
     int t = stmt.getTag();
-    Assert.notFalse(t != TagConstants.SWITCHLABEL	//@ nowarn Pre
+    Assert.notFalse(t != TagConstants.SWITCHLABEL	//@ nowarn Pre;
 		    && t != TagConstants.CONSTRUCTORINVOCATION
 		    && t != TagConstants.VARDECLSTMT);
   }
@@ -717,7 +717,7 @@ public class DoStmt extends Stmt
   //# PostCheckCall
   private void postCheck() {
     int t = stmt.getTag();
-    Assert.notFalse(t != TagConstants.SWITCHLABEL	//@ nowarn Pre
+    Assert.notFalse(t != TagConstants.SWITCHLABEL	//@ nowarn Pre;
 		    && t != TagConstants.CONSTRUCTORINVOCATION
 		    && t != TagConstants.VARDECLSTMT);
   }
@@ -786,7 +786,7 @@ public class LabelStmt extends Stmt
   //# PostCheckCall
   private void postCheck() {
     int t = stmt.getTag();
-    Assert.notFalse(t != TagConstants.SWITCHLABEL	//@ nowarn Pre
+    Assert.notFalse(t != TagConstants.SWITCHLABEL	//@ nowarn Pre;
 		    && t != TagConstants.CONSTRUCTORINVOCATION
 		    && t != TagConstants.VARDECLSTMT);
   }
@@ -804,11 +804,11 @@ public class IfStmt extends Stmt
   //# PostCheckCall
   private void postCheck() {
     int t = thn.getTag();
-    Assert.notFalse(t != TagConstants.SWITCHLABEL 	//@ nowarn Pre
+    Assert.notFalse(t != TagConstants.SWITCHLABEL 	//@ nowarn Pre;
 		    && t != TagConstants.CONSTRUCTORINVOCATION
 		    && t != TagConstants.VARDECLSTMT);
     t = els.getTag();
-    Assert.notFalse(t != TagConstants.SWITCHLABEL	//@ nowarn Pre
+    Assert.notFalse(t != TagConstants.SWITCHLABEL	//@ nowarn Pre;
 		    && t != TagConstants.CONSTRUCTORINVOCATION
 		    && t != TagConstants.VARDECLSTMT);
   }
@@ -842,13 +842,13 @@ public class ForStmt extends Stmt
   private void postCheck() {
     for(int i = 0; i < forInit.size(); i++) {
       int t = forInit.elementAt(i).getTag();
-      Assert.notFalse(t != TagConstants.SWITCHLABEL	 //@ nowarn Pre
+      Assert.notFalse(t != TagConstants.SWITCHLABEL	 //@ nowarn Pre;
 		    && t != TagConstants.CONSTRUCTORINVOCATION);
       // Could have a stronger invariant here...
     }
     // Invariants on forUpdate??...
     int t = body.getTag();
-    Assert.notFalse(t != TagConstants.SWITCHLABEL	//@ nowarn Pre
+    Assert.notFalse(t != TagConstants.SWITCHLABEL	//@ nowarn Pre;
 		    && t != TagConstants.CONSTRUCTORINVOCATION
 		    && t != TagConstants.VARDECLSTMT);
   }
@@ -893,11 +893,11 @@ public class TryFinallyStmt extends Stmt
   //# PostCheckCall
   private void postCheck() {
     int t = tryClause.getTag();
-    Assert.notFalse(t != TagConstants.SWITCHLABEL	//@ nowarn Pre
+    Assert.notFalse(t != TagConstants.SWITCHLABEL	//@ nowarn Pre;
 		    && t != TagConstants.CONSTRUCTORINVOCATION
 		    && t != TagConstants.VARDECLSTMT);
     t = finallyClause.getTag();
-    Assert.notFalse(t != TagConstants.SWITCHLABEL	//@ nowarn Pre
+    Assert.notFalse(t != TagConstants.SWITCHLABEL	//@ nowarn Pre;
 		    && t != TagConstants.CONSTRUCTORINVOCATION
 		    && t != TagConstants.VARDECLSTMT);
   }
@@ -918,7 +918,7 @@ public class TryCatchStmt extends Stmt
   //# PostCheckCall
   private void postCheck() {
     int t = tryClause.getTag();
-    Assert.notFalse(t != TagConstants.SWITCHLABEL	//@ nowarn Pre
+    Assert.notFalse(t != TagConstants.SWITCHLABEL	//@ nowarn Pre;
 		    && t != TagConstants.CONSTRUCTORINVOCATION
 		    && t != TagConstants.VARDECLSTMT);
   }
@@ -1113,7 +1113,7 @@ public class LiteralExpr extends Expr
 	(tag==TagConstants.STRINGLIT) ||
 	(tag==TagConstants.NULLLIT) ||
 	(tag==TagConstants.CHARLIT)
-      ) */
+      ); */
   //# ManualTag
   //# int tag
 
@@ -1128,7 +1128,7 @@ public class LiteralExpr extends Expr
 	((tag==TagConstants.DOUBLELIT) ==> (value instanceof Double)) &&
 	((tag==TagConstants.STRINGLIT) ==> (value instanceof String)) &&
 	((tag==TagConstants.CHARLIT) ==> (value instanceof Integer))
-      ) */
+      ); */
   //# Object value NullOK NoCheck
 
   //# int loc NotNullLoc
@@ -1203,7 +1203,7 @@ public class LiteralExpr extends Expr
 	(tag==TagConstants.STRINGLIT) ||
 	(tag==TagConstants.NULLLIT) ||
 	(tag==TagConstants.CHARLIT)
-      ) */
+      ); */
   /*@ requires (
 	((tag==TagConstants.BOOLEANLIT) ==> (value instanceof Boolean)) &&
 	((tag==TagConstants.NULLLIT) ==> (value == null)) &&
@@ -1215,7 +1215,7 @@ public class LiteralExpr extends Expr
 	((tag==TagConstants.DOUBLELIT) ==> (value instanceof Double)) &&
 	((tag==TagConstants.STRINGLIT) ==> (value instanceof String)) &&
 	((tag==TagConstants.CHARLIT) ==> (value instanceof Integer))
-      ) */
+      ); */
   //
   //@ requires loc != javafe.util.Location.NULL;
   //@ ensures \result != null;
@@ -1357,7 +1357,7 @@ public class NewArrayExpr extends Expr
    */
   //@ invariant locOpenBrackets.length >= dims.count;
   /*@ invariant (\forall int i; (0 <= i && i<dims.count) ==> 
-			locOpenBrackets[i] != Location.NULL) */
+			locOpenBrackets[i] != Location.NULL); */
   //# int[] locOpenBrackets NoCheck
 
   public int getStartLoc() { return loc; }
@@ -1459,7 +1459,7 @@ public class BinaryExpr extends Expr
        || op == TagConstants.ASGDIV || op == TagConstants.ASGREM
        || op == TagConstants.ASGADD || op == TagConstants.ASGSUB
        || op == TagConstants.ASGLSHIFT || op == TagConstants.ASGRSHIFT
-       || op == TagConstants.ASGURSHIFT || op == TagConstants.ASGBITAND) */
+       || op == TagConstants.ASGURSHIFT || op == TagConstants.ASGBITAND); */
   //# ManualTag
   //# int op
 
@@ -1508,7 +1508,7 @@ public class BinaryExpr extends Expr
        || op == TagConstants.ASGDIV || op == TagConstants.ASGREM
        || op == TagConstants.ASGADD || op == TagConstants.ASGSUB
        || op == TagConstants.ASGLSHIFT || op == TagConstants.ASGRSHIFT
-       || op == TagConstants.ASGURSHIFT || op == TagConstants.ASGBITAND) */
+       || op == TagConstants.ASGURSHIFT || op == TagConstants.ASGBITAND); */
   //
   //@ requires locOp != javafe.util.Location.NULL;
   //@ ensures \result != null;
@@ -1538,7 +1538,7 @@ public class UnaryExpr extends Expr
   /*@ invariant (op == TagConstants.UNARYADD || op == TagConstants.UNARYSUB
        || op == TagConstants.NOT || op == TagConstants.BITNOT
        || op == TagConstants.INC || op == TagConstants.DEC
-       || op == TagConstants.POSTFIXINC || op == TagConstants.POSTFIXDEC) */
+       || op == TagConstants.POSTFIXINC || op == TagConstants.POSTFIXDEC); */
   //# ManualTag
   //# int op
 
@@ -1570,7 +1570,7 @@ public class UnaryExpr extends Expr
   /*@ requires (op == TagConstants.UNARYADD || op == TagConstants.UNARYSUB
        || op == TagConstants.NOT || op == TagConstants.BITNOT
        || op == TagConstants.INC || op == TagConstants.DEC
-       || op == TagConstants.POSTFIXINC || op == TagConstants.POSTFIXDEC) */
+       || op == TagConstants.POSTFIXINC || op == TagConstants.POSTFIXDEC); */
   //
   //@ requires locOp != javafe.util.Location.NULL;
   //@ ensures \result != null;
@@ -1919,7 +1919,7 @@ public class PrimitiveType extends Type
        || tag == TagConstants.LONGTYPE || tag == TagConstants.CHARTYPE
        || tag == TagConstants.FLOATTYPE || tag == TagConstants.DOUBLETYPE
        || tag == TagConstants.VOIDTYPE || tag == TagConstants.NULLTYPE
-       || tag == TagConstants.BYTETYPE || tag == TagConstants.SHORTTYPE) */
+       || tag == TagConstants.BYTETYPE || tag == TagConstants.SHORTTYPE); */
   //# ManualTag
   //# int tag
 
@@ -1938,9 +1938,9 @@ public class PrimitiveType extends Type
        || tag == TagConstants.LONGTYPE || tag == TagConstants.CHARTYPE
        || tag == TagConstants.FLOATTYPE || tag == TagConstants.DOUBLETYPE
        || tag == TagConstants.VOIDTYPE || tag == TagConstants.NULLTYPE
-       || tag == TagConstants.BYTETYPE || tag == TagConstants.SHORTTYPE) */
-  //@ ensures \result.syntax;
+       || tag == TagConstants.BYTETYPE || tag == TagConstants.SHORTTYPE); */
   //@ requires loc != javafe.util.Location.NULL;
+  //@ ensures \result.syntax;
   //@ ensures \result != null;
   public static PrimitiveType make(TypeModifierPragmaVec tmodifiers,
 				   int tag, int loc) {
@@ -1961,7 +1961,7 @@ public class PrimitiveType extends Type
        || tag == TagConstants.LONGTYPE || tag == TagConstants.CHARTYPE
        || tag == TagConstants.FLOATTYPE || tag == TagConstants.DOUBLETYPE
        || tag == TagConstants.VOIDTYPE || tag == TagConstants.NULLTYPE
-       || tag == TagConstants.BYTETYPE || tag == TagConstants.SHORTTYPE) */
+       || tag == TagConstants.BYTETYPE || tag == TagConstants.SHORTTYPE); */
   //@ ensures !\result.syntax;
   //@ ensures \result != null;
   public static PrimitiveType makeNonSyntax(int tag) {
@@ -1991,10 +1991,10 @@ public class PrimitiveType extends Type
        || tag == TagConstants.LONGTYPE || tag == TagConstants.CHARTYPE
        || tag == TagConstants.FLOATTYPE || tag == TagConstants.DOUBLETYPE
        || tag == TagConstants.VOIDTYPE || tag == TagConstants.NULLTYPE
-       || tag == TagConstants.BYTETYPE || tag == TagConstants.SHORTTYPE) */
+       || tag == TagConstants.BYTETYPE || tag == TagConstants.SHORTTYPE); */
+  //@ requires loc != javafe.util.Location.NULL;
   //@ ensures \result.syntax;
   //@ ensures \result != null;
-  //@ requires loc != javafe.util.Location.NULL;
   static public PrimitiveType make(int tag, int loc) {
     return PrimitiveType.make(null, tag, loc);
   }
@@ -2032,9 +2032,8 @@ public class ArrayType extends Type
 
   //# NoMaker
   // Generate this manually to add condition about syntax:
-  //@ ensures elemType.syntax ==> \result.syntax;
-  //
   //@ requires locOpenBracket != javafe.util.Location.NULL;
+  //@ ensures elemType.syntax ==> \result.syntax;
   //@ ensures \result != null;
   public static ArrayType make(/*@ non_null @*/ Type elemType,
                                int locOpenBracket) {
@@ -2048,9 +2047,8 @@ public class ArrayType extends Type
      return result;
   }
 
-  //@ ensures elemType.syntax ==> \result.syntax;
-  //
   //@ requires locOpenBracket != javafe.util.Location.NULL;
+  //@ ensures elemType.syntax ==> \result.syntax;
   //@ ensures \result != null;
   public static ArrayType make(TypeModifierPragmaVec tmodifiers,
 			       /*@ non_null @*/ Type elemType,
@@ -2158,9 +2156,9 @@ public abstract class Name extends ASTNode
     //@ requires ids.count>0;
     //@ requires ids.count==locIds.length && ids.count==locDots.length+1;
     /*@ requires (\forall int i; (0 <= i && i<locIds.length)
-			==> locIds[i] != Location.NULL) */
+			==> locIds[i] != Location.NULL); */
     /*@ requires (\forall int i; (0 <= i && i<locDots.length)
-			==> locDots[i] != Location.NULL) */
+			==> locDots[i] != Location.NULL); */
     //@ ensures \result != null;
     //@ pure
     public static Name make(int[] locIds, int[] locDots, IdentifierVec ids) {
@@ -2191,7 +2189,7 @@ public abstract class Name extends ASTNode
 	// Convert N to a list of its components:
 	String[] components = javafe.filespace.StringUtil.parseList(N, '.');
 	int sz = components.length;
-	Assert.notFalse(sz>0);		//@ nowarn Pre
+	Assert.notFalse(sz>0);		//@ nowarn Pre;
 
 	// Convert the components to Identifiers:
 	IdentifierVec ids = IdentifierVec.make();
@@ -2323,12 +2321,12 @@ public class CompoundName extends Name
 
   //@ invariant locIds.length == length;
   /*@ invariant (\forall int i; (0 <= i && i<locIds.length)
-			==> locIds[i] != Location.NULL) */
+			==> locIds[i] != Location.NULL); */
   //# int[] locIds NoCheck
 
   //@ invariant locDots.length == length-1;
   /*@ invariant (\forall int i; (0 <= i && i<locDots.length)
-			==> locDots[i] != Location.NULL) */
+			==> locDots[i] != Location.NULL); */
   //# int[] locDots NoCheck
 
   //# PostMakeCall
@@ -2441,10 +2439,10 @@ public class CompoundName extends Name
   //@ requires ids.count>1;
   //@ requires locIds.length == ids.count;
   /*@ requires (\forall int i; (0 <= i && i<locIds.length)
-			==> locIds[i] != Location.NULL) */
+			==> locIds[i] != Location.NULL); */
   //@ requires locDots.length == ids.count-1;
   /*@ requires (\forall int i; (0 <= i && i<locDots.length)
-			==> locDots[i] != Location.NULL) */
+			==> locDots[i] != Location.NULL); */
   //
   //@ ensures \result != null;
   public static CompoundName make(/*@ non_null @*/ IdentifierVec ids, 

@@ -58,8 +58,6 @@ final /* was package */ public class SInt extends SExp
      * otherwise, throw SExpTypeError.
      */
     //@ also
-    //@ public normal_behavior
-    //@ also
     //@ private normal_behavior
     //@   ensures \result == value;
     public /*@ pure @*/ int getInteger() {

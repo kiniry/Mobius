@@ -50,7 +50,7 @@ public abstract class Env {
      *
      * If isStaticContext() returns true, then this is the type of "this".
      */
-    //@ ensures (this instanceof EnvForCU) == (\result==null)
+    //@ ensures (this instanceof EnvForCU) == (\result==null);
     abstract public TypeSig getEnclosingClass();
 
 
@@ -73,7 +73,7 @@ public abstract class Env {
      * this way. <p>
      */
     //@ ensures \result != null;
-    //@ ensures (this instanceof EnvForCU) == (\result instanceof EnvForCU)
+    //@ ensures (this instanceof EnvForCU) == (\result instanceof EnvForCU);
     abstract public Env asStaticContext();
 
 
@@ -127,9 +127,9 @@ public abstract class Env {
      * is actually accessible. <p>
      */
     /*@ ensures \result==null || (\result instanceof GenericVarDecl)
-                || (\result instanceof TypeSig) */
+                || (\result instanceof TypeSig); */
     /*@ ensures \result instanceof GenericVarDecl ==>
-                       ((GenericVarDecl)\result).id == id */
+                       ((GenericVarDecl)\result).id == id; */
     //@ ensures (this instanceof EnvForCU) ==> \result==null;
     abstract public ASTNode locateFieldOrLocal(/*@ non_null @*/ Identifier id);
 
@@ -207,8 +207,8 @@ public abstract class Env {
      * is actually accessible, unless caller is not null. <p>
      */
     //@ modifies prefixSize;
-    //@ ensures \result==null ==> 0==prefixSize
-    //@ ensures \result != null ==> 0<prefixSize && prefixSize <= n.length
+    //@ ensures \result==null ==> 0==prefixSize;
+    //@ ensures \result != null ==> 0<prefixSize && prefixSize <= n.length;
     public TypeSig findTypeNamePrefix(TypeSig caller,
 				      /*@ non_null @*/ Name n,
 				      boolean ignoreFields) {
@@ -324,7 +324,7 @@ public abstract class Env {
      * decoration holding the type environment in which a type is resolved.
      */
     //@ invariant typeEnv != null;
-    //@ invariant typeEnv.decorationType == \type(Env)
+    //@ invariant typeEnv.decorationType == \type(Env);
     static public ASTDecoration typeEnv = 
 	new ASTDecoration("environment");
 
@@ -378,7 +378,7 @@ public abstract class Env {
      * (At this point we haven't decided which field f refers to so
      * we don't know if it is an instance field or not.)
      */
-    //@ ensures !(\result instanceof AmbiguousVariableAccess)
+    //@ ensures !(\result instanceof AmbiguousVariableAccess);
     public Expr disambiguateExprName(/*@ non_null @*/ Name n) {
 	/*
 	 * Find the smallest prefix of n, n[0]..n[prefix-1], such that
@@ -619,7 +619,7 @@ public abstract class Env {
      *
      * Note: The returned instance may have be of a subtype of T.<p>
      */
-    //@ requires loc != Location.NULL
+    //@ requires loc != Location.NULL;
     public Expr lookupEnclosingInstance(/*@ non_null @*/ TypeSig T,
 					int loc) {
 	TypeSig instance;
@@ -651,7 +651,7 @@ public abstract class Env {
      *
      * Set by the EnvForLocals constructor.<p>
      */
-    //@ invariant whereDecoration.decorationType == \type(TypeSig)
+    //@ invariant whereDecoration.decorationType == \type(TypeSig);
     protected static final ASTDecoration whereDecoration
 	= new ASTDecoration("whereDecoration");
 
@@ -662,7 +662,7 @@ public abstract class Env {
      * Precondition: decl's type has been "parsed"; an Env containing
      * decl has been constructed.<p>
      */
-    //@ requires (decl instanceof FieldDecl) ==> ((FieldDecl)decl).hasParent
+    //@ requires (decl instanceof FieldDecl) ==> ((FieldDecl)decl).hasParent;
     //@ ensures \result != null;
     public static TypeSig whereDeclared(/*@ non_null @*/ GenericVarDecl decl) {
 	TypeSig result;
@@ -676,7 +676,7 @@ public abstract class Env {
 	    result = (TypeSig)whereDecoration.get(decl);
 	}
 
-	Assert.notNull(result);          //@ nowarn Pre
+	Assert.notNull(result);          //@ nowarn Pre;
 	return result;
     }
 
@@ -693,7 +693,7 @@ public abstract class Env {
      * The "C." part is omitted if C is the type of this (e.g.,
      * getEnclosingClass()).
      */
-    //@ requires loc != Location.NULL
+    //@ requires loc != Location.NULL;
     //@ ensures \result != null;
     public final ThisExpr getInferredThisExpr(/*@ non_null @*/ TypeSig C,
 					      int loc) {
@@ -718,7 +718,7 @@ public abstract class Env {
      *
      * loc is used as the location for the this. and C. parts.
      */
-    //@ requires loc != Location.NULL
+    //@ requires loc != Location.NULL;
     //@ ensures \result != null;
     public final ObjectDesignator getObjectDesignator(/*@ non_null @*/ TypeSig C,
 						      int loc) {

@@ -51,7 +51,7 @@ public final class ErrorMsg
 		}	  
 	    }
 	    if (iErrorLabel == -1) {
-		//@ unreachable
+		//@ unreachable;
 		StringBuffer s = new StringBuffer("Unknown cause!  Labels are");
 		for (int i = 0; i < cLabels; i++) {
 		     s.append(" " + labelList.at(i).getAtom().toString());
@@ -425,12 +425,12 @@ public final class ErrorMsg
 	case TagConstants.CHKWRITABLEDEFERRED:
 	case TagConstants.CHKMODIFIESEXTENSION:
 	    // this  a syntactic warning, not a semantic check
-	    //@ unreachable
+	    //@ unreachable;
 	    Assert.fail("unexpected error name tag");
 	    r = TagConstants.toString(tag);
 	    break;
 	default:
-	    //@ unreachable
+	    //@ unreachable;
 	    Assert.fail("Bad tag");
 	    break;
 	case TagConstants.CHKADDINFO:
@@ -601,8 +601,8 @@ public final class ErrorMsg
 
     /** Prune out s-expressions from the counterexample context that are 
 	almost certainly irrelevant. **/
-    //@ requires cc != null
-    //@ ensures \result != null
+    //@ requires cc != null;
+    //@ ensures \result != null;
     private static SList pruneCC(SList cc) throws SExpTypeError {
 	SList copy = SList.make();
 	SExp cur;

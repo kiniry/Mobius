@@ -9,14 +9,14 @@ clean:
 .PHONY: build
 build: classes.stamp
 
+CP = ${call canonicalize,${ESCTOOLS_ROOT}/Utils:${JUNIT_LIB}}
+
 classes.stamp: *.java
-	${JAVAC} -classpath $(call canonicalize,${JUNIT_LIB}) $?
+	${JAVAC} -classpath ${CP} $?
 	touch classes.stamp
 
 .PHONY: test
 test:
-
-CP = ${call canonicalize,${JUNIT_LIB}:${ESCTOOLS_ROOT}/Utils}
 
 .PHONY: esctest
 esctest:

@@ -238,7 +238,7 @@ public class Set implements Cloneable
 	return s;
       } catch (CloneNotSupportedException c) {
 	// shouldn't happen, since Set implements Cloneable
-	//@ unreachable //@ nowarn
+	//@ unreachable; //@ nowarn; 
 	Assert.fail("unexpected CloneNotSupportedException exception");
 	return null; // satisfy compiler
       }

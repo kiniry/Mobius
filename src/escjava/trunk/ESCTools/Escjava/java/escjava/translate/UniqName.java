@@ -182,7 +182,7 @@ public final class UniqName {
 	  if (recoverable) {
 	    return false;
 	  }
-	  //@ unreachable
+	  //@ unreachable;
 	  Assert.fail("unexpected character '" + ch +
 		      "' in purported location suffix '" + suffix + "'");
 	  break;
@@ -193,7 +193,7 @@ public final class UniqName {
       if (recoverable) {
 	return false;
       }
-      //@ unreachable
+      //@ unreachable;
       Assert.fail("wrong number of dots in purported location suffix '" +
 		  suffix + "'");
     }

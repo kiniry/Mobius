@@ -448,7 +448,7 @@ public final class Translate
 
           case TagConstants.NULLTYPE:
           default:
-            /*@ unreachable */
+            /*@ unreachable ;*/
             Assert.fail("Unexpected type tag");
             break;
           }
@@ -882,7 +882,7 @@ public final class Translate
                  di.loc);
         break;
       default:
-        //@ unreachable
+        //@ unreachable;
         Assert.fail("addLoopDecreases: unexpected piece number");
         break;
       }
@@ -1199,7 +1199,7 @@ public final class Translate
     }
 
     default:
-      //@ unreachable
+      //@ unreachable;
       Assert.notFalse(false);
       return null;
     }
@@ -1727,7 +1727,7 @@ public final class Translate
       }
       
     case TagConstants.CONSTRUCTORINVOCATION:
-      //@ unreachable
+      //@ unreachable;
       // If the following assert breaks, there's something wrong in
       // "trBody" where the constructor call is split up from the rest of
       // the constructor body.
@@ -1912,7 +1912,7 @@ public final class Translate
       return;
     }
     default:
-      //@ unreachable
+      //@ unreachable;
       Assert.notFalse(false,"Unexpected tag " + TagConstants.toString(tag)
                       + " " + stmt + " " +
                       Location.toString(stmt.getStartLoc()));
@@ -2060,7 +2060,7 @@ public final class Translate
    * <code>true</code>, then the value returned is certain to be of type
    * <code>VariableAccess</code>.
    */
-  //@ ensures protect ==> \result instanceof VariableAccess
+  //@ ensures protect ==> \result instanceof VariableAccess;
   private Expr protect(boolean protect, Expr e, int loc) {
     if (protect) {
       VariableAccess result = fresh(e, loc);
@@ -2069,7 +2069,7 @@ public final class Translate
     } else return e;
   }
 
-  //@ ensures protect ==> \result instanceof VariableAccess
+  //@ ensures protect ==> \result instanceof VariableAccess;
   private Expr protect(boolean protect, Expr e, int loc, String suffix) {
     if (protect) {
       VariableAccess result = fresh(e, loc, suffix);
@@ -2121,22 +2121,22 @@ public final class Translate
         VariableAccess a = fresh(x, xStart, "arrayinit");
         VariableAccess newallocvar = adorn(GC.allocvar);
 
-        // assume !isAllocated(a, alloc)
+        // assume !isAllocated(a, alloc);
         code.addElement(GC.assume(GC.not(xStart, xEnd,
                                          GC.nary(xStart, xEnd,
                                                  TagConstants.ISALLOCATED,
                                                  a, GC.allocvar))));
-        // assume isAllocated(a, alloc')
+        // assume isAllocated(a, alloc');
         code.addElement(GC.assume(GC.nary(xStart, xEnd,
                                           TagConstants.ISALLOCATED,
                                           a,
                                           newallocvar )));
-        // assume a != null
+        // assume a != null;
         code.addElement(GC.assume(GC.nary(xStart, xEnd,
                                           TagConstants.REFNE,
                                           a,
                                           GC.nulllit )));
-        // assume typeof(a) == array(T)
+        // assume typeof(a) == array(T);
         Expr typeofa = GC.nary(xStart, xEnd,
                                TagConstants.TYPEOF, a);
         Expr arrayT = TypeExpr.make(xStart, xEnd,
@@ -2917,7 +2917,7 @@ public final class Translate
       return Modifiers.isFinal(ts.getTypeDecl().modifiers);
 
     default:
-      //@ unreachable
+      //@ unreachable;
       Assert.fail("Unexpected tag " + TagConstants.toString(tag) + " ("
                   + tag + ")");
       return false;
@@ -2960,7 +2960,7 @@ public final class Translate
         break;
       }
       default:
-        //@ unreachable
+        //@ unreachable;
         Assert.fail("Unexpected tag " + TagConstants.toString(tag)
                     + " (" + tag + ")");
         break;
@@ -2983,12 +2983,12 @@ public final class Translate
       case TagConstants.TYPEOBJECTDESIGNATOR:
         // This case is not legal Java and should already have been
         // checked by the type checker
-        //@ unreachable
+        //@ unreachable;
         Assert.fail("Unexpected tag");
         obj= null;  // dummy assignment
         break;
       default:
-        //@ unreachable
+        //@ unreachable;
         Assert.fail("Unexpected tag " + TagConstants.toString(tag)
                     + " (" + tag + ")");
         obj= null;  // dummy assignment
@@ -3017,8 +3017,8 @@ public final class Translate
     ExprVec args = ExprVec.make(mi.args.size() + 1);
     ExprVec argsRaw = ExprVec.make(mi.args.size() + 1);
     Expr nullcheckArg = null;  // Java expression
-    /*@ readable_if nullcheckArg != null */
-    int nullcheckLoc = Location.NULL /*@ uninitialized */;
+    /*-@ uninitialized */ int nullcheckLoc = Location.NULL;
+    // FIXME /*@ readable nullcheckLoc if nullcheckArg != null; */
 
     Expr eod = null;
     int tag= mi.od.getTag();
@@ -3054,7 +3054,7 @@ public final class Translate
       break;
     }
     default:
-      //@ unreachable
+      //@ unreachable;
       Assert.fail("Unexpected tag " + TagConstants.toString(tag)
                   + " (" + tag + ")");
       break;
@@ -4821,7 +4821,7 @@ public final class Translate
         return res;
       }
     default:
-      //@ unreachable
+      //@ unreachable;
       Assert.fail("Unknown kind of guarded command encountered");
       return null;
     }
@@ -4901,7 +4901,7 @@ public final class Translate
         return orderTraceLabels(lcmd.desugared, count);
       }
     default:
-      //@ unreachable
+      //@ unreachable;
       Assert.fail("Unknown kind of guarded command encountered");
       return -1;
     }

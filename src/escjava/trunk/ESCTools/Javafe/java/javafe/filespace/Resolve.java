@@ -155,8 +155,8 @@ public class Resolve {
     /**
      * Combine two names using a separator if both are non-empty. <p>
      *
-     * <esc> requires first != null && second != null </esc>
      */
+    //@ requires first != null && second != null;
     //@ ensures \result != null;
     public static String combineNames(String first, String second,
 					String separator) {
@@ -176,7 +176,7 @@ public class Resolve {
      */
     //@ requires id != null;
     /*@ ensures \result != null ==>
-	(\forall int i; (0<=i && i<\result.length) ==> \result[i] != null) */   
+	(\forall int i; (0<=i && i<\result.length) ==> \result[i] != null); */   
     public static String[] parseIdentifier(String id) {
 	String[] path = StringUtil.parseList(id, '.');
 
@@ -287,7 +287,7 @@ public class Resolve {
      * Otherwise, returns its argument unchanged; the argument will
      * always have a remainder of length 0 in this case.<p>
      */
-    /*@ requires answer != null ==> answer.myPackage != null */
+    /*@ requires answer != null ==> answer.myPackage != null; */
     //@ ensures \result != null ==> \result.myPackage != null;
     public static Resolve_Result ensureUnit(Resolve_Result answer) {
 	// Return if check succeeds or answer already null:
@@ -356,8 +356,9 @@ public class Resolve {
      * Convert 1 character to another everywhere it appears in a given
      * string.
      *
-     * <esc> requires input != null; ensures \result != null </esc>
      */
+    //@ requires input != null;
+    //@ ensures \result != null;
     public static String tr(String input, char from, char to) {
 	StringBuffer chars = new StringBuffer(input);
 
@@ -378,7 +379,7 @@ public class Resolve {
     /** A simple test driver */
     //@ requires args != null;
     /*@ requires (\forall int i; (0<=i && i<args.length)
-		==> args[i] != null) */
+		==> args[i] != null); */
     public static void main(String[] args) throws IOException {
 	/*
 	 * Parse command arguments:

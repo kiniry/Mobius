@@ -23,7 +23,7 @@ public class Types
     /**
      * Factory method for TypeSig structures
      */
-    //@ requires !(enclosingEnv instanceof EnvForCU)
+    //@ requires !(enclosingEnv instanceof EnvForCU);
     //@ ensures \result != null;
     public static TypeSig makeTypeSig(String simpleName,
                                       /*@ non_null */ Env enclosingEnv,
@@ -33,7 +33,7 @@ public class Types
                                         decl);
     }
   
-    //@ requires !(enclosingEnv instanceof EnvForCU)
+    //@ requires !(enclosingEnv instanceof EnvForCU);
     //@ ensures \result != null;
     protected TypeSig makeTypeSigInstance(String simpleName,
                                           /*@ non_null */ Env enclosingEnv,
@@ -46,9 +46,9 @@ public class Types
     /**
      * Factory method for TypeSig structures
      */
-    //@ requires \nonnullelements(packageName)
-    //@ requires (enclosingType != null) ==> (decl != null)
-    //@ requires (decl==null) == (CU==null)
+    //@ requires \nonnullelements(packageName);
+    //@ requires (enclosingType != null) ==> (decl != null);
+    //@ requires (decl==null) == (CU==null);
     //@ ensures \result != null;
     protected static TypeSig makeTypeSig(String[] packageName,
                                          /*@ non_null */ String simpleName,
@@ -62,9 +62,9 @@ public class Types
                                         CU);
     }
     
-    //@ requires \nonnullelements(packageName)
-    //@ requires (enclosingType != null) ==> (decl != null)
-    //@ requires (decl==null) == (CU==null)
+    //@ requires \nonnullelements(packageName);
+    //@ requires (enclosingType != null) ==> (decl != null);
+    //@ requires (decl==null) == (CU==null);
     //@ ensures \result != null;
     protected TypeSig makeTypeSigInstance(String[] packageName,
                                           /*@ non_null */ String simpleName,
@@ -90,7 +90,7 @@ public class Types
      || tag == TagConstants.LONGTYPE || tag == TagConstants.CHARTYPE
      || tag == TagConstants.FLOATTYPE || tag == TagConstants.DOUBLETYPE
      || tag == TagConstants.VOIDTYPE || tag == TagConstants.NULLTYPE
-     || tag == TagConstants.BYTETYPE || tag == TagConstants.SHORTTYPE) */
+     || tag == TagConstants.BYTETYPE || tag == TagConstants.SHORTTYPE); */
     //@ ensures \result != null;
     private static final PrimitiveType makePrimitiveType(int tag) {
         return PrimitiveType.makeNonSyntax(tag);
@@ -178,7 +178,7 @@ public class Types
      * Return the package java.lang as a String[] for use in calling
      * OutsideEnv.lookup[deferred].
      */
-    //@ ensures \nonnullelements(\result)
+    //@ ensures \nonnullelements(\result);
     public static String[] javaLangPackage() {
 	if (s_javaLangPackage==null) {
 	    s_javaLangPackage = new String[2];
@@ -188,7 +188,7 @@ public class Types
 
 	return s_javaLangPackage;
     }
-    //@ invariant s_javaLangPackage==null || \nonnullelements(s_javaLangPackage)
+    //@ invariant s_javaLangPackage==null || \nonnullelements(s_javaLangPackage);
     private static String[] s_javaLangPackage = null;
 
 
@@ -374,7 +374,7 @@ public class Types
         return inst.isIntegralTypeInstance(t);
     }
     
-    //@ ensures \result ==> t instanceof PrimitiveType
+    //@ ensures \result ==> t instanceof PrimitiveType;
     public boolean isIntegralTypeInstance(Type t){
         if( t instanceof PrimitiveType ) {
             switch( ((PrimitiveType)t).tag ) {
@@ -414,14 +414,14 @@ public class Types
 
     //@ requires x != null && y != null;
     /*@ ensures \result ==>
-     (x instanceof PrimitiveType) == (y instanceof PrimitiveType) */
+     (x instanceof PrimitiveType) == (y instanceof PrimitiveType); */
     public static boolean isSameType( Type x, Type y ) {
         return inst.isSameTypeInstance(x, y);
     }
 
     //@ requires x != null && y != null;
     /*@ ensures \result ==>
-     (x instanceof PrimitiveType) == (y instanceof PrimitiveType) */
+     (x instanceof PrimitiveType) == (y instanceof PrimitiveType); */
     protected boolean isSameTypeInstance( Type x, Type y ) {
         if( x instanceof TypeName ) x = TypeSig.getSig( (TypeName)x);
         if( y instanceof TypeName ) y = TypeSig.getSig( (TypeName)y);
@@ -445,7 +445,7 @@ public class Types
      * in the name of the method is rather unfortunate.)
      */
     //@ requires x != null && y != null;
-    //@ ensures \result ==> (x instanceof TypeSig) || (x instanceof TypeName)
+    //@ ensures \result ==> (x instanceof TypeSig) || (x instanceof TypeName);
     public static boolean isSubclassOf( Type x, TypeSig y ) {
     
         if (x instanceof TypeName)
@@ -551,7 +551,7 @@ public class Types
                 else
                 {
                     // t is a primitive type, s is a class, so not castable
-                    Assert.notFalse( t instanceof PrimitiveType ); //@nowarn Pre
+                    Assert.notFalse( t instanceof PrimitiveType ); //@nowarn Pre;
                     return false;
                 }
             }
@@ -582,7 +582,7 @@ public class Types
                 {
                     // t is a primitive or array type
                     // MAYBE SHOULD ALLOW CASTING OF CLONEABLE TO ARRAY
-                    Assert.notFalse( t instanceof PrimitiveType  //@ nowarn Pre
+                    Assert.notFalse( t instanceof PrimitiveType  //@ nowarn Pre;
                                      || t instanceof ArrayType );
                     return false;
                 }
@@ -622,7 +622,7 @@ public class Types
             }
             else 
             {
-                Assert.notFalse( t instanceof PrimitiveType ); //@ nowarn Pre
+                Assert.notFalse( t instanceof PrimitiveType ); //@ nowarn Pre;
                 return false;
             }
         }
@@ -794,7 +794,7 @@ public class Types
 
     //@ ensures \result != null;
     public static Type binaryNumericPromotion(Type x, Type y) {
-        Assert.notFalse( isNumericType(x) && isNumericType(y) );	//@ nowarn Pre
+        Assert.notFalse( isNumericType(x) && isNumericType(y) );	//@ nowarn Pre;
     
         if( isDoubleType(x) || isDoubleType(y) )
             return doubleType;
@@ -856,7 +856,7 @@ public class Types
     }
 
     //@ requires x != null && y != null;
-    //@ requires x.args.count == y.args.count
+    //@ requires x.args.count == y.args.count;
     public static boolean routineMoreSpecific( RoutineDecl x, RoutineDecl y ) {
 
         // should check that type containing x is invocation convertable
@@ -927,7 +927,7 @@ public class Types
     }
 
     //@ requires args != null;
-    //@ ensures \nonnullelements(\result)
+    //@ ensures \nonnullelements(\result);
     public static Type[] getFormalParaTypes( FormalParaDeclVec args ) {
         Type[] r = new Type[ args.size() ];
         for( int i=0; i<args.size(); i++ ) 
@@ -1000,7 +1000,7 @@ public class Types
   
     protected static Identifier lenId = Identifier.intern("length");
   
-    //@ invariant lengthFieldDecl.id == lenId
+    //@ invariant lengthFieldDecl.id == lenId;
     public static /*@ non_null */ FieldDecl lengthFieldDecl
             = FieldDecl.make(Modifiers.ACC_PUBLIC|Modifiers.ACC_FINAL,
                              null,
@@ -1014,7 +1014,7 @@ public class Types
 
     //@ requires t != null && caller != null;
     //@ ensures \result != null;
-    //@ ensures \result.id == id
+    //@ ensures \result.id == id;
     public static FieldDecl lookupField(Type t, Identifier id, TypeSig caller) 
             throws LookupException
     {
@@ -1023,7 +1023,7 @@ public class Types
 
     //@ requires t != null && caller != null;
     //@ ensures \result != null;
-    //@ ensures \result.id == id
+    //@ ensures \result.id == id;
     protected FieldDecl lookupFieldInstance(Type t, Identifier id, TypeSig caller) 
             throws LookupException
     {
@@ -1050,7 +1050,7 @@ public class Types
   
     //@ requires \nonnullelements(args) && caller != null;
     //@ ensures \result != null;
-    //@ ensures \result.id == id
+    //@ ensures \result.id == id;
     public static MethodDecl lookupMethod(Type t, Identifier id, 
                                           Type[] args, TypeSig caller ) 
             throws LookupException
@@ -1060,7 +1060,7 @@ public class Types
 
     //@ requires \nonnullelements(args) && caller != null;
     //@ ensures \result != null;
-    //@ ensures \result.id == id
+    //@ ensures \result.id == id;
     protected MethodDecl lookupMethodInstance(Type t, Identifier id, 
                                               Type[] args, TypeSig caller ) 
             throws LookupException

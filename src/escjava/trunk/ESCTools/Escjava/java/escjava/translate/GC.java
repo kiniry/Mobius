@@ -310,7 +310,7 @@ public final class GC {
     return check(locUse, cond.label, cond.pred, cond.locPragmaDecl, aux);
   }
 
-  //@ requires label != TagConstants.CHKFREE
+  //@ requires label != TagConstants.CHKFREE;
   public static Condition condition(int label, Expr pred,
 				    int locPragmaDecl) {
     Assert.notFalse(label != TagConstants.CHKFREE);
@@ -442,7 +442,7 @@ public final class GC {
     }
 
   //@ requires target != null ;
-  //@ requires var!=null && val!=null
+  //@ requires var!=null && val!=null;
   public static Expr subst(int sloc, int eloc,
 			   GenericVarDecl var, Expr val, Expr target) {
     if ( !Main.options().lazySubst ) {
@@ -455,7 +455,7 @@ public final class GC {
     }
   }
 
-  //@ requires var != null && val!=null
+  //@ requires var != null && val!=null;
   public static Expr subst(GenericVarDecl var, Expr val, Expr target) {
     return subst( Location.NULL, Location.NULL, var, val, target );
   }
@@ -510,7 +510,7 @@ public final class GC {
     case TagConstants.FLOATTYPE:
       return dzerolit;
     }
-    /*@ unreachable */
+    /*@ unreachable; */
     Assert.fail("Bad tag");
     return null;
   }
@@ -584,7 +584,7 @@ public final class GC {
    * Translate.trBody.  It is also temporarily changed by
    * GetSpec.trMethodDecl.
    */
-  //@ invariant thisvar.decl.type instanceof TypeSig
+  //@ invariant thisvar.decl.type instanceof TypeSig;
   public static final VariableAccess thisvar =
       makeFormalPara("this", javafe.tc.Types.javaLangObject(),
 		     UniqName.specialVariable);

@@ -149,7 +149,7 @@ public final class Targets {
     }
 
     default:
-      //@ unreachable
+      //@ unreachable;
       Assert.fail("UnknownTag<" + tag + ":" +
 		  TagConstants.toString(tag) + ">");
       return;

@@ -125,7 +125,7 @@ public abstract class PrettyPrint {
       start of a new-line. */
 
   //@ requires o != null && classId != null;
-  //@ requires d != null ==> d.hasParent
+  //@ requires d != null ==> d.hasParent;
   public abstract void print(OutputStream o, int ind, TypeDeclElem d, 
 			     Identifier classId, boolean showBody);
 
@@ -210,7 +210,7 @@ public abstract class PrettyPrint {
 	(tag==TagConstants.DOUBLELIT) ||
 	(tag==TagConstants.STRINGLIT) ||
 	(tag==TagConstants.CHARLIT)
-      ) */
+      ); */
   /*@ requires (
 	((tag==TagConstants.BOOLEANLIT) ==> (val instanceof Boolean)) &&
 	((tag==TagConstants.INTLIT) ==> (val instanceof Integer)) &&
@@ -219,7 +219,7 @@ public abstract class PrettyPrint {
 	((tag==TagConstants.DOUBLELIT) ==> (val instanceof Double)) &&
 	((tag==TagConstants.STRINGLIT) ==> (val instanceof String)) &&
 	((tag==TagConstants.CHARLIT) ==> (val instanceof Integer))
-      ) */
+      ); */
   //@ ensures \result != null;
   public static String toCanonicalString(int tag, Object val) {
     if (tag == TagConstants.BOOLEANLIT) return val.toString();
@@ -227,7 +227,7 @@ public abstract class PrettyPrint {
     if (tag == TagConstants.FLOATLIT) return val.toString() + "F";
 
     if (tag == TagConstants.INTLIT) {
-      //@ assert val instanceof Integer
+      //@ assert val instanceof Integer;
       int v = ((Integer) val).intValue();
       if (v == Integer.MIN_VALUE) return "0x80000000";
       else if (v < 0) return "0x" + Integer.toHexString(v);

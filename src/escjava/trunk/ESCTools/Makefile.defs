@@ -130,6 +130,9 @@ export ESC_VERSION ?= CURRENT-CVS
 export JAVADOC_GEN_DIR = ${ESCTOOLS_ROOT}/docs/api
 export JMLDOC_GEN_DIR = ${ESCTOOLS_ROOT}/docs/jmlapi
 
+## Definitions for Utils
+export UTILS_SOURCE_DIR = ${ESCTOOLS_ROOT}/Utils
+
 ## Pertinent definitions for Javafe
 export JAVAFE_ROOT = ${ESCTOOLS_ROOT}/Javafe
 export JAVAFE_SOURCE_DIR = ${JAVAFE_ROOT}/java
@@ -273,7 +276,7 @@ export MOCHA_CLASSES = ${MOCHA_SOURCE_DIR}:${ESCJAVA_ROOT}/jars/mochalib.jar
 
 # A colon-separated list of directories that contain the source code
 # for the whole of ESC/Java.
-export SOURCEPATH = ${JAVAFE_SOURCE_DIR}:${ESCJAVA_SOURCE_DIR}:${MOCHA_SOURCE_DIR}
+export SOURCEPATH = ${JAVAFE_SOURCE_DIR}:${ESCJAVA_SOURCE_DIR}:${MOCHA_SOURCE_DIR}:${UTILS_SOURCE_DIR}
  
 #
 # Need to sources here because we can't read binary inner classes;

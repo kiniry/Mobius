@@ -14,7 +14,9 @@ public class CorrelatedReaderTest
 
   //----------------------------------------------------------------------
 
-  //@ ensures false
+  //@ ensures false;
+  //@ diverges true;
+  //@ signals (Exception) false;
   static void error() {
     System.out.println("Usage: java CorrelatedReader [locs|reset|subreader]");
     System.exit(1);
@@ -23,7 +25,7 @@ public class CorrelatedReaderTest
   /** A test harness.
    */
 
-  //@ requires \nonnullelements(argv)
+  //@ requires \nonnullelements(argv);
   public static void main(String[] argv)
 	throws IOException, IndexOutOfBoundsException {
 
@@ -60,7 +62,7 @@ public class CorrelatedReaderTest
 	  cin.reset();
 	  int c2=cin.read();
 	  int loc2 = cin.getLocation();
-	  Assert.notFalse( c==c2 && loc==loc2,		//@ nowarn Pre
+	  Assert.notFalse( c==c2 && loc==loc2,		//@ nowarn Pre;
 			  "c="+c
 			  +" c2="+c2
 			  +" loc="+loc
@@ -103,7 +105,7 @@ public class CorrelatedReaderTest
 	      int loc2 = subReader.getLocation();
 	      subReader.reset();
 	
-	      Assert.notFalse(loc==loc2,			//@ nowarn Pre
+	      Assert.notFalse(loc==loc2,			//@ nowarn Pre;
 			      "loc="+loc
 			      +" loc2="+loc2
 			      +" read="+read
@@ -113,7 +115,7 @@ public class CorrelatedReaderTest
 
 	  for(int j=0; j<read-discard; j++) {
 	    int sc = subReader.read();
-	    Assert.notFalse(sb.charAt(j) == sc,		//@ nowarn Pre
+	    Assert.notFalse(sb.charAt(j) == sc,		//@ nowarn Pre;
 			    "sc='"+(char)sc+"'"
 			    +" sb("+j+")='"+sb.charAt(j)+"'"
 			    +"sb='"+sb+"'"
@@ -121,7 +123,7 @@ public class CorrelatedReaderTest
 			    +" read="+read+" discard="+discard );
 	  }
 	
-	  Assert.notFalse( subReader.read() == -1 );	//@ nowarn Pre
+	  Assert.notFalse( subReader.read() == -1 );	//@ nowarn Pre;
 	}
       }
       else

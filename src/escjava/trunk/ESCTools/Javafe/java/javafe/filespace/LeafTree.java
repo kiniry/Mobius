@@ -45,7 +45,7 @@ class LeafTree extends Tree {
 
     public final Enumeration children() {
 	Enumeration empty = new EmptyEnum();
-	//@ set empty.elementType = \type(Tree)
+	//@ set empty.elementType = \type(Tree);
 
 	return empty;
     }

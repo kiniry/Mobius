@@ -102,7 +102,7 @@ class FileTree extends PreloadedTree {
      **************************************************/
 
     /** A simple test driver */
-    //@ requires \nonnullelements(args)
+    //@ requires \nonnullelements(args);
     public static void main(String[] args) {
 	if (args.length>1) {
 	    System.out.println("FileTree: usage [<directory>]");

@@ -27,7 +27,7 @@ public abstract class Query {
      * Warning: the definition of accessible is host system dependent
      * and may in fact be defined as always true.<p>
      */
-    //@ requires \nonnullelements(P)
+    //@ requires \nonnullelements(P);
     public boolean accessable(String[] P) {
 	return true;
     }
@@ -40,7 +40,7 @@ public abstract class Query {
      * If such a file is found, then a (non-null) GenericFile
      * representing it is returned.  Otherwise, null is returned.<p>
      */
-    //@ requires \nonnullelements(P)
+    //@ requires \nonnullelements(P);
     public abstract GenericFile findFile(String[] P, String typename,
 					String extension);
     public abstract GenericFile findFile(String[] P, String filename);
@@ -70,7 +70,7 @@ public abstract class Query {
      * Return true iff the fully-qualified outside type P.T exists in
      * our Java file space.
      */
-    //@ requires \nonnullelements(P)
+    //@ requires \nonnullelements(P);
     public boolean exists(String[] P, String T) {
 	return (findFile(P, T, "java") != null)
 	    || (findFile(P, T, "class") != null);

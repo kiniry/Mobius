@@ -93,7 +93,7 @@ public class SrcReader extends Reader
      *                                                 *
      **************************************************/
 
-    //@ requires \nonnullelements(args)
+    //@ requires \nonnullelements(args);
     public static void main(String[] args) {
 	if (args.length != 1) {
 	    System.err.println("SrcReader: <source filename>");

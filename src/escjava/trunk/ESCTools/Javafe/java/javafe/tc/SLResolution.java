@@ -74,9 +74,9 @@ public class SLResolution {
      * A fatal error may be reported if we cannot resolve a supertype
      * name, or detect a cycle in the type hierarchy.<p>
      */
-    //@ requires sig.state < TypeSig.LINKSRESOLVED
-    //@ modifies sig.state
-    //@ ensures sig.state==TypeSig.LINKSRESOLVED
+    //@ requires sig.state < TypeSig.LINKSRESOLVED;
+    //@ modifies sig.state;
+    //@ ensures sig.state==TypeSig.LINKSRESOLVED;
     /*package*/ public static void transition(/*@ non_null @*/ TypeSig sig) {
 	/*
 	 * First, check to see if we've looped:
@@ -111,7 +111,7 @@ public class SLResolution {
 	    ClassDecl cd = (ClassDecl)d;
 
 	    if (cd.superClass==null) {
-		cd.superClass = TypeName.make(Name.make(//@ nowarn Pre//strlen
+		cd.superClass = TypeName.make(Name.make(//@ nowarn Pre;//strlen
 							"java.lang.Object", 
 							cd.locOpenBrace));
 		TypeSig.setSig(cd.superClass, Types.javaLangObject());

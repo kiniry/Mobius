@@ -85,7 +85,7 @@ public class FlowInsensitiveChecks
      *
      */
     //@ requires (* <code>s</code> is in prepped state.*);
-    //@ requires s.state >= TypeSig.PREPPED
+    //@ requires s.state >= TypeSig.PREPPED;
     public void checkTypeDeclaration(/*@ non_null @*/ TypeSig s) {
         Assert.precondition(s.state >= TypeSig.PREPPED);
 
@@ -114,7 +114,7 @@ public class FlowInsensitiveChecks
      *
      */
     //@ requires (* <code>fd</code> is in prepped state. *);
-    //@ modifies sig
+    //@ modifies sig;
     public void checkFieldDecl(/*@ non_null @*/ FieldDecl fd) {
 	/*
 	 * Special case for free-floating fields like length.
@@ -122,9 +122,9 @@ public class FlowInsensitiveChecks
 	 * Such fields must not have any modifier pragmas or an initializer.
 	 */
 	if (fd.parent==null) {
-	    Assert.notFalse(fd.pmodifiers == null,   //@ nowarn Pre
+	    Assert.notFalse(fd.pmodifiers == null,   //@ nowarn Pre;
                             "Free-floating FieldDecls may not have any ModifierPragmas");
-	    Assert.notFalse(fd.init == null,         //@ nowarn Pre
+	    Assert.notFalse(fd.init == null,         //@ nowarn Pre;
                             "Free-floating FieldDecls may not have initializers");
 
 	    return;         // No other works needs to be done
@@ -222,7 +222,7 @@ public class FlowInsensitiveChecks
                     ConstructorDecl cd = (ConstructorDecl)rd;
 
                     // Was checked in parser
-                    Assert.notFalse(!(d instanceof InterfaceDecl)); //@ nowarn Pre
+                    Assert.notFalse(!(d instanceof InterfaceDecl)); //@ nowarn Pre;
 
                     // Modifiers were checked when we prep'ed the constructed
                     returnType = Types.voidType;
@@ -319,7 +319,7 @@ public class FlowInsensitiveChecks
      * </p>
      */
     //@ requires e != null && s != null;
-    //@ requires !(e instanceof EnvForCU)
+    //@ requires !(e instanceof EnvForCU);
     //@ requires sig != null;
     //@ ensures \result != null;
     //@ ensures !(\result instanceof EnvForCU);
@@ -418,7 +418,7 @@ public class FlowInsensitiveChecks
                                 // Check if it is a duplicate
                                 // val may be Integer or Long, convert to Long for
                                 // duplicate checking
-                                Assert.notFalse(val instanceof Long    //@ nowarn Pre
+                                Assert.notFalse(val instanceof Long    //@ nowarn Pre;
                                                 || val instanceof Integer);
                                 Long valLong = new Long(ConstantExpr.getLongConstant(val));
                                 if(switchValues.containsKey(valLong)) {
@@ -689,7 +689,7 @@ public class FlowInsensitiveChecks
 
                 TypeSig calleeSig =
                     ci.superCall 
-                    ? TypeSig.getSig(((ClassDecl)sig.getTypeDecl()) //@nowarn Cast,NonNull
+                    ? TypeSig.getSig(((ClassDecl)sig.getTypeDecl()) //@nowarn Cast,NonNull;
                                      .superClass)
                     : sig;
 
@@ -842,7 +842,7 @@ public class FlowInsensitiveChecks
         return e;			// dummy
     }
 
-    //@ requires !(se instanceof EnvForCU)
+    //@ requires !(se instanceof EnvForCU);
     //@ requires sig != null;
     protected void checkForLoopAfterInit(/*@ non_null */ Env se,
                                          /*@ non_null */ ForStmt f) {
@@ -857,10 +857,10 @@ public class FlowInsensitiveChecks
     }
 
     //@ requires env != null && v != null;
-    //@ requires !(env instanceof EnvForCU)
+    //@ requires !(env instanceof EnvForCU);
     //@ requires sig != null;
     //@ ensures \result != null;
-    //@ ensures !(\result instanceof EnvForCU)
+    //@ ensures !(\result instanceof EnvForCU);
     protected Env checkStmtVec(Env env, StmtVec v) {
 	for(int i = 0, sz = v.size(); i < sz; i++) {
 	    Stmt stmt = v.elementAt(i);
@@ -872,10 +872,10 @@ public class FlowInsensitiveChecks
     }
 
   
-    //@ requires env != null && ev != null  
-    //@ requires !(env instanceof EnvForCU)
+    //@ requires env != null && ev != null  ;
+    //@ requires !(env instanceof EnvForCU);
     //@ requires sig != null;
-    //@ ensures \nonnullelements(\result)
+    //@ ensures \nonnullelements(\result);
     protected Type[] checkExprVec(Env env, ExprVec ev) {
 
         Type[] r = new Type[ ev.size() ];
@@ -892,10 +892,10 @@ public class FlowInsensitiveChecks
 
 
     //@ requires sig != null;
-    //@ requires !(env instanceof EnvForCU)
+    //@ requires !(env instanceof EnvForCU);
     //@ requires env != null && x != null && expectedResult != null;
     //@ ensures \result != null;
-    //@ ensures (x instanceof ArrayInit) ==> \result instanceof ArrayInit
+    //@ ensures (x instanceof ArrayInit) ==> \result instanceof ArrayInit;
     protected VarInit checkInit(Env env, VarInit x, Type expectedResult) {
         if (x instanceof ArrayInit) {
             ArrayInit ai = (ArrayInit)x;
@@ -914,13 +914,13 @@ public class FlowInsensitiveChecks
             return x;
 
         } else {
-            //@ assume \typeof(x) <: \type(Expr)
+            //@ assume \typeof(x) <: \type(Expr);
             return checkExpr(env, (Expr) x, expectedResult);
         }
     }
 
     //@ requires env != null && e != null;
-    //@ requires !(env instanceof EnvForCU)
+    //@ requires !(env instanceof EnvForCU);
     //@ requires sig != null;
     //@ ensures \result != null;
     protected Expr checkDesignator(Env env, Expr e) {
@@ -941,7 +941,7 @@ public class FlowInsensitiveChecks
     }
 
     //@ requires env != null && expr != null && t != null;
-    //@ requires !(env instanceof EnvForCU)
+    //@ requires !(env instanceof EnvForCU);
     //@ requires sig != null;
     //@ ensures \result != null;
     protected Expr checkExpr(Env env, Expr expr, Type t) {
@@ -955,7 +955,7 @@ public class FlowInsensitiveChecks
      * done.
      */
     //@ requires env != null && x != null;
-    //@ requires !(env instanceof EnvForCU)
+    //@ requires !(env instanceof EnvForCU);
     //@ requires sig != null;
     //@ ensures \result != null;
     protected Expr checkExpr(Env env, Expr x) {
@@ -1083,7 +1083,7 @@ public class FlowInsensitiveChecks
                     TypeSig enclosingInstanceType;
                     try {
                         enclosingInstanceType =
-                            (TypeSig)getType(ne.enclosingInstance);  //@ nowarn Cast//caught
+                            (TypeSig)getType(ne.enclosingInstance);  //@ nowarn Cast;//caught
                     } catch (ClassCastException E) {
                         ErrorSet.error(ne.enclosingInstance.getStartLoc(),
                                        "The enclosing instance supplied in a new"
@@ -1157,7 +1157,7 @@ public class FlowInsensitiveChecks
                 if (ne.anonDecl != null) {
                     // Update anonDecl to have proper supertype:
                     if (calleeSig.getTypeDecl() instanceof ClassDecl) {
-                        Assert.notFalse(ne.anonDecl.superClass==null);  //@ nowarn Pre
+                        Assert.notFalse(ne.anonDecl.superClass==null);  //@ nowarn Pre;
                         ne.anonDecl.superClass = ne.type;
                     } else {
                         ne.anonDecl.superInterfaces.addElement(ne.type);
@@ -1509,7 +1509,7 @@ public class FlowInsensitiveChecks
                 Assert.notNull(getType(lva));
 
                 // Front-end VariableAccess's never point to fields:
-                Assert.notFalse(!(lva.decl instanceof FieldDecl)); //@ nowarn Pre
+                Assert.notFalse(!(lva.decl instanceof FieldDecl)); //@ nowarn Pre;
 
                 // Make sure only access final variables from enclosing instances:
                 if (Env.whereDeclared(lva.decl) != sig &&
@@ -1535,7 +1535,7 @@ public class FlowInsensitiveChecks
     // ======================================================================
 
     //@ requires env != null && od != null;
-    //@ requires !(env instanceof EnvForCU)
+    //@ requires !(env instanceof EnvForCU);
     //@ requires sig != null;
     protected Type checkObjectDesignator(Env env, ObjectDesignator od) {
 
@@ -1574,7 +1574,7 @@ public class FlowInsensitiveChecks
                     if (d instanceof ClassDecl) {
                         TypeName superClass = ((ClassDecl)d).superClass;
                         if (superClass==null) {
-                            Assert.notFalse(sig==Types.javaLangObject()); //@ nowarn Pre
+                            Assert.notFalse(sig==Types.javaLangObject()); //@ nowarn Pre;
                             ErrorSet.error(sod.locDot, 
                                             "Can't use keyword super in java.lang.Object");
                             return null;
@@ -1702,8 +1702,8 @@ public class FlowInsensitiveChecks
     // ======================================================================
 
     //@ requires left != null && right != null;
-    //@ requires loc != Location.NULL
-    //@ ensures \result != null  
+    //@ requires loc != Location.NULL;
+    //@ ensures \result != null  ;
     protected Type checkBinaryExpr(int op, Expr left, Expr right, int loc) {
   
         Type leftType = getType(left);
@@ -1948,7 +1948,7 @@ public class FlowInsensitiveChecks
      * Decorates <code>VarInit</code> nodes to point to <code>Type</code> objects.
      */
     //@ invariant typeDecoration != null;
-    //@ invariant typeDecoration.decorationType == \type(Type)
+    //@ invariant typeDecoration.decorationType == \type(Type);
     private static ASTDecoration typeDecoration
         = new ASTDecoration("typeDecoration");
 
@@ -1994,13 +1994,13 @@ public class FlowInsensitiveChecks
      * objects.
      */
     //@ invariant branchDecoration != null;
-    //@ invariant branchDecoration.decorationType == \type(Stmt)
+    //@ invariant branchDecoration.decorationType == \type(Stmt);
     private static ASTDecoration branchDecoration
         = new ASTDecoration("branchDecoration");
 
     //@ requires s != null && l != null;
     private static void setBranchLabel(BranchStmt s, Stmt l) {
-        Assert.notFalse(branchDecoration.get(s) == null);	//@ nowarn Pre
+        Assert.notFalse(branchDecoration.get(s) == null);	//@ nowarn Pre;
         branchDecoration.set(s,l);
     }
 
@@ -2036,7 +2036,7 @@ public class FlowInsensitiveChecks
     }
 
     //@ requires e != null && s != null && t != null;
-    //@ requires loc != Location.NULL
+    //@ requires loc != Location.NULL;
     protected static void reportLookupException(LookupException e, 
                                                 String s, 
                                                 String t, 
@@ -2156,7 +2156,7 @@ public class FlowInsensitiveChecks
         if (env == null) {
             env = (Env)Env.typeEnv.get(t);
         }	
-        Assert.notFalse(env != null);  //@ nowarn Pre
+        Assert.notFalse(env != null);  //@ nowarn Pre;
         checkTypeModifierPragmaVec(t.tmodifiers, t, env);
         if (t instanceof ArrayType) {
             env = checkTypeModifiers(env, ((ArrayType)t).elemType);

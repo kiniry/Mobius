@@ -341,7 +341,7 @@ public class DSA {
 	}
 
       default:
-	//@ unreachable
+	//@ unreachable;
 	Assert.fail("Fall thru on "+g);
 	return null;
     }
@@ -480,7 +480,7 @@ public class DSA {
 	}
 
       default:
-	//@ unreachable
+	//@ unreachable;
 	Assert.fail("Fall thru on "+g);
 	break;
     }
@@ -552,7 +552,7 @@ public class DSA {
 	}
 
       default:
-	//@ unreachable
+	//@ unreachable;
 	Assert.fail("Fall thru on "+g);
 	break;
     }

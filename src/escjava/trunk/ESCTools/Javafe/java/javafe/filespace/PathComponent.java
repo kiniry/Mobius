@@ -104,8 +104,8 @@ public class PathComponent {
     /**
      * Does a filename indicate that it is in zip format? <p>
      *
-     * <esc> requires name != null </esc>
      */
+    //@ requires name != null; 
     protected static boolean isZipFilename(String name) {
 	return name.endsWith(".zip") || name.endsWith(".jar");
     }
@@ -118,7 +118,7 @@ public class PathComponent {
      **************************************************/
 
     /** A simple test driver */
-    //@ requires \nonnullelements(args)
+    //@ requires \nonnullelements(args);
     public static void main(String[] args) throws IOException {
 	// Check usage:
 	if (args.length<1 || args.length>2) {
@@ -157,7 +157,7 @@ public class PathComponent {
 		return;
 	    }
 
-	    InputStream I = ((GenericFile)F.data).getInputStream(); //@ nowarn Cast,Null
+	    InputStream I = ((GenericFile)F.data).getInputStream(); //@ nowarn Cast,Null;
 	    for (;;) {
 		int next = I.read();
 		if (next<0)
@@ -175,7 +175,7 @@ public class PathComponent {
 	Enumeration E = new TreeWalker(T);
 	while (E.hasMoreElements()) {
 	    Tree node = (Tree)E.nextElement();
-	    GenericFile file = (GenericFile)node.data;	//@ nowarn Cast
+	    GenericFile file = (GenericFile)node.data;	//@ nowarn Cast;
 	    //@ assume file != null;
 
 	    System.out.print(file.getHumanName() + " ");

@@ -529,7 +529,7 @@ public class TagConstants extends GeneratedTags
             if (s.equals(escchecks[i - FIRSTESCCHECKTAG]))
                 return i;
         }
-        //@ unreachable
+        //@ unreachable;
         Assert.fail("unrecognized check string: \"" + s + "\"");
         return -1;
     }

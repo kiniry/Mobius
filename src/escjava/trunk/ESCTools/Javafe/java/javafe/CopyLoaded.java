@@ -215,7 +215,7 @@ public class CopyLoaded extends FrontEndTool implements Listener {
         String P[] = FQNpackage(s);
         String T = FQNname(s);
         TypeSig sig = OutsideEnv.lookup(P, T);
-        Assert.notFalse(sig != null); //@ nowarn Pre
+        Assert.notFalse(sig != null); //@ nowarn Pre;
     
         String path = makeDirTree(options().outDir, P);
         String outFile = T + ".spec";
@@ -389,7 +389,7 @@ public class CopyLoaded extends FrontEndTool implements Listener {
         TypeDecl decl = sig.getTypeDecl();
         for (int i=0; i<decl.elems.size(); i++) {
             if (decl.elems.elementAt(i) instanceof TypeDecl)
-            handleTD((TypeDecl)decl.elems.elementAt(i)); //@ nowarn Cast
+            handleTD((TypeDecl)decl.elems.elementAt(i)); //@ nowarn Cast;
         }
     }
     

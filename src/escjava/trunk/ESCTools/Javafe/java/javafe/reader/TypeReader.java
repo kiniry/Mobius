@@ -39,7 +39,7 @@ abstract public class TypeReader extends Reader
      * Warning: the definition of accessible is host system dependent
      * and may in fact be defined as always true.<p>
      */
-    //@ requires \nonnullelements(P)
+    //@ requires \nonnullelements(P);
     abstract public boolean accessable(String[] P);
 
 
