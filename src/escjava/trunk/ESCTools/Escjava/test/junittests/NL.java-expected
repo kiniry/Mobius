@@ -87,6 +87,9 @@ NL.java:54: Warning: Possible assignment of null to variable declared non_null (
 Associated declaration is "NL.java", line 103, col 33:
         /*@ pure */ public void qqm(/*@ non_null */ Object o) {
                                         ^
+NL.java:54: Warning: Precondition possibly not established (Pre)
+                qqm(oo); // FAILS 
+                   ^
 Associated declaration is "NL.java", line 49, col 5:
         //@ requires false;
             ^
@@ -146,6 +149,9 @@ NL.java:82: Warning: Possible assignment of null to variable declared non_null (
 Associated declaration is "NL.java", line 75, col 31:
         /*@ pure */ public void p(/*@ non_null */ Object o) {
                                       ^
+NL.java:82: Warning: Possible assignment of null to variable declared non_null (NonNull)
+                p(oo);  // FAILS
+                 ^
 Associated declaration is "NL.java", line 114, col 31:
         /*@ pure */ public void p(/*@ non_null */ Object o) {
                                       ^
@@ -247,4 +253,4 @@ NLS: NLS() ...
     [TIME]  passed immediately
   [TIME total]
 2 cautions
-15 warnings
+17 warnings
