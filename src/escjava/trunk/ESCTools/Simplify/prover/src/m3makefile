@@ -7,7 +7,7 @@
 /* Last modified on Tue Jul 16 21:19:10 PDT 2002 by saxe                     */
 /*      modified on Mon Nov  4 16:07:45 PST 1996 by detlefs                  */
 
-m3_option("-g2 -times")
+% m3_option("-g2 -times")
 
 %  import("esc")
 
