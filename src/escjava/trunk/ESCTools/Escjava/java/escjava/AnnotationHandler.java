@@ -1111,8 +1111,13 @@ public class AnnotationHandler {
           MethodInvocation m = (MethodInvocation)x;
           if (Main.options().checkPurity && !Utils.isPure(m.decl)) {
             ErrorSet.error(m.locId, "Method " + m.id
-                + " is used in an annotation" + " but is not pure ("
-                + Location.toFileLineString(m.decl.loc) + ")");
+                + " may not be used in an annotation since it is not pure",
+                m.decl.loc);
+            if (Main.options().checkPurity && Utils.isAllocates(m.decl)) {
+              ErrorSet.error(m.locId, "Method " + m.id
+                + " may not be used in an annotation since it allocates"
+                + " fresh storage");
+            }
           }
           break;
         case TagConstants.NEWINSTANCEEXPR:
