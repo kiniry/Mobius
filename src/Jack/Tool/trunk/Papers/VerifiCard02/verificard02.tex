@@ -170,8 +170,8 @@ presents future work.
 
 The electronic purse is a JavaCard application~\cite{JavaCardURL}, published
 as an advanced smart card programming case study by
-GemPlus~\cite{PurseUrl}. A JavaCard smart card is capable of running
-programs developed in {JavaCard}, which is a dialect of
+Gemplus~\cite{PurseUrl}. A JavaCard smart card is capable of running
+programs developed in {JavaCard}, a dialect of
 standard Java. {JavaCard} does not provide concepts such as dynamic
 class loading, security management, multi-threading and
 synchronization, object cloning and large primitive date types (float,
@@ -201,11 +201,11 @@ limited to \texttt{maxTransactionWOPIN}.
 
 
 \paragraph{\bf The \textit{credit} operation.} 
-If the balance on the card is not sufficient to do a certain debit
-operation, the balance can be increased by doing a credit
+If the balance on the card is not sufficient to execute a certain debit
+operation, the balance can be increased by performing a credit
 operation. To do this, the terminal asks the bank for credit
 permission. If the permission is obtained, the account is credited and 
-a confirmation is send to the bank.
+a confirmation is send back to the bank.
 
 
 \paragraph{\bf The \textit{currency change} operation.} The balance
@@ -218,8 +218,8 @@ purse must modify all variables related to the currency. \\
 
 The purse applet interacts with so-called \textit{loyalty applets}
 (implementing \emph{e.g.}~a frequent flyer program) that may be
-present on the card. Within the loyalty applet the card holder gets
-loyalty points when doing certain purchases, and these points can be
+present on the card. Within the loyalty applet, the card holder gets
+loyalty points for doing certain purchases, and these points can be
 used later to do other purchases. Further, a \textit{card issuer
 applet} should be available on the card, which can initialise the
 purse. And finally, the purse applet also communicates with the 
@@ -233,8 +233,9 @@ implements basic classes such as \texttt{Annee} (year),
 \texttt{Mois} (month) \texttt{Jour} (day), and \texttt{Decimal}
 (floating point numbers).  The \texttt{pacap\-interfaces} package
 declares sharable interfaces which enable the purse applet to
-communicate with the loyalty applets on the card.  The \texttt{purse}
-package is the core of the purse application.  It contains the class
+communicate with \emph{e.g.}~the loyalty applets on the card.  The
+\texttt{purse} package is the core of the purse application.  It
+contains the class
 \texttt{PurseApplet}, which manages the operations related with 
 installation, selection and deselection, and which communicates with the
 point of sale terminal.  The basic purse functionalities are
@@ -255,13 +256,13 @@ loyalty programs that the card holder is subscribed to (in a
 %type \texttt{Transaction}. A similar situation occurs with the current
 %currency and the different loyalties managed by the purse.
 
-Certain operations can only be performed by a restricted set of user,
+Certain operations can only be performed by a restricted set of users,
 \emph{e.g.}~because a pincode is needed.
-The \texttt{AccessCondition} class defines the different access
-conditions, and the \texttt{AccessControl} binds the access conditions
+The class \texttt{AccessCondition} defines the different access
+conditions, and the class \texttt{AccessControl} binds the access conditions
 to the operations. So, when a card holder intends to perform a certain
 operation, the purse application will check that the card holder has
-the appropriate permissions.. %The class
+the appropriate permissions. %The class
 %\texttt{AccessControlTable} permits to declare
 %all of different access controls that purse uses. 
 %When the currency change takes place, the 
@@ -274,7 +275,7 @@ the purse application.  Finally, the purse application contains several classes
 implementing cryptographic concepts, namely, \texttt{PacapCertificate},
 \texttt{PacapCipher}, \texttt{PacapKey}, \texttt{PacapRandom},
 \texttt{PacapSecureMessaging} and \texttt{PacapSignature}. These
-classes are not studied by us.
+classes are not studied in full detail in this case study.
 
 
 
@@ -301,7 +302,7 @@ specification. If it cannot establish this, it issues a warning.
 %supposed being correct).
 
 The specifications are given as
-\textit{pre-conditions}, \textit{post-conditions} and \textit{class
+\textit{preconditions}, \textit{postconditions} and \textit{class
 invariants}. The properties are specified as Java expressions,
 enriched with several specification-specific constructs. Here, we
 present some Esc/Java constructs (called pragmas), together with an
@@ -309,7 +310,7 @@ example of their use. Their full description can be found
 in~\cite{LeinoNS00}.
 
 \subsection{ESC/Java pragmas}
-\subsubsection{Routine modifiers pragmas}
+\subsubsection{Pragmas for specifying methods}
 \begin{itemize}
 \item{\texttt{requires P}.}
 This pragma specifies a precondition {\tt P}.
@@ -320,7 +321,7 @@ it can not establish that \texttt{P} holds at the call site.
 
 \item{\texttt{ensures Q}.}
 This pragma specifies a postcondition \texttt{Q}. The postcondition 
-is supposed to hold if the method terminates normally, \emph{i.e.},
+is supposed to hold if the method terminates normally, \emph{i.e.}
 without throwing an exception.
 
 \item{\texttt{exsures (E) R}.}
@@ -352,22 +353,22 @@ variable \texttt{V}. The second one denotes that \texttt{E} is true
 for a substitution of a value of type \texttt{T} for the bound
 variable \texttt{V}.
 
-\item{\texttt{$\backslash$old($E$)}.} Within a post-condition, this denotes
-the value of \texttt{E} in the pre-state of the method invocation. 
+\item{\texttt{$\backslash$old($E$)}} is used within a postcondition, where it denotes the value of \texttt{E} in the pre-state of the method invocation.
 
-\item {\tt$\backslash$result.} Within an \texttt{ensures} clause
-belonging to a non-void method, this represents the value returned by
-the method.
+\item {\tt$\backslash$result} represents the value returned by
+a non-void method method. It can only be used within an
+\texttt{ensures} clause.
 \end{itemize}
 
 
-\begin{figure}
+\begin{figure}[t]
 \rule{\linewidth}{0.3mm}
 \begin{verbatim}
 /*@
-   modifies nbData, data[nbData] ;
-   ensures nbData == \old(nbData)<MAX_DATA ? \old(nbData)+1 :\old(nbData) ; 
-   ensures data[\old(nbData)] == (\old(nbData)<MAX_DATA ? cur : data[nbData]) ;
+  modifies nbData, data[nbData];
+  ensures (\old(nbData) < MAX_DATA) ?
+            (nbData == \old(nbData) + 1 && data[\old(nbData)] == cur) :
+            (nbData == \old(nbData));
 */
 void addCurrency(byte cur){
    if(nbData < MAX_DATA) {
@@ -389,22 +390,20 @@ to the class \texttt{Currencies}. This class stores all currencies
 supported by the purse application. The method
 \texttt{addCurrency} adds a new currency to the list of valid
 currencies. This list is represented by the
-\texttt{data} array. The \texttt{modifies} clause declared in the
+array \texttt{data}. The \texttt{modifies} clause declared in the
 method's header specifies that
 this method may modify \texttt{nbData} and
 \texttt{data} in the position \texttt{nbData}\footnote{More precisely, it
 specifies that the method only may modify these instance variables and
-the local variables and formal parameters of the method.}. The method
-\texttt{addCurrency} has 
-two post-conditions (written as \texttt{ensure} clauses). The first
-one expresses that if \texttt{nbData} has not reached yet the
-threshold value \texttt{MAX$\_$DATA}, \texttt{nbData} will increase
-its value by one. The second one signals that the array variable
-\texttt{data} will take the value indicated by the formal parameter
-\texttt{cur} in the \texttt{nbData} position, if the table is not full
-yet. Inside the post-conditions, the expression
-\texttt{$\backslash$old(nbData)} refers to the value of \texttt{nbData} 
-before the method invocation.
+the local variables and formal parameters of the method.}. The
+postcondition of the method \texttt{addCurrency} (written as
+\texttt{ensure} clause) expresses that if \texttt{nbData} has not
+yet reached the threshold value \texttt{MAX$\_$DATA}, \texttt{nbData}
+will increase its value by one and the value of the formal parameter
+\texttt{cur} will be assigned to \texttt{data[\(\backslash\)old(nbData)]}. 
+Inside the postcondition, the expression
+\texttt{$\backslash$old(nbData)} refers to the value of
+\texttt{nbData} before the method invocation.
 
 
 
@@ -487,7 +486,9 @@ invariants in more detail.
 Sometimes discrepancies between the informal documentation and the
 implementation occur. In general we try to follow the informal
 documentation, and we correct the implementation where necessary
-(and document these changes). 
+(and document these changes). In several cases we consulted the case
+study developers at Gemplus, to get a better understanding which
+behaviour was actually intended.
 
 In the case study, several functions from the JavaCard
 API~\cite{JavaCardAPI} are used. When we specify methods using API
@@ -507,6 +508,31 @@ postcondition) of the classes dealing with key generation and
 certification. This enables to write and check the specifications of
 the classes \texttt{Purse} and \texttt{PurseApplet}. How to specify
 and verify cryptographic algorithms is a topic of future research.
+
+\begin{figure}[t]
+\rule{\linewidth}{0.3mm}
+\begin{verbatim}
+/*@
+  requires d != null;
+  ensures \result == (intPart>d.intPart ||
+                     (intPart == d.intPart && 
+                        (decPart == d.decPart||decPart > d.decPart)));
+*/
+public boolean isGreaterEqualThan(Decimal d){
+  boolean resu = false ;
+  if(intPart>d.getIntPart()) resu = true ;
+  else if(intPart<d.getIntPart()) resu = false ;
+  else if(intPart==d.getIntPart()){
+    if((decPart>d.getDecPart()) || (decPart>d.getDecPart())) resu=true ;
+    else if(decPart<d.getDecPart()) resu = false ;
+  }
+  return resu ;
+}
+\end{verbatim}
+\caption{Method {\tt isGreaterEqualThan}}
+\label{fig-cla-dec}
+\rule{\linewidth}{0.3mm}
+\end{figure}
 
 We aim at giving specifications which produce a minimal amount of
 ESC/Java warnings, but not all warnings can be avoided. Typically, if
@@ -547,72 +573,58 @@ which helps in finding errors.
 
 \subsubsection{Implementation mistakes}
 This section presents some examples of common programming
-errors. At the begining, when we start to assert this application, we
-had only on hands an informal specification of the classes, seldom
-complete. Several mails after we achieved to have a more detailed informal
-specifications of classes from the GemPlus team, which reflected what
-the source code actually intended for. By taking this informal
-specification, making assertions Esc/Java specification for classes
-and methods and finally running Esc/Java on this asserted code, we
-have found gap points where the source code, specifically classes and
-methods, does not provide their specification. This kind of errors
-could has been found by hand, but using a tool like Esc/Java give us
-the certainty all cases will be considered.
-
+errors, and how we found them using ESC/Java.
+% At the begining, when we start to assert this application, we
+%had only on hands an informal specification of the classes, seldom
+%complete. Several mails after we achieved to have a more detailed informal
+%specifications of classes from the GemPlus team, which reflected what
+%the source code actually intended for. By taking this informal
+%specification, making assertions Esc/Java specification for classes
+%and methods and finally running Esc/Java on this asserted code, we
+%have found gap points where the source code, specifically classes and
+%methods, does not provide their specification. This kind of errors
+%could has been found by hand, but using a tool like Esc/Java give us
+%the certainty all cases will be considered.
 
 
 
 \paragraph{The isGreaterEqualThan method}
 
-The \texttt{Decimal} class
-represents a floating point number as
-composed by a decimal part and a integer part. These concepts are
-represented by instance variables called respectively \texttt{intPart}
-and \texttt{decPart}. The
+
+
+The class \texttt{Decimal} 
+represents a floating point number 
+composed of a decimal part and a integer part,
+represented by instance variables \texttt{decPart}
+and \texttt{intPart}, respectively. The
 method \texttt{isGreaterEqualThan} (see Figure~\ref{fig-cla-dec})
-belongs to the \texttt{Decimal} class and it aims to verify when the
-decimal represented by \texttt{this} is greater or equal than its parameter
-\texttt{d}. Consequently, we have speficied a post-condition to express
-this desirable condition.
+belongs to this class and (as suggested by its name and the informal
+documentation) it is supposed to decide whether the
+decimal represented by \texttt{this} is greater or equal than the
+decimal represented by parameter
+\texttt{d}. This behaviour is specified in the method specification.
 
-After running ESC/Java on this asserted method, a warning is
-issued. This warning suggests that this post-condition
-does not hold. A careful inspection of the code reveals a
-\emph{``copy paste''} error on line $6$. On this
-line, the same
-condition is checked in both sides of the \emph{or} Java operator. A
-detailed revision of this code show us that this source code really
-implements a supposed \emph{isGreatherThan} method. So, if for example 
-the \texttt{if} guard is replaced by \texttt{decPart >= d.getDecPart()}, this source
-code would implement really what its informal specification aims,
-although this one it would not be the most reduced one. One nicer
-way to do it would consist of taking the \texttt{ensure} clause self,
-for instead.
-\begin{figure}[hbt]
-\rule{\linewidth}{0.3mm}
-\begin{verbatim}
-    /*@
-      //modifies \nothing
-      requires d != null ;
-      ensures \result == (intPart>d.intPart ||
-        (intPart == d.intPart && (decPart == d.decPart||decPart > d.decPart))) ;
-    */}
-1.  public boolean isGreaterEqualThan(Decimal d){
-2.    boolean resu = false ;
+However, after running ESC/Java on this asserted method, a warning is
+issued, suggesting that the postcondition
+might not hold. Inspection of the code reveals a
+\emph{``copy paste''} error in the fourth \texttt{if} statement, where 
+the same condition is tested twice, on both side of an \texttt{||}
+(or) operator. Replacing this condition 
+%on line $6$. On this
+%line, the same
+%condition is checked in both sides of the \emph{or} Java operator. A
+%detailed revision of this code show us that this source code really
+%implements a supposed \emph{isGreatherThan} method. So, if for example 
+%the \texttt{if} guard is replaced 
+by \texttt{decPart >= d.getDecPart()} would solve the problem,
+although it would probably be better to rewrite the method so that it
+simply tests the condition as expressed in the postcondition.
 
-3.    if(intPart>d.getIntPart()) resu = true ;
-4.    else if(intPart<d.getIntPart()) resu = false ;
-5.    else if(intPart==d.getIntPart()){
-6.      if((decPart>d.getDecPart()) || (decPart>d.getDecPart())) resu=true ;
-7.      else if(decPart<d.getDecPart()) resu = false ;
-8.    }
-9.    return resu ;
-10. }
-\end{verbatim}
-\caption{Method {\tt isGreaterEqualThan}}
-\label{fig-cla-dec}
-\rule{\linewidth}{0.3mm}
-\end{figure}
+% this source
+%code would implement really what its informal specification aims,
+%although this one it would not be the most reduced one. One nicer
+%way to do it would consist of taking the \texttt{ensure} clause self,
+%for instead.
 
 
 
@@ -621,65 +633,69 @@ for instead.
 
 \paragraph{Final modifiers}
 
-The \texttt{Annee} class represents a \textit{year}. It class
+\begin{figure}[t]
+\rule{\linewidth}{0.3mm}
+\begin{verbatim}
+/*@
+  modifies jour, mois, annee;
+  requires j >= Jour.MIN  && j <= Jour.MAX;
+  requires m >= Mois.MIN  && m <= Mois.MAX;
+  requires a >= Annee.MIN && a <= Annee.MAX;
+  ensures jour == j && annee == a && mois == m;
+*/
+public void setDate(byte j, byte m, byte a) throws DateException{...} 
+\end{verbatim}
+\caption{Fragment of class {\tt Date}}
+\label{fig-cla-dat}
+\rule{\linewidth}{0.3mm}
+\end{figure}
+
+
+
+The class \texttt{Annee} represents a \textit{year}. It 
 declares two
 static variables called \texttt{MIN} and \texttt{MAX}, which represent
 the minimum and maximum year allowed by the application.
-Its declarations are as follows $:$
+Its declarations are as follows:
 \begin{verbatim}
 public static byte MIN = (byte)99 ;
 public static byte MAX = (byte)127 ;
 \end{verbatim}
 
-The \texttt{Annee} class defines also a method \texttt{check}, which is
-used to determine that a value is between these variables. The
-\texttt{Date} class
-represents $:$ \texttt{jour}(day),
-\texttt{mois}(month), \texttt{annee}(year). The method
-\texttt{setDate}, which is presented in Figure~\ref{fig-cla-dat}
-belongs to this class, and assigns the arguments to the
-instance variables as long as they are in a valid interval (see
-\texttt{requires} pragma). In the particular case of the parameter
-that represents a year, \texttt{setDate} uses the
-method \texttt{check} of the \texttt{Annee} class to check this
-value is in range. Nevertheless, ESC/Java complains when it
+The class \texttt{Annee} also defines a method \texttt{check}, which is
+used to determine whether a value is between \texttt{MIN} and \texttt{MAX}. The
+class \texttt{Date} has three instance variables, representing the
+components of a date: \texttt{jour} (day),
+\texttt{mois} (month), and \texttt{annee} (year). The method
+\texttt{setDate} (see Figure~\ref{fig-cla-dat})
+in this class assigns its arguments to these
+instance variables, provided they are in a valid interval (see the
+\texttt{requires} pragma). %In the particular case of the parameter
+%that represents a year, \texttt{setDate} uses the
+%method \texttt{check} of the \texttt{Annee} class to check this
+%value is in range. 
+Surprisingly, ESC/Java complains when it
 finds a statement such as
 \mbox{\tt date.setDate((byte)1, (byte)1, (byte)110);} (where date is a
 instance of class \texttt{Date}). The warning message states that the
-third does not verify the third condition. This warning is shown in
-spite of this call respect the
-requires condition, i.e, $110>=99\ \&\&\ 110<= 127$.
+the third precondition of this call might not hold, even though 110 is 
+between 99 and 127.
+%third does not verify the third condition. This warning is shown in
+%spite of this call respect the
+%requires condition, i.e, $110>=99\ \&\&\ 110<= 127$.
 
-The problem is caused by the wrong declaration of \textsc{MIN}
-and \textsc{MAX} variables belonging to the \texttt{Annee}
-class. These variables were not declared as
-\texttt{final}\footnote{Java does not allow to change in runtime the
-value of a final {\tt final} variable.}, thus, their values could be
-changed in runtime by
-a direct assignation\footnote{In fact, due to these variables
-are declared are \texttt{public}}, and the pre-condition would be not
-satisfied. 
+The problem is caused by the erroneous declaration of the variables 
+\texttt{MIN} and \textsc{MAX} variables in class \texttt{Annee}.
+Because these variables are not declared 
+\texttt{final}\footnote{According to the Java semantics, final
+variables may only be modified when they are initialised, and
+afterwards they remain constant.}, their values can be
+changed at runtime by
+a direct assignment (as they are declared public). Thus, because the
+values of \texttt{MIN} and \texttt{MAX} might have changed, ESC/Java
+warns that possibly the precondition might not be satisfied.
 
 
-
-\begin{center}
-\begin{figure}[hbt]
-\rule{\linewidth}{0.3mm}
-\begin{verbatim}
-1.  /*@
-2.    modifies jour, mois, annee ;
-3.    requires j >= Jour.MIN  && j <= Jour.MAX ;
-4.    requires m >= Mois.MIN  && m <= Mois.MAX ;
-5.    requires a >= Annee.MIN && a <= Annee.MAX ;
-6.    ensures jour == j && annee == a && mois == m ;
-7.   */
-     public void setDate(byte j, byte m, byte a) throws DateException{...} 
-\end{verbatim}
-\caption{Piece of {\tt Date} class}
-\label{fig-cla-dat}
-\rule{\linewidth}{0.3mm}
-\end{figure}
-\end{center}
 
 
 
@@ -913,7 +929,7 @@ extra quantifiers, such as \texttt{\(\backslash\)min},
 \texttt{\(\backslash\)max}, and \texttt{\(\backslash\)choose} could be 
 useful to increase expresssivity of the specification language.
 
-\begin{figure}[tbh]
+\begin{figure}[t]
 \rule{\linewidth}{0.3mm}
 \begin{verbatim}
     /*@
@@ -968,10 +984,10 @@ acceptance of other specifications. Suppose one has the following
   /*@ modifies x;
       ensures x == 3;
   */
-  void m () { x = 3;
-              n (); }
+  void m() { x = 3;
+             n (); }
 
-  void n () { x = 4; }
+  void n() { x = 4; }
 \end{verbatim}
 Remember that a method without a modifies clause is assumed to modify
 only fresly allocated memory, if any~\cite{LeinoNS00}. The
