@@ -1254,7 +1254,8 @@ fully parsed and implemented (though not all clause types, as described below,
 are fully implemented or handled by the static checker).
 
 @item @strong{Differences from JML or Java:} None, except that ESC/Java2 does not
-constrain the order of clauses as rigidly as do JML tools. [[[ Say more]]]
+constrain the order of clauses as rigidly as do JML tools. [[[ Say more]]] [[[ Esc/Java2 does not currently check the access modifiers on behavior and example
+keywords.  What happens with the privacy checking? ]]]
 
 @item @strong{Comment:} The ESC/Java2 (and ESC/Java) translator,
 which produces the verification conditions to be checked by the static checker,
@@ -2209,15 +2210,23 @@ These operators are fully implemented. [[[ Are they in JML ???]]]
 @item \lblneg - [[[ description, status, differences needed here ]]]
 @item \lblpos - [[[ description, status, differences needed here ]]]
 
+@cindex @code{\lockset}
 @item \lockset : This value has type @code{\LockSet}.  The value is the set of objects whose
 locks are held by the current thread. 
 @*@strong{Status:} This feature is fully implemented by ESC/Java2 (as inherited from ESC/Java).
+
+@cindex \lockset membership
+@item membership in a \lockset : A @code{\lockset} contains objects.  Membership
+in a @code{\lockset} is tested using this syntax, for some object expression
+@code{o} : @code{\lockset[o]} .  This expression returns a boolean, which is true
+if the object is in the lockset.
+@*@strong{Status:} This feature is fully implemented by ESC/Java2 (as inherited from ESC/Java). [[[ Is it in JML ? ]]]
 
 @cindex @code{\max}
 @item @code{\max} : This function takes an argument of type @code{\LockSet}.  
 It returns an object of type @code{java.lang.Object}.  The result is one of the
 elements of the argument; the function satisfies the following for any 
-@code{\LockSet} @code{s} and Object @code{o} in @code{s}: @code{o <= \max(s)}.
+@code{\LockSet} @code{s} and Object @code{o}: @code{s[o] ==> (o <= \max(s))}.
 @*@strong{Status:} This feature is fully implemented by ESC/Java2 (as inherited from ESC/Java).
 
 
@@ -2543,7 +2552,12 @@ Java behavior: Postcondition warning - the exsures clause disallows the exceptio
 
 @subsection Methods and constructors without bodies in Java files
 
-[[[ discussion needed ]]]
+Java requires non-abstract, non-final methods and constructors to have a defined
+body.  Some tools, such as javadoc, allow the bodies to be stubbed with a 
+semicolon in place of the usual block statement.  ESC/Java2 also allows methods
+and constructors within .java files to be represented simply by a semicolon.  This
+allows classes to be documented and specified before the implementation is 
+completed.  JML tools (except jmldoc) and ESC/Java require bodies to be present.
 
 @subsection Methods and constructors in annotation expressions
 [[[ description, status, differences needed here ]]]
@@ -2557,6 +2571,10 @@ Java behavior: Postcondition warning - the exsures clause disallows the exceptio
 [[[ discussion needed ]]]
 
 @subsection  @code{field}, @code{method} and @code{constructor} keywords
+
+[[[ discussion needed ]]]
+
+@subsection Equivalence of @code{\TYPE} and @code{java.lang.Class}
 
 [[[ discussion needed ]]]
 
@@ -3477,6 +3495,7 @@ they may not be relevant to the discussion here.]]]
 @subsection  semicolon termination
 @subsection  need for the field, method, constructor keywords
 [[[ ESC/Java2 parses non_null in method declarations ]]]
+[[[ ESC/Java2 allows method/constructor bodies to be omitted ]]]escjava
 
 
 
