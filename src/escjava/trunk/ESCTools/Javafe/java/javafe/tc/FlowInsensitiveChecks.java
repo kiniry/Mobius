@@ -980,11 +980,14 @@ public class FlowInsensitiveChecks
                      * current/enclosing instances:
                      */
                     TypeSig classPrefix = Types.toClassTypeSig(referredType);
-                    if (classPrefix==null || !env.canAccessInstance(classPrefix))
+                    if (classPrefix==null || !env.canAccessInstance(classPrefix)) {
                         ErrorSet.error(t.getStartLoc(),
                                        "Undefined variable: "
                                        + PrettyPrint.inst.toString(referredType)
                                        + ".this");
+			setType(x, Types.errorType);
+			return x;
+		    }
                 }
 
                 setType(x, referredType);
@@ -1399,7 +1402,9 @@ public class FlowInsensitiveChecks
                                                + sig);
                         }
                     } catch(LookupException ex) {
-                        reportLookupException(ex, "field", Types.printName(t), fa.locId);
+			if (!Types.isErrorType(t))
+			    reportLookupException(ex, "field", 
+				Types.printName(t), fa.locId);
                     }
                 }
                 return fa;
@@ -1450,7 +1455,8 @@ public class FlowInsensitiveChecks
                                                + sig);
                         }
                     } catch(LookupException ex) {
-                        reportLookupException(ex, 
+			if (!Types.isErrorType(t))
+			    reportLookupException(ex, 
                                               "method "+mi.id
                                               +Types.printName(argTypes), 
                                               Types.printName(t), mi.locId);
@@ -1755,10 +1761,12 @@ public class FlowInsensitiveChecks
       
                 // Fall thru to here on error
 
-                ErrorSet.error(loc, 
+		if (!Types.isErrorType(leftType) && !Types.isErrorType(rightType)) {
+		    ErrorSet.error(loc, 
                                "Invalid types ("+Types.printName(leftType)
                                +" and "+Types.printName(rightType)
                                +") in equality comparison");
+		}
                 return Types.booleanType;
       
             case TagConstants.ASSIGN:
@@ -1774,7 +1782,7 @@ public class FlowInsensitiveChecks
             case TagConstants.ASGBITOR: 
             case TagConstants.ASGBITXOR: {
                 if(!isVariable(left)) {
-                    ErrorSet.error(loc,
+                    if (!Types.isErrorType(leftType)) ErrorSet.error(loc,
                                    "Left hand side of assignment operator "+
                                    "is not a location");
                 } else if(op == TagConstants.ASSIGN) {
