@@ -165,7 +165,7 @@ if ( ! $?ESC_SPECS ) then
 	if ( $?ESCTOOLS_RELEASE ) then
 		setenv ESC_SPECS $ESCTOOLS_RELEASE/jmlspecs.jar
 	else
-		setenv ESC_SPECS $ESCTOOLS_ROOT/jmlspecs.jar
+		setenv ESC_SPECS $ESCTOOLS_ROOT/specs
 	endif
 endif
 

@@ -358,6 +358,13 @@ junittests:
 jdktests:
 	$(MAKE) -C test/jdktests runtests
 
+.PHONY: checkspecs
+checkspecs:
+	@echo Type-checking the Esc/Java specs
+#ifdef JML_ROOT
+	jml -Q ${ESCTOOLS_ROOT}/specs
+#endif
+	escjava -Q */*/*.* */*/*/*.*
 .PHONY: javaspecs
 javaspecs:
 	$(MAKE) -C test/javaspecs runtests

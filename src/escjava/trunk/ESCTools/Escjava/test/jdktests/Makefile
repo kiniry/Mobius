@@ -22,7 +22,7 @@ export JUNITSW = $(JAVA) -Xmx256M -classpath "${_CLASSPATH}" \
 ##############################################################################
 .PHONY: buildtests
 buildtests:
-	$(JAVAC) -classpath "${_CLASSPATH}" *.java
+	$(JAVAC) -classpath "${_CLASSPATH}" -source 1.4 *.java
 
 .PHONY: test runtests
 test runtests: extests provetests
@@ -38,13 +38,15 @@ swtests: lists
 
 
 DEFAULTFLAGS = " "
+ALWAYSFLAGS = "-quiet -nowarn Deadlock"
 
 CHUNK = 40
+
 
 .PHONY: provetests
 provetests:
 	echo "Proving jdk tests..."
-	${ESCJAVA} -quiet -nowarn Deadlock -classpath "${_CLASSPATH}" -specs "${_SPECS}" Test*.java
+	${ESCJAVA} ${ALWAYSFLAGS} -classpath "${_CLASSPATH}" -specs "${_SPECS}" Test*.java
 
 .PHONY: partjunittests
 partjunittests:
@@ -74,7 +76,8 @@ sepjavatests:
 	@if [ ! -e $* ] ; then \
 		echo No such file $* ;\
 	else \
-	(${ESCJAVA} ${ALWAYSFLAGS} \
+	$(JUNIT) $*
+	(${ESCJAVA} ${ALWAYSFLAGS} -classpath "${_CLASSPATH}" -specs "${_SPECS}"\ 
 		`grep '//#FLAGS:' $* | \
 		sed -e "sx//#FLAGS:xx" -e "s@ESCTOOLS_ROOT@${ESCTOOLS_ROOT}@" ` \
 		$* 2>&1 | sed -e s/x/x/ > $*-ckd ) || exit 0; \

@@ -979,8 +979,10 @@ public final class GC {
 	      nopats.append(qe.nopats);
 	    }
 	  }
+          if (range == null) range = qe.rangeExpr;
+          else if (qe.rangeExpr != null) range = GC.and(range,qe.rangeExpr);
 	  return QuantifiedExpr.make( sloc, eloc, tag, copy, 
-				      GC.and(range, qe.rangeExpr), qe.expr,
+				      range, qe.expr,
 				      nopats, qe.pats );
 	}
       }

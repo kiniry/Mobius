@@ -10,7 +10,7 @@ PARSER_TEST_DIR = ${TESTSOURCEDIRECTORY}/escjava/parser/test
 
 ## For these tests inherited from the original ESC release we use the
 ## specification files that came with the original release.
-ESC_SPECS = ${ESCTOOLS_ROOT}/specs
+ESC_SPECS = ${ESCTOOLS_ROOT}/original-specs
 
 ###########################################################################
 

@@ -12,34 +12,13 @@ ModelVarMod: p2() ...
     [TIME]  passed
 
 ModelVarMod: p3() ...
-------------------------------------------------------------------------
-ModelVarMod.java:68: Warning: Possible assertion failure (Assert)
-            //@ assert m == 6; // ERROR
-                ^
-------------------------------------------------------------------------
-    [TIME]  failed
+    [TIME]  passed
 
 ModelVarMod: p3a() ...
-------------------------------------------------------------------------
-ModelVarMod.java:87: Warning: Postcondition possibly not established (Post)
-        }
-        ^
-Associated declaration is "ModelVarMod.java", line 81, col 5:
-        //@ ensures a.m == 0; // ERROR - how do we know a != this
-            ^
-Execution trace information:
-    Executed implicit return in "ModelVarMod.java", line 87, col 1.
-
-------------------------------------------------------------------------
-    [TIME]  failed
+    [TIME]  passed
 
 ModelVarMod: pp() ...
-------------------------------------------------------------------------
-ModelVarMod.java:97: Warning: Possible assertion failure (Assert)
-            //@ assert m == 6;  // ERROR
-                ^
-------------------------------------------------------------------------
-    [TIME]  failed
+    [TIME]  passed
 
 ModelVarMod: pp2() ...
 ------------------------------------------------------------------------
@@ -84,23 +63,13 @@ ModelVarModStatic: q2() ...
     [TIME]  passed
 
 ModelVarModStatic: q3() ...
-------------------------------------------------------------------------
-ModelVarMod.java:198: Warning: Possible assertion failure (Assert)
-            //@ assert m == 6; // ERROR
-                ^
-------------------------------------------------------------------------
-    [TIME]  failed
+    [TIME]  passed
 
 ModelVarModStatic: q3a() ...
     [TIME]  passed
 
 ModelVarModStatic: qq() ...
-------------------------------------------------------------------------
-ModelVarMod.java:229: Warning: Possible assertion failure (Assert)
-            //@ assert m == 6;  // ERROR
-                ^
-------------------------------------------------------------------------
-    [TIME]  failed
+    [TIME]  passed
 
 ModelVarModStatic: qq2() ...
 ------------------------------------------------------------------------
@@ -119,4 +88,4 @@ ModelVarModStatic: qq2b() ...
 ModelVarModStatic: ModelVarModStatic() ...
     [TIME]  passed
   [TIME total]
-7 warnings
+2 warnings

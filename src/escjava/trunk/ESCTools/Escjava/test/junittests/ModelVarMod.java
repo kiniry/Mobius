@@ -65,7 +65,7 @@ public class ModelVarMod extends ModelVarModS {
 	    kkk = 0;
 	    j = 2;
 	    //@ assert ms == 4;
-	    //@ assert m == 6; // ERROR
+	    //@ assert m == 6; // ERROR - OK for now - presume m does not depend on variables
 	}
 
 // Same as above, except the modifies clause is a little different
@@ -78,7 +78,7 @@ public class ModelVarMod extends ModelVarModS {
 	//@ requires a.ms == 0;
 	//@ modifies kkk,m,ms;
 	//@ ensures ms == 4;
-	//@ ensures a.m == 0; // ERROR - how do we know a != this
+	//@ ensures a.m == 0; // ERROR - how do we know a != this - OK for now
 	//@ ensures a.ms == 0;
 	public void p3a() {
 	    kkk = 0;
@@ -94,7 +94,7 @@ public class ModelVarMod extends ModelVarModS {
 	    int ii = 0;
 	    //@ assert m == 6;
 	    j = 10;
-	    //@ assert m == 6;  // ERROR
+	    //@ assert m == 6;  // ERROR - OK for now
 	}
 
 // Same as p3, except the modifies clause is a little different
@@ -195,7 +195,7 @@ class ModelVarModStatic {
 	    kkk = 0;
 	    j = 2;
 	    //@ assert ms == 4;
-	    //@ assert m == 6; // ERROR
+	    //@ assert m == 6; // ERROR - OK for now
 	}
 
 // Same as above, except the modifies clause is a little different
@@ -226,7 +226,7 @@ class ModelVarModStatic {
 	    int ii = 0;
 	    //@ assert m == 6;
 	    j = 10;
-	    //@ assert m == 6;  // ERROR
+	    //@ assert m == 6;  // ERROR - OK for now
 	}
 
 // Same as p3, except the modifies clause is a little different

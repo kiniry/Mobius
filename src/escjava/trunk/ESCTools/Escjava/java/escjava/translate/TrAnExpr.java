@@ -203,9 +203,9 @@ public class TrAnExpr {
             GetSpec.getRepresentsClauses(
               null /*ts.getTypeDecl()*/, fa.decl);
           if (reps == null || reps.size() == 0) {
-            boolean b = translate.frameHandler.isDefinitelyNotAssignable(
-                (od instanceof ExprObjectDesignator) ?
-                    ((ExprObjectDesignator)od).expr : null ,fa.decl);
+            //boolean b = translate.frameHandler.isDefinitelyNotAssignable(
+            //    (od instanceof ExprObjectDesignator) ?
+            //        ((ExprObjectDesignator)od).expr : null ,fa.decl);
             treatLikeAField = true;
           }
           //System.out.println("TREATLIKEAFIELD " + treatLikeAField + " " + doRewrites() + " " + fa + " " + Location.toString(fa.getStartLoc()) );
@@ -786,36 +786,71 @@ public class TrAnExpr {
       {
         Type t = TypeCheck.inst.getType(e);
         VariableAccess va = tempName(e.getStartLoc(),"quantvalue",t);
-        Expr vaf = GC.nary(va.id, ExprVec.make());
-        GeneralizedQuantifiedExpr qe = (GeneralizedQuantifiedExpr)e;
-        Expr tex = trSpecExpr(qe.expr,sp,st);
-        Expr rex = trSpecExpr(qe.rangeExpr,sp,st);
-        Expr ne = GC.implies(
-            GC.quantifiedExpr(Location.NULL, Location.NULL,
-                TagConstants.EXISTS, qe.vars, rex, rex, null, null),
-                GC.quantifiedExpr(Location.NULL, Location.NULL,
-                    TagConstants.EXISTS, qe.vars, rex,
-                    GC.and(rex, GC.nary(TagConstants.INTEGRALEQ, vaf, tex)),
-                    null, null));
+	ExprVec args = ExprVec.make();
+        args.addElement(GC.statevar);
         if (boundStack.size() > 0) {
           ListIterator iter = boundStack.listIterator(boundStack.size());
           while (iter.hasPrevious()) {
             QuantifiedExpr qqe = (QuantifiedExpr)iter.previous();
-            Expr rrex = trSpecExpr(qqe.rangeExpr, sp, st);
             Object o = qqe.vars;
             if (o instanceof GenericVarDecl) {
               GenericVarDecl g = (GenericVarDecl)o;
-              ne = GC.forall(g,rrex,GC.implies(rrex,ne));
+              args.addElement(VariableAccess.make(g.id,Location.NULL,g));
             } else if (o instanceof GenericVarDeclVec) {
               GenericVarDeclVec gi = (GenericVarDeclVec)o;
-              ne = GC.forall(gi,rrex,GC.implies(rrex,ne));
-              /*
+              for (int i=0; i<gi.size(); ++i) {
+                GenericVarDecl g = gi.elementAt(i);
+                args.addElement(VariableAccess.make(g.id,Location.NULL,g));
+              }
+            }
+          }
+        }
+        Expr vaf = GC.nary(va.id, args);
+        GeneralizedQuantifiedExpr qe = (GeneralizedQuantifiedExpr)e;
+        Expr tex = trSpecExpr(qe.expr,sp,st);
+        Expr rex = trSpecExpr(qe.rangeExpr,sp,st);
+          GenericVarDeclVec dummyDecls = GenericVarDeclVec.make();
+          Expr goodTypes = rex;
+            for (int k=0; k<qe.vars.size(); ++k) {
+              GenericVarDecl decl = qe.vars.elementAt(k);
+              Assert.notFalse(sp == null || ! sp.contains(decl));
+              Assert.notFalse(st == null || ! st.contains(decl));
+              dummyDecls.addElement(decl);
+              
+              goodTypes = GC.and(goodTypes, quantTypeCorrect(decl, sp));
+            }
+        Expr ne = GC.implies(
+            GC.quantifiedExpr(Location.NULL, Location.NULL,
+                TagConstants.EXISTS, qe.vars, null, GC.and(goodTypes, rex), null, null),
+                GC.quantifiedExpr(Location.NULL, Location.NULL,
+                    TagConstants.EXISTS, qe.vars, null,
+                    GC.and(goodTypes, GC.nary(TagConstants.INTEGRALEQ, vaf, tex)),
+                    null, null));
+        ExprVec pats = ExprVec.make();
+        pats.addElement(vaf);
+        if (boundStack.size() > 0) {
+          // FIXME - the following only works for one level of bound variable
+          // because of the pats - need to combine them all or maybe just put
+          // the pats at the innermost level
+          ListIterator iter = boundStack.listIterator(boundStack.size());
+          ExprVec ppats = pats;
+          while (iter.hasPrevious()) {
+            QuantifiedExpr qqe = (QuantifiedExpr)iter.previous();
+            Expr rrex = qqe.rangeExpr == null ? GC.truelit :
+                               trSpecExpr(qqe.rangeExpr, sp, st);
+            Object o = qqe.vars;
+            if (o instanceof GenericVarDecl) {
+              GenericVarDecl g = (GenericVarDecl)o;
+              ne = GC.forallwithpats(g,GC.implies(rrex,ne),ppats);
+              ppats = null;
+            } else if (o instanceof GenericVarDeclVec) {
+              GenericVarDeclVec gi = (GenericVarDeclVec)o;
                int kk = gi.size();
                while (--kk >= 0) {
-               GenericVarDecl g = gi.elementAt(kk);
-               ne = GC.forall(g,GC.implies(qe.rangeExpr,ne));
+                 GenericVarDecl g = gi.elementAt(kk);
+                 ne = GC.forallwithpats(g,GC.implies(rrex,ne),ppats);
+                 ppats = null;
                }
-               */
             } else System.out.print("[[" + o.getClass() + "]]");
           }
         }
@@ -825,23 +860,24 @@ public class TrAnExpr {
           // (\forall vars; rangeexpr ==> va <= expr) and
           // (\exists vars; rangeexpr) ==> (\exists vars; rangeexpr && va == expr)
           ne = QuantifiedExpr.make(Location.NULL, Location.NULL, 
-              TagConstants.FORALL, qe.vars, rex,
-              GC.implies(rex, GC.nary(TagConstants.INTEGRALLE, vaf, tex)),
-              null, null);
+              TagConstants.FORALL, qe.vars, null,
+              GC.implies(goodTypes, GC.nary(TagConstants.INTEGRALLE, vaf, tex)),
+              null,null);  // Use pats? FIXME
         } else {
           // (\max vars; rangeexpr; expr) generates the axioms
           // (\forall vars; rangeexpr ==> va >= expr) and
           // (\exists vars; rangeexpr) ==> (\exists vars; rangeexpr && va == expr)
           ne = QuantifiedExpr.make(Location.NULL, Location.NULL, 
-              TagConstants.FORALL, qe.vars, rex,
-              GC.implies(rex, GC.nary(TagConstants.INTEGRALGE, vaf, tex)),
-              null, null);
+              TagConstants.FORALL, qe.vars, null,
+              GC.implies(goodTypes, GC.nary(TagConstants.INTEGRALGE, vaf, tex)),
+              null, null); // FIXME Use Pats?
         }
         if (boundStack.size() > 0) {
           ListIterator iter = boundStack.listIterator(boundStack.size());
           while (iter.hasPrevious()) {
             QuantifiedExpr qqe = (QuantifiedExpr)iter.previous();
-            Expr rrex = trSpecExpr(qqe.rangeExpr, sp, st);
+            Expr rrex = qqe.rangeExpr == null ? GC.truelit :
+                              trSpecExpr(qqe.rangeExpr, sp, st);
             Object o = qqe.vars;
             if (o instanceof GenericVarDecl) {
               GenericVarDecl g = (GenericVarDecl)o;
@@ -866,14 +902,30 @@ public class TrAnExpr {
       case TagConstants.FORALL:
       case TagConstants.EXISTS: {
         QuantifiedExpr qe = (QuantifiedExpr)e;
+          int op;
+          if (qe.getTag() == TagConstants.FORALL)
+            op = TagConstants.BOOLIMPLIES;
+          else
+            op = TagConstants.BOOLAND;
+          
         if (doRewrites()) boundStack.add(qe);
         //if (doRewrites()) System.out.println("FORALL " + Location.toString(e.getStartLoc()));
         //if (doRewrites()) ErrorSet.dump(null);
+	// FIXME - this needs to be integrated with the following two cases???
         if (qe.vars.size() != 1) {
           int locStart = e.getStartLoc();
           int locEnd = e.getEndLoc();
           
+          GenericVarDeclVec dummyDecls = GenericVarDeclVec.make();
           Expr goodTypes = GC.truelit;
+            for (int k=0; k<qe.vars.size(); ++k) {
+              GenericVarDecl decl = qe.vars.elementAt(k);
+              Assert.notFalse(sp == null || ! sp.contains(decl));
+              Assert.notFalse(st == null || ! st.contains(decl));
+              dummyDecls.addElement(decl);
+              
+              goodTypes = GC.and(goodTypes, quantTypeCorrect(decl, sp));
+            }
           int pos = 0;
           if (doRewrites()) pos = trSpecExprAuxConditions.size();
           Expr body = trSpecExpr(qe.expr, sp, st);
@@ -903,23 +955,20 @@ public class TrAnExpr {
            System.out.println("");
            }
            */
+	  Expr qbody = GC.nary(locStart, locEnd, op, goodTypes, body);
+	// FIXME - here and nearby - the rangeExpr in the make call is not
+        // used later - is it ever not null coming into here?
           return GC.quantifiedExpr(locStart, locEnd, tag,
               qe.vars, 
-              qe.rangeExpr == null ? null :
+              qe.rangeExpr == null ? goodTypes :
                 trSpecExpr(qe.rangeExpr, sp, st),
-                body, null, null);
+                qbody, null, null);
         } else if (Main.options().nestQuantifiers) { // default is false
           GenericVarDecl decl = qe.vars.elementAt(0);
           
           Assert.notFalse(sp == null || ! sp.contains(decl));
           Assert.notFalse(st == null || ! st.contains(decl));
           Assert.notFalse( qe.vars.size() == 1 );
-          
-          int op;
-          if (qe.getTag() == TagConstants.FORALL)
-            op = TagConstants.BOOLIMPLIES;
-          else
-            op = TagConstants.BOOLAND;
           
           Expr body = GC.nary(qe.getStartLoc(), qe.getEndLoc(), op,
               quantTypeCorrect(decl, sp),
@@ -936,12 +985,6 @@ public class TrAnExpr {
           // FIXME - need to handle AuxConditions in here
           int locStart = e.getStartLoc();
           int locEnd = e.getEndLoc();
-          
-          int op;
-          if (tag == TagConstants.FORALL)
-            op = TagConstants.BOOLIMPLIES;
-          else
-            op = TagConstants.BOOLAND;
           
           GenericVarDeclVec dummyDecls = GenericVarDeclVec.make();
           Expr goodTypes = GC.truelit;

@@ -23,6 +23,7 @@ public class AllTests {
   public static Test suite() {
     TestSuite suite = new TestSuite("Test for default package");
     //$JUnit-BEGIN$
+    suite.addTestSuite(TestSet.class);
     suite.addTestSuite(TestThrowable.class);
     suite.addTestSuite(TestException.class);
     //$JUnit-END$

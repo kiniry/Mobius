@@ -49,7 +49,7 @@ nodocs: clean build jars test
 nodocs+: clean build jars alltests
 
 .PHONY: jars
-jars: jmlspecs-jar jar srcjar
+jars: escspecs-jar jmlspecs-jar jar srcjar
 
 ########################################### build, test
 
@@ -148,6 +148,11 @@ clean-norel-noreltemp:
 	rm -f tags TAGS
 
 ########################################### jmlspecs
+
+.PHONY: escspecs-jar
+escspecs-jar:
+	(cd specs; jar cf ../escspecs.jar . )
+
 
 .PHONY: jmlspecs-jar
 jmlspecs-jar:
@@ -292,8 +297,8 @@ jar:
 	cp -r ${ESCJAVA_CLASSFILES}/* ${RELTEMP}/sub
 	mkdir -p ${RELTEMP}/sub/junitutils
 	(cd ${ESCTOOLS_ROOT}/Utils/junitutils; cp `find . -name '*.class'` ${RELTEMP}/sub/junitutils)
+	( cd ${RELTEMP}/sub; jar xf ../../escspecs.jar )
 	( cd ${RELTEMP}/sub; rm -rf `find . -name CVS`; )
-	( cd ${RELTEMP}/sub; jar xf ../../jmlspecs.jar )
 	( cd ${RELTEMP}/sub; jar cmf ../../manifest.txt ../${RELJAR} *; )
 	##${JARMUPDATE} manifest.txt ${RELTEMP}/${RELJAR}
 	rm -rf ${RELTEMP}/sub
@@ -304,6 +309,7 @@ srcjar:
 	mkdir -p ${RELTEMP}/sub
 	cp -r ${ESCTOOLS_ROOT}/Javafe/java/* ${RELTEMP}/sub
 	cp -r ${ESCTOOLS_ROOT}/Escjava/java/* ${RELTEMP}/sub
+	cp -r ${ESCTOOLS_ROOT}/specs ${RELTEMP}/sub/specs
 	mkdir -p ${RELTEMP}/sub/junitutils
 	(cd ${ESCTOOLS_ROOT}/Utils/junitutils; cp `find . -name '*.java'` ${RELTEMP}/sub/junitutils)
 	( cd ${RELTEMP}/sub; rm -rf `find . -name CVS`; )
@@ -340,6 +346,7 @@ binary-release: build docs javadoc
 	cp ${ESCJ_SIMPLIFY_DIR}/Simplify-1.5.4* ${RELTEMP}
 	cp README.first README.txt ${RELTEMP}
 	cd release-files; cp `ls | grep -v CVS` ${RELTEMP}
+	cp escspecs.jar ${RELTEMP}
 	cp jmlspecs.jar ${RELTEMP}
 	-find ${RELTEMP} -name "*~" -exec rm -f {} \; > /dev/null 2>&1
 	cd ${RELTEMP}; tar cjvf ${RELDIR}/${RELTAR} *
@@ -447,6 +454,7 @@ generate-toplevel-archive: clean
 	cp -r ${ESCTOOLS_ROOT}/Utils ${RELTEMP}/ESCTools
 	cp -r ${ESCTOOLS_ROOT}/jars ${RELTEMP}/ESCTools
 	cp ${ESCTOOLS_ROOT}/jmlspecs.jar ${RELTEMP}/ESCTools
+	cp ${ESCTOOLS_ROOT}/escspecs.jar ${RELTEMP}/ESCTools
 	mkdir -p ${RELTEMP}/ESCTools/Escjava/release/master/bin
 	cp ${ESCTOOLS_ROOT}/Escjava/release/master/bin/Simplify-1.5.4.macosx \
 		${RELTEMP}/ESCTools/Escjava/release/master/bin

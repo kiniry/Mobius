@@ -89,12 +89,11 @@ export PROVER_CC_LIMIT ?= 10
 ##########################################################################
 
 ## You need to have some specs defined.  Use either 
-##   a) jmlspecs.jar from a JML release
-##   b) ${ESCTOOLS_ROOT}/jmlspecs.jar, which is a copy of jmlspecs.jar from
-##		some JML release or interim state
-##   c) ${ESCTOOLS_ROOT}/specs, which is a stripped down (and not being
-##		developped simple set of specs)
-export ESC_SPECS ?= ${ESCTOOLS_ROOT}/jmlspecs.jar
+##   a) jmlspecs.jar from a JML release (not currently recommended as they
+##              are rather complex specifications)
+##   b) ${ESCTOOLS_ROOT}/jmlspecs.jar, which is a jar of (c)
+##   c) ${ESCTOOLS_ROOT}/specs, which is a set of specs designed for Esc/java
+export ESC_SPECS ?= ${ESCTOOLS_ROOT}/specs
 
 ##########################################################################
 ## Definitions of Java tools.

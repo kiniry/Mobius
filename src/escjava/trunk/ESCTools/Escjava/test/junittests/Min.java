@@ -1,4 +1,4 @@
-//
+// FIXME -x1 and m1 tests fail to validate because of inadequate quantifier patterns
 // This tests reasoning with \min and \max quantifiers
 import java.util.Collection;
 import java.util.LinkedList;
@@ -54,7 +54,9 @@ public class Min {
 	}
 	public void pp2() {
 	    //@ ghost Collection c = new LinkedList();
-	    /*@ assert (\exists Object o; c.contains(o); 
+	    /*@ assert 
+                        (\exists Object o; c.contains(o)) ==>
+                        (\exists Object o; c.contains(o) &&
 			    (\min Object ooo; c.contains(ooo); ooo.hashValue())
 				== o.hashValue() );
 	    */
