@@ -1,6 +1,6 @@
 \documentclass{llncs}
-\usepackage{verbatim}
-\input{boxed-figure-new}
+%%\usepackage{verbatim}
+%%\input{boxed-figure-new}
 
 \newif\ifpdf
 \ifx\pdfoutput\undefined
@@ -108,10 +108,10 @@ annotations on methods that are used by other methods.  The program source
 and its specifications are translated into verification conditions that are passed
 to a theorem prover, which in turn either verifies that no problems are found or
 generates a counterexample indicating a potential bug. The tool
-and its built-in prover operated automatically with reasonable
-performance and needed only program annotations against which to check
-a program's source code.  The annotations needed were easily read,
-written and understood by those familiar with Java and were partially
+and its built-in prover operate automatically with reasonable
+performance and need only program annotations against which to check
+a program's source code.  The annotations needed are easily read,
+written and understood by those familiar with Java and are partially
 consistent with the syntax and semantics of the separate Java Modeling
 Language (JML) project~\cite{jmlpapers,Leavens-etal00}.  Consequently,
 the original ESC/Java (hereafter called ESC/Java) was a research
@@ -182,7 +182,7 @@ open licensing provisions.  The discussion below of various features
 of JML and ESC/Java2 is necessarily brief; more detail is available in
 the implementation notes that are part of an ESC/Java2 release.
 
-The subsequent sections will discuss the principal changes in creating
+The subsequent sections will discuss the most significant changes in creating
 ESC/Java2, the extensions to static checking, the backwards
 incompatibilities introduced, unresolved semantic issues in JML, and
 the direction of the ongoing work in this project.  Also discussed is
@@ -192,7 +192,7 @@ tally subsystem of the Dutch Internet voting system.
 Appendices list the details of the enhancements to ESC/Java and those
 features of JML that are not yet implemented in ESC/Java2.  We fully
 acknowledge that the on-going work described here builds on two
-substantial efforts: the definition of the Java Modeling Language and
+substantial prior efforts: the definition of the Java Modeling Language and
 the production of ESC/Java and the Simplify prover in the first place.
 
 \section{JML Example}
@@ -200,11 +200,58 @@ The Java Modeling language is described in detail in several other publications
 (\cite{Leavens-etal00} and various papers listed at \cite{jmlpapers}), so here we will give one example showing some of the syntax.  The class in Fig.~\ref{fig:example}
 uses an array to implement a List.  A few methods with partial specifications are shown.
 They demonstrate the following features of JML:
-\begin{BFIGURE}
-\verbatiminput{Example.java}
+%\begin{BFIGURE}
+%\verbatiminput{Example.java}
+%\caption{A List class with a partial specification.}
+%\label{fig:example}
+%\end{BFIGURE}
+\begin{figure}[htbp]
+\begin{verbatim}
+//@ model import java.util.List;
+//@ model import java.util.ArrayList;
+public class Example {
+  /*@ spec_public */ private Object[] seq;
+                        //@ in list;
+                        //@ maps seq[*] \into list;
+  //@ invariant seq != null && \elemtype(\typeof(seq)) == \type(Object);
+
+  //@ requires out != null;
+  //@ modifies out[*];
+  //@ signals (NullPointerException) false;
+  //@ ensures seq.length > 0 ==> out[0] == seq[seq.length-1];
+  public void reverse(Object[] out) {
+    int i = 0;
+    int j = seq.length;
+    while (i < seq.length) out[i++] = seq[--j];
+  }
+
+  //@ public model List list;
+  //@ private represents list <- toList(seq);
+
+  /*@ requires input != null;
+    @ ensures \result != null;
+    @ pure
+    @ private model List toList(Object[] input) {
+    @   List list = new ArrayList(input.length);
+    @   for (int i=0; i<input.length; ++i) list.add(input[i]);
+    @   return list;
+    @ }
+    @*/
+
+  //@ requires i >= 0 && i < length();
+  //@ modifies list;
+  public void insert(int i, Object o) { seq[i] = o; }
+
+  //@ private normal_behavior
+  //@   ensures \result == seq.length;
+  //@ pure
+  public int length() { return seq.length; }
+
+}
+\end{verbatim}
 \caption{A List class with a partial specification.}
 \label{fig:example}
-\end{BFIGURE}
+\end{figure}
 \begin{itemize}
 \item JML annotations are contained in comments beginning with \texttt{//@} or \texttt{/*@}.
 \item \texttt{model import} statements declare classes imported for use in annotations.
@@ -224,16 +271,16 @@ field and the implementation.
 a model method is only used in annotations and need not have an implementation.
 \item The \texttt{modifies} clause on the {\em insert} method indicates that it may modify the value
 of the model field {\em list} or any field in its {\em datagroup}; the \texttt{in} and \texttt{map} annotations on the declaration of
-{\em seq} stipulate that the \texttt{seq} field and its array elements are in the {\em list} datagroup.
+{\em seq} stipulate that the {\em seq} field and its array elements are in the {\em list} datagroup.
 \item The \texttt{pure} modifier on the {\em length} method indicates that that method has no
 side effects (it does not assign to any fields).
 \end{itemize}
 
-This class will compile with javac and will pass all the checks of the jml checker.  If it is subjected to the ESC/Java2 tool described in this paper, four warnings are produced, correctly pointing out three potential problems with this code:
+This class will compile with javac and will pass all the checks of the jml checker.  If it is subjected to the ESC/Java2 tool described in this paper, three warnings are produced, correctly pointing out three potential problems with this code:
 \begin{itemize}
 \item The default constructor does not set the value of \texttt{seq} to a non null array.
-\item The assignment to \texttt{out[i++]} on line 16 is problematic because the index may be too large for the out array; this is fixed by stating that the legth of \texttt{out} must be equal to the length of \texttt{seq}.
-\item An additional warning on that line indicates that the type of the out array may not allow
+\item The assignment to \texttt{out[i++]} on line 16 is problematic because the index may be too large for the array; this is fixed by stating that the length of \texttt{out} must be equal to the length of \texttt{seq}.
+\item An additional warning on that line indicates that the type of the \texttt{out} array may possibly not allow
 assignments of Object references.
 \end{itemize} 
 \section{Changes to DEC/SRC ESC/Java}
@@ -370,7 +417,7 @@ where induction is needed to handle recursive definitions.
 
 Recursive definitions of frame conditions (arising from recursive structures
 such as linked lists and trees) are indeed the most substantial complication 
-in checking datagroups.  For example,
+in checking datagroups.  As an example,
 consider the datagroup of all of the `next' fields of a linked list.
 ESC/Java2 currently deals with this by unrolling the recursion to a
 fixed depth; since in ESC/Java loops are also unrolled to a fixed
@@ -419,7 +466,7 @@ reasoning when combined with the class invariants that describe the
 behavior of the model fields.
 
 The Simplify theorem prover used by both ESC/Java and ESC/Java2 remains unchanged,
-except for being compiled for a new platform, MacOSX.  It is written in Modula-3
+except for being compiled for a new platform (MacOSX).  It is written in Modula-3
 and consequently requires compilation for each supported platform.  Although the prover
 has definite limitations, as pointed out below, revising it would be a significant project in
 its own right.
@@ -427,7 +474,7 @@ its own right.
 \subsection{Backwards incompatibilities}
 The ESC/Java specification language and JML arose separately; there
 was some initial but incomplete work to unify the
-two.~\cite{Leavens-etal03}  The ESC/Java2 project intends to have the
+two~\cite{Leavens-etal03}.  The ESC/Java2 project intends to have the
 tool reflect JML as precisely as reasonable.  In some cases,
 discussion about differences resulted in changes to JML.  In a few
 cases, some backwards incompatibilities in ESC/Java were introduced.
@@ -440,7 +487,7 @@ The principal incompatibilities are these:
   JML, since the work on JML resulted in an interpretation consistent
   with behavioral subtyping.  JML has a standalone \texttt{also} keyword
 that indicates there are inherited explicit or implicit specifications; its
-interpretation of of specification inheritance is consistent with behavioral
+interpretation of specification inheritance is consistent with behavioral
 subtyping.  By contrast, ESC/Java's use of inherited specifications had
 limitations and was a known source of soundness problems. \cite{Leino-Nelson-Saxe00}
 See
@@ -787,11 +834,11 @@ The primary issues that arose include:
 \item \emph{Aliasing issues and specification convenience constructs
     for such.}  As usual, reasoning about reference types and avoiding
   aliasing was one of the key issues in verifying the KOA application.
-  For example, frequently we wished to say that the element of a set of references
+  For example, frequently we wished to say that the elements of a set of references
  were pairwise unequal.  The only way to
   state this in JML today is quite cumbersome, thus the introduction
   of a new specification construct for such seems warranted.
-\item \emph{The Simplify prover backend and alternate provers.}
+%\item \emph{The Simplify prover backend and alternate provers.}
 % Add discussion of Simplify and moves on that front.   TODO
 \end{itemize}
 
@@ -826,7 +873,7 @@ useful in annotations, and that the operation of ESC/Java2 (and
 Simplify) on that core is correct and valuable.
 
 \paragraph*{Verification Logic} The logic into which Java and JML are
-embedded in both ESC/Java and ESC/Java2 is, by design and admission of
+embedded in both ESC/Java and ESC/Java2, by design and admission of
 the original authors, neither identifies all potential errors (e.g., because not
 all aspects of Java are modeled in the Logic) nor avoids all false alarms (e.g., 
 because of limitations in the prover).  This was the
@@ -857,7 +904,8 @@ information provided by the tool, whether it is a failed proof or an
 invalid test or execution history.  The ESC/Java project implemented
 some work towards appropriately pruning and interpreting
 counterexample and trace information~\cite{PruningPaper}, but there
-remains room for improvement.
+remains room for improvement.  Machine reading of the Simplify output
+coupled with other tools is also a means to easier interpretation~\cite{csallner05check}.
 
 \paragraph*{Tool Integration} Finally, though not part of this specific
 project, an integration of tools that support JML would be beneficial
@@ -889,7 +937,7 @@ to verify large portions of a critical, public system in a very short
 timeframe is a strong statement about the state of the tool and the underlying
 theory of extended static checking.  
 
-Additional evidence comes from several groups around the world using
+Additional evidence comes from several groups around the world that are using
 ESC/Java2 for instruction and research.  We are aware of over a half dozen
 groups that are using ESC/Java2 for new research in verification, and
 nearly ten classes are using it for instruction in software
@@ -1009,7 +1057,9 @@ of annotation fields matches that of Java and other JML tools;
 \texttt{\char'134 not\_modified}, \texttt{instance}, \texttt{old}, \texttt{forall},
 \texttt{pure} keywords as defined in JML;
 \item consistency in the format of annotations in order to match the language handled by other JML tools;
-\item equivalence of \texttt{\char'134 TYPE} and \texttt{java.lang.Class}.
+\item equivalence of \texttt{\char'134 TYPE} and \texttt{java.lang.Class};
+\item a beginning of a semantics for String objects, namely the freshness of the result of built-in +
+and equality and inequality of String literals.
 \end{itemize}
 In addition, all of the differences between JML and ESC/Java noted in
 the JML Reference Manual have been resolved.
