@@ -7,8 +7,6 @@ clean:
 	rm -f *.class
 	rm -f man1/*.1 man1/*.html
 
-
-
 .SUFFIXES: .class .java .1 .mtex .html
 
 .mtex.1:
