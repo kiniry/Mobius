@@ -19,26 +19,26 @@ Associated declaration is "InterfaceInherit.java", line 30, col 15:
 InterfaceInherit.java:40: Warning: Possible violation of object invariant (Invariant)
   }
   ^
-Associated declaration is "InterfaceInherit.java", line 34, col 6:
-  //@ invariant z < a;
-      ^
-InterfaceInherit.java:40: Warning: Possible violation of object invariant (Invariant)
-  }
-  ^
-Associated declaration is "InterfaceInherit.java", line 3, col 6:
-  //@ invariant -10 < a && a != 0 && a < 10;
-      ^
-InterfaceInherit.java:40: Warning: Possible violation of object invariant (Invariant)
-  }
-  ^
 Associated declaration is "InterfaceInherit.java", line 25, col 6:
   //@ invariant 10 <= x && x < 100;
       ^
 InterfaceInherit.java:40: Warning: Possible violation of object invariant (Invariant)
   }
   ^
+Associated declaration is "InterfaceInherit.java", line 34, col 6:
+  //@ invariant z < a;
+      ^
+InterfaceInherit.java:40: Warning: Possible violation of object invariant (Invariant)
+  }
+  ^
 Associated declaration is "InterfaceInherit.java", line 33, col 6:
   //@ invariant 1 <= z;
+      ^
+InterfaceInherit.java:40: Warning: Possible violation of object invariant (Invariant)
+  }
+  ^
+Associated declaration is "InterfaceInherit.java", line 3, col 6:
+  //@ invariant -10 < a && a != 0 && a < 10;
       ^
 InterfaceInherit.java:57: Warning: Possible violation of object invariant (Invariant)
       p(a);
@@ -99,14 +99,14 @@ Associated declaration is "SuperCallPost.java", line 9, col 6:
 Body.java:21: Warning: Possible violation of object invariant (Invariant)
 class Super implements A, B {
                             ^
-Associated declaration is "Body.java", line 8, col 6:
-  //@ invariant 10 <= b;
+Associated declaration is "Body.java", line 3, col 6:
+  //@ invariant 10 <= a;
       ^
 Body.java:21: Warning: Possible violation of object invariant (Invariant)
 class Super implements A, B {
                             ^
-Associated declaration is "Body.java", line 3, col 6:
-  //@ invariant 10 <= a;
+Associated declaration is "Body.java", line 8, col 6:
+  //@ invariant 10 <= b;
       ^
 Body.java:46: Warning: Possible assertion failure (Assert)
       //@ assert 10 <= sub.s;  // should fail, since invariant is decl ...
@@ -123,14 +123,14 @@ Body.java:74: Warning: Possible assertion failure (Assert)
 Body.java:87: Warning: Possible violation of object invariant (Invariant)
 class Sub extends Body implements D {
                                     ^
-Associated declaration is "Body.java", line 18, col 6:
-  //@ invariant 10 <= d;
+Associated declaration is "Body.java", line 89, col 6:
+  //@ invariant 10 <= s;
       ^
 Body.java:87: Warning: Possible violation of object invariant (Invariant)
 class Sub extends Body implements D {
                                     ^
-Associated declaration is "Body.java", line 89, col 6:
-  //@ invariant 10 <= s;
+Associated declaration is "Body.java", line 18, col 6:
+  //@ invariant 10 <= d;
       ^
 8 warnings
 Test.java:21: Warning: Possible violation of object invariant (Invariant)
@@ -161,14 +161,14 @@ Associated declaration is "Vanilla.java", line 21, col 6:
 Vanilla.java:46: Warning: Possible violation of object invariant (Invariant)
   }  // error:  fails to establish both 10 < k and k % 2 == 0
   ^
-Associated declaration is "Vanilla.java", line 21, col 6:
-  //@ invariant 10 < ((Vanilla)this).k;
+Associated declaration is "Vanilla.java", line 25, col 6:
+  //@ invariant ((Vanilla)this).k % 2 == 0;
       ^
 Vanilla.java:46: Warning: Possible violation of object invariant (Invariant)
   }  // error:  fails to establish both 10 < k and k % 2 == 0
   ^
-Associated declaration is "Vanilla.java", line 25, col 6:
-  //@ invariant ((Vanilla)this).k % 2 == 0;
+Associated declaration is "Vanilla.java", line 21, col 6:
+  //@ invariant 10 < ((Vanilla)this).k;
       ^
 Vanilla.java:56: Warning: Possible violation of object invariant (Invariant)
   }  // error:  fails to establish k % 2 == 0  (superclass establishes ...
