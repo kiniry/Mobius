@@ -31,7 +31,7 @@ import escjava.ParsedRoutineSpecs;
  *         + GCExpr
  *           + LabelExpr (Identifier label, Expr expr)
  *           + NaryExpr (int op, Identifier methodName, Expr* exprs)
- *           + QuantifiedExpr (GenericVarDecl* vars, Expr expr)
+ *           + QuantifiedExpr (GenericVarDecl* vars, Expr rangeExpr, Expr expr)
  *           + GeneralizedQuantifiedExpr (GenericVarDecl* vars, Expr expr)
  *                // Sum, Product, Max, Min
  *           + NumericalQuantifiedExpr (GenericVarDecl* vars, Expr expr)
@@ -174,6 +174,7 @@ public class QuantifiedExpr extends GCExpr
 {
   //# int quantifier
   //# GenericVarDecl* vars
+  //# Expr rangeExpr
   //# Expr expr
   //# Expr* nopats NullOK
   //# Expr* pats NullOK
@@ -219,6 +220,7 @@ public class NumericalQuantifiedExpr extends GCExpr
   // NumOf
   //# int quantifier
   //# GenericVarDecl* vars
+  //# Expr rangeExpr
   //# Expr expr
   //# Expr* nopats NullOK
 

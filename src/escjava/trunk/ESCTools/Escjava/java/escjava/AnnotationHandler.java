@@ -704,7 +704,7 @@ added, it doesn't change whether a routine appears to have a spec or not.
 	int loc = foralls.elementAt(0).getStartLoc();
 	int endLoc = foralls.elementAt(foralls.size()-1).getStartLoc();
 	return QuantifiedExpr.make(loc,endLoc,TagConstants.FORALL,
-		foralls,e,null,null);
+		foralls,null,e,null,null);
     }
 
     public void deNest(ArrayList ps, ModifierPragmaVec prefix, ArrayList deNestedSpecs) {

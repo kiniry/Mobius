@@ -869,23 +869,33 @@ public final class GC {
   }
 
   public static Expr forall(GenericVarDecl v, Expr e) {
-    return forall( Location.NULL, Location.NULL, v, e, null );
+    return forall( Location.NULL, Location.NULL, v, GC.truelit, e, null );
+  }
+
+  public static Expr forall(GenericVarDecl v, Expr range, Expr e) {
+    return forall( Location.NULL, Location.NULL, v, range, e, null );
+  }
+
+  public static Expr forall(GenericVarDeclVec v, Expr range, Expr e) {
+    return quantifiedExpr( Location.NULL, Location.NULL, 
+		TagConstants.FORALL, v, range, e, null, null );
   }
 
   public static Expr forall(GenericVarDecl v, Expr e, ExprVec nopats) {
-    return forall( Location.NULL, Location.NULL, v, e, nopats );
+    return forall( Location.NULL, Location.NULL, v, GC.truelit, e, nopats );
   }
 
   public static Expr forallwithpats(GenericVarDecl v, Expr e, ExprVec pats) {
     return quantifiedExpr( Location.NULL, Location.NULL, 
-		TagConstants.FORALL, v, e, null, pats );
+		TagConstants.FORALL, v, GC.truelit, e, null, pats );
   }
 
-  public static Expr forall(int sloc, int eloc, GenericVarDecl v, Expr e) {
-    return forall(sloc, eloc, v, e, null);
+  public static Expr forall(int sloc, int eloc, GenericVarDecl v, Expr range, Expr e) {
+    return forall(sloc, eloc, v, range, e, null);
   }
 
-  public static Expr forall(int sloc, int eloc, GenericVarDecl v, Expr e,
+  public static Expr forall(int sloc, int eloc, GenericVarDecl v, 
+			    Expr range, Expr e,
 			    ExprVec nopats) {
     Assert.notNull(v);
     Assert.notNull(e);
@@ -921,20 +931,20 @@ public final class GC {
     }
 
     // could not do the substitution
-    return quantifiedExpr(sloc, eloc, TagConstants.FORALL, v, e, nopats, null);
+    return quantifiedExpr(sloc, eloc, TagConstants.FORALL, v, range, e, nopats, null);
   }
 
   public static Expr quantifiedExpr(int sloc, int eloc, int tag,
-				    GenericVarDecl v, Expr e,
+				    GenericVarDecl v, Expr range, Expr e,
 				    ExprVec nopats, ExprVec pats)
     {
       GenericVarDeclVec vs = GenericVarDeclVec.make();
       vs.addElement(v);
-      return quantifiedExpr(sloc, eloc, tag, vs, e, nopats, pats );
+      return quantifiedExpr(sloc, eloc, tag, vs, range, e, nopats, pats );
     }
 
   public static Expr quantifiedExpr(int sloc, int eloc, int tag,
-				    GenericVarDeclVec vs, Expr e,
+				    GenericVarDeclVec vs, Expr range, Expr e,
 				    ExprVec nopats, ExprVec pats)
     {
       Assert.notFalse( tag == TagConstants.FORALL
@@ -961,13 +971,14 @@ public final class GC {
 	      nopats.append(qe.nopats);
 	    }
 	  }
-	  return QuantifiedExpr.make( sloc, eloc, tag, copy, qe.expr,
+	  return QuantifiedExpr.make( sloc, eloc, tag, copy, 
+				      GC.and(range, qe.rangeExpr), qe.expr,
 				      nopats, qe.pats );
 	}
       }
 
       // No optimization done
-      return QuantifiedExpr.make( sloc, eloc, tag, vs, e, nopats, pats );
+      return QuantifiedExpr.make( sloc, eloc, tag, vs, range, e, nopats, pats );
     }
 
   public static boolean isSimple(Expr e) {

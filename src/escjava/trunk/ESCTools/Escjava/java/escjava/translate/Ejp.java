@@ -150,7 +150,7 @@ public abstract class Ejp {
 				TagConstants.ANYEQ,
 				tRef, dynInstMap.apply(nuv));
 	  Expr implies = GC.implies(locStart, locEnd, equals, normal2);
-	  return GC.forall(locStart, locEnd, tDecl, implies);
+	  return GC.forall(locStart, locEnd, tDecl, null, implies);
 	}
 
     case TagConstants.VARINCMD: {

@@ -216,6 +216,7 @@ public class PredicateAbstraction
 	    Expr f = GC.quantifiedExpr( sloc, eloc,
 					TagConstants.FORALL,
 					decls,
+					GC.truelit,
 					GC.implies( GC.and( ttc ),
 						    inv ),
 					    null, null );

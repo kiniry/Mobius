@@ -297,13 +297,14 @@ public class VcToString {
 	  Assert.notFalse(!insideNoPats);
 	  insideNoPats = true;
 	  if (qe.pats.size() == 1) out.print("(PATS");
-	  else                     out.print("(MPAT");
+	  else                     out.print("(PATS (MPAT");
 	  for (int i = 0; i < qe.pats.size(); i++) {
 	    out.print(" ");
 	    Expr nopat = qe.pats.elementAt(i);
 	    printTerm(out, subst, nopat);
 	  }
-	  out.print(") ");
+	  if (qe.pats.size() == 1) out.print(") ");
+	  else                     out.print("))");
 	  insideNoPats = false;
 	}
 	printFormula( out, subst, qe.expr);

@@ -6,6 +6,7 @@ import java.util.Hashtable;
 import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.ArrayList;
+import java.util.ListIterator;
 
 import javafe.ast.*;
 import javafe.tc.*;
@@ -425,7 +426,7 @@ public class TrAnExpr {
 	    ExprVec ev = ExprVec.make();
 	    java.util.Iterator ii = boundStack.iterator();
 	    while (ii.hasNext()) {
-		Object o = ii.next();
+		Object o = ((QuantifiedExpr)ii.next()).vars;
 		if (o instanceof GenericVarDecl) {
 		    GenericVarDecl g = (GenericVarDecl)o;
 		    ev.addElement( VariableAccess.make(g.id, g.getStartLoc(), g) );
@@ -552,7 +553,7 @@ public class TrAnExpr {
 	    ExprVec ev = ExprVec.make();
 	    java.util.Iterator ii = boundStack.iterator();
 	    while (ii.hasNext()) {
-		Object o = ii.next();
+		Object o = ((QuantifiedExpr)ii.next()).vars;
 		if (o instanceof GenericVarDecl) {
 		    GenericVarDecl g = (GenericVarDecl)o;
 		    ev.addElement( VariableAccess.make(g.id, g.getStartLoc(), g) );
@@ -659,33 +660,6 @@ System.out.println("");
 	    ev.addElement( TypeExpr.make(Location.NULL, Location.NULL, t) );
 	    ev.addElement(Types.zeroEquivalent(Types.baseType(t))); // initial value
 	    return GC.nary(TagConstants.ARRAYMAKE,ev);
-/*
-	    VariableAccess v = tempName(e.getStartLoc(),"tempNewArray",
-				TypeCheck.inst.getType(nae));
-
-	    ExprVec ev = ExprVec.make(7);
-	    ev.addElement( v ); // variable name
-	    ev.addElement(apply(sp,currentAlloc) ); // alloc
-	    VariableAccess newAlloc = GC.makeVar(GC.allocvar.id,nae.getStartLoc());
-	    ev.addElement(apply(sp,newAlloc) ); // alloc
-	    trSpecExprAuxAssumptions.addElement(
-		GC.nary(TagConstants.ALLOCLT, currentAlloc, newAlloc));
-	    currentAlloc = newAlloc;
-	    ev.addElement(GC.elemsvar ); // elems
-	    Expr edims = GC.nary( TagConstants.ARRAYSHAPEONE, 
-				trSpecExpr( nae.dims.elementAt(0), sp, st));
-	    for (int kk = 1; kk < nae.dims.size(); ++kk) {
-		edims = GC.nary( TagConstants.ARRAYSHAPEMORE,
-				trSpecExpr( nae.dims.elementAt(kk), sp, st), edims);
-	    }
-	    ev.addElement(edims ); // arrayShape
-	    ev.addElement( TypeExpr.make(Location.NULL, Location.NULL, TypeCheck.inst.getType(nae)) );
-	    ev.addElement(Types.zeroEquivalent(TypeCheck.inst.getType(nae)); // initial value
-
-	    trSpecExprAuxConditions.addElement(GC.nary(TagConstants.ARRAYFRESH,ev));
-	    return v;
-		// FIXME for multiple dimensions, other types
-*/
 	} else {
 	    ErrorSet.notImplemented(!Main.options().noNotCheckedWarnings,
 		e.getStartLoc(),"Not checking predicates containing new array expressions");
@@ -762,8 +736,6 @@ System.out.println("");
         }
 
       case TagConstants.NUM_OF:
-      case TagConstants.MIN:
-      case TagConstants.MAXQUANT:
       case TagConstants.SUM:
       case TagConstants.PRODUCT:
 	{
@@ -772,13 +744,96 @@ System.out.println("");
 	    // FIXME - ignore these till we can figure out how to reason
 		// Not sure this is the correct type ??? FIXME
 	    Type t = TypeCheck.inst.getType(e);
-	    return tempName(e.getStartLoc(),"quantvalue",t);
+	    VariableAccess va = tempName(e.getStartLoc(),"quantvalue",t);
+	    return va;
+        }
+
+      case TagConstants.MIN:
+      case TagConstants.MAXQUANT:
+	{
+	    Type t = TypeCheck.inst.getType(e);
+	    VariableAccess va = tempName(e.getStartLoc(),"quantvalue",t);
+	    Expr vaf = GC.nary(va.id, ExprVec.make());
+	    GeneralizedQuantifiedExpr qe = (GeneralizedQuantifiedExpr)e;
+	    Expr tex = trSpecExpr(qe.expr,sp,st);
+	    Expr rex = trSpecExpr(qe.rangeExpr,sp,st);
+	    Expr ne = GC.implies(
+		GC.quantifiedExpr(Location.NULL, Location.NULL,
+		    TagConstants.EXISTS, qe.vars, rex, rex, null, null),
+		GC.quantifiedExpr(Location.NULL, Location.NULL,
+		    TagConstants.EXISTS, qe.vars, rex,
+		    GC.and(rex, GC.nary(TagConstants.INTEGRALEQ, vaf, tex)),
+		    null, null));
+	    if (boundStack.size() > 0) {
+		ListIterator iter = boundStack.listIterator(boundStack.size());
+		while (iter.hasPrevious()) {
+		    QuantifiedExpr qqe = (QuantifiedExpr)iter.previous();
+		    Expr rrex = trSpecExpr(qqe.rangeExpr, sp, st);
+		    Object o = qqe.vars;
+		    if (o instanceof GenericVarDecl) {
+			GenericVarDecl g = (GenericVarDecl)o;
+			ne = GC.forall(g,rrex,GC.implies(rrex,ne));
+		    } else if (o instanceof GenericVarDeclVec) {
+			GenericVarDeclVec gi = (GenericVarDeclVec)o;
+			ne = GC.forall(gi,rrex,GC.implies(rrex,ne));
+/*
+			int kk = gi.size();
+			while (--kk >= 0) {
+			    GenericVarDecl g = gi.elementAt(kk);
+			    ne = GC.forall(g,GC.implies(qe.rangeExpr,ne));
+			}
+*/
+		    } else System.out.print("[[" + o.getClass() + "]]");
+		}
+	    }
+	    trSpecExprAuxAssumptions.addElement(ne);
+	    if (tag == TagConstants.MIN) {
+		// (\min vars; rangeexpr; expr) generates the axioms
+		// (\forall vars; rangeexpr ==> va <= expr) and
+		// (\exists vars; rangeexpr) ==> (\exists vars; rangeexpr && va == expr)
+		ne = QuantifiedExpr.make(Location.NULL, Location.NULL, 
+		    TagConstants.FORALL, qe.vars, rex,
+		    GC.implies(rex, GC.nary(TagConstants.INTEGRALLE, vaf, tex)),
+		    null, null);
+	    } else {
+		// (\max vars; rangeexpr; expr) generates the axioms
+		// (\forall vars; rangeexpr ==> va >= expr) and
+		// (\exists vars; rangeexpr) ==> (\exists vars; rangeexpr && va == expr)
+		ne = QuantifiedExpr.make(Location.NULL, Location.NULL, 
+		    TagConstants.FORALL, qe.vars, rex,
+		    GC.implies(rex, GC.nary(TagConstants.INTEGRALGE, vaf, tex)),
+		    null, null);
+	    }
+	    if (boundStack.size() > 0) {
+		ListIterator iter = boundStack.listIterator(boundStack.size());
+		while (iter.hasPrevious()) {
+		    QuantifiedExpr qqe = (QuantifiedExpr)iter.previous();
+		    Expr rrex = trSpecExpr(qqe.rangeExpr, sp, st);
+		    Object o = qqe.vars;
+		    if (o instanceof GenericVarDecl) {
+			GenericVarDecl g = (GenericVarDecl)o;
+			ne = GC.forall(g,rrex,GC.implies(rrex,ne));
+		    } else if (o instanceof GenericVarDeclVec) {
+			GenericVarDeclVec gi = (GenericVarDeclVec)o;
+			ne = GC.forall(gi,rrex,GC.implies(rrex,ne));
+/*
+			int kk = gi.size();
+			while (--kk >= 0) {
+			    GenericVarDecl g = gi.elementAt(kk);
+			    ne = GC.forall(g,rrex,GC.implies(rrex,ne));
+			}
+*/
+		    } else System.out.print("[[" + o.getClass() + "]]");
+		}
+	    }
+	    trSpecExprAuxAssumptions.addElement(ne);
+	    return vaf;
         }
 
       case TagConstants.FORALL:
       case TagConstants.EXISTS: {
 	  QuantifiedExpr qe = (QuantifiedExpr)e;
-	if (doRewrites()) boundStack.add(qe.vars);
+	if (doRewrites()) boundStack.add(qe);
 //if (doRewrites()) System.out.println("FORALL " + Location.toString(e.getStartLoc()));
 //if (doRewrites()) ErrorSet.dump(null);
 	if (qe.vars.size() != 1) {
@@ -816,8 +871,11 @@ System.out.println("");
 }
 */
 	  return GC.quantifiedExpr(locStart, locEnd, tag,
-				   qe.vars, body, null, null);
-	} else if (Main.options().nestQuantifiers) {
+				   qe.vars, 
+				   qe.rangeExpr == null ? null :
+				      trSpecExpr(qe.rangeExpr, sp, st),
+				   body, null, null);
+	} else if (Main.options().nestQuantifiers) { // default is false
 	  GenericVarDecl decl = qe.vars.elementAt(0);
 
 	  Assert.notFalse(sp == null || ! sp.contains(decl));
@@ -837,7 +895,10 @@ System.out.println("");
 //if (doRewrites()) System.out.println("FORALL-ENDB " + Location.toString(e.getStartLoc()));
 	  return GC.quantifiedExpr(qe.getStartLoc(), qe.getEndLoc(),
 				   qe.getTag(),
-				   decl, body, null, null);
+				   decl, 
+				   qe.rangeExpr == null ? null :
+				     trSpecExpr(qe.rangeExpr, sp, st),
+				   body, null, null);
 	} else {
 // FIXME - need to handle AuxConditions in here
 	  int locStart = e.getStartLoc();
@@ -868,7 +929,10 @@ System.out.println("");
 	      if (doRewrites()) boundStack.removeLast();
 //if (doRewrites()) System.out.println("FORALL-ENDC " + Location.toString(e.getStartLoc()));
 	      return GC.quantifiedExpr(locStart, locEnd, tag,
-				       dummyDecls, qbody, null, null);
+				       dummyDecls, 
+				       qe.rangeExpr == null ? null :
+					trSpecExpr(qe.rangeExpr, sp, st),
+					qbody, null, null);
 	    }
 	  }
 	}

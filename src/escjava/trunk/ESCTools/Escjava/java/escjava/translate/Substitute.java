@@ -235,7 +235,10 @@ public class Substitute {
 	  }
 	}
 	result = NumericalQuantifiedExpr.make( qe.sloc, qe.eloc, qe.quantifier,
-		  	   	      qe.vars, doSubst(subst,qe.expr,rhsVars),
+		  	   	      qe.vars, 
+				      qe.rangeExpr == null ? null :
+				        doSubst(subst,qe.rangeExpr,rhsVars),
+				      doSubst(subst,qe.expr,rhsVars),
 				      newNopats);
 	break;
       }
@@ -331,7 +334,10 @@ public class Substitute {
 	}
 
 	result = QuantifiedExpr.make( qe.sloc, qe.eloc, qe.quantifier,
-		  	   	      qe.vars, doSubst(subst,qe.expr,rhsVars),
+		  	   	      qe.vars, 
+				      qe.rangeExpr == null ? null :
+					doSubst(subst,qe.rangeExpr,rhsVars),
+				      doSubst(subst,qe.expr,rhsVars),
 				      newNopats, newPats);
 	break;
       }
