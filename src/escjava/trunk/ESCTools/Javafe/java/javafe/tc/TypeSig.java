@@ -113,7 +113,7 @@ public class TypeSig extends Type
     //@ ensures \result!=null
     public static TypeSig getSig(/*@non_null*/ TypeDecl d) {
 	TypeSig r = (TypeSig)sigDecoration.get(d);
-	Assert.notNull(r,      //@ nowarn Pre
+	if (r == null) Assert.notNull(r,      //@ nowarn Pre
 	       "getSig called on a TypeDecl (" + d.id + ") not associated with a TypeSig");
 	return r;
     }
@@ -840,9 +840,11 @@ public class TypeSig extends Type
 	if (state >= TypeSig.PREPPED)
 	    return;
 
+	if (Info.on) Info.out("[prepping-slinks " + this + "]");
 	resolveSupertypeLinks();
-	Info.out("[prepping " + this + "]");
+	if (Info.on) Info.out("[prepping " + this + "]");
 	PrepTypeDeclaration.inst.prepTypeSignature(this);
+	if (Info.on) Info.out("[prepping-complete " + this + "]");
 
 	state = TypeSig.PREPPED;
     }
@@ -863,8 +865,11 @@ public class TypeSig extends Type
 	if (this.state < TypeSig.PREPPED)
 	    prep();
 
-	Info.out("[typechecking " + this + "]");
+	long start;
+	if (Info.on) start = javafe.Tool.currentTime();
+	if (Info.on) Info.out("[typechecking " + this + "]");
 	TypeCheck.inst.makeFlowInsensitiveChecks().checkTypeDeclaration(this);
+	if (Info.on) Info.out("[typechecking-end " + this + " " + javafe.Tool.timeUsed(start) + "]");
 	// FlowSensitiveChecks.checkTypeDeclaration(this);
 	this.state = TypeSig.CHECKED;
     }
