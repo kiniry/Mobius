@@ -131,6 +131,12 @@ Don't complain, but don't do it twice either. ???
 	cu = super.read(target,avoidSpec);
 	if (cu == null) return null;
 	CompilationUnit result = readRefinements(cu,avoidSpec);
+	if (result == null) {
+	    // Some error occurred (already reported).  In particular, this
+	    // null return can happen if the type declared in this file has
+	    // already been loaded by (declared in) another file.
+	    return result;
+	}
 
 	// Do anything to pragmas that must be done before type signatures
 	// are created - includes, for example, handling model imports.

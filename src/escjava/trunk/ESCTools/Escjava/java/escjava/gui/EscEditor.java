@@ -4,7 +4,6 @@ import java.awt.Rectangle;
 import java.awt.Font;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.EventQueue;
 import java.io.*;
 import javax.swing.*;
 import javax.swing.text.html.*;
@@ -232,6 +231,6 @@ public class EscEditor extends JFrame implements ActionListener {
     }
 
     public void showit() {
-	EventQueue.invokeLater(new FrameShower(this));
+	FrameShower.show(this);
     }
 }

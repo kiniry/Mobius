@@ -1,4 +1,7 @@
-// COpyright 2004, David Cok
+/*  Copyright 2004, David R. Cok 
+    Originally generated as part of a GUI interface to the
+    Esc/Java2 application.
+*/
 
 package escjava.gui;
 
@@ -13,6 +16,10 @@ import java.awt.event.ActionListener;
 import escjava.translate.NoWarn;
 import escjava.ast.TagConstants;
 
+/** This class creates and maintains a JPanel containing components for
+    controlling the various options that affect the running of the Esc/Java2
+    tool.
+*/
 public class EscOptions extends JPanel implements ActionListener {
 
     /** A reference to the Options structure in the ESC tool,
@@ -53,13 +60,14 @@ public class EscOptions extends JPanel implements ActionListener {
 		"are not implemented in ESC/Java2 are issued" },
 
 	{"Debugging:", null, null},
+	{"verbose", "v",	"Shows lots of tracing output" },
 	{"showErrorLocation", "showErrorLocation",	"TBD description" },
 	{"showDesugaredSpecs", "desugaredSpecs",	"TBD description" },
 	//{"pxLog log", 		"TBD description" },
 	{"pgc", "pgc", 		"TBD description" },
 	{"pdsa", "pdsa",		"TBD description" },
 	{"pvc", "pvc", 		"TBD description" },
-	{"testMode", "testMode",		"TBD description" },
+	//{"testMode", "testMode",		"TBD description" },
 	};
 
     public EscOptions(escjava.Options doc) {
@@ -134,8 +142,6 @@ public class EscOptions extends JPanel implements ActionListener {
 	// so it does not behave well in a Boxlayout.
 	simplify.setColumns(30);
 	simplify.setMaximumSize(simplify.getPreferredSize());
-	//simplify.setMaximumSize(new Dimension(
-	 // simplify.getMaximumSize().width, simplify.getPreferredSize().height));
 	misc.add(simplify);
 	simplify.addActionListener(
 	    new ActionListener() {
@@ -158,15 +164,26 @@ public class EscOptions extends JPanel implements ActionListener {
 		misc.add(new JLabel(opttext[0]));
 	    } else {
 		try {
-		    Field f = escoptions.getField(opttext[1]);
-		    boolean b = f.getBoolean(escjava.Main.options());
+		    boolean b = false;
+		    try {
+			Field f = escoptions.getField(opttext[1]);
+			b = f.getBoolean(escjava.Main.options());
+		    } catch (Exception e) {
+			// Some options do not have fields.  These are special
+			// cases and are ok.  We presume they are false by
+			// default.
+		    }
 		    cb = new JCheckBox(opttext[0],b);
 		    cb.setAlignmentX(Component.LEFT_ALIGNMENT);
 		    cb.setToolTipText(opttext[2]);
 		    cb.addActionListener(this);
 		    misc.add(cb);
 		} catch (Exception e) {
-		    System.out.println("FAILED TO RECOGNIZE OPTION " + i + ": " + opttext[0] + " " + e);
+		    JOptionPane.showMessageDialog(this,
+			"Please report an INTERNAL ERROR: " + Project.eol +
+			"An exception occurred while building the GUI " +
+			"component with label " + opttext[0] + Project.eol +
+			e);
 		}
 	    }
 	}
@@ -210,14 +227,26 @@ public class EscOptions extends JPanel implements ActionListener {
 		}
 	    }
 	    boolean value = ((JCheckBox)source).isSelected();
-	    try {
+	    if (fname == null) {
+		JOptionPane.showMessageDialog(this,
+		    "Please report an INTERNAL ERROR: " + Project.eol +
+		    "GUI references an unlisted option - " + name);
+	    } else if (fname.equals("v")) {
+		javafe.util.Info.on = value;
+	    } else try {
 		Field f = escoptions.getField(fname);
 		f.setBoolean(escjava.Main.options(),value);
 	    } catch (Exception ee) {
-		System.out.println("FAILED TO RECOGNIZE OPTION: " + name + " " + ee);
+		JOptionPane.showMessageDialog(this,
+		    "Please report an INTERNAL ERROR: " + Project.eol +
+		    "GUI failed to find an option " + fname +
+		    " for checkbox labeled " + name);
 	    }
 	} else {
-	    System.out.println("UNKNOWN GUI OPTION " + name);
+	    JOptionPane.showMessageDialog(this,
+		"Please report an INTERNAL ERROR: " + Project.eol +
+		"GUI named " + name +
+		" is an unsupported component of type " + source.getClass());
 	}
     }
 

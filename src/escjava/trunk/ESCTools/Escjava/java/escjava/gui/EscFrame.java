@@ -61,8 +61,7 @@ public class EscFrame extends JFrame {
 	EscHtml jf = EscHtml.make("Welcome","escjava/gui/welcome.html",
 			this,100,100,500,500);
 
-	Runnable runner = new FrameShower(this);
-	EventQueue.invokeLater(runner);
+	FrameShower.show(this);
 
 	jf.showit();
 
@@ -269,7 +268,7 @@ public class EscFrame extends JFrame {
 			tree.getClosestPathForLocation(e.getX(),e.getY()).
 				    getLastPathComponent()).getUserObject();
 		    if ((e.getModifiers() & MouseEvent.ALT_MASK) != 0)
-			// Shift + click --> error window
+			// Alt + click --> error window
 			GUI.windowTasks.addTask(o);
 		    else if ((e.getModifiers() & MouseEvent.CTRL_MASK) != 0) {
 			// Ctrl + click --> editor window
@@ -283,6 +282,8 @@ public class EscFrame extends JFrame {
 	tree.setShowsRootHandles(true);
 	ToolTipManager.sharedInstance().registerComponent(tree);
 	tree.setRootVisible(false);
+	//tree.setEditable(true);
+	//tree.setDragEnabled(true);
 	JScrollPane treeView = new JScrollPane(tree);
 	treeView.setPreferredSize(new Dimension(400,300));
 	tabbedPane.addTab("Results", null, treeView,

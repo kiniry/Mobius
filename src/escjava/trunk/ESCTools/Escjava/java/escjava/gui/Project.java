@@ -22,7 +22,7 @@ public class Project {
 
     static public void init(String[] args) {
 	currentProject = null;
-	GUI.gui.clear();
+	GUI.gui.clear(false);
 	ByteArrayOutputStream ba = Utils.setStreams();
 	try {
 	    GUI.gui.run(args);

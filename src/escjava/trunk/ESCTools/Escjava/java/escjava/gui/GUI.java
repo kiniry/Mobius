@@ -1,3 +1,8 @@
+/*  Copyright 2004, David R. Cok 
+    Originally generated as part of a GUI interface to the
+    Esc/Java2 application.
+*/
+
 package escjava.gui;
 
 import javax.swing.*;
@@ -105,7 +110,7 @@ static {
 	not reinitialized.
      */
     public void restart(String[] args) {
-	clear();
+	clear(args != null);
 	InputEntry.clear( options.inputEntries );
 	run(args);
 	escframe.init();
@@ -129,6 +134,11 @@ static {
 	    int from = "jar:file:".length();
 	    int to = urlStr.indexOf("!/");
 	    if (to != -1) specspath = urlStr.substring(from, to);
+
+	    try {
+	    processOption("-nowarn", new String[]{"Deadlock"}, 0);
+	    processOption("-source", new String[]{"1.4"}, 0);
+	    } catch (javafe.util.UsageError e) {} // FIXME
 	}
     }
 
@@ -325,7 +335,8 @@ static {
 				     + " of type " + TypeSig.getSig(r.parent)
 				     + " because its VC is too large");
 		    status = Status.STATICCHECKED_TIMEOUT;
-		} else if (!stop) {
+		} else {
+		    stopCheck(true);
 
 		    // FIXME if (stages<6) ???
 
@@ -334,8 +345,7 @@ static {
 		    GUI.gui.escframe.showGuiLight(1);
 		    status = doProving(vc,r,directTargets,tdn.scope);
 		    //System.out.println("DOPROVING " + status);
-		} else {
-		    status = Status.NOTPROCESSED;
+		    stopCheck(true);
 		}
 	    }
 	}
@@ -343,6 +353,9 @@ static {
 	} catch (Stop t) {
 	    status = Status.NOTPROCESSED;
 	    throw t;
+	} catch (escjava.prover.SubProcess.Died t) {
+	    ErrorSet.error("Prover died");
+	    status = Status.STATICCHECKED_ERROR;
 	} catch (Throwable t) {
 	    status = Status.STATICCHECKED_ERROR;
 	    System.out.println("An exception was thrown while processing a routine declaration: " + t);
@@ -409,6 +422,7 @@ static {
         }
 	public void processHelper(int action) {
 	    processThis(action);
+	    if (status == Status.PARSED_ERROR) return;
 	    if (status == Status.TYPECHECKED_ERROR) return;
 	    Enumeration children = holder.children();
 	    while (children.hasMoreElements()) {
@@ -602,25 +616,25 @@ static {
 		s = Status.PARSED_ERROR;
 	    } finally {
 		Utils.restoreStreams(true);
-	    String out = ba.toString();
-	    if (status == Status.NOTPROCESSED) out = "";
-	    if (ErrorSet.errorsSinceMark()) s = Status.PARSED_ERROR;
-	    else if (ErrorSet.cautionsSinceMark()) s = Status.PARSED_CAUTION;
-	    if (cu != null)  {
+		String out = ba.toString();
+		if (s == Status.NOTPROCESSED) out = "";
+		if (ErrorSet.errorsSinceMark()) s = Status.PARSED_ERROR;
+		else if (ErrorSet.cautionsSinceMark()) s = Status.PARSED_CAUTION;
+		if (cu != null)  {
 
-		this.cu = cu;
+		    this.cu = cu;
 
-		if (holder.isLeaf()) {
-		    // FIXME - if there are already children are they valid ???
-		    // The contents have not been added to the node tree
-		    gui.buildCUTree(this);
-		}
+		    if (holder.isLeaf()) {
+			// FIXME - if there are already children are they valid ???
+			// The contents have not been added to the node tree
+			gui.buildCUTree(this);
+		    }
 		    // FIXME use TYPECHECKED_WAITING???
-	    } else {
-		s = Status.PARSED_ERROR;
-	    }
+		} else {
+		    s = Status.PARSED_ERROR;
+		}
 
-	    setStatus( s, out);  // Notifies the GUI object
+		setStatus( s, out);  // Notifies the GUI object
 	    }
 	    return s;
         }

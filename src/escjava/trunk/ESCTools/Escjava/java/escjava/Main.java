@@ -147,18 +147,20 @@ public class Main extends javafe.SrcTool
     }
 
     public Main() {
-        clear(); // resets any static variables left from a previous instantiation
+        clear(true); // resets any static variables left from a previous instantiation
     }
 
     boolean keepProver = false;
 
-    public void clear() {
-        super.clear();
+    public void clear(boolean complete) {
+        // restore ordinary checking of assertions
+        super.clear(complete);
+	if (complete) {
+	    NoWarn.useGlobalStatus = false; 
+	    NoWarn.setAllChkStatus(TagConstants.CHK_AS_ASSERT);
+	}
         gctranslator = new Translate();
         if (!keepProver) ProverManager.kill();
-        // restore ordinary checking of assertions
-        NoWarn.useGlobalStatus = false; 
-	NoWarn.setAllChkStatus(TagConstants.CHK_AS_ASSERT);
         // Disallow the -avoidSpec option:
         javafe.SrcToolOptions.allowAvoidSpec = false; 
 
@@ -798,9 +800,12 @@ public class Main extends javafe.SrcTool
         }
 */
 
+	} catch (escjava.prover.SubProcess.Died e) {
+	    //System.out.println("DIED");
+	    ProverManager.died();
 	} catch (FatalError e) {
-System.out.println("DIED");
-	   ProverManager.died();
+	    //System.out.println("DIED");
+	    ProverManager.died();
 	}
 
         String proofTime = timeUsed(startTime);
@@ -826,6 +831,7 @@ System.out.println("DIED");
 
     public int doProving(Expr vc, RoutineDecl r, Set directTargets,
 				FindContributors scope) {
+	try {
 
 	Enumeration results = ProverManager.prove(vc,scope);
 
@@ -944,6 +950,12 @@ System.out.println("DIED");
             }
         }
 	return stat;
+
+	} catch (escjava.prover.SubProcess.Died e) {
+	    //status = "died";
+	    return Status.STATICCHECKED_ERROR;
+	}
+
     }
 
     /**

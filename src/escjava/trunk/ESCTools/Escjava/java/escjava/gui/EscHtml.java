@@ -1,5 +1,4 @@
 package escjava.gui;
-import java.awt.EventQueue;
 import javax.swing.*;
 import javax.swing.text.html.*;
 import javax.swing.event.*;
@@ -48,8 +47,7 @@ public class EscHtml extends JFrame {
     }
 
     public void showit() {
-        Runnable runner2 = new FrameShower(this);
-        EventQueue.invokeLater(runner2);
+	FrameShower.show(this);
     }
 
     class Hyperactive implements HyperlinkListener {

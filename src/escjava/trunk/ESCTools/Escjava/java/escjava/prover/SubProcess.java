@@ -44,6 +44,9 @@ import javafe.util.*;
 
 public class SubProcess
 {
+    static public class Died extends RuntimeException {}
+    final static public Died DIED = new Died();
+
     /**
      * The name of the subprocess, suitable for use in error messages.
      */
@@ -188,7 +191,7 @@ public class SubProcess
      */
     //@ requires P != null;
     public int getChar() {
-	Assert.notNull(P);     //@ nowarn Pre // precondition
+	if (P == null) throw new Died();
 
 	try {
 	    int next = from.read();
@@ -215,7 +218,8 @@ public class SubProcess
      */
     //@ requires P != null;
     public int peekChar() {
-	Assert.notNull(P);     //@ nowarn Pre // precondition
+	// P may have been closed on us 
+	if (P == null) throw new Died();
 
 	try {
 	    int next = from.read();

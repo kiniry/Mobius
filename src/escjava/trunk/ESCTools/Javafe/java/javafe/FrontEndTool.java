@@ -98,7 +98,7 @@ public abstract class FrontEndTool extends Tool {
         called multiple times within one process.  Called as part of
         construction of a new Main.
     */
-    public void clear() {
+    public void clear(boolean complete) {
         ErrorSet.clear();
 	// FIXME LocationManagerCorrelatedReader.clear();
         OutsideEnv.clear();
@@ -193,22 +193,22 @@ public abstract class FrontEndTool extends Tool {
      */
     public int handleOptions(String[] args) {
 	if (args != null) {
-	try {
-	    // Handle all tool options:
-	    options = makeOptions();
-	    processOptions(args);
-	    if (options.issueUsage) {
-		usage();
-		return okExitCode;
+	    try {
+		// Handle all tool options:
+		options = makeOptions();
+		processOptions(args);
+		if (options.issueUsage) {
+		    usage();
+		    return okExitCode;
+		}
+	    } catch (UsageError e) {
+		badOptionUsage(e);
+		ErrorSet.errors++; // Just so that the JUnit tests detect that
+				    // an error message was issued
+		return badUsageExitCode;
+	    } catch (FatalError e) {
+		Info.out("[" + name() + " exiting due to a fatal error]");
 	    }
-        } catch (UsageError e) {
-            badOptionUsage(e);
-	    ErrorSet.errors++; // Just so that the JUnit tests detect that
-				// an error message was issued
-            return badUsageExitCode;
-        } catch (FatalError e) {
-	    Info.out("[" + name() + " exiting due to a fatal error]");
-	}
 	}
 	// Setup the front end using the options:
 	setup();

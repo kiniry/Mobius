@@ -2,6 +2,7 @@ package escjava.gui;
 
 public class TaskQueue {
 
+    //@ non_null
     private java.util.LinkedList tasks = new java.util.LinkedList();
 
     synchronized public void addTask(Object o) { 
