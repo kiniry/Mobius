@@ -24,7 +24,7 @@ else
 endif
 
 export TOOLCMD = ${JAVA} -mx40m -classpath $(call canonicalize,${CLASSDIRECTORY}) javafe.test.Print ${JBIN}
-export TOOLARGS = -canonpaths -noprint -typecheck -quiet
+export TOOLARGS = -noprint -typecheck -quiet
 export TOOL = ${TOOLCMD} ${TOOLARGS}
 
 runtest: septests

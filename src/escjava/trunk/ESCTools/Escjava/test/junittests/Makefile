@@ -3,7 +3,7 @@ include ${TOP}/Makefile.defs
 
 ############################################################################
 # ESCJAVA is (only) used for standalone tests
-ESCJAVA = ${ESCTOOLS_ROOT}/Escjava/escj -canonpaths -nowarn Deadlock -verboseTrace
+ESCJAVA = ${ESCTOOLS_ROOT}/Escjava/escj -nowarn Deadlock -verboseTrace
 
 _CLASSPATH = $(call canonicalize,${ESCJAVA_CLASSPATH}:${JUNIT_UTILS_PATH}:.)
 _TMP = $(call canonicalize,/tmp)
@@ -60,7 +60,7 @@ ifdef COMSPEC
 	@touch .canonicalized
 endif
 
-ALWAYSFLAGS = -canonpaths -nowarn Deadlock -verboseTrace -testMode -classpath .
+ALWAYSFLAGS = -nowarn Deadlock -verboseTrace -testMode -classpath .
 DEFAULTFLAGS = " "
 
 ## This lists files without .java suffixes that need to be added to the
