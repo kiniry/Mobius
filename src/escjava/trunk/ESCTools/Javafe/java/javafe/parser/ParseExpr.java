@@ -614,6 +614,7 @@ public abstract class ParseExpr extends ParseType
                     fail(l.startingLoc, "\"assert\" is a Java keyword when you use the" +
                          " -source 1.4 option; rename this identifier.");
                 }
+		// fall-through
             case TagConstants.IDENT: 
                 {
                     Name n = parseName(l);
