@@ -51,9 +51,6 @@ export JDKSPEC_ROOT ?= ${ESCJAVA_ROOT}/release/master/specs
  
 export JAVADOCDIRECTORY ?= ${ESCTOOLS_ROOT}/javadoc
  
-export DECSRCDIRECTORY = ${JAVAFE_ROOT}/decsrclib
-export DECSRCCLASSDIRECTORY = ${JAVAFE_ROOT}/decsrclib
- 
 ##### This stuff with MOCHA needs to be cleaned up
 ### FIXME
  
@@ -79,11 +76,11 @@ export LD_LIBRARY_PATH=${MOCHA_PROOT}/platform/linux
 # The classpath for compiling Escjava; no sources outside the
 # repository should be on this list:
 #
-export JARS=${ESCTOOLS_JARS}/decsrc.jar:${ESCTOOLS_JARS}/mochalib.jar:${ESCTOOLS_JARS}/javafe.jar:${ESCTOOLS_JARS}/escjava.jar:
+export JARS=${ESCTOOLS_JARS}/mochalib.jar:${ESCTOOLS_JARS}/javafe.jar:${ESCTOOLS_JARS}/escjava.jar:
  
-export CLASSFILES=${CLASSDIRECTORY}:${MOCHA_CLASSES}:${JAVAFE_CLASSFILES}:${DECSRCCLASSDIRECTORY}
+export CLASSFILES=${CLASSDIRECTORY}:${MOCHA_CLASSES}:${JAVAFE_CLASSFILES}
  
-export CLASSES=${CLASSFILES}:${JARS}:.:
+export CLASSES=${CLASSFILES}
  
 export CLASSPATH=${CLASSES}
  
@@ -99,13 +96,13 @@ export SOURCEPATH=${SOURCEDIRECTORY}:${TESTSOURCEDIRECTORY}:${JAVAFE_ROOT}/java
 # need the binaries because don't have source for sun.* classes...
 #
 export JDKSPEC=${JDKSPEC_ROOT}
-export BOOTCLASSPATH=${JDKSPEC}:${JDKBINARIES}
+export BOOTCLASSPATH=${JDKSPEC}:${JDK_BINARIES}
  
 #
 # The classpath for checking escjava itself (e.g., escjava's
 # classpath), not counting -bootclasspath:
 #
-export ESCSPEC=${SOURCEDIRECTORY}:${JAVAFE_ROOT}/java:${DECSRCDIRECTORY}:${MOCHA_CLASSES}
+export ESCSPEC=${SOURCEDIRECTORY}:${JAVAFE_ROOT}/java:${MOCHA_CLASSES}
  
  
 ######################### misc cmds #########################

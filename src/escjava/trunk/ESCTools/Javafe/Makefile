@@ -7,20 +7,19 @@ export TOP = ..
 include ${TOP}/Makefile.defs
 # The above defines JAVAFE_ROOT, JAVAC, JAVAC_FLAGS
 
-# Various conventional UNIX tools are used in the following, including cc in preprocess
-# only mode.
+# Various conventional UNIX tools are used in the following, including cc in 
+# preprocess only mode.
 
-#####################################################################################
+##############################################################################
 ## Variables needed in the Makefile.
 export CLASSDIRECTORY=${JAVAFE_ROOT}/classfiles
 export SOURCEDIRECTORY=${JAVAFE_ROOT}/java
 export TESTSOURCEDIRECTORY=${JAVAFE_ROOT}/test
 
 export CLASSES=${CLASSDIRECTORY}
-export DECSRCLIBRARY=${JAVAFE_ROOT}/decsrclib
-export CLASSPATH=${CLASSES}:${DECSRCLIBRARY}:.:
+export CLASSPATH=${CLASSES}:.
 
-#######################################################################################
+##############################################################################
 
 .PHONY: default
 default: build

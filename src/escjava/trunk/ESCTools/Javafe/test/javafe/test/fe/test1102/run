@@ -5,5 +5,5 @@
 cd ${JAVAFE_ROOT}/java/javafe
 
 foreach i (*.java */*.java)
-  ${TOOL} -classpath ${CLASSDIRECTORY}:${DECSRCLIBRARY} $i
+  ${TOOL} -classpath ${JAVAFE_ROOT}/classfiles $i
 end

@@ -118,6 +118,11 @@ public class PkgTree extends PreloadedTree {
 		&& extension.equals(""))
 	    return INCLUDE_TREE;
 
+	/* Directories in jars do not appear as directories */
+	if ((node.data instanceof ZipGenericFile)
+		&& extension.equals(""))
+	    return INCLUDE_TREE;
+
 	/*
 	 * Non-package files include only those with extensions.
 	 *

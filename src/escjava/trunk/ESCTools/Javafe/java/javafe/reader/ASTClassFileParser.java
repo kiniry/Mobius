@@ -9,7 +9,8 @@ package javafe.reader;
 import java.io.*;
 import java.util.*;
 
-import decsrc.util.*;
+//import decsrc.util.*;
+import javafe.decsrc.ClassFileParser;
 
 import javafe.ast.*;
 import javafe.util.*;
