@@ -15,14 +15,12 @@ import escjava.ast.TagConstants;
 import escjava.translate.NoWarn;
 
 /**
- * This class parses the options on the command-line and is a
- * structure for holding the values of options.
- *
+ * This class parses the options on the command-line and is a structure for holding
+ * the values of options.
  */
 
-public class Options extends javafe.SrcToolOptions {
-
-
+public class Options extends javafe.SrcToolOptions
+{
     // Global escjava flags
 
     /*
@@ -55,7 +53,7 @@ public class Options extends javafe.SrcToolOptions {
     public boolean testMode = false;
 
     /** When true, pretty prints each compilation unit on the command-line;
-        this is only used for testing, to test the combining of refinements.
+     this is only used for testing, to test the combining of refinements.
      */
     public boolean testRef = false;
 
@@ -222,10 +220,10 @@ public class Options extends javafe.SrcToolOptions {
     // Option processing
 
     /**
-     * Process next tool option. <p>
+     * Process next tool option.
      *
-     * See <code>Tool.processOption</code> for the complete
-     * specification of this routine.<p>
+     * <p> See {@link javafe.Options#processOption(String [])} for the complete
+     * specification of this routine.
      */
     public int processOption(String option, String[] args, int offset) 
 		throws UsageError {
@@ -690,5 +688,12 @@ public class Options extends javafe.SrcToolOptions {
             throw new RuntimeException("IOException: " + e);
         }
     }
+} // end of class Options
 
-}
+/*
+ * Local Variables:
+ * Mode: Java
+ * fill-column: 85
+ * End:
+ */
+

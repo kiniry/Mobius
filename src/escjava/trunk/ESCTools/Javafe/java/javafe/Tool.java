@@ -55,10 +55,10 @@ public abstract class Tool {
      **************************************************/
 
     /** 
-     * A statically held Options object.  The object is static
-     * to facilitate using the options in other classes throughout
-     * the program.  All processing and reporting of options is
-     * managed by this object.
+     * A statically held Options object.  The object is static to
+     * facilitate using the options in other classes throughout the
+     * program.  All processing and reporting of options is managed by
+     * this object.
      */
      
     static public Options options = null;

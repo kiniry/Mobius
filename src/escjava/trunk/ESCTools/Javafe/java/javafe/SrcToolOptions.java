@@ -1,12 +1,14 @@
 package javafe;
+
 import java.util.Vector;
 import javafe.util.UsageError;
 
-/** This class holds the command-line options specific to the SrcTool class.
+/**
+ * This class holds the command-line options specific to the SrcTool class.
  */
  
-public class SrcToolOptions extends Options {
-
+public class SrcToolOptions extends Options
+{
     //**************************************************************************
     //  Hard-coded behavior
     //**************************************************************************
@@ -57,14 +59,10 @@ public class SrcToolOptions extends Options {
     // Support routines
     //************************************************************************
 
-   /**
-     * Process next tool option. <p>
-     *
-     * See <code>Tool.processOption</code> for the complete
-     * specification of this routine.<p>
-     */
+    // @overrides Options.processOption(String, String[], int)
+
     public int processOption(String option, String[] args, int offset) 
-                                     throws UsageError {
+        throws UsageError {
         if (option.equals("-f")) {
  	    if (offset>=args.length) {
                 throw new UsageError("Option -f requires at least one argument");
