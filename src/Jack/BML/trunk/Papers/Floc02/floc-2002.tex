@@ -73,6 +73,8 @@
 \usepackage{lscape} % it's needed to turn a page
 \usepackage{amsmath} % it is needed by the \sem command
 \usepackage{alltt}
+\usepackage{epsfig}
+
 \input{prooftree} %showing demonstration
 
 \begin{document}
@@ -158,7 +160,7 @@ programs, using \textit{model checking} or
 \textit{theorem proving} techniques. Drawbacks of both these
 techniques is that they require a good inside in the particular
 verification technique and tool (\emph{e.g.}~to construct the model
-that is input for the model checker or to formalise the programming
+that is input for the model checker or to formalize the programming
 language in the logic of the theorem prover), and that it is often time
 and memory consuming. By providing a front-end to the verification
 tool, which translates the program (and possibly also its
@@ -199,7 +201,7 @@ in the language of the verification tool.
 %inputs. 
 
 To make the use of formal methods more efficient, some more
-lightweigth approaches such as
+lightweight approaches such as
 \textit{run-time checking} and
 \textit{static checking} have been developed. These techniques allow 
 to do quick checks on a program specification in order to find the
@@ -357,7 +359,7 @@ receiver of the method call will be used. Additionally, for each
 overriding method in a subclass, one has to show that it satisfies the 
 specification of the superclass. 
 
-When reasoning in such a way, pre and post conditions of methods alone 
+When reasoning in such a way, pre- and post conditions of methods alone 
 are not sufficient, one also needs to know which variables may have
 been changed by a method. Consider for example the following annotated 
 code.
@@ -513,7 +515,7 @@ for a program fragment \texttt{i++; a[i] = 3;} the tool will accept a
 modifies clause \texttt{modifies a[i];}. However, we feel that in
 practice this is not such a heavy limitation. When specifying a method
 in which variables are modifies in a complicated or tricky way, a
-specifier will be very carefull when writing the modifies clause,
+specifier will be very careful when writing the modifies clause,
 while for simple methods he is more likely to forget to mention some
 variables. Moreover, one can always fall back on complete verification
 techniques, such as advocated in the \textsc{Loop} project.
@@ -1786,7 +1788,7 @@ our method will not reject this method.
 %accept as valid this specification.
 
 Our method also does not take earlier assignments to variables into
-account, \emph{e.g.}~a specificiation \texttt{//@ modifies a[i];} will 
+account, \emph{e.g.}~a specification \texttt{//@ modifies a[i];} will 
 be accepted for a body \texttt{i++; a[i] = 3;}.
 
 However, we think that these limitations do not severely restrict the
@@ -1914,12 +1916,114 @@ significantly can help to improve the verification speed.
 %%%---improving the specificaitions, we found several times that we had
 %%%---forgotten to mention a variable in an assignable clause, but even
 %%%---after correcting this ....
-Finally we present our experiences in the process of using \modtool
+Finally we discuss about our experiences in the process of using \modtool
 for checking the specification of the case study Gemplus' electronic
-purse~\cite{CatanoH02a}. 
+purse~\cite{CatanoH02a} and briefly present a general overview on its
+structure.
 
 
 
+
+\subsection{On the structure of the tool}
+\label{sub-on-the-str-too}
+The tool has been constructed in two parts as presented below by the
+figure. The first part has been made by reusing the
+syntactical analyzer used by \jml. This part takes as input the
+classes the user want to check and returns an Abstract syntax tree for 
+each class passed as parameter. The information gather in these
+\textsc{ASTs} is then used by the second part to check the
+specification of the assignable clause.
+
+The class \texttt{Assignable} implements as static methods the rules
+presented in Section~\ref{sec-syn-met-che-ass-cla}. This class uses the 
+\textsc{AST} passed by the Syntactical Analyzer of \jml~and figures
+out the context --class \texttt{ASTContext}-- for all methods in the
+source program. Basically, a context represents the \textit{elements} 
+under which the different \java constructs are analyzed. These
+elements typically consist of local variables, assignable declarations
+and parameters of methods.
+
+\begin{figure}[hbt]
+\centering
+\epsfig{file=figures/schema.eps, width=9cm, clip=}
+\end{figure}
+
+The class \texttt{ContextException} represents the kind of exception
+raised up when some element required for figuring out a context has
+not been passed as part of the source program. 
+
+Finally, The class \texttt{Util} 
+meets a sort of methods to handle the \textsc{AST} provided by the
+\jml~syntactical analyzer.
+
+
+
+
+
+
+\subsection{Experiences using \modtool}
+\label{sub-sec-usi-the-too}
+We have used \modtool~to check the assignable specifications provided
+for the industrial case study ``Gemplus' electronic purse'' presented
+in~\cite{CatanoH02a} and we have established specification
+errors we made at that time, and which we could not detect before
+because
+\escj~does not do any checking of assignable
+specifications. Basically, the errors detected consist of not
+specifying as
+assignable certain variable locations that the body that the
+\java~structures actually modify. The tool efficiently detect
+that and issues a message showing the structure that
+violates the specification. 
+
+Another important aspect of checking this application consist of
+having established the set of its \emph{side-effects freeness}
+methods. 
+
+As an example, we present the specification of the
+method \texttt{setValue} of the class \texttt{Decimal}. The class
+\texttt{Decimal} models a floating point number, represented by an
+integer and decimal parts. Our initial specification is presented
+below and they only have stated as assignable the class variables
+\texttt{intPart} and \texttt{decPart} since they are directly assigned 
+in the body of the method. 
+
+At that time, we did not consider any other
+modification caused by the invocation to the method \texttt{throwIt}
+of \texttt{decimal\_exception} as, in at first glance, when an exception
+is raised you do not expect that that modifies any field, but that
+because of memory management issues in \textsc{Javacard} applications
+it actually happens.
+%%%%%%%
+\begin{alltt}
+/*@ 
+  modifies intPart, decPart;
+*/ 
+public Decimal setValue(short i, short d) throws DecimalException\verb!{!
+  if(i < 0 || d < 0 || d >= PRECISION || 
+     (i == MAX_DECIMAL_NUMBER && d != 0))
+    decimal_exception.throwIt(decimal_exception.DECIMAL_OVERFLOW);
+
+  intPart = i;
+  decPart = d;
+  return this;
+\verb!}!
+\end{alltt}
+%%%%%%%
+
+When this method is analyzed by \modtool, it obtains the specification 
+of \texttt{throwIt} --\texttt{modifies instance, instance.type;}-- and 
+realizes that it had not been considered by the method
+\texttt{setValue}. Then, it issues a message pointing out the instruction
+having the problem. After adding the specifications
+\texttt{decimal\_exception.instance} and
+\texttt{decimal\_exception.instance.type;} to the specification of
+\texttt{setValue}, the tool stops of complaining.  
+
+
+    
+
+%   modifies decimal_exception.instance, decimal_exception.instance.type;
 
 \section{Conclusion and future work}
 \label{sec-con-and-fut-wor}
