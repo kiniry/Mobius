@@ -6,6 +6,8 @@
  */
 package bcclass;
 
+import org.apache.bcel.generic.ConstantPoolGen;
+
 /**
  * @author mpavlova
  *
@@ -14,4 +16,35 @@ package bcclass;
  */
 public class Class {
 	private Method[] methods;
+	private ConstantPoolGen constantPoolGen;
+	
+
+	/**
+	 * @return
+	 */
+	public ConstantPoolGen getConstantPoolGen() {
+		return constantPoolGen;
+	}
+
+	/**
+	 * @return
+	 */
+	public Method[] getMethods() {
+		return methods;
+	}
+
+	/**
+	 * @param gen
+	 */
+	public void setConstantPoolGen(ConstantPoolGen gen) {
+		constantPoolGen = gen;
+	}
+
+	/**
+	 * @param methods
+	 */
+	public void setMethods(Method[] methods) {
+		this.methods = methods;
+	}
+
 }

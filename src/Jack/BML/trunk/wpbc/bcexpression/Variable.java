@@ -6,7 +6,8 @@
  */
 package bcexpression;
 
-import bcexpression.type.JavaType;
+import type.BCType;
+import bcexpression.javatype.JavaType;
 
 /**
  * @author io
@@ -14,15 +15,37 @@ import bcexpression.type.JavaType;
  * To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
-public class Variable extends Expression {
-	
+public class Variable extends Expression  {
 	private int id;
-	private JavaType exc_type;
-	public Variable() {
+	private JavaType type;
+	
+	public Variable(int _id) {
+		id  = _id;
 	}
 	
-	public Variable(JavaType _exc_type, int _id) {
-		exc_type = _exc_type;
+	public Variable( int _id, JavaType _type) {
+		type = _type;
 		id = _id;
 	}
+
+	/* (non-Javadoc)
+	 * @see bcexpression.Expression#setType()
+	 */
+	public void setType() {
+	}
+
+	/* (non-Javadoc)
+	 * @see bcexpression.Expression#getType()
+	 */
+	public BCType getType() {
+		return type;
+	}
+	
+	public Expression substitute(Expression _e,  Expression _v) {
+		if (equals( _e)) {
+			return _v;
+		}
+		return null;
+	}
+	
 }

@@ -28,5 +28,9 @@ public class Predicate1Ar extends Predicate {
 		return  term;
 	}
 	
-	
+	public Formula substitute(Expression _e,  Expression _v) {
+		term.substitute(_e, _v);
+		return this;
+	}
+
 }

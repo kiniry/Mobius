@@ -2,20 +2,29 @@ package test;
 
 public class A {
 		
+        public static long i;
         
+        public static Code a = new Code();
+		
 		/*
-		 * @ requires i == 1;
+		 * ignore @ requires i == 1;
 		 * @ ensures \result == i;
 		 *
-		 **/
-		public int m(int i) {
+		 **/ 
+		public static  long m() {
+				//i++;
+				a.toString();
 				return i;
+				
 		} 
         
 		/*
 		 * @ ensures \result > 0
 		 */
-		public int n(){
-				return m(1);
+		public long n(){
+				return m();
 		}
+		
+		
+		
 }

@@ -6,7 +6,8 @@
  */
 package constants;
 
-import org.apache.bcel.generic.Type;
+import bcexpression.Expression;
+
 
 
 /**
@@ -15,10 +16,12 @@ import org.apache.bcel.generic.Type;
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public abstract class  BCConstant {
+public abstract class  BCConstant  {
 	private int cpIndex; 
 	private byte tag;
 
+	public BCConstant() {	
+	}
 	
 	public BCConstant(int _cpIndex) {
 		cpIndex = _cpIndex;
@@ -29,8 +32,9 @@ public abstract class  BCConstant {
 	}
 	
 	public String toString() {
-		return null;
+		return "_" + cpIndex;
 	}
+	
 	public byte getTag()  {
 		return tag;
 	}

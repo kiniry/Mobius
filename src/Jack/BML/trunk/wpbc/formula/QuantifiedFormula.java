@@ -14,19 +14,11 @@ package formula;
  */
 public class QuantifiedFormula extends  Formula {
 	private Quantificator quantificator;
+	private Formula subformula;
 	
-	public QuantifiedFormula(Formula _left, Quantificator _q) {
-		setLeft(_left);
+	public QuantifiedFormula(Formula _formula, Quantificator _q) {
+		subformula = _formula;
 		setQuantificator(_q);
-	}
-	
-	
-	
-	/**
-	 * @return Returns the right.
-	 */
-	public Formula getRight() {
-		return null;
 	}
 	/**
 	 * @return Returns the quantificator.
@@ -39,5 +31,11 @@ public class QuantifiedFormula extends  Formula {
 	 */
 	private void setQuantificator(Quantificator quantificator) {
 		this.quantificator = quantificator;
+	}
+	
+	public Formula copy() {
+		Formula  _subformula= subformula.copy();
+		Formula _copy = new QuantifiedFormula(_subformula, quantificator);
+		return _copy;
 	}
 }

@@ -6,6 +6,9 @@
  */
 package bcexpression;
 
+import bcexpression.javatype.JavaType;
+import type.BCType;
+
 /**
  * @author mpavlova
  *
@@ -14,9 +17,26 @@ package bcexpression;
  */
 public class ArithmeticExpression  extends Expression {
 	private byte arithmetic_op ;
+	
 	public ArithmeticExpression(Expression _left, Expression _right, byte _arithmetic_op ) {
 		super(_left,_right);
 		arithmetic_op = _arithmetic_op;
+	}
+	
+	
+	
+	public BCType getType() {
+		return JavaType.JavaINT;
+	}
+
+
+
+	/* (non-Javadoc)
+	 * @see bcexpression.Expression#setType()
+	 */
+	public void setType() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

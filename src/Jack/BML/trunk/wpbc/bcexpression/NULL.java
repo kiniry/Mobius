@@ -6,6 +6,8 @@
  */
 package bcexpression;
 
+import type.BCType;
+
 /**
  * @author io
  *
@@ -13,6 +15,22 @@ package bcexpression;
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
 public class NULL extends Expression {
+
+	/* (non-Javadoc)
+	 * @see bcexpression.Expression#setType()
+	 */
+	public void setType() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see bcexpression.Expression#getType()
+	 */
+	public BCType getType() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 	
 }

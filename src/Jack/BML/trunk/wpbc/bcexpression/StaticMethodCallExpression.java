@@ -6,6 +6,7 @@
  */
 package bcexpression;
 
+import type.BCType;
 import constants.BCConstantInterfaceMethodRef;
 
 /**
@@ -14,20 +15,33 @@ import constants.BCConstantInterfaceMethodRef;
  * To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
-public class StaticMethodCallExpression extends CPExpression {
+public class StaticMethodCallExpression  extends  DOTExpression {
+	
+	private Expression[] args;
 
-	private ExpressionList args;
-
-	public StaticMethodCallExpression(
-		BCConstantInterfaceMethodRef _left,
-		Expression _right,
-		ExpressionList _args) {
+	public StaticMethodCallExpression(BCConstantInterfaceMethodRef _left, Expression _right, Expression[] _args ) {
 		super(_left, _right);
-		args = _args;
-	}
-
-	public ExpressionList getArgs() {
+		args = _args; 
+	} 
+	
+	public StaticMethodCallExpression(Expression _left, Expression _right, Expression[] _args ) {
+		super(_left, _right);
+		args = _args; 
+	} 
+	
+	public Expression[] getArgs() {
 		return args;
 	}
 
+	/* (non-Javadoc)
+	 * @see bcexpression.Expression#getType()
+	 */
+	public BCType getType() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+
+	 
+	 
 }

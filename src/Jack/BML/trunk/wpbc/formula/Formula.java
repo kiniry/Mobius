@@ -16,17 +16,23 @@ import bcexpression.Expression;
  */
 public class Formula  {
 	
-	private Formula left;
-	private Formula right;
+	private Formula[] subformulas;
+	
 	private byte connector;
 	
 	public Formula() {	
 	}
 	
-	public Formula(Formula _left, Formula _right, byte _conn) {
-		setLeft(_left);
-		setRight(_right);
+	public Formula(Formula[] _f , byte _conn) {
 		setConnector(_conn);
+		subformulas = _f;
+	}
+	
+	public Formula(Formula _left, Formula _right, byte _conn) {
+		setConnector(_conn);
+		subformulas = new Formula[2];
+		subformulas[0] = _left;
+		subformulas[1] = _right;
 	}
 	
 	/**
@@ -41,32 +47,27 @@ public class Formula  {
 	private  void setConnector(byte connector) {
 		this.connector = connector;
 	}
+
 	/**
-	 * @return Returns the left.
+	 * substitute the expression _e in this formula by the expression _v
+	 * @param _e
+	 * @param _v
+	 * @return  this[ _e <- _v]
 	 */
-	public Formula getLeft() {
-		return left;
-	}
-	/**
-	 * @param left The left to set.
-	 */
-	protected void setLeft(Formula left) {
-		this.left = left;
-	}
-	/**
-	 * @return Returns the right.
-	 */
-	public Formula getRight() {
-		return right;
-	}
-	/**
-	 * @param right The right to set.
-	 */
-	private void setRight(Formula right) {
-		this.right = right;
+	public Formula substitute(Expression _e,  Expression _v) {
+		for (int i = 0; i < subformulas.length; i++  ) {
+			subformulas[i].substitute(_e, _v);
+		}
+		return this;
 	}
 	
-	public Formula substitute(Expression __e, Object value) {
-		return null;
+	public Formula copy() {
+		Formula[]  _subformulas= new Formula[subformulas.length];
+		for (int i = 0; i < subformulas.length; i++) {
+			_subformulas[i] = subformulas[i].copy();
+		}
+		Formula _copy = new Formula(_subformulas, connector);
+		return _copy;
 	}
+
 }

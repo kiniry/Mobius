@@ -7,7 +7,8 @@
 package bcexpression;
 
 
-import bcexpression.type.*;
+import bcexpression.javatype.*;
+import type.BCType;
 
 /**
  * @author io
@@ -15,15 +16,15 @@ import bcexpression.type.*;
  * To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
-public   class  Expression {
+public   abstract class  Expression {
 	
-	//LB Moi je ferais plutot une class abstrait Expression avec uniquement
-	// ce qui est commun aux expressions, a priori uniquement le type.
-	 
+	
 	private Expression left;
 	private Expression right;
+	private BCType type;
 	
-	private JavaType type;
+	
+	public static final NULL NULL = new NULL();
 	
 	protected Expression() {
 	}
@@ -48,28 +49,50 @@ public   class  Expression {
 		left = left2;
 	}
 	
-	
+	/**
+	 * @param 
+	 */
+	public abstract void setType( );
+
+
 	
 	
 	/*public byte getExpressionType() {
 		return type;
 	}*/
-	//LB Pourquoi Object et pas Expression ?
-	public   Object getLeft() {
+	public   Expression getLeft() {
 		return left; 
 	}
 	
-	public  Object getRight() {
+	public  Expression getRight() {
 		return right;
 	}
 	
-	//LB Ici ce pourrait etre une method abstraite.
-	public void substitute(Expression expr , Object value) {
+	public Expression substitute(Expression _e1 , Expression _e2) {
+		if (_e1 instanceof ReferenceExpression) {
+			
+		}
+		if (this.equals(_e1 ) ) {
+			this.setLeft(_e2.getLeft()) ;
+			this.setRight(_e2.getRight()) ;
+			return this;	
+		}
+		setLeft( left.substitute(_e1, _e2 ));
+		setRight(right.substitute(_e1, _e2 ));
+		return this;
+	}
+		
+	public abstract  BCType getType() ;
+
+	public String toString() {
+		return null;
 	}
 	
 	
-	public JavaType getType() {
-		return type;
+	public boolean equals(Expression _expr) {
+		
+		
+		return false;
+		
 	}
-	
 }

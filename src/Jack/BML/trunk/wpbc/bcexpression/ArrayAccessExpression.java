@@ -6,6 +6,10 @@
  */
 package bcexpression;
 
+import bcexpression.javatype.JavaArrType;
+import bcexpression.javatype.JavaType;
+import type.BCType;
+
 
 /**
  * @author io
@@ -13,33 +17,24 @@ package bcexpression;
  * To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
-public class ArrayAccessExpression extends CPExpression {
-	private int arrIndex;
+public class ArrayAccessExpression extends Expression {
 	
-	//referenece to an array object
-	private Expression left;
+	protected JavaType type;
 	
-	public ArrayAccessExpression(Expression  _left, int _arrIndex  ) {
+	public ArrayAccessExpression(Expression  _left, Expression _arrIndex  ) {
 		setLeft(_left);
-		setArrIndex(_arrIndex);
+		setRight(_arrIndex);
 	}
 
-	/**
-	 * @param index2
+
+	public BCType getType( ) {
+		return type;
+	}
+
+	/* (non-Javadoc)
+	 * @see bcexpression.Expression#setType()
 	 */
-	private void setArrIndex(int index2) {
-		arrIndex= index2;
+	public void setType() {
+		type = ((JavaArrType)getLeft().getType()).getElementType();		
 	}
-	
-	public int getArrIndex() {
-		return arrIndex;
-	}
-	/**
-	 * @param right2
-	 */
-	public void setLeft(Expression _left) {
-		left = _left;
-		
-	}
-	
 }

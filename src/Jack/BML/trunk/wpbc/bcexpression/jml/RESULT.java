@@ -6,6 +6,8 @@
  */
 package bcexpression.jml;
 
+import type.BCType;
+
 
 /**
  * @author io
@@ -16,5 +18,21 @@ package bcexpression.jml;
 public class RESULT extends JMLExpression{
 	public RESULT() {
 		//setExpressionType(ExpressionConstants.RESULT);
+	}
+
+	/* (non-Javadoc)
+	 * @see bcexpression.Expression#setType()
+	 */
+	public void setType() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see bcexpression.Expression#getType()
+	 */
+	public BCType getType() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

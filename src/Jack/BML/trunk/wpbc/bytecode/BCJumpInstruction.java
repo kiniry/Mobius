@@ -7,11 +7,13 @@
 package bytecode;
 
 import java.util.Enumeration;
-import vm.Stack;
+import bcexpression.vm.Stack;
 import java.util.Vector;
 
+import org.apache.bcel.generic.BranchInstruction;
 import org.apache.bcel.generic.InstructionHandle;
 
+import specification.ExceptionalPostcondition;
 import utils.Util;
 import formula.Formula;
 
@@ -21,26 +23,20 @@ import formula.Formula;
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public   class BCJumpInstruction extends BCInstruction   {
+public abstract  class BCJumpInstruction extends BCInstruction   {
 
 	
 	private BCInstruction target;
+	private int targetPosition;
 	
 	private Vector targetBlocks;
-	private Formula branchPostconditionCondition;
+
 	
 	public BCJumpInstruction(InstructionHandle _branchInstruction) {
 		super(_branchInstruction);
+		targetPosition = ( (BranchInstruction)_branchInstruction.getInstruction()).getTarget().getPosition();
 	}
 	
-	/**
-	 * 
-	 * @param _wp -  formula object. 
-	 * _wp  must be provable before  this instruiction
-	 */
-	public  void setWP(Formula  _wp) {
-		branchPostconditionCondition = _wp;
-	}
 
 	/**
 	 * @param _t - the instruction to which this jump instruction targets to
@@ -72,31 +68,38 @@ public   class BCJumpInstruction extends BCInstruction   {
 	 * It sets the target blocks for this jump instruction
 	 * 
 	 */
-	public void setTargetBlocks() {
-		BCInstruction _i = target;
+	public void setTargetBlocks(Trace _trace) {
+		BCInstruction _last = target;
 		Block _b = null;
-		while (_i != null)  {
-			if ((_i instanceof BCConditionalBranch) || (_i instanceof EndBlock ) ) {
-				_b = Util.getBlock(target,  _i);
+		
+		while (_last != null)  {
+			if ((_last instanceof BCConditionalBranch) || (_last instanceof EndBlock ) ) {
+				if ((_b = _trace.getBlockStartingAtEndingAt(target, _last)) == null ){
+					_b = Util.getBlock(target,  _last);
+					_trace.addBlock(_b);
+				} 
 				if (_b != null) {
 					_b.dump(""); 
 					addTargetBlock(_b) ;
 					break;
 				}
 			}
-			_i = _i.getNext();		
+			_last = _last.getNext();		
 		}
 		if ((_b != null ) && (_b instanceof LoopBlock ) ) {
 			return;
 		}
-		while (_i != null)  {
-			if ( (_i instanceof BCJumpInstruction) && (target.equals(((BCJumpInstruction)_i).getTarget())) ){
-					_b = Util.getBlock(target,  (BCJumpInstruction)_i); 
-					_b.dump("");
-					addTargetBlock(_b) ;
-					return;	
+		while (_last != null)  {
+			if ( (_last instanceof BCJumpInstruction) && (target.equals(((BCJumpInstruction)_last).getTarget())) ){
+				if ((_b = _trace.getBlockStartingAtEndingAt(target, _last)) == null ){
+					_b = Util.getBlock(target,  (BCJumpInstruction)_last);
+					_trace.addBlock(_b);
+				} 
+				_b.dump("");
+				addTargetBlock(_b) ;
+				return;	
 			}
-			_i = _i.getNext();
+			_last = _last.getNext();
 		}
 	}
 	
@@ -118,22 +121,12 @@ public   class BCJumpInstruction extends BCInstruction   {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see bytecode.ByteCode#wp(formula.Formula)
-	 */
-	public Formula wp(Formula postcondition, Stack stack ) {
-		return null;
-	}
+	
 	/**
-	 * @return Returns the branchPostconditionCondition.
+	 * @return
 	 */
-	public Formula getBranchPostconditionCondition() {
-		return branchPostconditionCondition;
+	public int getTargetPosition() {
+		return targetPosition;
 	}
-	/**
-	 * @param branchPostconditionCondition The branchPostconditionCondition to set.
-	 */
-	public void setBranchPostconditionCondition( Formula _branchPostconditionCondition) {
-		branchPostconditionCondition = _branchPostconditionCondition;
-	}
+
 }

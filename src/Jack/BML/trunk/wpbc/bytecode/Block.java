@@ -6,12 +6,14 @@
  */
 package bytecode;
 
+import java.util.HashMap;
 import java.util.Vector;
 
-import org.apache.bcel.generic.ConstantPoolGen;
 
+
+import specification.ExceptionalPostcondition;
 import utils.Util;
-import vm.Stack;
+
 import formula.Formula;
 
 /**
@@ -108,19 +110,27 @@ public class Block  implements ByteCode {
 		return prev;
 	} 
 	
+	/**
+	 * returns the calculated wp for the block
+	 * @return <code>wp </code>
+	 */
+	public Formula  getWp() {
+		return wp;
+	}
+	
 	/* (non-Javadoc)
 	 * @see bytecode.ByteCode#wp(formula.Formula)
 	 */
-	public Formula wp(Formula _normal_Postcondition, Formula _exc_Postcondition, Stack stack, ConstantPoolGen _cp ) {
+	public Formula wp(Formula _normal_Postcondition, ExceptionalPostcondition _exc_Postcondition) {
 		if (wp != null) {
 			return wp;
 		}
 		//wps = new Vector();
 		BCInstruction _instr = last;
 		Formula  _np = _normal_Postcondition; 
-		Formula _ep = _exc_Postcondition;
+		
 		while (! _instr.equals(first)) {
-			_np = _instr.wp(_normal_Postcondition, _exc_Postcondition, stack, _cp);
+			_np = _instr.wp(_normal_Postcondition, _exc_Postcondition);
 			_instr = _instr.getPrev();
 		}
 		wp = _np;
@@ -139,11 +149,16 @@ public class Block  implements ByteCode {
 			System.out.println( _offset +  ")");
 			
 			BCInstruction _i = first;
-
-			
 		}
 	}
 
+
+	public boolean equals(Block _block) {
+		if ((first.equals(_block.getFirst())) && (last.equals(_block.getLast()))) { 
+			return true;
+		}
+		return false;
+	} 
 
 
 }

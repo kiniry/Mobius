@@ -6,6 +6,7 @@
  */
 package bcexpression;
 
+import type.BCType;
 import constants.BCConstant;
 
 /**
@@ -14,16 +15,28 @@ import constants.BCConstant;
  * To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
-public class FieldAccessExpression  extends  CPExpression {
+public class FieldAccessExpression  extends  DOTExpression {
 
 	/**
 	 * @param _right
 	 * @param _left
 	 * @param _type
 	 */
-	public FieldAccessExpression(BCConstant _right, Expression _left) {
-		super(_right, _left);
+	public FieldAccessExpression(BCConstant _left, Expression _right) {
+		super( _left , _right);
 		
+	}
+	
+	public FieldAccessExpression(Expression _left, Expression _right)  { 
+		super(_left, _right);
+	}
+
+	/* (non-Javadoc)
+	 * @see bcexpression.Expression#getType()
+	 */
+	public BCType getType() {
+		// TODO Auto-generated method stub
+		return  getLeft().getType();
 	}
 	
 }

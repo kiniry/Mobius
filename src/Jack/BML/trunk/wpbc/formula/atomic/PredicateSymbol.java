@@ -18,9 +18,10 @@ public interface PredicateSymbol {
 	public static byte GRTEQ = 1; //">=";
 	public static byte LESS = 2; //"<";
 	public static byte LESSEQ = 3; //"<=";
-	public static byte EQ = 4;//"<=";
-	public static byte SUBTYPE = 5 ;//"<:";
-	public static byte INSTANCEOF = 6; // "instanceof";
+	public static byte EQ = 4;//"==";
+	public static byte NOTEQ = 5;//"!=";
+	public static byte SUBTYPE = 6 ;//"<:";
+	public static byte INSTANCEOF = 7; // "instanceof";
 	
 	
 }

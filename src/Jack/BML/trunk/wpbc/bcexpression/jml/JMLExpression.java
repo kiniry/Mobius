@@ -7,6 +7,7 @@
 package bcexpression.jml;
 
 import bcexpression.Expression;
+import bcexpression.javatype.JavaType;
 
 
 
@@ -17,30 +18,16 @@ import bcexpression.Expression;
  * To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
-public class JMLExpression extends Expression {
-	private Expression expr;
+public abstract class JMLExpression extends Expression {
+	private JavaType type;
 
 	protected JMLExpression() {
 		
 	}
-	
-	public JMLExpression(Expression _e, byte type) {	
-		expr = _e;
-		//setExpressionType(type);
-	}
-	
-	
-	public Object  getLeft() {
-		return expr;
-	}
-
-	/**
-	 * overriden fmethod from Expression. 
-	 * As only one subexpresion is available there
-	 * is no right subexpression
-	 */
-	public Object getRight() {
-		return null;
-	}
-	
+//	
+//	public JMLExpression(Expression _e) {	
+//		setLeft(_e);
+//		
+//	}
+		
 }

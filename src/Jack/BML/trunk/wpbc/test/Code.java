@@ -10,7 +10,9 @@ import java.util.Enumeration;
 import java.util.Vector;
 
 import org.apache.bcel.Repository;
+import org.apache.bcel.classfile.ConstantClass;
 import org.apache.bcel.classfile.ConstantMethodref;
+import org.apache.bcel.classfile.ConstantPool;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Method;
 import org.apache.bcel.generic.BranchInstruction;
@@ -51,16 +53,24 @@ public class Code {
 				 MethodGen mg       = new MethodGen(methods[6], clazz.getClassName(), cp);
 			    System.out.println("*** method name " + mg.getName() + "***");
 			    System.out.println("**********************************");
+				
+//				testCpConstantClass(cp) ;
 				//testIndexedInstructions(mg, cp);
 			    
 			    //printExcTable( mg) ;
-       			//printBlocks1(mg);
-       			printLVTable(mg);  
+       			printBlocks1(mg);
+       			//printLVTable(mg);  
 //				printBlocksOld(mg);
 
 								
 	}
 	
+	public static void testCpConstantClass(ConstantPoolGen _cpg ) {
+		ConstantClass cc = (ConstantClass)_cpg.getConstant(36);
+		ConstantPool _cp = _cpg.getConstantPool();
+		dump("getBytes    " + cc.getBytes(_cp));
+		dump("getConstantValue" + (String)cc.getConstantValue(_cp));
+	}
 	
 	public static void printLVTable(MethodGen mg)  {
 		LocalVariableGen[] lvs = mg.getLocalVariables();

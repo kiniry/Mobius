@@ -6,11 +6,14 @@
  */
 package bytecode;
 
+import java.util.HashMap;
 import java.util.Vector;
 
 import org.apache.bcel.generic.ConstantPoolGen;
 
-import vm.Stack;
+import specification.ExceptionalPostcondition;
+
+import bcexpression.vm.Stack;
 
 import formula.Connector;
 import formula.Formula;
@@ -44,12 +47,12 @@ public class LoopBlock  extends Block {
 		return invariant;
 	}
 	
-	public Formula wp(Formula _normal_Postcondition, Formula _exc_Postcondition ,Stack stack, ConstantPoolGen _cp) {
+	public Formula wp(Formula _normal_Postcondition, ExceptionalPostcondition _exc_Postcondition ) {
 		if (wp != null) {
 			return wp;
 		}
 		Formula _np = new Formula( _normal_Postcondition,  getInvariant(), Connector.AND );	
-		wp = super.wp(_np,_exc_Postcondition, stack,   _cp);
+		wp = super.wp(_np,_exc_Postcondition);
 		return wp; 
 	}
 	

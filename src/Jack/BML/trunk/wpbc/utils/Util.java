@@ -6,29 +6,67 @@
  */
 package utils;
 
+import java.util.Vector;
+
+import org.apache.bcel.generic.AALOAD;
+import org.apache.bcel.generic.AASTORE;
 import org.apache.bcel.generic.ATHROW;
+import org.apache.bcel.generic.ArithmeticInstruction;
+import org.apache.bcel.generic.ArrayInstruction;
+import org.apache.bcel.generic.BALOAD;
+import org.apache.bcel.generic.BASTORE;
+import org.apache.bcel.generic.CALOAD;
+import org.apache.bcel.generic.CASTORE;
+import org.apache.bcel.generic.CPInstruction;
+import org.apache.bcel.generic.ConstantPoolGen;
+import org.apache.bcel.generic.ConstantPushInstruction;
+import org.apache.bcel.generic.ConversionInstruction;
+import org.apache.bcel.generic.DALOAD;
+import org.apache.bcel.generic.DASTORE;
+import org.apache.bcel.generic.ExceptionThrower;
+import org.apache.bcel.generic.FALOAD;
+import org.apache.bcel.generic.FASTORE;
 import org.apache.bcel.generic.GotoInstruction;
+import org.apache.bcel.generic.IALOAD;
+import org.apache.bcel.generic.IASTORE;
 import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.CodeExceptionGen;
 import org.apache.bcel.generic.IfInstruction;
 import org.apache.bcel.generic.JsrInstruction;
+import org.apache.bcel.generic.LALOAD;
+import org.apache.bcel.generic.LASTORE;
 import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.RET;
 import org.apache.bcel.generic.ReturnInstruction;
 import org.apache.bcel.generic.BranchInstruction;
 import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.InstructionList;
-import bcexpression.type.JavaObjectType;
-import bcexpression.type.JavaType;
-import bcexpression.type.JavaTypeFactory;
-import bytecode.BCAthrowInstruction;
+import org.apache.bcel.generic.SALOAD;
+import org.apache.bcel.generic.SASTORE;
+import org.apache.bcel.generic.StackInstruction;
+import org.apache.bcel.generic.Type;
+import org.apache.bcel.generic.TypedInstruction;
+
+import bcexpression.javatype.JavaObjectType;
+import bcexpression.javatype.JavaReferenceType;
+import bcexpression.javatype.JavaType;
+
+import bytecode.BCATHROW;
+import bytecode.BCArithmeticInstructionWithException;
+import bytecode.BCAritmeticInstruction;
+import bytecode.BCCPInstruction;
 import bytecode.BCConditionalBranch;
-import bytecode.BCGotoInstruction;
+import bytecode.BCConstantPUSHInstruction;
+import bytecode.BCConversionInstruction;
+import bytecode.BCExceptionThrower;
+import bytecode.BCGOTO;
 import bytecode.BCInstruction;
-import bytecode.BCJsrInstruction;
+import bytecode.BCJSR;
 import bytecode.BCJumpInstruction;
-import bytecode.BCRetInstruction;
-import bytecode.BCReturnInstruction;
+import bytecode.BCRET;
+import bytecode.BCStackInstruction;
+import bytecode.BCTypeALOAD;
+import bytecode.BCTypeRETURN;
 import bytecode.Block;
 import bytecode.EndBlock;
 import bytecode.LoopBlock;
@@ -43,25 +81,47 @@ public class Util {
 	public static boolean DUMP = true;
 	
 	
-	public static BCInstruction[] wrapByteCode(InstructionList _il , MethodGen _mg ) {
+	public static BCInstruction[] wrapByteCode(InstructionList _il , MethodGen _mg,  ConstantPoolGen _cp ) {
 		InstructionHandle[] _iharr =  _il.getInstructionHandles(); 
 		BCInstruction[] _bc = new BCInstruction[_iharr.length];
 		for  (int i = 0; i < _iharr.length; i++) {
 			 if  (_iharr[i].getInstruction() instanceof ReturnInstruction) {
-				_bc[i]  = new BCReturnInstruction(_iharr[i]);
+				_bc[i]  = new BCTypeRETURN(_iharr[i]);
 			} else if (_iharr[i].getInstruction() instanceof  RET) {
-				_bc[i] = new BCRetInstruction(_iharr[i]);
+				_bc[i] = new BCRET(_iharr[i]);
 			} else if (_iharr[i].getInstruction() instanceof  GotoInstruction) {
-				_bc[i] = new BCGotoInstruction(_iharr[i]);
+				_bc[i] = new BCGOTO(_iharr[i]);
 			} else if  (_iharr[i].getInstruction() instanceof ATHROW) {
-				_bc[i] = new BCAthrowInstruction(_iharr[i]);	
+				_bc[i] = new BCATHROW(_iharr[i]);	
 			} else if (_iharr[i].getInstruction() instanceof  JsrInstruction) {
-				_bc[i] = new BCJsrInstruction(_iharr[i]);
+				_bc[i] = new BCJSR(_iharr[i]);
 			} else if (_iharr[i].getInstruction() instanceof IfInstruction ){
 				_bc[i] = new BCConditionalBranch(_iharr[i]);
-			 } else {
-				_bc[i] = new BCInstruction(_iharr[i]);
-			}
+			 }  else if ((_iharr[i].getInstruction() instanceof  ArithmeticInstruction) && ( _iharr[i].getInstruction() instanceof  ExceptionThrower) ) {
+				_bc[i] = new  BCArithmeticInstructionWithException(_iharr[i]);
+			}  else if (_iharr[i].getInstruction() instanceof  ArithmeticInstruction) {
+				_bc[i] = new  BCAritmeticInstruction(_iharr[i]);
+			}  else if (_iharr[i].getInstruction() instanceof  ConstantPushInstruction) {
+				_bc[i] = new BCConstantPUSHInstruction(_iharr[i]);
+			} else if (_iharr[i].getInstruction() instanceof ConversionInstruction ) {
+				_bc[i] = new BCConversionInstruction(_iharr[i]);
+			} else if (_iharr[i].getInstruction() instanceof   StackInstruction) {
+				_bc[i] = new BCStackInstruction(_iharr[i]);
+			} else if (_iharr[i].getInstruction() instanceof  ArrayInstruction ) {
+				JavaType  _type =JavaType.getJavaClass(((TypedInstruction)_iharr[i].getInstruction()).getType(_cp).getSignature() ); 
+				if ( (_iharr[i].getInstruction() instanceof AALOAD) ||  (_iharr[i].getInstruction() instanceof BALOAD ) || (_iharr[i].getInstruction() instanceof CALOAD ) || 
+					 (_iharr[i].getInstruction() instanceof LALOAD  ) || (_iharr[i].getInstruction() instanceof DALOAD) ||  (_iharr[i].getInstruction() instanceof FALOAD ) || 
+					 (_iharr[i].getInstruction() instanceof SALOAD ) || (_iharr[i].getInstruction() instanceof IALOAD )) {
+					_bc[i] =new  BCTypeALOAD(_iharr[i], _type );
+				}  
+				if ((_iharr[i].getInstruction() instanceof AASTORE) || ( _iharr[i].getInstruction() instanceof BASTORE) || (_iharr[i].getInstruction() instanceof CASTORE) ||
+				    (_iharr[i].getInstruction() instanceof LASTORE)   || (_iharr[i].getInstruction() instanceof DASTORE)  || (_iharr[i].getInstruction() instanceof FASTORE) ||
+				    (_iharr[i].getInstruction() instanceof SASTORE)   || (_iharr[i].getInstruction() instanceof IASTORE)) {
+					_bc[i] = new  BCTypeALOAD(_iharr[i], _type); 
+				}
+			} else if (_iharr[i].getInstruction() instanceof  CPInstruction ) {
+				_bc[i] = new BCCPInstruction(_iharr[i]);
+			} 
 			_bc[i].setBCIndex(i);
 			//set the bytecode command at the previous position and at the next positition
 			if (i > 0) {
@@ -74,25 +134,20 @@ public class Util {
 	}
 	
 	private static BCInstruction[] setTargets(BCInstruction[] _bc, MethodGen _mg) {
-//		set theTarget
+		
+		//set possible next instructions  for jump instructions - 
+		
 		for (int i = 0; i < _bc.length; i++) {
+//			if ( _bc[i] instanceof BCExceptionThrower ) {	
+//				((BCExceptionThrower)_bc[i]).setExceptionTarget( getExceptionHandlerStarts((BCExceptionThrower)_bc[i], _mg, _bc) );
+//			}
 			if (_bc[i] instanceof BCJumpInstruction) {
 				BCInstruction _ih = null;	
 				int offset;
 				//dumps the jump instruction
-				Instruction _i = _bc[i].getInstructionHandle().getInstruction();
+
 				Util.dump(" setTargets for " + _bc[i].getInstructionHandle().toString());
-				
-				if ((_bc[i] instanceof  BCAthrowInstruction) )  {
-					InstructionHandle  _ins = null;
-					if ( (_ins = getExceptionHandler((BCAthrowInstruction)_bc[i], _mg)) == null ) {
-						continue;
-					}
-					offset = _ins.getPosition();
-					//Util.dump(((BCAthrowInstruction)_bc[i]).getExceptions()[0].toString());
-				} else {
-					offset = ((BranchInstruction)_i).getTarget().getPosition();
-				}
+				offset = ( (BCJumpInstruction)_bc[i]).getTargetPosition();
 				_ih = getBCInstructionAtPosition(_bc,  offset);
 				((BCJumpInstruction)_bc[i]).setTarget(_ih );
 				_ih.addTargeter(_bc[i]);
@@ -103,27 +158,26 @@ public class Util {
 	}
 	
 	/**
-	 * @param instruction
-	 * @return
+	 * this method finds the instruction at which the exception handler for the
+	 * exception Thrower instruction given as parameter  starts.
+	 * @param instruction- the instrructiuon for whioch an exception handler is searched
+	 * @return  the instruction which is the start for the block that represents the instruction handle
 	 */
-	private static InstructionHandle getExceptionHandler(BCAthrowInstruction _instr, MethodGen mg) {
-		// TODO Auto-generated method stub
-		CodeExceptionGen[] _ehs = mg.getExceptionHandlers();
-		
-		for (int i = 0; i < _ehs.length; i++) {
-			
-			if ( ( _ehs[i].getStartPC().getPosition() < _instr.getPosition() ) &&  (_ehs[i].getEndPC().getPosition() > _instr.getPosition() ) ) {
-				JavaType _ot =  JavaTypeFactory.getJavaTypeFactory().getJavaType(_ehs[i].getCatchType());
-				JavaType[] _e = _instr.getExceptions();
-				
-				//handles any kind of exception
-				if  ((_ot == null) ||( ((JavaObjectType)_e[0]).subclassOf((JavaObjectType)_ot) )) {
+	public static BCInstruction getExceptionHandlerStarts(BCExceptionThrower _instr, JavaReferenceType _exc ,MethodGen mg, BCInstruction[] _bc) {
+	
+		CodeExceptionGen[] _excHandles = mg.getExceptionHandlers();
+		BCInstruction _i = null;
+		for (int i = 0; i < _excHandles.length; i++)  {	
+			if ( ( _excHandles[i].getStartPC().getPosition() < _instr.getPosition() ) &&  (_excHandles[i].getEndPC().getPosition() > _instr.getPosition() ) ) {
+				//getCatchType() returns null for if any exception may be managed by this handle
+				JavaType _ot =  new JavaObjectType(_excHandles[i].getCatchType());
+				if  ((_ot == null) ||( ((JavaObjectType)_exc).subclassOf((JavaObjectType)_ot) )) {
 					//Util.dump("handler " + _ehs[i].getHandlerPC().toString());
-					return _ehs[i].getHandlerPC();
+					_i = getBCInstructionAtPosition( _bc ,  _excHandles[i].getHandlerPC().getPosition());
 				}
 			}
 		}
-		return null;
+		return  _i;
 	}
 	
 	/**
@@ -141,7 +195,7 @@ public class Util {
 
 	private static LoopBlock getLoopBlock(BCInstruction _first , BCInstruction _last) {
 		LoopBlock _lb = null ;
-		if (  ((_last instanceof BCConditionalBranch ) || (_last instanceof BCGotoInstruction )) && 
+		if (  ((_last instanceof BCConditionalBranch ) || (_last instanceof BCGOTO )) && 
 		  (((BCJumpInstruction)_last).getTarget().getInstructionHandle().equals( _first.getInstructionHandle()))) {
 			_lb = new LoopBlock(_first, (BCJumpInstruction)_last);
 		}
@@ -159,7 +213,6 @@ public class Util {
 		if ( _last instanceof EndBlock) {
 			_b = new Block(_first, _last );
 		}
-		
 		return _b;
 	}
 	

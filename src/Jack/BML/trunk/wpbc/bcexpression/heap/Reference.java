@@ -8,8 +8,9 @@ package bcexpression.heap;
 
 
 
+import type.BCType;
 import bcexpression.Expression;
-import bcexpression.type.JavaType;
+import bcexpression.javatype.JavaType;
 
 /**
  * @author io
@@ -25,5 +26,19 @@ public class Reference extends Expression {
 	public Reference(int _id, JavaType _type) {
 		id = _id;
 		type = _type;
+	}
+	
+	/* (non-Javadoc)
+	 * @see bcexpression.Expression#setType()
+	 */
+	public void setType() {
+		// TODO Auto-generated method stub
+	}
+	
+	/* (non-Javadoc)
+	 * @see bcexpression.Expression#getType()
+	 */
+	public BCType getType()  {
+		return type;
 	}
 }

@@ -6,6 +6,9 @@
  */
 package bcexpression;
 
+import bcexpression.javatype.JavaType;
+import type.BCType;
+
 /**
  * @author io
  *
@@ -17,6 +20,18 @@ public class StringLiteral extends Expression {
 	
 	public StringLiteral(String _literal) {
 		literal = _literal;
-		//setExpressionType(ExpressionConstants.STRING_LITERAL);
+	}
+
+	/* (non-Javadoc)
+	 * @see bcexpression.Expression#setType()
+	 */
+	public void setType() {
+	}
+
+	/* (non-Javadoc)
+	 * @see bcexpression.Expression#getType()
+	 */
+	public BCType getType() {
+		return JavaType.JavaSTRING;
 	}
 }

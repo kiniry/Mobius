@@ -8,11 +8,31 @@ package constants;
 
 import org.apache.bcel.classfile.ConstantClass;
 
+
 /**
  * @author io
- *
- * To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Generation - Code and Comments
+ * basically this are the constant pool data structures that are pointing to Constant_Class_Info structures.
+ * 
+ *   CONSTANT_Fieldref_info {
+    	u1 tag;
+    	u2 class_index;
+    	u2 name_and_type_index;
+    }
+
+
+    CONSTANT_Methodref_info {
+    	u1 tag;
+    	u2 class_index;
+    	u2 name_and_type_index;
+    }
+
+
+    CONSTANT_InterfaceMethodref_info {
+    	u1 tag;
+    	u2 class_index;
+    	u2 name_and_type_index;
+    }
+
  */
 public class BCConstantClass extends  BCConstant {
 	private int nameIndex;
@@ -24,5 +44,6 @@ public class BCConstantClass extends  BCConstant {
 	
 	public int getNameIndex() {
 		return  nameIndex;
-	} 
+	}
+	
 }

@@ -6,46 +6,35 @@
  */
 package bcexpression.jml;
 
+import type.BCType;
 import bcexpression.Expression;
 import constants.BCConstantFieldRef;
 
 /**
  * @author io
  *
- * To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Generation - Code and Comments
+ * the class represents the JML constant elementype : array (JavaType) ---> JavaType 
  */
 public class ELEMTYPE extends JMLExpression {
-	private BCConstantFieldRef left;
-	private Expression right;
+
 	
-	public ELEMTYPE(BCConstantFieldRef _left, Expression _e) {
+	private JML_CONST_TYPE type;
+	
+	public ELEMTYPE(Expression _left) {
 		setLeft(_left);
-		setRight(_e);
-		
+		setType();
 	}
-	/**
-	 * @return Returns the left.
+
+	
+	/* (non-Javadoc)
+	 * @see bcexpression.Expression#setType()
 	 */
-	public Object getLeft() {
-		return left;
+	public void setType() {
+		type = new JML_CONST_TYPE();
 	}
-	/**
-	 * @param left The left to set.
-	 */
-	public void setLeft(BCConstantFieldRef left) {
-		this.left = left;
+	
+	public BCType getType() {
+		return type;
 	}
-	/**
-	 * @return Returns the right.
-	 */
-	public Object getRight() {
-		return right;
-	}
-	/**
-	 * @param right The right to set.
-	 */
-	public void setRight(Expression right) {
-		this.right = right;
-	}
+	
 }

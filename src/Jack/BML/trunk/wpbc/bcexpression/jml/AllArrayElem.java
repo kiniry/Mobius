@@ -6,7 +6,9 @@
  */
 package bcexpression.jml;
 
+import type.BCType;
 import bcexpression.Expression;
+
 import constants.BCConstantFieldRef;
 
 /**
@@ -16,36 +18,25 @@ import constants.BCConstantFieldRef;
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
 public class AllArrayElem  extends JMLExpression {
-	private BCConstantFieldRef left;
-	private Expression right;
-	
-	public AllArrayElem( BCConstantFieldRef _left, Expression _right) {
+
+	public AllArrayElem(Expression _left) {
 		setLeft(_left);
-		setRight(right);
+	}
+
+
+	/* (non-Javadoc)
+	 * @see bcexpression.Expression#setType()
+	 */
+	public void setType() {
+		// TODO Auto-generated method stub
 		
 	}
-	/**
-	 * @return Returns the left.
+	/* (non-Javadoc)
+	 * @see bcexpression.Expression#getType()
 	 */
-	public Object getLeft() {
-		return left;
+	public BCType getType() {
+		// TODO Auto-generated method stub
+		return null;
 	}
-	/**
-	 * @param left The left to set.
-	 */
-	public void setLeft(BCConstantFieldRef left) {
-		this.left = left;
-	}
-	/**
-	 * @return Returns the right.
-	 */
-	public Object getRight() {
-		return right;
-	}
-	/**
-	 * @param right The right to set.
-	 */
-	public void setRight(Expression right) {
-		this.right = right;
-	}
+	
 }

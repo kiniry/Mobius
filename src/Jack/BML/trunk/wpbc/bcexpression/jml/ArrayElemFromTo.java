@@ -6,6 +6,7 @@
  */
 package bcexpression.jml;
 
+import type.BCType;
 import bcexpression.Expression;
 import constants.BCConstantFieldRef;
 
@@ -16,14 +17,13 @@ import constants.BCConstantFieldRef;
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
 public class ArrayElemFromTo extends JMLExpression {
-	private BCConstantFieldRef left;
+	
 	private Expression right;
 	private int start;
 	private int end;
 	
-	public ArrayElemFromTo(BCConstantFieldRef _left, Expression _right, int _start, int _end) {
+	public ArrayElemFromTo( Expression _left, int _start, int _end) {
 		setLeft(_left);
-		setRight(_right);
 		setStart(_start);
 		setEnd(_end);
 		
@@ -44,24 +44,8 @@ public class ArrayElemFromTo extends JMLExpression {
 	public void setEnd(int end) {
 		this.end = end;
 	}
-	/**
-	 * @return Returns the left.
-	 */
-	public Object getLeft() {
-		return left;
-	}
-	/**
-	 * @param left The left to set.
-	 */
-	public void setLeft(BCConstantFieldRef left) {
-		this.left = left;
-	}
-	/**
-	 * @return Returns the right.
-	 */
-	public Object getRight() {
-		return right;
-	}
+	
+
 	/**
 	 * @param right The right to set.
 	 */
@@ -73,5 +57,21 @@ public class ArrayElemFromTo extends JMLExpression {
 	 */
 	public void setStart(int start) {
 		this.start = start;
+	}
+
+	/* (non-Javadoc)
+	 * @see bcexpression.Expression#setType()
+	 */
+	public void setType() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see bcexpression.Expression#getType()
+	 */
+	public BCType getType() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

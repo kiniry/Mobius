@@ -6,6 +6,7 @@
  */
 package constants;
 
+import org.apache.bcel.classfile.ConstantCP;
 import org.apache.bcel.classfile.ConstantNameAndType;
 import org.apache.bcel.classfile.ConstantPool;
 import org.apache.bcel.generic.ConstantPoolGen;
@@ -20,6 +21,13 @@ import org.apache.bcel.generic.Type;
 public class BCConstantRef extends BCConstant {
 	private int classIndex;
 	private int nameAndTypeIndex;
+	
+	public BCConstantRef() {
+	}
+	
+	public BCConstantRef(ConstantCP _cp, int _cpIndex){
+		this(_cp.getClassIndex(), _cp.getNameAndTypeIndex(),  _cpIndex);
+	}
 	
 	public BCConstantRef(int _classIndex, int _nameAndTypeIndex ,int _cpIndex ) {
 		super(_cpIndex);
@@ -37,6 +45,5 @@ public class BCConstantRef extends BCConstant {
 	
 	public String getSignature(ConstantPool _cp) {
 		return ((ConstantNameAndType)_cp.getConstant(nameAndTypeIndex)).getSignature(_cp);
-		
 	}
 }

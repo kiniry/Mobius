@@ -6,8 +6,10 @@
  */
 package bcexpression.jml;
 
+import type.BCType;
 import bcexpression.Expression;
-import bcexpression.ExpressionConstants;
+import bcexpression.javatype.JavaType;
+
 
 /**
  * @author io
@@ -16,7 +18,27 @@ import bcexpression.ExpressionConstants;
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
 public class OLD extends JMLExpression  {
-	public OLD(Expression _e) {
-		super(_e, ExpressionConstants.OLD);
+	
+	private JavaType type ;
+	
+	public OLD(Expression _left) {
+		setLeft(_left);
+	}
+
+	/* (non-Javadoc)
+	 * @see bcexpression.Expression#setType()
+	 */
+	public void setType() {
+		type = (JavaType) ((Expression)getLeft()).getType();
+	}
+
+	/* (non-Javadoc)
+	 * @see bcexpression.Expression#getType()
+	 */
+	public BCType getType() {
+		if (type == null) {
+			setType();
+		}
+		return type;
 	}
 }

@@ -1,7 +1,7 @@
 package bcexpression.jml;
 
+import type.BCType;
 import bcexpression.Expression;
-import bcexpression.ExpressionConstants;
 
 /**
  * @author io
@@ -11,8 +11,23 @@ import bcexpression.ExpressionConstants;
  */
 public class TYPEOF extends JMLExpression {
 
-	public TYPEOF(Expression _e) {
-		super(_e, ExpressionConstants.TYPEOF);
+	public TYPEOF(Expression _left) {
+		setLeft(_left );
+	}
+
+	/* (non-Javadoc)
+	 * @see bcexpression.Expression#setType()
+	 */
+	public void setType() {
+		// TODO Auto-generated method stub
+	}
+
+	/* (non-Javadoc)
+	 * @see bcexpression.Expression#getType()
+	 */
+	public BCType getType() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }

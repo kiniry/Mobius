@@ -42,4 +42,7 @@ public interface ExpressionConstants {
 	public static final byte  VARIABLE = 33;
 	public static final byte  EXCEPTION_VARIABLE = 34;
 	public static final byte  JAVA_TYPE = 35;
+	
+	public static final byte STACK = 37;
+	public static final byte STACK_COUNTER = 38;
 }

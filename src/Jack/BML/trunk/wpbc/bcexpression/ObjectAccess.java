@@ -6,6 +6,7 @@
  */
 package bcexpression;
 
+import type.BCType;
 import bcclass.BCLocalVariable;
 
 /**
@@ -14,24 +15,28 @@ import bcclass.BCLocalVariable;
  * To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
-public class ObjectAccess extends Expression {
-	BCLocalVariable local;
+public class ObjectAccess extends Expression implements ReferenceExpression {
+	private BCLocalVariable local;
+	private int local_index;
 	
 	public ObjectAccess(BCLocalVariable _local) {
 		local = _local;
 		//setExpressionType(ExpressionConstants.OBJECTACCESS);
 	}
-	
-	//LB A quoi serve ces operations qui retournent null ?
-	public Object getLeft() {
-		return null;
+
+	/* (non-Javadoc)
+	 * @see bcexpression.Expression#setType()
+	 */
+	public void setType() {
+		// TODO Auto-generated method stub
+		
 	}
-	
-	public Object getRight() {
+
+	/* (non-Javadoc)
+	 * @see bcexpression.Expression#getType()
+	 */
+	public BCType getType() {
+		// TODO Auto-generated method stub
 		return null;
-	}
-	
-	public Expression getObject() {
-		return this;
 	}
 }

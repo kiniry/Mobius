@@ -6,11 +6,13 @@
  */
 package bcclass;
 
+import java.util.HashMap;
 import java.util.Vector;
 
 import org.apache.bcel.classfile.Attribute;
 import org.apache.bcel.generic.CodeExceptionGen;
-import org.apache.bcel.generic.Instruction;
+
+import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.InstructionList;
 import org.apache.bcel.generic.LocalVariableGen;
 import org.apache.bcel.generic.MethodGen;
@@ -35,8 +37,9 @@ public class Method {
 	private BCInstruction[] code;
 	private Trace trace;
 	
-	private Formula postcondition;	
+	private HashMap exceptionalpostcondition;	
 	private Formula precondition;
+	private Formula postcondition;
 	private Expression[] assignables;
 	private Vector pogs;
 	
@@ -47,9 +50,9 @@ public class Method {
 	
 	
 	
-	public Method(BCInstruction[] code) {
-		setCode(code);
-	}
+//	public Method(BCInstruction[] code) {
+//		setCode(code);
+//	}
 
 	public Method(BCInstruction[] code, MethodGen _mg) {
 		setCode(code);
@@ -58,13 +61,10 @@ public class Method {
 		codeAttributes = _mg.getCodeAttributes();
 	}
 	
-	public Method(InstructionList code, MethodGen _mg) {
-		BCInstruction[] _bci = Util.wrapByteCode(code,_mg);
-		setCode(_bci);
-		excHandlers = _mg.getExceptionHandlers();
-		localVariabes = _mg.getLocalVariables();
-		codeAttributes = _mg.getCodeAttributes();
+	public Method(InstructionList code, MethodGen _mg, ConstantPoolGen _cp) {
+		this(Util.wrapByteCode(code,_mg, _cp), _mg);
 	}
+	
 	/**
 	 * @return
 	 */
@@ -72,15 +72,23 @@ public class Method {
 		return code;
 	}
 
+
 	/**
-	 * @return
+	 * @return the predicate that must be true in the state after the execution of the method
+	 */
+	public HashMap getExceptionalPostcondition() {
+		return exceptionalpostcondition;
+	}
+	
+	/**
+	 * @return the predicate that must be true in the state after the execution of the method
 	 */
 	public Formula getPostcondition() {
 		return postcondition;
 	}
 
 	/**
-	 * @return
+	 * @return the predicate that must be true in the state before the execution of the method
 	 */
 	public Formula getPrecondition() {
 		return precondition;
@@ -103,6 +111,13 @@ public class Method {
 	/**
 	 * @param formula
 	 */
+	public void setExcPostcondition(HashMap hm) {
+		exceptionalpostcondition = hm;
+	}
+	
+	/**
+	 * @param formula
+	 */
 	public void setPostcondition(Formula formula) {
 		postcondition = formula;
 	}
@@ -121,10 +136,10 @@ public class Method {
 		this.trace = trace;
 	}
 
-	void initTrace() {
+	protected void initTrace(MethodGen _mg) {
 		if (trace != null) {
 			return;
 		}
-		setTrace (new Trace( code) );
+		setTrace (new Trace( code, _mg) );
 	}
 }
