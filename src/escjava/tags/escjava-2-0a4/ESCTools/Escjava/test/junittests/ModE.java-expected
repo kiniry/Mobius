@@ -1,0 +1,105 @@
+ESC/Java version VERSION
+  Prover started:TIME
+
+ModE ...
+
+ModE: ModE() ...
+    [TIME]  passed immediately
+
+ModE: ModE(int) ...
+    [TIME]  passed immediately
+
+ModE: ModE(float) ...
+    [TIME]  passed immediately
+
+ModE: ModE(int, int) ...
+    [TIME]  passed immediately
+
+ModE: ModE(int, int, int) ...
+    [TIME]  passed immediately
+
+ModE: me() ...
+    [TIME]  passed immediately
+
+ModE: mn() ...
+    [TIME]  passed immediately
+
+ModE: mns() ...
+    [TIME]  passed immediately
+
+ModE: md() ...
+    [TIME]  passed immediately
+
+ModE: mi() ...
+    [TIME]  passed immediately
+
+ModE: mm() ...
+ModE.java:38: Caution: A method that 'modifies everything' has been called; the verification of a body with such a call is not correct.
+                ModE e = new ModE();
+                         ^
+ModE.java:39: Caution: A method that 'modifies everything' has been called; the verification of a body with such a call is not correct.
+                e = new ModE(5);
+                    ^
+ModE.java:40: Caution: A method that 'modifies everything' has been called; the verification of a body with such a call is not correct.
+                e.me();
+                  ^
+ModE.java:41: Caution: A method that 'modifies everything' has been called; the verification of a body with such a call is not correct.
+                e.mns();
+                  ^
+ModE.java:42: Caution: A method that 'modifies everything' has been called; the verification of a body with such a call is not correct.
+                e = new ModE(1,2,3);
+                    ^
+ModE.java:43: Caution: A method that 'modifies everything' has been called; the verification of a body with such a call is not correct.
+                e.md();
+                  ^
+ModE.java:44: Caution: A method that 'modifies everything' has been called; the verification of a body with such a call is not correct.
+                e.mss();
+                  ^
+ModE.java:38: Caution: A method that 'modifies everything' has been called; the verification of a body with such a call is not correct.
+                ModE e = new ModE();
+                         ^
+ModE.java:39: Caution: A method that 'modifies everything' has been called; the verification of a body with such a call is not correct.
+                e = new ModE(5);
+                    ^
+ModE.java:40: Caution: A method that 'modifies everything' has been called; the verification of a body with such a call is not correct.
+                e.me();
+                  ^
+ModE.java:41: Caution: A method that 'modifies everything' has been called; the verification of a body with such a call is not correct.
+                e.mns();
+                  ^
+ModE.java:42: Caution: A method that 'modifies everything' has been called; the verification of a body with such a call is not correct.
+                e = new ModE(1,2,3);
+                    ^
+ModE.java:43: Caution: A method that 'modifies everything' has been called; the verification of a body with such a call is not correct.
+                e.md();
+                  ^
+ModE.java:44: Caution: A method that 'modifies everything' has been called; the verification of a body with such a call is not correct.
+                e.mss();
+                  ^
+    [TIME]  passed
+  [TIME total]
+
+ModES ...
+
+ModES: ms() ...
+    [TIME]  passed immediately
+
+ModES: mss() ...
+    [TIME]  passed immediately
+
+ModES: ModES() ...
+    [TIME]  passed
+  [TIME total]
+
+ModESS ...
+
+ModESS: ms() ...
+    [TIME]  passed immediately
+
+ModESS: mss() ...
+    [TIME]  passed immediately
+
+ModESS: ModESS() ...
+    [TIME]  passed
+  [TIME total]
+14 cautions

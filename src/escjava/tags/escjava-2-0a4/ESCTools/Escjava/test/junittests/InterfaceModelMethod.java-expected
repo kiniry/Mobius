@@ -1,0 +1,10 @@
+ESC/Java version VERSION
+  Prover started:TIME
+    [TIME]
+
+InterfaceModelMethod ...
+    [TIME]
+
+InterfaceModelMethod: m() ...
+    [TIME]  passed
+  [TIME total]

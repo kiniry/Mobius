@@ -1,0 +1,269 @@
+## This file is part of the 2003 Revision of EscJava
+## author: David Cok - 1 May 2003
+## author: Joe Kiniry
+##
+## This file contains variable definitions common to the Makefiles in
+## various subdirectories of the ESC tools.  These should not need to
+## be modified by the user (those variables are in Makefile.local).
+## Many of these variables are initialized with ?= so that they can be
+## preset by environment variables, if customization is needed.  The
+## definitions here mostly reflect the directory organization of the
+## ESC tools; changing them will likely break something.
+
+## Please tell us if you find that something needs to be changed for
+## your platform!
+
+## Set up Java path and file separators on a per-platform basis.
+empty:=
+space:=		$(empty) $(empty)
+
+## This include file contains any user-customized definitions.
+export TOP ?= .
+ifneq ($(wildcard ${TOP}/Makefile.*local),)
+  include ${TOP}/Makefile.local
+endif
+
+## Define a function to canonicalize paths that are parameters
+## to native programs (e.g., "javac").
+ifdef COMSPEC
+  canonicalize = `cygpath -p -m $(1)`
+else
+  canonicalize = $(1)
+endif
+
+## Define a multi-platform diff
+
+ifdef COMSPEC
+    export DIFF = diff --strip-trailing-cr
+else
+    export DIFF = diff 
+endif
+
+######### Check if ESCTOOLS_ROOT is set
+
+ifndef ESCTOOLS_ROOT
+  $(error You must have ESCTOOLS_ROOT defined, either as an environment variable or in the file Makefile.local in the same directory as Makefile.defs )
+endif
+
+######### Make sure that ESCJ_SIMPLIFY_DIR is set
+
+export ESCJ_SIMPLIFY_DIR ?= ${ESCTOOLS_ROOT}/Escjava/release/master/bin
+
+######### Check if SIMPLIFY is set; guess a value if not
+######### Set ESCJ_SIMPLIFY as appropriate
+## (Caution: don't use tabs here, just spaces)
+
+ifndef SIMPLIFY
+  os = $(shell uname -s)
+  processor = $(shell uname -p)
+  ifeq ("${os}","Linux")
+    export SIMPLIFY =  Simplify-1.5.4.linux
+    $(warning Guessing a value for SIMPLIFY: ${SIMPLIFY})
+  endif
+  ifeq ("${os}","Darwin")
+    export SIMPLIFY =  Simplify-1.5.4.macosx
+    $(warning Guessing a value for SIMPLIFY: ${SIMPLIFY})
+  endif
+  ifeq ("${os}","CYGWIN_NT-5.1")
+    export SIMPLIFY =  Simplify-1.5.4.exe
+    $(warning Guessing a value for SIMPLIFY: ${SIMPLIFY})
+  endif
+  ifeq ("${os}","SunOS")
+    ifeq ("${processor}","sparc")
+      export SIMPLIFY =  Simplify-1.5.4.solaris
+      $(warning Guessing a value for SIMPLIFY: ${SIMPLIFY})
+    else
+      $(error No Simplify binary exists for SunOS on your processor architecture: ${processor}.  Consider building one for us.)
+    endif
+  endif
+endif
+ifndef SIMPLIFY
+  $(error You must have SIMPLIFY defined, either as an environment variable or in the file Makefile.local in the same directory as Makefile.defs.  It should be defined to be the name of, not the path to, an appropriate Simplify executable in $ESCTOOLS_ROOT/Escjava/release/master/bin: os = ${os})
+endif
+export ESCJ_SIMPLIFY = ${ESCJ_SIMPLIFY_DIR}/${SIMPLIFY}
+
+### Simplify settings
+export PROVER_KILL_TIME ?= 300
+export PROVER_CC_LIMIT ?= 10
+
+##########################################################################
+
+export ESC_SPECS ?= ${ESCTOOLS_ROOT}/specs
+
+##########################################################################
+## Definitions of Java tools.
+## Override these by defining them in Makefile.local or as environment
+## variables.
+
+export JAVA ?= java
+export JAVAC ?= javac 
+export JAVAC_FLAGS ?= -g -source 1.4
+export JAVADOC ?= javadoc -J-mx200m -source 1.4 -breakiterator -quiet
+
+##########################################################################
+
+## Variables that define the release.  They will be used to build
+## archives for distribution.  They are used to create the Version.java
+## file, which is used by Main.java to provide a version string.
+
+export ESC_PROJECT ?= ESCTools
+export ESC_VERSION ?= CURRENT-CVS
+
+##########################################################################
+
+## The following definitions are used in various Makefiles and should
+## be common for all users and environments.  (at least those environments
+## that have '/' as the path separator.
+## These are defined here rather than in the Makefiles for the individual
+## packages because the tools are used by each other (e.g. all tools use
+## Javafe).
+
+export JAVADOC_GEN_DIR = ${ESCTOOLS_ROOT}/docs/api
+
+## Pertinent definitions for Javafe
+export JAVAFE_ROOT = ${ESCTOOLS_ROOT}/Javafe
+export JAVAFE_SOURCE_DIR = ${JAVAFE_ROOT}/java
+export JAVAFE_CLASSFILES = ${JAVAFE_ROOT}/classfiles
+
+## This is the path needed to build Javafe
+export JAVAFE_BUILD_CLASSPATH = ${JAVAFE_CLASSFILES}
+
+# This is the path needed to run Javafe (only used for testing)
+export JAVAFE_CLASSPATH = ${JAVAFE_CLASSFILES}
+ 
+## Pertinent things for Escjava
+export ESCJAVA_ROOT = ${ESCTOOLS_ROOT}/Escjava
+export ESCJAVA_SOURCE_DIR = ${ESCJAVA_ROOT}/java
+export ESCJAVA_CLASSFILES = ${ESCJAVA_ROOT}/classfiles
+
+## Paths to Mocha components
+export MOCHA_LIB = ${ESCTOOLS_ROOT}/jars/mochalib.jar
+
+## This is the path needed to *run* Escjava.
+export ESCJAVA_CLASSPATH = ${JAVAFE_CLASSFILES}:${ESCJAVA_CLASSFILES}:${MOCHA_LIB}
+
+## The front-end for Escjava that should be used for testing.
+export ESCJ = ${ESCJAVA_ROOT}/escj
+
+# This is the location of any specification files for the JDK.
+# Here we set a default value as the location of spec
+# files supplied with the ESC release.
+export JDKSPEC_ROOT ?= ${ESCJAVA_ROOT}/release/master/specs
+ 
+############################### Release
+## Pertinent locations for building a release
+
+# Do something like this when you build a release:
+#   ESC_VERSION=2.0a0 ESC_RELEASE_DATE=`date "+%d-%m-%y"` make releases
+export ESC_RELEASE_DATE ?= `date "+%d-%m-%y"`
+
+# Temp directory for constructing releases
+export RELTEMP ?= ${ESCTOOLS_ROOT}/release-temp
+
+# Temp directory for testing releases
+export RELTEST ?= ${ESCTOOLS_ROOT}/release-test
+
+# Directory in which to put final binary and patch tar files (but nothing else)
+export RELDIR  ?= ${ESCTOOLS_ROOT}/release
+
+# Variables relevant to names of release files
+export RELNAME ?= ${ESC_PROJECT}-${ESC_VERSION}
+export RELNAME-DATE ?= ${RELNAME}-${ESC_RELEASE_DATE}
+export RELJAR  ?= esctools2.jar
+export RELTAR  ?= ${RELNAME}-binary.tbz
+export RELPATCHTAR  ?= ${RELNAME}-patch.tbz
+export RELCLASSPATH = ${RELDIR}/${RELJAR}
+
+export CALVIN_PATCHES   = ${RELNAME-DATE}-Calvin-patch.bz
+export ESCJAVA_PATCHES  = ${RELNAME-DATE}-Escjava-patch.bz
+export HOUDINI_PATCHES  = ${RELNAME-DATE}-Houdini-patch.bz
+export JAVAFE_PATCHES   = ${RELNAME-DATE}-Javafe-patch.bz
+export RCC_PATCHES      = ${RELNAME-DATE}-Rcc-patch.bz
+export SIMPLIFY_PATCHES = ${RELNAME-DATE}-Simplify-patch.bz
+
+export SPECS_TAR        = ${RELNAME-DATE}-specs.tbz
+export TOPLEVEL_TAR     = ${RELNAME-DATE}-TopLevel.tbz
+export ZERO_LENGTH_TAR  = ${RELNAME-DATE}-ZeroLengthFiles.tbz
+
+# Patch release - temp directory for generating a patch release
+export PATCH_DIR ?= ${ESCTOOLS_ROOT}/patches
+
+# The prefix of the name of the patch release tar file
+export PATCH_NAME ?= ${RELNAME-DATE}
+
+############################### Original ESCTools material
+
+# Directory containing the (uncompressed) tar files of the original
+# ESCTools and Simplify release
+export ORIGINAL_TAR_DIR ?= ${ESCTOOLS_ROOT}/../ESCTools-original-tars
+
+# Directory containing the original files of the original 
+# ESCTools and Simplify releases, as obtained from the tar files
+export ESCTOOLS_ORIGINAL ?= ${ESCTOOLS_ROOT}/../ESCTools.orig
+
+############################### JUnit
+## The location of the JUnit library as obtained from the JUnit project
+## You can override this default setting in Makefile.local or in your
+## environment
+export JUNIT_LIB ?= ${ESCTOOLS_ROOT}/Utils/junit.jar
+export JUNIT_SOURCEPATH ?= /usr/local/Java/junit/src
+
+## This contains items needed for compiling/running JUnit tests,
+## but not for compiling or running the tools themselves
+export JUNIT_UTILS_PATH = ${ESCTOOLS_ROOT}/Utils:${JUNIT_LIB}
+
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+## The stuff from here on needs cleaning up (FIXME)
+
+######################### locations #########################
+ 
+ 
+##### This stuff with MOCHA needs to be cleaned up
+### FIXME
+ 
+## Escjava relies on the jMocha library from UC Berkeley.
+## It uses (a) a jar file of java classes (mochalib.jar) that
+## is supplied with the Escjava distribution.
+## It also uses (b) a set of compiled shared object modules.
+
+## FIXME: DO we supply these?  DO we supply the tools to build them?
+## Do we leave it to the user to figure it out?  What are the license
+## restrictions on jMocha?  What version do we have here?
+
+## Joe: We do not supply these, nor is jMocha absolutely necessary for
+## using ESC/Java.  The license on jMocha is BSDish so we can
+## redistribute whatever bits of it that we like so long as we give
+## proper attribution.  http://www.ucop.edu/ott/permissn.html
+## See http://www.cs.sunysb.edu/~mocha/ for more information.
+
+# To get predicate abstraction to work with ESC/Java, you need to
+# download jMocha from UC Berkeley.  When you build jMocha, you'll get
+# 3 shared objects: libjbdd.so, libglu.so, libcu.so.  These have to be
+# put in an appropriate directory, and LD_LIBRARY_PATH must be set to
+# the name of that directory.  For example, if you put the shared
+# objects in a directory called ${MOCHA_ROOT}/platform/alpha, then you
+# would include the following line here:
+export MOCHA_ROOT = ${ESCJAVA_ROOT}/mochalib
+export MOCHA_SOURCE_DIR = ${MOCHA_ROOT}/java
+export MOCHA_TWO_ROOT = /usr/local/Java/j-mocha.2.0/mocha
+export LD_LIBRARY_PATH = ${MOCHA_TWO_ROOT}/platform/linux
+export MOCHA_CLASSES = ${MOCHA_SOURCE_DIR}:${ESCJAVA_ROOT}/jars/mochalib.jar
+ 
+######################### classpaths #########################
+ 
+## FIXME -- check which of these are actually needed - they come from
+## the setup file so some are for execution.
+
+# A colon-separated list of directories that contain the source code
+# for the whole of ESC/Java.
+export SOURCEPATH = ${JAVAFE_SOURCE_DIR}:${ESCJAVA_SOURCE_DIR}:${MOCHA_SOURCE_DIR}
+ 
+#
+# Need to sources here because we can't read binary inner classes;
+# need the binaries because don't have source for sun.* classes...
+#
+export JDKSPEC = ${JDKSPEC_ROOT}
+

@@ -1,0 +1,148 @@
+TOP = ../../..
+include ${TOP}/Makefile.defs
+
+############################################################################
+# ESCJAVA is (only) used for standalone tests
+ESCJAVA = ${ESCTOOLS_ROOT}/Escjava/escj -nowarn Deadlock -verboseTrace
+
+_CLASSPATH = $(call canonicalize,${ESCJAVA_CLASSPATH}:${JUNIT_UTILS_PATH}:.)
+_TMP = $(call canonicalize,/tmp)
+_SIMP = $(call canonicalize,${ESCJ_SIMPLIFY})
+
+# Used to invoke text-based JUnit tests
+export JUNIT = ${JAVA} -Xmx256M -classpath "${_CLASSPATH}" \
+	-Djava.io.tmpdir=${_TMP} -Dsimplify=${_SIMP} junit.textui.TestRunner
+
+# Used to invoke GUI-based JUnit tests
+export JUNITSW = $(JAVA) -Xmx256M -classpath "${_CLASSPATH}" \
+	-Djava.io.tmpdir=${_TMP} -Dsimplify=${_SIMP} junit.swingui.TestRunner
+
+# The default is to run tests without any spec files.  This is to keep them
+# robust against changes in specs.  You can adjust this by adding 
+# explicit command-line settings in any particular test.
+export ESC_SPECS = :
+
+##############################################################################
+.PHONY: buildtests
+buildtests:
+	$(JAVAC) -classpath "${_CLASSPATH}" TestSuite.java
+	cp Binary.javax Binary.java
+	javac Binary.java
+	rm Binary.java
+
+.PHONY: test runtests
+test runtests: buildtests
+	$(MAKE) skips
+	$(MAKE) dotests
+
+.PHONY: dotests
+dotests: lists
+	$(MAKE) notjunittests
+	$(JUNIT) TestSuite
+
+.PHONY: dotests-nolist
+dotests-nolist:
+	$(JUNIT) TestSuite
+
+.PHONY: swtests
+swtests: lists
+	$(JUNITSW) TestSuite
+
+.PHONY: canonicalize_paths
+canonicalize_paths:
+ifdef COMSPEC
+	@if [ ! -f .canonicalized ]; then \
+		for i in *-expected; do \
+			cat $${i} | sed -e "s/\\.\\//\\.\\\\/" > tmp-expected; \
+			rm $${i}; mv tmp-expected $${i}; \
+		done; \
+	fi
+	@touch .canonicalized
+endif
+
+ALWAYSFLAGS = -nowarn Deadlock -verboseTrace -testMode -classpath .
+DEFAULTFLAGS = " "
+
+## This lists files without .java suffixes that need to be added to the
+## set of junittests
+OTHERTESTS = \
+	RefineT.t SpecFile.jml RefineNoJava.refines-java \
+	Binary.refines-spec NoPublic.refines-spec
+
+## These have output that depends on initialization (e.g. what has already 
+## happened in the previous junittests), so the output is more stable when
+## run separately
+NOTJUNITTESTS = Desugaring.java 
+## FormalNonnullInheritance.java 
+## DesugaringA.java
+## InheritedSpecs.java NL.java
+
+.PHONY: lists
+lists:
+	@rm -f listtests
+	@touch listtests
+	@for f in `ls *.java ${OTHERTESTS} | grep -v -f skip`; do \
+		echo -n ${ALWAYSFLAGS} " " >> listtests ; \
+		( grep FLAGS $$f || echo ${DEFAULTFLAGS} ) \
+		| sed -e 's?//#FLAGS:??' -e "s/\$$/ $$f/"  \
+		| sed -e "s@ESCTOOLS_ROOT@${ESCTOOLS_ROOT}@" >> listtests ; \
+	done
+
+.PHONY: septest
+septest:
+	$(MAKE) skips
+	$(MAKE) othertests
+	$(MAKE) sepjavatests
+	$(MAKE) notjunittests
+
+.PHONY: notjunittests
+notjunittests:
+	@touch skip
+	@for f in  ${NOTJUNITTESTS} ; do \
+		$(MAKE) --no-print-directory $${f}-test; \
+	done
+
+.PHONY: sepjavatests
+sepjavatests:
+	@touch skip
+	@for f in `ls *.java | grep -v -f skip` ; do \
+		$(MAKE) --no-print-directory $${f}-test; \
+	done
+
+.PHONY: skips
+skips:
+	@touch skip
+	@echo Skipped: `cat skip | grep -v "^#" `
+
+.PHONY: othertests
+othertests: $(addsuffix -test,${OTHERTESTS})
+
+# I can't seem
+# to get 2>&1 > to work in order to output directly into the -ckd file
+# (FIXME)
+%-test: 
+	@echo Testing $* 
+	@if [ ! -e $* ] ; then \
+		echo No such file $* ;\
+	else \
+	(${ESCJAVA} -testMode -classpath . \
+		`grep '//#FLAGS:' $* | \
+		sed -e "sx//#FLAGS:xx" -e "s@ESCTOOLS_ROOT@${ESCTOOLS_ROOT}@" ` \
+		$* 2>&1 | sed -e s/x/x/ > $*-ckd ) || exit 0; \
+	if [ -e $*-expected ] ; then \
+		${DIFF} $*-ckd $*-expected  \
+		  && rm $*-ckd ;\
+	else \
+		echo ... Creating $*-expected ;\
+		mv $*-ckd $*-expected ;\
+	fi ;\
+	fi ;\
+
+%-expected: %
+	escjava -testMode \
+		`grep '//#FLAGS:' $* | sed -e "sx//#FLAGS:xx"` $* 2>&1 > $@
+
+.PHONY: clean
+clean:
+	@rm -f `cat .cvsignore` core*
+

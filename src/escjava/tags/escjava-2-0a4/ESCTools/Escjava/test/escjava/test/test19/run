@@ -1,0 +1,4 @@
+#!/bin/csh -f
+# usage: run FLAGS
+
+${ESCJ} -noNotCheckedWarnings $* *.java

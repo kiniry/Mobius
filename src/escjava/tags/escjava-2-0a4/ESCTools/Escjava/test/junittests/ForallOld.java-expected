@@ -1,0 +1,52 @@
+ESC/Java version VERSION
+  Prover started:TIME
+    [TIME]
+
+ForallOld ...
+    [TIME]
+
+ForallOld: mm() ...
+    [TIME]  passed
+
+ForallOld: m3() ...
+------------------------------------------------------------------------
+ForallOld.java:15: Warning: Postcondition possibly not established (Post)
+        }
+        ^
+Associated declaration is "ForallOld.java", line 13, col 5:
+        //@ ensures x == 6; // FAILS
+            ^
+Execution trace information:
+    Executed implicit return in "ForallOld.java", line 15, col 1.
+
+------------------------------------------------------------------------
+    [TIME]  failed
+
+ForallOld: m4() ...
+    [TIME]  passed
+
+ForallOld: m() ...
+ForallOld.java:28: Caution: Unable to use quantification because no trigger found: (FORALL (|x:28.16|) (NOT (>= 0 |x:28.16|)))
+        //@ forall int x;
+                       ^
+    [TIME]  passed
+
+ForallOld: m9() ...
+------------------------------------------------------------------------
+ForallOld.java:36: Warning: Postcondition possibly not established (Post)
+        public void m9() {}
+                          ^
+Associated declaration is "ForallOld.java", line 35, col 5:
+        //@ ensures x+y+z == a+b+c;
+            ^
+Execution trace information:
+    Executed implicit return in "ForallOld.java", line 36, col 19.
+
+------------------------------------------------------------------------
+    [TIME]  failed
+
+ForallOld: ForallOld() ...
+    [TIME]  passed
+  [TIME total]
+1 caution
+2 warnings

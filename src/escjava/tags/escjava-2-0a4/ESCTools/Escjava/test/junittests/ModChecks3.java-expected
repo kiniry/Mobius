@@ -1,0 +1,21 @@
+ESC/Java version VERSION
+  Prover started:TIME
+    [TIME]
+
+ModChecks3 ...
+ModChecks3.java:5: Error: Array ranges are allowed only as specification designators
+        //@ modifies aa[*][*];   // ERROR
+                       ^
+ModChecks3.java:6: Error: Array ranges are allowed only as specification designators
+        //@ modifies aa[*][0];   // ERROR
+                       ^
+ModChecks3.java:7: Error: Array ranges are allowed only as specification designators
+        //@ modifies aa[2..4][0];   // ERROR
+                       ^
+ModChecks3.java:8: Error: Reference wild cards allowed only as specification designators
+        //@ modifies this.*.*;   // ERROR
+                     ^
+Caution: Turning off extended static checking due to type error(s)
+  [TIME total] (aborted)
+1 caution
+4 errors

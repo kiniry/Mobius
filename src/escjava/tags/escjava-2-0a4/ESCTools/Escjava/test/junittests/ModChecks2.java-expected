@@ -1,0 +1,34 @@
+ModChecks2.java:19: Error: There is no assignable clause allowing this assignment
+                i = 0;                  // ERROR
+                ^
+ModChecks2.java:20: Error: There is no assignable clause allowing this assignment
+                j++;                    // ERROR
+                ^
+ModChecks2.java:21: Error: There is no assignable clause allowing this assignment
+                a = new int[15];        // ERROR
+                ^
+ModChecks2.java:22: Error: There is no assignable clause allowing this assignment
+                a[0] = 7;               // ERROR
+                ^
+ModChecks2.java:23: Error: There is no assignable clause allowing this assignment
+                //@ set gi = 0;         // ERROR
+                        ^
+ModChecks2.java:24: Error: There is no assignable clause allowing this assignment
+                o.j += 3;               // ERROR
+                ^
+ModChecks2.java:29: Error: There is no assignable clause allowing this assignment
+                i = 0; // ERROR
+                ^
+ModChecks2.java:35: Error: There is no assignable clause allowing this assignment
+                o.j = 0; // ERROR
+                  ^
+ModChecks2.java:40: Error: There is no assignable clause allowing this assignment
+                j = 0;   // ERROR
+                ^
+ModChecks2.java:45: Error: There is no assignable clause allowing this assignment
+                i = 0; // ERROR
+                ^
+ModChecks2.java:50: Error: There is no assignable clause allowing this assignment
+                super.i = 0; // ERROR
+                ^
+11 errors

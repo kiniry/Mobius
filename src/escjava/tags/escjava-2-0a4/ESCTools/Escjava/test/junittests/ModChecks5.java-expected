@@ -1,0 +1,13 @@
+ESC/Java version VERSION
+  Prover started:TIME
+    [TIME]
+
+ModChecks5 ...
+    [TIME]
+
+ModChecks5: m() ...
+    [TIME]  passed
+
+ModChecks5: ModChecks5() ...
+    [TIME]  passed
+  [TIME total]
