@@ -777,19 +777,51 @@ subsets of all fields.
 
 Data groups are defined explicitly and implicitly, using the
 @code{JMLDataGroup} class in the former case, and using @emph{implicit
-data groups} in the latter.
+data groups} in the latter.  @code{JMLDataGroup} is the JML class used
+to define a new data group, in lieu of a @code{datagroup} keyword at
+this point in time.
 
-The main data group that is most frequently used in JML specifications
-is an explicitely predefined data group found in the specification for
-the class @code{java.lang.Object}.  It is called the
-@code{objectState} data group.
+Every field implicitely defines a data group of the same name.  For
+example, the Java field declarations
+@example
+class C {
+  byte b;
+  int i;
+  Object o;
+  ...
+}
+@end example
+is equivalent to the following
+@example
+class C {
+  //@ JMLDataGroup b;
+  byte b; //@ in b;
+  //@ JMLDataGroup i;
+  int i; //@ in i;
+  //@ JMLDataGroup o;
+  Object o; //@ in o;
+  ...
+}
+@end example
+
+The data group most frequently used in JML specifications is an
+explicitely predefined data group found in the specification for the
+base class @code{java.lang.Object}.  It is called the
+@code{objectState} data group.  The @code{objectState} data group
 @cindex objectState
+is used as a general data group that represents all non-private,
+transient state of an object.  The @code{objectState} data group is
+only an convenience construct; it has no special significance to and
+of the JML tools.
 
+A data group can be used within a frame axiom.  For a data group
+@code{d}, writing @code{assignable d} means that all fields which
+are part of the data group @code{d} might be modified.
 
-
-The @code{objectState} data group is only an convenience construct; it
-has no special significance to and of the JML tools.
-
+@strong{Problem 8.} @anchor{Problem-8} Annotate the code of the
+previous problem with @emph{data groups}.  Make your assignable
+clauses as broad as possible considering possible future extensions of
+the class you are specifying.  Check your frame axioms with ESC/Java2.
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @node Heavyweight, Invariants, Data Groups, Core

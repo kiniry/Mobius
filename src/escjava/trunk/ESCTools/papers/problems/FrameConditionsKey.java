@@ -17,7 +17,7 @@ class FrameConditionsKey
   }
 
   //@ requires s != null;
-  //@ assignable o;
+  //@ assignable o, s.objectState;
   //@ ensures o.equals(s.toString());
   //@ signals (Exception) false;
   void m() {
@@ -49,29 +49,27 @@ class FrameConditionsKey
   //@ requires t != null;
   //@ requires t.length() >= 6;
   //@ assignable FrameConditionsKey.so;
-  //@ ensures FrameConditionsKey.so.equals(t.substring(3,6));
+  //@ ensures FrameConditionsKey.so.equals(t.substring(3, 6));
   //@ signals (Exception) false;
   void p(String t) {
-    FrameConditionsKey.so = t.substring(3,6);
+    FrameConditionsKey.so = t.substring(3, 6);
   }
 
   //@ requires StaticFrameConditionsKey.s != null;
   //@ requires s == StaticFrameConditionsKey.s;
-  //@ assignable StaticFrameConditionsKey.s;
-  //@ ensures s == StaticFrameConditionsKey.s;
+  //@ assignable StaticFrameConditionsKey.s.objectState, StaticFrameConditionsKey.s;
+  //@ ensures StaticFrameConditionsKey.s.equals("foobar");
   //@ signals (Exception) false;
   void q() {
     if (StaticFrameConditionsKey.s.hashCode() >= Integer.MIN_VALUE) {
       StaticFrameConditionsKey.s = "foobar";
     }
-    assert s == StaticFrameConditionsKey.s;
   }
   
   //@ requires true;
   //@ assignable i;
   //@ ensures i == 2;
-  //@ signals (IllegalArgumentException) (\old(o == null));
-  //@ signals (IllegalArgumentException iae) (\old(b < 0) && iae.getMessage().equals("bogus byte"));
+  //@ signals (IllegalArgumentException iae) (\old(o == null)) || (\old(b < 0) && iae.getMessage().equals("bogus byte"));
   void r(Object o, byte b) throws IllegalArgumentException {
     if (o == null)
       throw new IllegalArgumentException();
@@ -89,7 +87,7 @@ class FrameConditionsKey
     //@ assume o != null;
     o(1000);
     p("foobar");
-    //@ assume StaticFrameConditionsKey.s != null && s == StaticFrameConditionsKey.s;
+    // assume StaticFrameConditionsKey.so != null && s == StaticFrameConditionsKey.so;
     q();
     r("", (byte)1);
   }
@@ -98,15 +96,23 @@ class FrameConditionsKey
     FrameConditionsKey ppc = new FrameConditionsKey();
     ppc.s = "foobar"; // comment
     ppc.m();
+    // ppc.o.equals(s.toString)
     ppc.i = -1; // comment
     ppc.n();
+    // ppc.s != null;
     ppc.o = new Object(); // comment
     ppc.o(Byte.MAX_VALUE + 1); // comment
+    // ppc.o != null
     ppc.p("foobar");
+    // FrameConditionsKey.so.equals("bar")
     StaticFrameConditionsKey.s = "piggie"; // comment
     ppc.s = StaticFrameConditionsKey.s; // comment
     ppc.q();
+    // StaticFrameConditionsKey.s.equals("foobar")
     ppc.r("", (byte)1);
+    // i == 2
+
+    ppc.s();
   }
 }
 
