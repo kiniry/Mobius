@@ -17,7 +17,8 @@ public class InputEntry {
 	String q = "";
 	if (name.indexOf(' ') != -1) q = "\"";
 	String t = typeOption();
-	if (t.length() != 0) t = "-"+t+" ";
+	if (auto) t = "";
+	else if (t.length() != 0) t = "-"+t+" ";
 	return t + q + name + q;
     }
     static public void clear(ArrayList a) {
@@ -44,29 +45,16 @@ public class InputEntry {
 	InputEntry ie = null;
 
 	if (InputEntry.File.verify(name) == null) 
-		return new InputEntry.File(name);
-	if (InputEntry.Dir.verify(name) == null) 
-		return new InputEntry.Dir(name);
-	if (InputEntry.Package.verify(name) == null) 
-		return new InputEntry.Package(name);
-	if (InputEntry.Class.verify(name) == null) 
-		return new InputEntry.Class(name);
-	if (InputEntry.List.verify(name) == null) 
-		return new InputEntry.List(name);
+		ie = new InputEntry.File(name);
+	else if (InputEntry.Dir.verify(name) == null) 
+		ie = new InputEntry.Dir(name);
+	else if (InputEntry.Package.verify(name) == null) 
+		ie = new InputEntry.Package(name);
+	else if (InputEntry.Class.verify(name) == null) 
+		ie = new InputEntry.Class(name);
+	else if (InputEntry.List.verify(name) == null) 
+		ie = new InputEntry.List(name);
 
-	if (ie == null) {
-	    String[] p = StringUtil.parseList(name,'.');
-	    if (javafe.tc.OutsideEnv.reader.accessable(p)) {
-	    	ie = new InputEntry.Package(name);
-	    }
-	    if (ie == null && p != null) {
-		String[] pp = new String[p.length-1];
-		System.arraycopy(p,0,pp,0,pp.length);
-		if (javafe.tc.OutsideEnv.reader.exists(pp,p[p.length-1])) {
-		    ie = new InputEntry.Class(name);
-		}
-	    }
-	}
 	if (ie == null) ie = new Unknown(name);
 	ie.auto = true;
 	return ie;

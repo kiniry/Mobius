@@ -1001,5 +1001,7 @@ Accelerator keys
 - Enable the Usage menu item, add content
 
 - Figure out how to reliably set the user.dir from the application
+
+- allow changing the Look and Feel
 */
 
