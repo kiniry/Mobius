@@ -416,7 +416,7 @@ JML features needing clarification
 
 ESC/Java2 extends the pioneering work on ESC/Java by a group
 [Flanagan-etal02] at the Systems Research Center at DEC, later Compaq,
-now HP [@url{www.research.compaq.com}].  ESC/Java parses JML-like
+now HP [@url{http://www.research.compaq.com/}].  ESC/Java parses JML-like
 annotations in a Java program and warns, in a modular way, about
 annotations that may not be justified by the Java source of the given
 classes and the specifications of other classes.  The program works
@@ -446,7 +446,7 @@ which the annotation is logically checked, and any differences between
 ESC/Java2 and JML.
 @itemize @bullet
 @item More detailed information on JML is available at the web site 
-@uref{www.jmlspecs.org}; the details of the JML definition are published in 
+@uref{http://www.jmlspecs.org/}; the details of the JML definition are published in 
 "Preliminary Design of JML" [LeavensBakerRuby02] and in 
 "The JML Reference Manual" [Leavens-etal03]
 both available from the JML website.
@@ -472,10 +472,10 @@ The website for the project through version 2.0a8 was hosted by the
 Security of Systems group at the Radboud University Nijmegen (what used
 to be known as Katholieke Universiteit Nijmegen or the University of
 Nijmegen) in Nijmegen, Netherlands.
-(@url{www.niii.kun.nl/sos/research/escjava}).  The project is now hosted
-by the KindSoftware Research Group in the Department of Computer Science
-at University College Dublin from version 2.0a8
-onward. (@url{secure.ucd.ie})
+(@url{http://www.niii.kun.nl/sos/research/escjava/}).  The project is
+now hosted by the KindSoftware Research Group in the Department of
+Computer Science at University College Dublin from version 2.0a8
+onward. (@url{http://secure.ucd.ie/})
 
 The work of producing ESC/Java2 stands on the very much more
 considerable effort of the ESC/Java team in conceiving of and
@@ -499,21 +499,21 @@ separately available and may have their own license restrictions.
 @cindex Simplify
 @item The original source for ESC/Java, Simplify and related tools, available 
 at
-@*@center @uref{www.research.compaq.com/downloads.html}
+@*@center @uref{http://www.research.compaq.com/downloads.html/}
 
 @cindex Mocha
 @item Part of the Mocha tool from UCBerkeley (optional), available at
-@*@center @uref{www-cad.eecs.berkeley.edu/~mocha/download/j-mocha}
+@*@center @uref{http://www-cad.eecs.berkeley.edu/~mocha/download/j-mocha/}
 
 @cindex Simplify
 @cindex CM3
 @item The CM3 compiler for Modula-3, which is needed to build the Simplify 
-tool, available from @uref{www.elegosoft.com} or
+tool, available from @uref{http://www.elegosoft.com/} or
 @uref{fink.sourceforge.net}.
 
 @cindex JUnit
 @item The testing framework JUnit version 3.8.1, available at 
-@uref{www.junit.org}.
+@uref{http://www.junit.org/}.
 
 @item Specifications of the Java system classes.  The most useful set of these 
 specifications are those available with the releases of JML.
@@ -522,7 +522,7 @@ specifications are those available with the releases of JML.
 @item ESC/Java2 does not depend on the JML tool set, but it is useful 
 to use the two in combination.  ESC/Java2 is obviously dependent on
 the grammar and semantics of JML.  JML is available at
-@uref{www.jmlspecs.org}.
+@uref{http://www.jmlspecs.org/}.
 @end itemize
 
 @c ---------Contacts ------------------
@@ -532,9 +532,9 @@ the grammar and semantics of JML.  JML is available at
 Further information about JML and ESC/Java2 can be obtained from these sources.
 
 @itemize @bullet
-@item The KUN ESC/Java2 website: @uref{www.niii.kun.nl/sos/research/escjava}
-@item The JML web site:  @uref{www.jmlspecs.org}
-@item The JML project on sourceforge: @uref{sourceforge.net/projects/jmlspecs}
+@item The KUN ESC/Java2 website: @uref{http://www.niii.kun.nl/sos/research/escjava/}
+@item The JML web site:  @uref{http://www.jmlspecs.org/}
+@item The JML project on sourceforge: @uref{http://sourceforge.net/projects/jmlspecs/}
 @item The JML interest mailing list on sourceforge: 
         @*@center @email{jmlspecs-interest@@lists.sourceforge.net}
 @item The JML development mailing list on sourceforge: 
@@ -546,9 +546,9 @@ Further information about JML and ESC/Java2 can be obtained from these sources.
 JML utilizes (the Java subset of) the multijava compiler.
 Information about multijava can be obtained from these sources.
 @itemize @bullet
-@item The multijava website: @uref{www.multijava.org}
+@item The multijava website: @uref{http://www.multijava.org/}
 @item The multijava project on sourceforge: 
-             @uref{sourceforge.net/projects/multijava}
+             @uref{http://sourceforge.net/projects/multijava/}
 @end itemize
 
 @c --------------------------------------------------------------------------
