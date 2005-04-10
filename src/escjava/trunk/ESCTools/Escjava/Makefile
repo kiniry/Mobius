@@ -62,19 +62,16 @@ export TESTSOURCEDIRECTORY=${ESCJAVA_ROOT}/test
 export ESCJAVA_BUILD_CLASSPATH = $(call canonicalize,${JAVAFE_CLASSFILES}:${ESCJAVA_CLASSFILES}:${MOCHA_LIB}:${ANT_LIB}:${JUNIT_LIB}:${ESCTOOLS_ROOT}/Utils)
 
 ###########################################################################
-.PHONY: all
+.PHONY: all build buildall test alltests
+
 all: clean build docs test
 
-.PHONY: build
 build: version compile
 
-.PHONY: buildall
 buildall: version compileall
 
-.PHONY: test
 test: test_escjava
 
-.PHONY: alltests
 alltests: test_escjava 
 	-$(MAKE) typecheckEscjava
 	-$(MAKE) self_test
@@ -87,12 +84,13 @@ alltests: test_escjava
 # mtex2man is a Modula-III tool, thus if one is building Simplify, one
 # should have it as well.  We'll just conditionalize this rule on the
 # existence of the binary. -Joe
-.PHONY: docs
+
+.PHONY: docs docs_escjava
+
 docs: docs_escjava
 
 ESCJAVA_CORE_DOC = ${ESCJAVA_SOURCE_DIR}/escjava/escjava.mtex
 
-.PHONY: docs_escjava
 docs_escjava:	${ESCJAVA_CORE_DOC}
 	if type -type mtex2man > /dev/null && type -type mtex2html > /dev/null; then \
 		cc -C -E ${ESCJAVA_CORE_DOC} | grep -v "^#" | mtex2man \
@@ -118,10 +116,11 @@ STAMPFILE = classes.stamp
 ## files ought to be recompiled if dependencies change, even if the
 ## file has not been modified.  If in doubt do a clean before a build
 ## - it doesn't take long.
-.PHONY: compile
+
+.PHONY: compile compileall version generate_files
+
 compile: ${CLASSDIRECTORY} generate_files mocha ${STAMPFILE}
 
-.PHONY: compileall
 compileall: generate_files ${MOCHA_LIB} ${CLASSDIRECTORY}
 	@${JAVAC} ${JAVAC_FLAGS} \
 		-classpath ${ESCJAVA_BUILD_CLASSPATH} \
@@ -133,7 +132,7 @@ compileall: generate_files ${MOCHA_LIB} ${CLASSDIRECTORY}
 
 VERSION_FILE = ${ESCJAVA_SOURCE_DIR}/escjava/Version.java
 VERSION_TEMP = ${VERSION_FILE}-temp
-.PHONY: version
+
 version:
 	@rm -f ${VERSION_TEMP}
 	@touch ${VERSION_TEMP}
@@ -149,7 +148,6 @@ version:
 ${CLASSDIRECTORY}:
 	mkdir -p $@
 
-.PHONY: generate_files
 generate_files: generate_escjava_ast_source generate_escjava_backpred
 
 ${ESCJAVA_SOURCE_DIR}/escjava/Main.java: ${ESCJAVA_SOURCE_DIR}/escjava/Version.java
@@ -171,7 +169,8 @@ MOCHA_DIR = ./mochalib
 MOCHA_SOURCES = ${MOCHA_DIR}/java/mocha/*/*/*.java
 MOCHA_CLASSES_DIR = ${MOCHA_DIR}/classes
 
-.PHONY: mocha
+.PHONY: mocha clean_mocha
+
 mocha: ${MOCHA_CLASSES_DIR} ${MOCHA_LIB}
 
 ${MOCHA_LIB}: ${MOCHA_SOURCES}
@@ -181,11 +180,9 @@ ${MOCHA_LIB}: ${MOCHA_SOURCES}
 ${MOCHA_CLASSES_DIR}:
 	mkdir $@
 
-.PHONY: clean_mocha
 clean_mocha:
 	rm -rf ${MOCHA_CLASSES_DIR}
 	rm -f ${MOCHA_LIB}
-
 
 ###########################################################################
 # source file generation for escjava.ast
@@ -223,7 +220,8 @@ TypeVec = \
 	${AST_DIR}/DefPredVec.java \
 	${AST_DIR}/DecreasesInfoVec.java
 
-.PHONY: generate_escjava_ast_source
+.PHONY: generate_escjava_ast_source clean_escjava_ast
+
 generate_escjava_ast_source: ${AST_DIR}/GeneratedTags.java ${TypeVec} ${JavafeTypeVec}
 
 # FIXME - ought to make these depend on the component type.
@@ -254,12 +252,10 @@ ${AST_DIR}/GeneratedTags.java: ${ASTGEN} ${AST_DIR}/hierarchy.j
 ## These three classes are the three root abstract classes of 
 ## escjava.ast.  Why do we need to strip out their specs? -Joe
 
-.PHONY: clean_escjava_ast
 clean_escjava_ast: ${ASTFILELIST}
 	(cd ${AST_DIR}; rm -f `${ASTFILELIST} < ${AST_DIR}/hierarchy.j`)
 	rm -f *~ ${TypeVec} ${JavafeTypeVec} ${AST_DIR}/ASTGEN* ${AST_DIR}/zASTGEN* *.tmp
 	rm -f ${AST_DIR}/*.class ${CLASSDIRECTORY}/escjava/ast/*.class
-
 
 ###########################################################################
 ## Generating the source files in backpred.
@@ -267,7 +263,8 @@ clean_escjava_ast: ${ASTFILELIST}
 BACKPRED_DIR = ${ESCJAVA_SOURCE_DIR}/escjava/backpred
 DEFAULT_UNIV_BACKPRED = ${BACKPRED_DIR}/DefaultUnivBackPred.java
 
-.PHONY: generate_escjava_backpred
+.PHONY: generate_escjava_backpred clean_escjava_backpred
+
 generate_escjava_backpred: ${DEFAULT_UNIV_BACKPRED}
 
 ${DEFAULT_UNIV_BACKPRED}: ${BACKPRED_DIR}/UnivBackPred.ax
@@ -282,7 +279,6 @@ ${DEFAULT_UNIV_BACKPRED}: ${BACKPRED_DIR}/UnivBackPred.ax
 	@echo '    "";' >> ${DEFAULT_UNIV_BACKPRED}
 	@echo '}' >> ${DEFAULT_UNIV_BACKPRED}
 
-.PHONY: clean_escjava_backpred
 clean_escjava_backpred:
 	rm -f ${DEFAULT_UNIV_BACKPRED}
 
@@ -291,7 +287,7 @@ clean_escjava_backpred:
 ## FIXME - Check all these
 
 .PHONY: clean clean_escjava clean_tests clean_classfiles \
-	clean_docs clean_misc
+	clean_docs clean_misc clean_archives
 
 clean: clean_classfiles clean_docs clean_escjava clean_tests \
 	clean_misc clean_archives \
@@ -321,8 +317,9 @@ clean_archives:
 
 ###########################################################################
 # Deliverable generation targets.
-
 ## FIXME - check this out - move it one level up???
+
+.PHONY: archives
 
 archives: archive_esctools
 	cd ${ESCTOOLS_ROOT}; \
@@ -333,11 +330,13 @@ archives: archive_esctools
 
 TOP_ESCJAVA_TEST_DIR = ${TESTSOURCEDIRECTORY}/escjava/test
 
-.PHONY: test_escjava
+.PHONY: test_escjava tests build_javafe_test junittests jdktests \
+	checkspecs javaspecs test_escjava_parser typecheckEscjava \
+	test_matrix self_test self_testp test-release
+
 test_escjava: build build_javafe_test 
 	$(MAKE) tests
 
-.PHONY: tests
 tests:
 	$(MAKE) junittests
 	$(MAKE) jdktests
@@ -346,35 +345,29 @@ tests:
 	$(MAKE) -C test/nijmegen/JCF runtests
 	##$(MAKE) test_matrix   ## FIXME
 
-.PHONY: build_javafe_test
 build_javafe_test:
 	$(MAKE) -C ${JAVAFE_ROOT} javafe_test
 
-.PHONY: junittests
 junittests:
 	$(MAKE) -C test/junittests runtests
 
-.PHONY: jdktests
 jdktests:
 	$(MAKE) -C test/jdktests runtests
 
-.PHONY: checkspecs
 checkspecs:
 	@echo Type-checking the Esc/Java specs
 #ifdef JML_ROOT
 	jml -Q ${ESCJAVA2_SPECS}
 #endif
 	escjava -Q */*/*.* */*/*/*.*
-.PHONY: javaspecs
+
 javaspecs:
 	$(MAKE) -C test/javaspecs runtests
 
-.PHONY: test_escjava_parser
 test_escjava_parser:
 	$(MAKE) -C ${JAVAFE_SOURCE_DIR}/.. javafe_test
 	$(MAKE) -C ${TOP_ESCJAVA_TEST_DIR} test
 
-.PHONY: typecheckEscjava
 typecheckEscjava:
 	@echo ===== Typechecking the Escjava package =====
 	cd ${ESCTOOLS_ROOT}/Escjava/java && \
@@ -389,21 +382,18 @@ typecheckEscjava:
 	    -classpath "${call canonicalize,.:../../Javafe/java:../../Utils}" \
 	    -typecheck -noprint  escjava/*.java 
 
-.PHONY: test_matrix
 test_matrix:
 	${ESCJ} -source 1.4 -sourcepath ${TESTSOURCEDIRECTORY} \
 		-classpath "${call canonicalize,${TESTSOURCEDIRECTORY}:${ESCTOOLS_ROOT}/Javafe/java:${ESCTOOLS_ROOT}/Escjava/java:${ESCTOOLS_ROOT}/Utils}" \
 		-specs "${call canonicalize,${ESCTOOLS_ROOT}/specs-kiniry:${JML2_SPECS_JAR}" \
 		${TESTSOURCEDIRECTORY}/matrix/*.java
 
-.PHONY: self_test
 self_test: build
 	${ESCJ} -classpath "${call canonicalize,${ESCTOOLS_ROOT}/Javafe/java:${ESCTOOLS_ROOT}/Escjava/java:${ESCTOOLS_ROOT}/Utils:${JUNIT_LIB}}" \
 		-vclimit 1000000 \
 		-nocheck -source 1.4 -quiet -nosemicolonwarnings \
 		${foreach file,${OTHERSOURCEFILES} ${JAVASOURCEFILES},$(call canonicalize,$(file))}
 
-.PHONY: self_testp
 self_testp: build
 	echo ${foreach file,${OTHERSOURCEFILES} ${JAVASOURCEFILES},$(call canonicalize,$(file))} | \
 	xargs -t -n 50 \
@@ -413,7 +403,7 @@ self_testp: build
 ## FIXME - is this used? should it be?
 ## This tests a binary release that is present in the RELTEMP directory,
 ## with RELCLASSPATH pointing to the relevant esctools2.jar file.
-.PHONY: test-release
+
 test-release:
 	@echo TESTING RELEASE - Escjava
 	$(MAKE) JAVAFE_CLASSPATH=$(call canonicalize,${RELCLASSPATH}:${RELTEMP}) \
@@ -428,8 +418,8 @@ test-release:
 
 ###########################################################################
 
-#		-sds -nocheck \
-.PHONY: string
+.PHONY: string check-core-jdk-specs
+
 string:
 	${ESCJ} \
 		-classpath "${call canonicalize,${ESCTOOLS_ROOT}/Javafe/java:${ESCTOOLS_ROOT}/Escjava/java:${ESCTOOLS_ROOT}/Utils}" \
@@ -439,5 +429,4 @@ string:
 		../specs-kiniry/java/lang/String.java \
 		-routine String
 
-.PHONY: check-core-jdk-specs
 check-core-jdk-specs: string

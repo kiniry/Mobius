@@ -1,8 +1,9 @@
-
 export TOP  = ../../../..
 include ${TOP}/Makefile.defs
+
+.PHONY: runtests check
 
 runtests:  check
 
 check:
-	escjava -quiet -classpath . *.java
+	$(ESCJ) -quiet -classpath . *.java
