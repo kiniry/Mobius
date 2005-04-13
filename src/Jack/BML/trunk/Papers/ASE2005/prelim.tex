@@ -1,0 +1,29 @@
+\section{Preliminaries}
+\subsection{Java Modeling Language (JML)} 
+JML~\cite{JMLRefMan} is a behavioral interface specification language tailored to Java applications. It uses a predicate logic in order to describe class invariants, pre and postconditions, loop invariants, etc. Its syntax is close to Java's - most part of JML expressions are subset of Java expressions except for some keywords. For example \jmlKey{$\backslash$result} stands for the value that method returns if it is not void or \jmlKey{$\backslash$old(expression)} designates the value of \texttt{expression} in the prestate of a method and is usually used in the postcondition of a method. Statements in JML contain also special JML keywords - like \texttt{requires} for introducing method precondition, \texttt{ensures} for stating method postcondition, \jmlKey{loop\_invariant} for loop invariants, etc. JML specifications are written in comments so they are not visible for Java compilers. Instead they are used by tools tailored basically to either static checking of Java programs such as JACK, the Loop tool, ESC/Java ~\cite{escjava} or dynamic checking as the assertion checker jmlrac ~\cite{jmlrac}. An overview of the JML tools can be found in~\cite{BurdyCCEKLLP03}.
+
+Figure ~\ref{halfSrc} gives an example of a java method annotated with JML specification.     
+It describes the class \texttt{Half}.
+The specification says that if the method starts execution in a state that satisfies the precondition then on termination it will return the half of the argument as specified in the postcondition. The loop invariant is specified by using the key word \texttt{loop\_invariant} and a condition for loop termination is also specified by declaring after the keyword \jmlKey{decreases} the expression that decreases after every loop execution. 
+\begin{figure}
+\begin{verbatim}
+public class Half {	
+   //@ requires n >= 0;
+   //@ ensures \result == \old(n) / 2; 	 
+   public int half(int n) {
+      int a = 0;
+      int c = n;
+      //@ loop_modifies n,a;
+      //@ loop_invariant c==n+2*a;
+      //@ decreases n;
+      while (n > 1) {
+         a = a + 1;
+         n = n - 2;
+      }
+      return a;
+   }
+}
+\end{verbatim}
+\caption{class \texttt{Half} with JML annotations} 
+\label{halfSrc}
+\end{figure}

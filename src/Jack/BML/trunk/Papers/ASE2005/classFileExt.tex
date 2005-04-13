@@ -1,0 +1,89 @@
+% CHANGED - the example o compilation of loop specification
+
+\section{Extension of the Class File With JML Annotation}\label{extClassJML}
+This section explains how high level program specifications are compiled into bytecode level specifications and how they are inserted into the bytecode. 
+When using JML, preconditions and postconditions are written by the programmer at a source level, i.e. the specification is written in special comments in the source. 
+After compilation, the executable code is detached from its source code; but the verification process cannot be performed only with the compilation of the code - a specification of the bytecode is needed. 
+We propose a specification compiler and implementation of an important subset of the JML language into a low level specification language. The JML compiler does not depend on any specific Java compiler. Once the compilation of JML is done it is added into the class file as new method or class attributes. 
+
+The compiler supports the following JML statements :
+\begin{itemize} 
+	\item method preconditions and postconditions, 
+	\item class invariants
+	\item decreases expressions (expressions that guarantee termination for recursive methods and loops)
+	\item history constraints
+	\item loop invariants
+	\item assertions (predicates that hold in particular place in the code) 
+\end{itemize}
+
+JML is a rich specification language - it contains 
+
+Among the special JML keywords the compiler supports:
+
+\begin{itemize} 
+	\item \jmlKey{\backslash result} 
+	\item \jmlKey{\backslash old }
+	\item \jmlKey{\backslash old }
+	\item loop invariants
+	\item assertions (predicates that hold in particular place in the code) 
+\end{itemi
+ JML is a rich specification language supporting a lot of  This JML fragment is expressive enough for most purposes.
+
+\subsection{}
+
+\subsection{Compilation of JML Expressions}
+% added for CAV - before there was the paragraph The Java Class File Format
+First we give a brief presentation of the class file format. As defined in \cite{VMSpec}, a class file contains a definition of a single class class or interface.  It contains information about the class name, interfaces implemented by the class, super class, methods and fields declared in the class and references. There is a table data structure called \textbf{constant\_pool} that is used to construct the runtime constant pool upon class or interface creation. The runtime constant pool serves for loading, linking and resolution of references used in the class. The java virtual machine  specification (JVMS) allows to add to the class file a user specific information(~\cite{VMSpec}, ch.4.7.1). This is done by defining user specific attributes  (their structure is predefined by JVMS ).
+
+Thus what we call a ``JML compiler'' will compile the jml source specification into a user defined attributes. The compilation process is as follows : 1. compile the java source file , 2. from the source file and the resulting class file compile the JML specification , 3. add the JML compilation in the class file. In the phase 2. Java and JML source identifiers should be linked with the names on bytecode level, namely with the corresponding indexes either from the constant pool or the array of local variables. 
+
+
+
+
+
+
+
+
+\subsection{Compilation of JML Statements}
+ JML statements are compiled in new class file attributes. Method specifications, class invariants, loop invariants are defined as new attributes in the class file with respect to the Java Sun Virtual Machine specification. 
+ For example, the specification information for all the loops in a method specification is compiled to a unique attribute: the \textbf{Loop\_specification\_attribute}. This attribute contains an array of loop specifications - for every loop there should be a corresponding element in the array. More precisely it contains information at which instruction the loop starts, the invariant, the decreasing expression in case of total correctness, the expressions that can be modified. 
+The syntax of the loop attribute is given Figure~\ref{loopAttribute}. For the full specification of the compiler you can see~\cite{JML2BCSpec}.
+\begin{figure}
+%\begin{frameit}
+\textbf{     
+\begin{tabbing}
+JML\=Loop\_specification\_attribute \{\\
+%\> u2 attribute\_name\_index;\\
+%\> u4 attribute\_length;\\
+%\> u2 loop\_count;\\
+\> ...\\
+\> \{\hspace{3 mm}\= u2 index;\\
+\> \> u2 modifies\_count;\\
+\> \> formula modifies[modifies\_count];\\
+\> \> formula invariant;\\
+\> \> expression decreases;\\
+\> \} loop[loop\_count];\\
+\}
+\end{tabbing}
+}
+\begin{itemize}
+%\item \textbf{	attribute\_name\_index}: The value of the attribute\_name\_index item must be a valid index into the second \texttt{ constant\_pool table}. The \texttt{constant\_pool} entry at that index must be a\texttt{ CONSTANT\_Utf8\_info} structure representing the string "Loop\_Specification''
+%\textbf{   attribute\_length }\\
+%    The length of the attribute in bytes\\
+
+%\item \textbf{   loop\_count}: The length of the array of loop specifications
+
+\item \textbf{   index}: The index in the  \texttt{LineNumberTable } where the beginning of the corresponding loop is described
+
+\item \textbf{   modifies[]}: The array of modified expressions.
+
+\item \textbf{  invariant }: The predicate that is the loop invariant. It is a compilation of the JML formula in the low level specification language
+
+\item \textbf{  decreases }: The expression whose decreasing after every loop execution will guarantee loop termination 
+\end{itemize}
+\caption{Structure of the Loop Attribute}
+\label{loopAttribute}
+%\end{frameit}
+\end{figure}
+
+%A ``JML bytecode'' viewer is under development at project Everest, INRIA Sophia-Antipolis. The latter is a tool that visualizes all aspects of compiled Java class files and the contained bytecode.

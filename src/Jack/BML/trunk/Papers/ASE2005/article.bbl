@@ -1,0 +1,93 @@
+\begin{thebibliography}{10}
+
+\bibitem{ARUCom1986}
+Aho AV, Sethi R, and Ullman JD.
+\newblock {\em Compilers-Principles, Techniques, and Tools}.
+\newblock Addison-Wesley: Reading, 1986.
+
+\bibitem{ProBor}
+Richard Bornat.
+\newblock Proving pointer programs in hoare logic.
+\newblock In {\em Mathematics of Program Construction (MPC 2000)}.
+  Springer-Verlag, 2000.
+
+\bibitem{BurdyCCEKLLP03}
+L.~Burdy, Y.~Cheon, D.~Cok, M.~Ernst, J.~Kiniry, G.T. Leavens, K.R.M. Leino,
+  and E.~Poll.
+\newblock An overview of {JML} tools and applications.
+\newblock In T.~Arts and W.~Fokkink, editors, {\em Formal Methods for
+  Industrial Critical Systems (FMICS 2003)}, volume~80 of {\em ENTCS}.
+  Elsevier, 2003.
+
+\bibitem{BRL-JACK}
+L.~Burdy, A.~Requet, and J.-L. Lanet.
+\newblock Java applet correctness: A developer-oriented approach.
+\newblock In K.~Araki, S.~Gnesi, and D.~Mandrioli, editors, {\em FME 2003:
+  Formal Methods: International Symposium of Formal Methods Europe}, volume
+  2805 of {\em LNCS}, pages 422--439. Springer, 2003.
+
+\bibitem{JML2BCSpec}
+Lilian Burdy and Mariela Pavlova.
+\newblock Jml2bc specification.
+\newblock Technical report, INRIA, Sophia-Antipolis, 2004.
+\newblock draft.
+
+\bibitem{WPBC}
+Lilian Burdy and Mariela Pavlova.
+\newblock Weakest precondition calculus for java bytecode.
+\newblock Technical report, INRIA, Sophia-Antipolis, 2004.
+\newblock draft.
+
+\bibitem{ProColLeeNec}
+Christopher Colby, Peter Lee, and George~C. Necula.
+\newblock A proof carrying code architecture for java.
+\newblock In {\em CAV00}, 2000.
+
+\bibitem{DisDij}
+Edsger~W. Dijkstra.
+\newblock {\em A Discipline of Programming}.
+\newblock Prentice-Hall, 1976.
+
+\bibitem{WPCDS}
+Edsger~W. Dijkstra and Carel~S. Scholten.
+\newblock {\em Predicate Calculus and Program Semantics}.
+\newblock Springer, 1990.
+
+\bibitem{JMLRefMan}
+G.T.Leavens, Erik Poll, Curtis Clifton, Yoonsik Cheon, Clyde Ruby, David Cok,
+  and Joseph Kiniry.
+\newblock {\em JML Reference Manual}.
+
+\bibitem{VMSpec}
+Tim Lindholm and Frank Yellin.
+\newblock Java virtual machine specification.
+\newblock Technical report, Java Software, Sun Microsystems, Inc., 2004.
+
+\bibitem{Necula97}
+G.C. Necula.
+\newblock {Proof-Carrying Code}.
+\newblock In {\em {Proceedings of POPL'97}}, pages 106--119. ACM Press, 1997.
+
+\bibitem{ComNec}
+George Necula.
+\newblock {\em Compiling With Proofs}.
+\newblock PhD thesis, Carnegie Mellon University, 1998.
+
+\bibitem{DesNecLee98}
+George~C. Necula and Peter Lee.
+\newblock The design and implementation of a certifying compiler.
+\newblock In {\em PLDI98}, 1998.
+
+\bibitem{PBBHL}
+M.~Pavlova, G.~Barthe, L.~Burdy, M.~Huisman, and J.-L. Lanet.
+\newblock Enforcing high-level security properties for applets.
+\newblock In {\em CARDIS 2004}. Springer-Verlag, 2004.
+
+\bibitem{Quigley}
+C.L. Quigley.
+\newblock A programming logic for java bytecode programs.
+\newblock In {\em Proceedings of the 16th International Conference on Theorem
+  Proving in Higher Order Logics}, volume 2758 of {\em Lecture Notes in
+  Computer Science}. Springer-Verlag, 2003.
+
+\end{thebibliography}

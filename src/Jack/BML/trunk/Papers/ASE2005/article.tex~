@@ -1,0 +1,76 @@
+\documentclass[pagenumbers]{ieee} 
+
+
+\usepackage{amssymb}
+\usepackage{epsfig}
+
+
+%\pagestyle{plain}
+
+
+\newcommand{\blockm}[1]{ $\tt{b^{#1}}$ }
+\newcommand{\pathm}[2]{\blockm{#1} $\ll^{*}$ \blockm{#2} }
+
+
+
+
+
+\begin{document}
+\title{ Trouver un titre }
+\author{Lilian Burdy  Mariela Pavlova\\
+INRIA Sophia-Antipolis,\\ 2004 route des Lucioles BP 93
+06902 Sophia-Antipolis,\\  France}
+%\thanks[lilemail]{Lilian.Burdy@sophia.inria.fr}
+%\thanks[maremail]{Mariela.Pavlova@sophia.inria.fr}
+%\address{INRIA Sophia Antipolis, France, \\ fax : ++ 33 4 92 38 50 29}
+
+%\href{mailto:Lilian.Burdy@inria.sophia.fr}
+%\href{mailto:Mariela.Pavlova@sophia.inria.fr}
+
+\maketitle
+\thispagestyle{empty}
+\begin{abstract}
+\input abstract.tex
+\end{abstract}
+%\begin{keyword}
+ % java bytecode verification, bytecode annotations, Java Modeling Language, Proof Carrying Code, Weakest Precondition Calculus
+%\end{keyword}
+
+
+\input intro.tex
+\input architecture.tex
+\input relWork.tex
+\input classFileExt.tex
+\input verifCond.tex
+\input conclusion.tex
+
+\bibliographystyle{plain}
+\bibliography{specification,bibliography}
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

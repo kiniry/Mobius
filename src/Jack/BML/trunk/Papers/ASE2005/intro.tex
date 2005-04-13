@@ -1,0 +1,22 @@
+
+\section{Introduction}\label{intro}
+
+Embedded systems face the issue of how to verify/guarantee safety of using unknown and/or untrusted code. One can distinguish two main approaches to solve the problem of downloading untrusted code in a system with high security or safety requirements: the first one consisting in signing the code in a trusted environment (using a certificate issued by a trusted entity), the other one consisting in verifying the code against a security policy when it is loaded on the client environment. This paper can be considered as a contribution to the second solution. Moreover what we mean by ``verifying the code'' is using formal techniques to ensure that a code respects some properties: this involves verification condition generation and proof checking.
+ 
+The contributions of the paper are: a framework for verifying untrusted code, a definition of low level specification language, a definition and an implementation of a compiler from Java Modeling Language (JML)\cite{JMLRefMan} specification into this language which is independent from any specific Java compiler, a class file extension with a specification, a definition and an implementation of a weakest precondition calculus for Java bytecode, used for generating verification conditions. 
+
+There are several basic features involved in a scenario where an unknown code arrives and should be executed, and thus a trust in it must be established. First there are the 
+two counterparts - the code producer and the code client. The code producer defines a security policy, i.e. the necessary criteria that the received code must respect in order to be considered safe to execute. Two questions arise - how the security policy is expressed and how the unknown is checked if it respects the client's requirements. 
+
+The proposed architecture here called Annotation Carrying Code (ACC) replies to those questions in the following way. Code receiver defines his security requirements in terms of specification over the bytecode of his Application Programming Interface (API) code. In order to support this architecture we have defined a bytecode specification language and a compiler from JML to the low level specification language. The JML compiler is independent from any specific Java compiler. An extension of the class file format is also defined that contains the compiled annotation.
+
+When the code reaches the receiver side, the receiver will verify if the unknown code respects his security requirements. To do this he will generate the verification conditions upon the received code and its annotation, his API and its annotation. The proof obligations are generated using a weakest precondition calculus (WPC) that we define for java bytecode. The WPC defined deals with normal and exceptional termination. Once the verification conditions are generated, they are proved by the Java Correctness Kit(JACK)(see~\cite{BRL-JACK}). 
+ 
+Like JML the bytecode specification language is suitable for verifying a large set of properties (including functional and security ones) that can be encoded in Hoare logics. For example that no accessing of arrays out of its bounds, no accessing fields of not initialised references, or no integer overflow or underflow can be verified using the framework. On the other hand, the specification language does not deal with memory consumption and time constraints.
+
+ACC neither trusts the attached annotation nor the unknown code. Both inconsistent specification, or malicious code will result in invalid proof obligations, thus establishing in both cases that code is incorrect. 
+
+The framework proposed can be extended to a Proof Carrying Code architecture(see \cite{Necula97}). To build up a PCC architecture we need to find an efficient representation and validation procedure for proofs.
+
+The coming sections are structured as follows: section~\ref{relWork} reviews research works close to the present one, section~\ref{architecture_s} gives the architecture of the annotation carrying code, section~\ref{extClassJML} is an overview with an example of the JML compilation into ``JML bytecode'', section~\ref{verifCond} focuses on the algorithm for generating proof obligations. Finally section~\ref{conclusion} concludes with comments and future works.
+ 
