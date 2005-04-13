@@ -1010,7 +1010,7 @@ to represent the {\green state} of the protocol.
 \vspace*{-4ex}
 
 \begin{alltt} \code{\scriptsize{class SimpleProtocol \{
- {\blue //@ boolean ghost started;}
+ {\blue //@ ghost boolean started;}
 
  {\green //@ requires  !started;}
  {\green //@ assignable started;}
@@ -1063,7 +1063,7 @@ There may be correspondence between the {\blue ghost field} and some
 \begin{alltt}
 \code{\scriptsize{class SimpleProtocol \{
  {\green private ProtocolStack st;}
- {\blue //@ boolean ghost started;}
+ {\blue //@ ghost boolean started;}
   //@ invariant{\blue started} <==>{\green (st !=null)};
 
   //@ requires  !started;
@@ -1085,7 +1085,7 @@ There may be correspondence between the {\blue ghost field} and some
 We could now get rid of the ghost field, and write
 
 \begin{alltt} \code{\scriptsize{class SimpleProtocol \{
- private{\green spec\_public} ProtocolStack st;
+ private /*@{\green spec\_public} @*/ ProtocolStack st;
 
   //@ requires  {\green st==null};
   //@ assignable st;
@@ -1111,8 +1111,8 @@ Solution: use a {\blue model} field
 \begin{alltt} \code{\scriptsize class SimpleProtocol \{
   private ProtocolStack st;  
 
- {\blue //@ boolean model started;} 
- {\blue //@ represents started <-- (st!=null);}
+ {\blue //@ model boolean started;} 
+ {\blue //@ represents started = (st!=null);}
 
   //@ requires !started;
   //@ assigable started;
@@ -1135,8 +1135,8 @@ A model field also provided an associated {\blue datagroup}
 \begin{alltt} \code{\scriptsize class SimpleProtocol \{
   private ProtocolStack st;  {\red //@ in started;}
 
- {\blue //@ boolean model started;} 
- {\blue //@ represents started <-- (st!=null);}
+ {\blue //@ model boolean started;} 
+ {\blue //@ represents started = (st!=null);}
 
   //@ requires !started;
   //@ assigable started;
@@ -1292,7 +1292,7 @@ This is known as the {\red call-back} problem.
 
 Solution to the call-back problem:
 \begin{quote}
-A method invariant should at all so-called {\blue visible states},
+A method invariant should hold in all so-called {\blue visible states},
 which are all beginning and end states of method invocations
 \end{quote}
 
@@ -1301,7 +1301,7 @@ So there's more to invariants than just adding them to pre- and postconditons.
 
 \medskip
 
-NB \textit{all} invariants of \textit{all} objects should hold at 
+NB \textit{all} invariants of \textit{all} objects should hold in
 visible states;
 this clearly imposes impossible proof obligations.
 

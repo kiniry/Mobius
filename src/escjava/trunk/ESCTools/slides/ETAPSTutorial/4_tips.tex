@@ -174,7 +174,7 @@ the invariant for \code{Child} is \code{invChild \&\& invParent}
 
   class Child extends Parent \{
      //@{\green also}
-     //@   requires i <= 0
+     //@   requires i <= 0;
      //@   ensures  \result <= i;
      int m(int i)\{ ... \}
    \}}}
@@ -396,7 +396,7 @@ Alias.java:12: Warning: Possible violation of object invariant (Invariant)
   }
   ^
 Associated declaration is "Alias.java", line 5, col 6:
-  /*@ invariant (\forall int i; 0<=i && i < a.length; 
+  /*@ invariant noneg ==> (\forall int i; 0<=i && i < a.length; ...
 \end{verbatim}
 }
 
@@ -442,8 +442,8 @@ public class Alias {
   /*@ non_null */ int[] a = new int[10];
   boolean noneg = true;
 
-  /*@ invariant (\forall int i; 0<=i && i < a.length; 
-                       noneg ==> (a[i]>=0)); */
+  /*@ invariant noneg ==> 
+                 (\forall int i; 0<=i && i < a.length;  a[i]>=0); */
   //@ invariant a.owner == this;
 
   //@ requires 0<=i && i < a.length;
