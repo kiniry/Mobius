@@ -345,9 +345,9 @@ too weak.
   ...
   public void m() \{ ... 
                     b = new byte[3];
-                    //@ assert b != null; // ok!
+                    //@ assert b[0] == 0; // ok!
                     o.n(...);
-                    //@ assert b != null; // ok?
+                    //@ assert b[0] == 0; // ok?
                     ... 
   \}
 
@@ -366,9 +366,9 @@ What does ESC/Java need to know about \texttt{o.n} to check the second assert ?
   ...
   public void m() \{ ... 
                     b = new byte[3];
-                    //@ assert b != null; // ok!
+                    //@ assert b[0] == 0; // ok!
                     o.n(b);
-                    //@ assert b != null; // ok?
+                    //@ assert b[0] == 0; // ok?
                     ... 
   \}
 
@@ -376,7 +376,7 @@ What does ESC/Java need to know about \texttt{o.n} to check the second assert ?
 \end{alltt} %}
 
 A detailed spec for \texttt{o.n} might give a postcondition saying
-that \texttt{b} is not null.
+that \texttt{b[0]} is still 0.
 
 \end{slide}
 
@@ -389,9 +389,9 @@ that \texttt{b} is not null.
   ...
   public void m() \{ ... 
                     b = new byte[3];
-                    //@ assert b != null; // ok!
+                    //@ assert b[0] == 0; // ok!
                     o.n();
-                    //@ assert b != null; // ok?
+                    //@ assert b[0] == 0; // ok?
                     ... 
   \}
 
@@ -400,7 +400,7 @@ that \texttt{b} is not null.
 
 If the postcondition of \texttt{o.n} doesn't tell us \texttt{b} won't be not null
 -- and can't be expected to -- we need the \texttt{assignable} clause to
-tell us that \texttt{o.n} won't affect \texttt{b}.
+tell us that \texttt{o.n} won't affect \texttt{b[0]}.
 
 \medskip
 
