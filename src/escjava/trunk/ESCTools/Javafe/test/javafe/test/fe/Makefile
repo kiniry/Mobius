@@ -29,10 +29,9 @@ export TOOLCMD = ${JAVA} -mx40m -classpath ${CAN_CLASSDIRECTORY} javafe.test.Pri
 export TOOLARGS = -noprint -typecheck -quiet -testMode
 export TOOL = ${TOOLCMD} ${TOOLARGS}
 
-runtest: separate_tests diffs
-#runtest: diffs
+runtest: separate_tests 
 
-all: outputs javac diffs compare summary
+all: separate_tests
 
 ifdef ALLTESTS
 FILELIST = `ls | grep test | grep -v -f skip`
@@ -56,21 +55,6 @@ endif
 		${MAKE} --no-print-directory do$$t ; \
 	done
 	@echo " "
-
-outputs:
-	./make_outputs
-
-javac:
-	./make_javac
-
-diffs: outputs
-	-./make_diffs
-
-compare: outputs javac
-	./make_comparsions
-
-summary: test*
-	./make_summary
 
 ifdef COMSPEC
 export SUFFIX=.windows
@@ -103,10 +87,10 @@ testclasses: ${CLASSDIRECTORY}/javafe/test/Print.class
 ${CLASSDIRECTORY}/javafe/test/Print.class:
 	${MAKE} -C ${JAVAFE_ROOT} javafe_test
 
-## This target simply executes a given test, e.g. 'make extest1' runs test1
+## This target simply executes a given test, e.g. 'make test1-run' runs test1
 ## Must have variables JAVA and JAVAFE_ROOT set
 
-%-run:
+%-run: testclasses
 	(  cd $*; \
 	   export JAVAFE=$(call canonicalize,${ESCTOOLS_ROOT}/Javafe); \
 	   export CLASSPATH=$(call canonicalize,$*) ;\
@@ -117,6 +101,7 @@ clean:
 	rm -rf *.class test*/*.class
 	rm -rf test*/out
 	rm -rf test*/outc
-	rm -rf log comparsions summary
+	rm -rf log 
 	rm -rf _tmp_classes
 	find . -name \*~ -exec rm {} \;
+	rm -f ${CLASSDIRECTORY}/javafe/test/Print.class:
