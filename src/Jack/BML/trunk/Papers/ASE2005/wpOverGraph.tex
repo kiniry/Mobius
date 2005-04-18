@@ -1,0 +1,41 @@
+
+
+\subsection{Bytecode Weakest Precondition}\label{wpGraph}
+We can now define a weakest precondition on an acyclic execution graph. This is done in three steps: WPC on an execution path, WPC on a block of an execution path, WPC on a bytecode instruction of a block.
+\paragraph{WPC for an Execution Path: }
+Under the assumption that a bytecode respects the conditions stated in definition~\ref{wf}, we construct the abstract execution graph $\Gamma^1$ as stated in~\ref{graph}. A backwards tracing is done for every execution path in $\Gamma^1$ . The algorithm is:
+\begin{enumerate}
+\item Calculate for the leaves of the execution tree their weakest preconditions
+    \begin{itemize}
+    \item for all the leaves of the execution tree that terminate with a \texttt{return} instruction it will calculate its weakest precondition upon the postcondition declared in the specification attribute of the method where the block appears
+    \item for all the leaves of the execution tree that terminate with an \texttt{athrow} instruction the exception type will be approximated by an overriding function during the calculus. Thus its weakest precondition will be calculated either upon the weakest precondition of the exception handler of the approximated type if the exception is caught or upon the exceptional postcondition for the approximated exception type that is thrown.
+    \item for every block b that terminates with an instruction that is the end of some loop in the bytecode  it will calculate its weakest precondition upon the loop invariant specified.
+    \end{itemize}
+
+\item the calculated weakest precondition of a block b is the postcondition  for any block b' such that b' $\ll^1$ b. Calculate upon it the wp for any  block b'
+\item Return the verification condition generated if the current block (for which it is generated) is the block starting at the entry point instruction -it is a wp of an execution path else 2.
+\end{enumerate}
+
+For example for the blocks at Figure~\ref{blockBC} the first step of the algorithm will calculate the verification condition for block starting with $ \tt{instr_{18}}$ upon the postcondition  $\ulcorner \backslash$\texttt{result} == $\backslash$ old(n)div 2 $\urcorner$ and then it will calculate the verification conditions for block ending with $\tt{instr_{15}}$ , etc. iterating until the block that starts with the entry point instruction is found.
+It will also do the same for the leaf block that ends with $\tt{instr_{10}}$ (i.e. the last instruction of the loop in the bytecode) upon the loop invariant specified $\ulcorner$c == n + 2*a$\urcorner$.
+
+\paragraph{Weakest Precondition for a block: }\label{block}
+The rule for generating weakest precondition of a block \texttt{b}= \texttt{b$^{'}$; instr} is
+\begin{center}
+\texttt{wp}($\tt{b^{'}; instr}, \psi$) = \texttt{wp}($\tt{b^{'}}$,\texttt{wp}(\texttt{instr}, $\psi$))
+\end{center}
+
+%\begin{center} \texttt{wp(instruction\_list;instruction, $\psi$)} = \texttt{wp(instruction\_list, wp(instruction, $\psi$))} \end{center}
+For example for the sequence of instructions of the block starting with $\tt{instr_{18}}$ from Figure~\ref{blockBC} we calculate
+\begin{center}
+\texttt{wp( iload\_2; ireturn,  $\ulcorner \backslash$\texttt{result} == $\backslash$ old(n)div 2 $\urcorner$ )}
+\\
+=
+\\
+\texttt{wp(iload\_2, wp( ireturn, $\ulcorner \backslash$\texttt{result} == $\backslash$ old(n)div 2 $\urcorner$ ))} \end{center}
+
+
+Thus the weakest precondition for the block starting at $\tt{instr_{18}}$ at figure~\ref{blockBC} is
+
+\texttt{local(2) $\ulcorner$==$\urcorner$ $\ulcorner$ $\backslash$ old(n)div 2 $\urcorner$}
+
