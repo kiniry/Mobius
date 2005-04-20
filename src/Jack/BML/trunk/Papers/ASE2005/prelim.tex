@@ -13,7 +13,7 @@ JML is basically used for either static checking of Java programs such as JACK ~
      
 
 Figure ~\ref{halfSrc} gives an example of a java method annotated with JML specification.
-\todo{change the example}
+
 It describes the class \texttt{Half}.
 The specification says that if the method starts execution in a state that satisfies the precondition then on termination it will return the half of the argument as specified in the postcondition. The loop invariant is specified by using the key word \texttt{loop\_invariant} and a condition for loop termination is also specified by declaring after the keyword \jmlKey{decreases} the expression that decreases after every loop execution. 
 \begin{figure}

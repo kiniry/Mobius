@@ -1,26 +1,58 @@
 % CHANGED - the example o compilation of loop specification
 
 \section{Bytecode Specification Language}\label{bcSpecLg}
-Traditionally a lot of research has been done in the field of program verification for structured program languages~\cite{WPCDS},~\cite{DisDij}. This explains the fact that specification languages are destinated to high level program languages. Thus in order to verify that a program respects certain property, programmers usually express the property on source level in a proper specification language.
-After compilation, the executable code is detached from the source code; still we may need to verify that the resulting bytecode preserves the property in question. For example in untrusted code scenario: unknown bytecode implementing a published interface arrives at a receiver side and the latter wants to check that the received bytecode respects the interface specification (which may not be trivial). Here comes the need for writing specification on bytecode level. We propose a definition of a bytecode level specification language which corresponds to an important subset of JML.
-The bytecode specification language has the following featuares: 
-\begin{itemize} 
-	\item method preconditions and postconditions (see~\ref{prelim})
-	\item frame conditions (see~\ref{prelim})
-	\item class invariants  (see~\ref{prelim})
-	\item decreases expressions (expressions that guarantee termination for recursive methods and loops)
-	\item history constraints (see~\ref{prelim})
-	\item loop invariants (see~\ref{prelim})
-	\item assertions (predicates that hold at particular program point)
-	\item model variables  
-\end{itemize}
+Traditionally a lot of research has been done in the field of program verification for structured program languages~\cite{WPCDS},
+~\cite{DisDij}. This explains the fact that specification languages are destinated to high level program languages. In order to verify 
+a program w.r.t. to some property, usually the property is expressed in a suitable specification language.
+After compilation, the executable code is detached from the source code; still we may need to verify that the resulting bytecode 
+preserves the property in question. A typical example is when an untrusted bytecode implementing a public interface arrives at a 
+receiver side and the latter wants to check that the 
+unknown  bytecode respects the interface specification (which may not be trivial). Here comes the need for writing specification on 
+bytecode level. We propose a definition of a bytecode level specification language which corresponds to an important subset of JML.
+Hereafter we scatch the bytecode specification language grammar. We ommit some of the definitions for reason of space constraints,
+ e.g. the grammar for arithmetic expressions, as it is defined in a standard way. For the full specification you can look at ~\cite{JML2BCSpec}.  
 
-Among the special JML keywords the compiler supports:
-\begin{itemize} 
-	\item \jmlKey{$\backslash$result}  
-	\item \jmlKey{$\backslash$old(expression)}
-	\item \jmlKey{$\backslash$typeof(expression)} standing for the most-specific dynamic type of an expression's value
-\end{itemize}
+$$ \begin{array}{l}
+\MethodSpec  ::= \\
+   \Myspace \SpecCase \\
+   \Myspace  \mid  \SpecCase \  \jmlStmt{also} \  \MethodSpec	;\\
+   \\
+\SpecCase ::= \\ 
+    \Myspace \jmlStmt{requires} \ \predicate;\\ 
+	\Myspace \jmlStmt{modifies} \ list(\expression);\\
+    \Myspace \jmlStmt{ensures} \ \predicate;\\
+    \Myspace \jmlStmt{exsures} \ \texttt{ExceptionClass} \ \predicate;\\
+                     \\
+\interMethodSpec ::= \\
+     \Myspace \loopSpec \\
+	 \Myspace  \mid \jmlStmt{assert} \ \predicate; \\
+	  \\
+\loopSpec ::= \\
+    \Myspace \jmlStmt{loop\_invariant} \predicate; \\
+	\Myspace \jmlStmt{loop\_modifies} \ list(\expression);\\
+	 \\								
+\ClassSpec ::= \\ 
+     \Myspace \jmlStmt{class \ invariant} \ \predicate \\
+     \Myspace  \mid  \jmlStmt{history \ constraint} \ \predicate \\
+     \Myspace  \mid  \jmlStmt{model} \ \texttt{ClassName}  \ id \\
+      \\
+      \predicate ::= \\
+      \Myspace    \true \ \mid \ \false
+      \Myspace   \expression \ predSymbol \ \expression \\
+       \Myspace \mid   \predicate \wedge \predicate \\
+       \Myspace \mid   \predicate \vee \predicate \\
+       \Myspace \mid   \predicate \Rightarrow \predicate \\
+       \Myspace \mid   \forall (\texttt{boundVar } : JavaType )  \predicate \\
+       \Myspace \mid   \exists(\texttt{boundVar } : JavaType )  \predicate \\
+       \\ 
+  \expression ::= \\  
+      \Myspace  \ArithExpr  \mid  \ \register{i}  \  \mid  \ \reference \\
+  	  \Myspace  \mid  \ \fieldAccess{\expression}  \\
+  	  \Myspace  \mid \ \arrayAccess{\expression} {\expression}  \\
+  	  \Myspace  \mid \result \ \mid \old{\expression}  \\
+  	  \Myspace \mid \typeof{\expression}  \ \mid \ \Mynull \ \mid \  \this
+\end{array}$$
+
  The language defined here is expressive enough for most purposes including the description of non trivial functional and security properties.
 
 
@@ -42,10 +74,12 @@ is compiled standartly in binary form using tags. Basically the compilation of a
 
 \todo{example for the compilation rule for a specific expression. Explain that the expressions are compiled in binary using tags }
 
-\item add the JML compilation in the class file as user defined attributes. Method specifications, class invariants, loop invariants are newly defined attributes in the class file with respect to the Java Sun Virtual Machine specification.
+\item add the JML compilation in the class file as user defined attributes. Method specifications, class invariants, loop invariants are 
+newly defined attributes in the class file.
  For example, the specification of all the loops in a method are compiled to a unique method attribute: the \textbf{Loop\_specification\_attribute}. The syntax of the loop attribute is given at fig.~\ref{loopAttribute}. This attribute is an array of data structures each describing a single loop from the method source code. Also for each loop in the source code there must be a corresponding element in the array. 
 More precisely every element contains information about the instruction where the loop starts as specified in the \textbf{Line\_Number\_Table}, the invariant associated to this loop, the decreasing expression in case of total correctness, the expressions that can be modified. 
 For the full specification of the compiler you can see~\cite{JML2BCSpec}.
+\end{enumerate}
 \begin{figure}
 \textbf{     
 \begin{tabbing}
@@ -74,7 +108,7 @@ JML\=Loop\_specification\_attribute \{\\
 \label{loopAttribute}
 %\end{frameit}
 \end{figure}
-\end{enumerate}
+
 %A ``JML bytecode'' viewer is under development at project Everest, INRIA Sophia-Antipolis. The latter is a tool that visualizes all aspects of compiled Java class files and the contained bytecode.
 
 \subsubsection{Discussion}

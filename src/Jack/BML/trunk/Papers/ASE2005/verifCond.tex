@@ -1,18 +1,35 @@
 
 \section{Java Bytecode Verification}\label{verifCond}
-As we mentioned before the research in program verification has been targeting for a long time to structured program languages (\cite{WPCDS},~\cite{DisDij}). It is recently that it has become fashionable to study low level program logics -  ~\cite{B04tlsj},~\cite{BM05plb},~\cite{Quigley} and the reason for it is that nowadays it is a common practice installing unknown and untrusted code. The presented bytecode logic is defined in terms of weakest precondition calculus. As in ~\cite{BM05plb}, we assume that the verified bytecode program has passed the bytecode verification procedure, i.e. it is well typed (every instruction is applied to operands of the correct type) and well formed (e.g. no jumps to an unexisting bytecode index). The java bytecode verification is a well researched field and \cite{Ljbc} is a detailed overview of the state of the art in the domain. The logics defined here targets to express properties that are more complex than well typedness.
+As we mentioned before the research in program verification has been targeting for a long time to structured program languages (\cite{WPCDS},~\cite{DisDij}). 
+It is a fairly recent fashion the research in low level program logic and verification -  ~\cite{B04tlsj},~\cite{BM05plb},~\cite{Quigley}.
+The reason is that nowadays it becomes a common practice dealing with mobile code and the problems that this implies like establishing trust in the unknown code. 
 
-The logics also has these features:
+The presented bytecode logic is defined in terms of weakest precondition calculus. As in ~\cite{BM05plb}, we assume 
+that the verified bytecode program has passed the bytecode verification procedure, i.e. it is well typed 
+(every instruction is applied to operands of the correct type) and well formed 
+(e.g. no jumps to an unexisting bytecode index). The java bytecode verification field is  well researched and 
+for more information \cite{Ljbc}, for example, is a detailed overview of the state of the art in the domain. 
+The logic considered here targets to express properties that are more complex than well typedness.
+
+The logic has these features:
 \begin{itemize}
 \item modular, design by contract verification, in particular every method is verified separately method calls being translated to their specification 
 \item all java sequential instructions except for floating point arithmetic instructions and 64 bit data (\java{long} and \java{double} types)
 \item definition of the calculus for unstructured programs over the method's control flow graph
 \item the specific features like exceptions and exception handling, references and subroutines
-\item the bytecode specification language discussed in the previous section \ref{bcSpecLg}. Actually as the objective is to verify not trivial program properties every method has a specification written in the bytecode specification language - pre- and postconditions, assertions at particular program point among which loop invariants. The verification procedure assumes that the bytecode is specified enough, i.e. we do not try to infer specification, e.g. loop invariants as we assume that they are compiled from the source program
-\item the verification procedure does not trust neither the bytecode specification, nor the bytecode - in both of the cases - wrong specification or incorrect implementation will be the cause for verification conditions that are not provable 
+\item the bytecode specification language discussed in the previous section \ref{bcSpecLg}. 
+Actually as the objective is to verify not trivial program properties every method has a specification written 
+in the bytecode specification language - pre- and postconditions, assertions at particular program point among 
+which loop invariants. The verification procedure assumes that the bytecode is specified enough, i.e. 
+we do not try to infer specification, as we assume that they are compiled from the source program
+\item the verification procedure does not trust neither the bytecode specification, nor the bytecode; both of the cases - wrong 
+specification or incorrect implementation will be the cause for verification conditions that are not provable 
 \end{itemize}
 
-Verification of unstructured programs has been first defined by Floyd ~\cite{F67amp}. Although the definition of the weakest precondition for bytecode is straightfoward, the approach is different from the one used for defining weakest precondition for structured programs. The latter is defined over the structure of the language, i.e. over its statements and expressions. As bytecode lacks structure the bytecode weakest precondition is rather than defined over the control flow graph of the program and has two levels of definitions - the first one consists in the set of rules for single java bytecode instructions and the second one takes into account how the control flows in the bytecode. A related problem is how the cycles in the control flow are treated. As we just mentioned we assume that every method is specified enough, i.e. the if there are cycles the corresponding loop invariant is present. This gives us the right to ``cut'' the cycles in the graph at the program point where the invariant must hold. The ``cut'' generates an abstract control flow graph which is acyclic and over which the verification condition will be generated.  
+Verification of unstructured programs has been first defined by Floyd ~\cite{F67amp}. Although the definition of the weakest precondition for bytecode is straightfoward, the approach is different from the one used for defining weakest precondition for structured programs. The latter is defined over the structure of the language, i.e. over its statements and expressions. As bytecode lacks structure the bytecode weakest precondition is rather than defined over the control flow graph of the program and has two levels of definitions - the first one consists in the set of rules for single java bytecode instructions and the second one takes into account how the control flows in the bytecode. A related problem is how the cycles in the control flow are treated. 
+As we just mentioned we assume that every method is specified enough, i.e. if there are cycles the corresponding 
+loop invariant is present. This gives us the right to ``cut'' the cycles in the graph at the program point where the invariant must hold. 
+The ``cut'' generates an abstract control flow graph which is acyclic and over which the verification conditions are generated.  
 
 In the rest of the section we look at the bytecode logics - the weakest precondition rules for single java bytecode instructions in subsection \ref{wpInstr}, the method abstract control flow graph is explained in subsection ~\ref{abstrCntrFlow}, the definition of the weakest precondition over the abstract control flow graph ~\ref{wpGraph}, how exception handling and subroutines are handled is discussed in subsection ~\ref{specific} .
 

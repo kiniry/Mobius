@@ -1,4 +1,4 @@
-\newcommand{\todo}[1]{ \marginpar{\textbf{#1}}}
+\newcommand{\todo}[1]{ \textbf{#1}}
 
 \newcommand{\jmlKey}[1]{\texttt{#1}}% wrapping jml keywords
 \newcommand{\java}[1]{\texttt{#1}}
@@ -13,5 +13,35 @@
 \newcommand{\instr}[1]{\texttt{#1}}
 
 
+% thegrammar for the bytecode specification language
+\newcommand{\ClassSpec}{\rm{ClassSpec}}
+\newcommand{\MethodSpec}{\rm{MethodSpec}}
+\newcommand{\SpecCase}{\textrm{SpecCase}}
+\newcommand{\jmlStmt}[1]{\textrm{#1}}
+\newcommand{\interMethodSpec}{\rm{InterMethodSpec}}
+\newcommand{\loopSpec}{\rm{loopSpec}}
+
+\newcommand{\ArithExpr}{\texttt{Arithmetic\_Expression} }
+\newcommand{\expression}{\texttt{expression} }
+
+\newcommand{\integer}{\texttt{int} }
+\newcommand{\register}[1]{\texttt{lv[#1]} }
+\newcommand{\reference}{\texttt{ref} }
+\newcommand{\Mynull}{\texttt{null}}
+\newcommand{\this}{\texttt{this}}
+\newcommand{\fieldAccess}[1]{\texttt{Class.fieldName(#1)}}
+\newcommand{\arrayAccess}[2]{#1[#2] }
+
+\newcommand{\result}{\jmlKey{$\backslash$result}}
+\newcommand{\old}[1]{\jmlKey{$\backslash$old(#1)}}
+\newcommand{\typeof}[1]{\jmlKey{$\backslash$typeof(#1)}}
+
+
+\newcommand{\excPost}{\psi^{exc}}
+
+\newcommand{\Myspace}{\phantom{aaa}}
+\newcommand{\predicate}{ \mathcal{P}} 
+\newcommand{\Myfalse}{ \textit{false} }
+\newcommand{\Mytrue}{ \textit{true} }
 \newtheorem{defn}{Definition} 
 
