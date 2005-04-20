@@ -1,4 +1,4 @@
-This is TeX, Version 3.14159 (Web2C 7.4.5) (format=latex 2003.8.8)  20 APR 2005 11:52
+This is TeX, Version 3.14159 (Web2C 7.4.5) (format=latex 2003.8.8)  20 APR 2005 17:13
 **article.tex
 (./article.tex
 LaTeX2e <2001/06/01>
@@ -119,7 +119,15 @@ LaTeX Warning: Reference `extClassJML' on page 2 undefined on input line 21.
 
 ) (./architecture.tex
 File: architecture.eps Graphic file (type eps)
- <architecture.eps>) (./relWork.tex [2]) (./prelim.tex
+ <architecture.eps>
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 15.
+
+(/usr/share/texmf/tex/latex/base/omscmr.fd
+File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 15.
+ [2]) (./relWork.tex) (./prelim.tex
 
 LaTeX Warning: Citation `BR02jack' on page 3 undefined on input line 12.
 
@@ -131,6 +139,9 @@ Overfull \hbox (31.24583pt too wide) detected at line 54
  []
 
 
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [4]
 Underfull \hbox (badness 4467) in paragraph at lines 70--72
 []\OT1/cmr/m/n/10 compile the java source file. This can be
  []
@@ -172,32 +183,25 @@ Underfull \hbox (badness 2707) in paragraph at lines 77--82
 /10 . The syn-
  []
 
-[4]
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 96.
- (/usr/share/texmf/tex/latex/base/omscmr.fd
-File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
-)
 LaTeX Font Info:    Font shape `OMS/cmr/bx/n' in size <10> not available
 (Font)              Font shape `OMS/cmsy/b/n' tried instead on input line 96.
-LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 99.
-) (./verifCond.tex
+) (./verifCond.tex [5]
 Underfull \hbox (badness 5696) in paragraph at lines 20--25
 \OT1/cmr/m/n/10 con-di-tions, as-ser-tions at par-tic-u-lar pro-gram
  []
 
-[5] (./wpSingleInstr.tex
+(./wpSingleInstr.tex
 Overfull \hbox (2.2846pt too wide) detected at line 3
 [] \OT1/cmr/m/n/10 : [] \OMS/cmsy/m/n/10 ! P ! \OT1/cmr/m/n/10 ([][] \OMS/cmsy/
 m/n/10 ! P\OT1/cmr/m/n/10 ) \OMS/cmsy/m/n/10 ! P
  []
 
-
+[6]
 Overfull \hbox (28.98016pt too wide) detected at line 36
 []
  []
 
-) (./abstractCntrFlow.tex [6]
+) (./abstractCntrFlow.tex
 Underfull \hbox (badness 1715) in paragraph at lines 36--37
 []\OT1/cmr/m/it/10 Let's have a well
  []
@@ -209,17 +213,18 @@ Underfull \hbox (badness 10000) in paragraph at lines 56--57
 []\OT1/cmr/m/it/10 Let's
  []
 
+[7]
 File: graph.eps Graphic file (type eps)
-<graph.eps>) (./wpOverGraph.tex
+ <graph.eps>) (./wpOverGraph.tex
 
-LaTeX Warning: Reference `wf' on page 7 undefined on input line 6.
+LaTeX Warning: Reference `wf' on page 8 undefined on input line 6.
 
-[7]) (./specificJava.tex
+[8]) (./specificJava.tex
 Underfull \hbox (badness 1259) in paragraph at lines 1--1
 []\OT1/cmr/bx/n/10.95 Supporting ex-cep-tion han-dling and
  []
 
-)) (./conclusion.tex [8]
+)) (./conclusion.tex
 Underfull \hbox (badness 1917) in paragraph at lines 10--11
 \OT1/cmr/m/n/10 ca-tion con-di-tions. In-deed, gen-er-at-ing ver-i-fi-ca-
  []
@@ -234,7 +239,9 @@ Underfull \hbox (badness 1509) in paragraph at lines 10--11
 \OT1/cmr/m/n/10 the same in-struc-tion is an ex-po-nen-tial func-
  []
 
-) (./article.bbl) [9] (./article.aux)
+) (./article.bbl [9]) [10
+
+] (./article.aux)
 
 LaTeX Warning: There were undefined references.
 
@@ -242,10 +249,10 @@ LaTeX Warning: There were undefined references.
 Here is how much of TeX's memory you used:
  1147 strings out of 95847
  12933 string characters out of 1193875
- 64832 words of memory out of 1000001
+ 63832 words of memory out of 1000001
  4039 multiletter control sequences out of 10000+50000
  14337 words of font info for 56 fonts, out of 500000 for 1000
  14 hyphenation exceptions out of 1000
  32i,11n,24p,924b,438s stack positions out of 1500i,500n,5000p,200000b,5000s
 
-Output written on article.dvi (9 pages, 54532 bytes).
+Output written on article.dvi (10 pages, 55464 bytes).
