@@ -15,75 +15,100 @@
 \newlabel{architecture}{{1}{2}}
 \@writefile{toc}{\contentsline {section}{\numberline {3}Related Work}{2}}
 \newlabel{relWork}{{3}{2}}
+\citation{WildmoserN-ESOP05}
 \citation{Quigley}
 \citation{Quigley}
 \citation{JMLRefMan}
+\citation{M97oos}
+\citation{BR02jack}
+\citation{escjava}
+\citation{jmlrac}
 \citation{BurdyCCEKLLP03}
-\citation{JMLRefMan}
-\citation{BurdyCCEKLLP03}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Java Modeling Language (JML)}{3}}
+\citation{WPCDS}
+\citation{DisDij}
+\citation{JML2BCSpec}
+\@writefile{toc}{\contentsline {section}{\numberline {4}Preliminaries}{3}}
+\newlabel{prelim}{{4}{3}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}A quick overview of JML}{3}}
 \@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces class \texttt  {Half} with JML annotations}}{3}}
 \newlabel{halfSrc}{{2}{3}}
-\@writefile{toc}{\contentsline {section}{\numberline {4}Extension of the Class File With JML Annotation}{3}}
-\newlabel{extClassJML}{{4}{3}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Java Modeling Language (JML)}{3}}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Bytecode Specification Language}{3}}
+\newlabel{bcSpecLg}{{5}{3}}
+\citation{VMSpec}
 \citation{VMSpec}
 \citation{VMSpec}
 \citation{JML2BCSpec}
-\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces class \texttt  {Half} with JML annotations}}{4}}
-\newlabel{halfSrc}{{3}{4}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Compilation of JML Expressions}{4}}
-\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Coding function for identifiers}}{4}}
-\newlabel{codingFunction}{{1}{4}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Compilation of JML Statements}{4}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Compiling JML into bytecode specification language}{4}}
 \citation{WPCDS}
 \citation{DisDij}
-\citation{ProBor}
-\citation{VMSpec}
-\citation{ARUCom1986}
-\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Structure of the Loop Attribute}}{5}}
-\newlabel{loopAttribute}{{4}{5}}
-\@writefile{toc}{\contentsline {section}{\numberline {5}Generation of Proof Obligations for Java Bytecode}{5}}
-\newlabel{verifCond}{{5}{5}}
-\newlabel{wf}{{1}{5}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Execution graph}{5}}
-\newlabel{execRel}{{2}{6}}
-\newlabel{defLoop}{{3}{6}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Acyclic Execution Graph}{6}}
-\newlabel{graph}{{5.2}{6}}
-\newlabel{acyclicExRel}{{4}{6}}
-\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces the bytecode of method \texttt  {half}}}{6}}
-\newlabel{halfBC}{{5}{6}}
-\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces bytecode blocks of bytecode at Figure \nobreakspace  {}5\hbox {}}}{6}}
-\newlabel{blockBC}{{6}{6}}
+\citation{B04tlsj}
+\citation{BM05plb}
+\citation{Quigley}
+\citation{BM05plb}
+\citation{Ljbc}
+\citation{F67amp}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Structure of the Loop Attribute}}{5}}
+\newlabel{loopAttribute}{{3}{5}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.1.1}Discussion}{5}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}Java Bytecode Verification}{5}}
+\newlabel{verifCond}{{6}{5}}
 \citation{WPBC}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}Bytecode Weakest Precondition}{7}}
+\citation{B00ppp}
+\citation{ARUCom1986}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.1}Weakest Precondition for bytecode instructions}{6}}
+\newlabel{wpInstr}{{6.1}{6}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces rules for some bytecode instructions}}{6}}
+\newlabel{instrWP}{{4}{6}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {6.1.1}References: creating objects, updating field values}{6}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {6.1.2}Method calls}{6}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Overriding Function}}{7}}
+\newlabel{override}{{5}{7}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2}Execution graph}{7}}
+\newlabel{abstrCntrFlow}{{6.2}{7}}
+\newlabel{execRel}{{1}{7}}
+\newlabel{defLoop}{{2}{7}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3}Acyclic Execution Graph}{7}}
+\newlabel{graph}{{6.3}{7}}
+\newlabel{acyclicExRel}{{3}{7}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.4}Bytecode Weakest Precondition}{7}}
+\newlabel{wpGraph}{{6.4}{7}}
 \@writefile{toc}{\contentsline {paragraph}{WPC for an Execution Path: }{7}}
-\newlabel{block}{{5.3}{7}}
-\@writefile{toc}{\contentsline {paragraph}{Weakest Precondition for a block: }{7}}
-\@writefile{toc}{\contentsline {paragraph}{Weakest Precondition for bytecode instructions: }{7}}
-\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces rules for some bytecode instructions}}{7}}
-\newlabel{instrWP}{{7}{7}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces the bytecode of method \texttt  {half}}}{8}}
+\newlabel{halfBC}{{6}{8}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces bytecode blocks of bytecode at Figure \nobreakspace  {}6\hbox {}}}{8}}
+\newlabel{blockBC}{{7}{8}}
+\newlabel{block}{{6.4}{8}}
+\@writefile{toc}{\contentsline {paragraph}{Weakest Precondition for a block: }{8}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.5}Supporting exception handling and subroutines}{8}}
+\newlabel{specific}{{6.5}{8}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {6.5.1}Exception Handling}{8}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {6.5.2}Subroutines}{8}}
+\@writefile{toc}{\contentsline {section}{\numberline {7}Conclusion and Future Work}{8}}
+\newlabel{conclusion}{{7}{8}}
 \citation{PBBHL}
 \bibstyle{plain}
 \bibdata{specification,bibliography}
-\bibcite{ARUCom1986}{1}
-\bibcite{ProBor}{2}
-\bibcite{BurdyCCEKLLP03}{3}
-\bibcite{BRL-JACK}{4}
-\bibcite{JML2BCSpec}{5}
-\bibcite{WPBC}{6}
-\bibcite{ProColLeeNec}{7}
-\bibcite{DisDij}{8}
-\bibcite{WPCDS}{9}
-\bibcite{JMLRefMan}{10}
-\bibcite{VMSpec}{11}
-\bibcite{Necula97}{12}
-\bibcite{ComNec}{13}
-\bibcite{DesNecLee98}{14}
-\bibcite{PBBHL}{15}
-\bibcite{Quigley}{16}
-\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces Proof obligations for the total correctness of the example at Figure \nobreakspace  {}5\hbox {}. Note that $l(1)_{10}$ stands for the value of $l(1)$ on executing $i_{10}$ }}{8}}
-\newlabel{pogs}{{8}{8}}
-\@writefile{toc}{\contentsline {section}{\numberline {6}Conclusion and Future Work}{8}}
-\newlabel{conclusion}{{6}{8}}
+\bibcite{escjava}{1}
+\bibcite{ARUCom1986}{2}
+\bibcite{BM05plb}{3}
+\bibcite{B04tlsj}{4}
+\bibcite{M97oos}{5}
+\bibcite{B00ppp}{6}
+\bibcite{BurdyCCEKLLP03}{7}
+\bibcite{BRL-JACK}{8}
+\bibcite{JML2BCSpec}{9}
+\bibcite{WPBC}{10}
+\bibcite{jmlrac}{11}
+\bibcite{ProColLeeNec}{12}
+\bibcite{DisDij}{13}
+\bibcite{WPCDS}{14}
+\bibcite{JMLRefMan}{15}
+\bibcite{Ljbc}{16}
+\bibcite{VMSpec}{17}
+\bibcite{Necula97}{18}
+\bibcite{ComNec}{19}
+\bibcite{DesNecLee98}{20}
+\bibcite{PBBHL}{21}
+\bibcite{Quigley}{22}
+\bibcite{F67amp}{23}
+\bibcite{WildmoserN-ESOP05}{24}

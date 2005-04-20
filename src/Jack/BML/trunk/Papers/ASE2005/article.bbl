@@ -1,15 +1,32 @@
 \begin{thebibliography}{10}
 
+\bibitem{escjava}
+
+
 \bibitem{ARUCom1986}
 Aho AV, Sethi R, and Ullman JD.
 \newblock {\em Compilers-Principles, Techniques, and Tools}.
 \newblock Addison-Wesley: Reading, 1986.
 
-\bibitem{ProBor}
+\bibitem{BM05plb}
+Fabian Bannwart and Peter Muller.
+\newblock A program logic for bytecode.
+\newblock 2005.
+
+\bibitem{B04tlsj}
+Nick Benton.
+\newblock A typed logic for stack and jumps.
+\newblock 2004.
+
+\bibitem{M97oos}
+B.Meyer.
+\newblock {\em Object-Oriented Software Construction}.
+\newblock 2 rev edition edition, 1997.
+
+\bibitem{B00ppp}
 Richard Bornat.
 \newblock Proving pointer programs in hoare logic.
-\newblock In {\em Mathematics of Program Construction (MPC 2000)}.
-  Springer-Verlag, 2000.
+\newblock In {\em MPC}, pages 102--126, 2000.
 
 \bibitem{BurdyCCEKLLP03}
 L.~Burdy, Y.~Cheon, D.~Cok, M.~Ernst, J.~Kiniry, G.T. Leavens, K.R.M. Leino,
@@ -38,6 +55,10 @@ Lilian Burdy and Mariela Pavlova.
 \newblock Technical report, INRIA, Sophia-Antipolis, 2004.
 \newblock draft.
 
+\bibitem{jmlrac}
+Yoonsik Cheon and Gary~T. Leavens.
+\newblock A runtime assertion checker for the java modeling language.
+
 \bibitem{ProColLeeNec}
 Christopher Colby, Peter Lee, and George~C. Necula.
 \newblock A proof carrying code architecture for java.
@@ -57,6 +78,11 @@ Edsger~W. Dijkstra and Carel~S. Scholten.
 G.T.Leavens, Erik Poll, Curtis Clifton, Yoonsik Cheon, Clyde Ruby, David Cok,
   and Joseph Kiniry.
 \newblock {\em JML Reference Manual}.
+
+\bibitem{Ljbc}
+Xavier Leroy.
+\newblock Java bytecode verification: Algorithms and formalizations.
+\newblock {\em Journal of Automated Reasoning}.
 
 \bibitem{VMSpec}
 Tim Lindholm and Frank Yellin.
@@ -89,5 +115,17 @@ C.L. Quigley.
 \newblock In {\em Proceedings of the 16th International Conference on Theorem
   Proving in Higher Order Logics}, volume 2758 of {\em Lecture Notes in
   Computer Science}. Springer-Verlag, 2003.
+
+\bibitem{F67amp}
+R.W.Floyd.
+\newblock Assigning meaning to programs.
+\newblock In J.~T. Schwartz, editor, {\em volume 19 of Proceedings of Symposia
+  in Applied Mathematics}, pages 19--32, 1967.
+
+\bibitem{WildmoserN-ESOP05}
+Martin Wildmoser and Tobias Nipkow.
+\newblock Asserting bytecode safety.
+\newblock 2005.
+\newblock to appear.
 
 \end{thebibliography}

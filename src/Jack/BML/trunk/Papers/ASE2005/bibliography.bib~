@@ -35,6 +35,71 @@ Clyde Ruby and David Cok and Joseph Kiniry},
 
 
 
+@Book{M97oos,
+  ALTauthor = 	 {B.Meyer},
+  ALTeditor = 	 {Prentice Hall},
+  title = 	 {Object-Oriented Software Construction},
+  publisher = 	 {},
+  year = 	 {1997},
+  OPTkey = 	 {},
+  OPTvolume = 	 {},
+  OPTnumber = 	 {},
+  OPTseries = 	 {},
+  OPTaddress = 	 {},
+  edition = 	 {2 rev edition},
+  OPTmonth = 	 {},
+  OPTnote = 	 {},
+  OPTannote = 	 {}
+}
+
+
+
+@Unpublished{B04tlsj,
+  author = 	 {Nick Benton},
+  title = 	 {A Typed Logic for Stack and Jumps},
+  note = 	 {},
+  OPTkey = 	 {},
+  OPTmonth = 	 {},
+  OPTyear = 	 {2004},
+  OPTannote = 	 {}
+}
+
+@InProceedings{BM05plb,
+  author = 	 {Fabian Bannwart and Peter Muller},
+  title = 	 {A Program Logic for Bytecode},
+  booktitle = 	 {},
+  OPTcrossref =  {},
+  OPTkey = 	 {},
+  OPTpages = 	 {},
+  OPTyear = 	 {},
+  OPTeditor = 	 {},
+  OPTvolume = 	 {},
+  OPTnumber = 	 {},
+  OPTseries = 	 {},
+  OPTaddress = 	 {},
+  OPTmonth = 	 {},
+  OPTorganization = {},
+  OPTpublisher = {},
+  OPTnote = 	 {},
+  OPTannote = 	 {}
+}
+
+@Proceedings{BR02jack,
+  title = 	 {JACK:Java Applet Correctness Kit },
+  year = 	 {2002},
+  OPTkey = 	 {},
+  OPTeditor = 	 {},
+  OPTvolume = 	 {},
+  OPTnumber = 	 {},
+  OPTseries = 	 {},
+  OPTaddress = 	 {},
+  OPTmonth = 	 {},
+  OPTorganization = {},
+  OPTpublisher = {},
+  OPTnote = 	 {},
+  OPTannote = 	 {}
+}
+
 @Manual{MultJava,
   title =    {The MultiJava Project },
   author =   {G.T.Leavens},
@@ -244,3 +309,50 @@ formal features and provides a ``Java style view'' of lemmas."}
   note = {to appear},
   url =     {\url{http://www4.in.tum.de/~wildmosm/publications/WildmoserN-ESOP05.pdf}}
 }
+
+
+@Misc{escjava,
+  OPTkey = 	 {},
+  OPTauthor = 	 {},
+  OPTtitle = 	 { },
+  OPThowpublished = {},
+  OPTmonth = 	 {},
+  OPTyear = 	 {},
+  OPTnote = 	 {http://secure.ucd.ie/products/opensource/ESCJava2/docs.html},
+  OPTannote = 	 {}
+}
+
+@InProceedings{jmlrac,
+  author = 	 {Yoonsik Cheon and Gary T. Leavens},
+  title = 	 {A runtime assertion checker for the Java Modeling Language},
+  booktitle = 	 { },
+  OPTcrossref =  {},
+  OPTkey = 	 {},
+  OPTpages = 	 {},
+  OPTyear = 	 {2002},
+  OPTeditor = 	 {},
+  OPTvolume = 	 {},
+  OPTnumber = 	 {},
+  OPTseries = 	 { },
+  OPTaddress = 	 {},
+  OPTmonth = 	 {},
+  OPTorganization = {Software Engineering and Practice},
+  OPTpublisher = {CSREA},
+  OPTnote = 	 {},
+  OPTannote = 	 {}
+}
+
+@Article{Ljbc ,
+  author = 	 {Xavier Leroy},
+  title = 	 {Java Bytecode Verification: Algorithms and Formalizations},
+  journal = 	 {Journal of Automated Reasoning},
+  year = 	 {},
+  OPTkey = 	 {},
+  OPTvolume = 	 {},
+  OPTnumber = 	 {},
+  OPTpages = 	 {},
+  OPTmonth = 	 {},
+  OPTnote = 	 {},
+  OPTannote = 	 {}
+}
+

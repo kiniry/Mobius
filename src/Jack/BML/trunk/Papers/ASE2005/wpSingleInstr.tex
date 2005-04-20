@@ -49,18 +49,24 @@ $$
 \end{figure}
 
 \subsubsection{References: creating objects, updating field values}
-As Java is entirely based on references let's see how references are dealt with. 
+As Java is entirely based on references let's see how references are dealt with.
+In particular fields are treated as functions, where the domain of a field \texttt{f} 
+declared in the class \texttt{Cl} is the set of objects of class \texttt{Cl}.
 We are using an overriding function rather in the same fashion as in ~\cite{B00ppp}. 
 At fig.~\ref{instrWP} the rule for \instr{putField} generates field overriding expression 
-as field names are substituted by overriding substitution. The expression: 
+as field names are substituted by overriding substitution. The definition of overriding expresion is
+given at fig.~\ref{override}.
+
+\begin{figure}
 $$
  \texttt{Cl.f}(\oplus e2 \rightarrow e1)])(o) = \left\{ \begin{array} {ll}
-						       e1              & if e2 = o \\
+						       e1 & if e2 = o \\
 					               \texttt{Cl.f}(o)	& else 
 	\end{array}\right. 
 $$ 
-
-
+\caption{Overriding Function}
+\label{override}
+\end{figure}
 We give an example at fig.% \ref{aliasing} for how aliasing is treated. 
 
 %\begin{figure}

@@ -1,46 +1,18 @@
-This is BibTeX, Version 0.99c (Web2C 7.4.5)
-The top-level auxiliary file: article.aux
+This is BibTeX, Version 0.99cThe top-level auxiliary file: article.aux
 The style file: plain.bst
-Database file #1: specification.bib.bib
-Database file #2: bibliography.bib.bib
-You've used 16 entries,
-            2118 wiz_defined-function locations,
-            629 strings with 6948 characters,
-and the built_in function-call counts, 5068 in all, are:
-= -- 471
-> -- 282
-< -- 5
-+ -- 114
-- -- 93
-* -- 315
-:= -- 877
-add.period$ -- 55
-call.type$ -- 16
-change.case$ -- 90
-chr.to.int$ -- 0
-cite$ -- 16
-duplicate$ -- 211
-empty$ -- 399
-format.name$ -- 93
-if$ -- 1062
-int.to.chr$ -- 0
-int.to.str$ -- 16
-missing$ -- 14
-newline$ -- 84
-num.names$ -- 36
-pop$ -- 122
-preamble$ -- 1
-purify$ -- 76
-quote$ -- 0
-skip$ -- 126
-stack$ -- 0
-substring$ -- 149
-swap$ -- 46
-text.length$ -- 5
-text.prefix$ -- 0
-top$ -- 0
-type$ -- 58
-warning$ -- 0
-while$ -- 40
-width$ -- 18
-write$ -- 178
+Database file #1: specification.bib
+Database file #2: bibliography.bib
+A bad cross reference---entry "B00ppp"
+refers to entry "DBLP:conf/mpc/2000", which doesn't exist
+Warning--I didn't find a database entry for "BR02jack"
+Warning--I didn't find a database entry for "DBLP:conf/mpc/2000"
+Warning--to sort, need author or key in escjava
+Warning--empty booktitle in BM05plb
+Warning--empty note in B04tlsj
+Warning--can't use both author and editor fields in M97oos
+Warning--empty publisher in M97oos
+Warning--empty booktitle in jmlrac
+Warning--empty year in jmlrac
+Warning--empty year in Ljbc
+Warning--empty booktitle in WildmoserN-ESOP05
+(There was 1 error message)
