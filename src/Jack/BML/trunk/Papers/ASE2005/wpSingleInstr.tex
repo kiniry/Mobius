@@ -25,13 +25,14 @@ $$
  \Myspace where \ i \  is \ a \ valid \ entry \ in \ the \ list \  of \  local \ variables   \\
 \\ 
 \wpi(\instr{putField} \ i, \psi, \excPost) = \\
-   \Myspace \stack(counter -1) \not= \Mynull \Rightarrow \psi[\counter   \leftarrow \counter -2]
-   \phantom{ aaa \stack(counter -1) \not= \Mynull \Rightarrow}   [  \texttt{ClName.fName}(\stack{\counter - 1} ) \leftarrow   \stack{\counter}] \\
+   ( \Myspace \stack{counter -1} = \Mynull \\
+   \Myspace  \Myspace \Rightarrow \psi[\counter \leftarrow \stack{\counter -2} ] \\
+   \Myspace  \Myspace [\texttt{Cl.f} \leftarrow \texttt{Cl.f}(\oplus \stack{\counter - 1} \rightarrow \stack{\counter}) ] )\\
    \Myspace  \wedge  \\
-   \Myspace  \stack(counter -1) = \Mynull \Rightarrow \excPost(\texttt{NullPointer}) \\
+   \Myspace  \stack(counter-1) = \Mynull \Rightarrow \excPost(\texttt{NullPointer}) \\
  where \ i \  is \ a \ valid \ entry \ in \ the \ class \ constant \  pool \ which   \\
- is  \ a \  symbolic \reference \ to \ the \  field  \ with \ name \  \texttt{fName} \\
- from \  class \  \texttt{ClName}
+ is  \ a \  symbolic \reference \ to \ the \  field  \ with \ name \  \texttt{f} \\
+ from \  class \  \texttt{Cl}
  \end{array} $$
 
 %\texttt{wp(if\_acmpeq n , $\psi$)} =  \texttt{(Stack(t)==Stack(t-1)} $\Rightarrow$ $\psi(n)$ \texttt{[t$\leftarrow$t-2]\\
@@ -49,17 +50,16 @@ $$
 
 \subsubsection{References: creating objects, updating field values}
 As Java is entirely based on references let's see how references are dealt with. 
-We are using an overriding function rather in the same fashion as in ~\cite{B00ppp}.If a reference is updated 
-we have to keep this information because of possible aliasing
+We are using an overriding function rather in the same fashion as in ~\cite{B00ppp}. 
+At fig.~\ref{instrWP} the rule for \instr{putField} generates field overriding expression 
+as field names are substituted by overriding substitution. The expression: 
 $$
-fName(\tt{e_1} ) [fName(\tt{e_2} ) \leftarrow \tt{e_3} ] = \\
-$$
-$$
-\left\{ \begin{array}{ll}
-\tt{e_3} & if \ \tt{e_1} == \tt{e_2} \\
-fName(\tt{e_1} [fName(\tt{e_2} ) \leftarrow \tt{e_3} ] )(\oplus [ \tt{e_3} \rightarrow  \tt{e_2} ] ) & else 
-\end{array} \right.						
-$$
+ \texttt{Cl.f}(\oplus e2 \rightarrow e1)])(o) = \left\{ \begin{array} {ll}
+						       e1              & if e2 = o \\
+					               \texttt{Cl.f}(o)	& else 
+	\end{array}\right. 
+$$ 
+
 
 We give an example at fig.% \ref{aliasing} for how aliasing is treated. 
 
