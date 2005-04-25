@@ -1,41 +1,79 @@
 
 
 \subsection{Bytecode Weakest Precondition}\label{wpGraph}
-We can now define a weakest precondition on an acyclic execution graph. This is done in three steps: WPC on an execution path, WPC on a block of an execution path, WPC on a bytecode instruction of a block.
-\paragraph{WPC for an Execution Path: }
-Under the assumption that a bytecode respects the conditions stated in definition~\ref{wf}, we construct the abstract execution graph $\Gamma^1$ as stated in~\ref{graph}. A backwards tracing is done for every execution path in $\Gamma^1$ . The algorithm is:
-\begin{enumerate}
-\item Calculate for the leaves of the execution tree their weakest preconditions
-    \begin{itemize}
-    \item for all the leaves of the execution tree that terminate with a \texttt{return} instruction it will calculate its weakest precondition upon the postcondition declared in the specification attribute of the method where the block appears
-    \item for all the leaves of the execution tree that terminate with an \texttt{athrow} instruction the exception type will be approximated by an overriding function during the calculus. Thus its weakest precondition will be calculated either upon the weakest precondition of the exception handler of the approximated type if the exception is caught or upon the exceptional postcondition for the approximated exception type that is thrown.
-    \item for every block b that terminates with an instruction that is the end of some loop in the bytecode  it will calculate its weakest precondition upon the loop invariant specified.
-    \end{itemize}
 
-\item the calculated weakest precondition of a block b is the postcondition  for any block b' such that b' $\ll^1$ b. Calculate upon it the wp for any  block b'
-\item Return the verification condition generated if the current block (for which it is generated) is the block starting at the entry point instruction -it is a wp of an execution path else 2.
-\end{enumerate}
+The verification being modular proof, obligations are generated for every method separately. The verification condition generation 
+is trivially defined over the acyclic execution graph of a method. 
+The \wpi \ function runs in a backwards  direction starting from the blocks that do not have predecessors upto reaching the entry point
+ instruction.  Calculating the precondition of the sequential part of the block $\blockm{i}$ 
+ which we denote with  $\blockSeq{i}$  is standard - the precondition of an instruction  is inferred from the precondition of the previous.
+The  interesting part is how the postcondition  for $\blockSeq{i}$ , i.e. the precondition of the last block instructions is inferred 
+(i.e. jumps, return, loop end ) see for the definition of basic block section ~\ref{abstrCntrFlow}.  In the following we overload the function 
+symbol \wpi applying to sequence of bytecode instructions.
+The postcondition for the sequential part of a block  $\blockSeq{i}$ (without its last instruction )   is defined inductively 
+ as follows :
+ \begin{defn}[Block postcondition  $\blockPost{i}$]\label{post}
+ If $\blockm{i}$ ends with instruction $i_s$ then :
+ \begin{itemize} 
+ \item  if  $i_s$ is a loop end instruction \wpi \footnote{those \ instructions \ are detected when building the acyclic  graph and the 
+ backedge is "replaced"  by the corresponding \ invariant \ \invariant  } and whose invariant is \invariant: 
+ $$ \blockPost{i} =  \wpi(  i_s, \invariant)  $$ 
+ \item if  $i_s$ =  \instr{if\_cond n} \\
+$$
+\blockPost{i} =  \\
+\left\{
+\begin{array}{l}
+cond( \stack{\counter}, \stack{\counter - 1} )   \Rightarrow \\
+\phantom{ \counter }   \wpi(\blockSeq{n}, \blockPost{n} ,\excPost )[ \counter \leftarrow \counter -2 ]  \\
+\wedge \\
+ not ( cond( \stack{\counter}, \stack{\counter - 1} )  )   \Rightarrow \\
+\phantom{ \counter}    \wpi(\blockSeq{i+1}, \blockPost{i+1},\excPost ) [ \counter \leftarrow \counter -2 ]      \\                             
+\end{array}
+\right.
+$$
+\item if  $i_s$ =  \instr{goto n} \\ 
+$\blockPost{i} =  \wpi(\blockSeq{n}, \blockPost{n} , \excPost )$ \\
 
-For example for the blocks at Figure~\ref{blockBC} the first step of the algorithm will calculate the verification condition for block starting with $ \tt{instr_{18}}$ upon the postcondition  $\ulcorner \backslash$\texttt{result} == $\backslash$ old(n)div 2 $\urcorner$ and then it will calculate the verification conditions for block ending with $\tt{instr_{15}}$ , etc. iterating until the block that starts with the entry point instruction is found.
-It will also do the same for the leaf block that ends with $\tt{instr_{10}}$ (i.e. the last instruction of the loop in the bytecode) upon the loop invariant specified $\ulcorner$c == n + 2*a$\urcorner$.
+\item  if  $i_s$ =  \instr{athrow ExceptionType} \\ 
+$$
+\blockPost{i }  \\ 
+ =   \left\{ \begin{array}{l} 
+		\jmlKey{subtype}( \jmlKey{ typeof}(\stack{\counter} )) \\
+		(\oplus (Exc_{i}^{thrown} \rightarrow \excPost(Exc_{i}^{thrown}) ) \\
+		\phantom{\oplus Exc^{thrown} } [\counter \leftarrow  0] \\ 
+		\phantom{ \oplus Exc^{thrown} } [EXC \leftarrow  \stack{\counter} ] )_{i=0}^{n}   \\
+		(\oplus Exc_{i}^{handled(i)} \rightarrow \wpi(\blockm{i}, \blockPost{i}, \excPost )\\
+		\phantom{\oplus Exc^{handled(i)} }  [\counter \leftarrow  0] \\ 
+		\phantom{ \oplus Exc^{handled(i)}}   [EXC \leftarrow  \stack{\counter} ] )_{i=0}^{m} \\
+		\end{array} \right.
+$$
+As we are doing partial evaluation the only thing we know about the exception thrown is that it is 
+on the top of the stack $\stack{\counter}$. We keep track of all the possible postconditions upto
+discovering the type of the thrown exception and then identifying the adequate predicate 
+that must hold after the execution of the \instr{athrow} instruction.
+\item  if  $i_s$ = \instr{return} \\
+$$
+   \blockPost{i } = \psi[\result \leftarrow \stack{\counter} ]    
+$$
+where $\psi $ is the specified method postcondition.
+\item  else  
+ $$ \blockPost{i} =  \wpi(  i_s , \wpi( \blockSeq{s+1} ,  \blockPost{ s  +1} ) )  $$ 
+ \end{itemize}
+\end{defn}
 
-\paragraph{Weakest Precondition for a block: }\label{block}
-The rule for generating weakest precondition of a block \texttt{b}= \texttt{b$^{'}$; instr} is
-\begin{center}
-\texttt{wp}($\tt{b^{'}; instr}, \psi$) = \texttt{wp}($\tt{b^{'}}$,\texttt{wp}(\texttt{instr}, $\psi$))
-\end{center}
+%\Paragraph{Subroutines}
+Subroutines are treated by inlining them. As we stated in the beginning we assume that the bytecode has been certified by a java
+bytecode verifier thus our analysis for identifying  subroutine is not a problem.  
+\todo{example}
 
 %\begin{center} \texttt{wp(instruction\_list;instruction, $\psi$)} = \texttt{wp(instruction\_list, wp(instruction, $\psi$))} \end{center}
-For example for the sequence of instructions of the block starting with $\tt{instr_{18}}$ from Figure~\ref{blockBC} we calculate
-\begin{center}
-\texttt{wp( iload\_2; ireturn,  $\ulcorner \backslash$\texttt{result} == $\backslash$ old(n)div 2 $\urcorner$ )}
-\\
-=
-\\
-\texttt{wp(iload\_2, wp( ireturn, $\ulcorner \backslash$\texttt{result} == $\backslash$ old(n)div 2 $\urcorner$ ))} \end{center}
-
-
-Thus the weakest precondition for the block starting at $\tt{instr_{18}}$ at figure~\ref{blockBC} is
-
-\texttt{local(2) $\ulcorner$==$\urcorner$ $\ulcorner$ $\backslash$ old(n)div 2 $\urcorner$}
+%For example for the sequence of instructions of the block starting with $\tt{instr_{18}}$ from Figure~\ref{blockBC} we calculate
+%\begin{center}
+%\texttt{wp( iload\_2; ireturn,  $\ulcorner \backslash$\texttt{result} == $\backslash$ old(n)div 2 $\urcorner$ )}
+%\\
+%=
+%\\
+%\texttt{wp(iload\_2, wp( ireturn, $\ulcorner \backslash$\texttt{result} == $\backslash$ old(n)div 2 $\urcorner$ ))} \end{center}
+%Thus the weakest precondition for the block starting at $\tt{instr_{18}}$ at figure~\ref{blockBC} is
+%\texttt{local(2) $\ulcorner$==$\urcorner$ $\ulcorner$ $\backslash$ old(n)div 2 $\urcorner$}
 

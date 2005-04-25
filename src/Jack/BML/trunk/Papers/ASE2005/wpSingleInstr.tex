@@ -1,16 +1,22 @@
 \subsection{Weakest Precondition for bytecode instructions}\label{wpInstr}
-The weakest precondition (\wpi) calculus is a predicate transformer function which takes two arguments : an instruction and a predicate that is the instruction's postcondition $\psi$ and it returns the weakest predicate such that if it holds in the state when the instruction starts its execution then $\psi$ must hold in the state in which the instruction terminates its execution. The signature of \wpi is:
+We have defined a weakest precondition (\wpi) predicate transformer function which takes into account normal and exceptional termination. 
+\wpi \ takes three arguments : an instruction, a predicate that is the instruction's normal postcondition $\psi$, a function
+from exception types to predicates ( it returns the postcondition that  must hold if an exception of type the passed argument
+ causes the method termination)  and it returns the weakest predicate such that if it holds in the state when the instruction starts its 
+ execution then if the instruction terminates its execution normally  $\psi$ must hold in the poststate and if the instruction terminates
+ by an exception \texttt{E} then the predicate that is returned by the third argument for \texttt{E} must hold. The signature of \ \wpi is:
 $$\wpi : \texttt{instruction} \rightarrow \predicate \rightarrow (\tt{ ExceptionType} \rightarrow  \predicate) \rightarrow \predicate   $$
 
-For every instruction \wpi \ symbolically evaluates the values in the prestate of the instruction for the variables that 
-are changed by the instruction w.r.t. to their values in the poststate of the instruction and substitues in the postcondition the
- postcondition values with the precondition values. As the bytecode language is stack based, i.e. 
- the instructions take their arguments from the method execution stack and put the result onto the stack. 
- Thus we have to represent the elements of the stack that correspond to the arguments and the result of the instruction. 
+ The java bytecode language is stack based, i.e.  the instructions take their arguments from the method execution stack and 
+ put the result onto the stack. Thus we have to represent the elements of the stack that correspond to the arguments and the result for a given instruction. 
  In the examples at fig.~\ref{instrWP} \stack{\counter} stands for the element on the top of the stack. 
- The instruction $\instr{Type\_load} \ i$  loads on the top of the stack the value of the method local variable with at index \textit{i} in the \textbf{Local\_Variable\_Table} (see section ~\ref{bcSpecLg}). The \wpi \ rule for  \instr{Type\_load i} increments the stack
+ The instruction $\instr{Type\_load} \ i$  loads on the top of the stack the value of the method local variable with at index \textit{i}
+ in the \textbf{Local\_Variable\_Table} (see section ~\ref{bcSpecLg}). The \wpi \ rule for  \instr{Type\_load i} increments the stack
 counter \counter \ and puts on \stack{\counter} the contents of the local variable $\register{i}$.
-As we said in the beginning of the section \wpi \ ``understands'' the bytecode specification language, i.e. the keywords have their corresponding semantics. For example the keyword \jmlKey{$\backslash$result} is evaluated only by \instr{Type\_return} instructions and if appearing in the postcondition  \jmlKey{$\backslash$ result} is substituted by the element on the top of the stack \stack{\counter}. 
+As we said in the beginning of the section \wpi \ ``understands'' the bytecode specification language, i.e. the keywords have their 
+corresponding semantics. For example the keyword \jmlKey{$\backslash$result} is evaluated only by \instr{Type\_return} 
+instructions and if appearing in the postcondition  \jmlKey{$\backslash$ result} is substituted by the element on the top of 
+the stack \stack{\counter}. 
 
  More details can be found in~\cite{WPBC}.
 \begin{figure}[ht]
@@ -22,17 +28,20 @@ $$
 \\
 \wpi(\instr{Type\_load} \ i, \psi, \excPost) =  \\
 \Myspace \psi[\counter \ \leftarrow \ \counter+1] [\stack{\counter+1} \ \leftarrow \ \register{i}] \\
- \Myspace where \ i \  is \ a \ valid \ entry \ in \ the \ list \  of \  local \ variables   \\
+ \Myspace where \ i \  is \ a \ valid \ entry \ in \\
+ \ the \ list \  of \  local \ variables   \\
 \\ 
 \wpi(\instr{putField} \ i, \psi, \excPost) = \\
    ( \Myspace \stack{counter -1} = \Mynull \\
    \Myspace  \Myspace \Rightarrow \psi[\counter \leftarrow \stack{\counter -2} ] \\
    \Myspace  \Myspace [\texttt{Cl.f} \leftarrow \texttt{Cl.f}(\oplus \stack{\counter - 1} \rightarrow \stack{\counter}) ] )\\
    \Myspace  \wedge  \\
-   \Myspace  \stack(counter-1) = \Mynull \Rightarrow \excPost(\texttt{NullPointer}) \\
- where \ i \  is \ a \ valid \ entry \ in \ the \ class \ constant \  pool \ which   \\
- is  \ a \  symbolic \reference \ to \ the \  field  \ with \ name \  \texttt{f} \\
- from \  class \  \texttt{Cl}
+   \Myspace  \stack{counter-1} \not= \Mynull \Rightarrow \excPost(\tt{NullPointer}) \\
+ where \ i \  is \ a \ valid \ entry \ in \\
+  the \ class \ constant \  pool \ which   \\
+ is  \ a \  symbolic \reference \ to \ the \  field  \\
+ with \ name \  \texttt{f} from \  class \  \texttt{Cl}
+ 
  \end{array} $$
 
 %\texttt{wp(if\_acmpeq n , $\psi$)} =  \texttt{(Stack(t)==Stack(t-1)} $\Rightarrow$ $\psi(n)$ \texttt{[t$\leftarrow$t-2]\\
@@ -49,8 +58,7 @@ $$
 \end{figure}
 
 \subsubsection{References: creating objects, updating field values}
-As Java is entirely based on references let's see how references are dealt with.
-In particular fields are treated as functions, where the domain of a field \texttt{f} 
+Fields are treated as functions, where the domain of a field \texttt{f} 
 declared in the class \texttt{Cl} is the set of objects of class \texttt{Cl}.
 We are using an overriding function rather in the same fashion as in ~\cite{B00ppp}. 
 At fig.~\ref{instrWP} the rule for \instr{putField} generates field overriding expression 
@@ -60,7 +68,7 @@ given at fig.~\ref{override}.
 \begin{figure}
 $$
  \texttt{Cl.f}(\oplus e2 \rightarrow e1)])(o) = \left\{ \begin{array} {ll}
-						       e1 & if e2 = o \\
+						       e1 & if \ e2 = o \\
 					               \texttt{Cl.f}(o)	& else 
 	\end{array}\right. 
 $$ 

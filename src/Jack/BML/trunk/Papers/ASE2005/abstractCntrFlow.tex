@@ -1,67 +1,72 @@
 
-\subsection{Execution graph}\label{abstrCntrFlow}
-We denote by $\Gamma  = ( \Omega, \ll)$ the execution graph of a
+\subsection{The Control Flow graph}\label{abstrCntrFlow}
+As we  already stated we assume that loops in method bodies are  \textit{annotated} with appropriate invariants. 
+Related works \cite{WildmoserN-ESOP05} infer loop invariants. Anyways inferring invariants is not decidable. 
+Rather we propose the scheme where the programmer writes down the invariants  during the program development  
+and on compilation time they are compiled in BCL. 
+Under the assumption for invariant presence we may ``cut'' the control flow graph at every program point
+where an invariant must hold and ``place'' there the invariant. Here we describe how the "cuts" are done. This needs the introduction
+of several definitions.
+     
+ A method body is an array of bytecode instructions that is denoted with $i$ and the $k-th$ instruction
+ in the bytecode is  denoted with $i_{k}$.
+ We denote by $\Gamma  = ( \Omega, \ll)$ the control flow graph of a
 bytecode $\Pi$ where the set of nodes $\Omega$ is the set of
-blocks. The set of edges $\ll$ defines the execution relation
-between blocks.Using standard terminology \cite{ARUCom1986}, a
+blocks. Using standard terminology \cite{ARUCom1986}, a
 basic block is a code segment that has no unconditional jump or
 conditional branch statements except for possibly the last
 statement, and none of its statements, except possibly the first,
-is a target of any jump or branch statement. The formal definition of block follows
-below.
-
-We denote a block that starts at instruction $\tt{i_{j}}$
-respectively by \blockm{j}. Let's have the bytecode $\Pi$ and the
-set of its blocks  be $\wp$. The edges ( $\ll \ \subseteq \wp \ \times \ \wp $ ) define the order of block execution.
+is a target of any jump or branch statement. 
+ We denote a block starting at instruction  $i_{j}$  and ending at instruction by $i_{k}$ $\blockm{j}$. Let's have 
+the bytecode $\Pi$ and the set of its blocks  be $\wp$. The execution relation ( $\blockm{j} \execRel \blockm{k}$ ) states that block
+$ \blockm{k}$ may be executed immediately after $\blockm{j}$ in some execution path of the method. 
+The  definition is given at \ref{execRel}
 
 \begin{defn}[Execution relation between blocks]\label{execRel}
 \begin{tabbing}
-\\Let \=  have \= the block \blockm{j} such that  it ends with instruction $\tt{i_{k}}$ and \\
+\\Let \=  have \= the block $\blockm{j}$ such that  it ends with instruction $\tt{i_{k}}$ and \\
 it is not a return instruction\\
-\>  if $\tt{i_{k}}$ = \texttt{if\_cond n} then   \blockm{j} $\ll$ \blockm{n} and \blockm{j}  $\ll $ \blockm{k+1}  \\
-\>  if $\tt{i_{k}}$ = \texttt{goto n} then \blockm{j} $\ll$ \blockm{n} \\
-\>  if $\tt{i_{k}}$ = \texttt{jsr n} then \blockm{j} $\ll$ \blockm{n} \\
-\>  if $\tt{i_{k}}$ = \texttt{athrow} then \blockm{j} $\ll$ \blockm{n} for all \texttt{n}, such that \blockm{n} is the first\\
+\>  if $\tt{i_{k}}$ = \texttt{if\_cond n} then   $\blockm{j} \execRel \blockm{n}$ and $\blockm{j} \execRel  \blockm{k+1} $ \\
+\>  if $\tt{i_{k}}$ = \texttt{goto n} then $\blockm{j} \execRel \blockm{n}$ \\
+\>  if $\tt{i_{k}}$ = \texttt{athrow} then $\blockm{j} \execRel \blockm{n}$ for all \texttt{n}, such that $\blockm{n}$ is the first\\
 \> \> block of an exception handler that protects $\tt{i_{k}}$ \\
-\>  if  $\tt{i_{k}}$ = \texttt{ret n} then  \blockm{j} $\ll$ \blockm{s}\\
+\>  if $\tt{i_{k}}$ = \texttt{jsr n} then $\blockm{j} \execRel \blockm{n}$ \\
+\>  if  $\tt{i_{k}}$ = \texttt{ret n} then  $ \blockm{j} \execRel \blockm{s}$\\
 \> \> for all s that are indexes of instruction following \\
 \> \> a \texttt{jsr} to the subroutine that ends with $\tt{i_{k}}$ instruction\\
-\>  else \blockm{j} $ \ll  $ \blockm{k+1}
+\>  else $\blockm{j}  \execRel   \blockm{k+1}$
 \end{tabbing}
 \end{defn}
-%We say that $\tt{instr_{i}} $ is a precedent of $\tt{instr_{j}}$  and that  $\tt{instr_{j}}$ is next to  $\tt{instr_{i}}$ if $\tt{instr_{i}} \ll \tt{instr_{j}} $ , the same for blocks that are in the same relation.
-We say that there exists a path between \blockm{i} and \blockm{j} and we note it with  \pathm{i}{j}, if there exists blocks \blockm{s_{1}}... \blockm{s_{n}} such that \blockm{i}$\ll$ \blockm{s_{1}}$\ll$ \blockm{s_{2}}... \blockm{s_{n}}$\ll$ \blockm{j}
+
+We say that there exists a path between $\blockm{i}$ and $\blockm{j}$ and we note it with  $\pathm{i}{j}$, if there exists blocks 
+$\blockm{s_{1}}... \blockm{s_{n}}$ such that $\blockm{i} \execRel \blockm{s_{1}} \execRel \blockm{s_{2}}... \blockm{s_{n}} \execRel  \blockm{j}$
 \begin{defn}[Loop Definition]
 \label{defLoop}
-Let's have a well formed program $\Pi$. We say that \blockm{s} is the start block of loop $l$ in $\Pi$ and \blockm{e} is the end block of $l$ if:
+Let's have a well formed program $\Pi$. We say that $\blockm{s}$ is the start block of loop $l$ in $\Pi$ and $\blockm{e}$ is the end block of $l$ if:
 \begin{itemize}
-\item there exists a path in the execution graph starting at the entry block \blockm{entry} (i.e. the one that starts with the entry instruction) of $\Pi$ and that passes first through \blockm{s} and later through \blockm{e}, i.e.\blockm{entry} $\ll^{*}$ \blockm{s} $\ll^{*}$ \blockm{e}
-\item \blockm{e} $\ll$ \blockm{s}
+\item there exists a path in the control flow graph starting at the entry block $\blockm{entry}$ (i.e. the one
+ that starts with the entry instruction) of $\Pi$ and that passes first through $\blockm{s}$ and later through $\blockm{e}$,
+  i.e.$ \blockm{entry} \execRel^{*}  \blockm{s} \execRel^{*} \blockm{e}$
+\item $\blockm{e} \execRel \blockm{s}$
 \end{itemize}
 \end{defn}
 
-%Loops are represented as cycles in the execution graph. Every loop has a unique name $ \tt{ loop_{i}}$  Every loop $\tt{loop_{i}}$ in a well formed program is defined uniquely by two  instructions - the first instruction of the loop  $\tt{loop^{i}_{start}}$  and the last instruction of the loop $\tt{loop^{i}_{end}}$  and by definition they are in relation $\ll$.
 
-%Relation $\ll$ defines also an execution relation between blocks $\ll$ (we use the same name for the instruction and block execution relation)
-%\begin{defn}{Execution relation between blocks}
-%\label{execRel}
-%Let $\tt{b^{1}}$ and $\tt{b^{2}}$ are blocks. $\tt{b^{1}} \ll \tt{b^{2}} \iff \tt{b^{1}_{end}} \ll \tt{b^{2}_{start}}$.
-%\end{defn}
-
-
-\subsection{Acyclic Execution Graph} \label{graph}
-We consider the acyclic graph $\Gamma^1 = ( \Omega, \ll^1)$ obtained from the execution graph $\Gamma  = ( \Omega, \ll)$ of a well formed bytecode $ \Pi $. The set of nodes $\Omega$ is the set of  blocks in the program and the relation  $\ll^1 $ is a subset of the  execution relation $\ll$.
+\subsection{Acyclic control flow graph} \label{graph}
+We consider the acyclic graph $\Gamma^A = ( \Omega, \execRel^A)$ obtained from the control flow graph 
+$\Gamma  = ( \Omega, \execRel)$ of a well formed bytecode $ \Pi $. The set of nodes $\Omega$ is the set of  blocks in the 
+program and the relation  $\execRel^A$ is a subset of the  execution relation $\execRel$.
 \begin{defn}[Acyclic Execution relation]
 \label{acyclicExRel}
-Let's have the well formed bytecode program $\Pi$ and let have in $\Pi$ the two blocks  \blockm{i} and   \blockm{j}. We say that \blockm{i} $\ll^{1}$ \blockm{j} iff
+Let's have the well formed bytecode program $\Pi$ and let have in $\Pi$ the two blocks  $\blockm{i} $ and   $\blockm{j}$. We say 
+that $\blockm{i} \execRel^{1} \blockm{j}$ iff
 \begin{itemize}
-\item \blockm{i} $\ll$ \blockm{j}
-\item and block \blockm{i} and block \blockm{j} are not the end and the start blocks respectively of the same loop, see loop definition~\ref{defLoop}.
+\item $\blockm{i} \execRel \blockm{j}$
+\item and block $\blockm{i}$ and block $\blockm{j}$ are not the end and the start blocks respectively of the same loop, see loop definition~\ref{defLoop}.
 \end{itemize}
 \end{defn}
 
-%Naturally $\ll^1$ defines a relation between blocks for which we use the same notation $\ll^1$ .
-Both the cyclic and acyclic graphs of the bytecode of method \texttt{half} at Fig.~\ref{halfBC} is at Fig. ~\ref{blockBC}. Blocks are represented by boxes. Black arrows stand for relation $\ll^1$. Dashed arrows represent relation $\ll$.
+Both the cyclic and acyclic graphs of the bytecode of method \texttt{half} at Fig.~\ref{halfBC} is at Fig. ~\ref{blockBC}. Blocks are represented by boxes. Black arrows stand for relation $\execRel^A$. Dashed arrows represent relation $\execRel$.
 
 \begin{figure}[p]
 \begin{center}
@@ -92,5 +97,5 @@ Both the cyclic and acyclic graphs of the bytecode of method \texttt{half} at Fi
 \label{blockBC}
 \end{figure}
 
-Now a path in $\Gamma^1$  is a list of blocks between which is established a relation $\ll^1$ and that starts at the entry point instruction and whose last block is a block that does not have next block.
+Now a path in $\Gamma^A$  is a list of blocks between which is established a relation $\execRel^A$ and that starts at the entry point instruction and whose last block is a block that does not have next block.
 

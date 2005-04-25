@@ -1,5 +1,5 @@
 \newcommand{\todo}[1]{ \textbf{#1}}
-
+\newcommand{\fig}[1]{ Fig.}
 \newcommand{\jmlKey}[1]{\texttt{#1}}% wrapping jml keywords
 \newcommand{\java}[1]{\texttt{#1}}
 \newcommand{\stack}[1]{\texttt{st(#1)}}% element on top stack 
@@ -20,6 +20,7 @@
 \newcommand{\jmlStmt}[1]{\textrm{#1}}
 \newcommand{\interMethodSpec}{\rm{InterMethodSpec}}
 \newcommand{\loopSpec}{\rm{loopSpec}}
+\newcommand{\assert}{\rm{assert}}
 
 \newcommand{\ArithExpr}{\texttt{Arithmetic\_Expression} }
 \newcommand{\expression}{\texttt{expression} }
@@ -45,3 +46,14 @@
 \newcommand{\Mytrue}{ \textit{true} }
 \newtheorem{defn}{Definition} 
 
+
+
+% abstractCtrlFlow.tex
+\newcommand{\execRel}{\rightarrow} % the execution relation
+\newcommand{\blockm}[1]{ \tt{b^{#1}} }
+\newcommand{\blockSeq}[1]{ \tt{b_{seq}^{#1}} }
+\newcommand{\pathm}[2]{\blockm{#1} \execRel^{*} \blockm{#2} }
+
+\newcommand{\blockPost}[1]{ \it{post(\blockSeq{#1} )}}
+
+\newcommand{\invariant}{\textit{I}}

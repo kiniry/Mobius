@@ -5,8 +5,8 @@ following the design by contract approach,~\cite{M97oos} where classes are annot
 inside methods is also possible - for example one can specify loop invariants, or assertions - predicates that must hold at specific program points. 
 %In particular class invariants are properties that must hold at every visible state of a class instance or simply class respectively, history constraints - a property that is a relation between the prestate and poststate of a method, method  pre and postconditions, loop invariants - the predicate that must hold at every program state where the loop is entered, frame conditions - the list of expression that a method modifies, termination conditions - an expression from a well founded set that can be proven to decrease , etc.
 
-JML specifications are written in comments so they are not visible by Java compilers. JML specification is introduced by special JML keywords. For example \jmlKey{requires} and \jmlKey{ensures} stand for method precondition and postcondition respectively, \jmlKey{modifies} for specifying which publicly visible expressions are modified by the method, \jmlKey{loop\_invariant} for loop invariants, etc.
-The JML's syntax is close to the Java's syntax - the greatest part of the JML expressions form a subset of Java expressions except for some keywords. For example \jmlKey{$\backslash$result} stands for the value that a method returns if it is not void, \jmlKey{$\backslash$old(expression)} designates the value of \texttt{expression} in the prestate of a method and is usually used in the method's postcondition. JML also allows the declaration of special JML variables, that are used only for specification purposes. 
+JML specifications are written in comments so they are not visible by Java compilers. JML clauses are introduced by 
+special JML keywords. For example \jmlKey{requires} and \jmlKey{ensures} stand for method precondition and postcondition respectively, \jmlKey{modifies} for specifying which publicly visible expressions are modified by the method, \jmlKey{loop\_invariant} for loop invariants, etc. The JML's syntax is close to the Java's syntax - the greatest part of the JML expressions form a subset of Java expressions except for some keywords. For example \jmlKey{$\backslash$result} stands for the value that a method returns if it is not void, \jmlKey{$\backslash$old(expression)} designates the value of \texttt{expression} in the prestate of a method and is usually used in the method's postcondition. JML also allows the declaration of special JML variables, that are used only for specification purposes. 
 These variables are declared in comments with the \jmlKey{model} modificator and may be used only in specification clauses. 
 
 JML is basically used for either static checking of Java programs such as JACK ~\cite{BR02jack}, the Loop tool, ESC/Java ~\cite{escjava} or dynamic checking as the assertion checker jmlrac ~\cite{jmlrac}. An overview of the JML tools can be found in~\cite{BurdyCCEKLLP03}.
@@ -16,7 +16,7 @@ Figure ~\ref{halfSrc} gives an example of a java method annotated with JML speci
 
 It describes the class \texttt{Half}.
 The specification says that if the method starts execution in a state that satisfies the precondition then on termination it will return the half of the argument as specified in the postcondition. The loop invariant is specified by using the key word \texttt{loop\_invariant} and a condition for loop termination is also specified by declaring after the keyword \jmlKey{decreases} the expression that decreases after every loop execution. 
-\begin{figure}
+\begin{figure}[ht!]
 \begin{verbatim}
 public class Half {	
    //@ requires n >= 0;

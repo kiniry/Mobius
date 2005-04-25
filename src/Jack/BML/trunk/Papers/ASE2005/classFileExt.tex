@@ -1,17 +1,16 @@
 % CHANGED - the example o compilation of loop specification
 
-\section{Bytecode Specification Language}\label{bcSpecLg}
+\section{Bytecode Specification Language (BCL)}\label{bcSpecLg}
 Traditionally a lot of research has been done in the field of program verification for structured program languages~\cite{WPCDS},
-~\cite{DisDij}. This explains the fact that specification languages are destinated to high level program languages. In order to verify 
+~\cite{DisDij}. This explains the fact that the existing specification languages are designed for dealing with high level program languages. In order to verify 
 a program w.r.t. to some property, usually the property is expressed in a suitable specification language.
 After compilation, the executable code is detached from the source code; still we may need to verify that the resulting bytecode 
 preserves the property in question. A typical example is when an untrusted bytecode implementing a public interface arrives at a 
-receiver side and the latter wants to check that the 
-unknown  bytecode respects the interface specification (which may not be trivial). Here comes the need for writing specification on 
-bytecode level. We propose a definition of a bytecode level specification language which corresponds to an important subset of JML.
-Hereafter we scatch the bytecode specification language grammar. We ommit some of the definitions for reason of space constraints,
+receiver side and the latter wants to check that the unknown  bytecode respects the interface specification (which may not be trivial). Here comes the need for writing specification on  bytecode level. 
+We propose a bytecode level specification language which corresponds to an important subset of JML.
+We scatch the bytecode specification language grammar at \fig~\ref{bclGrammar}. We ommit some of the definitions for reason of space constraints,
  e.g. the grammar for arithmetic expressions, as it is defined in a standard way. For the full specification you can look at ~\cite{JML2BCSpec}.  
-
+\begin{figure}[!htbp]
 $$ \begin{array}{l}
 \MethodSpec  ::= \\
    \Myspace \SpecCase \\
@@ -20,25 +19,32 @@ $$ \begin{array}{l}
 \SpecCase ::= \\ 
     \Myspace \jmlStmt{requires} \ \predicate;\\ 
 	\Myspace \jmlStmt{modifies} \ list(\expression);\\
+	\Myspace \jmlStmt{decreases} \ \expression;\\
     \Myspace \jmlStmt{ensures} \ \predicate;\\
-    \Myspace \jmlStmt{exsures} \ \texttt{ExceptionClass} \ \predicate;\\
+    \Myspace \jmlStmt{exsures} \ \texttt{ExceptionClass EXC} \ \predicate;\\
                      \\
 \interMethodSpec ::= \\
      \Myspace \loopSpec \\
-	 \Myspace  \mid \jmlStmt{assert} \ \predicate; \\
+	 \Myspace  \assert \\
 	  \\
 \loopSpec ::= \\
-    \Myspace \jmlStmt{loop\_invariant} \predicate; \\
-	\Myspace \jmlStmt{loop\_modifies} \ list(\expression);\\
+		\Myspace \jmlStmt{pc\_ index} \ int;\\
+	    \Myspace \jmlStmt{loop\_modifies} \ list(\expression);\\
+       \Myspace \jmlStmt{loop\_invariant}  \ \predicate; \\
+	   \Myspace \jmlStmt{loop\_decreases} \ \expression; \\
 	 \\								
+\assert   ::= \\
+		\Myspace \jmlStmt{pc\_ index} \ int;\\
+		\Myspace \jmlStmt{assert} \ \predicate; \\
+	\\
 \ClassSpec ::= \\ 
      \Myspace \jmlStmt{class \ invariant} \ \predicate \\
      \Myspace  \mid  \jmlStmt{history \ constraint} \ \predicate \\
      \Myspace  \mid  \jmlStmt{model} \ \texttt{ClassName}  \ id \\
       \\
       \predicate ::= \\
-      \Myspace    \true \ \mid \ \false
-      \Myspace   \expression \ predSymbol \ \expression \\
+      \Myspace    \true \ \mid \ \false \\
+      \Myspace  \mid   \expression \ predSymbol \ \expression \\
        \Myspace \mid   \predicate \wedge \predicate \\
        \Myspace \mid   \predicate \vee \predicate \\
        \Myspace \mid   \predicate \Rightarrow \predicate \\
@@ -52,12 +58,24 @@ $$ \begin{array}{l}
   	  \Myspace  \mid \result \ \mid \old{\expression}  \\
   	  \Myspace \mid \typeof{\expression}  \ \mid \ \Mynull \ \mid \  \this
 \end{array}$$
-
- The language defined here is expressive enough for most purposes including the description of non trivial functional and security properties.
-
-
+\caption{BCL grammar}
+ \label{bclGrammar}
+ \end{figure}
+ The language defined here is expressive enough for most purposes including the description of non trivial functional and 
+ security properties. Let's just discuss some of the specification clauses 
+ (their semantics is the same as in JML~\cite{RT03djml} , ~\cite{JMLRefMan}).
+  
+ We can specify using the specification clause \jmlKey{exsures} what is the postcondition of  a method in case it terminates with 
+ an exception  \texttt{ExceptionClass}.The special keyword \texttt{EXC} stands for the thrown exception object.
+ 
+As shown by the grammar BCL allows us to specify different method specification cases separated by the keyword \jmlKey{also} - this means that 
+ method caller has to satisfy the disjunction of the preconditions in the specification cases  and the method's implementation 
+ has to guarantee the postcondition of every specification case given that the corresponding precondition held in the prestate.
+The rules for loop specifications and assertions  say at what point in the bytecode they must hold. Loop  specification 
+contains a frame conditions i.e. the expressions that may be modified in a loop iteration. This feature is not standard in JML; this is an extension introduced in 
+ ~\cite{BRL-JACK}. 
+ 
 \subsection{Compiling JML into bytecode specification language}
-
 
 This section explains how high level program specifications are compiled into bytecode level specifications and how they are inserted into the bytecode. 
  A compiler from JML to the bytecode specification language is also defined and its features are discussed.
@@ -80,7 +98,8 @@ newly defined attributes in the class file.
 More precisely every element contains information about the instruction where the loop starts as specified in the \textbf{Line\_Number\_Table}, the invariant associated to this loop, the decreasing expression in case of total correctness, the expressions that can be modified. 
 For the full specification of the compiler you can see~\cite{JML2BCSpec}.
 \end{enumerate}
-\begin{figure}
+
+\begin{figure}[ht!]
 \textbf{     
 \begin{tabbing}
 JML\=Loop\_specification\_attribute \{\\
