@@ -53,7 +53,7 @@ public class Datagroups {
         When we fetch a contents of a datagroup, we only fetch the fields that
         are in td or its superclasses and super interfaces. */
     //@ requires fd != null;
-    //@ require td != null;
+    //@ requires td != null;
     static public void add(TypeDecl td, FieldDecl fd, Expr fa) {
         Map map = (Map) datagroups.get(td);
         if (map == null) map = initMap(td);

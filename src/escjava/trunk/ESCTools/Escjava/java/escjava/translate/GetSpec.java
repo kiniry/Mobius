@@ -1976,8 +1976,8 @@ public final class GetSpec {
    */
   //@ invariant nonnullDecoration != null;
   //@ invariant nonnullDecoration.decorationType ==
-  // \type(SimpleModifierPragma);
-  /* @ spec_public */
+  //@ \type(SimpleModifierPragma);
+  /*@ spec_public */
   private static ASTDecoration nonnullDecoration = new ASTDecoration(
   "nonnullDecoration");
   
