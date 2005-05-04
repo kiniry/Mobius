@@ -7,3 +7,4 @@ TestProperties.java
 TestLong.java
 TestInteger.java
 TestBitSet.java
+TestFile.java
