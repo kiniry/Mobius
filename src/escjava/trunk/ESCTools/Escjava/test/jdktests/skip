@@ -1,1 +1,9 @@
 TestSystem3.java
+## Tests with Simplify problems
+TestThrowable.java
+TestStringBuffer.java
+TestString.java
+TestProperties.java
+TestLong.java
+TestInteger.java
+TestBitSet.java

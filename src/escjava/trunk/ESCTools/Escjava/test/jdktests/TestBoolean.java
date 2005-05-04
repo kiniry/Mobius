@@ -119,7 +119,7 @@ public class TestBoolean extends LocalTestCase {
 
   // FIXME - these need better handling of java.util.Properties and of
   // interned Strings to be provable
-  public void testGetProperty() {
+  public void testGetProperty() throws RuntimeException {
     assertTrue (!Boolean.getBoolean(null));
     assertTrueNP (!Boolean.getBoolean(""));
     System.setProperty("a","TRUE");

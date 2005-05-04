@@ -8,12 +8,12 @@ Execution trace information:
     Routine call returned exceptionally in "TestMap.java", line 25, col 25.
 
 TestMap.java:51: Warning: Possible assertion failure (Assert)
-        //@ assert (\forall Object oo; map.containsKey(oo) ==> oo.equa ...
+        //@ assert (/forall Object oo; map.containsKey(oo) ==> oo.equa ...
             ^
 TestMap.java:52: Warning: Precondition possibly not established (Pre)
         assertTrue ( map.get(o) == null); // FIXME
                    ^
-Associated declaration is ".\LocalTestCase.java", line 19, col 6:
+Associated declaration is "./LocalTestCase.java", line 19, col 6:
   //@ requires b;
       ^
 TestMap.java:57: Warning: Possible assertion failure (Assert)
@@ -49,13 +49,13 @@ TestMap.java:147: Warning: Possible assertion failure (Assert)
 TestMap.java:155: Warning: Possible assertion failure (Assert)
 //@ assert false;  // TEST FOR CONSISTENCY
     ^
-TestMap.java:174: Warning: Possible assertion failure (Assert)
+TestMap.java:175: Warning: Possible assertion failure (Assert)
 //@ assert false;  // TEST FOR CONSISTENCY
     ^
-TestMap.java:185: Warning: Possible assertion failure (Assert)
+TestMap.java:186: Warning: Possible assertion failure (Assert)
 //@ assert false;  // TEST FOR CONSISTENCY
     ^
 Execution trace information:
-    Routine call returned exceptionally in "TestMap.java", line 180, col 14.
+    Routine call returned exceptionally in "TestMap.java", line 181, col 14.
 
 16 warnings

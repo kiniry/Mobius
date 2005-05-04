@@ -10,7 +10,7 @@ TestList.java:164: Warning: Possible assertion failure (Assert)
 TestList.java:183: Warning: Precondition possibly not established (Pre)
             assertTrue (b);   // FIXME
                        ^
-Associated declaration is ".\LocalTestCase.java", line 19, col 6:
+Associated declaration is "./LocalTestCase.java", line 19, col 6:
   //@ requires b;
       ^
 Execution trace information:
@@ -25,7 +25,7 @@ Execution trace information:
 TestList.java:204: Warning: Precondition possibly not established (Pre)
         assertTrue (b);
                    ^
-Associated declaration is ".\LocalTestCase.java", line 19, col 6:
+Associated declaration is "./LocalTestCase.java", line 19, col 6:
   //@ requires b;
       ^
 Execution trace information:
@@ -47,7 +47,7 @@ TestList.java:275: Warning: Possible assertion failure (Assert)
 //@ assert false; // TEST FOR CONSISTENCY
     ^
 TestList.java:339: Warning: Possible assertion failure (Assert)
-           //@ assert c.elementType == \type(Object);  // FIXME - this ...
+           //@ assert c.elementType == /type(Object);  // FIXME - this ...
                ^
 Execution trace information:
     Routine call returned exceptionally in "TestList.java", line 285, col 13.

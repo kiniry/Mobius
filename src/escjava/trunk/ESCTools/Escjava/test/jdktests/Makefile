@@ -13,6 +13,7 @@ _TMP = $(call canonicalize,/tmp)
 _SIMP = $(call canonicalize,${ESCJ_SIMPLIFY})
 
 _SPECS = $(call canonicalize,${ESC_SPECS})
+_ESCROOT = $(call canonicalize,${ESCTOOLS_ROOT})
 
 # Used to invoke text-based JUnit tests
 export JUNIT = ${JAVA} -Xmx256M -classpath "${_CLASSPATH}" \
@@ -36,11 +37,11 @@ buildtests: lists
 test runtests: extests separate_java_tests
 
 .PHONY: extests
-extests: lists
+extests: buildtests
 	-${JUNIT} AllTests
 
 .PHONY: swtests
-swtests: lists
+swtests: buildtests
 	-$(JUNITSW) AllTests
 
 DEFAULTFLAGS = " "
@@ -118,6 +119,9 @@ separate_java_tests:
 		sed -e "sx//#FLAGS:xx" -e "s@ESCTOOLS_ROOT@${ESCTOOLS_ROOT}@" ` \
 		$(addsuffix .java,$*))
 
+## This target (X-test) runs escjava against X.java, using any flags specified
+## in X.java and comparing the output against the contents of X.java-expected.
+## The actual output is stored in X.java-ckd if it is different.
 %-test: 
 	@echo Testing $* 
 	@if [ ! -e $* ] ; then \
@@ -126,7 +130,11 @@ separate_java_tests:
 	(${ESCJAVA} ${ALWAYSFLAGS} -classpath "${_CLASSPATH}" -specs "${_SPECS}"\
 		`grep '//#FLAGS:' $* | \
 		sed -e "sx//#FLAGS:xx" -e "s@ESCTOOLS_ROOT@${ESCTOOLS_ROOT}@" ` \
-		$* 2>&1 | sed -e s/x/x/ > $*-ckd ) || exit 0; \
+		$* 2>&1 \
+	        | sed -e "s#${_ESCROOT}#ESCTOOLSROOT#" \
+                | tr '\\' '/'  \
+	        | sed -e "s#${_ESCROOT}#ESCTOOLSROOT#" \
+	        > $*-ckd ) || exit 0; \
 	if [ -e $*-expected ] ; then \
 		${DIFF} $*-ckd $*-expected  \
 		  && rm $*-ckd ;\

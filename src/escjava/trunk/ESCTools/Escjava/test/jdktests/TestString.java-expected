@@ -10,13 +10,13 @@ Execution trace information:
 TestString.java:56: Warning: Precondition possibly not established (Pre)
     assertTrue ( ss.charAt(1) == a[1] );  // FIXME
                ^
-Associated declaration is ".\LocalTestCase.java", line 19, col 6:
+Associated declaration is "./LocalTestCase.java", line 19, col 6:
   //@ requires b;
       ^
 TestString.java:62: Warning: Precondition possibly not established (Pre)
     assertTrue( !ss.equals(sss));   // FIXME
               ^
-Associated declaration is ".\LocalTestCase.java", line 19, col 6:
+Associated declaration is "./LocalTestCase.java", line 19, col 6:
   //@ requires b;
       ^
 TestString.java:64: Warning: Possible assertion failure (Assert)
@@ -31,7 +31,7 @@ Execution trace information:
 TestString.java:93: Warning: Precondition possibly not established (Pre)
     assertTrue ( ss.charAt(0) == a[3] );   // FIXME
                ^
-Associated declaration is ".\LocalTestCase.java", line 19, col 6:
+Associated declaration is "./LocalTestCase.java", line 19, col 6:
   //@ requires b;
       ^
 TestString.java:94: Warning: Possible assertion failure (Assert)
@@ -40,7 +40,7 @@ TestString.java:94: Warning: Possible assertion failure (Assert)
 TestString.java:102: Warning: Precondition possibly not established (Pre)
     assertTrue( a[0] == ss.charAt(0) );   // FIXME
               ^
-Associated declaration is ".\LocalTestCase.java", line 19, col 6:
+Associated declaration is "./LocalTestCase.java", line 19, col 6:
   //@ requires b;
       ^
 Caution: Unable to check method testConstructor4b() of type TestString completely because too much time required
@@ -58,7 +58,7 @@ Execution trace information:
 TestString.java:175: Warning: Precondition possibly not established (Pre)
      assertTrue ( sbb.equals(sb) );   // FIXME
                 ^
-Associated declaration is ".\LocalTestCase.java", line 19, col 6:
+Associated declaration is "./LocalTestCase.java", line 19, col 6:
   //@ requires b;
       ^
 TestString.java:264: Warning: Possible assertion failure (Assert)
@@ -94,7 +94,7 @@ TestString.java:355: Warning: Possible assertion failure (Assert)
 TestString.java:364: Warning: Precondition possibly not established (Pre)
     assertTrue ( b[1] == s.charAt(1) );   // FIXME
                ^
-Associated declaration is ".\LocalTestCase.java", line 19, col 6:
+Associated declaration is "./LocalTestCase.java", line 19, col 6:
   //@ requires b;
       ^
 TestString.java:383: Warning: Possible assertion failure (Assert)
@@ -106,19 +106,19 @@ TestString.java:385: Warning: Possible assertion failure (Assert)
 TestString.java:396: Warning: Precondition possibly not established (Pre)
     assertTrue( sss.charAt(0) == s.charAt(0));   // FIXME
               ^
-Associated declaration is ".\LocalTestCase.java", line 19, col 6:
+Associated declaration is "./LocalTestCase.java", line 19, col 6:
   //@ requires b;
       ^
 TestString.java:397: Warning: Precondition possibly not established (Pre)
     assertTrue( sss.charAt(3) == ss.charAt(0));  // FIXME
               ^
-Associated declaration is ".\LocalTestCase.java", line 19, col 6:
+Associated declaration is "./LocalTestCase.java", line 19, col 6:
   //@ requires b;
       ^
 TestString.java:400: Warning: Precondition possibly not established (Pre)
     assertTrue( s4.length() == s.length() + ss.length() );  // FIXME
               ^
-Associated declaration is ".\LocalTestCase.java", line 19, col 6:
+Associated declaration is "./LocalTestCase.java", line 19, col 6:
   //@ requires b;
       ^
 TestString.java:424: Warning: Possible assertion failure (Assert)
@@ -137,19 +137,19 @@ Execution trace information:
 TestString.java:457: Warning: Precondition possibly not established (Pre)
     assertTrue ( ss.charAt(0) == s.charAt(2) );  // FIXME
                ^
-Associated declaration is ".\LocalTestCase.java", line 19, col 6:
+Associated declaration is "./LocalTestCase.java", line 19, col 6:
   //@ requires b;
       ^
 TestString.java:531: Warning: Precondition possibly not established (Pre)
     assertTrue( c.charAt(0) == s.charAt(2));  // FIXME
               ^
-Associated declaration is ".\LocalTestCase.java", line 19, col 6:
+Associated declaration is "./LocalTestCase.java", line 19, col 6:
   //@ requires b;
       ^
 TestString.java:535: Warning: Precondition possibly not established (Pre)
     assertTrue( c.charAt(0) == s.charAt(0));   // FIXME
               ^
-Associated declaration is ".\LocalTestCase.java", line 19, col 6:
+Associated declaration is "./LocalTestCase.java", line 19, col 6:
   //@ requires b;
       ^
 TestString.java:564: Warning: Possible assertion failure (Assert)
@@ -167,7 +167,7 @@ TestString.java:578: Warning: Possible assertion failure (Assert)
 TestString.java:594: Warning: Precondition possibly not established (Pre)
     assertTrue (s.charAt(2) == data[2]);
                ^
-Associated declaration is ".\LocalTestCase.java", line 19, col 6:
+Associated declaration is "./LocalTestCase.java", line 19, col 6:
   //@ requires b;
       ^
 TestString.java:644: Warning: Possible assertion failure (Assert)
@@ -189,7 +189,7 @@ TestString.java:658: Warning: Possible assertion failure (Assert)
 TestString.java:666: Warning: Precondition possibly not established (Pre)
     assertTrue ( s.charAt(1) == ss.charAt(1));      // FIXME
                ^
-Associated declaration is ".\LocalTestCase.java", line 19, col 6:
+Associated declaration is "./LocalTestCase.java", line 19, col 6:
   //@ requires b;
       ^
 TestString.java:682: Warning: Possible assertion failure (Assert)

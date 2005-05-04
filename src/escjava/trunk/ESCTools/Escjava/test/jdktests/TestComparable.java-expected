@@ -1,0 +1,17 @@
+TestComparable.java:15: Warning: Possible assertion failure (Assert)
+    //@ assert i == -j;
+        ^
+TestComparable.java:34: Warning: Possible assertion failure (Assert)
+//@ assert false; // TEST FOR CONSISTENCY
+    ^
+Execution trace information:
+    Routine call returned exceptionally in "TestComparable.java", line 20, col 8.
+    Routine call returned exceptionally in "TestComparable.java", line 28, col 8.
+
+TestComparable.java:35: Warning: Possible unexpected exception (Exception)
+  }
+  ^
+Execution trace information:
+    Routine call returned exceptionally in "TestComparable.java", line 11, col 14.
+
+3 warnings

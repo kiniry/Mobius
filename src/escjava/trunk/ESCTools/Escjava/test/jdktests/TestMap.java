@@ -159,6 +159,7 @@ public class TestMap extends LocalTestCase {
     //@ requires e != null;
     //@ requires ee != null;
     //@ requires e != ee;
+    //@ signals_only RuntimeException;
     public void NoExec_testEntry() {
         //@ assume e.equalsObjects(ee);
         //@ assert e.equals(e);
