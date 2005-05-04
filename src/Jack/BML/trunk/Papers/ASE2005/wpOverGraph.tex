@@ -2,9 +2,9 @@
 
 \subsection{Bytecode Weakest Precondition}\label{wpGraph}
 
-The verification being modular proof, obligations are generated for every method separately. The verification condition generation 
+The verification being modular, proof obligations are generated for every method separately. The verification condition generation 
 is trivially defined over the acyclic execution graph of a method. 
-The \wpi \ function runs in a backwards  direction starting from the blocks that do not have predecessors upto reaching the entry point
+The \wpi \ function runs in a backwards  direction starting from the blocks that do not have predecessors up to reaching the entry point
  instruction.  Calculating the precondition of the sequential part of the block $\blockm{i}$ 
  which we denote with  $\blockSeq{i}$  is standard - the precondition of an instruction  is inferred from the precondition of the previous.
 The  interesting part is how the postcondition  for $\blockSeq{i}$ , i.e. the precondition of the last block instructions is inferred 
@@ -16,7 +16,7 @@ The postcondition for the sequential part of a block  $\blockSeq{i}$ (without it
  If $\blockm{i}$ ends with instruction $i_s$ then :
  \begin{itemize} 
  \item  if  $i_s$ is a loop end instruction \wpi \footnote{those \ instructions \ are detected when building the acyclic  graph and the 
- backedge is "replaced"  by the corresponding \ invariant \ \invariant  } and whose invariant is \invariant: 
+ back edge is "replaced"  by the corresponding \ invariant \ \invariant  } and whose invariant is \invariant: 
  $$ \blockPost{i} =  \wpi(  i_s, \invariant)  $$ 
  \item if  $i_s$ =  \instr{if\_cond n} \\
 $$
@@ -42,15 +42,17 @@ $$
 		(\oplus (Exc_{i}^{thrown} \rightarrow \excPost(Exc_{i}^{thrown}) ) \\
 		\phantom{\oplus Exc^{thrown} } [\counter \leftarrow  0] \\ 
 		\phantom{ \oplus Exc^{thrown} } [EXC \leftarrow  \stack{\counter} ] )_{i=0}^{n}   \\
-		(\oplus Exc_{i}^{handled(i)} \rightarrow \wpi(\blockm{i}, \blockPost{i}, \excPost )\\
-		\phantom{\oplus Exc^{handled(i)} }  [\counter \leftarrow  0] \\ 
-		\phantom{ \oplus Exc^{handled(i)}}   [EXC \leftarrow  \stack{\counter} ] )_{i=0}^{m} \\
+		(\oplus Exc_{i}^{handled} \rightarrow \wpi(\blockm{e}, \blockPost{e}, \excPost )\\
+		\phantom{\oplus Exc^{handled} } [\counter \leftarrow  0] \\ 
+		\phantom{ \oplus Exc^{handled}} [EXC \leftarrow  \stack{\counter} ] )_{i=0}^{m} \\
 		\end{array} \right.
 $$
-As we are doing partial evaluation the only thing we know about the exception thrown is that it is 
-on the top of the stack $\stack{\counter}$. We keep track of all the possible postconditions upto
+The only thing that is known about the exception thrown is that it is 
+on the top of the stack $\stack{\counter}$. We keep track of all the possible postconditions (as the exception
+may be caught by an exception handler starting at $\blockm{e}$ or it is thrown and thus the exceptional postcondition for 
+the exception must hold) up to
 discovering the type of the thrown exception and then identifying the adequate predicate 
-that must hold after the execution of the \instr{athrow} instruction.
+that must hold after the execution of the \instr{athrow} instruction. 
 \item  if  $i_s$ = \instr{return} \\
 $$
    \blockPost{i } = \psi[\result \leftarrow \stack{\counter} ]    
@@ -62,7 +64,7 @@ where $\psi $ is the specified method postcondition.
 \end{defn}
 
 %\Paragraph{Subroutines}
-Subroutines are treated by inlining them. As we stated in the beginning we assume that the bytecode has been certified by a java
+Subroutines are treated by inlining them. As we stated in the beginning we assume that the bytecode has been certified by a Java
 bytecode verifier thus our analysis for identifying  subroutine is not a problem.  
 \todo{example}
 

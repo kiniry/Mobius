@@ -8,8 +8,8 @@ After compilation, the executable code is detached from the source code; still w
 preserves the property in question. A typical example is when an untrusted bytecode implementing a public interface arrives at a 
 receiver side and the latter wants to check that the unknown  bytecode respects the interface specification (which may not be trivial). Here comes the need for writing specification on  bytecode level. 
 We propose a bytecode level specification language which corresponds to an important subset of JML.
-We scatch the bytecode specification language grammar at \fig~\ref{bclGrammar}. We ommit some of the definitions for reason of space constraints,
- e.g. the grammar for arithmetic expressions, as it is defined in a standard way. For the full specification you can look at ~\cite{JML2BCSpec}.  
+We sketch the bytecode specification language grammar at \fig~\ref{bclGrammar}. We omit some of the definitions for reason of space constraints,
+ e.g. the grammar for arithmetic expressions( which is defined in a standard way). For the full specification you can look at ~\cite{JML2BCSpec}.  
 \begin{figure}[!htbp]
 $$ \begin{array}{l}
 \MethodSpec  ::= \\
@@ -25,7 +25,7 @@ $$ \begin{array}{l}
                      \\
 \interMethodSpec ::= \\
      \Myspace \loopSpec \\
-	 \Myspace  \assert \\
+	 \Myspace  \mid \assert \\
 	  \\
 \loopSpec ::= \\
 		\Myspace \jmlStmt{pc\_ index} \ int;\\
@@ -75,20 +75,20 @@ The rules for loop specifications and assertions  say at what point in the bytec
 contains a frame conditions i.e. the expressions that may be modified in a loop iteration. This feature is not standard in JML; this is an extension introduced in 
  ~\cite{BRL-JACK}. 
  
-\subsection{Compiling JML into bytecode specification language}
+\subsection{Compiling JML into bytecode specification language}\label{comJML}
 
 This section explains how high level program specifications are compiled into bytecode level specifications and how they are inserted into the bytecode. 
  A compiler from JML to the bytecode specification language is also defined and its features are discussed.
 
 
-Before going farther we give a brief desrciption of the class file format. As defined by the java virtual machine  specification (JVMS) \cite{VMSpec}, a class file contains a definition of a single class class or interface. It contains information about the class name, interfaces implemented by the class, super class, methods and fields declared in the class and references. The JVMS mandate that the class file contains data structure usually refered as the \textbf{constant\_pool} table which is used to construct the runtime constant pool upon class or interface creation. The runtime constant pool serves for loading, linking and resolution of references used in the class. The JVMS allows to add to the class file a user specific information(~\cite{VMSpec}, ch.4.7.1). This is done by defining user specific attributes  (their structure is predefined by JVMS).
+Before going farther we give a brief description of the class file format. As defined by the Java virtual machine  specification (JVMS) \cite{VMSpec}, a class file contains a definition of a single class class or interface. It contains information about the class name, interfaces implemented by the class, super class, methods and fields declared in the class and references. The JVMS mandate that the class file contains data structure usually referred as the \textbf{constant\_pool} table which is used to construct the runtime constant pool upon class or interface creation. The runtime constant pool serves for loading, linking and resolution of references used in the class. The JVMS allows to add to the class file a user specific information(~\cite{VMSpec}, ch.4.7.1). This is done by defining user specific attributes  (their structure is predefined by JVMS).
 
-Thus the ``JML compiler'' compiles the jml source specification into a user defined attributes. The compilation process has three stages:
+Thus the ``JML compiler'' compiles the JML source specification into a user defined attributes. The compilation process has three stages:
 \begin{enumerate}
-\item compile the java source file. This can be done by any java compiler that supplies for every method in the generated class file the \textbf{Line\_Number\_Table} and \textbf{Local\_Variable\_Table}  attributes.
- The presence in the java class file format of these attribute is optional \cite{VMSpec}. The \textbf{Line\_Number\_Table} describes the link between the source line and the bytecode of a method.  The \textbf{Local\_Variable\_Table} describes the local variables that appear in a method. This attribute is important for the next phase of the JML cpmpilation.
+\item compile the Java source file. This can be done by any Java compiler that supplies for every method in the generated class file the \textbf{Line\_Number\_Table} and \textbf{Local\_Variable\_Table}  attributes.
+ The presence in the Java class file format of these attribute is optional \cite{VMSpec}. The \textbf{Line\_Number\_Table} describes the link between the source line and the bytecode of a method.  The \textbf{Local\_Variable\_Table} describes the local variables that appear in a method. This attribute is important for the next phase of the JML compilation.
 \item from the source file and the resulting class file compile the JML specification. In this phase Java and JML source identifiers are linked with their identifiers on bytecode level, namely with the corresponding indexes either from the constant pool or the array of local variables described in the \textbf{Local\_Variable\_Table} attribute. It is also in this phase that the specification parts like the loop invariants and the assertions which must hold at a certain source program point must be associated to the respective program point on bytecode level. The specification
-is compiled standartly in binary form using tags. Basically the compilation of an expression is a tag followed by the compilation of its subexpressions. 
+is compiled standardly in binary form using tags. Basically the compilation of an expression is a tag followed by the compilation of its subexpressions. 
 
 \todo{example for the compilation rule for a specific expression. Explain that the expressions are compiled in binary using tags }
 
@@ -131,5 +131,5 @@ JML\=Loop\_specification\_attribute \{\\
 %A ``JML bytecode'' viewer is under development at project Everest, INRIA Sophia-Antipolis. The latter is a tool that visualizes all aspects of compiled Java class files and the contained bytecode.
 
 \subsubsection{Discussion}
-The JML compiler does not depend on any specific Java compiler. Anyways it requires the presence of a debug information, namely the presence of the \textbf{Line\_Number\_Table} attribute for the proper compilation of intermethod specification, i.e. loops and assertions. We hope that this is an acceptable restriction for the compiler.
-The most problematic part of the compilation is to find the instructions to which the loop invariants must be associated. The difficulty consists in identifying the right cycle in the bytecode control flow graph corresponding to a particular loop in the source code. 
+The JML compiler does not depend on any specific Java compiler. Anyways it requires the presence of a debug information, namely the presence of the \textbf{Line\_Number\_Table} attribute for the proper compilation of inter method specification, i.e. loops and assertions. We hope that this is an acceptable restriction for the compiler. The most problematic part of the compilation is to find the program points where the loop invariants must hold. This basically means that one has to identify which source loop corresponds to which bytecode loop in the control flow graph. To do this we assume that the control flow graph is reducible~\cite{ARUCom1986} (basically means that there are no jumps from outside a loop inside it) which allows us to identify the relationship between the bytecode and the source code. 
+

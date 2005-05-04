@@ -1,21 +1,6 @@
 
-We propose an architecture for ensuring trust in mobile code
-scenarios. The architecture, which we call Annotation Carrying Code,
-is inspired from Proof Carrying Code, but aims at enforcing complex
-properties of software, including functional properties and security
-policies. The idea is that the code producer will develop an annotated
-application which can be verified using a weakest precondition
-calculus, that generates proof obligations for the software to be
-correct, and a theorem prover, that discharges the proof obligations
-and thus establishes the correctness of the code w.r.t. its
-annotations. Both the code and annotations are compiled, producing
-an annotated applet, which can be checked by the code consumer with a
-weakest precondition calculus at bytecode level, and the same theorem
-prover that is used by the code producer. In particular the annotations 
-are compiled from the specification written on source level, thus we capture
-a larger set of program properties than the certifying compiler proposed by Necula. 
-We present the architecture, and its implementation 
-in the context of a verification environment for Java applets.
 
+We propose a logic for sequential java bytecode based on a weakest precondition calculus and a bytecode specification language (BCL). 
+The logic supports the Java specific features - exceptions, subroutines, references and object creation and gives semantics to the BCL specification. The BCL and the logic defined  allow expressing and checking complex functional and interface properties. We propose a compiler from the high level Java specification language JML in BCL. The compiled JML annotation is added to the class file format in the form of user defined attributes. This makes automatic the process of bytecode annotation.  Both the compiler and the weakest precondition calculus are implemented and integrated in the Java Applet Correctness Kit (JACK) \footnote{http://www-sop.inria.fr/everest/soft/Jack/jack.html}.
 
 

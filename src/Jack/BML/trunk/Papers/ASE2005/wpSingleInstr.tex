@@ -1,13 +1,10 @@
 \subsection{Weakest Precondition for bytecode instructions}\label{wpInstr}
 We have defined a weakest precondition (\wpi) predicate transformer function which takes into account normal and exceptional termination. 
 \wpi \ takes three arguments : an instruction, a predicate that is the instruction's normal postcondition $\psi$, a function
-from exception types to predicates ( it returns the postcondition that  must hold if an exception of type the passed argument
- causes the method termination)  and it returns the weakest predicate such that if it holds in the state when the instruction starts its 
- execution then if the instruction terminates its execution normally  $\psi$ must hold in the poststate and if the instruction terminates
- by an exception \texttt{E} then the predicate that is returned by the third argument for \texttt{E} must hold. The signature of \ \wpi is:
+from exception types to predicates $\excPost$ ( it returns the specified postcondition in the \jmlKey{exsures} clause for a given exception ~\ref{bclGrammar})  and it returns the weakest predicate such that if it holds in the state when the instruction starts its execution if the instruction terminates its execution normally  $\psi$ must hold in the poststate and if it terminates with an exception \texttt{E} then the predicate $\excPost(\tt{E})$ must hold. The signature of \ \wpi is:
 $$\wpi : \texttt{instruction} \rightarrow \predicate \rightarrow (\tt{ ExceptionType} \rightarrow  \predicate) \rightarrow \predicate   $$
 
- The java bytecode language is stack based, i.e.  the instructions take their arguments from the method execution stack and 
+ The Java bytecode language is stack based, i.e. the instructions take their arguments from the method execution stack and 
  put the result onto the stack. Thus we have to represent the elements of the stack that correspond to the arguments and the result for a given instruction. 
  In the examples at fig.~\ref{instrWP} \stack{\counter} stands for the element on the top of the stack. 
  The instruction $\instr{Type\_load} \ i$  loads on the top of the stack the value of the method local variable with at index \textit{i}
@@ -34,7 +31,7 @@ $$
 \wpi(\instr{putField} \ i, \psi, \excPost) = \\
    ( \Myspace \stack{counter -1} = \Mynull \\
    \Myspace  \Myspace \Rightarrow \psi[\counter \leftarrow \stack{\counter -2} ] \\
-   \Myspace  \Myspace [\texttt{Cl.f} \leftarrow \texttt{Cl.f}(\oplus \stack{\counter - 1} \rightarrow \stack{\counter}) ] )\\
+   \Myspace  \Myspace [\texttt{Cl.f} \leftarrow \texttt{Cl.f}(\oplus [\stack{\counter - 1} \rightarrow \stack{\counter})] ] )\\
    \Myspace  \wedge  \\
    \Myspace  \stack{counter-1} \not= \Mynull \Rightarrow \excPost(\tt{NullPointer}) \\
  where \ i \  is \ a \ valid \ entry \ in \\
@@ -57,17 +54,15 @@ $$
 %\end{frameit}
 \end{figure}
 
-\subsubsection{References: creating objects, updating field values}
+\subsubsection{References: manipulating fields}
 Fields are treated as functions, where the domain of a field \texttt{f} 
 declared in the class \texttt{Cl} is the set of objects of class \texttt{Cl}.
 We are using an overriding function rather in the same fashion as in ~\cite{B00ppp}. 
-At fig.~\ref{instrWP} the rule for \instr{putField} generates field overriding expression 
-as field names are substituted by overriding substitution. The definition of overriding expresion is
-given at fig.~\ref{override}.
+At fig.~\ref{instrWP} the rule for \instr{putField} substitutes the corresponding field function with an overriding function. The definition of overriding expression is given at fig.~\ref{override}.
 
 \begin{figure}
 $$
- \texttt{Cl.f}(\oplus e2 \rightarrow e1)])(o) = \left\{ \begin{array} {ll}
+ \texttt{Cl.f}(\oplus[e2 \rightarrow e1)])(o) = \left\{ \begin{array} {ll}
 						       e1 & if \ e2 = o \\
 					               \texttt{Cl.f}(o)	& else 
 	\end{array}\right. 
@@ -75,7 +70,7 @@ $$
 \caption{Overriding Function}
 \label{override}
 \end{figure}
-We give an example at fig.% \ref{aliasing} for how aliasing is treated. 
+We give an example at fig.  % \ref{aliasing} for how aliasing is treated. 
 
 %\begin{figure}
 %\begin{verbatim}
@@ -93,5 +88,36 @@ We give an example at fig.% \ref{aliasing} for how aliasing is treated.
  %\label{aliasing}
 %\end{figure}
 
-
 \subsubsection{Method calls}
+Method calls are substituted by their specification. Method specification is a contract - the precondition of the called method
+must hold at the program point where the method is called and its postcondition is assumed to hold after the invocation. Thus the rule for
+invocation on an instance non void method is given at the fig ~\ref{wpInv}. In the precondition of the called method the formal parameters and the object on which the method is called are substituted with the first \textit{n+1} elements from the top of stack. As the method returns a value the JML keyword 
+\jmlKey{ $\backslash$ result} if present in the postcondition of the called method is substituted with a fresh variable $fresh\_var$ and as the result is put after the execution of the invocation at the top stack $fresh\_var$ is substituted in the postcondition $\psi$. The resulting predicate is quantified over the 
+expressions that may be modified by the called method. Here we omit the case when the invocation result in an exception for reasons of limited space. 
+The rule for static methods is rather the same except for the number of stack elements taken from the stack.  
+
+\begin{figure}[!ht]
+$$
+\begin{array}{l}
+\wpi(\rm{invoke} \ m, \psi ,\excPost) =\\ 
+\begin{array}{l}
+\psi^{pre}(m) \wedge \\
+ \forall m_{i}. ( i = 1 .. s ) \\
+ ( \\
+\psi^{post}(m) \\
+\phantom{\psi^{post}}[\register{i}  \rightarrow \stack{\counter - i + numArgs(method(ind) ) } ]_{i=0}^n  \\
+\phantom{\psi^{post}} [\tt{\backslash result} \rightarrow fresh\_var] \\
+\Rightarrow \psi[\counter \rightarrow \counter - numArgs(m)]\\
+\phantom{\Rightarrow \psi} [\stack{\counter }  \rightarrow fresh\_var] \\
+) \\
+%[e_{i} \rightarrow m_{i}]_{i = 1}^s \\
+\end{array} \\
+\psi^{pre}(m) - the \ specified \ precondition \ of \ method \ m \\
+\psi^{post}(m) - the \ specified \ postcondition \ of \ method \ m \\
+m_{i} , i = 1 .. s - stands  \ for \ the \ locations \\
+\phantom{m_{i} , i = 1 .. s   } modified \ by \ method \ m
+\end{array}
+$$
+\caption{\wpi \ rule for a call to an instance method}
+\label{wpInv}
+\end{figure}

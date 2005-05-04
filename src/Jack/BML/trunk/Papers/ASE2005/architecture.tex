@@ -1,6 +1,6 @@
 \section{Architecture for Embedded Software Verification}
 \label{architecture_s}	
-Figure~\ref{architecture} presents the overall proposed architecture for ensuring Java bytecode correctness. 
+Figure~\ref{architecture} presents the proposed overall architecture for ensuring Java bytecode correctness. 
 \begin{figure}[ht!]
 \begin{center}
 \epsfig{file=architecture.eps, width=\linewidth}
@@ -8,21 +8,21 @@ Figure~\ref{architecture} presents the overall proposed architecture for ensurin
 \label{architecture}
 \end{center}
 \end{figure}
-It describes a process that allows a client to trust a code produced by an unstruted code producer.
+It describes a process that allows a client to trust a code produced by an untrusted code producer.
 
 The process starts with some annotated Java source files provided by a client to a code producer. Those files can be
 \begin{itemize}
-\item A specified interface that described the application that should be developped. In that case, the client has fully specified in JML the features that have to be implemented by the code producer.
-\item An API with some restricted access to some method. In these case, the client can protect its system by restrecting its usage (for example: ...). 
+\item A specified interface that described the application that should be developed. In that case, the client has fully specified in JML the features that have to be implemented by the code producer.
+\item An API with some restricted access to some method. In these case, the client can protect its system by restricting its usage (for example: ...). 
 \end{itemize}
-In both cases, the code producer develops its application and proves that it fullfills the given requirements using Jack; 
+In both cases, the code producer develops its application and proves that it fulfills the given requirements using Jack; 
 in most cases, to complete this task, some annotations have to be added to the code.
 When the annotations are sufficient to prove the code, the Java file is then normally compiled with a Java compiler to obtain a 
 class file. 
 This class file is then annotated with special JML attributes extracted from the source file. 
 At this stage, the Java class files contain all the informations that will allow the client to trust it.
 
-Thus the code reaches the client side where proof obligations are generated (at code level) with respect to client's requirements. 
+Thus the code reaches the client side where proof obligations are generated (at bytecode level) with respect to client's requirements. 
 The corresponding proof obligations are then proved, for instance, with the JACK framework. If the client succeeds in proving 
 the verification conditions, he can trust the unknown code. 
 

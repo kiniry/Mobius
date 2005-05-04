@@ -1,11 +1,10 @@
 
 \subsection{The Control Flow graph}\label{abstrCntrFlow}
 As we  already stated we assume that loops in method bodies are  \textit{annotated} with appropriate invariants. 
-Related works \cite{WildmoserN-ESOP05} infer loop invariants. Anyways inferring invariants is not decidable. 
-Rather we propose the scheme where the programmer writes down the invariants  during the program development  
-and on compilation time they are compiled in BCL. 
-Under the assumption for invariant presence we may ``cut'' the control flow graph at every program point
-where an invariant must hold and ``place'' there the invariant. Here we describe how the "cuts" are done. This needs the introduction
+Related works like in \cite{WildmoserN-ESOP05} use different approach where they infer loop invariants. Anyways inferring invariants is not decidable. 
+Rather we propose the scheme where the programmer writes the invariants during the program development  
+and on compilation time they are compiled in BCL. Under the assumption for invariant presence we may ``cut'' the control flow graph at every program point
+where an invariant must hold and ``place'' there the invariant. Here we describe which are the points in the bytecode which are "cut". This needs the introduction
 of several definitions.
      
  A method body is an array of bytecode instructions that is denoted with $i$ and the $k-th$ instruction
@@ -17,18 +16,19 @@ basic block is a code segment that has no unconditional jump or
 conditional branch statements except for possibly the last
 statement, and none of its statements, except possibly the first,
 is a target of any jump or branch statement. 
- We denote a block starting at instruction  $i_{j}$  and ending at instruction by $i_{k}$ $\blockm{j}$. Let's have 
-the bytecode $\Pi$ and the set of its blocks  be $\wp$. The execution relation ( $\blockm{j} \execRel \blockm{k}$ ) states that block
+ We denote a block starting at instruction  $i_{j}$ with $\blockm{j}$. Let's have 
+the bytecode $\Pi$ and the set of its blocks be $\wp$. The execution relation ( $\blockm{j} \execRel \blockm{k}$ ) states that block
 $ \blockm{k}$ may be executed immediately after $\blockm{j}$ in some execution path of the method. 
 The  definition is given at \ref{execRel}
 
 \begin{defn}[Execution relation between blocks]\label{execRel}
 \begin{tabbing}
-\\Let \=  have \= the block $\blockm{j}$ such that  it ends with instruction $\tt{i_{k}}$ and \\
-it is not a return instruction\\
+\\Let \=  have \= the block $\blockm{j}$ such that  it ends with instruction \\ 
+$\tt{i_{k}}$ and it is not a return instruction\\
 \>  if $\tt{i_{k}}$ = \texttt{if\_cond n} then   $\blockm{j} \execRel \blockm{n}$ and $\blockm{j} \execRel  \blockm{k+1} $ \\
 \>  if $\tt{i_{k}}$ = \texttt{goto n} then $\blockm{j} \execRel \blockm{n}$ \\
-\>  if $\tt{i_{k}}$ = \texttt{athrow} then $\blockm{j} \execRel \blockm{n}$ for all \texttt{n}, such that $\blockm{n}$ is the first\\
+\>  if $\tt{i_{k}}$ = \texttt{athrow} then $\blockm{j} \execRel \blockm{n}$ for all \texttt{n}, such \\
+\> \> that $\blockm{n}$ is the first\\
 \> \> block of an exception handler that protects $\tt{i_{k}}$ \\
 \>  if $\tt{i_{k}}$ = \texttt{jsr n} then $\blockm{j} \execRel \blockm{n}$ \\
 \>  if  $\tt{i_{k}}$ = \texttt{ret n} then  $ \blockm{j} \execRel \blockm{s}$\\
@@ -42,10 +42,10 @@ We say that there exists a path between $\blockm{i}$ and $\blockm{j}$ and we not
 $\blockm{s_{1}}... \blockm{s_{n}}$ such that $\blockm{i} \execRel \blockm{s_{1}} \execRel \blockm{s_{2}}... \blockm{s_{n}} \execRel  \blockm{j}$
 \begin{defn}[Loop Definition]
 \label{defLoop}
-Let's have a well formed program $\Pi$. We say that $\blockm{s}$ is the start block of loop $l$ in $\Pi$ and $\blockm{e}$ is the end block of $l$ if:
+Let's have a well formed program $\Pi$. We say that $\blockm{s}$ is the entry block of loop $l$ in $\Pi$ and $\blockm{e}$ is the end block of $l$ if:
 \begin{itemize}
-\item there exists a path in the control flow graph starting at the entry block $\blockm{entry}$ (i.e. the one
- that starts with the entry instruction) of $\Pi$ and that passes first through $\blockm{s}$ and later through $\blockm{e}$,
+\item every path in the control flow graph starting at the entry block $\blockm{entry}$ (i.e. the one
+ that starts with the entry instruction) of $\Pi$ and that reaches $\blockm{e}$, passes through  $\blockm{s}$ 
   i.e.$ \blockm{entry} \execRel^{*}  \blockm{s} \execRel^{*} \blockm{e}$
 \item $\blockm{e} \execRel \blockm{s}$
 \end{itemize}
@@ -59,10 +59,10 @@ program and the relation  $\execRel^A$ is a subset of the  execution relation $\
 \begin{defn}[Acyclic Execution relation]
 \label{acyclicExRel}
 Let's have the well formed bytecode program $\Pi$ and let have in $\Pi$ the two blocks  $\blockm{i} $ and   $\blockm{j}$. We say 
-that $\blockm{i} \execRel^{1} \blockm{j}$ iff
+that $\blockm{i} \execRel^A \blockm{j}$ iff
 \begin{itemize}
 \item $\blockm{i} \execRel \blockm{j}$
-\item and block $\blockm{i}$ and block $\blockm{j}$ are not the end and the start blocks respectively of the same loop, see loop definition~\ref{defLoop}.
+\item and block $\blockm{i}$ and block $\blockm{j}$ are not the end and the entry blocks respectively of the same loop, see loop definition~\ref{defLoop}.
 \end{itemize}
 \end{defn}
 
