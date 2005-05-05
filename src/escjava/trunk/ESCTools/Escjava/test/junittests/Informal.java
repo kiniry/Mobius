@@ -20,6 +20,6 @@ public class Informal {
 	//@ accessible (* ok *);
 	//@	measured_by (* ok *);
 	//@	callable (* ok *);
-	public void m() {}
+	public void m() throws Exception {}
 
 }

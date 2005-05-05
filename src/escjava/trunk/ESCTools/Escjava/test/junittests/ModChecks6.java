@@ -15,7 +15,7 @@ public class ModChecks6 {
 	    aa[1] = 0;
 	    ModChecks6 o = new ModChecks6();
 	    o.i = 0;
-	    o.a[0] = 0;
+	    o.a[0] = 0; // WARNING
 	    o.mm();
 	    int j;
 	    j = 0;

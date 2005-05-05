@@ -20,6 +20,7 @@ public class JavaScopeB extends JavaScopeBB {
 		return k;
 	}
 	class Inn {
+
 		//@ ensures \result == 2;
 		int m() { 
 			//@ assume System.out != null;
@@ -28,6 +29,7 @@ public class JavaScopeB extends JavaScopeBB {
 	}
 
 	class HINN extends JavaScopeBB {
+
 		//@ ensures \result == 2;
 		int p() {
 			// Tests that this resolves to JavaScopeB.Inn

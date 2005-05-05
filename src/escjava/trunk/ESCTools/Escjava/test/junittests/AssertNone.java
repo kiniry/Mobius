@@ -1,5 +1,5 @@
 // Tests the behavior of assert in ignore mode
-//#FLAGS: -source 1.4 -da -sourcepath .:../../../specs
+//#FLAGS: -source 1.4 -da -sourcepath .
 public class AssertNone {
 
 	//no -ea:  Unexpected exception
@@ -8,9 +8,9 @@ public class AssertNone {
 		assert true : "Hi";
 		assert false : 0;
 	}
-
 	// no -ea:  Unexpected exception
 	// -ea:  Asseret error
+        //@ signals_only \nothing;
 	//@ exsures (java.lang.AssertionError e) true;
 	public void mm_Exception_Assert(int i) {
 		assert true : "Hi";
@@ -44,7 +44,7 @@ public class AssertNone {
 	// Unexpected Exception
 	// Esc/Java complains that the type in the exsures statement is not in the throws set
 	// ESC/Java2 does not have this complaint.  FIXME
-
+        //@ signals_only \nothing;
 	//@ exsures (java.lang.AssertionError e) true;
 	public void pExceptionwarningShouldCompilerError()  {
 		throw new java.lang.AssertionError("E");

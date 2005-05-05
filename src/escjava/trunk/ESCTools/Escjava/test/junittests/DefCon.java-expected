@@ -27,7 +27,18 @@ Execution trace information:
     [TIME]  failed
 
 DefCon$AE: AE(int) ...
-    [TIME]  passed
+------------------------------------------------------------------------
+DefCon.java:29: Warning: Postcondition possibly not established (Post)
+        }
+        ^
+Associated declaration is "DefCon.java", line 26, col 12:
+        //@ signals(ST se) gg == 17;
+            ^
+Execution trace information:
+    Routine call returned exceptionally in "DefCon.java", line 27, col 35.
+
+------------------------------------------------------------------------
+    [TIME]  failed
   [TIME total]
 
 DefCon$E ...
@@ -50,4 +61,4 @@ DefCon$SE ...
 DefCon$SE: SE() ...
     [TIME]  passed
   [TIME total]
-1 warning
+2 warnings

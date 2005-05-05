@@ -1,7 +1,6 @@
 // Tests the behavior of assert in jml mode
-//#FLAGS: -jmlAssertions -sourcepath .:../../../specs
+//#FLAGS: -jmlAssertions -sourcepath .
 public class AssertEA {
-
 	//no -ea:  Unexpected exception
 	// -ea: Assert error
 	public void m_Exception_Assert(int i) {
@@ -10,7 +9,8 @@ public class AssertEA {
 	}
 
 	// no -ea:  Unexpected exception
-	// -ea:  Asseret error
+	// -ea:  Assert error
+        //@ signals_only \nothing;
 	//@ exsures (java.lang.AssertionError e) true;
 	public void mm_Exception_Assert(int i) {
 		assert true : "Hi";
@@ -44,7 +44,7 @@ public class AssertEA {
 	// Unexpected Exception
 	// Esc/Java complains that the type in the exsures statement is not in the throws set
 	// ESC/Java2 does not have this complaint.  FIXME
-
+        //@ signals_only \nothing;
 	//@ exsures (java.lang.AssertionError e) true;
 	public void pExceptionwarningShouldCompilerError()  {
 		throw new java.lang.AssertionError("E");

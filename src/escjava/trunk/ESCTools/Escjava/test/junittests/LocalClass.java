@@ -8,7 +8,7 @@ public abstract class LocalClass
 	//@ requires o != null;
 	//@ ensures \result == 0;
     public int cc(Object o) {
-	LocalClass oo = (LocalClass)o;
+	LocalClass oo = (LocalClass)o;    // WARNING
 	return 0;
     }
 
@@ -35,7 +35,7 @@ public abstract class LocalClass
 	}
 
 	A a = new A();
-	int k = a.m(-1);
+	int k = a.m(-1);  // Warning - prrecondition
 	return 0;
     }
     public int xx() {
@@ -49,8 +49,8 @@ public abstract class LocalClass
 
 	A a = new A();
 	int k = a.m(1);
-	//@ assert k < 0;
-	//@ assert k > 0;
+	//@ assert k < 0;  // OK
+	//@ assert k > 0;  // Warning
 	return 0;
     }
 

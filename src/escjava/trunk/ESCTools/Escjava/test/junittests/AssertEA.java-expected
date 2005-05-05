@@ -7,7 +7,7 @@ AssertEA ...
 
 AssertEA: m_Exception_Assert(int) ...
 ------------------------------------------------------------------------
-AssertEA.java:9: Warning: Possible assertion failure (Assert)
+AssertEA.java:8: Warning: Possible assertion failure (Assert)
                 assert false : 0;
                 ^
 ------------------------------------------------------------------------

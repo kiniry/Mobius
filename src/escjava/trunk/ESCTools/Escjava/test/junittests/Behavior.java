@@ -1,5 +1,5 @@
 // Tests defaults in behavior specs
-//#FLAGS: -sourcepath .:../../../specs
+//#FLAGS: -sourcepath .
 
 public class Behavior {
 
@@ -13,7 +13,7 @@ public class Behavior {
 	/*@ public exceptional_behavior
 		signals (java.lang.Exception e) true;
 	*/
-	public void m2() { // WARNING HERE
+	public void m2() throws Exception { // WARNING HERE
 		return;
 	}
 

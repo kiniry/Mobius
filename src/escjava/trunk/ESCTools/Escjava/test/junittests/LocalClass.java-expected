@@ -11,7 +11,7 @@ LocalClass: LocalClass() ...
 LocalClass: cc(java.lang.Object) ...
 ------------------------------------------------------------------------
 LocalClass.java:11: Warning: Possible type cast error (Cast)
-        LocalClass oo = (LocalClass)o;
+        LocalClass oo = (LocalClass)o;    // WARNING
                         ^
 ------------------------------------------------------------------------
     [TIME]  failed
@@ -28,7 +28,7 @@ LocalClass.java:29: Caution: Not checking block-level types
         ^
 ------------------------------------------------------------------------
 LocalClass.java:38: Warning: Precondition possibly not established (Pre)
-        int k = a.m(-1);
+        int k = a.m(-1);  // Warning - prrecondition
                    ^
 Associated declaration is "LocalClass.java", line 32, col 6:
                 //@ requires i > 0;
@@ -42,7 +42,7 @@ LocalClass.java:42: Caution: Not checking block-level types
         ^
 ------------------------------------------------------------------------
 LocalClass.java:53: Warning: Possible assertion failure (Assert)
-        //@ assert k > 0;
+        //@ assert k > 0;  // Warning
             ^
 ------------------------------------------------------------------------
     [TIME]  failed

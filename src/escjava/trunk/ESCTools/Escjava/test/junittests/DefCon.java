@@ -1,7 +1,7 @@
 // This is a simplified version of test37 showing a difference that has
 // arisen between Exceptions and Throwables - we may not want to maintain
 // this difference.
-
+//#FLAGS: 
 public class DefCon {
 
 
@@ -20,8 +20,8 @@ public class DefCon {
 	}
 
 
-        // This does not produce a warning because Esc/java only
-        // handles Exceptions, not Throwables that are not Exceptions
+
+
 
         //@ signals(ST se) gg == 17;
 	public AE(int i) throws Throwable {

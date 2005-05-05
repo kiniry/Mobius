@@ -14,5 +14,5 @@ public class NotSpecified {
 	//@	measured_by \not_specified;
 	//@     accessible \not_specified;
 	//@	callable \not_specified;
-	public void m();
+	public void m() throws Exception;
 }

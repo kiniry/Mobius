@@ -1,5 +1,5 @@
 // Tests the behavior of assert in java mode
-//#FLAGS: -javaAssertions -sourcepath .:../../../specs
+//#FLAGS: -javaAssertions -sourcepath . 
 public class Assert {
 
 	//no -ea:  Unexpected exception
@@ -10,7 +10,8 @@ public class Assert {
 	}
 
 	// no -ea:  Unexpected exception
-	// -ea:  Asseret error
+	// -ea:  Assert error
+        //@ signals_only \nothing;
 	//@ exsures (java.lang.AssertionError e) true;
 	public void mm_Exception_Assert(int i) {
 		assert true : "Hi";
@@ -47,6 +48,7 @@ public class Assert {
 	}
 
 	// Postcondition warning
+        //@ signals_only RuntimeException;
 	//@ exsures (java.lang.AssertionError e) true;
 	public void ppPostwarning() throws AssertionError {
 		throw new java.lang.AssertionError("E");
@@ -56,6 +58,7 @@ public class Assert {
 	// Esc/Java complains that the type in the exsures statement is not in the throws set
 	// ESC/Java2 does not have this complaint.  FIXME
 
+        //@ signals_only \nothing;
 	//@ exsures (java.lang.AssertionError e) true;
 	public void pExceptionwarningShouldCompilerError()  {
 		throw new java.lang.AssertionError("E");
