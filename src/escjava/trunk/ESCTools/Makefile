@@ -170,10 +170,10 @@ alldocs: textdocs javadoc
 textdocs: quiet-docs slides papers
 
 quiet-docs:
-	${MAKE} docs > docs_log 2>&1
+	-${MAKE} docs > docs_log 2>&1
 
 docs:
-	${MAKE} -C docs build
+	-${MAKE} -C docs build
 
 slides:
 	${MAKE} -C slides build
@@ -324,7 +324,8 @@ srcjar:
 	rm -rf ${RELTEMP}/sub
 	cp ${RELSRCJAR} ${ESCTOOLS_ROOT}
 
-binary-release: build jars alldocs
+.PHONY: binary-release
+binary-release: build jars alldocs ## FIXME javadoc
 	@echo "Creating binary release .........."
 	## RELDIR is the staging area for all files
 	## First copy all .class files to sub and build a jar file
@@ -356,8 +357,11 @@ binary-release: build jars alldocs
 	${MAKE} clean-norel-noreltemp
 	${MAKE} -C Utils/junitutils build
 	cp ${ESCJAVA_ROOT}/escj ${RELTEMP}
-	cp ${ESCJAVA_ROOT}/escjava2.exe ${RELTEMP}
+	#cp ${ESCJAVA_ROOT}/escjava2.exe ${RELTEMP}
 	cp ${ESCJ_SIMPLIFY_DIR}/Simplify-1.5.4* ${RELTEMP}
+	cp README.first README.txt ${RELTEMP}
+	cp escspecs.jar ${RELTEMP}
+	cp escspecs.jar ${RELTEMP}/jmlspecs.jar
 	cd release-files; cp `ls | grep -v CVS` ${RELTEMP}
 	-find ${RELTEMP} -name "*~" -exec rm -f {} \; > /dev/null 2>&1
 	cd ${RELTEMP}; tar cjvf ${RELDIR}/${RELTAR} *
