@@ -41,3 +41,7 @@ Inheritance.java
 Inherit.java
 ClassEquiv.java
 FinalRef.java
+## Check
+NonNullBad.java
+DefCon.java
+DefaultConstructor.java
