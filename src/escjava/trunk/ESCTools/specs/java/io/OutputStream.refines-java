@@ -96,7 +96,7 @@ public abstract class OutputStream extends Object {
       @   assignable outputBytes;
       @   signals (IOException) (* an IO error occured *);
       @   signals (NullPointerException) b == null;
-      @*/
+      @   signals_only IOException, NullPointerException; */
     public void write(byte[] b) throws IOException;
 
 // FIXME - record what was written

@@ -72,6 +72,8 @@ public class Arrays {
       @   requires a == null || fromIndex > toIndex 
       @            || fromIndex < 0 || toIndex > a.length;
       @   assignable \nothing;
+      @   signals_only NullPointerException, IllegalArgumentException,
+                    ArrayIndexOutOfBoundsException;
       @   signals (NullPointerException) a == null;
       @   signals (IllegalArgumentException) fromIndex > toIndex;
       @   signals (ArrayIndexOutOfBoundsException) 
@@ -121,6 +123,8 @@ public class Arrays {
       @   requires a == null || fromIndex > toIndex ||
       @            fromIndex < 0 || toIndex > a.length;
       @   assignable \nothing;
+      @   signals_only NullPointerException, IllegalArgumentException,
+                    ArrayIndexOutOfBoundsException;
       @   signals (NullPointerException) a == null;
       @   signals (IllegalArgumentException) fromIndex > toIndex;
       @   signals (ArrayIndexOutOfBoundsException) 
@@ -172,6 +176,8 @@ public class Arrays {
       @   requires a == null || fromIndex > toIndex ||
       @            fromIndex < 0 || toIndex > a.length;
       @   assignable \nothing;
+      @   signals_only NullPointerException, IllegalArgumentException,
+                    ArrayIndexOutOfBoundsException;
       @   signals (NullPointerException) a == null;
       @   signals (IllegalArgumentException) fromIndex > toIndex;
       @   signals (ArrayIndexOutOfBoundsException) 
@@ -222,6 +228,8 @@ public class Arrays {
       @   requires a == null || fromIndex > toIndex ||
       @            fromIndex < 0 || toIndex > a.length;
       @   assignable \nothing;
+      @   signals_only NullPointerException, IllegalArgumentException, 
+                           ArrayIndexOutOfBoundsException;
       @   signals (NullPointerException) a == null;
       @   signals (IllegalArgumentException) fromIndex > toIndex;
       @   signals (ArrayIndexOutOfBoundsException) 
@@ -272,6 +280,8 @@ public class Arrays {
       @   requires a == null || fromIndex > toIndex ||
       @            fromIndex < 0 || toIndex > a.length;
       @   assignable \nothing;
+      @   signals_only NullPointerException, IllegalArgumentException,
+                          ArrayIndexOutOfBoundsException;
       @   signals (NullPointerException) a == null;
       @   signals (IllegalArgumentException) fromIndex > toIndex;
       @   signals (ArrayIndexOutOfBoundsException) 
@@ -326,6 +336,8 @@ public class Arrays {
       @   requires a == null || fromIndex > toIndex ||
       @            fromIndex < 0 || toIndex > a.length;
       @   assignable \nothing;
+      @   signals_only NullPointerException, IllegalArgumentException,
+                    ArrayIndexOutOfBoundsException;
       @   signals (NullPointerException) a == null;
       @   signals (IllegalArgumentException) fromIndex > toIndex;
       @   signals (ArrayIndexOutOfBoundsException)  
@@ -379,6 +391,8 @@ public class Arrays {
       @   requires a == null || fromIndex > toIndex ||
       @            fromIndex < 0 || toIndex > a.length;
       @   assignable \nothing;
+      @   signals_only NullPointerException, IllegalArgumentException,
+                    ArrayIndexOutOfBoundsException;
       @   signals (NullPointerException) a == null;
       @   signals (IllegalArgumentException) fromIndex > toIndex;
       @   signals (ArrayIndexOutOfBoundsException) 
@@ -407,6 +421,7 @@ public class Arrays {
       @   requires a == null ||
       @     (* array contains elements not mutually comparable *);
       @   assignable \nothing;
+      @   signals_only NullPointerException, ClassCastException;
       @   signals (NullPointerException) a == null;
       @   signals (ClassCastException)
       @     (* array contains elements not mutually comparable *);
@@ -439,6 +454,8 @@ public class Arrays {
       @            fromIndex < 0 || toIndex > a.length ||
       @      (* array contains elements not mutually comparable *);
       @   assignable \nothing;
+      @   signals_only NullPointerException, IllegalArgumentException,
+                    ArrayIndexOutOfBoundsException, ClassCastException;
       @   signals (NullPointerException) a == null;
       @   signals (ClassCastException)
       @           (* array contains elements not mutually comparable *);
@@ -484,6 +501,7 @@ public class Arrays {
       @   requires a == null || 
       @     (* array contains elements not mutually comparable *);
       @   assignable \nothing;
+      @   signals_only NullPointerException, ClassCastException;
       @   signals (NullPointerException) a == null;
       @   signals (ClassCastException)
       @     (* array contains elements not mutually comparable *);
@@ -535,6 +553,8 @@ public class Arrays {
       @            fromIndex < 0 || toIndex > a.length ||
       @     (* array contains elements not mutually comparable *);
       @   assignable \nothing;
+      @   signals_only NullPointerException, IllegalArgumentException,
+                    ArrayIndexOutOfBoundsException, ClassCastException;
       @   signals (NullPointerException) a == null;
       @   signals (ClassCastException)
       @     (* array contains elements not mutually comparable *);
@@ -814,6 +834,7 @@ public class Arrays {
       @   requires a == null ||
       @            (* array contains elements not comparable to key *);
       @   assignable \nothing;
+      @   signals_only NullPointerException, ClassCastException;
       @   signals (NullPointerException) a == null;
       @   signals (ClassCastException) 
       @            (* array contains elements not comparable to key *);
@@ -880,6 +901,7 @@ public class Arrays {
       @   requires a == null ||
       @            (* array contains elements not comparable to key *);
       @   assignable \nothing;
+      @   signals_only NullPointerException, ClassCastException;
       @   signals (NullPointerException) a == null;
       @   signals (ClassCastException) 
       @            (* array contains elements not comparable to key *);
@@ -1051,6 +1073,8 @@ public class Arrays {
       @   requires a == null || fromIndex > toIndex ||
       @            fromIndex < 0 || toIndex > a.length;
       @   assignable \nothing;
+      @   signals_only NullPointerException, IllegalArgumentException,
+      @                  ArrayIndexOutOfBoundsException;
       @   signals (NullPointerException) a == null;
       @   signals (IllegalArgumentException) fromIndex > toIndex;
       @   signals (ArrayIndexOutOfBoundsException) 
@@ -1099,6 +1123,8 @@ public class Arrays {
       @   requires a == null || fromIndex > toIndex ||
       @            fromIndex < 0 || toIndex > a.length;
       @   assignable \nothing;
+      @   signals_only NullPointerException, IllegalArgumentException,
+                    ArrayIndexOutOfBoundsException;
       @   signals (NullPointerException) a == null;
       @   signals (IllegalArgumentException) fromIndex > toIndex;
       @   signals (ArrayIndexOutOfBoundsException) 
@@ -1147,6 +1173,8 @@ public class Arrays {
       @   requires a == null || fromIndex > toIndex ||
       @            fromIndex < 0 || toIndex > a.length;
       @   assignable \nothing;
+      @   signals_only NullPointerException, IllegalArgumentException,
+      @                  ArrayIndexOutOfBoundsException;
       @   signals (NullPointerException) a == null;
       @   signals (IllegalArgumentException) fromIndex > toIndex;
       @   signals (ArrayIndexOutOfBoundsException) 
@@ -1195,6 +1223,8 @@ public class Arrays {
       @   requires a == null || fromIndex > toIndex ||
       @            fromIndex < 0 || toIndex > a.length;
       @   assignable \nothing;
+      @   signals_only NullPointerException, IllegalArgumentException, 
+                           ArrayIndexOutOfBoundsException;
       @   signals (NullPointerException) a == null;
       @   signals (IllegalArgumentException) fromIndex > toIndex;
       @   signals (ArrayIndexOutOfBoundsException) 
@@ -1243,6 +1273,8 @@ public class Arrays {
       @   requires a == null || fromIndex > toIndex ||
       @            fromIndex < 0 || toIndex > a.length;
       @   assignable \nothing;
+      @   signals_only NullPointerException, IllegalArgumentException, 
+                           ArrayIndexOutOfBoundsException;
       @   signals (NullPointerException) a == null;
       @   signals (IllegalArgumentException) fromIndex > toIndex;
       @   signals (ArrayIndexOutOfBoundsException) 
@@ -1291,6 +1323,8 @@ public class Arrays {
       @   requires a == null || fromIndex > toIndex ||
       @            fromIndex < 0 || toIndex > a.length;
       @   assignable \nothing;
+      @   signals_only NullPointerException, IllegalArgumentException,
+      @                  ArrayIndexOutOfBoundsException;
       @   signals (NullPointerException) a == null;
       @   signals (IllegalArgumentException) fromIndex > toIndex;
       @   signals (ArrayIndexOutOfBoundsException) 
@@ -1350,6 +1384,8 @@ public class Arrays {
       @   requires a == null || fromIndex > toIndex ||
       @            fromIndex < 0 || toIndex > a.length;
       @   assignable \nothing;
+      @   signals_only NullPointerException, IllegalArgumentException,
+                    ArrayIndexOutOfBoundsException;
       @   signals (NullPointerException) a == null;
       @   signals (IllegalArgumentException) fromIndex > toIndex;
       @   signals (ArrayIndexOutOfBoundsException) 
@@ -1409,6 +1445,8 @@ public class Arrays {
       @   requires a == null || fromIndex > toIndex ||
       @            fromIndex < 0 || toIndex > a.length;
       @   assignable \nothing;
+      @   signals_only NullPointerException, IllegalArgumentException,
+                    ArrayIndexOutOfBoundsException;
       @   signals (NullPointerException) a == null;
       @   signals (IllegalArgumentException) fromIndex > toIndex;
       @   signals (ArrayIndexOutOfBoundsException) 
@@ -1480,6 +1518,8 @@ public class Arrays {
       @   requires a == null || fromIndex > toIndex ||
       @            fromIndex < 0 || toIndex > a.length;
       @   assignable \nothing;
+      @   signals_only NullPointerException, IllegalArgumentException,
+      @                  ArrayIndexOutOfBoundsException;
       @   signals (NullPointerException) a == null;
       @   signals (IllegalArgumentException) fromIndex > toIndex;
       @   signals (ArrayIndexOutOfBoundsException) 

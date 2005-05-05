@@ -163,6 +163,7 @@ public interface List extends Collection {
       @             || !(c.elementType <: elementType)
       @             || (!containsNull && c.containsNull);
       @     assignable \nothing;
+      @     signals_only ClassCastException, NullPointerException, IndexOutOfBoundsException;
       @     signals (ClassCastException)
       @             c != null && !(c.elementType <: elementType);
       @     signals (NullPointerException) c == null;
@@ -309,6 +310,7 @@ public interface List extends Collection {
       @   //ensures \result == -1 <==>
           //   (\forall int i; (0<=i && i < content.theSize) ==> !nullequals(o,get(i)));
       @   //ensures \result == -1 <==> !contains(o);
+      @   signals_only ClassCastException, NullPointerException;
       @   signals (ClassCastException)
       @           (* class of specified element is incompatible with this *);
       @   signals (NullPointerException)
@@ -322,6 +324,7 @@ public interface List extends Collection {
       @   ensures \result != -1 ==> nullequals(o,get(\result));
       @   ensures (\forall int i; \result<i && i < size(); !nullequals(o,get(i)));
       @   ensures \result == -1 <==> !contains(o);
+      @   signals_only ClassCastException, NullPointerException;
       @   signals (ClassCastException)
       @           (* class of specified element is incompatible with this *);
       @   signals (NullPointerException)
@@ -351,7 +354,7 @@ public interface List extends Collection {
       @ also
       @ public exceptional_behavior
       @   requires index < 0 && size() <= index;
-      @   signals (IndexOutOfBoundsException);
+      @   signals_only IndexOutOfBoundsException;
       @
       @  implies_that
       @     ensures \result.elementType == elementType;

@@ -62,7 +62,7 @@ public interface Enumeration {
       @   public exceptional_behavior
       @     requires !moreElements;
       @     assignable \nothing;
-      @     signals (NoSuchElementException);
+      @     signals_only NoSuchElementException;
       @*/
     Object nextElement();
 }

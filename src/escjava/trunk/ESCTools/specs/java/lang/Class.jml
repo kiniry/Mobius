@@ -55,10 +55,12 @@ public final class Class implements java.io.Serializable {
       @   public behavior
       @     requires className != null;
       @     ensures true;
-      @     signals (LinkageError) (* if linkage fails *);
-      @     signals (ExceptionInInitializerError)
-      @               (* if the class must be loaded and its
-      @                  initialization throws an exception *);
+      @     signals_only ClassNotFoundException;
+            // JML does not allow Errors in specs
+      @     //signals (LinkageError) (* if linkage fails *);
+      @     //signals (ExceptionInInitializerError)
+      @     //          (* if the class must be loaded and its
+      @     //             initialization throws an exception *);
       @     signals (ClassNotFoundException)
       @               (* if className can't be located *);
       @*/
@@ -75,10 +77,12 @@ public final class Class implements java.io.Serializable {
       @   public behavior
       @     requires name != null && loader != null;
       @     ensures true;
-      @     signals (LinkageError) (* if linkage fails *);
-      @     signals (ExceptionInInitializerError)
-      @               (* if the class must be loaded and its
-      @                  initialization throws an exception *);
+      @     signals_only ClassNotFoundException;
+            // JML does not allow Errors in specs
+      @     //signals (LinkageError) (* if linkage fails *);
+      @     //signals (ExceptionInInitializerError)
+      @     //          (* if the class must be loaded and its
+      @     //             initialization throws an exception *);
       @     signals (ClassNotFoundException)
       @               (* if name can't be located *);
       @*/

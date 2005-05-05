@@ -36,50 +36,40 @@ public interface Comparable {
       @     ensures \result == 0;
       @ also
       @   public normal_behavior
-      @     requires i >= 0;
-      @     ensures \result == +1;
+      @     requires i > 0;
+      @     ensures \result == 1;
       @ implies_that
       @   public model_program {
       @     return ((i < 0) ? -1 : ((i == 0) ? 0 : 1));
       @   }
-      @ model pure int sgn(int i);
+      @ model static pure int sgn(int i);
       @*/
 
-    /*@ public model_program {
-      @   boolean x_y_def = true;
-      @   try {
-      @      x.compareTo(y);
-      @   } catch (ClassCastException e) {
-      @      x_y_def = false;
-      @   }
-      @   return x_y_def;
-      @ }
-      @ also public normal_behavior
+    /*@ 
+      @ public normal_behavior
+      @    ensures !(x <: \type(Comparable)) ==> !\result;
+      @    ensures !(y <: \type(Comparable)) ==> !\result;
       @    ensures \result == definedComparison(y,x);
-      @ public model pure boolean
-      @ definedComparison(non_null Comparable x, non_null Comparable y);
+      @ public static model pure boolean
+      @ definedComparison(Class x, Class y);
       @*/
 
-    /*@  public behavior
-      @    requires o != null;
-      @    ensures (* \result is negative if this is "less than" o *);
-      @    ensures (* \result is 0 if this is "equal to" o *);
-      @    ensures (* \result is positive if this is "greater than" o *);
-      @    signals (ClassCastException)
-      @         (* the class of o prohibits it from being compared to this *);
-      @ also public exceptional_behavior
+    /*@ 
+      @ public exceptional_behavior
       @    requires o == null;
-      @    signals (Exception e) e instanceof NullPointerException;
+      @    signals_only NullPointerException;
+      @ also public exceptional_behavior
+      @    requires o != null;
+      @    requires !definedComparison(this.getClass(), o.getClass());
+      @    signals_only ClassCastException;
       @ also
       @   public behavior
-      @    requires o != null && o instanceof Comparable;
-      @    ensures definedComparison((Comparable)o, this);
+      @    requires o != null; 
+      @    requires definedComparison(getClass(), o.getClass());
       @    ensures o == this ==> \result == 0; // reflexive
-      @    ensures sgn(\result) == - sgn(((Comparable)o).compareTo(this)); // antisymmetric
-      @    signals(ClassCastException)
-      @            !definedComparison((Comparable)o, this);
+      @    //ensures sgn(\result) == - sgn(((Comparable)o).compareTo(this)); // antisymmetric
       @*/
-    /*@ pure @*/ int compareTo(/*@ non_null @*/ Object o);
+    /*@ pure @*/ int compareTo(Object o);
 
     // compareTo is reflexive
     /*+@ public instance invariant

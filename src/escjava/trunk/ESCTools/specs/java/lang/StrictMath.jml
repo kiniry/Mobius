@@ -500,12 +500,12 @@ public /*@ pure @*/ final strictfp class StrictMath {
       @   requires a >= 0;
       @   ensures \result == a;
       @ also
-      @   requires a < 0;
+      @   requires a < 0 && a != Integer.MIN_VALUE;
       @   ensures \result == -a;
+      @ also
+      @   ensures (\result != Integer.MIN_VALUE) ==> \result >= 0L;
       @ |}
       @*/
-    //@ also public normal_behavior
-    //@   ensures (\result != Integer.MIN_VALUE) ==> \result >= 0; 
     public static /*@ pure @*/ int abs(int a);
 
     /*@ public normal_behavior
@@ -516,12 +516,12 @@ public /*@ pure @*/ final strictfp class StrictMath {
       @   requires a >= 0;
       @   ensures \result == a;
       @ also
-      @   requires a < 0;
+      @   requires a < 0 && a != Long.MIN_VALUE;
       @   ensures \result == -a;
+      @ also
+      @   ensures (\result != Long.MIN_VALUE) ==> \result >= 0L;
       @ |}
       @*/
-    //@ also public normal_behavior
-    //@   ensures (\result != Long.MIN_VALUE) ==> \result >= 0L;
     public static /*@ pure @*/ long abs(long a);
 
     /*@ public normal_behavior
@@ -578,11 +578,11 @@ public /*@ pure @*/ final strictfp class StrictMath {
       @ also
       @   requires a >= b;
       @   ensures \result == a;
+      @ also
+      @   ensures \result >= a && \result >= b;
+      @   ensures \result == a || \result == b;
       @ |}
       @*/
-    //@ implies_that
-    //@   ensures \result >= a && \result >= b;
-    //@   ensures \result == a || \result == b;
     public static /*@ pure @*/ int max(int a, int b);
 
     /*@ public normal_behavior
@@ -595,11 +595,11 @@ public /*@ pure @*/ final strictfp class StrictMath {
       @ also
       @   requires a >= b;
       @   ensures \result == a;
+      @ also
+      @   ensures \result >= a && \result >= b;
+      @   ensures \result == a || \result == b;
       @ |}
       @*/
-    //@ implies_that
-    //@   ensures \result >= a && \result >= b;
-    //@   ensures \result == a || \result == b;
     public static /*@ pure @*/ long max(long a, long b);
 
     /*@ public normal_behavior
@@ -660,11 +660,11 @@ public /*@ pure @*/ final strictfp class StrictMath {
       @ also
       @   requires a <= b;
       @   ensures \result == a;
+      @ also
+      @   ensures \result <= a && \result <= b;
+      @   ensures \result == a || \result == b;
       @ |}
       @*/
-    //@ implies_that
-    //@   ensures \result <= a && \result <= b;
-    //@   ensures \result == a || \result == b;
     public static /*@ pure @*/ int min(int a, int b);
 
     /*@ public normal_behavior
@@ -677,11 +677,11 @@ public /*@ pure @*/ final strictfp class StrictMath {
       @ also
       @   requires a <= b;
       @   ensures \result == a;
+      @ also
+      @   ensures \result <= a && \result <= b;
+      @   ensures \result == a || \result == b;
       @ |}
       @*/
-    //@ implies_that
-    //@   ensures \result <= a && \result <= b;
-    //@   ensures \result == a || \result == b;
     public static /*@ pure @*/ long min(long a, long b);
 
     /*@ public normal_behavior

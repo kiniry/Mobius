@@ -24,6 +24,7 @@ package java.lang;
  * @version $Revision$
  * @author Curtis Clifton with help from the JML Seminar participants summer 1999.
  * @author Gary T. Leavens
+ * @author David R. Cok
  */
 //-@ immutable
 public /*@ pure @*/ final 
@@ -31,14 +32,14 @@ public /*@ pure @*/ final
 {
 
     //@ public model char ch_;
-    //@ public constraint ch_ == \old(ch_);
-    //@ public represents ch_ <- charValue();
+    //+@ public constraint ch_ == \old(ch_);
+    //+@ public represents ch_ <- charValue();
 
-    public static final int MIN_RADIX;
+    public static final int MIN_RADIX; //@ initially MIN_RADIX == 2;
     public static final int MAX_RADIX;
     public static final char MIN_VALUE;
     public static final char MAX_VALUE;
-    public static final Class TYPE;
+    public static final Class TYPE;   //@ initially TYPE == \type(char);
     public static final byte UPPERCASE_LETTER;
     public static final byte LOWERCASE_LETTER;
     public static final byte TITLECASE_LETTER;
@@ -234,9 +235,15 @@ public /*@ pure @*/ final
     /*@ also
       @  public normal_behavior
       @   ensures \result !=null && \result.equals(String.valueOf(ch_));
+      @   ensures \result.charAt(0) == ch_;
       @*/
     public String toString();
 
+    /*@ 
+      @  public normal_behavior
+      @   ensures \result !=null && \result.equals(String.valueOf(c));
+      @   ensures \result.charAt(0) == c;
+      @*/
     public static /*@ pure @*/ String toString(char c);
 
     /*@  public normal_behavior
@@ -254,6 +261,17 @@ public /*@ pure @*/ final
       @*/
     public static /*@ pure @*/ boolean isTitleCase(char ch);
 
+    //@ axiom isDigit('0');
+    //@ axiom isDigit('1');
+    //@ axiom isDigit('2');
+    //@ axiom isDigit('3');
+    //@ axiom isDigit('4');
+    //@ axiom isDigit('5');
+    //@ axiom isDigit('6');
+    //@ axiom isDigit('7');
+    //@ axiom isDigit('8');
+    //@ axiom isDigit('9');
+    // FIXME - need to say when isDigit is false!
     /*@  public normal_behavior
       @   ensures \result <==> getType(ch) == DECIMAL_DIGIT_NUMBER;
       @*/
@@ -295,8 +313,7 @@ public /*@ pure @*/ final
       @   ensures \result <==> isLetter(ch) || 
       @                         getType(ch) == CURRENCY_SYMBOL || 
       @                         getType(ch) == CONNECTOR_PUNCTUATION;
-      @   ensures_redundantly \result <==> (* ch is permissible as the first
-      @ 					 character in a Java identifier *);
+      @  //(* ch is permissible as the first character in a Java identifier *);
       @*/
     public static /*@ pure @*/ boolean isJavaIdentifierStart(char ch);
 
@@ -307,15 +324,13 @@ public /*@ pure @*/ final
       @                         getType(ch) == COMBINING_SPACING_MARK ||
       @                         getType(ch) == NON_SPACING_MARK ||
       @                         isIdentifierIgnorable(ch);
-      @   ensures_redundantly \result <==> (* ch is permissible as a
-      @ 					 character in a Java identifier *);
+      @  //(* ch is permissible as a character in a Java identifier *);
       @*/
     public static /*@ pure @*/ boolean isJavaIdentifierPart(char ch);
 
     /*@  public normal_behavior
       @   ensures \result <==> isLetter(ch);
-      @   ensures_redundantly \result <==> (* ch is permissible as the first 
-      @ 					 character in a Unicode identifier *);
+      @  //(* ch is permissible as the first character in a Unicode identifier *);
       @*/
     public static /*@ pure @*/ boolean isUnicodeIdentifierStart(char ch);
 
@@ -327,8 +342,7 @@ public /*@ pure @*/ final
       @                         getType(ch) == COMBINING_SPACING_MARK ||
       @                         getType(ch) == NON_SPACING_MARK ||
       @                         isIdentifierIgnorable(ch);
-      @   ensures_redundantly \result <==> (* ch is permissible as a character
-      @ 					 in a Unicode identifier *);
+      @ //(* ch is permissible as a character in a Unicode identifier *);
       @*/
     public static /*@ pure @*/ boolean isUnicodeIdentifierPart(char ch);
 
@@ -340,9 +354,6 @@ public /*@ pure @*/ final
       @                         ('\u200A' <= ch && ch <= '\u200E') ||
       @                         ('\u206A' <= ch && ch <= '\u206F') ||
       @                         ch == '\uFEFF';
-      @   ensures_redundantly \result <==> (* ch is an ignorable
-      @ 					 character in a Java identifier or a
-      @ 					 Unicode identifier *);
       @*/
     public static /*@ pure @*/ boolean isIdentifierIgnorable(char ch);
 
@@ -388,6 +399,18 @@ public /*@ pure @*/ final
       @*/
     public static /*@ pure @*/ char toTitleCase(char ch);
 
+    //@ axiom digitVal('0') == 0;
+    //@ axiom digitVal('1') == 1;
+    //@ axiom digitVal('2') == 2;
+    //@ axiom digitVal('3') == 3;
+    //@ axiom digitVal('4') == 4;
+    //@ axiom digitVal('5') == 5;
+    //@ axiom digitVal('6') == 6;
+    //@ axiom digitVal('7') == 7;
+    //@ axiom digitVal('8') == 8;
+    //@ axiom digitVal('9') == 9;
+    //@ public normal_behavior
+    //@   ensures -1 <= \result && \result <= 9;
     /*@ public static model pure int digitVal(char ch)
       @ {
       @   if (!isDigit(ch)) {
@@ -434,6 +457,9 @@ public /*@ pure @*/ final
       @              !(ch >= 'a' && ch <='z'));
       @   requires_redundantly (* none of the other requires clauses are met *);
       @   ensures \result == -1;
+      @
+      @ also
+      @   ensures -1 <= \result && \result < radix;
       @ |}
       @*/
     public static /*@ pure @*/ int digit(char ch, int radix);
@@ -517,17 +543,19 @@ public /*@ pure @*/ final
     /*@  public normal_behavior
       @ {|
       @   requires MIN_RADIX <= radix && radix <= MAX_RADIX &&
-      @             0 <= digit && digit <= radix &&
+      @             0 <= digit && digit < radix &&
       @             digit < 10;
       @   ensures \result == (char) ('0' + digit);
+      @   ensures digit(\result,radix) == digit;
       @ also
       @   requires MIN_RADIX <= radix && radix <= MAX_RADIX &&
-      @             0 <= digit && digit <= radix &&
-      @             digit > 10;
+      @             0 <= digit && digit < radix &&
+      @             digit >= 10;
       @   ensures \result == (char) ('a' + digit - 10);
+      @   ensures digit(\result,radix) == digit;
       @ also
       @   requires MIN_RADIX > radix || radix > MAX_RADIX ||
-      @             0 > digit || digit > radix;
+      @             0 > digit || digit >= radix;
       @   ensures \result == '\u0000';
       @ |}
       @*/
@@ -537,14 +565,15 @@ public /*@ pure @*/ final
 
     public static /*@ pure @*/ boolean isMirrored(char c);
 
+    /*@ public normal_behavior
+      @   requires equals(anotherCharacter);
+      @   ensures \result == 0;
+      @ also public normal_behavior
+      @   requires !equals(anotherCharacter);
+      @   ensures \result != 0;
+      @*/
     public int compareTo(Character anotherCharacter);
 
     public int compareTo(Object o);
-
-    static /*@ pure @*/ char toUpperCaseEx(char ch);
-
-    static /*@ pure @*/ char[] toUpperCaseCharArray(char ch);
-
-    static /*@ pure @*/ int findInCharMap(char ch);
 
 }

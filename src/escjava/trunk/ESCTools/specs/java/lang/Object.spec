@@ -211,7 +211,7 @@ public class Object {
       @   ensures objectTimesFinalized == 1;
       @ also protected exceptional_behavior
       @   requires objectTimesFinalized == 1;
-      @   signals (Throwable) true; // FIXME - what exception?
+      @   signals (Exception) true; // FIXME - what exception?
       @*/
     protected void finalize() throws Throwable;
 

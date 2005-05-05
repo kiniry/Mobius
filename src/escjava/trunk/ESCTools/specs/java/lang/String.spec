@@ -533,7 +533,7 @@ public final class String
       @ also
       @   public exceptional_behavior
       @     requires o == null || !(o instanceof String);
-      @     signals (Exception e) e instanceof ClassCastException;
+      @     signals_only ClassCastException;
       @*/
     public /*@ pure @*/ int compareTo(Object o);
 
@@ -811,7 +811,7 @@ public final class String
       @   ensures equal(\result.charArray,0,s.charArray,0,s.length());
       @   ensures equal(\result.charArray,s.length(),ss.charArray,0,ss.length());
       @ public static pure function model non_null
-      @                                 String _concat_(String s, String ss);
+      @                                 String concat(String s, String ss);
       @
       @
       @ public normal_behavior
@@ -824,7 +824,7 @@ public final class String
       @   ensures \result != null;
       @   ensures \fresh(\result);
       @   ensures !isInterned(\result);
-      @   ensures \result.equals( _concat_(nonnull(s),nonnull(ss)));
+      @   ensures \result.equals( concat(nonnull(s),nonnull(ss)));
       @
       @ model static public non_null pure function String 
       @                                  _infixConcat_(String s, String ss);
@@ -839,7 +839,7 @@ public final class String
       @   ensures \result != null
       @            && \fresh(\result)
       @            && !isInterned(\result)
-      @            && \result.equals(_concat_(this,str));
+      @            && \result.equals(concat(this,str));
       @   also
       @   requires str.length() == 0;
       @   assignable \nothing;

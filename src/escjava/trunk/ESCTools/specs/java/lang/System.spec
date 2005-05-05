@@ -86,7 +86,7 @@ public final class System {
       @    ensures  systemSecurityManager == s;
       @    signals (SecurityException) (* if the change is not permitted *);
       @*/
-    public static void setSecurityManager(SecurityManager s);
+    public static void setSecurityManager(SecurityManager s) throws SecurityException;
 
     //@ public normal_behavior
     //@   ensures \result == systemSecurityManager;
@@ -235,7 +235,7 @@ t *);
     //@ also public exceptional_behavior
     //@   requires key == null;
     //@   signals_only NullPointerException;
-    public /*@ pure @*/ static String getProperty(String key);
+    public /*@ pure @*/ static String getProperty(String key) throws RuntimeException;
 
 
 // FIXME - conflict between exceptions
@@ -247,7 +247,7 @@ t *);
     //@ also public exceptional_behavior
     //@   requires key == null;
     //@   signals_only NullPointerException;
-    public /*@ pure @*/ static String getProperty(String key, String def);    
+    public /*@ pure @*/ static String getProperty(String key, String def) throws RuntimeException;    
 
 
 // FIXME - conflict between exceptions
@@ -259,7 +259,7 @@ t *);
       @   requires key == null || value == null;
       @   signals_only NullPointerException;
       @*/
-    public static String setProperty(String key, String value);
+    public static String setProperty(String key, String value) throws RuntimeException;
 
 
     /** @deprecated use java.lang.System.getProperty. */

@@ -126,13 +126,13 @@ public class Throwable extends Object
       @ public exceptional_behavior
       @   requires causeKnown;
       @   assignable \nothing;
-      @   signals (Exception e) e instanceof IllegalStateException;
+      @   signals_only IllegalStateException;
       @   signals (IllegalStateException e) e._message != null && !e.causeKnown;
       @ also
       @ public exceptional_behavior
       @   requires !causeKnown && cause == this;
       @   assignable \nothing;
-      @   signals (Exception e) e instanceof IllegalArgumentException;
+      @   signals_only IllegalArgumentException;
       @   signals (IllegalArgumentException e) e._message != null && !e.causeKnown;
       @*/
     public synchronized Throwable initCause(Throwable cause);
@@ -185,12 +185,12 @@ public class Throwable extends Object
       @ public exceptional_behavior
       @   requires stackTrace == null;
       @   assignable \nothing;
-      @   signals (NullPointerException) true;
+      @   signals_only NullPointerException;
       @ also
       @ public exceptional_behavior
       @   requires !\nonnullelements(stackTrace);
       @   assignable \nothing;
-      @   signals (NullPointerException) true;
+      @   signals_only NullPointerException;
       @*/
     public void setStackTrace(StackTraceElement[] stackTrace);
 }

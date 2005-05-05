@@ -112,6 +112,8 @@ public interface Map {
           @     ensures this.abstractValue == value;
           @
           @   // FIXME - fix these exceptions
+          @     signals_only NullPointerException, UnsupportedOperationException,
+                               ClassCastException, IllegalArgumentException;
           @     signals (NullPointerException) \not_modified(this.abstractValue);
           @     signals (UnsupportedOperationException)
           @               \not_modified(this.abstractValue) 
@@ -188,6 +190,7 @@ public interface Map {
               (\exists Object k; nullequals(value,content.mapsObject(k))));
       @
            // FIXME - fix exceptions
+      @    signals_only ClassCastException, NullPointerException;
       @    signals (ClassCastException)
       @         (* if the value is not appropriate for this object *);
       @    signals (NullPointerException) value == null
@@ -267,6 +270,8 @@ public interface Map {
       @    ensures \result == \old(get(key));
       @*/
     /*@ // FIXME
+      @    signals_only ClassCastException, NullPointerException,
+                               UnsupportedOperationException;
       @    signals (UnsupportedOperationException)
       @              (* if this operation is not supported *);
       @    signals (ClassCastException)

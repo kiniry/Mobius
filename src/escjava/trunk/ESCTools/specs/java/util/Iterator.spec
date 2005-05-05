@@ -80,7 +80,7 @@ public interface Iterator {
       @   public exceptional_behavior
       @     requires !moreElements;
       @     assignable \nothing;
-      @     signals (NoSuchElementException);
+      @     signals_only NoSuchElementException;
       @*/
     Object next();
 
@@ -100,6 +100,7 @@ public interface Iterator {
     /*@ public behavior
       @   assignable objectState, remove_called_since;
       @   ensures !\old(remove_called_since) && remove_called_since;
+      @   signals_only RuntimeException;
       @   signals (UnsupportedOperationException);
       @   signals (IllegalStateException) \old(remove_called_since);
       @*/

@@ -188,7 +188,7 @@ public class Vector extends AbstractList
       @  also exceptional_behavior
       @    requires newSize < 0;
       @    assignable \nothing;
-      @    signals (ArrayIndexOutOfBoundsException);
+      @    signals_only ArrayIndexOutOfBoundsException;
       @*/
     public synchronized void setSize(int newSize) throws ArrayIndexOutOfBoundsException;
 
@@ -264,7 +264,7 @@ public class Vector extends AbstractList
       @ also
       @  public exceptional_behavior
       @    requires 0 == elementCount;
-      @    signals (NoSuchElementException);
+      @    signals_only NoSuchElementException;
       @
       @ implies_that public normal_behavior
       @    requires elementCount > 0;
@@ -279,7 +279,7 @@ public class Vector extends AbstractList
       @ also
       @  public exceptional_behavior
       @    requires 0 == elementCount;
-      @    signals (NoSuchElementException);
+      @    signals_only NoSuchElementException;
       @ implies_that 
       @  public normal_behavior
       @    requires elementCount > 0;
@@ -301,7 +301,7 @@ public class Vector extends AbstractList
       @  public exceptional_behavior
       @    requires !(0 <= index && index < elementCount);
       @    assignable \nothing;
-      @    signals (ArrayIndexOutOfBoundsException);
+      @    signals_only ArrayIndexOutOfBoundsException;
       @*/
     public synchronized void setElementAt(Object obj, int index);
 
@@ -317,7 +317,7 @@ public class Vector extends AbstractList
       @  public exceptional_behavior
       @    requires !(0 <= index && index < elementCount);
       @    assignable \nothing;
-      @    signals (ArrayIndexOutOfBoundsException);
+      @    signals_only ArrayIndexOutOfBoundsException;
       @*/
     public synchronized void removeElementAt(int index);
 
@@ -337,7 +337,7 @@ public class Vector extends AbstractList
       @   public exceptional_behavior
       @    requires !(0 <= index && index <= elementCount);
       @    assignable \nothing;
-      @    signals (ArrayIndexOutOfBoundsException);
+      @    signals_only ArrayIndexOutOfBoundsException;
       @ also
       @  public normal_behavior
       @    requires 0 <= index && index < elementCount;
@@ -476,7 +476,7 @@ public class Vector extends AbstractList
       @ also
       @  public exceptional_behavior
       @    requires !(0 <= index && index < size());
-      @    signals (ArrayIndexOutOfBoundsException);
+      @    signals_only ArrayIndexOutOfBoundsException;
       @*/
     public /*@ pure @*/ synchronized Object get(int index);
 
@@ -494,7 +494,7 @@ public class Vector extends AbstractList
       @  public exceptional_behavior
       @    requires !(0 <= index && index < size());
       @    assignable \nothing;
-      @    signals (ArrayIndexOutOfBoundsException);
+      @    signals_only ArrayIndexOutOfBoundsException;
       @*/
     public synchronized Object set(int index, Object element);
 
@@ -538,7 +538,7 @@ public class Vector extends AbstractList
       @   public exceptional_behavior
       @    requires !(0 <= index && index <= size());
       @    assignable \nothing;
-      @    signals (ArrayIndexOutOfBoundsException);
+      @    signals_only ArrayIndexOutOfBoundsException;
       @*/
     public void add(int index, Object element);
 
@@ -552,7 +552,7 @@ public class Vector extends AbstractList
       @  public exceptional_behavior
       @    requires !(0 <= index && index < size());
       @    assignable \nothing;
-      @    signals (ArrayIndexOutOfBoundsException);
+      @    signals_only ArrayIndexOutOfBoundsException;
       @*/
     public synchronized Object remove(int index);
 
