@@ -74,7 +74,7 @@ test: test_escjava
 
 alltests: test_escjava 
 	-$(MAKE) typecheckEscjava
-	-$(MAKE) self_test
+	-$(MAKE) self_testp
 
 ###########################################################################
 # Documentation targets.
@@ -339,10 +339,10 @@ test_escjava: build build_javafe_test
 
 tests:
 	$(MAKE) junittests
-	$(MAKE) jdktests
 	$(MAKE) test_escjava_parser
 	$(MAKE) -C test/nijmegen/OCF runtests
 	$(MAKE) -C test/nijmegen/JCF runtests
+	$(MAKE) jdktests
 	##$(MAKE) test_matrix   ## FIXME
 
 build_javafe_test:
