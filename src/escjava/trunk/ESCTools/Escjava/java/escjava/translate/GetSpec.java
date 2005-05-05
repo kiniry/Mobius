@@ -453,7 +453,13 @@ public final class GetSpec {
         Expr gcDesignator = TrAnExpr.trSpecExpr(designator);
         // Returns null for modifies \nothing, \everything FIXME?
         // array-range, wild-ref expressions FIXME!!
-        if (gcDesignator != null) targets.addElement(gcDesignator);
+        if (gcDesignator != null) {
+           targets.addElement(gcDesignator);
+        } else if (designator instanceof ArrayRangeRefExpr) {
+           targets.addElement(GC.elemsvar);
+        } else if (designator instanceof EverythingExpr) {
+           targets.addElement(GC.elemsvar);
+        }
       }
     }
     

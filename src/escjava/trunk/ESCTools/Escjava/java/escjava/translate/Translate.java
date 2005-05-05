@@ -4154,6 +4154,9 @@ public final class Translate
         addAssumption(spec.postAssumptions.elementAt(i));
       }
 
+      // FIXME - do we need this - I think we already do it
+      // FIXME - figure out why this needs Exception instead of Throwable
+
       addAssumption(
         GC.or(
           GC.nary(TagConstants.ANYEQ,GC.ecvar,GC.ec_return),
@@ -4161,7 +4164,9 @@ public final class Translate
             GC.nary(TagConstants.ANYEQ,GC.ecvar,GC.ec_throw),
             GC.nary(TagConstants.TYPELE,
               GC.nary(TagConstants.TYPEOF,GC.xresultvar),
-              TypeExpr.make(Location.NULL,Location.NULL,Types.javaLangException())
+              GC.typeExpr( 
+                  Main.options().useThrowable ?
+                     Types.javaLangThrowable() : Types.javaLangException() )
             )
           )
         )

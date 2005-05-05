@@ -10,6 +10,7 @@ import javafe.ast.Name;
 import javafe.ast.*;
 import javafe.ast.TypeDecl;
 import javafe.ast.TypeDeclVec;
+import javafe.tc.TypeSig;
 import javafe.ast.PrettyPrint;			// Debugging methods only
 import javafe.ast.StandardPrettyPrint;		// Debugging methods only
 import javafe.ast.DelegatingPrettyPrint;	// Debugging methods only
@@ -491,10 +492,11 @@ public class RefinementSequence extends CompilationUnit {
           found = true;
         }
         if (!found) {
-          if (addNewItems) {
+          if (true || addNewItems) {
             td.elems.addElement(tde);
             tde.setParent(td);
           } else {
+               // This is obsolete - FIXME - once addNewItems is always true
             if (((RoutineDecl)tde).parent instanceof InterfaceDecl &&
                 (tde instanceof MethodDecl) ) {
               // An interface may specify some methods that
@@ -515,10 +517,11 @@ public class RefinementSequence extends CompilationUnit {
                 ErrorSet.caution(((RoutineDecl)tde).locId,
                 "Method is not declared in the java/class file");
               }
+
+            } else if (!((RoutineDecl)tde).implicit) {
               // FIXME - the use of implicit prevents some spurious
               // error messages, but should the default constructor
               // be created at all ?
-            } else if (!((RoutineDecl)tde).implicit) {
               ErrorSet.error(((RoutineDecl)tde).locId,
               "Method is not declared in the java/class file");
             }

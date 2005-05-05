@@ -286,6 +286,12 @@ public final class Utils
       } else if (e instanceof QuantifiedExpr) {
         return checkForFresh( ((QuantifiedExpr)e).expr) ||
                checkForFresh( ((QuantifiedExpr)e).rangeExpr) ;
+      } else if (e instanceof GeneralizedQuantifiedExpr ) {
+        return checkForFresh( ((GeneralizedQuantifiedExpr)e).expr) ||
+               checkForFresh( ((GeneralizedQuantifiedExpr)e).rangeExpr) ;
+      } else if (e instanceof NumericalQuantifiedExpr) {
+        return checkForFresh( ((NumericalQuantifiedExpr)e).expr) ||
+               checkForFresh( ((NumericalQuantifiedExpr)e).rangeExpr) ;
       } else {
         System.out.println("CLASS " + e.getClass());
         return true;

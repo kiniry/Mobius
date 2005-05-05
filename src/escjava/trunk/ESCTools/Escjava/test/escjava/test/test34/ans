@@ -823,9 +823,33 @@ BogusSpec.java:99: Error: The type of the exsures argument must be a subtype of 
 BogusSpec.java:100: Error: The type of the exsures argument must be a subtype of java.lang.Throwable
   //@ exsures (Cloneable c) true;
                ^
+BogusSpec.java:95: Error: Exception type in signals clause must be listed in either a corresponding signals_only clause or the method's throws list
+  //@ exsures (int) true;
+               ^
+BogusSpec.java:101: Associated declaration: 
+  Object m9(int j) throws Throwable {
+                   ^
+BogusSpec.java:98: Error: Exception type in signals clause must be listed in either a corresponding signals_only clause or the method's throws list
+  //@ exsures (\TYPE tt) tt == \type(SomeException);
+               ^
+BogusSpec.java:101: Associated declaration: 
+  Object m9(int j) throws Throwable {
+                   ^
+BogusSpec.java:99: Error: Exception type in signals clause must be listed in either a corresponding signals_only clause or the method's throws list
+  //@ exsures (int[] a) a == a;
+               ^
+BogusSpec.java:101: Associated declaration: 
+  Object m9(int j) throws Throwable {
+                   ^
 BogusSpec.java:106: Error: Invalid types (java.lang.Throwable and int) in equality comparison
   //@ exsures (Throwable t) t == 5;
                               ^
+BogusSpec.java:110: Error: Exception type in signals clause must be listed in either a corresponding signals_only clause or the method's throws list
+  //@ exsures (ArrayStoreException ase) ase == ase;
+               ^
+BogusSpec.java:111: Associated declaration: 
+  void m10() throws SomeException, NullPointerException, AnotherExcept ...
+             ^
 BogusSpec.java:113: Error: Keyword \result is not allowed in this context
   //@ exsures (SomeException se) \result == 2;
                                  ^
@@ -899,6 +923,18 @@ BogusSpec.java:174: Caution: JML requires a specification to begin with 'also' w
 BogusSpec.java:111: Associated declaration: 
   void m10() throws SomeException, NullPointerException, AnotherExcept ...
   ^
+BogusSpec.java:171: Error: Exception type in signals clause must be listed in either a corresponding signals_only clause or the method's throws list
+  //@ also_exsures (NullPointerException npe) true;
+                    ^
+BogusSpec.java:174: Associated declaration: 
+  void m10() throws SomeSubException, AnotherException {
+             ^
+BogusSpec.java:172: Error: Exception type in signals clause must be listed in either a corresponding signals_only clause or the method's throws list
+  //@ also_exsures (\TYPE tt) tt == \type(SomeException);
+                    ^
+BogusSpec.java:174: Associated declaration: 
+  void m10() throws SomeSubException, AnotherException {
+             ^
 BogusSpec.java:179: Error: Invalid types (java.lang.Throwable and int) in equality comparison
   //@ exsures (Throwable t) t == 5;
                               ^
@@ -908,6 +944,18 @@ BogusSpec.java:183: Error: The type of the exsures argument must be a subtype of
 BogusSpec.java:177: Caution: No initial also expected since there are no overridden or refined methods
   //@ also 
       ^
+BogusSpec.java:182: Error: Exception type in signals clause must be listed in either a corresponding signals_only clause or the method's throws list
+  //@ exsures (NullPointerException npe) true;
+               ^
+BogusSpec.java:185: Associated declaration: 
+  void m10also() throws SomeSubException, AnotherException {
+                 ^
+BogusSpec.java:183: Error: Exception type in signals clause must be listed in either a corresponding signals_only clause or the method's throws list
+  //@ exsures (\TYPE tt) tt == \type(SomeException);
+               ^
+BogusSpec.java:185: Associated declaration: 
+  void m10also() throws SomeSubException, AnotherException {
+                 ^
 BogusSpec.java:139: Error: No such constructor BogusSpec() in type BogusSpec
 class BogusSpecSub extends BogusSpec {
                                      ^
@@ -972,7 +1020,7 @@ BogusSpec.java:228: Caution: No initial also expected since there are no overrid
   //@ also modifies this.xx;
       ^
 24 cautions
-83 errors
+91 errors
 BogusVisibility.java:150: Error: Original ESC/Java keywords beginning with also_ are obsolete; they have been replaced with the corresponding JML keywords and the use of 'also' - note that the semantics has also changed.
   //@ also_ensures privSub == pack && prot == publ;
       ^

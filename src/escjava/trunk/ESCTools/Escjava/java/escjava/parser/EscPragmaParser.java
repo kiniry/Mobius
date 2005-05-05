@@ -1525,8 +1525,17 @@ public class EscPragmaParser extends Parse
           Expr expr = LiteralExpr.make(TagConstants.BOOLEANLIT, Boolean.FALSE, loc);
           Identifier id = TagConstants.ExsuresIdnName;
           FormalParaDecl arg = FormalParaDecl.make(0,null,
-              id, javafe.tc.Types.javaLangException(), ploc);
+              id, Main.options().useThrowable ?
+                   javafe.tc.Types.javaLangThrowable():
+                   javafe.tc.Types.javaLangException(),
+              ploc);
           if (scanner.ttype == TagConstants.SEMICOLON) {
+            ErrorSet.caution(scanner.startingLoc, 
+              "Use either \\nothing or a comma-separated list of type names " +
+              "after a signals_only keyword");
+            // skip - expression is false
+          } else if (scanner.ttype == TagConstants.NOTHING) {
+            scanner.getNextToken();
             // skip - expression is false
           } else while (true) {
             if (scanner.ttype == TagConstants.IDENT) {

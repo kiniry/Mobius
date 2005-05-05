@@ -241,6 +241,12 @@ public class Options extends javafe.SrcToolOptions
 
   public boolean useOldStringHandling = false; // Just for backwards compatibility for Esc/Java tests
 
+  /** JML allows only subtypes of Exception in signals clauses.  Thus signals
+      clauses cannot be written about Errors.  Set this option to true to have
+      annotations allow any Throwable.
+   */
+  public boolean useThrowable = false;
+
   /** The dirpath or jar file of system specs to use. */
   public String specspath = null;
 
@@ -1034,6 +1040,9 @@ public class Options extends javafe.SrcToolOptions
       return offset+1;
     } else if (option.equals("-useoldstringhandling")) {
       useOldStringHandling = true;
+      return offset;
+    } else if (option.equals("-usethrowable")) {
+      useThrowable = true;
       return offset;
     }
     

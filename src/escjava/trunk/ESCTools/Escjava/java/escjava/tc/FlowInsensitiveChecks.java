@@ -2239,13 +2239,17 @@ System.out.println("FOUND " + t);
               // Resolve type and check that it is a subtype of Throwable
               // and comparable to some type mentioned in the throws set.
               env.resolveType(sig,vemp.arg.type);
-              if (!Types.isSubclassOf(vemp.arg.type,
-                                      Types.javaLangThrowable())) {
+              //TypeSig top = Main.options().useThrowable ?
+	//		  Types.javaLangThrowable() : Types.javaLangException();
+              TypeSig top = Types.javaLangThrowable();
+                 // FIXME - JML actually requires that the var be a subtype of
+		 // Exception, but the original Esc/Java did not
+              if (!Types.isSubclassOf(vemp.arg.type,top)) {
                 ErrorSet.error(vemp.arg.type.getStartLoc(),
                                "The type of the " +
                                TagConstants.toString(tag) +
                                " argument must be a subtype of " +
-                               "java.lang.Throwable");
+                               Types.printName(top));
               } else {
                 // "vemp.arg.type" is a subclass of "Throwable", so it
                 // must be a "TypeName" or a "TypeSig"

@@ -479,8 +479,19 @@ public class AnnotationHandler {
             // NOTE: The original Esc/java may have prefered that we warn about
             // every exception in a signals_only clause that was not listed
             // in the throws clause.  Instead, we silently add types that are
-            // subtypes of RuntimeException.
-            if (!ts.isSubtypeOf(Types.javaLangRuntimeException())) {
+            // subtypes of RuntimeException or Error.
+            boolean b = Main.options().useThrowable;
+            if (b && !ts.isSubtypeOf(Types.javaLangRuntimeException()) &&
+                !ts.isSubtypeOf(Types.javaLangError()) &&
+                !Types.isSameType(ts,Types.javaLangThrowable())) {
+              ErrorSet.error(t.getStartLoc(),
+                "The signals_only clause may not contain an exception type " +
+                Types.printName(t) +
+                " that is not a subtype of either RuntimeException, Error or " +
+                "a type in the routine's throws clause",
+                locThrows);
+            } else if (!b && 
+                 !ts.isSubtypeOf(Types.javaLangRuntimeException()) ) {
               ErrorSet.error(t.getStartLoc(),
                 "The signals_only clause may not contain an exception type " +
                 Types.printName(t) +
@@ -755,10 +766,9 @@ public class AnnotationHandler {
         Expr defaultExpr = AnnotationHandler.F;
         // Create a default signals_only clause using the list of exceptions
         // prior to any adjustment
-        VarExprModifierPragma newmp = defaultSignalsOnly(tde,req);
-        resultList.addElement(newmp);
-        m.insertElementAt(newmp,0);
-
+        foundSignalsOnly = defaultSignalsOnly(tde,req);
+        resultList.addElement(foundSignalsOnly);
+        m.insertElementAt(foundSignalsOnly,0);
     }
     if (!foundDiverges) {
       // The default diverges clause is 'false'
@@ -768,6 +778,56 @@ public class AnnotationHandler {
 
     if (!foundModifies) {
       resultList.addElement(defaultModifies(tde.getStartLoc(), req, tde));
+    }
+    Expr sexpr = foundSignalsOnly.expr;
+    pos = 0;
+    while (pos < m.size()) {
+      ModifierPragma mp = m.elementAt(pos++);
+      int tag = mp.getTag();
+      if (tag != TagConstants.SIGNALS) continue;
+      if (mp.originalTag() == TagConstants.SIGNALS_ONLY) continue;
+      VarExprModifierPragma vmp = (VarExprModifierPragma)mp;
+      if (isFalse(vmp.expr)) continue;
+      if ((vmp.expr instanceof BinaryExpr) && ((BinaryExpr)vmp.expr).op == TagConstants.IMPLIES && isFalse(((BinaryExpr)vmp.expr).right)) continue;
+      Type t = vmp.arg.type;
+      if (!isInSignalsOnlyExpr(t,sexpr,true)) {
+        if (Types.isCastable(t,Types.javaLangThrowable()) &&
+          !Types.isCastable(t,Types.javaLangException())) {}
+        else
+          ErrorSet.error(t.getStartLoc(),
+            "Exception type in signals clause must be listed in either a " +
+            "corresponding signals_only clause or the method's throws list",
+            foundSignalsOnly.getStartLoc());
+      }
+    }
+  }
+
+  private boolean isInSignalsOnlyExpr(Type t, Expr e, boolean allowSuperTypes) {
+    if (e == null) return false;
+    if (e instanceof BinaryExpr) {
+      BinaryExpr be = (BinaryExpr)e;
+      if (be.op == TagConstants.IMPLIES) return isInSignalsOnlyExpr(t,be.right,allowSuperTypes);
+      return isInSignalsOnlyExpr(t,be.left,allowSuperTypes) || 
+             isInSignalsOnlyExpr(t,be.right,allowSuperTypes);
+    } else if (e instanceof NaryExpr) {
+      NaryExpr ne = (NaryExpr)e;
+      for (int i=0; i<ne.exprs.size(); ++i) {
+        Expr ee = ne.exprs.elementAt(i);
+        if (isInSignalsOnlyExpr(t,ee,allowSuperTypes)) return true;
+      }
+      return false;
+    } else if (e instanceof LiteralExpr) {
+      return false;
+    } else if (e instanceof InstanceOfExpr) {
+      InstanceOfExpr ie = (InstanceOfExpr)e;
+      if (allowSuperTypes) {
+         if (Types.isCastable(ie.type,t)) return true;
+      }
+      if ( Types.isCastable(t,ie.type) ) return true;
+      return false;
+    } else {
+      System.out.println("UNHANDLED TYPE-A " + e.getClass());
+      return false;
     }
   }
 
@@ -779,7 +839,9 @@ public class AnnotationHandler {
         TypeNameVec tv = tde.raises;
         Identifier id = TagConstants.ExsuresIdnName;
         FormalParaDecl arg = FormalParaDecl.make(0, null, id,
-		      Types.javaLangException(), throwsLoc);
+                      Main.options().useThrowable ?
+		      Types.javaLangThrowable() : Types.javaLangException(),
+                      throwsLoc);
         for (int i=0; i<tv.size(); ++i) {
             TypeName tn =tv.elementAt(i);
             int loc = tn.getStartLoc();
