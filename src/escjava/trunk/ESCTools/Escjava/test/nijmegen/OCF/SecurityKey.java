@@ -31,6 +31,7 @@ class SecurityKey
       @            keyLen == bArray.length &&
       @            (\forall short i ; 0 <= i && i < keyLen
       @                   ==> theKey[i] == bArray[i]);
+      @    signals_only NullPointerException, ArrayIndexOutOfBoundsException;
       @    signals (ArrayIndexOutOfBoundsException) false;
       @    signals (NullPointerException) false;
       @*/
@@ -51,6 +52,7 @@ class SecurityKey
       @ also
       @ behavior
       @     modifiable dest[destOff..destOff+length-1];
+      @     signals_only NullPointerException, ArrayIndexOutOfBoundsException;
       @     signals (NullPointerException) src == null || dest == null;
       @     signals (ArrayIndexOutOfBoundsException) 
       @                 (src != null &&
