@@ -20,8 +20,6 @@
 
 package java.util;
 
-//@ import java.util.Collection;
-
 /** JML's specification of java.util.List.
  * @version $Revision$
  * @author Brandon Shilling
@@ -115,11 +113,11 @@ public interface List extends Collection {
       @   requires \typeof(o) <: elementType;
       @   requires !containsNull ==> o != null;
       @   assignable objectState;
-      @   ensures content.theSize == \old(content.theSize+1);
-      @   //-@ ensures get(content,content.theSize-1) == o;
-      @   //-@ ensures (\forall \bigint i; 0<=i && i < content.theSize-1; 
-      @   //-@                  get(content,i) == \old(get(content,i)));
-      @   ensures \result;
+      @   ensures content.theSize == \old(content.theSize+1); */
+    /*-@  ensures get(content,content.theSize-1) == o;
+      @   ensures (\forall \bigint i; 0<=i && i < content.theSize-1; 
+      @                    get(content,i) == \old(get(content,i))); */
+    /*@   ensures \result;
       @*/
     boolean add(Object o);
 
@@ -129,11 +127,11 @@ public interface List extends Collection {
       @   requires contains(o);
       @   assignable objectState;
       @   ensures content.theSize == \old(content.theSize-1);
-      @   ensures \result != (size() == \old(size()) );
-      @//-@ ensures (\exists \bigint j; 0<=j && j<\old(size()) && nullequals(o,get(content,j));
-       //-@       (\forall \bigint k; 0<=k && k<j; get(content,k) == \old(get(content,k)))
-       //-@   &&  (\forall \bigint k; j<k && k<content.theSize; get(content,k-1)==\old(get(content,k+1))));
-      @ also public exceptional_behavior
+      @   ensures \result != (size() == \old(size()) ); */
+    /*-@ ensures (\exists \bigint j; 0<=j && j<\old(size()) && nullequals(o,get(content,j));
+              (\forall \bigint k; 0<=k && k<j; get(content,k) == \old(get(content,k)))
+	      &&  (\forall \bigint k; j<k && k<content.theSize; get(content,k-1)==\old(get(content,k+1)))); */
+    /*@ also public exceptional_behavior
       @   requires !contains(o);
       @   assignable \nothing;
       @   signals_only NoSuchElementException;
@@ -190,10 +188,10 @@ public interface List extends Collection {
 
     /*@ also
       @ public normal_behavior
-      @   requires o instanceof List && size() == ((List) o).size();
-      @ //-@  ensures \result <==> (\forall \bigint i; 0<=i && i < content.theSize; 
-      @ //-@      nullequals(get(content,i),get(((List)o).content,i)));
-      @ also public normal_behavior
+      @   requires o instanceof List && size() == ((List) o).size(); */
+    /*-@  ensures \result <==> (\forall \bigint i; 0<=i && i < content.theSize; 
+      @       nullequals(get(content,i),get(((List)o).content,i))); */
+    /*@ also public normal_behavior
       @   requires !(o instanceof List && size() == ((List) o).size());
       @   ensures !\result;
       @*/
@@ -203,9 +201,9 @@ public interface List extends Collection {
     int hashCode();
 
     /*@ public normal_behavior
-      @   requires 0 <= index && index < size();
-      @   //-@ ensures \result == get(content,index);
-      @   ensures (\result == null) || \typeof(\result) <: elementType;
+      @   requires 0 <= index && index < size(); */
+    /*-@  ensures \result == get(content,index); */
+    /*@   ensures (\result == null) || \typeof(\result) <: elementType;
       @   ensures !containsNull ==> \result != null;
       @ also
       @ public exceptional_behavior
@@ -225,10 +223,10 @@ public interface List extends Collection {
       @   assignable objectState;
       @   ensures \not_modified(containsNull,elementType,content.theSize);
       @   ensures \result == (\old(get(index)));
-      @   ensures get(index) == element;
-      @   //-@ ensures (\forall \bigint i; 0<=i && i<content.theSize && i != index;
-      @   //-@             get(content,i) == \old(get(content,i)));
-      @   signals_only UnsupportedOperationException, ClassCastException,
+      @   ensures get(index) == element; */
+    /*@   ensures (\forall \bigint i; 0<=i && i<content.theSize && i != index;
+      @               get(content,i) == \old(get(content,i))); */
+    /*@   signals_only UnsupportedOperationException, ClassCastException,
                          NullPointerException, IllegalArgumentException;
       @   signals (UnsupportedOperationException)
       @           (* set method not supported by list *);

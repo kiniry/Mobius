@@ -37,7 +37,8 @@ public abstract class InputStream {
     // inputBytes models the bytes that have been or will be
     // read between the opening and the closing of the InputStream
     // It is not modified - e.g. it is an oracle of sorts
-    //@ public model /*-@ final */ non_null byte[] inputBytes;
+    //+@ public model non_null byte[] inputBytes;
+    //-@ public model final non_null byte[] inputBytes;
     //@ public constraint inputBytes == \old(inputBytes);
     //@ public invariant inputBytes.owner == this;
 

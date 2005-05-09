@@ -42,12 +42,16 @@ public class Properties extends Hashtable{
 
     /*@ public normal_behavior
       @   requires name != null;
-      @   //-@ ensures (!content.hasMap(name) && defaults == null) ==> 
-          //-@                               \result == null;
-      @   //-@ ensures (!content.hasMap(name) && defaults != null) ==> 
-          //-@                               \result == defaults.getProperty(name);
-      @   //-@ ensures content.hasMap(name) ==> \result == content.maps(name);
-      @ also public exceptional_behavior
+      @*/
+    /*-@ also public normal_behavior
+      @   requires name != null;
+      @   ensures (!content.hasMap(name) && defaults == null) ==> 
+                                        \result == null;
+      @   ensures (!content.hasMap(name) && defaults != null) ==> 
+                                        \result == defaults.getProperty(name);
+      @   ensures content.hasMap(name) ==> \result == content.maps(name);
+      @*/
+    /*@ also public exceptional_behavior
       @   requires name == null;
       @   signals_only NullPointerException;
       @*/
@@ -57,16 +61,21 @@ public class Properties extends Hashtable{
     /*@ public normal_behavior
       @   requires name != null && value != null;
       @   assignable objectState;
-      @   //-@ ensures content.hasMap(name);
-      @   //-@ ensures !\old(content.hasMap(name)) ==> 
-          //-@                     content.theSize == \old(content.theSize + 1);
-      @   //-@ ensures \old(content.hasMap(name)) ==> 
-          //-@                     content.theSize == \old(content.theSize);
-      @   //-@ ensures content.maps(name) == value;
-      @   //-@ ensures (\forall String s; !name.equals(s) ==> 
-          //-@                  (content.hasMap(s) <==> \old(content.hasMap(s)))); 
+      @*/
+    /*-@ also public normal_behavior
+      @   requires name != null && value != null;
+      @   assignable objectState;
+      @   ensures content.hasMap(name);
+      @   ensures !\old(content.hasMap(name)) ==> 
+                              content.theSize == \old(content.theSize + 1);
+      @   ensures \old(content.hasMap(name)) ==> 
+                              content.theSize == \old(content.theSize);
+      @   ensures content.maps(name) == value;
+      @   ensures (\forall String s; !name.equals(s) ==> 
+                           (content.hasMap(s) <==> \old(content.hasMap(s)))); 
             // FIXME - likely needs more, but cleanup Map first
-      @ also public exceptional_behavior
+      @*/
+    /*@ also public exceptional_behavior
       @   requires name == null || value == null;
       @   assignable \not_specified;
       @   signals_only NullPointerException;

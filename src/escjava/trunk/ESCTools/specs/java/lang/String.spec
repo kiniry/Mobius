@@ -1091,9 +1091,8 @@ public final class String
       @ //-@  ensures \result <==> (s != null && \dttfsa(boolean,"|interned:|",s));
       @ //-@ function
       @ public pure static model boolean isInterned(String s);
-      @
-      @ //-@ axiom (\forall int i,k; length(\dttfsa(java.lang.String,"|intern:|",i,k)) == k);
       @*/
-
+    //-@ axiom (\forall int i,k; length(\dttfsa(java.lang.String,"|intern:|",i,k)) == k);
+    
 }
 

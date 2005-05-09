@@ -1,3 +1,5 @@
+// @(#)$Id$
+
 // @author David R. Cok
 
 package java.util;
@@ -53,10 +55,11 @@ public class BitSet implements Cloneable, java.io.Serializable{
     // index of the highest set bit
     /*@ public normal_behavior
       @   ensures \result >= 0;
-      @   ensures \result >= cardinality();
-      //-@   ensures \result == 0 <==> (\forall int i; 0<=i; !isSet(content,i));
-      //-@   ensures \result > 0 ==> (isSet(content,\result-1) &&
-      //-@                      (\forall int i; \result <= i; !isSet(content,i)));
+      @   ensures \result >= cardinality(); */
+    /*-@
+      @   ensures \result == 0 <==> (\forall int i; 0<=i; !isSet(content,i));
+      @   ensures \result > 0 ==> (isSet(content,\result-1) &&
+      @                      (\forall int i; \result <= i; !isSet(content,i)));
       @*/
     //@ pure
     public int length();
@@ -277,19 +280,19 @@ public class BitSet implements Cloneable, java.io.Serializable{
     /*@ also public normal_behavior
       @   assignable \not_specified;
       @   ensures \typeof(\result) == \type(BitSet);
-      @   ensures \result != null;
-      @   //-@ ensures (\forall int i; 0<=i; isSet(((BitSet)\result).content,i) ==
-      @   //-@                               isSet(content,i));
-      @   ensures ((BitSet)\result).cardinality() == cardinality();
+      @   ensures \result != null; */
+    /*-@   ensures (\forall int i; 0<=i; isSet(((BitSet)\result).content,i) ==
+      @                              isSet(content,i)); */
+    /*@   ensures ((BitSet)\result).cardinality() == cardinality();
       @*/
     public Object clone();
 
     /*@ also public normal_behavior
-      @   requires o != null && o instanceof BitSet;
-      @   //-@ ensures \result <==> (\forall int i; 
-          //-@          0<=i;
-      @   //-@          isSet(content,i) == isSet(((BitSet)o).content,i));
-      @   ensures \result ==> (cardinality() == ((BitSet)o).cardinality());
+      @   requires o != null && o instanceof BitSet; */
+    /*-@  ensures \result <==> (\forall int i; 
+      @			0<=i;
+      @             	isSet(content,i) == isSet(((BitSet)o).content,i)); */
+    /*@   ensures \result ==> (cardinality() == ((BitSet)o).cardinality());
       @ also public normal_behavior
       @   requires o != null && !(o instanceof BitSet);
       @   ensures !\result;
@@ -310,13 +313,13 @@ public class BitSet implements Cloneable, java.io.Serializable{
     /*@ public normal_behavior
       @   requires 0 <= fromIndex && 0 <= toIndex;
       @   requires fromIndex <= toIndex;
-      @   ensures \result != null;
-      @   //-@ ensures (\forall int i; 0<=i && i<fromIndex; !isSet(\result.content,i));
-      @   //-@ ensures (\forall int i; toIndex<=i; !isSet(\result.content,i));
-      @   //-@ ensures (\forall int i; fromIndex <= i && i < toIndex;
-          //-@                    isSet(\result.content,i) == isSet(content,i));
-      @   //-@ ensures size(\result.content) >= toIndex;
-      @   ensures cardinality() >= \result.cardinality();
+      @   ensures \result != null; */
+    /*-@  ensures (\forall int i; 0<=i && i<fromIndex; !isSet(\result.content,i));
+      @   ensures (\forall int i; toIndex<=i; !isSet(\result.content,i));
+      @   ensures (\forall int i; fromIndex <= i && i < toIndex;
+      @                       isSet(\result.content,i) == isSet(content,i));
+      @   ensures size(\result.content) >= toIndex; */
+    /*@   ensures cardinality() >= \result.cardinality();
       @*/
     //@ pure
     public BitSet get(int fromIndex,int toIndex);

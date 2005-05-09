@@ -138,32 +138,33 @@ public class Vector extends AbstractList
       @*/
     public synchronized void trimToSize();
 
-    /*@  public normal_behavior
-      @  {|
-      @    requires minCapacity <= maxCapacity;
-      @    assignable \nothing;
-      @    ensures true;
-      @  also
-      @    requires minCapacity > maxCapacity;
-      @    assignable objectState;
-      @    ensures \not_modified(theString,theHashCode);
-               // theHashCode is not changed because the result does not
-               // changes equals
-      @    ensures \not_modified(elementCount,containsNull,elementType);
-              // FIXME - this is the implementation described for Vector
-              // is it required of subclasses?
-      @    ensures maxCapacity == 
-                    (capacityIncrement > 0 &&
-                     \old(maxCapacity+capacityIncrement)>=minCapacity ?
-                          \old(maxCapacity+capacityIncrement)  :
-                     capacityIncrement == 0 &&
-                     \old(maxCapacity*2) >= minCapacity ?
-                          \old(maxCapacity*2)  :
-                          minCapacity);
-      @    //-@ ensures (\forall int i; 0<=i && i<elementCount;
-           //-@               elementData[i] == \old(elementData[i]));
-      @  |}
+    //@  public normal_behavior
+    //@  {|
+    //@    requires minCapacity <= maxCapacity;
+    //@    assignable \nothing;
+    //@    ensures true;
+    //@  also
+    //@    requires minCapacity > maxCapacity;
+    //@    assignable objectState;
+    //@    ensures \not_modified(theString,theHashCode);
+    //@           // theHashCode is not changed because the result does not
+    //@           // changes equals
+    //@    ensures \not_modified(elementCount,containsNull,elementType);
+    //@          // FIXME - this is the implementation described for Vector
+    //@          // is it required of subclasses?
+    /*@    ensures maxCapacity == 
+      @ 	(capacityIncrement > 0 &&
+      @                 \old(maxCapacity+capacityIncrement)>=minCapacity ?
+      @                      \old(maxCapacity+capacityIncrement)  :
+      @                 capacityIncrement == 0 &&
+      @                 \old(maxCapacity*2) >= minCapacity ?
+      @                      \old(maxCapacity*2)  :
+      @                      minCapacity);
       @*/
+    /*-@     ensures (\forall int i; 0<=i && i<elementCount;
+      @			elementData[i] == \old(elementData[i]));
+      @*/
+    //@ |}
     public synchronized void ensureCapacity(int minCapacity);
 
     /*@  public normal_behavior
@@ -173,18 +174,19 @@ public class Vector extends AbstractList
       @    assignable objectState; 
       @    ensures \not_modified(theString,theHashCode);
       @    ensures \not_modified(containsNull,elementType);
-      @    ensures elementCount == newSize;
-      @    //-@ ensures (\forall int i; 0<=i && i<elementCount;
-           //-@                elementData[i] == \old(elementData[i]));
-      @  also
+      @    ensures elementCount == newSize; */
+    /*-@   ensures (\forall int i; 0<=i && i<elementCount;
+      @			elementData[i] == \old(elementData[i])); */
+    /*@  also
       @    old int oldSize = elementCount;
       @    requires newSize > elementCount;
       @    assignable objectState;
       @    ensures \not_modified(theString,theHashCode);
-      @    ensures \not_modified(containsNull,elementType);
-      @    //-@ ensures (\forall int i; 0<=i && i<oldSize;
-           //-@                elementData[i] == \old(elementData[i]));
-      @    ensures (\forall int i; oldSize<=i && i < newSize;
+      @    ensures \not_modified(containsNull,elementType); */
+    /*-@
+      @    ensures (\forall int i; 0<=i && i<oldSize;
+      @			elementData[i] == \old(elementData[i])); */
+    /*@    ensures (\forall int i; oldSize<=i && i < newSize;
       @                           get(i) == null);
       @  |}
       @  also exceptional_behavior

@@ -45,14 +45,20 @@ public interface Comparable {
       @ model static pure int sgn(int i);
       @*/
 
-    /*@ 
-      @ public normal_behavior
+    /*@ public normal_behavior
+      @    requires x != null && y != null;
       @    ensures !(x <: \type(Comparable)) ==> !\result;
       @    ensures !(y <: \type(Comparable)) ==> !\result;
       @    ensures \result == definedComparison(y,x);
       @ public static model pure boolean
       @ definedComparison(Class x, Class y);
       @*/
+
+    /*$ public normal_behavior
+      $   requires x != null && y != null;
+      $ public static model pure boolean
+      $		definedComparison(Object x, Object y);
+      $*/
 
     /*@ 
       @ public exceptional_behavior
@@ -77,42 +83,42 @@ public interface Comparable {
       @*/
 
     // compareTo is antisymmetric
-    /*-@ public instance invariant
-      @   (\forall Comparable x, y; x != null && y != null
-      @                             && definedComparison(x, y)
-      @                             && definedComparison(y, x);
-      @                 sgn(x.compareTo(y)) == -sgn(y.compareTo(x)) );
-      @*/
+    /*-$ public instance invariant
+      $   (\forall Comparable x, y; x != null && y != null
+      $                             && definedComparison(x, y)
+      $                             && definedComparison(y, x);
+      $                 sgn(x.compareTo(y)) == -sgn(y.compareTo(x)) );
+      $*/
 
     // compareTo is transitive
-    /*-@ public instance invariant
-      @     (\forall int n; n == -1 || n == 1;
-      @      (\forall Comparable x, y, z;
-      @              x != null && y != null && z != null
-      @               && definedComparison(x, y) && definedComparison(y, z)
-      @               && definedComparison(x, z);
-      @              sgn(x.compareTo(y)) == n && sgn(y.compareTo(z)) == n
-      @                 ==> sgn(x.compareTo(z)) == n));
-      @ public instance invariant
-      @     (\forall int n; n == -1 || n == 1;
-      @      (\forall Comparable x, y, z;
-      @             x != null && y != null && z != null
-      @              && definedComparison(x, y) && definedComparison(y, z)
-      @              && definedComparison(x, z);
-      @             (sgn(x.compareTo(y)) == 0 && sgn(y.compareTo(z)) == n
-      @               || sgn(x.compareTo(y)) == n && sgn(y.compareTo(z)) == 0)
-      @             ==> sgn(x.compareTo(z)) == n));
-      @*/
+    /*-$ public instance invariant
+      $     (\forall int n; n == -1 || n == 1;
+      $      (\forall Comparable x, y, z;
+      $              x != null && y != null && z != null
+      $               && definedComparison(x, y) && definedComparison(y, z)
+      $               && definedComparison(x, z);
+      $              sgn(x.compareTo(y)) == n && sgn(y.compareTo(z)) == n
+      $                 ==> sgn(x.compareTo(z)) == n));
+      $ public instance invariant
+      $     (\forall int n; n == -1 || n == 1;
+      $      (\forall Comparable x, y, z;
+      $             x != null && y != null && z != null
+      $              && definedComparison(x, y) && definedComparison(y, z)
+      $              && definedComparison(x, z);
+      $             (sgn(x.compareTo(y)) == 0 && sgn(y.compareTo(z)) == n
+      $               || sgn(x.compareTo(y)) == n && sgn(y.compareTo(z)) == 0)
+      $             ==> sgn(x.compareTo(z)) == n));
+      $*/
 
     // compareTo returning 0 means the other argument
     // is in the same equivalence class
-    /*-@ public instance invariant
-      @    (\forall Comparable x, y, z;
-      @             x != null && y != null && z != null
-      @              && definedComparison(x, y) && definedComparison(x, z)
-      @              && definedComparison(y, z);
-      @             sgn(x.compareTo(y)) == 0
-      @             ==> sgn(x.compareTo(z)) == sgn(y.compareTo(z)));
-      @*/
+    /*-$ public instance invariant
+      $    (\forall Comparable x, y, z;
+      $             x != null && y != null && z != null
+      $              && definedComparison(x, y) && definedComparison(x, z)
+      $              && definedComparison(y, z);
+      $             sgn(x.compareTo(y)) == 0
+      $             ==> sgn(x.compareTo(z)) == sgn(y.compareTo(z)));
+      $*/
 
 }

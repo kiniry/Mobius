@@ -66,7 +66,6 @@ public interface Collection {
             public \bigint theSize;
 
             //@ public normal_behavior
-	    //@    assignable \not_specified;
             //@    ensures true;
             //-@ function pure
             public boolean containsObject(Object o);
