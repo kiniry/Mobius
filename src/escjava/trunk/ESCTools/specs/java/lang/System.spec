@@ -200,8 +200,8 @@ t *);
        set of system properties, but it appears to be the same (per equals)
        throughout a program.
      */
-    //-@ public model static non_null Properties nullSystemProperties;
-    //+@ public model static final non_null Properties nullSystemProperties;
+    //+@ public model static non_null Properties nullSystemProperties;
+    //-@ public model static final non_null Properties nullSystemProperties;
 
     /*@ public normal_behavior
       @    ensures \result == systemProperties;
