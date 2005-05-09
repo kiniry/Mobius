@@ -400,7 +400,6 @@ public class BitSet implements Cloneable, java.io.Serializable{
 
     /*@ public normal_behavior
       @   requires b != null;
-      @   assignable \not_specified;
       @*/
     /*-@
       @ also public normal_behavior
