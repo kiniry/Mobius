@@ -28,8 +28,6 @@ package java.util;
  */
 public interface List extends Collection {
 
-    //@ model class Content {}
-
     /*@ public normal_behavior
       @   ensures \result;
       @ public pure model boolean initialList();
