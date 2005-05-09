@@ -1086,13 +1086,12 @@ public final class String
     //@ pure // -@ function
     public native /*@ non_null @*/ String intern();
 
-    /*@ public normal_behavior
-      @    ensures \result <==> (s != null && (* \dttfsa(boolean,"|interned:|",s) *));
-      @ //-@  ensures \result <==> (s != null && \dttfsa(boolean,"|interned:|",s));
-      @ //-@ function
-      @ public pure static model boolean isInterned(String s);
-      @*/
+    //@ public normal_behavior
+    //+@    ensures \result <==> (s != null && (* \dttfsa(boolean,"|interned:|",s) *));
+    //-@    ensures \result <==> (s != null && \dttfsa(boolean,"|interned:|",s));
+    //-@ function
+    //@ public pure static model boolean isInterned(String s);
+
     //-@ axiom (\forall int i,k; length(\dttfsa(java.lang.String,"|intern:|",i,k)) == k);
     
 }
-
