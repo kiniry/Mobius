@@ -410,12 +410,12 @@ public class TagConstants extends GeneratedTags
 
     public static final int LAST_TAG = LASTESCKEYWORDTAG;
 
-    public static final Identifier ExsuresIdnName = 
+    public static final /*@non_null*/ Identifier ExsuresIdnName = 
         Identifier.intern("Optional..Exsures..Id..Name");
 
     //// Helper functions
 
-    public static String toVcString(int tag) {
+    public static /*@non_null*/ String toVcString(int tag) {
         switch(tag) {
             case TYPECODE:
                 return "TYPECODE";		// displayed to user as "TYPE"
@@ -438,7 +438,7 @@ public class TagConstants extends GeneratedTags
 
     // Documented in parent.
 
-    public static String toString(int tag) {
+    public static /*@non_null*/ String toString(int tag) {
         switch(tag) {
             // new literal expression (not true keyword)
             case  SYMBOLLIT:
@@ -536,7 +536,7 @@ public class TagConstants extends GeneratedTags
 	    || (FIRSTESCKEYWORDTAG <= tag && tag <= LASTESCKEYWORDTAG);
     }
 
-    public static int checkFromString(String s) {
+    public static int checkFromString(/*@non_null*/ String s) {
         for (int i = FIRSTESCCHECKTAG; i <= LASTESCCHECKTAG; i++) {
             if (s.equals(escchecks[i - FIRSTESCCHECKTAG]))
                 return i;
@@ -701,7 +701,7 @@ public class TagConstants extends GeneratedTags
             tag == TagConstants.DECREASING_REDUNDANTLY;
     }
 
-    public final static String[] escchecks = {
+    public final static /*@non_null*/ String[] escchecks = {
         "ZeroDiv",
         "ArrayStore",
         "Assert",
@@ -745,7 +745,7 @@ public class TagConstants extends GeneratedTags
         "Free"  // printed in debugging output only
     };
         
-    private static String[] escfunctions = {
+    private static /*@non_null*/ String[] escfunctions = {
         "allocLT",
         "allocLE",
         "anyEQ",
@@ -828,7 +828,7 @@ public class TagConstants extends GeneratedTags
     static public final String STRINGCATINFIX = "java.lang.String._infixConcat_";
 				     // Must match method name in String.spec
 
-    private static Identifier[] jmlkeywords = {
+    private static /*@non_null*/ Identifier[] jmlkeywords = {
         Identifier.intern("assume"),
         Identifier.intern("axiom"),
         Identifier.intern("code_contract"),
@@ -992,7 +992,7 @@ public class TagConstants extends GeneratedTags
         Identifier.intern("working_space")
     };
 
-    private static Identifier[] esckeywords = {
+    private static /*@non_null*/ Identifier[] esckeywords = {
         Identifier.intern("also_ensures"),
         Identifier.intern("also_exsures"),
         Identifier.intern("also_modifies"),
@@ -1003,7 +1003,7 @@ public class TagConstants extends GeneratedTags
         Identifier.intern("\\rep")
     };
 
-    public static void main(String[] args) {
+    public static void main(/*@non_null*/ String[] args) {
         for(int i = FIRST_TAG; i <= LAST_TAG; i++ )
             System.out.println(i + " " + toString(i));
     }
@@ -1011,7 +1011,7 @@ public class TagConstants extends GeneratedTags
     // This initialization code is simply a quick check that the arrays
     // are consistent in length.
 
-    static private void comp(int i, int j, String s) {
+    static private void comp(int i, int j, /*@non_null*/ String s) {
 	if (i != j)
 		System.out.println("Mismatched length ("
 			+ i + " vs. " + j + ") in " + s);
