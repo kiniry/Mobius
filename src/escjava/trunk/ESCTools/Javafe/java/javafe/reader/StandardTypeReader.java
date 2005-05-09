@@ -231,7 +231,9 @@ public class StandardTypeReader extends TypeReader
    * <code>P.T</code>'s binary may be read in in order to obtain it's
    * source pointer.
    */
+  //@ requires P != null;
   //@ requires \nonnullelements(P);
+  // can return null
   public GenericFile locateSource(String[] P,
                                   /*@ non_null @*/ String T,
                                   boolean useSrcPtr) {

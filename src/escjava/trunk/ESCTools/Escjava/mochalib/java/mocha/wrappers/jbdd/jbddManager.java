@@ -116,7 +116,7 @@ public class jbddManager {
       jbddManagerFinalize();
     }
 
-  public static void main(String args[]) {
+  public static void main(/*@non_null*/ String args[]) {
     jbddManager manager = new jbddManager(0);
     jbdd bdd1 = manager.jbdd_one();
     jbdd bdd0 = manager.jbdd_zero();
@@ -139,7 +139,9 @@ public class jbddManager {
   static 
     {
       //      try {
-                 System.loadLibrary("jbdd");
+    System.loadLibrary("glu");
+    System.loadLibrary("cu");
+    System.loadLibrary("jbdd");
       //      }
       //      catch (Throwable t){
       //	System.out.println( "Error in loadLibrary: " + t);

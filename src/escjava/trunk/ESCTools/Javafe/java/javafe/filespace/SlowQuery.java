@@ -63,6 +63,7 @@ public class SlowQuery extends Query {
      * Warning: the definition of accessible is host system dependent
      * and may in fact be defined as always true.<p>
      */
+    //@ requires P != null;
     public boolean accessable(String[] P) {
 	return (getPackage(P) != null);
     }
@@ -75,11 +76,16 @@ public class SlowQuery extends Query {
      * If such a file is found, then a (non-null) GenericFile
      * representing it is returned.  Otherwise, null is returned.<p>
      */
+    //@ requires P != null;
+    //@ requires typename != null;
+    //@ requires extension != null;
     public GenericFile findFile(String[] P, String typename,
 					String extension) {
 	return findFile(P,typename+"."+extension);
     }
 
+    //@ requires P != null;
+    //@ requires filename != null;
     public GenericFile findFile(String[] P, String filename) {
 	Tree Package = getPackage(P);
 	if (Package==null)
@@ -92,6 +98,9 @@ public class SlowQuery extends Query {
 	return (GenericFile)node.data;		//@ nowarn Cast;
     }
 
+    //@ requires P != null;
+    //@ requires typename != null;
+    //@ requires extensions != null;
     public GenericFile findFile(String[] P, String typename,
 					String[] extensions) {
 // FIXME - only utilizes the first package
@@ -108,6 +117,7 @@ public class SlowQuery extends Query {
      }
 
 
+    //@ requires P != null;
     public Enumeration findFiles(String[] P) {
 	Tree Package = getPackage(P);
 	if (Package==null)
@@ -121,6 +131,7 @@ public class SlowQuery extends Query {
      * the Java filespace or null if there is no such corresponding
      * package.
      */
+    //@ requires P != null;
     //@ requires \nonnullelements(P);
     private Tree getPackage(String[] P) {
 	Tree Package = javaFileSpace;
@@ -141,6 +152,7 @@ public class SlowQuery extends Query {
      **************************************************/
 
     /** A simple test driver */
+    //@ requires args != null;
     //@ requires \nonnullelements(args);
     public static void main(String[] args) throws IOException {
 	/*

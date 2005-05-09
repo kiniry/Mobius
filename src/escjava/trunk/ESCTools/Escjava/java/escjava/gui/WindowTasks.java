@@ -15,7 +15,7 @@ public class WindowTasks implements Runnable {
 
 	}
 
-	static private LinkedList tasks = new LinkedList();
+    static private /*@non_null*/ LinkedList tasks = new LinkedList();
 
 	synchronized static public void addTask(Object o) {
 		tasks.addLast(o);

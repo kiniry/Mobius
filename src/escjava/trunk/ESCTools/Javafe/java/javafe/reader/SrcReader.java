@@ -43,6 +43,7 @@ public class SrcReader extends Reader
 	this(null);
     }
 
+    // p can be null
     public SrcReader(PragmaParser p) {
 	readLex = new Lex(p, true);
 	readParser = new Parse();

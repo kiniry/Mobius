@@ -21,7 +21,7 @@ public class TeeOutputStream extends FilterOutputStream
      * being <code>out</code> in the superclass).
      */
     //@ spec_public
-    protected OutputStream out2;
+    protected /*@non_null*/ OutputStream out2;
 
     /**
      * Creates an output stream filter built on top of two specified 
@@ -76,6 +76,10 @@ public class TeeOutputStream extends FilterOutputStream
      * @exception  IOException  if an I/O error occurs.
      * @see        java.io.FilterOutputStream#write(byte[], int, int)
      */
+    //@ also
+    //@ public normal_behavior
+    //@ requires b != null;
+    //@   modifies \everything;
     public void write(byte b[]) throws IOException {
         out.write(b);
         out2.write(b);
@@ -100,6 +104,7 @@ public class TeeOutputStream extends FilterOutputStream
      */
     //@ also
     //@ public normal_behavior
+    //@   requires b != null;
     //@   requires b.length >= off + len;
     //@   modifies \everything;
     public void write(byte b[], int off, int len) throws IOException {

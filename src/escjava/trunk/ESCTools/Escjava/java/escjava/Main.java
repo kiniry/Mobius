@@ -47,7 +47,7 @@ import javafe.util.*;
 
 public class Main extends javafe.SrcTool
 {
-    static public final String jarlocation;
+    static public final String jarlocation; // can be null
     
     static {
 	java.net.URL urlJar = GUI.class.getClassLoader().getResource(
@@ -76,10 +76,10 @@ public class Main extends javafe.SrcTool
 
     /** Our version number */
     //public final static String version = "(Nijmegen/Kodak) 1.3, 2003";
-    public final static String version = Version.VERSION;
+    public final static /*@non_null*/ String version = Version.VERSION;
 
 
-    public AnnotationHandler annotationHandler = new AnnotationHandler();
+    private /*@non_null*/ AnnotationHandler annotationHandler = new AnnotationHandler();
 
     // Convenience copy of options().stages
     public int stages;
@@ -89,28 +89,29 @@ public class Main extends javafe.SrcTool
      *
      * Used in usage and error messages.<p>
      */
-    public String name() { return "escjava"; }
+    public /*@non_null*/ String name() { return "escjava"; }
 
-    public javafe.Options makeOptions() { return new Options(); }
+    public /*@non_null*/ javafe.Options makeOptions() { return new Options(); }
     
-    //@ pure
-    public static Options options() { return (Options)options; }
+    // result can be null
+    public static /*@ pure */ Options options() { return (Options)options; }
 
     // Front-end setup
 
     /**
      * Returns the Esc StandardTypeReader, EscTypeReader.
      */
-    public StandardTypeReader makeStandardTypeReader(String path,
-				String sourcePath,
-                             PragmaParser P) {
+    // All three arguments can be null.
+    public /*@non_null*/ StandardTypeReader makeStandardTypeReader(String path,
+						     String sourcePath,
+						     PragmaParser P) {
         return EscTypeReader.make(path, sourcePath, P, annotationHandler);
     }
 
     /**
      * Returns the EscPragmaParser.
      */
-    public javafe.parser.PragmaParser makePragmaParser() {
+    public /*@non_null*/ javafe.parser.PragmaParser makePragmaParser() {
         return new escjava.parser.EscPragmaParser();
     }
 
@@ -118,7 +119,7 @@ public class Main extends javafe.SrcTool
      * Returns the pretty printer to set
      * <code>PrettyPrint.inst</code> to.
      */
-    public PrettyPrint makePrettyPrint() {
+    public /*@non_null*/ PrettyPrint makePrettyPrint() {
         DelegatingPrettyPrint p = new EscPrettyPrint();
         p.del = new StandardPrettyPrint(p);
         return p;
@@ -129,7 +130,7 @@ public class Main extends javafe.SrcTool
      * (or a subclass thereof). May not return <code>null</code>.  By
      * default, returns <code>javafe.tc.TypeCheck</code>.
      */
-    public javafe.tc.TypeCheck makeTypeCheck() {
+    public /*@non_null*/ javafe.tc.TypeCheck makeTypeCheck() {
         return new escjava.tc.TypeCheck();
     }
 
@@ -138,7 +139,7 @@ public class Main extends javafe.SrcTool
      * Override SrcTool.notify to ensure all lexicalPragmas get
      * registered as they are loaded.
      */
-    public void notify(CompilationUnit justLoaded) {
+    public void notify(/*@non_null*/ CompilationUnit justLoaded) {
         super.notify(justLoaded);
     
         NoWarn.registerNowarns(justLoaded.lexicalPragmas);
@@ -161,7 +162,7 @@ public class Main extends javafe.SrcTool
      * command.<p>
      */
     //@ requires \nonnullelements(args);
-    public static void main(String[] args) {
+    public static void main(/*@non_null*/ String[] args) {
 	int exitcode = compile(args);
 	if (exitcode != 0) System.exit(exitcode);
     }
@@ -307,8 +308,11 @@ public class Main extends javafe.SrcTool
 
     /**
      * A wrapper for opening output files for printing.
+     *
+     * dir can be null.
      */
-    private PrintStream fileToPrintStream(String dir, String fname) {
+    //@ ensures \result != null;
+    private PrintStream fileToPrintStream(String dir, /*@non_null*/ String fname) {
         File f = new File(dir, fname);
         try {
             return new PrintStream(new FileOutputStream(f));
@@ -374,6 +378,8 @@ public class Main extends javafe.SrcTool
      * <p> In addition, it calls itself recursively to handle types
      * nested within outside types.
      */
+    //@ also
+    //@ requires td != null;
     public void handleTD(TypeDecl td) {
         long startTime = currentTime();
         TypeSig sig = TypeCheck.inst.getSig(td);
@@ -418,6 +424,7 @@ public class Main extends javafe.SrcTool
      * if we had to abort.
      *
      */
+    //@ requires td != null;
     //@ requires (* td is not from a binary file. *);
     private boolean processTD(TypeDecl td) {
 	try {
@@ -542,6 +549,7 @@ public class Main extends javafe.SrcTool
      * requires te is not from a binary file, sig is the
      * TypeSig for te's parent, and initState != null.
      */
+    //@ requires sig != null && initState != null;
     private void processTypeDeclElem(TypeDeclElem te, TypeSig sig,
                      InitialState initState) {
         // Only handle methods and constructors here:
@@ -784,7 +792,8 @@ public class Main extends javafe.SrcTool
     }
 
 
-
+    //@ requires vc != null;
+    // scope can be null
     public int doProving(Expr vc, RoutineDecl r, Set directTargets,
 				FindContributors scope) {
 	try {
@@ -927,6 +936,8 @@ public class Main extends javafe.SrcTool
      * @return <code>null</code> if <code>r</code> doesn't have a body.
      */
 
+    //@ requires r != null;
+    //@ requires initState != null;
     protected GuardedCmd computeBody(RoutineDecl r, InitialState initState) {
         if (r.getTag() == TagConstants.METHODDECL &&
             ((MethodDecl)r).body == null) {

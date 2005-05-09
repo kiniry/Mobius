@@ -24,7 +24,7 @@ public class EscFrame extends JFrame {
 
     static public final boolean runningOnMac = (System.getProperty("mrj.version") != null);
 
-    static public String addDots(String s) {
+    static public /*@non_null*/ String addDots(/*@non_null*/ String s) {
 	if (!runningOnMac) return s + "...";
 	return s;
     }
@@ -38,7 +38,7 @@ public class EscFrame extends JFrame {
 	}
     }
 
-    static public final JMenuBar menubar = new JMenuBar();
+    static public final /*@non_null*/ JMenuBar menubar = new JMenuBar();
     public EscOptions escoptionPanel;
     public GuiOptionsPanel guioptionPanel;
     private JTextArea listArea;
@@ -70,7 +70,7 @@ public class EscFrame extends JFrame {
 
     }
 
-    private void buildGUI(final JFrame frame) {
+    private void buildGUI(final /*@non_null*/ JFrame frame) {
 	JTabbedPane tabbedPane = new JTabbedPane();
 	frame.getContentPane().add(tabbedPane, BorderLayout.CENTER);
 	guioptionPanel = new GuiOptionsPanel();
@@ -267,7 +267,7 @@ public class EscFrame extends JFrame {
 */
 	tree.addMouseListener(
 	    new MouseInputAdapter() {
-		public void mouseClicked(MouseEvent e) {
+		public void mouseClicked(/*@non_null*/ MouseEvent e) {
 		    if (e.getClickCount() != 1) return;
 		    Object o = ((DefaultMutableTreeNode)
 			tree.getClosestPathForLocation(e.getX(),e.getY()).
@@ -555,7 +555,7 @@ public class EscFrame extends JFrame {
 
     static private class LAF extends JRadioButtonMenuItem implements ActionListener {
 	public UIManager.LookAndFeelInfo laf;
-	public LAF(UIManager.LookAndFeelInfo laf) {
+	public LAF(/*@non_null*/ UIManager.LookAndFeelInfo laf) {
 	    super(laf.getName());
 	    this.laf = laf;
 	}
@@ -569,7 +569,7 @@ public class EscFrame extends JFrame {
 	}
     }
 
-    public void showEditor(GUI.EscTreeValue v) {
+    public void showEditor(/*@non_null*/ GUI.EscTreeValue v) {
 	String vname = v.getFilename();
 	if (vname == null) return;
 	if (v instanceof GUI.GFCUTreeValue) {
@@ -599,7 +599,7 @@ public class EscFrame extends JFrame {
 	GUI.gui.treeModel.reload();
     }
 
-    static ActionListener notimp(final JFrame parent) {
+    static /*@non_null*/ ActionListener notimp(final /*@non_null*/ JFrame parent) {
 	return new ActionListener() {
 	    public void actionPerformed(ActionEvent e) {
 		//System.out.println("NOT IMPLEMENTED");
@@ -642,7 +642,7 @@ public class EscFrame extends JFrame {
     static private class EscRenderer extends DefaultTreeCellRenderer {
 	public Component getTreeCellRendererComponent(
                         JTree tree,
-                        Object value,
+                        /*@non_null*/ Object value,
                         boolean sel,
                         boolean expanded,
                         boolean leaf,
@@ -729,7 +729,7 @@ public class EscFrame extends JFrame {
     }
 
 
-    static final Object PROCESS_ALL = new Object();
+    static final /*@non_null*/ Object PROCESS_ALL = new Object();
 
     public void updateSizeInfo() {
 	Runtime rt = Runtime.getRuntime();
@@ -745,8 +745,8 @@ public class EscFrame extends JFrame {
     }
 
     public class EscTreeCellRenderer extends JPanel implements TreeCellRenderer {
-        JLabel label;
-	JCheckBox cb;
+        /*@non_null*/ JLabel label;
+	/*@non_null*/ JCheckBox cb;
 
 	public EscTreeCellRenderer() {
 	    setLayout(new BoxLayout(this,BoxLayout.LINE_AXIS));
@@ -761,7 +761,7 @@ public class EscFrame extends JFrame {
 
 	public boolean isShowing() { return true; }
 
-	public Component getTreeCellRendererComponent(JTree tree,
+	public /*@non_null*/ Component getTreeCellRendererComponent(JTree tree,
                                               Object value,
                                               boolean selected,
                                               boolean expanded,

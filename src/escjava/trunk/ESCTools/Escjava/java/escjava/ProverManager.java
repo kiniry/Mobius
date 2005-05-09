@@ -94,6 +94,9 @@ public class ProverManager {
         }
     }
 
+    //@ requires vc != null;
+    // scope can be null
+    //? ensures \result != null;
     synchronized
     static public Enumeration prove(Expr vc, FindContributors scope) {
 	if (scope == null) {

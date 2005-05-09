@@ -81,6 +81,7 @@ public class EscTypeReader extends StandardTypeReader
      * engine and a pragma parser.  The pragma parser may be null.
      */
     //@ requires Q != null;
+    //    pragmaP can be null && ah doesn't appear to be used.
     //@ ensures \result != null;
     public static StandardTypeReader make(Query Q, Query sourceQ,
 			PragmaParser pragmaP, AnnotationHandler ah) {
@@ -145,6 +146,8 @@ public class EscTypeReader extends StandardTypeReader
     /**
      * Return true iff the fully-qualified outside type P.T exists.
      */
+    //@ requires P != null;
+    //@ requires T != null;
     public boolean exists(String[] P, String T) {
 	if ( super.exists(P, T)) return true;
 	for (int i=0; i<activeSuffixes.length; ++i) {
@@ -155,18 +158,30 @@ public class EscTypeReader extends StandardTypeReader
 	return false;
     }
 
+    //@ requires P != null;
+    //@ requires T != null;
+    // can return null
     public GenericFile findFirst(String[] P, String T) {
 	return javaSrcFileSpace.findFile(P,T,activeSuffixes);
     }
 
+    //@ requires P != null;
+    //@ requires filename != null;
+    // can return null
     public GenericFile findSrcFile(String[] P, String filename) {
 	return javaSrcFileSpace.findFile(P,filename);
     }
 
+    //@ requires P != null;
+    //@ requires filename != null;
+    // can return null
     public GenericFile findBinFile(String[] P, String filename) {
 	return javaFileSpace.findFile(P,filename);
     }
 
+    //@ requires P != null;
+    //@ requires T != null;
+    // can return null
     public GenericFile findType(String[] P, String T) {
         GenericFile gf = javaSrcFileSpace.findFile(P,T,activeSuffixes);
         if (gf == null) gf = javaFileSpace.findFile(P, T, "class");
@@ -175,7 +190,7 @@ public class EscTypeReader extends StandardTypeReader
 
 
 
-    public FilenameFilter filter() {
+    public /*@non_null*/ FilenameFilter filter() {
 	return new FilenameFilter() {
 	    public boolean accept(File f, String n) {
 		int p = n.indexOf('.');
@@ -191,15 +206,16 @@ public class EscTypeReader extends StandardTypeReader
 	};
     }
 
-    String[] activeSuffixes = { "refines-java", "refines-spec", "refines-jml",
+    /*@non_null*/ String[] activeSuffixes = { "refines-java", "refines-spec", "refines-jml",
 			  "java", "spec", "jml" };
 
-    String[] nonJavaSuffixes = { "refines-java", "refines-spec", "refines-jml",
+    /*@non_null*/ String[] nonJavaSuffixes = { "refines-java", "refines-spec", "refines-jml",
 			  "spec", "jml",
 			  "java-refined", "spec-refined", "jml-refined" };
 
     // Reading
 
+    //@ requires f != null;
     public CompilationUnit read(GenericFile f, boolean avoidSpec) {
 	return super.read(f,avoidSpec);
     }
@@ -208,6 +224,9 @@ public class EscTypeReader extends StandardTypeReader
      * Override {@link StandardTypeReader#read(String[], String, boolean)}
      * method to include ".spec" files.
      */
+    //@ requires P != null;
+    //@ requires T != null;
+    // can return null
     public CompilationUnit read(String[] P, String T,
 				boolean avoidSpec) {
 	// If a source exists and we wish to avoid specs, use it:
@@ -252,6 +271,7 @@ public class EscTypeReader extends StandardTypeReader
 
     // Test methods
 
+    //@ requires args != null;
     //@ requires \nonnullelements(args);
     public static void main(String[] args)
             throws java.io.IOException {

@@ -19,10 +19,13 @@ import rcc.ast.TagConstants;
 public class RccPrettyPrint extends DelegatingPrettyPrint {
     public RccPrettyPrint() { }
     
+    //@ requires self != null && del != null;
     public RccPrettyPrint(PrettyPrint self, PrettyPrint del) {
 	super(self, del);
     }
     
+    //@ also
+    //@ requires o != null && lp != null;
     public void print(OutputStream o, LexicalPragma lp) {
 	if (lp.getTag() == TagConstants.NOWARNPRAGMA) {
 	    write(o, "//# nowarn");
@@ -36,7 +39,8 @@ public class RccPrettyPrint extends DelegatingPrettyPrint {
 	} else writeln(o, "// Unknown LexicalPragma (tag = " + lp.getTag() + ')');
     }
     
-    
+    //@ also
+    //@ requires o != null && mp != null;
     public void print(OutputStream o, int ind, TypeModifierPragma mp) {
 	int tag = mp.getTag();
 	switch (tag) {
@@ -53,7 +57,9 @@ public class RccPrettyPrint extends DelegatingPrettyPrint {
 	}
     }
 
-public void print(OutputStream o, int ind, ModifierPragma mp) {
+    //@ also
+    //@ requires o != null && mp != null;
+    public void print(OutputStream o, int ind, ModifierPragma mp) {
 	int tag = mp.getTag();
 	switch (tag) {
 	    
@@ -86,6 +92,8 @@ public void print(OutputStream o, int ind, ModifierPragma mp) {
     }
     
     
+    //@ also
+    //@ requires o != null; // es can be null
     public void printnp(OutputStream o, int ind, ExprVec es) {
 	if (es == null) write(o, "<null ExprVec>");
 	else {
@@ -97,6 +105,8 @@ public void print(OutputStream o, int ind, ModifierPragma mp) {
 	}
     }
     
+    //@ also
+    //@ requires o != null && sp != null;
     public void print(OutputStream o, int ind, StmtPragma sp) {
 	int tag = sp.getTag();
 	switch (tag) {
@@ -116,13 +126,14 @@ public void print(OutputStream o, int ind, ModifierPragma mp) {
 	}
     }
 
- public final String toString( TypeModifierPragmaVec mp) {
-    ByteArrayOutputStream result = new ByteArrayOutputStream(20);
-    for (int i = 0; i < mp.size(); i++) {
-	self.print(result, 0, mp.elementAt(i));
+    //@ also
+    //@ requires o != null && mp != null;
+    public final String toString( TypeModifierPragmaVec mp) {
+	ByteArrayOutputStream result = new ByteArrayOutputStream(20);
+	for (int i = 0; i < mp.size(); i++) {
+	    self.print(result, 0, mp.elementAt(i));
+	}
+	return result.toString();
     }
-    return result.toString();
-  }
-
 
 }

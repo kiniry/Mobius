@@ -73,7 +73,7 @@ import java.io.*;
      ** If we represent a non-empty list, return it as a
      ** <code>SPair</code>; otherwise, throw <code>SExpTypeError</code>.
      **/
-    /*package*/ SPair getPair() {
+    /*package*/ /*@non_null*/ SPair getPair() {
 	return this;
     }
 

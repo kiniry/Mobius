@@ -21,9 +21,10 @@ public class NoWarn
      ***************************************************/
 
     //@ spec_public
-    static private int chkStatus[] 
+    static private final int chkStatus[] 
             = new int[TagConstants.LASTESCCHECKTAG - 
                       TagConstants.FIRSTESCCHECKTAG + 1];
+    //@ public invariant chkStatus != null;
 
     static {
         init();
@@ -111,7 +112,6 @@ public class NoWarn
 		&& i != TagConstants.CHKFREE)
 		return i;
 	}
-
 	return 0;
     }
 
@@ -142,7 +142,7 @@ public class NoWarn
      *                                                 *
      ***************************************************/
 
-    static private LexicalPragmaVec nowarns = LexicalPragmaVec.make();
+    static private /*@non_null*/ LexicalPragmaVec nowarns = LexicalPragmaVec.make();
 
     public static void registerNowarns(LexicalPragmaVec v) {
         if (v != null)

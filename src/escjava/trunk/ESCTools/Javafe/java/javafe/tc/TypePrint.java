@@ -16,6 +16,8 @@ public class TypePrint extends DelegatingPrettyPrint
     super(self, del);
   }
 
+  //@ also
+  //@ requires o != null;
   public void print(OutputStream o, int ind, VarInit e) {
     if (e instanceof Expr) {
       Type t = FlowInsensitiveChecks.getTypeOrNull((Expr)e);
