@@ -32,7 +32,7 @@ public interface Map {
       @*/
 
     //-@ immutable
-    /*@ pure public static model class Content {
+    /*-@ pure public static model class Content {
 
           public \bigint theSize;
 
@@ -59,7 +59,7 @@ public interface Map {
         }
       @*/
 
-    /*@
+    /*-@
         public invariant (\forall Object o; content.theSize == 0 ==> 
                       !content.hasMapObject(o));
         public invariant (\forall Object o; content.theSize == 0 ==>
@@ -67,7 +67,7 @@ public interface Map {
         public invariant content.theSize == 0 ==> !content.hasMapObject(null);
         public invariant content.theSize == 0 ==> !content.hasMap(null);
       @*/
-    /*@ axiom (\forall Content c; (\forall Object o;
+    /*-@ axiom (\forall Content c; (\forall Object o;
                    c.hasMapObject(o) ==> c.hasMap(o)));
         axiom (\forall Content c; c.hasMapObject(null) <==> c.hasMap(null));
         axiom (\forall Content c; (\forall Object o;
@@ -76,10 +76,10 @@ public interface Map {
                    c.hasMapObject(null) ==> c.mapsObject(null) == c.maps(null));
      */
           
-    //@ public model instance non_null Content content; in objectState;
-    //@ public invariant content.owner == this;
+    //-@ public model instance non_null Content content; in objectState;
+    //-@ public invariant content.owner == this;
 
-    /*@ public normal_behavior
+    /*-@ public normal_behavior
       @   ensures \result <==> ( 
              content != null &&
              content.theSize == 0  && 
@@ -88,7 +88,8 @@ public interface Map {
              !content.hasMapObject(null) &&
              !content.hasMap(null) 
              );
-      @ model pure public boolean initialMap();
+      @*/
+    /*@ model pure public boolean initialMap();
       @*/
 
     public static interface Entry {
@@ -161,16 +162,17 @@ public interface Map {
     }
 
     //@ public normal_behavior
-    //@   ensures \result == content.theSize;
+    //@   ensures (* \result == content.theSize *);
+    //-@   ensures \result == content.theSize;
     /*@ pure @*/
     int size();
 
-    /*@ public normal_behavior
+    /*-@ public normal_behavior
       @    ensures \result <==> (content.theSize == 0); 
       @*/
     /*@ pure @*/ boolean isEmpty();
 	
-    /*@ public behavior
+    /*-@ public behavior
       @    ensures isEmpty() ==> !\result;
       @    ensures content.hasMap(key) <==> \result;
       @
@@ -183,7 +185,7 @@ public interface Map {
       @*/
     /*@ pure @*/ boolean containsKey(Object key) throws RuntimeException;
 
-    /*@ public behavior
+    /*-@ public behavior
       @    ensures isEmpty() ==> !\result;
       @    ensures \result <==> (
               nullequals(value,content.mapsObject(null)) ||
@@ -198,7 +200,7 @@ public interface Map {
       @*/
     /*@ pure @*/ boolean containsValue(Object value);
 
-    /*@ public normal_behavior
+    /*-@ public normal_behavior
       @    requires !containsKey(key);
       @    ensures \result == null;
       @ also public normal_behavior
@@ -212,7 +214,7 @@ public interface Map {
       @*/
     /*@ pure @*/ Object get(Object key);
 
-    /*@ public behavior
+    /*-@ public behavior
       @    assignable objectState;
       @    ensures content.hasMap(key);
       @    ensures !isEmpty() && containsKey(key) && containsValue(value);
@@ -258,7 +260,7 @@ public interface Map {
       @*/
     Object put(Object key, Object value);
 
-    /*@ public behavior
+    /*-@ public behavior
       @    assignable objectState;
       @    ensures !content.hasMapObject(key);
       @    ensures !content.hasMap(key);
@@ -310,7 +312,7 @@ public interface Map {
       @*/
     void putAll(Map t);
 
-    /*@ public normal_behavior
+    /*-@ public normal_behavior
       @    assignable objectState;
       @    ensures isEmpty();
       @    ensures (\forall Object k; !content.hasMapObject(k));

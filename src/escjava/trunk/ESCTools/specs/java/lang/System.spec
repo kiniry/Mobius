@@ -200,7 +200,7 @@ t *);
        set of system properties, but it appears to be the same (per equals)
        throughout a program.
      */
-    //@ public model final static non_null Properties nullSystemProperties;
+    //@ public model /*-@final*/ static non_null Properties nullSystemProperties;
 
     /*@ public normal_behavior
       @    ensures \result == systemProperties;
@@ -257,6 +257,7 @@ t *);
       @    signals (SecurityException) (* if access is not permitted *);
       @ also public exceptional_behavior
       @   requires key == null || value == null;
+      @   assignable \not_specified;
       @   signals_only NullPointerException;
       @*/
     public static String setProperty(String key, String value) throws RuntimeException;

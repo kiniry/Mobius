@@ -135,12 +135,14 @@ public class Hashtable extends Dictionary
     // specification inherited
     //@ also public exceptional_behavior
     //@   requires key == null || value == null;
+    //@   assignable \not_specified;
     //@   signals_only NullPointerException;
     public synchronized Object put(Object key, Object value);
 
     // specification inherited
     //@ also public exceptional_behavior
     //@   requires key == null;
+    //@   assignable \not_specified;
     //@   signals_only NullPointerException;
     public synchronized Object remove(Object key);
 

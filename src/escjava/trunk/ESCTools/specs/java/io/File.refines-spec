@@ -164,16 +164,19 @@ public class File implements Serializable, Comparable {
 
     //@ public normal_behavior
     //@   requires filter != null;
+    //@   assignable \not_specified;
     //@ non_null
     public File[] listFiles(FileFilter filter);
 
     //@ public normal_behavior
     //@   requires filter != null;
+    //@   assignable \not_specified;
     //@ non_null
     public File[] listFiles(FilenameFilter filter);
 
     //@ public normal_behavior
     //@   requires filter != null;
+    //@   assignable \not_specified;
     //@ non_null
     public String[] list(FilenameFilter filter);
 

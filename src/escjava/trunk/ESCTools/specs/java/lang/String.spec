@@ -266,7 +266,9 @@ public final class String
 
     /*@ public normal_behavior
       @   ensures \result == s.charArray.length;
-      @ public static function model pure int length(String s);
+      @
+      @ //-@ function
+      @ public static model pure int length(String s);
       @*/
 
     // inherits specs from CharSequence - \result == charArray.length
@@ -810,13 +812,17 @@ public final class String
       @   requires s != null && ss != null;
       @   ensures equal(\result.charArray,0,s.charArray,0,s.length());
       @   ensures equal(\result.charArray,s.length(),ss.charArray,0,ss.length());
-      @ public static pure function model non_null
+      @
+      @ //-@ function
+      @ public static pure model non_null
       @                                 String concat(String s, String ss);
       @
       @
       @ public normal_behavior
       @   ensures \result == (s == null ? "null" : s) ;
-      @ model static public pure function non_null String nonnull(String s);
+      @
+      @ //-@  function
+      @ model static public pure non_null String nonnull(String s);
       @
       @
       @ public normal_behavior
@@ -826,7 +832,8 @@ public final class String
       @   ensures !isInterned(\result);
       @   ensures \result.equals( concat(nonnull(s),nonnull(ss)));
       @
-      @ model static public non_null pure function String 
+      @ //-@ function
+      @ model static public non_null pure String 
       @                                  _infixConcat_(String s, String ss);
       @*/
  
@@ -1080,11 +1087,12 @@ public final class String
     public native /*@ non_null @*/ String intern();
 
     /*@ public normal_behavior
-      @    ensures \result <==> (s != null && \dttfsa(boolean,"|interned:|",s));
-        //-@ function
+      @    ensures \result <==> (s != null && (* \dttfsa(boolean,"|interned:|",s) *));
+      @ //-@  ensures \result <==> (s != null && \dttfsa(boolean,"|interned:|",s));
+      @ //-@ function
       @ public pure static model boolean isInterned(String s);
       @
-      @ axiom (\forall int i,k; length(\dttfsa(java.lang.String,"|intern:|",i,k)) == k);
+      @ //-@ axiom (\forall int i,k; length(\dttfsa(java.lang.String,"|intern:|",i,k)) == k);
       @*/
 
 }

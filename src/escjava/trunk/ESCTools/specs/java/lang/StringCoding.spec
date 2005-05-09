@@ -1,5 +1,7 @@
 package java.lang;
 
+import java.io.*;
+
 public class StringCoding {
 
     public static char[] decode(byte[] b, int offset, int len);

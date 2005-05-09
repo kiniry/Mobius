@@ -1533,8 +1533,8 @@ public class Arrays {
       @   requires a != null;
       @   ensures \result != null ; 
       @   ensures \result.content.theSize == a.length;
-      @   ensures (\forall int i; 0<=i && i<a.length;
-                                  List.get(\result.content,i) == a[i]);
+      @   //-@ ensures (\forall int i; 0<=i && i<a.length;
+          //-@                  List.get(\result.content,i) == a[i]);
       @ also public exceptional_behavior
       @   requires a == null;
       @   signals_only NullPointerException;

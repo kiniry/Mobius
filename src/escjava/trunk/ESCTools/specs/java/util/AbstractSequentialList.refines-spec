@@ -9,7 +9,7 @@ public abstract class AbstractSequentialList extends java.util.AbstractList {
       @ public pure model boolean initialAbstractSequentialList();
       @*/
 
-    /*@ public normal_behavior
+    /*@ protected normal_behavior
       @   ensures initialAbstractSequentialList();
       @*/
     //@ pure

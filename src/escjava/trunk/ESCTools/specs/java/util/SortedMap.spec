@@ -42,10 +42,10 @@ public interface SortedMap extends Map {
       @    ensures \result != null;
       @    ensures \result.firstKey.equals(fromKey);
       @    ensures \result.lastKey.equals(toKey);
-      @    ensures (\forall Entry e; (containsEntry(e) &&
-                       comparator().compare(fromKey,e) <= 0 && 
-                       comparator().compare(e,toKey) < 0)
-                       <==> \result.containsEntry(e));
+      @    //-@ ensures (\forall Entry e; (containsEntry(e) &&
+           //-@             comparator().compare(fromKey,e) <= 0 && 
+           //-@             comparator().compare(e,toKey) < 0)
+           //-@             <==> \result.containsEntry(e));
       @
            // FIXME - fix these exception conditions
       @    signals (ClassCastException)
@@ -54,19 +54,18 @@ public interface SortedMap extends Map {
       @    signals (IllegalArgumentException) 
       @            (* fromKey > toKey || fromKey or toKey is not
       @             within the domain of the SortedMap *); 
-      @    signals (NullPointerException) 
-      @            (fromKey==null || toKey==null) && !containsNull;
+      @    //-@ signals (NullPointerException) 
+      @    //-@         (fromKey==null || toKey==null) && !containsNull;
       @*/
     /*@ pure @*/ SortedMap subMap(Object fromKey, Object toKey); 
   
             
     /*@ public behavior
       @    ensures \result != null;
-      @    ensures \result.firstKey.equals(fromKey);
       @    ensures \result.lastKey.equals(toKey);
-      @    ensures (\forall Entry e; (containsEntry(e) &&
-                       comparator().compare(e,toKey) < 0)
-                       <==> \result.containsEntry(e));
+      @    //-@ ensures (\forall Entry e; (containsEntry(e) &&
+           //-@            comparator().compare(e,toKey) < 0)
+           //-@            <==> \result.containsEntry(e));
 
            // FIXME - fix these exception conditions
       @    signals (ClassCastException)
@@ -75,18 +74,18 @@ public interface SortedMap extends Map {
       @    signals (IllegalArgumentException) 
       @            (* toKey is not within the domain of the
       @             SortedMap *); 
-      @    signals (NullPointerException) toKey==null 
-      @             && !containsNull;
+      @    //-@ signals (NullPointerException) toKey==null 
+      @    //-@         && !containsNull;
       @*/  
     /*@ pure @*/ SortedMap headMap(Object toKey); 
 
     /*@ public behavior
       @    ensures \result != null;
       @    ensures \result.firstKey.equals(fromKey);
-      @    ensures \result.lastKey.equals(toKey);
-      @    ensures (\forall Entry e; (containsEntry(e) &&
-                       comparator().compare(fromKey,e) <= 0 )
-                       <==> \result.containsEntry(e));
+      @    // ensures \result.lastKey.equals(toKey); ?? there is not toKey
+      @    //-@ ensures (\forall Entry e; (containsEntry(e) &&
+           //-@             comparator().compare(fromKey,e) <= 0 )
+           //-@             <==> \result.containsEntry(e));
 
            // FIXME - fix these exception conditions
       @    signals (ClassCastException)
@@ -95,8 +94,8 @@ public interface SortedMap extends Map {
       @    signals (IllegalArgumentException) 
       @            (* fromKey is not within the domain of the 
       @             SortedMap *); 
-      @    signals (NullPointerException) fromKey==null 
-      @             && !containsNull;
+      @    //-@ signals (NullPointerException) fromKey==null 
+      @    //-@          && !containsNull;
       @*/          
     /*@ pure @*/ SortedMap tailMap(Object fromKey); 
 

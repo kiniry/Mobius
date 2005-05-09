@@ -287,8 +287,9 @@ public /*@ pure @*/ final
       @   public normal_behavior
       @     requires i == null || ii == null;
       @     ensures \result <==> ( i == ii );
-      @
-      @ public pure function static model boolean equalsLong(Long i, Long ii);
+      @*/
+    //-@ function
+    /*@ public pure static model boolean equalsLong(Long i, Long ii);
       @*/
 
     /*@ also

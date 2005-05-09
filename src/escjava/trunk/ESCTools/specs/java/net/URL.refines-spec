@@ -179,7 +179,7 @@ public final class URL implements java.io.Serializable {
     public /*@ pure @*/ URL(URL context, String spec, URLStreamHandler handler)
         throws MalformedURLException;
 
-    /*@  protected normal_behavior
+    /*-@  protected normal_behavior
       @    assignable _protocol, _host, _file, _port, 
       @               _authority, _userInfo, _path,
       @               _query, _ref;
@@ -196,7 +196,7 @@ public final class URL implements java.io.Serializable {
     protected void set(String protocol, String host, int port, String file,
                        String ref);
 
-    /*@  protected normal_behavior
+    /*-@  protected normal_behavior
       @    assignable _protocol, _host, _file, _port, 
       @               _authority, _userInfo, _path,
       @               _query, _ref;

@@ -29,7 +29,7 @@ public abstract class InputStream {
     // FIXME: availableBytes may change asynchronously, but presumably only increases
     // FIXME: This spec does not reflect the blocking that can occur (needs when clauses)
 
-    // FIXME - hsould modify objectState and then use not_modified on any
+    // FIXME - should modify objectState and then use not_modified on any
     // vars that are unchanged
 
     //@ public model JMLDataGroup streamState; in objectState;
@@ -37,7 +37,7 @@ public abstract class InputStream {
     // inputBytes models the bytes that have been or will be
     // read between the opening and the closing of the InputStream
     // It is not modified - e.g. it is an oracle of sorts
-    //@ public model final non_null byte[] inputBytes;
+    //@ public model /*-@ final */ non_null byte[] inputBytes;
     //@ public constraint inputBytes == \old(inputBytes);
     //@ public invariant inputBytes.owner == this;
 
@@ -61,7 +61,9 @@ public abstract class InputStream {
     //@ requires a.length >= length && b.length >= length;
     //@ ensures (\forall int i; 0<=i && i < length; a[i] == b[i]);
     //@ public static model boolean equalBytes(byte[] a, byte[] b, \bigint length);
+
     /*@ public normal_behavior
+      @   assignable \not_specified;
       @   ensures \result <==> (
       @       isOpen && !wasClosed && availableBytes > 0 && readPosition == 0 
       @       && inputBytes != null && inputBytes.owner == this);

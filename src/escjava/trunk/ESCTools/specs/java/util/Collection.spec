@@ -66,6 +66,7 @@ public interface Collection {
             public \bigint theSize;
 
             //@ public normal_behavior
+	    //@    assignable \not_specified;
             //@    ensures true;
             //-@ function pure
             public boolean containsObject(Object o);
@@ -192,7 +193,7 @@ public interface Collection {
       @   ensures \result ==> content.theSize == \old(content.theSize+1);
       @   ensures !\result ==> content.theSize == \old(content.theSize);
       @   ensures containsObject(o);
-      @   ensures (\forall Object o; \old(containsObject(o)) ==> containsObject(o));
+      @   ensures (\forall Object _o; \old(containsObject(_o)) ==> containsObject(_o));
       @   ensures (\forall Object oo; o != oo; containsObject(oo) ==> \old(containsObject(oo)));
       @   ensures \old(containsObject(null)) ==> containsObject(null);
       @   ensures o != null ==> (containsObject(null) ==> \old(containsObject(null)));

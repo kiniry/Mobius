@@ -1,6 +1,6 @@
 package java.io;
  
-public class ObjectStreamException extends extends {
+public class ObjectStreamException extends IOException {
   
     /*@ public normal_behavior
       @   ensures standardThrowable(null);

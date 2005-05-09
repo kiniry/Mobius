@@ -77,7 +77,7 @@ public interface Comparable {
       @*/
 
     // compareTo is antisymmetric
-    /*+@ public instance invariant
+    /*-@ public instance invariant
       @   (\forall Comparable x, y; x != null && y != null
       @                             && definedComparison(x, y)
       @                             && definedComparison(y, x);
@@ -85,7 +85,7 @@ public interface Comparable {
       @*/
 
     // compareTo is transitive
-    /*+@ public instance invariant
+    /*-@ public instance invariant
       @     (\forall int n; n == -1 || n == 1;
       @      (\forall Comparable x, y, z;
       @              x != null && y != null && z != null
@@ -106,7 +106,7 @@ public interface Comparable {
 
     // compareTo returning 0 means the other argument
     // is in the same equivalence class
-    /*+@ public instance invariant
+    /*-@ public instance invariant
       @    (\forall Comparable x, y, z;
       @             x != null && y != null && z != null
       @              && definedComparison(x, y) && definedComparison(x, z)

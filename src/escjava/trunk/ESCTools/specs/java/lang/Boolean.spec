@@ -106,8 +106,8 @@ public final /*@ pure @*/ class Boolean implements java.io.Serializable {
       @*/
     public String toString();
 
-    //@ public static final model int TRUE_HC;
-    //@ public static final model int FALSE_HC;
+    //@ public static /*-@final*/ model int TRUE_HC;
+    //@ public static /*-@final*/ model int FALSE_HC;
     //@ axiom TRUE_HC != FALSE_HC;
 
     // inherited specification

@@ -115,11 +115,13 @@ public class Vector extends AbstractList
       @    ensures !containsNull ==> !\nonnullelements(anArray);
       @ also public exceptional_behavior
       @    requires anArray == null;
+      @    assignable \not_specified;
       @    signals_only NullPointerException;
       @ also public exceptional_behavior
            requires anArray != null;
            requires (\exists int i; 0<=i && i<elementCount;
                                  !(elementType <: \elemtype(\typeof(anArray))));
+      @    assignable \not_specified;
            signals_only ArrayStoreException;
       @*/
     public synchronized void copyInto(Object[] anArray);
@@ -158,8 +160,8 @@ public class Vector extends AbstractList
                      \old(maxCapacity*2) >= minCapacity ?
                           \old(maxCapacity*2)  :
                           minCapacity);
-      @    ensures (\forall int i; 0<=i && i<elementCount;
-                          elementData[i] == \old(elementData[i]));
+      @    //-@ ensures (\forall int i; 0<=i && i<elementCount;
+           //-@               elementData[i] == \old(elementData[i]));
       @  |}
       @*/
     public synchronized void ensureCapacity(int minCapacity);
@@ -172,16 +174,16 @@ public class Vector extends AbstractList
       @    ensures \not_modified(theString,theHashCode);
       @    ensures \not_modified(containsNull,elementType);
       @    ensures elementCount == newSize;
-      @    ensures (\forall int i; 0<=i && i<elementCount;
-                          elementData[i] == \old(elementData[i]));
+      @    //-@ ensures (\forall int i; 0<=i && i<elementCount;
+           //-@                elementData[i] == \old(elementData[i]));
       @  also
       @    old int oldSize = elementCount;
       @    requires newSize > elementCount;
       @    assignable objectState;
       @    ensures \not_modified(theString,theHashCode);
       @    ensures \not_modified(containsNull,elementType);
-      @    ensures (\forall int i; 0<=i && i<oldSize;
-                          elementData[i] == \old(elementData[i]));
+      @    //-@ ensures (\forall int i; 0<=i && i<oldSize;
+           //-@                elementData[i] == \old(elementData[i]));
       @    ensures (\forall int i; oldSize<=i && i < newSize;
       @                           get(i) == null);
       @  |}
@@ -472,7 +474,7 @@ public class Vector extends AbstractList
       @  public normal_behavior
       @    requires 0 <= index && index < size();
       @    ensures !containsNull ==> \result != null;
-      @    ensures \result == elementData[index];
+      @    //-@ ensures \result == elementData[index];
       @ also
       @  public exceptional_behavior
       @    requires !(0 <= index && index < size());

@@ -89,6 +89,7 @@ public interface CharSequence {
 
     /*@ also
       @    public normal_behavior
+      @   assignable \not_specified;
       @      ensures \result != null
       @           && equal(\result.charArray,charArray);
       @*/

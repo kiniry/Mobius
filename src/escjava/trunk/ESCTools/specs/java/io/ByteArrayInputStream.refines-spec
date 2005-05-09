@@ -12,13 +12,14 @@ public class ByteArrayInputStream extends InputStream {
     // FIELDS
     /*@ spec_public */ protected byte[] buf;
     /*@ spec_public */ protected int count;  // One more than the last readable position
-    protected int mark; //@ in markPosition;
+    /*@ spec_public */ protected int mark; //@ in markPosition;
     /*@ spec_public */ protected int pos;  //@ in readPosition;
 
     // In fact any derived class can change them as it wishes.
     // Hence all sorts of errors can occur in the various methods.
 
     /*@ public normal_behavior
+      @   assignable \not_specified;
       @   ensures \result == (
       @              buf != null && pos >= 0 && pos <= count && 
       @              count <= buf.length &&

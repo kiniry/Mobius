@@ -33,7 +33,7 @@ public abstract class AbstractList extends AbstractCollection implements List {
       @ public pure model boolean initialAbstractList();
       @*/
 
-    /*@ public normal_behavior
+    /*@ protected normal_behavior
           ensures initialAbstractList();
       @*/
     /*@ pure @*/ protected AbstractList();

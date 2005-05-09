@@ -27,7 +27,8 @@ public abstract class AbstractMap implements Map {
       @ public pure model boolean initialAbstractMap();
       @*/
 
-    /*@ public normal_behavior
+    /*@ protected normal_behavior
+      @   assignable \not_specified;
       @   ensures initialAbstractMap();
       @*/
     protected AbstractMap();

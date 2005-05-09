@@ -187,8 +187,10 @@ public class Object {
     //@ public behavior
     //@   requires timeout >= 0L;
           // FIXME also check thread ownership - IllegalMonitorStateException
+    //@   assignable \not_specified;
     //@ also public exceptional_behavior
     //@   requires timeout < 0;
+    //@   assignable \not_specified;
     //@   signals_only IllegalArgumentException;
     public final void wait(long timeout) throws InterruptedException;
 
@@ -196,9 +198,11 @@ public class Object {
     //@   requires timeout >= 0L;
     //@   requires 0 <= nanos;
     //@   requires nanos < 1000000;
+    //@   assignable \not_specified;
           // FIXME also check thread ownership - IllegalMonitorStateException
     //@ also public exceptional_behavior
     //@   requires timeout < 0 || nanos < 0 || nanos >= 1000000;
+    //@   assignable \not_specified;
     //@   signals_only IllegalArgumentException;
     public final void wait(long timeout, int nanos)
         throws InterruptedException;
@@ -211,6 +215,7 @@ public class Object {
       @   ensures objectTimesFinalized == 1;
       @ also protected exceptional_behavior
       @   requires objectTimesFinalized == 1;
+      @   assignable \not_specified;
       @   signals (Exception) true; // FIXME - what exception?
       @*/
     protected void finalize() throws Throwable;

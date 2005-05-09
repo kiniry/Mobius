@@ -28,7 +28,8 @@ import java.io.InputStream;
  * @author Gary T. Leavens
  * @author Erik Poll
  */
-//@ pure immutable
+//-@ immutable
+//@ pure 
 public final class Class implements java.io.Serializable {
 
     private Class();
@@ -72,10 +73,12 @@ public final class Class implements java.io.Serializable {
     /*@   public normal_behavior
       @     requires name != null && loader != null
       @         && (* a class named name has been/can be loaded by loader *);
+      @     assignable \not_specified;
       @     ensures \result != null;
       @ also
       @   public behavior
       @     requires name != null && loader != null;
+      @     assignable \not_specified;
       @     ensures true;
       @     signals_only ClassNotFoundException;
             // JML does not allow Errors in specs

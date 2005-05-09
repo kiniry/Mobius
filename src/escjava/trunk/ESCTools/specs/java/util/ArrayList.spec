@@ -116,7 +116,7 @@ public class ArrayList extends AbstractList
       @   ensures ((List)\result).containsNull == this.containsNull;
       @   ensures ((List)\result).elementType == this.elementType;
       @   ensures ((ArrayList)\result).content.theSize == this.content.theSize;
-      @   ensures List.equals(((List)\result).content,this.content);
+      @   //-@ ensures List.equals(((List)\result).content,this.content);
       @   ensures ((ArrayList)\result).theString == this.theString;
       @   ensures ((ArrayList)\result).theHashCode == this.theHashCode;
       @*/
