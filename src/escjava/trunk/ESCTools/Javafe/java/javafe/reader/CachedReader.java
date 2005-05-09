@@ -35,8 +35,8 @@ public class CachedReader extends Reader
     public CachedReader(Reader reader) {
 	underlyingReader = reader;
 
-	//@ set cache.keyType = \type(String);
-	//@ set cache.elementType = \type(Object);
+	//-@ set cache.keyType = \type(String);
+	//-@ set cache.elementType = \type(Object);
     }
 
 
@@ -52,8 +52,8 @@ public class CachedReader extends Reader
      * CompilationUnit or a CachedReader_Null.
      */
     //@ invariant cache != null;
-    //@ invariant cache.keyType == \type(String);
-    //@ invariant cache.elementType == \type(Object);
+    //-@ invariant cache.keyType == \type(String);
+    //-@ invariant cache.elementType == \type(Object);
     protected Hashtable cache = new Hashtable();
 
 
@@ -127,8 +127,8 @@ public class CachedReader extends Reader
     public void flushAll() {
 	cache = new Hashtable();
 
-	//@ set cache.keyType = \type(String);
-	//@ set cache.elementType = \type(Object);
+	//-@ set cache.keyType = \type(String);
+	//-@ set cache.elementType = \type(Object);
     }
 
 

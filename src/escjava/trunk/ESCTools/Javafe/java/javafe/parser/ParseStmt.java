@@ -142,7 +142,7 @@ public abstract class ParseStmt extends ParseExpr
      * declarations that declare more than one variable.
      */
     //@ requires l != null && l.m_in != null;
-    //@ modifies seqStmt.elementCount, seqStmt.currentStackBottom;
+    //-@ modifies seqStmt.elementCount, seqStmt.currentStackBottom;
     /*@ ensures (seqStmt.elementCount - seqStmt.currentStackBottom) >
      (\old(seqStmt.elementCount) - \old(seqStmt.currentStackBottom)); @*/
     protected void addStmt(Lex l) {

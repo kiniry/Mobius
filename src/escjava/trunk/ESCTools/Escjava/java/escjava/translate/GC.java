@@ -450,8 +450,8 @@ public final class GC {
   }
 	    
   //@ requires subst != null && target != null ;
-  //@ requires subst.keyType == \type(GenericVarDecl) ;
-  //@ requires subst.elementType <: \type(Expr) ;
+  //-@ requires subst.keyType == \type(GenericVarDecl) ;
+  //-@ requires subst.elementType <: \type(Expr) ;
   public static Expr subst(int sloc, int eloc, Hashtable subst, Expr target)
     {
       if ( !Main.options().lazySubst ) {

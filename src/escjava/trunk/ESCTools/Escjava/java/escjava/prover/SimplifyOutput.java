@@ -48,7 +48,7 @@ public class SimplifyOutput
         this.kind = kind;
     }
 
-    public /*@ pure non_null @*/ String toString() {
+    public /*@ non_null @*/ String toString() {
         return super.toString() + " kind=" + kind;
     }
 }

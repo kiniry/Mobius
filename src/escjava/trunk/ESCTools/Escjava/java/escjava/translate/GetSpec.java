@@ -1723,11 +1723,10 @@ public final class GetSpec {
    * in the domain of <code>map</code>.
    */
   
-  //@ requires map.keyType == \type(GenericVarDecl);
-  //@ requires map.elementType == \type(VariableAccess);
-  //@ requires e.elementType == \type(GenericVarDecl);
-  static Hashtable restrict(/* @ non_null */Hashtable map,
-      /* @ non_null */Enumeration e) {
+  //-@ requires map.keyType == \type(GenericVarDecl);
+  //-@ requires map.elementType == \type(VariableAccess);
+  //-@ requires e.elementType == \type(GenericVarDecl);
+  static Hashtable restrict(/*@non_null*/ Hashtable map, /*@non_null*/Enumeration e) {
     Hashtable r = new Hashtable();
     while (e.hasMoreElements()) {
       GenericVarDecl vd = (GenericVarDecl)e.nextElement();

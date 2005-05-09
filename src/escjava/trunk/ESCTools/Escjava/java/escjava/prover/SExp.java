@@ -58,8 +58,9 @@ public abstract class SExp
     //@ public normal_behavior
     //@   requires \typeof(o) <: \type(String) || \typeof(o) <: \type(Integer) || \typeof(o) <: \type(SExp);
     //@   requires o != null;
+    //+@   assignable \not_specified;
     //@   ensures \result != null;
-    //@ pure
+    //-@ pure
     public static SExp fancyMake(Object o) {
 	javafe.util.Assert.precondition(o != null);
 	if (o instanceof SExp)
@@ -222,7 +223,8 @@ public abstract class SExp
      *
      * <p> This method is intended for test use. </p>
      */
-    public static /*@ pure @*/ void display(/*@ non_null @*/ SExp x) throws SExpTypeError {
+    //-@ pure
+    public static void display(/*@ non_null @*/ SExp x) throws SExpTypeError {
 	if (x.isAtom()) {
 	    System.out.print("[Atom]  "+x.getAtom().toString());
 	}

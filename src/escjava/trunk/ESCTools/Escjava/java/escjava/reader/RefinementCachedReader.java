@@ -51,8 +51,8 @@ public class RefinementCachedReader extends CachedReader
     public RefinementCachedReader(Reader reader) {
 	super(reader);
 
-	//@ set cache.keyType = \type(String);
-	//@ set cache.elementType = \type(Object);
+	//-@ set cache.keyType = \type(String);
+	//-@ set cache.elementType = \type(Object);
     }
 
 

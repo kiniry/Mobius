@@ -28,8 +28,8 @@ public class VcToString
    **/
   public static void resetTypeSpecific() {
     integralPrintNames = new Hashtable();
-    //@ set integralPrintNames.keyType = \type(Long);
-    //@ set integralPrintNames.elementType = \type(String);
+    //-@ set integralPrintNames.keyType = \type(Long);
+    //-@ set integralPrintNames.elementType = \type(String);
     // add thresholds
     integralPrintNames.put(minThreshold, String.valueOf(-MaxIntegral));
     integralPrintNames.put(maxThreshold, String.valueOf(MaxIntegral));
@@ -100,8 +100,8 @@ public class VcToString
   //@ spec_public
   private /*@ non_null */ Set stringLiterals = new Set();
 
-  //@ invariant integralPrintNames.keyType == \type(Long);
-  //@ invariant integralPrintNames.elementType == \type(String);
+  //-@ invariant integralPrintNames.keyType == \type(Long);
+  //-@ invariant integralPrintNames.elementType == \type(String);
   //@ spec_public
   private static /*@ non_null */ Hashtable integralPrintNames;
 

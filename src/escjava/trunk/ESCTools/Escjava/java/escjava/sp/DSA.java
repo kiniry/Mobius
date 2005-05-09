@@ -34,8 +34,8 @@ public class DSA {
     if (Main.options().lastVarUseOpt) {
       preOrderCount = new RefInt(0);
       lastVarUse = new Hashtable();  // mapping GenericVarDecl to RefInt
-      //@ set lastVarUse.keyType = \type(GenericVarDecl);
-      //@ set lastVarUse.elementType = \type(RefInt);
+      //-@ set lastVarUse.keyType = \type(GenericVarDecl);
+      //-@ set lastVarUse.elementType = \type(RefInt);
       computeLastVarUses(g, preOrderCount, lastVarUse);
       // reset the pre-order count
       preOrderCount.value = 0;
@@ -55,7 +55,7 @@ public class DSA {
     **/
 
   //@ requires (preOrderCount == null) == (lastVarUse == null);
-  /*@ requires lastVarUse != null ==>
+  /*-@ requires lastVarUse != null ==>
                lastVarUse.keyType == \type(GenericVarDecl) &&
 	       lastVarUse.elementType == \type(RefInt); */
   //@ modifies out.n, out.x;
@@ -347,8 +347,8 @@ public class DSA {
     }
   }
 
-  //@ requires lastVarUse.keyType == \type(GenericVarDecl);
-  //@ requires lastVarUse.elementType == \type(RefInt);
+  //-@ requires lastVarUse.keyType == \type(GenericVarDecl);
+  //-@ requires lastVarUse.elementType == \type(RefInt);
   private static void computeLastVarUses(/*@ non_null */ GuardedCmd g,
 					 /*@ non_null */ RefInt preOrderCount,
 					 /*@ non_null */ Hashtable lastVarUse) {

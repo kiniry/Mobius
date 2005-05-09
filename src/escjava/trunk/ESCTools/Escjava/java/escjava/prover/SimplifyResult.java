@@ -29,7 +29,7 @@ public class SimplifyResult extends SimplifyOutput
 
     //@ normal_behavior  
     //@   requires COUNTEREXAMPLE <= kind && kind < END;
-    //@   modifies this.*;
+    //-@   modifies this.*;
     //@   ensures this.kind == kind;
     //@   ensures this.labels == labels;
     //@   ensures this.context == context;

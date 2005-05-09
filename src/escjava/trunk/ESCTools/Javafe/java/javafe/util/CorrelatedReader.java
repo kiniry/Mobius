@@ -80,7 +80,7 @@ public abstract class CorrelatedReader
      * @see javafe.util.CorrelatedReader#clearMark()
      * @see javafe.util.CorrelatedReader#createReaderFromMark
      */
-    //@ modifies marked;
+    //-@ modifies marked;
     //@ ensures marked;
 
     public abstract void mark();
@@ -110,7 +110,7 @@ public abstract class CorrelatedReader
      * @see javafe.util.CorrelatedReader#mark()
      */
     //@ requires marked;
-    //@ modifies marked;
+    //-@ modifies marked;
     //@ ensures !marked;
 
     public abstract void reset() throws IOException;

@@ -86,7 +86,8 @@ public abstract class SList extends SExp
      * contents are the result of applying {@link SExp#fancyMake(Object)}
      * to our arguments.
      */
-    public static /*@ pure non_null @*/ SList make(/*@ non_null @*/ Object a1) {
+    //-@ pure
+    public static /*@ non_null @*/ SList make(/*@ non_null @*/ Object a1) {
 	return new SPair(SExp.fancyMake(a1), SNil.make());
     }
 
@@ -95,7 +96,8 @@ public abstract class SList extends SExp
      * contents are the result of applying {@link SExp#fancyMake(Object)}
      * to our arguments.
      */
-    public static /*@ pure non_null @*/ SList make(/*@ non_null @*/ Object a1, 
+    //-@ pure
+    public static /*@ non_null @*/ SList make(/*@ non_null @*/ Object a1, 
                                                    /*@ non_null @*/ Object a2) {
 	return new SPair(SExp.fancyMake(a1), make(a2));
     }
