@@ -1,11 +1,8 @@
 
 \section{Java Bytecode Verification}\label{verifCond}
 As we mentioned before the research in program verification has been targeting for a long time to structured program languages (\cite{WPCDS},~\cite{DisDij}). 
-The research in low level program logic and verification is a fairly recent fashion, still there exists works in the field ~\cite{B04tlsj},~\cite{BM05plb},~\cite{Quigley} as we mentioned in section \ref{relWork}.
-The reason is that nowadays it becomes a common practice dealing with mobile code and the issues that this involves like 
-establishing trust in the unknown code. 
-
-The presented bytecode logic is defined in terms of weakest precondition calculus. As in ~\cite{BM05plb}, we assume 
+The interest in low level program logic and verification is a fairly recent fashion, due to the wide spread use of mobile technology.
+The presented bytecode logic is defined in terms of weakest precondition calculus. We assume 
 that the bytecode program has passed the bytecode verification procedure, i.e. it is well typed 
 (every instruction is applied to operands of the correct type) and well formed 
 (e.g. no jumps to an un-existing bytecode index). The Java bytecode verification field is  well researched and 

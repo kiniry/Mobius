@@ -66,28 +66,50 @@ that $\blockm{i} \execRel^A \blockm{j}$ iff
 \end{itemize}
 \end{defn}
 
-Both the cyclic and acyclic graphs of the bytecode of method \texttt{half} at Fig.~\ref{halfBC} is at Fig. ~\ref{blockBC}. Blocks are represented by boxes. Black arrows stand for relation $\execRel^A$. Dashed arrows represent relation $\execRel$.
+Both the cyclic and acyclic graphs of the bytecode of method \texttt{isMember} at Fig.~\ref{isMemBC} is at Fig. ~\ref{blockBC}. Blocks are represented by boxes. Black arrows stand for relation $\execRel^A$. Dashed arrows stand for the acyclic relation $\execRel$.
 
 \begin{figure}[p]
 \begin{center}
 \begin{tabular}{rl}
- 0 & iconst\_0\\ 
- 1 & istore\_2\\
- 2 & iload\_1\\
- 3 & istore\_3\\%[-2mm]
- 4 & goto 13 (+9)\\%[-2mm]
- 7 & iinc 2 by 1\\%[-2mm]
-10 & iinc 1 by 254\\%[-2mm]
-13 & iload\_1\\%[-2mm]
-14 & iconst\_1\\%[-2mm]
-15 & if\_icmpgt 7 (-8)\\%[-2mm]
-18 & iload\_2\\%[-2mm]
-19 & ireturn\\%[-2mm]
+ 0 & iconst\_0 \\
+ 1 & istore\_2 \\
+ 2 & iconst\_0 \\
+ 3 & istore\_2 \\
+ 4 & goto 14 \\
+ 5 & aload\_0 \\
+ 6 & getfield \#19 <test/ListArray.list> \\
+ 7 & iload\_2 \\
+ 8 & aaload \\
+ 9 & aload\_1 \\
+10 & if\_acmpne 13 \\
+11 & iconst\_1 \\
+12 & ireturn \\
+13 & iinc 2 by 1 \\
+14 & iload\_2 \\
+15 & aload\_0 \\
+16 & getfield \#19 <test/ListArray.list> \\
+17 & arraylength \\
+18 & if\_icmplt 5  \\
+19 & iconst\_0 \\
+20 & ireturn \\
 \end{tabular}
 \end{center}
-\caption{the bytecode of method \texttt{half}}
-\label{halfBC}
+\caption{the bytecode of method \texttt{isMember}}
+\label{isMemBC}
 \end{figure}
+
+% 0 & iconst\_0\\ 
+% 1 & istore\_2\\
+ %2 & iload\_1\\
+ %%3 & istore\_3\\%[-2mm]
+% 4 & goto 13 (+9)\\%[-2mm]
+% 7 & iinc 2 by 1\\%[-2mm]
+%10 & iinc 1 by 254\\%[-2mm]
+%13 & iload\_1\\%[-2mm]
+%14 & iconst\_1\\%[-2mm]
+%15 & if\_icmpgt 7 (-8)\\%[-2mm]
+%%18 & iload\_2\\%[-2mm]
+%19 & ireturn\\%[-2mm]
 
 \begin{figure}[p]
 \begin{center}

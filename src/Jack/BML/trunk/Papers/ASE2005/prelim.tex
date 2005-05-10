@@ -11,30 +11,58 @@ These variables are declared in comments with the \jmlKey{model} modificator and
 
 JML is basically used for either static checking of Java programs such as JACK ~\cite{BR02jack}, the Loop tool, ESC/Java ~\cite{escjava} or dynamic checking as the assertion checker jmlrac ~\cite{jmlrac}. An overview of the JML tools can be found in~\cite{BurdyCCEKLLP03}.
      
-
-Figure ~\ref{halfSrc} gives an example of a Java method annotated with JML specification.
-
-It describes the class \texttt{Half}.
-The specification says that if the method starts execution in a state that satisfies the precondition then on termination it will return the half of the argument as specified in the postcondition. The loop invariant is specified by using the key word \texttt{loop\_invariant} and a condition for loop termination is also specified by declaring after the keyword \jmlKey{decreases} the expression that decreases after every loop execution. 
+Figure ~\ref{halfSrc} gives an example of a Java class that models a list stored in a private array field. 
+The method \texttt{isMember} returns either \texttt{true} if the object passed to it is a member of the list, otherwise 
+it returns \texttt{false} as is specified in its postcondition. The loop in the method body has an invariant - all
+the elements of the list that are inspected up to now are different from the parameter object \texttt{o}. The loop specification also states
+that the local variable \texttt{i} is modified in the loop.
+ 
 \begin{figure}[ht!]
 \begin{verbatim}
-public class Half {	
-   //@ requires n >= 0;
-   //@ ensures \result == \old(n) / 2; 	 
-   public int half(int n) {
-      int a = 0;
-      int c = n;
-      //@ loop_modifies n,a;
-      //@ loop_invariant c==n+2*a;
-      //@ decreases n;
-      while (n > 1) {
-         a = a + 1;
-         n = n - 2;
+public class ListArray {
+  private Object[] list;
+
+  //@requires list != null;
+  //@ensures \result == false  ==>
+  //@ (\forall int i;0 <= i && i < list.length ==> 
+  //@     list[i] != o) 
+  //@ && 
+  //@ (\result == true ==> 
+  //@ (\exists int i; 0 <= i && i < list.length && 
+  //@         list[i] == o )); 
+  public boolean isMember(Object o) {
+    int i = 0;
+    //@loop_modifies i;
+    //@loop_invariant i <= list.length && i >=0 
+    //@  && (\forall int k;0 <= k && k < i ==> 
+    //@   list[k] != o); 
+    for (i = 0; i < list.length; i++ ) {
+      if ( list[i] == o) {
+        return true;	
       }
-      return a;
-   }
-} 
+    }
+    return false;
+  }
+}
 \end{verbatim}
-\caption{class \texttt{Half} with JML annotations} 
+\caption{class \texttt{ListArray} with JML annotations} 
 \label{halfSrc}
 \end{figure}
+
+%public class Half {	
+ %  //@ requires n >= 0;
+ %   //@ ensures \result == \old(n) / 2; 	 
+  %  public int half(int n) {
+  %     int a = 0;
+ %      int c = n;
+  %     //@ loop_modifies n,a;
+   %    //@ loop_invariant c==n+2*a;
+   %    //@ decreases n;
+   %    while (n > 1) {
+    %      a = a + 1;
+    %      n = n - 2;
+     %  }
+    %   return a;
+   % }
+ %} 
+
