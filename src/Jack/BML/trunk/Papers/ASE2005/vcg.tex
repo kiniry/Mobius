@@ -1,15 +1,13 @@
 \section{Verifying Java Bytecode Programs}\label{vcg}
-Every method proof oblogations - pre ==> wpi 
-
-The verification procedure has those features:
+Bytecode programs represent a set of Java classes. Establishing the correctness of Java bytecode program consists in generating verification conditions for every method appearing in any class of the bytecode program.
+The verification procedure has the following steps :
 \begin{itemize}
-\item modular, design by contract verification, in particular every method is verified separately method calls being translated to their specification 
-\item it supports all Java sequential instructions except for floating point arithmetic instructions and 64 bit data (\java{long} and \java{double} types)
-\item definition of the calculus for unstructured programs over the method's control flow graph
-\item the specific features like exceptions and exception handling, objects, references and subroutines
-\item the bytecode specification language discussed in the previous section \ref{bcSpecLg}. Every method has a specification written 
-in BCL- pre- and postconditions, assertions at particular program point among 
-which loop invariants (if there is nothing special specified the specification by default (preconditions, postconditions and invariants taken to true) is taken into account). The verification procedure assumes that the bytecode is specified enough, i.e. we do not try to infer specification, as we assume that they are compiled from the source program
-\item the verification procedure does not trust neither the bytecode specification, nor the bytecode; both of the cases - wrong 
-specification or incorrect implementation will result in verification conditions that are not provable 
+\item for every method \texttt{m} calculate the weakest precondition $\wpi(\tt{m})$ its specification:  precondition $\psi^{pre}(m)$ , postcondition $\psi^{post}(m)$
+\item  for every method \texttt{m} prove the condition 
+$$
+\psi^{pre}(m)  \Rightarrow \wpi(m)
+$$    
 \end{itemize}
+
+\todo{example}
+

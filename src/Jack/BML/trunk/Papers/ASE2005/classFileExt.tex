@@ -11,6 +11,11 @@ We sketch the bytecode specification language grammar at \fig~\ref{bclGrammar}. 
  e.g. the grammar for arithmetic expressions( which is defined in a standard way). For the full specification you can look at ~\cite{JML2BCSpec}.  
 \begin{figure}[!htbp]
 $$ \begin{array}{l}
+\ClassSpec ::= \\ 
+     \Myspace \jmlStmt{class \ invariant} \ \predicate \\
+     \Myspace  \mid  \jmlStmt{history \ constraint} \ \predicate \\
+     \Myspace  \mid  \jmlStmt{model} \ \texttt{ClassName}  \ id \\
+      \\
 \MethodSpec  ::= \\
    \Myspace \SpecCase \\
    \Myspace  \mid  \SpecCase \  \jmlStmt{also} \  \MethodSpec	;\\
@@ -18,9 +23,9 @@ $$ \begin{array}{l}
 \SpecCase ::= \\ 
     \Myspace \jmlStmt{requires} \ \predicate;\\ 
 	\Myspace \jmlStmt{modifies} \ list(\expression);\\
-	\Myspace \jmlStmt{decreases} \ \expression;\\
+	%\Myspace \jmlStmt{decreases} \ \expression;\\
     \Myspace \jmlStmt{ensures} \ \predicate;\\
-    \Myspace \jmlStmt{exsures} \ \texttt{ExceptionClass EXC} \ \predicate;\\
+    \Myspace \jmlStmt{exsures} \ (\texttt{ExceptionClass EXC} \ \predicate;)\\
                      \\
 \interMethodSpec ::= \\
      \Myspace \loopSpec \\
@@ -36,11 +41,7 @@ $$ \begin{array}{l}
 		\Myspace \jmlStmt{pc\_ index} \ int;\\
 		\Myspace \jmlStmt{assert} \ \predicate; \\
 	\\
-\ClassSpec ::= \\ 
-     \Myspace \jmlStmt{class \ invariant} \ \predicate \\
-     \Myspace  \mid  \jmlStmt{history \ constraint} \ \predicate \\
-     \Myspace  \mid  \jmlStmt{model} \ \texttt{ClassName}  \ id \\
-      \\
+
       \predicate ::= \\
       \Myspace    \true \ \mid \ \false \\
       \Myspace  \mid   \expression \ predSymbol \ \expression \\
@@ -55,7 +56,7 @@ $$ \begin{array}{l}
   	  \Myspace  \mid  \ \fieldAccess{\expression}  \\
   	  \Myspace  \mid \ \arrayAccess{\expression} {\expression}  \\
   	  \Myspace  \mid \result \ \mid \old{\expression}  \\
-  	  \Myspace \mid \typeof{\expression}  \ \mid \ \Mynull \ \mid \  \this
+  	  \Myspace \mid \typeof{\expression}  \ \mid \ \Mynull \ \mid \  \this \ldots
 \end{array}$$
 \caption{BCL grammar}
  \label{bclGrammar}

@@ -11,16 +11,15 @@ of several definitions.
  in the bytecode is  denoted with $i_{k}$.
  We denote by $\Gamma  = ( \Omega, \ll)$ the control flow graph of a
 bytecode $\Pi$ where the set of nodes $\Omega$ is the set of
-blocks. Using standard terminology \cite{ARUCom1986}, a
+blocks.. We assume that method's bytecode has exactly one entry point(every execution of a method starts at the entry point instruction) and we denote it with $i_{\tt{entry}}$.  Using standard terminology \cite{ARUCom1986}, a
 basic block is a code segment that has no unconditional jump or
 conditional branch statements except for possibly the last
 statement, and none of its statements, except possibly the first,
 is a target of any jump or branch statement. 
- We denote a block starting at instruction  $i_{j}$ with $\blockm{j}$. Let's have 
+ We denote a block starting at instruction  $i_{j}$ with $\blockm{j}$.The block starting at the entry instruction is denoted with $\blockm{entry}$. Let's have 
 the bytecode $\Pi$ and the set of its blocks be $\wp$. The execution relation ( $\blockm{j} \execRel \blockm{k}$ ) states that block
 $ \blockm{k}$ may be executed immediately after $\blockm{j}$ in some execution path of the method. 
-The  definition is given at \ref{execRel}
-
+Definition \ref{execRel} states formally the execution relation.
 \begin{defn}[Execution relation between blocks]\label{execRel}
 \begin{tabbing}
 \\Let \=  have \= the block $\blockm{j}$ such that  it ends with instruction \\ 
@@ -44,8 +43,7 @@ $\blockm{s_{1}}... \blockm{s_{n}}$ such that $\blockm{i} \execRel \blockm{s_{1}}
 \label{defLoop}
 Let's have a well formed program $\Pi$. We say that $\blockm{s}$ is the entry block of loop $l$ in $\Pi$ and $\blockm{e}$ is the end block of $l$ if:
 \begin{itemize}
-\item every path in the control flow graph starting at the entry block $\blockm{entry}$ (i.e. the one
- that starts with the entry instruction) of $\Pi$ and that reaches $\blockm{e}$, passes through  $\blockm{s}$ 
+\item every path in the control flow graph starting at the entry block $\blockm{entry}$ of $\Pi$ and that reaches $\blockm{e}$, passes through  $\blockm{s}$ 
   i.e.$ \blockm{entry} \execRel^{*}  \blockm{s} \execRel^{*} \blockm{e}$
 \item $\blockm{e} \execRel \blockm{s}$
 \end{itemize}

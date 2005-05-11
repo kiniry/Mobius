@@ -103,10 +103,10 @@ $$
  \forall m_{i}. ( i = 1 .. s ) \\
  ( \\
 \psi^{post}(m) \\
-\phantom{\psi^{post}}[\register{i}  \rightarrow \stack{\counter - i + numArgs(method(ind) ) } ]_{i=0}^n  \\
-\phantom{\psi^{post}} [\tt{\backslash result} \rightarrow fresh\_var] \\
-\Rightarrow \psi[\counter \rightarrow \counter - numArgs(m)]\\
-\phantom{\Rightarrow \psi} [\stack{\counter }  \rightarrow fresh\_var] \\
+\phantom{\psi^{post}}[\register{i}  \leftarrow \stack{\counter - i + numArgs(method(ind) ) } ]_{i=0}^n  \\
+\phantom{\psi^{post}} [\tt{\backslash result} \leftarrow fresh\_var] \\
+\Rightarrow \psi[\counter \leftarrow \counter - numArgs(m)]\\
+\phantom{\Rightarrow \psi} [\stack{\counter }  \leftarrow fresh\_var] \\
 ) \\
 %[e_{i} \rightarrow m_{i}]_{i = 1}^s \\
 \end{array} \\

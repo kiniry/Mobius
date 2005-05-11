@@ -63,9 +63,16 @@ where $\psi $ is the specified method postcondition.
  \end{itemize}
 \end{defn}
 
+Thus the weakest precondition for a block $\blockm{i}$ is calculated standardly applying the standard $\wpi$ rule for compositional statements $\wpi( i_j;i_{j+1}, \psi) =\wpi( i_j, \wpi(i_{j+1}, \psi)) $ :
+ $$ \wpi(\blockm{i}) = \wpi( \blockSeq{i}, \blockPost{i} ) $$
+
+The weakest precondition $\wpi(\tt{m})$ for method \texttt{m}  is the weakest precondition of its entry block $\blockm{entry}$ which is calculated recursively starting from the blocks that do not have successors upon the specified method's postcondition  $\psi^{post}(m)$ and exceptional postcondition $\excPost (m)$ :
+ $$\wpi(\tt{m}) = \wpi(\blockSeq{entry}, \blockPost{entry}   ) $$:
+
+
 %\Paragraph{Subroutines}
 Subroutines are treated by inlining them. As we stated in the beginning we assume that the bytecode has been certified by a Java
-bytecode verifier thus our analysis for identifying  subroutine is not a problem.  
+bytecode verifier thus our analysis for identifying  subroutines is not a problem.  
 \todo{example}
 
 %\begin{center} \texttt{wp(instruction\_list;instruction, $\psi$)} = \texttt{wp(instruction\_list, wp(instruction, $\psi$))} \end{center}
