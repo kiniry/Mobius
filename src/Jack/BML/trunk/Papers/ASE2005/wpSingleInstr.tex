@@ -1,7 +1,7 @@
 \subsection{Weakest Precondition for bytecode instructions}\label{wpInstr}
 We define a weakest precondition (\wpi) predicate transformer function which takes into account normal and exceptional termination. 
 \wpi \ takes three arguments : an instruction, a predicate that is the instruction's normal postcondition $\psi$, a function
-from exception types to predicates $\excPost$ ( it returns the specified postcondition in the \jmlKey{exsures} clause for a given exception ~\ref{bclGrammar})  and it returns the weakest predicate such that if it holds in the state when the instruction starts its execution if the instruction terminates its execution normally  $\psi$ must hold in the poststate and if it terminates with an exception \texttt{E} then the predicate $\excPost(\tt{E})$ must hold. The signature of \wpi \ is:
+from exception types to predicates $\excPost$ ( it returns the specified postcondition in the \jmlKey{exsures} clause for a given exception see section ~\ref{bclGrammar})  and it returns the weakest predicate such that if it holds in the state when the instruction starts its execution if the instruction terminates its execution normally  $\psi$ must hold in the poststate and if it terminates with an exception \texttt{E} then the predicate $\excPost(\tt{E})$ must hold. The signature of \wpi \ is:
 $$\wpi : \texttt{instruction} \rightarrow \predicate \rightarrow (\tt{ ExceptionType} \rightarrow  \predicate) \rightarrow \predicate   $$
 
  The Java bytecode language is stack based, i.e. the instructions take their arguments from the method execution stack and 

@@ -17,25 +17,26 @@ conditional branch statements except for possibly the last
 statement, and none of its statements, except possibly the first,
 is a target of any jump or branch statement. 
  We denote a block starting at instruction  $i_{j}$ with $\blockm{j}$.The block starting at the entry instruction is denoted with $\blockm{entry}$. Let's have 
-the bytecode $\Pi$ and the set of its blocks be $\wp$. The execution relation ( $\blockm{j} \execRel \blockm{k}$ ) states that block
-$ \blockm{k}$ may be executed immediately after $\blockm{j}$ in some execution path of the method. 
-Definition \ref{execRel} states formally the execution relation.
-\begin{defn}[Execution relation between blocks]\label{execRel}
-\begin{tabbing}
-\\Let \=  have \= the block $\blockm{j}$ such that  it ends with instruction \\ 
-$\tt{i_{k}}$ and it is not a return instruction\\
-\>  if $\tt{i_{k}}$ = \texttt{if\_cond n} then   $\blockm{j} \execRel \blockm{n}$ and $\blockm{j} \execRel  \blockm{k+1} $ \\
-\>  if $\tt{i_{k}}$ = \texttt{goto n} then $\blockm{j} \execRel \blockm{n}$ \\
-\>  if $\tt{i_{k}}$ = \texttt{athrow} then $\blockm{j} \execRel \blockm{n}$ for all \texttt{n}, such \\
-\> \> that $\blockm{n}$ is the first\\
-\> \> block of an exception handler that protects $\tt{i_{k}}$ \\
-\>  if $\tt{i_{k}}$ = \texttt{jsr n} then $\blockm{j} \execRel \blockm{n}$ \\
-\>  if  $\tt{i_{k}}$ = \texttt{ret n} then  $ \blockm{j} \execRel \blockm{s}$\\
-\> \> for all s that are indexes of instruction following \\
-\> \> a \texttt{jsr} to the subroutine that ends with $\tt{i_{k}}$ instruction\\
-\>  else $\blockm{j}  \execRel   \blockm{k+1}$
-\end{tabbing}
-\end{defn}
+the bytecode $\Pi$ and the set of its blocks be $\wp$. The execution relation  $\blockm{j} \execRel \blockm{k}$  states that block
+$ \blockm{k}$ may be executed immediately after $\blockm{j}$ in some execution path of the method. For example  if  instruction $\tt{i_{k}}$ = \texttt{athrow} then 
+$\blockm{j} \execRel \blockm{n}$, where  $\blockm{n}$ is the first block of an exception handler that protects $\tt{i_{k}}$ 
+% Definition \ref{execRel} states formally the execution relation.
+% \begin{defn}[Execution relation between blocks]\label{execRel}
+%\begin{tabbing}
+%\\Let \=  have \= the block $\blockm{j}$ such that  it ends with instruction \\ 
+%$\tt{i_{k}}$ and it is not a return instruction\\
+%\>  if $\tt{i_{k}}$ = \texttt{if\_cond n} then   $\blockm{j} \execRel \blockm{n}$ and $\blockm{j} \execRel  \blockm{k+1} $ \\
+%\>  if $\tt{i_{k}}$ = \texttt{goto n} then $\blockm{j} \execRel \blockm{n}$ \\
+%\>  if $\tt{i_{k}}$ = \texttt{athrow} then $\blockm{j} \execRel \blockm{n}$ for all \texttt{n}, such \\
+%\> \> that $\blockm{n}$ is the first\\
+%\> \> block of an exception handler that protects $\tt{i_{k}}$ \\
+%\>  if $\tt{i_{k}}$ = \texttt{jsr n} then $\blockm{j} \execRel \blockm{n}$ \\
+%\>  if  $\tt{i_{k}}$ = \texttt{ret n} then  $ \blockm{j} \execRel \blockm{s}$\\
+%\> \> for all s that are indexes of instruction following \\
+%\> \> a \texttt{jsr} to the subroutine that ends with $\tt{i_{k}}$ instruction\\
+%\>  else $\blockm{j}  \execRel   \blockm{k+1}$
+%\end{tabbing}
+%\end{defn}
 
 We say that there exists a path between $\blockm{i}$ and $\blockm{j}$ and we note it with  $\pathm{i}{j}$, if there exists blocks 
 $\blockm{s_{1}}... \blockm{s_{n}}$ such that $\blockm{i} \execRel \blockm{s_{1}} \execRel \blockm{s_{2}}... \blockm{s_{n}} \execRel  \blockm{j}$

@@ -6,38 +6,42 @@ inside methods is also possible - for example one can specify loop invariants, o
 %In particular class invariants are properties that must hold at every visible state of a class instance or simply class respectively, history constraints - a property that is a relation between the prestate and poststate of a method, method  pre and postconditions, loop invariants - the predicate that must hold at every program state where the loop is entered, frame conditions - the list of expression that a method modifies, termination conditions - an expression from a well founded set that can be proven to decrease , etc.
 
 JML specifications are written in comments so they are not visible by Java compilers. JML clauses are introduced by 
-special JML keywords. For example \jmlKey{requires} and \jmlKey{ensures} stand for method precondition and postcondition respectively, \jmlKey{modifies} for specifying which publicly visible locations are modified by the method, \jmlKey{loop\_invariant} for loop invariants, etc. The JML's syntax is close to the Java's syntax - the greatest part of the JML expressions form a subset of Java expressions except for some keywords. For example \jmlKey{$\backslash$result} stands for the value that a method returns if it is not void, \jmlKey{$\backslash$old(expression)} designates the value of \texttt{expression} in the prestate of a method and is usually used in the method's postcondition. JML also allows the declaration of special JML variables, that are used only for specification purposes. 
+special JML keywords. For example \jmlKey{requires} and \jmlKey{ensures} stand for method precondition and postcondition respectively, \jmlKey{modifies} for specifying which publicly visible locations are modified by the method, \jmlKey{loop\_invariant} for loop invariants, \jmlKey{loop\_modifies} for the locations modified by loop invariants  etc. The JML's syntax is close to the Java's syntax - the greatest part of the JML expressions form a subset of Java expressions except for some keywords. For example \jmlKey{$\backslash$result} stands for the value that a method returns if it is not void, \jmlKey{$\backslash$old(expression)} designates the value of \texttt{expression} in the prestate of a method and is usually used in the method's postcondition. JML also allows the declaration of special JML variables, that are used only for specification purposes. 
 These variables are declared in comments with the \jmlKey{model} modificator and may be used only in specification clauses. 
 
 JML is basically used for either static checking of Java programs such as JACK ~\cite{BR02jack}, the Loop tool, ESC/Java ~\cite{escjava} or dynamic checking as the assertion checker jmlrac ~\cite{jmlrac}. An overview of the JML tools can be found in~\cite{BurdyCCEKLLP03}.
      
 Figure ~\ref{halfSrc} gives an example of a Java class that models a list stored in a private array field. 
-The method \texttt{isMember} returns either \texttt{true} if the object passed to it is a member of the list, otherwise 
-it returns \texttt{false} as is specified in its postcondition. The loop in the method body has an invariant - all
+The method \texttt{replace} will search in the array for the first occurence of the object \texttt{o} passed as first argument and if found it will be replaced with the 
+the object passes as second argument and the method returns true; otherwise it returns false. The loop in the method body has an invariant - all
 the elements of the list that are inspected up to now are different from the parameter object \texttt{o}. The loop specification also states
 that the local variable \texttt{i} is modified in the loop.
- 
+  %//@requires list != null;
+  % //@ensures \result == false  ==>
+  % //@ (\forall int i;0 <= i && i < list.length ==> 
+  % //@     list[i] != o) 
+  % //@ && 
+  % //@ (\result == true ==> 
+   %//@ (\exists int i; 0 <= i && i < list.length && 
+ %  //@         list[i] == o ));
 \begin{figure}[ht!]
 \begin{verbatim}
 public class ListArray {
   private Object[] list;
 
   //@requires list != null;
-  //@ensures \result == false  ==>
-  //@ (\forall int i;0 <= i && i < list.length ==> 
-  //@     list[i] != o) 
-  //@ && 
-  //@ (\result == true ==> 
-  //@ (\exists int i; 0 <= i && i < list.length && 
-  //@         list[i] == o )); 
-  public boolean isMember(Object o) {
+  //@ensures \result ==(\exists int i; 
+  //@ 0 <= i && i < list.length && 
+  //@        \old(list[i]) == o && list[i] == n); 
+  public boolean replace(Object o, Object n) {
     int i = 0;
     //@loop_modifies i;
     //@loop_invariant i <= list.length && i >=0 
     //@  && (\forall int k;0 <= k && k < i ==> 
-    //@   list[k] != o); 
+    //@  list[k] != o); 
     for (i = 0; i < list.length; i++ ) {
       if ( list[i] == o) {
+        list[i] = n;
         return true;	
       }
     }

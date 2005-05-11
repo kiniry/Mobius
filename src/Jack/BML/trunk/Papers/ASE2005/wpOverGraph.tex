@@ -2,22 +2,27 @@
 
 \subsection{Bytecode Weakest Precondition}\label{wpGraph}
 
-The verification being modular, proof obligations are generated for every method separately. The verification condition generation 
-is trivially defined over the acyclic execution graph of a method. 
-The \wpi \ function runs in a backwards  direction starting from the blocks that do not have predecessors up to reaching the entry point
- instruction.  Calculating the precondition of the sequential part of the block $\blockm{i}$ 
- which we denote with  $\blockSeq{i}$  is standard - the precondition of an instruction  is inferred from the precondition of the previous.
-The  interesting part is how the postcondition  for $\blockSeq{i}$ , i.e. the precondition of the last block instructions is inferred 
-(i.e. jumps, return, loop end ) see for the definition of basic block section ~\ref{abstrCntrFlow}.  In the following we overload the function 
-symbol \wpi applying to sequence of bytecode instructions.
-The postcondition for the sequential part of a block  $\blockSeq{i}$ (without its last instruction )   is defined inductively 
- as follows :
- \begin{defn}[Block postcondition  $\blockPost{i}$]\label{post}
- If $\blockm{i}$ ends with instruction $i_s$ then :
+In the following we overload the function symbol \wpi \ applying it to sequence of bytecode instructions.
+ The verification condition generation is defined over the acyclic execution graph of a method. 
+The \wpi \ function runs in a backwards direction starting from the blocks that do not have predecessors up to reaching the entry point
+ instruction. We distinguish the \wpi \ calculus over  a method's body bytecode, a bytecode block and a sequence of bytecode intructions.
+
+\paragraph{The weakest precondition $\wpi(\tt{m})$ for method \texttt{m}}  is the weakest precondition of its entry block $\blockm{entry}$ and its postcondition $\blockPost{entry}$ which is calculated recursively starting from the blocks that do not have successors upon the specified method's postcondition  $\psi^{post}(m)$ and exceptional postcondition $\excPost (m)$ :
+ $$\wpi(\tt{m}) = \wpi(\blockSeq{entry}, \blockPost{entry}, \excPost ) $$
+
+\paragraph{Weakest precondition for a bytecode block} If $\blockSeq{i}$ is the sequential part of block $\blockm{i}$ (without its last instruction ) and  $\blockPost{i}$ is its postcondition the precondition of $\blockm{i}$ is defined as follows:
+
+$$ \wpi(\blockm{i}) = \wpi( \blockSeq{i}, \blockPost{i}, \excPost ) $$
+ 
+Thus to get the \wpi \ for a block its postcondition should be known. A block postcondition is actually the conjunction of the preconditions
+of its successors and it depends on the last instruction of the block.
+
+\begin{defn}[Block postcondition  $\blockPost{i}$]\label{post}
+ If $\blockm{i}$ ends with instruction $i_s$ then:
  \begin{itemize} 
- \item  if  $i_s$ is a loop end instruction \wpi \footnote{those \ instructions \ are detected when building the acyclic  graph and the 
+ \item  if  $i_s$ is a loop end instruction \wpi \ \footnote{those \ instructions \ are detected when building the acyclic graph and the 
  back edge is "replaced"  by the corresponding \ invariant \ \invariant  } and whose invariant is \invariant: 
- $$ \blockPost{i} =  \wpi(  i_s, \invariant)  $$ 
+ $$ \blockPost{i} =  \wpi(  i_s, \invariant, \excPost )  $$ 
  \item if  $i_s$ =  \instr{if\_cond n} \\
 $$
 \blockPost{i} =  \\
@@ -35,43 +40,35 @@ $$
 $\blockPost{i} =  \wpi(\blockSeq{n}, \blockPost{n} , \excPost )$ \\
 
 \item  if  $i_s$ =  \instr{athrow ExceptionType} \\ 
-$$
-\blockPost{i }  \\ 
- =   \left\{ \begin{array}{l} 
-		\jmlKey{subtype}( \jmlKey{ typeof}(\stack{\counter} )) \\
-		(\oplus (Exc_{i}^{thrown} \rightarrow \excPost(Exc_{i}^{thrown}) ) \\
-		\phantom{\oplus Exc^{thrown} } [\counter \leftarrow  0] \\ 
-		\phantom{ \oplus Exc^{thrown} } [EXC \leftarrow  \stack{\counter} ] )_{i=0}^{n}   \\
-		(\oplus Exc_{i}^{handled} \rightarrow \wpi(\blockm{e}, \blockPost{e}, \excPost )\\
-		\phantom{\oplus Exc^{handled} } [\counter \leftarrow  0] \\ 
-		\phantom{ \oplus Exc^{handled}} [EXC \leftarrow  \stack{\counter} ] )_{i=0}^{m} \\
-		\end{array} \right.
-$$
-The only thing that is known about the exception thrown is that it is 
-on the top of the stack $\stack{\counter}$. We keep track of all the possible postconditions (as the exception
-may be caught by an exception handler starting at $\blockm{e}$ or it is thrown and thus the exceptional postcondition for 
-the exception must hold) up to
-discovering the type of the thrown exception and then identifying the adequate predicate 
-that must hold after the execution of the \instr{athrow} instruction. 
+if there exists a block $\blockm{e}$ such that 
+$\blockm{i} \execRel \blockm{e}$ (an exception handler protects the type of the exception thrown)
+then :\\
+$\blockPost{i }= \\ \wpi(\blockSeq{e}, \blockPost{e} ,\excPost)[\counter \leftarrow 0][EXC \leftarrow \stack{\counter}] $. \\
+Otherwise if the thrown exception is not handled then $\blockm{i}$ must respect the postcondition determined by
+the exceptional postcondition function $\excPost$ for this exceptional type ( or if not specified for the closest supertype) : \\ 
+ $\blockPost{i }= \excPost(\stack{\counter}) [\counter \leftarrow 0][EXC \leftarrow \stack{\counter}] $. \\
+    
+%The only thing that is known about the exception thrown is that it is 
+ % on the top of the stack $\stack{\counter}$. We keep track of all the possible postconditions (as the exception
+%may be caught by an exception handler starting at $\blockm{e}$ or it is thrown and thus the exceptional postcondition for 
+%the exception must hold) up to
+%discovering the type of the thrown exception and then identifying the adequate predicate 
+%that must hold after the execution of the \instr{athrow} instruction. 
 \item  if  $i_s$ = \instr{return} \\
 $$
    \blockPost{i } = \psi[\result \leftarrow \stack{\counter} ]    
 $$
 where $\psi $ is the specified method postcondition.
 \item  else  
- $$ \blockPost{i} =  \wpi(  i_s , \wpi( \blockSeq{s+1} ,  \blockPost{ s  +1} ) )  $$ 
+ $$ \blockPost{i} =  \wpi(  i_s , \wpi( \blockSeq{s+1} ,  \blockPost{ s  +1} ) , \excPost)  $$ 
  \end{itemize}
 \end{defn}
 
-Thus the weakest precondition for a block $\blockm{i}$ is calculated standardly applying the standard $\wpi$ rule for compositional statements $\wpi( i_j;i_{j+1}, \psi) =\wpi( i_j, \wpi(i_{j+1}, \psi)) $ :
- $$ \wpi(\blockm{i}) = \wpi( \blockSeq{i}, \blockPost{i} ) $$
-
-The weakest precondition $\wpi(\tt{m})$ for method \texttt{m}  is the weakest precondition of its entry block $\blockm{entry}$ which is calculated recursively starting from the blocks that do not have successors upon the specified method's postcondition  $\psi^{post}(m)$ and exceptional postcondition $\excPost (m)$ :
- $$\wpi(\tt{m}) = \wpi(\blockSeq{entry}, \blockPost{entry}   ) $$:
+\paragraph{\wpi \ for a sequence of bytecode instructions} is calculated standardly applying the standard $\wpi$ rule for compositional statements $\wpi( instrList;i_{j}, \psi,\excPost ) =\wpi(instrList, \wpi(i_{j}, \psi,\excPost )) $. %Calculating the precondition of the sequential part of the block $\blockm{i}$ which we denote with  $\blockSeq{i}$  is standard - the precondition of an instruction  is inferred from the precondition of the previous one.
 
 
-%\Paragraph{Subroutines}
-Subroutines are treated by inlining them. As we stated in the beginning we assume that the bytecode has been certified by a Java
+
+Subroutines are treated by inlining. As we stated in the beginning we assume that the bytecode has been certified by a Java
 bytecode verifier thus our analysis for identifying  subroutines is not a problem.  
 \todo{example}
 
