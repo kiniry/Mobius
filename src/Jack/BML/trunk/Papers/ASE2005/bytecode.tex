@@ -1,0 +1,38 @@
+
+
+
+Both the cyclic and acyclic graphs of the bytecode of method \texttt{isMember} at Fig.~\ref{isMemBC} is at Fig. ~\ref{blockBC}. Blocks are represented by boxes. Black arrows stand for relation $\execRel^A$. Dashed arrows stand for the acyclic relation $\execRel$.
+
+
+
+
+
+\begin{figure}[p]
+\begin{center}
+\begin{tabular}{rl}
+ 0 & iconst\_0 \\
+ 1 & istore\_2 \\
+ 2 & iconst\_0 \\
+ 3 & istore\_2 \\
+ 4 & goto 14 \\
+ 5 & aload\_0 \\
+ 6 & getfield \#19 <test/ListArray.list> \\
+ 7 & iload\_2 \\
+ 8 & aaload \\
+ 9 & aload\_1 \\
+10 & if\_acmpne 13 \\
+11 & iconst\_1 \\
+12 & ireturn \\
+13 & iinc 2 by 1 \\
+14 & iload\_2 \\
+15 & aload\_0 \\
+16 & getfield \#19 <test/ListArray.list> \\
+17 & arraylength \\
+18 & if\_icmplt 5  \\
+19 & iconst\_0 \\
+20 & ireturn \\
+\end{tabular}
+\end{center}
+\caption{the bytecode of method \texttt{isMember}}
+\label{isMemBC}
+\end{figure}

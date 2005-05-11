@@ -28,17 +28,12 @@ $$
  \Myspace where \ i \  is \ a \ valid \ entry \ in \\
  \ the \ list \  of \  local \ variables   \\
 \\ 
-\wpi(\instr{putField} \ i, \psi, \excPost) = \\
+\wpi(\instr{putField}\texttt{Cl.f}, \psi, \excPost) = \\
    ( \Myspace \stack{counter -1} = \Mynull \\
-   \Myspace  \Myspace \Rightarrow \psi[\counter \leftarrow \stack{\counter -2} ] \\
+   \Myspace  \Myspace \Rightarrow \psi[\counter \leftarrow \counter-2 ] \\
    \Myspace  \Myspace [\texttt{Cl.f} \leftarrow \texttt{Cl.f}(\oplus [\stack{\counter - 1} \rightarrow \stack{\counter})] ] )\\
    \Myspace  \wedge  \\
-   \Myspace  \stack{counter-1} \not= \Mynull \Rightarrow \excPost(\tt{NullPointer}) \\
- where \ i \  is \ a \ valid \ entry \ in \\
-  the \ class \ constant \  pool \ which   \\
- is  \ a \  symbolic \reference \ to \ the \  field  \\
- with \ name \  \texttt{f} from \  class \  \texttt{Cl}
- 
+   \Myspace  \stack{counter-1} \not= \Mynull \Rightarrow \excPost(\tt{NullPointer}) \\ 
  \end{array} $$
 
 %\texttt{wp(if\_acmpeq n , $\psi$)} =  \texttt{(Stack(t)==Stack(t-1)} $\Rightarrow$ $\psi(n)$ \texttt{[t$\leftarrow$t-2]\\
@@ -56,9 +51,10 @@ $$
 
 \subsubsection{References: manipulating fields}
 Fields are treated as functions, where the domain of a field \texttt{f} 
-declared in the class \texttt{Cl} is the set of objects of class \texttt{Cl}.
+declared in the class \texttt{Cl} is the set of objects of class \texttt{Cl} and its subclasses.
 We are using an overriding function rather in the same fashion as in ~\cite{B00ppp}. 
-At fig.~\ref{instrWP} the rule for \instr{putField} substitutes the corresponding field function with an overriding function. The definition of overriding expression is given at fig.~\ref{override}.
+At fig.~\ref{instrWP} the rule for \instr{putField} substitutes the corresponding field function \texttt{Cl.f} with the overriding function. 
+The definition of overriding expression is given at fig.~\ref{override}.
 
 \begin{figure}
 $$
