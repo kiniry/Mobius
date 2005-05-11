@@ -4,11 +4,10 @@
 Traditionally a lot of research has been done in the field of program verification for structured program languages~\cite{WPCDS},
 ~\cite{DisDij}. This explains the fact that the existing specification languages are designed for dealing with high level program languages. In order to verify 
 a program w.r.t. to some property, usually the property is expressed in a suitable specification language.
-After compilation, the executable code is detached from the source code; still we may need to verify that the resulting bytecode 
-preserves the property in question. A typical example is when an untrusted bytecode implementing a public interface arrives at a 
+After compilation, the executable code is detached from the source code; still there are situations where the bytecode is subject to verification procedures (e.g. for example establishing trust in it). A typical example is when an untrusted bytecode implementing a public interface arrives at a 
 receiver side and the latter wants to check that the unknown  bytecode respects the interface specification (which may not be trivial). Here comes the need for writing specification on  bytecode level. 
 We propose a bytecode level specification language which corresponds to an important subset of JML.
-We sketch the bytecode specification language grammar at \fig~\ref{bclGrammar}. We omit some of the definitions for reason of space constraints,
+We sketch the bytecode specification language grammar at \fig~\ref{bclGrammar}. We omit some of the definitions for reason of space limitations,
  e.g. the grammar for arithmetic expressions( which is defined in a standard way). For the full specification you can look at ~\cite{JML2BCSpec}.  
 \begin{figure}[!htbp]
 $$ \begin{array}{l}
@@ -94,7 +93,7 @@ is compiled standardly in binary form using tags. Basically the compilation of a
 
 \item add the JML compilation in the class file as user defined attributes. Method specifications, class invariants, loop invariants are 
 newly defined attributes in the class file.
- For example, the specification of all the loops in a method are compiled to a unique method attribute: the \textbf{Loop\_specification\_attribute}. The syntax of the loop attribute is given at fig.~\ref{loopAttribute}. This attribute is an array of data structures each describing a single loop from the method source code. Also for each loop in the source code there must be a corresponding element in the array. 
+ For example, the specification of all the loops in a method are compiled to a unique method attribute: whose syntax is given at fig.~\ref{loopAttribute}. This attribute is an array of data structures each describing a single loop from the method source code. Also for each loop in the source code there must be a corresponding element in the array. 
 More precisely every element contains information about the instruction where the loop starts as specified in the \textbf{Line\_Number\_Table}, the invariant associated to this loop, the decreasing expression in case of total correctness, the expressions that can be modified. 
 For the full specification of the compiler you can see~\cite{JML2BCSpec}.
 \end{enumerate}
@@ -128,8 +127,6 @@ JML\=Loop\_specification\_attribute \{\\
 %\end{frameit}
 \end{figure}
 
-%A ``JML bytecode'' viewer is under development at project Everest, INRIA Sophia-Antipolis. The latter is a tool that visualizes all aspects of compiled Java class files and the contained bytecode.
-
 \subsubsection{Discussion}
-The JML compiler does not depend on any specific Java compiler. Anyways it requires the presence of a debug information, namely the presence of the \textbf{Line\_Number\_Table} attribute for the proper compilation of inter method specification, i.e. loops and assertions. We hope that this is an acceptable restriction for the compiler. The most problematic part of the compilation is to find the program points where the loop invariants must hold. This basically means that one has to identify which source loop corresponds to which bytecode loop in the control flow graph. To do this we assume that the control flow graph is reducible~\cite{ARUCom1986} (basically means that there are no jumps from outside a loop inside it) which allows us to identify the relationship between the bytecode and the source code. 
-
+The JML compiler does not depend on any specific Java compiler. Anyways it requires the presence of a debug information, namely the presence of the \textbf{Line\_Number\_Table} attribute for the proper compilation of inter method specification, i.e. loops and assertions. We hope that this is an acceptable restriction for the compiler. The most problematic part of the compilation is to find the program points where the loop invariants must hold. This basically means that one has to identify which source loop corresponds to which bytecode loop in the control flow graph. To do this we assume that the control flow graph is reducible~\cite{ARUCom1986} (intuitively no jumps from outside a loop inside it) which allows us to identify the relationship between the bytecode and the source code. 
+\todo{limitations : registers that are used with two different types in the method bytecode}

@@ -20,9 +20,9 @@ in most cases, to complete this task, some annotations have to be added to the c
 When the annotations are sufficient to prove the code, the Java file is then normally compiled with a Java compiler to obtain a 
 class file. 
 This class file is then annotated with special JML attributes extracted from the source file. 
-At this stage, the Java class files contain all the informations that will allow the client to trust it.
+At this stage, the Java class files contain all the information that will allow the client to establish trust in it (e.g. loop invariants).
 
-Thus the code reaches the client side where proof obligations are generated (at bytecode level) with respect to client's requirements. 
+The client side generates proof obligations (at bytecode level) with respect to client's requirements. 
 The corresponding proof obligations are then proved, for instance, with the JACK framework. If the client succeeds in proving 
 the verification conditions, he can trust the unknown code. 
 
