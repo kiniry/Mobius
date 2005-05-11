@@ -5,7 +5,9 @@ Traditionally a lot of research has been done in the field of program verificati
 ~\cite{DisDij}. This explains the fact that the existing specification languages are designed for dealing with high level program languages. In order to verify 
 a program w.r.t. to some property, usually the property is expressed in a suitable specification language.
 After compilation, the executable code is detached from the source code; still there are situations where the bytecode is subject to verification procedures (e.g. for example establishing trust in it). A typical example is when an untrusted bytecode implementing a public interface arrives at a 
-receiver side and the latter wants to check that the unknown  bytecode respects the interface specification (which may not be trivial). Here comes the need for writing specification on  bytecode level. 
+receiver side and the latter wants to check that the unknown  bytecode respects the interface specification (which may not be trivial). Here comes the need for writing specification on  bytecode level. In the next subsection we lool at the grammar of the specification language.
+
+\subsection{Grammar} 
 We propose a bytecode level specification language which corresponds to an important subset of JML.
 We sketch the bytecode specification language grammar at \fig~\ref{bclGrammar}. We omit some of the definitions for reason of space limitations,
  e.g. the grammar for arithmetic expressions( which is defined in a standard way). For the full specification you can look at ~\cite{JML2BCSpec}.  
@@ -58,7 +60,7 @@ $$ \begin{array}{l}
   	  \Myspace  \mid \result \ \mid \old{\expression}  \\
   	  \Myspace \mid \typeof{\expression}  \ \mid \ \Mynull \ \mid \  \this \ldots
 \end{array}$$
-\caption{BCL grammar}
+\caption{BCSL grammar}
  \label{bclGrammar}
  \end{figure}
  The language defined here is expressive enough for most purposes including the description of non trivial functional and 
@@ -68,7 +70,7 @@ $$ \begin{array}{l}
  We can specify using the specification clause \jmlKey{exsures} what is the postcondition of  a method in case it terminates with 
  an exception  \texttt{ExceptionClass}.The special keyword \texttt{EXC} stands for the thrown exception object.
  
-As shown by the grammar BCL allows us to specify different method specification cases separated by the keyword \jmlKey{also} - this means that 
+As shown by the grammar BCSL allows us to specify different method specification cases separated by the keyword \jmlKey{also} - this means that 
  method caller has to satisfy the disjunction of the preconditions in the specification cases  and the method's implementation 
  has to guarantee the postcondition of every specification case given that the corresponding precondition held in the prestate.
 The rules for loop specifications and assertions  say at what point in the bytecode they must hold. Loop  specification 
