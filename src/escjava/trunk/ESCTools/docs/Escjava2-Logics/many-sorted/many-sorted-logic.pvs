@@ -1,0 +1,254 @@
+escjava2_memory : THEORY
+  BEGIN
+    Memory : TYPE+
+    Time : TYPE FROM int
+    ReferenceType, Reference : TYPE+
+    Object : TYPE+
+    BooleanField, DiscreteNumberField, ContinuousNumberField, ReferenceField : TYPE+
+
+    HEAP : Memory
+
+    memGet(memory : Memory, reference : Reference) : Object
+    memSet(memory : Memory, reference : Reference, object : Object) : Memory
+
+    vAllocTime(reference : Reference) : Time % injective
+    fClosedTime(field : ReferenceField) : Time
+    eClosedTime(object : Object) : Time
+
+    isAllocated(reference : Reference, time : Time) : bool
+    arrayFresh(reference : Reference, memory : Memory, time : Time) : bool
+  END escjava2_memory
+
+escjava2_java_typesystem : THEORY
+  BEGIN
+    IMPORTING escjava2_memory
+
+    Boolean : Type+ FROM bool
+    DiscreteNumber : TYPE+ FROM int
+    ContinuousNumber : TYPE+ FROM real
+    BigIntNumber : TYPE+ FROM int
+    RealNumber : TYPE+ FROM real
+    JavaNumber : TYPE = [DiscreteNumber + ContinuousNumber]
+    JMLNumber : TYPE = [JavaNumber + BigIntNumber + RealNumber]
+    Number : TYPE = JMLNumber
+    java_lang_Object : ReferenceType
+
+    java_lang_Boolean_TRUE : Boolean
+    java_lang_Boolean_FALSE : Boolean
+
+    NULL : Reference
+
+    isBigInt?(number : Number) : bool
+    isReal?(number : Number) : bool
+
+    extends? : ({R : PRED[[ReferenceType, ReferenceType]] | irreflexive?(R)})
+    subtype? : ({R : PRED[[ReferenceType, ReferenceType]] | 
+      reflexive?(R) AND transitive?(R) AND antisymmetric?(R)})
+    isa?(reference : Reference, referenceType : ReferenceType) : bool
+
+    subtype_includes_extends : LEMMA
+      FORALL(t : ReferenceType, u : ReferenceType) :
+        extends?(t, u) IMPLIES subtype?(t, u)
+
+    subtype_is_the_smallest_relation_that_contains_extends : LEMMA
+      FORALL(t : ReferenceType, u : ReferenceType) :
+        subtype?(t, u) AND NOT (t = u) IMPLIES
+        EXISTS(v : ReferenceType) : extends?(t, v) AND subtype?(v, u)
+
+    java_lang_Object_is_Top : LEMMA
+      FORALL(t : ReferenceType) : subtype?(t, java_lang_Object)
+
+    elementReferenceType(referenceType : ReferenceType) : ReferenceType
+
+    typeOf(reference : Reference) : ReferenceType
+
+    unique_dynamic_subtype : LEMMA
+      FORALL(r : Reference, t : ReferenceType) : isa?(r, t) IFF ((r = NULL) OR typeOf(r) = t)
+
+    % do we need a cotuple of (non-array) ReferenceType and ArrayReferenceType?
+    % XXX
+    instantiable(referenceType : ReferenceType) : bool =
+      COND
+        referenceType = java_lang_Object -> TRUE,
+        ELSE -> FALSE
+      ENDCOND
+  END escjava2_java_typesystem
+
+escjava2_java_numeric_types : THEORY
+  BEGIN
+    IMPORTING escjava2_java_typesystem, integers
+
+    java_lang_Double_MAX_VALUE : DiscreteNumber % (2-2^-52)*2^1023
+    java_lang_Double_MIN_VALUE : DiscreteNumber % 
+    java_lang_Float_MAX_VALUE : DiscreteNumber % (2-2^-23)*2^127
+    java_lang_Float_MIN_VALUE : DiscreteNumber % 
+    java_lang_Long_MAX_VALUE : DiscreteNumber % 2^63-1
+    java_lang_Long_MIN_VALUE : DiscreteNumber % -2^63
+    java_lang_Integer_MAX_VALUE : DiscreteNumber % 2^31-1
+    java_lang_Integer_MIN_VALUE : DiscreteNumber % -2^31
+    java_lang_Short_MAX_VALUE : DiscreteNumber % 2^15-1
+    java_lang_Short_MIN_VALUE : DiscreteNumber % -2^15
+    java_lang_Byte_MAX_VALUE : DiscreteNumber % 2^32-1
+    java_lang_Byte_MIN_VALUE : DiscreteNumber % 0
+    java_lang_Char_MAX_VALUE : DiscreteNumber % 2^7-1
+    java_lang_Char_MIN_VALUE : DiscreteNumber % -2^7
+
+    rangeCheck(number : Number, lowerBound, upperBound : DiscreteNumber) : bool =
+      CASES number OF
+        IN_1(javaNumber) : 
+          CASES javaNumber OF
+            IN_1(discreteNumber) : lowerBound <= discreteNumber <= upperBound,
+            IN_2(continuousNumber) : FALSE
+          ENDCASES,
+        IN_2(BigIntNumber) : FALSE,
+        IN_3(RealNumber) : FALSE
+      ENDCASES
+
+    isChar? : [Number -> bool]
+    isChar_def : LEMMA
+      FORALL(number : Number) : isChar?(number) IFF 
+        rangeCheck(number, java_lang_Char_MIN_VALUE, java_lang_Char_MAX_VALUE)
+    isByte? : [Number -> bool]
+    isByte_def : LEMMA
+      FORALL(number : Number) : isByte?(number) IFF 
+        rangeCheck(number, java_lang_Byte_MIN_VALUE, java_lang_Byte_MAX_VALUE)
+    isShort? : [Number -> bool]
+    isShort_def : LEMMA
+      FORALL(number : Number) : isShort?(number) IFF 
+        rangeCheck(number, java_lang_Short_MIN_VALUE, java_lang_Short_MAX_VALUE)
+    isInt? : [Number -> bool]
+    isInt_def : LEMMA
+      FORALL(number : Number) : isInt?(number) IFF 
+        rangeCheck(number, java_lang_Integer_MIN_VALUE, java_lang_Integer_MAX_VALUE)
+    isLong? : [Number -> bool]
+    isLong_def : LEMMA
+      FORALL(number : Number) : isLong?(number) IFF 
+        rangeCheck(number, java_lang_Long_MIN_VALUE, java_lang_Long_MAX_VALUE)
+    isFloat? : [Number -> bool]
+    isFloat_def : LEMMA
+      FORALL(number : Number) : isFloat?(number) IFF 
+        rangeCheck(number, java_lang_Float_MIN_VALUE, java_lang_Float_MAX_VALUE)
+    isDouble? : [Number -> bool]
+    isDouble_def : LEMMA
+      FORALL(number : Number) : isDouble?(number) IFF 
+        rangeCheck(number, java_lang_Double_MIN_VALUE, java_lang_Double_MAX_VALUE)
+
+    % an approximation of Z if a theory of integers is not available
+    % these definitions would require an explicit definition of + on DiscreteNumber
+    % or would be defined using Peano arithmetic
+    % we just use the integers PVS theory
+    % 0, 1 : DiscreteNumber
+    % isBigInt?(0) = TRUE
+    % isBigInt?(1) = TRUE
+    % successor : LEMMA
+    %   FORALL(number : DiscreteNumber) : isBigInt?(number) IFF isBigInt?(number + 1)
+
+  END escjava2_java_numeric_types
+
+escjava2_java_casting : THEORY
+  BEGIN
+    IMPORTING escjava2_java_typesystem, escjava2_java_numeric_types
+
+    % numeric downcasting (truncation)
+    narrowDouble2Float(source : ContinuousNumber) : ContinuousNumber
+    narrowDouble2Long : [ContinuousNumber -> DiscreteNumber]
+    narrowDouble2Int : [ContinuousNumber -> DiscreteNumber]
+
+    narrowFloat2Long : [ContinuousNumber -> DiscreteNumber]
+    narrowFloat2Int : [ContinuousNumber -> DiscreteNumber]
+
+    narrowLong2Int : [DiscreteNumber -> DiscreteNumber]
+    narrowLong2Short : [DiscreteNumber -> DiscreteNumber]
+    narrowLong2Byte : [DiscreteNumber -> DiscreteNumber]
+    narrowLong2Char : [DiscreteNumber -> DiscreteNumber]
+
+    narrowInt2Short : [DiscreteNumber -> DiscreteNumber]
+    narrowInt2Byte : [DiscreteNumber -> DiscreteNumber]
+
+    ConversionFunction : TYPE = [DiscreteNumber -> DiscreteNumber]
+    castByte2Char : ConversionFunction
+    castChar2Byte : ConversionFunction
+  END escjava2_java_casting
+
+escjava2_object_fields_base[fieldType : TYPE, valueType : TYPE] : THEORY
+  BEGIN
+    IMPORTING escjava2_memory, escjava2_java_typesystem
+   
+    select(field : fieldType, object : Object) : valueType
+    store(field : fieldType, object : Object, value : valueType) : fieldType
+  END escjava2_object_fields_base
+
+escjava2_object_fields : THEORY
+  BEGIN
+    IMPORTING escjava2_memory, escjava2_java_typesystem,
+              escjava2_object_fields_base[BooleanField, Boolean],
+              escjava2_object_fields_base[DiscreteNumberField, DiscreteNumber],
+              escjava2_object_fields_base[ContinuousNumberField, ContinuousNumber],
+              escjava2_object_fields_base[ReferenceField, Reference]
+  END escjava2_object_fields
+
+escjava2_java_arrays_base[T : TYPE] : THEORY
+  BEGIN
+    IMPORTING escjava2_java_typesystem
+
+    get(obj : Object, num : DiscreteNumber) : T
+    set(obj : Object, num : DiscreteNumber, val : T) : Object
+  END escjava2_java_arrays_base
+
+escjava2_java_arrays : THEORY
+  BEGIN
+    IMPORTING escjava2_java_typesystem,
+    	      escjava2_java_arrays_base[DiscreteNumber],
+    	      escjava2_java_arrays_base[ContinuousNumber],
+    	      escjava2_java_arrays_base[Boolean],
+    	      escjava2_java_arrays_base[Object]
+    ArrayReferenceType : TYPE FROM ReferenceType
+
+    % array type constructor
+    arrayOf(boolean : Boolean) : ArrayReferenceType
+    arrayOf(number : Number) : ArrayReferenceType
+    arrayOf(referenceType : ReferenceType) : ArrayReferenceType
+    arrayOf(arrayReferenceType : ArrayReferenceType) : ArrayReferenceType
+    arrayLength(reference : Reference) : DiscreteNumber
+
+    array_subtyping : LEMMA
+      FORALL(t : ReferenceType, u : ReferenceType) :
+        subtype?(t, u) IMPLIES subtype?(arrayOf(t), arrayOf(u))
+
+    left_inverses_of_Object_constructors : LEMMA
+      FORALL(t : ReferenceType) : elementReferenceType(arrayOf(t)) = t
+  END escjava2_java_arrays
+
+escjava2_java_operators : THEORY
+  BEGIN
+    IMPORTING escjava2_java_typesystem
+
+    % arithmetic functions
+    DiscreteArithmeticFunction : [DiscreteNumber, DiscreteNumber -> DiscreteNumber]
+    ContinuousArithmeticFunction : [ContinuousNumber, ContinuousNumber -> ContinuousNumber]
+    % +,-,etc. : ArithmeticFunction
+
+    % boolean functions
+    BooleanFunction :  [Boolean, Boolean -> Boolean]
+    % ! : [Boolean -> Boolean]
+    % &&, ||, etc. : BooleanFunction
+
+    % Java typecast
+    cast(reference : Reference, referenceType : ReferenceType) : Reference
+
+    cast_defintion : LEMMA
+      FORALL(r : Reference, t : ReferenceType) : isa?(cast(r, t), t)
+
+    upcast_has_no_effect : LEMMA
+      FORALL(r : Reference, t : ReferenceType) : isa?(r, t) IMPLIES (cast(r, t) = r)
+  END escjava2_java_operators
+
+escjava2_jml_operators : THEORY
+  BEGIN
+    IMPORTING escjava2_java_typesystem, escjava2_java_arrays
+
+  END escjava2_jml_operators
+
+escjava2_object_logic : THEORY
+  BEGIN
+  END escjava2_object_logic

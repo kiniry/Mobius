@@ -1,1 +1,4 @@
 *.texinfo
+.pvscontext
+orphaned-proofs.prf
+pvsbin
