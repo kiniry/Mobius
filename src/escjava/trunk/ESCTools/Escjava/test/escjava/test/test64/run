@@ -1,4 +1,4 @@
-#!/bin/csh -f
+#!/bin/sh
 # usage: run FLAGS
 
 sort ans.raw > ans
@@ -7,5 +7,5 @@ sort ans.raw > ans
 ${ESCJ} $* -inlineFromConstructors T.java ;\
 ${ESCJ} $* U.java ;\
 ${ESCJ} $* -inlineFromConstructors U.java ;\
-) >& out.raw
+) > out.raw
 sort out.raw 

@@ -1,4 +1,4 @@
-#!/bin/csh -f
+#!/bin/sh
 
 ## Test source file reader with all sources in front end.
 

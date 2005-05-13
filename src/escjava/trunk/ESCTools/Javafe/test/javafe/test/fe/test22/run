@@ -1,4 +1,4 @@
-#!/bin/csh -f
+#!/bin/sh
 
 ## Check error messages for inheriting incompatible methods   [disabled]
 

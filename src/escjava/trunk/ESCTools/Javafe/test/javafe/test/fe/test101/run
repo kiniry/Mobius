@@ -1,4 +1,4 @@
-#!/bin/csh -f
+#!/bin/sh
 
 ## Test checking of modifiers of type declarations [1.1]
 

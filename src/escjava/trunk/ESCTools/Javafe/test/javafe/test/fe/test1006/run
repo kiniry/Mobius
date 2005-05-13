@@ -1,4 +1,4 @@
-#!/bin/csh -f
+#!/bin/sh
 
 ## Check that equality on arrays works
 

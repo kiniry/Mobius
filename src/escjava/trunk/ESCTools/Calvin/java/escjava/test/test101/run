@@ -1,4 +1,4 @@
-#!/bin/csh -f
+#!/bin/sh
 # usage: run FLAGS
 
 # B.java - simple test of getting info from loop context, 
@@ -8,16 +8,16 @@
 # F.java - clear an array
 # D.java - ensures escjava knows int[] and int are never aliased
 
-foreach p (C2 F B C)
-  foreach q ("-DPAquantifyAssumptions=true" "-DPAquantifyAssumptions=false")
-    foreach f (-DPABDT -DEnumMaxFindMin "-DPA3n=1.2.3.4." -DPANK=4)
+for p in C2 F B C; do
+  for q in "-DPAquantifyAssumptions=true" "-DPAquantifyAssumptions=false"; do
+    for f in -DPABDT -DEnumMaxFindMin "-DPA3n=1.2.3.4." -DPANK=4; do
       echo ============ Benchmark $p Alg $f $q
-      setenv JAVA "srcjava $f $q"
+      JAVA="srcjava $f $q"
       ${ESCJ} -quiet -predAbstract $* -sxLog log/sx.$p.$f.$q $p.java | tee log/allout.$p.$f.$q | grep "Warning\|Error\|Caution\|reachable" > log/out.$p.$f.$q
       diff log/out.$p.$f.$q ans-per-run.$p
-    end
-  end
-end
+    done
+  done
+done
 
 exit
 

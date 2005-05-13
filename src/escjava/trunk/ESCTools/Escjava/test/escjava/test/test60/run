@@ -1,4 +1,4 @@
-#!/bin/csh -f
+#!/bin/sh
 # usage: run FLAGS
 
 # Note, escjava is nondeterministic in the order in which it produces
@@ -29,7 +29,7 @@
 ( ${ESCJ} $* C.java \
 ; ${ESCJ} $* N.java \
 ; ${ESCJ} $* Typecheck.java \
-) >! out.raw
+) > out.raw
 cat out.raw | \
   sed -e 's/\(Associated declaration is "N.java", line\) 15, col 21:/\1 6, col 21:/' \
       -e 's/\(public void m2(.*)\);/\1 {/' \
@@ -38,4 +38,4 @@ cat out.raw | \
 cat ans.raw | \
   sed -e 's/\(public void m2(.*)\);/\1 {/' \
       -e 's/\(public void m2(.*) {\).*$/\1 {/' | \
-  sort | cat run - >! ans
+  sort | cat run - > ans

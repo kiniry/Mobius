@@ -1,4 +1,4 @@
-#!/bin/csh -f
+#!/bin/sh
 
 ## Check import statements involving nonexistent classes/packages
 ##    [checking of package accessability intentionally disabled]

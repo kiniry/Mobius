@@ -1,9 +1,9 @@
-#!/bin/csh -f
+#!/bin/sh
 
 ## Checks casts, conversions and constant expressions
 
-foreach f (*.java)
+for f in *.java; do
    echo $f
    ${TOOL} $f
-end
+done
 

@@ -1,4 +1,4 @@
-#!/bin/csh -f
+#!/bin/sh
 
 ## Test that we enforce static contexts correctly in 1.1
 

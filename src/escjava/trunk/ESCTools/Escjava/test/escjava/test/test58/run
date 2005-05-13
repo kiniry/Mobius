@@ -1,4 +1,4 @@
-#!/bin/csh -f
+#!/bin/sh
 # usage: run FLAGS
 
 # Note, escjava is nondeterministic in the order in which it produces
@@ -28,6 +28,6 @@
 ; ${ESCJ} $* Body.java \
 ; ${ESCJ} $* Test.java \
 ; ${ESCJ} $* Vanilla.java \
-) >! out.raw
+) > out.raw
 sort out.raw | cat run -
-sort ans.raw | cat run - >! ans
+sort ans.raw | cat run - > ans

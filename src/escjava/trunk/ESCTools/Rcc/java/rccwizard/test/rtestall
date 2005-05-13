@@ -1,9 +1,9 @@
-#!/bin/csh -f
+#!/bin/sh -f
 # Copyright 2000, 2001, Compaq Computer Corporation
 
 # use: rtestall FLAGS
 
-foreach f (`grep Good alltests | awk '{print $1;}'`)
+for f in `grep Good alltests | awk '{print $1;}'`; do
 #echo $f
 ./rtest $f $*
-end
+done

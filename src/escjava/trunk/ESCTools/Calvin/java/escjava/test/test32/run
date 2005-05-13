@@ -1,7 +1,6 @@
-#!/bin/csh -f 
+#!/bin/sh
 
-setenv PROVER_CC_LIMIT 1
+PROVER_CC_LIMIT=1
 
 ${ESCJ} $* Hotspot.java
-
 ${ESCJ} -warn Deadlock $* SynchHotspot.java

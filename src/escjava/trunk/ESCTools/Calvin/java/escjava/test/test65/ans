@@ -1,4 +1,4 @@
-#!/bin/csh -f
+#!/bin/sh -f
 # usage: run FLAGS
 
 # Note, escjava is nondeterministic in the order in which it produces
@@ -23,9 +23,9 @@
 # What better comment than the one given here in the 'run' file!  Hence,
 # the 'run' file is prepended to the 'ans' and 'out' files.
 
-${ESCJ} $* C.java >! out.raw
+${ESCJ} $* C.java > out.raw
 sort out.raw | cat run -
-sort ans.raw | cat run - >! ans
+sort ans.raw | cat run - > ans
                                                        ^
                                       ^
                                   ^

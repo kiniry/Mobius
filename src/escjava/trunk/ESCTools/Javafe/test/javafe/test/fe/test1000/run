@@ -1,4 +1,4 @@
-#!/bin/csh -f
+#!/bin/sh
 
 ## Misc tests on labels from Rustan and Jim, implemented by Cormac
 

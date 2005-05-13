@@ -1,4 +1,4 @@
-#!/bin/csh -f
+#!/bin/sh
 
 ## Test anonymous classes declared inside superclass constr. calls  [1.1]
 

@@ -1,4 +1,4 @@
-#!/bin/csh -f
+#!/bin/sh
 
 ## Test scoping of Expr names (includes TypeNames and method
 ## invocations)                                                     [1.1]

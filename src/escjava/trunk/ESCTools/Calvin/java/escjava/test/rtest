@@ -1,8 +1,6 @@
-# Copyright Hewlett-Packard, 2002
-
 #!/bin/sh -f
-
 # use: rtest directory FLAGS
+# Copyright Hewlett-Packard, 2002
 
 echo === ESC/Java regression test $1 ===
 

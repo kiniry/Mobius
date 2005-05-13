@@ -1,4 +1,4 @@
-#!/bin/csh -f
+#!/bin/sh
 
 ## Test the use of modifiers on local variables & formal parameters [1.1]
 

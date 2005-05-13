@@ -1,4 +1,4 @@
-#!/bin/csh -f
+#!/bin/sh
 
 ## Test multiple definitions of the same type in a single cmd-line
 ## source file

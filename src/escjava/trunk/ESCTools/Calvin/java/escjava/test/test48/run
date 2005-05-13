@@ -1,7 +1,7 @@
-#!/bin/csh -f
+#!/bin/sh
 # usage: run FLAGS
 
-set ARGS = (`echo $* | sed -e 's/-notrace//g'`)
+ARGS=`echo $* | sed -e 's/-notrace//g'`
 
 ${ESCJ} ${ARGS} and.java
 ${ESCJ} ${ARGS} break.java

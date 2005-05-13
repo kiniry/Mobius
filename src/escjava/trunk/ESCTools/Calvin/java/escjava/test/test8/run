@@ -1,4 +1,4 @@
-#!/bin/csh -f
+#!/bin/sh
 # usage: run FLAGS
 
 ${ESCJ} $* switch.java try.java trycatch.java trycatch2.java unreachable.java

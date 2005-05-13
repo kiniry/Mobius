@@ -1,4 +1,4 @@
-#!/bin/csh -f
+#!/bin/sh
 
 ## Check that loading the same source file twice does not cause an
 ## error
