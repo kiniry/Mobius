@@ -20,6 +20,9 @@ JNIEXPORT jint JNICALL Java_DemonstrationProver_demo_1start_1prover
  */
 JNIEXPORT jint JNICALL Java_DemonstrationProver_demo_1set_1prover_1resource_1flags
   (JNIEnv *env, jobject obj, jstring properties) {
+  const char *properties_string = (*env)->GetStringUTFChars(env, properties, 0);
+  // use properties_string in native call
+  (*env)->ReleaseStringUTFChars(env, properties, properties_string);
 }
 
 /*
@@ -28,7 +31,10 @@ JNIEXPORT jint JNICALL Java_DemonstrationProver_demo_1set_1prover_1resource_1fla
  * Signature: (Ljava/lang/String;)I
  */
 JNIEXPORT jint JNICALL Java_DemonstrationProver_demo_1signature
-  (JNIEnv *env, jobject obj, jstring sig) {
+  (JNIEnv *env, jobject obj, jstring signature) {
+  const char *signature_string = (*env)->GetStringUTFChars(env, signature, 0);
+  // use signature_string in native call
+  (*env)->ReleaseStringUTFChars(env, signature, signature_string);
 }
 
 /*
@@ -38,6 +44,9 @@ JNIEXPORT jint JNICALL Java_DemonstrationProver_demo_1signature
  */
 JNIEXPORT jint JNICALL Java_DemonstrationProver_demo_1declare_1axiom
   (JNIEnv *env, jobject obj, jstring axiom) {
+  const char *axiom_string = (*env)->GetStringUTFChars(env, axiom, 0);
+  // use axiom_string in native call
+  (*env)->ReleaseStringUTFChars(env, axiom, axiom_string);
 }
 
 /*
@@ -47,6 +56,9 @@ JNIEXPORT jint JNICALL Java_DemonstrationProver_demo_1declare_1axiom
  */
 JNIEXPORT jint JNICALL Java_DemonstrationProver_demo_1make_1assumption
   (JNIEnv *env, jobject obj, jstring formula) {
+  const char *formula_string = (*env)->GetStringUTFChars(env, formula, 0);
+  // use formula_string in native call
+  (*env)->ReleaseStringUTFChars(env, formula, formula_string);
 }
 
 /*
@@ -65,6 +77,12 @@ JNIEXPORT jint JNICALL Java_DemonstrationProver_demo_1retract_1assumption
  */
 JNIEXPORT jint JNICALL Java_DemonstrationProver_demo_1is_1valid
   (JNIEnv *env, jobject obj, jstring formula, jstring properties) {
+  const char *formula_string = (*env)->GetStringUTFChars(env, formula, 0);
+  const char *properties_string = (*env)->GetStringUTFChars(env, properties, 0);
+  // use formula_string in native call
+  // use properties_string in native call
+  (*env)->ReleaseStringUTFChars(env, formula, formula_string);
+  (*env)->ReleaseStringUTFChars(env, properties, properties_string);
 }
 
 /*

@@ -22,7 +22,7 @@ class DemonstrationProver implements ProverInterface
   }
 
   // decaration : string -> int
-  public native int demo_signature(String sig);
+  public native int demo_signature(String signature);
 
   public ProverResponse signature(Signature signature) {
     assert false;
