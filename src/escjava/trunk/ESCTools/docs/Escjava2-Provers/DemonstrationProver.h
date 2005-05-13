@@ -7,8 +7,6 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-/* Inaccessible static: _00024assertionsDisabled */
-/* Inaccessible static: class_00024DemonstrationProver */
 /*
  * Class:     DemonstrationProver
  * Method:    demo_start_prover

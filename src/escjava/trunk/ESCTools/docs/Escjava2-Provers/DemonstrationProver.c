@@ -1,4 +1,3 @@
-#include <jni.h>
 #include "DemonstrationProver.h"
 #include <stdio.h>
 
