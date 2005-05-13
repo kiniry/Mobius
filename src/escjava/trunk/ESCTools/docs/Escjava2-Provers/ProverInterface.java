@@ -1,3 +1,4 @@
+import java.util.Properties;
 //@ model import org.jmlspecs.models.JMLObjectSequence;
 
 interface ProverInterface
@@ -36,6 +37,7 @@ interface ProverInterface
     @   ensures \result == ProverResponse.FAIL ==> prover_stopped;
     @   ensures assumptions.isEmpty();
     @*/
+  // start_prover -> start_solver
   public /*@ non_null @*/ ProverResponse start_prover();
 
   /**
@@ -58,6 +60,7 @@ interface ProverInterface
     @   ensures \result != ProverResponse.FAIL ==> prover_started;
     @   ensures \result == ProverResponse.FAIL ==> prover_stopped;
     @*/
+  // set_prover_resource_flags -> set_flags
   public /*@ non_null @*/ ProverResponse set_prover_resource_flags(/*@ non_null @*/ Properties properties);
 
   /**
@@ -79,6 +82,7 @@ interface ProverInterface
     @   ensures \result == ProverResponse.FAIL ==> prover_stopped;
     @   ensures signature_defined;
     @*/
+  // decomposed into {var|pred|func|type}_declaration  (var is an uninterpreted constant)
   public /*@ non_null @*/ ProverResponse signature(/*@ non_null @*/ Signature signature);
 
   /**
@@ -97,6 +101,7 @@ interface ProverInterface
     @   ensures \result != ProverResponse.FAIL ==> prover_started;
     @   ensures \result == ProverResponse.FAIL ==> prover_stopped;
     @*/
+  // declare_axiom -> add_axiom
   public /*@ non_null @*/ ProverResponse declare_axiom(/*@ non_null @*/ Formula formula);
 
   /**
@@ -116,6 +121,7 @@ interface ProverInterface
     @   ensures \result == ProverResponse.FAIL ==> prover_stopped;
     @   ensures assumptions.equals(\old(assumptions.insertBack(formula)));
     @*/
+  // make_assumption -> add_assertion
   public /*@ non_null @*/ ProverResponse make_assumption(/*@ non_null @*/ Formula formula);
 
   /**
@@ -137,6 +143,7 @@ interface ProverInterface
     @           assumptions.isEmpty();
     @   ensures count == ALL ==> assumptions.isEmpty();
     @*/
+  // retract_assumption -> backtrack
   public /*@ non_null @*/ ProverResponse retract_assumption(int count);
 
   /**
@@ -167,6 +174,7 @@ interface ProverInterface
     @   ensures \result == ProverResponse.FAIL ==> prover_stopped;
     @   ensures assumptions.equals(\old(assumptions));
     @*/
+  // is_valid -> query
   public /*@ non_null @*/ ProverResponse is_valid(/*@ non_null @*/ Formula formula,
                                                   Properties properties);
 
@@ -181,5 +189,6 @@ interface ProverInterface
     @   ensures prover_stopped;
     @   ensures assumptions.isEmpty();
     @*/
+  // stop_prover
   public /*@ non_null @*/ ProverResponse stop_prover();
 }

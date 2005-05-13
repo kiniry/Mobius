@@ -20,4 +20,11 @@
 *.tps
 *.vr
 *.vrs
+DemonstrationProver.class
+Formula.class
 Makefile
+ProverInterface.class
+ProverResponse.class
+Signature.class
+demoprover
+demoprover.jnilib

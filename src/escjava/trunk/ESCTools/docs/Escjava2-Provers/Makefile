@@ -22,6 +22,17 @@ pdffiles =	$(foreach texfile,$(texfiles),\
 java_files =		$(wildcard *.java)
 java_texinfo_files =	$(addsuffix .texinfo,$(java_files))
 
+CFLAGS = -I/System/Library/Frameworks/JavaVM.framework/Versions/1.4.2/Headers
+CC = gcc
+
+OSX_DYNAMIC_LIB_SWITCH = -dynamiclib
+LINUX_DYNAMIC_LIB_SWITCH = -shared
+DYNAMIC_LIB_SWITCH = $(OSX_DYNAMIC_LIB_SWITCH)
+
+OSX_DYNAMIC_LIB_EXTENSION = .jnilib
+LINUX_DYNAMIC_LIB_EXTENSION = .so
+DYNAMIC_LIB_EXTENSION = $(OSX_DYNAMIC_LIB_EXTENSION)
+
 PERL=perl
 CODE2TEXI=$(PERL) -e 'BEGIN: while (<>) { s/\r//g; s/@/@@/g; s/\{/@\{/g; s/\}/@\}/g; } continue { print; }'
 
@@ -86,7 +97,7 @@ CODE2TEXI=$(PERL) -e 'BEGIN: while (<>) { s/\r//g; s/@/@@/g; s/\{/@\{/g; s/\}/@\
 	fig2dev -L pdf $< $@
 
 .PHONY: all build
-all:	build
+all:	build java jni
 
 build:	Escjava2-Provers.pdf
 
@@ -98,11 +109,35 @@ cleanup:
 		*.pg *.pgs *.tp *.tps *.vr *.vrs *.p *.k \
 		*# *~
 
+%.class: %.java
+	javac -source 1.4 $<
+
+.PHONY: java jni
+java:	ProverInterface.class DemonstrationProver.class
+
+jni:	DemonstrationProver.h libdemoprover$(DYNAMIC_LIB_EXTENSION) demoprover
+
+demoprover:	DemonstrationProver.c
+	$(CC) $(CFLAGS) \
+	  -o demoprover $<
+
+demoprover.o:	DemonstrationProver.c
+	$(CC) $(CFLAGS) -c \
+	  -o demoprover.o $<
+
+libdemoprover.jnilib:	demoprover.o
+	$(CC) $(CFLAGS) $(DYNAMIC_LIB_SWITCH) \
+	  -o libdemoprover$(DYNAMIC_LIB_EXTENSION) demoprover.o -framework JavaVM
+
+%.h:	%.class
+	javah `basename $< .class`
+
 clean:
 	rm -rf auto _region_* \
-		$(paper).pdf $(paper).ps \
-		*.aux *.log *~ *.dvi *.brf \
-		*.cp *.cps *.fn *.fns *.ky *.kys \
-		*.pg *.pgs *.tp *.tps *.vr *.vrs *.p *.k \
-		*.bbl *.blg *.toc *.thm *.out *.cb \
-		*.lof *.lot *.gz *.Z #*
+	  $(paper).pdf $(paper).ps \
+	  *.o \
+	  *.aux *.log *~ *.dvi *.brf \
+	  *.cp *.cps *.fn *.fns *.ky *.kys \
+	  *.pg *.pgs *.tp *.tps *.vr *.vrs *.p *.k \
+	  *.bbl *.blg *.toc *.thm *.out *.cb \
+	  *.lof *.lot *.gz *.Z #*

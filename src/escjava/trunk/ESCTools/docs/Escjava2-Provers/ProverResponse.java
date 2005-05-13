@@ -1,3 +1,5 @@
+import java.util.Properties;
+
 class ProverResponse
 {
   /**
@@ -95,5 +97,9 @@ class ProverResponse
    */
   private ProverResponse() {
     ; // skip
+  }
+
+  // placeholder for factory for building ProverResponses for sammy
+  ProverResponse(int return_code) {
   }
 }
