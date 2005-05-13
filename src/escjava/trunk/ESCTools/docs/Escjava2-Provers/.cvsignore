@@ -21,6 +21,8 @@
 *.vr
 *.vrs
 DemonstrationProver.class
+DemonstrationProver.cmi
+DemonstrationProver.cmo
 Formula.class
 Makefile
 ProverInterface.class
