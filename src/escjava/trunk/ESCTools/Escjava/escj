@@ -229,12 +229,12 @@ if [ -n "$COMSPEC" ]; then
     ## but the script below balks at backslashes
     if echo ${CLASSPATH} | grep cygdrive > /dev/null; then
 	CLASSPATH=`cygpath -p -u ${CLASSPATH}`
+	CLASSPATH=`cygpath -p -m ${CLASSPATH}`
     fi
-    CLASSPATH=`cygpath -p -m ${CLASSPATH}`
     if echo ${ESC_SPECS} | grep cygdrive > /dev/null; then
 	ESC_SPECS=`cygpath -p -u ${ESC_SPECS}`
+	ESC_SPECS=`cygpath -p -m ${ESC_SPECS}`
     fi
-    ESC_SPECS=`cygpath -p -m ${ESC_SPECS}`
 fi
 
 if [ -n "$ESCJ_VERBOSE" ]; then
