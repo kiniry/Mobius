@@ -1,6 +1,6 @@
 % CHANGED - the example o compilation of loop specification
 
-\section{Bytecode Specification Language (BCL)}\label{bcSpecLg}
+\section{Bytecode Specification Language (BCSL)}\label{bcSpecLg}
 Traditionally a lot of research has been done in the field of program verification for structured program languages~\cite{WPCDS},
 ~\cite{DisDij}. This explains the fact that the existing specification languages are designed for dealing with high level program languages. In order to verify 
 a program w.r.t. to some property, usually the property is expressed in a suitable specification language.
@@ -85,15 +85,22 @@ This section explains how high level program specifications are compiled into by
 
 Before going farther we give a brief description of the class file format. As defined by the Java virtual machine  specification (JVMS) \cite{VMSpec}, a class file contains a definition of a single class class or interface. It contains information about the class name, interfaces implemented by the class, super class, methods and fields declared in the class and references. The JVMS mandate that the class file contains data structure usually referred as the \textbf{constant\_pool} table which is used to construct the runtime constant pool upon class or interface creation. The runtime constant pool serves for loading, linking and resolution of references used in the class. The JVMS allows to add to the class file a user specific information(~\cite{VMSpec}, ch.4.7.1). This is done by defining user specific attributes  (their structure is predefined by JVMS).
 
-Thus the ``JML compiler'' compiles the JML source specification into a user defined attributes. The compilation process has three stages:
+Thus the ``JML compiler'' compiles the JML source specification into user defined attributes. The compilation process has three stages:
 \begin{enumerate}
 \item compile the Java source file. This can be done by any Java compiler that supplies for every method in the generated class file the \textbf{Line\_Number\_Table} and \textbf{Local\_Variable\_Table}  attributes.
  The presence in the Java class file format of these attribute is optional \cite{VMSpec}. The \textbf{Line\_Number\_Table} describes the link between the source line and the bytecode of a method.  The \textbf{Local\_Variable\_Table} describes the local variables that appear in a method. This attribute is important for the next phase of the JML compilation.
 \item from the source file and the resulting class file compile the JML specification. In this phase Java and JML source identifiers are linked with their identifiers on bytecode level, namely with the corresponding indexes either from the constant pool or the array of local variables described in the \textbf{Local\_Variable\_Table} attribute. It is also in this phase that the specification parts like the loop invariants and the assertions which must hold at a certain source program point must be associated to the respective program point on bytecode level. The specification
 is compiled standardly in binary form using tags. Basically the compilation of an expression is a tag followed by the compilation of its subexpressions. 
-
-\todo{example for the compilation rule for a specific expression. Explain that the expressions are compiled in binary using tags }
-
+Thus for example the loop invariant specified in JML for the method \texttt{replace} at ~\fig{replaceSrc} is :
+$$
+\begin{array}{l}
+\register{3} <= length(\#19(local(0) \wedge \\
+\register{3} >= 0  \wedge \\ 
+       \forall  var_0:int  (  0 <= var_0 \wedge var_0 < \register{3}  \Rightarrow \\
+                \Myspace \Myspace \Myspace \#19(local(0)[var_0] \neq local(1) )
+\end{array}
+$$
+From the example you can see that local variables and  fields are respectively linked to the index of the register table for the method and to the corresponding index of the constant pool table. 
 \item add the JML compilation in the class file as user defined attributes. Method specifications, class invariants, loop invariants are 
 newly defined attributes in the class file.
  For example, the specification of all the loops in a method are compiled to a unique method attribute: whose syntax is given at fig.~\ref{loopAttribute}. This attribute is an array of data structures each describing a single loop from the method source code. Also for each loop in the source code there must be a corresponding element in the array. 

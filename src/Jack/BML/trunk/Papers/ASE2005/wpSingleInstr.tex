@@ -20,8 +20,8 @@ the stack \stack{\counter}.
 
 $$
 \begin{array}{l}
-\wpi(\instr{Type\_return} , \psi, \excPost) =  \\
- \Myspace \psi[\backslash \jmlKey{result} \leftarrow \stack{\counter}] \\
+\wpi(\instr{iinc} \  i , \psi, \excPost) =  \\
+ \Myspace \psi[\register{i} \leftarrow \register{i} + 1 ] \\
 \\
 \wpi(\instr{Type\_load} \ i, \psi, \excPost) =  \\
 \Myspace \psi[\counter \ \leftarrow \ \counter+1] [\stack{\counter+1} \ \leftarrow \ \register{i}] \\
@@ -91,7 +91,7 @@ Method calls are substituted by their specification. Method specification is a c
 must be established by the caller at the program point where the method is invoked and its postcondition is assumed to hold after the invocation. Thus the rule for
 invocation on an instance non void method is given at the fig ~\ref{wpInv}. In the precondition of the called method the formal parameters and the object on which the method is called are substituted with the first \textit{n+1} elements from the top of stack. As the method returns a value the JML keyword 
 \jmlKey{ $\backslash$ result} if present in the postcondition of the called method is substituted with a fresh variable $fresh\_var$ and as the result is put after the execution of the invocation at the top stack $fresh\_var$ is substituted in the postcondition $\psi$. The resulting predicate is quantified over the 
-expressions that may be modified by the called method. Here we omit the case when the invocation result in an exception for reasons of limited space. 
+expressions that may be modified by the called method. Here we omit the case when the method calls results in an exception for reasons of limited space. 
 The rule for static methods is rather the same except for the number of stack elements taken from the stack.  
 
 \begin{figure}[!ht]
@@ -103,10 +103,12 @@ $$
  \forall m_{i}. ( i = 1 .. s ) \\
  ( \\
 \psi^{post}(m) \\
-\phantom{\psi^{post}}[\register{i}  \leftarrow \stack{\counter - i + numArgs(method(ind) ) } ]_{i=0}^n  \\
-\phantom{\psi^{post}} [\tt{\backslash result} \leftarrow fresh\_var] \\
+\Myspace [\register{i}  \leftarrow \stack{\counter - i + numArgs(method(ind) ) } ]_{i=0}^n  \\
+%\phantom{\psi^{post}}
+\Myspace  [\tt{\backslash result} \leftarrow fresh\_var] \\
 \Rightarrow \psi[\counter \leftarrow \counter - numArgs(m)]\\
-\phantom{\Rightarrow \psi} [\stack{\counter }  \leftarrow fresh\_var] \\
+%\phantom{\Rightarrow \psi}
+ \Myspace  [\stack{\counter }  \leftarrow fresh\_var] \\
 ) \\
 %[e_{i} \rightarrow m_{i}]_{i = 1}^s \\
 \end{array} \\

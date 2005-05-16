@@ -10,29 +10,35 @@ Both the cyclic and acyclic graphs of the bytecode of method \texttt{isMember} a
 \begin{figure}[p]
 \begin{center}
 \begin{tabular}{rl}
- 0 & iconst\_0 \\
- 1 & istore\_2 \\
- 2 & iconst\_0 \\
- 3 & istore\_2 \\
- 4 & goto 14 \\
- 5 & aload\_0 \\
- 6 & getfield \#19 <test/ListArray.list> \\
- 7 & iload\_2 \\
- 8 & aaload \\
- 9 & aload\_1 \\
-10 & if\_acmpne 13 \\
-11 & iconst\_1 \\
-12 & ireturn \\
-13 & iinc 2 by 1 \\
-14 & iload\_2 \\
-15 & aload\_0 \\
-16 & getfield \#19 <test/ListArray.list> \\
-17 & arraylength \\
-18 & if\_icmplt 5  \\
-19 & iconst\_0 \\
-20 & ireturn \\
+ 1 iconst_0
+ 2 istore_3 
+ 3 iconst_0 
+ 4 istore_3 
+ 5 goto 29 
+ 6 aload_0
+ 7 getfield #19 <test/ListArray.list> 
+ 8 iload_3 
+ 9 aaload 
+10 aload_1 
+11 if_acmpne 26
+12 aload_0 
+13 getfield #19 <test/ListArray.list>
+14 iload_3 
+15 aload_2 
+16 aastore 
+17 iconst_1 
+18 ireturn 
+19 iinc 3 by 1 
+20 iload_3 
+21 aload_0 
+22 getfield #19 <test/ListArray.list> 
+23 arraylength  
+24 if_icmplt 7  
+25 iconst_0  
+26 ireturn  
 \end{tabular}
 \end{center}
 \caption{the bytecode of method \texttt{isMember}}
 \label{isMemBC}
 \end{figure}
+
