@@ -492,7 +492,9 @@ public class RefinementSequence extends CompilationUnit {
           found = true;
         }
         if (!found) {
-          if (true || addNewItems) {
+          if (tde instanceof ConstructorDecl && ((ConstructorDecl)tde).implicit){
+             // skip - don't add in implicit constructors
+          } else if (true || addNewItems) {
             td.elems.addElement(tde);
             tde.setParent(td);
           } else {
