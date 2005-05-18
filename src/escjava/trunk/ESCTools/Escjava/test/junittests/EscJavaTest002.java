@@ -7,12 +7,10 @@
 // This test includes a simple object invariant that is established
 // by a member initializer and maintained by the class's single method.
 
-package escjava.testsuite;
-
 
 public class EscJavaTest002 {
   int n = 0;
-  /*@ invariant 0 <= n */
+  /*@ invariant 0 <= n; */
 
   void inc() {
     n++;

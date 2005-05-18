@@ -4,7 +4,7 @@ class CausedAnErrorOnce01 {
   int instancevar;
 
   public static int m1(fieldref o) {
-    //@ assume o != null
+    //@ assume o != null;
     return fieldref.classvar + o.classvar + o.instancevar;
   }
 

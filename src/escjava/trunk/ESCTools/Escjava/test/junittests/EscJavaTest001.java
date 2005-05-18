@@ -10,9 +10,6 @@
 // A negative version of this test is found in TestJavaBad000.
 
 
-package escjava.testsuite;
-
-
 public class EscJavaTest001 {
   int m(int x, int y) {
     if (y == 0) {

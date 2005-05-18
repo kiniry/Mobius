@@ -10,8 +10,6 @@
 // A positive version of this test is found in TestJavaTest001.
 
 
-package escjava.testsuite;
-
 
 public class EscJavaBad000 {
   int m(int x, int y) {

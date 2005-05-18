@@ -4,8 +4,6 @@
 // Revision history:
 //   27 Feb 1998  rustan     Created
 
-package escjava.testsuite;
-
 
 public class EscJavaTest000 {
   int x;
