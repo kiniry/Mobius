@@ -25,18 +25,29 @@ Sub: Sub() ...
 Inheritance ...
     [TIME]
 
+Inheritance: Inheritance() ...
+    [TIME]  passed immediately
+
 Inheritance: mm(Super) ...
+    [TIME]  passed
+
+Inheritance: m3(Super) ...
 ------------------------------------------------------------------------
-Inheritance.java:18: Warning: Possible assertion failure (Assert)
-            //@ assert s.m() == 0;          // Line D // FIXME - can't ...
+Inheritance.java:26: Warning: Possible assertion failure (Assert)
+            //@ assert s.m() == 0;         // FIXME should be ok
                 ^
 Execution trace information:
-    Executed then branch in "Inheritance.java", line 14, col 30.
+    Executed then branch in "Inheritance.java", line 25, col 30.
 
 ------------------------------------------------------------------------
     [TIME]  failed
 
-Inheritance: Inheritance() ...
-    [TIME]  passed
+Inheritance: m2(Super) ...
+------------------------------------------------------------------------
+Inheritance.java:31: Warning: Possible assertion failure (Assert)
+        //@ assert s.m() == 0; // ERROR
+            ^
+------------------------------------------------------------------------
+    [TIME]  failed
   [TIME total]
-1 warning
+2 warnings
