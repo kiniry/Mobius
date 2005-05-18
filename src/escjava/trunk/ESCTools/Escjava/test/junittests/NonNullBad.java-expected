@@ -6,20 +6,20 @@ NonNullBad.java:18: Caution: The non_null annotation is ignored because this met
         public void m(/*@ non_null */ Object o, /*@ non_null */ Object ...
                           ^
 NonNullBad.java:23: Associated declaration: 
-        public void m(Object o, /*@ non_null */ Object oo, /*@ non_nul ...
+        public void m(Object o, /*@ non_null */ Object oo, Object ooo) ...
                       ^
 NonNullBad.java:5: Caution: The non_null annotation is ignored because this method overrides a method declaration in which this parameter is not declared non_null: 
         public void m(/*@ non_null */ Object o,
                           ^
 NonNullBad.java:23: Associated declaration: 
-        public void m(Object o, /*@ non_null */ Object oo, /*@ non_nul ...
+        public void m(Object o, /*@ non_null */ Object oo, Object ooo) ...
                       ^
 NonNullBad.java:7: Caution: The non_null annotation is ignored because this method overrides a method declaration in which this parameter is not declared non_null: 
                         /*@ non_null */ Object ooo);
                             ^
-NonNullBad.java:13: Associated declaration: 
- ... ject o, /*@ non_null */ Object oo, Object ooo);
-                                        ^
+NonNullBad.java:23: Associated declaration: 
+        public void m(Object o, /*@ non_null */ Object oo, Object ooo) ...
+                                                           ^
   Prover started:TIME
     [TIME]
 

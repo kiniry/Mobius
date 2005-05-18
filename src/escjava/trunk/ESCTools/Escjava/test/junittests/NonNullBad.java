@@ -15,11 +15,11 @@ class NonNullBadS {
 }
 
 interface NonNullBadI extends NonNullBadII {
-	public void m(/*@ non_null */ Object o, /*@ non_null */ Object oo, /*@ non_null */ Object ooo);
+	public void m(/*@ non_null */ Object o, /*@ non_null */ Object oo,  Object ooo);
 
 }
 
 interface NonNullBadII {
-	public void m(Object o, /*@ non_null */ Object oo, /*@ non_null */ Object ooo);
+	public void m(Object o, /*@ non_null */ Object oo, Object ooo);
 
 }
