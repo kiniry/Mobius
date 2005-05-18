@@ -16,7 +16,10 @@ public class MethodInSpec {
 	*/
 
 	//@ ensures fact(3) == 6;
-	void mf() {} // FAILS - recursive
+	void mf() {} // OK
+
+	//@ ensures fact(3) == 5;
+	void mff() {} // FAILS
 
 	//@ ensures meth2(0) == 3;
 	void mr() {} // OK

@@ -83,7 +83,7 @@ class NonNull
 
    void foo(Object x /*@ non_null */)
     /*@ pure */
-    /*@ requires (/*boolean*/ (\lblneg Pre:0.32.16 (/*boolean*/ (/*boolean*/ (/*NonNull*/ this) instanceof NonNull) && (/*boolean*/ (/*java.lang.Object*/ x:32.34) != (/*null*/ null))))); */
+    /*@ requires (/*boolean*/ (\lblneg NonNull:0.32.16 (/*boolean*/ (/*java.lang.Object*/ x:32.34) != (/*null*/ null)))); */
     /*@ signals_only (java.lang.Exception) (/*boolean*/ (/*boolean*/ \old((/*boolean*/ (/*boolean*/ (/*NonNull*/ this) instanceof NonNull) && (/*boolean*/ (/*java.lang.Object*/ x:32.34) != (/*null*/ null))))) ==> (/*boolean*/ false)); */
     /*@ diverges (/*boolean*/ (/*boolean*/ \old((/*boolean*/ (/*boolean*/ (/*NonNull*/ this) instanceof NonNull) && (/*boolean*/ (/*java.lang.Object*/ x:32.34) != (/*null*/ null))))) ==> (/*boolean*/ false)); */
     /*@ modifies (/*boolean*/ \old((/*boolean*/ (/*boolean*/ (/*NonNull*/ this) instanceof NonNull) && (/*boolean*/ (/*java.lang.Object*/ x:32.34) != (/*null*/ null))))) ==> ((/*UNAVAILABLE*/ \nothing)); @*/ 
@@ -96,7 +96,7 @@ class NonNull
 
    void foo2(Object x /*@ non_null */)
     /*@ pure */
-    /*@ requires (/*boolean*/ (\lblneg Pre:0.39.17 (/*boolean*/ (/*boolean*/ (/*NonNull*/ this) instanceof NonNull) && (/*boolean*/ (/*java.lang.Object*/ x:39.35) != (/*null*/ null))))); */
+    /*@ requires (/*boolean*/ (\lblneg NonNull:0.39.17 (/*boolean*/ (/*java.lang.Object*/ x:39.35) != (/*null*/ null)))); */
     /*@ signals_only (java.lang.Exception) (/*boolean*/ (/*boolean*/ \old((/*boolean*/ (/*boolean*/ (/*NonNull*/ this) instanceof NonNull) && (/*boolean*/ (/*java.lang.Object*/ x:39.35) != (/*null*/ null))))) ==> (/*boolean*/ false)); */
     /*@ diverges (/*boolean*/ (/*boolean*/ \old((/*boolean*/ (/*boolean*/ (/*NonNull*/ this) instanceof NonNull) && (/*boolean*/ (/*java.lang.Object*/ x:39.35) != (/*null*/ null))))) ==> (/*boolean*/ false)); */
     /*@ modifies (/*boolean*/ \old((/*boolean*/ (/*boolean*/ (/*NonNull*/ this) instanceof NonNull) && (/*boolean*/ (/*java.lang.Object*/ x:39.35) != (/*null*/ null))))) ==> ((/*UNAVAILABLE*/ \nothing)); @*/ 

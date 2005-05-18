@@ -1,55 +1,55 @@
-ModE.java:37: Error: There is no assignable clause allowing this method call
+ModE.java:37: Warning: Possible violation of modifies clause (Modifies)
                 ModE e = new ModE();  // WARNING
                                  ^
-ModE.java:7: Associated declaration: 
+Associated declaration is "ModE.java", line 7, col 14:
         //@ modifies \everything;
                      ^
-ModE.java:35: Associated declaration: 
+Associated declaration is "ModE.java", line 35, col 5:
         //@ modifies \nothing;
             ^
-ModE.java:38: Error: There is no assignable clause allowing this method call
+ModE.java:38: Warning: Possible violation of modifies clause (Modifies)
                 e.me();  // WARNING
                     ^
-ModE.java:21: Associated declaration: 
+Associated declaration is "ModE.java", line 21, col 14:
         //@ modifies \everything;
                      ^
-ModE.java:35: Associated declaration: 
+Associated declaration is "ModE.java", line 35, col 5:
         //@ modifies \nothing;
             ^
-ModE.java:39: Error: There is no assignable clause allowing this method call
+ModE.java:39: Warning: Possible violation of modifies clause (Modifies)
                 e = new ModE(1,2,3);  // WARNING
                             ^
-ModE.java:19: Associated declaration: 
+Associated declaration is "ModE.java", line 19, col 1:
         public ModE(int i, int j, int k);
         ^
-ModE.java:35: Associated declaration: 
+Associated declaration is "ModE.java", line 35, col 5:
         //@ modifies \nothing;
             ^
-ModE.java:40: Error: There is no assignable clause allowing this method call
+ModE.java:40: Warning: Possible violation of modifies clause (Modifies)
                 e.md();  // WARNING
                     ^
-ModE.java:30: Associated declaration: 
+Associated declaration is "ModE.java", line 30, col 1:
         public void md();
         ^
-ModE.java:35: Associated declaration: 
+Associated declaration is "ModE.java", line 35, col 5:
         //@ modifies \nothing;
             ^
-ModE.java:47: Error: There is no assignable clause allowing this method call
+ModE.java:47: Warning: Possible violation of modifies clause (Modifies)
                 e = new ModE(5);  // WARNING
                             ^
-ModE.java:10: Associated declaration: 
+Associated declaration is "ModE.java", line 10, col 14:
         //@ modifies \not_specified;
                      ^
-ModE.java:44: Associated declaration: 
+Associated declaration is "ModE.java", line 44, col 5:
         //@ modifies \nothing;
             ^
-ModE.java:48: Error: There is no assignable clause allowing this method call
+ModE.java:48: Warning: Possible violation of modifies clause (Modifies)
                 e.mns();  // WARNING
                      ^
-ModE.java:27: Associated declaration: 
+Associated declaration is "ModE.java", line 27, col 14:
         //@ modifies \not_specified;
                      ^
-ModE.java:44: Associated declaration: 
+Associated declaration is "ModE.java", line 44, col 5:
         //@ modifies \nothing;
             ^
-6 errors
+6 warnings

@@ -7,13 +7,14 @@ CONX.java:40: Associated declaration:
 CONX.java:16: Associated declaration: 
         //@ modifies \nothing;
             ^
-CONX.java:28: Error: There is no assignable clause allowing this method call
+CONX.java:28: Warning: Possible violation of modifies clause (Modifies)
                 Object oo = new CONX(o); // WARNING
                                     ^
-CONX.java:48: Associated declaration: 
+Associated declaration is "CONX.java", line 48, col 14:
         //@ modifies CONX.*;
                      ^
-CONX.java:26: Associated declaration: 
+Associated declaration is "CONX.java", line 26, col 5:
         //@ modifies \nothing;
             ^
-2 errors
+1 warning
+1 error

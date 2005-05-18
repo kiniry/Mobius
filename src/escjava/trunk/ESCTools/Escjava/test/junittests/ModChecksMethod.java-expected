@@ -6,28 +6,32 @@ ModChecksMethod ...
     [TIME]
 
 ModChecksMethod: mnothing() ...
-ModChecksMethod.java:20: Error: There is no assignable clause allowing this method call
+------------------------------------------------------------------------
+ModChecksMethod.java:20: Warning: Possible violation of modifies clause (Modifies)
             pe(); // WARNING
               ^
-ModChecksMethod.java:245: Associated declaration: 
+Associated declaration is "ModChecksMethod.java", line 245, col 14:
         //@ modifies \everything;
                      ^
-ModChecksMethod.java:18: Associated declaration: 
+Associated declaration is "ModChecksMethod.java", line 18, col 5:
         //@ modifies \nothing;
             ^
-    [TIME]  passed
+------------------------------------------------------------------------
+    [TIME]  failed
 
 ModChecksMethod: mnothingA() ...
-ModChecksMethod.java:24: Error: There is no assignable clause allowing this method call
+------------------------------------------------------------------------
+ModChecksMethod.java:24: Warning: Possible violation of modifies clause (Modifies)
             pi(); // WARNING
               ^
-ModChecksMethod.java:242: Associated declaration: 
+Associated declaration is "ModChecksMethod.java", line 242, col 14:
         //@ modifies i;
                      ^
-ModChecksMethod.java:22: Associated declaration: 
+Associated declaration is "ModChecksMethod.java", line 22, col 5:
         //@ modifies \nothing;
             ^
-    [TIME]  passed
+------------------------------------------------------------------------
+    [TIME]  failed
 
 ModChecksMethod: mnothingB() ...
     [TIME]  passed
@@ -89,28 +93,32 @@ Associated declaration is "ModChecksMethod.java", line 42, col 5:
     [TIME]  failed
 
 ModChecksMethod: mnothingG() ...
-ModChecksMethod.java:48: Error: There is no assignable clause allowing this method call
+------------------------------------------------------------------------
+ModChecksMethod.java:48: Warning: Possible violation of modifies clause (Modifies)
             pTstar(); // WARNING
                   ^
-ModChecksMethod.java:278: Associated declaration: 
+Associated declaration is "ModChecksMethod.java", line 278, col 14:
         //@ modifies ModChecksMethod.*;
                      ^
-ModChecksMethod.java:46: Associated declaration: 
+Associated declaration is "ModChecksMethod.java", line 46, col 5:
         //@ modifies \nothing;
             ^
-    [TIME]  passed
+------------------------------------------------------------------------
+    [TIME]  failed
 
 ModChecksMethod: mnothingH() ...
-ModChecksMethod.java:52: Error: There is no assignable clause allowing this method call
+------------------------------------------------------------------------
+ModChecksMethod.java:52: Warning: Possible violation of modifies clause (Modifies)
             pATstar(); // WARNING
                    ^
-ModChecksMethod.java:275: Associated declaration: 
+Associated declaration is "ModChecksMethod.java", line 275, col 14:
         //@ modifies ModChecksMethodA.*;
                      ^
-ModChecksMethod.java:50: Associated declaration: 
+Associated declaration is "ModChecksMethod.java", line 50, col 5:
         //@ modifies \nothing;
             ^
-    [TIME]  passed
+------------------------------------------------------------------------
+    [TIME]  failed
 
 ModChecksMethod: meverything() ...
     [TIME]  passed
@@ -133,28 +141,32 @@ Associated declaration is "ModChecksMethod.java", line 74, col 5:
     [TIME]  failed
 
 ModChecksMethod: mi2() ...
-ModChecksMethod.java:80: Error: There is no assignable clause allowing this method call
+------------------------------------------------------------------------
+ModChecksMethod.java:80: Warning: Possible violation of modifies clause (Modifies)
             pe(); // WARNING
               ^
-ModChecksMethod.java:245: Associated declaration: 
+Associated declaration is "ModChecksMethod.java", line 245, col 14:
         //@ modifies \everything;
                      ^
-ModChecksMethod.java:78: Associated declaration: 
+Associated declaration is "ModChecksMethod.java", line 78, col 5:
         //@ modifies i;
             ^
-    [TIME]  passed
+------------------------------------------------------------------------
+    [TIME]  failed
 
 ModChecksMethod: mi3() ...
-ModChecksMethod.java:84: Error: There is no assignable clause allowing this method call
+------------------------------------------------------------------------
+ModChecksMethod.java:84: Warning: Possible violation of modifies clause (Modifies)
             o.pe(); // WARNING
                 ^
-ModChecksMethod.java:245: Associated declaration: 
+Associated declaration is "ModChecksMethod.java", line 245, col 14:
         //@ modifies \everything;
                      ^
-ModChecksMethod.java:82: Associated declaration: 
+Associated declaration is "ModChecksMethod.java", line 82, col 5:
         //@ modifies i;
             ^
-    [TIME]  passed
+------------------------------------------------------------------------
+    [TIME]  failed
 
 ModChecksMethod: mi3A() ...
 ------------------------------------------------------------------------
@@ -213,28 +225,32 @@ Associated declaration is "ModChecksMethod.java", line 98, col 5:
     [TIME]  failed
 
 ModChecksMethod: mi3E() ...
-ModChecksMethod.java:104: Error: There is no assignable clause allowing this method call
+------------------------------------------------------------------------
+ModChecksMethod.java:104: Warning: Possible violation of modifies clause (Modifies)
             pTstar(); // WARNING
                   ^
-ModChecksMethod.java:278: Associated declaration: 
+Associated declaration is "ModChecksMethod.java", line 278, col 14:
         //@ modifies ModChecksMethod.*;
                      ^
-ModChecksMethod.java:102: Associated declaration: 
+Associated declaration is "ModChecksMethod.java", line 102, col 5:
         //@ modifies i;
             ^
-    [TIME]  passed
+------------------------------------------------------------------------
+    [TIME]  failed
 
 ModChecksMethod: mi3F() ...
-ModChecksMethod.java:108: Error: There is no assignable clause allowing this method call
+------------------------------------------------------------------------
+ModChecksMethod.java:108: Warning: Possible violation of modifies clause (Modifies)
             pATstar(); // WARNING
                    ^
-ModChecksMethod.java:275: Associated declaration: 
+Associated declaration is "ModChecksMethod.java", line 275, col 14:
         //@ modifies ModChecksMethodA.*;
                      ^
-ModChecksMethod.java:106: Associated declaration: 
+Associated declaration is "ModChecksMethod.java", line 106, col 5:
         //@ modifies i;
             ^
-    [TIME]  passed
+------------------------------------------------------------------------
+    [TIME]  failed
 
 ModChecksMethod: mii() ...
     [TIME]  passed
@@ -254,40 +270,46 @@ Associated declaration is "ModChecksMethod.java", line 117, col 5:
     [TIME]  failed
 
 ModChecksMethod: mtstarA() ...
-ModChecksMethod.java:124: Error: There is no assignable clause allowing this method call
+------------------------------------------------------------------------
+ModChecksMethod.java:124: Warning: Possible violation of modifies clause (Modifies)
             pTstar(); // WARNING
                   ^
-ModChecksMethod.java:278: Associated declaration: 
+Associated declaration is "ModChecksMethod.java", line 278, col 14:
         //@ modifies ModChecksMethod.*;
                      ^
-ModChecksMethod.java:122: Associated declaration: 
+Associated declaration is "ModChecksMethod.java", line 122, col 5:
         //@ modifies this.*;
             ^
-    [TIME]  passed
+------------------------------------------------------------------------
+    [TIME]  failed
 
 ModChecksMethod: mtstarB() ...
-ModChecksMethod.java:128: Error: There is no assignable clause allowing this method call
+------------------------------------------------------------------------
+ModChecksMethod.java:128: Warning: Possible violation of modifies clause (Modifies)
             o.pTstar(); // WARNING
                     ^
-ModChecksMethod.java:278: Associated declaration: 
+Associated declaration is "ModChecksMethod.java", line 278, col 14:
         //@ modifies ModChecksMethod.*;
                      ^
-ModChecksMethod.java:126: Associated declaration: 
+Associated declaration is "ModChecksMethod.java", line 126, col 5:
         //@ modifies this.*;
             ^
-    [TIME]  passed
+------------------------------------------------------------------------
+    [TIME]  failed
 
 ModChecksMethod: mtstarC() ...
-ModChecksMethod.java:132: Error: There is no assignable clause allowing this method call
+------------------------------------------------------------------------
+ModChecksMethod.java:132: Warning: Possible violation of modifies clause (Modifies)
             pATstar(); // WARNING
                    ^
-ModChecksMethod.java:275: Associated declaration: 
+Associated declaration is "ModChecksMethod.java", line 275, col 14:
         //@ modifies ModChecksMethodA.*;
                      ^
-ModChecksMethod.java:130: Associated declaration: 
+Associated declaration is "ModChecksMethod.java", line 130, col 5:
         //@ modifies this.*;
             ^
-    [TIME]  passed
+------------------------------------------------------------------------
+    [TIME]  failed
 
 ModChecksMethod: mTstar() ...
 ------------------------------------------------------------------------
@@ -321,16 +343,18 @@ ModChecksMethod: mTstarB() ...
     [TIME]  passed
 
 ModChecksMethod: mTstarC() ...
-ModChecksMethod.java:153: Error: There is no assignable clause allowing this method call
+------------------------------------------------------------------------
+ModChecksMethod.java:153: Warning: Possible violation of modifies clause (Modifies)
             pATstar(); // WARNING
                    ^
-ModChecksMethod.java:275: Associated declaration: 
+Associated declaration is "ModChecksMethod.java", line 275, col 14:
         //@ modifies ModChecksMethodA.*;
                      ^
-ModChecksMethod.java:151: Associated declaration: 
+Associated declaration is "ModChecksMethod.java", line 151, col 5:
         //@ modifies ModChecksMethod.*;
             ^
-    [TIME]  passed
+------------------------------------------------------------------------
+    [TIME]  failed
 
 ModChecksMethod: mATstar() ...
 ------------------------------------------------------------------------
@@ -361,28 +385,32 @@ Associated declaration is "ModChecksMethod.java", line 161, col 5:
     [TIME]  failed
 
 ModChecksMethod: mATstarB() ...
-ModChecksMethod.java:168: Error: There is no assignable clause allowing this method call
+------------------------------------------------------------------------
+ModChecksMethod.java:168: Warning: Possible violation of modifies clause (Modifies)
             pTstar(); // WARNING
                   ^
-ModChecksMethod.java:278: Associated declaration: 
+Associated declaration is "ModChecksMethod.java", line 278, col 14:
         //@ modifies ModChecksMethod.*;
                      ^
-ModChecksMethod.java:166: Associated declaration: 
+Associated declaration is "ModChecksMethod.java", line 166, col 5:
         //@ modifies ModChecksMethodA.*;
             ^
-    [TIME]  passed
+------------------------------------------------------------------------
+    [TIME]  failed
 
 ModChecksMethod: mATstarC() ...
-ModChecksMethod.java:173: Error: There is no assignable clause allowing this method call
+------------------------------------------------------------------------
+ModChecksMethod.java:173: Warning: Possible violation of modifies clause (Modifies)
             o.pTstar(); // WARNING
                     ^
-ModChecksMethod.java:278: Associated declaration: 
+Associated declaration is "ModChecksMethod.java", line 278, col 14:
         //@ modifies ModChecksMethod.*;
                      ^
-ModChecksMethod.java:171: Associated declaration: 
+Associated declaration is "ModChecksMethod.java", line 171, col 5:
         //@ modifies ModChecksMethodA.*;
             ^
-    [TIME]  passed
+------------------------------------------------------------------------
+    [TIME]  failed
 
 ModChecksMethod: mATstarD() ...
     [TIME]  passed
@@ -574,16 +602,18 @@ ModChecksMethod.java:282: Associated declaration:
     [TIME]  passed
 
 ModChecksMethod: mcnothing() ...
-ModChecksMethod.java:289: Error: There is no assignable clause allowing this method call
+------------------------------------------------------------------------
+ModChecksMethod.java:289: Warning: Possible violation of modifies clause (Modifies)
             new ModChecksMethod(0); // WARNING 
                                ^
-ModChecksMethod.java:297: Associated declaration: 
+Associated declaration is "ModChecksMethod.java", line 297, col 14:
         //@ modifies \everything;
                      ^
-ModChecksMethod.java:287: Associated declaration: 
+Associated declaration is "ModChecksMethod.java", line 287, col 5:
         //@ modifies \nothing;
             ^
-    [TIME]  passed
+------------------------------------------------------------------------
+    [TIME]  failed
 
 ModChecksMethod: mcnothingA() ...
     [TIME]  passed
@@ -624,16 +654,18 @@ ModChecksMethod: parangeC() ...
     [TIME]  passed immediately
 
 ModChecksMethod: mstatic() ...
-ModChecksMethod.java:336: Error: There is no assignable clause allowing this method call
+------------------------------------------------------------------------
+ModChecksMethod.java:336: Warning: Possible violation of modifies clause (Modifies)
                 new ModChecksMethod(null); // WARNING
                                    ^
-ModChecksMethod.java:339: Associated declaration: 
+Associated declaration is "ModChecksMethod.java", line 339, col 29:
         //@ modifies ModChecksMethod.si;
                                     ^
-ModChecksMethod.java:334: Associated declaration: 
+Associated declaration is "ModChecksMethod.java", line 334, col 5:
         //@ modifies \nothing;
             ^
-    [TIME]  passed
+------------------------------------------------------------------------
+    [TIME]  failed
 
 ModChecksMethod: ModChecksMethod(java.lang.Object) ...
     [TIME]  passed immediately
@@ -681,16 +713,18 @@ ModChecksMethod: mstaticA() ...
     [TIME]  passed
 
 ModChecksMethod: mstaticB() ...
-ModChecksMethod.java:381: Error: There is no assignable clause allowing this method call
+------------------------------------------------------------------------
+ModChecksMethod.java:381: Warning: Possible violation of modifies clause (Modifies)
                 pstaticB();  // WARNING
                         ^
-ModChecksMethod.java:371: Associated declaration: 
+Associated declaration is "ModChecksMethod.java", line 371, col 14:
         //@ modifies ModChecksMethod.*;
                      ^
-ModChecksMethod.java:379: Associated declaration: 
+Associated declaration is "ModChecksMethod.java", line 379, col 5:
         //@ modifies ModChecksMethodZ.*;
             ^
-    [TIME]  passed
+------------------------------------------------------------------------
+    [TIME]  failed
   [TIME total]
 
 ModChecksMethodA ...
@@ -712,5 +746,5 @@ ModChecksMethodZ: ModChecksMethodZ(int) ...
 ModChecksMethodZ: ModChecksMethodZ(double) ...
     [TIME]  passed immediately
   [TIME total]
-24 warnings
-20 errors
+41 warnings
+3 errors

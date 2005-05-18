@@ -14,7 +14,7 @@ public class CONX {
 	}
 
 	//@ modifies \nothing;
-	void mm() {
+	static void mm() {
 		Object o = new CONX(0); // WARNING
 	}
 

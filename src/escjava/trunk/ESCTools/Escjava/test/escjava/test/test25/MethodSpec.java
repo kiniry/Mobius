@@ -37,4 +37,5 @@ ESC/Java2 combines them as
 which is
 	requires true;
 	ensures \result <= 0;
+and is not verifiable
 */

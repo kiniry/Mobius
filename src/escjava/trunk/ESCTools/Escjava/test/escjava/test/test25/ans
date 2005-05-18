@@ -4,12 +4,6 @@ MethodCall.java:48: Warning: Precondition possibly not established (Pre)
 Associated declaration is "MethodCall.java", line 9, col 8:
     //@ requires arg<x;
         ^
-MethodSpec.java:21: Warning: Postcondition possibly not established (Post)
-    int foo(int arg) { return arg; }
-                                   ^
-Associated declaration is "MethodSpec.java", line 20, col 13:
-    //@ also ensures \result<=0;
-             ^
 MiscFields.java:29: Warning: Possible violation of object invariant (Invariant)
     MiscFieldsUser2() {}                // error
                        ^
@@ -58,4 +52,4 @@ SuperClass.java:22: Warning: Possible violation of object invariant (Invariant)
 Associated declaration is "SuperClass.java", line 3, col 8:
     //@ invariant x!=0;
         ^
-10 warnings
+9 warnings

@@ -26,13 +26,15 @@ ModelVarState: mmm() ...
     [TIME]  passed
 
 ModelVarState: mmmm() ...
-ModelVarState.java:34: Error: There is no assignable clause allowing this assignment
+------------------------------------------------------------------------
+ModelVarState.java:34: Warning: Possible violation of modifies clause (Modifies)
                 sz = 2;  // ERROR - no modifies
                 ^
-ModelVarState.java:32: Associated declaration: 
+Associated declaration is "ModelVarState.java", line 32, col 5:
         //@ modifies \nothing;
             ^
-    [TIME]  passed
+------------------------------------------------------------------------
+    [TIME]  failed
 
 ModelVarState: m5() ...
     [TIME]  passed
@@ -40,5 +42,4 @@ ModelVarState: m5() ...
 ModelVarState: ModelVarState() ...
     [TIME]  passed
   [TIME total]
-1 warning
-1 error
+2 warnings

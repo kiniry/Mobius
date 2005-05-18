@@ -94,7 +94,7 @@ Hotspot.java:190: Warning: Possible assignment of null to variable declared non_
 Associated declaration is "Hotspot.java", line 25, col 16:
   Object nn /*@ non_null */;
                 ^
-Hotspot.java:196: Warning: Precondition possibly not established (Pre)
+Hotspot.java:196: Warning: Possible assignment of null to variable declared non_null (NonNull)
     mNonNullParam(o, (5 < 2 ? p : o));  // this is not
                  ^
 Associated declaration is "Hotspot.java", line 193, col 35:

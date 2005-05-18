@@ -38,7 +38,7 @@ NonNull: NonNull(non_null) ...
 
 NonNull: p() ...
 ------------------------------------------------------------------------
-NonNull.java:20: Warning: Precondition possibly not established (Pre)
+NonNull.java:20: Warning: Possible assignment of null to variable declared non_null (NonNull)
                 m(o);
                  ^
 Associated declaration is "NonNull.java", line 11, col 19:
@@ -63,7 +63,7 @@ NonNull: p3() ...
 
 NonNull: p4() ...
 ------------------------------------------------------------------------
-NonNull.java:34: Warning: Precondition possibly not established (Pre)
+NonNull.java:34: Warning: Possible assignment of null to variable declared non_null (NonNull)
                 q(o);
                  ^
 Associated declaration is "NonNull.java", line 8, col 24:
@@ -74,7 +74,7 @@ Associated declaration is "NonNull.java", line 8, col 24:
 
 NonNull: r() ...
 ------------------------------------------------------------------------
-NonNull.java:40: Warning: Precondition possibly not established (Pre)
+NonNull.java:40: Warning: Possible assignment of null to variable declared non_null (NonNull)
                 q(o);
                  ^
 Associated declaration is "NonNull.java", line 8, col 24:

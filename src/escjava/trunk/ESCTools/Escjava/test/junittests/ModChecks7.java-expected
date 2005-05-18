@@ -46,10 +46,11 @@ ModChecks7: mo1() ...
     [TIME]  passed
 
 ModChecks7: mo2() ...
-ModChecks7.java:44: Error: There is no assignable clause allowing this assignment
+------------------------------------------------------------------------
+ModChecks7.java:44: Warning: Possible violation of modifies clause (Modifies)
                 o = oo;
                 ^
-ModChecks7.java:42: Associated declaration: 
+Associated declaration is "ModChecks7.java", line 42, col 5:
         //@ modifies o.i;
             ^
 ------------------------------------------------------------------------
@@ -63,13 +64,14 @@ Associated declaration is "ModChecks7.java", line 42, col 5:
     [TIME]  failed
 
 ModChecks7: mo3() ...
-ModChecks7.java:50: Error: There is no assignable clause allowing this assignment
+------------------------------------------------------------------------
+ModChecks7.java:50: Warning: Possible violation of modifies clause (Modifies)
                 o = oo;
                 ^
-ModChecks7.java:48: Associated declaration: 
+Associated declaration is "ModChecks7.java", line 48, col 5:
         //@ modifies oo.i;
             ^
-    [TIME]  passed
+------------------------------------------------------------------------
+    [TIME]  failed
   [TIME total]
-3 warnings
-2 errors
+5 warnings

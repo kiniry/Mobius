@@ -9,37 +9,37 @@ ModN: mok() ...
     [TIME]  passed
 
 ModN: m() ...
-ModN.java:18: Error: There is no assignable clause allowing this assignment
+------------------------------------------------------------------------
+ModN.java:18: Warning: Possible violation of modifies clause (Modifies)
                 j = 0;
                 ^
-ModN.java:16: Associated declaration: 
+Associated declaration is "ModN.java", line 16, col 5:
         //@ modifies i,k;
             ^
-    [TIME]  passed
+------------------------------------------------------------------------
+    [TIME]  failed
 
 ModN: mm() ...
-ModN.java:26: Error: There is no assignable clause allowing this assignment
+------------------------------------------------------------------------
+ModN.java:26: Warning: Possible violation of modifies clause (Modifies)
                 k = 0;
                 ^
-ModN.java:21: Associated declaration: 
+Associated declaration is "ModN.java", line 21, col 5:
         //@ modifies i;
             ^
-    [TIME]  passed
+------------------------------------------------------------------------
+    [TIME]  failed
 
 ModN: mmm() ...
-ModN.java:34: Error: There is no assignable clause allowing this assignment
+------------------------------------------------------------------------
+ModN.java:34: Warning: Possible violation of modifies clause (Modifies)
                 m = 0;
                 ^
-ModN.java:29: Associated declaration: 
+Associated declaration is "ModN.java", line 29, col 5:
         //@ modifies i;
             ^
-ModN.java:34: Error: There is no assignable clause allowing this assignment
-                m = 0;
-                ^
-ModN.java:32: Associated declaration: 
-        //@ modifies i,k;
-            ^
-    [TIME]  passed
+------------------------------------------------------------------------
+    [TIME]  failed
 
 ModN: p() ...
 ------------------------------------------------------------------------
@@ -72,16 +72,17 @@ Execution trace information:
     [TIME]  failed
 
 ModN: pa() ...
-ModN.java:62: Error: There is no assignable clause allowing this assignment
+------------------------------------------------------------------------
+ModN.java:62: Warning: Possible violation of modifies clause (Modifies)
                 a = null;
                 ^
-ModN.java:60: Associated declaration: 
+Associated declaration is "ModN.java", line 60, col 5:
         //@ modifies i;
             ^
-    [TIME]  passed
+------------------------------------------------------------------------
+    [TIME]  failed
 
 ModN: ModN() ...
     [TIME]  passed
   [TIME total]
-2 warnings
-5 errors
+6 warnings
