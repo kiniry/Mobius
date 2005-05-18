@@ -26,20 +26,22 @@ the stack \stack{\counter}.
 
 $$
 \begin{array}{l}
-\wpi(\instr{iinc} \  i , \psi, \excPost) =  \\
- \Myspace \psi[\register{i} \leftarrow \register{i} + 1 ] \\
+\wpi(\instr{iinc} \  i , \ \psi, \ \excPost) = \psi[\register{i} \leftarrow \register{i} + 1 ] \\
 \\
-\wpi(\instr{Type\_load} \ i, \psi, \excPost) =  \\
+\wpi(\instr{Type\_load} \ i, \ \psi, \ \excPost) =  \\
 \Myspace \psi[\counter \ \leftarrow \ \counter+1] [\stack{\counter+1} \ \leftarrow \ \register{i}] \\
- \Myspace where \ i \  is \ a \ valid \ entry \ in \\
- \ the \ list \  of \  local \ variables   \\
+ \Myspace \texttt{where} \ i \ \texttt{is a valid local variable index}   \\
 \\ 
-\wpi(\instr{putField}\texttt{Cl.f}, \psi, \excPost) = \\
-   ( \Myspace \stack{\counter -1} \not= \Mynull \\
-   \Myspace  \Myspace \Rightarrow \psi[\counter \leftarrow \counter-2 ] \\
-   \Myspace  \Myspace [\texttt{Cl.f} \leftarrow \texttt{Cl.f}(\oplus [\stack{\counter - 1} \rightarrow \stack{\counter}] ) ]\\
-   \Myspace  \wedge  \\
-   \Myspace  \stack{counter-1} = \Mynull \Rightarrow \excPost(\tt{NullPointer}) \\ 
+\wpi(\instr{putField} \ \texttt{Cl.f}, \ \psi, \ \excPost) = \\
+\begin{array}{l}
+\begin{array}{l}
+   (\stack{\counter -1} \not= \Mynull \Rightarrow  \\
+   \begin{array}{l} \psi [\counter \leftarrow \counter-2 ] \\[0 mm] 
+   \Myspace  [\texttt{Cl.f} \leftarrow \texttt{Cl.f}\oplus [\stack{\counter -1} \rightarrow \stack{\counter}] ] )\ \wedge 
+\end{array}
+\end{array}
+   \\
+   \stack{\counter-1} = \Mynull \Rightarrow \excPost(\tt{NullPointerException}) \end{array}
  \end{array} $$
 
 %\texttt{wp(if\_acmpeq n , $\psi$)} =  \texttt{(Stack(t)==Stack(t-1)} $\Rightarrow$ $\psi(n)$ \texttt{[t$\leftarrow$t-2]\\
@@ -64,7 +66,7 @@ The definition of overriding expression is given in fig.~\ref{override}.
 
 \begin{figure}
 $$
- \texttt{Cl.f}(\oplus[e2 \rightarrow e1])(o) = \left\{ \begin{array} {ll}
+ (\texttt{Cl.f} \oplus[e2 \rightarrow e1])(o) = \left\{ \begin{array} {ll}
 						       e1 & if \ e2 = o \\
 					               \texttt{Cl.f}(o)	& else 
 	\end{array}\right. 
@@ -103,24 +105,20 @@ The rule for static methods is rather the same except for the number of stack el
 \begin{figure}[!ht]
 $$
 \begin{array}{l}
-\wpi(\instr{invoke} \ m, \psi ,\excPost) =\\ 
+\wpi(\instr{invoke} \ m, \ \psi ,\ \excPost) =\\ 
 \begin{array}{l}
-\psi^{pre}(m) \wedge \\
- \forall m_{i}. ( i = 1 .. s ) \\
- ( \\
+\psi^{pre}(m) \ \wedge \\
+ \forall_{j = 1..s} m_{j}.( \\
 \psi^{post}(m) \\
-\Myspace [\register{i}  \leftarrow \stack{\counter - i + numArgs(m) } ]_{i=0}^n  \\
+\Myspace [\register{i}  \leftarrow \stack{\counter \ - i + numArgs(m)}]_{i=0}^n  \\
 %\phantom{\psi^{post}}
 \Myspace  [\tt{\backslash result} \leftarrow fresh\_var] \\
-\Rightarrow \psi[\counter \leftarrow \counter - numArgs(m)]\\
-%\phantom{\Rightarrow \psi}
- \Myspace  [\stack{\counter }  \leftarrow fresh\_var] \\
-) \\
+\Rightarrow \psi[\counter \leftarrow \counter - \tt{numArgs}(m)][\stack{\counter }  \leftarrow \tt{fresh\_var}]) \\
 %[e_{i} \rightarrow m_{i}]_{i = 1}^s \\
-\end{array} \\
+\end{array} \\[15 mm]
 \psi^{pre}(m) - the \ specified \ precondition \ of \ method \ m \\
 \psi^{post}(m) - the \ specified \ postcondition \ of \ method \ m \\
-m_{i} , i = 1 .. s - the \ locations \ modified \ by \ method \ m
+m_{j} , j = 1 .. s - the \ locations \ modified \ by \ method \ m
 \end{array}
 $$
 \caption{\wpi \ rule for a call to an instance method}
