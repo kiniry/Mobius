@@ -1,6 +1,6 @@
 
 \subsection{The Control Flow graph}\label{abstrCntrFlow}
-In this section we discuss how the control flow graph of a bytecode is transformed in an acyclic control flow graph. As we assume that the bytecode is provided 
+In this section we discuss how the control flow graph of a bytecode is transformed in an acyclic control flow graph. We assume that the bytecode is provided 
 with sufficient specification and in particular loop invariants. Under the assumption for invariant presence we may ``cut'' the control flow graph at every program point
 where an invariant must hold and ``place'' at that point the invariant. This needs the introduction of several definitions.
 
@@ -12,14 +12,14 @@ where an invariant must hold and ``place'' at that point the invariant. This nee
      
  A method body is an array of bytecode instructions that is denoted with $i$ and the $k-th$ instruction
  in the bytecode is  denoted with $i_{k}$.
- We denote by $\Gamma  = ( \Omega, \execRel)$ the control flow graph of abytecode where the set of nodes $\Omega$ is the set of basic blocks of the bytecode.
+% We denote by $\Gamma  = ( \Omega, \execRel)$ the control flow graph of abytecode where the set of nodes $\Omega$ is the set of basic blocks of the bytecode.
  We assume that method's bytecode has exactly one entry point(every execution of a method starts at the entry point instruction) and we denote it with $i_{\tt{entry}}$.  Using standard terminology \cite{ARUCom1986}, a
 basic block is a code segment that has no unconditional jump or
 conditional branch statements except for possibly the last
 statement, and none of its statements, except possibly the first,
 is a target of any jump or branch statement. 
  We denote a block starting at instruction  $i_{j}$ with $\blockm{j}$.The block starting at the entry instruction is denoted with $\blockm{entry}$.
- The execution relation  $\blockm{j} \execRel \blockm{k}$  states that block $\blockm{k}$ may be executed immediately after $\blockm{j}$ in some execution path of the method. For example  if  instruction $\tt{i_{k}}$ = \texttt{athrow} then 
+ The execution relation  $\blockm{j} \execRel \blockm{k}$  states that block $\blockm{k}$ may be executed immediately after $\blockm{j}$ in some execution path of the method. For example if  instruction $\tt{i_{k}}$ = \texttt{athrow} is the last of the block $\blockm{j}$ then 
 $\blockm{j} \execRel \blockm{n}$, where  $\blockm{n}$ is the first block of an exception handler that protects $\tt{i_{k}}$ 
 % Definition \ref{execRel} states formally the execution relation.
 % \begin{defn}[Execution relation between blocks]\label{execRel}
@@ -39,11 +39,12 @@ $\blockm{j} \execRel \blockm{n}$, where  $\blockm{n}$ is the first block of an e
 %\end{tabbing}
 %\end{defn}
 
-We say that there exists a path between $\blockm{i}$ and $\blockm{j}$ and we note it with  $\pathm{i}{j}$, if there exists blocks 
-$\blockm{s_{1}}... \blockm{s_{n}}$ such that $\blockm{i} \execRel \blockm{s_{1}} \execRel \blockm{s_{2}}... \blockm{s_{n}} \execRel  \blockm{j}$
+%We say that there exists a path between $\blockm{i}$ and $\blockm{j}$ and we note it with  $\pathm{i}{j}$, if there exists blocks 
+%$\blockm{s_{1}}... \blockm{s_{n}}$ such that $\blockm{i} \execRel \blockm{s_{1}} \execRel \blockm{s_{2}}... \blockm{s_{n}} \execRel  \blockm{j}$
+
 \begin{defn}[Loop Definition]
 \label{defLoop}
-Let's have a well formed program $\Pi$. We say that $\blockm{s}$ is the entry block of loop $l$ in $\Pi$ and $\blockm{e}$ is the end block of $l$ if:
+Let's have a bytecode program. We say that $\blockm{s}$ is the entry block of loop $l$ in $\Pi$ and $\blockm{e}$ is the end block of $l$ if:
 \begin{itemize}
 \item every path in the control flow graph starting at the entry block $\blockm{entry}$ of $\Pi$ and that reaches $\blockm{e}$, passes through  $\blockm{s}$ 
   i.e.$ \blockm{entry} \execRel^{*}  \blockm{s} \execRel^{*} \blockm{e}$
@@ -51,11 +52,13 @@ Let's have a well formed program $\Pi$. We say that $\blockm{s}$ is the entry bl
 \end{itemize}
 \end{defn}
 %\subsection{Acyclic control flow graph} \label{graph}
-We consider the acyclic graph $\Gamma^A = ( \Omega, \execRel^A)$ obtained from the control flow graph 
-$\Gamma  = ( \Omega, \execRel)$ of a well formed bytecode $ \Pi $ where the relation $\execRel^A$ is a subset of the  execution relation $\execRel$.
+We abstract the execution relation $\execRel$ to the acyclic execution relation $\execRel^A$ as follows. 
+%We consider the acyclic graph $\Gamma^A = ( \Omega, \execRel^A)$ obtained from the control flow graph 
+%$\Gamma  = ( \Omega, \execRel)$ of a well formed bytecode $ \Pi $ where the relation $\execRel^A$ is a subset of the  execution relation $\execRel$.
+
 \begin{defn}[Acyclic Execution relation]
 \label{acyclicExRel}
-Let's have the well formed bytecode program $\Pi$ and let have in $\Pi$ the two blocks  $\blockm{i} $ and   $\blockm{j}$. We say 
+Let's have a bytecode and let's have in it the two basic blocks  $\blockm{i} $ and   $\blockm{j}$. We say 
 that $\blockm{i} \execRel^A \blockm{j}$ iff
 \begin{itemize}
 \item $\blockm{i} \execRel \blockm{j}$
@@ -63,18 +66,8 @@ that $\blockm{i} \execRel^A \blockm{j}$ iff
 \end{itemize}
 \end{defn}
 
-% 0 & iconst\_0\\ 
-% 1 & istore\_2\\
- %2 & iload\_1\\
- %%3 & istore\_3\\%[-2mm]
-% 4 & goto 13 (+9)\\%[-2mm]
-% 7 & iinc 2 by 1\\%[-2mm]
-%10 & iinc 1 by 254\\%[-2mm]
-%13 & iload\_1\\%[-2mm]
-%14 & iconst\_1\\%[-2mm]
-%15 & if\_icmpgt 7 (-8)\\%[-2mm]
-%%18 & iload\_2\\%[-2mm]
-%19 & ireturn\\%[-2mm]
+We give at fig.~\ref{blockBC} the control flow graph of the method replace given earlier in fig.~\ref{replaceSrc}. The figure shows that the acyclic relation
+excludes edges between loop entry and loop end blocks and that at that place the corresponding loop invariant must hold.  
 
 \begin{figure}[p]
 \begin{center}

@@ -3,7 +3,7 @@
 \section{Bytecode Specification Language (BCSL)}\label{bcSpecLg}
 %Traditionally a lot of research has been done in the field of program verification for structured program languages~\cite{WPCDS},
 %~\cite{DisDij}. This explains the fact that the existing specification languages are designed for dealing with high level program languages. 
-In this section we propose a bytecode specification language which we call BCSL. We define a compiler from the high level specification language JML to BCSL. The specification compilation results in a class file extension. In the next subsections we give the grammar of BCSL and scatch how the specification compilation is done.
+In this section we propose a bytecode specification language which we call BCSL. We define a compiler from the high level specification language JML to BCSL. The specification compilation results in a class file extension. In the next subsections we give the grammar of BCSL and scatch specification compiler.
 
 %In order to verify 
 %a program w.r.t. to some property, usually the property is expressed in a suitable specification language.
@@ -12,7 +12,7 @@ In this section we propose a bytecode specification language which we call BCSL.
 % Here comes the need for writing specification on  bytecode level.
 
 
-\subsection{Grammar} 
+\subsection{Grammar} \label{grammar}
 We propose a bytecode level specification language which corresponds to a representative subset of JML.
 We sketch the bytecode specification language grammar at \fig~\ref{bclGrammar}. We omit some of the definitions 
 because of space limitations,
@@ -75,13 +75,13 @@ $$ \begin{array}{l}
  (their semantics is the same as in JML~\cite{RT03djml} , ~\cite{JMLRefMan}).
   
  We can specify using the specification clause \jmlKey{exsures} what is the postcondition of  a method in case it terminates with 
- an exception  \texttt{ExceptionClass}.The special keyword \texttt{EXC} stands for the thrown exception object.
+ an exception  \texttt{ExceptionClass}. If the postcondition states something about the exception object thrown then the special keyword \texttt{EXC} is used.
  
 As shown by the grammar BCSL allows us to specify different method specification cases separated by the keyword \jmlKey{also} - this means that 
  method caller has to satisfy the disjunction of the preconditions in the specification cases  and the method's implementation 
  has to guarantee the postcondition of every specification case given that the corresponding precondition held in the prestate.
 The rules for loop specifications and assertions say at what point in the bytecode they must hold. Among the expressions that are handled (almost all are also handled
-by JML) we have $\counter$ and \stack{\ArithExpr}  which respectively stand for the stack counter and an element on the stack at position \ArithExpr. These expressions do not appear in the precondition and postcondition specification of a method. Later we shall see how stack expressions are used.
+by JML) we have $\counter$ and \stack{\ArithExpr}  which respectively stand for the stack counter and an element on the stack at position \ArithExpr. These expressions do not appear in the precondition and postcondition specification of a method. Later we shall see how the they are used.
  
  
 \subsection{Compiling JML into bytecode specification language}\label{comJML}

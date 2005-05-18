@@ -4,7 +4,7 @@ We define a weakest precondition (\wpi) predicate transformer function which tak
 from exception types to predicates $\excPost$ ( it returns the specified postcondition in the \jmlKey{exsures} clause for a given exception see section ~\ref{bclGrammar}).
 The \wpi \ function returns the weakest predicate such that if it holds in the state when the instruction starts its execution 
 \begin{enumerate}
-	\item if the instruction terminates its execution normally the predicate $\psi$ holds in the poststate 
+	\item if the instruction terminates its execution normally the predi $\psi$ holds in the poststate 
 	\item if it terminates with an exception \texttt{E} then the predicate $\excPost(\tt{E})$ holds in the poststate.
 \end{enumerate}
  Thus the signature of \wpi \ is:
@@ -109,7 +109,7 @@ $$
  \forall m_{i}. ( i = 1 .. s ) \\
  ( \\
 \psi^{post}(m) \\
-\Myspace [\register{i}  \leftarrow \stack{\counter - i + numArgs(method(ind) ) } ]_{i=0}^n  \\
+\Myspace [\register{i}  \leftarrow \stack{\counter - i + numArgs(m) } ]_{i=0}^n  \\
 %\phantom{\psi^{post}}
 \Myspace  [\tt{\backslash result} \leftarrow fresh\_var] \\
 \Rightarrow \psi[\counter \leftarrow \counter - numArgs(m)]\\
@@ -120,8 +120,7 @@ $$
 \end{array} \\
 \psi^{pre}(m) - the \ specified \ precondition \ of \ method \ m \\
 \psi^{post}(m) - the \ specified \ postcondition \ of \ method \ m \\
-m_{i} , i = 1 .. s - the \ locations \\
-\phantom{m_{i} , i = 1 .. s   } modified \ by \ method \ m
+m_{i} , i = 1 .. s - the \ locations \ modified \ by \ method \ m
 \end{array}
 $$
 \caption{\wpi \ rule for a call to an instance method}
