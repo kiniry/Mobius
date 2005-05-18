@@ -24,7 +24,7 @@ TestObject.java:86: Warning: Possible assertion failure (Assert)
 TestObject.java:122: Warning: Postcondition possibly not established (Post)
     } // ERROR - must either be a Cloneable or throw a CloneNotSupport ...
     ^
-Associated declaration is "ESCTOOLSROOT/specs/java/lang/Object.spec", line 130, col 23:
+Associated declaration is "ESCTOOLSROOT/specs/java/lang/Object.spec", line 129, col 23:
       @ also protected exceptional_behavior ...
                        ^
 Execution trace information:

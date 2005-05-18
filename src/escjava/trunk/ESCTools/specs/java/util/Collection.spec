@@ -151,7 +151,9 @@ public interface Collection {
        
     /*@ public normal_behavior
       @   requires a!= null;
-      @   requires elementType <: \elemtype(\typeof(a));
+      @   //requires elementType <: \elemtype(\typeof(a));
+      @   requires (\forall Object o; containsObject(o);
+      @                                \typeof(o) <: \elemtype(\typeof(a)));
       @   {|
       @     requires content.theSize <= a.length;
       @     assignable a[*];
@@ -175,7 +177,7 @@ public interface Collection {
       @ also
       @ public exceptional_behavior
       @   requires a != null;
-      @   requires !(elementType <: \elemtype(\typeof(a)));
+      @   //requires !(elementType <: \elemtype(\typeof(a)));
       @   requires !(\forall Object o; containsObject(o);
       @                                \typeof(o) <: \elemtype(\typeof(a)));
       @   assignable a[*];
