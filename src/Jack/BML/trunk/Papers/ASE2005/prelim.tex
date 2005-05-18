@@ -2,18 +2,27 @@
 \section{A quick overview of JML}\label{prelim}
 JML (short for Java Modeling Language) is a behavioral interface specification language tailored to Java applications ~\cite{JMLRefMan}. JML is developed 
 following the design by contract approach,~\cite{M97oos} where classes are annotated with class invariants and method pre- and postconditions. Specification
-inside methods is also possible - for example one can specify loop invariants, or assertions - predicates that must hold at specific program points. 
+inside methods is also possible for example one can specify loop invariants, or assertions  predicates that must hold at specific program points. 
 %In particular class invariants are properties that must hold at every visible state of a class instance or simply class respectively, history constraints - a property that is a relation between the prestate and poststate of a method, method  pre and postconditions, loop invariants - the predicate that must hold at every program state where the loop is entered, frame conditions - the list of expression that a method modifies, termination conditions - an expression from a well founded set that can be proven to decrease , etc.
 
-JML specifications are written in comments so they are not visible by Java compilers. JML clauses are introduced by 
-special JML keywords. For example \jmlKey{requires} and \jmlKey{ensures} stand for method precondition and postcondition respectively, \jmlKey{modifies} for specifying which publicly visible locations are modified by the method, \jmlKey{loop\_invariant} for loop invariants, \jmlKey{loop\_modifies} for the locations modified by loop invariants  etc. The JML's syntax is close to the Java's syntax - the greatest part of the JML expressions form a subset of Java expressions except for some keywords. For example \jmlKey{$\backslash$result} stands for the value that a method returns if it is not void, \jmlKey{$\backslash$old(expression)} designates the value of \texttt{expression} in the prestate of a method and is usually used in the method's postcondition. JML also allows the declaration of special JML variables, that are used only for specification purposes. 
+JML specifications are written as comments so they are not visible by Java compilers. The JML's syntax is close to the 
+ Java's syntax - the greatest part of the JML expressions form a subset of Java expressions except for some keywords.
+ For introducing method precondition and postcondition one has to use  \jmlKey{requires} and \jmlKey{ensures} respectively ,
+  \jmlKey{modifies} is followed by all the publicly visible locations that can be modified by the method, 
+  \jmlKey{loop\_invariant} stands for loop invariants, \jmlKey{loop\_modifies} gives  the locations modified by loop invariants etc. 
+  The latter not standard in JML; this is an extension introduced in  ~\cite{BRL-JACK}. JML also supports special specification
+  key words. For example \jmlKey{$\backslash$result} stands for the value that a method returns if it is not void, \jmlKey{$\backslash$old(expression)} 
+  designates the value of \texttt{expression} in the prestate of a method and is usually used in the method's postcondition. 
+  JML also allows the declaration of special JML variables, that are used only for specification purposes. 
 These variables are declared in comments with the \jmlKey{model} modificator and may be used only in specification clauses. 
 
-JML is basically used for either static checking of Java programs such as JACK ~\cite{BR02jack}, the Loop tool, ESC/Java ~\cite{escjava} or dynamic checking as the assertion checker jmlrac ~\cite{jmlrac}. An overview of the JML tools can be found in~\cite{BurdyCCEKLLP03}.
+JML can be used for either static checking of Java programs such as JACK ~\cite{BR02jack}, the Loop tool, 
+ESC/Java ~\cite{escjava} or dynamic checking as the assertion checker jmlrac ~\cite{jmlrac}. An overview of the JML tools can 
+be found in~\cite{BurdyCCEKLLP03}.
      
 Figure ~\ref{halfSrc} gives an example of a Java class that models a list stored in a private array field. 
 The method \texttt{replace} will search in the array for the first occurence of the object \texttt{o} passed as first argument and if found it will be replaced with the 
-the object passes as second argument and the method returns true; otherwise it returns false. The loop in the method body has an invariant - all
+the object passed as second argument and the method returns true; otherwise it returns false. The loop in the method body has an invariant - all
 the elements of the list that are inspected up to now are different from the parameter object \texttt{o}. The loop specification also states
 that the local variable \texttt{i} is modified in the loop.
   %//@requires list != null;

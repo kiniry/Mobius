@@ -1,14 +1,50 @@
 \section{Related Work} \label{relWork}
     
+Related works exist in several directions -  logic for unstructured program languages,  attaching specification to the compiled code, bytecode verification, architecture for
+checking untrusted components.
 
-Several works have been dedicated to the definition of bytecode logic.
- \cite{Quigley} defines a Hoare logics for bytecode programs. This work is limited to a subset of the Java virtual machine instructions and does not treat for example method calls, neither exceptional termination. The logic is defined by searching a structure in the bytecode control flow graph, which gives an issue to complex rules.
+Floyd is among the first to work on program verification for unstructured languages (see \ref{F67amp}).
+Few works have been dedicated to the definition of a bytecode logic. In \cite{Quigley}, Quigley defines a Hoare logics for bytecode programs. 
+ This work is limited to a subset of the Java virtual machine instructions and does not treat for example method calls, 
+ neither exceptional termination. The logic is defined by searching a structure in the bytecode control flow graph, 
+ which gives an issue to complex rules.
 
-A work close to ours is presented in \cite{BM05plb}. The authors define a Hoare logic over a bytecode language with objects and  exceptions. A compiler from source proofs into bytecode proofs is defined. As in the present work, they assume that the bytecode has passed the bytecode verification certification. The bytecode logic aims to express functional properties. To our knowledge subroutines are not treated. Invariants are inferred by fixpoint calculation differently from the approach presented here where invariants are compiled from the high level JML specification see section \ref{comJML}. However infering invariants is not decidable problem. Their work is inspired by~\cite{B04tlsj}. In the latter a bytecode logic is defined which checks both for well - typedness and functional correctness. ~\cite{B04tlsj} works on a stack language which does not support objects, references, exceptions and subroutines. 
+A work close to ours is presented by P.Muller and F.Bannwart in \cite{BM05plb}. The authors define a Hoare logic over a 
+bytecode language with objects and  exceptions. A compiler from source proofs into bytecode proofs is also defined. 
+As in the present work, they assume that the bytecode has passed the bytecode verification certification. The bytecode logic aims to 
+express functional properties. To our knowledge subroutines are not treated. Invariants are inferred by fixpoint calculation differently 
+from the approach presented here where invariants are compiled from the high level JML specification see section \ref{comJML}. 
+However infering invariants is not decidable problem. Their work is inspired by the Nick Benton's work (see ~\cite{B04tlsj}). 
+In the latter a bytecode logic for a stack based language is defined which checks programs both for well - typedness and functional correctness. 
+ The language does not support objects, references, exceptions neither subroutines. 
 
-In ~\cite{WildmoserN-ESOP05} a  framework is described for verifying Jinja (a Java subset) bytecode against arithmetic overflow. Anyways the annotation is written manually which is not comfortable especially on bytecode. Here we propose a way to compile a specification written in a high level language thus leaving the specification to be written on high level which is convenient.
+In ~\cite{WildmoserN-ESOP05} a  framework is described for verifying Jinja (a Java subset) bytecode against arithmetic overflow. 
+Anyways the annotation is written manually which is not comfortable especially on bytecode. 
+Here we propose a way to compile a specification written in a high level language thus leaving the specification to be written on 
+high level which is convenient.
 
-The Spec\# programming system developed at Microsoft,~\cite{BLS04sp} - a superset of the C\# programming language, with a built-in  specification language,
- proposes a verification framework (there is a choice to perform the checks either at runtime or statically). The static verification procedure  involves translation of the specification into metadata which is attached to the compiled bytecode and the verification is performed over the bytecode by the Boogie theorem prover. \todo{say much about Spec\#}
+In the field of specification compilation we can mention the Spec\# programming system developed at Microsoft,
+~\cite{BLS04sp}. Spec\#  is a superset of the C\# programming language, with a built-in  specification language,
+ proposes a verification framework (there is a choice to perform the checks either at runtime or statically). 
+ The static verification procedure  involves translation of the specification into metadata which is attached to the intermediate code 
+ and the verification is performed over the bytecode by the Boogie theorem prover.
+
+ Bytecode verification is concerned with establishing that a bytecode is well typed 
+(every instruction is applied to operands of the correct type) and well formed 
+(e.g. no jumps to an un-existing bytecode index), differently from the goals of the present
+work where program correctness is defined in terms of functional correctness. The Java Virtual Machine (JVM), for example, is provided with a bytecode verifier. 
+The field is well researched and for more information one can look at~\ref{Ljbc}.  
+
+Another topic related to the present work is PCC.
+ PCC and the certifying compiler were proposed by Necula (see \cite{Necula97}, \cite{ComNec}, \cite{DesNecLee98}). PCC is an architecture for establishing trust in untrusted code 
+in which the code producer supplies a proof for correctness with the code. 
+%In this architecture it is the certifying compiler that infers 
+%automatically a type specification (e.g. loop invariants) and then generates automatically a proof for the code correctness. 
+The initial idea for PCC  was that the producer automatically infers annotation for properties like well typedness, 
+correct read/writes and automatically generates the proof for their correctness using the certifying compiler. 
+Such properties guarantee that a program do the things correctly and not that it does the right things. The present work is targeting at a
+ framework for establishing complex functional and interface properties whose automatic checking is hard and even impossible. 
+ From the above cited works ~\cite{BM05plb} is aiming also at building PCC for
+ guaranteeing not trivial properties. As we stated in section \ref{architecture} in its present stage our framework does not support adding proofs to bytecode 
+ which is a future work. 
  
-From the above cited works - ~\cite{WildmoserN-ESOP05} and ~\cite{BM05plb} are targeting at extending proof carrying code(PCC) architecrture for complex safety and functional properties. PCC and the certifying compiler were proposed by Necula (see \cite{Necula97}, \cite{ComNec}, \cite{DesNecLee98}). PCC is an architecture for establishing trust in untrusted code in which the code producer supplies a proof for correctness with the code. In this architecture it is the certifying compiler that infers automatically a type specification (e.g. loop invariants) and then generates a proof for the code correctness. Then the code issuer generates a proof over the code and the annotation and sends both to the code receiver. The code receiver validates the proof upon its security policy. Thus the client captures (if code and proof are not both changed in a suitable way) tampering in both proof or code. The PCC architecture was designed for assembly language programs and its basic concern is to guarantee properties that are expressible via types - e.g. well typedness, read/writes are done correctly, basically these are properties that guarantee that a program do the things correctly and not that it does the right things. The present work is targeting at a framework for guaranteeing more than program well typedness ( a problem resolved by the Java bytecode verifier), i.e. complex functional properties. In its present stage our framework do not support adding proofs to bytecode which is a future work. 

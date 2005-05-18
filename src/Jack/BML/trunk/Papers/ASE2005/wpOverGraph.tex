@@ -59,15 +59,16 @@ $$
 \item if  $ins_s$ =  \instr{goto n} \\ 
 $\blockPost{i} =  \wpi(\blockSeq{n}, \blockPost{n} , \excPost )$ \\
 
-\item  if  $ins_s$ =  \instr{athrow ExceptionType} \\ 
-if there exists a block $\blockm{e}$ such that 
+\item  if  $ins_s$ =  \instr{athrow} \\ 
+	\begin{enumerate}
+\item if there exists a block $\blockm{e}$ such that 
 $\blockm{i} \execRel^A \blockm{e}$ (i.e. an exception handler protects the type of the exception thrown)
 then :\\
 $\blockPost{i }= \\ \wpi(\blockSeq{e}, \blockPost{e} ,\excPost)[\counter \leftarrow 0][EXC \leftarrow \stack{\counter}] $. \\
-Otherwise if the thrown exception is not handled then $\blockm{i}$ must respect the postcondition determined by
+\item Otherwise if the thrown exception is not handled then $\blockm{i}$ must respect the postcondition determined by
 the exceptional postcondition function $\excPost$ for this exceptional type ( or if not specified for the closest supertype) : \\ 
  $\blockPost{i }= \excPost(\stack{\counter}) [\counter \leftarrow 0][EXC \leftarrow \stack{\counter}] $. \\
-    
+    \end{enumerate}
 %The only thing that is known about the exception thrown is that it is 
  % on the top of the stack $\stack{\counter}$. We keep track of all the possible postconditions (as the exception
 %may be caught by an exception handler starting at $\blockm{e}$ or it is thrown and thus the exceptional postcondition for 
@@ -85,14 +86,17 @@ where $\psi $ is the specified method postcondition.
 
 \end{defn}
 
-\paragraph{\wpi \ for a sequence of bytecode instructions} is calculated standardly applying the standard $\wpi$ rule for compositional statements $\wpi( instrList;i_{j}, \psi,\excPost ) =\wpi(instrList, \wpi(i_{j}, \psi,\excPost )) $. %Calculating the precondition of the sequential part of the block $\blockm{i}$ which we denote with  $\blockSeq{i}$  is standard - the precondition of an instruction  is inferred from the precondition of the previous one.
+\paragraph{\wpi \ for a sequence of bytecode instructions} is calculated applying the standard $\wpi$ rule for compositional statements : 
+$$ \wpi( instrList;i_{j}, \psi,\excPost ) =\wpi(instrList, \wpi(i_{j}, \psi,\excPost )) $$
+
+ %Calculating the precondition of the sequential part of the block $\blockm{i}$ which we denote with  $\blockSeq{i}$  is standard - the precondition of an instruction  is inferred from the precondition of the previous one.
 
 
 Subroutines are treated by in-lining. As we stated in the beginning we assume that the bytecode has been certified by a Java
 bytecode verifier thus our analysis for identifying  subroutines is not a problem.  
 
 
-\paragraph{Verifying Java Bytecode Programs} Bytecode programs represent a set of Java classes. Establishing the correctness of Java bytecode program thus, consists in generating verification conditions for every method appearing in any class of the bytecode program.
+\paragraph{Verifying Java Bytecode Programs} Bytecode programs represent a set of Java classes. Establishing the correctness of Java bytecode program w.r.t. to their specification thus, consists in generating verification conditions for every method appearing in any class of the bytecode program.
 The verification procedure for a method \texttt{m} consists in  calculating the weakest precondition $\wpi(\tt{m})$ upon its specification: precondition $\psi^{pre}(m)$, 
 postcondition $\psi^{post}(\tt{m})$ and the mapping between exceptional types and predicates $\excPost(\tt{m})$ and then prove the condition: 
 $$
@@ -108,7 +112,7 @@ $$
                       1 + \register{3} >= 0)  \wedge \\ 
                         \forall  var_0:int  (  0 <= var_0 \wedge \\
                     \Myspace    var_0 < 1 + \register{3}  \Rightarrow \\
-                \Myspace \Myspace \#19( \register{0})[var_0] \neq \register{1} )
+                \Myspace \Myspace \#19(\register{0})[var_0] \neq \register{1})
 \end{array}
 \right.
 $$

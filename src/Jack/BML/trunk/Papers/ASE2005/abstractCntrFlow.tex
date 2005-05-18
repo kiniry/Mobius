@@ -1,24 +1,25 @@
 
 \subsection{The Control Flow graph}\label{abstrCntrFlow}
-As we  already stated we assume that loops in method bodies are  \textit{annotated} with appropriate invariants. 
-Related works like in \cite{WildmoserN-ESOP05} use different approach where loop invariants are inferred. Anyways inferring invariants is not decidable. 
-Rather we propose the scheme where the programmer writes the invariants during the program development  
-and on compilation time compiles them in BCL. Under the assumption for invariant presence we may ``cut'' the control flow graph at every program point
-where an invariant must hold and ``place'' at that point the invariant. Here we describe which are the points in the bytecode which are "cut". This needs the introduction
-of several definitions.
+In this section we discuss how the control flow graph of a bytecode is transformed in an acyclic control flow graph. As we assume that the bytecode is provided 
+with sufficient specification and in particular loop invariants. Under the assumption for invariant presence we may ``cut'' the control flow graph at every program point
+where an invariant must hold and ``place'' at that point the invariant. This needs the introduction of several definitions.
+
+%As we  already stated we assume that loops in method bodies are  \textit{annotated} with appropriate invariants. 
+%Related works like in \cite{WildmoserN-ESOP05} use different approach where loop invariants are inferred. Anyways inferring invariants is not decidable. 
+%Rather we propose the scheme where the programmer writes the invariants during the program development  
+%and on compilation time compiles them in BCL.. Here we describe which are the points in the bytecode which are "cut". This needs the introduction
+%of several definitions.
      
  A method body is an array of bytecode instructions that is denoted with $i$ and the $k-th$ instruction
  in the bytecode is  denoted with $i_{k}$.
- We denote by $\Gamma  = ( \Omega, \ll)$ the control flow graph of a
-bytecode $\Pi$ where the set of nodes $\Omega$ is the set of
-blocks.. We assume that method's bytecode has exactly one entry point(every execution of a method starts at the entry point instruction) and we denote it with $i_{\tt{entry}}$.  Using standard terminology \cite{ARUCom1986}, a
+ We denote by $\Gamma  = ( \Omega, \execRel)$ the control flow graph of abytecode where the set of nodes $\Omega$ is the set of basic blocks of the bytecode.
+ We assume that method's bytecode has exactly one entry point(every execution of a method starts at the entry point instruction) and we denote it with $i_{\tt{entry}}$.  Using standard terminology \cite{ARUCom1986}, a
 basic block is a code segment that has no unconditional jump or
 conditional branch statements except for possibly the last
 statement, and none of its statements, except possibly the first,
 is a target of any jump or branch statement. 
- We denote a block starting at instruction  $i_{j}$ with $\blockm{j}$.The block starting at the entry instruction is denoted with $\blockm{entry}$. Let's have 
-the bytecode $\Pi$ and the set of its blocks be $\wp$. The execution relation  $\blockm{j} \execRel \blockm{k}$  states that block
-$ \blockm{k}$ may be executed immediately after $\blockm{j}$ in some execution path of the method. For example  if  instruction $\tt{i_{k}}$ = \texttt{athrow} then 
+ We denote a block starting at instruction  $i_{j}$ with $\blockm{j}$.The block starting at the entry instruction is denoted with $\blockm{entry}$.
+ The execution relation  $\blockm{j} \execRel \blockm{k}$  states that block $\blockm{k}$ may be executed immediately after $\blockm{j}$ in some execution path of the method. For example  if  instruction $\tt{i_{k}}$ = \texttt{athrow} then 
 $\blockm{j} \execRel \blockm{n}$, where  $\blockm{n}$ is the first block of an exception handler that protects $\tt{i_{k}}$ 
 % Definition \ref{execRel} states formally the execution relation.
 % \begin{defn}[Execution relation between blocks]\label{execRel}
@@ -49,12 +50,9 @@ Let's have a well formed program $\Pi$. We say that $\blockm{s}$ is the entry bl
 \item $\blockm{e} \execRel \blockm{s}$
 \end{itemize}
 \end{defn}
-
-
-\subsection{Acyclic control flow graph} \label{graph}
+%\subsection{Acyclic control flow graph} \label{graph}
 We consider the acyclic graph $\Gamma^A = ( \Omega, \execRel^A)$ obtained from the control flow graph 
-$\Gamma  = ( \Omega, \execRel)$ of a well formed bytecode $ \Pi $. The set of nodes $\Omega$ is the set of  blocks in the 
-program and the relation  $\execRel^A$ is a subset of the  execution relation $\execRel$.
+$\Gamma  = ( \Omega, \execRel)$ of a well formed bytecode $ \Pi $ where the relation $\execRel^A$ is a subset of the  execution relation $\execRel$.
 \begin{defn}[Acyclic Execution relation]
 \label{acyclicExRel}
 Let's have the well formed bytecode program $\Pi$ and let have in $\Pi$ the two blocks  $\blockm{i} $ and   $\blockm{j}$. We say 
@@ -80,11 +78,15 @@ that $\blockm{i} \execRel^A \blockm{j}$ iff
 
 \begin{figure}[p]
 \begin{center}
-\epsfig{file=graph.eps}
+\epsfig{file=graph1.eps}
 \end{center}
-\caption{bytecode blocks of bytecode at Figure ~\ref{halfBC}}
+dashed arrows stand for the standard execution relation \\ 
+black arrows represent the acyclic execution relation \\
+bytecode basic blocks are placed in boxes \\
+the invariant is placed between the blocks where it must hold
+\caption{control flow graph of method \texttt{replace} from fig. ~\ref{replaceSrc} }
 \label{blockBC}
 \end{figure}
 
-Now a path in $\Gamma^A$  is a list of blocks between which is established a relation $\execRel^A$ and that starts at the entry point instruction and whose last block is a block that does not have next block.
+%Now a path in $\Gamma^A$  is a list of blocks between which is established a relation $\execRel^A$ and that starts at the entry point instruction and whose last block is a block that does not have next block.
 
