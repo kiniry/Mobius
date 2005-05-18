@@ -197,8 +197,12 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
       case TagConstants.NO_WACK_FORALL:
       case TagConstants.OLD:
         write(o, "/*@ "); 
-      write(o, TagConstants.toString(tag)); 
-      write(o, " */");
+        write(o, TagConstants.toString(tag)); 
+        write(o, " */");
+        LocalVarDecl d = ((VarDeclModifierPragma)mp).decl;
+        self.print(o, ind, d, true); 
+        write(o, "; */");
+        break;
       
       case TagConstants.ALSO_ENSURES:
       case TagConstants.ALSO_REQUIRES:
@@ -211,13 +215,14 @@ public class EscPrettyPrint extends DelegatingPrettyPrint {
       case TagConstants.READABLE_IF:
       case TagConstants.REQUIRES:
       case TagConstants.WRITABLE_IF: {
-        Expr e = ((ExprModifierPragma)mp).expr;
         write(o, "/*@ "); 
         if (mp.isRedundant())
           write(o, TagConstants.toString(TagConstants.makeRedundant(tag))); 
         else
           write(o, TagConstants.toString(tag)); 
         write(o, ' ');
+if (!(mp instanceof ExprModifierPragma)) System.out.print("{{{{ " + mp + "}}}}");
+        Expr e = ((ExprModifierPragma)mp).expr;
         self.print(o, ind, e); 
         write(o, "; */");
         break;

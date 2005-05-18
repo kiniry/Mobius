@@ -614,9 +614,11 @@ public class AnnotationHandler {
     ArrayList list = new ArrayList();
     boolean addTypeCheck = (!Modifiers.isStatic(tde.getModifiers()) && tde instanceof MethodDecl);
     TypeSig ts = TypeSig.getSig(tde.parent);
+    int loc = Location.NULL;
 
     while (pos < m.size()) {
       ModifierPragma mp = m.elementAt(pos++);
+      // FIXME - what if some foralls happen after requires - not in scope?
       int tag = mp.getTag();
       if (tag == TagConstants.NO_WACK_FORALL)
           foralls.addElement(((VarDeclModifierPragma)mp).decl);
@@ -624,35 +626,22 @@ public class AnnotationHandler {
           continue;
       if (((ExprModifierPragma)mp).expr.getTag() == TagConstants.NOTSPECIFIEDEXPR)
           continue;
-/*
-      if (addTypeCheck) {
-        Expr e = ThisExpr.make(null, Location.NULL);
-        javafe.tc.FlowInsensitiveChecks.setType(e, ts);
-        e = InstanceOfExpr.make(e, ts, Location.NULL);
-        javafe.tc.FlowInsensitiveChecks.setType(e, Types.booleanType);
-        ((ExprModifierPragma)mp).expr = and(e, ((ExprModifierPragma)mp).expr);
-      }
-*/
+      loc = mp.getStartLoc();
       list.add(forallWrap(foralls, mp));
     }
-    ExprModifierPragma conjunction = and(list);
-    boolean reqIsTrue = conjunction == null || isTrue(conjunction.expr);
-    //boolean reqIsFalse = conjunction != null && isFalse(conjunction.expr);
-    Expr reqexpr = conjunction == null ? null : conjunction.expr;
-    //System.out.println("REQ " + reqexpr);
-    Expr req = T;
     if (addTypeCheck) {
         Expr e = ThisExpr.make(null, Location.NULL);
         javafe.tc.FlowInsensitiveChecks.setType(e, ts);
         e = InstanceOfExpr.make(e, ts, Location.NULL);
         javafe.tc.FlowInsensitiveChecks.setType(e, Types.booleanType);
-        reqexpr = reqexpr == null ? e : and(e,reqexpr);
-        reqIsTrue = false;
+	list.add(0,(ExprModifierPragma.make(TagConstants.REQUIRES,e,loc)));
     }
+    ExprModifierPragma conjunction = and(list);
+    boolean reqIsTrue = conjunction == null || isTrue(conjunction.expr);
+    Expr reqexpr = conjunction == null ? null : conjunction.expr;
+    Expr req = T;
     if (reqexpr != null) {
       ExprVec arg = ExprVec.make(new Expr[] { reqexpr });
-      //req = UnaryExpr.make(TagConstants.PRE, reqexpr, Location.NULL);
-
       req = NaryExpr.make(Location.NULL, reqexpr.getStartLoc(),
           TagConstants.PRE, Identifier.intern("\\old"), arg);
       javafe.tc.FlowInsensitiveChecks.setType(req, Types.booleanType);
