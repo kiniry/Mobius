@@ -624,6 +624,7 @@ public class AnnotationHandler {
           continue;
       if (((ExprModifierPragma)mp).expr.getTag() == TagConstants.NOTSPECIFIEDEXPR)
           continue;
+/*
       if (addTypeCheck) {
         Expr e = ThisExpr.make(null, Location.NULL);
         javafe.tc.FlowInsensitiveChecks.setType(e, ts);
@@ -631,6 +632,7 @@ public class AnnotationHandler {
         javafe.tc.FlowInsensitiveChecks.setType(e, Types.booleanType);
         ((ExprModifierPragma)mp).expr = and(e, ((ExprModifierPragma)mp).expr);
       }
+*/
       list.add(forallWrap(foralls, mp));
     }
     ExprModifierPragma conjunction = and(list);
@@ -639,6 +641,14 @@ public class AnnotationHandler {
     Expr reqexpr = conjunction == null ? null : conjunction.expr;
     //System.out.println("REQ " + reqexpr);
     Expr req = T;
+    if (addTypeCheck) {
+        Expr e = ThisExpr.make(null, Location.NULL);
+        javafe.tc.FlowInsensitiveChecks.setType(e, ts);
+        e = InstanceOfExpr.make(e, ts, Location.NULL);
+        javafe.tc.FlowInsensitiveChecks.setType(e, Types.booleanType);
+        reqexpr = reqexpr == null ? e : and(e,reqexpr);
+        reqIsTrue = false;
+    }
     if (reqexpr != null) {
       ExprVec arg = ExprVec.make(new Expr[] { reqexpr });
       //req = UnaryExpr.make(TagConstants.PRE, reqexpr, Location.NULL);
