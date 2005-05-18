@@ -11,7 +11,6 @@ public class M3String {
   //@ modifies o.owner;
   void m(/*@ non_null @*/ String o) {
 	//@ set o.owner = this;
-	//+@ assume o.stringSeq.length == \old(o.stringSeq.length);
         //@  assume o.charArray.length == \old(o.charArray.length);
   }
 }
