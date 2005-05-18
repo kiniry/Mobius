@@ -20,7 +20,7 @@ JML can be used for either static checking of Java programs such as JACK ~\cite{
 ESC/Java ~\cite{escjava} or dynamic checking as the assertion checker jmlrac ~\cite{jmlrac}. An overview of the JML tools can 
 be found in~\cite{BurdyCCEKLLP03}.
      
-Figure ~\ref{halfSrc} gives an example of a Java class that models a list stored in a private array field. 
+Fig.~\ref{replaceSrc} gives an example of a Java class that models a list stored in a private array field. 
 The method \texttt{replace} will search in the array for the first occurence of the object \texttt{o} passed as first argument and if found it will be replaced with the 
 the object passed as second argument and the method returns true; otherwise it returns false. The loop in the method body has an invariant - all
 the elements of the list that are inspected up to now are different from the parameter object \texttt{o}. The loop specification also states
