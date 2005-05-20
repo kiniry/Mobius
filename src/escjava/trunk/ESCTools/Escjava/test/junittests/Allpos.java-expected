@@ -1,0 +1,19 @@
+ESC/Java version VERSION
+    [TIME]
+
+Allpos ...
+  Prover started:TIME
+    [TIME]
+
+Allpos: Allpos() ...
+    [TIME]  passed immediately
+
+Allpos: allpos(int[], int) ...
+    [TIME]  passed immediately
+
+Allpos: allposLoop(int[]) ...
+    [TIME]  passed
+
+Allpos: allposLoop2(int[]) ...
+    [TIME]  passed
+  [TIME total]

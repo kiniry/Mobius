@@ -794,30 +794,39 @@ public final class Translate
                                         VariableAccess.make(vd.id, sLoop, vd), va)));
     }
 
+
+    ExprVec ev = ExprVec.make(10);
+
     ConditionVec invs = ConditionVec.make();
     for (int i = 0; i < J.size(); i++) {
+      TrAnExpr.initForClause();
       ExprStmtPragma loopinv = J.elementAt(i);
       Expr pred = TrAnExpr.trSpecExpr(loopinv.expr, null, h);  // FIXME - what about formal params in old?
       Condition cond = GC.condition(TagConstants.CHKLOOPINVARIANT,
                                     pred,
                                     loopinv.getStartLoc());
+      if (TrAnExpr.extraSpecs) ev.append(addNewAssumptionsNow());
       invs.addElement(cond);      
     }
 
     DecreasesInfoVec decs = DecreasesInfoVec.make();
     for (int i = 0; i < decreases.size(); i++) {
       ExprStmtPragma d = decreases.elementAt(i);
+      TrAnExpr.initForClause();
       Expr de = TrAnExpr.trSpecExpr(d.expr);  // FIXME - what about old?
       int loc = d.getStartLoc();
       VariableAccess fOld = temporary("decreases", loc, loc);
       DecreasesInfo di = new DecreasesInfo(loc, de, fOld);
+      if (TrAnExpr.extraSpecs) ev.append(addNewAssumptionsNow());
       decs.addElement(di);
     }
 
     ExprVec preds = ExprVec.make();
     for (int i = 0; i < P.size(); i++) {
       ExprStmtPragma looppred = P.elementAt(i);
-      preds.addElement(TrAnExpr.trSpecExpr(looppred.expr, null, h));  // FIXME - what about params?
+      Expr e = TrAnExpr.trSpecExpr(looppred.expr, null, h);  // FIXME - what about params?
+      if (TrAnExpr.extraSpecs) ev.append(addNewAssumptionsNow());
+      preds.addElement(e);
     }
 
     // If we ever implement the "safe" (as opposed to "fast") version of
@@ -831,11 +840,11 @@ public final class Translate
     switch (Main.options().loopTranslation) {
     case Options.LOOP_FAST:
     case Options.LOOP_FALL_THRU:
-      desugarLoopFast(loop);
+      desugarLoopFast(loop,ev);
       break;
 
     case Options.LOOP_SAFE:
-      desugarLoopSafe(loop);
+      desugarLoopSafe(loop,ev);
       break;
 
     default:
@@ -854,7 +863,7 @@ public final class Translate
    * Desugars <code>loop</code> according to the fast option.  In particular, sets
    * <code>loop.desugared</code> to the desugaring.
    */
-  private void desugarLoopFast(LoopCmd loop) {
+  private void desugarLoopFast(LoopCmd loop, ExprVec axs) {
     // A fast-desugared loop has the shape:
     //   var V in  J;B;S;J;B;S;J;..;fail  end
     // where "V" is the list of temporary variables used within the
@@ -876,7 +885,7 @@ public final class Translate
 
     // Build a command that checks loop invariants
     code.push();  // this mark popped below
-    checkLoopInvariants(loop);
+    checkLoopInvariants(loop,axs);
     GuardedCmd J = GC.seq(GuardedCmdVec.popFromStackVector(code));
 
     code.push(); // this mark popped below after for loop
@@ -1060,11 +1069,11 @@ public final class Translate
    * Desugars <code>loop</code> according to the safe option.  In particular, sets
    * <code>loop.desugared</code> to the desugaring.
    */
-  public void desugarLoopSafe(LoopCmd loop) {
+  public void desugarLoopSafe(LoopCmd loop, ExprVec axs) {
     // Build a command that checks loop invariants safely
 
     code.push();  // this mark popped below
-    checkLoopInvariants(loop);
+    checkLoopInvariants(loop,axs);
     code.addElement(GC.fail());
     GuardedCmd checkInvariantsInitially = 
       GC.seq(GuardedCmdVec.popFromStackVector(code));
@@ -1095,6 +1104,7 @@ public final class Translate
         code.addElement(GC.assume(TrAnExpr.targetTypeCorrect(vd, loop.oldmap)));
       }
     }
+    addNewAssumptionsNow(axs);
     for (int i = 0; i < loop.invariants.size(); i++) {
       Condition cond = loop.invariants.elementAt(i);
       code.addElement(GC.assume(cond.pred));
@@ -1107,7 +1117,7 @@ public final class Translate
 
     code.addElement(DynInstCmd.make(UniqName.locToSuffix(loop.getStartLoc()), S));
 
-    checkLoopInvariants(loop);
+    checkLoopInvariants(loop,axs);
     code.addElement(GC.fail());
     GuardedCmd checkInvariantsAfterIteration = 
       GC.seq(GuardedCmdVec.popFromStackVector(code));
@@ -1119,7 +1129,8 @@ public final class Translate
   /**
    * Add to "code" checks for all loop invariants of "loop".
    */
-  private void checkLoopInvariants(/*@ non_null */ LoopCmd loop) {
+  private void checkLoopInvariants(/*@ non_null */ LoopCmd loop, ExprVec axs) {
+    addNewAssumptionsNow(axs);
     for (int i = 0; i < loop.invariants.size(); i++) {
       Condition cond = loop.invariants.elementAt(i);
       addCheck(loop.locHotspot, cond);
@@ -3667,16 +3678,21 @@ public final class Translate
     axsToAdd.addAll(TrAnExpr.trSpecAuxAxiomsNeeded);
     TrAnExpr.closeForClause();
   }
-  void addNewAssumptionsNow() {
+  ExprVec addNewAssumptionsNow() {
     addNewAssumptionsHelper();
     if (TrAnExpr.trSpecAuxAxiomsNeeded != null)
       axsToAdd.addAll(TrAnExpr.trSpecAuxAxiomsNeeded);
     ExprVec ev = ExprVec.make(10);
     GetSpec.addAxioms(axsToAdd,ev);
+    addNewAssumptionsNow(ev);
+    TrAnExpr.closeForClause();
+    return ev;
+  }
+  private void addNewAssumptionsNow(ExprVec ev) {
+    //addNewAssumptionsHelper();
     for (int i=0; i<ev.size(); ++i) {
       addAssumption(ev.elementAt(i));
     }
-    TrAnExpr.closeForClause();
   }
   private void addNewAssumptionsHelper() {
     if (TrAnExpr.trSpecModelVarsUsed != null) {
