@@ -102,7 +102,7 @@ public class Traverse
                 //System.out.println("Loop invariant as expr: "+PrettyPrint.inst.toString(pa.set.get()));
 
 
-                tr.desugarLoopSafe(loop);
+                tr.desugarLoopSafe(loop,ExprVec.make());
                 desugarLoops(loop.desugared, tr);
                 return;
             }
