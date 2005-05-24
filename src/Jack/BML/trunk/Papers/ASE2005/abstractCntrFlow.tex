@@ -1,7 +1,7 @@
 
-\subsection{Abstracting Control Flow graph}\label{abstrCntrFlow}
+\subsection{Abstracting The Control Flow Graph}\label{abstrCntrFlow}
 In this section we discuss how the control flow graph of a bytecode is transformed in an acyclic control flow graph. We assume that the bytecode is provided 
-with sufficient specification and in particular loop invariants. Under the assumption for invariant presence we may ``cut'' the control flow graph at every program point
+with sufficient specification and in particular loop invariants. Under this assumption we can ``cut'' the control flow graph at every program point
 where an invariant must hold and ``place'' at that point the invariant. This needs the introduction of several definitions.
 
 %As we  already stated we assume that loops in method bodies are  \textit{annotated} with appropriate invariants. 
@@ -10,10 +10,9 @@ where an invariant must hold and ``place'' at that point the invariant. This nee
 %and on compilation time compiles them in BCL.. Here we describe which are the points in the bytecode which are "cut". This needs the introduction
 %of several definitions.
      
- A method body is an array of bytecode instructions that is denoted with $i$ and the $k-th$ instruction
- in the bytecode is  denoted with $i_{k}$.
+ A method body is an array of bytecode instructions. We write $i_k$ for the $k-th$ instruction in a method body.
 % We denote by $\Gamma  = ( \Omega, \execRel)$ the control flow graph of abytecode where the set of nodes $\Omega$ is the set of basic blocks of the bytecode.
- We assume that method's bytecode has exactly one entry point(every execution of a method starts at the entry point instruction) and we denote it with $i_{\tt{entry}}$.  Using standard terminology \cite{ARUCom1986}, a
+ We assume that method's bytecode has exactly one entry point(every execution of a method starts at the entry point instruction) and we denote it with $i_{\tt{entry}}$. Using standard terminology \cite{ARUCom1986}, a
 basic block is a code segment that has no unconditional jump or
 conditional branch statements except for possibly the last
 statement, and none of its statements, except possibly the first,
@@ -44,10 +43,10 @@ $\blockm{j} \execRel \blockm{n}$, where  $\blockm{n}$ is the first block of an e
 
 \begin{defn}[Loop Definition]
 \label{defLoop}
-Let's have a bytecode program. We say that $\blockm{s}$ is the entry block of loop $l$ in $\Pi$ and $\blockm{e}$ is the end block of $l$ if:
+Assume we have a bytecode $\Pi$. We say that $\blockm{s}$ is the entry block of a loop $l$ in $\Pi$ and $\blockm{e}$ is an end block of $l$ if:
 \begin{itemize}
 \item every path in the control flow graph starting at the entry block $\blockm{entry}$ of $\Pi$ and that reaches $\blockm{e}$, passes through  $\blockm{s}$ 
-  i.e.$ \blockm{entry} \execRel^{*}  \blockm{s} \execRel^{*} \blockm{e}$
+ % i.e.$ \blockm{entry} \execRel^{*}  \blockm{s} \execRel^{*} \blockm{e}$
 \item $\blockm{e} \execRel \blockm{s}$
 \end{itemize}
 \end{defn}
@@ -58,7 +57,7 @@ We abstract the execution relation $\execRel$ to the acyclic execution relation 
 
 \begin{defn}[Acyclic Execution relation]
 \label{acyclicExRel}
-Let's have a bytecode and let's have in it the two basic blocks  $\blockm{i} $ and   $\blockm{j}$. We say 
+Assume we have a bytecode and let's have in it the two basic blocks  $\blockm{i} $ and   $\blockm{j}$. We say 
 that $\blockm{i} \execRel^A \blockm{j}$ iff
 \begin{itemize}
 \item $\blockm{i} \execRel \blockm{j}$
@@ -69,7 +68,7 @@ that $\blockm{i} \execRel^A \blockm{j}$ iff
 We give at fig.~\ref{blockBC} the control flow graph of the method replace given earlier in fig.~\ref{replaceSrc}. The figure shows that the acyclic relation
 excludes edges between loop entry and loop end blocks and that at that place the corresponding loop invariant must hold.  
 
-\begin{figure}[p]
+\begin{figure}[!ht]
 \begin{center}
 \epsfig{file=graph1.eps}
 \end{center}

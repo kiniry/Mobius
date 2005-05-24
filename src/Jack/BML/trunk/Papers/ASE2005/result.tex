@@ -1,0 +1,10 @@
+\section{Implementation and Results}
+ As we already mentioned you have implementations of the JML compiler and a verification condition generator which is integrated in the tool JACK.
+ The tool is a plugin for the eclipse \todo{referenced - the eclipse site} integrated development environment for Java which uses formal methods for
+statically checking Java programs againts their JML specification. The tool can interface with several theorem provers (AtelierB, 
+Simplify, Coq, PVS ) \todo{references}. Jack has a user-friendly interface which makes it easy for use by developers that do not have
+a large background in formal methods.
+
+Here we want to discuss some practical issues. First, the JML compilation augments the file size twice. For the example given at fig.~\ref{replaceSrc}, the class 
+file withot the specification extensions is 548 bytes, and the one with BCSL extensions is 954 bytes.     
+

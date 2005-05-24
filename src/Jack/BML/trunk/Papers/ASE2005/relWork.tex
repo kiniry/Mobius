@@ -1,6 +1,6 @@
 \section{Related Work} \label{relWork}
     
-Related works exist in several directions -  logic for unstructured program languages,  attaching specification to the compiled code, bytecode verification, architecture for
+Related work exists in several directions -  logic for unstructured program languages,  attaching specification to the compiled code, bytecode verification, architecture for
 checking untrusted components.
 
 Floyd is among the first to work on program verification for unstructured languages (see \ref{F67amp}).
@@ -9,19 +9,19 @@ Few works have been dedicated to the definition of a bytecode logic. In \cite{Qu
  neither exceptional termination. The logic is defined by searching a structure in the bytecode control flow graph, 
  which gives an issue to complex rules.
 
-A work close to ours is presented by P.Muller and F.Bannwart in \cite{BM05plb}. The authors define a Hoare logic over a 
+A work close to ours is presented by P.M\..uller and F.Bannwart in \cite{BM05plb}. The authors define a Hoare logic over a 
 bytecode language with objects and  exceptions. A compiler from source proofs into bytecode proofs is also defined. 
-As in the present work, they assume that the bytecode has passed the bytecode verification certification. The bytecode logic aims to 
-express functional properties. To our knowledge subroutines are not treated. Invariants are inferred by fixpoint calculation differently 
-from the approach presented here where invariants are compiled from the high level JML specification see section \ref{comJML}. 
-However infering invariants is not decidable problem. Their work is inspired by the Nick Benton's work (see ~\cite{B04tlsj}). 
-In the latter a bytecode logic for a stack based language is defined which checks programs both for well - typedness and functional correctness. 
+As in the our work, they assume that the bytecode has passed the bytecode verification certification. The bytecode logic aims to 
+express functional properties. To our knowledge subroutines are not treated. Invariants are inferred by fixpoint calculation, differently 
+from the approach presented here, where invariants are compiled from the high level JML specification (see section \ref{comJML}). 
+However infering invariants is not decidable problem. The work of P.M\..uller and F.Bannwart is inspired by the Nick Benton's work (see ~\cite{B04tlsj}). 
+In~\cite{B04tlsj} a bytecode logic for a stack based language is defined which checks programs both for well - typedness and functional correctness. 
  The language does not support objects, references, exceptions neither subroutines. 
 
 In ~\cite{WildmoserN-ESOP05} a  framework is described for verifying Jinja (a Java subset) bytecode against arithmetic overflow. 
-Anyways the annotation is written manually which is not comfortable especially on bytecode. 
-Here we propose a way to compile a specification written in a high level language thus leaving the specification to be written on 
-high level which is convenient.
+%The annotation is written manually, which is not comfortable, especially on bytecode. 
+Here we propose a way to compile a specification written in a high level language, allowing specification to be written on a 
+high level, which is more convenient.
 
 In the field of specification compilation we can mention the Spec\# programming system developed at Microsoft,
 ~\cite{BLS04sp}. Spec\#  is a superset of the C\# programming language, with a built-in  specification language,
@@ -33,7 +33,7 @@ In the field of specification compilation we can mention the Spec\# programming 
 (every instruction is applied to operands of the correct type) and well formed 
 (e.g. no jumps to an un-existing bytecode index), differently from the goals of the present
 work where program correctness is defined in terms of functional correctness. The Java Virtual Machine (JVM), for example, is provided with a bytecode verifier. 
-The field is well researched and for more information one can look at~\ref{Ljbc}.  
+The field is well researched and for more information one can look at~\cite{Ljbc}.  
 
 Another topic related to the present work is PCC.
  PCC and the certifying compiler were proposed by Necula (see \cite{Necula97}, \cite{ComNec}, \cite{DesNecLee98}). PCC is an architecture for establishing trust in untrusted code 
@@ -44,7 +44,7 @@ The initial idea for PCC  was that the producer automatically infers annotation 
 correct read/writes and automatically generates the proof for their correctness using the certifying compiler. 
 Such properties guarantee that a program do the things correctly and not that it does the right things. The present work is targeting at a
  framework for establishing complex functional and interface properties whose automatic checking is hard and even impossible. 
- From the above cited works ~\cite{BM05plb} is aiming also at building PCC for
+ From the above cited papers, ~\cite{BM05plb} is aiming also at building PCC for
  guaranteeing not trivial properties. As we stated in section \ref{architecture} in its present stage our framework does not support adding proofs to bytecode 
  which is a future work. 
  

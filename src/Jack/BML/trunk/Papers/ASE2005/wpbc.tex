@@ -14,7 +14,7 @@ The weakest precondition proposed has those features:
 \begin{itemize}
 %\item modular, design by contract verification, in particular every method is verified separately method calls being translated to their specification 
 \item it supports all Java sequential instructions except for floating point arithmetic instructions and 64 bit data (\java{long} and \java{double} types), including 
-exceptions, object creation, references and subroutines. The calculus is defined over the method's control flow graph
+exceptions, object creation, references and subroutines. The calculus is defined over the method control flow graph
 
 \item it supports BCSL (section \ref{bcSpecLg}), i.e. method's specification written in BCSL like pre- and postconditions, assertions at particular program point among 
 which loop invariants (if there is nothing special specified the specification by default (preconditions, postconditions and invariants taken to true) is taken into account). %The verification procedure assumes that the bytecode is specified enough, i.e. we do not try to infer specification, as we assume that they are compiled from the source program
@@ -23,11 +23,11 @@ specification or incorrect implementation will result in verification conditions
 \end{itemize}
 
 
-The calculus is defined over the control flow graph of the program and has two levels of definitions - the first one is the set of rules for single Java bytecode instructions (discussed in the next subsection~\ref{wpInstr} ) and the second one takes into account how control
+The calculus is defined over the control flow graph of the program and has two levels of definitions - the first one is the set of rules for single Java bytecode instructions (discussed in subsection~\ref{wpInstr} ) and the second one takes into account how control
  flows in the bytecode(subsection ~\ref{wpGraph}). A related problem is how the cycles in the control flow are treated. 
-As we mentioned before we assume that every method is specified enough, i.e. if there are cycles the corresponding 
-loop invariant is present. This gives us the right to ``cut'' the cycles in the graph at the program point where the invariant must hold. 
-The ``cut'' generates an abstract control flow graph which is acyclic and over which the verification conditions are generated. Subsection ~\ref{abstrCntrFlow} discusses 
+As we mentioned before we assume that every method is specified in sufficient details, i.e. if there are cycles the corresponding 
+loop invariant is present. This allows us to ``cut'' the cycles in the graph at the program point where the invariant must hold. 
+These ``cuts'' generate an abstract control flow graph which is acyclic and over which the verification conditions are generated. Subsection ~\ref{abstrCntrFlow} discusses 
 how the abstract control flow graph is generated.
 
 %In the rest of the section we describe the bytecode logic  and how the verification conditions are generated:

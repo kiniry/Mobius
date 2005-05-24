@@ -14,9 +14,9 @@ In this section we propose a bytecode specification language which we call BCSL.
 
 \subsection{Grammar} \label{grammar}
 We propose a bytecode level specification language which corresponds to a representative subset of JML.
-We sketch the bytecode specification language grammar at \fig~\ref{bclGrammar}. We omit some of the definitions 
+We sketch the bytecode specification language grammar in fig.~\ref{bclGrammar}. We omit some of the definitions 
 because of space limitations,
- e.g. the grammar for arithmetic expressions( which is defined in a standard way). For the full specification we refer to ~\cite{JML2BCSpec}.  
+ e.g. the grammar for arithmetic expressions (which is defined in a standard way). For the full specification we refer to ~\cite{JML2BCSpec}.  
 \begin{figure}[!htbp]
 $$ \begin{array}{l}
 \ClassSpec ::= \\ 
@@ -33,7 +33,7 @@ $$ \begin{array}{l}
 	\Myspace \jmlStmt{modifies} \ list(\expression);\\
 	%\Myspace \jmlStmt{decreases} \ \expression;\\
     \Myspace \jmlStmt{ensures} \ \predicate;\\
-    \Myspace \jmlStmt{exsures} \ (\texttt{ExceptionClass EXC} \ \predicate;)\\
+    \Myspace \jmlStmt{exsures} \ (\texttt{ExceptionClass}) \ \predicate;\\
                      \\
 \interMethodSpec ::= \\
      \Myspace \loopSpec \\
@@ -63,9 +63,9 @@ $$ \begin{array}{l}
       \Myspace  \ArithExpr  \mid  \ \register{i}  \  \mid  \ \reference \\
   	  \Myspace  \mid  \ \fieldAccess{\expression}  \\
   	  \Myspace  \mid \ \arrayAccess{\expression} {\expression}  \\
-  	  \Myspace  \mid \result \ \mid \old{\expression}  \\
-  	  \Myspace \mid \typeof{\expression}  \ \mid \ \Mynull \ \mid \  \this \\
-  	  \Myspace \mid \counter \mid \stack{\ArithExpr} \ldots
+  	  \Myspace  \mid \result \ \mid \old{\expression} \mid \ \EXC \\
+  	  \Myspace \mid \typeof{\expression}  \ \mid \ \Mynull \ \mid \ \this \\
+  	  \Myspace  \mid  \counter \mid \stack{\ArithExpr} \ldots
 \end{array}$$
 \caption{BCSL grammar}
  \label{bclGrammar}
@@ -75,11 +75,12 @@ $$ \begin{array}{l}
  (their semantics is the same as in JML~\cite{RT03djml} , ~\cite{JMLRefMan}).
   
  We can specify using the specification clause \jmlKey{exsures} what is the postcondition of  a method in case it terminates with 
- an exception  \texttt{ExceptionClass}. If the postcondition states something about the exception object thrown then the special keyword \texttt{EXC} is used.
+ an exception  \texttt{ExceptionClass}. If the postcondition states something about the exception object thrown then the special expression \texttt{EXC} is used 
+(this expression can appear only in exceptional postconditions). If \jmlKey{exsures} is not specified for certain exception, then by default it is \Myfalse.
  
 As shown by the grammar BCSL allows us to specify different method specification cases separated by the keyword \jmlKey{also} - this means that 
  method caller has to satisfy the disjunction of the preconditions in the specification cases  and the method's implementation 
- has to guarantee the postcondition of every specification case given that the corresponding precondition held in the prestate.
+ has to guarantee the postcondition of every specification case of which the precondition held in the prestate.
 The rules for loop specifications and assertions say at what point in the bytecode they must hold. Among the expressions that are handled (almost all are also handled
 by JML) we have $\counter$ and \stack{\ArithExpr}  which respectively stand for the stack counter and an element on the stack at position \ArithExpr. These expressions do not appear in the precondition and postcondition specification of a method. Later we shall see how the they are used.
  
@@ -92,11 +93,11 @@ This section explains how high level program specifications are compiled into by
 
 Before going farther we give a brief description of the class file format. As defined by the Java virtual machine  specification (JVMS) \cite{VMSpec}, a class file contains a definition of a single class class or interface. It contains information about the class name, interfaces implemented by the class, super class, methods and fields declared in the class and references. The JVMS mandate that the class file contains data structure usually referred as the \textbf{constant\_pool} table which is used to construct the runtime constant pool upon class or interface creation. The runtime constant pool serves for loading, linking and resolution of references used in the class. The JVMS allows to add to the class file a user specific information(~\cite{VMSpec}, ch.4.7.1). This is done by defining user specific attributes  (their structure is predefined by JVMS).
 
-Thus the ``JML compiler'' compiles the JML source specification into user defined attributes. The compilation process has three stages:
+Thus the ``JML compiler'' \footnote{Gary Leavens also calls his tool jmlc JML compiler, which transforms jml into runtime checks and thus generates input for the jmlrac tool  } compiles the JML source specification into user defined attributes. The compilation process has three stages:
 \begin{enumerate}
 \item compile the Java source file. This can be done by any Java compiler that supplies for every method in the generated class file the \textbf{Line\_Number\_Table} and \textbf{Local\_Variable\_Table}  attributes. The presence in the Java class file format of these attribute is optional \cite{VMSpec}, yet almost all standard non optimizing compilers can generate these data. The \textbf{Line\_Number\_Table} describes the link between the source line and the bytecode of a method.  The \textbf{Local\_Variable\_Table} describes the local variables that appear in a method. This attribute is important for the next phase of the JML compilation.
-\item from the source file and the resulting class file compile the JML specification. In this phase Java and JML source identifiers are linked with their identifiers on bytecode level, namely with the corresponding indexes either from the constant pool or the array of local variables described in the \textbf{Local\_Variable\_Table} attribute. It is also in this phase that the specification parts like the loop invariants and the assertions which must hold at a certain source program point must be associated to the respective program point on bytecode level. The specification
-is compiled standardly in binary form using tags. Basically the compilation of an expression is a tag followed by the compilation of its subexpressions. 
+\item from the source file and the resulting class file compile the JML specification. In this phase Java and JML source identifiers are linked with their identifiers on bytecode level, namely with the corresponding indexes either from the constant pool or the array of local variables described in the \textbf{Local\_Variable\_Table} attribute. It is also in this phase that the specification parts like the loop invariants and the assertions which should hold at a certain source program point must be associated to the respective program point on bytecode level. The specification
+is compiled in binary form using tags in the standard way. Basically the compilation of an expression is a tag followed by the compilation of its subexpressions. 
 Thus for example the loop invariant specified in JML for the method \texttt{replace} at ~\ref{replaceSrc} is :
 $$
 \begin{array}{l}
@@ -109,8 +110,8 @@ $$
 From the example one can see that local variables and  fields are respectively linked to the index of the register table for the method and to the corresponding index of the constant pool table. 
 \item add the result of the JML compilation in the class file as user defined attributes. Method specifications, class invariants, loop invariants are 
 newly defined attributes in the class file.
- For example, the specification of all the loops in a method are compiled to a unique method attribute: whose syntax is given at fig.~\ref{loopAttribute}. This attribute is an array of data structures each describing a single loop from the method source code. Also for each loop in the source code there must be a corresponding element in the array. 
-More precisely every element contains information about the instruction where the loop starts as specified in the \textbf{Line\_Number\_Table}, the invariant associated to this loop, the decreasing expression in case of total correctness, the expressions that can be modified. 
+ For example, the specification of all the loops in a method are compiled to a unique method attribute: whose syntax is given in fig.~\ref{loopAttribute}. This attribute is an array of data structures each describing a single loop from the method source code. Also for each loop in the source code there must be a corresponding element in the array. 
+More precisely, every element contains information about the instruction where the loop starts as specified in the \textbf{Line\_Number\_Table}, the invariant associated to this loop, the decreasing expression in case of total correctness, the expressions that can be modified. 
 For the full specification of the compiler one can see~\cite{JML2BCSpec}.
 \end{enumerate}
 
@@ -143,5 +144,5 @@ JML\=Loop\_specification\_attribute \{\\
 %\end{frameit}
 \end{figure}
 
-The JML compiler does not depend on any specific Java compiler. But it requires the presence of a debug information, namely the presence of the \textbf{Line\_Number\_Table} attribute for the proper compilation of inter method specification, i.e. loops and assertions. We think that this is an acceptable restriction for the compiler. The most problematic part of the compilation is to find the program points where the loop invariants must hold. This basically means that one has to identify which source loop corresponds to which bytecode loop in the control flow graph. To do this we assume that the control flow graph is reducible~\cite{ARUCom1986} (intuitively no jumps from outside a loop inside it) which allows us to identify the relationship between the bytecode and the source code. 
+The JML compiler does not depend on any specific Java compiler, but it requires the presence of a debug information, namely the presence of the \textbf{Line\_Number\_Table} attribute for the proper compilation of inter method specification, i.e. loops and assertions. We think that this is an acceptable restriction for the compiler. The most problematic part of the compilation is to find the program points where the loop invariants must hold. This basically means that one has to identify which source loop corresponds to which bytecode loop in the control flow graph. To do this we assume that the control flow graph is reducible~\cite{ARUCom1986} (intuitively this means no jumps from outside a loop inside it) which allows us to identify the relationship between the bytecode and the source code. 
 \todo{limitations : registers that are used with two different types in the method bytecode}
