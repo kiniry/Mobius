@@ -11,6 +11,12 @@ class Allpos {
       //@ pure
       //@ model static boolean allpos(int[] f, int n);
 
+      //@ public normal_behavior
+      //@   requires f != null;
+      //@   ensures \result == f.length - k;
+      //@ pure
+      //@ model static int diff(int[] f, int k);
+
       //@ requires f!=null;
       //@ ensures \result == (\forall int i; 0<=i & i<f.length; f[i]>0);
       boolean allposLoop(int[] f) {
@@ -20,6 +26,7 @@ class Allpos {
          // assert res == allpos(f, k);     // NEEDED
          //@ loop_invariant 0<=k && k<=f.length;
          //@ loop_invariant res == allpos(f, k);
+         //@ decreases diff(f,k);
          while (k != f.length) {
              res = res && f[k]>0;
              k = k+1;
@@ -38,6 +45,7 @@ class Allpos {
          // assert res == allpos(f, k);     // NEEDED
          //@ loop_invariant 0<=k && k<=f.length;
          //@ loop_invariant res == allpos(f, k);
+         //@ decreases diff(f,k);
          while (k != f.length) {
              res = res && f[k]>0;
              o = null ; // force a state change

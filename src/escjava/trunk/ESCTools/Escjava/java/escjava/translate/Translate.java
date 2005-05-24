@@ -929,6 +929,7 @@ public final class Translate
         S = cloneGuardedCommand(S);
       }
       code.addElement(S);
+      addNewAssumptionsNow(axs);
       addLoopDecreases(loop, 1);  // check 0 <= fOld;
       addLoopDecreases(loop, 2);  // check F < fOld;
       iComp++;
@@ -1082,6 +1083,7 @@ public final class Translate
     addLoopDecreases(loop, 0);  // fOld = F;
     code.addElement(loop.guard);
     code.addElement(loop.body);
+    addNewAssumptionsNow(axs);
     addLoopDecreases(loop, 1);  // check 0 <= fOld;
     addLoopDecreases(loop, 2);  // check F < fOld;
     GuardedCmd S = GC.seq(GuardedCmdVec.popFromStackVector(code));
