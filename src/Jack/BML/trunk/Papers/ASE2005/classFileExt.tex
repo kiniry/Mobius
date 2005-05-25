@@ -19,70 +19,62 @@ because of space limitations,
  e.g. the grammar for arithmetic expressions (which is defined in a standard way). For the full specification we refer to ~\cite{JML2BCSpec}.  
 \begin{figure}[!htbp]
 $$ \begin{array}{l}
-\ClassSpec ::= \\ 
-     \Myspace \jmlStmt{class \ invariant} \ \predicate \\
-     \Myspace  \mid  \jmlStmt{history \ constraint} \ \predicate \\
-     \Myspace  \mid  \jmlStmt{model} \ \texttt{ClassName}  \ id \\
+\ClassSpec ::= \jmlStmt{class \ invariant} \ \predicate \\
+     \Myspace \Myspace \Myspace \Myspace \Myspace  \mid  \jmlStmt{history \ constraint} \ \predicate \\
+     \Myspace \Myspace \Myspace \Myspace \Myspace  \mid  \jmlStmt{model} \ \texttt{ClassName}  \ id \\
       \\
-\MethodSpec  ::= \\
-   \Myspace \SpecCase \\
-   \Myspace  \mid  \SpecCase \  \jmlStmt{also} \  \MethodSpec	;\\
+\MethodSpec  ::= \SpecCase \\
+   \Myspace \Myspace \Myspace \Myspace \Myspace \Myspace  \mid  \SpecCase \  \jmlStmt{also} \  \MethodSpec	;\\
    \\
-\SpecCase ::= \\ 
-    \Myspace \jmlStmt{requires} \ \predicate;\\ 
-	\Myspace \jmlStmt{modifies} \ list(\expression);\\
+\SpecCase ::= \jmlStmt{requires} \ \predicate;\\ 
+	\Myspace \Myspace \Myspace \Myspace  \Myspace \mid  \jmlStmt{modifies} \ list(\expression);\\
 	%\Myspace \jmlStmt{decreases} \ \expression;\\
-    \Myspace \jmlStmt{ensures} \ \predicate;\\
-    \Myspace \jmlStmt{exsures} \ (\texttt{ExceptionClass}) \ \predicate;\\
+    \Myspace \Myspace \Myspace \Myspace \Myspace \mid  \jmlStmt{ensures} \ \predicate;\\
+    \Myspace \Myspace \Myspace \Myspace \Myspace \mid  \jmlStmt{exsures} \ (\texttt{ExceptionClass}) \ \predicate;\\
                      \\
-\interMethodSpec ::= \\
-     \Myspace \loopSpec \\
-	 \Myspace  \mid \assert \\
+\interMethodSpec ::= \loopSpec \\
+	 \Myspace \Myspace \Myspace \Myspace \Myspace \Myspace \Myspace \Myspace  \mid \assert \\
 	  \\
-\loopSpec ::= \\
-		\Myspace \jmlStmt{pc\_ index} \ int;\\
-	    \Myspace \jmlStmt{loop\_modifies} \ list(\expression);\\
-       \Myspace \jmlStmt{loop\_invariant}  \ \predicate; \\
-	   \Myspace \jmlStmt{loop\_decreases} \ \expression; \\
+\loopSpec ::= \jmlStmt{pc\_ index} \ int;\\
+	    \Myspace \Myspace \Myspace \Myspace \Myspace \mid \jmlStmt{loop\_modifies} \ list(\expression);\\
+       \Myspace\Myspace \Myspace \Myspace  \Myspace \mid \jmlStmt{loop\_invariant}  \ \predicate; \\
+	   \Myspace \Myspace \Myspace \Myspace \Myspace \mid \jmlStmt{loop\_decreases} \ \expression; \\
 	 \\								
-\assert   ::= \\
-		\Myspace \jmlStmt{pc\_ index} \ int;\\
-		\Myspace \jmlStmt{assert} \ \predicate; \\
+\assert   ::= \jmlStmt{pc\_ index} \ int;\\
+		\Myspace \Myspace \Myspace \Myspace \mid \jmlStmt{assert} \ \predicate; \\
 	\\
 
-      \predicate ::= \\
-      \Myspace    \true \ \mid \ \false \\
-      \Myspace  \mid   \expression \ predSymbol \ \expression \\
-       \Myspace \mid   \predicate \wedge \predicate \\
-       \Myspace \mid   \predicate \vee \predicate \\
-       \Myspace \mid   \predicate \Rightarrow \predicate \\
-       \Myspace \mid   \forall (\texttt{boundVar } : JavaType )  \predicate \\
-       \Myspace \mid   \exists(\texttt{boundVar } : JavaType )  \predicate \\
+      \predicate ::= \true \ \mid \ \false \\
+      \Myspace  \Myspace \mid   \expression \ predSymbol \ \expression \\
+       \Myspace \Myspace \mid   \predicate \wedge \predicate \\
+       \Myspace \Myspace \mid   \predicate \vee \predicate \\
+       \Myspace \Myspace \mid   \predicate \Rightarrow \predicate \\
+       \Myspace \Myspace \mid   \forall (\texttt{boundVar } : JavaType )  \predicate \\
+       \Myspace \Myspace \mid   \exists(\texttt{boundVar } : JavaType )  \predicate \\
        \\ 
-  \expression ::= \\  
-      \Myspace  \ArithExpr  \mid  \ \register{i}  \  \mid  \ \reference \\
-  	  \Myspace  \mid  \ \fieldAccess{\expression}  \\
-  	  \Myspace  \mid \ \arrayAccess{\expression} {\expression}  \\
-  	  \Myspace  \mid \result \ \mid \old{\expression} \mid \ \EXC \\
-  	  \Myspace \mid \typeof{\expression}  \ \mid \ \Mynull \ \mid \ \this \\
-  	  \Myspace  \mid  \counter \mid \stack{\ArithExpr} \ldots
+  \expression ::= \ArithExpr  \mid  \ \register{i}  \  \mid  \ \reference \\
+  	  \Myspace \Myspace  \mid  \ \fieldAccess{\expression}  \\
+  	  \Myspace \Myspace  \mid \ \arrayAccess{\expression} {\expression}  \\
+  	  \Myspace \Myspace  \mid \result \ \mid \old{\expression} \mid \ \EXC \\
+  	  \Myspace \Myspace \mid \typeof{\expression}  \ \mid \ \Mynull \ \mid \ \this \\
+  	  \Myspace  \Myspace \mid  \counter \mid \stack{\ArithExpr} \ldots
 \end{array}$$
 \caption{BCSL grammar}
  \label{bclGrammar}
  \end{figure}
  The language defined here is expressive enough for most purposes including the description of non trivial functional and 
- security properties. We now discuss some of the specification clauses 
- (their semantics is the same as in JML~\cite{RT03djml} , ~\cite{JMLRefMan}).
-  
+ security properties. We now discuss some of the specification clauses that have some differences with JML, for the rest their semantics is the same as in JML and can be found in~\cite{RT03djml} and ~\cite{JMLRefMan}.
+ 
  We can specify using the specification clause \jmlKey{exsures} what is the postcondition of  a method in case it terminates with 
  an exception  \texttt{ExceptionClass}. If the postcondition states something about the exception object thrown then the special expression \texttt{EXC} is used 
-(this expression can appear only in exceptional postconditions). If \jmlKey{exsures} is not specified for certain exception, then by default it is \Myfalse.
+(this expression can appear only in exceptional postconditions). If \jmlKey{exsures} is not specified for certain exception, then by default it is considered as \Myfalse.
  
-As shown by the grammar BCSL allows us to specify different method specification cases separated by the keyword \jmlKey{also} - this means that 
+As shown by the grammar, BCSL allows us to specify different method specification cases separated by the keyword \jmlKey{also} - this means that 
  method caller has to satisfy the disjunction of the preconditions in the specification cases  and the method's implementation 
  has to guarantee the postcondition of every specification case of which the precondition held in the prestate.
+
 The rules for loop specifications and assertions say at what point in the bytecode they must hold. Among the expressions that are handled (almost all are also handled
-by JML) we have $\counter$ and \stack{\ArithExpr}  which respectively stand for the stack counter and an element on the stack at position \ArithExpr. These expressions do not appear in the precondition and postcondition specification of a method. Later we shall see how the they are used.
+by JML) we have $\counter$ and \stack{\ArithExpr} which respectively stand for the stack counter and an element on the stack at position \ArithExpr. These expressions do not appear in the precondition and postcondition specification of a method. Later we shall see how they are used.
  
  
 \subsection{Compiling JML into bytecode specification language}\label{comJML}
