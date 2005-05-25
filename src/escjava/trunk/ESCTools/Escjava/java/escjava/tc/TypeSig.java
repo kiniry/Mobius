@@ -8,7 +8,8 @@ import javafe.tc.LookupException;
 
 public class TypeSig extends javafe.tc.TypeSig {
 
-    public TypeSig(String[] packageName,
+    //@ requires \nonnullelements(packageName);
+    public TypeSig(/*@non_null*/ String[] packageName,
 		   /*@ non_null */ String simpleName,
 		   javafe.tc.TypeSig enclosingType,
 		   TypeDecl decl,

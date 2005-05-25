@@ -29,12 +29,12 @@ public class EscOptions extends JPanel implements ActionListener {
 
     /** A reference to the Class object of escjava.Options.
      */
-    static final public Class escoptions = escjava.Options.class;
+    static final public /*@non_null*/ Class escoptions = escjava.Options.class;
 
     /** These are the options that are actually portrayed in the
 	GUI.  The array contains the text string, field name and the tooltip.
      */
-    static String[][] optionsShown = {
+    static /*@non_null*/ String[][] optionsShown = {
 	{"Control of Input:", null, null},
 	{"source 1.4", "assertIsKeyword",	
 		"When enabled, Java 1.4 source (including assert statements)\n"+
@@ -208,7 +208,9 @@ public class EscOptions extends JPanel implements ActionListener {
 	}
     }
 
-    public void makeWarningOpt(String name, JPanel warnings, ActionListener a) {
+    public void makeWarningOpt(/*@non_null*/ String name, 
+			       /*@non_null*/ JPanel warnings, 
+			       /*@non_null*/ ActionListener a) {
 	int tag = NoWarn.toNoWarnTag(name);
 	boolean b = NoWarn.getChkStatus(tag) != TagConstants.CHK_AS_ASSUME;
 	JCheckBox cb = new JCheckBox(name,b);
@@ -217,7 +219,7 @@ public class EscOptions extends JPanel implements ActionListener {
 	//cb.setToolTipText(opttext[2]);
     }
 
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(/*@non_null*/ ActionEvent e) {
 	// write back out to the Options structure
 
 	Object source = e.getSource();
@@ -256,8 +258,8 @@ public class EscOptions extends JPanel implements ActionListener {
     }
 
     static public class MListener implements ActionListener {
-	static private String[] temp = new String[1];
-	public void actionPerformed(ActionEvent e) {
+	static private /*@non_null*/ String[] temp = new String[1];
+	public void actionPerformed(/*@non_null*/ ActionEvent e) {
 	    Object o = e.getSource();
 	    if (o instanceof JCheckBox) {
 		JCheckBox cb = (JCheckBox)o;

@@ -47,7 +47,7 @@ public class FindContributors
      * possibly to type errors.  If such error(s) occur, a fatal
      * error is reproted.
      */
-    public FindContributors(TypeSig T) {
+    public FindContributors(/*@non_null*/ TypeSig T) {
 	originType = T;
 	addType(T);
 
@@ -75,7 +75,7 @@ public class FindContributors
      * possibly to type errors.  If such error(s) occur, a fatal
      * error is reproted.
      */
-    public FindContributors(RoutineDecl rd) {
+    public FindContributors(/*@non_null*/ RoutineDecl rd) {
 	originType = TypeSig.getSig(rd.parent);
 	addType(originType);
 
@@ -125,14 +125,14 @@ public class FindContributors
     /** The set of routines visited so far.
      */
 
-    private Set visitedRoutines = new Set();
+    private /*@non_null*/ Set visitedRoutines = new Set();
 
     /**
      * The set of TypeSigs we've determined to be contributors so far. <p>
      *
      * Invariant: This set is closed under taking supertypes
      */
-    private Set contributorTypes = new Set();
+    private /*@non_null*/ Set contributorTypes = new Set();
 
     /**
      * The set of invariants (elementType ExprDeclPragmas) we've
@@ -141,7 +141,7 @@ public class FindContributors
      * Closure Property: walk(-) has been called on each of
      * these invariants.
      */
-    private Set contributorInvariants = new Set();
+    private /*@non_null*/ Set contributorInvariants = new Set();
 
     /**
      * The set of fields (elementType FieldDecl) we've determined to be
@@ -153,10 +153,10 @@ public class FindContributors
      *    contributorTypes and "mention the field" f for f a field in
      *    contributorFields are members of contributorInvariants
      */
-    private Set contributorFields = new Set();
+    private /*@non_null*/ Set contributorFields = new Set();
 
     public int preFieldMode = 0;
-    public Set preFields = new Set();
+    public /*@non_null*/ Set preFields = new Set();
 
     /**
      * A mapping from fields (FieldDecls) to possible invariant
@@ -177,6 +177,7 @@ public class FindContributors
      *    then (f,J) is in fieldToPossible.
      *
      */
+    // can be null
     Hashtable fieldToPossible = new Hashtable();
 
 
@@ -281,7 +282,7 @@ public class FindContributors
      * Precondition: J is a possible invariant contributor, J "mentions
      * the field" fd.
      */
-    private void addPossibleMentions(FieldDecl fd, ExprDeclPragma J) {
+    private void addPossibleMentions(FieldDecl fd, /*@non_null*/ ExprDeclPragma J) {
 	ExprDeclPragmaVec range = (ExprDeclPragmaVec)fieldToPossible.get(fd);
 	if (range==null) {
 	    range = ExprDeclPragmaVec.make();
@@ -485,7 +486,7 @@ public class FindContributors
      *
      * Precondition: the type declaring cd has been typechecked.
      */
-    private void addImplicitConstructorRefs(ConstructorDecl cd,
+    private void addImplicitConstructorRefs(/*@non_null*/ ConstructorDecl cd,
 					    FieldDeclVec fields,
 					    boolean addTypes,
 					    LinkedList visited) {
@@ -534,7 +535,7 @@ public class FindContributors
      *
      * Precondition: the TypeDecl has been typechecked.
      */
-    private void walkInstanceInitialier(TypeDecl td,
+    private void walkInstanceInitialier(/*@non_null*/ TypeDecl td,
 					FieldDeclVec fields,
 					boolean addTypes,
 					LinkedList visited) {
@@ -707,7 +708,7 @@ public class FindContributors
      *
      * Throws a fatal error if a type error occurs while checking sig.
      */
-    void typecheck(TypeSig sig) {
+    void typecheck(/*@non_null*/ TypeSig sig) {
 	int errorCount = ErrorSet.errors;
 
 	sig.typecheck();

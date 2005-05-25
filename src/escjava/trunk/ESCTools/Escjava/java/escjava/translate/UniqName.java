@@ -56,6 +56,7 @@ public final class UniqName {
 	return locToSuffix(loc,true);
   }
 
+  //@ ensures \result != null;
   public static String locToSuffix(int loc, boolean useDefault) {
     Assert.notFalse(loc != Location.NULL);
 
@@ -80,7 +81,7 @@ public final class UniqName {
   /** Returns the location corresponding to <code>suffix</code>.
     * Requires <code>suffix</code> to be a valid suffix.
     **/
-  public static int suffixToLoc(String suffix) {
+  public static int suffixToLoc(/*@non_null*/ String suffix) {
     return suffixToLoc(suffix, false);
   }
 
@@ -89,7 +90,9 @@ public final class UniqName {
     * Requires <code>recoverable</code> or that <code>suffix</code> is
     * a valid suffix.
     **/
-  public static int suffixToLoc(String suffix, boolean recoverable) {
+  public static int suffixToLoc(/*@non_null*/ String suffix, 
+				boolean recoverable) 
+  {
     if (parseSuffix(suffix, recoverable)) {
       return Location.make( psout0, psout1, psout2 );
     } else {
@@ -109,7 +112,8 @@ public final class UniqName {
    * Not thread safe.
    **********************************************************************/
 
-  public static String suffixToString(String suffix) {
+  //@ ensures \result != null;
+  public static String suffixToString(/*@non_null*/ String suffix) {
     parseSuffix(suffix, false);
     String s = Location.streamIdToFile(psout0).getHumanName();
     if (psout1 == 0)
@@ -152,7 +156,9 @@ public final class UniqName {
     * parameters).
     **/
   
-  private static boolean parseSuffix(String suffix, boolean recoverable) {
+  private static boolean parseSuffix(/*@non_null*/ String suffix, 
+				     boolean recoverable) 
+  {
     // These numbers will be shifted as dots are discovered
     int a0 = 0;
     int a1 = idDefaultSuffixFile;
@@ -268,6 +274,7 @@ public final class UniqName {
      **
      ** (This partially handles case 3 of ESCJ 23b.) 
      **/
+    //@ ensures \result != null;
     public static LocalVarDecl newBoundVariable(char prefix) {
 	return newBoundVariable(String.valueOf(prefix));
     }
@@ -280,6 +287,7 @@ public final class UniqName {
      **
      ** (This partially handles case 3 of ESCJ 23b.) 
      **/
+    //@ ensures \result != null;
     public static LocalVarDecl newBoundThis() {
 	return newBoundVariable("brokenObj");
     }
@@ -291,7 +299,8 @@ public final class UniqName {
      **
      ** This handles case 3 of ESCJ 23b.
      **/
-    public static LocalVarDecl newBoundVariable(String name) {
+    //@ ensures \result != null;
+    public static LocalVarDecl newBoundVariable(/*@non_null*/ String name) {
 	Identifier id = Identifier.intern(name);
 	return LocalVarDecl.make(Modifiers.NONE,  // Java modifiers
 	 		         null,            // pragma modifiers
@@ -362,7 +371,8 @@ public final class UniqName {
      **
      ** Handles cases 3, 4, 6, 10, 11, 12, 13 and 15 of ESCJ 23b. <p>
      **/
-    public static String variable(GenericVarDecl v) {
+    //@ ensures \result != null;
+    public static String variable(/*@non_null*/ GenericVarDecl v) {
 	String s = v.id.toString();
 	int loc = v.locId;
 
@@ -394,8 +404,8 @@ public final class UniqName {
      *                                                 *
      ***************************************************/
 
-    private static Hashtable mapObjStr = new Hashtable();
-    private static Hashtable mapStrObj = new Hashtable();
+    private static /*@non_null*/ Hashtable mapObjStr = new Hashtable();
+    private static /*@non_null*/ Hashtable mapStrObj = new Hashtable();
 
     /**
      ** Reset the <n>-uniqueness-ensuring mechanism.
@@ -406,7 +416,9 @@ public final class UniqName {
     }
 
 
-    private static String verifyUnique(GenericVarDecl o,String s) {
+    //@ ensures \result != null;
+    private static String verifyUnique(/*@non_null*/ GenericVarDecl o,
+				       /*@non_null*/ String s) {
 	String s2 = (String)mapObjStr.get(o);
 	if( s2 != null ) {
 	    // Mapping already initialized, use it

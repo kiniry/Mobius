@@ -127,7 +127,7 @@ public class EnvForGhostLocals extends Env implements/*privately*/ Cloneable {
      * avoided unless an unknown environment needs to be coerced in
      * this way. <p>
      */
-    public Env asStaticContext() {
+    public /*@non_null*/ Env asStaticContext() {
 	EnvForGhostLocals n;
 	try {
 	    n = (EnvForGhostLocals)this.clone();

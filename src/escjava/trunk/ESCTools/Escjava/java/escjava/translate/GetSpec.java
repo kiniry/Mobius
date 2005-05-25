@@ -25,29 +25,29 @@ import javafe.util.*;
 
 public final class GetSpec {
   
-  public static Spec getSpecForCall(/* @ non_null */RoutineDecl rd,
-      /* @ non_null */FindContributors scope, Set predictedSynTargs) {
+  public static Spec getSpecForCall(/*@ non_null */RoutineDecl rd,
+      /*@ non_null */FindContributors scope, Set predictedSynTargs) {
     Spec spec = getCommonSpec(rd, scope, null);
     return extendSpecForCall(spec, scope, predictedSynTargs);
   }
   
   /* used for calls that are inlined */
-  public static Spec getSpecForInline(/* @ non_null */RoutineDecl rd,
-      /* @ non_null */FindContributors scope) {
+  public static Spec getSpecForInline(/*@ non_null */RoutineDecl rd,
+      /*@ non_null */FindContributors scope) {
     return getCommonSpec(rd, scope, null);
     // TBW: Should also add NonNullInit checks somewhere!
   }
   
-  public static Spec getSpecForBody(/* @ non_null */RoutineDecl rd,
-      /* @ non_null */FindContributors scope,
-      /* @ non_null */Set synTargs, Hashtable premap) {
+  public static Spec getSpecForBody(/*@ non_null */RoutineDecl rd,
+      /*@ non_null */FindContributors scope,
+      /*@ non_null */Set synTargs, Hashtable premap) {
     Spec spec = getCommonSpec(rd, scope, premap);
     return extendSpecForBody(spec, scope, synTargs);
   }
   
-  private static/* @ non_null @ */Spec getCommonSpec(
-      /* @ non_null */RoutineDecl rd,
-      /* @ non_null */FindContributors scope, Hashtable premap) {
+  private static /*@non_null*/ Spec getCommonSpec(
+      /*@ non_null */RoutineDecl rd,
+      /*@ non_null */FindContributors scope, Hashtable premap) {
     /*
      * Need to typecheck TypeDecl containing callee so that
      * requires/ensures/modifies clauses etc are resolved.
@@ -78,7 +78,7 @@ public final class GetSpec {
     return spec;
   }
   
-  static private ASTDecoration dmdDecoration = new ASTDecoration("dmd");
+  static private /*@non_null*/ ASTDecoration dmdDecoration = new ASTDecoration("dmd");
   
   /**
    * * Implement GetCombinedMethodDecl from ESCJ 16c section 7:
@@ -88,7 +88,8 @@ public final class GetSpec {
    */
   //@ ensures \result != null;
   public static DerivedMethodDecl getCombinedMethodDecl(
-      /* @ non_null */RoutineDecl rd) {
+      /*@ non_null */RoutineDecl rd) 
+  {
     DerivedMethodDecl dmd = (DerivedMethodDecl)dmdDecoration.get(rd);
     if (dmd != null) return dmd;
     
@@ -158,8 +159,8 @@ public final class GetSpec {
    * <p>* * Precondition: rd has been typechecked.
    * <p>
    */
-  private static void addModifiersToDMD(/* @ non_null */DerivedMethodDecl dmd,
-      /* @ non_null */RoutineDecl rd) {
+  private static void addModifiersToDMD(/*@ non_null */DerivedMethodDecl dmd,
+      /*@ non_null */RoutineDecl rd) {
     /*
      * Compute the substitution on parameter names to change a spec for an
      * overridden method to refer to our method's parameter names instead of
@@ -272,22 +273,25 @@ public final class GetSpec {
   
   /** Perform a substitution on an ExprModifierPragma * */
   private static ExprModifierPragma doSubst(Hashtable subst,
-      ExprModifierPragma emp) {
+					    /*@non_null*/ ExprModifierPragma emp) {
     return ExprModifierPragma.make(emp.tag,
         Substitute.doSubst(subst, emp.expr), emp.loc);
   }
   
   /** Perform a substitution on a CondExprModifierPragma * */
   private static CondExprModifierPragma doSubst(Hashtable subst,
-      CondExprModifierPragma emp) {
+						/*@non_null*/ CondExprModifierPragma emp) 
+  {
     return CondExprModifierPragma.make(emp.tag, Substitute.doSubst(subst,
         emp.expr), emp.loc, emp.cond == null ? null : Substitute.doSubst(subst,
             emp.cond));
   }
   
   /** Perform a substitution on a VarExprModifierPragma * */
+  //@ ensures \result != null;
   private static VarExprModifierPragma doSubst(Hashtable subst,
-      VarExprModifierPragma vemp) {
+					       /*@non_null*/ VarExprModifierPragma vemp) 
+  {
     VarExprModifierPragma v =
       VarExprModifierPragma.make(vemp.tag, vemp.arg, Substitute.doSubst(
         subst, vemp.expr), vemp.loc);
@@ -297,8 +301,8 @@ public final class GetSpec {
   
   //@ ensures \result != null;
   public static DerivedMethodDecl filterMethodDecl(
-      /* @ non_null */DerivedMethodDecl dmd,
-      /* @ non_null */FindContributors scope) {
+      /*@ non_null */DerivedMethodDecl dmd,
+      /*@ non_null */FindContributors scope) {
     if (!Main.options().filterMethodSpecs) { return dmd; }
     
     DerivedMethodDecl dmdFiltered = new DerivedMethodDecl(dmd.original);
@@ -316,9 +320,10 @@ public final class GetSpec {
     return dmdFiltered;
   }
   
+  //@ ensures \result != null;
   private static ExprModifierPragmaVec filterExprModPragmas(
-      /* @ non_null */ExprModifierPragmaVec vec,
-      /* @ non_null */FindContributors scope) {
+      /*@ non_null */ExprModifierPragmaVec vec,
+      /*@ non_null */FindContributors scope) {
     int n = vec.size();
     ExprModifierPragmaVec vecNew = null; // lazily allocated
     for (int i = 0; i < n; i++) {
@@ -345,9 +350,10 @@ public final class GetSpec {
     }
   }
   
+  //@ ensures \result != null;
   private static ModifiesGroupPragmaVec filterModifies(
-      /* @ non_null */ModifiesGroupPragmaVec mvec,
-      /* @ non_null */FindContributors scope) {
+      /*@ non_null */ModifiesGroupPragmaVec mvec,
+      /*@ non_null */FindContributors scope) {
     ModifiesGroupPragmaVec result = ModifiesGroupPragmaVec.make();
     int mn = mvec.size();
     for (int j = 0; j < mn; ++j) {
@@ -379,9 +385,10 @@ public final class GetSpec {
     return result;
   }
   
+  //@ ensures \result != null;
   private static VarExprModifierPragmaVec filterVarExprModPragmas(
-      /* @ non_null */VarExprModifierPragmaVec vec,
-      /* @ non_null */FindContributors scope) {
+      /*@ non_null */VarExprModifierPragmaVec vec,
+      /*@ non_null */FindContributors scope) {
     int n = vec.size();
     VarExprModifierPragmaVec vecNew = null; // lazily allocated
     for (int i = 0; i < n; i++) {
@@ -415,7 +422,7 @@ public final class GetSpec {
   /** Translates a MethodDecl to a Spec. */
   
   //@ ensures \result != null;
-  private static Spec trMethodDecl(/* @ non_null */DerivedMethodDecl dmd,
+  private static Spec trMethodDecl(/*@ non_null */DerivedMethodDecl dmd,
       Hashtable premap) {
     Assert.notNull(dmd);
     
@@ -517,8 +524,9 @@ public final class GetSpec {
   
   /** Computes the preconditions, according to section 7.2.0 of ESCJ 16. */
   
+  //@ ensures \result != null;
   private static ConditionVec trMethodDeclPreconditions(
-      /* @ non_null */DerivedMethodDecl dmd, ExprVec preAssumptions) {
+      /*@ non_null */DerivedMethodDecl dmd, ExprVec preAssumptions) {
     ConditionVec pre = ConditionVec.make();
     
     // Account for properties about parameters
@@ -601,10 +609,11 @@ public final class GetSpec {
   
   /** Computes the postconditions, according to section 7.2.2 of ESCJ 16. */
   
+  //@ ensures \result != null;
   private static ConditionVec trMethodDeclPostcondition(
-      /* @ non_null */DerivedMethodDecl dmd,
-      /* @ non_null */Hashtable wt,
-      /* @ non_null */ExprVec postAssumptions) {
+      /*@ non_null */DerivedMethodDecl dmd,
+      /*@ non_null */Hashtable wt,
+      /*@ non_null */ExprVec postAssumptions) {
     ConditionVec post = ConditionVec.make();
     
     // type correctness of targets (including "alloc", if "alloc" is a target)
@@ -936,7 +945,7 @@ public final class GetSpec {
    * axsToAdd holds a Set of RepHelper - we need to add to the assumptions any
    * axioms pertinent to the RepHelper.
    */
-  static public void addAxioms(java.util.Set axsToAdd, ExprVec assumptions) {
+  static public void addAxioms(/*@non_null*/ java.util.Set axsToAdd, ExprVec assumptions) {
     java.util.Set axsDone = new java.util.HashSet();
     while (!axsToAdd.isEmpty()) {
       RepHelper o = (RepHelper)axsToAdd.iterator().next();
@@ -951,7 +960,9 @@ public final class GetSpec {
   
   // FIXME - need to include inherited constraint clauses
   static public ConditionVec addConstraintClauses(ConditionVec post,
-      TypeDecl decl, Hashtable wt, ExprVec postAssumptions) {
+						  /*@non_null*/ TypeDecl decl, 
+						  Hashtable wt, 
+						  ExprVec postAssumptions) {
     TypeDeclElemVec pmods = decl.elems;
     java.util.Set axsToAdd = new java.util.HashSet();
     for (int i = 0; i < pmods.size(); ++i) {
@@ -987,8 +998,11 @@ public final class GetSpec {
   
   /** Implements ExtendSpecForCall, section 7.3 of ESCJ 16. */
   
-  private static Spec extendSpecForCall(/* @ non_null */Spec spec,
-      /* @ non_null */FindContributors scope, Set predictedSynTargs) {
+  //@ ensures \result != null;
+  private static Spec extendSpecForCall(/*@ non_null */Spec spec,
+					/*@ non_null */FindContributors scope, 
+					Set predictedSynTargs) 
+  {
     // FIXME - I'm not sure that \old variables not in the modifies list get
     // translated here
     // I think those translations are in scope but not in spec.
@@ -1177,9 +1191,11 @@ public final class GetSpec {
   
   /** Implements ExtendSpecForBody, section 7.4 of ESCJ 16. */
   
-  private static Spec extendSpecForBody(/* @ non_null */Spec spec,
-      /* @ non_null */FindContributors scope,
-      /* @ non_null */Set synTargs) {
+  //@ ensures \result != null;
+  private static Spec extendSpecForBody(/*@ non_null */Spec spec,
+					/*@ non_null */FindContributors scope,
+					/*@ non_null */Set synTargs) 
+  {
     
     TypeDecl td = spec.dmd.getContainingClass();
     boolean isConstructor = spec.dmd.isConstructor();
@@ -1227,8 +1243,8 @@ public final class GetSpec {
    * Add to <code>post</code> all NonNullInit checks for non_null instance
    * fields and instance ghost fields declared in <code>td</code>.
    */
-  private static void nonNullInitChecks(/* @ non_null */TypeDecl td,
-      /* @ non_null */ConditionVec post) {
+  private static void nonNullInitChecks(/*@ non_null */TypeDecl td,
+      /*@ non_null */ConditionVec post) {
     TypeDeclElemVec tdes = td.elems;
     
     // check that non_null instance fields have been initialized
@@ -1264,7 +1280,7 @@ public final class GetSpec {
   
   //@ ensures \result != null && \result.elementType == \type(InterfaceDecl);
   static public Enumeration getFirstInheritedInterfaces(
-      /* @non_null */ClassDecl cd) {
+      /*@non_null */ClassDecl cd) {
     Set interfaces = new Set();
     addSuperInterfaces(cd, interfaces);
     if (interfaces.size() != 0 && cd.superClass != null) {
@@ -1280,8 +1296,8 @@ public final class GetSpec {
   }
   
   //@ requires set.elementType == \type(InterfaceDecl);
-  private static void addSuperInterfaces(/* @ non_null */TypeDecl td,
-      /* @ non_null */Set set) {
+  private static void addSuperInterfaces(/*@ non_null */TypeDecl td,
+      /*@ non_null */Set set) {
     if (td instanceof InterfaceDecl) {
       set.add(td);
     }
@@ -1301,9 +1317,9 @@ public final class GetSpec {
    * syntactic targets <code>synTargs</code>.
    */
   
-  private static void addInvariantBody(/* @ non_null */InvariantInfo ii,
-      /* @ non_null */Spec spec,
-      /* @ non_null */Set synTargs) {
+  private static void addInvariantBody(/*@ non_null */InvariantInfo ii,
+      /*@ non_null */Spec spec,
+      /*@ non_null */Set synTargs) {
     
     Set invFV = Substitute.freeVars(ii.J);
     
@@ -1449,7 +1465,8 @@ public final class GetSpec {
   
   /** Collects the axioms in <code>scope</code>. */
   
-  private static ExprVec collectAxioms(/* @ non_null */FindContributors scope) {
+  //@ ensures \result != null;
+  private static ExprVec collectAxioms(/*@ non_null */FindContributors scope) {
     
     ExprVec r = ExprVec.make();
     
@@ -1506,7 +1523,7 @@ public final class GetSpec {
   private static HashSet collectInvariantsAxsToAdd;
   
   private static InvariantInfo collectInvariants(
-      /* @ non_null */FindContributors scope, Hashtable premap) {
+      /*@ non_null */FindContributors scope, Hashtable premap) {
     collectInvariantsAxsToAdd = null;
     InvariantInfo ii = null;
     InvariantInfo iiPrev = null;
@@ -1624,8 +1641,8 @@ public final class GetSpec {
    */
   
   private static ParamAndGlobalVarInfo collectParamsAndGlobals(
-      /* @ non_null */Spec spec,
-      /* @ non_null */FindContributors scope) {
+      /*@ non_null */Spec spec,
+      /*@ non_null */FindContributors scope) {
     ParamAndGlobalVarInfo vars = null;
     ParamAndGlobalVarInfo varPrev = null;
     
@@ -1683,7 +1700,8 @@ public final class GetSpec {
     return vars;
   }
   
-  private static ExprVec addNewAxs(HashSet axsToAdd, ExprVec assumptions) {
+  //@ ensures \result != null;
+  private static ExprVec addNewAxs(/*@non_null*/ HashSet axsToAdd, ExprVec assumptions) {
     if (assumptions == null) assumptions = ExprVec.make();
     java.util.Set axsDone = new java.util.HashSet();
     while (!axsToAdd.isEmpty()) {
@@ -1701,7 +1719,7 @@ public final class GetSpec {
   
   /** Shaves a GC designator. */
   
-  private static VariableAccess shave(/* @ non_null */Expr e) {
+  private static VariableAccess shave(/*@ non_null */Expr e) {
     switch (e.getTag()) {
       case TagConstants.VARIABLEACCESS:
         return (VariableAccess)e;
@@ -1726,6 +1744,7 @@ public final class GetSpec {
   //-@ requires map.keyType == \type(GenericVarDecl);
   //-@ requires map.elementType == \type(VariableAccess);
   //-@ requires e.elementType == \type(GenericVarDecl);
+  //@ ensures \result != null;
   static Hashtable restrict(/*@non_null*/ Hashtable map, /*@non_null*/Enumeration e) {
     Hashtable r = new Hashtable();
     while (e.hasMoreElements()) {
@@ -1743,8 +1762,9 @@ public final class GetSpec {
    */
   
   //@ requires e.elementType == \type(GenericVarDecl);
-  static Hashtable makeSubst(/* @ non_null */Enumeration e,
-      /* @ non_null */String postfix) {
+  //@ ensures \result != null;
+  static Hashtable makeSubst(/*@ non_null */Enumeration e,
+      /*@ non_null */String postfix) {
     Hashtable r = new Hashtable();
     while (e.hasMoreElements()) {
       GenericVarDecl vd = (GenericVarDecl)e.nextElement();
@@ -1754,8 +1774,9 @@ public final class GetSpec {
     return r;
   }
   
-  static Hashtable makeSubst(/* @ non_null */FormalParaDeclVec args,
-      /* @ non_null */String postfix) {
+  //@ ensures \result != null;
+  static Hashtable makeSubst(/*@ non_null */FormalParaDeclVec args,
+      /*@ non_null */String postfix) {
     Hashtable r = new Hashtable();
     for (int i = 0; i < args.size(); i++) {
       GenericVarDecl vd = args.elementAt(i);
@@ -1769,8 +1790,10 @@ public final class GetSpec {
    * * Given a GenericVarDecl named "x@old", returns a VariableAccess to a *
    * fresh LocalVarDecl named "x@ <postfix>". * * This handles ESCJ 23b case 13.
    */
-  static VariableAccess createVarVariant(/* @ non_null */GenericVarDecl vd,
-      /* @ non_null */String postfix) {
+  //@ ensures \result != null;
+  static VariableAccess createVarVariant(/*@ non_null */GenericVarDecl vd,
+					 /*@ non_null */String postfix) 
+  {
     String name = vd.id.toString();
     if (name.indexOf('@') != -1) name = name.substring(0, name.indexOf('@'));
     
@@ -1788,7 +1811,7 @@ public final class GetSpec {
    */
   
   private static void addFreeTypeCorrectAs(GenericVarDecl vd, Type type,
-      ConditionVec cv) {
+					   /*@non_null*/ ConditionVec cv) {
     Expr e = TrAnExpr.typeCorrectAs(vd, type);
     Condition cond = GC.freeCondition(e, Location.NULL);
     cv.addElement(cond);
@@ -1801,9 +1824,13 @@ public final class GetSpec {
    * modifies constraints implied by <code>spec</code>.
    */
   
-  public static GuardedCmd surroundBodyBySpec(GuardedCmd body, Spec spec,
-      FindContributors scope, Set syntargets, Hashtable premap,
-      int locEndCurlyBrace) {
+  public static GuardedCmd surroundBodyBySpec(GuardedCmd body, 
+					      /*@non_null*/ Spec spec,
+					      FindContributors scope, 
+					      Set syntargets, 
+					      Hashtable premap,
+					      int locEndCurlyBrace) 
+  {
     StackVector code = new StackVector();
     code.push();
     
@@ -1823,7 +1850,9 @@ public final class GetSpec {
    * every condition <code>C</code> in <code>cv</code>.
    */
   
-  private static void addAssumptions(ExprVec ev, StackVector code) {
+  private static void addAssumptions(/*@non_null*/ ExprVec ev,
+				     /*@non_null*/ StackVector code) 
+  {
     for (int i = 0; i < ev.size(); i++) {
       Expr e = ev.elementAt(i);
       code.addElement(GC.assume(e));
@@ -1831,7 +1860,9 @@ public final class GetSpec {
     }
   }
   
-  private static void assumeConditions(ConditionVec cv, StackVector code) {
+  private static void assumeConditions(/*@non_null*/ ConditionVec cv, 
+				       /*@non_null*/ StackVector code) 
+  {
     for (int i = 0; i < cv.size(); i++) {
       Condition cond = cv.elementAt(i);
       code.addElement(GC.assumeAnnotation(cond.locPragmaDecl, cond.pred));
@@ -1843,7 +1874,10 @@ public final class GetSpec {
    * every condition <code>C</code> in <code>cv</code>.
    */
   
-  private static void checkConditions(ConditionVec cv, int loc, StackVector code) {
+  private static void checkConditions(/*@non_null*/ ConditionVec cv, 
+				      int loc, 
+				      StackVector code) 
+  {
     for (int i = 0; i < cv.size(); i++) {
       Condition cond = cv.elementAt(i);
       if (cond.label == TagConstants.CHKUNEXPECTEDEXCEPTION2) continue;
@@ -1907,7 +1941,8 @@ public final class GetSpec {
     return ii;
   }
   
-  private static boolean exprIsVisible(TypeSig originType, Expr e) {
+  private static boolean exprIsVisible(TypeSig originType, 
+				       /*@non_null*/ Expr e) {
     
     switch (e.getTag()) {
       
@@ -1945,7 +1980,7 @@ public final class GetSpec {
     }
   }
   
-  static public void collectFields(Expr e, java.util.Set s) {
+  static public void collectFields(/*@non_null*/ Expr e, java.util.Set s) {
     // FIXME - have to avoid collecting bound variables of quantifiers
     switch (e.getTag()) {
       case TagConstants.PRE:

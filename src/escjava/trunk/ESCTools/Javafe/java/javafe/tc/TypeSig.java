@@ -23,7 +23,7 @@ public class TypeSig extends Type
      * The name of the package we belong to.  Always non-null.
      */
     //@ invariant \nonnullelements(packageName);
-    public /*public readonly*/ String[] packageName;
+    public /*public readonly non_null */ String[] packageName;
 
     /**
      * Our enclosing type or null iff we are a package-member type.
@@ -205,7 +205,7 @@ public class TypeSig extends Type
     //@ requires \nonnullelements(packageName);
     //@ requires (enclosingType != null) ==> (decl != null);
     //@ requires (decl==null) == (CU==null);
-    protected TypeSig(String[] packageName,
+    protected TypeSig(/*@non_null*/ String[] packageName,
 		    /*@ non_null @*/ String simpleName,
 		    TypeSig enclosingType,
 		    TypeDecl decl, CompilationUnit CU) {
@@ -238,7 +238,7 @@ public class TypeSig extends Type
      * CU must be the CompilationUnit that decl belongs to.<p>
      */
     //@ requires \nonnullelements(packageName);
-    protected TypeSig(String[] packageName,
+    protected TypeSig(/*@non_null*/ String[] packageName,
 		    /*@ non_null @*/ String simpleName,
 		    /*@ non_null @*/ TypeDecl decl,
 		    /*@ non_null @*/ CompilationUnit CU) {
@@ -308,7 +308,7 @@ public class TypeSig extends Type
      */
     //@ requires \nonnullelements(P);
     //@ ensures \result != null;
-    private static String getKey(String[] P, /*@ non_null @*/ String T) {
+    private static String getKey(/*@non_null*/ String[] P, /*@ non_null @*/ String T) {
 	String key = "";
 
 	for (int i=0; i<P.length; i++)
@@ -326,7 +326,7 @@ public class TypeSig extends Type
      * This function should only be called by OutsideEnv. <p>
      */
     //@ requires \nonnullelements(P);
-    static public TypeSig lookup(String[] P, /*@ non_null @*/ String T) {
+    static public TypeSig lookup(/*@non_null*/ String[] P, /*@ non_null @*/ String T) {
 	return (TypeSig)map.get(getKey(P,T));
     }
 
@@ -344,7 +344,7 @@ public class TypeSig extends Type
      */
     //@ requires \nonnullelements(P);
     //@ ensures \result != null;
-    static /*package*/ TypeSig get(String[] P, /*@ non_null @*/ String T) {
+    static /*package*/ TypeSig get(/*@non_null*/ String[] P, /*@ non_null @*/ String T) {
 	String key = getKey(P,T);
 	TypeSig result = (TypeSig)map.get(key);
 	if (result != null)

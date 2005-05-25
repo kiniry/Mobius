@@ -17,7 +17,7 @@ public class RepHelper {
 	this.a = rd;
     }
 
-    public RepHelper(FieldAccess fa) {
+    public RepHelper(/*@non_null*/ FieldAccess fa) {
 	this.a = fa.decl;
 	ObjectDesignator od = fa.od;
 	Type t = null;

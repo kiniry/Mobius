@@ -23,7 +23,7 @@ import escjava.prover.*;
   **/
 
 class Suggestion {
-  static String generate(int warningTag, Object auxInfo,
+  static /*null*/ String generate(int warningTag, Object auxInfo,
 			 /*@ non_null */ RoutineDecl rd,
 			 /*@ non_null */ Set directTargets,
 			 /*@ non_null */ SList cc, int locDecl) {
@@ -70,6 +70,7 @@ class Suggestion {
       return null;  // no suggestion
   }
 
+  //@ ensures \result != null;
   private static String gNull(/*@ non_null */ VarInit E,
 			      /*@ non_null */ RoutineDecl rd) {
     switch (E.getTag()) {
@@ -151,6 +152,7 @@ class Suggestion {
     }
   }
 
+  //@ ensures \result != null;
   private static String gNeg(/*@ non_null */ VarInit E,
 			     /*@ non_null */ RoutineDecl rd,
 			     /*@ non_null */ Set directTargets) {
@@ -225,6 +227,7 @@ class Suggestion {
   }
 
 
+  //@ ensures \result != null;
   private static String gArrStore(/*@ non_null */ VarInit E,
 				  /*@ non_null */ RoutineDecl rd) {
       switch (E.getTag()) {
@@ -359,6 +362,7 @@ class Suggestion {
     * any one of the overrides is returned.
     **/
 
+  //@ ensures \result != null;
   static MethodDecl getOriginalMethod(/*@ non_null */ MethodDecl md) {
     MethodDecl orig = md;
     while (true) {

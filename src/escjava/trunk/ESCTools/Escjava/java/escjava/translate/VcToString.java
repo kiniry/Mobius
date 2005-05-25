@@ -108,7 +108,7 @@ public class VcToString
   private VcToString() {
   }
 
-  private String vc2Term(Expr e, Hashtable subst) {
+  private String vc2Term(/*@non_null*/ Expr e, Hashtable subst) {
     Assert.notNull( e );
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     PrintStream ps = new PrintStream(baos);
@@ -134,13 +134,13 @@ public class VcToString
 
   private DefPredVec preds;
 
-  private DefPredVec getDefpreds(Expr e) {
+  private DefPredVec getDefpreds(/*@non_null*/ Expr e) {
     preds = DefPredVec.make();
     getDefpredsHelper(e);
     return preds;
   }
 
-  private void getDefpredsHelper(Expr e) {
+  private void getDefpredsHelper(/*@non_null*/ Expr e) {
     if( e instanceof DefPredLetExpr ) {
       DefPredLetExpr dple = (DefPredLetExpr)e;
       preds.append( dple.preds );
@@ -186,8 +186,9 @@ public class VcToString
   
   // ======================================================================
 
-  private void printFormula(PrintStream out, Expr e) {
-
+  private void printFormula(/*@non_null*/ PrintStream out, 
+			    /*@non_null*/ Expr e) 
+    {
     // maps GenericVarDecls to Strings
     // some complex invariant here
 	
@@ -195,14 +196,19 @@ public class VcToString
     printFormula( out, subst, e );
   }
       
-  private void printFormula(PrintStream out, Hashtable subst, Expr e) {
-
+  private void printFormula(/*@non_null*/ PrintStream out, 
+			    Hashtable subst, 
+			    /*@non_null*/ Expr e) 
+  {
     Assert.notNull( e );
 
     reallyPrintFormula( out, subst, e );
   }
 
-  private void reallyPrintFormula(PrintStream out, Hashtable subst, Expr e) {
+  private void reallyPrintFormula(/*@non_null*/ PrintStream out, 
+				  Hashtable subst, 
+				  /*@non_null*/ Expr e) 
+  {
 
     // System.out.print("printFormula: ");
     // PrettyPrint.inst.print(System.out, e);
@@ -480,7 +486,10 @@ public class VcToString
 
   private boolean insideNoPats = false;
 
-  private void printTerm(PrintStream out, Hashtable subst, Expr e) {
+  private void printTerm(/*@non_null*/ PrintStream out, 
+			 Hashtable subst, 
+			 /*@non_null*/ Expr e) 
+  {
 
     // System.out.print("printTerm: ");
     // PrettyPrint.inst.print(System.out, e);
@@ -767,7 +776,10 @@ public class VcToString
   }
 
   //@ requires ne.op == TagConstants.DTTFSA;
-  private void printDttfsa(PrintStream out, Hashtable subst, NaryExpr ne) {
+  private void printDttfsa(/*@non_null*/ PrintStream out, 
+			   Hashtable subst, 
+			   /*@non_null*/ NaryExpr ne) 
+  {
     LiteralExpr lit = (LiteralExpr)ne.exprs.elementAt(1);
     String op = (String)lit.value;
     if (ne.exprs.size() == 2) {
@@ -790,7 +802,8 @@ public class VcToString
 
   // ======================================================================
 
-  private void printVarDecl(PrintStream out, GenericVarDecl decl) {
+  private void printVarDecl(/*@non_null*/ PrintStream out, 
+			    GenericVarDecl decl) {
     out.print(Atom.printableVersion(UniqName.variable(decl)));
   }
 
@@ -798,15 +811,15 @@ public class VcToString
 
 
   private static final long MaxIntegral = 1000000;
-  private static final Long minThreshold = new Long(-MaxIntegral);
-  private static final Long maxThreshold = new Long(MaxIntegral);
+  private static final /*@non_null*/ Long minThreshold = new Long(-MaxIntegral);
+  private static final /*@non_null*/ Long maxThreshold = new Long(MaxIntegral);
 
   /**
    ** Convert an integral # into its printname according to the rules
    ** of ESCJ 23b, part 9.
    **/
 
-  private String integralPrintName(long n) {
+  private /*@non_null*/ String integralPrintName(long n) {
     if (-MaxIntegral <= n && n <= MaxIntegral) {
       return String.valueOf(n);
     }

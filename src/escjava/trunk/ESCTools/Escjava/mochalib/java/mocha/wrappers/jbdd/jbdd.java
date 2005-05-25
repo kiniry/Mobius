@@ -114,7 +114,7 @@ public class jbdd {
   public native	boolean jbddest_unate(int var_id, int phase); // shouldn't
   // this be boolean?
   public native	/*@non_null*/ jbdd[] jbdd_find_essential();
-  public native	double[] jbdd_cof_minterm();
+  public native	/*@non_null*/ double[] jbdd_cof_minterm();
   public native	boolean jbdd_var_is_dependent(/*@non_null*/ jbdd f);
   public native	boolean jbdd_equal(/*@non_null*/ jbdd g);
   public native	/*@non_null*/ jbdd jbdd_intersects(/*@non_null*/ jbdd g); 

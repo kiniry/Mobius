@@ -114,7 +114,9 @@ public class Traverse
 	}	
     }
 
-    static GuardedCmd computeHelper(GuardedCmd g, GuardedCmd context, Set env) {
+    static /*@non_null*/ GuardedCmd computeHelper(/*@non_null*/ GuardedCmd g, 
+						  GuardedCmd context, Set env) 
+    {
         switch (g.getTag()) {
             case TagConstants.SKIPCMD:
             case TagConstants.RAISECMD:

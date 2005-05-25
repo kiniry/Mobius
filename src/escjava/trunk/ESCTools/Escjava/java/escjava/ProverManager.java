@@ -72,7 +72,7 @@ public class ProverManager {
     }
 
     synchronized
-    static public void push(Expr vc) {
+    static public void push(/*@non_null*/ Expr vc) {
 	PrintStream ps = prover.subProcessToStream();
 	ps.print("\n(BG_PUSH ");
 	VcToString.computePC(vc, ps);

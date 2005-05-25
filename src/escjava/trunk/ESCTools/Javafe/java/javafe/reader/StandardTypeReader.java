@@ -173,7 +173,7 @@ public class StandardTypeReader extends TypeReader
    * <p> Warning: the definition of accessible is host system
    * dependent and may in fact be defined as always true.
    */
-  public boolean accessable(String[] P) {
+  public boolean accessable(/*@non_null*/ String[] P) {
     return javaSrcFileSpace.accessable(P) || javaFileSpace.accessable(P);
   }
 
@@ -181,12 +181,12 @@ public class StandardTypeReader extends TypeReader
    * Return true iff the fully-qualified outside type <code>P.T</code>
    * exists.
    */
-  public boolean exists(String[] P, String T) {
+  public boolean exists(/*@non_null*/ String[] P, /*@non_null*/ String T) {
     return (javaSrcFileSpace.findFile(P, T, "java") != null) ||
       (javaFileSpace.findFile(P, T, "class") != null);
   }
 
-  public GenericFile findType(String[] P, String T) {
+  public GenericFile findType(/*@non_null*/ String[] P, /*@non_null*/ String T) {
     GenericFile gf = javaSrcFileSpace.findFile(P, T, "java");
     if (gf == null) gf = javaFileSpace.findFile(P, T, "class");
     return gf;
@@ -203,7 +203,7 @@ public class StandardTypeReader extends TypeReader
    * reached from its containing clases, is it considered to exist.
    */
   //@ requires \nonnullelements(P) && \nonnullelements(N);
-  public GenericFile locateBinary(String[] P, String[] N) {
+  public GenericFile locateBinary(/*@non_null*/ String[] P, /*@non_null*/ String[] N) {
     String typename = "";
 
     for (int i=0; i<N.length; i++) {
@@ -231,10 +231,9 @@ public class StandardTypeReader extends TypeReader
    * <code>P.T</code>'s binary may be read in in order to obtain it's
    * source pointer.
    */
-  //@ requires P != null;
   //@ requires \nonnullelements(P);
   // can return null
-  public GenericFile locateSource(String[] P,
+  public GenericFile locateSource(/*@non_null*/ String[] P,
                                   /*@ non_null @*/ String T,
                                   boolean useSrcPtr) {
     // First try the .java file with name T.java:
@@ -260,7 +259,7 @@ public class StandardTypeReader extends TypeReader
   }
 
   // Finds source files
-  public ArrayList findFiles(String[] P) {
+  public /*@non_null*/ ArrayList findFiles(/*@non_null*/ String[] P) {
     FilenameFilter ff = filter();
     ArrayList a = new ArrayList();
     Enumeration e = javaSrcFileSpace.findFiles(P);
@@ -272,7 +271,7 @@ public class StandardTypeReader extends TypeReader
     return a;
   }
 
-  public FilenameFilter filter() {
+  public /*@non_null*/ FilenameFilter filter() {
     return new FilenameFilter() {
         public boolean accept(File f, String n) {
           if (!f.isFile()) return false;
@@ -332,7 +331,7 @@ public class StandardTypeReader extends TypeReader
    * <p> (This is a convenience function.)
    */
   //@ requires \nonnullelements(P);
-  public CompilationUnit readTypeSrc(String[] P,
+  public CompilationUnit readTypeSrc(/*@non_null*/ String[] P,
                                      /*@ non_null @*/ String T,
                                      boolean avoidSpec) {
     GenericFile source = locateSource(P, T, true);
@@ -361,7 +360,7 @@ public class StandardTypeReader extends TypeReader
    * WRT after) is considered an error.
    */
   //@ requires \nonnullelements(P);
-  public CompilationUnit readTypeBinaries(String[] P,
+  public CompilationUnit readTypeBinaries(/*@non_null*/ String[] P,
                                           /*@ non_null @*/ String T,
                                           long after) {
     // Check for an up-to-date T.class file:
@@ -401,8 +400,8 @@ public class StandardTypeReader extends TypeReader
    * <p> If the resulting {@link CompilationUnit} is non-null, then it
    * is always complete, having no stubs.
    */
-  public CompilationUnit read(String[] P,
-                              String T,
+  public CompilationUnit read(/*@non_null*/ String[] P,
+                              /*@non_null*/ String T,
                               boolean avoidSpec) {
     int fileOriginOption = Tool.options.fileOrigin;
 
@@ -436,7 +435,7 @@ public class StandardTypeReader extends TypeReader
   }
 
   //@ requires \nonnullelements(args);
-  public static void main(String[] args)
+  public static void main(/*@non_null*/ String[] args)
     throws java.io.IOException {
     if (args.length != 2) {
       System.err.println("StandardTypeReader: <package> <simple name>");

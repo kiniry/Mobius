@@ -18,9 +18,9 @@ import mocha.wrappers.jbdd.*;
 public interface Abstractor {
 
     // Returns true if fixpoint
-    public abstract boolean union(Prover p);
+    public abstract boolean union(/*@non_null*/ Prover p);
 
-    public abstract jbdd get();
-    public abstract Vector getClauses();
+    public abstract /*@non_null*/ jbdd get();
+    public abstract /*@non_null*/ Vector getClauses();
 
 }

@@ -47,7 +47,7 @@ final class SNil extends SList
     //@   requires single != null;
     //@   modifies \nothing;
     //@   ensures \result == single;
-    public static SNil getNil() {
+    public static /*@non_null*/ SNil getNil() {
 	if (single != null) {
 	    return single;
 	} else {

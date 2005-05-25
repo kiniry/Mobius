@@ -53,10 +53,10 @@ public class EscTypeReader extends StandardTypeReader
      * source reader, and a binary reader.  All arguments must be
      * non-null.
      */
-    //@ requires engine != null && srcReader != null && binReader != null;
-    protected EscTypeReader(Query engine, Query srcEngine, 
-			CachedReader srcReader,
-			CachedReader binReader) {
+    protected EscTypeReader(/*@non_null*/ Query engine, 
+			    /*@non_null*/ Query srcEngine, 
+			    /*@non_null*/ CachedReader srcReader,
+			    /*@non_null*/ CachedReader binReader) {
 	super(engine, srcEngine, srcReader, binReader);
     }
 
@@ -68,11 +68,11 @@ public class EscTypeReader extends StandardTypeReader
      * source reader, and a binary reader.  All arguments must be
      * non-null.
      */
-    //@ requires engine != null && srcReader != null && binReader != null;
     //@ ensures \result != null;
-    public static StandardTypeReader make(Query engine, 
-					Query srcEngine, CachedReader srcReader,
-					  CachedReader binReader) {
+    public static StandardTypeReader make(/*@non_null*/ Query engine, 
+					  /*@non_null*/ Query srcEngine, 
+					  /*@non_null*/ CachedReader srcReader,
+					  /*@non_null*/ CachedReader binReader) {
 	return new EscTypeReader(engine, srcEngine, srcReader, binReader);
     }
 

@@ -24,10 +24,10 @@ import escjava.backpred.FindContributors;
  **/
 
 public final class InitialState {
-  private Hashtable premap;
-  private Expr is;
+  private /*@non_null*/ Hashtable premap;
+  private /*@non_null*/ Expr is;
 
-  public InitialState(FindContributors scope) {
+  public InitialState(/*@non_null*/ FindContributors scope) {
     premap = new Hashtable();
     ExprVec conjuncts = ExprVec.make();
 
@@ -113,11 +113,11 @@ public final class InitialState {
     return variant;
   }
   
-  public Hashtable getPreMap() {
+  public /*@non_null*/ Hashtable getPreMap() {
     return premap;
   }
   
-  public Expr getInitialState() {
+  public /*@non_null*/ Expr getInitialState() {
     return is;
   }
 }

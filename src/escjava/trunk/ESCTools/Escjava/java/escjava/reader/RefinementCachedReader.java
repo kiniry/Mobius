@@ -42,7 +42,7 @@ public class RefinementCachedReader extends CachedReader
      */
     //@ invariant underlyingReader != null;
 
-    protected AnnotationHandler annotationHandler = new AnnotationHandler();
+    protected /*@non_null*/ AnnotationHandler annotationHandler = new AnnotationHandler();
 
     /**
      * Creating a cached version of a Reader:
@@ -153,7 +153,7 @@ Don't complain, but don't do it twice either. ???
 
     protected ArrayList refinementSequence;
 
-    public CompilationUnit readRefinements(CompilationUnit cu, boolean avoidSpec) {
+    public CompilationUnit readRefinements(/*@non_null*/ CompilationUnit cu, boolean avoidSpec) {
      
 	    // Get and parse the package name
 	    Name pkgName = cu.pkgName;
@@ -292,7 +292,10 @@ Don't complain, but don't do it twice either. ???
 	    return newcu;
 	}
 
-	CompilationUnit getCombinedBinaries(Name pkgName, String[] pkg, ArrayList rs) {
+    CompilationUnit getCombinedBinaries(/*null*/ Name pkgName, 
+					/*@non_null*/ String[] pkg, 
+					/*@non_null*/ ArrayList rs) 
+    {
 	    CompilationUnit combination = null;
 	    java.util.List failures = new java.util.LinkedList();
 	    Iterator i = rs.iterator();
@@ -349,8 +352,11 @@ Don't complain, but don't do it twice either. ???
 
 	// result is a list of CompilationUnits
 	// result will contain something, perhaps just the given cu
-	ArrayList getRefinementSequence(String[] pkgStrings, Identifier type, 
-				CompilationUnit cu, boolean avoidSpec) {
+        //@ ensures \result != null;
+	ArrayList getRefinementSequence(/*@non_null*/ String[] pkgStrings,
+					Identifier type, 
+					/*@non_null*/ CompilationUnit cu, 
+					boolean avoidSpec) {
 	    ArrayList refinements = new ArrayList();
 	    GenericFile mrcufile;
 	    GenericFile gf = cu.sourceFile();
@@ -431,7 +437,9 @@ Don't complain, but don't do it twice either. ???
 	    return refinements;
 	}
 
-	public static GenericFile findRefined(String[] pkgStrings, CompilationUnit cu) {
+    public static GenericFile findRefined(/*@non_null*/ String[] pkgStrings, 
+					  /*@non_null*/ CompilationUnit cu) 
+    {
 	    LexicalPragmaVec v = cu.lexicalPragmas;
 	    for (int i=0; i<v.size(); ++i) {
 		if (v.elementAt(i) instanceof RefinePragma) {
