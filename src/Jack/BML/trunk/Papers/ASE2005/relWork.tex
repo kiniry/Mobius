@@ -3,7 +3,7 @@
 Related work exists in several directions -  logic for unstructured program languages,  attaching specification to the compiled code, bytecode verification, architecture for
 checking untrusted components.
 
-Floyd is among the first to work on program verification for unstructured languages (see \ref{F67amp}).
+Floyd is among the first to work on program verification for unstructured languages (see \cite{F67amp}).
 Few works have been dedicated to the definition of a bytecode logic. In \cite{Quigley}, Quigley defines a Hoare logics for bytecode programs. 
  This work is limited to a subset of the Java virtual machine instructions and does not treat for example method calls, 
  neither exceptional termination. The logic is defined by searching a structure in the bytecode control flow graph, 
@@ -18,14 +18,14 @@ However infering invariants is not decidable problem. The work of P.M\..uller an
 In~\cite{B04tlsj} a bytecode logic for a stack based language is defined which checks programs both for well - typedness and functional correctness. 
  The language does not support objects, references, exceptions neither subroutines. 
 
-In ~\cite{WildmoserN-ESOP05} a  framework is described for verifying Jinja (a Java subset) bytecode against arithmetic overflow. 
+In ~\cite{WildmoserN-ESOP05} a framework is described for verifying Jinja (a Java subset) bytecode against arithmetic overflow. 
 %The annotation is written manually, which is not comfortable, especially on bytecode. 
 Here we propose a way to compile a specification written in a high level language, allowing specification to be written on a 
 high level, which is more convenient.
 
 In the field of specification compilation we can mention the Spec\# programming system developed at Microsoft,
 ~\cite{BLS04sp}. Spec\#  is a superset of the C\# programming language, with a built-in  specification language,
- proposes a verification framework (there is a choice to perform the checks either at runtime or statically). 
+which proposes a verification framework (there is a choice to perform the checks either at runtime or statically). 
  The static verification procedure  involves translation of the specification into metadata which is attached to the intermediate code 
  and the verification is performed over the bytecode by the Boogie theorem prover.
 
