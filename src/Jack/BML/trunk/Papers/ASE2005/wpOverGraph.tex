@@ -2,19 +2,14 @@
 
 \subsection{Bytecode Weakest Precondition}\label{wpGraph}
 
-In the following we overload the function symbol \wpi \ applying it to a method, i.e. the verification condition generation for a method is defined over its acyclic execution graph.
+In the following we overload the function symbol \wpi \ applying it to a method and sequence of bytecode instructions.
 The \wpi \ function runs in a backwards direction starting from the blocks that do not have successors up to reaching the entry point
- instruction. We distinguish the \wpi \ calculus over  a method's body bytecode, a bytecode block and a sequence of bytecode instructions.
+ instruction. We distinguish the \wpi \ calculus over a method's body bytecode, a bytecode block and a sequence of bytecode instructions.
 
 \paragraph{The weakest precondition $\wpi(\tt{m})$ for method \texttt{m}} is the weakest precondition of its entry block $\blockm{entry}$. 
- $$\wpi(\tt{m}) = \wpi(\blockm{entry})$$%, \blockPost{entry}, \excPost(m) ) $$
-%
+ $$\wpi(\tt{m}) = \wpi(\blockm{entry})$$
 
-%
-
-
-\paragraph{The weakest precondition for a bytecode block} is calculated splitting the block in two parts: its last instruction and its sequential part (the instruction sequence without the last one).
-Let call $\blockSeq{i}$ the sequential part of block $\blockm{i}$ and $\blockPost{i}$ the precondition of its last instruction, the weakest precondition of $\blockm{i}$ is then defined as follows:
+\paragraph{The weakest precondition for a bytecode block} is calculated splitting the block in two parts: its last instruction and its sequential part (the instruction sequence without the last one). We note with $\blockSeq{i}$ the sequential part of block $\blockm{i}$ and $\blockPost{i}$ the predicate that must hold after the execution of $\blockPost{i}$ and its last instruction, the weakest precondition of $\blockm{i}$ is then defined as follows:
 
 $$ \wpi(\blockm{i}) = \wpi( \blockSeq{i}, \blockPost{i}, \excPost ) $$
 
@@ -22,13 +17,20 @@ Concerning the sequential part, the \wpi \ is calculated applying the standard $
 \begin{center}
 $ \begin{array}{l} \wpi( instrList;i_{j}, \psi,\excPost ) = \\ \wpi(instrList, \wpi(i_{j}, \psi,\excPost ),\excPost ) \end{array} $
 \end{center}
-%Calculating the precondition of the sequential part of the block $\blockm{i}$ which we denote with  $\blockSeq{i}$  is standard - the precondition of an instruction  is inferred from the precondition of the previous one.=
-Let define now the precondition of the last instruction of a block. This precondition depends on the blocks that can be executed after it. The definition will be notably different if a successor is an entry point of a loop or not. Thus, definition \ref{post} defines the precondition in function of the last instruction and the precondition of the successor block. This precondition depends on the relation between the two blocks (the current and the successor), it is defined in definition \ref{post2}, we call it $pre(b^{i}, b^{n})$ standing for the precondition of block n when it is executed after block i..
-%The postcondition $\blockPost{i}$ is calculated recursively starting from the blocks that do not have successors upon the specified method's postcondition  $\psi^{post}(m)$ and exceptional postcondition $\excPost (m)$.
- 
-%It is actually the conjunction of the preconditions of the block successors and it depends on the last instruction of the block.
+%Calculating the precondition of the sequential part of the block $\blockm{i}$ which we denote with  $\blockSeq{i}$  is standard - the precondition of an instruction  is inferred from the precondition of the previous one.
+The weakest precondition of the sequential part of a block depends on its last instruction and its successors blocks. 
+To calculate the weakest precondition for a block we first define the postcondition of its sequential part; the latter definition involves
+the predicate  $pre(\blockm{i}, \blockm{n}) $ where if $b^i \execRel b^n$ then $pre(\blockm{i}, \blockm{n})$ must hold after the execution $b^i$
+and before the execution of $b^n$. 
 
-\begin{defn}[Last instruction block precondition]\label{post}
+
+%This predicate depends on if the two blocks are the entry and an end of a loop (see def.\ref{defLoop} in the previous Section \ref{abstrCntrFlow} ) or not.
+
+
+% Lilian : Let define now the precondition of the last instruction of a block. This precondition depends on the blocks that can be executed after it. The definition will be notably different if a successor is an entry point of a loop or not. Thus, definition \ref{post} defines the precondition in function of the last instruction and the precondition of the successor block. This precondition depends on the relation between the two blocks (the current and the successor), it is defined in definition \ref{post2}, we call it $pre(b^{i}, b^{n})$ standing for the precondition of block $b^{n}$ when it is executed after $b^{i}$ .
+
+We define the postcondition of the sequential part of a block $\blockm{i}$: 
+\begin{defn}[ Block's postcondition $\blockPost{i}$]\label{post}
  Let $\tt{ins}_s$ be the last instruction of $\ \blockm{i} $ then:
  \begin{itemize} 
  
@@ -51,7 +53,7 @@ $\blockPost{i} =  pre(b^{i}, b^{n})$ \\
 \item  if  $\tt{ins}_s$ =  \instr{athrow} \\ 
 	\begin{enumerate}
 \item if there exists a block $\blockm{e}$ such that 
-$\blockm{i} \execRel^A \blockm{e}$ (i.e. an exception handler protects the type of the exception thrown)
+$\blockm{i} \execRel \blockm{e}$ (i.e. an exception handler protects the type of the exception thrown)
 then :\\
 $\blockPost{i }=$\\
 $ pre(b^{i}, b^{e})[\counter \leftarrow 0][\EXC \leftarrow \stack{\counter}] $. \\
@@ -60,12 +62,6 @@ the exceptional postcondition function $\excPost$ for this exceptional type:\\ %
  $\blockPost{i }=$\\ $\excPost(\stack{\counter}) [\counter \leftarrow 0][\EXC \leftarrow \stack{\counter}] $. \\
 see in section \ref{grammar} for the meaning of \EXC.
     \end{enumerate}
-%The only thing that is known about the exception thrown is that it is 
- % on the top of the stack $\stack{\counter}$. We keep track of all the possible postconditions (as the exception
-%may be caught by an exception handler starting at $\blockm{e}$ or it is thrown and thus the exceptional postcondition for 
-%the exception must hold) up to
-%discovering the type of the thrown exception and then identifying the adequate predicate 
-%that must hold after the execution of the \instr{athrow} instruction. 
 \item  if  $\tt{ins}_s$ = \instr{return} \\
 $$
    \blockPost{i } = \psi[\result \leftarrow \stack{\counter} ]    
@@ -77,32 +73,30 @@ where $\psi $ is the specified method postcondition.
 
 \end{defn}
 
+The predicate $pre(b^{i}, b^{n})$ is basically either a loop invariant in case the $b^{i}$ and $b^{n}$ define a loop (see def.\ref{defLoop} in the previous Section \ref{abstrCntrFlow} ), otherwise it is the weakest precondition of $b^{n}$ hold after $b^{i}$ and before $b^{n}$. 
 \begin{defn}[precondition of a block]\label{post2}
-$pre(b^{i}, b^{n})$ is the precondition of the block n when it is executed after the block i.
+Assume that $b^i \execRel b^n$. The predicate $pre(b^{i}, b^{n})$ must hold after the execution of $\blockm{i}$ and before the execution of $\blockm{n}$ and is defined as follows:
 \begin{itemize}
-
 \item if \ $\blockm{i} \execRel^l \blockm{n}$ 
-%if  $\tt{ins}_s$ is a loop end instruction \footnote{loop entry and loop end instructions are identified when building the acyclic control flow graph} of a loop with invariant $\invariant$ 
-then the loop invariant has to be proven:
+then the corresponding loop invariant must hold:
 $$
 pre(b^{i}, b^{n}) =  \invariant
 $$
 
 \item else if $\ \blockm{n}$ is a loop entry then the corresponding loop invariant $\invariant$ must hold before $\blockm{n}$ is executed, i.e. after the execution of $\blockm{i}$. We also require as postcondition that \invariant \ implies the weakest precondition of the loop entry instruction. The implication is quantified over the locations $m_i , i= 1..s$ that may be modified in the loop.
-% These locations are specified by the \jmlKey{loop\_modifies} loop specification entry (see section \ref{bclGrammar}). The quantification thus allows to initialize the free expressions applying the \textit{wp} and this prevents us from writing large loop invariants.
 
 $$
 pre(b^{i}, b^{n}) = \invariant \ \wedge \ \forall_{i = 1..s} m_i.(
 \invariant \Rightarrow \wpi(\blockSeq{l},\blockPost{l},\excPost))
 $$
-\item else the precondition is the classical precondition of the block n. 
+\item else 
 $$
 pre(b^{i}, b^{n}) = \wpi( \blockSeq{n} ,  \blockPost{n}, \excPost)
 $$
 \end{itemize}
 \end{defn}
-Subroutines are treated by in-lining. As we stated in the beginning we assume that the bytecode has been certified by a Java
-bytecode verifier thus our analysis for identifying  subroutines is not a problem.  
+Subroutines are treated by in-lining. As we stated in the beginning we assume that the  bytecode has been generates by a nonoptimizing compiler and that it 
+has been certified by a Java bytecode verifier thus our analysis for identifying the instructions that belong to a subroutine is not a problem (as the bytecode verifier guarantees that \texttt{jsr} are not the cause of cycles).  
 
 
 \subsection{Verifying Java Bytecode Programs} Bytecode programs represent a set of Java classes. Establishing the correctness of Java bytecode program w.r.t. to their specification thus, consists in generating verification conditions for every method appearing in every class of the bytecode program.
@@ -112,9 +106,8 @@ $$
 \psi^{pre}(m)  \Rightarrow \wpi(m)
 $$    
 
-\paragraph{Example} We give a simple example of how the \wpi \ works. Block $\blockm{6}$ (starts at instr. \texttt{6}) in fig.\ref{blockBC} ends with a branching instruction and in the case when the condition is true (the current element of the array is not equal to the first parameter of the method \texttt{replace}) the execution will continue at $\blockm{19}$. Below we give the part of the weakest precondition predicate of $\blockm{6}$ when the condition of its last instruction holds - in this case the postcondition of the block is the precondition of $\blockm{19}$ which is an end of a loop and thus its postcondition is the loop invariant. The implications with conclusion \Myfalse \ stand for the possible exceptions \texttt{NullPointer} and \texttt{ArrayIndexOutOfBound}  exceptions that may be thrown. 
-
-
+\paragraph{Example} We give a simple example of how the \wpi \ works. Block $\blockm{6}$ (starts at instr. \texttt{6}) in fig.\ref{blockBC} ends with a branching instruction and in the case when the condition is true (the current element of the array is not equal to the first parameter of the method \texttt{replace}) the execution will continue at $\blockm{19}$. Below we give the part of the weakest precondition predicate of $\blockm{6}$ when the condition of its last instruction holds - in this case 
+the predicate $pre(b^{6}, b^{19})$ is $\wpi(\blockm{19})$.  The implications with conclusion \Myfalse \ stand for the possible exceptions \texttt{NullPointer} and \texttt{ArrayIndexOutOfBound} exceptions that may be thrown (as no postcondition is specified explicitely for these cases of abnormal termination, the one by default is taken). 
 
 \input wpExample.tex
 

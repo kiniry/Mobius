@@ -4,33 +4,37 @@ Safety, security and establishing trust in untrusted component are important iss
 i.e. mobile phones, bank cards, ID cards and whatever scenario where 
 untrusted code must be executed. Those questions have received different answers - cryptography to guarantee data integrity or confidentiality,
  digital signatures for establishing that the code originates from a trusted entity, bytecode verification that checks if the bytecode 
- is well structured(e.g. no jumps outside the bytecode array) or well typed, 
- the proof carrying code framework  and the certifying compiler ( see  \cite{ComNec},\cite{DesNecLee98} ) for establishing once 
- again type properties for assembly programs.  
+ is well structured (e.g. no jumps outside the bytecode array) or well typed, 
+ the proof carrying code framework  and the certifying compiler (see  \cite{ComNec,DesNecLee98}) for establishing once 
+ again safety properties for assembly programs.  
+
 %Still downloading and installing untrusted software components (which is not accompanied by its source code) may require 
 %more than guaranteeing that the code issuer is trusted, or that the code is well typed / structured. For instance, the code receiver may be willing to establish that the component respects 
 %some functional properties or does not break certain security policy. 
 %A typical example is when the receiver site gets an interface implementation and wants to check the latter against the interface 
 %specification. Another scenario may be when the receiver requires some safety condition for the untrusted code.  These situations
 %can be resolved by using program logic for low level programs.
-The Java technology finds a large application in mobile and embedded components because of its portability across platforms. For instance, its dialect JavaCard is largely used in smartcard applications and the J2ME Mobile Information Device Profile(MIDP) finds application in GSM mobile components. 
+
+The Java technology finds a large application in mobile and embedded components because of its portability across platforms. For instance, its dialect JavaCard is largely used in smartcard applications and the J2ME Mobile Information Device Profile (MIDP) finds application in GSM mobile components. 
   In this article we propose a static verification technique using formal methods for sequential Java bytecode programs.
 We define a bytecode logic in terms of weakest precondition calculus for the sequential Java bytecode language. The logic rules out 
 almost all Java bytecode instructions and supports the Java specific features like 
 exceptions, references, method calls and subroutines.  
  
  %The verification is modular  -  every method from the application is checked separately against its specification. 
-   In order to make the process automatic we define a bytecode specification language here, called BCSL, and supply a compiler from 
- the high level Java specification language JML ~\cite{JMLRefMan} to BCSL. 
+ 
+We define a bytecode specification language, called BCSL, and supply a compiler from 
+ the high level Java specification language JML~\cite{JMLRefMan} to BCSL. 
  BCSL supports a JML subset which is expressive enough to specify rich functional properties. The specification then is 
  inserted in the class file format in newly defined attributes, thus making not only the code mobile but also its specification. These class
- file extensions do not affect the JVM performance. 
-  We have implementations of a verification condition generator based on the weakest precondition calculus and the JML 
-specification compiler. Both are integrated in the Java Applet Correctness Kit(JACK) ~\cite{BRL-JACK}.
-  In what follows, the sections and their corresponding topics are: 
-Section ~\ref{architecture_s} reviews scenarios in which the architecture is appropriate to use; Section  ~\ref{prelim} is a short description of the JML specification language; Section ~\ref{bcSpecLg} presents the bytecode 
-specification language BCSL and the JML compiler; Section ~\ref{relWork} provides an overview of related work; Section ~\ref{wpbc} explains how the weakest precondition calculus, works illustrating it with definitions and an example; in this section we also give the verification conditions that are generated for 
-proving program correctness; Section ~\ref{conclusion} concludes with future work.  
+ file extensions do not affect the JVM performance. This scheme makes the Java bytecode benefit from the specification written on source level.
+ We have implementations of a verification condition generator based on the weakest precondition calculus and the JML 
+specification compiler. Both are integrated in the Java Applet Correctness Kit(JACK)~\cite{BRL-JACK}.
+  
+In what follows, the sections and their corresponding topics are: 
+Section~\ref{prelim} gives background information, namely a brief description for JACK and the JML specification language; Section~\ref{architecture_s} reviews scenarios in which the architecture is appropriate to use; Section~\ref{relWork} provides an overview of related work; Section~\ref{bcSpecLg} presents the bytecode 
+specification language BCSL and the JML compiler; Section~\ref{wpbc} explains how the weakest precondition calculus works illustrating it with definitions and example; in this section we also give the verification conditions that are generated for 
+proving program correctness; Section~\ref{results} discusses some experiments; Section~\ref{conclusion} concludes with future work.  
 
 
 

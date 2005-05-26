@@ -1,8 +1,8 @@
 %!PS-Adobe-2.0 EPSF-2.0
 %%Title: architecture.fig
 %%Creator: fig2dev Version 3.2 Patchlevel 4
-%%CreationDate: Wed Apr 20 17:14:06 2005
-%%For: lburdy@olur (Lilian Burdy,L119,7936,,)
+%%CreationDate: Thu May 26 17:39:21 2005
+%%For: mpavlova@leucodon (Mariela Pavlova,L119,7936,,)
 %%BoundingBox: 0 0 470 654
 %%Magnification: 1.0000
 %%EndComments
@@ -186,6 +186,15 @@ gs col0 s gr
 n 5337 4550 m 5460 4569 l 5360 4495 l 5337 4550 l  cp gs 0.00 setgray ef gr  col0 s
 % Polyline
 gs  clippath
+5970 6915 m 6030 6915 l 6030 6764 l 6000 6884 l 5970 6764 l cp
+eoclip
+n 6000 6525 m
+ 6000 6900 l gs col0 s gr gr
+
+% arrowhead
+n 5970 6764 m 6000 6884 l 6030 6764 l 5970 6764 l  cp gs 0.00 setgray ef gr  col0 s
+% Polyline
+gs  clippath
 7185 7245 m 7185 7305 l 7337 7305 l 7217 7275 l 7337 7245 l cp
 eoclip
 n 8475 7275 m
@@ -302,11 +311,11 @@ n 10350 6900 m
 % arrowhead
 n 10380 811 m 10350 691 l 10320 811 l 10380 811 l  cp gs 0.00 setgray ef gr  col0 s
 /Courier ff 210.00 scf sf
+5999 3675 m
+gs 1 -1 sc (Class file) dup sw pop 2 div neg 0 rm  col0 sh gr
+/Courier ff 210.00 scf sf
 5999 6164 m
 gs 1 -1 sc (with) dup sw pop 2 div neg 0 rm  col0 sh gr
-/Courier ff 210.00 scf sf
-5999 6404 m
-gs 1 -1 sc (JML attributes) dup sw pop 2 div neg 0 rm  col0 sh gr
 /Courier ff 210.00 scf sf
 5999 5924 m
 gs 1 -1 sc (Class file) dup sw pop 2 div neg 0 rm  col0 sh gr
@@ -316,18 +325,9 @@ gs 1 -1 sc (Producer) dup sw pop 2 div neg 0 rm  col0 sh gr
 /Times-Bold ff 270.00 scf sf
 3750 7125 m
 gs 1 -1 sc (Client) dup sw pop 2 div neg 0 rm  col0 sh gr
-% Polyline
-gs  clippath
-5970 6915 m 6030 6915 l 6030 6764 l 6000 6884 l 5970 6764 l cp
-eoclip
-n 6000 6525 m
- 6000 6900 l gs col0 s gr gr
-
-% arrowhead
-n 5970 6764 m 6000 6884 l 6030 6764 l 5970 6764 l  cp gs 0.00 setgray ef gr  col0 s
 /Courier ff 210.00 scf sf
-5999 3675 m
-gs 1 -1 sc (Class file) dup sw pop 2 div neg 0 rm  col0 sh gr
+5999 6404 m
+gs 1 -1 sc (BCSL attributes) dup sw pop 2 div neg 0 rm  col0 sh gr
 % here ends figure;
 $F2psEnd
 rs

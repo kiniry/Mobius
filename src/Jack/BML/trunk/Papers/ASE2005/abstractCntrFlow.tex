@@ -1,8 +1,8 @@
 
 \subsection{Abstracting The Control Flow Graph}\label{abstrCntrFlow}
 In this section we discuss how the control flow graph of a bytecode is transformed in an acyclic control flow graph. We assume that the bytecode is provided 
-with sufficient specification and in particular loop invariants. Under this assumption we can ``cut'' the control flow graph at every program point
-where an invariant must hold and ``place'' at that point the invariant. This needs the introduction of several definitions.
+with sufficient specification and in particular loop invariants. Under this assumption, we can ``cut'' the control flow graph at every program point
+where an invariant must hold and ``place'' at that point the invariant. This requires the introduction of several definitions.
 
 %As we  already stated we assume that loops in method bodies are  \textit{annotated} with appropriate invariants. 
 %Related works like in \cite{WildmoserN-ESOP05} use different approach where loop invariants are inferred. Anyways inferring invariants is not decidable. 
@@ -17,7 +17,7 @@ basic block is a code segment that has no unconditional jump or
 conditional branch statements except for possibly the last
 statement, and none of its statements, except possibly the first,
 is a target of any jump or branch statement. 
- We denote a block starting at instruction  $i_{j}$ with $\blockm{j}$.The block starting at the entry instruction is denoted with $\blockm{entry}$.
+ We denote a block starting at instruction  $i_{j}$ with $\blockm{j}$. The block starting at the entry instruction is denoted with $\blockm{entry}$.
  The execution relation  $\blockm{j} \execRel \blockm{k}$  states that block $\blockm{k}$ may be executed immediately after $\blockm{j}$ in some execution path of the method. For example if  instruction $\tt{i_{k}}$ = \texttt{athrow} is the last of the block $\blockm{j}$ then 
 $\blockm{j} \execRel \blockm{n}$, where  $\blockm{n}$ is the first block of an exception handler that protects $\tt{i_{k}}$ 
 % Definition \ref{execRel} states formally the execution relation.
@@ -43,29 +43,34 @@ $\blockm{j} \execRel \blockm{n}$, where  $\blockm{n}$ is the first block of an e
 
 \begin{defn}[Loop Definition]
 \label{defLoop}
-Assume we have a bytecode $\Pi$. We say that $\blockm{s}$ is the entry block of a loop $l$ in $\Pi$ and $\blockm{e}$ is an end block of $l$ if:
+Assume we have a bytecode $\Pi$. We say that $\blockm{e}$ is the entry block of a loop $l$ in $\Pi$ and $\blockm{f}$ is an end block of $l$ and we note this with  
+ $\blockm{f} \execRel^l \blockm{e}$ if:
 \begin{itemize}
-\item every path in the control flow graph starting at the entry block $\blockm{entry}$ of $\Pi$ and that reaches $\blockm{e}$, passes through  $\blockm{s}$ 
+\item every path in the control flow graph starting at the entry block $\blockm{entry}$ of $\Pi$ and that reaches $\blockm{f}$, passes through  $\blockm{e}$ 
  % i.e.$ \blockm{entry} \execRel^{*}  \blockm{s} \execRel^{*} \blockm{e}$
-\item $\blockm{e} \execRel \blockm{s}$
+\item $\blockm{f} \execRel \blockm{e}$
+
 \end{itemize}
 \end{defn}
+
 %\subsection{Acyclic control flow graph} \label{graph}
-We abstract the execution relation $\execRel$ to the acyclic execution relation $\execRel^A$ as follows. 
+
+We abstract the execution relation $\execRel$ to the acyclic execution relation $\execRel^A = \execRel \backslash \execRel^l $
+
 %We consider the acyclic graph $\Gamma^A = ( \Omega, \execRel^A)$ obtained from the control flow graph 
 %$\Gamma  = ( \Omega, \execRel)$ of a well formed bytecode $ \Pi $ where the relation $\execRel^A$ is a subset of the  execution relation $\execRel$.
 
-\begin{defn}[Acyclic Execution relation]
-\label{acyclicExRel}
-Assume we have a bytecode and let's have in it the two basic blocks  $\blockm{i} $ and   $\blockm{j}$. We say 
-that $\blockm{i} \execRel^A \blockm{j}$ iff
-\begin{itemize}
-\item $\blockm{i} \execRel \blockm{j}$
-\item and block $\blockm{i}$ and block $\blockm{j}$ are not the end and the entry blocks respectively of the same loop, see loop definition~\ref{defLoop}.
-\end{itemize}
-\end{defn}
+%\begin{defn}[Acyclic Execution relation]
+%\label{acyclicExRel}
+%Assume we have a bytecode and let's have in it the two basic blocks  $\blockm{i} $ and   $\blockm{j}$. We say 
+%that $\blockm{i} \execRel^A \blockm{j}$ iff
+%\begin{itemize}
+% \item $\blockm{i} \execRel \blockm{j}$
+%\item and block $\blockm{i}$ and block $\blockm{j}$ are not the end and the entry blocks respectively of the same loop, see loop definition~\ref{defLoop}.
+%\end{itemize}
+%\end{defn}
 
-We give at fig.~\ref{blockBC} the control flow graph of the method replace given earlier in fig.~\ref{replaceSrc}. The figure shows that the acyclic relation
+We give at Fig.~\ref{blockBC} the control flow graph of the method \texttt{replace} given earlier in Fig.~\ref{replaceSrc}. The figure shows that the acyclic relation
 excludes edges between loop entry and loop end blocks and that at that place the corresponding loop invariant must hold.  
 
 \begin{figure}[!ht]
@@ -76,7 +81,7 @@ dashed arrows stand for the standard execution relation \\
 black arrows represent the acyclic execution relation \\
 bytecode basic blocks are placed in boxes \\
 the invariant is placed between the blocks where it must hold
-\caption{control flow graph of method \texttt{replace} from fig. ~\ref{replaceSrc} }
+\caption{control flow graph of method \texttt{replace} from Fig. ~\ref{replaceSrc} }
 \label{blockBC}
 \end{figure}
 

@@ -1,10 +1,10 @@
 \subsection{Weakest Precondition for bytecode instructions}\label{wpInstr}
 We define a weakest precondition (\wpi) predicate transformer function which takes into account normal and exceptional termination. 
-\wpi \ takes three arguments : an instruction, a predicate that is the instruction's normal postcondition $\psi$, and a function
+\wpi \ takes three arguments: an instruction, a predicate that is the instruction's normal postcondition $\psi$, and a function
 from exception types to predicates $\excPost$ (it returns the specified postcondition in the \jmlKey{exsures} clause for a given exception; see section~\ref{bclGrammar}).
 The \wpi \ function returns the weakest predicate such that if it holds in the state when the instruction starts its execution the following conditions are met: 
 \begin{enumerate}
-	\item if the instruction terminates its execution normally the predicate $\psi$ holds in the poststate 
+	\item if the instruction terminates, its execution normally the predicate $\psi$ holds in the poststate 
 	\item if it terminates with an exception \texttt{E} then the predicate $\excPost(\tt{E})$ holds in the poststate.
 \end{enumerate}
  So the signature of \wpi \ is:
@@ -12,9 +12,9 @@ $$\wpi : \texttt{instruction} \rightarrow \predicate \rightarrow (\tt{ Exception
 
  The Java bytecode language is stack based, i.e. the instructions take their arguments from the method execution stack and 
  put the result on the stack. So we have to represent the elements of the stack that correspond to the arguments and the result for a given instruction. 
- In the examples in fig.~\ref{instrWP} \stack{\counter} stands for the element on the top of the stack. 
+ In the examples in Fig.~\ref{instrWP} \stack{\counter} stands for the element on the top of the stack. 
  The instruction $\instr{Type\_load} \ i$  loads on the top of the stack the value of the method local variable at index \textit{i}
- in the \textbf{Local\_Variable\_Table} (see section ~\ref{bcSpecLg}). The \wpi \ rule for  \instr{Type\_load i} increments the stack
+ in the \textbf{Local\_Variable\_Table} (see section~\ref{bcSpecLg}). The \wpi \ rule for  \instr{Type\_load i} increments the stack
 counter \counter \ and puts on \stack{\counter} the contents of the local variable $\register{i}$.
 As we said in the beginning of the section, \wpi \ ``understands'' the bytecode specification language, i.e. the keywords have their 
 corresponding semantics. For example, the keyword \result \ is evaluated only by \instr{Type\_return} 
@@ -60,9 +60,9 @@ $$
 \subsubsection{References: manipulating fields}
 Fields are treated as functions, where the domain of a field \texttt{f} 
 declared in the class \texttt{Cl} is the set of objects of class \texttt{Cl} and its subclasses.
-We are using function update when assigning a value to a field reference as in ~\cite{B00ppp}. 
-In fig.~\ref{instrWP} the rule for \instr{putField} substitutes the corresponding field function \texttt{Cl.f} with \texttt{Cl.f} updated for object $o$ 
-The definition of update function is given in fig.~\ref{override}.
+We are using function update when assigning a value to a field reference as in~\cite{B00ppp}. 
+In Fig.~\ref{instrWP} the rule for \instr{putField} substitutes the corresponding field function \texttt{Cl.f} with \texttt{Cl.f} updated for object $o$ 
+The definition of update function is given in Fig.~\ref{override}.
 
 \begin{figure}
 $$
@@ -97,10 +97,10 @@ $$
 \subsubsection{Method calls}
 Method calls are handled by using their specification. A method specification is a contract - the precondition of the called method
 must be established by the caller at the program point where the method is invoked and its postcondition is assumed to hold after the invocation. Thus the rule for
-invocation on a non-void instance method is given in fig ~\ref{wpInv}. In the precondition of the called method the formal parameters and the object on which the method is called are substituted with the first \textit{n+1} elements from the top of stack. 
-Because the method returns a value, any occurences of the JML keyword \result \ in $\psi^{post}(m)$  are substituted with the fresh variable $fresh\_var$.  
+invocation on a non-void instance method is given in Fig~\ref{wpInv}. In the precondition of the called method the formal parameters and the object on which the method is called are substituted with the first \textit{n+1} elements from the top of stack. 
+Because the method returns a value, any occurence of the JML keyword \result \ in $\psi^{post}(m)$ is substituted with the fresh variable $fresh\_var$.  
 Because the return value is put on the stack top, the $fresh\_var$ is substituted for the stack top in $\psi$. The resulting predicate is quantified over the 
-expressions that may be modified by the called method. Here we omit the case when the method calls results in an exception for reasons of limited space. 
+expressions that may be modified by the called method. Here we omit the case where the method call results in an exception for reasons of limited space. 
 The rule for static methods is rather the same except for the number of stack elements taken from the stack.  
 
 \begin{figure}[!ht]
