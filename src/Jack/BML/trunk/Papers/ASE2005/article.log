@@ -1,0 +1,318 @@
+This is e-TeX, Version 3.141592-2.2 (MiKTeX 2.4) (preloaded format=latex 2005.1.9)  30 MAY 2005 00:16
+entering extended mode
+**article.tex
+(article.tex
+LaTeX2e <2003/12/01>
+Babel <v3.8a> and hyphenation patterns for english, french, german, ngerman, du
+mylang, nohyphenation, loaded.
+(ieee.cls
+Document Class: ieee 2002/04/16 LaTeX2e class file `ieee' v1.0 for IEEE Confere
+nce Proceedings
+(C:\texmf\tex\latex\base\article.cls
+Document Class: article 2004/02/16 v1.4f Standard LaTeX document class
+(C:\texmf\tex\latex\base\size10.clo
+File: size10.clo 2004/02/16 v1.4f Standard LaTeX file (size option)
+)
+\c@part=\count79
+\c@section=\count80
+\c@subsection=\count81
+\c@subsubsection=\count82
+\c@paragraph=\count83
+\c@subparagraph=\count84
+\c@figure=\count85
+\c@table=\count86
+\abovecaptionskip=\skip41
+\belowcaptionskip=\skip42
+\bibindent=\dimen102
+) (ieee.clo
+File: ieee.clo 2002/04/16 v1.0 IEEE Document Class Options
+)
+(C:\texmf\tex\latex\float\float.sty
+Package: float 2001/11/08 v1.3d Float enhancements (AL)
+\c@float@type=\count87
+\float@exts=\toks14
+\float@box=\box26
+\@float@everytoks=\toks15
+\@floatcapt=\box27
+) (floatsty.sty
+Package: floatsty 2002/04/15 v0.1 Float styles (GNP)
+\@fs@ieee@ctmp=\skip43
+\@fs@ieee@figindent=\skip44
+)
+\@float@every@figure=\toks16
+\@float@every@table=\toks17
+)
+(C:\texmf\tex\latex\amsfonts\amssymb.sty
+Package: amssymb 2002/01/22 v2.2d
+
+(C:\texmf\tex\latex\amsfonts\amsfonts.sty
+Package: amsfonts 2001/10/25 v2.2f
+\@emptytoks=\toks18
+\symAMSa=\mathgroup4
+\symAMSb=\mathgroup5
+LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
+(Font)                  U/euf/m/n --> U/euf/b/n on input line 132.
+))
+(C:\texmf\tex\latex\graphics\epsfig.sty
+Package: epsfig 1999/02/16 v1.7a (e)psfig emulation (SPQR)
+
+(C:\texmf\tex\latex\graphics\graphicx.sty
+Package: graphicx 1999/02/16 v1.0f Enhanced LaTeX Graphics (DPC,SPQR)
+
+(C:\texmf\tex\latex\graphics\keyval.sty
+Package: keyval 1999/03/16 v1.13 key=value parser (DPC)
+\KV@toks@=\toks19
+)
+(C:\texmf\tex\latex\graphics\graphics.sty
+Package: graphics 2001/07/07 v1.0n Standard LaTeX Graphics (DPC,SPQR)
+ (C:\texmf\tex\latex\graphics\trig.sty
+Package: trig 1999/03/16 v1.09 sin cos tan (DPC)
+) (C:\texmf\tex\latex\00miktex\graphics.cfg
+File: graphics.cfg 2003/03/12 v1.1 MiKTeX 'graphics' configuration
+)
+Package graphics Info: Driver file: dvips.def on input line 80.
+
+(C:\texmf\tex\latex\graphics\dvips.def
+File: dvips.def 1999/02/16 v3.0i Driver-dependant file (DPC,SPQR)
+))
+\Gin@req@height=\dimen103
+\Gin@req@width=\dimen104
+)
+\epsfxsize=\dimen105
+\epsfysize=\dimen106
+) (C:\texmf\tex\latex\ltxmisc\url.sty
+\Urlmuskip=\muskip10
+Package: url 2004/03/15  ver 3.1  Verb mode for urls, etc.
+) (cmd.tex
+\c@defn=\count88
+) (article.aux)
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 17.
+LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 17.
+LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 17.
+LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 17.
+LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 17.
+LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 17.
+LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    Try loading font information for U+msa on input line 29.
+ (C:\texmf\tex\latex\amsfonts\umsa.fd
+File: umsa.fd 2002/01/19 v2.2g AMS font definitions
+)
+LaTeX Font Info:    Try loading font information for U+msb on input line 29.
+
+(C:\texmf\tex\latex\amsfonts\umsb.fd
+File: umsb.fd 2002/01/19 v2.2g AMS font definitions
+) (abstract.tex) (intro.tex
+Underfull \vbox (badness 3803) has occurred while \output is active []
+
+ [1
+
+
+])
+(architecture.tex
+File: architecture.eps Graphic file (type eps)
+ <architecture.eps>
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 16.
+ (C:\texmf\tex\latex\base\omscmr.fd
+File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 16.
+
+Underfull \hbox (badness 1436) in paragraph at lines 17--18
+\OT1/cmr/m/n/10 method. In this case, the client can pro-tect
+ []
+
+
+Underfull \hbox (badness 3930) in paragraph at lines 17--18
+\OT1/cmr/m/n/10 trans-ac-tions and the API pro-vides trans-ac-
+ []
+
+
+Underfull \hbox (badness 2173) in paragraph at lines 17--18
+\OT1/cmr/m/n/10 tion man-age-ment fa-cil-i-ties: method \OT1/cmtt/m/n/10 open \
+OT1/cmr/m/n/10 for
+ []
+
+[2]) (relWork.tex) (prelim.tex [3]
+
+LaTeX Warning: Citation `BR02jack' on page 4 undefined on input line 22.
+
+
+Overfull \hbox (14.86186pt too wide) in paragraph at lines 63--63
+[]  \OT1/cmtt/m/n/10 //@ \old(list[i]) == obj1 && list[i] == obj2);[] 
+ []
+
+
+Overfull \hbox (20.11182pt too wide) in paragraph at lines 63--63
+[]  \OT1/cmtt/m/n/10 public boolean replace(Object obj1,Object obj2)[] 
+ []
+
+
+Overfull \hbox (9.61191pt too wide) in paragraph at lines 63--63
+[]    \OT1/cmtt/m/n/10 //@loop_invariant i <= list.length && i >=0[] 
+ []
+
+
+Overfull \hbox (4.36195pt too wide) in paragraph at lines 63--63
+[]    \OT1/cmtt/m/n/10 //@  && (\forall int k;0 <= k && k < i ==>[] 
+ []
+
+LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <10> not available
+(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 64.
+) (classFileExt.tex
+Underfull \hbox (badness 10000) in paragraph at lines 3--3
+[]\OT1/cmr/bx/n/12 Bytecode Spec-i-fi-ca-tion Lan-guage
+ []
+
+
+Underfull \hbox (badness 2671) in paragraph at lines 67--70
+[]\OT1/cmr/m/n/10 We can spec-ify us-ing the spec-i-fi-ca-tion clause
+ []
+
+[4]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+
+Underfull \hbox (badness 3826) in paragraph at lines 90--96
+[]\OT1/cmr/m/n/10 compile the Java source file. This can be
+ []
+
+
+Underfull \hbox (badness 6758) in paragraph at lines 90--96
+\OT1/cmr/m/n/10 done by any Java com-piler that sup-plies
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 90--96
+\OT1/cmr/m/n/10 for every method in the gen-er-ated class
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 90--96
+\OT1/cmr/m/n/10 file the \OT1/cmr/bx/n/10 Line[]Number[]Table \OT1/cmr/m/n/10 a
+nd \OT1/cmr/bx/n/10 Lo-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 90--96
+\OT1/cmr/bx/n/10 cal[]Variable[]Table \OT1/cmr/m/n/10 at-tributes. The pres-
+ []
+
+[5]
+Overfull \hbox (4.90128pt too wide) detected at line 110
+[]
+ []
+
+LaTeX Font Info:    Font shape `OMS/cmr/bx/n' in size <10> not available
+(Font)              Font shape `OMS/cmsy/b/n' tried instead on input line 132.
+
+Underfull \hbox (badness 2865) in paragraph at lines 148--149
+\OT1/cmr/m/n/10 pi-la-tion of in-ter method spec-i-fi-ca-tion, i.e. loops
+ []
+
+
+Underfull \hbox (badness 1062) in paragraph at lines 148--149
+\OT1/cmr/m/n/10 and as-ser-tions. We think that this is an ac-cept-
+ []
+
+) (wpbc.tex [6] (wpSingleInstr.tex
+Overfull \hbox (2.2846pt too wide) detected at line 11
+[] \OT1/cmr/m/n/10 : [] \OMS/cmsy/m/n/10 ! P ! \OT1/cmr/m/n/10 ([] \OMS/cmsy/m/
+n/10 ! P\OT1/cmr/m/n/10 ) \OMS/cmsy/m/n/10 ! P
+ []
+
+
+Overfull \hbox (31.9818pt too wide) detected at line 52
+[]
+ []
+
+[7]
+
+LaTeX Font Warning: Font shape `OT1/cmss/bx/it' undefined
+(Font)              using `OT1/cmss/bx/n' instead on input line 132.
+
+) (abstractCntrFlow.tex
+LaTeX Font Info:    Font shape `OMS/cmr/m/it' in size <10> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 43.
+File: graph1.eps Graphic file (type eps)
+ <graph1.eps>
+
+LaTeX Warning: Float too large for page by 115.59512pt on input line 80.
+
+) (wpOverGraph.tex [8]
+Underfull \hbox (badness 10000) in paragraph at lines 33--34
+[]
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 35--36
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 48--50
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 51--52
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 53--58
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 63--64
+
+ []
+
+
+Overfull \hbox (108.81639pt too wide) in paragraph at lines 79--80
+[]
+ []
+
+
+Overfull \hbox (30.63205pt too wide) detected at line 92
+\OML/cmm/m/it/10 pre\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 b[]; b[]\OT1/cmr/m/n/10 )
+ = []  \OMS/cmsy/m/n/10 ^  8[]\OML/cmm/m/it/10 m[]:\OT1/cmr/m/n/10 ([] \OMS/cms
+y/m/n/10 ) []\OT1/cmr/m/n/10 ([]\OML/cmm/m/it/10 ; [][][];  []\OT1/cmr/m/n/10 )
+)
+ []
+
+[9] (wpExample.tex))) (results.tex) (conclusion.tex) (article.bbl
+Underfull \hbox (badness 10000) in paragraph at lines 4--6
+[]\OT1/cmr/m/n/9 escjava.  $\OT1/cmtt/m/n/9 http : / / secure . ucd . ie / prod
+ucts /
+ []
+
+
+Underfull \hbox (badness 1389) in paragraph at lines 18--21
+[]\OT1/cmr/m/n/9 Mike Bar-nett, K. Rus-tan M. Leino, and Wol-fram
+ []
+
+[10]) [11] (article.aux)
+
+LaTeX Font Warning: Some font shapes were not available, defaults substituted.
+
+
+LaTeX Warning: There were undefined references.
+
+ ) 
+Here is how much of TeX's memory you used:
+ 1341 strings out of 95898
+ 13656 string characters out of 1195289
+ 67022 words of memory out of 1059535
+ 4242 multiletter control sequences out of 35000
+ 16974 words of font info for 66 fonts, out of 500000 for 1000
+ 14 hyphenation exceptions out of 607
+ 32i,26n,24p,958b,373s stack positions out of 1500i,500n,5000p,200000b,32768s
+
+Output written on article.dvi (11 pages, 71588 bytes).

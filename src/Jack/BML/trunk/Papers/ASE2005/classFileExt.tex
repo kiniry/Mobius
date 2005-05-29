@@ -72,8 +72,11 @@ As shown by the grammar, BCSL allows us to specify different method specificatio
  method caller has to satisfy the disjunction of the preconditions in the specification cases  and the method's implementation 
  has to guarantee the postcondition of every specification case of which the precondition held in the prestate.
 
-Loop specifications and assertions are tagged with the program point in the bytecode where they must hold. Among the expressions that are handled (almost all are also handled
-by JML) we have the expressions $\counter$ and \stack{\ArithExpr} which  stand for the stack counter and an element on the stack at position \ArithExpr. These expressions do not appear in the precondition and postcondition specification of a method. Later we shall see how they are used.
+Loop specifications and assertions are tagged with the program point in the bytecode where they must hold. Among the expressions 
+that are handled (almost all are also handled
+by JML) we have the expressions : \register{i} standing for the \texttt{i}-th local variable in a method; 
+$\fieldAccess{\expression}$ meaning a field access expression, where \texttt{field\_cp\_index} is the constant pool index
+describing the field; $\counter$ and \stack{\ArithExpr} which  stand for the stack counter and an element on the stack at position \ArithExpr. These expressions do not appear in the precondition and postcondition specification of a method. Later we shall see how they are used.
  
  
 \subsection{Compiling JML into bytecode specification language}\label{comJML}
@@ -84,8 +87,17 @@ Before going farther we give a brief description of the class file format. As de
 
 Thus the ``JML compiler'' \footnote{Gary Leavens also calls his tool jmlc JML compiler, which transforms jml into runtime checks and thus generates input for the jmlrac tool  } compiles the JML source specification into user defined attributes. The compilation process has three stages:
 \begin{enumerate}
-\item compile the Java source file. This can be done by any Java compiler that supplies for every method in the generated class file the \textbf{Line\_Number\_Table} and \textbf{Local\_Variable\_Table}  attributes. The presence in the Java class file format of these attribute is optional \cite{VMSpec}, yet almost all standard non optimizing compilers can generate these data. The \textbf{Line\_Number\_Table} describes the link between the source line and the bytecode of a method.  The \textbf{Local\_Variable\_Table} describes the local variables that appear in a method. This attribute is important for the next phase of the JML compilation.
-\item from the source file and the resulting class file compile the JML specification. In this phase Java and JML source identifiers are linked with their identifiers on bytecode level, namely with the corresponding indexes either from the constant pool or the array of local variables described in the \textbf{Local\_Variable\_Table} attribute. It is also in this phase that the specification parts like the loop invariants and the assertions which should hold at a certain source program point must be associated to the respective program point on bytecode level. The specification
+\item compile the Java source file. This can be done by any Java compiler that supplies for every method in the generated class file 
+the \textbf{Line\_Number\_Table} and \textbf{Local\_Variable\_Table}  attributes. The presence in the Java class file format of 
+these attribute is optional \cite{VMSpec}, yet almost all standard non optimizing compilers can generate these data. 
+The \textbf{Line\_Number\_Table} describes the link between the source line and the bytecode of a method.  
+The \textbf{Local\_Variable\_Table} describes the local variables that appear in a method. 
+This attribute is important for the next phase of the JML compilation.
+\item from the source file and the resulting class file compile the JML specification. In this phase, Java and JML source identifiers are 
+linked with their identifiers on bytecode level, namely with the corresponding indexes either from the constant pool or the array of 
+local variables described in the \textbf{Local\_Variable\_Table} attribute. If in the JML specification a field
+identifier appears, for which no constant pool (cp) index exists, such is added in the constant pool and the identifier in question
+is compiled to the new cp index. It is also in this phase that the specification parts like the loop invariants and the assertions which should hold at a certain source program point must be associated to the respective program point on bytecode level. The specification
 is compiled in binary form using tags in the standard way. Basically the compilation of an expression is a tag followed by the compilation of its subexpressions. 
 Thus for example the loop invariant specified in JML for the method \texttt{replace} in Fig.~\ref{replaceSrc} is :
 $$
