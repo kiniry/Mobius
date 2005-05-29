@@ -1,17 +1,23 @@
 \begin{thebibliography}{10}
 
 \bibitem{escjava}
-
+escjava.
+\newblock \url{http://secure.ucd.ie/products/opensource/ESCJava2/docs.html}.
 
 \bibitem{ARUCom1986}
 Aho AV, Sethi R, and Ullman JD.
-\newblock {\em Compilers-Principles, Techniques, and Tools}.
+\newblock {\em Compilers-Principles, Techniques and Tools}.
 \newblock Addison-Wesley: Reading, 1986.
 
 \bibitem{BM05plb}
-Fabian Bannwart and Peter Muller.
+Fabian Bannwart and Peter M\..uller.
 \newblock A program logic for bytecode.
 \newblock 2005.
+
+\bibitem{BLS04sp}
+Mike Barnett, K.~Rustan~M. Leino, and Wolfram Schulte.
+\newblock The {spec}\# programming system: An overview.
+\newblock In Springer, editor, {\em in CASSIS workshop proceedings}, 2004.
 
 \bibitem{B04tlsj}
 Nick Benton.
@@ -25,7 +31,7 @@ B.Meyer.
 
 \bibitem{B00ppp}
 Richard Bornat.
-\newblock Proving pointer programs in hoare logic.
+\newblock Proving pointer programs in {Hoare Logic}.
 \newblock In {\em MPC}, pages 102--126, 2000.
 
 \bibitem{BurdyCCEKLLP03}
@@ -38,41 +44,26 @@ L.~Burdy, Y.~Cheon, D.~Cok, M.~Ernst, J.~Kiniry, G.T. Leavens, K.R.M. Leino,
 
 \bibitem{BRL-JACK}
 L.~Burdy, A.~Requet, and J.-L. Lanet.
-\newblock Java applet correctness: A developer-oriented approach.
+\newblock {Java} applet correctness: A developer-oriented approach.
 \newblock In K.~Araki, S.~Gnesi, and D.~Mandrioli, editors, {\em FME 2003:
   Formal Methods: International Symposium of Formal Methods Europe}, volume
   2805 of {\em LNCS}, pages 422--439. Springer, 2003.
 
 \bibitem{JML2BCSpec}
 Lilian Burdy and Mariela Pavlova.
-\newblock Jml2bc specification.
+\newblock From {JML} to {BCSL}.
 \newblock Technical report, INRIA, Sophia-Antipolis, 2004.
 \newblock draft.
 
 \bibitem{WPBC}
 Lilian Burdy and Mariela Pavlova.
-\newblock Weakest precondition calculus for java bytecode.
+\newblock Weakest precondition calculus for {Java} bytecode.
 \newblock Technical report, INRIA, Sophia-Antipolis, 2004.
 \newblock draft.
 
 \bibitem{jmlrac}
 Yoonsik Cheon and Gary~T. Leavens.
-\newblock A runtime assertion checker for the java modeling language.
-
-\bibitem{ProColLeeNec}
-Christopher Colby, Peter Lee, and George~C. Necula.
-\newblock A proof carrying code architecture for java.
-\newblock In {\em CAV00}, 2000.
-
-\bibitem{DisDij}
-Edsger~W. Dijkstra.
-\newblock {\em A Discipline of Programming}.
-\newblock Prentice-Hall, 1976.
-
-\bibitem{WPCDS}
-Edsger~W. Dijkstra and Carel~S. Scholten.
-\newblock {\em Predicate Calculus and Program Semantics}.
-\newblock Springer, 1990.
+\newblock A runtime assertion checker for the {Java} modeling language.
 
 \bibitem{JMLRefMan}
 G.T.Leavens, Erik Poll, Curtis Clifton, Yoonsik Cheon, Clyde Ruby, David Cok,
@@ -81,12 +72,12 @@ G.T.Leavens, Erik Poll, Curtis Clifton, Yoonsik Cheon, Clyde Ruby, David Cok,
 
 \bibitem{Ljbc}
 Xavier Leroy.
-\newblock Java bytecode verification: Algorithms and formalizations.
+\newblock {Java} bytecode verification: Algorithms and formalizations.
 \newblock {\em Journal of Automated Reasoning}.
 
 \bibitem{VMSpec}
 Tim Lindholm and Frank Yellin.
-\newblock Java virtual machine specification.
+\newblock {Java} virtual machine specification.
 \newblock Technical report, Java Software, Sun Microsystems, Inc., 2004.
 
 \bibitem{Necula97}
@@ -111,10 +102,16 @@ M.~Pavlova, G.~Barthe, L.~Burdy, M.~Huisman, and J.-L. Lanet.
 
 \bibitem{Quigley}
 C.L. Quigley.
-\newblock A programming logic for java bytecode programs.
+\newblock A programming logic for {Java} bytecode programs.
 \newblock In {\em Proceedings of the 16th International Conference on Theorem
   Proving in Higher Order Logics}, volume 2758 of {\em Lecture Notes in
   Computer Science}. Springer-Verlag, 2003.
+
+\bibitem{RT03djml}
+A.D. Raghavan and G.T. Leavens.
+\newblock Desugaring {JML} method specification.
+\newblock Report 00-03d, Iowa State University, Department of Computer Science,
+  2003.
 
 \bibitem{F67amp}
 R.W.Floyd.

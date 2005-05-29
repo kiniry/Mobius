@@ -6,14 +6,14 @@ attaching the BCSL specification. Implementations for a proof obligation generat
 
 There are several important directions for future work:
 \begin{itemize}
+\item perform case studies and experiments.
 \item find an efficient representation and validation of proofs in order to construct a PCC framework for Java bytecode. 
 \item source proof compilation. We would like to build a PCC framework where the proofs are done interactively over the source code
 and then compiled down to bytecode. Actually observing the proof obligations generated over a source program and over its compilation with non optimizing compiler are
 rather similar (modulo names and certain types, e.g. boolean type).
 \item an extension of the framework applying previous research results in automated annotation generation for Java bytecode (see\cite{PBBHL}). The client thus will have the possibility to verify a security policy by propagating properties in the loaded code and then by verifying that the code verify the propagated properties.
-
 %\item correctness of the semantics of the weakest precondition calculus proposed, which we will do over the bytecode operational semantics. 
-\item case studies and experiments.
+
 \end{itemize}
 %For the correctness proof we will define an operational semantics for the Java bytecode instructions and thus we will prove the soudness of our weakest precondition calculus.
 

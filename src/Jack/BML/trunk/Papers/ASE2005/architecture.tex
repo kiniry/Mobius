@@ -5,7 +5,6 @@ Figure~\ref{architecture} presents the proposed overall architecture for ensurin
 \begin{center}
 \epsfig{file=architecture.eps, width=\linewidth}
 \caption{The overall architecture for annotating and verifying code}
-\todo{change in the figure the box that says class with JML attributes}
 \label{architecture}
 \end{center}
 \end{figure}
@@ -17,25 +16,42 @@ In the first stage of the process the client provides the functional and (or) se
 \item A specified interface that describes the application to be developed. In that case, the client has fully specified in JML the features that have to be implemented by the code producer.
 \item An API with some restricted access to some method. In this case, the client can protect its system by restricting its usage (for example, if the client requirement is for no nested transactions and the API provides transaction management facilities: method \texttt{open} for opening and method \texttt{close} for closing transactions, then we have these restrictions: \texttt{close} must not be called if there is no transaction running, \texttt{open} must not be called if there is a transaction running).   
 \end{itemize}
-The producer uses Jack to check the requirements and usually has to add JML annotations for this %In both cases, the code producer develops its application and proves that it fulfills the given requirements using Jack; %in most cases, to complete this task, some annotations have to be added to the code 
-e.g. loop invariants, class invariants, method preconditions and postconditions etc. Only then, have we got the annotated Java source files to feed to the JML compiler.
-%Thus the burden of annotating the code 
-%in order to render it provable w.r.t. the client requirements is left to the producer. 
+%OLD:
+% In the development process, the producer uses Jack to check the client requirements and usually has to add JML annotations for this %In both cases, the code producer develops its application and proves that it fulfills the given requirements using Jack; %in most cases, to complete this task, some annotations have to be added to the code 
+%e.g. loop invariants, class invariants, method preconditions and postconditions etc. In a standard, application only after specifying enough the source code, 
+%have we got the annotated Java source files to feed to the JML compiler.
+
+In the development process, the producer verifies if the client requirements are respected by generating verification conditions
+over the source code and usually, he has to add JML annotations for this e.g. loop invariants, class invariants, method preconditions
+ and postconditions etc. In a standard application, only after specifying enough the source code, 
+have we got the annotated Java source files to feed to the JML compiler.
+
 
 When the annotations are sufficient to prove the code, 
 the Java file is then normally compiled with a Java compiler to obtain a 
-class file. 
-This class file is then annotated with special JML attributes extracted from the source file. 
+class file. This class file is then extended with user defined attributes that contain the BCSL specification, resulting from the compilation of the JML specification. 
 At this stage, the Java class files contain all the information that will allow the client to check it. 
- 
+ %OLD
+%In particular, the client will generate proof obligations from the untrusted annotated bytecode and his security requirements 
+%(expressed in a suitable form) as shown in Fig. \ref{architecture}. Proof obligations are formulas which, if provable, guarantee the bytecode correctness.
+%The latter are then proved , for instance, with JACK (see section \ref{prelim}). If the client succeeds in proving 
+%the verification conditions, he can trust the unknown code. Currently the framework does not support sending both the proof and the 
+%bytecode to the client, which is the next step in our work.
 In particular, the client will generate proof obligations from the untrusted annotated bytecode and his security requirements 
 (expressed in a suitable form) as shown in Fig. \ref{architecture}. Proof obligations are formulas which, if provable, guarantee the bytecode correctness.
-The latter are then proved, for instance, with JACK (see section \ref{prelim}). If the client succeeds in proving 
+The latter are then proved with a theorem prover ( possibly interactively). If the client succeeds in proving 
 the verification conditions, he can trust the unknown code. Currently the framework does not support sending both the proof and the 
 bytecode to the client, which is the next step in our work.
 
-To implement this architecture, we have defined a compiler from JML to BCSL; the JML compilation results in an extension of the class file format; 
-we have implemented a tool to insert those special attributes in the class file and we have extended the Jack framework to generate proof obligations at bytecode 
-level and to prove them with the plugged Jack provers (as explained in the introduction). 
-The coming sections introduce those features.  
+%OLD
+%To implement this architecture, we have defined a compiler from JML to BCSL; the JML compilation results in an extension of the class file format; 
+%we have implemented a tool to insert those special attributes in the class file and we have extended the JACK framework to generate proof obligations at bytecode 
+%level and to prove them with the plugged JACK provers (as explained in the introduction). 
+%The coming sections introduce those features.  
 
+To implement this architecture we use JACK \footnote{ http://www-sop.inria.fr/everest/soft/Jack/jack.html} as a verification condition generator both on the consumer and the
+producer side. JACK is a plugin for the eclipse \todo{referenced - the eclipse site} integrated development environment for Java. Originally, the tool was designed to generate verification conditions for Java source programs against their JML specification. JACK can interface with several theorem provers (AtelierB, Simplify, Coq, PVS ) \todo{references}. We have extended the tool with a compiler from JML to BCSL and a bytecode verification condition generator. In the following we introduce the BCSL language, the JML compiler and the bytecode weakest precondition calculus which underlines the bytecode verification condition generator.
+ 
+%the JML compilation results in an extension of the class file format; we have implemented a tool to insert those special attributes in the class file and we have extended 
+%the JACK framework to generate proof obligations at bytecode level and to prove them with the plugged JACK provers (as explained in the introduction). 
+%The coming sections introduce those features.  

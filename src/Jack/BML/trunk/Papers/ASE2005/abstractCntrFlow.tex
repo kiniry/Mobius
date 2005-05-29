@@ -3,12 +3,6 @@
 In this section we discuss how the control flow graph of a bytecode is transformed in an acyclic control flow graph. We assume that the bytecode is provided 
 with sufficient specification and in particular loop invariants. Under this assumption, we can ``cut'' the control flow graph at every program point
 where an invariant must hold and ``place'' at that point the invariant. This requires the introduction of several definitions.
-
-%As we  already stated we assume that loops in method bodies are  \textit{annotated} with appropriate invariants. 
-%Related works like in \cite{WildmoserN-ESOP05} use different approach where loop invariants are inferred. Anyways inferring invariants is not decidable. 
-%Rather we propose the scheme where the programmer writes the invariants during the program development  
-%and on compilation time compiles them in BCL.. Here we describe which are the points in the bytecode which are "cut". This needs the introduction
-%of several definitions.
      
  A method body is an array of bytecode instructions. We write $i_k$ for the $k-th$ instruction in a method body.
 % We denote by $\Gamma  = ( \Omega, \execRel)$ the control flow graph of abytecode where the set of nodes $\Omega$ is the set of basic blocks of the bytecode.

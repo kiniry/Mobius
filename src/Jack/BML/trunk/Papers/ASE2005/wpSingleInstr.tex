@@ -41,7 +41,14 @@ $$
 \end{array}
 \end{array}
    \\
-   \stack{\counter-1} = \Mynull \Rightarrow \excPost(\tt{NullPointerException}) \end{array}
+   \stack{\counter-1} = \Mynull \Rightarrow \phi  \\
+   \it{where \ the \ predicate \ \phi \  is \ the \ precondition} \\
+   \it{ of \ the \ exception \ handler \ }\\ 
+   \it{ protecting \ the \ instruction \  against} \\ 
+   \tt{NullPointerException } \ \it{\ if \ it \  exists,}  \\
+   \it{otherwise \ if \ the } \ \tt{ NullPointerException} \ \it{\ is \ not \ handled}    \\
+      \phi = \excPost(\tt{NullPointerException})
+    \end{array}
  \end{array} $$
 
 %\texttt{wp(if\_acmpeq n , $\psi$)} =  \texttt{(Stack(t)==Stack(t-1)} $\Rightarrow$ $\psi(n)$ \texttt{[t$\leftarrow$t-2]\\
@@ -117,9 +124,9 @@ $$
  \psi[\counter \leftarrow \counter - \tt{numArgs}(m)][\stack{\counter }  \leftarrow \tt{fresh\_var}]) \\
 %[e_{i} \rightarrow m_{i}]_{i = 1}^s \\
 \end{array} \\[15 mm]
-\psi^{pre}(m) - the \ specified \ precondition \ of \ method \ m \\
-\psi^{post}(m) - the \ specified \ postcondition \ of \ method \ m \\
-m_{j} , j = 1 .. s - the \ locations \ modified \ by \ method \ m
+\psi^{pre}(m) - \it{ the \ specified \ precondition \ of \ method \ m} \\
+\psi^{post}(m) - \it{the \ specified \ postcondition \ of \ method \ m} \\
+m_{j} , j = 1 .. s - \it{ the \ locations \ modified \ by \ method \ m}
 \end{array}
 $$
 \caption{\wpi \ rule for a call to an instance method}

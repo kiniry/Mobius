@@ -1,4 +1,5 @@
-This is BibTeX, Version 0.99cThe top-level auxiliary file: article.aux
+This is BibTeX, Version 0.99c (Web2C 7.4.5)
+The top-level auxiliary file: article.aux
 The style file: plain.bst
 Database file #1: specification.bib
 Database file #2: bibliography.bib
@@ -15,4 +16,45 @@ Warning--empty booktitle in jmlrac
 Warning--empty year in jmlrac
 Warning--empty year in Ljbc
 Warning--empty booktitle in WildmoserN-ESOP05
+You've used 23 entries,
+            2118 wiz_defined-function locations,
+            669 strings with 7766 characters,
+and the built_in function-call counts, 6977 in all, are:
+= -- 643
+> -- 351
+< -- 8
++ -- 143
+- -- 113
+* -- 417
+:= -- 1178
+add.period$ -- 74
+call.type$ -- 23
+change.case$ -- 122
+chr.to.int$ -- 0
+cite$ -- 32
+duplicate$ -- 300
+empty$ -- 574
+format.name$ -- 113
+if$ -- 1473
+int.to.chr$ -- 0
+int.to.str$ -- 23
+missing$ -- 17
+newline$ -- 118
+num.names$ -- 52
+pop$ -- 173
+preamble$ -- 1
+purify$ -- 99
+quote$ -- 0
+skip$ -- 196
+stack$ -- 0
+substring$ -- 234
+swap$ -- 70
+text.length$ -- 8
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 88
+warning$ -- 9
+while$ -- 58
+width$ -- 25
+write$ -- 242
 (There was 1 error message)
