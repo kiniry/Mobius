@@ -1,4 +1,5 @@
-\documentclass[pagenumbers]{ieee} 
+\documentclass{acm_proc_article-sp}
+%\documentclass[pagenumbers]{ieee} 
 
 
 \usepackage{amssymb}
@@ -16,9 +17,22 @@
 
 \begin{document}
 \title{ Annotation Carrying Code }
-\author{Lilian Burdy  Mariela Pavlova\\
-INRIA Sophia-Antipolis,\\ 2004 route des Lucioles BP 93
-06902 Sophia-Antipolis,\\  France}
+\numberofauthors{2}
+\author{
+\alignauthor Mariela Pavlova\\
+       \affaddr{INRIA Sophia-Antipolis}\\
+       \affaddr{2004 route des Lucioles BP 93}\\
+       \affaddr{06902 Sophia-Antipolis,  France}\\
+       \email{Mariela.Pavlova@sophia.inria.fr}
+\alignauthor Lilian Burdy\\
+       \affaddr{INRIA Sophia-Antipolis}\\
+       \affaddr{2004 route des Lucioles BP 93}\\
+       \affaddr{06902 Sophia-Antipolis,  France}\\
+       \email{Lilian.Burdy@sophia.inria.fr}
+}
+%\author{Lilian Burdy  Mariela Pavlova\\
+%INRIA Sophia-Antipolis,\\ 2004 route des Lucioles BP 93
+%06902 Sophia-Antipolis,\\  France}
 %\thanks[lilemail]{Lilian.Burdy@sophia.inria.fr}
 %\thanks[maremail]{Mariela.Pavlova@sophia.inria.fr}
 %\address{INRIA Sophia Antipolis, France, \\ fax : ++ 33 4 92 38 50 29}
@@ -27,7 +41,7 @@ INRIA Sophia-Antipolis,\\ 2004 route des Lucioles BP 93
 %\href{mailto:Mariela.Pavlova@sophia.inria.fr}
 
 \maketitle
-\thispagestyle{empty}
+%\thispagestyle{empty}
 \begin{abstract}
 \input abstract.tex
 \end{abstract}
@@ -45,7 +59,7 @@ INRIA Sophia-Antipolis,\\ 2004 route des Lucioles BP 93
 %\input vcg.tex
 \input results.tex
 \input conclusion.tex
-\bibliographystyle{plain}
+\bibliographystyle{abbrv}
 \bibliography{specification,bibliography}
 \end{document}
 
