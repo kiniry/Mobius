@@ -3,11 +3,11 @@
 all: intro warnings more tool tips
 
 clean: 	
-	rm *.aux
-	rm *.log
-	rm *.ps
-	rm *.pdf
-	rm *.dvi
+	rm -f *.aux
+	rm -f *.log
+	rm -f *.ps
+	rm -f *.pdf
+	rm -f *.dvi
 
 intro: 1_intro_jml.pdf
 
