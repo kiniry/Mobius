@@ -1,3 +1,513 @@
+2005-05-25  Patrice Chalin  <chalin@cs.concordia.ca>
+
+	* Escjava/java/escjava/ProverManager.java:
+	* Escjava/java/escjava/Status.java:
+	* Escjava/java/escjava/backpred/FindContributors.java:
+	* Escjava/java/escjava/gui/EscOptions.java:
+	* Escjava/java/escjava/pa/PredicateAbstraction.java:
+	* Escjava/java/escjava/pa/Traverse.java:
+	* Escjava/java/escjava/pa/generic/Abstractor.java:
+	* Escjava/java/escjava/pa/generic/BinaryDecisionTreeAbstractor.java:
+	* Escjava/java/escjava/pa/generic/EnumClausesAbstractor.java:
+	* Escjava/java/escjava/pa/generic/EnumMaxClausesFindMinAbstractor.java:
+	* Escjava/java/escjava/pa/generic/EnumNFindK.java:
+	* Escjava/java/escjava/prover/SList.java:
+	* Escjava/java/escjava/prover/SNil.java:
+	* Escjava/java/escjava/reader/EscTypeReader.java:
+	* Escjava/java/escjava/reader/RefinementCachedReader.java:
+	* Escjava/java/escjava/tc/EnvForGhostLocals.java:
+	* Escjava/java/escjava/tc/TypeSig.java:
+	* Escjava/java/escjava/translate/AssocDeclClipPolicy.java:
+	* Escjava/java/escjava/translate/GC.java:
+	* Escjava/java/escjava/translate/GetSpec.java:
+	* Escjava/java/escjava/translate/InitialState.java:
+	* Escjava/java/escjava/translate/RepHelper.java:
+	* Escjava/java/escjava/translate/Suggestion.java:
+	* Escjava/java/escjava/translate/UniqName.java:
+	* Escjava/java/escjava/translate/VcToString.java:
+	* Escjava/mochalib/java/mocha/wrappers/jbdd/jbdd.java:
+	* Escjava/mochalib/java/mocha/wrappers/jbdd/jbddManager.java:
+	* Javafe/java/javafe/reader/StandardTypeReader.java:
+	* Javafe/java/javafe/reader/TypeReader.java:
+	* Javafe/java/javafe/tc/TypeSig.java:
+	Updated specs; essentially added non-null annotations.
+
+2005-05-24  David Cok  <cok@frontiernet.net>
+
+	* Escjava/java/escjava/translate/Translate.java:
+	* Escjava/test/junittests/Allpos.java:
+	* Escjava/test/junittests/Allpos.java-expected:
+	* Escjava/test/junittests/AllposLS.java:
+	* Escjava/test/junittests/AllposLS.java-expected:
+	Fixes to use method calls in decreases statements
+
+2005-05-20  David Cok  <cok@frontiernet.net>
+
+	* Escjava/java/escjava/pa/Traverse.java: Additional fix for loops
+
+	* Escjava/test/junittests/Allpos.java:
+	* Escjava/test/junittests/Allpos.java-expected:
+	* Escjava/test/junittests/AllposLS.java:
+	* Escjava/test/junittests/AllposLS.java-expected:
+	* Escjava/java/escjava/translate/Translate.java:
+	Fixes to method calls in loop invariants and more tests
+
+2005-05-18  David Cok  <cok@frontiernet.net>
+
+	* Escjava/test/jdktests/TestObject.java-expected, specs/java/util/Collection.spec:
+	Tweaking for tests
+
+	* Escjava/test/CausedAnErrorOnce01.java:
+	* Escjava/test/EscJavaBad000.java:
+	* Escjava/test/EscJavaTest000.java:
+	* Escjava/test/EscJavaTest001.java:
+	* Escjava/test/EscJavaTest002.java:
+	* Escjava/test/junittests/CausedAnErrorOnce00.java:
+	* Escjava/test/junittests/CausedAnErrorOnce00.java-expected:
+	* Escjava/test/junittests/CausedAnErrorOnce01.java:
+	* Escjava/test/junittests/CausedAnErrorOnce01.java-expected:
+	* Escjava/test/junittests/EscJavaBad000.java:
+	* Escjava/test/junittests/EscJavaBad000.java-expected:
+	* Escjava/test/junittests/EscJavaTest000.java:
+	* Escjava/test/junittests/EscJavaTest000.java-expected:
+	* Escjava/test/junittests/EscJavaTest001.java:
+	* Escjava/test/junittests/EscJavaTest001.java-expected:
+	* Escjava/test/junittests/EscJavaTest002.java:
+	* Escjava/test/junittests/EscJavaTest002.java-expected:
+	Incorporating some old tests
+
+	* Escjava/java/escjava/AnnotationHandler.java:
+	* Escjava/java/escjava/ast/EscPrettyPrint.java:
+	* Escjava/test/escjava/test/test25/ans:
+	* Escjava/test/escjava/test/test49/ans:
+	* Escjava/test/escjava/test/test56/ans:
+	* Escjava/test/jdktests/TestObject.java-expected:
+	* Escjava/test/junittests/ModCond.java:
+	* Escjava/test/junittests/ModCond.java-expected:
+	Improvements to handling modifies clauses and new tests
+
+	* Escjava/test/escjava/test/test25/MethodSpec.java:
+	* Escjava/test/escjava/test/test25/ans:
+	* Escjava/test/escjava/test/test32/ans:
+	* Escjava/test/escjava/test/test49/ans:
+	* Escjava/test/escjava/test/test56/ans:
+	* Escjava/test/junittests/CONX.java:
+	* Escjava/test/junittests/CONX.java-expected:
+	* Escjava/test/junittests/MethodInSpec.java:
+	* Escjava/test/junittests/ModChecks2.java-expected:
+	* Escjava/test/junittests/ModChecks6.java-expected:
+	* Escjava/test/junittests/ModChecks7.java-expected:
+	* Escjava/test/junittests/ModChecksMethod.java-expected:
+	* Escjava/test/junittests/ModE.java-expected:
+	* Escjava/test/junittests/ModN.java-expected:
+	* Escjava/test/junittests/ModelVarState.java-expected:
+	* Escjava/test/junittests/NonNull.java-expected:
+	* Escjava/test/junittests/skip:
+	Repairing test for changes in error messages
+
+	* Escjava/java/escjava/AnnotationHandler.java:
+	Partial fix for virtual methods
+
+	* Escjava/test/junittests/FinalRef.java: Edited a test
+
+	* Escjava/test/junittests/M3String.java: Fixed a test
+
+	* Escjava/test/junittests/Inheritance.java:
+	* Escjava/test/junittests/Inheritance.java-expected:
+	Partially fixed a test
+
+	* Escjava/test/junittests/Bug1.java:
+	* Escjava/test/junittests/Bug1.java-expected:
+	* Escjava/test/junittests/Bug2.java:
+	* Escjava/test/junittests/Bug2.java-expected:
+	Adding some tests
+
+	* Escjava/test/junittests/skip: debugged some tests
+
+	* Escjava/test/junittests/NonNullBad.java:
+	* Escjava/test/junittests/NonNullBad.java-expected:
+	Removing a platform dependency
+
+2005-05-17  David Cok  <cok@frontiernet.net>
+
+	* Escjava/java/escjava/RefinementSequence.java:
+	* Escjava/test/junittests/NonNullBad.java:
+	* Escjava/test/junittests/NonNullBad.java-expected:
+	* Escjava/test/junittests/NonNullErrors.java:
+	* Escjava/test/junittests/NonNullErrors.java-expected:
+	* Escjava/test/junittests/skip:
+	Fixing a couple tests
+
+2005-05-14  Patrice Chalin  <chalin@cs.concordia.ca>
+
+	* Escjava/escj:
+	Adjusting of CLASSPATH and ESC_SPECS was wrong under cygwin. This is a minor 
+	fix (due to statement outside of if block).
+
+2005-05-13  Joseph Kiniry <joseph.kiniry@ucd.ie>
+
+	* docs/Escjava2-Provers/.cvsignore:
+	* docs/Escjava2-Provers/DemonstrationClient.c:
+	* docs/Escjava2-Provers/DemonstrationProver.ml:
+	Initial example code showing how to call a prover written in OCaml
+	from C, and hence from Java.
+
+	* docs/Escjava2-Provers/.cvsignore:
+	* docs/Escjava2-Provers/DemonstrationProver.c:
+	* docs/Escjava2-Provers/DemonstrationProver.h:
+	* docs/Escjava2-Provers/DemonstrationProver.java:
+	* docs/Escjava2-Provers/Makefile:
+	Unpacked Java strings into char*s to prepare for calling native methods.
+
+	* docs/Escjava2-Provers/DemonstrationProver.c:
+	* docs/Escjava2-Provers/DemonstrationProver.h:
+	* docs/Escjava2-Provers/Makefile:
+	Testing complete on Linux with JDK 1.5.  Will test on JDK 1.4 later.
+
+	* docs/Escjava2-Provers/.cvsignore:
+	* docs/Escjava2-Provers/DemonstrationProver.c:
+	* docs/Escjava2-Provers/DemonstrationProver.h:
+	* docs/Escjava2-Provers/DemonstrationProver.java:
+	* docs/Escjava2-Provers/Formula.java:
+	* docs/Escjava2-Provers/Makefile:
+	* docs/Escjava2-Provers/ProverInterface.java:
+	* docs/Escjava2-Provers/ProverResponse.java:
+	* docs/Escjava2-Provers/Signature.java:
+	Wrote demonstration prover JNI interface and implementation.  Current
+	version is known to work on OS X; I'll test it on Linux now.
+
+2005-05-13  Patrice Chalin  <chalin@cs.concordia.ca>
+
+	* */run:
+	Switch from csh/tcsh to sh.
+
+2005-05-12  Joseph Kiniry <joseph.kiniry@ucd.ie>
+
+	* docs/Escjava2-Logics/many-sorted/.cvsignore:
+	* docs/Escjava2-Logics/many-sorted/many-sorted-logic.pvs:
+	Beginning of realization of new many-sorted logic in PVS.  I have
+	finished about 75% of the lemmas of our SMT-LIB logic thus far, and am
+	currently deciding whether an ArrayReferenceType is necessary.
+
+2005-05-12  Patrice Chalin  <chalin@cs.concordia.ca>
+
+	* Javafe/java/javafe/ast/make_tags:
+	Using sh instead of csh as sh is an integral part of most unix-like systems 
+	where as csh is not.
+
+2005-05-09  Patrice Chalin  <chalin@cs.concordia.ca>
+
+	* Escjava/mochalib/java/mocha/wrappers/jbdd/jbdd.java, specs/java/util/BitSet.jml:
+	Updated class specifications.
+
+	* Escjava/java/escjava/ast/TagConstants.java:
+	* Escjava/java/escjava/ColorOptions.java:
+	* Escjava/java/escjava/Main.java:
+	* Escjava/java/escjava/ProverManager.java:
+	* Escjava/java/escjava/ast/EscPrettyPrint.java:
+	* Escjava/java/escjava/gui/EscFrame.java:
+	* Escjava/java/escjava/gui/WindowTasks.java:
+	* Escjava/java/escjava/pa/generic/Disjunction.java:
+	* Escjava/java/escjava/prover/SPair.java:
+	* Escjava/java/escjava/prover/TeeOutputStream.java:
+	* Escjava/java/escjava/reader/EscTypeReader.java:
+	* Escjava/java/escjava/translate/NoWarn.java:
+	* Escjava/mochalib/java/mocha/wrappers/jbdd/jbddManager.java:
+	* Javafe/java/javafe/ast/DelegatingPrettyPrint.java:
+	* Javafe/java/javafe/filespace/Query.java:
+	* Javafe/java/javafe/filespace/SlowQuery.java:
+	* Javafe/java/javafe/reader/SrcReader.java:
+	* Javafe/java/javafe/reader/StandardTypeReader.java:
+	* Javafe/java/javafe/tc/TypePrint.java:
+	* Rcc/java/rcc/ast/RccPrettyPrint.java:
+	Updated specs w.r.t. non-null annotations.
+
+	* specs/java/lang/System.spec:
+	Minor fix (due to interchange of +@ and -@).
+
+	* specs/java/util/List.spec:
+	Removing bogus declaration of model class named Content introduced by mistake.
+
+	* specs/java/lang/String.spec: More adjustments of +@ and -@.
+
+	* specs/java/io/InputStream.refines-java:
+	* specs/java/lang/Boolean.spec:
+	* specs/java/lang/Class.jml:
+	* specs/java/lang/Comparable.spec:
+	* specs/java/lang/String.spec:
+	* specs/java/lang/System.spec:
+	* specs/java/util/Arrays.refines-spec:
+	* specs/java/util/BitSet.jml:
+	* specs/java/util/Collection.spec:
+	* specs/java/util/GregorianCalendar.refines-spec:
+	* specs/java/util/List.spec:
+	* specs/java/util/Properties.spec:
+	* specs/java/util/SortedMap.spec, specs/java/util/Vector.spec:
+	Fixing improperly marked -@ specs.
+
+	* Escjava/java/escjava/prover/SExp.java:
+	* Escjava/java/escjava/prover/SList.java:
+	* Escjava/java/escjava/prover/SimplifyComment.java:
+	* Escjava/java/escjava/prover/SimplifyOutput.java:
+	* Escjava/java/escjava/prover/SimplifyResult.java:
+	* Escjava/java/escjava/reader/RefinementCachedReader.java:
+	* Escjava/java/escjava/sp/DSA.java:
+	* Escjava/java/escjava/sp/VarMap.java:
+	* Escjava/java/escjava/translate/GC.java:
+	* Escjava/java/escjava/translate/GetSpec.java:
+	* Escjava/java/escjava/translate/VcToString.java:
+	* Javafe/java/javafe/parser/ParseStmt.java:
+	* Javafe/java/javafe/reader/CachedReader.java:
+	* Javafe/java/javafe/tc/TypeSig.java:
+	* Javafe/java/javafe/util/CorrelatedReader.java:
+	* specs/java/io/ByteArrayInputStream.refines-spec:
+	* specs/java/io/File.refines-spec:
+	* specs/java/io/FileFilter.refines-spec:
+	* specs/java/io/FileInputStream.refines-spec:
+	* specs/java/io/FilenameFilter.refines-spec:
+	* specs/java/io/InputStream.refines-java:
+	* specs/java/io/ObjectStreamException.spec:
+	* specs/java/lang/AbstractMethodError.jml:
+	* specs/java/lang/Boolean.spec:
+	* specs/java/lang/CharSequence.spec:
+	* specs/java/lang/Class.jml:
+	* specs/java/lang/Comparable.spec:
+	* specs/java/lang/Long.jml:
+	* specs/java/lang/Object.spec:
+	* specs/java/lang/String.spec:
+	* specs/java/lang/StringCoding.spec:
+	* specs/java/lang/System.spec:
+	* specs/java/net/URL.refines-spec:
+	* specs/java/util/AbstractList.spec:
+	* specs/java/util/AbstractMap.refines-spec:
+	* specs/java/util/AbstractSequentialList.refines-spec:
+	* specs/java/util/ArrayList.spec:
+	* specs/java/util/Arrays.refines-spec:
+	* specs/java/util/BitSet.jml:
+	* specs/java/util/Collection.spec:
+	* specs/java/util/GregorianCalendar.refines-spec:
+	* specs/java/util/Hashtable.refines-spec:
+	* specs/java/util/List.spec:
+	* specs/java/util/Map.spec:
+	* specs/java/util/Properties.spec:
+	* specs/java/util/SortedMap.spec:
+	* specs/java/util/Vector.spec:
+	Changes necessary so that the specs pass the JML checker.
+
+2005-05-05  David Cok  <cok@frontiernet.net>
+
+	* Escjava/test/junittests/skip: More temporary skips
+
+	* Makefile: Changes to use esc specs in release
+
+	* Escjava/java/escjava/AnnotationHandler.java:
+	* Escjava/java/escjava/Options.java:
+	* Escjava/java/escjava/RefinementSequence.java:
+	* Escjava/java/escjava/ast/Utils.java:
+	* Escjava/java/escjava/parser/EscPragmaParser.java:
+	* Escjava/java/escjava/tc/FlowInsensitiveChecks.java:
+	* Escjava/java/escjava/translate/GetSpec.java:
+	* Escjava/java/escjava/translate/Translate.java:
+	* Escjava/test/escjava/test/test34/ans:
+	* Escjava/test/junittests/SignalsBad.java:
+	* Escjava/test/junittests/SignalsBad.java-expected:
+	Changes to exception handling
+
+	* Escjava/test/nijmegen/OCF/SecurityKey.java: Adding signals_only
+
+	* Escjava/test/junittests/Assert.java:
+	* Escjava/test/junittests/Assert.java-expected:
+	* Escjava/test/junittests/Assert13.java:
+	* Escjava/test/junittests/AssertEA.java:
+	* Escjava/test/junittests/AssertEA.java-expected:
+	* Escjava/test/junittests/AssertNone.java:
+	* Escjava/test/junittests/Behavior.java:
+	* Escjava/test/junittests/DefCon.java:
+	* Escjava/test/junittests/DefCon.java-expected:
+	* Escjava/test/junittests/Informal.java:
+	* Escjava/test/junittests/Informal.java-expected:
+	* Escjava/test/junittests/JavaScopeB.java:
+	* Escjava/test/junittests/LocalClass.java:
+	* Escjava/test/junittests/LocalClass.java-expected:
+	* Escjava/test/junittests/Mod2.java:
+	* Escjava/test/junittests/Mod2.java-expected:
+	* Escjava/test/junittests/ModChecks6.java:
+	* Escjava/test/junittests/ModChecks6.java-expected:
+	* Escjava/test/junittests/NotSpecified.java:
+	* Escjava/test/junittests/SignalsOnlyBad.java-expected:
+	* Escjava/test/junittests/SignalsOnlyBad2.java-expected:
+	* Escjava/test/junittests/SignalsUnchecked.java:
+	revised tests
+
+	* specs/java/lang/ArrayStoreException.spec:
+	* specs/java/lang/Character.jml:
+	* specs/java/lang/Class.jml:
+	* specs/java/lang/ClassNotFoundException.spec:
+	* specs/java/lang/Comparable.spec:
+	* specs/java/lang/IllegalAccessException.spec:
+	* specs/java/lang/IllegalMonitorStateException.spec:
+	* specs/java/lang/IllegalThreadStateException.spec:
+	* specs/java/lang/InstantiationException.spec:
+	* specs/java/lang/Integer.jml:
+	* specs/java/lang/Long.jml:
+	* specs/java/lang/Math.jml:
+	* specs/java/lang/NegativeArraySizeException.spec:
+	* specs/java/lang/NoSuchFieldException.spec:
+	* specs/java/lang/NoSuchMethodException.spec:
+	* specs/java/lang/Number.jml:
+	* specs/java/lang/NumberFormatException.spec:
+	* specs/java/lang/Object.spec:
+	* specs/java/lang/SecurityException.spec:
+	* specs/java/lang/StrictMath.jml:
+	* specs/java/lang/String.spec:
+	* specs/java/lang/StringBuffer.jml:
+	* specs/java/lang/System.spec:
+	* specs/java/lang/Throwable.jml:
+	* specs/java/lang/UnsupportedOperationException.spec:
+	* specs/java/lang/reflect/InvocationTargetException.spec:
+	* specs/java/lang/reflect/UndeclaredThrowableException.spec:
+	* specs/java/math/BigInteger.refines-spec:
+	* specs/java/net/BindException.spec:
+	* specs/java/net/ConnectException.spec:
+	* specs/java/net/MalformedURLException.spec:
+	* specs/java/net/NoRouteToHostException.spec:
+	* specs/java/net/PortUnreachableException.spec:
+	* specs/java/net/ProtocolException.spec:
+	* specs/java/net/SocketException.spec:
+	* specs/java/net/SocketTimeoutException.spec:
+	* specs/java/net/URISyntaxException.spec:
+	* specs/java/net/UnknownHostException.spec:
+	* specs/java/net/UnknownServiceException.spec:
+	* specs/java/util/Arrays.refines-spec:
+	* specs/java/util/BitSet.jml:
+	* specs/java/util/ConcurrentModificationException.spec:
+	* specs/java/util/EmptyStackException.spec:
+	* specs/java/util/Enumeration.spec:
+	* specs/java/util/Hashtable.refines-spec:
+	* specs/java/util/Iterator.spec:
+	* specs/java/util/List.spec:
+	* specs/java/util/Map.spec:
+	* specs/java/util/MissingResourceException.spec:
+	* specs/java/util/TooManyListenersException.spec:
+	* specs/java/util/Vector.spec:
+	* specs/java/io/BufferedInputStream.refines-spec:
+	* specs/java/io/ByteArrayInputStream.refines-spec:
+	* specs/java/io/CharConversionException.spec:
+	* specs/java/io/EOFException.spec:
+	* specs/java/io/File.refines-spec:
+	* specs/java/io/FileFilter.refines-spec:
+	* specs/java/io/FileInputStream.refines-spec:
+	* specs/java/io/FileNotFoundException.spec:
+	* specs/java/io/FilenameFilter.refines-spec:
+	* specs/java/io/FilterInputStream.refines-spec:
+	* specs/java/io/InputStream.refines-java:
+	* specs/java/io/InterruptedIOException.spec:
+	* specs/java/io/InvalidClassException.spec:
+	* specs/java/io/NotActiveException.spec:
+	* specs/java/io/NotSerializableException.spec:
+	* specs/java/io/ObjectStreamException.spec:
+	* specs/java/io/OptionalDataException.spec:
+	* specs/java/io/OutputStream.refines-java:
+	* specs/java/io/StreamCorruptedException.spec:
+	* specs/java/io/SyncFailedException.spec:
+	* specs/java/io/UTFDataFormatException.spec:
+	* specs/java/io/WriteAbortedException.spec:
+	* specs/java/lang/AbstractMethodError.jml:
+	* specs/java/lang/ArrayIndexOutOfBoundsException.spec:
+	additional and revised spec files
+
+	* Escjava/Makefile: Slight adjustment to self test
+
+2005-05-04  David Cok  <cok@frontiernet.net>
+
+	* Escjava/test/jdktests/skip: skipping another test, temporarily
+
+	* Escjava/test/jdktests/Makefile:
+	* Escjava/test/jdktests/TestBitSet.java:
+	* Escjava/test/jdktests/TestBitSet.java-ckd:
+	* Escjava/test/jdktests/TestBitSet.java-expected:
+	* Escjava/test/jdktests/TestBoolean.java:
+	* Escjava/test/jdktests/TestBoolean.java-expected:
+	* Escjava/test/jdktests/TestByteArrayInputStream.java:
+	* Escjava/test/jdktests/TestByteArrayInputStream.java-expected:
+	* Escjava/test/jdktests/TestCharacter.java:
+	* Escjava/test/jdktests/TestCharacter.java-expected:
+	* Escjava/test/jdktests/TestCollection.java-expected:
+	* Escjava/test/jdktests/TestComparable.java:
+	* Escjava/test/jdktests/TestComparable.java-expected:
+	* Escjava/test/jdktests/TestFile.java:
+	* Escjava/test/jdktests/TestFile.java-expected:
+	* Escjava/test/jdktests/TestInputStream.java:
+	* Escjava/test/jdktests/TestInputStream.java-expected:
+	* Escjava/test/jdktests/TestInteger.java:
+	* Escjava/test/jdktests/TestInteger.java-expected:
+	* Escjava/test/jdktests/TestList.java-expected:
+	* Escjava/test/jdktests/TestLong.java:
+	* Escjava/test/jdktests/TestLong.java-expected:
+	* Escjava/test/jdktests/TestMap.java:
+	* Escjava/test/jdktests/TestMap.java-expected:
+	* Escjava/test/jdktests/TestMath.java:
+	* Escjava/test/jdktests/TestMath.java-expected:
+	* Escjava/test/jdktests/TestObject.java-expected:
+	* Escjava/test/jdktests/TestSet.java-expected:
+	* Escjava/test/jdktests/TestSet2.java-expected:
+	* Escjava/test/jdktests/TestString.java-expected:
+	* Escjava/test/jdktests/TestStringBuffer.java:
+	* Escjava/test/jdktests/TestStringBuffer.java-expected:
+	* Escjava/test/jdktests/TestSystem.java-ckd:
+	* Escjava/test/jdktests/TestSystem1.java-expected:
+	* Escjava/test/jdktests/skip:
+	New tests; fixed for cross-platform testing; some tests skipped
+
+2005-05-04  Patrice Chalin  <chalin@cs.concordia.ca>
+
+	* Escjava/java/escjava/tc/Datagroups.java:
+	* Escjava/java/escjava/translate/GetSpec.java:
+	Minor typos in the specs
+
+2005-04-15  David Cok  <cok@frontiernet.net>
+
+	* Javafe/test/javafe/test/fe/Makefile:
+	* Javafe/test/javafe/test/fe/make_comparsions:
+	* Javafe/test/javafe/test/fe/make_diffs:
+	* Javafe/test/javafe/test/fe/make_javac:
+	* Javafe/test/javafe/test/fe/make_outputs:
+	* Javafe/test/javafe/test/fe/make_summary:
+	* Javafe/test/javafe/test/fe/new:
+	Corrrecting Makefile; simplifying makefile and other associated files
+
+2005-04-13  Erik Poll  <erikpoll@cs.ru.nl>
+
+	* slides/ETAPSTutorial/2_tool.tex:
+	fixed erroneous assignable clause example
+
+	* slides/ETAPSTutorial/4_tips.tex:
+	* slides/ETAPSTutorial/5_more_jml.tex:
+	* slides/ETAPSTutorial/examples/Alias.java:
+	a couple of typos in Java/JML code fixed
+
+	* slides/ETAPSTutorial/examples/LoopInvWarning.java:
+	improved code
+
+2005-04-10  Joseph Kiniry <joseph.kiniry@ucd.ie>
+
+	* Escjava/Makefile:
+	* Escjava/test/nijmegen/JCF/Makefile:
+	* Escjava/test/nijmegen/OCF/Makefile:
+	* Javafe/Makefile:
+	More .PHONY refactoring in Makefiles.
+
+	* docs/ESCJAVA-UsersManual.html:
+	Fixed JML URL after link-checking site.
+
+	* docs/Escjava2-ImplementationNotes/Escjava2-ImplementationNotes.texinfo:
+	Fixed several URLs after link-checking site.
+
+2005-04-01  Erik Poll  <erikpoll@cs.ru.nl>
+
+	* slides/ETAPSTutorial/1_intro_jml.tex:
+	added tutorial overview
+
 2005-03-29  Joseph Kiniry <joseph.kiniry@ucd.ie>
 
 	* docs/escjava.css:
