@@ -4,10 +4,9 @@ Safety, security and establishing trust in untrusted component are important iss
 i.e. mobile phones, bank cards, ID cards and whatever scenario where 
 untrusted code must be executed. Those questions have received different answers - cryptography to guarantee data integrity or confidentiality,
  digital signatures for establishing that the code originates from a trusted entity, bytecode verification that checks if the bytecode 
- is well structured (e.g. no jumps outside the bytecode array) or well typed, 
- the proof carrying code framework  and the certifying compiler (see \cite{ComNec,DesNecLee98}) for establishing once 
- again safety properties for assembly programs.  Here we a propose a solution for statically checking java bytecode programs against
+ is well structured (e.g. no jumps outside the bytecode array) or well typed, the proof carrying code framework  and the certifying compiler (see \cite{ComNec,DesNecLee98}) for establishing once again safety properties for assembly programs.  Here we a propose a solution for statically checking java bytecode programs against
  policies, that might be more complex than well-typedness.  
+
 
 %Still downloading and installing untrusted software components (which is not accompanied by its source code) may require 
 %more than guaranteeing that the code issuer is trusted, or that the code is well typed / structured. For instance, the code receiver may be willing to establish that the component respects 
@@ -28,13 +27,13 @@ exceptions, references, method calls and subroutines.
  BCSL supports a JML subset which is expressive enough to specify rich functional properties. The specification then is 
  inserted in the class file format in newly defined attributes, thus making not only the code mobile but also its specification. These class
  file extensions do not affect the JVM performance. This scheme makes the Java bytecode benefit from the specification written on source level.
- We have implementations of a verification condition generator based on the weakest precondition calculus and the JML 
-specification compiler. Both are integrated in the Java Applet Correctness Kit(JACK)~\cite{BRL-JACK}. 
+ We have implementations of a verification condition generator based on the weakest precondition calculus and the JML specification compiler. Both are integrated in the Java Applet Correctness Kit(JACK)~\cite{BRL-JACK}. 
 
 The contribution of this material is that it provides a framework for establishing trust in interface implementations, 
 provided that the source code is not available. More generally, it can be applied to scenarios, where the code producer is 
 aware of the client requirements(potentially complex); thus he can generate and supply along the bytecode the 
 specification information sufficient for the client to establish that the code respects those requirements.   
+
   
 In what follows, the sections and their corresponding topics are: 
 Section~\ref{architecture_s} reviews scenarios in which the architecture is appropriate to use; Section~\ref{relWork} provides an 

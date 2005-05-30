@@ -1,5 +1,3 @@
-
-
 \subsection{Bytecode Weakest Precondition}\label{wpGraph}
 
 In the following we overload the function symbol \wpi \ applying it to a method and sequence of bytecode instructions.
@@ -32,7 +30,9 @@ We define the postcondition of the sequential part of a block $\blockm{i}$ as fo
 \begin{defn}[ Block's postcondition $\blockPost{i}$]\label{post}
  Let $i_s$ be the last instruction of $\ \blockm{i} $ then:
  \begin{itemize} 
- \item if  $i_s$ =  \instr{if\_cond n} \\
+
+\item if  $i_s$ =  \instr{if\_cond n} \\
+
 $$
 \blockPost{i} =  \\
 \left\{
@@ -71,11 +71,13 @@ where $\psi $ is the specified method postcondition.
 
 \end{defn}
 
+
 The function  $pre$ determines what is the property that should hold between two blocks that execute one after another,
 depending on if they determine a cycle or not (see def.\ref{defLoop} in the previous Section \ref{abstrCntrFlow} ).  This definition
 gives us the right to abstract the control flow to an acyclic one, as discussed in the previous subsection \ref{abstrCntrFlow} and perform on the latter the weakest precondition calculus.  
 
-\begin{defn}[predicate that holds between two consecutive a block]\label{post2}
+\begin{defn}[predicate between consecutive block]\label{post2}
+
 Assume that $b^i \execRel b^n$. The predicate $pre(b^{i}, b^{n})$ must hold after the execution of $\blockm{i}$ and before the execution of $\blockm{n}$ and is defined as follows:
 \begin{itemize}
 \item if \ $\blockm{i} \execRel^l \blockm{n}$ 
@@ -96,6 +98,7 @@ pre(b^{i}, b^{n}) = \wpi( \blockSeq{n} ,  \blockPost{n}, \excPost)
 $$
 \end{itemize}
 \end{defn}
+
 Subroutines are treated, first by identifying the instructions that belongs to it and then by in-lining them. Exception handlers are 
 treated by identifying the instructions that belong to the handler (the class file format provides information about the exception handlers for all methods, in particular where starts and ends the region 
 they protect and at what index the handler starts at); the precondition of the handler bytecode is calculated upon the postcondition of the region 
@@ -103,6 +106,7 @@ it protects.
 %As we assume that the  bytecode has been generates by a nonoptimizing compiler and that it 
 %has been certified by a Java bytecode verifier thus our analysis for identifying the instructions that belong to a subroutine or exception handler is not 
 %a problem (as the bytecode verifier guarantees that \texttt{jsr} are not the cause of cycles).  
+
 
 \subsection{Verifying Java Bytecode Programs} Bytecode programs represent a set of Java classes. Establishing the correctness of Java bytecode program w.r.t. to their specification thus, consists in generating verification conditions for every method appearing in every class of the bytecode program.
 The verification procedure for a method \texttt{m} consists in  calculating the weakest precondition $\wpi(\tt{m})$ upon its specification: precondition $\psi^{pre}(m)$, 
