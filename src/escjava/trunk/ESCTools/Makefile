@@ -306,7 +306,7 @@ jar:	build
 	( cd ${RELTEMP}/sub; rm -rf `find . -name CVS`; )
 	( cd ${RELTEMP}/sub; jar cmf ../../manifest.txt \
 	  ${RELJAR} *; )
-	## ${JARMUPDATE} manifest.txt ${RELJAR}
+#	 ${JARMUPDATE} manifest.txt ${RELJAR}
 	rm -rf ${RELTEMP}/sub
 	cp ${RELJAR} ${ESCTOOLS_ROOT}
 
@@ -315,7 +315,7 @@ srcjar:
 	cp -r ${ESCTOOLS_ROOT}/Javafe/java/* ${RELTEMP}/sub
 	cp -r ${ESCTOOLS_ROOT}/Escjava/java/* ${RELTEMP}/sub
 	cp -r ${ESCJAVA2_SPECS} ${RELTEMP}/sub/specs
-	cp -r ${ESCTOOLS_ROOT}/original-specs ${RELTEMP}/sub/original-specs
+	cp -r ${ORIG_SRC_SPECS} ${RELTEMP}/sub/original-specs
 	mkdir -p ${RELTEMP}/sub/junitutils
 	(cd ${ESCTOOLS_ROOT}/Utils/junitutils; \
 	  cp `find . -name '*.java'` ${RELTEMP}/sub/junitutils)
@@ -327,19 +327,22 @@ srcjar:
 .PHONY: binary-release
 binary-release: build jars alldocs ## FIXME javadoc
 	@echo "Creating binary release .........."
-	## RELDIR is the staging area for all files
-	## First copy all .class files to sub and build a jar file
+#	 RELDIR is the staging area for all files
+#	 First copy all .class files to sub and build a jar file
 	mkdir -p ${RELDIR}
 	rm -rf ${RELTEMP}
 	mkdir -p ${RELTEMP}
 	${MAKE} jars
-	## Now copy in all specs
+#	 Now copy in all specs, new and old
 	rm -rf ${RELTEMP}/specs
 	cp -r ${ESCJAVA2_SPECS} ${RELTEMP}
 	-find ${RELTEMP}/specs -name "CVS" -exec rm -rf {} \; > /dev/null  2>&1
-	## Copy papers and slides and other documentation
+	rm -rf ${RELTEMP}/original-specs
+	cp -r ${ORIG_SRC_SPECS} ${RELTEMP}
+	-find ${RELTEMP}/original-specs -name "CVS" -exec rm -rf {} \; > /dev/null  2>&1
+#	Copy papers and slides and other documentation
 	mkdir ${RELTEMP}/papers
-	cp papers/*.pdf ${RELTEMP}
+	cp papers/*.pdf ${RELTEMP}/papers
 	mkdir ${RELTEMP}/slides
 	cp slides/ETAPSTutorial/*.pdf ${RELTEMP}/slides
 	cp slides/escjava_demo.pdf ${RELTEMP}/slides
@@ -351,9 +354,12 @@ binary-release: build jars alldocs ## FIXME javadoc
 	cp docs/ESCJAVA-UsersManual.html ${RELTEMP}/docs
 	cp -r Escjava/release/master/examples ${RELTEMP}
 	-find ${RELTEMP}/examples -name "CVS" -exec rm -rf {} \; > /dev/null 2>&1
-#	cp $(ESCJAVA2_SPECS_JAR) ${RELTEMP}
-#	cp $(JML2_SPECS_JAR) ${RELTEMP}
-	## Copy other miscellaneous files
+#	Copy actual jar files with all ESC/Java2's classfiles and the two jar files
+#       with specs in them.
+	cp esctools2.jar ${RELTEMP}
+	cp $(ESCJAVA2_SPECS_JAR) ${RELTEMP}
+	cp $(JML2_SPECS_JAR) ${RELTEMP}
+# 	Copy other miscellaneous files
 	${MAKE} clean-norel-noreltemp
 	${MAKE} -C Utils/junitutils build
 	cp ${ESCJAVA_ROOT}/escj ${RELTEMP}
@@ -442,7 +448,7 @@ generate-specs-archive:
 	rm -rf ${RELTEMP}/specs
 	rm -rf ${RELTEMP}/original-specs
 	cp -r ${ESCJAVA2_SPECS} ${RELTEMP}
-	cp -r ${ESCTOOLS_ROOT}/original-specs ${RELTEMP}
+	cp -r ${ORIG_SRC_SPECS} ${RELTEMP}
 	-find ${RELTEMP}/specs -name "CVS" -exec rm -rf {} \;  > /dev/null 2>&1
 	-find ${RELTEMP}/original-specs -name "CVS" -exec rm -rf {} \;  > /dev/null 2>&1
 	(cd ${RELTEMP}; tar cjf ${PATCH_DIR}/${SPECS_TAR} specs original-specs;) 

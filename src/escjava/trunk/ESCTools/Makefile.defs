@@ -103,14 +103,16 @@ export PROVER_CC_LIMIT ?= 10
 export JAR_FILES = ${ESCTOOLS_ROOT}/jars
 
 ## You need to have some specs defined.  Use either 
-##   a) ${JAR_FILES}/jmlspecs.jar from a JML release (not
-##      currently recommended as they are rather complex specifications)
-
+##   a) ${JAR_FILES}/jmlspecs.jar from a JML release (not currently
+##      recommended as they are rather complex specifications)
 ##   b) ${JAR_FILES}/escspecs.jar, which is a jar of (c)
 ##   c) ${ESCTOOLS_ROOT}/specs, which is a set of specs designed for Esc/java
+##   d) ${ESCTOOLS_ROOT}/original-specs, the specs that shipped with the
+##      original Compaq SRC ESC/Java release (very lightweight and incomplete)
 export JML2_SPECS_JAR := ${JAR_FILES}/jmlspecs.jar
 export ESCJAVA2_SPECS_JAR := ${JAR_FILES}/escspecs.jar
 export ESCJAVA2_SPECS := ${ESCTOOLS_ROOT}/specs
+export ORIG_SRC_SPECS := ${ESCTOOLS_ROOT}/original-specs
 
 export ESC_SPECS := ${ESCJAVA2_SPECS}
 
@@ -150,7 +152,7 @@ export COPYRIGHT = 'ESC/Java2<br />&copy; 2003,2004,2005 David Cok and Joseph Ki
 ## information files we use for such.
 export JAVADOC_GEN_DIR = ${ESCTOOLS_ROOT}/docs/api
 export JMLDOC_GEN_DIR = ${ESCTOOLS_ROOT}/docs/jmlapi
-export DOCS_STYLESHEET = ${ESCTOOLS_ROOT}/docs/kind.css
+export DOCS_STYLESHEET = ${ESCTOOLS_ROOT}/docs/escjava.css
 
 ## Definitions for Utils
 export UTILS_SOURCE_DIR = ${ESCTOOLS_ROOT}/Utils
