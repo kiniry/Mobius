@@ -6,8 +6,8 @@
 
 
 \section{A quick overview of JML} \label{prelim}
-JML (short for Java Modeling Language) is a behavioral interface specification language tailored to Java applications~\cite{JMLRefMan}. JML 
-follows the design-by-contract approach~\cite{M97oos}, where classes are annotated with class invariants and method pre- and postconditions. Specification
+JML~\cite{JMLRefMan} (short for Java Modeling Language) is a behavioral interface specification language tailored to Java applications. JML 
+follows the design-by-contract approach (see~\cite{M97oos}), where classes are annotated with class invariants and method pre- and postconditions. Specification
 inside methods is also possible; for example one can specify loop invariants, or assertions  predicates that must hold at specific program points. 
 %In particular class invariants are properties that must hold at every visible state of a class instance or simply class respectively, history constraints - a property that is a relation between the prestate and poststate of a method, method  pre and postconditions, loop invariants - the predicate that must hold at every program state where the loop is entered, frame conditions - the list of expression that a method modifies, termination conditions - an expression from a well founded set that can be proven to decrease , etc.
 
@@ -21,13 +21,12 @@ JML specifications are written as comments so they are not visible by Java compi
   JML also allows the declaration of special JML variables, that are used only for specification purposes. 
 These variables are declared in comments with the \jmlKey{model} modificator and may be used only in specification clauses. 
 
-JML can be used for either static checking of Java programs by tools such as JACK~\cite{BR02jack}, the Loop tool, 
+JML can be used for either static checking of Java programs by tools such as JACK, the Loop tool, 
 ESC/Java~\cite{escjava} or dynamic checking by tools such as the assertion checker jmlrac~\cite{jmlrac}. An overview of the JML tools can 
 be found in~\cite{BurdyCCEKLLP03}.
      
-Fig.~\ref{replaceSrc} gives an example of a Java class that models a list stored in a private array field. 
-The method \texttt{replace} will search in the array for the first occurence of the object \texttt{obj1} passed as first argument and if found, it will be replaced with the 
-the object passed as second argument \texttt{obj2} and the method will return true; otherwise it returns false. The loop in the method body has an invariant which states that all the elements of the list that are inspected up to now are different from the parameter object \texttt{obj1}. The loop specification also states
+Figure~\ref{replaceSrc} gives an example of a Java class that models a list stored in a private array field. 
+The method \texttt{replace} will search in the array for the first occurence of the object \texttt{obj1} passed as first argument and if found, it will be replaced with the object passed as second argument \texttt{obj2} and the method will return true; otherwise it returns false. The loop in the method body has an invariant which states that all the elements of the list that are inspected up to now are different from the parameter object \texttt{obj1}. The loop specification also states
 that the local variable \texttt{i} and any element of the array field \texttt{list} may be modified in the loop.
   %//@requires list != null;
   % //@ensures \result == false  ==>

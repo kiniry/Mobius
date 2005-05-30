@@ -4,7 +4,7 @@ In this section we discuss how the control flow graph of a bytecode is transform
 with sufficient specification and in particular loop invariants. Under this assumption, we can ``cut'' the control flow graph at every program point
 where an invariant must hold and ``place'' at that point the invariant. This requires the introduction of several definitions.
      
- A method body is an array of bytecode instructions. We write $i_k$ for the $k-th$ instruction in a method body.
+ A method body is an array of bytecode instructions. We write $i_k$ the $k-th$ instruction in a method body.
 % We denote by $\Gamma  = ( \Omega, \execRel)$ the control flow graph of abytecode where the set of nodes $\Omega$ is the set of basic blocks of the bytecode.
  We assume that method's bytecode has exactly one entry point(every execution of a method starts at the entry point instruction) and we denote it with $i_{\tt{entry}}$. Using standard terminology \cite{ARUCom1986}, a
 basic block is a code segment that has no unconditional jump or
@@ -35,17 +35,20 @@ $\blockm{j} \execRel \blockm{n}$, where  $\blockm{n}$ is the first block of an e
 %We say that there exists a path between $\blockm{i}$ and $\blockm{j}$ and we note it with  $\pathm{i}{j}$, if there exists blocks 
 %$\blockm{s_{1}}... \blockm{s_{n}}$ such that $\blockm{i} \execRel \blockm{s_{1}} \execRel \blockm{s_{2}}... \blockm{s_{n}} \execRel  \blockm{j}$
 
-\begin{defn}[Loop Definition]
+\newdef{definition}{Definition}
+\begin{definition}
+%\begin{defn}
+{Loop.}
 \label{defLoop}
 Assume we have a bytecode $\Pi$. We say that $\blockm{e}$ is the entry block of a loop $l$ in $\Pi$ and $\blockm{f}$ is an end block of $l$ and we note this with  
  $\blockm{f} \execRel^l \blockm{e}$ if:
 \begin{itemize}
 \item every path in the control flow graph starting at the entry block $\blockm{entry}$ of $\Pi$ and that reaches $\blockm{f}$, passes through  $\blockm{e}$ 
  % i.e.$ \blockm{entry} \execRel^{*}  \blockm{s} \execRel^{*} \blockm{e}$
-\item $\blockm{f} \execRel \blockm{e}$
+\item and $\blockm{f} \execRel \blockm{e}$
 
 \end{itemize}
-\end{defn}
+\end{definition}
 
 %\subsection{Acyclic control flow graph} \label{graph}
 
@@ -64,10 +67,10 @@ We abstract the execution relation $\execRel$ to the acyclic execution relation 
 %\end{itemize}
 %\end{defn}
 
-We give at Fig.~\ref{blockBC} the control flow graph of the method \texttt{replace} given earlier in Fig.~\ref{replaceSrc}. The figure shows that the acyclic relation
+We give at figure~\ref{blockBC} the control flow graph of the method \texttt{replace} given earlier in Fig.~\ref{replaceSrc}. The figure shows that the acyclic relation
 excludes edges between loop entry and loop end blocks and that at that place the corresponding loop invariant must hold.  
 
-\begin{figure}[!ht]
+\begin{figure}
 \begin{center}
 \epsfig{file=graph1.eps}
 \end{center}
@@ -75,7 +78,7 @@ dashed arrows stand for the standard execution relation \\
 black arrows represent the acyclic execution relation \\
 bytecode basic blocks are placed in boxes \\
 the invariant is placed between the blocks where it must hold
-\caption{control flow graph of method \texttt{replace} from Fig. ~\ref{replaceSrc} }
+\caption{control flow graph of method \texttt{replace} from figure~\ref{replaceSrc} }
 \label{blockBC}
 \end{figure}
 

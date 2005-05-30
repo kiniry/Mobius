@@ -14,19 +14,18 @@ Few works have been dedicated to the definition of a bytecode logic. In \cite{Qu
  neither exceptional termination. The logic is defined by searching a structure in the bytecode control flow graph, 
  which gives an issue to complex rules.
 
-A work close to ours is presented by P.Muller and F.Bannwart in \cite{BM05plb}. The authors define a Hoare logic over a 
+A work close to ours is presented in~\cite{BM05plb} by P.Muller and F.Bannwart. The authors define a Hoare logic over a 
 bytecode language with objects and  exceptions. A compiler from source proofs into bytecode proofs is also defined. 
-As in the our work, they assume that the bytecode has passed the bytecode verification certification. The bytecode logic aims to 
+As in our work, they assume that the bytecode has passed the bytecode verification certification. The bytecode logic aims to 
 express functional properties. To our knowledge subroutines are not treated. Invariants are inferred by fixpoint calculation, differently 
 from the approach presented here, where invariants are compiled from the high level JML specification (see section \ref{comJML}). 
-However infering invariants is not decidable problem. The work of P.Muller and F.Bannwart is inspired by the Nick Benton's work (see ~\cite{B04tlsj}). 
+However infering invariants is not a decidable problem. The work of P.Muller and F.Bannwart is inspired by the Nick Benton's work (see ~\cite{B04tlsj}). 
 In the latter a bytecode logic for a stack based language is defined which checks programs both for well --- typedness and functional correctness. 
  The language does not support objects, references, exceptions neither subroutines. 
 
-In ~\cite{WildmoserN-ESOP05} a framework is described for verifying Jinja (a Java subset) bytecode against arithmetic overflow. 
+In ~\cite{WildmoserN-ESOP05}, M. Wildmoser and T. Nipkow describe a framework for verifying Jinja (a Java subset) bytecode against arithmetic overflow. 
 %The annotation is written manually, which is not comfortable, especially on bytecode. 
-Here we propose a way to compile a specification written in a high level language, allowing specification to be written on a 
-high level, which is more convenient.
+Here we propose a way to compile a specification written in a high level language, allowing specification to be written at source level, which we consider as more convenient.
 
 In the field of specification compilation we can mention the Spec\# programming system developed at Microsoft,
 ~\cite{BLS04sp}. Spec\# is a superset of the C\# programming language, with a built-in  specification language,
@@ -45,5 +44,5 @@ Such properties guarantee that a program do the things correctly and not that it
  framework for establishing complex functional and interface properties whose automatic checking is hard and even impossible. 
  From the above cited papers, \cite{BM05plb} is aiming also at building PCC for
  guaranteeing not trivial properties. As we stated in section \ref{architecture}, our framework currently does not support adding proofs to bytecode 
- which is a future work. 
+ which but we consider thia point as a future work. 
  

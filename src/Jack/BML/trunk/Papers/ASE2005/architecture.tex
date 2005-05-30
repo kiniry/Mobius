@@ -1,4 +1,4 @@
-\section{Architecture for Embedded Software Verification}
+\section{Framework}
 \label{architecture_s}	
 Figure~\ref{architecture} presents the proposed overall architecture for ensuring Java bytecode correctness. 
 \begin{figure}[ht!]
@@ -14,7 +14,7 @@ It describes a process that allows a client to trust a code produced by an untru
 In the first stage of the process the client provides the functional and (or) security requirements to the producer. The requirements can be in different form:
 \begin{itemize}
 \item A specified interface that describes the application to be developed. In that case, the client has fully specified in JML the features that have to be implemented by the code producer.
-\item An API with some restricted access to some method. In this case, the client can protect its system by restricting its usage (for example, if the client requirement is for no nested transactions and the API provides transaction management facilities: method \texttt{open} for opening and method \texttt{close} for closing transactions, then we have these restrictions: \texttt{close} must not be called if there is no transaction running, \texttt{open} must not be called if there is a transaction running).   
+\item An API with some restricted access to some method. In this case, the client can protect its system by restricting its usage (for example, if the client API provides transaction management facilities, a requirement can be for no nested transactions and the API method \texttt{open} for opening and method \texttt{close} for closing transactions can be annotated to ensure that \texttt{close} is not called if there is no transaction running and \texttt{open} is not be called if there is already a running transaction).   
 \end{itemize}
 
 %OLD:
@@ -35,13 +35,13 @@ class file. This class file is then extended with user defined attributes that c
 At this stage, the Java class files contain all the information that will allow the client to check it. 
  %OLD
 %In particular, the client will generate proof obligations from the untrusted annotated bytecode and his security requirements 
-%(expressed in a suitable form) as shown in Fig. \ref{architecture}. Proof obligations are formulas which, if provable, guarantee the bytecode correctness.
+%(expressed in a suitable form) as shown in figure~\ref{architecture}. Proof obligations are formulas which, if provable, guarantee the bytecode correctness.
 %The latter are then proved , for instance, with JACK (see section \ref{prelim}). If the client succeeds in proving 
 %the verification conditions, he can trust the unknown code. Currently the framework does not support sending both the proof and the 
 %bytecode to the client, which is the next step in our work.
 In particular, the client will generate proof obligations from the untrusted annotated bytecode and his security requirements 
-(expressed in a suitable form) as shown in Fig. \ref{architecture}. Proof obligations are formulas which, if provable, guarantee the bytecode correctness.
-The latter are then proved with a theorem prover ( possibly interactively). If the client succeeds in proving 
+(expressed in a suitable form) as shown in figure~\ref{architecture}. Proof obligations are formulas which, if provable, guarantee the bytecode correctness.
+The latter are then proved with a theorem prover (possibly interactively). If the client succeeds in proving 
 the verification conditions, he can trust the unknown code. Currently the framework does not support sending both the proof and the 
 bytecode to the client, which is the next step in our work.
 
@@ -51,8 +51,8 @@ bytecode to the client, which is the next step in our work.
 %level and to prove them with the plugged JACK provers (as explained in the introduction). 
 %The coming sections introduce those features.  
 
-To implement this architecture we use JACK \footnote{ http://www-sop.inria.fr/everest/soft/Jack/jack.html} as a verification condition generator both on the consumer and the
-producer side. JACK is a plugin for the eclipse \todo{referenced - the eclipse site} integrated development environment for Java. Originally, the tool was designed to generate verification conditions for Java source programs against their JML specification. JACK can interface with several theorem provers (AtelierB, Simplify, Coq, PVS ) \todo{references}. We have extended the tool with a compiler from JML to BCSL and a bytecode verification condition generator. In the following we introduce the BCSL language, the JML compiler and the bytecode weakest precondition calculus which underlines the bytecode verification condition generator.
+To implement this architecture we use JACK as a verification condition generator both on the consumer and the
+producer side. JACK is a plugin for the eclipse\footnote{http://www.eclipse.org} integrated development environment for Java. Originally, the tool was designed to generate verification conditions for Java source programs against their JML specification. JACK can interface with several theorem provers (AtelierB, Simplify, Coq, PVS). We have extended the tool with a compiler from JML to BCSL and a bytecode verification condition generator. In the following we introduce the BCSL language, the JML compiler and the bytecode weakest precondition calculus which underlines the bytecode verification condition generator.
  
 %the JML compilation results in an extension of the class file format; we have implemented a tool to insert those special attributes in the class file and we have extended 
 %the JACK framework to generate proof obligations at bytecode level and to prove them with the plugged JACK provers (as explained in the introduction). 
