@@ -1,16 +1,16 @@
 \section{Conclusion and Future Work}\label{conclusion}
-This article describes a bytecode weakest precondition calculus applied on a bytecode specification language (BCSL).
-BCSL is defined as suitable extensions of the Java class file format attaching specifications to bytecode.
+This article describes a bytecode weakest precondition calculus applied to a bytecode specification language (BCSL).
+BCSL is defined as suitable extensions of the Java class file format.
 Implementations for a proof obligation generator and a JML compiler to BCSL have been developped and are part of the Jack 1.8 release\footnote{http://www-sop.inria.fr/everest/soft/Jack/jack.html}.
-At this step, we have build a complete framework for Java program validation. This validation can be done at source or at bytecode level in a common environment: for instance, to prove lemmas ensuring bytecode correctness all the current and future provers plugged in Jack can be used.
+At this step, we have built a complete framework for Java program validation. This validation can be done at source or at bytecode level in a common environment: for instance, to prove lemmas ensuring bytecode correctness all the current and future provers plugged in Jack can be used.
 
-We are now targeting to complete our architecture for establishing trust in unknown code - in particular extending the present work to a PCC architecture for establishing non trivial requirements.  
+We are now targeting to complete our architecture for establishing trust in untrusted code - in particular extending the present work to a PCC architecture for establishing non trivial requirements.  
 %Properties that can be verified are properties expressible in the JML specification language. Design by contract properties (used in interface design) can be easily expressed and sent through a network with this framework. What should be pointed out is that we do not deal with such low level properties like for example memory allocation or time constraints.What the approach proposes is suitable for verifying static properties (invariant) concerning objects: it can be relations between values, or conditions over expressions that the program treats.
 In this way, several important directions for future work are:
 \begin{itemize}
-\item perform case studies and strength the tool with more experiments.
+\item perform case studies and strengthen the tool with more experiments.
 \item find an efficient representation and validation of proofs in order to construct a PCC framework for Java bytecode. We would like to build a PCC framework where the proofs are done interactively over the source code
-and then compiled down to bytecode. Actually observing the proof obligations generated over a source program and over its compilation with non optimizing compiler are
+and then compiled down to bytecode. Actually, observing the proof obligations generated over a source program and over its compilation with non optimizing compiler are
 rather similar (modulo names and certain types, e.g. boolean type).
 \item an extension of the framework applying previous research results in automated annotation generation for Java bytecode (see~\cite{PBBHL}). The client thus will have the possibility to verify a security policy by propagating properties in the loaded code and then by verifying that the code verify the propagated properties.
 %\item correctness of the semantics of the weakest precondition calculus proposed, which we will do over the bytecode operational semantics. 

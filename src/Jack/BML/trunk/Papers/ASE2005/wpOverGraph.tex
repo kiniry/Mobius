@@ -54,10 +54,10 @@ $\blockPost{i} =  pre(b^{i}, b^{n})$
 $\blockm{i} \execRel \blockm{e}$ (i.e. an exception handler protects the type of the exception thrown)
 then :\\
 $\blockPost{i }=$\\
-$ pre(b^{i}, b^{e})[\counter \leftarrow 0][\EXC \leftarrow \stack{\counter}] $.
+$ pre(b^{i}, b^{e})[\counter \leftarrow 0][\stack{0} \leftarrow \stack{\counter}] $.
 \item Otherwise the thrown exception is not handled and then $\blockm{i}$ must respect the postcondition determined by
 the exceptional postcondition function $\excPost$ for this exceptional type:\\ %(or if not specified for the closest supertype) : \\ 
- $\blockPost{i }=$\\ $\excPost(\stack{\counter}) [\counter \leftarrow 0][\EXC \leftarrow \stack{\counter}] $. \\
+ $\blockPost{i }=$\\ $\excPost(\stack{\counter}) [\counter \leftarrow 0][\stack{0} \leftarrow \stack{\counter} ] [\EXC \leftarrow \stack{\counter}] $. \\
 see in section \ref{grammar} for the meaning of \EXC.
     \end{enumerate}
 \item  if  $i_s$ = \instr{return}
@@ -100,8 +100,7 @@ $$
 
 Subroutines are treated, first by identifying the instructions that belongs to it and then by in-lining them. Exception handlers are 
 treated by identifying the instructions that belong to the handler (the class file format provides information about the exception handlers for all methods, in particular where starts and ends the region 
-they protect and at what index the handler starts at); the precondition of the handler bytecode is calculated upon the postcondition of the region 
-it protects. 
+they protect and at what index the handler starts at); the precondition of the handler bytecode is calculated upon the normal postcondition of the method.
 %As we assume that the  bytecode has been generates by a nonoptimizing compiler and that it 
 %has been certified by a Java bytecode verifier thus our analysis for identifying the instructions that belong to a subroutine or exception handler is not 
 %a problem (as the bytecode verifier guarantees that \texttt{jsr} are not the cause of cycles).  
@@ -116,7 +115,8 @@ $$
 The verification procedure does not trust neither the bytecode specification, nor the bytecode; in both cases --- wrong 
 specification or incorrect implementation will result in verification conditions that are not provable 
 
-\subsubsection{Example} We give a simple example of how the \wpi \ works. Block $\blockm{6}$ (starts at instr. \texttt{6}) in figure~\ref{blockBC} ends with a branching instruction and in the case when the condition is true (the current element of the array is not equal to the first parameter of the method \texttt{replace}) the execution will continue at $\blockm{19}$. Below we give the part of the weakest precondition for block $\blockm{6}$ in case the control flows to block $\blockm{19}$
+%\subsubsection{Example}
+ We give a simple example of how the \wpi \ works. Block $\blockm{6}$ (starts at instr. \texttt{6}) in Fig.~\ref{blockBC} ends with a branching instruction and in the case when the condition is true (the current element of the array is not equal to the first parameter of the method \texttt{replace}) the execution will continue at $\blockm{19}$. Below we give the part of the weakest precondition for block $\blockm{6}$ in case the control flows to block $\blockm{19}$
 ( the condition of its last instruction holds and in this case 
 the predicate $pre(b^{6}, b^{19})$ is $\wpi(\blockm{19})$).  The implications with conclusion \Myfalse \ stand for the possible exceptions \texttt{NullPointer} and \texttt{ArrayIndexOutOfBound} exceptions that may be thrown (as no postcondition is specified explicitely for these cases of abnormal termination, the one by default is taken). 
 

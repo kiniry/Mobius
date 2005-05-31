@@ -6,7 +6,8 @@ where an invariant must hold and ``place'' at that point the invariant. This req
      
  A method body is an array of bytecode instructions. We write $i_k$ the $k-th$ instruction in a method body.
 % We denote by $\Gamma  = ( \Omega, \execRel)$ the control flow graph of abytecode where the set of nodes $\Omega$ is the set of basic blocks of the bytecode.
- We assume that method's bytecode has exactly one entry point(every execution of a method starts at the entry point instruction) and we denote it with $i_{\tt{entry}}$. Using standard terminology \cite{ARUCom1986}, a
+ We assume that method's bytecode has exactly one entry point(every execution of a method starts at the entry point instruction) and we denote it with $i_{\tt{entry}}$. Using 
+standard terminology (see \cite{ARUCom1986}), a
 basic block is a code segment that has no unconditional jump or
 conditional branch statements except for possibly the last
 statement, and none of its statements, except possibly the first,
@@ -45,14 +46,14 @@ Assume we have a bytecode $\Pi$. We say that $\blockm{e}$ is the entry block of 
 \begin{itemize}
 \item every path in the control flow graph starting at the entry block $\blockm{entry}$ of $\Pi$ and that reaches $\blockm{f}$, passes through  $\blockm{e}$ 
  % i.e.$ \blockm{entry} \execRel^{*}  \blockm{s} \execRel^{*} \blockm{e}$
-\item and $\blockm{f} \execRel \blockm{e}$
+\item   there is a path in which $\blockm{e}$  is executed immediately after the execution of $\blockm{f}$,  $\blockm{f} \execRel \blockm{e}$
 
 \end{itemize}
 \end{definition}
 
 %\subsection{Acyclic control flow graph} \label{graph}
 
-We abstract the execution relation $\execRel$ to the acyclic execution relation $\execRel^A = \execRel \backslash \execRel^l $
+We abstract the execution relation $\execRel$ to the acyclic execution relation $\execRel^A$ which is the execution relation $\execRel$ where the backedges $ \execRel^l$ are removed: $\execRel^A = \execRel \backslash \execRel^l$
 
 %We consider the acyclic graph $\Gamma^A = ( \Omega, \execRel^A)$ obtained from the control flow graph 
 %$\Gamma  = ( \Omega, \execRel)$ of a well formed bytecode $ \Pi $ where the relation $\execRel^A$ is a subset of the  execution relation $\execRel$.
@@ -67,7 +68,7 @@ We abstract the execution relation $\execRel$ to the acyclic execution relation 
 %\end{itemize}
 %\end{defn}
 
-We give at figure~\ref{blockBC} the control flow graph of the method \texttt{replace} given earlier in Fig.~\ref{replaceSrc}. The figure shows that the acyclic relation
+We give in Fig.~\ref{blockBC} the control flow graph of the method \texttt{replace} given earlier in Fig.~\ref{replaceSrc}. The figure shows that the acyclic relation
 excludes edges between loop entry and loop end blocks and that at that place the corresponding loop invariant must hold.  
 
 \begin{figure}

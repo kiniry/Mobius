@@ -5,7 +5,7 @@ i.e. mobile phones, bank cards, ID cards and whatever scenario where
 untrusted code must be executed. Those questions have received different answers - cryptography to guarantee data integrity or confidentiality,
  digital signatures for establishing that the code originates from a trusted entity, bytecode verification that checks if the bytecode 
  is well structured (e.g. no jumps outside the bytecode array) or well typed, the proof carrying code framework and certifying compilers (see \cite{ComNec,DesNecLee98}) for establishing once again safety properties for assembly programs.  Here we a propose a solution for statically checking Java bytecode programs against
- policies, that might be more complex than well-typedness.  
+ policies, that might be more complex than well-typedness.
 
 
 %Still downloading and installing untrusted software components (which is not accompanied by its source code) may require 
@@ -29,9 +29,8 @@ exceptions, references, method calls and subroutines.
  file extensions do not affect the JVM performance. This scheme makes the Java bytecode benefits from the specification written at source level.
  We have implementations of a verification condition generator based on the weakest precondition calculus and of the JML specification compiler. Both are integrated in the Java Applet Correctness Kit (JACK)~\cite{BRL-JACK}. 
 
-The contribution of this material is that it provides a framework for establishing trust between a client and a code producer when the producer source code is not available.
-More generally, it can be applied to scenarios where the code producer has to implement or to fulfill some client requirements.
-Those requirements can be, for example, sufficient to ensure some security properties since they are defined in an high level language.
+The contribution of this material is that it provides a framework for establishing trust between a client and a code producer against non trivial security policies, where the untrusted code is likely to lack its source code.
+More generally, it can be applied to scenarios where the code producer has to implement or fulfill some client requirements.
 Using this framework, the producer can generate and supply, along the bytecode, the specification information sufficient for the client to establish that the code respects those requirements.   
 
   

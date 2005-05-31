@@ -1,11 +1,11 @@
 %\section{Implementation and Results}\label{results}
 
-\subsubsection{Experimental results}
+%\subsubsection{Experimental results}
 Here we discuss some experimental results. 
 The JML compilation augments around twice the file size. 
 For the example given at fig.~\ref{replaceSrc}, the class file without the specification extensions is 548 bytes, 
-and the class with the BCSL extension BCSL is 954 bytes. The JML compilation for this class took 3000 ms. On bytecode level, Jack generated 4 proof obligations,  
-which can be proven interactively with Coq. On source level of the program 13 proof obligations, 
+and the class with the BCSL extension BCSL is 954 bytes. Ofcourse, the more specific is the specification, the greater will be the size of the class file. 
+On bytecode level, Jack generated 4 proof obligations, which can be proven interactively with Coq. On source level of the program 13 proof obligations, 
 which can also be proven interactively in Coq. The proof obligations on source and bytecode level are basically the same modulo 
- local variable names and field names; the difference in their number is due to differences in the implementation of $wp$ on source and bytecode level (splitting or not conjonction lemmas in many lemmas).. 
+ local variable names and field names; the difference in the number is due to differences in the implementation of $wp$ on source and bytecode level; splitting the conjunctions in the bytecode proof obligations results in the same proof obligations generated over the source code (modulo names). 
 
