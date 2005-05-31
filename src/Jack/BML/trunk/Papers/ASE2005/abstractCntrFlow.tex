@@ -53,7 +53,7 @@ Assume we have a bytecode $\Pi$. We say that $\blockm{e}$ is the entry block of 
 
 %\subsection{Acyclic control flow graph} \label{graph}
 
-We abstract the execution relation $\execRel$ to the acyclic execution relation $\execRel^A$ which is the execution relation $\execRel$ where the backedges $ \execRel^l$ are removed: $\execRel^A = \execRel \backslash \execRel^l$
+We abstract the execution relation $\execRel$ to the acyclic execution relation $\execRel^A$ which is an abstraction of $\execRel$ where the backedges $ \execRel^l$ are removed: $\execRel^A = \execRel \backslash \execRel^l$
 
 %We consider the acyclic graph $\Gamma^A = ( \Omega, \execRel^A)$ obtained from the control flow graph 
 %$\Gamma  = ( \Omega, \execRel)$ of a well formed bytecode $ \Pi $ where the relation $\execRel^A$ is a subset of the  execution relation $\execRel$.

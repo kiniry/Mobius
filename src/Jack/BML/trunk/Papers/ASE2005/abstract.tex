@@ -1,2 +1,20 @@
-We propose a logic for sequential Java bytecode based on a weakest precondition calculus and a bytecode specification language (BCSL). BCSL and the logic defined allow expressing and checking complex functional and safety properties. The logic supports the Java specific features - exceptions, subroutines, references and object creation and gives semantics to the BCSL specification. We propose a compiler from the high level Java Modeling Language (JML) in BCSL. The compiled JML annotation is added to the class file format in the form of user defined attributes. This allows bytecode programs to benefit the specification on source level. The present work aims at building a framework for establishing trust in untrusted bytecode components, which potentially are not accompanied by their source code. In particular, it can be applied to scenarios, in which the code receiver wants to establish trust in untrusted interface implementations. Both the compiler and the weakest precondition calculus have been implemented and integrated in the Java Applet Correctness Kit (JACK).
 
+We propose a framework for establishing the correctness of untrusted
+Java bytecode components w.r.t. to complex functional and/or security
+policies. To this end, we define a bytecode specification language
+(BCSL) and a weakest precondition calculus for sequential Java
+bytecode. BCSL and the calculus are expressive enough for verifying
+non-trivial properties of programs, and cover most of sequential Java
+bytecode, including exceptions, subroutines, references, object
+creation and method calls.
+
+Our approach does not require that bytecode components are provided
+with their source code. Nevertheless, we provide a means to bring 
+the benefits of source program specifications to the code consumer 
+by defining a compiler from the Java Modeling Language (JML) to BCSL.
+Our compiler can be used in combination with many Java compilers to
+produce extended class files from JML-annotated Java source programs.
+
+All components, including the verification condition generator and the
+compiler are implemented and integrated in the Java Applet Correctness
+Kit (JACK), and have been tested on non-trivial examples.

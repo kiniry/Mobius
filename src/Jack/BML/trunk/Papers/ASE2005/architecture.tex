@@ -13,7 +13,7 @@ It describes a process that allows a client to trust a code produced by an untru
 In the first stage of the process the client provides the functional and (or) security requirements to the producer. The requirements can be in different form:
 \begin{itemize}
 \item A specified interface that describes the application to be developed. In that case, the client has fully specified in JML the features that have to be implemented by the code producer.
-\item An API with some restricted access to some method. In this case, the client can protect its system by restricting its usage (for example, if the client API provides transaction management facilities, a requirement can be for no nested transactions and the API method \texttt{open} for opening and method \texttt{close} for closing transactions can be annotated to ensure that \texttt{close} is not called if there is no transaction running and \texttt{open} has not been called if there is already a running transaction).   
+\item An API with some restricted access to some method. In this case, the client can protect its system by restricting its usage (for example, if the client API provides transaction management facilities, a requirement can be for no nested transactions and the API method \texttt{open} for opening and method \texttt{close} for closing transactions can be annotated to ensure that \texttt{close} should not be called if there is no transaction running and \texttt{open} should not be called if there is already a running transaction).   
 \end{itemize}
 
 %OLD:

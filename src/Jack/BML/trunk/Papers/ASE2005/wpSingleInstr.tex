@@ -73,7 +73,7 @@ $$
 \subsubsection{References: manipulating fields}
 Instance fields are treated as functions, where the domain of a field \texttt{f} 
 declared in the class \texttt{Cl} is the set of objects of class \texttt{Cl} and its subclasses.
-We are using function update when assigning a value to a field reference as in~\cite{B00ppp}. 
+We are using function update when assigning a value to a field reference as, for instance in~\cite{B00ppp}. 
 In Fig.~\ref{instrWP} the rule for \instr{putField} substitutes the corresponding field function \texttt{Cl.f} with \texttt{Cl.f} updated for object $o$, in case the dereferenced object is not null. The definition of update function is given in figure~\ref{override}.
 
 \begin{figure}
