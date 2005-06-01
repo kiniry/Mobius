@@ -1,26 +1,39 @@
 
 \section{Introduction}\label{intro}
-Safety, security and establishing trust in untrusted component are important issues for the mobile code world, 
-i.e. mobile phones, bank cards, ID cards and whatever scenario where 
-untrusted code must be executed. Those questions have received different answers - cryptography to guarantee data integrity or confidentiality,
- digital signatures for establishing that the code originates from a trusted entity, bytecode verification that checks if the bytecode 
- is well structured (e.g. no jumps outside the bytecode array) or well typed, the proof carrying code framework and certifying compilers (see \cite{ComNec,DesNecLee98}) for establishing once again safety properties for assembly programs.  Here we a propose a solution for statically checking Java bytecode programs against
- policies, that might be more complex than well-typedness.
+This paper addresses the  problem of establishing trust in untrusted software components. This question concerns important areas like 
+smart card applications, mobile phones, bank cards, ID cards and whatever scenario where untrusted code should be installed and executed.
+In particular, depending on what is the level of trust  the code receiver wants to establish, 
+the state of the art proposes different solutions. 
+For example, the verification may be performed over the source code. 
+In this case, the code receiver should make the compromise to trust the compiler, which is problematic. 
+The bytecode verification technique proposes another solution, which requires no tradeoff with the compiler. 
+The bytecode verifier performs the static analysis directly over the bytecode and guarantees that 
+the code is well typed and well formed. Yet, bytecode verification is limited to properties, that only guarantee that the bytecode does 
+not violate the proper function of the virtual machine. Another solution is the Proof Carrying Code paradigm ( PCC) and the certifying compiler.  In this architecture, the untrusted code
+is accompanied by a proof for its safety w.r.t. to some safety property and the code receiver has just to generate the 
+verification conditions and type check the proof against them. 
+The proof is generated automatically by the certifying compiler and thus for properties like well typedness or safe memory access. 
+As the certifying compiler is designed to be completely automatic, it will not be able to deal with rich functional or security properties. 
+ 
+The present work proposes an interactive verification framework for establishing trust between a client and a code producer against 
+non trivial security or functional  policies, where the untrusted code is likely to lack its source code. 
+More generally, the frameweork can be applied to scenarios where the code producer has to implement or fulfill some client requirements.
+Using this framework, the producer can generate and supply, along the bytecode, the specification information sufficient for the 
+client to establish that the code respects those requirements.    
 
-
-%Still downloading and installing untrusted software components (which is not accompanied by its source code) may require 
+In particular, the architecture is tailored to Java bytecode. %Still downloading and installing untrusted software components (which is not accompanied by its source code) may require 
 %more than guaranteeing that the code issuer is trusted, or that the code is well typed / structured. For instance, the code receiver may be willing to establish that the component respects 
 %some functional properties or does not break certain security policy. 
 %A typical example is when the receiver site gets an interface implementation and wants to check the latter against the interface 
 %specification. Another scenario may be when the receiver requires some safety condition for the untrusted code.  These situations
 %can be resolved by using program logic for low level programs.
-
 The Java technology finds a large application in mobile and embedded components because of its portability across platforms. 
 For instance, its dialect JavaCard is largely used in smartcard applications and the J2ME Mobile Information Device Profile (MIDP) finds application in GSM mobile components. 
 In this article we propose a static verification technique using formal methods for sequential Java bytecode programs.
 
+The aforementioned scheme is composed by several coponents.
 We define a bytecode logic in terms of weakest precondition calculus for the sequential Java bytecode language. The logic rules out 
-almost all Java bytecode instructions and support the Java specific features like 
+almost all Java bytecode instructions and supports the Java specific features like 
 exceptions, references, method calls and subroutines.  
  We define a bytecode specification language, called BCSL, and supply a compiler from 
  the high level Java specification language JML~\cite{JMLRefMan} to BCSL. 
@@ -29,9 +42,6 @@ exceptions, references, method calls and subroutines.
  file extensions do not affect the JVM performance. The scheme makes the Java bytecode benefit from the specification written at source level.
  We have implementations of a verification condition generator based on the weakest precondition calculus and of the JML specification compiler. Both are integrated in the Java Applet Correctness Kit (JACK)~\cite{BRL-JACK}. 
 
-The contribution of this material is that it provides a framework for establishing trust between a client and a code producer against non trivial security policies, where the untrusted code is likely to lack its source code.
-More generally, it can be applied to scenarios where the code producer has to implement or fulfill some client requirements.
-Using this framework, the producer can generate and supply, along the bytecode, the specification information sufficient for the client to establish that the code respects those requirements.   
 
   
 In what follows, the sections and their corresponding topics are: 

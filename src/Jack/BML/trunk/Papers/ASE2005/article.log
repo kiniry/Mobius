@@ -1,59 +1,11 @@
-This is e-TeX, Version 3.141592-2.2 (MiKTeX 2.4) (preloaded format=latex 2005.1.9)  30 MAY 2005 00:16
+This is e-TeX, Version 3.141592-2.2 (MiKTeX 2.4) (preloaded format=latex 2005.1.9)  2 JUN 2005 00:14
 entering extended mode
 **article.tex
 (article.tex
 LaTeX2e <2003/12/01>
 Babel <v3.8a> and hyphenation patterns for english, french, german, ngerman, du
 mylang, nohyphenation, loaded.
-(ieee.cls
-Document Class: ieee 2002/04/16 LaTeX2e class file `ieee' v1.0 for IEEE Confere
-nce Proceedings
-(C:\texmf\tex\latex\base\article.cls
-Document Class: article 2004/02/16 v1.4f Standard LaTeX document class
-(C:\texmf\tex\latex\base\size10.clo
-File: size10.clo 2004/02/16 v1.4f Standard LaTeX file (size option)
-)
-\c@part=\count79
-\c@section=\count80
-\c@subsection=\count81
-\c@subsubsection=\count82
-\c@paragraph=\count83
-\c@subparagraph=\count84
-\c@figure=\count85
-\c@table=\count86
-\abovecaptionskip=\skip41
-\belowcaptionskip=\skip42
-\bibindent=\dimen102
-) (ieee.clo
-File: ieee.clo 2002/04/16 v1.0 IEEE Document Class Options
-)
-(C:\texmf\tex\latex\float\float.sty
-Package: float 2001/11/08 v1.3d Float enhancements (AL)
-\c@float@type=\count87
-\float@exts=\toks14
-\float@box=\box26
-\@float@everytoks=\toks15
-\@floatcapt=\box27
-) (floatsty.sty
-Package: floatsty 2002/04/15 v0.1 Float styles (GNP)
-\@fs@ieee@ctmp=\skip43
-\@fs@ieee@figindent=\skip44
-)
-\@float@every@figure=\toks16
-\@float@every@table=\toks17
-)
-(C:\texmf\tex\latex\amsfonts\amssymb.sty
-Package: amssymb 2002/01/22 v2.2d
-
-(C:\texmf\tex\latex\amsfonts\amsfonts.sty
-Package: amsfonts 2001/10/25 v2.2f
-\@emptytoks=\toks18
-\symAMSa=\mathgroup4
-\symAMSb=\mathgroup5
-LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
-(Font)                  U/euf/m/n --> U/euf/b/n on input line 132.
-))
-(C:\texmf\tex\latex\graphics\epsfig.sty
+(acm_proc_article-sp.cls (C:\texmf\tex\latex\graphics\epsfig.sty
 Package: epsfig 1999/02/16 v1.7a (e)psfig emulation (SPQR)
 
 (C:\texmf\tex\latex\graphics\graphicx.sty
@@ -61,7 +13,7 @@ Package: graphicx 1999/02/16 v1.0f Enhanced LaTeX Graphics (DPC,SPQR)
 
 (C:\texmf\tex\latex\graphics\keyval.sty
 Package: keyval 1999/03/16 v1.13 key=value parser (DPC)
-\KV@toks@=\toks19
+\KV@toks@=\toks14
 )
 (C:\texmf\tex\latex\graphics\graphics.sty
 Package: graphics 2001/07/07 v1.0n Standard LaTeX Graphics (DPC,SPQR)
@@ -75,39 +27,176 @@ Package graphics Info: Driver file: dvips.def on input line 80.
 (C:\texmf\tex\latex\graphics\dvips.def
 File: dvips.def 1999/02/16 v3.0i Driver-dependant file (DPC,SPQR)
 ))
-\Gin@req@height=\dimen103
-\Gin@req@width=\dimen104
+\Gin@req@height=\dimen102
+\Gin@req@width=\dimen103
 )
-\epsfxsize=\dimen105
-\epsfysize=\dimen106
+\epsfxsize=\dimen104
+\epsfysize=\dimen105
+)
+(C:\texmf\tex\latex\amsfonts\amssymb.sty
+Package: amssymb 2002/01/22 v2.2d
+
+(C:\texmf\tex\latex\amsfonts\amsfonts.sty
+Package: amsfonts 2001/10/25 v2.2f
+\@emptytoks=\toks15
+\symAMSa=\mathgroup4
+\symAMSb=\mathgroup5
+LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
+(Font)                  U/euf/m/n --> U/euf/b/n on input line 132.
+))
+(C:\texmf\tex\latex\amsmath\amsmath.sty
+Package: amsmath 2000/07/18 v2.13 AMS math features
+\@mathmargin=\skip41
+
+For additional information on amsmath, use the `?' option.
+(C:\texmf\tex\latex\amsmath\amstext.sty
+Package: amstext 2000/06/29 v2.01
+ (C:\texmf\tex\latex\amsmath\amsgen.sty
+File: amsgen.sty 1999/11/30 v2.0
+\@emptytoks=\toks16
+\ex@=\dimen106
+)) (C:\texmf\tex\latex\amsmath\amsbsy.sty
+Package: amsbsy 1999/11/29 v1.2d
+\pmbraise@=\dimen107
+)
+(C:\texmf\tex\latex\amsmath\amsopn.sty
+Package: amsopn 1999/12/14 v2.01 operator names
+)
+\inf@bad=\count79
+LaTeX Info: Redefining \frac on input line 211.
+\uproot@=\count80
+\leftroot@=\count81
+LaTeX Info: Redefining \overline on input line 307.
+\classnum@=\count82
+\DOTSCASE@=\count83
+LaTeX Info: Redefining \ldots on input line 379.
+LaTeX Info: Redefining \dots on input line 382.
+LaTeX Info: Redefining \cdots on input line 467.
+\Mathstrutbox@=\box26
+\strutbox@=\box27
+\big@size=\dimen108
+LaTeX Font Info:    Redeclaring font encoding OML on input line 567.
+LaTeX Font Info:    Redeclaring font encoding OMS on input line 568.
+\macc@depth=\count84
+\c@MaxMatrixCols=\count85
+\dotsspace@=\muskip10
+\c@parentequation=\count86
+\dspbrk@lvl=\count87
+\tag@help=\toks17
+\row@=\count88
+\column@=\count89
+\maxfields@=\count90
+\andhelp@=\toks18
+\eqnshift@=\dimen109
+\alignsep@=\dimen110
+\tagshift@=\dimen111
+\tagwidth@=\dimen112
+\totwidth@=\dimen113
+\lineht@=\dimen114
+\@envbody=\toks19
+\multlinegap=\skip42
+\multlinetaggap=\skip43
+\mathdisplay@stack=\toks20
+LaTeX Info: Redefining \[ on input line 2666.
+LaTeX Info: Redefining \] on input line 2667.
+)
+Document Class 'acm_proc_article-sp' <15th. October '04>. Modified by G.K.M. To
+bin
+Based in part upon document Style `acmconf' <22 May 89>. Hacked 4/91 by
+shivers@cs.cmu.edu, 4/93 by theobald@cs.mcgill.ca
+Excerpts were taken from (Journal Style) 'esub2acm.cls'.
+****** Bugs/comments/suggestions to Gerry Murray -- murray@hq.acm.org ******
+\footheight=\dimen115
+\@maxsep=\dimen116
+\@dblmaxsep=\dimen117
+\aucount=\count91
+\originalaucount=\count92
+\auwidth=\dimen118
+\auskip=\dimen119
+\auskipcount=\count93
+\auskip=\dimen120
+\allauboxes=\dimen121
+\addauthors=\toks21
+\addauflag=\count94
+\subtitletext=\toks22
+\savesection=\count95
+\sectioncntr=\count96
+\c@figure=\count97
+\c@table=\count98
+\titleboxnotes=\toks23
+\titleboxnoteflag=\count99
+Document Class: acm_proc_article-sp 2004/15/10 - V2.7SP - based on esub2acm.sty
+ <23 April 96>
+(C:\texmf\tex\latex\base\latexsym.sty
+Package: latexsym 1998/08/17 v2.2e Standard LaTeX package (lasy symbols)
+\symlasy=\mathgroup6
+LaTeX Font Info:    Overwriting symbol font `lasy' in version `bold'
+(Font)                  U/lasy/m/n --> U/lasy/b/n on input line 47.
+)
+\@acmtitlebox=\box28
+\titlenotecount=\count100
+\tntoks=\toks24
+\tntokstwo=\toks25
+\tntoksthree=\toks26
+\tntoksfour=\toks27
+\tntoksfive=\toks28
+\catcount=\count101
+\copyrightnotice=\toks29
+\conf=\toks30
+\confinfo=\toks31
+\c@part=\count102
+\c@section=\count103
+\c@subsection=\count104
+\c@subsubsection=\count105
+\c@paragraph=\count106
+
+Using 'Abbrev' bibliography style
+\bibindent=\dimen122
+\colcntr=\count107
+\savebox=\box29
+\copyrtyr=\toks32
+\acmcopyr=\toks33
+\boilerplate=\toks34
+\copyrightetc=\toks35
 ) (C:\texmf\tex\latex\ltxmisc\url.sty
-\Urlmuskip=\muskip10
+\Urlmuskip=\muskip11
 Package: url 2004/03/15  ver 3.1  Verb mode for urls, etc.
 ) (cmd.tex
-\c@defn=\count88
+\c@defn=\count108
 ) (article.aux)
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 17.
-LaTeX Font Info:    ... okay on input line 17.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 17.
-LaTeX Font Info:    ... okay on input line 17.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 17.
-LaTeX Font Info:    ... okay on input line 17.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 17.
-LaTeX Font Info:    ... okay on input line 17.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 17.
-LaTeX Font Info:    ... okay on input line 17.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 17.
-LaTeX Font Info:    ... okay on input line 17.
-LaTeX Font Info:    Try loading font information for U+msa on input line 29.
- (C:\texmf\tex\latex\amsfonts\umsa.fd
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 18.
+LaTeX Font Info:    ... okay on input line 18.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 18.
+LaTeX Font Info:    ... okay on input line 18.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 18.
+LaTeX Font Info:    ... okay on input line 18.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 18.
+LaTeX Font Info:    ... okay on input line 18.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 18.
+LaTeX Font Info:    ... okay on input line 18.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 18.
+LaTeX Font Info:    ... okay on input line 18.
+LaTeX Font Info:    Try loading font information for U+msa on input line 44.
+
+(C:\texmf\tex\latex\amsfonts\umsa.fd
 File: umsa.fd 2002/01/19 v2.2g AMS font definitions
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 29.
-
-(C:\texmf\tex\latex\amsfonts\umsb.fd
+LaTeX Font Info:    Try loading font information for U+msb on input line 44.
+ (C:\texmf\tex\latex\amsfonts\umsb.fd
 File: umsb.fd 2002/01/19 v2.2g AMS font definitions
+)
+LaTeX Font Info:    Try loading font information for U+lasy on input line 44.
+
+(C:\texmf\tex\latex\base\ulasy.fd
+File: ulasy.fd 1998/08/17 v2.2e LaTeX symbol font definitions
 ) (abstract.tex) (intro.tex
-Underfull \vbox (badness 3803) has occurred while \output is active []
+Overfull \hbox (2.77821pt too wide) in paragraph at lines 18--23
+\OT1/cmr/m/n/9 ducer against non triv-ial se-cu-rity or func-tional poli-cies, 
+where
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [1
 
@@ -115,204 +204,56 @@ Underfull \vbox (badness 3803) has occurred while \output is active []
 ])
 (architecture.tex
 File: architecture.eps Graphic file (type eps)
- <architecture.eps>
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 16.
+ <architecture.eps>) (relWork.tex [2]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+)
+(prelim.tex
+LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <9> not available
+(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 65.
+) (classFileExt.tex [3] [4]
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 130.
+
  (C:\texmf\tex\latex\base\omscmr.fd
 File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
-LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 16.
-
-Underfull \hbox (badness 1436) in paragraph at lines 17--18
-\OT1/cmr/m/n/10 method. In this case, the client can pro-tect
- []
-
-
-Underfull \hbox (badness 3930) in paragraph at lines 17--18
-\OT1/cmr/m/n/10 trans-ac-tions and the API pro-vides trans-ac-
- []
-
-
-Underfull \hbox (badness 2173) in paragraph at lines 17--18
-\OT1/cmr/m/n/10 tion man-age-ment fa-cil-i-ties: method \OT1/cmtt/m/n/10 open \
-OT1/cmr/m/n/10 for
- []
-
-[2]) (relWork.tex) (prelim.tex [3]
-
-LaTeX Warning: Citation `BR02jack' on page 4 undefined on input line 22.
-
-
-Overfull \hbox (14.86186pt too wide) in paragraph at lines 63--63
-[]  \OT1/cmtt/m/n/10 //@ \old(list[i]) == obj1 && list[i] == obj2);[] 
- []
-
-
-Overfull \hbox (20.11182pt too wide) in paragraph at lines 63--63
-[]  \OT1/cmtt/m/n/10 public boolean replace(Object obj1,Object obj2)[] 
- []
-
-
-Overfull \hbox (9.61191pt too wide) in paragraph at lines 63--63
-[]    \OT1/cmtt/m/n/10 //@loop_invariant i <= list.length && i >=0[] 
- []
-
-
-Overfull \hbox (4.36195pt too wide) in paragraph at lines 63--63
-[]    \OT1/cmtt/m/n/10 //@  && (\forall int k;0 <= k && k < i ==>[] 
- []
-
-LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <10> not available
-(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 64.
-) (classFileExt.tex
-Underfull \hbox (badness 10000) in paragraph at lines 3--3
-[]\OT1/cmr/bx/n/12 Bytecode Spec-i-fi-ca-tion Lan-guage
- []
-
-
-Underfull \hbox (badness 2671) in paragraph at lines 67--70
-[]\OT1/cmr/m/n/10 We can spec-ify us-ing the spec-i-fi-ca-tion clause
- []
-
-[4]
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
-
-Underfull \hbox (badness 3826) in paragraph at lines 90--96
-[]\OT1/cmr/m/n/10 compile the Java source file. This can be
- []
-
-
-Underfull \hbox (badness 6758) in paragraph at lines 90--96
-\OT1/cmr/m/n/10 done by any Java com-piler that sup-plies
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 90--96
-\OT1/cmr/m/n/10 for every method in the gen-er-ated class
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 90--96
-\OT1/cmr/m/n/10 file the \OT1/cmr/bx/n/10 Line[]Number[]Table \OT1/cmr/m/n/10 a
-nd \OT1/cmr/bx/n/10 Lo-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 90--96
-\OT1/cmr/bx/n/10 cal[]Variable[]Table \OT1/cmr/m/n/10 at-tributes. The pres-
- []
-
-[5]
-Overfull \hbox (4.90128pt too wide) detected at line 110
+LaTeX Font Info:    Font shape `OMS/cmr/bx/n' in size <9> not available
+(Font)              Font shape `OMS/cmsy/b/n' tried instead on input line 130.
+)
+(wpbc.tex [5] (wpSingleInstr.tex [6]
+Overfull \hbox (18.4511pt too wide) detected at line 148
 []
  []
-
-LaTeX Font Info:    Font shape `OMS/cmr/bx/n' in size <10> not available
-(Font)              Font shape `OMS/cmsy/b/n' tried instead on input line 132.
-
-Underfull \hbox (badness 2865) in paragraph at lines 148--149
-\OT1/cmr/m/n/10 pi-la-tion of in-ter method spec-i-fi-ca-tion, i.e. loops
- []
-
-
-Underfull \hbox (badness 1062) in paragraph at lines 148--149
-\OT1/cmr/m/n/10 and as-ser-tions. We think that this is an ac-cept-
- []
-
-) (wpbc.tex [6] (wpSingleInstr.tex
-Overfull \hbox (2.2846pt too wide) detected at line 11
-[] \OT1/cmr/m/n/10 : [] \OMS/cmsy/m/n/10 ! P ! \OT1/cmr/m/n/10 ([] \OMS/cmsy/m/
-n/10 ! P\OT1/cmr/m/n/10 ) \OMS/cmsy/m/n/10 ! P
- []
-
-
-Overfull \hbox (31.9818pt too wide) detected at line 52
-[]
- []
-
-[7]
-
-LaTeX Font Warning: Font shape `OT1/cmss/bx/it' undefined
-(Font)              using `OT1/cmss/bx/n' instead on input line 132.
 
 ) (abstractCntrFlow.tex
-LaTeX Font Info:    Font shape `OMS/cmr/m/it' in size <10> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 43.
+\c@definition=\count109
 File: graph1.eps Graphic file (type eps)
  <graph1.eps>
 
-LaTeX Warning: Float too large for page by 115.59512pt on input line 80.
+LaTeX Warning: Float too large for page by 45.25249pt on input line 84.
 
-) (wpOverGraph.tex [8]
-Underfull \hbox (badness 10000) in paragraph at lines 33--34
-[]
+) (wpOverGraph.tex [7]
+Overfull \hbox (6.60439pt too wide) in paragraph at lines 58--62
+\OML/cmm/m/it/9  []\OT1/cmr/m/n/9 ([])[[] \OMS/cmsy/m/n/9   \OT1/cmr/m/n/9 0][[
+] \OMS/cmsy/m/n/9   []\OT1/cmr/m/n/9 ][[] \OMS/cmsy/m/n/9   []\OT1/cmr/m/n/9 ]$
+. 
  []
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 35--36
-
+[8]
+Overfull \hbox (1.77686pt too wide) in paragraph at lines 73--79
+\OT1/cmr/m/n/9 The func-tion $\OML/cmm/m/it/9 pre$ \OT1/cmr/m/n/9 de-ter-mines 
+what is the prop-erty that should
  []
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 48--50
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 51--52
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 53--58
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 63--64
-
- []
-
-
-Overfull \hbox (108.81639pt too wide) in paragraph at lines 79--80
-[]
- []
-
-
-Overfull \hbox (30.63205pt too wide) detected at line 92
-\OML/cmm/m/it/10 pre\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 b[]; b[]\OT1/cmr/m/n/10 )
- = []  \OMS/cmsy/m/n/10 ^  8[]\OML/cmm/m/it/10 m[]:\OT1/cmr/m/n/10 ([] \OMS/cms
-y/m/n/10 ) []\OT1/cmr/m/n/10 ([]\OML/cmm/m/it/10 ; [][][];  []\OT1/cmr/m/n/10 )
-)
- []
-
-[9] (wpExample.tex))) (results.tex) (conclusion.tex) (article.bbl
-Underfull \hbox (badness 10000) in paragraph at lines 4--6
-[]\OT1/cmr/m/n/9 escjava.  $\OT1/cmtt/m/n/9 http : / / secure . ucd . ie / prod
-ucts /
- []
-
-
-Underfull \hbox (badness 1389) in paragraph at lines 18--21
-[]\OT1/cmr/m/n/9 Mike Bar-nett, K. Rus-tan M. Leino, and Wol-fram
- []
-
-[10]) [11] (article.aux)
-
-LaTeX Font Warning: Some font shapes were not available, defaults substituted.
-
-
-LaTeX Warning: There were undefined references.
-
- ) 
+(wpExample.tex))) (results.tex) (conclusion.tex [9]) (article.bbl) [10]
+(article.aux) ) 
 Here is how much of TeX's memory you used:
- 1341 strings out of 95898
- 13656 string characters out of 1195289
- 67022 words of memory out of 1059535
- 4242 multiletter control sequences out of 35000
- 16974 words of font info for 66 fonts, out of 500000 for 1000
+ 1897 strings out of 95898
+ 19254 string characters out of 1195289
+ 75375 words of memory out of 1069424
+ 4791 multiletter control sequences out of 35000
+ 20517 words of font info for 58 fonts, out of 500000 for 1000
  14 hyphenation exceptions out of 607
- 32i,26n,24p,958b,373s stack positions out of 1500i,500n,5000p,200000b,32768s
+ 39i,20n,26p,963b,284s stack positions out of 1500i,500n,5000p,200000b,32768s
 
-Output written on article.dvi (11 pages, 71588 bytes).
+Output written on article.dvi (10 pages, 76192 bytes).
