@@ -6,7 +6,7 @@ package javafe.util;
  * A <code>FatalError</code> is an unchecked exception thrown only by
  * <code>ErrorSet.fatal</code> that indicates that a fatal error has
  * been encountered, forcing all further processing to be
- * abandoned.<p>
+ * abandoned.  Note that this is really an Exception, not an Error.
  * 
  * <p> The cause and existence of a fatal error will already have been
  * reported to the user by the time the <code>FatalError</code> has

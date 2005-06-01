@@ -321,7 +321,7 @@ public /*@ pure @*/ final class Float extends Number implements Comparable {
       @  also
       @   public exceptional_behavior
       @     requires o == null || !(o instanceof Float);
-      @     signals(ClassCastException);
+      @     signals_only ClassCastException;
       @*/
     public int compareTo(Object o);
 

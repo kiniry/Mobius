@@ -2015,8 +2015,8 @@ public final class GetSpec {
    * (SimpleModifierPragma's).
    */
   //@ invariant nonnullDecoration != null;
-  //@ invariant nonnullDecoration.decorationType ==
-  //@ \type(SimpleModifierPragma);
+  // FIXME @ invariant nonnullDecoration.decorationType ==
+  // FIXME @ \type(SimpleModifierPragma);
   /*@ spec_public */
   private static ASTDecoration nonnullDecoration = new ASTDecoration(
   "nonnullDecoration");

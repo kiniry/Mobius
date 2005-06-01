@@ -318,7 +318,7 @@ public /*@ pure @*/ final class Double extends Number implements Comparable {
       @   also
       @     public exceptional_behavior
       @       requires o == null || !(o instanceof Double);
-      @       signals(ClassCastException);
+      @       signals_only ClassCastException;
       @*/
     public int compareTo(Object o);
     

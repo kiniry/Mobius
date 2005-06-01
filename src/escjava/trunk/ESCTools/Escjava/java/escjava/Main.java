@@ -634,7 +634,7 @@ public class Main extends javafe.SrcTool
 
         LabelInfoToString.resetToMark();
         GuardedCmd gc = computeBody(r, initState);
-        /*-@ uninitialized @-*/ /*-@ readable_if stats; @-*/ int origgcSize = 0;
+        /*-@ uninitialized @*/ /*-@ readable_if stats; @*/ int origgcSize = 0;
         if (options().stats) {
                 origgcSize = Util.size(gc);
         }

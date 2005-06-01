@@ -301,10 +301,10 @@ public /*@ pure @*/ final class Byte extends Number implements Comparable
       @     public exceptional_behavior
       @       requires o == null && !(o instanceof Byte);
       @       assignable \nothing;
-      @       signals(ClassCastException);
+      @       signals_only ClassCastException;
       @*/
     public int compareTo(Object o);
 
-    public static final Class TYPE;
+    public static /* non_null */ final Class TYPE;
 
 }

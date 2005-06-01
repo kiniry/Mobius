@@ -269,9 +269,9 @@ public class ErrorSet
   //@ requires msg != null;
   //@ modifies fatals, errors, System.out.output;
   //@ ensures false;
-  //@ signals (Throwable) fatals == \old(fatals)+1;
-  //@ signals (Throwable) errors == \old(errors)+1;
-  //@ signals (Exception e) (e instanceof FatalError);
+  //@ signals (Exception) fatals == \old(fatals)+1;
+  //@ signals (Exception) errors == \old(errors)+1;
+  //@ signals_only FatalError;
   public static void fatal(String msg) /*throws FatalError*/ {
     if (msg != null) {
       fatals++;
@@ -299,9 +299,9 @@ public class ErrorSet
   //@ requires msg != null;
   //@ modifies fatals, errors, System.out.output;
   //@ ensures false;
-  //@ signals (Throwable) fatals == \old(fatals)+1;
-  //@ signals (Throwable) errors == \old(errors)+1;
-  //@ signals (Exception e) (e instanceof FatalError);
+  //@ signals (Exception) fatals == \old(fatals)+1;
+  //@ signals (Exception) errors == \old(errors)+1;
+  //@ signals_only FatalError;
   public static void fatal(int loc, String msg) /*throws FatalError*/ {
     fatals++;
     errors++;
@@ -317,7 +317,7 @@ public class ErrorSet
   //@ requires loc != Location.NULL;
   //@ modifies System.out.output;
   //@ ensures false;
-  //@ signals (Exception e) ( e instanceof NotImplementedException);
+  //@ signals_only NotImplementedException;
   public static void notImplemented(boolean print, int loc, String msg) {
     if (print) report(loc, "Not implemented", msg);
     throw new NotImplementedException(msg); 
@@ -331,10 +331,10 @@ public class ErrorSet
 
   // Constants for use as the type field of report:
 
-  private static final String CAUTION		= "Caution";
-  private static final String WARNING		= "Warning";
-  private static final String ERROR		= "Error";
-  private static final String FATALERROR	= "Fatal error";
+  private static /*@ non_null */ final String CAUTION		= "Caution";
+  private static /*@ non_null */ final String WARNING		= "Warning";
+  private static /*@ non_null */ final String ERROR		= "Error";
+  private static /*@ non_null */ final String FATALERROR	= "Fatal error";
 
 
   /**
@@ -361,12 +361,12 @@ public class ErrorSet
 	
   } //@ nowarn Post; // dump does not satisfy the postcondition
 
-    /**
-     *  Reports a general message, implemented here in order to
-     *  have a single location through which error reporting happens.
-     */
-    //@ requires msg != null;
-    //@ modifies System.out.output;
+  /**
+   *  Reports a general message, implemented here in order to
+   *  have a single location through which error reporting happens.
+   */
+  //@ requires msg != null;
+  //@ modifies System.out.output;
   public static void report(/*@ non_null @*/ String msg) {
     reporter.report(0,Location.NULL,-1,msg);
   }
@@ -431,7 +431,7 @@ public class ErrorSet
   //@ modifies \nothing;
   //@ ensures \result != null ==> \result.isOpen;
   //@ ensures \fresh(\result); // FIXME - not sure about this
-  //@ signals (Throwable) false;
+  //@ signals_only \nothing;
   private static InputStream getFile(int loc) {
     try {
       return Location.toFile(loc).getInputStream();
@@ -454,7 +454,7 @@ public class ErrorSet
   //@ modifies \nothing;
   //@ ensures true;
   //@ ensures \fresh(\result);
-  //@ signals (Throwable) false;
+  //@ signals_only \nothing;
   private static String getLine(int loc) {
     InputStream i = getFile(loc);
     if (i==null)
@@ -494,7 +494,7 @@ public class ErrorSet
   //@ requires !Location.isWholeFileLoc(loc);
   //@ modifies System.out.output;
   //@ ensures true;
-  //@ signals (Throwable t) false;
+  //@ signals_only \nothing;
   public static void displayColumn(int loc) {
     displayColumn(loc, null);
   }
