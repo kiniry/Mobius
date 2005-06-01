@@ -23,12 +23,13 @@ However, infering invariants is not a decidable problem. The work of P.Muller an
 In the latter a bytecode logic for a stack based language is defined which checks programs both for well --- typedness and functional correctness. 
  The language does not support objects, references, exceptions neither subroutines. 
 
-In ~\cite{WildmoserN-ESOP05}, M. Wildmoser and T. Nipkow describe a framework for verifying Jinja (a Java subset) bytecode against arithmetic overflow. 
-%The annotation is written manually, which is not comfortable, especially on bytecode. 
+In ~\cite{WildmoserN-ESOP05}, M. Wildmoser and T. Nipkow describe a framework for verifying Jinja (a Java subset) bytecode 
+against arithmetic overflow.  The annotation is written manually, which is not comfortable, especially on bytecode. 
 Here we propose a way to compile a specification written in a high level language, allowing specification to be written at source level, which we consider as more convenient.
 
-In the field of specification compilation we can mention the Spec\# programming system developed at Microsoft,
-~\cite{BLS04sp}. Spec\# is a superset of the C\# programming language, with a built-in  specification language,
+ The Spec\# (\cite{BLS04sp}) programming system developed at Microsoft proposes a static verification framework where 
+ the source specification is inserted in the intermediate. 
+ Spec\# is a superset of the C\# programming language, with a built-in  specification language,
 which proposes a verification framework (there is a choice to perform the checks either at runtime or statically). 
  The static verification procedure  involves translation of the specification into metadata which is attached to the intermediate code 
  and the verification is performed over the bytecode by the Boogie theorem prover.
