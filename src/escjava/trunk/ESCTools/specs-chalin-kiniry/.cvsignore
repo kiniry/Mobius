@@ -1,4 +1,6 @@
 *.stamp
+.emacs.desktop
 build
 jmlc
 jmlc_jmlunit
+semantic.cache

@@ -37,7 +37,7 @@ UNIT_TEST_CLASSPATH	= $(jmlc_jmlunit_path):$(buildpath):$(JUNITCP)
 CHECKSTYLE_CLASSPATH	= $(CORECP):$(CHECKSTYLECP)
 
 javapat	=	$(srcpath)/*java
-javafiles =	$(wildcard $(srcpath)*java)
+javafiles =	$(wildcard $(srcpath)/*java)
 readme_file =	README.TXT
 version_file =	VERSION.TXT
 usermanual_dir = usermanual
@@ -150,7 +150,7 @@ spellcheck:
 # targets related to building software
 
 patrice:
-	rm *.stamp; make classes jmlc_jmlunit jmlunit jmlrac-tests
+	rm *.stamp; make classes jmlc jmlc_jmlunit jmlunit jmlunit_classes jmlrac-tests
 
 classes:	classes.stamp
 
