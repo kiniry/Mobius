@@ -15,7 +15,7 @@ public final class List
   private static /* null */ Pair chain = null;
 
   /*@ private static invariant
-    @   (\forall List k;; List.bLookup(k));
+    @   (\forall List k;; List.lookup(k));
     @*/
 
   /*
@@ -36,7 +36,7 @@ public final class List
    */
   /*@ spec_public @*/ private /* null */ Pair elts = null;
   //@ public model \bigint _size;
-  //@  represents _size <- size();
+  //@ private represents _size <- count(elts);
 
   //------------------------------------------------------------------------------
   // Queries
@@ -117,12 +117,51 @@ public final class List
   // Helpers methods
 
   /*@ private normal_behavior
-    @  requires (\exists List p;; p.elts == elts);
-    @  modifies \nothing;
-    @  ensures  (\exists List p; p.elts == elts; \result == p);
+    @   ensures \result == (chain == null
+    @		? null
+    @		: ((List)chain.first()).elts == elts
+    @			? (List)chain.first()
+    @			: lookupHelper((Pair)(chain.second()), elts));
+    @*/
+  private static /*@ pure @*//*null*/ List lookupHelper(/* null */ Pair chain, /*@ non_null */ Pair elts) {
+    if(chain == null)
+      return null;
+
+    List k = (List)chain.first();
+    return k.elts == elts
+      ? k
+      : lookupHelper((Pair)(chain.second()), elts);
+  }
+
+  /*@ private normal_behavior
+    @  // requires (\exists List p;; p.elts == elts);
+    @  // ensures  (\exists List p; p.elts == elts; \result == p);
+    @  requires lookupHelper(chain, elts) != null;
+    @  ensures  \result == lookupHelper(chain, elts);
     @ also
     @ private normal_behavior
-    @  requires !(\exists List p;; p.elts == elts);
+    @  // requires !(\exists List p;; p.elts == elts);
+    @  requires lookupHelper(chain, elts) == null;
+    @  ensures  \result == null;
+    @*/
+  private /*@pure*/ static /*null*/ List lookup(/*null*/ Pair elts) {
+    // look for pre-existing chain of elements elts
+    for (Pair p = chain; p != null; p = (Pair)(p.second())) {
+      List aList = (List)(p.first());
+      Pair q = aList.elts;
+      if (elts == q)
+        return aList;
+    }
+    return null;
+  }
+
+  /*@ private normal_behavior
+    @  requires lookupHelper(chain, elts) != null;
+    @  modifies \nothing;
+    @  ensures  \result == lookupHelper(chain, elts);
+    @ also
+    @ private normal_behavior
+    @  requires lookupHelper(chain, elts) == null;
     @  modifies chain;
     @  ensures  \fresh(\result);
     @  ensures  \result.elts == elts;
@@ -137,40 +176,22 @@ public final class List
   }
 
   /*@ private normal_behavior
-    @   ensures \result <==> 
-    @       (p != null && p.first() == k || lookupHelper((Pair)(p.second()), k));
+    @   ensures \result <==>
+    @       (p != null && (p.first() == k || lookupHelper((Pair)(p.second()), k)));
+    @   ensures \result <==> lookupHelper((Pair)(p.second()), k.elts) != null;
     @*/
   private static /*@ pure @*/ boolean lookupHelper(/* null */ Pair p, /*@ non_null */ List k) {
-    return p != null && p.first() == k || lookupHelper((Pair)(p.second()), k);
+    return p != null && (p.first() == k || lookupHelper((Pair)(p.second()), k));
   }
 
   /*@ private normal_behavior
     @  ensures \result <==> lookupHelper(chain, k);
     @*/
-  private /*@pure*/ static boolean bLookup(/*@non_null*/ List k) {
+  private /*@pure*/ static boolean lookup(/*@non_null*/ List k) {
     for (Pair p = chain; p != null; p = (Pair)(p.second())) {
       if (p.first() == k)
         return true;
     }
     return false;
-  }
-
-  /*@ private normal_behavior
-    @  requires (\exists List p;; p.elts == elts);
-    @  ensures  (\exists List p; p.elts == elts; \result == p);
-    @ also
-    @ private normal_behavior
-    @  requires !(\exists List p;; p.elts == elts);
-    @  ensures  \result == null;
-    @*/
-  private /*@pure*/ static /*null*/ List lookup(/*null*/ Pair elts) {
-    // look for pre-existing chain of elements elts
-    for (Pair p = chain; p != null; p = (Pair)(p.second())) {
-      List aList = (List)(p.first());
-      Pair q = aList.elts;
-      if (elts == q)
-        return aList;
-    }
-    return null;
   }
 }
