@@ -28,10 +28,10 @@ against arithmetic overflow.  The annotation is written manually, which is not c
 Here we propose a way to compile a specification written in a high level language, allowing specification to be written at source level, which we consider as more convenient.
 
  The Spec\# (\cite{BLS04sp}) programming system developed at Microsoft proposes a static verification framework where 
- the source specification is inserted in the intermediate. 
+ the method and class contracts  (pre, post conditions, exceptional postconditions, class invariants) are inserted in the intermediate code . 
  Spec\# is a superset of the C\# programming language, with a built-in  specification language,
 which proposes a verification framework (there is a choice to perform the checks either at runtime or statically). 
- The static verification procedure  involves translation of the specification into metadata which is attached to the intermediate code 
+ The static verification procedure  involves translation of the contract specification into metadata which is attached to the intermediate code 
  and the verification is performed over the bytecode by the Boogie theorem prover.
 
 Another topic related to the present work is PCC.
