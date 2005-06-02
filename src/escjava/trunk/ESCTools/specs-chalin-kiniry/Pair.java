@@ -1,3 +1,5 @@
+// $Id$
+
 public final class Pair
 {
   /*@ public static invariant
@@ -9,8 +11,12 @@ public final class Pair
     @                      (p.first instanceof Pair &&
     @                      (p.second == null) || ((p.second instanceof Pair) &&
     @                                              elts_invariant((Pair)(p.second)))));
-    @
-    @ private pure static model boolean elts_invariant(Pair p);
+    @ private pure static model boolean elts_invariant(Pair p) {
+    @   return (p == null ||
+    @           (p.first instanceof Pair &&
+    @            (p.second == null) || ((p.second instanceof Pair) &&
+    @                                    elts_invariant((Pair)(p.second)))));
+    @ }
     @*/
 
   //@ private static invariant elts_invariant(elts);

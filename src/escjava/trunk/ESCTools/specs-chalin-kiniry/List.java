@@ -1,12 +1,27 @@
 // $Id$
 
+/**
+ * The (referential equality, functional, executable, pure) model class for lists.
+ *
+ * @author Patrice Chalin
+ * @author Joe Kiniry
+ */
+
 public final class List
 {
-  /*@ public static invariant
-    @  (\forall List k; (* k is in the chain lists *));
-    @  // (\forall Object o; (* o is in the chain lists *) <==> o instanceof List);
+  /**
+   * The (global) chain of Lists.  Every List object is in our chain.
+   */
+  private static /* null */ Pair chain = null;
+
+  /*@ private static invariant
+    @   (\forall List k;; List.bLookup(k));
     @*/
 
+  /*
+   * This invariant ensures that there is at most one List with a
+   * given head and tail.
+   */
   /*@ public static invariant
     @   (\forall List p, q;; p == q <==> 
     @           p.isEmpty() && q.isEmpty() ||
@@ -15,9 +30,13 @@ public final class List
     @		 p.tail() == q.tail())
     @	);
     @*/
-  private static /* null */ Pair chain = null;
 
-  /*@ spec_public @*/ private /* null */ Pair elts;
+  /**
+   * The elements in this List.
+   */
+  /*@ spec_public @*/ private /* null */ Pair elts = null;
+  //@ public model \bigint _size;
+  //@  represents _size <- size();
 
   //------------------------------------------------------------------------------
   // Queries
@@ -66,6 +85,24 @@ public final class List
   public static /*@ pure non_null @*/ List empty() {
     return lookupAndOrMake(null);
   }
+
+  /*@ ensures \result == (p == null
+    @   ? 0 
+    @   : (p.second() instanceof Pair) ? 1 + count((Pair)(p.second())) : 1);
+    @
+    @ private static pure model \bigint count(Pair p) {
+    @   return (p == null
+    @    ? 0 
+    @    : (p.second() instanceof Pair) ? 1 + count((Pair)(p.second())) : 1);
+    @ }    
+    @*/
+
+  /*@ public normal_behavior
+    @   ensures \result == _size;
+    @ public pure model \bigint size() {
+    @   return count(elts);
+    @ }
+    @*/
 
   /*@ public normal_behavior
     @   ensures !\result.isEmpty();
