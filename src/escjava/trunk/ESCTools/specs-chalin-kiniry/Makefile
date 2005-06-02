@@ -182,7 +182,7 @@ jmlc_jmlunit.stamp:	$(javafiles)
 	@mkdir -p $(jmlc_jmlunit_path)
 	export CLASSPATH=$(JUNIT_CLASSPATH);\
 	jmlc --destination $(jmlc_jmlunit_path) \
-		--Quiet --junit --source 1.4 $(javapat) && \
+		--Quiet --source 1.4 $(javapat) && \
 	touch jmlc_jmlunit.stamp
 
 jmlunit:	jmlc_jmlunit jmlunit.stamp
