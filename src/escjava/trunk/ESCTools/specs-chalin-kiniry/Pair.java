@@ -1,5 +1,9 @@
 // $Id$
 
+/**
+ * Model class for immutable pairs.
+ */
+
 public final class Pair
 {
   /*@ private static invariant
@@ -12,7 +16,7 @@ public final class Pair
     @*/
 
   //@ private static invariant Cons.isChain(chain);
-  //@ private static invariant (* every first is a Pair *);
+  //@ private static invariant (* every first is a non-null Pair *);
   private static /* null */ Cons chain = null;
 
   private final /* null */ Object first;
