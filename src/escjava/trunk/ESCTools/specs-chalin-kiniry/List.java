@@ -1,5 +1,12 @@
+// $Id$
+
 public final class List
 {
+  /*@ public static invariant
+    @  (\forall List k; (* k is in the chain lists *));
+    @  // (\forall Object o; (* o is in the chain lists *) <==> o instanceof List);
+    @*/
+
   /*@ public static invariant
     @   (\forall List p, q;; p == q <==> 
     @           p.isEmpty() && q.isEmpty() ||
@@ -8,23 +15,12 @@ public final class List
     @		 p.tail() == q.tail())
     @	);
     @*/
-
-  private static /* null */ Pair lists = null;
+  private static /* null */ Pair chain = null;
 
   /*@ spec_public @*/ private /* null */ Pair elts;
 
-  private List(Pair elts) {
-    this.elts = elts;
-  }
-
-  /*@ public normal_behavior
-    @   modifies \nothing;
-    @   ensures \result.isEmpty();
-    @*/
-  public static /*@ pure non_null @*/ List empty() {
-    // look for the empty list and if it exists return it
-    return lookupAndMake(null);
-  }
+  //------------------------------------------------------------------------------
+  // Queries
 
   /*@ public normal_behavior
     @   ensures \result <==> elts == null;
@@ -33,14 +29,8 @@ public final class List
     return (elts == null);
   }
 
-  /*@ public normal_behavior
-    @   ensures !\result.isEmpty();
-    @   ensures \result.head() == o;
-    @   ensures \result.tail() == this;
-    @*/
-  public /*@ pure non_null @*/ List append(Object o) {
-    return lookupAndMake(Pair.make(o, elts));
-  }
+  //------------------------------------------------------------------------------
+  // Selectors
 
   /*@ public normal_behavior
     @  requires !isEmpty();
@@ -58,22 +48,87 @@ public final class List
     @*/
   public /*@ pure @*/ List tail() {
     Pair someElts = (Pair)(elts.second());
-    List result = lookupAndMake(someElts);
+    List result = lookupAndOrMake(someElts);
     return result;
   }
 
-  private static /*@ non_null @*/ List lookupAndMake(Pair elts) {
+  //------------------------------------------------------------------------------
+  // Constructors and factory methods
+
+  private List(Pair elts) {
+    this.elts = elts;
+  }
+
+  /*@ public normal_behavior
+    @   modifies \nothing;
+    @   ensures \result.isEmpty();
+    @*/
+  public static /*@ pure non_null @*/ List empty() {
+    return lookupAndOrMake(null);
+  }
+
+  /*@ public normal_behavior
+    @   ensures !\result.isEmpty();
+    @   ensures \result.head() == o;
+    @   ensures \result.tail() == this;
+    @*/
+  public /*@ pure non_null @*/ List append(Object o) {
+    return lookupAndOrMake(Pair.make(o, elts));
+  }
+
+  //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Helpers methods
+
+  /*@ private normal_behavior
+    @  requires (\exists List p;; p.elts == elts);
+    @  modifies \nothing;
+    @  ensures  (\exists List p; p.elts == elts; \result == p);
+    @ also
+    @ private normal_behavior
+    @  requires !(\exists List p;; p.elts == elts);
+    @  modifies chain;
+    @  ensures  \fresh(\result);
+    @  ensures  \result.elts == elts;
+    @*/
+  private static /*@ non_null @*/ List lookupAndOrMake(Pair elts) {
     List result = lookup(elts);
     if (result == null) {
       result = new List(elts);
-      lists = Pair.make(result, lists);
+      chain = Pair.make(result, chain);
     }
     return(result);
   }
 
-  private static /*null*/ List lookup(/*null*/ Pair elts) {
+  /*@ private normal_behavior
+    @   ensures \result <==> 
+    @       (p != null && p.first() == k || lookupHelper((Pair)(p.second()), k));
+    @*/
+  private static /*@ pure @*/ boolean lookupHelper(/* null */ Pair p, /*@ non_null */ List k) {
+    return p != null && p.first() == k || lookupHelper((Pair)(p.second()), k);
+  }
+
+  /*@ private normal_behavior
+    @  ensures \result <==> lookupHelper(chain, k);
+    @*/
+  private /*@pure*/ static boolean bLookup(/*@non_null*/ List k) {
+    for (Pair p = chain; p != null; p = (Pair)(p.second())) {
+      if (p.first() == k)
+        return true;
+    }
+    return false;
+  }
+
+  /*@ private normal_behavior
+    @  requires (\exists List p;; p.elts == elts);
+    @  ensures  (\exists List p; p.elts == elts; \result == p);
+    @ also
+    @ private normal_behavior
+    @  requires !(\exists List p;; p.elts == elts);
+    @  ensures  \result == null;
+    @*/
+  private /*@pure*/ static /*null*/ List lookup(/*null*/ Pair elts) {
     // look for pre-existing chain of elements elts
-    for (Pair p = lists; p != null; p = (Pair)(p.second())) {
+    for (Pair p = chain; p != null; p = (Pair)(p.second())) {
       List aList = (List)(p.first());
       Pair q = aList.elts;
       if (elts == q)
