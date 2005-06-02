@@ -1,3 +1,84 @@
+2005-06-02  Joseph Kiniry <joseph.kiniry@ucd.ie>
+
+	* specs-chalin-kiniry/Makefile: Added patrice target.
+
+	* specs-chalin-kiniry/.cvsignore:
+	* specs-chalin-kiniry/APair.java:
+	* specs-chalin-kiniry/AbstractPair.java:
+	* specs-chalin-kiniry/CPair.java:
+	* specs-chalin-kiniry/FinalPair.java:
+	* specs-chalin-kiniry/FunkyPair.java:
+	* specs-chalin-kiniry/Makefile:
+	* specs-chalin-kiniry/PairInterface.java:
+	* specs-chalin-kiniry/extra.java:
+	* specs-chalin-kiniry/jmlunit/.cvsignore:
+	* specs-chalin-kiniry/jmlunit/List_JML_TestData.java:
+	* specs-chalin-kiniry/jmlunit/Pair_JML_TestData.java:
+	* specs-chalin-kiniry/old_src/APair.java:
+	* specs-chalin-kiniry/old_src/AbstractPair.java:
+	* specs-chalin-kiniry/old_src/CPair.java:
+	* specs-chalin-kiniry/old_src/FinalPair.java:
+	* specs-chalin-kiniry/old_src/FunkyPair.java:
+	* specs-chalin-kiniry/old_src/PairInterface.java:
+	* specs-chalin-kiniry/old_src/extra.java:
+	Moved old experiments into old_src, added test data value generators
+	and Makefile.
+
+	* specs-chalin-kiniry/List.java:
+	All our unit test pass with flying colo(u)rs.
+
+	* specs-chalin-kiniry/List.java:
+	* specs-chalin-kiniry/Pair.java:
+	More hard thinking over tea, forest fruit, and brownies (no, not those kind!).
+
+	* specs-chalin-kiniry/List.java:
+	Simplified several contracts by writing helper, freaky, recursive pure
+	methods.
+
+2005-06-01  Joseph Kiniry <joseph.kiniry@ucd.ie>
+
+	* specs-chalin-kiniry/APair.java:
+	* specs-chalin-kiniry/AbstractPair.java:
+	* specs-chalin-kiniry/CPair.java:
+	* specs-chalin-kiniry/FinalPair.java:
+	* specs-chalin-kiniry/FunkyPair.java:
+	* specs-chalin-kiniry/List.java:
+	* specs-chalin-kiniry/Pair.java:
+	* specs-chalin-kiniry/PairInterface.java:
+	* specs-chalin-kiniry/extra.java:
+	Patrice and I are thinking hard about new model classes. <g>
+
+2005-06-01  David Cok  <cok@frontiernet.net>
+
+	* Escjava/java/escjava/Main.java:
+	* Escjava/java/escjava/translate/GetSpec.java:
+	* Escjava/java/escjava/translate/VcToString.java:
+	* Javafe/java/javafe/ast/PrettyPrint.java:
+	* Javafe/java/javafe/reader/Reader.java:
+	* Javafe/java/javafe/util/Assert.java:
+	* Javafe/java/javafe/util/ErrorSet.java:
+	* Javafe/java/javafe/util/FatalError.java:
+	* specs/java/lang/Byte.jml:
+	* specs/java/lang/Double.jml:
+	* specs/java/lang/Float.jml:
+	* specs/java/lang/System.spec:
+	Minor fixes to specifications
+
+2005-05-30  Joseph Kiniry <joseph.kiniry@ucd.ie>
+
+	* slides/ETAPSTutorial/Makefile: New/improved clean rule.
+
+	* Makefile:
+	* Makefile.defs:
+	Added ORIG_SRC_SPECS variable to Makefile.defs to simplify the
+	makefile for releases a bit more.
+
+	* papers/koa_state_diagram.pdf:
+	* release-files/README.release:
+	* release-files/RELEASE_NOTES.txt:
+	Release notes and readme that were shipped with the 2.0a8 release; I
+	had just forgotten to commit them.
+
 2005-05-25  Patrice Chalin  <chalin@cs.concordia.ca>
 
 	* Escjava/java/escjava/ProverManager.java:
