@@ -149,6 +149,9 @@ spellcheck:
 
 # targets related to building software
 
+patrice:
+	rm *.stamp; make classes jmlc_jmlunit jmlunit jmlrac-tests
+
 classes:	classes.stamp
 
 classes.stamp:	$(javafiles)
