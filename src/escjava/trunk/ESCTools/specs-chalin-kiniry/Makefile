@@ -223,12 +223,12 @@ escjava2.stamp:	$(javafiles)
 escjava2-current:
 	export CLASSPATH=$(ESCJAVA_CLASSPATH);\
 	$(escjava) -bootclasspath $(BOOTCP) \
-		Pair.java List.java
+		Cons.java Pair.java List.java
 
 escjava2-core:
 	export CLASSPATH=$(ESCJAVA_CLASSPATH);\
 	$(escjava) -bootclasspath $(BOOTCP) \
-		Pair.java List.java
+		Cons.java Pair.java List.java
 
 checkstyle.stamp:
 	export CLASSPATH=$(CHECKSTYLE_CLASSPATH); \
@@ -249,9 +249,11 @@ main-jmlrac: jmlc
 
 jml-junit-tests:	classes jmlunit_classes
 	export CLASSPATH=$(UNIT_TEST_CLASSPATH);\
-	jml-junit $(test_memory_use) Pair_JML_Test
+	jml-junit $(test_memory_use) Cons_JML_Test
 
 jmlrac-tests:	classes jmlunit_classes
+	export CLASSPATH=$(UNIT_TEST_CLASSPATH);\
+	jmlrac $(test_memory_use) Cons_JML_Test
 	export CLASSPATH=$(UNIT_TEST_CLASSPATH);\
 	jmlrac $(test_memory_use) Pair_JML_Test
 	export CLASSPATH=$(UNIT_TEST_CLASSPATH);\
@@ -259,7 +261,7 @@ jmlrac-tests:	classes jmlunit_classes
 
 jmlrac-tests-current:	classes jmlunit_classes
 	export CLASSPATH=$(UNIT_TEST_CLASSPATH);\
-	jmlrac $(test_memory_use) Pair_JML_Test
+	jmlrac $(test_memory_use) Cons_JML_Test
 
 # generating source-based documentation
 
