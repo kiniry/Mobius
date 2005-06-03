@@ -117,6 +117,7 @@ public abstract class Cons_JML_TestData
     vjava_lang_ObjectStrategy
     = new org.jmlspecs.jmlunit.strategies.ObjectStrategy()
       {
+        // ObjectStrategy provides null and "new Object()"
         protected Object make(int n) {
           // replace this comment with test data if desired
           switch (n) {
@@ -181,6 +182,8 @@ public abstract class Cons_JML_TestData
             return d;
           case 4:
             return e;
+          case 5:
+            return a; // we want to test with aliasing
           default:
             break;
           }

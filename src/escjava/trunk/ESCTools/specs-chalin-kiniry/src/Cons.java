@@ -91,5 +91,4 @@ public final class Cons
     return c == null || c.second == null || 
       (c.second instanceof Cons && isChain((Cons)c.second));
   }
-
 }

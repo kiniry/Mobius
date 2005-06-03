@@ -12,18 +12,18 @@ CORECP	= .
 BOOTCP	= ~/Sandboxes/JML2/specs:~/Sandboxes/JML2/:/System/Library/Frameworks/JavaVM.framework/Versions/1.4.2/Classes/classes.jar
 JMLCP	= /usr/local/Java/JML/bin/jmlruntime.jar:/usr/local/Java/JML/bin/jmljunitruntime.jar
 JUNITCP	= /usr/local/Java/jars/junit.jar
-CHECKSTYLECP	= jars/checkstyle-optional.jar:jars/checkstyle-all.jar
+CHECKSTYLECP	= /usr/local/checkstyle/checkstyle-optional.jar:/usr/local/checkstyle/checkstyle-all.jar
 
 # local variables for build process
 
 basedocdir =	doc
-srcpath =	.
+srcpath =	src
+timestamppath =	timestamps
 jdksrcpath =	/usr/local/Java/src/jdk-1.4
 specpath =	specs
 buildpath =	build
 jmlc_path =	jmlc
 jmlunit_path =	jmlunit
-jmlc_jmlunit_path =	jmlc_jmlunit
 escjava =	escjava2 -source 1.4 -vclimit 2500000
 
 # Various CLASSPATH constructions
@@ -31,9 +31,9 @@ escjava =	escjava2 -source 1.4 -vclimit 2500000
 BASE_CLASSPATH	= $(CORECP):$(JUNITCP):$(JMLCP)
 JAVAC_CLASSPATH	= $(buildpath):$(BASE_CLASSPATH)
 JMLC_CLASSPATH	= $(jmlc_path):$(BASE_CLASSPATH)
-JUNIT_CLASSPATH	= $(jmlc_jmlunit_path):$(BASE_CLASSPATH)
+JUNIT_CLASSPATH	= $(jmlc_path):$(BASE_CLASSPATH)
 ESCJAVA_CLASSPATH	= $(CORECP):$(JUNITCP):$(JMLCP)
-UNIT_TEST_CLASSPATH	= $(jmlc_jmlunit_path):$(buildpath):$(JUNITCP)
+UNIT_TEST_CLASSPATH	= $(jmlc_path):$(buildpath):$(JUNITCP)
 CHECKSTYLE_CLASSPATH	= $(CORECP):$(CHECKSTYLECP)
 
 javapat	=	$(srcpath)/*java
@@ -49,6 +49,10 @@ jmlunitfiles =	$(wildcard $(jmlunit_path)/*java)
 generated_jmlunitfiles	=	$(wildcard $(jmlunit_path)/*_JML_Test.java)
 classfiles =	$(foreach javafile,$(javafiles),\
 		$(subst .java,.class,$(javafile)))
+
+current_focus =	Cons.java
+core_files =	Cons.java Pair.java List.java
+
 javadoc =	javadoc
 jmldoc =	jmldoc
 javadocflags =	-version -author -private -source 1.4
@@ -60,7 +64,7 @@ main_memory_use =	-ms256M -mx256M
 rac_memory_use =	-ms256M -mx320M
 test_memory_use	=	-ms256M -mx320M
 
-copyright = "CK<br />&copy; 2005 CK<br />All Rights Reserved"
+copyright = "CK JML Model Classes<br />&copy; 2005 Patrice Chalin and Joseph Kiniry<br />All Rights Reserved"
 
 # implicit rules for paper documentation generation
 
@@ -105,7 +109,7 @@ copyright = "CK<br />&copy; 2005 CK<br />All Rights Reserved"
 # identification of phony targets
 
 .PHONY: all build escjava test ps pdf spellcheck \
-	classes jmlc jmlc_jmlunit jmlunit jmlunit_classes \
+	classes jmlc jmlunit jmlunit_classes \
 	escjava2-typecheck escjava2 escjava2-current escjava2-core \
 	main main-jmlrac jml-junit-tests jmlrac-tests \
 	source_docs javadoc jmldoc checkstyle \
@@ -149,93 +153,82 @@ spellcheck:
 
 # targets related to building software
 
-patrice:
-	rm *.stamp; make classes jmlc jmlc_jmlunit jmlunit jmlunit_classes jmlrac-tests
+classes:	$(timestamppath)/classes.stamp
 
-classes:	classes.stamp
-
-classes.stamp:	$(javafiles)
+$(timestamppath)/classes.stamp:	$(javafiles)
 	@mkdir -p $(buildpath)
 	export CLASSPATH=$(JAVAC_CLASSPATH);\
 	javac -g -d $(buildpath) -source 1.4 $(javapat) && \
-	touch classes.stamp
+	touch $(timestamppath)/classes.stamp
 
-jml:	jml.stamp
+jml:	$(timestamppath)/jml.stamp
 
-jml.stamp:	$(javafiles)
+$(timestamppath)/jml.stamp:	$(javafiles)
 	export CLASSPATH=$(JMLC_CLASSPATH);\
 	jml --Quiet --source 1.4 $(javapat) && \
-	touch jml.stamp
+	touch $(timestamppath)/jml.stamp
 
-jmlc:	jmlc.stamp
+jmlc:	$(timestamppath)/jmlc.stamp
 
-jmlc.stamp:	$(javafiles)
+$(timestamppath)/jmlc.stamp:	$(javafiles)
 	@mkdir -p $(jmlc_path)
 	export CLASSPATH=$(JMLC_CLASSPATH);\
 	jmlc --destination $(jmlc_path) \
 		--Quiet --source 1.4 $(javapat) && \
-	touch jmlc.stamp
+	touch $(timestamppath)/jmlc.stamp
 
-jmlc_jmlunit: jmlc_jmlunit.stamp
+jmlunit:	jmlc $(timestamppath)/jmlunit.stamp
 
-jmlc_jmlunit.stamp:	$(javafiles)
-	@mkdir -p $(jmlc_jmlunit_path)
-	export CLASSPATH=$(JUNIT_CLASSPATH);\
-	jmlc --destination $(jmlc_jmlunit_path) \
-		--Quiet --source 1.4 $(javapat) && \
-	touch jmlc_jmlunit.stamp
-
-jmlunit:	jmlc_jmlunit jmlunit.stamp
-
-jmlunit.stamp:	$(javafiles)
+$(timestamppath)/jmlunit.stamp:	$(javafiles)
 	@mkdir -p $(jmlunit_path)
 	export CLASSPATH=$(JAVAC_CLASSPATH);\
 	jmlunit --destination $(jmlunit_path) \
 		--sourcepath $(specpath):$(srcpath) \
 		--package --source 1.4 \
 		--testLevel=2 $(srcpath)/ && \
-	touch jmlunit.stamp
+	touch $(timestamppath)/jmlunit.stamp
 
-jmlunit_classes:	jmlunit jmlunit_classes.stamp
+jmlunit_classes:	jmlunit $(timestamppath)/jmlunit_classes.stamp
 
-jmlunit_classes.stamp:	$(jmlunitfiles)
-	mkdir -p $(jmlc_jmlunit_path)
+$(timestamppath)/jmlunit_classes.stamp:	$(jmlunitfiles)
+	mkdir -p $(jmlc_path)
 	export CLASSPATH=$(JUNIT_CLASSPATH);\
-	javac -g -d $(jmlc_jmlunit_path) -source 1.4 $(jmlunitpat) && \
-	touch jmlunit_classes.stamp
+	javac -g -d $(jmlc_path) -source 1.4 $(jmlunitpat) && \
+	touch $(timestamppath)/jmlunit_classes.stamp
 
 # targets related to checking software
 
-escjava2-typecheck:	escjava2-typecheck.stamp
+escjava2-typecheck:	$(timestamppath)/escjava2-typecheck.stamp
 
-escjava2-typecheck.stamp:	$(javafiles)
+$(timestamppath)/escjava2-typecheck.stamp:	$(javafiles)
 	export CLASSPATH=$(ESCJAVA_CLASSPATH);\
 	$(escjava) -typecheck $(javapat) && \
-	touch escjava2-typecheck.stamp
+	touch $(timestamppath)/escjava2-typecheck.stamp
 
-escjava2:	escjava2.stamp
+escjava2:	$(timestamppath)/escjava2.stamp
 
-escjava2.stamp:	$(javafiles)
+$(timestamppath)/escjava2.stamp:	$(javafiles)
 	export CLASSPATH=$(ESCJAVA_CLASSPATH);\
 	$(escjava) $(javapat) && \
-	touch escjava2.stamp
+	touch $(timestamppath)/escjava2.stamp
 
 escjava2-current:
 	export CLASSPATH=$(ESCJAVA_CLASSPATH);\
 	$(escjava) -bootclasspath $(BOOTCP) \
-		Cons.java Pair.java List.java
+		$(current_focus)
 
 escjava2-core:
 	export CLASSPATH=$(ESCJAVA_CLASSPATH);\
 	$(escjava) -bootclasspath $(BOOTCP) \
-		Cons.java Pair.java List.java
+		$(core_files)
 
-checkstyle.stamp:
+$(timestamppath)/checkstyle.stamp:	$(javafiles)
 	export CLASSPATH=$(CHECKSTYLE_CLASSPATH); \
 	java com.puppycrawl.tools.checkstyle.Main \
-		-c sos-group.xml $(javafiles)
+		-c sos-group.xml $(javafiles) &&
+	touch $(timestamppath)/checkstycle.stamp
 
-checkstyle:	checkstyle.stamp
+checkstyle:	$(timestamppath)/checkstyle.stamp
 
 # executing the program
 
@@ -249,7 +242,7 @@ main-jmlrac: jmlc
 
 jml-junit-tests:	classes jmlunit_classes
 	export CLASSPATH=$(UNIT_TEST_CLASSPATH);\
-	jml-junit $(test_memory_use) Cons_JML_Test
+	jml-junit $(test_memory_use) Cons_JML_Test Pair_JML_Test List_JML_Test
 
 jmlrac-tests:	classes jmlunit_classes
 	export CLASSPATH=$(UNIT_TEST_CLASSPATH);\
@@ -267,9 +260,9 @@ jmlrac-tests-current:	classes jmlunit_classes
 
 source_docs:	javadoc jmldoc
 
-javadoc:	javadoc.stamp
+javadoc:	$(timestamppath)/javadoc.stamp
 
-javadoc.stamp:	$(javafiles) $(srcpath)/package.html $(basedocdir)/overview.html
+$(timestamppath)/javadoc.stamp:	$(javafiles) $(srcpath)/package.html $(basedocdir)/overview.html
 	mkdir -p $(javadocdir); \
 	export CLASSPATH=$(BASE_CLASSPATH);\
 	$(javadoc) -d $(javadocdir) $(javadocflags) \
@@ -279,11 +272,11 @@ javadoc.stamp:	$(javafiles) $(srcpath)/package.html $(basedocdir)/overview.html
 	-header $(copyright) \
 	-footer $(copyright) \
 	-subpackages ck; \
-	touch javadoc.stamp
+	touch $(timestamppath)/javadoc.stamp
 
-jmldoc:		jmldoc.stamp
+jmldoc:		$(timestamppath)/jmldoc.stamp
 
-jmldoc.stamp:	$(javafiles) $(srcpath)/package.html $(basedocdir)/overview.html
+$(timestamppath)/jmldoc.stamp:	$(javafiles) $(srcpath)/package.html $(basedocdir)/overview.html
 	mkdir -p $(jmldocdir); \
 	export CLASSPATH=$(BASE_CLASSPATH);\
 	$(jmldoc) -d $(jmldocdir) $(jmldocflags) \
@@ -293,16 +286,16 @@ jmldoc.stamp:	$(javafiles) $(srcpath)/package.html $(basedocdir)/overview.html
 	-header $(copyright) \
 	-footer $(copyright) \
 	ck \
-	touch jmldoc.stamp
+	touch $(timestamppath)/jmldoc.stamp
 
 
 release:
 	echo '$(RELEASE)' > $(version_file)
 	date >> $(version_file)
 
-distr: distr.stamp
+distr:	$(timestamppath)/distr.stamp
 
-distr.stamp: release classes clean_distr usermanual
+$(timestamppath)/distr.stamp: release classes clean_distr usermanual
 	mkdir -p distr/tmp
 	mkdir -p distr/koa
 	mkdir -p distr/koa/lib
@@ -318,11 +311,11 @@ distr.stamp: release classes clean_distr usermanual
 	cp $(usermanual_pdf) distr/koa/doc
 	cd distr/koa; jar -i koa.jar
 	cd distr; zip koa.zip koa/koa.jar koa/lib/*
-	touch distr.stamp
+	$(timestamppath)/touch distr.stamp
 
-src_distr: src_distr.stamp 
+src_distr:	$(timestamppath)/src_distr.stamp 
 
-src_distr.stamp: distr clean_src_distr
+$(timestamppath)/src_distr.stamp: distr clean_src_distr
 	mkdir -p distr/koa/src/sos/koa
 	mkdir -p distr/koa/doc/javadocs
 	mkdir -p distr/koa/doc/jmldocs
@@ -358,13 +351,13 @@ src_distr.stamp: distr clean_src_distr
 	cd distr; unzip -l koa.zip |grep 'src'|grep 'lib' >> $(readme_file)
 	cat README.footer >> distr/$(readme_file)
 	cd distr; zip -r koa.zip $(readme_file)
-	touch src_distr.stamp
+	touch $(timestamppath)/src_distr.stamp
 
-usermanual:	usermanual.stamp
+usermanual:	$(timestamppath)/usermanual.stamp
 
-usermanual.stamp:	
-	cd $(usermanual_dir); make pdf
-	touch usermanual.stamp
+$(timestamppath)/usermanual.stamp:	
+	cd $(usermanual_dir); make pdf && \
+	touch $(timestamppath)/usermanual.stamp
 
 # targets related to cleaning up
 
@@ -373,23 +366,24 @@ clean:	clean_javadoc clean_jmldoc clean_classes clean_jml clean_jmlc clean_jmlun
 	rm -f *.log *.bbl *.blg *.aux *.out
 	rm -f *.pstex *.pstex_t *.pdf *.pdf_t *.pdftex
 	rm -f *.bak
+
 clean_other_stamps:
-	rm -f escjava2-typecheck.stamp escjava2.stamp checkstyle.stamp
+	rm -f $(timestamppath)/escjava2-typecheck.stamp \
+	  $(timestamppath)/escjava2.stamp \
+	  $(timestamppath)/checkstyle.stamp
 
 clean_classes:
-	rm -rf distr $(buildpath) classes.stamp jmlunit_classes.stamp
+	rm -rf distr $(buildpath) \
+	  $(timestamppath)/classes.stamp $(timestamppath)/jmlunit_classes.stamp
 
 clean_jml:
-	rm -rf jml.stamp
+	rm -rf $(timestamppath)/jml.stamp
 
 clean_jmlc:
-	rm -rf $(jmlc_path) jmlc.stamp
-
-clean_jmlcjunit:
-	rm -rf $(jmlc_jmlunit_path) jmlc_jmlunit.stamp
+	rm -rf $(jmlc_path) $(timestamppath)/jmlc.stamp
 
 clean_jmlunit:
-	rm -f $(generated_jmlunitfiles) jmlunit.stamp
+	rm -f $(generated_jmlunitfiles) $(timestamppath)/jmlunit.stamp
 
 clean_javadoc:
 	rm -rf $(javadocdir)/*.html \
@@ -398,7 +392,7 @@ clean_javadoc:
 		$(javadocdir)/images \
 		$(javadocdir)/package-list \
 		$(javadocdir)/stylesheet.css \
-		javadoc.stamp
+		$(timestamppath)/javadoc.stamp
 
 clean_jmldoc:
 	rm -rf $(jmldocdir)/*.html \
@@ -407,14 +401,13 @@ clean_jmldoc:
 		$(jmldocdir)/images \
 		$(jmldocdir)/package-list \
 		$(jmldocdir)/stylesheet.css \
-		jmldoc.stamp
+		$(timestamppath)/jmldoc.stamp
 
 clean_distr:
 	rm -rf distr
 
 clean_src_distr:
-	rm -rf src_distr.stamp
+	rm -rf $(timestamppath)/src_distr.stamp
 
 clean_usermanual:
-	rm -rf usermanual.stamp
-
+	rm -rf $(timestamppath)/usermanual.stamp
