@@ -9,30 +9,37 @@ public final /*@ pure @*/ class Bag
   // Queries
 
   public boolean isEmpty() {
+    return false;
   }
 
   public boolean has(Object o) {
+    return false;
   }
 
   public boolean equals(Object o) {
+    return false;
   }
 
   //------------------------------------------------------------------------------
   // Selectors
 
   public Object choose() {
+    return null;
   }
 
   public Bag insert(Object o) {
+    return null;
   }
 
   public Bag remove(Object o) {
+    return null;
   }
 
   //------------------------------------------------------------------------------
   // Constructors and factory methods
 
   public static Bag empty() {
+    return null;
   }
 
   //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
