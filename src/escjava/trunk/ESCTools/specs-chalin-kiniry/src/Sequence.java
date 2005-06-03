@@ -10,9 +10,14 @@
 public final /*@ pure @*/ class Sequence
 {
   /**
-   * The (global) chain of Sequences.  Every Sequence object is in our chain.
+   * The (global) chain of Sequences.  Every Sequence object is in 'chain'.
    */
-  private static /* null */ Pair chain = null;
+  /*@ private static invariant
+    @   (* chain contains Sequences and only Sequences, that is ... *);
+    @ private static invariant
+    @   (\forall Object o;; Cons.isMember(chain, o) <==> (o instanceof Sequence));
+    @*/
+  private static /* null */ Cons chain = null;
 
   /*@ private static invariant
     @   (\forall Sequence k;; Sequence.lookup(k));
@@ -35,8 +40,9 @@ public final /*@ pure @*/ class Sequence
    * The elements in this Sequence.
    */
   /*@ spec_public @*/ private /* null */ Pair elts = null;
-  //@ public model \bigint _length;
-  //@   in objectState;
+  /*@ public model \bigint _length;
+    @                      in objectState;
+    @*/
   //@ private represents _length <- length(elts);
   //@ public invariant 0 <= _length;
   //@ public invariant isEmpty() <==> 0 == _length;
@@ -63,7 +69,6 @@ public final /*@ pure @*/ class Sequence
 
   /*@ public normal_behavior
     @  requires !isEmpty();
-    @  modifies \nothing;
     @  ensures \result == elts.first();
     @*/
   public Object head() {
@@ -72,7 +77,6 @@ public final /*@ pure @*/ class Sequence
 
   /*@ public normal_behavior
     @  requires !isEmpty();
-    @  modifies \nothing;
     @  ensures \result.elts == elts.second();
     @*/
   public Sequence tail() {
@@ -95,10 +99,9 @@ public final /*@ pure @*/ class Sequence
   }
 
   /*@ public normal_behavior
-    @   modifies \nothing;
     @   ensures \result.isEmpty();
     @*/
-  public static /*@ non_null @*/ Sequence empty() {
+  public static /*@ pure non_null @*/ Sequence empty() {
     return lookupAndOrMake(null);
   }
 
@@ -145,16 +148,17 @@ public final /*@ pure @*/ class Sequence
     @		? null
     @		: ((Sequence)chain.first()).elts == elts
     @			? (Sequence)chain.first()
-    @			: lookupHelper((Pair)(chain.second()), elts));
+    @			: lookupHelper((Cons)(chain.second()), elts));
     @*/
-  private static /* null */ Sequence lookupHelper(/* null */ Pair chain, /*@ non_null */ Pair elts) {
+  private static /*@ pure @*/ /* null */ Sequence lookupHelper(/* null */ Cons chain,
+                                                               /*@ non_null */ Pair elts) {
     if(chain == null)
       return null;
 
     Sequence k = (Sequence)chain.first();
     return k.elts == elts
       ? k
-      : lookupHelper((Pair)(chain.second()), elts);
+      : lookupHelper((Cons)(chain.second()), elts);
   }
 
   /*@ private normal_behavior
@@ -168,9 +172,9 @@ public final /*@ pure @*/ class Sequence
     @  requires lookupHelper(chain, elts) == null;
     @  ensures  \result == null;
     @*/
-  private static /* null */ Sequence lookup(/* null */ Pair elts) {
+  private static /*@ pure @*/ /* null */ Sequence lookup(/* null */ Pair elts) {
     // look for pre-existing chain of elements elts
-    for (Pair p = chain; p != null; p = (Pair)(p.second())) {
+    for (Cons p = chain; p != null; p = (Cons)(p.second())) {
       Sequence aSequence = (Sequence)(p.first());
       Pair q = aSequence.elts;
       if (elts == q)
@@ -190,29 +194,29 @@ public final /*@ pure @*/ class Sequence
     @  ensures  \fresh(\result);
     @  ensures  \result.elts == elts;
     @*/
-  private static /*@ non_null @*/ Sequence lookupAndOrMake(Pair elts) {
+  private static /*@ non_null @*/ /* non_pure */ Sequence lookupAndOrMake(Pair elts) {
     Sequence result = lookup(elts);
     if (result == null) {
       result = new Sequence(elts);
-      chain = Pair.make(result, chain);
+      chain = new Cons(result, chain);
     }
     return(result);
   }
 
   /*@ private normal_behavior
     @   ensures \result <==>
-    @       (p != null && (p.first() == k || lookupHelper((Pair)(p.second()), k)));
-    @   ensures \result <==> lookupHelper((Pair)(p.second()), k.elts) != null;
+    @       (p != null && (p.first() == k || lookupHelper((Cons)(p.second()), k)));
+    @   ensures \result <==> lookupHelper((Cons)(p.second()), k.elts) != null;
     @*/
-  private static boolean lookupHelper(/* null */ Pair p, /*@ non_null */ Sequence k) {
-    return p != null && (p.first() == k || lookupHelper((Pair)(p.second()), k));
+  private static /*@ pure @*/ boolean lookupHelper(/* null */ Cons p, /*@ non_null */ Sequence k) {
+    return p != null && (p.first() == k || lookupHelper((Cons)(p.second()), k));
   }
 
   /*@ private normal_behavior
     @  ensures \result <==> lookupHelper(chain, k);
     @*/
-  private static boolean lookup(/*@ non_null @*/ Sequence k) {
-    for (Pair p = chain; p != null; p = (Pair)(p.second())) {
+  private static /*@ pure @*/ boolean lookup(/*@ non_null @*/ Sequence k) {
+    for (Cons p = chain; p != null; p = (Cons)(p.second())) {
       if (p.first() == k)
         return true;
     }
