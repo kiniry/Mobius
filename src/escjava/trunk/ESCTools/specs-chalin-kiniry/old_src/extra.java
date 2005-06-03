@@ -128,3 +128,57 @@
     }
     return false;
   }
+
+
+  /*@ public normal_behavior
+    @   requires isChain(chain);
+    @   ensures  \result == (chain == null
+    @			? 0
+    @			: 1 + lengthHelper((Cons)chain.second()));
+    @
+    @ pure private static \bigint lengthHelper(Cons c) {
+    @   return chain == null
+    @			? 0
+    @			: 1 + lengthHelper((Cons)chain.second());
+    @ }
+    @*/
+
+  /*@ public normal_behavior
+    @   requires isChain(chain);
+    @   ensures  \result == lengthHelper(c);
+    @
+    @ pure private static \bigint length(Cons c) {
+    @   return lengthHelper(c);
+    @ }
+    @*/
+
+  /*@ public model \bigint length;
+    @              in objectState;
+    @*/
+  //@ private represents length <- length(elts);
+  //@ public invariant 0 <= length;
+
+  //@ private invariant_redundantly elts == null <==> 0 == length;
+  //@ public  invariant_redundantly isEmpty() <==> 0 == length;
+
+
+  /*@ private normal_behavior
+    @   ensures \result <==>
+    @       (p != null && (p.first() == k || inChainHelper((Cons)(p.second()), k)));
+    @   ensures \result <==> getCached((Cons)(p.second()), k.elts) != null;
+    @*/
+  private static /*@ pure @*/ boolean inChainHelper(/* null */ Cons p,
+                                                    /*@ non_null */ Sequence k) {
+    return p != null && (p.first() == k || inChainHelper((Cons)(p.second()), k));
+  }
+
+  /*@ private normal_behavior
+    @  ensures \result <==> inChainHelper(chain, k);
+    @*/
+  private static /*@ pure @*/ boolean inChain(/*@ non_null @*/ Sequence k) {
+    for (Cons p = chain; p != null; p = (Cons)(p.second())) {
+      if (p.first() == k)
+        return true;
+    }
+    return false;
+  }

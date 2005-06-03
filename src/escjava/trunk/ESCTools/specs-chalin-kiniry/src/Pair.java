@@ -2,16 +2,13 @@
 
 /**
  * Model class for immutable pairs.
+ *
+ * @author Patrice Chalin
+ * @author Joe Kiniry
  */
 
 public final /*@ pure @*/ class Pair
 {
-  /*@ private static invariant
-    @   (* chain contains all Pairs and only Pairs, that is ... *);
-    @ private static invariant
-    @   (\forall Object o;; Cons.isMember(chain, o) <==> (o instanceof Pair));
-    @*/
-
   /*@ public static invariant
     @   (* two pairs are referentially equal iff their firsts/seconds are 
     @      referentially equal, that is ... *);
@@ -20,8 +17,16 @@ public final /*@ pure @*/ class Pair
     @                                    p.second() == q.second());
     @*/
 
-  //@ private static invariant Cons.isChain(chain);
-  //@ private static invariant (* every first is a non-null Pair *);
+  /**
+   * The chain of all Pairs.
+   */
+  /*@ private static invariant
+    @   (* chain contains all Pairs and only Pairs, that is ... *);
+    @ private static invariant
+    @   (\forall Object o;; Cons.isMember(chain, o) <==> (o instanceof Pair));
+    @ private static invariant Cons.isChain(chain);
+    @ private static invariant (* every first is a non-null Pair *);
+    @*/
   private static /* null */ Cons chain = null;
 
   /*@ spec_public @*/ private final /* null */ Object first;
@@ -58,7 +63,7 @@ public final /*@ pure @*/ class Pair
     @   ensures_redundantly Cons.isMember(chain, \result);
     @*/
   public static /*@ non_null @*/ /* non_pure */ Pair make(Object first, Object second) {
-    Pair result = getPairFromChain(first, second);
+    Pair result = getCached(first, second);
     if (result == null)
       result = new Pair(first, second);
     chain = new Cons(result, chain);
@@ -87,7 +92,7 @@ public final /*@ pure @*/ class Pair
     return this == other;
   }
 
-  // -----------------------------------------------------------------
+  //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // Helpers
 
   /*@ private normal_behavior
@@ -106,10 +111,10 @@ public final /*@ pure @*/ class Pair
     @	  ? null
     @	  : same((Pair)chain.first(), first, second)
     @		? (Pair)chain.first()
-    @		: getPairFromChainHelper((Cons)(chain.second()), first, second));
+    @		: getCachedHelper((Cons)(chain.second()), first, second));
     @*/
   private static /*@ pure @*/ /* null */ 
-    Pair getPairFromChainHelper(/* null */ Cons chain,
+    Pair getCachedHelper(/* null */ Cons chain,
                                 /* null */ Object first, 
                                 /* null */ Object second)
   {
@@ -119,7 +124,7 @@ public final /*@ pure @*/ class Pair
     Pair p = (Pair)chain.first();
     return same(p, first, second)
       ? p
-      : getPairFromChainHelper((Cons)chain.second(), first, second);
+      : getCachedHelper((Cons)chain.second(), first, second);
   }
 
   /**
@@ -127,9 +132,9 @@ public final /*@ pure @*/ class Pair
    */
   /*@ private normal_behavior
     @   ensures (* returns the Pair [first, second] in chain, otherwise returns null *);
-    @   ensures \result == getPairFromChainHelper(chain, first, second);
+    @   ensures \result == getCachedHelper(chain, first, second);
     @*/
-  private static /*@ pure @*/ /* null */ Pair getPairFromChain(Object first, Object second) {
+  private static /*@ pure @*/ /* null */ Pair getCached(Object first, Object second) {
     for (Cons c = chain; c != null; c = (Cons)(c.second())) {
       Pair p = (Pair)(c.first());
       if (p.first == first && p.second == second)
@@ -139,9 +144,9 @@ public final /*@ pure @*/ class Pair
   }
 
   /*@ private normal_behavior
-    @   ensures \result <==> getPairFromChain(first, second) != null;
+    @   ensures \result <==> getCached(first, second) != null;
     @*/
   private static /*@ pure @*/ boolean inChain(Object first, Object second) {
-    return getPairFromChain(first, second) != null;
+    return getCached(first, second) != null;
   }
 }

@@ -54,8 +54,25 @@ public final /*@ pure @*/ class Cons
       second() == ((Cons)other).second();
   }
 
+  /*@ public normal_behavior
+    @   ensures \result == Cons.length(this);
+    @
+    @ public model \bigint length() {
+    @   return length(this);
+    @ }
+    @*/
+
   // -----------------------------------------------------------------
   // Helpers
+
+  /*@ public normal_behavior
+    @   requires isChain(c);
+    @   ensures \result == (c == null ? 0 : 1 + length((Cons)(c.second())));
+    @
+    @ public static pure model \bigint length(Cons c) {
+    @   return (c == null ? 0 : 1 + length((Cons)(c.second())));
+    @ }    
+    @*/
 
   /*@ public normal_behavior
     @   requires isChain(chain);
