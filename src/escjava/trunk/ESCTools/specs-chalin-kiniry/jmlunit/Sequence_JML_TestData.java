@@ -121,13 +121,13 @@ public abstract class Sequence_JML_TestData
           switch (n) {
             // replace this comment with test data if desired
           case 0:
-            return Sequence.empty();
+            return Pair.make(null, null);
           case 1:
-            return Sequence.empty();
+            return null;
           case 2:
-            return Sequence.empty().append(null);
+            return "";
           case 3:
-            return Sequence.empty().append("");
+            return new Integer(0);
           default:
             break;
           }
@@ -164,13 +164,13 @@ public abstract class Sequence_JML_TestData
           switch (n) {
             // replace this comment with test data if desired
           case 0:
-            return Pair.make(null, null);
+            return Sequence.empty();
           case 1:
-            return null;
+            return Sequence.empty();
           case 2:
-            return "";
+            return Sequence.empty().append(null);
           case 3:
-            return new Integer(0);
+            return Sequence.empty().append("");
           default:
             break;
           }
