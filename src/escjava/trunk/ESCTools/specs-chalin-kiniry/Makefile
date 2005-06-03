@@ -51,7 +51,7 @@ classfiles =	$(foreach javafile,$(javafiles),\
 		$(subst .java,.class,$(javafile)))
 
 current_focus =	Cons.java
-core_files =	Cons.java Pair.java List.java
+core_files =	Cons.java Pair.java Sequence.java
 
 javadoc =	javadoc
 jmldoc =	jmldoc
@@ -242,15 +242,15 @@ main-jmlrac: jmlc
 
 jml-junit-tests:	classes jmlunit_classes
 	export CLASSPATH=$(UNIT_TEST_CLASSPATH);\
-	jml-junit $(test_memory_use) Cons_JML_Test Pair_JML_Test List_JML_Test
+	jml-junit $(test_memory_use) Cons_JML_Test Pair_JML_Test Sequence_JML_Test
 
-jmlrac-tests:	classes jmlunit_classes
+jmlrac-tests:	jmlunit_classes classes
 	export CLASSPATH=$(UNIT_TEST_CLASSPATH);\
 	jmlrac $(test_memory_use) Cons_JML_Test
 	export CLASSPATH=$(UNIT_TEST_CLASSPATH);\
 	jmlrac $(test_memory_use) Pair_JML_Test
 	export CLASSPATH=$(UNIT_TEST_CLASSPATH);\
-	jmlrac $(test_memory_use) List_JML_Test
+	jmlrac $(test_memory_use) Sequence_JML_Test
 
 jmlrac-tests-current:	classes jmlunit_classes
 	export CLASSPATH=$(UNIT_TEST_CLASSPATH);\

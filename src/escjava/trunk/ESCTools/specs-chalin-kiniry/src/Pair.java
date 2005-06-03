@@ -4,7 +4,7 @@
  * Model class for immutable pairs.
  */
 
-public final class Pair
+public final /*@ pure @*/ class Pair
 {
   /*@ private static invariant
     @   (\forall Pair p;; Cons.isMember(chain, p));
@@ -55,14 +55,14 @@ public final class Pair
   /*@ normal_behavior
     @   modifies \nothing;
     @*/
-  public /*@ pure @*/ Object first() {
+  public Object first() {
     return first;
   }
 
   /*@ normal_behavior
     @   modifies \nothing;
     @*/
-  public /*@ pure @*/ Object second() {
+  public Object second() {
     return second;
   }
   
@@ -71,7 +71,7 @@ public final class Pair
     @   modifies \nothing;
     @   ensures \result == (this == other);
     @*/
-  public /*@ pure @*/ boolean equals(Object other) {
+  public boolean equals(Object other) {
     return this == other;
   }
 }

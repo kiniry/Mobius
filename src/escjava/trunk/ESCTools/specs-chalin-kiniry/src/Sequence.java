@@ -7,23 +7,23 @@
  * @author Joe Kiniry
  */
 
-public final class List
+public final /*@ pure @*/ class Sequence
 {
   /**
-   * The (global) chain of Lists.  Every List object is in our chain.
+   * The (global) chain of Sequences.  Every Sequence object is in our chain.
    */
   private static /* null */ Pair chain = null;
 
   /*@ private static invariant
-    @   (\forall List k;; List.lookup(k));
+    @   (\forall Sequence k;; Sequence.lookup(k));
     @*/
 
   /*
-   * This invariant ensures that there is at most one List with a
+   * This invariant ensures that there is at most one Sequence with a
    * given head and tail.
    */
   /*@ public static invariant
-    @   (\forall List p, q;; p == q <==> 
+    @   (\forall Sequence p, q;; p == q <==> 
     @           p.isEmpty() && q.isEmpty() ||
     @		(!p.isEmpty() && !q.isEmpty() && 
     @            p.head() == q.head() && 
@@ -32,11 +32,15 @@ public final class List
     @*/
 
   /**
-   * The elements in this List.
+   * The elements in this Sequence.
    */
   /*@ spec_public @*/ private /* null */ Pair elts = null;
-  //@ public model \bigint _size;
-  //@ private represents _size <- count(elts);
+  //@ public model \bigint _length;
+  //@   in objectState;
+  //@ private represents _length <- length(elts);
+  //@ public invariant 0 <= _length;
+  //@ public invariant isEmpty() <==> 0 == _length;
+  //@ private invariant_redundantly elts == null <==> 0 == _length;
 
   //------------------------------------------------------------------------------
   // Queries
@@ -44,9 +48,15 @@ public final class List
   /*@ public normal_behavior
     @   ensures \result <==> elts == null;
     @*/
-  public /*@ pure @*/ boolean isEmpty() {
+  public boolean isEmpty() {
     return (elts == null);
   }
+
+  //  The number of times a given element 'o' occurs in the sequence.
+  //@ public pure model \bigint length(Object o);
+
+  //  True iff 'o' is in this list.
+  //  public pure boolean has(Object o);
 
   //------------------------------------------------------------------------------
   // Selectors
@@ -56,7 +66,7 @@ public final class List
     @  modifies \nothing;
     @  ensures \result == elts.first();
     @*/
-  public /*@ pure @*/ Object head() {
+  public Object head() {
     return elts.first();
   }
 
@@ -65,16 +75,22 @@ public final class List
     @  modifies \nothing;
     @  ensures \result.elts == elts.second();
     @*/
-  public /*@ pure @*/ List tail() {
+  public Sequence tail() {
     Pair someElts = (Pair)(elts.second());
-    List result = lookupAndOrMake(someElts);
+    Sequence result = lookupAndOrMake(someElts);
     return result;
   }
+
+  //  Returns the item at index 'i'.
+  //@ public pure model Object itemAt(\bigint i);
+
+  //  Returns the last item in this sequence.
+  //@ public pure model Object last();
 
   //------------------------------------------------------------------------------
   // Constructors and factory methods
 
-  private List(Pair elts) {
+  private Sequence(Pair elts) {
     this.elts = elts;
   }
 
@@ -82,25 +98,25 @@ public final class List
     @   modifies \nothing;
     @   ensures \result.isEmpty();
     @*/
-  public static /*@ pure non_null @*/ List empty() {
+  public static /*@ non_null @*/ Sequence empty() {
     return lookupAndOrMake(null);
   }
 
   /*@ ensures \result == (p == null
     @   ? 0 
-    @   : (p.second() instanceof Pair) ? 1 + count((Pair)(p.second())) : 1);
+    @   : (p.second() instanceof Pair) ? 1 + length((Pair)(p.second())) : 1);
     @
-    @ private static pure model \bigint count(Pair p) {
+    @ private static pure model \bigint length(Pair p) {
     @   return (p == null
     @    ? 0 
-    @    : (p.second() instanceof Pair) ? 1 + count((Pair)(p.second())) : 1);
+    @    : (p.second() instanceof Pair) ? 1 + length((Pair)(p.second())) : 1);
     @ }    
     @*/
 
   /*@ public normal_behavior
-    @   ensures \result == _size;
-    @ public pure model \bigint size() {
-    @   return count(elts);
+    @   ensures \result == _length;
+    @ public pure model \bigint length() {
+    @   return length(elts);
     @ }
     @*/
 
@@ -109,8 +125,16 @@ public final class List
     @   ensures \result.head() == o;
     @   ensures \result.tail() == this;
     @*/
-  public /*@ pure non_null @*/ List append(Object o) {
+  public /*@ non_null @*/ Sequence append(Object o) {
     return lookupAndOrMake(Pair.make(o, elts));
+  }
+
+  /*@ also
+    @ public normal_behavior
+    @   ensures \result == (this == o);
+    @*/
+  public boolean equals(Object o) {
+    return this == o;
   }
 
   //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -119,38 +143,38 @@ public final class List
   /*@ private normal_behavior
     @   ensures \result == (chain == null
     @		? null
-    @		: ((List)chain.first()).elts == elts
-    @			? (List)chain.first()
+    @		: ((Sequence)chain.first()).elts == elts
+    @			? (Sequence)chain.first()
     @			: lookupHelper((Pair)(chain.second()), elts));
     @*/
-  private static /*@ pure @*//*null*/ List lookupHelper(/* null */ Pair chain, /*@ non_null */ Pair elts) {
+  private static /* null */ Sequence lookupHelper(/* null */ Pair chain, /*@ non_null */ Pair elts) {
     if(chain == null)
       return null;
 
-    List k = (List)chain.first();
+    Sequence k = (Sequence)chain.first();
     return k.elts == elts
       ? k
       : lookupHelper((Pair)(chain.second()), elts);
   }
 
   /*@ private normal_behavior
-    @  // requires (\exists List p;; p.elts == elts);
-    @  // ensures  (\exists List p; p.elts == elts; \result == p);
+    @  // requires (\exists Sequence p;; p.elts == elts);
+    @  // ensures  (\exists Sequence p; p.elts == elts; \result == p);
     @  requires lookupHelper(chain, elts) != null;
     @  ensures  \result == lookupHelper(chain, elts);
     @ also
     @ private normal_behavior
-    @  // requires !(\exists List p;; p.elts == elts);
+    @  // requires !(\exists Sequence p;; p.elts == elts);
     @  requires lookupHelper(chain, elts) == null;
     @  ensures  \result == null;
     @*/
-  private /*@pure*/ static /*null*/ List lookup(/*null*/ Pair elts) {
+  private static /* null */ Sequence lookup(/* null */ Pair elts) {
     // look for pre-existing chain of elements elts
     for (Pair p = chain; p != null; p = (Pair)(p.second())) {
-      List aList = (List)(p.first());
-      Pair q = aList.elts;
+      Sequence aSequence = (Sequence)(p.first());
+      Pair q = aSequence.elts;
       if (elts == q)
-        return aList;
+        return aSequence;
     }
     return null;
   }
@@ -166,10 +190,10 @@ public final class List
     @  ensures  \fresh(\result);
     @  ensures  \result.elts == elts;
     @*/
-  private static /*@ non_null @*/ List lookupAndOrMake(Pair elts) {
-    List result = lookup(elts);
+  private static /*@ non_null @*/ Sequence lookupAndOrMake(Pair elts) {
+    Sequence result = lookup(elts);
     if (result == null) {
-      result = new List(elts);
+      result = new Sequence(elts);
       chain = Pair.make(result, chain);
     }
     return(result);
@@ -180,14 +204,14 @@ public final class List
     @       (p != null && (p.first() == k || lookupHelper((Pair)(p.second()), k)));
     @   ensures \result <==> lookupHelper((Pair)(p.second()), k.elts) != null;
     @*/
-  private static /*@ pure @*/ boolean lookupHelper(/* null */ Pair p, /*@ non_null */ List k) {
+  private static boolean lookupHelper(/* null */ Pair p, /*@ non_null */ Sequence k) {
     return p != null && (p.first() == k || lookupHelper((Pair)(p.second()), k));
   }
 
   /*@ private normal_behavior
     @  ensures \result <==> lookupHelper(chain, k);
     @*/
-  private /*@pure*/ static boolean lookup(/*@non_null*/ List k) {
+  private static boolean lookup(/*@ non_null @*/ Sequence k) {
     for (Pair p = chain; p != null; p = (Pair)(p.second())) {
       if (p.first() == k)
         return true;

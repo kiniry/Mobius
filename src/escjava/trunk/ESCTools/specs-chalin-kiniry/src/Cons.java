@@ -13,7 +13,7 @@
  */
 
 // immutable!
-public final class Cons
+public final /*@ pure @*/ class Cons
 {
   /*@ spec_public @*/ private final /* null */ Object first;
   /*@ spec_public @*/ private final /* null */ Object second;
@@ -32,7 +32,7 @@ public final class Cons
     @   modifies \nothing;
     @   ensures \result == first;
     @*/
-  public /*@ pure @*/ Object first() {
+  public Object first() {
     return first;
   }
 
@@ -40,7 +40,7 @@ public final class Cons
     @   modifies \nothing;
     @   ensures \result == second;
     @*/
-  public /*@ pure @*/ Object second() {
+  public Object second() {
     return second;
   }
   
@@ -51,7 +51,7 @@ public final class Cons
     @                       first() == ((Cons)other).first() &&
     @                       second() == ((Cons)other).second());
     @*/
-  public /*@ pure @*/ boolean equals(Object other) {
+  public boolean equals(Object other) {
     return (other instanceof Cons) &&
       first() == ((Cons)other).first() &&
       second() == ((Cons)other).second();
@@ -66,7 +66,7 @@ public final class Cons
     @                       (chain.first() == o ||
     @                        isMemberHelper((Cons)chain.second(), o)));
     @*/
-  /*@ spec_public @*/ private /*@ pure @*/ static boolean 
+  /*@ spec_public @*/ private static boolean 
     isMemberHelper(Cons chain,
                    /*@ non_null @*/ Object o) {
     return (chain != null && 
@@ -77,7 +77,7 @@ public final class Cons
     @   requires isChain(chain);
     @   ensures \result == isMemberHelper(chain, o);
     @*/
-  public /*@ pure @*/ static boolean isMember(Cons chain,
+  public static boolean isMember(Cons chain,
                                               /*@ non_null @*/ Object o) {
     return isMemberHelper(chain, o);
   }
@@ -87,7 +87,7 @@ public final class Cons
     @     (c == null || c.second == null || 
     @      (c.second instanceof Cons && isChain((Cons)c.second)));
     @*/
-  public static /*@ pure @*/ boolean isChain(Cons c) {
+  public static boolean isChain(Cons c) {
     return c == null || c.second == null || 
       (c.second instanceof Cons && isChain((Cons)c.second));
   }
