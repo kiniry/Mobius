@@ -29,7 +29,6 @@ public final /*@ pure @*/ class Cons
   }
 
   /*@ normal_behavior
-    @   modifies \nothing;
     @   ensures \result == first;
     @*/
   public Object first() {
@@ -37,7 +36,6 @@ public final /*@ pure @*/ class Cons
   }
 
   /*@ normal_behavior
-    @   modifies \nothing;
     @   ensures \result == second;
     @*/
   public Object second() {
@@ -46,7 +44,6 @@ public final /*@ pure @*/ class Cons
   
   /*@ also 
     @ public normal_behavior
-    @   modifies \nothing;
     @   ensures \result == ((other instanceof Cons) &&
     @                       first() == ((Cons)other).first() &&
     @                       second() == ((Cons)other).second());
@@ -66,7 +63,7 @@ public final /*@ pure @*/ class Cons
     @                       (chain.first() == o ||
     @                        isMemberHelper((Cons)chain.second(), o)));
     @*/
-  /*@ spec_public @*/ private static boolean 
+  /*@ pure spec_public @*/ private static boolean 
     isMemberHelper(Cons chain,
                    /*@ non_null @*/ Object o) {
     return (chain != null && 
@@ -77,7 +74,7 @@ public final /*@ pure @*/ class Cons
     @   requires isChain(chain);
     @   ensures \result == isMemberHelper(chain, o);
     @*/
-  public static boolean isMember(Cons chain,
+  public static /*@ pure @*/ boolean isMember(Cons chain,
                                               /*@ non_null @*/ Object o) {
     return isMemberHelper(chain, o);
   }
@@ -87,7 +84,7 @@ public final /*@ pure @*/ class Cons
     @     (c == null || c.second == null || 
     @      (c.second instanceof Cons && isChain((Cons)c.second)));
     @*/
-  public static boolean isChain(Cons c) {
+  public static /*@ pure @*/ boolean isChain(Cons c) {
     return c == null || c.second == null || 
       (c.second instanceof Cons && isChain((Cons)c.second));
   }
