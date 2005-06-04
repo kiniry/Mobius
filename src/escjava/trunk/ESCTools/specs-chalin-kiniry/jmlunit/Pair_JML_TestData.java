@@ -128,7 +128,7 @@ public abstract class Pair_JML_TestData
           case 3:
             return Pair.make("", "");
           case 4:
-            return Pair.make(Sequence.empty(), null);
+            return Pair.make(EmptySequence.make(), null);
           case 5:
             return Pair.make(new Cons(null, null), 
                              Pair.make(new Cons(null, null), null));
@@ -176,9 +176,9 @@ public abstract class Pair_JML_TestData
           case 3:
             return new Integer(0);
           case 4:
-            return Sequence.empty();
+            return EmptySequence.make();
           case 5:
-            return Sequence.empty().append(null);
+            return EmptySequence.make().append(null);
           case 6:
             return new Cons(null, null);
           case 7:
