@@ -165,7 +165,7 @@ jml:	$(timestamppath)/jml.stamp
 
 $(timestamppath)/jml.stamp:	$(javafiles)
 	export CLASSPATH=$(JMLC_CLASSPATH);\
-	jml --Quiet --source 1.4 $(javapat) && \
+	jml --purity --Quiet --source 1.4 $(javapat) && \
 	touch $(timestamppath)/jml.stamp
 
 jmlc:	$(timestamppath)/jmlc.stamp
@@ -174,7 +174,7 @@ $(timestamppath)/jmlc.stamp:	$(javafiles)
 	@mkdir -p $(jmlc_path)
 	export CLASSPATH=$(JMLC_CLASSPATH);\
 	jmlc --destination $(jmlc_path) \
-		--Quiet --source 1.4 $(javapat) && \
+		--purity --Quiet --source 1.4 $(javapat) && \
 	touch $(timestamppath)/jmlc.stamp
 
 jmlunit:	jmlc $(timestamppath)/jmlunit.stamp
@@ -242,7 +242,7 @@ main-jmlrac: jmlc
 
 jml-junit-tests:	classes jmlunit_classes
 	export CLASSPATH=$(UNIT_TEST_CLASSPATH);\
-	jml-junit $(test_memory_use) Cons_JML_Test Pair_JML_Test Sequence_JML_Test
+	jml-junit $(test_memory_use) Cons_JML_Test Pair_JML_Test Sequence_JML_Test &
 
 jmlrac-tests:	jmlunit_classes classes
 	export CLASSPATH=$(UNIT_TEST_CLASSPATH);\
