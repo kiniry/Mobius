@@ -104,6 +104,9 @@ public abstract class Sequence
   //------------------------------------------------------------------------------
   // Constructors and factory methods
 
+  /*@ protected normal_behavior
+    @   modifies \nothing;
+    @*/
   protected Sequence() {
     ;
   }

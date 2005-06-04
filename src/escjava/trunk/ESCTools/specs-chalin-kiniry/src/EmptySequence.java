@@ -22,12 +22,12 @@ public final class EmptySequence extends Sequence
   //------------------------------------------------------------------------------
   // Selectors
 
-  public Object head() {
+  public Object head() throws RuntimeException {
     assert false;
     throw new RuntimeException();
   }
 
-  public Sequence tail() {
+  public Sequence tail() throws RuntimeException {
     assert false;
     throw new RuntimeException();
   }
@@ -48,5 +48,5 @@ public final class EmptySequence extends Sequence
     @*/
   private EmptySequence() {
     this.elts = null;
-  }
+   }
 }

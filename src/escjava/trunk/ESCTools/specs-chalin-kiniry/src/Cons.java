@@ -55,6 +55,7 @@ public final /*@ pure @*/ class Cons
   }
 
   /*@ public normal_behavior
+    @   requires Cons.isChain(this);
     @   ensures \result == Cons.length(this);
     @
     @ public model \bigint length() {
