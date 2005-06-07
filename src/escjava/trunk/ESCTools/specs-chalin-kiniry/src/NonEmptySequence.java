@@ -1,8 +1,11 @@
 // $Id$
 
 /**
- * The (referential equality, functional, executable, pure) model
- * class for Sequences.
+ * The model class for non-empty Sequences.
+ *
+ * All of our model classes have referential equality, are pure,
+ * functional, and executable.  All have been extensively tested with
+ * JML/Junit and have been ESCed with ESC/Java2.0a8.
  *
  * @author Patrice Chalin
  * @author Joe Kiniry
@@ -29,8 +32,8 @@ public final class NonEmptySequence extends Sequence
 
   /*@ also
     @ public normal_behavior
-    @  requires !isEmpty();
-    @  ensures  \result == head;
+    @   requires !isEmpty();
+    @   ensures  \result == head;
     @*/
   public /*@ pure @*/ Object head() {
     return elts.first();
@@ -38,16 +41,16 @@ public final class NonEmptySequence extends Sequence
 
   /*@ also
     @ public normal_behavior
-    @  requires !isEmpty();
-    @  modifies \nothing;
-    @  ensures  \result == tail;
+    @   requires !isEmpty();
+    @   modifies \nothing;
+    @   ensures  \result == tail;
     @ also
     @ private normal_behavior
-    @  requires !isEmpty();
-    @  modifies chain;
-    @  ensures \result == (elts.second() == null
-    @                     ? EmptySequence.make()
-    @                     : getCached(chain, (Cons)elts.second()));
+    @   requires !isEmpty();
+    @   modifies chain;
+    @   ensures  \result == (elts.second() == null
+    @                       ? EmptySequence.make()
+    @                       : getCached(chain, (Cons)elts.second()));
     @*/
   public /*@ non_null @*/ /* observationally_pure */ Sequence tail() {
     return getCachedAndOrMake((Cons)elts.second());
@@ -60,8 +63,14 @@ public final class NonEmptySequence extends Sequence
   // Constructors and factory methods
 
   /*@ normal_behavior
-    @   requires Cons.isChain(elts);
+    @   requires Cons.isChain(e);
     @   modifies elts;
+    @   ensures  !isEmpty();
+    @ also
+    @ protected normal_behavior
+    @   requires Cons.isChain(e);
+    @   modifies elts;
+    @   ensures  elts == e;
     @*/
   NonEmptySequence(/*@ non_null @*/ Cons e) {
     this.elts = e;

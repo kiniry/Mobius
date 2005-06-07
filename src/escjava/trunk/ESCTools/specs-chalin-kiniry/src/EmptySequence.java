@@ -1,8 +1,11 @@
 // $Id$
 
 /**
- * The (referential equality, functional, executable, pure) model
- * class for empty Sequences.
+ * The model class for empty Sequences.
+ *
+ * All of our model classes have referential equality, are pure,
+ * functional, and executable.  All have been extensively tested with
+ * JML/Junit and have been ESCed with ESC/Java2.0a8.
  *
  * @author Patrice Chalin
  * @author Joe Kiniry
@@ -10,6 +13,8 @@
 
 public final class EmptySequence extends Sequence
 {
+  //@ private invariant elts == null;
+  
   private static final EmptySequence theEmptySequence = new EmptySequence();
 
   static {
@@ -23,12 +28,10 @@ public final class EmptySequence extends Sequence
   // Selectors
 
   public Object head() throws RuntimeException {
-    assert false;
     throw new RuntimeException();
   }
 
   public Sequence tail() throws RuntimeException {
-    assert false;
     throw new RuntimeException();
   }
 
@@ -42,11 +45,13 @@ public final class EmptySequence extends Sequence
     return theEmptySequence;
   }
 
-  /*@ private normal_behavior
-    @   modifies elts;
+  /*@ public normal_behavior
+    @   ensures isEmpty();
+    @ protected normal_behavior
     @   ensures elts == null;
     @*/
-  private EmptySequence() {
-    this.elts = null;
-   }
+  private /*@ pure @*/ EmptySequence() {
+    // relying upon default initialization of elts
+    //@ assert elts == null;
+  }
 }

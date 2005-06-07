@@ -1,8 +1,11 @@
 // $Id$
 
 /**
- * The (referential equality, functional, executable, pure) model
- * class for Sequences.
+ * The abstract model class for Sequences.
+ *
+ * All of our model classes have referential equality, are pure,
+ * functional, and executable.  All have been extensively tested with
+ * JML/Junit and have been ESCed with ESC/Java2.0a8.
  *
  * @author Patrice Chalin
  * @author Joe Kiniry
@@ -31,6 +34,11 @@ public abstract class Sequence
   //@ public  invariant_redundantly isEmpty() <==> 0 == length;
   //@ protected represents length <- elts.length();
 
+  //  @review kiniry/chalin - think about whether we want to keep this, as
+  //  it is in the current model classes, and if so, whether to use a ghost
+  //  or a model field.
+  //@ protected Class elementType = \type(Object);
+
   // TBC
   //@ protected invariant (* Each Sequence object is uniquely determined by its elts.*);
   //  the only subclasses of this class are EmptySequence and NonEmptySequence
@@ -54,6 +62,8 @@ public abstract class Sequence
 
   /**
    * The elements in this Sequence.
+   *
+   * @todo chalin/kiniry - consider using Pair instead of Cons
    */
   //@ private invariant Cons.isChain(elts);
   protected /* null */ Cons elts;
@@ -86,14 +96,23 @@ public abstract class Sequence
 
   /*@ public normal_behavior
     @  requires !isEmpty();
+    @ also
+    @ public exceptional_behavior
+    @  requires isEmpty();
+    @  signals_only RuntimeException;
     @*/
   public abstract /*@ pure @*/ Object head();
 
   /*@ public normal_behavior
     @  requires !isEmpty();
     @  modifies \nothing;
+    @ also
+    @ public exceptional_behavior
+    @  requires isEmpty();
+    @  modifies \nothing;
+    @  signals_only RuntimeException;
     @*/
-  public abstract /*@ non_null @*/ /* observationally_pure */ Sequence tail();
+  public abstract /*@ non_null pure @*/ /* observationally_pure */ Sequence tail();
 
   //  Returns the item at index 'i'.
   //@ public pure model Object itemAt(\bigint i);
