@@ -176,3 +176,17 @@
 /*@ \peer */
 /*@ \readonly */
 /*@ \rep */
+
+//@ immutable
+
+//@ null_ref_by_default
+//@ non_null_ref_by_default
+//@ obs_pure
+//@ may_be_null
+
+//@ code_java_math
+//@ code_safe_math
+//@ code_bigint_math
+//@ spec_java_math
+//@ spec_safe_math
+//@ spec_bigint_math

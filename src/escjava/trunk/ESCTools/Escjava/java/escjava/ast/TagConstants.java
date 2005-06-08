@@ -402,11 +402,30 @@ public class TagConstants extends GeneratedTags
     public static final int ALSO_EXSURES = ALSO_ENSURES + 1;
     public static final int ALSO_MODIFIES = ALSO_EXSURES + 1;
     public static final int ALSO_REQUIRES = ALSO_MODIFIES + 1;
+
     // Include the Universe type annotation keywords (cjbooms)
     public static final int PEER = ALSO_REQUIRES + 1;
     public static final int READONLY = PEER + 1;
     public static final int REP = READONLY + 1;
-    public static final int LASTESCKEYWORDTAG = REP;
+
+    // Chalin-Kiniry experimental keywords for nullness, purity, and whatnot
+    public static final int MAY_BE_NULL = REP + 1;
+    public static final int NULL_REF_BY_DEFAULT = MAY_BE_NULL + 1;
+    public static final int NON_NULL_REF_BY_DEFAULT = NULL_REF_BY_DEFAULT + 1;
+    public static final int OBS_PURE = NON_NULL_REF_BY_DEFAULT + 1;
+
+    // Chalin's spec and code modifiers for different math semantics
+    public static final int WACK_JAVA_MATH = OBS_PURE + 1;
+    public static final int WACK_SAFE_MATH = WACK_JAVA_MATH + 1;
+    public static final int WACK_BIGINT_MATH = WACK_SAFE_MATH + 1;
+    public static final int CODE_JAVA_MATH = WACK_BIGINT_MATH + 1;
+    public static final int CODE_SAFE_MATH = CODE_JAVA_MATH + 1;
+    public static final int CODE_BIGINT_MATH = CODE_SAFE_MATH + 1;
+    public static final int SPEC_JAVA_MATH = CODE_BIGINT_MATH + 1;
+    public static final int SPEC_SAFE_MATH = SPEC_JAVA_MATH + 1;
+    public static final int SPEC_BIGINT_MATH = SPEC_SAFE_MATH + 1;
+
+    public static final int LASTESCKEYWORDTAG = SPEC_BIGINT_MATH;
 
     public static final int LAST_TAG = LASTESCKEYWORDTAG;
 
@@ -533,7 +552,7 @@ public class TagConstants extends GeneratedTags
 
     public static boolean isKeywordTag(int tag) {
 	return (FIRSTJMLKEYWORDTAG <= tag && tag <= LASTJMLKEYWORDTAG)
-	    || (FIRSTESCKEYWORDTAG <= tag && tag <= LASTESCKEYWORDTAG);
+          || (FIRSTESCKEYWORDTAG <= tag && tag <= LASTESCKEYWORDTAG);
     }
 
     public static int checkFromString(/*@non_null*/ String s) {
@@ -673,32 +692,33 @@ public class TagConstants extends GeneratedTags
     }
 
     public static boolean isRedundant(int tag) {
-	return (tag == TagConstants.REQUIRES_REDUNDANTLY) ||
-            (tag == TagConstants.ENSURES_REDUNDANTLY) ||
-            tag == TagConstants.INVARIANT_REDUNDANTLY ||
-            tag == TagConstants.CONSTRAINT_REDUNDANTLY ||
-            tag == TagConstants.REPRESENTS_REDUNDANTLY ||
-            (tag == TagConstants.PRECONDITION_REDUNDANTLY) ||
-            (tag == TagConstants.DIVERGES_REDUNDANTLY) ||
-            (tag == TagConstants.WHEN_REDUNDANTLY) ||
-            (tag == TagConstants.POSTCONDITION_REDUNDANTLY) ||
-            (tag == TagConstants.EXSURES_REDUNDANTLY) ||
-            (tag == TagConstants.SIGNALS_REDUNDANTLY) ||
-            (tag == TagConstants.DURATION_REDUNDANTLY) ||
-            (tag == TagConstants.WORKING_SPACE_REDUNDANTLY) ||
-            tag == TagConstants.MODIFIABLE_REDUNDANTLY ||
-            tag == TagConstants.ASSIGNABLE_REDUNDANTLY ||
-            tag == TagConstants.MODIFIES_REDUNDANTLY ||
-            tag == TagConstants.MEASURED_BY_REDUNDANTLY ||
-            tag == TagConstants.ASSERT_REDUNDANTLY ||
-            tag == TagConstants.ASSUME_REDUNDANTLY ||
-            tag == TagConstants.LOOP_INVARIANT_REDUNDANTLY ||
-            tag == TagConstants.IN_REDUNDANTLY ||
-            tag == TagConstants.MAPS_REDUNDANTLY ||
-            tag == TagConstants.MAINTAINING_REDUNDANTLY ||
-            tag == TagConstants.DECREASES_REDUNDANTLY ||
-            tag == TagConstants.HENCE_BY_REDUNDANTLY ||
-            tag == TagConstants.DECREASING_REDUNDANTLY;
+      return (tag == TagConstants.REQUIRES_REDUNDANTLY
+              || tag == TagConstants.ASSERT_REDUNDANTLY
+              || tag == TagConstants.ASSIGNABLE_REDUNDANTLY
+              || tag == TagConstants.ASSUME_REDUNDANTLY
+              || tag == TagConstants.CONSTRAINT_REDUNDANTLY
+              || tag == TagConstants.DECREASES_REDUNDANTLY
+              || tag == TagConstants.DECREASING_REDUNDANTLY
+              || tag == TagConstants.DIVERGES_REDUNDANTLY
+              || tag == TagConstants.DURATION_REDUNDANTLY
+              || tag == TagConstants.ENSURES_REDUNDANTLY
+              || tag == TagConstants.EXSURES_REDUNDANTLY
+              || tag == TagConstants.HENCE_BY_REDUNDANTLY
+              || tag == TagConstants.INVARIANT_REDUNDANTLY
+              || tag == TagConstants.IN_REDUNDANTLY
+              || tag == TagConstants.LOOP_INVARIANT_REDUNDANTLY
+              || tag == TagConstants.MAINTAINING_REDUNDANTLY
+              || tag == TagConstants.MAPS_REDUNDANTLY
+              || tag == TagConstants.MEASURED_BY_REDUNDANTLY
+              || tag == TagConstants.MODIFIABLE_REDUNDANTLY
+              || tag == TagConstants.MODIFIES_REDUNDANTLY
+              || tag == TagConstants.POSTCONDITION_REDUNDANTLY
+              || tag == TagConstants.PRECONDITION_REDUNDANTLY
+              || tag == TagConstants.REPRESENTS_REDUNDANTLY
+              || tag == TagConstants.SIGNALS_REDUNDANTLY
+              || tag == TagConstants.WHEN_REDUNDANTLY
+              || tag == TagConstants.WORKING_SPACE_REDUNDANTLY
+              );
     }
 
     public final static /*@non_null*/ String[] escchecks = {
@@ -941,7 +961,7 @@ public class TagConstants extends GeneratedTags
         Identifier.intern("exceptional_behavior"),
         Identifier.intern("exceptional_example"),
         Identifier.intern("exsures_redundantly"),
-	      Identifier.intern("field"),
+        Identifier.intern("field"),
         Identifier.intern("forall"),
         Identifier.intern("for_example"),
         Identifier.intern("implies_that"),
@@ -956,7 +976,7 @@ public class TagConstants extends GeneratedTags
         Identifier.intern("maintaining"),
         Identifier.intern("measured_by_redundantly"),
         Identifier.intern("measured_by"),
-	      Identifier.intern("method"),
+        Identifier.intern("method"),
         Identifier.intern("model"),
         Identifier.intern("model_program"),
         Identifier.intern("modifiable_redundantly"),
@@ -997,13 +1017,31 @@ public class TagConstants extends GeneratedTags
         Identifier.intern("also_exsures"),
         Identifier.intern("also_modifies"),
         Identifier.intern("also_requires"),
+
         // Universe type annotations (cjbooms)
  	Identifier.intern("\\peer"),
         Identifier.intern("\\readonly"),
-        Identifier.intern("\\rep")
+        Identifier.intern("\\rep"),
+
+        // Chalin-Kiniry experimental keywords for nullness, purity, and whatnot
+        Identifier.intern("may_be_null"),
+        Identifier.intern("null_ref_by_default"),
+        Identifier.intern("non_null_ref_by_default"),
+        Identifier.intern("obs_pure"),
+
+        // Chalin's spec and code modifiers for different math semantics
+        Identifier.intern("\\java_math"),
+        Identifier.intern("\\safe_math"),
+        Identifier.intern("\\bigint_math"),
+        Identifier.intern("code_java_math"),
+        Identifier.intern("code_safe_math"),
+        Identifier.intern("code_bigint_math"),
+        Identifier.intern("spec_java_math"),
+        Identifier.intern("spec_safe_math"),
+        Identifier.intern("spec_bigint_math")
     };
 
-    public static void main(/*@non_null*/ String[] args) {
+    public static void main(/*@ non_null @*/ String[] args) {
         for(int i = FIRST_TAG; i <= LAST_TAG; i++ )
             System.out.println(i + " " + toString(i));
     }
@@ -1018,14 +1056,13 @@ public class TagConstants extends GeneratedTags
     }
 
     static {
-	comp(esckeywords.length,LASTESCKEYWORDTAG - FIRSTESCKEYWORDTAG + 1,
+	comp(esckeywords.length, LASTESCKEYWORDTAG - FIRSTESCKEYWORDTAG + 1,
 		"esckeywords");
-	comp(jmlkeywords.length,LASTJMLKEYWORDTAG - FIRSTJMLKEYWORDTAG + 1,
+	comp(jmlkeywords.length, LASTJMLKEYWORDTAG - FIRSTJMLKEYWORDTAG + 1,
 		"jmlkeywords");
-	comp(escfunctions.length,LASTFUNCTIONTAG - FIRSTFUNCTIONTAG + 1,
+	comp(escfunctions.length, LASTFUNCTIONTAG - FIRSTFUNCTIONTAG + 1,
 		"escfunctions");
-	comp(escchecks.length,LASTESCCHECKTAG - FIRSTESCCHECKTAG + 1,
+	comp(escchecks.length, LASTESCCHECKTAG - FIRSTESCCHECKTAG + 1,
 		"escchecks");
     }
-		
 }

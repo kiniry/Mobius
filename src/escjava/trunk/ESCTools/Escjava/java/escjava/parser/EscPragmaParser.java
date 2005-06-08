@@ -78,9 +78,10 @@ import java.util.Iterator;
  | 'spec_public' | 'writable_deferred' | 'helper' 
  | 'public' | 'private' | 'protected' 
  | 'spec_protected' | 'model' | 'transient' | '\peer' | '\readonly' | '\rep'
- 
- @note kiniry 29 Apr 2003 - the last three above are not yet fully supported
- 
+ | 'may_be_null' | 'non_null_ref_by_default' | 'null_ref_by_default' | 'obs_pure'
+ | 'code_java_math' | 'code_safe_math' | 'code_bigint_math'
+ | 'spec_java_math' | 'spec_safe_math' | 'spec_bigint_math'
+
  ExprModifierPragma ::= 'readable_if' | 'writable_if' 
  | 'requires' | 'requires_redundantly' | 'also_requires' (if Main.allowAlsoRequires)
  | 'ensures' | 'ensures_redundantly' | 'also_ensures' 
@@ -198,6 +199,7 @@ import java.util.Iterator;
  
  Function ::= '\fresh' | '\nonnullelements' | '\elemtype' | '\max' | '\old'
  | '\typeof' | '\not_modified' | '\nowarn' | '\nowarn_op' | '\warn' | '\warn_op'
+ | '\java_math' | '\safe_math' | \bigint_math
  
  UnOp ::= '+' | '-' | '!' | '~'
  
@@ -1381,24 +1383,34 @@ public class EscPragmaParser extends Parse
         // punctuation does not look like an identifier so it
         // does not get advanced up at the top
         // fall-through
-        case TagConstants.PURE:
+        case TagConstants.CODE_BIGINT_MATH:
+        case TagConstants.CODE_JAVA_MATH:
+        case TagConstants.CODE_SAFE_MATH:
         case TagConstants.FUNCTION:
         case TagConstants.HELPER:
         case TagConstants.IMMUTABLE:
-        case TagConstants.SPEC_PROTECTED: // SC HPT AAST 3, SUPPORT COMPLETE (cok)
-        case TagConstants.SPEC_PUBLIC: // incomplete
         case TagConstants.INSTANCE: // complete (cok)
+        case TagConstants.MAY_BE_NULL: // incomplete (chalin/kiniry)
         case TagConstants.MONITORED: // incomplete
         case TagConstants.NON_NULL: // incomplete
-        case TagConstants.UNINITIALIZED: // incomplete
-        case TagConstants.WRITABLE_DEFERRED: // incomplete
+        case TagConstants.NON_NULL_REF_BY_DEFAULT: // incomplete (chalin/kiniry)
+        case TagConstants.NULL_REF_BY_DEFAULT: // incomplete (chalin/kiniry)
+        case TagConstants.OBS_PURE: // incomplete (chalin/kiniry)
         case TagConstants.PEER: // parsed but not typechecked - Universe type annotation (cjbooms)
+        case TagConstants.PURE:
         case TagConstants.READONLY: // parsed but not typechecked - Universe type annotation (cjbooms)
         case TagConstants.REP: // parsed but not typechecked - Universe type annotation (cjbooms)
+        case TagConstants.SPEC_BIGINT_MATH:
+        case TagConstants.SPEC_JAVA_MATH:
+        case TagConstants.SPEC_PROTECTED: // SC HPT AAST 3, SUPPORT COMPLETE (cok)
+        case TagConstants.SPEC_PUBLIC: // incomplete
+        case TagConstants.SPEC_SAFE_MATH:
+        case TagConstants.UNINITIALIZED: // incomplete
+        case TagConstants.WRITABLE_DEFERRED: // incomplete
           // let modifiers accumulate
           dst.ttype = TagConstants.MODIFIERPRAGMA;
           dst.auxVal = SimpleModifierPragma.make(tag, loc);
-				  break;
+          break;
 
         case TagConstants.ALSO_ENSURES:
         case TagConstants.ALSO_REQUIRES:
@@ -1445,6 +1457,22 @@ public class EscPragmaParser extends Parse
           semicolonExpected = true;
           break;
         }
+
+//         case TagConstants.WACK_JAVA_MATH:
+//         case TagConstants.WACK_SAFE_MATH:
+//         case TagConstants.WACK_BIGINT_MATH: {
+//           // @todo check that token consumed is '(' and if not emit a warning
+//           // and try to unparse token and parse next expr to build ExprModifierPragma
+//           l.getNextToken();
+//           Expr e = parseExpression(l);
+//           dst.ttype = TagConstants.MODIFIERPRAGMA;
+//           ExprModifierPragma pragma = ExprModifierPragma.make(tag, e, loc);
+//           // make sure token is closing ')' and if not emit warning that it is
+//           // mandatory, pop, and continue
+//           l.getNextToken();
+//           dst.auxVal = pragma;
+//           break;
+//         }
 
         case TagConstants.MEASURED_BY: // parsed, unclear semantics (cok)
         case TagConstants.MEASURED_BY_REDUNDANTLY: // parsed, unclear semantics (cok)
@@ -2126,6 +2154,9 @@ public class EscPragmaParser extends Parse
               case TagConstants.MAX:
               case TagConstants.PRE: // \\old
               case TagConstants.TYPEOF:
+              case TagConstants.WACK_JAVA_MATH:
+              case TagConstants.WACK_SAFE_MATH:
+              case TagConstants.WACK_BIGINT_MATH:
               {
                 l.getNextToken();
                 ExprVec args = parseExpressionList(l, TagConstants.RPAREN);

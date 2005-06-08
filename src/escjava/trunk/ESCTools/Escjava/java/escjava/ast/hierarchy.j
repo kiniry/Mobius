@@ -62,7 +62,9 @@ import escjava.ParsedRoutineSpecs;
  *      + VarInCmd (GenericVarDecl v*, GuardedCmd g)
  *      + DynInstCmd (String s, GuardedCmd g)
  *      + SeqCmd (GuardedCmd cmds*)
- *      + LoopCmd (Condition invariants*, DecreasesInfo decreases*, LocalVarDecl skolemConstants*, Expr predicates*, GenericVarDecl tempVars*, GuardedCmd guard, GuardedCmd body)
+ *      + LoopCmd (Condition invariants*, DecreasesInfo decreases*,
+ *                 LocalVarDecl skolemConstants*, Expr predicates*,
+ *                 GenericVarDecl tempVars*, GuardedCmd guard, GuardedCmd body)
  *      + CmdCmdCmd (int cmd, GuardedCmd g1, GuardedCmd g2)// Try, Choose
  *      + Call (RoutineDecl rd, Expr* args, TypeDecl scope)
  *    - TypeDeclElem ()
@@ -86,12 +88,18 @@ import escjava.ParsedRoutineSpecs;
  *         + SkolemConstantPragma (LocalVarDecl* decl)
  *    - ModifierPragma ()
  *         + SimpleModifierPragma () 
- *                   // Uninitialized, Monitored, NonNull, WritableDeferred, Helper, \Peer, \ReadOnly, \Rep
+ *                   // Uninitialized, Monitored, NonNull, WritableDeferred,
+ *                   // Helper, \Peer, \ReadOnly, \Rep,
+ *                   // may_be_null, null_ref_by_default, non_null_ref_by_default, 
+ *                   // obs_pure,
+ *                   // code_java_math, code_safe_math, code_bigint_math,
+ *                   // spec_java_math, spec_safe_math, spec_bigint_math
  *	   + NestedModifierPragma (ArrayList list)
  *         + ExprModifierPragma (Expr expr) 
- *                   // DefinedIf, Writable, Requires, Pre, Ensures, Post, AlsoEnsures, 
- *                   // MonitoredBy, Constraint, InvariantFor, Space, 
- *                   // \Duration, \WorkingSpace
+ *                   // DefinedIf, Writable, Requires, Pre, Ensures, Post,
+ *                   // AlsoEnsures, MonitoredBy, Constraint, InvariantFor, Space, 
+ *                   // \Duration, \WorkingSpace,
+ *                   // \java_math, \safe_math, \bigint_math
  *         + IdentifierModifierPramga (Identifier id)
  *                   // IsInitialized
  *         + ReachModifierPragma (Expr expr, Identifier id, StoreRefExpr)
@@ -151,20 +159,25 @@ public class NaryExpr extends GCExpr
   //# PostCheckCall
   private void postCheck() {
     boolean goodtag = 
-      (op == TagConstants.CLASSLITERALFUNC
+      (
+       op == TagConstants.CLASSLITERALFUNC
        || op == TagConstants.DTTFSA
        || op == TagConstants.ELEMTYPE
-       || op == TagConstants.WACK_NOWARN
-       || op == TagConstants.NOWARN_OP
-       || op == TagConstants.WARN
-       || op == TagConstants.WARN_OP
-       || op == TagConstants.WACK_DURATION
-       || op == TagConstants.WACK_WORKING_SPACE
        || op == TagConstants.FRESH
        || op == TagConstants.MAX
+       || op == TagConstants.NOWARN_OP
        || op == TagConstants.TYPEOF
+       || op == TagConstants.WACK_BIGINT_MATH
+       || op == TagConstants.WACK_DURATION
+       || op == TagConstants.WACK_JAVA_MATH
+       || op == TagConstants.WACK_NOWARN
+       || op == TagConstants.WACK_SAFE_MATH
+       || op == TagConstants.WACK_WORKING_SPACE
+       || op == TagConstants.WARN
+       || op == TagConstants.WARN_OP
        || (TagConstants.FIRSTFUNCTIONTAG <= op 
-	   && op <= TagConstants.LASTFUNCTIONTAG));
+	   && op <= TagConstants.LASTFUNCTIONTAG)
+       );
     Assert.notFalse(goodtag);
   }
 
@@ -240,10 +253,9 @@ public class SubstExpr extends GCExpr
   //# GenericVarDecl var
   //# Expr val
   //# Expr target
-
 }
 
-/** 
+/**
  * @note If <code>loc</code> is <code>Location.NULL</code>, then this
  * node is <em>not</em> due to a source-level "type" construct in an
  * annotation expression but rather was created during translations.
@@ -252,7 +264,6 @@ public class SubstExpr extends GCExpr
 public class TypeExpr extends GCExpr
 {
   //# Type type
-
 }
 
 public class LabelExpr extends GCExpr
@@ -295,6 +306,7 @@ public class SetCompExpr extends Expr
 
   public int getStartLoc() { return fp.getStartLoc(); }
 }
+
 public class LockSetExpr extends Expr
 {
   //# int loc
@@ -708,6 +720,7 @@ public class ModelMethodDeclPragma extends TypeDeclElemPragma
     }
   }
 }
+
 public class GhostDeclPragma extends TypeDeclElemPragma
 {
   //# FieldDecl decl
@@ -867,15 +880,27 @@ public class SimpleModifierPragma extends ModifierPragma
   //# PostCheckCall
   private void postCheck() {
     boolean goodtag =
-      (tag == TagConstants.UNINITIALIZED
+      (tag == TagConstants.CODE_BIGINT_MATH
+       || tag == TagConstants.CODE_JAVA_MATH
+       || tag == TagConstants.CODE_SAFE_MATH
+       || tag == TagConstants.HELPER
+       || tag == TagConstants.IMMUTABLE
+       || tag == TagConstants.MAY_BE_NULL
        || tag == TagConstants.MONITORED
        || tag == TagConstants.NON_NULL
-       || tag == TagConstants.SPEC_PUBLIC
-       || tag == TagConstants.WRITABLE_DEFERRED
-       || tag == TagConstants.HELPER
+       || tag == TagConstants.NON_NULL_REF_BY_DEFAULT
+       || tag == TagConstants.NULL_REF_BY_DEFAULT
+       || tag == TagConstants.OBS_PURE
        || tag == TagConstants.PEER
        || tag == TagConstants.READONLY
-       || tag == TagConstants.REP);
+       || tag == TagConstants.REP
+       || tag == TagConstants.SPEC_BIGINT_MATH
+       || tag == TagConstants.SPEC_JAVA_MATH
+       || tag == TagConstants.SPEC_PUBLIC
+       || tag == TagConstants.SPEC_SAFE_MATH
+       || tag == TagConstants.UNINITIALIZED
+       || tag == TagConstants.WRITABLE_DEFERRED
+       );
     Assert.notFalse(goodtag);
   }
 
@@ -896,15 +921,16 @@ public class ExprModifierPragma extends ModifierPragma
 
     //# PostCheckCall
     private void postCheck() {
-        boolean goodtag = (tag == TagConstants.READABLE_IF 
-                           || tag == TagConstants.WRITABLE_IF
-                           || tag == TagConstants.REQUIRES 
+        boolean goodtag = (tag == TagConstants.ALSO_ENSURES
                            || tag == TagConstants.ALSO_REQUIRES
                            || tag == TagConstants.ENSURES 
-                           || tag == TagConstants.ALSO_ENSURES
                            || tag == TagConstants.MONITORED_BY 
+                           || tag == TagConstants.READABLE_IF 
+                           || tag == TagConstants.REQUIRES 
                            || tag == TagConstants.WACK_DURATION
-                           || tag == TagConstants.WACK_WORKING_SPACE);
+                           || tag == TagConstants.WACK_WORKING_SPACE
+                           || tag == TagConstants.WRITABLE_IF
+                           );
         boolean isJMLExprModifier = isJMLExprModifier();
         Assert.notFalse(goodtag || isJMLExprModifier);
     }
@@ -919,7 +945,8 @@ public class ExprModifierPragma extends ModifierPragma
     public int getEndLoc() { return expr.getEndLoc(); }
 }
 
-public class ModifiesGroupPragma extends ModifierPragma {
+public class ModifiesGroupPragma extends ModifierPragma
+{
     //# int tag
     //# CondExprModifierPragma* items
     //# Expr precondition
@@ -951,7 +978,8 @@ public class ModifiesGroupPragma extends ModifierPragma {
     }
 }
 
-public class CondExprModifierPragma  extends ModifierPragma {
+public class CondExprModifierPragma extends ModifierPragma
+{
     // Extended to support JML
 
     //# int tag
@@ -978,7 +1006,10 @@ public class CondExprModifierPragma  extends ModifierPragma {
     public int getStartLoc() { return loc; }
     public int getEndLoc() { return cond.getEndLoc(); }
 }
-public class MapsExprModifierPragma  extends ModifierPragma implements javafe.ast.IdPragma {
+
+public class MapsExprModifierPragma extends ModifierPragma
+  implements javafe.ast.IdPragma
+{
     // Extended to support JML
 
     //# int tag

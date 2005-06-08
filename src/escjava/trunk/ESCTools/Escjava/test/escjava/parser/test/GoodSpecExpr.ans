@@ -29,3 +29,6 @@ GoodSpecExpr.j:33: /*@ ensures (\forall float[] t1:0.33.29,  t2:0.33.33; t1 == t
 GoodSpecExpr.j:34: /*@ ensures (\forall java.lang.String s1:0.34.38,  s2:0.34.42,  s3:0.34.46; false); */
 GoodSpecExpr.j:35: /*@ ensures (\exists long a:0.35.26; a == 1); */
 GoodSpecExpr.j:36: /*@ ensures (\exists long[] a:0.36.28,  b:0.36.30,  c:0.36.32; true); */
+GoodSpecExpr.j:38: /*@ ensures \java_math(0); */
+GoodSpecExpr.j:39: /*@ ensures \safe_math(0); */
+GoodSpecExpr.j:40: /*@ ensures \bigint_math(0); */
