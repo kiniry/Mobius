@@ -20,6 +20,7 @@
 *.tps
 *.vr
 *.vrs
+DemonstrationProver
 DemonstrationProver.class
 DemonstrationProver.cmi
 DemonstrationProver.cmo
