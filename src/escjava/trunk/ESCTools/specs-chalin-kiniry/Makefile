@@ -24,7 +24,7 @@ specpath =	specs
 buildpath =	build
 jmlc_path =	jmlc
 jmlunit_path =	jmlunit
-escjava =	escjava2 -source 1.4 -vclimit 2500000
+escjava =	escjava2 -source 1.4 -vclimit 2500000 -sourcepath src
 
 # Various CLASSPATH constructions
 
@@ -50,8 +50,8 @@ generated_jmlunitfiles	=	$(wildcard $(jmlunit_path)/*_JML_Test.java)
 classfiles =	$(foreach javafile,$(javafiles),\
 		$(subst .java,.class,$(javafile)))
 
-current_focus =	Cons.java
-core_files =	Cons.java Pair.java Sequence.java
+current_focus =	src/EmptySequence.java src/NonEmptySequence.java
+core_files =	Cons.java Pair.java Sequence.java EmptySequence.java NonEmptySequence.java
 
 javadoc =	javadoc
 jmldoc =	jmldoc
