@@ -37,7 +37,7 @@ public abstract class Sequence
   //  @review kiniry/chalin - think about whether we want to keep this, as
   //  it is in the current model classes, and if so, whether to use a ghost
   //  or a model field.
-  //@ protected Class elementType = \type(Object);
+  //  protected Class elementType = Object.class;
 
   // TBC
   //@ protected invariant (* Each Sequence object is uniquely determined by its elts.*);
@@ -55,18 +55,18 @@ public abstract class Sequence
     @   (* chain contains all Sequences and only Sequences, that is ... *);
     @ private static invariant
     @   (\forall Object o;; 
-    @     Cons.isMember(chain, o) <==> (o instanceof Sequence));
+    @     Pair.isMember(chain, o) <==> (o instanceof Sequence));
     @ private static invariant isSequenceChain(chain);
     @*/
-  protected static /* null */ Cons chain = null;
+  protected static /* null */ Pair chain = null;
 
   /**
    * The elements in this Sequence.
    *
    * @todo chalin/kiniry - consider using Pair instead of Cons
    */
-  //@ private invariant Cons.isChain(elts);
-  protected /* null */ Cons elts;
+  //@ private invariant Pair.isChain(elts);
+  protected /* null */ Pair elts;
 
   //------------------------------------------------------------------------------
   // Queries
@@ -131,10 +131,10 @@ public abstract class Sequence
   }
 
   /*@ protected normal_behavior
-    @   requires Cons.isChain(elts);
+    @   requires Pair.isChain(elts);
     @   modifies elts;
     @*/
-  protected Sequence(Cons e) {
+  protected Sequence(Pair e) {
     elts = e;
   }
 
@@ -151,7 +151,7 @@ public abstract class Sequence
     @   ensures !\result.isEmpty();
     @*/
   public /*@ pure non_null @*/ Sequence append(Object o) {
-    return getCachedAndOrMake(new Cons(o, elts));
+    return getCachedAndOrMake(Pair.make(o, elts));
   }
 
   /*@ also
@@ -166,20 +166,20 @@ public abstract class Sequence
   // Helpers methods
 
   /*@ protected normal_behavior
-    @  requires Cons.isChain(elts);
+    @  requires Pair.isChain(elts);
     @  requires getCached(chain, elts) != null;
     @  modifies \nothing;
     @  ensures  \result == getCached(chain, elts);
     @ also
     @ protected normal_behavior
-    @  requires Cons.isChain(elts);
+    @  requires Pair.isChain(elts);
     @  requires getCached(chain, elts) == null;
     @  modifies chain;
     @  ensures  \fresh(\result);
     @  ensures  \result.elts == elts;
     @*/
   protected static /*@ non_null @*/ /* non_pure */ Sequence
-    getCachedAndOrMake(/* null */ Cons elts) 
+    getCachedAndOrMake(/* null */ Pair elts) 
   {
     Sequence result = getCached(chain, elts);
     if (result == null) {
@@ -206,31 +206,31 @@ public abstract class Sequence
     @    (c == null || 
     @     (c.first() instanceof Sequence &&
     @      (c.second() == null || 
-    @       c.second() instanceof Cons && 
-    @       isSequenceChain((Cons)c.second()))));
-    @  ensures_redundantly \result ==> Cons.isChain(c);
+    @       c.second() instanceof Pair && 
+    @       isSequenceChain((Pair)c.second()))));
+    @  ensures_redundantly \result ==> Pair.isChain(c);
     @*/
-  public static /*@ pure @*/ boolean isSequenceChain(Cons c) {
+  public static /*@ pure @*/ boolean isSequenceChain(Pair c) {
     return c == null || 
       (c.first() instanceof Sequence &&
        (c.second() == null || 
-        c.second() instanceof Cons && 
-        isSequenceChain((Cons)c.second())));
+        c.second() instanceof Pair && 
+        isSequenceChain((Pair)c.second())));
   }
 
   /*@ protected normal_behavior
     @  requires isSequenceChain(chain);
-    @  requires Cons.isChain(elts);
+    @  requires Pair.isChain(elts);
     @  ensures
     @    \result == (chain == null
     @		    ? null
     @		    : (((Sequence)chain.first()).elts == elts
     @			? (Sequence)chain.first()
-    @			: getCached((Cons)(chain.second()), elts)));
+    @			: getCached((Pair)(chain.second()), elts)));
     @*/
   protected static /*@ pure @*/ /* null */ Sequence 
-    getCached(/* null */ Cons chain,
-              /* null */ Cons elts)
+    getCached(/* null */ Pair chain,
+              /* null */ Pair elts)
   {
     if (chain == null)
       return null;
@@ -238,7 +238,7 @@ public abstract class Sequence
     Sequence k = (Sequence)chain.first();
     return k.elts == elts
       ? k
-      : getCached((Cons)(chain.second()), elts);
+      : getCached((Pair)(chain.second()), elts);
   }
 
   /*@ protected normal_behavior
@@ -252,6 +252,6 @@ public abstract class Sequence
     @   ensures chain.second() == \old(chain);
     @*/
   protected static void cache(/*@ non_null @*/ Sequence s) {
-      chain = new Cons(s, chain);
+      chain = Pair.make(s, chain);
   }
 }

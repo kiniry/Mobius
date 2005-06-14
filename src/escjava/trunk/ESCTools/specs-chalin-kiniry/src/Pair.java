@@ -42,7 +42,6 @@ public final /*@ pure @*/ class Pair
     this.second = second;
   }
 
-
   /*@ public normal_behavior
     @   modifies \nothing;
     @   ensures \result.first() == first;
@@ -50,13 +49,13 @@ public final /*@ pure @*/ class Pair
     @ also
     @ private normal_behavior
     @   requires (\exists Pair p;; p.first() == first && p.second() == second);
-    @   requires_redundantly inChain(first, second);
+    @   requires_redundantly inCache(first, second);
     @   modifies \nothing;
     @   ensures_redundantly Cons.isMember(chain, \result);
     @ also
     @ private normal_behavior
     @   requires !(\exists Pair p;; p.first() == first && p.second() == second);
-    @   requires_redundantly !inChain(first, second);
+    @   requires_redundantly !inCache(first, second);
     @   modifies chain;
     @   ensures \fresh(\result);
     @   ensures chain.first() == \result && chain.second() == \old(chain);
@@ -85,12 +84,21 @@ public final /*@ pure @*/ class Pair
   }
   
   /*@ also 
-    @ normal_behavior
+    @ public normal_behavior
     @   ensures \result == (this == other);
     @*/
   public boolean equals(Object other) {
     return this == other;
   }
+
+  /*@ public normal_behavior
+    @   requires Pair.isChain(this);
+    @   ensures \result == Pair.length(this);
+    @
+    @ public model \bigint length() {
+    @   return length(this);
+    @ }
+    @*/
 
   //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // Helpers
@@ -146,7 +154,51 @@ public final /*@ pure @*/ class Pair
   /*@ private normal_behavior
     @   ensures \result <==> getCached(first, second) != null;
     @*/
-  private static /*@ pure @*/ boolean inChain(Object first, Object second) {
+  private static /*@ pure @*/ boolean inCache(Object first, Object second) {
     return getCached(first, second) != null;
+  }
+
+  //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Extra chain-related methods (originally from Cons) 
+
+  /*@ public normal_behavior
+    @   requires isChain(c);
+    @   ensures \result == (c == null ? 0 : 1 + length((Pair)(c.second())));
+    @
+    @ public static pure model \bigint length(Pair c) {
+    @   return (c == null ? 0 : 1 + length((Pair)(c.second())));
+    @ }    
+    @*/
+
+  /*@ public normal_behavior
+    @   requires isChain(chain);
+    @   ensures \result == (chain != null && 
+    @                       (chain.first() == o ||
+    @                        isMemberHelper((Pair)chain.second(), o)));
+    @*/
+  /*@ pure spec_public @*/ private static boolean 
+    isMemberHelper(Pair chain,
+                   /*@ non_null @*/ Object o) {
+    return (chain != null && 
+            (chain.first == o || isMemberHelper((Pair)chain.second, o)));
+  }
+
+  /*@ public normal_behavior
+    @   requires isChain(chain);
+    @   ensures \result == isMemberHelper(chain, o);
+    @*/
+  public static /*@ pure @*/ boolean isMember(Pair chain,
+                                              /*@ non_null @*/ Object o) {
+    return isMemberHelper(chain, o);
+  }
+
+  /*@ public normal_behavior
+    @   ensures \result == 
+    @     (c == null || c.second == null || 
+    @      (c.second instanceof Pair && isChain((Pair)c.second)));
+    @*/
+  public static /*@ pure @*/ boolean isChain(Pair c) {
+    return c == null || c.second == null || 
+      (c.second instanceof Pair && isChain((Pair)c.second));
   }
 }

@@ -24,7 +24,7 @@ public final class NonEmptySequence extends Sequence
     @	in objectState;
     @ private represents tail <- (elts.second() == null
     @                             ? EmptySequence.make()
-    @                             : getCachedAndOrMake((Cons)elts.second()));
+    @                             : getCachedAndOrMake((Pair)elts.second()));
     @*/
 
   //------------------------------------------------------------------------------
@@ -50,10 +50,10 @@ public final class NonEmptySequence extends Sequence
     @   modifies chain;
     @   ensures  \result == (elts.second() == null
     @                       ? EmptySequence.make()
-    @                       : getCached(chain, (Cons)elts.second()));
+    @                       : getCached(chain, (Pair)elts.second()));
     @*/
   public /*@ non_null @*/ /* observationally_pure */ Sequence tail() {
-    return getCachedAndOrMake((Cons)elts.second());
+    return getCachedAndOrMake((Pair)elts.second());
   }
 
   //------------------------------------------------------------------------------
@@ -63,16 +63,16 @@ public final class NonEmptySequence extends Sequence
   // Constructors and factory methods
 
   /*@ normal_behavior
-    @   requires Cons.isChain(e);
+    @   requires Pair.isChain(e);
     @   modifies elts;
     @   ensures  !isEmpty();
     @ also
     @ protected normal_behavior
-    @   requires Cons.isChain(e);
+    @   requires Pair.isChain(e);
     @   modifies elts;
     @   ensures  elts == e;
     @*/
-  NonEmptySequence(/*@ non_null @*/ Cons e) {
+  NonEmptySequence(/*@ non_null @*/ Pair e) {
     this.elts = e;
   }
 }

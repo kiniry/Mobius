@@ -35,6 +35,7 @@ public final class EmptySequence extends Sequence
     throw new RuntimeException();
   }
 
+
   //------------------------------------------------------------------------------
   // Constructors and factory methods
 
