@@ -1,5 +1,5 @@
 import java.util.Properties;
-//@ model import org.jmlspecs.models.JMLObjectSequence;
+// model import org.jmlspecs.models.JMLObjectSequence;
 
 interface ProverInterface
 {
@@ -12,9 +12,9 @@ interface ProverInterface
 
   //@ constraint \old(prover_stopped) ==> prover_stopped;
 
-  //@ model JMLObjectSequence assumptions; in objectState;
-  //@ invariant !assumptions.containsNull;
-  //@ invariant assumptions.elementType == \type(Formula);
+  // model JMLObjectSequence assumptions; in objectState;
+  // invariant !assumptions.containsNull;
+  // invariant assumptions.elementType == \type(Formula);
 
   /**
    * Start up the prover.  After the prover is started correctly it
@@ -35,8 +35,10 @@ interface ProverInterface
     @           \result == ProverResponse.FAIL;
     @   ensures \result != ProverResponse.FAIL ==> prover_started;
     @   ensures \result == ProverResponse.FAIL ==> prover_stopped;
-    @   ensures assumptions.isEmpty();
+    
     @*/
+
+    //   ensures assumptions.isEmpty();
   // start_prover -> start_solver
   public /*@ non_null @*/ ProverResponse start_prover();
 
@@ -119,8 +121,9 @@ interface ProverInterface
     @           \result == ProverResponse.INCONSISTENCY_WARNING;
     @   ensures \result != ProverResponse.FAIL ==> prover_started;
     @   ensures \result == ProverResponse.FAIL ==> prover_stopped;
-    @   ensures assumptions.equals(\old(assumptions.insertBack(formula)));
     @*/
+
+    // ensures assumptions.equals(\old(assumptions.insertBack(formula)));
   // make_assumption -> add_assertion
   public /*@ non_null @*/ ProverResponse make_assumption(/*@ non_null @*/ Formula formula);
 
@@ -131,18 +134,20 @@ interface ProverInterface
    * @return a response code.
    */
   /*@ public normal_behavior
-    @   require count >= 0 || count == ALL;
+    @   requires count >= 0 || count == ALL;
     @   assignable objectState;
     @   ensures \result == ProverResponse.OK ||
     @           \result == ProverResponse.FAIL;
     @   ensures \result != ProverResponse.FAIL ==> prover_started;
     @   ensures \result == ProverResponse.FAIL ==> prover_stopped;
-    @   ensures count != ALL && count <= assumptions.length() ==>
-    @           assumptions.equals(\old(assumptions.prefix(assumptions.length() - count)));
-    @   ensures count != ALL && assumptions.length() < count ==>
-    @           assumptions.isEmpty();
-    @   ensures count == ALL ==> assumptions.isEmpty();
     @*/
+
+    //   ensures count != ALL && count <= assumptions.length() ==>
+    //           assumptions.equals(\old(assumptions.prefix(assumptions.length() - count)));
+    //   ensures count != ALL && assumptions.length() < count ==>
+    //           assumptions.isEmpty();
+    //   ensures count == ALL ==> assumptions.isEmpty();
+    //*/
   // retract_assumption -> backtrack
   public /*@ non_null @*/ ProverResponse retract_assumption(int count);
 
@@ -160,7 +165,7 @@ interface ProverInterface
    * I prefer is_valid().
    */
   /*@ public normal_behavior
-    @   require count >= 0 || count == ALL;
+    @   requires count >= 0 || count == ALL;
     @   assignable objectState;
     @   ensures \result == ProverResponse.YES ||
     @           \result == ProverResponse.NO ||
@@ -172,8 +177,9 @@ interface ProverInterface
     @           \result == ProverResponse.FAIL;
     @   ensures \result != ProverResponse.FAIL ==> prover_started;
     @   ensures \result == ProverResponse.FAIL ==> prover_stopped;
-    @   ensures assumptions.equals(\old(assumptions));
     @*/
+
+    //   ensures assumptions.equals(\old(assumptions));
   // is_valid -> query
   public /*@ non_null @*/ ProverResponse is_valid(/*@ non_null @*/ Formula formula,
                                                   Properties properties);
@@ -187,8 +193,8 @@ interface ProverInterface
     @   ensures \result == ProverResponse.OK ||
     @           \result == ProverResponse.FAIL;
     @   ensures prover_stopped;
-    @   ensures assumptions.isEmpty();
     @*/
+    //   ensures assumptions.isEmpty();
   // stop_prover
   public /*@ non_null @*/ ProverResponse stop_prover();
 }

@@ -1,0 +1,18 @@
+There is some additional files here, to test the xml rpc interface of sammy.
+
+1/ All you have to do is to set up where your binary file of sammy (compiled with xmlrpc support) in the bash script "exec-rpc-sammy.sh" .
+
+2/ launch "exec-rpc-sammy.sh"
+
+Known Problems : Sometimes, for example if you launch it many times in a row, sammy have some well known problems to bind to the localhost, nothing serious. The only correct implemented calls are :
+start_prover
+set_flags
+stop_prover
+
+If you want to clean the directory, just do :
+
+make -f Makefile-rpc-sammy clean
+
+TODO : 
+
+* The DemonstrationProver should not work anymore because of slight changes in ProverInterface.java -> clean that
