@@ -9,10 +9,43 @@ start_prover
 set_flags
 stop_prover
 
-If you want to clean the directory, just do :
-
-make -f Makefile-rpc-sammy clean
-
 TODO : 
 
-* The DemonstrationProver should not work anymore because of slight changes in ProverInterface.java -> clean that
+* The DemonstrationProver should not work anymore because of slight changes in ProverInterface.java -> clean that -> cleaned by removing compilation of these files from makefile
+
+====================
+
+LightAnalyser just read the many-sorted logic and try to inputinto sammy, but
+it fails atm due to sammy's intern problem I guess : 
+
+declaring sorts work but declaring fonctions, variable and predicate fail.
+
+=====================
+
+This product includes software developed by the Apache Software Foundation 
+(http://www.apache.org/).  See the ASL.txt file for the appropriate license 
+text.
+
+The source for the Apache XML-RPC library xmlrpc-1.2-b1 may be retrieved
+from the Apache Web Services Project website at: http://ws.apache.org/xmlrpc/.
+The following modification (addition of 2 lines) was made to the
+java/org/apache/xmlrpc/XmlWriter.java file:
+
+173a174
+>             startElement("string");
+174a176
+>             endElement("string");
+
+(or, in other words, on line 172:
+        else if (obj instanceof String)
+        {
+            chardata(obj.toString());
+        }
+was changed to
+        else if (obj instanceof String)
+        {
+            startElement("string");
+            chardata(obj.toString());
+            endElement("string");
+        }
+)

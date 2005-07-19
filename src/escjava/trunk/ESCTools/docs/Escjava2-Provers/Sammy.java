@@ -104,26 +104,26 @@ class Sammy implements ProverInterface {
 	 */
 
 	/*
+	 * Types
+	 */
+	parameters.add(signature.type());
+
+	ProverResponse res = execute("type_declaration");
+
+	if(debug)
+	    if( res!= ProverResponse.OK )
+		System.out.println("Failed to set types");
+
+	/*
 	 * Variables = 0 unary function in smt lib
 	 */
 	parameters.add(signature.variable());
 
-	ProverResponse res = execute("func_declaration");
+	res = execute("func_declaration");
 
 	if(debug)
 	    if( res!= ProverResponse.OK )
 		System.out.println("Failed to set variable");
-
-	/*
-	 * Predicates
-	 */
-	parameters.add(signature.predicate());
-
-	res = execute("pred_declaration");
-
-	if(debug)
-	    if( res!= ProverResponse.OK )
-		System.out.println("Failed to set predicates");
 
 	/*
 	 * Functions
@@ -137,15 +137,15 @@ class Sammy implements ProverInterface {
 		System.out.println("Failed to set functions");
 
 	/*
-	 * Types
+	 * Predicates
 	 */
-	parameters.add(signature.type());
+	parameters.add(signature.predicate());
 
-	res = execute("type_declaration");
+	res = execute("pred_declaration");
 
 	if(debug)
 	    if( res!= ProverResponse.OK )
-		System.out.println("Failed to set types");
+		System.out.println("Failed to set predicates");
 
 	return res;
     }
