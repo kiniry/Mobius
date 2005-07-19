@@ -12,7 +12,8 @@ class Sammy implements ProverInterface {
      * Vector representing the parameters that are given to sammy
      * Notice that it's cleared after each call to execute()
      */
-    static Vector parameters = new Vector();
+
+    /*@ non_null @*/ static Vector parameters = new Vector();
 
     static boolean debug = false;
 
@@ -44,7 +45,6 @@ class Sammy implements ProverInterface {
 
     }
 	  
-    
     public ProverResponse set_prover_resource_flags(Properties properties) {
 
 	if(debug) System.out.println("Sammy::set_prover_resource_flags");
@@ -220,8 +220,17 @@ class Sammy implements ProverInterface {
      * See sammy's cvcl/smt/README.TXT for further informations
      */ 
     
-    /*@ requires serverInstance != null;
-      @ requires !parameters.isEmpty();
+    /*@   requires serverInstance != null;
+      @   requires !parameters.isEmpty();
+      @   ensures \result == ProverResponse.OK ||
+      @   \result == ProverResponse.FAIL ||
+      @   \result == ProverResponse.YES ||
+      @   \result == ProverResponse.NO ||
+      @   \result == ProverResponse.COUNTER_EXAMPLE ||
+      @   \result == ProverResponse.SYNTAX_ERROR ||
+      @   \result == ProverResponse.PROGRESS_INFORMATION ||
+      @   \result == ProverResponse.TIMEOUT ||
+      @   \result == ProverResponse.INCONSISTENCY_WARNING;
       @*/
     private ProverResponse execute(/*@ non_null @*/ String cmd ){
 

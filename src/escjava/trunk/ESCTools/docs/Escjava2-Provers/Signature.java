@@ -1,13 +1,19 @@
 class Signature {
-    private String signature;
 
+    public /*@ non_null @*/ String theoryType;
 
-    Signature(String signature) {
-	this.signature = signature;
-    }
+    public /*@ non_null @*/ LightAnalyser la; 
 
-    public String toString() {
-	return signature;
+    /*
+     * theoryType == "smt-lib" ||
+     *            ==           ; 
+     */ 
+
+    Signature(/*@ non_null @*/ String fileNameOfTheory,/*@ non_null @*/ String theoryType) {
+	this.theoryType = theoryType;
+
+	if(theoryType.compareTo("smt-lib") == 0)
+	    la = new LightAnalyser(fileNameOfTheory);
     }
 
     /*
@@ -24,19 +30,47 @@ class Signature {
      * Notice that in smt lib format, variables are 0 unary functions.
      */
     public String variable(){
-	return new String("");
+
+	if(theoryType.compareTo("smt-lib") == 0)
+	    return new String("");
+
+	return null;
     }
 
     public String predicate(){
-	return new String("");
+
+	if(theoryType.compareTo("smt-lib") == 0)
+	    return la.find(3);
+
+	return null;
     }
 
     public String function(){
-	return new String("");
+
+	if(theoryType.compareTo("smt-lib") == 0)
+	    return la.find(2);
+
+	return null;
     }
 
     public String type(){
 
-	return new String("");
+	if(theoryType.compareTo("smt-lib") == 0)
+	    return la.find(1);
+
+	return null;
+    }
+
+    public void print(){
+
+	System.out.println("Types :");
+	System.out.println(type());
+	System.out.println("Variables :");
+	System.out.println(variable());
+	System.out.println("Functions :");
+	System.out.println(function());
+	System.out.println("Predicates :");
+	System.out.println(predicate());
+
     }
 }

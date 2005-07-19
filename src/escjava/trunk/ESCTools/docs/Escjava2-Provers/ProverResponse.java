@@ -100,7 +100,26 @@ class ProverResponse
     }
 
     // placeholder for factory for building ProverResponses
+    /*@   ensures \result == ProverResponse.OK ||
+      @   \result == ProverResponse.FAIL ||
+      @   \result == ProverResponse.YES ||
+      @   \result == ProverResponse.NO ||
+      @   \result == ProverResponse.COUNTER_EXAMPLE ||
+      @   \result == ProverResponse.SYNTAX_ERROR ||
+      @   \result == ProverResponse.PROGRESS_INFORMATION ||
+      @   \result == ProverResponse.TIMEOUT ||
+      @   \result == ProverResponse.INCONSISTENCY_WARNING;
+      @*/
     static public ProverResponse factory(int return_code) {
-	return null;
+
+	/*
+	 * Naive implementation, should be redefined in subclasses
+	 */
+
+	if( return_code >= 0 )
+	    return ProverResponse.OK;
+	else
+	    return ProverResponse.FAIL;
+
     }
 }

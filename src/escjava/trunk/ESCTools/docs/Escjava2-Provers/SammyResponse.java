@@ -12,7 +12,7 @@ class SammyResponse extends ProverResponse {
 	    return ProverResponse.SYNTAX_ERROR;
 	default : //positive attitude
 	    return ProverResponse.OK;
-      }
+	}
     }
 
 }

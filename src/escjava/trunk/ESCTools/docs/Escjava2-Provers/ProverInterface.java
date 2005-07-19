@@ -1,20 +1,14 @@
 import java.util.Properties;
-// model import org.jmlspecs.models.JMLObjectSequence;
 
 interface ProverInterface
 {
-  //@ model boolean prover_started; in objectState;
-  //@ model boolean prover_stopped; in objectState;
 
-  //@ invariant prover_started ^ prover_stopped;
-
-  //@ model boolean signature_defined; in objectState;
-
-  //@ constraint \old(prover_stopped) ==> prover_stopped;
-
-  // model JMLObjectSequence assumptions; in objectState;
-  // invariant !assumptions.containsNull;
-  // invariant assumptions.elementType == \type(Formula);
+    /*
+     * Variables indicating the state of the prover
+     * All assertions using this have been commented for the moment
+     */
+//     public boolean prover_started;
+//     public boolean signature_defined;
 
   /**
    * Start up the prover.  After the prover is started correctly it
@@ -30,16 +24,10 @@ interface ProverInterface
    * arbitrary information about the failure.
    */
   /*@ public normal_behavior
-    @   assignable objectState;
     @   ensures \result == ProverResponse.OK ||
     @           \result == ProverResponse.FAIL;
-    @   ensures \result != ProverResponse.FAIL ==> prover_started;
-    @   ensures \result == ProverResponse.FAIL ==> prover_stopped;
-    
     @*/
 
-    //   ensures assumptions.isEmpty();
-  // start_prover -> start_solver
   public /*@ non_null @*/ ProverResponse start_prover();
 
   /**
@@ -53,16 +41,13 @@ interface ProverInterface
    * @return a response code.
    */
   /*@ public normal_behavior
-    @   requires prover_started;
-    @   assignable objectState;
+//    @   requires prover_started;
     @   ensures \result == ProverResponse.OK || 
     @           \result == ProverResponse.FAIL ||
     @           \result == ProverResponse.SYNTAX_ERROR ||
     @           \result == ProverResponse.PROGRESS_INFORMATION;
-    @   ensures \result != ProverResponse.FAIL ==> prover_started;
-    @   ensures \result == ProverResponse.FAIL ==> prover_stopped;
     @*/
-  // set_prover_resource_flags -> set_flags
+
   public /*@ non_null @*/ ProverResponse set_prover_resource_flags(/*@ non_null @*/ Properties properties);
 
   /**
@@ -75,16 +60,12 @@ interface ProverInterface
    * @return a response code.
    */
   /*@ public normal_behavior
-    @   requires prover_started;
-    @   assignable objectState;
+//    @   requires prover_started;
     @   ensures \result == ProverResponse.OK || 
     @           \result == ProverResponse.FAIL ||
     @           \result == ProverResponse.SYNTAX_ERROR;
-    @   ensures \result != ProverResponse.FAIL ==> prover_started;
-    @   ensures \result == ProverResponse.FAIL ==> prover_stopped;
-    @   ensures signature_defined;
     @*/
-  // decomposed into {var|pred|func|type}_declaration  (var is an uninterpreted constant)
+
   public /*@ non_null @*/ ProverResponse signature(/*@ non_null @*/ Signature signature);
 
   /**
@@ -94,16 +75,13 @@ interface ProverInterface
    * @return a response code.
    */
   /*@ public normal_behavior
-    @   requires signature_defined;
-    @   assignable objectState;
+//    @   requires signature_defined;
     @   ensures \result == ProverResponse.OK || 
     @           \result == ProverResponse.FAIL ||
     @           \result == ProverResponse.SYNTAX_ERROR ||
     @           \result == ProverResponse.INCONSISTENCY_WARNING;
-    @   ensures \result != ProverResponse.FAIL ==> prover_started;
-    @   ensures \result == ProverResponse.FAIL ==> prover_stopped;
     @*/
-  // declare_axiom -> add_axiom
+
   public /*@ non_null @*/ ProverResponse declare_axiom(/*@ non_null @*/ Formula formula);
 
   /**
@@ -113,18 +91,13 @@ interface ProverInterface
    * @return a response code.
    */
   /*@ public normal_behavior
-    @   requires signature_defined;
-    @   assignable objectState;
+//    @   requires signature_defined;
     @   ensures \result == ProverResponse.OK || 
     @           \result == ProverResponse.FAIL ||
     @           \result == ProverResponse.SYNTAX_ERROR ||
     @           \result == ProverResponse.INCONSISTENCY_WARNING;
-    @   ensures \result != ProverResponse.FAIL ==> prover_started;
-    @   ensures \result == ProverResponse.FAIL ==> prover_stopped;
     @*/
 
-    // ensures assumptions.equals(\old(assumptions.insertBack(formula)));
-  // make_assumption -> add_assertion
   public /*@ non_null @*/ ProverResponse make_assumption(/*@ non_null @*/ Formula formula);
 
   /**
@@ -134,21 +107,11 @@ interface ProverInterface
    * @return a response code.
    */
   /*@ public normal_behavior
-    @   requires count >= 0 || count == ALL;
-    @   assignable objectState;
+    @   requires count >= 0 ;
     @   ensures \result == ProverResponse.OK ||
     @           \result == ProverResponse.FAIL;
-    @   ensures \result != ProverResponse.FAIL ==> prover_started;
-    @   ensures \result == ProverResponse.FAIL ==> prover_stopped;
     @*/
 
-    //   ensures count != ALL && count <= assumptions.length() ==>
-    //           assumptions.equals(\old(assumptions.prefix(assumptions.length() - count)));
-    //   ensures count != ALL && assumptions.length() < count ==>
-    //           assumptions.isEmpty();
-    //   ensures count == ALL ==> assumptions.isEmpty();
-    //*/
-  // retract_assumption -> backtrack
   public /*@ non_null @*/ ProverResponse retract_assumption(int count);
 
   /**
@@ -165,8 +128,6 @@ interface ProverInterface
    * I prefer is_valid().
    */
   /*@ public normal_behavior
-    @   requires count >= 0 || count == ALL;
-    @   assignable objectState;
     @   ensures \result == ProverResponse.YES ||
     @           \result == ProverResponse.NO ||
     @           \result == ProverResponse.COUNTER_EXAMPLE ||
@@ -175,12 +136,8 @@ interface ProverInterface
     @           \result == ProverResponse.TIMEOUT ||
     @           \result == ProverResponse.NO ||
     @           \result == ProverResponse.FAIL;
-    @   ensures \result != ProverResponse.FAIL ==> prover_started;
-    @   ensures \result == ProverResponse.FAIL ==> prover_stopped;
     @*/
 
-    //   ensures assumptions.equals(\old(assumptions));
-  // is_valid -> query
   public /*@ non_null @*/ ProverResponse is_valid(/*@ non_null @*/ Formula formula,
                                                   Properties properties);
 
@@ -192,9 +149,7 @@ interface ProverInterface
   /*@ public normal_behavior
     @   ensures \result == ProverResponse.OK ||
     @           \result == ProverResponse.FAIL;
-    @   ensures prover_stopped;
     @*/
-    //   ensures assumptions.isEmpty();
-  // stop_prover
+
   public /*@ non_null @*/ ProverResponse stop_prover();
 }
