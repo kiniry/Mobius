@@ -11,7 +11,7 @@ then
     echo "You have to modify this script to set the path to sammy"
 else
 
-    make -f Makefile-rpc-sammy all
+    make 
 
     pid_sammy=$(ps -A | grep sammy | cut -f 1 -d " ")
     

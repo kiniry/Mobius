@@ -4,6 +4,10 @@ class mainRpcSammy {
 
     public static void main(String[] args) {
 
+	Signature S = new Signature("../Escjava2-Logics/many-sorted/many-sorted-logic.smt","smt-lib");
+
+	//S.print();
+
 	Sammy sammy = new Sammy(true);
 
 	sammy.start_prover();
@@ -20,6 +24,8 @@ class mainRpcSammy {
 	p.setProperty("-exhaustive","");
 
 	sammy.set_prover_resource_flags(p);
+
+	sammy.signature(S);
 	
 	sammy.stop_prover();
     

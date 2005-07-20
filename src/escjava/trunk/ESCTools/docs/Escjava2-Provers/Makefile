@@ -116,7 +116,10 @@ CODE2TEXI=$(PERL) -e 'BEGIN: while (<>) { s/\r//g; s/@/@@/g; s/\{/@\{/g; s/\}/@\
 	fig2dev -L pdf $< $@
 
 .PHONY: all build
-all:	java jni
+
+#all:	java jni # was used to build the demonstration prover of Joe
+
+all :   interface sammy mainRpcSammy
 
 build:	Escjava2-Provers.pdf
 
@@ -131,14 +134,24 @@ cleanup:
 %.class: %.java
 	javac -source 1.4 $<
 
+sammy : Sammy.class SammyResponse.class
+
+mainRpcSammy : mainRpcSammy.class
+
+interface : ProverResponse.class Signature.class \
+	ProverInterface.class Formula.class \
+	LightAnalyser.java 
+
 .PHONY: java jni test
 java:	ProverInterface.class DemonstrationProver.class
 
 jni:	DemonstrationProver.h $(DYNAMIC_LIB_PREFIX)demoprover$(DYNAMIC_LIB_EXTENSION) demoprover
 
-test:	java jni
-	demoprover
-	java DemonstrationProver
+test:	#java jni
+	#demoprover : FIXME, these files were used to show how to use
+	# the prover interface, but it's useless to execute them
+	# because the interface has changed since
+	#java DemonstrationProver
 
 demoprover:	DemonstrationProver.c
 	$(CC) $(CFLAGS) \
@@ -165,4 +178,4 @@ clean:
 	  *.cp *.cps *.fn *.fns *.ky *.kys \
 	  *.pg *.pgs *.tp *.tps *.vr *.vrs *.p *.k \
 	  *.bbl *.blg *.toc *.thm *.out *.cb \
-	  *.lof *.lot *.gz *.Z #*
+	  *.lof *.lot *.gz *.Z *.texinfo #*
