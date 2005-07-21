@@ -295,12 +295,14 @@
             (forall ?x Reference (instantiable (typeOf ?x)))
             (forall ?x ReferenceType (iff (instantiable ?x)
                                        (instantiable (arrayObject ?x))))
-            # to be checked
+
+            # to be checked / modified by clement
             (forall ?x ReferenceType
               (forall ?y ReferenceType 
                 (implies (and (subtype ?x ?y)
-                              (instantiable ?x))
+                              (instantiable ?y))
                          (instantiable ?x))))
+		
 
             # for simplicity, get* and set* functions are defined
             # on all Object values, whether they are arrays or not
@@ -384,6 +386,7 @@
                                     (isAllocated ?r ?t))
                                (isAllocated (referenceSelect ?f
                                                (memGet ?h ?r)) ?t))))))
+
             # and the same axiom applies to arrays and their values
             (forall ?h Memory
               (forall ?r Reference

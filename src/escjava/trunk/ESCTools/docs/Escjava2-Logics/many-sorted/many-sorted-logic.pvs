@@ -1,6 +1,6 @@
 escjava2_memory : THEORY
   BEGIN
-    Memory : TYPE+
+    Memory : TYPE+	
     Time : TYPE FROM int
     ReferenceType, Reference : TYPE+
     Object : TYPE+
@@ -8,16 +8,34 @@ escjava2_memory : THEORY
 
     HEAP : Memory
 
-    memGet(memory : Memory, reference : Reference) : Object
-    memSet(memory : Memory, reference : Reference, object : Object) : Memory
+	memGet : [ Memory, Reference -> Object ]
+	memSet : [ Memory, Reference, Object -> Memory ]
 
-    vAllocTime(reference : Reference) : Time % injective
+	vAllocTime : {R : [ Reference -> Time ] | injective?(R) }
     fClosedTime(field : ReferenceField) : Time
     eClosedTime(object : Object) : Time
 
     isAllocated(reference : Reference, time : Time) : bool
     arrayFresh(reference : Reference, memory : Memory, time : Time) : bool
-  END escjava2_memory
+	memory_operation : LEMMA
+	  FORALL( r : Reference, obj : Object ) :
+            memGet(memSet(HEAP, r,obj), r) = obj
+
+	memory_operation2 : LEMMA
+	  FORALL( r : Reference, q : Reference, obj : Object ) :
+	    memGet(memSet(HEAP, r, obj), q) = memGet(HEAP, q)
+
+	alloc_time : LEMMA
+	  FORALL( r : Reference, t : Time ) :
+  	    isAllocated(r,t) IFF vAllocTime(r) < t
+
+	% maybe redunctant ?
+	arrayFresh_operation : LEMMA 
+	  FORALL( r : Reference, a : Time) :
+	    arrayFresh(r, HEAP, a) IMPLIES
+	      vAllocTime(r) = a AND isAllocated(r, a)					
+
+   END escjava2_memory
 
 escjava2_java_typesystem : THEORY
   BEGIN
@@ -32,6 +50,7 @@ escjava2_java_typesystem : THEORY
     JMLNumber : TYPE = [JavaNumber + BigIntNumber + RealNumber]
     Number : TYPE = JMLNumber
     java_lang_Object : ReferenceType
+	java_lang_Cloneable : ReferenceType
 
     java_lang_Boolean_TRUE : Boolean
     java_lang_Boolean_FALSE : Boolean
@@ -72,6 +91,7 @@ escjava2_java_typesystem : THEORY
         referenceType = java_lang_Object -> TRUE,
         ELSE -> FALSE
       ENDCOND
+
   END escjava2_java_typesystem
 
 escjava2_java_numeric_types : THEORY
@@ -176,6 +196,11 @@ escjava2_object_fields_base[fieldType : TYPE, valueType : TYPE] : THEORY
    
     select(field : fieldType, object : Object) : valueType
     store(field : fieldType, object : Object, value : valueType) : fieldType
+
+	select_definition : LEMMA 
+	  FORALL( f : fieldType, obj : Object, v : valueType ) :
+	    select((store(f, obj, v), obj)) = v
+
   END escjava2_object_fields_base
 
 escjava2_object_fields : THEORY
@@ -185,6 +210,12 @@ escjava2_object_fields : THEORY
               escjava2_object_fields_base[DiscreteNumberField, DiscreteNumber],
               escjava2_object_fields_base[ContinuousNumberField, ContinuousNumber],
               escjava2_object_fields_base[ReferenceField, Reference]
+
+ 	referenceField_allocation : LEMMA
+ 	  FORALL( r : Reference, f : ReferenceField, t : Time ) :
+	    fClosedTime(f) < t AND isAllocated(r,t) IMPLIES
+	    isAllocated( select( f, memGet(HEAP,r)), t) 
+
   END escjava2_object_fields
 
 escjava2_java_arrays_base[T : TYPE] : THEORY
@@ -193,6 +224,15 @@ escjava2_java_arrays_base[T : TYPE] : THEORY
 
     get(obj : Object, num : DiscreteNumber) : T
     set(obj : Object, num : DiscreteNumber, val : T) : Object
+
+	get_definition : LEMMA
+	  FORALL( obj : Object, val : Object, n : DiscreteNumber, val : T) :
+	    get( (set (obj, n, val)),n) = val
+
+	get_definition2 : LEMMA
+	  FORALL( obj : Object, val : Object, n : DiscreteNumber, m :DiscreteNumber, val : T) :
+	    get( (set (obj, n, val)),m) = get( obj, m)
+
   END escjava2_java_arrays_base
 
 escjava2_java_arrays : THEORY
@@ -205,18 +245,45 @@ escjava2_java_arrays : THEORY
     ArrayReferenceType : TYPE FROM ReferenceType
 
     % array type constructor
-    arrayOf(boolean : Boolean) : ArrayReferenceType
-    arrayOf(number : Number) : ArrayReferenceType
-    arrayOf(referenceType : ReferenceType) : ArrayReferenceType
-    arrayOf(arrayReferenceType : ArrayReferenceType) : ArrayReferenceType
+    arrayOf( n : DiscreteNumber, boolean : Boolean) : ArrayReferenceType
+    arrayOf( n : DiscreteNumber, number : Number) : ArrayReferenceType
+    arrayOf( n : DiscreteNumber, referenceType : ReferenceType) : ArrayReferenceType
+    arrayOf( n : DiscreteNumber, arrayReferenceType : ArrayReferenceType) : ArrayReferenceType
     arrayLength(reference : Reference) : DiscreteNumber
 
+	selectArray : [ Reference -> Object ] % substitute for elems
+
+	% am I right ??? :O/
+	arrayOf_operation : LEMMA
+	  FORALL( n : DiscreteNumber, b : Boolean, ar : ArrayReferenceType, obj : Object, m : DiscreteNumber, b2 : Boolean ) :
+	    arrayOf(n , b) = ar IMPLIES
+	      EXISTS( r : Reference, t : Time) :
+		arrayFresh(r, HEAP, t) AND get( set(selectArray(r), m, b2), m) = b2
+
     array_subtyping : LEMMA
-      FORALL(t : ReferenceType, u : ReferenceType) :
-        subtype?(t, u) IMPLIES subtype?(arrayOf(t), arrayOf(u))
+      FORALL(t : ReferenceType, u : ReferenceType, n : DiscreteNumber, m : DiscreteNumber ) :
+        subtype?(t, u) IMPLIES subtype?(arrayOf(n,t), arrayOf(m,u))
 
     left_inverses_of_Object_constructors : LEMMA
-      FORALL(t : ReferenceType) : elementReferenceType(arrayOf(t)) = t
+      FORALL(t : ReferenceType, n : DiscreteNumber ) : elementReferenceType(arrayOf(n, t)) = t
+
+	% all arrays are subtype of cloneable
+	array_of_boolean_subtype_cloneable : LEMMA
+	  FORALL( m : DiscreteNumber, b : Boolean ) :
+	    subtype?(arrayOf(m, b), java_lang_Cloneable) 
+
+	array_of_Number_subtype_cloneable : LEMMA
+	  FORALL( m : DiscreteNumber, n : Number ) :
+	    subtype?(arrayOf(m, n), java_lang_Cloneable)
+
+	array_of_ReferenceType_subtype_cloneable : LEMMA
+	  FORALL( m : DiscreteNumber, r : ReferenceType ) :
+	    subtype?(arrayOf(m, r), java_lang_Cloneable)
+
+	array_of_arrayReferenceType_subtype_cloneable : LEMMA
+	  FORALL( m : DiscreteNumber, a : ArrayReferenceType ) :
+	    subtype?(arrayOf(m, a), java_lang_Cloneable)
+
   END escjava2_java_arrays
 
 escjava2_java_operators : THEORY
@@ -236,7 +303,7 @@ escjava2_java_operators : THEORY
     % Java typecast
     cast(reference : Reference, referenceType : ReferenceType) : Reference
 
-    cast_defintion : LEMMA
+    cast_definition : LEMMA
       FORALL(r : Reference, t : ReferenceType) : isa?(cast(r, t), t)
 
     upcast_has_no_effect : LEMMA
@@ -252,3 +319,37 @@ escjava2_jml_operators : THEORY
 escjava2_object_logic : THEORY
   BEGIN
   END escjava2_object_logic
+
+escjava2_locking : THEORY
+BEGIN
+ 	  IMPORTING escjava2_java_typesystem
+	    
+	  lockMap : TYPE+
+
+	  LS : lockMap
+	  maxLockset : Reference
+
+	  lockLock : [ lockMap, Reference -> lockMap ]
+	  lockRelease : [ lockMap, Reference -> lockMap ]
+	  lockSelect : [ lockMap, Reference -> bool ]
+
+	  lockLess : { R : [ Reference , Reference -> bool ] | transitive?(R) }
+
+	  lock_access_definition : LEMMA
+	    FORALL( r : Reference ) : 
+	      lockSelect( lockLock(LS, r), r ) = false
+
+	  lock_access_definition2 : LEMMA
+	    FORALL( r : Reference ) : 
+	      lockSelect( lockRelease(lockLock(LS, r), r), r) = true
+
+	  ls_has_a_maximum_element : LEMMA
+	    FORALL( r : Reference ) : 
+	      lockLess(r, maxLockset ) = true
+
+	  null_belongs_to_ls : LEMMA
+	    FORALL( r : Reference ) :
+	      lockLess(NULL, r) = true
+
+END escjava2_locking
+
