@@ -3,14 +3,14 @@
 package escjava;
 
 import escjava.backpred.FindContributors;
-import escjava.prover.Simplify;
+import escjava.prover.*;
 import escjava.translate.VcToString;
 import javafe.ast.ASTNode;
 import javafe.ast.Expr;
 import javafe.util.FatalError;
 import java.io.PrintStream;
 import java.util.Enumeration;
-
+import java.util.Properties;
 
 public class ProverManager {
 
@@ -29,66 +29,129 @@ public class ProverManager {
 
     static private FindContributors savedScope = null;
 
+    public static boolean useSimplify = false;
+    public static boolean useSammy = false;
+    public static boolean useHarvey = false;
+
     //@ ensures isStarted && prover != null;
     synchronized
     static public void start() {
-	if (isStarted) return;
-	long startTime = java.lang.System.currentTimeMillis();
-	prover = new Simplify();
-	
-	if (listener != null) listener.stateChanged(1);
-	if (!Main.options().quiet)
-	    System.out.println("  Prover started:" + Main.timeUsed(startTime));
 
-	escjava.backpred.BackPred.genUnivBackPred(prover.subProcessToStream());
-	prover.sendCommands("");
+	if (isStarted) return;
+
+	if( useSammy && (sammy == null || !sammy.started) ){
+	    long startTimeSammy = java.lang.System.currentTimeMillis();
+
+	    sammy = new Sammy(true); //create new instance with debug = true
+	    sammy.start_prover();
+
+	    /*
+	     * Example to set flags : There's surely a need for a few new function
+	     * to give the property from the Main.java
+	     */
+	    Properties p = new Properties();
+
+	    p.setProperty("-timeout","1000");
+	    p.setProperty("-max_instances","5");
+	    p.setProperty("-exhaustive","");
+
+	    sammy.set_prover_resource_flags(p);
+
+	    if (!Main.options().quiet)
+		System.out.println("  Sammy started:" + Main.timeUsed(startTimeSammy));
+	}
+
+	if( useSimplify && (simplify == null)) { 
+	    
+	    long startTime = java.lang.System.currentTimeMillis();
+	    simplify = new Simplify();
+	
+	    if (!Main.options().quiet)
+		System.out.println("  Simplify started:" + Main.timeUsed(startTime));
+
+	    escjava.backpred.BackPred.genUnivBackPred(simplify.subProcessToStream());
+	    simplify.sendCommands("");
+
+	}
+
+	if (listener != null) listener.stateChanged(1);
 	isStarted = true;
 	status = STARTED;
+
     }
 
     synchronized
     static public Simplify prover() {
 	start();
-	return prover;
+	return simplify;
     }
 
     //@ ensures status == NOTSTARTED && prover == null;
     synchronized
     static public void kill() {
-	if (prover != null) prover.close();
-	if (listener != null) listener.stateChanged(0);
-	prover = null;
+
+	if(useSimplify) {
+	    if (simplify != null) 
+		simplify.close();
+	    
+	    simplify = null;
+	}
+
+	if(useSammy) {
+	    sammy.stop_prover();
+	    sammy = null;
+	}
+
+	if (listener != null) 
+	    listener.stateChanged(0);
+
 	isStarted = false;
 	status = NOTSTARTED;
     }
 
     synchronized
     static public void died() {
-	if (prover != null) prover.close();
-	if (listener != null) listener.stateChanged(0);
-	prover = null;
+
+	if(useSimplify) {
+	    if (simplify != null) 
+		simplify.close();
+	    
+	    simplify = null;
+	}
+
+	if(useSammy) {
+	    sammy.stop_prover();
+	    sammy = null;
+	}
+
+	if (listener != null) 
+	    listener.stateChanged(0);
+
 	isStarted = false;
 	status = NOTSTARTED;
     }
 
+    /*
+     * Specific to simplify
+     */
     synchronized
     static public void push(/*@non_null*/ Expr vc) {
-	PrintStream ps = prover.subProcessToStream();
+	PrintStream ps = simplify.subProcessToStream();
 	ps.print("\n(BG_PUSH ");
 	VcToString.computePC(vc, ps);
 	ps.println(")");
-	prover.sendCommands("");
+	simplify.sendCommands("");
     }
 
     synchronized
     static public void push(FindContributors scope) {
 	start();
-        if (prover != null) {
-            PrintStream ps = prover.subProcessToStream();
+        if (simplify != null) {
+            PrintStream ps = simplify.subProcessToStream();
             ps.print("\n(BG_PUSH ");
             escjava.backpred.BackPred.genTypeBackPred(scope, ps);
             ps.println(")");
-            prover.sendCommands("");
+            simplify.sendCommands("");
 	    savedScope = scope;
 	    status = PUSHED;
         }
@@ -99,6 +162,7 @@ public class ProverManager {
     //? ensures \result != null;
     synchronized
     static public Enumeration prove(Expr vc, FindContributors scope) {
+
 	if (scope == null) {
 	    if (savedScope != null && status != PUSHED) push(savedScope);
 	} else {
@@ -113,9 +177,15 @@ public class ProverManager {
 	}
 	if (listener != null) listener.stateChanged(2);
 	try {
-	    prover.startProve();
-	    VcToString.compute(vc, prover.subProcessToStream());
-	    Enumeration en = prover.streamProve();
+	    simplify.startProve();
+	    VcToString.compute(vc, simplify.subProcessToStream());
+
+	    //++
+// 	    System.out.println("ProverManager::prove");
+//  	    System.out.println(vc);
+	    //++
+	    
+	    Enumeration en = simplify.streamProve();
 	    if (listener != null) listener.stateChanged(1);
 	    return en;
 	} catch (FatalError e) {
@@ -124,10 +194,13 @@ public class ProverManager {
 	}
     }
 
+    /*
+     * Specific to simplify
+     */
     synchronized
     static public void pop() {
-        if (prover != null)
-            prover.sendCommand("(BG_POP)");
+        if (simplify != null)
+            simplify.sendCommand("(BG_POP)");
 	savedScope = null;
 	status = STARTED;
     }
@@ -136,9 +209,12 @@ public class ProverManager {
      * Our Simplify instance.
      */
     //-@ monitored
-    public static Simplify prover;
+    public static Simplify simplify;
 	//@ private invariant isStarted ==> prover != null;
+    
+    /*
+     * Our Sammy instance \\o \o/ o//
+     */
+    public static Sammy sammy;
 
 }
-
-	

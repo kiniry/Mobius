@@ -229,10 +229,33 @@ public class Main extends javafe.SrcTool
 	if (options().simplify == null) setDefaultSimplify();
 	if (options().simplify != null) System.setProperty("simplify",options().simplify);
         super.setup();
-        
-        if (!options().quiet)
-            System.out.println("ESC/Java version " + 
-                (options().testMode?"VERSION":version));
+
+	System.out.println("options().useSimplify"+options().useSimplify);
+
+	ProverManager.useSimplify = options().useSimplify;
+	ProverManager.useSammy = options().useSammy;
+	ProverManager.useHarvey = options().useHarvey;
+
+        if (!options().quiet) {
+	    System.out.print("ESC/Java version " + 
+			       (options().testMode?"VERSION":version));
+
+	    //$$
+	    System.out.print(", using");
+
+	    if(ProverManager.useSimplify)
+		System.out.print(" simplify");
+	    
+	    if(ProverManager.useSammy)
+		System.out.print(" sammy");
+
+	    if(ProverManager.useHarvey)
+		System.out.print(" harvey");
+
+	    System.out.print(".\n");
+
+	}
+	//$$
     }
 
     public void setDefaultSimplify() {
@@ -294,7 +317,7 @@ public class Main extends javafe.SrcTool
 	if (ErrorSet.fatals > 0) {
 	    ErrorSet.fatal(null);
         }
-        
+
         // call our routines to run the constructor inlining experiment
         if (options().inlineConstructors)
             InlineConstructor.inlineConstructorsEverywhere(loaded);
@@ -429,107 +452,112 @@ public class Main extends javafe.SrcTool
     private boolean processTD(TypeDecl td) {
 	try {
 
-        // ==== Start stage 1 ====
+	    //$$
+	    escjava.prover.Harvey.main(new String[3]);
+	    //$$
 
-        /*
-         * Do Java type checking then print Java types if we've been
-         * asked to:
-         */
-	long startTime = currentTime();
-        int errorCount = ErrorSet.errors;
-        TypeSig sig = TypeCheck.inst.getSig(td);
-        sig.typecheck();
-        NoWarn.typecheckRegisteredNowarns();
+	    // ==== Start stage 1 ====
+
+	    /*
+	     * Do Java type checking then print Java types if we've been
+	     * asked to:
+	     */
+	    long startTime = currentTime();
+	    int errorCount = ErrorSet.errors;
+	    TypeSig sig = TypeCheck.inst.getSig(td);
+	    sig.typecheck();
+	    NoWarn.typecheckRegisteredNowarns();
     
 
-        if (options().pjt) {
-            // Create a pretty-printer that shows types
-            DelegatingPrettyPrint p = new javafe.tc.TypePrint();
-            p.del = new EscPrettyPrint(p, new StandardPrettyPrint(p));
+	    if (options().pjt) {
+		// Create a pretty-printer that shows types
+		DelegatingPrettyPrint p = new javafe.tc.TypePrint();
+		p.del = new EscPrettyPrint(p, new StandardPrettyPrint(p));
 
-            System.out.println("\n**** Source code with types:");
-            p.print(System.out, 0, td);
-        }
+		System.out.println("\n**** Source code with types:");
+		p.print(System.out, 0, td);
+	    }
 
-        // Turn off extended static checking and abort if any errors
-        // occured while type checking *this* TypeDecl:
-        if (errorCount < ErrorSet.errors) {
-            if (stages>1) {
-                stages = 1;
-                ErrorSet.caution("Turning off extended static checking " + 
+	    // Turn off extended static checking and abort if any errors
+	    // occured while type checking *this* TypeDecl:
+	    if (errorCount < ErrorSet.errors) {
+		if (stages>1) {
+		    stages = 1;
+		    ErrorSet.caution("Turning off extended static checking " + 
                                      "due to type error(s)");
-            }
-            return true;
-        }
+		}
+		return true;
+	    }
 
-        // ==== Start stage 2 ====
-        if (stages<2)
-            return false;
+	    // ==== Start stage 2 ====
+	    if (stages<2)
+		return false;
         
 
-        // Generate the type-specific background predicate
-        errorCount = ErrorSet.errors;
-	if (Info.on) Info.out("[ Finding contributors for " + sig + "]");
-        FindContributors scope = new FindContributors(sig);
-        VcToString.resetTypeSpecific();
-	if (Info.on) Info.out("[ Found contributors for " + sig + "]");
+	    // Generate the type-specific background predicate
+	    errorCount = ErrorSet.errors;
+	    if (Info.on) Info.out("[ Finding contributors for " + sig + "]");
+	    FindContributors scope = new FindContributors(sig);
+	    VcToString.resetTypeSpecific();
+
+	    if (Info.on) Info.out("[ Found contributors for " + sig + "]");
     
-        if (options().guardedVC) {
-            String locStr = UniqName.locToSuffix(td.locId);
-            String fn = locStr + ".class." + options().guardedVCFileExt;
-            File f = new File(options().guardedVCDir, fn);
-            PrintStream o = fileToPrintStream(options().guardedVCDir, fn);
-            o.println(options().ClassVCPrefix);
-            o.println(td.id + "@" + locStr);
-            o.print("\n(BG_PUSH ");
-            escjava.backpred.BackPred.genTypeBackPred(scope, o);
-            o.println(")");
-            o.close();
-        }
+	    if (options().guardedVC) {
+		String locStr = UniqName.locToSuffix(td.locId);
+		String fn = locStr + ".class." + options().guardedVCFileExt;
+		File f = new File(options().guardedVCDir, fn);
+		PrintStream o = fileToPrintStream(options().guardedVCDir, fn);
+		o.println(options().ClassVCPrefix);
+		o.println(td.id + "@" + locStr);
+		o.print("\n(BG_PUSH ");
+		escjava.backpred.BackPred.genTypeBackPred(scope, o);
+		o.println(")");
+		o.close();
+	    }
 
-        // Turn off extended static checking and abort if any type errors
-        // occured while generating the type-specific background predicate:
-        if (errorCount < ErrorSet.errors) {
-            stages = 1;
-            ErrorSet.caution("Turning off extended static checking " + 
-                             "due to type error(s)");
-            return true;
-        }
+	    // Turn off extended static checking and abort if any type errors
+	    // occured while generating the type-specific background predicate:
+	    if (errorCount < ErrorSet.errors) {
+		stages = 1;
+		ErrorSet.caution("Turning off extended static checking " + 
+				 "due to type error(s)");
+		return true;
+	    }
 
-	if (options().testRef) makePrettyPrint().print(System.out,0,td);
+	    if (options().testRef) makePrettyPrint().print(System.out,0,td);
 
-        // ==== Start stage 3 ====
-        if (3 <= stages) {
+	    // ==== Start stage 3 ====
+	    if (3 <= stages) {
 
-	    if (6 <= stages || options().predAbstract)
-		ProverManager.push(scope);
+		if (6 <= stages || options().predAbstract)
+		    ProverManager.push(scope);
 
-            LabelInfoToString.reset();
-            InitialState initState = new InitialState(scope);
-            LabelInfoToString.mark();
+		LabelInfoToString.reset();
+		InitialState initState = new InitialState(scope);
+		LabelInfoToString.mark();
 
-	    if (!options().quiet)
-		System.out.println("    [" + timeUsed(startTime) + "]");
+		if (!options().quiet)
+		    System.out.println("    [" + timeUsed(startTime) + "]");
 
     
-            // Process the elements of "td"; stage 3 continues into stages 4
-            // and 5 inside processTypeDeclElem:
-            if (options().inlineConstructors && !Modifiers.isAbstract(td.modifiers)) {
-                // only process inlined versions of methods
-                for (int i = 0; i < td.elems.size(); i++) {
-                    TypeDeclElem tde = td.elems.elementAt(i);
-                    if (!InlineConstructor.isConstructorInlinable(tde) ||
-                        InlineConstructor.isConstructorInlinedMethod((MethodDecl) tde))
-                    processTypeDeclElem(tde, sig, initState);
-                }
-            } else {
-                for (int i = 0; i < td.elems.size(); i++) 
-                    processTypeDeclElem(td.elems.elementAt(i), sig, initState);
-            }
-        }
+		// Process the elements of "td"; stage 3 continues into stages 4
+		// and 5 inside processTypeDeclElem:
+		if (options().inlineConstructors && !Modifiers.isAbstract(td.modifiers)) {
+		    // only process inlined versions of methods
+		    for (int i = 0; i < td.elems.size(); i++) {
+			TypeDeclElem tde = td.elems.elementAt(i);
+			if (!InlineConstructor.isConstructorInlinable(tde) ||
+			    InlineConstructor.isConstructorInlinedMethod((MethodDecl) tde))
+			    processTypeDeclElem(tde, sig, initState);
+		    }
+		} else {
+		    for (int i = 0; i < td.elems.size(); i++) 
+			processTypeDeclElem(td.elems.elementAt(i), sig, initState);
+		}
+	    }
 
-        // ==== all done; clean up ====
-	ProverManager.pop();
+	    // ==== all done; clean up ====
+	    ProverManager.pop();
         
 	} catch (FatalError e) {
 		// Error already reported
@@ -643,6 +671,7 @@ public class Main extends javafe.SrcTool
         startTime = java.lang.System.currentTimeMillis();
     
         UniqName.resetUnique();
+
         if (gc==null)
             return "passed immediately";
         if (options().pgc) {
@@ -669,7 +698,7 @@ public class Main extends javafe.SrcTool
             gc = DSA.dsa(gc);
             dsaTime = timeUsed(startTime);
             startTime = java.lang.System.currentTimeMillis();
-    
+
             if (options().pdsa) {
                 System.out.println("\n**** Dynamic Single Assignment:");
                 ((EscPrettyPrint)PrettyPrint.inst).print(System.out, 0, gc);
@@ -798,135 +827,159 @@ public class Main extends javafe.SrcTool
 				FindContributors scope) {
 	try {
 
-	Enumeration results = ProverManager.prove(vc,scope);
+	    //$$
+	    // 	    System.out.println("vc :");
+	    // 	    System.out.println(vc);
 
-        // Process Simplify's output
-        String status = "unexpectedly missing Simplify output";
-	int stat = Status.STATICCHECKED_ERROR;
+	    // 	    System.out.println("r :");
+	    // 	    System.out.println(r);
 
-        boolean nextWarningNeedsPrecedingLine = true;
-	if (results != null) while (results.hasMoreElements()) {
+	    // 	    System.out.println("directTargets :");
+	    // 	    System.out.println(directTargets);
 
-            SimplifyOutput so = (SimplifyOutput)results.nextElement();
-            switch (so.getKind()) {
-                case SimplifyOutput.VALID:
-		    status = "passed";
-		    stat = Status.STATICCHECKED_OK;
-                    break;
-                case SimplifyOutput.INVALID:
-                    status = "failed";
-		    stat = Status.STATICCHECKED_ERROR;
-                    break;
-                case SimplifyOutput.UNKNOWN:
-                    status = "timed out";
-		    stat = Status.STATICCHECKED_TIMEOUT;
-                    break;
-                case SimplifyOutput.COMMENT: {
-                    SimplifyComment sc = (SimplifyComment)so;
-                    System.out.println("SIMPLIFY: " + sc.getMsg());
-                    break;
-                }
-                case SimplifyOutput.COUNTEREXAMPLE: {
-                    if (nextWarningNeedsPrecedingLine) {
-                        escjava.translate.ErrorMsg.printSeparatorLine(System.out);
-                        nextWarningNeedsPrecedingLine = false;
-                    }
-                    SimplifyResult sr = (SimplifyResult)so;
-                    escjava.translate.ErrorMsg.print(TypeCheck.inst.getName(r),
-                                                     sr.getLabels(), sr.getContext(),
-                                                     r, directTargets, System.out);
-                    break;
-                }
-                case SimplifyOutput.EXCEEDED_PROVER_KILL_TIME: {
-                    SimplifyResult sr = (SimplifyResult)so;
-                    ErrorSet.caution("Unable to check " +
-                                     TypeCheck.inst.getName(r) +
-                                     " of type " + TypeSig.getSig(r.parent) +
-                                     " completely because too much time required");
-                    if (Info.on && sr.getLabels() != null) {
-                        Info.out("Current labels: " + sr.getLabels());
-                    }
-                    nextWarningNeedsPrecedingLine = true;
-                    break;
-                }
-                case SimplifyOutput.EXCEEDED_PROVER_KILL_ITER: {
-                    SimplifyResult sr = (SimplifyResult)so;
-                    ErrorSet.caution("Unable to check " +
-                                     TypeCheck.inst.getName(r) +
-                                     " of type " + TypeSig.getSig(r.parent) +
-                                     " completely because" +
-                                     " too many iterations required");
-                    if (Info.on && sr.getLabels() != null) {
-                        Info.out("Current labels: " + sr.getLabels());
-                    }
-                    nextWarningNeedsPrecedingLine = true;
-                    break;
-                }
-                case SimplifyOutput.REACHED_CC_LIMIT:
-                    ErrorSet.caution("Not checking " +
-                                     TypeCheck.inst.getName(r) +
-                                     " of type " + TypeSig.getSig(r.parent) +
-                                     " completely because" +
-                                     " warning limit (PROVER_CC_LIMIT) reached");
-                    break;
-                case SimplifyOutput.EXCEEDED_PROVER_SUBGOAL_KILL_TIME: {
-                    SimplifyResult sr = (SimplifyResult)so;
-                    ErrorSet.caution("Unable to check subgoal of " +
-                                     TypeCheck.inst.getName(r) +
-                                     " of type " + TypeSig.getSig(r.parent) +
-                                     " completely because too much time required");
-                    if (Info.on && sr.getLabels() != null) {
-                        Info.out("Current labels: " + sr.getLabels());
-                    }
-                    nextWarningNeedsPrecedingLine = true;
-                    break;
-                }
-                case SimplifyOutput.EXCEEDED_PROVER_SUBGOAL_KILL_ITER: {
-                    SimplifyResult sr = (SimplifyResult)so;
-                    ErrorSet.caution("Unable to check subgoal of " +
-                                     TypeCheck.inst.getName(r) +
-                                     " of type " + TypeSig.getSig(r.parent) +
-                                     " completely because" +
-                                     " too many iterations required");
-                    if (Info.on && sr.getLabels() != null) {
-                        Info.out("Current labels: " + sr.getLabels());
-                    }
-                    nextWarningNeedsPrecedingLine = true;
-                    break;
-                }
-                case SimplifyOutput.WARNING_TRIGGERLESS_QUANT: {
-                    TriggerlessQuantWarning tqw = (TriggerlessQuantWarning)so;
-                    int loc = tqw.getLocation();
-/* Turn off this warning for now.  FIXME
-   Some generated axioms require using the Simplify heuristic to work correctly,
-   while others generate this warning if there is no explict quantifier.
-                    String msg = "Unable to use quantification because " +
-                        "no trigger found: " + tqw.e1;
-                    if (loc != Location.NULL) {
-                        ErrorSet.caution(loc, msg);
-                    } else {
-                        ErrorSet.caution(msg);
-                    }
-                    if (Info.on && tqw.getLabels() != null) {
-                        Info.out("Current labels: " + tqw.getLabels());
-                    }
-*/
-                    break;
-                }
-                default:
-                    Assert.fail("unexpected type of Simplify output");
-                    break;
-            }
-        }
-	return stat;
+	    // 	    System.out.println("scope :");
+	    // 	    System.out.println(scope);
+	    //$$
 
-	} catch (escjava.prover.SubProcess.Died e) {
-	    //status = "died";
+	    Enumeration results = ProverManager.prove(vc,scope);
+
+	    //$$
+	    if( ProverManager.useSimplify ) {
+	    //$$
+
+		// Process Simplify's output
+		String status = "unexpectedly missing Simplify output";
+		int stat = Status.STATICCHECKED_ERROR;
+
+		boolean nextWarningNeedsPrecedingLine = true;
+		if (results != null) while (results.hasMoreElements()) {
+
+		    SimplifyOutput so = (SimplifyOutput)results.nextElement();
+		    switch (so.getKind()) {
+		    case SimplifyOutput.VALID:
+			status = "passed";
+			stat = Status.STATICCHECKED_OK;
+			break;
+		    case SimplifyOutput.INVALID:
+			status = "failed";
+			stat = Status.STATICCHECKED_ERROR;
+			break;
+		    case SimplifyOutput.UNKNOWN:
+			status = "timed out";
+			stat = Status.STATICCHECKED_TIMEOUT;
+			break;
+		    case SimplifyOutput.COMMENT: {
+			SimplifyComment sc = (SimplifyComment)so;
+			System.out.println("SIMPLIFY: " + sc.getMsg());
+			break;
+		    }
+		    case SimplifyOutput.COUNTEREXAMPLE: {
+			if (nextWarningNeedsPrecedingLine) {
+			    escjava.translate.ErrorMsg.printSeparatorLine(System.out);
+			    nextWarningNeedsPrecedingLine = false;
+			}
+			SimplifyResult sr = (SimplifyResult)so;
+			escjava.translate.ErrorMsg.print(TypeCheck.inst.getName(r),
+							 sr.getLabels(), sr.getContext(),
+							 r, directTargets, System.out);
+			break;
+		    }
+		    case SimplifyOutput.EXCEEDED_PROVER_KILL_TIME: {
+			SimplifyResult sr = (SimplifyResult)so;
+			ErrorSet.caution("Unable to check " +
+					 TypeCheck.inst.getName(r) +
+					 " of type " + TypeSig.getSig(r.parent) +
+					 " completely because too much time required");
+			if (Info.on && sr.getLabels() != null) {
+			    Info.out("Current labels: " + sr.getLabels());
+			}
+			nextWarningNeedsPrecedingLine = true;
+			break;
+		    }
+		    case SimplifyOutput.EXCEEDED_PROVER_KILL_ITER: {
+			SimplifyResult sr = (SimplifyResult)so;
+			ErrorSet.caution("Unable to check " +
+					 TypeCheck.inst.getName(r) +
+					 " of type " + TypeSig.getSig(r.parent) +
+					 " completely because" +
+					 " too many iterations required");
+			if (Info.on && sr.getLabels() != null) {
+			    Info.out("Current labels: " + sr.getLabels());
+			}
+			nextWarningNeedsPrecedingLine = true;
+			break;
+		    }
+		    case SimplifyOutput.REACHED_CC_LIMIT:
+			ErrorSet.caution("Not checking " +
+					 TypeCheck.inst.getName(r) +
+					 " of type " + TypeSig.getSig(r.parent) +
+					 " completely because" +
+					 " warning limit (PROVER_CC_LIMIT) reached");
+			break;
+		    case SimplifyOutput.EXCEEDED_PROVER_SUBGOAL_KILL_TIME: {
+			SimplifyResult sr = (SimplifyResult)so;
+			ErrorSet.caution("Unable to check subgoal of " +
+					 TypeCheck.inst.getName(r) +
+					 " of type " + TypeSig.getSig(r.parent) +
+					 " completely because too much time required");
+			if (Info.on && sr.getLabels() != null) {
+			    Info.out("Current labels: " + sr.getLabels());
+			}
+			nextWarningNeedsPrecedingLine = true;
+			break;
+		    }
+		    case SimplifyOutput.EXCEEDED_PROVER_SUBGOAL_KILL_ITER: {
+			SimplifyResult sr = (SimplifyResult)so;
+			ErrorSet.caution("Unable to check subgoal of " +
+					 TypeCheck.inst.getName(r) +
+					 " of type " + TypeSig.getSig(r.parent) +
+					 " completely because" +
+					 " too many iterations required");
+			if (Info.on && sr.getLabels() != null) {
+			    Info.out("Current labels: " + sr.getLabels());
+			}
+			nextWarningNeedsPrecedingLine = true;
+			break;
+		    }
+		    case SimplifyOutput.WARNING_TRIGGERLESS_QUANT: {
+			TriggerlessQuantWarning tqw = (TriggerlessQuantWarning)so;
+			int loc = tqw.getLocation();
+			/* Turn off this warning for now.  FIXME
+			   Some generated axioms require using the Simplify heuristic to work correctly,
+			   while others generate this warning if there is no explict quantifier.
+			   String msg = "Unable to use quantification because " +
+			   "no trigger found: " + tqw.e1;
+			   if (loc != Location.NULL) {
+			   ErrorSet.caution(loc, msg);
+			   } else {
+			   ErrorSet.caution(msg);
+			   }
+			   if (Info.on && tqw.getLabels() != null) {
+			   Info.out("Current labels: " + tqw.getLabels());
+			   }
+			*/
+			break;
+		    }
+		    default:
+			Assert.fail("unexpected type of Simplify output");
+			break;
+		    }
+		}
+		
+		return stat;
+		//$$
+	    }
+	    //$$
+	    return 0;
+	    //		return stat;
+
+	    } catch (escjava.prover.SubProcess.Died e) {
+		//status = "died";
 	    return Status.STATICCHECKED_ERROR;
+	    }
+	    
 	}
-
-    }
-
+    
     /**
      * This method computes the guarded command (including assuming
      * the precondition, the translated body, the checked
