@@ -1,15 +1,38 @@
+// $Id$
+
+/**
+ * A demonstration (stub) SMT-LIB prover to show how ESC/Java2
+ * interfaces with a prover written in Java.
+ *
+ * @author Joseph Kiniry
+ */
+
 import java.util.Properties;
 
 class DemonstrationProver implements ProverInterface
 {
+  private boolean prover_running; //@ in objectState;
+  //@ private represents prover_started <- prover_running;
+  //@ private represents prover_stopped <- !prover_running;
+
+  private /* null @*/ Signature signature; //@ in objectState;
+  //@ private represents signature_defined <- (signature != null);
+
   static {
     System.loadLibrary("demoprover");
   }
 
   // start_solver : unit -> int
+  /*@ public normal_behavior
+    @   assignable objectState;
+    @*/
   public native int demo_start_prover();
 
+  // @review kiniry - how do we put whatever a native method modifies
+  // into the objectState datagroup?
+
   public ProverResponse start_prover() {
+    prover_running = true;
     return new ProverResponse(demo_start_prover());
   }
 
@@ -17,40 +40,40 @@ class DemonstrationProver implements ProverInterface
   public native int demo_set_prover_resource_flags(String properties);
 
   public ProverResponse set_prover_resource_flags(Properties properties) {
-    assert false;
-    return null;
+    return ProverResponse.OK;
   }
 
   // decaration : string -> int
   public native int demo_signature(String signature);
 
   public ProverResponse signature(Signature signature) {
-    assert false;
-    return null;
+    this.signature = signature;
+    return ProverResponse.OK;
   }
 
   // add_axiom : string -> int
   public native int demo_declare_axiom(String axiom);
 
   public ProverResponse declare_axiom(Formula formula) {
-    assert false;
-    return null;
+    return ProverResponse.OK;
   }
 
   // add_assertion : string -> int
   public native int demo_make_assumption(String formula);
 
   public ProverResponse make_assumption(Formula formula) {
-    assert false;
-    return null;
+    return ProverResponse.OK;
   }
 
   // backtrack : int -> int
   public native int demo_retract_assumption(int count);
 
   public ProverResponse retract_assumption(int count) {
-    assert false;
-    return null;
+    return ProverResponse.OK;
+  }
+
+  public ProverResponse retract_assumption() {
+    return ProverResponse.OK;
   }
 
   // query : string -> int
@@ -58,14 +81,17 @@ class DemonstrationProver implements ProverInterface
 
   public ProverResponse is_valid(Formula formula,
                                  Properties properties) {
-    assert false;
-    return null;
+    return ProverResponse.OK;
   }
 
   // stop_solver : unit -> int
+  /*@ public normal_behavior
+    @   assignable objectState;
+    @*/
   public native int demo_stop_prover();
 
   public ProverResponse stop_prover() {
+    prover_running = false;
     return new ProverResponse(demo_stop_prover());
   }
 
