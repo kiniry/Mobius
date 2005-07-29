@@ -823,20 +823,6 @@ public class Main extends javafe.SrcTool
 				FindContributors scope) {
 	try {
 
-	    //$$
-	    // 	    System.out.println("vc :");
-	    // 	    System.out.println(vc);
-
-	    // 	    System.out.println("r :");
-	    // 	    System.out.println(r);
-
-	    // 	    System.out.println("directTargets :");
-	    // 	    System.out.println(directTargets);
-
-	    // 	    System.out.println("scope :");
-	    // 	    System.out.println(scope);
-	    //$$
-
 	    Enumeration results = ProverManager.prove(vc,scope);
 
 	    //$$
