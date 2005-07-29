@@ -119,7 +119,7 @@ CODE2TEXI=$(PERL) -e 'BEGIN: while (<>) { s/\r//g; s/@/@@/g; s/\{/@\{/g; s/\}/@\
 
 #all:	java jni # was used to build the demonstration prover of Joe
 
-all :   interface sammy mainRpcSammy
+all :   interface 
 
 build:	Escjava2-Provers.pdf
 
@@ -134,13 +134,8 @@ cleanup:
 %.class: %.java
 	javac -source 1.4 $<
 
-sammy : Sammy.class SammyResponse.class
-
-mainRpcSammy : mainRpcSammy.class
-
 interface : ProverResponse.class Signature.class \
-	ProverInterface.class Formula.class \
-	LightAnalyser.java 
+	ProverInterface.class Formula.class
 
 .PHONY: java jni test
 java:	ProverInterface.class DemonstrationProver.class
