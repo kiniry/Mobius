@@ -452,10 +452,6 @@ public class Main extends javafe.SrcTool
     private boolean processTD(TypeDecl td) {
 	try {
 
-	    //$$
-	    escjava.prover.Harvey.main(new String[3]);
-	    //$$
-
 	    // ==== Start stage 1 ====
 
 	    /*
