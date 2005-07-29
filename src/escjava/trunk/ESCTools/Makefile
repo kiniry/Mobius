@@ -52,7 +52,8 @@ jars: $(ESCJAVA2_SPECS_JAR) $(JML2_SPECS_JAR) jar srcjar
 ################################################################################
 ## Top-level build and test rules
 
-.PHONY: build buildall test alltests findbugs
+.PHONY: build buildall test javafetests escjavatests alltests \
+	javafealltests escjavaalltests findbugs
 
 build buildall: fix-perms
 	for d in $(SUBDIRS) ; do \
@@ -64,9 +65,21 @@ test: build
 	    $(MAKE) -C $$d $@ || exit 1; \
 	done
 
+javafetests: build
+	$(MAKE) -C Javafe test || exit 1;
+
+escjavatests: build
+	$(MAKE) -C Escjava test || exit 1;
+
 alltests:	build
 	${MAKE} test ALLTESTS=1
 	${MAKE} specs-test
+
+javafealltests: build
+	$(MAKE) -C Javafe test ALLTESTS=1 || exit 1;
+
+escjavaalltests: build
+	$(MAKE) -C Escjava test ALLTESTS=1 || exit 1;
 
 ifdef FINDBUGS
 findbugs: jar
