@@ -230,8 +230,6 @@ public class Main extends javafe.SrcTool
 	if (options().simplify != null) System.setProperty("simplify",options().simplify);
         super.setup();
 
-	System.out.println("options().useSimplify"+options().useSimplify);
-
 	ProverManager.useSimplify = options().useSimplify;
 	ProverManager.useSammy = options().useSammy;
 	ProverManager.useHarvey = options().useHarvey;
