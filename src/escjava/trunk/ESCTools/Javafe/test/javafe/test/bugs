@@ -1,4 +1,21 @@
-Currently (10/5/98) the following tests are failing:
+Currently (11 July 2005) the following tests are being skipped:
+
+NONE
+
+
+Currently (11 July 2005) the following tests are failing:
+
+fe/1103: there seems to be a bug in the typechecker as a StackOverFlowError
+         is currently being thrown.  the problem is triggered when typechecking
+         InputEntry's static inner classes.  E.g., 
+
+          class B {
+            static class C extends B {
+            }
+          }
+
+
+In the past (10/5/98) the following tests used to fail:
 
 fe/14:   import statements involving nonexistent classes/packages not
 	 checked yet
@@ -14,30 +31,3 @@ fe/1102: unknown bug in java.lang.File.list() causes files to be missed
 	(returns null instead of a String with the file's filename).
 	This causes bogus type not found errors.  Ignore for now, I
 	guess.  -- mdl
-
-
-[below text is scrap for now -- mdl]
-
-comparions:
-1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20?
-1001
-1002

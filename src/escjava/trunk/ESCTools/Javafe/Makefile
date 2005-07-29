@@ -35,7 +35,7 @@ build: fixperms compile
 buildall: compileall
 
 ifdef ALLTESTS
-test: extensive_tests typecheckTests
+test: extensive_tests typecheck_tests
 else
 test: runtest
 endif
@@ -115,7 +115,7 @@ cleanclasses:
 docs:	
 	@true
 
-## javadocs are generated from the parent directory
+## javadocs are generated from the parent directory now
 
 ###########################################################################
 ## test targets
@@ -133,8 +133,8 @@ JAVAFETESTTARGETS = \
 
 ## Runs basic tests on Javafe
 
-.PHONY: runtest extensive_tests test_jdk_sources typecheckTests \
-	test-release javafe_test
+.PHONY: runtest extensive_tests test_jdk_sources typecheck_tests \
+	test_release javafe_test
 
 runtest: javafe_test
 	${MAKE} -C test/javafe/parser/test runtest
@@ -150,7 +150,7 @@ test_jdk_sources:
 	${MAKE} -C test/javafe/parser/test testparsejdkidempotence
 
 ## Runs the Javafe tool on bodies of code
-typecheckTests: javafe_test
+typecheck_tests: javafe_test
 	${MAKE} -C test/javafe/test typecheckJDK
 	${MAKE} -C test/javafe/test typecheckJavafe
 

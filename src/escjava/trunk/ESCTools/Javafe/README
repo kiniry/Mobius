@@ -19,8 +19,14 @@ The structure of the Javafe CVS repository is as follows:
         test                            For test harnesses, data files etc
 
 
-The Makefile is intended to be used with gnumake.
+The Makefile is intended to be used with GNU make.
 
-        gnumake                         Compiles java front end to .class files
-        gnumake clean                   Removes all generated files
-        gnumake javadoc                 Makes documentation into doc/javadoc
+        make                            Compiles java front end to .class files
+        make build                      Compiles java front end to .class files
+        make clean                      Removes all generated files
+        make test                       Run standard tests
+        make test ALLTESTS=1            Run all tests that exist
+
+        make fixperms                   Fix executable permissions on shell 
+                                        scripts (sometimes necessary after initial
+                                        CVS checkout)
