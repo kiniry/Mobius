@@ -220,8 +220,8 @@ This spec for \code{Child} is equivalent with
 \code{\scriptsize class Child extends Parent \{
 
   /*@   requires i <= 0 || i >= 0;
-    @   ensures  \old(i) >= 0 ==> \result >= i;
-    @   ensures  \old(i) <= 0 ==> \result <= i;
+    @   ensures  \old(i >= 0) ==> \result >= i;
+    @   ensures  \old(i <= 0) ==> \result <= i;
     @*/
   int m(int i)\{ ... \}
  \}}
@@ -547,7 +547,7 @@ class Inner {
 \item It is all about knowing what is modified and what is not
 \item These {\blue owner} fields or the equivalent create a form of encapsulation that can be 
 checked by ESC/Java to control what might be modified by a given operation
-\item There is a proposal to add so-called {\blue universes} to JML
+\item  {\blue universes} have now been added to JML
 to provide a more advanced form of alias control.
 \end{itemize}
 \end{slide}

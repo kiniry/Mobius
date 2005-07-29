@@ -388,7 +388,8 @@ These are easy to confuse!
       signals (BankException e) 
                 e.getReason.equals("Amount too big")
 {\green   @*/}
-  public int{\green debit}(int amount) \{ ...  \}
+  public int{\green debit}(int amount) throws BankException 
+ \{ ...  \}
 
 }
 \end{alltt}
@@ -528,7 +529,7 @@ Assignable clauses
 
 
 \begin{alltt}\code{\scriptsize public class Timer\{
- {\red //@ model public JMLDatagroup time, alarm;}
+ {\red //@ public model JMLDatagroup time, alarm;}
   int {\green time_hrs, time_mins, time_secs};{\red //@ in time;}
   int {\green alarm_hrs, alarm_mins, alarm_secs};{\red //@ in alarm;}
 
@@ -561,7 +562,7 @@ Datagroups provide an abstraction mechanism for assignable clauses.
 
 \medskip
 
-There's a default datagroup \code{objectState} defined in \code{Object.java}
+There's a default datagroup {\green \code{objectState}} defined in \code{Object.java}
 
 \medskip
 
@@ -576,15 +577,15 @@ in \code{objectState}
 \vspace*{-4ex}
 
 \begin{alltt}\code{\scriptsize public class Timer\{
-  //@ model public JMLDatagroup time, alarm; {\red //@ objectState}
-  int{\green time_hrs, time_mins, time_secs}; //@ in time;
-  int{\green alarm_hrs, alarm_mins, alarm_secs}; //@ in alarm;
+ //@ public model JMLDatagroup time, alarm;{\red//@ in objectState;}
+ int{\green time_hrs, time_mins, time_secs}; //@ in time;
+ int{\green alarm_hrs, alarm_mins, alarm_secs}; //@ in alarm;
 
-  //@ assignable{\red time};
-  public void{\green tick}() \{ ... \}
+ //@ assignable{\red time};
+ public void{\green tick}() \{ ... \}
 
-  //@ assignable{\red alarm};
-  public void{\green setAlarm}(int hrs, int mins, int secs) \{ ... \}
+ //@ assignable{\red alarm};
+ public void{\green setAlarm}(int hrs, int mins, int secs) \{ ... \}
 \}
 
 }
@@ -627,7 +628,7 @@ Another implementation, using an array of 6 digits to represent
 hrs:mns:secs
 
 \begin{alltt}\code{\scriptsize public class ArrayTimer\{
- {\red //@ model public JMLDatagroup time;}
+ {\red //@ public model JMLDatagroup time;}
   char[]{\green currentTime};{\red //@ in time;}
  {\red //@ maps currentTime[*] \into time;}
 
@@ -702,7 +703,7 @@ over all fields not mentioned in the assignable clause}
 \begin{slide}{Aliasing}
 \vspace*{-4ex}
 
-Aliasing is the root of all evil, for anyone trying trying to verify 
+Aliasing is the root of all evil, for anyone trying to verify 
 imperative programs.
 
 \medskip
@@ -768,7 +769,7 @@ ESC/Java2 may notice this, produce a correct, but puzzling, warning.
 To rule out such aliasing of eg. \code{alarmTime} fields:
 
 \begin{alltt}\code{\scriptsize public class ArrayTimer\{
-  char[]{\green alarmTime};
+  char[]{\green currentTime};
   //@ invariant currentTime.owner == this;
   ...
 
@@ -988,9 +989,9 @@ Suppose the informal spec of
 
    \code{\scriptsize{class SimpleProtocol \{
 
-     void start() \{ ... \}
+     public void start() \{ ... \}
          
-     void stop() \{ ... \}
+     public void stop() \{ ... \}
     \}}}
 
 \end{alltt} %}
@@ -1010,19 +1011,19 @@ to represent the {\green state} of the protocol.
 \vspace*{-4ex}
 
 \begin{alltt} \code{\scriptsize{class SimpleProtocol \{
- {\blue //@ ghost boolean started;}
+ {\blue //@ public \Red{ghost} boolean started;}
 
  {\green //@ requires  !started;}
  {\green //@ assignable started;}
  {\green //@ ensures    started;}
-  void start() \{ 
+  public void start() \{ 
      ...
     {\blue //@ set started = true;} \}
       
  {\green //@ requires   started;}
  {\green //@ assignable started;}
  {\green //@ ensures   !started;}
-  void stop() \{ 
+  public void stop() \{ 
      ... 
     {\blue //@ set started = false;} \}
  }}
@@ -1040,12 +1041,12 @@ if protocols is in progress, eg.
 \code{\scriptsize{class SimpleProtocol \{
  {\green //@ private ProtocolStack st;}
   ...
-  void start() \{ 
+  public void start() \{ 
      ...
      st = new ProtocolStack(...);
      ...  \}
       
-  void stop() \{ 
+  public void stop() \{ 
      ... 
      st = null;
      ...  \}
@@ -1057,24 +1058,24 @@ if protocols is in progress, eg.
 \begin{slide}{Ghost fields - example}
 \vspace*{-4ex}
 
-There may be correspondence between the {\blue ghost field} and some
+There may be a relation between the {\blue ghost field} and some
 {\green other field(s)}, eg.
 
 \begin{alltt}
 \code{\scriptsize{class SimpleProtocol \{
  {\green private ProtocolStack st;}
- {\blue //@ ghost boolean started;}
+ {\blue //@ public ghost boolean started;}
   //@ invariant{\blue started} <==>{\green (st !=null)};
 
   //@ requires  !started;
   //@ assignable started;
   //@ ensures    started;
-  void start() \{ ...  \}
+  public void start() \{ ...  \}
       
   //@ requires   started;
   //@ assignable started;
   //@ ensures   !started;
-  void stop() \{ ...  \} }}
+  public void stop() \{ ...  \} }}
 \end{alltt} %}
 \end{slide}
 
@@ -1090,12 +1091,12 @@ We could now get rid of the ghost field, and write
   //@ requires  {\green st==null};
   //@ assignable st;
   //@ ensures  {\green  st!=null};
-  void start() \{ ... \}
+  public void start() \{ ... \}
       
   //@ requires  {\green st!=null};
   //@ assignable st;
   //@ ensures   {\green st==null};
-  void stop() \{ ... \} }}
+  public void stop() \{ ... \} }}
 \end{alltt} %}
 
 but this is ugly and exposes implementation details.
@@ -1111,18 +1112,18 @@ Solution: use a {\blue model} field
 \begin{alltt} \code{\scriptsize class SimpleProtocol \{
   private ProtocolStack st;  
 
- {\blue //@ model boolean started;} 
- {\blue //@ represents started = (st!=null);}
+ {\blue //@ public \Red{model} boolean started;} 
+ {\blue //@ private \Red{represents} started = (st != null);}
 
   //@ requires !started;
   //@ assigable started;
   //@ ensures   started;
-  void start() \{ ... \}
+  public void start() \{ ... \}
       
   //@ requires  started;
   //@ assigable started;
   //@ ensures  !started;
-  void stop() \{ ... \} }
+  public void stop() \{ ... \} }
 \end{alltt} %}
 \end{slide}
 
@@ -1135,18 +1136,18 @@ A model field also provided an associated {\blue datagroup}
 \begin{alltt} \code{\scriptsize class SimpleProtocol \{
   private ProtocolStack st;  {\red //@ in started;}
 
- {\blue //@ model boolean started;} 
- {\blue //@ represents started = (st!=null);}
+ {\blue //@ public \Red{model} boolean started;} 
+ {\blue //@ private \Red{represents} started = (st != null);}
 
   //@ requires !started;
   //@ assigable started;
   //@ ensures   started;
-  void start() \{ ... \}
+  public void start() \{ ... \}
       
   //@ requires  started;
   //@ assigable started;
   //@ ensures  !started;
-  void stop() \{ ... \} }
+  public void stop() \{ ... \} }
 \end{alltt} %}
 \end{slide}
 
@@ -1248,7 +1249,7 @@ An invariant can temporarily be broken.
     
    public void m()\{
      i--;
-    {\red b.m(...a)}; // invariant possibly broken
+    {\red b.m(...)}; // invariant possibly broken
      i++;
    \}}
 \end{alltt} %}

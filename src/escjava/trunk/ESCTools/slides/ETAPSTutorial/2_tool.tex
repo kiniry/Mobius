@@ -41,7 +41,8 @@ cok,
 \newcommand{\code}[1]{{\rm \texttt{\textbf{\scriptsize #1}}}}
 \myitem{1}{\mbox{{$\bullet$}}}
 
-
+\newcommand{\vooralle}{\(\backslash\)forall}
+\newcommand{\eris}{\(\backslash\)exists}
 \newcommand{\bsl}{\char'134}
 \newcommand{\result}{\bsl result}
 \newcommand{\old}{\bsl old}
@@ -101,7 +102,7 @@ cok,
 \begin{slide}{Running ESC/Java2}
 \vspace*{-6ex}
 \begin{itemize}
-\item Download the binary distribution from {\green http://www.cs.kun.nl/sos/research/escjava}
+\item Download the binary distribution from {\green http://secure.ucd.ie/products/opensource/ESCJava2}
 \item Untar the distribution and follow the instructions in {\green README.release} about setting environment variables.
 \item Run the tool by doing one of the following:
 \begin{itemize}
@@ -256,7 +257,7 @@ To stop ESC/Java2 complaining: add a postcondition
 \begin{alltt}\code{ class A\{
   byte[] b;
  {\green //@ ensures b != null && b.length = 20;}
-  public void n() \{ a = new byte[20]; \}
+  public void n() \{ b = new byte[20]; \}
   public void m() \{ n();
                     b[0] = 2;
                     ...       \} 
@@ -413,5 +414,136 @@ tell us that \texttt{o.n} won't affect \texttt{b[0]}.
 
 
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}{ESC/Java is not complete}
+\vspace*{-6ex}
+
+ESC/Java may produce warnings about correct programs.
+
+\begin{alltt}
+\texttt{\textbf{\scriptsize
+ {\blue /*@ requires 0 < n;
+    @ ensures \result ==
+    @              (\eris int x,y,z;
+    @                pow(x,n)+pow(y,n) == pow(z,n));
+    @*/}
+  public static boolean{\green fermat}(double n) \{
+    return (n==2);
+  \}
+}}
+\end{alltt}
+
+Warning: {\em postcondition possibly not satisfied}
+
+{\scriptsize (Typically, the theorem prover times out in complicated cases.)}
+
+\end{slide}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}{ESC/Java is not sound}
+\vspace*{-6ex}
+
+ESC/Java may fail to produce warning about incorrect program.
+
+\begin{alltt}
+\texttt{\textbf{\footnotesize  public class Positive\{
+      private int n = 1; {\blue //@ invariant n > 0;}
+
+      public void increase()\{ n++; \}
+  \}
+}}
+\end{alltt}
+
+ESC/Java(2) produces no warning, but \code{increase} may break the invariant, namely if \code{n} is $2^{32}-1$.
+
+\medskip
+
+This can be fixed by improved model of Java arithmetic,
+but this does come at a price (both in specs and in code).
+
+\end{slide}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}{ESC/Java is not sound}
+\vspace*{-6ex}
+
+More fundamental problem: {\green sound modular verification for OO programs
+with invariants}.
+\begin{alltt}\texttt{\textbf{\footnotesize public class{\green A}\{               public class{\green B}\{
+  B{\green b};                         
+  int{\green x};                       int{\green y};
+  //@{\blue invariant x <= b.y;}        
+  void{\green decr\_x}()\{                void{\green decr\_y}()\{          
+    x--;  \}                          y--; \}
+ \}                            \}
+}}
+\end{alltt}
+
+How can we know that invoking \code{decr\_y} on some \code{B} won't break
+the invariant of some \code{A}, or some object whose invariant
+depends on a \code{B} object.
+
+
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}{ESC/Java is not sound}
+\vspace*{-7ex}
+
+\begin{alltt}\texttt{\textbf{\footnotesize public class{\green A}\{               public class{\green B}\{
+  B{\green b};                         
+  int{\green x};                       int{\green y};
+  //@{\blue invariant x <= b.y;}        
+  void{\green decr\_x}()\{x++;\}           void{\green incr\_y}()\{\Red{y++;}\}    
+ \}                            \}
+
+ public class{\green D}\{
+  B{\green b};
+  void{\green decr\_y}()\{          
+    b.y--;  \}                          
+ \}                            }}
+\end{alltt}
+
+How can \code{D} know it might be breaking \code{A}'s invariant?
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}{Modularity problem}
+\vspace*{-6ex}
+
+{\blue Modular verification for (open) OO programs
+with invariants} is a big \& fundamental problem.
+Most verification tools fail here.
+Root causes:
+\begin{enumerate}
+\item invariants talking about another object's fields
+\item object modifying another object's field
+\item possibility of {\green aliasing}
+\end{enumerate}
+
+{\scriptsize NB 1 \& 2 are unavoidable, eg. think of an object
+modifying  -- or its invariant mentioning -- the contents of an 
+array field}
+
+\medskip
+
+Alias control and ownership might provide solutions,
+eg.\ universes by Peter M\"uller \& co or 
+explicit pack/unpack operations by Rustan Leino \& co.
+
+\end{slide}
+
+
+
+\end{document}
 
 \end{document}
