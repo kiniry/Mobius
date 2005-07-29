@@ -1,9 +1,19 @@
 * Automated Tests
 
 ** Determine why the following Javafe tests fail:
-*** test6
+*** test6 (platform-dependent output problem)
 *** test1007
 *** test1103
+
+** Currently being skipped (Javafe/test/javafe/test/fe)
+*** always: 1103, 1104
+*** skipunlessall: 1102
+
+** Old tests that used to (?) fail:
+*** 14, 17, 1001, 1003, 1102
+
+** Put jars for various JDK releases in the classpath for the JDK
+   typechecking tests in /usr/local/Java/src/...
 
 * ASTGen's childAt() generation.
 
