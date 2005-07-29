@@ -88,10 +88,16 @@ class CECEnum implements Enumeration {
 	P = simplify;
 	P.resetInfo();
 
+	//$$
+	System.out.println("CECEnum::(,)");
+	System.out.println(exp);
+	//$$
+
 	if (Info.on) {
 	  Info.out("[calling Simplify on '" + exp + "']");
 	}
 	P.send(exp);
+
     }
 
     /*package*/ CECEnum(/*@non_null*/ SubProcess simplify) {

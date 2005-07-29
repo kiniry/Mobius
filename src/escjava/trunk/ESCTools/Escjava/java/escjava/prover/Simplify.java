@@ -89,6 +89,10 @@ public class Simplify
      */
     //@ ensures !closed;
     public Simplify() {
+
+	//$$
+	//Info.on = true;
+
 	P = new SubProcess("Simplify",
                            new String[] {
                                java.lang.System.getProperty("simplify",
@@ -133,6 +137,13 @@ public class Simplify
      */
     //@ requires !closed;
     public void sendCommand(/*@ non_null @*/ String s) {
+
+	//++
+//	System.out.println("Simplify::sendCommand");
+//
+//	System.out.println(s);
+	//++
+
 	readySubProcess();
 	P.resetInfo();
 
@@ -163,6 +174,13 @@ public class Simplify
      */
     //@ requires !closed;
     public void sendCommands(/*@ non_null @*/ String s) {
+
+	//++
+//	System.out.println("Simplify::sendCommands");
+//
+//	System.out.println(s);
+	//++
+
 	readySubProcess();
 	P.resetInfo();
 
@@ -225,6 +243,13 @@ public class Simplify
     //@ ensures \result.elementType == \type(SimplifyOutput);
     //@ ensures !\result.returnsNull;
     public /*@ non_null @*/ Enumeration prove(/*@ non_null @*/ String exp) {
+
+	//++
+//	System.out.println("Simplify::prove");
+//
+//	System.out.println(exp);
+	//++
+
 	readySubProcess();
 	subProcessUser = new CECEnum(P, exp);
 	return subProcessUser;
@@ -238,6 +263,12 @@ public class Simplify
     //@   modifies subProcessUser;
     //@   ensures subProcessUser != null;
     public void startProve() {
+
+	//++
+//	System.out.println("Simplify::startProve");
+//
+	//++
+
 	readySubProcess();
 	subProcessUser = new CECEnum(P);
     }
@@ -245,6 +276,12 @@ public class Simplify
     //@ ensures \result.elementType == \type(SimplifyOutput);
     //@ ensures !\result.returnsNull;
     public /*@ non_null @*/ Enumeration streamProve() {
+
+	//++
+//	System.out.println("Simplify::streamProve");
+//
+	//++
+
         P.ToStream().flush();
 	while (P.peekChar() == '>') {
             eatPrompt();

@@ -50,6 +50,10 @@ public class Options extends javafe.SrcToolOptions
       "Do not warn about the specified warning category.  The special category 'All' can be used to ignore all warnings.  The full list of warnings is found in the User's Manual." },
     { "-PlainWarning",
       "Suppress the output of the partial counterexample in the case of invariant warnings." },
+    //$$
+    { "-Prover",
+      "Use provers listed after this option, for example : -Prover simplify harvey"},
+    //$$
     { "-Routine [<routine_identifier> | <fully_quality_routine_signature>]",
       "Check\n\tonly the specified routine in all specified classes." },
     { "-RoutineIndirect <routine_file>",
@@ -226,6 +230,16 @@ public class Options extends javafe.SrcToolOptions
    */
 
   public String simplify = System.getProperty("simplify");
+
+    //$$
+    /*
+     * Flags indicating which prover you want to use
+     */
+    public boolean useSimplify = true; 
+    // -> by default simplify is used when the option -Prover is not given.
+    public boolean useSammy = false;
+    public boolean useHarvey = false;
+    //$$
 
   public boolean suggest = false;
 
@@ -481,6 +495,7 @@ public class Options extends javafe.SrcToolOptions
     throws UsageError {
     // First, change option to lowercase for case-less comparison.
     option = option.toLowerCase();
+
     if (option.equals("-nocheck")) {
       stages = 5; // run all but last stage
       return offset;
@@ -622,7 +637,79 @@ public class Options extends javafe.SrcToolOptions
       pvc = true;
       prettyPrintVC = true;
       return offset;
-    } else if (option.equals("-wpnxw")) {
+    } 
+    //$$
+    /*
+     * Surely it's possible to reuse some pre existing feature of Javafe
+     * to do that, but it's simple, works and did not interfer with the 
+     * rest of the code, so that's nice for me atm . There will be time
+     * to FIXME...
+     * Clement
+     */
+    else if (option.equals("-prover")) {
+	useSimplify = false; // override default settings
+
+	int newOffset = offset;
+
+	if ((offset >= args.length) || (args[offset].charAt(0) == '-')) {
+	    throw new UsageError(
+				 "Option "
+				 + option
+				 + " requires one argument or more indicating which prover you want to use.\n"
+				 + "(e.g., \"-Prover simplify sammy\")");
+      }
+
+	// all strings are converted to lower case 
+	// thus no need for huge test
+	String optionChecked;
+
+	if( offset + 1 <= args.length ) { // at least one more command after
+
+	    optionChecked = new String(args[offset]).toLowerCase(); 
+
+	    if( optionChecked.equals("simplify") )
+		useSimplify = true;
+	    if( optionChecked.equals("sammy") )
+		useSammy = true;
+	    if( optionChecked.equals("harvey") )
+		useHarvey = true;
+
+	    newOffset++;
+	}
+
+	if( offset + 2 <= args.length ) { // at least two more commands after
+
+	    optionChecked = new String(args[newOffset]).toLowerCase(); 
+
+	    if( optionChecked.equals("simplify") )
+		useSimplify = true;
+	    if( optionChecked.equals("sammy") )
+		useSammy = true;
+	    if( optionChecked.equals("harvey") )
+		useHarvey = true;
+
+	    newOffset++;
+	}
+
+	if( offset + 3 <= args.length ) { // at least three more commands after
+
+	    optionChecked = new String(args[newOffset]).toLowerCase(); 
+
+	    if( optionChecked.equals("simplify") )
+		useSimplify = true;
+	    if( optionChecked.equals("sammy") )
+		useSammy = true;
+	    if( optionChecked.equals("harvey") )
+		useHarvey = true;
+
+	    newOffset++;
+	}
+	 
+	return newOffset;
+	
+    } 
+    //$$
+	else if (option.equals("-wpnxw")) {
       if (offset >= args.length) {
         throw new UsageError("Option " + option +
                              " requires one integer argument");
